@@ -839,20 +839,3 @@ ptr_align (void *ptr, size_t alignment)
    ((Type_max) / 10 < Accum || Accum * 10 + (Digit_val) < Accum		\
 	       ? 0 : ((Accum = Accum * 10 + (Digit_val)), 1))		\
   )
-
-#if 0
-#define ASSERT_ABORT(Expr) do { if (!(Expr)) abort (); } while (0)
-#define DECIMAL_DIGIT_ACCUMULATE(Accum, Digit_val, Type_max, Overflow)	\
-  do									\
-    {									\
-      int _digit_val = Digit_val;					\
-      ASSERT_ABORT (0 <= _digit_val && _digit_val < 10			\
-		    && Accum <= Type_max);				\
-      /* Ensure that Type_max is the maximum value of Accum.  */	\
-      VERIFY_W_TYPEOF (TYPE_MAXIMUM (__typeof__ (Accum)) == (Type_max)); \
-      if (!(Overflow = ((Type_max) / 10 < Accum				\
-			|| Accum * 10 + _digit_val < Accum)))		\
-		   Accum = Accum * 10 + _digit_val;			\
-    }									\
-  while (0)
-#endif
