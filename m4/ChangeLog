@@ -1,3 +1,12 @@
+2004-01-11  Paul Eggert  <eggert@twinsun.com>
+
+	* posixver.m4 (gl_DEFAULT_POSIX2_VERSION): Move
+	the documentation from 'configure' into 'config.hin',
+	so that 'configure --help' isn't burdened by it and
+	we don't have to worry about its formatting there.
+	Reword the documentation so that it's more succinct
+	and can be run together into a single paragraph.
+
 2004-01-12  Jim Meyering  <jim@meyering.net>
 
 	* posixver.m4 (gl_DEFAULT_POSIX2_VERSION): New macro.
