@@ -371,7 +371,7 @@ static struct option const long_options[] =
   {"zero-terminated", no_argument, NULL, 'z'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {0, 0, 0, 0},
+  {NULL, 0, NULL, 0},
 };
 
 /* The set of signals that are caught.  */
@@ -1706,7 +1706,7 @@ mergefps (char **files, size_t ntemps, size_t nfiles,
 	{
 	  if (savedline && compare (savedline, smallest))
 	    {
-	      savedline = 0;
+	      savedline = NULL;
 	      write_bytes (saved.text, saved.length, ofp, output_file);
 	    }
 	  if (!savedline)
