@@ -1,3 +1,7 @@
+Fri Feb 28 22:32:51 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/uniq.c (usage): Fix typo in --help output.  From Andreas Schwab.
+
 Tue Feb 25 20:34:51 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/Makefile.am (noinst_HEADERS): Add obstack.h.
