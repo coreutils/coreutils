@@ -1,5 +1,5 @@
 ## Process this file with automake to produce Makefile.in -*-Makefile-*-
-info_TEXINFOS = omni-utils.texi
+info_TEXINFOS = coreutils.texi
 
 EXTRA_DIST = perm.texi getdate.texi constants.texi doclicense.texi
 
