@@ -1,3 +1,8 @@
+Mon Sep  9 21:39:49 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/cp.c (do_copy): Describe in a little more detail the code
+	that makes `cp non-directory file/' (eventually) fail.
+
 Sun Sep  8 12:54:31 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/dircolors.c (usage): Refer to LS_COLORS, not LS_COLOR.
