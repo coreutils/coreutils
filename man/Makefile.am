@@ -131,7 +131,8 @@ mapped_name = `echo $*|sed 's/install/ginstall/; s/test/[/'`
 	(cd $t && $(LN_S) ../../src/$(mapped_name) $*); \
 	$(PERL) -- $(srcdir)/help2man		\
 	    --include=$(srcdir)/$*.x		\
-	    --output=$@ $t/$*
+	    --output=$t/$@ $t/$*
+	@sed 's|$*\.td/||g' $t/$@ > $@
 	@chmod a-w $@
 	@rm -rf $t
 
