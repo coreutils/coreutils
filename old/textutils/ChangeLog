@@ -1,6 +1,17 @@
-2001-09-12  Jim Meyering  <meyering@lucent.com>
+2001-09-16  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.15.
+
+	* man/Makefile.am: Revamp this file, as for fileutils.
+
+2001-09-14  Jim Meyering  <meyering@lucent.com>
+
+	* src/md5sum.c (digest_check): On systems for which setmode actually
+	does something, arrange to read the file containing checksum strings
+	in text mode.  Based on a patch from Chris Faylor.
+	* src/system.h (SET_MODE): Define.
+
+2001-09-12  Jim Meyering  <meyering@lucent.com>
 
 	The command `echo a|./fmt -2147483647' would cause fmt to segfault.
 	* src/fmt.c (fmt_paragraph): Test for sentinal directly, rather than
