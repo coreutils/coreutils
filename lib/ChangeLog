@@ -4,8 +4,6 @@
 	Bug reported by Lute Kamstra in
 	<http://mail.gnu.org/archive/html/bug-gnulib/2003-09/msg00003.html>.
 
-2003-09-03  Jim Meyering  <jim@meyering.net>
-
 	* getdate.y (relative_time_table): Use tDAY_UNIT for "tomorrow",
 	"yesterday", "today", and "now" rather than tMINUTE_UNIT.  Of
 	course with correspondingly smaller numbers for tomorrow and
