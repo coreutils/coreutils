@@ -4007,7 +4007,10 @@ and @var{field-list} are one or more numbers or ranges (two numbers
 separated by a dash) separated by commas.  Bytes, characters, and
 fields are numbered starting at 1.  Incomplete ranges may be
 given: @option{-@var{m}} means @samp{1-@var{m}}; @samp{@var{n}-} means
-@samp{@var{n}} through end of line or last field.
+@samp{@var{n}} through end of line or last field.  The list elements
+can be repeated, can overlap, and can be specified in any order; but
+the selected input is written in the same order that it is read, and
+is written exactly once.
 
 The program accepts the following options.  Also see @ref{Common
 options}.
