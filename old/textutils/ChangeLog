@@ -1,3 +1,21 @@
+Wed Jan 18 16:14:00 1994  Jim Meyering  (meyering@comco.com)
+
+	* unexpand.c (unexpand): Don't segfault when given a name of a
+	nonexistent file.
+
+Thu Jan 13 17:27:38 1994  Jim Meyering  (meyering@comco.com)
+
+	* src/Makefile.in: Change all link commands to use both $(CFLAGS)
+	and $(LDFLAGS).
+
+	* csplit.c (load_buffer): Rather than incrementing buffer size,
+	double it each time we fail to find a newline.  Otherwise, csplit
+	would run out of memory when processing files with very long lines.
+
+Mon Jan 10 01:20:38 1994  Jim Meyering  (meyering@comco.com)
+
+	* man/Makefile.in (manprefix): Use binprefix as the default.
+
 Sat Jan 08 22:22:45 1994  Jim Meyering  (meyering@comco.com)
 
 	* cat.c: Use full_write and safe_read instead of write and read resp.
