@@ -26,7 +26,7 @@
 
 #if __STDC__
 void error (int, int, const char *, ...) \
-  __attribute__ ((format (printf, 3, 4)));
+  __attribute__ ((__format__ (__printf__, 3, 4)));
 #else
 void error ();
 #endif
