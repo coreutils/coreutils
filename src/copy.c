@@ -187,10 +187,7 @@ copy_dir (const char *src_path_in, const char *dst_path_in, int new_dst,
 			    &local_copy_into_self, NULL);
       *copy_into_self |= local_copy_into_self;
 
-      /* Free the memory for `src_path'.  The memory for `dst_path'
-	 cannot be deallocated, since it is used to create multiple
-	 hard links.  */
-
+      free (dst_path);
       free (src_path);
 
       namep += strlen (namep) + 1;
