@@ -1,3 +1,27 @@
+2000-08-07  Paul Eggert  <eggert@twinsun.com>
+
+	* src/cp.c (usage, main): For cp -P messages, mention the new
+	behavior as well as the old.
+
+2000-08-07  Paul Eggert  <eggert@twinsun.com>
+
+	Standardize on "memory exhausted" instead of "Memory exhausted"
+	or "virtual memory exhausted".
+	Invoke xalloc_die instead of printing our own message.
+	* src/chmod.c (main): Likewise.
+	* src/copy.c (copy_dir, copy_internal): Likewise.
+	* src/cp.c (do_copy): Likewise.
+	* src/dircolors.c (xstrndup): Likewise.
+	* src/install.c (main): Likewise.
+	* src/ln.c (do_link): Likewise.
+	* src/mkdir.c (main): Likewise.
+	* src/mkfifo.c (main): Likewise.
+	* src/mknod.c (main): Likewise.
+	* src/mv.c (movefile): Likewise.
+	* src/remove.c (remove_cwd_entries, rm): Likewise.
+	* src/shred.c (quotearg_colon, xmalloc):
+	"virtual memory exhausted" -> "memory exhausted"
+
 2000-08-07  Jim Meyering  <meyering@lucent.com>
 
 	* src/cp.c (enum) [PARENTS_OPTION]: New member.
