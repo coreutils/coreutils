@@ -25,7 +25,7 @@ ln b/FUBAR b/bar || framework_failure=1
 chmod a-w b/bar || framework_failure=1
 
 if test $framework_failure = 1; then
-  echo '$0: failure in testing framework' 1>&2
+  echo "$0: failure in testing framework" 1>&2
   (exit 1); exit
 fi
 

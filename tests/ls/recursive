@@ -22,7 +22,7 @@ mkdir x y a b c a/1 a/2 a/3 || framework_failure=1
 touch f a/1/I a/1/II || framework_failure=1
 
 if test $framework_failure = 1; then
-  echo '$0: failure in testing framework' 1>&2
+  echo "$0: failure in testing framework" 1>&2
   (exit 1); exit
 fi
 

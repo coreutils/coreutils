@@ -24,7 +24,7 @@ ln -s foo slink || framework_failure=1
 ln -s no-such-file no-file || framework_failure=1
 
 if test $framework_failure = 1; then
-  echo '$0: failure in testing framework' 1>&2
+  echo "$0: failure in testing framework" 1>&2
   (exit 1); exit
 fi
 

@@ -50,7 +50,7 @@ cat <<\EOF > exp || framework_failure=1
 EOF
 
 if test $framework_failure = 1; then
-  echo '$0: failure in testing framework' 1>&2
+  echo "$0: failure in testing framework" 1>&2
   (exit 1); exit 1
 fi
 

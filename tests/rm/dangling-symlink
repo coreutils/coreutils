@@ -21,7 +21,7 @@ ln -s no-file dangle
 ln -s / symlink
 
 if test $framework_failure = 1; then
-  echo '$0: failure in testing framework' 1>&2
+  echo "$0: failure in testing framework" 1>&2
   (exit 1); exit
 fi
 

@@ -22,7 +22,7 @@ mkdir -p a/b || framework_failure=1
 chmod u-r a
 
 if test $framework_failure = 1; then
-  echo '$0: failure in testing framework' 1>&2
+  echo "$0: failure in testing framework" 1>&2
   (exit 1); exit
 fi
 
