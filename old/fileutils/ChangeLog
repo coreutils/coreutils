@@ -2,11 +2,17 @@
 
 	* Version 4.0.33.
 
+	* src/df.c (show_point): Before accepting an entry as a match, make
+	sure that the mount directory exists and has the required device number.
+	Before, e.g., `df /floppy' would mistakenly report on the root
+	partition if /floppy were not listed in /etc/mtab but / was.
+	Patch from Eirik Fuller (http://bugs.debian.org/76923).
+
 	* src/chmod.c (mode_changed): New function.
 	(change_file_mode): Use it to determine accurately when -c should
 	make chmod announce there's been a change.
 	Based on a patch from Michael Stone.
-	Reported by root@khms.westfalen.de.
+	Reported by root@khms.westfalen.de as Debian bug #77349.
 
 	* tests/chmod/c-option: New test for the above fix.
 	* tests/chmod/Makefile.am (TESTS): Add c-option
