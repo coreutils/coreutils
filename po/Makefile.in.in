@@ -62,8 +62,9 @@ CATALOGS = @CATALOGS@
 	mv t-$@ $@
 
 gmsgfmt_cmd = \
-  rm -f $${lang}.gmo && $(GMSGFMT) -c --statistics -o t-$${lang}.gmo \
-    $${lang}.po && mv t-$${lang}.gmo $${lang}.gmo
+  rm -f $${lang}.gmo \
+    && $(GMSGFMT) -c --statistics -o t-$${lang}.gmo $${lang}.po \
+    && mv t-$${lang}.gmo $${lang}.gmo
 
 .po.gmo:
 	@lang=`echo $* | sed -e 's,.*/,,'`; \
