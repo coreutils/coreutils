@@ -1,3 +1,7 @@
+2002-11-19  Jim Meyering  <jim@meyering.net>
+
+	* jm-macros.m4: Require Autoconf-2.56.
+
 2002-09-30  Akim Demaille  <akim@epita.fr>
 
 	* prereq.m4: Use AC_REQUIRE everywhere it is possible.
