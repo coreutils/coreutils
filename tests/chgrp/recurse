@@ -1,5 +1,5 @@
 #!/bin/sh
-# make sure chgrp handles --recursive w/symlinks
+# ad-hoc tests of chgrp with -R and -H or -L and symlinks
 
 if test "$VERBOSE" = yes; then
   set -x
@@ -9,7 +9,7 @@ fi
 . $srcdir/../group-names
 
 pwd=`pwd`
-tmp=slink.$$
+tmp=recurse.$$
 trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
 trap '(exit $?); exit' 1 2 13 15
 
@@ -30,18 +30,27 @@ fail=0
 
 # chgrp -R should not traverse a symlink to a directory.
 mkdir d e
-touch e/f
+touch d/dd e/ee
 ln -s ../e d/s
-chgrp -R $g1 e/f || fail=1
-# Neither of the following should change the group of e/f
+chgrp -R $g1 e/ee || fail=1
+# This should not should change the group of e/ee
 chgrp -R $g2 d
-set _ `ls -l e/f`; g=$5; test "$g" = $g1 || fail=1
-chgrp --deref -R $g2 d
-set _ `ls -l e/f`; g=$5; test "$g" = $g1 || fail=1
+set _ `ls -l e/ee`; g=$5; test "$g" = $g1 || fail=1
+# This must change the group of e/ee, since -L makes
+# chgrp traverse the symlink from d/s into e.
+chgrp -L -R $g2 d
+set _ `ls -l e/ee`; g=$5; test "$g" = $g2 || fail=1
 
-# Even when the symlink-to-directory is a command line argument, it should
-# not be traversed.  So this shouldn't change the group of e/f either.
-chgrp --deref -R $g2 d/s || fail=1
-set _ `ls -l e/f`; g=$5; test "$g" = $g1 || fail=1
+# This must *not* change the group of e/ee
+chgrp -H -R $g1 d
+set _ `ls -l e/ee`; g=$5; test "$g" = $g2 || fail=1
+
+ln -s d link
+
+# This shouldn't change the group of e/ee either.
+chgrp -H -R $g1 link || fail=1
+set _ `ls -l e/ee`; g=$5; test "$g" = $g2 || fail=1
+# But it *should* change d/dd.
+set _ `ls -l d/dd`; g=$5; test "$g" = $g1 || fail=1
 
 (exit $fail); exit
