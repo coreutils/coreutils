@@ -282,7 +282,7 @@ do_move (source, dest)
 	return 0;
 
       if (!override_mode && (interactive || stdin_tty)
-	  && eaccess_stat (&dest_stats, W_OK))
+	  && eaccess_stat (&dest_stats, W_OK, dest))
 	{
 	  fprintf (stderr, "%s: replace `%s', overriding mode %04o? ",
 		   program_name, dest,

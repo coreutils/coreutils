@@ -78,8 +78,8 @@ char *program_name;
    whether dereferencing of symlinks is done.  */
 static int (*xstat) ();
 
-/* If nonzero, copy all files except directories and, if not dereferencing
-   them, symbolic links, as if they were regular files. */
+/* If nonzero, copy all files except (directories and, if not dereferencing
+   them, symbolic links,) as if they were regular files. */
 static int flag_copy_as_regular = 1;
 
 /* If nonzero, dereference symbolic links (copy the files they point to). */
@@ -563,7 +563,7 @@ copy (src_path, dst_path, new_dst, device, ancestors)
 	    {
 	      if (flag_interactive)
 		{
-		  if (eaccess_stat (&dst_sb, W_OK) != 0)
+		  if (eaccess_stat (&dst_sb, W_OK, dst_path) != 0)
 		    fprintf (stderr,
 			     "%s: overwrite `%s', overriding mode %04o? ",
 			     program_name, dst_path,
@@ -808,7 +808,9 @@ copy (src_path, dst_path, new_dst, device, ancestors)
 
       /* If non-root uses -p, it's ok if we can't preserve ownership.
 	 But root probably wants to know, e.g. if NFS disallows it.  */
-      if (chown (dst_path, src_sb.st_uid, src_sb.st_gid)
+      if (chown (dst_path,
+		 (myeuid == 0 ? src_sb.st_uid : myeuid),
+		 src_sb.st_gid)
 	  && (errno != EPERM || myeuid == 0))
 	{
 	  error (0, errno, "%s", dst_path);

@@ -228,7 +228,7 @@ remove_file (statp)
      struct stat *statp;
 {
   if (!ignore_missing_files && (interactive || stdin_tty)
-      && eaccess_stat (statp, W_OK)
+      && eaccess_stat (statp, W_OK, pathname)
 #ifdef S_ISLNK
       && !S_ISLNK (statp->st_mode)
 #endif

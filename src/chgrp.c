@@ -53,6 +53,7 @@ struct group *getgrnam ();
 
 int lstat ();
 
+char *group_member ();
 char *savedir ();
 char *xmalloc ();
 char *xrealloc ();
@@ -208,9 +209,22 @@ change_file_group (file, group)
 	describe_change (file, 1);
       if (chown (file, file_stats.st_uid, group))
 	{
-	  if (force_silent == 0)
-	    error (0, errno, "%s", file);
 	  errors = 1;
+	  if (force_silent == 0)
+	    {
+	      /* Give a more specific message.  Some systems set errno
+		 to EPERM for both `inaccessible file' and `user not a member
+		 of the specified group' errors.  */
+	      if (errno == EPERM && !group_member (group))
+		{
+		  error (0, errno, "you are not a member of group `%s'",
+			 groupname);
+		}
+	      else
+		{
+		  error (0, errno, "%s", file);
+		}
+	    }
 	}
     }
   else if (verbose && changes_only == 0)
