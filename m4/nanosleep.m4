@@ -1,4 +1,4 @@
-#serial 3
+#serial 4
 
 dnl From Jim Meyering.
 dnl Check for the nanosleep function.
