@@ -234,18 +234,21 @@ FORMAT is one of:\n\
 static void
 build_print_fmt (void)
 {
-  /* 12 = 10 chars for lineno_width, 1 for %, 1 for \0.  */
-  print_fmt = xmalloc (strlen (separator_str) + 12);
+  print_fmt = xmalloc (  1 /* for `%' */
+		       + 1 /* for `-' or `0' */
+		       + INT_STRLEN_BOUND (lineno_width)
+		       + 1 /* for `d' */
+		       + 1 /* for trailing NUL byte */ );
   switch (lineno_format)
     {
     case FORMAT_RIGHT_NOLZ:
-      sprintf (print_fmt, "%%%dd%s", lineno_width, separator_str);
+      sprintf (print_fmt, "%%%dd", lineno_width);
       break;
     case FORMAT_RIGHT_LZ:
-      sprintf (print_fmt, "%%0%dd%s", lineno_width, separator_str);
+      sprintf (print_fmt, "%%0%dd", lineno_width);
       break;
     case FORMAT_LEFT:
-      sprintf (print_fmt, "%%-%dd%s", lineno_width, separator_str);
+      sprintf (print_fmt, "%%-%dd", lineno_width);
       break;
     }
 }
@@ -286,12 +289,13 @@ build_type_arg (char **typep, struct re_pattern_buffer *regexp)
   return rval;
 }
 
-/* Print and increment the line number. */
+/* Print the line number and separator; increment the line number. */
 
 static void
 print_lineno (void)
 {
   printf (print_fmt, line_no);
+  fputs (separator_str, stdout);
   line_no += page_incr;
 }
 
