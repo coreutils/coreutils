@@ -1,4 +1,5 @@
-#include "save-cwd.h"
+#ifndef REMOVE_H
+# define REMOVE_H
 
 struct rm_options
 {
@@ -32,10 +33,10 @@ enum RM_status
   RM_NONEMPTY_DIR
 };
 
-#define VALID_STATUS(S) \
+# define VALID_STATUS(S) \
   ((S) == RM_OK || (S) == RM_USER_DECLINED || (S) == RM_ERROR)
 
-#define UPDATE_STATUS(S, New_value)				\
+# define UPDATE_STATUS(S, New_value)				\
   do								\
     {								\
       if ((New_value) == RM_ERROR				\
@@ -44,11 +45,7 @@ enum RM_status
     }								\
   while (0)
 
-struct dev_ino
-{
-  ino_t st_ino;
-  dev_t st_dev;
-};
-
 enum RM_status rm PARAMS ((size_t n_files, char const *const *file,
 			   struct rm_options const *x));
+
+#endif
