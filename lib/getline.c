@@ -14,21 +14,36 @@ General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
-Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
 
 /* Written by Jan Brittenson, bson@gnu.ai.mit.edu.  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+# include <config.h>
 #endif
 
-#include <sys/types.h>
 #include <stdio.h>
+#include <sys/types.h>
+
+#if defined __GNU_LIBRARY__ && defined HAVE_GETDELIM
+
+int
+getline (lineptr, n, stream)
+     char **lineptr;
+     size_t *n;
+     FILE *stream;
+{
+  return getdelim (lineptr, n, '\n', stream);
+}
+
+
+#else /* ! have getdelim */
+
 #define NDEBUG
 #include <assert.h>
 
 #if STDC_HEADERS
-#include <stdlib.h>
+# include <stdlib.h>
 #else
 char *malloc (), *realloc ();
 #endif
@@ -48,7 +63,7 @@ getstr (lineptr, n, stream, terminator, offset)
      size_t *n;
      FILE *stream;
      char terminator;
-     int offset;
+     size_t offset;
 {
   int nchars_avail;		/* Allocated but unused chars in *LINEPTR.  */
   char *read_pos;		/* Where we're reading into *LINEPTR. */
@@ -124,3 +139,14 @@ getline (lineptr, n, stream)
 {
   return getstr (lineptr, n, stream, '\n', 0);
 }
+
+int
+getdelim (lineptr, n, delimiter, stream)
+     char **lineptr;
+     size_t *n;
+     int delimiter;
+     FILE *stream;
+{
+  return getstr (lineptr, n, stream, delimiter, 0);
+}
+#endif
