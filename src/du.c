@@ -25,8 +25,10 @@
    -c		Write a grand total of all of the arguments after all
 		arguments have been processed.  This can be used to find
 		out the disk usage of a directory, with some files excluded.
+   -h		Print sizes in human readable format (1k 234M 2G, etc).
    -k		Print sizes in kilobytes instead of 512 byte blocks
 		(the default required by POSIX).
+   -m		Print sizes in megabytes instead of 512 byte blocks
    -b		Print sizes in bytes.
    -S		Count the size of each directory separately, not including
 		the sizes of subdirectories.
@@ -34,7 +36,9 @@
    -L		Dereference all symbolic links.
 
    By tege@sics.se, Torbjorn Granlund,
-   and djm@ai.mit.edu, David MacKenzie.  */
+   and djm@ai.mit.edu, David MacKenzie.
+   Variable blocks added by lm@sgi.com.
+*/
 
 #ifdef _AIX
  #pragma alloca
@@ -44,11 +48,16 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
+#include <assert.h>
 
 #include "system.h"
 #include "version.h"
 #include "save-cwd.h"
 #include "error.h"
+
+#undef	convert_blocks
+#define	convert_blocks(b, size) (size == size_kilobytes ? ((b) + 1) / 2 : \
+    size == size_megabytes ? ((b) + 1024) / 2048 : (b))
 
 /* Initial number of entries in each hash table entry's table of inodes.  */
 #define INITIAL_HASH_MODULE 100
@@ -58,6 +67,11 @@
 
 /* Initial size to allocate for `path'.  */
 #define INITIAL_PATH_SIZE 100
+
+/* The maximum length of a human-readable string.  Be pessimistic
+   and assume `int' is 64-bits wide.  Converting 2^63 - 1 gives the
+   11-character string, 8589934592G.  */
+#define LONGEST_HUMAN_READABLE 11
 
 /* Hash structure for inode and device numbers.  The separate entry
    structure makes it easier to rehash "in place".  */
@@ -137,8 +151,12 @@ enum output_size
 {
   size_blocks,			/* 512-byte blocks. */
   size_kilobytes,		/* 1K blocks. */
-  size_bytes			/* 1-byte blocks. */
+  size_megabytes,		/* 1024K blocks. */
+  size_bytes,			/* 1-byte blocks. */
 };
+
+/* human style output */
+static int opt_human_readable;
 
 /* The units to count in. */
 static enum output_size output_size;
@@ -175,7 +193,9 @@ static struct option const long_options[] =
   {"count-links", no_argument, &opt_count_all, 1},
   {"dereference", no_argument, NULL, 'L'},
   {"dereference-args", no_argument, &opt_dereference_arguments, 1},
+  {"human-readable", no_argument, NULL, 'h'},
   {"kilobytes", no_argument, NULL, 'k'},
+  {"megabytes", no_argument, NULL, 'm'},
   {"one-file-system", no_argument, &opt_one_file_system, 1},
   {"separate-dirs", no_argument, &opt_separate_dirs, 1},
   {"summarize", no_argument, &opt_summarize_only, 1},
@@ -201,36 +221,50 @@ usage (int status, char *reason)
       printf (_("\
 Summarize disk usage of each FILE, recursively for directories.\n\
 \n\
-  -a, --all                write counts for all files, not just directories\n\
-  -b, --bytes              print size in bytes\n\
-  -c, --total              produce a grand total\n\
-  -k, --kilobytes          use 1024 blocks, not 512 despite POSIXLY_CORRECT\n\
-  -l, --count-links        count sizes many times if hard linked\n\
-  -s, --summarize          display only a total for each argument\n\
-  -x, --one-file-system    skip directories on different filesystems\n\
-  -D, --dereference-args   dereference PATHs when symbolic link\n\
-  -L, --dereference        dereference all symbolic links\n\
-  -S, --separate-dirs      do not include size of subdirectories\n\
-      --help               display this help and exit\n\
-      --version            output version information and exit\n"));
+  -a, --all             write counts for all files, not just directories\n\
+  -b, --bytes           print size in bytes\n\
+  -c, --total           produce a grand total\n\
+  -h, --human           use variable sizes, not 512 despite POSIXLY_CORRECT\n\
+  -k, --kilobytes       use 1024-byte blocks, not 512 despite POSIXLY_CORRECT\n\
+  -l, --count-links     count sizes many times if hard linked\n\
+  -m, --megabytes       use 1024K-byte blocks, not 512 despite POSIXLY_CORRECT\n\
+  -s, --summarize       display only a total for each argument\n\
+  -x, --one-file-system  skip directories on different filesystems\n\
+  -D, --dereference-args  dereference PATHs when symbolic link\n\
+  -L, --dereference     dereference all symbolic links\n\
+  -S, --separate-dirs   do not include size of subdirectories\n\
+      --help            display this help and exit\n\
+      --version         output version information and exit\n"));
     }
   exit (status);
 }
-
+
 void
 main (int argc, char **argv)
 {
   int c;
   char *cwd_only[2];
+  char *bs;
 
   cwd_only[0] = ".";
   cwd_only[1] = NULL;
 
   program_name = argv[0];
   xstat = lstat;
-  output_size = getenv ("POSIXLY_CORRECT") ? size_blocks : size_kilobytes;
 
-  while ((c = getopt_long (argc, argv, "abcklsxDLS", long_options, (int *) 0))
+  if (getenv ("POSIXLY_CORRECT"))
+    output_size = size_blocks;
+  else if ((bs = getenv ("BLOCKSIZE"))
+	   && strncmp (bs, "HUMAN", sizeof ("HUMAN") - 1) == 0)
+    {
+      opt_human_readable = 1;
+      output_size = size_bytes;
+    }
+  else
+    output_size = size_kilobytes;
+
+  while ((c = getopt_long (argc, argv, "abchklmsxDLS", long_options,
+			   (int *) 0))
 	 != EOF)
     {
       switch (c)
@@ -244,14 +278,26 @@ main (int argc, char **argv)
 
 	case 'b':
 	  output_size = size_bytes;
+	  opt_human_readable = 0;
 	  break;
 
 	case 'c':
 	  opt_combined_arguments = 1;
 	  break;
 
+	case 'h':
+	  output_size = size_bytes;
+	  opt_human_readable = 1;
+	  break;
+
 	case 'k':
 	  output_size = size_kilobytes;
+	  opt_human_readable = 0;
+	  break;
+
+	case 'm':
+	  output_size = size_megabytes;
+	  opt_human_readable = 0;
 	  break;
 
 	case 'l':
@@ -304,7 +350,54 @@ main (int argc, char **argv)
 
   exit (exit_status);
 }
-
+
+static char *
+human_readable (int n_bytes, char *buf, int buf_len)
+{
+  const char *suffix;
+  double amt;
+  char *p;
+
+  assert (buf_len > LONGEST_HUMAN_READABLE);
+
+  p = buf;
+  amt = n_bytes;
+
+  if (amt > 1024 * 1024 * 1024)
+    {
+      amt /= (1024 * 1024 * 1024);
+      suffix = "G";
+    }
+  else if (amt > 1024 * 1024)
+    {
+      amt /= (1024 * 1024);
+      suffix = "M";
+    }
+  else if (amt > 1024)
+    {
+      amt /= 1024;
+      suffix = "K";
+    }
+  else
+    {
+      suffix = "";
+    }
+
+  if (amt >= 10)
+    {
+      sprintf (p, "%.0f%s", amt, suffix);
+    }
+  else if (amt == 0)
+    {
+      strcpy (p, "0");
+    }
+  else
+    {
+      sprintf (p, "%.1f%s", amt, suffix);
+    }
+  return (p);
+}
+
 /* Recursively print the sizes of the directories (and, if selected, files)
    named in FILES, the last entry of which is NULL.  */
 
@@ -363,14 +456,23 @@ du_files (char **files)
 
   if (opt_combined_arguments)
     {
-      printf (_("%ld\ttotal\n"), output_size == size_bytes ? tot_size
-	      : convert_blocks (tot_size, output_size == size_kilobytes));
+      if (opt_human_readable)
+	{
+	  char buf[LONGEST_HUMAN_READABLE + 1];
+	  printf("%s\ttotal\n", human_readable (tot_size, buf,
+						LONGEST_HUMAN_READABLE + 1));
+	}
+      else
+	{
+	  printf (_("%ld\ttotal\n"), output_size == size_bytes ? tot_size
+		  : convert_blocks (tot_size, output_size == size_kilobytes));
+	}
       fflush (stdout);
     }
 
   free_cwd (&cwd);
 }
-
+
 /* Print (if appropriate) and return the size
    (in units determined by `output_size') of file or directory ENT.
    TOP is one for external calls, zero for recursive calls.
@@ -488,9 +590,20 @@ count_entry (char *ent, int top, dev_t last_dev)
       str_trunc (path, pathlen - 1); /* Remove the "/" we added.  */
       if (!opt_summarize_only || top)
 	{
-	  printf ("%ld\t%s\n", output_size == size_bytes ? size
-		  : convert_blocks (size, output_size == size_kilobytes),
-		  path->length > 0 ? path->text : "/");
+	  if (opt_human_readable)
+	    {
+	      char buf[LONGEST_HUMAN_READABLE + 1];
+	      printf("%s\t%s\n",
+		     human_readable (size, buf, LONGEST_HUMAN_READABLE + 1),
+		     path->length > 0 ? path->text : "/");
+	    }
+	  else
+	    {
+	      printf ("%ld\t%s\n", (output_size == size_bytes
+				    ? size
+				    : convert_blocks (size, output_size)),
+		      path->length > 0 ? path->text : "/");
+	    }
 	  fflush (stdout);
 	}
       return opt_separate_dirs ? 0 : size;
@@ -501,16 +614,26 @@ count_entry (char *ent, int top, dev_t last_dev)
       int print_only_dir_size = 0;
       if (!print_only_dir_size)
 	{
-	  printf ("%ld\t%s\n", output_size == size_bytes ? size
-		  : convert_blocks (size, output_size == size_kilobytes),
-		  path->text);
+	  if (opt_human_readable)
+	    {
+	      char buf[LONGEST_HUMAN_READABLE + 1];
+	      printf("%s\t%s\n",
+		     human_readable (size, buf, LONGEST_HUMAN_READABLE + 1),
+		     path->length > 0 ? path->text : "/");
+	    }
+	  else
+	    {
+	      printf ("%ld\t%s\n", output_size == size_bytes ? size
+		      : convert_blocks (size, output_size == size_kilobytes),
+		      path->text);
+	    }
 	  fflush (stdout);
 	}
     }
 
   return size;
 }
-
+
 /* Allocate space for the hash structures, and set the global
    variable `htab' to point to it.  The initial hash module is specified in
    MODULUS, and the number of entries are specified in ENTRY_TAB_SIZE.  (The
@@ -658,7 +781,7 @@ hash_insert2 (struct htab *htab, ino_t ino, dev_t dev)
 
   return 0;
 }
-
+
 /* Initialize the struct string S1 for holding SIZE characters.  */
 
 static void
