@@ -1,5 +1,12 @@
 Sat Oct  5 08:07:03 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* acinclude.m4 (AM_FUNC_ERROR_AT_LINE): New macro.
+	(AM_FUNC_OBSTACK): New macro.
+
+	* configure.in (AM_FUNC_ERROR_AT_LINE): Use this instead of
+	open-coding it.
+	(AM_FUNC_OBSTACK): Likewise.
+
 	* lib/filemode.c (ftypelet) [HAVE_ST_DM_MODE]: Add support for
 	Cray's migrated dmf files.
 	* src/ls.c (print_long_format) [HAVE_ST_DM_MODE]: Likewise.
