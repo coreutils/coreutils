@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2003-03-22.08}
+\def\texinfoversion{2003-04-21.17}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
@@ -88,6 +88,7 @@
 \let\ptexgtr=>
 \let\ptexhat=^
 \let\ptexi=\i
+\let\ptexindent=\indent
 \let\ptexlbrace=\{
 \let\ptexless=<
 \let\ptexplus=+
@@ -847,7 +848,8 @@ where each line of input produces a line of output.}
 
 % @paragraphindent NCHARS
 % We'll use ems for NCHARS, close enough.
-% We cannot implement @paragraphindent asis, though.
+% NCHARS can also be the word `asis' or `none'.
+% We cannot feasibly implement @paragraphindent asis, though.
 % 
 \def\asisword{asis} % no translation, these are keywords
 \def\noneword{none}
@@ -882,6 +884,53 @@ where each line of input produces a line of output.}
     \fi
   \fi
 }
+
+% @firstparagraphindent WORD
+% If WORD is `none', then suppress indentation of the first paragraph
+% after a section heading.  If WORD is `insert', then do indentat such
+% paragraphs.
+% 
+% The paragraph indentation is suppressed or not by calling
+% \suppressfirstparagraphindent, which the sectioning commands do.  We
+% switch the definition of this back and forth according to WORD.  By
+% default, we suppress indentation.
+% 
+\def\suppressfirstparagraphindent{\dosuppressfirstparagraphindent}
+\newdimen\currentparindent
+%
+\def\insertword{insert}
+%
+\def\firstparagraphindent{\parsearg\dofirstparagraphindent}
+\def\dofirstparagraphindent#1{%
+  \def\temp{#1}%
+  \ifx\temp\noneword
+    \let\suppressfirstparagraphindent = \dosuppressfirstparagraphindent
+  \else\ifx\temp\insertword
+    \let\suppressfirstparagraphindent = \relax
+  \else
+    \errhelp = \EMsimple
+    \errmessage{Unknown @firstparagraphindent option `\temp'}%
+  \fi\fi
+}
+
+% Here is how we actually suppress indentation.  Redefine \everypar to
+% \kern backwards by \parindent, and then reset itself to empty.
+% 
+% We also make \indent itself not actually do anything until the next
+% paragraph.
+% 
+\gdef\dosuppressfirstparagraphindent{%
+  \gdef\indent{%
+    \global\let\indent=\ptexindent
+    \global\everypar = {}%
+  }%
+  \global\everypar = {%
+    \kern-\parindent
+    \global\let\indent=\ptexindent
+    \global\everypar = {}%
+  }%
+}%
+
 
 % @asis just yields its argument.  Used with @table, for example.
 %
@@ -1567,7 +1616,7 @@ where each line of input produces a line of output.}
     \gdef\kbdexamplefont{\tt}\gdef\kbdfont{\tt}%
   \else
     \errhelp = \EMsimple
-    \errmessage{Unknown @kbdinputstyle `\arg'}%
+    \errmessage{Unknown @kbdinputstyle option `\arg'}%
   \fi\fi\fi
 }
 \def\worddistinct{distinct}
@@ -3721,6 +3770,7 @@ width0pt\relax} \fi
     \numberedsubsubseczzz{#2}
   \fi
 \fi
+\suppressfirstparagraphindent
 }
 
 % like \numhead, but chooses appendix heading levels
@@ -3740,6 +3790,7 @@ width0pt\relax} \fi
     \appendixsubsubseczzz{#2}
   \fi
 \fi
+\suppressfirstparagraphindent
 }
 
 % like \numhead, but chooses numberless heading levels
@@ -3759,6 +3810,7 @@ width0pt\relax} \fi
     \unnumberedsubsubseczzz{#2}
   \fi
 \fi
+\suppressfirstparagraphindent
 }
 
 % @chapter, @appendix, @unnumbered.
@@ -4430,6 +4482,7 @@ width0pt\relax} \fi
   \let\equiv=\ptexequiv
   \let\!=\ptexexclam
   \let\i=\ptexi
+  \let\indent=\ptexindent
   \let\{=\ptexlbrace
   \let\+=\tabalign
   \let\}=\ptexrbrace
@@ -6146,6 +6199,7 @@ width0pt\relax} \fi
 %
 % Auto-number footnotes.  Otherwise like plain.
 \gdef\footnote{%
+  \let\indent=\ptexindent
   \global\advance\footnoteno by \@ne
   \edef\thisfootno{$^{\the\footnoteno}$}%
   %
