@@ -31,7 +31,7 @@
 # The current list of GNU canonical charset names is as follows.
 #
 #       name                         used by which systems         a MIME name?
-#   ASCII                     glibc solaris
+#   ASCII, ANSI_X3.4-1968     glibc solaris
 #   ISO-8859-1                glibc aix hpux irix osf solaris           yes
 #   ISO-8859-2                glibc aix hpux irix solaris               yes
 #   ISO-8859-4                solaris                                   yes
@@ -72,6 +72,9 @@
 # Note: Names which are not marked as being a MIME name should not be used in
 # Internet protocols for information interchange (mail, news, etc.).
 #
+# Note: ASCII and ANSI_X3.4-1968 are synonymous canonical names. Applications
+# must understand both names and treat them as equivalent.
+#
 # The first argument passed to this file is the canonical host specification,
 #    CPU_TYPE-MANUFACTURER-OPERATING_SYSTEM
 # or
@@ -86,11 +89,12 @@ echo "# It was automatically generated from config.charset."
 echo "# Packages using this file: "
 case "$os" in
     linux* | *-gnu*)
-	# With glibc we don't need any canonicalization, because glibc
-	# supports all GNU canonical names directly.
-	echo "ANSI_X3.4-1968 ASCII" # this is a nop
-	echo "ISO_646.IRV:1983 ASCII" # this is a nop
-	echo "BALTIC ISO-8859-13" # in glibc-2.2 or newer, this is a nop
+	# With glibc-2.1 or newer, we don't need any canonicalization,
+	# because glibc has iconv and both glibc and libiconv support all
+	# GNU canonical names directly. Therefore, the Makefile does not
+	# need to install the alias file at all.
+	# The following applies only to glibc-2.0.x and older libcs.
+	echo "ISO_646.IRV:1983 ASCII"
 	;;
     aix*)
 	echo "ISO8859-1 ISO-8859-1"
