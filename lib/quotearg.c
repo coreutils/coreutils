@@ -530,12 +530,17 @@ static char *
 quotearg_n_options (int n, char const *arg,
 		    struct quoting_options const *options)
 {
-  static unsigned int nslots;
-  static struct slotvec
+  /* Preallocate a slot 0 buffer, so that the caller can always quote
+     one small component of a "memory exhausted" message in slot 0.  */
+  static char slot0[256];
+  static unsigned int nslots = 1;
+  struct slotvec
     {
       size_t size;
       char *val;
-    } *slotvec;
+    };
+  static struct slotvec const slotvec0 = {sizeof slot0, slot0};
+  static struct slotvec *slotvec = (struct slotvec *) &slotvec0;
 
   if (nslots <= n)
     {
@@ -543,6 +548,11 @@ quotearg_n_options (int n, char const *arg,
       size_t s = n1 * sizeof (struct slotvec);
       if (! (0 < n1 && n1 == s / sizeof (struct slotvec)))
 	abort ();
+      if (slotvec == &slotvec0)
+	{
+	  slotvec = (struct slotvec *) xmalloc (sizeof (struct slotvec));
+	  *slotvec = slotvec0;
+	}
       slotvec = (struct slotvec *) xrealloc (slotvec, s);
       memset (slotvec + nslots, 0, (n1 - nslots) * sizeof (struct slotvec));
       nslots = n;
@@ -556,7 +566,7 @@ quotearg_n_options (int n, char const *arg,
     if (size <= qsize)
       {
 	slotvec[n].size = size = qsize + 1;
-	slotvec[n].val = val = xrealloc (val, size);
+	slotvec[n].val = val = xrealloc (val == slot0 ? 0 : val, size);
 	quotearg_buffer (val, size, arg, (size_t) -1, options);
       }
 
