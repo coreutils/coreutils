@@ -462,8 +462,9 @@ __mktime_internal (struct tm *tp,
       t2 = t1 + sec_adjustment;
       if (((t1 < t) != (sec_requested < 0))
 	  | ((t2 < t1) != (sec_adjustment < 0))
-	  | ! (*convert) (&t, &tm))
+	  | ! (*convert) (&t2, &tm))
 	return -1;
+      t = t2;
     }
 
   *tp = tm;

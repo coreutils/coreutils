@@ -3,7 +3,7 @@
 #   Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
 #   2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
 
-timestamp='2004-11-17'
+timestamp='2004-11-30'
 
 # This file is (in principle) common to ALL GNU software.
 # The presence of a machine in this file suggests that SOME GNU software
@@ -1032,6 +1032,10 @@ case $basic_machine in
 	w89k-*)
 		basic_machine=hppa1.1-winbond
 		os=-proelf
+		;;
+	xbox)
+		basic_machine=i686-pc
+		os=-mingw32
 		;;
 	xps | xps100)
 		basic_machine=xps100-honeywell

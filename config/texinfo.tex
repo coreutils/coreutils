@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2004-11-19.19}
+\def\texinfoversion{2004-11-25.16}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004 Free Software
@@ -1730,8 +1730,12 @@ where each line of input produces a line of output.}
 \let\dfn=\smartslanted
 \let\emph=\smartitalic
 
+% @b, explicit bold.
 \def\b#1{{\bf #1}}
 \let\strong=\b
+
+% @sansserif, explicit sans.
+\def\sansserif#1{{\sf #1}}
 
 % We can't just use \exhyphenpenalty, because that only has effect at
 % the end of a paragraph.  Restore normal hyphenation at the end of the
