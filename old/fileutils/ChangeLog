@@ -1,3 +1,14 @@
+Fri Mar 26 19:03:37 1993  Jim Meyering  (meyering@comco.com)
+
+	* ls.c (decode_switches, print_long_format): New option: --full-time.
+	From K. Richard Pixley (rich@rtl.cygnus.com)
+
+Fri Mar 26 00:32:39 1993  Jim Meyering  (meyering@comco.com)
+
+	* df.c (add_omitted_fs_type, fs_to_omit): New functions adding
+	support for --exclude-type option.  From Kaveh R. Ghazi
+	<ghazi@caip.rutgers.edu>.
+
 Tue Mar 23 23:13:33 1993  Jim Meyering  (meyering@comco.com)
 
 	* ls.c (gobble_file): Don't stat symlinks unless we need to.
