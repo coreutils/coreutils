@@ -64,23 +64,26 @@ syntax-check:
 	  fi;								\
 	fi
 	@grep -E '[ ]	' --exclude=$(srcdir)/lib/regex.c		\
-		$(srcdir)/{lib,src}/*.[chy]				\
+		$(srcdir)/{lib,src}/*.[chly]				\
 		$(find -name Makefile.am) &&				\
-	  { echo 'Makefile.maint: found SPACE-TAB sequence; remove the SPACE' \
+	  { echo '$(ME): found SPACE-TAB sequence; remove the SPACE'	\
 		1>&2; \
+	    exit 1; } || :
+	@grep -E '\<free \(\(' $(srcdir)/{lib,src}/*.[chly] &&		\
+	  { echo '$(ME): don'\''t cast free argument' 1>&2;		\
 	    exit 1; } || :
 	@grep -E --exclude=$(srcdir)/lib/regex.c			\
 	    '\*\) *x(m|c|re)alloc\>' $(srcdir)/{lib,src}/*.[chy] &&	\
-	  { echo 'Makefile.maint: don'\''t cast x*alloc return value' 1>&2; \
+	  { echo '$(ME): don'\''t cast x*alloc return value' 1>&2;	\
 	    exit 1; } || :
 	@grep -F 'error (EXIT_SUCCESS,'					\
-		$(find -name '*.[chly]') &&				\
-	  { echo 'Makefile.maint: found error (EXIT_SUCCESS' 1>&2;	\
+	    $$(find -type f -name '*.[chly]') &&			\
+	  { echo '$(ME): found error (EXIT_SUCCESS' 1>&2;		\
 	    exit 1; } || :
 
 #	grep -E '^#  *include <(string|stdlib)\.h>'			\
 #	    $(srcdir)/{lib,src}/*.[chy] &&				\
-#	  { echo 'Makefile.maint: FIXME' 1>&2;				\
+#	  { echo '$(ME): FIXME' 1>&2;					\
 #	    exit 1; } || :
 # FIXME: don't allow `#include .strings\.h' anywhere
 
