@@ -2,7 +2,7 @@
 # This Makefile fragment is shared between fileutils, sh-utils, textutils,
 # CPPI, Bison, and Autoconf.
 
-## Copyright 2001 Free Software Foundation, Inc.
+## Copyright (C) 2001-2002 Free Software Foundation, Inc.
 ##
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -53,9 +53,21 @@ release_archive_dir ?= ../release
 # Checks that don't require cvs.
 # Run `changelog-check' last, as previous test may reveal problems requiring
 # new ChangeLog entries.
-local-check: ac-check po-check copyright-check writable-files \
-	m4-check author_mark_check \
-	changelog-check
+local-check = \
+  ac-check po-check copyright-check writable-files m4-check author_mark_check \
+  changelog-check strftime-check
+.PHONY: $(local-check)
+
+extract_char = sed 's/^[^%][^%]*%\(.\).*/\1/'
+strftime-check:
+	if test -f $(srcdir)/date.c; then				\
+	  grep '^  %.  ' $(srcdir)/date.c | sort			\
+	    | $(extract_char) > $@-src;					\
+	  info libc date calendar format | sort | grep '^    `%.'\'	\
+	    | $(extract_char) > $@-info;				\
+	  diff -u $@-src $@-info || exit 1;				\
+	  rm -f $@-src $@-info;						\
+	fi
 
 changelog-check:
 	if head ChangeLog | grep 'Version $(VERSION)' >/dev/null; then \
@@ -156,7 +168,7 @@ maintainer-distcheck: changelog-check
 # Tag before making distribution.  Also, don't make a distribution if
 # checks fail.  Also, make sure the NEWS file is up-to-date.
 # FIXME: use dist-hook/my-dist like distcheck-hook/my-distcheck.
-cvs-dist: local-check cvs-check maintainer-distcheck
+cvs-dist: $(local-check) cvs-check maintainer-distcheck
 	$(CVS) update po
 	$(CVS) tag -c $(this-cvs-tag)
 	$(MAKE) dist
@@ -175,7 +187,7 @@ null_AM_MAKEFLAGS = \
 # and building with CFLAGS='-Wformat -Werror' causes any format warning to be
 # treated as a failure.
 t=./=test
-my-distcheck: local-check
+my-distcheck: $(local-check)
 	-rm -rf $(t)
 	mkdir $(t)
 	GZIP=$(GZIP_ENV) $(AMTAR) -C $(t) -zxf $(distdir).tar.gz
@@ -316,7 +328,7 @@ endef
 $(xd-delta): $(release_archive_dir)/$(prev-tgz) $(distdir).tar.gz
 	xdelta delta -9 $^ $@ || :
 
-alpha: local-check
+alpha: $(local-check)
 	$(MAKE) cvs-dist
 	$(MAKE) $(xd-delta)
 	$(MAKE) -s announcement > /tmp/announce-$(my_distdir)
