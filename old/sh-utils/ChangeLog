@@ -1,5 +1,8 @@
 2000-01-29  Jim Meyering  <meyering@lucent.com>
 
+	* configure.in: Move library-related tests into m4/lib-check.m4.
+	Remove lib-check for cposix now that we use m4/isc-posix.m4.
+
 	* src/seq.c: Back out most of the 2000-01-21 and 01-22 changes.
 	[Instead, merely give examples showing how to accomplish the same
 	task with fewer limitations using existing tools. ]
