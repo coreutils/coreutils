@@ -276,18 +276,8 @@ o+t
 
 Remember that the special permissions only affect files that are
 executable, plus, on some systems, directories (on which they have
-different meanings; @pxref{Mode Structure}).  Using @samp{a}
-in the @var{users} part of a symbolic mode does not cause the special
-permissions to be affected; thus,
-
-@example
-a+s
-@end example
-
-@noindent
-has @emph{no effect}.  You must use @samp{u}, @samp{g}, and @samp{o}
-explicitly to affect the special permissions.  Also, the
-combinations @samp{u+t}, @samp{g+t}, and @samp{o+s} have no effect.
+different meanings; @pxref{Mode Structure}).
+Also, the combinations @samp{u+t}, @samp{g+t}, and @samp{o+s} have no effect.
 
 The @samp{=} operator is not very useful with special permissions; for
 example, the mode:
