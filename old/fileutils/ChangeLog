@@ -1,5 +1,8 @@
 2001-08-13  Jim Meyering  <meyering@lucent.com>
 
+	* src/cp.c, src/dd.c, src/ln.c, src/ls.c, src/mv.c (AUTHORS): Mark
+	string for translation, since it contains the English word `and'.
+
 	* Makefile.maint (author_mark_check): New rule.
 	(local-check): Depend on it.
 
