@@ -39,7 +39,7 @@ AC_DEFUN(jm_CHECK_DECLS,
 #endif
 '
 
-  AC_CHECK_DECLS((free, lseek, malloc, memchr, nanosleep,
+  AC_CHECK_DECLS((free, getenv, lseek, malloc, memchr, nanosleep,
                   realloc, stpcpy, strstr, strtoul, strtoull),
                   , , $headers)
 ])
