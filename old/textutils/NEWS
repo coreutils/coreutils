@@ -1,5 +1,9 @@
 Changes in release 2.1
 [2.0.9]
+* od now prints valid addresses for offsets of 2^32 and larger, and allows
+    the byte offset (-j) and byte count (-N) arguments to be 2^32 and larger.
+* tail now works with line and byte counts of 2^32 and larger, on systems
+    with large file support
 * join now works with an 8-bit delimiter
 * fix a compilation failure on some Solaris systems with wc.c
 [2.0.8]
