@@ -1,6 +1,16 @@
-2003-08-01  Jim Meyering  <jim@meyering.net>
+2003-08-02  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.91.
+
+	* tests/Makefile.am (TESTS_ENVIRONMENT): Set PATH so that
+	the tests in help-version will use the just-built binaries.
+
+2003-08-01  Jim Meyering  <jim@meyering.net>
+
+	* tests/shred/remove: Ensure that $? is 0 for the final `exit 0'.
+	Otherwise, with at least the /bin/sh from HPUX 10.20,
+	the trap code would end up converting that to exit 1 and thus an
+	unexpected test failure.  Reported by Christian Krackowizer.
 
 2003-07-31  Paul Eggert  <eggert@twinsun.com>
 
