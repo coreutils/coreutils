@@ -5,16 +5,16 @@
 
 2000-11-09  Paul Eggert  <eggert@twinsun.com>
 
-	* lib/unicodeio.c (ENOTSUP): Define to EINVAL if not defined.
+	* unicodeio.c (ENOTSUP): Define to EINVAL if not defined.
 
 2000-11-09  Paul Eggert  <eggert@twinsun.com>
 
-	* lib/unicodeio.c (MB_LEN_MAX): Make sure it's at least 6,
+	* unicodeio.c (MB_LEN_MAX): Make sure it's at least 6,
 	to avoid buggy C libraries.
 
 2000-11-08  Paul Eggert  <eggert@twinsun.com>
 
-	* lib/unicodeio.c (<wchar.h>): Do not include; no longer needed,
+	* unicodeio.c (<wchar.h>): Do not include; no longer needed,
 	since we no longer use wcrtomb.
 	(<limits.h>): Include if HAVE_LIMITS_H.
 	(MB_LEN_MAX): Define if limits.h doesn't.
@@ -32,7 +32,7 @@
 
 2000-11-06  Paul Eggert  <eggert@twinsun.com>
 
-	* lib/getusershell.c (setusershell): Use rewind rather than
+	* getusershell.c (setusershell): Use rewind rather than
 	fseek/fseeko, to avoid configuration hassles with fseeko.
 	Don't bother opening SHELLS_FILE if shellstream is NULL;
 	it's not necessary.
@@ -50,22 +50,22 @@
 
 2000-11-02  Vesselin Atanasov  <vesselin@bgnet.bg>
 
-	* lib/fnmatch.c: Do not comment out all the code if we are using
+	* fnmatch.c: Do not comment out all the code if we are using
 	the GNU C library, because in some cases we are replacing buggy
 	code in the GNU C library itself.
 
 2000-10-30  Paul Eggert  <eggert@twinsun.com>
 
-	* lib/error.h, lib/getline.h, lib/modechange.h:
+	* error.h, getline.h, modechange.h:
 	Remove "2000" from Copyright line, as the file hasn't been
 	changed this year other than in the copyright notice.
 
-	* lib/xalloc.h: Add "2000" to Copyright line, as this file
+	* xalloc.h: Add "2000" to Copyright line, as this file
 	was changed this year.
 
 2000-10-30  Paul Eggert  <eggert@twinsun.com>
 
-	* lib/fnmatch.c (FOLD): Do not assume that characters are unsigned.
+	* fnmatch.c (FOLD): Do not assume that characters are unsigned.
 	(fnmatch): Fix some FNM_FILE_NAME and FNM_LEADING_DIR bugs,
 	e.g. fnmatch("d*/*1", "d/s/1", FNM_FILE_NAME) incorrectly yielded zero.
 
