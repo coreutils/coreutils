@@ -742,7 +742,7 @@ remove_entry (Dirstack_state const *ds, char const *filename,
     }
 
 
-#else
+#else /* ! ROOT_CAN_UNLINK_DIRS */
 
   if (is_dir == T_YES && ! x->recursive)
     {
@@ -866,34 +866,50 @@ remove_cwd_entries (Dirstack_state *ds, char **subdir, struct stat *subdir_sb,
 	  break;
 
 	case RM_NONEMPTY_DIR:
-	  /* Record dev/ino of F so that we can compare
-	     that with dev/ino of `.' after the chdir.
-	     This dev/ino pair is also used in cycle detection.  */
-	  if (lstat (f, subdir_sb))
-	    error (EXIT_FAILURE, errno, _("cannot lstat %s"),
-		   quote (full_filename (f)));
+	  {
+	    /* Save a copy of errno, in case the preceding unlink (from
+	       remove_entry's DO_UNLINK) of a non-directory failed due
+	       to EPERM.  */
+	    int saved_errno = errno;
 
-	  if (chdir (f))
-	    {
-	      error (0, errno, _("cannot chdir from %s to %s"),
-		     quote_n (0, full_filename (".")), quote_n (1, f));
-	      AD_mark_as_unremovable (ds, f);
-	      status = RM_ERROR;
-	      break;
-	    }
-	  if (cycle_check (&ds->cycle_check_state, subdir_sb))
-	    {
-	      error (0, 0, _("\
+	    /* Record dev/ino of F so that we can compare
+	       that with dev/ino of `.' after the chdir.
+	       This dev/ino pair is also used in cycle detection.  */
+	    if (lstat (f, subdir_sb))
+	      error (EXIT_FAILURE, errno, _("cannot lstat %s"),
+		     quote (full_filename (f)));
+
+	    if (chdir (f))
+	      {
+		/* It is much more common that we reach this point for an
+		   inaccessible directory.  Hence the second diagnostic, below.
+		   However it is also possible that F is a non-directory.
+		   That can happen when we use the `! ROOT_CAN_UNLINK_DIRS'
+		   block of code and when DO_UNLINK fails due to EPERM.
+		   In that case, give a better diagnostic.  */
+		if (errno == ENOTDIR)
+		  error (0, saved_errno, _("cannot remove %s"), quote (f));
+		else
+		  error (0, errno, _("cannot chdir from %s to %s"),
+			 quote_n (0, full_filename (".")), quote_n (1, f));
+		AD_mark_as_unremovable (ds, f);
+		status = RM_ERROR;
+		break;
+	      }
+	    if (cycle_check (&ds->cycle_check_state, subdir_sb))
+	      {
+		error (0, 0, _("\
 WARNING: Circular directory structure.\n\
 This almost certainly means that you have a corrupted file system.\n\
 NOTIFY YOUR SYSTEM MANAGER.\n\
 The following directory is part of the cycle:\n  %s\n"),
-		     quote (full_filename (".")));
-	      longjmp (ds->current_arg_jumpbuf, 1);
-	    }
+		       quote (full_filename (".")));
+		longjmp (ds->current_arg_jumpbuf, 1);
+	      }
 
-	  *subdir = xstrdup (f);
-	  break;
+	    *subdir = xstrdup (f);
+	    break;
+	  }
 	}
 
       /* Record status for this directory.  */
