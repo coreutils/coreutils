@@ -93,7 +93,7 @@ libfetish_a_DEPENDENCIES = $(libfetish_a_LIBADD)
 
 BUILT_SOURCES = getdate.c lstat.c stat.c unlocked-io.h
 MAINTAINERCLEANFILES = $(BUILT_SOURCES)
-DISTCLEANFILES = lstat.c stat.c
+DISTCLEANFILES = lstat.c stat.c unlocked-io.h
 
 EXTRA_DIST = xstat.in config.charset ref-add.sin ref-del.sin unlocked-io.hin
 lstat.c: xstat.in
