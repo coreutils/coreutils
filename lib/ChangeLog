@@ -1,3 +1,19 @@
+2003-08-08  Paul Eggert  <eggert@twinsun.com>
+
+	* Makefile.am (libfetish_a_SOURCES): Remove fnmatch_.h.
+	(lib_OBJECTS): New macro, for convenience when cutting and
+	pasting Makefile.am templates from gnulib.
+	(EXTRA_DIST): Remove fnmatch_loop.c.
+	(BUILT_SOURCES): Append $(FNMATCH_H).
+	* Makefile.am: Import the following changes from gnulib templates
+	for alloca and fnmatch):
+	(all-local $(lib_OBJECTS)): New dependencies.
+	(alloca.h): Use alloca.h-t for temporary.
+	(EXTRA_DIST): Append fnmatch_.h, fnmatch_loop.c.
+	(fnmatch.h): New rule.
+	(MOSTLYCLEANFILES): Add fnmatch.h, fnmatch.h-t.
+	(DISTCLEANFILES): Remove fnmatch.h
+
 2003-08-08  Jim Meyering  <jim@meyering.net>
 
 	* mountlist.c (read_filesystem_list) [MOUNTED_GETFSSTAT]:
