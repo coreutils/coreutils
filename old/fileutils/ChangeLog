@@ -1,6 +1,7 @@
 Fri Mar 21 23:58:12 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* Makefile.am (AUTOMAKE_OPTIONS): Require automake-1.1l.
+	(aclocal.m4): Use aclocal's new -I option.
 
 Thu Mar 13 21:27:36 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
