@@ -1055,7 +1055,7 @@ fraccompare (register const char *a, register const char *b)
 #ifdef ENABLE_NLS
 
 /* Decide the kind of fraction the program will use */
-static int
+static void
 nls_set_fraction (register unsigned char ch)
 {
   if (!nls_fraction_found && ch != decimal_point)
@@ -1074,8 +1074,7 @@ nls_set_fraction (register unsigned char ch)
 	decimal_point = ch;
 	th_sep = '\0';
       }
-  /* FIXME: fix return type here, too.   */
-  return nls_fraction_found = 1;
+  nls_fraction_found = 1;
 }
 
 /* Look for a fraction
@@ -1124,7 +1123,9 @@ nls_set_fraction (register unsigned char ch)
    the seperator has to be a decimal point...
    */
 
-/* FIXME: can these be const?  */
+/* FIXME: can these parameters be const?  */
+/* FIXME: describe: no meaningful return value --
+   updates global, nls_fraction_found  */
 static int
 look_for_fraction (unsigned char *s, unsigned char *e)
 {
@@ -1231,9 +1232,12 @@ numcompare (register const unsigned char *a, register const unsigned char *b)
   else
     {
       /* either both numbers are signed, or both are not-signed */
-      /* FIXME: clean up */
       if (*a == NEGATIVE_SIGN)
-	++a, ++b, ret_code = -1;
+	{
+	  ++a;
+	  ++b;
+	  ret_code = -1;
+	}
       /* if both are signed, then remember -100 < -10 (ret_code reversed!) */
 
       /* Skip any leading zeroes */
@@ -1272,7 +1276,7 @@ numcompare (register const unsigned char *a, register const unsigned char *b)
 	}
 
       if (ISDIGIT (*a))
-	return ret_code * 1;	/* a has more digits than b */
+	return ret_code;	/* a has more digits than b */
       if (ISDIGIT (*b))
 	return ret_code * -1;	/* b has more digits than a */
 
