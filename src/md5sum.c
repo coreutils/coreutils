@@ -59,12 +59,6 @@
 # endif
 #endif
 
-#if _LIBC || STDC_HEADERS
-# define TOLOWER(c) tolower (c)
-#else
-# define TOLOWER(c) (ISUPPER (c) ? tolower (c) : (c))
-#endif
-
 /* The minimum length of a valid digest line in a file produced
    by `md5sum FILE' and read by `md5sum --check'.  This length does
    not include any newline character at the end of a line.  */

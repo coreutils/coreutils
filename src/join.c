@@ -24,12 +24,6 @@
 #include <sys/types.h>
 #include <getopt.h>
 
-#if _LIBC || STDC_HEADERS
-# define TOLOWER(c) tolower (c)
-#else
-# define TOLOWER(c) (ISUPPER (c) ? tolower (c) : (c))
-#endif
-
 #include "system.h"
 #include "error.h"
 #include "memcasecmp.h"
