@@ -1,3 +1,8 @@
+1998-07-22  Paul Eggert  <eggert@twinsun.com>
+
+	* lib/xstrtol.c: Include <stdio.h> if NDEBUG is not defined;
+	needed on SunOS 4.
+
 1998-07-18  Jim Meyering  <meyering@ascend.com>
 
 	* src/copy.c (copy_internal): Add another exclusion from the
