@@ -1,3 +1,9 @@
+2005-01-03  Jim Meyering  <jim@meyering.net>
+
+	* utimens.c (futimens): Account for the fact that futimes
+	can also fail with errno == ENOSYS in that case.
+	Patch from Dmitry V. Levin.
+
 2005-01-03  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* utimens.c (futimens) [HAVE_FUTIMES]: Fall back on utimes if
