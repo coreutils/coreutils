@@ -19,7 +19,7 @@
 
 #include <sys/stat.h>
 
-#ifdef STAT_MACROS_BROKEN
+#if STAT_MACROS_BROKEN
 # undef S_ISBLK
 # undef S_ISCHR
 # undef S_ISDIR
@@ -129,7 +129,7 @@
 #define CHMOD_MODE_BITS \
   (S_ISUID | S_ISGID | S_ISVTX | S_IRWXU | S_IRWXG | S_IRWXO)
 
-#ifdef ST_MTIM_NSEC
+#if ST_MTIM_NSEC
 # define ST_TIME_CMP_NS(a, b, ns) ((a).ns < (b).ns ? -1 : (a).ns > (b).ns)
 #else
 # define ST_TIME_CMP_NS(a, b, ns) 0
@@ -144,13 +144,13 @@
 # define mkfifo(path, mode) (mknod ((path), (mode) | S_IFIFO, 0))
 #endif
 
-#ifdef HAVE_SYS_PARAM_H
+#if HAVE_SYS_PARAM_H
 # include <sys/param.h>
 #endif
 
 /* <unistd.h> should be included before any preprocessor test
    of _POSIX_VERSION.  */
-#ifdef HAVE_UNISTD_H
+#if HAVE_UNISTD_H
 # include <unistd.h>
 #endif
 
@@ -187,11 +187,11 @@
 #endif
 
 /* Since major is a function on SVR4, we can't use `ifndef major'.  */
-#ifdef MAJOR_IN_MKDEV
+#if MAJOR_IN_MKDEV
 # include <sys/mkdev.h>
 # define HAVE_MAJOR
 #endif
-#ifdef MAJOR_IN_SYSMACROS
+#if MAJOR_IN_SYSMACROS
 # include <sys/sysmacros.h>
 # define HAVE_MAJOR
 #endif
@@ -206,7 +206,7 @@
 #endif
 #undef HAVE_MAJOR
 
-#ifdef HAVE_UTIME_H
+#if HAVE_UTIME_H
 # include <utime.h>
 #endif
 
@@ -223,7 +223,7 @@ struct utimbuf
 /* Don't use bcopy!  Use memmove if source and destination may overlap,
    memcpy otherwise.  */
 
-#ifdef HAVE_STRING_H
+#if HAVE_STRING_H
 # if !STDC_HEADERS && HAVE_MEMORY_H
 #  include <memory.h>
 # endif
@@ -255,7 +255,7 @@ extern int errno;
 # define EXIT_SUCCESS 0
 #endif
 
-#ifdef HAVE_FCNTL_H
+#if HAVE_FCNTL_H
 # include <fcntl.h>
 #else
 # include <sys/file.h>
@@ -273,24 +273,24 @@ extern int errno;
 # define R_OK 4
 #endif
 
-#ifdef HAVE_DIRENT_H
+#if HAVE_DIRENT_H
 # include <dirent.h>
 # define NLENGTH(direct) (strlen((direct)->d_name))
 #else /* not HAVE_DIRENT_H */
 # define dirent direct
 # define NLENGTH(direct) ((direct)->d_namlen)
-# ifdef HAVE_SYS_NDIR_H
+# if HAVE_SYS_NDIR_H
 #  include <sys/ndir.h>
 # endif /* HAVE_SYS_NDIR_H */
-# ifdef HAVE_SYS_DIR_H
+# if HAVE_SYS_DIR_H
 #  include <sys/dir.h>
 # endif /* HAVE_SYS_DIR_H */
-# ifdef HAVE_NDIR_H
+# if HAVE_NDIR_H
 #  include <ndir.h>
 # endif /* HAVE_NDIR_H */
 #endif /* HAVE_DIRENT_H */
 
-#ifdef CLOSEDIR_VOID
+#if CLOSEDIR_VOID
 /* Fake a return value. */
 # define CLOSEDIR(d) (closedir (d), 0)
 #else
