@@ -1,7 +1,7 @@
 /* getline.c -- Replacement for GNU C library function getline
 
-   Copyright (C) 1993, 1996, 1997, 1998, 2000, 2003 Free Software
-   Foundation, Inc.
+   Copyright (C) 1993, 1996, 1997, 1998, 2000, 2003, 2004 Free
+   Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -23,36 +23,22 @@
 # include <config.h>
 #endif
 
-/* Specification.  */
 #include "getline.h"
 
-#include <stddef.h>
-#include <stdio.h>
+#if ! (defined __GNU_LIBRARY__ && HAVE_GETDELIM)
 
-/* Get ssize_t.  */
-#include <sys/types.h>
+# include "getndelim2.h"
 
-#if defined __GNU_LIBRARY__ && HAVE_GETDELIM
+ssize_t
+getdelim (char **lineptr, size_t *linesize, int delimiter, FILE *stream)
+{
+  return getndelim2 (lineptr, linesize, 0, GETNLINE_NO_LIMIT, delimiter, EOF,
+                     stream);
+}
+#endif
 
 ssize_t
 getline (char **lineptr, size_t *linesize, FILE *stream)
 {
   return getdelim (lineptr, linesize, '\n', stream);
 }
-
-#else /* ! have getdelim */
-
-# include "getndelim2.h"
-
-ssize_t
-getline (char **lineptr, size_t *linesize, FILE *stream)
-{
-  return getndelim2 (lineptr, linesize, (size_t)(-1), stream, '\n', 0, 0);
-}
-
-ssize_t
-getdelim (char **lineptr, size_t *linesize, int delimiter, FILE *stream)
-{
-  return getndelim2 (lineptr, linesize, (size_t)(-1), stream, delimiter, 0, 0);
-}
-#endif
