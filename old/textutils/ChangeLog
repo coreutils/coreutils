@@ -1,3 +1,25 @@
+Sun Jul 30 00:01:58 1995  Jim Meyering  (meyering@comco.com)
+
+	* md5sum.c (md5_check): Use getline instead of fgets.
+
+	* lib/Makefile.in: (SOURCES): Add getline.c.
+	(OBJECTS): Add getline.o.
+	(DISTFILES): Add getline.h.
+	(getline.o): Depend on getline.h.
+
+	* md5.c [memcpy]: Define to bcopy if needed.
+	(md5_buffer): Explicitely cast SWAP expressions to unsigned
+	to avoid warning.
+
+	* lib/Makefile.in (strtoul.o): Depend on strtol.c.
+
+	* sort.c (check): Print `disorder on...' message on standard error,
+	not stdout.  This is a minor concession to POSIX which says
+	`no output shall be produced...'.
+
+	* sort.c (main): Fix -k so it works. -k 2,3 was being treated
+	like -k 2.  Reported by Marcus Daniels <marcus@sysc.pdx.edu>.
+
 Wed Jul 26 22:54:48 1995  Jim Meyering  (meyering@comco.com)
 
 	* man/Makefile.in (install, uninstall): Strip off `.1', not just `1'
