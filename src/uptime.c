@@ -162,8 +162,8 @@ usage (int status)
     {
       printf (_("Usage: %s [OPTION]... [ FILE ]\n"), program_name);
       printf (_("\
-Print the current time, the length of time the system has been up,\n
-the number of users on the system, and the average number of jobs\n
+Print the current time, the length of time the system has been up,\n\
+the number of users on the system, and the average number of jobs\n\
 in the run queue over the last 1, 5 and 15 minutes.\n\
 If FILE is not specified, use %s.  %s as FILE is common.\n\
 \n\
