@@ -1,3 +1,33 @@
+2003-07-20  Paul Eggert  <eggert@twinsun.com>
+
+	wc count field widths now are heuristically adjusted depending
+	on the input size, if known.  If only one count is printed, it
+	is guaranteed to be printed without leading spaces.
+
+	Previously, wc did not align the count fields if
+	POSIXLY_CORRECT was set, but POSIX did not actually require
+	this undesirable behavior, so it has been removed.
+
+	* NEWS: Document this.
+	* doc/coreutils.texi (wc invocation): Likewise.
+
+	* src/wc.c (number_width): New var.
+	(posixly_correct): Remove.
+	(struct fstatus): New struct.
+	(write_counts): Output fields of width number_width.
+	Do not worry about POSIXLY_CORRECT.
+	Use null file, not empty-string file, to denote stdin,
+	since "" is a valid file name on some hosts.
+	(wc, wc_file): New arg fstatus.  Use it to avoid invoking fstat
+	if possible.
+	(wc):  Avoid problems if end_pos - current_pos overflows.
+	Do not print odd message if stdin has a read error.
+	(get_input_fstatus, compute_number_width): New functions.
+	(main): Use them to implement the new behavior.
+	Ignore POSIXLY_CORRECT.
+
+	* tests/wc/Test.pm: Adjust to the new output widths.
+
 2003-07-19  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.90.
@@ -852,8 +882,8 @@
 
 	* src/split.c: Include "inttostr.h".
 	(bytes_split, lines_split, line_bytes_split, main):
-        Use uintmax_t, not size_t, for file sizes.
-        (main): Give a better diagnostic for option arguments == 0.
+	Use uintmax_t, not size_t, for file sizes.
+	(main): Give a better diagnostic for option arguments == 0.
 	Use umaxtostr to print file sizes.
 	Reported by Luke Hassell.
 
@@ -2816,7 +2846,3 @@
 	textutils, and sh-utils.
 	* Makefile.am: Likewise.
 	* src/Makefile.am: Likewise.
-
-Local Variables:
-version-control: never
-End:
