@@ -1,3 +1,9 @@
+2005-03-18  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* strftime.c (my_strftime): If the underlying strftime returns 0
+	(which shouldn't happen), generate nothing instead of returning 0
+	immediately, so that nstrftime (NULL, ...) doesn't return 0.
+
 2005-03-15  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* strftime.c (my_strftime): Prepend space to format so that we can
