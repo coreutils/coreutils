@@ -1,7 +1,11 @@
+2003-11-06  Jim Meyering  <jim@meyering.net>
+
+	* Version 5.1.0.
+
 2003-11-05  Dennis Smit  <ds@nerds-incorporated.org>
 
 	* src/wc.c (main): Free `fstatus' so there is no confusion about
-        whether it's leaked or not.
+	whether it's leaked or not.
 	* src/who.c (who): Likewise for `utmp_buf'.
 
 2003-11-05  Paul Eggert  <eggert@twinsun.com>
@@ -31,8 +35,6 @@
 	Don't report an error simply because $(programs) outputs nothing.
 
 2003-11-05  Jim Meyering  <jim@meyering.net>
-
-	* Version 5.1.0.
 
 	* Use autoconf-2.58.  Regenerate dependent files.
 
