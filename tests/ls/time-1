@@ -2,6 +2,7 @@
 # Test some of ls's sorting options.
 
 : ${LS=ls}
+: ${TOUCH=touch}
 test=time-1
 
 if test "$VERBOSE" = yes; then
@@ -11,25 +12,41 @@ fi
 
 tmp=t-ls.$$
 
-# We're going to LS from a subdir.  Prepend ../ if $LS is not an
-# absolute file name.
+# We're going to run LS from a subdir.
+# Prepend ../ if $LS is a relative file name.
 case $LS in
   /*) ;;
-  *) LS=../$LS
+  */*) LS=../$LS
+esac
+
+case $TOUCH in
+  /*) ;;
+  */*) TOUCH=../$TOUCH
 esac
 
 test_failure=0
 mkdir $tmp || test_failure=1
 cd $tmp || test_failure=1
 
-: > a || test_failure=1
-sleep 1
-: > b || test_failure=1
-: > c || test_failure=1
-sleep 1
-cat a || test_failure=1
+t1='1998-01-15 21:00'
+t2='1998-01-15 22:00'
+t3='1998-01-15 23:00'
 
-mv c d || test_failure=1
+u1='1998-01-14 11:00'
+u2='1998-01-14 12:00'
+u3='1998-01-14 13:00'
+
+$TOUCH -m -d "$t3" a || test_failure=1
+$TOUCH -m -d "$t2" b || test_failure=1
+$TOUCH -m -d "$t1" d || test_failure=1
+
+$TOUCH -a -d "$u1" a || test_failure=1
+$TOUCH -a -d "$u2" b || test_failure=1
+$TOUCH -a -d "$u3" d || test_failure=1
+
+sleep 5
+
+mv d c || test_failure=1
 
 if test $test_failure = 1; then
   echo 'failure in testing framework'
@@ -38,17 +55,15 @@ fi
 
 fail=0
 
-# A was accessed more recently.
-set `$LS -u a b`
-test "$*" = 'a b' && : || fail=1
+set `$LS -u a b c`
+test "$*" = 'c b a' && : || fail=1
 
-# B was modified more recently.
-set `$LS -t a b`
-test "$*" = 'b a' && : || fail=1
+set `$LS -t a b c`
+test "$*" = 'a b c' && : || fail=1
 
-# D has newer ctime.
-set `$LS -c a d`
-test "$*" = 'd a' && : || fail=1
+# C has newer ctime.
+set `$LS -c a c`
+test "$*" = 'c a' && : || fail=1
 
 cd ..
 rm -rf $tmp
