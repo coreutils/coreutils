@@ -2,7 +2,13 @@
 
 	* Version 4.0.36.
 
+	* src/cp.c (usage): Split a string that was longer than 2048 bytes.
+
 	* doc/perm.texi: s/can not/cannot/
+
+2001-01-07  Karl Eichwalder  <ke@suse.de>
+
+	* src/chown.c (usage): Split long message string.
 
 2001-01-07  Karl Eichwalder  <ke@suse.de>
 
