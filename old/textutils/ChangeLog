@@ -1,3 +1,24 @@
+1999-11-03  Paul Eggert  <eggert@twinsun.com>
+
+	* NEWS, doc/textutils.texi:
+	Do not consider newline to be part of a line when comparing lines
+	in `sort' and `comm'.  POSIX.2 requires that we consider newline,
+	but this is a bug in the spec and the bug will likely be fixed.
+	* src/comm.c (compare_files): Likewise.
+	* src/sort.c (begfield, limfield, findlines, keycompare, compare):
+	Likewise.
+	* tests/sort/Test.pm:  Update tests `use-nl' and `11d' to reflect
+	this change.
+
+	* lib/linebuffer.c (readline): Do not leave room for an extra
+	byte after the newline; it's no longer needed.
+	* src/sort.c: (sortalloc, mergealloc, fillbuf, checkfp, mergefps):
+	Likewise.
+
+	* lib/memcoll.c (memcoll): The two arguments cannot be
+	adjacent any more, so remove the alloca/copy workaround for
+	that case.
+
 1999-11-03  Jim Meyering  <meyering@ascend.com>
 
 	Fix so that `tail -fn 2 file' works again.
