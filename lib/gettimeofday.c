@@ -1,7 +1,8 @@
 /* Work around the bug in some systems whereby gettimeofday clobbers the
    static buffer that localtime uses for it's return value.  The gettimeofday
    function from Mac OS X 10.0.4, i.e. Darwin 1.3.7 has this problem.
-   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+   The tzset replacement is necessary for at least Solaris 2.5, 2.5.1, and 2.6.
+   Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -21,10 +22,11 @@
 
 #include <config.h>
 
-/* Disable the definitions of gettimeofday and localtime (from config.h)
+/* Disable the definitions of these functions (from config.h)
    so we can use the library versions here.  */
 #undef gettimeofday
 #undef localtime
+#undef tzset
 
 #include <sys/types.h>
 
@@ -83,4 +85,24 @@ rpl_gettimeofday (struct timeval *tv, struct timezone *tz)
   *localtime_buffer_addr = save;
 
   return result;
+}
+
+/* This is a wrapper for tzset. It is used only on systems for which
+   tzset may clobber the static buffer used for localtime's result.
+   Save and restore the contents of the buffer used for localtime's
+   result around the call to tzset.  */
+void
+rpl_tzset (void)
+{
+  struct tm save;
+
+  if (! localtime_buffer_addr)
+    {
+      time_t t = 0;
+      localtime_buffer_addr = localtime (&t);
+    }
+
+  save = *localtime_buffer_addr;
+  tzset ();
+  *localtime_buffer_addr = save;
 }
