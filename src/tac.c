@@ -130,13 +130,30 @@ static struct option const longopts[] =
 };
 
 static void
-usage ()
+usage (status)
+     int status;
 {
-  fprintf (stderr, "\
-Usage: %s [-br] [-s separator] [--before] [--regex] [--separator=separator]\n\
-      [--help] [--version] [file...]\n",
-	   program_name);
-  exit (1);
+  if (status != 0)
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+  else
+    {
+      printf ("\
+Usage: %s [OPTION]... [FILE]...\n\
+",
+	      program_name);
+      printf ("\
+\n\
+  -b, --before             attach the separator before instead of after\n\
+  -r, --regex              intepret the separator as a regular expression\n\
+  -s, --separator STRING   use STRING as the separator instead of newline\n\
+      --help               display this help and exit\n\
+      --version            output version information and exit\n\
+\n\
+With no FILE, or when FILE is -, read standard input.\n\
+");
+    }
+  exit (status);
 }
 
 void
@@ -173,7 +190,7 @@ main (argc, argv)
 	    error (1, 0, "separator cannot be empty");
 	  break;
 	default:
-	  usage ();
+	  usage (1);
 	}
     }
 
@@ -184,7 +201,7 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   if (sentinel_length == 0)
     {

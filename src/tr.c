@@ -15,7 +15,7 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
-/* Written by Jim Meyering, meyering@cs.utexas.edu. */
+/* Written by Jim Meyering, meyering@cs.utexas.edu.  */
 
 #ifdef HAVE_CONFIG_H
 #if defined (CONFIG_BROKETS)
@@ -49,36 +49,36 @@
 
 #define N_CHARS (UCHAR_MAX + 1)
 
-/* A pointer to a function that returns an int. */
+/* A pointer to a function that returns an int.  */
 typedef int (*PFI) ();
 
 /* Convert from character C to its index in the collating
    sequence array.  Just cast to an unsigned int to avoid
-   problems with sign-extension. */
+   problems with sign-extension.  */
 #define ORD(c) (unsigned int)(c)
 
-/* The inverse of ORD. */
+/* The inverse of ORD.  */
 #define CHR(i) (unsigned char)(i)
 
 /* The value for Spec_list->state that indicates to
    get_next that it should initialize the tail pointer.
    Its value doesn't matter as long as it can't be
-   confused with a valid character code. */
+   confused with a valid character code.  */
 #define BEGIN_STATE (2 * N_CHARS)
 
 /* The value for Spec_list->state that indicates to
    get_next that the element pointed to by Spec_list->tail is
    being considered for the first time on this pass through the
    list -- it indicates that get_next should make any necessary
-   initializations. */
+   initializations.  */
 #define NEW_ELEMENT (BEGIN_STATE + 1)
 
 /* A value distinct from any character that may have been stored in a
-   buffer as the result of a block-read in the function squeeze_filter. */
+   buffer as the result of a block-read in the function squeeze_filter.  */
 #define NOT_A_CHAR (unsigned int)(-1)
 
 /* The following (but not CC_NO_CLASS) are indices into the array of
-   valid character class strings. */
+   valid character class strings.  */
 enum Char_class
   {
     CC_ALNUM = 0, CC_ALPHA = 1, CC_BLANK = 2, CC_CNTRL = 3,
@@ -92,7 +92,7 @@ enum Char_class
    was one of the character classes [:upper:] or [:lower:].  The value
    is used only when translating and then, only to make sure that upper
    and lower class constructs have the same relative positions in string1
-   and string2. */
+   and string2.  */
 enum Upper_Lower_class
   {
     UL_LOWER = 0,
@@ -105,7 +105,7 @@ enum Upper_Lower_class
    is from [:upper:] and the other is from [:lower:], or neither is from
    upper or lower.  In fact, no other character classes are allowed when
    translating, but that condition is tested elsewhere.  This array is
-   indexed by values of type enum Upper_Lower_class. */
+   indexed by values of type enum Upper_Lower_class.  */
 static int const class_ok[3][3] =
 {
   {0, 1, 0},
@@ -113,7 +113,7 @@ static int const class_ok[3][3] =
   {0, 0, 1}
 };
 
-/* The type of a List_element.  See build_spec_list for more details. */
+/* The type of a List_element.  See build_spec_list for more details.  */
 enum Range_element_type
   {
     RE_NO_TYPE = 0,
@@ -128,7 +128,7 @@ enum Range_element_type
    For example, consider the POSIX version of the classic tr command:
        tr -cs 'a-zA-Z_' '[\n*]'
    String1 has 3 constructs, two of which are ranges (a-z and A-Z),
-   and a single normal character, `_'.  String2 has one construct. */
+   and a single normal character, `_'.  String2 has one construct.  */
 struct List_element
   {
     enum Range_element_type type;
@@ -162,39 +162,39 @@ struct List_element
    specified (like -s, -d, or -c).  The main exception is the member
    `tail', which is first used to construct the list.  After construction,
    it is used by get_next to save its state when traversing the list.
-   The member `state' serves a similar function. */
+   The member `state' serves a similar function.  */
 struct Spec_list
   {
     /* Points to the head of the list of range elements.
-       The first struct is a dummy; its members are never used. */
+       The first struct is a dummy; its members are never used.  */
     struct List_element *head;
 
     /* When appending, points to the last element.  When traversing via
        get_next(), points to the element to process next.  Setting
        Spec_list.state to the value BEGIN_STATE before calling get_next
-       signals get_next to initialize tail to point to head->next. */
+       signals get_next to initialize tail to point to head->next.  */
     struct List_element *tail;
 
-    /* Used to save state between calls to get_next(). */
+    /* Used to save state between calls to get_next().  */
     unsigned int state;
 
     /* Length, in the sense that length('a-z[:digit:]123abc')
-       is 42 ( = 26 + 10 + 6). */
+       is 42 ( = 26 + 10 + 6).  */
     int length;
 
-    /* The number of [c*] and [c*0] constructs that appear in this spec. */
+    /* The number of [c*] and [c*0] constructs that appear in this spec.  */
     int n_indefinite_repeats;
 
     /* Non-zero if this spec contains at least one equivalence
-       class construct e.g. [=c=]. */
+       class construct e.g. [=c=].  */
     int has_equiv_class;
 
     /* Non-zero if this spec contains at least one of [:upper:] or
-       [:lower:] class constructs. */
+       [:lower:] class constructs.  */
     int has_upper_or_lower;
 
     /* Non-zero if this spec contains at least one of the character class
-       constructs (all but upper and lower) that aren't allowed in s2. */
+       constructs (all but upper and lower) that aren't allowed in s2.  */
     int has_restricted_char_class;
   };
 
@@ -202,18 +202,18 @@ char *xmalloc ();
 char *stpcpy ();
 void error ();
 
-/* The name by which this program was run. */
+/* The name by which this program was run.  */
 char *program_name;
 
 /* When non-zero, each sequence in the input of a repeated character
    (call it c) is replaced (in the output) by a single occurrence of c
-   for every c in the squeeze set. */
+   for every c in the squeeze set.  */
 static int squeeze_repeats = 0;
 
-/* When non-zero, removes characters in the delete set from input. */
+/* When non-zero, removes characters in the delete set from input.  */
 static int delete = 0;
 
-/* Use the complement of set1 in place of set1. */
+/* Use the complement of set1 in place of set1.  */
 static int complement = 0;
 
 /* When non-zero, this flag causes GNU tr to provide strict
@@ -228,7 +228,7 @@ static int complement = 0;
    being POSIX conformant means we can't issue such messages.
    Warnings on the following topics are suppressed when this
    variable is non-zero:
-   1. Ambiguous octal escapes. */
+   1. Ambiguous octal escapes.  */
 static int posix_pedantic;
 
 /* When tr is performing translation and string1 is longer than string2,
@@ -258,11 +258,11 @@ static int posix_pedantic;
    compatibility.  For example, it doesn't disable the interpretation
    of the POSIX constructs [:alpha:], [=c=], and [c*10], so if by
    some unfortunate coincidence you use such constructs in scripts
-   expecting to use some other version of tr, the scripts will break. */
+   expecting to use some other version of tr, the scripts will break.  */
 static int truncate_set1 = 0;
 
 /* An alias for (!delete && non_option_args == 2).
-   It is set in main and used there and in validate(). */
+   It is set in main and used there and in validate().  */
 static int translating;
 
 #ifndef BUFSIZ
@@ -295,7 +295,7 @@ static SET_TYPE in_delete_set[N_CHARS];
 
 /* Array of character values defining the translation (if any) that
    tr is to perform.  Translation is performed only when there are
-   two specification strings and the delete switch is not given. */
+   two specification strings and the delete switch is not given.  */
 static char xlate[N_CHARS];
 
 /* If non-zero, display usage information and exit.  */
@@ -316,17 +316,76 @@ static struct option const long_options[] =
 };
 
 static void
-usage ()
+usage (status)
+     int status;
 {
-  fprintf (stderr, "\
-Usage: %s [-cdst] [--complement] [--delete] [--squeeze-repeats]\n\
-       [--truncate-set1] [--help] [--version] string1 [string2]\n",
-	   program_name);
-  exit (2);
+  if (status != 0)
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+  else
+    {
+      printf ("\
+Usage: %s [OPTION]... SET1 [SET2]\n\
+",
+	      program_name);
+      printf ("\
+\n\
+  -c, --complement        first complement SET1\n\
+  -d, --delete            delete characters in SET1, do not translate\n\
+  -s, --squeeze-repeats   replace sequence of characters with one\n\
+  -t, --truncate-set1     first truncate SET1 to length of SET2\n\
+      --help              display this help and exit\n\
+      --version           output version information and exit\n\
+");
+      printf ("\
+\n\
+SETs are specified as strings of characters.  Most represent\n\
+themselves.  Here are the special writings:\n\
+\n\
+  \\NNN            character with octal value NNN (1 to 3 digits)\n\
+  \\\\              backslash\n\
+  \\a              audible BEL\n\
+  \\b              backspace\n\
+  \\f              form feed\n\
+  \\n              new line\n\
+  \\r              return\n\
+  \\t              horizontal tab\n\
+  \\v              vertical tab\n\
+  CHAR1-CHAR2     all characters from CHAR1 to CHAR2 in ascending order\n\
+  [CHAR1-CHAR2]   same as CHAR1-CHAR2, if both SET1 and SET2 use this\n\
+  [CHAR*]         in SET2, copies of CHAR until length of SET1\n\
+  [CHAR*REPEAT]   REPEAT copies of CHAR, REPEAT octal if starting with 0\n\
+  [:alnum:]       all letters and digits\n\
+  [:alpha:]       all letters\n\
+  [:blank:]       all horizontal whitespace\n\
+  [:cntrl:]       all control characters\n\
+  [:digit:]       all digits\n\
+  [:graph:]       all printable characters, not including space\n\
+  [:lower:]       all lowercase letters\n\
+  [:print:]       all printable characters, including space\n\
+  [:punct:]       all punctuation characters\n\
+  [:space:]       all horizontal or vertical whitespace\n\
+  [:upper:]       all uppercase letters\n\
+  [:xdigit:]      all hexadecimal digits\n\
+  [=CHAR=]        all characters which are equivalent to CHAR\n\
+");
+      printf ("\
+\n\
+Translation occurs if -d is not given and both SET1 and SET2 appear.\n\
+-t may be used only when translating.  SET2 is extended to length of\n\
+SET1 by repeating its last character as necessary.  Excess characters\n\
+of SET2 are ignored.  Only [:lower:] and [:upper:] are guaranteed to\n\
+expand in ascending order; used in SET2 while translating, they may\n\
+only be used in pairs to specify case conversion.  -s uses SET1 if not\n\
+translating nor deleting; else squeezing uses SET2 and occurs after\n\
+translation or deletion.\n\
+");
+    }
+  exit (status);
 }
 
 /* Return non-zero if the character C is a member of the
-   equivalence class containing the character EQUIV_CLASS. */
+   equivalence class containing the character EQUIV_CLASS.  */
 
 static int
 is_equiv_class_member (equiv_class, c)
@@ -337,7 +396,7 @@ is_equiv_class_member (equiv_class, c)
 }
 
 /* Return non-zero if the character C is a member of the
-   character class CHAR_CLASS. */
+   character class CHAR_CLASS.  */
 
 static int
 is_char_class_member (char_class, c)
@@ -396,7 +455,7 @@ is_char_class_member (char_class, c)
    the resulting string is returned through LEN and the function returns 0.
    The resulting array of characters may contain zero-bytes; however,
    on input, S is assumed to be null-terminated, and hence
-   cannot contain actual (non-escaped) zero bytes. */
+   cannot contain actual (non-escaped) zero bytes.  */
 
 static int
 unquote (s, len)
@@ -469,7 +528,7 @@ unquote (s, len)
 			     give a warning about the ambiguity.  POSIX
 			     isn't clear on this, but one person has said
 			     that in his interpretation, POSIX says tr
-			     can't even give a warning. */
+			     can't even give a warning.  */
 			  error (0, 0, "warning: the ambiguous octal escape \
 \\%c%c%c is being\n\tinterpreted as the 2-byte sequence \\0%c%c, `%c'",
 				 s[i], s[i + 1], s[i + 2],
@@ -500,7 +559,7 @@ unquote (s, len)
 }
 
 /* If CLASS_STR is a valid character class string, return its index
-   in the global char_class_name array.  Otherwise, return CC_NO_CLASS. */
+   in the global char_class_name array.  Otherwise, return CC_NO_CLASS.  */
 
 static enum Char_class
 look_up_char_class (class_str)
@@ -515,7 +574,7 @@ look_up_char_class (class_str)
 }
 
 /* Return a newly allocated string with a printable version of C.
-   This function is used solely for formatting error messages. */
+   This function is used solely for formatting error messages.  */
 
 static char *
 make_printable_char (c)
@@ -541,7 +600,7 @@ make_printable_char (c)
    (isprint) characters are represented by a backslash followed by
    3 octal digits.  However, the characters represented by \c escapes
    where c is one of [abfnrtv] are represented by their 2-character \c
-   sequences.  This function is used solely for printing error messages. */
+   sequences.  This function is used solely for printing error messages.  */
 
 static char *
 make_printable_str (s, len)
@@ -549,7 +608,7 @@ make_printable_str (s, len)
      int len;
 {
   /* Worst case is that every character expands to a backslash
-     followed by a 3-character octal escape sequence. */
+     followed by a 3-character octal escape sequence.  */
   char *printable_buf = xmalloc (4 * len + 1);
   char *p = printable_buf;
   int i;
@@ -602,7 +661,7 @@ make_printable_str (s, len)
 }
 
 /* Append a newly allocated structure representing a
-   character C to the specification list LIST. */
+   character C to the specification list LIST.  */
 
 static void
 append_normal_char (list, c)
@@ -659,7 +718,7 @@ append_range (list, first, last)
 /* If CHAR_CLASS_STR is a valid character class string, append a
    newly allocated structure representing that character class to the end
    of the specification list LIST and return 0.  If CHAR_CLASS_STR is not
-   a valid string, give an error message and return non-zero. */
+   a valid string, give an error message and return non-zero.  */
 
 static int
 append_char_class (list, char_class_str, len)
@@ -692,7 +751,7 @@ append_char_class (list, char_class_str, len)
 /* Append a newly allocated structure representing a [c*n]
    repeated character construct, to the specification list LIST.
    THE_CHAR is the single character to be repeated, and REPEAT_COUNT
-   is non-negative repeat count. */
+   is non-negative repeat count.  */
 
 static void
 append_repeated_char (list, the_char, repeat_count)
@@ -716,7 +775,7 @@ append_repeated_char (list, the_char, repeat_count)
    the length of that string, LEN, if LEN is exactly one, append
    a newly allocated structure representing the specified
    equivalence class to the specification list, LIST and return zero.
-   If LEN is not 1, issue an error message and return non-zero. */
+   If LEN is not 1, issue an error message and return non-zero.  */
 
 static int
 append_equiv_class (list, equiv_class_str, len)
@@ -745,7 +804,7 @@ append_equiv_class (list, equiv_class_str, len)
   return 0;
 }
 
-/* Return a newly allocated copy of P[FIRST_IDX..LAST_IDX]. */
+/* Return a newly allocated copy of P[FIRST_IDX..LAST_IDX].  */
 
 static unsigned char *
 substr (p, first_idx, last_idx)
@@ -757,8 +816,8 @@ substr (p, first_idx, last_idx)
   unsigned char *tmp = (unsigned char *) xmalloc (len);
 
   assert (first_idx <= last_idx);
-  /* We must use bcopy or memcopy rather than strncpy
-     because `p' may contain zero-bytes. */
+  /* We must use bcopy or memcpy rather than strncpy
+     because `p' may contain zero-bytes.  */
   bcopy (p + first_idx, tmp, len);
   tmp[len] = '\0';
   return tmp;
@@ -767,7 +826,7 @@ substr (p, first_idx, last_idx)
 /* Search forward starting at START_IDX for the 2-char sequence
    (PRE_BRACKET_CHAR,']') in the string P of length P_LEN.  If such
    a sequence is found, return the index of the first character,
-   otherwise return -1.  P may contain zero bytes. */
+   otherwise return -1.  P may contain zero bytes.  */
 
 static int
 find_closing_delim (p, start_idx, p_len, pre_bracket_char)
@@ -789,7 +848,7 @@ find_closing_delim (p, start_idx, p_len, pre_bracket_char)
    If the string represents a negative value, a value larger
    than LONG_MAX, or if all LEN characters do not represent a
    valid integer, return non-zero and do not modify *VAL.
-   Otherwise, return zero and set *VAL to the converted value. */
+   Otherwise, return zero and set *VAL to the converted value.  */
 
 static int
 non_neg_strtol (s, len, val)
@@ -833,7 +892,7 @@ non_neg_strtol (s, len, val)
    found, return -1.  If a closing bracket is found and the
    second char is `*', but the string between the `*' and `]' isn't
    empty, an octal number, or a decimal number, print an error message
-   and return -2. */
+   and return -2.  */
 
 static int
 find_bracketed_repeat (p, start_idx, p_len, char_to_repeat, n)
@@ -859,13 +918,13 @@ find_bracketed_repeat (p, start_idx, p_len, char_to_repeat, n)
 	  *char_to_repeat = p[start_idx];
 	  if (digit_str_len == 0)
 	    {
-	      /* We've matched [c*] -- no explicit repeat count. */
+	      /* We've matched [c*] -- no explicit repeat count.  */
 	      *n = 0;
 	      return i;
 	    }
 
 	  /* Here, we have found [c*s] where s should be a string
-	     of octal or decimal digits. */
+	     of octal or decimal digits.  */
 	  digit_str = &p[start_idx + 2];
 	  if (non_neg_strtol (digit_str, digit_str_len, n))
 	    {
@@ -877,7 +936,7 @@ find_bracketed_repeat (p, start_idx, p_len, char_to_repeat, n)
 	  return i;
 	}
     }
-  return -1;			/* No bracket found. */
+  return -1;			/* No bracket found.  */
 }
 
 /* Convert string UNESACPED_STRING (which has been preprocessed to
@@ -890,7 +949,7 @@ find_bracketed_repeat (p, start_idx, p_len, char_to_repeat, n)
 	  decimal integer.
       - r-s Range of characters from `r' to `s'.  The second endpoint must
 	  not precede the first in the current collating sequence.
-      - c Any other character is interpreted as itself. */
+      - c Any other character is interpreted as itself.  */
 
 static int
 build_spec_list (unescaped_string, len, result)
@@ -908,7 +967,7 @@ build_spec_list (unescaped_string, len, result)
      constructs is classified as `normal'.  Since all multi-character
      constructs have at least 3 characters, any strings of length 2 or
      less are composed solely of normal characters.  Hence, the index of
-     the outer for-loop runs only as far as LEN-2. */
+     the outer for-loop runs only as far as LEN-2.  */
 
   for (i = 0; i < len - 2;)
     {
@@ -938,17 +997,17 @@ build_spec_list (unescaped_string, len, result)
 				     (closing_delim_idx - 1) - (i + 2) + 1);
 		  free (opnd_str);
 
-		  /* Return non-zero if append_*_class reports a problem. */
+		  /* Return non-zero if append_*_class reports a problem.  */
 		  if (parse_failed)
 		    return 1;
 		  else
 		    i = closing_delim_idx + 2;
 		  break;
 		}
-	      /* Else fall through.  This could be [:*] or [=*]. */
+	      /* Else fall through.  This could be [:*] or [=*].  */
 	    default:
 	      /* Determine whether this is a bracketed repeat range
-		 matching the RE \[.\*(dec_or_oct_number)?\]. */
+		 matching the RE \[.\*(dec_or_oct_number)?\].  */
 	      closing_bracket_idx = find_bracketed_repeat (p, i + 1,
 				       len, &char_to_repeat, &repeat_count);
 	      if (closing_bracket_idx >= 0)
@@ -963,7 +1022,7 @@ build_spec_list (unescaped_string, len, result)
 		}
 	      else
 		/* Found a string that looked like [c*n] but the
-		   numeric part was invalid. */
+		   numeric part was invalid.  */
 		return 1;
 	      break;
 	    }
@@ -972,9 +1031,9 @@ build_spec_list (unescaped_string, len, result)
 
 	  /* Here if we've tried to match [c*n], [:str:], and [=c=]
 	     and none of them fit.  So we still have to consider the
-	     range `[-c' (from `[' to `c'). */
+	     range `[-c' (from `[' to `c').  */
 	default:
-	  /* Look ahead one char for ranges like a-z. */
+	  /* Look ahead one char for ranges like a-z.  */
 	  if (p[i + 1] == '-')
 	    {
 	      if (append_range (result, p[i], p[i + 2]))
@@ -990,7 +1049,7 @@ build_spec_list (unescaped_string, len, result)
 	}
     }
 
-  /* Now handle the (2 or fewer) remaining characters p[i]..p[len - 1]. */
+  /* Now handle the (2 or fewer) remaining characters p[i]..p[len - 1].  */
   for (; i < len; i++)
     append_normal_char (result, p[i]);
 
@@ -1009,7 +1068,7 @@ build_spec_list (unescaped_string, len, result)
    CLASS is set to UL_NONE.  This value is used only when constructing
    the translation table to verify that any occurrences of upper and
    lower class constructs in the spec-strings appear in the same relative
-   positions. */
+   positions.  */
 
 static int
 get_next (s, class)
@@ -1096,7 +1155,7 @@ get_next (s, class)
       /* FIXME: this assumes that each character is alone in its own
 	 equivalence class (which appears to be correct for my
 	 LC_COLLATE.  But I don't know of any function that allows
-	 one to determine a character's equivalence class. */
+	 one to determine a character's equivalence class.  */
 
       return_val = p->u.equiv_code;
       s->state = NEW_ELEMENT;
@@ -1104,7 +1163,7 @@ get_next (s, class)
       break;
 
     case RE_REPEATED_CHAR:
-      /* Here, a repeat count of n == 0 means don't repeat at all. */
+      /* Here, a repeat count of n == 0 means don't repeat at all.  */
       assert (p->u.repeated_char.repeat_count >= 0);
       if (p->u.repeated_char.repeat_count == 0)
 	{
@@ -1132,14 +1191,18 @@ get_next (s, class)
     case RE_NO_TYPE:
       abort ();
       break;
+
+    default:
+      abort ();
+      break;
     }
   return return_val;
 }
 
 /* This is a minor kludge.  This function is called from
    get_spec_stats to determine the cardinality of a set derived
-   from a complemented string.  It's a kludge in that some of
-   the same operations are (duplicated) performed in set_initialize. */
+   from a complemented string.  It's a kludge in that some of the
+   same operations are (duplicated) performed in set_initialize.  */
 
 static int
 card_of_complement (s)
@@ -1168,7 +1231,7 @@ card_of_complement (s)
    construct in string2 to [c*n] where n is large enough (or 0) to give
    string2 the same length as string1.  For example, with the command
    tr a-z 'A[\n*]Z' on the second call to get_spec_stats, LEN_S1 would
-   be 26 and S (representing string2) would be converted to 'A[\n*24]Z'. */
+   be 26 and S (representing string2) would be converted to 'A[\n*24]Z'.  */
 
 static void
 get_spec_stats (s, len_s1)
@@ -1261,7 +1324,7 @@ spec_init (spec_list)
    one converts all \c and \ddd escapes to their one-byte representations.
    The second constructs a linked specification list, SPEC_LIST, of the
    characters and constructs that comprise the argument string.  If either
-   of these passes detects an error, this function returns non-zero. */
+   of these passes detects an error, this function returns non-zero.  */
 
 static int
 parse_str (s, spec_list)
@@ -1328,14 +1391,19 @@ string2_extend (s1, s2)
 
     case RE_EQUIV_CLASS:
       /* This shouldn't happen, because validate exits with an error
-	 if it finds an equiv class in string2 when translating. */
+	 if it finds an equiv class in string2 when translating.  */
       abort ();
       break;
 
     case RE_NO_TYPE:
       abort ();
       break;
+
+    default:
+      abort ();
+      break;
     }
+
   append_repeated_char (s2, char_to_repeat, s1->length - s2->length);
   s2->length = s1->length;
   return;
@@ -1347,7 +1415,7 @@ string2_extend (s1, s2)
    [c*0] construct appears in string2, it is converted to [c*n]
    with a value for n that makes s2->length == s1->length.  By
    the same token, if the --truncate-set1 option is not
-   given, S2 may be extended. */
+   given, S2 may be extended.  */
 
 static void
 validate (s1, s2)
@@ -1362,7 +1430,7 @@ validate (s1, s2)
 
   /* FIXME: it isn't clear from the POSIX spec that this is illegal,
      but in the spirit of the other restrictions put on translation
-     with character classes, this seems a logical interpretation. */
+     with character classes, this seems a logical interpretation.  */
   if (complement && s1->has_upper_or_lower)
     {
       error (1, 0,
@@ -1397,7 +1465,7 @@ validate (s1, s2)
 	      if (!truncate_set1)
 		{
 		  /* string2 must be non-empty unless --truncate-set1 is
-		     given or string1 is empty. */
+		     given or string1 is empty.  */
 
 		  if (s2->length == 0)
 		    error (1, 0,
@@ -1411,7 +1479,7 @@ validate (s1, s2)
 		   "character classes may not be used when translating and complementing");
 	}
       else
-	/* Not translating. */
+	/* Not translating.  */
 	{
 	  if (s2->n_indefinite_repeats > 0)
 	    error (1, 0,
@@ -1426,7 +1494,7 @@ validate (s1, s2)
    processed and written to stdout.  The buffers are processed so that
    multiple consecutive occurrences of the same character in the input
    stream are replaced by a single occurrence of that character if the
-   character is in the squeeze set. */
+   character is in the squeeze set.  */
 
 static void
 squeeze_filter (buf, size, reader)
@@ -1471,13 +1539,13 @@ squeeze_filter (buf, size, reader)
 	     perhaps twice as much work in the worst cases where most
 	     of the input is removed by squeezing repeats.  But most
 	     uses of this functionality seem to remove less than 20-30%
-	     of the input. */
+	     of the input.  */
 	  for (; i < nr && !in_squeeze_set[buf[i]]; i += 2)
 	    ;			/* empty */
 
 	  /* There is a special case when i == nr and we've just
 	     skipped a character (the last one in buf) that is in
-	     the squeeze set. */
+	     the squeeze set.  */
 	  if (i == nr && in_squeeze_set[buf[i - 1]])
 	    --i;
 
@@ -1486,17 +1554,17 @@ squeeze_filter (buf, size, reader)
 	  else
 	    {
 	      char_to_squeeze = buf[i];
-	      /* We're about to output buf[begin..i]. */
+	      /* We're about to output buf[begin..i].  */
 	      out_len = i - begin + 1;
 
 	      /* But since we stepped by 2 in the loop above,
-		 out_len may be one too large. */
+		 out_len may be one too large.  */
 	      if (i > 0 && buf[i - 1] == char_to_squeeze)
 		--out_len;
 
 	      /* Advance i to the index of first character to be
 		 considered when looking for a char different from
-		 char_to_squeeze. */
+		 char_to_squeeze.  */
 	      ++i;
 	    }
 	  if (out_len > 0
@@ -1508,14 +1576,14 @@ squeeze_filter (buf, size, reader)
 	{
 	  /* Advance i to index of first char != char_to_squeeze
 	     (or to nr if all the rest of the characters in this
-	     buffer are the same as char_to_squeeze). */
+	     buffer are the same as char_to_squeeze).  */
 	  for (; i < nr && buf[i] == char_to_squeeze; i++)
 	    ;			/* empty */
 	  if (i < nr)
 	    char_to_squeeze = NOT_A_CHAR;
 	  /* If (i >= nr) we've squeezed the last character in this buffer.
 	     So now we have to read a new buffer and continue comparing
-	     characters against char_to_squeeze. */
+	     characters against char_to_squeeze.  */
 	}
     }
 }
@@ -1524,7 +1592,7 @@ squeeze_filter (buf, size, reader)
    contains at least one character not in the delete set.  Store
    in the array BUF, all characters from that buffer that are not
    in the delete set, and return the number of characters saved
-   or 0 upon EOF. */
+   or 0 upon EOF.  */
 
 static long
 read_and_delete (buf, size, not_used)
@@ -1543,7 +1611,7 @@ read_and_delete (buf, size, not_used)
 
   /* This enclosing do-while loop is to make sure that
      we don't return zero (indicating EOF) when we've
-     just deleted all the characters in a buffer. */
+     just deleted all the characters in a buffer.  */
   do
     {
       int i;
@@ -1560,7 +1628,7 @@ read_and_delete (buf, size, not_used)
       /* This first loop may be a waste of code, but gives much
          better performance when no characters are deleted in
          the beginning of a buffer.  It just avoids the copying
-         of buf[i] into buf[n_saved] when it would be a NOP. */
+         of buf[i] into buf[n_saved] when it would be a NOP.  */
 
       for (i = 0; i < nr && !in_delete_set[buf[i]]; i++)
 	/* empty */ ;
@@ -1577,7 +1645,7 @@ read_and_delete (buf, size, not_used)
 
 /* Read at most SIZE bytes from stdin into the array BUF.  Then
    perform the in-place and one-to-one mapping specified by the global
-   array `xlate'.  Return the number of characters read, or 0 upon EOF. */
+   array `xlate'.  Return the number of characters read, or 0 upon EOF.  */
 
 static long
 read_and_xlate (buf, size, not_used)
@@ -1613,7 +1681,7 @@ read_and_xlate (buf, size, not_used)
 /* Initialize a boolean membership set IN_SET with the character
    values obtained by traversing the linked list of constructs S
    using the function `get_next'.  If COMPLEMENT_THIS_SET is
-   non-zero the resulting set is complemented. */
+   non-zero the resulting set is complemented.  */
 
 static void
 set_initialize (s, complement_this_set, in_set)
@@ -1671,7 +1739,7 @@ main (argc, argv)
 	  break;
 
 	default:
-	  usage ();
+	  usage (2);
 	  break;
 	}
     }
@@ -1683,7 +1751,7 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   posix_pedantic = (getenv ("POSIXLY_CORRECT") != NULL);
 
@@ -1694,9 +1762,9 @@ main (argc, argv)
      no args at all.  POSIX doesn't specifically say anything
      either way, but it looks like they implied it's illegal
      by omission.  If you want to make tr do a slow imitation
-     of `cat' use `tr a a'. */
+     of `cat' use `tr a a'.  */
   if (non_option_args > 2)
-    usage ();
+    usage (2);
 
   if (!delete && !squeeze_repeats && non_option_args != 2)
     error (1, 0, "two strings must be given when translating");
@@ -1709,7 +1777,7 @@ deleting and squeezing repeats");
      only one string argument may be specified.  But POSIX
      says to ignore any string2 in this case, so if POSIXLY_CORRECT
      is set, pretend we never saw string2.  But I think
-     this deserves a fatal error, so that's the default. */
+     this deserves a fatal error, so that's the default.  */
   if ((delete && !squeeze_repeats) && non_option_args != 1)
     {
       if (posix_pedantic && non_option_args == 2)
@@ -1804,7 +1872,7 @@ deleting and squeezing repeats");
 	      if (!class_ok[(int) class_s1][(int) class_s2])
 		error (1, 0,
 		     "misaligned or mismatched upper and/or lower classes");
-	      /* The following should have been checked by validate... */
+	      /* The following should have been checked by validate...  */
 	      if (c2 == -1)
 		break;
 	      xlate[c1] = c2;

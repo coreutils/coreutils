@@ -161,7 +161,7 @@ main (argc, argv)
 
 	    default:
 	      error (0, 0, "unrecognized option `-%c'", *argv[1]);
-	      usage ();
+	      usage (1);
 	    }
 	  ++argv[1];
 	}
@@ -200,7 +200,7 @@ main (argc, argv)
 	  break;
 
 	default:
-	  usage ();
+	  usage (1);
 	}
     }
 
@@ -211,7 +211,7 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   if (number == -1)
     number = DEFAULT_NUMBER;
@@ -396,12 +396,32 @@ atou (str)
 }
 
 static void
-usage ()
+usage (status)
+     int status;
 {
-  fprintf (stderr, "\
-Usage: %s [-c N[bkm]] [-n N] [-qv] [--bytes=N[bkm]] [--lines=N]\n\
-       [--quiet] [--silent] [--verbose] [--help] [--version] [file...]\n\
-       %s [-Nbcklmqv] [--help] [--version] [file...]\n",
-       program_name, program_name);
-  exit (1);
+  if (status != 0)
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+  else
+    {
+      printf ("\
+Usage: %s [OPTION]... [FILE]...\n\
+",
+	      program_name);
+      printf ("\
+\n\
+  -c, --bytes SIZE         print first SIZE bytes\n\
+  -l, -n, --lines NUMBER   print first NUMBER lines instead of first 10\n\
+  -q, --quiet, --silent    never print headers giving file names\n\
+  -v, --verbose            always print headers giving file names\n\
+      --help               display this help and exit\n\
+      --version            output version information and exit\n\
+\n\
+SIZE may have a multiplier suffix: b for 512, k for 1K, m for 1 Meg.\n\
+If -VALUE is used as first OPTION, read -c VALUE when one of\n\
+multipliers bkm follows concatenated, else read -n VALUE.  With no\n\
+FILE, or when FILE is -, read standard input.\n\
+");
+    }
+  exit (status);
 }

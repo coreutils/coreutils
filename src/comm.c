@@ -99,7 +99,7 @@ main (argc, argv)
 	break;
 
       default:
-	usage ();
+	usage (1);
       }
 
   if (show_version)
@@ -109,10 +109,10 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   if (optind + 2 != argc)
-    usage ();
+    usage (1);
 
   exit (compare_files (argv + optind));
 }
@@ -251,9 +251,26 @@ writeline (line, stream, class)
 }
 
 static void
-usage ()
+usage (status)
+     int status;
 {
-  fprintf (stderr, "Usage: %s [-123] [--help] [--version] file1 file2\n",
-	   program_name);
-  exit (1);
+  if (status != 0)
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+  else
+    {
+      printf ("\
+Usage: %s [OPTION]... LEFT_FILE RIGHT_FILE\n\
+",
+	      program_name);
+      printf ("\
+\n\
+  -1              suppress lines unique to left file\n\
+  -2              suppress lines unique to right file\n\
+  -3              suppress lines unique to both files\n\
+      --help      display this help and exit\n\
+      --version   output version information and exit\n\
+");
+    }
+  exit (status);
 }

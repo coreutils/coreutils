@@ -147,7 +147,7 @@ main (argc, argv)
 	  break;
 
 	case '?':
-	  usage ();
+	  usage (1);
 	case 'a':
 	  convert_entire_line = 1;
 	  break;
@@ -174,7 +174,7 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   add_tabstop (tabval);
 
@@ -446,11 +446,29 @@ next_file (fp)
 }
 
 static void
-usage ()
+usage (status)
+     int status;
 {
-  fprintf (stderr, "\
-Usage: %s [-tab1[,tab2[,...]]] [-t tab1[,tab2[,...]]] [-a]\n\
-       [--tabs=tab1[,tab2[,...]]] [--all] [--help] [--version] [file...]\n",
-	   program_name);
-  exit (1);
+  if (status != 0)
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+  else
+    {
+      printf ("\
+Usage: %s [OPTION]... [FILE]...\n\
+",
+	      program_name);
+      printf ("\
+\n\
+  -a, --all           convert all whitespace, instead of initial whitespace\n\
+  -t, --tabs NUMBER   have tabs NUMBER characters apart, not 8\n\
+  -t, --tabs LIST     use comma separated list of explicit tab positions\n\
+      --help          display this help and exit\n\
+      --version       output version information and exit\n\
+\n\
+Instead of -t NUMBER or -t LIST, -NUMBER or -LIST may be used.  With\n\
+no FILE, or when FILE is -, read standard input.\n\
+");
+    }
+  exit (status);
 }

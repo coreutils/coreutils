@@ -160,7 +160,7 @@ main (argc, argv)
 	  break;
 
 	default:
-	  usage ();
+	  usage (1);
 	}
     }
 
@@ -171,7 +171,7 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   if (optind >= 2 && strcmp (argv[optind - 1], "--") != 0)
     {
@@ -188,7 +188,7 @@ main (argc, argv)
     outfile = argv[optind++];
 
   if (optind < argc)
-    usage ();			/* Extra arguments. */
+    usage (1);			/* Extra arguments. */
 
   check_file (infile, outfile);
 
@@ -345,13 +345,35 @@ writeline (line, stream, linecount)
 }
 
 static void
-usage ()
+usage (status)
+     int status;
 {
-  fprintf (stderr, "\
-Usage: %s [-cdu] [-f skip-fields] [-s skip-chars] [-w check-chars]\n\
-       [-#skip-fields] [+#skip-chars] [--count] [--repeated] [--unique]\n\
-       [--skip-fields=skip-fields] [--skip-chars=skip-chars]\n\
-       [--check-chars=check-chars] [--help] [--version] [infile] [outfile]\n",
-	   program_name);
-  exit (1);
+  if (status != 0)
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+  else
+    {
+      printf ("\
+Usage: %s [OPTION]... [INPUT [OUTPUT]]\n\
+",
+	      program_name);
+      printf ("\
+\n\
+  -c, --count           prefix lines by the number of occurrences\n\
+  -d, --repeated        only print duplicate lines\n\
+  -f, --skip-fields N   avoid comparing the N first fields\n\
+  -s, --skip-chars N    avoid comparing the N first characters\n\
+  -u, --unique          only print unique lines\n\
+  -w, --check-chars N   compare no more then N characters in lines\n\
+  -N                    same as -f N\n\
+  +N                    same as -s N\n\
+      --help            display this help and exit\n\
+      --version         output version information and exit\n\
+\n\
+A field is a run of whitespace, than non whitespace characters.\n\
+Fields are skipped before chars.  If OUTPUT not specified, writes to\n\
+standard output.  If INPUT not specified, reads from standard input.\n\
+");
+    }
+  exit (status);
 }

@@ -1,3 +1,31 @@
+Sat Oct 23 01:00:12 1993  Jim Meyering  (meyering@comco.com)
+
+	* cat.c, cksum.c, comm.c, csplit.c, cut.c, expand.c, fold.c, head.c,
+	join.c, nl.c, od.c, paste.c, pr.c, split.c, sum.c, tac.c, tail.c,
+	tr.c, unexpand.c, uniq.c, wc.c (usage): Add long --help.
+	Exit successfully for --help, non-zero for usage error.
+	From Francois Pinard.
+
+	* configure.in: Add AC_STAT_MACROS_BROKEN.
+	* system.h [AC_STAT_MACROS_BROKEN]: Test it.
+
+Fri Oct 22 23:26:17 1993  Jim Meyering  (meyering@comco.com)
+
+	* linebuffer.c, memchr.c [HAVE_CONFIG_H, CONFIG_BROKETS]: Include
+	<config.h> or "config.h".
+	* cat.c, cksum.c, comm.c, csplit.c, cut.c, expand.c, fold.c, head.c,
+	join.c, nl.c, od.c, paste.c, pr.c, sort.c, split.c, sum.c, tac.c,
+	tail.c, tr.c, unexpand.c, uniq.c, version.c, wc.c: Ditto.
+
+	* configure.in: Use AC_CONIG_HEADER.
+	* Makefile.in [DIST]: Add config.h.in.
+
+	* Makefile.in: Convert so make may be run from subdirectories.
+	Add dependencies on config.h.
+	* src/Makefile.in: Ditto.
+	* lib/Makefile.in: Ditto.
+	* man/Makefile.in: Ditto.
+
 Wed Oct 20 20:05:48 1993  Jim Meyering  (meyering@comco.com)
 
 	* memchr.c (memchr): Do the 32-bit assignment only if !LONG_64_BITS.

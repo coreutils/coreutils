@@ -661,12 +661,12 @@ main (argc, argv)
 	    }
 
 	  if (nfiles > 1)
-	    usage ();
+	    usage (1);
 	  names[nfiles++] = optarg;
 	  break;
 
 	case '?':
-	  usage ();
+	  usage (1);
 	}
       prev_optc = optc;
     }
@@ -678,10 +678,10 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   if (nfiles != 2)
-    usage ();
+    usage (1);
 
   fp1 = strcmp (names[0], "-") ? fopen (names[0], "r") : stdin;
   if (!fp1)
@@ -702,11 +702,38 @@ main (argc, argv)
 }
 
 static void
-usage ()
+usage (status)
+     int status;
 {
-  fprintf (stderr, "\
-Usage: %s [-a 1|2] [-v 1|2] [-e empty-string] [-o field-list...] [-t char]\n\
-       [-j[1|2] field] [-1 field] [-2 field] file1 file2\n",
-	   program_name);
-  exit (1);
+  if (status != 0)
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+  else
+    {
+      printf ("\
+Usage: %s [OPTION]... FILE1 FILE2\n\
+",
+	      program_name);
+      printf ("\
+\n\
+  -a SIDE          print unpairable lines coming from file SIDE\n\
+  -e EMPTY         replace missing input fields with EMPTY\n\
+  -j FIELD         join on this FIELD for both files\n\
+  -[j]SIDE FIELD   join on this FIELD for file SIDE\n\
+  -o FORMAT        obey FORMAT while constructing output line\n\
+  -t CHAR          use CHAR as input and output field separator\n\
+  -v SIDE          like -a SIDE, but suppress joined output lines\n\
+  --help           display this help and exit\n\
+  --version        output version information and exit\n\
+\n\
+When FILE1 or FILE2 is -, not both, read standard input.  SIDE is 1\n\
+for FILE1 or 2 for FILE2.  Unless -t CHAR is given, leading blanks\n\
+separate fields and are ignored, else fields are separated by CHAR.\n\
+Any FIELD is a field number counted from 1.  FORMAT is one or more\n\
+comma or blank separated specifications, each being `SIDE.FIELD'.\n\
+Default FORMAT outputs the join field, the remaining fields from\n\
+FILE1, the remaining fields from FILE2, all separated by CHAR.\n\
+");
+    }
+  exit (status);
 }

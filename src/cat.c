@@ -85,15 +85,37 @@ static int newlines2 = 0;
 static int exit_stat = 0;
 
 static void
-usage ()
+usage (status)
+     int status;
 {
-  fprintf (stderr, "\
-Usage: %s [-benstuvAET] [--number] [--number-nonblank] [--squeeze-blank]\n\
-       [--show-nonprinting] [--show-ends] [--show-tabs] [--show-all]\n\
-       [--help] [--version] [file...]\n",
-	   program_name);
-
-  exit (2);
+  if (status != 0)
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+  else
+    {
+      printf ("\
+Usage: %s [OPTION] [FILE]...\n\
+",
+	      program_name);
+      printf ("\
+\n\
+  -b, --number-nonblank    number nonblank output lines\n\
+  -e                       equivalent to -vE\n\
+  -n, --number             number all output lines\n\
+  -s, --squeeze-blank      never more than one single blank line\n\
+  -t                       equivalent to -vT\n\
+  -u                       (ignored)\n\
+  -v, --show-nonprinting   use ^ and M- notation, save for LFD and TAB\n\
+  -A, --show-all           equivalent to -vET\n\
+  -E, --show-ends          display $ at end of each line\n\
+  -T, --show-tabs          display TAB characters as ^I\n\
+      --help               display this help and exit\n\
+      --version            output version information and exit\n\
+\n\
+With no FILE, or when FILE is -, read standard input.\n\
+");
+    }
+  exit (status);
 }
 
 
@@ -231,7 +253,7 @@ main (argc, argv)
 	  break;
 
 	default:
-	  usage ();
+	  usage (2);
 	}
     }
 
@@ -242,7 +264,7 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   output_desc = 1;
 

@@ -307,15 +307,75 @@ static struct option const long_options[] =
 };
 
 static void
-usage ()
+usage (status)
+     int status;
 {
-  fprintf (stderr, "\
-Usage: %s [-abcdfhiloxv] [-s[bytes]] [-w[bytes]] [-A radix] [-j bytes]\n\
-       [-N bytes] [-t type] [--skip-bytes=bytes] [--address-radix=radix]\n\
-       [--read-bytes=bytes] [--format=type] [--output-duplicates]\n\
-       [--strings[=bytes]] [--width[=bytes]] [--help] [--version] [file...]\n",
-	   program_name);
-  exit (1);
+  if (status != 0)
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+  else
+    {
+      printf ("\
+Usage: %s [OPTION]... [FILE]...\n\
+  or:  %s -C [FILE] [[+]OFFSET [[+]LABEL]]\n\
+",
+	      program_name, program_name);
+      printf ("\
+\n\
+  -A, --address-radix RADIX   decide how file offsets are printed\n\
+  -C, --compatible            trigger older syntax\n\
+  -N, --read-bytes BYTES      limit dump to BYTES input bytes per file\n\
+  -j, --skip-bytes BYTES      skip BYTES input bytes first on each file\n\
+  -s, --strings [BYTES]       output strings of at least BYTES graphic chars\n\
+  -t, --format TYPE           select output format or formats\n\
+  -v, --output-duplicates     do not use * to mark line suppression\n\
+  -w, --width [BYTES]         output BYTES bytes per output line\n\
+      --help                  display this help and exit\n\
+      --version               output version information and exit\n\
+\n\
+Pre-POSIX format specifications may be intermixed, they accumulate:\n\
+  -a   same as -t a,  select named characters\n\
+  -b   same as -t oC, select octal bytes\n\
+  -c   same as -t c,  select ASCII characters or backslash escapes\n\
+  -d   same as -t u2, select unsigned decimal shorts\n\
+  -f   same as -t fF, select floats\n\
+  -h   same as -t x2, select hexadecimal shorts\n\
+  -i   same as -t d2, select decimal shorts\n\
+  -l   same as -t d4, select decimal longs\n\
+  -o   same as -t o2, select octal shorts\n\
+  -x   same as -t x2, select hexadecimal shorts\n\
+");
+      printf ("\
+\n\
+For older syntax (second call format), OFFSET means -j OFFSET.  LABEL\n\
+is the pseudo-address at first byte printed, incremented when dump is\n\
+progressing.  For OFFSET and LABEL, a 0x or 0X prefix indicates\n\
+hexadecimal, suffixes maybe . for octal and b multiply by 512.\n\
+\n\
+TYPE is made up of one or more of these specifications:\n\
+\n\
+  a          named character\n\
+  c          ASCII character or backslash escape\n\
+  d[SIZE]    signed decimal, SIZE bytes per integer\n\
+  f[SIZE]    floating point, SIZE bytes per integer\n\
+  o[SIZE]    octal, SIZE bytes per integer\n\
+  u[SIZE]    unsigned decimal, SIZE bytes per integer\n\
+  x[SIZE]    hexadecimal, SIZE bytes per integer\n\
+\n\
+SIZE is a number.  For TYPE in doux, SIZE may also be C for\n\
+sizeof(char), S for sizeof(short), I for sizeof(int) or L for\n\
+sizeof(long).  If TYPE is f, SIZE may also be F for sizeof(float), D\n\
+for sizeof(double) or L for sizeof(long double).\n\
+\n\
+RADIX is d for decimal, o for octal, x for hexadecimal or n for none.\n\
+BYTES is hexadecimal with 0x or 0X prefix, it is multiplied by 512\n\
+with b suffix, by 1024 with k and by 1048576 with m.  -s without a\n\
+number implies 3.  -w without a number implies 32.  By default, od\n\
+uses -A o -t d2 -w 16.  With no FILE, or when FILE is -, read standard\n\
+input.\n\
+");
+    }
+  exit (status);
 }
 
 /* Compute the greatest common denominator of U and V
@@ -1795,7 +1855,7 @@ main (argc, argv)
 	  break;
 
 	default:
-	  usage ();
+	  usage (1);
 	  break;
 	}
     }
@@ -1807,7 +1867,7 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   if (flag_dump_strings && n_specs > 0)
     error (2, 0, "no type may be specified when dumping strings");
@@ -1856,7 +1916,7 @@ main (argc, argv)
 	      error (0, 0,
 		     "invalid second operand in compatibility mode `%s'",
 		     argv[optind + 1]);
-	      usage ();
+	      usage (1);
 	    }
 	}
       else if (n_files == 3)
@@ -1876,14 +1936,14 @@ main (argc, argv)
 	    {
 	      error (0, 0,
 	      "in compatibility mode the last 2 arguments must be offsets");
-	      usage ();
+	      usage (1);
 	    }
 	}
       else
 	{
 	  error (0, 0,
 	     "in compatibility mode there may be no more than 3 arguments");
-	  usage ();
+	  usage (1);
 	}
 
       if (flag_pseudo_start)

@@ -204,15 +204,15 @@ main (argc, argv)
 
 	case 'h':
 	  if (build_type_arg (&header_type, &header_regex) != TRUE)
-	    usage ();
+	    usage (2);
 	  break;
 	case 'b':
 	  if (build_type_arg (&body_type, &body_regex) != TRUE)
-	    usage ();
+	    usage (2);
 	  break;
 	case 'f':
 	  if (build_type_arg (&footer_type, &footer_regex) != TRUE)
-	    usage ();
+	    usage (2);
 	  break;
 	case 'v':
 	  page_start = atoi (optarg);
@@ -243,7 +243,7 @@ main (argc, argv)
 	      if (optarg[1] == 'n')
 		lineno_format = FORMAT_LEFT;
 	      else
-		usage ();
+		usage (2);
 	      break;
 	    case 'r':
 	      switch (optarg[1])
@@ -255,12 +255,12 @@ main (argc, argv)
 		  lineno_format = FORMAT_RIGHT_LZ;
 		  break;
 		default:
-		  usage ();
+		  usage (2);
 		  break;
 		}
 	      break;
 	    default:
-	      usage ();
+	      usage (2);
 	      break;
 	    }
 	  break;
@@ -268,7 +268,7 @@ main (argc, argv)
 	  section_del = optarg;
 	  break;
 	default:
-	  usage ();
+	  usage (2);
 	  break;
 	}
     }
@@ -280,7 +280,7 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   /* Initialize the section delimiters.  */
   c = strlen (section_del);
@@ -563,17 +563,51 @@ build_type_arg (typep, regexp)
 /* Print a usage message and quit. */
 
 static void
-usage ()
+usage (status)
+     int status;
 {
-  fprintf (stderr, "\
-Usage: %s [-h header-style] [-b body-style] [-f footer-style] [-p] [-d cc]\n\
-       [-v start-number] [-i increment] [-l lines] [-s line-separator]\n\
-       [-w line-no-width] [-n {ln,rn,rz}] [--header-numbering=style]\n\
-       [--body-numbering=style] [--footer-numbering=style]\n\
-       [--first-page=number] [--page-increment=number] [--no-renumber]\n\
-       [--join-blank-lines=number] [--number-separator=string]\n\
-       [--number-width=number] [--number-format={ln,rn,rz}]\n\
-       [--section-delimiter=cc] [--help] [--version] [file...]\n",
-	   program_name);
-  exit (2);
+  if (status != 0)
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+  else
+    {
+      printf ("\
+Usage: %s [OPTION]... [FILE]...\n\
+",
+	      program_name);
+      printf ("\
+\n\
+  -b, --body-numbering STYLE      use STYLE for numbering body lines\n\
+  -d, --section-delimiter CC      use CC for separating logical pages\n\
+  -f, --footer-numbering STYLE    use STYLE for numbering footer lines\n\
+  -h, --header-numbering STYLE    use STYLE for numbering header lines\n\
+  -i, --page-increment NUMBER     line number increment at each line\n\
+  -l, --join-blank-lines NUMBER   group of NUMBER empty lines counted as one\n\
+  -n, --number-format FORMAT      insert line numbers according to FORMAT\n\
+  -p, --no-renumber               do not reset line numbers at logical pages\n\
+  -s, --number-separator STRING   add STRING after (possible) line number\n\
+  -v, --first-page NUMBER         first line number on each logical page\n\
+  -w, --number-width NUMBER       use NUMBER columns for line numbers\n\
+      --help                      display this help and exit\n\
+      --version                   output version information and exit\n\
+\n\
+By default, selects -v1 -i1 -l1 -sTAB -w6 -nrn -hn -bt -fn.  CC are\n\
+two delimiter characters for separating logical pages, a missing\n\
+second character implies :.  Type \\\\ for \\.  STYLE is one of:\n\
+\n\
+  a         number all lines\n\
+  t         number only nonempty lines\n\
+  n         number no lines\n\
+  pREGEXP   number only lines that contain a match for REGEXP\n\
+\n\
+FORMAT is one of:\n\
+\n\
+  ln   left justified, no leading zeros\n\
+  rn   right justified, no leading zeros\n\
+  rz   right justified, leading zeros\n\
+\n\
+With no FILE, or when FILE is -, read standard input.\n\
+");
+    }
+  exit (status);
 }

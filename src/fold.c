@@ -73,13 +73,26 @@ static struct option const longopts[] =
 };
 
 static void
-usage ()
+usage (status)
+     int status;
 {
-  fprintf (stderr, "\
-Usage: %s [-bs] [-w width] [--bytes] [--spaces] [--width=width]\n\
-       [--help] [--version] [file...]\n",
-	   program_name);
-  exit (1);
+  if (status != 0)
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+  else
+    {
+      printf ("\
+Usage: %s [OPTION]... [FILE]...\n\
+",
+	      program_name);
+      printf ("\
+\n\
+  -b, --bytes         count bytes rather than columns\n\
+  -s, --spaces        break at word boundaries\n\
+  -w, --width WIDTH   use WIDTH columns instead of 80\n\
+");
+    }
+  exit (status);
 }
 
 void
@@ -133,7 +146,7 @@ main (argc, argv)
 	  break;
 
 	default:
-	  usage ();
+	  usage (1);
 	}
     }
 
@@ -144,7 +157,7 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   if (argc == optind)
     errs |= fold_file ("-", width);

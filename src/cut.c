@@ -199,7 +199,7 @@ main (argc, argv)
 	case 'c':
 	  /* Build the byte list. */
 	  if (operating_mode != undefined_mode)
-	    usage ();
+	    usage (2);
 	  operating_mode = byte_mode;
 	  if (set_fields (optarg) == 0)
 	    error (2, 0, "no fields given");
@@ -208,7 +208,7 @@ main (argc, argv)
 	case 'f':
 	  /* Build the field list. */
 	  if (operating_mode != undefined_mode)
-	    usage ();
+	    usage (2);
 	  operating_mode = field_mode;
 	  if (set_fields (optarg) == 0)
 	    error (2, 0, "no fields given");
@@ -231,7 +231,7 @@ main (argc, argv)
 	  break;
 
 	default:
-	  usage ();
+	  usage (2);
 	}
     }
 
@@ -242,13 +242,13 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   if (operating_mode == undefined_mode)
-    usage ();
+    usage (2);
 
   if ((delimited_lines_only || delim != '\0') && operating_mode != field_mode)
-    usage ();
+    usage (2);
 
   if (delim == '\0')
     delim = '\t';
@@ -596,14 +596,39 @@ invalid_list ()
 }
 
 static void
-usage ()
+usage (status)
+     int status;
 {
-  fprintf (stderr, "\
-Usage: %s {-b byte-list,--bytes=byte-list} [-n] [file...] <options> \n\
-       %s {-c character-list,--characters=character-list} <options> [file...]\n\
-       %s {-f field-list,--fields=field-list} [-d delim] [-s] \n\
-       [--delimiter=delim] [--only-delimited] <options> [file...]\n\
-  Options: [--help] [--version]\n",
-	   program_name, program_name, program_name);
-  exit (2);
+  if (status != 0)
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+  else
+    {
+      printf ("\
+Usage: %s [OPTION]... [FILE]...\n\
+",
+	      program_name);
+      printf ("\
+\n\
+  -b, --bytes LIST        output only these bytes\n\
+  -c, --characters LIST   output only these characters\n\
+  -d, --delimiter DELIM   use DELIM instead of TAB for field delimiter\n\
+  -f, --fields LIST       output only these fields\n\
+  -n                      (ignored)\n\
+  -s, --only-delimited    do not print lines not containing delimiters\n\
+      --help              display this help and exit\n\
+      --version           output version information and exit\n\
+\n\
+Use one, and only one of -b, -c or -f.  Each LIST is made up of one\n\
+range, or many ranges separated by commas.  Each range is one of:\n\
+\n\
+  N     N'th byte, character or field, counted from 1\n\
+  N-    from N'th byte, character or field, to end of line\n\
+  N-M   from N'th to M'th (included) byte, character or field\n\
+  -M    from first to M'th (included) byte, character or field\n\
+\n\
+With no FILE, or when FILE is -, read standard input.\n\
+");
+    }
+  exit (status);
 }

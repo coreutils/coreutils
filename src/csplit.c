@@ -1517,7 +1517,7 @@ main (argc, argv)
 	break;
 
       default:
-	usage ();
+	usage (1);
       }
 
   if (show_version)
@@ -1527,10 +1527,10 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   if (optind >= argc - 1)
-    usage ();
+    usage (1);
 
   if (suffix)
     filename_space = (char *) xmalloc (strlen (prefix) + max_out (suffix) + 2);
@@ -1553,13 +1553,39 @@ main (argc, argv)
 }
 
 static void
-usage ()
+usage (status)
+     int status;
 {
-  fprintf (stderr, "\
-Usage: %s [-sqkz] [-f prefix] [-b suffix] [-n digits] [--prefix=prefix]\n\
-       [--suffix=suffix] [--digits=digits] [--quiet] [--silent]\n\
-       [--keep-files] [--abandon-null-files] [--help] [--version]\n\
-       file pattern...\n",
-	   program_name);
-  exit (1);
+  if (status != 0)
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+  else
+    {
+      printf ("\
+Usage: %s [OPTION]... FILE PATTERN...\n\
+",
+	      program_name);
+      printf ("\
+\n\
+  -b, --suffix=FORMAT     use sprintf FORMAT instead of %%d\n\
+  -f, --prefix=PREFIX     use PREFIX instead of xx\n\
+  -k, --keep-files        do not remove output files on errors\n\
+  -n, --digits=DIGITS     use specified number of digits instead of 2\n\
+  -s, --quiet, --silent   do not print counts of output file sizes\n\
+  -z, --abandon-null-files   remove empty output files\n\
+      --help              display this help and exit\n\
+      --version           output version information and exit\n\
+\n\
+Read standard input if FILE is -.  Each PATTERN may be:\n\
+\n\
+  INTEGER            copy up to but not including specified line number\n\
+  /REGEXP/[OFFSET]   copy up to but not including a matching line\n\
+  %%REGEXP%%[OFFSET]   skip to, but not including a matching line\n\
+  {INTEGER}          repeat the previous pattern specified number of times\n\
+  {*}                repeat the previous pattern as many times as possible\n\
+\n\
+A line OFFSET is a `+' or `-' (required) followed by a positive integer.\n\
+");
+    }
+  exit (status);
 }

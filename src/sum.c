@@ -65,11 +65,29 @@ static struct option const longopts[] =
 };
 
 static void
-usage ()
+usage (status)
+     int status;
 {
-  fprintf (stderr, "\
-Usage: %s [-rs] [--help] [--version] [--sysv] [file...]\n", program_name);
-  exit (1);
+  if (status != 0)
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+  else
+    {
+      printf ("\
+Usage: %s [OPTION]... [FILE]...\n\
+",
+	      program_name);
+      printf ("\
+\n\
+  -r              defeat -s, use BSD sum algorithm, use 1K blocks\n\
+  -s, --sysv      use System V sum algorithm, use 512 bytes blocks\n\
+      --help      display this help and exit\n\
+      --version   output version information and exit\n\
+\n\
+With no FILE, or when FILE is -, read standard input.\n\
+");
+    }
+  exit (status);
 }
 
 void
@@ -101,7 +119,7 @@ main (argc, argv)
 	  break;
 
 	default:
-	  usage ();
+	  usage (1);
 	}
     }
 
@@ -112,7 +130,7 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   files_given = argc - optind;
   if (files_given == 0)

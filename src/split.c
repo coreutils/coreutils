@@ -94,23 +94,43 @@ static struct option const longopts[] =
 };
 
 static void
-usage (reason)
-    char *reason;
+usage (status, reason)
+     int status;
+     char *reason;
 {
   if (reason != NULL)
     fprintf (stderr, "%s: %s\n", program_name, reason);
-  fprintf (stderr, "\
-Usage: %s [-lines] [-l lines] [-b bytes[bkm]] [-C bytes[bkm]]\n\
-       [--lines=lines] [--bytes=bytes[bkm]] [--line-bytes=bytes[bkm]]\n\
-       [--help] [--version] [infile [outfile-prefix]]\n",
-	   program_name);
-  exit (2);
+
+  if (status != 0)
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+  else
+    {
+      printf ("\
+Usage: %s [OPTION] [INPUT [PREFIX]]\n\
+",
+	      program_name);
+    printf ("\
+\n\
+  -C, --line-bytes SIZE   put at most SIZE bytes of lines per output file\n\
+  -b, --bytes SIZE        put SIZE bytes per output file\n\
+  -l, --lines NUMBER      put NUMBER lines per output file\n\
+  -NUMBER                 same as -l NUMBER\n\
+      --help              display this help and exit\n\
+      --version           output version information and exit\n\
+\n\
+SIZE may have a multiplier suffix: b for 512, k for 1K, m for 1 Meg.\n\
+With no PREFIX, use x.  With no INPUT, or when INPUT is -, read\n\
+standard input.\n\
+");
+    }
+  exit (status);
 }
 
 void
 main (argc, argv)
-    int argc;
-    char *argv[];
+     int argc;
+     char *argv[];
 {
   struct stat stat_buf;
   int num;			/* numeric argument from command line */
@@ -148,27 +168,27 @@ main (argc, argv)
 
 	case 'b':
 	  if (split_type != type_undef)
-	    usage ("cannot split in more than one way");
+	    usage (2, "cannot split in more than one way");
 	  split_type = type_bytes;
 	  if (convint (optarg, &accum) == -1)
-	    usage ("invalid number of bytes");
+	    usage (2, "invalid number of bytes");
 	  break;
 
 	case 'l':
 	  if (split_type != type_undef)
-	    usage ("cannot split in more than one way");
+	    usage (2, "cannot split in more than one way");
 	  split_type = type_lines;
 	  if (!isdigits (optarg))
-	    usage ("invalid number of lines");
+	    usage (2, "invalid number of lines");
 	  accum = atoi (optarg);
 	  break;
 
 	case 'C':
 	  if (split_type != type_undef)
-	    usage ("cannot split in more than one way");
+	    usage (2, "cannot split in more than one way");
 	  split_type = type_byteslines;
 	  if (convint (optarg, &accum) == -1)
-	    usage ("invalid number of bytes");
+	    usage (2, "invalid number of bytes");
 	  break;
 
 	case '0':
@@ -182,7 +202,7 @@ main (argc, argv)
 	case '8':
 	case '9':
 	  if (split_type != type_undef && split_type != type_digits)
-	    usage ("cannot split in more than one way");
+	    usage (2, "cannot split in more than one way");
 	  if (digits_optind != 0 && digits_optind != this_optind)
 	    accum = 0;		/* More than one number given; ignore other. */
 	  digits_optind = this_optind;
@@ -191,7 +211,7 @@ main (argc, argv)
 	  break;
 
 	default:
-	  usage ((char *)0);
+	  usage (2, (char *)0);
 	}
     }
 
@@ -202,7 +222,7 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ((char *)0);
+    usage (0, (char *)0);
 
   /* Handle default case.  */
   if (split_type == type_undef)
@@ -212,7 +232,7 @@ main (argc, argv)
     }
 
   if (accum < 1)
-    usage ("invalid number");
+    usage (2, "invalid number");
   num = accum;
 
   /* Get out the filename arguments.  */
@@ -224,7 +244,7 @@ main (argc, argv)
     outbase = argv[optind++];
 
   if (optind < argc)
-    usage ("too many arguments");
+    usage (2, "too many arguments");
 
   /* Open the input file.  */
   if (!strcmp (infile, "-"))
@@ -289,7 +309,7 @@ main (argc, argv)
 
 static int
 isdigits (str)
-    char *str;
+     char *str;
 {
   do
     {
@@ -343,9 +363,9 @@ convint (str, val)
 
 static void
 bytes_split (nchars, buf, bufsize)
-    int nchars;
-    char *buf;
-    int bufsize;
+     int nchars;
+     char *buf;
+     int bufsize;
 {
   int n_read;
   int new_file_flag = 1;
@@ -390,9 +410,9 @@ bytes_split (nchars, buf, bufsize)
 
 static void
 lines_split (nlines, buf, bufsize)
-    int nlines;
-    char *buf;
-    int bufsize;
+     int nlines;
+     char *buf;
+     int bufsize;
 {
   int n_read;
   char *bp, *bp_out, *eob;
@@ -439,7 +459,7 @@ lines_split (nlines, buf, bufsize)
 
 static void
 line_bytes_split (nchars)
-    int nchars;
+     int nchars;
 {
   int n_read;
   char *bp;
@@ -490,9 +510,9 @@ line_bytes_split (nchars)
 
 static void
 cwrite (new_file_flag, bp, bytes)
-    int new_file_flag;
-    char *bp;
-    int bytes;
+     int new_file_flag;
+     char *bp;
+     int bytes;
 {
   if (new_file_flag)
     {
@@ -514,8 +534,8 @@ cwrite (new_file_flag, bp, bytes)
 
 static int
 stdread (buf, nchars)
-    char *buf;
-    int nchars;
+     char *buf;
+     int nchars;
 {
   int n_read;
   int to_be_read = nchars;

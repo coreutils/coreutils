@@ -77,13 +77,31 @@ static struct option const longopts[] =
 };
 
 static void
-usage ()
+usage (status)
+     int status;
 {
-  fprintf (stderr, "\
-Usage: %s [-clw] [--bytes] [--chars] [--lines] [--words]\n\
-       [--help] [--version] [file...]\n",
-	   program_name);
-  exit (1);
+  if (status != 0)
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+  else
+    {
+      printf ("\
+Usage: %s [OPTION]... [FILE]...\n\
+",
+	      program_name);
+      printf ("\
+\n\
+  -c, --bytes, --chars   print the byte counts\n\
+  -l, --lines            print the newline counts\n\
+  -w, --words            print the word counts\n\
+      --help             display this help and exit\n\
+      --version          output version information and exit\n\
+\n\
+Print lines, words and bytes in that order.  If none of -clw, select\n\
+them all.  With no FILE, or when FILE is -, read standard input.\n\
+");
+    }
+  exit (status);
 }
 
 void
@@ -118,7 +136,7 @@ main (argc, argv)
 	break;
 
       default:
-	usage ();
+	usage (1);
       }
 
   if (show_version)
@@ -128,7 +146,7 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   if (print_lines + print_words + print_chars == 0)
     print_lines = print_words = print_chars = 1;
