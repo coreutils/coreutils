@@ -349,7 +349,7 @@ set_fields (fieldstr)
   struct range_pair *rp;
   unsigned int n_rp;
   unsigned int n_rp_allocated;
-  int i;
+  unsigned int i;
 
   n_rp = 0;
   n_rp_allocated = 16;
