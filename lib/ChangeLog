@@ -1,5 +1,17 @@
 2000-07-23  Paul Eggert  <eggert@twinsun.com>
 
+	* lib/quotearg.c:
+	Include <wchar.h> even if ! (HAVE_MBRTOWC && 1 < MB_LEN_MAX),
+	so that mbstate_t is always defined.
+
+	Do not inspect MB_LEN_MAX, since it's incorrectly defined to
+	be 1 in at least one GCC installation, and this configuration
+	error is likely to be common.  Ignoring MB_LEN_MAX hurts
+	performance on hosts that have mbrtowc but have only unibyte
+	locales, but I assume these hosts are rare.
+
+2000-07-23  Paul Eggert  <eggert@twinsun.com>
+
 	* lib/quotearg.c: Streamline by invoking multibyte code only if needed.
 	<wchar.h>: Include only if HAVE_MBRTOWC && 1 < MB_LEN_MAX.
 	(MB_CUR_MAX): Redefine to 1 if ! (HAVE_MBRTOWC && 1 < MB_LEN_MAX).
