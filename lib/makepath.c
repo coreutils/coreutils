@@ -1,5 +1,5 @@
 /* makepath.c -- Ensure that a directory path exists.
-   Copyright (C) 1990, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1990, 1997, 1998, 1999, 2000, 2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -338,7 +338,7 @@ make_path (const char *argpath,
 	     stat and mkdir process O(n^2) file name components.  */
 	  if (do_chdir && chdir (basename_dir) < 0)
 	    {
-	      error (0, errno, _("cannot chdir to directory, %s"),
+	      error (0, errno, _("cannot chdir to directory %s"),
 		     quote (dirpath));
 	      CLEANUP;
 	      return 1;
