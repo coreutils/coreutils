@@ -145,11 +145,34 @@ With no FILE, or when FILE is -, read standard input.\n\
   exit (status);
 }
 
-static RETSIGTYPE
-cleanup (int signum)
+static void
+cleanup (void)
 {
   unlink (tempfile);
+}
+
+static void
+cleanup_fatal (void)
+{
+  cleanup ();
   exit (1);
+}
+
+static RETSIGTYPE
+sighandler (int sig)
+{
+#ifdef SA_INTERRUPT
+  struct sigaction sigact;
+
+  sigact.sa_handler = SIG_DFL;
+  sigemptyset (&sigact.sa_mask);
+  sigact.sa_flags = 0;
+  sigaction (sig, &sigact, NULL);
+#else				/* !SA_INTERRUPT */
+  signal (sig, SIG_DFL);
+#endif				/* SA_INTERRUPT */
+  cleanup ();
+  kill (getpid (), sig);
 }
 
 /* Allocate N bytes of memory dynamically, with error checking.  */
@@ -163,7 +186,7 @@ xmalloc (unsigned int n)
   if (p == 0)
     {
       error (0, 0, _("virtual memory exhausted"));
-      cleanup (0);
+      cleanup_fatal ();
     }
   return p;
 }
@@ -177,7 +200,7 @@ xrealloc (char *p, unsigned int n)
   if (p == 0)
     {
       error (0, 0, _("virtual memory exhausted"));
-      cleanup (0);
+      cleanup_fatal ();
     }
   return p;
 }
@@ -188,7 +211,7 @@ xwrite (int desc, const char *buffer, int size)
   if (full_write (desc, buffer, size) < 0)
     {
       error (0, errno, _("write error"));
-      cleanup (0);
+      cleanup_fatal ();
     }
 }
 
@@ -295,7 +318,7 @@ tac (int fd, const char *file)
 	  else if (ret == -2)
 	    {
 	      error (0, 0, _("error in regular expression search"));
-	      cleanup (0);
+	      cleanup_fatal ();
 	    }
 	  else
 	    {
@@ -439,23 +462,23 @@ save_stdin (void)
   if (fd == -1)
     {
       error (0, errno, "%s", tempfile);
-      cleanup (0);
+      cleanup_fatal ();
     }
   while ((bytes_read = safe_read (0, buffer, read_size)) > 0)
     if (full_write (fd, buffer, bytes_read) < 0)
       {
 	error (0, errno, "%s", tempfile);
-	cleanup (0);
+	cleanup_fatal ();
       }
   if (close (fd) < 0)
     {
       error (0, errno, "%s", tempfile);
-      cleanup (0);
+      cleanup_fatal ();
     }
   if (bytes_read == -1)
     {
       error (0, errno, _("read error"));
-      cleanup (0);
+      cleanup_fatal ();
     }
 }
 
@@ -487,7 +510,7 @@ tac_stdin (void)
     return tac (0, _("standard input"));
 
 #ifdef SA_INTERRUPT
-  newact.sa_handler = cleanup;
+  newact.sa_handler = sighandler;
   sigemptyset (&newact.sa_mask);
   newact.sa_flags = 0;
 
@@ -513,19 +536,19 @@ tac_stdin (void)
 #else				/* !SA_INTERRUPT */
   sigint = signal (SIGINT, SIG_IGN);
   if (sigint != SIG_IGN)
-    signal (SIGINT, cleanup);
+    signal (SIGINT, sighandler);
 
   sighup = signal (SIGHUP, SIG_IGN);
   if (sighup != SIG_IGN)
-    signal (SIGHUP, cleanup);
+    signal (SIGHUP, sighandler);
 
   sigpipe = signal (SIGPIPE, SIG_IGN);
   if (sigpipe != SIG_IGN)
-    signal (SIGPIPE, cleanup);
+    signal (SIGPIPE, sighandler);
 
   sigterm = signal (SIGTERM, SIG_IGN);
   if (sigterm != SIG_IGN)
-    signal (SIGTERM, cleanup);
+    signal (SIGTERM, sighandler);
 #endif				/* SA_INTERRUPT */
 
   save_stdin ();
