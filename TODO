@@ -140,3 +140,6 @@ cp --recursive: perform dir traversals in source and dest hierarchy rather
 
 `tail --follow=name --retry' should elicit a diagnostic, since no file name
   was specified.
+
+du and wc: add an option to make them read NUL-delimited
+  file name arguments from a file.
