@@ -133,19 +133,6 @@ static int nls_month_found = 1;
 /* A string with one character, to enforce char collation */
 # define NLS_ONE_CHARACTER_STRING " "
 
-/* Map the characters in the "C" locale 1 - 1 to the locale view of
-   character order.  */
-static unsigned char nls_locale_map[UCHAR_LIM];
-
-/* A definition to map each character through the above translation
-   table, during sort.  */
-/* FIXME: WRONG!  use nls_locale_map?  */
-# define NLS_MAP(c)  UCHAR(c)
-
-#else
-
-/* No NLS the character value itself, represents the sorting order */
-# define NLS_MAP(c)  UCHAR(c)
 #endif
 
 /* The kind of blanks for '-b' to skip in various options. */
@@ -1675,7 +1662,7 @@ keycompare (const struct line *a, const struct line *b)
 		{							\
 		  if ((A) != (B))					\
 		    {							\
-		      diff = NLS_MAP(A) - NLS_MAP(B);	      		\
+		      diff = UCHAR (A) - UCHAR (B);	      		\
 		      break;						\
 		    }							\
 		  ++texta;						\
@@ -1717,8 +1704,8 @@ keycompare (const struct line *a, const struct line *b)
 	  {
 	    if (translate[UCHAR (*texta++)] != translate[UCHAR (*textb++)])
 	      {
-		diff = (NLS_MAP (translate[UCHAR (*--texta)])
-			- NLS_MAP (translate[UCHAR (*--textb)]));
+		diff = (UCHAR (translate[UCHAR (*--texta)])
+			- UCHAR (translate[UCHAR (*--textb)]));
 		break;
 	      }
 	  }
@@ -1773,7 +1760,7 @@ compare (register const struct line *a, register const struct line *b)
 	  return reverse ? -diff : diff;
 	}
 #endif
-      diff = NLS_MAP (*ap) - NLS_MAP (*bp);
+      diff = UCHAR (*ap) - UCHAR (*bp);
       if (diff == 0)
 	{
 	  diff = NLS_MEMCMP (ap, bp, mini);
