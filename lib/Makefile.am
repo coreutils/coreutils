@@ -201,10 +201,10 @@ EXTRA_DIST += alloca_.h
 
 # We need the following in order to create an <alloca.h> when the system
 # doesn't have one that works with the given compiler.
-all-local $(lib_OBJECTS): @ALLOCA_H@
+all-local $(lib_OBJECTS): $(ALLOCA_H)
 alloca.h: alloca_.h
-	cp $(srcdir)/alloca_.h alloca.h-t
-	mv alloca.h-t alloca.h
+	cp $(srcdir)/alloca_.h $@-t
+	mv $@-t $@
 MOSTLYCLEANFILES += alloca.h alloca.h-t
 
 BUILT_SOURCES += $(FNMATCH_H)
@@ -212,10 +212,10 @@ EXTRA_DIST += fnmatch_.h fnmatch_loop.c
 
 # We need the following in order to create an <fnmatch.h> when the system
 # doesn't have one that supports the required API.
-all-local $(lib_OBJECTS): @FNMATCH_H@
+all-local $(lib_OBJECTS): $(FNMATCH_H)
 fnmatch.h: fnmatch_.h
-	cp $(srcdir)/fnmatch_.h fnmatch.h-t
-	mv fnmatch.h-t fnmatch.h
+	cp $(srcdir)/fnmatch_.h $@-t
+	mv $@-t $@
 MOSTLYCLEANFILES += fnmatch.h fnmatch.h-t
 
 SUFFIXES = .sed .sin
