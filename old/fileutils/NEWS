@@ -1,5 +1,6 @@
 Changes in release 4.1:
 [4.0q]
+* install -D bug is fixed
 * chown now works properly when the specified login name contains a period
   This is at the expense of always looking up the entire USER.GROUP string
   as a login name first, and only then (upon failure) interpreting the `.'
