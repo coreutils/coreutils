@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.1k from Makefile.am
+# Makefile.in generated automatically by automake 1.1l from Makefile.am
 
 # Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -38,11 +38,10 @@ INSTALL_DATA = @INSTALL_DATA@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 transform = @program_transform_name@
 RANLIB = @RANLIB@
-POW_LIBM = @POW_LIBM@
+GENCAT = @GENCAT@
 PERL = @PERL@
+GMSGFMT = @GMSGFMT@
 CC = @CC@
-
-AUTOMAKE_OPTIONS = 1.1
 
 TESTS = md5-rfc
 EXTRA_DIST = $(TESTS)
@@ -62,8 +61,8 @@ TAR = tar
 default: all
 
 .SUFFIXES:
-$(srcdir)/Makefile.in: @MAINT@ Makefile.am $(top_srcdir)/configure.in 
-	cd $(top_srcdir) && automake --gnits Makefile
+$(srcdir)/Makefile.in: @MAINT@ Makefile.am $(top_srcdir)/configure.in $(ACLOCAL) 
+	cd $(top_srcdir) && automake --gnu tests/md5sum-test/Makefile
 
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status $(BUILT_SOURCES)
 	cd $(top_builddir) \

@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.1k from Makefile.am
+# Makefile.in generated automatically by automake 1.1l from Makefile.am
 
 # Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -38,10 +38,9 @@ INSTALL_DATA = @INSTALL_DATA@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 transform = @program_transform_name@
 RANLIB = @RANLIB@
-POW_LIBM = @POW_LIBM@
+GENCAT = @GENCAT@
+GMSGFMT = @GMSGFMT@
 CC = @CC@
-
-AUTOMAKE_OPTIONS = 1.1c
 
 x = cut
 t = t1 t2 t3 t4 t5 t6 t7 t8 t9 tA tB tC tD ta tb tc td te tf tg th \
@@ -52,8 +51,8 @@ exp = $(t:=.exp)
 out = $(t:=.out)
 err = $(t:=.err)
 
-EXTRA_DIST = build-script.pl Test.pm $x-tests $(in) $(exp)
-noinst_SCRIPTS = $x-tests build-script
+EXTRA_DIST = mk-script.pl Test.pm $x-tests $(in) $(exp)
+noinst_SCRIPTS = $x-tests
 
 PERL = @PERL@
 editpl = sed -e 's,@''PERL''@,$(PERL),g' -e 's,@''srcdir''@,@srcdir@,g'
@@ -83,8 +82,8 @@ default: all
 
 .SUFFIXES:
 .SUFFIXES: .pl
-$(srcdir)/Makefile.in: @MAINT@ Makefile.am $(top_srcdir)/configure.in 
-	cd $(top_srcdir) && automake --gnits Makefile
+$(srcdir)/Makefile.in: @MAINT@ Makefile.am $(top_srcdir)/configure.in $(ACLOCAL) 
+	cd $(top_srcdir) && automake --gnu tests/cut-test/Makefile
 
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status $(BUILT_SOURCES)
 	cd $(top_builddir) \
@@ -179,8 +178,8 @@ mostlyclean-generic distclean-generic clean-generic \
 maintainer-clean-generic clean mostlyclean distclean maintainer-clean
 
 
-$x-tests: @MAINT@build-script Test.pm
-	./build-script ../../src/$x > $@.n
+$x-tests: @MAINT@mk-script Test.pm
+	./mk-script ../../src/$x > $@.n
 	mv $@.n $@
 	chmod 755 $@
 
