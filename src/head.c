@@ -254,7 +254,7 @@ elide_tail_bytes_pipe (const char *filename, int fd, uintmax_t n_elide_0)
       size_t n_to_read = READ_BUFSIZE + n_elide;
       unsigned int i;
       char *b[2];
-      b[0] = xmalloc (2 * n_to_read);
+      b[0] = xnmalloc (2, n_to_read);
       b[1] = b[0] + n_to_read;
 
       for (i = 0; ! eof ; i = !i)
