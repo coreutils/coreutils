@@ -1,3 +1,18 @@
+Tue Dec 17 16:48:51 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* tests/join-test/Makefile.am (.pl): Make generated file read-only so
+	I don't accidentally modify it instead of the one with the .pl suffix.
+
+	* acinclude.m4 (jm_SYS_PROC_UPTIME): Require AC_PROG_CC, rather than
+	now-obsolete AC_C_CROSS.
+	(jm_FUNC_MKTIME): When redefining, use rpl_ prefix, not gnu_ one
+	since there's nothing GNU-specific about the replacement.  Contrast
+	with gnu_ prefix added to strftime.
+	(jm_FUNC_MEMCMP): New macro.
+	* configure.in: Use jm_FUNC_MEMCMP instead of AM_FUNC_MEMCMP.
+	* acconfig.h: Add memcmp.
+	* README: Remove warning about memcmp.  The new macro handles it.
+
 Mon Dec 16 23:03:27 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* tests/Makefile.am (pkgdata_DATA): Remove unnecessary assignment.
