@@ -1,6 +1,11 @@
-2004-10-05  Paul Eggert  <eggert@cs.ucla.edu>
+2004-10-12  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	* src/dircolors.hin: Add .flac as an audio suffix.
+	From Jesus Climent in http://bugs.debian.org/276149.
+
+2004-10-05  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/ls.c (ignore_mode): Renamed from ignore, to avoid shadowing
 	problems.  All uses changed.
