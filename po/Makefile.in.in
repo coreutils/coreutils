@@ -90,7 +90,7 @@ all: all-@USE_NLS@
 all-yes all-gettext: cat-id-tbl.c $(CATALOGS) @MAINT@$(GMOFILES)
 all-no:
 
-$(PACKAGE).pot: $(POTFILES)
+$(PACKAGE).pot: @MAINT@$(POTFILES)
 	$(XGETTEXT) --default-domain=$(PACKAGE) --directory=$(top_srcdir) \
 	  --add-comments --keyword=_ --keyword=N_ \
 	  --files-from=$(srcdir)/POTFILES.in
