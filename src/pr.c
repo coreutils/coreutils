@@ -133,8 +133,8 @@
 
   -s[STRING]	Separate columns by any string STRING.
                 Don't use -s "STRING".
-		without -s: default separator 'space' s used,
-		same as -s" ",
+                without -s: Default separator `TAB' with -j and `space'
+                otherwise (same as -s\" \"),
 		with -s only: no separator is used, same as -s"".
 	        Quotes should be used with blanks and some shell active
 		characters.
@@ -547,10 +547,12 @@ static int ignore_failed_opens = FALSE;
 static int use_col_separator = FALSE;
 
 /* String used to separate columns if the -s option has been specified.
-   Default value with -s is a space. */
+   Default without -s but together with one of the column options
+   -a|COLUMN|-m is a `space' and with the -j option a `tab'. */
 static char *col_sep_string;
 static int col_sep_length = 0;
 static char *column_separator = " ";
+static char *line_separator = "\t";
 
 /* Number of separator characters waiting to be printed as soon as we
    know that we have any input remaining to be printed. */
@@ -975,7 +977,11 @@ init_parameters (int number_of_files)
     {
       if (!use_col_separator)
 	{
-	  col_sep_string = column_separator;
+	  /* Use default separator */
+	  if (join_lines)
+	    col_sep_string = line_separator;
+	  else
+	    col_sep_string = column_separator;
 	  col_sep_length = 1;
 	  use_col_separator = TRUE;
 	}
@@ -2451,10 +2457,10 @@ Paginate or columnate FILE(s) for printing.\n\
                     page printed (see +FIRST_PAGE)\n\
   -o MARGIN         offset each line with MARGIN spaces (do not affect -w)\n\
   -r                inhibit warning when a file cannot be opened\n\
-  -s[STRING]        separate columns by an optional STRING\n\
-                    don't use -s \"STRING\" \n\
-                    without -s: default sep. \'space\' used, same as -s\" \"\n\
-                    -s only: no separator used, same as -s\"\" \n\
+  -s[STRING]        separate columns by an optional STRING, don't use\n\
+                    -s \"STRING\", -s only: No separator used (same as -s\"\"),\n\
+                    without -s: Default separator \'TAB\' with -j and \'space\'\n\
+                    otherwise (same as -s\" \")\n\
   -t                inhibit page headers and trailers\n\
   -T                inhibit page headers and trailers, eliminate any page\n\
                     layout by form feeds set in input files\n\
