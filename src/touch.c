@@ -190,7 +190,7 @@ touch (char *file)
   return 0;
 }
 
-static void
+void
 usage (int status)
 {
   if (status != 0)
@@ -285,12 +285,8 @@ main (int argc, char **argv)
 	  break;
 
 	case CHAR_MAX + 1:	/* --time */
-	  {
-	    int mask;
-	    XARGMATCH (&mask, "--time", optarg, time_args, time_masks,
-		       usage (1));
-	    change_times |= mask;
-	  }
+	  change_times |= XARGMATCH ("--time", optarg,
+				     time_args, time_masks);
 	  break;
 
 	default:
