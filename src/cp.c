@@ -769,7 +769,7 @@ main (int argc, char **argv)
 	  break;
 
 	case 'i':
-	  x.interactive = I_ON;
+	  x.interactive = I_ASK_USER;
 	  break;
 
 	case 'l':
