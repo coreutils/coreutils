@@ -74,7 +74,7 @@ static struct option const longopts[] =
 
   {"path", no_argument, NULL, 'p'},
   {"parents", no_argument, NULL, 'p'},
-  {"verbose", no_argument, NULL, 14},
+  {"verbose", no_argument, NULL, 'v'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
@@ -152,7 +152,7 @@ Remove the DIRECTORY(ies), if they are empty.\n\
   -p, --parents   remove DIRECTORY, then try to remove each directory\n\
                   component of that path name.  E.g., `rmdir -p a/b/c' is\n\
                   similar to `rmdir a/b/c a/b a'.\n\
-      --verbose   output a diagnostic for every directory processed\n\
+  -v, --verbose   output a diagnostic for every directory processed\n\
       --help      display this help and exit\n\
       --version   output version information and exit\n\
 "));
@@ -176,7 +176,7 @@ main (int argc, char **argv)
 
   empty_paths = 0;
 
-  while ((optc = getopt_long (argc, argv, "p", longopts, NULL)) != -1)
+  while ((optc = getopt_long (argc, argv, "pv", longopts, NULL)) != -1)
     {
       switch (optc)
 	{
@@ -188,7 +188,7 @@ main (int argc, char **argv)
 	case IGNORE_FAIL_ON_NON_EMPTY_OPTION:
 	  ignore_fail_on_non_empty = 1;
 	  break;
-	case 14:
+	case 'v':
 	  verbose = 1;
 	  break;
 	case_GETOPT_HELP_CHAR;
