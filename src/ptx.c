@@ -166,7 +166,6 @@ static const char **input_file_name;	/* array of text input file names */
 static int *file_line_count;	/* array of `total_line_count' values at end */
 
 static BLOCK text_buffer;	/* file to study */
-static char *text_buffer_maxend;/* allocated end of text_buffer */
 
 /* SKIP_NON_WHITE used only for getting or skipping the reference.  */
 
