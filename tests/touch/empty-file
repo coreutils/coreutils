@@ -31,14 +31,14 @@ if test $framework_failure = 1; then
 fi
 
 sleep 2
-for d in $dirs; do
+for d in $TOUCH_DIR_LIST; do
   $TOUCH $d/a || fail=1
   set x `$LS -t $d/a $d/b`
   test "$*" = "x $d/a $d/b" || fail=1
 done
 
 sleep 2
-for d in $dirs; do
+for d in $TOUCH_DIR_LIST; do
   $TOUCH $d/b
   set x `$LS -t $d/a $d/b`
   test "$*" = "x $d/b $d/a" || fail=1
