@@ -1,3 +1,7 @@
+2003-05-14  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (head invocation): Document --bytes=-N and --lines=-N.
+
 2003-05-13  Paul Eggert  <eggert@twinsun.com>
 
 	* coreutils.texi (uniq invocation, squeezing, The uniq command):
