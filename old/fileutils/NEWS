@@ -3,6 +3,7 @@ Changes in release 4.1:
 * cp's --version-control option is deprecated.  Use the new optional argument
   to --backup (--backup[=CONTROL]) instead.  The old option still works, but
   now evokes a warning.
+* same for mv
 * cp, ln, and mv accept new option: --target-directory=DIR
 * chgrp accepts new option, --dereference.  --no-dereference is now the default.
 * New ls option --quoting-style=locale acts like --quoting-style=c, except
