@@ -237,13 +237,13 @@ Operating on sorted files
 * ptx invocation::              Produce a permuted index of file contents.
 * tsort invocation::            Topological sort.
 
-@code{ptx}: Produce permuted indexes
+@command{ptx}: Produce permuted indexes
 
 * General options in ptx::      Options which affect general program behavior.
 * Charset selection in ptx::    Underlying character set considerations.
 * Input processing in ptx::     Input fields, contexts, and keyword selection.
 * Output formatting in ptx::    Types of output format, and sizing the fields.
-* Compatibility in ptx::        The GNU extensions to @code{ptx}
+* Compatibility in ptx::        The GNU extensions to @command{ptx}
 
 Operating on fields within a line
 
@@ -257,7 +257,7 @@ Operating on characters
 * expand invocation::           Convert tabs to spaces.
 * unexpand invocation::         Convert spaces to tabs.
 
-@code{tr}: Translate, squeeze, and/or delete characters
+@command{tr}: Translate, squeeze, and/or delete characters
 
 * Character sets::              Specifying sets of characters.
 * Translating::                 Changing one characters to another.
@@ -325,7 +325,7 @@ Conditions
 * test invocation::               Check file types and compare values
 * expr invocation::               Evaluate expressions
 
-@code{test}: Check file types and compare values
+@command{test}: Check file types and compare values
 
 * File type tests::               File type tests
 * Access permission tests::       Access permission tests
@@ -333,12 +333,12 @@ Conditions
 * String tests::                  String tests
 * Numeric tests::                 Numeric tests
 
-@code{expr}: Evaluate expression
+@command{expr}: Evaluate expression
 
 * String expressions::         + : match substr index length
 * Numeric expressions::        + - * / %
 * Relations for expr::         | & < <= = == != >= >
-* Examples of expr::           Examples of using @code{expr}
+* Examples of expr::           Examples of using @command{expr}
 
 Redirection
 
@@ -357,7 +357,7 @@ Working context
 * printenv invocation::          Print all or some environment variables
 * tty invocation::               Print file name of terminal on standard input
 
-@code{stty}: Print or change terminal characteristics
+@command{stty}: Print or change terminal characteristics
 
 * Control::                     Control settings
 * Input::                       Input settings
@@ -383,15 +383,15 @@ System context
 * hostname invocation::          Print or set system name
 * hostid invocation::            Print numeric host identifier.
 
-@code{date}: Print or set system date and time
+@command{date}: Print or set system date and time
 
 * Time directives::              Time directives
 * Date directives::              Date directives
 * Literal directives::           Literal directives
 * Padding::                      Padding
 * Setting the time::             Setting the time
-* Options for date::             Options for @code{date}
-* Examples of date::             Examples of @code{date}
+* Options for date::             Options for @command{date}
+* Examples of date::             Examples of @command{date}
 
 Modified command invocation
 
@@ -435,10 +435,10 @@ Opening the software toolbox
 
 * Toolbox introduction::         Toolbox introduction
 * I/O redirection::              I/O redirection
-* The who command::              The @code{who} command
-* The cut command::              The @code{cut} command
-* The sort command::             The @code{sort} command
-* The uniq command::             The @code{uniq} command
+* The who command::              The @command{who} command
+* The cut command::              The @command{cut} command
+* The sort command::             The @command{sort} command
+* The uniq command::             The @command{uniq} command
 * Putting the tools together::   Putting the tools together
 
 GNU Free Documentation License
@@ -479,7 +479,7 @@ This manual was originally derived from the Unix man pages in the
 distributions, which were written by David MacKenzie and updated by Jim
 Meyering.  What you are reading now is the authoritative documentation
 for these utilities; the man pages are no longer being maintained.  The
-original @code{fmt} man page was written by Ross Paterson.  Fran@,{c}ois
+original @command{fmt} man page was written by Ross Paterson.  Fran@,{c}ois
 Pinard did the initial conversion to Texinfo format.  Karl Berry did the
 indexing, some reorganization, and editing of the results.  Brian
 Youmans of the Free Software Foundation office staff combined the
@@ -908,13 +908,13 @@ in some way.
 @end menu
 
 @node cat invocation
-@section @code{cat}: Concatenate and write files
+@section @command{cat}: Concatenate and write files
 
 @pindex cat
 @cindex concatenate and write files
 @cindex copying files
 
-@code{cat} copies each @var{file} (@samp{-} means standard input), or
+@command{cat} copies each @var{file} (@samp{-} means standard input), or
 standard input if none are given, to standard output.  Synopsis:
 
 @example
@@ -937,14 +937,14 @@ Equivalent to @option{-vET}.
 @opindex --binary
 @cindex binary and text I/O in cat
 On MS-DOS and MS-Windows only, read and write the files in binary mode.
-By default, @code{cat} on MS-DOS/MS-Windows uses binary mode only when
+By default, @command{cat} on MS-DOS/MS-Windows uses binary mode only when
 standard output is redirected to a file or a pipe; this option overrides
 that.  Binary file I/O is used so that the files retain their format
-(Unix text as opposed to DOS text and binary), because @code{cat} is
+(Unix text as opposed to DOS text and binary), because @command{cat} is
 frequently used as a file-copying program.  Some options (see below)
-cause @code{cat} to read and write files in text mode because in those
+cause @command{cat} to read and write files in text mode because in those
 cases the original file contents aren't important (e.g., when lines are
-numbered by @code{cat}, or when line endings should be marked).  This is
+numbered by @command{cat}, or when line endings should be marked).  This is
 so these options work as DOS/Windows users would expect; for example,
 DOS-style text files have their lines end with the CR-LF pair of
 characters, which won't be processed as an empty line by @option{-b} unless
@@ -955,7 +955,7 @@ the file is read in text mode.
 @opindex -b
 @opindex --number-nonblank
 Number all nonblank output lines, starting with 1.  On MS-DOS and
-MS-Windows, this option causes @code{cat} to read and write files in
+MS-Windows, this option causes @command{cat} to read and write files in
 text mode.
 
 @item -e
@@ -967,7 +967,7 @@ Equivalent to @option{-vE}.
 @opindex -E
 @opindex --show-ends
 Display a @samp{$} after the end of each line.  On MS-DOS and
-MS-Windows, this option causes @code{cat} to read and write files in
+MS-Windows, this option causes @command{cat} to read and write files in
 text mode.
 
 @item -n
@@ -975,7 +975,7 @@ text mode.
 @opindex -n
 @opindex --number
 Number all output lines, starting with 1.  On MS-DOS and MS-Windows,
-this option causes @code{cat} to read and write files in text mode.
+this option causes @command{cat} to read and write files in text mode.
 
 @item -s
 @itemx --squeeze-blank
@@ -983,7 +983,7 @@ this option causes @code{cat} to read and write files in text mode.
 @opindex --squeeze-blank
 @cindex squeezing blank lines
 Replace multiple adjacent blank lines with a single blank line.  On
-MS-DOS and MS-Windows, this option causes @code{cat} to read and write
+MS-DOS and MS-Windows, this option causes @command{cat} to read and write
 files in text mode.
 
 @item -t
@@ -1006,7 +1006,7 @@ Ignored; for Unix compatibility.
 @opindex --show-nonprinting
 Display control characters except for LFD and TAB using
 @samp{^} notation and precede characters that have the high bit set with
-@samp{M-}.  On MS-DOS and MS-Windows, this option causes @code{cat} to
+@samp{M-}.  On MS-DOS and MS-Windows, this option causes @command{cat} to
 read files and standard input in DOS binary mode, so the CR
 characters at the end of each line are also visible.
 
@@ -1014,12 +1014,12 @@ characters at the end of each line are also visible.
 
 
 @node tac invocation
-@section @code{tac}: Concatenate and write files in reverse
+@section @command{tac}: Concatenate and write files in reverse
 
 @pindex tac
 @cindex reversing files
 
-@code{tac} copies each @var{file} (@samp{-} means standard input), or
+@command{tac} copies each @var{file} (@samp{-} means standard input), or
 standard input if none are given, to standard output, reversing the
 records (lines by default) in each separately.  Synopsis:
 
@@ -1046,8 +1046,8 @@ precedes in the file.
 @itemx --regex
 @opindex -r
 @opindex --regex
-Treat the separator string as a regular expression.  Users of @code{tac}
-on MS-DOS/MS-Windows should note that, since @code{tac} reads files in
+Treat the separator string as a regular expression.  Users of @command{tac}
+on MS-DOS/MS-Windows should note that, since @command{tac} reads files in
 binary mode, each line of a text file might end with a CR/LF pair
 instead of the Unix-style LF.
 
@@ -1061,13 +1061,13 @@ Use @var{separator} as the record separator, instead of newline.
 
 
 @node nl invocation
-@section @code{nl}: Number lines and write files
+@section @command{nl}: Number lines and write files
 
 @pindex nl
 @cindex numbering lines
 @cindex line numbering
 
-@code{nl} writes each @var{file} (@samp{-} means standard input), or
+@command{nl} writes each @var{file} (@samp{-} means standard input), or
 standard input if none are given, to standard output, with line numbers
 added to some or all of the lines.  Synopsis:
 
@@ -1076,8 +1076,8 @@ nl [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
 @cindex logical pages, numbering on
-@code{nl} decomposes its input into (logical) pages; by default, the
-line number is reset to 1 at the top of each logical page.  @code{nl}
+@command{nl} decomposes its input into (logical) pages; by default, the
+line number is reset to 1 at the top of each logical page.  @command{nl}
 treats all of the input files as a single document; it does not reset
 line numbers or logical pages between files.
 
@@ -1106,7 +1106,7 @@ length of each string cannot be changed.
 
 A section delimiter is replaced by an empty line on output.  Any text
 that comes before the first section delimiter string in the input file
-is considered to be part of a body section, so @code{nl} treats a
+is considered to be part of a body section, so @command{nl} treats a
 file that contains no section delimiters as a single body section.
 
 The program accepts the following options.  Also see @ref{Common options}.
@@ -1181,13 +1181,13 @@ Select the line numbering format (default is @code{rn}):
 
 @table @samp
 @item ln
-@opindex ln @r{format for @code{nl}}
+@opindex ln @r{format for @command{nl}}
 left justified, no leading zeros;
 @item rn
-@opindex rn @r{format for @code{nl}}
+@opindex rn @r{format for @command{nl}}
 right justified, no leading zeros;
 @item rz
-@opindex rz @r{format for @code{nl}}
+@opindex rz @r{format for @command{nl}}
 right justified, leading zeros.
 @end table
 
@@ -1220,7 +1220,7 @@ Use @var{number} characters for line numbers (default 6).
 
 
 @node od invocation
-@section @code{od}: Write files in octal or other formats
+@section @command{od}: Write files in octal or other formats
 
 @pindex od
 @cindex octal dump of files
@@ -1228,7 +1228,7 @@ Use @var{number} characters for line numbers (default 6).
 @cindex ASCII dump of files
 @cindex file contents, dumping unambiguously
 
-@code{od} writes an unambiguous representation of each @var{file}
+@command{od} writes an unambiguous representation of each @var{file}
 (@samp{-} means standard input), or standard input if none are given.
 Synopses:
 
@@ -1238,7 +1238,7 @@ od --traditional [@var{file}] [[+]@var{offset} [[+]@var{label}]]
 @end example
 
 Each line of output consists of the offset in the input, followed by
-groups of data from the file. By default, @code{od} prints the offset in
+groups of data from the file. By default, @command{od} prints the offset in
 octal, and each group of file data is two bytes of input printed as a
 single octal number.
 
@@ -1307,7 +1307,7 @@ option @option{-s[@var{n}]}, where @var{n} also defaults to 3.
 Select the format in which to output the file data.  @var{type} is a
 string of one or more of the below type indicator characters.  If you
 include more than one type indicator character in a single @var{type}
-string, or use this option more than once, @code{od} writes one copy
+string, or use this option more than once, @command{od} writes one copy
 of each output line using each of the data types that you specified,
 in the order that you specified.
 
@@ -1372,7 +1372,7 @@ long double
 @opindex -v
 @opindex --output-duplicates
 Output consecutive lines that are identical.  By default, when two or
-more consecutive output lines would be identical, @code{od} outputs only
+more consecutive output lines would be identical, @command{od} outputs only
 the first line, and puts just an asterisk on the following line to
 indicate the elision.
 
@@ -1394,7 +1394,7 @@ without an argument; use @option{--width} instead.
 @end table
 
 The next several options are shorthands for format specifications.
-@sc{gnu} @code{od} accepts any combination of shorthands and format
+@sc{gnu} @command{od} accepts any combination of shorthands and format
 specification options.  These options accumulate.
 
 @table @samp
@@ -1442,7 +1442,7 @@ Output as hexadecimal shorts.  Equivalent to @option{-tx2}.
 
 @item --traditional
 @opindex --traditional
-Recognize the non-option arguments that traditional @code{od}
+Recognize the non-option arguments that traditional @command{od}
 accepted.  The following syntax:
 
 @smallexample
@@ -1481,21 +1481,21 @@ These commands reformat the contents of files.
 
 
 @node fmt invocation
-@section @code{fmt}: Reformat paragraph text
+@section @command{fmt}: Reformat paragraph text
 
 @pindex fmt
 @cindex reformatting paragraph text
 @cindex paragraphs, reformatting
 @cindex text, reformatting
 
-@code{fmt} fills and joins lines to produce output lines of (at most)
+@command{fmt} fills and joins lines to produce output lines of (at most)
 a given number of characters (75 by default).  Synopsis:
 
 @example
 fmt [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
-@code{fmt} reads from the specified @var{file} arguments (or standard
+@command{fmt} reads from the specified @var{file} arguments (or standard
 input if none are given), and writes to standard output.
 
 By default, blank lines, spaces between words, and indentation are
@@ -1507,12 +1507,12 @@ output.
 @cindex sentences and line-breaking
 @cindex Knuth, Donald E.
 @cindex Plass, Michael F.
-@code{fmt} prefers breaking lines at the end of a sentence, and tries to
+@command{fmt} prefers breaking lines at the end of a sentence, and tries to
 avoid line breaks after the first word of a sentence or before the last
 word of a sentence.  A @dfn{sentence break} is defined as either the end
 of a paragraph or a word ending in any of @samp{.?!}, followed by two
 spaces or end of line, ignoring any intervening parentheses or quotes.
-Like @TeX{}, @code{fmt} reads entire ``paragraphs'' before choosing line
+Like @TeX{}, @command{fmt} reads entire ``paragraphs'' before choosing line
 breaks; the algorithm is a variant of that in ``Breaking Paragraphs Into
 Lines'' (Donald E. Knuth and Michael F. Plass, @cite{Software---Practice
 and Experience}, 11 (1981), 1119--1184).
@@ -1561,7 +1561,7 @@ between sentences to two spaces.
 @opindex -@var{width}
 @opindex -w
 @opindex --width
-Fill output lines up to @var{width} characters (default 75).  @code{fmt}
+Fill output lines up to @var{width} characters (default 75).  @command{fmt}
 initially tries to make lines about 7% shorter than this, to give it
 room to balance line lengths.
 
@@ -1577,14 +1577,14 @@ leaving the code unchanged.
 
 
 @node pr invocation
-@section @code{pr}: Paginate or columnate files for printing
+@section @command{pr}: Paginate or columnate files for printing
 
 @pindex pr
 @cindex printing, preparing files for
 @cindex multicolumn output, generating
 @cindex merging files in parallel
 
-@code{pr} writes each @var{file} (@samp{-} means standard input), or
+@command{pr} writes each @var{file} (@samp{-} means standard input), or
 standard input if none are given, to standard output, paginating and
 optionally outputting in multicolumn format; optionally merges all
 @var{file}s, printing all in parallel, one per column.  Synopsis:
@@ -1878,9 +1878,9 @@ three column options (@option{-COLUMN}|@option{-a -COLUMN}|@option{-m}) unless
 Use @var{string} to separate output columns.  The @option{-S} option doesn't
 affect the @option{-W/-w} option, unlike the @option{-s} option which does.  It
 does not affect line truncation or column alignment.
-Without @option{-S}, and with @option{-J}, @code{pr} uses the default output
+Without @option{-S}, and with @option{-J}, @command{pr} uses the default output
 separator, TAB.
-Without @option{-S} or @option{-J}, @code{pr} uses a @samp{space}
+Without @option{-S} or @option{-J}, @command{pr} uses a @samp{space}
 (same as @option{-S"@w{ }"}).  With @option{-S@var{string}},
 @var{string} must be nonempty; @option{--sep-string} with no
 @var{string} is equivalent to @option{--sep-string=""}.
@@ -1946,13 +1946,13 @@ line is never truncated.
 
 
 @node fold invocation
-@section @code{fold}: Wrap input lines to fit in specified width
+@section @command{fold}: Wrap input lines to fit in specified width
 
 @pindex fold
 @cindex wrapping long input lines
 @cindex folding long input lines
 
-@code{fold} writes each @var{file} (@option{-} means standard input), or
+@command{fold} writes each @var{file} (@option{-} means standard input), or
 standard input if none are given, to standard output, breaking long
 lines.  Synopsis:
 
@@ -1960,11 +1960,11 @@ lines.  Synopsis:
 fold [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
-By default, @code{fold} breaks lines wider than 80 columns.  The output
+By default, @command{fold} breaks lines wider than 80 columns.  The output
 is split into as many lines as necessary.
 
 @cindex screen columns
-@code{fold} counts screen columns by default; thus, a tab may count more
+@command{fold} counts screen columns by default; thus, a tab may count more
 than one column, backspace decreases the column count, and carriage
 return sets the column to zero.
 
@@ -2018,13 +2018,13 @@ These commands output pieces of the input.
 @end menu
 
 @node head invocation
-@section @code{head}: Output the first part of files
+@section @command{head}: Output the first part of files
 
 @pindex head
 @cindex initial part of files, outputting
 @cindex first part of files, outputting
 
-@code{head} prints the first part (10 lines by default) of each
+@command{head} prints the first part (10 lines by default) of each
 @var{file}; it reads from standard input if no files are given or
 when given a @var{file} of @option{-}.  Synopsis:
 
@@ -2032,7 +2032,7 @@ when given a @var{file} of @option{-}.  Synopsis:
 head [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
-If more than one @var{file} is specified, @code{head} prints a
+If more than one @var{file} is specified, @command{head} prints a
 one-line header consisting of
 @example
 ==> @var{file name} <==
@@ -2083,12 +2083,12 @@ by a size letter (@samp{b}, @samp{k}, @samp{m}) as in @code{-c}, or
 this; use @option{-c @var{count}} or @option{-n @var{count}} instead.
 
 @node tail invocation
-@section @code{tail}: Output the last part of files
+@section @command{tail}: Output the last part of files
 
 @pindex tail
 @cindex last part of files, outputting
 
-@code{tail} prints the last part (10 lines by default) of each
+@command{tail} prints the last part (10 lines by default) of each
 @var{file}; it reads from standard input if no files are given or
 when given a @var{file} of @samp{-}.  Synopsis:
 
@@ -2096,7 +2096,7 @@ when given a @var{file} of @samp{-}.  Synopsis:
 tail [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
-If more than one @var{file} is specified, @code{tail} prints a
+If more than one @var{file} is specified, @command{tail} prints a
 one-line header consisting of
 @example
 ==> @var{file name} <==
@@ -2104,17 +2104,17 @@ one-line header consisting of
 @noindent
 before the output for each @var{file}.
 
-@cindex BSD @code{tail}
-@sc{gnu} @code{tail} can output any amount of data (some other versions of
-@code{tail} cannot).  It also has no @option{-r} option (print in
+@cindex BSD @command{tail}
+@sc{gnu} @command{tail} can output any amount of data (some other versions of
+@command{tail} cannot).  It also has no @option{-r} option (print in
 reverse), since reversing a file is really a different job from printing
-the end of a file; BSD @code{tail} (which is the one with @code{-r}) can
+the end of a file; BSD @command{tail} (which is the one with @code{-r}) can
 only reverse files that are at most as large as its buffer, which is
 typically 32k.  A more reliable and versatile way to reverse files is
-the @sc{gnu} @code{tac} command.
+the @sc{gnu} @command{tac} command.
 
 If any option-argument is a number @var{n} starting with a @samp{+},
-@code{tail} begins printing with the @var{n}th item from the start of
+@command{tail} begins printing with the @var{n}th item from the start of
 each file, instead of from the end.
 
 The program accepts the following options.  Also see @ref{Common options}.
@@ -2139,7 +2139,7 @@ by 1048576.
 Loop forever trying to read more characters at the end of the file,
 presumably because the file is growing.  This option is ignored when
 reading from a pipe.
-If more than one file is given, @code{tail} prints a header whenever it
+If more than one file is given, @command{tail} prints a header whenever it
 gets output from a different file, to indicate which file that output is
 from.
 
@@ -2154,10 +2154,10 @@ rotated (removed or renamed, then reopened).  In that case, use
 to see if it has been removed and recreated by some other program.
 
 No matter which method you use, if the tracked file is determined to have
-shrunk, @code{tail} prints a message saying the file has been truncated
+shrunk, @command{tail} prints a message saying the file has been truncated
 and resumes tracking the end of the file from the newly-determined endpoint.
 
-When a file is removed, @code{tail}'s behavior depends on whether it is
+When a file is removed, @command{tail}'s behavior depends on whether it is
 following the name or the descriptor.  When following by name, tail can
 detect that a file has been removed and gives a message to that effect,
 and if @option{--retry} has been specified it will continue checking
@@ -2196,7 +2196,7 @@ When following by name or by descriptor, you may specify the process ID,
 after that process terminates, tail will also terminate.  This will
 work properly only if the writer and the tailing process are running on
 the same machine.  For example, to save the output of a build in a file
-and to watch the file grow, if you invoke @code{make} and @code{tail}
+and to watch the file grow, if you invoke @code{make} and @command{tail}
 like this then the tail process will stop when your build completes.
 Without this option, you would have had to kill the @code{tail -f}
 process yourself.
@@ -2204,10 +2204,10 @@ process yourself.
 $ make >& makerr & tail --pid=$! -f makerr
 @end example
 If you specify a @var{pid} that is not in use or that does not correspond
-to the process that is writing to the tailed files, then @code{tail}
+to the process that is writing to the tailed files, then @command{tail}
 may terminate long before any @var{file}s stop growing or it may not
 terminate until long after the real writer has terminated.
-Note that @option{--pid} cannot be supported on some systems; @code{tail}
+Note that @option{--pid} cannot be supported on some systems; @command{tail}
 will print a warning if this is the case.
 
 @itemx --max-unchanged-stats=@var{n}
@@ -2256,13 +2256,13 @@ conformance}) does not allow these options; use @option{-c
 @var{count}} or @option{-n @var{count}} instead.
 
 @node split invocation
-@section @code{split}: Split a file into fixed-size pieces
+@section @command{split}: Split a file into fixed-size pieces
 
 @pindex split
 @cindex splitting a file into pieces
 @cindex pieces, splitting a file into
 
-@code{split} creates output files containing consecutive sections of
+@command{split} creates output files containing consecutive sections of
 @var{input} (standard input if none is given or @var{input} is
 @samp{-}).  Synopsis:
 
@@ -2270,7 +2270,7 @@ conformance}) does not allow these options; use @option{-c
 split [@var{option}] [@var{input} [@var{prefix}]]
 @end example
 
-By default, @code{split} puts 1000 lines of @var{input} (or whatever is
+By default, @command{split} puts 1000 lines of @var{input} (or whatever is
 left over for the last section), into each output file.
 
 @cindex output file name prefix
@@ -2329,13 +2329,13 @@ Write a diagnostic to standard error just before each output file is opened.
 
 
 @node csplit invocation
-@section @code{csplit}: Split a file into context-determined pieces
+@section @command{csplit}: Split a file into context-determined pieces
 
 @pindex csplit
 @cindex context splitting
 @cindex splitting a file into pieces by context
 
-@code{csplit} creates zero or more output files containing sections of
+@command{csplit} creates zero or more output files containing sections of
 @var{input} (standard input if @var{input} is @samp{-}).  Synopsis:
 
 @example
@@ -2349,7 +2349,7 @@ remaining line matches a given regular expression).  After every
 @var{pattern} has been matched, any remaining input is copied into one
 last output file.
 
-By default, @code{csplit} prints the number of bytes written to each
+By default, @command{csplit} prints the number of bytes written to each
 output file after it has been created.
 
 The types of pattern arguments are:
@@ -2388,7 +2388,7 @@ of two-digit decimal numbers from @samp{00} to @samp{99}.  In any case,
 concatenating the output files in sorted order by filename produces the
 original input file.
 
-By default, if @code{csplit} encounters an error or receives a hangup,
+By default, if @command{csplit} encounters an error or receives a hangup,
 interrupt, quit, or terminate signal, it removes any output files
 that it has created so far before it exits.
 
@@ -2556,27 +2556,27 @@ Print only the maximum line lengths.
 
 
 @node sum invocation
-@section @code{sum}: Print checksum and block counts
+@section @command{sum}: Print checksum and block counts
 
 @pindex sum
 @cindex 16-bit checksum
 @cindex checksum, 16-bit
 
-@code{sum} computes a 16-bit checksum for each given @var{file}, or
+@command{sum} computes a 16-bit checksum for each given @var{file}, or
 standard input if none are given or for a @var{file} of @samp{-}.  Synopsis:
 
 @example
 sum [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
-@code{sum} prints the checksum for each @var{file} followed by the
+@command{sum} prints the checksum for each @var{file} followed by the
 number of blocks in the file (rounded up).  If more than one @var{file}
 is given, file names are also printed (by default).  (With the
 @option{--sysv} option, corresponding file names are printed when there is
 at least one file argument.)
 
-By default, @sc{gnu} @code{sum} computes checksums using an algorithm
-compatible with BSD @code{sum} and prints file sizes in units of
+By default, @sc{gnu} @command{sum} computes checksums using an algorithm
+compatible with BSD @command{sum} and prints file sizes in units of
 1024-byte blocks.
 
 The program accepts the following options.  Also see @ref{Common options}.
@@ -2585,33 +2585,33 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @item -r
 @opindex -r
-@cindex BSD @code{sum}
+@cindex BSD @command{sum}
 Use the default (BSD compatible) algorithm.  This option is included for
-compatibility with the System V @code{sum}.  Unless @option{-s} was also
+compatibility with the System V @command{sum}.  Unless @option{-s} was also
 given, it has no effect.
 
 @item -s
 @itemx --sysv
 @opindex -s
 @opindex --sysv
-@cindex System V @code{sum}
+@cindex System V @command{sum}
 Compute checksums using an algorithm compatible with System V
-@code{sum}'s default, and print file sizes in units of 512-byte blocks.
+@command{sum}'s default, and print file sizes in units of 512-byte blocks.
 
 @end table
 
-@code{sum} is provided for compatibility; the @code{cksum} program (see
+@command{sum} is provided for compatibility; the @code{cksum} program (see
 next section) is preferable in new applications.
 
 
 @node cksum invocation
-@section @code{cksum}: Print CRC checksum and byte counts
+@section @command{cksum}: Print CRC checksum and byte counts
 
 @pindex cksum
 @cindex cyclic redundancy check
 @cindex CRC checksum
 
-@code{cksum} computes a cyclic redundancy check (CRC) checksum for each
+@command{cksum} computes a cyclic redundancy check (CRC) checksum for each
 given @var{file}, or standard input if none are given or for a
 @var{file} of @samp{-}.  Synopsis:
 
@@ -2619,17 +2619,17 @@ given @var{file}, or standard input if none are given or for a
 cksum [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
-@code{cksum} prints the CRC checksum for each file along with the number
+@command{cksum} prints the CRC checksum for each file along with the number
 of bytes in the file, and the filename unless no arguments were given.
 
-@code{cksum} is typically used to ensure that files
+@command{cksum} is typically used to ensure that files
 transferred by unreliable means (e.g., netnews) have not been corrupted,
-by comparing the @code{cksum} output for the received files with the
-@code{cksum} output for the original files (typically given in the
+by comparing the @command{cksum} output for the received files with the
+@command{cksum} output for the original files (typically given in the
 distribution).
 
 The CRC algorithm is specified by the @sc{posix} standard.  It is not
-compatible with the BSD or System V @code{sum} algorithms (see the
+compatible with the BSD or System V @command{sum} algorithms (see the
 previous section); it is more robust.
 
 The only options are @option{--help} and @option{--version}.  @xref{Common
@@ -2637,7 +2637,7 @@ options}.
 
 
 @node md5sum invocation
-@section @code{md5sum}: Print or check message-digests
+@section @command{md5sum}: Print or check message-digests
 
 @pindex md5sum
 @cindex 128-bit checksum
@@ -2645,11 +2645,11 @@ options}.
 @cindex fingerprint, 128-bit
 @cindex message-digest, 128-bit
 
-@code{md5sum} computes a 128-bit checksum (or @dfn{fingerprint} or
+@command{md5sum} computes a 128-bit checksum (or @dfn{fingerprint} or
 @dfn{message-digest}) for each specified @var{file}.
 If a @var{file} is specified as @samp{-} or if no files are given
-@code{md5sum} computes the checksum for the standard input.
-@code{md5sum} can also determine whether a file and checksum are
+@command{md5sum} computes the checksum for the standard input.
+@command{md5sum} can also determine whether a file and checksum are
 consistent. Synopses:
 
 @example
@@ -2681,12 +2681,12 @@ the default.
 Read filenames and checksum information from the single @var{file}
 (or from stdin if no @var{file} was specified) and report whether
 each named file and the corresponding checksum data are consistent.
-The input to this mode of @code{md5sum} is usually the output of
+The input to this mode of @command{md5sum} is usually the output of
 a prior, checksum-generating run of @samp{md5sum}.
 Each valid line of input consists of an MD5 checksum, a binary/text
 flag, and then a filename.
 Binary files are marked with @samp{*}, text with @samp{ }.
-For each such line, @code{md5sum} reads the named file and computes its
+For each such line, @command{md5sum} reads the named file and computes its
 MD5 checksum.  Then, if the computed message digest does not match the
 one on the line with the filename, the file is noted as having
 failed the test.  Otherwise, the file passes the test.
@@ -2697,7 +2697,7 @@ a warning is issued to standard error.
 Use the @option{--status} option to inhibit that output.
 If any listed file cannot be opened or read, if any valid line has
 an MD5 checksum inconsistent with the associated file, or if no valid
-line is found, @code{md5sum} exits with nonzero status.  Otherwise,
+line is found, @command{md5sum} exits with nonzero status.  Otherwise,
 it exits successfully.
 
 @itemx --status
@@ -2751,12 +2751,12 @@ These commands work with (or produce) sorted files.
 
 
 @node sort invocation
-@section @code{sort}: Sort text files
+@section @command{sort}: Sort text files
 
 @pindex sort
 @cindex sorting files
 
-@code{sort} sorts, merges, or compares all the lines from the given
+@command{sort} sorts, merges, or compares all the lines from the given
 files, or standard input if none are given or for a @var{file} of
 @samp{-}.  By default, @command{sort} writes the results to standard
 output.  Synopsis:
@@ -2765,7 +2765,7 @@ output.  Synopsis:
 sort [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
-@code{sort} has three modes of operation: sort (the default), merge,
+@command{sort} has three modes of operation: sort (the default), merge,
 and check for sortedness.  The following options change the operation
 mode:
 
@@ -2795,7 +2795,7 @@ works.
 @vindex LC_ALL
 @vindex LC_COLLATE
 A pair of lines is compared as follows: if any key fields have
-been specified, @code{sort} compares each pair of fields, in the
+been specified, @command{sort} compares each pair of fields, in the
 order specified on the command line, according to the associated
 ordering options, until a difference is found or no fields are left.
 Unless otherwise specified, all comparisons use the character collating
@@ -2811,27 +2811,27 @@ you get undefined behavior if @env{LC_CTYPE} is @code{ja_JP.PCK} but
 @env{LC_COLLATE} is @code{en_US.UTF-8}. }
 
 If any of the global options @samp{bdfgiMnr} are given but no key fields
-are specified, @code{sort} compares the entire lines according to the
+are specified, @command{sort} compares the entire lines according to the
 global options.
 
 Finally, as a last resort when all keys compare equal (or if no ordering
-options were specified at all), @code{sort} compares the entire lines.
+options were specified at all), @command{sort} compares the entire lines.
 The last resort comparison honors the @option{--reverse} (@option{-r})
 global option.  The @option{--stable} (@option{-s}) option disables this
 last-resort comparison so that lines in which all fields compare equal
 are left in their original relative order.  If no fields or global
 options are specified, @option{--stable} (@option{-s}) has no effect.
 
-@sc{gnu} @code{sort} (as specified for all @sc{gnu} utilities) has no limits on
+@sc{gnu} @command{sort} (as specified for all @sc{gnu} utilities) has no limits on
 input line length or restrictions on bytes allowed within lines.  In
 addition, if the final byte of an input file is not a newline, @sc{gnu}
-@code{sort} silently supplies one.  A line's trailing newline is not
+@command{sort} silently supplies one.  A line's trailing newline is not
 part of the line for comparison purposes.
 
-Upon any error, @code{sort} exits with a status of @samp{2}.
+Upon any error, @command{sort} exits with a status of @samp{2}.
 
 @vindex TMPDIR
-If the environment variable @env{TMPDIR} is set, @code{sort} uses its
+If the environment variable @env{TMPDIR} is set, @command{sort} uses its
 value as the directory for temporary files instead of @file{/tmp}.  The
 @option{--temporary-directory} (@option{-T}) option in turn overrides
 the environment variable.
@@ -3019,7 +3019,7 @@ than @var{size}.
 Use character @var{separator} as the field separator when finding the
 sort keys in each line.  By default, fields are separated by the empty
 string between a non-whitespace character and a whitespace character.
-That is, given the input line @w{@samp{ foo bar}}, @code{sort} breaks it
+That is, given the input line @w{@samp{ foo bar}}, @command{sort} breaks it
 into fields @w{@samp{ foo}} and @w{@samp{ bar}}.  The field separator is
 not considered to be part of either the field preceding or the field
 following.  But note that sort fields that extend to the end of the line,
@@ -3074,7 +3074,7 @@ characters.)
 
 @end table
 
-Historical (BSD and System V) implementations of @code{sort} have
+Historical (BSD and System V) implementations of @command{sort} have
 differed in their interpretation of some options, particularly
 @option{-b}, @option{-f}, and @option{-n}.  @sc{gnu} sort follows the @sc{posix}
 behavior, which is usually (but not always!) like the System V behavior.
@@ -3203,12 +3203,12 @@ sort -t : -b -k 5,5 -k 3,3n /etc/passwd
 
 
 @node uniq invocation
-@section @code{uniq}: Uniquify files
+@section @command{uniq}: Uniquify files
 
 @pindex uniq
 @cindex uniquify files
 
-@code{uniq} writes the unique lines in the given @file{input}, or
+@command{uniq} writes the unique lines in the given @file{input}, or
 standard input if nothing is given or for an @var{input} name of
 @samp{-}.  Synopsis:
 
@@ -3216,7 +3216,7 @@ standard input if nothing is given or for an @var{input} name of
 uniq [@var{option}]@dots{} [@var{input} [@var{output}]]
 @end example
 
-By default, @code{uniq} prints the unique lines in a sorted file, i.e.,
+By default, @command{uniq} prints the unique lines in a sorted file, i.e.,
 discards all but one of identical successive lines.  Optionally, it can
 instead show only lines that appear exactly once, or lines that appear
 more than once.
@@ -3225,7 +3225,7 @@ The input need not be sorted, but duplicate input lines are detected
 only if they are adjacent.  If you want to discard non-adjacent
 duplicate lines, perhaps you want to use @code{sort -u}.
 
-If no @var{output} file is specified, @code{uniq} writes to standard
+If no @var{output} file is specified, @command{uniq} writes to standard
 output.
 
 The program accepts the following options.  Also see @ref{Common options}.
@@ -3328,13 +3328,13 @@ compared.
 
 
 @node comm invocation
-@section @code{comm}: Compare two sorted files line by line
+@section @command{comm}: Compare two sorted files line by line
 
 @pindex comm
 @cindex line-by-line comparison
 @cindex comparing sorted files
 
-@code{comm} writes to standard output lines that are common, and lines
+@command{comm} writes to standard output lines that are common, and lines
 that are unique, to two input files; a file name of @samp{-} means
 standard input.  Synopsis:
 
@@ -3343,15 +3343,15 @@ comm [@var{option}]@dots{} @var{file1} @var{file2}
 @end example
 
 @vindex LC_COLLATE
-Before @code{comm} can be used, the input files must be sorted using the
+Before @command{comm} can be used, the input files must be sorted using the
 collating sequence specified by the @env{LC_COLLATE} locale.
 If an input file ends in a non-newline
-character, a newline is silently appended.  The @code{sort} command with
-no options always outputs a file that is suitable input to @code{comm}.
+character, a newline is silently appended.  The @command{sort} command with
+no options always outputs a file that is suitable input to @command{comm}.
 
 @cindex differing lines
 @cindex common lines
-With no options, @code{comm} produces three column output.  Column one
+With no options, @command{comm} produces three column output.  Column one
 contains lines unique to @var{file1}, column two contains lines unique
 to @var{file2}, and column three contains lines common to both files.
 Columns are separated by a single TAB character.
@@ -3364,19 +3364,19 @@ Columns are separated by a single TAB character.
 The options @option{-1}, @option{-2}, and @option{-3} suppress printing of
 the corresponding columns.  Also see @ref{Common options}.
 
-Unlike some other comparison utilities, @code{comm} has an exit
+Unlike some other comparison utilities, @command{comm} has an exit
 status that does not depend on the result of the comparison.
-Upon normal completion @code{comm} produces an exit code of zero.
+Upon normal completion @command{comm} produces an exit code of zero.
 If there is an error it exits with nonzero status.
 
 
 @node tsort invocation
-@section @code{tsort}: Topological sort
+@section @command{tsort}: Topological sort
 
 @pindex tsort
 @cindex topological sort
 
-@code{tsort} performs a topological sort on the given @var{file}, or
+@command{tsort} performs a topological sort on the given @var{file}, or
 standard input if no input file is given or for a @var{file} of
 @samp{-}.  For more details and some history, see @ref{tsort background}.
 Synopsis:
@@ -3385,7 +3385,7 @@ Synopsis:
 tsort [@var{option}] [@var{file}]
 @end example
 
-@code{tsort} reads its input as pairs of strings, separated by blanks,
+@command{tsort} reads its input as pairs of strings, separated by blanks,
 indicating a partial ordering.  The output is a total ordering that
 corresponds to the given partial ordering.
 
@@ -3451,7 +3451,7 @@ file_lines dump_remainder
 recheck pretty_name
 @end example
 
-then you can use @code{tsort} to produce an ordering of those
+then you can use @command{tsort} to produce an ordering of those
 functions that satisfies your requirement.
 
 @example
@@ -3475,7 +3475,7 @@ tail_forever
 main
 @end example
 
-@code{tsort} detects any cycles in the input and writes the first cycle
+@command{tsort} detects any cycles in the input and writes the first cycle
 encountered to standard error.
 
 Note that for a given partial ordering, generally there is no unique
@@ -3487,9 +3487,9 @@ The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
 
 @node tsort background
-@section @code{tsort}: Background
+@section @command{tsort}: Background
 
-@code{tsort} exists because very early versions of the Unix linker processed
+@command{tsort} exists because very early versions of the Unix linker processed
 an archive file exactly once, and in order.  As @code{ld} read each object in
 the archive, it decided whether it was needed in the program based on
 whether it defined any symbols which were undefined at that point in
@@ -3508,7 +3508,7 @@ script called @code{lorder}.  The GNU tools don't provide a version of
 lorder, as far as I know, but you can still find it in BSD
 distributions.
 
-Then you ran @code{tsort} over the @code{lorder} output, and you used the
+Then you ran @command{tsort} over the @code{lorder} output, and you used the
 resulting sort to define the order in which you added objects to the archive.
 
 This whole procedure has been obsolete since about 1980, because
@@ -3522,11 +3522,11 @@ the way the linker handled archive files, which has since been solved
 in different ways.
 
 @node ptx invocation
-@section @code{ptx}: Produce permuted indexes
+@section @command{ptx}: Produce permuted indexes
 
 @pindex ptx
 
-@code{ptx} reads a text file and essentially produces a permuted index, with
+@command{ptx} reads a text file and essentially produces a permuted index, with
 each keyword in its context.  The calling sketch is either one of:
 
 @example
@@ -3538,7 +3538,7 @@ The @option{-G} (or its equivalent: @option{--traditional}) option disables
 all @sc{gnu} extensions and reverts to traditional mode, thus introducing some
 limitations and changing several of the program's default option values.
 When @option{-G} is not specified, @sc{gnu} extensions are always enabled.
-@sc{gnu} extensions to @code{ptx} are documented wherever appropriate in this
+@sc{gnu} extensions to @command{ptx} are documented wherever appropriate in this
 document.  For the full list, see @xref{Compatibility in ptx}.
 
 Individual options are explained in the following sections.
@@ -3562,7 +3562,7 @@ instead of the standard input.  If two parameters are given, they give
 respectively the name of the @var{input} file to read and the name of
 the @var{output} file to produce.  @emph{Be very careful} to note that,
 in this case, the contents of file given by the second parameter is
-destroyed.  This behavior is dictated by System V @code{ptx}
+destroyed.  This behavior is dictated by System V @command{ptx}
 compatibility; @sc{gnu} Standards normally discourage output parameters not
 introduced by an option.
 
@@ -3593,7 +3593,7 @@ exit without further processing.
 @item -G
 @itemx --traditional
 As already explained, this option disables all @sc{gnu} extensions to
-@code{ptx} and switches to traditional mode.
+@command{ptx} and switches to traditional mode.
 
 @item --help
 Print a short help on standard output, then exit without further
@@ -3613,7 +3613,7 @@ processing.
 As it is set up now, the program assumes that the input file is coded
 using 8-bit ISO 8859-1 code, also known as Latin-1 character set,
 @emph{unless} it is compiled for MS-DOS, in which case it uses the
-character set of the IBM-PC.  (@sc{gnu} @code{ptx} is not known to work on
+character set of the IBM-PC.  (@sc{gnu} @command{ptx} is not known to work on
 smaller MS-DOS machines anymore.)  Compared to 7-bit @sc{ascii}, the set
 of characters which are letters is different; this alters the behavior
 of regular expression matching.  Thus, the default regular expression
@@ -3661,7 +3661,7 @@ never be taken as keywords in concordance output.  It is called the
 end of line separation of words is not subject to the value of the
 @option{-S} option.
 
-There is a default Ignore file used by @code{ptx} when this option is
+There is a default Ignore file used by @command{ptx} when this option is
 not specified, usually found in @file{/usr/local/lib/eign} if this has
 not been changed at installation time.  If you want to deactivate the
 default Ignore file, specify @code{/dev/null} instead.
@@ -3736,7 +3736,7 @@ on the right of the output line.
 
 As a matter of convenience to the user, many usual backslashed escape
 sequences from the C language are recognized and converted to the
-corresponding characters by @code{ptx} itself.
+corresponding characters by @command{ptx} itself.
 
 @item -W @var{regexp}
 @itemx --word-regexp=@var{regexp}
@@ -3753,7 +3753,7 @@ Manual}.
 
 As a matter of convenience to the user, many usual backslashed escape
 sequences, as found in the C language, are recognized and converted to
-the corresponding characters by @code{ptx} itself.
+the corresponding characters by @command{ptx} itself.
 
 @end table
 
@@ -3846,7 +3846,7 @@ this case.
 
 As a matter of convenience to the user, many usual backslashed escape
 sequences, as found in the C language, are recognized and converted to
-the corresponding characters by @code{ptx} itself.
+the corresponding characters by @command{ptx} itself.
 
 @item -M @var{string}
 @itemx --macro-name=@var{string}
@@ -3910,34 +3910,34 @@ processing for @TeX{}.
 
 
 @node Compatibility in ptx
-@subsection The @sc{gnu} extensions to @code{ptx}
+@subsection The @sc{gnu} extensions to @command{ptx}
 
-This version of @code{ptx} contains a few features which do not exist in
-System V @code{ptx}.  These extra features are suppressed by using the
+This version of @command{ptx} contains a few features which do not exist in
+System V @command{ptx}.  These extra features are suppressed by using the
 @option{-G} command line option, unless overridden by other command line
 options.  Some @sc{gnu} extensions cannot be recovered by overriding, so the
 simple rule is to avoid @option{-G} if you care about @sc{gnu} extensions.
-Here are the differences between this program and System V @code{ptx}.
+Here are the differences between this program and System V @command{ptx}.
 
 @itemize @bullet
 
 @item
 This program can read many input files at once, it always writes the
 resulting concordance on standard output.  On the other hand, System V
-@code{ptx} reads only one file and sends the result to standard output
+@command{ptx} reads only one file and sends the result to standard output
 or, if a second @var{file} parameter is given on the command, to that
 @var{file}.
 
 Having output parameters not introduced by options is a dangerous
-practice which @sc{gnu} avoids as far as possible.  So, for using @code{ptx}
+practice which @sc{gnu} avoids as far as possible.  So, for using @command{ptx}
 portably between @sc{gnu} and System V, you should always use it with a
 single input file, and always expect the result on standard output.  You
 might also want to automatically configure in a @option{-G} option to
-@code{ptx} calls in products using @code{ptx}, if the configurator finds
-that the installed @code{ptx} accepts @option{-G}.
+@command{ptx} calls in products using @code{ptx}, if the configurator finds
+that the installed @command{ptx} accepts @option{-G}.
 
 @item
-The only options available in System V @code{ptx} are options @option{-b},
+The only options available in System V @command{ptx} are options @option{-b},
 @option{-f}, @option{-g}, @option{-i}, @option{-o}, @option{-r}, @option{-t} and
 @option{-w}.  All other options are @sc{gnu} extensions and are not repeated in
 this enumeration.  Moreover, some options have a slightly different
@@ -3957,12 +3957,12 @@ line width computations.
 @item
 All 256 characters, even @kbd{NUL}s, are always read and processed from
 input file with no adverse effect, even if @sc{gnu} extensions are disabled.
-However, System V @code{ptx} does not accept 8-bit characters, a few
+However, System V @command{ptx} does not accept 8-bit characters, a few
 control characters are rejected, and the tilde @kbd{~} is also rejected.
 
 @item
 Input line length is only limited by available memory, even if @sc{gnu}
-extensions are disabled.  However, System V @code{ptx} processes only
+extensions are disabled.  However, System V @command{ptx} processes only
 the first 200 characters in each line.
 
 @item
@@ -3973,13 +3973,13 @@ newline only.
 
 @item
 The program makes better use of output line width.  If @sc{gnu} extensions
-are disabled, the program rather tries to imitate System V @code{ptx},
+are disabled, the program rather tries to imitate System V @command{ptx},
 but still, there are some slight disposition glitches this program does
 not completely reproduce.
 
 @item
 The user can specify both an Ignore file and an Only file.  This is not
-allowed with System V @code{ptx}.
+allowed with System V @command{ptx}.
 
 @end itemize
 
@@ -3995,10 +3995,10 @@ allowed with System V @code{ptx}.
 
 
 @node cut invocation
-@section @code{cut}: Print selected parts of lines
+@section @command{cut}: Print selected parts of lines
 
 @pindex cut
-@code{cut} writes to standard output selected parts of each line of each
+@command{cut} writes to standard output selected parts of each line of each
 input file, or standard input if no files are given or for a file name of
 @samp{-}.  Synopsis:
 
@@ -4074,12 +4074,12 @@ The default is to use the input delimiter.
 
 
 @node paste invocation
-@section @code{paste}: Merge lines of files
+@section @command{paste}: Merge lines of files
 
 @pindex paste
 @cindex merging files
 
-@code{paste} writes to standard output lines consisting of sequentially
+@command{paste} writes to standard output lines consisting of sequentially
 corresponding lines of each given file, separated by a TAB character.
 Standard input is used for a file name of @samp{-} or if no input files
 are given.
@@ -4142,12 +4142,12 @@ $ paste -d '%_' num2 let3 num2
 
 
 @node join invocation
-@section @code{join}: Join lines on a common field
+@section @command{join}: Join lines on a common field
 
 @pindex join
 @cindex common field, joining on
 
-@code{join} writes to standard output a line for each pair of input
+@command{join} writes to standard output a line for each pair of input
 lines that have identical join fields.  Synopsis:
 
 @example
@@ -4242,7 +4242,7 @@ to the join field.  However, when printing unpairable lines
 (using either of the @option{-a} or @option{-v} options), there is no way
 to specify the join field using @var{m.n} in @var{field-list}
 if there are unpairable lines in both files.
-To give @code{join} that functionality, @sc{posix} invented the @samp{0}
+To give @command{join} that functionality, @sc{posix} invented the @samp{0}
 field specification notation.
 
 The elements in @var{field-list}
@@ -4261,7 +4261,7 @@ Print a line for each unpairable line in file @var{file-number}
 
 @end table
 
-In addition, when @sc{gnu} @code{join} is invoked with exactly one argument,
+In addition, when @sc{gnu} @command{join} is invoked with exactly one argument,
 the @option{--help} and @option{--version} options are recognized.
 @xref{Common options}.
 
@@ -4281,7 +4281,7 @@ This commands operate on individual characters.
 
 
 @node tr invocation
-@section @code{tr}: Translate, squeeze, and/or delete characters
+@section @command{tr}: Translate, squeeze, and/or delete characters
 
 @pindex tr
 
@@ -4291,7 +4291,7 @@ Synopsis:
 tr [@var{option}]@dots{} @var{set1} [@var{set2}]
 @end example
 
-@code{tr} copies standard input to standard output, performing
+@command{tr} copies standard input to standard output, performing
 one of the following operations:
 
 @itemize @bullet
@@ -4307,7 +4307,7 @@ delete characters, then squeeze repeated characters from the result.
 
 The @var{set1} and (if given) @var{set2} arguments define ordered
 sets of characters, referred to below as @var{set1} and @var{set2}.  These
-sets are the characters of the input that @code{tr} operates on.
+sets are the characters of the input that @command{tr} operates on.
 The @option{--complement} (@option{-c}) option replaces @var{set1} with its
 complement (all of the characters that are not in @var{set1}).
 
@@ -4369,7 +4369,7 @@ from @var{m} through @var{n}, in ascending order.  @var{m} should
 collate before @var{n}; if it doesn't, an error results.  As an example,
 @samp{0-9} is the same as @samp{0123456789}.
 
-@sc{gnu} @code{tr} does not support the System V syntax that uses square
+@sc{gnu} @command{tr} does not support the System V syntax that uses square
 brackets to enclose ranges.  Translations specified in that format
 sometimes work as expected, since the brackets are often transliterated
 to themselves.  However, they should be avoided because they sometimes
@@ -4380,7 +4380,7 @@ Many historically common and even accepted uses of ranges are not
 portable.  For example, on @sc{ebcdic} hosts using the @samp{A-Z}
 range will not do what most would expect because @samp{A} through @samp{Z}
 are not contiguous as they are in @sc{ascii}.
-If you can rely on a @sc{posix} compliant version of @code{tr}, then
+If you can rely on a @sc{posix} compliant version of @command{tr}, then
 the best way to work around this is to use character classes (see below).
 Otherwise, it is most portable (and most ugly) to enumerate the members
 of the ranges.
@@ -4457,7 +4457,7 @@ The syntax @samp{[=@var{c}=]} expands to all of the characters that are
 equivalent to @var{c}, in no particular order.  Equivalence classes are
 a relatively recent invention intended to support non-English alphabets.
 But there seems to be no standard way to define them or determine their
-contents.  Therefore, they are not fully implemented in @sc{gnu} @code{tr};
+contents.  Therefore, they are not fully implemented in @sc{gnu} @command{tr};
 each character's equivalence class consists only of that character,
 which is of no particular use.
 
@@ -4469,9 +4469,9 @@ which is of no particular use.
 
 @cindex translating characters
 
-@code{tr} performs translation when @var{set1} and @var{set2} are
+@command{tr} performs translation when @var{set1} and @var{set2} are
 both given and the @option{--delete} (@option{-d}) option is not given.
-@code{tr} translates each character of its input that is in @var{set1}
+@command{tr} translates each character of its input that is in @var{set1}
 to the corresponding character in @var{set2}.  Characters not in
 @var{set1} are passed through unchanged.  When a character appears more
 than once in @var{set1} and the corresponding characters in @var{set2}
@@ -4483,7 +4483,7 @@ tr aaa xyz
 tr a z
 @end example
 
-A common use of @code{tr} is to convert lowercase characters to
+A common use of @command{tr} is to convert lowercase characters to
 uppercase.  This can be done in many ways.  Here are three of them:
 
 @example
@@ -4495,22 +4495,22 @@ tr '[:lower:]' '[:upper:]'
 @noindent
 But note that using ranges like @code{a-z} above is not portable.
 
-When @code{tr} is performing translation, @var{set1} and @var{set2}
+When @command{tr} is performing translation, @var{set1} and @var{set2}
 typically have the same length.  If @var{set1} is shorter than
 @var{set2}, the extra characters at the end of @var{set2} are ignored.
 
 On the other hand, making @var{set1} longer than @var{set2} is not
 portable; @sc{posix} says that the result is undefined.  In this situation,
-BSD @code{tr} pads @var{set2} to the length of @var{set1} by repeating
+BSD @command{tr} pads @var{set2} to the length of @var{set1} by repeating
 the last character of @var{set2} as many times as necessary.  System V
-@code{tr} truncates @var{set1} to the length of @var{set2}.
+@command{tr} truncates @var{set1} to the length of @var{set2}.
 
-By default, @sc{gnu} @code{tr} handles this case like BSD @code{tr}.  When
-the @option{--truncate-set1} (@option{-t}) option is given, @sc{gnu} @code{tr}
-handles this case like the System V @code{tr} instead.  This option is
+By default, @sc{gnu} @command{tr} handles this case like BSD @code{tr}.  When
+the @option{--truncate-set1} (@option{-t}) option is given, @sc{gnu} @command{tr}
+handles this case like the System V @command{tr} instead.  This option is
 ignored for operations other than translation.
 
-Acting like System V @code{tr} in this case breaks the relatively common
+Acting like System V @command{tr} in this case breaks the relatively common
 BSD idiom:
 
 @example
@@ -4524,7 +4524,7 @@ newlines.
 
 @noindent
 By the way, the above idiom is not portable because it uses ranges.
-Assuming a @sc{posix} compliant @code{tr}, here is a better way to write it:
+Assuming a @sc{posix} compliant @command{tr}, here is a better way to write it:
 
 @example
 tr -cs '[:alnum:]' '[\n*]'
@@ -4537,19 +4537,19 @@ tr -cs '[:alnum:]' '[\n*]'
 @cindex squeezing repeat characters
 @cindex deleting characters
 
-When given just the @option{--delete} (@option{-d}) option, @code{tr}
+When given just the @option{--delete} (@option{-d}) option, @command{tr}
 removes any input characters that are in @var{set1}.
 
 When given just the @option{--squeeze-repeats} (@option{-s}) option,
-@code{tr} replaces each input sequence of a repeated character that
+@command{tr} replaces each input sequence of a repeated character that
 is in @var{set1} with a single occurrence of that character.
 
-When given both @option{--delete} and @option{--squeeze-repeats}, @code{tr}
+When given both @option{--delete} and @option{--squeeze-repeats}, @command{tr}
 first performs any deletions using @var{set1}, then squeezes repeats
 from any remaining characters using @var{set2}.
 
 The @option{--squeeze-repeats} option may also be used when translating,
-in which case @code{tr} first performs translation, then squeezes
+in which case @command{tr} first performs translation, then squeezes
 repeats from any remaining characters using @var{set2}.
 
 Here are some examples to illustrate various combinations of options:
@@ -4586,7 +4586,7 @@ separated by a newline.  The bourne shell script below works first
 by converting each sequence of punctuation and blank characters to a
 single newline.  That puts each ``word'' on a line by itself.
 Next it maps all uppercase characters to lower case, and finally it
-runs @code{uniq} with the @option{-d} option to print out only the words
+runs @command{uniq} with the @option{-d} option to print out only the words
 that were adjacent duplicates.
 
 @example
@@ -4608,10 +4608,10 @@ tr -d axM
 However, when @samp{-} is one of those characters, it can be tricky because
 @samp{-} has special meanings.  Performing the same task as above but also
 removing all @samp{-} characters, we might try @code{tr -d -axM}, but
-that would fail because @code{tr} would try to interpret @option{-a} as
+that would fail because @command{tr} would try to interpret @option{-a} as
 a command-line option.  Alternatively, we could try putting the hyphen
 inside the string, @code{tr -d a-xM}, but that wouldn't work either because
-it would make @code{tr} interpret @code{a-x} as the range of characters
+it would make @command{tr} interpret @code{a-x} as the range of characters
 @samp{a}@dots{}@samp{x} rather than the three.
 One way to solve the problem is to put the hyphen at the end of the list
 of characters:
@@ -4645,7 +4645,7 @@ following warning and error messages, for strict compliance with
 
 @item
 When the @option{--delete} option is given but @option{--squeeze-repeats}
-is not, and @var{set2} is given, @sc{gnu} @code{tr} by default prints
+is not, and @var{set2} is given, @sc{gnu} @command{tr} by default prints
 a usage message and exits, because @var{set2} would not be used.
 The @sc{posix} specification says that @var{set2} must be ignored in
 this case. Silently ignoring arguments is a bad idea.
@@ -4657,21 +4657,21 @@ value 400 octal does not fit into a single byte.
 
 @end enumerate
 
-@sc{gnu} @code{tr} does not provide complete BSD or System V compatibility.
+@sc{gnu} @command{tr} does not provide complete BSD or System V compatibility.
 For example, it is impossible to disable interpretation of the @sc{posix}
 constructs @samp{[:alpha:]}, @samp{[=c=]}, and @samp{[c*10]}.  Also, @sc{gnu}
-@code{tr} does not delete zero bytes automatically, unlike traditional
+@command{tr} does not delete zero bytes automatically, unlike traditional
 Unix versions, which provide no way to preserve zero bytes.
 
 
 @node expand invocation
-@section @code{expand}: Convert tabs to spaces
+@section @command{expand}: Convert tabs to spaces
 
 @pindex expand
 @cindex tabs to spaces, converting
 @cindex converting tabs to spaces
 
-@code{expand} writes the contents of each given @var{file}, or standard
+@command{expand} writes the contents of each given @var{file}, or standard
 input if none are given or for a @var{file} of @samp{-}, to standard
 output, with tab characters converted to the appropriate number of
 spaces.  Synopsis:
@@ -4680,7 +4680,7 @@ spaces.  Synopsis:
 expand [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
-By default, @code{expand} converts all tabs to spaces.  It preserves
+By default, @command{expand} converts all tabs to spaces.  It preserves
 backspace characters in the output; they decrement the column count for
 tab calculations.  The default action is equivalent to @option{-t 8} (set
 tabs every 8 columns).
@@ -4718,11 +4718,11 @@ characters) on each line to spaces.
 
 
 @node unexpand invocation
-@section @code{unexpand}: Convert spaces to tabs
+@section @command{unexpand}: Convert spaces to tabs
 
 @pindex unexpand
 
-@code{unexpand} writes the contents of each given @var{file}, or
+@command{unexpand} writes the contents of each given @var{file}, or
 standard input if none are given or for a @var{file} of @samp{-}, to
 standard output, with strings of two or more space or tab characters
 converted to as many tabs as possible followed by as many spaces as are
@@ -4732,7 +4732,7 @@ needed.  Synopsis:
 unexpand [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
-By default, @code{unexpand} converts only initial spaces and tabs (those
+By default, @command{unexpand} converts only initial spaces and tabs (those
 that precede all non space or tab characters) on each line.  It
 preserves backspace characters in the output; they decrement the column
 count for tab calculations.  By default, tabs are set at every 8th
@@ -5368,8 +5368,8 @@ List timestamps in full, rather than using the standard abbreviation
 heuristics.  The format is @sc{iso} 8601 date, time, and time zone
 format with nanosecond precision, e.g., @samp{2001-05-14
 23:45:56.477817180 -0700}.  It's not possible to change the format, but
-you can extract out the date string with @code{cut} and then pass the
-result to @code{date -d}.  @xref{date invocation, @code{date}
+you can extract out the date string with @command{cut} and then pass the
+result to @code{date -d}.  @xref{date invocation, @command{date}
 invocation, , sh-utils, Shell utilities}.
 
 This is useful because the time output includes all the information that
@@ -7989,7 +7989,7 @@ This section describes commands that display text strings.
 
 
 @node echo invocation
-@section @code{echo}: Print a line of text
+@section @command{echo}: Print a line of text
 
 @pindex echo
 @cindex displaying text
@@ -7997,7 +7997,7 @@ This section describes commands that display text strings.
 @cindex text, displaying
 @cindex arbitrary text, displaying
 
-@code{echo} writes each given @var{string} to standard output, with a
+@command{echo} writes each given @var{string} to standard output, with a
 space between each and a newline after the last one.  Synopsis:
 
 @example
@@ -8045,37 +8045,37 @@ a valid octal number, it is printed literally.
 
 
 @node printf invocation
-@section @code{printf}: Format and print data
+@section @command{printf}: Format and print data
 
 @pindex printf
-@code{printf} does formatted printing of text. Synopsis:
+@command{printf} does formatted printing of text. Synopsis:
 
 @example
 printf @var{format} [@var{argument}]@dots{}
 @end example
 
-@code{printf} prints the @var{format} string, interpreting @samp{%}
-directives and @samp{\} escapes in the same way as the C @code{printf}
+@command{printf} prints the @var{format} string, interpreting @samp{%}
+directives and @samp{\} escapes in the same way as the C @command{printf}
 function.  The @var{format} argument is re-used as necessary to convert
 all of the given @var{argument}s.
 
-@code{printf} has one additional directive, @samp{%b}, which prints its
+@command{printf} has one additional directive, @samp{%b}, which prints its
 argument string with @samp{\} escapes interpreted in the same way as in
 the @var{format} string.
 
 @kindex \0ooo
 @kindex \0xhhh
-@code{printf} interprets @samp{\0ooo} in @var{format} as an octal number
+@command{printf} interprets @samp{\0ooo} in @var{format} as an octal number
 (if @var{ooo} is 0 to 3 octal digits) specifying a character to print,
 and @samp{\xhhh} as a hexadecimal number (if @var{hhh} is 1 to 3 hex
 digits) specifying a character to print.
 
 @kindex \uhhhh
 @kindex \Uhhhhhhhh
-@code{printf} interprets two character syntaxes introduced in ISO C 99:
+@command{printf} interprets two character syntaxes introduced in ISO C 99:
 @samp{\u} for 16-bit Unicode characters, specified as 4 hex digits
 @var{hhhh}, and @samp{\U} for 32-bit Unicode characters, specified as 8 hex
-digits @var{hhhhhhhh}. @code{printf} outputs the Unicode characters
+digits @var{hhhhhhhh}. @command{printf} outputs the Unicode characters
 according to the LC_CTYPE part of the current locale, i.e. depending
 on the values of the environment variables @code{LC_ALL}, @code{LC_CTYPE},
 @code{LANG}.
@@ -8086,7 +8086,7 @@ or when @code{libiconv} is installed prior to the sh-utils. Otherwise the
 use of @samp{\u} and @samp{\U} will give an error message.
 
 @kindex \c
-An additional escape, @samp{\c}, causes @code{printf} to produce no
+An additional escape, @samp{\c}, causes @command{printf} to produce no
 further output.
 
 The only options are a lone @option{--help} or
@@ -8110,9 +8110,9 @@ $ /usr/local/bin/printf '\u4e2d\u6587'
 @noindent
 will be output correctly in all Chinese locales (GB2312, BIG5, UTF-8, etc).
 
-Note that in these examples, the full pathname of @code{printf} has been
+Note that in these examples, the full pathname of @command{printf} has been
 given, to distinguish it from the GNU @code{bash} builtin function
-@code{printf}.
+@command{printf}.
 
 For larger strings, you don't need to look up the hexadecimal code
 values of each character one by one. ASCII characters mixed with \u
@@ -8131,12 +8131,12 @@ $ recode BIG5..JAVA < sample.txt \
 
 
 @node yes invocation
-@section @code{yes}: Print a string until interrupted
+@section @command{yes}: Print a string until interrupted
 
 @pindex yes
 @cindex repeated output of a string
 
-@code{yes} prints the command line arguments, separated by spaces and
+@command{yes} prints the command line arguments, separated by spaces and
 followed by a newline, forever until it is killed.  If no arguments are
 given, it prints @samp{y} followed by a newline forever until killed.
 
@@ -8165,66 +8165,66 @@ pipeline.
 
 
 @node false invocation
-@section @code{false}: Do nothing, unsuccessfully
+@section @command{false}: Do nothing, unsuccessfully
 
 @pindex false
 @cindex do nothing, unsuccessfully
 @cindex failure exit status
-@cindex exit status of @code{false}
+@cindex exit status of @command{false}
 
-@code{false} does nothing except return an exit status of 1, meaning
+@command{false} does nothing except return an exit status of 1, meaning
 @dfn{failure}.  It can be used as a place holder in shell scripts
 where an unsuccessful command is needed.
 
-By default, @code{false} honors the @option{--help} and @option{--version}
+By default, @command{false} honors the @option{--help} and @option{--version}
 options.  However, that is contrary to @sc{posix}, so when the environment
-variable @env{POSIXLY_CORRECT} is set, @code{false} ignores @emph{all}
+variable @env{POSIXLY_CORRECT} is set, @command{false} ignores @emph{all}
 command line arguments, including @option{--help} and @option{--version}.
 
-This version of @code{false} is implemented as a C program, and is thus
+This version of @command{false} is implemented as a C program, and is thus
 more secure and faster than a shell script implementation, and may safely
 be used as a dummy shell for the purpose of disabling accounts.
 
 
 @node true invocation
-@section @code{true}: Do nothing, successfully
+@section @command{true}: Do nothing, successfully
 
 @pindex true
 @cindex do nothing, successfully
 @cindex no-op
 @cindex successful exit
-@cindex exit status of @code{true}
+@cindex exit status of @command{true}
 
-@code{true} does nothing except return an exit status of 0, meaning
+@command{true} does nothing except return an exit status of 0, meaning
 @dfn{success}.  It can be used as a place holder in shell scripts
 where a successful command is needed, although the shell built-in
 command @code{:} (colon) may do the same thing faster.
-In most modern shells, @code{true} is a built-in command, so when
+In most modern shells, @command{true} is a built-in command, so when
 you use @samp{true} in a script, you're probably using the built-in
 command, not the one documented here.
 
-By default, @code{true} honors the @option{--help} and @option{--version}
+By default, @command{true} honors the @option{--help} and @option{--version}
 options.  However, that is contrary to @sc{posix}, so when the environment
-variable @env{POSIXLY_CORRECT} is set, @code{true} ignores @emph{all}
+variable @env{POSIXLY_CORRECT} is set, @command{true} ignores @emph{all}
 command line arguments, including @option{--help} and @option{--version}.
 
-This version of @code{true} is implemented as a C program, and is thus
+This version of @command{true} is implemented as a C program, and is thus
 more secure and faster than a shell script implementation, and may safely
 be used as a dummy shell for the purpose of disabling accounts.
 
 @node test invocation
-@section @code{test}: Check file types and compare values
+@section @command{test}: Check file types and compare values
 
 @pindex test
 @cindex check file types
 @cindex compare values
 @cindex expression evaluation
 
-@code{test} returns a status of 0 (true) or 1 (false) depending on the
+@command{test} returns a status of 0 (true) or 1 (false) depending on the
 evaluation of the conditional expression @var{expr}.  Each part of the
 expression must be a separate argument.
 
-@code{test} has file status checks, string operators, and numeric
+@command{test} has file status checks, string operators, and numeric
 comparison operators.
 
 @cindex conflicts with shell built-ins
@@ -8233,9 +8233,9 @@ Because most shells have a built-in command by the same name, using the
 unadorned command name in a script or interactively may get you
 different functionality than that described here.
 
-Besides the options below, @code{test} accepts a lone @option{--help} or
+Besides the options below, @command{test} accepts a lone @option{--help} or
 @option{--version}.  @xref{Common options}.  A single non-option argument
-is also allowed: @code{test} returns true if the argument is not null.
+is also allowed: @command{test} returns true if the argument is not null.
 
 @menu
 * File type tests::             -[bcdfhLpSt]
@@ -8402,7 +8402,7 @@ numbers, i.e., if they are hard links to each other.
 @cindex string tests
 
 These options test string characteristics.  Strings are not quoted for
-@code{test}, though you may need to quote them to protect characters
+@command{test}, though you may need to quote them to protect characters
 with special meaning to the shell, e.g., spaces.
 
 @table @samp
@@ -8474,7 +8474,7 @@ test 0x100 -eq 1
 
 
 @node Connectives for test
-@subsection Connectives for @code{test}
+@subsection Connectives for @command{test}
 
 @cindex logical connectives
 @cindex connectives, logical
@@ -8503,20 +8503,20 @@ True if either @var{expr1} or @var{expr2} is true.
 
 
 @node expr invocation
-@section @code{expr}: Evaluate expressions
+@section @command{expr}: Evaluate expressions
 
 @pindex expr
 @cindex expression evaluation
 @cindex evaluation of expressions
 
-@code{expr} evaluates an expression and writes the result on standard
+@command{expr} evaluates an expression and writes the result on standard
 output.  Each token of the expression must be a separate argument.
 
-Operands are either numbers or strings.  @code{expr} converts
+Operands are either numbers or strings.  @command{expr} converts
 anything appearing in an operand position to an integer or a string
 depending on the operation being applied to it.
 
-Strings are not quoted for @code{expr} itself, though you may need to
+Strings are not quoted for @command{expr} itself, though you may need to
 quote them to protect characters with special meaning to the shell,
 e.g., spaces.
 
@@ -8525,7 +8525,7 @@ Operators may be given as infix symbols or prefix keywords.  Parentheses
 may be used for grouping in the usual manner (you must quote parentheses
 to avoid the shell evaluating them, however).
 
-@cindex exit status of @code{expr}
+@cindex exit status of @command{expr}
 Exit status:
 
 @display
@@ -8548,7 +8548,7 @@ Exit status:
 @cindex string expressions
 @cindex expressions, string
 
-@code{expr} supports pattern matching and other string operators.  These
+@command{expr} supports pattern matching and other string operators.  These
 have lower precedence than both the numeric and relational operators (in
 the next sections).
 
@@ -8580,7 +8580,7 @@ expression operators.
 @kindex \| @r{regexp operator}
 In the regular expression, @code{\+}, @code{\?}, and @code{\|} are
 operators which respectively match one or more, zero or one, or separate
-alternatives.  SunOS and other @code{expr}'s treat these as regular
+alternatives.  SunOS and other @command{expr}'s treat these as regular
 characters.  (@sc{posix} allows either behavior.)
 @xref{Top, , Regular Expression Library, regex, Regex}, for details of
 regular expression syntax.  Some examples are in @ref{Examples of expr}.
@@ -8618,7 +8618,7 @@ This operator is a GNU extension.  Portable shell scripts should use
 
 @end table
 
-To make @code{expr} interpret keywords as strings, you must use the
+To make @command{expr} interpret keywords as strings, you must use the
 @code{quote} operator.
 
 
@@ -8628,7 +8628,7 @@ To make @code{expr} interpret keywords as strings, you must use the
 @cindex numeric expressions
 @cindex expressions, numeric
 
-@code{expr} supports the usual numeric operators, in order of increasing
+@command{expr} supports the usual numeric operators, in order of increasing
 precedence.  The string operators (previous section) have lower precedence,
 the connectives (next section) have higher.
 
@@ -8656,13 +8656,13 @@ numbers; an error occurs if this cannot be done.
 
 
 @node Relations for expr
-@subsection Relations for @code{expr}
+@subsection Relations for @command{expr}
 
 @cindex connectives, logical
 @cindex logical connectives
 @cindex relations, numeric or string
 
-@code{expr} supports the usual logical connectives and relations.  These
+@command{expr} supports the usual logical connectives and relations.  These
 are higher precedence than either the string or numeric operators
 (previous sections).  Here is the list, lowest-precedence operator first.
 
@@ -8692,7 +8692,7 @@ Return its first argument if neither argument is null or 0, otherwise
 @cindex comparison operators
 @vindex LC_COLLATE
 Compare the arguments and return 1 if the relation is true, 0 otherwise.
-@code{==} is a synonym for @code{=}.  @code{expr} first tries to convert
+@code{==} is a synonym for @code{=}.  @command{expr} first tries to convert
 both arguments to numbers and do a numeric comparison; if either
 conversion fails, it does a lexicographic comparison using the character
 collating sequence specified by the @env{LC_COLLATE} locale.
@@ -8701,9 +8701,9 @@ collating sequence specified by the @env{LC_COLLATE} locale.
 
 
 @node Examples of expr
-@subsection Examples of using @code{expr}
+@subsection Examples of using @command{expr}
 
-@cindex examples of @code{expr}
+@cindex examples of @command{expr}
 Here are a few examples, including quoting for shell metacharacters.
 
 To add 1 to the shell variable @code{foo}, in Bourne-compatible shells:
@@ -8752,14 +8752,14 @@ it's described here.
 
 
 @node tee invocation
-@section @code{tee}: Redirect output to multiple files
+@section @command{tee}: Redirect output to multiple files
 
 @pindex tee
 @cindex pipe fitting
 @cindex destinations, multiple output
 @cindex read from stdin and write to stdout and files
 
-The @code{tee} command copies standard input to standard output and also
+The @command{tee} command copies standard input to standard output and also
 to any files given as arguments.  This is useful when you want not only
 to send some data down a pipe, but also to save a copy.  Synopsis:
 
@@ -8832,21 +8832,21 @@ options}.
 
 
 @node dirname invocation
-@section @code{dirname}: Strip non-directory suffix from a file name
+@section @command{dirname}: Strip non-directory suffix from a file name
 
 @pindex dirname
 @cindex directory components, printing
 @cindex stripping non-directory suffix
 @cindex non-directory suffix, stripping
 
-@code{dirname} prints all but the final slash-delimited component of
+@command{dirname} prints all but the final slash-delimited component of
 a string (presumably a filename).  Synopsis:
 
 @example
 dirname @var{name}
 @end example
 
-If @var{name} is a single component, @code{dirname} prints @samp{.}
+If @var{name} is a single component, @command{dirname} prints @samp{.}
 (meaning the current directory).
 
 The only options are @option{--help} and @option{--version}.  @xref{Common
@@ -8854,20 +8854,20 @@ options}.
 
 
 @node pathchk invocation
-@section @code{pathchk}: Check file name portability
+@section @command{pathchk}: Check file name portability
 
 @pindex pathchk
 @cindex file names, checking validity and portability
 @cindex valid file names, checking for
 @cindex portable file names, checking for
 
-@code{pathchk} checks portability of filenames.  Synopsis:
+@command{pathchk} checks portability of filenames.  Synopsis:
 
 @example
 pathchk [@var{option}]@dots{} @var{name}@dots{}
 @end example
 
-For each @var{name}, @code{pathchk} prints a message if any of
+For each @var{name}, @command{pathchk} prints a message if any of
 these conditions is true:
 @enumerate
 @item
@@ -8897,7 +8897,7 @@ name contains no characters not in the portable file name character set.
 
 @end table
 
-@cindex exit status of @code{pathchk}
+@cindex exit status of @command{pathchk}
 Exit status:
 
 @display
@@ -8925,15 +8925,15 @@ so forth.  See also the user-related commands in the next section.
 
 
 @node pwd invocation
-@section @code{pwd}: Print working directory
+@section @command{pwd}: Print working directory
 
 @pindex pwd
 @cindex print name of current directory
 @cindex current working directory, printing
 @cindex working directory, printing
 
-@cindex symbolic links and @code{pwd}
-@code{pwd} prints the fully resolved name of the current directory.
+@cindex symbolic links and @command{pwd}
+@command{pwd} prints the fully resolved name of the current directory.
 That is, all components of the printed name will be actual directory
 names---none will be symbolic links.
 
@@ -8948,14 +8948,14 @@ The only options are a lone @option{--help} or
 
 
 @node stty invocation
-@section @code{stty}: Print or change terminal characteristics
+@section @command{stty}: Print or change terminal characteristics
 
 @pindex stty
 @cindex change or print terminal settings
 @cindex terminal settings
 @cindex line settings of terminal
 
-@code{stty} prints or changes terminal characteristics, such as baud rate.
+@command{stty} prints or changes terminal characteristics, such as baud rate.
 Synopses:
 
 @example
@@ -8963,14 +8963,14 @@ stty [@var{option}] [@var{setting}]@dots{}
 stty [@var{option}]
 @end example
 
-If given no line settings, @code{stty} prints the baud rate, line
+If given no line settings, @command{stty} prints the baud rate, line
 discipline number (on systems that support it), and line settings
 that have been changed from the values set by @samp{stty sane}.
 By default, mode reading and setting are performed on the tty line
 connected to standard input, although this can be modified by the
 @option{--file} option.
 
-@code{stty} accepts many non-option arguments that change aspects of
+@command{stty} accepts many non-option arguments that change aspects of
 the terminal line operation, as described below.
 
 The program accepts the following options.  Also see @ref{Common options}.
@@ -8998,9 +8998,9 @@ to allow the shell to open the device in the traditional manner.
 @itemx --save
 @opindex -g
 @opindex --save
-@cindex machine-readable @code{stty} output
+@cindex machine-readable @command{stty} output
 Print all current settings in a form that can be used as an argument to
-another @code{stty} command to restore the current settings.  This option
+another @command{stty} command to restore the current settings.  This option
 may not be used in combination with any line settings.
 
 @end table
@@ -9459,9 +9459,9 @@ any other digit to indicate decimal.
 @cindex disabling special characters
 @kindex u@r{, and disabling special characters}
 For GNU stty, giving a value of @code{^-} or @code{undef} disables that
-special character.  (This is incompatible with Ultrix @code{stty},
+special character.  (This is incompatible with Ultrix @command{stty},
 which uses  a value of @samp{u} to disable a special character.  GNU
-@code{stty} treats a value @samp{u} like any other, namely to set that
+@command{stty} treats a value @samp{u} like any other, namely to set that
 special character to @key{U}.)
 
 @table @samp
@@ -9570,7 +9570,7 @@ Tell the kernel that the terminal has @var{n} columns.  Non-@sc{posix}.
 Print the number of rows and columns that the kernel thinks the
 terminal has.  (Systems that don't support rows and columns in the kernel
 typically use the environment variables @env{LINES} and @env{COLUMNS}
-instead; however, GNU @code{stty} does not know anything about them.)
+instead; however, GNU @command{stty} does not know anything about them.)
 Non-@sc{posix}.
 
 @item line @var{n}
@@ -9594,26 +9594,26 @@ of: 0 50 75 110 134 134.5 150 200 300 600 1200 1800 2400 4800 9600
 
 
 @node printenv invocation
-@section @code{printenv}: Print all or some environment variables
+@section @command{printenv}: Print all or some environment variables
 
 @pindex printenv
 @cindex printing all or some environment variables
 @cindex environment variables, printing
 
-@code{printenv} prints environment variable values.  Synopsis:
+@command{printenv} prints environment variable values.  Synopsis:
 
 @example
 printenv [@var{option}] [@var{variable}]@dots{}
 @end example
 
-If no @var{variable}s are specified, @code{printenv} prints the value of
+If no @var{variable}s are specified, @command{printenv} prints the value of
 every environment variable.  Otherwise, it prints the value of each
 @var{variable} that is set, and nothing for those that are not set.
 
 The only options are a lone @option{--help} or @option{--version}.
 @xref{Common options}.
 
-@cindex exit status of @code{printenv}
+@cindex exit status of @command{printenv}
 Exit status:
 
 @display
@@ -9624,13 +9624,13 @@ Exit status:
 
 
 @node tty invocation
-@section @code{tty}: Print file name of terminal on standard input
+@section @command{tty}: Print file name of terminal on standard input
 
 @pindex tty
 @cindex print terminal file name
 @cindex terminal file name, printing
 
-@code{tty} prints the file name of the terminal connected to its standard
+@command{tty} prints the file name of the terminal connected to its standard
 input.  It prints @samp{not a tty} if standard input is not a terminal.
 Synopsis:
 
@@ -9652,7 +9652,7 @@ Print nothing; only return an exit status.
 
 @end table
 
-@cindex exit status of @code{tty}
+@cindex exit status of @command{tty}
 Exit status:
 
 @display
@@ -9683,14 +9683,14 @@ logins, groups, and so forth.
 
 
 @node id invocation
-@section @code{id}: Print real and effective uid and gid
+@section @command{id}: Print real and effective uid and gid
 
 @pindex id
 @cindex real uid and gid, printing
 @cindex effective uid and gid, printing
 @cindex printing real and effective uid and gid
 
-@code{id} prints information about the given user, or the process
+@command{id} prints information about the given user, or the process
 running it if no user is specified.  Synopsis:
 
 @example
@@ -9704,7 +9704,7 @@ the real group id, and supplemental group ids.
 Each of these numeric values is preceded by an identifying string and
 followed by the corresponding user or group name in parentheses.
 
-The options cause @code{id} to print only part of the above information.
+The options cause @command{id} to print only part of the above information.
 Also see @ref{Common options}.
 
 @table @samp
@@ -9744,7 +9744,7 @@ Print only the user id.
 
 
 @node logname invocation
-@section @code{logname}: Print current login name
+@section @command{logname}: Print current login name
 
 @pindex logname
 @cindex printing user's login name
@@ -9754,9 +9754,9 @@ Print only the user id.
 @flindex /etc/utmp
 @flindex utmp
 
-@code{logname} prints the calling user's name, as found in the file
+@command{logname} prints the calling user's name, as found in the file
 @file{/etc/utmp}, and exits with a status of 0.  If there is no
-@file{/etc/utmp} entry for the calling process, @code{logname} prints
+@file{/etc/utmp} entry for the calling process, @command{logname} prints
 an error message and exits with a status of 1.
 
 The only options are @option{--help} and @option{--version}.  @xref{Common
@@ -9764,13 +9764,13 @@ options}.
 
 
 @node whoami invocation
-@section @code{whoami}: Print effective user id
+@section @command{whoami}: Print effective user id
 
 @pindex whoami
 @cindex effective UID, printing
 @cindex printing the effective UID
 
-@code{whoami} prints the user name associated with the current
+@command{whoami} prints the user name associated with the current
 effective user id.  It is equivalent to the command @samp{id -un}.
 
 The only options are @option{--help} and @option{--version}.  @xref{Common
@@ -9778,13 +9778,13 @@ options}.
 
 
 @node groups invocation
-@section @code{groups}: Print group names a user is in
+@section @command{groups}: Print group names a user is in
 
 @pindex groups
 @cindex printing groups a user is in
 @cindex supplementary groups, printing
 
-@code{groups} prints the names of the primary and any supplementary
+@command{groups} prints the names of the primary and any supplementary
 groups for each given @var{username}, or the current process if no names
 are given.  If names are given, the name of each user is printed before
 the list of that user's groups.  Synopsis:
@@ -9800,14 +9800,14 @@ options}.
 
 
 @node users invocation
-@section @code{users}: Print login names of users currently logged in
+@section @command{users}: Print login names of users currently logged in
 
 @pindex users
 @cindex printing current usernames
 @cindex usernames, printing current
 
 @cindex login sessions, printing users with
-@code{users} prints on a single line a blank-separated list of user
+@command{users} prints on a single line a blank-separated list of user
 names of users currently logged in to the current host.  Each user name
 corresponds to a login session, so if a user has more than one login
 session, that user's name will appear the same number of times in the
@@ -9819,8 +9819,8 @@ users [@var{file}]
 
 @flindex /etc/utmp
 @flindex /etc/wtmp
-With no @var{file} argument, @code{users} extracts its information from
-the file @file{/etc/utmp}.  If a file argument is given, @code{users}
+With no @var{file} argument, @command{users} extracts its information from
+the file @file{/etc/utmp}.  If a file argument is given, @command{users}
 uses that file instead.  A common choice is @file{/etc/wtmp}.
 
 The only options are @option{--help} and @option{--version}.  @xref{Common
@@ -9828,36 +9828,36 @@ options}.
 
 
 @node who invocation
-@section @code{who}: Print who is currently logged in
+@section @command{who}: Print who is currently logged in
 
 @pindex who
 @cindex printing current user information
 @cindex information, about current users
 
-@code{who} prints information about users who are currently logged on.
+@command{who} prints information about users who are currently logged on.
 Synopsis:
 
 @example
-@code{who} [@var{option}] [@var{file}] [am i]
+@command{who} [@var{option}] [@var{file}] [am i]
 @end example
 
 @cindex terminal lines, currently used
 @cindex login time
 @cindex remote hostname
-If given no non-option arguments, @code{who} prints the following
+If given no non-option arguments, @command{who} prints the following
 information for each user currently logged on: login name, terminal
 line, login time, and remote hostname or X display.
 
 @flindex /etc/utmp
 @flindex /etc/wtmp
-If given one non-option argument, @code{who} uses that instead of
+If given one non-option argument, @command{who} uses that instead of
 @file{/etc/utmp} as the name of the file containing the record of
 users logged on.  @file{/etc/wtmp} is commonly given as an argument
-to @code{who} to look at who has previously logged on.
+to @command{who} to look at who has previously logged on.
 
 @opindex am i
 @opindex who am i
-If given two non-option arguments, @code{who} prints only the entry
+If given two non-option arguments, @command{who} prints only the entry
 for the user running it (determined from its standard input), preceded
 by the hostname.  Traditionally, the two arguments given are @samp{am
 i}, as in @samp{who am i}.
@@ -9878,7 +9878,7 @@ Overrides all other options.
 
 @item -s
 @opindex -s
-Ignored; for compatibility with other versions of @code{who}.
+Ignored; for compatibility with other versions of @command{who}.
 
 @item -i
 @itemx -u
@@ -9947,7 +9947,7 @@ information.
 
 
 @node date invocation
-@section @code{date}: Print or set system date and time
+@section @command{date}: Print or set system date and time
 
 @pindex date
 @cindex time, printing or setting
@@ -9961,13 +9961,13 @@ date [-u|--utc|--universal] @c this avoids a newline in the output
 [ MMDDhhmm[[CC]YY][.ss] ]
 @end example
 
-Invoking @code{date} with no @var{format} argument is equivalent to invoking
+Invoking @command{date} with no @var{format} argument is equivalent to invoking
 @samp{date '+%a %b %e %H:%M:%S %Z %Y'}.
 
-@findex strftime @r{and @code{date}}
+@findex strftime @r{and @command{date}}
 @cindex time formats
 @cindex formatting times
-If given an argument that starts with a @samp{+}, @code{date} prints the
+If given an argument that starts with a @samp{+}, @command{date} prints the
 current time and date (or the time and date specified by the
 @code{--date} option, see below) in the format defined by that argument,
 which is the same as in the @code{strftime} function.  Except for
@@ -9990,7 +9990,7 @@ are printed unchanged.  The directives are described below.
 @cindex time directives
 @cindex directives, time
 
-@code{date} directives related to times.
+@command{date} directives related to times.
 
 @table @samp
 @item %H
@@ -10042,7 +10042,7 @@ It isn't changed by the @option{--date} option.
 @cindex date directives
 @cindex directives, date
 
-@code{date} directives related to dates.
+@command{date} directives related to dates.
 
 @table @samp
 @item %a
@@ -10098,7 +10098,7 @@ year (1970@dots{}.)
 @cindex literal directives
 @cindex directives, literal
 
-@code{date} directives that produce literal strings.
+@command{date} directives that produce literal strings.
 
 @table @samp
 @item %%
@@ -10117,8 +10117,8 @@ a horizontal tab
 @cindex padding of numeric fields
 @cindex fields, padding numeric
 
-By default, @code{date} pads numeric fields with zeroes, so that, for
-example, numeric months are always output as two digits. GNU @code{date}
+By default, @command{date} pads numeric fields with zeroes, so that, for
+example, numeric months are always output as two digits. GNU @command{date}
 recognizes the following numeric modifiers between the @samp{%} and the
 directive.
 
@@ -10153,7 +10153,7 @@ date +%_d/%_m -d "Feb 1"
 @cindex time setting
 @cindex appropriate privileges
 
-If given an argument that does not start with @samp{+}, @code{date} sets
+If given an argument that does not start with @samp{+}, @command{date} sets
 the system clock to the time and date specified by that argument (as
 described below).  You must have appropriate privileges to set the
 system clock.  The @option{--date} and @option{--set} options may not be
@@ -10186,10 +10186,10 @@ The @option{--set} option also sets the system clock; see the next section.
 
 
 @node Options for date
-@subsection Options for @code{date}
+@subsection Options for @command{date}
 
-@cindex @code{date} options
-@cindex options for @code{date}
+@cindex @command{date} options
+@cindex options for @command{date}
 
 The program accepts the following options.  Also see @ref{Common options}.
 
@@ -10218,7 +10218,7 @@ format.  It can contain month names, time zones, @samp{am} and @samp{pm},
 Parse each line in @var{datefile} as with @option{-d} and display the
 resulting time and date.  If @var{datefile} is @samp{-}, use standard
 input.  This is useful when you have many dates to process, because the
-system overhead of starting up the @code{date} executable many times can
+system overhead of starting up the @command{date} executable many times can
 be considerable.
 
 @item -I @var{timespec}
@@ -10293,9 +10293,9 @@ historical reasons.
 
 
 @node Examples of date
-@subsection Examples of @code{date}
+@subsection Examples of @command{date}
 
-@cindex examples of @code{date}
+@cindex examples of @command{date}
 
 Here are a few examples.  Also see the documentation for the @option{-d}
 option in the previous section.
@@ -10341,7 +10341,7 @@ date -d 1may '+%B %-d
 
 @item
 To print the current date and time in the format required by many
-non-GNU versions of @code{date} when setting the system clock:
+non-GNU versions of @command{date} when setting the system clock:
 @example
 date +%m%d%H%M%Y.%S
 @end example
@@ -10409,14 +10409,14 @@ date -d '1970-01-01 UTC 946684800 seconds' +"%Y-%m-%d %T %z"
 
 
 @node uname invocation
-@section @code{uname}: Print system information
+@section @command{uname}: Print system information
 
 @pindex uname
 @cindex print system information
 @cindex system information, printing
 
-@code{uname} prints information about the machine and operating system
-it is run on.  If no options are given, @code{uname} acts as if the
+@command{uname} prints information about the machine and operating system
+it is run on.  If no options are given, @command{uname} acts as if the
 @code{-s} option were given. Synopsis:
 
 @example
@@ -10520,7 +10520,7 @@ Print the kernel version.
 @end table
 
 @node hostname invocation
-@section @code{hostname}: Print or set system name
+@section @command{hostname}: Print or set system name
 
 @pindex hostname
 @cindex setting the hostname
@@ -10528,7 +10528,7 @@ Print the kernel version.
 @cindex system name, printing
 @cindex appropriate privileges
 
-With no arguments, @code{hostname} prints the name of the current host
+With no arguments, @command{hostname} prints the name of the current host
 system.  With one argument, it sets the current host name to the
 specified string.  You must have appropriate privileges to set the host
 name. Synopsis:
@@ -10542,12 +10542,12 @@ options}.
 
 
 @node hostid invocation
-@section @code{hostid}: Print numeric host identifier.
+@section @command{hostid}: Print numeric host identifier.
 
 @pindex hostid
 @cindex printing the host identifier
 
-@code{hostid} prints the numeric identifier of the current host
+@command{hostid} prints the numeric identifier of the current host
 in hexadecimal.  This command accepts no arguments.
 The only options are @option{--help} and @option{--version}.
 @xref{Common options}.
@@ -10585,13 +10585,13 @@ user, etc.
 
 
 @node chroot invocation
-@section @code{chroot}: Run a command with a different root directory
+@section @command{chroot}: Run a command with a different root directory
 
 @pindex chroot
 @cindex running a program in a specified root directory
 @cindex root directory, running a program in a specified
 
-@code{chroot} runs a command with a specified root directory.
+@command{chroot} runs a command with a specified root directory.
 On many systems, only the super-user can do this.
 Synopses:
 
@@ -10601,7 +10601,7 @@ chroot @var{option}
 @end example
 
 Ordinarily, filenames are looked up starting at the root of the
-directory structure, i.e., @file{/}.  @code{chroot} changes the root to
+directory structure, i.e., @file{/}.  @command{chroot} changes the root to
 the directory @var{newroot} (which must exist) and then runs
 @var{command} with optional @var{args}.  If @var{command} is not
 specified, the default is the value of the @env{SHELL} environment
@@ -10640,14 +10640,14 @@ device files), copy them into place, too.
 
 
 @node env invocation
-@section @code{env}: Run a command in a modified environment
+@section @command{env}: Run a command in a modified environment
 
 @pindex env
 @cindex environment, running a program in a modified
 @cindex modified environment, running a program in a
 @cindex running a program in a modified environment
 
-@code{env} runs a command with a modified environment.  Synopses:
+@command{env} runs a command with a modified environment.  Synopses:
 
 @example
 env [@var{option}]@dots{} [@var{name}=@var{value}]@dots{} @c
@@ -10669,7 +10669,7 @@ remaining arguments are passed as arguments to that program.
 
 If no command name is specified following the environment
 specifications, the resulting environment is printed.  This is like
-specifying a command name of @code{printenv}.
+specifying a command name of @command{printenv}.
 
 The program accepts the following options.  Also see @ref{Common options}.
 
@@ -10694,7 +10694,7 @@ Start with an empty environment, ignoring the inherited environment.
 
 
 @node nice invocation
-@section @code{nice}: Run a command with modified scheduling priority
+@section @command{nice}: Run a command with modified scheduling priority
 
 @pindex nice
 @cindex modifying scheduling priority
@@ -10702,19 +10702,19 @@ Start with an empty environment, ignoring the inherited environment.
 @cindex priority, modifying
 @cindex appropriate privileges
 
-@code{nice} prints or modifies the scheduling priority of a job.
+@command{nice} prints or modifies the scheduling priority of a job.
 Synopsis:
 
 @example
 nice [@var{option}]@dots{} [@var{command} [@var{arg}]@dots{}]
 @end example
 
-If no arguments are given, @code{nice} prints the current scheduling
-priority, which it inherited.  Otherwise, @code{nice} runs the given
+If no arguments are given, @command{nice} prints the current scheduling
+priority, which it inherited.  Otherwise, @command{nice} runs the given
 @var{command} with its scheduling priority adjusted.  If no
 @var{adjustment} is given, the priority of the command is incremented by
 10.  You must have appropriate privileges to specify a negative
-adjustment.  The priority can be adjusted by @code{nice} over the range
+adjustment.  The priority can be adjusted by @command{nice} over the range
 of -20 (the highest priority) to 19 (the lowest).
 
 @cindex conflicts with shell built-ins
@@ -10741,7 +10741,7 @@ instead.
 
 
 @node nohup invocation
-@section @code{nohup}: Run a command immune to hangups
+@section @command{nohup}: Run a command immune to hangups
 
 @pindex nohup
 @cindex hangups, immunity to
@@ -10749,7 +10749,7 @@ instead.
 @cindex logging out and continuing to run
 
 @flindex nohup.out
-@code{nohup} runs the given @var{command} with hangup signals ignored,
+@command{nohup} runs the given @var{command} with hangup signals ignored,
 so that the command can continue running in the background after you log
 out. Synopsis:
 
@@ -10758,19 +10758,19 @@ nohup @var{command} [@var{arg}]@dots{}
 @end example
 
 @flindex nohup.out
-@code{nohup} increases the scheduling priority of @var{command} by 5, so
+@command{nohup} increases the scheduling priority of @var{command} by 5, so
 it has a slightly smaller chance to run.  If standard output is a terminal,
 it and standard error are redirected so that they are appended to the
 file @file{nohup.out}; if that cannot be written to, they are appended
 to the file @file{$HOME/nohup.out}.  If that cannot be written to, the
 command is not run.
 
-If @code{nohup} creates either @file{nohup.out} or
+If @command{nohup} creates either @file{nohup.out} or
 @file{$HOME/nohup.out}, it creates it with no ``group'' or ``other''
 access permissions.  It does not change the permissions if the output
 file already existed.
 
-@code{nohup} does not automatically put the command it runs in the
+@command{nohup} does not automatically put the command it runs in the
 background; you must do that explicitly, by ending the command line
 with an @samp{&}.
 
@@ -10779,7 +10779,7 @@ options}.
 
 
 @node su invocation
-@section @code{su}: Run a command with substitute user and group id
+@section @command{su}: Run a command with substitute user and group id
 
 @pindex su
 @cindex substitute user and group ids
@@ -10787,7 +10787,7 @@ options}.
 @cindex super-user, becoming
 @cindex root, becoming
 
-@code{su} allows one user to temporarily become another user.  It runs a
+@command{su} allows one user to temporarily become another user.  It runs a
 command (often an interactive shell) with the real and effective user
 id, group id, and supplemental groups of a given @var{user}. Synopsis:
 
@@ -10795,13 +10795,13 @@ id, group id, and supplemental groups of a given @var{user}. Synopsis:
 su [@var{option}]@dots{} [@var{user} [@var{arg}]@dots{}]
 @end example
 
-@cindex passwd entry, and @code{su} shell
+@cindex passwd entry, and @command{su} shell
 @flindex /bin/sh
 @flindex /etc/passwd
 If no @var{user} is given, the default is @code{root}, the super-user.
 The shell to use is taken from @var{user}'s @code{passwd} entry, or
 @file{/bin/sh} if none is specified there.  If @var{user} has a
-password, @code{su} prompts for the password unless run by a user with
+password, @command{su} prompts for the password unless run by a user with
 effective user id of zero (the super-user).
 
 @vindex HOME
@@ -10809,7 +10809,7 @@ effective user id of zero (the super-user).
 @vindex USER
 @vindex LOGNAME
 @cindex login shell
-By default, @code{su} does not change the current directory.
+By default, @command{su} does not change the current directory.
 It sets the environment variables @env{HOME} and @env{SHELL}
 from the password entry for @var{user}, and if @var{user} is not
 the super-user, sets @env{USER} and @env{LOGNAME} to @var{user}.
@@ -10819,14 +10819,14 @@ Any additional @var{arg}s are passed as additional arguments to the
 shell.
 
 @cindex @option{-su}
-GNU @code{su} does not treat @file{/bin/sh} or any other shells specially
+GNU @command{su} does not treat @file{/bin/sh} or any other shells specially
 (e.g., by setting @code{argv[0]} to @option{-su}, passing @code{-c} only
 to certain shells, etc.).
 
 @findex syslog
-@code{su} can optionally be compiled to use @code{syslog} to report
-failed, and optionally successful, @code{su} attempts.  (If the system
-supports @code{syslog}.)  However, GNU @code{su} does not check if the
+@command{su} can optionally be compiled to use @code{syslog} to report
+failed, and optionally successful, @command{su} attempts.  (If the system
+supports @code{syslog}.)  However, GNU @command{su} does not check if the
 user is a member of the @code{wheel} group; see below.
 
 The program accepts the following options.  Also see @ref{Common options}.
@@ -10882,7 +10882,7 @@ read its login startup file(s).
 Do not change the environment variables @env{HOME}, @env{USER},
 @env{LOGNAME}, or @env{SHELL}.  Run the shell given in the environment
 variable @env{SHELL} instead of the shell from @var{user}'s passwd
-entry, unless the user running @code{su} is not the superuser and
+entry, unless the user running @command{su} is not the superuser and
 @var{user}'s shell is restricted.  A @dfn{restricted shell} is one that
 is not listed in the file @file{/etc/shells}, or in a compiled-in list
 if that file does not exist.  Parts of what this option does can be
@@ -10893,7 +10893,7 @@ overridden by @code{--login} and @code{--shell}.
 @opindex -s
 @opindex --shell
 Run @var{shell} instead of the shell from @var{user}'s passwd entry,
-unless the user running @code{su} is not the superuser and @var{user}'s
+unless the user running @command{su} is not the superuser and @var{user}'s
 shell is restricted (see @option{-m} just above).
 
 @end table
@@ -10901,7 +10901,7 @@ shell is restricted (see @option{-m} just above).
 @cindex wheel group, not supported
 @cindex group wheel, not supported
 @cindex fascism
-@heading Why GNU @code{su} does not support the @samp{wheel} group
+@heading Why GNU @command{su} does not support the @samp{wheel} group
 
 (This section is by Richard Stallman.)
 
@@ -10915,7 +10915,7 @@ and give power back to the users by patching the kernel, but I
 wouldn't know how to do that in Unix.)
 
 However, occasionally the rulers do tell someone.  Under the usual
-@code{su} mechanism, once someone learns the root password who
+@command{su} mechanism, once someone learns the root password who
 sympathizes with the ordinary users, he or she can tell the rest.  The
 ``wheel group'' feature would make this impossible, and thus cement the
 power of the rulers.
@@ -11099,12 +11099,12 @@ also support at least eight real-time signals called @samp{RTMIN},
 
 
 @node sleep invocation
-@section @code{sleep}: Delay for a specified time
+@section @command{sleep}: Delay for a specified time
 
 @pindex sleep
 @cindex delay for a specified time
 
-@code{sleep} pauses for an amount of time specified by the sum of
+@command{sleep} pauses for an amount of time specified by the sum of
 the values of the command line arguments.
 Synopsis:
 
@@ -11127,8 +11127,8 @@ hours
 days
 @end table
 
-Historical implementations of @code{sleep} have required that
-@var{number} be an integer.  However, GNU @code{sleep} accepts
+Historical implementations of @command{sleep} have required that
+@var{number} be an integer.  However, GNU @command{sleep} accepts
 arbitrary floating point numbers.
 
 The only options are @option{--help} and @option{--version}.  @xref{Common
@@ -11148,26 +11148,26 @@ These programs do numerically-related operations.
 
 
 @node factor invocation
-@section @code{factor}: Print prime factors
+@section @command{factor}: Print prime factors
 
 @pindex factor
 @cindex prime factors
 
-@code{factor} prints prime factors.  Synopses:
+@command{factor} prints prime factors.  Synopses:
 
 @example
 factor [@var{number}]@dots{}
 factor @var{option}
 @end example
 
-If no @var{number} is specified on the command line, @code{factor} reads
+If no @var{number} is specified on the command line, @command{factor} reads
 numbers from standard input, delimited by newlines, tabs, or spaces.
 
 The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
 
 The algorithm it uses is not very sophisticated, so for some inputs
-@code{factor} runs for a long time.  The hardest numbers to factor are
+@command{factor} runs for a long time.  The hardest numbers to factor are
 the products of large primes.  Factoring the product of the two largest 32-bit
 prime numbers takes over 10 minutes of CPU time on a 400MHz Pentium II.
 
@@ -11177,7 +11177,7 @@ $ factor $p
 18446743979220271189: 4294967279 4294967291
 @end example
 
-In contrast, @code{factor} factors the largest 64-bit number in just
+In contrast, @command{factor} factors the largest 64-bit number in just
 over a tenth of a second:
 
 @example
@@ -11186,19 +11186,19 @@ $ factor `echo '2^64-1'|bc`
 @end example
 
 @node seq invocation
-@section @code{seq}: Print numeric sequences
+@section @command{seq}: Print numeric sequences
 
 @pindex seq
 @cindex numeric sequences
 @cindex sequence of numbers
 
-@code{seq} prints a sequence of numbers to standard output.  Synopses:
+@command{seq} prints a sequence of numbers to standard output.  Synopses:
 
 @example
 seq [@var{option}]@dots{} [@var{first} [@var{increment}]] @var{last}@dots{}
 @end example
 
-@code{seq} prints the numbers from @var{first} to @var{last} by
+@command{seq} prints the numbers from @var{first} to @var{last} by
 @var{increment}.  By default, @var{first} and @var{increment} are both 1,
 and each number is printed on its own line.  All numbers can be reals,
 not just integers.
@@ -11210,14 +11210,14 @@ The program accepts the following options.  Also see @ref{Common options}.
 @itemx --format=@var{format}
 @opindex -f @var{format}
 @opindex --format=@var{format}
-@cindex formatting of numbers in @code{seq}
+@cindex formatting of numbers in @command{seq}
 Print all numbers using @var{format}; default @samp{%g}.
 @var{format} must contain exactly one of the floating point
 output formats @samp{%e}, @samp{%f}, or @samp{%g}.
 
 @item -s @var{string}
 @itemx --separator=@var{string}
-@cindex separator for numbers in @code{seq}
+@cindex separator for numbers in @command{seq}
 Separate numbers with @var{string}; default is a newline.
 The output always terminates with a newline.
 
@@ -11228,7 +11228,7 @@ Print all numbers with the same width, by padding with leading zeroes.
 
 @end table
 
-If you want to use @code{seq} to print sequences of large integer values,
+If you want to use @command{seq} to print sequences of large integer values,
 don't use the default @samp{%g} format since it can result in
 loss of precision:
 
@@ -11247,7 +11247,7 @@ $ seq --format=%1.f 1000000 1000001
 1000001
 @end example
 
-If you want hexadecimal output, you can use @code{printf}
+If you want hexadecimal output, you can use @command{printf}
 to perform the conversion:
 
 @example
@@ -11289,7 +11289,7 @@ FFFFFFFF
 100000000
 @end example
 
-Be careful when using @code{seq} with a fractional @var{increment},
+Be careful when using @command{seq} with a fractional @var{increment},
 otherwise you may see surprising results.  Most people would expect to
 see @code{0.3} printed as the last number in this example:
 
@@ -11298,7 +11298,7 @@ $ seq -s' ' 0 .1 .3
 0 0.1 0.2
 @end example
 
-But that doesn't happen on most systems because @code{seq} is
+But that doesn't happen on most systems because @command{seq} is
 implemented using binary floating point arithmetic (via the C
 @code{double} type) -- which means some decimal numbers like @code{.1}
 cannot be represented exactly.  That in turn means some nonintuitive
