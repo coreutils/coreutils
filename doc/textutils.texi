@@ -1694,6 +1694,7 @@ it to a temporary file before sorting and writing the output to
 
 @item -t @var{separator}
 @opindex -t
+@cindex field separator character
 Use character @var{separator} as the field separator when finding the
 sort keys in each line.  By default, fields are separated by the empty
 string between a non-whitespace character and a whitespace character.
@@ -1704,44 +1705,26 @@ following.
 
 @item -u
 @opindex -u
+@cindex uniqifying output
 For the default case or the @samp{-m} option, only output the first
 of a sequence of lines that compare equal.  For the @samp{-c} option,
 check that no pair of consecutive lines compares equal.
 
-@item +@var{pos1}[-@var{pos2}]
-Specify a field within each line to use as a sorting key.  The field
-consists of the portion of the line starting at @var{pos1} and up
-to (but not including) @var{pos2} (or to the end of the line if
-@var{pos2} is not given).  The fields and character positions are
-numbered starting with 0.
-
 @item -k @var{pos1}[,@var{pos2}]
-An alternate syntax for specifying sorting keys.  The fields and
-character positions are numbered starting with 1.
+@opindex -k
+@cindex sort field
+The recommended, POSIX, option for specifying a sort field.  The field
+consists of the line between @var{pos1} and @var{pos2} (or the end of
+the line, if @var{pos2} is omitted), inclusive.  Fields and character
+positions are numbered starting with 1.  See below.
+
+@item +@var{pos1}[-@var{pos2}]
+The obsolete, traditional option for specifying a sort field.  The field
+consists of the line between @var{pos1} and up to but not including
+@var{pos2} (or the end of the line if @var{pos2} is omitted).  Fields
+and character positions are numbered starting with 0.  See below.
 
 @end table
-
-A position has the form @samp{@var{f}.@var{c}}, where @var{f} is the
-number of the field to use and @var{c} is the number of the first
-character from the beginning of the field (for @samp{+@var{pos}}) or
-from the end of the previous field (for @samp{-@var{pos}}).  The
-@samp{.@var{c}} part of a position may be omitted in which case it is
-taken to be the first character in the field.  If the @samp{-b} option
-has been given, the @samp{.@var{c}} part of a field specification is
-counted from the first nonblank character of the field (for
-@samp{+@var{pos}}) or from the first nonblank character following the
-previous field (for @samp{-@var{pos}}).
-
-A @samp{+@var{pos}} or @samp{-@var{pos}} argument may also have any
-of the option letters @samp{Mbdfinr} appended to it, in which case
-the global ordering options are not used for that particular field.
-The @samp{-b} option may be independently attached to either or
-both of the @samp{+@var{pos}} and @samp{-@var{pos}} parts of a field
-specification, and if it is inherited from the global options it will
-be attached to both.  If a @samp{-n} or @samp{-M} option is used,
-thus implying a @samp{-b} option, the @samp{-b} option is taken to
-apply to both the @samp{+@var{pos}} and the @samp{-@var{pos}} parts
-of a key specification.  Keys may span multiple fields.
 
 In addition, when GNU @code{sort} is invoked with exactly one argument,
 options @samp{--help} and @samp{--version} are recognized.  @xref{Common
@@ -1755,6 +1738,28 @@ According to POSIX, @samp{-n} no longer implies @samp{-b}.  For
 consistency, @samp{-M} has been changed in the same way.  This may
 affect the meaning of character positions in field specifications in
 obscure cases.  The only fix is to add an explicit @samp{-b}.
+
+A position in a sort field specified with the @samp{-k} or @samp{+}
+option has the form @samp{@var{f}.@var{c}}, where @var{f} is the number
+of the field to use and @var{c} is the number of the first character
+from the beginning of the field (for @samp{+@var{pos}}) or from the end
+of the previous field (for @samp{-@var{pos}}).  If the @samp{.@var{c}}
+is omitted, it's taken to be the first character in the field.  If the
+@samp{-b} option was specified, the @samp{.@var{c}} part of a field
+specification is counted from the first nonblank character of the field
+(for @samp{+@var{pos}}) or from the first nonblank character following
+the previous field (for @samp{-@var{pos}}).
+
+A sort key option may also have any of the option letters @samp{Mbdfinr}
+appended to it, in which case the global ordering options are not used
+for that particular field.  The @samp{-b} option may be independently
+attached to either or both of the @samp{+@var{pos}} and
+@samp{-@var{pos}} parts of a field specification, and if it is inherited
+from the global options it will be attached to both.  If a @samp{-n} or
+@samp{-M} option is used, thus implying a @samp{-b} option, the
+@samp{-b} option is taken to apply to both the @samp{+@var{pos}} and the
+@samp{-@var{pos}} parts of a key specification.  Keys may span multiple
+fields.
 
 
 @node uniq invocation
