@@ -14,8 +14,6 @@
 
 #define BUCKET_HEAD(ht, idx) ((ht)->hash_table[(idx)])
 
-static void hash_free_0 (HT *, int);
-
 static int
 is_prime (candidate)
      unsigned long candidate;
@@ -77,6 +75,53 @@ unsigned int
 hash_get_n_slots_used (const HT *ht)
 {
   return ht->hash_n_slots_used;
+}
+
+/* Free all storage associated with HT that functions in this package
+   have allocated.  If a key_freer function has been supplied (when HT
+   was created), this function applies it to the key of each entry before
+   freeing that entry. */
+
+static void
+hash_free_0 (HT *ht, int free_user_data)
+{
+  if (free_user_data && ht->hash_key_freer != NULL)
+    {
+      unsigned int i;
+
+      for (i = 0; i < ht->hash_table_size; i++)
+	{
+	  HASH_ENT *p;
+	  HASH_ENT *next;
+
+	  for (p = BUCKET_HEAD (ht, i); p; p = next)
+	    {
+	      next = p->next;
+	      ht->hash_key_freer (p->key);
+	    }
+	}
+    }
+
+#ifdef USE_OBSTACK
+  obstack_free (&(ht->ht_obstack), NULL);
+#else
+  {
+    unsigned int i;
+    for (i = 0; i < ht->hash_table_size; i++)
+      {
+	HASH_ENT *p;
+	HASH_ENT *next;
+
+	for (p = BUCKET_HEAD (ht, i); p; p = next)
+	  {
+	    next = p->next;
+	    free (p);
+	  }
+      }
+  }
+#endif
+  ht->hash_free_entry_list = NULL;
+  free (ht->hash_table);
 }
 
 /* FIXME-comment */
@@ -610,53 +655,6 @@ hash_clear (HT *ht)
   ht->hash_max_chain_length = 0;
   ht->hash_n_keys = 0;
   ht->hash_dirty_max_chain_length = 0;
-}
-
-/* Free all storage associated with HT that functions in this package
-   have allocated.  If a key_freer function has been supplied (when HT
-   was created), this function applies it to the key of each entry before
-   freeing that entry. */
-
-static void
-hash_free_0 (HT *ht, int free_user_data)
-{
-  if (free_user_data && ht->hash_key_freer != NULL)
-    {
-      unsigned int i;
-
-      for (i = 0; i < ht->hash_table_size; i++)
-	{
-	  HASH_ENT *p;
-	  HASH_ENT *next;
-
-	  for (p = BUCKET_HEAD (ht, i); p; p = next)
-	    {
-	      next = p->next;
-	      ht->hash_key_freer (p->key);
-	    }
-	}
-    }
-
-#ifdef USE_OBSTACK
-  obstack_free (&(ht->ht_obstack), NULL);
-#else
-  {
-    unsigned int i;
-    for (i = 0; i < ht->hash_table_size; i++)
-      {
-	HASH_ENT *p;
-	HASH_ENT *next;
-
-	for (p = BUCKET_HEAD (ht, i); p; p = next)
-	  {
-	    next = p->next;
-	    free (p);
-	  }
-      }
-  }
-#endif
-  ht->hash_free_entry_list = NULL;
-  free (ht->hash_table);
 }
 
 void
