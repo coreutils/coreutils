@@ -1716,6 +1716,25 @@ check-misc:
 	  done | $(ASSORT) -u ) > $@-t
 	chmod a-w $@-t
 	mv $@-t $@
+
+# The following rule is not designed to be portable,
+# and relies on tools that not everyone has.
+
+# Most functions in src/*.c should have static scope.
+# Any that don't must be marked with `extern', but `main'
+# and `usage' are exceptions.  They're always extern, but
+# don't need to be marked.
+sc_src_functions_have_static_scope: $(all_programs)
+	@t=exceptions-$$$$;						\
+	trap "s=$$?; rm -f $$t; exit $$s" 0 1 2 13 15;			\
+	( printf '^main$$\n^usage$$\n';					\
+	  grep -h -A1 '^extern .*[^;]$$' $(SOURCES)			\
+	    | grep -vE '^(extern |--)' |sed 's/^/^/;s/ .*/$$/' ) > $$t;	\
+	nm -e *.$(OBJEXT)						\
+	    | sed -n 's/.* T //p'					\
+	    | grep -Ev -f $$t &&					\
+	  { echo 'the above functions should have static scope' 1>&2;	\
+	    exit 1; } || :
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
