@@ -171,7 +171,7 @@ hash_compare_active_dir_ents (void const *x, void const *y)
 {
   struct active_dir_ent const *a = x;
   struct active_dir_ent const *b = y;
-  return SAME_INODE (*a, *b);
+  return SAME_INODE (*a, *b) ? true : false;
 }
 
 /* A hash function for null-terminated char* strings using
