@@ -28,12 +28,15 @@
 # define HAVE_STRUCT_ERA_ENTRY 1
 # define HAVE_TM_GMTOFF 1
 # define HAVE_TM_ZONE 1
+# define HAVE_TZNAME 1
+# define HAVE_TZSET 1
 # define MULTIBYTE_IS_FORMAT_SAFE 1
 # define STDC_HEADERS 1
 # include <ansidecl.h>
 # include "../locale/localeinfo.h"
 #endif
 
+#include <ctype.h>
 #include <sys/types.h>		/* Some systems define `time_t' here.  */
 
 #ifdef TIME_WITH_SYS_TIME
@@ -46,7 +49,6 @@
 #  include <time.h>
 # endif
 #endif
-
 #if HAVE_TZNAME
 extern char *tzname[];
 #endif
@@ -80,7 +82,7 @@ extern char *tzname[];
 # include <stdlib.h>
 # include <string.h>
 #else
-# define memcpy(d, s, n) bcopy (s, d, n)
+# define memcpy(d, s, n) bcopy ((s), (d), (n))
 #endif
 
 #ifndef __P
@@ -126,6 +128,7 @@ extern char *tzname[];
 #ifdef _LIBC
 # define gmtime_r __gmtime_r
 # define localtime_r __localtime_r
+extern int __tz_compute __P ((time_t timer, const struct tm *tm));
 #else
 # if ! HAVE_LOCALTIME_R
 #  if ! HAVE_TM_GMTOFF
@@ -163,20 +166,75 @@ localtime_r (t, tp)
 #endif /* ! defined (_LIBC) */
 
 
-#define	add(n, f)							      \
+#if !defined (memset) && !defined (HAVE_MEMSET) && !defined (_LIBC)
+/* Some systems lack the `memset' function and we don't want to
+   introduce additional dependencies.  */
+static const char spaces[16] = "                ";
+
+# define memset_space(P, Len) \
+  do {									      \
+    int _len = (Len);							      \
+    									      \
+    do									      \
+      {									      \
+	int _this = _len > 16 ? 16 : _len;				      \
+	memcpy ((P), spaces, _this);					      \
+	(P) += _this;							      \
+	_len -= _this;							      \
+      }									      \
+    while (_len > 0);							      \
+  } while (0)
+#else
+# define memset_space(P, Len) memset ((P), ' ', (Len))
+#endif
+
+#define	add(n, f) \
   do									      \
     {									      \
-      i += (n);								      \
+      int _n = (n);							      \
+      int _delta = width - _n;						      \
+      i += _n + (_delta > 0 ? _delta : 0);				      \
       if (i >= maxsize)							      \
 	return 0;							      \
       else								      \
 	if (p)								      \
 	  {								      \
+	    if (_delta > 0)						      \
+	      memset_space (p, _delta);					      \
 	    f;								      \
-	    p += (n);							      \
+	    p += _n;							      \
 	  }								      \
     } while (0)
-#define	cpy(n, s)	add ((n), memcpy((PTR) p, (PTR) (s), (n)))
+
+#define	cpy(n, s) \
+    add ((n),								      \
+	 if (to_lowcase)						      \
+	   memcpy_lowcase (p, (s), _n);					      \
+	 else								      \
+	   memcpy ((PTR) p, (PTR) (s), _n))
+
+
+
+#ifdef _LIBC
+# define TOUPPER(Ch) toupper (Ch)
+# define TOLOWER(Ch) tolower (Ch)
+#else
+# define TOUPPER(Ch) (islower (Ch) ? toupper (Ch) : (Ch))
+# define TOLOWER(Ch) (isupper (Ch) ? tolower (Ch) : (Ch))
+#endif
+
+static char *memcpy_lowcase __P ((char *dest, const char *src, size_t len));
+
+static char *
+memcpy_lowcase (dest, src, len)
+     char *dest;
+     const char *src;
+     size_t len;
+{
+  while (len-- > 0)
+    dest[len] = TOLOWER (src[len]);
+  return dest;
+}
 
 #if ! HAVE_TM_GMTOFF
 /* Yield the difference between *A and *B,
@@ -256,7 +314,7 @@ strftime (s, maxsize, format, tp)
       char *s;
       size_t maxsize;
       const char *format;
-      register const struct tm *tp;
+      const struct tm *tp;
 {
   int hour12 = tp->tm_hour;
 #ifdef _NL_CURRENT
@@ -283,15 +341,30 @@ strftime (s, maxsize, format, tp)
   size_t month_len = strlen (f_month);
   const char *zone;
   size_t zonelen;
-  register size_t i = 0;
-  register char *p = s;
-  register const char *f;
+  size_t i = 0;
+  char *p = s;
+  const char *f;
 
-  zone = 0;
-#if HAVE_TM_ZONE
+  zone = NULL;
+#if !defined _LIBC && HAVE_TM_ZONE
+  /* XXX We have some problems here.  First, the string pointed to by
+     tm_zone is dynamically allocated while loading the zone data.  But
+     when another zone is loaded since the information in TP were
+     computed this would be a stale pointer.
+     The second problem is the POSIX test suite which assumes setting
+     the environment variable TZ to a new value before calling strftime()
+     will influence the result (the %Z format) even if the information in
+     TP is computed with a totally different time zone.  --drepper@gnu  */
   zone = (const char *) tp->tm_zone;
 #endif
 #if HAVE_TZNAME
+  /* POSIX.1 8.1.1 requires that whenever strftime() is called, the
+     time zone names contained in the external variable `tzname' shall
+     be set as if the tzset() function had been called.  */
+# if HAVE_TZSET
+  tzset ();
+# endif
+
   if (!(zone && *zone) && tp->tm_isdst >= 0)
     zone = tzname[tp->tm_isdst];
 #endif
@@ -317,6 +390,8 @@ strftime (s, maxsize, format, tp)
       char buf[1 + (sizeof (int) < sizeof (time_t)
 		    ? INT_STRLEN_BOUND (time_t)
 		    : INT_STRLEN_BOUND (int))];
+      int width = -1;
+      int to_lowcase = 0;
 
 #if DO_MULTIBYTE
 
@@ -393,16 +468,33 @@ strftime (s, maxsize, format, tp)
 
       /* Check for flags that can modify a number format.  */
       ++f;
-      switch (*f)
+      while (1)
 	{
-	case '_':
-	case '-':
-	  pad = *f++;
-	  break;
+	  switch (*f)
+	    {
+	    case '_':
+	    case '-':
+	    case '0':
+	      pad = *f++;
+	      break;
 
-	default:
-	  pad = 0;
+	    default:
+	      pad = 0;
+	      break;
+	    }
 	  break;
+	}
+
+      /* As a GNU extension we allow to specify the field width.  */
+      if (isdigit (*f))
+	{
+	  width = 0;
+	  do
+	    {
+	      width *= 10;
+	      width += *f - '0';
+	    }
+	  while (isdigit (*++f));
 	}
 
       /* Check for modifiers.  */
@@ -470,10 +562,10 @@ strftime (s, maxsize, format, tp)
 
 	subformat:
 	  {
-	    size_t len = strftime (p, maxsize - i, subfmt, tp);
+	    size_t len = strftime (NULL, maxsize - i, subfmt, tp);
 	    if (len == 0 && *subfmt)
 	      return 0;
-	    add (len, ;);
+	    add (len, strftime (p, maxsize - i, subfmt, tp));
 	  }
 	  break;
 
@@ -529,8 +621,9 @@ strftime (s, maxsize, format, tp)
 	     jump to one of these two labels.  */
 
 	do_number_spacepad:
-	  /* Force `_' flag.  */
-	  pad = '_';
+	  /* Force `_' flag unless overwritten by `0' flag.  */
+	  if (pad != '0')
+	    pad = '_';
 
 	do_number:
 	  /* Format the number according to the MODIFIER flag.  */
@@ -639,6 +732,10 @@ strftime (s, maxsize, format, tp)
 	case 'n':		/* POSIX.2 extension.  */
 	  add (1, *p = '\n');
 	  break;
+
+	case 'P':
+	  to_lowcase = 1;
+	  /* FALLTHROUGH */
 
 	case 'p':
 	  cpy (ap_len, ampm);
