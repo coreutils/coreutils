@@ -15,27 +15,7 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-/* Options:
-   -f, --force		Assume a 'y' answer to all questions it would
-			normally ask, and not ask the questions.
-
-   -i, --interactive	Require confirmation from the user before
-			performing any move that would destroy an
-			existing file.
-
-   -u, --update		Do not move a nondirectory that has an
-			existing destination with the same or newer
-			modification time.
-
-   -v, --verbose		List the name of each file as it is moved, and
-			the name it is moved to.
-
-   -b, --backup
-   -S, --suffix
-   -V, --version-control
-			Backup file creation.
-
-   Written by Mike Parker, David MacKenzie, and Jim Meyering */
+/* Written by Mike Parker, David MacKenzie, and Jim Meyering */
 
 #ifdef _AIX
  #pragma alloca
@@ -126,7 +106,8 @@ cp_option_init (struct cp_options *x)
 {
   x->copy_as_regular = 0;  /* FIXME: maybe make this an option */
   x->dereference = DEREF_NEVER;
-  x->force = 0;
+  x->unlink_dest_before_opening = 0;
+  x->unlink_dest_after_failed_open = 0;
   x->failed_unlink_is_fatal = 1;
   x->hard_link = 0;
   x->interactive = 0;
@@ -357,7 +338,7 @@ Rename SOURCE to DEST, or move SOURCE(s) to DIRECTORY.\n\
 \n\
       --backup[=CONTROL]       make a backup of each existing destination file\n\
   -b                           like --backup but does not accept an argument\n\
-  -f, --force                  remove existing destinations, never prompt\n\
+  -f, --force                  never prompt before overwriting\n\
   -i, --interactive            prompt before overwrite\n\
       --strip-trailing-slashes  remove any trailing slashes from each SOURCE\n\
                                  argument\n\
@@ -435,11 +416,9 @@ main (int argc, char **argv)
 	  break;
 	case 'f':
 	  x.interactive = 0;
-	  x.force = 1;
 	  break;
 	case 'i':
 	  x.interactive = 1;
-	  x.force = 0;
 	  break;
 	case STRIP_TRAILING_SLASHES_OPTION:
 	  remove_trailing_slashes = 1;
