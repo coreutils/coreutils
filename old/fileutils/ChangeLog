@@ -1,3 +1,9 @@
+Sat Jun 29 00:33:31 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/Makefile.am (BUILT_SOURCES): Guard dependency on dircolors.h
+	with @MAINT@ so it won't be removed with a casual disctlean.
+	(EXTRA_DIST): Add dcgen.pl and dircolors.hin.
+
 Fri Jun 28 22:56:00 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/dircolors.c (dc_parse_stream): Move `enum states' dcl into
