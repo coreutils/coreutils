@@ -146,8 +146,8 @@ touch (const char *file)
       /* Don't save a copy of errno if it's EISDIR, since that would lead
 	 touch to give a bogus diagnostic for e.g., `touch /' (assuming
 	 we don't own / or have write access to it).  On Solaris 5.6,
-	 and probably other systems, it is EINVAL.  */
-      if (fd == -1 && errno != EISDIR && errno != EINVAL)
+	 and probably other systems, it is EINVAL.  On SunOS4, it's EPERM.  */
+      if (fd == -1 && errno != EISDIR && errno != EINVAL && errno != EPERM)
 	open_errno = errno;
     }
 
