@@ -175,11 +175,9 @@ do_stdin (void)
 
   for (;;)
     {
-      long int token_length;
-
-      token_length = readtoken (stdin, DELIM, sizeof (DELIM) - 1,
-				&tokenbuffer);
-      if (token_length < 0)
+      size_t token_length = readtoken (stdin, DELIM, sizeof (DELIM) - 1,
+				       &tokenbuffer);
+      if (token_length == (size_t) -1)
 	break;
       fail |= print_factors (tokenbuffer.buffer);
     }
