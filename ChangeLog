@@ -1,6 +1,10 @@
-2004-01-09  Jim Meyering  <jim@meyering.net>
+2004-01-10  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.1.1.
+
+	* tests/misc/stat-fmt: Use backticks, not $().
+
+2004-01-09  Jim Meyering  <jim@meyering.net>
 
 	* configure.ac: Quote underquoted `jm_DUMMY_1' to avoid new warning.
 
