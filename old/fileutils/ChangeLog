@@ -1,3 +1,10 @@
+Wed Jun 26 06:58:58 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* ln.c (same_name): New function.
+	(do_link): Use it to test reliably whether A and B (from
+	ln --force A B) are hard links to the same file.
+	From Andreas Schwab.
+
 Tue Jun 25 00:03:43 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/getline.c: New file.
