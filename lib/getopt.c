@@ -75,11 +75,12 @@
 #endif
 
 #ifndef _
-/* This is for other GNU distributions with internationalized messages.
-   When compiling libc, the _ macro is predefined.  */
-# ifdef HAVE_LIBINTL_H
+/* This is for other GNU distributions with internationalized messages.  */
+# if defined HAVE_LIBINTL_H || defined _LIBC
 #  include <libintl.h>
-#  define _(msgid)	gettext (msgid)
+#  ifndef _
+#   define _(msgid)	gettext (msgid)
+#  endif
 # else
 #  define _(msgid)	(msgid)
 # endif
