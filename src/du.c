@@ -22,7 +22,7 @@
    By tege@sics.se, Torbjorn Granlund,
    and djm@ai.mit.edu, David MacKenzie.
    Variable blocks added by lm@sgi.com and eggert@twinsun.com.
-   Rewritten to use nftw by Jim Meyering.  */
+   Rewritten to use nftw, then to use fts by Jim Meyering.  */
 
 #include <config.h>
 #include <stdio.h>
@@ -135,6 +135,7 @@ static struct option const long_options[] =
   {"kilobytes", no_argument, NULL, 'k'}, /* long form is obsolescent */
   {"max-depth", required_argument, NULL, MAX_DEPTH_OPTION},
   {"megabytes", no_argument, NULL, 'm'}, /* obsolescent */
+  {"no-dereference", no_argument, NULL, 'P'},
   {"one-file-system", no_argument, NULL, 'x'},
   {"separate-dirs", no_argument, NULL, 'S'},
   {"summarize", no_argument, NULL, 's'},
@@ -179,6 +180,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
   -L, --dereference     dereference all symbolic links\n\
+  -P, --no-dereference  don't follow any symbolic links (this is the default)\n\
   -S, --separate-dirs   do not include size of subdirectories\n\
   -s, --summarize       display only a total for each argument\n\
 "), stdout);
@@ -549,8 +551,8 @@ main (int argc, char **argv)
 				     &output_block_size);
 
   fail = 0;
-  while ((c = getopt_long (argc, argv, "abchHklmsxB:DLSX:", long_options, NULL))
-	 != -1)
+  while ((c = getopt_long (argc, argv, "abchHklmsxB:DLPSX:",
+			   long_options, NULL)) != -1)
     {
       long int tmp_long;
       switch (c)
@@ -631,7 +633,13 @@ main (int argc, char **argv)
 	  bit_flags |= FTS_COMFOLLOW;
 	  break;
 
-	case 'L':
+	case 'P': /* --no-dereference */
+	  bit_flags |= FTS_PHYSICAL;
+	  bit_flags &= ~FTS_LOGICAL;
+	  bit_flags &= ~FTS_COMFOLLOW;
+	  break;
+
+	case 'L': /* --dereference */
 	  bit_flags &= ~FTS_PHYSICAL;
 	  bit_flags |= FTS_LOGICAL;
 	  break;
