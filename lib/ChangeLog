@@ -1,3 +1,17 @@
+2002-06-22  Jim Meyering  <meyering@lucent.com>
+
+	* c-stack.c, c-stack.h: New files, from diffutils-2.8.2.
+
+	* Makefile.am (libfetish_a_SOURCES): Add fnmatch_.h in place
+	of fnmatch.h.
+	(EXTRA_DIST): Add fnmatch_loop.c.
+	(libfetish_a_SOURCES): Add c-stack.c and c-stack.h.
+
+	* fnmatch_loop.c: New file, from diffutils-2.8.2.
+	* fnmatch.c: Update from diffutils-2.8.2.
+	* fnmatch_.h: New file.  From diffutils-2.8.2.
+	* fnmatch.h: Remove file.
+
 2002-06-18  Paul Eggert  <eggert@twinsun.com>
 
 	* file-type.h: Report an error if neither S_ISREG nor
