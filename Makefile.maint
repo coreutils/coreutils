@@ -345,6 +345,9 @@ my-distcheck: $(local-check)
 	echo "$(distdir).tar.gz is ready for distribution"; \
 	echo "========================"
 
+WGET = wget
+WGETFLAGS = -C off
+
 tgz-md5 = $(shell md5sum < $(my_distdir).tar.gz|sed 's/  -//')
 tgz-sha1 = $(shell sha1sum < $(my_distdir).tar.gz|sed 's/  -//')
 bz2-md5 = $(shell md5sum < $(my_distdir).tar.bz2|sed 's/  -//')
@@ -360,7 +363,7 @@ rel-check:
 	md5_tmp=/tmp/rel-check-md5-$$$$; \
 	set -e; \
 	trap 'status=$$?; rm -f $$tarz $$md5_tmp; exit $$status' 0 1 2 3 15; \
-	wget -q --output-document=$$tarz $(url); \
+	$(WGET) $(WGETFLAGS) -q --output-document=$$tarz $(url); \
 	echo "$(md5)  -" > $$md5_tmp; \
 	md5sum -c $$md5_tmp < $$tarz
 
@@ -388,7 +391,6 @@ announcement: NEWS ChangeLog $(rel-files) $(signatures)
 ## Updating files.  ##
 ## ---------------- ##
 
-WGET = wget
 ftp-gnu = ftp://ftp.gnu.org/gnu
 www-gnu = http://www.gnu.org
 
@@ -415,7 +417,8 @@ do-po-update:
 	tmppo=/tmp/$(PACKAGE)-$(VERSION)-po &&\
 	rm -rf $$tmppo && \
 	mkdir $$tmppo && \
-	(cd $$tmppo && $(WGET) -r -l1 -nd --no-parent -A '*.po' $(po_repo)) &&\
+	(cd $$tmppo && \
+	  $(WGET) $(WGETFLAGS) -r -l1 -nd --no-parent -A '*.po' $(po_repo)) &&\
 	cp $$tmppo/*.po po
 	cd po && $(MAKE) update-po
 	$(MAKE) po-check
@@ -432,10 +435,12 @@ po-update:
 # The following pseudo table associates a local directory and a URL
 # with each of the files that belongs to some other package and is
 # regularly updated from the specified URL.
-wget_files ?= $(srcdir)/config/config.guess \
-              $(srcdir)/config/config.sub \
-              $(srcdir)/src/ansi2knr.c \
-	      $(srcdir)/config/texinfo.tex
+wget_files ?= \
+  $(srcdir)/config/config.guess \
+  $(srcdir)/config/config.sub \
+  $(srcdir)/config/texinfo.tex \
+  $(srcdir)/src/ansi2knr.c
+
 get-targets = $(patsubst %, get-%, $(wget_files))
 
 config.guess-url_prefix = $(ftp-gnu)/config/
@@ -453,12 +458,15 @@ url = $($(notdir $(target))-url_prefix)$(notdir $(target))
 
 .PHONY: $(get-targets)
 $(get-targets):
-	$(WGET) $(url) -O $(target).t \
+	$(WGET) $(WGETFLAGS) $(url) -O $(target).t \
 	  && $(move_if_change) $(target).t $(target)
 
-cvs_files ?= $(srcdir)/config/depcomp $(srcdir)/config/missing \
-	     $(srcdir)/config/mkinstalldirs \
-             $(srcdir)/config/install-sh $(srcdir)/src/ansi2knr.c
+cvs_files ?= \
+  $(srcdir)/config/depcomp \
+  $(srcdir)/config/install-sh \
+  $(srcdir)/config/missing \
+  $(srcdir)/config/mkinstalldirs \
+  $(srcdir)/src/ansi2knr.c
 automake_repo=:pserver:anoncvs:anoncvs@sources.redhat.com:/cvs/automake
 .PHONY: wget-update
 wget-update: $(get-targets)
