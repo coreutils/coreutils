@@ -170,14 +170,15 @@ main (int argc, char **argv)
   int c;
   int fail = 0;
   struct timeval tv_start;
-  struct timeval tv_done;
+  struct timeval tv_stop;
   int i_sec;
   int i_usec;
 #ifdef SA_INTERRUPT
   struct sigaction oldact, newact;
 #endif
 
-  /* FIXME */
+  /* Record start time.  */
+  /* FIXME: this is not portable.  write replacement based on times? */
   gettimeofday (&tv_start, NULL);
 
   program_name = argv[0];
@@ -210,12 +211,20 @@ main (int argc, char **argv)
     {
       double s;
       const char *p;
-      if (xstrtod (argv[i], &p, &s) || s < 0 || apply_suffix (&s, *p))
+      if (xstrtod (argv[i], &p, &s)
+	  /* No negative intervals.  */
+	  || s < 0
+	  /* No extra chars after number and optional s,m,h,d char. */
+	  || (*p && *(p+1))
+	  /* Update S based on suffix char. */
+	  || apply_suffix (&s, *p))
 	{
 	  error (0, 0, _("invalid time interval `%s'"), argv[i]);
 	  fail = 1;
 	  continue;
 	}
+
+      /* FIXME-maybe: This could overflow.  */
       seconds += s;
     }
 
@@ -231,21 +240,22 @@ main (int argc, char **argv)
   sigaction (SIGCONT, NULL, &oldact);
   if (oldact.sa_handler != SIG_IGN)
     sigaction (SIGCONT, &newact, NULL);
-#else				/* !SA_INTERRUPT */
+#else
   if (signal (SIGCONT, SIG_IGN) != SIG_IGN)
     signal (SIGCONT, sighandler);
-#endif				/* !SA_INTERRUPT */
+#endif
 
   i_sec = floor (seconds);
   sleep (i_sec);
   i_usec = (int) ((seconds - i_sec) * 1000000);
+  /* FIXME: not portable: write replacement based on select.  */
   usleep (i_usec);
 
   if (!suspended)
     exit (0);
 
-  tv_done.tv_sec = tv_start.tv_sec + i_sec;
-  tv_done.tv_usec = tv_start.tv_usec + i_usec;
+  tv_stop.tv_sec = tv_start.tv_sec + i_sec;
+  tv_stop.tv_usec = tv_start.tv_usec + i_usec;
 
   while (1)
     {
@@ -253,7 +263,7 @@ main (int argc, char **argv)
       struct timeval tv_now;
       int negative;
       gettimeofday (&tv_now, NULL);
-      negative = timeval_subtract (&diff, &tv_done, &tv_now);
+      negative = timeval_subtract (&diff, &tv_stop, &tv_now);
       if (negative)
 	break;
       sleep (diff.tv_sec);
