@@ -1,3 +1,7 @@
+1998-05-10  Jim Meyering  <meyering@ascend.com>
+
+	* jm-mktime.m4: Use AM_FUNC_MKTIME, now that it's up to date.
+
 1998-05-09  Jim Meyering  <meyering@ascend.com>
 
 	* Makefile.am (EXTRA_DIST): Add ssize_t.m4.
