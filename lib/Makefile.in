@@ -27,14 +27,14 @@ DEFS = -DCONFIG_BROKETS @DEFS@
 CFLAGS = @CFLAGS@
 YACC = @YACC@
 
-prefix = /usr/local
+prefix = @prefix@
 exec_prefix = $(prefix)
 libdir = $(exec_prefix)/lib
 
 SOURCES = getdate.y posixtm.y \
 argmatch.c backupfile.c basename.c dirname.c eaccess.c \
 error.c filemode.c fsusage.c full-write.c getopt.c getopt1.c \
-getversion.c idcache.c isdir.c makepath.c \
+getversion.c group-member.c idcache.c isdir.c makepath.c \
 modechange.c mountlist.c safe-read.c savedir.c \
 stripslash.c xgetcwd.c xmalloc.c xstrdup.c userspec.c yesno.c \
 fileblocks.c fnmatch.c ftruncate.c mkdir.c mktime.c rename.c stpcpy.c \
@@ -43,18 +43,21 @@ strdup.c strstr.c alloca.c
 OBJECTS = getdate.o posixtm.o \
 argmatch.o backupfile.o basename.o dirname.o eaccess.o \
 error.o filemode.o full-write.o getopt.o getopt1.o \
-getversion.o idcache.o isdir.o makepath.o \
+getversion.o group-member.o idcache.o isdir.o makepath.o \
 modechange.o safe-read.o savedir.o \
 stripslash.o xgetcwd.o xmalloc.o xstrdup.o userspec.o yesno.o \
 @LIBOBJS@ @ALLOCA@
 
 DISTFILES = Makefile.in backupfile.h getopt.h modechange.h \
-fnmatch.h fsusage.h mountlist.h pathmax.h system.h $(SOURCES)
+fnmatch.h fsusage.h mountlist.h pathmax.h $(SOURCES)
 
 all: libfu.a
 
 .c.o:
 	$(CC) -c $(CPPFLAGS) $(DEFS) -I.. -I$(srcdir) $(CFLAGS) $<
+
+Makefile: ../config.status Makefile.in
+	CONFIG_FILES=$@ CONFIG_HEADERS= ../config.status
 
 install: all
 
