@@ -1,16 +1,16 @@
 # Swedish messages for coreutils.
-# Copyright © 1997, 2002 Free Software Foundation, Inc.
+# Copyright © 1997, 2002, 2003 Free Software Foundation, Inc.
 # Peter Antman <peter.antman@abc.se>, 1997.
 # Thomas Olsson <cid95tho@lustudat.student.lu.se>, 1997.
 # Daniel Resare <daniel@resare.com> 1999, 2000.
-# Göran Uddeborg <goeran@uddeborg.pp.se>, 1996, 1997, 1998, 1999, 2000, 2001, 2002.
-# $Revision: 1.38 $
+# Göran Uddeborg <goeran@uddeborg.pp.se>, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003.
+# $Revision: 1.40 $
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: coreutils 4.5.4\n"
-"POT-Creation-Date: 2003-02-05 11:25+0100\n"
-"PO-Revision-Date: 2002-12-14 16:59+0100\n"
+"Project-Id-Version: coreutils 4.5.5\n"
+"POT-Creation-Date: 2003-02-08 21:32+0100\n"
+"PO-Revision-Date: 2003-02-03 16:58+0100\n"
 "Last-Translator: Göran Uddeborg <goeran@uddeborg.pp.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -278,7 +278,7 @@ msgstr "De jämförda strängarna var %s och %s."
 #: src/mkfifo.c:51 src/mknod.c:51 src/mv.c:307 src/nice.c:63 src/nl.c:172
 #: src/od.c:283 src/paste.c:399 src/pathchk.c:142 src/pinky.c:465
 #: src/pr.c:2750 src/printenv.c:59 src/printf.c:93 src/ptx.c:1855 src/pwd.c:42
-#: src/readlink.c:65 src/rm.c:96 src/rmdir.c:142 src/seq.c:78 src/shred.c:156
+#: src/readlink.c:65 src/rm.c:95 src/rmdir.c:142 src/seq.c:78 src/shred.c:156
 #: src/sleep.c:59 src/sort.c:272 src/split.c:91 src/stat.c:675 src/stty.c:494
 #: src/su.c:433 src/sum.c:56 src/sync.c:40 src/tac.c:123 src/tail.c:230
 #: src/tee.c:59 src/test.c:985 src/touch.c:240 src/tr.c:323 src/tsort.c:93
@@ -320,7 +320,7 @@ msgstr ""
 #: src/md5sum.c:157 src/mkdir.c:76 src/mkfifo.c:68 src/mknod.c:82 src/mv.c:361
 #: src/nice.c:77 src/nl.c:227 src/od.c:370 src/paste.c:423 src/pathchk.c:154
 #: src/pinky.c:492 src/pr.c:2862 src/printenv.c:72 src/printf.c:141
-#: src/pwd.c:53 src/readlink.c:82 src/rm.c:128 src/rmdir.c:162 src/seq.c:104
+#: src/pwd.c:53 src/readlink.c:82 src/rm.c:127 src/rmdir.c:162 src/seq.c:104
 #: src/shred.c:219 src/sleep.c:75 src/sort.c:343 src/split.c:123
 #: src/stat.c:745 src/stty.c:708 src/su.c:454 src/sum.c:76 src/sync.c:51
 #: src/tac.c:146 src/tail.c:300 src/tee.c:72 src/test.c:1067 src/touch.c:271
@@ -340,7 +340,7 @@ msgstr ""
 #: src/chroot.c:78 src/csplit.c:1464 src/dirname.c:89 src/expr.c:178
 #: src/install.c:284 src/link.c:87 src/mkdir.c:124 src/mkfifo.c:113
 #: src/mknod.c:137 src/pathchk.c:194 src/readlink.c:101 src/readlink.c:133
-#: src/rm.c:200 src/rmdir.c:206 src/seq.c:411 src/sleep.c:150 src/stat.c:796
+#: src/rm.c:199 src/rmdir.c:206 src/seq.c:411 src/sleep.c:150 src/stat.c:796
 #: src/unlink.c:88
 msgid "too few arguments"
 msgstr "för få argument"
@@ -1574,9 +1574,8 @@ msgid "you must specify a list of bytes, characters, or fields"
 msgstr "du måste specificera en lista med byte, tecken eller fält"
 
 #: src/cut.c:720
-#, fuzzy
 msgid "an input delimiter may be specified only when operating on fields"
-msgstr "en avskiljare kan endast specificeras vid arbete på fält"
+msgstr "en indataavskiljare kan endast specificeras vid arbete på fält"
 
 #: src/cut.c:724
 msgid ""
@@ -2218,11 +2217,11 @@ msgstr ""
 "innehåller något /, skriv \".\" (som betyder aktuell katalog)\n"
 
 #: src/du.c:49
-#, fuzzy
 msgid ""
 "Torbjorn Granlund, David MacKenzie, Larry McVoy, Paul Eggert, and Jim "
 "Meyering"
-msgstr "Torbjörn Granlund, David MacKenzie, Larry McVoy och Paul Eggert"
+msgstr ""
+"Torbjörn Granlund, David MacKenzie, Larry McVoy, Paul Eggert och Jim Meyering"
 
 #: src/du.c:172
 msgid ""
@@ -2291,9 +2290,9 @@ msgstr ""
 "                          --summarize\n"
 
 #: src/du.c:339
-#, fuzzy, c-format
+#, c-format
 msgid "cannot change to parent of directory %s"
-msgstr "kan inte byta till katalog %s"
+msgstr "kan inte byta till föräldern till katalog %s"
 
 #: src/du.c:347
 #, c-format
@@ -2301,9 +2300,9 @@ msgid "cannot change to directory %s"
 msgstr "kan inte byta till katalog %s"
 
 #: src/du.c:354
-#, fuzzy, c-format
+#, c-format
 msgid "cannot read directory %s"
-msgstr "kan inte skapa katalog %s"
+msgstr "kan inte läsa katalog %s"
 
 #: src/du.c:545 src/ls.c:2241 src/wc.c:591
 msgid "total"
@@ -3522,7 +3521,6 @@ msgstr ""
 "                               annars: sortera efter ctime\n"
 
 #: src/ls.c:3784
-#, fuzzy
 msgid ""
 "  -C                         list entries by columns\n"
 "      --color[=WHEN]         control whether color is used to distinguish "
@@ -3539,7 +3537,8 @@ msgstr ""
 "                               filetyper.  NÄR kan vara \"never\", \"always"
 "\"\n"
 "                               eller \"auto\".\n"
-"  -d, --directory            lista kataloger istället för deras innehåll\n"
+"  -d, --directory            lista kataloger istället för deras innehåll,\n"
+"                               och följ inte symboliska länkar\n"
 "  -D, --dired                anpassa utdata för Emacs dired-funktion\n"
 
 #: src/ls.c:3792
@@ -3558,7 +3557,6 @@ msgstr ""
 "      --full-time            som -l --time-style=full-iso\n"
 
 #: src/ls.c:3799
-#, fuzzy
 msgid ""
 "  -g                         like -l, but do not list owner\n"
 "  -G, --no-group             inhibit display of group information\n"
@@ -3578,7 +3576,12 @@ msgstr ""
 "2G)\n"
 "      --si                  d:o, men använd multipler av 1000 istället för "
 "1024\n"
-"  -H, --dereference-command-line  följ symboliska länkar på kommandoraden\n"
+"  -H, --dereference-command-line\n"
+"                            följ symboliska länkar angivna på kommandoraden\n"
+"      --dereference-command-line-symlink-to-dir\n"
+"                            följ varje kommandoradsargument som är en "
+"symbolisk\n"
+"                              länk som pekar på en katalog\n"
 
 #: src/ls.c:3810
 msgid ""
@@ -3985,17 +3988,19 @@ msgid ""
 "it is interpreted as hexadecimal; otherwise, if it begins with 0, as octal;\n"
 "otherwise, as decimal.  TYPE may be:\n"
 msgstr ""
+"\n"
+"Både ÖVRE och LÄGRE måste anges när TYP är b, c eller u, och de får\n"
+"inte anges när TYP är p.  Om ÖVRE eller LÄGRE börjar med 0x eller 0X\n"
+"tolkas det som hexadecimalt; annars, om det börjar med 0 som oktalt;\n"
+"annars som decimalt.  TYP får vara:\n"
 
 #: src/mknod.c:76
-#, fuzzy
 msgid ""
 "\n"
 "  b      create a block (buffered) special file\n"
 "  c, u   create a character (unbuffered) special file\n"
 "  p      create a FIFO\n"
 msgstr ""
-"\n"
-"ÖVRE UNDRE är inte tillåtna för TYP p, obligatoriska annars.  TYP kan vara:\n"
 "\n"
 "  b      skapa en (buffrad) blockspecialfil\n"
 "  c, u   skapa en (obuffrad) teckenspecialfil\n"
@@ -5286,15 +5291,17 @@ msgid "cannot get current directory"
 msgstr "kan inte avgöra aktuell katalog"
 
 #: src/readlink.c:69
-#, fuzzy, c-format
+#, c-format
 msgid "Usage: %s [OPTION]... FILE\n"
-msgstr "Användning: %s [FLAGGA]... [FIL]\n"
+msgstr "Användning: %s [FLAGGA]... FIL\n"
 
 #: src/readlink.c:70
 msgid ""
 "Display value of a symbolic link on standard output.\n"
 "\n"
 msgstr ""
+"Visa värdet på en symbolisk länk på standard ut.\n"
+"\n"
 
 #: src/readlink.c:72
 msgid ""
@@ -5305,6 +5312,12 @@ msgid ""
 "  -s, --silent            suppress most error messages\n"
 "  -v, --verbose           report error messages\n"
 msgstr ""
+"  -f, --canonicalize      kanonisera genom att följa varje symlänk i varje \n"
+"                          komponent i den angivna sökvägen rekursivt\n"
+"  -n, --no-newline        skriv inte en avslutande nyrad\n"
+"  -q, --quiet,\n"
+"  -s, --silent            undertryck de flesta felmeddelandena\n"
+"  -v, --verbose           rapportera felmeddelanden\n"
 
 #: src/remove.c:394
 #, c-format
@@ -5390,16 +5403,16 @@ msgstr ""
 msgid "cannot remove `.' or `..'"
 msgstr "kan inte ta bort \".\" eller \"..\""
 
-#: src/rm.c:61
+#: src/rm.c:60
 msgid "Paul Rubin, David MacKenzie, Richard Stallman, and Jim Meyering"
 msgstr "Paul Rubin, David MacKenzie, Richard Stallman och Jim Meyering"
 
-#: src/rm.c:100 src/touch.c:244
+#: src/rm.c:99 src/touch.c:244
 #, c-format
 msgid "Usage: %s [OPTION]... FILE...\n"
 msgstr "Användning: %s [FLAGGA]... FIL...\n"
 
-#: src/rm.c:101
+#: src/rm.c:100
 msgid ""
 "Remove (unlink) the FILE(s).\n"
 "\n"
@@ -5419,7 +5432,7 @@ msgstr ""
 "  -r, -R, --recursive   ta bort innehåll i kataloger rekursivt\n"
 "  -v, --verbose         förklara vad som görs\n"
 
-#: src/rm.c:113
+#: src/rm.c:112
 #, c-format
 msgid ""
 "\n"
@@ -5436,7 +5449,7 @@ msgstr ""
 "\n"
 "  %s ./-apa\n"
 
-#: src/rm.c:122
+#: src/rm.c:121
 msgid ""
 "\n"
 "Note that if you use rm to remove a file, it is usually possible to recover\n"
@@ -6086,9 +6099,8 @@ msgid "invalid number"
 msgstr "ogiltigt antal"
 
 #: src/stat.c:325
-#, fuzzy
 msgid "*** invalid date/time ***"
-msgstr "ogiltigt datum \"%s\""
+msgstr "*** ogiltigt datum/tid ***"
 
 #: src/stat.c:603
 #, c-format
@@ -7393,9 +7405,9 @@ msgid "creating %s"
 msgstr "skapar %s"
 
 #: src/touch.c:222
-#, fuzzy, c-format
+#, c-format
 msgid "cannot touch %s"
-msgstr "kan inte ta status på %s"
+msgstr "kan inte beröra %s"
 
 #: src/touch.c:228
 #, c-format
@@ -7820,7 +7832,6 @@ msgstr ""
 "\n"
 
 #: src/unexpand.c:387
-#, fuzzy
 msgid ""
 "  -a, --all        convert all whitespace, instead of just initial "
 "whitespace\n"
@@ -7829,10 +7840,13 @@ msgid ""
 "  -t, --tabs=N     have tabs N characters apart instead of 8 (enables -a)\n"
 "  -t, --tabs=LIST  use comma separated LIST of tab positions (enables -a)\n"
 msgstr ""
-"  -a, --all           konvertera alla mellanrum, i stället för inledande\n"
-"  -t, --tabs=ANTAL    tabulatorstegen är ANTAL långa i stället för 8\n"
-"  -t, --tabs=LISTA    använd kommaseparerad lista med angivna tab-"
-"positioner\n"
+"  -a, --all        konvertera alla mellanrum, i stället för bara inledande\n"
+"      --first-only konvertera bara inledande mellanrumsekvenser (ersätter -"
+"a)\n"
+"  -t, --tabs=N     tabulatorstegen är N långa i stället för 8 (aktiverar -"
+"a)\n"
+"  -t, --tabs=LISTA använd kommaseparerad LISTA med tab-positioner (aktiverar "
+"-a)\n"
 
 #: src/unexpand.c:464
 msgid "`-LIST' option is obsolete; use `--first-only -t LIST'"
@@ -8245,17 +8259,3 @@ msgid ""
 msgstr ""
 "Skriv gång på gång en rad med alla specifierade STRÄNG(ar), eller \"y\"\n"
 "\n"
-
-#, fuzzy
-#~ msgid "cannot convert time"
-#~ msgstr "kan inte ställa klockan"
-
-#, fuzzy
-#~ msgid "cannot format time"
-#~ msgstr "kan inte ställa klockan"
-
-#~ msgid "cannot change to `..' from directory %s"
-#~ msgstr "kan inte byta till \"..\" från katalog %s"
-
-#~ msgid "missing file arguments"
-#~ msgstr "filargument saknas"

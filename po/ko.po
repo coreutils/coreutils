@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GNU textutils 2.0.22\n"
-"POT-Creation-Date: 2003-02-05 11:25+0100\n"
+"POT-Creation-Date: 2003-02-08 21:32+0100\n"
 "PO-Revision-Date: 2002-07-22 20:02+0900\n"
 "Last-Translator: Changwoo Ryu <cwryu@debian.org>\n"
 "Language-Team: Korean <translation-team-ko@lists.sourceforge.net>\n"
@@ -274,7 +274,7 @@ msgstr "비교한 문자열은 %s과(와) %s입니다."
 #: src/mkfifo.c:51 src/mknod.c:51 src/mv.c:307 src/nice.c:63 src/nl.c:172
 #: src/od.c:283 src/paste.c:399 src/pathchk.c:142 src/pinky.c:465
 #: src/pr.c:2750 src/printenv.c:59 src/printf.c:93 src/ptx.c:1855 src/pwd.c:42
-#: src/readlink.c:65 src/rm.c:96 src/rmdir.c:142 src/seq.c:78 src/shred.c:156
+#: src/readlink.c:65 src/rm.c:95 src/rmdir.c:142 src/seq.c:78 src/shred.c:156
 #: src/sleep.c:59 src/sort.c:272 src/split.c:91 src/stat.c:675 src/stty.c:494
 #: src/su.c:433 src/sum.c:56 src/sync.c:40 src/tac.c:123 src/tail.c:230
 #: src/tee.c:59 src/test.c:985 src/touch.c:240 src/tr.c:323 src/tsort.c:93
@@ -312,7 +312,7 @@ msgstr ""
 #: src/md5sum.c:157 src/mkdir.c:76 src/mkfifo.c:68 src/mknod.c:82 src/mv.c:361
 #: src/nice.c:77 src/nl.c:227 src/od.c:370 src/paste.c:423 src/pathchk.c:154
 #: src/pinky.c:492 src/pr.c:2862 src/printenv.c:72 src/printf.c:141
-#: src/pwd.c:53 src/readlink.c:82 src/rm.c:128 src/rmdir.c:162 src/seq.c:104
+#: src/pwd.c:53 src/readlink.c:82 src/rm.c:127 src/rmdir.c:162 src/seq.c:104
 #: src/shred.c:219 src/sleep.c:75 src/sort.c:343 src/split.c:123
 #: src/stat.c:745 src/stty.c:708 src/su.c:454 src/sum.c:76 src/sync.c:51
 #: src/tac.c:146 src/tail.c:300 src/tee.c:72 src/test.c:1067 src/touch.c:271
@@ -331,7 +331,7 @@ msgstr ""
 #: src/chroot.c:78 src/csplit.c:1464 src/dirname.c:89 src/expr.c:178
 #: src/install.c:284 src/link.c:87 src/mkdir.c:124 src/mkfifo.c:113
 #: src/mknod.c:137 src/pathchk.c:194 src/readlink.c:101 src/readlink.c:133
-#: src/rm.c:200 src/rmdir.c:206 src/seq.c:411 src/sleep.c:150 src/stat.c:796
+#: src/rm.c:199 src/rmdir.c:206 src/seq.c:411 src/sleep.c:150 src/stat.c:796
 #: src/unlink.c:88
 msgid "too few arguments"
 msgstr "인수가 너무 적음"
@@ -5010,17 +5010,17 @@ msgstr ""
 msgid "cannot remove `.' or `..'"
 msgstr "`.'나 `..'를 지울 수 없습니다"
 
-#: src/rm.c:61
+#: src/rm.c:60
 #, fuzzy
 msgid "Paul Rubin, David MacKenzie, Richard Stallman, and Jim Meyering"
 msgstr "David Ihnat, David MacKenzie, 그리고 Jim Meyering"
 
-#: src/rm.c:100 src/touch.c:244
+#: src/rm.c:99 src/touch.c:244
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION]... FILE...\n"
 msgstr "사용법: %s [<옵션>]... [<파일>]...\n"
 
-#: src/rm.c:101
+#: src/rm.c:100
 #, fuzzy
 msgid ""
 "Remove (unlink) the FILE(s).\n"
@@ -5048,7 +5048,7 @@ msgstr ""
 "  %s -- -foo\n"
 "  %s ./-foo\n"
 
-#: src/rm.c:113
+#: src/rm.c:112
 #, c-format
 msgid ""
 "\n"
@@ -5059,7 +5059,7 @@ msgid ""
 "  %s ./-foo\n"
 msgstr ""
 
-#: src/rm.c:122
+#: src/rm.c:121
 msgid ""
 "\n"
 "Note that if you use rm to remove a file, it is usually possible to recover\n"
