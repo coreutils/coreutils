@@ -43,10 +43,10 @@ my @tv = (
 
 # Make sure counts are interpreted as decimal.
 # Before 2.0f, these would have been interpreted as octal
-['no-octal-1', '-08',  "\n"x12, "\n"x8, 0],
-['no-octal-2', '-010', "\n"x12, "\n"x10, 0],
-['no-octal-3', '-n 08', "\n"x12, "\n"x8, 0],
-['no-octal-4', '-c 08', "\n"x12, "\n"x8, 0],
+['no-oct-1', '-08',  "\n"x12, "\n"x8, 0],
+['no-oct-2', '-010', "\n"x12, "\n"x10, 0],
+['no-oct-3', '-n 08', "\n"x12, "\n"x8, 0],
+['no-oct-4', '-c 08', "\n"x12, "\n"x8, 0],
 );
 
 sub test_vector
