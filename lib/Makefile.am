@@ -55,6 +55,7 @@ libfetish_a_SOURCES = \
   dirname.c dirname.h \
   dirfd.h \
   dup-safer.c \
+  euidaccess.h \
   exclude.c exclude.h \
   exitfail.c exitfail.h \
   filemode.c filemode.h \
