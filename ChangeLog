@@ -1,6 +1,12 @@
-2002-10-01  Jim Meyering  <meyering@lucent.com>
+2002-10-02  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.5.2.
+
+	* Makefile.am (SUBDIRS): Remove `old'.
+	(EXTRA_DIST): List the files in old/.
+	Suggestion from Akim Demaille.
+
+2002-10-01  Jim Meyering  <meyering@lucent.com>
 
 	* src/sys2.h (SSIZE_MAX): Define.
 
