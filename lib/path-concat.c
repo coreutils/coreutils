@@ -1,6 +1,6 @@
 /* path-concat.c -- concatenate two arbitrary pathnames
 
-   Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004 Free
+   Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005 Free
    Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -22,6 +22,7 @@
 #if HAVE_CONFIG_H
 # include <config.h>
 #endif
+# include <assert.h>
 
 /* Specification.  */
 #include "path-concat.h"
@@ -54,7 +55,7 @@ longest_relative_suffix (char const *f)
    Arrange for a directory separator if necessary between DIR and BASE
    in the result, removing any redundant separators.
    In any case, if BASE_IN_RESULT is non-NULL, set
-   *BASE_IN_RESULT to point to the copy of BASE in the returned
+   *BASE_IN_RESULT to point to the copy of ABASE in the returned
    concatenation.
 
    Report an error if memory is exhausted.  */
@@ -78,10 +79,49 @@ path_concat (char const *dir, char const *abase, char **base_in_result)
   p += needs_separator;
 
   if (base_in_result)
-    *base_in_result = p;
+    *base_in_result = p - IS_ABSOLUTE_FILE_NAME (abase);
 
   p = mempcpy (p, base, baselen);
   *p = '\0';
 
+  assert (!base_in_result
+	  || strcmp (*base_in_result, abase) == 0);
+
   return p_concat;
 }
+
+#ifdef TEST_PATH_CONCAT
+#include <stdlib.h>
+#include <stdio.h>
+int
+main ()
+{
+  static char const *const tests[][3] =
+    {
+      {"a", "b",   "a/b"},
+      {"a/", "b",  "a/b"},
+      {"a/", "/b", "a/b"},
+      {"a", "/b",  "a/b"},
+
+      {"/", "b",  "/b"},
+      {"/", "/b", "/b"},
+      {"/", "/",  "/"},
+      {"a", "/",  "a/"},   /* this might deserve a diagnostic */
+      {"/a", "/", "/a/"},  /* this might deserve a diagnostic */
+    };
+  size_t i;
+  bool fail = false;
+  for (i = 0; i < sizeof tests / sizeof tests[0]; i++)
+    {
+      char *base_in_result;
+      char const *const *t = tests[i];
+      char *res = path_concat (t[0], t[1], &base_in_result);
+      if (strcmp (res, t[2]) != 0)
+	{
+	  printf ("got %s, expected %s\n", res, t[2]);
+	  fail = true;
+	}
+    }
+  exit (fail ? EXIT_FAILURE : EXIT_SUCCESS);
+}
+#endif
