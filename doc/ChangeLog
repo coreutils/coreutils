@@ -4,6 +4,17 @@
 	extension to join, which does not require sorted input when
 	the input contains no unpairable lines.
 
+2001-09-03  Paul Eggert  <eggert@twinsun.com>
+
+	* coreutils.texi:
+	New 'uname' options -i or --hardware-platform,
+	and -o or --operating-system.
+	'uname -a' now outputs -i and -o information at the end.
+	New uname option --kernel-version is an alias for -v.
+	Uname option --release has been renamed to --kernel-release,
+	and --sysname has been renamed to --kernel-name;
+	the old options will work for a while, but are no longer documented.
+
 2001-08-24  Herbert Xu  <herbert@gondor.apana.org.au>
 
 	* coreutils.texi (cut invocation): Document how cut treats lines
