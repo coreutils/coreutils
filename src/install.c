@@ -147,10 +147,6 @@ cp_option_init (struct cp_options *x)
   x->dereference = DEREF_ALWAYS;
   x->unlink_dest_before_opening = 1;
   x->unlink_dest_after_failed_open = 0;
-
-  /* If unlink fails, try to proceed anyway.  */
-  x->failed_unlink_is_fatal = 0;
-
   x->hard_link = 0;
   x->interactive = I_UNSPECIFIED;
   x->move_mode = 0;

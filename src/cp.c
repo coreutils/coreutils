@@ -690,7 +690,6 @@ cp_option_init (struct cp_options *x)
   x->dereference = DEREF_UNDEFINED;
   x->unlink_dest_before_opening = 0;
   x->unlink_dest_after_failed_open = 0;
-  x->failed_unlink_is_fatal = 1;
   x->hard_link = 0;
   x->interactive = I_UNSPECIFIED;
   x->myeuid = geteuid ();
