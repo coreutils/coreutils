@@ -906,8 +906,12 @@ main (int argc, char **argv)
   i = decode_switches (argc, argv);
 
   if (print_with_color)
+    parse_ls_color ();
+
+  /* Test print_with_color again, because the call to parse_ls_color
+     may have just reset it -- e.g., if LS_COLORS is invalid.  */
+  if (print_with_color)
     {
-      parse_ls_color ();
       prep_non_filename_text ();
       /* Avoid following symbolic links when possible.  */
       if (color_indicator[C_ORPHAN].string != NULL
