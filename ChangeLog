@@ -14,6 +14,10 @@
 	* tests/du/trailing-slash: Run envvar-check in case BLOCK_SIZE
 	etc. are set.
 
+2004-02-23  Paul Eggert  <eggert@twinsun.com>
+
+	* NEWS: Document how chown's USER.GROUP argument is now parsed.
+
 2004-02-23  Jim Meyering  <jim@meyering.net>
 
 	* src/seq.c (usage): Remove stray space after \n in --help output.
