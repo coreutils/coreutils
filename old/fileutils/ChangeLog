@@ -1,5 +1,6 @@
 Thu Feb 20 20:16:59 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* lib/mktime.c: Update from libc.
 	* lib/strtol.c: Update from libc.
 
 Wed Feb 19 22:06:32 1997  Jim Meyering  <meyering@na-net.ornl.gov>
