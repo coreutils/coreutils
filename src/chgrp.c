@@ -298,7 +298,7 @@ main (int argc, char **argv)
 
   recurse = force_silent = verbose = changes_only = 0;
 
-  while ((optc = getopt_long (argc, argv, "Rcfnv", long_options, (int *) 0))
+  while ((optc = getopt_long (argc, argv, "Rcfhv", long_options, (int *) 0))
 	 != EOF)
     {
       switch (optc)
