@@ -20,6 +20,7 @@
 #include <config.h>
 #include <getopt.h>
 #include <pwd.h>
+#include <stdio.h>
 
 #include "system.h"
 #include "error.h"
