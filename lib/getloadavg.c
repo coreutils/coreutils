@@ -19,6 +19,14 @@
 
 /* Compile-time symbols that this file uses:
 
+   HAVE_PSTAT_GETDYNAMIC	Define this if your system has the
+                                pstat_getdynamic function.  I think it
+				is unique to HPUX9.  The best way to get the
+				definition is through the AC_FUNC_GETLOADAVG
+				macro that comes with autoconf 2.13 or newer.
+				If that isn't an option, then just put
+				AC_CHECK_FUNCS(pstat_getdynamic) in your
+				configure.in file.
    FIXUP_KERNEL_SYMBOL_ADDR()	Adjust address in returned struct nlist.
    KERNEL_FILE			Pathname of the kernel to nlist.
    LDAV_CVT()			Scale the load average from the kernel.
