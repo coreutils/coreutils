@@ -62,7 +62,7 @@
 #define obstack_chunk_free free
 
 #ifndef INT_MAX
-#define INT_MAX (((unsigned int) ~(unsigned int) 0) >> 1)
+#define INT_MAX 2147483647
 #endif
 
 /* Return an int indicating the result of comparing two longs. */
@@ -490,6 +490,9 @@ static enum time_type const time_types[] =
 };
 
 
+/* Write to standard output the string PREFIX followed by a space-separated
+   list of the integers stored in OS all on one line.  */
+
 static void
 dired_dump_obstack (prefix, os)
      const char *prefix;
@@ -501,7 +504,7 @@ dired_dump_obstack (prefix, os)
   fputs (prefix, stdout);
   n_pos = obstack_object_size (os) / sizeof (size_t);
   pos = obstack_finish (os);
-  for (i=0; i<n_pos; i++)
+  for (i = 0; i < n_pos; i++)
     printf (" %d", pos[i]);
   fputs ("\n", stdout);
 }
@@ -1791,7 +1794,7 @@ print_file_name_and_frills (f)
   if (print_block_size)
     printf ("%*u ", block_size_size,
 	    (unsigned) convert_blocks (ST_NBLOCKS (f->stat),
-					    kilobyte_blocks));
+				       kilobyte_blocks));
 
   print_name_with_quoting (f->name);
 
@@ -2096,48 +2099,52 @@ usage (status)
       printf ("Usage: %s [OPTION]... [PATH]...\n", program_name);
       printf ("\
 \n\
+  -A, --almost-all           do not list implied . and ..\n\
   -a, --all                  do not hide entries starting with .\n\
-  -b, --escape               print octal escapes for nongraphic characters\n\
-  -c                         sort by change time; with -l: show ctime\n\
-  -d, --directory            list directory entries instead of contents\n\
-  -f                         do not sort, enable -aU, disable -lst\n\
-  -g                         (ignored)\n\
-  -i, --inode                print index number of each file\n\
-  -k, --kilobytes            use 1024 blocks, not 512 despite POSIXLY_CORRECT\n\
-  -l                         use a long listing format\n\
-  -m                         fill width with a comma separated list of entries\n\
-  -n, --numeric-uid-gid      list numeric UIDs and GIDs instead of names\n\
-  -p                         append a character for typing each entry\n\
-  -q, --hide-control-chars   print ? instead of non graphic characters\n\
-  -r, --reverse              reverse order while sorting\n\
-  -s, --size                 print block size of each file\n\
-  -t                         sort by modification time; with -l: show mtime\n\
-  -u                         sort by last access time; with -l: show atime\n\
-  -w, --width=COLS           assume screen width instead of current value\n\
-  -x                         list entries by lines instead of by columns\n\
-  -A, --almost-all           do not list implied . and ..\n");
-      printf ("\
   -B, --ignore-backups       do not list implied entries ending with ~\n\
+  -b, --escape               print octal escapes for nongraphic characters\n\
   -C                         list entries by columns\n\
+  -c                         sort by change time; with -l: show ctime\n\
+  -D, --dired                generate output well suited to Emacs' dired mode\n\
+  -d, --directory            list directory entries instead of contents\n\
   -F, --classify             append a character for typing each entry\n\
-  -G, --no-group             inhibit display of group information\n\
-  -I, --ignore=PATTERN       do not list implied entries matching shell PATTERN\n\
-  -L, --dereference          list entries pointed to by symbolic links\n\
-  -N, --literal              do not quote entry names\n\
-  -Q, --quote-name           enclose entry names in double quotes\n\
-  -R, --recursive            list subdirectories recursively\n\
-  -S                         sort by file size\n\
-  -T, --tabsize=COLS         assume tab stops at each COLS instead of 8\n\
-  -U                         do not sort; list entries in directory order\n\
-  -X                         sort alphabetically by entry extension\n\
-  -1                         list one file per line\n\
-      --full-time            list both full date and full time\n\
-      --help                 display this help and exit\n\
+  -f                         do not sort, enable -aU, disable -lst\n\
       --format=WORD          across -x, commas -m, horizontal -x, long -l,\n\
                                single-column -1, verbose -l, vertical -C\n\
+      --full-time            list both full date and full time\n");
+
+      printf ("\
+  -G, --no-group             inhibit display of group information\n\
+  -g                         (ignored)\n\
+  -I, --ignore=PATTERN       do not list implied entries matching shell PATTERN\n\
+  -i, --inode                print index number of each file\n\
+  -k, --kilobytes            use 1024 blocks, not 512 despite POSIXLY_CORRECT\n\
+  -L, --dereference          list entries pointed to by symbolic links\n\
+  -l                         use a long listing format\n\
+  -m                         fill width with a comma separated list of entries\n\
+  -N, --literal              do not quote entry names\n\
+  -n, --numeric-uid-gid      list numeric UIDs and GIDs instead of names\n\
+  -p                         append a character for typing each entry\n\
+  -Q, --quote-name           enclose entry names in double quotes\n\
+  -q, --hide-control-chars   print ? instead of non graphic characters\n\
+  -R, --recursive            list subdirectories recursively\n\
+  -r, --reverse              reverse order while sorting\n\
+  -S                         sort by file size\n");
+
+      printf ("\
+  -s, --size                 print block size of each file\n\
       --sort=WORD            ctime -c, extension -X, none -U, size -S,\n\
                                status -c, time -t\n\
       --time=WORD            atime -u, access -u, use -u\n\
+  -T, --tabsize=COLS         assume tab stops at each COLS instead of 8\n\
+  -t                         sort by modification time; with -l: show mtime\n\
+  -U                         do not sort; list entries in directory order\n\
+  -u                         sort by last access time; with -l: show atime\n\
+  -w, --width=COLS           assume screen width instead of current value\n\
+  -x                         list entries by lines instead of by columns\n\
+  -X                         sort alphabetically by entry extension\n\
+  -1                         list one file per line\n\
+      --help                 display this help and exit\n\
       --version              output version information and exit\n\
 \n\
 Sort entries alphabetically if none of -cftuSUX nor --sort.\n");
