@@ -13,11 +13,11 @@
 
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
+   You should have received a copy of the GNU Library General Public
+   License along with this program; if not, write to the Free Software
    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
    USA.  */
 
@@ -219,18 +219,18 @@ void obstack_init (struct obstack *obstack);
 
 void * obstack_alloc (struct obstack *obstack, int size);
 
-void * obstack_copy (struct obstack *obstack, void *address, int size);
-void * obstack_copy0 (struct obstack *obstack, void *address, int size);
+void * obstack_copy (struct obstack *obstack, const void *address, int size);
+void * obstack_copy0 (struct obstack *obstack, const void *address, int size);
 
 void obstack_free (struct obstack *obstack, void *block);
 
 void obstack_blank (struct obstack *obstack, int size);
 
-void obstack_grow (struct obstack *obstack, void *data, int size);
-void obstack_grow0 (struct obstack *obstack, void *data, int size);
+void obstack_grow (struct obstack *obstack, const void *data, int size);
+void obstack_grow0 (struct obstack *obstack, const void *data, int size);
 
 void obstack_1grow (struct obstack *obstack, int data_char);
-void obstack_ptr_grow (struct obstack *obstack, void *data);
+void obstack_ptr_grow (struct obstack *obstack, const void *data);
 void obstack_int_grow (struct obstack *obstack, int data);
 
 void * obstack_finish (struct obstack *obstack);
@@ -240,7 +240,7 @@ int obstack_object_size (struct obstack *obstack);
 int obstack_room (struct obstack *obstack);
 void obstack_make_room (struct obstack *obstack, int size);
 void obstack_1grow_fast (struct obstack *obstack, int data_char);
-void obstack_ptr_grow_fast (struct obstack *obstack, void *data);
+void obstack_ptr_grow_fast (struct obstack *obstack, const void *data);
 void obstack_int_grow_fast (struct obstack *obstack, int data);
 void obstack_blank_fast (struct obstack *obstack, int size);
 
@@ -387,7 +387,7 @@ __extension__								\
    int __len = (length);						\
    if (__o->next_free + __len > __o->chunk_limit)			\
      _obstack_newchunk (__o, __len);					\
-   _obstack_memcpy (__o->next_free, (char *) (where), __len);		\
+   _obstack_memcpy (__o->next_free, (const char *) (where), __len);	\
    __o->next_free += __len;						\
    (void) 0; })
 
@@ -397,7 +397,7 @@ __extension__								\
    int __len = (length);						\
    if (__o->next_free + __len + 1 > __o->chunk_limit)			\
      _obstack_newchunk (__o, __len + 1);				\
-   _obstack_memcpy (__o->next_free, (char *) (where), __len);		\
+   _obstack_memcpy (__o->next_free, (const char *) (where), __len);	\
    __o->next_free += __len;						\
    *(__o->next_free)++ = 0;						\
    (void) 0; })
@@ -419,7 +419,7 @@ __extension__								\
 ({ struct obstack *__o = (OBSTACK);					\
    if (__o->next_free + sizeof (void *) > __o->chunk_limit)		\
      _obstack_newchunk (__o, sizeof (void *));				\
-   *((void **)__o->next_free)++ = ((void *)datum);			\
+   *((void **)__o->next_free)++ = ((const void *)datum);		\
    (void) 0; })
 
 # define obstack_int_grow(OBSTACK,datum)				\
