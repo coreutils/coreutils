@@ -1,3 +1,9 @@
+2005-01-27  Jim Meyering  <jim@meyering.net>
+
+	* hash-pjw.m4 (gl_HASH_PJW): New file/macro.
+	* basename.m4 (gl_BASENAME): New file/macro.
+	* prereq.m4: Require gl_HASH_PJW and gl_BASENAME.
+
 2005-01-23  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Sync from gnulib.
