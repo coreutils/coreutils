@@ -12,7 +12,7 @@ my $xx = '../../src/tr';
 
 print <<EOF;
 #! /bin/sh
-# run-test generated automatically by build-script from test.data.pl
+# This script was generated automatically by build-script.
 case \$# in
   0) xx='$xx';;
   *) xx="\$1";;
