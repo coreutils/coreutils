@@ -1,5 +1,13 @@
 2004-07-28  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* memchr.c: Include <stddef.h>, not <stdlib.h> and <sys/types.h>.
+	(LONG_MAX_32_BITS): Remove.
+	Include <inttypes.h> and <stdint.h> if available.
+	(alignof, UNALIGNEDP): New macro, portable to all C89 hosts.
+	(__memchr): Don't assume unsigned long int is either 4 or 8 bytes;
+	let it be any number of bytes greater than or equal to 4.
+	* memrchr.c: Likewise, with __memrchr.
+
 	* md5.h: Include <stdint.h> if HAVE_STDINT_H || _LIBC, not
 	ifdef _LIBC.
 	(md5_uint32): Use uint32_t if available.  Simplify fallback ifdefs.
