@@ -207,7 +207,7 @@ AC_DEFUN([jm_PREREQ_STRNLEN],
   AC_CHECK_HEADERS(memory.h)
   AC_CHECK_DECLS([memchr])
 
-  # This is necessary because automake-1.6.1 doens't understand
+  # This is necessary because automake-1.6.1 doesn't understand
   # that the above use of AC_FUNC_STRNLEN means we may have to use
   # lib/strnlen.c.
   test $ac_cv_func_strnlen_working = yes \
