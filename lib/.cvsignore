@@ -1,3 +1,7 @@
 Makefile
 getdate.c
 posixtm.c
+safe-stat.h
+safe-stat.c
+safe-lstat.c
+safe-lstat.h
