@@ -1,6 +1,11 @@
-2005-02-08  Paul Eggert  <eggert@cs.ucla.edu>
+2005-02-09  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/copy.c (valid_options): Add an assertion that
+	not both hard_link and symbolic_link are set.
+
+2005-02-08  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: Document stat -f -c %S, plus changes to default formats.
 	* doc/coreutils.texi (stat invocation): Normalize terminology,
