@@ -1,3 +1,5 @@
+Changes in release 1.16
+1.15a
 Changes in release 1.15
 * nice works with very recently-changed GNU libc getopt
 * fix several bugs in m4 macros used to create `configure' script
