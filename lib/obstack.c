@@ -82,8 +82,8 @@ void (*obstack_alloc_failed_handler) (void) = print_and_abort;
 
 /* Exit value used when `print_and_abort' is used.  */
 # include <stdlib.h>
-# ifndef EXIT_FAILURE
-#  define EXIT_FAILURE 1
+# ifndef _LIBC
+#  include "exit.h"
 # endif
 int obstack_exit_failure = EXIT_FAILURE;
 
