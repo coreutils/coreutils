@@ -1,6 +1,6 @@
 1999-05-09  Jim Meyering  <meyering@ascend.com>
 
-	* Version 1.22j.
+	* Version 1.22k.
 
 	* Makefile.maint (alpha): Put the announcement in
 	/tmp/announce-$(distdir)
