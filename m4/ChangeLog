@@ -1,3 +1,8 @@
+2003-12-20  Jim Meyering  <jim@meyering.net>
+
+	* lib-check.m4 (jm_LIB_CHECK): Do not set LIB_CRYPT to the
+	value, $ac_cv_search_crypt, if it's "none required".
+
 2003-12-19  Jim Meyering  <jim@meyering.net>
 
 	* clock_time.m4 (gl_CLOCK_TIME): Don't set LIB_CLOCK_GETTIME
