@@ -1,5 +1,5 @@
 /* paste - merge lines of files
-   Copyright (C) 1984 by David M. Ihnat
+   Copyright (C) 1984, 1997 by David M. Ihnat
 
    This program is a total rewrite of the Bell Laboratories Unix(Tm)
    command of the same name, as of System V.  It contains no proprietary
@@ -45,9 +45,6 @@
 #include <sys/types.h>
 #include "system.h"
 #include "error.h"
-
-char *xmalloc ();
-char *xrealloc ();
 
 /* Indicates that no delimiter should be added in the current position. */
 #define EMPTY_DELIM '\0'
@@ -194,7 +191,7 @@ paste_parallel (int nfiles, char **fnamptr)
 	{
 	  file_list_size += 12;
 	  delbuf = (char *) xrealloc (delbuf, file_list_size + 2);
-	  fileptr = (FILE **) xrealloc (fileptr, (file_list_size + 1)
+	  fileptr = (FILE **) xrealloc ((char *) fileptr, (file_list_size + 1)
 					* sizeof (FILE *));
 	}
       if (!strcmp (fnamptr[files_open], "-"))
