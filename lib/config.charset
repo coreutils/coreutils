@@ -1,7 +1,7 @@
 #! /bin/sh
 # Output a system dependent table of character encoding aliases.
 #
-#   Copyright (C) 2000 Free Software Foundation, Inc.
+#   Copyright (C) 2000-2001 Free Software Foundation, Inc.
 #
 #   This program is free software; you can redistribute it and/or modify it
 #   under the terms of the GNU Library General Public License as published
@@ -205,27 +205,39 @@ case "$os" in
 	echo "UTF-8 UTF-8"
 	;;
     freebsd*)
-	# FreeBSD 3.3 doesn't have nl_langinfo(CODESET); therefore
+	# FreeBSD 4.2 doesn't have nl_langinfo(CODESET); therefore
 	# localcharset.c falls back to using the full locale name
 	# from the environment variables.
 	echo "C ASCII"
 	echo "US-ASCII ASCII"
-	for l in lt_LN; do
+	for l in la_LN lt_LN; do
 	  echo "$l.ASCII ASCII"
 	done
 	for l in da_DK de_AT de_CH de_DE en_AU en_CA en_GB en_US es_ES \
-                 fi_FI fr_BE fr_CA fr_CH fr_FR is_IS it_CH it_IT lt_LN \
-                 nl_BE nl_NL no_NO pt_PT sv_SE; do
+                 fi_FI fr_BE fr_CA fr_CH fr_FR is_IS it_CH it_IT la_LN \
+                 lt_LN nl_BE nl_NL no_NO pt_PT sv_SE; do
 	  echo "$l.ISO_8859-1 ISO-8859-1"
 	  echo "$l.DIS_8859-15 ISO-8859-15"
 	done
-	for l in hr_HR hu_HU lt_LN pl_PL sl_SI; do
+	for l in cs_CZ hr_HR hu_HU la_LN lt_LN pl_PL sl_SI; do
 	  echo "$l.ISO_8859-2 ISO-8859-2"
+	done
+	for l in la_LN lt_LT; do
+	  echo "$l.ISO_8859-4 ISO-8859-4"
 	done
 	for l in ru_RU ru_SU; do
 	  echo "$l.KOI8-R KOI8-R"
+	  echo "$l.ISO_8859-5 ISO-8859-5"
 	  echo "$l.CP866 CP866"
 	done
+	echo "uk_UA.KOI8-U KOI8-U"
+	echo "zh_TW.BIG5 BIG5"
+	echo "zh_TW.Big5 BIG5"
+	echo "zh_CN.EUC GB2312"
+	echo "ja_JP.EUC EUC-JP"
+	echo "ja_JP.SJIS SJIS"
+	echo "ja_JP.Shift_JIS SJIS"
+	echo "ko_KR.EUC EUC-KR"
 	;;
     beos*)
 	# BeOS has a single locale, and it has UTF-8 encoding.
