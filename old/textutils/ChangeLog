@@ -1,3 +1,9 @@
+2000-01-08  Jim Meyering  <meyering@ascend.com>
+
+	* src/cut.c (OUTPUT_DELIMITER_OPTION): Define this and use it
+	instead of `CHAR_MAX + n'.
+	* src/pr.c (PAGES_OPTION, COLUMNS_OPTION): Likewise.
+
 2000-01-07  Jim Meyering  <meyering@ascend.com>
 
 	* tests/tsort/Makefile.am (TESTS_ENVIRONMENT): Add `pwd`/ prefix
