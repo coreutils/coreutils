@@ -60,7 +60,9 @@ foreach my $dir (@dir_list)
 
 	    # Skip files owned by self, symlinks, and directories.
 	    # It's not technically necessary to skip symlinks, but it's simpler.
-	    -l $target_file || -o _ || -d _
+	    # SVR4-like systems (e.g., Solaris 9) let you unlink files that
+	    # you can write, so skip writable files too.
+	    -l $target_file || -o _ || -d _ || -w _
 	      and next;
 
 	    $found_file = 1;
