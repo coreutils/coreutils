@@ -2,6 +2,9 @@
 
 	* Version 5.0.1.
 
+	* tests/du/slash: New file/test for today's lib/ftw.c fix.
+	* tests/du/Makefile.am (TESTS): Add slash
+
 	* src/tail.c (xlseek): Avoid warning about ``return without value
 	from function returning non-void''.
 
