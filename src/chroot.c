@@ -65,7 +65,7 @@ main (int argc, char **argv)
     }
 
   if (chroot (argv[1]))
-    error (1, errno, "cannot change root directory to %s", argv[1]);
+    error (1, errno, _("cannot change root directory to %s"), argv[1]);
 
   if (argc == 2)
     {
@@ -82,7 +82,7 @@ main (int argc, char **argv)
 
   /* Execute the given command.  */
   execvp (argv[0], argv);
-  error (1, errno, "cannot execute %s", argv[0]);
+  error (1, errno, _("cannot execute %s"), argv[0]);
 
   exit (1);
   return 1;
