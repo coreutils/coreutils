@@ -1,6 +1,10 @@
-2002-01-09  Jim Meyering  <meyering@lucent.com>
+2002-01-13  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.20.
+
+	* tests/help-version: Tweak to work with the programs in diffutils.
+
+2002-01-09  Jim Meyering  <meyering@lucent.com>
 
 	* configure.in (ALL_LINGUAS): Add Turkish (tr).
 
