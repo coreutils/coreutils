@@ -2405,6 +2405,7 @@ print_color_indicator (const char *name, unsigned int mode, int linkok)
 	type = C_EXEC;
 
       /* Check the file's suffix only if still classified as C_FILE.  */
+      ext = NULL;
       if (type == C_FILE)
 	{
 	  /* Test if NAME has a recognized suffix.  */
