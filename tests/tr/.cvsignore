@@ -1,5 +1,8 @@
 t*.out
 t*.in
 t*.exp
+tB.err
+tR0.0.err
+tR0.1.err
 build-script
 Makefile
