@@ -6,7 +6,7 @@
 	not `xx01, xx02, ...'.
 	Reported by Matt Kraai in http://bugs.debian.org/286605
 
-	* tests/misc/split-fail: Avoid spurious failure on x86 solaris2.9
+	* tests/misc/split-fail: Avoid spurious failure on x86 Solaris5.9
 	when using c89.
 
 2004-12-20  Paul Eggert  <eggert@cs.ucla.edu>
