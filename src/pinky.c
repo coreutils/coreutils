@@ -234,13 +234,13 @@ print_long_entry (const char name[])
 
   pw = getpwnam (name);
 
-  printf (_ ("Login name: "));
+  printf (_("Login name: "));
   printf ("%-28s", name);
 
-  printf (_ ("In real life: "));
+  printf (_("In real life: "));
   if (pw == NULL)
     {
-      printf (" %s", _ ("???\n"));
+      printf (" %s", _("???\n"));
       return;
     }
   else
@@ -257,9 +257,9 @@ print_long_entry (const char name[])
 
   if (include_home_and_shell)
     {
-      printf (_ ("Directory: "));
+      printf (_("Directory: "));
       printf ("%-29s", pw->pw_dir);
-      printf (_ ("Shell: "));
+      printf (_("Shell: "));
       printf (" %s", pw->pw_shell);
       putchar ('\n');
     }
@@ -280,7 +280,7 @@ print_long_entry (const char name[])
 	{
 	  int bytes;
 
-	  printf (_ ("Project: "));
+	  printf (_("Project: "));
 
 	  while ((bytes = fread (buf, 1, sizeof (buf), stream)) > 0)
 	    fwrite (buf, 1, bytes, stdout);
@@ -306,7 +306,7 @@ print_long_entry (const char name[])
 	{
 	  int bytes;
 
-	  printf (_ ("Plan:\n"));
+	  printf (_("Plan:\n"));
 
 	  while ((bytes = fread (buf, 1, sizeof (buf), stream)) > 0)
 	    fwrite (buf, 1, bytes, stdout);
@@ -325,16 +325,16 @@ print_long_entry (const char name[])
 static void
 print_heading (void)
 {
-  printf ("%-8s", _ ("Login"));
+  printf ("%-8s", _("Login"));
   if (include_fullname)
-    printf (" %-19s", _ ("   Name"));
-  printf (" %-9s", _ ("TTY"));
+    printf (" %-19s", _("   Name"));
+  printf (" %-9s", _("TTY"));
   if (include_idle)
-    printf (" %-6s", _ ("Idle"));
-  printf (" %-12s", _ ("When"));
+    printf (" %-6s", _("Idle"));
+  printf (" %-12s", _("When"));
 #ifdef HAVE_UT_HOST
   if (include_where)
-    printf (" %s", _ ("Where"));
+    printf (" %s", _("Where"));
 #endif
   putchar ('\n');
 }
@@ -404,12 +404,12 @@ static void
 usage (int status)
 {
   if (status != 0)
-    fprintf (stderr, _ ("Try `%s --help' for more information.\n"),
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf (_ ("Usage: %s [OPTION]... [USER]...\n"), program_name);
-      printf (_ ("\
+      printf (_("Usage: %s [OPTION]... [USER]...\n"), program_name);
+      printf (_("\
 \n\
   -l              do long format output\n\
   -b              omit the user's home directory and shell in long format\n\
@@ -426,7 +426,7 @@ usage (int status)
 \n\
 The utmp file will be %s.\n\
 "), UTMP_FILE);
-      puts (_ ("\nReport bugs to <sh-utils-bugs@gnu.ai.mit.edu>."));
+      puts (_("\nReport bugs to <sh-utils-bugs@gnu.ai.mit.edu>."));
     }
   exit (status);
 }
