@@ -15,16 +15,18 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 
-/* Copy SOURCE into DEST, stopping after copying the first '\0', and
-   return a pointer to the '\0' at the end of DEST;
-   in other words, return DEST + strlen (SOURCE). */
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+/* Copy SRC to DEST, returning the address of the terminating '\0' in DEST.  */
 
 char *
-stpcpy (dest, source)
+stpcpy (dest, src)
      char *dest;
-     char *source;
+     const char *src;
 {
-  while ((*dest++ = *source++) != '\0')
+  while ((*dest++ = *src++) != '\0')
     /* Do nothing. */ ;
   return dest - 1;
 }
