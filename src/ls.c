@@ -137,7 +137,6 @@ time_t time ();
 char *base_name ();
 char *getgroup ();
 char *getuser ();
-void invalid_arg ();
 void strip_trailing_slashes ();
 char *xstrdup ();
 
@@ -353,6 +352,11 @@ static char const *const indicator_style_args[] =
   "none", "classify", "file-type", 0
 };
 
+static enum indicator_style const indicator_style_types[]=
+{
+  none, classify, file_type
+};
+
 /* Nonzero means use colors to mark types.  Also define the different
    colors as well as the stuff for the LS_COLORS environment variable.
    The LS_COLORS variable is now in a termcap-like format.  */
@@ -545,7 +549,7 @@ static char const *const format_args[] =
   "vertical", "single-column", 0
 };
 
-static enum format const formats[] =
+static enum format const format_types[] =
 {
   long_format, long_format, with_commas, horizontal, horizontal,
   many_per_line, one_per_line
@@ -573,17 +577,16 @@ static enum time_type const time_types[] =
 
 static char const *const color_args[] =
   {
-    /* Note: "no" is a prefix of "none" so we don't include it.  */
     /* force and none are for compatibility with another color-ls version */
     "always", "yes", "force",
-    "never", "none",
+    "never", "no", "none",
     "auto", "tty", "if-tty", 0
   };
 
 static enum color_type const color_types[] =
   {
     color_always, color_always, color_always,
-    color_never, color_never,
+    color_never, color_never, color_never,
     color_if_tty, color_if_tty, color_if_tty
   };
 
@@ -780,7 +783,8 @@ main (int argc, char **argv)
       dired_dump_obstack ("//DIRED//", &dired_obstack);
       dired_dump_obstack ("//SUBDIRED//", &subdired_obstack);
       printf ("//DIRED-OPTIONS// --quoting-style=%s\n",
-	      quoting_style_args[get_quoting_style (filename_quoting_options)]);
+	      ARGMATCH_TO_ARGUMENT (filename_quoting_options,
+				    quoting_style_args, quoting_style_vals));
     }
 
   /* Restore default color before exiting */
@@ -857,9 +861,10 @@ decode_switches (int argc, char **argv)
   really_all_files = 0;
   ignore_patterns = 0;
 
+  /* FIXME: Shouldn't we complain on wrong values? */
   if ((p = getenv ("QUOTING_STYLE"))
-      && 0 <= (i = argmatch (p, quoting_style_args)))
-    set_quoting_style (NULL, (enum quoting_style) i);
+      && 0 <= (i = ARGCASEMATCH (p, quoting_style_args, quoting_style_vals)))
+    set_quoting_style (NULL, quoting_style_vals[i]);
 
   human_block_size (getenv ("LS_BLOCK_SIZE"), 0, &output_block_size);
 
@@ -1094,52 +1099,26 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 10:		/* --sort */
-	  i = argmatch (optarg, sort_args);
-	  if (i < 0)
-	    {
-	      invalid_arg (_("sort type"), optarg, i);
-	      usage (EXIT_FAILURE);
-	    }
-	  sort_type = sort_types[i];
+	  sort_type = XARGCASEMATCH ("--sort", optarg, sort_args, sort_types);
 	  break;
 
 	case 11:		/* --time */
-	  i = argmatch (optarg, time_args);
-	  if (i < 0)
-	    {
-	      invalid_arg (_("time type"), optarg, i);
-	      usage (EXIT_FAILURE);
-	    }
-	  time_type = time_types[i];
+	  time_type = XARGCASEMATCH ("--time", optarg, time_args, time_types);
 	  break;
 
 	case 12:		/* --format */
-	  i = argmatch (optarg, format_args);
-	  if (i < 0)
-	    {
-	      invalid_arg (_("format type"), optarg, i);
-	      usage (EXIT_FAILURE);
-	    }
-	  format = formats[i];
+	  format = XARGCASEMATCH ("--format", optarg,
+				  format_args, format_types);
 	  break;
 
 	case 13:		/* --color */
 	  if (optarg)
-	    {
-	      i = argmatch (optarg, color_args);
-	      if (i < 0)
-		{
-		  invalid_arg (_("colorization criterion"), optarg, i);
-		  usage (EXIT_FAILURE);
-		}
-	      i = color_types[i];
-	    }
+	    i = XARGCASEMATCH ("--color", optarg,
+			       color_args, color_types);
 	  else
-	    {
-	      /* Using --color with no argument is equivalent to using
-		 --color=always.  */
-	      i = color_always;
-	    }
+	    /* Using --color with no argument is equivalent to using
+	       --color=always.  */
+	    i = color_always;
 
 	  print_with_color = (i == color_always
 			      || (i == color_if_tty
@@ -1155,23 +1134,16 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 14:		/* --indicator-style */
-	  i = argmatch (optarg, indicator_style_args);
-	  if (i < 0)
-	    {
-	      invalid_arg (_("indicator style"), optarg, i);
-	      usage (EXIT_FAILURE);
-	    }
-	  indicator_style = (enum indicator_style) i;
+	  indicator_style = XARGCASEMATCH ("--indicator-style", optarg,
+					   indicator_style_args,
+					   indicator_style_types);
 	  break;
 
 	case 15:		/* --quoting-style */
-	  i = argmatch (optarg, quoting_style_args);
-	  if (i < 0)
-	    {
-	      invalid_arg (_("quoting style"), optarg, i);
-	      usage (EXIT_FAILURE);
-	    }
-	  set_quoting_style (NULL, (enum quoting_style) i);
+	  set_quoting_style (NULL,
+			     XARGCASEMATCH ("--quoting-style", optarg,
+					    quoting_style_args,
+					    quoting_style_vals));
 	  break;
 
 	case 16:
