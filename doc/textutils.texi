@@ -2269,7 +2269,9 @@ string between a non-whitespace character and a whitespace character.
 That is, given the input line @w{@samp{ foo bar}}, @code{sort} breaks it
 into fields @w{@samp{ foo}} and @w{@samp{ bar}}.  The field separator is
 not considered to be part of either the field preceding or the field
-following.
+following.  But note that sort fields that extend to the end of the line,
+as @samp{-k 2}, or sort fields consisting of a range, as @samp{-k 2,3},
+retain the field separators present between the endpoints of the range.
 
 @item -T @var{tempdir}
 @opindex -T
