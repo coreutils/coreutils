@@ -16,6 +16,16 @@
 
 	* src/Makefile.am (PERL): Remove duplicate definition.
 
+	fmt's -s, -t, -c options didn't work properly for long lines.
+	Since get_line may end up calling put_paragraph (for long lines),
+	be sure to set global, `other_indent', before it is used there.
+
+	* src/fmt.c (set_other_indent): New function, factored out of...
+	(get_paragraph): ... here.  Call it.
+	(get_line): Call set_other_indent before calling flush_paragraph,
+	which calls fmt_paragraph, which in turn calls put_paragraph,
+	which uses other_indent.
+
 	* tests/fmt/Makefile.am (TESTS): Add long-line.
 	* tests/fmt/long-line: New file/test, for the above fix.
 
