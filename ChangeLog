@@ -1,6 +1,11 @@
-2003-07-23  Jim Meyering  <jim@meyering.net>
+2003-07-24  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.90.
+
+	* tests/wc/Test.pm (test_vector): Disable the `PIPE' tests when running
+	`wc' with no options.  This goes along with the change of 2003-07-20.
+
+2003-07-23  Jim Meyering  <jim@meyering.net>
 
 	Don't include headers already included by system.h:
 	* src/tr.c: Don't include errno.h.
