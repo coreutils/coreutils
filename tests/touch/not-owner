@@ -1,0 +1,48 @@
+#!/bin/sh
+# Make sure that touch gives reasonable diagnostics when applied
+# to an unwritable directory owned by some other user.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  touch --version
+fi
+
+. $srcdir/../envvar-check
+. $srcdir/../lang-default
+PRIV_CHECK_ARG=require-non-root . $srcdir/../priv-check
+
+pwd=`pwd`
+tmp=fail-diag.$$
+trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
+trap '(exit $?); exit' 1 2 13 15
+
+framework_failure=0
+mkdir $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo 'failure in testing framework' 1>&2
+  (exit 1); exit
+fi
+
+fail=0
+
+# Before fileutils-4.1, we'd get the following misleading
+# diagnostic instead of `...: Permission denied'.
+# touch: creating `/': Is a directory
+touch / > out 2>&1 && fail=1
+
+# On SunOS4, EPERM is `Not owner'.
+# On some *BSD systems it's `Operation not permitted'.
+for msg in 'Not owner' 'Operation not permitted' 'Permission denied'; do
+  cat > exp <<EOF
+touch: setting times of \`/': $msg
+EOF
+
+  cmp out exp > /dev/null 2>&1 && { match=1; break; }
+done
+test "$match" = 1 || fail=1
+
+test $fail = 1 && diff out exp 2> /dev/null
+
+(exit $fail); exit
