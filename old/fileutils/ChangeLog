@@ -1,4 +1,4 @@
-1998-03-13  Jim Meyering  <meyering@eng.ascend.com>
+1998-03-14  Jim Meyering  <meyering@eng.ascend.com>
 
 	* src/remove.c: Use `virtual memory exhausted' message, not
 	`Memory exhausted' to be consistent with the majority of other
@@ -19,6 +19,9 @@
 	* src/mv.c (do_move): Add &copy_into_self arg in call to copy.
 	Don't remove source directory when copy_into_self is nonzero.
 	Reported by Arne Henrik Juul.
+
+	* tests/mv/into-self: Test for the above.
+	* tests/mv/Makefile.am (TESTS): Add into-self.
 
 1998-03-10  Jim Meyering  <meyering@eng.ascend.com>
 

@@ -89,7 +89,7 @@ l = @l@
 
 AUTOMAKE_OPTIONS = 1.1 gnits
 
-TESTS = mv-special-1
+TESTS = mv-special-1 into-self
 EXTRA_DIST = $(TESTS) setup
 TESTS_ENVIRONMENT = \
   DF=../../src/df \
