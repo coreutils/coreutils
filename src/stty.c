@@ -380,7 +380,7 @@ static struct control_info control_info[] =
   {NULL, 0, 0}
 };
 
-static const char *visible __P ((unsigned char ch));
+static const char *visible __P ((unsigned int ch));
 static unsigned long baud_to_value __P ((speed_t speed));
 static int recover_mode __P ((char *arg, struct termios *mode));
 static int screen_columns __P ((void));
@@ -1600,7 +1600,7 @@ sane_mode (struct termios *mode)
 /* Adapted from `cat' by Torbjorn Granlund.  */
 
 static const char *
-visible (unsigned char ch)
+visible (unsigned int ch)
 {
   static char buf[10];
   char *bpout = buf;
