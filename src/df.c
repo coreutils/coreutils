@@ -185,7 +185,7 @@ main (argc, argv)
 	  add_excluded_fs_type (optarg);
 	  break;
 	default:
-	  usage ();
+	  usage (1);
 	}
     }
 
@@ -196,7 +196,7 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   if (optind != argc)
     {
@@ -475,12 +475,31 @@ excluded_fstype (fstype)
 }
 
 static void
-usage ()
+usage (status)
+     int status;
 {
   fprintf (stderr, "\
-Usage: %s [-aikPv] [-t fstype] [-x fstype] [--all] [--inodes]\n\
-\t[--type=fstype] [--exclude-type=fstype] [--kilobytes] [--portability]\n\
-\t[--help] [--version] [path...]\n",
+Usage: %s [OPTION] [PATH]...\n\
+\n",
 	   program_name);
-  exit (1);
+
+  if (status == 0)
+    fprintf (stderr, "\
+  -a, --all                 include filesystems having 0 blocks\n\
+  -i, --inodes              list inode information instead of block usage\n\
+  -k, --kilobytes           use 1024 blocks, not 512 despite POSIXLY_CORRECT\n\
+  -t, --type TYPE           limit the listing to TYPE filesystems type\n\
+  -x, --exclude-type TYPE   limit the listing to not TYPE filesystems type\n\
+  -v                        (ignored)\n\
+  -P, --portability         use the POSIX output format\n\
+      --help                provide this help\n\
+      --version             show program version\n\
+\n\
+If no PATHs are given, list all currently mounted filesystems.\n");
+
+  else
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+
+  exit (status);
 }

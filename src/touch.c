@@ -24,7 +24,7 @@
    -r, --file=FILE		Use the time and date of reference file FILE.
    -t TIME			Specify time and date in the form
 				`MMDDhhmm[[CC]YY][.ss]'.
-   
+
    If no options are given, -am is the default, using the current time.
    The -r, -t, and -d options are mutually exclusive.  If a file does not
    exist, create it unless -c is given.
@@ -194,13 +194,13 @@ main (argc, argv)
 	  if (i < 0)
 	    {
 	      invalid_arg ("time selector", optarg, i);
-	      usage ();
+	      usage (1);
 	    }
 	  change_times |= time_masks[i];
 	  break;
 
 	default:
-	  usage ();
+	  usage (1);
 	}
     }
 
@@ -211,7 +211,7 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   if (change_times == 0)
     change_times = CH_ATIME | CH_MTIME;
@@ -220,7 +220,7 @@ main (argc, argv)
       || (posix_date && flexible_date))
     {
       error (0, 0, "cannot specify times from more than one source");
-      usage ();
+      usage (1);
     }
 
   if (use_ref)
@@ -250,7 +250,7 @@ main (argc, argv)
   if (optind == argc)
     {
       error (0, 0, "file arguments missing");
-      usage ();
+      usage (1);
     }
 
   for (; optind < argc; ++optind)
@@ -304,7 +304,7 @@ touch (file)
 	{
 	  error (0, errno, "%s", file);
 	  return 1;
-	}	
+	}
     }
 
   if (amtime_now)
@@ -337,7 +337,7 @@ touch (file)
 
       status = utime (file, &utb);
     }
-  
+
   if (status)
     {
       error (0, errno, "%s", file);
@@ -376,12 +376,32 @@ utime_now (file, filesize)
 #endif
 
 static void
-usage ()
+usage (status)
+     int status;
 {
   fprintf (stderr, "\
-Usage: %s [-acfm] [-r reference-file] [-t MMDDhhmm[[CC]YY][.ss]]\n\
-       [-d time] [--time={atime,access,use,mtime,modify}] [--date=time]\n\
-       [--file=reference-file] [--no-create] [--help] [--version] file...\n",
+Usage: %s [OPTION]... FILE...\n\
+\n",
 	   program_name);
-  exit (1);
+
+  if (status == 0)
+    fprintf (stderr, "\
+  -a                     change the access time only\n\
+  -c                     do not create files that do not exist\n\
+  -d, --date STRING      parse STRING and use it, instead of current time\n\
+  -f                     (ignored)\n\
+  -m                     change the modification time only\n\
+  -r, --file REFERENCE   use this file's times, instead of current time\n\
+  -t STAMP               use MMDDhhmm[[CC]YY][.ss], instead of current time\n\
+      --help             provide this help\n\
+      --time WORD        access -a, atime -a, mtime -m, modify -m, use -a\n\
+      --version          show program version\n\
+\n\
+STAMP may be used without -t if none of -drt, nor --, are used.\n");
+
+  else
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+
+  exit (status);
 }

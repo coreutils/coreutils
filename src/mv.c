@@ -21,14 +21,14 @@
 
    -i, --interactive	Require confirmation from the user before
 			performing any move that would destroy an
-			existing file. 
+			existing file.
 
    -u, --update		Do not move a nondirectory that has an
 			existing destination with the same or newer
-			modification time.  
+			modification time.
 
    -v, --verbose		List the name of each file as it is moved, and
-			the name it is moved to. 
+			the name it is moved to.
 
    -b, --backup
    -S, --suffix
@@ -170,7 +170,7 @@ main (argc, argv)
 	  version = optarg;
 	  break;
 	default:
-	  usage ();
+	  usage (1);
 	}
     }
 
@@ -181,10 +181,10 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   if (argc < optind + 2)
-    usage ();
+    usage (1);
 
   if (make_backups)
     backup_type = get_version (version);
@@ -335,7 +335,7 @@ do_move (source, dest)
 
   if (copy_reg (source, dest))
     goto un_backup;
-  
+
   if (unlink (source))
     {
       error (0, errno, "cannot remove `%s'", source);
@@ -364,14 +364,14 @@ copy_reg (source, dest)
   int ofd;
   char buf[1024 * 8];
   int len;			/* Number of bytes read into `buf'. */
-  
+
   if (!S_ISREG (source_stats.st_mode))
     {
       error (0, 0, "cannot move `%s' across filesystems: Not a regular file",
 	     source);
       return 1;
     }
-  
+
   if (unlink (dest) && errno != ENOENT)
     {
       error (0, errno, "cannot remove `%s'", dest);
@@ -396,7 +396,7 @@ copy_reg (source, dest)
     {
       int wrote = 0;
       char *bp = buf;
-      
+
       do
 	{
 	  wrote = write (ofd, bp, len);
@@ -432,7 +432,7 @@ copy_reg (source, dest)
       error (0, errno, "%s", dest);
       return 1;
     }
-  
+
   /* chown turns off set[ug]id bits for non-root,
      so do the chmod last.  */
 
@@ -468,16 +468,37 @@ copy_reg (source, dest)
 }
 
 static void
-usage ()
+usage (status)
+     int status;
 {
   fprintf (stderr, "\
-Usage: %s [options] source dest\n\
-       %s [options] source... directory\n\
-Options:\n\
-       [-bfiuv] [-S backup-suffix] [-V {numbered,existing,simple}]\n\
-       [--backup] [--force] [--interactive] [--update] [--verbose]\n\
-       [--suffix=backup-suffix] [--version-control={numbered,existing,simple}]\n\
-       [--help] [--version]\n",
+Usage: %s [OPTION]... SOURCE DEST\n\
+  or:  %s [OPTION]... SOURCE... DIRECTORY\n\
+\n",
 	   program_name, program_name);
-  exit (1);
+
+  if (status == 0)
+    fprintf (stderr, "\
+  -b, --backup                 make backup before removal\n\
+  -f, --force                  remove existing destinations, never prompt\n\
+  -i, --interactive            prompt before overwrite\n\
+  -u, --update                 move only older or brand new files\n\
+  -v, --verbose                explain what is being done\n\
+  -S, --suffix SUFFIX          override the usual backup suffix\n\
+  -V, --version-control WORD   override the usual version control\n\
+      --help                   provide this help\n\
+      --version                show program version\n\
+\n\
+The backup suffix is ~, unless set with SIMPLE_BACKUP_SUFFIX.  The\n\
+version control may be set with VERSION_CONTROL, values are:\n\
+\n\
+  t, numbered     make numbered backups\n\
+  nil, existing   numbered if numbered backups exist, simple otherwise\n\
+  never, simple   always make simple backups  \n");
+
+  else
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+
+  exit (status);
 }

@@ -89,7 +89,7 @@ main (argc, argv)
 	  symbolic_mode = optarg;
 	  break;
 	default:
-	  usage ();
+	  usage (1);
 	}
     }
 
@@ -100,7 +100,7 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   newmode = 0666 & ~umask (0);
   if (symbolic_mode)
@@ -114,7 +114,7 @@ main (argc, argv)
     }
 
   if (argc - optind != 2 && argc - optind != 4)
-    usage ();
+    usage (1);
 
   /* Only check the first character, to allow mnemonic usage like
      `mknod /dev/rst0 character 18 0'. */
@@ -126,7 +126,7 @@ main (argc, argv)
       error (4, 0, "block special files not supported");
 #else
       if (argc - optind != 4)
-	usage ();
+	usage (1);
       if (mknod (argv[optind], newmode | S_IFBLK,
 		 makedev (atoi (argv[optind + 2]), atoi (argv[optind + 3]))))
 	error (1, errno, "%s", argv[optind]);
@@ -139,7 +139,7 @@ main (argc, argv)
       error (4, 0, "character special files not supported");
 #else
       if (argc - optind != 4)
-	usage ();
+	usage (1);
       if (mknod (argv[optind], newmode | S_IFCHR,
 		 makedev (atoi (argv[optind + 2]), atoi (argv[optind + 3]))))
 	error (1, errno, "%s", argv[optind]);
@@ -151,27 +151,43 @@ main (argc, argv)
       error (4, 0, "fifo files not supported");
 #else
       if (argc - optind != 2)
-	usage ();
+	usage (1);
       if (mkfifo (argv[optind], newmode))
 	error (1, errno, "%s", argv[optind]);
 #endif
       break;
 
     default:
-      usage ();
+      usage (1);
     }
 
   exit (0);
 }
 
 static void
-usage ()
+usage (status)
+     int status;
 {
   fprintf (stderr, "\
-Usage: %s [options] path {bcu} major minor\n\
-       %s [options] path p\n\
-Options:\n\
-       [-m mode] [--mode=mode] [--help] [--version]\n",
-	   program_name, program_name);
-  exit (1);
+Usage: %s [OPTION]... PATH TYPE [MAJOR MINOR]\n\
+\n",
+	   program_name);
+
+  if (status == 0)
+    fprintf (stderr, "\
+  -m, --mode MODE   set permission mode (as in chmod), not 0666 - umask\n\
+      --help        provide this help\n\
+      --version     show program version\n\
+\n\
+MAJOR MINOR are forbidden for TYPE p, mandatory otherwise.  TYPE may be:\n\
+\n\
+  b      create a block (buffered) special file\n\
+  c, u   create a character (unbuffered) special file   \n\
+  p      create a FIFO\n");
+
+  else
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+
+  exit (status);
 }

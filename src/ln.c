@@ -104,7 +104,7 @@ static int show_help;
 /* If non-zero, print the version on standard output and exit.  */
 static int show_version;
 
-static struct option const long_options[] = 
+static struct option const long_options[] =
 {
   {"backup", no_argument, NULL, 'b'},
   {"directory", no_argument, &hard_dir_link, 1},
@@ -178,7 +178,7 @@ main (argc, argv)
 	  version = optarg;
 	  break;
 	default:
-	  usage ();
+	  usage (1);
 	  break;
 	}
     }
@@ -190,10 +190,10 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   if (optind == argc)
-    usage ();
+    usage (1);
 
   if (make_backups)
     backup_type = get_version (version);
@@ -324,7 +324,7 @@ do_link (source, dest)
       error (0, errno, "%s", dest);
       return 1;
     }
-       
+
   if (verbose)
     printf ("%s -> %s\n", source, dest);
 
@@ -350,16 +350,38 @@ do_link (source, dest)
 }
 
 static void
-usage ()
+usage (status)
+     int status;
 {
   fprintf (stderr, "\
-Usage: %s [options] source [dest]\n\
-       %s [options] source... directory\n\
-Options:\n\
-       [-bdfisvF] [-S backup-suffix] [-V {numbered,existing,simple}]\n\
-       [--version-control={numbered,existing,simple}] [--backup] [--directory]\n\
-       [--force] [--interactive] [--symbolic] [--verbose]\n\
-       [--suffix=backup-suffix] [--help] [--version]\n",
+Usage: %s [OPTION]... SOURCE [DEST]\n\
+  or:  %s [OPTION]... SOURCE... DIRECTORY\n\
+\n",
 	   program_name, program_name);
-  exit (1);
+
+  if (status == 0)
+    fprintf (stderr, "\
+  -b, --backup                 make backups for removed files\n\
+  -d, -F, --directory          hard link directories (super-user only)\n\
+  -f, --force                  remove existing destinations\n\
+  -i, --interactive            prompt whether to remove destinations\n\
+  -s, --symbolic               make symbolic links, instead of hard links\n\
+  -v, --verbose                print name of each file before linking\n\
+  -S, --suffix SUFFIX          override the usual backup suffix\n\
+  -V, --version-control WORD   override the usual version control\n\
+      --help                   provide this help\n\
+      --version                show program version\n\
+\n\
+The backup suffix is ~, unless set with SIMPLE_BACKUP_SUFFIX.  The\n\
+version control may be set with VERSION_CONTROL, values are:\n\
+\n\
+  t, numbered     make numbered backups\n\
+  nil, existing   numbered if numbered backups exist, simple otherwise\n\
+  never, simple   always make simple backups  \n");
+
+  else
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+
+  exit (status);
 }

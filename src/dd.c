@@ -359,7 +359,7 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   apply_translations ();
 
@@ -394,7 +394,7 @@ main (argc, argv)
     }
   else
     output_file = "standard output";
-  
+
 #ifdef _POSIX_VERSION
   sigaction (SIGINT, NULL, &sigact);
   if (sigact.sa_handler != SIG_IGN)
@@ -705,7 +705,7 @@ copy_simple (buf, nread)
 	nfree = nread;
 
       bcopy (start, obuf + oc, nfree);
-	    
+
       nread -= nfree;		/* Update the number of bytes left to copy. */
       start += nfree;
       oc += nfree;
@@ -822,7 +822,7 @@ scanargs (argc, argv)
 	  break;
 
 	default:
-	  usage ();
+	  usage (1);
 	}
     }
 
@@ -835,7 +835,7 @@ scanargs (argc, argv)
       if (val == NULL)
 	{
 	  error (0, 0, "unrecognized option `%s'", name);
-	  usage ();
+	  usage (1);
 	}
       *val++ = '\0';
 
@@ -874,7 +874,7 @@ scanargs (argc, argv)
 	  else
 	    {
 	      error (0, 0, "unrecognized option `%s=%s'", name, val);
-	      usage ();
+	      usage (1);
 	    }
 	}
     }
@@ -960,7 +960,7 @@ parse_conversion (str)
       if (conversions[i].convname == NULL)
 	{
 	  error (0, 0, "%s: invalid conversion", str);
-	  usage ();
+	  usage (1);
 	}
       str = new;
   } while (new != NULL);
@@ -1070,15 +1070,46 @@ interrupt_handler ()
 }
 
 static void
-usage ()
+usage (status)
+     int status;
 {
   fprintf (stderr, "\
-Usage: %s [if=file] [of=file] [ibs=bytes] [obs=bytes] [bs=bytes] [cbs=bytes]\n\
-       [skip=blocks] [seek=blocks] [count=blocks]\n\
-       [conv={ascii,ebcdic,ibm,block,unblock,lcase,ucase,swab,noerror,notrunc,\n\
-       sync}] [--help] [--version]\n\
-Numbers can be followed by a multiplier:\n\
-b=512, c=1, k=1024, w=2, xm=number m\n",
+Usage: %s [OPTION]...\n\
+\n",
 	   program_name);
-  exit (1);
+
+  if (status == 0)
+    fprintf (stderr, "\
+  bs=BYTES        force ibs=BYTES and obs=BYTES\n\
+  cbs=BYTES       convert BYTES bytes at a time\n\
+  conv=KEYWORDS   convert the file as per the comma separated keyword list\n\
+  count=BLOCKS    copy only BLOCKS input blocks\n\
+  ibs=BYTES       read BYTES bytes at a time\n\
+  if=FILE         read from FILE instead of stdin\n\
+  obs=BYTES       write BYTES bytes at a time\n\
+  of=FILE         write to FILE instead of stdout, don't truncate file\n\
+  seek=BLOCKS     skip BLOCKS obs-sized blocks at start of output\n\
+  skip=BLOCKS     skip BLOCKS ibs-sized blocks at start of input\n\
+      --help      provide this help\n\
+      --version   show program version\n\
+\n\
+BYTES may be suffixed: by xM for multiplication by M, by c for x1,\n\
+by w for x2, by b for x512, by k for x1024.  Each KEYWORD may be:\n\
+\n\
+  ascii     from EBCDIC to ASCII\n\
+  ebcdic    from ASCII to EBCDIC\n\
+  ibm       from ASCII to alternated EBCDIC\n\
+  block     pad newline-terminated records with spaces to cbs-size \n\
+  unblock   replace trailing spaces in cbs-size records with newline\n\
+  lcase     change uppercase to lowercase\n\
+  ucase     change lowercase to uppercase\n\
+  swab      swap every pair of input bytes\n\
+  noerror   continue after read errors\n\
+  sync      pad every input block with NULs to ibs-size\n");
+
+  else
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+
+  exit (status);
 }

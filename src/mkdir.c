@@ -99,7 +99,7 @@ main (argc, argv)
 	  symbolic_mode = optarg;
 	  break;
 	default:
-	  usage ();
+	  usage (1);
 	}
     }
 
@@ -110,10 +110,10 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   if (optind == argc)
-    usage ();
+    usage (1);
 
   newmode = 0777 & ~umask (0);
   parent_mode = newmode | 0300;	/* u+wx */
@@ -142,11 +142,25 @@ main (argc, argv)
 }
 
 static void
-usage ()
+usage (status)
+     int status;
 {
   fprintf (stderr, "\
-Usage: %s [-p] [-m mode] [--parents] [--mode=mode]\n\
-       [--help] [--version] dir...\n", program_name);
-  exit (1);
+Usage: %s [OPTION] DIRECTORY...\n\
+\n",
+	   program_name);
+
+  if (status == 0)
+    fprintf (stderr, "\
+  -p, --parents     no error if existing, make parent directories as needed\n\
+  -m, --mode MODE   set permission mode (as in chmod), not 0777 - umask\n\
+      --help        provide this help\n\
+      --version     show program version\n");
+
+  else
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+
+  exit (status);
 }
 

@@ -15,7 +15,7 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
-/* 
+/*
               |     		      user
               | unchanged                 explicit
  -------------|-------------------------+-------------------------|
@@ -146,7 +146,7 @@ main (argc, argv)
 	  verbose = 1;
 	  break;
 	default:
-	  usage ();
+	  usage (1);
 	}
     }
 
@@ -157,10 +157,10 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   if (optind >= argc - 1)
-    usage ();
+    usage (1);
 
   e = parse_user_spec (argv[optind], &user, &group, &username, &groupname);
   if (e)
@@ -292,11 +292,30 @@ describe_change (file, changed)
 }
 
 static void
-usage ()
+usage (status)
+     int status;
 {
   fprintf (stderr, "\
-Usage: %s [-Rcfv] [--recursive] [--changes] [--silent] [--quiet]\n\
-       [--verbose] [--help] [--version] [user][:.][group] file...\n",
-	   program_name);
-  exit (1);
+Usage: %s [OPTION]... OWNER[.[GROUP]] FILE...\n\
+  or:  %s [OPTION]... .[GROUP] FILE...\n\
+\n",
+	   program_name, program_name);
+
+  if (status == 0)
+    fprintf (stderr, "\
+  -c, --changes           be verbose whenever change occurs\n\
+  -f, --silent, --quiet   avoid most error messages\n\
+  -v, --verbose           explain what is being done\n\
+  -R, --recursive         change files and directories recursively\n\
+      --help              provide this help\n\
+      --version           show program version\n\
+\n\
+Owner is unchanged if missing.  Group is unchanged is missing, but changed\n\
+to login group if implied by a period.  A colon may replace the period.\n");
+
+  else
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+
+  exit (status);
 }

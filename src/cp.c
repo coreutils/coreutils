@@ -268,7 +268,7 @@ main (argc, argv)
 	  break;
 
 	default:
-	  usage ((char *) 0);
+	  usage ((char *) 0, 2);
 	}
     }
 
@@ -279,10 +279,10 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage (NULL);
+    usage (NULL, 0);
 
   if (flag_hard_link && flag_symbolic_link)
-    usage ("cannot make both hard and symbolic links");
+    usage ("cannot make both hard and symbolic links", 2);
 
   if (make_backups)
     backup_type = get_version (version);
@@ -321,9 +321,9 @@ do_copy (argc, argv)
   int ret = 0;
 
   if (optind >= argc)
-    usage ("missing file arguments");
+    usage ("missing file arguments", 2);
   if (optind >= argc - 1)
-    usage ("missing file argument");
+    usage ("missing file argument", 2);
 
   dest = argv[argc - 1];
 
@@ -405,7 +405,7 @@ do_copy (argc, argv)
 	    {
 	      ret |= copy (arg, dst_path, new_dst, 0, (struct dir_list *) 0);
 	      forget_all ();
-  
+
 	      if (flag_path)
 		{
 		  ret |= re_protect (dst_path, strlen (dest) + 1,
@@ -427,7 +427,7 @@ do_copy (argc, argv)
       struct stat source_stats;
 
       if (flag_path)
-	usage ("when preserving paths, last argument must be a directory");
+	usage ("when preserving paths, last argument must be a directory", 2);
 
       source = argv[optind];
 
@@ -459,7 +459,8 @@ do_copy (argc, argv)
       return copy (source, new_dest, new_dst, 0, (struct dir_list *) 0);
     }
   else
-    usage ("when copying multiple files, last argument must be a directory");
+    usage ("when copying multiple files, last argument must be a directory",
+	   2);
 }
 
 /* Copy the file SRC_PATH to the file DST_PATH.  The files may be of
@@ -882,7 +883,7 @@ make_path (const_dirpath, src_offset, mode, verbose_fmt_string,
 
   src = dirpath + src_offset;
 
-  tmp_dst_dirname = dirname (dirpath); 
+  tmp_dst_dirname = dirname (dirpath);
   dst_dirname = (char *) alloca (strlen (tmp_dst_dirname) + 1);
   strcpy (dst_dirname, tmp_dst_dirname);
   free (tmp_dst_dirname);
@@ -998,7 +999,7 @@ re_protect (const_dst_path, src_offset, attr_list)
 
   dst_path = (char *) alloca (strlen (const_dst_path) + 1);
   strcpy (dst_path, const_dst_path);
-  src_path = dst_path + src_offset; 
+  src_path = dst_path + src_offset;
 
   for (p = attr_list; p; p = p->next)
     {

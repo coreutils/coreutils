@@ -134,7 +134,7 @@ main (argc, argv)
 	  verbose = 1;
 	  break;
 	default:
-	  usage ();
+	  usage (1);
 	}
     }
 
@@ -145,10 +145,10 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   if (optind >= argc - 1)
-    usage ();
+    usage (1);
 
   parse_group (argv[optind++], &group);
 
@@ -304,11 +304,26 @@ isnumber (str)
 }
 
 static void
-usage ()
+usage (status)
+     int status;
 {
   fprintf (stderr, "\
-Usage: %s [-Rcfv] [--recursive] [--changes] [--silent] [--quiet]\n\
-       [--verbose] [--help] [--version] group file...\n",
+Usage: %s [OPTION]... GROUP FILE...\n\
+\n",
 	   program_name);
-  exit (1);
+
+  if (status == 0)
+    fprintf (stderr, "\
+  -c, --changes           be verbose whenever change occurs\n\
+  -f, --silent, --quiet   avoid most error messages\n\
+  -v, --verbose           explain what is being done\n\
+  -R, --recursive         change files and directories recursively\n\
+      --help              provide this help\n\
+      --version           show program version\n");
+
+  else
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+
+  exit (status);
 }

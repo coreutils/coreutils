@@ -204,7 +204,7 @@ main (argc, argv)
 	  owner_name = optarg;
 	  break;
 	default:
-	  usage ();
+	  usage (1);
 	}
     }
 
@@ -215,13 +215,13 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   /* Check for invalid combinations of arguments. */
   if ((dir_arg && strip_files)
       || (optind == argc)
       || (optind == argc - 1 && !dir_arg))
-    usage ();
+    usage (1);
 
   if (symbolic_mode)
     {
@@ -255,7 +255,7 @@ main (argc, argv)
       else
 	{
 	  if (!isdir (argv[argc - 1]))
-	    usage ();
+	    usage (1);
 	  for (; optind < argc - 1; ++optind)
 	    {
 	      errors |= install_file_in_dir (argv[optind], argv[argc - 1]);
@@ -537,15 +537,30 @@ isnumber (str)
 }
 
 static void
-usage ()
+usage (status)
+     int status;
 {
    fprintf (stderr, "\
-Usage: %s [options] [-s] [--strip] source dest\n\
-       %s [options] [-s] [--strip] source... directory\n\
-       %s [options] {-d,--directory} directory...\n\
-Options:\n\
-       [-c] [-g group] [-m mode] [-o owner] [--group=group]\n\
-       [--help] [--version] [--mode=mode] [--owner=owner]\n",
+Usage: %s [OPTION]... SOURCE DEST           (1st format)\n\
+  or:  %s [OPTION]... SOURCE... DIRECTORY   (2nd format)\n\
+  or:  %s [OPTION]... DIRECTORY...          (3nd format)\n\
+\n",
 	    program_name, program_name, program_name);
-  exit (1);
+
+  if (status == 0)
+    fprintf (stderr, "\
+  -c                  (ignored)\n\
+  -d, --directory     create [leading] directories, mandatory for 3rd format\n\
+  -g, --group GROUP   set group ownership, instead of process' current group\n\
+  -m, --mode MODE     set permission mode (as in chmod), instead of 0755\n\
+  -o, --owner OWNER   set ownership (super-user only)\n\
+  -s, --strip         strip symbol tables, only for 1st and 2nd formats\n\
+      --help          provide this help\n\
+      --version       show program version\n");
+
+  else
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+
+  exit (status);
 }

@@ -465,7 +465,7 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   format_needs_stat = sort_type == sort_time || sort_type == sort_size
     || format == long_format
@@ -615,16 +615,16 @@ decode_switches (argc, argv)
 	  all_files = 1;
 	  really_all_files = 1;
 	  break;
-	  
+
 	case 'b':
 	  quote_funny_chars = 1;
 	  qmark_funny_chars = 0;
 	  break;
-	  
+
 	case 'c':
 	  time_type = time_ctime;
 	  break;
-	  
+
 	case 'd':
 	  immediate_dirs = 1;
 	  break;
@@ -647,106 +647,106 @@ decode_switches (argc, argv)
 	case 'i':
 	  print_inode = 1;
 	  break;
-	  
+
 	case 'k':
 	  kilobyte_blocks = 1;
 	  break;
-	  
+
 	case 'l':
 	  format = long_format;
 	  break;
-	  
+
 	case 'm':
 	  format = with_commas;
 	  break;
-	  
+
 	case 'n':
 	  numeric_users = 1;
 	  break;
-	  
+
 	case 'p':
 	  indicator_style = not_programs;
 	  break;
-	  
+
 	case 'q':
 	  qmark_funny_chars = 1;
 	  quote_funny_chars = 0;
 	  break;
-	  
+
 	case 'r':
 	  sort_reverse = 1;
 	  break;
-	  
+
 	case 's':
 	  print_block_size = 1;
 	  break;
-	  
+
 	case 't':
 	  sort_type = sort_time;
 	  break;
-	  
+
 	case 'u':
 	  time_type = time_atime;
 	  break;
-	  
+
 	case 'w':
 	  line_length = atoi (optarg);
 	  if (line_length < 1)
 	    error (1, 0, "invalid line width: %s", optarg);
 	  break;
-	  
+
 	case 'x':
 	  format = horizontal;
 	  break;
-	  
+
 	case 'A':
 	  all_files = 1;
 	  break;
-	  
+
 	case 'B':
 	  add_ignore_pattern ("*~");
 	  add_ignore_pattern (".*~");
 	  break;
-	  
+
 	case 'C':
 	  format = many_per_line;
 	  break;
-	  
+
 	case 'F':
 	  indicator_style = all;
 	  break;
-	  
+
 	case 'G':		/* inhibit display of group info */
 	  inhibit_group = 1;
 	  break;
-	  
+
 	case 'I':
 	  add_ignore_pattern (optarg);
 	  break;
-	  
+
 	case 'L':
 	  trace_links = 1;
 	  break;
-	  
+
 	case 'N':
 	  quote_funny_chars = 0;
 	  qmark_funny_chars = 0;
 	  break;
-	  
+
 	case 'Q':
 	  quote_as_string = 1;
 	  quote_funny_chars = 1;
 	  qmark_funny_chars = 0;
 	  break;
-	  
+
 	case 'R':
 	  trace_dirs = 1;
 	  break;
-	  
+
 	case 'S':
 	  sort_type = sort_size;
 	  break;
-	  
+
 	case 'T':
 	  tabsize = atoi (optarg);
 	  if (tabsize < 1)
@@ -770,7 +770,7 @@ decode_switches (argc, argv)
 	  if (i < 0)
 	    {
 	      invalid_arg ("sort type", optarg, i);
-	      usage ();
+	      usage (1);
 	    }
 	  sort_type = sort_types[i];
 	  break;
@@ -780,7 +780,7 @@ decode_switches (argc, argv)
 	  if (i < 0)
 	    {
 	      invalid_arg ("time type", optarg, i);
-	      usage ();
+	      usage (1);
 	    }
 	  time_type = time_types[i];
 	  break;
@@ -790,13 +790,13 @@ decode_switches (argc, argv)
 	  if (i < 0)
 	    {
 	      invalid_arg ("format type", optarg, i);
-	      usage ();
+	      usage (1);
 	    }
 	  format = formats[i];
 	  break;
-	  
+
 	default:
-	  usage ();
+	  usage (1);
 	}
     }
 
@@ -1877,19 +1877,64 @@ attach (dest, dirname, name)
 }
 
 static void
-usage ()
+usage (status)
+     int status;
 {
   fprintf (stderr, "\
-Usage: %s [-abcdgiklmnpqrstuxABCFGLNQRSUX1] [-w cols] [-T cols] [-I pattern]\n\
-       [--all] [--escape] [--directory] [--inode] [--kilobytes] [--literal]\n\
-       [--numeric-uid-gid] [--hide-control-chars] [--reverse] [--size]\n\
-       [--width=cols] [--tabsize=cols] [--almost-all] [--ignore-backups]\n",
+Usage: %s [OPTION]... [PATH]...\n\
+\n",
 	   program_name);
-  fprintf (stderr, "\
-       [--classify] [--file-type] [--ignore=pattern] [--dereference]\n\
-       [--quote-name] [--recursive] [--sort={none,time,size,extension}]\n\
-       [--format={long,verbose,commas,across,vertical,single-column}]\n\
-       [--time={atime,access,use,ctime,status}] [--no-group]\n\
-       [--help] [--version] [path...]\n");
-  exit (1);
+
+  if (status == 0)
+    fprintf (stderr, "\
+  -a, --all                  do not hide entries starting with .\n\
+  -b, --escape               print octal escapes for nongraphic characters\n\
+  -c                         sort by change time, list change time if -l\n\
+  -d, --directory            list directory entries, instead of contents\n\
+  -f                         do not sort, enable -aU, disable -lst\n\
+  -g                         (ignored)\n\
+  -i, --inode                print index number of each file\n\
+  -k, --kilobytes            use 1024 blocks, not 512 despite POSIXLY_CORRECT\n\
+  -l                         make a long listing, with many informations\n\
+  -m                         fill width with a comma separated list of entries\n\
+  -n, --numeric-uid-gid      list numeric UIDs and GIDs, instead of names\n\
+  -p                         append a character for typing each entry\n\
+  -q, --hide-control-chars   print ? instead of non graphic characters\n\
+  -r, --reverse              reverse order while sorting\n\
+  -s, --size                 print block size of each file\n\
+  -t                         sort by modification time, list mod time if -l\n\
+  -u                         sort by last access time, list access time if -l\n\
+  -w, --width COLS           assume screen width, instead of current value\n\
+  -x                         list entries by lines, instead of by columns\n\
+  -A, --almost-all           hide only implied . and ..\n\
+  -B, --ignore-backups       hide implied entries ending with ~\n\
+  -C                         list entries by columns\n\
+  -F, --classify             append a character for typing each entry\n\
+  -G, --no-group             inhibit display of group information\n\
+  -I, --ignore PATTERN       hide implied entries matching shell PATTERN\n\
+  -L, --dereference          list entries pointed to by symbolic links\n\
+  -N, --literal              do not quote entry names\n\
+  -Q, --quote-name           enclose entry names in double quotes\n\
+  -R, --recursive            list subdirectories recursively\n\
+  -S                         sort by file size\n\
+  -T, --tabsize COLS         assume tab stops at each COLS, instead of 8\n\
+  -U                         do not sort and list entries in directory order\n\
+  -X                         sort alphabetically by entry extension\n\
+  -1                         list one file per line\n\
+      --full-time            list both full date and full time\n\
+      --help                 provide this help\n\
+      --format WORD          across -x, commas -m, horizontal -x, long -l,\n\
+                               single-column -1, verbose -l, vertical -C\n\
+      --sort WORD            ctime -c, extension -X, none -U, size -S,\n\
+                               status -c, time -t\n\
+      --time WORD            atime -u, access -u, use -u\n\
+      --version              show program version\n\
+\n\
+Sort entries alphabetically if none of -cftuSUX nor --sort.\n");
+
+  else
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+
+  exit (status);
 }

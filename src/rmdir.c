@@ -87,7 +87,7 @@ main (argc, argv)
 	  empty_paths = 1;
 	  break;
 	default:
-	  usage ();
+	  usage (1);
 	}
     }
 
@@ -98,10 +98,10 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   if (optind == argc)
-    usage ();
+    usage (1);
 
   for (; optind < argc; ++optind)
     {
@@ -144,9 +144,23 @@ remove_parents (path)
 }
 
 static void
-usage ()
+usage (status)
+     int status;
 {
-  fprintf (stderr, "Usage: %s [-p] [--parents] [--help] [--version] dir...\n",
+  fprintf (stderr, "\
+Usage: %s [OPTION]... DIRECTORY...\n\
+\n",
 	   program_name);
-  exit (1);
+
+  if (status == 0)
+    fprintf (stderr, "\
+  -p, --parents   remove explicit parent directories if being emptied\n\
+      --help      provide this help\n\
+      --version   show program version\n");
+
+  else
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+
+  exit (status);
 }

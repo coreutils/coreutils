@@ -149,7 +149,7 @@ main (argc, argv)
 	  verbose = 1;
 	  break;
 	default:
-	  usage ();
+	  usage (1);
 	}
     }
 
@@ -160,13 +160,13 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   if (modeind == 0)
     modeind = optind++;
 
   if (optind >= argc)
-    usage ();
+    usage (1);
 
   changes = mode_compile (argv[modeind],
 			  MODE_MASK_EQUALS | MODE_MASK_PLUS | MODE_MASK_MINUS);
@@ -302,12 +302,30 @@ describe_change (file, mode, changed)
 }
 
 static void
-usage ()
+usage (status)
+     int status;
 {
   fprintf (stderr, "\
-Usage: %s [-Rcfv] [--recursive] [--changes] [--silent] [--quiet]\n\
-       [--verbose] [--help] [--version] mode file...\n\
-       mode is [ugoa...][[+-=][rwxXstugo...]...][,...] or octal number\n",
-	   program_name);
-  exit (1);
+Usage: %s [OPTION]... MODE[,MODE]... FILE...\n\
+  or:  %s [OPTION]... OCTAL_MODE FILE...\n\
+\n",
+	   program_name, program_name);
+
+  if (status == 0)
+    fprintf (stderr, "\
+  -c, --changes           be verbose whenever change occurs\n\
+  -f, --silent, --quiet   avoid most error messages\n\
+  -v, --verbose           explain what is being done\n\
+  -R, --recursive         change files and directories recursively\n\
+      --help              provide this help\n\
+      --version           show program version\n\
+\n\
+Each MODE is one or more of letters ugoa, one of the signs +-= and one\n\
+or more of letters rwxXstugo.\n");
+
+  else
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+
+  exit (status);
 }

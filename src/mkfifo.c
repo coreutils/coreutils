@@ -88,7 +88,7 @@ main (argc, argv)
 	  symbolic_mode = optarg;
 	  break;
 	default:
-	  usage ();
+	  usage (1);
 	}
     }
 
@@ -99,10 +99,10 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   if (optind == argc)
-    usage ();
+    usage (1);
 
   newmode = 0666 & ~umask (0);
   if (symbolic_mode)
@@ -130,11 +130,24 @@ main (argc, argv)
 
 #ifdef S_ISFIFO
 static void
-usage ()
+usage (status)
+     int status;
 {
   fprintf (stderr, "\
-Usage: %s [-m mode] [--mode=mode] [--help] [--version] path...\n",
+Usage: %s [OPTION] PATH...\n\
+\n",
 	   program_name);
-  exit (1);
+
+  if (status == 0)
+    fprintf (stderr, "\
+  -m, --mode MODE   set permission mode (as in chmod), not 0666 - umask\n\
+      --help        provide this help\n\
+      --version     show program version\n");
+
+  else
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+
+  exit (status);
 }
 #endif

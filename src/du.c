@@ -191,19 +191,38 @@ static struct option const long_options[] =
 };
 
 static void
-usage (reason)
+usage (reason, status)
      char *reason;
+     int status;
 {
   if (reason != NULL)
     fprintf (stderr, "%s: %s\n", program_name, reason);
 
   fprintf (stderr, "\
-Usage: %s [-abcklsxDLS] [--all] [--total] [--count-links] [--summarize]\n\
-       [--bytes] [--kilobytes] [--one-file-system] [--separate-dirs]\n\
-       [--dereference] [--dereference-args] [--help] [--version] [path...]\n",
+Usage: %s [OPTION]... [PATH]...\n\
+\n",
 	   program_name);
 
-  exit (2);
+  if (status == 0)
+    fprintf (stderr, "\
+  -a, --all                write counts for all files, not just directories\n\
+  -b, --bytes              print size in bytes\n\
+  -c, --total              produce a grand total\n\
+  -k, --kilobytes          use 1024 blocks, not 512 despite POSIXLY_CORRECT\n\
+  -l, --count-links        count sizes many times if hard linked\n\
+  -s, --summarize          display only a total for each argument\n\
+  -x, --one-file-system    skip directories on different filesystems\n\
+  -D, --dereference-args   dereference PATHs when symbolic link\n\
+  -L, --dereference        dereference all symbolic links\n\
+  -S, --separate-dirs      do not include size of subdirectories\n\
+      --help               provide this help\n\
+      --version            show program version\n");
+
+  else
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+
+  exit (status);
 }
 
 void
@@ -266,7 +285,7 @@ main (argc, argv)
 	  break;
 
 	default:
-	  usage ((char *) 0);
+	  usage ((char *) 0, 2);
 	}
     }
 
@@ -277,10 +296,10 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage (NULL);
+    usage (NULL, 0);
 
   if (opt_all && opt_summarize_only)
-    usage ("cannot both summarize and show all entries");
+    usage ("cannot both summarize and show all entries", 2);
 
   /* Initialize the hash structure for inode numbers.  */
   hash_init (INITIAL_HASH_MODULE, INITIAL_ENTRY_TAB_SIZE);

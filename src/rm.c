@@ -145,7 +145,7 @@ main (argc, argv)
 	  verbose = 1;
 	  break;
 	default:
-	  usage ();
+	  usage (1);
 	}
     }
 
@@ -156,14 +156,14 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   if (optind == argc)
     {
       if (ignore_missing_files)
 	exit (0);
       else
-	usage ();
+	usage (1);
     }
 
   stdin_tty = isatty (0);
@@ -526,11 +526,27 @@ is the same file as\n", program_name, pathname);
 }
 
 static void
-usage ()
+usage (status)
+     int status;
 {
   fprintf (stderr, "\
-Usage: %s [-dfirvR] [--directory] [--force] [--interactive] [--recursive]\n\
-       [--verbose] [--help] [--version] path...\n",
+Usage: %s [OPTION]... PATH...\n\
+\n",
 	   program_name);
-  exit (1);
+
+  if (status == 0)
+    fprintf (stderr, "\
+  -d, --directory       unlink directory, even if non-empty (super-user only)\n\
+  -f, --force           ignore nonexistent files, never prompt\n\
+  -i, --interactive     prompt before any removal\n\
+  -v, --verbose         explain what is being done\n\
+  -r, -R, --recursive   remove the contents of directories recursively\n\
+      --help            provide this help\n\
+      --version         show program version\n");
+
+  else
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+
+  exit (status);
 }

@@ -1,3 +1,16 @@
+Thu Oct 07 12:57:10 1993  Jim Meyering  (meyering@comco.com)
+
+	* chgrp.c, chmod.c, chown.c, cp-aux.c, cp.c, dd.c, df.c, du.c,
+	install.c, ln.c, ls.c, mkdir.c, mkfifo.c, mknod.c, mv.c, mvdir.c,
+	rm.c, rmdir.c, touch.c (usage): Using --help gets long well-
+	formatted help.  Now --help writes to stdout and exits successfully.
+	From Francois Pinard <pinard@iro.umontreal.ca>.
+
+	* lib/Makefile.in [libdir]: Make sure it's defined.
+
+        * posixtm.y [!__GNUC__ && !HAVE_ALLOCA_H]: Declare alloca as void*
+        rather than char*.  The latter conflicts with a dcl from bison.simple.
+
 Wed Oct 06 18:22:00 1993  Jim Meyering  (meyering@comco.com)
 
 	* chmod.c (change_file_mode): Add an argument to control how symbolic
@@ -127,7 +140,7 @@ Mon Jul 19 17:39:01 1993  Jim Meyering  (meyering@comco.com)
 Fri Jul 16 22:00:16 1993  David J. MacKenzie  (djm@goldman.gnu.ai.mit.edu)
 
 	* dd.c (print_stats): Change message from "truncated blocks"
-	to "truncated records" for final POSIX.2 spec. 
+	to "truncated records" for final POSIX.2 spec.
 
 Fri Jun 25 17:18:15 1993  Jim Meyering  (meyering@comco.com)
 
@@ -315,7 +328,7 @@ Sun Apr 18 02:35:36 1993  Jim Meyering  (meyering@comco.com)
 
 	* src/Makefile.in (install): Rewrite the test for whether to install
 	mvdir so that it doesn't cause gratuitous failures with broken shells.
-	Split long rule so the pieces fit in 80-column lines. 
+	Split long rule so the pieces fit in 80-column lines.
 
 Thu Apr 15 23:44:01 1993  Jim Meyering  (meyering@comco.com)
 
@@ -766,7 +779,7 @@ Sat Mar 28 00:36:57 1992  David J. MacKenzie  (djm@wookumz.gnu.ai.mit.edu)
 	whether to do it once per buffer read, instead of once per character.
 	(copy): If conv=block and the input didn't end with a newline,
 	pad the final block with spaces.
- 
+
 Wed Mar 25 14:35:17 1992  David J. MacKenzie  (djm@wookumz.gnu.ai.mit.edu)
 
 	* system.h: Don't use BSIZE for calculating ST_BLKSIZE if it
@@ -953,7 +966,7 @@ Sun Aug 25 00:56:11 1991  David J. MacKenzie  (djm at apple-gunkies)
 
 	* df.c, fsinfo.c, fsinfo.h: New program.
 	* configure: Check for various ways of getting info on mounted
-	filesystems. 
+	filesystems.
 
 Thu Aug 22 10:53:23 1991  David J. MacKenzie  (djm at apple-gunkies)
 
@@ -1112,7 +1125,7 @@ Sat Jul  6 02:19:09 1991  David J. MacKenzie  (djm at geech.gnu.ai.mit.edu)
 
 	* configure: echo messages to stdout, not stderr.
 	Use test programs to see if alloca needs -lPW and if chars are
-	unsigned. 
+	unsigned.
 
 Tue Jul  2 03:16:32 1991  David J. MacKenzie  (djm at geech.gnu.ai.mit.edu)
 
@@ -1202,7 +1215,7 @@ Sat Jun  8 11:02:32 1991  David J. MacKenzie  (djm at geech.gnu.ai.mit.edu)
 
 	* backupfile.c: Use POSIX instead of _POSIX_SOURCE to
 	determine whether to check whether readdir returned a valid
-	entry. 
+	entry.
 
 Fri Jun  7 21:44:51 1991  David J. MacKenzie  (djm at geech.gnu.ai.mit.edu)
 
@@ -1288,7 +1301,7 @@ Mon Feb 25 11:44:14 1991  David J. MacKenzie  (djm at geech.ai.mit.edu)
 
 	* dd.c (copy): Only seek if not seeking to start of file, so
 	"dd >> foo" works with Minix shell that doesn't open foo in
-	append mode. 
+	append mode.
 
 Thu Feb 21 11:59:39 1991  David J. MacKenzie  (djm at geech.ai.mit.edu)
 
@@ -1319,7 +1332,7 @@ Thu Jan 10 02:16:55 1991  David J. MacKenzie  (djm at albert.ai.mit.edu)
 Fri Dec 28 18:40:34 1990  David J. MacKenzie  (djm at albert.ai.mit.edu)
 
 	* chmod.c, chown.c, chgrp.c, du.c: Rename -d option to -L for
-	similarity to ls and cpio. 
+	similarity to ls and cpio.
 
 Thu Dec 27 00:06:45 1990  David J. MacKenzie  (djm at egypt)
 
@@ -1411,7 +1424,7 @@ Sat Oct 27 23:38:55 1990  David J. MacKenzie  (djm at apple-gunkies)
 	* rm.c (check_stack): If not interactive, don't prompt when
 	corruption is found, just quit.
 	(remove_file, remove_dir): Delete leading spaces in verbose
-	output. 
+	output.
 
 	* cp.c (copy), rm.c (remove_dir): If we think the dest. file
 	is unwritable, warn the user in the interactive prompt instead
@@ -1530,7 +1543,7 @@ Wed Aug 22 01:45:54 1990  David J. MacKenzie  (djm at apple-gunkies)
 
 	* du.c: Rename -f option to -x, for POSIX.  Rename
 	+kilobyte-file-size to +kilobytes.  Add -b, +bytes option for
-	POSIX. 
+	POSIX.
 
 	* cp-aux.c (usage): Change -o to -x.
 	(stpcpy): Renamed from str_cpy.  Change callers in cp.c.
@@ -1638,7 +1651,7 @@ Tue Jul 24 03:39:42 1990  David J. MacKenzie  (djm at albert.ai.mit.edu)
 
 Mon Jul 23 16:57:44 1990  David J. MacKenzie  (djm at albert.ai.mit.edu)
 
-	* cp.c (copy): Make +update operate silently, like +one-file-system. 
+	* cp.c (copy): Make +update operate silently, like +one-file-system.
 
 	* ln.c: Add -F as synonym for -d, for SunOS compatibility.
 
@@ -1656,7 +1669,7 @@ Sun Jul  8 00:39:31 1990  David J. MacKenzie  (djm at apple-gunkies)
 
 	* rm.c (main, usage): Add new option -d, +directory.
 	(rm): If -d given, use remove_file instead of remove_dir for
-	directories. 
+	directories.
 	(remove_file): If directory, print "remove directory `foo'?"
 	for interactive instead of "remove `foo'?".
 
@@ -1671,12 +1684,12 @@ Fri Jul  6 02:02:49 1990  David J. MacKenzie  (djm at apple-gunkies)
 	default owner and group.
 
 	* mv.c (main): New option -u, +update.
-	(do_move): Don't move nondirectories if -u and there is an existing 
+	(do_move): Don't move nondirectories if -u and there is an existing
 	destination that has the same or newer mtime.
 	(usage): Document -u, +update.
 
 	* cp.c (main): New option -u, +update.
-	(copy): Don't copy nondirectories if -u and there is an existing 
+	(copy): Don't copy nondirectories if -u and there is an existing
 	destination that has the same or newer mtime.
 	* cp-aux.c (usage): Document -u ,+update.
 
@@ -1729,7 +1742,7 @@ Fri Jun 22 00:38:20 1990  David J. MacKenzie  (djm at albert.ai.mit.edu)
 
 	* rm.c, rmdir.c, mkdir.c, mkfifo.c: Move code to remove
 	slashes at the end of an arg from main to
-	strip_trailing_slashes. 
+	strip_trailing_slashes.
 
 	* install.c (strip): Print error message if the `strip'
 	program can't be run.
@@ -1741,7 +1754,7 @@ Fri Jun 22 00:38:20 1990  David J. MacKenzie  (djm at albert.ai.mit.edu)
 
 Thu Jun 21 01:19:28 1990  David J. MacKenzie  (djm at albert.ai.mit.edu)
 
-	* ls.c (print_long_format): Use mode_string instead of filemodestring. 
+	* ls.c (print_long_format): Use mode_string instead of filemodestring.
 
 	* ls.c (print_long_format): Compare times as longs, not ints.
 	(longdiff): Macro to compare two longs efficiently if sizeof
@@ -1793,7 +1806,7 @@ Sun Jun 17 00:09:23 1990  David J. MacKenzie  (djm at albert.ai.mit.edu)
 Sat Jun 16 01:45:42 1990  David J. MacKenzie  (djm at albert.ai.mit.edu)
 
 	* argmatch.c (invalid_arg): Change order in which the items
-	are printed. 
+	are printed.
 
 	* ls.c: Add +tabsize (-T) option.
 
@@ -1870,7 +1883,7 @@ Sat May 19 00:16:50 1990  David J. MacKenzie  (djm at albert.ai.mit.edu)
 	* mv.c (usage), ln.c (usage), cp-aux.c (usage): Revise messages.
 
 	* chmod.c (describe_change): Use mode_string instead of
-	filemodestring. 
+	filemodestring.
 
 	* cp.c (main): Recognize new options for making backups.
 	* cp.c (copy): Make backups if requested.  Fix typo.
@@ -1909,7 +1922,7 @@ Mon May 14 14:34:10 1990  David J. MacKenzie  (djm at albert.ai.mit.edu)
 
 	* dd.c: Make translation tables unsigned.
 	(main): Give `input_file' and `output_file' nonzero values for
-	stdin and stdout. 
+	stdin and stdout.
 	(parse_conversion): Set new global vars 'space_character' and
 	'newline_character' to correct values when translating to EBCDIC
 	(either flavor).
@@ -1924,7 +1937,7 @@ Mon May 14 14:34:10 1990  David J. MacKenzie  (djm at albert.ai.mit.edu)
 Sat May 12 01:16:42 1990  David J. MacKenzie  (djm at albert.ai.mit.edu)
 
 	* cp-hash (remember_created): Return error status instead of
-	fatal error. 
+	fatal error.
 	* cp.c (copy): Change caller.
 	(do_copy, copy_reg): Return error status instead of fatal error.
 
@@ -1942,7 +1955,7 @@ Sat May 12 01:16:42 1990  David J. MacKenzie  (djm at albert.ai.mit.edu)
 Fri May 11 02:11:03 1990  David J. MacKenzie  (djm at albert.ai.mit.edu)
 
 	* ln.c, mv.c, rm.c, rmdir.c, create.c, chmod.c: Change some
-	error messages. 
+	error messages.
 
 	* du.c, cp-aux.c (error): Function removed.
 	Change callers to use error.c version.
@@ -1986,7 +1999,7 @@ Sat Apr 14 17:23:11 1990  David J. MacKenzie  (djm at albert.ai.mit.edu)
 	* ls.c (main): Don't remove leading path from program_name.
 	(basename): Function removed.
 	(length_of_file_name_and_frills): Don't add 1 for type indicator
-	for block and character special files. 
+	for block and character special files.
 
 Thu Apr 12 19:50:15 1990  David J. MacKenzie  (djm at albert.ai.mit.edu)
 
@@ -2023,7 +2036,7 @@ Sun Apr  8 20:33:20 1990  David J. MacKenzie  (djm at albert.ai.mit.edu)
 	* rm.c (remove_file): Ditto.
 	(remove_dir): Use eaccess_stat to determine readability and
 	searchability.  Move initial interactive query here from
-	clear_directory. 
+	clear_directory.
 	* Makefile: Link ln, mv, and rm with eaccess.o.
 
 Sat Apr  7 11:47:52 1990  David J. MacKenzie  (djm at albert.ai.mit.edu)
@@ -2067,7 +2080,7 @@ Sun Apr  1 18:53:57 1990  David J. MacKenzie  (djm at spike.ai.mit.edu)
 Sat Mar 31 22:29:57 1990  David J. MacKenzie  (djm at albert.ai.mit.edu)
 
 	* mv.c [RENAME_MISSING] (rename): To rename directories, run
-	setuid root mv_dir program. 
+	setuid root mv_dir program.
 
 Tue Mar 20 14:28:25 1990  David J. MacKenzie  (djm at pogo.ai.mit.edu)
 
@@ -2100,17 +2113,17 @@ Sat Mar 17 21:45:35 1990  David J. MacKenzie  (djm at albert.ai.mit.edu)
 
 	* cp-aux.c, cp.h: Rename user_confirm_overwriting to yesno and
 	don't have it print a prompt, so it can be used in several
-	places. 
+	places.
 
 	* cp.c (do_copy): Change an error message to resemble mv's.
 	Remove all trailing slashes from all non-option args.
 	(main): Set new global var `stdin_not_tty'.
 	(copy): Use POSIX method of handling file overwriting and
-	prompting. 
+	prompting.
 
 	* dirlib.c (mkdir): Use chmod to set the directory mode after
 	successful creation, so set[ug]id and sticky bits are set
-	correctly. 
+	correctly.
 
 Thu Mar 15 12:33:23 1990  David J. MacKenzie  (djm at albert.ai.mit.edu)
 
@@ -2124,7 +2137,7 @@ Thu Mar 15 12:33:23 1990  David J. MacKenzie  (djm at albert.ai.mit.edu)
 	Global: Call error instead of the above functions.
 	(change_dir_mode): Make the new size of the path twice the
 	size of the name that was too long, rather than twice its old
-	size. 
+	size.
 
 	* rm.c: Move interactive query about whether to remove a
 	directory from remove_dir to clear_directory; only query for
@@ -2183,7 +2196,7 @@ Tue Mar 13 00:50:14 1990  David J. MacKenzie  (djm at rice-chex)
 
 	* Makefile (CC): Add comment noting that either fixincludes or
 	-traditional needs to be used for gcc to compile ioctl calls
-	correctly. 
+	correctly.
 
 Mon Mar 12 16:25:23 1990  Jim Kingdon  (kingdon at pogo.ai.mit.edu)
 
@@ -2236,7 +2249,7 @@ Mon Mar  5 00:34:36 1990  David J. MacKenzie  (djm at albert.ai.mit.edu)
 	(do_move): Simplify check for query.  Rename `stb' to
 	`to_stats' and `stbf' to `from_stats'.
 	Return error condition if original file could not be renamed or
-	unlinked. 
+	unlinked.
 
 	* rm.c: Rename global `force_flag' to `ignore_errors' and change its
 	meaning so that it does not overlap with `override_mode'.
@@ -2249,7 +2262,7 @@ Sun Mar  4 23:39:03 1990  David J. MacKenzie  (djm at albert.ai.mit.edu)
 
 	* ln.c (main): Reword an error message to be more like mv's.
 
-	* rmdir.c: Move global `errors' into main instead of having 
+	* rmdir.c: Move global `errors' into main instead of having
 	error set it.
 
 	* mkdir.c: Move global `errors' into main and have make_path
@@ -2399,7 +2412,7 @@ Mon Feb 12 11:30:45 1990  David J. MacKenzie  (djm at rice-chex)
 
 	* du.c (main): Check error return from stat.
 	(str_copyc, str_concatc): Don't return a value, since it is
-	ignored. 
+	ignored.
 
 	* cp.c (copy): Check error return from unlink and chmod.  Fix
 	typo in call to error.

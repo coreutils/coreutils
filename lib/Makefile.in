@@ -27,6 +27,10 @@ DEFS = -DMVDIR="\"$(libdir)/mvdir\"" @DEFS@
 CFLAGS = @CFLAGS@
 YACC = @YACC@
 
+prefix = /usr/local
+exec_prefix = $(prefix)
+libdir = $(exec_prefix)/lib
+
 SOURCES = getdate.y posixtm.y \
 argmatch.c backupfile.c basename.c dirname.c eaccess.c \
 error.c filemode.c fsusage.c getopt.c getopt1.c \
