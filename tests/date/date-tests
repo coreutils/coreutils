@@ -715,23 +715,40 @@ else
   esac
 fi
 test -s next-y.E || rm -f next-y.E
-TZ=EST5EDT $xx -u -d '08/01/97 6:00' '+%D,%H:%M'  > utc-0.O 2> utc-0.E
+TZ=UTC+4 $xx -u -d '08/01/97 6:00' '+%D,%H:%M'  > utc-0.O 2> utc-0.E
 code=$?
 if test $code != 0 ; then
-  $echo "Test utc-0(TZ=EST5EDT) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test utc-0(TZ=UTC+4) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp utc-0.O $srcdir/utc-0.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE" ; then $echo "passed utc-0(TZ=EST5EDT)"; fi ;;
-    1) $echo "Test utc-0(TZ=EST5EDT) failed: files utc-0.O and $srcdir/utc-0.X differ" 1>&2;
+    0) if test "$VERBOSE" ; then $echo "passed utc-0(TZ=UTC+4)"; fi ;;
+    1) $echo "Test utc-0(TZ=UTC+4) failed: files utc-0.O and $srcdir/utc-0.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
-    2) $echo "Test utc-0(TZ=EST5EDT) may have failed." 1>&2;
+    2) $echo "Test utc-0(TZ=UTC+4) may have failed." 1>&2;
        $echo The command "cmp utc-0.O $srcdir/utc-0.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
 test -s utc-0.E || rm -f utc-0.E
+LANG=C TZ=UTC $xx -u -d '08/01/97 6:00 UTC +4 hours' '+%D,%H:%M'  > utc-0a.O 2> utc-0a.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test utc-0a(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp utc-0a.O $srcdir/utc-0a.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed utc-0a(LANG=C TZ=UTC)"; fi ;;
+    1) $echo "Test utc-0a(LANG=C TZ=UTC) failed: files utc-0a.O and $srcdir/utc-0a.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test utc-0a(LANG=C TZ=UTC) may have failed." 1>&2;
+       $echo The command "cmp utc-0a.O $srcdir/utc-0a.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s utc-0a.E || rm -f utc-0a.E
 TZ=UTC+1 $xx -u --file=- '+%Y-%m-%d %T' < $srcdir/utc-1.I > utc-1.O 2> utc-1.E
 code=$?
 if test $code != 0 ; then
@@ -749,6 +766,23 @@ else
   esac
 fi
 test -s utc-1.E || rm -f utc-1.E
+LANG=C TZ=UTC $xx -u --file=- '+%Y-%m-%d %T' < $srcdir/utc-1a.I > utc-1a.O 2> utc-1a.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test utc-1a(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp utc-1a.O $srcdir/utc-1a.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed utc-1a(LANG=C TZ=UTC)"; fi ;;
+    1) $echo "Test utc-1a(LANG=C TZ=UTC) failed: files utc-1a.O and $srcdir/utc-1a.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test utc-1a(LANG=C TZ=UTC) may have failed." 1>&2;
+       $echo The command "cmp utc-1a.O $srcdir/utc-1a.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s utc-1a.E || rm -f utc-1a.E
 TZ=UTC+2 $xx -d '1970-01-01 00:00:01' +%s  > date2sec-0.O 2> date2sec-0.E
 code=$?
 if test $code != 0 ; then
@@ -766,6 +800,23 @@ else
   esac
 fi
 test -s date2sec-0.E || rm -f date2sec-0.E
+LANG=C TZ=UTC $xx -d '1970-01-01 00:00:01 UTC +2 hours' +%s  > date2sec-0a.O 2> date2sec-0a.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test date2sec-0a(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp date2sec-0a.O $srcdir/date2sec-0a.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed date2sec-0a(LANG=C TZ=UTC)"; fi ;;
+    1) $echo "Test date2sec-0a(LANG=C TZ=UTC) failed: files date2sec-0a.O and $srcdir/date2sec-0a.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test date2sec-0a(LANG=C TZ=UTC) may have failed." 1>&2;
+       $echo The command "cmp date2sec-0a.O $srcdir/date2sec-0a.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s date2sec-0a.E || rm -f date2sec-0a.E
 LANG=C TZ=UTC $xx -d 2000-01-01 +%s  > date2sec-1.O 2> date2sec-1.E
 code=$?
 if test $code != 0 ; then
@@ -801,7 +852,7 @@ else
 fi
 test -s sec2date-0.E || rm -f sec2date-0.E
 if test $errors = 0 ; then
-  $echo Passed all 46 tests. 1>&2
+  $echo Passed all 49 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi
