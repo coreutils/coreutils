@@ -81,6 +81,8 @@ int statfs ();
 int statvfs ();
 #endif
 
+#include "full-read.h"
+
 /* Many space usage primitives use all 1 bits to denote a value that is
    not applicable or unknown.  Propagate this information by returning
    a uintmax_t value that is all 1 bits if X is all 1 bits, even if X
@@ -104,8 +106,6 @@ int statvfs ();
    Use PROPAGATE_TOP_BIT if the original value might be negative;
    otherwise, use PROPAGATE_ALL_ONES.  */
 #define PROPAGATE_TOP_BIT(x) ((x) | ~ (EXTRACT_TOP_BIT (x) - 1))
-
-int safe_read ();
 
 /* Fill in the fields of FSP with information about space usage for
    the filesystem on which PATH resides.
@@ -163,7 +163,7 @@ get_fs_usage (const char *path, const char *disk, struct fs_usage *fsp)
   if (fd < 0)
     return -1;
   lseek (fd, (off_t) SUPERBOFF, 0);
-  if (safe_read (fd, (char *) &fsd, sizeof fsd) != sizeof fsd)
+  if (full_read (fd, (char *) &fsd, sizeof fsd) != sizeof fsd)
     {
       close (fd);
       return -1;
