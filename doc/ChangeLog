@@ -1,3 +1,7 @@
+2002-08-02  Paul Eggert  <eggert@twinsun.com>
+
+	* coreutils.texi (uniq invocation): uniq now obeys LC_COLLATE.
+
 2002-07-29  Paul Eggert  <eggert@twinsun.com>
 
 	* coreutils.texi (nohup invocation): Change behavior to conform to

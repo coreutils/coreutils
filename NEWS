@@ -1,1 +1,4 @@
 [0.1.0]
+* uniq now obeys the LC_COLLATE locale, as per POSIX 1003.1-2001 TC1.
+
+  Baseline: textutils-2.1
