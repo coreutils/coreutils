@@ -1,10 +1,8 @@
-1998-04-27  Jim Meyering  <meyering@ascend.com>
-
-	* tests/tail/Test.pm: Disable test f-1, now that it fails.
-
 1998-04-26  Jim Meyering  <meyering@ascend.com>
 
 	* Version 1.22f.
+
+	* tests/tail/Test.pm: Disable test f-1, now that it fails.
 
 	* src/sort.c (keycompare) (CMP_WITH_IGNORE): Don't return 0 from inside
 	the keyspec-iterating loop.  With this change, test 22a passes.
