@@ -278,6 +278,8 @@ s2 = '/^\#define AUTHORS \\\\/{;n;$(sed_filter);p;q;}'
 # Any that don't must be marked with `extern', but `main'
 # and `usage' are exceptions.  They're always extern, but
 # don't need to be marked.
+#
+# The second nm|grep checks for file-scope variables with `extern' scope.
 sc_tight_scope: $(all_programs)
 	@t=exceptions-$$$$;						\
 	trap "s=$$?; rm -f $$t; exit $$s" 0 1 2 13 15;			\
@@ -288,4 +290,10 @@ sc_tight_scope: $(all_programs)
 	    | sed -n 's/.* T //p'					\
 	    | grep -Ev -f $$t &&					\
 	  { echo 'the above functions should have static scope' 1>&2;	\
+	    exit 1; } || : ;						\
+	printf '^program_name$$\n' > $$t;				\
+	nm -e *.$(OBJEXT)						\
+	    | sed -n 's/.* B //p'					\
+	    | grep -Ev -f $$t &&					\
+	  { echo 'the above variables should have static scope' 1>&2;	\
 	    exit 1; } || :
