@@ -147,7 +147,7 @@ target_alias = @target_alias@
 
 SUBDIRS = lib src doc man m4 po tests old
 EXTRA_DIST = Makefile.cfg Makefile.maint GNUmakefile \
-  .kludge-stamp .prev-version
+  .kludge-stamp .prev-version THANKS-to-translators THANKStt.in
 
 
 ACLOCAL_AMFLAGS = -I m4
@@ -570,6 +570,14 @@ distcheck-hook:
 .kludge-stamp: $(srcdir)/src/Makefile.in
 	perl -pi -e '$(rm_subst)' $(srcdir)/src/Makefile.in
 	touch $@
+
+THANKS-to-translators: po/LINGUAS THANKStt.in
+	(								\
+	  cat $(srcdir)/THANKStt.in;					\
+	  for lang in `cat po/LINGUAS`; do				\
+	    echo http://www.iro.umontreal.ca/contrib/po/HTML/team-$$lang.html; \
+	  done;								\
+	) > $@-tmp && mv $@-tmp $@
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

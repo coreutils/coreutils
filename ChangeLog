@@ -2,6 +2,11 @@
 
 	* Version 4.5.1.
 
+	Symlinks were always reported as using 0 blocks.
+	* src/system.h (ST_NBLOCKS): Don't depend on file type.
+	This reverts the change of 2000-01-30.
+	Based on a report and patch from Neil Brown via Michael Stone.
+
 	* Most files: Change `exit (0)' to `exit (EXIT_SUCCESS)',
 	`exit (1)' to `exit (EXIT_FAILURE)', and
 	`usage (1)' to `usage (EXIT_FAILURE)'.
