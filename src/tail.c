@@ -37,6 +37,7 @@
 #include "error.h"
 #include "inttostr.h"
 #include "posixver.h"
+#include "quote.h"
 #include "safe-read.h"
 #include "xnanosleep.h"
 #include "xstrtol.h"
@@ -358,7 +359,8 @@ dump_remainder (const char *pretty_filename, int fd, uintmax_t n_bytes)
       size_t n = MIN (n_remaining, BUFSIZ);
       size_t bytes_read = safe_read (fd, buffer, n);
       if (bytes_read == SAFE_READ_ERROR)
-	error (EXIT_FAILURE, errno, "%s", pretty_filename);
+	error (EXIT_FAILURE, errno, _("error reading %s"),
+	       quote (pretty_filename));
       if (bytes_read == 0)
 	break;
       xwrite (STDOUT_FILENO, buffer, bytes_read);
@@ -437,7 +439,7 @@ file_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
   bytes_read = safe_read (fd, buffer, bytes_read);
   if (bytes_read == SAFE_READ_ERROR)
     {
-      error (0, errno, "%s", pretty_filename);
+      error (0, errno, _("error reading %s"), quote (pretty_filename));
       return 1;
     }
 
@@ -484,7 +486,7 @@ file_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
       bytes_read = safe_read (fd, buffer, BUFSIZ);
       if (bytes_read == SAFE_READ_ERROR)
 	{
-	  error (0, errno, "%s", pretty_filename);
+	  error (0, errno, _("error reading %s"), quote (pretty_filename));
 	  return 1;
 	}
     }
@@ -496,10 +498,10 @@ file_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
 /* Print the last N_LINES lines from the end of the standard input,
    open for reading as pipe FD.
    Buffer the text as a linked list of LBUFFERs, adding them as needed.
-   Return 0 if successful, 1 if an error occured.  */
+   Return 0 if successful, 1 upon error.  */
 
 static int
-pipe_lines (const char *pretty_filename, int fd, size_t n_lines)
+pipe_lines (const char *pretty_filename, int fd, uintmax_t n_lines)
 {
   struct linebuffer
   {
@@ -529,9 +531,15 @@ pipe_lines (const char *pretty_filename, int fd, size_t n_lines)
       tmp->next = NULL;
 
       /* Count the number of newlines just read.  */
-      for (i = 0; i < tmp->nbytes; i++)
-	if (tmp->buffer[i] == '\n')
-	  ++tmp->nlines;
+      {
+	char const *buffer_end = tmp->buffer + n_read;
+	char const *p = tmp->buffer;
+	while ((p = memchr (p, '\n', buffer_end - p)))
+	  {
+	    ++p;
+	    ++tmp->nlines;
+	  }
+      }
       total_lines += tmp->nlines;
 
       /* If there is enough room in the last buffer read, just append the new
@@ -566,7 +574,7 @@ pipe_lines (const char *pretty_filename, int fd, size_t n_lines)
 
   if (n_read == SAFE_READ_ERROR)
     {
-      error (0, errno, "%s", pretty_filename);
+      error (0, errno, _("error reading %s"), quote (pretty_filename));
       errors = 1;
       goto free_lbuffers;
     }
@@ -689,7 +697,7 @@ pipe_bytes (const char *pretty_filename, int fd, uintmax_t n_bytes)
 
   if (n_read == SAFE_READ_ERROR)
     {
-      error (0, errno, "%s", pretty_filename);
+      error (0, errno, _("error reading %s"), quote (pretty_filename));
       errors = 1;
       goto free_cbuffers;
     }
@@ -736,7 +744,7 @@ start_bytes (const char *pretty_filename, int fd, uintmax_t n_bytes)
 	return -1;
       if (bytes_read == SAFE_READ_ERROR)
 	{
-	  error (0, errno, "%s", pretty_filename);
+	  error (0, errno, _("error reading %s"), quote (pretty_filename));
 	  return 1;
 	}
       if (bytes_read <= n_bytes)
@@ -773,7 +781,7 @@ start_lines (const char *pretty_filename, int fd, uintmax_t n_lines)
 	return -1;
       if (bytes_read == SAFE_READ_ERROR) /* error */
 	{
-	  error (0, errno, "%s", pretty_filename);
+	  error (0, errno, _("error reading %s"), quote (pretty_filename));
 	  return 1;
 	}
 
@@ -1065,7 +1073,7 @@ tail_bytes (const char *pretty_filename, int fd, uintmax_t n_bytes)
 
   if (fstat (fd, &stats))
     {
-      error (0, errno, "%s", pretty_filename);
+      error (0, errno, _("cannot fstat %s"), quote (pretty_filename));
       return 1;
     }
 
@@ -1133,7 +1141,7 @@ tail_lines (const char *pretty_filename, int fd, uintmax_t n_lines)
 
   if (fstat (fd, &stats))
     {
-      error (0, errno, "%s", pretty_filename);
+      error (0, errno, _("cannot fstat %s"), quote (pretty_filename));
       return 1;
     }
 
@@ -1212,7 +1220,8 @@ tail_file (struct File_spec *f, uintmax_t n_units)
 	  f->ino = 0;
 	  f->dev = 0;
 	}
-      error (0, errno, "%s", pretty_name (f));
+      error (0, errno, _("cannot open %s for reading"),
+	     quote (pretty_name (f)));
       errors = 1;
     }
   else
@@ -1229,7 +1238,7 @@ tail_file (struct File_spec *f, uintmax_t n_units)
 	    {
 	      errors = 1;
 	      f->errnum = errno;
-	      error (0, errno, "%s", pretty_name (f));
+	      error (0, errno, _("error reading %s"), quote (pretty_name (f)));
 	    }
 	  else if (!IS_TAILABLE_FILE_TYPE (stats.st_mode))
 	    {
@@ -1261,7 +1270,7 @@ tail_file (struct File_spec *f, uintmax_t n_units)
 	{
 	  if (!is_stdin && close (fd))
 	    {
-	      error (0, errno, "%s", pretty_name (f));
+	      error (0, errno, _("error reading %s"), quote (pretty_name (f)));
 	      errors = 1;
 	    }
 	}
