@@ -1,3 +1,34 @@
+1999-01-10  Jim Meyering  <meyering@ascend.com>
+
+	* src/Makefile.am (pinky_LDADD, pinky_DEPENDENCIES, who_LDADD,
+	who_DEPENDENCIES): Remove definitions.
+
+	* lib/Makefile.am (BUILT_SOURCES): Add lstat.c and stat.c.
+	(lstat.c, stat.c): New rules.
+
+	* lib/canon-host.c (main) [TEST_CANON_HOST]: Add a simple test driver.
+
+	* configure.in: Require autoconf-2.13.
+	Use new AC_SEARCH_LIBS to see if we need nsl or inet libraries
+	to resolve gethostbyname.
+
+1998-12-22  Jim Meyering  <meyering@ascend.com>
+
+	* configure.in (ALL_LINGUAS): Add chinese (zh).
+
+1998-12-13  Jim Meyering  <meyering@ascend.com>
+
+	* lib/putenv.c: Don't include stdlib.h and declare malloc and free.
+	This works around Solaris 2.7's conflicting prototype.
+	Reported by Karl Berry.
+
+	* lib/Makefile.am (lstat.c): Add rule to generate this from xstat.in.
+	(stat.c): Likewise.
+	(EXTRA_DIST): Add xstat.in.
+	* lib/stat.c: Remove file.
+	* lib/lstat.c: Remove file.
+	* lib/xstat.in (xstat@): New file.
+
 1998-12-10  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* src/date.c (main): Arrange to exit unsuccessfully when stime fails.
@@ -5,11 +36,6 @@
 1998-12-07  Jim Meyering  <meyering@ascend.com>
 
 	* configure.in (ALL_LINGUAS): Add Russian (ru).
-
-1998-12-06  Jim Meyering  <meyering@ascend.com>
-
-	* lib/putenv.c: Redefine putenv before including stdlib.h to work
-	around Solaris 2.7's conflicting prototype.  Reported by Karl Berry.
 
 1998-10-31  Jim Meyering  <meyering@ascend.com>
 
