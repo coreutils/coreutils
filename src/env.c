@@ -136,10 +136,10 @@ A mere - implies -i.  If no COMMAND, print the resulting environment.\n\
 }
 
 int
-main (register int argc, register char **argv, char **envp)
+main (register int argc, register char **argv)
 {
   int optc;
-  int ignore_environment = 0;
+  bool ignore_environment = false;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -157,7 +157,7 @@ main (register int argc, register char **argv, char **envp)
 	case 0:
 	  break;
 	case 'i':
-	  ignore_environment = 1;
+	  ignore_environment = true;
 	  break;
 	case 'u':
 	  break;
@@ -169,7 +169,7 @@ main (register int argc, register char **argv, char **envp)
     }
 
   if (optind < argc && STREQ (argv[optind], "-"))
-    ignore_environment = 1;
+    ignore_environment = true;
 
   if (ignore_environment)
     {
