@@ -1,11 +1,11 @@
-#serial 3
+#serial 4
 
 dnl From Paul Eggert.
 
 # Define HAVE_INTTYPES_H if <inttypes.h> exists,
 # doesn't clash with <sys/types.h>, and declares uintmax_t.
 
-AC_DEFUN(jm_AC_HEADER_INTTYPES_H,
+AC_DEFUN([jm_AC_HEADER_INTTYPES_H],
 [
   AC_CACHE_CHECK([for inttypes.h], jm_ac_cv_header_inttypes_h,
   [AC_TRY_COMPILE(
