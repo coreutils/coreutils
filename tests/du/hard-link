@@ -34,17 +34,17 @@ du -a --exclude=sub dir \
   | sed 's/^[0-9][0-9]*	//' > out || fail=1
 echo === >> out
 du -a --exclude=sub --count-links dir \
-  | sed 's/^[0-9][0-9]*	//' >> out || fail=1
+  | sed 's/^[0-9][0-9]*	//' | sort -r >> out || fail=1
 cat <<\EOF > exp
 dir/f1
 dir
 ===
-dir/f1
 dir/f2
+dir/f1
 dir
 EOF
 
 cmp out exp || fail=1
-test $fail = 1 && diff out exp 2> /dev/null
+test $fail = 1 && diff -u out exp 2> /dev/null
 
 (exit $fail); exit $fail
