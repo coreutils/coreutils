@@ -10,11 +10,11 @@ tmp=eq-x-$$
 trap 'status=$?; cd $pwd; chmod -R a+rwx $tmp; rm -rf $tmp && exit $status' 0
 trap '(exit $?); exit' 1 2 13 15
 
-file=f
 framework_failure=0
-mkdir $file || framework_failure=1
-cd $file || framework_failure=1
+mkdir $tmp || framework_failure=1
+cd $tmp || framework_failure=1
 
+file=f
 touch $file || framework_failure=1
 chmod 444 $file || framework_failure=1
 
