@@ -1,3 +1,9 @@
+2004-09-18  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (dd invocation): Distinguish between options
+	(e.g., --help) and operands (e.g., if=file).  Move miscellaneous
+	stuff after the operand descriptions, for clarity.
+
 2004-09-09  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (sort invocation): -u disables the last-resort
