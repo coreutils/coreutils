@@ -1,4 +1,9 @@
 Changes in release 4.1:
+[4.0n]
+* cp, install, ln, and mv: when making backup files in verbose mode, these
+  commands now print the backup file name on the same line as the rest of the
+  information, e.g., `a -> b (backup: b.~13~)' rather than on a separate line
+  as all but ln used to do.  ln didn't output the backup file name at all.
 [4.0m]
 * mv accepts new option: --strip-trailing-slashes (soon, many other
   programs will, too)
