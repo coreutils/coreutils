@@ -38,6 +38,7 @@
 #include "system.h"
 #include "error.h"
 #include "lchown.h"
+#include "quote.h"
 #include "savedir.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -144,7 +145,7 @@ describe_change (const char *file, enum Change_status changed)
   if (changed == CH_NOT_APPLIED)
     {
       printf (_("neither symbolic link %s nor referent has been changed\n"),
-	      file);
+	      quote (file));
       return;
     }
 
@@ -186,7 +187,7 @@ change_file_owner (int cmdline_arg, const char *file, uid_t user, gid_t group,
   if (lstat (file, &file_stats))
     {
       if (force_silent == 0)
-	error (0, errno, "%s", file);
+	error (0, errno, _("getting attributes of %s"), quote (file));
       return 1;
     }
 
@@ -231,7 +232,8 @@ change_file_owner (int cmdline_arg, const char *file, uid_t user, gid_t group,
 	  if (fail)
 	    {
 	      if (force_silent == 0)
-		error (0, saved_errno, "%s", file);
+		error (0, saved_errno, _("changing ownership of %s"),
+		       quote (file));
 	      errors = 1;
 	    }
 	}
@@ -268,7 +270,7 @@ change_dir_owner (const char *dir, uid_t user, gid_t group,
   if (name_space == NULL)
     {
       if (force_silent == 0)
-	error (0, errno, "%s", dir);
+	error (0, errno, "%s", quote (dir));
       return 1;
     }
 
@@ -375,10 +377,11 @@ main (int argc, char **argv)
 	case FROM_OPTION:
 	  {
 	    char *u_dummy, *g_dummy;
-	    const char *e = parse_user_spec (argv[optind], &old_user, &old_group,
+	    const char *e = parse_user_spec (argv[optind],
+					     &old_user, &old_group,
 					     &u_dummy, &g_dummy);
 	    if (e)
-	      error (1, 0, "%s: %s", argv[optind], e);
+	      error (1, 0, "%s: %s", quote (argv[optind]), e);
 	    break;
 	  }
 	case 'R':
@@ -414,7 +417,7 @@ main (int argc, char **argv)
       struct stat ref_stats;
 
       if (stat (reference_file, &ref_stats))
-        error (1, errno, "%s", reference_file);
+	error (1, errno, _("getting attributes of %s"), quote (reference_file));
 
       user  = ref_stats.st_uid;
       group = ref_stats.st_gid;

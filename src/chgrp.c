@@ -27,6 +27,7 @@
 #include "error.h"
 #include "lchown.h"
 #include "group-member.h"
+#include "quote.h"
 #include "savedir.h"
 #include "xstrtol.h"
 
@@ -137,7 +138,7 @@ describe_change (const char *file, enum Change_status changed)
   if (changed == CH_NOT_APPLIED)
     {
       printf (_("neither symbolic link %s nor referent has been changed\n"),
-	      file);
+	      quote (file));
       return;
     }
 
@@ -155,7 +156,7 @@ describe_change (const char *file, enum Change_status changed)
     default:
       abort ();
     }
-  printf (fmt, file, groupname);
+  printf (fmt, quote (file), groupname);
 }
 
 /* Set *G according to NAME. */
@@ -176,14 +177,14 @@ parse_group (const char *name, gid_t *g)
       unsigned long int tmp_long;
 
       if (!ISDIGIT (*name))
-	error (1, 0, _("invalid group name `%s'"), name);
+	error (1, 0, _("invalid group name %s"), quote (name));
 
       s_err = xstrtoul (name, NULL, 0, &tmp_long, NULL);
       if (s_err != LONGINT_OK)
 	STRTOL_FATAL_ERROR (name, _("group number"), s_err);
 
       if (tmp_long > MAXGID)
-	error (1, 0, _("invalid group number `%s'"), name);
+	error (1, 0, _("invalid group number %s"), quote (name));
 
       *g = tmp_long;
     }
@@ -205,7 +206,7 @@ change_file_group (int cmdline_arg, const char *file, gid_t group)
   if ((*xstat) (file, &file_stats))
     {
       if (force_silent == 0)
-	error (0, errno, "%s", file);
+	error (0, errno, _("getting attributes of %s"), quote (file));
       return 1;
     }
 
@@ -252,16 +253,18 @@ change_file_group (int cmdline_arg, const char *file, gid_t group)
 		 of the specified group' errors.  */
 	      if (saved_errno == EPERM && !group_member (group))
 		{
-		  error (0, saved_errno, _("you are not a member of group `%s'"),
-			 groupname);
+		  error (0, saved_errno, _("you are not a member of group %s"),
+			 quote (groupname));
 		}
 	      else if (saved_errno == EINVAL && group > MAXUID)
 		{
-		  error (0, 0, _("%s: invalid group number"), groupname);
+		  error (0, 0, _("%s: invalid group number"),
+			 quote (groupname));
 		}
 	      else
 		{
-		  error (0, saved_errno, "%s", file);
+		  error (0, saved_errno, _("changing group of %s"),
+			 quote (file));
 		}
 	    }
 	}
@@ -296,7 +299,7 @@ change_dir_group (const char *dir, gid_t group, const struct stat *statp)
   if (name_space == NULL)
     {
       if (force_silent == 0)
-	error (0, errno, "%s", dir);
+	error (0, errno, "%s", quote (dir));
       return 1;
     }
 
@@ -423,7 +426,7 @@ main (int argc, char **argv)
     {
       struct stat ref_stats;
       if (stat (reference_file, &ref_stats))
-        error (1, errno, "%s", reference_file);
+	error (1, errno, _("getting attributes of %s"), quote (reference_file));
 
       group = ref_stats.st_gid;
     }

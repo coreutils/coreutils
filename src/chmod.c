@@ -26,6 +26,7 @@
 #include "error.h"
 #include "filemode.h"
 #include "modechange.h"
+#include "quote.h"
 #include "savedir.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -120,7 +121,8 @@ describe_change (const char *file, mode_t mode,
     default:
       abort ();
     }
-  printf (fmt, file, (unsigned long) (mode & CHMOD_MODE_BITS), &perms[1]);
+  printf (fmt, quote (file),
+	  (unsigned long) (mode & CHMOD_MODE_BITS), &perms[1]);
 }
 
 /* Change the mode of FILE according to the list of operations CHANGES.
@@ -139,7 +141,7 @@ change_file_mode (const char *file, const struct mode_change *changes,
   if (lstat (file, &file_stats))
     {
       if (force_silent == 0)
-	error (0, errno, "%s", file);
+	error (0, errno, _("getting attributes of %s"), quote (file));
       return 1;
     }
 #ifdef S_ISLNK
@@ -151,7 +153,7 @@ change_file_mode (const char *file, const struct mode_change *changes,
 	if (stat (file, &file_stats))
 	  {
 	    if (force_silent == 0)
-	      error (0, errno, "%s", file);
+	      error (0, errno, _("getting attributes of %s"), quote (file));
 	    return 1;
 	  }
     }
@@ -170,7 +172,8 @@ change_file_mode (const char *file, const struct mode_change *changes,
       if (fail)
 	{
 	  if (force_silent == 0)
-	    error (0, saved_errno, "%s", file);
+	    error (0, saved_errno, _("changing permissions of %s"),
+		   quote (file));
 	  errors = 1;
 	}
     }
@@ -202,7 +205,7 @@ change_dir_mode (const char *dir, const struct mode_change *changes,
   if (name_space == NULL)
     {
       if (force_silent == 0)
-	error (0, errno, "%s", dir);
+	error (0, errno, "%s", quote (dir));
       return 1;
     }
 
@@ -352,7 +355,7 @@ main (int argc, char **argv)
   else if (changes == MODE_MEMORY_EXHAUSTED)
     error (1, 0, _("virtual memory exhausted"));
   else if (changes == MODE_BAD_REFERENCE)
-    error (1, errno, "%s", reference_file);
+    error (1, errno, _("getting attributes of %s"), quote (reference_file));
 
   for (; optind < argc; ++optind)
     {
