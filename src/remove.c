@@ -527,8 +527,9 @@ is_empty_dir (char const *dir)
       dp = readdir (dirp);
       if (dp == NULL)
 	{
+	  int saved_errno = errno;
 	  closedir (dirp);
-	  return errno == 0 ? true : false;
+	  return saved_errno == 0 ? true : false;
 	}
 
       f = dp->d_name;
