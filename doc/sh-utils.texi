@@ -2453,6 +2453,46 @@ use @samp{date --rfc}.  I just did and saw this:
 Mon, 25 Mar 1996 23:34:17 -0600
 @end example
 
+@item
+To convert a date string to the number of seconds since 1970-01-01 00:00:00,
+use the @samp{--date} option with the @samp{%s} format.
+That can be useful in sorting and graphing data by date.
+The command in the following example prints the number of seconds that
+elapsed between the epoch and the specified date: one second after midnight
+on 1970-01-01.
+But it is important to note that the date string is interpreted relative
+to the local time zone, UTC+2, so it is two hours and one second
+or @samp{7201} seconds after the @code{epoch}.
+
+@example
+% env TZ=UTC+2 date --date='1970-01-01 00:00:01' +%s
+7201
+@end example
+
+@item
+If you're sorting or graphing dated data, your raw date values may be
+represented as seconds since the epoch.  But few people can look at
+the date @samp{946684800} and casually note ``Oh, that's the first second
+of the third millenium.''
+
+@example
+% env TZ=UTC date --date='2000-01-01' +%s
+946684800
+@end example
+
+To convert such an unwieldy number of seconds back to
+a more readable form, use a command like this:
+
+@smallexample
+% env TZ=UTC date -d '1970-01-01 UTC 946684800 sec' +"%Y-%m-%d %T %z"
+2000-01-01 00:00:00 +0000
+@end smallexample
+
+Note that in the few preceding examples, the timezone was set to
+a specific value through the @samp{TZ} environment variable.
+If you do not set @samp{TZ}, you must remember that @samp{--date}
+strings are converted relative to the local time zone.
+
 @end itemize
 
 
