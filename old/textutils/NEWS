@@ -1,5 +1,6 @@
 Changes in release 2.1
 [2.0f]
+* all programs fail when printing --help or --version output to a full device
 * cut no longer gets a segfault under some circumstances
 * unexpand accepts new option: --first-only
 [2.0e]

@@ -1,3 +1,7 @@
+2000-07-02  Jim Meyering  <meyering@lucent.com>
+
+	* Version 2.0f.
+
 2000-07-01  Jim Meyering  <meyering@lucent.com>
 
 	* src/cut.c: Change type of global, field_1_bufsize, from int to size_t.
