@@ -1,11 +1,11 @@
 [4.5.5]
 * ls has a new option --dereference-command-line-symlink-to-dir, which
-  corresponds to the default behavior when none of -d, -l -F, -H, -L has
-  been specified.
+  corresponds to the new default behavior when none of -d, -l -F, -H, -L
+  has been specified.
 * ls dangling-symlink now prints `dangling-symlink'.
-  Before, it would fail with `no such file or directory'
-* ls -s symlink-to-non-dir and ls -i symlink-to-non-dir now print attributes
-  of `symlink', rather than attributes of their referents
+  Before, it would fail with `no such file or directory'.
+* ls -s symlink-to-non-dir and ls -i symlink-to-non-dir now print
+  attributes of `symlink', rather than attributes of their referents.
 * Fix a bug introduced in 4.5.4 that made it so that ls --color would no
   longer highlight the names of files with the execute bit set when not
   specified on the command line.
