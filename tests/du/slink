@@ -20,7 +20,7 @@ cd $tmp || framework_failure=1
 df --local . > tmp
 # So if this is a non-local file system, skip the test.
 if grep '^/' tmp > /dev/null; then
-  # Ok.
+  : # Ok.
 else
   echo "$0: skipping this test, since \`.' is on a non-local file system" 1>&2
   (exit 77); exit
