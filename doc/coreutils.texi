@@ -395,13 +395,13 @@ System context
 
 @command{date}: Print or set system date and time
 
-* Time directives::              Time directives
-* Date directives::              Date directives
-* Literal directives::           Literal directives
-* Padding and other flags::      Padding and other flags
-* Setting the time::             Setting the time
-* Options for date::             Options for @command{date}
-* Examples of date::             Examples of @command{date}
+* Time conversion specifiers::   %[HIklMNpPrRsSTXzZ]
+* Date conversion specifiers::   %[aAbBcCdDeFgGhjmuUVwWxyY]
+* Literal conversion specifiers:: %[%nt]
+* Padding and other flags::      Pad with zeroes, spaces, etc.
+* Setting the time::             Changing the system clock.
+* Options for date::             Instead of the current time.
+* Examples of date::             Examples.
 
 Modified command invocation
 
@@ -11417,7 +11417,7 @@ date [-u|--utc|--universal] @c this avoids a newline in the output
 Invoking @command{date} with no @var{format} argument is equivalent to invoking
 it with a default format that depends on the @env{LC_TIME} locale category.
 In the default C locale, this format is @samp{'+%a %b %e %H:%M:%S %Z %Y'},
-so the output looks like @samp{Fri Feb 27 13:47:51 PST 2004}.
+so the output looks like @samp{Thu Mar @ 3 13:47:51 PST 2005}.
 
 @vindex TZ
 Normally, @command{date} uses the time zone rules indicated by the
@@ -11432,165 +11432,179 @@ If given an argument that starts with a @samp{+}, @command{date} prints the
 current time and date (or the time and date specified by the
 @option{--date} option, see below) in the format defined by that argument,
 which is similar to that of the @code{strftime} function.  Except for
-directives, which start with @samp{%}, characters in the format string
-are printed unchanged.  The directives are described below.
+conversion specifiers, which start with @samp{%}, characters in the
+format string are printed unchanged.  The conversion specifiers are
+described below.
 
 @exitstatus
 
 @menu
-* Time directives::             %[HIklMprsSTXzZ]
-* Date directives::             %[aAbBcCdDhjmUwWxyY]
-* Literal directives::          %[%nt]
-* Padding and other flags::     Pad with zeroes, spaces (%_), etc.
-* Setting the time::            Changing the system clock.
-* Options for date::            Instead of the current time.
-* Examples of date::            Examples.
+* Time conversion specifiers::     %[HIklMNpPrRsSTXzZ]
+* Date conversion specifiers::     %[aAbBcCdDeFgGhjmuUVwWxyY]
+* Literal conversion specifiers::  %[%nt]
+* Padding and other flags::        Pad with zeroes, spaces, etc.
+* Setting the time::               Changing the system clock.
+* Options for date::               Instead of the current time.
+* Examples of date::               Examples.
 @end menu
 
-@node Time directives
-@subsection Time directives
+@node Time conversion specifiers
+@subsection Time conversion specifiers
 
-@cindex time directives
-@cindex directives, time
+@cindex time conversion specifiers
+@cindex conversion specifiers, time
 
-@command{date} directives related to times.
+@command{date} conversion specifiers related to times.
 
 @table @samp
 @item %H
-hour (00@dots{}23)
+hour (@samp{00}@dots{}@samp{23})
 @item %I
-hour (01@dots{}12)
+hour (@samp{01}@dots{}@samp{12})
 @item %k
-hour ( 0@dots{}23).
+hour (@samp{ 0}@dots{}@samp{23}).
 This is a @acronym{GNU} extension.
 @item %l
-hour ( 1@dots{}12).
+hour (@samp{ 1}@dots{}@samp{12}).
 This is a @acronym{GNU} extension.
 @item %M
-minute (00@dots{}59)
+minute (@samp{00}@dots{}@samp{59})
 @item %N
-nanoseconds (000000000@dots{}999999999)
+nanoseconds (@samp{000000000}@dots{}@samp{999999999}).
+This is a @acronym{GNU} extension.
 @item %p
-locale's upper case @samp{AM} or @samp{PM} (blank in many locales).
+locale's equivalent of either @samp{AM} or @samp{PM};
+blank in many locales.
 Noon is treated as @samp{PM} and midnight as @samp{AM}.
 @item %P
-locale's lower case @samp{am} or @samp{pm} (blank in many locales).
-Noon is treated as @samp{pm} and midnight as @samp{am}.
+like @samp{%p}, except lower case.
 This is a @acronym{GNU} extension.
 @item %r
-locale's 12-hour time (hh:mm:ss [AP]M)
+locale's 12-hour clock time (e.g., @samp{11:11:04 PM})
 @item %R
-24-hour hour and minute.  Same as @code{%H:%M}.
+24-hour hour and minute.  Same as @samp{%H:%M}.
+This is a @acronym{GNU} extension.
 @item %s
 @cindex epoch, seconds since
 @cindex seconds since the epoch
 @cindex beginning of time
 seconds since the epoch, i.e., since 1970-01-01 00:00:00 UTC.
 Leap seconds are not counted unless leap second support is available.
-This is a @acronym{GNU} extension.
 @xref{%s-examples}, for examples.
+This is a @acronym{GNU} extension.
 @item %S
-second (00@dots{}60).  This may be @samp{60} if leap seconds are supported.
+second (@samp{00}@dots{}@samp{60}).
+This may be @samp{60} if leap seconds are supported.
 @item %T
-24-hour hour, minute, and second.  Same as @code{%H:%M:%S}.
+24-hour hour, minute, and second.  Same as @samp{%H:%M:%S}.
 @item %X
-locale's time representation (hh:mm:ss)
+locale's time representation (e.g., @samp{23:13:48})
 @item %z
-@w{RFC 2822}/@w{ISO 8601} style numeric time zone (e.g., @samp{-0600}
+@w{RFC 2822/ISO 8601} style numeric time zone (e.g., @samp{-0600}
 or @samp{+0100}), or nothing if no
 time zone is determinable.  This value reflects the numeric time zone
 appropriate for the current time, using the time zone rules specified
 by the @env{TZ} environment variable.
 The time (and optionally, the time zone rules) can be overridden
 by the @option{--date} option.
+This is a @acronym{GNU} extension.
 @item %Z
 alphabetic time zone abbreviation (e.g., @samp{EDT}), or nothing if no
 time zone is determinable.  See @samp{%z} for how it is determined.
 @end table
 
 
-@node Date directives
-@subsection Date directives
+@node Date conversion specifiers
+@subsection Date conversion specifiers
 
-@cindex date directives
-@cindex directives, date
+@cindex date conversion specifiers
+@cindex conversion specifiers, date
 
-@command{date} directives related to dates.
+@command{date} conversion specifiers related to dates.
 
 @table @samp
 @item %a
-locale's abbreviated weekday name (Sun@dots{}Sat)
+locale's abbreviated weekday name (e.g., @samp{Sun})
 @item %A
-locale's full weekday name, variable length (Sunday@dots{}Saturday)
+locale's full weekday name, variable length (e.g., @samp{Sunday})
 @item %b
-locale's abbreviated month name (Jan@dots{}Dec)
+locale's abbreviated month name (e.g., @samp{Jan})
 @item %B
-locale's full month name, variable length (January@dots{}December)
+locale's full month name, variable length (e.g., @samp{January})
 @item %c
-locale's date and time (Sat Nov 04 12:02:33 EST 1989)
+locale's date and time (e.g., @samp{Thu Mar @ 3 23:05:25 2005})
 @item %C
-century.  This is like @code{%Y}, except the last two digits are omitted.
-For example, it is @samp{20} if @code{%Y} is @samp{2000},
-and is @samp{-0} if @code{%Y} is @samp{-001}.
+century.  This is like @samp{%Y}, except the last two digits are omitted.
+For example, it is @samp{20} if @samp{%Y} is @samp{2000},
+and is @samp{-0} if @samp{%Y} is @samp{-001}.
 It is normally at least two characters, but it may be more.
 @item %d
-day of month (01@dots{}31)
+day of month (e.g., @samp{01})
 @item %D
-date (equivalent to @code{%m/%d/%y})
+date; same as @samp{%m/%d/%y}
 @item %e
-blank-padded day of month ( 1@dots{}31)
+day of month, space padded; same as @samp{%_d}
 @item %F
-the @w{ISO 8601} standard date format: @code{%Y-%m-%d}.
-This is the preferred form for all uses.
+full date in @w{ISO 8601} format; same as @samp{%Y-%m-%d}.
+This is a good choice for a date format, as it is standard and
+is easy to sort in the usual case where years are in the range
+0000@dots{}9999.
+This is a @acronym{GNU} extension.
 @item %g
 The year corresponding to the ISO week number, but without the century
-(range @code{00} through @code{99}).  This has the same format and value
-as @code{%y}, except that if the ISO week number (see @code{%V}) belongs
+(range @samp{00} through @samp{99}).  This has the same format and value
+as @samp{%y}, except that if the ISO week number (see @samp{%V}) belongs
 to the previous or next year, that year is used instead.
+This is a @acronym{GNU} extension.
 @item %G
 The year corresponding to the ISO week number.  This has the same format
-and value as @code{%Y}, except that if the ISO week number (see
-@code{%V}) belongs to the previous or next year, that year is used
+and value as @samp{%Y}, except that if the ISO week number (see
+@samp{%V}) belongs to the previous or next year, that year is used
 instead.
+This is a @acronym{GNU} extension.
 @item %h
-same as @code{%b}
+same as @samp{%b}
 @item %j
-day of year (001@dots{}366)
+day of year (@samp{001}@dots{}@samp{366})
 @item %m
-month (01@dots{}12)
+month (@samp{01}@dots{}@samp{12})
 @item %u
-day of week (1@dots{}7) with 1 corresponding to Monday
+day of week (@samp{1}@dots{}@samp{7}) with @samp{1} corresponding to Monday
 @item %U
-week number of year with Sunday as first day of week (00@dots{}53).
+week number of year with Sunday as first day of week
+(@samp{00}@dots{}@samp{53}).
 Days in a new year preceding the first Sunday are in week zero.
 @item %V
 week number of year with Monday as first day of the week as a decimal
-(01@dots{}53).  If the week containing January 1 has four or more days in
+(@samp{01}@dots{}@samp{53}).
+If the week containing January 1 has four or more days in
 the new year, then it is considered week 1; otherwise, it is week 53 of
 the previous year, and the next week is week 1.  (See the @acronym{ISO} 8601
 standard.)
 @item %w
-day of week (0@dots{}6) with 0 corresponding to Sunday
+day of week (@samp{0}@dots{}@samp{6}) with 0 corresponding to Sunday
 @item %W
-week number of year with Monday as first day of week (00@dots{}53).
+week number of year with Monday as first day of week
+(@samp{00}@dots{}@samp{53}).
 Days in a new year preceding the first Monday are in week zero.
 @item %x
-locale's date representation (mm/dd/yy)
+locale's date representation (e.g., @samp{12/31/99})
 @item %y
-last two digits of year (00@dots{}99)
+last two digits of year (@samp{00}@dots{}@samp{99})
 @item %Y
 year.  This is normally at least four characters, but it may be more.
-Year 0000 precedes year 0001, and year -001 precedes year 0000.
+Year @samp{0000} precedes year @samp{0001}, and year @samp{-001}
+precedes year @samp{0000}.
 @end table
 
 
-@node Literal directives
-@subsection Literal directives
+@node Literal conversion specifiers
+@subsection Literal conversion specifiers
 
-@cindex literal directives
-@cindex directives, literal
+@cindex literal conversion specifiers
+@cindex conversion specifiers, literal
 
-@command{date} directives that produce literal strings.
+@command{date} conversion specifiers that produce literal strings.
 
 @table @samp
 @item %%
@@ -11609,25 +11623,30 @@ a horizontal tab
 @cindex padding of numeric fields
 @cindex fields, padding numeric
 
-By default, @command{date} pads numeric fields with zeroes, so that, for
+Unless otherwise specified, @command{date} normally pads numeric fields
+with zeroes, so that, for
 example, numeric months are always output as two digits.
-Numbers that do not have a range are never
-padded, since there is no natural width for them.
+Seconds since the epoch are not padded, though,
+since there is no natural width for them.
 
 As a @acronym{GNU} extension, @command{date} recognizes any of the
 following optional flags after the @samp{%}:
 
 @table @samp
 @item -
-(hyphen) do not pad the field; useful if the output is intended for
+(hyphen) Do not pad the field; useful if the output is intended for
 human consumption.
 @item _
-(underscore) pad the field with spaces; useful if you need a fixed
+(underscore) Pad with spaces; useful if you need a fixed
 number of characters in the output, but zeroes are too distracting.
 @item 0
-(zero) Pad with zeros even if the format specifies padding with spaces.
+(zero) Pad with zeros even if the conversion specifier
+would normally pad with spaces.
 @item ^
 Use upper case characters if possible.
+@item #
+Use opposite case characters if possible.
+A field that is normally upper case becomes lower case, and vice versa.
 @end table
 
 @noindent
@@ -11643,25 +11662,26 @@ date +%_d/%_m -d "Feb 1"
 @end example
 
 As a @acronym{GNU} extension, you can specify the field width
-after any flag, as a decimal number.  If the natural size of the
+(after any flag, if present) as a decimal number.  If the natural size of the
 output is of the field has less than the specified number of characters,
-the result is written right adjusted and space padded to the given
-size.
+the result is written right adjusted and padded to the given
+size.  For example, @samp{%9B} prints the right adjusted month name in
+a field of width 9.
 
 An optional modifier can follow the optional flag and width
 specification.  The modifiers are:
 
-@table @code
+@table @samp
 @item E
 Use the locale's alternate representation for date and time.  This
-modifier applies to the @code{%c}, @code{%C}, @code{%x}, @code{%X},
-@code{%y} and @code{%Y} format specifiers.  In a Japanese locale, for
-example, @code{%Ex} might yield a date format based on the Japanese
+modifier applies to the @samp{%c}, @samp{%C}, @samp{%x}, @samp{%X},
+@samp{%y} and @samp{%Y} conversion specifiers.  In a Japanese locale, for
+example, @samp{%Ex} might yield a date format based on the Japanese
 Emperors' reigns.
 
 @item O
 Use the locale's alternate numeric symbols for numbers.  This modifier
-applies only to numeric format specifiers.
+applies only to numeric conversion specifiers.
 @end table
 
 If the format supports the modifier but no alternate representation
@@ -11878,7 +11898,7 @@ for example @samp{date -d 1may '+%B %d'} will print @samp{May 01}.
 @item
 To print a date without the leading zero for one-digit days
 of the month, you can use the (@acronym{GNU} extension)
-@code{-} flag to suppress
+@samp{-} flag to suppress
 the padding altogether:
 
 @example
