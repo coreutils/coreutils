@@ -1,5 +1,40 @@
 2000-05-07  Jim Meyering  <meyering@lucent.com>
 
+	* src/basename.c: Include "closeout.h".
+	(main): Call atexit with close_stdout.
+	* src/chroot.c: Likewise.
+	* src/dirname.c: Likewise.
+	* src/echo.c: Likewise.
+	* src/env.c: Likewise.
+	* src/expr.c: Likewise.
+	* src/factor.c: Likewise.
+	* src/hostid.c: Likewise.
+	* src/hostname.c: Likewise.
+	* src/id.c: Likewise.
+	* src/logname.c: Likewise.
+	* src/nice.c: Likewise.
+	* src/pathchk.c: Likewise.
+	* src/pinky.c: Likewise.
+	* src/printf.c: Likewise.
+	* src/pwd.c: Likewise.
+	* src/seq.c: Likewise.
+	* src/stty.c: Likewise.
+	* src/su.c: Likewise.
+	* src/test.c: Likewise.
+	* src/uname.c: Likewise.
+	* src/uptime.c: Likewise.
+	* src/users.c: Likewise.
+	* src/who.c: Likewise.
+	* src/whoami.c: Likewise.
+	* src/tee.c: Likewise.  Remove explicit close_stdout.
+
+	* src/yes.c Include "closeout.h".
+	(usage): Call close_stdout just before exit.
+	* src/sleep.c: Likewise.
+	* src/true.c: Likewise.
+	* src/date.c (usage): Call close_stdout_status.
+	* src/printenv.c (usage): Likewise.
+
 	* tests/date/Test.pm ($Test::env{'rfc822-1'}): Add TZ=UTC.
 
 2000-05-06  Jim Meyering  <meyering@lucent.com>
@@ -16,12 +51,6 @@
 	* src/printf.c: Include "closeout.h".
 	(main): Call close_stdout.
 	Reported by Ian Jackson via Michael Stone.
-
-	* src/factor.c: Likewise.
-	* src/hostname.c: Likewise.
-	* src/logname.c: Likewise.
-	* src/pwd.c: Likewise.
-	* src/seq.c: Likewise.
 
 2000-05-04  Jim Meyering  <meyering@lucent.com>
 
