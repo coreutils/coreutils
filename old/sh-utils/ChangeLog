@@ -2,6 +2,13 @@
 
 	* Version 2.0.13.
 
+2002-07-07  Paul Eggert  <eggert@twinsun.com>
+
+	* src/nohup.sh: Port to POSIX 1003.1-2001 "nice", which
+	requires the option "-n 5" rather than "-5".  This matters
+	with GNU "nice" if the user has set the _POSIX2_VERSION
+	environment variable.
+
 2002-07-24  Jim Meyering  <meyering@lucent.com>
 
 	* src/Makefile.am (AM_INSTALLCHECK_STD_OPTIONS_EXEMPT): Exempt false.
