@@ -1,4 +1,12 @@
+Mon Oct 25 19:22:58 EDT 1993
+
+	* stty.c (main, integer_arg): Don't just call error(1,... about
+	improper usage.  Call `error (0,...' them usage (1).
+
 Sun Oct 24 14:10:23 1993  Jim Meyering  (meyering@comco.com)
+
+	* test.c [member]: Don't try to cast index return value to an int.
+	That can lose on systems with 64-bit pointers.
 
 	* long-options.c: Save and restore optind, too.
 	* long-options.h: New file.

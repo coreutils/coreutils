@@ -462,17 +462,13 @@ static void
 usage (status)
      int status;
 {
-  fprintf (status == 0 ? stdout : stderr, "\
-Usage: %s [OPTION]... [ FILE | ARG1 ARG2 ]\n\
-",
-	   program_name);
-
   if (status != 0)
     fprintf (stderr, "Try `%s --help' for more information.\n",
 	     program_name);
   else
-
-    printf ("\
+    {
+      printf ("Usage: %s [OPTION]... [ FILE | ARG1 ARG2 ]\n", program_name);
+      printf ("\
 \n\
   -H, --heading     print line of column headings\n\
   -T, -w, --mesg    add user's message status as +, - or ?\n\
@@ -488,6 +484,6 @@ Usage: %s [OPTION]... [ FILE | ARG1 ARG2 ]\n\
 If FILE not given, uses /etc/utmp.  /etc/wtmp as FILE is common.\n\
 If ARG1 ARG2 given, -m presumed: `am i' or `mom likes' are usual.\n\
 ");
-
+    }
   exit (status);
 }

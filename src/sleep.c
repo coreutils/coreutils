@@ -57,24 +57,20 @@ static void
 usage (status)
      int status;
 {
-  fprintf (status == 0 ? stdout : stderr, "\
-Usage: %s [OPTION]... NUMBER[SUFFIX]\n\
-",
-	   program_name);
-
   if (status != 0)
     fprintf (stderr, "Try `%s --help' for more information.\n",
 	     program_name);
   else
-
-    printf ("\
+    {
+      printf ("Usage: %s [OPTION]... NUMBER[SUFFIX]\n", program_name);
+      printf ("\
 \n\
   --help      display this help and exit\n\
   --version   output version information and exit\n\
 \n\
 SUFFIX may be s for seconds, m for minutes, h for hours or d for days.\n\
 ");
-
+    }
   exit (status);
 }
 

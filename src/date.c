@@ -224,20 +224,17 @@ static void
 usage (status)
      int status;
 {
-  fprintf (status == 0 ? stdout : stderr, "\
-Usage: %s [OPTION]... [+FORMAT] [MMDDhhmm[[CC]YY][.ss]]\n\
-",
-	   program_name);
-
   if (status != 0)
     fprintf (stderr, "Try `%s --help' for more information.\n",
 	     program_name);
   else
     {
+      printf ("Usage: %s [OPTION]... [+FORMAT] [MMDDhhmm[[CC]YY][.ss]]\n",
+	      program_name);
       printf ("\
 \n\
-  -d, --date STRING        display time described by STRING, not `now'\n\
-  -s, --set STRING         set time described by STRING\n\
+  -d, --date=STRING        display time described by STRING, not `now'\n\
+  -s, --set=STRING         set time described by STRING\n\
   -u, --uct, --universal   print or set Universal Coordinated Time\n\
       --help               display this help and exit\n\
       --version            output version information and exit\n\
@@ -278,6 +275,5 @@ FORMAT controls the output.  Interpreted sequences are:\n\
   %%y   last two digits of year (00..99)\n\
 ");
     }
-
   exit (status);
 }

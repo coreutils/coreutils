@@ -61,7 +61,7 @@
 
 #include "system.h"
 #include "version.h"
-#include "long-option.h"
+#include "long-options.h"
 
 #if !defined (isascii) || defined (STDC_HEADERS)
 #undef isascii
@@ -104,18 +104,17 @@ static void
 usage (status)
      int status;
 {
-  fprintf (status == 0 ? stdout : stderr, "\
-Usage: %s FORMAT [ARGUMENT]...\n\
-  or:  %s OPTION\n\
-",
-	   program_name, program_name);
-
   if (status != 0)
     fprintf (stderr, "Try `%s --help' for more information.\n",
 	     program_name);
   else
-
-    printf ("\
+    {
+      printf ("\
+Usage: %s FORMAT [ARGUMENT]...\n\
+  or:  %s OPTION\n\
+",
+	      program_name, program_name);
+      printf ("\
 \n\
   --help      display this help and exit\n\
   --version   output version information and exit\n\
@@ -141,7 +140,7 @@ FORMAT controls the output as in C printf.  Interpreted sequences are:\n\
 and all C format specifications ending with one of diouxXfeEgGcs, with\n\
 ARGUMENTs converted to proper type first.  Variable widths are handled.\n\
 ");
-
+    }
   exit (status);
 }
 

@@ -174,26 +174,22 @@ static void
 usage (status)
      int status;
 {
-  fprintf (status == 0 ? stdout : stderr, "\
-Usage: %s [OPTION]... [COMMAND [ARG]...]\n\
-",
-	   program_name);
-
   if (status != 0)
     fprintf (stderr, "Try `%s --help' for more information.\n",
 	     program_name);
   else
-
-    printf ("\
+    {
+      printf ("Usage: %s [OPTION]... [COMMAND [ARG]...]\n", program_name);
+      printf ("\
 \n\
   -ADJUST                   increment priority by ADJUST first\n\
-  -n, --adjustment ADJUST   same as -ADJUST\n\
+  -n, --adjustment=ADJUST   same as -ADJUST\n\
       --help                display this help and exit\n\
       --version             output version information and exit\n\
 \n\
 With no COMMAND, print the current scheduling priority.  ADJUST is 10\n\
 by default.  Range goes from -20 (highest priority) to 19 (lowest).\n\
 ");
-
+    }
   exit (status);
 }

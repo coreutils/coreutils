@@ -1008,24 +1008,23 @@ posixtest ()
 }
 
 #if defined (TEST_STANDALONE)
-#include "long-option.h"
+#include "long-options.h"
 
 static void
 usage (status)
      int status;
 {
-  fprintf (status == 0 ? stdout : stderr, "\
-Usage: %s EXPRESSION\n\
-  or:  [ EXPRESSION ]\n\
-  or:  %s OPTION\n\
-",
-	   program_name, program_name);
-
   if (status != 0)
     fprintf (stderr, "Try `%s --help' for more information.\n",
 	     program_name);
   else
     {
+      printf ("\
+Usage: %s EXPRESSION\n\
+  or:  [ EXPRESSION ]\n\
+  or:  %s OPTION\n\
+",
+	      program_name, program_name);
       printf ("\
 \n\
   --help      display this help and exit\n\
@@ -1087,7 +1086,6 @@ Beware that parentheses need to be escaped by backslashes for shells.\n\
 INTEGER may also be -l STRING, which evaluates to the length of STRING.\n\
 ");
     }
-
   exit (status);
 }
 #endif /* TEST_STANDALONE */

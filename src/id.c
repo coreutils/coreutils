@@ -363,17 +363,13 @@ static void
 usage (status)
      int status;
 {
-  fprintf (status == 0 ? stdout : stderr, "\
-Usage: %s [OPTION]... [USERNAME]\n\
-",
-	   program_name);
-
   if (status != 0)
     fprintf (stderr, "Try `%s --help' for more information.\n",
 	     program_name);
   else
-
-    printf ("\
+    {
+      printf ("Usage: %s [OPTION]... [USERNAME]\n", program_name);
+      printf ("\
 \n\
   -g, --group     print only the group ID\n\
   -n, --name      print a name instead of a number, for -ugG\n\
@@ -385,6 +381,6 @@ Usage: %s [OPTION]... [USERNAME]\n\
 \n\
 Without any OPTION, print some useful set of identified information.\n\
 ");
-
+    }
   exit (status);
 }

@@ -68,22 +68,18 @@ static void
 usage (status)
      int status;
 {
-  fprintf (status == 0 ? stdout : stderr, "\
-Usage: %s [OPTION]... PATH [SUFFIX]\n\
-",
-	   program_name);
-
   if (status != 0)
     fprintf (stderr, "Try `%s --help' for more information.\n",
 	     program_name);
   else
-
-    printf ("\
+    {
+      printf ("Usage: %s [OPTION]... PATH [SUFFIX]\n", program_name);
+      printf ("\
 \n\
   --help      display this help and exit\n\
   --version   output version information and exit\n\
 ");
-
+    }
   exit (status);
 }
 

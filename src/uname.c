@@ -188,17 +188,13 @@ static void
 usage (status)
      int status;
 {
-  fprintf (status == 0 ? stdout : stderr, "\
-Usage: %s [OPTION]...\n\
-",
-	   program_name);
-
   if (status != 0)
     fprintf (stderr, "Try `%s --help' for more information.\n",
 	     program_name);
   else
-
-    printf ("\
+    {
+      printf ("Usage: %s [OPTION]...\n", program_name);
+      printf ("\
 \n\
   -a, --all        print all information\n\
   -m, --machine    print the machine (hardware) type\n\
@@ -211,6 +207,6 @@ Usage: %s [OPTION]...\n\
 \n\
 Without any OPTION, assume -s.\n\
 ");
-
+    }
   exit (status);
 }

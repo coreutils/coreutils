@@ -46,7 +46,7 @@
 
 #include "system.h"
 #include "version.h"
-#include "long-option.h"
+#include "long-options.h"
 
 #if !defined (isascii) || defined (STDC_HEADERS)
 #undef isascii
@@ -110,17 +110,16 @@ static void
 usage (status)
      int status;
 {
-  fprintf (status == 0 ? stdout : stderr, "\
-Usage: %s EXPRESSION\n\
-  or:  %s OPTION\n\
-",
-	   program_name, program_name);
-
   if (status != 0)
     fprintf (stderr, "Try `%s --help' for more information.\n",
 	     program_name);
   else
     {
+      printf ("\
+Usage: %s EXPRESSION\n\
+  or:  %s OPTION\n\
+",
+	      program_name, program_name);
       printf ("\
 \n\
   --help      display this help and exit\n\
@@ -166,7 +165,6 @@ Pattern matches return the string matched between \\( and \\) or null; if\n\
 \\( and \\) are not used, they return the number of characters matched or 0.\n\
 ");
     }
-
   exit (status);
 }
 

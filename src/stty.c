@@ -446,16 +446,12 @@ static void
 usage (status)
      int status;
 {
-  fprintf (status == 0 ? stdout : stderr, "\
-Usage: %s [OPTION]... [SETTING]...\n\
-",
-	   program_name);
-
   if (status != 0)
     fprintf (stderr, "Try `%s --help' for more information.\n",
 	     program_name);
   else
     {
+      printf ("Usage: %s [OPTION]... [SETTING]...\n", program_name);
       printf ("\
 \n\
   -a, --all       print all current settings in human-readable form\n\
@@ -619,7 +615,6 @@ settings, CHAR is taken literally, or coded as in ^c, 0x37, 0177 or\n\
 127; special values ^- or undef used to disable special characters.\n\
 ");
     }
-
   exit (status);
 }
 
@@ -675,7 +670,10 @@ done:;
   if (optind == argc)
     {
       if (optc == '?')
-	error (1, 0, "invalid argument `%s'", argv[--optind]);
+	{
+	  error (0, 0, "invalid argument `%s'", argv[--optind]);
+	  usage (1);
+	}
       display_settings (output_type, &mode);
       exit (0);
     }
@@ -700,7 +698,10 @@ done:;
 	    }
 	}
       if (match_found == 0 && reversed)
-	error (1, 0, "invalid argument `%s'", --argv[optind]);
+	{
+	  error (0, 0, "invalid argument `%s'", --argv[optind]);
+	  usage (1);
+	}
       if (match_found == 0)
 	{
 	  for (i = 0; control_info[i].name != NULL; ++i)
@@ -708,7 +709,10 @@ done:;
 	      if (!strcmp (argv[optind], control_info[i].name))
 		{
 		  if (optind == argc - 1)
-		    error (1, 0, "missing argument to `%s'", argv[optind]);
+		    {
+		      error (0, 0, "missing argument to `%s'", argv[optind]);
+		      usage (1);
+		    }
 		  match_found = 1;
 		  ++optind;
 		  set_control_char (&control_info[i], argv[optind], &mode);
@@ -721,14 +725,20 @@ done:;
 	  if (!strcmp (argv[optind], "ispeed"))
 	    {
 	      if (optind == argc - 1)
-		error (1, 0, "missing argument to `%s'", argv[optind]);
+		{
+		  error (0, 0, "missing argument to `%s'", argv[optind]);
+		  usage (1);
+		}
 	      ++optind;
 	      set_speed (input_speed, argv[optind], &mode);
 	    }
 	  else if (!strcmp (argv[optind], "ospeed"))
 	    {
 	      if (optind == argc - 1)
-		error (1, 0, "missing argument to `%s'", argv[optind]);
+		{
+		  error (0, 0, "missing argument to `%s'", argv[optind]);
+		  usage (1);
+		}
 	      ++optind;
 	      set_speed (output_speed, argv[optind], &mode);
 	    }
@@ -736,7 +746,10 @@ done:;
 	  else if (!strcmp (argv[optind], "rows"))
 	    {
 	      if (optind == argc - 1)
-		error (1, 0, "missing argument to `%s'", argv[optind]);
+		{
+		  error (0, 0, "missing argument to `%s'", argv[optind]);
+		  usage (1);
+		}
 	      ++optind;
 	      set_window_size ((int) integer_arg (argv[optind]), -1);
 	    }
@@ -744,7 +757,10 @@ done:;
 		   || !strcmp (argv[optind], "columns"))
 	    {
 	      if (optind == argc - 1)
-		error (1, 0, "missing argument to `%s'", argv[optind]);
+		{
+		  error (0, 0, "missing argument to `%s'", argv[optind]);
+		  usage (1);
+		}
 	      ++optind;
 	      set_window_size (-1, (int) integer_arg (argv[optind]));
 	    }
@@ -755,7 +771,10 @@ done:;
 	  else if (!strcmp (argv[optind], "line"))
 	    {
 	      if (optind == argc - 1)
-		error (1, 0, "missing argument to `%s'", argv[optind]);
+		{
+		  error (0, 0, "missing argument to `%s'", argv[optind]);
+		  usage (1);
+		}
 	      ++optind;
 	      mode.c_line = integer_arg (argv[optind]);
 	    }
@@ -765,7 +784,10 @@ done:;
 	  else if (string_to_baud (argv[optind]) != (speed_t) -1)
 	    set_speed (both_speeds, argv[optind], &mode);
 	  else if (recover_mode (argv[optind], &mode) == 0)
-	    error (1, 0, "invalid argument `%s'", argv[optind]);
+	    {
+	      error (0, 0, "invalid argument `%s'", argv[optind]);
+	      usage (1);
+	    }
 	}
       optind++;
     }
@@ -1479,6 +1501,9 @@ integer_arg (s)
     p--;
 
   if (*p)
-    error (1, 0, "invalid integer argument `%s'", s);
+    {
+      error (0, 0, "invalid integer argument `%s'", s);
+      usage (1);
+    }
   return value;
 }

@@ -195,25 +195,22 @@ static void
 usage (status)
      int status;
 {
-  fprintf (status == 0 ? stdout : stderr, "\
-Usage: %s [OPTION]... [-] [NAME=VALUE]... [COMMAND [ARG]...]\n\
-",
-	   program_name);
-
   if (status != 0)
     fprintf (stderr, "Try `%s --help' for more information.\n",
 	     program_name);
   else
-
-    printf ("\
+    {
+      printf ("Usage: %s [OPTION]... [-] [NAME=VALUE]... [COMMAND [ARG]...]\n",
+	      program_name);
+      printf ("\
 \n\
-  -u, --unset NAME           remove variable from the environment\n\
+  -u, --unset=NAME           remove variable from the environment\n\
   -i, --ignore-environment   start with an empty environment\n\
       --help                 display this help and exit\n\
       --version              output version information and exit\n\
 \n\
 A mere - implies -i.  If no COMMAND, print the resulting environment.\n\
 ");
-
+    }
   exit (status);
 }

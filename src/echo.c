@@ -76,17 +76,13 @@ static void
 usage (status)
      int status;
 {
-  fprintf (status == 0 ? stdout : stderr, "\
-Usage: %s [OPTION]... [STRING]...\n\
-",
-	   program_name);
-
   if (status != 0)
     fprintf (stderr, "Try `%s --help' for more information.\n",
 	     program_name);
   else
-
-    printf ("\
+    {
+      printf ("Usage: %s [OPTION]... [STRING]...\n", program_name);
+      printf ("\
 \n\
   -n              do not output the trailing newline\n\
   -e              (unused)\n\
@@ -107,7 +103,7 @@ Without -E, the following sequences are recognized and interpolated:\n\
   \\t     horizontal tab\n\
   \\v     vertical tab\n\
 ");
-
+    }
   exit (status);
 }
 
