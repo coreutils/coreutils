@@ -190,7 +190,6 @@ libfetish_a_SOURCES = \
   fnmatch_.h \
   fopen-safer.c \
   fsusage.h \
-  fts.c fts_.h \
   ftw_.h \
   full-read.c full-read.h \
   full-write.c full-write.h \
@@ -295,7 +294,7 @@ am_libfetish_a_OBJECTS = acl$U.$(OBJEXT) getdate$U.$(OBJEXT) \
 	cycle-check$U.$(OBJEXT) diacrit$U.$(OBJEXT) dirname$U.$(OBJEXT) \
 	dup-safer$U.$(OBJEXT) exclude$U.$(OBJEXT) exitfail$U.$(OBJEXT) \
 	filemode$U.$(OBJEXT) file-type$U.$(OBJEXT) \
-	fopen-safer$U.$(OBJEXT) fts$U.$(OBJEXT) full-read$U.$(OBJEXT) \
+	fopen-safer$U.$(OBJEXT) full-read$U.$(OBJEXT) \
 	full-write$U.$(OBJEXT) getstr$U.$(OBJEXT) gettime$U.$(OBJEXT) \
 	getugroups$U.$(OBJEXT) hard-locale$U.$(OBJEXT) \
 	human$U.$(OBJEXT) idcache$U.$(OBJEXT) isdir$U.$(OBJEXT) \
@@ -367,7 +366,7 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/exitfail$U.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/file-type$U.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/filemode$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/fopen-safer$U.Po ./$(DEPDIR)/fts$U.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/fopen-safer$U.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/full-read$U.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/full-write$U.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/getdate$U.Po ./$(DEPDIR)/getopt$U.Po \
@@ -550,7 +549,6 @@ mostlyclean-kr:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/file-type$U.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/filemode$U.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fopen-safer$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fts$U.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/full-read$U.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/full-write$U.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/getdate$U.Po@am__quote@
@@ -694,8 +692,6 @@ fsusage_.c: fsusage.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/fsusage.c; then echo $(srcdir)/fsusage.c; else echo fsusage.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
 ftruncate_.c: ftruncate.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/ftruncate.c; then echo $(srcdir)/ftruncate.c; else echo ftruncate.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-fts_.c: fts.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/fts.c; then echo $(srcdir)/fts.c; else echo fts.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
 ftw_.c: ftw.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/ftw.c; then echo $(srcdir)/ftw.c; else echo ftw.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
 full-read_.c: full-read.c $(ANSI2KNR)
@@ -934,21 +930,21 @@ dup2_.$(OBJEXT) error_.$(OBJEXT) euidaccess_.$(OBJEXT) \
 exclude_.$(OBJEXT) exitfail_.$(OBJEXT) file-type_.$(OBJEXT) \
 fileblocks_.$(OBJEXT) filemode_.$(OBJEXT) fnmatch_.$(OBJEXT) \
 fopen-safer_.$(OBJEXT) fsusage_.$(OBJEXT) ftruncate_.$(OBJEXT) \
-fts_.$(OBJEXT) ftw_.$(OBJEXT) full-read_.$(OBJEXT) \
-full-write_.$(OBJEXT) getcwd_.$(OBJEXT) getdate_.$(OBJEXT) \
-getgroups_.$(OBJEXT) gethostname_.$(OBJEXT) getline_.$(OBJEXT) \
-getloadavg_.$(OBJEXT) getopt_.$(OBJEXT) getopt1_.$(OBJEXT) \
-getpass_.$(OBJEXT) getstr_.$(OBJEXT) gettime_.$(OBJEXT) \
-gettimeofday_.$(OBJEXT) getugroups_.$(OBJEXT) getusershell_.$(OBJEXT) \
-group-member_.$(OBJEXT) hard-locale_.$(OBJEXT) hash_.$(OBJEXT) \
-hash-pjw_.$(OBJEXT) human_.$(OBJEXT) idcache_.$(OBJEXT) \
-imaxtostr_.$(OBJEXT) isdir_.$(OBJEXT) lchown_.$(OBJEXT) \
-linebuffer_.$(OBJEXT) localcharset_.$(OBJEXT) long-options_.$(OBJEXT) \
-lstat_.$(OBJEXT) makepath_.$(OBJEXT) malloc_.$(OBJEXT) \
-mbswidth_.$(OBJEXT) md5_.$(OBJEXT) memcasecmp_.$(OBJEXT) \
-memchr_.$(OBJEXT) memcmp_.$(OBJEXT) memcoll_.$(OBJEXT) \
-memcpy_.$(OBJEXT) memmove_.$(OBJEXT) memrchr_.$(OBJEXT) \
-memset_.$(OBJEXT) mkdir_.$(OBJEXT) mkstemp_.$(OBJEXT) mktime_.$(OBJEXT) \
+ftw_.$(OBJEXT) full-read_.$(OBJEXT) full-write_.$(OBJEXT) \
+getcwd_.$(OBJEXT) getdate_.$(OBJEXT) getgroups_.$(OBJEXT) \
+gethostname_.$(OBJEXT) getline_.$(OBJEXT) getloadavg_.$(OBJEXT) \
+getopt_.$(OBJEXT) getopt1_.$(OBJEXT) getpass_.$(OBJEXT) \
+getstr_.$(OBJEXT) gettime_.$(OBJEXT) gettimeofday_.$(OBJEXT) \
+getugroups_.$(OBJEXT) getusershell_.$(OBJEXT) group-member_.$(OBJEXT) \
+hard-locale_.$(OBJEXT) hash_.$(OBJEXT) hash-pjw_.$(OBJEXT) \
+human_.$(OBJEXT) idcache_.$(OBJEXT) imaxtostr_.$(OBJEXT) \
+isdir_.$(OBJEXT) lchown_.$(OBJEXT) linebuffer_.$(OBJEXT) \
+localcharset_.$(OBJEXT) long-options_.$(OBJEXT) lstat_.$(OBJEXT) \
+makepath_.$(OBJEXT) malloc_.$(OBJEXT) mbswidth_.$(OBJEXT) \
+md5_.$(OBJEXT) memcasecmp_.$(OBJEXT) memchr_.$(OBJEXT) \
+memcmp_.$(OBJEXT) memcoll_.$(OBJEXT) memcpy_.$(OBJEXT) \
+memmove_.$(OBJEXT) memrchr_.$(OBJEXT) memset_.$(OBJEXT) \
+mkdir_.$(OBJEXT) mkstemp_.$(OBJEXT) mktime_.$(OBJEXT) \
 mmap-stack_.$(OBJEXT) modechange_.$(OBJEXT) mountlist_.$(OBJEXT) \
 nanosleep_.$(OBJEXT) obstack_.$(OBJEXT) offtostr_.$(OBJEXT) \
 path-concat_.$(OBJEXT) physmem_.$(OBJEXT) posixtm_.$(OBJEXT) \
