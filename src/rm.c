@@ -79,8 +79,8 @@ static struct option const long_opts[] =
   {"force", no_argument, NULL, 'f'},
   {"interactive", no_argument, NULL, 'i'},
 
-  {"no-preserve-root", no_argument, 0, NO_PRESERVE_ROOT},
-  {"preserve-root", no_argument, 0, PRESERVE_ROOT},
+  {"no-preserve-root", no_argument, NULL, NO_PRESERVE_ROOT},
+  {"preserve-root", no_argument, NULL, PRESERVE_ROOT},
 
   /* This is solely for testing.  Do not document.  */
   /* It is relatively difficult to ensure that there is a tty on stdin.
@@ -179,9 +179,6 @@ main (int argc, char **argv)
     {
       switch (c)
 	{
-	case 0:		/* Long option.  */
-	  break;
-
 	case 'd':
 	  x.unlink_dirs = true;
 	  break;
