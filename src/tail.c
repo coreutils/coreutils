@@ -378,17 +378,18 @@ dump_remainder (const char *pretty_filename, int fd, off_t n_bytes)
    Go backward through the file, reading `BUFSIZ' bytes at a time (except
    probably the first), until we hit the start of the file or have
    read NUMBER newlines.
+   START_POS is the starting position of the read pointer for the file
+   associated with FD (may be nonzero).
    FILE_LENGTH is the length of the file (one more than the offset of the
    last byte of the file).
    Return 0 if successful, 1 if an error occurred.  */
 
 static int
 file_lines (const char *pretty_filename, int fd, long int n_lines,
-	    off_t file_length)
+	    off_t start_pos, off_t file_length)
 {
   char buffer[BUFSIZ];
   int bytes_read;
-  int i;			/* Index into `buffer' for scanning.  */
   off_t pos = file_length;
 
   if (n_lines == 0)
@@ -396,7 +397,7 @@ file_lines (const char *pretty_filename, int fd, long int n_lines,
 
   /* Set `bytes_read' to the size of the last, probably partial, buffer;
      0 < `bytes_read' <= `BUFSIZ'.  */
-  bytes_read = pos % BUFSIZ;
+  bytes_read = (pos - start_pos) % BUFSIZ;
   if (bytes_read == 0)
     bytes_read = BUFSIZ;
   /* Make `pos' a multiple of `BUFSIZ' (0 if the file is short), so that all
@@ -417,6 +418,7 @@ file_lines (const char *pretty_filename, int fd, long int n_lines,
 
   do
     {
+      int i;			/* Index into `buffer' for scanning.  */
       /* Scan backward, counting the newlines in this bufferfull.  */
       for (i = bytes_read - 1; i >= 0; i--)
 	{
@@ -433,11 +435,11 @@ file_lines (const char *pretty_filename, int fd, long int n_lines,
 	    }
 	}
       /* Not enough newlines in that bufferfull.  */
-      if (pos == 0)
+      if (pos == start_pos)
 	{
 	  /* Not enough lines in the file; print the entire file.  */
 	  /* FIXME: check lseek return value  */
-	  lseek (fd, (off_t) 0, SEEK_SET);
+	  lseek (fd, (off_t) start_pos, SEEK_SET);
 	  dump_remainder (pretty_filename, fd, file_length);
 	  return 0;
 	}
@@ -1093,18 +1095,18 @@ tail_lines (const char *pretty_filename, int fd, long int n_lines)
   else
     {
       off_t length;
+      off_t start_pos;
 
-      /* Use file_lines only if FD refers to a regular file with
-         its file pointer positioned at beginning of file.  */
-      /* FIXME: this first lseek conjunct is a kludge.
-	 Once there's a reasonable test suite, fix the true culprit:
-	 file_lines.  file_lines shouldn't presume that the input
-	 file pointer is initially positioned to beginning of file.  */
+      /* Use file_lines only if FD refers to a regular file for
+	 which lseek (... SEEK_END) works.  */
       if (S_ISREG (stats.st_mode)
-	  && lseek (fd, (off_t) 0, SEEK_CUR) == (off_t) 0
-	  && (length = lseek (fd, (off_t) 0, SEEK_END)) >= 0)
+	  /* Record the current position before confirming that
+	     we can seek to the end.  */
+	  && ((start_pos = lseek (fd, (off_t) 0, SEEK_CUR)), 1)
+	  && (length = lseek (fd, (off_t) 0, SEEK_END)) >= 0
+	  && start_pos < length)
 	{
-	  if (length != 0 && file_lines (pretty_filename, fd, n_lines, length))
+	  if (length != 0 && file_lines (pretty_filename, fd, n_lines, start_pos, length))
 	    return 1;
 	}
       else
