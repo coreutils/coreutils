@@ -730,6 +730,7 @@ copy_internal (const char *src_path, const char *dst_path,
   int delayed_fail;
   int copied_as_regular = 0;
   int ran_chown = 0;
+  int preserve_metadata;
 
   /* move_mode is set to the value from the `options' parameter for the
      first copy_internal call.  For any subsequent recursive call, it must
@@ -1092,6 +1093,13 @@ copy_internal (const char *src_path, const char *dst_path,
     }
 
   delayed_fail = 0;
+
+  /* In certain modes (cp's --symbolic-link), and for certain file types
+     (symlinks and hard links) it doesn't make sense to preserve metadata,
+     or it's possible to preserve only some of it.
+     In such cases, set this variable to zero.  */
+  preserve_metadata = 1;
+
   if (S_ISDIR (src_type))
     {
       struct dir_list *dir;
@@ -1156,6 +1164,8 @@ copy_internal (const char *src_path, const char *dst_path,
 #ifdef S_ISLNK
   else if (x->symbolic_link)
     {
+      preserve_metadata = 0;
+
       if (*src_path != '/')
 	{
 	  /* Check that DST_PATH denotes a file in the current directory.  */
@@ -1189,18 +1199,16 @@ copy_internal (const char *src_path, const char *dst_path,
 		 quote_n (0, dst_path), quote_n (1, src_path));
 	  goto un_backup;
 	}
-
-      return 0;
     }
 #endif
   else if (x->hard_link)
     {
+      preserve_metadata = 0;
       if (link (src_path, dst_path))
 	{
 	  error (0, errno, _("cannot create link %s"), quote (dst_path));
 	  goto un_backup;
 	}
-      return 0;
     }
   else if (S_ISREG (src_type)
 	   || (x->copy_as_regular && !S_ISDIR (src_type)
@@ -1216,10 +1224,6 @@ copy_internal (const char *src_path, const char *dst_path,
       if (copy_reg (src_path, dst_path, x,
 		    get_dest_mode (x, src_mode), &new_dst))
 	goto un_backup;
-      if (command_line_arg)
-	{
-	  record_dest (dst_path, NULL);
-	}
     }
   else
 #ifdef S_ISFIFO
@@ -1253,6 +1257,7 @@ copy_internal (const char *src_path, const char *dst_path,
       char *link_val;
       int link_size;
 
+      preserve_metadata = 0;
       link_val = (char *) alloca (PATH_MAX + 2);
       link_size = readlink (src_path, link_val, PATH_MAX + 1);
       if (link_size < 0)
@@ -1305,8 +1310,6 @@ copy_internal (const char *src_path, const char *dst_path,
 	     preserving owner/group is a potential security problem.  */
 # endif
 	}
-
-      return 0;
     }
   else
 #endif
@@ -1314,6 +1317,12 @@ copy_internal (const char *src_path, const char *dst_path,
       error (0, 0, _("%s has unknown file type"), quote (src_path));
       goto un_backup;
     }
+
+  if (command_line_arg)
+    record_dest (dst_path, NULL);
+
+  if ( ! preserve_metadata)
+    return 0;
 
   /* POSIX says that `cp -p' must restore the following:
      - permission bits
