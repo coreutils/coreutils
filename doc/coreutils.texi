@@ -8079,11 +8079,27 @@ The program accepts the following options.  Also see @ref{Common options}.
 @opindex --all
 Show counts for all files, not just directories.
 
+@itemx --apparent-size
+@opindex --apparent-size
+Print apparent sizes, rather than disk usage.  The apparent size of a
+file is the number of bytes reported by @code{wc -c} on regular files,
+or more generally, @code{ls -l --block-size=1} or @code{stat --format=%s}.
+For example, a file containing the word @samp{zoo} with no newline would,
+of course, have an apparent size of 3.  Such a small file may require
+anywhere from zero to 16 or more kilobytes of disk space, depending on
+the type and configuration of the file system on which the file resides.
+However, a sparse file created with this command
+@example
+: | dd bs=1 seek=`echo '2^31'|bc` of=big
+@end example
+has an apparent size of 2 gigabytes, yet on most modern
+systems, it actually uses almost no disk space.
+
 @item -b
 @itemx --bytes
 @opindex -b
 @opindex --bytes
-Print sizes in bytes, overriding the default block size (@pxref{Block size}).
+Equivalent to @code{--apparent-size --block-size=1}.
 
 @item -B @var{size}
 @itemx --block-size=@var{size}
