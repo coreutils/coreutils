@@ -1460,7 +1460,7 @@ parse_options (int argc, char **argv,
 	    strtol_error s_err;
 	    uintmax_t n;
 	    s_err = xstrtoumax (optarg, NULL, 10, &n, "bkm");
-	    if (s_err == LONGINT_INVALID)
+	    if (s_err != LONGINT_OK)
 	      {
 		error (EXIT_FAILURE, 0, "%s: %s", optarg,
 		       (c == 'n'
@@ -1468,13 +1468,9 @@ parse_options (int argc, char **argv,
 			: _("invalid number of bytes")));
 	      }
 
-	    if (s_err != LONGINT_OK)
-	      error (EXIT_FAILURE, 0,
-		     _("%s: is so large that it is not representable"), optarg);
-
 	    if (OFF_T_MAX < n)
 	      error (EXIT_FAILURE, 0,
-		     _("%s is larger than the maximum file size on this system"),
+		   _("%s is larger than the maximum file size on this system"),
 		     optarg);
 	    *n_units = (off_t) n;
 	  }
