@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce a configure script. -*-m4-*-
-AC_INIT([GNU coreutils],[4.5.6],[bug-coreutils@gnu.org])
+AC_INIT([GNU coreutils],[4.5.7],[bug-coreutils@gnu.org])
 AC_CONFIG_SRCDIR(src/ls.c)
 
 AC_CONFIG_AUX_DIR(config)
