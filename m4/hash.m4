@@ -1,4 +1,4 @@
-# hash.m4 serial 2
+# hash.m4 serial 3
 dnl Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
@@ -10,6 +10,4 @@ AC_DEFUN([gl_HASH],
 [
   dnl Prerequisites of lib/hash.c.
   AC_REQUIRE([AM_STDBOOL_H])
-  AC_CHECK_HEADERS_ONCE(stdlib.h)
-  AC_CHECK_DECLS_ONCE(free malloc)
 ])
