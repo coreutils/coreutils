@@ -2,6 +2,9 @@
 
 	* Version 2.0.12.
 
+	* Makefile.maint (alpha): Use $(PACKAGE)-$(VERSION), not $(distdir),
+	since the latter now has a `$(top_distdir)/' prefix.
+
 2001-03-01  Paul Eggert  <eggert@twinsun.com>
 
 	* src/sort.c (die): New function.
