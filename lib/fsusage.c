@@ -73,7 +73,7 @@ adjust_blocks (blocks, fromsize, tosize)
     abort ();
   if (fromsize <= 0)
     return -1;
-								    
+
   if (fromsize == tosize)	/* E.g., from 512 to 512.  */
     return blocks;
   else if (fromsize > tosize)	/* E.g., from 2048 to 512.  */
