@@ -30,7 +30,7 @@
 #include <stdio.h>
 #include <ctype.h>
 
-#if defined (vms)
+#if	defined (vms)
 #include <types.h>
 #include <time.h>
 #else
