@@ -2,7 +2,7 @@
 
 	* linebuffer.c, linebuffer.h: Update from gnulib.
 
-	* getdelim2.c, * getdelim2.h: New files.
+	* getdelim2.c, getdelim2.h: New files.
 	* getstr.c, getstr.h: Remove files.
 
 	* same.h: Update from gnulib.
