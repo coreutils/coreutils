@@ -1,6 +1,19 @@
-2003-01-14  Jim Meyering  <jim@meyering.net>
+2003-01-15  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.5.
+
+	Rename ls's --dereference-command-line (-H)
+	option to   --dereference-command-line-symlink-to-dir.
+	* src/ls.c [enum Dereference_symlink]
+	(DEREF_COMMAND_LINE_SYMLINK_TO_DIR): Rename from
+	DEREF_COMMAND_LINE_ARGUMENTS.  Update all uses.
+	(long_options): Rename the option.
+	(usage): Say that --dereference-... changes how ls treats
+	only symlinks to directories specified on the command line.
+
+	FIXME: update .texi
+
+2003-01-14  Jim Meyering  <jim@meyering.net>
 
 	* tests/ls/dangle: New file/test, for the above fix.
 	* tests/ls/inode: Another new file/test, for the above fix.
@@ -599,7 +612,7 @@
 	* src/cut.c (cut_fields): Add a temporary size_t variable, n_bytes,
 	to avoid warnings.
 
-	* src/pinky.c (print_long_entry): fread returns size_t.
+	* src/pinky.cdereference-command-line-symlink-to-dir (print_long_entry): fread returns size_t.
 	Declare local `bytes' accordingly, to avoid warning.
 
 	tail -c +N would perform an extra read after encountering EOF
