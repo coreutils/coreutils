@@ -2,6 +2,8 @@
 
 	* Version 3.16o.
 
+	* src/ansi2knr.c: Use new version from automake-1.3.
+
 	* src/chown.c: Accept new option, --dereference.
 	--no-dereference is now the default.
 	(enum Change_status) [CH_NOT_APPLIED]: New member.
