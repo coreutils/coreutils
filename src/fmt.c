@@ -58,7 +58,7 @@
 
 typedef long COST;
 
-#define MAXCOST	(~(((unsigned long) 1) << (8 * sizeof (COST) -1)))
+#define MAXCOST	TYPE_MAXIMUM (COST)
 
 #define SQR(n)		((n) * (n))
 #define EQUIV(n)	SQR ((COST) (n))
@@ -132,8 +132,8 @@ struct Word
     /* Static attributes determined during input.  */
 
     const char *text;		/* the text of the word */
-    short length;		/* length of this word */
-    short space;		/* the size of the following space */
+    int length;			/* length of this word */
+    int space;			/* the size of the following space */
     bool paren:1;		/* starts with open paren */
     bool period:1;		/* ends in [.?!])* */
     bool punct:1;		/* ends in punctuation */
@@ -141,7 +141,7 @@ struct Word
 
     /* The remaining fields are computed during the optimization.  */
 
-    short line_length;		/* length of the best line starting here */
+    int line_length;		/* length of the best line starting here */
     COST best_cost;		/* cost of best paragraph starting here */
     WORD *next_break;		/* break which achieves best_cost */
   };
