@@ -72,6 +72,9 @@ unsigned long int strtoul ();
 		     (c) >= 'A' && (c) <= 'F' ? (c) - 'A' + 10 : (c) - '0')
 #define octtobin(c) ((c) - '0')
 
+/* A value for field_width or precision that indicates it was not specified.  */
+#define UNSPECIFIED INT_MIN
+
 /* The value to return to the calling program.  */
 static int exit_status;
 
@@ -310,7 +313,7 @@ print_esc_string (const char *str)
 
 /* Output a % directive.  START is the start of the directive,
    LENGTH is its length, and ARGUMENT is its argument.
-   If FIELD_WIDTH or PRECISION is non-negative, they are args for
+   If FIELD_WIDTH or PRECISION is UNSPECIFIED, they are args for
    '*' values in those fields. */
 
 static void
@@ -327,16 +330,16 @@ print_direc (const char *start, size_t length, int field_width,
     {
     case 'd':
     case 'i':
-      if (field_width < 0)
+      if (field_width == UNSPECIFIED)
 	{
-	  if (precision < 0)
+	  if (precision == UNSPECIFIED)
 	    printf (p, xstrtol (argument));
 	  else
 	    printf (p, precision, xstrtol (argument));
 	}
       else
 	{
-	  if (precision < 0)
+	  if (precision == UNSPECIFIED)
 	    printf (p, field_width, xstrtol (argument));
 	  else
 	    printf (p, field_width, precision, xstrtol (argument));
@@ -347,16 +350,16 @@ print_direc (const char *start, size_t length, int field_width,
     case 'u':
     case 'x':
     case 'X':
-      if (field_width < 0)
+      if (field_width == UNSPECIFIED)
 	{
-	  if (precision < 0)
+	  if (precision == UNSPECIFIED)
 	    printf (p, xstrtoul (argument));
 	  else
 	    printf (p, precision, xstrtoul (argument));
 	}
       else
 	{
-	  if (precision < 0)
+	  if (precision == UNSPECIFIED)
 	    printf (p, field_width, xstrtoul (argument));
 	  else
 	    printf (p, field_width, precision, xstrtoul (argument));
@@ -368,16 +371,16 @@ print_direc (const char *start, size_t length, int field_width,
     case 'E':
     case 'g':
     case 'G':
-      if (field_width < 0)
+      if (field_width == UNSPECIFIED)
 	{
-	  if (precision < 0)
+	  if (precision == UNSPECIFIED)
 	    printf (p, xstrtod (argument));
 	  else
 	    printf (p, precision, xstrtod (argument));
 	}
       else
 	{
-	  if (precision < 0)
+	  if (precision == UNSPECIFIED)
 	    printf (p, field_width, xstrtod (argument));
 	  else
 	    printf (p, field_width, precision, xstrtod (argument));
@@ -389,16 +392,16 @@ print_direc (const char *start, size_t length, int field_width,
       break;
 
     case 's':
-      if (field_width < 0)
+      if (field_width == UNSPECIFIED)
 	{
-	  if (precision < 0)
+	  if (precision == UNSPECIFIED)
 	    printf (p, argument);
 	  else
 	    printf (p, precision, argument);
 	}
       else
 	{
-	  if (precision < 0)
+	  if (precision == UNSPECIFIED)
 	    printf (p, field_width, argument);
 	  else
 	    printf (p, field_width, precision, argument);
@@ -420,8 +423,8 @@ print_formatted (const char *format, int argc, char **argv)
   const char *f;		/* Pointer into `format'.  */
   const char *direc_start;	/* Start of % directive.  */
   size_t direc_length;		/* Length of % directive.  */
-  int field_width;		/* Arg to first '*', or -1 if none.  */
-  int precision;		/* Arg to second '*', or -1 if none.  */
+  int field_width;		/* Arg to first '*', or UNSPECIFIED if none. */
+  int precision;		/* Arg to second '*', or UNSPECIFIED if none. */
 
   for (f = format; *f; ++f)
     {
@@ -430,7 +433,7 @@ print_formatted (const char *format, int argc, char **argv)
 	case '%':
 	  direc_start = f++;
 	  direc_length = 1;
-	  field_width = precision = -1;
+	  field_width = precision = UNSPECIFIED;
 	  if (*f == '%')
 	    {
 	      putchar ('%');
@@ -458,6 +461,9 @@ print_formatted (const char *format, int argc, char **argv)
 	      if (argc > 0)
 		{
 		  field_width = xstrtoul (*argv);
+		  if (field_width == UNSPECIFIED)
+		    error (EXIT_FAILURE, 0, _("invalid field width: %s"),
+			   *argv);
 		  ++argv;
 		  --argc;
 		}
@@ -481,6 +487,9 @@ print_formatted (const char *format, int argc, char **argv)
 		  if (argc > 0)
 		    {
 		      precision = xstrtoul (*argv);
+		      if (precision == UNSPECIFIED)
+			error (EXIT_FAILURE, 0, _("invalid precision: %s"),
+			       *argv);
 		      ++argv;
 		      --argc;
 		    }
