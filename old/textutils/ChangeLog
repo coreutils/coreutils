@@ -1,3 +1,9 @@
+Fri Dec  8 20:48:00 1995  Jim Meyering  (meyering@comco.com)
+
+	* aclocal.m4 (fp_C_PROTOTYPES): Set ANSI2KNR to ./ansi2knr.
+
+Thu Dec  7 19:55:03 1995  Jim Meyering  (meyering@comco.com)
+
 	* aclocal.m4 (ud_WITH_REGEX): New macro.
 	* configure.in: Use it.
 	* lib/Makefile.in (REGEX): Set to @REGEXOBJ@, not regex.o.
