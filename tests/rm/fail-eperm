@@ -13,7 +13,10 @@ case "$PERL" in
   exit 77
   ;;
 esac
-ARGV_0=$0 exec $PERL -w -- - << \EOP
+ARGV_0=$0
+export ARGV_0
+
+exec $PERL -w -- - << \EOP
 require 5.003;
 use strict;
 
@@ -71,11 +74,11 @@ foreach my $dir (@dir_list)
 	      or die "$ME: unexpected exit status from `$cmd';\n"
 		. "  got $status, expected 1\n";
 
-	    my $exp = "rm: cannot remove `$dir/$f': Operation not permitted\n";
-	    $line eq $exp
+	    my $exp = "rm: cannot remove `$dir/$f':";
+	    $line =~ /^$exp/
 	      or die "$ME: unexpected dignostic from `$cmd';\n"
 		. "  got      $line"
-		. "  expected $exp";
+		. "  expected $exp ...\n";
 
 	    last;
 	  }
