@@ -2,6 +2,8 @@ Sun Jun 11 00:39:50 1995  Jim Meyering  (meyering@comco.com)
 
 	* md5sum.c: New file.  From Ulrich Drepper.
 	* md5-test.rfc: New file.
+	* Makefile.in: (PROGS): Add md5sum.
+	(check): Run a recursive make in each subdirectory.
 	* man/Makefile.in: (MANFILES): Add md5sum.1.
 	* src/Makefile.in: (SOURCES): Add md5sum.c.
 	(OBJECTS): Add md5sum.o.
