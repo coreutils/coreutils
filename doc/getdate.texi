@@ -468,13 +468,14 @@ year.
 @cindex Berets, Jim
 @cindex MacKenzie, David
 @cindex Meyering, Jim
+@cindex Eggert, Paul
 @code{getdate} was originally implemented by Steven M. Bellovin
 (@email{smb@@research.att.com}) while at the University of North Carolina
 at Chapel Hill.  The code was later tweaked by a couple of people on
 Usenet, then completely overhauled by Rich $alz (@email{rsalz@@bbn.com})
 and Jim Berets (@email{jberets@@bbn.com}) in August, 1990.  Various
 revisions for the GNU system were made by David MacKenzie, Jim Meyering,
-and others.
+Paul Eggert and others.
 
 @cindex Pinard, F.
 @cindex Berry, K.
