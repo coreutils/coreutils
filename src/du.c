@@ -120,18 +120,6 @@ int G_fail;
   ((Type) == FTS_DP		\
    || (Type) == FTS_DNR)
 
-enum
-{
-  /* Use this to estimate the number of NUL-separated file names
-     in a file F, specified via --files0-from=F.  */
-  EXPECTED_BYTES_PER_FILE_NAME = 20,
-
-  /* If we can't easily determine the size of a file F, specified via
-     --files0-from=F, use this as an initial estimate of the number of
-     file names.  */
-  DEFAULT_PROJECTED_N_FILES = 200
-};
-
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
@@ -202,7 +190,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -D, --dereference-args  dereference FILEs that are symbolic links\n\
 "), stdout);
       fputs (_("\
-      --files0-from=F   summarize disk usage of the NUL-separated file\n\
+      --files0-from=F   summarize disk usage of the NUL-terminated file\n\
                           names specified in file F\n\
   -H                    like --si, but also evokes a warning; will soon\n\
                           change to be equivalent to --dereference-args (-D)\n\
@@ -509,38 +497,41 @@ du_files (char **files, int bit_flags)
 {
   bool fail = false;
 
-  FTS *fts = xfts_open (files, bit_flags, NULL);
-
-  while (1)
+  if (*files)
     {
-      FTSENT *ent;
+      FTS *fts = xfts_open (files, bit_flags, NULL);
 
-      ent = fts_read (fts);
-      if (ent == NULL)
+      while (1)
 	{
-	  if (errno != 0)
+	  FTSENT *ent;
+
+	  ent = fts_read (fts);
+	  if (ent == NULL)
 	    {
-	      /* FIXME: try to give a better message  */
-	      error (0, errno, _("fts_read failed"));
-	      fail = true;
+	      if (errno != 0)
+		{
+		  /* FIXME: try to give a better message  */
+		  error (0, errno, _("fts_read failed"));
+		  fail = true;
+		}
+	      break;
 	    }
-	  break;
+	  FTS_CROSS_CHECK (fts);
+
+	  /* This is a space optimization.  If we aren't printing totals,
+	     then it's ok to clear the duplicate-detection tables after
+	     each command line hierarchy has been processed.  */
+	  if (ent->fts_level == 0 && ent->fts_info == FTS_D && !print_totals)
+	    hash_clear (htab);
+
+	  process_file (fts, ent);
 	}
-      FTS_CROSS_CHECK (fts);
 
-      /* This is a space optimization.  If we aren't printing totals,
-	 then it's ok to clear the duplicate-detection tables after
-	 each command line hierarchy has been processed.  */
-      if (ent->fts_level == 0 && ent->fts_info == FTS_D && !print_totals)
-	hash_clear (htab);
-
-      process_file (fts, ent);
+      /* Ignore failure, since the only way it can do so is in failing to
+	 return to the original directory, and since we're about to exit,
+	 that doesn't matter.  */
+      fts_close (fts);
     }
-
-  /* Ignore failure, since the only way it can do so is in failing to
-     return to the original directory, and since we're about to exit,
-     that doesn't matter.  */
-  fts_close (fts);
 
   if (print_totals)
     print_size (tot_size, _("total"));
@@ -747,7 +738,6 @@ main (int argc, char **argv)
       FILE *istream;
       size_t i;
       bool valid = true;
-      bool read_fail;
 
       /* When using --files0-from=F, you may not specify any files
 	 on the command-line.  */
@@ -762,14 +752,9 @@ main (int argc, char **argv)
 	       quote (files_from));
 
       readtokens0_init (&tok);
-      read_fail = readtokens0 (istream, &tok);
 
-      if (read_fail)
+      if (! readtokens0 (istream, &tok) || fclose (istream) != 0)
 	error (EXIT_FAILURE, 0, _("cannot read file names from %s"),
-	       quote (files_from));
-
-      if (tok.n_tok == 0)
-	error (EXIT_FAILURE, 0, _("no files specified in %s"),
 	       quote (files_from));
 
       /* Fail if any name has length zero.  */
