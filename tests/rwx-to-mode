@@ -14,7 +14,7 @@ esac
 
 case $rwx in
   [ld-][rwx-][rwx-][rwxs-][rwx-][rwx-][rwxs-][rwx-][rwx-][rwxt-]) ;;
-  *) echo "$0: invalid mode string: $rwx";;
+  *) echo "$0: invalid mode string: $rwx" 1>&2; exit 1;;
 esac
 
 u=`echo $rwx|sed 's/^.\(...\).*/,u=\1/;s/-//g;s/^,u=$//'`
