@@ -127,9 +127,10 @@
 	link count for the file is 1, mv no longer unlinks the file.  Instead,
 	it gives the expected diagnostic that the source and destination are
 	the same.  WARNING: this is an incomplete fix.  If the file happens
-	to have a link count of 2 or greater, mv will still unlink it.
+	to have a link count of 2 or greater, such an erroneous mv command
+	will still unlink it.
 	Although that is not possible on VFAT, it is possible on other file
-	system types, e.g., ntfs, hpfs, and umsdos.
+	system types, e.g., ntfs, and hpfs.
 	* src/copy.c (same_file_ok): Invoke same_name (which might still
 	return false for names that refer to the same directory entry)
 	only if the link count is 2 or more.
