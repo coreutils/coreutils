@@ -1,0 +1,159 @@
+#!/bin/sh
+# Sign files and upload them.
+
+scriptversion=2004-01-20.17
+
+# Copyright (C) 2004  Free Software Foundation
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+# 02111-1307, USA.
+
+# Originally written by Alexandre Duret-Lutz <adl@gnu.org>.
+
+set -e
+
+GPG='gpg --batch --no-tty'
+to=
+
+usage="Usage: $0 [OPTIONS]... FILES...
+
+Sign all FILES, and upload them to selected destinations.
+
+Options:
+  --help                   print this help text and exit
+  --to DEST                specify one destination for FILES
+                           (multiple --to options are allowed)
+  --user NAME              sign with key NAME
+  --version                output version information and exit
+
+Recognized destinations are:
+  alpha.gnu.org:DIRECTORY  build directive files and upload files by FTP
+  ftp.gnu.org:DIRECTORY    build directive files and upload files by FTP
+  [user@]host:DIRECTORY    upload files with scp
+
+Example:
+  gnupload --to sources.redhat.com:~ftp/automake \\
+           --to alpha.gnu.org:gnu/automake \\
+           automake-1.8.2b.tar.gz automake-1.8.2b.tar.bz2
+"
+
+while test -n "$1"; do
+  case $1 in
+    --help)
+      echo "$usage"
+      exit 0
+      ;;
+    --to)
+      if test -z "$2"; then
+	echo "$0: Missing argument for --to" 2>&1
+        exit 1
+      else
+        to="$to $2"
+        shift 2
+      fi
+      ;;
+    --user)
+      if test -z "$2"; then
+	echo "$0: Missing argument for --user" 2>&1
+        exit 1
+      else
+        GPG="$GPG --local-user $2"
+        shift 2
+      fi
+      ;;
+    --version)
+      echo "gnupload $scriptversion"
+      exit 0
+      ;;
+    -*)
+      echo "$0: Unknown option \`$1', try \`$0 --help'" 2>&1
+      exit 1
+      ;;
+    *)
+      break
+      ;;
+  esac
+done
+
+if test $# = 0; then
+  echo "$0: No file to upload" 2>&1
+  exit 1
+else
+  :
+fi
+
+# Make sure all files exist.  We don't want to ask
+# the passphrase if the script is unlikely to complete.
+for file;
+do
+  if test ! -f $file; then
+    echo "$0: Cannot find \`$file'" 2>&1
+    exit 1
+  else
+    :
+  fi
+done
+
+# Reset PATH to be sure that echo is a built-in.  We will later use
+# `echo $passphrase' to output the passphrase, so it is important that
+# it is a built-in (third-party programs tend to appear in `ps'
+# listings with their arguments...).
+PATH=/empty echo -n "Enter GPG passphrase: "
+stty -echo
+read -r passphrase
+stty echo
+echo
+
+for file;
+do
+  echo "Signing $file..."
+  rm -f $file.sig
+  echo $passphrase | $GPG --passphrase-fd 0 -ba -o $file.sig $file
+done
+
+for dest in $to;
+do
+  for file;
+  do
+    echo "Uploading $file to $dest..."
+    files="$file $file.sig"
+    case $dest in
+      alpha.gnu.org:*)
+	rm -f $file.directive $file.directive.asc
+	echo directory: `echo $dest | sed 's/[^:]*://'` >$file.directive
+	echo "$passphrase" | $GPG --passphrase-fd 0 --clearsign $file.directive
+        ncftpput ftp-upload.gnu.org /incoming/alpha $files $file.directive.asc
+	rm -f $file.directive $file.directive.asc
+	;;
+      ftp.gnu.org:*)
+	rm -f $file.directive $file.directive.asc
+	echo directory: `echo $dest | sed 's/[^:]*://'` >$file.directive
+	echo "$passphrase" | $GPG --passphrase-fd 0 --clearsign $file.directive
+        ncftpput ftp-upload.gnu.org /incoming/ftp $files $file.directive.asc
+	rm -f $file.directive $file.directive.asc
+	;;
+      *)
+	scp $files $dest
+	;;
+    esac
+  done
+done
+
+# Local variables:
+# eval: (add-hook 'write-file-hooks 'time-stamp)
+# time-stamp-start: "scriptversion="
+# time-stamp-format: "%:y-%02m-%02d.%02H"
+# time-stamp-end: "$"
+# End:
