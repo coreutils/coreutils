@@ -1,3 +1,8 @@
+Mon May 15 01:00:08 1995  Jim Meyering  (meyering@comco.com)
+
+	* all source files (usage): Include one- or two-line synopsis
+	in --help output.  From Karl Berry.
+
 Sat May 13 08:57:20 1995  Jim Meyering  (meyering@comco.com)
 
 	* lib/Makefile.in (maintainer-clean): Rename from realclean.
