@@ -1,3 +1,9 @@
+1999-09-19  Jim Meyering  <meyering@ascend.com>
+
+	* src/sys2.h (__attribute__): Define.
+	(ATTRIBUTE_NORETURN): Remove #else clause.
+	(ATTRIBUTE_UNUSED): Define.
+
 1999-09-17  Jim Meyering  <meyering@ascend.com>
 
 	* configure.in (AC_REPLACE_FUNCS): Remove strdup, now that this
