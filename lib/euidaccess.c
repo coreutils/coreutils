@@ -33,49 +33,23 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#ifdef S_IEXEC
-# ifndef S_IXUSR
-#  define S_IXUSR S_IEXEC
-# endif
-# ifndef S_IXGRP
-#  define S_IXGRP (S_IEXEC >> 3)
-# endif
-# ifndef S_IXOTH
-#  define S_IXOTH (S_IEXEC >> 6)
-# endif
-#endif /* S_IEXEC */
-
-#if defined (HAVE_UNISTD_H) || defined (_LIBC)
+#if HAVE_UNISTD_H || defined _LIBC
 # include <unistd.h>
 #endif
 
-#ifdef _POSIX_VERSION
-# include <limits.h>
-# if !defined(NGROUPS_MAX) || NGROUPS_MAX < 1
-#  undef NGROUPS_MAX
-#  define NGROUPS_MAX sysconf (_SC_NGROUPS_MAX)
-# endif /* NGROUPS_MAX */
-
-#else /* not _POSIX_VERSION */
+#ifndef _POSIX_VERSION
 uid_t getuid ();
 gid_t getgid ();
 uid_t geteuid ();
 gid_t getegid ();
-# include <sys/param.h>
-# if !defined(NGROUPS_MAX) && defined(NGROUPS)
-#  define NGROUPS_MAX NGROUPS
-# endif /* not NGROUPS_MAX and NGROUPS */
-#endif /* not POSIX_VERSION */
+#endif
 
 #include <errno.h>
-#ifndef errno
-extern int errno;
-#endif
 #ifndef __set_errno
 # define __set_errno(val) errno = (val)
 #endif
 
-#if defined(EACCES) && !defined(EACCESS)
+#if defined EACCES && !defined EACCESS
 # define EACCESS EACCES
 #endif
 
@@ -86,117 +60,142 @@ extern int errno;
 # define R_OK 4
 #endif
 
-#if !defined (S_IROTH) && defined (R_OK)
-# define S_IROTH R_OK
-#endif
-
-#if !defined (S_IWOTH) && defined (W_OK)
-# define S_IWOTH W_OK
-#endif
-
-#if !defined (S_IXOTH) && defined (X_OK)
-# define S_IXOTH X_OK
-#endif
 
 #ifdef _LIBC
 
+# define access __access
+# define getuid __getuid
+# define getgid __getgid
+# define geteuid __geteuid
+# define getegid __getegid
 # define group_member __group_member
 # define euidaccess __euidaccess
+# undef stat
+# define stat stat64
 
 #else
 
-/* The user's real user id. */
-static uid_t uid;
-
-/* The user's real group id. */
-static gid_t gid;
-
-# if HAVE_GETGROUPS
-int group_member ();
-# else
-#  define group_member(gid)	0
-# endif
+# include "group-member.h"
+# include "stat-macros.h"
 
 #endif
 
-/* The user's effective user id. */
-static uid_t euid;
-
-/* The user's effective group id. */
-static gid_t egid;
-
-/* Nonzero if UID, GID, EUID, and EGID have valid values. */
-static int have_ids;
-
-
 /* Return 0 if the user has permission of type MODE on file PATH;
-   otherwise, return -1 and set `errno' to EACCESS.
+   otherwise, return -1 and set `errno'.
    Like access, except that it uses the effective user and group
-   id's instead of the real ones, and it does not check for read-only
-   file system, text busy, etc. */
+   id's instead of the real ones, and it does not always check for read-only
+   file system, text busy, etc.  */
 
 int
 euidaccess (const char *path, int mode)
 {
-  struct stat stats;
-  int granted;
-
-#ifdef	_LIBC
-  if (! __libc_enable_secure)
-    /* If we are not set-uid or set-gid, access does the same.  */
-    return __access (path, mode);
+#if defined EFF_ONLY_OK
+  return access (path, mode | EFF_ONLY_OK);
+#elif defined ACC_SELF
+  return accessx (path, mode, ACC_SELF);
+#elif HAVE_DECL_EACCESS
+  return eaccess (path, mode);
 #else
-  if (have_ids == 0)
+
+  uid_t uid = getuid ();
+  gid_t gid = getgid ();
+  uid_t euid = geteuid ();
+  gid_t egid = getegid ();
+  struct stat stats;
+
+# if HAVE_DECL_SETREGID && PREFER_NONREENTRANT_EUIDACCESS
+
+  /* Define PREFER_NONREENTRANT_EUIDACCESS if you prefer euidaccess to
+     return the correct result even if this would make it
+     nonreentrant.  Define this only if your entire application is
+     safe even if the uid or gid might temporarily change.  If your
+     application uses signal handlers or threads it is probably not
+     safe.  */
+
+  if (mode == F_OK)
+    return stat (path, &stats);
+  else
     {
-      have_ids = 1;
-      uid = getuid ();
-      gid = getgid ();
-      euid = geteuid ();
-      egid = getegid ();
+      int result;
+      int saved_errno;
+      
+      if (uid != euid)
+	setreuid (euid, uid);
+      if (gid != egid)
+	setregid (egid, gid);
+
+      result = access (path, mode);
+      saved_errno = errno;
+      
+      /* Restore them.  */
+      if (uid != euid)
+	setreuid (uid, euid);
+      if (gid != egid)
+	setregid (gid, egid);
+
+      errno = saved_errno;
+      return result;
     }
 
+# else
+
+  /* The following code assumes the traditional Unix model, and is not
+     correct on systems that have ACLs or the like.  However, it's
+     better than nothing, and it is reentrant.  */
+
+  unsigned int granted;
   if (uid == euid && gid == egid)
     /* If we are not set-uid or set-gid, access does the same.  */
     return access (path, mode);
-#endif
 
   if (stat (path, &stats))
     return -1;
 
-  mode &= (X_OK | W_OK | R_OK);	/* Clear any bogus bits. */
-#if R_OK != S_IROTH || W_OK != S_IWOTH || X_OK != S_IXOTH
-  ?error Oops, portability assumptions incorrect.
-#endif
-
-  if (mode == F_OK)
-    return 0;			/* The file exists. */
-
-#ifdef	_LIBC
-  /* Now we need the IDs.  */
-  if (have_ids == 0)
-    {
-      have_ids = 1;
-      euid = __geteuid ();
-      egid = __getegid ();
-    }
-#endif
-
   /* The super-user can read and write any file, and execute any file
-     that anyone can execute. */
+     that anyone can execute.  */
   if (euid == 0 && ((mode & X_OK) == 0
 		    || (stats.st_mode & (S_IXUSR | S_IXGRP | S_IXOTH))))
     return 0;
 
-  if (euid == stats.st_uid)
-    granted = (unsigned) (stats.st_mode & (mode << 6)) >> 6;
-  else if (egid == stats.st_gid || group_member (stats.st_gid))
-    granted = (unsigned) (stats.st_mode & (mode << 3)) >> 3;
+  /* Convert the mode to traditional form, clearing any bogus bits.  */
+  if (R_OK == 4 && W_OK == 2 && X_OK == 1 && F_OK == 0)
+    mode &= 7;
   else
-    granted = (stats.st_mode & mode);
-  if (granted == mode)
+    mode = ((mode & R_OK ? 4 : 0)
+	    + (mode & W_OK ? 2 : 0)
+	    + (mode & X_OK ? 1 : 0));
+
+  if (mode == 0)
+    return 0;			/* The file exists.  */
+
+  /* Convert the file's permission bits to traditional form.  */
+  if (S_IRUSR == (4 << 6) && S_IWUSR == (2 << 6) && S_IXUSR == (1 << 6)
+      && S_IRGRP == (4 << 3) && S_IWGRP == (2 << 3) && S_IXGRP == (1 << 3)
+      && S_IROTH == (4 << 0) && S_IWOTH == (2 << 0) && S_IXOTH == (1 << 0))
+    granted = stats.st_mode;
+  else
+    granted = ((stats.st_mode & S_IRUSR ? 4 << 6 : 0)
+	       + (stats.st_mode & S_IWUSR ? 2 << 6 : 0)
+	       + (stats.st_mode & S_IXUSR ? 1 << 6 : 0)
+	       + (stats.st_mode & S_IRGRP ? 4 << 3 : 0)
+	       + (stats.st_mode & S_IWGRP ? 2 << 3 : 0)
+	       + (stats.st_mode & S_IXGRP ? 1 << 3 : 0)
+	       + (stats.st_mode & S_IROTH ? 4 << 0 : 0)
+	       + (stats.st_mode & S_IWOTH ? 2 << 0 : 0)
+	       + (stats.st_mode & S_IXOTH ? 1 << 0 : 0));
+
+  if (euid == stats.st_uid)
+    granted >>= 6;
+  else if (egid == stats.st_gid || group_member (stats.st_gid))
+    granted >>= 3;
+
+  if ((mode & ~granted) == 0)
     return 0;
   __set_errno (EACCESS);
   return -1;
+
+# endif
+#endif
 }
 #undef euidaccess
 #ifdef weak_alias
@@ -204,9 +203,9 @@ weak_alias (__euidaccess, euidaccess)
 #endif
 
 #ifdef TEST
+# include <error.h>
 # include <stdio.h>
-# include <errno.h>
-# include "error.h"
+# include <stdlib.h>
 
 char *program_name;
 
