@@ -1480,6 +1480,74 @@ else
   esac
 fi
 test -s rep-3.E || rm -f rep-3.E
+cat $srcdir/o-rep-1.I | $xx '[b*08]' '[x*]' > o-rep-1.O 2> o-rep-1.E
+code=$?
+if test $code != 1 ; then
+  $echo "Test o-rep-1(|) failed: ../../src/tr return code $code differs from expected value 1" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp o-rep-1.O $srcdir/o-rep-1.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed o-rep-1(|)"; fi ;;
+    1) $echo "Test o-rep-1(|) failed: files o-rep-1.O and $srcdir/o-rep-1.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test o-rep-1(|) may have failed." 1>&2;
+       $echo The command "cmp o-rep-1.O $srcdir/o-rep-1.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s o-rep-1.E || rm -f o-rep-1.E
+$xx '[b*08]' '[x*]' < $srcdir/o-rep-1.I > o-rep-1.O 2> o-rep-1.E
+code=$?
+if test $code != 1 ; then
+  $echo "Test o-rep-1(<) failed: ../../src/tr return code $code differs from expected value 1" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp o-rep-1.O $srcdir/o-rep-1.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed o-rep-1(<)"; fi ;;
+    1) $echo "Test o-rep-1(<) failed: files o-rep-1.O and $srcdir/o-rep-1.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test o-rep-1(<) may have failed." 1>&2;
+       $echo The command "cmp o-rep-1.O $srcdir/o-rep-1.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s o-rep-1.E || rm -f o-rep-1.E
+cat $srcdir/o-rep-2.I | $xx '[b*010]cd' '[a*7]BC[x*]' > o-rep-2.O 2> o-rep-2.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test o-rep-2(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp o-rep-2.O $srcdir/o-rep-2.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed o-rep-2(|)"; fi ;;
+    1) $echo "Test o-rep-2(|) failed: files o-rep-2.O and $srcdir/o-rep-2.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test o-rep-2(|) may have failed." 1>&2;
+       $echo The command "cmp o-rep-2.O $srcdir/o-rep-2.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s o-rep-2.E || rm -f o-rep-2.E
+$xx '[b*010]cd' '[a*7]BC[x*]' < $srcdir/o-rep-2.I > o-rep-2.O 2> o-rep-2.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test o-rep-2(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp o-rep-2.O $srcdir/o-rep-2.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed o-rep-2(<)"; fi ;;
+    1) $echo "Test o-rep-2(<) failed: files o-rep-2.O and $srcdir/o-rep-2.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test o-rep-2(<) may have failed." 1>&2;
+       $echo The command "cmp o-rep-2.O $srcdir/o-rep-2.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s o-rep-2.E || rm -f o-rep-2.E
 cat $srcdir/esc.I | $xx 'a\-z' 'A-Z' > esc.O 2> esc.E
 code=$?
 if test $code != 0 ; then
@@ -1821,7 +1889,7 @@ else
 fi
 test -s ross-6.E || rm -f ross-6.E
 if test $errors = 0 ; then
-  $echo Passed all 106 tests. 1>&2
+  $echo Passed all 110 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi
