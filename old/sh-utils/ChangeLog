@@ -4,7 +4,7 @@ Sun Jun 29 07:18:25 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 	[putenv]: Remove definition and subsequent #undef hack to avoid
 	conflicts with system prototypes.  That didn't let the definition of
 	putenv to rpl_putenv from config.h get through.
-	Reported by Marcus Daniels.
+	Suggestion from Marcus Daniels.
 
 	* configure.in (LIB_CRYPT): AC_SUBST new variable.  Use it to add
 	crypt-related library (-lufc or -lcrypt) only for the program that
