@@ -1,5 +1,5 @@
 /* cat -- concatenate files and print on the standard output.
-   Copyright (C) 88, 90, 91, 1995-2002 Free Software Foundation, Inc.
+   Copyright (C) 88, 90, 91, 1995-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -304,10 +304,7 @@ cat (
 		     Irix-5 returns ENOSYS on pipes.  */
 		  if (errno == EOPNOTSUPP || errno == ENOTTY
 		      || errno == EINVAL || errno == ENODEV
-# ifdef ENOSYS
-		      || errno == ENOSYS
-# endif
-		      )
+		      || errno == ENOSYS)
 		    use_fionread = 0;
 		  else
 		    {
