@@ -1,4 +1,11 @@
+2000-06-25  Jim Meyering  <meyering@lucent.com>
+
+	* configure.in (ALL_LINGUAS): Add Danish (da).
+
 2000-06-24  Jim Meyering  <meyering@lucent.com>
+
+	* doc/textutils.texi: Lots of minor rewording and grammar correction.
+	From Brian Youmans.
 
 	* tests/sum/basic-1: New file.
 	* tests/sum/Makefile.am: New file.
