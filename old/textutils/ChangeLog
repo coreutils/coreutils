@@ -1,5 +1,10 @@
 Wed Jul 10 22:57:29 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* aclocal.m4 (fp_PROG_CC_STDC): Include sys/stat.h in test program
+	so that DYNIX/ptx V4.1.3 doesn't use `-Xc -D__EXTENSIONS__' -- with
+	those options on that system, sys/stat.h gets compile errors.
+	With help from Marcus Daniels.
+	
 	* getopt.c: Update from gettext-0.10.23.
 	* getopt1.c: Likewise.
 	* getopt.h: Likewise.
