@@ -120,7 +120,7 @@ main (void)
 # include "closeout.h"
 # include "long-options.h"
 # include "error.h"
-# include "human.h"
+# include "inttostr.h"
 
 /* Number of bytes to read at once.  */
 # define BUFLEN (1 << 16)
@@ -205,8 +205,8 @@ cksum (const char *file, int print_name)
   uintmax_t length = 0;
   size_t bytes_read;
   register FILE *fp;
-  char hbuf[LONGEST_HUMAN_READABLE + 1];
-  char *hp;
+  char length_buf[INT_BUFSIZE_BOUND (uintmax_t)];
+  char const *hp;
 
   if (STREQ (file, "-"))
     {
@@ -251,7 +251,7 @@ cksum (const char *file, int print_name)
       return -1;
     }
 
-  hp = human_readable (length, hbuf, 1, 1);
+  hp = umaxtostr (length, length_buf);
 
   for (; length; length >>= 8)
     crc = (crc << 8) ^ crctab[((crc >> 24) ^ length) & 0xFF];
