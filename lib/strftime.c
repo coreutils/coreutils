@@ -515,6 +515,9 @@ my_strftime (s, maxsize, format, tp ut_argument)
   size_t i = 0;
   CHAR_T *p = s;
   const CHAR_T *f;
+#if DO_MULTIBYTE && !defined COMPILE_WIDE
+  const char *format_end = NULL;
+#endif
 
   zone = NULL;
 #if HAVE_TM_ZONE
@@ -607,10 +610,15 @@ my_strftime (s, maxsize, format, tp ut_argument)
 	  {
 	    mbstate_t mbstate = mbstate_zero;
 	    size_t len = 0;
+	    size_t fsize;
+
+	    if (! format_end)
+	      format_end = f + strlen (f) + 1;
+	    fsize = format_end - f;
 
 	    do
 	      {
-		size_t bytes = mbrlen (f + len, (size_t) -1, &mbstate);
+		size_t bytes = mbrlen (f + len, fsize - len, &mbstate);
 
 		if (bytes == 0)
 		  break;
