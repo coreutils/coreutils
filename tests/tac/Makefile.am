@@ -25,7 +25,7 @@ TESTS = $x-tests
 
 mk_script = $(srcdir)/../mk-script
 $(srcdir)/$x-tests: $(mk_script) Test.pm
-	$(PERL) -w -- $(mk_script) ../../src/$x > $@.n
+	$(PERL) -I. -w -- $(mk_script) ../../src/$x > $@.n
 	mv $@.n $@
 	chmod 755 $@
 
@@ -37,6 +37,6 @@ Makefile.am: ../Makefile.am.in Test.pm $(mk_script)
 	sed -n '1,/^##test-files-begin/p' $< > $@t
 	tool=`echo $(subdir)|sed 's/^tests.//;s/-test//'`; \
 	  echo "x = $$tool" >> $@t
-	$(PERL) -w -- $(mk_script) --list >> $@t
+	$(PERL) -I. -w -- $(mk_script) --list >> $@t
 	sed -n '/^##test-files-end/,$$p' $< >> $@t
 	mv $@t $@
