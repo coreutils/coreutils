@@ -29,6 +29,7 @@
 #include "backupfile.h"
 #include "version.h"
 #include "safe-lstat.h"
+#include "safe-stat.h"
 
 int link ();			/* Some systems don't declare this anywhere. */
 
