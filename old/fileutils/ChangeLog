@@ -1,3 +1,7 @@
+2000-01-06  Jim Meyering  <meyering@ascend.com>
+
+	* lib/strftime.c: Sync with the GNU C Library.
+
 2000-01-06  Paul Eggert  <eggert@set.twinsun.com>
 
 	* tar/lib/getdate.y: Sync tm_diff with the GNU C Library.
