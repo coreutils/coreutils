@@ -1,5 +1,10 @@
 2003-08-08  Paul Eggert  <eggert@twinsun.com>
 
+	* vasnprintf.m4 (gl_PREREQ_VASNPRINTF):
+	Solaris 2.5.1 needs -lw to get the wcslen function.
+
+2003-08-08  Paul Eggert  <eggert@twinsun.com>
+
 	Use new gnulib 'extensions' module.
 	* extensions.m4, unlocked-io.m4: New files, from gnulib.
 	* gnu-source.m4, jm-glibc-io.m4: Remove.
