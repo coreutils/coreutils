@@ -502,6 +502,13 @@ main (int argc, char **argv)
 				  ? n_files - 1
 				  : n_files - 2);
     unsigned int i;
+
+    /* Initialize the hash table only if we'll need it.
+       The problem it is used to detect can arise only if there are
+       two or more files to move.  */
+    if (last_file_idx)
+      dest_info_init ();
+
     for (i = 0; i <= last_file_idx; ++i)
       errors |= movefile (file[i], target_directory, dest_is_dir, &x);
   }
