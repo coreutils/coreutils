@@ -1,6 +1,11 @@
-2004-02-21  Jim Meyering  <jim@meyering.net>
+2004-02-22  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.2.1.
+
+	* src/du.c (usage): Separate -H and --si.  Say that the meaning
+	of -H will soon change to that of --dereference-args (-D).
+
+2004-02-21  Jim Meyering  <jim@meyering.net>
 
 	* src/comm.c (usage): Tell what comm does when there are no options.
 	Reword in terms of FILE1 and FILE2 rather than `left file' and
