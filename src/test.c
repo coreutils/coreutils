@@ -288,7 +288,7 @@ age_of (char *filename, time_t *age)
  * term ::=
  *	'-'('h'|'d'|'f'|'r'|'s'|'w'|'c'|'b'|'p'|'u'|'g'|'k') filename
  *	'-'('L'|'x') filename
- *	'-t' [ int ]
+ *	'-t' int
  *	'-'('z'|'n') string
  *	string
  *	string ('!='|'=') string
@@ -1038,7 +1038,7 @@ EXPRESSION is true or false and sets exit status.  It is one of:\n\
 "), stdout);
       fputs (_("\
   -S FILE     FILE exists and is a socket\n\
-  -t [FD]     file descriptor FD (stdout by default) is opened on a terminal\n\
+  -t FD       file descriptor FD is opened on a terminal\n\
   -u FILE     FILE exists and its set-user-ID bit is set\n\
   -w FILE     FILE exists and is writable\n\
   -x FILE     FILE exists and is executable\n\
