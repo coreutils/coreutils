@@ -1,3 +1,7 @@
+Thu Mar 13 21:27:36 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/mktime.c: (TIME_T_MIN): Work around a bug in Cray C 5.0.3.0.
+
 Wed Feb 19 23:06:46 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/factor.c (factor): Rewrite inner loop to be more efficient.
