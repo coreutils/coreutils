@@ -1101,7 +1101,7 @@ main (int margc, char **margv)
       if (margc < 2 || strcmp (margv[margc - 1], "]") != 0)
 	{
 	  parse_long_options (margc, margv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-			      usage, AUTHORS, NULL);
+			      usage, AUTHORS, (char const *) NULL);
 	  test_syntax_error (_("missing `]'\n"), NULL);
 	}
 

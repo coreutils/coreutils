@@ -1161,7 +1161,7 @@ main (int argc, char **argv)
   atexit (close_stdout_wrapper);
 
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE, VERSION,
-		      usage, AUTHORS, NULL);
+		      usage, AUTHORS, (char const *) NULL);
 
   /* Don't close stdout on exit from here on.  */
   closeout_func = NULL;

@@ -86,7 +86,7 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      usage, AUTHORS, NULL);
+		      usage, AUTHORS, (char const *) NULL);
 
   /* The above handles --help and --version.
      Now, handle `--'.  */

@@ -74,7 +74,7 @@ main (int argc, char **argv)
   /* Don't recognize --help or --version if POSIXLY_CORRECT is set.  */
   if (getenv ("POSIXLY_CORRECT") == NULL)
     parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-			usage, AUTHORS, NULL);
+			usage, AUTHORS, (char const *) NULL);
 
   if (argc == 1)
     {

@@ -65,7 +65,7 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE, VERSION,
-		      usage, AUTHORS, NULL);
+		      usage, AUTHORS, (char const *) NULL);
 
   if (1 < argc)
     error (0, 0, _("ignoring all arguments"));

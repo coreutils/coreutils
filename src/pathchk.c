@@ -166,7 +166,7 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      usage, AUTHORS, NULL);
+		      usage, AUTHORS, (char const *) NULL);
 
   while ((optc = getopt_long (argc, argv, "p", longopts, NULL)) != -1)
     {

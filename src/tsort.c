@@ -560,7 +560,7 @@ main (int argc, char **argv)
   exit_status = 0;
 
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE, VERSION,
-		      usage, AUTHORS, NULL);
+		      usage, AUTHORS, (char const *) NULL);
 
   while ((opt = getopt_long (argc, argv, "", long_options, NULL)) != -1)
     switch (opt)
