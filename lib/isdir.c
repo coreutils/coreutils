@@ -41,5 +41,5 @@ isdir (path)
 {
   struct stat stats;
 
-  return safe_stat (path, &stats) == 0 && S_ISDIR (stats.st_mode);
+  return stat (path, &stats) == 0 && S_ISDIR (stats.st_mode);
 }
