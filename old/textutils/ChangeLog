@@ -1,3 +1,7 @@
+1999-07-25  Jim Meyering  <meyering@ascend.com>
+
+	* Version 1.22n.
+
 1999-06-01  Volker Borchert  <bt@teknon.de>
 
 	* tests/Makefile.am: Make envvar-check depend on check-recursive rather
