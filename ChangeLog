@@ -1,3 +1,22 @@
+2003-07-11  Jim Meyering  <jim@meyering.net>
+
+	* src/head.c (diagnose_copy_fd_failure): New function, renamed from
+	the macro, COPY_FD_DIAGNOSE.
+	(diagnose_copy_fd_failure): Enclose diagnostic in _(...).
+	(head_file): Likewise.
+
+	* src/date.c: Include "quote.h".
+	(batch_convert): Use the quote function rather than using literal `...'
+	in a diagnostic.
+
+	* src/setuidgid.c (main): Enclose diagnostic in _(...).
+	* src/fmt.c (main): Likewise.
+	* src/mknod.c (main): Likewise.
+	* src/tac.c (tac_seekable): Likewise.
+	* src/yes.c (main): Likewise.
+	* src/od.c (main): Likewise.
+	* src/install.c (change_attributes): Likewise.
+
 2003-07-10  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
