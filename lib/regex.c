@@ -89,6 +89,10 @@
 /* This is for other GNU distributions with internationalized messages.  */
 #if HAVE_LIBINTL_H || defined _LIBC
 # include <libintl.h>
+# ifdef _LIBC
+#  undef gettext
+#  define gettext(msgid) __dcgettext ("libc", msgid, LC_MESSAGES)
+# endif
 #else
 # define gettext(msgid) (msgid)
 #endif
@@ -2724,7 +2728,10 @@ regex_compile (pattern, size, syntax, bufp)
 			    if (c1 == 1)
 			      range_start = extra[idx];
 			    while (c1-- > 0)
-			      SET_LIST_BIT (extra[idx++]);
+			      {
+				SET_LIST_BIT (extra[idx]);
+				++idx;
+			      }
 			  }
 #endif
 			had_char_class = false;
