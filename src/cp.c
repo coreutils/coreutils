@@ -1242,7 +1242,7 @@ copy_reg (char *src_path, char *dst_path)
 	 be needed for a file of its size, then
 	 at least one of the blocks in the file is a hole. */
       /* FIXME: isn't there risk of overflow here?  */
-      if (S_ISREG (sb.st_mode) && sb.st_size > sb.st_blocks * DEV_BSIZE)
+      if (S_ISREG (sb.st_mode) && sb.st_size > ST_NBLOCKS (sb) * 512)
 	make_holes = 1;
     }
 #endif
