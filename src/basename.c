@@ -43,22 +43,22 @@ static void
 usage (int status)
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("\
+      printf (_("\
 Usage: %s NAME [SUFFIX]\n\
   or:  %s OPTION\n\
-",
+"),
 	      program_name, program_name);
-      printf ("\
+      printf (_("\
 Print NAME with any leading directory components removed.\n\
 If specified, also remove a trailing SUFFIX.\n\
 \n\
   --help      display this help and exit\n\
   --version   output version information and exit\n\
-");
+"));
     }
   exit (status);
 }
@@ -96,7 +96,8 @@ main (int argc, char **argv)
 
   if (argc == 1 || argc > 3)
     {
-      error (0, 0, "too %s arguments", argc == 1 ? "few" : "many");
+      error (0, 0, (argc == 1 ? _("too few arguments")
+		    : _("too many arguments")));
       usage (1);
     }
 
