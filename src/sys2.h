@@ -583,6 +583,10 @@ enum
 # define SIZE_MAX TYPE_MAXIMUM (size_t)
 #endif
 
+#ifndef SSIZE_MAX
+# define SSIZE_MAX TYPE_MAXIMUM (ssize_t)
+#endif
+
 #ifndef UINTMAX_MAX
 # define UINTMAX_MAX TYPE_MAXIMUM (uintmax_t)
 #endif
