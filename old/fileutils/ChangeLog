@@ -1,11 +1,6 @@
 1997-11-02  Jim Meyering  <meyering@na-net.ornl.gov>
 
-	* lib/xmalloc.c (xalloc_fail): Renamed from fixup_null_alloc.
-	(xcalloc): #ifdef-out unused function.
-	(xrealloc): Remove code to work around deficient versions of realloc.
-	Now we have an autoconf-enabled replacement version.
-	(xmalloc): Remove code to work around deficient versions of malloc.
-	Now we have an autoconf-enabled replacement version.
+	* acconfig.h: Add malloc and realloc.
 
 	* src/rm.c: Put cycle-detecting code inside an
 	#ifdef ENABLE_CYCLE_CHECK, for systems lacking d_ino.
@@ -23,6 +18,13 @@
 	likely event that we don't save the entry in the hash table.
 
 1997-10-25  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/xmalloc.c (xalloc_fail): Renamed from fixup_null_alloc.
+	(xcalloc): #ifdef-out unused function.
+	(xrealloc): Remove code to work around deficient versions of realloc.
+	Now we have an autoconf-enabled replacement version.
+	(xmalloc): Remove code to work around deficient versions of malloc.
+	Now we have an autoconf-enabled replacement version.
 
 	* configure.in (jm_FUNC_MALLOC): Use it.
 
