@@ -1,3 +1,9 @@
+2003-02-19  Jim Meyering  <jim@meyering.net>
+
+	* c-stack.m4 (AC_SYS_XSI_STACK_OVERFLOW_HEURISTIC): Limit stack size
+	to 1MB, so as not to render systems with no stack size limit (e.g.,
+	linux-2.2.x) unusable.  Suggestion and code from Bruno Haible.
+
 2003-02-17  Jim Meyering  <jim@meyering.net>
 
 	* prereq.m4 (jm_PREREQ_PHYSMEM): Undo last change, since
