@@ -18,13 +18,13 @@
 /* Written by David MacKenzie <djm@gnu.ai.mit.edu> */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+# include <config.h>
 #endif
 
 #include "backupfile.h"
 
 #ifdef STDC_HEADERS
-#include <stdlib.h>
+# include <stdlib.h>
 #endif
 
 int argmatch ();
@@ -32,12 +32,12 @@ void invalid_arg ();
 
 extern char *program_name;
 
-static char *backup_args[] =
+static const char *const backup_args[] =
 {
   "never", "simple", "nil", "existing", "t", "numbered", 0
 };
 
-static enum backup_type backup_types[] =
+static const enum backup_type backup_types[] =
 {
   simple, simple, numbered_existing, numbered_existing, numbered, numbered
 };
