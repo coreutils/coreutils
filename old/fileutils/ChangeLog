@@ -1,3 +1,33 @@
+2002-04-12  Jim Meyering  <meyering@lucent.com>
+
+	* Version 4.1.9.
+
+	* src/Makefile.am (LDADD): List ../lib/libfetish.a both before
+	and after @LIBINTL@.  Thanks to Paul Eggert for the fix and to
+	Bruno Haible for diagnosing the problem.
+
+	* src/link.c: Include long-options.h.
+	[long_opts]: Remove.
+	(usage): Tweak --help output; use *_OPTION_DESCRIPTION macros.
+	(main): Don't use getopt directly.  Use parse_long_options instead.
+	Tweak a diagnostic.
+	Use EXIT_FAILURE rather than a literal `1'.
+	* src/unlink.c: Likewise.
+	(main): If POSIXLY_CORRECT is set, don't recognize --help or --version,
+	so the program can operate on a file with one of those names.
+
+2002-04-11  Jim Meyering  <meyering@lucent.com>
+
+	New programs link and unlink.
+
+	* src/Makefile.am (bin_PROGRAMS): Add link and unlink.
+	* src/link.c, src/unlink.c: New files, from Debian's fileutils_4.1-10.
+	Written by Michael Stone.
+
+	* man/link.x: New file.
+	* man/unlink.x: New file.
+	* man/Makefile.am: Add link and unlink.
+
 2002-04-07  Jim Meyering  <meyering@lucent.com>
 
 	* tests/install/basic-1: Tweak comments to reflect reality.
