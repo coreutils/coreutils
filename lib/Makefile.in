@@ -136,6 +136,7 @@ libfetish_a_SOURCES = \
   closeout.c closeout.h \
   diacrit.c diacrit.h \
   dirname.c dirname.h \
+  dirfd.h \
   dup-safer.c \
   exclude.c exclude.h \
   filemode.c filemode.h \
@@ -264,20 +265,20 @@ depcomp = $(SHELL) $(top_srcdir)/depcomp
 @AMDEP_TRUE@	$(DEPDIR)/atexit.Po $(DEPDIR)/backupfile$U.Po \
 @AMDEP_TRUE@	$(DEPDIR)/basename$U.Po $(DEPDIR)/canon-host$U.Po \
 @AMDEP_TRUE@	$(DEPDIR)/chown.Po $(DEPDIR)/closeout$U.Po \
-@AMDEP_TRUE@	$(DEPDIR)/diacrit$U.Po $(DEPDIR)/dirname$U.Po \
-@AMDEP_TRUE@	$(DEPDIR)/dup-safer$U.Po $(DEPDIR)/dup2.Po \
-@AMDEP_TRUE@	$(DEPDIR)/error.Po $(DEPDIR)/euidaccess.Po \
-@AMDEP_TRUE@	$(DEPDIR)/exclude$U.Po $(DEPDIR)/fileblocks.Po \
-@AMDEP_TRUE@	$(DEPDIR)/filemode$U.Po $(DEPDIR)/fnmatch.Po \
-@AMDEP_TRUE@	$(DEPDIR)/fopen-safer$U.Po $(DEPDIR)/fsusage.Po \
-@AMDEP_TRUE@	$(DEPDIR)/ftruncate.Po $(DEPDIR)/full-write$U.Po \
-@AMDEP_TRUE@	$(DEPDIR)/getdate$U.Po $(DEPDIR)/getgroups.Po \
-@AMDEP_TRUE@	$(DEPDIR)/gethostname.Po $(DEPDIR)/getline.Po \
-@AMDEP_TRUE@	$(DEPDIR)/getloadavg.Po $(DEPDIR)/getopt$U.Po \
-@AMDEP_TRUE@	$(DEPDIR)/getopt1$U.Po $(DEPDIR)/getpass.Po \
-@AMDEP_TRUE@	$(DEPDIR)/getstr$U.Po $(DEPDIR)/gettimeofday.Po \
-@AMDEP_TRUE@	$(DEPDIR)/getugroups$U.Po $(DEPDIR)/getusershell.Po \
-@AMDEP_TRUE@	$(DEPDIR)/group-member.Po \
+@AMDEP_TRUE@	$(DEPDIR)/diacrit$U.Po $(DEPDIR)/dirfd.Po \
+@AMDEP_TRUE@	$(DEPDIR)/dirname$U.Po $(DEPDIR)/dup-safer$U.Po \
+@AMDEP_TRUE@	$(DEPDIR)/dup2.Po $(DEPDIR)/error.Po \
+@AMDEP_TRUE@	$(DEPDIR)/euidaccess.Po $(DEPDIR)/exclude$U.Po \
+@AMDEP_TRUE@	$(DEPDIR)/fileblocks.Po $(DEPDIR)/filemode$U.Po \
+@AMDEP_TRUE@	$(DEPDIR)/fnmatch.Po $(DEPDIR)/fopen-safer$U.Po \
+@AMDEP_TRUE@	$(DEPDIR)/fsusage.Po $(DEPDIR)/ftruncate.Po \
+@AMDEP_TRUE@	$(DEPDIR)/full-write$U.Po $(DEPDIR)/getdate$U.Po \
+@AMDEP_TRUE@	$(DEPDIR)/getgroups.Po $(DEPDIR)/gethostname.Po \
+@AMDEP_TRUE@	$(DEPDIR)/getline.Po $(DEPDIR)/getloadavg.Po \
+@AMDEP_TRUE@	$(DEPDIR)/getopt$U.Po $(DEPDIR)/getopt1$U.Po \
+@AMDEP_TRUE@	$(DEPDIR)/getpass.Po $(DEPDIR)/getstr$U.Po \
+@AMDEP_TRUE@	$(DEPDIR)/gettimeofday.Po $(DEPDIR)/getugroups$U.Po \
+@AMDEP_TRUE@	$(DEPDIR)/getusershell.Po $(DEPDIR)/group-member.Po \
 @AMDEP_TRUE@	$(DEPDIR)/hard-locale$U.Po $(DEPDIR)/hash$U.Po \
 @AMDEP_TRUE@	$(DEPDIR)/hash-pjw$U.Po $(DEPDIR)/human$U.Po \
 @AMDEP_TRUE@	$(DEPDIR)/idcache$U.Po $(DEPDIR)/isdir$U.Po \
@@ -329,17 +330,18 @@ CFLAGS = @CFLAGS@
 YACCCOMPILE = $(YACC) $(YFLAGS) $(AM_YFLAGS)
 DIST_SOURCES = $(libfetish_a_SOURCES)
 DIST_COMMON = README ChangeLog Makefile.am Makefile.in TODO \
-	__fpending.c alloca.c atexit.c chown.c dup2.c error.c error.h \
-	euidaccess.c fileblocks.c fnmatch.c fsusage.c ftruncate.c \
-	getdate.c getgroups.c gethostname.c getline.c getloadavg.c \
-	getpass.c gettimeofday.c getusershell.c group-member.c lchown.c \
-	malloc.c memchr.c memcmp.c memcpy.c memmove.c memrchr.c \
-	memset.c mkdir.c mkstemp.c mktime.c mountlist.c nanosleep.c \
-	obstack.c obstack.h putenv.c readutmp.c realloc.c regex.c \
-	rename.c rmdir.c rpmatch.c stime.c stpcpy.c strcasecmp.c \
-	strcspn.c strdup.c strncasecmp.c strndup.c strnlen.c strpbrk.c \
-	strstr.c strtod.c strtoimax.c strtol.c strtoll.c strtoul.c \
-	strtoull.c strtoumax.c strverscmp.c tempname.c utime.c
+	__fpending.c alloca.c atexit.c chown.c dirfd.c dup2.c error.c \
+	error.h euidaccess.c fileblocks.c fnmatch.c fsusage.c \
+	ftruncate.c getdate.c getgroups.c gethostname.c getline.c \
+	getloadavg.c getpass.c gettimeofday.c getusershell.c \
+	group-member.c lchown.c malloc.c memchr.c memcmp.c memcpy.c \
+	memmove.c memrchr.c memset.c mkdir.c mkstemp.c mktime.c \
+	mountlist.c nanosleep.c obstack.c obstack.h putenv.c readutmp.c \
+	realloc.c regex.c rename.c rmdir.c rpmatch.c stime.c stpcpy.c \
+	strcasecmp.c strcspn.c strdup.c strncasecmp.c strndup.c \
+	strnlen.c strpbrk.c strstr.c strtod.c strtoimax.c strtol.c \
+	strtoll.c strtoul.c strtoull.c strtoumax.c strverscmp.c \
+	tempname.c utime.c
 SOURCES = $(libfetish_a_SOURCES)
 
 all: $(BUILT_SOURCES)
@@ -388,6 +390,7 @@ mostlyclean-kr:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/chown.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/closeout$U.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/diacrit$U.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/dirfd.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/dirname$U.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/dup-safer$U.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/dup2.Po@am__quote@
@@ -537,6 +540,8 @@ closeout_.c: closeout.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/closeout.c; then echo $(srcdir)/closeout.c; else echo closeout.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > closeout_.c || rm -f closeout_.c
 diacrit_.c: diacrit.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/diacrit.c; then echo $(srcdir)/diacrit.c; else echo diacrit.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > diacrit_.c || rm -f diacrit_.c
+dirfd_.c: dirfd.c $(ANSI2KNR)
+	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/dirfd.c; then echo $(srcdir)/dirfd.c; else echo dirfd.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > dirfd_.c || rm -f dirfd_.c
 dirname_.c: dirname.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/dirname.c; then echo $(srcdir)/dirname.c; else echo dirname.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > dirname_.c || rm -f dirname_.c
 dup-safer_.c: dup-safer.c $(ANSI2KNR)
@@ -762,17 +767,17 @@ yesno_.c: yesno.c $(ANSI2KNR)
 __fpending_.$(OBJEXT) addext_.$(OBJEXT) alloca_.$(OBJEXT) \
 argmatch_.$(OBJEXT) atexit_.$(OBJEXT) backupfile_.$(OBJEXT) \
 basename_.$(OBJEXT) canon-host_.$(OBJEXT) chown_.$(OBJEXT) \
-closeout_.$(OBJEXT) diacrit_.$(OBJEXT) dirname_.$(OBJEXT) \
-dup-safer_.$(OBJEXT) dup2_.$(OBJEXT) error_.$(OBJEXT) \
-euidaccess_.$(OBJEXT) exclude_.$(OBJEXT) fileblocks_.$(OBJEXT) \
-filemode_.$(OBJEXT) fnmatch_.$(OBJEXT) fopen-safer_.$(OBJEXT) \
-fsusage_.$(OBJEXT) ftruncate_.$(OBJEXT) full-write_.$(OBJEXT) \
-getdate_.$(OBJEXT) getgroups_.$(OBJEXT) gethostname_.$(OBJEXT) \
-getline_.$(OBJEXT) getloadavg_.$(OBJEXT) getopt_.$(OBJEXT) \
-getopt1_.$(OBJEXT) getpass_.$(OBJEXT) getstr_.$(OBJEXT) \
-gettimeofday_.$(OBJEXT) getugroups_.$(OBJEXT) getusershell_.$(OBJEXT) \
-group-member_.$(OBJEXT) hard-locale_.$(OBJEXT) hash_.$(OBJEXT) \
-hash-pjw_.$(OBJEXT) human_.$(OBJEXT) idcache_.$(OBJEXT) \
+closeout_.$(OBJEXT) diacrit_.$(OBJEXT) dirfd_.$(OBJEXT) \
+dirname_.$(OBJEXT) dup-safer_.$(OBJEXT) dup2_.$(OBJEXT) \
+error_.$(OBJEXT) euidaccess_.$(OBJEXT) exclude_.$(OBJEXT) \
+fileblocks_.$(OBJEXT) filemode_.$(OBJEXT) fnmatch_.$(OBJEXT) \
+fopen-safer_.$(OBJEXT) fsusage_.$(OBJEXT) ftruncate_.$(OBJEXT) \
+full-write_.$(OBJEXT) getdate_.$(OBJEXT) getgroups_.$(OBJEXT) \
+gethostname_.$(OBJEXT) getline_.$(OBJEXT) getloadavg_.$(OBJEXT) \
+getopt_.$(OBJEXT) getopt1_.$(OBJEXT) getpass_.$(OBJEXT) \
+getstr_.$(OBJEXT) gettimeofday_.$(OBJEXT) getugroups_.$(OBJEXT) \
+getusershell_.$(OBJEXT) group-member_.$(OBJEXT) hard-locale_.$(OBJEXT) \
+hash_.$(OBJEXT) hash-pjw_.$(OBJEXT) human_.$(OBJEXT) idcache_.$(OBJEXT) \
 isdir_.$(OBJEXT) lchown_.$(OBJEXT) linebuffer_.$(OBJEXT) \
 localcharset_.$(OBJEXT) long-options_.$(OBJEXT) lstat_.$(OBJEXT) \
 makepath_.$(OBJEXT) malloc_.$(OBJEXT) mbswidth_.$(OBJEXT) \
