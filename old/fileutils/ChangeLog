@@ -1,5 +1,9 @@
 2001-04-22  Jim Meyering  <meyering@lucent.com>
 
+	* tests/ls/no-arg: New file.
+	* tests/ls/Makefile.am (TESTS): Add no-arg.
+	* src/ls.c (main): Fix off-by-one error introduced with last change.
+
 	* src/dd.c (usage): Mention that sync makes dd pad with spaces (rather
 	than NULs) when used with block or unblock.  Reported by Dale Scheetz.
 
