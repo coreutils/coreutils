@@ -34,6 +34,7 @@ touch f f2 d/f3
 chgrp $g1 f || fail=1
 chgrp $g2 f || fail=1
 chgrp $g2 f2 || fail=1
+chgrp -R $g1 d || fail=1
 
 (
   chgrp -c $g1 f
