@@ -1,6 +1,10 @@
-2004-01-10  Jim Meyering  <jim@meyering.net>
+2004-01-12  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.1.1.
+
+	* configure.ac: Use gl_DEFAULT_POSIX2_VERSION.
+
+2004-01-10  Jim Meyering  <jim@meyering.net>
 
 	* tests/misc/stat-fmt: Use backticks, not $().
 
