@@ -88,6 +88,19 @@
 #include <string.h>
 #include <search.h>
 
+#ifndef weak_alias
+# define __tsearch tsearch
+# define __tfind tfind
+# define __tdelete tdelete
+# define __twalk twalk
+# define __tdestroy tdestroy
+#endif
+
+#ifndef _LIBC
+# define weak_alias(f,g)
+# define internal_function
+#endif
+
 typedef struct node_t
 {
   /* Callers expect this to be the first element in the structure - do not
@@ -105,9 +118,9 @@ typedef const struct node_t *const_node;
 
 /* Routines to check tree invariants.  */
 
-#include <assert.h>
+# include <assert.h>
 
-#define CHECK_TREE(a) check_tree(a)
+# define CHECK_TREE(a) check_tree(a)
 
 static void
 check_tree_recurse (node p, int d_sofar, int d_total)
@@ -142,7 +155,7 @@ check_tree (node root)
 
 #else
 
-#define CHECK_TREE(a)
+# define CHECK_TREE(a)
 
 #endif
 
@@ -293,7 +306,9 @@ __tsearch (const void *key, void **vrootp, __compar_fn_t compar)
 
   return q;
 }
+#ifdef weak_alias
 weak_alias (__tsearch, tsearch)
+#endif
 
 
 /* Find datum in search tree.
@@ -325,7 +340,9 @@ __tfind (key, vrootp, compar)
     }
   return NULL;
 }
+#ifdef weak_alias
 weak_alias (__tfind, tfind)
+#endif
 
 
 /* Delete node with given key.
@@ -585,7 +602,9 @@ __tdelete (const void *key, void **vrootp, __compar_fn_t compar)
   free (unchained);
   return retval;
 }
+#ifdef weak_alias
 weak_alias (__tdelete, tdelete)
+#endif
 
 
 /* Walk the nodes of a tree.
@@ -625,7 +644,9 @@ __twalk (const void *vroot, __action_fn_t action)
   if (root != NULL && action != NULL)
     trecurse (root, action, 0);
 }
+#ifdef weak_alias
 weak_alias (__twalk, twalk)
+#endif
 
 
 
@@ -654,4 +675,6 @@ __tdestroy (void *vroot, void (*freefct)(void *))
   if (root != NULL)
     tdestroy_recurse (root, freefct);
 }
+#ifdef weak_alias
 weak_alias (__tdestroy, tdestroy)
+#endif
