@@ -1,3 +1,16 @@
+1998-01-16  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/getling.c: Make PARAMS-defining conditionals consistent.
+	* lib/linebuffer.h: Likewise.
+	* lib/long-options.h: Likewise.
+	* lib/memcasecmp.h: Likewise.
+	* lib/xstrtod.h: Likewise.
+	* lib/xstrtol.h: Likewise.
+	Suggestion from Kaveh Ghazi.
+
+	* tests/head/Test.pm (fail-0): Disable test.  It depends on
+	sizeof(long) being 32 bits.  Reported by Kaveh Ghazi.
+
 1998-01-10  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* Version 1.22d.
