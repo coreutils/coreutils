@@ -5,6 +5,7 @@ $test = 0;
 $| = 1;
 
 print "#! /bin/sh\nsort='$sort'\necho testing with sort=\$sort\nerrors=0\n";
+print "$sort --version 2> /dev/null\n";
 $expected = '';
 $input = '';
 $options = '';
