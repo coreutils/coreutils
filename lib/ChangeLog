@@ -1,3 +1,7 @@
+2000-12-01  Paul Eggert  <eggert@twinsun.com>
+
+	* lib/memrchr.c: Include <config.h> before any system include file.
+
 2000-11-29  Paul Eggert  <eggert@twinsun.com>
 
 	* lib/dirname.c (dir_name_r): Fix typo: int -> size_t.
