@@ -1,5 +1,5 @@
 /* Error handler for noninteractive utilities
-   Copyright (C) 1990,91,92,93,94,95,96,97,98 Free Software Foundation, Inc.
+   Copyright (C) 1990,91,92,93,94,95,96,97,98, 99 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.  Its master source is NOT part of
    the C library, however.  The master source lives in /gd/gnu/lib.
@@ -230,7 +230,10 @@ error_at_line (status, errnum, file_name, line_number, message, va_alist)
     {
 #if defined HAVE_STRERROR_R || defined _LIBC
       char errbuf[1024];
-      fprintf (stderr, ": %s", __strerror_r (errnum, errbuf, sizeof errbuf));
+      /* Don't use __strerror_r's return value because on some systems
+	 (at least DEC UNIX 4.0[A-D]) strerror_r returns `int'.  */
+      __strerror_r (errnum, errbuf, sizeof errbuf);
+      fprintf (stderr, ": %s", errbuf);
 #else
       fprintf (stderr, ": %s", strerror (errnum));
 #endif
