@@ -1,5 +1,7 @@
 2003-06-18  Jim Meyering  <jim@meyering.net>
 
+	* getdelim2.c: Extracted from getline.c.
+
 	* linebuffer.c, linebuffer.h: Update from gnulib.
 
 	* getdelim2.c, getdelim2.h: New files.
