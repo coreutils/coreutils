@@ -2,6 +2,13 @@
 
 	* Version 1.16m.
 
+	* Makefile.maint (po-check): New rule.
+	(alpha): Make it.
+
+	* po/POTFILES.in: Add the following from lib/: argmatch.c, closeout.c,
+	error.c, getopt.c, human.c, long-options.c, version-etc.c, xmalloc.c.
+	Add these from src/: false.c, hostid.c, true.c.
+
 	* lib/getdate.y (OtherTable[]): Use tDAY_UNIT for `tomorrow,'
 	`yesterday,' `today,' and `now' rather than tMINUTE_UNIT.  Of course
 	with correspondingly smaller numbers for tomorrow and yesterday.
