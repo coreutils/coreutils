@@ -1,7 +1,7 @@
 # Macro to add for using GNU gettext.
 # Ulrich Drepper <drepper@cygnus.com>, 1995.
 
-# serial 1
+# serial 2
 
 AC_DEFUN(AM_WITH_NLS,
   [AC_MSG_CHECKING([whether NLS is requested])
@@ -184,7 +184,7 @@ AC_DEFUN(AM_WITH_NLS,
 AC_DEFUN(AM_GNU_GETTEXT,
   [AC_REQUIRE([AC_PROG_MAKE_SET])dnl
    AC_REQUIRE([AC_PROG_CC])dnl
-   AC_REQUIRE([AC_PROG_RANLIB])dnl
+   AC_REQUIRE([AC_ISC_POSIX])dnl
    AC_REQUIRE([AC_HEADER_STDC])dnl
    AC_REQUIRE([AC_C_CONST])dnl
    AC_REQUIRE([AC_C_INLINE])dnl
@@ -269,6 +269,10 @@ __argz_count __argz_stringify __argz_next])
    fi
    AC_SUBST(MKINSTALLDIRS)
 
+   dnl *** For now the libtool support in intl/Makefile is not for real.
+   l=
+   AC_SUBST(l)
+
    dnl Generate list of files to be processed by xgettext which will
    dnl be included in po/Makefile.
    test -d po || mkdir po
@@ -281,6 +285,8 @@ __argz_count __argz_stringify __argz_next])
    else
      posrcprefix="../"
    fi
+   rm -f po/POTFILES
    sed -e "/^#/d" -e "/^\$/d" -e "s,.*,	$posrcprefix& \\\\," -e "\$s/\(.*\) \\\\/\1/" \
 	< $srcdir/po/POTFILES.in > po/POTFILES
+   chmod a-w po/POTFILES
   ])
