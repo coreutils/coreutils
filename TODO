@@ -52,4 +52,4 @@ Should printf '\0123' print "\n3"?
 
 printf: consider adapting builtins/printf.def from bash
 
-du: add `--total' option, suggested here http://bugs.debian.org/186007
+df: add `--total' option, suggested here http://bugs.debian.org/186007
