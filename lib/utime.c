@@ -32,6 +32,12 @@
 # include <fcntl.h>
 #endif
 
+#include <unistd.h>
+#include <errno.h>
+#ifndef errno
+extern int errno;
+#endif
+
 #include "full-write.h"
 #include "safe-read.h"
 
@@ -59,6 +65,7 @@ utime_null (const char *file)
   char c;
   int status = 0;
   struct stat st;
+  int saved_errno = 0;
 
   fd = open (file, O_RDWR);
   if (fd < 0
@@ -70,9 +77,23 @@ utime_null (const char *file)
 	 of patches, but that system doesn't use this code: it has utimes.
 	 || fsync (fd) < 0
       */
-      || (st.st_size == 0 && ftruncate (fd, st.st_size) < 0)
-      || close (fd) < 0)
-    status = -1;
+      || (st.st_size == 0 && ftruncate (fd, st.st_size) < 0))
+    {
+      saved_errno = errno;
+      status = -1;
+    }
+
+  if (0 <= fd)
+    {
+      if (close (fd) < 0)
+	status = -1;
+
+      /* If there was a prior failure, use the saved errno value.
+	 But if the only failure was in the close, don't change errno.  */
+      if (saved_errno)
+	errno = saved_errno;
+    }
+
   return status;
 #endif
 }
