@@ -1,9 +1,11 @@
 #!/bin/sh
 # basic tests for printf
 
+prog=`pwd`/../../src/printf
+
 if test "$VERBOSE" = yes; then
   set -x
-  printf --version
+  $prog --version
 fi
 
 pwd=`pwd`
@@ -24,7 +26,7 @@ fail=0
 
 # This would fail (by printing the `--') for printf in sh-utils
 # and in coreutils 4.5.1.
-printf -- 'foo\n' > out || fail=1
+$prog -- 'foo\n' > out || fail=1
 cat <<\EOF > exp
 foo
 EOF
