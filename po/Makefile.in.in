@@ -213,20 +213,25 @@ dist distdir: update-po $(DISTFILES)
 
 update-po: Makefile
 	$(MAKE) $(PACKAGE).pot
-	PATH=`pwd`/../src:$$PATH; \
-	cd $(srcdir); \
 	catalogs='$(CATALOGS)'; \
 	for cat in $$catalogs; do \
 	  cat=`basename $$cat`; \
 	  lang=`echo $$cat | sed 's/\$(CATOBJEXT)$$//'`; \
-	  mv $$lang.po $$lang.old.po; \
 	  echo "$$lang:"; \
-	  if $(MSGMERGE) $$lang.old.po $(PACKAGE).pot -o $$lang.po; then \
-	    rm -f $$lang.old.po; \
+	  if $(MSGMERGE) $(srcdir)/$$lang.po \
+	                 $(srcdir)/$(PACKAGE).pot -o $$lang.new.po; then \
+	    if cmp $$lang.new.po $(srcdir)/$$lang.po >/dev/null; then \
+	      echo "$$lang.po is unchanged"; \
+	      rm -f $$lang.new.po; \
+	    else \
+	      echo "updating $$lang.po"; \
+	      rm -f $(srcdir)/$$lang.po; \
+	      mv $$lang.new.po $(srcdir)/$$lang.po; \
+	    fi; \
 	  else \
 	    echo "msgmerge for $$cat failed!"; \
-	    rm -f $$lang.po; \
-	    mv $$lang.old.po $$lang.po; \
+	    rm -f $$lang.new.po; \
+	    exit 1; \
 	  fi; \
 	done
 
