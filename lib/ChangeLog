@@ -1,3 +1,17 @@
+2003-01-11  Jim Meyering  <jim@meyering.net>
+
+	* canonicalize.c: Don't test HAVE_ERRNO_H.  It's not necessary.
+	Don't test HAVE_STDDEF_H.  It's not necessary.
+	Use definition of PTR_INT_TYPE from obstack.h.
+
+2002-12-01  Dmitry V. Levin  <ldv@altlinux.org>
+
+	* canonicalize.c: New file.
+	The readlink-based implementation imported from GNU C Library.
+	The resolveip-based implementation imported from src/df.c (show_point).
+	* canonicalize.h: New file.
+	* Makefile.am (libfetish_a_SOURCES): Add canonicalize.h.
+
 2003-01-10  Jim Meyering  <jim@meyering.net>
 
 	* save-cwd.h: Remove uses of PARAMS.
