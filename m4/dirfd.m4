@@ -1,10 +1,14 @@
-#serial 2
+#serial 4
 
 dnl Find out how to get the file descriptor associated with an open DIR*.
 dnl From Jim Meyering
 
 AC_DEFUN([UTILS_FUNC_DIRFD],
 [
+  dnl Work around a bug of AC_EGREP_CPP in autoconf-2.57.
+  AC_REQUIRE([AC_PROG_CPP])
+  AC_REQUIRE([AC_PROG_EGREP])
+
   AC_HEADER_DIRENT
   dirfd_headers='
 #if HAVE_DIRENT_H
