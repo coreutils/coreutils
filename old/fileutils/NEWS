@@ -1,4 +1,6 @@
 Changes in release 4.01:
+[4.0.40]
+* portability fixes, mainly for UnixWare 7.1.1
 [4.0.39]
 * cp and mv accept --strip-trailing-slashes, not just --strip-trailing-slash
 [4.0.38]
