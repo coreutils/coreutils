@@ -1,5 +1,5 @@
 /* GNU's who.
-   Copyright (C) 1992-1999 Free Software Foundation, Inc.
+   Copyright (C) 1992-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -153,7 +153,7 @@ print_entry (const STRUCT_UTMP *utmp_ent)
       last_change = 0;
     }
 
-  printf ("%-8.*s", (int) sizeof (utmp_ent->ut_name), utmp_ent->ut_name);
+  printf ("%-8.*s", (int) sizeof (UT_USER (utmp_ent)), UT_USER (utmp_ent));
   if (include_mesg)
     printf ("  %c  ", mesg);
   printf (" %-8.*s", (int) sizeof (utmp_ent->ut_line), utmp_ent->ut_line);
@@ -219,7 +219,7 @@ list_entries_who (int n, const STRUCT_UTMP *utmp_buf)
   entries = 0;
   while (n--)
     {
-      if (utmp_buf->ut_name[0]
+      if (UT_USER (utmp_buf)[0]
 #ifdef USER_PROCESS
 	  && utmp_buf->ut_type == USER_PROCESS
 #endif
@@ -261,7 +261,7 @@ scan_entries (int n, const STRUCT_UTMP *utmp_buf)
 
   while (n--)
     {
-      if (utmp_buf->ut_name[0]
+      if (UT_USER (utmp_buf)[0]
 #ifdef USER_PROCESS
 	  && utmp_buf->ut_type == USER_PROCESS
 #endif
@@ -299,7 +299,7 @@ search_entries (int n, const STRUCT_UTMP *utmp_buf, const char *line)
 {
   while (n--)
     {
-      if (utmp_buf->ut_name[0]
+      if (UT_USER (utmp_buf)[0]
 #ifdef USER_PROCESS
 	  && utmp_buf->ut_type == USER_PROCESS
 #endif

@@ -1,5 +1,5 @@
 /* GNU's pinky.
-   Copyright (C) 1992-1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1992-1997, 1999, 2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -199,15 +199,15 @@ print_entry (const STRUCT_UTMP *utmp_ent)
       last_change = 0;
     }
 
-  printf ("%-8.*s", (int) sizeof (utmp_ent->ut_name), utmp_ent->ut_name);
+  printf ("%-8.*s", (int) sizeof (UT_USER (utmp_ent)), UT_USER (utmp_ent));
 
   if (include_fullname)
     {
       struct passwd *pw;
-      char name[sizeof (utmp_ent->ut_name) + 1];
+      char name[sizeof (UT_USER (utmp_ent)) + 1];
 
-      strncpy (name, utmp_ent->ut_name, sizeof (utmp_ent->ut_name));
-      name[sizeof (utmp_ent->ut_name)] = '\0';
+      strncpy (name, UT_USER (utmp_ent), sizeof (UT_USER (utmp_ent)));
+      name[sizeof (UT_USER (utmp_ent))] = '\0';
       pw = getpwnam (name);
       if (pw == NULL)
 	printf (" %19s", "        ???");
@@ -405,7 +405,7 @@ scan_entries (int n, const STRUCT_UTMP *utmp_buf,
 
   while (n--)
     {
-      if (utmp_buf->ut_name[0]
+      if (UT_USER (utmp_buf)[0]
 #ifdef USER_PROCESS
 	  && utmp_buf->ut_type == USER_PROCESS
 #endif
@@ -416,8 +416,8 @@ scan_entries (int n, const STRUCT_UTMP *utmp_buf,
 	      int i;
 
 	      for (i = 0; i < argc_names; i++)
-		if (strncmp (utmp_buf->ut_name, argv_names[i],
-			     sizeof (utmp_buf->ut_name)) == 0)
+		if (strncmp (UT_USER (utmp_buf), argv_names[i],
+			     sizeof (UT_USER (utmp_buf))) == 0)
 		  {
 		    print_entry (utmp_buf);
 		    break;
