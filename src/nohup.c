@@ -73,7 +73,7 @@ main (int argc, char **argv)
 {
   int fd;
   int saved_stderr_fd = -1;
-  int stderr_isatty;
+  bool stderr_isatty;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
