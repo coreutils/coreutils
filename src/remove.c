@@ -615,7 +615,7 @@ remove_file (struct File_spec *fs, const struct rm_options *x)
   int asked = 0;
   char *pathname = fs->filename;
 
-  if (!x->ignore_missing_files && x->interactive && x->stdin_tty
+  if (!x->ignore_missing_files && (x->interactive || x->stdin_tty)
       && euidaccess (pathname, W_OK))
     {
       if (!S_ISLNK (fspec_filetype_mode (fs)))
