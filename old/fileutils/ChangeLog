@@ -1,3 +1,19 @@
+1999-03-31  Jim Meyering  <meyering@ascend.com>
+
+	* src/du.c: Remove prototypes and tsort function definitions.
+
+	* src/chown.c (main): Move the declaration of `e' into the scope
+	where it's used and make it `const'.
+
+	* src/install.c (main): Qualify a char* with the `const' keyword.
+	(install_file_in_dir): Likewise.
+	* src/ln.c (main): Likewise.
+	* src/mkdir.c (main): Likewise.
+	* src/mkfifo.c (main): Likewise.
+	* src/mknod.c (main): Likewise.
+	* src/mv.c (main): Likewise.
+	* src/touch.c (touch): Likewise.
+
 1999-03-30  Jim Meyering  <meyering@ascend.com>
 
 	* src/*.c: Don't include closeout.h or version-etc.h explicitly.
