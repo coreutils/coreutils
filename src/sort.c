@@ -266,14 +266,22 @@ static void
 xfclose (fp)
      FILE *fp;
 {
-  if (fflush (fp) != 0)
+  if (fp == stdin)
     {
-      error (0, errno, "flushing file");
-      cleanup ();
-      exit (2);
+      /* Allow reading stdin from tty more than once. */
+      if (feof (fp))
+	clearerr (fp);
     }
-
-  if (fp != stdin && fp != stdout)
+  else if (fp == stdout)
+    {
+      if (fflush (fp) != 0)
+	{
+	  error (0, errno, "flushing file");
+	  cleanup ();
+	  exit (2);
+	}
+    }
+  else
     {
       if (fclose (fp) != 0)
 	{
@@ -281,11 +289,6 @@ xfclose (fp)
 	  cleanup ();
 	  exit (2);
 	}
-    }
-  else
-    {
-      /* Allow reading stdin from tty more than once. */
-      clearerr (fp);
     }
 }
 
