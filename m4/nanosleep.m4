@@ -1,11 +1,15 @@
-#serial 1
+#serial 2
 
 dnl From Jim Meyering.
-dnl FIXME
+dnl Check for the nanosleep function
 dnl
 
 AC_DEFUN(jm_FUNC_NANOSLEEP,
 [
+ # Solaris 2.5.1 needs -lposix4 to get the nanosleep function.
+ # Solaris 7 prefers the library name -lrt to the obsolescent name -lposix4.
+ AC_SEARCH_LIBS(nanosleep, [rt posix4])
+
  AC_CACHE_CHECK([whether nanosleep works],
   jm_cv_func_nanosleep_works,
   [AC_TRY_RUN([
