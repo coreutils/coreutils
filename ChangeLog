@@ -17,7 +17,7 @@
 	specifications like `-72x'.
 	* tests/fmt/basic: Add test for the above fix.
 
-	Work around nasty readdir bug with Darwin6.5 and hfs file system.
+	Work around nasty readdir bug on Darwin6.5.
 	* src/remove.c (IF_READDIR_NEEDS_REWINDDIR): Define.
 	[! HAVE_WORKING_READDIR] (remove_cwd_entries): If readdir has just
 	returned NULL and there has been at least one successful unlink or
