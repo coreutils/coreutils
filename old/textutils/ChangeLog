@@ -2,7 +2,9 @@
 
 	* Version 2.0.21.
 
-	* tests/head/Test.pm: Tell head to accept old-style options like `-1'.
+	* tests/head/Test.pm: Accept pre-POSIX 1003.1-2001 options.
+	* tests/pr/Test.pm: Likewise.
+	* tests/sort/Test.pm: Likewise.
 
 	* Makefile.cfg (wget_files): Reflect new location of these files.
 
