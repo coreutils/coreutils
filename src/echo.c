@@ -120,7 +120,7 @@ main (int argc, char **argv)
   bool display_return = true;
   bool allow_options =
     (! getenv ("POSIXLY_CORRECT")
-     || (! DEFAULT_ECHO_TO_XPG && 0 < argc && STREQ (argv[1], "-n")));
+     || (! DEFAULT_ECHO_TO_XPG && 1 < argc && STREQ (argv[1], "-n")));
 
   /* System V machines already have a /bin/sh with a v9 behavior.
      Use the identical behavior for these machines so that the
