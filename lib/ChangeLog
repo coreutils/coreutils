@@ -1,3 +1,9 @@
+2003-07-17  Paul Eggert  <eggert@twinsun.com>
+
+	* xalloca.h, xmalloc.c, xmemcoll.c, xmemcoll.h:
+	Merge with gnulib.  Use a single exit_failure variable rather
+	than a separate one for each module.
+
 2003-07-16  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (AM_CPPFLAGS): Rename from `INCLUDES', to avoid
