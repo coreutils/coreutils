@@ -1,22 +1,17 @@
 #!/bin/sh
 
-# TMPDIR should be an absolute dir for this test.
-# FIXME: enforce it
-: ${TMPDIR=/tmp}
-
 if test "$VERBOSE" = yes; then
   set -x
   mkdir --version
 fi
 
-temp_dir=$TMPDIR/t-mkdir.$$
-tmp=$temp_dir/a/b/c
-rm -rf $temp_dir
+pwd=`pwd`
+tmp=`echo "$0"|sed 's,.*/,,'`.tmp
+trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
+trap '(exit $?); exit' 1 2 13 15
 
-mkdir --parents $tmp || fail=1
+mkdir --parents $pwd/$tmp || fail=1
 
 test -d $tmp || fail=1
-
-rm -rf $temp_dir
 
 exit $fail
