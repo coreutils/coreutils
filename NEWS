@@ -38,6 +38,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   rm no longer requires read access to the current directory.
 
+  tail -f no longer mishandles pipes and fifos.  With no operands,
+  tail now ignores -f if standard input is a pipe, as POSIX requires.
+
   For some types of errors (e.g., read-only file system, I/O error)
   when first encountering a directory, `rm -r' would mistakenly fail
   to remove files under that directory.
@@ -156,6 +159,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   The stat option --filesystem has been renamed to --file-system, for
   consistency with POSIX "file system" and with cp and du --one-file-system.
+
+** Removed features
+
+  tail's undocumented --max-consecutive-size-changes option has been removed.
 
 * Major changes in release 5.2.1 (2004-03-12) [stable]
 
