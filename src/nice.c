@@ -1,5 +1,5 @@
 /* nice -- run a program with modified scheduling priority
-   Copyright (C) 1990-2002 Free Software Foundation, Inc.
+   Copyright (C) 1990-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -25,7 +25,6 @@
 #include <getopt.h>
 #include <sys/types.h>
 #ifndef NICE_PRIORITY
-# include <sys/time.h>
 # include <sys/resource.h>
 #endif
 
