@@ -249,7 +249,7 @@ sha_process_block (const void *buffer, size_t len, struct sha_ctx *ctx)
   const md5_uint32 *words = buffer;
   size_t nwords = len / sizeof (md5_uint32);
   const md5_uint32 *endp = words + nwords;
-  md5_uint32 x[80];
+  md5_uint32 x[16];
   md5_uint32 a = ctx->A;
   md5_uint32 b = ctx->B;
   md5_uint32 c = ctx->C;
