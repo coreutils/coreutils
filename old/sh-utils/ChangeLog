@@ -1,5 +1,8 @@
 1999-04-25  Jim Meyering  <meyering@ascend.com>
 
+	* src/seq.c (main): Handle the case in which seq is given no args.
+	Reported by John Gotts.
+
 	* lib/human.c <inttypes.h>: Don't include it here.
 	* lib/human.h <inttypes.h>: Include it here instead.
 	<config.h>: Include it here too.
