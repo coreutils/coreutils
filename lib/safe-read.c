@@ -1,4 +1,4 @@
-/* An interface to read that retries after interrupts.
+/* An interface to read and write that retries after interrupts.
    Copyright (C) 1993, 1994, 1998, 2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -18,9 +18,6 @@
 #if HAVE_CONFIG_H
 # include <config.h>
 #endif
-
-/* Specification.  */
-#include "safe-read.h"
 
 /* Get ssize_t.  */
 #include <sys/types.h>
@@ -57,25 +54,38 @@ extern int errno;
 # define INT_MAX TYPE_MAXIMUM (int)
 #endif
 
-/* Read up to COUNT bytes at BUF from descriptor FD, retrying if interrupted.
-   Return the actual number of bytes read, zero for EOF, or SAFE_READ_ERROR
-   upon error.  */
+#ifdef SAFE_WRITE
+# include "safe-write.h"
+# define safe_rw safe_write
+# define rw write
+#else
+# include "safe-read.h"
+# define safe_rw safe_read
+# define rw read
+# undef const
+# define const /* empty */
+#endif
+
+/* Read(write) up to COUNT bytes at BUF from(to) descriptor FD, retrying if
+   interrupted.  Return the actual number of bytes read(written), zero for EOF,
+   or SAFE_READ_ERROR(SAFE_WRITE_ERROR) upon error.  */
 size_t
-safe_read (int fd, void *buf, size_t count)
+safe_rw (int fd, void const *buf, size_t count)
 {
   ssize_t result;
 
   /* POSIX limits COUNT to SSIZE_MAX, but we limit it further, requiring
      that COUNT <= INT_MAX, to avoid triggering a bug in Tru64 5.1.
      When decreasing COUNT, keep the file pointer block-aligned.
-     Note that in any case, read may succeed, yet read fewer than COUNT
-     bytes, so the caller must be prepared to handle partial results.  */
+     Note that in any case, read(write) may succeed, yet read(write)
+     fewer than COUNT bytes, so the caller must be prepared to handle
+     partial results.  */
   if (count > INT_MAX)
     count = INT_MAX & ~8191;
 
   do
     {
-      result = read (fd, buf, count);
+      result = rw (fd, buf, count);
     }
   while (result < 0 && IS_EINTR (errno));
 
