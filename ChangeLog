@@ -2,6 +2,12 @@
 
 	* Version 5.0.2.
 
+	* README: Update section on testing as `root'.
+	Suggestion from Paul Jarc.
+
+	* src/test.c (AUTHORS): Replace 3-letter usernames with the actual
+	names of authors that I just found in bash's builtins/test.def.
+
 	Running `[' with no arguments would evoke a segfault.
 	* src/test.c (main) [LBRACKET]: Move initialization of argv to
 	precede potential use via test_syntax_error.
