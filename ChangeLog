@@ -1,6 +1,10 @@
-2004-11-06  Paul Eggert  <eggert@cs.ucla.edu>
+2004-11-07  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	* src/sort.c (merge): Remove declarations of now-unused variables.
+
+2004-11-06  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/sort.c (first_same_file): Remove.  Move most of the code to....
 	(avoid_trashing_input): New function.
