@@ -1,3 +1,8 @@
+2001-02-21  Jim Meyering  <meyering@lucent.com>
+
+	* tests/ls-2/tests: Add two tests of existing behavior -- both will
+	have to be changed (soon after release), once ls is fixed.
+
 2001-02-20  Paul Eggert  <eggert@twinsun.com>
 
 	* src/ls.c (FULL_TIME_OPTION): Renamed from FULL_TIME, for
