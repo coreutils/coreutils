@@ -523,7 +523,7 @@ check-root:
 	cd touch && $(MAKE) check TESTS=fifo
 	cd mv    && $(MAKE) check TESTS=mv-special-1
 
-check-recursive: envvar-check evar-check root-hint
+check-recursive: evar-check root-hint
 
 # Warn when `make check' is run with POSIXLY_CORRECT or CDPATH set.
 .PHONY: evar-check
