@@ -317,7 +317,7 @@ struct control_info
 
 /* Control characters. */
 
-struct control_info control_info[] =
+static struct control_info control_info[] =
 {
   {"intr", CINTR, VINTR},
   {"quit", CQUIT, VQUIT},
@@ -354,12 +354,12 @@ struct control_info control_info[] =
 };
 
 /* The width of the screen, for output wrapping. */
-int max_col;
+static int max_col;
 
 /* Current position, to know when to wrap. */
-int current_col;
+static int current_col;
 
-struct option longopts[] =
+static struct option longopts[] =
 {
   {"all", 0, NULL, 'a'},
   {"save", 0, NULL, 'g'},

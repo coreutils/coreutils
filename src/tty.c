@@ -32,9 +32,9 @@ void usage ();
 char *program_name;
 
 /* If nonzero, return an exit status but produce no output. */
-int silent;
+static int silent;
 
-struct option longopts[] =
+static struct option longopts[] =
 {
   {"silent", 0, NULL, 's'},
   {"quiet", 0, NULL, 's'},

@@ -153,15 +153,15 @@ extern char **environ;
 char *program_name;
 
 /* If nonzero, pass the `-f' option to the subshell.  */
-int fast_startup;
+static int fast_startup;
 
 /* If nonzero, simulate a login instead of just starting a shell.  */
-int simulate_login;
+static int simulate_login;
 
 /* If nonzero, change some environment vars to indicate the user su'd to.  */
-int change_environment;
+static int change_environment;
 
-struct option longopts[] =
+static struct option longopts[] =
 {
   {"command", 1, 0, 'c'},
   {"fast", 0, &fast_startup, 1},

@@ -55,12 +55,12 @@ void usage ();
 #define PRINT_MACHINE 16
 
 /* Mask indicating which elements of the name to print. */
-unsigned char toprint;
+static unsigned char toprint;
 
 /* The name this program was run with, for error messages. */
 char *program_name;
 
-struct option long_options[] =
+static struct option long_options[] =
 {
   {"sysname", 0, NULL, 's'},
   {"nodename", 0, NULL, 'n'},

@@ -29,15 +29,15 @@ void error ();
 void xwrite ();
 
 /* If nonzero, append to output files rather than truncating them. */
-int append;
+static int append;
 
 /* If nonzero, ignore interrupts. */
-int ignore_interrupts;
+static int ignore_interrupts;
 
 /* The name that this program was run with. */
 char *program_name;
 
-struct option long_options[] =
+static struct option long_options[] =
 {
   {"append", 0, NULL, 'a'},
   {"ignore-interrupts", 0, NULL, 'i'},
