@@ -1,5 +1,5 @@
 /* provide a chdir function that tries not to fail due to ENAMETOOLONG
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -30,68 +30,25 @@
 #include <assert.h>
 #include <limits.h>
 
-#include "mempcpy.h"
 #include "openat.h"
 
 #ifndef O_DIRECTORY
 # define O_DIRECTORY 0
 #endif
 
-#ifndef MIN
-# define MIN(a, b) ((a) < (b) ? (a) : (b))
-#endif
-
 #ifndef PATH_MAX
 # error "compile this file only if your system defines PATH_MAX"
 #endif
 
-/* FIXME: this use of `MIN' is our sole concession to arbitrary limitations.
-   If, for some system, PATH_MAX is larger than 8191 and you call
-   chdir_long with a directory name that is longer than PATH_MAX,
-   yet that contains a single component that is more than 8191 bytes
-   long, then this function will fail.  */
-#define MAX_COMPONENT_LENGTH MIN (PATH_MAX - 1, 8 * 1024)
-
 struct cd_buf
 {
-  /* FIXME maybe allocate this via malloc, rather than using the stack.
-     But that would be the sole use of malloc.  Is it worth it to
-     let chdir_long fail due to a low-memory condition?
-     But when using malloc, and assuming we remove the `concession'
-     above, we'll still have to avoid allocating 2^31 bytes on
-     systems that define PATH_MAX to very large number.
-     Ideally, we'd allocate enough to deal with most names, and
-     dynamically increase the buffer size only when necessary.  */
-  char buffer[MAX_COMPONENT_LENGTH + 1];
-  char *avail;
   int fd;
 };
 
-/* Like memchr, but return the number of bytes from MEM
-   to the first occurrence of C thereafter.  Search only
-   LEN bytes.  Return LEN if C is not found.  */
-static inline size_t
-memchrcspn (char const *mem, int c, size_t len)
-{
-  char const *found = memchr (mem, c, len);
-  if (!found)
-    return len;
-
-  len = found - mem;
-  return len;
-}
-
-static void
+static inline void
 cdb_init (struct cd_buf *cdb)
 {
-  cdb->avail = cdb->buffer;
   cdb->fd = AT_FDCWD;
-}
-
-static inline bool
-cdb_empty (struct cd_buf const *cdb)
-{
-  return cdb->avail == cdb->buffer;
 }
 
 static inline int
@@ -100,6 +57,20 @@ cdb_fchdir (struct cd_buf const *cdb)
   return fchdir (cdb->fd);
 }
 
+static inline void
+cdb_free (struct cd_buf const *cdb)
+{
+  if (0 <= cdb->fd)
+    {
+      bool close_fail = close (cdb->fd);
+      assert (! close_fail);
+    }
+}
+
+/* Given a file descriptor of an open directory (or AT_FDCWD), CDB->fd,
+   try to open the CDB->fd-relative directory, DIR.  If the open succeeds,
+   update CDB->fd with the resulting descriptor, close the incoming file
+   descriptor, and return zero.  Upon failure, return -1 and set errno.  */
 static int
 cdb_advance_fd (struct cd_buf *cdb, char const *dir)
 {
@@ -111,85 +82,37 @@ cdb_advance_fd (struct cd_buf *cdb, char const *dir)
 	return -1;
     }
 
-  if (cdb->fd != AT_FDCWD)
-    close (cdb->fd);
+  cdb_free (cdb);
   cdb->fd = new_fd;
 
   return 0;
 }
 
-static int
-cdb_flush (struct cd_buf *cdb)
+/* Return a pointer to the first non-slash in S.  */
+static inline char *
+find_non_slash (char const *s)
 {
-  if (cdb_empty (cdb))
-    return 0;
-
-  cdb->avail[0] = '\0';
-  if (cdb_advance_fd (cdb, cdb->buffer) != 0)
-    return -1;
-
-  cdb->avail = cdb->buffer;
-
-  return 0;
+  size_t n_slash = strspn (s, "/");
+  return (char *) s + n_slash;
 }
 
-static void
-cdb_free (struct cd_buf *cdb)
-{
-  if (0 <= cdb->fd && close (cdb->fd) != 0)
-    abort ();
-}
+/* This is a function much like chdir, but without the PATH_MAX limitation
+   on the length of the directory name.  A significant difference is that
+   it must be able to modify (albeit only temporarily) the directory
+   name.  It handles an arbitrarily long directory name by operating
+   on manageable portions of the name.  On systems without the openat
+   syscall, this means changing the working directory to more and more
+   `distant' points along the long directory name and then restoring
+   the working directory.  If any of those attempts to save or restore
+   the working directory fails, this function exits nonzero.
 
-static int
-cdb_append (struct cd_buf *cdb, char const *s, size_t len)
-{
-  char const *end = cdb->buffer + sizeof cdb->buffer;
-
-  /* Insert a slash separator if there is a preceding byte
-     and it's not a slash.  */
-  bool need_slash = (cdb->buffer < cdb->avail && cdb->avail[-1] != '/');
-  size_t n_free;
-
-  if (sizeof cdb->buffer < len + 1)
-    {
-      /* This single component is too long.  */
-      errno = ENAMETOOLONG;
-      return -1;
-    }
-
-  /* See if there's enough room for the `/', the new component and
-     a trailing NUL.  */
-  n_free = end - cdb->avail;
-  if (n_free < need_slash + len + 1)
-    {
-      if (cdb_flush (cdb) != 0)
-	return -1;
-      need_slash = false;
-    }
-
-  if (need_slash)
-    *(cdb->avail)++ = '/';
-
-  cdb->avail = mempcpy (cdb->avail, s, len);
-  return 0;
-}
-
-/* This is a wrapper around chdir that works even on PATH_MAX-limited
-   systems.  It handles an arbitrarily long directory name by extracting
-   and processing manageable portions of the name.  On systems without
-   the openat syscall, this means changing the working directory to
-   more and more `distant' points along the long directory name and
-   then restoring the working directory.
-   If any of those attempts to change or restore the working directory
-   fails, this function exits nonzero.
-
-   Note that this function may still fail with errno == ENAMETOOLONG,
-   but only if the specified directory name contains a component that
-   is long enough to provoke such a failure all by itself (e.g. if the
-   component is longer than PATH_MAX on systems that define PATH_MAX).  */
+   Note that this function may still fail with errno == ENAMETOOLONG, but
+   only if the specified directory name contains a component that is long
+   enough to provoke such a failure all by itself (e.g. if the component
+   has length PATH_MAX or greater on systems that define PATH_MAX).  */
 
 int
-chdir_long (char const *dir)
+chdir_long (char *dir)
 {
   int e = chdir (dir);
   if (e == 0 || errno != ENAMETOOLONG)
@@ -197,70 +120,79 @@ chdir_long (char const *dir)
 
   {
     size_t len = strlen (dir);
-    char const *dir_end = dir + len;
-    char const *d;
+    char *dir_end = dir + len;
     struct cd_buf cdb;
+    size_t n_leading_slash;
 
     cdb_init (&cdb);
 
     /* If DIR is the empty string, then the chdir above
        must have failed and set errno to ENOENT.  */
     assert (0 < len);
+    assert (PATH_MAX <= len);
 
-    if (*dir == '/')
+    /* Count leading slashes.  */
+    n_leading_slash = strspn (dir, "/");
+
+    /* Handle any leading slashes as well as any name that matches
+       the regular expression, m!^//hostname[/]*! .  Handling this
+       prefix separately usually results in a single additional
+       cdb_advance_fd call, but it's worthwhile, since it makes the
+       code in the following loop cleaner.  */
+    if (n_leading_slash == 2)
       {
-	/* Names starting with exactly two slashes followed by at least
-	   one non-slash are special --
-	   for example, in some environments //Hostname/file may
-	   denote a file on a different host.
-	   Preserve those two leading slashes.  Treat all other
-	   sequences of slashes like a single one.  */
-	if (3 <= len && dir[1] == '/' && dir[2] != '/')
+	int err;
+	/* Find next slash.
+	   We already know that dir[2] is neither a slash nor '\0'.  */
+	char *slash = memchr (dir + 3, '/', dir_end - (dir + 3));
+	if (slash == NULL)
 	  {
-	    size_t name_len = 1 + strcspn (dir + 3, "/");
-	    if (cdb_append (&cdb, dir, 2 + name_len) != 0)
-	      goto Fail;
-	    /* Advance D to next slash or to end of string. */
-	    d = dir + 2 + name_len;
-	    assert (*d == '/' || *d == '\0');
+	    errno = ENAMETOOLONG;
+	    return -1;
 	  }
-	else
-	  {
-	    if (cdb_append (&cdb, "/", 1) != 0)
-	      goto Fail;
-	    d = dir + 1;
-	  }
+	*slash = '\0';
+	err = cdb_advance_fd (&cdb, dir);
+	*slash = '/';
+	if (err != 0)
+	  goto Fail;
+	dir = find_non_slash (slash + 1);
       }
-    else
+    else if (n_leading_slash)
       {
-	d = dir;
+	if (cdb_advance_fd (&cdb, "/") != 0)
+	  goto Fail;
+	dir += n_leading_slash;
       }
 
-    while (1)
+    assert (*dir != '/');
+    assert (dir <= dir_end);
+
+    while (PATH_MAX <= dir_end - dir)
       {
-	/* Skip any slashes to find start of next component --
-	   or the end of DIR. */
-	char const *start = d + strspn (d, "/");
-	if (*start == '\0')
+	int err;
+	/* Find a slash that is PATH_MAX or fewer bytes away from dir.
+	   I.e. see if there is a slash that will give us a name of
+	   length PATH_MAX-1 or less.  */
+	char *slash = memrchr (dir, '/', PATH_MAX);
+	if (slash == NULL)
 	  {
-	    if (cdb_flush (&cdb) != 0)
-	      goto Fail;
-	    break;
-	  }
-	/* If the remaining portion is no longer than PATH_MAX, then
-	   flush anything that is buffered and do the rest in one chunk.  */
-	if (dir_end - start <= PATH_MAX)
-	  {
-	    if (cdb_flush (&cdb) != 0
-		|| cdb_advance_fd (&cdb, start) != 0)
-	      goto Fail;
-	    break;
+	    errno = ENAMETOOLONG;
+	    return -1;
 	  }
 
-	len = memchrcspn (start, '/', dir_end - start);
-	assert (len == strcspn (start, "/"));
-	d = start + len;
-	if (cdb_append (&cdb, start, len) != 0)
+	*slash = '\0';
+	assert (slash - dir < PATH_MAX);
+	err = cdb_advance_fd (&cdb, dir);
+	*slash = '/';
+	if (err != 0)
+	  goto Fail;
+
+	dir = find_non_slash (slash + 1);
+      }
+
+    if (dir < dir_end)
+      {
+	if (cdb_advance_fd (&cdb, dir) != 0)
 	  goto Fail;
       }
 
@@ -318,16 +250,19 @@ main (int argc, char *argv[])
     error (EXIT_FAILURE, errno,
 	   "chdir_long failed: %s", line);
 
-  {
-    /* Using `pwd' here makes sense only if it is a robust implementation,
-       like the one in coreutils after the 2004-04-19 changes.  */
-    char const *cmd = "pwd";
-    execlp (cmd, (char *) NULL);
-    error (EXIT_FAILURE, errno, "%s", cmd);
-  }
+  if (argc <= 1)
+    {
+      /* Using `pwd' here makes sense only if it is a robust implementation,
+	 like the one in coreutils after the 2004-04-19 changes.  */
+      char const *cmd = "pwd";
+      execlp (cmd, (char *) NULL);
+      error (EXIT_FAILURE, errno, "%s", cmd);
+    }
 
-  /* not reached */
-  abort ();
+  fclose (stdin);
+  fclose (stderr);
+
+  exit (EXIT_SUCCESS);
 }
 #endif
 
