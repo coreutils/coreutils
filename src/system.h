@@ -830,7 +830,7 @@ ptr_align (void *ptr, size_t alignment)
    and return nonzero.  Otherwise, set Accum to that new value and
    return zero.  With a compiler that provides the __typeof__ operator,
    perform a compile-time check to verify that the specified Type_max
-   constant is the same as the constant derived from the type of Accum.  */
+   value is the same as the constant derived from the type of Accum.  */
 #define DECIMAL_DIGIT_ACCUMULATE(Accum, Digit_val, Type_max)		\
   (									\
    /* Ensure that Type_max is the maximum value of Accum.  */		\
