@@ -54,14 +54,14 @@
 #include "getdate.h"
 
 #if defined (STDC_HEADERS) || defined (USG)
-#include <string.h>
+# include <string.h>
 #endif
 
 /* Some old versions of bison generate parsers that use bcopy.
    That loses on systems that don't provide the function, so we have
    to redefine it here.  */
 #if !defined (HAVE_BCOPY) && defined (HAVE_MEMCPY) && !defined (bcopy)
-#define bcopy(from, to, len) memcpy ((to), (from), (len))
+# define bcopy(from, to, len) memcpy ((to), (from), (len))
 #endif
 
 extern struct tm	*gmtime ();
