@@ -70,6 +70,50 @@
 #include <pwd.h>
 #include <getopt.h>
 
+/* Get MB_LEN_MAX.  */
+#if HAVE_LIMITS_H
+# include <limits.h>
+#endif
+
+/* Get MB_CUR_MAX.  */
+#if HAVE_STDLIB_H
+# include <stdlib.h>
+#endif
+
+/* Get mbstate_t, mbrtowc(), mbsinit(), wcwidth().  */
+#if HAVE_WCHAR_H
+# include <wchar.h>
+#endif
+
+/* Get iswprint().  */
+#if HAVE_WCTYPE_H
+# include <wctype.h>
+#endif
+#if !defined iswprint && !HAVE_ISWPRINT
+# define iswprint(wc) 1
+#endif
+
+/* Some systems, like BeOS, have multibyte encodings but lack mbstate_t.  */
+#if HAVE_MBRTOWC && defined mbstate_t
+# define mbrtowc(pwc, s, n, ps) (mbrtowc) (pwc, s, n, 0)
+# define mbsinit(ps) 1
+#endif
+
+#ifndef HAVE_DECL_WCWIDTH
+"this configure-time declaration test was not run"
+#endif
+#if !HAVE_DECL_WCWIDTH
+int wcwidth ();
+#endif
+
+/* If wcwidth() doesn't exist, assume all printable characters have
+   width 1.  */
+#ifndef wcwidth
+# if !HAVE_WCWIDTH
+#  define wcwidth(wc) ((wc) == 0 ? 0 : iswprint (wc) ? 1 : -1)
+# endif
+#endif
+
 #include "system.h"
 #include <fnmatch.h>
 
@@ -78,6 +122,7 @@
 #include "human.h"
 #include "filemode.h"
 #include "ls.h"
+#include "mbswidth.h"
 #include "obstack.h"
 #include "path-concat.h"
 #include "quotearg.h"
@@ -2422,35 +2467,163 @@ print_long_format (const struct fileinfo *f)
     print_type_indicator (f->stat.st_mode);
 }
 
-/* Output to OUT a quoted representation of the file name P,
-   using OPTIONS to control quoting.
-   Return the number of characters in P's quoted representation.  */
+/* Output to OUT a quoted representation of the file name NAME,
+   using OPTIONS to control quoting.  Produce no output if OUT is NULL.
+   Return the number of screen columns occupied by NAME's quoted
+   representation.  */
 
 static size_t
-quote_name (FILE *out, const char *p, struct quoting_options const *options)
+quote_name (FILE *out, const char *name, struct quoting_options const *options)
 {
   char smallbuf[BUFSIZ];
-  size_t len = quotearg_buffer (smallbuf, sizeof smallbuf, p, -1, options);
+  size_t len = quotearg_buffer (smallbuf, sizeof smallbuf, name, -1, options);
   char *buf;
+  int displayed_width;
 
   if (len < sizeof smallbuf)
     buf = smallbuf;
   else
     {
       buf = (char *) alloca (len + 1);
-      quotearg_buffer (buf, len + 1, p, -1, options);
+      quotearg_buffer (buf, len + 1, name, -1, options);
     }
 
   if (qmark_funny_chars)
     {
-      size_t i;
-      for (i = 0; i < len; i++)
-	if (! ISPRINT ((unsigned char) buf[i]))
-	  buf[i] = '?';
+#if HAVE_MBRTOWC && (MB_LEN_MAX > 1)
+      if (MB_CUR_MAX > 1)
+	{
+	  const char *p = buf;
+	  char *plimit = buf + len;
+	  char *q = buf;
+	  displayed_width = 0;
+
+	  while (p < plimit)
+	    switch (*p)
+	      {
+		case ' ': case '!': case '"': case '#': case '%':
+		case '&': case '\'': case '(': case ')': case '*':
+		case '+': case ',': case '-': case '.': case '/':
+		case '0': case '1': case '2': case '3': case '4':
+		case '5': case '6': case '7': case '8': case '9':
+		case ':': case ';': case '<': case '=': case '>':
+		case '?':
+		case 'A': case 'B': case 'C': case 'D': case 'E':
+		case 'F': case 'G': case 'H': case 'I': case 'J':
+		case 'K': case 'L': case 'M': case 'N': case 'O':
+		case 'P': case 'Q': case 'R': case 'S': case 'T':
+		case 'U': case 'V': case 'W': case 'X': case 'Y':
+		case 'Z':
+		case '[': case '\\': case ']': case '^': case '_':
+		case 'a': case 'b': case 'c': case 'd': case 'e':
+		case 'f': case 'g': case 'h': case 'i': case 'j':
+		case 'k': case 'l': case 'm': case 'n': case 'o':
+		case 'p': case 'q': case 'r': case 's': case 't':
+		case 'u': case 'v': case 'w': case 'x': case 'y':
+		case 'z': case '{': case '|': case '}': case '~':
+		  /* These characters are printable ASCII characters.  */
+		  *q++ = *p++;
+		  displayed_width += 1;
+		  break;
+		default:
+		  /* If we have a multibyte sequence, copy it until we
+		     reach its end, replacing each non-printable multibyte
+		     character with a single question mark.  */
+		  {
+		    mbstate_t mbstate;
+		    memset (&mbstate, 0, sizeof mbstate);
+		    do
+		      {
+			wchar_t wc;
+			size_t bytes;
+			int w;
+
+			bytes = mbrtowc (&wc, p, plimit - p, &mbstate);
+
+			if (bytes == (size_t) -1)
+			  {
+			    /* An invalid multibyte sequence was
+			       encountered.  Skip one input byte, and
+			       put a question mark.  */
+			    p++;
+			    *q++ = '?';
+			    displayed_width += 1;
+			    break;
+			  }
+
+			if (bytes == (size_t) -2)
+			  {
+			    /* An incomplete multibyte character
+			       at the end.  Replace it entirely with
+			       a question mark.  */
+			    p = plimit;
+			    *q++ = '?';
+			    displayed_width += 1;
+			    break;
+			  }
+
+			if (bytes == 0)
+			  /* A null wide character was encountered.  */
+			  bytes = 1;
+
+			w = wcwidth (wc);
+			if (w >= 0)
+			  {
+			    /* A printable multibyte character.
+			       Keep it.  */
+			    for (; bytes > 0; --bytes)
+			      *q++ = *p++;
+			    displayed_width += w;
+			  }
+			else
+			  {
+			    /* An unprintable multibyte character.
+			       Replace it entirely with a question
+			       mark.  */
+			    p += bytes;
+			    *q++ = '?';
+			    displayed_width += 1;
+			  }
+		      }
+		    while (! mbsinit (&mbstate));
+		  }
+		  break;
+	      }
+
+	  /* The buffer may have shrunk.  */
+	  len = q - buf;
+	}
+      else
+#endif
+	{
+	  char *p = buf;
+	  char *plimit = buf + len;
+
+	  while (p < plimit)
+	    {
+	      if (! ISPRINT ((unsigned char) *p))
+		*p = '?';
+	      p++;
+	    }
+	  displayed_width = len;
+	}
+    }
+  else
+    {
+      /* Assume unprintable characters have a displayed_width of 1.  */
+#if HAVE_MBRTOWC && (MB_LEN_MAX > 1)
+      if (MB_CUR_MAX > 1)
+	displayed_width = mbsnwidth (buf, len,
+				     (MBSW_ACCEPT_INVALID
+				      | MBSW_ACCEPT_UNPRINTABLE));
+      else
+#endif
+	displayed_width = len;
     }
 
-  fwrite (buf, 1, len, out);
-  return len;
+  if (out != NULL)
+    fwrite (buf, 1, len, out);
+  return displayed_width;
 }
 
 static void
@@ -2624,7 +2797,7 @@ length_of_file_name_and_frills (const struct fileinfo *f)
   if (print_block_size)
     len += 1 + block_size_size;
 
-  len += quotearg_buffer (0, 0, f->name, -1, filename_quoting_options);
+  len += quote_name (NULL, f->name, filename_quoting_options);
 
   if (indicator_style != none)
     {
