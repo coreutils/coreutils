@@ -93,6 +93,7 @@ static struct option const long_options[] =
   {"help", no_argument, &show_help, 1},
   {"set", required_argument, NULL, 's'},
   {"uct", no_argument, NULL, 'u'},
+  {"utc", no_argument, NULL, 'u'},
   {"universal", no_argument, NULL, 'u'},
   {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
@@ -190,7 +191,7 @@ show_date (format, when)
 	 doesn't support %e, but POSIX requires it.  If you don't use
 	 a GNU strftime, make sure yours supports %e.  */
       format = (universal_time
-		? "%a %b %e %H:%M:%S GMT %Y"
+		? "%a %b %e %H:%M:%S UTC %Y"
 		: "%a %b %e %H:%M:%S %Z %Y");
     }
   else if (*format == '\0')
@@ -225,7 +226,7 @@ usage (status)
 \n\
   -d, --date=STRING        display time described by STRING, not `now'\n\
   -s, --set=STRING         set time described by STRING\n\
-  -u, --uct, --universal   print or set Universal Coordinated Time\n\
+  -u, --utc, --universal   print or set Coordinated Universal Time\n\
       --help               display this help and exit\n\
       --version            output version information and exit\n\
 ");
