@@ -3521,7 +3521,7 @@ non-alphanumeric characters to newlines, then squeezes each string
 of repeated newlines into a single newline:
 
 @example
-tr -cs '[a-zA-Z0-9]' '[\n*]'
+tr -cs 'a-zA-Z0-9' '[\n*]'
 @end example
 
 @item
