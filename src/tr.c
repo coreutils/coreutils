@@ -560,13 +560,15 @@ unquote (s, len)
    in the global char_class_name array.  Otherwise, return CC_NO_CLASS.  */
 
 static enum Char_class
-look_up_char_class (class_str)
+look_up_char_class (class_str, len)
      unsigned char *class_str;
+     int len;
 {
   unsigned int i;
 
   for (i = 0; i < N_CHAR_CLASSES; i++)
-    if (strcmp ((const char *) class_str, char_class_name[i]) == 0)
+    if (strncmp ((const char *) class_str, char_class_name[i], len) == 0
+	&& strlen (char_class_name[i]) == len)
       return (enum Char_class) i;
   return CC_NO_CLASS;
 }
@@ -727,7 +729,7 @@ append_char_class (list, char_class_str, len)
   enum Char_class char_class;
   struct List_element *new;
 
-  char_class = look_up_char_class (char_class_str);
+  char_class = look_up_char_class (char_class_str, len);
   if (char_class == CC_NO_CLASS)
     {
       char *tmp = make_printable_str (char_class_str, len);
