@@ -1,3 +1,9 @@
+Copyright 1994, 1995, 1996, 1999, 2000, 2001 Free Software Foundation,
+Inc.
+
+   This file is free documentation; the Free Software Foundation gives
+unlimited permission to copy, distribute and modify it.
+
 Basic Installation
 ==================
 
@@ -70,7 +76,7 @@ them in the environment.  You can do that on the command line like this:
 
      ./configure CC=c89 CFLAGS=-O2 LIBS=-lposix
 
-   *Note Environment Variables::, for more details.
+   *Note Defining Variables::, for more details.
 
 Compiling For Multiple Architectures
 ====================================
@@ -84,10 +90,10 @@ the `configure' script.  `configure' automatically checks for the
 source code in the directory that `configure' is in and in `..'.
 
    If you have to use a `make' that does not support the `VPATH'
-variable, you have to compile the package for one architecture at a time
-in the source code directory.  After you have installed the package for
-one architecture, use `make distclean' before reconfiguring for another
-architecture.
+variable, you have to compile the package for one architecture at a
+time in the source code directory.  After you have installed the
+package for one architecture, use `make distclean' before reconfiguring
+for another architecture.
 
 Installation Names
 ==================
@@ -141,8 +147,7 @@ type, such as `sun4', or a canonical name which has the form:
 
 where SYSTEM can have one of these forms:
 
-     OS
-     KERNEL-OS
+     OS KERNEL-OS
 
    See the file `config.sub' for the possible values of each field.  If
 `config.sub' isn't included in this package, then this package doesn't
@@ -172,11 +177,11 @@ default values for variables like `CC', `cache_file', and `prefix'.
 `CONFIG_SITE' environment variable to the location of the site script.
 A warning: not all `configure' scripts look for a site script.
 
-Environment Variables
-=====================
+Defining Variables
+==================
 
    Variables not defined in a site shell script can be set in the
-environment passed to configure.  However, some packages may run
+environment passed to `configure'.  However, some packages may run
 configure again during the build, and the customized values of these
 variables may be lost.  In order to avoid this problem, you should set
 them in the `configure' command line, using `VAR=value'.  For example:
