@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2001-03-28.08}
+\def\texinfoversion{2001-05-24.08}
 %
 % Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99,
 %               2000, 01 Free Software Foundation, Inc.
@@ -169,6 +169,16 @@
    \showboxbreadth\maxdimen\showboxdepth\maxdimen
 }%
 \fi
+
+% add check for \lastpenalty to plain's definitions.  If the last thing
+% we did was a \nobreak, we don't want to insert more space.
+% 
+\def\smallbreak{\ifnum\lastpenalty<10000\par\ifdim\lastskip<\smallskipamount
+  \removelastskip\penalty-50\smallskip\fi\fi}
+\def\medbreak{\ifnum\lastpenalty<10000\par\ifdim\lastskip<\medskipamount
+  \removelastskip\penalty-100\medskip\fi\fi}
+\def\bigbreak{\ifnum\lastpenalty<10000\par\ifdim\lastskip<\bigskipamount
+  \removelastskip\penalty-200\bigskip\fi\fi}
 
 % For @cropmarks command.
 % Do @cropmarks to get crop marks.
@@ -1030,6 +1040,7 @@ where each line of input produces a line of output.}
   \def\pdfurl#1{%
     \begingroup
       \normalturnoffactive\def\@{@}%
+      \let\value=\expandablevalue
       \leavevmode\Red
       \startlink attr{/Border [0 0 0]}%
         user{/Subtype /Link /A << /S /URI /URI (#1) >>}%
@@ -4146,9 +4157,17 @@ width0pt\relax} \fi
 % is reset to zero; thus the \afterenvbreak inserts no space -- but the
 % start of the next paragraph will insert \parskip
 %
-\def\aboveenvbreak{{\advance\envskipamount by \parskip
-\endgraf \ifdim\lastskip<\envskipamount
-\removelastskip \penalty-50 \vskip\envskipamount \fi}}
+\def\aboveenvbreak{{%
+  \ifnum\lastpenalty < 10000
+    \advance\envskipamount by \parskip
+    \endgraf
+    \ifdim\lastskip<\envskipamount
+      \removelastskip
+      \penalty-50
+      \vskip\envskipamount
+    \fi
+  \fi
+}}
 
 \let\afterenvbreak = \aboveenvbreak
 
