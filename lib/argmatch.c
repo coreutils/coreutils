@@ -48,9 +48,17 @@
 
 extern char *program_name;
 
+/* The following test is to work around the gross typo in
+   systems like Sony NEWS-OS Release 4.0C, whereby EXIT_FAILURE
+   is defined to 0, not 1.  */
+#if !EXIT_FAILURE
+# undef EXIT_FAILURE
+# define EXIT_FAILURE 1
+#endif
+
 /* Non failing version of argmatch call this function after failing. */
 #ifndef ARGMATCH_DIE
-# define ARGMATCH_DIE exit (2)
+# define ARGMATCH_DIE exit (EXIT_FAILURE)
 #endif
 
 static void
