@@ -16,4 +16,4 @@ clean: distclean
 
 .PHONY: realclean
 realclean: clean
-	rm -f tr-tests t*.in t*.exp
+	rm -f tr-tests t*.in t*.exp t*.err
