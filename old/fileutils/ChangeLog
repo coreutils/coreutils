@@ -1,6 +1,16 @@
-1998-06-21  Jim Meyering  <meyering@ascend.com>
+1998-06-26  Jim Meyering  <meyering@ascend.com>
 
 	* Version 3.16q.
+
+	* src/remove.c (remove_file): Remove `non-directory' part of
+	`removing non-directory FILE' verbose message.
+
+1998-06-23  Jim Meyering  <meyering@ascend.com>
+
+	* src/df.c (show_dev): Increase field width for blocks, used,
+	and available columns from 7 to 8.
+
+1998-06-21  Jim Meyering  <meyering@ascend.com>
 
 	* aclocal.m4: Regenerate with fixed gettext.m4 installed.
 	See README-alpha for details.
