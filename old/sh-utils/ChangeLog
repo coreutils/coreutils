@@ -1,3 +1,15 @@
+1998-01-31  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (AC_LFS): Use it.
+
+1998-01-25  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* Makefile.maint: New file.
+	* Makefile.am: Move rules common to textutils, fileutils, sh-utils
+	into Makefile.maint.
+	Include Makefile.maint.
+	(EXTRA_DIST): Add Makefile.maint.
+
 1998-01-03  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/Makefile.am (AUTOMAKE_OPTIONS): Define to ../src/ansi2knr.
