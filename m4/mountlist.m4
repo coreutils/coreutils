@@ -1,5 +1,5 @@
-# mountlist.m4 serial 1
-dnl Copyright (C) 2002 Free Software Foundation, Inc.
+# mountlist.m4 serial 2
+dnl Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
 dnl Public License, this file may be distributed as part of a program
@@ -19,9 +19,8 @@ AC_DEFUN([gl_MOUNTLIST],
 # Prerequisites of lib/mountlist.c not done by jm_LIST_MOUNTED_FILESYSTEMS.
 AC_DEFUN([gl_PREREQ_MOUNTLIST_EXTRA],
 [
-  AC_REQUIRE([AC_HEADER_STDC])
   dnl Note jm_LIST_MOUNTED_FILESYSTEMS checks for mntent.h, not sys/mntent.h.
-  AC_CHECK_HEADERS_ONCE(fcntl.h string.h unistd.h)
+  AC_CHECK_HEADERS_ONCE(fcntl.h unistd.h)
   AC_CHECK_HEADERS(sys/mntent.h)
   jm_FSTYPENAME
 ])
