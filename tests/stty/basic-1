@@ -1,31 +1,26 @@
 #! /bin/sh
 # Make sure stty can parse most of its options.
 
-reversible ()
-{
-  case $1 in
-    # The following list of reversible options was generated with
-    # grep -w REV stty.c |grep '{"' |sed 's/....//;s/".*//' \
-    #   |fmt |tr ' ' '|' |sed 's/$/) ;;/'
-    parenb|parodd|hupcl|hup|cstopb|cread|clocal|crtscts|ignbrk|brkint|ignpar) ;;
-    parmrk|inpck|istrip|inlcr|igncr|icrnl|ixon|ixoff|tandem|iuclc|ixany) ;;
-    imaxbel|opost|olcuc|ocrnl|onlcr|onocr|onlret|ofill|ofdel|isig|icanon) ;;
-    iexten|echo|echoe|crterase|echok|echonl|noflsh|xcase|tostop|echoprt) ;;
-    prterase|echoctl|ctlecho|echoke|crtkill|evenp|parity|oddp|nl|cooked|raw) ;;
-    pass8|litout|cbreak|decctlq|tabs|lcase|LCASE) ;;
-
-    *) echo no; return;;
-  esac
-
-  echo yes;
-}
-
 : ${STTY=stty}
 
 if test "$VERBOSE" = yes; then
   set -x
   $RM --version
 fi
+
+# The following list of reversible options was generated with
+# grep -w REV stty.c|sed -n '/^  {"/{s//REV_/;s/".*/=1/;p;}'|fmt
+REV_parenb=1 REV_parodd=1 REV_hupcl=1 REV_hup=1 REV_cstopb=1 REV_cread=1
+REV_clocal=1 REV_crtscts=1 REV_ignbrk=1 REV_brkint=1 REV_ignpar=1
+REV_parmrk=1 REV_inpck=1 REV_istrip=1 REV_inlcr=1 REV_igncr=1 REV_icrnl=1
+REV_ixon=1 REV_ixoff=1 REV_tandem=1 REV_iuclc=1 REV_ixany=1 REV_imaxbel=1
+REV_opost=1 REV_olcuc=1 REV_ocrnl=1 REV_onlcr=1 REV_onocr=1 REV_onlret=1
+REV_ofill=1 REV_ofdel=1 REV_isig=1 REV_icanon=1 REV_iexten=1 REV_echo=1
+REV_echoe=1 REV_crterase=1 REV_echok=1 REV_echonl=1 REV_noflsh=1
+REV_xcase=1 REV_tostop=1 REV_echoprt=1 REV_prterase=1 REV_echoctl=1
+REV_ctlecho=1 REV_echoke=1 REV_crtkill=1 REV_evenp=1 REV_parity=1
+REV_oddp=1 REV_nl=1 REV_cooked=1 REV_raw=1 REV_pass8=1 REV_litout=1
+REV_cbreak=1 REV_decctlq=1 REV_tabs=1 REV_lcase=1 REV_LCASE=1
 
 saved_state=.saved-state
 $STTY --save > $saved_state || exit 1
@@ -38,30 +33,33 @@ options=`stty -a|tail +2|tr ';' '\012'|sed '/ = /d;s/^ //'|tr -s ' -' '\012'`
 # Take them one at a time, with and without the leading `-'.
 for opt in $options; do
   $STTY $opt || exit 1
-  if test `reversible $opt` = yes; then
+  rev=`eval echo "\\\$REV_$opt"`
+  if test -n "$rev"; then
     $STTY -$opt || exit 1
   fi
 done
 
-# Take them in pairs.
-for opt1 in $options; do
-  echo .|tr -d '\012'
-  for opt2 in $options; do
+if test -n "$RUN_LONG_TESTS"; then
+  # Take them in pairs.
+  for opt1 in $options; do
+    echo .|tr -d '\012'
+    for opt2 in $options; do
 
-    $STTY $opt1 $opt2 || exit 1
+      $STTY $opt1 $opt2 || exit 1
 
-    test `reversible $opt1` = yes && rev1=yes || rev1=no
-    test `reversible $opt2` = yes && rev2=yes || rev2=no
-    if test $rev1 = yes; then
-      $STTY -$opt1 $opt2 || exit 1
-    fi
-    if test $rev2 = yes; then
-      $STTY $opt1 -$opt2 || exit 1
-    fi
-    if test "$rev1$rev2" = yesyes; then
-      $STTY -$opt1 -$opt2 || exit 1
-    fi
+      rev1=`eval echo "\\\$REV_$opt1"`
+      rev2=`eval echo "\\\$REV_$opt2"`
+      if test -n "$rev1"; then
+	$STTY -$opt1 $opt2 || exit 1
+      fi
+      if test -n "$rev2"; then
+	$STTY $opt1 -$opt2 || exit 1
+      fi
+      if test "$rev1$rev2" = 11; then
+	$STTY -$opt1 -$opt2 || exit 1
+      fi
+    done
   done
-done
+fi
 
 exit 0
