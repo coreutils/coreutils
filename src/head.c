@@ -96,7 +96,7 @@ With more than one FILE, precede each with a header giving the file name.\n\
 With no FILE, or when FILE is -, read standard input.\n\
 \n\
   -c, --bytes=SIZE         print first SIZE bytes\n\
-  -n, --lines=NUMBER   print first NUMBER lines instead of first 10\n\
+  -n, --lines=NUMBER       print first NUMBER lines instead of first 10\n\
   -q, --quiet, --silent    never print headers giving file names\n\
   -v, --verbose            always print headers giving file names\n\
       --help               display this help and exit\n\
