@@ -348,7 +348,7 @@ dc_parse_stream (FILE *fp, const char *filename)
 	    }
 	}
 
-      if (unrecognized)
+      if (unrecognized && (state == ST_TERMSURE || state == ST_TERMYES))
 	{
 	  error (0, 0, _("%s:%lu: unrecognized keyword `%s'"),
 		 filename, (long unsigned) line_number, keywd);
