@@ -1,5 +1,7 @@
 2003-02-17  Jim Meyering  <jim@meyering.net>
 
+	* mmap-stack.h (RUN_WITH_BIG_STACK_4): Define.
+
 	* physmem.c: Undo most of last change.
 	Use sysmp instead, since it provides a cleaner interface.
 	From Kaveh Ghazi.
