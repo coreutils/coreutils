@@ -1,3 +1,59 @@
+Sun Oct 02 17:57:09 1994  Jim Meyering  (meyering@comco.com)
+
+	* tr.c (main): Give an error and fail when squeezing repeats
+	and no non-options are given.  Reported by Tony Robinson
+	(ajr@eng.cam.ac.uk).
+
+	* sort.c (main): Temporarily copy each input file that might be
+	another name for the output file.  When in doubt (e.g. a pipe),
+	copy.  This allows the dangerous (historical -- in cnews) idiom
+	`cat file | sort -o file' to work properly.  Don't rely on this
+	behavior in new shell scripts.  From Paul Eggert (eggert@twinsun.com).
+
+Mon Sep 26 18:01:47 1994  David J. MacKenzie  (djm@churchy.gnu.ai.mit.edu)
+
+	* lib/xwrite.c safe-read.c memchr.c linebuffer.c full-write.c:
+	Remove CONFIG_BROKETS ifdef.
+	* src/Makefile.in lib/Makefile.in: Don't define it.
+
+Sat Sep 24 21:26:27 1994  Jim Meyering  (meyering@comco.com)
+
+	* full-write.c (full_write): Declare argument LEN to be size_t.
+
+Mon Sep 12 13:35:27 1994  Jim Meyering  (meyering@comco.com)
+
+	* tail.c (tail_file): [For multiple files only]: Report truncation
+	of monitored file and reset current file size.  From Franc,ois Pinard.
+
+Sat Aug 27 16:57:20 1994  Jim Meyering  (meyering@comco.com)
+
+	* system.h [BROKEN_STAT_MACROS]: Remove unnecessary #ifdef's.
+	From Franc,ois Pinard.
+
+Tue Jul 26 11:33:53 1994  Jim Meyering  (meyering@comco.com)
+
+	* system.h: Remove `|| defined(_POSIX_VERSION)' from test that
+	decides whether to include <fcntl.h>.  From Francois Pinard.
+
+Wed Jul 13 12:33:34 1994  Jim Meyering  (meyering@comco.com)
+
+	* tr.c (substr): Fix off-by-one allocation error.
+
+Wed Jun 22 01:02:50 1994  Jim Meyering  (meyering@comco.com)
+
+	* tac.c (tac_file): Use O_RDONLY instead of zero in call to open.
+	(tac): Fix typo that had `1' as arg #2 of error after failed read.
+	Use errno instead.  From Michael I Bushnell <mib@gnu.ai.mit.edu>.
+
+Thu May 26 08:46:32 1994  Jim Meyering  (meyering@comco.com)
+
+	* configure.in [INSTALL]: Revert change of March 25.  autoconf
+	has been fixed.
+
+Mon Apr 11 17:25:43 1994  Jim Meyering  (meyering@comco.com)
+
+	* join.c (prline): Remove unused function.  Indent.
+
 Fri May  6 05:44:24 1994  Jim Meyering  (meyering@comco.com)
 
 	* tail.c (tail_forever): Don't print headers when asked not to.

@@ -281,7 +281,7 @@ usage (status)
     fprintf (stderr, "Try `%s --help' for more information.\n", program_name);
   else
     {
-      printf ("Usage: %s [OPTION]... [FILE]...\n", program_name);
+      printf ("Usage: %s [-DIGITS] [OPTION]... [FILE]...\n", program_name);
       fputs ("\
 Mandatory arguments to long options are mandatory for short options too.\n\
 \n\

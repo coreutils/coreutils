@@ -1,4 +1,6 @@
 User-visible changes in release 1.10
+* new program: fmt
+* tail -f on multiple files reports file truncation
 * tail -q corrected so it never prints headers
 * wc -c is much faster when operating on non-regular files
 * unexpand gives a diagnostic (rather than a segfault) when given a name of
