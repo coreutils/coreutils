@@ -49,6 +49,10 @@
 # define S_TYPEISSHM(Stat_ptr) 0
 #endif
 
+#if ! HAVE_FDATASYNC
+# define fdatasync(fd) (errno = ENOSYS, -1)
+#endif
+
 #define ROUND_UP_OFFSET(X, M) ((M) - 1 - (((X) + (M) - 1) % (M)))
 #define PTR_ALIGN(Ptr, M) ((Ptr) \
 			   + ROUND_UP_OFFSET ((char *)(Ptr) - (char *)0, (M)))
@@ -80,6 +84,10 @@
 #define C_SYNC 02000
 /* Use separate input and output buffers, and combine partial input blocks. */
 #define C_TWOBUFS 04000
+#define C_NOCREAT 010000
+#define C_EXCL 020000
+#define C_FDATASYNC 040000
+#define C_FSYNC 0100000
 
 /* The name this program was run with. */
 char *program_name;
@@ -110,6 +118,10 @@ static uintmax_t max_records = (uintmax_t) -1;
 
 /* Bit vector of conversions to apply. */
 static int conversions_mask = 0;
+
+/* Open flags for the input and output files.  */
+static int input_flags = 0;
+static int output_flags = 0;
 
 /* If nonzero, filter characters through the translation table.  */
 static int translation_needed = 0;
@@ -143,13 +155,18 @@ static size_t oc = 0;
 /* Index into current line, for `conv=block' and `conv=unblock'.  */
 static size_t col = 0;
 
-struct conversion
+/* A longest symbol in the struct symbol_values table below.  */
+#define LONGEST_SYMBOL "fdatasync"
+
+/* A symbol and the corresponding integer value.  */
+struct symbol_value
 {
-  char *convname;
-  int conversion;
+  char symbol[sizeof LONGEST_SYMBOL];
+  int value;
 };
 
-static struct conversion conversions[] =
+/* Conversion symbols, for conv="...".  */
+static struct symbol_value const conversions[] =
 {
   {"ascii", C_ASCII | C_TWOBUFS},	/* EBCDIC to ASCII. */
   {"ebcdic", C_EBCDIC | C_TWOBUFS},	/* ASCII to EBCDIC. */
@@ -160,9 +177,26 @@ static struct conversion conversions[] =
   {"ucase", C_UCASE | C_TWOBUFS},	/* Translate lower to upper case. */
   {"swab", C_SWAB | C_TWOBUFS},	/* Swap bytes of input. */
   {"noerror", C_NOERROR},	/* Ignore i/o errors. */
+  {"nocreat", C_NOCREAT},	/* Do not create output file.  */
+  {"excl", C_EXCL},		/* Fail if the output file already exists.  */
   {"notrunc", C_NOTRUNC},	/* Do not truncate output file. */
   {"sync", C_SYNC},		/* Pad input records to ibs with NULs. */
-  {NULL, 0}
+  {"fdatasync", C_FDATASYNC},	/* Synchronize output data before finishing.  */
+  {"fsync", C_FSYNC},		/* Also synchronize output metadata.  */
+  {"", 0}
+};
+
+/* Flags, for iflag="..." and oflag="...".  */
+static struct symbol_value const flags[] =
+{
+  {"append",	O_APPEND},
+  {"direct",	O_DIRECT},
+  {"dsync",	O_DSYNC},
+  {"noctty",	O_NOCTTY},
+  {"nofollow",	O_NOFOLLOW},
+  {"nonblock",	O_NONBLOCK},
+  {"sync",	O_SYNC},
+  {"",		0}
 };
 
 /* Translation table formed by applying successive transformations. */
@@ -290,14 +324,16 @@ Copy a file, converting and formatting according to the options.\n\
 \n\
   bs=BYTES        force ibs=BYTES and obs=BYTES\n\
   cbs=BYTES       convert BYTES bytes at a time\n\
-  conv=KEYWORDS   convert the file as per the comma separated keyword list\n\
+  conv=CONVS      convert the file as per the comma separated symbol list\n\
   count=BLOCKS    copy only BLOCKS input blocks\n\
   ibs=BYTES       read BYTES bytes at a time\n\
 "), stdout);
       fputs (_("\
   if=FILE         read from FILE instead of stdin\n\
+  iflag=FLAGS     read as per the comma separated symbol list\n\
   obs=BYTES       write BYTES bytes at a time\n\
   of=FILE         write to FILE instead of stdout\n\
+  oflag=FLAGS     write as per the comma separated symbol list\n\
   seek=BLOCKS     skip BLOCKS obs-sized blocks at start of output\n\
   skip=BLOCKS     skip BLOCKS ibs-sized blocks at start of input\n\
 "), stdout);
@@ -308,7 +344,8 @@ Copy a file, converting and formatting according to the options.\n\
 BLOCKS and BYTES may be followed by the following multiplicative suffixes:\n\
 xM M, c 1, w 2, b 512, kB 1000, K 1024, MB 1000*1000, M 1024*1024,\n\
 GB 1000*1000*1000, G 1024*1024*1024, and so on for T, P, E, Z, Y.\n\
-Each KEYWORD may be:\n\
+\n\
+Each CONV symbol may be:\n\
 \n\
 "), stdout);
       fputs (_("\
@@ -320,13 +357,36 @@ Each KEYWORD may be:\n\
   lcase     change upper case to lower case\n\
 "), stdout);
       fputs (_("\
+  nocreat   do not create the output file\n\
+  excl      fail if the output file already exists\n\
   notrunc   do not truncate the output file\n\
   ucase     change lower case to upper case\n\
   swab      swap every pair of input bytes\n\
   noerror   continue after read errors\n\
   sync      pad every input block with NULs to ibs-size; when used\n\
               with block or unblock, pad with spaces rather than NULs\n\
+  fdatasync physically write output file data before finishing\n\
+  fsync     likewise, but also write metadata\n\
 "), stdout);
+      fputs (_("\
+\n\
+Each FLAG symbol may be:\n\
+\n\
+  append    append mode (makes sense only for output)\n\
+"), stdout);
+      if (O_DIRECT)
+	fputs (_("  direct    use direct I/O for data\n"), stdout);
+      if (O_DSYNC)
+	fputs (_("  dsync     use synchronized I/O for data\n"), stdout);
+      if (O_SYNC)
+	fputs (_("  sync      likewise, but also for metadata\n"), stdout);
+      if (O_NONBLOCK)
+	fputs (_("  nonblock  use non-blocking I/O\n"), stdout);
+      if (O_NOFOLLOW)
+	fputs (_("  nofollow  do not follow symlinks\n"), stdout);
+      if (O_NOCTTY)
+	fputs (_("  noctty    do not assign controlling terminal from file\n"),
+	       stdout);
       fputs (_("\
 \n\
 Note that sending a SIGUSR1 signal to a running `dd' process makes it\n\
@@ -486,33 +546,47 @@ write_output (void)
   oc = 0;
 }
 
-/* Interpret one "conv=..." option.
+/* Diagnostics for invalid iflag="..." and oflag="..." symbols.  */
+static char const iflag_error_msgid[] = N_("invalid input flag: %s");
+static char const oflag_error_msgid[] = N_("invalid output flag: %s");
+
+/* Interpret one "conv=..." or similar option STR according to the
+   symbols in TABLE, returning the flags specified.  If the option
+   cannot be parsed, use ERROR_MSGID to generate a diagnostic.
    As a by product, this function replaces each `,' in STR with a NUL byte.  */
 
-static void
-parse_conversion (char *str)
+static int
+parse_symbols (char *str, struct symbol_value const *table,
+	       char const *error_msgid)
 {
-  char *new;
-  int i;
+  int value = 0;
 
   do
     {
-      new = strchr (str, ',');
+      struct symbol_value const *entry;
+      char *new = strchr (str, ',');
       if (new != NULL)
 	*new++ = '\0';
-      for (i = 0; conversions[i].convname != NULL; i++)
-	if (STREQ (conversions[i].convname, str))
-	  {
-	    conversions_mask |= conversions[i].conversion;
-	    break;
-	  }
-      if (conversions[i].convname == NULL)
+      for (entry = table; ; entry++)
 	{
-	  error (0, 0, _("invalid conversion: %s"), quote (str));
-	  usage (EXIT_FAILURE);
+	  if (! entry->symbol[0])
+	    {
+	      error (0, 0, _(error_msgid), quote (str));
+	      usage (EXIT_FAILURE);
+	    }
+	  if (STREQ (entry->symbol, str))
+	    {
+	      if (! entry->value)
+		error (EXIT_FAILURE, 0, _(error_msgid), quote (str));
+	      value |= entry->value;
+	      break;
+	    }
 	}
       str = new;
-  } while (new != NULL);
+    }
+  while (str);
+
+  return value;
 }
 
 /* Return the value of STR, interpreted as a non-negative decimal integer,
@@ -574,7 +648,12 @@ scanargs (int argc, char **argv)
       else if (STREQ (name, "of"))
 	output_file = val;
       else if (STREQ (name, "conv"))
-	parse_conversion (val);
+	conversions_mask |= parse_symbols (val, conversions,
+					   N_("invalid conversion: %s"));
+      else if (STREQ (name, "iflag"))
+	input_flags |= parse_symbols (val, flags, iflag_error_msgid);
+      else if (STREQ (name, "oflag"))
+	output_flags |= parse_symbols (val, flags, oflag_error_msgid);
       else
 	{
 	  int invalid = 0;
@@ -638,6 +717,12 @@ scanargs (int argc, char **argv)
     output_blocksize = DEFAULT_BLOCKSIZE;
   if (conversion_blocksize == 0)
     conversions_mask &= ~(C_BLOCK | C_UNBLOCK);
+
+  if (input_flags & (O_DSYNC | O_SYNC))
+    input_flags |= O_RSYNC;
+
+  if ((conversions_mask & (C_EXCL | C_NOCREAT)) == (C_EXCL | C_NOCREAT))
+    error (EXIT_FAILURE, 0, _("cannot combine excl and nocreat"));
 }
 
 /* Fix up translation table. */
@@ -928,6 +1013,22 @@ copy_with_unblock (char const *buf, size_t nread)
     }
 }
 
+/* Set the file descriptor flags for FD that correspond to the nonzero bits
+   in FLAGS.  The file's name is NAME.  */
+
+static void
+set_fd_flags (int fd, int flags, char const *name)
+{
+  if (flags)
+    {
+      int old_flags = fcntl (fd, F_GETFL);
+      int new_flags = old_flags | flags;
+      if (old_flags < 0
+	  || (new_flags != old_flags && fcntl (fd, F_SETFL, new_flags) == -1))
+	error (EXIT_FAILURE, errno, _("setting flags for %s"), quote (name));
+    }
+}
+
 /* The main loop.  */
 
 static int
@@ -994,7 +1095,7 @@ dd_copy (void)
     }
 
   if (max_records == 0)
-    quit (exit_status);
+    return exit_status;
 
   while (1)
     {
@@ -1061,7 +1162,7 @@ dd_copy (void)
 	  if (nwritten != n_bytes_read)
 	    {
 	      error (0, errno, _("writing %s"), quote (output_file));
-	      quit (EXIT_FAILURE);
+	      return EXIT_FAILURE;
 	    }
 	  else if (n_bytes_read == input_blocksize)
 	    w_full++;
@@ -1122,13 +1223,31 @@ dd_copy (void)
       if (nwritten != oc)
 	{
 	  error (0, errno, _("writing %s"), quote (output_file));
-	  quit (EXIT_FAILURE);
+	  return EXIT_FAILURE;
 	}
     }
 
   free (real_buf);
   if (real_obuf)
     free (real_obuf);
+
+  if ((conversions_mask & C_FDATASYNC) && fdatasync (STDOUT_FILENO) != 0)
+    {
+      if (errno != ENOSYS && errno != EINVAL)
+	{
+	  error (0, errno, "fdatasync %s", quote (output_file));
+	  exit_status = EXIT_FAILURE;
+	}
+      conversions_mask |= C_FSYNC;
+    }
+
+  if (conversions_mask & C_FSYNC)
+    while (fsync (STDOUT_FILENO) != 0)
+      if (errno != EINTR)
+	{
+	  error (0, errno, "fsync %s", quote (output_file));
+	  return EXIT_FAILURE;
+	}
 
   return exit_status;
 }
@@ -1174,19 +1293,29 @@ main (int argc, char **argv)
 
   apply_translations ();
 
-  if (input_file != NULL)
+  if (input_file == NULL)
     {
-      if (open_fd (STDIN_FILENO, input_file, O_RDONLY, 0) < 0)
-	error (EXIT_FAILURE, errno, _("opening %s"), quote (input_file));
+      input_file = _("standard input");
+      set_fd_flags (STDIN_FILENO, input_flags, input_file);
     }
   else
-    input_file = _("standard input");
+    {
+      if (open_fd (STDIN_FILENO, input_file, O_RDONLY | input_flags, 0) < 0)
+	error (EXIT_FAILURE, errno, _("opening %s"), quote (input_file));
+    }
 
-  if (output_file != NULL)
+  if (output_file == NULL)
+    {
+      output_file = _("standard output");
+      set_fd_flags (STDOUT_FILENO, output_flags, output_file);
+    }
+  else
     {
       mode_t perms = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH;
       int opts
-	= (O_CREAT
+	= (output_flags
+	   | (conversions_mask & C_NOCREAT ? 0 : O_CREAT)
+	   | (conversions_mask & C_EXCL ? O_EXCL : 0)
 	   | (seek_records || (conversions_mask & C_NOTRUNC) ? 0 : O_TRUNC));
 
       /* Open the output file with *read* access only if we might
@@ -1210,8 +1339,8 @@ main (int argc, char **argv)
 		   quote (output_file));
 
 	  /* Complain only when ftruncate fails on a regular file, a
-	     directory, or a shared memory object, as the 2000-08
-	     POSIX draft specifies ftruncate's behavior only for these
+	     directory, or a shared memory object, as
+	     POSIX 1003.1-2003 specifies ftruncate's behavior only for these
 	     file types.  For example, do not complain when Linux 2.4
 	     ftruncate fails on /dev/fd0.  */
 	  if (ftruncate (STDOUT_FILENO, o) != 0
@@ -1226,10 +1355,6 @@ main (int argc, char **argv)
 	    }
 	}
 #endif
-    }
-  else
-    {
-      output_file = _("standard output");
     }
 
   install_handler (SIGINT, interrupt_handler);
