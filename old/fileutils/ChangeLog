@@ -1,5 +1,6 @@
 2000-06-26  Paul Eggert  <eggert@twinsun.com>
 
+	Now that savedir.c has been cleaned up...
 	* src/chgrp.c (change_dir_group): Don't set errno before
 	invoking savedir, and assume that errno is nonzero if savedir fails.
 	* src/chmod.c (change_dir_mode): Likewise.
