@@ -1,3 +1,17 @@
+2004-01-21  Paul Eggert  <eggert@twinsun.com>
+
+	* argmatch.c (ARGMATCH_DIE) [! defined ARGMATCH_DIE]:
+	Include "exitfail.h", and use exit_failure rather than EXIT_FAILURE.
+	* argmatch.h: Comment fix to match the above.
+	* long-options.c (parse_long_options): Use prototype
+	for usage function arg.  Pass it EXIT_SUCCESS rather than 0,
+	for clarity.
+	* obstack.c (obstack_exit_failure) [!defined _LIBC]:
+	Now a macro referring to exit_failure, instead of a separate
+	variable.  Include "exitfail.h" to get it.
+	* xstrtol.h: Include "exitfail.h".
+	(STRTOL_FATAL_ERROR): Exit with status exit_failure, not 2.
+
 2004-01-21  Jim Meyering  <jim@meyering.net>
 
 	* mktime.c (__mktime_internal) [!_LIBC]: Define to mktime_internal
