@@ -1,6 +1,12 @@
-2002-03-16  Jim Meyering  <meyering@lucent.com>
+2002-03-17  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.12.
+
+	* src/seq.c (usage): Mention that --format=FORMAT must be
+	a *floating-point* format, also in description of that option.
+	Reported by Karl Eichwalder.
+
+2002-03-16  Jim Meyering  <meyering@lucent.com>
 
 	* src/Makefile.am (datadir): Don't define.  Automake does it better.
 	Patch from Albert Chin-A-Young <china@thewrittenword.com>
