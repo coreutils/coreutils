@@ -332,9 +332,13 @@ usage (int status)
 	     program_name);
   else
     {
-      printf (_("Usage: %s [OPTION]...\n"), program_name);
+      printf (_("\
+Usage: %s [OPERAND]...\n\
+  or:  %s OPTION\n\
+"),
+	      program_name, program_name);
       fputs (_("\
-Copy a file, converting and formatting according to the options.\n\
+Copy a file, converting and formatting according to the operands.\n\
 \n\
   bs=BYTES        force ibs=BYTES and obs=BYTES\n\
   cbs=BYTES       convert BYTES bytes at a time\n\
@@ -351,8 +355,6 @@ Copy a file, converting and formatting according to the options.\n\
   seek=BLOCKS     skip BLOCKS obs-sized blocks at start of output\n\
   skip=BLOCKS     skip BLOCKS ibs-sized blocks at start of input\n\
 "), stdout);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
 BLOCKS and BYTES may be followed by the following multiplicative suffixes:\n\
@@ -408,7 +410,12 @@ then to resume copying.\n\
   $ kill -USR1 $pid; sleep 1; kill $pid\n\
   10899206+0 records in\n\
   10899206+0 records out\n\
+\n\
+Options are:\n\
+\n\
 "), stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
   exit (status);
@@ -557,8 +564,8 @@ write_output (void)
 static char const iflag_error_msgid[] = N_("invalid input flag: %s");
 static char const oflag_error_msgid[] = N_("invalid output flag: %s");
 
-/* Interpret one "conv=..." or similar option STR according to the
-   symbols in TABLE, returning the flags specified.  If the option
+/* Interpret one "conv=..." or similar operand STR according to the
+   symbols in TABLE, returning the flags specified.  If the operand
    cannot be parsed, use ERROR_MSGID to generate a diagnostic.
    As a by product, this function replaces each `,' in STR with a NUL byte.  */
 
@@ -633,9 +640,6 @@ scanargs (int argc, char **argv)
 {
   int i;
 
-  --argc;
-  ++argv;
-
   for (i = optind; i < argc; i++)
     {
       char *name, *val;
@@ -644,7 +648,7 @@ scanargs (int argc, char **argv)
       val = strchr (name, '=');
       if (val == NULL)
 	{
-	  error (0, 0, _("unrecognized option %s"), quote (name));
+	  error (0, 0, _("unrecognized operand %s"), quote (name));
 	  usage (EXIT_FAILURE);
 	}
       *val++ = '\0';
@@ -696,7 +700,7 @@ scanargs (int argc, char **argv)
 	    max_records = n;
 	  else
 	    {
-	      error (0, 0, _("unrecognized option %s=%s"),
+	      error (0, 0, _("unrecognized operand %s=%s"),
 		     quote_n (0, name), quote_n (1, val));
 	      usage (EXIT_FAILURE);
 	    }
@@ -1356,6 +1360,8 @@ main (int argc, char **argv)
 
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE, VERSION,
 		      usage, AUTHORS, (char const *) NULL);
+  if (getopt_long (argc, argv, "", NULL, NULL) != -1)
+    usage (EXIT_FAILURE);
 
   /* Don't close stdout on exit from here on.  */
   closeout_func = NULL;
@@ -1422,7 +1428,7 @@ main (int argc, char **argv)
 
 	  /* Complain only when ftruncate fails on a regular file, a
 	     directory, or a shared memory object, as
-	     POSIX 1003.1-2003 specifies ftruncate's behavior only for these
+	     POSIX 1003.1-2004 specifies ftruncate's behavior only for these
 	     file types.  For example, do not complain when Linux 2.4
 	     ftruncate fails on /dev/fd0.  */
 	  if (ftruncate (STDOUT_FILENO, o) != 0
