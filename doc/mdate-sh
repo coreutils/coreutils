@@ -82,7 +82,7 @@ case $3 in
        # be used for file modified in the last year.
        if (expr $nummonth \> $nummonthtod) > /dev/null;
        then
-	 year=`expr year - 1`
+	 year=`expr $year - 1`
        fi
        ;;
   *) year=$3;;
