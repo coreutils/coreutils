@@ -1,5 +1,7 @@
 Changes in release 4.1:
 [4.0q]
+* `mv DIR EXISTING-FILE' no longer removes EXISTING-FILE.  Now it gets an error
+  as POSIX says it must.
 * touch no longer hangs on fifos
 [4.0p]
 * various tools: quote multibyte characters correctly in diagnostics
