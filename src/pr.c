@@ -299,7 +299,7 @@ static void print_char __P ((int c));
 static void cleanup __P ((void));
 static void first_last_page __P ((char *pages));
 static void print_sep_string __P ((void));
-static void separator_string (char *optarg_S);
+static void separator_string __P ((const char *optarg_S));
 
 /* The name under which this program was invoked. */
 char *program_name;
@@ -661,7 +661,7 @@ first_last_page (char *pages)
 /* Estimate length of col_sep_string with option -s[STRING] */
 
 static void
-separator_string (char *optarg_S)
+separator_string (const char *optarg_S)
 {
   col_sep_length = (int) strlen (optarg_S);
   col_sep_string = (char *) xmalloc (col_sep_length + 1);
