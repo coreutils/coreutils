@@ -24,8 +24,8 @@ fi
 
 dd bs=1 seek=8G of=big < /dev/null 2> /dev/null
 if test $? != 0; then
-  echo "$0: cannot create a file large enough for this test" 1>&2
-  echo "$0: that may be because file offsets are only 32 bits" 1>&2
+  echo "$0: cannot create a file large enough for this test; possibly" 1>&2
+  echo "$0: because file offsets are only 32 bits on this file system" 1>&2
   (exit 77); exit 77
 fi
 
