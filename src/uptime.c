@@ -141,8 +141,8 @@ print_uptime (int n)
 static void
 uptime (const char *filename)
 {
-  int users = read_utmp (filename);
-  print_uptime (users);
+  int n_users = read_utmp (filename);
+  print_uptime (n_users);
 }
 
 static void
