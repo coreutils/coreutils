@@ -1,6 +1,10 @@
-2001-11-01  Jim Meyering  <meyering@lucent.com>
+2001-11-02  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.1.
+
+	* src/ls.c: Use XMALLOC and XREALLOC in a several places.  It's cleaner.
+
+2001-11-01  Jim Meyering  <meyering@lucent.com>
 
 	* src/ls.c: Include dirfd.h.
 	(print_dir): If dirfd fails, resort to using stat.
