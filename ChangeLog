@@ -1,6 +1,15 @@
-2005-04-05  Jim Meyering  <jim@meyering.net>
+2005-04-05  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	* man/Makefile.am (.x.1): Remove "COMMAND.td/" from examples.
+	* src/basename.c (usage): Add examples.
+	* src/cat.c (usage): Likewise.
+	* src/chgrp.c (usage): Likewise.
+	* src/chown.c (usage): Likewise.
+	* src/dirname.c (usage): Likewise.
+
+2005-04-05  Jim Meyering  <jim@meyering.net>
 
 	* src/nice.c (usage): Mention that some shells provide a
 	built-in function by the same name.
