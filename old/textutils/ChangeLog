@@ -1,3 +1,11 @@
+Thu Jun 15 13:42:38 1995  Jim Meyering  (meyering@comco.com)
+
+	* md5sum.c: Don't include values.h.
+	[__P]: Undefine it.
+
+	* md5sum.c: [UNIX || unix]: Also test __UNIX__, __unix__,
+	and _POSIX_VERSION.  Reported by Arne H. Juul.
+
 Tue Jun 13 21:20:10 1995  Jim Meyering  (meyering@comco.com)
 
 	* tr.c [NDEBUG]: Define it to disable assertions.  Some systems
@@ -61,7 +69,7 @@ Sat May 27 00:35:47 1995  Jim Meyering  (meyering@comco.com)
 Thu May 25 00:06:50 1995  Jim Meyering  (meyering@comco.com)
 
 	* tail.c (tail_lines): Change one more `long' to `off_t'.
-	Otherwise, tail didn't work on NetBSD.  From by Arne H. Juul.
+	Otherwise, tail didn't work on NetBSD.  From Arne H. Juul.
 
 	* csplit.c [struct control]: Change type of `repeat' to unsigned
 	long to avoid conversion warning.
