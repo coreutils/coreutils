@@ -2,6 +2,7 @@
    x use getopt_long
    x use error, not pferror
    - bracket strings with _(...) for gettext
+   - use consistent non-capitalizatin in error messages
  */
 
 /*
@@ -719,7 +720,7 @@ dopass (int fd, char const *name, off_t size, int type,
   thresh = 0;
   if (n)
     {
-      pfstatus ("%s: pass %lu/%lu (%s)...", name, k, n, pass_string);
+      pfstatus (_("%s: pass %lu/%lu (%s)...)"), name, k, n, pass_string);
       if (size > VERBOSE_UPDATE)
 	thresh = size - VERBOSE_UPDATE;
     }
@@ -745,8 +746,7 @@ dopass (int fd, char const *name, off_t size, int type,
 		 may fail with a different errno.  */
 	      /* This error confuses people. */
 	      if (e == EBADF && fd == 0)
-		fputs (
-			"(Did you remember to open stdin read/write with \"<>file\"?)\n",
+		fputs (_("(Did you remember to open stdin read/write with \"<>file\"?)\n"),
 			stderr);
 	      return -1;
 	    }
@@ -758,7 +758,7 @@ dopass (int fd, char const *name, off_t size, int type,
       /* Time to print progress? */
       if (cursize <= thresh && n)
 	{
-	  pfstatus ("%s: pass %lu/%lu (%s)...%lu/%lu K",
+	  pfstatus (_("%s: pass %lu/%lu (%s)...%lu/%lu K"),
 		    name, k, n, pass_string,
 		    (size - cursize + 1023) / 1024, (size + 1023) / 1024);
 	  if (thresh > VERBOSE_UPDATE)
@@ -1146,7 +1146,7 @@ wipename (char *oldname, struct Options const *flags)
   int err;
   int dirfd;			/* Try to open directory to sync *it* */
 
-  pfstatus ("%s: deleting", oldname);
+  pfstatus (_("%s: deleting"), oldname);
 
   newname = strdup (oldname);	/* This is a malloc */
   if (!newname)
@@ -1194,7 +1194,7 @@ wipename (char *oldname, struct Options const *flags)
 		sync ();	/* Force directory out */
 	      if (origname)
 		{
-		  pfstatus ("%s: renamed to `%s'",
+		  pfstatus (_("%s: renamed to `%s'"),
 			    origname, newname);
 		  if (flags->verbose > 1)
 		    flushstatus ();
@@ -1214,7 +1214,7 @@ wipename (char *oldname, struct Options const *flags)
   if (origname)
     {
       if (!err)
-	pfstatus ("%s: deleted", origname);
+	pfstatus (_("%s: deleted"), origname);
       free (origname);
     }
   return err;
