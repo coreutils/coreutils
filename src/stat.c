@@ -36,6 +36,7 @@
 # define is_flask_enabled() 0
 # define stat_secure(a,b,c) stat(a,b)
 # define lstat_secure(a,b,c) lstat(a,b)
+# define statfs_secure(a,b,c) statfs(a,b)
 #endif
 
 #define PROGRAM_NAME "stat"
@@ -368,11 +369,11 @@ print_statfs (char *pformat, char m, char const *filename,
       printf (pformat, sid);
       break;
     case 'C':
-      rv = security_sid_to_context (sid, (security_context_t *) & sbuf,
+      rv = security_sid_to_context (sid, (security_context_t *) &sbuf,
 				    &sbuflen);
       if (rv < 0)
 	sprintf (sbuf, "<error finding security context %d>", sid);
-      printf (sbuf);
+      fputs (sbuf, stdout);
       break;
 #endif
     default:
@@ -464,11 +465,11 @@ print_stat (char *pformat, char m, char const *filename,
       printf (pformat, sid);
       break;
     case 'C':
-      rv = security_sid_to_context (sid, (security_context_t *) & sbuf,
+      rv = security_sid_to_context (sid, (security_context_t *) &sbuf,
 				    &sbuflen);
       if (rv < 0)
 	sprintf (sbuf, "<error finding security context %d>", sid);
-      printf (sbuf);
+      fputs (sbuf, stdout);
       break;
 #endif
     case 'u':
@@ -500,13 +501,8 @@ print_stat (char *pformat, char m, char const *filename,
       printf (pformat, minor (statbuf->st_rdev));
       break;
     case 's':
-#ifdef __USE_FILE_OFFSET64
       strcat (pformat, "llu");
       printf (pformat, (unsigned long long) statbuf->st_size);
-#else
-      strcat (pformat, "u");
-      printf (pformat, (unsigned int) statbuf->st_size);
-#endif
       break;
     case 'b':
       strcat (pformat, "u");
@@ -616,12 +612,11 @@ do_statfs (char const *filename, int terse, int secure, char const *format)
   SECURITY_ID_T sid = -1;
   int i;
 
-#ifdef FLASK_LINUX
   if (secure)
     i = statfs_secure (filename, &statfsbuf, &sid);
   else
-#endif
     i = statfs (filename, &statfsbuf);
+
   if (i == -1)
     {
       perror (filename);
