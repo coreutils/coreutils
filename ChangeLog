@@ -14,8 +14,8 @@
 2004-11-19  Alfred M. Szmidt  <ams@gnu.org>
 
 	* src/ls.c (usage): Clarified description of --no-group (-G),
-        --human-readable (-h), --inode (-i), --size (-s), --time,
-        and --time-style.
+	--human-readable (-h), --inode (-i), --size (-s), --time,
+	and --time-style.
 
 2004-11-19  Jim Meyering  <jim@meyering.net>
 
