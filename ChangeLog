@@ -1,6 +1,16 @@
-2003-05-14  Jim Meyering  <jim@meyering.net>
+2003-05-21  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
+
+	* src/head.c (elide_tail_lines_pipe): Fix a thinko.
+	This sort of thing is why it'd be *Really Good* to factor
+	out the common code used here and in tail.c.
+
+	* src/stat.c: Fix portability problem on FreeBSD5.0.
+	FIXME: in progress
+	Reported by Nelson Beebe.
+
+2003-05-14  Jim Meyering  <jim@meyering.net>
 
 	* src/head.c (usage): Document new feature: --bytes=-N and --lines=-N.
 
