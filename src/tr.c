@@ -1274,7 +1274,7 @@ card_of_complement (struct Spec_list *s)
   int cardinality = N_CHARS;
   SET_TYPE in_set[N_CHARS];
 
-  memset (in_set, 0, N_CHARS * sizeof (in_set[0]));
+  memset (in_set, 0, sizeof in_set);
   s->state = BEGIN_STATE;
   while ((c = get_next (s, NULL)) != -1)
     if (!in_set[c]++)
