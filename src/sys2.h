@@ -526,3 +526,18 @@ char *base_name PARAMS ((char const *));
 #ifndef ATTRIBUTE_UNUSED
 # define ATTRIBUTE_UNUSED __attribute__ ((__unused__))
 #endif
+
+#if defined strdupa
+# define ASSIGN_STRDUPA(DEST, S)		\
+  do { DEST = strdupa(S); } while (0)
+#else
+# define ASSIGN_STRDUPA(DEST, S)		\
+  do						\
+    {						\
+      const char *s_ = (S);			\
+      size_t len_ = strlen (s_) + 1;		\
+      char *tmp_dest_ = (char *) alloca (len_);	\
+      DEST = memcpy (tmp_dest_, (s_), len_);	\
+    }						\
+  while (0)
+#endif
