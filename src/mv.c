@@ -126,7 +126,7 @@ rm_option_init (struct rm_options *x)
 static void
 cp_option_init (struct cp_options *x)
 {
-  x->copy_as_regular = 1;  /* FIXME: maybe make this an option */
+  x->copy_as_regular = 0;  /* FIXME: maybe make this an option */
   x->dereference = 0;
   x->force = 0;
   x->hard_link = 0;
