@@ -1,6 +1,28 @@
-2004-12-11  Jim Meyering  <jim@meyering.net>
+2004-12-13  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	* src/ls.c (gobble_file): Change arg name to be command_line_arg
+	rather than explicit_arg, for consistency with copy.c.
+	(extract_dirs_from_files): Remove ignore_dot_and_dot_dot arg, since
+	it is deducible from dirname arg.  All callers changed.
+	(extract_dirs_from_files, print_dir, queue_directory):
+	Add command_line_arg arg.  All callers changed.
+	(struct pending): Add command_line_arg member.
+	(main): Use NULL rather than 0 when appropriate.
+	(set_exit_status, file_failure): New functions.
+	(queue_directory): Store command_line_arg into new structure.
+	(print_dir, gobble_file, get_link_name):
+	Use file_failure to report problems in accessing files,
+	so that the exit status is set consistently.
+	(print_dir): Simplify readdir failure code yet again.
+	If closedir fails, report "closing directory" rather than "reading
+	directory" failure.
+	(xstrcoll): Use set_exit_status to set status on failure.
+	* tests/ls-2/tests (no-a-isdir-b): This now exits with status 2,
+	not status 1.
+
+2004-12-11  Jim Meyering  <jim@meyering.net>
 
 	Avoid a race condition vulnerability in chown, when used with
 	--from=O:G and without the (-h) --no-dereference option.
