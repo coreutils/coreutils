@@ -3155,8 +3155,6 @@ works.
 
 @end table
 
-@vindex LC_ALL
-@vindex LC_COLLATE
 @cindex sort stability
 @cindex sort's last-resort comparison
 A pair of lines is compared as follows:
@@ -3172,6 +3170,8 @@ comparison} so that lines in which all fields compare equal are left
 in their original relative order.  The @option{--unique}
 (@option{-u}) option also disables the last-resort comparison.
 
+@vindex LC_ALL
+@vindex LC_COLLATE
 Unless otherwise specified, all comparisons use the character collating
 sequence specified by the @env{LC_COLLATE} locale.@footnote{If you
 use a non-@acronym{POSIX} locale (e.g., by setting @env{LC_ALL}
