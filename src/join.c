@@ -176,6 +176,8 @@ from 1.  FORMAT is one or more comma or blank separated specifications,\n\
 each being `FILENUM.FIELD' or `0'.  Default FORMAT outputs the join field,\n\
 the remaining fields from FILE1, the remaining fields from FILE2, all\n\
 separated by CHAR.\n\
+\n\
+Important: FILE1 and FILE2 must be sorted on the join fields.\n\
 "), stdout);
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
