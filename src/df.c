@@ -146,8 +146,14 @@ print_header (void)
   else
     {
       char buf[LONGEST_HUMAN_READABLE + 1];
-      printf (" %4s-blocks      Used Available Use%%",
-	      human_readable (output_block_size, buf, 1, -1024));
+      char *p = human_readable (output_block_size, buf, 1, -1024);
+
+      /* Replace e.g. "1.0k" by "1k".  */
+      size_t plen = strlen (p);
+      if (3 <= plen && strncmp (p + plen - 3, ".0", 2) == 0)
+	strcpy (p + plen - 3, p + plen - 1);
+
+      printf (" %4s-blocks      Used Available Use%%", p);
     }
 
   printf (" Mounted on\n");
