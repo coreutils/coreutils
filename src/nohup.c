@@ -28,6 +28,7 @@
 #include "long-options.h"
 #include "path-concat.h"
 #include "quote.h"
+#include "cloexec.h"
 
 #define PROGRAM_NAME "nohup"
 
@@ -147,6 +148,10 @@ main (int argc, char **argv)
 	 not change anything, and at worst, it'll lead to suppression of
 	 the post-failed-execve diagnostic.  */
       saved_stderr_fd = dup (STDERR_FILENO);
+
+      if (set_cloexec_flag (saved_stderr_fd, 1) == -1)
+	error (NOHUP_FAILURE, errno,
+	       _("failed to set the copy of stderr to close on exec"));
 
       if (dup2 (fd, STDERR_FILENO) == -1)
 	error (NOHUP_FAILURE, errno, _("failed to redirect standard error"));
