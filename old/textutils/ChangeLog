@@ -8,6 +8,7 @@ Thu May  4 23:15:58 1995  Jim Meyering  (meyering@comco.com)
 
 	* sort.c Don't hard-code /tmp.
 	[DEFAULT_TMPDIR]: Use this instead.
+	* tac.c (save_stdin): Likewise.
 
 	* (set_ordering): Properly parse arguments like `+x.yn'.
 	Reported by John Salmon (johns@mullet.anu.edu.au).
@@ -17,7 +18,7 @@ Wed Apr 26 23:48:13 1995  Jim Meyering  (meyering@comco.com)
 
 	* sort.c (tempname): AND-off high bits of pid so that its decimal
 	string representation is no longer than five digits.
-	From Hans Verkuil (hans@wyst.hobby.nl)
+	From Hans Verkuil (hans@wyst.hobby.nl).
 
 Thu Apr 20 23:09:33 1995  Jim Meyering  (meyering@comco.com)
 
