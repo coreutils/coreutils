@@ -2,6 +2,9 @@
 
 	* Version 5.0.90.
 
+	* tests/help-version (expected_failure_status_expr): Record that
+	expr exits with status of 3 for e.g., a write error.
+
 	* tests/priv-check: Use `id -u' to see if we're running as root,
 	rather than trying go write to an write-protected file.
 	When running as root, ensure $NON_ROOT_USERNAME is valid.
