@@ -9,6 +9,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 - date -d DATE can now parse a DATE string like May-23-2003
 
 ** Bug fixes
+- split's --verbose option works once again [broken in 4.5.10 and 5.0]
 - tail -f is no longer subject to a race condition that could make it
   delay displaying the last part of a file that had stopped growing.  That
   bug could also make tail -f give an unwarranted `file truncated' warning.
