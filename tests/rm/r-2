@@ -16,6 +16,21 @@ mkdir $tmp $tmp/a $tmp/a/b
 > $tmp/a/f
 > $tmp/a/b/g
 
+# FIXME: if this fails, it's a framework failure
+cat <<EOF > $tmp/$test.E
+removing any entries of directory $tmp/a
+removing any entries of directory $tmp/a/b
+removing non-directory $tmp/a/b/g
+removing the directory itself: $tmp/a/b
+removing non-directory $tmp/a/f
+removing the directory itself: $tmp/a
+EOF
+
+LANGUAGE=C
+export LANGUAGE
+LANG=C
+export LANG
+
 fail=0
 $RM --verbose -r $tmp/a > $tmp/$test.O || fail=1
 
@@ -23,16 +38,9 @@ if test -d $tmp/a; then
   fail=1
 fi
 
-cat <<EOF > $tmp/$test.E
-$tmp/a
-$tmp/a/b
-$tmp/a/b/g
-$tmp/a/f
-EOF
-
 # Compare expected and actual output.
 cmp $tmp/$test.E $tmp/$test.O || fail=1
 
-rm -rf $tmp
+#rm -rf $tmp
 
 exit $fail

@@ -21,15 +21,22 @@ mkdir $tmp/a $tmp/a/a || test_failure=1
 > $tmp/b || test_failure=1
 
 cat <<EOF > $tmp/$test.E || test_failure=1
-$tmp/a
-$tmp/a/a
-$tmp/b
+removing any entries of directory $tmp/a
+removing any entries of directory $tmp/a/a
+removing the directory itself: $tmp/a/a
+removing the directory itself: $tmp/a
+removing non-directory $tmp/b
 EOF
 
 if test $test_failure = 1; then
   echo 'failure in testing framework'
   exit 1
 fi
+
+LANGUAGE=C
+export LANGUAGE
+LANG=C
+export LANG
 
 fail=0
 $RM --verbose -r $tmp/a $tmp/b > $tmp/$test.O || fail=1
