@@ -421,6 +421,9 @@ print_user (const STRUCT_UTMP *utmp_ent, time_t boottime)
 	    }
 	  sprintf (hoststr, "(%s)", host);
 	}
+
+      if (host != ut_host)
+	free (host);
     }
   else
     {

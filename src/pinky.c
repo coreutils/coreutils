@@ -310,6 +310,9 @@ print_entry (const STRUCT_UTMP *utmp_ent)
 	printf (" %s:%s", host, display);
       else
 	printf (" %s", host);
+
+      if (host != ut_host)
+	free (host);
     }
 #endif
 
