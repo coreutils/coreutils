@@ -1,8 +1,16 @@
-1998-07-16  Jim Meyering  <meyering@ascend.com>
+1998-07-25  Jim Meyering  <meyering@ascend.com>
 
 	* Version 1.22f.
 
-	* src/chown.c: Include lchown.h.
+	* tests/sort/Test.pm: Add two tests relating to this.
+	* src/sort.c (main): Stat all non-`-' input file files (and fail if a
+	stat fails) when an output file is specified by `-o' but doesn't exist.
+	Reported by Will Edgington.
+
+	* tests/sort/Test.pm: New tests of -o.
+
+1998-07-16  Jim Meyering  <meyering@ascend.com>
+
 	* lib/Makefile.am (noinst_HEADERS): Add lchown.h.
 	* lib/lchown.h: New file, just to define ENOSYS on systems that lack it.
 	* lib/lchown.c: Include lchown.h.
