@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1996, 1997, 1998, 1999, 2001, 2002
+/* Copyright (C) 1991, 1992, 1993, 1996, 1997, 1998, 1999, 2001, 2002, 2003
    Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -35,10 +35,6 @@ extern "C" {
    non-ANSI C where `const' is problematical.  */
 # endif /* C++ or ANSI C.  */
 
-# ifndef __const
-#  define __const const
-# endif
-
 /* We #undef these before defining them because some losing systems
    (HP-UX A.08.07 for example) define these in <unistd.h>.  */
 # undef	FNM_PATHNAME
@@ -70,7 +66,7 @@ extern "C" {
 
 /* Match NAME against the filename pattern PATTERN,
    returning zero if it matches, FNM_NOMATCH if not.  */
-extern int fnmatch __P ((__const char *__pattern, __const char *__name,
+extern int fnmatch __P ((const char *__pattern, const char *__name,
 			 int __flags));
 
 # ifdef	__cplusplus
