@@ -157,6 +157,7 @@ copy_dir (const char *src_path_in, const char *dst_path_in, int new_dst,
    If the source file contains holes, copies holes and blocks of zeros
    in the source file as holes in the destination file.
    (Holes are read as zeroes by the `read' system call.)
+   Use DST_MODE as the 3rd argument in the call to open.
    Return 0 if successful, -1 if an error occurred.
    FIXME: describe sparse_mode.  */
 
