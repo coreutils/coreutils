@@ -366,7 +366,7 @@
 2001-08-19  Jim Meyering  <meyering@lucent.com>
 
 	* src/Makefile.am (bin_PROGRAMS): Add kill.
-	* src/kill.c: New file.
+	* src/kill.c: New program.  Written by Marcus Brinkmann.
 
 2001-08-19  Jim Meyering  <meyering@lucent.com>
 
