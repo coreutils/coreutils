@@ -3211,7 +3211,7 @@ Paste the lines of one file at a time rather than one line from each
 file.
 
 @item -d @var{delim-list}
-@itemx --delimiters @var{delim-list}
+@itemx --delimiters=@var{delim-list}
 @opindex -d
 @opindex --delimiters
 Consecutively use the characters in @var{delim-list} instead of
