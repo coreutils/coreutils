@@ -1,3 +1,8 @@
+2002-04-28  Paul Eggert  <eggert@twinsun.com>
+
+	* coreutils.texi (kill invocation): Document the above.
+	Document POSIX signals better.
+
 2002-04-15  Jim Meyering  <meyering@lucent.com>
 
 	* coreutils.texi: Document kill.
