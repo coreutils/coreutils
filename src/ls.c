@@ -1020,6 +1020,7 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 'u':
+	  sort_type = sort_time;
 	  time_type = time_atime;
 	  break;
 
