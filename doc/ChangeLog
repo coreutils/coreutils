@@ -1,3 +1,7 @@
+2002-04-28  Jim Meyering  <meyering@lucent.com>
+
+	* coreutils.texi: Change `@code{PROG}' to `@command{PROG}'.
+
 2002-04-28  Paul Eggert  <eggert@twinsun.com>
 
 	* coreutils.texi (kill invocation): Document the above.
