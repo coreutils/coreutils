@@ -1,4 +1,5 @@
 error.h
+exit.h
 fnmatch.h
 fts.c
 fts_.h
