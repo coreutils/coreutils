@@ -1,3 +1,14 @@
+1998-08-18  Paul Eggert  <eggert@twinsun.com>
+
+	Port nanosecond-resolution times to UnixWare 2.1.2 and
+	pedantic Solaris 2.6.
+
+	* st_mtim.m4 (AC_STRUCT_ST_MTIM_NSEC): Renamed from
+	AC_STRUCT_ST_MTIM.
+	* st_mtim.m4 (AC_STRUCT_ST_MTIM_NSEC):
+	Generate name of ns member, instead of just 1 or undef.
+	Allow for UnixWare 2.1.2 and Solaris 2.6 if in pedantic mode.
+
 1998-08-15  Jim Meyering  <meyering@ascend.com>
 
 	* ssize_t.m4 (jm_TYPE_SSIZE_T): Remove file.
