@@ -1,3 +1,7 @@
+2000-02-27  Jim Meyering  <meyering@lucent.com>
+
+	* check-decl.m4: Add getenv to the list.
+
 2000-02-23  Jim Meyering  <meyering@lucent.com>
 
 	* check-decl.m4: Now that we have the new AC_CHECK_DECLS, use it
