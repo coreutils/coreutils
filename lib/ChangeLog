@@ -1,3 +1,17 @@
+2005-04-04  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* getdate.y (parser_control): rels_seen is now a boolean, not a
+	count, since there's no maximum.  All uses changed.
+	Add member dsts_seen.
+	(local_zone): Accumulate dsts_seen rather than relying on tm_isdst
+	not being INT_MAX.
+	(get_date): Initialize dsts_seen, and check that it doesn't go over 1.
+	Use pc_rels_seen to decide whther a date is absolute.
+
+	* getdate.y (number): Don't overwrite year.
+	(get_date): Initialize pc.year.digits to 0, not 4, to enable above
+	check.
+
 2005-03-30  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* readutmp.h (read_utmp): New arg OPTIONS.  All uses changed.
