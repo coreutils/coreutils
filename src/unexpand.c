@@ -235,6 +235,7 @@ unexpand (void)
   int next_tab_column;		/* Column the next tab stop is on. */
   int convert = 1;		/* If nonzero, perform translations. */
   unsigned int pending = 0;	/* Pending columns of blanks. */
+  int saved_errno;
 
   fp = next_file ((FILE *) NULL);
   if (fp == NULL)
@@ -246,6 +247,7 @@ unexpand (void)
   for (;;)
     {
       c = getc (fp);
+      saved_errno = errno;
 
       if (c == ' ' && convert && column < TAB_STOP_SENTINEL)
 	{
@@ -325,6 +327,7 @@ unexpand (void)
 
 	  if (c == EOF)
 	    {
+	      errno = saved_errno;
 	      fp = next_file (fp);
 	      if (fp == NULL)
 		break;		/* No more files. */
