@@ -3,7 +3,7 @@
 **  Originally written by Steven M. Bellovin <smb@research.att.com> while
 **  at the University of North Carolina at Chapel Hill.  Later tweaked by
 **  a couple of people on Usenet.  Completely overhauled by Rich $alz
-**  <rsalz@bbn.com> and Jim Berets <jberets@bbn.com> in August, 1990;
+**  <rsalz@bbn.com> and Jim Berets <jberets@bbn.com> in August, 1990.
 **
 **  This grammar has 13 shift/reduce conflicts.
 **
