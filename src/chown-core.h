@@ -20,7 +20,7 @@
 
 enum Change_status
 {
-  CH_NOT_APPLIED,
+  CH_NOT_APPLIED = 1,
   CH_SUCCEEDED,
   CH_FAILED,
   CH_NO_CHANGE_REQUESTED
