@@ -38,10 +38,10 @@ INSTALL_DATA = @INSTALL_DATA@
 
 CC = @CC@
 GENCAT = @GENCAT@
-GMSGFMT = @GMSGFMT@
+GMSGFMT = PATH=../src:$$PATH @GMSGFMT@
 MSGFMT = @MSGFMT@
-XGETTEXT = @XGETTEXT@
-MSGMERGE = msgmerge
+XGETTEXT = PATH=../src:$$PATH @XGETTEXT@
+MSGMERGE = PATH=../src:$$PATH msgmerge
 
 DEFS = @DEFS@
 CFLAGS = @CFLAGS@
@@ -87,8 +87,8 @@ INSTOBJEXT = @INSTOBJEXT@
 
 all: all-@USE_NLS@
 
-all-yes: cat-id-tbl.c $(CATALOGS)
-all-no all-gettext:
+all-yes all-gettext: cat-id-tbl.c $(CATALOGS)
+all-no:
 
 $(PACKAGE).pot: $(POTFILES)
 	$(XGETTEXT) --default-domain=$(PACKAGE) --directory=$(top_srcdir) \
@@ -175,7 +175,7 @@ mostlyclean:
 clean: mostlyclean
 
 distclean: clean
-	rm -f Makefile Makefile.in POTFILES *.mo *.msg *.cat
+	rm -f Makefile Makefile.in POTFILES *.mo *.msg *.cat *.cat.m
 
 maintainer-clean: distclean
 	@echo "This command is intended for maintainers to use;"
@@ -190,11 +190,13 @@ dist dist-gettext: update-po $(DISTFILES)
 
 update-po: Makefile
 	$(MAKE) $(PACKAGE).pot
+	PATH=`pwd`/../src:$$PATH; \
 	cd $(srcdir); \
 	catalogs='$(CATALOGS)'; \
 	for cat in $$catalogs; do \
 	  lang=`echo $$cat | sed 's/$(CATOBJEXT)$$//'`; \
 	  mv $$lang.po $$lang.old.po; \
+	  echo "$$lang:"; \
 	  if $(MSGMERGE) $$lang.old.po $(PACKAGE).pot -o $$lang.po; then \
 	    rm -f $$lang.old.po; \
 	  else \
