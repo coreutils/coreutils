@@ -303,16 +303,14 @@ strdup __argz_count __argz_stringify __argz_next])
    dnl Generate list of files to be processed by xgettext which will
    dnl be included in po/Makefile.
    test -d po || mkdir po
-   changequote(, )dnl
    case "$srcdir" in
    .)
      posrcprefix="../" ;;
-   /* | [A-Za-z]:*)
+   /* | [[A-Za-z]]:*)
      posrcprefix="$srcdir/" ;;
    *)
      posrcprefix="../$srcdir/" ;;
    esac
-   changequote([, ])dnl
    rm -f po/POTFILES
    sed -e "/^#/d" -e "/^\$/d" -e "s,.*,	$posrcprefix& \\\\," -e "\$s/\(.*\) \\\\/\1/" \
 	< $srcdir/po/POTFILES.in > po/POTFILES
