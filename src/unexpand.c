@@ -96,10 +96,18 @@ static int have_read_stdin;
 /* Status to return to the system. */
 static int exit_status;
 
+/* For long options that have no equivalent short option, use a
+   non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
+enum
+{
+  CONVERT_FIRST_ONLY_OPTION = CHAR_MAX + 1
+};
+
 static struct option const longopts[] =
 {
   {"tabs", required_argument, NULL, 't'},
   {"all", no_argument, NULL, 'a'},
+  {"first-only", no_argument, NULL, CONVERT_FIRST_ONLY_OPTION},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
@@ -390,6 +398,10 @@ main (int argc, char **argv)
   int tabval = -1;		/* Value of tabstop being read, or -1. */
   int c;			/* Option character. */
 
+  /* If nonzero, cancel the effect of any -a (explicit or implicit in -t),
+     so that only leading white space will be considered.  */
+  int convert_first_only = 0;
+
   program_name = argv[0];
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
@@ -417,6 +429,9 @@ main (int argc, char **argv)
 	  convert_entire_line = 1;
 	  parse_tabstops (optarg);
 	  break;
+	case CONVERT_FIRST_ONLY_OPTION:
+	  convert_first_only = 1;
+	  break;
 	case ',':
 	  add_tabstop (tabval);
 	  tabval = -1;
@@ -430,6 +445,9 @@ main (int argc, char **argv)
 	  break;
 	}
     }
+
+  if (convert_first_only)
+    convert_entire_line = 0;
 
   add_tabstop (tabval);
 
