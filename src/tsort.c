@@ -181,7 +181,7 @@ search_item (struct item *root, const char *str)
 	  else
 	    {
 	      r = p = s->right;
-	      a = +1;
+	      a = 1;
 	    }
 
 	  while (p != q)
@@ -194,7 +194,7 @@ search_item (struct item *root, const char *str)
 		}
 	      else
 		{
-		  p->balance = +1;
+		  p->balance = 1;
 		  p = p->right;
 		}
 	    }
