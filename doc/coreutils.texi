@@ -6231,6 +6231,24 @@ tape=/dev/rmt/0
 (dd bs=4k seek=1 count=0 && dd bs=512k) <$tape >$disk
 @end example
 
+Note that sending a @samp{SIGUSR1} signal to a running @command{dd}
+process makes it print to standard error the number of records read
+and written so far, then to resume copying.  In the example below,
+@command{dd} is run in the background to copy 10 million blocks.
+The @command{kill} command makes it output the first pair of
+intermediate record counts,
+and when @command{dd} completes, it outputs the final pair.
+
+@example
+$ dd if=/dev/zero of=/dev/null count 10M & pid=$!
+$ kill -USR1 $pid; sleep 99
+5403604+0 records in
+5403604+0 records out
+10485760+0 records in
+10485760+0 records out
+@end example
+
+
 @table @samp
 
 @item if=@var{file}
