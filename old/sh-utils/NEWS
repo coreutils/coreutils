@@ -1,6 +1,5 @@
 Changes in release 2.1
  [2.0e]
-* seq now accepts integer format specs, e.g., --format=%02d
 * still more portability fixes
  [2.0d]
 * fix portability problem with sleep vs lib/strtod.c's requirement for -lm
