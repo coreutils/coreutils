@@ -42,6 +42,8 @@
 #include "closeout.h"
 #include "error.h"
 #include "posixver.h"
+#include "quote.h"
+#include "xstrndup.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "expand"
@@ -151,9 +153,11 @@ add_tabstop (int tabval)
    to the list of tabstops. */
 
 static void
-parse_tabstops (char *stops)
+parse_tabstops (char const *stops)
 {
   int tabval = -1;
+  char const *num_start IF_LINT (= NULL);
+  int fail = 0;
 
   for (; *stops; stops++)
     {
@@ -165,12 +169,35 @@ parse_tabstops (char *stops)
       else if (ISDIGIT (*stops))
 	{
 	  if (tabval == -1)
-	    tabval = 0;
-	  tabval = tabval * 10 + *stops - '0';
+	    {
+	      tabval = 0;
+	      num_start = stops;
+	    }
+	  {
+	    /* Detect overflow.  */
+	    int prev = tabval;
+	    tabval = tabval * 10 + *stops - '0';
+	    if (tabval < prev)
+	      {
+		size_t len = strspn (num_start, "0123456789");
+		char *bad_num = xstrndup (num_start, len);
+		error (0, 0, _("tab stop is too large %s"), quote (bad_num));
+		fail = 1;
+		stops = num_start + len - 1;
+	      }
+	  }
 	}
       else
-	error (EXIT_FAILURE, 0, _("tab size contains an invalid character"));
+	{
+	  error (0, 0, _("tab size contains invalid character(s): %s"),
+		 quote (stops));
+	  fail = 1;
+	  break;
+	}
     }
+
+  if (fail)
+    exit (EXIT_FAILURE);
 
   add_tabstop (tabval);
 }
