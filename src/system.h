@@ -572,6 +572,18 @@ uid_t getuid ();
   (Basename[0] == '.' && (Basename[1] == '\0' \
 			  || (Basename[1] == '.' && Basename[2] == '\0')))
 
+/* A wrapper for readdir so that callers don't see entries for `.' or `..'.  */
+static inline struct dirent const *
+readdir_ignoring_dot_and_dotdot (DIR *dirp)
+{
+  while (1)
+    {
+      struct dirent const *dp = readdir (dirp);
+      if (dp == NULL || ! DOT_OR_DOTDOT (dp->d_name))
+	return dp;
+    }
+}
+
 #if SETVBUF_REVERSED
 # define SETVBUF(Stream, Buffer, Type, Size) \
     setvbuf (Stream, Type, Buffer, Size)
