@@ -53,21 +53,21 @@ char *program_name;
 /* Which timestamps to change. */
 static int change_times;
 
-/* (-c) If nonzero, don't create if not already there. */
-static int no_create;
+/* (-c) If true, don't create if not already there.  */
+static bool no_create;
 
-/* (-r) If nonzero, use times from a reference file. */
-static int use_ref;
+/* (-r) If true, use times from a reference file.  */
+static bool use_ref;
 
-/* (-t) If nonzero, date supplied on command line in POSIX format. */
-static int posix_date;
+/* (-t) If true, use date supplied on command line in POSIX format.  */
+static bool posix_date;
 
-/* If nonzero, the only thing we have to do is change both the
+/* If true, the only thing we have to do is change both the
    modification and access time to the current time, so we don't
    have to own the file, just be able to read and write it.
    On some systems, we can do this if we own the file, even though
    we have neither read nor write access to it.  */
-static int amtime_now;
+static bool amtime_now;
 
 /* New access and modification times to use when setting time.  */
 static struct timespec newtime[2];
@@ -118,12 +118,12 @@ get_reldate (struct timespec *result,
 }
 
 /* Update the time of file FILE according to the options given.
-   Return 0 if successful, 1 if an error occurs. */
+   Return true if successful.  */
 
-static int
+static bool
 touch (const char *file)
 {
-  int status;
+  bool ok;
   struct stat sbuf;
   int fd = -1;
   int open_errno = 0;
@@ -155,27 +155,27 @@ touch (const char *file)
 	  else
 	    {
 	      if (no_create && errno == ENOENT)
-		return 0;
+		return true;
 	      error (0, errno, _("failed to get attributes of %s"),
 		     quote (file));
 	    }
 	  if (fd != -1)
 	    close (fd);
-	  return 1;
+	  return false;
 	}
     }
 
   if (fd != -1 && close (fd) < 0)
     {
       error (0, errno, _("creating %s"), quote (file));
-      return 1;
+      return false;
     }
 
   if (amtime_now)
     {
       /* Pass NULL to utime so it will not fail if we just have
 	 write access to the file, but don't own it.  */
-      status = utime (file, NULL);
+      ok = (utime (file, NULL) == 0);
     }
   else
     {
@@ -194,10 +194,10 @@ touch (const char *file)
 	  timespec[1].tv_nsec = TIMESPEC_NS (sbuf.st_mtim);
 	}
 
-      status = utimens (file, timespec);
+      ok = (utimens (file, timespec) == 0);
     }
 
-  if (status)
+  if (!ok)
     {
       if (open_errno)
 	{
@@ -210,13 +210,13 @@ touch (const char *file)
       else
 	{
 	  if (no_create && errno == ENOENT)
-	    return 0;
+	    return true;
 	  error (0, errno, _("setting times of %s"), quote (file));
 	}
-      return 1;
+      return false;
     }
 
-  return 0;
+  return true;
 }
 
 void
@@ -264,8 +264,8 @@ int
 main (int argc, char **argv)
 {
   int c;
-  int date_set = 0;
-  int err = 0;
+  bool date_set = false;
+  bool ok = true;
   char const *flex_date = NULL;
 
   initialize_main (&argc, &argv);
@@ -276,7 +276,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  change_times = no_create = use_ref = posix_date = 0;
+  change_times = no_create = use_ref = posix_date = false;
 
   while ((c = getopt_long (argc, argv, "acd:fmr:t:", longopts, NULL)) != -1)
     {
@@ -290,12 +290,12 @@ main (int argc, char **argv)
 	  break;
 
 	case 'c':
-	  no_create++;
+	  no_create = true;
 	  break;
 
 	case 'd':
 	  flex_date = optarg;
-	  date_set++;
+	  date_set = true;
 	  break;
 
 	case 'f':
@@ -306,18 +306,18 @@ main (int argc, char **argv)
 	  break;
 
 	case 'r':
-	  use_ref++;
+	  use_ref = true;
 	  ref_file = optarg;
 	  break;
 
 	case 't':
-	  posix_date++;
+	  posix_date = true;
 	  if (! posixtime (&newtime[0].tv_sec, optarg,
 			   PDS_LEADING_YEAR | PDS_CENTURY | PDS_SECONDS))
 	    error (EXIT_FAILURE, 0, _("invalid date format %s"), quote (optarg));
 	  newtime[0].tv_nsec = 0;
 	  newtime[1] = newtime[0];
-	  date_set++;
+	  date_set = true;
 	  break;
 
 	case TIME_OPTION:	/* --time */
@@ -360,7 +360,7 @@ main (int argc, char **argv)
 	  if (change_times & CH_MTIME)
 	    get_reldate (&newtime[1], flex_date, &newtime[1]);
 	}
-      date_set++;
+      date_set = true;
     }
   else
     {
@@ -392,13 +392,13 @@ main (int argc, char **argv)
 	    }
 
 	  optind++;
-	  date_set++;
+	  date_set = true;
 	}
     }
   if (!date_set)
     {
       if ((change_times & (CH_ATIME | CH_MTIME)) == (CH_ATIME | CH_MTIME))
-	amtime_now = 1;
+	amtime_now = true;
       else
 	{
 	  if (gettime (&newtime[0]) != 0)
@@ -414,7 +414,7 @@ main (int argc, char **argv)
     }
 
   for (; optind < argc; ++optind)
-    err |= touch (argv[optind]);
+    ok &= touch (argv[optind]);
 
-  exit (err == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
+  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
