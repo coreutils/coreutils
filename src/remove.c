@@ -29,6 +29,7 @@
 #include "dirname.h"
 #include "error.h"
 #include "euidaccess.h"
+#include "file-type.h"
 #include "hash.h"
 #include "hash-pjw.h"
 #include "obstack.h"
