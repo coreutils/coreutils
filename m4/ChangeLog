@@ -1,5 +1,9 @@
 2000-04-12  Jim Meyering  <meyering@lucent.com>
 
+	* getloadavg.m4 (AM_FUNC_GETLOADAVG): Use AC_CHECK_HEADERS, not
+	`AC_CHECK_HEADER' to check for locale.h.  Thanks to a report from
+	Christian Krackowizer.
+
 	More code moved from ../configure.in into (jm_CHECK_ALL_TYPES).
 	* jm-macros.m4 (_GNU_SOURCE): Define.
 	(AC_SYS_LARGEFILE): Require.
