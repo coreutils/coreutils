@@ -134,10 +134,9 @@ struct group *getgrgid ();
    - Its arg may be any int or unsigned int; it need not be an unsigned char.
    - It's guaranteed to evaluate its argument exactly once.
    - It's typically faster.
-   Posix 1003.2-1992 section 2.5.2.1 page 50 lines 1556-1558 says that
-   only '0' through '9' are digits.  Prefer ISDIGIT to isdigit unless
-   it's important to use the locale's definition of `digit' even when the
-   host does not conform to Posix.  */
+   POSIX says that only '0' through '9' are digits.  Prefer ISDIGIT to
+   ISDIGIT_LOCALE unless it's important to use the locale's definition
+   of `digit' even when the host does not conform to POSIX.  */
 #define ISDIGIT(c) ((unsigned) (c) - '0' <= 9)
 
 #ifndef strdup
