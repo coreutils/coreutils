@@ -57,6 +57,16 @@ static int verbose;
 /* If nonzero, describe only modes that change. */
 static int changes_only;
 
+static struct option const long_options[] =
+{
+  {"recursive", no_argument, 0, 'R'},
+  {"changes", no_argument, 0, 'c'},
+  {"silent", no_argument, 0, 'f'},
+  {"quiet", no_argument, 0, 'f'},
+  {"verbose", no_argument, 0, 'v'},
+  {0, 0, 0, 0}
+};
+
 /* Parse the ASCII mode given on the command line into a linked list
    of `struct mode_change' and apply that to each file argument. */
 
@@ -78,7 +88,8 @@ main (argc, argv)
     {
       thisind = optind ? optind : 1;
 
-      c = getopt (argc, argv, "RcfvrwxXstugoa,+-=");
+      c = getopt_long (argc, argv, "RcfvrwxXstugoa,+-=", long_options,
+		       (int *) 0);
       if (c == EOF)
 	break;
 
