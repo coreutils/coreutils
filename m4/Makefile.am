@@ -8,6 +8,7 @@ bison.m4 \
 c-bs-a.m4 \
 check-decl.m4 \
 chown.m4 \
+codeset.m4 \
 d-ino.m4 \
 d-type.m4 \
 error.m4 \
@@ -21,6 +22,7 @@ getloadavg.m4 \
 gettext.m4 \
 glibc.m4 \
 group-member.m4 \
+iconv.m4 \
 inttypes_h.m4 \
 isc-posix.m4 \
 jm-glibc-io.m4 \
