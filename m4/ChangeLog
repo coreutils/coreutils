@@ -1,6 +1,10 @@
 2000-05-28  Jim Meyering  <meyering@lucent.com>
 
-	* jm-macros.m4: s/jm_FUNC_STRERROR_R/AC_FUNC_STRERROR_R/.
+	* jm-macros.m4 (AC_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK): Rename from
+	jm_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK.
+	* lstat-slash.m4: Remove file (absorbed into autoconf).
+
+	* jm-macros.m4 (AC_FUNC_STRERROR_R): Rename from jm_FUNC_STRERROR_R.
 	* strerror_r.m4: Remove file (absorbed into autoconf).
 
 2000-05-26  Jim Meyering  <meyering@lucent.com>
