@@ -308,6 +308,10 @@
    don't. */
 #undef HAVE_DECL_STRTOIMAX
 
+/* Define to 1 if you have the declaration of `strtold', and to 0 if you
+   don't. */
+#undef HAVE_DECL_STRTOLD
+
 /* Define to 1 if you have the declaration of `strtoll', and to 0 if you
    don't. */
 #undef HAVE_DECL_STRTOLL
