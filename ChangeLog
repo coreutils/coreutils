@@ -1,6 +1,13 @@
-2002-11-19  Jim Meyering  <jim@meyering.net>
+2002-11-21  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.4.
+
+2002-11-21  Martin Buck  <martin.buck@ascom.ch
+
+	* src/stty.c (struct speeds): Add support for all baud rates defined
+	in linux-2.4.19.
+
+2002-11-19  Jim Meyering  <jim@meyering.net>
 
 	* tests/sum/sysv: Export LC_ALL=C, to avoid failure when
 	run in a UTF locale.  Report and suggested fix by Bruno Haible.
