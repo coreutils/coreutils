@@ -1,5 +1,11 @@
 Wed Oct  9 00:26:55 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* lib/getloadavg.c [__sun]: Define sun.  Reported by Kaveh Ghazi.
+
+	* lib/strftime.c (strftime): Accommodate the broken C compiler
+	that comes with SunOS -- don't initialize aggregates in decls of
+	automatic variables.  Reported by Kaveh Ghazi.
+
 	* tests/: Renamed checks/ directory.
 	* Makefile.am (SUBDIRS): Rename checks to tests.
 	* configure.in (AC_OUTPUT): Rename checks to tests.
