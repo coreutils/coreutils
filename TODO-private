@@ -26,7 +26,7 @@ go cu; cd po; export xu=fu j=ca
 go cu; cd po; export xu=su j=sl
 go cu; cd po; export xu=tu j=el
 go cu; cd po; export xu=su j=da
+go cu; cd po; export xu=fu j=lg
 k=$xu-$j
 msgmerge -o $k ../../$xu/po/$j.po $j.po && mv $k $j.po
-cvs ci -m 'merge from sh-utils-2.0.12' $j.po
-cvs ci -m 'merge from sh-utils-2.0.15' $j.po
+cvs ci -m 'merge from fileutils-4.1.11' $j.po
