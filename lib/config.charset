@@ -272,7 +272,7 @@ case "$os" in
 	;;
     beos*)
 	# BeOS has a single locale, and it has UTF-8 encoding.
-	echo "C UTF-8"
+	echo "* UTF-8"
 	;;
     msdosdjgpp*)
 	# DJGPP 2.03 doesn't have nl_langinfo(CODESET); therefore
