@@ -31,6 +31,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  printf, seq, tail, and sleep now parse floating-point operands
+  and options in the C locale.  POSIX requires this for printf.
+
   od -c -w9999999 no longer segfaults
 
   csplit no longer reads from freed memory (dumping core on some systems)
