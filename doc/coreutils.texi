@@ -3265,9 +3265,13 @@ starting with 1.  So to sort on the second field, you'd use
 @opindex --output
 @cindex overwriting of input, allowed
 Write output to @var{output-file} instead of standard output.
-If necessary, @command{sort} reads input before opening
+Normally, @command{sort} reads all input before opening
 @var{output-file}, so you can safely sort a file in place by using
 commands like @code{sort -o F F} and @code{cat F | sort -o F}.
+However, @command{sort} with @option{--merge} (@option{-m}) can open
+the output file before reading all input, so a command like @code{cat
+F | sort -m -o F - G} is not safe as @command{sort} might start
+writing @file{F} before @command{cat} is done reading it.
 
 @vindex POSIXLY_CORRECT
 On newer systems, @option{-o} cannot appear after an input file if
