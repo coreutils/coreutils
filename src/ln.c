@@ -40,7 +40,7 @@
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
-  TARGET_DIRECTORY_OPTION = CHAR_MAX + 1,
+  TARGET_DIRECTORY_OPTION = CHAR_MAX + 1
 };
 
 int link ();			/* Some systems don't declare this anywhere. */
