@@ -1,5 +1,5 @@
 %{
-/* $Revision: 2.1 $
+/* $Revision: 1.2 $
 **
 **  Originally written by Steven M. Bellovin <smb@research.att.com> while
 **  at the University of North Carolina at Chapel Hill.  Later tweaked by
@@ -49,7 +49,11 @@ char *alloca ();
 
 #include <sys/types.h>
 
-#if !(defined (USG) || !defined (sgi) || !defined (__386BSD__)) || defined(BSD4_2) || defined(BSD4_1C) || (defined (hp9000) && !defined (hpux)) || defined(_AIX) 
+#if sgi
+#undef timezone
+#endif
+
+#if !(defined (USG) || defined (sgi) || defined (__386BSD__)) || defined(BSD4_2) || defined(BSD4_1C) || (defined (hp9000) && !defined (hpux)) || defined(_AIX) 
 #include <sys/time.h>
 #else
 #include <time.h>
@@ -79,22 +83,18 @@ struct timeb {
 #include <string.h>
 #endif
 
-#if sgi
-#undef timezone
-#endif
-
 extern struct tm	*localtime();
-
-static int yylex ();
-static int yyerror ();
 
 #define yyparse getdate_yyparse
 #define yylex getdate_yylex
 #define yyerror getdate_yyerror
 
+static int yylex ();
+static int yyerror ();
+
 #if	!defined(lint) && !defined(SABER)
 static char RCS[] =
-	"$Header: str2date.y,v 2.1 90/09/06 08:15:06 cronan Exp $";
+	"$Header: /w/src/cvsroot/fileutils/lib/getdate.y,v 1.2 1993/04/04 15:21:49 meyering Exp $";
 #endif	/* !defined(lint) && !defined(SABER) */
 
 
