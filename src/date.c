@@ -388,7 +388,7 @@ specifies Coordinated Universal Time.  Interpreted sequences are:\n\
   %%c   locale's date and time (Sat Nov 04 12:02:33 EST 1989)\n\
   %%d   day of month (01..31)\n\
   %%D   date (mm/dd/yy)\n\
-  %%e	day of month, blank padded ( 1..31)
+  %%e	day of month, blank padded ( 1..31)\n\
   %%h   same as %%b\n\
   %%H   hour (00..23)\n\
   %%I   hour (01..12)\n\
@@ -411,7 +411,7 @@ specifies Coordinated Universal Time.  Interpreted sequences are:\n\
   %%X   locale's time representation (%%H:%%M:%%S)\n\
   %%y   last two digits of year (00..99)\n\
   %%Y   year (1970...)\n\
-  %%z   RFC-822 style numeric timezone (-0500) (a nonstandard extension)
+  %%z   RFC-822 style numeric timezone (-0500) (a nonstandard extension)\n\
   %%Z   time zone (e.g., EDT), or nothing if no time zone is determinable\n\
 \n\
 By default, date pads numeric fields with zeroes.  GNU date recognizes\n\
