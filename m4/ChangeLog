@@ -1,5 +1,12 @@
+1999-04-20  Jim Meyering  <meyering@ascend.com>
+
+	* xstrtoumax.m4: Require jm_AC_TYPE_UNSIGNED_LONG_LONG.
+	Replace xstroull if necessary.
+	From Paul Eggert.
+
 1999-04-20  Paul Eggert  <eggert@twinsun.com>
 
+	* ulonglong.m4 (jm_AC_TYPE_UNSIGNED_LONG_LONG): New file/macro.
 	* m4/lfs.m4: Port to AIX and HP-UX.  Support cross-compilation.
 
 1999-04-18  Jim Meyering  <meyering@ascend.com>
