@@ -33,9 +33,8 @@ fail=0
 cd $dir
 file=file
 echo foo > $file
-ginstall -D $file no-dir || fail=1
-find
-test -d no-dir || fail=1
-test -r no-dir/$file || fail=1
+ginstall -D $file no-dir1/no-dir2/dest || fail=1
+test -d no-dir1/no-dir2 || fail=1
+test -r no-dir1/no-dir2/dest || fail=1
 
 exit $fail
