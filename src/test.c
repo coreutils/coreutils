@@ -1105,8 +1105,7 @@ test_command (margc, margv)
      int margc;
      char **margv;
 {
-  auto int value;
-  int expr ();
+  int value;
 
 #if !defined (TEST_STANDALONE)
   int code;

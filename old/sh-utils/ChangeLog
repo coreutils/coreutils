@@ -1,3 +1,5 @@
+Tue Mar  8 10:29:13 1994  Jim Meyering  (meyering@comco.com)
+
 	* configure.in [INSTALL]: When AC_PROG_INSTALL resorts to setting
 	this to `./install.sh', make it `../install.sh' instead since that
 	script will be invoked only from subdirectories.
