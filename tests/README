@@ -1,0 +1,3 @@
+A note about Makefile.am.in.
+It is used (usually only by the maintainer) to generate most of the
+Makefile.am files in these subdirectories.
