@@ -1,3 +1,8 @@
+2001-04-22  Jim Meyering  <meyering@lucent.com>
+
+	* src/dd.c (usage): Mention that sync makes dd pad with spaces (rather
+	than NULs) when used with block or unblock.  Reported by Dale Scheetz.
+
 2001-04-21  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.0.44.
