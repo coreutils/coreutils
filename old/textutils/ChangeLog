@@ -1,3 +1,7 @@
+Sun Jul 16 18:42:34 1995  Jim Meyering  (meyering@comco.com)
+
+	* configure.in: Add AC_C_INLINE: md5sum.c uses inline keyword.
+
 Tue Jul 11 21:56:02 1995  Jim Meyering  (meyering@comco.com)
 
 	* md5sum.c Add #else block after #ifdef VMS.
