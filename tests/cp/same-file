@@ -109,7 +109,7 @@ cat <<\EOF > $expected
 0 -l (foo symlink -> foo)
 0 -dl (foo symlink -> foo)
 0 -fl (foo symlink -> foo)
-0 -dfl (foo symlink -> foo)
+0 -dfl (foo symlink)
 0 -bl (foo symlink -> foo)
 0 -bdl (foo symlink symlink.~1~ -> foo)
 0 -bfl (foo symlink -> foo)
