@@ -67,8 +67,6 @@ enum Change_status
 };
 
 char *group_member ();
-char *xmalloc ();
-char *xrealloc ();
 
 static int change_dir_group __P ((const char *dir, int group,
 				  const struct stat *statp));

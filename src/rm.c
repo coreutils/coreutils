@@ -127,7 +127,6 @@ struct File_spec
 char *base_name ();
 int euidaccess ();
 void strip_trailing_slashes ();
-char *xmalloc ();
 int yesno ();
 
 /* Forward dcl for recursively called function.  */

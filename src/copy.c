@@ -36,7 +36,6 @@ struct dir_list
 
 int full_write ();
 int euidaccess ();
-char *xmalloc ();
 int yesno ();
 
 static int copy_internal __P ((const char *src_path, const char *dst_path,

@@ -1,5 +1,5 @@
 /* cp-hash.c  -- file copying (hash search routines)
-   Copyright (C) 89, 90, 91, 95, 1996 Free Software Foundation.
+   Copyright (C) 89, 90, 91, 95, 1996, 1997 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -40,9 +40,6 @@ struct htab
   unsigned first_free_entry;	/* Index in `entry_tab'.  */
   struct entry *hash[1];	/* Vector of pointers in `entry_tab'.  */
 };
-
-char *xmalloc ();
-char *xrealloc ();
 
 struct htab *htab;
 char new_file;

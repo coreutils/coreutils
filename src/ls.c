@@ -148,8 +148,6 @@ char *getgroup ();
 char *getuser ();
 void strip_trailing_slashes ();
 char *xstrdup ();
-char *xmalloc ();
-char *xrealloc ();
 void invalid_arg ();
 
 static char *make_link_path __P ((const char *path, const char *linkname));
@@ -1641,7 +1639,8 @@ gobble_file (const char *name, int explicit_arg, const char *dirname)
   if (files_index == nfiles)
     {
       nfiles *= 2;
-      files = (struct fileinfo *) xrealloc (files, sizeof (*files) * nfiles);
+      files = (struct fileinfo *) xrealloc ((char *) files,
+					    sizeof (*files) * nfiles);
     }
 
   files[files_index].linkname = 0;

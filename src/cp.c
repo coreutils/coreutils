@@ -58,7 +58,6 @@ char *base_name ();
 char *dirname ();
 enum backup_type get_version ();
 void strip_trailing_slashes ();
-char *xmalloc ();
 char *xstrdup ();
 
 /* Initial number of entries in each hash table entry's table of inodes.  */

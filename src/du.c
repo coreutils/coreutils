@@ -100,9 +100,6 @@ typedef struct
 int stat ();
 int lstat ();
 
-char *xmalloc ();
-char *xrealloc ();
-
 static int hash_insert __P ((ino_t ino, dev_t dev));
 static int hash_insert2 __P ((struct htab *_htab, ino_t ino, dev_t dev));
 static long count_entry __P ((const char *ent, int top, dev_t last_dev,

@@ -36,8 +36,6 @@ enum Change_status
 
 void mode_string ();
 void strip_trailing_slashes ();
-char *xmalloc ();
-char *xrealloc ();
 
 static int change_dir_mode __P ((const char *dir,
 				 const struct mode_change *changes,

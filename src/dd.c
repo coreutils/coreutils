@@ -93,7 +93,6 @@
 /* Use separate input and output buffers, and combine partial input blocks. */
 #define C_TWOBUFS 04000
 
-char *xmalloc ();
 int safe_read ();
 int full_write ();
 

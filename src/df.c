@@ -32,7 +32,6 @@
 
 char *dirname ();
 void strip_trailing_slashes ();
-char *xmalloc ();
 char *xstrdup ();
 char *xgetcwd ();
 

@@ -57,8 +57,6 @@ struct group *getgrgid ();
 
 char *parse_user_spec ();
 void strip_trailing_slashes ();
-char *xmalloc ();
-char *xrealloc ();
 
 enum Change_status
 {
