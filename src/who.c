@@ -577,7 +577,7 @@ scan_entries (size_t n, const STRUCT_UTMP *utmp_buf)
 
   if (my_line_only)
     {
-      ttyname_b = ttyname (0);
+      ttyname_b = ttyname (STDIN_FILENO);
       if (!ttyname_b)
 	return;
       if (strncmp (ttyname_b, DEV_DIR_WITH_TRAILING_SLASH, DEV_DIR_LEN) == 0)
