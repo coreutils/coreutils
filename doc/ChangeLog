@@ -1,3 +1,8 @@
+2001-11-07  Paul Eggert  <eggert@twinsun.com>
+
+	* coreutils.texi (paste invocation): Give examples.
+	Thanks to Dan Jacobson for suggesting the examples.
+
 2001-11-05  Jim Meyering  <meyering@lucent.com>
 
 	* coreutils.texi (sort invocation): Recommend setting LC_ALL=C,
