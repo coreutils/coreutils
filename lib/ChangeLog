@@ -23,7 +23,7 @@
 	unistd-safer.h, version-etc.h, xalloc.h, xreadlink.h, xstrtod.h,
 	xstrtol.h: Likewise.
 	* filemode.h, hard-locale.h, memcoll.h, modechange.h, physmem.h, same.h,
-	strverscmp.h: Do not include config.h; no longer needed.
+	* strverscmp.h: Do not include config.h; no longer needed.
 	Anyway, config.h should always be included before any other file.
 
 2003-06-17  Jim Meyering  <jim@meyering.net>
