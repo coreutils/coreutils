@@ -1788,7 +1788,7 @@ AC_DEFUN([_jm_DECL_HEADERS],
                    unistd.h sys/time.h utmp.h utmpx.h)
 ])
 
-#serial 32
+#serial 33
 
 dnl We use jm_ for non Autoconf macros.
 m4_pattern_forbid([^jm_[ABCDEFGHIJKLMNOPQRSTUVXYZ]])dnl
