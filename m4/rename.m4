@@ -1,4 +1,4 @@
-#serial 1
+#serial 2
 
 dnl From Volker Borchert.
 dnl Determine whether rename works for source paths with a trailing slash.
@@ -13,15 +13,15 @@ AC_DEFUN(vb_FUNC_RENAME,
  AC_CACHE_CHECK([whether rename is broken],
   vb_cv_func_rename_trailing_slash_bug,
   [
-    rm -rf conftestdir conftestdir2
-    mkdir conftestdir ||
+    rm -rf conftest.d1 conftest.d2
+    mkdir conftest.d1 ||
       AC_MSG_ERROR([cannot create temporary directory])
     AC_TRY_RUN([
 #       include <stdio.h>
         int
         main ()
         {
-          exit (rename ("conftestdir/", "conftestdir2") ? 1 : 0);
+          exit (rename ("conftest.d1/", "conftest.d2") ? 1 : 0);
         }
       ],
       vb_cv_func_rename_trailing_slash_bug=no,
@@ -29,7 +29,7 @@ AC_DEFUN(vb_FUNC_RENAME,
       dnl When crosscompiling, assume rename is broken.
       vb_cv_func_rename_trailing_slash_bug=yes)
 
-      rm -rf conftestdir conftestdir2
+      rm -rf conftest.d1 conftest.d2
   ])
   if test $vb_cv_func_rename_trailing_slash_bug = yes; then
     AC_LIBOBJ(rename)
