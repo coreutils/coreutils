@@ -682,6 +682,17 @@ static sig_atomic_t volatile stop_signal_count;
 
 static int exit_status;
 
+/* Exit statuses.  */
+enum
+  {
+    /* "ls" had a minor problem (e.g., it could not stat a directory
+       entry).  */
+    LS_MINOR_PROBLEM = 1,
+
+    /* "ls" had more serious trouble.  */
+    LS_FAILURE = 2
+  };
+
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
@@ -1095,6 +1106,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  initialize_exit_failure (LS_FAILURE);
   atexit (close_stdout);
 
 #define N_ENTRIES(Array) (sizeof Array / sizeof *(Array))
@@ -1553,7 +1565,7 @@ decode_switches (int argc, char **argv)
 	    unsigned long int tmp_ulong;
 	    if (xstrtoul (optarg, NULL, 0, &tmp_ulong, NULL) != LONGINT_OK
 		|| ! (0 < tmp_ulong && tmp_ulong <= SIZE_MAX))
-	      error (EXIT_FAILURE, 0, _("invalid line width: %s"),
+	      error (LS_FAILURE, 0, _("invalid line width: %s"),
 		     quotearg (optarg));
 	    line_length = tmp_ulong;
 	    break;
@@ -1627,7 +1639,7 @@ decode_switches (int argc, char **argv)
 	    unsigned long int tmp_ulong;
 	    if (xstrtoul (optarg, NULL, 0, &tmp_ulong, NULL) != LONGINT_OK
 		|| SIZE_MAX < tmp_ulong)
-	      error (EXIT_FAILURE, 0, _("invalid tab size: %s"),
+	      error (LS_FAILURE, 0, _("invalid tab size: %s"),
 		     quotearg (optarg));
 	    tabsize = tmp_ulong;
 	    break;
@@ -1740,7 +1752,7 @@ decode_switches (int argc, char **argv)
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
-	  usage (EXIT_FAILURE);
+	  usage (LS_FAILURE);
 	}
     }
 
@@ -1804,7 +1816,7 @@ decode_switches (int argc, char **argv)
 	  else
 	    {
 	      if (strchr (p1 + 1, '\n'))
-		error (EXIT_FAILURE, 0, _("invalid time style format %s"),
+		error (LS_FAILURE, 0, _("invalid time style format %s"),
 		       quote (p0));
 	      *p1++ = '\0';
 	    }
@@ -2217,7 +2229,7 @@ print_dir (const char *name, const char *realname)
   if (!dirp)
     {
       error (0, errno, "%s", quotearg_colon (name));
-      exit_status = EXIT_FAILURE;
+      exit_status = LS_FAILURE;
       return;
     }
 
@@ -2233,7 +2245,7 @@ print_dir (const char *name, const char *realname)
 	{
 	  error (0, errno, _("cannot determine device and inode of %s"),
 		 quotearg_colon (name));
-	  exit_status = EXIT_FAILURE;
+	  exit_status = LS_FAILURE;
 	  return;
 	}
 
@@ -2259,43 +2271,46 @@ print_dir (const char *name, const char *realname)
       /* Set errno to zero so we can distinguish between a readdir failure
 	 and when readdir simply finds that there are no more entries.  */
       errno = 0;
-      if ((next = readdir (dirp)) == NULL)
+      next = readdir (dirp);
+      if (next)
 	{
-	  if (errno)
+	  if (! file_ignored (next->d_name))
 	    {
-	      /* Save/restore errno across closedir call.  */
-	      int e = errno;
-	      closedir (dirp);
-	      errno = e;
-
-	      /* Arrange to give a diagnostic after exiting this loop.  */
-	      dirp = NULL;
-	    }
-	  break;
-	}
-
-      if (! file_ignored (next->d_name))
-	{
-	  enum filetype type = unknown;
+	      enum filetype type = unknown;
 
 #if HAVE_STRUCT_DIRENT_D_TYPE
-	  if (next->d_type == DT_BLK
-	      || next->d_type == DT_CHR
-	      || next->d_type == DT_DIR
-	      || next->d_type == DT_FIFO
-	      || next->d_type == DT_LNK
-	      || next->d_type == DT_REG
-	      || next->d_type == DT_SOCK)
-	    type = next->d_type;
+	      if (next->d_type == DT_BLK
+		  || next->d_type == DT_CHR
+		  || next->d_type == DT_DIR
+		  || next->d_type == DT_FIFO
+		  || next->d_type == DT_LNK
+		  || next->d_type == DT_REG
+		  || next->d_type == DT_SOCK)
+		type = next->d_type;
 #endif
-	  total_blocks += gobble_file (next->d_name, type, false, name);
+	      total_blocks += gobble_file (next->d_name, type, false, name);
+	    }
 	}
+      else if (errno == EOVERFLOW)
+	{
+	  error (0, errno, _("reading directory %s"), quotearg_colon (name));
+	  if (exit_status == EXIT_SUCCESS)
+	    exit_status = LS_MINOR_PROBLEM;
+	}
+      else
+	break;
     }
 
-  if (dirp == NULL || CLOSEDIR (dirp))
+  if (errno)
     {
       error (0, errno, _("reading directory %s"), quotearg_colon (name));
-      exit_status = EXIT_FAILURE;
+      exit_status = LS_FAILURE;
+    }
+
+  if (CLOSEDIR (dirp) != 0)
+    {
+      error (0, errno, _("reading directory %s"), quotearg_colon (name));
+      exit_status = LS_FAILURE;
       /* Don't return; print whatever we got.  */
     }
 
@@ -2511,7 +2526,8 @@ gobble_file (const char *name, enum filetype type, bool explicit_arg,
       if (err < 0)
 	{
 	  error (0, errno, "%s", quotearg_colon (path));
-	  exit_status = EXIT_FAILURE;
+	  if (exit_status == EXIT_SUCCESS)
+	    exit_status = LS_MINOR_PROBLEM;
 	  return 0;
 	}
 
@@ -2667,7 +2683,8 @@ get_link_name (const char *filename, struct fileinfo *f)
     {
       error (0, errno, _("cannot read symbolic link %s"),
 	     quotearg_colon (filename));
-      exit_status = EXIT_FAILURE;
+      if (exit_status == EXIT_SUCCESS)
+	exit_status = LS_MINOR_PROBLEM;
     }
 }
 
@@ -2784,7 +2801,8 @@ xstrcoll (char const *a, char const *b)
     {
       error (0, errno, _("cannot compare file names %s and %s"),
 	     quote_n (0, a), quote_n (1, b));
-      exit_status = EXIT_FAILURE;
+      if (exit_status == EXIT_SUCCESS)
+	exit_status = LS_MINOR_PROBLEM;
       longjmp (failed_strcoll, 1);
     }
   return diff;
@@ -4154,6 +4172,10 @@ equivalent to using --color=none.  Using the --color option without the\n\
 optional WHEN argument is equivalent to using --color=always.  With\n\
 --color=auto, color codes are output only if standard output is connected\n\
 to a terminal (tty).\n\
+"), stdout);
+      fputs (_("\
+\n\
+Exit status is 0 if OK, 1 if minor problems, 2 if serious trouble.\n\
 "), stdout);
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
