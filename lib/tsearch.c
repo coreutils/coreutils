@@ -84,6 +84,24 @@
    In this case, A has been rotated left.  This preserves the ordering of the
    binary tree.  */
 
+#if HAVE_CONFIG_H
+# include <config.h>
+#endif
+
+#if __GNUC__
+# define alloca __builtin_alloca
+#else
+# if HAVE_ALLOCA_H
+#  include <alloca.h>
+# else
+#  ifdef _AIX
+ #  pragma alloca
+#  else
+char *alloca ();
+#  endif
+# endif
+#endif
+
 #include <stdlib.h>
 #include <string.h>
 #include <search.h>
@@ -360,7 +378,7 @@ __tdelete (const void *key, void **vrootp, __compar_fn_t compar)
      would need to have around 250.000 nodes.  */
   int stacksize = 40;
   int sp = 0;
-  node **nodestack = alloca (sizeof (node *) * stacksize);
+  node **nodestack = (node **) alloca (sizeof (node *) * stacksize);
 
   if (rootp == NULL)
     return NULL;
@@ -376,7 +394,7 @@ __tdelete (const void *key, void **vrootp, __compar_fn_t compar)
 	{
 	  node **newstack;
 	  stacksize += 20;
-	  newstack = alloca (sizeof (node *) * stacksize);
+	  newstack = (node **) alloca (sizeof (node *) * stacksize);
 	  nodestack = memcpy (newstack, nodestack, sp * sizeof (node *));
 	}
 
@@ -414,7 +432,7 @@ __tdelete (const void *key, void **vrootp, __compar_fn_t compar)
 	    {
 	      node **newstack;
 	      stacksize += 20;
-	      newstack = alloca (sizeof (node *) * stacksize);
+	      newstack = (node **) alloca (sizeof (node *) * stacksize);
 	      nodestack = memcpy (newstack, nodestack, sp * sizeof (node *));
 	    }
 	  nodestack[sp++] = parent;
