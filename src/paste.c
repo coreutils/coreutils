@@ -206,7 +206,7 @@ paste_parallel (int nfiles, char **fnamptr)
 	{
 	  fileptr[files_open] = fopen (fnamptr[files_open], "r");
 	  if (fileptr[files_open] == NULL)
-	    error (1, errno, "%s", fnamptr[files_open]);
+	    error (EXIT_FAILURE, errno, "%s", fnamptr[files_open]);
 	  else if (fileno (fileptr[files_open]) == 0)
 	    opened_stdin = 1;
 	}
@@ -215,7 +215,7 @@ paste_parallel (int nfiles, char **fnamptr)
   fileptr[files_open] = ENDLIST;
 
   if (opened_stdin && have_read_stdin)
-    error (1, 0, _("standard input is closed"));
+    error (EXIT_FAILURE, 0, _("standard input is closed"));
 
   /* Read a line from each file and output it to stdout separated by a
      delimiter, until we go through the loop without successfully
@@ -489,8 +489,8 @@ main (int argc, char **argv)
   else
     exit_status = paste_serial (argc - optind, &argv[optind]);
   if (have_read_stdin && fclose (stdin) == EOF)
-    error (1, errno, "-");
+    error (EXIT_FAILURE, errno, "-");
   if (ferror (stdout) || fclose (stdout) == EOF)
-    error (1, errno, _("write error"));
+    error (EXIT_FAILURE, errno, _("write error"));
   exit (exit_status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

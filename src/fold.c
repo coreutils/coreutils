@@ -296,7 +296,8 @@ main (int argc, char **argv)
 	    long int tmp_long;
 	    if (xstrtol (optarg, NULL, 10, &tmp_long, NULL) != LONGINT_OK
 		|| tmp_long <= 0 || tmp_long > INT_MAX)
-	      error (1, 0, _("invalid number of columns: `%s'"), optarg);
+	      error (EXIT_FAILURE, 0,
+		     _("invalid number of columns: `%s'"), optarg);
 	    width = (int) tmp_long;
 	  }
 	  break;
@@ -322,9 +323,9 @@ main (int argc, char **argv)
       errs |= fold_file (argv[i], width);
 
   if (have_read_stdin && fclose (stdin) == EOF)
-    error (1, errno, "-");
+    error (EXIT_FAILURE, errno, "-");
   if (fclose (stdout) == EOF)
-    error (1, errno, _("write error"));
+    error (EXIT_FAILURE, errno, _("write error"));
 
   exit (errs == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

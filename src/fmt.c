@@ -383,7 +383,7 @@ main (register int argc, register char **argv)
 	  long int tmp_long;
 	  if (xstrtol (optarg, NULL, 10, &tmp_long, NULL) != LONGINT_OK
 	      || tmp_long <= 0 || tmp_long > INT_MAX)
-	    error (1, 0, _("invalid line number increment: `%s'"),
+	    error (EXIT_FAILURE, 0, _("invalid line number increment: `%s'"),
 		   optarg);
 	  max_width = (int) tmp_long;
 	}

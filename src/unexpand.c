@@ -141,7 +141,7 @@ parse_tabstops (const char *stops)
 	  tabval = tabval * 10 + *stops - '0';
 	}
       else
-	error (1, 0, _("tab size contains an invalid character"));
+	error (EXIT_FAILURE, 0, _("tab size contains an invalid character"));
     }
 
   add_tabstop (tabval);
@@ -159,9 +159,9 @@ validate_tabstops (const int *tabs, int entries)
   for (i = 0; i < entries; i++)
     {
       if (tabs[i] == 0)
-	error (1, 0, _("tab size cannot be 0"));
+	error (EXIT_FAILURE, 0, _("tab size cannot be 0"));
       if (tabs[i] <= prev_tab)
-	error (1, 0, _("tab sizes must be ascending"));
+	error (EXIT_FAILURE, 0, _("tab sizes must be ascending"));
       prev_tab = tabs[i];
     }
 }
@@ -450,8 +450,8 @@ main (int argc, char **argv)
   unexpand ();
 
   if (have_read_stdin && fclose (stdin) == EOF)
-    error (1, errno, "-");
+    error (EXIT_FAILURE, errno, "-");
   if (fclose (stdout) == EOF)
-    error (1, errno, _("write error"));
+    error (EXIT_FAILURE, errno, _("write error"));
   exit (exit_status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

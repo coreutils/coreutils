@@ -624,11 +624,11 @@ main (int argc, char **argv)
     usage (0);
 
   if (parallel_files && explicit_columns)
-    error (1, 0,
+    error (EXIT_FAILURE, 0,
   _("Cannot specify number of columns when printing in parallel."));
 
   if (parallel_files && print_across_flag)
-    error (1, 0,
+    error (EXIT_FAILURE, 0,
   _("Cannot specify both printing across and printing in parallel."));
 
   for ( ; optind < argc; optind++)
@@ -656,9 +656,9 @@ main (int argc, char **argv)
   cleanup ();
 
   if (have_read_stdin && fclose (stdin) == EOF)
-    error (1, errno, _("standard input"));
+    error (EXIT_FAILURE, errno, _("standard input"));
   if (ferror (stdout) || fclose (stdout) == EOF)
-    error (1, errno, _("write error"));
+    error (EXIT_FAILURE, errno, _("write error"));
   if (failed_opens > 0)
     exit(1);
   exit (EXIT_SUCCESS);
@@ -745,7 +745,7 @@ init_parameters (int number_of_files)
 		      (columns - 1) * chars_per_gutter) / columns;
 
   if (chars_per_column < 1)
-    error (1, 0, _("page width too narrow"));
+    error (EXIT_FAILURE, 0, _("page width too narrow"));
 
   if (numbered_lines)
     {
@@ -957,9 +957,9 @@ close_file (COLUMN *p)
   if (p->status == CLOSED)
     return;
   if (ferror (p->fp))
-    error (1, errno, "%s", p->name);
+    error (EXIT_FAILURE, errno, "%s", p->name);
   if (p->fp != stdin && fclose (p->fp) == EOF)
-    error (1, errno, "%s", p->name);
+    error (EXIT_FAILURE, errno, "%s", p->name);
 
   if (!parallel_files)
     {

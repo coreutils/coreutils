@@ -888,22 +888,22 @@ main (int argc, char **argv)
 
   fp1 = strcmp (names[0], "-") ? fopen (names[0], "r") : stdin;
   if (!fp1)
-    error (1, errno, "%s", names[0]);
+    error (EXIT_FAILURE, errno, "%s", names[0]);
   fp2 = strcmp (names[1], "-") ? fopen (names[1], "r") : stdin;
   if (!fp2)
-    error (1, errno, "%s", names[1]);
+    error (EXIT_FAILURE, errno, "%s", names[1]);
   if (fp1 == fp2)
-    error (1, errno, _("both files cannot be standard input"));
+    error (EXIT_FAILURE, errno, _("both files cannot be standard input"));
   join (fp1, fp2);
 
   if (fp1 != stdin && fclose (fp1) == EOF)
-    error (1, errno, "%s", names[0]);
+    error (EXIT_FAILURE, errno, "%s", names[0]);
   if (fp2 != stdin && fclose (fp2) == EOF)
-    error (1, errno, "%s", names[1]);
+    error (EXIT_FAILURE, errno, "%s", names[1]);
   if ((fp1 == stdin || fp2 == stdin) && fclose (stdin) == EOF)
-    error (1, errno, "-");
+    error (EXIT_FAILURE, errno, "-");
   if (ferror (stdout) || fclose (stdout) == EOF)
-    error (1, errno, _("write error"));
+    error (EXIT_FAILURE, errno, _("write error"));
 
   exit (EXIT_SUCCESS);
 }

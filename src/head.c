@@ -175,7 +175,7 @@ head_bytes (const char *filename, int fd, long int bytes_to_write)
       if (bytes_read > bytes_to_write)
 	bytes_read = bytes_to_write;
       if (fwrite (buffer, 1, bytes_read, stdout) == 0)
-	error (1, errno, _("write error"));
+	error (EXIT_FAILURE, errno, _("write error"));
       bytes_to_write -= bytes_read;
     }
   return 0;
@@ -203,7 +203,7 @@ head_lines (const char *filename, int fd, long int lines_to_write)
 	if (buffer[bytes_to_write++] == '\n' && --lines_to_write == 0)
 	  break;
       if (fwrite (buffer, 1, bytes_to_write, stdout) == 0)
-	error (1, errno, _("write error"));
+	error (EXIT_FAILURE, errno, _("write error"));
     }
   return 0;
 }
@@ -334,7 +334,7 @@ main (int argc, char **argv)
 	  /* FIXME: use xstrtoul instead.  */
 	  number = atou (optarg);
 	  if (number == -1)
-	    error (1, 0, _("invalid number `%s'"), optarg);
+	    error (EXIT_FAILURE, 0, _("invalid number `%s'"), optarg);
 	  break;
 
 	case 'q':
@@ -376,9 +376,9 @@ main (int argc, char **argv)
     exit_status |= head_file (argv[optind], number);
 
   if (have_read_stdin && close (0) < 0)
-    error (1, errno, "-");
+    error (EXIT_FAILURE, errno, "-");
   if (fclose (stdout) == EOF)
-    error (1, errno, _("write error"));
+    error (EXIT_FAILURE, errno, _("write error"));
 
   exit (exit_status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

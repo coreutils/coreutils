@@ -63,7 +63,7 @@
       assert ((fd) == 1);						\
       assert ((n_bytes) >= 0);						\
       if (n_bytes > 0 && fwrite ((buffer), 1, (n_bytes), stdout) == 0)	\
-	error (1, errno, _("write error"));				\
+	error (EXIT_FAILURE, errno, _("write error"));			\
     }									\
   while (0)
 
@@ -537,7 +537,7 @@ output:
       total += bytes_read;
     }
   if (bytes_read == -1)
-    error (1, errno, "%s", filename);
+    error (EXIT_FAILURE, errno, "%s", filename);
   if (forever)
     {
       fflush (stdout);
@@ -1012,8 +1012,8 @@ main (int argc, char **argv)
     tail_forever (argv + fileind, argc - fileind);
 
   if (have_read_stdin && close (0) < 0)
-    error (1, errno, "-");
+    error (EXIT_FAILURE, errno, "-");
   if (fclose (stdout) == EOF)
-    error (1, errno, _("write error"));
+    error (EXIT_FAILURE, errno, _("write error"));
   exit (exit_status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

@@ -768,7 +768,7 @@ main (int argc, char **argv)
       exit_status = 1;
     }
   if (ferror (stdout) || fclose (stdout) == EOF)
-    error (1, errno, _("write error"));
+    error (EXIT_FAILURE, errno, _("write error"));
 
   exit (exit_status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

@@ -163,7 +163,7 @@ simple_cat (
       /* Write this block out.  */
 
       if (full_write (output_desc, buf, n_read) < 0)
-	error (1, errno, _("write error"));
+	error (EXIT_FAILURE, errno, _("write error"));
     }
 }
 
@@ -244,7 +244,7 @@ cat (
 	      do
 		{
 		  if (full_write (output_desc, wp, outsize) < 0)
-		    error (1, errno, _("write error"));
+		    error (EXIT_FAILURE, errno, _("write error"));
 		  wp += outsize;
 		}
 	      while (bpout - wp >= outsize);
@@ -297,7 +297,7 @@ cat (
 		  int n_write = bpout - outbuf;
 
 		  if (full_write (output_desc, outbuf, n_write) < 0)
-		    error (1, errno, _("write error"));
+		    error (EXIT_FAILURE, errno, _("write error"));
 		  bpout = outbuf;
 		}
 
@@ -591,7 +591,7 @@ main (int argc, char **argv)
   /* Get device, i-node number, and optimal blocksize of output.  */
 
   if (fstat (output_desc, &stat_buf) < 0)
-    error (1, errno, _("standard output"));
+    error (EXIT_FAILURE, errno, _("standard output"));
 
   outsize = ST_BLKSIZE (stat_buf);
   /* Input file can be output file for non-regular files.
@@ -716,9 +716,9 @@ main (int argc, char **argv)
   while (++argind < argc);
 
   if (have_read_stdin && close (0) < 0)
-    error (1, errno, "-");
+    error (EXIT_FAILURE, errno, "-");
   if (close (1) < 0)
-    error (1, errno, _("write error"));
+    error (EXIT_FAILURE, errno, _("write error"));
 
   exit (exit_status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

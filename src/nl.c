@@ -281,7 +281,7 @@ build_type_arg (char **typep, struct re_pattern_buffer *regexp)
       regexp->fastmap_accurate = 0;
       errmsg = re_compile_pattern (optarg, optlen, regexp);
       if (errmsg)
-	error (1, 0, "%s", errmsg);
+	error (EXIT_FAILURE, 0, "%s", errmsg);
       break;
     default:
       rval = FALSE;
@@ -497,7 +497,7 @@ main (int argc, char **argv)
 	    if (xstrtol (optarg, NULL, 10, &tmp_long, NULL) != LONGINT_OK
 		/* Allow it to be negative.  */
 		|| tmp_long > INT_MAX)
-	      error (1, 0, _("invalid starting line number: `%s'"),
+	      error (EXIT_FAILURE, 0, _("invalid starting line number: `%s'"),
 		     optarg);
 	    starting_line_number = (int) tmp_long;
 	  }
@@ -507,7 +507,7 @@ main (int argc, char **argv)
 	    long int tmp_long;
 	    if (xstrtol (optarg, NULL, 10, &tmp_long, NULL) != LONGINT_OK
 		|| tmp_long <= 0 || tmp_long > INT_MAX)
-	      error (1, 0, _("invalid line number increment: `%s'"),
+	      error (EXIT_FAILURE, 0, _("invalid line number increment: `%s'"),
 		     optarg);
 	    page_incr = (int) tmp_long;
 	  }
@@ -520,7 +520,7 @@ main (int argc, char **argv)
 	    long int tmp_long;
 	    if (xstrtol (optarg, NULL, 10, &tmp_long, NULL) != LONGINT_OK
 		|| tmp_long <= 0 || tmp_long > INT_MAX)
-	      error (1, 0, _("invalid number of blank lines: `%s'"),
+	      error (EXIT_FAILURE, 0, _("invalid number of blank lines: `%s'"),
 		     optarg);
 	    blank_join = (int) tmp_long;
 	  }
@@ -533,7 +533,8 @@ main (int argc, char **argv)
 	    long int tmp_long;
 	    if (xstrtol (optarg, NULL, 10, &tmp_long, NULL) != LONGINT_OK
 		|| tmp_long <= 0 || tmp_long > INT_MAX)
-	      error (1, 0, _("invalid line number field width: `%s'"),
+	      error (EXIT_FAILURE, 0,
+		     _("invalid line number field width: `%s'"),
 		     optarg);
 	    lineno_width = (int) tmp_long;
 	  }
@@ -627,7 +628,7 @@ main (int argc, char **argv)
       exit_status = 1;
     }
   if (ferror (stdout) || fclose (stdout) == EOF)
-    error (1, errno, _("write error"));
+    error (EXIT_FAILURE, errno, _("write error"));
 
   exit (exit_status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

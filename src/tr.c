@@ -1516,7 +1516,8 @@ validate (struct Spec_list *s1, struct Spec_list *s2)
   get_s1_spec_stats (s1);
   if (s1->n_indefinite_repeats > 0)
     {
-      error (1, 0, _("the [c*] repeat construct may not appear in string1"));
+      error (EXIT_FAILURE, 0,
+	     _("the [c*] repeat construct may not appear in string1"));
     }
 
   /* FIXME: it isn't clear from the POSIX spec that this is invalid,
@@ -1524,7 +1525,7 @@ validate (struct Spec_list *s1, struct Spec_list *s2)
      with character classes, this seems a logical interpretation.  */
   if (complement && s1->has_upper_or_lower)
     {
-      error (1, 0,
+      error (EXIT_FAILURE, 0,
 	     _("character classes may not be used when translating \
 and complementing"));
     }
@@ -1534,14 +1535,14 @@ and complementing"));
       get_s2_spec_stats (s2, s1->length);
       if (s2->has_restricted_char_class)
 	{
-	  error (1, 0,
+	  error (EXIT_FAILURE, 0,
 		 _("when translating, the only character classes that may \
 appear in\n\tstring2 are `upper' and `lower'"));
 	}
 
       if (s2->n_indefinite_repeats > 1)
 	{
-	  error (1, 0,
+	  error (EXIT_FAILURE, 0,
 		 _("only one [c*] repeat construct may appear in string2"));
 	}
 
@@ -1549,7 +1550,7 @@ appear in\n\tstring2 are `upper' and `lower'"));
 	{
 	  if (s2->has_equiv_class)
 	    {
-	      error (1, 0,
+	      error (EXIT_FAILURE, 0,
 		     _("[=c=] expressions may not appear in string2 \
 when translating"));
 	    }
@@ -1562,14 +1563,14 @@ when translating"));
 		     given or string1 is empty.  */
 
 		  if (s2->length == 0)
-		    error (1, 0,
+		    error (EXIT_FAILURE, 0,
 		     _("when not truncating set1, string2 must be non-empty"));
 		  string2_extend (s1, s2);
 		}
 	    }
 
 	  if (complement && s2->has_upper_or_lower)
-	    error (1, 0,
+	    error (EXIT_FAILURE, 0,
 		   _("character classes may not be used when translating \
 and complementing"));
 	}
@@ -1577,7 +1578,7 @@ and complementing"));
 	/* Not translating.  */
 	{
 	  if (s2->n_indefinite_repeats > 0)
-	    error (1, 0,
+	    error (EXIT_FAILURE, 0,
 		   _("the [c*] construct may appear in string2 only \
 when translating"));
 	}
@@ -1611,7 +1612,7 @@ squeeze_filter (unsigned char *buf, long int size, PFI reader)
 	    nr = (*reader) (buf, size, NULL);
 
 	  if (nr < 0)
-	    error (1, errno, _("read error"));
+	    error (EXIT_FAILURE, errno, _("read error"));
 	  if (nr == 0)
 	    break;
 	  i = 0;
@@ -1662,7 +1663,7 @@ squeeze_filter (unsigned char *buf, long int size, PFI reader)
 	    }
 	  if (out_len > 0
 	      && fwrite ((char *) &buf[begin], 1, out_len, stdout) == 0)
-	    error (1, errno, _("write error"));
+	    error (EXIT_FAILURE, errno, _("write error"));
 	}
 
       if (char_to_squeeze != NOT_A_CHAR)
@@ -1708,7 +1709,7 @@ read_and_delete (unsigned char *buf, long int size, PFI not_used)
       int nr = safe_read (0, (char *) buf, size);
 
       if (nr < 0)
-	error (1, errno, _("read error"));
+	error (EXIT_FAILURE, errno, _("read error"));
       if (nr == 0)
 	{
 	  hit_eof = 1;
@@ -1752,7 +1753,7 @@ read_and_xlate (unsigned char *buf, long int size, PFI not_used)
 
   chars_read = safe_read (0, (char *) buf, size);
   if (chars_read < 0)
-    error (1, errno, _("read error"));
+    error (EXIT_FAILURE, errno, _("read error"));
   if (chars_read == 0)
     {
       hit_eof = 1;
@@ -1855,10 +1856,10 @@ main (int argc, char **argv)
     }
 
   if (!delete && !squeeze_repeats && non_option_args != 2)
-    error (1, 0, _("two strings must be given when translating"));
+    error (EXIT_FAILURE, 0, _("two strings must be given when translating"));
 
   if (delete && squeeze_repeats && non_option_args != 2)
-    error (1, 0, _("two strings must be given when both \
+    error (EXIT_FAILURE, 0, _("two strings must be given when both \
 deleting and squeezing repeats"));
 
   /* If --delete is given without --squeeze-repeats, then
@@ -1871,13 +1872,13 @@ deleting and squeezing repeats"));
       if (posix_pedantic && non_option_args == 2)
 	--non_option_args;
       else
-	error (1, 0,
+	error (EXIT_FAILURE, 0,
 	       _("only one string may be given when deleting \
 without squeezing repeats"));
     }
 
   if (squeeze_repeats && non_option_args == 0)
-    error (1, 0,
+    error (EXIT_FAILURE, 0,
 	   _("at least one string must be given when squeezing repeats"));
 
   spec_init (s1);
@@ -1909,7 +1910,7 @@ without squeezing repeats"));
 	{
 	  nr = read_and_delete (io_buf, IO_BUF_SIZE, NULL);
 	  if (nr > 0 && fwrite ((char *) io_buf, 1, nr, stdout) == 0)
-	    error (1, errno, _("write error"));
+	    error (EXIT_FAILURE, errno, _("write error"));
 	}
       while (nr > 0);
     }
@@ -1963,7 +1964,7 @@ without squeezing repeats"));
 	      c1 = get_next (s1, &class_s1);
 	      c2 = get_next (s2, &class_s2);
 	      if (!class_ok[(int) class_s1][(int) class_s2])
-		error (1, 0,
+		error (EXIT_FAILURE, 0,
 		     _("misaligned or mismatched upper and/or lower classes"));
 	      /* The following should have been checked by validate...  */
 	      if (c2 == -1)
@@ -1986,7 +1987,7 @@ without squeezing repeats"));
 	      chars_read = read_and_xlate (io_buf, IO_BUF_SIZE, NULL);
 	      if (chars_read > 0
 		  && fwrite ((char *) io_buf, 1, chars_read, stdout) == 0)
-		error (1, errno, _("write error"));
+		error (EXIT_FAILURE, errno, _("write error"));
 	    }
 	  while (chars_read > 0);
 	}

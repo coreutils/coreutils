@@ -319,7 +319,7 @@ main (int argc, char **argv)
     }
 
   if (have_read_stdin && close (0))
-    error (1, errno, "-");
+    error (EXIT_FAILURE, errno, "-");
 
   exit (exit_status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

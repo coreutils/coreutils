@@ -253,7 +253,7 @@ main (int argc, char **argv)
 	errors = 1;
 
   if (have_read_stdin && fclose (stdin) == EOF)
-    error (1, errno, "-");
+    error (EXIT_FAILURE, errno, "-");
   exit (errors == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 

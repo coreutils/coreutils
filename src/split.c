@@ -176,17 +176,17 @@ cwrite (int new_file_flag, const char *bp, int bytes)
   if (new_file_flag)
     {
       if (output_desc >= 0 && close (output_desc) < 0)
-	error (1, errno, "%s", outfile);
+	error (EXIT_FAILURE, errno, "%s", outfile);
 
       next_file_name ();
       if (verbose)
 	fprintf (stderr, _("creating file `%s'\n"), outfile);
       output_desc = open (outfile, O_WRONLY | O_CREAT | O_TRUNC, 0666);
       if (output_desc < 0)
-	error (1, errno, "%s", outfile);
+	error (EXIT_FAILURE, errno, "%s", outfile);
     }
   if (full_write (output_desc, bp, bytes) < 0)
-    error (1, errno, "%s", outfile);
+    error (EXIT_FAILURE, errno, "%s", outfile);
 }
 
 /* Read NCHARS bytes from the input file into BUF.
@@ -228,7 +228,7 @@ bytes_split (int nchars, char *buf, int bufsize)
     {
       n_read = stdread (buf, bufsize);
       if (n_read < 0)
-        error (1, errno, "%s", infile);
+        error (EXIT_FAILURE, errno, "%s", infile);
       bp_out = buf;
       to_read = n_read;
       for (;;)
@@ -271,7 +271,7 @@ lines_split (int nlines, char *buf, int bufsize)
     {
       n_read = stdread (buf, bufsize);
       if (n_read < 0)
-	error (1, errno, "%s", infile);
+	error (EXIT_FAILURE, errno, "%s", infile);
       bp = bp_out = buf;
       eob = bp + n_read;
       *eob = '\n';
@@ -320,7 +320,7 @@ line_bytes_split (int nchars)
 
       n_read = stdread (buf + n_buffered, nchars - n_buffered);
       if (n_read < 0)
-	error (1, errno, "%s", infile);
+	error (EXIT_FAILURE, errno, "%s", infile);
 
       n_buffered += n_read;
       if (n_buffered != nchars)
@@ -489,7 +489,7 @@ main (int argc, char **argv)
     {
       input_desc = open (infile, O_RDONLY);
       if (input_desc < 0)
-	error (1, errno, "%s", infile);
+	error (EXIT_FAILURE, errno, "%s", infile);
     }
 
   /* No output file is open now.  */
@@ -509,7 +509,7 @@ main (int argc, char **argv)
   /* Get the optimal block size of input device and make a buffer.  */
 
   if (fstat (input_desc, &stat_buf) < 0)
-    error (1, errno, "%s", infile);
+    error (EXIT_FAILURE, errno, "%s", infile);
   in_blk_size = ST_BLKSIZE (stat_buf);
 
   buf = xmalloc (in_blk_size + 1);
@@ -534,9 +534,9 @@ main (int argc, char **argv)
     }
 
   if (close (input_desc) < 0)
-    error (1, errno, "%s", infile);
+    error (EXIT_FAILURE, errno, "%s", infile);
   if (output_desc >= 0 && close (output_desc) < 0)
-    error (1, errno, "%s", outfile);
+    error (EXIT_FAILURE, errno, "%s", outfile);
 
   exit (EXIT_SUCCESS);
 }

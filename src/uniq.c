@@ -218,14 +218,14 @@ check_file (const char *infile, const char *outfile)
   else
     istream = fopen (infile, "r");
   if (istream == NULL)
-    error (1, errno, "%s", infile);
+    error (EXIT_FAILURE, errno, "%s", infile);
 
   if (!strcmp (outfile, "-"))
     ostream = stdout;
   else
     ostream = fopen (outfile, "w");
   if (ostream == NULL)
-    error (1, errno, "%s", outfile);
+    error (EXIT_FAILURE, errno, "%s", outfile);
 
   thisline = &lb1;
   prevline = &lb2;
@@ -263,10 +263,10 @@ check_file (const char *infile, const char *outfile)
 
  closefiles:
   if (ferror (istream) || fclose (istream) == EOF)
-    error (1, errno, _("error reading %s"), infile);
+    error (EXIT_FAILURE, errno, _("error reading %s"), infile);
 
   if (ferror (ostream) || fclose (ostream) == EOF)
-    error (1, errno, _("error writing %s"), outfile);
+    error (EXIT_FAILURE, errno, _("error writing %s"), outfile);
 
   free (lb1.buffer);
   free (lb2.buffer);
@@ -323,7 +323,8 @@ main (int argc, char **argv)
 	    long int tmp_long;
 	    if (xstrtol (optarg, NULL, 10, &tmp_long, NULL) != LONGINT_OK
 		|| tmp_long <= 0 || tmp_long > INT_MAX)
-	      error (1, 0, _("invalid number of fields to skip: `%s'"),
+	      error (EXIT_FAILURE, 0,
+		     _("invalid number of fields to skip: `%s'"),
 		     optarg);
 	    skip_fields = (int) tmp_long;
 	  }
@@ -334,7 +335,8 @@ main (int argc, char **argv)
 	    long int tmp_long;
 	    if (xstrtol (optarg, NULL, 10, &tmp_long, NULL) != LONGINT_OK
 		|| tmp_long <= 0 || tmp_long > INT_MAX)
-	      error (1, 0, _("invalid number of bytes to skip: `%s'"),
+	      error (EXIT_FAILURE, 0,
+		     _("invalid number of bytes to skip: `%s'"),
 		     optarg);
 	    skip_chars = (int) tmp_long;
 	  }
@@ -349,7 +351,8 @@ main (int argc, char **argv)
 	    long int tmp_long;
 	    if (xstrtol (optarg, NULL, 10, &tmp_long, NULL) != LONGINT_OK
 		|| tmp_long <= 0 || tmp_long > INT_MAX)
-	      error (1, 0, _("invalid number of bytes to compare: `%s'"),
+	      error (EXIT_FAILURE, 0,
+		     _("invalid number of bytes to compare: `%s'"),
 		     optarg);
 	    check_chars = (int) tmp_long;
 	  }
@@ -379,7 +382,8 @@ main (int argc, char **argv)
 	  long int tmp_long;
 	  if (xstrtol (opt_str, NULL, 10, &tmp_long, NULL) != LONGINT_OK
 	      || tmp_long <= 0 || tmp_long > INT_MAX)
-	    error (1, 0, _("invalid number of bytes to compare: `%s'"),
+	    error (EXIT_FAILURE, 0,
+		   _("invalid number of bytes to compare: `%s'"),
 		   opt_str);
 	  skip_chars = (int) tmp_long;
 	}

@@ -612,7 +612,7 @@ main (int argc, char **argv)
 	case 's':
 	  separator = optarg;
 	  if (*separator == 0)
-	    error (1, 0, _("separator cannot be empty"));
+	    error (EXIT_FAILURE, 0, _("separator cannot be empty"));
 	  break;
 	default:
 	  usage (1);
@@ -638,7 +638,7 @@ main (int argc, char **argv)
       error_message = re_compile_pattern (separator, strlen (separator),
 					  &compiled_separator);
       if (error_message)
-	error (1, 0, "%s", error_message);
+	error (EXIT_FAILURE, 0, "%s", error_message);
     }
   else
     match_length = sentinel_length = strlen (separator);
@@ -678,8 +678,8 @@ main (int argc, char **argv)
   output ((char *) NULL, (char *) NULL);
 
   if (have_read_stdin && close (0) < 0)
-    error (1, errno, "-");
+    error (EXIT_FAILURE, errno, "-");
   if (close (1) < 0)
-    error (1, errno, _("write error"));
+    error (EXIT_FAILURE, errno, _("write error"));
   exit (errors == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

@@ -646,7 +646,7 @@ static unsigned int
 get_first_line_in_buffer (void)
 {
   if (head == NULL && !load_buffer ())
-    error (1, errno, _("input disappeared"));
+    error (EXIT_FAILURE, errno, _("input disappeared"));
 
   return head->first_available;
 }
@@ -747,7 +747,7 @@ set_input_file (const char *name)
     {
       input_desc = open (name, O_RDONLY);
       if (input_desc < 0)
-	error (1, errno, "%s", name);
+	error (EXIT_FAILURE, errno, "%s", name);
     }
 }
 
@@ -1126,11 +1126,11 @@ check_for_offset (struct control *p, const char *str, const char *num)
   unsigned long val;
 
   if (*num != '-' && *num != '+')
-    error (1, 0, _("%s: `+' or `-' expected after delimeter"), str);
+    error (EXIT_FAILURE, 0, _("%s: `+' or `-' expected after delimeter"), str);
 
   if (xstrtoul (num + 1, NULL, 10, &val, NULL) != LONGINT_OK
       || val > UINT_MAX)
-    error (1, 0, _("%s: integer expected after `%c'"), str, *num);
+    error (EXIT_FAILURE, 0, _("%s: integer expected after `%c'"), str, *num);
   p->offset = (unsigned int) val;
 
   if (*num == '-')
@@ -1150,7 +1150,7 @@ parse_repeat_count (int argnum, struct control *p, char *str)
 
   end = str + strlen (str) - 1;
   if (*end != '}')
-    error (1, 0, _("%s: `}' is required in repeat count"), str);
+    error (EXIT_FAILURE, 0, _("%s: `}' is required in repeat count"), str);
   *end = '\0';
 
   if (str+1 == end-1 && *(str+1) == '*')
@@ -1160,7 +1160,8 @@ parse_repeat_count (int argnum, struct control *p, char *str)
       if (xstrtoul (str + 1, NULL, 10, &val, NULL) != LONGINT_OK
 	  || val > UINT_MAX)
 	{
-	  error (1, 0, _("%s}: integer required between `{' and `}'"),
+	  error (EXIT_FAILURE, 0,
+		 _("%s}: integer required between `{' and `}'"),
 		 global_argv[argnum]);
 	}
       p->repeat = (unsigned int) val;
@@ -1186,7 +1187,8 @@ extract_regexp (int argnum, boolean ignore, char *str)
 
   closing_delim = strrchr (str + 1, delim);
   if (closing_delim == NULL)
-    error (1, 0, _("%s: closing delimeter `%c' missing"), str, delim);
+    error (EXIT_FAILURE, 0,
+	   _("%s: closing delimeter `%c' missing"), str, delim);
 
   len = closing_delim - str - 1;
   p = new_control_record ();
@@ -1239,12 +1241,13 @@ parse_patterns (int argc, int start, char **argv)
 
 	  if (xstrtoul (argv[i], NULL, 10, &val, NULL) != LONGINT_OK
 	      || val > INT_MAX)
-	    error (1, 0, _("%s: invalid pattern"), argv[i]);
+	    error (EXIT_FAILURE, 0, _("%s: invalid pattern"), argv[i]);
 	  if (val == 0)
-	    error (1, 0, _("%s: line number must be greater than zero"),
+	    error (EXIT_FAILURE, 0,
+		   _("%s: line number must be greater than zero"),
 		   argv[i]);
 	  if (val < last_val)
-	    error (1, 0,
+	    error (EXIT_FAILURE, 0,
 	     _("line number `%s' is smaller than preceding line number, %lu"),
 		   argv[i], last_val);
 
@@ -1373,14 +1376,16 @@ get_format_conv_type (char **format_ptr)
       break;
 
     case 0:
-      error (1, 0, _("missing conversion specifier in suffix"));
+      error (EXIT_FAILURE, 0, _("missing conversion specifier in suffix"));
       break;
 
     default:
       if (ISPRINT (ch))
-        error (1, 0, _("invalid conversion specifier in suffix: %c"), ch);
+        error (EXIT_FAILURE, 0,
+	       _("invalid conversion specifier in suffix: %c"), ch);
       else
-	error (1, 0, _("invalid conversion specifier in suffix: \\%.3o"), ch);
+	error (EXIT_FAILURE, 0,
+	       _("invalid conversion specifier in suffix: \\%.3o"), ch);
     }
 }
 
@@ -1411,9 +1416,11 @@ max_out (char *format)
     }
 
   if (percents == 0)
-    error (1, 0, _("missing %% conversion specification in suffix"));
+    error (EXIT_FAILURE, 0,
+	   _("missing %% conversion specification in suffix"));
   else if (percents > 1)
-    error (1, 0, _("too many %% conversion specifications in suffix"));
+    error (EXIT_FAILURE, 0,
+	   _("too many %% conversion specifications in suffix"));
 
   return out_count;
 }
@@ -1492,7 +1499,7 @@ main (int argc, char **argv)
       case 'n':
 	if (xstrtoul (optarg, NULL, 10, &val, NULL) != LONGINT_OK
 	    || val > INT_MAX)
-	  error (1, 0, _("%s: invalid number"), optarg);
+	  error (EXIT_FAILURE, 0, _("%s: invalid number"), optarg);
 	digits = (int) val;
 	break;
 
