@@ -1,4 +1,5 @@
 [4.1.10]
+* `rm dangling-symlink' doesn't prompt [introduced in 4.1.9]
 * stat: rename --link/-l to --dereference/-L.
     The old options will continue to work for a while.
 [4.1.9]
