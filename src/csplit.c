@@ -85,7 +85,7 @@ struct control
 /* A string with a length count. */
 struct cstring
 {
-  int len;
+  unsigned int len;
   char *str;
 };
 
@@ -267,11 +267,14 @@ save_to_hold_area (char *start, unsigned int num)
 
 /* Read up to MAX_N_BYTES chars from the input stream into DEST.
    Return the number of chars read. */
+/* FIXME: MAX_N_BYTES should be of type size_t, but if you pull
+   that thread, you'll find there are many other `unsigned' types
+   in this file that should also be changed.  */
 
-static int
-read_input (char *dest, unsigned int max_n_bytes)
+static size_t
+read_input (char *dest, int max_n_bytes)
 {
-  int bytes_read;
+  size_t bytes_read;
 
   if (max_n_bytes == 0)
     return 0;
@@ -281,7 +284,7 @@ read_input (char *dest, unsigned int max_n_bytes)
   if (bytes_read == 0)
     have_read_eof = TRUE;
 
-  if (bytes_read < 0)
+  if (bytes_read == SAFE_READ_ERROR)
     {
       error (0, errno, _("read error"));
       cleanup_fatal ();
