@@ -708,7 +708,7 @@ sort_buffer_size (FILE *const *fps, int nfps,
       size_t worst_case;
 
       if ((i < nfps ? fstat (fileno (fps[i]), &st)
-	   : strcmp (files[i], "-") == 0 ? fstat (STDIN_FILENO, &st)
+	   : STREQ (files[i], "-") ? fstat (STDIN_FILENO, &st)
 	   : stat (files[i], &st))
 	  != 0)
 	die (_("stat failed"), files[i]);
@@ -2428,7 +2428,7 @@ main (int argc, char **argv)
 	      error (SORT_FAILURE, 0, _("empty tab"));
 	    if (optarg[1])
 	      {
-		if (strcmp (optarg, "\\0") == 0)
+		if (STREQ (optarg, "\\0"))
 		  newtab = '\0';
 		else
 		  {
