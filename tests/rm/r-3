@@ -14,23 +14,24 @@ tmp=$TMPDIR/t-rm.$$
 
 framework_fail=0
 mkdir $tmp || framework_fail=1
+cd $tmp || framework_fail=1
 
-a=1
-n=300
-i=$a
-echo "creating $n files in $tmp..."
-while :; do
-  touch $tmp/$i || framework_fail=1
-  test $i = $n && break
-  i=`expr $i + 1`
+# Create 300 files (12 * 25).
+for i in 0 1 2 3 4 5 6 7 8 9 a b; do
+  files=
+  for j in a b c d e f g h i j k l m n o p q r s t u v w x y; do
+    files="$files $i$j"
+  done
+  touch $files || framework_fail=1
 done
 
-test -f $tmp/$a || framework_fail=1
-test -f $tmp/$n || framework_fail=1
+test -f 0a || framework_fail=1
+test -f by || framework_fail=1
+cd .. || framework_fail=1
 
 if test $framework_fail = 1; then
   echo 'failure in testing framework'
-  exit 1
+  (exit 1); exit
 fi
 
 fail=0
