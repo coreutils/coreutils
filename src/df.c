@@ -697,7 +697,7 @@ add_fs_type (const char *fstype)
 {
   struct fs_type_list *fsp;
 
-  fsp = xmalloc (sizeof (struct fs_type_list));
+  fsp = xmalloc (sizeof *fsp);
   fsp->fs_name = (char *) fstype;
   fsp->fs_next = fs_select_list;
   fs_select_list = fsp;
@@ -710,7 +710,7 @@ add_excluded_fs_type (const char *fstype)
 {
   struct fs_type_list *fsp;
 
-  fsp = xmalloc (sizeof (struct fs_type_list));
+  fsp = xmalloc (sizeof *fsp);
   fsp->fs_name = (char *) fstype;
   fsp->fs_next = fs_exclude_list;
   fs_exclude_list = fsp;
@@ -890,8 +890,7 @@ main (int argc, char **argv)
 
       /* stat all the given entries to make sure they get automounted,
 	 if necessary, before reading the filesystem table.  */
-      stats = (struct stat *)
-	xmalloc ((argc - optind) * sizeof (struct stat));
+      stats = xmalloc ((argc - optind) * sizeof *stats);
       for (i = optind; i < argc; ++i)
 	{
 	  if (stat (argv[i], &stats[i - optind]))
