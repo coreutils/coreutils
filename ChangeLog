@@ -2,6 +2,12 @@
 
 	* Version 4.5.10.
 
+	* src/Makefile.am (check-misc): Check for use of `defined' in
+	#define directives.
+	Change to $(srcdir) before running grep.
+
+	* src/sleep.c: Remove now-unused #include and #define directives.
+
 	* src/du.c (process_file): If a file's size is not being counted
 	e.g., because it's a hard link to a file we've already counted,
 	then don't print a line for it.
