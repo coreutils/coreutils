@@ -37,7 +37,7 @@ error.c filemode.c fsusage.c full-write.c getopt.c getopt1.c \
 getversion.c group-member.c idcache.c isdir.c makepath.c \
 modechange.c mountlist.c safe-read.c savedir.c \
 stripslash.c xgetcwd.c xmalloc.c xstrdup.c userspec.c yesno.c \
-fileblocks.c fnmatch.c ftruncate.c mkdir.c mktime.c rename.c stpcpy.c \
+fileblocks.c fnmatch.c ftruncate.c mkdir.c mktime.c rename.c rmdir.c stpcpy.c \
 strdup.c strstr.c alloca.c long-options.c
 
 OBJECTS = getdate.o posixtm.o \
@@ -58,7 +58,7 @@ all: libfu.a
 .SUFFIXES = .c .o
 
 .c.o:
-	$(CC) -c $(CPPFLAGS) $(DEFS) -I.. -I$(srcdir) $(CFLAGS) $<
+	$(CC) -c $(CPPFLAGS) $(DEFS) -I. -I.. -I$(srcdir) $(CFLAGS) $<
 
 Makefile: ../config.status Makefile.in
 	CONFIG_FILES=$@ CONFIG_HEADERS= ../config.status
@@ -99,19 +99,19 @@ extract_stat = sed -e 's/@l@//g' -e 's/@L@//g'
 extract_lstat = sed -e 's/@l@/l/g' -e 's/@L@/L/g'
 
 safe-lstat.c: safe-xstat.c.in
-	$(extract_lstat) safe-xstat.c.in > $@-tmp
+	$(extract_lstat) $(srcdir)/safe-xstat.c.in > $@-tmp
 	mv $@-tmp $@
 
 safe-lstat.h: safe-xstat.h.in
-	$(extract_lstat) safe-xstat.h.in > $@-tmp
+	$(extract_lstat) $(srcdir)/safe-xstat.h.in > $@-tmp
 	mv $@-tmp $@
 
 safe-stat.c: safe-xstat.c.in
-	$(extract_stat) safe-xstat.c.in > $@-tmp
+	$(extract_stat) $(srcdir)/safe-xstat.c.in > $@-tmp
 	mv $@-tmp $@
 
 safe-stat.h: safe-xstat.h.in
-	$(extract_stat) safe-xstat.h.in > $@-tmp
+	$(extract_stat) $(srcdir)/safe-xstat.h.in > $@-tmp
 	mv $@-tmp $@
 
 safe-stat.o: safe-stat.h
