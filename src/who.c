@@ -52,7 +52,6 @@
 
 #include "system.h"
 #include "version.h"
-#include "safe-stat.h"
 #include "error.h"
 
 #if !defined (UTMP_FILE) && defined (_PATH_UTMP)	/* 4.4BSD.  */
@@ -217,7 +216,7 @@ print_entry (this)
       line[DEV_DIR_LEN + sizeof (this->ut_line)] = '\0';
     }
 
-  if (safe_stat (line, &stats) == 0)
+  if (stat (line, &stats) == 0)
     {
       mesg = (stats.st_mode & S_IWGRP) ? '+' : '-';
       last_change = stats.st_atime;

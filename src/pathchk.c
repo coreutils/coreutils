@@ -45,7 +45,6 @@
 
 #include "version.h"
 #include "system.h"
-#include "safe-stat.h"
 #include "error.h"
 
 #ifdef _POSIX_VERSION
@@ -212,7 +211,7 @@ dir_ok (path)
 {
   struct stat stats;
 
-  if (safe_stat (path, &stats))
+  if (stat (path, &stats))
     return 2;
 
   if (!S_ISDIR (stats.st_mode))

@@ -35,8 +35,6 @@
 #else /* TEST_STANDALONE */
 #  include "system.h"
 #  include "version.h"
-#  include "safe-stat.h"
-#  include "safe-lstat.h"
 #  include "group-member.h"
 #  include "error.h"
 #  if !defined (S_IXUGO)
@@ -154,7 +152,7 @@ test_stat (path, finfo)
       errno = ENOENT;
       return (-1);
     }
-  return (safe_stat (path, finfo));
+  return (stat (path, finfo));
 }
 
 /* Do the same thing access(2) does, but use the effective uid and gid,
@@ -595,9 +593,9 @@ binary_operator ()
 	      pos += 3;
 	      if (l_is_l || r_is_l)
 		test_syntax_error ("-ef does not accept -l\n", NULL);
-	      if (safe_stat (argv[op - 1], &stat_buf) < 0)
+	      if (stat (argv[op - 1], &stat_buf) < 0)
 		return (FALSE);
-	      if (safe_stat (argv[op + 1], &stat_spare) < 0)
+	      if (stat (argv[op + 1], &stat_spare) < 0)
 		return (FALSE);
 	      return (TRUE ==
 		      (stat_buf.st_dev == stat_spare.st_dev &&
@@ -760,7 +758,7 @@ unary_operator ()
 #else
       /* An empty filename is not a valid pathname. */
       if ((argv[pos - 1][0] == '\0') ||
-	  (safe_lstat (argv[pos - 1], &stat_buf) < 0))
+	  (lstat (argv[pos - 1], &stat_buf) < 0))
 	return (FALSE);
 
       return (TRUE == (S_ISLNK (stat_buf.st_mode)));
