@@ -267,7 +267,7 @@ show_dev (const char *disk, const char *mount_point, const char *fstype)
     }
   else
     {
-      int w = human_readable_base ? 5 : 7;
+      int w = human_readable_base ? 5 : 8;
       char buf[2][LONGEST_HUMAN_READABLE + 1];
       char availbuf[LONGEST_HUMAN_READABLE + 2];
       char *avail;
