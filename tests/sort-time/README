@@ -24,4 +24,6 @@ done
 # do this on at least SunOS, Linux, Solaris
 
 # RESULTS:
-# Solarix x86 dual PPro/200: none
+# Solaris5.5.1, x86 dual PPro/200: none
+# Linux 3.0.29 x86 P/100: 5-6% improvement for 80, 200, 400,
+#     but 1-2% penalty for 800 and 3000
