@@ -76,11 +76,20 @@ Here is one possible patch to correct the problem.
 If you run the tests as root, note that a few of them create files
 and/or run programs as a non-root user, `nobody' by default.
 If you want to use some other non-root username, specify it via
-the NON_ROOT_USERNAME environment variable.
+the NON_ROOT_USERNAME environment variable.  Depending on the
+permissions with which the working directories have been created,
+using `nobody' may fail, because that use won't have the required
+read and write access to the build and test directories.
+I find that it is best to unpack and build as a non-privileged
+user, and then to run the following command as that user in order
+to run the privilege-requiring tests:
+
+  sudo env NON_ROOT_USERNAME=$USER make check
+
 If you can run the tests as root, please do so and report any
 problems.  We get much less test coverage in that mode, and it's
 arguably more important that these tools work well when run by
-root than when run by unprivileged users.
+root than when run by less privileged users.
 
 ***************************************
 
