@@ -12,7 +12,7 @@
 	* src/ls.c: Likewise.
 	* src/dircolors.c: Remove free and malloc decls.
 	* src/ls.c: Likewise.
-	* src/rm.c: Likewise.
+	* src/rm.c: Remove free, malloc, and realloc decls.
 	On some systems, strstr and stpcpy are macros, so declaring them
 	unconditionally gets syntax errors.
 	Reported by Mark M. Kettenis.
