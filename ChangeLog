@@ -1860,6 +1860,12 @@
 
 	* Makefile.am (SUBDIRS): Remove djgpp, for now.
 
+2002-07-20  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.am (false.c): Convert only the final EXIT_SUCCESS
+	into EXIT_FAILURE.  Otherwise, false --help and false --version
+	would fail.
+
 2002-07-08  Jim Meyering  <jim@meyering.net>
 
 	* src/Makefile.am (uninstall-local): Search for @GNU_PACKAGE@,
