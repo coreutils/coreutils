@@ -23,7 +23,9 @@
 
 char *xmalloc ();
 
-/* On Ultrix 4.3, getgroups (0, 0) always fails.
+/* On at least Ultrix 4.3 and NextStep 3.2, getgroups (0, 0) always fails.
+   On other systems, it returns the number of supplemental groups for the
+   process is returned.
    This function handles that special case and lets the system-
    provided function handle all others.  */
 
@@ -32,7 +34,7 @@ getgroups (n, group)
      size_t n;
      GETGROUPS_T *group;
 {
-  int ng;
+  int n_groups;
   GETGROUPS_T *gbuf;
 
 #undef getgroups
@@ -45,13 +47,13 @@ getgroups (n, group)
   while (1)
     {
       gbuf = (GETGROUPS_T *) xrealloc (gbuf, n * sizeof (GETGROUPS_T));
-      ng = getgroups (n, gbuf);
-      if (ng < n)
+      n_groups = getgroups (n, gbuf);
+      if (n_groups < n)
 	break;
       n += 10;
     }
 
   free (gbuf);
 
-  return ng;
+  return n_groups;
 }
