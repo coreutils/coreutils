@@ -1,3 +1,8 @@
+2002-12-04  Jim Meyering  <jim@meyering.net>
+
+	* safe-read.c: Rework so that it may serve to define safe_write, too.
+	* safe-write.c: Simply #define SAFE_WRITE and include safe-read.c.
+
 2002-12-03  Jim Meyering  <jim@meyering.net>
 
 	* safe-read.h: Update from gnulib (add comments, include stddef.h).
