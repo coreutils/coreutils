@@ -31,8 +31,12 @@
 #include "system.h"
 #include "version.h"
 
+#ifndef ULONG_MAX
+#define ULONG_MAX ((unsigned long) ~(unsigned long) 0)
+#endif
+
 #ifndef LONG_MAX
-#define LONG_MAX 0x7FFFFFFF
+#define LONG_MAX ((long int) (ULONG_MAX >> 1))
 #endif
 
 #ifndef UCHAR_MAX
