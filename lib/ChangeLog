@@ -1,3 +1,41 @@
+2003-08-17  Paul Eggert  <eggert@twinsun.com>
+
+	* same.c: Include <stdbool.h>, <limits.h>.
+	(_POSIX_NAME_MAX): Define if not defined.
+	(MIN): New macro.
+	(same_name): If file names are silently truncated, report
+	that the file names are the same if they are the same after
+	the silent truncation.
+
+2003-08-16  Paul Eggert  <eggert@twinsun.com>
+
+	Merge from gnulib.
+	* Makefile.am (libfetish_a_SOURCES): Remove getndelim2.c,
+	getndelim2.h, xstrtoimax.c.  Add localcharset.h.
+	(CLEANFILES, SUFFIXES): Initialize to empty.
+	(EXTRA_DIST): Add getndelim2.c, getndelim2.h.
+	(install-exec-local): Use $(GLIBC21), not @GLIBC21@.
+	Do not mkdir libdir if not glibc21.
+	(charset.alias): @host@ -> $(host).
+	(SUFFIXES, .sin.sed, CLEANFILES): Reorder rules
+	to match gnulib module suggestions.
+	* localcharset.h, readlink.c: New files, from gnulib.
+	* asnprintf.c, asnprintf.c, asprintf.c, backupfile.h,
+	canon-host.c, config.charset, dirname.h, euidaccess.c, exclude.c,
+	fsusage.h, full-write.c, getloadavg.c, getndelim2.h, gettext.h,
+	group-member.h, hard-locale.h, hash.c, hash.h, hash-pjw.c,
+	localcharset.c, long-options.h, makepath.h, malloc.c, mbswidth.c,
+	mbswidth.h, md5.h, memcasecmp.c, memcasecmp.h, memcoll.h,
+	mkstemp.c, modechange.h, mountlist.h, path-concat.h, pathmax.h,
+	physmem.h, posixtm.h, printf-args.c, printf-args.h,
+	printf-parse.c, printf-parse.h, putenv.c, quote.h, readutmp.h,
+	ref-add.sin, ref-del.sin, safe-read.c, savedir.h, setenv.c,
+	setenv.h, stdbool_.h, strnlen.c, strpbrk.c, strtoimax.c,
+	strverscmp.h, tempname.c, unicodeio.c, unicodeio.h,
+	unistd-safer.h, unlocked-io.h, vasnprintf.c, vasnprintf.h,
+	vasprintf.c, vasprintf.h, version-etc.h, xgethostname.c,
+	xmemcoll.c, xstrtoimax.c, xstrtoumax.c: Sync with gnulib.
+
 2003-08-15  Paul Eggert  <eggert@twinsun.com>
 
 	* physmem.c: Include "physmem.h" before system includes.
