@@ -944,8 +944,6 @@ close_output_file (void)
 	}
       else
 	{
-	  /* FIXME: if we write to stdout here, we have to close stdout
-	     and check for errors.  */
 	  if (!suppress_count)
 	    {
 	      char buf[INT_BUFSIZE_BOUND (uintmax_t)];
