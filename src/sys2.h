@@ -321,6 +321,18 @@ char *ttyname ();
 uid_t geteuid ();
 #endif
 
+#if !HAVE_DECL_GETPWUID
+struct passwd *getpwuid ();
+#endif
+
+#if !HAVE_DECL_GETGRGID
+struct group *getgrgid ();
+#endif
+
+#if !HAVE_DECL_GETUID
+uid_t getuid ();
+#endif
+
 #include "xalloc.h"
 
 #if ! defined HAVE_MEMPCPY && ! defined mempcpy
