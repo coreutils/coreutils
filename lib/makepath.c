@@ -389,7 +389,8 @@ make_path (const char *argpath,
       /* The above chown may have turned off some permission bits in MODE.
 	 Another reason we may have to use chmod here is that mkdir(2) is
 	 required to honor only the file permission bits.  In particular,
-	 it may not have honored the `special' bits.  */
+	 it need not honor the `special' bits, so if MODE includes any
+	 special bits, set them here.  */
       if ((mode & ~S_IRWXUGO)
 	  && chmod (basename_dir, mode))
 	{
