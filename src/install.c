@@ -125,13 +125,13 @@ int full_write ();
 int isdir ();
 enum backup_type get_version ();
 
-static int change_attributes __P ((char *path, int no_need_to_chown));
-static int change_timestamps __P ((char *from, char *to));
-static int copy_file __P ((char *from, char *to, int *to_created));
-static int install_file_in_dir __P ((char *from, char *to_dir));
-static int install_file_in_file __P ((char *from, char *to));
+static int change_timestamps __P ((const char *from, const char *to));
+static int change_attributes __P ((const char *path, int no_need_to_chown));
+static int copy_file __P ((const char *from, const char *to, int *to_created));
+static int install_file_in_dir __P ((const char *from, const char *to_dir));
+static int install_file_in_file __P ((const char *from, const char *to));
 static void get_ids __P ((void));
-static void strip __P ((char *path));
+static void strip __P ((const char *path));
 static void usage __P ((int status));
 
 /* The name this program was run with, for error messages. */
@@ -324,7 +324,7 @@ main (int argc, char **argv)
    Return 0 if successful, 1 if an error occurs. */
 
 static int
-install_file_in_file (char *from, char *to)
+install_file_in_file (const char *from, const char *to)
 {
   int to_created;
   int no_need_to_chown;
@@ -348,7 +348,7 @@ install_file_in_file (char *from, char *to)
    Return 0 if successful, 1 if not. */
 
 static int
-install_file_in_dir (char *from, char *to_dir)
+install_file_in_dir (const char *from, const char *to_dir)
 {
   char *from_base;
   char *to;
@@ -372,7 +372,7 @@ static char buffer[READ_SIZE];
    copy fails, don't modify *TO_CREATED.  */
 
 static int
-copy_file (char *from, char *to, int *to_created)
+copy_file (const char *from, const char *to, int *to_created)
 {
   int fromfd, tofd;
   int bytes;
@@ -488,7 +488,7 @@ copy_file (char *from, char *to, int *to_created)
    Return 0 if successful, 1 if not. */
 
 static int
-change_attributes (char *path, int no_need_to_chown)
+change_attributes (const char *path, int no_need_to_chown)
 {
   int err = 0;
 
@@ -528,7 +528,7 @@ change_attributes (char *path, int no_need_to_chown)
    Return 0 if successful, 1 if not. */
 
 static int
-change_timestamps (char *from, char *to)
+change_timestamps (const char *from, const char *to)
 {
   struct stat stb;
   struct utimbuf utb;
@@ -555,7 +555,7 @@ change_timestamps (char *from, char *to)
    it portable would be very difficult.  Not worth the effort. */
 
 static void
-strip (char *path)
+strip (const char *path)
 {
   int pid, status;
 
@@ -566,7 +566,7 @@ strip (char *path)
       error (1, errno, _("fork system call failed"));
       break;
     case 0:			/* Child. */
-      execlp ("strip", "strip", path, (char *) NULL);
+      execlp ("strip", "strip", path, NULL);
       error (1, errno, _("cannot run strip"));
       break;
     default:			/* Parent. */
