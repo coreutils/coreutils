@@ -1,6 +1,11 @@
-2003-06-06  Jim Meyering  <jim@meyering.net>
+2003-06-07  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
+
+	* Makefile.maint (syntax-check): Add commented-out (over-aggressive)
+	rule.
+
+2003-06-06  Jim Meyering  <jim@meyering.net>
 
 	* src/extract-magic (main): Avoid newer 3-arg form of open,
 	so this script works also with e.g., perl5.005_03.
