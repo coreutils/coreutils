@@ -1,6 +1,6 @@
 2000-11-30  Jim Meyering  <meyering@lucent.com>
 
-	* jm-macros.m4 (jm_MACROS): Add stdint.h to the list of headers.
+	* jm-macros.m4 (jm_MACROS): Check for stdint.h.
 
 2000-11-30  Jim Meyering  <meyering@lucent.com>
 
