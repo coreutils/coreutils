@@ -1,6 +1,9 @@
-2002-11-21  Jim Meyering  <jim@meyering.net>
+2002-11-23  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.4.
+
+	* src/tac.c (output): Declare some local variables to be of type size_t,
+	rather than `int' to avoid warnings from gcc.
 
 2002-11-21  Martin Buck  <martin.buck@ascom.ch
 
