@@ -55,7 +55,7 @@
 
 	* lib/readutmp.c (read_utmp): Take new params: count and buffer.
 	Return boolean indicating failure.
-	Now, caller must give diagnostic upon.
+	Now, caller must give diagnostic upon failure.
 
 1997-07-12  Kaveh R. Ghazi  <ghazi@caip.rutgers.edu>
 
