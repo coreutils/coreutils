@@ -33,7 +33,6 @@
 # include <unistd.h>
 #endif
 
-#include "error.h"
 #include "xalloc.h"
 
 #ifndef ENAMETOOLONG
