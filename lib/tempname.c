@@ -32,9 +32,6 @@
 #ifndef P_tmpdir
 # define P_tmpdir "/tmp"
 #endif
-#ifndef TMP_MAX
-# define TMP_MAX 238328
-#endif
 #ifndef __GT_FILE
 # define __GT_FILE	0
 # define __GT_BIGFILE	1
@@ -122,6 +119,11 @@ char *getenv ();
 #if !defined UINT64_MAX && !defined uint64_t
 # define uint64_t uintmax_t
 #endif
+
+/* The total number of temporary file names that can exist for a given
+   template is 62**6.  On ancient hosts where uint64_t is really 32
+   bits, TEMPORARIES evaluates to 965660736, which is good enough.  */
+#define TEMPORARIES ((uint64_t) 62 * 62 * 62 * 62 * 62 * 62)
 
 /* Return nonzero if DIR is an existent directory.  */
 static int
@@ -219,7 +221,8 @@ __gen_tempname (char *tmpl, int kind)
   char *XXXXXX;
   static uint64_t value;
   uint64_t random_time_bits;
-  int count, fd = -1;
+  uint64_t count;
+  int fd = -1;
   int save_errno = errno;
   struct_stat64 st;
 
@@ -245,7 +248,7 @@ __gen_tempname (char *tmpl, int kind)
 #endif
   value += random_time_bits ^ __getpid ();
 
-  for (count = 0; count < TMP_MAX; value += 7777, ++count)
+  for (count = 0; count < TEMPORARIES; value += 7777, ++count)
     {
       uint64_t v = value;
 
