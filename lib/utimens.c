@@ -81,9 +81,9 @@ futimens (int fd ATTRIBUTE_UNUSED,
 	return 0;
 
       /* On GNU/Linux without the futimes syscall and without /proc
-	 mounted, glibc futimes fails with errno == ENOENT.  Fall back
-	 on utimes in this case.  */
-      if (errno != ENOENT)
+	 mounted, glibc futimes fails with errno == ENOENT or ENOSYS.
+	 Fall back on utimes in this case.  */
+      if (errno != ENOENT && errno != ENOSYS)
 	return -1;
     }
 # endif
