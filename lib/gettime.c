@@ -28,7 +28,7 @@
 int
 gettime (struct timespec *ts)
 {
-#if defined CLOCK_REALTIME && HAVE_CLOCK_SETTIME
+#if defined CLOCK_REALTIME && HAVE_CLOCK_GETTIME
   if (clock_gettime (CLOCK_REALTIME, ts) == 0)
     return 0;
 #endif
