@@ -916,7 +916,7 @@ dired_dump_obstack (const char *prefix, struct obstack *os)
       fputs (prefix, stdout);
       for (i = 0; i < n_pos; i++)
 	printf (" %lu", (unsigned long) pos[i]);
-      fputs ("\n", stdout);
+      putchar ('\n');
     }
 }
 
