@@ -2,6 +2,8 @@
 
 	* Version 2.0.15.
 
+	* tests/uniq/Test.pm: Re-enable some commented-out tests.
+
 2001-08-25  Paul Eggert  <eggert@twinsun.com>
 
 	* src/uniq.c (main): Fix a typo in the previous patch: missing
