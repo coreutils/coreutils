@@ -1,3 +1,29 @@
+Thu Nov 03 12:59:34 1994  Jim Meyering  (meyering@comco.com)
+
+	* makepath.h: New file.
+	* makepath.c: Include it.
+	Add an argument: PRESERVE_EXISTING.
+	Declare char* arguments const.
+	* install.c, mkdir.c: Update callers.  Set it in mkdir.c so
+	that `mkdir -p' ignores existing directories as POSIX mandates.
+	Before, it would try to change owner and/or permissions of such
+	directories.  Christopher S. Arthur <csa@halcyon.com> reported
+	the mkdir -p failure.
+	* lib/Makefile.in (DISTFILES): Add it.
+	(makepath.o): Depend on makepath.h.
+	* src/Makefile.in (install.o, mkdir.o): Depend on makepath.h.
+	* cp.c (make_path_private): Rename function from make_path to
+	avoid confusion.
+	(do_copy): Update caller.
+
+	* ls.c: Include <limits.h> before system.h because limits.h on
+	some systems undefines PATH_MAX, whereas system.h includes pathmax.h
+	which sets PATH_MAX.  From Kaveh Ghazi.
+
+	* euidaccess.c: Define S_IXUSR, S_IXGRP, and S_IXOTH in terms of
+	S_IEXEC if they're not already defined.  Reported by Kaveh Ghazi
+	and Daniel Hagerty <hag@gnu.ai.mit.edu>.
+
 Tue Nov 01 06:18:20 1994  Jim Meyering  (meyering@comco.com)
 
 	* eaccess.c (euidaccess): Rename from eaccess to avoid conflict
