@@ -1,3 +1,27 @@
+2000-10-22  Jim Meyering  <meyering@lucent.com>
+
+	* tests/Makefile.am (SUBDIRS): Add shasum.
+	* tests/shasum/basic-1: New file.
+	* configure.in (AC_OUTPUT): Add tests/shasum/Makefile.
+
+	* src/Makefile.am (bin_PROGRAMS): Add shasum.
+	(md5sum_SOURCES): Define.
+	(shasum_SOURCES): Define.
+
+	* src/md5sum.c: Factor out the differences between MD5 and SHA1,
+	and parameterize so this code may be used by both md5sum and the new
+	program, shasum.  Loosely based on a patch from Scott Miller.
+	* src/checksum.h: New file.
+	* src/md5.c: New file that simply defines `algorithm'.
+	* src/shasum.c: Likewise.
+
+	* man/Makefile.am (man_MANS): Add shasum.1.
+	* man/shasum.x: New file.
+
+	Support 8-byte integers, assuming they're printable with e.g., %lld.
+	* src/od.c: Add support for printing data as unsigned
+	long long integers.
+
 2000-10-21  Jim Meyering  <meyering@lucent.com>
 
 	The command, `yes ''|./cat -n' would stop printing after INT_MAX lines.
