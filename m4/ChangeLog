@@ -21,7 +21,6 @@
 	* st_mtim.m4: Likewise.
 	* strftime.m4: Likewise.
 
-
 1999-01-16  Jim Meyering  <meyering@ascend.com>
 
 	* jm-macros.m4 (ARGMATCH_DIE): Define.
