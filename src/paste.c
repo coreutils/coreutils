@@ -145,7 +145,7 @@ main (argc, argv)
 
   if (show_version)
     {
-      printf ("%s\n", version_string);
+      printf ("paste - %s\n", version_string);
       exit (0);
     }
 

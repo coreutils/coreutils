@@ -35,7 +35,6 @@
 #include <sys/types.h>
 #include <getopt.h>
 #include "system.h"
-#include "version.h"
 #include "long-options.h"
 
 char *xmalloc ();
@@ -599,7 +598,7 @@ main (argc, argv)
 
   program_name = argv[0];
 
-  parse_long_options (argc, argv, usage);
+  parse_long_options (argc, argv, "join", usage);
 
   /* Now that we've seen the options, we can construct the blank line
      structures.  */

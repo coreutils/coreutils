@@ -198,7 +198,7 @@ main (argc, argv)
 
   if (show_version)
     {
-      printf ("%s\n", version_string);
+      printf ("tac - %s\n", version_string);
       exit (0);
     }
 
