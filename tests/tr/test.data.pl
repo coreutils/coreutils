@@ -69,7 +69,8 @@
 ('I', 'abc-z', '', 'a\-z', 'A-Z', 'AbcBC', 0);
 #
 # From Ross
-('R0', '', '-cs', '[:upper:]', 'X[Y*]', '', 1);
+('R0.0', '', '-cs', '[:upper:]', 'X[Y*]', '', 1);
+('R0.1', '', '-cs', '[:cntrl:]', 'X[Y*]', '', 1);
 ('R1.0', 'AMZamz123.-+AMZ', '-cs', '[:upper:]', '[X*]', 'AMZXAMZ', 0);
 ('R1.1', '', '-cs', '[:upper:][:digit:]', '[Z*]', '', 0);
 ('R2', 'amzAMZ123.-+amz', '-dcs', '[:lower:]', 'n-rs-z', 'amzamz', 0);
