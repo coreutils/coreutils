@@ -1,5 +1,5 @@
 /* GNU fmt -- simple text formatter.
-   Copyright (C) 1994-2000 Free Software Foundation, Inc.
+   Copyright (C) 1994-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -185,7 +185,7 @@ static bool split;
 static bool uniform;
 
 /* Prefix minus leading and trailing spaces (default "").  */
-static const char *prefix;
+static const unsigned char *prefix;
 
 /* User-supplied maximum line width (default WIDTH).  The only output
    lines
@@ -652,7 +652,7 @@ static int
 get_prefix (FILE *f)
 {
   register int c;
-  register const char *p;
+  register const unsigned char *p;
 
   in_column = 0;
   c = get_space (f, getc (f));
