@@ -1138,13 +1138,13 @@ tail_bytes (const char *pretty_filename, int fd, uintmax_t n_bytes,
 		 more bytes than have been requested.  So reposition the
 		 file pointer to the incoming current position and print
 		 everything after that.  */
-	      xlseek (fd, current_pos, SEEK_SET, pretty_filename);
+	      *read_pos = xlseek (fd, current_pos, SEEK_SET, pretty_filename);
 	    }
 	  else
 	    {
 	      /* There are more bytes remaining than were requested.
 		 Back up.  */
-	      xlseek (fd, -nb, SEEK_END, pretty_filename);
+	      *read_pos = xlseek (fd, -nb, SEEK_END, pretty_filename);
 	    }
 	  *read_pos += dump_remainder (pretty_filename, fd, n_bytes);
 	}
@@ -1194,12 +1194,15 @@ tail_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
 	   && (start_pos = lseek (fd, (off_t) 0, SEEK_CUR)) != -1
 	   && start_pos < (end_pos = lseek (fd, (off_t) 0, SEEK_END)))
 	{
+	  *read_pos = end_pos;
 	  if (end_pos != 0 && file_lines (pretty_filename, fd, n_lines,
 					  start_pos, end_pos, read_pos))
 	    return 1;
 	}
       else
-	return pipe_lines (pretty_filename, fd, n_lines, read_pos);
+	{
+	  return pipe_lines (pretty_filename, fd, n_lines, read_pos);
+	}
     }
   return 0;
 }
