@@ -1,6 +1,12 @@
-2002-04-15  Jim Meyering  <meyering@lucent.com>
+2002-04-16  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.9.
+
+	* src/stat.c: Add copyright comment.
+	(human_fstype): Rename from print_human_fstype, and rework accordingly.
+	(print_statfs): Use human_fstype to honor format width on %T.
+
+2002-04-15  Jim Meyering  <meyering@lucent.com>
 
 	Handle "lld" vs "ld" printf formats the same way Bash does.
 	* src/stat.c: Include inttypes.h.
