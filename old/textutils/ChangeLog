@@ -2,7 +2,7 @@
 
 	* Version 2.0.15.
 
-	* tests/uniq/Test.pm: Add tests for the new functionality below.
+	* tests/uniq/Test.pm: Add tests for -s 0 and -w 0.
 
 2001-08-24  Paul Eggert  <eggert@twinsun.com>
 
