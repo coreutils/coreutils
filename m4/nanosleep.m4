@@ -13,8 +13,19 @@ AC_DEFUN(jm_FUNC_NANOSLEEP,
 
  AC_CACHE_CHECK([whether nanosleep works],
   jm_cv_func_nanosleep_works,
-  [AC_TRY_RUN([
-#   include <time.h>
+  [
+   AC_HEADER_TIME
+   AC_TRY_RUN([
+#   if TIME_WITH_SYS_TIME
+#    include <sys/time.h>
+#    include <time.h>
+#   else
+#    if HAVE_SYS_TIME_H
+#     include <sys/time.h>
+#    else
+#     include <time.h>
+#    endif
+#   endif
 
     int
     main ()
