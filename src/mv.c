@@ -248,9 +248,6 @@ do_move (const char *source, const char *dest, const struct cp_options *x)
 	  assert (VALID_STATUS (status));
 	  if (status == RM_ERROR)
 	    fail = 1;
-
-	  if (fail)
-	    error (0, errno, _("cannot remove %s"), quote (dir_to_remove));
 	}
     }
 
