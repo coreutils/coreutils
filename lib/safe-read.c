@@ -1,5 +1,5 @@
 /* safe-read.c -- an interface to read that retries after interrupts
-   Copyright (C) 1993, 1994 Free Software Foundation, Inc.
+   Copyright (C) 1993, 1994, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -31,17 +31,16 @@
 extern int errno;
 #endif
 
+#include "safe-read.h"
+
 /* Read LEN bytes at PTR from descriptor DESC, retrying if interrupted.
    Return the actual number of bytes read, zero for EOF, or negative
    for an error.  */
 
-int
-safe_read (desc, ptr, len)
-     int desc;
-     char *ptr;
-     int len;
+ssize_t
+safe_read (int desc, char *ptr, size_t len)
 {
-  int n_chars;
+  ssize_t n_chars;
 
   if (len <= 0)
     return len;
