@@ -34,7 +34,6 @@
 #include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include <assert.h>
 
 #ifndef HAVE_DECL_FREE
 "this configure-time declaration test was not run"
@@ -264,7 +263,8 @@ hash_lookup (const Hash_table *table, const void *entry)
     = table->bucket + table->hasher (entry, table->n_buckets);
   struct hash_entry *cursor;
 
-  assert (bucket < table->bucket_limit);
+  if (! (bucket < table->bucket_limit))
+    abort ();
 
   if (bucket->data == NULL)
     return NULL;
@@ -293,12 +293,11 @@ hash_get_first (const Hash_table *table)
   if (table->n_entries == 0)
     return NULL;
 
-  for (bucket = table->bucket; bucket < table->bucket_limit; bucket++)
-    if (bucket->data)
+  for (bucket = table->bucket; ; bucket++)
+    if (! (bucket < table->bucket_limit))
+      abort ();
+    else if (bucket->data)
       return bucket->data;
-
-  assert (0);
-  return NULL;
 }
 
 /* Return the user data for the entry following ENTRY, where ENTRY has been
@@ -312,7 +311,8 @@ hash_get_next (const Hash_table *table, const void *entry)
     = table->bucket + table->hasher (entry, table->n_buckets);
   struct hash_entry *cursor;
 
-  assert (bucket < table->bucket_limit);
+  if (! (bucket < table->bucket_limit))
+    abort ();
 
   /* Find next entry in the same bucket.  */
   for (cursor = bucket; cursor; cursor = cursor->next)
@@ -752,7 +752,9 @@ hash_find_entry (Hash_table *table, const void *entry,
     = table->bucket + table->hasher (entry, table->n_buckets);
   struct hash_entry *cursor;
 
-  assert (bucket < table->bucket_limit);
+  if (! (bucket < table->bucket_limit))
+    abort ();
+
   *bucket_head = bucket;
 
   /* Test for empty bucket.  */
@@ -846,7 +848,9 @@ hash_rehash (Hash_table *table, unsigned candidate)
 	    = (new_table->bucket
 	       + new_table->hasher (data, new_table->n_buckets));
 
-	  assert (new_bucket < new_table->bucket_limit);
+	  if (! (new_bucket < new_table->bucket_limit))
+	    abort ();
+
 	  next = cursor->next;
 
 	  if (new_bucket->data)
@@ -910,7 +914,9 @@ hash_insert (Hash_table *table, const void *entry)
   void *data;
   struct hash_entry *bucket;
 
-  assert (entry);		/* cannot insert a NULL entry */
+  /* The caller cannot insert a NULL entry.  */
+  if (! entry)
+    abort ();
 
   /* If there's a matching entry already in the table, return that.  */
   if ((data = hash_find_entry (table, entry, &bucket, false)) != NULL)

@@ -1,5 +1,7 @@
 /* backupfile.h -- declarations for making Emacs style backup file names
-   Copyright (C) 1990-1992, 1997-1999 Free Software Foundation, Inc.
+
+   Copyright (C) 1990, 1991, 1992, 1997, 1998, 1999, 2003 Free
+   Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by

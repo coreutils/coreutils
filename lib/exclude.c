@@ -26,6 +26,7 @@
 
 #include <stdbool.h>
 
+#include <ctype.h>
 #include <errno.h>
 #ifndef errno
 extern int errno;
@@ -57,6 +58,18 @@ extern int errno;
 #ifndef SIZE_MAX
 # define SIZE_MAX ((size_t) -1)
 #endif
+
+#if STDC_HEADERS || (! defined isascii && ! HAVE_ISASCII)
+# define IN_CTYPE_DOMAIN(c) true
+#else
+# define IN_CTYPE_DOMAIN(c) isascii (c)
+#endif
+
+static inline bool
+is_space (unsigned char c)
+{
+  return IN_CTYPE_DOMAIN (c) && isspace (c);
+}
 
 /* Verify a requirement at compile-time (unlike assert, which is runtime).  */
 #define verify(name, assertion) struct name { char a[(assertion) ? 1 : -1]; }
@@ -208,8 +221,9 @@ add_exclude (struct exclude *ex, char const *pattern, int options)
 }
 
 /* Use ADD_FUNC to append to EX the patterns in FILENAME, each with
-   OPTIONS.  LINE_END terminates each pattern in the file.  Return -1
-   on failure, 0 on success.  */
+   OPTIONS.  LINE_END terminates each pattern in the file.  If
+   LINE_END is a space character, ignore trailing spaces and empty
+   lines in FILE.  Return -1 on failure, 0 on success.  */
 
 int
 add_exclude_file (void (*add_func) (struct exclude *, char const *, int),
@@ -253,12 +267,28 @@ add_exclude_file (void (*add_func) (struct exclude *, char const *, int),
     e = errno;
 
   buf = xrealloc (buf, buf_count + 1);
+  buf[buf_count] = line_end;
+  lim = buf + buf_count + ! (buf_count == 0 || buf[buf_count - 1] == line_end);
+  pattern = buf;
 
-  for (pattern = p = buf, lim = buf + buf_count;  p <= lim;  p++)
-    if (p < lim ? *p == line_end : buf < p && p[-1])
+  for (p = buf; p < lim; p++)
+    if (*p == line_end)
       {
-	*p = '\0';
+	char *pattern_end = p;
+
+	if (is_space (line_end))
+	  {
+	    for (; ; pattern_end--)
+	      if (pattern_end == pattern)
+		goto next_pattern;
+	      else if (! is_space (pattern_end[-1]))
+		break;
+	  }
+
+	*pattern_end = '\0';
 	(*add_func) (ex, pattern, options);
+
+      next_pattern:
 	pattern = p + 1;
       }
 

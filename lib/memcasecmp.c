@@ -23,10 +23,10 @@
 
 #include <ctype.h>
 
-#if defined (STDC_HEADERS) || (!defined (isascii) && !defined (HAVE_ISASCII))
+#if defined STDC_HEADERS || (!defined isascii && !defined HAVE_ISASCII)
 # define IN_CTYPE_DOMAIN(Char) 1
 #else
-# define IN_CTYPE_DOMAIN(Char) isascii(Char)
+# define IN_CTYPE_DOMAIN(Char) isascii (Char)
 #endif
 #define ISLOWER(Char) (IN_CTYPE_DOMAIN (Char) && islower (Char))
 
@@ -45,15 +45,16 @@
 int
 memcasecmp (const void *vs1, const void *vs2, size_t n)
 {
-  unsigned int i;
-  unsigned char const *s1 = (unsigned char const *) vs1;
-  unsigned char const *s2 = (unsigned char const *) vs2;
+  size_t i;
+  char const *s1 = vs1;
+  char const *s2 = vs2;
   for (i = 0; i < n; i++)
     {
-      unsigned char u1 = *s1++;
-      unsigned char u2 = *s2++;
-      if (TOUPPER (u1) != TOUPPER (u2))
-        return TOUPPER (u1) - TOUPPER (u2);
+      unsigned char u1 = s1[i];
+      unsigned char u2 = s2[i];
+      int diff = TOUPPER (u1) - TOUPPER (u2);
+      if (diff)
+	return diff;
     }
   return 0;
 }

@@ -72,7 +72,9 @@ xgethostname ()
 	break;
       else if (err < 0 && errno != ENAMETOOLONG && errno != 0)
 	{
+	  int saved_errno = errno;
 	  free (hostname);
+	  errno = saved_errno;
 	  return NULL;
 	}
       size *= 2;

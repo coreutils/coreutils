@@ -1,5 +1,5 @@
 /* hash - hashing table processing.
-   Copyright (C) 1998, 1999, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2001, 2003 Free Software Foundation, Inc.
    Written by Jim Meyering <meyering@ascend.com>, 1998.
 
    This program is free software; you can redistribute it and/or modify
@@ -23,6 +23,8 @@
 
 #ifndef HASH_H_
 # define HASH_H_
+
+# include <stdio.h>
 
 typedef unsigned (*Hash_hasher) (const void *, unsigned);
 typedef bool (*Hash_comparator) (const void *, const void *);

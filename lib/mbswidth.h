@@ -36,6 +36,7 @@
    control characters and 1 otherwise.  */
 #define MBSW_REJECT_UNPRINTABLE	2
 
+
 /* Returns the number of screen columns needed for STRING.  */
 #define mbswidth gnu_mbswidth  /* avoid clash with UnixWare 7.1.1 function */
 extern int mbswidth (const char *string, int flags);

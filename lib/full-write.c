@@ -20,20 +20,25 @@
 # include <config.h>
 #endif
 
+/* Specification.  */
+#ifdef FULL_READ
+# include "full-read.h"
+#else
+# include "full-write.h"
+#endif
+
 #include <errno.h>
 #ifndef errno
 extern int errno;
 #endif
 
 #ifdef FULL_READ
-# include "full-read.h"
 # include "safe-read.h"
 # define safe_rw safe_read
 # define full_rw full_read
 # undef const
 # define const /* empty */
 #else
-# include "full-write.h"
 # include "safe-write.h"
 # define safe_rw safe_write
 # define full_rw full_write

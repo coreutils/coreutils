@@ -1,5 +1,6 @@
-/* Formatted output to strings.
-   Copyright (C) 1999, 2002 Free Software Foundation, Inc.
+/* Determine a canonical name for the current locale's character encoding.
+   Copyright (C) 2000-2003 Free Software Foundation, Inc.
+   This file is part of the GNU CHARSET Library.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -15,23 +16,26 @@
    with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
+#ifndef _LOCALCHARSET_H
+#define _LOCALCHARSET_H
+
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
-/* Specification.  */
-#include "vasnprintf.h"
 
-#include <stdarg.h>
+/* Determine the current locale's character encoding, and canonicalize it
+   into one of the canonical names listed in config.charset.
+   The result must not be freed; it is statically allocated.
+   If the canonical name cannot be determined, the result is a non-canonical
+   name.  */
+extern const char * locale_charset (void);
 
-char *
-asnprintf (char *resultbuf, size_t *lengthp, const char *format, ...)
-{
-  va_list args;
-  char *result;
 
-  va_start (args, format);
-  result = vasnprintf (resultbuf, lengthp, format, args);
-  va_end (args);
-  return result;
+#ifdef __cplusplus
 }
+#endif
+
+
+#endif /* _LOCALCHARSET_H */

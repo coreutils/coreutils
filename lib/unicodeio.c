@@ -1,21 +1,20 @@
 /* Unicode character output to streams with locale dependent encoding.
 
-   Copyright (C) 2000-2002 Free Software Foundation, Inc.
+   Copyright (C) 2000-2003 Free Software Foundation, Inc.
 
-   This program is free software; you can redistribute it and/or modify it
-   under the terms of the GNU Library General Public License as published
-   by the Free Software Foundation; either version 2, or (at your option)
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2, or (at your option)
    any later version.
 
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-   You should have received a copy of the GNU Library General Public
-   License along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
-   USA.  */
+   You should have received a copy of the GNU General Public License along
+   with this program; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 /* Written by Bruno Haible <haible@clisp.cons.org>.  */
 
@@ -26,9 +25,8 @@
 # include <config.h>
 #endif
 
-#if HAVE_STDDEF_H
-# include <stddef.h>
-#endif
+/* Specification.  */
+#include "unicodeio.h"
 
 #include <stdio.h>
 #if HAVE_STRING_H
@@ -52,8 +50,7 @@ extern int errno;
 #define _(msgid) gettext (msgid)
 #define N_(msgid) msgid
 
-/* Specification.  */
-#include "unicodeio.h"
+#include "localcharset.h"
 
 /* When we pass a Unicode character to iconv(), we must pass it in a
    suitable encoding. The standardized Unicode encodings are
@@ -114,10 +111,10 @@ utf8_wctomb (unsigned char *r, unsigned int wc)
    Assumes that the locale doesn't change between two calls.  */
 long
 unicode_to_mb (unsigned int code,
-	       long (*success) PARAMS ((const char *buf, size_t buflen,
-					void *callback_arg)),
-	       long (*failure) PARAMS ((unsigned int code, const char *msg,
-					void *callback_arg)),
+	       long (*success) (const char *buf, size_t buflen,
+				void *callback_arg),
+	       long (*failure) (unsigned int code, const char *msg,
+				void *callback_arg),
 	       void *callback_arg)
 {
   static int initialized;
@@ -131,7 +128,6 @@ unicode_to_mb (unsigned int code,
 
   if (!initialized)
     {
-      extern const char *locale_charset PARAMS ((void));
       const char *charset = locale_charset ();
 
       is_utf8 = !strcmp (charset, UTF8_NAME);
@@ -190,7 +186,7 @@ unicode_to_mb (unsigned int code,
          )
 	return failure (code, NULL, callback_arg);
 
-      /* Avoid glibc-2.1 bug and Solaris 5.7 bug.  */
+      /* Avoid glibc-2.1 bug and Solaris 7 bug.  */
 # if defined _LIBICONV_VERSION \
     || !((__GLIBC__ - 0 == 2 && __GLIBC_MINOR__ - 0 <= 1) || defined __sun)
 

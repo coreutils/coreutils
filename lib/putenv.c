@@ -33,7 +33,7 @@ extern int errno;
 # define __set_errno(ev) ((errno) = (ev))
 #endif
 
-/* Don't include stdlib.h because some (e.g., Solaris 5.7) declare putenv
+/* Don't include stdlib.h because some (e.g., Solaris 7) declare putenv
    with a non-const argument.  That would conflict with the declaration of
    rpl_putenv below (due to the #define putenv rpl_putenv from config.h).  */
 

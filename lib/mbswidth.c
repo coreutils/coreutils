@@ -75,7 +75,7 @@ int wcwidth ();
 #else
 # define IN_CTYPE_DOMAIN(c) isascii(c)
 #endif
-/* Undefine to protect against the definition in wctype.h of solaris2.6.   */
+/* Undefine to protect against the definition in wctype.h of Solaris 2.6.   */
 #undef ISPRINT
 #define ISPRINT(c) (IN_CTYPE_DOMAIN (c) && isprint (c))
 #undef ISCNTRL

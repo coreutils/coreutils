@@ -1,5 +1,7 @@
 /* Declarations for GNU's read utmp module.
-   Copyright (C) 1992-2002 Free Software Foundation, Inc.
+
+   Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,
+   2001, 2002, 2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -24,7 +26,8 @@
 
 /* AIX 4.3.3 has both utmp.h and utmpx.h, but only struct utmp
    has the ut_exit member.  */
-# if HAVE_UTMPX_H && HAVE_UTMP_H && HAVE_STRUCT_UTMP_UT_EXIT && ! HAVE_STRUCT_UTMPX_UT_EXIT
+# if (HAVE_UTMPX_H && HAVE_UTMP_H && HAVE_STRUCT_UTMP_UT_EXIT \
+      && ! HAVE_STRUCT_UTMPX_UT_EXIT)
 #  undef HAVE_UTMPX_H
 # endif
 

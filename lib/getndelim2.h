@@ -18,13 +18,13 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 #ifndef GETNDELIM2_H
-# define GETNDELIM2_H 1
+#define GETNDELIM2_H 1
 
-# include <stddef.h>
-# include <stdio.h>
+#include <stddef.h>
+#include <stdio.h>
 
 /* Get ssize_t.  */
-# include <sys/types.h>
+#include <sys/types.h>
 
 /* Read up to (and including) a delimiter DELIM1 from STREAM into *LINEPTR
    + OFFSET (and NUL-terminate it).  If DELIM2 is non-zero, then read up

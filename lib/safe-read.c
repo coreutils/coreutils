@@ -1,5 +1,5 @@
 /* An interface to read and write that retries after interrupts.
-   Copyright (C) 1993, 1994, 1998, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1993, 1994, 1998, 2002-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -17,6 +17,13 @@
 
 #if HAVE_CONFIG_H
 # include <config.h>
+#endif
+
+/* Specification.  */
+#ifdef SAFE_WRITE
+# include "safe-write.h"
+#else
+# include "safe-read.h"
 #endif
 
 /* Get ssize_t.  */
@@ -38,28 +45,10 @@ extern int errno;
 
 #include <limits.h>
 
-#ifndef CHAR_BIT
-# define CHAR_BIT 8
-#endif
-
-/* The extra casts work around common compiler bugs.  */
-#define TYPE_SIGNED(t) (! ((t) 0 < (t) -1))
-/* The outer cast is needed to work around a bug in Cray C 5.0.3.0.
-   It is necessary at least when t == time_t.  */
-#define TYPE_MINIMUM(t) ((t) (TYPE_SIGNED (t) \
-			      ? ~ (t) 0 << (sizeof (t) * CHAR_BIT - 1) : (t) 0))
-#define TYPE_MAXIMUM(t) ((t) (~ (t) 0 - TYPE_MINIMUM (t)))
-
-#ifndef INT_MAX
-# define INT_MAX TYPE_MAXIMUM (int)
-#endif
-
 #ifdef SAFE_WRITE
-# include "safe-write.h"
 # define safe_rw safe_write
 # define rw write
 #else
-# include "safe-read.h"
 # define safe_rw safe_read
 # define rw read
 # undef const
