@@ -300,7 +300,7 @@ Write sorted concatenation of all FILE(s) to standard output.\n\
   -i               consider only [\\040-\\0176] characters in keys\n\
   -k POS1[,POS2]   start a key at POS1, end it *at* POS2\n\
 		     field numbers and character offsets are numbered\n\
-                     starting with one (contrast with zero-based +POS form)\n
+                     starting with one (contrast with zero-based +POS form)\n\
   -m               merge already sorted files, do not sort\n\
   -M               compare (unknown) < `JAN' < ... < `DEC', imply -b\n\
   -n               compare according to string numerical value, imply -b\n\
