@@ -14,33 +14,42 @@ fi
 tmp=$RM_TMPDIR/t-rm.$$
 
 test_failure=0
-mkdir $tmp || test_failure=1
-mkdir $tmp/a $tmp/a/a || test_failure=1
-mkdir $tmp/b $tmp/b/bb || test_failure=1
-mkdir $tmp/c $tmp/c/cc || test_failure=1
+mkdir $tmp $tmp/a $tmp/b $tmp/c || test_failure=1
+touch $tmp/a/a $tmp/b/bb $tmp/c/cc || test_failure=1
 
-if $test_failure = 1; then
+if test $test_failure = 1; then
   echo 'failure in testing framework'
   exit 1
 fi
 
-fail=0
-$RM --verbose -r $tmp > $tmp/$test.O || fail=1
-
-for d in $dirs; do
-  if test -d $d; then
-    fail=1
-  fi
-done
-
-cat <<EOF > $tmp/$test.E
-$tmp/a
-$tmp/a/a
-$tmp/b
+cat <<EOF > $test.I
+y
+y
+y
+y
+y
+y
+y
+y
+n
+n
+n
 EOF
 
-# Compare expected and actual output.
-cmp $tmp/$test.E $tmp/$test.O || fail=1
+# Remove all but one of a, b, c -- I doubt that this test can portably
+# determine which one was removed based on order or dir entries.
+# This is a good argument for switching to a dejagnu-style test suite.
+fail=0
+$RM --verbose -i -r $tmp < $test.I > /dev/null || fail=1
+
+# $tmp should not have been removed.
+test -d $tmp || fail=1
+
+# There should be only one directory left.
+case $tmp/* in
+  $tmp/[abc]) ;;
+  *) fail=1 ;;
+esac
 
 rm -rf $tmp
 
