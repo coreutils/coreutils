@@ -1115,6 +1115,7 @@ new_control_record ()
 /* Convert string NUM to an integer and put the value in *RESULT.
    Return a TRUE if the string consists entirely of digits,
    FALSE if not. */
+/* FIXME: use xstrtoul in place of this function.  */
 
 static boolean
 string_to_number (result, num)
@@ -1307,7 +1308,7 @@ get_format_width (format_ptr)
 
   start = *format_ptr;
   for (; **format_ptr; (*format_ptr)++)
-    if (**format_ptr < '0' || **format_ptr > '9')
+    if (!ISDIGIT (**format_ptr))
       break;
 
   ch_save = **format_ptr;
@@ -1346,7 +1347,7 @@ get_format_prec (format_ptr)
 
   start = *format_ptr;
   for (; **format_ptr; (*format_ptr)++)
-    if (**format_ptr < '0' || **format_ptr > '9')
+    if (!ISDIGIT (**format_ptr))
       break;
 
   /* ANSI 4.9.6.1 says that if the precision is negative, it's as good as
