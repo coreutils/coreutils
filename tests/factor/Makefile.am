@@ -3,8 +3,8 @@
 ##test-files-begin
 x = factor
 explicit =
-maint_gen = t1.exp t2.exp t3.exp t4.exp
-run_gen = t1.out t1.err t2.out t2.err t3.out t3.err t4.out t4.err
+maint_gen = 1.X 2.X 3.X 4.X
+run_gen = 1.O 1.E 2.O 2.E 3.O 3.E 4.O 4.E
 ##test-files-end
 
 EXTRA_DIST = mk-script.pl Test.pm $x-tests $(explicit) $(maint_gen)

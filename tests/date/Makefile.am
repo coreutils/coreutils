@@ -3,11 +3,14 @@
 ##test-files-begin
 x = date
 explicit =
-maint_gen = t1.exp t2.exp t3.exp t4.exp t5.exp t6.exp t7.exp t8.exp t9.exp \
-tleap-1.exp
-run_gen = t1.out t1.err t2.out t2.err t3.out t3.err t4.out t4.err t5.out \
-t5.err t6.out t6.err t7.out t7.err t8.out t8.err t9.out t9.err tleap-1.out \
-tleap-1.err
+maint_gen = 1.X 2.X 3.X 4.X 5.X 6.X 7.X 8.X 9.X leap-1.X U95-1.X U95-2.X \
+U95-3.X U92-1.X U92-2.X U92-3.X V92-1.X V92-2.X V92-3.X W92-1.X W92-2.X \
+W92-3.X millen-1.X
+run_gen = 1.O 1.E 2.O 2.E 3.O 3.E 4.O 4.E 5.O 5.E 6.O 6.E 7.O 7.E 8.O 8.E 9.O \
+9.E leap-1.O leap-1.E U95-1.O U95-1.E U95-2.O U95-2.E U95-3.O U95-3.E U92-1.O \
+U92-1.E U92-2.O U92-2.E U92-3.O U92-3.E V92-1.O V92-1.E V92-2.O V92-2.E \
+V92-3.O V92-3.E W92-1.O W92-1.E W92-2.O W92-2.E W92-3.O W92-3.E millen-1.O \
+millen-1.E
 ##test-files-end
 
 EXTRA_DIST = mk-script.pl Test.pm $x-tests $(explicit) $(maint_gen)
