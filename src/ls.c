@@ -2259,7 +2259,7 @@ print_long_format (const struct fileinfo *f)
 
   /* The last byte of the mode string is the POSIX
      "optional alternate access method flag".  */
-  sprintf (p, "%s%3u ", modebuf, (unsigned int) f->stat.st_nlink);
+  sprintf (p, "%s %3u ", modebuf, (unsigned int) f->stat.st_nlink);
   p += strlen (p);
 
   user_name = (numeric_ids ? NULL : getuser (f->stat.st_uid));
