@@ -1,4 +1,16 @@
+1997-07-09  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/makepath.c (make_path): Chdir to `/' before starting if necessary.
+	Call save_cwd before while loop rather than from first iteration
+	inside it.
+
+	* lib/strverscmp.c (strverscmp): Add `parenentheses around arithmetic
+	in operand of |' as suggested by gcc -Wall.
+
 1997-07-06  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/idcache.c (getuidbyname): Declare parameter to be const.
+	(getgidbyname): Declare parameter to be const.
 
 	* lib/modechange.h (mode_create_from_ref): Add prototype.
 	(MODE_MASK_ALL): New define.
