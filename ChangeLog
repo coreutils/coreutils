@@ -2,6 +2,11 @@
 
 	* Version 5.1.0.
 
+	* src/pr.c: Change type of global, buff_allocated, to size_t.
+
+	* src/join.c [struct seq]: Change types of members count and alloc
+	from `int' to `size_t'.
+
 	* tests/Makefile.am (root-hint): Tweak wording.
 
 	* src/du.c: Accept new option (-0, --null) that makes it so each
