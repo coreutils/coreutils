@@ -216,14 +216,15 @@ wc (fd, file)
 
   if (print_chars && !print_words && !print_lines)
     {
-      struct stat stats;
       off_t current_pos, end_pos;
 
-      if (fstat (fd, &stats) == 0 && S_ISREG (stats.st_mode)
-	  && (current_pos = lseek (fd, (off_t)0, SEEK_CUR)) != -1
-	  && (end_pos  = lseek (fd, (off_t)0, SEEK_END)) != -1)
+      if ((current_pos = lseek (fd, (off_t) 0, SEEK_CUR)) != -1
+	  && (end_pos  = lseek (fd, (off_t) 0, SEEK_END)) != -1)
 	{
-	  chars = end_pos - current_pos;
+	  off_t diff;
+	  /* Be careful here.  The current position may actually be
+	     beyond the end of the file.  As in the example above.  */
+	  chars = (diff = end_pos - current_pos) < 0 ? 0 : diff;
 	}
       else
 	{
