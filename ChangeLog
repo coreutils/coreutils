@@ -1,6 +1,26 @@
-2003-11-09  Jim Meyering  <jim@meyering.net>
+2003-11-16  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.1.0.
+
+	Fix read-from-free'd-buffer error detected by valgrind.
+	* src/csplit.c (remove_line): Don't return a pointer to data in
+	a freed buffer.  Instead, arrange to free the buffer on the
+	subsequent call.
+
+	* tests/misc/csplit: New test for above fix.
+
+2003-11-11  Jim Meyering  <jim@meyering.net>
+
+	* src/ls.c (extract_dirs_from_files): Avoid useless copy operations.
+	This avoids a warning from valgrind about memcpy with overlapping
+	source and destination.
+
+	* configure.ac: Require automake-1.7.8.
+
+2003-11-09  Jim Meyering  <jim@meyering.net>
+
+	FIXME: update coreutils.texi:
+	chmod's new options: --preserve-root and --no-preserve-root.
 
 	* Use automake-1.7.9.  Regenerate dependent files.
 
@@ -302,10 +322,6 @@
 	and invalid suffix char are both reported.
 
 2003-10-14  Jim Meyering  <jim@meyering.net>
-
-	FIXME: update coreutils.texi:
-	chmod's new options: --preserve-root and --no-preserve-root.
-	chown and chgrp have new options: -H -L -P
 
 	* src/ls.c (decode_switches) [TIOCGWINSZ]: Comment out the
 	warning-inducing test, ws.ws_col <= SIZE_MAX, since it was always
