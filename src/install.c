@@ -370,9 +370,13 @@ copy_file (char *from, char *to, int *to_created)
       error (0, errno, "%s", from);
       return 1;
     }
-  if (!S_ISREG (from_stats.st_mode))
+
+  /* Allow installing from non-regular files like /dev/null.
+     Charles Karney reported that some Sun version of install allows that
+     and that sendmail's installation process relies on the behavior.  */
+  if (S_ISDIR (from_stats.st_mode))
     {
-      error (0, 0, _("`%s' is not a regular file"), from);
+      error (0, 0, _("`%s' is a directory"), from);
       return 1;
     }
   if (stat (to, &to_stats) == 0)
