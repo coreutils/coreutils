@@ -1709,7 +1709,7 @@ main (int argc, char **argv)
   flags.n_iterations = DEFAULT_PASSES;
   flags.size = -1;
 
-  while ((c = getopt_long (argc, argv, "fn:Rs:vxz", long_opts, NULL)) != -1)
+  while ((c = getopt_long (argc, argv, "fn:s:uvxz", long_opts, NULL)) != -1)
     {
       switch (c)
 	{
