@@ -1,6 +1,11 @@
-2002-02-27  Jim Meyering  <meyering@lucent.com>
+2002-03-02  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.6.
+
+	* src/copy.c (copy_reg): Detect abuse of a race condition
+	whereby an unprivileged user could gain read access to otherwise-
+	inaccessible files when root uses cp or mv to copy a hierarchy
+	belonging to that user.
 
 2002-02-27  Paul Eggert  <eggert@twinsun.com>
 
