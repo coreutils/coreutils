@@ -337,6 +337,9 @@ my @tv = (
 # This test failed with 1.22e and earlier.
 ['dbl-sp-b', '-d -t', "1\n2\n", "1\n\n2\n\n", 0],
 
+# This test would segfault with 2.0f and earlier.
+['narrow-1', '-W1 -t', "12345\n", "1\n", 0],
+
 );
 #']]);
 
