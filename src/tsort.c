@@ -315,7 +315,7 @@ scan_zeros (struct item *k)
 static void
 detect_loop (struct item *k)
 {
-  if (k->count > 0)
+  if (k->count > 0 && k->top)
     {
       while (k && k->count > 0)
 	{
