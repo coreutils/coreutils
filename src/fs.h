@@ -1,27 +1,36 @@
 /* define the magic numbers as given by statfs(2) */
 /* please send additions to meskes@debian.org     */
 
-#define AFFS_SUPER_MAGIC      0xADFF
-#define EXT_SUPER_MAGIC       0x137D
-#define EXT2_OLD_SUPER_MAGIC  0xEF51
-#define EXT2_SUPER_MAGIC      0xEF53
-#define HPFS_SUPER_MAGIC      0xF995E849
-#define ISOFS_SUPER_MAGIC     0x9660
-#define MINIX_SUPER_MAGIC     0x137F /* orig. minix */
-#define MINIX_SUPER_MAGIC2    0x138F /* 30 char minix */
-#define MINIX2_SUPER_MAGIC    0x2468 /* minix V2 */
-#define MINIX2_SUPER_MAGIC2   0x2478 /* minix V2, 30 char names */
-#define MSDOS_SUPER_MAGIC     0x4d44
-#define NCP_SUPER_MAGIC       0x564c
-#define NFS_SUPER_MAGIC       0x6969
-#define PROC_SUPER_MAGIC      0x9fa0
-#define SMB_SUPER_MAGIC       0x517B
-#define XENIX_SUPER_MAGIC     0x012FF7B4
-#define SYSV4_SUPER_MAGIC     0x012FF7B5
-#define SYSV2_SUPER_MAGIC     0x012FF7B6
-#define COH_SUPER_MAGIC       0x012FF7B7
-#define UFS_MAGIC             0x00011954
-#define _XIAFS_SUPER_MAGIC    0x012FD16D
-#define NTFS_SUPER_MAGIC      0x5346544e
-#define TMPFS_MAGIC	      0x1021994
-#define REISERFS_MAGIC        0x52654973
+#if defined(__linux__)
+# define S_MAGIC_AFFS		0xADFF
+# define S_MAGIC_EXT		0x137D
+# define S_MAGIC_EXT2_OLD	0xEF51
+# define S_MAGIC_EXT2		0xEF53
+# define S_MAGIC_HPFS	  	0xF995E849
+# define S_MAGIC_ISOFS		0x9660
+# define S_MAGIC_ISOFS_WIN	0x4000
+# define S_MAGIC_ISOFS_R_WIN	0x4004
+# define S_MAGIC_MINIX		0x137F
+# define S_MAGIC_MINIX_30	0x138F
+# define S_MAGIC_MINIX_V2	0x2468
+# define S_MAGIC_MINIX_V2_30	0x2478
+# define S_MAGIC_MSDOS		0x4d44
+# define S_MAGIC_FAT		0x4006
+# define S_MAGIC_NCP		0x564c
+# define S_MAGIC_NFS		0x6969
+# define S_MAGIC_PROC		0x9fa0
+# define S_MAGIC_SMB		0x517B
+# define S_MAGIC_XENIX		0x012FF7B4
+# define S_MAGIC_SYSV4		0x012FF7B5
+# define S_MAGIC_SYSV2		0x012FF7B6
+# define S_MAGIC_COH		0x012FF7B7
+# define S_MAGIC_UFS		0x00011954
+# define S_MAGIC_XIAFS		0x012FD16D
+# define S_MAGIC_NTFS 		0x5346544e
+# define S_MAGIC_TMPFS		0x1021994
+# define S_MAGIC_REISERFS        0x52654973
+# define S_MAGIC_CRAMFS          0x28cd3d45
+# define S_MAGIC_ROMFS           0x7275
+#elif defined (__GNU__)
+# include <hurd/hurd_types.h>
+#endif
