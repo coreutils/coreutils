@@ -1063,7 +1063,7 @@ fts_sort(sp, head, nitems)
 
 		sp->fts_nitems = nitems + 40;
 		if ((a = realloc(sp->fts_array,
- 		    (size_t)(sp->fts_nitems * sizeof(FTSENT *)))) == NULL) {
+		    (size_t)(sp->fts_nitems * sizeof(FTSENT *)))) == NULL) {
 			free(sp->fts_array);
 			sp->fts_array = NULL;
 			sp->fts_nitems = 0;
