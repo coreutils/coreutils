@@ -1,5 +1,6 @@
 Changes in release 1.23
 [1.22f]
+* fix pr bug: pr -td didn't double space
 * fix tac bug when using -b, -r, and -s SEPARATOR
 * fix sort bug whereby using key-local `d' option would cause following
   key specs to be ignored when any two keys (in the `d'-modified test)
