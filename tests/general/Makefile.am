@@ -22,9 +22,7 @@ AUTOMAKE_OPTIONS = gnits
 
 SUITE = suite.at dd.at m4sh.at
 
-# We don't actually distribute the testsuite, since one only
-# needs m4 to build it, m4 being required anyway to install Autoconf.
-EXTRA_DIST = $(SUITE)
+EXTRA_DIST = $(SUITE) testsuite
 
 TESTS_ENVIRONMENT = \
   PATH=`pwd`/../../src:$$PATH
@@ -33,7 +31,7 @@ TESTS = testsuite
 
 check-local: atconfig
 
-testsuite: $(SUITE)
+testsuite: $(SUITE) atgeneral.m4
 	$(M4) -I $(srcdir) atgeneral.m4 suite.at > $@-t1
 	sed 's/[ 	]*$$//;/^$$/N;/\n$$/D' $@-t1 > $@-tmp
 	rm -f $@-t1
