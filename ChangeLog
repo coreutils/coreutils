@@ -1,3 +1,22 @@
+2002-09-02  Jim Meyering  <meyering@lucent.com>
+
+	* Version 4.5.2.
+
+	* README: A good problem report/patch includes diffs against
+	the most recent test release.
+
+	* src/pathchk.c (NEED_PATHCONF_WRAPPER): Define.
+	(pathconf_wrapper): Define only if NEED_PATHCONF_WRAPPER is set.
+
+	* src/kill.c (print_table_row): Use an unsigned type for widths
+	to avoid warning about comparison between signed and unsigned.
+	(list_signals): Likewise.
+
+	* src/od.c (skip): Add a cast to avoid warning about comparison
+	between signed and unsigned.
+	* src/install.c (get_ids): Likewise.  Also rearrange range-checking
+	comparisons to make them more readable.
+
 2002-09-01  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.5.1.
