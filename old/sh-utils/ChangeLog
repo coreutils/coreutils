@@ -1,3 +1,8 @@
+Wed Mar  6 21:40:34 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* who-users.c (print_entry): Use STRUCT_UTMP, not `struct utmp' to
+	declare formal parameter.
+
 Tue Mar  5 22:49:33 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* getdate.y (RelativeMonth): Add 1900 to the year so that relative
