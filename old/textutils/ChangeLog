@@ -1,3 +1,12 @@
+1999-11-01  Jim Meyering  <meyering@ascend.com>
+
+	* lib/Makefile.am (MAINTAINERCLEANFILES): Set to $(BUILT_SOURCES).
+
+1999-10-20  Jim Meyering  <meyering@ascend.com>
+
+	* src/tail.c (recheck): Don't refuse to tail a non-regular, non-pipe.
+	(tail_file): Likewise.
+
 1999-10-07  Jim Meyering  <meyering@ascend.com>
 
 	* configure.in (ALL_LINGUAS): Add Japanese (ja).

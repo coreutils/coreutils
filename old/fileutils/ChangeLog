@@ -1,3 +1,7 @@
+1999-11-01  Jim Meyering  <meyering@ascend.com>
+
+	* lib/Makefile.am (MAINTAINERCLEANFILES): Set to $(BUILT_SOURCES).
+
 1999-10-31  Jim Meyering  <meyering@ascend.com>
 
 	* Makefile.maint (my-distcheck): Remove $(DEPDIR) to work around
