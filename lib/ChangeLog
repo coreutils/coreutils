@@ -1,3 +1,60 @@
+2004-11-25  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* mempcpy.c, mempcpy.h: New files, taken from gnulib.
+	* Makefile.am: (libfetish_a_SOURCES): Add getcwd.h, mempcpy.h.
+	* getcwd.c: Replace by a copy of glibc/sysdeps/posix/getcwd.c, but
+	with the following changes.
+	(__set_errno): Parenthesize properly.
+	Include <stdbool.h>.
+	(MIN, MAX, MATCHING_INO): New macros.
+	(__getcwd): Define with prototype, not K&R form.
+	Use heuristics to allocate default buffer on stack if possible.
+	If AT_FDCWD is defined, use openat and fstatat to avoid O(N**2)
+	behavior, and to avoid the PATH_MAX limit when computing
+	../../../../...
+	Use MATCHING_INO to compare inode number to file.
+	Check for arithmetic overflow in size calculations.
+	Fix bug in reallocation of dot array that caused getcwd to fail
+	on directories nested deeper than 75.
+	Be more careful about saving errno on error.
+	Do not use realloc; use only free+malloc, as this is a bit
+	more flexible and avoids a needless copy operation.
+	Do not inspect st_dev and st_ino for symbolic links; POSIX
+	doesn't specify the latter.
+	Check for closedir errors.
+	Avoid needless casts.
+	Use "#ifdef weak_alias" around weak_alias, to be like other
+	glibc code.
+	The following changes to getcwd.c have effect only when used in
+	gnulib; they have no effect inside glibc proper.
+	(#pragma alloca) [defined _AIX && !defined __GNUC__]: Remove,
+	as alloca isn't used.
+	(alloca, __alloca): Likewise.
+	[!_LIBC]: Include "getcwd.h", "mempcpy.h".
+	Include <stddef.h>, <stdlib.h>, <string.h>, <limits.h>
+	unconditionally, as gnulib assumes C89 or better.
+	Do not include <sys/param.h>.
+	(errno) [!defined __GNU_LIBRARY__ && !defined STDC_HEADERS]: Remove
+	no-longer-necessary 'extern int errno' decl; gnulib assumes C89 or
+	better.
+	(NULL) [!defined NULL]: Remove; we assume C89 or better.
+	Include <dirent.h> in a way that is compatible with modern Autoconf.
+	(_D_ALLOC_NAMELEN, _D_EXACT_NAMLEN):
+	New macros, if not already defined.
+	Include <unistd.h> if _LIBC, not if __GNU_LIBRARY__.
+	Use "_LIBC", not "defined _LIBC", for consistency.
+	(HAVE_MEMPCPY): Remove; no longer needed now that gnulib has
+	a mempcpy module.
+	(__lstat, __closedir, __opendir, __readdir) [!_LIBC]: New macros.
+	(GETCWD_RETURN_TYPE): Remove.  All uses replaced by char *.
+	* xgetcwd.c: David MacKenzie's old code was removed, so give
+	credit only to Jim Meyering and adjust the copyright dates.
+	Do not include <limits.h>, <stdio.h>, <sys/types.h>,
+	<stdlib.h>, <unistd.h>, "pathmax.h".
+	Instead, include "xgetcwd.h" (first) and "getcwd.h".
+	(INITIAL_BUFFER_SIZE): Remove.
+	(xgetcwd): Rely on getcwd, since we now depend on a reliable one.
+
 2004-11-23  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* utimens.c (__attribute__, ATTRIBUTE_UNUSED): New macros.
