@@ -27,9 +27,6 @@
   - Add -i/--interactive
   - Reserve -d
   - Add -L
-  - Deal with the amazing variety of gettimeofday() implementation bugs.
-    (Some systems use a one-arg form; still others insist that the timezone
-    either be NULL or be non-NULL.  Whee.)
   - Add an unlink-all option to emulate rm.
  */
 
@@ -106,6 +103,7 @@
 #include "xstrtol.h"
 #include "dirname.h"
 #include "error.h"
+#include "gethrxtime.h"
 #include "getpagesize.h"
 #include "human.h"
 #include "inttostr.h"
@@ -587,20 +585,7 @@ isaac_seed (struct isaac_state *s)
   { gid_t t = getgid ();   ISAAC_SEED (s, t); }
 
   {
-#if 0 && HAVE_GETHRTIME
-    /* This block if if-0'd out for now because it makes shred
-       fail with an `illegal instruction' when compiled with Sun's
-       c89 on Solaris 8 and 9.  */
-    hrtime_t t = gethrtime ();
-#elif HAVE_CLOCK_GETTIME		/* POSIX ns-resolution */
-    struct timespec t;
-    clock_gettime (CLOCK_REALTIME, &t);
-#elif HAVE_GETTIMEOFDAY
-    struct timeval t;
-    gettimeofday (&t, (struct timezone *) 0);
-#else
-    time_t t = time (NULL);
-#endif
+    xtime_t t = gethrxtime ();
     ISAAC_SEED (s, t);
   }
 
