@@ -1,6 +1,12 @@
-2001-03-17  Jim Meyering  <meyering@lucent.com>
+2001-03-18  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.0.42.
+
+2001-03-17  Paul Eggert  <eggert@twinsun.com>
+
+	* doc/fileutils.texi: Warn that touch DATE FILE will be withdrawn.
+
+2001-03-17  Jim Meyering  <meyering@lucent.com>
 
 	* tests/install/basic-1: Add the standard $VERBOSE-handling hook.
 	This test currently fails for mips-dec-ultrix4.4.
@@ -14,7 +20,6 @@
 	* missing (--run): Use `eval' to run `"$@"'.  Otherwise, Ultrix4.4's
 	/bin/sh fails and outputs garbage.
 
-	* doc/fileutils.texi (touch invocation): Mention the obsolescent usage.
 	* src/touch.c (usage): Tweak the obsolescent usage line so that
 	help2man recognizes it as such.  Reported by Dan Jacobson.
 
