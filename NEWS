@@ -1,12 +1,12 @@
 GNU coreutils NEWS                                    -*- outline -*-
 * Major changes in release 5.0.1:
 
-** New features:
+** New features
 - head now accepts --lines=-N (--bytes=-N) to print all but the
   N lines (bytes) at the end of the file
 - md5sum --check now accepts the output of the BSD md5sum program, e.g.,
   MD5 (f) = d41d8cd98f00b204e9800998ecf8427e
-- date -d DATE can now parse a DATE string like May-23-2003.
+- date -d DATE can now parse a DATE string like May-23-2003
 
 ** Bug fixes
 - tail -f is no longer subject to a race condition that could make it
