@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in.
 
-AUTOMAKE_OPTIONS = 1.0
+AUTOMAKE_OPTIONS = 1.1c
 
 in = \
   t1.in t2.in t3.in t4.in t5.in t6.in t7.in t8.in t9.in tA.in tB.in \
@@ -13,7 +13,7 @@ exp = $(in:.in=.exp)
 out = $(in:.in=.out)
 err = $(in:.in=.err)
 
-EXTRA_DIST = build-script.pl Trtest.pm $(in) $(exp)
+EXTRA_DIST = build-script.pl Test.pm $(in) $(exp)
 noinst_SCRIPTS = tr-tests
 
 PERL = @PERL@
@@ -21,8 +21,8 @@ editpl = sed -e 's,@''PERL''@,$(PERL),g' -e 's,@''srcdir''@,@srcdir@,g'
 
 TESTS = tr-tests
 
-tr-tests: build-script Trtest.pm
-	./build-script > $@.n
+tr-tests: build-script Test.pm
+	./build-script ../../src/tr > $@.n
 	mv $@.n $@
 	chmod 755 $@
 
