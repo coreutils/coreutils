@@ -1,5 +1,14 @@
 2000-12-16  Jim Meyering  <meyering@lucent.com>
 
+	* getusershell.c [!SHELLS_FILE && __DJGPP__]: Define
+	SHELLS_FILE to a file name that's useful on djgpp systems.
+	Include stdlib.h.
+	(ADDITIONAL_DEFAULT_SHELLS): Define.
+	(default_shells): Prepend ADDITIONAL_DEFAULT_SHELLS.
+	Based mostly on a patch from Prashant TR.
+
+2000-12-16  Jim Meyering  <meyering@lucent.com>
+
 	This bug had a serious impact on chown: `chown N:M FILE' (for integer
 	N and M) would have treated it like `chown N:N FILE'.
 
