@@ -19,6 +19,9 @@
 # include <config.h>
 #endif
 
+#if HAVE_INTTYPES_H
+# include <inttypes.h>
+#endif
 #include <sys/types.h>
 #include <sys/stat.h>
 #include "fsusage.h"
@@ -64,28 +67,6 @@ int statvfs ();
 
 int safe_read ();
 
-/* Return the number of TOSIZE-byte blocks used by
-   BLOCKS FROMSIZE-byte blocks, rounding away from zero.
-   TOSIZE must be positive.  Return -1 if FROMSIZE is not positive.  */
-
-static long
-adjust_blocks (blocks, fromsize, tosize)
-     long blocks;
-     int fromsize, tosize;
-{
-  if (tosize <= 0)
-    abort ();
-  if (fromsize <= 0)
-    return -1;
-
-  if (fromsize == tosize)	/* e.g., from 512 to 512 */
-    return blocks;
-  else if (fromsize > tosize)	/* e.g., from 2048 to 512 */
-    return blocks * (fromsize / tosize);
-  else				/* e.g., from 256 to 512 */
-    return (blocks + (blocks < 0 ? -1 : 1)) / (tosize / fromsize);
-}
-
 /* Fill in the fields of FSP with information about space usage for
    the filesystem on which PATH resides.
    DISK is the device on which PATH is mounted, for space-getting
@@ -100,25 +81,27 @@ get_fs_usage (path, disk, fsp)
      struct fs_usage *fsp;
 {
 #ifdef STAT_STATFS3_OSF1
-# define CONVERT_BLOCKS(B) adjust_blocks ((B), fsd.f_fsize, 512)
 
   struct statfs fsd;
 
   if (statfs (path, &fsd, sizeof (struct statfs)) != 0)
     return -1;
 
+  fsp->fsu_blocksize = fsd.f_fsize;
+
 #endif /* STAT_STATFS3_OSF1 */
 
 #ifdef STAT_STATFS2_FS_DATA	/* Ultrix */
-# define CONVERT_BLOCKS(B) adjust_blocks ((B), 1024, 512)
 
   struct fs_data fsd;
 
   if (statfs (path, &fsd) != 1)
     return -1;
-  fsp->fsu_blocks = CONVERT_BLOCKS (fsd.fd_req.btot);
-  fsp->fsu_bfree = CONVERT_BLOCKS (fsd.fd_req.bfree);
-  fsp->fsu_bavail = CONVERT_BLOCKS (fsd.fd_req.bfreen);
+
+  fsp->fsu_blocksize = 1024;
+  fsp->fsu_blocks = fsd.fd_req.btot;
+  fsp->fsu_bfree = fsd.fd_req.bfree;
+  fsp->fsu_bavail = fsd.fd_req.bfreen;
   fsp->fsu_files = fsd.fd_req.gtot;
   fsp->fsu_ffree = fsd.fd_req.gfree;
 
@@ -128,8 +111,6 @@ get_fs_usage (path, disk, fsp)
 # ifndef SUPERBOFF
 #  define SUPERBOFF (SUPERB * 512)
 # endif
-# define CONVERT_BLOCKS(B) \
-    adjust_blocks ((B), (fsd.s_type == Fs2b ? 1024 : 512), 512)
 
   struct filsys fsd;
   int fd;
@@ -143,28 +124,31 @@ get_fs_usage (path, disk, fsp)
   fd = open (disk, O_RDONLY);
   if (fd < 0)
     return -1;
-  lseek (fd, (long) SUPERBOFF, 0);
+  lseek (fd, (off_t) SUPERBOFF, 0);
   if (safe_read (fd, (char *) &fsd, sizeof fsd) != sizeof fsd)
     {
       close (fd);
       return -1;
     }
   close (fd);
-  fsp->fsu_blocks = CONVERT_BLOCKS (fsd.s_fsize);
-  fsp->fsu_bfree = CONVERT_BLOCKS (fsd.s_tfree);
-  fsp->fsu_bavail = CONVERT_BLOCKS (fsd.s_tfree);
+
+  fsp->fsu_blocksize = fsd.s_type == Fs2b ? 1024 : 512;
+  fsp->fsu_blocks = fsd.s_fsize;
+  fsp->fsu_bfree = fsd.s_tfree;
+  fsp->fsu_bavail = fsd.s_tfree;
   fsp->fsu_files = (fsd.s_isize - 2) * INOPB * (fsd.s_type == Fs2b ? 2 : 1);
   fsp->fsu_ffree = fsd.s_tinode;
 
 #endif /* STAT_READ_FILSYS */
 
 #ifdef STAT_STATFS2_BSIZE	/* 4.3BSD, SunOS 4, HP-UX, AIX */
-# define CONVERT_BLOCKS(B) adjust_blocks ((B), fsd.f_bsize, 512)
 
   struct statfs fsd;
 
   if (statfs (path, &fsd) < 0)
     return -1;
+
+  fsp->fsu_blocksize = fsd.f_bsize;
 
 # ifdef STATFS_TRUNCATES_BLOCK_COUNTS
 
@@ -184,58 +168,56 @@ get_fs_usage (path, disk, fsp)
 #endif /* STAT_STATFS2_BSIZE */
 
 #ifdef STAT_STATFS2_FSIZE	/* 4.4BSD */
-# define CONVERT_BLOCKS(B) adjust_blocks ((B), fsd.f_fsize, 512)
 
   struct statfs fsd;
 
   if (statfs (path, &fsd) < 0)
     return -1;
 
+  fsp->fsu_blocksize = fsd.f_fsize;
+
 #endif /* STAT_STATFS2_FSIZE */
 
 #ifdef STAT_STATFS4		/* SVR3, Dynix, Irix, AIX */
-# if _AIX || defined(_CRAY)
-#  define CONVERT_BLOCKS(B) adjust_blocks ((B), fsd.f_bsize, 512)
-#  ifdef _CRAY
-#   define f_bavail f_bfree
-#  endif
-# else
-#  define CONVERT_BLOCKS(B) (B)
-#  ifndef _SEQUENT_		/* _SEQUENT_ is DYNIX/ptx */
-#   ifndef DOLPHIN		/* DOLPHIN 3.8.alfa/7.18 has f_bavail */
-#    define f_bavail f_bfree
-#   endif
-#  endif
+
+# if !_AIX && !defined _SEQUENT_ && !defined DOLPHIN
+#  define f_bavail f_bfree
 # endif
 
   struct statfs fsd;
 
   if (statfs (path, &fsd, sizeof fsd, 0) < 0)
     return -1;
+
   /* Empirically, the block counts on most SVR3 and SVR3-derived
      systems seem to always be in terms of 512-byte blocks,
      no matter what value f_bsize has.  */
+# if _AIX || defined(_CRAY)
+   fsp->fsu_blocksize = fsd.f_bsize;
+# else
+   fsp->fsu_blocksize = 512;
+# endif
 
 #endif /* STAT_STATFS4 */
 
 #ifdef STAT_STATVFS		/* SVR4 */
-# define CONVERT_BLOCKS(B) \
-    adjust_blocks ((B), fsd.f_frsize ? fsd.f_frsize : fsd.f_bsize, 512)
 
   struct statvfs fsd;
 
   if (statvfs (path, &fsd) < 0)
     return -1;
+
   /* f_frsize isn't guaranteed to be supported.  */
+  fsp->fsu_blocksize = fsd.f_frsize ? fsd.f_frsize : fsd.f_bsize;
 
 #endif /* STAT_STATVFS */
 
 #if !defined(STAT_STATFS2_FS_DATA) && !defined(STAT_READ_FILSYS)
 				/* !Ultrix && !SVR2 */
 
-  fsp->fsu_blocks = CONVERT_BLOCKS (fsd.f_blocks);
-  fsp->fsu_bfree = CONVERT_BLOCKS (fsd.f_bfree);
-  fsp->fsu_bavail = CONVERT_BLOCKS (fsd.f_bavail);
+  fsp->fsu_blocks = fsd.f_blocks;
+  fsp->fsu_bfree = fsd.f_bfree;
+  fsp->fsu_bavail = fsd.f_bavail;
   fsp->fsu_files = fsd.f_files;
   fsp->fsu_ffree = fsd.f_ffree;
 
