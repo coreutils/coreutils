@@ -379,23 +379,23 @@ static void
 usage (status)
      int status;
 {
-  fprintf (stderr, "\
+  fprintf (status == 0 ? stdout : stderr, "\
 Usage: %s [OPTION]... FILE...\n\
 \n",
 	   program_name);
 
   if (status == 0)
-    fprintf (stderr, "\
-  -a                     change the access time only\n\
-  -c                     do not create files that do not exist\n\
-  -d, --date STRING      parse STRING and use it, instead of current time\n\
+    fprintf (stdout, "\
+  -a                     change only the access time\n\
+  -c                     do not create any files\n\
+  -d, --date STRING      parse STRING and use it instead of current time\n\
   -f                     (ignored)\n\
-  -m                     change the modification time only\n\
-  -r, --file REFERENCE   use this file's times, instead of current time\n\
-  -t STAMP               use MMDDhhmm[[CC]YY][.ss], instead of current time\n\
-      --help             provide this help\n\
+  -m                     change only the modification time\n\
+  -r, --file REFERENCE   use this file's times instead of current time\n\
+  -t STAMP               use MMDDhhmm[[CC]YY][.ss] instead of current time\n\
+      --help             display this help and exit\n\
       --time WORD        access -a, atime -a, mtime -m, modify -m, use -a\n\
-      --version          show program version\n\
+      --version          output version information and exit\n\
 \n\
 STAMP may be used without -t if none of -drt, nor --, are used.\n");
 

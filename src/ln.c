@@ -353,14 +353,14 @@ static void
 usage (status)
      int status;
 {
-  fprintf (stderr, "\
+  fprintf (status == 0 ? stdout : stderr, "\
 Usage: %s [OPTION]... SOURCE [DEST]\n\
   or:  %s [OPTION]... SOURCE... DIRECTORY\n\
 \n",
 	   program_name, program_name);
 
   if (status == 0)
-    fprintf (stderr, "\
+    fprintf (stdout, "\
   -b, --backup                 make backups for removed files\n\
   -d, -F, --directory          hard link directories (super-user only)\n\
   -f, --force                  remove existing destinations\n\
@@ -369,8 +369,8 @@ Usage: %s [OPTION]... SOURCE [DEST]\n\
   -v, --verbose                print name of each file before linking\n\
   -S, --suffix SUFFIX          override the usual backup suffix\n\
   -V, --version-control WORD   override the usual version control\n\
-      --help                   provide this help\n\
-      --version                show program version\n\
+      --help                   display this help and exit\n\
+      --version                output version information and exit\n\
 \n\
 The backup suffix is ~, unless set with SIMPLE_BACKUP_SUFFIX.  The\n\
 version control may be set with VERSION_CONTROL, values are:\n\

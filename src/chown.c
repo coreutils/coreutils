@@ -295,22 +295,22 @@ static void
 usage (status)
      int status;
 {
-  fprintf (stderr, "\
+  fprintf (status == 0 ? stdout : stderr, "\
 Usage: %s [OPTION]... OWNER[.[GROUP]] FILE...\n\
   or:  %s [OPTION]... .[GROUP] FILE...\n\
 \n",
 	   program_name, program_name);
 
   if (status == 0)
-    fprintf (stderr, "\
+    fprintf (stdout, "\
   -c, --changes           be verbose whenever change occurs\n\
-  -f, --silent, --quiet   avoid most error messages\n\
+  -f, --silent, --quiet   suppress most error messages\n\
   -v, --verbose           explain what is being done\n\
   -R, --recursive         change files and directories recursively\n\
-      --help              provide this help\n\
-      --version           show program version\n\
+      --help              display this help and exit\n\
+      --version           output version information and exit\n\
 \n\
-Owner is unchanged if missing.  Group is unchanged is missing, but changed\n\
+Owner is unchanged if missing.  Group is unchanged if missing, but changed\n\
 to login group if implied by a period.  A colon may replace the period.\n");
 
   else

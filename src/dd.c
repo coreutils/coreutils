@@ -1073,13 +1073,13 @@ static void
 usage (status)
      int status;
 {
-  fprintf (stderr, "\
+  fprintf (status == 0 ? stdout : stderr, "\
 Usage: %s [OPTION]...\n\
 \n",
 	   program_name);
 
   if (status == 0)
-    fprintf (stderr, "\
+    fprintf (stdout, "\
   bs=BYTES        force ibs=BYTES and obs=BYTES\n\
   cbs=BYTES       convert BYTES bytes at a time\n\
   conv=KEYWORDS   convert the file as per the comma separated keyword list\n\
@@ -1090,8 +1090,8 @@ Usage: %s [OPTION]...\n\
   of=FILE         write to FILE instead of stdout, don't truncate file\n\
   seek=BLOCKS     skip BLOCKS obs-sized blocks at start of output\n\
   skip=BLOCKS     skip BLOCKS ibs-sized blocks at start of input\n\
-      --help      provide this help\n\
-      --version   show program version\n\
+      --help      display this help and exit\n\
+      --version   output version information and exit\n\
 \n\
 BYTES may be suffixed: by xM for multiplication by M, by c for x1,\n\
 by w for x2, by b for x512, by k for x1024.  Each KEYWORD may be:\n\

@@ -478,13 +478,13 @@ static void
 usage (status)
      int status;
 {
-  fprintf (stderr, "\
+  fprintf (status == 0 ? stdout : stderr, "\
 Usage: %s [OPTION] [PATH]...\n\
 \n",
 	   program_name);
 
   if (status == 0)
-    fprintf (stderr, "\
+    fprintf (stdout, "\
   -a, --all                 include filesystems having 0 blocks\n\
   -i, --inodes              list inode information instead of block usage\n\
   -k, --kilobytes           use 1024 blocks, not 512 despite POSIXLY_CORRECT\n\
@@ -492,8 +492,8 @@ Usage: %s [OPTION] [PATH]...\n\
   -x, --exclude-type TYPE   limit the listing to not TYPE filesystems type\n\
   -v                        (ignored)\n\
   -P, --portability         use the POSIX output format\n\
-      --help                provide this help\n\
-      --version             show program version\n\
+      --help                display this help and exit\n\
+      --version             output version information and exit\n\
 \n\
 If no PATHs are given, list all currently mounted filesystems.\n");
 

@@ -540,7 +540,7 @@ static void
 usage (status)
      int status;
 {
-   fprintf (stderr, "\
+  fprintf (status == 0 ? stdout : stderr, "\
 Usage: %s [OPTION]... SOURCE DEST           (1st format)\n\
   or:  %s [OPTION]... SOURCE... DIRECTORY   (2nd format)\n\
   or:  %s [OPTION]... DIRECTORY...          (3nd format)\n\
@@ -548,15 +548,15 @@ Usage: %s [OPTION]... SOURCE DEST           (1st format)\n\
 	    program_name, program_name, program_name);
 
   if (status == 0)
-    fprintf (stderr, "\
+    fprintf (stdout, "\
   -c                  (ignored)\n\
   -d, --directory     create [leading] directories, mandatory for 3rd format\n\
   -g, --group GROUP   set group ownership, instead of process' current group\n\
   -m, --mode MODE     set permission mode (as in chmod), instead of 0755\n\
   -o, --owner OWNER   set ownership (super-user only)\n\
   -s, --strip         strip symbol tables, only for 1st and 2nd formats\n\
-      --help          provide this help\n\
-      --version       show program version\n");
+      --help          display this help and exit\n\
+      --version       output version information and exit\n");
 
   else
     fprintf (stderr, "Try `%s --help' for more information.\n",

@@ -196,15 +196,16 @@ usage (reason, status)
      int status;
 {
   if (reason != NULL)
-    fprintf (stderr, "%s: %s\n", program_name, reason);
+    fprintf (status == 0 ? stdout : stderr, "%s: %s\n",
+	     program_name, reason);
 
-  fprintf (stderr, "\
+  fprintf (status == 0 ? stdout : stderr, "\
 Usage: %s [OPTION]... [PATH]...\n\
 \n",
 	   program_name);
 
   if (status == 0)
-    fprintf (stderr, "\
+    fprintf (stdout, "\
   -a, --all                write counts for all files, not just directories\n\
   -b, --bytes              print size in bytes\n\
   -c, --total              produce a grand total\n\
@@ -215,8 +216,8 @@ Usage: %s [OPTION]... [PATH]...\n\
   -D, --dereference-args   dereference PATHs when symbolic link\n\
   -L, --dereference        dereference all symbolic links\n\
   -S, --separate-dirs      do not include size of subdirectories\n\
-      --help               provide this help\n\
-      --version            show program version\n");
+      --help               display this help and exit\n\
+      --version            output version information and exit\n");
 
   else
     fprintf (stderr, "Try `%s --help' for more information.\n",

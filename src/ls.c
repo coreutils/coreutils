@@ -1880,13 +1880,13 @@ static void
 usage (status)
      int status;
 {
-  fprintf (stderr, "\
+  fprintf (status == 0 ? stdout : stderr, "\
 Usage: %s [OPTION]... [PATH]...\n\
 \n",
 	   program_name);
 
   if (status == 0)
-    fprintf (stderr, "\
+    fprintf (stdout, "\
   -a, --all                  do not hide entries starting with .\n\
   -b, --escape               print octal escapes for nongraphic characters\n\
   -c                         sort by change time, list change time if -l\n\
@@ -1906,7 +1906,9 @@ Usage: %s [OPTION]... [PATH]...\n\
   -u                         sort by last access time, list access time if -l\n\
   -w, --width COLS           assume screen width, instead of current value\n\
   -x                         list entries by lines, instead of by columns\n\
-  -A, --almost-all           hide only implied . and ..\n\
+  -A, --almost-all           hide only implied . and ..\n");
+
+    fprintf (stdout, "\
   -B, --ignore-backups       hide implied entries ending with ~\n\
   -C                         list entries by columns\n\
   -F, --classify             append a character for typing each entry\n\
@@ -1922,13 +1924,13 @@ Usage: %s [OPTION]... [PATH]...\n\
   -X                         sort alphabetically by entry extension\n\
   -1                         list one file per line\n\
       --full-time            list both full date and full time\n\
-      --help                 provide this help\n\
+      --help                 display this help and exit\n\
       --format WORD          across -x, commas -m, horizontal -x, long -l,\n\
                                single-column -1, verbose -l, vertical -C\n\
       --sort WORD            ctime -c, extension -X, none -U, size -S,\n\
                                status -c, time -t\n\
       --time WORD            atime -u, access -u, use -u\n\
-      --version              show program version\n\
+      --version              output version information and exit\n\
 \n\
 Sort entries alphabetically if none of -cftuSUX nor --sort.\n");
 

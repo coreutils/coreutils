@@ -305,23 +305,23 @@ static void
 usage (status)
      int status;
 {
-  fprintf (stderr, "\
+  fprintf (status == 0 ? stdout : stderr, "\
 Usage: %s [OPTION]... MODE[,MODE]... FILE...\n\
   or:  %s [OPTION]... OCTAL_MODE FILE...\n\
 \n",
 	   program_name, program_name);
 
   if (status == 0)
-    fprintf (stderr, "\
-  -c, --changes           be verbose whenever change occurs\n\
-  -f, --silent, --quiet   avoid most error messages\n\
-  -v, --verbose           explain what is being done\n\
+    fprintf (stdout, "\
+  -c, --changes           like verbose but report only when a change is made\n\
+  -f, --silent, --quiet   suppress most error messages\n\
+  -v, --verbose           output a diagnostic for every file processed\n\
   -R, --recursive         change files and directories recursively\n\
-      --help              provide this help\n\
-      --version           show program version\n\
+      --help              display this help and exit\n\
+      --version           output version information and exit\n\
 \n\
-Each MODE is one or more of letters ugoa, one of the signs +-= and one\n\
-or more of letters rwxXstugo.\n");
+Each MODE is one or more of the letters ugoa, one of the symbols +-= and\n\
+one or more of the letters rwxXstugo.\n");
 
   else
     fprintf (stderr, "Try `%s --help' for more information.\n",
