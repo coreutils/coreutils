@@ -1,5 +1,13 @@
 1999-01-31  Jim Meyering  <meyering@ascend.com>
 
+	* src/uptime.c (print_uptime): Use the C numeric locale for sscanf
+	of /proc/uptime data, then restore.
+	* lib/getloadavg.c: Include locale.h.
+	[!HAVE_SETLOCALE]: Define-away setlocale.
+	(getloadavg): Ensure the sscanf of /proc/getloadavg data uses the
+	`C' numeric locale.  Restore afterwards.
+	Based on a suggestion from Thomas Quinot.
+
 	* lib/strtod.c: Protoize.
 
 1999-01-30  Jim Meyering  <meyering@ascend.com>
