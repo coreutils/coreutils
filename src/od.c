@@ -934,7 +934,7 @@ open_next_file (void)
   while (in_stream == NULL);
 
   if (limit_bytes_to_format && !flag_dump_strings)
-    setbuf (in_stream, NULL);
+    SETVBUF (in_stream, NULL, _IONBF, 0);
   SET_BINARY (fileno (in_stream));
 
   return err;
@@ -1060,8 +1060,8 @@ skip (off_t n_skip)
 	  /* If the number of bytes left to skip is less than the size
 	     of the current file, try seeking to the correct offset.  */
 
-	  else if (S_ISREG (file_stats.st_mode) &&
-		   fseek (in_stream, n_skip, SEEK_CUR) == 0)
+	  else if (S_ISREG (file_stats.st_mode)
+		   && 0 <= lseek (fileno (in_stream), n_skip, SEEK_CUR))
 	    {
 	      n_skip = 0;
 	    }
