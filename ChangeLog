@@ -1,5 +1,7 @@
 2003-07-11  Jim Meyering  <jim@meyering.net>
 
+	* Version 5.0.1.
+
 	* src/head.c (diagnose_copy_fd_failure): New function, renamed from
 	the macro, COPY_FD_DIAGNOSE.
 	(diagnose_copy_fd_failure): Enclose diagnostic in _(...).
@@ -18,8 +20,6 @@
 	* src/install.c (change_attributes): Likewise.
 
 2003-07-10  Jim Meyering  <jim@meyering.net>
-
-	* Version 5.0.1.
 
 	* src/head.c (usage): Use 1024*1024 in place of 1048576.
 	* src/tail.c (usage): Likewise.
