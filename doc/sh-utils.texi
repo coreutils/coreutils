@@ -844,7 +844,7 @@ Returns the substring of @var{string} beginning at @var{position}
 with length at most @var{length}.  If either @var{position} or
 @var{length} is negative, zero, or non-numeric, returns the null string.
 
-@item index @var{string} @var{character-class}
+@item index @var{string} @var{charset}
 @findex index
 Returns the first position in @var{string} where the first character in
 @var{charset} was found.  If no character in @var{charset} is found in
