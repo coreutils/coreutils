@@ -23,4 +23,19 @@
 # endif
 #endif
 
-extern int mbswidth PARAMS ((const char *string));
+/* Optional flags to influence mbswidth/mbsnwidth behavior.  */
+
+/* Assume invalid characters have width 0.  If this is not set, the
+   functions return -1 if an invalid or incomplete character occurs.  */
+#define MBSW_ACCEPT_INVALID		1
+
+/* Assume unprintable characters have width 1.  If this is not set, the
+   functions return -1 if a non-printable character occurs.  */
+#define MBSW_ACCEPT_UNPRINTABLE	2
+
+/* Returns the number of screen columns needed for STRING.  */
+extern int mbswidth PARAMS ((const char *string, int flags));
+
+/* Returns the number of screen columns needed for the NBYTES bytes
+   starting at BUF.  */
+extern int mbsnwidth PARAMS ((const char *buf, size_t nbytes, int flags));
