@@ -1042,16 +1042,23 @@ EXT (INT opt, const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 	if (level-- == 0)
 	  {
 	    /* This means we found the end of the pattern.  */
+#define ALLOCA_LIMIT 8000
 #define NEW_PATTERN \
 	    struct patternlist *newp;					      \
 	    size_t plen;						      \
+	    size_t plensize;						      \
+	    size_t newpsize;						      \
 									      \
 	    plen = (opt == L('?') || opt == L('@')			      \
 		    ? pattern_len					      \
 		    : p - startp + 1);					      \
-	    newp = (struct patternlist *)				      \
-	      alloca (offsetof (struct patternlist, str)		      \
-		      + (plen * sizeof (CHAR)));			      \
+	    plensize = plen * sizeof (CHAR);				      \
+	    newpsize = offsetof (struct patternlist, str) + plensize;	      \
+	    if ((size_t) -1 / sizeof (CHAR) < plen			      \
+		|| newpsize < offsetof (struct patternlist, str)	      \
+		|| ALLOCA_LIMIT <= newpsize)				      \
+	      return -1;						      \
+	    newp = (struct patternlist *) alloca (newpsize);		      \
 	    *((CHAR *) MEMPCPY (newp->str, startp, p - startp)) = L('\0');    \
 	    newp->next = NULL;						      \
 	    *lastp = newp;						      \
