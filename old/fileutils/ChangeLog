@@ -2,6 +2,18 @@
 
 	* Version 4.1.2.
 
+	Don't fail for commands like this: cp a a d/
+
+	* src/copy.c (triple_hash_no_name): New function.
+	(src_info_init): New function.
+	(copy_internal): Warn and return early for the second and subsequent
+	occurrences of the same source file named on the command line.
+	* src/copy.h (struct cp_options) [src_info]: New member.
+	* src/install.c (cp_option_init): Initialize new member.
+	* src/mv.c (cp_option_init): Likewise.
+	* src/cp.c (cp_option_init): Likewise.
+	(do_copy): Call src_info_init.
+
 	* tests/mv/dup-source: New test for the above.
 	* tests/mv/Makefile.am (TESTS): Add dup-source.
 
