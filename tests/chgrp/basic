@@ -87,9 +87,8 @@ test "$VERBOSE" = yes && set +x
 cat <<\EOF > expected
 changed group of `f' to G1
 changed group of `f' to G2
-changed group of `f' to G2
 changed group of `f' to G1
-changed group of `f' to G1
+group of `f' retained as G1
 changed group of `f' to G2
 changed group of `d/f3' to G2
 changed group of `d' to G2
@@ -100,7 +99,6 @@ changed group of `d' to G2
 changed group of `d/f3' to G1
 changed group of `d' to G1
 changed group of `d' to G2
-changed group of `symlink' to G2
 changed ownership of `f' to :G2
 changed group of `symlink' to G1
 changed ownership of `f' to :G2
