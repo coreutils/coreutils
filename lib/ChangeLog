@@ -1,3 +1,14 @@
+2005-02-01  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* mountlist.h (MOUNTLIST_H_): New macro, to protect against double
+	inclusion.
+	Include <sys/types.h>, for dev_t.
+	(ME_DUMMY, ME_REMOTE): Move from here....
+	* mountlist.c (ME_DUMMY, ME_REMOTE): To here.
+	(ME_DUMMY): Count "subfs" as a dummy.  Problem reported by
+	Dmitry V. Levin.
+	Include mountlist.h first, to test the interface.
+
 2005-01-29  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (libfetish_a_SOURCES): Remove many files from this
