@@ -348,22 +348,15 @@ noconv:
 #endif
 
 /* Prototype.  */
-INT WEAKNAME (strtol) __P ((const STRING_TYPE *nptr, STRING_TYPE **endptr,
+INT strtol __P ((const STRING_TYPE *nptr, STRING_TYPE **endptr,
 			    int base));
 
 
 INT
-WEAKNAME (strtol) (nptr, endptr, base)
+strtol (nptr, endptr, base)
      const STRING_TYPE *nptr;
      STRING_TYPE **endptr;
      int base;
 {
   return INTERNAL (strtol) (nptr, endptr, base, 0);
 }
-
-#ifdef weak_alias
-/* We need this indirection when `strtol' is defined as a macro
-   for one of the other names.  */
-#define weak1(x, y) weak_alias (x, y)
-weak1 (WEAKNAME (strtol), strtol)
-#endif
