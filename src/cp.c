@@ -836,7 +836,9 @@ main (int argc, char **argv)
   struct cp_options x;
   char *target_directory = NULL;
   bool seen_option_a = false;
+  bool seen_option_r = false;
   bool seen_option_a_then_r = false;
+  bool seen_option_r_then_a = false;
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -874,6 +876,8 @@ main (int argc, char **argv)
 	  x.recursive = 1;
 	  x.copy_as_regular = 0;
 	  seen_option_a = true;
+	  if (seen_option_r)
+	    seen_option_r_then_a = true;
 	  break;
 
 	case 'V':  /* FIXME: this is deprecated.  Remove it in 2001.  */
@@ -948,6 +952,7 @@ main (int argc, char **argv)
 	case 'r':
 	  x.recursive = 1;
 	  x.copy_as_regular = 1;
+	  seen_option_r = true;
 	  if (seen_option_a)
 	    seen_option_a_then_r = true;
 	  break;
@@ -1016,6 +1021,10 @@ main (int argc, char **argv)
  use -dpr instead."));
       usage (1);
     }
+
+  if (seen_option_r_then_a)
+    error (0, 0,
+	   _("WARNING: -r has no effect when specified before --archive (-a)"));
 
   if (x.hard_link && x.symbolic_link)
     {
