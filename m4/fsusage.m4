@@ -187,6 +187,11 @@ AC_TRY_CPP([#include <sys/filsys.h>],
   ac_fsusage_space=yes)
 fi
 
-AS_IF([test $ac_fsusage_space = yes], [$1], [$2])[]dnl
+dnl FIXME: this should use AS_IF.
+if test $ac_fsusage_space = yes; then
+$1
+else
+$2
+fi
 
 ])
