@@ -2,6 +2,9 @@
 
 	* Version 3.16p.
 
+	* tests/ls/time-1: Clean up ctime test.  Note that it fails also
+	on Solaris5.5.1 tmpfs file systems.
+
 	Solve the `rm -f rm' problem more cleanly.
 	* src/.rm-warning: Remove file.
 	* src/automake-wrap: New file.
