@@ -1,6 +1,7 @@
 /* On some systems, mkdir ("foo/", 0700) fails because of the trailing
    slash.  On those systems, this wrapper removes the trailing slash.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+
+   Copyright (C) 2001, 2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -28,25 +29,11 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <stdio.h>
-#if HAVE_STDLIB_H
-# include <stdlib.h>
-#endif
-
-#if HAVE_STRING_H
-# include <string.h>
-#else
-# include <strings.h>
-#endif
+#include <stdlib.h>
+#include <string.h>
 
 #include "dirname.h"
 #include "xalloc.h"
-
-#ifndef HAVE_DECL_FREE
-"this configure-time declaration test was not run"
-#endif
-#if !HAVE_DECL_FREE
-void free ();
-#endif
 
 /* This function is required at least for NetBSD 1.5.2.  */
 
