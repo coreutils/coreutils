@@ -476,7 +476,7 @@ tail_bytes (filename, fd, n_bytes)
   if (from_start)
     {
       if (S_ISREG (stats.st_mode))
-	lseek (fd, n_bytes, SEEK_SET);
+	lseek (fd, n_bytes, SEEK_CUR);
       else if (start_bytes (filename, fd, n_bytes))
 	return 1;
       dump_remainder (filename, fd);
@@ -485,13 +485,37 @@ tail_bytes (filename, fd, n_bytes)
     {
       if (S_ISREG (stats.st_mode))
 	{
-	  if (lseek (fd, (off_t) 0, SEEK_END) <= n_bytes)
-	    /* The file is shorter than we want, or just the right size, so
-	       print the whole file.  */
-	    lseek (fd, (off_t) 0, SEEK_SET);
+	  off_t current_pos, end_pos;
+	  size_t bytes_remaining;
+
+	  if ((current_pos = lseek (fd, (off_t) 0, SEEK_CUR)) != -1
+	      && (end_pos = lseek (fd, (off_t) 0, SEEK_END)) != -1)
+	    {
+	      off_t diff;
+	      /* Be careful here.  The current position may actually be
+		 beyond the end of the file.  */
+	      bytes_remaining = (diff = end_pos - current_pos) < 0 ? 0 : diff;
+	    }
 	  else
-	    /* The file is longer than we want, so go back.  */
-	    lseek (fd, -n_bytes, SEEK_END);
+	    {
+	      error (0, errno, "%s", filename);
+	      return 1;
+	    }
+
+	  if (bytes_remaining <= n_bytes)
+	    {
+	      /* From the current position to end of file, there are no
+		 more bytes than have been requested.  So reposition the
+		 file pointer to the incoming current position and print
+		 everything after that.  */
+	      lseek (fd, current_pos, SEEK_SET);
+	    }
+	  else
+	    {
+	      /* There are more bytes remaining than were requested.
+		 Back up.  */
+	      lseek (fd, -n_bytes, SEEK_END);
+	    }
 	  dump_remainder (filename, fd);
 	}
       else
@@ -526,7 +550,14 @@ tail_lines (filename, fd, n_lines)
     }
   else
     {
-      if (S_ISREG (stats.st_mode))
+      /* Use file_lines only if FD refers to a regular file with
+         its file pointer positioned at beginning of file.  */
+      /* FIXME: adding the lseek conjunct is a kludge.
+	 Once there's a reasonable test suite, fix the true culprit:
+	 file_lines.  file_lines shouldn't presume that the input
+	 file pointer is initially positioned to beginning of file.  */
+      if (S_ISREG (stats.st_mode)
+	  && lseek (fd, (off_t) 0, SEEK_CUR) == (off_t) 0)
 	{
 	  length = lseek (fd, (off_t) 0, SEEK_END);
 	  if (length != 0 && file_lines (filename, fd, n_lines, length))
