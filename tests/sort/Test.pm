@@ -183,6 +183,17 @@ my @tv = (
  "_________U___iob\n_________U__abort\n_________U__abort\n_________U__fprintf\n_________U__free\n_________U__malloc\n_________U__malloc\n_________U__memcpy\n_________U__memset\n_________U_dyld_stub_binding_helper\n",
  0],
 
+# Demonstrate that folding changes the ordering of e.g. A, a, and _
+# because while they normally (in the C locale) collate like A, _, a,
+# when using -f, `a' is compared as if it were `A'.
+["21a", '',    "A\na\n_\n", "A\n_\na\n", 0],
+["21b", '-f',  "A\na\n_\n", "A\na\n_\n", 0],
+["21c", '-f',  "a\nA\n_\n", "A\na\n_\n", 0],
+["21d", '-f',  "_\na\nA\n", "A\na\n_\n", 0],
+["21e", '-f',  "a\n_\nA\n", "A\na\n_\n", 0],
+["21f", '-fs', "A\na\n_\n", "A\na\n_\n", 0],
+["21g", '-fu', "a\n_\n", "a\n_\n", 0],
+
 );
 
 sub test_vector
