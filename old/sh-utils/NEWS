@@ -1,4 +1,6 @@
 Changes in release 2.1
+ [2.0f]
+* fix build problems with ut_name vs. ut_user
  [2.0e]
 * stty: fix long-standing bug that caused test failures on at least HPUX
   systems when COLUMNS was set to zero
