@@ -15,7 +15,7 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-/* Jim Meyering <meyering@comco.com> */
+/* Written by Jim Meyering */
 
 #include <config.h>
 #include <stdio.h>
@@ -25,6 +25,11 @@
 #include "long-options.h"
 #include "closeout.h"
 #include "error.h"
+
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "sync"
+
+#define AUTHORS "Jim Meyering"
 
 /* The name this program was run with. */
 char *program_name;
@@ -58,8 +63,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "sync", GNU_PACKAGE, VERSION,
-		      "Jim Meyering", usage);
+  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
+		      AUTHORS, usage);
 
   if (argc != 1)
     error (0, 0, _("ignoring all arguments"));
