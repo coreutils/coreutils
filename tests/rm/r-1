@@ -21,8 +21,8 @@ mkdir $tmp/a $tmp/a/a || test_failure=1
 > $tmp/b || test_failure=1
 
 cat <<EOF > $tmp/$test.E || test_failure=1
-removing any entries of directory $tmp/a
-removing any entries of directory $tmp/a/a
+removing all entries of directory $tmp/a
+removing all entries of directory $tmp/a/a
 removing the directory itself: $tmp/a/a
 removing the directory itself: $tmp/a
 removing non-directory $tmp/b
