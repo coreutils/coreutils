@@ -1,6 +1,11 @@
-2002-12-14  Jim Meyering  <jim@meyering.net>
+2002-12-15  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.5.
+
+	* src/ls.c, src/stat.c, src/date.c: Remove declaration of nstrftime.
+	Include strftime.h instead.
+
+2002-12-14  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.cfg ($(url_dir_list)): Use .../coreutils, not .../fetish.
 
