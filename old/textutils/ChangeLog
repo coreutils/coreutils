@@ -1,3 +1,8 @@
+Sun Dec 29 23:42:57 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/pr.c (init_header): Plug a small memory leak by using stack
+	rather than heap for a 15-byte temporary buffer.
+
 Sat Dec 28 00:03:23 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/pr.c (TAB_WIDTH): Parenthesize uses of parameters and renamed
