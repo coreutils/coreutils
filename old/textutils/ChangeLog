@@ -1,6 +1,17 @@
-2002-01-21  Jim Meyering  <meyering@lucent.com>
+2002-01-22  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.20.
+
+2001-01-21  Paul Eggert  <eggert@twinsun.com>
+
+	* src/comm.c: Include xmemcoll.h, not memcoll.h.
+	Use xmemcoll instead of memcoll.
+	* src/join.c: Likewise.
+	* src/sort.c: Likewise.
+
+	* src/sort.c (die): Do not invoke cleanup; atexit does this now.
+	(main): Use atexit to invoke cleanup on exit.
+	Set xmemcoll_exit_failure to SORT_FAILURE.
 
 2002-01-20  Paul Eggert  <eggert@twinsun.com>
 
