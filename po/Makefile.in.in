@@ -41,7 +41,7 @@ GENCAT = @GENCAT@
 GMSGFMT = @GMSGFMT@
 MSGFMT = @MSGFMT@
 XGETTEXT = @XGETTEXT@
-MSGMERGE = msgmerge -f
+MSGMERGE = msgmerge
 
 DEFS = @DEFS@
 CFLAGS = @CFLAGS@
@@ -88,7 +88,7 @@ INSTOBJEXT = @INSTOBJEXT@
 all: all-@USE_NLS@
 
 all-yes: cat-id-tbl.c $(CATALOGS)
-all-no:
+all-no all-gettext:
 
 $(PACKAGE).pot: $(POTFILES)
 	$(XGETTEXT) --default-domain=$(PACKAGE) --directory=$(top_srcdir) \
@@ -134,6 +134,14 @@ install-data: all
 	  else \
 	    $(INSTALL_DATA) $(srcdir)/$$cat $$dir/$(PACKAGE)$(INSTOBJEXT); \
 	  fi; \
+	  if test -r $$cat.m; then \
+	    $(INSTALL_DATA) $$cat.m $$dir/$(PACKAGE)$(INSTOBJEXT).m; \
+	  else \
+	    if test -r $(srcdir)/$$cat.m ; then \
+	      $(INSTALL_DATA) $(srcdir)/$$cat.m \
+		$$dir/$(PACKAGE)$(INSTOBJEXT).m; \
+	    fi; \
+	  fi; \
 	done
 
 # This installation goal is only used in GNU gettext.  Packages which
@@ -148,7 +156,9 @@ uninstall:
 	for cat in $$catalogs; do \
 	  lang=`echo $$cat | sed 's/$(CATOBJEXT)$$//'`; \
 	  rm -f $(localedir)/$$lang/LC_MESSAGES/$(PACKAGE)$(INSTOBJEXT); \
+	  rm -f $(localedir)/$$lang/LC_MESSAGES/$(PACKAGE)$(INSTOBJEXT).m; \
 	  rm -f $(gnulocaledir)/$$lang/LC_MESSAGES/$(PACKAGE)$(INSTOBJEXT); \
+	  rm -f $(gnulocaledir)/$$lang/LC_MESSAGES/$(PACKAGE)$(INSTOBJEXT).m; \
 	done
 	rm -f $(gettextsrcdir)/po-Makefile.in.in
 
