@@ -1,3 +1,31 @@
+Sun Jun 29 17:19:30 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/mv.c (copy_reg): New parameter, SOURCE_STATS.
+	(do_move): Update caller.
+
+Sun Jun 22 08:32:46 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	Use variable width columns when printing in multi-column mode.
+	* src/ls.c: (init_col_info): New function.
+	(print_current_files): Call init_col_info if format is
+	`many_per_line' or `horizontal'.
+	(print_many_per_line): Calculate and apply optimum column widths.
+	(print_horizontal): Likewise.
+	From Ulrich Drepper.
+
+	* src/mv.c (movefile): Take new boolean parameter, DEST_IS_DIR,
+	to save a stat per moved file when the destination is a directory.
+	(main): Call movefile with additional argument.
+	(strip_trailing_slashes_2): New function.
+	(movefile): Remove trailing slashes from dest.  Otherwise, stat ("b/")
+	fails with ENOTDIR on systems including Linux w/libc 2.0.30.
+	Reproduce with `rm -rf a b; mkdir a; touch b; ./mv a b/'.
+	(do_move): Fix misleading comment.
+
+Sat Jun 21 21:26:57 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in: Remove now-unused definitions of LN, MV, RM.
+
 Sun Jun 15 07:04:29 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/full-write.c (full_write): Add comment regarding failure due
