@@ -1383,6 +1383,9 @@
 /* Define to a replacement function name for fnmatch(). */
 #undef fnmatch
 
+/* Define to rpl_free if the replacement function should be used. */
+#undef free
+
 /* Define to rpl_getcwd if the wrapper function should be used. */
 #undef getcwd
 
@@ -1407,7 +1410,7 @@
 #undef inline
 #endif
 
-/* Define to `unsigned long' if <sys/types.h> does not define. */
+/* Define to `unsigned long int' if <sys/types.h> does not define. */
 #undef ino_t
 
 /* Define to long or long long if <stdint.h> and <inttypes.h> don't define. */
@@ -1492,6 +1495,9 @@
 /* Define to unsigned long or unsigned long long if <stdint.h> and
    <inttypes.h> don't define. */
 #undef uintmax_t
+
+/* Define to `size_t' if <sys/types.h> does not define. */
+#undef uintptr_t
 
 /* Define to rpl_utime if the replacement function should be used. */
 #undef utime
