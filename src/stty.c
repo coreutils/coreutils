@@ -1192,12 +1192,19 @@ set_speed (enum speed_setting type, const char *arg, struct termios *mode)
 
 #ifdef TIOCGWINSZ
 
+static int
+get_win_size (int fileno, struct winsize *win)
+{
+  int err = ioctl (fileno, TIOCGWINSZ, (char *) win);
+  return err;
+}
+
 static void
 set_window_size (int rows, int cols)
 {
   struct winsize win;
 
-  if (ioctl (0, TIOCGWINSZ, (char *) &win))
+  if (get_win_size (STDIN_FILENO, &win))
     {
       if (errno != EINVAL)
 	error (1, errno, _("standard input"));
@@ -1241,16 +1248,16 @@ set_window_size (int rows, int cols)
       win.ws_row = 1;
       win.ws_col = 1;
 
-      if (ioctl (0, TIOCSWINSZ, (char *) &win))
+      if (ioctl (STDIN_FILENO, TIOCSWINSZ, (char *) &win))
 	error (1, errno, _("standard input"));
 
-      if (ioctl (0, TIOCSSIZE, (char *) &ttysz))
+      if (ioctl (STDIN_FILENO, TIOCSSIZE, (char *) &ttysz))
 	error (1, errno, _("standard input"));
       return;
     }
 # endif
 
-  if (ioctl (0, TIOCSWINSZ, (char *) &win))
+  if (ioctl (STDIN_FILENO, TIOCSWINSZ, (char *) &win))
     error (1, errno, _("standard input"));
 }
 
@@ -1259,7 +1266,7 @@ display_window_size (int fancy)
 {
   struct winsize win;
 
-  if (ioctl (0, TIOCGWINSZ, (char *) &win))
+  if (get_win_size (STDIN_FILENO, &win))
     {
       if (errno != EINVAL)
 	error (1, errno, _("standard input"));
@@ -1288,7 +1295,7 @@ screen_columns (void)
      (but it works for ptys).
      It can also fail on any system when stdout isn't a tty.
      In case of any failure, just use the default.  */
-  if (ioctl (1, TIOCGWINSZ, (char *) &win) == 0 && win.ws_col > 0)
+  if (get_win_size (STDOUT_FILENO, &win) == 0 && win.ws_col > 0)
     return win.ws_col;
 #endif
   /* FIXME: use xstrtol */
