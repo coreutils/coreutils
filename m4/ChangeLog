@@ -1,3 +1,16 @@
+2000-01-04  Jim Meyering  <meyering@ascend.com>
+
+	* d-type.m4 (jm_CHECK_TYPE_STRUCT_DIRENT_D_TYPE): Rename from
+	jm_STRUCT_DIRENT_D_TYPE.
+	* d-ino.m4: (jm_CHECK_TYPE_STRUCT_DIRENT_D_INO): Rename from
+	jm_STRUCT_DIRENT_D_INO.
+	* utimbuf.m4 (jm_CHECK_TYPE_STRUCT_UTIMBUF): Rename from
+	jm_STRUCT_UTIMBUF.
+	* jm-macros.m4: Reflect s/jm_STRUCT_/jm_CHECK_TYPE_STRUCT_/ renamings.
+
+	* timespec.m4 (jm_CHECK_TYPE_STRUCT_TIMESPEC): New file, macro.
+	* jm-macros.m4 (jm_CHECK_TYPE_STRUCT_TIMESPEC): Require it.
+
 2000-01-03  Paul Eggert  <eggert@twinsun.com>
 
 	* nanosleep.m4 (jm_FUNC_NANOSLEEP): Search for nanosleep in -lrt
