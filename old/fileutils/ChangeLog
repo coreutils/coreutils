@@ -1,5 +1,8 @@
 2000-09-10  Jim Meyering  <meyering@lucent.com>
 
+	* tests/cp/cp-mv-backup (LC_ALL): Set to `C' and export to ensure
+	that `ls' sorts the same way for everyone.  Reported by Vin Shelton.
+
 	* Makefile.maint (b_host): Use freefriends.org, not tug.org.
 
 2000-09-09  Jim Meyering  <meyering@lucent.com>
