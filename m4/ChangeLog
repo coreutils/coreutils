@@ -1,3 +1,8 @@
+2004-12-06  Jim Meyering  <jim@meyering.net>
+
+	* openat.m4 (gl_FUNC_OPENAT): Use AC_LIBSOURCES.
+	(gl_PREREQ_GETCWD): Use AC_REQUIRE.
+
 2004-12-02  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* openat.m4: Add copyright notice.
