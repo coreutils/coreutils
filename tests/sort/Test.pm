@@ -27,11 +27,12 @@ my @tv = (
 #
 ["02a", '-c', "A\nB\nC\n", '', 0],
 ["02b", '-c', "A\nC\nB\n", '', 1],
+["02c", '-c -k1,1', "a\na b\n", '', 0],
 # This should fail because there are duplicate keys
-["02c", '-cu', "A\nA\n", '', 1],
-["02d", '-cu', "A\nB\n", '', 0],
-["02e", '-cu', "A\nB\nB\n", '', 1],
-["02f", '-cu', "B\nA\nB\n", '', 1],
+["02m", '-cu', "A\nA\n", '', 1],
+["02n", '-cu', "A\nB\n", '', 0],
+["02o", '-cu', "A\nB\nB\n", '', 1],
+["02p", '-cu', "B\nA\nB\n", '', 1],
 #
 ["03a", '-k1', "B\nA\n", "A\nB\n",  0],
 ["03b", '-k1,1', "B\nA\n", "A\nB\n",  0],
