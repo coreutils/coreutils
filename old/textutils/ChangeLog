@@ -1,3 +1,9 @@
+Fri Feb 16 21:44:14 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* join.c (main): Mark two strings for translation.
+	* md5sum.c (md5_check): Mark a string for translation.
+	From François Pinard.
+
 Mon Feb 12 21:12:28 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	Update for automake-0.29.
@@ -23,7 +29,7 @@ Wed Jan 31 23:26:13 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 Fri Jan  5 18:30:28  1996 Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* aclocal.m4: For SVR4 systems, use -Xc -D_POSIX_C_SOURCE in CFLAGS,
-	not just -Xc.  From Franc,ois Pinard.
+	not just -Xc.  From François Pinard.
 
 	* doc/Makefile.am (DIST_OTHER): Don't set to mdate-sh.  mdate-sh is
 	distributed automatically.  From Tom Tromey.
