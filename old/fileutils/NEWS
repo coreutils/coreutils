@@ -1,5 +1,6 @@
 Changes in release 3.17:
 [3.16w]
+* touch now interprets `-t TIME-DATE' as POSIX specifies
 * `ls EMPTY-DIR EMPTY-DIR' once again outputs the directory names
 [3.16v]
 * portability fixes
