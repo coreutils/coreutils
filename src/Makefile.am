@@ -211,8 +211,9 @@ check-README:
 # even in comments, but for now it does the job with no false positives.
 .PHONY: check-misc
 check-misc:
-	grep '^# *define  *S_IS' $(SOURCES) && exit 1 || :
-	grep st_blocks $(SOURCES) && exit 1 || :
+	cd $(srcdir); grep '^# *define  *S_IS' $(SOURCES) && exit 1 || :
+	cd $(srcdir); grep st_blocks $(SOURCES) && exit 1 || :
+	cd $(srcdir); grep '^# *define .*defined' $(SOURCES) && exit 1 || :
 
 # Extract the list of authors from each file.
 sed_filter = s/^ *//;s/N_ (//;s/^"//;s/")*$$//
