@@ -27,6 +27,7 @@
 #include <signal.h>
 
 #include "system.h"
+#include "closeout.h"
 
 #include <regex.h>
 
@@ -1383,6 +1384,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  atexit (close_stdout);
+
   global_argv = argv;
   controls = NULL;
   control_used = 0;
@@ -1488,9 +1491,6 @@ main (int argc, char **argv)
       error (0, errno, _("read error"));
       cleanup_fatal ();
     }
-
-  if (!suppress_count && (ferror (stdout) || fclose (stdout) == EOF))
-    error (EXIT_FAILURE, errno, _("write error"));
 
   exit (EXIT_SUCCESS);
 }
