@@ -1,3 +1,9 @@
+2001-08-31  Jim Meyering  <meyering@lucent.com>
+
+	* xgetcwd.c (xgetcwd): Reorganize to avoid some duplication.
+	Use an initial, malloc'd, buffer of length 128 rather than
+	a statically allocated one of length 1024.
+
 2001-08-30  Paul Eggert  <eggert@twinsun.com>
 
 	* lib/xgetcwd.c: Don't include pathmax.h.
