@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{1999-02-02}%
+\def\texinfoversion{1999-02-04}%
 %
 % Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99
 % Free Software Foundation, Inc.
@@ -104,7 +104,7 @@
 \ifx\putwordInfo\undefined      \gdef\putwordInfo{Info}\fi
 \ifx\putwordMethodon\undefined  \gdef\putwordMethodon{Method on}\fi
 \ifx\putwordNoTitle\undefined	\gdef\putwordNoTitle{No Title}\fi
-\ifx\putwordOf\undefined        \gdef\putwordOf{of}\fi
+\ifx\putwordof\undefined        \gdef\putwordof{of}\fi
 \ifx\putwordon\undefined        \gdef\putwordon{on}\fi
 \ifx\putwordpage\undefined      \gdef\putwordpage{page}\fi
 \ifx\putwordsection\undefined   \gdef\putwordsection{section}\fi
@@ -1509,17 +1509,24 @@ where each line of input produces a line of output.}
 \let\env=\code
 \let\command=\code
 
-% @uref (abbreviation for `urlref') takes an optional second argument
-% specifying the text to display.  First (mandatory) arg is the url.
-% Perhaps eventually put in a hypertex \special here.
+% @uref (abbreviation for `urlref') takes an optional (comma-separated)
+% second argument specifying the text to display and an optional third
+% arg as text to display instead of (rather than in addition to) the url
+% itself.  First (mandatory) arg is the url.  Perhaps eventually put in
+% a hypertex \special here.
 %
-\def\uref#1{\urefxxx #1,,\finish}
-\def\urefxxx#1,#2,#3\finish{%
-  \setbox0 = \hbox{\ignorespaces #2}%
+\def\uref#1{\douref #1,,,\finish}
+\def\douref#1,#2,#3,#4\finish{%
+  \setbox0 = \hbox{\ignorespaces #3}%
   \ifdim\wd0 > 0pt
-    \unhbox0\ (\code{#1})%
+    \unhbox0 % third arg given, show only that
   \else
-    \code{#1}%
+    \setbox0 = \hbox{\ignorespaces #2}%
+    \ifdim\wd0 > 0pt
+      \unhbox0\ (\code{#1})% second arg given, show both it and url
+    \else
+      \code{#1}% only url given, so show it
+    \fi
   \fi
 }
 
@@ -2600,23 +2607,27 @@ width0pt\relax} \fi
           \def\subentry{ #3}%
         \fi
         %
-        % First process the index-string with all font commands turned off
-        % to get the string to sort by.
+        % First process the index entry with all font commands turned
+        % off to get the string to sort by.
         {\indexnofonts \xdef\indexsorttmp{#2\subentry}}%
         %
-        % Now produce the complete index entry, with both the sort key and the
-        % original text, including any font commands.
+        % Now the real index entry with the fonts.
         \toks0 = {#2}%
+        %
+        % If third (subentry) arg is present, add it to the index
+        % string.  And include a space.
+        \ifx\thirdarg\emptymacro \else
+          \toks0 = \expandafter{\the\toks0 \space #3}%
+        \fi
+        %
+        % Set up the complete index entry, with both the sort key
+        % and the original text, including any font commands.  We write
+        % three arguments to \entry to the .?? file, texindex reduces to
+        % two when writing the .??s sorted result.
         \edef\temp{%
           \write\csname#1indfile\endcsname{%
             \realbackslash entry{\indexsorttmp}{\folio}{\the\toks0}}%
         }%
-        %
-        % If third (subentry) arg is present, add it to the index string.
-        \ifx\thirdarg\emptymacro \else
-          \toks0 = {#3}%
-          \edef\temp{\temp{\the\toks0}}%
-        \fi
         %
         % If a skip is the last thing on the list now, preserve it
         % by backing up by \lastskip, doing the \write, then inserting
@@ -4391,8 +4402,8 @@ width0pt\relax} \fi
 \defopvarparsebody\Edefcv\defcvx\defcvarheader\defcvtype}
 
 \def\defcvarheader #1#2#3{%
-\dosubind {vr}{\code{#2}}{of #1}% Make entry in var index
-\begingroup\defname {#2}{\defcvtype{}\putwordOf\ #1}%
+\dosubind {vr}{\code{#2}}{\putwordof\ #1}% Make entry in var index
+\begingroup\defname {#2}{\defcvtype\ \putwordof\ #1}%
 \defvarargs {#3}\endgroup %
 }
 
@@ -4401,8 +4412,8 @@ width0pt\relax} \fi
 \def\defivar{\defvrparsebody\Edefivar\defivarx\defivarheader}
 
 \def\defivarheader #1#2#3{%
-\dosubind {vr}{\code{#2}}{of #1}% Make entry in var index
-\begingroup\defname {#2}{\putwordDefivar\putwordOf\ #1}%
+\dosubind {vr}{\code{#2}}{\putwordof\ #1}% Make entry in var index
+\begingroup\defname {#2}{\putwordDefivar\ \putwordof\ #1}%
 \defvarargs {#3}\endgroup %
 }
 
@@ -5314,8 +5325,7 @@ should work if nowhere else does.}
 % Use TeX 3.0's \emergencystretch to help line breaking, but if we're
 % using an old version of TeX, don't do anything.  We want the amount of
 % stretch added to depend on the line length, hence the dependence on
-% \hsize.  This makes it come to about 9pt for the 8.5x11 format.  We
-% call this whenever the paper size is set.
+% \hsize.  We call this whenever the paper size is set.
 %
 \def\setemergencystretch{%
   \ifx\emergencystretch\thisisundefined
@@ -5323,7 +5333,7 @@ should work if nowhere else does.}
     \def\emergencystretch{\dimen0}%
   \else
     \emergencystretch = \hsize
-    \divide\emergencystretch by 45
+    \divide\emergencystretch by 40
   \fi
 }
 
