@@ -11,6 +11,7 @@ TESTS_ENVIRONMENT = \
 
 TESTS = \
   readlink \
+  head-elide-tail \
   split-fail \
   false \
   tty-eof \
