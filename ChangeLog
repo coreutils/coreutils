@@ -1,6 +1,11 @@
-2004-06-13  Paul Eggert  <eggert@cs.ucla.edu>
+2004-06-14  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	* src/copy.c: Remove declaration of euidaccess.
+	Instead, include "euidaccess.h".
+
+2004-06-13  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/who.c (PIDSTR_DECL_AND_INIT): Don't assume pid_t fits in int.
 	(UT_ID) [!HAVE_STRUCT_XTMP_UT_ID]: Remove bogus comment,
