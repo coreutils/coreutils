@@ -1,3 +1,18 @@
+2004-09-10  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* NEWS: "tail" now handles obscure POSIX 1003.2-1992 cases better.
+	* src/tail.c (parse_obsolete_option): Renamed from
+	parse_obsolescent_option, since the options are obsolete now.
+	Remove bool *arg; just exit if there's an error.  Revamp to follow
+	POSIX 1003.2-1992 more precisely, to handle cases like "tail -
+	file" and "tail -10 -- file" correctly when we are conforming to
+	the older standard.
+	(main): Adjust to this change.
+	* tests/tail/Test.pm (test_vector): minus-* requires
+	_POSIX2_VERSION=199209 now, to work correctly if there is
+	an input file.  err-1 and err-3 no longer errors if there
+	is another file.
+
 2004-09-09  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/test.c (usage): Document -r, -w, -x more carefully.
