@@ -1,6 +1,11 @@
-2002-12-01  Jim Meyering  <jim@meyering.net>
+2002-12-02  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.4.
+
+	* tests/Fetish.pm (_at_replace): Do the substitution only if there's
+	something to replace.
+
+2002-12-01  Jim Meyering  <jim@meyering.net>
 
 	* src/stat.c: Don't include <string.h> or <ctype.h>.
 	That's already done via system.h.
