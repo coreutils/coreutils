@@ -3,6 +3,8 @@ package Test;
 require 5.002;
 use strict;
 
+use Config;
+
 # For each test...
 # Export LANG=C so that the locale-dependent strings match.
 # Export TZ=UTC0 so that zone-dependent strings match.
@@ -124,11 +126,21 @@ sub test_vector
      # FIXME: add a lot more...
      );
 
+  my $sunos4 = "$Config::Config{osname}$Config::Config{osvers}" =~ /sunos4/;
+
   my @tv;
   my $t;
   foreach $t (@tvec)
     {
       my ($test_name, $flags, $in, $exp, $ret) = @$t;
+
+      # Skip the test of %c on SunOS4 systems.  Such systems would fail this
+      # test because their underlying strftime doesn't handle the %c format
+      # properly.  GNU strftime must rely on the underlying host library
+      # function to get locale-dependent behavior, as strftime is the only
+      # portable interface to that behavior.
+      next if $sunos4 && $test_name eq '2';
+
       # Append a newline to end of each expected string.
       push (@tv, [$test_name, $flags, $in, "$exp\n", $ret]);
     }
