@@ -44,6 +44,8 @@
 # endif
 
 # include <sys/types.h>
+# include "hash.h"
+# include "cycle-check.h"
 
 typedef struct {
 	struct _ftsent *fts_cur;	/* current node */
@@ -64,10 +66,23 @@ typedef struct {
 # define FTS_SEEDOT	0x0020		/* return dot and dot-dot */
 # define FTS_XDEV	0x0040		/* don't cross devices */
 # define FTS_WHITEOUT	0x0080		/* return whiteout information */
-# define FTS_OPTIONMASK	0x00ff		/* valid user option mask */
 
-# define FTS_NAMEONLY	0x0100		/* (private) child names only */
-# define FTS_STOP	0x0200		/* (private) unrecoverable error */
+  /* There are two ways to detect cycles.
+     The lazy way, with which one may process a directory that is a
+     part of the cycle several times before detecting the cycle.
+     The `tight' way, whereby fts uses more memory (proportional
+     to number of `active' directories, aka distance from root
+     of current tree to current directory -- see active_dir_ht)
+     to detect any cycle right away.  For example, du must use
+     this option to avoid counting disk space in a cycle multiple
+     times, but chown -R need not.
+     The default is to use the constant-memory lazy way. */
+# define FTS_TIGHT_CYCLE_CHECK	0x0100
+
+# define FTS_OPTIONMASK	0x01ff		/* valid user option mask */
+
+# define FTS_NAMEONLY	0x1000		/* (private) child names only */
+# define FTS_STOP	0x2000		/* (private) unrecoverable error */
 	int fts_options;		/* fts_open options, global flags */
 
 	/* This data structure records the directories between a starting
@@ -80,10 +95,9 @@ typedef struct {
 	   This data structure is used to detect directory cycles efficiently
 	   and promptly even when the depth of a hierarchy is in the tens
 	   of thousands.  Lazy checking, as done by GNU rm via cycle-check.c,
-	   wouldn't be appropriate for du.
-	   FIXME: add an option so that we *do* use cycle-check.c, except
-	   when necessary.  */
-	void *fts_dir_signatures;
+	   wouldn't be appropriate for du.  */
+	Hash_table *active_dir_ht;
+	struct cycle_check_state *cycle_state;
 } FTS;
 
 typedef struct _ftsent {
