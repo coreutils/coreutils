@@ -1,7 +1,14 @@
 2003-01-20  Jim Meyering  <jim@meyering.net>
 
-	Merge in changes from libc
+	Merge in changes from GNU libc
 	* error.c: Eliminate many `#ifdef USE_IN_LIBIO' conditionals.
+
+2003-01-19  Ulrich Drepper  <drepper@redhat.com>
+
+	From GNU libc.
+	* strftime.c (my_strftime): Handle very large width
+	specifications for numeric values correctly.  Improve checks for
+	overflow.
 
 2003-01-19  Jim Meyering  <jim@meyering.net>
 
