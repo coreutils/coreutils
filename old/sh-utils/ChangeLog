@@ -1,3 +1,9 @@
+Fri Nov 29 22:16:40 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/uname.c (main) [HAVE_SYSINFO && SI_ARCHITECTURE]: Support
+	--processor (-p).  Print processor type.
+	(usage): Document it.
+
 Thu Nov 28 00:28:37 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in (AM_GNU_GETTEXT): Renamed from ud_GNU_GETTEXT
