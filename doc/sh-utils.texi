@@ -120,7 +120,7 @@ by the Foundation.
 @cindex shell utilities
 @cindex utilities for shell programming
 
-This manual minimally documents version @value{VERSION} of the GNU shell
+This manual documents version @value{VERSION} of the GNU shell
 utilities.
 
 @menu
