@@ -43,8 +43,8 @@
 #include <grp.h>
 #include <pwd.h>
 #include <getopt.h>
-#include <fnmatch.h>
 #include "system.h"
+#include <fnmatch.h>
 #include "version.h"
 
 #ifndef S_IEXEC
@@ -58,9 +58,7 @@
 #define longdiff(a, b) ((a) - (b))
 #endif
 
-#ifdef STDC_HEADERS
-#include <time.h>
-#else
+#ifndef STDC_HEADERS
 char *ctime ();
 time_t time ();
 #endif

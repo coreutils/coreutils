@@ -1,3 +1,29 @@
+Mon Apr 19 11:21:14 1993  Jim Meyering (meyering@comco.com)
+
+	* Version 3.5.
+
+	* ls.c, touch.c: Don't include time.h explicitly -- it's included
+	by system.h.  From Franc,ois Pinard.
+
+	* posixtm.y: Use TM_IN_SYS_TIME.
+
+	* backupfile.c [index, rindex]: Don't redefine them.
+
+	* system.h [alloca]: Don't redefine it.
+
+	* configure.in: Check for sys/time.h; getdate.y needs it for
+	structs timeval and timezone on some systems.
+
+Sun Apr 18 22:40:19 1993  David J. MacKenzie  (djm@kropotkin.gnu.ai.mit.edu)
+
+	* ls.c: Include fnmatch.h after system.h, so we get our
+	definitions of FNM_*, not those from unistd.h.
+
+	* mountlist.c [MOUNTED_GETMNTINFO]: Add #ifdef around MOUNT_PC.
+
+	* configure.in: Fix test for 4.4BSD statfs to not grep for a
+	macro in cpp output.
+
 Sun Apr 18 02:35:36 1993  Jim Meyering (meyering@comco.com)
 
 	* configure.in: Check for gettimeofday.

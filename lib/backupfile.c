@@ -24,8 +24,12 @@
 #include "backupfile.h"
 #if defined(STDC_HEADERS) || defined(HAVE_STRING_H)
 #include <string.h>
+#ifndef index
 #define index strchr
+#endif
+#ifndef rindex
 #define rindex strrchr
+#endif
 #else
 #include <strings.h>
 #endif

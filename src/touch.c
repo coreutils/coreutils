@@ -39,9 +39,7 @@
 #include "system.h"
 #include "version.h"
 
-#ifdef STDC_HEADERS
-#include <time.h>
-#else
+#ifndef STDC_HEADERS
 time_t mktime ();
 time_t time ();
 #endif
