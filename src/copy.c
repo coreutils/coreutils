@@ -25,8 +25,9 @@
 #define DO_CHOWN(Chown, File, New_uid, New_gid)				\
   (Chown ((File), (x->myeuid == 0 ? (New_uid) : x->myeuid), (New_gid))	\
    /* If non-root uses -p, it's ok if we can't preserve ownership.	\
-      But root probably wants to know, e.g. if NFS disallows it.  */	\
-   && (errno != EPERM || x->myeuid == 0))
+      But root probably wants to know, e.g. if NFS disallows it,	\
+      or if the target system doesn't support file ownership. */	\
+   && ((errno != EPERM && errno != EINVAL) || x->myeuid == 0))
 
 struct dir_list
 {
