@@ -1,5 +1,8 @@
 2000-06-18  Jim Meyering  <meyering@lucent.com>
 
+	* strnlen.c: Include memory.h, string.h, and/or strings.h as needed.
+	(this snippet comes from src/system.h).
+
 	* getloadavg.c: s/NLIST_STRUCT/HAVE_NLIST_H/.  Remove big
 	multi-platform `#ifndef NLIST_STRUCT' block.
 
