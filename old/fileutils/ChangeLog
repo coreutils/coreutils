@@ -1,3 +1,9 @@
+Tue May 28 18:39:49 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* dd.c (print_stats): Don't mark "%u %s" as a translatable string.
+	* mv.c (main): Don't mark "%s" as a translatable string.
+	From Göran Uddeborg.
+
 Thu May 23 07:50:38 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* ls.c (usage): Make --literal (-N) description clearer.
@@ -73,7 +79,7 @@ Wed May 15 22:54:31 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 Tue May 14 23:36:54 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* dd.c (print_stats): Restructure pluralization of error message
-	so it's easier to translate.  Reported by Gvran Uddeborg
+	so it's easier to translate.  Reported by Göran Uddeborg
 	<gvran@uddeborg.pp.se>.
 	* mv.c (main): Likewise.
 
@@ -151,7 +157,7 @@ Wed Apr 24 21:33:43 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* ln.c (do_link): With --force, don't remove DEST when it's
 	the same as SOURCE.  Before, `ln -f FILE FILE' would remove FILE.
-	Reported by Bruno Haible.
+	Reported by Bruno Haible (haible@ilog.fr).
 
 	* mkdir.c (main): Use verbose_fmt_string, not string literal in
 	call to make_path for --parents.  Reported by Ulrich Drepper.
