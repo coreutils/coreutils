@@ -872,7 +872,7 @@ decode_switches (int argc, char **argv)
 
     case LS_LS:
       /* This is for the `ls' program.  */
-      if (isatty (1))
+      if (isatty (STDOUT_FILENO))
 	{
 	  format = many_per_line;
 	  /* See description of qmark_funny_chars, above.  */
@@ -931,7 +931,7 @@ decode_switches (int argc, char **argv)
   {
     struct winsize ws;
 
-    if (ioctl (1, TIOCGWINSZ, &ws) != -1 && ws.ws_col != 0)
+    if (ioctl (STDOUT_FILENO, TIOCGWINSZ, &ws) != -1 && ws.ws_col != 0)
       line_length = ws.ws_col;
   }
 #endif
@@ -988,7 +988,7 @@ decode_switches (int argc, char **argv)
 	  sort_type = sort_none;
 	  /* disable -l */
 	  if (format == long_format)
-	    format = (isatty (1) ? many_per_line : one_per_line);
+	    format = (isatty (STDOUT_FILENO) ? many_per_line : one_per_line);
 	  print_block_size = 0;	/* disable -s */
 	  print_with_color = 0;	/* disable --color */
 	  break;
