@@ -120,8 +120,12 @@ is_number (const char *str)
 /* Extract from NAME, which has the form "[user][:.][group]",
    a USERNAME, UID U, GROUPNAME, and GID G.
    Either user or group, or both, must be present.
-   If the group is omitted but the ":" or "." separator is given,
+   If the group is omitted but the ":" separator is given,
    use the given user's login group.
+   If SPEC_ARG contains a `:', then use that as the separator, ignoring
+   any `.'s.  If there is no `:', but there is a `.', then first look
+   up SPEC_ARG as a login name.  If that look-up fails, then try again
+   interpreting the `.'  as a separator.
 
    USERNAME and GROUPNAME will be in newly malloc'd memory.
    Either one might be NULL instead, indicating that it was not
@@ -147,6 +151,8 @@ parse_user_spec (const char *spec_arg, uid_t *uid, gid_t *gid,
   struct group *grp;
   char *g, *u, *separator;
   char *groupname;
+  int maybe_retry = 0;
+  char *dot = NULL;
 
   error_msg = NULL;
   *username_arg = *groupname_arg = NULL;
@@ -154,13 +160,24 @@ parse_user_spec (const char *spec_arg, uid_t *uid, gid_t *gid,
 
   V_STRDUP (spec, spec_arg);
 
-  /* Find the separator if there is one.  */
+  /* Find the POSIX `:' separator if there is one.  */
   separator = strchr (spec, ':');
 
-  /* FIXME: accepting `.' as the separator is contrary to POSIX.
-     someday we should drop support for this.  */
+  /* If there is no colon, then see if there's a `.'.  */
   if (separator == NULL)
-    separator = strchr (spec, '.');
+    {
+      dot = strchr (spec, '.');
+      /* If there's no colon but there is a `.', then first look up the
+	 whole spec, in case it's an OWNER name that includes a dot.
+	 If that fails, then we'll try again, but interpreting the `.'
+	 as a separator.  */
+      /* FIXME: accepting `.' as the separator is contrary to POSIX.
+	 someday we should drop support for this.  */
+      if (dot)
+	maybe_retry = 1;
+    }
+
+ retry:
 
   /* Replace separator with a NUL.  */
   if (separator != NULL)
@@ -279,6 +296,14 @@ parse_user_spec (const char *spec_arg, uid_t *uid, gid_t *gid,
 	      error_msg = _(E_no_memory);
 	    }
 	}
+    }
+
+  if (error_msg && maybe_retry)
+    {
+      maybe_retry = 0;
+      separator = dot;
+      error_msg = NULL;
+      goto retry;
     }
 
   return error_msg;
