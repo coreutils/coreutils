@@ -1,3 +1,17 @@
+2005-01-25  Jim Meyering  <jim@meyering.net>
+
+	* path-concat.c (path_concat): Set *BASE_IN_RESULT
+	properly when ABASE is an absolute file name.
+	Correct the description of this function.
+	Include <assert.h>.
+	Add an assertion and a test driver.
+	This fixes a bug introduced on 2004-07-02.
+
+2005-01-23  Jim Meyering  <jim@meyering.net>
+
+	* vasnprintf.c (VASNPRINTF) [!USE_SNPRINTF]: Correct the test for
+	integer overflow.
+
 2005-01-21  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Sync from gnulib.
