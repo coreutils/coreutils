@@ -11,6 +11,22 @@ AC_DEFUN([jm_LIST_MOUNTED_FILESYSTEMS],
   [
 AC_CHECK_FUNCS(listmntent getmntinfo)
 AC_CHECK_HEADERS(mntent.h sys/param.h sys/ucred.h sys/mount.h sys/fs_types.h)
+    getfsstat_includes="\
+$ac_includes_default
+#if HAVE_SYS_PARAM_H
+# include <sys/param.h> /* needed by powerpc-apple-darwin1.3.7 */
+#endif
+#if HAVE_SYS_UCRED_H
+# include <sys/ucred.h> /* needed by powerpc-apple-darwin1.3.7 */
+#endif
+#if HAVE_SYS_MOUNT_H
+# include <sys/mount.h>
+#endif
+#if HAVE_SYS_FS_TYPES_H
+# include <sys/fs_types.h> /* needed by powerpc-apple-darwin1.3.7 */
+#endif
+"
+AC_CHECK_MEMBERS([struct fsstat.f_fstypename],,,[$getfsstat_includes])
 
 # Determine how to get the list of mounted filesystems.
 ac_list_mounted_fs=
@@ -116,21 +132,16 @@ if test -z "$ac_list_mounted_fs"; then
   AC_CACHE_VAL(fu_cv_sys_mounted_getfsstat,
   [AC_TRY_LINK([
 #include <sys/types.h>
-#if HAVE_SYS_PARAM_H
-# include <sys/param.h> /* needed by powerpc-apple-darwin1.3.7 */
+#if HAVE_STRUCT_FSSTAT_F_FSTYPENAME
+# define FS_TYPE(Ent) ((Ent).f_fstypename)
+#else
+# define FS_TYPE(Ent) mnt_names[(Ent).f_type]
 #endif
-#if HAVE_SYS_UCRED_H
-#include <sys/ucred.h> /* needed by powerpc-apple-darwin1.3.7 */
-#endif
-#if HAVE_SYS_MOUNT_H
-#include <sys/mount.h>
-#endif
-#if HAVE_SYS_FS_TYPES_H
-#include <sys/fs_types.h> /* needed by powerpc-apple-darwin1.3.7 */
-#endif
-],
+]$getfsstat_includes
+,
   [struct statfs *stats;
-  int numsys = getfsstat ((struct statfs *)0, 0L, MNT_WAIT); ],
+   int numsys = getfsstat ((struct statfs *)0, 0L, MNT_WAIT);
+   char *t = FS_TYPE (*stats); ],
     fu_cv_sys_mounted_getfsstat=yes,
     fu_cv_sys_mounted_getfsstat=no)])
   AC_MSG_RESULT($fu_cv_sys_mounted_getfsstat)
