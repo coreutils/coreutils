@@ -236,12 +236,12 @@ integer_expected_error (char *pch)
 
 /* Return nonzero if the characters pointed to by STRING constitute a
    valid number.  Stuff the converted number into RESULT if RESULT is
-   a non-null pointer to a long. */
+   not null.  */
 static int
-isint (register char *string, long int *result)
+isint (register char *string, intmax_t *result)
 {
   int sign;
-  long value;
+  intmax_t value;
 
   sign = 1;
   value = 0;
@@ -292,10 +292,10 @@ isint (register char *string, long int *result)
   return (1);
 }
 
-/* Find the modification time of FILE, and stuff it into AGE, a pointer
-   to a long.  Return nonzero if successful, else zero. */
+/* Find the modification time of FILE, and stuff it into *AGE.
+   Return nonzero if successful, else zero. */
 static int
-age_of (char *filename, long int *age)
+age_of (char *filename, time_t *age)
 {
   struct stat finfo;
 
@@ -388,7 +388,9 @@ binary_operator (void)
 {
   register int op;
   struct stat stat_buf, stat_spare;
-  long int l, r, value;
+  intmax_t l, r;
+  int value;
+  time_t lt, rt;
   /* Are the left and right integer expressions of the form '-l string'? */
   int l_is_l, r_is_l;
 
@@ -521,8 +523,8 @@ binary_operator (void)
 	      pos += 3;
 	      if (l_is_l || r_is_l)
 		test_syntax_error (_("-nt does not accept -l\n"), NULL);
-	      if (age_of (argv[op - 1], &l) && age_of (argv[op + 1], &r))
-		return (TRUE == (l > r));
+	      if (age_of (argv[op - 1], &lt) && age_of (argv[op + 1], &rt))
+		return (TRUE == (lt > rt));
 	      else
 		return (FALSE);
 	    }
@@ -594,8 +596,8 @@ binary_operator (void)
 	      pos += 3;
 	      if (l_is_l || r_is_l)
 		test_syntax_error (_("-nt does not accept -l\n"), NULL);
-	      if (age_of (argv[op - 1], &l) && age_of (argv[op + 1], &r))
-		return (TRUE == (l < r));
+	      if (age_of (argv[op - 1], &lt) && age_of (argv[op + 1], &rt))
+		return (TRUE == (lt < rt));
 	      return (FALSE);
 	    }
 	  break;
@@ -624,7 +626,8 @@ binary_operator (void)
 static int
 unary_operator (void)
 {
-  long fd, value;
+  intmax_t fd;
+  int value;
   struct stat stat_buf;
 
   switch (argv[pos][1])
@@ -793,7 +796,7 @@ unary_operator (void)
 	{
 	  fd = 1;
 	}
-      return (TRUE == (isatty ((int) fd)));
+      return (TRUE == (fd == (int) fd && isatty (fd)));
 
     case 'n':			/* True if arg has some length. */
       unary_advance ();
