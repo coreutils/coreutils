@@ -94,7 +94,7 @@
 	* src/pinky.c (print_heading): Align TTY and Name headings.
 	Reported by Karl Eichwalder.
 
-2002-10-18  Jim Meyering  <meyering@lucent.com>
+2002-10-18  Jim Meyering  <jim@meyering.net>
 
 	* src/split.c (cwrite): Change type of `bytes' parameter to size_t
 	Remove now-useless cast.
@@ -110,14 +110,14 @@
 	* src/system.h (ST_BLKSIZE): Correct comment describing how to
 	reproduce HPUX-11 cat failure.  From Petter Reinholdtsen.
 
-2002-10-17  Jim Meyering  <meyering@lucent.com>
+2002-10-17  Jim Meyering  <jim@meyering.net>
 
 	Fix a problem that could make e.g., `cat' misbehave on systems which
 	give invalid (unreasonably large) values for stat.st_blksize.
 	* src/system.h (ST_BLKSIZE): Ensure that the result is in [1..4MB].
 	Reported by Petter Reinholdtsen.
 
-2002-10-14  Jim Meyering  <meyering@lucent.com>
+2002-10-14  Jim Meyering  <jim@meyering.net>
 
 	Specifying a printf conversion specifer as nl's separator string
 	could cause nl to segfault.
@@ -133,7 +133,7 @@
 	* tests/misc/split-l: New test, to make sure `split --lines=N' works.
 	* tests/misc/Makefile.am (TESTS): Add split-l.
 
-2002-10-13  Jim Meyering  <meyering@lucent.com>
+2002-10-13  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.3.
 
@@ -145,7 +145,7 @@
 
 	* src/Makefile.am (../AUTHORS): New target/rule.
 
-2002-10-12  Jim Meyering  <meyering@lucent.com>
+2002-10-12  Jim Meyering  <jim@meyering.net>
 
 	* src/paste.c (paste_parallel): Declare local, `delims_saved', to be
 	of type size_t, since that's the way it's used and avoids a warning.
@@ -167,17 +167,17 @@
 	(file_lines): Reorganize to use memrchr rather than an explicit loop.
 	Adapt to new safe_read ABI.
 
-2002-10-11  Jim Meyering  <meyering@lucent.com>
+2002-10-11  Jim Meyering  <jim@meyering.net>
 
 	* tests/du/deref: New file/test, for the above fix.
 	* tests/du/Makefile.am (TESTS): Add deref.
 
-2002-10-10  Jim Meyering  <meyering@lucent.com>
+2002-10-10  Jim Meyering  <jim@meyering.net>
 
 	* tests/ln/Makefile.am (TESTS): Add target-1.
 	* tests/ln/target-1: New file/test, for the fix on 2002-10-08.
 
-2002-10-09  Jim Meyering  <meyering@lucent.com>
+2002-10-09  Jim Meyering  <jim@meyering.net>
 
 	* tests/cp/backup-is-src: Ensure that certain environment variables
 	are not set (e.g., SIMPLE_BACKUP_SUFFIX).  Reported by Duncan Roe.
@@ -196,7 +196,7 @@
 
 	* src/ln.c (main): Fix target_directory parsing when n_files == 1.
 
-2002-10-08  Jim Meyering  <meyering@lucent.com>
+2002-10-08  Jim Meyering  <jim@meyering.net>
 
 	* tests/tail-2/big-4gb: Use double quotes around diagnostic.
 	Fix syntax in test: use =, not ==.
@@ -215,12 +215,12 @@
 	Don't advance the write pointer past the end of the write buffer.
 	* src/sort.c (begfield, limfield): Likewise.
 
-2002-10-07  Jim Meyering  <meyering@lucent.com>
+2002-10-07  Jim Meyering  <jim@meyering.net>
 
 	* src/cat.c (simple_cat, cat): Adapt to new safe_read ABI.
 	* src/head.c (head_bytes, head_lines): Likewise.
 
-2002-10-06  Jim Meyering  <meyering@lucent.com>
+2002-10-06  Jim Meyering  <jim@meyering.net>
 
 	* src/dd.c (scanargs): Ensure that specified block sizes (specified
 	via ibs=N, obs=N, and bs=N) are no larger than SSIZE_MAX.
@@ -233,7 +233,7 @@
 	* Makefile.maint (announcement): Output all URLs for detached
 	signatures, not just the last one from the previous loop.
 
-2002-10-05  Jim Meyering  <meyering@lucent.com>
+2002-10-05  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.2.
 
@@ -247,7 +247,7 @@
 	* tests/tail-2/big-4gb: New file/test, for the fix of 2002-09-27.
 	* tests/tail-2/Makefile.am (TESTS): Add big-4gb.
 
-2002-10-03  Jim Meyering  <meyering@lucent.com>
+2002-10-03  Jim Meyering  <jim@meyering.net>
 
 	* src/rm.c (AUTHORS): Mark translatable string with `N_ (...)'.
 	* src/df.c (AUTHORS): Likewise.
@@ -255,23 +255,23 @@
 	* src/tail.c (AUTHORS): Likewise.
 	* src/touch.c (AUTHORS): Likewise.
 
-2002-10-02  Jim Meyering  <meyering@lucent.com>
+2002-10-02  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (SUBDIRS): Remove `old'.
 	(EXTRA_DIST): List the files in old/.
 	* configure.ac (AC_CONFIG_FILES): Remove old/* names.
 	Suggestion from Akim Demaille.
 
-2002-10-01  Jim Meyering  <meyering@lucent.com>
+2002-10-01  Jim Meyering  <jim@meyering.net>
 
 	* src/sys2.h (SSIZE_MAX): Define.
 
-2002-09-30  Jim Meyering  <meyering@lucent.com>
+2002-09-30  Jim Meyering  <jim@meyering.net>
 
 	* src/csplit.c: Don't include stdlib.h here.  It's already included
 	via system.h.
 
-2002-09-29  Jim Meyering  <meyering@lucent.com>
+2002-09-29  Jim Meyering  <jim@meyering.net>
 
 	* src/tr.c (find_bracketed_repeat): Rearrange pointer/integer
 	expression to avoid bogus warning from gcc.
@@ -298,7 +298,7 @@
 	* src/copy.c (copy_internal): Remove local, move_mode;
 	use x->move_mode instead.  Based on a patch from Tom Haynes.
 
-2002-09-28  Jim Meyering  <meyering@lucent.com>
+2002-09-28  Jim Meyering  <jim@meyering.net>
 
 	* src/split.c (FAIL_ONLY_ONE_WAY): New macro.
 	Factor out some duplication.
@@ -326,17 +326,17 @@
 	* src/tail.c (tail_bytes): Change type of bytes_remaining to off_t
 	to avoid overflow.  Reported by Hans Lermen.
 
-2002-09-26  Jim Meyering  <meyering@lucent.com>
+2002-09-26  Jim Meyering  <jim@meyering.net>
 
 	* src/install.c (get_ids): Use strtoul, not strtol.  Remove some casts.
 
-2002-09-25  Jim Meyering  <meyering@lucent.com>
+2002-09-25  Jim Meyering  <jim@meyering.net>
 
 	* src/test.c (eaccess): Change type of local `euid' from int to uid_t
 	and add a cast, to avoid a warning about `signed and unsigned type in
 	conditional expression'.
 
-2002-09-22  Jim Meyering  <meyering@lucent.com>
+2002-09-22  Jim Meyering  <jim@meyering.net>
 
 	* src/rmdir.c: Include "dirname.h", for declaration of
 	strip_trailing_slashes.
@@ -365,7 +365,7 @@
 	* tests/fmt/Makefile.am (TESTS): Add long-line.
 	* tests/fmt/long-line: New file/test, for the above fix.
 
-2002-09-21  Jim Meyering  <meyering@lucent.com>
+2002-09-21  Jim Meyering  <jim@meyering.net>
 
 	* src/od.c: No longer include deprecated <values.h>.
 	It was required solely for now-removed reference to BITSPERBYTE.
@@ -377,7 +377,7 @@
 	`rmdir -p dir-specified-with-trailing-slash/' would fail.
 	* src/rmdir.c (remove_parents): Strip trailing slashes.
 
-2002-09-20  Jim Meyering  <meyering@lucent.com>
+2002-09-20  Jim Meyering  <jim@meyering.net>
 
 	* tests/rmdir/t-slash: New file/test, for the above fix.
 	* tests/rmdir/Makefile.am (TESTS): Add t-slash.
@@ -389,7 +389,7 @@
 
 	* configure.ac: Add need-ngettext to AM_GNU_GETTEXT invocation.
 
-2002-09-18  Jim Meyering  <meyering@lucent.com>
+2002-09-18  Jim Meyering  <jim@meyering.net>
 
 	`od -t x8' used the wrong (`l'-prefixed) printf format.
 	Likewise for the o8 and u8 formats.
@@ -397,7 +397,7 @@
 	(decode_one_format): Use PRIdMAX, PRIoMAX, etc. for LONG_LONG.
 	Reported by Arun Sharma.
 
-2002-09-17  Jim Meyering  <meyering@lucent.com>
+2002-09-17  Jim Meyering  <jim@meyering.net>
 
 	* src/sys2.h (PRIdMAX, PRIoMAX, PRIuMAX, PRIxMAX): Define if necessary.
 	From gettext's intl/loadmsgcat.c.
@@ -405,14 +405,14 @@
 	* tests/od/x8: New file/test, for the above fix.
 	* tests/od/Makefile.am (TESTS): Add x8.
 
-2002-09-15  Jim Meyering  <meyering@lucent.com>
+2002-09-15  Jim Meyering  <jim@meyering.net>
 
 	* Use autoconf-2.54.  Regenerate dependent files.
 
 	* src/csplit.c (get_format_width): Add cast to avoid
 	warning about `signed and unsigned type in conditional expression'.
 
-2002-09-14  Jim Meyering  <meyering@lucent.com>
+2002-09-14  Jim Meyering  <jim@meyering.net>
 
 	* src/who.c (print_user): Change type of local to size_t
 	to avoid warnings about `comparison between signed and unsigned'.
@@ -429,7 +429,7 @@
 	(split_3): Change parameter names to be readable and add comment.
 	Clean up the test for whether a line may be ignored.
 
-2002-09-13  Jim Meyering  <meyering@lucent.com>
+2002-09-13  Jim Meyering  <jim@meyering.net>
 
 	* src/printf.c (main): Handle leading command line argument of `--'.
 	Reported by Raul: DervishD <raul@pleyades.net>
@@ -440,7 +440,7 @@
 	rather than 0..59 -- to accommodate the occasional positive leap second.
 	Reported by Richard Neill.
 
-2002-09-12  Jim Meyering  <meyering@lucent.com>
+2002-09-12  Jim Meyering  <jim@meyering.net>
 
 	* src/Makefile.am (nanosec_libs): Define.
 	(sleep_LDADD, tail_LDADD): Use it here.
@@ -463,12 +463,12 @@
 	Use xstrtod, now that we accept floating point values.
 	Prompted by a patch from Augey Mikus.
 
-2002-09-06  Jim Meyering  <meyering@lucent.com>
+2002-09-06  Jim Meyering  <jim@meyering.net>
 
 	* src/remove.c (prompt): Change comment to give a better note to
 	translators.  From Michael Piefel.
 
-2002-09-02  Jim Meyering  <meyering@lucent.com>
+2002-09-02  Jim Meyering  <jim@meyering.net>
 
 	* README: A good problem report/patch includes diffs against
 	the most recent test release.
@@ -485,11 +485,11 @@
 	* src/install.c (get_ids): Likewise.  Also rearrange range-checking
 	comparisons to make them more readable.
 
-2002-09-01  Jim Meyering  <meyering@lucent.com>
+2002-09-01  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.1.
 
-2002-08-31  Jim Meyering  <meyering@lucent.com>
+2002-08-31  Jim Meyering  <jim@meyering.net>
 
 	Symlinks were always reported as using 0 blocks.
 	* src/system.h (ST_NBLOCKS): Don't depend on file type.
@@ -509,7 +509,7 @@
 	But don't change `error (0, ...' to `error (EXIT_SUCCESS, ...', since
 	error never exits successfully.
 
-2002-08-29  Jim Meyering  <meyering@lucent.com>
+2002-08-29  Jim Meyering  <jim@meyering.net>
 
 	* src/remove.c (remove_cwd_entries): Use closedir (not CLOSEDIR)
 	when ignoring any return value.
@@ -522,12 +522,12 @@
 	(print_dir): Rename local variable: reading -> dirp.
 	Reported by Mike Coleman.
 
-2002-08-28  Jim Meyering  <meyering@lucent.com>
+2002-08-28  Jim Meyering  <jim@meyering.net>
 
 	* src/remove.c (remove_cwd_entries): Use CLOSEDIR, not closedir.
 	Give a diagnostic and fail if closedir fails.
 
-2002-08-26  Jim Meyering  <meyering@lucent.com>
+2002-08-26  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (THANKS-to-translators): New rule.
 	(EXTRA_DIST): Add both THANKS-to-translators and THANKStt.in.
@@ -540,7 +540,7 @@
 	/dev/audio on at least Solaris 2.7 and 2.8 systems.
 	Reported by Shing-Shong Shei.
 
-2002-08-25  Jim Meyering  <meyering@lucent.com>
+2002-08-25  Jim Meyering  <jim@meyering.net>
 
 	* src/cat.c (main): Close STDIN_FILENO rather than a literal `0'.
 	* src/tac.c (main): Likewise.
@@ -549,7 +549,7 @@
 	* src/tr.c (main): Likewise.
 	* src/wc.c (main): Likewise.
 
-2002-08-20  Jim Meyering  <meyering@lucent.com>
+2002-08-20  Jim Meyering  <jim@meyering.net>
 
 	* tests/mv/setup: Rewrite not to use `: ${VAR=not_set}' paradigm.
 
@@ -558,7 +558,7 @@
 	* src/nohup.sh: Don't use "exec --"; it's not portable and
 	shouldn't be needed.
 
-2002-08-09  Jim Meyering  <meyering@lucent.com>
+2002-08-09  Jim Meyering  <jim@meyering.net>
 
 	* src/pr.c (main): Don't ignore -COLUMN if it's the last option.
 	(usage): Clarify help text for the -COLUMN option.
@@ -571,7 +571,7 @@
 	* man/Makefile.am (check-x-vs-1): Set and export PATH so we use
 	programs in ../src.
 
-2002-08-08  Jim Meyering  <meyering@lucent.com>
+2002-08-08  Jim Meyering  <jim@meyering.net>
 
 	* src/date.c: Guard inclusion of <langinfo.h> with
 	`#if HAVE_LANGINFO_CODESET', not `#if HAVE_LANGINFO_H'.
@@ -589,18 +589,18 @@
 	* src/touch.c (main): Likewise.  Remove unnecessary initialization.
 	Use localtime, not posixtm, to warn about obsolete "touch".
 
-2002-08-05  Jim Meyering  <meyering@lucent.com>
+2002-08-05  Jim Meyering  <jim@meyering.net>
 
 	* tests/misc/Makefile.am (TESTS): Add nice and pathchk1.
 
-2002-08-04  Jim Meyering  <meyering@lucent.com>
+2002-08-04  Jim Meyering  <jim@meyering.net>
 
 	* src/Makefile.am (check-README): New target/rule.
 	(check): Depend on it.
 
 	* configure.ac (AC_CONFIG_FILES): Add old/Makefile and old/*/Makefile.
 
-2002-08-03  Jim Meyering  <meyering@lucent.com>
+2002-08-03  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (SUBDIRS): Add old.
 	* old/: New directory, containing legacy ChangeLog* and NEWS files
@@ -622,16 +622,16 @@
 	xmemcoll has a byte to stomp on temporarily.
 	(main): Set hard_LC_COLLATE.
 
-2002-07-29  Jim Meyering  <meyering@lucent.com>
+2002-07-29  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (SUBDIRS): Remove djgpp, for now.
 
-2002-07-08  Jim Meyering  <meyering@lucent.com>
+2002-07-08  Jim Meyering  <jim@meyering.net>
 
 	* src/Makefile.am (uninstall-local): Search for @GNU_PACKAGE@,
 	rather than the hard-coded `sh-utils'.
 
-2002-07-01  Jim Meyering  <meyering@lucent.com>
+2002-07-01  Jim Meyering  <jim@meyering.net>
 
 	* configure.ac: Merge the three files from fileutils,
 	textutils, and sh-utils.
