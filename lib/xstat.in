@@ -43,6 +43,13 @@ extern int errno;
 # define S_ISLNK(m) (((m) & S_IFMT) == S_IFLNK)
 #endif
 
+#ifndef HAVE_DECL_FREE
+"this configure-time declaration test was not run"
+#endif
+#if !HAVE_DECL_FREE
+void free ();
+#endif
+
 char *xmalloc ();
 
 /* lstat works different on Linux and Solaris systems.  POSIX (see
