@@ -1,5 +1,7 @@
 2003-01-22  Jim Meyering  <jim@meyering.net>
 
+	* ftw.c (find_object): Don't use c99-style struct initializer.
+
 	* ftw_.h: Change all uses of __const to const.
 	* search_.h: Likewise.
 
