@@ -630,8 +630,25 @@ else
   esac
 fi
 test -s trailing-sp.E || rm -f trailing-sp.E
+$xx  $srcdir/sp-vs-blank.I1 $srcdir/sp-vs-blank.I2 > sp-vs-blank.O 2> sp-vs-blank.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test sp-vs-blank failed: ../../src/join return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp sp-vs-blank.O $srcdir/sp-vs-blank.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed sp-vs-blank"; fi ;;
+    1) $echo "Test sp-vs-blank failed: files sp-vs-blank.O and $srcdir/sp-vs-blank.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test sp-vs-blank may have failed." 1>&2;
+       $echo The command "cmp sp-vs-blank.O $srcdir/sp-vs-blank.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s sp-vs-blank.E || rm -f sp-vs-blank.E
 if test $errors = 0 ; then
-  $echo Passed all 36 tests. 1>&2
+  $echo Passed all 37 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi
