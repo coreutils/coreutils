@@ -1,3 +1,7 @@
+2004-01-14  Paul Eggert  <eggert@twinsun.com>
+
+	* posixver.c: Include posixver.h.
+
 2004-01-12  Jim Meyering  <jim@meyering.net>
 
 	* posixver.c (DEFAULT_POSIX2_VERSION): Use definition of new,

@@ -1,3 +1,7 @@
+2004-01-14  Paul Eggert  <eggert@twinsun.com>
+
+	* posixv.m4 (gl_POSIXVER): Require gl_DEFAULT_POSIX2_VERSION.
+
 2004-01-13  Jim Meyering  <jim@meyering.net>
 
 	* gettext.m4, lib-ld.m4, lib-prefix.m4, nls.m4, po.m4:
