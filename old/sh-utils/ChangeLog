@@ -1,3 +1,16 @@
+Tue Mar 18 06:46:54 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/seq.c (check_format): Rename local, FORMAT_STRING, to avoid
+	shadowing global.
+	(print_numbers): Likewise.
+
+	* src/who-users.c (idle_string): Rename local, IDLE, to avoid
+	shadowing global.
+
+	* src/su.c (log_su): Resort to getpwuid if getlogin fails.
+	If no tty name is found, use `none' in the log message.
+	Based on a patch from Galen Hazelwood.
+
 Thu Mar 13 21:27:36 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/mktime.c: (TIME_T_MIN): Work around a bug in Cray C 5.0.3.0.
