@@ -138,7 +138,7 @@ get_fs_usage (path, disk, fsp)
     }
   close (fd);
 
-  fsp->fsu_blocksize = fsd.s_type == Fs2b ? 1024 : 512;
+  fsp->fsu_blocksize = (fsd.s_type == Fs2b ? 1024 : 512);
   fsp->fsu_blocks = PROPAGATE_ALL_ONES (fsd.s_fsize);
   fsp->fsu_bfree = PROPAGATE_ALL_ONES (fsd.s_tfree);
   fsp->fsu_bavail = PROPAGATE_ALL_ONES (fsd.s_tfree);
