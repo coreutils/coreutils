@@ -14,6 +14,12 @@
 
 	* userspec.c (parse_user_spec): Fix typo: s/u/g/.
 
+2000-10-31  Bruno Haible  <haible@clisp.cons.org>
+
+	* config.charset: Add ISO-8859-3, BIG5HKSCS, GB18030, JOHAB, VISCII,
+	CP874, CP949, CP950, CP1250, CP1253, CP1254, CP1255, CP1256, CP1257
+	to the list of canonical encodings. Rename EUC-CN to GB2312.
+
 2000-12-08  Andreas Schwab  <schwab@suse.de>
 
 	* mbswidth.c (mbsnwidth): Don't loop endlessly when called with an
