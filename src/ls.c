@@ -62,6 +62,7 @@
 #include <grp.h>
 #include <pwd.h>
 #include <getopt.h>
+#include <signal.h>
 
 /* Get MB_CUR_MAX.  */
 #if HAVE_STDLIB_H
@@ -104,6 +105,7 @@ int wcwidth ();
 #include "dirname.h"
 #include "dirfd.h"
 #include "error.h"
+#include "full-write.h"
 #include "hard-locale.h"
 #include "hash.h"
 #include "human.h"
@@ -268,6 +270,7 @@ static uintmax_t gobble_file PARAMS ((const char *name, enum filetype type,
 static void print_color_indicator PARAMS ((const char *name, mode_t mode,
 					   int linkok));
 static void put_indicator PARAMS ((const struct bin_str *ind));
+static int put_indicator_direct PARAMS ((const struct bin_str *ind));
 static int length_of_file_name_and_frills PARAMS ((const struct fileinfo *f));
 static void add_ignore_pattern PARAMS ((const char *pattern));
 static void attach PARAMS ((char *dest, const char *dirname, const char *name));
@@ -994,6 +997,28 @@ free_pending_ent (struct pending *p)
   free (p);
 }
 
+static void
+restore_default_color (void)
+{
+  if (put_indicator_direct (&color_indicator[C_LEFT]) == 0)
+    put_indicator_direct (&color_indicator[C_RIGHT]);
+}
+
+static void
+restore_default_color_handler (int signum)
+{
+  restore_default_color ();
+  _exit (128 + signum);
+}
+
+static void
+sigtstp_handler (int signum)
+{
+  signal (SIGTSTP, sigtstp_handler);
+  restore_default_color ();
+  raise (SIGSTOP);
+}
+
 int
 main (int argc, char **argv)
 {
@@ -1031,6 +1056,11 @@ main (int argc, char **argv)
 	  || (color_indicator[C_MISSING].string != NULL
 	      && format == long_format))
 	check_symlink_color = 1;
+
+	signal (SIGINT, restore_default_color_handler);
+	signal (SIGTERM, restore_default_color_handler);
+	signal (SIGQUIT, restore_default_color_handler);
+	signal (SIGTSTP, sigtstp_handler);
     }
 
   if (dereference == DEREF_UNDEFINED)
@@ -3305,6 +3335,20 @@ put_indicator (const struct bin_str *ind)
 
   for (i = ind->len; i > 0; --i)
     putchar (*(p++));
+}
+
+/* Output a color indicator, but don't use stdio, for use from signal handlers.
+   Return zero if the write is successful or if the string length is zero.
+   Return nonzero if the write fails.  */
+static int
+put_indicator_direct (const struct bin_str *ind)
+{
+  size_t len;
+  if (ind->len <= 0)
+    return 0;
+
+  len = ind->len;
+  return (full_write (STDOUT_FILENO, ind->string, len) != len);
 }
 
 static int
