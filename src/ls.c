@@ -513,6 +513,14 @@ enum color_type
     color_if_tty		/* 2: --color=tty */
   };
 
+enum Dereference_symlink
+  {
+    DEREF_UNDEFINED = 1,
+    DEREF_NEVER,
+    DEREF_COMMAND_LINE_ARGUMENTS,	/* -H */
+    DEREF_ALWAYS			/* -L */
+  };
+
 enum indicator_no
   {
     C_LEFT, C_RIGHT, C_END, C_NORM, C_FILE, C_DIR, C_LINK, C_FIFO, C_SOCK,
@@ -566,10 +574,10 @@ static int check_symlink_color;
 
 static int print_inode;
 
-/* Nonzero means when a symbolic link is found, display info on
-   the file linked to.  -L  */
+/* What to do with symbolic links.  Affected by -d, -F, -H, -l (and
+   other options that imply -l), and -L.  */
 
-static int trace_links;
+static enum Dereference_symlink dereference;
 
 /* Nonzero means when a directory is found, display info on its
    contents.  -R  */
@@ -693,6 +701,7 @@ static struct option const long_options[] =
   {"classify", no_argument, 0, 'F'},
   {"file-type", no_argument, 0, 'p'},
   {"si", no_argument, 0, SI_OPTION},
+  {"dereference-command-line", no_argument, 0, 'H'},
   {"ignore", required_argument, 0, 'I'},
   {"indicator-style", required_argument, 0, INDICATOR_STYLE_OPTION},
   {"dereference", no_argument, 0, 'L'},
@@ -882,9 +891,17 @@ main (int argc, char **argv)
 	check_symlink_color = 1;
     }
 
+  if (dereference == DEREF_UNDEFINED)
+    dereference = ((immediate_dirs
+		    || indicator_style == classify
+		    || format == long_format)
+		   ? DEREF_NEVER
+		   : DEREF_COMMAND_LINE_ARGUMENTS);
+
   format_needs_stat = sort_type == sort_time || sort_type == sort_size
     || format == long_format
-    || trace_links || trace_dirs || print_block_size || print_inode;
+    || dereference == DEREF_ALWAYS
+    || trace_dirs || print_block_size || print_inode;
   format_needs_type = (format_needs_stat == 0
 		       && (print_with_color || indicator_style != none));
 
@@ -1021,7 +1038,7 @@ decode_switches (int argc, char **argv)
   print_block_size = 0;
   indicator_style = none;
   print_inode = 0;
-  trace_links = 0;
+  dereference = DEREF_UNDEFINED;
   trace_dirs = 0;
   immediate_dirs = 0;
   all_files = 0;
@@ -1144,16 +1161,6 @@ decode_switches (int argc, char **argv)
 	  output_block_size = -1024;
 	  break;
 
-	case 'H':
-	  error (0, 0,
-		 _("\
-Warning: the meaning of `-H' will change in the future to conform to POSIX.\n\
-Use `--si' for the old meaning."));
-	  /* Fall through.  */
-	case SI_OPTION:
-	  output_block_size = -1000;
-	  break;
-
 	case 'i':
 	  print_inode = 1;
 	  break;
@@ -1251,12 +1258,16 @@ Use `--si' for the old meaning."));
 	  print_group = 0;
 	  break;
 
+	case 'H':
+	  dereference = DEREF_COMMAND_LINE_ARGUMENTS;
+	  break;
+
 	case 'I':
 	  add_ignore_pattern (optarg);
 	  break;
 
 	case 'L':
-	  trace_links = 1;
+	  dereference = DEREF_ALWAYS;
 	  break;
 
 	case 'N':
@@ -1364,6 +1375,10 @@ Use `--si' for the old meaning."));
 
 	case BLOCK_SIZE_OPTION:
 	  human_block_size (optarg, 1, &output_block_size);
+	  break;
+
+	case SI_OPTION:
+	  output_block_size = -1000;
 	  break;
 
 	case_GETOPT_HELP_CHAR;
@@ -1953,7 +1968,7 @@ gobble_file (const char *name, enum filetype type, int explicit_arg,
 	  attach (path, dirname, name);
 	}
 
-      val = (trace_links
+      val = (DEREF_ALWAYS <= dereference + explicit_arg
 	     ? stat (path, &files[files_index].stat)
 	     : lstat (path, &files[files_index].stat));
 
@@ -1972,7 +1987,7 @@ gobble_file (const char *name, enum filetype type, int explicit_arg,
 #endif
 
       if (S_ISLNK (files[files_index].stat.st_mode)
-	  && (explicit_arg || format == long_format || check_symlink_color))
+	  && (format == long_format || check_symlink_color))
 	{
 	  char *linkpath;
 	  struct stat linkstats;
@@ -1983,9 +1998,7 @@ gobble_file (const char *name, enum filetype type, int explicit_arg,
 	  /* Avoid following symbolic links when possible, ie, when
 	     they won't be traced and when no indicator is needed. */
 	  if (linkpath
-	      && ((explicit_arg && format != long_format)
-		  || indicator_style != none
-		  || check_symlink_color)
+	      && (indicator_style != none || check_symlink_color)
 	      && stat (linkpath, &linkstats) == 0)
 	    {
 	      files[files_index].linkok = 1;
