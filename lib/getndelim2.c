@@ -27,11 +27,7 @@
 /* Specification.  */
 #include "getndelim2.h"
 
-#if STDC_HEADERS
-# include <stdlib.h>
-#else
-char *malloc (), *realloc ();
-#endif
+#include <stdlib.h>
 
 #include "unlocked-io.h"
 
