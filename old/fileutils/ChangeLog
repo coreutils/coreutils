@@ -2,6 +2,10 @@
 
 	* Version 3.16w.
 
+	* src/df.c (show_dev) [!posix_format]: When using --print-type,
+	let the device path and the file system type share a single (wider)
+	field if their combined lengths allow it.  From Andries Brouwer.
+
 	* tests/touch/empty-file: Upon failure, suggest how to rerun the test
 	with longer delay, in case NFS clock skew was the cause of the failure.
 	Reported by Kaveh Ghazi.
