@@ -33,6 +33,7 @@
 #include "getline.h"
 #include "posixtm.h"
 #include "posixver.h"
+#include "strftime.h"
 #include "timespec.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -41,9 +42,6 @@
 #define AUTHORS "David MacKenzie"
 
 int putenv ();
-
-size_t nstrftime PARAMS ((char *, size_t, char const *,
-			  struct tm const *, int, int));
 
 static void show_date PARAMS ((const char *format, struct timespec when));
 

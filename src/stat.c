@@ -52,6 +52,7 @@
 #include "getopt.h"
 #include "quote.h"
 #include "quotearg.h"
+#include "strftime.h"
 #include "xreadlink.h"
 
 #define NAMEMAX_FORMAT PRIuMAX
@@ -76,9 +77,6 @@
 # undef NAMEMAX_FORMAT
 # define NAMEMAX_FORMAT "s"
 #endif
-
-size_t nstrftime PARAMS ((char *, size_t, char const *,
-			  struct tm const *, int, int));
 
 #define PROGRAM_NAME "stat"
 

@@ -118,6 +118,7 @@ int wcwidth ();
 #include "quote.h"
 #include "quotearg.h"
 #include "same.h"
+#include "strftime.h"
 #include "strverscmp.h"
 #include "xstrtol.h"
 #include "xreadlink.h"
@@ -249,8 +250,6 @@ struct bin_str
 time_t time ();
 #endif
 
-size_t nstrftime PARAMS ((char *, size_t, char const *,
-			  struct tm const *, int, int));
 char *getgroup ();
 char *getuser ();
 
