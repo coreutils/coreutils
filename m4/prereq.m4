@@ -1,4 +1,4 @@
-#serial 33
+#serial 34
 
 dnl We use jm_ for non Autoconf macros.
 m4_pattern_forbid([^jm_[ABCDEFGHIJKLMNOPQRSTUVXYZ]])dnl
@@ -118,7 +118,7 @@ AC_DEFUN([jm_PREREQ_PHYSMEM],
 [
   AC_CHECK_HEADERS([unistd.h sys/pstat.h sys/sysmp.h sys/sysinfo.h \
     machine/hal_sysinfo.h sys/table.h sys/param.h sys/sysctl.h \
-    sys/systemcfg.h])
+    sys/systemcfg.h],,, [AC_INCLUDES_DEFAULT])
   AC_CHECK_FUNCS(pstat_getstatic pstat_getdynamic sysmp getsysinfo sysctl table)
 
   AC_REQUIRE([gl_SYS__SYSTEM_CONFIGURATION])
@@ -191,7 +191,8 @@ AC_DEFUN([jm_PREREQ_STAT],
   AC_CHECK_FUNCS(statvfs)
 
   # For `struct statfs' on Ultrix 4.4.
-  AC_CHECK_HEADERS(netinet/in.h nfs/nfs_clnt.h nfs/vfs.h)
+  AC_CHECK_HEADERS([netinet/in.h nfs/nfs_clnt.h nfs/vfs.h],,,
+    [AC_INCLUDES_DEFAULT])
 
   AC_REQUIRE([jm_AC_TYPE_LONG_LONG])
 
