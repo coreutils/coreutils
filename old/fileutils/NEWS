@@ -1,12 +1,13 @@
 Changes in release 3.17:
 [3.16a]
+* install accepts new option, --verbose (-v)
 * mkdir -p is a lot faster when creating very deep directories on some systems
 * rm -i no longer exits with status indicating failure solely because the
   user declines to remove a file
 * rm -r is a lot faster on some systems when removing deep hierarchies
 * chgrp, chmod, and chown no longer give contradictory output when --verbose
   is used and an operation fails
-* install accepts new option, --preserver-timestamps
+* install accepts new option, --preserve-timestamps
 * du --megabytes --total now shows total in megabytes
 * touch -d DATE now works on Unicos
 * du accepts new option --max-depth=N
