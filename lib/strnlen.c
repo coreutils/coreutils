@@ -21,21 +21,7 @@
 #endif
 #undef strnlen
 
-#if HAVE_STRING_H
-# if !STDC_HEADERS && HAVE_MEMORY_H
-#  include <memory.h>
-# endif
-# include <string.h>
-#else
-# include <strings.h>
-#endif
-
-#ifndef HAVE_DECL_MEMCHR
-"this configure-time declaration test was not run"
-#endif
-#if !HAVE_DECL_MEMCHR
-char *memchr ();
-#endif
+#include <string.h>
 
 #undef __strnlen
 #undef strnlen

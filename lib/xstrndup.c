@@ -1,5 +1,5 @@
-/* A wrapper around xstrndup.
-
+/* Duplicate a bounded initial segment of a string, with out-of-memory
+   checking.
    Copyright (C) 2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -16,22 +16,24 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-/* Written by Jim Meyering. */
-
-#ifdef HAVE_CONFIG_H
-# include "config.h"
+#if HAVE_CONFIG_H
+# include <config.h>
 #endif
 
+/* Specification.  */
 #include "xstrndup.h"
+
+#include "strndup.h"
 #include "xalloc.h"
 
-char *strndup (char const *, size_t);
-
+/* Return a newly allocated copy of at most N bytes of STRING.
+   In other words, return a copy of the initial segment of length N of
+   STRING.  */
 char *
-xstrndup (char const *s, size_t n)
+xstrndup (const char *string, size_t n)
 {
-  char *new = strndup (s, n);
-  if (new == NULL)
+  char *s = strndup (string, n);
+  if (! s)
     xalloc_die ();
-  return (char *) new;
+  return s;
 }

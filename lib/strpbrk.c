@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1994, 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994, 2000, 2002-2003 Free Software Foundation, Inc.
    NOTE: The canonical source of this file is maintained with the GNU C Library.
    Bugs can be reported to bug-glibc@prep.ai.mit.edu.
 
@@ -21,10 +21,7 @@
 #endif
 
 #include <stddef.h>
-
-#if defined _LIBC || HAVE_STRING_H
-# include <string.h>
-#endif
+#include <string.h>
 
 #undef strpbrk
 

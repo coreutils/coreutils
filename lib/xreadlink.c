@@ -31,9 +31,7 @@ extern int errno;
 
 #include <limits.h>
 #include <sys/types.h>
-#if HAVE_STDLIB_H
-# include <stdlib.h>
-#endif
+#include <stdlib.h>
 #if HAVE_UNISTD_H
 # include <unistd.h>
 #endif

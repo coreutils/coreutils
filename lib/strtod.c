@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1997, 1999, 2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -37,22 +37,9 @@ extern int errno;
 
 #include <math.h>
 
-#if HAVE_FLOAT_H
-# include <float.h>
-#else
-# define DBL_MAX 1.7976931348623159e+308
-# define DBL_MIN 2.2250738585072010e-308
-#endif
-
-#if STDC_HEADERS
-# include <stdlib.h>
-# include <string.h>
-#else
-# define NULL 0
-# ifndef HUGE_VAL
-#  define HUGE_VAL HUGE
-# endif
-#endif
+#include <float.h>
+#include <stdlib.h>
+#include <string.h>
 
 /* Convert NPTR to a double.  If ENDPTR is not NULL, a pointer to the
    character after the last one used in the number is put in *ENDPTR.  */

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2000, 2003 Free Software Foundation, Inc.
 
    NOTE: The canonical source of this file is maintained with the GNU C Library.
    Bugs can be reported to bug-glibc@prep.ai.mit.edu.
@@ -21,15 +21,8 @@
 # include "config.h"
 #endif
 
-#include <stdio.h>
-#include <sys/types.h>
-
-#if defined _LIBC || defined STDC_HEADERS
-# include <stdlib.h>
-# include <string.h>
-#else
-char *malloc ();
-#endif
+#include <stdlib.h>
+#include <string.h>
 
 #ifndef HAVE_DECL_STRNLEN
 "this configure-time declaration test was not run"
@@ -55,7 +48,7 @@ __strndup (const char *s, size_t n)
     return NULL;
 
   new[len] = '\0';
-  return (char *) memcpy (new, s, len);
+  return memcpy (new, s, len);
 }
 #ifdef weak_alias
 weak_alias (__strndup, strndup)

@@ -47,7 +47,7 @@ int gethostname ();
    If malloc fails, exit.
    Upon any other failure, return NULL.  */
 char *
-xgethostname ()
+xgethostname (void)
 {
   char *hostname;
   size_t size;

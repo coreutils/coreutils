@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1994, 1996-1997, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994, 1996-1997, 2002-2003 Free Software Foundation, Inc.
 
    NOTE: The canonical source of this file is maintained with the GNU C Library.
    Bugs can be reported to bug-glibc@gnu.org.
@@ -23,15 +23,7 @@
 #endif
 
 #include <stddef.h>
-
-#if defined _LIBC || HAVE_STRING_H
-# include <string.h>
-#else
-# include <strings.h>
-# ifndef strchr
-#  define strchr index
-# endif
-#endif
+#include <string.h>
 
 #undef strcspn
 

@@ -27,20 +27,12 @@
 # include <stdint.h>
 #endif
 
-#if HAVE_STDLIB_H
-# include <stdlib.h>
-#endif
+#include <stdlib.h>
 
 /* Verify a requirement at compile-time (unlike assert, which is runtime).  */
 #define verify(name, assertion) struct name { char a[(assertion) ? 1 : -1]; }
 
 #ifdef UNSIGNED
-# ifndef HAVE_DECL_STRTOUL
-"this configure-time declaration test was not run"
-# endif
-# if !HAVE_DECL_STRTOUL
-unsigned long strtoul (char const *, char **, int);
-# endif
 # ifndef HAVE_DECL_STRTOULL
 "this configure-time declaration test was not run"
 # endif
@@ -50,12 +42,6 @@ unsigned long long strtoull (char const *, char **, int);
 
 #else
 
-# ifndef HAVE_DECL_STRTOL
-"this configure-time declaration test was not run"
-# endif
-# if !HAVE_DECL_STRTOL
-long strtol (char const *, char **, int);
-# endif
 # ifndef HAVE_DECL_STRTOLL
 "this configure-time declaration test was not run"
 # endif
