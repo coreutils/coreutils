@@ -1,3 +1,11 @@
+2000-07-23  Paul Eggert  <eggert@twinsun.com>
+
+	* lib/quotearg.c: Streamline by invoking multibyte code only if needed.
+	<wchar.h>: Include only if HAVE_MBRTOWC && 1 < MB_LEN_MAX.
+	(MB_CUR_MAX): Redefine to 1 if ! (HAVE_MBRTOWC && 1 < MB_LEN_MAX).
+	(quotearg_buffer_restyled): If a unibyte locale, don't bother to
+	invoke multibyte primitives.
+
 2000-07-23  Jim Meyering  <meyering@lucent.com>
 
 	* basename.c (base_name): Add an assertion.
@@ -12,7 +20,7 @@
 	* mbswidth.h: New file.
 	* mbswidth.c: New file.
 	* Makefile.am (libfetish_a_SOURCES): Add mbswidth.c.
-        (noinst_HEADERS): Add mbswidth.h.
+	(noinst_HEADERS): Add mbswidth.h.
 
 2000-07-17  Bruno Haible  <haible@clisp.cons.org>
 
