@@ -202,19 +202,20 @@ static MONTHTAB_CONST struct month monthtab[] =
 /* During the merge phase, the number of files to merge at once. */
 #define NMERGE 16
 
-/* Initial buffer size for in core sorting.  Will not grow unless a
-   line longer than this is seen. */
-static int sortalloc = 512 * 1024;
+/* Initial buffer size for in-core sorting.  The buffer will grow only
+   if a line longer than this is seen. */
+#define SORTALLOC (8 * 1024 * 1024)
+static int const sortalloc = SORTALLOC;
 
 /* Initial buffer size for in core merge buffers.  Bear in mind that
    up to NMERGE * mergealloc bytes may be allocated for merge buffers. */
-static int mergealloc = 16 * 1024;
+static int const mergealloc = SORTALLOC / NMERGE / 2;
 
 /* Guess of average line length. */
-static int linelength = 30;
+static int const linelength = 30;
 
 /* Maximum number of elements for the array(s) of struct line's, in bytes.  */
-#define LINEALLOC (256 * 1024)
+#define LINEALLOC (SORTALLOC / 2)
 
 /* Directory in which any temporary files are to be created. */
 static char *temp_dir;
