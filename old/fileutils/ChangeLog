@@ -1,3 +1,15 @@
+Thu Oct  5 21:49:34 1995  Jim Meyering  (meyering@comco.com)
+
+	* configure.in (HAVE_STRUCT_UTIMBUF): Add new test.  Testing for
+	the existence of <utime.h> is insufficient on some Next systems.
+	* acconfig.h (HAVE_STRUCT_UTIMBUF): Add it.
+	* system.h [!HAVE_UTIME_H]: Don't declare struct utimbuf here.
+	[!HAVE_STRUCT_UTIMBUF]: Declare struct utimbuf here instead.
+
+	* df.c (show_point): Cast -2 to dev_t before assignment.
+	* mountlist.c (read_filesystem_list): Cast -1 to dev_t before
+	assignment.
+
 Sun Oct  1 13:22:36 1995  Jim Meyering  (meyering@comco.com)
 
 	* configure.in (AC_REPLACE_FUNCS): Add strtoul.
