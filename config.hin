@@ -494,9 +494,6 @@
 /* Define to 1 if you have the `dgc' library (-ldgc). */
 #undef HAVE_LIBDGC
 
-/* Define to 1 if you have the <libintl.h> header file. */
-#undef HAVE_LIBINTL_H
-
 /* Define to 1 if you have the `kstat' library (-lkstat). */
 #undef HAVE_LIBKSTAT
 
@@ -1392,7 +1389,7 @@
 /* Define to empty if `const' does not conform to ANSI C. */
 #undef const
 
-/* Define to rpl_fnmatch if the replacement function should be used. */
+/* Define to a replacement function name for fnmatch(). */
 #undef fnmatch
 
 /* Define to rpl_getcwd if the wrapper function should be used. */
