@@ -34,12 +34,7 @@
 #include <sys/stat.h>
 #include "xstrtol.h"
 #include <stddef.h>
-
-#if STDC_HEADERS
-# include <stdlib.h>
-#else
-char *malloc ();
-#endif
+#include <stdlib.h>
 
 #if STAT_MACROS_BROKEN
 # undef S_ISDIR
