@@ -1,4 +1,4 @@
-/* Convert string representation of a number into an uintmax_t value.
+/* Convert string representation of a number into a uintmax_t or intmax_t value.
    Copyright 2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
