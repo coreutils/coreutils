@@ -1,5 +1,9 @@
 Mon Oct 28 17:40:54 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/Makefile.am (install-exec-local): Redirect stderr of chown to
+	/dev/null and suggest running `make install-root' upon failure to
+	install su.  Suggestions from François Pinard.
+
 	* configure.in: Don't output confusing diagnostic: `checking for
 	shadow password routines'.  Suggestion from François Pinard.
 
