@@ -482,14 +482,14 @@ main (int argc, char **argv)
 	}
     }
 
-  n_files = argc - optind;
-  file = argv + optind;
-
-  if (n_files == 0)
+  if (argc <= optind)
     {
       error (0, 0, _("missing file argument"));
       usage (EXIT_FAILURE);
     }
+
+  n_files = argc - optind;
+  file = argv + optind;
 
   target_directory_specified = (target_directory != NULL);
   if (!target_directory)
