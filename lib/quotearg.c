@@ -84,7 +84,7 @@ struct quoting_options
 
   /* Quote the characters indicated by this bit vector even if the
      quoting style would not normally require them to be quoted.  */
-  int quote_these_too[(UCHAR_MAX / INT_BITS) + 1];
+  unsigned int quote_these_too[(UCHAR_MAX / INT_BITS) + 1];
 };
 
 /* Names of quoting styles.  */
@@ -152,7 +152,8 @@ int
 set_char_quoting (struct quoting_options *o, char c, int i)
 {
   unsigned char uc = c;
-  int *p = (o ? o : &default_quoting_options)->quote_these_too + uc / INT_BITS;
+  unsigned int *p =
+    (o ? o : &default_quoting_options)->quote_these_too + uc / INT_BITS;
   int shift = uc % INT_BITS;
   int r = (*p >> shift) & 1;
   *p ^= ((i & 1) ^ r) << shift;

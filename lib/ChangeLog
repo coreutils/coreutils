@@ -1,6 +1,7 @@
 2004-11-10  Paul Eggert  <eggert@cs.ucla.edu>
 
-	* allocsa.h, mbswidth.c, mktime.c, readlink.c: Sync from gnulib.
+	* allocsa.h, mbswidth.c, mktime.c, readlink.c, getdate.y,
+	quotearg.c, strftime.c: Sync from gnulib.
 
 2004-11-06  Jim Meyering  <jim@meyering.net>
 
