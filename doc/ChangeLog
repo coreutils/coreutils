@@ -1,3 +1,9 @@
+2002-03-05  Paul Eggert  <eggert@twinsun.com>
+
+	* coreutils.texi (cut invocation): Say that selected input is
+	written in the same order that it is read, and is written
+	exactly once.
+
 2002-03-03  Paul Eggert  <eggert@twinsun.com>
 
 	Make cp -r equivalent to cp -R.  Add a new cp option --copy-contents
