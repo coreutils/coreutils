@@ -1,4 +1,4 @@
-#serial 1
+#serial 2
 
 dnl From Bruno Haible.
 
@@ -30,6 +30,27 @@ AC_DEFUN(jm_ICONV,
   ])
   if test "$jm_cv_func_iconv" = yes; then
     AC_DEFINE(HAVE_ICONV, 1, [Define if you have the iconv() function.])
+    AC_MSG_CHECKING([for iconv declaration])
+    AC_CACHE_VAL(jm_cv_proto_iconv, [
+      AC_TRY_COMPILE([
+#include <stdlib.h>
+#include <iconv.h>
+extern
+#ifdef __cplusplus
+"C"
+#endif
+#if defined(__STDC__) || defined(__cplusplus)
+size_t iconv (iconv_t cd, char * *inbuf, size_t *inbytesleft, char * *outbuf, size_t* outbytesleft);
+#else
+size_t iconv();
+#endif
+], [], jm_cv_proto_iconv_arg1="", jm_cv_proto_iconv_arg1="const")
+      jm_cv_proto_iconv="extern size_t iconv (iconv_t cd, $jm_cv_proto_iconv_arg1 char * *inbuf, size_t *inbytesleft, char * *outbuf, size_t* outbytesleft);"])
+    jm_cv_proto_iconv=`echo "[$]jm_cv_proto_iconv" | tr -s ' ' | sed -e 's/( /(/'`
+    AC_MSG_RESULT([$]{ac_t:-
+         }[$]jm_cv_proto_iconv)
+    AC_DEFINE_UNQUOTED(ICONV_CONST, $jm_cv_proto_iconv_arg1,
+      [Define as const if the declaration of iconv() needs const.])
   fi
   LIBICONV=
   if test "$jm_cv_lib_iconv" = yes; then
