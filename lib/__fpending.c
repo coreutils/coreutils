@@ -21,9 +21,9 @@
 # include <config.h>
 #endif
 
-#include <stdlib.h>
-
 #include "__fpending.h"
+
+#include <stdlib.h>
 
 /* Return the number of pending (aka buffered, unflushed)
    bytes on the stream, FP, that is open for writing.  */
