@@ -26,7 +26,7 @@ cd $pwd || framework_failure=1
 mkdir $tmp || framework_failure=1
 cd $tmp || framework_failure=1
 
-. $abs_srcdir/../sticky-check
+. $abs_srcdir/../setgid-check
 
 mkdir foo bar || framework_failure=1
 mkdir -p a/b/c d e || framework_failure=1
