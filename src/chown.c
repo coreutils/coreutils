@@ -148,6 +148,14 @@ Owner is unchanged if missing.  Group is unchanged if missing, but changed\n\
 to login group if implied by a `:' following a symbolic OWNER.\n\
 OWNER and GROUP may be numeric as well as symbolic.\n\
 "), stdout);
+      printf (_("\
+\n\
+Examples:\n\
+  %s root /u        Change the owner of /u to \"root\".\n\
+  %s root:staff /u  Likewise, but also change its group to \"staff\".\n\
+  %s -hR root /u    Change the owner of /u and subfiles to \"root\".\n\
+"),
+	      program_name, program_name, program_name);
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
   exit (status);

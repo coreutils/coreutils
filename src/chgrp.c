@@ -153,6 +153,13 @@ one takes effect.\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      printf (_("\
+\n\
+Examples:\n\
+  %s staff /u      Change the group of /u to \"staff\".\n\
+  %s -hR staff /u  Change the group of /u and subfiles to \"staff\".\n\
+"),
+	      program_name, program_name);
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
   exit (status);

@@ -1,5 +1,7 @@
 /* dirname -- strip filename suffix from pathname
-   Copyright (C) 1990-1997, 1999-2002, 2004 Free Software Foundation, Inc.
+
+   Copyright (C) 1990-1997, 1999-2002, 2004, 2005 Free Software
+   Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -56,6 +58,13 @@ output `.' (meaning the current directory).\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      printf (_("\
+\n\
+Examples:\n\
+  %s /usr/bin/sort  Output \"/usr/bin\".\n\
+  %s stdio.h        Output \".\".\n\
+"),
+	      program_name, program_name);
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
   exit (status);

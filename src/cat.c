@@ -1,5 +1,5 @@
 /* cat -- concatenate files and print on the standard output.
-   Copyright (C) 88, 90, 91, 1995-2004 Free Software Foundation, Inc.
+   Copyright (C) 88, 90, 91, 1995-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -118,6 +118,13 @@ With no FILE, or when FILE is -, read standard input.\n\
   -B, --binary             use binary writes to the console device.\n\n\
 "), stdout);
 #endif
+      printf (_("\
+\n\
+Examples:\n\
+  %s f - g  Output f's contents, then standard input, then g's contents.\n\
+  %s        Copy standard input to standard output.\n\
+"),
+	      program_name, program_name);
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
   exit (status);
