@@ -422,9 +422,10 @@ copy_internal (const char *src_path, const char *dst_path,
 		return 0;
 	    }
 
-	  if (backup_type != none && !S_ISDIR (dst_sb.st_mode))
+	  if (x->backup_type != none && !S_ISDIR (dst_sb.st_mode))
 	    {
-	      char *tmp_backup = find_backup_file_name (dst_path);
+	      char *tmp_backup = find_backup_file_name (dst_path,
+							x->backup_type);
 	      if (tmp_backup == NULL)
 		error (1, 0, _("virtual memory exhausted"));
 
@@ -755,10 +756,12 @@ valid_options (const struct cp_options *co)
 {
   assert (co != NULL);
 
+  assert (VALID_BACKUP_TYPE (co->backup_type));
+
   /* FIXME: make sure xstat and dereference are consistent.  */
   assert (co->xstat);
 
-  assert (co->sparse_mode != SPARSE_UNUSED);
+  assert (VALID_SPARSE_MODE (co->sparse_mode));
   return 1;
 }
 
@@ -766,9 +769,7 @@ valid_options (const struct cp_options *co)
    any type.  NONEXISTENT_DST should be nonzero if the file DST_PATH
    is known not to exist (e.g., because its parent directory was just
    created);  NONEXISTENT_DST should be zero if DST_PATH might already
-   exist.  DEVICE is the device number of the parent directory of
-   DST_PATH, or 0 if the parent of this file is not known.
-   OPTIONS is ... FIXME-describe
+   exist.  OPTIONS is ... FIXME-describe
    Return 0 if successful, 1 if an error occurs. */
 
 int
