@@ -109,6 +109,11 @@ typedef double LONG_DOUBLE;
 # define LDBL_DIG DBL_DIG
 #endif
 
+#if !HAVE_FSEEKO
+# undef fseeko
+# define fseeko(Stream, Offset, Whence) (-1)
+#endif
+
 enum size_spec
   {
     NO_SIZE,
@@ -1039,13 +1044,10 @@ skip (off_t n_skip)
 	    }
 	  else
 	    {
-	      /* fseek may work on some streams for which lseek doesn't.
-		 But fseek's offset argument is restricted to the range
-		 of type `long'.  So if N_SKIP is too large or if fseek
-		 fails, try lseek.  */
-	      if ((n_skip <= LONG_MAX
-		   && fseek (in_stream, (long) n_skip, SEEK_SET) == 0)
-		  || lseek (fileno (in_stream), n_skip, SEEK_SET) >= 0)
+	      /* Try fseeko if available, fseek otherwise.  */
+	      if (fseeko (in_stream, n_skip, SEEK_SET) == 0
+		  || (n_skip <= LONG_MAX
+		      && fseek (in_stream, (long) n_skip, SEEK_SET) == 0))
 		{
 		  n_skip = 0;
 		  break;
