@@ -1,3 +1,8 @@
+1999-01-12  Jim Meyering  <meyering@ascend.com>
+
+	* Makefile.am.in: Rewrite to avoid using fmt.
+	Reported by Lars Hecking.
+
 1999-01-10  Jim Meyering  <meyering@ascend.com>
 
 	* fstypename.m4: Use the new 3-arg form of AC_DEFINE instead of my
