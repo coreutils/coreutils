@@ -2,6 +2,14 @@
 
 	* Version 4.5.9.
 
+	* src/du.c (process_file): Sizes must all be of type uintmax_t.
+	Otherwise, for files or totals that are too big, numbers would
+	be truncated.  Patch mostly by Michael Stone.
+	Reported by Ingo Saitz as Debian bug #183210.
+
+	* tests/du/8gb: New test for the above-fixed bug.
+	* tests/du/Makefile.am (TESTS): Add 8gb.
+
 	* src/du.c (MAX_N_DESCRIPTORS): Use 3 * UTILS_OPEN_MAX / 4
 	rather than UTILS_OPEN_MAX - 10.
 
