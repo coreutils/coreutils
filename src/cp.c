@@ -599,7 +599,6 @@ do_copy (int n_files, char **file, const char *target_directory,
 	    {
 	      int copy_into_self;
 	      ret |= copy (arg, dst_path, new_dst, x, &copy_into_self, NULL);
-	      forget_all ();
 
 	      if (flag_path)
 		{
