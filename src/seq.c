@@ -1,5 +1,5 @@
 /* seq - print sequence of numbers to standard output.
-   Copyright (C) 94, 95, 96, 1997 Free Software Foundation, Inc.
+   Copyright (C) 94, 95, 96, 1997, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -274,7 +274,7 @@ check_format (const char *fmt)
     return 0;
 
   fmt += strspn (fmt, "-+#0");
-  if (isdigit (*fmt))
+  if (ISDIGIT (*fmt))
     {
       fmt += strspn (fmt, "012345789");
 
