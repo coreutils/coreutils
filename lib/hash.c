@@ -29,6 +29,7 @@
 #endif
 
 #include "hash.h"
+#include "xalloc.h"
 
 #include <limits.h>
 #include <stdio.h>
