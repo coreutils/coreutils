@@ -1,7 +1,7 @@
 Sat Jul 13 14:22:54 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
-	* src/stty.c [!GWINSZ_BROKEN]: Remove this guarded `#undef TIOCGWINSZ'.
-	That symbol can't be defined anymore.
+	* src/stty.c [GWINSZ_BROKEN]: Remove thus-guarded `#undef TIOCGWINSZ'.
+	GWINSZ_BROKEN can't be defined anymore.
 
 	* configure.in (boot time test): Use AC_EGREP_CPP instead of
 	AC_EGREP_HEADER; #endif, instead of #fi.
