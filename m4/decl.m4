@@ -1,20 +1,25 @@
 AC_DEFUN(jm_CHECK_DECLARATION,
 [
-test -z "$ac_cv_header_strings_h" && AC_CHECK_HEADERS(strings.h)
-test -z "$ac_cv_header_stdlib_h" && AC_CHECK_HEADERS(stdlib.h)
-test -z "$ac_cv_header_unistd_h" && AC_CHECK_HEADERS(unistd.h)
-AC_MSG_CHECKING([whether $1 is declared])
-AC_CACHE_VAL(jm_cv_func_decl_$1,
-[AC_TRY_COMPILE([
+  AC_REQUIRE(AC_HEADER_STDC)
+  test -z "$ac_cv_header_memory_h" && AC_CHECK_HEADERS(memory.h)
+  test -z "$ac_cv_header_string_h" && AC_CHECK_HEADERS(string.h)
+  test -z "$ac_cv_header_strings_h" && AC_CHECK_HEADERS(strings.h)
+  test -z "$ac_cv_header_unistd_h" && AC_CHECK_HEADERS(unistd.h)
+  AC_MSG_CHECKING([whether $1 is declared])
+  AC_CACHE_VAL(jm_cv_func_decl_$1,
+    [AC_TRY_COMPILE([
 #include <stdio.h>
 #ifdef HAVE_STRING_H
+# if !STDC_HEADERS && HAVE_MEMORY_H
+#  include <memory.h>
+# endif
 # include <string.h>
 #else
 # ifdef HAVE_STRINGS_H
 #  include <strings.h>
 # endif
 #endif
-#ifdef HAVE_STDLIB_H
+#ifdef STDC_HEADERS
 # include <stdlib.h>
 #endif
 #ifdef HAVE_UNISTD_H
