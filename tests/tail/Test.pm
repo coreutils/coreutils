@@ -2,8 +2,6 @@ package Test;
 require 5.002;
 use strict;
 
-$Test::input_via_stdin = 1;
-
 my @tv = (
 # test name, options, input, expected output, expected return code
 #
@@ -72,6 +70,22 @@ my @tv = (
 
 sub test_vector
 {
+  my $t;
+  foreach $t (@tv)
+    {
+      my ($test_name, $flags, $in, $exp, $ret) = @$t;
+
+      # If you run the minus* tests with a FILE arg they'd hang.
+      if ($test_name =~ /^minus/)
+	{
+	  $Test::input_via{$test_name} = {REDIR => 0, PIPE => 0};
+	}
+      else
+	{
+	  $Test::input_via{$test_name} = {REDIR => 0, FILE => 0, PIPE => 0}
+	}
+    }
+
   return @tv;
 }
 
