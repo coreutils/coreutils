@@ -32,12 +32,12 @@
 #endif
 #include "system.h"
 #include "version.h"
+#include "error.h"
 
 #define max(h,i) ((h) > (i) ? (h) : (i))
 
 char *stpcpy ();
 char *xmalloc ();
-void error ();
 int full_write ();
 int safe_read ();
 

@@ -25,6 +25,7 @@
 
 #include "system.h"
 #include "version.h"
+#include "error.h"
 
 /* The following parameters represent the program's idea of what is
    "best".  Adjust to taste, subject to the caveats given.  */
@@ -142,12 +143,6 @@ struct Word
 #define	_(x) x
 #else
 #define	_(x) ()
-#endif
-
-#ifdef HAVE_VPRINTF
-void error _ ((int, int, const char *,...));
-#else
-void error ();
 #endif
 
 static void set_prefix _ ((char *p));

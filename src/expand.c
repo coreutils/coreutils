@@ -43,6 +43,7 @@
 #include <sys/types.h>
 #include "system.h"
 #include "version.h"
+#include "error.h"
 
 /* The number of bytes added at a time to the amount of memory
    allocated for the output line. */
@@ -54,7 +55,6 @@
 
 char *xmalloc ();
 char *xrealloc ();
-void error ();
 
 static FILE *next_file ();
 static void add_tabstop ();

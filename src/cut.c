@@ -73,6 +73,7 @@
 #include <sys/types.h>
 #include "system.h"
 #include "version.h"
+#include "error.h"
 
 #define FATAL_ERROR(s)							\
   do									\
@@ -109,7 +110,6 @@ struct range_pair
 
 char *xmalloc ();
 char *xrealloc ();
-void error ();
 
 /* This buffer is used to support the semantics of the -s option
    (or lack of same) when the specified field list includes (does

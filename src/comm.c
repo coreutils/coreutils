@@ -25,6 +25,7 @@
 #include "system.h"
 #include "linebuffer.h"
 #include "version.h"
+#include "error.h"
 
 #define min(x, y) ((x) < (y) ? (x) : (y))
 
@@ -53,7 +54,6 @@ static struct option const long_options[] =
   {0, 0, 0, 0}
 };
 
-void error ();
 static int compare_files ();
 static void writeline ();
 static void usage ();

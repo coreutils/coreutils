@@ -30,6 +30,7 @@
 #include "regex.h"
 #include "system.h"
 #include "version.h"
+#include "error.h"
 
 #ifdef STDC_HEADERS
 #include <stdlib.h>
@@ -42,9 +43,7 @@ char *realloc ();
 #define MAX(a,b) (((a) > (b)) ? (a) : (b))
 #endif
 
-void error ();
 int safe_read ();
-
 
 static char *xrealloc ();
 static char *xmalloc ();

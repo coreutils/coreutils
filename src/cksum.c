@@ -109,11 +109,10 @@ main ()
 #include <sys/types.h>
 #include "system.h"
 #include "version.h"
+#include "error.h"
 
 /* Number of bytes to read at once.  */
 #define BUFLEN (1 << 16)
-
-void error ();
 
 /* The name this program was run with.  */
 char *program_name;
