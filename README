@@ -83,7 +83,7 @@ and/or run programs as a non-root user, `nobody' by default.
 If you want to use some other non-root username, specify it via
 the NON_ROOT_USERNAME environment variable.  Depending on the
 permissions with which the working directories have been created,
-using `nobody' may fail, because that use won't have the required
+using `nobody' may fail, because that user won't have the required
 read and write access to the build and test directories.
 I find that it is best to unpack and build as a non-privileged
 user, and then to run the following command as that user in order
