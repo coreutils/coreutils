@@ -178,17 +178,17 @@ static uintmax_t tot_size = 0;
 static struct option const long_options[] =
 {
   {"all", no_argument, &opt_all, 1},
-  {"block-size", required_argument, 0, 129},
+  {"block-size", required_argument, 0, CHAR_MAX + 2},
   {"bytes", no_argument, NULL, 'b'},
   {"count-links", no_argument, &opt_count_all, 1},
   {"dereference", no_argument, NULL, 'L'},
   {"dereference-args", no_argument, &opt_dereference_arguments, 1},
-  {"exclude", required_argument, 0, 128},
+  {"exclude", required_argument, 0, CHAR_MAX + 1},
   {"exclude-from", required_argument, 0, 'X'},
   {"human-readable", no_argument, NULL, 'h'},
   {"si", no_argument, 0, 'H'},
   {"kilobytes", no_argument, NULL, 'k'},
-  {"max-depth", required_argument, NULL, 13},
+  {"max-depth", required_argument, NULL, CHAR_MAX + 3},
   {"megabytes", no_argument, NULL, 'm'},
   {"one-file-system", no_argument, &opt_one_file_system, 1},
   {"separate-dirs", no_argument, &opt_separate_dirs, 1},
@@ -300,7 +300,7 @@ main (int argc, char **argv)
 	  output_block_size = 1024;
 	  break;
 
-	case 13:		/* --max-depth=N */
+	case CHAR_MAX + 3:		/* --max-depth=N */
 	  if (xstrtol (optarg, NULL, 0, &tmp_long, NULL) != LONGINT_OK
 	      || tmp_long < 0 || tmp_long > INT_MAX)
 	    error (1, 0, _("invalid maximum depth `%s'"), optarg);
@@ -342,11 +342,11 @@ main (int argc, char **argv)
 	    error (1, errno, "%s", optarg);
 	  break;
 
-	case 128:
+	case CHAR_MAX + 1:
 	  add_exclude (exclude, optarg);
 	  break;
 
-	case 129:
+	case CHAR_MAX + 2:
 	  human_block_size (optarg, 1, &output_block_size);
 	  break;
 
