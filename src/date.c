@@ -161,7 +161,7 @@ specifies Coordinated Universal Time.  Interpreted sequences are:\n\
   %%n   a newline\n\
   %%p   locale's AM or PM\n\
   %%r   time, 12-hour (hh:mm:ss [AP]M)\n\
-  %%s   seconds since 00:00:00, Jan 1, 1970 (a GNU extension)\n\
+  %%s   seconds since `00:00:00 1970-01-01 UTC' (a GNU extension)\n\
   %%S   second (00..60)\n\
   %%t   a horizontal tab\n\
   %%T   time, 24-hour (hh:mm:ss)\n\
