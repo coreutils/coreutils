@@ -151,7 +151,7 @@ Usage: %s [OPTION] DIRECTORY...\n\
 	   program_name);
 
   if (status == 0)
-    fprintf (stdout, "\
+    printf ("\
   -p, --parents     no error if existing, make parent directories as needed\n\
   -m, --mode MODE   set permission mode (as in chmod), not 0777 - umask\n\
       --help        display this help and exit\n\

@@ -385,7 +385,7 @@ Usage: %s [OPTION]... FILE...\n\
 	   program_name);
 
   if (status == 0)
-    fprintf (stdout, "\
+    printf ("\
   -a                     change only the access time\n\
   -c                     do not create any files\n\
   -d, --date STRING      parse STRING and use it instead of current time\n\

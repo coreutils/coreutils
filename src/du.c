@@ -205,7 +205,7 @@ Usage: %s [OPTION]... [PATH]...\n\
 	   program_name);
 
   if (status == 0)
-    fprintf (stdout, "\
+    printf ("\
   -a, --all                write counts for all files, not just directories\n\
   -b, --bytes              print size in bytes\n\
   -c, --total              produce a grand total\n\

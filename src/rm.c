@@ -536,7 +536,7 @@ Usage: %s [OPTION]... PATH...\n\
 	   program_name);
 
   if (status == 0)
-    fprintf (stdout, "\
+    printf ("\
   -d, --directory       unlink directory, even if non-empty (super-user only)\n\
   -f, --force           ignore nonexistent files, never prompt\n\
   -i, --interactive     prompt before any removal\n\

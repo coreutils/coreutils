@@ -302,7 +302,7 @@ Usage: %s [OPTION]... OWNER[.[GROUP]] FILE...\n\
 	   program_name, program_name);
 
   if (status == 0)
-    fprintf (stdout, "\
+    printf ("\
   -c, --changes           be verbose whenever change occurs\n\
   -f, --silent, --quiet   suppress most error messages\n\
   -v, --verbose           explain what is being done\n\

@@ -479,7 +479,7 @@ Usage: %s [OPTION]... SOURCE DEST\n\
 	   program_name, program_name);
 
   if (status == 0)
-    fprintf (stdout, "\
+    printf ("\
   -b, --backup                 make backup before removal\n\
   -f, --force                  remove existing destinations, never prompt\n\
   -i, --interactive            prompt before overwrite\n\

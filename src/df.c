@@ -483,7 +483,7 @@ Usage: %s [OPTION] [PATH]...\n\
 	   program_name);
 
   if (status == 0)
-    fprintf (stdout, "\
+    printf ("\
   -a, --all                 include filesystems having 0 blocks\n\
   -i, --inodes              list inode information instead of block usage\n\
   -k, --kilobytes           use 1024 blocks, not 512 despite POSIXLY_CORRECT\n\

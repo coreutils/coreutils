@@ -360,7 +360,7 @@ Usage: %s [OPTION]... SOURCE [DEST]\n\
 	   program_name, program_name);
 
   if (status == 0)
-    fprintf (stdout, "\
+    printf ("\
   -b, --backup                 make backups for removed files\n\
   -d, -F, --directory          hard link directories (super-user only)\n\
   -f, --force                  remove existing destinations\n\

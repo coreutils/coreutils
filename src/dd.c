@@ -1079,7 +1079,7 @@ Usage: %s [OPTION]...\n\
 	   program_name);
 
   if (status == 0)
-    fprintf (stdout, "\
+    printf ("\
   bs=BYTES        force ibs=BYTES and obs=BYTES\n\
   cbs=BYTES       convert BYTES bytes at a time\n\
   conv=KEYWORDS   convert the file as per the comma separated keyword list\n\

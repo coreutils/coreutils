@@ -1887,7 +1887,7 @@ Usage: %s [OPTION]... [PATH]...\n\
 
   if (status == 0)
     {
-      fprintf (stdout, "\
+      printf ("\
   -a, --all                  do not hide entries starting with .\n\
   -b, --escape               print octal escapes for nongraphic characters\n\
   -c                         sort by change time; with -l: show ctime\n\
@@ -1909,7 +1909,7 @@ Usage: %s [OPTION]... [PATH]...\n\
   -x                         list entries by lines instead of by columns\n\
   -A, --almost-all           do not list implied . and ..\n");
 
-      fprintf (stdout, "\
+      printf ("\
   -B, --ignore-backups       do not list implied entries ending with ~\n\
   -C                         list entries by columns\n\
   -F, --classify             append a character for typing each entry\n\

@@ -153,7 +153,7 @@ Usage: %s [OPTION]... DIRECTORY...\n\
 	   program_name);
 
   if (status == 0)
-    fprintf (stdout, "\
+    printf ("\
   -p, --parents   remove explicit parent directories if being emptied\n\
       --help      display this help and exit\n\
       --version   output version information and exit\n");

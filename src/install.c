@@ -548,7 +548,7 @@ Usage: %s [OPTION]... SOURCE DEST           (1st format)\n\
 	    program_name, program_name, program_name);
 
   if (status == 0)
-    fprintf (stdout, "\
+    printf ("\
   -c                  (ignored)\n\
   -d, --directory     create [leading] directories, mandatory for 3rd format\n\
   -g, --group GROUP   set group ownership, instead of process' current group\n\
