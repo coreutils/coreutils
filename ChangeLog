@@ -6,6 +6,7 @@
 	the entire file name, not just the last component.
 	Reported by Robert Lindgren.
 	* tests/du/exclude: Test for this.
+	* NEWS: Document this.
 
 2005-01-04  Jim Meyering  <jim@meyering.net>
 
