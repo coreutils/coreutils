@@ -541,7 +541,7 @@ wc_file (char const *file, struct fstatus *fstatus)
 static struct fstatus *
 get_input_fstatus (int nfiles, char * const *file)
 {
-  struct fstatus *fstatus = xmalloc (nfiles * sizeof *fstatus);
+  struct fstatus *fstatus = xnmalloc (nfiles, sizeof *fstatus);
 
   if (nfiles == 1
       && ((print_lines + print_words + print_chars
