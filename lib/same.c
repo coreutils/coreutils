@@ -26,9 +26,7 @@
 #ifdef HAVE_UNISTD_H
 # include <unistd.h>
 #endif
-#if HAVE_STDLIB_H
-# include <stdlib.h>
-#endif
+#include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <ctype.h>
@@ -37,11 +35,7 @@
 extern int errno;
 #endif
 
-#if HAVE_STRING_H
-# include <string.h>
-#else
-# include <strings.h>
-#endif
+#include <string.h>
 
 #include <limits.h>
 #ifndef _POSIX_NAME_MAX
@@ -52,13 +46,6 @@ extern int errno;
 #include "dirname.h"
 #include "error.h"
 #include "xalloc.h"
-
-#ifndef HAVE_DECL_FREE
-"this configure-time declaration test was not run"
-#endif
-#if !HAVE_DECL_FREE
-void free ();
-#endif
 
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 
@@ -121,13 +108,13 @@ same_name (const char *source, const char *dest)
 #if ! _POSIX_NO_TRUNC && HAVE_PATHCONF && defined _PC_NAME_MAX
       if (same && ! identical_basenames)
 	{
-	  long name_max = (errno = 0, pathconf (source_dirname, _PC_NAME_MAX));
+	  long name_max = (errno = 0, pathconf (dest_dirname, _PC_NAME_MAX));
 	  if (name_max < 0)
 	    {
 	      if (errno)
 		{
 		  /* Shouldn't happen.  */
-		  error (1, errno, "%s", source_dirname);
+		  error (1, errno, "%s", dest_dirname);
 		}
 	      same = false;
 	    }
