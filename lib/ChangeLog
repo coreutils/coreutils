@@ -1,10 +1,10 @@
 2003-08-18  Paul Eggert <eggert@twinsun.com>
 
 	* same.c: Include <stdlib.h> and <string.h> unconditionally,
-        as we're now assuming that part of hosted C89.
-        (free) [!HAVE_DECL_FREE]: Remove decl; no longer needed.
+	as we're now assuming that part of hosted C89.
+	(free) [!HAVE_DECL_FREE]: Remove decl; no longer needed.
 	(same_name): Invoke pathconf on destination, not source, as
-        that's a bit clearer even if they are the same dir.
+	that's a bit clearer even if they are the same dir.
 
 2003-08-18  Jim Meyering  <jim@meyering.net>
 
