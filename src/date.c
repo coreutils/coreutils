@@ -68,6 +68,7 @@ size_t strftime ();
 time_t time ();
 #endif
 
+int putenv ();
 int stime ();
 
 char *xrealloc ();
@@ -78,10 +79,18 @@ void error ();
 static void show_date ();
 static void usage ();
 
+/* putenv string to use Universal Coordinated Time.
+   POSIX.2 says it should be "TZ=UCT0" or "TZ=GMT0". */
+#ifndef TZ_UCT
+#if defined(hpux) || defined(__hpux__) || defined(ultrix) || defined(__ultrix__) || defined(USG)
+#define TZ_UCT "TZ=GMT0"
+#else
+#define TZ_UCT "TZ="
+#endif
+#endif
+
 /* The name this program was run with, for error messages. */
 char *program_name;
-
-static int universal_time = 0;
 
 /* If non-zero, display usage information and exit.  */
 static int show_help;
@@ -109,6 +118,7 @@ main (argc, argv)
   char *datestr = NULL;
   time_t when;
   int set_date = 0;
+  int universal_time = 0;
 
   program_name = argv[0];
 
@@ -143,6 +153,9 @@ main (argc, argv)
 
   if (argc - optind > 1)
     usage (1);
+
+  if (universal_time && putenv (TZ_UCT) != 0)
+    error (1, 0, "virtual memory exhausted");
 
   time (&when);
 
@@ -182,7 +195,7 @@ show_date (format, when)
   char *out = NULL;
   size_t out_length = 0;
 
-  tm = (universal_time ? gmtime : localtime) (&when);
+  tm = localtime (&when);
 
   if (format == NULL)
     /* Print the date in the default format.  Vanilla ANSI C strftime
