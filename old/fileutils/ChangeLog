@@ -1,5 +1,6 @@
 2002-04-07  Jim Meyering  <meyering@lucent.com>
 
+	* tests/install/basic-1: Tweak comments to reflect reality.
 	* tests/cp/fail-perm: Add VERBOSE=yes support.
 	* tests/mv/mv-special-1: Fix typo in VERBOSE=yes handling.
 	Reported by Richard Dawe.
