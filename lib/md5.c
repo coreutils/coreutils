@@ -1,20 +1,22 @@
 /* md5.c - Functions to compute MD5 message digest of files or memory blocks
-   according to the definition of MD5 in RFC 1321 from April 1992.
-   Copyright (C) 1995 Software Foundation, Inc.
+Copyright (C) 1996 Free Software Foundation, Inc.
+This file is part of the GNU C Library.
+Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+The GNU C Library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Library General Public License as
+published by the Free Software Foundation; either version 2 of the
+License, or (at your option) any later version.
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+The GNU C Library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Library General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+You should have received a copy of the GNU Library General Public
+License along with the GNU C Library; see the file COPYING.LIB.  If
+not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+Boston, MA 02111-1307, USA.  */
 
 /* Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>.  */
 
@@ -24,7 +26,7 @@
 
 #include <sys/types.h>
 
-#if STDC_HEADERS
+#if STDC_HEADERS || defined _LIBC
 # include <stdlib.h>
 # include <string.h>
 #else
@@ -34,6 +36,13 @@
 #endif
 
 #include "md5.h"
+
+#ifdef _LIBC
+# include <endian.h>
+# if __BYTE_ORDER == __BIG_ENDIAN
+#  define WORDS_BIGENDIAN 1
+# endif
+#endif
 
 #ifdef WORDS_BIGENDIAN
 # define SWAP(n)							\
@@ -58,6 +67,9 @@ md5_init_ctx (ctx)
   ctx->B = 0xefcdab89;
   ctx->C = 0x98badcfe;
   ctx->D = 0x10325476;
+
+  ctx->total[0] = ctx->total[1] = 0;
+  ctx->buflen = 0;
 }
 
 /* Put result from CTX in first 16 bytes following RESBUF.  The result must
@@ -75,6 +87,36 @@ md5_read_ctx (ctx, resbuf)
   return resbuf;
 }
 
+/* Process the remaining bytes in the internal buffer and the usual
+   prolog according to the standard and write the result to RESBUF.  */
+void *
+md5_finish_ctx (ctx, resbuf)
+     struct md5_ctx *ctx;
+     void *resbuf;
+{
+  /* Take yet unprocessed bytes into account.  */
+  md5_uint32 bytes = ctx->buflen;
+  size_t pad;
+
+  /* Now count remaining bytes.  */
+  ctx->total[0] += bytes;
+  if (ctx->total[0] < bytes)
+    ++ctx->total[1];
+
+  pad = bytes >= 56 ? 64 + 56 - bytes : 56 - bytes;
+  memcpy (&ctx->buffer[bytes], fillbuf, pad);
+
+  /* Put the 64-bit file length in *bits* at the end of the buffer.  */
+  *(md5_uint32 *) &ctx->buffer[bytes + pad] = SWAP (ctx->total[0] << 3);
+  *(md5_uint32 *) &ctx->buffer[bytes + pad + 4] = SWAP ((ctx->total[1] << 3) |
+							(ctx->total[0] >> 29));
+
+  /* Process last bytes.  */
+  md5_process_block (ctx->buffer, bytes + pad + 8, ctx);
+
+  return md5_read_ctx (ctx, resbuf);
+}
+
 /* Compute MD5 message digest for bytes read from STREAM.  The
    resulting message digest number will be written into the 16 bytes
    beginning at RESBLOCK.  */
@@ -86,15 +128,11 @@ md5_stream (stream, resblock)
   /* Important: BLOCKSIZE must be a multiple of 64.  */
 #define BLOCKSIZE 4096
   struct md5_ctx ctx;
-  md5_uint32 len[2];
   char buffer[BLOCKSIZE + 72];
-  size_t pad, sum;
+  size_t sum;
 
   /* Initialize the computation context.  */
   md5_init_ctx (&ctx);
-
-  len[0] = 0;
-  len[1] = 0;
 
   /* Iterate over full file contents.  */
   while (1)
@@ -116,13 +154,6 @@ md5_stream (stream, resblock)
       if (n == 0 && ferror (stream))
         return 1;
 
-      /* RFC 1321 specifies the possible length of the file up to 2^64 bits.
-	 Here we only compute the number of bytes.  Do a double word
-         increment.  */
-      len[0] += sum;
-      if (len[0] < sum)
-	++len[1];
-
       /* If end of file is reached, end the loop.  */
       if (n == 0)
 	break;
@@ -133,27 +164,12 @@ md5_stream (stream, resblock)
       md5_process_block (buffer, BLOCKSIZE, &ctx);
     }
 
-  /* We can copy 64 byte because the buffer is always big enough.  FILLBUF
-     contains the needed bits.  */
-  memcpy (&buffer[sum], fillbuf, 64);
-
-  /* Compute amount of padding bytes needed.  Alignment is done to
-		(N + PAD) % 64 == 56
-     There is always at least one byte padded.  I.e. even the alignment
-     is correctly aligned 64 padding bytes are added.  */
-  pad = sum & 63;
-  pad = pad >= 56 ? 64 + 56 - pad : 56 - pad;
-
-  /* Put the 64-bit file length in *bits* at the end of the buffer.  */
-  *(md5_uint32 *) &buffer[sum + pad] = SWAP (len[0] << 3);
-  *(md5_uint32 *) &buffer[sum + pad + 4] = SWAP ((len[1] << 3)
-						 | (len[0] >> 29));
-
-  /* Process last bytes.  */
-  md5_process_block (buffer, sum + pad + 8, &ctx);
+  /* Add the last bytes if necessary.  */
+  if (sum > 0)
+    md5_process_bytes (buffer, sum, &ctx);
 
   /* Construct result in desired memory.  */
-  md5_read_ctx (&ctx, resblock);
+  md5_finish_ctx (&ctx, resblock);
   return 0;
 }
 
@@ -168,37 +184,61 @@ md5_buffer (buffer, len, resblock)
      void *resblock;
 {
   struct md5_ctx ctx;
-  char restbuf[64 + 72];
-  size_t blocks = len & ~63;
-  size_t pad, rest;
 
   /* Initialize the computation context.  */
   md5_init_ctx (&ctx);
 
   /* Process whole buffer but last len % 64 bytes.  */
-  md5_process_block (buffer, blocks, &ctx);
-
-  /* REST bytes are not processed yet.  */
-  rest = len - blocks;
-  /* Copy to own buffer.  */
-  memcpy (restbuf, &buffer[blocks], rest);
-  /* Append needed fill bytes at end of buffer.  We can copy 64 byte
-     because the buffer is always big enough.  */
-  memcpy (&restbuf[rest], fillbuf, 64);
-
-  /* PAD bytes are used for padding to correct alignment.  Note that
-     always at least one byte is padded.  */
-  pad = rest >= 56 ? 64 + 56 - rest : 56 - rest;
-
-  /* Put length of buffer in *bits* in last eight bytes.  */
-  *(md5_uint32 *) &restbuf[rest + pad] = (md5_uint32) SWAP (len << 3);
-  *(md5_uint32 *) &restbuf[rest + pad + 4] = (md5_uint32) SWAP (len >> 29);
-
-  /* Process last bytes.  */
-  md5_process_block (restbuf, rest + pad + 8, &ctx);
+  md5_process_bytes (buffer, len, &ctx);
 
   /* Put result in desired memory area.  */
-  return md5_read_ctx (&ctx, resblock);
+  return md5_finish_ctx (&ctx, resblock);
+}
+
+
+void
+md5_process_bytes (buffer, len, ctx)
+     const void *buffer;
+     size_t len;
+     struct md5_ctx *ctx;
+{
+  /* When we already have some bits in our internal buffer concatenate
+     both inputs first.  */
+  if (ctx->buflen != 0)
+    {
+      size_t left_over = ctx->buflen;
+      size_t add = 128 - left_over > len ? len : 128 - left_over;
+
+      memcpy (&ctx->buffer[left_over], buffer, add);
+      ctx->buflen += add;
+
+      if (left_over + add > 64)
+	{
+	  md5_process_block (ctx->buffer, (left_over + add) & ~63, ctx);
+	  /* The regions in the following copy operation cannot overlap.  */
+	  memcpy (ctx->buffer, &ctx->buffer[(left_over + add) & ~63],
+		  (left_over + add) & 63);
+	  ctx->buflen = (left_over + add) & 63;
+	}
+
+      buffer += add;
+      len -= add;
+    }
+
+  /* Process available complete blocks.  */
+  if (len > 64)
+    {
+      md5_process_block (buffer, len & ~63, ctx);
+      buffer += len & ~63;
+      len &= 63;
+    }
+
+  /* Move remaining bytes in internal buffer.  */
+  if (len > 0)
+    {
+      memcpy (ctx->buffer, buffer, len);
+      ctx->buflen = len;
+    }
 }
 
 
@@ -228,6 +268,13 @@ md5_process_block (buffer, len, ctx)
   md5_uint32 B = ctx->B;
   md5_uint32 C = ctx->C;
   md5_uint32 D = ctx->D;
+
+  /* First increment the byte count.  RFC 1321 specifies the possible
+     length of the file up to 2^64 bits.  Here we only compute the
+     number of bytes.  Do a double word increment.  */
+  ctx->total[0] += len;
+  if (ctx->total[0] < len)
+    ++ctx->total[1];
 
   /* Process all bytes in the buffer with 64 bytes in each round of
      the loop.  */
