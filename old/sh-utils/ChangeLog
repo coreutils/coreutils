@@ -9,6 +9,10 @@
 	integer.  This avoids loss of information and wrong result, e.g. for
 	"expr '00' '<' '0!'", where you don't want to convert '00' to '0'.
 
+2001-08-18  Jim Meyering  <meyering@lucent.com>
+
+	* tests/expr/basic (00): New test for the above.
+
 2001-06-21  Paul Eggert  <eggert@twinsun.com>
 
 	* src/expr.c: Code cleanup to avoid tricky macros and
