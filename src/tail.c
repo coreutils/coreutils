@@ -227,7 +227,6 @@ main (argc, argv)
   while ((c = getopt_long (argc, argv, "c:n:fqv", long_options, (int *) 0))
 	 != EOF)
     {
-      int allow_bkm_suffix;
       strtol_error s_err;
 
       switch (c)
@@ -237,12 +236,10 @@ main (argc, argv)
 
 	case 'c':
 	  count_lines = 0;
-	  allow_bkm_suffix = 1;
 	  goto getnum;
 
 	case 'n':
 	  count_lines = 1;
-	  allow_bkm_suffix = 0;
 	getnum:
 	  if (*optarg == '+')
 	    {
