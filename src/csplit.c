@@ -31,8 +31,9 @@
 #include <regex.h>
 
 #include "error.h"
+#include "human.h"
 #include "safe-read.h"
-#include "xstrtoul.h"
+#include "xstrtol.h"
 #include "xalloc.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -67,8 +68,8 @@ struct control
   char *regexpr;		/* Non-compiled regular expression. */
   struct re_pattern_buffer re_compiled;	/* Compiled regular expression. */
   int offset;			/* Offset from regexp to split at. */
-  int lines_required;		/* Number of lines required. */
-  unsigned int repeat;		/* Repeat count. */
+  uintmax_t lines_required;	/* Number of lines required. */
+  uintmax_t repeat;		/* Repeat count. */
   int repeat_forever;		/* Non-zero if `*' used as a repeat count. */
   int argnum;			/* ARGV index. */
   boolean ignore;		/* If true, produce no output (for regexp). */
@@ -743,8 +744,10 @@ dump_rest_of_file (void)
 static void
 handle_line_error (const struct control *p, int repetition)
 {
+  char buf[LONGEST_HUMAN_READABLE + 1];
+
   fprintf (stderr, _("%s: `%d': line number out of range"),
-	   program_name, p->lines_required);
+	   program_name, human_readable (p->lines_required, buf, 1, 1));
   if (repetition)
     fprintf (stderr, _(" on repetition %d\n"), repetition);
   else
@@ -762,7 +765,7 @@ static void
 process_line_count (const struct control *p, int repetition)
 {
   unsigned int linenum;
-  unsigned int last_line_to_save = p->lines_required * (repetition + 1);
+  uintmax_t last_line_to_save = p->lines_required * (repetition + 1);
   struct cstring *line;
 
   create_output_file ();
@@ -1089,7 +1092,7 @@ check_for_offset (struct control *p, const char *str, const char *num)
 static void
 parse_repeat_count (int argnum, struct control *p, char *str)
 {
-  unsigned long val;
+  uintmax_t val;
   char *end;
 
   end = str + strlen (str) - 1;
@@ -1101,14 +1104,13 @@ parse_repeat_count (int argnum, struct control *p, char *str)
     p->repeat_forever = 1;
   else
     {
-      if (xstrtoul (str + 1, NULL, 10, &val, "") != LONGINT_OK
-	  || val > UINT_MAX)
+      if (xstrtoumax (str + 1, NULL, 10, &val, "") != LONGINT_OK)
 	{
 	  error (EXIT_FAILURE, 0,
 		 _("%s}: integer required between `{' and `}'"),
 		 global_argv[argnum]);
 	}
-      p->repeat = (unsigned int) val;
+      p->repeat = val;
     }
 
   *end = '}';
@@ -1166,8 +1168,8 @@ parse_patterns (int argc, int start, char **argv)
 {
   int i;			/* Index into ARGV. */
   struct control *p;		/* New control record created. */
-  unsigned long val;
-  static unsigned long last_val = 0;
+  uintmax_t val;
+  static uintmax_t last_val = 0;
 
   for (i = start; i < argc; i++)
     {
@@ -1180,25 +1182,28 @@ parse_patterns (int argc, int start, char **argv)
 	  p = new_control_record ();
 	  p->argnum = i;
 
-	  if (xstrtoul (argv[i], NULL, 10, &val, "") != LONGINT_OK
-	      || val > INT_MAX)
+	  if (xstrtoumax (argv[i], NULL, 10, &val, "") != LONGINT_OK)
 	    error (EXIT_FAILURE, 0, _("%s: invalid pattern"), argv[i]);
 	  if (val == 0)
 	    error (EXIT_FAILURE, 0,
 		   _("%s: line number must be greater than zero"),
 		   argv[i]);
 	  if (val < last_val)
-	    error (EXIT_FAILURE, 0,
-	     _("line number `%s' is smaller than preceding line number, %lu"),
-		   argv[i], last_val);
+	    {
+	      char buf[LONGEST_HUMAN_READABLE + 1];
+	      error (EXIT_FAILURE, 0,
+	       _("line number `%s' is smaller than preceding line number, %s"),
+		     argv[i], human_readable (last_val, buf, 1, 1));
+	    }
 
 	  if (val == last_val)
 	    error (0, 0,
 	   _("warning: line number `%s' is the same as preceding line number"),
 		   argv[i]);
+
 	  last_val = val;
 
-	  p->lines_required = (int) val;
+	  p->lines_required = val;
 	}
 
       if (i + 1 < argc && *argv[i + 1] == '{')
