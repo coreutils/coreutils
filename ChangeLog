@@ -1,6 +1,11 @@
-2003-05-02  Jim Meyering  <jim@meyering.net>
+2003-05-03  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
+
+	* tests/du/8gb: Skip test if the file system of `.' doesn't support
+	sparse files -- otherwise it'd create a file of size 8GB.
+
+2003-05-02  Jim Meyering  <jim@meyering.net>
 
 	* src/fmt.c (usage): Don't mention obsolescent -WIDTH option.
 	Instead explain about `-' and standard input.
