@@ -1,3 +1,8 @@
+1998-12-18  Jim Meyering  <meyering@ascend.com>
+
+	* Makefile.am.in (Makefile.am): Simplify rule.
+	Based on suggestion from Lars Hecking.
+
 1998-11-16  Jim Meyering  <meyering@ascend.com>
 
 	* lfs.m4: Double-quote the `uname...` expression.
