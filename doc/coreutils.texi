@@ -522,7 +522,9 @@ Append @var{suffix} to each backup file made with @option{-b}.
 @end macro
 
 @macro optTargetDirectory
+@item -t @var{directory}
 @itemx @w{@kbd{--target-directory}=@var{directory}}
+@opindex -t
 @opindex --target-directory
 @cindex target directory
 @cindex destination directory
@@ -531,7 +533,9 @@ Specify the destination @var{directory}.
 @end macro
 
 @macro optNoTargetDirectory
-@item --no-target-directory
+@item -T
+@itemx --no-target-directory
+@opindex -T
 @opindex --no-target-directory
 @cindex target directory
 @cindex destination directory
@@ -634,7 +638,7 @@ context that requires a file name.
 * Exit status::                 Indicating program success or failure.
 * Backup options::              -b -S -V, in some programs.
 * Block size::                  BLOCK_SIZE and --block-size, in some programs.
-* Target directory::            --target-directory, in some programs.
+* Target directory::            Specifying a target directory, in some programs.
 * Trailing slashes::            --strip-trailing-slashes, in some programs.
 * Traversing symlinks::         -H, -L, or -P, in some programs.
 * Treating / specially::        --preserve-root and --no-preserve-root.
@@ -934,7 +938,8 @@ allow more fine-grained control:
 
 @table @samp
 
-@item --no-target-directory
+@item -T
+@itemx --no-target-directory
 @opindex --no-target-directory
 @cindex target directory
 @cindex destination directory
@@ -945,13 +950,14 @@ programs that operate in a shared area.  For example, when the command
 @file{/tmp/source} was renamed to @file{/tmp/dest}: it could have been
 renamed to @file{/tmp/dest/source} instead, if some other process
 created @file{/tmp/dest} as a directory.  However, if @file{mv
---no-target-directory /tmp/source /tmp/dest} succeeds, there is no
+-T /tmp/source /tmp/dest} succeeds, there is no
 question that @file{/tmp/source} was renamed to @file{/tmp/dest}.
 
 In the opposite situation, where you want the last operand to be
 treated as a directory and want a diagnostic otherwise, you can use
-the @option{--target-directory} option instead.
+the @option{--target-directory} (@option{-t}) option.
 
+@item -t @var{directory}
 @itemx @w{@kbd{--target-directory}=@var{directory}}
 @opindex --target-directory
 @cindex target directory
@@ -975,13 +981,13 @@ invocation of the subject command.  (It can be done by going through a
 shell command, but that requires more human labor and brain power than
 it should.)
 
-The @w{@kbd{--target-directory}} option allows the @command{cp},
+The @w{@kbd{--target-directory}} (@option{-t}) option allows the @command{cp},
 @command{install}, @command{ln}, and @command{mv} programs to be used
 conveniently with @command{xargs}.  For example, you can move the files
 from the current directory to a sibling directory, @code{d} like this:
 
 @smallexample
-ls | xargs mv --target-directory=../d --
+ls | xargs mv -t ../d --
 @end smallexample
 
 However, this doesn't move files whose names begin with @samp{.}.
@@ -990,7 +996,7 @@ files too, with this command:
 
 @example
 find . -mindepth 1 -maxdepth 1 \
-  | xargs mv --target-directory=../d
+  | xargs mv -t ../d
 @end example
 
 But both of the above approaches fail if there are no files in the
@@ -1002,13 +1008,14 @@ The following example removes those limitations and requires both
 @example
 find . -mindepth 1 -maxdepth 1 -print0 \
   | xargs --null --no-run-if-empty \
-      mv --target-directory=../d
+      mv -t ../d
 @end example
 
 @end table
 
 @noindent
-The @option{--target-directory} and @option{--no-target-directory}
+The @option{--target-directory} (@option{-t}) and
+@option{--no-target-directory} (@option{-T})
 options cannot be combined.
 
 @node Trailing slashes
@@ -6175,18 +6182,26 @@ copying, moving (renaming), and deleting (removing).
 @command{cp} copies files (or, optionally, directories).  The copy is
 completely independent of the original.  You can either copy one file to
 another, or copy arbitrarily many files to a destination directory.
-Synopsis:
+Synopses:
 
 @example
-cp [@var{option}]@dots{} @var{source} @var{dest}
+cp [@var{option}]@dots{} [-T] @var{source} @var{dest}
 cp [@var{option}]@dots{} @var{source}@dots{} @var{directory}
+cp [@var{option}]@dots{} -t @var{directory} @var{source}@dots{}
 @end example
 
-If the last argument names an existing directory, @command{cp} copies each
-@var{source} file into that directory (retaining the same name).
-Otherwise, if only two files are given, it copies the first onto the
-second.  It is an error if the last argument is not a directory and more
-than two non-option arguments are given.
+@itemize @bullet
+@item
+If two file names are given, @command{cp} copies the first file to the
+second.
+
+@item
+If the @option{--target-directory} (@option{-t}) option is given, or
+failing that if the last file is a directory and the
+@option{--no-target-directory} (@option{-T}) option is not given,
+@command{cp} copies each @var{source} file to the specified directory,
+using the @var{source}s' names.
+@end itemize
 
 Generally, files are written just as they are read.  For exceptions,
 see the @option{--sparse} option below.
@@ -6312,8 +6327,6 @@ Make hard links instead of copies of non-directories.
 @opindex -L
 @opindex --dereference
 Always follow symbolic links.
-
-@optNoTargetDirectory
 
 @item -P
 @itemx --no-dereference
@@ -6472,6 +6485,8 @@ results in an error message on systems that do not support symbolic links.
 @optBackupSuffix
 
 @optTargetDirectory
+
+@optNoTargetDirectory
 
 @item -u
 @itemx --update
@@ -6774,16 +6789,29 @@ affected file descriptors, even after @command{dd} exits.
 possible, their owner and group.  Synopses:
 
 @example
-install [@var{option}]@dots{} @var{source} @var{dest}
+install [@var{option}]@dots{} [-T] @var{source} @var{dest}
 install [@var{option}]@dots{} @var{source}@dots{} @var{directory}
-install [@var{option}]@dots{} --target-directory=@var{directory} @var{source}@dots{}
-install -d [@var{option}]@dots{} @var{directory}@dots{}
+install [@var{option}]@dots{} -t @var{directory} @var{source}@dots{}
+install [@var{option}]@dots{} -d @var{directory}@dots{}
 @end example
 
-In the first of these, the @var{source} file is copied to the @var{dest}
-target file.  In the second and third, each @var{source} file is copied
-to the destination @var{directory}.  In the last, each @var{directory}
-(and any missing parent directories) is created.
+@itemize @bullet
+@item
+If two file names are given, @command{install} copies the first file to the
+second.
+
+@item
+If the @option{--target-directory} (@option{-t}) option is given, or
+failing that if the last file is a directory and the
+@option{--no-target-directory} (@option{-T}) option is not given,
+@command{install} copies each @var{source} file to the specified
+directory, using the @var{source}s' names.
+
+@item
+If the @option{--directory} (@option{-d}) option is given,
+@command{install} creates each @var{directory} and any missing parent
+directories.
+@end itemize
 
 @cindex Makefiles, installing programs in
 @command{install} is similar to @command{cp}, but allows you to control the
@@ -6834,8 +6862,6 @@ which can be either an octal number, or a symbolic mode as in
 permissions}).  The default mode is @samp{u=rwx,go=rx}---read, write,
 and execute for the owner, and read and execute for group and other.
 
-@optNoTargetDirectory
-
 @item -o @var{owner}
 @itemx --owner=@var{owner}
 @opindex -o
@@ -6873,6 +6899,8 @@ Strip the symbol tables from installed binary executables.
 
 @optTargetDirectory
 
+@optNoTargetDirectory
+
 @item -v
 @itemx --verbose
 @opindex -v
@@ -6891,18 +6919,26 @@ Print the name of each file before copying it.
 
 @pindex mv
 
-@command{mv} moves or renames files (or directories).  Synopsis:
+@command{mv} moves or renames files (or directories).  Synopses:
 
 @example
-mv [@var{option}]@dots{} @var{source} @var{dest}
+mv [@var{option}]@dots{} [-T] @var{source} @var{dest}
 mv [@var{option}]@dots{} @var{source}@dots{} @var{directory}
+mv [@var{option}]@dots{} -t @var{directory} @var{source}@dots{}
 @end example
 
-If the last argument names an existing directory, @command{mv} moves each
-other given file into a file with the same name in that directory.
-Otherwise, if only two files are given, it renames the first as
-the second.  It is an error if the last argument is not a directory
-and more than two files are given.
+@itemize @bullet
+@item
+If two file names are given, @command{mv} moves the first file to the
+second.
+
+@item
+If the @option{--target-directory} (@option{-t}) option is given, or
+failing that if the last file is a directory and the
+@option{--no-target-directory} (@option{-T}) option is not given,
+@command{mv} moves each @var{source} file to the specified
+directory, using the @var{source}s' names.
+@end itemize
 
 @command{mv} can move any type of file from one file system to another.
 Prior to version @code{4.0} of the fileutils,
@@ -6952,8 +6988,6 @@ Prompt whether to overwrite each existing destination file, regardless
 of its permissions.  If the response does not begin with @samp{y} or
 @samp{Y}, the file is skipped.
 
-@optNoTargetDirectory
-
 @itemx @w{@kbd{--reply}[=@var{how}]}
 @opindex --reply
 @cindex interactivity
@@ -6987,6 +7021,8 @@ Print the name of each file before moving it.
 @optBackupSuffix
 
 @optTargetDirectory
+
+@optNoTargetDirectory
 
 @optVersionControl
 
@@ -7403,29 +7439,36 @@ with the @option{-s} option, it makes symbolic (or @dfn{soft}) links.
 Synopses:
 
 @example
-ln [@var{option}]@dots{} @var{target} [@var{linkname}]
+ln [@var{option}]@dots{} [-T] @var{target} @var{linkname}
+ln [@var{option}]@dots{} @var{target}
 ln [@var{option}]@dots{} @var{target}@dots{} @var{directory}
+ln [@var{option}]@dots{} -t @var{directory} @var{target}@dots{}
 @end example
 
 @itemize @bullet
 
-@item If the last argument names an existing directory, @command{ln} creates a
-link to each @var{target} file in that directory, using the
-@var{target}s' names.  (But see the description of the
-@option{--no-dereference} and @option{--no-target-directory} options below.)
+@item
+If two file names are given, @command{ln} creates a link to the first
+file from the second.
 
-@item If two file names are given, @command{ln} creates a link from the
-second to the first.
+@item
+If one @var{target} is given, @command{ln} creates a link to that file
+in the current directory.
 
-@item If one @var{target} is given, @command{ln} creates a link to that
-file in the current directory.
-
-@item It is an error if the last argument is not a directory and more
-than two files are given.  Without @option{-f} or @option{-i} (see below),
-@command{ln} will not remove an existing file.  Use the @option{--backup}
-option to make @command{ln} rename existing files.
+@item
+If the @option{--target-directory} (@option{-t}) option is given, or
+failing that if the last file is a directory and the
+@option{--no-target-directory} (@option{-T}) option is not given,
+@command{ln} creates a link to each @var{target} file in the specified
+directory, using the @var{target}s' names.
 
 @end itemize
+
+Normally @command{ln} does not remove existing files.  Use the
+@option{--force} (@option{-f}) option to remove them unconditionally,
+the @option{--interactive} (@option{-i}) option to remove them
+conditionally, and the @option{--backup} (@option{-b}) option to
+rename them.
 
 @cindex hard link, defined
 @cindex inode, and hard links
@@ -7497,10 +7540,8 @@ must delete or backup that symlink before creating the new link.
 The default is to treat a destination that is a symlink to a directory
 just like a directory.
 
-This option is weaker than the @option{--no-target-directory} option,
-and has no effect if @option{--no-target-directory} is also given.
-
-@optNoTargetDirectory
+This option is weaker than the @option{--no-target-directory}
+(@option{-T}) option, so it has no effect if both options are given.
 
 @item -s
 @itemx --symbolic
@@ -7512,6 +7553,8 @@ an error message on systems that do not support symbolic links.
 @optBackupSuffix
 
 @optTargetDirectory
+
+@optNoTargetDirectory
 
 @item -v
 @itemx --verbose
