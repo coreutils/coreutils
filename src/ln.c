@@ -338,10 +338,12 @@ Usage: %s [OPTION]... TARGET [LINK_NAME]\n\
 "),
 	      program_name, program_name, program_name);
       printf (_("\
-Create a link to the specified TARGET with optional LINK_NAME.  If there is\n\
-more than one TARGET, the last argument must be a directory;  create links\n\
-in DIRECTORY to each TARGET.  Create hard links by default, symbolic links\n\
-with --symbolic.  When creating hard links, each TARGET must exist.\n\
+Create a link to the specified TARGET with optional LINK_NAME.\n\
+If LINK_NAME is omitted, a link with the same basename as the TARGET is\n\
+created in the current directory.  When using the second form with more\n\
+than one TARGET, the last argument must be a directory;  create links\n\
+in DIRECTORY to each TARGET.  Create hard links by default, symbolic\n\
+links with --symbolic.  When creating hard links, each TARGET must exist.\n\
 \n\
   -b, --backup[=CONTROL]      make a backup of each existing destination file\n\
   -d, -F, --directory         hard link directories (super-user only)\n\
