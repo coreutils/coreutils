@@ -20,9 +20,9 @@ while (<>)
     chop;
     $prog = '($test_name, $input,$flags,$s1,$s2,$expected,$e_ret_code) = ' . $_ . ';';
     eval $prog;
-    $in = "t$test.in"; 
-    $exp_name = 't' . $test . '.expected'; 
-    $out = "t$test.out"; 
+    $in = "t$test_name.in"; 
+    $exp_name = 't' . $test_name . '.exp'; 
+    $out = "t$test_name.out"; 
 
     open(IN, ">$in") || die "Couldn't open $in for writing.\n";
     print IN $input;
@@ -37,15 +37,15 @@ while (<>)
 $cmd 2> /dev/null
 code=\$?
 if test \$code != $e_ret_code ; then
-  echo Test $test failed: tr return code \$code differs from expected value $e_ret_code 1>&2
+  echo Test $test_name failed: tr return code \$code differs from expected value $e_ret_code 1>&2
   errors=`expr \$errors + 1`
 else
   cmp $out $exp_name
   case \$? in
-    0) if test "\$verbose" ; then echo passed $test; fi ;; # equal files
-    1) echo Test $test failed: files $out and $exp_name differ 1>&2;
+    0) if test "\$verbose" ; then echo passed $test_name; fi ;; # equal files
+    1) echo Test $test_name failed: files $out and $exp_name differ 1>&2;
        errors=`expr \$errors + 1` ;;
-    2) echo Test $test may have failed. 1>&2;
+    2) echo Test $test_name may have failed. 1>&2;
        echo The command \"cmp $out $exp_name\" failed. 1>&2 ;
        errors=`expr \$errors + 1` ;;
   esac

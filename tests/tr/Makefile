@@ -9,11 +9,11 @@ tr-tests: main build-script test.data.pl
 
 .PHONY: distclean
 distclean:
-	rm -f t[0-9]*.out
+	rm -f t*.out
 
 .PHONY: clean
 clean: distclean
 
 .PHONY: realclean
 realclean: clean
-	rm -f tr-tests t[0-9]*.in t[0-9]*.expected
+	rm -f tr-tests t*.in t*.exp
