@@ -2,6 +2,28 @@
 
 	* Version 5.0.1.
 
+	* src/fmt.c (usage): Don't mention obsolescent -WIDTH option.
+	Instead explain about `-' and standard input.
+	(main): Give a proper diagnostic for e.g., `fmt -c -72'.
+	Reported by Keith Thompson.
+	* tests/fmt/basic: Add test for the above fix.
+
+	* src/fmt.c: Include "quote.h".
+	Use quote() in diagnostics, rather than literal `' marks.
+	(main): Exit nonzero when unable to open an input file.
+	* tests/fmt/basic: Add test for the above fix.
+
+	* src/fmt.c (main): Diagnose invalid suffix on obsolescent width
+	specifications like `-72x'.
+	* tests/fmt/basic: Add test for the above fix.
+
+	Work around nasty readdir bug with Darwin6.5 and hfs file system.
+	* src/remove.c (IF_READDIR_NEEDS_REWINDDIR): Define.
+	[! HAVE_WORKING_READDIR] (remove_cwd_entries): If readdir has just
+	returned NULL and there has been at least one successful unlink or
+	rmdir call since the opendir or previous rewinddir, then call
+	rewinddir and reiterate the loop.
+
 	Factor out common code.
 	* src/remove.c (readdir_ignoring_dotdirs): New function.
 	(is_empty_dir): Use it here.
