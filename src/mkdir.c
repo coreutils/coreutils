@@ -174,7 +174,10 @@ main (int argc, char **argv)
 	     This extra step is necessary in some cases when the containing
 	     directory has a default ACL.  */
 
-	  if (fail == 0 && specified_mode)
+	  /* Set the permissions only if this directory has just
+	     been created.  */
+
+	  if (fail == 0 && specified_mode && dir_created)
 	    {
 	      fail = chmod (dir, newmode);
 	      if (fail)
