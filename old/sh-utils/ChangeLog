@@ -1,5 +1,15 @@
 Thu Dec 12 06:07:30 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* Version 1.14.
+
+	* configure.in: Bump version to 1.14.
+
+	* lib/getdate.y (IN_CTYPE_DOMAIN): Rename from ISASCII.
+	(ISDIGIT): New definition from Paul Eggert.
+	This one evaluates its argument exactly once.
+	(yylex): Move increment out of ISALPHA argument.  Use a
+	comma-expression instead.
+
 	* src/false.sh (usage): Update bug-reporting address.
 	* src/groups.sh (usage): Likewise.
 	* src/nohup.sh (usage): Likewise.
