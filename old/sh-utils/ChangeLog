@@ -1,5 +1,8 @@
 Mon Nov  4 20:24:31 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* configure.in (test for group_member): Handle it separately
+	so I can keep the hyphen (not the underscore) in the filename.
+
 	Thu Oct 31 19:32:32 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	  * lib/xgethostname.c [ENAMETOOLONG] (xgethostname): If gethostname

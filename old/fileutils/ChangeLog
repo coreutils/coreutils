@@ -1,3 +1,10 @@
+Mon Nov  4 23:18:03 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (test for group_member): Handle it separately
+	so I can keep the hyphen (not the underscore) in the filename.
+
+	* lib/rename.c: New version from François Pinard.
+
 Sat Nov  2 07:05:36 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/ls.c (gobble_file): Set linkok for non-orphaned symlinks.
