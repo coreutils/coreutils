@@ -1,5 +1,5 @@
 /* readtokens.c  -- Functions for reading tokens from an input stream.
-   Copyright (C) 1990-1991, 1999, 2001 Jim Meyering.
+   Copyright (C) 1990-1991, 1999, 2001, 2003 Jim Meyering.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -113,7 +113,7 @@ readtoken (FILE *stream,
       for (j = 0; j < sizeof (isdelim); j++)
 	isdelim[j] = 0;
       for (t = delim; *t; t++)
-	isdelim[(unsigned int) *t] = 1;
+	isdelim[(unsigned char) *t] = 1;
     }
 
   p = tokenbuffer->buffer;
