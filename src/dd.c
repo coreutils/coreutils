@@ -77,14 +77,8 @@ char *program_name;
 /* The name of the input file, or NULL for the standard input. */
 static char *input_file = NULL;
 
-/* The input file descriptor. */
-static int input_fd = 0;
-
 /* The name of the output file, or NULL for the standard output. */
 static char *output_file = NULL;
-
-/* The output file descriptor. */
-static int output_fd = 1;
 
 /* The number of bytes in which atomic reads are done. */
 static size_t input_blocksize = 0;
@@ -366,9 +360,9 @@ static void
 cleanup (void)
 {
   print_stats ();
-  if (close (input_fd) < 0)
+  if (close (STDIN_FILENO) < 0)
     error (1, errno, "%s", input_file);
-  if (close (output_fd) < 0)
+  if (close (STDOUT_FILENO) < 0)
     error (1, errno, "%s", output_file);
 }
 
@@ -423,12 +417,34 @@ install_handler (int sig_num, RETSIGTYPE (*sig_handler) (int sig))
 #endif
 }
 
+/* Open a file to a particular file descriptor.  This is like standard
+   `open', except it always returns DESIRED_FD if successful.  */
+static int
+open_fd (int desired_fd, char const *filename, int options, mode_t mode)
+{
+  int fd;
+  close (desired_fd);
+  fd = open (filename, options, mode);
+  if (fd < 0)
+    return -1;
+
+  if (fd != desired_fd)
+    {
+      if (dup2 (fd, desired_fd) != desired_fd)
+	desired_fd = -1;
+      if (close (fd) != 0)
+	return -1;
+    }
+
+  return desired_fd;
+}
+
 /* Write, then empty, the output buffer `obuf'. */
 
 static void
 write_output (void)
 {
-  int nwritten = full_write (output_fd, obuf, output_blocksize);
+  int nwritten = full_write (STDOUT_FILENO, obuf, output_blocksize);
   if (nwritten != output_blocksize)
     {
       error (0, errno, "%s", output_file);
@@ -701,18 +717,7 @@ static void
 skip (int fdesc, char *file, uintmax_t records, size_t blocksize,
       unsigned char *buf)
 {
-  struct stat stats;
   off_t o;
-
-  /* Use fstat instead of checking for errno == ESPIPE because
-     lseek doesn't work on some special files but doesn't return an
-     error, either. */
-  /* FIXME: can this really happen?  What system?  */
-  if (fstat (fdesc, &stats))
-    {
-      error (0, errno, "%s", file);
-      quit (1);
-    }
 
   /* Try lseek and if an error indicates it was an inappropriate
      operation, fall back on using read.  */
@@ -856,7 +861,7 @@ dd_copy (void)
     obuf = ibuf;
 
   if (skip_records != 0)
-    skip (input_fd, input_file, skip_records, input_blocksize, ibuf);
+    skip (STDIN_FILENO, input_file, skip_records, input_blocksize, ibuf);
 
   if (seek_record != 0)
     {
@@ -867,7 +872,8 @@ dd_copy (void)
 	 0+0 records out
 	 */
 
-	 skip (output_fd, output_file, seek_record, output_blocksize, obuf);
+	 skip (STDOUT_FILENO, output_file, seek_record, output_blocksize,
+	       obuf);
     }
 
   if (max_records == 0)
@@ -884,7 +890,7 @@ dd_copy (void)
       if ((conversions_mask & C_SYNC) && (conversions_mask & C_NOERROR))
 	memset ((char *) ibuf, 0, input_blocksize);
 
-      nread = safe_read (input_fd, ibuf, input_blocksize);
+      nread = safe_read (STDIN_FILENO, ibuf, input_blocksize);
 
       if (nread == 0)
 	break;			/* EOF.  */
@@ -896,7 +902,7 @@ dd_copy (void)
 	    {
 	      print_stats ();
 	      /* Seek past the bad block if possible. */
-	      lseek (input_fd, (off_t) input_blocksize, SEEK_CUR);
+	      lseek (STDIN_FILENO, (off_t) input_blocksize, SEEK_CUR);
 	      if (conversions_mask & C_SYNC)
 		/* Replace the missing input with null bytes and
 		   proceed normally.  */
@@ -928,7 +934,7 @@ dd_copy (void)
 
       if (ibuf == obuf)		/* If not C_TWOBUFS. */
 	{
-	  int nwritten = full_write (output_fd, obuf, nread);
+	  int nwritten = full_write (STDOUT_FILENO, obuf, nread);
 	  if (nwritten < 0)
 	    {
 	      error (0, errno, "%s", output_file);
@@ -987,7 +993,7 @@ dd_copy (void)
   /* Write out the last block. */
   if (oc != 0)
     {
-      int nwritten = full_write (output_fd, obuf, oc);
+      int nwritten = full_write (STDOUT_FILENO, obuf, oc);
       if (nwritten > 0)
 	w_partial++;
       if (nwritten < 0)
@@ -1029,17 +1035,11 @@ main (int argc, char **argv)
 
   if (input_file != NULL)
     {
-      input_fd = open (input_file, O_RDONLY);
-      if (input_fd < 0)
+      if (open_fd (STDIN_FILENO, input_file, O_RDONLY, 0) < 0)
 	error (1, errno, "%s", input_file);
     }
   else
     input_file = _("standard input");
-
-  if (input_fd == output_fd)
-    error (1, 0, _("%s is closed"), (input_fd == 0
-				     ? _("standard input")
-				     : _("standard output")));
 
   if (output_file != NULL)
     {
@@ -1051,11 +1051,9 @@ main (int argc, char **argv)
       /* Open the output file with *read* access only if we might
 	 need to read to satisfy a `seek=' request.  If we can't read
 	 the file, go ahead with write-only access; it might work.  */
-      if (! seek_record
-	  || (output_fd = open (output_file, O_RDWR | opts, perms)) < 0)
-	output_fd = open (output_file, O_WRONLY | opts, perms);
-
-      if (output_fd < 0)
+      if ((! seek_record
+	   || open_fd (STDOUT_FILENO, output_file, O_RDWR | opts, perms) < 0)
+	  && open_fd (STDOUT_FILENO, output_file, O_WRONLY | opts, perms) < 0)
 	error (1, errno, "%s", output_file);
 #if HAVE_FTRUNCATE
       if (seek_record != 0 && !(conversions_mask & C_NOTRUNC))
@@ -1063,7 +1061,7 @@ main (int argc, char **argv)
 	  off_t o = seek_record * output_blocksize;
 	  if (o / output_blocksize != seek_record)
 	    error (1, 0, _("file offset out of range"));
-	  if (ftruncate (output_fd, o) < 0)
+	  if (ftruncate (STDOUT_FILENO, o) < 0)
 	    error (0, errno, "%s", output_file);
 	}
 #endif
