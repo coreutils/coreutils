@@ -22,18 +22,25 @@
 # include <config.h>
 #endif
 
-#if HAVE_DIRENT_H || defined _LIBC
+#if defined _LIBC
 # include <dirent.h>
+# define NAMLEN(dirent) _D_EXACT_NAMLEN(dirent)
 #else
-# define dirent direct
-# if HAVE_SYS_NDIR_H
-#  include <sys/ndir.h>
-# endif
-# if HAVE_SYS_DIR_H
-#  include <sys/dir.h>
-# endif
-# if HAVE_NDIR_H
-#  include <ndir.h>
+# if HAVE_DIRENT_H || defined _LIBC
+#  include <dirent.h>
+#  define NAMLEN(dirent) strlen ((dirent)->d_name)
+# else
+#  define dirent direct
+#  define NAMLEN(dirent) (dirent)->d_namlen
+#  if HAVE_SYS_NDIR_H
+#   include <sys/ndir.h>
+#  endif
+#  if HAVE_SYS_DIR_H
+#   include <sys/dir.h>
+#  endif
+#  if HAVE_NDIR_H
+#   include <ndir.h>
+#  endif
 # endif
 #endif
 
@@ -50,6 +57,15 @@
 # include <include/sys/stat.h>
 #else
 # include <sys/stat.h>
+#endif
+
+#if ! _LIBC && !HAVE_DECL_STPCPY && !defined stpcpy
+char *stpcpy ();
+#endif
+
+#if ! _LIBC && ! defined HAVE_MEMPCPY && ! defined mempcpy
+/* Be CAREFUL that there are no side effects in N.  */
+# define mempcpy(D, S, N) ((void *) ((char *) memcpy (D, S, N) + (N)))
 #endif
 
 /* #define NDEBUG 1 */
@@ -74,6 +90,10 @@
 # define __tfind tfind
 # undef __tsearch
 # define __tsearch tsearch
+# undef __stpcpy
+# define __stpcpy stpcpy
+# undef __mempcpy
+# define __mempcpy mempcpy
 # undef internal_function
 # define internal_function /* empty */
 # undef dirent64
@@ -92,8 +112,13 @@
 # define NFTW_NAME nftw
 # define INO_T ino_t
 # define STAT stat
-# define LXSTAT __lxstat
-# define XSTAT __xstat
+# ifdef _LIBC
+#  define LXSTAT __lxstat
+#  define XSTAT __xstat
+# else
+#  define LXSTAT(V,f,sb) lstat (f,sb)
+#  define XSTAT(V,f,sb) stat (f,sb)
+# endif
 # define FTW_FUNC_T __ftw_func_t
 # define NFTW_FUNC_T __nftw_func_t
 #endif
@@ -220,7 +245,7 @@ open_dir_stream (struct ftw_data *data, struct dir_data *dirp)
 
 	  while ((d = __readdir64 (st)) != NULL)
 	    {
-	      size_t this_len = _D_EXACT_NAMLEN (d);
+	      size_t this_len = NAMLEN (d);
 	      if (actsize + this_len + 2 >= bufsize)
 		{
 		  char *newp;
@@ -454,7 +479,7 @@ ftw_dir (struct ftw_data *data, struct STAT *st)
 
   while (dir.stream != NULL && (d = __readdir64 (dir.stream)) != NULL)
     {
-      result = process_entry (data, &dir, d->d_name, _D_EXACT_NAMLEN (d));
+      result = process_entry (data, &dir, d->d_name, NAMLEN (d));
       if (result != 0)
 	break;
     }
