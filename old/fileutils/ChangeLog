@@ -3,7 +3,8 @@
 	* tests/cp/cp-parents: Add some permission tests.
 
 	* tests/mkdir/perm: Fix the test so it actually does something.
-	Run each test also with mkdir's `-p' option.
+	Run each test also with mkdir's `-p' option and check permissions
+	on the parent directories.
 
 2000-10-23  Paul Eggert  <eggert@twinsun.com>
 
