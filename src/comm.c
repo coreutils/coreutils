@@ -1,5 +1,5 @@
 /* comm -- compare two sorted files line by line.
-   Copyright (C) 86, 90, 91, 1995-1999 Free Software Foundation, Inc.
+   Copyright (C) 86, 90, 91, 1995-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
+#include "closeout.h"
 #include "linebuffer.h"
 #include "error.h"
 #include "hard-locale.h"
@@ -215,11 +216,6 @@ compare_files (char **infiles)
 	  ret = 1;
 	}
     }
-  if (ferror (stdout) || fclose (stdout) == EOF)
-    {
-      error (0, errno, _("write error"));
-      ret = 1;
-    }
   return ret;
 }
 
@@ -232,6 +228,8 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+
+  atexit (close_stdout);
 
 #ifdef ENABLE_NLS
   hard_LC_COLLATE = hard_locale (LC_COLLATE);
