@@ -1,3 +1,10 @@
+2000-05-02  Paul Eggert  <eggert@twinsun.com>
+
+	* largefile.m4 (AC_SYS_LARGEFILE): Define _GNU_SOURCE if
+	this is needed to make ftello visible (e.g. glibc 2.1.3).  Use
+	compile-time test, rather than inspecting host and OS, to
+	decide whether to define _LARGEFILE_SOURCE.
+
 2000-05-01  Jim Meyering  <meyering@lucent.com>
 
 	* fsusage.m4: Use AC_MSG_CHECKING instead of obsolete AC_CHECKING.
