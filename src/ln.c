@@ -28,6 +28,7 @@
 #include "dirname.h"
 #include "error.h"
 #include "quote.h"
+#include "yesno.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "ln"
@@ -87,7 +88,6 @@ int symlink ();
     while (0)
 
 int isdir ();
-int yesno ();
 
 /* The name by which the program was run, for error messages.  */
 char *program_name;

@@ -44,6 +44,7 @@
 #include "utimecmp.h"
 #include "utimens.h"
 #include "xreadlink.h"
+#include "yesno.h"
 
 #define DO_CHOWN(Chown, File, New_uid, New_gid)				\
   (Chown (File, New_uid, New_gid)					\
@@ -78,8 +79,6 @@ struct F_triple
 
 /* Initial size of the above hash table.  */
 #define DEST_INFO_INITIAL_CAPACITY 61
-
-int yesno ();
 
 static int copy_internal (const char *src_path, const char *dst_path,
 			  int new_dst, dev_t device,
