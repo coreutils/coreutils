@@ -128,13 +128,6 @@ int wcwidth ();
    Subtracting doesn't always work, due to overflow.  */
 #define longdiff(a, b) ((a) < (b) ? -1 : (a) > (b))
 
-/* The field width for inode numbers.  On some hosts inode numbers are
-   64 bits, so columns won't line up exactly when a huge inode number
-   is encountered, but in practice 7 digits is usually enough.  */
-#ifndef INODE_DIGITS
-# define INODE_DIGITS 7
-#endif
-
 /* Arrange to make lstat calls go through the wrapper function
    on systems with an lstat function that does not dereference symlinks
    that are specified with a trailing slash.  */
@@ -166,19 +159,6 @@ int rpl_lstat (const char *, struct stat *);
 #else
 # define ST_DM_MODE(Stat_buf) ((Stat_buf).st_mode)
 #endif
-
-#ifndef LOGIN_NAME_MAX
-# if _POSIX_LOGIN_NAME_MAX
-#  define LOGIN_NAME_MAX _POSIX_LOGIN_NAME_MAX
-# else
-#  define LOGIN_NAME_MAX 17
-# endif
-#endif
-
-/* The maximum length of a string representation of a user or group ID,
-   not counting any terminating NUL byte.  */
-#define ID_LENGTH_MAX \
-  MAX (LOGIN_NAME_MAX - 1, LONGEST_HUMAN_READABLE)
 
 enum filetype
   {
@@ -269,6 +249,8 @@ static void print_current_files (void);
 static void print_dir (const char *name, const char *realname);
 static void print_file_name_and_frills (const struct fileinfo *f);
 static void print_horizontal (void);
+static int format_user_width (uid_t u);
+static int format_group_width (gid_t g);
 static void print_long_format (const struct fileinfo *f);
 static void print_many_per_line (void);
 static void print_name_with_quoting (const char *p, mode_t mode,
@@ -348,10 +330,19 @@ static struct pending *pending_dirs;
 static time_t current_time = TYPE_MINIMUM (time_t);
 static int current_time_ns = -1;
 
-/* The number of digits to use for block sizes.
-   4, or more if needed for bigger numbers.  */
+/* The number of bytes to use for columns containing inode numbers,
+   block sizes, link counts, owners, groups, authors, major device
+   numbers, minor device numbers, and file sizes, respectively.  */
 
-static int block_size_size;
+static int inode_number_width;
+static int block_size_width;
+static int nlink_width;
+static int owner_width;
+static int group_width;
+static int author_width;
+static int major_device_number_width;
+static int minor_device_number_width;
+static int file_size_width;
 
 /* Option flags */
 
@@ -2286,6 +2277,16 @@ file_interesting (const struct dirent *next)
   return 0;
 }
 
+/* POSIX requires that a file size be printed without a sign, even
+   when negative.  Assume the typical case where negative sizes are
+   actually positive values that have wrapped around.  */
+
+static uintmax_t
+unsigned_file_size (off_t size)
+{
+  return size + (size < 0) * ((uintmax_t) OFF_T_MAX - OFF_T_MIN + 1);
+}
+
 /* Enter and remove entries in the table `files'.  */
 
 /* Empty the table of files. */
@@ -2303,7 +2304,15 @@ clear_files (void)
     }
 
   files_index = 0;
-  block_size_size = 4;
+  inode_number_width = 0;
+  block_size_width = 0;
+  nlink_width = 0;
+  owner_width = 0;
+  group_width = 0;
+  author_width = 0;
+  major_device_number_width = 0;
+  minor_device_number_width = 0;
+  file_size_width = 0;
 }
 
 /* Add a file to the current table of files.
@@ -2316,6 +2325,7 @@ gobble_file (const char *name, enum filetype type, int explicit_arg,
 {
   register uintmax_t blocks;
   register char *path;
+  register struct fileinfo *f;
 
   if (files_index == nfiles)
     {
@@ -2323,9 +2333,10 @@ gobble_file (const char *name, enum filetype type, int explicit_arg,
       nfiles *= 2;
     }
 
-  files[files_index].linkname = 0;
-  files[files_index].linkmode = 0;
-  files[files_index].linkok = 0;
+  f = &files[files_index];
+  f->linkname = 0;
+  f->linkmode = 0;
+  f->linkok = 0;
 
   if (explicit_arg
       || format_needs_stat
@@ -2362,7 +2373,7 @@ gobble_file (const char *name, enum filetype type, int explicit_arg,
       switch (dereference)
 	{
 	case DEREF_ALWAYS:
-	  err = stat (path, &files[files_index].stat);
+	  err = stat (path, &f->stat);
 	  break;
 
 	case DEREF_COMMAND_LINE_ARGUMENTS:
@@ -2370,14 +2381,14 @@ gobble_file (const char *name, enum filetype type, int explicit_arg,
 	  if (explicit_arg)
 	    {
 	      int need_lstat;
-	      err = stat (path, &files[files_index].stat);
+	      err = stat (path, &f->stat);
 
 	      if (dereference == DEREF_COMMAND_LINE_ARGUMENTS)
 		break;
 
 	      need_lstat = (err < 0
 			    ? errno == ENOENT
-			    : ! S_ISDIR (files[files_index].stat.st_mode));
+			    : ! S_ISDIR (f->stat.st_mode));
 	      if (!need_lstat)
 		break;
 
@@ -2388,7 +2399,7 @@ gobble_file (const char *name, enum filetype type, int explicit_arg,
 	    }
 
 	default: /* DEREF_NEVER */
-	  err = lstat (path, &files[files_index].stat);
+	  err = lstat (path, &f->stat);
 	  break;
 	}
 
@@ -2402,21 +2413,21 @@ gobble_file (const char *name, enum filetype type, int explicit_arg,
 #if HAVE_ACL
       if (format == long_format)
 	{
-	  int n = file_has_acl (path, &files[files_index].stat);
-	  files[files_index].have_acl = (0 < n);
+	  int n = file_has_acl (path, &f->stat);
+	  f->have_acl = (0 < n);
 	  if (n < 0)
 	    error (0, errno, "%s", quotearg_colon (path));
 	}
 #endif
 
-      if (S_ISLNK (files[files_index].stat.st_mode)
+      if (S_ISLNK (f->stat.st_mode)
 	  && (format == long_format || check_symlink_color))
 	{
 	  char *linkpath;
 	  struct stat linkstats;
 
-	  get_link_name (path, &files[files_index]);
-	  linkpath = make_link_path (path, files[files_index].linkname);
+	  get_link_name (path, f);
+	  linkpath = make_link_path (path, f->linkname);
 
 	  /* Avoid following symbolic links when possible, ie, when
 	     they won't be traced and when no indicator is needed. */
@@ -2424,7 +2435,7 @@ gobble_file (const char *name, enum filetype type, int explicit_arg,
 	      && (indicator_style != none || check_symlink_color)
 	      && stat (linkpath, &linkstats) == 0)
 	    {
-	      files[files_index].linkok = 1;
+	      f->linkok = 1;
 
 	      /* Symbolic links to directories that are mentioned on the
 	         command line are automatically traced if not being
@@ -2434,45 +2445,103 @@ gobble_file (const char *name, enum filetype type, int explicit_arg,
 		{
 		  /* Get the linked-to file's mode for the filetype indicator
 		     in long listings.  */
-		  files[files_index].linkmode = linkstats.st_mode;
-		  files[files_index].linkok = 1;
+		  f->linkmode = linkstats.st_mode;
+		  f->linkok = 1;
 		}
 	    }
 	  if (linkpath)
 	    free (linkpath);
 	}
 
-      if (S_ISLNK (files[files_index].stat.st_mode))
-	files[files_index].filetype = symbolic_link;
-      else if (S_ISDIR (files[files_index].stat.st_mode))
+      if (S_ISLNK (f->stat.st_mode))
+	f->filetype = symbolic_link;
+      else if (S_ISDIR (f->stat.st_mode))
 	{
 	  if (explicit_arg && !immediate_dirs)
-	    files[files_index].filetype = arg_directory;
+	    f->filetype = arg_directory;
 	  else
-	    files[files_index].filetype = directory;
+	    f->filetype = directory;
 	}
       else
-	files[files_index].filetype = normal;
+	f->filetype = normal;
 
-      blocks = ST_NBLOCKS (files[files_index].stat);
+      {
+	char buf[INT_BUFSIZE_BOUND (uintmax_t)];
+	int len = strlen (umaxtostr (f->stat.st_ino, buf));
+	if (inode_number_width < len)
+	  inode_number_width = len;
+      }
+
+      blocks = ST_NBLOCKS (f->stat);
       {
 	char buf[LONGEST_HUMAN_READABLE + 1];
 	int len = strlen (human_readable (blocks, buf, human_output_opts,
 					  ST_NBLOCKSIZE, output_block_size));
-	if (block_size_size < len)
-	  block_size_size = len < 7 ? len : 7;
+	if (block_size_width < len)
+	  block_size_width = len;
       }
+
+      if (print_owner)
+	{
+	  int len = format_user_width (f->stat.st_uid);
+	  if (owner_width < len)
+	    owner_width = len;
+	}
+
+      if (print_group)
+	{
+	  int len = format_group_width (f->stat.st_gid);
+	  if (group_width < len)
+	    group_width = len;
+	}
+
+      if (print_author)
+	{
+	  int len = format_user_width (f->stat.st_uid);
+	  if (author_width < len)
+	    author_width = len;
+	}
+
+      {
+	char buf[INT_BUFSIZE_BOUND (uintmax_t)];
+	int len = strlen (umaxtostr (f->stat.st_nlink, buf));
+	if (nlink_width < len)
+	  nlink_width = len;
+      }
+
+      if (S_ISCHR (f->stat.st_mode) || S_ISBLK (f->stat.st_mode))
+	{
+	  char buf[INT_BUFSIZE_BOUND (uintmax_t)];
+	  int len = strlen (umaxtostr (major (f->stat.st_rdev), buf));
+	  if (major_device_number_width < len)
+	    major_device_number_width = len;
+	  len = strlen (umaxtostr (minor (f->stat.st_rdev), buf));
+	  if (minor_device_number_width < len)
+	    minor_device_number_width = len;
+	  len = major_device_number_width + 2 + minor_device_number_width;
+	  if (file_size_width < len)
+	    file_size_width = len;
+	}
+      else
+	{
+	  char buf[LONGEST_HUMAN_READABLE + 1];
+	  uintmax_t size = unsigned_file_size (f->stat.st_size);
+	  int len = strlen (human_readable (size, buf, human_output_opts,
+					    1, file_output_block_size));
+	  if (file_size_width < len)
+	    file_size_width = len;
+	}
     }
   else
     {
-      files[files_index].filetype = type;
+      f->filetype = type;
 #if HAVE_STRUCT_DIRENT_D_TYPE
-      files[files_index].stat.st_mode = DTTOIF (type);
+      f->stat.st_mode = DTTOIF (type);
 #endif
       blocks = 0;
     }
 
-  files[files_index].name = xstrdup (name);
+  f->name = xstrdup (name);
   files_index++;
 
   return blocks;
@@ -2902,20 +2971,75 @@ get_current_time (void)
   current_time_ns = 999999999;
 }
 
-/* Format into BUFFER the name or id of the user with id U.  Return
-   the length of the formatted buffer, not counting the terminating
-   null.  */
+/* Print the name or id of the user with id U, using a print width of
+   WIDTH.  */
 
-static size_t
-format_user (char *buffer, uid_t u)
+static void
+format_user (uid_t u, int width)
 {
   char const *name = (numeric_ids ? NULL : getuser (u));
   if (name)
-    sprintf (buffer, "%-8s ", name);
+    printf ("%-*s ", width, name);
   else
-    sprintf (buffer, "%-8lu ", (unsigned long int) u);
-  return strlen (buffer);
+    printf ("%*lu ", width, (unsigned long int) u);
+  dired_pos += width + 1;
 }
+
+/* Likewise, for groups.  */
+
+static void
+format_group (gid_t g, int width)
+{
+  char const *name = (numeric_ids ? NULL : getgroup (g));
+  if (name)
+    printf ("%-*s ", width, name);
+  else
+    printf ("%*lu ", width, (unsigned long int) g);
+  dired_pos += width + 1;
+}
+
+/* Return the number of bytes that format_user will print.  */
+
+static int
+format_user_width (uid_t u)
+{
+  char const *name = (numeric_ids ? NULL : getuser (u));
+  char buf[INT_BUFSIZE_BOUND (unsigned long int)];
+  size_t len;
+
+  if (! name)
+    {
+      sprintf (buf, "%lu", (unsigned long int) u);
+      name = buf;
+    }
+
+  len = strlen (name);
+  if (INT_MAX < len)
+    error (EXIT_FAILURE, 0, _("User name too long"));
+  return len;
+}
+
+/* Likewise, for groups.  */
+
+static int
+format_group_width (gid_t g)
+{
+  char const *name = (numeric_ids ? NULL : getgroup (g));
+  char buf[INT_BUFSIZE_BOUND (unsigned long int)];
+  size_t len;
+
+  if (! name)
+    {
+      sprintf (buf, "%lu", (unsigned long int) g);
+      name = buf;
+    }
+
+  len = strlen (name);
+  if (INT_MAX < len)
+    error (EXIT_FAILURE, 0, _("Group name too long"));
+  return len;
+}
+
 
 /* Print information about F in long format.  */
 
@@ -2927,11 +3051,8 @@ print_long_format (const struct fileinfo *f)
     [LONGEST_HUMAN_READABLE + 1		/* inode */
      + LONGEST_HUMAN_READABLE + 1	/* size in blocks */
      + sizeof (modebuf) - 1 + 1		/* mode string */
-     + LONGEST_HUMAN_READABLE + 1	/* st_nlink */
-     + ID_LENGTH_MAX + 1		/* owner name */
-     + ID_LENGTH_MAX + 1		/* group name */
-     + ID_LENGTH_MAX + 1		/* author name */
-     + LONGEST_HUMAN_READABLE + 1	/* major device number */
+     + INT_BUFSIZE_BOUND (uintmax_t)	/* st_nlink */
+     + LONGEST_HUMAN_READABLE + 2	/* major device number */
      + LONGEST_HUMAN_READABLE + 1	/* minor device number */
      + 35 + 1	/* usual length of time/date -- may be longer; see below */
      ];
@@ -2971,61 +3092,71 @@ print_long_format (const struct fileinfo *f)
 
   if (print_inode)
     {
-      char hbuf[LONGEST_HUMAN_READABLE + 1];
-      sprintf (p, "%*s ", INODE_DIGITS, umaxtostr (f->stat.st_ino, hbuf));
-      p += strlen (p);
+      char hbuf[INT_BUFSIZE_BOUND (uintmax_t)];
+      sprintf (p, "%*s ", inode_number_width,
+	       umaxtostr (f->stat.st_ino, hbuf));
+      p += inode_number_width + 1;
     }
 
   if (print_block_size)
     {
       char hbuf[LONGEST_HUMAN_READABLE + 1];
-      sprintf (p, "%*s ", block_size_size,
+      sprintf (p, "%*s ", block_size_width,
 	       human_readable (ST_NBLOCKS (f->stat), hbuf, human_output_opts,
 			       ST_NBLOCKSIZE, output_block_size));
-      p += strlen (p);
+      p += block_size_width + 1;
     }
 
   /* The last byte of the mode string is the POSIX
      "optional alternate access method flag".  */
-  sprintf (p, "%s %3lu ", modebuf, (unsigned long int) f->stat.st_nlink);
-  p += strlen (p);
+  {
+    char hbuf[INT_BUFSIZE_BOUND (uintmax_t)];
+    sprintf (p, "%s %*s ", modebuf, nlink_width,
+	     umaxtostr (f->stat.st_nlink, hbuf));
+  }
+  p += sizeof modebuf + nlink_width + 1;
 
-  if (print_owner)
-    p += format_user (p, f->stat.st_uid);
+  DIRED_INDENT ();
 
-  if (print_group)
+  if (print_owner | print_group | print_author)
     {
-      char const *group_name = (numeric_ids ? NULL : getgroup (f->stat.st_gid));
-      if (group_name)
-	sprintf (p, "%-8s ", group_name);
-      else
-	sprintf (p, "%-8lu ", (unsigned long int) f->stat.st_gid);
-      p += strlen (p);
+      DIRED_FPUTS (buf, stdout, p - buf);
+
+      if (print_owner)
+	format_user (f->stat.st_uid, owner_width);
+
+      if (print_group)
+	format_group (f->stat.st_gid, group_width);
+
+      if (print_author)
+	format_user (f->stat.st_author, author_width);
+
+      p = buf;
     }
 
-  if (print_author)
-    p += format_user (p, f->stat.st_author);
-
   if (S_ISCHR (f->stat.st_mode) || S_ISBLK (f->stat.st_mode))
-    sprintf (p, "%3lu, %3lu ",
-	     (unsigned long int) major (f->stat.st_rdev),
-	     (unsigned long int) minor (f->stat.st_rdev));
+    {
+      char majorbuf[INT_BUFSIZE_BOUND (uintmax_t)];
+      char minorbuf[INT_BUFSIZE_BOUND (uintmax_t)];
+      int blanks_width = (file_size_width
+			  - (major_device_number_width + 2
+			     + minor_device_number_width));
+      sprintf (p, "%*s, %*s ",
+	       major_device_number_width + MAX (0, blanks_width),
+	       umaxtostr (major (f->stat.st_rdev), majorbuf),
+	       minor_device_number_width,
+	       umaxtostr (minor (f->stat.st_rdev), minorbuf));
+    }
   else
     {
       char hbuf[LONGEST_HUMAN_READABLE + 1];
-      uintmax_t size = f->stat.st_size;
-
-      /* POSIX requires that the size be printed without a sign, even
-	 when negative.  Assume the typical case where negative sizes
-	 are actually positive values that have wrapped around.  */
-      size += (f->stat.st_size < 0) * ((uintmax_t) OFF_T_MAX - OFF_T_MIN + 1);
-
-      sprintf (p, "%8s ",
+      uintmax_t size = unsigned_file_size (f->stat.st_size);
+      sprintf (p, "%*s ", file_size_width,
 	       human_readable (size, hbuf, human_output_opts,
 			       1, file_output_block_size));
     }
 
-  p += strlen (p);
+  p += file_size_width + 1;
 
   if ((when_local = localtime (&when)))
     {
@@ -3088,7 +3219,6 @@ print_long_format (const struct fileinfo *f)
       p += strlen (p);
     }
 
-  DIRED_INDENT ();
   DIRED_FPUTS (buf, stdout, p - buf);
   print_name_with_quoting (f->name, FILE_OR_LINK_MODE (f), f->linkok,
 			   &dired_obstack);
@@ -3321,10 +3451,10 @@ print_file_name_and_frills (const struct fileinfo *f)
   char buf[MAX (LONGEST_HUMAN_READABLE + 1, INT_BUFSIZE_BOUND (uintmax_t))];
 
   if (print_inode)
-    printf ("%*s ", INODE_DIGITS, umaxtostr (f->stat.st_ino, buf));
+    printf ("%*s ", inode_number_width, umaxtostr (f->stat.st_ino, buf));
 
   if (print_block_size)
-    printf ("%*s ", block_size_size,
+    printf ("%*s ", block_size_width,
 	    human_readable (ST_NBLOCKS (f->stat), buf, human_output_opts,
 			    ST_NBLOCKSIZE, output_block_size));
 
@@ -3458,10 +3588,10 @@ length_of_file_name_and_frills (const struct fileinfo *f)
   size_t name_width;
 
   if (print_inode)
-    len += INODE_DIGITS + 1;
+    len += inode_number_width + 1;
 
   if (print_block_size)
-    len += 1 + block_size_size;
+    len += block_size_width + 1;
 
   quote_name (NULL, f->name, filename_quoting_options, &name_width);
   len += name_width;
