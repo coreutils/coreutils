@@ -1,5 +1,5 @@
 /* sort - sort lines of text (with all kinds of options).
-   Copyright (C) 88, 1991-2000 Free Software Foundation, Inc.
+   Copyright (C) 88, 1991-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -281,7 +281,7 @@ Usage: %s [OPTION]... [FILE]...\n\
 Write sorted concatenation of all FILE(s) to standard output.\n\
 \n\
   +POS1 [-POS2]    start a key at POS1, end it *before* POS2 (obsolescent)\n\
-		     field numbers and character offsets are numbered\n\
+                     field numbers and character offsets are numbered\n\
                      starting with zero (contrast with the -k option)\n\
   -b               ignore leading blanks in sort fields or keys\n\
   -c               check if given files already sorted, do not sort\n\
@@ -290,7 +290,7 @@ Write sorted concatenation of all FILE(s) to standard output.\n\
   -g               compare according to general numerical value, imply -b\n\
   -i               consider only printable characters in keys\n\
   -k POS1[,POS2]   start a key at POS1, end it *at* POS2\n\
-		     field numbers and character offsets are numbered\n\
+                     field numbers and character offsets are numbered\n\
                      starting with one (contrast with zero-based +POS form)\n\
   -m               merge already sorted files, do not sort\n\
   -M               compare (unknown) < `JAN' < ... < `DEC', imply -b\n\
@@ -301,7 +301,7 @@ Write sorted concatenation of all FILE(s) to standard output.\n\
   -S SIZE          use SIZE for main memory sorting\n\
   -t SEP           use SEParator instead of non- to whitespace transition\n\
   -T DIRECTORY     use DIRECTORY for temporary files, not $TMPDIR or %s\n\
-		     multiple -T options specify multiple directories\n\
+                     multiple -T options specify multiple directories\n\
   -u               with -c, check for strict ordering;\n\
                    with -m, only output the first of an equal sequence\n\
   -z               end lines with 0 byte, not newline, for find -print0\n\
