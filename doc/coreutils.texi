@@ -7712,11 +7712,13 @@ is omitted, only the group of the files is changed; in this case,
 @end table
 
 Some older scripts may still use @samp{.} in place of the @samp{:} separator.
-@acronym{POSIX} 1003.1-2001 (@pxref{Standards conformance}) does not allow that,
-but you may be able to work around the compatibility problems by setting
-@samp{_POSIX2_VERSION=199209} in your environment.
-New scripts should avoid the use of @samp{.} because @sc{gnu} @command{chown}
-may fail if @var{owner} contains @samp{.} characters.
+@acronym{POSIX} 1003.1-2001 (@pxref{Standards conformance}) does not
+require support for that, but for backward compatibility @acronym{GNU}
+@command{chown} supports @samp{.} so long as no ambiguity results.
+New scripts should avoid the use of @samp{.} because it is not
+portable, and because it has undesirable results if the entire
+@var{owner@samp{.}group} happens to identify a user whose name
+contains @samp{.}.
 
 Warning: The @command{chown} command may clear the set-user-ID or
 set-group-ID bits on some systems.  The @command{chown} command is
