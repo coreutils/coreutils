@@ -19,3 +19,168 @@ n
 p (he->h_addrtype)
 n
 q
+r a:b
+b main
+r a:b
+n
+s
+n
+p separator
+n
+l 128
+c
+q
+r meyering:store
+p *username
+p *username[separator - name]
+p separator - name
+p username[separator - name]
+r ''
+l
+q
+r ''
+l
+q
+r meyering
+b main
+r meyering
+n
+r
+n
+s
+n
+p u
+n
+n
+q
+r ''
+r meyering
+up
+l
+q
+b main
+b a.out 1
+r a.out 1
+n
+s
+fin
+s
+n
+p uid
+p gid
+p euid
+p egid
+n
+p mode
+p path
+fin
+r -v -c 10 -n 20 -x 80 < in-2
+up
+up
+p &dummy
+p *ovp
+p *(int*)*ovp
+p ((struct item*)*ovp)->key
+p old_vec@10
+r -v -c 10 -n 20 -x 80 < in-3
+p *(int*)*ovp
+up
+dow
+p *(int*)*ovp
+up
+p *(int*)*ovp
+i loca
+dow
+p key
+p dummy
+p &dummy
+up
+p old_vec
+p *ovp
+p ovp
+p ovp - old_vec
+p *old_vec@10
+p *old_vec@13
+b hash_insert_item
+r
+b hash_insert_item_at 
+r
+n
+p fail
+p *(ht->vec)@13
+p *(ht->ht_vec)@13
+p ((struct item*)(ht->ht_vec)[10])->key
+b hash_delete_item
+b hash_delete_item_at 
+c
+n
+p slot
+p item
+n
+n
+p *(ht->ht_vec)@13
+p &dummy
+p dummy
+n
+s
+n
+n
+p *(ht->ht_vec)@13
+n
+p new_size
+n
+p *old_vec@13
+p old_vec@13
+n
+p *old_vec@13
+n
+p *old_vec@13
+n
+l
+n
+p ovp - old_vec
+n
+p ovp - old_vec
+n
+p ovp - old_vec
+p *old_vec@13
+p &dummy
+q
+r 444444444444 44444444444
+b human_readable 
+r
+n
+q
+b main
+r 444444444444 44444444444
+n
+p a
+p b
+r 34343434 3434343434
+c
+r
+n
+n
+p a
+p b
+r 343434343 343434343
+c
+q
+b posixtime 
+r
+n
+s
+n
+p len
+n
+p pair
+p len
+n
+b year
+y
+c
+c
+p n
+up
+p len
+q
