@@ -1,3 +1,7 @@
+2001-03-20  Bruno Haible  <haible@clisp.cons.org>
+
+        * iconv.m4 (jm_ICONV): Recommend GNU libiconv.
+
 2001-03-17  Jim Meyering  <meyering@lucent.com>
 
 	* memcmp.m4 (jm_AC_FUNC_MEMCMP): Remove my copy of AC_FUNC_MEMCMP,
