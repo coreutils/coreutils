@@ -128,6 +128,7 @@ mk_script = $(srcdir)/../mk-script
 
 MAINTAINERCLEANFILES = $x-tests $(maint_gen)
 CLEANFILES = $(run_gen)
+subdir = tests/tail
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../config.h
 CONFIG_CLEAN_FILES = 
@@ -154,8 +155,6 @@ TAGS:
 
 
 distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
-
-subdir = tests/tail
 
 distdir: $(DISTFILES)
 	here=`cd $(top_builddir) && pwd`; \

@@ -106,6 +106,7 @@ TESTS_ENVIRONMENT = \
 
 
 TESTS = basic-1 newline-1
+subdir = tests/md5sum
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../config.h
 CONFIG_CLEAN_FILES = 
@@ -130,8 +131,6 @@ TAGS:
 
 
 distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
-
-subdir = tests/md5sum
 
 distdir: $(DISTFILES)
 	here=`cd $(top_builddir) && pwd`; \
