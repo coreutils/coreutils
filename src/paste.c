@@ -52,14 +52,6 @@
 /* Indicates that no delimiter should be added in the current position. */
 #define EMPTY_DELIM '\0'
 
-static FILE dummy_closed;
-/* Element marking a file that has reached EOF and been closed. */
-#define CLOSED (&dummy_closed)
-
-static FILE dummy_endlist;
-/* Element marking end of list of open files. */
-#define ENDLIST (&dummy_endlist)
-
 /* Name this program was run with. */
 char *program_name;
 
@@ -154,13 +146,19 @@ paste_parallel (size_t nfiles, char **fnamptr)
      round, the string of delimiters must be preserved.
      delbuf[0] through delbuf[nfiles]
      store the delimiters for closed files. */
-  char *delbuf;
-  FILE **fileptr;		/* Streams open to the files to process. */
-  size_t files_open;		/* Number of files still open to process. */
-  bool opened_stdin = false;	/* true if any fopen got fd == STDIN_FILENO */
+  char *delbuf = xmalloc (nfiles + 2);
 
-  delbuf = xmalloc (nfiles + 2);
-  fileptr = xnmalloc (nfiles + 1, sizeof *fileptr);
+  /* Streams open to the files to process.  */
+  FILE **fileptr = xnmalloc (nfiles + 1, sizeof *fileptr);
+
+  /* Which of these streams are closed.  */
+  bool *closed = xcalloc (nfiles, sizeof *closed);
+
+  /* Number of files still open to process.  */
+  size_t files_open;
+
+  /* True if any fopen got fd == STDIN_FILENO.  */
+  bool opened_stdin = false;
 
   /* Attempt to open all files.  This could be expanded to an infinite
      number of files, but at the (considerable) expense of remembering
@@ -183,7 +181,7 @@ paste_parallel (size_t nfiles, char **fnamptr)
 	}
     }
 
-  fileptr[files_open] = ENDLIST;
+  fileptr[files_open] = NULL;
 
   if (opened_stdin && have_read_stdin)
     error (EXIT_FAILURE, 0, _("standard input is closed"));
@@ -200,11 +198,11 @@ paste_parallel (size_t nfiles, char **fnamptr)
       size_t delims_saved = 0;	/* Number of delims saved in `delbuf'. */
       size_t i;
 
-      for (i = 0; fileptr[i] != ENDLIST && files_open; i++)
+      for (i = 0; fileptr[i] && files_open; i++)
 	{
 	  int chr IF_LINT (= 0);	/* Input character. */
 	  size_t line_length = 0;	/* Number of chars in line. */
-	  if (fileptr[i] != CLOSED)
+	  if (! closed[i])
 	    {
 	      chr = getc (fileptr[i]);
 	      if (chr != EOF && delims_saved)
@@ -227,7 +225,7 @@ paste_parallel (size_t nfiles, char **fnamptr)
 	    {
 	      /* EOF, read error, or closed file.
 		 If an EOF or error, close the file and mark it in the list. */
-	      if (fileptr[i] != CLOSED)
+	      if (! closed[i])
 		{
 		  if (ferror (fileptr[i]))
 		    {
@@ -242,11 +240,11 @@ paste_parallel (size_t nfiles, char **fnamptr)
 		      ok = false;
 		    }
 
-		  fileptr[i] = CLOSED;
+		  closed[i] = true;
 		  files_open--;
 		}
 
-	      if (fileptr[i + 1] == ENDLIST)
+	      if (! fileptr[i + 1])
 		{
 		  /* End of this output line.
 		     Is this the end of the whole thing? */
@@ -277,7 +275,7 @@ paste_parallel (size_t nfiles, char **fnamptr)
 	      somedone = true;
 
 	      /* Except for last file, replace last newline with delim. */
-	      if (fileptr[i + 1] != ENDLIST)
+	      if (fileptr[i + 1])
 		{
 		  if (chr != '\n' && chr != EOF)
 		    putc (chr, stdout);
@@ -297,6 +295,7 @@ paste_parallel (size_t nfiles, char **fnamptr)
 	}
     }
   free (fileptr);
+  free (closed);
   free (delbuf);
   return ok;
 }
