@@ -1,5 +1,5 @@
 /* GNU's read utmp module.
-   Copyright (C) 92, 93, 94, 95, 96, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1992-1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -53,7 +53,8 @@ extract_trimmed_name (const STRUCT_UTMP *ut)
    number of entries read, and return zero.  If there is any error,
    return non-zero and don't modify the parameters.  */
 
-#ifdef HAVE_UTMPNAME
+/* FIXME: use `#if HAVE_UTMPNAME' instead...  */
+#if 0
 
 int
 read_utmp (const char *filename, int *n_entries, STRUCT_UTMP **utmp_buf)
