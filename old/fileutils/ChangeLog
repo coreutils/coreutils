@@ -1,5 +1,10 @@
 1998-01-10  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/install.c (install_file_to_path): New function.
+	(main): Handle new option, -D.
+	Based on a patch from Marty Leisner.
+	(usage): Describe -D.
+
 	* src/ls.c (decode_switches) [-u]: Fix bug whereby -u worked only
 	with -l or -t.  Now, -u (like -c) implies --sort=time.
 	(usage): Correct descriptions of --sort, --time, and -t.
