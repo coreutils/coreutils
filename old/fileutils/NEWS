@@ -1,4 +1,5 @@
 User-visible changes in release 3.10:
+* skeletal texinfo documentation (mainly just the `invoking' nodes)
 * ln accepts a new option: --no-dereference (-n).  With this option,
   if the destination command line argument is a symlink to a directory,
   use that as the destination instead of the file in the directory.
