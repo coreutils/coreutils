@@ -82,7 +82,7 @@ char *xstrdup ();
 
 static unsigned char decimal_point;
 static unsigned char th_sep;
-static unsigned char *nls_grouping;
+static char *nls_grouping;
 
 /* This is "C" locale, need another? */
 static int need_locale = 0;
@@ -483,7 +483,7 @@ nls_sort_month_comp (const void *m1, const void *m2)
 /* Do collation on strings S1 and S2, but for at most L characters.
    we use the fact, that we KNOW that LEN is the min of the two lengths */
 static int
-strncoll (unsigned char *s1, unsigned char *s2, int len)
+strncoll (char *s1, char *s2, int len)
 {
   register int diff;
 
@@ -513,7 +513,7 @@ strncoll (unsigned char *s1, unsigned char *s2, int len)
    Use the fact, that we KNOW that S2 is the shorter string and has
    length LEN.  */
 static int
-strncoll_s2_readonly (unsigned char *s1, const unsigned char *s2, int len)
+strncoll_s2_readonly (char *s1, const char *s2, int len)
 {
   register int diff;
 
@@ -566,11 +566,11 @@ inittables (void)
       nls_months_collide[0] = 1;	/* if an error, look again       */
       for (i = 0; i < NLS_NUM_MONTHS; i++)
 	{
-	  unsigned char *s;
+	  char *s;
 	  size_t s_len;
 	  int j;
 
-	  s = (unsigned char *) nl_langinfo (ABMON_1 + us_monthtab[i].val - 1);
+	  s = (char *) nl_langinfo (ABMON_1 + us_monthtab[i].val - 1);
 	  s_len = strlen (s);
 	  nls_monthtab[i].name = (char *) xmalloc (s_len + 1);
 	  nls_monthtab[i].val = us_monthtab[i].val;
@@ -578,7 +578,7 @@ inittables (void)
 	  /* Be careful: abreviated month names
 	     may be longer than the usual 3 characters.  */
 	  for (j = 0; j < s_len; j++)
-	    nls_monthtab[i].name[j] = fold_toupper[s[j]];
+	    nls_monthtab[i].name[j] = fold_toupper[UCHAR (s[j])];
 	  nls_monthtab[i].name[j] = '\0';
 
 	  nls_months_collide[nls_monthtab[i].val] = 0;
@@ -1126,9 +1126,9 @@ nls_set_fraction (register unsigned char ch)
    */
 
 static void
-look_for_fraction (unsigned const char *s, unsigned const char *e)
+look_for_fraction (const char *s, const char *e)
 {
-  register unsigned const char *p;
+  register const char *p;
   register unsigned short n = 0;
   static unsigned short max_groups = 0;
   static unsigned short *groups = NULL;
@@ -1140,7 +1140,7 @@ look_for_fraction (unsigned const char *s, unsigned const char *e)
     }
 
   /* skip blanks and signs */
-  while (blanks[*s] || *s == NEGATIVE_SIGN)
+  while (blanks[UCHAR (*s)] || *s == NEGATIVE_SIGN)
     s++;
   /* groups = {}, n = 0 */
   for (p = s; p < e; p++)
@@ -1202,14 +1202,14 @@ look_for_fraction (unsigned const char *s, unsigned const char *e)
 }
 
 static int
-numcompare (register const unsigned char *a, register const unsigned char *b)
+numcompare (register const char *a, register const char *b)
 {
   int ret_code = 1;		/* normal return status, see later in code */
   int diff = 0;			/* difference between two digits           */
 
-  while (blanks[*a])
+  while (blanks[UCHAR (*a)])
     ++a;
-  while (blanks[*b])
+  while (blanks[UCHAR (*b)])
     ++b;
 
   /* next character in a,b is non-blank */
@@ -1647,8 +1647,8 @@ keycompare (const struct line *a, const struct line *b)
 	     of the time) we could temporarily NUL-terminate them in
 	     place and avoid the copy.  */
 
-	  unsigned char *copy_a = (unsigned char *) alloca (lena + 1);
-	  unsigned char *copy_b = (unsigned char *) alloca (lenb + 1);
+	  char *copy_a = (char *) alloca (lena + 1);
+	  char *copy_b = (char *) alloca (lenb + 1);
 	  int new_len_a, new_len_b, i;
 
 	  /* We can't use strcoll directly on the two strings,
@@ -2488,7 +2488,7 @@ main (int argc, char **argv)
 
     decimal_point = *lconvp->decimal_point;
     th_sep        = *lconvp->thousands_sep;
-    nls_grouping  =  (unsigned char *) (lconvp->grouping);
+    nls_grouping  =  (char *) (lconvp->grouping);
   }
 
   /* if locale doesn't define a decimal point, we'll use the
