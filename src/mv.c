@@ -400,7 +400,10 @@ main (int argc, char **argv)
 	  break;
 
 	case 'V':  /* FIXME: this is deprecated.  Remove it in 2001.  */
-	  error (0, 0, _("obsolete option name replaced by --backup"));
+	  error (0, 0,
+		 _("warning: --version-control (-V) is obsolete;  support for\
+ it\nwill be removed in some future release.  Use --backup=%s instead."
+		   ), optarg);
 	  /* Fall through.  */
 
 	case 'b':
