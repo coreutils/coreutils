@@ -225,7 +225,7 @@ read_filesystem_list (need_fs_type, all_fs)
 	      me->me_dev = xatoi (devopt + 4);
 	  }
 	else
-	  me->me_dev = -1;	/* Magic; means not known yet. */
+	  me->me_dev = (dev_t) -1;	/* Magic; means not known yet. */
 	me->me_next = NULL;
 
 	/* Add to the linked list. */
@@ -256,7 +256,7 @@ read_filesystem_list (need_fs_type, all_fs)
 #else
 	me->me_type = fstype_to_string (fsp->f_type);
 #endif
-	me->me_dev = -1;	/* Magic; means not known yet. */
+	me->me_dev = (dev_t) -1;	/* Magic; means not known yet. */
 	me->me_next = NULL;
 
 	/* Add to the linked list. */
@@ -317,7 +317,7 @@ read_filesystem_list (need_fs_type, all_fs)
 	me->me_devname = xstrdup (stats[counter].f_mntfromname);
 	me->me_mountdir = xstrdup (stats[counter].f_mntonname);
 	me->me_type = mnt_names[stats[counter].f_type];
-	me->me_dev = -1;	/* Magic; means not known yet. */
+	me->me_dev = (dev_t) -1;	/* Magic; means not known yet. */
 	me->me_next = NULL;
 
 	/* Add to the linked list. */
@@ -350,7 +350,7 @@ read_filesystem_list (need_fs_type, all_fs)
 	strcpy (me->me_devname + 5, mnt.mt_dev);
 #endif
 	me->me_mountdir = xstrdup (mnt.mt_filsys);
-	me->me_dev = -1;	/* Magic; means not known yet. */
+	me->me_dev = (dev_t) -1;	/* Magic; means not known yet. */
 	me->me_type = "";
 #ifdef GETFSTYP			/* SVR3.  */
 	if (need_fs_type)
@@ -384,7 +384,7 @@ read_filesystem_list (need_fs_type, all_fs)
 	me->me_devname = xstrdup ( (*ent)->mt_resource);
 	me->me_mountdir = xstrdup( (*ent)->mt_directory);
 	me->me_type =  xstrdup ((*ent)->mt_fstype);
-	me->me_dev = -1;	/* Magic; means not known yet. */
+	me->me_dev = (dev_t) -1;	/* Magic; means not known yet. */
 	me->me_next = NULL;
 
 	/* Add to the linked list. */
@@ -412,7 +412,7 @@ read_filesystem_list (need_fs_type, all_fs)
 	me->me_devname = xstrdup (mnt.mnt_special);
 	me->me_mountdir = xstrdup (mnt.mnt_mountp);
 	me->me_type = xstrdup (mnt.mnt_fstype);
-	me->me_dev = -1;	/* Magic; means not known yet. */
+	me->me_dev = (dev_t) -1;	/* Magic; means not known yet. */
 	me->me_next = NULL;
 
 	/* Add to the linked list. */
@@ -464,7 +464,7 @@ read_filesystem_list (need_fs_type, all_fs)
 	  }
 	me->me_mountdir = xstrdup (thisent + vmp->vmt_data[VMT_STUB].vmt_off);
 	me->me_type = xstrdup (fstype_to_string (vmp->vmt_gfstype));
-	me->me_dev = -1;	/* vmt_fsid might be the info we want.  */
+	me->me_dev = (dev_t) -1; /* vmt_fsid might be the info we want.  */
 	me->me_next = NULL;
 
 	/* Add to the linked list. */
