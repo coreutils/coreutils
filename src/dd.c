@@ -850,6 +850,7 @@ dd_copy (void)
 {
   unsigned char *ibuf, *bufstart; /* Input buffer. */
   unsigned char *real_buf;	  /* real buffer address before alignment */
+  unsigned char *real_obuf;
   int nread;			/* Bytes read in the current block. */
   int exit_status = 0;
   size_t page_size = getpagesize ();
@@ -882,11 +883,12 @@ dd_copy (void)
   if (conversions_mask & C_TWOBUFS)
     {
       /* Page-align the output buffer, too.  */
-      obuf = (unsigned char *) xmalloc (output_blocksize + page_size - 1);
-      obuf = PTR_ALIGN (obuf, page_size);
+      real_obuf = (unsigned char *) xmalloc (output_blocksize + page_size - 1);
+      obuf = PTR_ALIGN (real_obuf, page_size);
     }
   else
     {
+      real_obuf = NULL;
       obuf = ibuf;
     }
 
@@ -1034,8 +1036,8 @@ dd_copy (void)
     }
 
   free (real_buf);
-  if (obuf != ibuf)
-    free (obuf);
+  if (real_obuf)
+    free (real_obuf);
 
   return exit_status;
 }
