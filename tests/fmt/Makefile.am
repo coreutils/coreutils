@@ -9,4 +9,4 @@ TESTS_ENVIRONMENT = \
   PATH=`pwd`/../../src:$$PATH \
   PROG=fmt
 
-TESTS = basic
+TESTS = basic long-line
