@@ -1,9 +1,18 @@
 2003-06-06  Jim Meyering  <jim@meyering.net>
 
-	* backupfile.c: Update from gnulib.
+	* Makefile.am (EXTRA_DIST): Add alloca_.h.
+	(all-local $(lib_OBJECTS)): Depend on $(ALLOCA_H).
+	(alloca.h): New rule.
+
+	* addext.c: Update from gnulib.
+	* backupfile.c: Likewise.
+	* config.charset: Likewise.
+	* dirname.h: Likewise.
+	* fsusage.c: Likewise.
 	* userspec.c: Likewise.
 	* xreadlink.c: Likewise.
 	* xstrtol.c: Likewise.
+	* __fpending.h: Likewise.
 
 	* md5.c: Include <string.h> and <stdlib.h> unconditionally.
 	(memcpy): Remove definition.
