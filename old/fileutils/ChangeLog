@@ -1,6 +1,12 @@
-2001-10-07  Jim Meyering  <meyering@lucent.com>
+2001-10-11  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.1.
+
+	* src/mknod.c (main): Tell what's wrong with `mknod c zero 1 5' rather
+	than saying just `Try `./mknod --help' for more information.'.
+	Suggestion from Karl Berry.
+
+2001-10-07  Jim Meyering  <meyering@lucent.com>
 
 	* TODO: Remove items relating to cp-hash.c, now that they're done.
 
