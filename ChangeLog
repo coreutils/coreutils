@@ -1,6 +1,11 @@
-2005-03-27  Jim Meyering  <jim@meyering.net>
+2005-03-28  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/system.h (GETOPT_HELP_OPTION_DECL): Use NULL, not `0'.
+	(GETOPT_VERSION_OPTION_DECL): Likewise.
+
+2005-03-27  Jim Meyering  <jim@meyering.net>
 
 	* src/dcgen: Simplify further, clean up.
 	Add a standard-output-closing global destructor.
