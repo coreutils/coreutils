@@ -1,6 +1,14 @@
-2001-12-15  Jim Meyering  <meyering@lucent.com>
+2001-12-17  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.12.
+
+	* Makefile.maint (real_dir): Remove unused variable.
+	(url_dir_list): Don't set define it here, but...
+	* Makefile.cfg (url_dir_list): ...define it here instead.
+	(hosts, a_host, b_host): Remove now-unused variables.
+	(alpha_subdir, a_url_dir, b_url_dir): Remove now-unused variables.
+
+2001-12-15  Jim Meyering  <meyering@lucent.com>
 
 	* src/basename.c, src/chroot.c, src/date.c, src/dirname.c, src/echo.c,
 	* src/env.c, src/expr.c, src/factor.c, src/hostid.c, src/hostname.c,
