@@ -56,10 +56,10 @@ test "$VERBOSE" = yes && set +x
   touch f
   ln -s f symlink
   chgrp $g1 f
-  chgrp -h $g2 symlink 2> /dev/null
+  chgrp -h $g2 symlink
 
   # This should not change the group of f.
-  chgrp -h -c $g2 symlink 2> /dev/null
+  chgrp -h -c $g2 symlink
   chown --from=:$g1 -c :$g2 f
 
   # This *should* change the group of f.
@@ -67,6 +67,20 @@ test "$VERBOSE" = yes && set +x
   # it says the `group of `symlink'' has been changed.
   chgrp -c $g1 symlink
   chown --from=:$g1 -c :$g2 f
+
+  # If -R is specified without -H or L, -h is assumed.
+  chgrp -h $g1 f symlink
+  chgrp -R $g2 symlink
+  chown --from=:$g1 -c :$g2 f
+
+  # chown() must not be optimized away even when
+  # the file's owner and group already have the desired value.
+  touch f g
+  chgrp $g1 f g
+  chgrp $g2 g
+  sleep 1
+  chgrp $g1 f
+  ls -c -t f g
 
 ) 2>&1 | sed "s/\([ :]\)$g1$/\1G1/;s/\([ :]\)$g2$/\1G2/" > actual
 
@@ -90,6 +104,9 @@ changed group of `symlink' to G2
 changed ownership of `f' to :G2
 changed group of `symlink' to G1
 changed ownership of `f' to :G2
+changed ownership of `f' to :G2
+f
+g
 EOF
 
 cmp expected actual \
