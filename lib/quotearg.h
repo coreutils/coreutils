@@ -25,7 +25,8 @@ enum quoting_style
     shell_always_quoting_style,	/* --quoting-style=shell-always */
     c_quoting_style,		/* --quoting-style=c */
     escape_quoting_style,	/* --quoting-style=escape */
-    locale_quoting_style	/* --quoting-style=locale */
+    locale_quoting_style,	/* --quoting-style=locale */
+    clocale_quoting_style	/* --quoting-style=clocale */
   };
 
 /* For now, --quoting-style=literal is the default, but this may change.  */
