@@ -4,6 +4,7 @@
 
 	* src/od.c: No longer include deprecated <values.h>.
 	It was required solely for now-removed reference to BITSPERBYTE.
+	* src/install.c: Likewise.
 	Suggestion from Bruno Haible.
 
 2002-09-06  Andreas Schwab  <schwab@suse.de>
