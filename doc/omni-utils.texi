@@ -9796,7 +9796,7 @@ Set the time and date to @var{datestr}.  See @samp{-d} above.
 @cindex Greenwich Mean Time
 @cindex GMT
 Use Coordinated Universal Time (@sc{utc}) by operating as if the
-@env{TZ} environment variable was set to the string @samp{UTC0}.
+@env{TZ} environment variable were set to the string @samp{UTC0}.
 Normally, @command{date} operates in the time zone indicated by
 @env{TZ}, or the system default if @env{TZ} is not set.  Coordinated
 Universal Time is often called ``Greenwich Mean Time'' (@sc{gmt}) for
