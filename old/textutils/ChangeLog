@@ -1,5 +1,7 @@
 2001-02-19  Jim Meyering  <meyering@lucent.com>
 
+	* src/sort.c (AUTHORS): Add Paul Eggert.
+
 	* src/wc.c (wc): Rename innermost `buf' to avoid shadowing warning.
 	(wc): Rename local `wc' to avoid shadowing function name.
 
