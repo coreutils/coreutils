@@ -45,6 +45,8 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "chown"
 
+#define AUTHORS "David MacKenzie"
+
 #ifndef _POSIX_VERSION
 struct passwd *getpwnam ();
 struct group *getgrnam ();
@@ -361,7 +363,7 @@ main (int argc, char **argv)
 	  verbosity = V_high;
 	  break;
 	case_GETOPT_HELP_CHAR;
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, "David MacKenzie");
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 	default:
 	  usage (1);
 	}

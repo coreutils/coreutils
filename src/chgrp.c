@@ -34,6 +34,8 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "chgrp"
 
+#define AUTHORS "David MacKenzie"
+
 /* MAXUID may come from limits.h *or* sys/params.h (via system.h) above. */
 #ifndef MAXUID
 # define MAXUID UID_T_MAX
@@ -360,7 +362,7 @@ main (int argc, char **argv)
 	  verbosity = V_high;
 	  break;
 	case_GETOPT_HELP_CHAR;
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, "David MacKenzie");
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 	default:
 	  usage (1);
 	}
