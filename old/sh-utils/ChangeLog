@@ -1,3 +1,7 @@
+2000-04-09  Jim Meyering  <meyering@lucent.com>
+
+	* configure.in (ALL_LINGUAS): Add Estonian (et).
+
 2000-04-01  Jochen Hein  <jochen@jochen.org>
 
 	* src/date.c: Use the "C" locale when using --rfc-822 (-R), as
