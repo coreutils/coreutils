@@ -35,7 +35,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "chmod"
 
-#define AUTHORS "David MacKenzie"
+#define AUTHORS "David MacKenzie", "Jim Meyering"
 
 enum Change_status
 {
