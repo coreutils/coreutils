@@ -1,3 +1,7 @@
+2000-07-02  Jim Meyering  <meyering@lucent.com>
+
+	* nanosleep.c (SIGCONT): Define if not already defined.
+
 2000-06-17  Bruno Haible  <haible@clisp.cons.org>
 
 	* mountlist.c: Use MOUNTED_FS_STAT_DEV instead of MOUNTED_NEXT_DEV,
