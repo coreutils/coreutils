@@ -1,3 +1,7 @@
+1999-08-01  Jim Meyering  <meyering@ascend.com>
+
+	* mktime.m4 (AC_FUNC_MKTIME): Undefine to avoid syntax errors from m4.
+
 1999-08-01  Paul Eggert  <eggert@twinsun.com>
 
 	* lfs.m4: Remove this file.
