@@ -1,0 +1,59 @@
+#!/bin/sh
+# Force mv to use the copying code.
+# Consider the case where SRC and DEST are on a different
+# partitions and DEST is a symlink to SRC.
+
+: ${MV=mv}
+: ${RM=rm}
+: ${LN=ln}
+
+if test "$VERBOSE" = yes; then
+  set -x
+  $MV --version
+fi
+
+. $srcdir/setup
+
+if test -z "$other_partition_tmpdir"; then
+  exit 77
+fi
+
+file="$other_partition_tmpdir/file"
+symlink=symlink
+
+framework_failure=0
+$RM -f $file $symlink || framework_failure=1
+echo whatever > $file || framework_failure=1
+$LN -s $file $symlink || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo 'failure in testing framework'
+  exit 1
+fi
+
+# Make sure we get English translations.
+LANGUAGE=C
+export LANGUAGE
+LC_ALL=C
+export LC_ALL
+LANG=C
+export LANG
+
+# This mv command should exit nonzero.
+$MV $file $symlink > out 2>&1 && fail=1
+
+sed \
+   -e "s,$MV:,XXX:," \
+   -e "s,$file,YYY," \
+   -e "s,$symlink,ZZZ," \
+  out > out2
+
+cat > exp <<\EOF
+XXX: `YYY' and `ZZZ' are the same file
+EOF
+
+cmp out2 exp || fail=1
+
+$RM -fr out out2 exp $file $symlink $other_partition_tmpdir
+
+exit $fail
