@@ -1,4 +1,12 @@
 GNU coreutils NEWS                                    -*- outline -*-
+* Major changes in release 5.0.2:
+
+** Bug fixes
+- kill no longer tries to operate on argv[0] (introduced in 5.0.1)
+  Why wasn't this noticed?  Although many tests use kill, none of
+  them made an effort to avoid using the shell's built-in kill.
+- [ invoked with no arguments no longer evokes a segfault
+
 * Major changes in release 5.0.1:
 
 ** New programs
