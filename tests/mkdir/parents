@@ -27,17 +27,9 @@ if test $framework_failure = 1; then
   (exit 1); exit
 fi
 
-fail=0
+. $srcdir/../sticky-check
 
-p=`ls -ld e-dir|sed 's/ .*//'`
-case $p in drwx------);; *) fail=1;; esac
-if test $fail = 1; then
-  cat <<EOF >&2
-$0: Since it looks like you're running this test in a directory with
-the sticky bit set, we're skipping this test.
-EOF
-  (exit 77); exit
-fi
+fail=0
 
 # Make sure `mkdir -p existing-dir' succeeds
 # and that `mkdir existing-dir' fails.
