@@ -1,4 +1,4 @@
-# serial 3
+# serial 4
 
 # Define some macros required for proper operation of code in lib/*.c
 # on MSDOS/Windows systems.
@@ -7,19 +7,32 @@
 
 AC_DEFUN(jm_AC_DOS,
   [
-    # FIXME: this is incomplete.  Add a compile-test that does something
-    # like this:
-    #if defined _WIN32 || defined __WIN32__ || defined __MSDOS__
+    AC_CACHE_CHECK([whether system is Windows or MSDOS], [ac_cv_win_or_dos],
+      [
+        AC_TRY_COMPILE([],
+        [#if !defined _WIN32 && !defined __WIN32__ && !defined __MSDOS__
+neither MSDOS nor Windows
+#endif],
+        [ac_cv_win_or_dos=yes],
+        [ac_cv_win_or_dos=no])
+      ])
+
+    if test x"$ac_cv_win_or_dos" = xyes; then
+      ac_fs_accepts_drive_letter_prefix=1
+      ac_fs_backslash_is_file_name_separator=1
+    else
+      ac_fs_accepts_drive_letter_prefix=0
+      ac_fs_backslash_is_file_name_separator=0
+    fi
 
     AH_VERBATIM(FILESYSTEM_PREFIX_LEN,
     [#if FILESYSTEM_ACCEPTS_DRIVE_LETTER_PREFIX
 # define FILESYSTEM_PREFIX_LEN(Filename) \
   ((Filename)[0] && (Filename)[1] == ':' ? 2 : 0)
-else
+#else
 # define FILESYSTEM_PREFIX_LEN(Filename) 0
 #endif])
 
-    ac_fs_accepts_drive_letter_prefix=0
     AC_DEFINE_UNQUOTED([FILESYSTEM_ACCEPTS_DRIVE_LETTER_PREFIX],
       $ac_fs_accepts_drive_letter_prefix,
       [Define on systems for which file names may have a so-called
@@ -33,7 +46,6 @@ else
 # define ISSLASH(C) ((C) == '/')
 #endif])
 
-    ac_fs_backslash_is_file_name_separator=0
     AC_DEFINE_UNQUOTED([FILESYSTEM_BACKSLASH_IS_FILE_NAME_SEPARATOR],
       $ac_fs_backslash_is_file_name_separator,
       [Define if the backslash character may also serve as a file name
