@@ -26,19 +26,36 @@ fi
 fail=0
 
 nohup sh -c 'echo stdout; echo stderr 1>&2' 2>err || fail=1
-test `cat nohup.out` = stdout || fail=1
 
-cat <<\EOF > exp || fail=1
+# Be careful.  The results of the above nohup command
+# change depending on whether stdout is redirected.
+if test -t 1; then
+  test "`cat nohup.out`" = stdout || fail=1
+  cat <<\EOF > exp || fail=1
 nohup: appending output to `nohup.out'
 stderr
 EOF
+else
+  # Here it should not even exist.
+  test -f nohup.out && fail=1
+  cat <<\EOF > exp || fail=1
+stderr
+EOF
+fi
+
 cmp exp err || fail=1
 test $fail = 1 && diff exp err 2> /dev/null
 rm -f nohup.out err exp
 # ----------------------
 
+# Be careful.  The results of the following nohup command
+# change depending on whether stderr is redirected.
 nohup sh -c 'echo stdout; echo stderr 1>&2' >out || fail=1
-test `cat out|tr '\n' -` = stdout-stderr- || fail=1
+if test -t 2; then
+  test `cat out|tr '\n' -` = stdout-stderr- || fail=1
+else
+  test `cat out|tr '\n' -` = stdout- || fail=1
+fi
 # It must *not* exist.
 test -f nohup.out && fail=1
 rm -f nohup.out err
@@ -46,11 +63,13 @@ rm -f nohup.out err
 
 nohup no-such-command 2> err
 errno=$?
-test $errno = 127 || fail=1
-# It must exist.
-test -f nohup.out || fail=1
-# It must be empty.
-test -s nohup.out && fail=1
+if test -t 1; then
+  test $errno = 127 || fail=1
+  # It must exist.
+  test -f nohup.out || fail=1
+  # It must be empty.
+  test -s nohup.out && fail=1
+fi
 
 cat <<\EOF > exp || fail=1
 nohup: appending output to `nohup.out'
@@ -66,10 +85,12 @@ touch k; chmod 0 k
 nohup ./k 2> err
 errno=$?
 test $errno = 126 || fail=1
-# It must exist.
-test -f nohup.out || fail=1
-# It must be empty.
-test -s nohup.out && fail=1
+if test -t 1; then
+  # It must exist.
+  test -f nohup.out || fail=1
+  # It must be empty.
+  test -s nohup.out && fail=1
+fi
 
 cat <<\EOF > exp || fail=1
 nohup: appending output to `nohup.out'
