@@ -1,14 +1,14 @@
 ## Process this file with automake to produce Makefile.in
 noinst_LIBRARIES = fu
 
-EXTRA_DIST = alloca.c euidaccess.c fnmatch.c fsusage.c ftruncate.c \
-getdate.y getopt.c getopt1.c memcmp.c memcpy.c memset.c \
+EXTRA_DIST = alloca.c basename.c euidaccess.c fnmatch.c fsusage.c \
+ftruncate.c getdate.y getopt.c getopt1.c memcmp.c memcpy.c memset.c \
 mkdir.c mktime.c mountlist.c posixtm.y rename.c rmdir.c \
 stpcpy.c strcasecmp.c strdup.c strstr.c strtol.c strtoul.c
 
 INCLUDES = -I.. -I$(srcdir)
 
-fu_SOURCES = getdate.c posixtm.c argmatch.c backupfile.c basename.c \
+fu_SOURCES = getdate.c posixtm.c argmatch.c backupfile.c \
 dirname.c error.c fileblocks.c filemode.c \
 full-write.c getversion.c group-member.c idcache.c \
 isdir.c long-options.c makepath.c modechange.c obstack.c \
