@@ -262,6 +262,7 @@ my @tv = (
 ['12mc', '-o3 -m -s:--: -n. -l17 -f', [\'tFFt-bl', \'tn'], [\'o3msnl17fbltn'], 0],
 ['12md', '-o3 -j -m -l17 -f', [\'tFFt-lm', \'loli'], [\'o3jml17f-lm-lo'], 0],
 
+['margin-0', '-o 0', '', '', 0],
 );
 #']]);
 
