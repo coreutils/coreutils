@@ -431,7 +431,7 @@ skip (int fdesc, char *file, uintmax_t records, size_t blocksize,
      operation, fall back on using read.  */
   o = records * blocksize;
   if (o / blocksize != records
-      || lseek (fdesc, o, SEEK_SET) < 0)
+      || lseek (fdesc, o, SEEK_SET) == -1)
     {
       while (records-- > 0)
 	{
