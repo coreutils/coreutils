@@ -1,7 +1,5 @@
-/* @IGNORE@ -*- c -*- */
-/* Work around the bug in some systems whereby rename fails when the
-   source path has a trailing slash.  The rename from SunOS 4.1.1_U1
-   has this bug.
+/* Work around the bug in some systems whereby rename fails when the source
+   path has a trailing slash.  The rename from SunOS 4.1.1_U1 has this bug.
    Copyright (C) 2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -22,6 +20,17 @@
 
 #include <config.h>
 #include <stdio.h>
+#if HAVE_STDLIB_H
+# include <stdlib.h>
+#endif
+
+#if HAVE_STRING_H
+# include <string.h>
+#else
+# include <strings.h>
+#endif
+
+#include <xalloc.h>
 
 #ifndef HAVE_DECL_FREE
 "this configure-time declaration test was not run"
@@ -30,30 +39,30 @@
 void free ();
 #endif
 
-/* Rename the file SRC_PATH to the file DST_PATH, removing any trailing
-   slashes from SRC_PATH. Needed for SunOS 4.1.1_U1.  */
+void strip_trailing_slashes ();
+
+/* Rename the file SRC_PATH to DST_PATH, removing any trailing
+   slashes from SRC_PATH.  Needed for SunOS 4.1.1_U1.  */
 
 int
 rpl_rename (const char *src_path, const char *dst_path)
 {
   char *src_temp;
-  int i;
-  int t;
+  int ret_val;
+  size_t s_len = strlen (src_path);
 
-  i = strlen (src_path) - 1;
-  if (src_path[i] == '/')
+  if (s_len && src_path[s_len - 1] == '/')
     {
       src_temp = xstrdup (src_path);
-      for ( ; i > 0 && src_path[i] == '/'; i--)
-	src_temp[i] = '\0';
+      strip_trailing_slashes (src_temp);
     }
   else
     src_temp = (char *) src_path;
 
-  t = rename (src_temp, dst_path);
+  ret_val = rename (src_temp, dst_path);
 
   if (src_temp != src_path)
     free (src_temp);
 
-  return t;
+  return ret_val;
 }
