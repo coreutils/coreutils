@@ -98,9 +98,9 @@ static void
 describe_change (char *file, int changed)
 {
   if (changed)
-    printf ("group of %s changed to %s\n", file, groupname);
+    printf (_("group of %s changed to %s\n"), file, groupname);
   else
-    printf ("group of %s retained as %s\n", file, groupname);
+    printf (_("group of %s retained as %s\n"), file, groupname);
 }
 
 /* Set *G according to NAME. */
@@ -112,7 +112,7 @@ parse_group (char *name, int *g)
 
   groupname = name;
   if (*name == '\0')
-    error (1, 0, "can not change to null group");
+    error (1, 0, _("can not change to null group"));
 
   grp = getgrnam (name);
   if (grp == NULL)
@@ -124,7 +124,7 @@ parse_group (char *name, int *g)
       *g = tmp_long;
       if (s_err == LONGINT_OVERFLOW || tmp_long > INT_MAX)
 	{
-	  STRTOL_FATAL_ERROR (name, "group number", s_err);
+	  STRTOL_FATAL_ERROR (name, _("group number"), s_err);
 	}
     }
   else
@@ -163,13 +163,13 @@ change_file_group (char *file, int group)
 		 of the specified group' errors.  */
 	      if (errno == EPERM && !group_member (group))
 		{
-		  error (0, errno, "you are not a member of group `%s'",
+		  error (0, errno, _("you are not a member of group `%s'"),
 			 groupname);
 		}
 #ifdef MAXUID
 	      else if (errno == EINVAL && group > MAXUID)
 		{
-		  error (0, 0, "%s: invalid group number", groupname);
+		  error (0, 0, _("%s: invalid group number"), groupname);
 		}
 #endif
 	      else
@@ -213,7 +213,7 @@ change_dir_group (char *dir, int group, struct stat *statp)
 	  return 1;
 	}
       else
-	error (1, 0, "virtual memory exhausted");
+	error (1, 0, _("virtual memory exhausted"));
     }
 
   dirlength = strlen (dir) + 1;	/* + 1 is for the trailing '/'. */
@@ -243,12 +243,12 @@ static void
 usage (int status)
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("Usage: %s [OPTION]... GROUP FILE...\n", program_name);
-      printf ("\
+      printf (_("Usage: %s [OPTION]... GROUP FILE...\n"), program_name);
+      printf (_("\
 Change the group membership of each FILE to GROUP.\n\
 \n\
   -c, --changes           like verbose but report only when a change is made\n\
@@ -256,7 +256,7 @@ Change the group membership of each FILE to GROUP.\n\
   -v, --verbose           output a diagnostic for every file processed\n\
   -R, --recursive         change files and directories recursively\n\
       --help              display this help and exit\n\
-      --version           output version information and exit\n");
+      --version           output version information and exit\n"));
     }
   exit (status);
 }
@@ -307,7 +307,7 @@ main (int argc, char **argv)
 
   if (argc - optind <= 1)
     {
-      error (0, 0, "too few arguments");
+      error (0, 0, _("too few arguments"));
       usage (1);
     }
 
