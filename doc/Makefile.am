@@ -24,16 +24,20 @@ MAINTAINERCLEANFILES = constants.texi
 $(DVIS): $(EXTRA_DIST)
 $(INFO_DEPS): $(EXTRA_DIST)
 
+# Extended regular expressions to match word starts and ends.
+_W = (^|[^A-Za-z0-9_])
+W_ = ([^A-Za-z0-9_]|$$)
+
 # List words/regexps here that should not appear in the texinfo documentation.
 # E.g., use @sc{nul}, not `NUL'
 # and use `time zone', not `timezone'.
 check-texinfo:
 	fail=0; \
 	grep timezone $(srcdir)/*.texi && fail=1; \
-	grep -w IO $(srcdir)/*.texi && fail=1; \
+	$(EGREP) '$(_W)IO$(W_)' $(srcdir)/*.texi && fail=1; \
 	grep non-zero $(srcdir)/*.texi && fail=1; \
 	grep '@url{' $(srcdir)/*.texi && fail=1; \
-	grep -w NUL $(srcdir)/*.texi && fail=1; \
+	$(EGREP) '$(_W)NUL$(W_)' $(srcdir)/*.texi && fail=1; \
 	grep '\$$@"' $(srcdir)/*.texi && fail=1; \
 	grep -n '[^[:punct:]]@footnote' $(srcdir)/*.texi && fail=1; \
 	grep -n filename $(srcdir)/*.texi|grep -vE 'setfilename|{filename}' \
