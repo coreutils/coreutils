@@ -255,11 +255,8 @@ do_link (const char *source, const char *dest, bool dest_is_dir)
 
       if (backup_type != none)
 	{
-	  size_t buf_len;
 	  char *tmp_backup = find_backup_file_name (dest, backup_type);
-	  if (tmp_backup == NULL)
-	    xalloc_die ();
-	  buf_len = strlen (tmp_backup) + 1;
+	  size_t buf_len = strlen (tmp_backup) + 1;
 	  dest_backup = alloca (buf_len);
 	  memcpy (dest_backup, tmp_backup, buf_len);
 	  free (tmp_backup);
