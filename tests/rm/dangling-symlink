@@ -7,6 +7,9 @@ if test "$VERBOSE" = yes; then
   rm --version
 fi
 
+# Make sure there's a tty on stdin.
+. $srcdir/../input-tty
+
 pwd=`pwd`
 t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
 trap 'status=$?; cd $pwd; chmod -R u+rwx $t0; rm -rf $t0 && exit $status' 0
@@ -24,11 +27,7 @@ fi
 
 fail=0
 
-# Skip this test if there is no /dev/stdin file.
-ls /dev/stdin >/dev/null 2>&1 \
-  || { (exit 77); exit; }
-
-rm dangle < /dev/stdin &
+rm dangle &
 pid=$!
 # The buggy rm (fileutils-4.1.9) would hang here, waiting for input.
 
