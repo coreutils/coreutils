@@ -1,9 +1,9 @@
-#serial 2
+#serial 3
 
 # Test for the GNU C Library, version 2.1 or newer.
 # From Bruno Haible.
 
-AC_DEFUN(jm_GLIBC21,
+AC_DEFUN([jm_GLIBC21],
   [
     AC_CACHE_CHECK(whether we are using the GNU C Library 2.1 or newer,
       ac_cv_gnu_library_2_1,
