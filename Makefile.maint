@@ -170,10 +170,10 @@ cvs-tag-check:
 	else :; fi
 
 cvs-diff-check:
-	if $(CVS) diff >cvs-diffs; then			  	\
-	  rm cvs-diffs;					  	\
-	else						  	\
-	  echo "Some files are locally modified:" 1>&2;  	\
+	if $(CVS) diff >cvs-diffs; then				\
+	  rm cvs-diffs;						\
+	else							\
+	  echo "Some files are locally modified:" 1>&2;		\
 	  cat cvs-diffs;					\
 	  exit 1;						\
 	fi
