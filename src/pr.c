@@ -2018,7 +2018,7 @@ store_columns (void)
   /* Keep track of the location of the last char in buff. */
   line_vector[line] = buff_start;
 
-  if (balance_columns && p->lines_stored != lines_per_body)
+  if (balance_columns)
     balance (line);
 }
 
