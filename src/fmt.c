@@ -342,8 +342,12 @@ main (register int argc, register char **argv)
 	  int old_max = max_width;
 	  max_width = max_width * 10 + *s - '0';
 	  if (INT_MAX / 10 < old_max || max_width < old_max)
-	    error (EXIT_FAILURE, 0, _("invalid width option: `%s'"), argv[1]);
+	    break;
 	}
+
+      if (*s)
+	error (EXIT_FAILURE, 0, _("invalid width option: `%s'"), argv[1]);
+
       /* Make the options we just parsed invisible to getopt. */
       argv[1] = argv[0];
       argv++;
