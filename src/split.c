@@ -1,5 +1,5 @@
 /* split.c -- split a file into pieces.
-   Copyright (C) 88, 91, 95, 96, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 88, 91, 1995-1998, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -156,7 +156,8 @@ cwrite (int new_file_flag, const char *bp, int bytes)
       next_file_name ();
       if (verbose)
 	fprintf (stderr, _("creating file `%s'\n"), outfile);
-      output_desc = open (outfile, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+      output_desc = open (outfile,
+			  O_WRONLY | O_CREAT | O_TRUNC | O_BINARY, 0666);
       if (output_desc < 0)
 	error (EXIT_FAILURE, errno, "%s", outfile);
     }
@@ -494,6 +495,8 @@ main (int argc, char **argv)
       if (input_desc < 0)
 	error (EXIT_FAILURE, errno, "%s", infile);
     }
+  /* Binary I/O is safer when bytecounts are used.  */
+  SET_BINARY (input_desc);
 
   /* No output file is open now.  */
   output_desc = -1;
