@@ -1,5 +1,5 @@
 /* su for GNU.  Run a shell with substitute user and group IDs.
-   Copyright (C) 92, 93, 94, 95, 96, 1997 Free Software Foundation, Inc.
+   Copyright (C) 92, 93, 94, 95, 96, 97, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -170,9 +170,9 @@ static int change_environment;
 static struct option const longopts[] =
 {
   {"command", required_argument, 0, 'c'},
-  {"fast", no_argument, &fast_startup, 1},
+  {"fast", no_argument, NULL, 'f'},
   {"help", no_argument, &show_help, 1},
-  {"login", no_argument, &simulate_login, 1},
+  {"login", no_argument, NULL, 'l'},
   {"preserve-environment", no_argument, &change_environment, 0},
   {"shell", required_argument, 0, 's'},
   {"version", no_argument, &show_version, 1},
