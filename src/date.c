@@ -23,6 +23,7 @@
 #include <sys/types.h>
 
 #include "system.h"
+#include "argmatch.h"
 #include "closeout.h"
 #include "error.h"
 #include "getdate.h"
@@ -46,8 +47,33 @@ char *xstrdup ();
 
 static void show_date PARAMS ((const char *format, time_t when));
 
+enum Time_spec
+{
+  /* display only the date: 1999-03-25 */
+  TIME_SPEC_DATE=1,
+  /* display date and hour: 1999-03-25T03-0500 */
+  TIME_SPEC_HOURS,
+  /* display date, hours, and minutes: 1999-03-25T03:23-0500 */
+  TIME_SPEC_MINUTES,
+  /* display date, hours, minutes, and seconds: 1999-03-25T03:23:14-0500 */
+  TIME_SPEC_SECONDS
+};
+
+static char const *const time_spec_string[] =
+{
+  "date", "hours", "minutes", "seconds", 0
+};
+
+static enum Time_spec const time_spec[] =
+{
+  TIME_SPEC_DATE, TIME_SPEC_HOURS, TIME_SPEC_MINUTES, TIME_SPEC_SECONDS
+};
+
 /* The name this program was run with, for error messages. */
 char *program_name;
+
+/* If nonzero, display an ISO 8601 format date/time string */
+static int iso_8601_format = 0;
 
 /* If non-zero, display time in RFC-822 format for mail or news. */
 static int rfc_format = 0;
@@ -59,6 +85,7 @@ static struct option const long_options[] =
 {
   {"date", required_argument, NULL, 'd'},
   {"file", required_argument, NULL, 'f'},
+  {"iso-8601", optional_argument, NULL, 'I'},
   {"reference", required_argument, NULL, 'r'},
   {"rfc-822", no_argument, NULL, 'R'},
   {"set", required_argument, NULL, 's'},
@@ -97,14 +124,18 @@ Usage: %s [OPTION]... [+FORMAT]\n\
       printf (_("\
 Display the current time in the given FORMAT, or set the system date.\n\
 \n\
-  -d, --date=STRING        display time described by STRING, not `now'\n\
-  -f, --file=DATEFILE      like --date once for each line of DATEFILE\n\
-  -r, --reference=FILE     display the last modification time of FILE\n\
-  -R, --rfc-822            output RFC-822 compliant date string\n\
-  -s, --set=STRING         set time described by STRING\n\
-  -u, --utc, --universal   print or set Coordinated Universal Time\n\
-      --help               display this help and exit\n\
-      --version            output version information and exit\n\
+  -d, --date=STRING         display time described by STRING, not `now'\n\
+  -f, --file=DATEFILE       like --date once for each line of DATEFILE\n\
+  -I, --iso-8601[=TIMESPEC] output an ISO-8601 compliant date/time string.\n\
+                            TIMESPEC=`date' (or missing) for date only,\n\
+                            `hours', `minutes', or `seconds' for date and\n\
+                            time to the indicated precision.\n\
+  -r, --reference=FILE      display the last modification time of FILE\n\
+  -R, --rfc-822             output RFC-822 compliant date string\n\
+  -s, --set=STRING          set time described by STRING\n\
+  -u, --utc, --universal    print or set Coordinated Universal Time\n\
+      --help                display this help and exit\n\
+      --version             output version information and exit\n\
 "));
       printf (_("\
 \n\
@@ -286,7 +317,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  while ((optc = getopt_long (argc, argv, "d:f:r:Rs:u", long_options, NULL))
+  while ((optc = getopt_long (argc, argv, "d:f:I::r:Rs:u", long_options, NULL))
 	 != -1)
     switch (optc)
       {
@@ -297,6 +328,12 @@ main (int argc, char **argv)
 	break;
       case 'f':
 	batch_file = optarg;
+	break;
+      case 'I':
+	iso_8601_format = (optarg
+			   ? XARGMATCH ("--iso-8601", optarg,
+					time_spec_string, time_spec)
+			   : TIME_SPEC_DATE);
 	break;
       case 'r':
 	reference = optarg;
@@ -439,6 +476,13 @@ show_date (const char *format, time_t when)
   struct tm *tm;
   char *out = NULL;
   size_t out_length = 0;
+  /* ISO 8601 formats, in local and UTC.  See below regarding %z */
+  char *iso_format_string[5][2]={
+    {"", ""},
+    {"%Y-%m-%d", "%Y-%m-%d"},
+    {"%Y-%m-%dT%H%z", "%Y-%m-%dT%HZ"},
+    {"%Y-%m-%dT%H:%M%z", "%Y-%m-%dT%H:%MZ"},
+    {"%Y-%m-%dT%H:%M:%S%z", "%Y-%m-%dT%H:%M:%SZ"}};
 
   tm = localtime (&when);
 
@@ -455,7 +499,9 @@ show_date (const char *format, time_t when)
 		? (universal_time
 		   ? "%a, %_d %b %Y %H:%M:%S GMT"
 		   : "%a, %_d %b %Y %H:%M:%S %z")
-		: "%a %b %e %H:%M:%S %Z %Y");
+		: (iso_8601_format
+		   ? iso_format_string[iso_8601_format][universal_time]
+		   : "%a %b %e %H:%M:%S %Z %Y"));
     }
   else if (*format == '\0')
     {
