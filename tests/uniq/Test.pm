@@ -36,13 +36,13 @@ my @tv = (
 ['33', '-f 1',"a a a\nb a c\n",  "a a a\nb a c\n",  0],
 ['34', '-f 1',"b a\na a\n",      "b a\n",           0],
 ['35', '-f 2',"a a c\nb a c\n",  "a a c\n",         0],
-# Skip over characters; FIXME: the parsing of +number is broken
-#['40', '+1',  "aaa\naaa\n",      "aaa\n",           0],
-#['41', '+1',  "baa\naaa\n",      "aaa\n",           0],
+# Skip over characters.
+['40', '+1',  "aaa\naaa\n",      "aaa\n",           0],
+['41', '+1',  "baa\naaa\n",      "baa\n",           0],
 ['42', '-s 1',"aaa\naaa\n",      "aaa\n",           0],
 ['43', '-s 2',"baa\naaa\n",      "baa\n",           0],
-#['44', '+1 --',  "aaa\naaa\n",      "aaa\n",           0],
-#['45', '+1 --',  "baa\naaa\n",      "aaa\n",           0],
+['44', '+1 --',  "aaa\naaa\n",   "aaa\n",           0],
+['45', '+1 --',  "baa\naaa\n",   "baa\n",           0],
 # Skip over fields and characters
 ['50', '-f 1 -s 1',"a aaa\nb ab\n",      "a aaa\nb ab\n",       0],
 ['51', '-f 1 -s 1',"a aaa\nb aaa\n",     "a aaa\n",             0],
