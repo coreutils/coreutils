@@ -1,3 +1,7 @@
+1999-05-17  Paul Eggert  <eggert@twinsun.com>
+
+	* lib/human.c (human_readable): Allow from_block_size to be zero.
+
 1999-05-14  Jim Meyering  <meyering@ascend.com>
 
 	* tests/Makefile.am (envvar-check): Renamed from check-local.
