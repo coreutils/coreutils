@@ -805,11 +805,11 @@ remove_entry (DS const *ds, char const *filename, struct rm_options const *x,
 
 /* Remove entries in `.', the current working directory (cwd).
    Upon finding a directory that is both non-empty and that can be chdir'd
-   into, return zero and set *SUBDIR and fill in SUBDIR_SB, where
+   into, return RM_OK and set *SUBDIR and fill in SUBDIR_SB, where
    SUBDIR is the malloc'd name of the subdirectory if the chdir succeeded,
    NULL otherwise (e.g., if opendir failed or if there was no subdirectory).
    Likewise, SUBDIR_SB is the result of calling lstat on SUBDIR.
-   Return RM_OK if all entries are removed.  Remove RM_ERROR if any
+   Return RM_OK if all entries are removed.  Return RM_ERROR if any
    entry cannot be removed.  Otherwise, return RM_USER_DECLINED if
    the user declines to remove at least one entry.  Remove as much as
    possible, continuing even if we fail to remove some entries.  */
