@@ -126,7 +126,7 @@ xstrndup (const char *s, size_t n)
 {
   char *new = strndup (s, n);
   if (new == NULL)
-    error (EXIT_FAILURE, 0, _("virtual memory exhausted"));
+    xalloc_die ();
   return new;
 }
 
