@@ -4,6 +4,11 @@
 
 	* build-aux: New directory.  Renamed from config.
 	* configure.ac: Reflect renaming: config -> build-aux.
+	* Makefile.am (dist-hook): Likewise.
+	* Makefile.maint: Likewise.
+	* Makefile.cfg (cvs_files): Likewise.
+	* .x-sc_sun_os_names: Likewise.
+	* .x-sc_trailing_blank: Likewise.
 
 	* src/ls.c (get_funky_string): Use '\a', rather than 7, for
 	portability to EBCDIC hosts.
