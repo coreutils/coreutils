@@ -13,12 +13,14 @@ my @tv = (
 ['a4', '-w',  'x',                  "      1\n",                    0],
 ['a5', '-w',  "x y\n",              "      2\n",                    0],
 ['a6', '-w',  "x y\nz",             "      3\n",                    0],
-# Remember, -l counts *newline* bytes, not lines.
+# Remember, -l counts *newline* bytes, not logical lines.
 ['a7', '-l',  "x y",                "      0\n",                    0],
 ['a8', '-l',  "x y\n",              "      1\n",                    0],
 ['a9', '-l',  "x\ny\n",             "      2\n",                    0],
 ['b0', '',    "",                   "      0       0       0\n",    0],
 ['b1', '',    "a b\nc\n",           "      2       3       6\n",    0],
+['c0', '-L',  "1\n12\n",            "      2\n",                    0],
+['c1', '-L',  "\n123456",           "      6\n",                    0],
 );
 
 sub test_vector
