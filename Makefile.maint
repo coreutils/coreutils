@@ -157,9 +157,14 @@ automake_repo=:pserver:anoncvs@anoncvs.cygnus.com:/cvs/automake
 .PHONY: wget-update
 wget-update:
 	$(WGET) $(ftp-gnu)/texinfo/texinfo.tex -O $(srcdir)/doc/texinfo.tex
-	$(WGET) $(ftp-gnu)/config/config.guess -O $(srcdir)/config.guess
-	$(WGET) $(ftp-gnu)/config/config.sub -O $(srcdir)/config.sub
-	cvs -d $(automake_repo) co -p automake/depcomp > depcomp
+	for f in config.guess config.sub; do \
+	  $(WGET) $(ftp-gnu)/config/$$f -O $(srcdir)/$$f; \
+	done
+	for f in depcomp missing; do \
+	  echo checking out $$f...; \
+	  cvs -d $(automake_repo) co -p automake/$$f > t$$$$ \
+	    && mv t$$$$ $$f; \
+	done
 
 define emit-rsync-commands
 	echo =====================================
