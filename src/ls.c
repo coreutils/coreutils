@@ -132,6 +132,7 @@ struct bin_str
 
 #ifndef STDC_HEADERS
 time_t time ();
+void free ();
 #endif
 
 void mode_string ();
