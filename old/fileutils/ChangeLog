@@ -2,6 +2,8 @@
 
 	* Version 3.16z.
 
+	* Makefile.maint (alpha): New target.
+
 	* lib/backupfile.h: Protect against multiple inclusion.
 	From Akim Demaille.
 
