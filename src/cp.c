@@ -96,7 +96,7 @@ static bool remove_trailing_slashes;
 
 static char const *const sparse_type_string[] =
 {
-  "never", "auto", "always", 0
+  "never", "auto", "always", NULL
 };
 
 static enum Sparse_type const sparse_type[] =
@@ -107,7 +107,7 @@ static enum Sparse_type const sparse_type[] =
 /* Valid arguments to the `--reply' option. */
 static char const* const reply_args[] =
 {
-  "yes", "no", "query", 0
+  "yes", "no", "query", NULL
 };
 
 /* The values that correspond to the above strings. */
@@ -741,7 +741,7 @@ decode_preserve_arg (char const *arg, struct cp_options *x, bool on_off)
   static char const* const preserve_args[] =
     {
       "mode", "timestamps",
-      "ownership", "links", "all", 0
+      "ownership", "links", "all", NULL
     };
 
   char *arg_writable = xstrdup (arg);
