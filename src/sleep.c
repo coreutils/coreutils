@@ -83,6 +83,7 @@ point number.\n\
     }
   exit (status);
 }
+
 /* Given a floating point value *X, and a suffix character, SUFFIX_CHAR,
    scale *X by the multiplier implied by SUFFIX_CHAR.  SUFFIX_CHAR may
    be the NUL byte or `s' to denote seconds, `m' for minutes, `h' for
