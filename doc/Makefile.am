@@ -31,6 +31,6 @@ $(INFO_DEPS): $(EXTRA_DIST)
 # List words/regexps here that should not appear in the texinfo documentation.
 check-texinfo:
 	grep timezone $(srcdir)/*.texi && exit 1 || :
-	grep -w POSIX $(srcdir)/*.texi && exit 1 || :
+	grep -w POSIX $(srcdir)/*.texi 2> /dev/null && exit 1 || :
 
 check: check-texinfo
