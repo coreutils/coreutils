@@ -1,3 +1,9 @@
+2004-09-21  Jim Meyering  <jim@meyering.net>
+
+	* man/rm.x: Say "the response is affirmative" rather than "the
+	response begins with y or Y", so that the documentation is
+	accurate in non-English locales.  Problem reported by Munzir Taha.
+
 2004-09-19  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/echo.c (main): Don't pass NULL to strcmp when
@@ -7,7 +13,7 @@
 	(long_options, main): Remove support for undocumented and
 	obsolete --string option, as suggested in the 1996-09-26 patch.
 	* NEWS: Document this.
-	
+
 	* tests/rm/fail-eperm: Don't try to remove writeable files in a
 	sticky /tmp directory, as SVR4-like systems (e.g., Solaris 9) let
 	you remove such files.  Problem reported by Bert Fischer in:
