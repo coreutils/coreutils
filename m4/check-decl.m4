@@ -38,7 +38,7 @@ AC_DEFUN(jm_CHECK_DECLS,
 # endif
 #endif
 
-#if !HAVE_UTMPX_H
+#if HAVE_UTMP_H
 # include <utmp.h>
 #endif
 '
