@@ -1,6 +1,8 @@
 2004-04-20  Jim Meyering  <jim@meyering.net>
 
-	* dirfd.m4: Don't emit trailing blanks.
+	* dirfd.m4 (gl_FUNC_DIRFD): Rename from UTILS_FUNC_DIRFD.
+	Don't emit trailing blanks.
+	* jm-macros.m4 (gl_MACROS): Reflect the renaming.
 
 2004-04-19  Jim Meyering  <jim@meyering.net>
 
