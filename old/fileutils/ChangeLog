@@ -2,6 +2,9 @@
 
 	* Version 4.0.42.
 
+	* tests/install/basic-1: Add the standard $VERBOSE-handling hook.
+	This test currently fails for mips-dec-ultrix4.4.
+
 	* tests/install/create-leading: Use ../envvar-check rather than
 	open-coding the same tests.
 
