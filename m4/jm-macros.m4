@@ -1,4 +1,4 @@
-#serial 51   -*- autoconf -*-
+#serial 52   -*- autoconf -*-
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
@@ -60,6 +60,10 @@ AC_DEFUN([jm_MACROS],
   AC_REQUIRE([jm_FUNC_GNU_STRFTIME])
   AC_REQUIRE([jm_FUNC_MKTIME])
   AC_REQUIRE([jm_FUNC_FPENDING])
+
+  # This is for od and stat, and any other program that
+  # uses the PRI.MAX macros from inttypes.h.
+  AC_REQUIRE([gt_INTTYPES_PRI])
 
   AC_REQUIRE([jm_FUNC_GETGROUPS])
   test -n "$GETGROUPS_LIB" && LIBS="$GETGROUPS_LIB $LIBS"
