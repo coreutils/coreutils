@@ -1,3 +1,9 @@
+Wed Jul  3 17:41:15 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/chgrp.c [!MAXUID]: Define after inclusion of system.h to avoid
+	warning about redefinition on SunOS4, Solaris2.4 and SGI-irix5.3.
+	From Kaveh Ghazi.
+
 Tue Jul  2 22:56:03 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in (VERSION): Bump to 3.12q.
