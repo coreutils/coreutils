@@ -2,6 +2,44 @@
 
 	* Version 4.0.34.
 
+	* src/chgrp.c: Include "chown-core.h".
+	[enum Change_status, enum Verbosity]: Remove declarations.
+	Remove decls of globals that are now part of struct Chown_option.
+	Remove decl of xstat.
+	(describe_change): Remove function.
+	(change_file_group): Likewise.
+	(change_dir_group): Likewise.
+	(parse_group): Don't set global, groupname, here...
+	(main): ... instead, initialize `chopt.group_name' here.
+	Initialize chopt and update uses of the now-members.
+	Set group_name also when it's obtained via a --reference=FILE option.
+	Call change_file_owner (with -1 for uids), not change_file_group.
+
+	* src/chown.c: Don't include pwd.h or grp.h -- no longer needed.
+	Include "chown-core.h".
+	[enum Change_status, enum Verbosity]: Remove declarations.
+	Remove decls of globals that are now part of struct Chown_option.
+	(describe_change): Remove function.
+	(change_file_owner): Likewise.
+	(change_dir_owner): Likewise.
+	(main): Initialize chopt and update uses of the now-members.
+	Set user_name and group_name also when they're obtained via a
+	--reference=FILE option.
+	Pass `chopt' to change_file_owner.
+
+	* src/chown-core.c: Include <pwd.h>, <grp.h>, and "xalloc.h".
+	[!_POSIX_VERSION]: Declare getgrnam and getgrgid.
+	(gid_to_name): New function.
+	(uid_to_name): Likewise.
+	(chopt_free): Likewise.
+
+	Factor out code that's common to chgrp.c and chown.c.
+	* src/chown-core.h: New file.
+	* src/chown-core.c (chopt_init): New function.
+	(describe_change): Extracted/combined from chgrp.c and chown.c.
+	(change_dir_owner): Likewise.
+	(change_file_owner): Likewise.
+
 	* configure.in (AC_OUTPUT): Add tests/chgrp/Makefile.
 	* tests/Makefile.am (SUBDIRS): Add chgrp.
 	* tests/chgrp: New directory.
