@@ -9,7 +9,7 @@ DEFS = -DLIBDIR=\"$(libdir)\" @DEFS@
 
 libfetish_a_SOURCES = \
   getdate.y posixtm.c addext.c argmatch.c backupfile.c basename.c \
-  canon-host.c closeout.c dirname.c exclude.c filemode.c diacrit.c \
+  canon-host.c closeout.c diacrit.c dirname.c exclude.c filemode.c \
   full-write.c getopt.c getopt1.c getugroups.c hard-locale.c hash.c \
   human.c idcache.c isdir.c linebuffer.c localcharset.c long-options.c \
   makepath.c md5.c memcasecmp.c memcoll.c modechange.c path-concat.c \
