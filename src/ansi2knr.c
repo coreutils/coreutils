@@ -1,6 +1,6 @@
-/* Copyright (C) 1989, 1997 Aladdin Enterprises.  All rights reserved. */
+/* Copyright (C) 1989, 1997, 1998 Aladdin Enterprises.  All rights reserved. */
 
-/*$Id: ansi2knr.c,v 1.8 1998/05/24 17:43:17 meyering Exp $*/
+/*$Id: ansi2knr.c,v 1.9 1999/01/13 05:40:42 meyering Exp $*/
 /* Convert ANSI C function definitions to K&R ("traditional C") syntax */
 
 /*
@@ -40,9 +40,12 @@ program under the GPL.
  * identifier at the left margin, followed by a left parenthesis,
  * with a right parenthesis as the last character on the line,
  * and with a left brace as the first token on the following line
- * (ignoring possible intervening comments).
- * It will recognize a multi-line header provided that no intervening
- * line ends with a left or right brace or a semicolon.
+ * (ignoring possible intervening comments), except that a line
+ * consisting of only
+ *	identifier1(identifier2)
+ * will not be considered a function definition unless identifier2 is
+ * the word "void".  ansi2knr will recognize a multi-line header provided
+ * that no intervening line ends with a left or right brace or a semicolon.
  * These algorithms ignore whitespace and comments, except that
  * the function name must be the first thing on the line.
  * The following constructs will confuse it:
@@ -55,35 +58,39 @@ program under the GPL.
  * The original and principal author of ansi2knr is L. Peter Deutsch
  * <ghost@aladdin.com>.  Other authors are noted in the change history
  * that follows (in reverse chronological order):
-	lpd 97-12-08 made input_file optional; only closes input and/or
+	lpd 1998-11-09 added further hack to recognize identifier(void)
+		as being a procedure
+	lpd 1998-10-23 added hack to recognize lines consisting of
+		identifier1(identifier2) as *not* being procedures
+	lpd 1997-12-08 made input_file optional; only closes input and/or
 		output file if not stdin or stdout respectively; prints
 		usage message on stderr rather than stdout; adds
 		--filename switch (changes suggested by
 		<ceder@lysator.liu.se>)
-	lpd 96-01-21 added code to cope with not HAVE_CONFIG_H and with
+	lpd 1996-01-21 added code to cope with not HAVE_CONFIG_H and with
 		compilers that don't understand void, as suggested by
 		Tom Lane
-	lpd 96-01-15 changed to require that the first non-comment token
+	lpd 1996-01-15 changed to require that the first non-comment token
 		on the line following a function header be a left brace,
 		to reduce sensitivity to macros, as suggested by Tom Lane
 		<tgl@sss.pgh.pa.us>
-	lpd 95-06-22 removed #ifndefs whose sole purpose was to define
+	lpd 1995-06-22 removed #ifndefs whose sole purpose was to define
 		undefined preprocessor symbols as 0; changed all #ifdefs
 		for configuration symbols to #ifs
-	lpd 95-04-05 changed copyright notice to make it clear that
+	lpd 1995-04-05 changed copyright notice to make it clear that
 		including ansi2knr in a program does not bring the entire
 		program under the GPL
-	lpd 94-12-18 added conditionals for systems where ctype macros
+	lpd 1994-12-18 added conditionals for systems where ctype macros
 		don't handle 8-bit characters properly, suggested by
 		Francois Pinard <pinard@iro.umontreal.ca>;
 		removed --varargs switch (this is now the default)
-	lpd 94-10-10 removed CONFIG_BROKETS conditional
-	lpd 94-07-16 added some conditionals to help GNU `configure',
+	lpd 1994-10-10 removed CONFIG_BROKETS conditional
+	lpd 1994-07-16 added some conditionals to help GNU `configure',
 		suggested by Francois Pinard <pinard@iro.umontreal.ca>;
 		properly erase prototype args in function parameters,
 		contributed by Jim Avera <jima@netcom.com>;
 		correct error in writeblanks (it shouldn't erase EOLs)
-	lpd 89-xx-xx original version
+	lpd 1989-xx-xx original version
  */
 
 /* Most of the conditionals here are to make ansi2knr work with */
@@ -397,6 +404,34 @@ test1(buf)
 			key++;
 		   }
 	   }
+	   {
+	       char *id = p;
+	       int len;
+	       /*
+		* Check for identifier1(identifier2) and not
+		* identifier1(void).
+		*/
+
+	       while ( isidchar(*p) )
+		   p++;
+	       len = p - id;
+	       p = skipspace(p, 1);
+	       if ( *p == ')' && (len != 4 || strncmp(id, "void", 4)) )
+		   return 0;	/* not a function */
+	   }
+	/*
+	 * If the last significant character was a ), we need to count
+	 * parentheses, because it might be part of a formal parameter
+	 * that is a procedure.
+	 */
+	if (contin > 0) {
+	    int level = 0;
+
+	    for (p = skipspace(buf, 1); *p; p = skipspace(p + 1, 1))
+		level += (*p == '(' ? 1 : *p == ')' ? -1 : 0);
+	    if (level > 0)
+		contin = -1;
+	}
 	return contin;
 }
 
