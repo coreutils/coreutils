@@ -1,7 +1,7 @@
 /* define the magic numbers as given by statfs(2) */
 /* please send additions to meskes@debian.org     */
 
-#if defined(__linux__)
+#if defined __linux__
 # define S_MAGIC_AFFS		0xADFF
 # define S_MAGIC_EXT		0x137D
 # define S_MAGIC_EXT2_OLD	0xEF51
@@ -31,6 +31,6 @@
 # define S_MAGIC_REISERFS	0x52654973
 # define S_MAGIC_CRAMFS		0x28cd3d45
 # define S_MAGIC_ROMFS		0x7275
-#elif defined (__GNU__)
+#elif defined __GNU__
 # include <hurd/hurd_types.h>
 #endif
