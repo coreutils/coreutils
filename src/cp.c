@@ -137,7 +137,7 @@ Usage: %s [OPTION]... SOURCE DEST\n\
 Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
 \n\
   -a, --archive                same as -dpR\n\
-  -b, --backup[=CONTROL]       make backup before removal\n\
+  -b, --backup[=CONTROL]       make a backup of each existing destination file\n\
   -d, --no-dereference         preserve links\n\
   -f, --force                  remove existing destinations, never prompt\n\
   -i, --interactive            prompt before overwrite\n\
