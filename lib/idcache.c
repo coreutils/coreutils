@@ -44,6 +44,10 @@ struct group *getgrnam ();
 char *xmalloc ();
 char *xstrdup ();
 
+#ifdef __DJGPP__
+static char digits[] = "0123456789";
+#endif
+
 struct userid
 {
   union
@@ -105,6 +109,15 @@ getuidbyname (const char *user)
       return 0;
 
   pwent = getpwnam (user);
+#ifdef __DJGPP__
+  /* We need to pretend to be the user USER, to make
+     pwd functions know about an arbitrary user name.  */
+  if (!pwent && strspn (user, digits) < strlen (user))
+    {
+      setenv ("USER", user, 1);
+      pwent = getpwnam (user);	/* now it will succeed */
+    }
+#endif
 
   tail = (struct userid *) xmalloc (sizeof (struct userid));
   tail->name = xstrdup (user);
@@ -172,6 +185,15 @@ getgidbyname (const char *group)
       return 0;
 
   grent = getgrnam (group);
+#ifdef __DJGPP__
+  /* We need to pretend to belong to group GROUP, to make
+     grp functions know about any arbitrary group name.  */
+  if (!grent && strspn (group, digits) < strlen (group))
+    {
+      setenv ("GROUP", group, 1);
+      grent = getgrnam (group);	/* now it will succeed */
+    }
+#endif
 
   tail = (struct userid *) xmalloc (sizeof (struct userid));
   tail->name = xstrdup (group);
