@@ -65,11 +65,6 @@ void strip_trailing_slashes ();
 int euidaccess ();
 char *stpcpy ();
 
-static int copy_reg (char *source, char *dest);
-static int do_move (char *source, char *dest);
-static int movefile (char *source, char *dest);
-static void usage (int status);
-
 /* The name this program was run with. */
 char *program_name;
 
