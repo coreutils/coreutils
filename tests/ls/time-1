@@ -85,7 +85,7 @@ In the output below, the date of last access for \`a' should
 have been $u1.
 EOF
   ls --full -lu a
-  framework_failure=1
+  (exit 77); exit
   ;;
 esac
 
