@@ -83,6 +83,10 @@
 # define longdiff(a, b) ((a) - (b))
 #endif
 
+/* Convert B 512-byte blocks to kilobytes if K is nonzero,
+   otherwise return it unchanged. */
+#define convert_blocks(b, k) ((k) ? ((b) + 1) / 2 : (b))
+
 /* The maximum number of digits required to print an inode number
    in an unsigned format.  */
 #ifndef INODE_DIGITS
