@@ -1090,7 +1090,7 @@ main (int argc, char **argv)
     }
 
   nfiles = 100;
-  files = (struct fileinfo *) xmalloc (sizeof (struct fileinfo) * nfiles);
+  files = XMALLOC (struct fileinfo, nfiles);
   files_index = 0;
 
   clear_files ();
@@ -1906,8 +1906,7 @@ parse_ls_color (void)
 		 override an earlier one, which can be useful for
 		 having terminal-specific defs override global).  */
 
-	      ext = (struct color_ext_type *)
-		xmalloc (sizeof (struct color_ext_type));
+	      ext = XMALLOC (struct color_ext_type, 1);
 	      ext->next = color_ext_list;
 	      color_ext_list = ext;
 
@@ -2137,7 +2136,7 @@ add_ignore_pattern (const char *pattern)
 {
   register struct ignore_pattern *ignore;
 
-  ignore = (struct ignore_pattern *) xmalloc (sizeof (struct ignore_pattern));
+  ignore = XMALLOC (struct ignore_pattern, 1);
   ignore->pattern = pattern;
   /* Add it to the head of the linked list. */
   ignore->next = ignore_patterns;
@@ -3535,8 +3534,7 @@ init_column_info (void)
 
   if (column_info == NULL)
     {
-      column_info = (struct column_info *) xmalloc (max_idx
-						    * sizeof (struct column_info));
+      column_info = XMALLOC (struct column_info, max_idx);
       allocate = 1;
     }
 
@@ -3548,7 +3546,7 @@ init_column_info (void)
       column_info[i].line_len = (i + 1) * MIN_COLUMN_WIDTH;
 
       if (allocate)
-	column_info[i].col_arr = (int *) xmalloc ((i + 1) * sizeof (int));
+	column_info[i].col_arr = XMALLOC (int, i + 1);
 
       for (j = 0; j <= i; ++j)
 	column_info[i].col_arr[j] = MIN_COLUMN_WIDTH;
