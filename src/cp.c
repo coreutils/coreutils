@@ -291,7 +291,7 @@ re_protect (const char *const_dst_path, int src_offset,
 
       dst_path[p->slash_offset] = '\0';
 
-      if ((*(x->xstat)) (src_path, &src_sb))
+      if (XSTAT (x, src_path, &src_sb))
 	{
 	  error (0, errno, _("failed to get attributes of %s"),
 		 quote (src_path));
@@ -552,6 +552,10 @@ do_copy (int n_files, char **file, const char *target_directory,
 	 Copy the files `file1' through `filen'
 	 to the existing directory `edir'. */
       int i;
+      int (*xstat)() = (x->dereference == DEREF_COMMAND_LINE_ARGUMENTS
+			|| x->dereference == DEREF_ALWAYS
+			? stat
+			: lstat);
 
       for (i = 0; i < n_files; i++)
 	{
@@ -593,7 +597,7 @@ do_copy (int n_files, char **file, const char *target_directory,
 						  (x->verbose
 						   ? "%s -> %s\n" : NULL),
 						  &attr_list, &new_dst,
-						  x->xstat);
+						  xstat);
 	    }
 	  else
 	    {
@@ -1021,16 +1025,6 @@ main (int argc, char **argv)
 
   /* The key difference between -d (--no-dereference) and not is the version
      of `stat' to call.  */
-
-  if (x.dereference == DEREF_NEVER)
-    x.xstat = lstat;
-  else
-    {
-      /* For DEREF_COMMAND_LINE_ARGUMENTS, x.xstat must be stat for
-	 each command line argument, but must later be `lstat' for
-	 any symlinks that are found via recursive traversal.  */
-      x.xstat = stat;
-    }
 
   if (x.recursive)
     x.copy_as_regular = copy_contents;
