@@ -18,11 +18,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
 
 /* Written by Jan Brittenson, bson@gnu.ai.mit.edu.  */
 
-#ifdef HAVE_CONFIG_H
+#if HAVE_CONFIG_H
 # include <config.h>
 #endif
 
-/* The `getdelim' function is only declared if there following symbol
+/* The `getdelim' function is only declared if the following symbol
    is defined.  */
 #define _GNU_SOURCE	1
 #include <stdio.h>
