@@ -83,7 +83,7 @@ static struct option const longopts[] =
   {"time", required_argument, 0, CHAR_MAX + 1},
   {"no-create", no_argument, 0, 'c'},
   {"date", required_argument, 0, 'd'},
-  {"file", required_argument, 0, 'r'},
+  {"file", required_argument, 0, 'r'}, /* FIXME: phase out --file */
   {"reference", required_argument, 0, 'r'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
@@ -168,30 +168,44 @@ touch (const char *file)
       fd = open_maybe_create (file, &file_created);
     }
 
-  if (fd == -1)
+  /* Don't fail if the open failed because FILE is a directory.  */
+  if (fd == -1
+      /* As usual, using E* macros like this is risky...
+         So heads up.  */
+      && errno != EISDIR)
     {
       error (0, errno, "%s", file);
       return 1;
     }
 
-  if (file_created && amtime_now)
+  if (amtime_now)
     {
-      if (close (fd) < 0)
+      if (file_created)
+	{
+	  if (close (fd) < 0)
+	    {
+	      error (0, errno, "%s", file);
+	      return 1;
+	    }
+
+	  /* We've just created the file with the current times.  */
+	  return 0;
+	}
+    }
+  else
+    {
+      /* We're setting only one of the time values.  stat the target to get
+	 the other one.  If we have the file descriptor already, use fstat,
+	 otherwise, FILE is a directory, so we have to use stat.  */
+      if (fd == -1 ? stat (file, &sbuf) : fstat (fd, &sbuf))
 	{
 	  error (0, errno, "%s", file);
+	  close (fd);
 	  return 1;
 	}
-      return 0;		/* We've done all we have to. */
     }
 
-  if (fstat (fd, &sbuf))
-    {
-      error (0, errno, "%s", file);
-      close (fd);
-      return 1;
-    }
-
-  if (close (fd) < 0)
+  if (fd != -1 && close (fd) < 0)
     {
       error (0, errno, "%s", file);
       return 1;
@@ -252,7 +266,7 @@ usage (int status)
 Update the access and modification times of each FILE to the current time.\n\
 \n\
   -a                     change only the access time\n\
-  -c                     do not create any files\n\
+  -c, --no-create        do not create any files\n\
   -d, --date=STRING      parse STRING and use it instead of current time\n\
   -f                     (ignored)\n\
   -m                     change only the modification time\n\
