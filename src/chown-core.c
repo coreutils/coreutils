@@ -175,7 +175,9 @@ change_file_owner (FTS *fts, FTSENT *ent,
 		   struct Chown_option const *chopt)
 {
   const char *file_full_name = ent->fts_path;
-  struct stat *file_stats = ent->fts_statp;
+  struct stat const *file_stats = ent->fts_statp;
+  struct stat const *target_stats;
+  struct stat stat_buf;
   int errors = 0;
 
   /* This is the second time we've seen this directory.  */
@@ -207,12 +209,28 @@ change_file_owner (FTS *fts, FTSENT *ent,
       return 1;
     }
 
-  if ((old_uid == (uid_t) -1 || file_stats->st_uid == old_uid)
-      && (old_gid == (gid_t) -1 || file_stats->st_gid == old_gid))
+  /* If this is a symlink and we're dereferencing them,
+     stat it to get the permissions of the referent.  */
+  if (S_ISLNK (file_stats->st_mode) && chopt->affect_symlink_referent)
     {
-      uid_t new_uid = (uid == (uid_t) -1 ? file_stats->st_uid : uid);
-      gid_t new_gid = (gid == (gid_t) -1 ? file_stats->st_gid : gid);
-      if (new_uid != file_stats->st_uid || new_gid != file_stats->st_gid)
+      if (stat (ent->fts_accpath, &stat_buf) != 0)
+	{
+	  error (0, errno, _("cannot dereference %s"), quote (file_full_name));
+	  return 1;
+	}
+      target_stats = &stat_buf;
+    }
+  else
+    {
+      target_stats = file_stats;
+    }
+
+  if ((old_uid == (uid_t) -1 || target_stats->st_uid == old_uid)
+      && (old_gid == (gid_t) -1 || target_stats->st_gid == old_gid))
+    {
+      uid_t new_uid = (uid == (uid_t) -1 ? target_stats->st_uid : uid);
+      gid_t new_gid = (gid == (gid_t) -1 ? target_stats->st_gid : gid);
+      if (new_uid != target_stats->st_uid || new_gid != target_stats->st_gid)
 	{
 	  const char *file = ent->fts_accpath;
 	  int fail;
