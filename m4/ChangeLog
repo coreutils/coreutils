@@ -3,6 +3,8 @@
 	* rename.m4: Use temporary directories named conftestdir{,2}, not
 	foo and bar.  Create conftestdir/ in the script, not in the C code.
 	Remove directories in the script, not in the C code.
+	Remove conftestdir{,2} before trying to create the directory.
+	Make the entire configure script fail if the mkdir fails.
 
 2001-01-02  Volker Borchert  <bt@teknon.de>
 
