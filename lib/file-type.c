@@ -64,8 +64,5 @@ file_type (struct stat const *st)
   if (S_TYPEISSHM (st))
     return _("shared memory object");
 
-  if (S_TYPEISTMO (st))
-    return _("typed memory object");
-
   return _("weird file");
 }
