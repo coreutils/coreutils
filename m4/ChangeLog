@@ -2,6 +2,22 @@
 
 	* chown.m4: Replace each use of AC_SUBST(LIBOBJS)/LIBOBJS=... with
 	AC_LIBOBJ([function_name]).
+	* chown.m4: Likewise.
+	* fnmatch.m4: Likewise.
+	* ftruncate.m4: Likewise.
+	* getgroups.m4: Likewise.
+	* getline.m4: Likewise.
+	* group-member.m4: Likewise.
+	* jm-macros.m4: Likewise.
+	* lstat.m4: Likewise.
+	* malloc.m4: Likewise.
+	* memcmp.m4: Likewise.
+	* nanosleep.m4: Likewise.
+	* putenv.m4: Likewise.
+	* realloc.m4: Likewise.
+	* regex.m4: Likewise.
+	* stat.m4: Likewise.
+	* strftime.m4: Likewise.
 
 2000-07-01  Jim Meyering  <meyering@lucent.com>
 
