@@ -224,12 +224,17 @@ struct ftw_data
    as `ftw', map each flag to the subset of values used by `ftw'.  */
 static const int nftw_arr[] =
 {
-  FTW_F, FTW_D, FTW_DNR, FTW_NS, FTW_SL, FTW_DP, FTW_SLN
+  /* Extract with:
+     perl -ne '/^  (FTW_\w+)\b[^=]*$/ and print "$1, "' ftw_.h; echo */
+  FTW_F, FTW_D, FTW_DNR, FTW_NS, FTW_DCH, FTW_DCHP, FTW_DPRE, FTW_SL, FTW_DP, FTW_SLN
 };
 
 static const int ftw_arr[] =
 {
-  FTW_F, FTW_D, FTW_DNR, FTW_NS, FTW_F, FTW_D, FTW_NS
+  /* Generate with:
+     perl -ne '/^  (FTW_\w+)\b[^=]*$/ and print "$1, "' ftw_.h \
+       | sed 's/_SL/_F/;s/_DP\>/_D/;s/_SLN/_NS/'; echo  */
+  FTW_F, FTW_D, FTW_DNR, FTW_NS, FTW_DCH, FTW_DCHP, FTW_DPRE, FTW_F, FTW_D, FTW_NS
 };
 
 
