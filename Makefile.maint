@@ -53,11 +53,11 @@ PREV_VERSION_REGEXP := $(shell echo $(PREV_VERSION)|sed 's/\./\\./g')
 v = Version
 url_list = \
   ftp://alpha.gnu.org/gnu/fetish/$(distdir).tar.gz \
-  ftp://tug.org/pub/FIXME/fetish/$(distdir).tar.gz \
+  ftp://tug.org/pub/gnu/fetish/$(distdir).tar.gz \
   ftp://ftp.enst.fr/pub/gnu/gnits/fetish/$(distdir).tar.gz
 dir_list = \
   /fs/share/ftp/gnu/fetish \
-  /home/ftp/FIXME \
+  /home/ftp/pub/gnu/fetish \
   /pub/gnu/gnits/fetish
 
 md5 = $(shell md5sum < $(distdir).tar.gz|sed 's/  -//')
