@@ -3041,7 +3041,7 @@ the values of the command line arguments.
 Synopsis:
 
 @example
-sleep [@var{number}[smhd]]@dots{}
+sleep @var{number}[smhd]@dots{}
 @end example
 
 @cindex time units
