@@ -262,8 +262,11 @@ usage (status)
 	     program_name);
   else
     {
-      printf ("Usage: %s [OPTION]... [+FORMAT] [MMDDhhmm[[CC]YY][.ss]]\n",
-	      program_name);
+      printf ("\
+Usage: %s [OPTION]... [+FORMAT]\n\
+  or:  %s [-u] [--utc] [--universal] [MMDDhhmm[[CC]YY][.ss]]\n\
+",
+	      program_name, program_name);
       printf ("\
 \n\
   -d, --date=STRING        display time described by STRING, not `now'\n\
