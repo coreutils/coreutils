@@ -165,13 +165,14 @@ describe_change (const char *file, enum Change_status changed,
 
 /* Change the owner and/or group of the file specified by FTS and ENT
    to UID and/or GID as appropriate.
-   FIXME: describe old_uid and old_gid.
+   If REQUIRED_UID is not -1, then skip files with any other user ID.
+   If REQUIRED_GID is not -1, then skip files with any other group ID.
    CHOPT specifies additional options.
    Return 0 if successful, -1 if errors occurred.  */
 static int
 change_file_owner (FTS *fts, FTSENT *ent,
 		   uid_t uid, gid_t gid,
-		   uid_t old_uid, gid_t old_gid,
+		   uid_t required_uid, gid_t required_gid,
 		   struct Chown_option const *chopt)
 {
   char const *file_full_name = ent->fts_path;
@@ -216,7 +217,7 @@ change_file_owner (FTS *fts, FTSENT *ent,
 
   if (errors)
     do_chown = false;
-  else if (old_uid == (uid_t) -1 && old_gid == (gid_t) -1
+  else if (required_uid == (uid_t) -1 && required_gid == (gid_t) -1
 	   && chopt->verbosity == V_off && ! chopt->root_dev_ino)
     do_chown = true;
   else
@@ -238,8 +239,10 @@ change_file_owner (FTS *fts, FTSENT *ent,
 	}
 
       do_chown = (!errors
-		  && (old_uid == (uid_t) -1 || old_uid == file_stats->st_uid)
-		  && (old_gid == (gid_t) -1 || old_gid == file_stats->st_gid));
+		  && (required_uid == (uid_t) -1
+		      || required_uid == file_stats->st_uid)
+		  && (required_gid == (gid_t) -1
+		      || required_gid == file_stats->st_gid));
     }
 
   if (do_chown && ROOT_DEV_INO_CHECK (chopt->root_dev_ino, file_stats))
