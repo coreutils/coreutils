@@ -31,7 +31,7 @@ my %seen;
 my $test_vector;
 foreach $test_vector (@Test::t)
   {
-    my ($test_name, $input, $flags, $expected, $e_ret_code)
+    my ($test_name, $flags, $input, $expected, $e_ret_code)
 	= @{$test_vector};
     die "$0: $.: duplicate test name \`$test_name'\n"
       if (defined ($seen{$test_name}));
