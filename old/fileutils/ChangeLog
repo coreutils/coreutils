@@ -1,3 +1,7 @@
+1999-04-06  Jim Meyering  <meyering@ascend.com>
+
+	* lib/strftime.c: Update from master source in libc.
+
 1999-04-04  Jim Meyering  <meyering@ascend.com>
 
 	* tests/ln/misc: Comment out the test added on 1999-01-31.
