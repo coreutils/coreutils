@@ -1,3 +1,20 @@
+Fri Jun  7 22:06:46 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (VERSION): Set to 1.18.
+
+	* src/Makefile.am (sort_LDADD): Set this to -lm to get pow when using
+	the strtod supplied with this package.  Otherwise, linking failed on
+	Solaris-2.4 systems.  Reported by Wayne Stewart <wstewa@atl.com>.
+
+Thu Jun  6 21:57:08 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* po/Makefile.in.in: Update from gettext-0.10.16.
+	* intl/*: Likewise.
+	* ABOUT-NLS: Likewise.
+	* aclocal.m4 (AC_REPLACE_GNU_GETOPT): Move definition to precede
+	gettext-related ones.
+	Update from gettext-0.10.16.
+
 Fri May 31 22:04:51 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* Version 1.17.
