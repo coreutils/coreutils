@@ -355,6 +355,9 @@ make_path (const char *argpath,
       if (!do_chdir)
 	basename_dir = dirpath;
 
+      /* Done creating leading directories.  Restore original umask.  */
+      umask (oldmask);
+
       /* We're done making leading directories.
 	 Create the final component of the path.  */
 
@@ -363,9 +366,6 @@ make_path (const char *argpath,
 	  CLEANUP;
 	  return 1;
 	}
-
-      /* Done creating directories.  Restore original umask.  */
-      umask (oldmask);
 
       if (verbose_fmt_string != NULL)
 	error (0, 0, verbose_fmt_string, quote (dirpath));
