@@ -57,7 +57,6 @@ enum
 };
 
 int euidaccess ();
-int full_write ();
 int isdir ();
 int lstat ();
 int yesno ();
