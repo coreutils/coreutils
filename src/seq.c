@@ -57,6 +57,10 @@ static char *separator;
 /* FIXME: make this an option.  */
 static char *terminator = "\n";
 
+/* The representation of the decimal point in the current locale.
+   Always "." if the localeconv function is not supported.  */
+static char *decimal_point = ".";
+
 /* The increment.  */
 static double step;
 
@@ -124,19 +128,34 @@ main (int argc, char **argv)
   first = 1.0;
   step_is_set = 0;
 
+  /* Figure out the locale's idea of a decimal point.  */
+#ifdef HAVE_LOCALECONV
+  {
+    struct lconv *locale;
+
+    locale = localeconv ();
+    /* Paranoia.  */
+    if (locale && locale->decimal_point && locale->decimal_point[0] != '\0')
+      decimal_point = locale->decimal_point;
+  }
+#endif
+
   /* We have to handle negative numbers in the command line but this
-     conflicts with the command line arguments.  So the getopt mode is
-     REQUIRE_ORDER (the '+' in the format string) and it abort on the
-     first non-option or negative number.  */
-  while ((optc = getopt_long (argc, argv, "+0123456789f:s:w", long_options,
-			      NULL)) != -1)
+     conflicts with the command line arguments.  So explicitly check first
+     whether the next argument looks like a negative number.  */
+  while (1)
     {
-      if ('0' <= optc && optc <= '9')
+      if (argv[optind][0] == '-'
+	  && ((optc = argv[optind][1]) == decimal_point[0]
+	      || ISDIGIT (optc)))
 	{
 	  /* means negative number */
-	  --optind;
 	  break;
 	}
+
+      optc = getopt_long (argc, argv, "+f:s:w", long_options, NULL);
+      if (optc == -1)
+	break;
 
       switch (optc)
 	{
@@ -336,26 +355,32 @@ get_width_format ()
     }
   full_width = width1;
 
-  sprintf (buffer, "%g", 1.0 + modf (min_val, &temp));
+  sprintf (buffer, "%g", 1.0 + modf (fabs (min_val), &temp));
   width1 = strlen (buffer);
   if (width1 == 1)
     width1 = 0;
   else
     {
-      if (buffer[0] != '1' || buffer[1] != '.' ||
-	  buffer[2 + strspn (&buffer[2], "0123456789")] != '\0')
+      if (buffer[0] != '1'
+	  /* FIXME: assumes that decimal_point is a single character
+	     string.  */
+	  || buffer[1] != decimal_point[0]
+	  || buffer[2 + strspn (&buffer[2], "0123456789")] != '\0')
 	return "%g";
       width1 -= 2;
     }
 
-  sprintf (buffer, "%g", 1.0 + modf (step, &temp));
+  sprintf (buffer, "%g", 1.0 + modf (fabs (step), &temp));
   width2 = strlen (buffer);
   if (width2 == 1)
     width2 = 0;
   else
     {
-      if (buffer[0] != '1' || buffer[1] != '.' ||
-	  buffer[2 + strspn (&buffer[2], "0123456789")] != '\0')
+      if (buffer[0] != '1'
+	  /* FIXME: assumes that decimal_point is a single character
+	     string.  */
+	  || buffer[1] != decimal_point[0]
+	  || buffer[2 + strspn (&buffer[2], "0123456789")] != '\0')
 	return "%g";
       width2 -= 2;
     }
