@@ -69,11 +69,9 @@ set `$LS -c a c`
 if test "$*" = 'c a'; then
   : ok
 else
-  if test "$VERBOSE" = yes; then
-    # In spite of documentation, (e.g., stat(2)), neither link nor chmod
-    # update a file's st_ctime on SunOS4.1.4.
-    echo "failed ls ctime test -- this is expected at least for SunOS4.1.4" >&2
-  fi
+  # In spite of documentation, (e.g., stat(2)), neither link nor chmod
+  # update a file's st_ctime on SunOS4.1.4.
+  echo "failed ls ctime test -- this is expected at least for SunOS4.1.4" >&2
   fail=1
 fi
 
