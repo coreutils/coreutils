@@ -3,6 +3,9 @@
 	* ls-mntd-fs.m4 (jm_LIST_MOUNTED_FILESYSTEMS): Add a compile-test
 	instead of the mere test for existence of mntent.h.  The latter
 	would get a false-positive on AIX 3.4 systems.
+	In the outer getmntent if-block, don't die if neither of the getmntent
+	tests succeeds.  Instead, just fall through and continue with the
+	remaining tests.
 
 2001-09-22  Jim Meyering  <meyering@lucent.com>
 
