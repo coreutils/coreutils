@@ -3,9 +3,6 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
-  `cp --sparse=always F /dev/hdx' no longer tries to use lseek to create
-  holes in the destination.
-
   nohup now sets the close-on-exec flag for its copy of the stderr file
   descriptor.  This avoids some nohup-induced hangs.  For example, before
   this change, if you ran `ssh localhost', then `nohup sleep 600 </dev/null &',
