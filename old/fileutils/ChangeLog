@@ -1,3 +1,12 @@
+Wed Aug 21 23:17:04 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/Makefile.am (EXTRA_DIST): Remove ansi2knr.1 and ansi2knr.c.
+	Automake includes them automatically.
+
+	* configure.in (AM_INIT_AUTOMAKE): Use it.
+	(AM_PROG_INSTALL): Remove.  AM_INIT_AUTOMAKE does this.
+	(AC_PROG_MAKE_SET): Likewise.
+
 Sun Aug 18 09:52:39 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in (jm_MAINTAINER_MODE, fp_C_PROTOTYPES): Rename with
