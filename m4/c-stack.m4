@@ -1,6 +1,6 @@
 # Check prerequisites for compiling lib/c-stack.c.
 
-# Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+# Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -138,7 +138,7 @@ AC_DEFUN([AC_SYS_XSI_STACK_OVERFLOW_HEURISTIC],
    fi])
 
 
-AC_DEFUN([jm_PREREQ_C_STACK],
+AC_DEFUN([gl_PREREQ_C_STACK],
   [AC_REQUIRE([AC_SYS_XSI_STACK_OVERFLOW_HEURISTIC])
 
    # for STACK_DIRECTION
@@ -151,10 +151,12 @@ AC_DEFUN([jm_PREREQ_C_STACK],
    AC_CHECK_HEADERS_ONCE(sys/time.h unistd.h)
    AC_CHECK_HEADERS(sys/resource.h ucontext.h)
 
+   AC_CHECK_MEMBERS([struct sigaction.sa_sigaction], , , [#include <signal.h>])
+
    AC_CHECK_TYPES([stack_t], , , [#include <signal.h>])])
 
 AC_DEFUN([gl_C_STACK],
 [
   dnl Prerequisites of lib/c-stack.c.
-  jm_PREREQ_C_STACK
+  gl_PREREQ_C_STACK
 ])

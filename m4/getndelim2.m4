@@ -1,4 +1,4 @@
-# getndelim2.m4 serial 2
+# getndelim2.m4 serial 3
 dnl Copyright (C) 2003 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
@@ -8,7 +8,13 @@ dnl the same distribution terms as the rest of that program.
 
 AC_DEFUN([gl_GETNDELIM2],
 [
-  AC_LIBOBJ(getndelim2)
+  # Avoid multiple inclusions of getndelim2.o into LIBOBJS.
+  # This hack won't be needed after gnulib requires Autoconf 2.58 or later.
+  case " $LIB@&t@OBJS " in
+  *" getndelim2.$ac_objext "* ) ;;
+  *) AC_LIBOBJ(getndelim2);;
+  esac
+
   gl_PREREQ_GETNDELIM2
 ])
 

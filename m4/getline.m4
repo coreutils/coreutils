@@ -1,4 +1,4 @@
-# getline.m4 serial 9
+# getline.m4 serial 10
 
 dnl Copyright (C) 1998, 1999, 2000, 2001, 2002, 2003 Free Software
 dnl Foundation, Inc.
@@ -56,7 +56,14 @@ AC_DEFUN([AM_FUNC_GETLINE],
     AC_DEFINE([getline], [gnu_getline],
       [Define to a replacement function name for getline().])
     AC_LIBOBJ(getline)
-    AC_LIBOBJ(getndelim2)
+
+    # Avoid multiple inclusions of getndelim2.o into LIBOBJS.
+    # This hack won't be needed after gnulib requires Autoconf 2.58 or later.
+    case " $LIB@&t@OBJS " in
+    *" getndelim2.$ac_objext "* ) ;;
+    *) AC_LIBOBJ(getndelim2);;
+    esac
+
     gl_PREREQ_GETLINE
     gl_PREREQ_GETNDELIM2
   fi
