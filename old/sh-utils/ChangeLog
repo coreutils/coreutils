@@ -1,7 +1,29 @@
-1999-05-09  Jim Meyering  <meyering@ascend.com>
+1999-05-14  Jim Meyering  <meyering@ascend.com>
 
-	* configure.in (LIB_CRYPT): Set it to -l$ac_lib, now that autoconf
-	uses an $ac_-prefixed variable name.
+	* lib/getugroups.c (getugroups): Don't dereference a null pointer when
+	running `id USER' for some USER that is listed on the RHS in /etc/group.
+	From Sander van Malssen.
+	Add some curly braces, use STREQ, reverse the sense of a test
+	and use `continue' to save a level of nesting.
+
+	* tests/Makefile.am (envvar-check): Renamed from check-local.
+	(check): Depend on envvar-check so the envvar check is performed
+	before all other tests.  Reported by Volker Borchert.
+	* tests/.env-warn: Use `%%' place-holder that Makefile.am rule expects,
+	so CDPATH is mentioned in the message.  Reported by Volker Borchert.
+
+1999-05-10  Jim Meyering  <meyering@ascend.com>
+
+	* src/uptime.c (AUTHORS): add Kaveh.
+
+	Expand each `&' character in the gecos field.
+	* src/pinky.c (count_ampersands): New function.
+	(create_fullname): New function.
+	(print_entry): Use create_fullname here.
+	(print_long_entry): Use it here, too.
+	From Kaveh Ghazi.
+
+1999-05-09  Jim Meyering  <meyering@ascend.com>
 
 	* lib/regex.c: Update from libc.
 
