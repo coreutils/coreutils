@@ -81,8 +81,8 @@ static struct option const long_options[] =
   {0, 0, 0, 0}
 };
 
-/* Tell the user the mode MODE that file FILE has been set to;
-   if CHANGED is zero, FILE had that mode already. */
+/* Tell the user how/if the MODE of FILE has been changed.
+   CHANGED describes what (if anything) has happened. */
 
 static void
 describe_change (const char *file, short unsigned int mode,
