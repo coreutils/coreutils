@@ -1,6 +1,8 @@
 Changes in release 1.23
 * pr: For compatibility (also more POSIX compliant): Include default
   separator `TAB' when merging lines of full length.
+* tail -N file1 file2 works like head -N file1 file2, except when
+  POSIXLY_CORRECT is set, in which case it gets an error.
 
 Changes in release 1.22
 [1.21a]
