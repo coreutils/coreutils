@@ -73,6 +73,15 @@ static const char suffixes[] =
   'Y'	/* Yotta */
 };
 
+/* Like human_readable_inexact, except always round to even.  */
+char *
+human_readable (uintmax_t n, char *buf,
+		int from_block_size, int output_block_size)
+{
+  return human_readable_inexact (n, buf, from_block_size, output_block_size,
+				 human_round_to_even);
+}
+
 /* Convert N to a human readable format in BUF.
 
    N is expressed in units of FROM_BLOCK_SIZE.  FROM_BLOCK_SIZE must
@@ -81,6 +90,9 @@ static const char suffixes[] =
    If OUTPUT_BLOCK_SIZE is positive, use units of OUTPUT_BLOCK_SIZE in
    the output number.  OUTPUT_BLOCK_SIZE must be a multiple of
    FROM_BLOCK_SIZE or vice versa.
+
+   Use INEXACT_STYLE to determine whether to take the ceiling or floor
+   of any result that cannot be expressed exactly.
 
    If OUTPUT_BLOCK_SIZE is negative, use a format like "127k" if
    possible, using powers of -OUTPUT_BLOCK_SIZE; otherwise, use
@@ -95,8 +107,9 @@ static const char suffixes[] =
    than -OUTPUT_BLOCK_SIZE aren't modified.  */
 
 char *
-human_readable (uintmax_t n, char *buf,
-		int from_block_size, int output_block_size)
+human_readable_inexact (uintmax_t n, char *buf,
+			int from_block_size, int output_block_size,
+			enum human_inexact_style inexact_style)
 {
   uintmax_t amt;
   int base;
@@ -207,24 +220,33 @@ human_readable (uintmax_t n, char *buf,
 
       if (amt < 10)
 	{
-	  tenths += 2 < rounding + (tenths & 1);
-
-	  if (tenths == 10)
+	  if (2 * (1 - (int) inexact_style)
+	      < rounding + (tenths & (inexact_style == human_round_to_even)))
 	    {
-	      amt++;
-	      tenths = 0;
+	      tenths++;
+	      rounding = 0;
+
+	      if (tenths == 10)
+		{
+		  amt++;
+		  tenths = 0;
+		}
 	    }
 
 	  if (amt < 10)
 	    {
 	      *--p = '0' + tenths;
 	      *--p = '.';
-	      tenths = 0;
+	      tenths = rounding = 0;
 	    }
 	}
     }
 
-  if (5 < tenths + (2 < rounding + (amt & 1)))
+  if (inexact_style == human_ceiling
+      ? 0 < tenths + rounding
+      : inexact_style == human_round_to_even
+      ? 5 < tenths + (2 < rounding + (amt & 1))
+      : /* inexact_style == human_floor */ 0)
     {
       amt++;
 
