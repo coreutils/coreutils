@@ -6,8 +6,8 @@ if test "$VERBOSE" = yes; then
   mv --version
 fi
 
-dir=into-self-dir
-file=into-self-file
+dir=toself-dir
+file=toself-file
 
 test_failure=0
 
