@@ -1317,7 +1317,7 @@ tail_file (struct File_spec *f, uintmax_t n_units)
 	     call made the window big enough to exercise the problem.  */
 	  sleep (1);
 #endif
-	  f->errnum = 0;
+	  f->errnum = ok - 1;
 	  if (fstat (fd, &stats) < 0)
 	    {
 	      ok = false;
