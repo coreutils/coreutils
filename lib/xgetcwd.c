@@ -12,20 +12,13 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-/* Written by David MacKenzie, djm@gnu.ai.mit.edu. */
+/* Written by David MacKenzie <djm@gnu.ai.mit.edu>.  */
 
 #ifdef HAVE_CONFIG_H
-#if defined (CONFIG_BROKETS)
-/* We use <config.h> instead of "config.h" so that a compilation
-   using -I. -I$srcdir will use ./config.h rather than $srcdir/config.h
-   (which it would do because it found this file in $srcdir).  */
 #include <config.h>
-#else
-#include "config.h"
-#endif
 #endif
 
 #include <stdio.h>
@@ -36,7 +29,7 @@ extern int errno;
 #include <sys/types.h>
 #include "pathmax.h"
 
-#if !defined(_POSIX_VERSION) && !defined(HAVE_GETCWD)
+#ifndef HAVE_GETCWD
 char *getwd ();
 #define getcwd(buf, max) getwd (buf)
 #else
