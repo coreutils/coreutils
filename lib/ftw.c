@@ -60,6 +60,7 @@ char *alloca ();
 
 #include <errno.h>
 #include <ftw.h>
+#include <limits.h>
 #include <search.h>
 #include <stdlib.h>
 #include <string.h>
@@ -71,11 +72,6 @@ char *alloca ();
 # include <include/sys/stat.h>
 #else
 # include <sys/stat.h>
-#endif
-
-#include <limits.h>
-#ifndef PATH_MAX
-# define PATH_MAX 1024
 #endif
 
 #if ! _LIBC && !HAVE_DECL_STPCPY && !defined stpcpy
@@ -153,6 +149,14 @@ int rpl_lstat (const char *, struct stat *);
 # endif
 # define FTW_FUNC_T __ftw_func_t
 # define NFTW_FUNC_T __nftw_func_t
+#endif
+
+/* We define PATH_MAX if the system does not provide a definition.
+   This does not artificially limit any operation.  PATH_MAX is simply
+   used as a guesstimate for the expected maximal path length.
+   Buffers will be enlarged if necessary.  */
+#ifndef PATH_MAX
+# define PATH_MAX 1024
 #endif
 
 struct dir_data
@@ -656,6 +660,7 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
 						 * sizeof (struct dir_data *));
   memset (data.dirstreams, '\0', data.maxdir * sizeof (struct dir_data *));
 
+  /* PATH_MAX is always defined when we get here.  */
   dir_len = strlen (dir);
   data.dirbufsize = MAX (2 * dir_len, PATH_MAX);
   data.dirbuf = (char *) malloc (data.dirbufsize);
@@ -768,10 +773,10 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
   /* Return to the start directory (if necessary).  */
   if (cwd != NULL)
     {
-      int saved_errno = errno;
+      int save_err = errno;
       __chdir (cwd);
       free (cwd);
-      __set_errno (saved_errno);
+      __set_errno (save_err);
     }
 
   /* Free all memory.  */
