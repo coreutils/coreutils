@@ -24,10 +24,12 @@
 #include <config.h>
 #include <stdio.h>
 #include <sys/types.h>
+#include <setjmp.h>
 #include <assert.h>
 
 #include "save-cwd.h"
 #include "system.h"
+#include "cycle-check.h"
 #include "dirname.h"
 #include "error.h"
 #include "file-type.h"
@@ -142,6 +144,12 @@ struct dirstack_state
      into each directory to be processed.  When finished with the
      hierarchy under a directory, pop the active dir stack.  */
   struct obstack Active_dir;
+
+  /* Used to detect cycles.  */
+  struct cycle_check_state cycle_check_state;
+
+  /* Target of a longjmp in case rm detects a directory cycle.  */
+  jmp_buf current_arg_jumpbuf;
 };
 typedef struct dirstack_state DS;
 
@@ -496,44 +504,6 @@ AD_is_removable (DS const *ds, char const *file)
 {
   struct AD_ent *top = AD_stack_top (ds);
   return ! (top->unremovable && hash_lookup (top->unremovable, file));
-}
-
-static inline bool
-is_power_of_two (unsigned int i)
-{
-  return (i & (i - 1)) == 0;
-}
-
-static void
-cycle_check (DS const *ds, struct stat const *sb)
-{
-#ifdef ENABLE_CYCLE_CHECK
-  /* If there is a directory cycle, detect it (lazily) and die.  */
-  static struct dev_ino dir_cycle_detect_dev_ino;
-  static unsigned int chdir_counter;
-
-  /* If the current directory ever happens to be the same
-     as the one we last recorded for the cycle detection,
-     then it's obviously part of a cycle.  */
-  if (chdir_counter && SAME_INODE (*sb, dir_cycle_detect_dev_ino))
-    {
-      error (0, 0, _("\
-WARNING: Circular directory structure.\n\
-This almost certainly means that you have a corrupted file system.\n\
-NOTIFY YOUR SYSTEM MANAGER.\n\
-The following directory is part of the cycle:\n  %s\n"),
-	     quote (full_filename (".")));
-      exit (EXIT_FAILURE);
-    }
-
-  /* If the number of `descending' chdir calls is a power of two,
-     record the dev/ino of the current directory.  */
-  if (is_power_of_two (++chdir_counter))
-    {
-      dir_cycle_detect_dev_ino.st_dev = sb->st_dev;
-      dir_cycle_detect_dev_ino.st_ino = sb->st_ino;
-    }
-#endif
 }
 
 static bool
@@ -909,7 +879,16 @@ remove_cwd_entries (DS *ds, char **subdir, struct stat *subdir_sb,
 	      status = RM_ERROR;
 	      break;
 	    }
-	  cycle_check (ds, subdir_sb);
+	  if (cycle_check (&ds->cycle_check_state, subdir_sb))
+	    {
+	      error (0, 0, _("\
+WARNING: Circular directory structure.\n\
+This almost certainly means that you have a corrupted file system.\n\
+NOTIFY YOUR SYSTEM MANAGER.\n\
+The following directory is part of the cycle:\n  %s\n"),
+		     quote (full_filename (".")));
+	      longjmp (ds->current_arg_jumpbuf, 1);
+	    }
 
 	  *subdir = xstrdup (f);
 	  break;
@@ -1120,7 +1099,12 @@ rm (size_t n_files, char const *const *file, struct rm_options const *x)
 
   for (i = 0; i < n_files; i++)
     {
-      enum RM_status s = rm_1 (ds, file[i], x, &cwd_state);
+      enum RM_status s;
+      cycle_check_init (&ds->cycle_check_state);
+      if (setjmp (ds->current_arg_jumpbuf))
+	s = RM_ERROR;
+      else
+	s = rm_1 (ds, file[i], x, &cwd_state);
       assert (VALID_STATUS (s));
       UPDATE_STATUS (status, s);
     }
