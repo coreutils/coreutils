@@ -237,6 +237,14 @@ writing identical descriptions for each of the programs, they are
 described here.  (In fact, every @sc{gnu} program accepts (or should accept)
 these options.)
 
+@vindex POSIXLY_CORRECT
+Normally options and operands can appear in any order, and programs act
+as if all the options appear before any operands.  For example,
+@samp{sort -r passwd -t :} acts like @samp{sort -r -t : passwd}, since
+@samp{:} is an option-argument of @option{-t}.  However, if the
+@env{POSIXLY_CORRECT} environment variable is set, options must appear
+before operands, unless otherwise specified for a particular command.
+
 Some of these programs recognize the @samp{--help} and @samp{--version}
 options only when one of them is the sole command line argument.
 
@@ -252,8 +260,24 @@ Print a usage message listing all available options, then exit successfully.
 @cindex version number, finding
 Print the version number, then exit successfully.
 
+@item --
+@opindex --
+@cindex option delimiter
+Delimit the option list.  Later arguments, if any, are treated as
+operands even if they begin with @samp{-}.  For example, @samp{sort --
+-r} reads from the file named @file{-r}.
+
 @end table
 
+@cindex standard input
+@cindex standard output
+A single @samp{-} is not really an option, though it looks like one.  It
+stands for standard input, or for standard output if that is clear from
+the context, and it can be used either as an operand or as an
+option-argument.  For example, @samp{sort -o - -} outputs to standard
+output and reads from standard input, and is equivalent to plain
+@samp{sort}.  Unless otherwise specified, @samp{-} can appear in any
+context that requires a file name.
 
 @node Output of entire files
 @chapter Output of entire files
@@ -1051,8 +1075,8 @@ If a line is too long to fit in a column, it is truncated.
 @opindex -c
 @opindex --show-control-chars
 Print control characters using hat notation (e.g., @samp{^G}); print
-other unprintable characters in octal backslash notation.  By default,
-unprintable characters are not changed.
+other nonprinting characters in octal backslash notation.  By default,
+nonprinting characters are not changed.
 
 @item -d
 @itemx --double-space
@@ -1258,7 +1282,7 @@ set in the input files.
 @itemx --show-nonprinting
 @opindex -v
 @opindex --show-nonprinting
-Print unprintable characters in octal backslash notation.
+Print nonprinting characters in octal backslash notation.
 
 @item -w @var{page_width}
 @itemx --width=@var{page_width}
@@ -2109,14 +2133,18 @@ mode:
 @table @samp
 
 @item -c
+@itemx --check
 @opindex -c
+@opindex --check
 @cindex checking for sortedness
 Check whether the given files are already sorted: if they are not all
 sorted, print an error message and exit with a status of 1.
 Otherwise, exit successfully.
 
 @item -m
+@itemx --merge
 @opindex -m
+@opindex --merge
 @cindex merging sorted files
 Merge the given files by sorting them as a group.  Each input file must
 always be individually sorted.  It always works to sort instead of
@@ -2133,17 +2161,19 @@ options, until a difference is found or no fields are left.
 Unless otherwise specified, all comparisons use the character
 collating sequence specified by the @env{LC_COLLATE} locale.
 
-If any of the global options @samp{Mbdfinr} are given but no key fields
+If any of the global options @samp{bdfgiMnr} are given but no key fields
 are specified, @code{sort} compares the entire lines according to the
 global options.
 
 Finally, as a last resort when all keys compare equal (or if no
 ordering options were specified at all), @code{sort} compares the entire
 lines.  The last resort comparison
-honors the @samp{-r} global option.  The @samp{-s} (stable) option
+honors the @option{--reverse} (@option{-r}) global option.
+The @option{--stable} (@option{-s}) option
 disables this last-resort comparison so that lines in which all fields
 compare equal are left in their original relative order.  If no fields
-or global options are specified, @samp{-s} has no effect.
+or global options are specified, @option{--stable} (@option{-s}) has no
+effect.
 
 @sc{gnu} @code{sort} (as specified for all @sc{gnu} utilities) has no limits on
 input line length or restrictions on bytes allowed within lines.  In
@@ -2160,8 +2190,8 @@ Upon any error, @code{sort} exits with a status of @samp{2}.
 @vindex TMPDIR
 If the environment variable @env{TMPDIR} is set, @code{sort} uses its
 value as the directory for temporary files instead of @file{/tmp}.  The
-@samp{-T @var{tempdir}} option in turn overrides the environment
-variable.
+@option{--temporary-directory} (@option{-T}) option in turn overrides
+the environment variable.
 
 The following options affect the ordering of output lines.  They may be
 specified globally or as part of a specific key field.  If no key
@@ -2174,14 +2204,19 @@ so portable shell scripts should specify global options first.
 @table @samp
 
 @item -b
+@itemx --ignore-leading-blanks
 @opindex -b
+@opindex --ignore-leading-blanks
 @cindex blanks, ignoring leading
 @vindex LC_CTYPE
 Ignore leading blanks when finding sort keys in each line.
 The @env{LC_CTYPE} locale determines character types.
 
 @item -d
+@itemx --dictionary-order
 @opindex -d
+@opindex --dictionary-order
+@cindex dictionary order
 @cindex phone directory order
 @cindex telephone directory order
 @vindex LC_CTYPE
@@ -2190,15 +2225,20 @@ letters, digits and blanks when sorting.
 The @env{LC_CTYPE} locale determines character types.
 
 @item -f
+@itemx --ignore-case
 @opindex -f
+@opindex --ignore-case
+@cindex ignoring case
 @cindex case folding
 @vindex LC_CTYPE
 Fold lowercase characters into the equivalent uppercase characters when
-sorting so that, for example, @samp{b} and @samp{B} sort as equal.
+comparing so that, for example, @samp{b} and @samp{B} sort as equal.
 The @env{LC_CTYPE} locale determines character types.
 
 @item -g
+@itemx --general-numeric-sort
 @opindex -g
+@opindex --general-numeric-sort
 @cindex general numeric sort
 @vindex LC_NUMERIC
 Sort numerically, using the standard C function @code{strtod} to convert
@@ -2224,17 +2264,23 @@ Plus infinity.
 @end itemize
 
 Use this option only if there is no alternative; it is much slower than
-@samp{-n} and it can lose information when converting to floating point.
+@option{--numeric-sort} (@option{-n}) and it can lose information when
+converting to floating point.
 
 @item -i
+@itemx --ignore-nonprinting
 @opindex -i
+@opindex --ignore-nonprinting
+@cindex nonprinting characters, ignoring
 @cindex unprintable characters, ignoring
 @vindex LC_CTYPE
-Ignore unprintable characters.
+Ignore nonprinting characters.
 The @env{LC_CTYPE} locale determines character types.
 
 @item -M
+@itemx --month-sort
 @opindex -M
+@opindex --month-sort
 @cindex months, sorting by
 @vindex LC_TIME
 An initial string, consisting of any amount of whitespace, followed
@@ -2244,7 +2290,9 @@ Invalid names compare low to valid names.  The @env{LC_TIME} locale
 determines the month spellings.
 
 @item -n
+@itemx --numeric-sort
 @opindex -n
+@opindex --numeric-sort
 @cindex numeric sort
 @vindex LC_NUMERIC
 Sort numerically: the number begins each line; specifically, it consists
@@ -2253,10 +2301,11 @@ digits possibly separated by thousands separators, optionally followed
 by a decimal-point character and zero or more digits.  The @env{LC_NUMERIC}
 locale specifies the decimal-point character and thousands separator.
 
-@code{sort -n} uses what might be considered an unconventional method
+Numeric sort uses what might be considered an unconventional method
 to compare strings representing floating point numbers.  Rather than
 first converting each string to the C @code{double} type and then
-comparing those values, sort aligns the decimal-point characters in the two
+comparing those values, @command{sort} aligns the decimal-point
+characters in the two
 strings and compares the strings a character at a time.  One benefit
 of using this approach is its speed.  In practice this is much more
 efficient than performing the two corresponding string-to-double (or even
@@ -2266,10 +2315,13 @@ there is no corresponding loss of precision.  Converting each string to
 on most systems.
 
 Neither a leading @samp{+} nor exponential notation is recognized.
-To compare such strings numerically, use the @samp{-g} option.
+To compare such strings numerically, use the
+@option{--general-numeric-sort} (@option{-g}) option.
 
 @item -r
+@itemx --reverse
 @opindex -r
+@opindex --reverse
 @cindex reverse sorting
 Reverse the result of comparison, so that lines with greater key values
 appear earlier in the output instead of later.
@@ -2281,15 +2333,26 @@ Other options are:
 @table @samp
 
 @item -o @var{output-file}
+@itemx --output=@var{output-file}
 @opindex -o
+@opindex --output
 @cindex overwriting of input, allowed
 Write output to @var{output-file} instead of standard output.
 If necessary, @command{sort} reads input before opening
 @var{output-file}, so you can safely sort a file in place by using
-commands like @code{sort F -o F} and @code{cat F | sort -o F}.
+commands like @code{sort -o F F} and @code{cat F | sort -o F}.
+
+@vindex POSIXLY_CORRECT
+If @option{-c} is not also specified, @option{-o} may appear after an
+input file even if @env{POSIXLY_CORRECT} is set, e.g., @samp{sort F -o
+F}.  Warning: this usage is obsolescent.  Future versions of @sc{posix}
+will require that support for it be withdrawn.  Portable scripts should
+specify @samp{-o @var{output-file}} before any input files.
 
 @item -S @var{size}
+@itemx --buffer-size=@var{size}
 @opindex -S
+@opindex --buffer-size
 @cindex size for main memory sorting
 Use a main-memory sort buffer of the given @var{size}.  By default,
 @var{size} is in units of 1,024 bytes.  Appending @samp{%} causes
@@ -2307,7 +2370,9 @@ grows beyond @var{size} if @command{sort} encounters input lines larger
 than @var{size}.
 
 @item -t @var{separator}
+@itemx --field-separator=@var{separator}
 @opindex -t
+@opindex --field-separator
 @cindex field separator character
 Use character @var{separator} as the field separator when finding the
 sort keys in each line.  By default, fields are separated by the empty
@@ -2320,7 +2385,9 @@ as @samp{-k 2}, or sort fields consisting of a range, as @samp{-k 2,3},
 retain the field separators present between the endpoints of the range.
 
 @item -T @var{tempdir}
+@itemx --temporary-directory=@var{tempdir}
 @opindex -T
+@opindex --temporary-directory
 @cindex temporary directory
 @vindex TMPDIR
 Use directory @var{tempdir} to store temporary files, overriding the
@@ -2331,24 +2398,31 @@ performance by using this option to specify directories on different
 disks and controllers.
 
 @item -u
+@itemx --unique
 @opindex -u
+@opindex --unique
 @cindex uniquifying output
-For the default case or the @samp{-m} option, only output the first
-of a sequence of lines that compare equal.  For the @samp{-c} option,
+
+Normally, output only the first of a sequence of lines that compare
+equal.  For the @option{--check} (@option{-c}) option,
 check that no pair of consecutive lines compares equal.
 
 @item -k @var{pos1}[,@var{pos2}]
+@itemx --key=@var{pos1}[,@var{pos2}]
 @opindex -k
+@opindex --key
 @cindex sort field
-The recommended, @sc{posix}, option for specifying a sort field.  The field
+Specify a sort field that
 consists of the part of the line between @var{pos1} and @var{pos2} (or the
 end of the line, if @var{pos2} is omitted), @emph{inclusive}.
 Fields and character positions are numbered starting with 1.
-So to sort on the second field, you'd use @samp{-k 2,2}
+So to sort on the second field, you'd use @samp{--key=2,2} (@samp{-k 2,2}).
 See below for more examples.
 
 @item -z
+@itemx --zero-terminated
 @opindex -z
+@opindex --zero-terminated
 @cindex sort zero-terminated lines
 Treat the input as a set of lines, each terminated by a zero byte (@sc{ascii}
 @sc{nul} (Null) character) instead of an @sc{ascii} @sc{lf} (Line Feed).
@@ -2357,21 +2431,17 @@ This option can be useful in conjunction with @samp{perl -0} or
 reliably handle arbitrary pathnames (even those which contain Line Feed
 characters.)
 
-@item +@var{pos1}[-@var{pos2}]
+@item +@var{pos1} [-@var{pos2}]
 The obsolescent, traditional option for specifying a sort field.  The field
 consists of the line between @var{pos1} and up to but @emph{not including}
 @var{pos2} (or the end of the line if @var{pos2} is omitted).  Fields
 and character positions are numbered starting with 0.  See below.
 
-Warning: the @samp{+@var{pos}} usage is obsolescent.  Future versions of
+Warning: the @samp{+@var{pos1}} usage is obsolescent.  Future versions of
 @sc{posix} will require that support for it be withdrawn.  Use
-@option{-k} instead.
+@option{--key} (@option{-k}) instead.
 
 @end table
-
-In addition, when @sc{gnu} @code{sort} is invoked with exactly one argument,
-options @samp{--help} and @samp{--version} are recognized.  @xref{Common
-options}.
 
 Historical (BSD and System V) implementations of @code{sort} have
 differed in their interpretation of some options, particularly
