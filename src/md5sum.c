@@ -172,7 +172,8 @@ static void process_buffer __P ((const void *buffer, size_t len,
 /* FIXME: This is provisory.  Use strtok.  */
 
 static int
-split_3 (char *s, char **u, char **v, char **w)
+split_3 (s, u, v, w)
+     char *s, **u, **v, **w;
 {
   size_t i;
   char *p[3];
@@ -227,7 +228,8 @@ split_3 (char *s, char **u, char **v, char **w)
 /* FIXME: use strcspn.  */
 
 static int
-hex_digits (const char *s)
+hex_digits (s)
+     const char *s;
 {
   while (*s)
     {
@@ -332,10 +334,7 @@ main (argc, argv)
   else if (check_file == NULL)
     {
       if (optind == argc)
-	{
-	  error (0, errno, _("missing file argument"));
-	  usage (1);
-	}
+	argv[argc++] = "-";
 
       for (; optind < argc; ++optind)
 	{
@@ -442,7 +441,7 @@ usage (status)
 	     program_name);
   else
     printf (_("\
-Usage: %s [OPTION] FILE...\n\
+Usage: %s [OPTION] [FILE]...\n\
   or:  %s --check=FILE\n\
   or:  %s --string=STRING\n\
 Mandatory arguments to long options are mandatory for short options too.\n\
