@@ -6,7 +6,7 @@ use Getopt::Long;
 use Digest::MD5;
 use Digest::SHA1;
 
-(my $VERSION = '$Revision: 1.2 $ ') =~ tr/[0-9].//cd;
+(my $VERSION = '$Revision: 1.3 $ ') =~ tr/[0-9].//cd;
 (my $ME = $0) =~ s|.*/||;
 
 END
@@ -109,25 +109,31 @@ EOF
   my $tbz = "$my_distdir.tar.bz2";
   my $xd = "$package_name-$prev_version-$curr_version.xdelta";
 
-  # FIXME: make this optional?
-  my $mail_gpg_sign_cookie = '<#secure method=pgpmime mode=sign>';
   my %size;
 
   foreach my $f (($tgz, $tbz, $xd))
     {
-      my $t = `du --human $f`;
+      my $cmd = "du --human $f";
+      my $t = `$cmd`;
+      # FIXME-someday: give a better diagnostic, a la $PROCESS_STATUS
+      $@
+	and (warn "$ME: command failed: `$cmd'\n"), $fail = 1;
       chomp $t;
-      # FIXME: don't ignore failure...
       $t =~ s/^([\d.]+[MkK]).*/${1}B/;
       $size{$f} = $t;
     }
+
+  $fail
+    and exit 1;
 
   print <<EOF;
 
 Subject: $my_distdir released
 
-$mail_gpg_sign_cookie
+<#secure method=pgpmime mode=sign>
+
 FIXME: put comments here
+
 EOF
 
   foreach my $url (@url_dir_list)
@@ -149,22 +155,37 @@ EOF
       print "  $url/$tbz.sig\n";
     }
 
+  # FIXME: clean up upon interrupt or die
+  my $tmpdir = $ENV{TMPDIR} || '/tmp';
+  my $tmp = "$tmpdir/$ME-$$";
+  unlink $tmp;  # ignore failure
+
   print "\nHere are the MD5 and SHA1 signatures:\n";
+  print "<#part type=text/plain filename=\"$tmp\" disposition=inline>\n"
+    . "<#/part>";
+
+  open OUT, '>', $tmp
+    or die "$ME: $tmp: cannot open for writing: $!\n";
+
   foreach my $meth (qw (md5 sha1))
     {
       foreach my $f (($tgz, $tbz, $xd))
 	{
-	  open FH, '<', $f
+	  open IN, '<', $f
 	    or die "$ME: $f: cannot open for reading: $!\n";
-	  binmode FH;
+	  binmode IN;
 	  my $dig =
 	    ($meth eq 'md5'
-	     ? Digest::MD5->new->addfile(*FH)->hexdigest
-	     : Digest::SHA1->new->addfile(*FH)->hexdigest);
-	  close FH;
-	  print "$dig  $f\n";
+	     ? Digest::MD5->new->addfile(*IN)->hexdigest
+	     : Digest::SHA1->new->addfile(*IN)->hexdigest);
+	  close IN;
+	  print OUT "$dig  $f\n";
 	}
     }
+
+  close OUT
+    or die "$ME: $tmp: while writing: $!\n";
+  chmod 0400, $tmp;  # ignore failure
 
   # FIXME: depend on whether it's a test release
   # sed -n "$news-r1),$news-r2)p" NEWS
