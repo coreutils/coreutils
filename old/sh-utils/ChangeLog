@@ -1,5 +1,8 @@
 Mon Dec 19 22:05:12 1994  Jim Meyering  (meyering@comco.com)
 
+	* src/*.c: Include "error.h" rather than simply declaring
+	`void error ();'.
+
 	* lib/Makefile.in (DISTFILES): Remove safe-xstat.cin.
 	(distclean): Remove references to safe-l?stat.c.
 	Remove all related rules and dependencies.
