@@ -1,4 +1,7 @@
 [5.0.1]
+* df and `readlink --canonicalize' no longer corrupt the heap on
+  non-glibc, non-solaris systems
+* `env -u SOME_ALREADY_UNSET_VARIABLE' no longer dumps core on non-glibc systems
 * tail's byte and line counts are no longer limited to OFF_T_MAX.
   Now the limit is UINTMAX_MAX (usually 2^64).
 * tsort now fails when given an odd number of input tokens.
