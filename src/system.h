@@ -311,14 +311,14 @@ extern int errno;
    ST_BLKSIZE: Preferred I/O blocksize for the file, in bytes.
    ST_NBLOCKS: Number of blocks in the file, including indirect blocks.
    ST_NBLOCKSIZE: Size of blocks used when calculating ST_NBLOCKS.  */
-#ifndef HAVE_ST_BLOCKS
+#ifndef HAVE_STRUCT_STAT_ST_BLOCKS
 # define ST_BLKSIZE(statbuf) DEV_BSIZE
 # if defined(_POSIX_SOURCE) || !defined(BSIZE) /* fileblocks.c uses BSIZE.  */
 #  define ST_NBLOCKS(statbuf) ((statbuf).st_size / ST_NBLOCKSIZE + ((statbuf).st_size % ST_NBLOCKSIZE != 0))
 # else /* !_POSIX_SOURCE && BSIZE */
 #  define ST_NBLOCKS(statbuf) (st_blocks ((statbuf).st_size))
 # endif /* !_POSIX_SOURCE && BSIZE */
-#else /* HAVE_ST_BLOCKS */
+#else /* HAVE_STRUCT_STAT_ST_BLOCKS */
 /* Some systems, like Sequents, return st_blksize of 0 on pipes. */
 # define ST_BLKSIZE(statbuf) ((statbuf).st_blksize > 0 \
 			       ? (statbuf).st_blksize : DEV_BSIZE)
@@ -336,7 +336,7 @@ extern int errno;
 #   endif /* _CRAY */
 #  endif /* not AIX PS/2 */
 # endif /* !hpux */
-#endif /* HAVE_ST_BLOCKS */
+#endif /* HAVE_STRUCT_STAT_ST_BLOCKS */
 
 #ifndef ST_NBLOCKS
 # define ST_NBLOCKS(statbuf) ((statbuf).st_blocks)

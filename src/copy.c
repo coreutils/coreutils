@@ -215,7 +215,7 @@ copy_reg (const char *src_path, const char *dst_path,
 
   buf_size = ST_BLKSIZE (sb);
 
-#if HAVE_ST_BLOCKS
+#if HAVE_STRUCT_STAT_ST_BLOCKS
   if (sparse_mode == SPARSE_AUTO && S_ISREG (sb.st_mode))
     {
       /* Use a heuristic to determine whether SRC_PATH contains any
