@@ -19,23 +19,20 @@
 #include <config.h>
 #endif
 
-#if defined(STDC_HEADERS) || defined(HAVE_STRING_H)
-#include <string.h>
-#else
-#include <strings.h>
-#ifndef strrchr
-#define strrchr rindex
-#endif
-#endif
-
-/* Return NAME with any leading path stripped off.  */
+/* Return NAME with any leading path stripped off.
+   Don't use strrchr/rindex.  */
 
 char *
 basename (name)
      const char *name;
 {
-  char *base;
+  const char *base = name;
 
-  base = strrchr (name, '/');
-  return base ? base + 1 : (char *) name;
+  while (*name)
+    {
+      if (*name == '/')
+	base = name + 1;
+      ++name;
+    }
+  return (char *) base;
 }
