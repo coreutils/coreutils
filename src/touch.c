@@ -228,7 +228,7 @@ and for the obsolescent argument are all different.\n\
 int
 main (int argc, char **argv)
 {
-  int c, i;
+  int c;
   int date_set = 0;
   int err = 0;
 
