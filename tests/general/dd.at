@@ -1,0 +1,50 @@
+#							-*- autoconf -*-
+
+cat <<EOF
+
+Executables (autoheader, autoupdate...)
+
+EOF
+
+AT_SETUP([dd's skip, seek, and conv=notrunc options])
+
+AT_DATA(in, [[12345*7
+]])
+AT_DATA(out, [[abcdefghijklmnop
+]])
+
+AT_CHECK([dd bs=1 skip=1 seek=2 conv=notrunc count=3 if=in of=out], 0, [],
+[3+0 records in
+3+0 records out
+])
+AT_CHECK([cat out], 0, [ab234fghijklmnop
+])
+
+AT_CHECK([dd bskip=5 bseek=9 conv=notrunc count=1 if=in of=out], 0, [],
+[0+1 records in
+0+1 records out
+])
+AT_CHECK([cat out], 0, [ab234fghi*7
+mnop
+])
+
+AT_CLEANUP
+
+
+# ======================================================
+AT_SETUP([dd])
+AT_SETUP([dd's new bskip and bseek options])
+
+AT_DATA(in, [[1*3
+]])
+AT_DATA(out, [[abcde
+]])
+
+AT_CHECK([dd bskip=1 bseek=2 count=1 if=in of=out], 0, [],
+[0+1 records in
+0+1 records out
+])
+AT_CHECK([cat out], 0, [ab*3
+])
+
+AT_CLEANUP
