@@ -1,6 +1,5 @@
 #!/bin/sh
-# Test basic --backup functionality -- initially do it just for cp.
-# It won't be hard to adapt this script to work for mv, too.
+# Test basic --backup functionality for both cp and mv.
 
 if test "$VERBOSE" = yes; then
   set -x
@@ -37,15 +36,17 @@ fi
 exec 1> $actual
 
 fail=0
-for initial_files in 'a' 'a b' 'a b b~' 'a b b.~1~' 'a b b~ b.~1~'; do
-  for opt in none off  numbered t  existing nil  simple never; do
-    ( cd $dir; touch $initial_files )
-      cp --backup=$opt $dir/a $dir/b || fail=1
-    ( cd $dir; echo $initial_files $opt: `ls a b*`; rm -f a b b~ b.~?~ )
+for prog in cp mv; do
+  for initial_files in 'a' 'a b' 'a b b~' 'a b b.~1~' 'a b b~ b.~1~'; do
+    for opt in none off  numbered t  existing nil  simple never; do
+      ( cd $dir; touch $initial_files )
+	$prog --backup=$opt $dir/a $dir/b || fail=1
+      ( cd $dir; echo $initial_files $opt: `ls`; rm -f a b b~ b.~?~ )
+    done
   done
 done
 
-cat <<\EOF > $expected
+cat <<\EOF > $expected-tmp
 a none: a b
 a off: a b
 a numbered: a b
@@ -87,6 +88,8 @@ a b b~ b.~1~ nil: a b b.~1~ b.~2~ b~
 a b b~ b.~1~ simple: a b b.~1~ b~
 a b b~ b.~1~ never: a b b.~1~ b~
 EOF
+
+sed 's/: a/:/' $expected-tmp |cat $expected-tmp - > $expected
 
 # Uncomment this if you see a failure and want to try to diagnose it.
 # diff -u $expected $actual 1>&2
