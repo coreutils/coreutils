@@ -1,5 +1,19 @@
 2004-07-25  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* src/nice.c (GET_NICE_VALUE): Renamed from GET_PRIORITY.
+	All uses changed.
+	(NZERO): New macro, if system doesn't define it already.
+	(usage): Distinguish priorities from nice values.
+	Don't assume NZERO is 20.
+	(main): Use bool instead of int where appropriate.
+	If user specifies an adjustment out of range, always truncate it
+	to an inrange value instead of sometimes giving an error message
+	and sometimes not.
+	Do not assume that -1 is an error return from "nice" or
+	"getpriority", as it might be the current nice value minus NZERO.
+	If nice/setpriority fails with errno == EPERM, go ahead and run
+	the command anyway; POSIX requires this.
+
 	* src/pathchk.c: Include euidaccess.h.
 	(dir_ok): Use euidaccess, not access.
 	* src/test.c (R_OK, W_OK, X_OK, FOK): Remove; system.h defines them.
