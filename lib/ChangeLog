@@ -1,3 +1,28 @@
+2003-09-25  Jim Meyering  <jim@meyering.net>
+            Bruno Haible  <bruno@clisp.org>
+
+	[Update from gnulib]
+	This lets translators provide better translations for the
+	"Written by ..." part of --version output.
+	* version-etc.h: Include stdarg.h.
+	(version_etc_copyright): Declare as readonly.
+	(version_etc): Make this function variadic with a NULL-terminated list
+	of author name strings.
+	(version_etc_va): New declaration.
+	* version-etc.c: Include stdarg.h, stdlib.h.
+	(version_etc_copyright): Declare as readonly.
+	(version_etc_va): New function. Provide a different translatable string
+	for each possible number of authors < 10. Abbreviate when there are 10
+	authors or more.
+	(version_etc): Make this function variadic. Call version_etc_va.
+	Suggestion from Gary V. Vaughan.
+
+	* long-options.h (parse_long_options): Change prototype: the authors
+	string is moved to the end and becomes variadic.
+	* long-options.c: Include stdarg.h.
+	(parse_long_options): Make this function variadic, too.
+	Call version_etc_va, not version_etc.
+
 2003-10-17  Jim Meyering  <jim@meyering.net>
 
 	* xfts.c, xfts.h: New files.
