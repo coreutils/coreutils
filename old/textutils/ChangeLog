@@ -1,3 +1,24 @@
+1997-11-08  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* m4/lfs.m4 (AC_LFS): New file/macro.
+	* m4/Makefile.am (EXTRA_DIST): Add lfs.m4.
+	* configure.in (AC_LFS): Use it.
+	(AC_CHECK_FUNCS): Add fseeko.
+	* src/od.c (fseeko): Define a stub if ! HAVE_FSEEKO.
+	(skip): Use fseeko if available.  Don't use lseek; it causes
+	the stdio stream to become out of sync with respect to the
+	underyling file descriptor.
+	From Paul Eggert.
+
+1997-10-16  Paul Eggert  <eggert@twinsun.com>
+
+        * FIXME: do this differently
+	configure.in (AC_CHECK_FUNCS): Add fseeko.
+
+	* src/od.c (skip): Use fseeko.  Don't use lseek; it causes
+	the stdio stream to become out of sync with respect to the
+	underyling file descriptor.
+
 1997-11-06  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/sort.c (getmonth): Remove HAVE_ALLOCA #ifdefs.
