@@ -1,6 +1,13 @@
-1999-01-29  Jim Meyering  <meyering@ascend.com>
+1999-01-30  Jim Meyering  <meyering@ascend.com>
+
+	* acconfig.h: Remove lots of now-unnecessary #undefs.
+
+	* configure.in: Require autoconf 2.13.
 
 	* doc/Makefile.am (DISTCLEANFILES): Arrange to remove sh-utils.fl.
+
+	* configure.in (ALL_LINGUAS): Add Greek (el).
+	* po/el.po: New file.
 
 1999-01-25  Jim Meyering  <meyering@ascend.com>
 
