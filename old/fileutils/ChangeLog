@@ -1,3 +1,25 @@
+1998-10-03  Jim Meyering  <meyering@ascend.com>
+
+	* tests/Fetish.pm: Make `VERBOSE' be a little more verbose.
+
+	* tests/mv/Makefile.am (TESTS): Add i-1.
+	* tests/mv/i-1: New test.
+
+1998-10-02  Jim Meyering  <meyering@ascend.com>
+
+	* tests/ls-2/Makefile.am (EXTRA_DIST): Remove run-test.
+	* tests/ls-2/run-test: Remove file.
+	* tests/ls-2/quoting: Include /bin/sh driver framework.
+
+	* tests/dircolors/simple: Remove file.
+	* tests/dircolors/run-test: Embed it here instead.
+	* tests/dircolors/simple: Rename from run-test.
+
+1998-10-01  Jim Meyering  <meyering@ascend.com>
+
+	* tests/Makefile.am (EXTRA_DIST): Remove README.
+	From Akim Demaille.
+
 1998-09-28  Jim Meyering  <meyering@ascend.com>
 
 	* Version 4.0-pre1.
