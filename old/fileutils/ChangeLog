@@ -1,3 +1,10 @@
+2001-01-17  Jim Meyering  <meyering@lucent.com>
+
+	* src/sys2.h (case_GETOPT_VERSION_CHAR): Use PACKAGE, not GNU_PACKAGE.
+	* src/sync.c (main): Likewise.
+	* src/shred.c (PACKAGE): Likewise.
+	* src/dd.c (main): Likewise.
+
 2001-01-14  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.0.36.
