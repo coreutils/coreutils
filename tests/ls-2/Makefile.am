@@ -9,4 +9,4 @@ TESTS_ENVIRONMENT = \
   PATH=../../src:$$PATH \
   PROG=ls
 
-TESTS = quoting
+TESTS = tests
