@@ -1,3 +1,11 @@
+2001-05-13  Jim Meyering  <meyering@lucent.com>
+
+	* tests/Fetish.pm (run_tests): Fail if any test name is longer
+	than 12 bytes.
+
+	* tests/ls-2/tests: Shorten test names so the length of a
+	resulting file name doesn't exceed 14.
+
 2001-05-12  Paul Eggert  <eggert@twinsun.com>
 
 	* src/system.h (NODEV): New macro, if not already defined.
