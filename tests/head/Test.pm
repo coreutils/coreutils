@@ -2,6 +2,9 @@ package Test;
 require 5.002;
 use strict;
 
+# Tell head to accept old-style options like `-1'.
+$Test::env_default = ['_POSIX2_VERSION=199209'];
+
 my @tv = (
 # test name, options, input, expected output, expected return code
 #
@@ -26,8 +29,8 @@ my @tv = (
 ['obs-1', '-1c', "", "", 0],
 ['obs-2', '-1c', "12", "1", 0],
 ['obs-3', '-14c', "1234567890abcdefg", "1234567890abcd", 0],
-['obs-4', '-2b', [\'in'], [\'in-1024'], 0], #'
-['obs-5', '-1k', [\'in'], [\'in-1024'], 0], #'
+['obs-4', '-2b', [\'in'], [\'in-1024'], 0],
+['obs-5', '-1k', [\'in'], [\'in-1024'], 0],
 
 # This test fails for textutils-1.22, because head let 4096m overflow to 0
 # and did not fail.  Now head fails with a diagnostic.
