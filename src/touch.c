@@ -153,7 +153,7 @@ touch (const char *file)
 	  if (open_errno)
 	    error (0, open_errno, _("creating %s"), quote (file));
 	  else
-	    error (0, errno, _("obtaining attributes of %s"), quote (file));
+	    error (0, errno, _("getting attributes of %s"), quote (file));
 	  close (fd);
 	  return 1;
 	}
@@ -330,7 +330,7 @@ main (int argc, char **argv)
   if (use_ref)
     {
       if (stat (ref_file, &ref_stats))
-	error (1, errno, _("obtaining attributes of %s"), quote (ref_file));
+	error (1, errno, _("getting attributes of %s"), quote (ref_file));
       date_set++;
     }
 
