@@ -1,3 +1,17 @@
+1998-03-28  Jim Meyering  <meyering@eng.ascend.com>
+
+	* src/copy.c: Add copyright.
+	* src/remove.c: Add copyright.
+	[_AIX]: Add #pragma alloca.
+
+1998-03-27  Jim Meyering  <meyering@eng.ascend.com>
+
+	* Makefile.maint ($(ACLOCAL_M4)): Replace old rule with this
+	dependency and the := assignment of ACLOCAL to make the default
+	rule use the `-I m4' option.
+
+	* Makefile.am (AUTOMAKE_OPTIONS): Require 1.2h.
+
 1998-03-23  Jim Meyering  <meyering@eng.ascend.com>
 
 	* acconfig.h: Remove HAVE_INTTYPES_H, now that m4/inttypes_h.m4
