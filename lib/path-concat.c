@@ -55,18 +55,7 @@ char *malloc ();
 char *strdup ();
 #endif
 
-#ifndef DIRECTORY_SEPARATOR
-# define DIRECTORY_SEPARATOR '/'
-#endif
-
-#ifndef FILESYSTEM_PREFIX_LEN
-# define FILESYSTEM_PREFIX_LEN(Filename) 0
-#endif
-
-#ifndef ISSLASH
-# define ISSLASH(C) ((C) == DIRECTORY_SEPARATOR)
-#endif
-
+#include "dirname.h"
 #include "xalloc.h"
 #include "path-concat.h"
 
@@ -88,8 +77,8 @@ path_concat (const char *dir, const char *base, char **base_in_result)
 {
   char *p;
   char *p_concat;
-  size_t base_len;
-  size_t dir_len;
+  size_t baselen;
+  size_t dirlen;
 
   if (!dir)
     {
@@ -100,16 +89,16 @@ path_concat (const char *dir, const char *base, char **base_in_result)
     }
 
   /* DIR is not empty. */
-  base_len = strlen (base);
-  dir_len = strlen (dir);
+  baselen = base_len (base);
+  dirlen = strlen (dir);
 
-  p_concat = malloc (dir_len + base_len + 2);
+  p_concat = malloc (dirlen + baselen + 2);
   if (!p_concat)
     return 0;
 
-  p = mempcpy (p_concat, dir, dir_len);
+  p = mempcpy (p_concat, dir, dirlen);
 
-  if (dir_len > FILESYSTEM_PREFIX_LEN (dir))
+  if (FILESYSTEM_PREFIX_LEN (dir) < dirlen)
     {
       if (ISSLASH (*(p - 1)) && ISSLASH (*base))
 	--p;
@@ -120,7 +109,8 @@ path_concat (const char *dir, const char *base, char **base_in_result)
   if (base_in_result)
     *base_in_result = p;
 
-  memcpy (p, base, base_len + 1);
+  memcpy (p, base, baselen);
+  p[baselen] = '\0';
 
   return p_concat;
 }
