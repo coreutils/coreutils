@@ -16,8 +16,8 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-#ifndef _SHA_H
-# define _SHA_H 1
+#ifndef SHA1_H
+# define SHA1_H 1
 
 # include <stdio.h>
 # include "md5.h"
