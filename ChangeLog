@@ -1,3 +1,7 @@
+2002-07-29  Jim Meyering  <meyering@lucent.com>
+
+	* Makefile.am (SUBDIRS): Remove djgpp, for now.
+
 2002-07-08  Jim Meyering  <meyering@lucent.com>
 
 	* Version 0.1.0.
