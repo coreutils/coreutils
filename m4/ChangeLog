@@ -1,3 +1,8 @@
+1999-09-22  Paul Eggert  <eggert@twinsun.com>
+
+	* largefile.m4 (AC_SYS_LARGEFILE_FLAGS): Work around GCC
+	2.95.1 bug with HP-UX 10.20.
+
 1999-09-17  Jim Meyering  <meyering@ascend.com>
 
 	* jm-macros.m4 (AC_REPLACE_FUNCS): Add strdup.
