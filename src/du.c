@@ -38,6 +38,7 @@
 #include "human.h"
 #include "quote.h"
 #include "quotearg.h"
+#include "readtokens.h"
 #include "same.h"
 #include "xfts.h"
 #include "xstrtol.h"
@@ -119,12 +120,25 @@ int G_fail;
   ((Type) == FTS_DP		\
    || (Type) == FTS_DNR)
 
+enum
+{
+  /* Use this to estimate the number of NUL-separated file names
+     in a file F, specified via --files0-from=F.  */
+  EXPECTED_BYTES_PER_FILE_NAME = 20,
+
+  /* If we can't easily determine the size of a file F, specified via
+     --files0-from=F, use this as an initial estimate of the number of
+     file names.  */
+  DEFAULT_PROJECTED_N_FILES = 200
+};
+
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
   APPARENT_SIZE_OPTION = CHAR_MAX + 1,
   EXCLUDE_OPTION,
+  FILES0_FROM_OPTION,
   HUMAN_SI_OPTION,
   MAX_DEPTH_OPTION
 };
@@ -140,6 +154,7 @@ static struct option const long_options[] =
   {"dereference-args", no_argument, NULL, 'D'},
   {"exclude", required_argument, 0, EXCLUDE_OPTION},
   {"exclude-from", required_argument, 0, 'X'},
+  {"files0-from", required_argument, 0, FILES0_FROM_OPTION},
   {"human-readable", no_argument, NULL, 'h'},
   {"si", no_argument, 0, HUMAN_SI_OPTION},
   {"kilobytes", no_argument, NULL, 'k'}, /* long form is obsolescent */
@@ -164,7 +179,10 @@ usage (int status)
 	     program_name);
   else
     {
-      printf (_("Usage: %s [OPTION]... [FILE]...\n"), program_name);
+      printf (_("\
+Usage: %s [OPTION]... [FILE]...\n\
+  or:  %s [OPTION]... --files0-from=F\n\
+"), program_name, program_name);
       fputs (_("\
 Summarize disk usage of each FILE, recursively for directories.\n\
 \n\
@@ -184,8 +202,10 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -D, --dereference-args  dereference FILEs that are symbolic links\n\
 "), stdout);
       fputs (_("\
+      --files0-from=F   summarize disk usage of the NUL-separated file\n\
+                          names specified in file F\n\
   -H                    like --si, but also evokes a warning; will soon\n\
-                        change to be equivalent to --dereference-args (-D)\n\
+                          change to be equivalent to --dereference-args (-D)\n\
   -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n\
       --si              like -h, but use powers of 1000 not 1024\n\
   -k                    like --block-size=1K\n\
@@ -536,6 +556,7 @@ main (int argc, char **argv)
   int max_depth_specified = 0;
   char **files;
   int fail;
+  char *files_from = NULL;
 
   /* Bit flags that control how fts works.  */
   int bit_flags = FTS_PHYSICAL | FTS_TIGHT_CYCLE_CHECK;
@@ -677,6 +698,10 @@ main (int argc, char **argv)
 	    }
 	  break;
 
+	case FILES0_FROM_OPTION:
+	  files_from = optarg;
+	  break;
+
 	case EXCLUDE_OPTION:
 	  add_exclude (exclude, optarg, EXCLUDE_WILDCARDS);
 	  break;
@@ -716,7 +741,69 @@ main (int argc, char **argv)
   if (opt_summarize_only)
     max_depth = 0;
 
-  files = (optind < argc ? argv + optind : cwd_only);
+  if (files_from)
+    {
+      FILE *istream;
+      size_t i;
+      size_t *filename_lengths;
+      size_t n_files;
+      bool valid = true;
+
+      /* When using --files0-from=F, you may not specify any files
+	 on the command-line.  */
+      if (optind < argc)
+	error (EXIT_FAILURE, 0,
+	       _("%s: you may not specify command-line arguments with\
+ --files0-from"), quotearg_colon (argv[optind]));
+
+      istream = (STREQ (files_from, "-") ? stdin : fopen (files_from, "r"));
+      if (istream == NULL)
+	error (EXIT_FAILURE, errno, _("cannot open %s for reading"),
+	       quote (files_from));
+
+      {
+	/* If we can easily determine the size of the input file,
+	   estimate the number of file names it contains.  */
+	struct stat st;
+	size_t projected_n_filenames
+	  = ((fstat (fileno (istream), &st) == 0
+	      && 0 < st.st_size)
+	     ? st.st_size / (EXPECTED_BYTES_PER_FILE_NAME + 1)
+	     : DEFAULT_PROJECTED_N_FILES);
+
+	n_files = readtokens (istream, projected_n_filenames,
+			    "", 1, &files, &filename_lengths);
+      }
+
+      if (n_files == (size_t) -1)
+	error (EXIT_FAILURE, errno, _("cannot read file names from %s"),
+	       quote (files_from));
+
+      if (n_files == 0)
+	error (EXIT_FAILURE, errno, _("no files specified in %s"),
+	       quote (files_from));
+
+      /* Fail if any name has length zero.  */
+      for (i = 0; i < n_files; i++)
+	{
+	  if (filename_lengths[i] == 0)
+	    {
+	      /* Using the standard `filename:line-number:' prefix here is
+		 not totally appropriate, since NUL is the separator, not NL,
+		 but it might be better than nothing.  */
+	      error (0, 0, _("%s:%lu: invalid zero-length file name specified"),
+		     quotearg_colon (files_from), (unsigned long) i);
+	      valid = false;
+	    }
+	}
+      free (filename_lengths);
+      if (! valid)
+	exit (EXIT_FAILURE);
+    }
+  else
+    {
+      files = (optind < argc ? argv + optind : cwd_only);
+    }
 
   /* Initialize the hash structure for inode numbers.  */
   hash_init ();
