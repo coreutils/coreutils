@@ -271,13 +271,11 @@ change_file_owner (int cmdline_arg, const char *file, uid_t uid, gid_t gid,
 	  int fail;
 	  int symlink_changed = 1;
 	  int saved_errno;
-	  int called_lchown = 0;
 
 	  if (is_symlink)
 	    {
 	      if (chopt->dereference == DEREF_NEVER)
 		{
-		  called_lchown = 1;
 		  fail = lchown (file, new_uid, new_gid);
 
 		  /* Ignore the failure if it's due to lack of support (ENOSYS)
