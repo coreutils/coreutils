@@ -262,7 +262,7 @@ do_link (const char *source, const char *dest)
 	{
 	  char *tmp_backup = find_backup_file_name (dest, backup_type);
 	  if (tmp_backup == NULL)
-	    error (1, 0, _("virtual memory exhausted"));
+	    xalloc_die ();
 	  dest_backup = (char *) alloca (strlen (tmp_backup) + 1);
 	  strcpy (dest_backup, tmp_backup);
 	  free (tmp_backup);
