@@ -1,20 +1,5 @@
-# Makefile.in generated automatically by automake 0.25 from Makefile.am
-# Copyright (C) 1994, 1995 Free Software Foundation, Inc.
+# Makefile.in generated automatically by automake 0.27 from Makefile.am
 
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2, or (at your option)
-# any later version.
-
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
-# 02111-1307, USA.
 
 SHELL = /bin/sh
 
@@ -69,10 +54,10 @@ full-write.c getopt.c getopt1.c getversion.c group-member.c idcache.c \
 isdir.c long-options.c makepath.c modechange.c obstack.c \
 safe-read.c save-cwd.c savedir.c stripslash.c userspec.c xgetcwd.c \
 xmalloc.c xstrdup.c xstrtol.c xstrtoul.c yesno.c
-
-LIBRARIES = $(noinst_LIBRARIES)
+LIBRARIES= $(noinst_LIBRARIES)
 
 noinst_LIBFILES = libfu.a
+
 CC = @CC@
 LEX = @LEX@
 YACC = @YACC@
@@ -85,26 +70,31 @@ LIBS = @LIBS@
 
 COMPILE = $(CC) -c $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 LINK = $(CC) $(LDFLAGS) -o $@
+fu_OBJECTS = getdate.o posixtm.o argmatch.o backupfile.o basename.o \
+dirname.o error.o fileblocks.o filemode.o full-write.o getopt.o \
+getopt1.o getversion.o group-member.o idcache.o isdir.o long-options.o \
+makepath.o modechange.o obstack.o safe-read.o save-cwd.o savedir.o \
+stripslash.o userspec.o xgetcwd.o xmalloc.o xstrdup.o xstrtol.o \
+xstrtoul.o yesno.o
+LIBFILES =  libfu.a
 
-fu_OBJECTS = getdate.o posixtm.o argmatch.o backupfile.o basename.o dirname.o error.o fileblocks.o filemode.o full-write.o getopt.o getopt1.o getversion.o group-member.o idcache.o isdir.o long-options.o makepath.o modechange.o obstack.o safe-read.o save-cwd.o savedir.o stripslash.o userspec.o xgetcwd.o xmalloc.o xstrdup.o xstrtol.o xstrtoul.o yesno.o
-LIBFILES = libfu.a
 AR = ar
 RANLIB = @RANLIB@
-
 DIST_COMMON = Makefile.in Makefile.am
+
 
 PACKAGE = @PACKAGE@
 VERSION = @VERSION@
 
 DISTFILES = $(SOURCES) $(HEADERS) $(TEXINFOS) $(INFOS) $(MANS) \
 	$(DIST_OTHER) $(DIST_COMMON) $(DATA)
-
 subdir = lib
 
 SOURCES = $(fu_SOURCES)
 OBJECTS = $(fu_OBJECTS)
 
 default: all
+
 
 mostlyclean-noinstLIBRARIES:
 
@@ -127,8 +117,8 @@ distclean-compile:
 	rm -f *.tab.c
 
 maintainer-clean-compile:
-
 $(fu_OBJECTS): ../config.h
+
 libfu.a: $(fu_OBJECTS) $(fu_LIBADD)
 	rm -f libfu.a
 	$(AR) cru libfu.a $(fu_OBJECTS) $(fu_LIBADD)
@@ -140,15 +130,13 @@ $(srcdir)/Makefile.in: Makefile.am
 Makefile: ../config.status Makefile.in
 	cd .. && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= ./config.status
 
-id: ID
-
 ID:
-	here=`pwd`; cd $(srcdir) && mkid -f $$here/ID $(SOURCES) $(HEADERS)
+	here=`pwd` && cd $(srcdir) && mkid -f $$here/ID $(SOURCES) $(HEADERS)
 
 tags: TAGS
 
 TAGS:
-	here=`pwd`; cd $(srcdir) && etags $(ETAGS_ARGS) $(SOURCES) $(HEADERS) -o $$here/TAGS
+	here=`pwd` && cd $(srcdir) && etags $(ETAGS_ARGS) $(SOURCES) $(HEADERS) -o $$here/TAGS
 
 mostlyclean-tags:
 
@@ -162,54 +150,51 @@ maintainer-clean-tags:
 distdir = ../$(PACKAGE)-$(VERSION)/$(subdir)
 dist: $(DISTFILES)
 	@for file in $(DISTFILES); do		\
-	  test -f $(distdir)/$$file || {	\
-	    echo linking $$file;		\
-	    ln $(srcdir)/$$file $(distdir)/$$file; \
-	  } || {				\
-	    echo copying $$file instead;	\
-	    cp -p $(srcdir)/$$file $(distdir)/$$file; \
-	  };					\
+	  test -f $(distdir)/$$file \
+	    || ln $(srcdir)/$$file $(distdir)/$$file \
+	    || cp -p $(srcdir)/$$file $(distdir)/$$file; \
 	done
 
 # This fragment is probably only useful for maintainers.  It relies on
 # GNU make and gcc.  It is only included in the generated Makefile.in
 # if `automake' is not passed the `--include-deps' flag.
 
-MKDEP = gcc -MM
+MKDEP = gcc -MM $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 
-DEP_FILES = $(patsubst %.${kr}o,.deps/%.P,$(OBJECTS))
+DEP_FILES = $(patsubst %.$(kr)o, $(srcdir)/.deps/%.P,$(OBJECTS))
 
--include .deps/.P
-.deps/.P:
-	test -d .deps || mkdir .deps
+-include $(srcdir)/.deps/.P
+$(srcdir)/.deps/.P: $(BUILT_SOURCES)
+	cd $(srcdir) && test -d .deps || mkdir .deps
 	: > $@
 
 -include $(DEP_FILES)
-$(DEP_FILES): .deps/.P
+$(DEP_FILES): $(srcdir)/.deps/.P
 
-.deps/%.P: %.c
+$(srcdir)/.deps/%.P: $(srcdir)/%.c
 	@echo "mkdeps $< > $@"
-	@$(MKDEP) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS) $< > $@-tmp
+	@re=`echo 's,\<$(srcdir),,g' | sed 's/\./\\./g'`; \
+	  $(MKDEP) $< | sed $$re > $@-tmp
 	@mv $@-tmp $@
 
 # End of maintainer-only section
-
 all: $(LIBFILES)
 
-info: 
+info:
 
-dvi: 
+dvi:
 
-check: 
+check: all
 
-installcheck: 
+installcheck:
 
 install: 
-	:
+	@:
 
 uninstall: 
 
 installdirs:
+
 
 mostlyclean-generic:
 	test -z "$(MOSTLYCLEANFILES)" || rm -f $(MOSTLYCLEANFILES)
@@ -223,19 +208,31 @@ distclean-generic:
 
 maintainer-clean-generic:
 	test -z "$(MAINTAINERCLEANFILES)" || rm -f $(MAINTAINERCLEANFILES)
+mostlyclean:  mostlyclean-noinstLIBRARIES mostlyclean-compile \
+mostlyclean-tags mostlyclean-generic
 
-mostlyclean: mostlyclean-noinstLIBRARIES mostlyclean-compile mostlyclean-tags mostlyclean-generic
+clean:  clean-noinstLIBRARIES clean-compile clean-tags clean-generic \
+mostlyclean 
 
-clean: mostlyclean clean-noinstLIBRARIES clean-compile clean-tags clean-generic
-
-distclean: clean distclean-noinstLIBRARIES distclean-compile distclean-tags distclean-generic
+distclean:  distclean-noinstLIBRARIES distclean-compile distclean-tags \
+distclean-generic clean 
 	rm -f config.status
 
-maintainer-clean: distclean maintainer-clean-noinstLIBRARIES maintainer-clean-compile maintainer-clean-tags maintainer-clean-generic
+maintainer-clean:  maintainer-clean-noinstLIBRARIES \
+maintainer-clean-compile maintainer-clean-tags maintainer-clean-generic \
+distclean 
 	@echo "This command is intended for maintainers to use;"
 	@echo "it deletes files that may require special tools to rebuild."
 	rm -f config.status
 
+.PHONY: default mostlyclean-noinstLIBRARIES distclean-noinstLIBRARIES \
+clean-noinstLIBRARIES maintainer-clean-noinstLIBRARIES \
+mostlyclean-compile distclean-compile clean-compile \
+maintainer-clean-compile tags mostlyclean-tags distclean-tags \
+clean-tags maintainer-clean-tags dist all info dvi check installcheck \
+install uninstall installdirs mostlyclean-generic distclean-generic \
+clean-generic maintainer-clean-generic clean mostlyclean distclean \
+maintainer-clean
 
 .SUFFIXES:
 .SUFFIXES: .c .o
@@ -243,4 +240,3 @@ maintainer-clean: distclean maintainer-clean-noinstLIBRARIES maintainer-clean-co
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
-

@@ -1,20 +1,5 @@
-# Makefile.in generated automatically by automake 0.25 from Makefile.am
-# Copyright (C) 1994, 1995 Free Software Foundation, Inc.
+# Makefile.in generated automatically by automake 0.27 from Makefile.am
 
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2, or (at your option)
-# any later version.
-
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
-# 02111-1307, USA.
 
 SHELL = /bin/sh
 
@@ -52,25 +37,23 @@ DIST_OTHER = mdate-sh
 
 MAKEINFO = makeinfo
 TEXI2DVI = texi2dvi
-
-TEXFILES = *.aux *.cp *.cps *.dvi *.fn *.fns *.ky *.log *.pg \
-*.toc *.tp *.vr *.op
-
 INFOS = fileutils.info*
 INFO_DEPS = fileutils.info
 DVIS = fileutils.dvi
 
-DIST_COMMON = mdate-sh texinfo.tex stamp-vti Makefile.in version.texi Makefile.am
+DIST_COMMON = mdate-sh texinfo.tex stamp-vti Makefile.in version.texi \
+Makefile.am
+
 
 PACKAGE = @PACKAGE@
 VERSION = @VERSION@
 
 DISTFILES = $(SOURCES) $(HEADERS) $(TEXINFOS) $(INFOS) $(MANS) \
 	$(DIST_OTHER) $(DIST_COMMON) $(DATA)
-
 subdir = doc
 
 default: all
+
 
 version.texi: stamp-vti
 
@@ -95,8 +78,8 @@ distclean-vti:
 
 maintainer-clean-vti:
 	rm -f stamp-vti version.texi
-
 fileutils.info: fileutils.texi version.texi
+
 
 .texi.info:
 	$(MAKEINFO) -I$(srcdir) $<
@@ -112,13 +95,13 @@ install-info: $(INFO_DEPS)
 	  else					\
 	    d=$(srcdir);			\
 	  fi;					\
-	  for ifile in $${file}*; do		\
+	  for ifile in `cd $$d && echo $${file}*`; do \
 	    $(INSTALL_DATA) $$d/$$ifile $(infodir)/$$ifile; \
 	  done;					\
 	done
 
 uninstall-info:
-	cd $(srcdir) && for file in *.info*; do
+	cd $(srcdir) && for file in *.info*; do	\
 	  rm -f $(infodir)/$$file; \
 	done
 
@@ -139,41 +122,37 @@ $(srcdir)/Makefile.in: Makefile.am
 
 Makefile: ../config.status Makefile.in
 	cd .. && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= ./config.status
-
 tags: TAGS
 TAGS:
+
 
 distdir = ../$(PACKAGE)-$(VERSION)/$(subdir)
 dist: $(DISTFILES)
 	@for file in $(DISTFILES); do		\
-	  test -f $(distdir)/$$file || {	\
-	    echo linking $$file;		\
-	    ln $(srcdir)/$$file $(distdir)/$$file; \
-	  } || {				\
-	    echo copying $$file instead;	\
-	    cp -p $(srcdir)/$$file $(distdir)/$$file; \
-	  };					\
+	  test -f $(distdir)/$$file \
+	    || ln $(srcdir)/$$file $(distdir)/$$file \
+	    || cp -p $(srcdir)/$$file $(distdir)/$$file; \
 	done
-
 all: info
 
 info: $(INFO_DEPS)
 
 dvi: $(DVIS)
 
-check: 
+check: all
 
-installcheck: 
+installcheck:
 
 install-data: install-info
 
 install: install-data
-	:
+	@:
 
 uninstall: uninstall-info
 
 installdirs:
-	$(top_srcdir)/mkinstalldirs $(infodir)
+	$(top_srcdir)/mkinstalldirs  $(infodir)
+
 
 mostlyclean-generic:
 	test -z "$(MOSTLYCLEANFILES)" || rm -f $(MOSTLYCLEANFILES)
@@ -187,19 +166,25 @@ distclean-generic:
 
 maintainer-clean-generic:
 	test -z "$(MAINTAINERCLEANFILES)" || rm -f $(MAINTAINERCLEANFILES)
+mostlyclean:  mostlyclean-vti mostlyclean-info mostlyclean-generic
 
-mostlyclean: mostlyclean-vti mostlyclean-info mostlyclean-generic
+clean:  clean-vti clean-info clean-generic mostlyclean 
 
-clean: mostlyclean clean-vti clean-info clean-generic
-
-distclean: clean distclean-vti distclean-info distclean-generic
+distclean:  distclean-vti distclean-info distclean-generic clean 
 	rm -f config.status
 
-maintainer-clean: distclean maintainer-clean-vti maintainer-clean-info maintainer-clean-generic
+maintainer-clean:  maintainer-clean-vti maintainer-clean-info \
+maintainer-clean-generic distclean 
 	@echo "This command is intended for maintainers to use;"
 	@echo "it deletes files that may require special tools to rebuild."
 	rm -f config.status
 
+.PHONY: default mostlyclean-vti distclean-vti clean-vti \
+maintainer-clean-vti install-info uninstall-info mostlyclean-info \
+distclean-info clean-info maintainer-clean-info tags dist all info dvi \
+check installcheck install-data install uninstall installdirs \
+mostlyclean-generic distclean-generic clean-generic \
+maintainer-clean-generic clean mostlyclean distclean maintainer-clean
 
 .SUFFIXES:
 .SUFFIXES: .texi .info .dvi
@@ -207,4 +192,3 @@ maintainer-clean: distclean maintainer-clean-vti maintainer-clean-info maintaine
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
-
