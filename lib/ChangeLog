@@ -1,5 +1,10 @@
 2003-12-02  Jim Meyering  <jim@meyering.net>
 
+	* Makefile.am (libfetish_a_SOURCES): Reflect sha -> sha1 renaming.
+
+	* sha1.c: File renamed from sha.c.
+	* sha1.h: File renamed from sha.h.
+
 	* sha.c: Add FSF Copyright.
 	* sha.h: Correct stale references to MD5 and `16 bytes'.
 	Patch by Ulrich Drepper.
