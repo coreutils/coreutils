@@ -307,11 +307,32 @@ The program accepts the following options.  Also see @ref{Common options}.
 @opindex --show-all
 Equivalent to @samp{-vET}.
 
+@item -B
+@itemx --binary
+@opindex -B
+@opindex --binary
+@cindex binary and text I/O in cat
+On MS-DOS and MS-Windows only, causes @code{cat} read and write the
+files in binary mode.  By default, @code{cat} on MS-DOS/MS-Windows uses
+binary mode only when standard output is redirected to a file or a pipe;
+this option overrides that.  Binary file I/O is used so that the files
+retain their format (Unix text as opposed to DOS text and binary),
+because @code{cat} is frequently used as file copying program.  Some
+options (see below) cause @code{cat} read and write files in text mode
+because then the original file contents aren't important (e.g., when
+lines are numbered by @code{cat}, or when line endings should be
+marked).  This is so these options work as DOS/Windows users would
+expect; for example, DOS-style text files have their lines end with
+@key{CR-LF} pair of characters which won't be processed as an empty line
+by @samp{-b} unless the file is read in text mode.
+
 @item -b
 @itemx --number-nonblank
 @opindex -b
 @opindex --number-nonblank
-Number all nonblank output lines, starting with 1.
+Number all nonblank output lines, starting with 1.  On MS-DOS and
+MS-Windows, this option causes @code{cat} to read and write files in
+text mode.
 
 @item -e
 @opindex -e
@@ -321,20 +342,25 @@ Equivalent to @samp{-vE}.
 @itemx --show-ends
 @opindex -E
 @opindex --show-ends
-Display a @samp{$} after the end of each line.
+Display a @samp{$} after the end of each line.  On MS-DOS and
+MS-Windows, this option causes @code{cat} to read and write files in
+text mode.
 
 @item -n
 @itemx --number
 @opindex -n
 @opindex --number
-Number all output lines, starting with 1.
+Number all output lines, starting with 1.  On MS-DOS and MS-Windows,
+this option causes @code{cat} to read and write files in text mode.
 
 @item -s
 @itemx --squeeze-blank
 @opindex -s
 @opindex --squeeze-blank
 @cindex squeezing blank lines
-Replace multiple adjacent blank lines with a single blank line.
+Replace multiple adjacent blank lines with a single blank line.  On
+MS-DOS and MS-Windows, this option causes @code{cat} to read and write
+files in text mode.
 
 @item -t
 @opindex -t
@@ -355,8 +381,10 @@ Ignored; for Unix compatibility.
 @opindex -v
 @opindex --show-nonprinting
 Display control characters except for @key{LFD} and @key{TAB} using
-@samp{^} notation and precede characters that have the high bit set
-with @samp{M-}.
+@samp{^} notation and precede characters that have the high bit set with
+@samp{M-}.  On MS-DOS and MS-Windows, this option causes @code{cat} to
+read files ! and standard input in DOS binary mode, so the @key{CR}
+characters at the ! end of each line are also visible.
 
 @end table
 
@@ -394,7 +422,10 @@ precedes in the file.
 @itemx --regex
 @opindex -r
 @opindex --regex
-Treat the separator string as a regular expression.
+Treat the separator string as a regular expression.  Users of @code{tac}
+on MS-DOS/MS-Windows should note that, since @code{tac} reads files in
+binary mode, each line of a text file might end with a CR/LF pair
+instead of the Unix-style LF.
 
 @item -s @var{separator}
 @itemx --separator=@var{separator}
@@ -1788,7 +1819,8 @@ The program accepts the following options.  Also see @ref{Common options}.
 Treat all input files as binary.  This option has no effect on Unix
 systems, since they don't distinguish between binary and text files.
 This option is useful on systems that have different internal and
-external character representations.
+external character representations.  On MS-DOS and MS-Windows, this is
+the default.
 
 @item -c
 @itemx --check
@@ -3960,9 +3992,9 @@ appropriate tool, build one.
 
 As of this writing, all the programs we've discussed are available via
 anonymous @code{ftp} from @code{prep.ai.mit.edu} as
-@file{/pub/gnu/textutils-1.9.tar.gz} directory.@footnote{Version 1.9 was
-current when this column was written. Check the nearest GNU archive for
-the current version.}
+@file{/pub/gnu/textutils-1.9.tar.gz}.@footnote{Version 1.9 was current
+when this column was written. Check the nearest GNU archive for the
+current version.  The main GNU FTP site is now @code{ftp.gnu.org}.}
 
 None of what I have presented in this column is new. The Software Tools
 philosophy was first introduced in the book @cite{Software Tools},
