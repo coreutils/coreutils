@@ -26,31 +26,31 @@
 @ifinfo
 @format
 START-INFO-DIR-ENTRY
-* Text utilities: (textutils).  	GNU text utilities.
-* cat: (textutils)cat invocation.		Concatenate and write files.
-* cksum: (textutils)cksum invocation.		Print @sc{POSIX} CRC checksum.
-* comm: (textutils)comm invocation.		Compare sorted files by line.
-* csplit: (textutils)csplit invocation.		Split by context.
-* cut: (textutils)cut invocation.		Print selected parts of lines.
-* expand: (textutils)expand invocation.		Convert tabs to spaces.
-* fmt: (textutils)fmt invocation.		Reformat paragraph text.
-* fold: (textutils)fold invocation.		Wrap long input lines.
-* head: (textutils)head invocation.		Output the first part of files.
-* join: (textutils)join invocation.		Join lines on a common field.
-* md5sum: (textutils)md5sum invocation.		Print or check message-digests.
-* nl: (textutils)nl invocation.			Number lines and write files.
-* od: (textutils)od invocation.			Dump files in octal, etc.
-* paste: (textutils)paste invocation.		Merge lines of files.
-* pr: (textutils)pr invocation.			Paginate or columnate files.
-* sort: (textutils)sort invocation.		Sort text files.
-* split: (textutils)split invocation.		Split into fixed-size pieces.
-* sum: (textutils)sum invocation.		Print traditional checksum.
-* tac: (textutils)tac invocation.		Reverse files.
-* tail: (textutils)tail invocation.		Output the last part of files.
-* tr: (textutils)tr invocation.			Translate characters.
-* unexpand: (textutils)unexpand invocation.	Convert spaces to tabs.
-* uniq: (textutils)uniq invocation.		Uniqify files.
-* wc: (textutils)wc invocation.			Byte, word, and line counts.
+* Text utilities: (textutils).          GNU text utilities.
+* cat: (textutils)cat invocation.               Concatenate and write files.
+* cksum: (textutils)cksum invocation.           Print @sc{POSIX} CRC checksum.
+* comm: (textutils)comm invocation.             Compare sorted files by line.
+* csplit: (textutils)csplit invocation.         Split by context.
+* cut: (textutils)cut invocation.               Print selected parts of lines.
+* expand: (textutils)expand invocation.         Convert tabs to spaces.
+* fmt: (textutils)fmt invocation.               Reformat paragraph text.
+* fold: (textutils)fold invocation.             Wrap long input lines.
+* head: (textutils)head invocation.             Output the first part of files.
+* join: (textutils)join invocation.             Join lines on a common field.
+* md5sum: (textutils)md5sum invocation.         Print or check message-digests.
+* nl: (textutils)nl invocation.                 Number lines and write files.
+* od: (textutils)od invocation.                 Dump files in octal, etc.
+* paste: (textutils)paste invocation.           Merge lines of files.
+* pr: (textutils)pr invocation.                 Paginate or columnate files.
+* sort: (textutils)sort invocation.             Sort text files.
+* split: (textutils)split invocation.           Split into fixed-size pieces.
+* sum: (textutils)sum invocation.               Print traditional checksum.
+* tac: (textutils)tac invocation.               Reverse files.
+* tail: (textutils)tail invocation.             Output the last part of files.
+* tr: (textutils)tr invocation.                 Translate characters.
+* unexpand: (textutils)unexpand invocation.     Convert spaces to tabs.
+* uniq: (textutils)uniq invocation.             Uniqify files.
+* wc: (textutils)wc invocation.                 Byte, word, and line counts.
 END-INFO-DIR-ENTRY
 @end format
 @end ifinfo
@@ -58,7 +58,7 @@ END-INFO-DIR-ENTRY
 @ifinfo
 This file documents the GNU text utilities.
 
-Copyright (C) 1994, 95 Free Software Foundation, Inc.
+Copyright (C) 1994, 95, 96 Free Software Foundation, Inc.
 
 Permission is granted to make and distribute verbatim copies of
 this manual provided the copyright notice and this permission notice
@@ -85,12 +85,12 @@ by the Foundation.
 @titlepage
 @title GNU @code{textutils}
 @subtitle A set of text utilities
-@subtitle for version @value{VERSION}, @value{RELEASEDATE}
+@subtitle for version @value{VERSION}, @value{UPDATED}
 @author David MacKenzie et al.
 
 @page
 @vskip 0pt plus 1filll
-Copyright @copyright{} 1994, 95 Free Software Foundation, Inc.
+Copyright @copyright{} 1994, 95, 96 Free Software Foundation, Inc.
 
 Permission is granted to make and distribute verbatim copies of
 this manual provided the copyright notice and this permission notice
@@ -733,7 +733,7 @@ address.
 These commands reformat the contents of files.
 
 @menu
-* fmt invocation::		Reformat paragraph text.
+* fmt invocation::              Reformat paragraph text.
 * pr invocation::               Paginate or columnate files for printing.
 * fold invocation::             Wrap input lines to fit in specified width.
 @end menu
@@ -827,7 +827,7 @@ room to balance line lengths.
 @item -p @var{prefix}
 @itemx --prefix=@var{prefix}
 Only lines beginning with @var{prefix} (possibly preceded by whitespace)
-are subject to formatting. The prefix and any preceding whitespace is
+are subject to formatting. The prefix and any preceding whitespace are
 stripped for the formatting and then re-attached to each formatted output
 line.  One use is to format certain kinds of program comments, while
 leaving the code unchanged.
@@ -1407,7 +1407,7 @@ contents of files.
 * wc invocation::               Print byte, word, and line counts.
 * sum invocation::              Print checksum and block counts.
 * cksum invocation::            Print CRC checksum and byte counts.
-* md5sum invocation::		Print or check message-digests.
+* md5sum invocation::           Print or check message-digests.
 @end menu
 
 
@@ -1772,8 +1772,8 @@ like @code{1.0e-34} and @code{10e100}.  Use this option only if there
 is no alternative;  it is much slower than @samp{-n} and numbers with
 too many significant digits will be compared as if they had been
 truncated.  In addition, numbers outside the range of representable
-double precision floating point numbers are treated as if they were zeroes.
-@c FIXME: Someday there will be an option to warn about underflow and overflow.
+double precision floating point numbers are treated as if they were
+zeroes; overflow and underflow are not reported.
 
 @item -i
 @opindex -i
@@ -2739,8 +2739,8 @@ ones, to tabs.
 @end table
 
 
-@c		What's GNU?
-@c		Arnold Robbins
+@c              What's GNU?
+@c              Arnold Robbins
 @node Opening the software toolbox
 @chapter Opening the software toolbox
 
