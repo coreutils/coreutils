@@ -105,6 +105,10 @@ char *malloc ();
 # define EXIT_FAILURE 1
 #endif
 
+#ifndef BACKUPFILE_EXIT_FAILURE
+# define BACKUPFILE_EXIT_FAILURE EXIT_FAILURE
+#endif
+
 /* The extension added to file names to produce a simple (as opposed
    to numbered) backup file name. */
 const char *simple_backup_suffix = "~";
@@ -244,7 +248,7 @@ get_version (const char *version)
   if (i < 0)
     {
       invalid_arg ("version control type", version, i);
-      exit (EXIT_FAILURE);
+      exit (BACKUPFILE_EXIT_FAILURE);
     }
   return backup_types[i];
 }
