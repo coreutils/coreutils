@@ -642,7 +642,7 @@ string_to_join_field (char const *str, char const *err_msg_fmt)
   uintmax_t val;
 
   strtol_error s_err = xstrtoumax (str, NULL, 10, &val, "");
-  if (s_err == LONGINT_OVERFLOW || SIZE_MAX < val)
+  if (s_err == LONGINT_OVERFLOW || (s_err == LONGINT_OK && SIZE_MAX < val))
     {
       error (EXIT_FAILURE, 0,
 	     _("value %s is so large that it is not representable"),
