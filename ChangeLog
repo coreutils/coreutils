@@ -1,5 +1,13 @@
 2003-05-10  Jim Meyering  <jim@meyering.net>
 
+	* Makefile.maint (syntax-check): Check for `error (EXIT_SUCCESS,'.
+
+	* src/readlink.c (main): Set program_name before first use.
+	Remove that (redundant) first use.
+	Don't exit successfully just because --verbose was specified.
+	Pass 0, not EXIT_SUCCESS, as first argument to error; when that
+	parameter is 0, error does not exit.
+
 	* src/uname.c (main): When failing due to too many arguments, also say
 	that, rather than just "Try `uname --help' for more information.".
 	* src/comm.c (main): Likewise, but for too few arguments.
@@ -9,6 +17,8 @@
 	* src/uniq.c (main): Don't segfault when argc < optind.
 	* src/who.c (main): Handle argc < optind.
 	* src/install.c (main): Likewise.
+	* src/mv.c (main): Likewise.
+	* src/pwd.c (main): Likewise.
 	* src/ln.c (main): Test for `missing argument' before computing n_files.
 	* src/tail.c (main): Test for the case of no arguments before
 	computing n_files.
