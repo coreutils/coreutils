@@ -1,6 +1,12 @@
-2004-11-24  Jim Meyering  <jim@meyering.net>
+2004-11-25  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	* man/install.x: Use `install', not `ginstall' in the one-line
+	description.  Reported by Brendan O'Dea.
+	* man/sha1sum.x: Use `sha1sum', not `shasum'.
+
+2004-11-24  Jim Meyering  <jim@meyering.net>
 
 	Since the changes of 2004-05-22, the u.saved_cwd member at
 	the bottom of the active-directory stack was no longer
