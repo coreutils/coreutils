@@ -2230,7 +2230,12 @@ quote_filename (register const char *p, size_t *quoted_length)
     }
 
   p = p0;
-  quoted = xmalloc (4 * strlen (p) + 1);
+
+  quoted = xmalloc (4 * strlen (p)
+		    /* Add two (one for beginning and one for ending quote)
+		       if --quote-name (-Q) was specified.  */
+		    + (quote_as_string ? 2 : 0)
+		    + 1);
   q = quoted;
 
 #define SAVECHAR(c) *q++ = (c)
@@ -2276,7 +2281,9 @@ quote_filename (register const char *p, size_t *quoted_length)
 	      break;
 
 	    case '"':
-	      SAVE_2_CHARS ("\\\"");
+	      if (quote_as_string)
+		SAVECHAR ('\\');
+	      SAVECHAR ('"');
 	      break;
 
 	    default:
