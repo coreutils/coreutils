@@ -98,14 +98,14 @@ idle_string (time_t when)
   seconds_idle = now - when;
   if (seconds_idle < 60)	/* One minute. */
     return "     ";
-  if (seconds_idle < (24 * 60 * 60)) /* One day. */
+  if (seconds_idle < (24 * 60 * 60))	/* One day. */
     {
       sprintf (idle_hhmm, "%02d:%02d",
 	       (int) (seconds_idle / (60 * 60)),
 	       (int) ((seconds_idle % (60 * 60)) / 60));
       return (const char *) idle_hhmm;
     }
-  sprintf(idle_hhmm, "%dd", (int) (seconds_idle / (24 * 60 * 60)));
+  sprintf (idle_hhmm, "%dd", (int) (seconds_idle / (24 * 60 * 60)));
   return (const char *) idle_hhmm;
 }
 
@@ -154,22 +154,22 @@ print_entry (const STRUCT_UTMP *utmp_ent)
 
   if (include_fullname)
     {
-      struct passwd * pw;
-      char name[sizeof(utmp_ent->ut_name)+1];
-      
-      strncpy(name, utmp_ent->ut_name, sizeof(utmp_ent->ut_name));
-      name[sizeof(utmp_ent->ut_name)] = '\0';
-      pw = getpwnam(name);
+      struct passwd *pw;
+      char name[sizeof (utmp_ent->ut_name) + 1];
+
+      strncpy (name, utmp_ent->ut_name, sizeof (utmp_ent->ut_name));
+      name[sizeof (utmp_ent->ut_name)] = '\0';
+      pw = getpwnam (name);
       if (pw == NULL)
-	printf(" %19s", "        ???");
+	printf (" %19s", "        ???");
       else
 	{
-	  char * const comma = strchr(pw->pw_gecos, ',');
+	  char *const comma = strchr (pw->pw_gecos, ',');
 	  if (comma)
 	    *comma = '\0';
-	  
+
 	  /* FIXME: we don't yet convert '&' to username capitalized. */
-	  printf(" %-19.19s", pw->pw_gecos);
+	  printf (" %-19.19s", pw->pw_gecos);
 	}
     }
 
@@ -212,7 +212,7 @@ print_entry (const STRUCT_UTMP *utmp_ent)
       if (*ut_host)
 	/* See if we can canonicalize it.  */
 	host = canon_host (ut_host);
-      if (! host)
+      if ( ! host)
 	host = ut_host;
 
       if (display)
@@ -230,89 +230,89 @@ print_entry (const STRUCT_UTMP *utmp_ent)
 static void
 print_long_entry (const char name[])
 {
-  struct passwd * pw;
+  struct passwd *pw;
 
-  pw = getpwnam(name);
+  pw = getpwnam (name);
 
-  printf (_("Login name: "));
+  printf (_ ("Login name: "));
   printf ("%-28s", name);
 
-  printf (_("In real life: "));
+  printf (_ ("In real life: "));
   if (pw == NULL)
     {
-      printf(" %s", _("???\n"));
+      printf (" %s", _ ("???\n"));
       return;
     }
   else
     {
-      char * const comma = strchr(pw->pw_gecos, ',');
+      char *const comma = strchr (pw->pw_gecos, ',');
       if (comma)
 	*comma = '\0';
-	  
+
       /* FIXME: we don't yet convert '&' to username capitalized. */
-      printf(" %s", pw->pw_gecos);
+      printf (" %s", pw->pw_gecos);
     }
 
-  putchar  ('\n');
-  
+  putchar ('\n');
+
   if (include_home_and_shell)
     {
-      printf(_("Directory: "));
-      printf("%-29s", pw->pw_dir);
-      printf(_("Shell: "));
-      printf(" %s", pw->pw_shell);
-      putchar  ('\n');
+      printf (_ ("Directory: "));
+      printf ("%-29s", pw->pw_dir);
+      printf (_ ("Shell: "));
+      printf (" %s", pw->pw_shell);
+      putchar ('\n');
     }
 
   if (include_project)
     {
-      FILE * stream;
+      FILE *stream;
       char buf[1024];
-      const char * const baseproject = "/.project";
-      char * const project =
-	xmalloc(strlen(pw->pw_dir) + strlen(baseproject) + 1);
-      
+      const char *const baseproject = "/.project";
+      char *const project =
+      xmalloc (strlen (pw->pw_dir) + strlen (baseproject) + 1);
+
       strcpy (project, pw->pw_dir);
       strcat (project, baseproject);
-      
-      stream = fopen(project, "r");
+
+      stream = fopen (project, "r");
       if (stream)
 	{
 	  int bytes;
-	  
-	  printf (_("Project: "));
-	  
-	  while ( (bytes = fread(buf, 1, sizeof(buf), stream)) > 0)
-	    fwrite(buf, 1, bytes, stdout);
-	  fclose(stream);
+
+	  printf (_ ("Project: "));
+
+	  while ((bytes = fread (buf, 1, sizeof (buf), stream)) > 0)
+	    fwrite (buf, 1, bytes, stdout);
+	  fclose (stream);
 	}
-      
+
       free (project);
     }
-  
+
   if (include_plan)
     {
-      FILE * stream;
+      FILE *stream;
       char buf[1024];
-      const char * const baseplan = "/.plan";
-      char * const plan =
-	xmalloc(strlen(pw->pw_dir) + strlen(baseplan) + 1);
-      
+      const char *const baseplan = "/.plan";
+      char *const plan =
+      xmalloc (strlen (pw->pw_dir) + strlen (baseplan) + 1);
+
       strcpy (plan, pw->pw_dir);
       strcat (plan, baseplan);
-      
-      stream = fopen(plan, "r");
+
+      stream = fopen (plan, "r");
       if (stream)
 	{
 	  int bytes;
-	  
-	  printf (_("Plan:\n"));
-	  
-	  while ( (bytes = fread(buf, 1, sizeof(buf), stream)) > 0)
-	    fwrite(buf, 1, bytes, stdout);
-	  fclose(stream);
+
+	  printf (_ ("Plan:\n"));
+
+	  while ((bytes = fread (buf, 1, sizeof (buf), stream)) > 0)
+	    fwrite (buf, 1, bytes, stdout);
+	  fclose (stream);
 	}
-      
+
       free (plan);
     }
 
@@ -325,18 +325,16 @@ print_long_entry (const char name[])
 static void
 print_heading (void)
 {
-  STRUCT_UTMP * utmp_buf; /* This is only to get sizes... */
-
-  printf ("%-8s", _("Login"));
+  printf ("%-8s", _ ("Login"));
   if (include_fullname)
-    printf (" %-19s", _("   Name"));
-  printf (" %-9s", _("TTY"));
+    printf (" %-19s", _ ("   Name"));
+  printf (" %-9s", _ ("TTY"));
   if (include_idle)
-    printf (" %-6s", _("Idle"));
-  printf (" %-12s", _("When"));
+    printf (" %-6s", _ ("Idle"));
+  printf (" %-12s", _ ("When"));
 #ifdef HAVE_UT_HOST
   if (include_where)
-    printf (" %s", _("Where"));
+    printf (" %s", _ ("Where"));
 #endif
   putchar ('\n');
 }
@@ -345,7 +343,7 @@ print_heading (void)
 
 static void
 scan_entries (int n, const STRUCT_UTMP *utmp_buf,
-	      const int argc_names, char * const argv_names[])
+	      const int argc_names, char *const argv_names[])
 {
   if (include_heading)
     print_heading ();
@@ -356,15 +354,15 @@ scan_entries (int n, const STRUCT_UTMP *utmp_buf,
 #ifdef USER_PROCESS
 	  && utmp_buf->ut_type == USER_PROCESS
 #endif
-	 )
+	)
 	{
 	  if (argc_names)
 	    {
 	      int i;
-	      
+
 	      for (i = 0; i < argc_names; i++)
-		if (strncmp(utmp_buf->ut_name, argv_names[i],
-			    sizeof(utmp_buf->ut_name)) == 0)
+		if (strncmp (utmp_buf->ut_name, argv_names[i],
+			     sizeof (utmp_buf->ut_name)) == 0)
 		  {
 		    print_entry (utmp_buf);
 		    break;
@@ -381,7 +379,7 @@ scan_entries (int n, const STRUCT_UTMP *utmp_buf,
 
 static void
 short_pinky (const char *filename,
-	     const int argc_names, char * const argv_names[])
+	     const int argc_names, char *const argv_names[])
 {
   int n_users;
   STRUCT_UTMP *utmp_buf;
@@ -394,25 +392,24 @@ short_pinky (const char *filename,
 }
 
 static void
-long_pinky (const int argc_names, char * const argv_names[])
+long_pinky (const int argc_names, char *const argv_names[])
 {
   int i;
-  
-  for (i=0; i < argc_names; i++)
+
+  for (i = 0; i < argc_names; i++)
     print_long_entry (argv_names[i]);
 }
-
 
 static void
 usage (int status)
 {
   if (status != 0)
-    fprintf (stderr, _("Try `%s --help' for more information.\n"),
+    fprintf (stderr, _ ("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf (_("Usage: %s [OPTION]... [USER]...\n"), program_name);
-      printf (_("\
+      printf (_ ("Usage: %s [OPTION]... [USER]...\n"), program_name);
+      printf (_ ("\
 \n\
   -l              do long format output\n\
   -b              omit the user's home directory and shell in long format\n\
@@ -429,13 +426,13 @@ usage (int status)
 \n\
 The utmp file will be %s.\n\
 "), UTMP_FILE);
-      puts (_("\nReport bugs to <sh-utils-bugs@gnu.ai.mit.edu>."));
+      puts (_ ("\nReport bugs to <sh-utils-bugs@gnu.ai.mit.edu>."));
     }
   exit (status);
 }
 
 int
-main (int argc, char * const argv[])
+main (int argc, char *const argv[])
 {
   int optc, longind;
 
@@ -485,15 +482,15 @@ main (int argc, char * const argv[])
 	case 'h':
 	  include_project = 0;
 	  break;
-	  
+
 	case 'p':
 	  include_plan = 0;
 	  break;
-	  
+
 	case 'b':
 	  include_home_and_shell = 0;
 	  break;
-	  
+
 	default:
 	  usage (1);
 	}
@@ -509,9 +506,9 @@ main (int argc, char * const argv[])
     usage (0);
 
   if (do_short_format)
-    short_pinky (UTMP_FILE, argc-optind, argv+optind);
+    short_pinky (UTMP_FILE, argc - optind, argv + optind);
   else
-    long_pinky (argc-optind, argv+optind);
+    long_pinky (argc - optind, argv + optind);
 
   exit (0);
 }
