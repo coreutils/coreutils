@@ -1,4 +1,14 @@
-Tue Dec 17 16:49:02 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+Wed Dec 18 07:47:29 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* acinclude.m4 (jm_FUNC_GNU_STRFTIME): Change m4 quote characters
+	outside the quoted test program.  Quote the test program with <<, >>.
+	Reported by Andreas Schwab.
+	(AM_FUNC_GETLOADAVG): Likewise.
+
+Tue Dec 17 18:54:32 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/Makefile.am (install-exec-local): Properly redirect stdout
+	and stderr to /dev/null.  From Eric Backus.
 
 	* lib/strftime.c: Update from GNU libc.
 
@@ -339,8 +349,7 @@ Mon Oct 28 17:40:54 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 	* configure.in: Don't output confusing diagnostic: `checking for
 	shadow password routines'.  Suggestion from François Pinard.
 
-Thu Oct 24 13:50:46 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund\
-.de>
+Thu Oct 24 13:50:46 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
         * src/tee.c (main): Ignore SIGPIPE.
 
