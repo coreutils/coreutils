@@ -1,3 +1,20 @@
+1999-04-20  Paul Eggert  <eggert@twinsun.com>
+
+	Replace our temporary hack implementation of strtoumax with
+	something very close to the real code in glibc.
+
+	* lib/xstrtoumax.c: Remove the temporary strtoumax replacement;
+	we now have a true replacement in strtoumax.c.
+	(__strtol): Always define to strtoumax.
+	(<stdlib.h>): No need to include.
+	(PARAMS): Remove.
+	(my_strtoumax): Move this to strtoumax.c,
+	rename it to strtoumax, and simplify.
+
+	* lib/strtoull.c, lib/strtoumax.c: New files.
+
+	* lib/strtol.c: Update to glibc 2.1.1 version.
+
 1999-04-20  Jim Meyering  <meyering@ascend.com>
 
 	* tests/Makefile.am (EXTRA_DIST): s/posix-warn/env-warn/.
