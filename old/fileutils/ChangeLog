@@ -1,5 +1,13 @@
 1998-10-25  Jim Meyering  <meyering@ascend.com>
 
+	* Version 4.0-b6.
+
+	* tests/rm/unreadable: Two new tests.
+	* tests/rm/Makefile.am (TESTS): Add new test `unreadable'.  But comment
+	it out since we're so close to release and since the test compares the
+	text of diagnostics that are likely to vary between systems.
+	(TEST_ENVIRONMENT): Add required framework.
+
 	* src/remove.c (remove_cwd_entries): Don't apply CLOSEDIR to a NULL
 	pointer. (provoke with `mkdir -m 0100 x; rm -rf x')
 	Upon CLOSEDIR failure, set `status' to RM_ERROR, not RM_OK.
