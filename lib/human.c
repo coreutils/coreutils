@@ -23,10 +23,6 @@
 # include <config.h>
 #endif
 
-#if HAVE_INTTYPES_H
-# include <inttypes.h>
-#endif
-
 #include <sys/types.h>
 #include <stdio.h>
 
