@@ -92,15 +92,14 @@ size_t mbrtowc ();
 #define INT_BITS (sizeof (int) * CHAR_BIT)
 
 #if defined (STDC_HEADERS) || (!defined (isascii) && !defined (HAVE_ISASCII))
-/* Undefine to protect against the definition in wctype.h of solaris2.6.   */
-# undef ISASCII
-# define ISASCII(c) 1
+# define IN_CTYPE_DOMAIN(c) 1
 #else
-# define ISASCII(c) isascii (c)
+# define IN_CTYPE_DOMAIN(c) isascii(c)
 #endif
+
 /* Undefine to protect against the definition in wctype.h of solaris2.6.   */
 #undef ISPRINT
-#define ISPRINT(c) (ISASCII (c) && isprint (c))
+#define ISPRINT(c) (IN_CTYPE_DOMAIN (c) && isprint (c))
 
 struct quoting_options
 {
