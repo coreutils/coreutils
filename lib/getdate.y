@@ -312,9 +312,22 @@ date	: tUNUMBER '/' tUNUMBER {
 	    yyDay = $3;
 	}
 	| tUNUMBER '/' tUNUMBER '/' tUNUMBER {
-	    yyMonth = $1;
-	    yyDay = $3;
-	    yyYear = $5;
+	  /* Interpret as YYYY/MM/DD if $1 >= 1000, otherwise as MM/DD/YY.
+	     The goal in recognizing YYYY/MM/DD is solely to support legacy
+	     machine-generated dates like those in an RCS log listing.  If
+	     you want portability, use the ISO 8601 format.  */
+	  if ($1 >= 1000)
+	    {
+	      yyYear = $1;
+	      yyMonth = $3;
+	      yyDay = $5;
+	    }
+	  else
+	    {
+	      yyMonth = $1;
+	      yyDay = $3;
+	      yyYear = $5;
+	    }
 	}
 	| tUNUMBER tSNUMBER tSNUMBER {
 	    /* ISO 8601 format.  yyyy-mm-dd.  */
