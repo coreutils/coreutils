@@ -1684,8 +1684,12 @@ keycompare (const struct line *a, const struct line *b)
 
 	  diff = strcoll (copy_a, copy_b);
 
+	  /* Free copy_a and copy_b.  */
+	  alloca (0);
+
 	  if (diff)
 	    return key->reverse ? -diff : diff;
+
 	  continue;
 	}
 #endif
