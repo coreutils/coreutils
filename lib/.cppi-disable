@@ -1,12 +1,15 @@
 error.h
 fnmatch.h
+fts.c
+fts_.h
 getopt.c
 getopt.h
 getopt1.c
 getpagesize.h
 md5.h
 obstack.h
+printf-args.h
 regex.c
 regex.h
-fts_.h
-fts.c
+vasnprintf.h
+vasprintf.h
