@@ -1796,6 +1796,22 @@ Sort numerically: the number begins each line; specifically, it consists
 of optional whitespace, an optional @samp{-} sign, and zero or more
 digits, optionally followed by a decimal point and zero or more digits.
 
+@code{sort -n} uses what might be considered an unconventional method
+to compare strings representing floating point numbers.  Rather than
+first converting each string to the C @code{double} type and then
+comparing those values, sort aligns the decimal points in the two
+strings and compares the strings a character at a time.  One benefit
+of using this approach is its speed.  In practice this is much more
+efficient than performing the two corresponding string-to-double (or even
+string-to-integer) conversions and then comparing doubles.  In addition,
+there is no corresponding loss of precision.  Converting each string to
+@code{double} before comparison would limit precision to about 16 digits
+on most systems.
+
+Note that neither a leading @samp{+} nor exponential notation is
+recognized.  To compare such strings numerically, use the @samp{-g}
+option.
+
 @item -r
 @opindex -r
 @cindex reverse sorting
