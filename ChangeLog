@@ -9,6 +9,27 @@
 
 	* src/date.c: Don't include timespec.h, now that system.h does it.
 
+2004-02-02  Paul Eggert  <eggert@twinsun.com>
+
+	Don't dump core if localtime returns NULL (possible on
+	hosts with 64-bit time_t and 32-bit int).
+	* src/date.c: Include "inttostr.h".
+	(batch_convert, main):
+	If time conversion fails, exit with nonzero status.
+	(show_date): Return int to report conversion failure.
+	Print the time as an int if localtime fails.
+	* src/uptime.c: Print "??" if the current clock can't
+	be converted by localtime.  This won't happen until the year
+	2*31 + 1900, but we don't want to dump core even if the current
+	clock has the wrong value.
+
+	* src/stat.c: Include "inttostr.h".
+	(human_time): Print the date/time as a number of seconds since the
+	epoch if it can't be converted by localtime.  This is better than
+	just saying "invalid", and is consistent with what "ls" does.
+	Don't dump core if the year has more than 48 digits; this isn't
+	possible on any contemporary host, but we might as well do it right.
+
 2004-01-31  Paul Eggert  <eggert@twinsun.com>
 
 	* src/stat.c (human_time): Accept time rather than
