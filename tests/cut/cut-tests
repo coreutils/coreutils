@@ -1718,23 +1718,6 @@ else
   esac
 fi
 test -s y.E || rm -f y.E
-cat $srcdir/y.I | $xx -s -b4 > y.O 2> y.E
-code=$?
-if test $code != 1 ; then
-  $echo "Test y(|) failed: ../../src/cut return code $code differs from expected value 1" 1>&2
-  errors=`expr $errors + 1`
-else
-  cmp y.O $srcdir/y.X > /dev/null 2>&1
-  case $? in
-    0) if test "$VERBOSE" ; then $echo "passed y(|)"; fi ;;
-    1) $echo "Test y(|) failed: files y.O and $srcdir/y.X differ" 1>&2;
-       errors=`expr $errors + 1` ;;
-    2) $echo "Test y(|) may have failed." 1>&2;
-       $echo The command "cmp y.O $srcdir/y.X" failed. 1>&2 ;
-       errors=`expr $errors + 1` ;;
-  esac
-fi
-test -s y.E || rm -f y.E
 $xx -s -b4 < $srcdir/y.I > y.O 2> y.E
 code=$?
 if test $code != 1 ; then
@@ -1764,23 +1747,6 @@ else
     1) $echo "Test z(F) failed: files z.O and $srcdir/z.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test z(F) may have failed." 1>&2;
-       $echo The command "cmp z.O $srcdir/z.X" failed. 1>&2 ;
-       errors=`expr $errors + 1` ;;
-  esac
-fi
-test -s z.E || rm -f z.E
-cat $srcdir/z.I | $xx  > z.O 2> z.E
-code=$?
-if test $code != 1 ; then
-  $echo "Test z(|) failed: ../../src/cut return code $code differs from expected value 1" 1>&2
-  errors=`expr $errors + 1`
-else
-  cmp z.O $srcdir/z.X > /dev/null 2>&1
-  case $? in
-    0) if test "$VERBOSE" ; then $echo "passed z(|)"; fi ;;
-    1) $echo "Test z(|) failed: files z.O and $srcdir/z.X differ" 1>&2;
-       errors=`expr $errors + 1` ;;
-    2) $echo "Test z(|) may have failed." 1>&2;
        $echo The command "cmp z.O $srcdir/z.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
@@ -1820,23 +1786,6 @@ else
   esac
 fi
 test -s empty-fl.E || rm -f empty-fl.E
-cat $srcdir/empty-fl.I | $xx -f '' > empty-fl.O 2> empty-fl.E
-code=$?
-if test $code != 1 ; then
-  $echo "Test empty-fl(|) failed: ../../src/cut return code $code differs from expected value 1" 1>&2
-  errors=`expr $errors + 1`
-else
-  cmp empty-fl.O $srcdir/empty-fl.X > /dev/null 2>&1
-  case $? in
-    0) if test "$VERBOSE" ; then $echo "passed empty-fl(|)"; fi ;;
-    1) $echo "Test empty-fl(|) failed: files empty-fl.O and $srcdir/empty-fl.X differ" 1>&2;
-       errors=`expr $errors + 1` ;;
-    2) $echo "Test empty-fl(|) may have failed." 1>&2;
-       $echo The command "cmp empty-fl.O $srcdir/empty-fl.X" failed. 1>&2 ;
-       errors=`expr $errors + 1` ;;
-  esac
-fi
-test -s empty-fl.E || rm -f empty-fl.E
 $xx -f '' < $srcdir/empty-fl.I > empty-fl.O 2> empty-fl.E
 code=$?
 if test $code != 1 ; then
@@ -1866,23 +1815,6 @@ else
     1) $echo "Test missing-fl(F) failed: files missing-fl.O and $srcdir/missing-fl.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test missing-fl(F) may have failed." 1>&2;
-       $echo The command "cmp missing-fl.O $srcdir/missing-fl.X" failed. 1>&2 ;
-       errors=`expr $errors + 1` ;;
-  esac
-fi
-test -s missing-fl.E || rm -f missing-fl.E
-cat $srcdir/missing-fl.I | $xx -f > missing-fl.O 2> missing-fl.E
-code=$?
-if test $code != 1 ; then
-  $echo "Test missing-fl(|) failed: ../../src/cut return code $code differs from expected value 1" 1>&2
-  errors=`expr $errors + 1`
-else
-  cmp missing-fl.O $srcdir/missing-fl.X > /dev/null 2>&1
-  case $? in
-    0) if test "$VERBOSE" ; then $echo "passed missing-fl(|)"; fi ;;
-    1) $echo "Test missing-fl(|) failed: files missing-fl.O and $srcdir/missing-fl.X differ" 1>&2;
-       errors=`expr $errors + 1` ;;
-    2) $echo "Test missing-fl(|) may have failed." 1>&2;
        $echo The command "cmp missing-fl.O $srcdir/missing-fl.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
@@ -1922,23 +1854,6 @@ else
   esac
 fi
 test -s empty-bl.E || rm -f empty-bl.E
-cat $srcdir/empty-bl.I | $xx -b '' > empty-bl.O 2> empty-bl.E
-code=$?
-if test $code != 1 ; then
-  $echo "Test empty-bl(|) failed: ../../src/cut return code $code differs from expected value 1" 1>&2
-  errors=`expr $errors + 1`
-else
-  cmp empty-bl.O $srcdir/empty-bl.X > /dev/null 2>&1
-  case $? in
-    0) if test "$VERBOSE" ; then $echo "passed empty-bl(|)"; fi ;;
-    1) $echo "Test empty-bl(|) failed: files empty-bl.O and $srcdir/empty-bl.X differ" 1>&2;
-       errors=`expr $errors + 1` ;;
-    2) $echo "Test empty-bl(|) may have failed." 1>&2;
-       $echo The command "cmp empty-bl.O $srcdir/empty-bl.X" failed. 1>&2 ;
-       errors=`expr $errors + 1` ;;
-  esac
-fi
-test -s empty-bl.E || rm -f empty-bl.E
 $xx -b '' < $srcdir/empty-bl.I > empty-bl.O 2> empty-bl.E
 code=$?
 if test $code != 1 ; then
@@ -1968,23 +1883,6 @@ else
     1) $echo "Test missing-bl(F) failed: files missing-bl.O and $srcdir/missing-bl.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test missing-bl(F) may have failed." 1>&2;
-       $echo The command "cmp missing-bl.O $srcdir/missing-bl.X" failed. 1>&2 ;
-       errors=`expr $errors + 1` ;;
-  esac
-fi
-test -s missing-bl.E || rm -f missing-bl.E
-cat $srcdir/missing-bl.I | $xx -b > missing-bl.O 2> missing-bl.E
-code=$?
-if test $code != 1 ; then
-  $echo "Test missing-bl(|) failed: ../../src/cut return code $code differs from expected value 1" 1>&2
-  errors=`expr $errors + 1`
-else
-  cmp missing-bl.O $srcdir/missing-bl.X > /dev/null 2>&1
-  case $? in
-    0) if test "$VERBOSE" ; then $echo "passed missing-bl(|)"; fi ;;
-    1) $echo "Test missing-bl(|) failed: files missing-bl.O and $srcdir/missing-bl.X differ" 1>&2;
-       errors=`expr $errors + 1` ;;
-    2) $echo "Test missing-bl(|) may have failed." 1>&2;
        $echo The command "cmp missing-bl.O $srcdir/missing-bl.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
@@ -2314,7 +2212,7 @@ else
 fi
 test -s multichar-od.E || rm -f multichar-od.E
 if test $errors = 0 ; then
-  $echo Passed all 135 tests. 1>&2
+  $echo Passed all 129 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi
