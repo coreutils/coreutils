@@ -1,3 +1,11 @@
+1999-07-31  Jim Meyering  <meyering@ascend.com>
+
+	* src/tail.c (tail_forever): Don't call kill if pid is 0.
+	Detect when `writer_is_dead' also when the writer is some other user.
+	From Karl Heuer.
+
+	* src/tail.c (parse_options): Warn if --pid=PID is used without -f.
+
 1999-07-30  Jim Meyering  <meyering@ascend.com>
 
 	* Version 1.22o.
