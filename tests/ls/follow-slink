@@ -19,7 +19,7 @@ ln -s link link || framework_failure=1
 # Make sure the symlink was created.
 # `ln -s link link' succeeds, but creates no file on
 # systems running some version of the DJGPP libc.
-ls link || framework_failure=1
+ls -F link > /dev/null || framework_failure=1
 
 if test $framework_failure = 1; then
   echo 'failure in testing framework'
