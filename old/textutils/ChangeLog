@@ -1,6 +1,21 @@
-2001-10-27  Jim Meyering  <meyering@lucent.com>
+2001-10-28  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.17.
+
+2001-10-27  Paul Eggert  <eggert@twinsun.com>
+
+	* src/sum.c: Include human.h.
+	(ROTATE_RIGHT): Remove; it was slow and the comment was
+	misleading anyway.
+	(bsd_sum_file): Avoid unsigned and long when they're not needed.
+	Compute total input bytes as uintmax_t, not long, so that the
+	code works even with files whose size does not fit in 'long'.
+	(sysv_sum_file): Likewise.
+	(sysv_sum_file): Do not reduce checksum until the end; this is
+	what System V does.
+	Reported by Nick Lawes.
+
+2001-10-27  Jim Meyering  <meyering@lucent.com>
 
 	Give an accurate diagnostic when `head --bytes=30M' fails.
 	* src/head.c (string_to_integer): Check explicitly for overflow,
