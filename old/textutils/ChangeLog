@@ -1,3 +1,11 @@
+1997-11-02  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* acconfig.h: Add malloc and realloc.
+
+	* src/wc.c (main): New option, --max-line-length (-L).
+	(wc, write_counts): Implement it.
+	From Bruno Haible.
+
 1997-10-26  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/memcasecmp.c: Convert to upper case before comparing.
@@ -5,6 +13,13 @@
 	Reported by Arthur Pool.
 
 1997-10-25  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/xmalloc.c (xalloc_fail): Renamed from fixup_null_alloc.
+	(xcalloc): #ifdef-out unused function.
+	(xrealloc): Remove code to work around deficient versions of realloc.
+	Now we have an autoconf-enabled replacement version.
+	(xmalloc): Remove code to work around deficient versions of malloc.
+	Now we have an autoconf-enabled replacement version.
 
 	* lib/memcmp.c (rpl_memcmp): Rename from memcmp.
 
@@ -14,6 +29,12 @@
 
 	* configure.in (jm_FUNC_MALLOC): Use it.
 	(jm_FUNC_REALLOC): Use it.
+
+	* lib/Makefile.am (EXTRA_DIST): Add malloc.c.
+	* lib/malloc.c: New file.
+	* m4/malloc.m4: New file.
+	* m4/Makefile.am (EXTRA_DIST): Add malloc.m4.
+
 	* lib/Makefile.am (noinst_HEADERS): Add xalloc.h.
 	(EXTRA_DIST): Add realloc.c.
 	(EXTRA_DIST): Add malloc.c.
