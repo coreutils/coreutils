@@ -76,6 +76,7 @@ printenv.1:	$(common_dep)	$(srcdir)/printenv.x	../src/printenv.c
 printf.1:	$(common_dep)	$(srcdir)/printf.x	../src/printf.c
 ptx.1:		$(common_dep)	$(srcdir)/ptx.x		../src/ptx.c
 pwd.1:		$(common_dep)	$(srcdir)/pwd.x		../src/pwd.c
+readlink.1:	$(common_dep)	$(srcdir)/readlink.x	../src/readlink.c
 rm.1:		$(common_dep)	$(srcdir)/rm.x		../src/rm.c
 rmdir.1:	$(common_dep)	$(srcdir)/rmdir.x	../src/rmdir.c
 seq.1:		$(common_dep)	$(srcdir)/seq.x		../src/seq.c
