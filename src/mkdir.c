@@ -169,11 +169,15 @@ main (int argc, char **argv)
 	  int t_errno;
 	  fail = make_dir (dir, dir, newmode, &dir_created);
 	  t_errno = errno;
-	  /* If make_dir `succeeds' because the directory already exists,
-	     then fail unless --parents (-p) was specified.  */
-	  if (fail ||
-	      (!create_parents && !dir_created && (t_errno = EEXIST)))
+	  if (fail)
 	    {
+	      /* make_dir already gave a diagnostic.  */
+	    }
+	  else if (!create_parents && !dir_created && (t_errno = EEXIST))
+	    {
+	      /* make_dir `succeeds' when DIR already exists.
+		 In that case, mkdir must fail, unless --parents (-p)
+		 was specified.  */
 	      error (0, t_errno, _("cannot create directory %s"),
 		     quote (dir));
 	      fail = 1;
