@@ -1,5 +1,5 @@
 /* linebuffer.c -- read arbitrarily long lines
-   Copyright (C) 1986, 1991, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1986, 1991, 1998, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -39,9 +39,9 @@ initbuffer (struct linebuffer *linebuffer)
 }
 
 /* Read an arbitrarily long line of text from STREAM into LINEBUFFER.
-   Remove any newline.  Does not null terminate.
-   Return zero upon error or upon end of file.
-   Otherwise, return LINEBUFFER.  */
+   Keep the newline; append a newline if it's the last line of a file
+   that ends in a non-newline character.  Do not null terminate.
+   Return LINEBUFFER, except at end of file return 0.  */
 
 struct linebuffer *
 readline (struct linebuffer *linebuffer, FILE *stream)
@@ -52,33 +52,32 @@ readline (struct linebuffer *linebuffer, FILE *stream)
   char *end = buffer + linebuffer->size; /* Sentinel. */
 
   if (feof (stream) || ferror (stream))
-    {
-      linebuffer->length = 0;
-      return 0;
-    }
+    return 0;
 
-  while (1)
+  do
     {
       c = getc (stream);
+      if (c == EOF)
+	{
+	  if (p == buffer)
+	    return 0;
+	  if (p[-1] == '\n')
+	    break;
+	  c = '\n';
+	}
       if (p == end)
 	{
 	  linebuffer->size *= 2;
 	  buffer = (char *) xrealloc (buffer, linebuffer->size);
-	  p += buffer - linebuffer->buffer;
+	  p = p - linebuffer->buffer + buffer;
 	  linebuffer->buffer = buffer;
 	  end = buffer + linebuffer->size;
 	}
-      if (c == EOF || c == '\n')
-	break;
       *p++ = c;
     }
+  while (c != '\n');
 
-  if (feof (stream) && p == buffer)
-    {
-      linebuffer->length = 0;
-      return 0;
-    }
-  linebuffer->length = p - linebuffer->buffer;
+  linebuffer->length = p - buffer;
   return linebuffer;
 }
 
