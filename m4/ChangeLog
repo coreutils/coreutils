@@ -1,9 +1,10 @@
 2004-12-06  Jim Meyering  <jim@meyering.net>
 
-	* mempcpy.m4 (gl_FUNC_MEMPCPY): Use AC_LIBSOURCES.
-	* lchown.m4 (gl_FUNC_LCHOWN): Use AC_LIBSOURCES.
-	* chdir-long.m4 (gl_FUNC_CHDIR_LONG): Use AC_LIBSOURCES.
-	* openat.m4 (gl_FUNC_OPENAT): Use AC_LIBSOURCES.
+	* save-cwd.m4 (gl_SAVE_CWD): Use AC_LIBSOURCES.
+	* mempcpy.m4 (gl_FUNC_MEMPCPY): Likewise.
+	* lchown.m4 (gl_FUNC_LCHOWN): Likewise.
+	* chdir-long.m4 (gl_FUNC_CHDIR_LONG): Likewise.
+	* openat.m4 (gl_FUNC_OPENAT): Likewise.
 	(gl_PREREQ_GETCWD): Use AC_REQUIRE.
 
 2004-12-02  Paul Eggert  <eggert@cs.ucla.edu>
