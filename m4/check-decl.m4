@@ -1,4 +1,4 @@
-#serial 8
+#serial 9
 
 dnl This is just a wrapper function to encapsulate this kludge.
 dnl Putting it in a separate file like this helps share it between
@@ -39,9 +39,21 @@ AC_DEFUN(jm_CHECK_DECLS,
 #endif
 '
 
-  AC_CHECK_DECLS((free, getenv, lseek, malloc, memchr, nanosleep,
-                  realloc, stpcpy, strstr, strtoul, strtoull),
-                  , , $headers)
+  AC_CHECK_DECLS((
+    free,
+    getenv,
+    geteuid,
+    getlogin,
+    lseek,
+    malloc,
+    memchr,
+    nanosleep,
+    realloc,
+    stpcpy,
+    strstr,
+    strtoul,
+    strtoull,
+    ttyname), , , $headers)
 ])
 
 dnl FIXME: when autoconf has support for it.
