@@ -214,7 +214,13 @@ touch (const char *file)
   if (status)
     {
       if (open_errno)
-	error (0, open_errno, _("creating %s"), quote (file));
+	{
+	  /* The wording of this diagnostic should cover at least two cases:
+	     - the file does not exist, but the parent directory is unwritable
+	     - the file exists, but it isn't writable
+	     I think it's not worth trying to distinguish them.  */
+	  error (0, open_errno, _("cannot touch %s"), quote (file));
+	}
       else
 	{
 	  if (no_create && errno == ENOENT)
