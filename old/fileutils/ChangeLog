@@ -1,3 +1,44 @@
+Fri Aug  4 22:11:06 1995  Jim Meyering  (meyering@comco.com)
+
+	* install.c (isnumber): Rename to is_number to avoid conflict with
+  	FreeBSD 2.0.5 macro definition.  Reported by David O'Brien
+	(obrien@sea.legent.com).
+
+	* lib/save-cwd.c: New file.
+	* lib/save-cwd.h: New file.
+	* lib/Makefile.in (SOURCES, OBJECTS, DISTFILES): Update for new files.
+
+	* configure.in: (AC_REPLACE_FUNCS): Remove fnmatch.
+	Add check for working fnmatch functions so that
+	systems providing it don't incur the space overhead of linking
+	with the version in lib.  Cross compiling builds always use the
+	version in lib.
+
+	* ls.c (decode_switches): Set SORT_TYPE.  Before, ls -c was sorting
+	by name, rather than change time.  Reported by Ken Estes
+	(m-ke0082@sparky.cs.nyu.edu).
+
+	* du.c: (save_cwd, restore_cwd, free_cwd): Remove functions.
+	New versions have been broken out into save-cwd.c.
+	(du_files): Adapt to handle status code returned by new versions
+	of save_cwd and restore_cwd.
+	(count_entry): Likewise.
+
+	* all programs (main): Include program name in --version output.
+
+	* src/Makefile.in (cp.o): Depend on ../lib/obstack.h.
+
+	* xstrtol.c, xstrtol.h: New files.
+	* xstrtoul.c, xstrtoul.h: New files.
+	* lib/Makefile.in (SOURCES, OBJECTS, DISTFILES): Update for new files.
+
+	* chgrp.c (parse_group): Use xstrtoul instead of isnumber; the
+	latter would silently overflow, accepting a group id larger
+	than INT_MAX.
+	(isnumber): Remove now-unused static function.
+	(change_file_group) [MAXUID]: Give a more descriptive message
+	when numeric group id is larger than MAXUID.
+
 Sat May 27 00:35:47 1995  Jim Meyering  (meyering@comco.com)
 
 	* system.h [!STDC_HEADERS && HAVE_MEMORY_H]: Include memory.h.
@@ -134,7 +175,7 @@ Sat Feb 11 07:52:01 1995  Jim Meyering  (meyering@comco.com)
 
         * lib/Makefile.in (DISTFILES): Add error.h.
 
-	* chgrp.c, chmod.c, chown.c, cp-hash.c, cp.c, df.c, du.c, install.c, 
+	* chgrp.c, chmod.c, chown.c, cp-hash.c, cp.c, df.c, du.c, install.c,
 	ln.c, ls.c, mv.c, mvdir.c, rm.c, touch.c: Rename SAFE_STAT and
 	SAFE_LSTAT to safe_stat and safe_lstat.
 
