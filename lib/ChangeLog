@@ -1,5 +1,7 @@
 2003-06-18  Jim Meyering  <jim@meyering.net>
 
+	* inttostr.h (PARAMS): Remove.  All uses removed.
+
 	Merge in change from gnulib.
 	* makepath.c: Remove block of alloca-related code in favor
 	of an unconditional `#include <alloca.h>'.
