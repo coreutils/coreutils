@@ -1193,11 +1193,11 @@ Use @var{number} characters for line numbers (default 6).
 
 @code{od} writes an unambiguous representation of each @var{file}
 (@samp{-} means standard input), or standard input if none are given.
-Synopsis:
+Synopses:
 
 @example
 od [@var{option}]@dots{} [@var{file}]@dots{}
-od -C [@var{file}] [[+]@var{offset} [[+]@var{label}]]
+od --traditional [@var{file}] [[+]@var{offset} [[+]@var{label}]]
 @end example
 
 Each line of output consists of the offset in the input, followed by
@@ -1248,14 +1248,20 @@ by 1024, and @samp{m} by 1048576.
 Output at most @var{bytes} bytes of the input.  Prefixes and suffixes on
 @code{bytes} are interpreted as for the @option{-j} option.
 
-@item -s [@var{n}]
+@item -s @var{n}
 @itemx --strings[=@var{n}]
 @opindex -s
 @opindex --strings
 @cindex string constants, outputting
 Instead of the normal output, output only @dfn{string constants}: at
-least @var{n} (3 by default) consecutive @sc{ascii} graphic characters,
+least @var{n} consecutive @sc{ascii} graphic characters,
 followed by a null (zero) byte.
+
+If @var{n} is omitted with @option{--strings}, the default is 3.  On
+older systems, @sc{gnu} @command{od} instead supports an obsolete
+option @option{-s[@var{n}]}, where @var{n} also defaults to 3.  Newer
+systems do not support @option{-s} without an argument; use
+@option{--strings} instead.
 
 @item -t @var{type}
 @itemx --format=@var{type}
@@ -1333,22 +1339,26 @@ more consecutive output lines would be identical, @code{od} outputs only
 the first line, and puts just an asterisk on the following line to
 indicate the elision.
 
-@item -w[@var{n}]
+@item -w @var{n}
 @itemx --width[=@var{n}]
 @opindex -w
 @opindex --width
 Dump @code{n} input bytes per output line.  This must be a multiple of
 the least common multiple of the sizes associated with the specified
-output types.  If @var{n} is omitted, the default is 32.  If this option
-is not given at all, the default is 16.
+output types.
+
+If this option is not given at all, the default is 16.  If @var{n} is
+omitted with @option{--width}, the default is 32.  On older systems,
+@sc{gnu} @command{od} instead supports an obsolete option
+@option{-w[@var{n}]}, where @var{n} also defaults to 32.  Newer
+systems do not support @option{-w} without an argument; use
+@option{--width} instead.
 
 @end table
 
-The next several options map the old, pre-@sc{posix} format specification
-options to the corresponding @sc{posix} format specs.
-@sc{gnu} @code{od} accepts
-any combination of old- and new-style options.  Format specification
-options accumulate.
+The next several options are shorthands for format specifications.
+@sc{gnu} @code{od} accepts any combination of shorthands and format
+specification options.  These options accumulate.
 
 @table @samp
 
@@ -1393,10 +1403,9 @@ Output as octal shorts.  Equivalent to @option{-to2}.
 @opindex -x
 Output as hexadecimal shorts.  Equivalent to @option{-tx2}.
 
-@item -C
-@itemx --traditional
+@item --traditional
 @opindex --traditional
-Recognize the pre-@sc{posix} non-option arguments that traditional @code{od}
+Recognize the non-option arguments that traditional @code{od}
 accepted.  The following syntax:
 
 @smallexample
@@ -1600,7 +1609,7 @@ form feeds set in the input files requires the @option{-T} option.
 Capital letter options override small letter ones.
 
 @item
-Some of the option-arguments (compare @option{-s}, @option{-S}, @option{-e},
+Some of the option-arguments (compare @option{-s}, @option{-e},
 @option{-i}, @option{-n}) cannot be specified as separate arguments from the
 preceding option letter (already stated in the @sc{posix} specification).
 @end itemize
@@ -1726,8 +1735,9 @@ is 8).
 Merge lines of full length.  Used together with the column options
 @option{-@var{column}}, @option{-a -@var{column}} or @option{-m}.  Turns off
 @option{-W/-w} line truncation;
-no column alignment used; may be used with @option{-S[@var{string}]}.
-@option{-J} has been introduced (together with @option{-W} and @option{-S})
+no column alignment used; may be used with
+@option{--sep-string[=@var{string}]}.  @option{-J} has been introduced
+(together with @option{-W} and @option{--sep-string})
 to disentangle the old (@sc{posix}-compliant) options @option{-w} and
 @option{-s} along with the three column options.
 
@@ -1748,7 +1758,8 @@ the @option{-T} option had been given.
 @opindex --merge
 Merge and print all @var{file}s in parallel, one in each column.  If a
 line is too long to fit in a column, it is truncated, unless the @option{-J}
-option is used.  @option{-S[@var{string}]} may be used.  Empty pages in
+option is used.  @option{--sep-string[=@var{string}]} may be used.
+Empty pages in
 some @var{file}s (form feeds set) produce empty columns, still marked
 by @var{string}.  The result is a continuous line numbering and column
 marking throughout the whole merged file.  Completely empty merged pages
@@ -1818,7 +1829,7 @@ three column options (@option{-COLUMN}|@option{-a -COLUMN}|@option{-m}) unless
 @option{-w} is set.  This is a @sc{posix}-compliant formulation.
 
 
-@item -S[@var{string}]
+@item -S @var{string}
 @itemx --sep-string[=@var{string}]
 @opindex -S
 @opindex --sep-string
@@ -1828,13 +1839,15 @@ does not affect line truncation or column alignment.
 Without @option{-S}, and with @option{-J}, @code{pr} uses the default output
 separator, TAB.
 Without @option{-S} or @option{-J}, @code{pr} uses a @samp{space}
-(same as @option{-S" "}).
-Using @option{-S} with no @var{string} is equivalent to @option{-S""}.
-Note that for some of @code{pr}'s options the single-letter option
-character must be followed immediately by any corresponding argument;
-there may not be any intervening white space.
-@option{-S/-s} is one of them.  Don't use @option{-S "STRING"}.
-@sc{posix} requires this.
+(same as @option{-S"@w{ }"}).  With @option{-S@var{string}},
+@var{string} must be nonempty; @option{--sep-string} with no
+@var{string} is equivalent to @option{--sep-string=""}.
+
+On older systems, @command{pr} instead supports an obsolete option
+@option{-S[@var{string}]}, where @var{string} is optional.  This usage
+conflicts with newer systems, where @option{-S} always has an
+argument.  To specify an empty @var{string} portably, use
+@option{--sep-string}.
 
 @item -t
 @itemx --omit-header
@@ -1939,6 +1952,10 @@ is broken at the maximum line length as usual.
 @opindex --width
 Use a maximum line length of @var{width} columns instead of 80.
 
+On older systems, @command{fold} supports an obsolete option
+@option{-@var{width}}.  Newer systems do not support this; use
+@option{-w @var{width}} instead.
+
 @end table
 
 
@@ -1966,11 +1983,10 @@ These commands output pieces of the input.
 
 @code{head} prints the first part (10 lines by default) of each
 @var{file}; it reads from standard input if no files are given or
-when given a @var{file} of @option{-}.  Synopses:
+when given a @var{file} of @option{-}.  Synopsis:
 
 @example
 head [@var{option}]@dots{} [@var{file}]@dots{}
-head -@var{number} [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
 If more than one @var{file} is specified, @code{head} prints a
@@ -1981,20 +1997,9 @@ one-line header consisting of
 @noindent
 before the output for each @var{file}.
 
-@code{head} accepts two option formats: the new one, in which numbers
-are arguments to the options (@option{-q -n 1}), and the old one, in which
-the number precedes any option letters (@option{-1q}).
-
 The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
-
-@item -@var{count}@var{options}
-@opindex -@var{count}
-This option is only recognized if it is specified first.  @var{count} is
-a decimal number optionally followed by a size letter (@samp{b},
-@samp{k}, @samp{m}) as in @code{-c}, or @samp{l} to mean count by lines,
-or other option letters (@samp{cqv}).
 
 @item -c @var{bytes}
 @itemx --bytes=@var{bytes}
@@ -2026,6 +2031,13 @@ Always print file name headers.
 
 @end table
 
+On older systems, @command{head} supports an obsolete option
+@option{-@var{count}@var{options}}, which is recognized only if it is
+specified first.  @var{count} is a decimal number optionally followed
+by a size letter (@samp{b}, @samp{k}, @samp{m}) as in @code{-c}, or
+@samp{l} to mean count by lines, or other option letters (@samp{cqv}).
+Newer systems do not support this; use @option{-c @var{count}} or
+@option{-n @var{count}} instead.
 
 @node tail invocation
 @section @code{tail}: Output the last part of files
@@ -2035,11 +2047,10 @@ Always print file name headers.
 
 @code{tail} prints the last part (10 lines by default) of each
 @var{file}; it reads from standard input if no files are given or
-when given a @var{file} of @samp{-}.  Synopses:
+when given a @var{file} of @samp{-}.  Synopsis:
 
 @example
 tail [@var{option}]@dots{} [@var{file}]@dots{}
-tail -@var{number} [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
 If more than one @var{file} is specified, @code{tail} prints a
@@ -2059,14 +2070,6 @@ only reverse files that are at most as large as its buffer, which is
 typically 32k.  A more reliable and versatile way to reverse files is
 the @sc{gnu} @code{tac} command.
 
-@code{tail} accepts two option formats: the standard one, in which
-numbers are arguments to the options (@option{-n 1}), and the
-obsolescent one, in which the number precedes any option letters
-(@option{-1}).  On older systems @command{tail} also supports an
-obsolete option format @option{+@var{count}} with the same meaning as
-@option{-+@var{count}}, but @sc{posix} no longer allows this; use
-@option{-n +@var{count}} instead.
-
 If any option-argument is a number @var{n} starting with a @samp{+},
 @code{tail} begins printing with the @var{n}th item from the start of
 each file, instead of from the end.
@@ -2074,13 +2077,6 @@ each file, instead of from the end.
 The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
-
-@item -@var{count}
-@opindex -@var{count}
-This option is only recognized if it is specified first.  @var{count} is
-a decimal number optionally followed by a size letter (@samp{b},
-@samp{k}, @samp{m}) as in @code{-c}, or @samp{l} to mean count by lines,
-or other option letters (@samp{cfqv}).
 
 @item -c @var{bytes}
 @itemx --bytes=@var{bytes}
@@ -2205,6 +2201,15 @@ Always print file name headers.
 
 @end table
 
+On older systems, @command{tail} supports an obsolete option
+@option{-@var{count}@var{options}}, which is recognized only if it is
+specified first.  @var{count} is a decimal number optionally followed
+by a size letter (@samp{b}, @samp{k}, @samp{m}) as in @code{-c}, or
+@samp{l} to mean count by lines, or other option letters
+(@samp{cfqv}).  Some older @command{tail} implementations also support
+an obsolete option @option{+@var{count}} with the same meaning as
+@option{-+@var{count}}.  Newer systems do not support these options;
+use @option{-c @var{count}} or @option{-n @var{count}} instead.
 
 @node split invocation
 @section @code{split}: Split a file into fixed-size pieces
@@ -2235,12 +2240,15 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@item -@var{lines}
-@itemx -l @var{lines}
+@item -l @var{lines}
 @itemx --lines=@var{lines}
 @opindex -l
 @opindex --lines
 Put @var{lines} lines of @var{input} into each output file.
+
+On older systems, @command{split} supports an obsolete option
+@option{-@var{lines}}.  Newer systems do not support this; use
+@option{-l @var{lines}} instead.
 
 @item -b @var{bytes}
 @itemx --bytes=@var{bytes}
@@ -3040,9 +3048,9 @@ end positions of a field specification, and if it is inherited
 from the global options it will be attached to both.
 Keys may span multiple fields.
 
-On older systems @command{sort} supports an obsolete origin-zero
-syntax @samp{+@var{pos1} [-@var{pos2}]} for specifying sort keys, but
-@sc{posix} no longer allows this.  Use @option{-k} instead.
+On older systems, @command{sort} supports an obsolete origin-zero
+syntax @samp{+@var{pos1} [-@var{pos2}]} for specifying sort keys.
+Newer systems do not support this; use @option{-k} instead.
 
 Here are some examples to illustrate various combinations of options.
 
@@ -3170,15 +3178,17 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@item -@var{n}
-@itemx -f @var{n}
+@item -f @var{n}
 @itemx --skip-fields=@var{n}
-@opindex -@var{n}
 @opindex -f
 @opindex --skip-fields
 Skip @var{n} fields on each line before checking for uniqueness.  Fields
 are sequences of non-space non-tab characters that are separated from
 each other by at least one space or tab.
+
+On older systems, @command{uniq} supports an obsolete option
+@option{-@var{n}}.  Newer systems do not support this; use @option{-f
+@var{n}} instead.
 
 @item -s @var{n}
 @itemx --skip-chars=@var{n}
@@ -3186,9 +3196,10 @@ each other by at least one space or tab.
 @opindex --skip-chars
 Skip @var{n} characters before checking for uniqueness.  If you use both
 the field and character skipping options, fields are skipped over first.
-On older systems, @command{uniq} also supports an obsolete option
-format @option{+@var{n}}, but @sc{posix} no longer allows this format;
-use @option{-s @var{n}} instead.
+
+On older systems, @command{uniq} supports an obsolete option
+@option{+@var{n}}.  Newer systems do not support this; use @option{-s
+@var{n}} instead.
 
 @item -c
 @itemx --count
@@ -4514,26 +4525,28 @@ expand [@var{option}]@dots{} [@var{file}]@dots{}
 
 By default, @code{expand} converts all tabs to spaces.  It preserves
 backspace characters in the output; they decrement the column count for
-tab calculations.  The default action is equivalent to @option{-8} (set
+tab calculations.  The default action is equivalent to @option{-t 8} (set
 tabs every 8 columns).
 
 The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@item -@var{tab1}[,@var{tab2}]@dots{}
-@itemx -t @var{tab1}[,@var{tab2}]@dots{}
+@item -t @var{tab1}[,@var{tab2}]@dots{}
 @itemx --tabs=@var{tab1}[,@var{tab2}]@dots{}
-@opindex -@var{tab}
 @opindex -t
 @opindex --tabs
 @cindex tabstops, setting
 If only one tab stop is given, set the tabs @var{tab1} spaces apart
 (default is 8).  Otherwise, set the tabs at columns @var{tab1},
 @var{tab2}, @dots{} (numbered from 0), and replace any tabs beyond the
-last tabstop given with single spaces.  If the tabstops are specified
-with the @option{-t} or @option{--tabs} option, they can be separated by
+last tabstop given with single spaces.  Tabstops can be separated by
 blanks as well as by commas.
+
+On older systems, @command{expand} supports an obsolete option
+@option{-@var{tab1}[,@var{tab2}]@dots{}}, where tabstops must be
+separated by commas.  Newer systems do not support this; use
+@option{-t @var{tab1}[,@var{tab2}]@dots{}} instead.
 
 @item -i
 @itemx --initial
@@ -4571,18 +4584,21 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@item -@var{tab1}[,@var{tab2}]@dots{}
-@itemx -t @var{tab1}[,@var{tab2}]@dots{}
+@item -t @var{tab1}[,@var{tab2}]@dots{}
 @itemx --tabs=@var{tab1}[,@var{tab2}]@dots{}
-@opindex -@var{tab}
 @opindex -t
 @opindex --tabs
 If only one tab stop is given, set the tabs @var{tab1} spaces apart
 instead of the default 8.  Otherwise, set the tabs at columns
 @var{tab1}, @var{tab2}, @dots{} (numbered from 0), and leave spaces and
-tabs beyond the tabstops given unchanged.  If the tabstops are specified
-with the @option{-t} or @option{--tabs} option, they can be separated by
+tabs beyond the tabstops given unchanged.  Tabstops can be separated by
 blanks as well as by commas.  This option implies the @option{-a} option.
+
+On older systems, @command{unexpand} supports an obsolete option
+@option{-@var{tab1}[,@var{tab2}]@dots{}}, where tabstops must be
+separated by commas.  (Unlike @option{-t}, this obsolete option does
+not imply @option{-a}.)  Newer systems do not support this; use
+@option{--first-only -t @var{tab1}[,@var{tab2}]@dots{}} instead.
 
 @item -a
 @itemx --all
@@ -7212,12 +7228,13 @@ specified files.  Synopsis:
 touch [@var{option}]@dots{} @var{file}@dots{}
 @end example
 
-Older systems support an obsolete variant syntax, as follows.
+On older systems, @command{touch} supports an obsolete syntax, as follows.
 If the first @var{file} would be a valid argument to the @option{-t}
 option and no timestamp is given with any of the @option{-d}, @option{-r},
 or @option{-t} options and the @samp{--} argument is not given, that
 argument is interpreted as the time for the other files instead of
-as a file name.  This usage is obsolete; use @option{-t} instead.
+as a file name.  Newer systems do not support this; use @option{-t}
+instead.
 
 @cindex empty files, creating
 Any @var{file} that does not exist is created empty.
