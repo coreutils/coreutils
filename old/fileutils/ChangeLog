@@ -2,6 +2,9 @@
 
 	* Version 4.1.11.
 
+	* src/rm.c: Add new option, --presume-input-tty, for testing only.
+	Not documented.
+
 	This test might remove a file owned by the person running `make check'.
 	* tests/rm/fail-eperm: Hoist definition of $target_file, and use
 	that (not $f) in test for owner/dir/symlink.  Patch by Michael Stone.
@@ -11,6 +14,7 @@
 	rm would prompt for non-dangling symlinks
 	* src/remove.c (prompt): When not interactive, don't prompt
 	for a symlink.  Reported by Dave Beckett.  Patch by Michael Stone.
+	* tests/rm/dangling-symlink: Add a test for the above-fixed bug.
 
 2002-07-20  Jim Meyering  <meyering@lucent.com>
 
