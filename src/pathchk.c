@@ -1,5 +1,5 @@
 /* pathchk -- check whether pathnames are valid or portable
-   Copyright (C) 1991-2001 Free Software Foundation, Inc.
+   Copyright (C) 1991-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -325,7 +325,7 @@ validate_path (char *path, int portability)
       if (!last_elem)
 	{
 	  exists = dir_ok (path);
-	  if (dir_ok == 0)
+	  if (exists == 0)
 	    {
 	      free (parent);
 	      return 1;
