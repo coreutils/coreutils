@@ -41,10 +41,6 @@
       or if the target system doesn't support file ownership. */	\
    && ((errno != EPERM && errno != EINVAL) || x->myeuid == 0))
 
-#define SAME_INODE(Sb_1, Sb_2) \
-  ((Sb_1).st_ino == (Sb_2).st_ino \
-   && (Sb_1).st_dev == (Sb_2).st_dev)
-
 struct dir_list
 {
   struct dir_list *parent;
