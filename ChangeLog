@@ -44,3 +44,7 @@
 	textutils, and sh-utils.
 	* Makefile.am: Likewise.
 	* src/Makefile.am: Likewise.
+
+Local Variables:
+version-control: never
+End:
