@@ -446,7 +446,7 @@ static int
 install_file_in_dir (const char *from, const char *to_dir,
 		     const struct cp_options *x)
 {
-  char *from_base;
+  const char *from_base;
   char *to;
   int ret;
 
