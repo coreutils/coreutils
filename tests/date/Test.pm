@@ -111,6 +111,8 @@ sub test_vector
      ['this-mo', "-d '$d0 $t0 this month' $fmt", {}, "$d0 $t0", 0],
      ['this-y', "-d '$d0 $t0 this year' $fmt", {}, "$d0 $t0", 0],
 
+     ['risks-1', "-d 'Nov 10 1996' $fmt", {}, "1996-11-10 00:00:00", 0],
+
      # FIXME: add a lot more...
      );
 
