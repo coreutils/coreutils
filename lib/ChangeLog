@@ -4,6 +4,8 @@
 	(BUILT_SOURCES): Add unlocked-io.h.
 	(io_functions): Define.
 	(unlocked-io.h): New rule.
+	(DISTCLEANFILES): Add unlocked-io.h.
+
 	* unlocked-io.hin: New file
 
 	* regex.c: Update from glibc.
