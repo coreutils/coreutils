@@ -7,24 +7,19 @@
 
 # If this test takes too long on your system, blame the OS.
 
-: ${RM=rm}
-: ${MKDIR=mkdir}
-
-test=deep-1
-
-# Don't require use of TMPDIR.
-: ${RM_TMPDIR=.}
-
 if test "$VERBOSE" = yes; then
   set -x
-  $RM --version
+  rm --version
 fi
+
+pwd=`pwd`
+tmp=`echo "$0"|sed 's,.*/,,'`.tmp
+trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
+trap '(exit $?); exit' 1 2 13 15
 
 umask 022
 
 fail=0
-
-tmp=$RM_TMPDIR/t-rm.$$
 
 k20=/k/k/k/k/k/k/k/k/k/k/k/k/k/k/k/k/k/k/k/k
 k200=$k20$k20$k20$k20$k20$k20$k20$k20$k20$k20
@@ -37,14 +32,14 @@ k_deep=$k200$k200
 # Create a directory in $tmp with lots of `k' components.
 deep=$tmp$k_deep
 echo "creating a hierarchy 400 deep in $tmp..." |tr -d '\012'
-$MKDIR -p $deep || fail=1
+mkdir -p $deep || fail=1
 echo done
 
 # Make sure the deep dir was created.
 test -d $deep || fail=1
 
 echo "deleting $tmp..." |tr -d '\012'
-$RM -r $tmp || fail=1
+rm -r $tmp || fail=1
 echo done
 
 # Make sure all of $tmp was deleted.
