@@ -1,5 +1,9 @@
 1999-11-13  Jim Meyering  <meyering@ascend.com>
 
+	* src/touch.c (touch): Don't fail just because we couldn't open
+	an existing file.  This makes it so that touching a read-only
+	file now works.  Also clean up and simplify.
+	Based on a patch from Chip Salzenberg.
 	* tests/touch/no-rights: New test for this.
 	* tests/touch/Makefile.am (TESTS): Add no-rights.
 
