@@ -73,6 +73,7 @@ syntax-check-rules = \
   sc_dd_max_sym_length \
   sc_error_exit_success \
   sc_prohibit_atoi_atof \
+  sc_prohibit_jm_in_m4 \
   sc_space_tab \
   sc_sun_os_names \
   sc_system_h_headers \
@@ -164,6 +165,16 @@ sc_dd_max_sym_length:
 	  echo 'dd.c: LONGEST_SYMBOL is not longest' 1>&2;	\
 	  exit 1;						\
 	fi
+
+# Many m4 macros names once began with `jm_'.
+# On 2004-04-13, they were all changed to start with gl_ instead.
+# Make sure that none are inadvertently reintroduced.
+sc_prohibit_jm_in_m4:
+	@( cvsu --list ) > /dev/null 2>&1 || : &&			\
+	  grep -E 'jm_[A-Z]'						\
+		$$(cvsu --list $(srcdir)/m4 |grep '\.m4$$') &&		\
+	    { echo '$(ME): do not use jm_ in m4 macro names'		\
+	      1>&2; exit 1; } || :
 
 # Create a list of regular expressions matching the names
 # of files included from system.h.  Exclude a couple.
