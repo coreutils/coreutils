@@ -1,3 +1,15 @@
+2004-08-09  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* sha1.h (sha1_ctx): Renamed from sha_ctx.
+	(sha1_init_ctx): Renamed from sha_init_ctx.
+	(sha1_process_block): Renamed from sha_process_block.
+	(sha1_process_bytes): Renamed from sha_process_bytes.
+	(sha1_finish_ctx): Renamed from sha_finish_ctx.
+	(sha1_read_ctx): Renamed from sha_read_ctx.
+	(sha1_stream): Renamed from sha_stream.
+	(sha1_buffer): Renamed from sha_buffer.
+	* sha1.c: Likewise.
+
 2004-08-07  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* canonicalize.h, cycle-check.h, stat-macros.h, strdup.h,

@@ -1,4 +1,4 @@
-/* sha.c - Functions to compute SHA1 message digest of files or
+/* sha1.c - Functions to compute SHA1 message digest of files or
    memory blocks according to the NIST specification FIPS-180-1.
 
    Copyright (C) 2000, 2001, 2003, 2004 Free Software Foundation, Inc.
@@ -35,7 +35,7 @@
 
 /*
   Not-swap is a macro that does an endian swap on architectures that are
-  big-endian, as SHA needs some data in a little-endian format
+  big-endian, as SHA1 needs some data in a little-endian format
 */
 
 #ifdef WORDS_BIGENDIAN
@@ -63,10 +63,10 @@ static const unsigned char fillbuf[64] = { 0x80, 0 /* , 0, 0, ...  */ };
 /*
   Takes a pointer to a 160 bit block of data (five 32 bit ints) and
   intializes it to the start constants of the SHA1 algorithm.  This
-  must be called before using hash in the call to sha_hash
+  must be called before using hash in the call to sha1_hash.
 */
 void
-sha_init_ctx (struct sha_ctx *ctx)
+sha1_init_ctx (struct sha1_ctx *ctx)
 {
   ctx->A = 0x67452301;
   ctx->B = 0xefcdab89;
@@ -84,7 +84,7 @@ sha_init_ctx (struct sha_ctx *ctx)
    IMPORTANT: On some systems it is required that RESBUF is correctly
    aligned for a 32 bits value.  */
 void *
-sha_read_ctx (const struct sha_ctx *ctx, void *resbuf)
+sha1_read_ctx (const struct sha1_ctx *ctx, void *resbuf)
 {
   ((md5_uint32 *) resbuf)[0] = NOTSWAP (ctx->A);
   ((md5_uint32 *) resbuf)[1] = NOTSWAP (ctx->B);
@@ -101,7 +101,7 @@ sha_read_ctx (const struct sha_ctx *ctx, void *resbuf)
    IMPORTANT: On some systems it is required that RESBUF is correctly
    aligned for a 32 bits value.  */
 void *
-sha_finish_ctx (struct sha_ctx *ctx, void *resbuf)
+sha1_finish_ctx (struct sha1_ctx *ctx, void *resbuf)
 {
   /* Take yet unprocessed bytes into account.  */
   md5_uint32 bytes = ctx->buflen;
@@ -121,23 +121,23 @@ sha_finish_ctx (struct sha_ctx *ctx, void *resbuf)
 						    (ctx->total[0] >> 29));
 
   /* Process last bytes.  */
-  sha_process_block (ctx->buffer, bytes + pad + 8, ctx);
+  sha1_process_block (ctx->buffer, bytes + pad + 8, ctx);
 
-  return sha_read_ctx (ctx, resbuf);
+  return sha1_read_ctx (ctx, resbuf);
 }
 
 /* Compute SHA1 message digest for bytes read from STREAM.  The
    resulting message digest number will be written into the 16 bytes
    beginning at RESBLOCK.  */
 int
-sha_stream (FILE *stream, void *resblock)
+sha1_stream (FILE *stream, void *resblock)
 {
-  struct sha_ctx ctx;
+  struct sha1_ctx ctx;
   char buffer[BLOCKSIZE + 72];
   size_t sum;
 
   /* Initialize the computation context.  */
-  sha_init_ctx (&ctx);
+  sha1_init_ctx (&ctx);
 
   /* Iterate over full file contents.  */
   while (1)
@@ -178,17 +178,17 @@ sha_stream (FILE *stream, void *resblock)
       /* Process buffer with BLOCKSIZE bytes.  Note that
 			BLOCKSIZE % 64 == 0
        */
-      sha_process_block (buffer, BLOCKSIZE, &ctx);
+      sha1_process_block (buffer, BLOCKSIZE, &ctx);
     }
 
  process_partial_block:;
 
   /* Process any remaining bytes.  */
   if (sum > 0)
-    sha_process_bytes (buffer, sum, &ctx);
+    sha1_process_bytes (buffer, sum, &ctx);
 
   /* Construct result in desired memory.  */
-  sha_finish_ctx (&ctx, resblock);
+  sha1_finish_ctx (&ctx, resblock);
   return 0;
 }
 
@@ -197,22 +197,22 @@ sha_stream (FILE *stream, void *resblock)
    output yields to the wanted ASCII representation of the message
    digest.  */
 void *
-sha_buffer (const char *buffer, size_t len, void *resblock)
+sha1_buffer (const char *buffer, size_t len, void *resblock)
 {
-  struct sha_ctx ctx;
+  struct sha1_ctx ctx;
 
   /* Initialize the computation context.  */
-  sha_init_ctx (&ctx);
+  sha1_init_ctx (&ctx);
 
   /* Process whole buffer but last len % 64 bytes.  */
-  sha_process_bytes (buffer, len, &ctx);
+  sha1_process_bytes (buffer, len, &ctx);
 
   /* Put result in desired memory area.  */
-  return sha_finish_ctx (&ctx, resblock);
+  return sha1_finish_ctx (&ctx, resblock);
 }
 
 void
-sha_process_bytes (const void *buffer, size_t len, struct sha_ctx *ctx)
+sha1_process_bytes (const void *buffer, size_t len, struct sha1_ctx *ctx)
 {
   /* When we already have some bits in our internal buffer concatenate
      both inputs first.  */
@@ -226,7 +226,7 @@ sha_process_bytes (const void *buffer, size_t len, struct sha_ctx *ctx)
 
       if (ctx->buflen > 64)
 	{
-	  sha_process_block (ctx->buffer, ctx->buflen & ~63, ctx);
+	  sha1_process_block (ctx->buffer, ctx->buflen & ~63, ctx);
 
 	  ctx->buflen &= 63;
 	  /* The regions in the following copy operation cannot overlap.  */
@@ -247,14 +247,14 @@ sha_process_bytes (const void *buffer, size_t len, struct sha_ctx *ctx)
       if (UNALIGNED_P (buffer))
 	while (len > 64)
 	  {
-	    sha_process_block (memcpy (ctx->buffer, buffer, 64), 64, ctx);
+	    sha1_process_block (memcpy (ctx->buffer, buffer, 64), 64, ctx);
 	    buffer = (const char *) buffer + 64;
 	    len -= 64;
 	  }
       else
 #endif
 	{
-	  sha_process_block (buffer, len & ~63, ctx);
+	  sha1_process_block (buffer, len & ~63, ctx);
 	  buffer = (const char *) buffer + (len & ~63);
 	  len &= 63;
 	}
@@ -269,7 +269,7 @@ sha_process_bytes (const void *buffer, size_t len, struct sha_ctx *ctx)
       left_over += len;
       if (left_over >= 64)
 	{
-	  sha_process_block (ctx->buffer, 64, ctx);
+	  sha1_process_block (ctx->buffer, 64, ctx);
 	  left_over -= 64;
 	  memcpy (ctx->buffer, &ctx->buffer[64], left_over);
 	}
@@ -277,7 +277,7 @@ sha_process_bytes (const void *buffer, size_t len, struct sha_ctx *ctx)
     }
 }
 
-/* --- Code below is the primary difference between md5.c and sha.c --- */
+/* --- Code below is the primary difference between md5.c and sha1.c --- */
 
 /* SHA1 round constants */
 #define K1 0x5a827999L
@@ -296,7 +296,7 @@ sha_process_bytes (const void *buffer, size_t len, struct sha_ctx *ctx)
    Most of this code comes from GnuPG's cipher/sha1.c.  */
 
 void
-sha_process_block (const void *buffer, size_t len, struct sha_ctx *ctx)
+sha1_process_block (const void *buffer, size_t len, struct sha1_ctx *ctx)
 {
   const md5_uint32 *words = buffer;
   size_t nwords = len / sizeof (md5_uint32);

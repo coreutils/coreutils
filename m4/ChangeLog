@@ -1,3 +1,8 @@
+2004-08-09  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* sha1.m4: Renamed from sha.m4.
+	(gl_SHA1): Renamed from gl_SHA.  All uses changed.
+
 2004-08-07  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* canonicalize.m4, getcwd-path-max.m4, strdup.m4: Merge from gnulib.

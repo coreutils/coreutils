@@ -62,7 +62,7 @@
 
 
 #define DIGEST_TYPE_STRING(Alg) ((Alg) == ALG_MD5 ? "MD5" : "SHA1")
-#define DIGEST_STREAM(Alg) ((Alg) == ALG_MD5 ? md5_stream : sha_stream)
+#define DIGEST_STREAM(Alg) ((Alg) == ALG_MD5 ? md5_stream : sha1_stream)
 
 #define DIGEST_BITS(Alg) ((Alg) == ALG_MD5 ? 128 : 160)
 #define DIGEST_HEX_BYTES(Alg) (DIGEST_BITS (Alg) / 4)
@@ -319,7 +319,7 @@ hex_digits (unsigned char const *s)
 }
 
 /* An interface to the function, DIGEST_STREAM,
-   (either md5_stream or sha_stream).
+   (either md5_stream or sha1_stream).
    Operate on FILENAME (it may be "-") and put the result in *BIN_RESULT.
    Return true if successful.  */
 
@@ -618,8 +618,8 @@ main (int argc, char **argv)
 
   if (file_type_specified & do_check)
     {
-      error (0, 0, _("the --binary and --text options are meaningless when \
-verifying checksums"));
+      error (0, 0, _("the --binary and --text options are meaningless when "
+		     "verifying checksums"));
       usage (EXIT_FAILURE);
     }
 
@@ -661,7 +661,7 @@ verifying checksums"));
 	  if (algorithm == ALG_MD5)
 	    md5_buffer (string[i], strlen (string[i]), bin_buffer);
 	  else
-	    sha_buffer (string[i], strlen (string[i]), bin_buffer);
+	    sha1_buffer (string[i], strlen (string[i]), bin_buffer);
 
 	  for (cnt = 0; cnt < (digest_hex_bytes / 2); ++cnt)
 	    printf ("%02x", bin_buffer[cnt]);
