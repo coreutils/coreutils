@@ -1,3 +1,7 @@
+1999-08-11  Paul Eggert  <eggert@twinsun.com>
+
+	* doc/textutils.texi: Document how to ignore newline during sort
+
 1999-08-07  Jim Meyering  <meyering@ascend.com>
 
 	* po/POTFILES.in: Add lots of lib/*.c files.  Remove src/system.h.
