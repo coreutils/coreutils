@@ -1,3 +1,7 @@
+Fri Nov 04 17:26:16 1994  Jim Meyering  (meyering@comco.com)
+
+	* Version 1.10.
+
 Thu Nov 03 23:23:08 1994  Jim Meyering  (meyering@comco.com)
 
 	* linebuffer.h: Use __P instead of _P since the latter conflicts

@@ -1,2 +1,2493 @@
-@value{VERSION}
-@value{RELEASE_DATE}
+\input texinfo
+@c %**start of header
+@setfilename textutils.info
+@settitle GNU text utilities
+@c %**end of header
+
+@include version.texi
+
+@c Define new indices.
+@defcodeindex op
+
+@c Put everything in one index (arbitrarily chosen to be the concept index).
+@syncodeindex fn cp
+@syncodeindex ky cp
+@syncodeindex op cp
+@syncodeindex pg cp
+@syncodeindex vr cp
+
+@ifinfo
+@set Francois Franc,ois
+@end ifinfo
+@tex
+@set Francois Fran\noexpand\ptexc cois
+@end tex
+
+@ifinfo
+@format
+START-INFO-DIR-ENTRY
+* Text utilities: (textutils).  	GNU text utilities.
+* cat: (textutils)cat invocation.		Concatenate and write files.
+* tac: (textutils)tac invocation.		Reverse files.
+* nl: (textutils)nl invocation.			Number lines and write files.
+* od: (textutils)od invocation.			Dump files in octal, etc.
+* fmt: (textutils)fmt invocation.		Reformat paragraph text.
+* pr: (textutils)pr invocation.			Paginate or columnate files.
+* fold: (textutils)fold invocation.		Wrap long input lines.
+* head: (textutils)head invocation.		Output the first part of files.
+* tail: (textutils)tail invocation.		Output the last part of files.
+* split: (textutils)split invocation.		Split into fixed-size pieces.
+* csplit: (textutils)csplit invocation.		Split by context.
+* wc: (textutils)wc invocation.			Byte, word, and line counts.
+* sum: (textutils)sum invocation.		Print traditional checksum.
+* cksum: (textutils)cksum invocation.		Print POSIX CRC checksum.
+* sort: (textutils)sort invocation.		Sort text files.
+* uniq: (textutils)uniq invocation.		Uniqify files.
+* comm: (textutils)comm invocation.		Compare sorted files by line.
+* cut: (textutils)cut invocation.		Print selected parts of lines.
+* paste: (textutils)paste invocation.		Merge lines of files.
+* join: (textutils)join invocation.		Join lines on a common field.
+* tr: (textutils)tr invocation.			Translate characters.
+* expand: (textutils)expand invocation.		Convert tabs to spaces.
+* unexpand: (textutils)unexpand invocation.	Convert spaces to tabs.
+END-INFO-DIR-ENTRY
+@end format
+@end ifinfo
+
+@ifinfo
+This file documents the GNU text utilities.
+
+Copyright (C) 1994 Free Software Foundation, Inc.
+
+Permission is granted to make and distribute verbatim copies of
+this manual provided the copyright notice and this permission notice
+are preserved on all copies.
+
+@ignore
+Permission is granted to process this file through TeX and print the
+results, provided the printed document carries copying permission
+notice identical to this one except for the removal of this paragraph
+(this paragraph not being relevant to the printed manual).
+
+@end ignore
+Permission is granted to copy and distribute modified versions of this
+manual under the conditions for verbatim copying, provided that the entire
+resulting derived work is distributed under the terms of a permission
+notice identical to this one.
+
+Permission is granted to copy and distribute translations of this manual
+into another language, under the above conditions for modified versions,
+except that this permission notice may be stated in a translation approved
+by the Foundation.
+@end ifinfo
+
+@titlepage
+@title GNU textutils, version @value{VERSION}
+@subtitle A set of text utilities
+@subtitle for version @value{VERSION}, @value{RELEASEDATE}
+@author David MacKenzie et al.
+
+@page
+@vskip 0pt plus 1filll
+Copyright @copyright{} 1994 Free Software Foundation, Inc.
+
+Permission is granted to make and distribute verbatim copies of
+this manual provided the copyright notice and this permission notice
+are preserved on all copies.
+
+Permission is granted to copy and distribute modified versions of this
+manual under the conditions for verbatim copying, provided that the entire
+resulting derived work is distributed under the terms of a permission
+notice identical to this one.
+
+Permission is granted to copy and distribute translations of this manual
+into another language, under the above conditions for modified versions,
+except that this permission notice may be stated in a translation approved
+by the Foundation.
+@end titlepage
+
+
+@ifinfo
+@node Top
+@top GNU text utilities
+
+@cindex text utilities
+@cindex utilities for text handling
+
+This manual minimally documents version @value{VERSION} of the GNU text
+utilities.  
+
+@menu
+* Introduction::                        Caveats, overview, and authors.
+* Common options::                      Common options.
+* Output of entire files::		cat tac nl od
+* Formatting file contents::	        fmt pr fold
+* Output of parts of files::		head tail split csplit
+* Summarizing files::			wc sum cksum
+* Operating on sorted files::		sort uniq comm
+* Operating on fields within a line::	cut paste join
+* Operating on characters::		tr expand unexpand
+* Index::				General index.
+@end menu
+@end ifinfo
+
+
+@node Introduction
+@chapter Introduction
+
+@cindex introduction
+
+This manual is incomplete: No attempt is made to explain basic concepts
+in a way suitable for novices.  Thus, if you are interested, please get
+involved in improving this manual.  The entire GNU community will
+benefit.
+
+@cindex POSIX.2
+The GNU text utilities are mostly compatible with the POSIX.2 standard.
+
+@cindex bugs, reporting
+Please report bugs to @samp{bug-gnu-utils@@prep.ai.mit.edu}.  Remember
+to include the version number, machine architecture, input files, and
+any other information needed to reproduce the bug.  @xref{Bugs, , , gcc,
+GNU CC}.
+
+This manual is based on the Unix man pages in the distribution, which
+were originally written by David MacKenzie and updated by Jim Meyering.
+The original @code{fmt} man page was written by Ross Paterson.
+@c If the following space before `@value' is removed, makeinfo
+@c fails to substitute the value for Francois.  Instead, it reports
+@c `F{No Value For "rancois"}...'. This is a bug in makeinfo.
+@c So please don't remove that leading space for now.
+ @value{Francois} Pinard did the initial conversion to Texinfo format.
+Karl Berry did the indexing, some reorganization, and editing of the results.
+Richard Stallman contributed his usual invaluable insights to the
+overall process.
+
+
+@node Common options
+@chapter Common options
+
+@cindex common options
+
+Certain options are available in all these programs.  Rather than
+writing identical descriptions for each of the programs, they are
+described here.  (In fact, every GNU program accepts (or should accept)
+these options.)
+
+A few of these programs take arbitrary strings as arguments.  In those
+cases, @samp{--help} and @samp{--version} are taken as these options
+only if there is one and exactly one command line argument.
+
+@table @samp
+
+@item --help
+@opindex --help
+@cindex help, online
+Print a usage message listing all available options, then exit successfully.
+
+@item --version
+@opindex --version
+@cindex version number, finding
+Print the version number, then exit successfully.
+
+@end table
+
+
+@node Output of entire files
+@chapter Output of entire files
+
+@cindex output of entire files
+@cindex entire files, output of
+
+These commands read and write entire files, possibly transforming them
+in some way.
+
+@menu
+* cat invocation::              Concatenate and write files.
+* tac invocation::              Concatenate and write files in reverse.
+* nl invocation::               Number lines and write files.
+* od invocation::               Write files in octal or other formats.
+@end menu
+
+@node cat invocation
+@section @code{cat}: Concatenate and write files
+
+@pindex cat
+@cindex concatenate and write files
+@cindex copying files
+
+@code{cat} copies each @var{file} (@samp{-} means standard input), or
+standard input if none are given, to standard output.  Synopsis:
+
+@example
+cat [@var{option}] [@var{file}]@dots{}
+@end example
+
+The program accepts the following options.  Also see @ref{Common options}.
+
+@table @samp
+
+@item -A
+@itemx --show-all
+@opindex -A
+@opindex --show-all
+Equivalent to @samp{-vET}.
+
+@item -b
+@itemx --number-nonblank
+@opindex -b
+@opindex --number-nonblank
+Number all nonblank output lines, starting with 1.
+
+@item -e
+@opindex -e
+Equivalent to @samp{-vE}.
+
+@item -E
+@itemx --show-ends
+@opindex -E
+@opindex --show-ends
+Display a @samp{$} after the end of each line.
+
+@item -n
+@itemx --number
+@opindex -n
+@opindex --number
+Number all output lines, starting with 1.
+
+@item -s
+@itemx --squeeze-blank
+@opindex -s
+@opindex --squeeze-blank
+@cindex squeezing blank lines
+Replace multiple adjacent blank lines with a single blank line.
+
+@item -t
+@opindex -t
+Equivalent to @samp{-vT}.
+
+@item -T
+@itemx --show-tabs
+@opindex -T
+@opindex --show-tabs
+Display @key{TAB} characters as @samp{^I}.
+
+@item -u
+@opindex -u
+Ignored; for Unix compatibility.
+
+@item -v
+@itemx --show-nonprinting
+@opindex -v
+@opindex --show-nonprinting
+Display control characters except for @key{LFD} and @key{TAB} using
+@samp{^} notation and precede characters that have the high bit set
+with @samp{M-}.
+
+@end table
+
+
+@node tac invocation
+@section @code{tac}: Concatenate and write files in reverse
+
+@pindex tac
+@cindex reversing files
+
+@code{tac} copies each @var{file} (@samp{-} means standard input), or
+standard input if none are given, to standard output, reversing the
+records (lines by default) in each separately.  Synopsis:
+
+@example
+tac [@var{option}]@dots{} [@var{file}]@dots{}
+@end example
+
+@dfn{Records} are separated by instances of a string (newline by
+default)).  By default, this separator string is attached to the end of
+the record that it follows in the file.
+
+The program accepts the following options.  Also see @ref{Common options}.
+
+@table @samp
+
+@item -b
+@itemx --before
+@opindex -b
+@opindex --before
+The separator is attached to the beginning of the record that it
+precedes in the file.
+
+@item -r
+@itemx --regex
+@opindex -r
+@opindex --regex
+Treat the separator string as a regular expression.
+
+@item -s @var{separator}
+@itemx --separator=@var{separator}
+@opindex -s
+@opindex --separator
+Use @var{separator} as the record separator, instead of newline.
+
+@end table
+
+
+@node nl invocation
+@section @code{nl}: Number lines and write files
+
+@pindex nl
+@cindex numbering lines
+@cindex line numbering
+
+@code{nl} writes each @var{file} (@samp{-} means standard input), or
+standard input if none are given, to standard output, with line numbers
+added to some or all of the lines.  Synopsis:
+
+@example
+nl [@var{option}]@dots{} [@var{file}]@dots{}
+@end example
+
+@cindex logical pages, numbering on
+@code{nl} decomposes its input into (logical) pages; by default, the
+line number is reset to 1 at the top of each logical page.  @code{nl}
+treats all of the input files as a single document; it does not reset
+line numbers or logical pages between files.
+
+@cindex headers, numbering
+@cindex body, numbering
+@cindex footers, numbering
+A logical page consists of three sections: header, body, and footer.
+Any of the sections can be empty.  Each can be numbered in a different
+style from the others.
+
+The beginnings of the sections of logical pages are indicated in the
+input file by a line containing exactly one of these delimiter strings:
+
+@table @samp
+@item \:\:\:
+start of header;
+@item \:\:
+start of body;
+@item \:
+start of footer.
+@end table
+
+The two characters from which these strings are made can be changed from
+@samp{\} and @samp{:} via options (see below), but the pattern and
+length of each string cannot be changed.
+
+A section delimiter is replaced by an empty line on output.  Any text
+that comes before the first section delimiter string in the input file
+is considered to be part of a body section, so @code{nl} treats a
+file that contains no section delimiters as a single body section.
+
+The program accepts the following options.  Also see @ref{Common options}.
+
+@table @samp
+
+@item -b @var{style}
+@itemx --body-numbering=@var{style}
+@opindex -b
+@opindex --body-numbering
+Select the numbering style for lines in the body section of each
+logical page.  When a line is not numbered, the current line number
+is not incremented, but the line number separator character is still
+prepended to the line.  The styles are:
+
+@table @samp
+@item a
+number all lines,
+@item t
+number only nonempty lines (default for body),
+@item n
+do not number lines (default for header and footer),
+@item p@var{regexp}
+number only lines that contain a match for @var{regexp}.
+@end table
+
+@item -d @var{cd}
+@itemx --section-delimiter=@var{cd}
+@opindex -d
+@opindex --section-delimiter
+@cindex section delimiters of pages
+Set the section delimiter characters to @var{cd}; default is
+@samp{\:}. If only @var{c} is given, the second remains @samp{:}.
+(Remember to protect @samp{\} or other metacharacters from shell
+expansion with quotes or extra backslashes.)
+
+@item -f @var{style}
+@itemx --footer-numbering=@var{style}
+@opindex -f
+@opindex --footer-numbering
+Analogous to @samp{--body-numbering}.
+
+@item -h @var{style}
+@itemx --header-numbering=@var{style}
+@opindex -h
+@opindex --header-numbering
+Analogous to @samp{--body-numbering}.
+
+@item -i @var{number}
+@itemx --page-increment=@var{number}
+@opindex -i
+@opindex --page-increment
+Increment line numbers by @var{number} (default 1).
+
+@item -l @var{number}
+@itemx --join-blank-lines=@var{number}
+@opindex -l
+@opindex --join-blank-lines
+@cindex empty lines, numbering
+@cindex blank lines, numbering
+Consider @var{number} (default 1) consecutive empty lines to be one
+logical line for numbering, and only number the last one.  Where fewer
+than @var{number} consecutive empty lines occur, do not number them.
+An empty line is one that contains no characters, not even spaces
+or tabs.
+
+@item -n @var{format}
+@itemx --number-format=@var{format}
+@opindex -n
+@opindex --number-format
+Select the line numbering format (default is @code{rn}):
+
+@table @samp
+@item ln
+@opindex ln @r{format for @code{nl}}
+left justified, no leading zeros;
+@item rn
+@opindex rn @r{format for @code{nl}}
+right justified, no leading zeros;
+@item rz
+@opindex rz @r{format for @code{nl}}
+right justified, leading zeros.
+@end table
+
+@item -p
+@itemx --no-renumber
+@opindex -p
+@opindex --no-renumber
+Do not reset the line number at the start of a logical page.
+
+@item -s @var{string}
+@itemx --number-separator=@var{string}
+@opindex -s
+@opindex --number-separator
+Separate the line number from the text line in the output with
+@var{string} (default is @key{TAB}).
+
+@item -v @var{number}
+@itemx --first-page=@var{number}
+@opindex -v
+@opindex --first-page
+Set the initial line number on each logical page to @var{number} (default 1).
+
+@item -w @var{number}
+@itemx --number-width=@var{number}
+@opindex -w
+@opindex --number-width
+Use @var{number} characters for line numbers (default 6).
+
+@end table
+
+
+@node od invocation
+@section @code{od}: Write files in octal or other formats
+
+@pindex od
+@cindex octal dump of files
+@cindex hex dump of files
+@cindex ASCII dump of files
+@cindex file contents, dumping unambiguously
+
+@code{od} writes an unambiguous representation of each @var{file}
+(@samp{-} means standard input), or standard input if none are given.
+Synopsis:
+
+@example
+od [@var{option}]@dots{} [@var{file}]@dots{}
+od -C [@var{file}] [[+]@var{offset} [[+]@var{label}]]
+@end example
+
+Each line of output consists of the offset in the input, followed by
+groups of data from the file. By default, @code{od} prints the offset in
+octal, and each group of file data is two bytes of input printed as a
+single octal number.
+
+The program accepts the following options.  Also see @ref{Common options}.
+
+@table @samp
+
+@item -A @var{radix}
+@itemx --address-radix=@var{radix}
+@opindex -A
+@opindex --address-radix
+@cindex radix for file offsets
+@cindex file offset radix
+Select the base in which file offsets are printed.  @var{radix} can
+be one of the following:
+
+@table @samp
+@item d
+decimal;
+@item o
+octal;
+@item x
+hexadecimal;
+@item n
+none (do not print offsets).
+@end table
+
+The default is octal.
+
+@item -j @var{bytes}
+@itemx --skip-bytes=@var{bytes}
+@opindex -j
+@opindex --skip-bytes
+Skip @var{bytes} input bytes before formatting and writing.  If
+@var{bytes} begins with @samp{0x} or @samp{0X}, it is interpreted in
+hexadecimal; otherwise, if it begins with @samp{0}, in octal; otherwise,
+in decimal.  Appending @samp{b} multiplies @var{bytes} by 512, @samp{k}
+by 1024, and @samp{m} by 1048576.
+
+@item -N @var{bytes}
+@itemx --read-bytes=@var{bytes}
+@opindex -N
+@opindex --read-bytes
+Output at most @var{bytes} bytes of the input.  Prefixes and suffixes on
+@code{bytes} are interpreted as for the @samp{-j} option.
+
+@item -s [@var{n}]
+@itemx --strings[=@var{n}]
+@opindex -s
+@opindex --strings
+@cindex string constants, outputting
+Instead of the normal output, output only @dfn{string constants}: at
+least @var{n} (3 by default) consecutive ASCII graphic characters,
+followed by a null (zero) byte.
+
+@item -t @var{type}
+@itemx --format=@var{type}
+@opindex -t
+@opindex --format
+Select the format in which to output the file data.  @var{type} is a
+string of one or more of the below type indicator characters.  If you
+include more than one type indicator character in a single @var{type}
+string, or use this option more than once, @code{od} writes one copy
+of each output line using each of the data types that you specified,
+in the order that you specified.
+
+@table @samp
+@item a
+named character,
+@item c
+ASCII character or backslash escape,
+@item d
+signed decimal,
+@item f
+floating point,
+@item o
+octal,
+@item u
+unsigned decimal,
+@item x
+hexadecimal.
+@end table
+
+The type @code{a} outputs things like @samp{sp} for space, @samp{nl} for
+newline, and @samp{nul} for a null (zero) byte.  Type @code{c} outputs
+@samp{ }, @samp{\n}, and @code{\0}, respectively.
+
+@cindex type size
+Except for types @samp{a} and @samp{c}, you can specify the number
+of bytes to use in interpreting each number in the given data type
+by following the type indicator character with a decimal integer.
+Alternately, you can specify the size of one of the C compiler's
+built-in data types by following the type indicator character with
+one of the following characters.  For integers (@samp{d}, @samp{o},
+@samp{u}, @samp{x}):
+
+@table @samp
+@item C
+char,
+@item S
+short,
+@item I
+int,
+@item L
+long.
+@end table
+
+For floating point (@code{f}):
+
+@table @asis
+@item F
+float,
+@item D
+double,
+@item L
+long double.
+@end table
+
+@item -v
+@itemx --output-duplicates
+@opindex -v
+@opindex --output-duplicates
+Output consecutive lines that are identical.  By default, when two or
+more consecutive output lines would be identical, @code{od} outputs only
+the first line, and puts just an asterisk on the following line to
+indicate the elision.
+
+@item -w [@var{n}]
+@itemx --width[=@var{n}]
+@opindex -w
+@opindex --width
+Dump @code{n} input bytes per output line.  This must be a multiple of
+the least common multiple of the sizes associated with the specified
+output types.  If @var{n} is omitted, the default is 32.  If this option
+is not given at all, the default is 16.
+
+@end table
+
+The next several options map the old, pre-POSIX format specification
+options to the corresponding POSIX format specs.  GNU @code{od} accepts
+any combination of old- and new-style options.  Format specification
+options accumulate.
+
+@table @samp
+
+@item -a
+@opindex -a
+Output as named characters.  Equivalent to @samp{-ta}.
+
+@item -b
+@opindex -b
+Output as octal bytes.  Equivalent to @samp{-toC}.
+
+@item -c
+@opindex -c
+Output as ASCII characters or backslash escapes.  Equivalent to
+@samp{-tc}.
+
+@item -d
+@opindex -d
+Output as unsigned decimal shorts.  Equivalent to @samp{-tu2}.
+
+@item -f
+@opindex -f
+Output as floats.  Equivalent to @samp{-tfF}.
+
+@item -h
+@opindex -h
+Output as hexadecimal shorts.  Equivalent to @samp{-tx2}.
+
+@item -i
+@opindex -i
+Output as decimal shorts.  Equivalent to @samp{-td2}.
+
+@item -l
+@opindex -l
+Output as decimal longs.  Equivalent to @samp{-td4}.
+
+@item -o
+@opindex -o
+Output as octal shorts.  Equivalent to @samp{-to2}.
+
+@item -x
+@opindex -x
+Output as hexadecimal shorts.  Equivalent to @samp{-tx2}.
+
+@item -C
+@itemx --traditional
+@opindex --traditional
+Recognize the pre-POSIX non-option arguments that traditional @code{od}
+accepted.  The following syntax:
+
+@example
+od --traditional [@var{file}] [[+]@var{offset}[.][b] [[+]@var{label}[.][b]]]
+@end example
+
+@noindent
+can be used to specify at most one file and optional arguments
+specifying an offset and a pseudo-start address, @var{label}.  By
+default, @var{offset} is interpreted as an octal number specifying how
+many input bytes to skip before formatting and writing.  The optional
+trailing decimal point forces the interpretation of @var{offset} as a
+decimal number.  If no decimal is specified and the offset begins with
+@samp{0x} or @samp{0X} it is interpreted as a hexadecimal number.  If
+there is a trailing @samp{b}, the number of bytes skipped will be
+@var{offset} multiplied by 512.  The @var{label} argument is interpreted
+just like @var{offset}, but it specifies an initial pseudo-address.  The
+pseudo-addresses are displayed in parentheses following any normal
+address.
+
+@end table
+
+
+@node Formatting file contents
+@chapter Formatting file contents
+
+@cindex formatting file contents
+
+These commands reformat the contents of files.
+
+@menu
+* fmt invocation::		Reformat paragraph text.
+* pr invocation::               Paginate or columnate files for printing.
+* fold invocation::             Wrap input lines to fit in specified width.
+@end menu
+
+
+@node fmt invocation
+@section @code{fmt}: Reformat paragraph text
+
+@pindex fmt
+@cindex reformatting paragraph text
+@cindex paragraphs, reformatting
+@cindex text, reformatting
+
+@code{fmt} fills and joins lines to produce output lines of (at most)
+a given number of characters (75 by default).  Synopsis:
+
+@example
+fmt [@var{option}]@dots{} [@var{file}]@dots{}
+@end example
+
+@code{fmt} reads from the specified @var{file} arguments (or standard
+input if none), and writes to standard output.
+
+By default, blank lines, spaces between words, and indentation are
+preserved in the output; successive input lines with different
+indentation are not joined; tabs are expanded on input and introduced on
+output.
+
+@cindex line-breaking
+@cindex sentences and line-breaking
+@cindex Knuth, Donald E.
+@cindex Plass, Michael F.
+@code{fmt} prefers breaking lines at the end of a sentence, and tries to
+avoid line breaks after the first word of a sentence or before the last
+word of a sentence.  A @dfn{sentence break} is defined as either the end
+of a paragraph or a word ending in any of @samp{.?!}, followed by two
+spaces or end of line, ignoring any intervening parentheses or quotes.
+Like @TeX{}, @code{fmt} reads entire ``paragraphs'' before choosing line
+breaks; the algorithm is a variant of that in ``Breaking Paragraphs Into
+Lines'' (Donald E. Knuth and Michael F. Plass, @cite{Software---Practice
+and Experience}, 11 (1981), 1119--1184).
+
+The program accepts the following options.  Also see @ref{Common options}.
+
+@table @samp
+
+@item -c
+@itemx --crown-margin
+@opindex -c
+@opindex --crown-margin
+@cindex crown margin
+@dfn{Crown margin} mode: preserve the indentation of the first two
+lines within a paragraph, and align the left margin of each subsequent
+line with that of the second line.
+
+@item -t
+@itemx --tagged-paragraph
+@opindex -t
+@opindex --tagged-paragraph
+@cindex tagged paragraphs
+@dfn{Tagged paragraph} mode: like crown margin mode, except that if
+indentation of the first line of a paragraph is the same as the
+indentation of the second, the first line is treated as a one-line
+paragraph.
+
+@item -s
+@itemx --split-only
+@opindex -s
+@opindex --split-only
+Split lines only.  Do not join short lines to form longer ones.  This
+prevents sample lines of code, and other such ``formatted'' text from
+being unduly combined.
+
+@item -u
+@itemx --uniform-spacing
+@opindex -u
+@opindex --uniform-spacing
+Uniform spacing.  Reduce spacing between words to one space, and spacing
+between sentences to two spaces.
+
+@item -@var{width}
+@itemx -w @var{width}
+@itemx --width=@var{width}
+@opindex -@var{width}
+@opindex -w
+@opindex --width
+Fill output lines up to @var{width} characters (default 75).  @code{fmt}
+initially tries to make lines about 7% shorter than this, to give it
+room to balance line lengths.
+
+@item -p @var{prefix}
+@itemx --prefix=@var{prefix}
+Only lines beginning with @var{prefix} (possibly preceded by whitespace)
+are subject to formatting. The prefix and any preceding whitespace is
+stripped for the formatting and then re-attached to each formatted output
+line.  One use is to format certain kinds of program comments, while
+leaving the code unchanged.
+
+@end table
+
+
+@node pr invocation
+@section @code{pr}: Paginate or columnate files for printing
+
+@pindex pr
+@cindex printing, preparing files for
+@cindex multicolumn output, generating
+
+@code{pr} writes each @var{file} (@samp{-} means standard input), or
+standard input if none are given, to standard output, paginating and
+optionally outputting in multicolumn format.  Synopsis:
+
+@example
+pr [@var{option}]@dots{} [@var{file}]@dots{}
+@end example
+
+By default, a 5-line header is printed: two blank lines; a line with the
+date, the filename, and the page count; and two more blank lines.  A
+five line footer (entirely) is also printed.
+
+Form feeds in the input cause page breaks in the output.
+
+The program accepts the following options.  Also see @ref{Common options}.
+
+@table @samp
+
+@item +@var{page}
+Begin printing with page @var{page}.
+
+@item -@var{column}
+@opindex -@var{column}
+Produce @var{column}-column output and print columns down.  The column
+width is automatically decreased as @var{column} increases; unless you
+use the @samp{-w} option to increase the page width as well, this option
+might well cause some input to be truncated.
+
+@item -a
+@opindex -a
+@cindex across columns
+Print columns across rather than down.
+
+@item -b
+@opindex -b
+@cindex balancing columns
+Balance columns on the last page.
+
+@item -c
+@opindex -c
+Print control characters using hat notation (e.g., @samp{^G}); print
+other unprintable characters in octal backslash notation.  By default,
+unprintable characters are not changed.
+
+@item -d
+@opindex -d
+@cindex double spacing
+Double space the output.
+
+@item -e[@var{in-tabchar}[@var{in-tabwidth}]]
+@opindex -e
+@cindex input tabs
+Expand tabs to spaces on input.  Optional argument @var{in-tabchar} is
+the input tab character (default is @key{TAB}).  Second optional
+argument @var{in-tabwidth} is the input tab character's width (default
+is 8).
+
+@item -f
+@itemx -F
+@opindex -F
+@opindex -f
+Use a formfeed instead of newlines to separate output pages.
+
+@item -h @var{header}
+@opindex -h
+Replace the filename in the header with the string @var{header}.
+
+@item -i[@var{out-tabchar}[@var{out-tabwidth}]]
+@opindex -i
+@cindex output tabs
+Replace spaces with tabs on output.  Optional argument @var{out-tabchar}
+is the output tab character (default is @key{TAB}).  Second optional
+argument @var{out-tabwidth} is the output tab character's width (default
+is 8).
+
+@item -l @var{n}
+@opindex -l
+Set the page length to @var{n} (default 66) lines.  If @var{n} is less
+than 10, the headers and footers are omitted, as if the @samp{-t} option
+had been given.
+
+@item -m
+@opindex -m
+Print all files in parallel, one in each column.
+
+@item -n[@var{number-separator}[@var{digits}]]
+@opindex -n
+Precede each column with a line number; with parallel files (@samp{-m}),
+precede each line with a line number.  Optional argument
+@var{number-separator} is the character to print after each number
+(default is @key{TAB}).  Optional argument @var{digits} is the number of
+digits per line number (default is 5).
+
+@item -o @var{n}
+@opindex -o
+@cindex indenting lines
+@cindex left margin
+Indent each line with @var{n} (default is zero) spaces wide, i.e., set
+the left margin.  The total page width is @samp{n} plus the width set
+with the @samp{-w} option.
+
+@item -r
+@opindex -r
+Do not print a warning message when an argument @var{file} cannot be
+opened.  (The exit status will still be nonzero, however.)
+
+@item -s[@var{c}]
+@opindex -s
+Separate columns by the single character @var{c}.  If @var{c} is
+omitted, the default is space; if this option is omitted altogether, the
+default is @key{TAB}.
+
+@item -t
+@opindex -t
+Do not print the usual 5-line header and the 5-line footer on each page,
+and do not fill out the bottoms of pages (with blank lines or
+formfeeds).
+
+@item -v
+@opindex -v
+Print unprintable characters in octal backslash notation.
+
+@item -w @var{n}
+@opindex -w
+Set the page width to @var{n} (default is 72) columns.
+
+@end table
+
+
+@node fold invocation
+@section @code{fold}: Wrap input lines to fit in specified width
+
+@pindex fold
+@cindex wrapping long input lines
+@cindex folding long input lines
+
+@code{fold} writes each @var{file} (@samp{-} means standard input), or
+standard input if none are given, to standard output, breaking long
+lines.  Synopsis:
+
+@example
+fold [@var{option}]@dots{} [@var{file}]@dots{}
+@end example
+
+By default, @code{fold} breaks lines wider than 80 columns. The output
+is split into as many lines as necessary.
+
+@cindex screen columns
+@code{fold} counts screen columns by default; thus, a tab may count more
+than one column, backspace decreases the column count, and carriage
+return sets the column to zero.
+
+The program accepts the following options.  Also see @ref{Common options}.
+
+@table @samp
+
+@item -b
+@itemx --bytes
+@opindex -b
+@opindex --bytes
+Count bytes rather than columns, so that tabs, backspaces, and carriage
+returns are each counted as taking up one column, just like other
+characters.
+
+@item -s
+@itemx --spaces
+@opindex -s
+@opindex --spaces
+Break at word boundaries: the line is broken after the last blank before
+the maximum line length.  If the line contains no such blanks, the line
+is broken at the maximum line length as usual.
+
+@item -w @var{width}
+@itemx --width=@var{width}
+@opindex -w
+@opindex --width
+Use a maximum line length of @var{width} columns instead of 80.
+
+@end table
+
+
+@node Output of parts of files
+@chapter Output of parts of files
+
+@cindex output of parts of files
+@cindex parts of files, output of
+
+These commands output pieces of the input.
+
+@menu
+* head invocation::             Output the first part of files.
+* tail invocation::             Output the last part of files.
+* split invocation::            Split a file into fixed-size pieces.
+* csplit invocation::           Split a file into context-determined pieces.
+@end menu
+
+@node head invocation
+@section @code{head}: Output the first part of files
+
+@pindex head
+@cindex initial part of files, outputting
+@cindex first part of files, outputting
+
+@code{head} prints the first part (10 lines by default) of each
+@var{file}; it reads from standard input if no files are given or
+when given a @var{file} of @samp{-}.  Synopses:
+
+@example
+head [@var{option}]@dots{} [@var{file}]@dots{}
+head -@var{number} [@var{option}]@dots{} [@var{file}]@dots{}
+@end example
+
+If more than one @var{file} is specicified, @code{head} prints a
+one-line header consisting of
+@example
+==> @var{filename} <==
+@end example
+@noindent 
+before the output for each @var{file}.
+
+@code{head} accepts two option formats: the new one, in which numbers
+are arguments to the options (@samp{-q -n 1}), and the old one, in which
+the number precedes any option letters (@samp{-1q}).
+
+The program accepts the following options.  Also see @ref{Common options}.
+
+@table @samp
+
+@item -@var{count}@var{options}
+@opindex -@var{count}
+This option is only recognized if it is specified first.  @var{count} is
+a decimal number optionally followed by a size letter (@samp{b},
+@samp{k}, @samp{m}) as in @code{-c}, or @samp{l} to mean count by lines,
+or other option letters (@samp{cqv}).
+
+@item -c @var{bytes}
+@itemx --bytes=@var{bytes}
+@opindex -c
+@opindex --bytes
+Print the first @var{bytes} bytes, instead of initial lines.  Appending
+@samp{b} multiplies @var{bytes} by 512, @samp{k} by 1024, and @samp{m}
+by 1048576.
+
+@itemx -n @var{n}
+@itemx --lines=@var{n}
+@opindex -n
+@opindex --lines
+Output the first @var{n} lines.
+
+@item -q
+@itemx --quiet
+@itemx --silent
+@opindex -q
+@opindex --quiet
+@opindex --silent
+Never print filename headers.
+
+@item -v
+@itemx --verbose
+@opindex -v
+@opindex --verbose
+Always print filename headers.
+
+@end table
+
+
+@node tail invocation
+@section @code{tail}: Output the last part of files
+
+@pindex tail
+@cindex last part of files, outputting
+
+@code{tail} prints the last part (10 lines by default) of each
+@var{file}; it reads from standard input if no files are given or
+when given a @var{file} of @samp{-}.  Synopses:
+
+@example
+tail [@var{option}]@dots{} [@var{file}]@dots{}
+tail -@var{number} [@var{option}]@dots{} [@var{file}]@dots{}
+tail +@var{number} [@var{option}]@dots{} [@var{file}]@dots{}
+@end example
+
+If more than one @var{file} is specified, @code{tail} prints a
+one-line header consisting of
+@example
+==> @var{filename} <==
+@end example
+@noindent 
+before the output for each @var{file}.
+
+@cindex BSD @code{tail}
+GNU @code{tail} can output any amount of data (some other versions of
+@code{tail} cannot).  It also has no @samp{-r} option (print in
+reverse), since reversing a file is really a different job from printing
+the end of a file; BSD @code{tail} (which is the one with @code{-r}) can
+only reverse files that are at most as large as its buffer, which is
+typically 32k.  A more reliable and versatile way to reverse files is
+the GNU @code{tac} command.
+
+@code{head} accepts two option formats: the new one, in which numbers
+are arguments to the options (@samp{-n 1}), and the old one, in which
+the number precedes any option letters (@samp{-1} or @samp{+1}).
+
+If any option-argument is a number @var{n} starting with a @samp{+},
+@code{tail} begins printing with the @var{n}th item from the start of
+each file, instead of from the end.
+
+The program accepts the following options.  Also see @ref{Common options}.
+
+@table @samp
+
+@item -@var{count}
+@itemx +@var{count}
+@opindex -@var{count}
+@opindex +@var{count}
+This option is only recognized if it is specified first.  @var{count} is
+a decimal number optionally followed by a size letter (@samp{b},
+@samp{k}, @samp{m}) as in @code{-c}, or @samp{l} to mean count by lines,
+or other option letters (@samp{cfqv}).
+
+@item -c @var{bytes}
+@itemx --bytes=@var{bytes}
+@opindex -c
+@opindex --bytes
+Output the last @var{bytes} bytes, instead of final lines.  Appending
+@samp{b} multiplies @var{bytes} by 512, @samp{k} by 1024, and @samp{m}
+by 1048576.
+
+@item -f
+@itemx --follow
+@opindex -f
+@opindex --follow
+@cindex growing files
+Loop forever trying to read more characters at the end of the file,
+presumably because the file is growing.  Ignored if reading from a pipe.
+If more than one file is given, @code{tail} prints a header whenever it
+gets output from a different file, to indicate which file that output is
+from.
+
+@itemx -n @var{n}
+@itemx --lines=@var{n}
+@opindex -n
+@opindex --lines
+Output the last @var{n} lines.
+
+@item -q
+@itemx -quiet
+@itemx --silent
+@opindex -q
+@opindex --quiet
+@opindex --silent
+Never print filename headers.
+
+@item -v
+@itemx --verbose
+@opindex -v
+@opindex --verbose
+Always print filename headers.
+
+@end table
+
+
+@node split invocation
+@section @code{split}: Split a file into fixed-size pieces
+
+@pindex split
+@cindex splitting a file into pieces
+@cindex pieces, splitting a file into
+
+@code{split} creates output files containing consecutive sections of
+@var{input} (standard input if none is given or @var{input} is
+@samp{-}).  Synopsis:
+
+@example
+split [@var{option}] [@var{input} [@var{prefix}]]
+@end example
+
+By default, @code{split} puts 1000 lines of @var{input} (or whatever is
+left over for the last section), into each output file.
+
+@cindex output filename prefix
+The output files' names consist of @var{prefix} (@samp{x} by default)
+followed by a group of letters @samp{aa}, @samp{ab}, and so on, such
+that concatenating the output files in sorted order by filename produces
+the original input file.  (If more than 676 output files are required,
+@code{split} uses @samp{zaa}, @samp{zab}, etc.)
+
+The program accepts the following options.  Also see @ref{Common options}.
+
+@table @samp
+
+@item -@var{lines}
+@itemx -l @var{lines}
+@itemx --lines=@var{lines}
+@opindex -l
+@opindex --lines
+Put @var{lines} lines of @var{input} into each output file.
+
+@item -b @var{bytes}
+@itemx --bytes=@var{bytes}
+@opindex -b
+@opindex --bytes
+Put the first @var{bytes} bytes of @var{input} into each output file.
+Appending @samp{b} multiplies @var{bytes} by 512, @samp{k} by 1024, and
+@samp{m} by 1048576.
+
+@item -C @var{bytes}
+@itemx --line-bytes=@var{bytes}
+@opindex -C
+@opindex --line-bytes
+Put into each output file as many complete lines of @var{input} as
+possible without exceeding @var{bytes} bytes.  For lines longer than
+@var{bytes} bytes, put @var{bytes} bytes into each output file until
+less than @var{bytes} bytes of the line are left, then continue
+normally.  @var{bytes} has the same format as for the @samp{--bytes}
+option.
+
+@end table
+
+
+@node csplit invocation
+@section @code{csplit}: Split a file into context-determined pieces
+
+@pindex csplit
+@cindex context splitting
+@cindex splitting a file into pieces by context
+
+@code{csplit} creates zero or more output files containing sections of
+@var{input} (standard input if @var{input} is @samp{-}).  Synopsis:
+
+@example
+csplit [@var{option}]@dots{} @var{input} @var{pattern}@dots{}
+@end example
+
+The contents of the output files are determined by the @var{pattern}
+arguments, as detailed below.  An error occurs if a @var{pattern}
+argument refers to a nonexistent line of the input file (e.g., if no
+remaining line matches a given regular expression).  After every
+@var{pattern} has been matched, any remaining input is copied into one
+last output file.
+
+By default, @code{csplit} prints the number of bytes written to each
+output file after it has been created.
+
+The types of pattern arguments are:
+
+@table @samp
+
+@item @var{n}
+Create an output file containing the input up to but not including line
+@var{n} (a positive integer).  If followed by a repeat count, also
+create an output file containing the next @var{line} lines of the input
+file once for each repeat.
+
+@item /@var{regexp}/[@var{offset}]
+Create an output file containing the current line up to (but not
+including) the next line of the input file that contains a match for
+@var{regexp}.  The optional @var{offset} is a @samp{+} or @samp{-}
+followed by a positive integer.  If it is given, the input up to the
+matching line plus or minus @var{offset} is put into the output file,
+and the line after that begins the next section of input.
+
+@item %@var{regexp}%[@var{offset}]
+Like the previous type, except that it does not create an output
+file, so that section of the input file is effectively ignored.
+
+@item @{@var{repeat-count}@}
+Repeat the previous pattern @var{repeat-count} additional
+times. @var{repeat-count} can either be a positive integer or an
+asterisk, meaning repeat as many times as necessary until the input is
+exausted.
+
+@end table
+
+The output files' names consist of a prefix (@samp{xx} by default)
+followed by a suffix.  By default, the suffix is an ascending sequence
+of two-digit decimal numbers from @samp{00} and up to @samp{99}.  In any
+case, concatenating the output files in sorted order by file name
+produces the original input file.
+
+By default, if @code{csplit} encounters an error or receives a hangup,
+interrupt, quit, or terminate signal, it removes any output files
+that it has created so far before it exits.
+
+The program accepts the following options.  Also see @ref{Common options}.
+
+@table @samp
+
+@item -f @var{prefix}
+@itemx --prefix=@var{prefix}
+@opindex -f
+@opindex --prefix
+@cindex output filename prefix
+Use @var{prefix} as the output filename prefix.
+
+@item -b @var{suffix}
+@itemx --suffix=@var{suffix}
+@opindex -b
+@opindex --suffix
+@cindex output filename suffix
+Use @var{suffix} as the output filename suffix.  When this option is
+specified, the suffix string must include exactly one
+@code{printf(3)}-style conversion specification, possibly including
+format specification flags, a field width, a precision specifications,
+or all of these kinds of modifiers.  The format letter must convert a
+binary integer argument to readable form; thus, only @samp{d}, @samp{i},
+@samp{u}, @samp{o}, @samp{x}, and @samp{X} conversions are allowed.  The
+entire @var{suffix} is given (with the current output file number) to
+@code{sprintf(3)} to form the filename suffixes for each of the
+individual output files in turn.  If this option is used, the
+@samp{--digits} option is ignored.
+
+@item -n @var{digits}
+@itemx --digits=@var{digits}
+@opindex -n
+@opindex --digits
+Use output filenames containing numbers that are @var{digits} digits
+long instead of the default 2.
+
+@item -k
+@itemx --keep-files
+@opindex -k
+@opindex --keep-files
+Do not remove output files when errors are encountered.
+
+@item -z
+@itemx --elide-empty-files
+@opindex -z
+@opindex --elide-empty-files
+Suppress the generation of zero-length output files.  (In cases where
+the section delimiters of the input file are supposed to mark the first
+lines of each of the sections, the first output file will generally be a
+zero-length file unless you use this option.)  The output file sequence
+numbers always run consecutively starting from 0, even when this option
+is specified.
+
+@item -s
+@itemx -q
+@itemx --silent
+@itemx --quiet
+@opindex -s
+@opindex -q
+@opindex --silent
+@opindex --quiet
+Do not print counts of output file sizes.
+
+@end table
+
+
+@node Summarizing files
+@chapter Summarizing files
+
+@cindex summarizing files
+
+These commands generate just a few numbers representing entire
+contents of files.
+
+@menu
+* wc invocation::               Print byte, word, and line counts.
+* sum invocation::              Print checksum and block counts.
+* cksum invocation::            Print CRC checksum and byte counts.
+@end menu
+
+
+@node wc invocation
+@section @code{wc}: Print byte, word, and line counts
+
+@pindex wc
+@cindex byte count
+@cindex word count
+@cindex line count
+
+@code{wc} counts the number of bytes, whitespace-separated words, and
+newlines in each given @var{file}, or standard input if none are given
+or for a @var{file} of @samp{-}.  Synopsis:
+
+@example
+wc [@var{option}]@dots{} [@var{file}]@dots{}
+@end example
+
+@cindex total counts
+@code{wc} prints one line of counts for each file, and if the file was
+given as an argument, it prints the filename following the counts.  If
+more than one @var{file} is given, @code{wc} prints a final line
+containing the cumulative counts, with the filename @file{total}.  The
+counts are printed in this order: lines, words, bytes.
+
+By default, @code{wc} prints all three counts.  Options can specify
+that only certain counts be printed.  Options do not undo others
+previously given, so
+
+@example
+wc --bytes --words
+@end example
+
+@noindent
+prints both the byte counts and the word counts.
+
+The program accepts the following options.  Also see @ref{Common options}.
+
+@table @samp
+
+@item -c
+@itemx --bytes
+@itemx --chars
+@opindex -c
+@opindex --bytes
+@opindex --chars
+Print only the byte counts.
+
+@item -w
+@itemx --words
+@opindex -w
+@opindex --words
+Print only the word counts.
+
+@item -l
+@itemx --lines
+@opindex -l
+@opindex --lines
+Print only the newline counts.
+
+@end table
+
+
+@node sum invocation
+@section @code{sum}: Print checksum and block counts
+
+@pindex sum
+@cindex 16-bit checksum
+@cindex checksum, 16-bit
+
+@code{sum} computes a 16-bit checksum for each given @var{file}, or
+standard input if none are given or for a @var{file} of @samp{-}.  Synopsis:
+
+@example
+sum [@var{option}]@dots{} [@var{file}]@dots{}
+@end example
+
+@code{sum} prints the checksum for each @var{file} followed by the
+number of blocks in the file (rounded up).  If more than one @var{file}
+is given, filenames are also printed (by default).  (With the
+@samp{--sysv} option, corresponding file name are printed when there is
+at least one file argument.)
+
+By default, GNU @code{sum} computes checksums using an algorithm
+compatible with BSD @code{sum} and prints file sizes in units of
+1024-byte blocks.
+
+The program accepts the following options.  Also see @ref{Common options}.
+
+@table @samp
+
+@item -r
+@opindex -r
+@cindex BSD @code{sum}
+Use the default (BSD compatible) algorithm.  This option is included for
+compatibility with the System V @code{sum}.  Unless @samp{-s} was also
+given, it has no effect.
+
+@item -s
+@itemx --sysv
+@opindex -s
+@opindex --sysv
+@cindex System V @code{sum}
+Compute checksums using an algorithm compatible with System V
+@code{sum}'s default, and print file sizes in units of 512-byte blocks.
+
+@end table
+
+@code{sum} is provided for compatibility; the @code{cksum} program (see
+next section) is preferable in new applications.
+
+
+@node cksum invocation
+@section @code{cksum}: Print CRC checksum and byte counts
+
+@pindex cksum
+@cindex cyclic redundancy check
+
+@code{cksum} computes a cyclic redundancy check (CRC) checksum for each
+given @var{file}, or standard input if none are given or for a
+@var{file} of @samp{-}.  Synopsis:
+
+Synopsis:
+
+@example
+cksum [@var{option}]@dots{} [@var{file}]@dots{}
+@end example
+
+@code{cksum} prints the CRC for each file along with the number of bytes
+in the file, and the filename unless no arguments were given.
+
+@code{cksum} is typically used to ensure that files have been
+transferred by unreliable means (e.g., netnews) have not been corrupted,
+by comparing the @code{cksum} output for the received files with the
+@code{cksum} output for the original files (usually given in the
+distribution).
+
+The CRC algorithm is specified by the POSIX.2 standard.  It is not
+compatible with the BSD or System V @code{sum} programs; it is more
+robust.
+
+
+@node Operating on sorted files
+@chapter Operating on sorted files
+
+@cindex operating on sorted files
+@cindex sorted files, operations on
+
+These commands work with (or produce) sorted files.
+
+@menu
+* sort invocation::             Sort text files.
+* uniq invocation::             Uniqify files.
+* comm invocation::             Compare two sorted files line by line.
+@end menu
+
+
+@node sort invocation
+@section @code{sort}: Sort text files
+
+@pindex sort
+@cindex sorting files
+
+@code{sort} sorts, merges, or compares all the lines from the given
+files, or standard input if none are given or for a @var{file} of
+@samp{-}.  By default, @code{sort} writes the results to standard
+output.  Synopsis:
+
+@example
+sort [@var{option}]@dots{} [@var{file}]@dots{}
+@end example
+
+@code{sort} has three modes of operation: sort (the default), merge,
+and check for sortedness.  The following options change the operation
+mode:
+
+@table @samp
+
+@item -c
+@opindex -c
+@cindex checking for sortedness
+Check whether the given files are already sorted: if they are not all
+sorted, print an error message and exit with a status of 1.
+
+@item -m
+@opindex -m
+@cindex merging sorted files
+Merge the given files by sorting them as a group.  Each input file must
+always be individually sorted.  It always works to sort instead of
+merge; merging is provided because it is faster, in the case where it
+works.
+
+@end table
+
+A pair of lines is compared as follows: if any key fields have been
+specified, @code{sort} compares each pair of fields, in the order
+specified on the command line, according to the associated ordering
+options, until a difference is found or no fields are left.
+
+If any of the global options @samp{Mbdfinr} are given but no key fields
+are specified, @code{sort} compares the entire lines according to the
+global options.
+
+Finally, as a last resort when all keys compare equal (or if no
+ordering options were specified at all), @code{sort} compares the lines
+byte by byte in machine collating sequence.  The last resort comparison
+honors the @samp{-r} global option.  The @samp{-s} (stable) option
+disables this last-resort comparison so that lines in which all fields
+compare equal are left in their original relative order.  If no fields
+or global options are specified, @samp{-s} has no effect.
+
+GNU @code{sort} (as specified for all GNU utilities) has no limits on
+input line length or restrictions on bytes allowed within lines.  In
+addition, if the final byte of an input file is not a newline, GNU
+@code{sort} silently supplies one.
+
+@vindex TMPDIR
+If the environment variable @code{TMPDIR} is set, @code{sort} uses its
+value as the directory for temporary files instead of @file{/tmp}.  The
+@samp{-T @var{tempdir}} option in turn overrides the environment
+variable.
+
+The following options affect the ordering of output lines.  They may be
+specified globally or as part of a specific key field.  If no key
+fields are specified, global options apply to comparison of entire
+lines; otherwise the global options are inherited by key fields that do
+not specify any special options of their own.
+
+@table @samp
+
+@item -b
+@opindex -b
+@cindex blanks, ignoring leading
+Ignore leading blanks when finding sort keys in each line.
+
+@item -d
+@opindex -d
+@cindex phone directory order
+@cindex telephone directory order
+Sort in @dfn{phone directory} order: ignore all characters except
+letters, digits and blanks when sorting.
+
+@item -f
+@opindex -f
+@cindex case folding
+Fold lowercase characters into the equivalent uppercase characters when
+sorting so that, for example, @samp{b} and @samp{B} sort as equal.
+
+@item -i
+@opindex -i
+@cindex unprintable characters, ignoring
+Ignore characters outside the printable ASCII range 040-0176 octal
+(inclusive) when sorting.
+
+@item -M
+@opindex -M
+@cindex months, sorting by
+An initial string, consisting of any amount of whitespace, followed
+by three letters abbreviating a month name, is folded to UPPER case and
+compared in the order @samp{JAN} < @samp{FEB} < @dots{} < @samp{DEC}.
+Invalid names compare low to valid names.
+
+@item -n
+@opindex -n
+@cindex numeric sort
+Sort numerically: the number begins each line; specifically, it consists
+of optional whitespace, an optional @samp{-} sign, and zero or more
+digits, optionally followed by a decimal point and zero or more digits.
+
+@item -r
+@opindex -r
+@cindex reverse sorting
+Reverse the result of comparison, so that lines with greater key values
+appear earlier in the output instead of later.
+
+@end table
+
+Other options are:
+
+@table @samp
+
+@item -o @var{output-file}
+@opindex -o
+@cindex overwriting of input, allowed
+Write output to @var{output-file} instead of standard output.
+If @var{output-file} is one of the input files, @code{sort} copies
+it to a temporary file before sorting and writing the output to
+@var{output-file}.
+
+@item -t @var{separator}
+@opindex -t
+Use character @var{separator} as the field separator when finding the
+sort keys in each line.  By default, fields are separated by the empty
+string between a non-whitespace character and a whitespace character.
+That is, given the input line @w{@samp{ foo bar}}, @code{sort} breaks it
+into fields @w{@samp{ foo}} and @w{@samp{ bar}}.  The field separator is
+not considered to be part of either the field preceding or the field
+following.
+
+@item -u
+@opindex -u
+For the default case or the @samp{-m} option, only output the first
+of a sequence of lines that compare equal.  For the @samp{-c} option,
+check that no pair of consecutive lines compares equal.
+
+@item +@var{pos1}[-@var{pos2}]
+Specify a field within each line to use as a sorting key.  The field
+consists of the portion of the line starting at @var{pos1} and up
+to (but not including) @var{pos2} (or to the end of the line if
+@var{pos2} is not given).  The fields and character positions are
+numbered starting with 0.
+
+@item -k @var{pos1}[,@var{pos2}]
+An alternate syntax for specifying sorting keys.  The fields and
+character positions are numbered starting with 1.
+
+@end table
+
+A position has the form @samp{@var{f}.@var{c}}, where @var{f} is the
+number of the field to use and @var{c} is the number of the first
+character from the beginning of the field (for @samp{+@var{pos}}) or
+from the end of the previous field (for @samp{-@var{pos}}).  The
+@samp{.@var{c}} part of a position may be omitted in which case it is
+taken to be the first character in the field.  If the @samp{-b} option
+has been given, the @samp{.@var{c}} part of a field specification is
+counted from the first nonblank character of the field (for
+@samp{+@var{pos}}) or from the first nonblank character following the
+previous field (for @samp{-@var{pos}}).
+
+A @samp{+@var{pos}} or @samp{-@var{pos}} argument may also have any
+of the option letters @samp{Mbdfinr} appended to it, in which case
+the global ordering options are not used for that particular field.
+The @samp{-b} option may be independently attached to either or
+both of the @samp{+@var{pos}} and @samp{-@var{pos}} parts of a field
+specification, and if it is inherited from the global options it will
+be attached to both.  If a @samp{-n} or @samp{-M} option is used,
+thus implying a @samp{-b} option, the @samp{-b} option is taken to
+apply to both the @samp{+@var{pos}} and the @samp{-@var{pos}} parts
+of a key specification.  Keys may span multiple fields.
+
+In addition, when GNU @code{sort} is invoked with exactly one argument,
+options @samp{--help} and @samp{--version} are recognized.  @xref{Common
+options}.
+
+Historical (BSD and System V) implementations of @code{sort} have
+differed in their interpretation of some options, particularly
+@samp{-b}, @samp{-f}, and @samp{-n}.  GNU sort follows the POSIX
+behavior, which is usually (but not always!) like the System V behavior.
+According to POSIX, @samp{-n} no longer implies @samp{-b}.  For
+consistency, @samp{-M} has been changed in the same way.  This may
+affect the meaning of character positions in field specifications in
+obscure cases.  The only fix is to add an explicit @samp{-b}.
+
+
+@node uniq invocation
+@section @code{uniq}: Uniqify files
+
+@pindex uniq
+@cindex uniqify files
+
+@code{uniq} writes the unique lines in the given @file{input}, or
+standard input if nothing is given or for an @var{input} name of
+@samp{-}.  Synopsis:
+
+@example
+uniq [@var{option}]@dots{} [@var{input} [@var{output}]]
+@end example
+
+By default, @code{uniq} prints the unique lines in a sorted file, i.e.,
+discards all but one of identical successive lines.  Optionally, it can
+instead show only lines that appear exactly once, or lines that appear
+more than once.
+
+The input must be sorted.  If your input is not sorted, perhaps you want
+to use @code{sort -u}.
+
+If no @var{output} file is specified, @code{uniq} writes to standard
+output. 
+
+The program accepts the following options.  Also see @ref{Common options}.
+
+@table @samp
+
+@item -@var{n}
+@itemx -f @var{n}
+@itemx --skip-fields=@var{n}
+@opindex -@var{n}
+@opindex -f
+@opindex --skip-fields
+Skip @var{n} fields on each line before checking for uniqueness.  Fields
+are sequences of non-space non-tab characters that are separated from
+each other by at least one spaces or tabs.
+
+@item +@var{n}
+@itemx -s @var{n}
+@itemx --skip-chars=@var{n}
+@opindex +@var{n}
+@opindex -s
+@opindex --skip-chars
+Skip @var{n} characters before checking for uniqueness.  If you use both
+the field and character skipping options, fields are skipped over first.
+
+@item -c
+@itemx --count
+@opindex -c
+@opindex --count
+Print the number of times each line occurred along with the line.
+
+@item -d
+@itemx --repeated
+@opindex -d
+@opindex --repeated
+@cindex duplicate lines, outputting
+Print only duplicate lines.
+
+@item -u
+@itemx --unique
+@opindex -u
+@opindex --unique
+@cindex unique lines, outputting
+Print only unique lines.
+
+@item -w @var{n}
+@itemx --check-chars=@var{n}
+@opindex -w
+@opindex --check-chars
+Compare @var{n} characters on each line (after skipping any specified
+fields and characters).  By default the entire rest of the lines are
+compared.
+
+@end table
+
+
+@node comm invocation
+@section @code{comm}: Compare two sorted files line by line
+
+@pindex comm
+@cindex line-by-line comparison
+@cindex comparing sorted files
+
+@code{comm} writes to standard output lines that are common, and lines
+that are unique, to two input files; a filename of @samp{-} means
+standard input.  Synopsis:
+
+@example
+comm [@var{option}]@dots{} @var{file1} @var{file2}
+@end example
+
+The input files must be sorted before @code{comm} can be used.  
+
+@cindex differing lines
+@cindex common lines
+With no options, @code{comm} produces three column output.  Column one
+contains lines unique to @var{file1}, column two contains lines unique
+to @var{file2}, and column three contains lines common to both files.
+
+@opindex -1
+@opindex -2
+@opindex -3
+The options @samp{-1}, @samp{-2}, and @samp{-3} suppress printing of
+the corresponding columns.  Also see @ref{Common options}.
+
+
+@node Operating on fields within a line
+@chapter Operating on fields within a line
+
+@menu
+* cut invocation::              Print selected parts of lines.
+* paste invocation::            Merge lines of files.
+* join invocation::             Join lines on a common field.
+@end menu
+
+
+@node cut invocation
+@section @code{cut}: Print selected parts of lines
+
+@pindex cut
+@code{cut} writes to standard output selected parts of each line of each
+input file, or standard input if no files are given or for a filename of
+@samp{-}.  Synopsis:
+
+@example
+cut [@var{option}]@dots{} [@var{file}]@dots{}
+@end example
+
+In the table which follows, the @var{byte-list}, @var{character-list},
+and @var{field-list} are one or more numbers or ranges (two numbers
+separated by a dash) separated by commas.  Bytes, characters, and
+fields are numbered from starting at 1.  Incomplete ranges may be
+given: @samp{-@var{m}} means @samp{1-@var{m}}; @samp{@var{n}-} means
+@samp{@var{n}} through end of line or last field.
+
+The program accepts the following options.  Also see @ref{Common
+options}.
+
+@table @samp
+
+@item -b @var{byte-list}
+@itemx --bytes=@var{byte-list}
+@opindex -b
+@opindex --bytes
+Print only the bytes in positions listed in @var{byte-list}.  Tabs and
+backspaces are treated like any other character; they take up 1 byte.
+
+@item -c @var{character-list}
+@itemx --characters=@var{character-list}
+@opindex -c
+@opindex --characters
+Print only characters in positions listed in @var{character-list}.
+The same as @samp{-b} for now, but internationalization will change
+that.  Tabs and backspaces are treated like any other character; they
+take up 1 character.
+
+@item -f @var{field-list}
+@itemx --fields=@var{field-list}
+@opindex -f
+@opindex --fields
+Print only the fields listed in @var{field-list}.  Fields are
+separated by a @key{TAB} by default.
+
+@item -d @var{delim}
+@itemx --delimiter=@var{delim}
+@opindex -d
+@opindex --delimiter
+For @samp{-f}, fields are separated by the first character in @var{delim}
+(default is @key{TAB}).
+
+@item -n
+@opindex -n
+Do not split multibyte characters (no-op for now).
+
+@item -s
+@itemx --only-delimited
+@opindex -s
+@opindex --only-delimited
+For @samp{-f}, do not print lines that do not contain the field separator
+character.
+
+@end table
+
+
+@node paste invocation
+@section @code{paste}: Merge lines of files
+
+@pindex paste
+@cindex merging files
+
+@code{paste} writes to standard output lines consisting of sequentially
+corresponding lines of each given file, separated by @key{TAB}.
+Standard input is used for a filename of @samp{-} or if no input files
+are given.
+
+Synopsis:
+
+@example
+paste [@var{option}]@dots{} [@var{file}]@dots{}
+@end example
+
+The program accepts the following options.  Also see @ref{Common options}.
+
+@table @samp
+
+@item -s
+@itemx --serial
+@opindex -s
+@opindex --serial
+Paste the lines of one file at a time rather than one line from each
+file.
+
+@item -d @var{delim-list}
+@itemx --delimiters @var{delim-list}
+@opindex -d
+@opindex --delimiters
+Consecutively use the characters in @var{delim-list} instead of
+@key{TAB} to separate merged lines.  When @var{delim-list} is
+exhausted, start again at its beginning.
+
+@end table
+
+
+@node join invocation
+@section @code{join}: Join lines on a common field
+
+@pindex join
+@cindex common field, joining on
+
+@code{join} writes to standard output a line for each pair of input
+lines that have identical join fields.  Synopsis:
+
+@example
+join [@var{option}]@dots{} @var{file1} @var{file2}
+@end example
+
+Either @var{file1} or @var{file2} (but not both) can be @samp{-},
+meaning standard input.  @var{file1} and @var{file2} should be already
+sorted in increasing order (not numerically) on the join fields; unless
+the @samp{-t} option is given, they should be sorted ignoring blanks at
+the start of the line, as in @code{sort -b}.
+
+The defaults are: the join field is the first field in each line;
+fields in the input are separated by one or more blanks, with leading
+blanks on the line ignored; fields in the output are separated by a
+space; each output line consists of the join field, the remaining
+fields from @var{file1}, then the remaining fields from @var{file2}.
+
+The program accepts the following options.  Also see @ref{Common options}.
+
+@table @samp
+
+@item -a @var{file-number}
+@opindex -a
+Print a line for each unpairable line in file @var{file-number} (either
+@samp{1} or @samp{2}), in addition to the normal output.
+
+@item -e @var{string}
+@opindex -e
+Replace those output fields that are missing in the input with
+@var{string}.
+
+@item -1 @var{field}
+@itemx -j1 @var{field}
+@opindex -1
+@opindex -j1
+Join on field @var{field} (a positive integer) of file 1.
+
+@item -2 @var{field}
+@itemx -j2 @var{field}
+@opindex -2
+@opindex -j2
+Join on field @var{field} (a positive integer) of file 2.
+
+@item -j @var{field}
+Equivalent to @samp{-1 @var{field} -2 @var{field}}.
+
+@item -o @var{field-list}@dots{}
+Construct each output line according to the format in @var{field-list}.
+Each element in @var{field-list} consists of a file number (either 1 or
+2), a period, and a field number (a positive integer).  The elements in
+the list are separated by commas or blanks.  Multiple @var{field-list}
+arguments can be given after a single @samp{-o} option; the values
+of all lists given with @samp{-o} are concatenated together.
+
+@item -t @var{char}
+Use character @var{char} as the input and output field separator.
+
+@item -v @var{file-number}
+Print a line for each unpairable line in file @var{file-number}
+(either 1 or 2), instead of the normal output.
+
+@end table
+
+In addition, when GNU @code{join} is invoked with exactly one argument,
+options @samp{--help} and @samp{--version} are recognized.  @xref{Common
+options}.
+
+
+@node Operating on characters
+@chapter Operating on characters
+
+@cindex operating on characters
+
+This commands operate on individual characters.
+
+@menu
+* tr invocation::               Translate, squeeze, and/or delete characters.
+* expand invocation::           Convert tabs to spaces.
+* unexpand invocation::         Convert spaces to tabs.
+@end menu
+
+
+@node tr invocation
+@section @code{tr}: Translate, squeeze, and/or delete characters
+
+@pindex tr
+
+Synopsis:
+
+@example
+tr [@var{option}]@dots{} @var{set1} [@var{set2}]
+@end example
+
+@code{tr} copies standard input to standard output, performing
+one of the following operations:
+
+@itemize @bullet
+@item
+translate, and optionally squeeze repeated characters in the result,
+@item
+squeeze repeated characters,
+@item
+delete characters,
+@item
+delete characters, then squeeze repeated characters from the result.
+@end itemize
+
+The @var{set1} and (if given) @var{set2} arguments define ordered
+sets of characters, referred to below as @var{set1} and @var{set2}.  These
+sets are the characters of the input that @code{tr} operates on.
+The @samp{--complement} (@samp{-c}) option replaces @var{set1} with its
+complement (all of the characters that are not in @var{set1}).
+
+@menu
+* Character sets::              Specifying sets of characters.
+* Translating::                 Changing one characters to another.
+* Squeezing::                   Squeezing repeats and deleting.
+* Warnings in tr::              Warning messages.
+@end menu
+
+
+@node Character sets
+@subsection Specifying sets of characters
+
+@cindex specifying sets of characters
+
+The format of the @var{set1} and @var{set2} arguments resembles
+the format of regular expressions; however, they are not regular
+expressions, only lists of characters.  Most characters simply
+represent themselves in these strings, but the strings can contain
+the shorthands listed below, for convenience.  Some of them can be
+used only in @var{set1} or @var{set2}, as noted below.
+
+@table @asis
+
+@item Backslash escapes.
+@cindex backslash escapes
+
+A backslash followed by a character not listed below causes an error
+message.
+
+@table @samp
+@item \a
+Control-G,
+@item \b
+Control-H,
+@item \f
+Control-L,
+@item \n
+Control-J,
+@item \r
+Control-M,
+@item \t
+Control-I,
+@item \v
+Control-K,
+@item \@var{ooo}
+The character with the value given by @var{ooo}, which is 1 to 3
+octal digits,
+@item \\
+A backslash.
+@end table
+
+@item Ranges.
+@cindex ranges
+
+The notation @samp{@var{m}-@var{n}} expands to all of the characters
+from @var{m} through @var{n}, in ascending order.  @var{m} should
+collate before @var{n}; if it doesn't, an error results.  As an example,
+@samp{0-9} is the same as @samp{0123456789}.  Although GNU @code{tr}
+does not support the System V syntax that uses square brackets to
+enclose ranges, translations specified in that format will still work as
+long as the brackets in @var{string1} correspond to identical brackets
+in @var{string2}.
+
+@item Repeated characters.
+@cindex repeated characters
+
+The notation @samp{[@var{c}*@var{n}]} in @var{set2} expands to @var{n}
+copies of character @var{c}.  Thus, @samp{[y*6]} is the same as
+@samp{yyyyyy}.  The notation @samp{[@var{c}*]} in @var{string2} expands
+to as many copies of @var{c} as are needed to make @var{set2} as long as
+@var{set1}.  If @var{n} begins with @samp{0}, it is interpreted in
+octal, otherwise in decimal.
+
+@item Character classes.
+@cindex characters classes
+
+The notation @samp{[:@var{class}:]} expands to all of the characters in
+the (predefined) class @var{class}.  The characters expand in no
+particular order, except for the @code{upper} and @code{lower} classes,
+which expand in ascending order.  When the @samp{--delete} (@samp{-d})
+and @samp{--squeeze-repeats} (@samp{-s}) options are both given, any
+character class can be used in @var{set2}.  Otherwise, only the
+character classes @code{lower} and @code{upper} are accepted in
+@var{set2}, and then only if the corresponding character class
+(@code{upper} and @code{lower}, respectively) is specified in the same
+relative position in @var{set1}.  Doing this specifies case conversion.
+The class names are given below; an error results when an invalid class
+name is given.
+
+@table @code
+@item alnum
+@opindex alnum
+Letters and digits.
+@item alpha
+@opindex alpha
+Letters.
+@item blank
+@opindex blank
+Horizontal whitespace.
+@item cntrl
+@opindex cntrl
+Control characters.
+@item digit
+@opindex digit
+Digits.
+@item graph
+@opindex graph
+Printable characters, not including space.
+@item lower
+@opindex lower
+Lowercase letters.
+@item print
+@opindex print
+Printable characters, including space.
+@item punct
+@opindex punct
+Punctuation characters.
+@item space
+@opindex space
+Horizontal or vertical whitespace.
+@item upper
+@opindex upper
+Uppercase letters.
+@item xdigit
+@opindex xdigit
+Hexadecimal digits.
+@end table
+
+@item Equivalence classes.
+@cindex equivalence classes
+
+The syntax @samp{[=@var{c}=]} expands to all of the characters that are
+equivalent to @var{c}, in no particular order.  Equivalence classes are
+a relatively recent invention intended to support non-English alphabets.
+But there seems to be no standard way to define them or determine their
+contents.  Therefore, they are not fully implemented in GNU @code{tr};
+each character's equivalence class consists only of that character,
+which is of no particular use.
+
+@end table
+
+
+@node Translating
+@subsection Translating
+
+@cindex translating characters
+
+@code{tr} performs translation when @var{set1} and @var{set2} are
+both given and the @samp{--delete} (@samp{-d}) option is not given.
+@code{tr} translates each character of its input that is in @var{set1}
+to the corresponding character in @var{set2}.  Characters not in
+@var{set1} are passed through unchanged.  When a character appears more
+than once in @var{set1} and the corresponding characters in @var{set2}
+are not all the same, only the final one is used.  For example, these
+two commands are equivalent:
+
+@example
+tr aaa xyz
+tr a z
+@end example
+
+A common use of @code{tr} is to convert lowercase characters to
+uppercase.  This can be done in many ways.  Here are three of them:
+
+@example
+tr abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ
+tr a-z A-Z
+tr '[:lower:]' '[:upper:]'
+@end example
+
+When @code{tr} is performing translation, @var{set1} and @var{set2}
+typically have the same length.  If @var{set1} is shorter than
+@var{set2}, the extra characters at the end of @var{set2} are ignored.
+
+On the other hand, making @var{set1} longer than @var{set2} is not
+portable; POSIX.2 says that the result is undefined.  In this situation,
+BSD @code{tr} pads @var{set2} to the length of @var{set1} by repeating
+the last character of @var{set2} as many times as necessary.  System V
+@code{tr} truncates @var{set1} to the length of @var{set2}.
+
+By default, GNU @code{tr} handles this case like BSD @code{tr}.  When
+the @samp{--truncate-set1} (@samp{-t}) option is given, GNU @code{tr}
+handles this case like the System V @code{tr} instead.  This option is
+ignored for operations other than translation.
+
+Acting like System V @code{tr} in this case breaks the relatively common
+BSD idiom:
+
+@example
+tr -cs A-Za-z0-9 '\012'
+@end example
+
+@noindent
+because it converts only zero bytes (the first element in the
+complement of @var{set1}), rather than all non-alphanumerics, to
+newlines.
+
+
+@node Squeezing
+@subsection Squeezing repeats and deleting
+
+@cindex squeezing repeat characters
+@cindex deleting characters
+
+When given just the @samp{--delete} (@samp{-d}) option, @code{tr}
+removes any input characters that are in @var{set1}.
+
+When given just the @samp{--squeeze-repeats} (@samp{-s}) option,
+@code{tr} replaces each input sequence of a repeated character that
+is in @var{set1} with a single occurrence of that character.
+
+When given both @samp{--delete} and @samp{--squeeze-repeats}, @code{tr}
+first performs any deletions using @var{set1}, then squeezes repeats
+from any remaining characters using @var{set2}.
+
+The @samp{--squeeze-repeats} option may also be used when translating,
+in which case @code{tr} first performs translation, then squeezes
+repeats from any remaining characters using @var{set2}.
+
+Here are some examples to illustrate various combinations of options:
+
+@itemize @bullet
+
+@item
+Remove all zero bytes:
+
+@example
+tr -d '\000'
+@end example
+
+@item
+Put all words on lines by themselves.  This converts all
+non-alphanumeric characters to newlines, then squeezes each string
+of repeated newlines into a single newline:
+
+@example
+tr -cs '[a-zA-Z0-9]' '[\n*]'
+@end example
+
+@item
+Convert each sequence of repeated newlines to a single newline:
+
+@example
+tr -s '\n'
+@end example
+
+@end itemize
+
+
+@node Warnings in tr
+@subsection Warning messages
+
+@vindex POSIXLY_CORRECT
+Setting the environment variable @code{POSIXLY_CORRECT} turns off the
+following warning and error messages, for strict compliance with
+POSIX.2.  Otherwise, the following diagnostics are issued:
+
+@enumerate
+
+@item
+When the @samp{--delete} option is given but @samp{--squeeze-repeats}
+is not, and @var{set2} is given, GNU @code{tr} by default prints
+a usage message and exits, because @var{set2} would not be used.
+The POSIX specification says that @var{set2} must be ignored in
+this case. Silently ignoring arguments is a bad idea.
+
+@item
+When an ambiguous octal escape is given.  For example, @samp{\400}
+is actually @samp{\40} followed by the digit @samp{0}, because the
+value 400 octal does not fit into a single byte.
+
+@end enumerate
+
+GNU @code{tr} does not provide complete BSD or System V compatibility.
+For example, it is impossible to disable interpretation of the POSIX
+constructs @samp{[:alpha:]}, @samp{[=c=]}, and @samp{[c*10]}.  Also, GNU
+@code{tr} does not delete zero bytes automatically, unlike traditional
+Unix versions, which provide no way to preserve zero bytes.
+
+
+@node expand invocation
+@section @code{expand}: Convert tabs to spaces
+
+@pindex expand
+@cindex tabs to spaces, converting
+@cindex converting tabs to spaces
+
+@code{expand} writes the contents of each given @var{file}, or standard
+input if none are given or for a @var{file} of @samp{-}, to standard
+output, with tab characters converted to the appropriate number of
+spaces.  Synopsis:
+
+@example
+expand [@var{option}]@dots{} [@var{file}]@dots{}
+@end example
+
+By default, @code{expand} converts all tabs to spaces.  It preserves
+backspace characters in the output; they decrement the column count for
+tab calculations.  The default action is equivalent to @samp{-8} (set
+tabs every 8 columns).
+
+The program accepts the following options.  Also see @ref{Common options}.
+
+@table @samp
+
+@item -@var{tab1}[,@var{tab2}]@dots{}
+@itemx -t @var{tab1}[,@var{tab2}]@dots{}
+@itemx --tabs=@var{tab1}[,@var{tab2}]@dots{}
+@opindex -@var{tab}
+@opindex -t
+@opindex --tabs
+@cindex tabstops, setting
+If only one tab stop is given, set the tabs @var{tab1} spaces apart
+(default is 8).  Otherwise, set the tabs at columns @var{tab1},
+@var{tab2}, @dots{} (numbered from 0), and replace any tabs beyond the
+last tabstop given with single spaces.  If the tabstops are specified
+with the @samp{-t} or @samp{--tabs} option, they can be separated by
+blanks as well as by commas.
+
+@item -i
+@itemx --initial
+@opindex -i
+@opindex --initial
+@cindex initial tabs, converting
+Only convert initial tabs (those that precede all non-space or non-tab
+characters) on each line to spaces.
+
+@end table
+
+
+@node unexpand invocation
+@section @code{unexpand}: Convert spaces to tabs
+
+@pindex unexpand
+
+@code{unexpand} writes the contents of each given @var{file}, or
+standard input if none are given or for a @var{file} of @samp{-}, to
+standard output, with strings of two or more space or tab characters
+converted to as many tabs as possible followed by as many spaces as are
+needed.  Synopsis:
+
+@example
+unexpand [@var{option}]@dots{} [@var{file}]@dots{}
+@end example
+
+By default, @code{unexpand} converts only initial spaces and tabs (those
+that precede all non space or tab characters) on each line.  It
+preserves backspace characters in the output; they decrement the column
+count for tab calculations.  By default, tabs are set at every 8th
+column.
+
+The program accepts the following options.  Also see @ref{Common options}.
+
+@table @samp
+
+@item -@var{tab1}[,@var{tab2}]@dots{}
+@itemx -t @var{tab1}[,@var{tab2}]@dots{}
+@itemx --tabs=@var{tab1}[,@var{tab2}]@dots{}
+@opindex -@var{tab}
+@opindex -t
+@opindex --tabs
+If only one tab stop is given, set the tabs @var{tab1} spaces apart
+instead of the default 8.  Otherwise, set the tabs at columns
+@var{tab1}, @var{tab2}, @dots{} (numbered from 0), and leave spaces and
+tabs beyond the tabstops given unchanged.  If the tabstops are specified
+with the @samp{-t} or @samp{--tabs} option, they can be separated by
+blanks as well as by commas.  This option implies the @samp{-a} option.
+
+@item -a
+@itemx --all
+@opindex -a
+@opindex --all
+Convert all strings of two or more spaces or tabs, not just initial
+ones, to tabs.
+
+@end table
+
+
+@node Index
+@unnumbered Index
+
+@printindex cp
+
+@contents
+@bye
+
+@c Local variables:
+@c texinfo-column-for-description: 32
+@c End:
