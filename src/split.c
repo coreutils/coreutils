@@ -40,6 +40,8 @@
 
 char *xmalloc ();
 void error ();
+int full_write ();
+int safe_read ();
 
 static int convint ();
 static int isdigits ();
@@ -524,7 +526,7 @@ cwrite (new_file_flag, bp, bytes)
       if (output_desc < 0)
 	error (1, errno, "%s", outfile);
     }
-  if (write (output_desc, bp, bytes) < 0)
+  if (full_write (output_desc, bp, bytes) < 0)
     error (1, errno, "%s", outfile);
 }
 
@@ -542,7 +544,7 @@ stdread (buf, nchars)
 
   while (to_be_read)
     {
-      n_read = read (input_desc, buf, to_be_read);
+      n_read = safe_read (input_desc, buf, to_be_read);
       if (n_read < 0)
 	return -1;
       if (n_read == 0)

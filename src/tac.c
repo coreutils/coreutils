@@ -78,6 +78,8 @@ static void save_stdin ();
 static void xwrite ();
 
 void error ();
+int full_write ();
+int safe_read ();
 
 /* The name this program was run with. */
 char *program_name;
@@ -382,8 +384,8 @@ save_stdin ()
       error (0, errno, "%s", tempfile);
       cleanup ();
     }
-  while ((bytes_read = read (0, buffer, read_size)) > 0)
-    if (write (fd, buffer, bytes_read) != bytes_read)
+  while ((bytes_read = safe_read (0, buffer, read_size)) > 0)
+    if (full_write (fd, buffer, bytes_read) < 0)
       {
 	error (0, errno, "%s", tempfile);
 	cleanup ();
@@ -466,7 +468,7 @@ tac (fd, file)
      in the input file. */
 
   lseek (fd, file_pos, SEEK_SET);
-  if (read (fd, buffer, saved_record_size) != saved_record_size)
+  if (safe_read (fd, buffer, saved_record_size) != saved_record_size)
     {
       error (0, 1, "%s", file);
       return 1;
@@ -562,7 +564,7 @@ tac (fd, file)
 	  else
 	    match_start = past_end;
 
-	  if (read (fd, buffer, read_size) != read_size)
+	  if (safe_read (fd, buffer, read_size) != read_size)
 	    {
 	      error (0, errno, "%s", file);
 	      return 1;
@@ -640,7 +642,7 @@ xwrite (desc, buffer, size)
      char *buffer;
      int size;
 {
-  if (write (desc, buffer, size) != size)
+  if (full_write (desc, buffer, size) < 0)
     {
       error (0, errno, "write error");
       cleanup ();

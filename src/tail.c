@@ -57,14 +57,29 @@
 #endif
 
 #include <stdio.h>
+#include <assert.h>
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
 #include "version.h"
 
+/* FIXME: uncomment before release.  */
+/* #define NDEBUG 1 */
+
+#define XWRITE(fd, buffer, n_bytes)					\
+  do									\
+    {									\
+      assert ((fd) == 1);						\
+      assert ((n_bytes) > 0);						\
+      if (fwrite ((buffer), 1, (n_bytes), stdout) == 0)			\
+	error (1, errno, "write error");				\
+    }									\
+  while (0)
+
 /* Number of items to tail. */
 #define DEFAULT_NUMBER 10
 
+/* FIXME: use definition from stdio.h.  */
 /* Size of atomic reads. */
 #define BUFSIZE (512 * 8)
 
@@ -97,8 +112,8 @@ enum header_mode
 };
 
 char *xmalloc ();
-void xwrite ();
 void error ();
+int safe_read ();
 
 static int file_lines ();
 static int pipe_bytes ();
@@ -315,7 +330,7 @@ main (argc, argv)
 
   if (have_read_stdin && close (0) < 0)
     error (1, errno, "-");
-  if (close (1) < 0)
+  if (fclose (stdout) == EOF)
     error (1, errno, "write error");
   exit (exit_status);
 }
@@ -422,15 +437,8 @@ write_header (filename)
 {
   static int first_file = 1;
 
-  if (first_file)
-    {
-      xwrite (1, "==> ", 4);
-      first_file = 0;
-    }
-  else
-    xwrite (1, "\n==> ", 5);
-  xwrite (1, filename, strlen (filename));
-  xwrite (1, " <==\n", 5);
+  printf ("%s==> %s <==\n", (first_file ? "" : "\n"), filename);
+  first_file = 0;
 }
 
 /* Display the last NUMBER units of file FILENAME, open for reading
@@ -568,7 +576,7 @@ file_lines (filename, fd, number, pos)
      reads will be on block boundaries, which might increase efficiency. */
   pos -= bytes_read;
   lseek (fd, pos, SEEK_SET);
-  bytes_read = read (fd, buffer, bytes_read);
+  bytes_read = safe_read (fd, buffer, bytes_read);
   if (bytes_read == -1)
     {
       error (0, errno, "%s", filename);
@@ -590,7 +598,7 @@ file_lines (filename, fd, number, pos)
 	      /* If this newline wasn't the last character in the buffer,
 	         print the text after it. */
 	      if (i != bytes_read - 1)
-		xwrite (1, &buffer[i + 1], bytes_read - (i + 1));
+		XWRITE (1, &buffer[i + 1], bytes_read - (i + 1));
 	      return 0;
 	    }
 	}
@@ -604,7 +612,7 @@ file_lines (filename, fd, number, pos)
       pos -= BUFSIZE;
       lseek (fd, pos, SEEK_SET);
     }
-  while ((bytes_read = read (fd, buffer, BUFSIZE)) > 0);
+  while ((bytes_read = safe_read (fd, buffer, BUFSIZE)) > 0);
   if (bytes_read == -1)
     {
       error (0, errno, "%s", filename);
@@ -642,7 +650,7 @@ pipe_lines (filename, fd, number)
   tmp = (LBUFFER *) xmalloc (sizeof (LBUFFER));
 
   /* Input is always read into a fresh buffer. */
-  while ((tmp->nbytes = read (fd, tmp->buffer, BUFSIZE)) > 0)
+  while ((tmp->nbytes = safe_read (fd, tmp->buffer, BUFSIZE)) > 0)
     {
       tmp->nlines = 0;
       tmp->next = NULL;
@@ -721,10 +729,10 @@ pipe_lines (filename, fd, number)
     }
   else
     i = 0;
-  xwrite (1, &tmp->buffer[i], tmp->nbytes - i);
+  XWRITE (1, &tmp->buffer[i], tmp->nbytes - i);
 
   for (tmp = tmp->next; tmp; tmp = tmp->next)
-    xwrite (1, tmp->buffer, tmp->nbytes);
+    XWRITE (1, tmp->buffer, tmp->nbytes);
 
 free_lbuffers:
   while (first)
@@ -764,7 +772,7 @@ pipe_bytes (filename, fd, number)
   tmp = (CBUFFER *) xmalloc (sizeof (CBUFFER));
 
   /* Input is always read into a fresh buffer. */
-  while ((tmp->nbytes = read (fd, tmp->buffer, BUFSIZE)) > 0)
+  while ((tmp->nbytes = safe_read (fd, tmp->buffer, BUFSIZE)) > 0)
     {
       tmp->next = NULL;
 
@@ -818,10 +826,10 @@ pipe_bytes (filename, fd, number)
     i = total_bytes - number;
   else
     i = 0;
-  xwrite (1, &tmp->buffer[i], tmp->nbytes - i);
+  XWRITE (1, &tmp->buffer[i], tmp->nbytes - i);
 
   for (tmp = tmp->next; tmp; tmp = tmp->next)
-    xwrite (1, tmp->buffer, tmp->nbytes);
+    XWRITE (1, tmp->buffer, tmp->nbytes);
 
 free_cbuffers:
   while (first)
@@ -846,7 +854,7 @@ start_bytes (filename, fd, number)
   char buffer[BUFSIZE];
   int bytes_read = 0;
 
-  while (number > 0 && (bytes_read = read (fd, buffer, BUFSIZE)) > 0)
+  while (number > 0 && (bytes_read = safe_read (fd, buffer, BUFSIZE)) > 0)
     number -= bytes_read;
   if (bytes_read == -1)
     {
@@ -854,7 +862,7 @@ start_bytes (filename, fd, number)
       return 1;
     }
   else if (number < 0)
-    xwrite (1, &buffer[bytes_read + number], -number);
+    XWRITE (1, &buffer[bytes_read + number], -number);
   return 0;
 }
 
@@ -872,7 +880,7 @@ start_lines (filename, fd, number)
   int bytes_read = 0;
   int bytes_to_skip = 0;
 
-  while (number && (bytes_read = read (fd, buffer, BUFSIZE)) > 0)
+  while (number && (bytes_read = safe_read (fd, buffer, BUFSIZE)) > 0)
     {
       bytes_to_skip = 0;
       while (bytes_to_skip < bytes_read)
@@ -885,7 +893,7 @@ start_lines (filename, fd, number)
       return 1;
     }
   else if (bytes_to_skip < bytes_read)
-    xwrite (1, &buffer[bytes_to_skip], bytes_read - bytes_to_skip);
+    XWRITE (1, &buffer[bytes_to_skip], bytes_read - bytes_to_skip);
   return 0;
 }
 
@@ -904,9 +912,9 @@ dump_remainder (filename, fd)
 
   total = 0;
 output:
-  while ((bytes_read = read (fd, buffer, BUFSIZE)) > 0)
+  while ((bytes_read = safe_read (fd, buffer, BUFSIZE)) > 0)
     {
-      xwrite (1, buffer, bytes_read);
+      XWRITE (1, buffer, bytes_read);
       total += bytes_read;
     }
   if (bytes_read == -1)

@@ -70,7 +70,7 @@ enum header_mode
 };
 
 void error ();
-void xwrite ();
+int safe_read ();
 
 static int head ();
 static int head_bytes ();
@@ -231,7 +231,7 @@ main (argc, argv)
 
   if (have_read_stdin && close (0) < 0)
     error (1, errno, "-");
-  if (close (1) < 0)
+  if (fclose (stdout) == EOF)
     error (1, errno, "write error");
 
   exit (exit_status);
@@ -276,15 +276,8 @@ write_header (filename)
 {
   static int first_file = 1;
 
-  if (first_file)
-    {
-      xwrite (1, "==> ", 4);
-      first_file = 0;
-    }
-  else
-    xwrite (1, "\n==> ", 5);
-  xwrite (1, filename, strlen (filename));
-  xwrite (1, " <==\n", 5);
+  printf ("%s==> %s <==\n", (first_file ? "" : "\n"), filename);
+  first_file = 0;
 }
 
 static int
@@ -310,8 +303,8 @@ head_bytes (filename, fd, bytes_to_write)
 
   while (bytes_to_write)
     {
-      bytes_read = read (fd, buffer, BUFSIZE);
-      if (bytes_read == -1)
+      bytes_read = safe_read (fd, buffer, BUFSIZE);
+      if (bytes_read < 0)
 	{
 	  error (0, errno, "%s", filename);
 	  return 1;
@@ -320,7 +313,8 @@ head_bytes (filename, fd, bytes_to_write)
 	break;
       if (bytes_read > bytes_to_write)
 	bytes_read = bytes_to_write;
-      xwrite (1, buffer, bytes_read);
+      if (fwrite (buffer, 1, bytes_read, stdout) == 0)
+	error (1, errno, "write error");
       bytes_to_write -= bytes_read;
     }
   return 0;
@@ -338,8 +332,8 @@ head_lines (filename, fd, lines_to_write)
 
   while (lines_to_write)
     {
-      bytes_read = read (fd, buffer, BUFSIZE);
-      if (bytes_read == -1)
+      bytes_read = safe_read (fd, buffer, BUFSIZE);
+      if (bytes_read < 0)
 	{
 	  error (0, errno, "%s", filename);
 	  return 1;
@@ -350,7 +344,8 @@ head_lines (filename, fd, lines_to_write)
       while (bytes_to_write < bytes_read)
 	if (buffer[bytes_to_write++] == '\n' && --lines_to_write == 0)
 	  break;
-      xwrite (1, buffer, bytes_to_write);
+      if (fwrite (buffer, 1, bytes_to_write, stdout) == 0)
+	error (1, errno, "write error");
     }
   return 0;
 }

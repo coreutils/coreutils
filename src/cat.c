@@ -47,6 +47,8 @@
 char *stpcpy ();
 char *xmalloc ();
 void error ();
+int full_write ();
+int safe_read ();
 
 static void cat ();
 static void next_line_num ();
@@ -417,7 +419,7 @@ simple_cat (buf, bufsize)
     {
       /* Read a block of input.  */
 
-      n_read = read (input_desc, buf, bufsize);
+      n_read = safe_read (input_desc, buf, bufsize);
       if (n_read < 0)
 	{
 	  error (0, errno, "%s", infile);
@@ -432,7 +434,7 @@ simple_cat (buf, bufsize)
 
       /* Write this block out.  */
 
-      if (write (output_desc, buf, n_read) != n_read)
+      if (full_write (output_desc, buf, n_read) < 0)
 	error (1, errno, "write error");
     }
 }
@@ -516,7 +518,7 @@ cat (inbuf, insize, outbuf, outsize, quote,
 	      unsigned char *wp = outbuf;
 	      do
 		{
-		  if (write (output_desc, wp, outsize) != outsize)
+		  if (full_write (output_desc, wp, outsize) < 0)
 		    error (1, errno, "write error");
 		  wp += outsize;
 		}
@@ -564,14 +566,14 @@ cat (inbuf, insize, outbuf, outsize, quote,
 		{
 		  int n_write = bpout - outbuf;
 
-		  if (write (output_desc, outbuf, n_write) != n_write)
+		  if (full_write (output_desc, outbuf, n_write) < 0)
 		    error (1, errno, "write error");
 		  bpout = outbuf;
 		}
 
 	      /* Read more input into INBUF.  */
 
-	      n_read = read (input_desc, inbuf, insize);
+	      n_read = safe_read (input_desc, inbuf, insize);
 	      if (n_read < 0)
 		{
 		  error (0, errno, "%s", infile);

@@ -56,6 +56,7 @@ char *realloc ();
 #endif /* INT_MAX */
 
 void error ();
+int safe_read ();
 
 
 static char *xrealloc ();
@@ -314,7 +315,7 @@ read_input (dest, max)
   if (max == 0)
     return 0;
 
-  bytes_read = read (input_desc, dest, max);
+  bytes_read = safe_read (input_desc, dest, max);
 
   if (bytes_read == 0)
     have_read_eof = TRUE;

@@ -40,6 +40,7 @@ static int bsd_sum_file ();
 static int sysv_sum_file ();
 
 void error ();
+int safe_read ();
 
 /* The name this program was run with. */
 char *program_name;
@@ -242,7 +243,7 @@ sysv_sum_file (file, print_name)
 	}
     }
 
-  while ((bytes_read = read (fd, buf, sizeof buf)) > 0)
+  while ((bytes_read = safe_read (fd, buf, sizeof buf)) > 0)
     {
       register int i;
 

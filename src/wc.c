@@ -39,6 +39,7 @@
 #define BUFFER_SIZE (16 * 1024)
 
 void error ();
+int safe_read ();
 
 static void wc ();
 static void wc_file ();
@@ -220,7 +221,7 @@ wc (fd, file)
     }
   else
     {
-      while ((bytes_read = read (fd, buf, BUFFER_SIZE)) > 0)
+      while ((bytes_read = safe_read (fd, buf, BUFFER_SIZE)) > 0)
 	{
 	  register char *p = buf;
 

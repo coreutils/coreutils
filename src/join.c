@@ -44,6 +44,7 @@ void error ();
 static void usage ();
 
 #define min(A, B) ((A) < (B) ? (A) : (B))
+#define max(A, B) ((A) > (B) ? (A) : (B))
 
 /* An element of the list describing the format of each
    output line. */
@@ -114,6 +115,10 @@ static struct option const longopts[] =
   {"j2", required_argument, NULL, '2'},
   {NULL, 0, NULL, 0}
 };
+
+/* Used to print non-joining lines */
+static struct line blank1;
+static struct line blank2;
 
 /* Fill in the `fields' structure in LINE. */
 
@@ -404,7 +409,7 @@ join (fp1, fp2)
       if (diff < 0)
 	{
 	  if (print_unpairables_1)
-	    prline (&seq1.lines[0]);
+	    prjoin (&seq1.lines[0], &blank2);
 	  freeline (&seq1.lines[0]);
 	  seq1.count = 0;
 	  getseq (fp1, &seq1);
@@ -413,7 +418,7 @@ join (fp1, fp2)
       if (diff > 0)
 	{
 	  if (print_unpairables_2)
-	    prline (&seq2.lines[0]);
+	    prjoin (&blank1, &seq2.lines[0]);
 	  freeline (&seq2.lines[0]);
 	  seq2.count = 0;
 	  getseq (fp2, &seq2);
@@ -474,22 +479,22 @@ join (fp1, fp2)
 
   if (print_unpairables_1 && seq1.count)
     {
-      prline (&seq1.lines[0]);
+      prjoin(&seq1.lines[0], &blank2);
       freeline (&seq1.lines[0]);
       while (get_line (fp1, &line))
 	{
-	  prline (&line);
+	  prjoin(&line, &blank2);
 	  freeline (&line);
 	}
     }
 
   if (print_unpairables_2 && seq2.count)
     {
-      prline (&seq2.lines[0]);
+      prjoin(&blank1, &seq2.lines[0]);
       freeline (&seq2.lines[0]);
       while (get_line (fp2, &line))
 	{
-	  prline (&line);
+	  prjoin(&blank1, &line);
 	  freeline (&line);
 	}
     }
@@ -541,6 +546,10 @@ add_field_list (str)
       if (*str == ',' || ISBLANK (*str))
 	{
 	  added += add_field (file, field);
+	  switch (file) {
+	   case 1: blank1.nfields = max(blank1.nfields, field); break;
+	   case 2: blank2.nfields = max(blank2.nfields, field); break;
+	  }
 	  file = field = -1;
 	  dot_found = 0;
 	}
@@ -569,6 +578,24 @@ add_field_list (str)
   return added;
 }
 
+/* Create a blank line with COUNT fields separated by tabs. */
+
+void
+make_blank (blank, count)
+     struct line *blank;
+     int count;
+{
+  int i;
+  blank->beg = xmalloc(blank->nfields + 1);
+  blank->fields = (struct field *)xmalloc(sizeof(struct field) * count);
+  for (i = 0; i < blank->nfields; i++) {
+    blank->beg[i] = '\t';
+    blank->fields[i].lim = blank->fields[i].beg = &blank->beg[i];
+  }
+  blank->beg[i] = '\0';
+  blank->lim = &blank->beg[i];
+}
+
 void
 main (argc, argv)
      int argc;
@@ -578,9 +605,17 @@ main (argc, argv)
   FILE *fp1, *fp2;
   int optc, prev_optc = 0, nfiles, val;
 
+  blank1.nfields = 1;
+  blank2.nfields = 1;
+  
   program_name = argv[0];
 
   parse_long_options (argc, argv, usage);
+
+  /* Now that we've seen the options, we can construct the blank line
+     structures.  */
+  make_blank(&blank1, blank1.nfields);
+  make_blank(&blank2, blank2.nfields);
 
   nfiles = 0;
   print_pairables = 1;

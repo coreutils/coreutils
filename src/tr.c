@@ -201,6 +201,7 @@ struct Spec_list
 char *xmalloc ();
 char *stpcpy ();
 void error ();
+int safe_read ();
 
 /* The name by which this program was run.  */
 char *program_name;
@@ -1514,7 +1515,7 @@ squeeze_filter (buf, size, reader)
       if (i >= nr)
 	{
 	  if (reader == NULL)
-	    nr = read (0, (char *) buf, size);
+	    nr = safe_read (0, (char *) buf, size);
 	  else
 	    nr = (*reader) (buf, size, NULL);
 
@@ -1616,7 +1617,7 @@ read_and_delete (buf, size, not_used)
   do
     {
       int i;
-      int nr = read (0, (char *) buf, size);
+      int nr = safe_read (0, (char *) buf, size);
 
       if (nr < 0)
 	error (1, errno, "read error");
@@ -1664,7 +1665,7 @@ read_and_xlate (buf, size, not_used)
   if (hit_eof)
     return 0;
 
-  chars_read = read (0, (char *) buf, size);
+  chars_read = safe_read (0, (char *) buf, size);
   if (chars_read < 0)
     error (1, errno, "read error");
   if (chars_read == 0)
