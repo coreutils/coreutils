@@ -1,5 +1,8 @@
 1999-04-24  Jim Meyering  <meyering@ascend.com>
 
+	* lib/Makefile.am (libtu_a_SOURCES): Add xstrtoumax.c
+	(noinst_HEADERS): Remove xstrtoul.h.
+
 	* src/csplit.c: Include new "xstrtol.h", not "xstrtoul.h".
 	(struct control) [repeat]: Declare as uintmax_t, not int.
 	(struct control) [lines_required]: Likewise.
