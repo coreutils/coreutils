@@ -86,9 +86,11 @@ get_dest_mode (const struct cp_options *option, mode_t mode)
   if (option->set_mode)
     return option->mode;
 
-  /* Honor the umask for `cp', but not for `mv' or `cp -p'.  */
+  /* Honor the umask for `cp', but not for `mv' or `cp -p'.
+     In addition, `cp' without -p must clear the set-user-ID and set-group-ID
+     bits.  POSIX requires it do that when creating new files.  */
   if (!option->move_mode && !option->preserve_chmod_bits)
-    mode &= option->umask_kill;
+    mode &= (option->umask_kill & ~(S_ISUID | S_ISGID));
 
   return mode;
 }
@@ -651,7 +653,13 @@ copy_internal (const char *src_path, const char *dst_path,
 		}
 
 	      if (x->update && MTIME_CMP (src_sb, dst_sb) <= 0)
-		return 0;
+		{
+		  /* Pretend the rename succeeded, so the caller (mv)
+		     doesn't end up removing the source file.  */
+		  if (rename_succeeded)
+		    *rename_succeeded = 1;
+		  return 0;
+		}
 	    }
 
 	  if (!S_ISDIR (src_type) && x->interactive)
