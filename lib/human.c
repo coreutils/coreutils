@@ -76,7 +76,7 @@ static const char suffixes[] =
 /* Convert N to a human readable format in BUF.
 
    N is expressed in units of FROM_BLOCK_SIZE.  FROM_BLOCK_SIZE must
-   be positive.
+   be nonnegative.
 
    If OUTPUT_BLOCK_SIZE is positive, use units of OUTPUT_BLOCK_SIZE in
    the output number.  OUTPUT_BLOCK_SIZE must be a multiple of
@@ -101,7 +101,7 @@ human_readable (uintmax_t n, char *buf,
   uintmax_t amt;
   int base;
   int to_block_size;
-  int tenths;
+  int tenths = 0;
   int power;
   char *p;
 
@@ -109,7 +109,7 @@ human_readable (uintmax_t n, char *buf,
      1 means AMT.TENTHS < adjusted N < AMT.TENTHS + 0.05;
      2 means adjusted N == AMT.TENTHS + 0.05;
      3 means AMT.TENTHS + 0.05 < adjusted N < AMT.TENTHS + 0.1.  */
-  int rounding;
+  int rounding = 0;
 
   if (output_block_size < 0)
     {
@@ -136,7 +136,6 @@ human_readable (uintmax_t n, char *buf,
     {
       int multiplier = from_block_size / to_block_size;
       amt = n * multiplier;
-      tenths = rounding = 0;
 
       if (amt / multiplier != n)
 	{
@@ -172,6 +171,8 @@ human_readable (uintmax_t n, char *buf,
 	  return buf;
 	}
     }
+  else if (from_block_size == 0)
+    amt = 0;
   else
     {
       int divisor = to_block_size / from_block_size;
