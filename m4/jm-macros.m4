@@ -1,4 +1,4 @@
-#serial 27
+#serial 28   -*- autoconf -*-
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
@@ -32,6 +32,7 @@ AC_DEFUN(jm_MACROS,
     paths.h \
     stdlib.h \
     stddef.h \
+    stdint.h \
     string.h \
     sys/acl.h \
     sys/filsys.h \
