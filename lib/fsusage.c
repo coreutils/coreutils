@@ -56,18 +56,14 @@ int statvfs ();
 /* Return the number of TOSIZE-byte blocks used by
    BLOCKS FROMSIZE-byte blocks, rounding up.  */
 
-static long
-adjust_blocks (blocks, fromsize, tosize)
-     long blocks;
-     int fromsize, tosize;
-{
-  if (fromsize == tosize)	/* E.g., from 512 to 512.  */
-    return blocks;
-  else if (fromsize > tosize)	/* E.g., from 2048 to 512.  */
-    return blocks * (fromsize / tosize);
-  else				/* E.g., from 256 to 512.  */
-    return (blocks + 1) / (tosize / fromsize);
-}
+#define adjust_blocks(blocks, fromsize, tosize)		\
+  (((fromsize) == (tosize))				\
+   ? (blocks) 	/* E.g., from 512 to 512.  */		\
+   : (((fromsize) > (tosize))				\
+      /* E.g., from 2048 to 512.  */			\
+      ? (blocks) * ((fromsize) / (tosize))		\
+      /* E.g., from 256 to 512.  */			\
+      : ((blocks) + 1) / ((tosize) / (fromsize))))
 
 /* Fill in the fields of FSP with information about space usage for
    the filesystem on which PATH resides.
