@@ -257,7 +257,8 @@ re_protect (const char *const_dst_path, int src_offset,
 
       if ((*(x->xstat)) (src_path, &src_sb))
 	{
-	  error (0, errno, "%s", src_path);
+	  error (0, errno, _("obtaining file attributes of %s"),
+		 quote (src_path));
 	  return 1;
 	}
 
@@ -278,7 +279,7 @@ re_protect (const char *const_dst_path, int src_offset,
 
 	  if (utime (dst_path, &utb))
 	    {
-	      error (0, errno, _("preserving times for %s"), dst_path);
+	      error (0, errno, _("preserving times for %s"), quote (dst_path));
 	      return 1;
 	    }
 	}
@@ -291,7 +292,8 @@ re_protect (const char *const_dst_path, int src_offset,
 	  if (chown (dst_path, src_sb.st_uid, src_sb.st_gid)
 	      && ((errno != EPERM && errno != EINVAL) || myeuid == 0))
 	    {
-	      error (0, errno, _("preserving ownership for %s"), dst_path);
+	      error (0, errno, _("preserving ownership for %s"),
+		     quote (dst_path));
 	      return 1;
 	    }
 	}
@@ -300,7 +302,8 @@ re_protect (const char *const_dst_path, int src_offset,
 	{
 	  if (chmod (dst_path, src_sb.st_mode & x->umask_kill))
 	    {
-	      error (0, errno, _("preserving permissions for %s"), dst_path);
+	      error (0, errno, _("preserving permissions for %s"),
+		     quote (dst_path));
 	      return 1;
 	    }
 	}
@@ -462,7 +465,7 @@ do_copy (int n_files, char **file, const char *target_directory,
     {
       if (errno != ENOENT)
 	{
-	  error (0, errno, "%s", dest);
+	  error (0, errno, _("accessing %s"), quote (dest));
 	  return 1;
 	}
 
