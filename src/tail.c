@@ -1381,10 +1381,10 @@ parse_obsolescent_option (int argc, const char *const *argv,
 
   if (!*fail)
     {
+      bool posix_pedantic = (getenv ("POSIXLY_CORRECT") != NULL);
+
       if (argc > 3)
 	{
-	  int posix_pedantic = (getenv ("POSIXLY_CORRECT") != NULL);
-
 	  /* When POSIXLY_CORRECT is set, enforce the `at most one
 	     file argument' requirement.  */
 	  if (posix_pedantic)
@@ -1404,6 +1404,11 @@ tail's obsolescent option syntax (%s).  Use the equivalent -n or -c\n\
 option instead."), argv[1]);
 #endif
 	}
+
+      if (! posix_pedantic)
+	error (0, 0,
+	       _("warning: `tail %s' is obsolete; use -n or -c instead"),
+	       argv[1]);
 
       /* Set globals.  */
       from_start = t_from_start;
