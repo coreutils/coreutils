@@ -1,3 +1,8 @@
+2003-07-31  Paul Eggert  <eggert@twinsun.com>
+
+	* bumpalloc.h: Remove.
+	* Makefile.am (libfetish_a_SOURCES): Remove bumpalloc.h.
+
 2003-07-28  Jim Meyering  <jim@meyering.net>
 
 	* stdbool_.h: Renamed from stdbool.hin.
