@@ -1,6 +1,16 @@
-2003-01-22  Jim Meyering  <jim@meyering.net>
+2003-01-27  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.5.
+
+	* src/ls.c (decode_switches): If `dired' is set without
+	`format == long_format', then silently reset dired.  This doesn't
+	change the behavior of ls (all prior uses of dired were protected
+	by `&& format == long_format'), and lets us...
+	(DIRED_INDENT): ... remove `format == long_format' conjunct.
+	(PUSH_CURRENT_DIRED_POS): Likewise.
+	(main): Likewise.
+
+2003-01-22  Jim Meyering  <jim@meyering.net>
 
 	* tests/du/no-x: New test, for functionality added to lib/ftw.c.
 	* tests/du/Makefile.am (TESTS): Add no-x.
