@@ -1,3 +1,19 @@
+Fri Apr 23 21:53:47 1993  Jim Meyering  (meyering@comco.com)
+
+	* Makefile.in [CFLAGS, LDFLAGS]: Don't set to -g explicitely;
+	configure's AC_SUBST will set these.
+
+	* Makefile.in [Makefile]: Add dependencies and a rule to remake it.
+	[targets that cd then run make in subdirectories]: Don't depend
+	on `cd ..';  use a subshell instead.
+
+	* Makefile.in [info, install-info, dvi, check, installcheck]:
+	New targets but no rules; comply with standards.
+
+	* configure.in [CFLAGS]: Default to -g -O if CC is gcc and the user
+	hasn't specified CFLAGS.
+	[LDFLAGS]: Substitute into Makefile.
+
 Tue Mar 30 21:36:11 1993  Jim Meyering  (meyering@comco.com)
 
 	* od.c: New option --compatible, -C.
