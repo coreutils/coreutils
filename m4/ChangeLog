@@ -1,3 +1,9 @@
+2003-08-05  Paul Eggert  <eggert@twinsun.com>
+
+	* prereq.m4 (jm_PREREQ_PHYSMEM, jm_PREREQ_STAT): Ignore headers
+	that are present but cannot be compiled.  This avoids spurious warnings
+	on Solaris 9 sparc with Forte Developer 7 C 5.4.
+
 2003-08-04  Paul Eggert  <eggert@twinsun.com>
 
 	Merge fnmatch module from gnulib.
