@@ -354,7 +354,7 @@ tail_file (filename, number, filenum)
       have_read_stdin = 1;
       filename = "standard input";
       if (print_headers)
-	write_header (filename);
+	write_header (filename, NULL);
       errors = tail (filename, 0, number);
       if (forever_multiple)
 	{
@@ -392,7 +392,7 @@ tail_file (filename, number, filenum)
       else
 	{
 	  if (print_headers)
-	    write_header (filename);
+	    write_header (filename, NULL);
 	  errors = tail (filename, fd, number);
 	  if (forever_multiple)
 	    {
@@ -432,12 +432,15 @@ tail_file (filename, number, filenum)
 }
 
 static void
-write_header (filename)
-     char *filename;
+write_header (filename, comment)
+     const char *filename;
+     const char *comment;
 {
   static int first_file = 1;
 
-  printf ("%s==> %s <==\n", (first_file ? "" : "\n"), filename);
+  printf ("%s==> %s%s%s <==\n", (first_file ? "" : "\n"), filename,
+	  (comment ? ": " : ""),
+	  (comment ? comment : ""));
   first_file = 0;
 }
 
@@ -966,13 +969,24 @@ tail_forever (names, nfiles)
 
 	  /* This file has changed size.  Print out what we can, and
 	     then keep looping.  */
+
+	  changed = 1;
+
+	  if (stats.st_size < file_sizes[i])
+	    {
+	      write_header (names[i], "file truncated");
+	      last = i;
+	      lseek (file_descs[i], stats.st_size, SEEK_SET);
+	      file_sizes[i] = stats.st_size;
+	      continue;
+	    }
+
 	  if (i != last)
 	    {
 	      if (print_headers)
-		write_header (names[i]);
+		write_header (names[i], NULL);
 	      last = i;
 	    }
-	  changed = 1;
 	  file_sizes[i] += dump_remainder (names[i], file_descs[i]);
 	}
 
