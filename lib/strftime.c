@@ -780,9 +780,8 @@ my_strftime (CHAR_T *s, size_t maxsize, const CHAR_T *format,
 	    *u++ = format_char;
 	    *u = '\0';
 	    len = strftime (ubuf, sizeof ubuf, ufmt, tp);
-	    if (len == 0)
-	      return 0;
-	    cpy (len - 1, ubuf + 1);
+	    if (len != 0)
+	      cpy (len - 1, ubuf + 1);
 	  }
 	  break;
 #endif
