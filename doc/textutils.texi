@@ -28,7 +28,7 @@
 START-INFO-DIR-ENTRY
 * Text utilities: (textutils).  	GNU text utilities.
 * cat: (textutils)cat invocation.		Concatenate and write files.
-* cksum: (textutils)cksum invocation.		Print POSIX CRC checksum.
+* cksum: (textutils)cksum invocation.		Print @sc{POSIX} CRC checksum.
 * comm: (textutils)comm invocation.		Compare sorted files by line.
 * csplit: (textutils)csplit invocation.		Split by context.
 * cut: (textutils)cut invocation.		Print selected parts of lines.
@@ -145,7 +145,7 @@ involved in improving this manual.  The entire GNU community will
 benefit.
 
 @cindex POSIX.2
-The GNU text utilities are mostly compatible with the POSIX.2 standard.
+The GNU text utilities are mostly compatible with the @sc{POSIX.2} standard.
 
 @c This paragraph appears in all of fileutils.texi, textutils.texi, and
 @c sh-utils.texi too -- so be sure to keep them consistent.
@@ -650,8 +650,8 @@ is not given at all, the default is 16.
 
 @end table
 
-The next several options map the old, pre-POSIX format specification
-options to the corresponding POSIX format specs.  GNU @code{od} accepts
+The next several options map the old, pre-@sc{POSIX} format specification
+options to the corresponding @sc{POSIX} format specs.  GNU @code{od} accepts
 any combination of old- and new-style options.  Format specification
 options accumulate.
 
@@ -1545,7 +1545,7 @@ by comparing the @code{cksum} output for the received files with the
 @code{cksum} output for the original files (typically given in the
 distribution).
 
-The CRC algorithm is specified by the POSIX.2 standard.  It is not
+The CRC algorithm is specified by the @sc{POSIX.2} standard.  It is not
 compatible with the BSD or System V @code{sum} algorithms (see the
 previous section); it is more robust.
 
@@ -1834,7 +1834,7 @@ check that no pair of consecutive lines compares equal.
 @item -k @var{pos1}[,@var{pos2}]
 @opindex -k
 @cindex sort field
-The recommended, POSIX, option for specifying a sort field.  The field
+The recommended, @sc{POSIX}, option for specifying a sort field.  The field
 consists of the line between @var{pos1} and @var{pos2} (or the end of
 the line, if @var{pos2} is omitted), inclusive.  Fields and character
 positions are numbered starting with 1.  See below.
@@ -1853,9 +1853,9 @@ options}.
 
 Historical (BSD and System V) implementations of @code{sort} have
 differed in their interpretation of some options, particularly
-@samp{-b}, @samp{-f}, and @samp{-n}.  GNU sort follows the POSIX
+@samp{-b}, @samp{-f}, and @samp{-n}.  GNU sort follows the @sc{POSIX}
 behavior, which is usually (but not always!) like the System V behavior.
-According to POSIX, @samp{-n} no longer implies @samp{-b}.  For
+According to @sc{POSIX}, @samp{-n} no longer implies @samp{-b}.  For
 consistency, @samp{-M} has been changed in the same way.  This may
 affect the meaning of character positions in field specifications in
 obscure cases.  The only fix is to add an explicit @samp{-b}.
@@ -1883,7 +1883,7 @@ from the global options it will be attached to both.  If a @samp{-n} or
 fields.
 
 Here are some examples to illustrate various combinations of options.
-In them, the POSIX @samp{-k} option is used to specify sort keys rather
+In them, the @sc{POSIX} @samp{-k} option is used to specify sort keys rather
 than the obsolete @samp{+@var{pos1}-@var{pos2}} syntax.
 
 @itemize @bullet
@@ -2264,7 +2264,7 @@ to the join field.  However, when printing unpairable lines
 (using either of the @samp{-a} or @samp{-v} options), there is no way
 to specify the join field using @var{m.n} in @var{field-list}
 if there are unpairable lines in both files.
-To give @code{join} that functionality, POSIX invented the @samp{0}
+To give @code{join} that functionality, @sc{POSIX} invented the @samp{0}
 field specification notation.
 
 The elements in @var{field-list}
@@ -2507,7 +2507,7 @@ typically have the same length.  If @var{set1} is shorter than
 @var{set2}, the extra characters at the end of @var{set2} are ignored.
 
 On the other hand, making @var{set1} longer than @var{set2} is not
-portable; POSIX.2 says that the result is undefined.  In this situation,
+portable; @sc{POSIX.2} says that the result is undefined.  In this situation,
 BSD @code{tr} pads @var{set2} to the length of @var{set1} by repeating
 the last character of @var{set2} as many times as necessary.  System V
 @code{tr} truncates @var{set1} to the length of @var{set2}.
@@ -2587,7 +2587,7 @@ tr -s '\n'
 @vindex POSIXLY_CORRECT
 Setting the environment variable @code{POSIXLY_CORRECT} turns off the
 following warning and error messages, for strict compliance with
-POSIX.2.  Otherwise, the following diagnostics are issued:
+@sc{POSIX.2}.  Otherwise, the following diagnostics are issued:
 
 @enumerate
 
@@ -2595,7 +2595,7 @@ POSIX.2.  Otherwise, the following diagnostics are issued:
 When the @samp{--delete} option is given but @samp{--squeeze-repeats}
 is not, and @var{set2} is given, GNU @code{tr} by default prints
 a usage message and exits, because @var{set2} would not be used.
-The POSIX specification says that @var{set2} must be ignored in
+The @sc{POSIX} specification says that @var{set2} must be ignored in
 this case. Silently ignoring arguments is a bad idea.
 
 @item
@@ -2606,7 +2606,7 @@ value 400 octal does not fit into a single byte.
 @end enumerate
 
 GNU @code{tr} does not provide complete BSD or System V compatibility.
-For example, it is impossible to disable interpretation of the POSIX
+For example, it is impossible to disable interpretation of the @sc{POSIX}
 constructs @samp{[:alpha:]}, @samp{[=c=]}, and @samp{[c*10]}.  Also, GNU
 @code{tr} does not delete zero bytes automatically, unlike traditional
 Unix versions, which provide no way to preserve zero bytes.
