@@ -1,3 +1,12 @@
+2000-03-04  Jim Meyering  <meyering@lucent.com>
+
+	Don't get failed assertion for `tail -f directory'.
+	* src/tail.c: Revert most of 1999-10-20 change.  Instead, ...
+	(IS_TAILABLE_FILE_TYPE): Define to produce similar result.
+	(recheck): Use it here.
+	(tail_file): Use it here.
+	Reported by François Pinard.
+
 2000-03-03  Jim Meyering  <meyering@lucent.com>
 
 	* src/sort.c (fillbuf): Move declaration of local, cc, into scope of
