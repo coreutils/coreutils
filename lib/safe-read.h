@@ -7,4 +7,4 @@
 #endif
 
 ssize_t
-safe_read PARAMS ((int desc, char *ptr, size_t len));
+safe_read PARAMS ((int desc, void *ptr, size_t len));
