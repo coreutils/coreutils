@@ -231,8 +231,8 @@ my @tv = (
 ['10mb', '-w 35 -m -l 17 -f', [\'tFFt-lm', \'loli'], [\'w35ml17f-lm-lo'], 0],
 ['10mc', '-j -m -l 17 -f', [\'tFFt-lm', \'loli'], [\'jml17f-lm-lo'], 0],
 ['10md', '-w 35 -j -m -l 17 -f', [\'tFFt-lm', \'loli'], [\'w35jml17f-lmlo'], 0],
-['10me', '-n.3 -j -m -l 17 -f', [\'tFFt-lm', \'tFFt-lm', \'loli'], [\'njml17f-lm-lm-lo'], 0],
-['10mf', '-n.3 -j -m -l 17 -f', [\'tFFt-lm', \'loli', \'tFFt-lm'], [\'njml17f-lm-lo-lm'], 0],
+['10me', '-n.3 -j -m -l 17 -f', [\'tFFt-lm', \'tFFt-lm', \'loli'], [\'njml17f-lmlmlo'], 0],
+['10mf', '-n.3 -j -m -l 17 -f', [\'tFFt-lm', \'loli', \'tFFt-lm'], [\'njml17f-lmlolm'], 0],
 ['10aa', '-a -3 -l 17 -f', [\'tFFt-lm'], [\'a3l17f-lm'], 0],
 ['10ab', '-w 35 -a -3 -l 17 -f', [\'tFFt-lm'], [\'w35a3l17f-lm'], 0],
 ['10ac', '-j -a -3 -l 17 -f', [\'tFFt-lm'], [\'ja3l17f-lm'], 0],
@@ -247,8 +247,8 @@ my @tv = (
 ['11b', '-n.3 -s:--: -m -l 17 -f', [\'tFFt-bl', \'FnFn'], [\'nsml17-bl-FF'], 0],
 ['11e', '-n.3 -s:--: -m -l 13 -f', [\'tn', \'tn', \'FnFn'], [\'nsml13-t-t-FF'], 0],
 ['11f', '-n.3 -s:--: -m -l 17 -f', [\'tn', \'tn', \'FnFn'], [\'nsml17-t-t-FF'], 0],
-['11g', '-n.3 -s:--: -m -l 13 -f', [\'tn', \'tn', \'FnFn', \'FnFn'], [\'nsml13-t-t-FF-FF'], 0],
-['11h', '-n.3 -s:--: -m -l 17 -f', [\'tn', \'tn', \'FnFn', \'FnFn'], [\'nsml17-t-t-FF-FF'], 0],
+['11g', '-n.3 -s:--: -m -l 13 -f', [\'tn', \'tn', \'FnFn', \'FnFn'], [\'nsml13-t-tFFFF'], 0],
+['11h', '-n.3 -s:--: -m -l 17 -f', [\'tn', \'tn', \'FnFn', \'FnFn'], [\'nsml17-t-tFFFF'], 0],
 #
 # left margin (-o option) and separator string (-s option)
 ['12aa', '-o3 -a -3 -l17 -f', [\'tn'], [\'o3a3l17f-tn'], 0],
@@ -259,7 +259,7 @@ my @tv = (
 ['12bc', '-o3 -b -3 -s:--: -n. -l17 -f', [\'tn'], [\'o3b3snl17f-tn'], 0],
 ['12ma', '-o3 -m -l17 -f', [\'tFFt-bl', \'tn'], [\'o3ml17f-bl-tn'], 0],
 ['12mb', '-o3 -m -s:--: -l17 -f', [\'tFFt-bl', \'tn'], [\'o3msl17f-bl-tn'], 0],
-['12mc', '-o3 -m -s:--: -n. -l17 -f', [\'tFFt-bl', \'tn'], [\'o3msnl17f-bl-tn'], 0],
+['12mc', '-o3 -m -s:--: -n. -l17 -f', [\'tFFt-bl', \'tn'], [\'o3msnl17fbltn'], 0],
 ['12md', '-o3 -j -m -l17 -f', [\'tFFt-lm', \'loli'], [\'o3jml17f-lm-lo'], 0],
 
 );
