@@ -1,5 +1,8 @@
 2000-03-11  Jim Meyering  <meyering@lucent.com>
 
+	* tests/date/Test.pm: Set the default TZ value to UTC0, not UTC.
+	The latter didn't have any effect on alphaev56-dec-osf4.0f.
+
 	* src/chroot.c (usage): FIXME
 
 	Final merge with fileutils.
