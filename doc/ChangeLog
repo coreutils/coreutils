@@ -1,3 +1,9 @@
+2004-02-23  Paul Eggert  <eggert@twinsun.com>
+
+	* coreutils.texi (chown invocation): Document that chown now falls
+	back on USER.GROUP parsing regardless of POSIX version, as POSIX
+	1003.1-2001 allows that behavior as a compatible extension.
+
 2004-02-22  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (du invocation): Mention that using du's -H option
