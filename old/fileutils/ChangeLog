@@ -9,9 +9,11 @@ Sun Oct 29 06:06:13 1995  Jim Meyering  (meyering@comco.com)
 	(distclean): Remove .deps.
 	* src/Makefile.in: Likewise.
 
+	* src/Makefile.in (test.o): Remove special rule.
+
 	* mkdep-Makefile: New file.
 	* Makefile.in (DISTFILES): Add mkdep-Makefile.
-	
+
 	* doc/Makefile.in (mostlyclean): Remove *.info.
 
 	* touch.c: Change long option name `file' to `reference'.
