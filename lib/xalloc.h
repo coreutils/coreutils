@@ -21,9 +21,6 @@
 # define XALLOC_H_
 
 # include <stddef.h>
-# if HAVE_STDINT_H
-#  include <stdint.h>
-# endif
 
 # ifndef __attribute__
 #  if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 8) || __STRICT_ANSI__
@@ -71,14 +68,11 @@ char *xstrdup (const char *str);
    calculations, so the conservative dividend to use here is
    SIZE_MAX - 1, since SIZE_MAX might represent an overflowed value.
    However, malloc (SIZE_MAX) fails on all known hosts where
-   PTRDIFF_MAX < SIZE_MAX, so do not bother to test for
+   sizeof (ptrdiff_t) <= sizeof (size_t), so do not bother to test for
    exactly-SIZE_MAX allocations on such hosts; this avoids a test and
    branch when S is known to be 1.  */
-# if defined PTRDIFF_MAX && PTRDIFF_MAX < SIZE_MAX
-#  define xalloc_oversized(n, s) (SIZE_MAX / (s) < (n))
-# else /* SIZE_MAX might not be defined, so avoid (SIZE_MAX - 1).  */
-#  define xalloc_oversized(n, s) ((size_t) -2 / (s) < (n))
-# endif
+# define xalloc_oversized(n, s) \
+    ((size_t) (sizeof (ptrdiff_t) <= sizeof (size_t) ? -1 : -2) / (s) < (n))
 
 /* These macros are deprecated; they will go away soon, and are retained
    temporarily only to ease conversion to the functions described above.  */
