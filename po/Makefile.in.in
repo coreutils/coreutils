@@ -73,8 +73,8 @@ INSTOBJEXT = @INSTOBJEXT@
 	$(MAKE) $(PACKAGE).pot
 	$(MSGMERGE) $< $(srcdir)/$(PACKAGE).pot -o $*.pox
 
-@MAINT@.po.mo:
-@MAINT@	$(MSGFMT) -o $@ $<
+.po.mo:
+	$(MSGFMT) -o $@ $<
 
 .po.gmo:
 	file=$(srcdir)/`echo $* | sed 's,.*/,,'`.gmo \
