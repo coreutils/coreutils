@@ -1,6 +1,11 @@
-2004-10-05  Jim Meyering  <jim@meyering.net>
+2004-10-05  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	* src/ls.c (ignore_mode): Renamed from ignore, to avoid shadowing
+	problems.  All uses changed.
+
+2004-10-05  Jim Meyering  <jim@meyering.net>
 
 	* .x-sc_trailing_blank: Add an exclusion for config/texinfo.tex,
 	since Karl says its trailing blanks are there to stay :-)
