@@ -1,6 +1,10 @@
-2004-02-22  Jim Meyering  <jim@meyering.net>
+2004-02-23  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.2.1.
+
+	* src/seq.c (usage): Remove stray space after \n in --help output.
+
+2004-02-22  Jim Meyering  <jim@meyering.net>
 
 	* src/du.c (usage): Separate -H and --si.  Say that the meaning
 	of -H will soon change to that of --dereference-args (-D).
