@@ -258,11 +258,6 @@ quotearg_buffer (char *buffer, size_t buffersize,
 	    case '\t': c = 't'; goto store_escape;
 	    case '\v': c = 'v'; goto store_escape;
 
-	    case ' ':
-	      if (quoting_style == escape_quoting_style)
-		goto store_escape;
-	      break;
-
 	    case '"':
 	      if (quoting_style == c_quoting_style)
 		goto store_escape;
