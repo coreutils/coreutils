@@ -205,6 +205,9 @@ main (int argc, char **argv)
 	case 'o':
 	  owner_name = optarg;
 	  break;
+	case 'S':
+	  simple_backup_suffix = optarg;
+	  break;
         case 'V':
 	  version = optarg;
 	  break;
@@ -592,7 +595,14 @@ format, make all components of the given DIRECTORY(ies).\n\
   -S, --suffix=SUFFIX override the usual backup suffix\n\
   -V, --version-control=WORD   override the usual version control\n\
       --help          display this help and exit\n\
-      --version       output version information and exit\n"));
+      --version       output version information and exit\n\
+\n\
+The backup suffix is ~, unless set with SIMPLE_BACKUP_SUFFIX.  The\n\
+version control may be set with VERSION_CONTROL, values are:\n\
+\n\
+  t, numbered     make numbered backups\n\
+  nil, existing   numbered if numbered backups exist, simple otherwise\n\
+  never, simple   always make simple backups\n"));
     }
   exit (status);
 }
