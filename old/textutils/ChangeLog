@@ -1,3 +1,7 @@
+Thu May 16 22:18:41 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* Makefile.am (distcheck): New target.  From Gord Matzigkeit.
+
 Fri May 10 20:46:13 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* po/Makefile.in.in (all-yes): Always depend on CATALOGS.  Otherwise
