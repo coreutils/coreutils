@@ -2,6 +2,9 @@
 
 	* Version 4.5.4.
 
+	* Makefile.cfg (cvs_files): Define.  From autoconf.
+	(local_updates): Likewise.
+
 	* src/ls.c (restore_default_color_handler, sigtstp_handler):
 	Remove functions.
 	(sighandler): New function, based on the one in sort.c.
