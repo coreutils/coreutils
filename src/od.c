@@ -232,6 +232,9 @@ static char const *const *file_list;
 /* The input stream associated with the current file.  */
 static FILE *in_stream;
 
+/* If non-zero, at least one of the files we read was standard input.  */
+static int have_read_stdin;
+
 #define LONGEST_INTEGRAL_TYPE long int
 
 #define MAX_INTEGRAL_TYPE_SIZE sizeof(LONGEST_INTEGRAL_TYPE)
@@ -397,19 +400,16 @@ print_s_char (n_bytes, block, fmt_string)
      const char *block;
      const char *fmt_string;
 {
-  int i, err;
-  err = 0;
+  int i;
   for (i = n_bytes; i > 0; i--)
     {
-      int tmp = (unsigned) *(unsigned char *) block;
+      int tmp = (unsigned) *(const unsigned char *) block;
       if (tmp > SCHAR_MAX)
 	tmp = (SCHAR_MAX - tmp);
       assert (tmp <= SCHAR_MAX);
-      err |= (printf (fmt_string, tmp, (i == 1 ? '\n' : ' ')) == EOF);
+      printf (fmt_string, tmp, (i == 1 ? '\n' : ' '));
       block += sizeof (unsigned char);
     }
-  if (err)
-    error (2, errno, "standard output");
 }
 
 static void
@@ -418,16 +418,13 @@ print_char (n_bytes, block, fmt_string)
      const char *block;
      const char *fmt_string;
 {
-  int i, err;
-  err = 0;
+  int i;
   for (i = n_bytes; i > 0; i--)
     {
-      unsigned int tmp = *(unsigned char *) block;
-      err |= (printf (fmt_string, tmp, (i == 1 ? '\n' : ' ')) == EOF);
+      unsigned int tmp = *(const unsigned char *) block;
+      printf (fmt_string, tmp, (i == 1 ? '\n' : ' '));
       block += sizeof (unsigned char);
     }
-  if (err)
-    error (2, errno, "standard output");
 }
 
 static void
@@ -436,19 +433,16 @@ print_s_short (n_bytes, block, fmt_string)
      const char *block;
      const char *fmt_string;
 {
-  int i, err;
-  err = 0;
+  int i;
   for (i = n_bytes / sizeof (unsigned short); i > 0; i--)
     {
-      int tmp = (unsigned) *(unsigned short *) block;
+      int tmp = (unsigned) *(const unsigned short *) block;
       if (tmp > SHRT_MAX)
 	tmp = (SHRT_MAX - tmp);
       assert (tmp <= SHRT_MAX);
-      err |= (printf (fmt_string, tmp, (i == 1 ? '\n' : ' ')) == EOF);
+      printf (fmt_string, tmp, (i == 1 ? '\n' : ' '));
       block += sizeof (unsigned short);
     }
-  if (err)
-    error (2, errno, "standard output");
 }
 
 static void
@@ -457,16 +451,13 @@ print_short (n_bytes, block, fmt_string)
      const char *block;
      const char *fmt_string;
 {
-  int i, err;
-  err = 0;
+  int i;
   for (i = n_bytes / sizeof (unsigned short); i > 0; i--)
     {
-      unsigned int tmp = *(unsigned short *) block;
-      err |= (printf (fmt_string, tmp, (i == 1 ? '\n' : ' ')) == EOF);
+      unsigned int tmp = *(const unsigned short *) block;
+      printf (fmt_string, tmp, (i == 1 ? '\n' : ' '));
       block += sizeof (unsigned short);
     }
-  if (err)
-    error (2, errno, "standard output");
 }
 
 static void
@@ -475,16 +466,13 @@ print_int (n_bytes, block, fmt_string)
      const char *block;
      const char *fmt_string;
 {
-  int i, err;
-  err = 0;
+  int i;
   for (i = n_bytes / sizeof (unsigned int); i > 0; i--)
     {
-      unsigned int tmp = *(unsigned int *) block;
-      err |= (printf (fmt_string, tmp, (i == 1 ? '\n' : ' ')) == EOF);
+      unsigned int tmp = *(const unsigned int *) block;
+      printf (fmt_string, tmp, (i == 1 ? '\n' : ' '));
       block += sizeof (unsigned int);
     }
-  if (err)
-    error (2, errno, "standard output");
 }
 
 static void
@@ -493,16 +481,13 @@ print_long (n_bytes, block, fmt_string)
      const char *block;
      const char *fmt_string;
 {
-  int i, err;
-  err = 0;
+  int i;
   for (i = n_bytes / sizeof (unsigned long); i > 0; i--)
     {
-      unsigned long tmp = *(unsigned long *) block;
-      err |= (printf (fmt_string, tmp, (i == 1 ? '\n' : ' ')) == EOF);
+      unsigned long tmp = *(const unsigned long *) block;
+      printf (fmt_string, tmp, (i == 1 ? '\n' : ' '));
       block += sizeof (unsigned long);
     }
-  if (err)
-    error (2, errno, "standard output");
 }
 
 static void
@@ -511,16 +496,13 @@ print_float (n_bytes, block, fmt_string)
      const char *block;
      const char *fmt_string;
 {
-  int i, err;
-  err = 0;
+  int i;
   for (i = n_bytes / sizeof (float); i > 0; i--)
     {
-      float tmp = *(float *) block;
-      err |= (printf (fmt_string, tmp, (i == 1 ? '\n' : ' ')) == EOF);
+      float tmp = *(const float *) block;
+      printf (fmt_string, tmp, (i == 1 ? '\n' : ' '));
       block += sizeof (float);
     }
-  if (err)
-    error (2, errno, "standard output");
 }
 
 static void
@@ -529,16 +511,13 @@ print_double (n_bytes, block, fmt_string)
      const char *block;
      const char *fmt_string;
 {
-  int i, err;
-  err = 0;
+  int i;
   for (i = n_bytes / sizeof (double); i > 0; i--)
     {
-      double tmp = *(double *) block;
-      err |= (printf (fmt_string, tmp, (i == 1 ? '\n' : ' ')) == EOF);
+      double tmp = *(const double *) block;
+      printf (fmt_string, tmp, (i == 1 ? '\n' : ' '));
       block += sizeof (double);
     }
-  if (err)
-    error (2, errno, "standard output");
 }
 
 #ifdef __STDC__
@@ -548,16 +527,13 @@ print_long_double (n_bytes, block, fmt_string)
      const char *block;
      const char *fmt_string;
 {
-  int i, err;
-  err = 0;
+  int i;
   for (i = n_bytes / sizeof (LONG_DOUBLE); i > 0; i--)
     {
-      LONG_DOUBLE tmp = *(LONG_DOUBLE *) block;
-      err |= (printf (fmt_string, tmp, (i == 1 ? '\n' : ' ')) == EOF);
+      LONG_DOUBLE tmp = *(const LONG_DOUBLE *) block;
+      printf (fmt_string, tmp, (i == 1 ? '\n' : ' '));
       block += sizeof (LONG_DOUBLE);
     }
-  if (err)
-    error (2, errno, "standard output");
 }
 
 #endif
@@ -571,7 +547,7 @@ print_named_ascii (n_bytes, block, unused_fmt_string)
   int i;
   for (i = n_bytes; i > 0; i--)
     {
-      unsigned int c = *(unsigned char *) block;
+      unsigned int c = *(const unsigned char *) block;
       unsigned int masked_c = (0x7f & c);
       const char *s;
       char buf[5];
@@ -586,8 +562,7 @@ print_named_ascii (n_bytes, block, unused_fmt_string)
 	  s = buf;
 	}
 
-      if (printf ("%3s%c", s, (i == 1 ? '\n' : ' ')) == EOF)
-	error (2, errno, "standard output");
+      printf ("%3s%c", s, (i == 1 ? '\n' : ' '));
       block += sizeof (unsigned char);
     }
 }
@@ -601,7 +576,7 @@ print_ascii (n_bytes, block, unused_fmt_string)
   int i;
   for (i = n_bytes; i > 0; i--)
     {
-      unsigned int c = *(unsigned char *) block;
+      unsigned int c = *(const unsigned char *) block;
       const char *s;
       char buf[5];
 
@@ -640,12 +615,11 @@ print_ascii (n_bytes, block, unused_fmt_string)
 	  break;
 
 	default:
-	  sprintf (buf, (isprint (c) ? "  %c" : "%03o"), c);
+	  sprintf (buf, (isascii (c) && isprint (c) ? "  %c" : "%03o"), c);
 	  s = (const char *) buf;
 	}
 
-      if (printf ("%3s%c", s, (i == 1 ? '\n' : ' ')) == EOF)
-	error (2, errno, "standard output");
+      printf ("%3s%c", s, (i == 1 ? '\n' : ' '));
       block += sizeof (unsigned char);
     }
 }
@@ -691,7 +665,7 @@ simple_strtoul (s, p, val)
        print_function = print_int; (assuming size == INT)
        fmt_string = "%011d%c";
       }
-*/
+   */
 
 static int
 decode_one_format (s, next, tspec)
@@ -861,9 +835,9 @@ decode_one_format (s, next, tspec)
 
       switch (size_spec)
 	{
-	  /* Don't use %#e; not all systems support it.  */
 	case FP_SINGLE:
 	  print_function = print_float;
+	  /* Don't use %#e; not all systems support it.  */
 	  pre_fmt_string = "%%%d.%de%%c";
 	  fmt_string = xmalloc (strlen (pre_fmt_string));
 	  sprintf (fmt_string, pre_fmt_string,
@@ -966,11 +940,14 @@ decode_format_string (s)
    When possible, use seek- rather than read operations to advance
    IN_STREAM.  A file name of "-" is interpreted as standard input.  */
 
-static void
+static int
 skip (n_skip)
      long unsigned int n_skip;
 {
-  for ( /*empty */ ; *file_list != NULL; ++file_list)
+  int err;
+
+  err = 0;
+  for ( /* empty */ ; *file_list != NULL; ++file_list)
     {
       struct stat file_stats;
       int j;
@@ -979,19 +956,24 @@ skip (n_skip)
 	{
 	  input_filename = "standard input";
 	  in_stream = stdin;
+	  have_read_stdin = 1;
 	}
       else
 	{
 	  input_filename = *file_list;
 	  in_stream = fopen (input_filename, "r");
 	  if (in_stream == NULL)
-	    error (2, errno, "%s", input_filename);
+	    {
+	      error (0, errno, "%s", input_filename);
+	      err = 1;
+	      continue;
+	    }
 	}
 
       if (n_skip == 0)
 	break;
 
-      /* First try using fseek.  For large offsets, all this work is
+      /* First try using fseek.  For large offsets, this extra work is
 	 worthwhile.  If the offset is below some threshold it may be
 	 more efficient to move the pointer by reading.  There are two
 	 issues when trying to use fseek:
@@ -1002,7 +984,11 @@ skip (n_skip)
 	     But that will work only for regular files and dirs.  */
 
       if (fstat (fileno (in_stream), &file_stats))
-	error (2, errno, "%s", input_filename);
+	{
+	  error (0, errno, "%s", input_filename);
+	  err = 1;
+	  continue;
+	}
 
       /* The st_size field is valid only for regular files and
 	 directories.  FIXME: is the preceding true?
@@ -1014,10 +1000,10 @@ skip (n_skip)
 	  if (n_skip >= file_stats.st_size)
 	    {
 	      n_skip -= file_stats.st_size;
-	      if (in_stream != stdin)
+	      if (in_stream != stdin && fclose (in_stream))
 		{
-		  if (fclose (in_stream))
-		    error (2, errno, "%s", input_filename);
+		  error (0, errno, "%s", input_filename);
+		  err = 1;
 		}
 	      continue;
 	    }
@@ -1043,12 +1029,7 @@ skip (n_skip)
 	  n_bytes_read = fread (buf, 1, n_bytes_to_read, in_stream);
 	  n_skip -= n_bytes_read;
 	  if (n_bytes_read != n_bytes_to_read)
-	    {
-	      if (ferror (in_stream))
-		error (2, errno, "%s", input_filename);
-	      else
-		break;
-	    }
+	    break;
 	}
 
       if (n_skip == 0)
@@ -1057,6 +1038,8 @@ skip (n_skip)
 
   if (n_skip != 0)
     error (2, 0, "cannot skip past end of combined input");
+
+  return err;
 }
 
 static const char *
@@ -1120,66 +1103,107 @@ write_block (current_offset, n_bytes, prev_block, curr_block)
       prev_pair_equal = 0;
       for (i = 0; i < n_specs; i++)
 	{
-	  if (printf ("%s ", (i == 0
-			      ? format_address (current_offset)
-			      : address_pad))
-	      == EOF)
-	    error (2, errno, "standard output");
+	  printf ("%s ", (i == 0
+			  ? format_address (current_offset)
+			  : address_pad));
 	  (*spec[i].print_function) (n_bytes, curr_block, spec[i].fmt_string);
 	}
     }
   first = 0;
 }
 
-/* Read and return a single byte from the concatenation of the input
-   files named in the global array FILE_LIST.  On the first call to this
+/* Test whether there have been errors on in_stream, and close it if
+   it is not standard input.  Return non-zero if there has been an error
+   on in_stream or stdout; return zero otherwise.  This function will
+   report more than one error only if both a read and a write error
+   have occurred.  */
+
+static int
+check_and_close ()
+{
+  int err;
+
+  err = 0;
+  if (ferror (in_stream))
+    {
+      error (0, errno, "%s", input_filename);
+      if (in_stream != stdin)
+	fclose (in_stream);
+      err = 1;
+    }
+  else if (in_stream != stdin && fclose (in_stream) == EOF)
+    {
+      error (0, errno, "%s", input_filename);
+      err = 1;
+    }
+
+  if (ferror (stdout))
+    {
+      error (0, errno, "standard output");
+      err = 1;
+    }
+
+  return err;
+}
+
+/* Read a single byte into *C from the concatenation of the input files
+   named in the global array FILE_LIST.  On the first call to this
    function, the global variable IN_STREAM is expected to be an open
    stream associated with the input file *FILE_LIST.  If IN_STREAM is
    at end-of-file, close it and update the global variables IN_STREAM,
    FILE_LIST, and INPUT_FILENAME so they correspond to the next file in
    the list.  Then try to read a byte from the newly opened file.
-   Repeat if necessary until *FILE_LIST is NULL.  Upon any read-, open-,
-   or close error give a message and exit. When EOF is reached for the
-   last file in FILE_LIST, return EOF.  Any subsequent calls return EOF.  */
+   Repeat if necessary until *FILE_LIST is NULL.  When EOF is reached
+   for the last file in FILE_LIST, set *C to EOF and return.  Subsequent
+   calls do likewise.  The return value is non-zero if any errors
+   occured, zero otherwise.  */
 
 static int
-read_char ()
+read_char (c)
+     int *c;
 {
-  if (*file_list == NULL)
-    return EOF;
+  int err;
 
+  if (*file_list == NULL)
+    {
+      *c = EOF;
+      return 0;
+    }
+
+  err = 0;
   while (1)
     {
-      int c;
+      *c = fgetc (in_stream);
 
-      c = fgetc (in_stream);
+      if (*c != EOF)
+	return err;
 
-      if (c != EOF)
-	return c;
+      err |= check_and_close ();
 
-      if (errno != 0)
-	error (2, errno, "%s", input_filename);
-
-      if (in_stream != stdin)
-	if (fclose (in_stream) == EOF)
-	  error (2, errno, "%s", input_filename);
-
-      ++file_list;
-      if (*file_list == NULL)
-	return EOF;
-
-      if (STREQ (*file_list, "-"))
+      do
 	{
-	  input_filename = "standard input";
-	  in_stream = stdin;
+	  ++file_list;
+	  if (*file_list == NULL)
+	    return err;
+
+	  if (STREQ (*file_list, "-"))
+	    {
+	      input_filename = "standard input";
+	      in_stream = stdin;
+	      have_read_stdin = 1;
+	    }
+	  else
+	    {
+	      input_filename = *file_list;
+	      in_stream = fopen (input_filename, "r");
+	      if (in_stream == NULL)
+		{
+		  error (0, errno, "%s", input_filename);
+		  err = 1;
+		}
+	    }
 	}
-      else
-	{
-	  input_filename = *file_list;
-	  in_stream = fopen (input_filename, "r");
-	  if (in_stream == NULL)
-	    error (2, errno, "%s", input_filename);
-	}
+      while (in_stream == NULL);
     }
 }
 
@@ -1191,62 +1215,70 @@ read_char ()
    If all N bytes cannot be read from IN_STREAM, close IN_STREAM and
    update the global variables IN_STREAM, FILE_LIST, and INPUT_FILENAME.
    Then try to read the remaining bytes from the newly opened file.
-   Repeat if necessary until *FILE_LIST is NULL.  Upon any read-, open-,
-   or close error give a message and exit.  Otherwise, return the number
-   of bytes read.  */
+   Repeat if necessary until *FILE_LIST is NULL.  Set *N_BYTES_IN_BUFFER
+   to the number of bytes read.  If an error occurs, it will be detected
+   through ferror when the stream is about to be closed.  If there is an
+   error, give a message but continue reading as usual and return non-zero.
+   Otherwise return zero.  */
 
-static unsigned long int
-read_block (n, block)
+static int
+read_block (n, block, n_bytes_in_buffer)
      size_t n;
      char *block;
+     size_t *n_bytes_in_buffer;
 {
-  unsigned long int n_bytes_in_buffer;
+  int err;
 
   assert (n > 0 && n <= bytes_per_block);
+
+  *n_bytes_in_buffer = 0;
+
   if (n == 0)
     return 0;
-
-  n_bytes_in_buffer = 0;
 
   if (*file_list == NULL)
     return 0;			/* EOF.  */
 
+  err = 0;
   while (1)
     {
       size_t n_needed;
       size_t n_read;
 
-      n_needed = n - n_bytes_in_buffer;
-      n_read = fread (block + n_bytes_in_buffer, 1, n_needed, in_stream);
+      n_needed = n - *n_bytes_in_buffer;
+      n_read = fread (block + *n_bytes_in_buffer, 1, n_needed, in_stream);
 
-      if (ferror (in_stream))
-	error (2, errno, "%s", input_filename);
+      *n_bytes_in_buffer += n_read;
 
       if (n_read == n_needed)
-	return n;
+	return err;
 
-      n_bytes_in_buffer += n_read;
+      err |= check_and_close ();
 
-      if (in_stream != stdin)
-	if (fclose (in_stream) == EOF)
-	  error (2, errno, "%s", input_filename);
-
-      ++file_list;
-      if (*file_list == NULL)
-	return n_bytes_in_buffer;
-
-      if (STREQ (*file_list, "-"))
+      do
 	{
-	  input_filename = "standard input";
-	  in_stream = stdin;
+	  ++file_list;
+	  if (*file_list == NULL)
+	    return err;
+
+	  if (STREQ (*file_list, "-"))
+	    {
+	      input_filename = "standard input";
+	      in_stream = stdin;
+	      have_read_stdin = 1;
+	    }
+	  else
+	    {
+	      input_filename = *file_list;
+	      in_stream = fopen (input_filename, "r");
+	      if (in_stream == NULL)
+		{
+		  error (0, errno, "%s", input_filename);
+		  err = 1;
+		}
+	    }
 	}
-      else
-	{
-	  input_filename = *file_list;
-	  in_stream = fopen (input_filename, "r");
-	  if (in_stream == NULL)
-	    error (2, errno, "%s", input_filename);
-	}
+      while (in_stream == NULL);
     }
 }
 
@@ -1264,7 +1296,7 @@ get_lcm ()
   return l_c_m;
 }
 
-/* Read chunks of size BYTES_PER_BLOCK from the input files, write the
+/* Read a chunk of size BYTES_PER_BLOCK from the input files, write the
    formatted block to standard output, and repeat until the specified
    maximum number of bytes has been read or until all input has been
    processed.  If the last block read is smaller than BYTES_PER_BLOCK
@@ -1272,31 +1304,37 @@ get_lcm ()
    spec, extend the input block with zero bytes until its length is a
    multiple of all format spec sizes.  Write the final block.  Finally,
    write on a line by itself the offset of the byte after the last byte
-   read.  */
+   read.  Accumulate return values from calls to read_block and
+   check_and_close, and if any was non-zero, return non-zero.
+   Otherwise, return zero.  */
 
-static void
+static int
 dump ()
 {
   char *block[2];
   unsigned long int current_offset;
-  int idx = 0;
+  int idx;
+  int err;
   size_t n_bytes_read;
+  size_t end_offset;
 
   block[0] = (char *) alloca (bytes_per_block);
   block[1] = (char *) alloca (bytes_per_block);
 
   current_offset = n_bytes_to_skip;
 
+  idx = 0;
+  err = 0;
   if (limit_bytes_to_format)
     {
-      size_t end_offset = n_bytes_to_skip + max_bytes_to_format;
+      end_offset = n_bytes_to_skip + max_bytes_to_format;
 
       n_bytes_read = 0;
       while (current_offset < end_offset)
 	{
 	  size_t n_needed;
 	  n_needed = MIN (end_offset - current_offset, bytes_per_block);
-	  n_bytes_read = read_block (n_needed, block[idx]);
+	  err |= read_block (n_needed, block[idx], &n_bytes_read);
 	  if (n_bytes_read < bytes_per_block)
 	    break;
 	  assert (n_bytes_read == bytes_per_block);
@@ -1310,7 +1348,7 @@ dump ()
     {
       while (1)
 	{
-	  n_bytes_read = read_block (bytes_per_block, block[idx]);
+	  err |= read_block (bytes_per_block, block[idx], &n_bytes_read);
 	  if (n_bytes_read < bytes_per_block)
 	    break;
 	  assert (n_bytes_read == bytes_per_block);
@@ -1339,25 +1377,30 @@ dump ()
     }
 
   if (output_address_fmt_string != NULL)
-    {
-      if (printf ("%s\n", format_address (current_offset)) == EOF)
-	error (2, errno, "standard output");
-    }
+    printf ("%s\n", format_address (current_offset));
+
+  if (limit_bytes_to_format && current_offset > end_offset)
+    err |= check_and_close ();
+
+  return err;
 }
 
-/* STRINGS mode.  Find each "string constant" in the file.
-   A string constant is a run of at least `string_min' ASCII graphic
-   (or formatting) characters terminated by a null.  Based on a
-   function written by Richard Stallman for a pre-POSIX
-   version of od.  */
+/* STRINGS mode.  Find each "string constant" in the input.
+   A string constant is a run of at least `string_min' ASCII
+   graphic (or formatting) characters terminated by a null.
+   Based on a function written by Richard Stallman for a
+   pre-POSIX version of od.  Return non-zero if an error
+   occurs.  Otherwise, return zero.  */
 
-static void
+static int
 dump_strings ()
 {
   int bufsize = MAX (100, string_min);
   char *buf = xmalloc (bufsize);
   unsigned long address = n_bytes_to_skip;
+  int err;
 
+  err = 0;
   while (1)
     {
       int i;
@@ -1372,11 +1415,14 @@ dump_strings ()
 
       for (i = 0; i < string_min; i++)
 	{
-	  c = read_char ();
+	  err |= read_char (&c);
 	  address++;
 	  if (c < 0)
-	    return;
-	  if (!isprint (c))
+	    {
+	      free (buf);
+	      return err;
+	    }
+	  if (!(isascii (c) && isprint (c)))
 	    /* Found a non-printing.  Try again starting with next char.  */
 	    goto tryline;
 	  buf[i] = c;
@@ -1392,13 +1438,16 @@ dump_strings ()
 	      bufsize = 1 + 3 * bufsize / 2;
 	      buf = xrealloc (buf, bufsize);
 	    }
-	  c = read_char ();
+	  err |= read_char (&c);
 	  address++;
 	  if (c < 0)
-	    return;
+	    {
+	      free (buf);
+	      return err;
+	    }
 	  if (c == '\0')
 	    break;		/* It is; print this string.  */
-	  if (!isprint (c))
+	  if (!(isascii (c) && isprint (c)))
 	    goto tryline;	/* It isn't; give up on this string.  */
 	  buf[i++] = c;		/* String continues; store it all.  */
 	}
@@ -1408,55 +1457,57 @@ dump_strings ()
       buf[i] = 0;
       if (output_address_fmt_string != NULL)
 	{
-	  if (printf ("%s ", format_address (address - i - 1)) == EOF)
-	    error (2, errno, "standard output");
+	  printf ("%s ", format_address (address - i - 1));
 	}
       for (i = 0; (c = buf[i]); i++)
 	{
-	  int err;
 	  switch (c)
 	    {
 	    case '\007':
-	      err = fputs ("\\a", stdout);
+	      fputs ("\\a", stdout);
 	      break;
 
 	    case '\b':
-	      err = fputs ("\\b", stdout);
+	      fputs ("\\b", stdout);
 	      break;
 
 	    case '\f':
-	      err = fputs ("\\f", stdout);
+	      fputs ("\\f", stdout);
 	      break;
 
 	    case '\n':
-	      err = fputs ("\\n", stdout);
+	      fputs ("\\n", stdout);
 	      break;
 
 	    case '\r':
-	      err = fputs ("\\r", stdout);
+	      fputs ("\\r", stdout);
 	      break;
 
 	    case '\t':
-	      err = fputs ("\\t", stdout);
+	      fputs ("\\t", stdout);
 	      break;
 
 	    case '\v':
-	      err = fputs ("\\v", stdout);
+	      fputs ("\\v", stdout);
 	      break;
 
 	    default:
-	      err = putchar (c);
+	      putc (c, stdout);
 	    }
-	  if (err == EOF)
-	    error (2, errno, "standard output");
 	}
-      if (putchar ('\n') == EOF)
-	error (2, errno, "standard output");
+      putchar ('\n');
     }
+
+  /* We reach this point only if we search through
+     (max_bytes_to_format - string_min) bytes before reachine EOF.  */
+
   free (buf);
+
+  err |= check_and_close ();
+  return err;
 }
 
-void
+int
 main (argc, argv)
      int argc;
      char **argv;
@@ -1468,8 +1519,10 @@ main (argc, argv)
   unsigned int address_pad_len;
   unsigned long int desired_width;
   int width_specified = 0;
+  int err;
 
   program_name = argv[0];
+  err = 0;
 
   for (i = 0; i <= MAX_INTEGRAL_TYPE_SIZE; i++)
     integral_type_size[i] = NO_SIZE;
@@ -1501,7 +1554,7 @@ main (argc, argv)
 			   long_options, (int *) 0))
 	 != EOF)
     {
-      strtoul_error err;
+      strtoul_error s_err;
 
       switch (c)
 	{
@@ -1533,17 +1586,17 @@ main (argc, argv)
 	  break;
 
 	case 'j':
-	  err = my_strtoul (optarg, 0, &n_bytes_to_skip, 1);
-	  if (err != UINT_OK)
-	    uint_fatal_error (optarg, "skip argument", err);
+	  s_err = my_strtoul (optarg, 0, &n_bytes_to_skip, 1);
+	  if (s_err != UINT_OK)
+	    uint_fatal_error (optarg, "skip argument", s_err);
 	  break;
 
 	case 'N':
 	  limit_bytes_to_format = 1;
 
-	  err = my_strtoul (optarg, 0, &max_bytes_to_format, 1);
-	  if (err != UINT_OK)
-	    uint_fatal_error (optarg, "limit argument", err);
+	  s_err = my_strtoul (optarg, 0, &max_bytes_to_format, 1);
+	  if (s_err != UINT_OK)
+	    uint_fatal_error (optarg, "limit argument", s_err);
 	  break;
 
 	case 's':
@@ -1551,9 +1604,9 @@ main (argc, argv)
 	    string_min = 3;
 	  else
 	    {
-	      err = my_strtoul (optarg, 0, &string_min, 1);
-	      if (err != UINT_OK)
-		uint_fatal_error (optarg, "minimum string length", err);
+	      s_err = my_strtoul (optarg, 0, &string_min, 1);
+	      if (s_err != UINT_OK)
+		uint_fatal_error (optarg, "minimum string length", s_err);
 	    }
 	  ++flag_dump_strings;
 	  break;
@@ -1574,7 +1627,11 @@ main (argc, argv)
 
 #define CASE_OLD_ARG(old_char,new_string)				\
 	case old_char:							\
-	  assert (decode_format_string (new_string) == 0);		\
+	  {								\
+	    int tmp;							\
+	    tmp = decode_format_string (new_string);			\
+	    assert (tmp == 0);						\
+	  }								\
 	  break
 
 	  CASE_OLD_ARG ('a', "a");
@@ -1598,8 +1655,8 @@ main (argc, argv)
 	    }
 	  else
 	    {
-	      err = my_strtoul (optarg, 10, &desired_width, 0);
-	      if (err != UINT_OK)
+	      s_err = my_strtoul (optarg, 10, &desired_width, 0);
+	      if (s_err != UINT_OK)
 		error (2, 0, "invalid width specification `%s'", optarg);
 	    }
 	  break;
@@ -1620,9 +1677,9 @@ main (argc, argv)
 
   if (n_specs == 0)
     {
-      int err = decode_one_format ("o2", NULL, &(spec[0]));
+      int d_err = decode_one_format ("o2", NULL, &(spec[0]));
 
-      assert (err == 0);
+      assert (d_err == 0);
       n_specs = 1;
     }
 
@@ -1634,12 +1691,12 @@ main (argc, argv)
       /* If no files were listed on the command line, set up the
 	 global array FILE_LIST so that it contains the null-terminated
 	 list of one name: "-".  */
-      static char const * const default_file_list[] = {"-", NULL};
+      static char const *const default_file_list[] = {"-", NULL};
 
       file_list = default_file_list;
     }
 
-  skip (n_bytes_to_skip);
+  err |= skip (n_bytes_to_skip);
 
   /* Compute output block length.  */
   l_c_m = get_lcm ();
@@ -1671,14 +1728,13 @@ main (argc, argv)
     }
 #endif
 
-  if (flag_dump_strings)
-    {
-      dump_strings ();
-    }
-  else
-    {
-      dump ();
-    }
+  err |= (flag_dump_strings ? dump_strings () : dump ()); 
 
-  exit (0);
+  if (have_read_stdin && fclose (stdin) == EOF)
+    error (2, errno, "standard input");
+
+  if (fclose (stdout) == EOF)
+    error (2, errno, "write error");
+
+  exit (err);
 }
