@@ -1,0 +1,27 @@
+#!/bin/sh
+
+: ${RM=rm}
+test=sunos-1
+
+if test "$VERBOSE" = yes; then
+  set -x
+  $RM --version
+fi
+
+tmp=t-rm.$$
+
+test_failure=0
+mkdir $tmp || test_failure=1
+
+if test $test_failure = 1; then
+  echo 'failure in testing framework'
+  exit 1
+fi
+
+fail=0
+cd $tmp
+$RM '' && fail=1
+cd ..
+rm -rf $tmp
+
+exit $fail
