@@ -14,7 +14,9 @@ fi
 tmp=$RM_TMPDIR/t-rm.$$
 
 test_failure=0
-touch $tmp/a || test_failure=1
+mkdir $tmp || test_failure=1
+: > $tmp/a || test_failure=1
+test -f $tmp/a || test_failure=1
 
 if test $test_failure = 1; then
   echo 'failure in testing framework'
@@ -29,11 +31,11 @@ n
 EOF
 
 fail=0
-$RM -i $tmp/a < $tmp/$test.In > /dev/null || fail=1
+$RM -i $tmp/a < $tmp/$test.In > /dev/null 2>&1 || fail=1
 # The file should not have been removed.
 test -f $tmp/a || fail=1
 
-$RM -i $tmp/a < $tmp/$test.In > /dev/null || fail=1
+$RM -i $tmp/a < $tmp/$test.Iy > /dev/null 2>&1 || fail=1
 # The file should have been removed this time.
 test -f $tmp/a && fail=1
 
