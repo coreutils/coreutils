@@ -1,7 +1,7 @@
 \input texinfo
 @c %**start of header
-@setfilename omni-utils.info
-@settitle @sc{gnu} Omni-utils
+@setfilename coreutils.info
+@settitle @sc{gnu} Core-utils
 
 @c %**end of header
 
@@ -23,94 +23,94 @@
 @ifinfo
 @format
 START-INFO-DIR-ENTRY
-* @sc{gnu} Utilities: (omni-utils).              @sc{gnu} Utilities.
+* @sc{gnu} Utilities: (coreutils).              @sc{gnu} Utilities.
 * Common options:                                Common options.
 * File permissions:                              Access modes.
 * Date input formats:                            Specifying date strings.
 * Opening the software toolbox:                  The software tools philosophy.
 * GNU Free Documentation License:                The license for this documentation.
 
-* basename: (omni-utils)basename invocation.     Strip directory and suffix.
-* cat: (omni-utils)cat invocation.               Concatenate and write files.
-* chgrp: (omni-utils)chgrp invocation.           Change file groups.
-* chmod: (omni-utils)chmod invocation.           Change file permissions.
-* chown: (omni-utils)chown invocation.           Change file owners/groups.
-* chroot: (omni-utils)chroot invocation.         Specify the root directory.
-* cksum: (omni-utils)cksum invocation.           Print @sc{posix} CRC checksum.
-* comm: (omni-utils)comm invocation.             Compare sorted files by line.
-* cp: (omni-utils)cp invocation.                 Copy files.
-* csplit: (omni-utils)csplit invocation.         Split by context.
-* cut: (omni-utils)cut invocation.               Print selected parts of lines.
-* date: (omni-utils)date invocation.             Print/set system date and time.
-* dd: (omni-utils)dd invocation.                 Copy and convert a file.
-* df: (omni-utils)df invocation.                 Report filesystem disk usage.
-* dir: (omni-utils)dir invocation.               List directories briefly.
-* dircolors: (omni-utils)dircolors invocation.   Color setup for ls.
-* dirname: (omni-utils)dirname invocation.       Strip non-directory suffix.
-* du: (omni-utils)du invocation.                 Report on disk usage.
-* echo: (omni-utils)echo invocation.             Print a line of text.
-* env: (omni-utils)env invocation.               Modify the environment.
-* expand: (omni-utils)expand invocation.         Convert tabs to spaces.
-* expr: (omni-utils)expr invocation.             Evaluate expressions.
-* factor: (omni-utils)factor invocation.         Print prime factors
-* false: (omni-utils)false invocation.           Do nothing, unsuccessfully.
-* fmt: (omni-utils)fmt invocation.               Reformat paragraph text.
-* fold: (omni-utils)fold invocation.             Wrap long input lines.
-* groups: (omni-utils)groups invocation.         Print group names a user is in.
-* head: (omni-utils)head invocation.             Output the first part of files.
-* hostid: (omni-utils)hostid invocation.         Print numeric host identifier.
-* hostname: (omni-utils)hostname invocation.     Print or set system name.
-* id: (omni-utils)id invocation.                 Print real/effective uid/gid.
-* install: (omni-utils)install invocation.       Copy and change attributes.
-* join: (omni-utils)join invocation.             Join lines on a common field.
-* ln: (omni-utils)ln invocation.                 Make links between files.
-* logname: (omni-utils)logname invocation.       Print current login name.
-* ls: (omni-utils)ls invocation.                 List directory contents.
-* md5sum: (omni-utils)md5sum invocation.         Print or check message-digests.
-* mkdir: (omni-utils)mkdir invocation.           Create directories.
-* mkfifo: (omni-utils)mkfifo invocation.         Create FIFOs (named pipes).
-* mknod: (omni-utils)mknod invocation.           Create special files.
-* mv: (omni-utils)mv invocation.                 Rename files.
-* nice: (omni-utils)nice invocation.             Modify scheduling priority.
-* nl: (omni-utils)nl invocation.                 Number lines and write files.
-* nohup: (omni-utils)nohup invocation.           Immunize to hangups.
-* od: (omni-utils)od invocation.                 Dump files in octal, etc.
-* paste: (omni-utils)paste invocation.           Merge lines of files.
-* pathchk: (omni-utils)pathchk invocation.       Check file name portability.
-* pr: (omni-utils)pr invocation.                 Paginate or columnate files.
-* printenv: (omni-utils)printenv invocation.     Print environment variables.
-* printf: (omni-utils)printf invocation.         Format and print data.
-* ptx: (omni-utils)ptx invocation.               Produce permuted indexes.
-* pwd: (omni-utils)pwd invocation.               Print working directory.
-* rm: (omni-utils)rm invocation.                 Remove files.
-* rmdir: (omni-utils)rmdir invocation.           Remove empty directories.
-* seq: (omni-utils)seq invocation.               Print numeric sequences
-* shred: (omni-utils)shred invocation.           Remove files more securely.
-* sleep: (omni-utils)sleep invocation.           Delay for a specified time.
-* sort: (omni-utils)sort invocation.             Sort text files.
-* split: (omni-utils)split invocation.           Split into fixed-size pieces.
-* stty: (omni-utils)stty invocation.             Print/change terminal settings.
-* su: (omni-utils)su invocation.                 Modify user and group id.
-* sum: (omni-utils)sum invocation.               Print traditional checksum.
-* sync: (omni-utils)sync invocation.             Synchronize memory and disk.
-* tac: (omni-utils)tac invocation.               Reverse files.
-* tail: (omni-utils)tail invocation.             Output the last part of files.
-* tee: (omni-utils)tee invocation.               Redirect to multiple files.
-* test: (omni-utils)test invocation.             File/string tests.
-* touch: (omni-utils)touch invocation.           Change file timestamps.
-* tr: (omni-utils)tr invocation.                 Translate characters.
-* true: (omni-utils)true invocation.             Do nothing, successfully.
-* tsort: (omni-utils)tsort invocation.           Topological sort.
-* tty: (omni-utils)tty invocation.               Print terminal name.
-* uname: (omni-utils)uname invocation.           Print system information.
-* unexpand: (omni-utils)unexpand invocation.     Convert spaces to tabs.
-* uniq: (omni-utils)uniq invocation.             Uniquify files.
-* users: (omni-utils)users invocation.           Print current user names.
-* vdir: (omni-utils)vdir invocation.             List directories verbosely.
-* wc: (omni-utils)wc invocation.                 Byte, word, and line counts.
-* who: (omni-utils)who invocation.               Print who is logged in.
-* whoami: (omni-utils)whoami invocation.         Print effective user id.
-* yes: (omni-utils)yes invocation.               Print a string indefinitely.
+* basename: (coreutils)basename invocation.     Strip directory and suffix.
+* cat: (coreutils)cat invocation.               Concatenate and write files.
+* chgrp: (coreutils)chgrp invocation.           Change file groups.
+* chmod: (coreutils)chmod invocation.           Change file permissions.
+* chown: (coreutils)chown invocation.           Change file owners/groups.
+* chroot: (coreutils)chroot invocation.         Specify the root directory.
+* cksum: (coreutils)cksum invocation.           Print @sc{posix} CRC checksum.
+* comm: (coreutils)comm invocation.             Compare sorted files by line.
+* cp: (coreutils)cp invocation.                 Copy files.
+* csplit: (coreutils)csplit invocation.         Split by context.
+* cut: (coreutils)cut invocation.               Print selected parts of lines.
+* date: (coreutils)date invocation.             Print/set system date and time.
+* dd: (coreutils)dd invocation.                 Copy and convert a file.
+* df: (coreutils)df invocation.                 Report filesystem disk usage.
+* dir: (coreutils)dir invocation.               List directories briefly.
+* dircolors: (coreutils)dircolors invocation.   Color setup for ls.
+* dirname: (coreutils)dirname invocation.       Strip non-directory suffix.
+* du: (coreutils)du invocation.                 Report on disk usage.
+* echo: (coreutils)echo invocation.             Print a line of text.
+* env: (coreutils)env invocation.               Modify the environment.
+* expand: (coreutils)expand invocation.         Convert tabs to spaces.
+* expr: (coreutils)expr invocation.             Evaluate expressions.
+* factor: (coreutils)factor invocation.         Print prime factors
+* false: (coreutils)false invocation.           Do nothing, unsuccessfully.
+* fmt: (coreutils)fmt invocation.               Reformat paragraph text.
+* fold: (coreutils)fold invocation.             Wrap long input lines.
+* groups: (coreutils)groups invocation.         Print group names a user is in.
+* head: (coreutils)head invocation.             Output the first part of files.
+* hostid: (coreutils)hostid invocation.         Print numeric host identifier.
+* hostname: (coreutils)hostname invocation.     Print or set system name.
+* id: (coreutils)id invocation.                 Print real/effective uid/gid.
+* install: (coreutils)install invocation.       Copy and change attributes.
+* join: (coreutils)join invocation.             Join lines on a common field.
+* ln: (coreutils)ln invocation.                 Make links between files.
+* logname: (coreutils)logname invocation.       Print current login name.
+* ls: (coreutils)ls invocation.                 List directory contents.
+* md5sum: (coreutils)md5sum invocation.         Print or check message-digests.
+* mkdir: (coreutils)mkdir invocation.           Create directories.
+* mkfifo: (coreutils)mkfifo invocation.         Create FIFOs (named pipes).
+* mknod: (coreutils)mknod invocation.           Create special files.
+* mv: (coreutils)mv invocation.                 Rename files.
+* nice: (coreutils)nice invocation.             Modify scheduling priority.
+* nl: (coreutils)nl invocation.                 Number lines and write files.
+* nohup: (coreutils)nohup invocation.           Immunize to hangups.
+* od: (coreutils)od invocation.                 Dump files in octal, etc.
+* paste: (coreutils)paste invocation.           Merge lines of files.
+* pathchk: (coreutils)pathchk invocation.       Check file name portability.
+* pr: (coreutils)pr invocation.                 Paginate or columnate files.
+* printenv: (coreutils)printenv invocation.     Print environment variables.
+* printf: (coreutils)printf invocation.         Format and print data.
+* ptx: (coreutils)ptx invocation.               Produce permuted indexes.
+* pwd: (coreutils)pwd invocation.               Print working directory.
+* rm: (coreutils)rm invocation.                 Remove files.
+* rmdir: (coreutils)rmdir invocation.           Remove empty directories.
+* seq: (coreutils)seq invocation.               Print numeric sequences
+* shred: (coreutils)shred invocation.           Remove files more securely.
+* sleep: (coreutils)sleep invocation.           Delay for a specified time.
+* sort: (coreutils)sort invocation.             Sort text files.
+* split: (coreutils)split invocation.           Split into fixed-size pieces.
+* stty: (coreutils)stty invocation.             Print/change terminal settings.
+* su: (coreutils)su invocation.                 Modify user and group id.
+* sum: (coreutils)sum invocation.               Print traditional checksum.
+* sync: (coreutils)sync invocation.             Synchronize memory and disk.
+* tac: (coreutils)tac invocation.               Reverse files.
+* tail: (coreutils)tail invocation.             Output the last part of files.
+* tee: (coreutils)tee invocation.               Redirect to multiple files.
+* test: (coreutils)test invocation.             File/string tests.
+* touch: (coreutils)touch invocation.           Change file timestamps.
+* tr: (coreutils)tr invocation.                 Translate characters.
+* true: (coreutils)true invocation.             Do nothing, successfully.
+* tsort: (coreutils)tsort invocation.           Topological sort.
+* tty: (coreutils)tty invocation.               Print terminal name.
+* uname: (coreutils)uname invocation.           Print system information.
+* unexpand: (coreutils)unexpand invocation.     Convert spaces to tabs.
+* uniq: (coreutils)uniq invocation.             Uniquify files.
+* users: (coreutils)users invocation.           Print current user names.
+* vdir: (coreutils)vdir invocation.             List directories verbosely.
+* wc: (coreutils)wc invocation.                 Byte, word, and line counts.
+* who: (coreutils)who invocation.               Print who is logged in.
+* whoami: (coreutils)whoami invocation.         Print effective user id.
+* yes: (coreutils)yes invocation.               Print a string indefinitely.
 END-INFO-DIR-ENTRY
 @end format
 @end ifinfo
@@ -130,7 +130,7 @@ Free Documentation License''.
 @end ifinfo
 
 @titlepage
-@title @sc{gnu} @code{Omni-utils}
+@title @sc{gnu} @code{Core-utils}
 @subtitle A set of command line utilities
 @subtitle for version @value{VERSION}, @value{UPDATED}
 @author David MacKenzie et al.
@@ -153,7 +153,7 @@ Free Documentation License''.
 @c the matching @end directive below.
 @ifnottex
 @node Top
-@top GNU Omni-utils
+@top GNU Core-utils
 
 @cindex text utilities
 @cindex shell utilities
@@ -457,7 +457,7 @@ benefit.
 The @sc{gnu} utilities documented here are mostly compatible with the
 @sc{posix.2} standard.
 @cindex bugs, reporting
-Please report bugs to @email{bug-omni-utils@@gnu.org}.  Remember
+Please report bugs to @email{bug-coreutils@@gnu.org}.  Remember
 to include the version number, machine architecture, input files, and
 any other information needed to reproduce the bug: your input, what you
 expected, what you got, and why it is wrong.  Diffs are welcome, but
