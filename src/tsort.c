@@ -36,7 +36,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "tsort"
 
-#define WRITTEN_BY _("Written by Mark Kettenis.")
+#define AUTHORS "Mark Kettenis"
 
 /* Token delimiters when reading from a file.  */
 #define DELIM " \t\n"
@@ -560,7 +560,7 @@ main (int argc, char **argv)
   exit_status = 0;
 
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE, VERSION,
-		      WRITTEN_BY, usage);
+		      usage, AUTHORS, NULL);
 
   while ((opt = getopt_long (argc, argv, "", long_options, NULL)) != -1)
     switch (opt)

@@ -63,7 +63,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "stty"
 
-#define WRITTEN_BY _("Written by David MacKenzie.")
+#define AUTHORS "David MacKenzie"
 
 #ifndef _POSIX_VDISABLE
 # define _POSIX_VDISABLE ((unsigned char) 0)
@@ -750,7 +750,7 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      WRITTEN_BY, usage);
+		      usage, AUTHORS, NULL);
 
   output_type = changed;
   verbose_output = 0;

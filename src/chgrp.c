@@ -35,7 +35,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "chgrp"
 
-#define WRITTEN_BY _("Written by David MacKenzie and Jim Meyering.")
+#define AUTHORS "David MacKenzie", "Jim Meyering"
 
 #ifndef _POSIX_VERSION
 struct group *getgrnam ();
@@ -231,7 +231,7 @@ main (int argc, char **argv)
 	  break;
 
 	case_GETOPT_HELP_CHAR;
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, WRITTEN_BY);
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 	default:
 	  usage (EXIT_FAILURE);
 	}

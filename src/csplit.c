@@ -37,7 +37,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "csplit"
 
-#define WRITTEN_BY _("Written by Stuart Kemp and David MacKenzie.")
+#define AUTHORS "Stuart Kemp", "David MacKenzie"
 
 /* Increment size of area for control records. */
 #define ALLOC_SIZE 20
@@ -1353,7 +1353,7 @@ main (int argc, char **argv)
 
       case_GETOPT_HELP_CHAR;
 
-      case_GETOPT_VERSION_CHAR (PROGRAM_NAME, WRITTEN_BY);
+      case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
       default:
 	usage (EXIT_FAILURE);

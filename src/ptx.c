@@ -35,7 +35,7 @@
 /* Note to translator: Please translate "F. Pinard" to "François
    Pinard" if "ç" (c-with-cedilla) is available in the
    translation's character set and encoding.  */
-#define WRITTEN_BY _("Written by F. Pinard.")
+#define AUTHORS _("F. Pinard")
 
 /* Number of possible characters in a byte.  */
 #define CHAR_SET_SIZE 256
@@ -2087,7 +2087,7 @@ Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"),
 				     format_args, format_vals);
 	case_GETOPT_HELP_CHAR;
 
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, WRITTEN_BY);
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 	}
     }
 

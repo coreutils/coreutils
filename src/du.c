@@ -45,8 +45,8 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "du"
 
-#define WRITTEN_BY \
-  _("Written by Torbjorn Granlund, David MacKenzie, Paul Eggert, and Jim Meyering.")
+#define AUTHORS \
+  "Torbjorn Granlund", "David MacKenzie, Paul Eggert", "Jim Meyering"
 
 /* Initial size of the hash table.  */
 #define INITIAL_TABLE_SIZE 103
@@ -655,7 +655,7 @@ main (int argc, char **argv)
 
 	case_GETOPT_HELP_CHAR;
 
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, WRITTEN_BY);
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
 	  fail = 1;

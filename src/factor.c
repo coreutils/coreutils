@@ -35,7 +35,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "factor"
 
-#define WRITTEN_BY _("Written by Paul Rubin.")
+#define AUTHORS "Paul Rubin"
 
 /* Token delimiters when reading from a file.  */
 #define DELIM "\n\t "
@@ -202,7 +202,7 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      WRITTEN_BY, usage);
+		      usage, AUTHORS, NULL);
   /* The above handles --help and --version.
      Since there is no other invocation of getopt, handle `--' here.  */
   if (argc > 1 && STREQ (argv[1], "--"))

@@ -115,7 +115,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "su"
 
-#define WRITTEN_BY _("Written by David MacKenzie.")
+#define AUTHORS "David MacKenzie"
 
 #if HAVE_PATHS_H
 # include <paths.h>
@@ -508,7 +508,7 @@ main (int argc, char **argv)
 
 	case_GETOPT_HELP_CHAR;
 
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, WRITTEN_BY);
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
 	  usage (EXIT_FAILURE);

@@ -36,7 +36,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "dircolors"
 
-#define WRITTEN_BY _("Written by H. Peter Anvin.")
+#define AUTHORS "H. Peter Anvin"
 
 #define obstack_chunk_alloc malloc
 #define obstack_chunk_free free
@@ -443,7 +443,7 @@ main (int argc, char **argv)
 
       case_GETOPT_HELP_CHAR;
 
-      case_GETOPT_VERSION_CHAR (PROGRAM_NAME, WRITTEN_BY);
+      case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
       default:
 	usage (EXIT_FAILURE);

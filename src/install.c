@@ -40,7 +40,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "install"
 
-#define WRITTEN_BY _("Written by David MacKenzie.")
+#define AUTHORS "David MacKenzie"
 
 #if HAVE_SYS_WAIT_H
 # include <sys/wait.h>
@@ -255,7 +255,7 @@ main (int argc, char **argv)
 	  backup_suffix_string = optarg;
 	  break;
 	case_GETOPT_HELP_CHAR;
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, WRITTEN_BY);
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 	default:
 	  usage (EXIT_FAILURE);
 	}

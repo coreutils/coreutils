@@ -1,5 +1,5 @@
 /* echo.c, derived from code echo.c in Bash.
-   Copyright (C) 87,89, 1991-1997, 1999-2002 Free Software Foundation, Inc.
+   Copyright (C) 87,89, 1991-1997, 1999-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "echo"
 
-#define WRITTEN_BY _("Written by FIXME unknown.")
+#define AUTHORS "FIXME unknown"
 
 /* echo [-neE] [arg ...]
 Output the ARGs.  If -n is specified, the trailing newline is
@@ -127,7 +127,7 @@ main (int argc, char **argv)
   /* Don't recognize --help or --version if POSIXLY_CORRECT is set.  */
   if (getenv ("POSIXLY_CORRECT") == NULL)
     parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      WRITTEN_BY, usage);
+		      usage, AUTHORS, NULL, NULL);
   else
     allow_options = 0;
 

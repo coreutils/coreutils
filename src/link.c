@@ -35,7 +35,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "link"
 
-#define WRITTEN_BY _("Written by Michael Stone.")
+#define AUTHORS "Michael Stone"
 
 /* Name this program was run with.  */
 char *program_name;
@@ -73,7 +73,7 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      WRITTEN_BY, usage);
+		      usage, AUTHORS, NULL);
 
   /* The above handles --help and --version.
      Since there is no other invocation of getopt, handle `--' here.  */

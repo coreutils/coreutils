@@ -45,7 +45,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "cksum"
 
-#define WRITTEN_BY _("Written by Q. Frank Xia.")
+#define AUTHORS "Q. Frank Xia"
 
 #include <stdio.h>
 #include <sys/types.h>
@@ -309,7 +309,7 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE, VERSION,
-		      WRITTEN_BY, usage);
+		      usage, AUTHORS, NULL);
 
   have_read_stdin = 0;
 

@@ -28,7 +28,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "hostname"
 
-#define WRITTEN_BY _("Written by Jim Meyering.")
+#define AUTHORS "Jim Meyering"
 
 #if !defined(HAVE_SETHOSTNAME) && defined(HAVE_SYSINFO) && \
      defined (HAVE_SYS_SYSTEMINFO_H) && defined(HAVE_LIMITS_H)
@@ -91,7 +91,7 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      WRITTEN_BY, usage);
+		      usage, AUTHORS, NULL);
 
 #ifdef HAVE_SETHOSTNAME
   if (argc == 2)

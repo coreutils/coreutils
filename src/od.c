@@ -31,7 +31,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "od"
 
-#define WRITTEN_BY _("Written by Jim Meyering.")
+#define AUTHORS "Jim Meyering"
 
 #if defined(__GNUC__) || defined(STDC_HEADERS)
 # include <float.h>
@@ -1815,7 +1815,7 @@ it must be one character from [doxn]"),
 
 	case_GETOPT_HELP_CHAR;
 
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, WRITTEN_BY);
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
 	  usage (EXIT_FAILURE);

@@ -31,7 +31,7 @@
 
 #define PROGRAM_NAME "nohup"
 
-#define WRITTEN_BY _("Written by Jim Meyering.")
+#define AUTHORS "Jim Meyering"
 
 /* Exit statuses.  */
 enum
@@ -86,7 +86,7 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      WRITTEN_BY, usage);
+		      usage, AUTHORS, NULL);
 
   /* The above handles --help and --version.
      Now, handle `--'.  */

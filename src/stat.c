@@ -87,7 +87,7 @@
 
 #define PROGRAM_NAME "stat"
 
-#define WRITTEN_BY _("Written by Michael Meskes.")
+#define AUTHORS "Michael Meskes"
 
 static struct option const long_options[] = {
   {"link", no_argument, 0, 'l'}, /* deprecated.  FIXME: remove in 2003 */
@@ -807,7 +807,7 @@ main (int argc, char *argv[])
 
 	case_GETOPT_HELP_CHAR;
 
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, WRITTEN_BY);
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
 	  usage (EXIT_FAILURE);

@@ -32,7 +32,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "sum"
 
-#define WRITTEN_BY _("Written by Kayvan Aghaiepour and David MacKenzie.")
+#define AUTHORS "Kayvan Aghaiepour", "David MacKenzie"
 
 /* The name this program was run with. */
 char *program_name;
@@ -249,7 +249,7 @@ main (int argc, char **argv)
 
 	case_GETOPT_HELP_CHAR;
 
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, WRITTEN_BY);
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
 	  usage (EXIT_FAILURE);

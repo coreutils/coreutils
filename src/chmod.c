@@ -34,7 +34,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "chmod"
 
-#define WRITTEN_BY _("Written by David MacKenzie.")
+#define AUTHORS "David MacKenzie"
 
 enum Change_status
 {
@@ -389,7 +389,7 @@ main (int argc, char **argv)
 	  verbosity = V_high;
 	  break;
 	case_GETOPT_HELP_CHAR;
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, WRITTEN_BY);
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 	default:
 	  usage (EXIT_FAILURE);
 	}

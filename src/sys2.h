@@ -474,9 +474,9 @@ enum
 #include "closeout.h"
 #include "version-etc.h"
 
-#define case_GETOPT_VERSION_CHAR(Program_name, Written_by)		\
+#define case_GETOPT_VERSION_CHAR(Program_name, Authors)			\
   case GETOPT_VERSION_CHAR:						\
-    version_etc (stdout, Program_name, PACKAGE, VERSION, Written_by);	\
+    version_etc (stdout, Program_name, PACKAGE, VERSION, Authors, NULL);\
     exit (EXIT_SUCCESS);						\
     break;
 

@@ -38,7 +38,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "cat"
 
-#define WRITTEN_BY _("Written by Torbjorn Granlund and Richard M. Stallman.")
+#define AUTHORS "Torbjorn Granlund", "Richard M. Stallman"
 
 /* Undefine, to avoid warning about redefinition on some systems.  */
 #undef max
@@ -650,7 +650,7 @@ main (int argc, char **argv)
 
 	case_GETOPT_HELP_CHAR;
 
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, WRITTEN_BY);
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
 	  usage (EXIT_FAILURE);

@@ -51,7 +51,7 @@ struct rlimit { size_t rlim_cur; };
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "sort"
 
-#define WRITTEN_BY _("Written by Mike Haertel and Paul Eggert.")
+#define AUTHORS "Mike Haertel", "Paul Eggert"
 
 #if HAVE_LANGINFO_CODESET
 # include <langinfo.h>
@@ -2514,7 +2514,7 @@ main (int argc, char **argv)
 
 	case_GETOPT_HELP_CHAR;
 
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, WRITTEN_BY);
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
 	  usage (SORT_FAILURE);

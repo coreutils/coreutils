@@ -27,7 +27,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "logname"
 
-#define WRITTEN_BY _("Written by FIXME: unknown.")
+#define AUTHORS "FIXME: unknown"
 
 /* The name this program was run with. */
 char *program_name;
@@ -72,7 +72,7 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      WRITTEN_BY, usage);
+		      usage, AUTHORS, NULL);
 
   while ((c = getopt_long (argc, argv, "", long_options, NULL)) != -1)
     {

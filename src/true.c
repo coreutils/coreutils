@@ -21,7 +21,7 @@
 #include "system.h"
 
 #define PROGRAM_NAME "true"
-#define WRITTEN_BY _("Written by Jim Meyering.")
+#define AUTHORS "Jim Meyering"
 
 /* The name this program was run with. */
 char *program_name;
@@ -63,7 +63,7 @@ main (int argc, char **argv)
 	usage (EXIT_SUCCESS);
 
       if (STREQ (argv[1], "--version"))
-	version_etc (stdout, PROGRAM_NAME, GNU_PACKAGE, VERSION, WRITTEN_BY);
+	version_etc (stdout, PROGRAM_NAME, GNU_PACKAGE, VERSION, AUTHORS, NULL);
     }
 
   exit (EXIT_SUCCESS);

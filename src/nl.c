@@ -36,7 +36,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "nl"
 
-#define WRITTEN_BY _("Written by Scott Bartram and David MacKenzie.")
+#define AUTHORS "Scott Bartram", "David MacKenzie"
 
 #ifndef TRUE
 # define TRUE   1
@@ -598,7 +598,7 @@ main (int argc, char **argv)
 	  section_del = optarg;
 	  break;
 	case_GETOPT_HELP_CHAR;
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, WRITTEN_BY);
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 	default:
 	  fail = 1;
 	  break;

@@ -1058,7 +1058,7 @@ INTEGER may also be -l STRING, which evaluates to the length of STRING.\n\
 # define main test_command
 #endif
 
-#define WRITTEN_BY _("Written by Kevin Braunsdorf and Matthew Bradburn.")
+#define AUTHORS "Kevin Braunsdorf", "Matthew Bradburn"
 
 /*
  * [:
@@ -1101,7 +1101,7 @@ main (int margc, char **margv)
       if (margc < 2 || strcmp (margv[margc - 1], "]") != 0)
 	{
 	  parse_long_options (margc, margv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-			      WRITTEN_BY, usage);
+			      usage, AUTHORS, NULL);
 	  test_syntax_error (_("missing `]'\n"), NULL);
 	}
 

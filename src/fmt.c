@@ -34,7 +34,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "fmt"
 
-#define WRITTEN_BY _("Written by Ross Paterson.")
+#define AUTHORS "Ross Paterson"
 
 /* The following parameters represent the program's idea of what is
    "best".  Adjust to taste, subject to the caveats given.  */
@@ -401,7 +401,7 @@ main (register int argc, register char **argv)
 
       case_GETOPT_HELP_CHAR;
 
-      case_GETOPT_VERSION_CHAR (PROGRAM_NAME, WRITTEN_BY);
+      case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
       }
 
