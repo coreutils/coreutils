@@ -1,6 +1,17 @@
-1998-05-03  Jim Meyering  <meyering@ascend.com>
+1998-05-09  Jim Meyering  <meyering@ascend.com>
 
 	* Version 3.16o.
+
+	* src/dd.c: Include safe-read.h.
+	Don't declare safe_read.
+	* src/touch.c: Likewise.
+
+	* configure.in (AM_FUNC_MKTIME): Use this instead of jm_FUNC_MKTIME.
+
+	* configure.in (jm_TYPE_SSIZE_T): Use it.
+	* acconfig.h (ssize_t): Add undef.
+
+1998-05-03  Jim Meyering  <meyering@ascend.com>
 
 	* po/: Update from gettext-0.10.35.
 	* intl/: Likewise.
