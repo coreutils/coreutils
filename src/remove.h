@@ -28,6 +28,14 @@ struct rm_options
 
   /* If nonzero, display the name of each file removed.  */
   int verbose;
+
+  /* If true, treat the failure by the rm function to restore the
+     current working directory as a fatal error.  I.e., if this field
+     is true and the rm function cannot restore cwd, it must exit with
+     a nonzero status.  Some applications require that the rm function
+     restore cwd (e.g., mv) and some others do not (e.g., rm,
+     in many cases).  */
+  bool require_restore_cwd;
 };
 
 enum RM_status
