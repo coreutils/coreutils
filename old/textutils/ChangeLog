@@ -1,3 +1,10 @@
+1999-08-03  Jim Meyering  <meyering@ascend.com>
+
+	* src/tail.c (tail_forever): When following by name and calling recheck
+	because of exceeding max_n_consecutive_size_changes_between_opens,
+	`continue' so we don't fall through and (assuming the file finally grew)
+	get the erroneous `file truncated' message.
+
 1999-08-01  Jim Meyering  <meyering@ascend.com>
 
 	* Version 1.22p.
