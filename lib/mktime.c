@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
    Contributed by Paul Eggert (eggert@twinsun.com).
 
    NOTE: The canonical source of this file is maintained with the GNU C
@@ -26,6 +26,12 @@
 #include <config.h>
 #endif
 
+#ifdef _LIBC
+# define HAVE_LIMITS_H 1
+# define HAVE_LOCALTIME_R 1
+# define STDC_HEADERS 1
+#endif
+
 /* Assume that leap seconds are possible, unless told otherwise.
    If the host has a `zic' command with a `-L leapsecondfilename' option,
    then it supports leap seconds; otherwise it probably doesn't.  */
@@ -36,13 +42,13 @@
 #include <sys/types.h>		/* Some systems define `time_t' here.  */
 #include <time.h>
 
-#if __STDC__ || __GNU_LIBRARY__ || STDC_HEADERS
+#if HAVE_LIMITS_H
 #include <limits.h>
 #endif
 
 #if DEBUG
 #include <stdio.h>
-#if __STDC__ || __GNU_LIBRARY__ || STDC_HEADERS
+#if STDC_HEADERS
 #include <stdlib.h>
 #endif
 /* Make it work even if the system's libc has its own mktime routine.  */
@@ -101,10 +107,10 @@ time_t __mktime_internal __P ((struct tm *,
 			       time_t *));
 
 
-#if ! HAVE_LOCALTIME_R && ! defined (localtime_r)
 #ifdef _LIBC
 #define localtime_r __localtime_r
 #else
+#if ! HAVE_LOCALTIME_R && ! defined (localtime_r)
 /* Approximate localtime_r as best we can in its absence.  */
 #define localtime_r my_localtime_r
 static struct tm *localtime_r __P ((const time_t *, struct tm *));
@@ -119,8 +125,8 @@ localtime_r (t, tp)
   *tp = *l;
   return tp;
 }
-#endif /* ! _LIBC */
 #endif /* ! HAVE_LOCALTIME_R && ! defined (localtime_r) */
+#endif /* ! _LIBC */
 
 
 /* Yield the difference between (YEAR-YDAY HOUR:MIN:SEC) and (*TP),
@@ -133,11 +139,19 @@ ydhms_tm_diff (year, yday, hour, min, sec, tp)
      int year, yday, hour, min, sec;
      const struct tm *tp;
 {
-  time_t ay = year + (time_t) (TM_YEAR_BASE - 1);
-  time_t by = tp->tm_year + (time_t) (TM_YEAR_BASE - 1);
-  time_t intervening_leap_days =
-    (ay/4 - by/4) - (ay/100 - by/100) + (ay/400 - by/400);
-  time_t years = ay - by;
+  /* Compute intervening leap days correctly even if year is negative.
+     Take care to avoid int overflow.  time_t overflow is OK, since
+     only the low order bits of the correct time_t answer are needed.
+     Don't convert to time_t until after all divisions are done, since
+     time_t might be unsigned.  */
+  int a4 = (year >> 2) + (TM_YEAR_BASE >> 2) - ! (year & 3);
+  int b4 = (tp->tm_year >> 2) + (TM_YEAR_BASE >> 2) - ! (tp->tm_year & 3);
+  int a100 = a4 / 25 - (a4 % 25 < 0);
+  int b100 = b4 / 25 - (b4 % 25 < 0);
+  int a400 = a100 >> 2;
+  int b400 = b100 >> 2;
+  int intervening_leap_days = (a4 - b4) - (a100 - b100) + (a400 - b400);
+  time_t years = year - (time_t) tp->tm_year;
   time_t days = (365 * years + intervening_leap_days
 		 + (yday - tp->tm_yday));
   return (60 * (60 * (24 * days + (hour - tp->tm_hour))
@@ -146,12 +160,20 @@ ydhms_tm_diff (year, yday, hour, min, sec, tp)
 }
 
 
+static time_t localtime_offset;
+
 /* Convert *TP to a time_t value.  */
 time_t
 mktime (tp)
      struct tm *tp;
 {
-  static time_t localtime_offset;
+#ifdef _LIBC
+  /* POSIX.1 8.1.1 requires that whenever mktime() is called, the
+     time zone names contained in the external variable `tzname' shall
+     be set as if the tzset() function had been called.  */
+  __tzset ();
+#endif
+
   return __mktime_internal (tp, localtime_r, &localtime_offset);
 }
 
