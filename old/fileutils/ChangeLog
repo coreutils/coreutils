@@ -1,5 +1,18 @@
 2001-04-29  Jim Meyering  <meyering@lucent.com>
 
+	* Version 4.1.
+
+	* configure: Regenerate using a further-patched copy of autoconf-2.49e
+	to work around a bug in its test for ranlib.  This is the change to
+	autoconf's acgeneral.m4 that was made on 2001-04-24.
+
+	* README: Don't mention mvdir.  It is no longer provided.
+	Don't mention HP/UX vs. du blocksize problem.  It's long gone.
+	Remove note about how cp, mv, and ln couldn't make backups
+	of files with names of maximum length.  Now they can do that.
+	Thank the people who have provided access to their systems
+	for portability testing.
+
 	* man/rm.x: Refer to shred.
 	Remove the example showing how to remove `-foo', since that is now
 	in the --help output (and hence automatically included).
@@ -19,18 +32,20 @@
 2001-04-22  Jim Meyering  <meyering@lucent.com>
 
 	* src/ls.c (decode_switches): Ensure that -1 has no effect when it
-	follows -l.  Reported by Ulrich Drepper.
+	follows -l, per POSIX.  Reported by Ulrich Drepper.
 
 	* src/dd.c (usage): Mention that sync makes dd pad with spaces (rather
 	than NULs) when used with block or unblock.
 	(dd_copy): When using sync with either block or unblock,
 	pad with spaces.  Reported by Dale Scheetz.
 	* tests/dd/skip-seek (block-sync-1): New test, for this.  Based on
-	report from Dale Scheetz.
+	a report from Dale Scheetz.
 	* doc/fileutils.texi (dd invocation): Document it here, too.
 
 	* configure: Regenerate using a patched copy of autoconf-2.49e to
 	work around a bug in its test for a working memcmp function.
+	This is the change to autoconf's acfunctions.m4 that was made
+	on 2001-04-22.
 
 	* tests/ls/no-arg: New file.
 	* tests/ls/Makefile.am (TESTS): Add no-arg.
