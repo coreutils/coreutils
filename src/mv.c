@@ -277,8 +277,6 @@ movefile (char *source, char *dest, bool dest_is_dir,
       /* Treat DEST as a directory; build the full filename.  */
       char const *src_basename = base_name (source);
       char *new_dest = path_concat (dest, src_basename, NULL);
-      if (new_dest == NULL)
-	xalloc_die ();
       strip_trailing_slashes (new_dest);
       fail = do_move (source, new_dest, x);
       free (new_dest);
