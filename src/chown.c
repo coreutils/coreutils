@@ -281,7 +281,7 @@ Change the owner and/or group of each FILE to OWNER and/or GROUP.\n\
 Owner is unchanged if missing.  Group is unchanged if missing, but changed\n\
 to login group if implied by a period.  A colon may replace the period.\n\
 "));
-      puts (_("\nReport bugs to <fileutils-bugs@gnu.ai.mit.edu>."));
+      puts (_("\nReport bugs to <fileutils-bugs@gnu.org>."));
     }
   exit (status);
 }
