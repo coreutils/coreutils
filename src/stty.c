@@ -62,9 +62,6 @@
 
 #if defined(GWINSZ_BROKEN)	/* Such as for SCO UNIX 3.2.2. */
 #undef TIOCGWINSZ
-#ifdef TCGETS			/* Solaris 2.2 */
-#define TIOCGWINSZ TCGETS
-#endif
 #endif
 
 #ifndef _POSIX_VDISABLE

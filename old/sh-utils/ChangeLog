@@ -1,3 +1,11 @@
+Mon Nov 29 00:28:35 1993  Jim Meyering  (meyering@comco.com)
+
+	* stty.c, configure.in, acconfig.h: Revert change of Nov 26.
+	I am no longer able to reproduce the behavior that prompted
+	that patch -- but I had tested only using an old version of gcc.
+	When building with a more recent version of gcc or with /bin/cc
+	there is no problem.
+
 Sat Nov 27 15:11:21 1993  Jim Meyering  (meyering@comco.com)
 
 	* nice.c (main): If an adjustment is specified, but no command is
