@@ -1,5 +1,8 @@
 Sat Oct  5 11:38:23 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* lib/Makefile.am (su_SOURCES): Remove gethostname.c --
+	it's AC_REPLACE'd and already in EXTRA_DIST.
+
 	* configure.in: Use AM_SANITY_CHECK_CC.
 
 	* configure.in: Use AM_FUNC_ERROR_AT_LINE.
