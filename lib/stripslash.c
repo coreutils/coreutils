@@ -12,13 +12,17 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-#if defined(STDC_HEADERS) || defined(USG)
-#include <string.h>
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
+
+#if defined(STDC_HEADERS) || defined(HAVE_STRING_H)
+# include <string.h>
 #else
-#include <strings.h>
+# include <strings.h>
 #endif
 
 /* Remove trailing slashes from PATH.
