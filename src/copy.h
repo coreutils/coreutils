@@ -153,10 +153,6 @@ struct cp_options
   /* If nonzero, display the names of the files before copying them. */
   int verbose;
 
-  /* A pointer to either lstat or stat, depending on
-     whether the copy should dereference symlinks.  */
-  int (*xstat) ();
-
   /* If nonzero, stdin is a tty.  */
   int stdin_tty;
 
@@ -177,6 +173,11 @@ struct cp_options
 
 int stat ();
 int lstat ();
+
+# define XSTAT(X, Src_path, Src_sb) \
+  ((X)->dereference == DEREF_NEVER \
+   ? lstat (Src_path, Src_sb) \
+   : stat (Src_path, Src_sb))
 
 /* Arrange to make lstat calls go through the wrapper function
    on systems with an lstat function that does not dereference symlinks
