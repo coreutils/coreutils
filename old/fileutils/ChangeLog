@@ -1,7 +1,11 @@
 2000-11-17  Jim Meyering  <meyering@lucent.com>
 
-	* Makefile.am (.NOTPARALLEL): New target.  To prevent unwanted
-	parallelism.  Suggestion from Ulrich Drepper.
+	* Makefile.am (.NOTPARALLEL): Remove target.
+	* GNUmakefile (.NOTPARALLEL): ... put it here instead, since this
+	file is common to these packages: fileutils, sh-utils, textutils.
+
+	* Makefile.am (.NOTPARALLEL): New target.  Prevent unwanted parallelism.
+	Suggestion from Ulrich Drepper.
 	* po/Makefile.in.in (Makefile): Likewise.
 
 	* Makefile.maint (sha1): Define.
