@@ -157,6 +157,22 @@ int rpl_lstat (const char *, struct stat *);
 # define PATH_MAX 1024
 #endif
 
+#ifndef S_IFMT
+# define S_IFMT 0170000
+#endif
+
+#if STAT_MACROS_BROKEN
+# undef S_ISLNK
+#endif
+
+#ifndef S_ISLNK
+# ifdef S_IFLNK
+#  define S_ISLNK(m) (((m) & S_IFMT) == S_IFLNK)
+# else
+#  define S_ISLNK(m) 0
+# endif
+#endif
+
 struct dir_data
 {
   DIR *stream;
