@@ -478,9 +478,9 @@ Separate the line number from the text line in the output with
 @var{string} (default is @key{TAB}).
 
 @item -v @var{number}
-@itemx --first-page=@var{number}
+@itemx --starting-line-number=@var{number}
 @opindex -v
-@opindex --first-page
+@opindex --starting-line-number
 Set the initial line number on each logical page to @var{number} (default 1).
 
 @item -w @var{number}
