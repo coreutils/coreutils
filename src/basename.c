@@ -34,10 +34,8 @@
 #include "long-options.h"
 #include "error.h"
 
-char *basename __P ((char *));
-void strip_trailing_slashes ();
-
-static void remove_suffix __P ((register char *name, register char *suffix));
+extern char *basename ();
+extern void strip_trailing_slashes ();
 
 /* The name this program was run with. */
 char *program_name;
@@ -64,6 +62,25 @@ If specified, also remove a trailing SUFFIX.\n\
 ");
     }
   exit (status);
+}
+
+/* Remove SUFFIX from the end of NAME if it is there, unless NAME
+   consists entirely of SUFFIX. */
+
+static void
+remove_suffix (char *name, const char *suffix)
+{
+  char *np;
+  const char *sp;
+
+  np = name + strlen (name);
+  sp = suffix + strlen (suffix);
+
+  while (np > name && sp > suffix)
+    if (*--np != *--sp)
+      return;
+  if (np > name)
+    *np = '\0';
 }
 
 void
@@ -94,22 +111,4 @@ main (int argc, char **argv)
   puts (name);
 
   exit (0);
-}
-
-/* Remove SUFFIX from the end of NAME if it is there, unless NAME
-   consists entirely of SUFFIX. */
-
-static void
-remove_suffix (register char *name, register char *suffix)
-{
-  register char *np, *sp;
-
-  np = name + strlen (name);
-  sp = suffix + strlen (suffix);
-
-  while (np > name && sp > suffix)
-    if (*--np != *--sp)
-      return;
-  if (np > name)
-    *np = '\0';
 }
