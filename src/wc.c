@@ -29,11 +29,10 @@
 #include "system.h"
 #include "error.h"
 #include "human.h"
+#include "safe-read.h"
 
 /* Size of atomic reads. */
 #define BUFFER_SIZE (16 * 1024)
-
-int safe_read ();
 
 /* The name this program was run with. */
 char *program_name;

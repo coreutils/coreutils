@@ -32,13 +32,13 @@
 #endif
 #include "system.h"
 #include "error.h"
+#include "safe-read.h"
 
 /* Undefine, to avoid warning about redefinition on some systems.  */
 #undef max
 #define max(h,i) ((h) > (i) ? (h) : (i))
 
 int full_write ();
-int safe_read ();
 
 /* Name under which this program was invoked.  */
 char *program_name;
