@@ -78,6 +78,8 @@ my $help_info = sprintf _(<<'EOT'), $this_program, $this_program;
 
 Usage: %s [OPTION]... EXECUTABLE
 
+     --program_name=STRING  override any name found in output of
+                              `EXECUTABLE --version'
  -n, --name=STRING       description for the NAME paragraph
  -s, --section=SECTION   section number for manual page (1, 6, 8)
  -m, --manual=TEXT       name of manual (User Commands, ...)
@@ -107,8 +109,10 @@ my $locale = 'C';
 my $help_option = '--help';
 my $version_option = '--version';
 my ($opt_name, @opt_include, $opt_output, $opt_info, $opt_no_info);
+my $opt_program_name;
 
 my %opt_def = (
+    'program-name=s'	 => \$opt_program_name,
     'n|name=s'		 => \$opt_name,
     's|section=s'	 => \$section,
     'm|manual=s'	 => \$manual,
@@ -279,6 +283,8 @@ else
 }
 
 $program =~ s!.*/!!;
+$opt_program_name
+  and $program = $opt_program_name;
 
 # No info for `info' itself.
 $opt_no_info = 1 if $program eq 'info';
