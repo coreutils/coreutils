@@ -88,6 +88,8 @@ main (int argc, char **argv)
 	{
 	  if (!isinteger (&s[1]))
 	    error (1, 0, _("invalid option `%s'"), s);
+
+	  minusflag = 0;
 	  /* FIXME: use xstrtol */
 	  adjustment = atoi (&s[1]);
 	  adjustment_given = 1;
@@ -107,6 +109,8 @@ main (int argc, char **argv)
 		case 'n':
 		  if (!isinteger (optarg))
 		    error (1, 0, _("invalid priority `%s'"), optarg);
+
+		  minusflag = 0;
 		  /* FIXME: use xstrtol */
 		  adjustment = atoi (optarg);
 		  adjustment_given = 1;
