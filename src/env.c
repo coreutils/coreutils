@@ -168,7 +168,7 @@ main (register int argc, register char **argv, char **envp)
 	}
     }
 
-  if (optind < argc && !strcmp (argv[optind], "-"))
+  if (optind < argc && STREQ (argv[optind], "-"))
     ignore_environment = 1;
 
   if (ignore_environment)
@@ -182,7 +182,7 @@ main (register int argc, register char **argv, char **envp)
     if (optc == 'u')
       putenv (optarg);		/* Requires GNU putenv. */
 
-  if (optind < argc && !strcmp (argv[optind], "-"))
+  if (optind < argc && STREQ (argv[optind], "-"))
     ++optind;
 
   while (optind < argc && strchr (argv[optind], '='))
