@@ -63,10 +63,10 @@ static int have_read_stdin;
 static struct item *head;
 
 /* A scratch variable.  */
-static struct item *r = NULL;
+static struct item *rr = NULL;
 
 /* The number of strings to sort.  */
-static int n = 0;
+static int n_strings = 0;
 
 static struct option const long_options[] =
 {
@@ -284,7 +284,7 @@ record_relation (struct item *j, struct item *k)
 static void
 count_items (struct item *k)
 {
-  n++;
+  n_strings++;
 }
 
 static void
@@ -292,12 +292,12 @@ scan_zeros (struct item *k)
 {
   if (k->count == 0)
     {
-      if (r == NULL)
+      if (rr == NULL)
 	head = k;
       else
-	r->qlink = k;
+	rr->qlink = k;
 
-      r = k;
+      rr = k;
     }
 }
 
@@ -428,9 +428,10 @@ getstr (char **lineptr, int *n, FILE *stream)
   return read_pos - *lineptr;
 }
 
+/* FIXME: describe */
 
 static void
-sort (const char *file)
+tsort (const char *file)
 {
   struct item *root;
   struct item *j = NULL;
@@ -487,7 +488,7 @@ sort (const char *file)
 
       /* T5. Output front of queue.  */
       printf ("%s\n", head->str);
-      n--;
+      n_strings--;
 
       /* T6. Erase relations.  */
       while (p)
@@ -495,8 +496,8 @@ sort (const char *file)
 	  p->suc->count--;
 	  if (p->suc->count == 0)
 	    {
-	      r->qlink = p->suc;
-	      r = p->suc;
+	      rr->qlink = p->suc;
+	      rr = p->suc;
 	    }
 
 	  p = p->next;
@@ -507,8 +508,8 @@ sort (const char *file)
     }
 
   /* T8.  End of process.  */
-  assert (n >= 0);
-  if (n > 0)
+  assert (n_strings >= 0);
+  if (n_strings > 0)
     {
       if (have_read_stdin)
 	fprintf (stderr, _("%s: input contains a loop:\n"), program_name);
@@ -555,9 +556,9 @@ main (int argc, char **argv)
     }
 
   if (optind < argc)
-    sort (argv[optind]);
+    tsort (argv[optind]);
   else
-    sort ("-");
+    tsort ("-");
 
   if (fclose (stdout) == EOF)
     error (EXIT_FAILURE, errno, _("write error"));
