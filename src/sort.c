@@ -1,5 +1,5 @@
 /* sort - sort lines of text (with all kinds of options).
-   Copyright (C) 88, 91-97, 98 Free Software Foundation, Inc.
+   Copyright (C) 88, 91-97, 98, 99 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -35,6 +35,12 @@
 
 #if defined ENABLE_NLS && HAVE_LANGINFO_H
 # include <langinfo.h>
+#endif
+
+#if HAVE_UNISTD_H && defined(_PC_PATH_MAX) && _POSIX_NAME_MAX == 12
+# define PATH_MAX_IN_DIR(f) pathconf(f, _PC_PATH_MAX)
+#else
+# define PATH_MAX_IN_DIR(f) 255
 #endif
 
 char *xstrdup ();
@@ -425,14 +431,24 @@ tempname (void)
   static unsigned int seq;
   int len = strlen (temp_file_prefix);
   char *name = xmalloc (len + 1 + sizeof ("sort") - 1 + 5 + 5 + 1);
+  int long_file_names = PATH_MAX_IN_DIR (temp_file_prefix) > 12;
   struct tempnode *node;
 
   node = (struct tempnode *) xmalloc (sizeof (struct tempnode));
-  sprintf (name,
-	   "%s%ssort%5.5d%5.5d",
-	   temp_file_prefix,
-	   (len && temp_file_prefix[len - 1] != '/') ? "/" : "",
-	   (unsigned int) getpid () & 0xffff, seq);
+
+  /* If long filenames aren't supported, we cannot use filenames
+     longer than 8+3 and still assume they are unique.  */
+  if (long_file_names)
+    sprintf (name,
+	     "%s%ssort%5.5d%5.5d",
+	     temp_file_prefix,
+	     (len && temp_file_prefix[len - 1] != '/') ? "/" : "",
+	     (unsigned int) getpid () & 0xffff, seq);
+  else
+    sprintf (name, "%s%ss%5.5d%2.2d.%3.3d",
+	     temp_file_prefix,
+	     (len && temp_file_prefix[len - 1] != '/') ? "/" : "",
+	     (unsigned int) getpid () & 0xffff, seq / 1000, seq % 1000);
 
   /* Make sure that SEQ's value fits in 5 digits.  */
   ++seq;
