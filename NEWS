@@ -9,12 +9,16 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
-   'df', 'du', and 'ls' now take the default block size from the
-   BLOCKSIZE environment variable if the BLOCK_SIZE, DF_BLOCK_SIZE,
-   DU_BLOCK_SIZE, and LS_BLOCK_SIZE environment variables are not set.
-   Unlike the other variables, though, BLOCKSIZE does not affect
-   values like 'ls -l' sizes that are normally displayed as bytes.
-   This new behavior is for compatibility with BSD.
+  With stat, a specified format is no longer automatically newline terminated.
+  If you want a newline at the end of your output, append `\n' to the format
+  string.
+
+  'df', 'du', and 'ls' now take the default block size from the
+  BLOCKSIZE environment variable if the BLOCK_SIZE, DF_BLOCK_SIZE,
+  DU_BLOCK_SIZE, and LS_BLOCK_SIZE environment variables are not set.
+  Unlike the other variables, though, BLOCKSIZE does not affect
+  values like 'ls -l' sizes that are normally displayed as bytes.
+  This new behavior is for compatibility with BSD.
 
   du accepts a new option --files0-from=FILE, where FILE contains a
   list of NUL-terminated file names.

@@ -1,6 +1,12 @@
-2004-04-03  Jim Meyering  <jim@meyering.net>
+2004-04-04  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	A specified format is no longer automatically newline terminated.
+	If you want a newline at the end of your format, use `\n'.
+	* src/stat.c (print_it): Don't print a newline at the end of
+	every format.
+	(do_statfs): Add a newline at end of each default format string.
 
 2004-03-30  Paul Eggert  <eggert@twinsun.com>
 
