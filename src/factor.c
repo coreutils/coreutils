@@ -183,6 +183,13 @@ main (int argc, char **argv)
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 		      AUTHORS, usage);
+  /* The above handles --help and --version.
+     Since there is no other invocation of getopt, handle `--' here.  */
+  if (argc > 1 && STREQ (argv[1], "--"))
+    {
+      --argc;
+      ++argv;
+    }
 
   fail = 0;
   if (argc == 1)
