@@ -53,6 +53,7 @@
 #include "cp-hash.h"
 #include "error.h"
 #include "path-concat.h"
+#include "quote.h"
 #include "remove.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -203,8 +204,8 @@ do_move (const char *source, const char *dest, const struct cp_options *x)
 
 	  dir_to_remove = NULL;
 	  error (0, 0,
-		 _("cannot move `%s' to a subdirectory of itself, `%s'"),
-		 source, dest);
+		 _("cannot move %s to a subdirectory of itself, %s"),
+		 quote_n (0, source), quote_n (0, dest));
 	}
       else if (rename_succeeded)
 	{
@@ -259,7 +260,7 @@ do_move (const char *source, const char *dest, const struct cp_options *x)
 	  remove_fini ();
 
 	  if (fail)
-	    error (0, errno, _("cannot remove `%s'"), dir_to_remove);
+	    error (0, errno, _("cannot remove %s"), quote (dir_to_remove));
 	}
 
       if (copy_into_self)
@@ -482,8 +483,8 @@ main (int argc, char **argv)
     {
       if (!dest_is_dir)
 	{
-	  error (0, 0, _("specified target, `%s' is not a directory"),
-		 target_directory);
+	  error (0, 0, _("specified target, %s is not a directory"),
+		 quote (target_directory));
 	  usage (1);
 	}
     }
