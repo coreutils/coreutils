@@ -153,10 +153,10 @@ static const int width_bytes[] =
 
 /* Ensure that for each member of `enum size_spec' there is an
    initializer in the width_bytes array.  */
-struct assert_width_bytes_matches_size_spec_decl
+struct dummy
 {
-  int t1[sizeof width_bytes / sizeof width_bytes[0] - N_SIZE_SPECS];
-  int t2[N_SIZE_SPECS - sizeof width_bytes / sizeof width_bytes[0]];
+  int assert_width_bytes_matches_size_spec_decl
+    [sizeof width_bytes / sizeof width_bytes[0] == N_SIZE_SPECS ? 1 : -1];
 };
 
 /* Names for some non-printing characters.  */
