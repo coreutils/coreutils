@@ -308,6 +308,12 @@ extern int errno;
 #  define LDAV_CVT(n) (((double) (n)) / FSCALE)
 # endif
 
+# ifndef NLIST_STRUCT
+#  if HAVE_NLIST_H
+#   define NLIST_STRUCT
+#  endif
+# endif
+
 /* VAX C can't handle multi-line #ifs, or lines longer that 256 characters.  */
 # ifndef NLIST_STRUCT
 
