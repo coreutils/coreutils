@@ -1,3 +1,10 @@
+2003-04-21  Jim Meyering  <jim@meyering.net>
+
+	Fix printf POSIX compatibility bug reported by Ben Harris in
+	<http://mail.gnu.org/archive/html/bug-coreutils/2003-04/msg00070.html>.
+	* doc/coreutils.texi (printf invocation): It's \NNN in the format,
+	\0NNN in the %b operand.
+
 2003-04-10  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (check-texinfo): Check for uses of non-zero.
