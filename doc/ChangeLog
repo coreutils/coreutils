@@ -1,5 +1,6 @@
 2004-01-09  Jim Meyering  <jim@meyering.net>
 
+	Document the exit status of each and every program.
 	* coreutils.texi (yes invocation): Document that a write error
 	makes `yes' exit unsuccessfully.
 	(chroot invocation): Enumerate the meaning of exit status values.
