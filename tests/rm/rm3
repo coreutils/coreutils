@@ -20,11 +20,12 @@ mkdir -p $tmp || framework_failure=1
 cd $tmp || framework_failure=1
 mkdir -p z || framework_failure=1
 cd z || framework_failure=1
-touch f fu || framework_failure=1
-ln -s f slink
+touch empty empty-u || framework_failure=1
+echo not-empty > fu
+ln -s empty-f slink
 ln -s . slinkdot
 mkdir d du || framework_failure=1
-chmod u-w fu du || framework_failure=1
+chmod u-w fu du empty-u || framework_failure=1
 cd ..
 
 if test $framework_failure = 1; then
@@ -43,6 +44,7 @@ y
 y
 y
 y
+y
 EOF
 
 # Both of these should fail.
@@ -52,8 +54,9 @@ mv o2 out
 
 sort <<EOF > exp || fail=1
 rm: descend into directory \`z'
-rm: remove regular file \`z/f'
+rm: remove regular empty file \`z/empty'
 rm: remove write-protected regular file \`z/fu'
+rm: remove write-protected regular empty file \`z/empty-u'
 rm: remove symbolic link \`z/slink'
 rm: remove symbolic link \`z/slinkdot'
 rm: remove directory \`z/d'
