@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in -*-Makefile-*-.
 
-EXTRA_DIST = $(TESTS) T.pm
+EXTRA_DIST = $(TESTS) Fetish.pm quoting
 
 TESTS_ENVIRONMENT = \
   top_srcdir=$(top_srcdir) \
