@@ -114,11 +114,11 @@ main (int argc, char **argv)
 
   if (setgid (pwd->pw_gid))
     error (SETUIDGID_FAILURE, errno,
-	   _("cannot set group-ID to %ld"), (long int) pwd->pw_gid);
+	   _("cannot set group-ID to %lu"), (unsigned long int) pwd->pw_gid);
 
   if (setuid (pwd->pw_uid))
     error (SETUIDGID_FAILURE, errno,
-	   _("cannot set user-ID to %ld"), (long int) pwd->pw_uid);
+	   _("cannot set user-ID to %lu"), (unsigned long int) pwd->pw_uid);
 
   {
     char **cmd = argv + 2;
