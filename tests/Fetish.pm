@@ -12,12 +12,12 @@ use FileHandle;
 use File::Compare qw(compare);
 
 @ISA = qw(Exporter);
-($VERSION = '$Revision: 1.8 $ ') =~ tr/[0-9].//cd;
+($VERSION = '$Revision: 1.9 $ ') =~ tr/[0-9].//cd;
 @EXPORT = qw (run_tests);
 
 my $debug = $ENV{DEBUG};
 
-my @Types = qw (IN OUT ERR EXIT PRE POST);
+my @Types = qw (IN OUT ERR AUX CMP EXIT PRE POST);
 my %Types = map {$_ => 1} @Types;
 my %Zero_one_type = map {$_ => 1} qw (OUT ERR EXIT PRE POST);
 my $srcdir = $ENV{srcdir};
@@ -35,7 +35,7 @@ my $Global_count = 1;
 # I/O spec: a hash ref with the following properties
 # ================
 # - one key/value pair
-# - the key must be one of these strings: IN, OUT, ERR, EXIT
+# - the key must be one of these strings: IN, OUT, ERR, AUX, CMP, EXIT
 # - the value must be a file spec
 # {OUT => 'data'}    put data in a temp file and compare it to stdout from cmd
 # {OUT => {'filename'=>undef}} compare contents of existing filename to
@@ -91,6 +91,82 @@ sub _create_file ($$$$)
   return $file;
 }
 
+sub _compare_files ($$$$$)
+{
+  my ($program_name, $test_name, $in_or_out, $actual, $expected) = @_;
+
+  my $differ = compare ($expected, $actual);
+  if ($differ)
+    {
+      my $info = (defined $in_or_out ? "std$in_or_out " : '');
+      warn "$program_name: test $test_name: ${info}mismatch, comparing "
+	. "$actual (actual) and $expected (expected)\n";
+      # Ignore any failure, discard stderr.
+      system "diff -c $actual $expected 2>/dev/null";
+    }
+
+  return $differ;
+}
+
+sub _process_file_spec ($$$$$)
+{
+  my ($program_name, $test_name, $file_spec, $type, $junk_files) = @_;
+
+  my ($file_name, $contents);
+  if (!ref $file_spec)
+    {
+      ($file_name, $contents) = (undef, $file_spec);
+    }
+  elsif (ref $file_spec eq 'HASH')
+    {
+      my $n = keys %$file_spec;
+      die "$program_name: $test_name: $type spec has $n elements --"
+	. " expected 1\n"
+	  if $n != 1;
+      ($file_name, $contents) = each %$file_spec;
+
+      # This happens for the AUX hash in an io_spec like this:
+      # {CMP=> ['zy123utsrqponmlkji', {'@AUX@'=> undef}]},
+      defined $contents
+	or return $file_name;
+    }
+  else
+    {
+      die "$program_name: $test_name: invalid RHS in $type-spec\n"
+    }
+
+  my $is_junk_file = (! defined $file_name
+		      || (($type eq 'IN' || $type eq 'AUX' || $type eq 'CMP')
+			  && defined $contents));
+  my $file = _create_file ($program_name, $test_name,
+			   $file_name, $contents);
+
+  if ($is_junk_file)
+    {
+      push @$junk_files, $file
+    }
+  else
+    {
+      # FIXME: put $srcdir in here somewhere
+      warn "$program_name: $test_name: specified file `$file' does"
+	. " not exist\n"
+	  if ! -f "$srcdir/$file";
+    }
+
+  return $file;
+}
+
+sub _at_replace ($$)
+{
+  my ($map, $s) = @_;
+  foreach my $eo (qw (AUX OUT ERR))
+    {
+      my $f = $map->{$eo};
+      $f and $s =~ s/\@$eo\@/$f/g;
+    }
+  return $s;
+}
+
 # FIXME: cleanup on interrupt
 # FIXME: extract `do_1_test' function
 
@@ -129,6 +205,7 @@ sub run_tests ($$$$$)
   my $fail = 0;
   foreach $t (@$t_spec)
     {
+      my @post_compare;
       my $test_name = shift @$t;
       my $expect = {};
       my ($pre, $post);
@@ -167,6 +244,48 @@ sub run_tests ($$$$$)
 	      next;
 	    }
 
+	  if ($type eq 'CMP')
+	    {
+	      my $t = ref $val;
+	      $t && $t eq 'ARRAY'
+		or die "$program_name: $test_name: invalid CMP spec\n";
+	      @$val == 2
+		or die "$program_name: $test_name: invalid CMP list;  must have"
+		  . " exactly 2 elements\n";
+	      my @cmp_files;
+	      foreach my $e (@$val)
+		{
+		  my $r = ref $e;
+		  $r && $r ne 'HASH'
+		    and die "$program_name: $test_name: invalid element ($r)"
+		      . " in CMP list;  only scalars and hash references "
+			. "are allowed\n";
+		  if ($r && $r eq 'HASH')
+		    {
+		      my $n = keys %$e;
+		      $n == 1
+			or die "$program_name: $test_name: CMP spec has $n "
+			  . "elements -- expected 1\n";
+
+		      # Replace any `@AUX@' in the key of %$e.
+		      my ($ff, $val) = each %$e;
+		      my $new_ff = _at_replace $expect, $ff;
+		      if ($new_ff ne $ff)
+			{
+			  $e->{$new_ff} = $val;
+			  delete $e->{$ff};
+			}
+		    }
+		  my $cmp_file = _process_file_spec ($program_name, $test_name,
+						     $e, $type, \@junk_files);
+		  push @cmp_files, $cmp_file;
+		}
+	      push @post_compare, [@cmp_files];
+
+	      $expect->{$type} = $val;
+	      next;
+	    }
+
 	  if ($type eq 'EXIT')
 	    {
 	      die "$program_name: $test_name: invalid EXIT code\n"
@@ -176,48 +295,20 @@ sub run_tests ($$$$$)
 	      next;
 	    }
 
-	  my $file_spec = $val;
-	  my ($file_name, $contents);
-	  if (!ref $file_spec)
-	    {
-	      ($file_name, $contents) = (undef, $file_spec);
-	    }
-	  elsif (ref $file_spec eq 'HASH')
-	    {
-	      my $n = keys %$file_spec;
-	      die "$program_name: $test_name: $type spec has $n elements --"
-		. " expected 1\n"
-		  if $n != 1;
-	      ($file_name, $contents) = each %$file_spec;
-	    }
-	  else
-	    {
-	      die "$program_name: $test_name: invalid RHS in $type-spec\n"
-	    }
+	  my $file = _process_file_spec ($program_name, $test_name, $val,
+					 $type, \@junk_files);
 
-	  my $is_junk_file = (! defined $file_name
-			      || ($type eq 'IN' && defined $contents));
-	  my $file = _create_file ($program_name, $test_name,
-				   $file_name, $contents);
 	  if ($type eq 'IN')
 	    {
 	      push @args, _shell_quote $file;
 	    }
-	  else
+	  elsif ($type eq 'AUX' || $type eq 'OUT' || $type eq 'ERR')
 	    {
 	      $expect->{$type} = $file;
 	    }
-
-	  if ($is_junk_file)
-	    {
-	      push @junk_files, $file
-	    }
 	  else
 	    {
-	      # FIXME: put $srcdir in here somewhere
-	      warn "$program_name: $test_name: specified file `$file' does"
-		. " not exist\n"
-		  if ! -f "$srcdir/$file";
+	      die "$program_name: $test_name: invalid type: $type\n"
 	    }
 	}
 
@@ -225,8 +316,7 @@ sub run_tests ($$$$$)
       $expect->{EXIT} ||= 0;
 
       # Allow ERR to be omitted -- in that case, expect no error output.
-      my $eo;
-      foreach $eo (qw (OUT ERR))
+      foreach my $eo (qw (OUT ERR))
 	{
 	  if (!exists $expect->{$eo})
 	    {
@@ -238,6 +328,15 @@ sub run_tests ($$$$$)
 
       # FIXME: Does it ever make sense to specify a filename *and* contents
       # in OUT or ERR spec?
+
+      # FIXME: this is really suboptimal...
+      my @new_args;
+      foreach my $a (@args)
+	{
+	  $a = _at_replace $expect, $a;
+	  push @new_args, $a;
+	}
+      @args = @new_args;
 
       warn "$test_name...\n" if $verbose;
       &{$expect->{PRE}} if $expect->{PRE};
@@ -265,19 +364,20 @@ sub run_tests ($$$$$)
 	  goto cleanup;
 	}
 
-      foreach $eo (qw (OUT ERR))
+      foreach my $eo (qw (OUT ERR))
 	{
 	  my $eo_lower = lc $eo;
-	  if (compare ($expect->{$eo}, $tmp{$eo}))
-	    {
-	      warn "$program_name: test $test_name: std$eo_lower mismatch,"
-		. " comparing $tmp{$eo} (actual)"
-		  . " and $expect->{$eo} (expected)\n";
-	      # Ignore any failure, discard stderr.
-	      system "diff -c $tmp{$eo} $expect->{$eo} 2>/dev/null";
-	      $fail = 1;
-	    }
+	  _compare_files ($program_name, $test_name, $eo_lower,
+			  $expect->{$eo}, $tmp{$eo})
+	    and $fail = 1;
 	}
+
+    foreach my $pair (@post_compare)
+      {
+	my ($a, $b) = @$pair;
+	_compare_files $program_name, $test_name, undef, $a, $b
+	  and $fail = 1;
+      }
 
     cleanup:
       &{$expect->{POST}} if $expect->{POST};
