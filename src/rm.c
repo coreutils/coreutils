@@ -74,6 +74,10 @@
 # define D_INO(dp) 1
 #endif
 
+#ifndef HAVE_MEMPCPY
+# define mempcpy(D, S, N) ((void *) ((char *) memcpy (D, S, N) + (N)))
+#endif
+
 #if !defined (S_ISLNK)
 # define S_ISLNK(Mode) 0
 #endif
@@ -434,10 +438,7 @@ full_filename (const char *filename)
 
   /* Copy directory part, including trailing slash, and then
      append the filename part, including a trailing zero byte.  */
-  /* FIXME: use mempcpy like this instead of two memcpy calls:
-     mempcpy (mempcpy (buf, dir_name, dir_len), filename, filename_len + 1); */
-  memcpy (buf, dir_name, dir_len);
-  memcpy (buf + dir_len, filename, filename_len + 1);
+  mempcpy (mempcpy (buf, dir_name, dir_len), filename, filename_len + 1);
 
   assert (strlen (buf) + 1 == n_bytes_needed);
 
@@ -789,8 +790,8 @@ remove_dir (struct File_spec *fs, int need_save_cwd)
   push_dir (dir_name);
 
   /* Save a copy of dir_name.  Otherwise, remove_cwd_entries may clobber
-     dir_name because dir_name is just a pointer to the dir entry's d_name
-     field, and remove_cwd_entries may close the directory.  */
+     it because it is just a pointer to the dir entry's d_name field, and
+     remove_cwd_entries may close the directory.  */
   ASSIGN_STRDUPA (dir_name, dir_name);
 
   status = remove_cwd_entries ();
