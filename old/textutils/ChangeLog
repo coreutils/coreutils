@@ -1,3 +1,10 @@
+1999-02-07  Jim Meyering  <meyering@ascend.com>
+
+	* Makefile.maint (my-distcheck): Don't depend on dist, now that this
+	is hooked up to the distcheck rule.
+	* Makefile.am (distcheck-hook): New target and rule -- link to shared
+	rule, my-distcheck, in Makefile.maint.
+
 1999-01-31  Jim Meyering  <meyering@ascend.com>
 
 	* doc/textutils.texi: Wrap the @top node in @ifnottex instead of
