@@ -1,6 +1,6 @@
 2003-10-15  Jim Meyering  <jim@meyering.net>
 
-	* tests/chgrp/recurse: Update tests accordingly.
+	* Version 5.1.0.
 
 	chown and chgrp now accept POSIX-mandated -H, -L, -P options and
 	use fts to perform a directory traversal when -R is specified.
@@ -36,6 +36,10 @@
 	[struct Chown_option] (affect_symlink_referent): New member.
 	(chown_files): New prototype.
 
+	* tests/chgrp/recurse: Update tests accordingly.
+	* tests/chgrp/posix-H: New tests for the above.
+	* tests/chgrp/Makefile.am (TESTS): Add posix-H.
+
 	* src/ln.c (usage): Clarify that --directory, -d, -F probably won't
 	work even for superuser.  Suggestion from Dan Jacobson.
 
@@ -50,8 +54,6 @@
 
 2003-10-14  Jim Meyering  <jim@meyering.net>
 
-	* Version 5.0.92.
-
 	FIXME: update coreutils.texi:
 	chmod's new options: --preserve-root and --no-preserve-root.
 	chown and chgrp have new options: -H -L -P
@@ -59,9 +61,6 @@
 	* src/ls.c (decode_switches) [TIOCGWINSZ]: Comment out the
 	warning-inducing test, ws.ws_col <= SIZE_MAX, since it was always
 	true on Linux.
-
-	* tests/chgrp/posix-H: New tests for the above.
-	* tests/chgrp/Makefile.am (TESTS): Add posix-H.
 
 2003-10-13  Paul Eggert  <eggert@twinsun.com>
 
