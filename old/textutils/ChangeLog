@@ -1,3 +1,8 @@
+Wed Feb 21 18:56:27 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* join.c (xfields) [without -t]: Ignore leading blanks.
+	From David Dyck	(dcd@tc.fluke.COM).
+
 Sun Feb 18 12:07:27 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* join.c [TOLOWER]: Define.
