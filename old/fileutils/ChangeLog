@@ -24,6 +24,9 @@ Sun Jul  7 22:40:08 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/Makefile.am (MAINTAINERCLEANFILES): Add dircolors.h.
 
+	* configure.in (AM_HEADER_TIOCGWINSZ_NEEDS_SYS_IOCTL): Use it.
+	* acconfig.h [GWINSZ_IN_SYS_IOCTL]: Add #undef.
+
 	* src/ls.c: Include termios.h.
 	Guard inclusion of sys/ioctl.h with #ifdef GWINSZ_IN_SYS_IOCTL,
 	rather than HAVE_SYS_IOCTL_H.  Modelled after sh-utils' stty.c
@@ -33,7 +36,7 @@ Sun Jul  7 22:40:08 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 	termios.h, and not sys/ioctl.h.
 
 	* aclocal.m4 (AM_SYS_POSIX_TERMIOS): New macro, derived from test
-	in configure.in.
+	in the configure.in from sh-utils.
 	(AM_HEADER_TIOCGWINSZ_NEEDS_SYS_IOCTL): Likewise.
 
 Sat Jul  6 12:46:27 1996  Jim Meyering  <meyering@na-net.ornl.gov>
