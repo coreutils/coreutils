@@ -171,6 +171,10 @@ char *alloca ();
 # include <stdint.h>
 #endif
 
+#if HAVE_INTTYPES_H
+# include <inttypes.h> /* for the definition of UINTMAX_MAX */
+#endif
+
 #include <ctype.h>
 
 /* Jim Meyering writes:
