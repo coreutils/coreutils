@@ -1,3 +1,9 @@
+2005-01-03  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* utimens.c (futimens) [HAVE_FUTIMES]: Fall back on utimes if
+	futimes fails with errno == ENOENT.  Problem reported by
+	Dmitry V. Levin.
+
 2005-01-02  Jim Meyering  <jim@meyering.net>
 
 	* version-etc.c (version_etc_copyright): Update copyright date.
