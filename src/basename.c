@@ -26,6 +26,7 @@
    => functions.lis */
 
 #include <config.h>
+#include <getopt.h>
 #include <stdio.h>
 #include <sys/types.h>
 
@@ -102,31 +103,26 @@ main (int argc, char **argv)
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 		      usage, AUTHORS, (char const *) NULL);
-  /* The above handles --help and --version.
-     Since there is no other invocation of getopt, handle `--' here.  */
-  if (argc > 1 && STREQ (argv[1], "--"))
-    {
-      --argc;
-      ++argv;
-    }
+  if (getopt (argc, argv, "+") != -1)
+    usage (EXIT_FAILURE);
 
-  if (argc < 2)
+  if (argc < optind + 1)
     {
       error (0, 0, _("missing operand"));
       usage (EXIT_FAILURE);
     }
 
-  if (3 < argc)
+  if (optind + 2 < argc)
     {
-      error (0, 0, _("extra operand %s"), quote (argv[3]));
+      error (0, 0, _("extra operand %s"), quote (argv[optind + 2]));
       usage (EXIT_FAILURE);
     }
 
-  name = base_name (argv[1]);
+  name = base_name (argv[optind]);
   name[base_len (name)] = '\0';
 
-  if (argc == 3)
-    remove_suffix (name, argv[2]);
+  if (argc == optind + 2)
+    remove_suffix (name, argv[optind + 1]);
 
   puts (name);
 
