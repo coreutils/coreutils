@@ -1,12 +1,12 @@
 # Messages français pour GNU concernant textutils.
 # Copyright © 1996 Free Software Foundation, Inc.
-# Michel Robitaille <robitail@IRO.UMontreal.CA>, depuis/since 1996.
+# Michel Robitaille <robitail@IRO.UMontreal.CA>, traducteur depuis/since 1996.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: GNU textutils 2.0.22\n"
-"POT-Creation-Date: 2002-08-03 11:41+0200\n"
-"PO-Revision-Date: 2002-07-22 08:00-0500\n"
+"POT-Creation-Date: 2002-09-01 02:25+0200\n"
+"PO-Revision-Date: 2002-08-06 08:00-0500\n"
 "Last-Translator: Michel Robitaille <robitail@IRO.UMontreal.CA>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -38,7 +38,7 @@ msgstr "débordement de la pile"
 
 #: lib/closeout.c:107 src/cat.c:186 src/cat.c:267 src/cat.c:320
 #: src/cksum.c:267 src/head.c:152 src/head.c:195 src/tail.c:327
-#: src/tail.c:1651 src/tr.c:1667 src/tr.c:1913 src/tr.c:2021
+#: src/tail.c:1652 src/tr.c:1667 src/tr.c:1913 src/tr.c:2021
 msgid "write error"
 msgstr "Erreur d'écriture."
 
@@ -94,57 +94,57 @@ msgstr "objet de mémoire partagée"
 msgid "weird file"
 msgstr "fichier bizarre"
 
-#: lib/getopt.c:694
+#: lib/getopt.c:692 lib/getopt.c:704
 #, c-format
 msgid "%s: option `%s' is ambiguous\n"
 msgstr "%s: l'option « %s » est ambiguë\n"
 
-#: lib/getopt.c:719
+#: lib/getopt.c:737 lib/getopt.c:741
 #, c-format
 msgid "%s: option `--%s' doesn't allow an argument\n"
 msgstr "%s: l'option « --%s » ne requiert pas un argument.\n"
 
-#: lib/getopt.c:724
+#: lib/getopt.c:750 lib/getopt.c:755
 #, c-format
 msgid "%s: option `%c%s' doesn't allow an argument\n"
 msgstr "%s: l'option « %c%s » ne requiert pas un argument.\n"
 
-#: lib/getopt.c:742 lib/getopt.c:915
+#: lib/getopt.c:791 lib/getopt.c:804 lib/getopt.c:1093 lib/getopt.c:1106
 #, c-format
 msgid "%s: option `%s' requires an argument\n"
 msgstr "%s: l'option « %s » requiert un argument.\n"
 
-#: lib/getopt.c:771
+#: lib/getopt.c:842 lib/getopt.c:845
 #, c-format
 msgid "%s: unrecognized option `--%s'\n"
 msgstr "%s: option non reconnue « --%s »\n"
 
-#: lib/getopt.c:775
+#: lib/getopt.c:853 lib/getopt.c:856
 #, c-format
 msgid "%s: unrecognized option `%c%s'\n"
 msgstr "%s: option non reconnue « %c%s »\n"
 
-#: lib/getopt.c:801
+#: lib/getopt.c:903 lib/getopt.c:906
 #, c-format
 msgid "%s: illegal option -- %c\n"
 msgstr "%s: option illégale --%c\n"
 
-#: lib/getopt.c:804
+#: lib/getopt.c:912 lib/getopt.c:915
 #, c-format
 msgid "%s: invalid option -- %c\n"
 msgstr "%s: option invalide --%c\n"
 
-#: lib/getopt.c:834 lib/getopt.c:964
+#: lib/getopt.c:962 lib/getopt.c:973 lib/getopt.c:1159 lib/getopt.c:1172
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
 msgstr "%s: l'option requiert un argument --%c\n"
 
-#: lib/getopt.c:881
+#: lib/getopt.c:1025 lib/getopt.c:1036
 #, c-format
 msgid "%s: option `-W %s' is ambiguous\n"
 msgstr "%s: l'option « -W %s » est ambiguë\n"
 
-#: lib/getopt.c:899
+#: lib/getopt.c:1060 lib/getopt.c:1072
 #, c-format
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "%s: l'option « -W %s » ne requiert pas un argument.\n"
@@ -178,7 +178,7 @@ msgstr "ne peut aller vers le répertoire %s"
 msgid "cannot change permissions of %s"
 msgstr "Ne peut changer les permissions de %s"
 
-#: lib/obstack.c:494 lib/obstack.c:497 lib/xmalloc.c:66
+#: lib/obstack.c:500 lib/obstack.c:503 lib/xmalloc.c:66
 msgid "memory exhausted"
 msgstr "Mémoire épuisée"
 
@@ -271,10 +271,10 @@ msgstr "Les chaînes comparées étaient %s et %s."
 #: src/env.c:115 src/expand.c:106 src/expr.c:85 src/factor.c:70 src/fmt.c:267
 #: src/fold.c:63 src/head.c:84 src/hostid.c:44 src/hostname.c:63 src/id.c:83
 #: src/install.c:597 src/join.c:140 src/kill.c:89 src/link.c:47 src/ln.c:335
-#: src/logname.c:44 src/ls.c:3598 src/md5sum.c:121 src/mkdir.c:57
+#: src/logname.c:44 src/ls.c:3618 src/md5sum.c:121 src/mkdir.c:57
 #: src/mkfifo.c:51 src/mknod.c:61 src/mv.c:310 src/nice.c:63 src/nl.c:172
 #: src/od.c:287 src/paste.c:399 src/pathchk.c:136 src/pinky.c:465
-#: src/pr.c:2752 src/printenv.c:59 src/printf.c:93 src/ptx.c:1855 src/pwd.c:43
+#: src/pr.c:2750 src/printenv.c:59 src/printf.c:93 src/ptx.c:1855 src/pwd.c:43
 #: src/rm.c:96 src/rmdir.c:140 src/seq.c:78 src/shred.c:171 src/sleep.c:67
 #: src/sort.c:275 src/split.c:91 src/stat.c:726 src/stty.c:497 src/su.c:433
 #: src/sum.c:56 src/sync.c:40 src/tac.c:123 src/tail.c:234 src/tee.c:59
@@ -312,10 +312,10 @@ msgstr ""
 #: src/env.c:134 src/expand.c:131 src/expr.c:148 src/factor.c:90
 #: src/false.c:28 src/fmt.c:297 src/fold.c:86 src/head.c:115 src/hostid.c:57
 #: src/hostname.c:76 src/id.c:104 src/install.c:652 src/join.c:180
-#: src/kill.c:119 src/link.c:59 src/ln.c:390 src/logname.c:55 src/ls.c:3727
+#: src/kill.c:119 src/link.c:59 src/ln.c:390 src/logname.c:55 src/ls.c:3747
 #: src/md5sum.c:157 src/mkdir.c:76 src/mkfifo.c:68 src/mknod.c:86 src/mv.c:364
 #: src/nice.c:77 src/nl.c:227 src/od.c:374 src/paste.c:423 src/pathchk.c:148
-#: src/pinky.c:492 src/pr.c:2864 src/printenv.c:72 src/printf.c:141
+#: src/pinky.c:492 src/pr.c:2862 src/printenv.c:72 src/printf.c:141
 #: src/pwd.c:54 src/rm.c:128 src/rmdir.c:160 src/seq.c:104 src/shred.c:234
 #: src/sleep.c:83 src/sort.c:346 src/split.c:123 src/stat.c:796 src/stty.c:711
 #: src/su.c:454 src/sum.c:76 src/sync.c:51 src/tac.c:146 src/tail.c:304
@@ -412,14 +412,24 @@ msgstr ""
 msgid "cannot do ioctl on `%s'"
 msgstr "Ne peut exécuter « ioctl » sur « %s »"
 
-#: src/cat.c:647 src/dd.c:1217 src/od.c:1014 src/tee.c:181
+#: src/cat.c:663 src/dd.c:1220 src/od.c:1014 src/tee.c:181
 msgid "standard output"
 msgstr "sortie standard"
 
-#: src/cat.c:778
+#: src/cat.c:794
 #, c-format
 msgid "%s: input file is output file"
 msgstr "%s: le fichier à l'entrée est le même qu'à la sortie."
+
+#: src/cat.c:852
+#, fuzzy
+msgid "closing standard input"
+msgstr "entrée standard"
+
+#: src/cat.c:855
+#, fuzzy
+msgid "closing standard output"
+msgstr "sortie standard"
 
 #: src/chgrp.c:93
 #, fuzzy
@@ -492,9 +502,9 @@ msgstr ""
 "  -v, --verbose             produire un diagnostic pour chaque fichier "
 "traité\n"
 
-#: src/chgrp.c:218 src/chmod.c:158 src/chmod.c:365 src/chown-core.c:235
+#: src/chgrp.c:218 src/chmod.c:158 src/chmod.c:366 src/chown-core.c:235
 #: src/chown-core.c:247 src/chown.c:220 src/cp.c:303 src/touch.c:169
-#: src/touch.c:358
+#: src/touch.c:357
 #, c-format
 msgid "failed to get attributes of %s"
 msgstr "échec d'obtention des attributs de %s"
@@ -573,7 +583,7 @@ msgstr ""
 msgid "invalid character %s in mode string %s"
 msgstr "Le caractère « %c » est invalide dans le type de chaîne « %s »."
 
-#: src/chmod.c:361
+#: src/chmod.c:362
 #, fuzzy, c-format
 msgid "invalid mode string: %s"
 msgstr "Le type de chaîne « %s » est invalide."
@@ -730,12 +740,12 @@ msgstr ""
 "Si aucune commande n'est fournie, exécuter ``${SHELL} -i'' (par défaut: /bin/"
 "sh).\n"
 
-#: src/chroot.c:83
+#: src/chroot.c:84
 #, fuzzy, c-format
 msgid "cannot change root directory to %s"
 msgstr "ne peut aller vers le répertoire %s"
 
-#: src/chroot.c:86
+#: src/chroot.c:87
 #, fuzzy
 msgid "cannot chdir to root directory"
 msgstr "ne peut aller vers le répertoire %s"
@@ -796,7 +806,7 @@ msgstr "Ne peut changer la protection de %s"
 msgid "cannot open %s for reading"
 msgstr "Ne peut ouvrir %s en lecture"
 
-#: src/copy.c:232 src/copy.c:286 src/copy.c:301 src/dd.c:1195
+#: src/copy.c:232 src/copy.c:286 src/copy.c:301 src/dd.c:1197
 #, fuzzy, c-format
 msgid "cannot fstat %s"
 msgstr "Ne peut changer la protection de %s"
@@ -806,8 +816,8 @@ msgstr "Ne peut changer la protection de %s"
 msgid "skipping file %s, as it was replaced while being copied"
 msgstr "escamotage du fichier %s, parce qu<il a /t/ remplac/ durant la copie"
 
-#: src/copy.c:262 src/copy.c:1041 src/ln.c:291 src/remove.c:724
-#: src/remove.c:771 src/remove.c:929
+#: src/copy.c:262 src/copy.c:1041 src/ln.c:291 src/remove.c:735
+#: src/remove.c:782 src/remove.c:961
 #, fuzzy, c-format
 msgid "cannot remove %s"
 msgstr "Ne peut changer la protection de %s"
@@ -817,7 +827,7 @@ msgstr "Ne peut changer la protection de %s"
 msgid "cannot create regular file %s"
 msgstr "Ne peut créer de fichier temporaire"
 
-#: src/copy.c:328 src/dd.c:812 src/dd.c:1006
+#: src/copy.c:328 src/dd.c:814 src/dd.c:1008
 #, fuzzy, c-format
 msgid "reading %s"
 msgstr "Erreur lors de la lecture %s"
@@ -827,7 +837,7 @@ msgstr "Erreur lors de la lecture %s"
 msgid "cannot lseek %s"
 msgstr "Ne peut changer la protection de %s"
 
-#: src/copy.c:377 src/copy.c:401 src/dd.c:1050 src/dd.c:1111
+#: src/copy.c:377 src/copy.c:401 src/dd.c:1052 src/dd.c:1113
 #, fuzzy, c-format
 msgid "writing %s"
 msgstr "Erreur lors de l'écriture %s"
@@ -978,7 +988,7 @@ msgstr "Ne peut créer le répertoire %s"
 msgid "cannot create special file %s"
 msgstr "fichier spécial de caractères"
 
-#: src/copy.c:1406 src/ls.c:2352 src/stat.c:481
+#: src/copy.c:1406 src/ls.c:2372 src/stat.c:481
 #, fuzzy, c-format
 msgid "cannot read symbolic link %s"
 msgstr "lien symbolique"
@@ -1050,9 +1060,9 @@ msgstr ""
 
 #: src/cp.c:174 src/csplit.c:1503 src/cut.c:175 src/df.c:760 src/du.c:193
 #: src/expand.c:119 src/fmt.c:277 src/fold.c:76 src/head.c:98
-#: src/install.c:613 src/kill.c:103 src/ln.c:354 src/ls.c:3608 src/mkdir.c:66
+#: src/install.c:613 src/kill.c:103 src/ln.c:354 src/ls.c:3628 src/mkdir.c:66
 #: src/mkfifo.c:60 src/mknod.c:70 src/mv.c:324 src/nl.c:185 src/paste.c:413
-#: src/pr.c:2765 src/ptx.c:1867 src/shred.c:181 src/sort.c:289 src/split.c:104
+#: src/pr.c:2763 src/ptx.c:1867 src/shred.c:181 src/sort.c:289 src/split.c:104
 #: src/tac.c:136 src/tail.c:248 src/touch.c:243 src/unexpand.c:384
 #: src/uniq.c:148
 msgid ""
@@ -1300,16 +1310,16 @@ msgstr ""
 "AVERTISSEMENT: -i sera retiré dans une prochaine version; utiliser -u à la "
 "place"
 
-#: src/cp.c:971 src/ln.c:463
+#: src/cp.c:972 src/ln.c:464
 #, fuzzy
 msgid "symbolic links are not supported on this system"
 msgstr "AVERTISSEMENT: --pid=PID n'est pas supporté sur ce système"
 
-#: src/cp.c:1007
+#: src/cp.c:1008
 msgid "cannot make both hard and symbolic links"
 msgstr "Ne peut créer à la fois un lien symbolique et direct."
 
-#: src/cp.c:1015 src/install.c:279 src/ln.c:529 src/mv.c:486
+#: src/cp.c:1016 src/install.c:279 src/ln.c:530 src/mv.c:486
 msgid "backup type"
 msgstr "type d'archive"
 
@@ -1509,7 +1519,7 @@ msgid "David Ihnat, David MacKenzie, and Jim Meyering"
 msgstr "David Ihnat, David MacKenzie et Jim Meyering"
 
 #: src/cut.c:167 src/df.c:754 src/du.c:188 src/expand.c:110 src/fold.c:67
-#: src/head.c:88 src/ls.c:3602 src/nl.c:176 src/paste.c:403 src/pr.c:2756
+#: src/head.c:88 src/ls.c:3622 src/nl.c:176 src/paste.c:403 src/pr.c:2754
 #: src/sort.c:279 src/sum.c:60 src/tac.c:127 src/tail.c:238 src/tee.c:63
 #: src/unexpand.c:375 src/wc.c:128
 #, c-format
@@ -1834,9 +1844,9 @@ msgstr ""
 "  « - » (tiret) ne pas compléter le champ\n"
 "  « _ » (souligné) compléter le champ par des blancs\n"
 
-#: src/date.c:239 src/dd.c:1169 src/dircolors.c:540 src/head.c:220
-#: src/md5sum.c:334 src/md5sum.c:675 src/od.c:960 src/od.c:2000 src/pr.c:1166
-#: src/pr.c:1373 src/pr.c:1495 src/stty.c:912 src/tac.c:484 src/tac.c:490
+#: src/date.c:239 src/dd.c:1171 src/dircolors.c:540 src/head.c:220
+#: src/md5sum.c:334 src/md5sum.c:675 src/od.c:960 src/od.c:2000 src/pr.c:1164
+#: src/pr.c:1371 src/pr.c:1493 src/stty.c:912 src/tac.c:484 src/tac.c:490
 #: src/tee.c:151 src/tr.c:2028 src/tsort.c:585
 msgid "standard input"
 msgstr "entrée standard"
@@ -2004,42 +2014,42 @@ msgstr "enregistrement tronqué."
 msgid "truncated records"
 msgstr "enregistrements tronqués."
 
-#: src/dd.c:386
+#: src/dd.c:387
 #, fuzzy, c-format
 msgid "closing input file %s"
 msgstr "Création du fichier « %s »\n"
 
-#: src/dd.c:388
+#: src/dd.c:390
 #, c-format
 msgid "closing output file %s"
 msgstr "fermeture du fichier de sortie %s"
 
-#: src/dd.c:472
+#: src/dd.c:474
 #, fuzzy, c-format
 msgid "writing to %s"
 msgstr "Erreur lors de l'écriture %s"
 
-#: src/dd.c:504
+#: src/dd.c:506
 #, fuzzy, c-format
 msgid "invalid conversion: %s"
 msgstr "L'option largeur est invalide: « %s »."
 
-#: src/dd.c:560
+#: src/dd.c:562
 #, fuzzy, c-format
 msgid "unrecognized option %s"
 msgstr "L'option « -%c » n'est pas reconnue."
 
-#: src/dd.c:607
+#: src/dd.c:609
 #, fuzzy, c-format
 msgid "unrecognized option %s=%s"
 msgstr "L'option « -%c » n'est pas reconnue."
 
-#: src/dd.c:613
+#: src/dd.c:615
 #, fuzzy, c-format
 msgid "invalid number %s"
 msgstr "Nombre invalide."
 
-#: src/dd.c:643
+#: src/dd.c:645
 msgid ""
 "only one conv in {ascii,ebcdic,ibm}, {lcase,ucase}, {block,unblock}, "
 "{unblock,sync}"
@@ -2047,7 +2057,7 @@ msgstr ""
 "Un seul type de conversion est autorisé parmi {ascii,ebcdic,ibm},\n"
 "{lcase,ucase}, {block,unblock}, {unblock,sync}"
 
-#: src/dd.c:778
+#: src/dd.c:780
 #, c-format
 msgid ""
 "warning: working around lseek kernel bug for file (%s)\n"
@@ -2057,17 +2067,17 @@ msgstr ""
 "pour le fichier (%s)\n"
 "de type mt_type=0x%0lx -- voir <sys/mtio.h> pour la liste des types"
 
-#: src/dd.c:1166 src/dd.c:1184
+#: src/dd.c:1168 src/dd.c:1186
 #, fuzzy, c-format
 msgid "opening %s"
 msgstr "Erreur lors de la lecture %s"
 
-#: src/dd.c:1192
+#: src/dd.c:1194
 #, fuzzy
 msgid "file offset out of range"
 msgstr "%s: numéro de ligne hors plage."
 
-#: src/dd.c:1208
+#: src/dd.c:1211
 #, c-format
 msgid "advancing past %s bytes in output file %s"
 msgstr "a dépassé de %s octets dans le fichier de sortie %s"
@@ -2170,7 +2180,7 @@ msgstr ""
 "                          de système de fichiers\n"
 "  -v                      (ignorée)\n"
 
-#: src/df.c:785 src/du.c:225 src/ls.c:3715
+#: src/df.c:785 src/du.c:225 src/ls.c:3735
 msgid ""
 "\n"
 "SIZE may be (or may be an integer optionally followed by) one of following:\n"
@@ -2382,7 +2392,7 @@ msgstr "ne peut aller vers le répertoire %s"
 msgid "cannot change to directory %s"
 msgstr "ne peut aller vers le répertoire %s"
 
-#: src/du.c:557 src/ls.c:2129 src/wc.c:589
+#: src/du.c:557 src/ls.c:2149 src/wc.c:589
 msgid "total"
 msgstr "total"
 
@@ -2864,24 +2874,24 @@ msgstr ""
 msgid "cannot reposition file pointer for %s"
 msgstr "ne peut repositionner le pointeur de fichier pour %s"
 
-#: src/head.c:255 src/tail.c:1378
+#: src/head.c:255 src/tail.c:1379
 #, c-format
 msgid "%s: %s is so large that it is not representable"
 msgstr "%s: %s est tellement grande qu'elle n'est pas représentable."
 
-#: src/head.c:256 src/tail.c:1380
+#: src/head.c:256 src/tail.c:1381
 msgid "number of lines"
 msgstr "Nombre de lignes"
 
-#: src/head.c:256 src/tail.c:1381
+#: src/head.c:256 src/tail.c:1382
 msgid "number of bytes"
 msgstr "Nombre d'octets"
 
-#: src/head.c:263 src/tail.c:1467
+#: src/head.c:263 src/tail.c:1468
 msgid "invalid number of lines"
 msgstr "nombre invalide de lignes."
 
-#: src/head.c:264 src/tail.c:1468
+#: src/head.c:264 src/tail.c:1469
 msgid "invalid number of bytes"
 msgstr "nombre d'octets invalide."
 
@@ -2979,32 +2989,32 @@ msgstr ""
 msgid "cannot print only user and only group"
 msgstr "ne peut omettre ensemble l'usager et le groupe"
 
-#: src/id.c:165
+#: src/id.c:166
 msgid "cannot print only names or real IDs in default format"
 msgstr ""
 "Ne peut afficher seulement les noms ou les IDentificateurs réels\n"
 "dans le format par défaut."
 
-#: src/id.c:174
+#: src/id.c:175
 #, c-format
 msgid "%s: No such user"
 msgstr "%s: usager inexistant."
 
-#: src/id.c:211
+#: src/id.c:212
 #, c-format
 msgid "cannot find name for user ID %u"
 msgstr "ne peut trouver le nom de l'usager ID %u"
 
-#: src/id.c:234
+#: src/id.c:235
 #, fuzzy, c-format
 msgid "cannot find name for group ID %u"
 msgstr "ne peut modifier le propriétraire et/ou le groupe de %s"
 
-#: src/id.c:272
+#: src/id.c:273
 msgid "cannot get supplemental group list"
 msgstr "Ne peut trouver la liste de groupes supplémentaires."
 
-#: src/id.c:382
+#: src/id.c:383
 msgid " groups="
 msgstr " groupes="
 
@@ -3505,17 +3515,17 @@ msgstr ""
 "  -v, --verbose              afficher le nom de chaque fichier avant de "
 "créer un lien\n"
 
-#: src/ln.c:489 src/mv.c:462 src/shred.c:1609
+#: src/ln.c:490 src/mv.c:462 src/shred.c:1609
 #, fuzzy
 msgid "missing file argument"
 msgstr "Argument escamoté."
 
-#: src/ln.c:520
+#: src/ln.c:521
 #, fuzzy, c-format
 msgid "%s: specified target directory is not a directory"
 msgstr "%s existe mais n'est pas un répertoire"
 
-#: src/ln.c:541
+#: src/ln.c:542
 msgid "when making multiple links, last argument must be a directory"
 msgstr ""
 "Lors de la création de liens: le dernier argument doit être un répertoire."
@@ -3604,12 +3614,17 @@ msgstr "ne peut repositionner le pointeur de fichier pour %s"
 msgid "not listing already-listed directory: %s"
 msgstr "Ne peut créer le répertoire %s"
 
-#: src/ls.c:2462
+#: src/ls.c:2116 src/remove.c:904
+#, fuzzy, c-format
+msgid "reading directory %s"
+msgstr "Ne peut créer le répertoire %s"
+
+#: src/ls.c:2482
 #, fuzzy, c-format
 msgid "cannot compare file names %s and %s"
 msgstr "Les chaînes comparées étaient %s et %s."
 
-#: src/ls.c:3603
+#: src/ls.c:3623
 msgid ""
 "List information about the FILEs (the current directory by default).\n"
 "Sort entries alphabetically if none of -cftuSUX nor --sort.\n"
@@ -3620,7 +3635,7 @@ msgstr ""
 "des options  -cftuSUX  ou  --sort n'est utilisée.\n"
 "\n"
 
-#: src/ls.c:3611
+#: src/ls.c:3631
 msgid ""
 "  -a, --all                  do not hide entries starting with .\n"
 "  -A, --almost-all           do not list implied . and ..\n"
@@ -3634,7 +3649,7 @@ msgstr ""
 "                             non-graphiques\n"
 "                             en utilisant des séquences d'échappement\n"
 
-#: src/ls.c:3617
+#: src/ls.c:3637
 msgid ""
 "      --block-size=SIZE      use SIZE-byte blocks\n"
 "  -B, --ignore-backups       do not list implied entries ending with ~\n"
@@ -3656,7 +3671,7 @@ msgstr ""
 "                             autrement: trier par la date de modification "
 "(ctime)\n"
 
-#: src/ls.c:3625
+#: src/ls.c:3645
 msgid ""
 "  -C                         list entries by columns\n"
 "      --color[=WHEN]         control whether color is used to distinguish "
@@ -3675,7 +3690,7 @@ msgstr ""
 "  -D, --dired                générer une sortie adaptée pour le mode\n"
 "                             « dired » de Emacs\n"
 
-#: src/ls.c:3632
+#: src/ls.c:3652
 msgid ""
 "  -f                         do not sort, enable -aU, disable -lst\n"
 "  -F, --classify             append indicator (one of */=@|) to entries\n"
@@ -3692,7 +3707,7 @@ msgstr ""
 "                             -C vertical\n"
 "      --full-time            identique à -l --time-style=full-iso\n"
 
-#: src/ls.c:3639
+#: src/ls.c:3659
 msgid ""
 "  -g                         like -l, but do not list owner\n"
 "  -G, --no-group             inhibit display of group information\n"
@@ -3712,7 +3727,7 @@ msgstr ""
 "                             suivre les liens symboliques de la ligne de "
 "commande\n"
 
-#: src/ls.c:3646
+#: src/ls.c:3666
 msgid ""
 "      --indicator-style=WORD append indicator with style WORD to entry "
 "names:\n"
@@ -3731,7 +3746,7 @@ msgstr ""
 "                             concordant avec le PATRON de shell\n"
 "  -k                         identique à --block-size=1K\n"
 
-#: src/ls.c:3653
+#: src/ls.c:3673
 msgid ""
 "  -l                         use a long listing format\n"
 "  -L, --dereference          when showing file information for a symbolic\n"
@@ -3747,7 +3762,7 @@ msgstr ""
 "  -m                         remplir la largeur par une liste d'entrées\n"
 "                             séparée par des virgules\n"
 
-#: src/ls.c:3660
+#: src/ls.c:3680
 msgid ""
 "  -n, --numeric-uid-gid      like -l, but list numeric UIDs and GIDs\n"
 "  -N, --literal              print raw entry names (don't treat e.g. "
@@ -3766,7 +3781,7 @@ msgstr ""
 "de groupe\n"
 "  -p, --file-type            accoler un indicateur (parmi /=@|) aux entrées\n"
 
-#: src/ls.c:3667
+#: src/ls.c:3687
 msgid ""
 "  -q, --hide-control-chars   print ? instead of non graphic characters\n"
 "      --show-control-chars   show non graphic characters as-is (default\n"
@@ -3788,7 +3803,7 @@ msgstr ""
 "                             suivant:  literal, shell, shell-always, c, "
 "escape\n"
 
-#: src/ls.c:3675
+#: src/ls.c:3695
 msgid ""
 "  -r, --reverse              reverse order while sorting\n"
 "  -R, --recursive            list subdirectories recursively\n"
@@ -3798,7 +3813,7 @@ msgstr ""
 "  -R, --recursive            afficher les sous-répertoire récursivement\n"
 "  -s, --size                 afficher la taille de chaque fichier en blocs\n"
 
-#: src/ls.c:3680
+#: src/ls.c:3700
 msgid ""
 "  -S                         sort by file size\n"
 "      --sort=WORD            extension -X, none -U, size -S, time -t,\n"
@@ -3822,7 +3837,7 @@ msgstr ""
 "                             tel que spécifié dans la clé de trie --"
 "sort=clé\n"
 
-#: src/ls.c:3689
+#: src/ls.c:3709
 msgid ""
 "      --time-style=STYLE     show times using style STYLE:\n"
 "                               full-iso, long-iso, iso, locale, +FORMAT\n"
@@ -3847,7 +3862,7 @@ msgstr ""
 "  -T, --tabsize=TAILLE       utiliser la tabulation de la TAILLE\n"
 "                             pour chaque colonne au lieu de 8\n"
 
-#: src/ls.c:3700
+#: src/ls.c:3720
 msgid ""
 "  -u                         with -lt: sort by, and show, access time\n"
 "                               with -l: show access time and sort by name\n"
@@ -3863,7 +3878,7 @@ msgstr ""
 "                             original des entrées d'un répertoire\n"
 "  -v                         trier par version\n"
 
-#: src/ls.c:3707
+#: src/ls.c:3727
 #, fuzzy
 msgid ""
 "  -w, --width=COLS           assume screen width instead of current value\n"
@@ -3878,7 +3893,7 @@ msgstr ""
 "                          à moins que l'option -s soit spécifiée\n"
 "  -n                      (ignoré)\n"
 
-#: src/ls.c:3719
+#: src/ls.c:3739
 msgid ""
 "\n"
 "By default, color is not used to distinguish types of files.  That is\n"
@@ -4103,7 +4118,7 @@ msgstr ""
 "  -m, --mode=MODE   utiliser le MODE d'accès (comme avec « chmod »),\n"
 "                    mais non pas selon a=rw - umask\n"
 
-#: src/mkfifo.c:93 src/mknod.c:208
+#: src/mkfifo.c:93 src/mknod.c:210
 msgid "fifo files not supported"
 msgstr "Les fichiers de type « fifo » n'est pas supporté."
 
@@ -4170,28 +4185,28 @@ msgstr ""
 "Lors de la création d'un fichier spécial, les numéros\n"
 "majeur et mineur de périphériques doivent être spécifiés."
 
-#: src/mknod.c:189
+#: src/mknod.c:190
 #, fuzzy, c-format
 msgid "invalid major device number %s"
 msgstr "Le numéro de ligne de départ « %s » est invalide."
 
-#: src/mknod.c:193
+#: src/mknod.c:195
 #, fuzzy, c-format
 msgid "invalid minor device number %s"
 msgstr "Le numéro de ligne de départ « %s » est invalide."
 
-#: src/mknod.c:198
+#: src/mknod.c:200
 #, fuzzy, c-format
 msgid "invalid device %s %s"
 msgstr "argument %s invalide pour %s"
 
-#: src/mknod.c:212
+#: src/mknod.c:214
 msgid "major and minor device numbers may not be specified for fifo files"
 msgstr ""
 "Les numéros majeur et mineur de périphérique ne peuvent être\n"
 "spécifiés pour des fichiers de type « fifo »"
 
-#: src/mknod.c:233
+#: src/mknod.c:235
 #, fuzzy, c-format
 msgid "cannot set permissions of %s"
 msgstr "Ne peut changer les permissions de %s"
@@ -4907,77 +4922,77 @@ msgid "`--pages' starting page number is larger than ending page number"
 msgstr ""
 "« --pages » numéro de page de départ est plus grand que le no. de page finale"
 
-#: src/pr.c:913
+#: src/pr.c:911
 msgid "`--pages=FIRST_PAGE[:LAST_PAGE]' missing argument"
 msgstr "« --pages=PREMIÈRE_PAGE[:DERNIÈRE_PAGE] » argument manquant"
 
-#: src/pr.c:924
+#: src/pr.c:922
 #, c-format
 msgid "`--columns=COLUMN' invalid number of columns: `%s'"
 msgstr "« --columns=N »    nombre invalide de colonnes: « %s »"
 
-#: src/pr.c:978
+#: src/pr.c:976
 #, c-format
 msgid "`-l PAGE_LENGTH' invalid number of lines: `%s'"
 msgstr "« -l LONGUEUR_PAGE » contient un nombre invalide de lignes: « %s »."
 
-#: src/pr.c:1002
+#: src/pr.c:1000
 #, c-format
 msgid "`-N NUMBER' invalid starting line number: `%s'"
 msgstr "« -N NUMBER » contient un nombre invalide de départ: « %s »."
 
-#: src/pr.c:1014
+#: src/pr.c:1012
 #, c-format
 msgid "`-o MARGIN' invalid line offset: `%s'"
 msgstr "« -o MARGIN » saut de ligne invalide: « %s »"
 
-#: src/pr.c:1055
+#: src/pr.c:1053
 #, c-format
 msgid "`-w PAGE_WIDTH' invalid number of characters: `%s'"
 msgstr ""
 "« -w LARGEUR_DE_PAGE » contient un nombre invalide de caractères: « %s »"
 
-#: src/pr.c:1067
+#: src/pr.c:1065
 #, c-format
 msgid "`-W PAGE_WIDTH' invalid number of characters: `%s'"
 msgstr ""
 "« -W LARGEUR_DE_PAGE » contient un nombre invalide de caractères: « %s »"
 
-#: src/pr.c:1081
+#: src/pr.c:1079
 msgid "%b %e %H:%M %Y"
 msgstr "%b %e %H:%M %Y"
 
-#: src/pr.c:1090
+#: src/pr.c:1088
 msgid "Cannot specify number of columns when printing in parallel."
 msgstr "Ne peut spécifier le nombre de colonnes lorsqu'imprimant en parallèle."
 
-#: src/pr.c:1094
+#: src/pr.c:1092
 msgid "Cannot specify both printing across and printing in parallel."
 msgstr "Ne peut faire un affichage à la fois croisée et en parallèle."
 
-#: src/pr.c:1190
+#: src/pr.c:1188
 #, c-format
 msgid "`-%c' extra characters or invalid number in the argument: `%s'"
 msgstr ""
 "« -%c': caractères superflus ou nombre invalide dans les arguments: « %s »."
 
-#: src/pr.c:1301
+#: src/pr.c:1299
 msgid "page width too narrow"
 msgstr "La largeur de page est trop petite."
 
-#: src/pr.c:2364
+#: src/pr.c:2362
 #, c-format
 msgid "starting page number larger than total number of pages: `%d'"
 msgstr ""
 "Le numéro de page de départ est plus grand que le nombre total de pages: « %"
 "d »"
 
-#: src/pr.c:2395
+#: src/pr.c:2393
 #, c-format
 msgid "Page %d"
 msgstr "Page %d"
 
-#: src/pr.c:2761
+#: src/pr.c:2759
 msgid ""
 "Paginate or columnate FILE(s) for printing.\n"
 "\n"
@@ -4985,12 +5000,13 @@ msgstr ""
 "Paginer ou mettre en colonne les FICHIERS pour impression.\n"
 "\n"
 
-#: src/pr.c:2768
+#: src/pr.c:2766
+#, fuzzy
 msgid ""
 "  +FIRST_PAGE[:LAST_PAGE], --pages=FIRST_PAGE[:LAST_PAGE]\n"
 "                    begin [stop] printing with page FIRST_[LAST_]PAGE\n"
 "  -COLUMN, --columns=COLUMN\n"
-"                    produce COLUMN-column output and print columns down,\n"
+"                    output COLUMN columns and print columns down,\n"
 "                    unless -a is used. Balance number of lines in the\n"
 "                    columns on each page.\n"
 msgstr ""
@@ -5005,7 +5021,7 @@ msgstr ""
 "                       utilisé.  Équilibrer le nombre de lignes de chaque\n"
 "                       colonne sur chaque page.\n"
 
-#: src/pr.c:2776
+#: src/pr.c:2774
 msgid ""
 "  -a, --across      print columns across rather than down, used together\n"
 "                    with -COLUMN\n"
@@ -5022,7 +5038,7 @@ msgstr ""
 "  -d, --double-space\n"
 "                       produire une sortie avec double espacement\n"
 
-#: src/pr.c:2784
+#: src/pr.c:2782
 msgid ""
 "  -D, --date-format=FORMAT\n"
 "                    use FORMAT for the header date\n"
@@ -5045,7 +5061,7 @@ msgstr ""
 "                       avec -f ou 5 lignes par en-tête et bas de page sans -"
 "f) \n"
 
-#: src/pr.c:2794
+#: src/pr.c:2792
 msgid ""
 "  -h HEADER, --header=HEADER\n"
 "                    use a centered HEADER instead of filename in page "
@@ -5072,7 +5088,7 @@ msgstr ""
 "                       colonnes -s-sep-string[=CHAÎNE] initialise les "
 "séparateurs\n"
 
-#: src/pr.c:2803
+#: src/pr.c:2801
 msgid ""
 "  -l PAGE_LENGTH, --length=PAGE_LENGTH\n"
 "                    set the page length to PAGE_LENGTH (66) lines\n"
@@ -5088,7 +5104,7 @@ msgstr ""
 "                       colonne, tronque les lignes, mais joint les\n"
 "                       lignes de pleine longueur avec -j\n"
 
-#: src/pr.c:2810
+#: src/pr.c:2808
 msgid ""
 "  -n[SEP[DIGITS]], --number-lines[=SEP[DIGITS]]\n"
 "                    number lines, use DIGITS (5) digits, then SEP (TAB),\n"
@@ -5106,7 +5122,7 @@ msgstr ""
 "ligne\n"
 "                       de la 1ère page imprimée (voir +PREMIÈRE_PAGE)\n"
 
-#: src/pr.c:2818
+#: src/pr.c:2816
 msgid ""
 "  -o MARGIN, --indent=MARGIN\n"
 "                    offset each line with MARGIN (zero) spaces, do not\n"
@@ -5121,7 +5137,7 @@ msgstr ""
 "                       inhiber les avertissements lorsqu'un fichier\n"
 "                       ne peut être ouvert\n"
 
-#: src/pr.c:2825
+#: src/pr.c:2823
 msgid ""
 "  -s[CHAR],--separator[=CHAR]\n"
 "                    separate columns by a single character, default for "
@@ -5139,11 +5155,11 @@ msgstr ""
 "                       options de 3 colonnes (-COLUMN|-a - COLUMN|-m) sauf "
 "si -w est utilisé\n"
 
-#: src/pr.c:2832
+#: src/pr.c:2830
 msgid "  -SSTRING, --sep-string[=STRING]\n"
 msgstr "  -SSTRING, --sep-string[=CHAÎNE]\n"
 
-#: src/pr.c:2835
+#: src/pr.c:2833
 msgid ""
 "                    separate columns by STRING,\n"
 "                    without -S: Default separator <TAB> with -J and <space>\n"
@@ -5160,7 +5176,7 @@ msgstr ""
 "  -t, --omit-header\n"
 "                      inhiber l'en-tête et le bas de page\n"
 
-#: src/pr.c:2841
+#: src/pr.c:2839
 msgid ""
 "  -T, --omit-pagination\n"
 "                    omit page headers and trailers, eliminate any "
@@ -5185,7 +5201,7 @@ msgstr ""
 "                       utiliser LARGEUR_DE_PAGE au lieu de 72 colonnes\\n\"\n"
 "                       tronquer les lignes (voir aussi l'option -j)\n"
 
-#: src/pr.c:2851
+#: src/pr.c:2849
 msgid ""
 "  -W PAGE_WIDTH, --page-width=PAGE_WIDTH\n"
 "                    set page width to PAGE_WIDTH (72) characters always,\n"
@@ -5201,7 +5217,7 @@ msgstr ""
 "utilisée\n"
 "                       sans interférence avec -S ou -s\n"
 
-#: src/pr.c:2859
+#: src/pr.c:2857
 msgid ""
 "\n"
 "-T implied by -l nn when nn <= 10 or <= 3 with -F. With no FILE, or when\n"
@@ -5549,57 +5565,57 @@ msgstr ""
 "Le répertoire suivant fait parti du cycle:\n"
 "  %s\n"
 
-#: src/remove.c:570 src/remove.c:709 src/remove.c:850 src/remove.c:916
+#: src/remove.c:581 src/remove.c:720 src/remove.c:876 src/remove.c:948
 #, fuzzy, c-format
 msgid "cannot lstat %s"
 msgstr "Ne peut changer la protection de %s"
 
-#: src/remove.c:599
+#: src/remove.c:610
 #, fuzzy, c-format
 msgid "%s: descend into write-protected directory %s? "
 msgstr "Ne peut créer le répertoire %s"
 
-#: src/remove.c:600
+#: src/remove.c:611
 #, fuzzy, c-format
 msgid "%s: descend into directory %s? "
 msgstr "ne peut aller vers le répertoire %s"
 
-#: src/remove.c:611
+#: src/remove.c:622
 #, c-format
 msgid "%s: remove write-protected %s %s? "
 msgstr "%s: détruire un fichier protégé en écriture %s %s? "
 
-#: src/remove.c:612
+#: src/remove.c:623
 #, c-format
 msgid "%s: remove %s %s? "
 msgstr "%s: détruire %s %s? "
 
-#: src/remove.c:636
+#: src/remove.c:647
 #, c-format
 msgid "removed %s\n"
 msgstr "détruit %s\n"
 
-#: src/remove.c:651 src/remove.c:986
+#: src/remove.c:662 src/remove.c:1018
 #, fuzzy, c-format
 msgid "removed directory: %s\n"
 msgstr "Ne peut créer le répertoire %s"
 
-#: src/remove.c:731 src/remove.c:991
+#: src/remove.c:742 src/remove.c:1023
 #, fuzzy, c-format
 msgid "cannot remove directory %s"
 msgstr "Ne peut créer le répertoire %s"
 
-#: src/remove.c:805
+#: src/remove.c:816
 #, fuzzy, c-format
 msgid "cannot open directory %s"
 msgstr "Ne peut créer le répertoire %s"
 
-#: src/remove.c:855 src/remove.c:934
+#: src/remove.c:881 src/remove.c:966
 #, fuzzy, c-format
 msgid "cannot chdir from %s to %s"
 msgstr "ne peut aller vers le répertoire %s"
 
-#: src/remove.c:1025
+#: src/remove.c:1057
 msgid "cannot remove `.' or `..'"
 msgstr "Ne peut enlever « . » or « .. »"
 
@@ -6970,12 +6986,12 @@ msgstr "%s: incapable d'exécuter toutes les opérations demandées."
 msgid "new_mode: mode\n"
 msgstr "new_mode: mode\n"
 
-#: src/stty.c:1464
+#: src/stty.c:1465
 #, c-format
 msgid "%s: no size information for this device"
 msgstr "%s: aucune information sur la taille pour ce périphérique."
 
-#: src/stty.c:1913
+#: src/stty.c:1914
 #, fuzzy, c-format
 msgid "invalid integer argument `%s'"
 msgstr "L'incrément du nombre de ligne « %s » est invalide."
@@ -7273,59 +7289,59 @@ msgstr "%s: ne peut repérer le déplacement %s%s"
 msgid "%s: cannot seek to relative offset %s%s"
 msgstr "%s: ne peut repérer selon le déplacement relatif %s%s"
 
-#: src/tail.c:408
+#: src/tail.c:409
 #, c-format
 msgid "%s: cannot seek to end-relative offset %s%s"
 msgstr "%s: ne peut repérer la fin selon le déplacement relatif %s%s"
 
-#: src/tail.c:814
+#: src/tail.c:815
 #, c-format
 msgid "`%s' has become inaccessible"
 msgstr "« %s » est devenu inaccessible"
 
-#: src/tail.c:831
+#: src/tail.c:832
 #, c-format
 msgid "`%s' has been replaced with an untailable file; giving up on this name"
 msgstr ""
 "« %s » a été remplacé par un fichier dont on ne peut déterminer la taille; "
 "abandon sur ce nom."
 
-#: src/tail.c:852
+#: src/tail.c:853
 #, c-format
 msgid "`%s' has become accessible"
 msgstr "%s» est devenu accessible"
 
-#: src/tail.c:860
+#: src/tail.c:861
 #, c-format
 msgid "`%s' has appeared;  following end of new file"
 msgstr "« %s » a été remplacé; à la suite de la fin d'un nouveau fichier"
 
-#: src/tail.c:871
+#: src/tail.c:872
 #, c-format
 msgid "`%s' has been replaced;  following end of new file"
 msgstr "« %s » a été remplacé; à la suite de la fin d'un nouveau fichier"
 
-#: src/tail.c:996
+#: src/tail.c:997
 #, c-format
 msgid "%s: file truncated"
 msgstr "%s: fichier tronqué"
 
-#: src/tail.c:1016
+#: src/tail.c:1017
 msgid "no files remaining"
 msgstr "aucun fichier restant"
 
-#: src/tail.c:1226
+#: src/tail.c:1227
 #, c-format
 msgid "%s: cannot follow end of this type of file; giving up on this name"
 msgstr ""
 "%s: ne peut déterminer la fin de ce type de fichier; abandon sur ce nom"
 
-#: src/tail.c:1346
+#: src/tail.c:1347
 #, c-format
 msgid "%c: invalid suffix character in obsolescent option"
 msgstr "%c: caractère invalide en suffixe dans une option désuète."
 
-#: src/tail.c:1395
+#: src/tail.c:1396
 #, c-format
 msgid ""
 "too many arguments;  When using tail's obsolescent option syntax (%s)\n"
@@ -7337,7 +7353,7 @@ msgstr ""
 "b\n"
 "équivalente à la place."
 
-#: src/tail.c:1404
+#: src/tail.c:1405
 #, c-format
 msgid ""
 "Warning: it is not portable to use two or more file arguments with\n"
@@ -7348,52 +7364,52 @@ msgstr ""
 "avec une syntaxe désuète des options (%s) de tail n'est pas portable.\n"
 "Utiliser les options équivalentes -n ou -c à la place."
 
-#: src/tail.c:1413
+#: src/tail.c:1414
 #, c-format
 msgid "`%s' option is obsolete; use `%s-%c %.*s'"
 msgstr "option « %s » est obsolète; utiliser « %s-%c %.*s »"
 
-#: src/tail.c:1473
+#: src/tail.c:1474
 #, c-format
 msgid "%s: is so large that it is not representable"
 msgstr "%s: est tellement grand qu'il n'est pas représentable."
 
-#: src/tail.c:1477
+#: src/tail.c:1478
 #, c-format
 msgid "%s is larger than the maximum file size on this system"
 msgstr "%s est plus grand que la taille maximale possible sur ce système"
 
-#: src/tail.c:1503
+#: src/tail.c:1504
 #, c-format
 msgid "%s: invalid maximum number of unchanged stats between opens"
 msgstr ""
 "%s: nombre maximum invalide de changements d'états entre les ouvertures"
 
-#: src/tail.c:1515
+#: src/tail.c:1516
 #, c-format
 msgid "%s: invalid maximum number of consecutive size changes"
 msgstr "%s: nombre maximum invalide de changements consécutifs de taille"
 
-#: src/tail.c:1527
+#: src/tail.c:1528
 #, c-format
 msgid "%s: invalid PID"
 msgstr "%s: PID invalide."
 
-#: src/tail.c:1545
+#: src/tail.c:1546
 #, c-format
 msgid "%s: invalid number of seconds"
 msgstr "%s: nombre de secondes invalide."
 
-#: src/tail.c:1565
+#: src/tail.c:1566
 msgid "warning: --retry is useful only when following by name"
 msgstr "AVERTISSEMENT: --retry est utile seulement si suivi par un nom"
 
-#: src/tail.c:1569
+#: src/tail.c:1570
 msgid "warning: PID ignored; --pid=PID is useful only when following"
 msgstr ""
 "AVERTISSEMENT: PID ignoré; --pid=PID est utile seulement lorsqu'il suit"
 
-#: src/tail.c:1572
+#: src/tail.c:1573
 msgid "warning: --pid=PID is not supported on this system"
 msgstr "AVERTISSEMENT: --pid=PID n'est pas supporté sur ce système"
 
@@ -7745,24 +7761,24 @@ msgstr ""
 "Noter que les options -d et -t acceptent différents formats de date et "
 "d'heure.\n"
 
-#: src/touch.c:306 src/touch.c:327
+#: src/touch.c:305 src/touch.c:325
 #, fuzzy, c-format
 msgid "invalid date format %s"
 msgstr "argument %s invalide pour %s"
 
-#: src/touch.c:351
+#: src/touch.c:349
 #, fuzzy
 msgid "cannot specify times from more than one source"
 msgstr "Ne peut segmenter plus d'une façon."
 
-#: src/touch.c:374
+#: src/touch.c:372
 #, fuzzy, c-format
 msgid ""
 "warning: `touch %s' is obsolete; use `touch -t %04d%02d%02d%02d%02d.%02d'"
 msgstr ""
 "AVERTISSEMENT: `uniq %s' est obsolète; utiliser `uniq -s %s' à la place"
 
-#: src/touch.c:394
+#: src/touch.c:392
 #, fuzzy
 msgid "file arguments missing"
 msgstr "Trop peu de arguments."

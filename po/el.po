@@ -1,250 +1,298 @@
 # Greek messages for GNU textutils
-# Copyright (C) 1999, 2000 Free Software Foundation, Inc.
-# Simos Xenitellis <S.Xenitellis@rhbnc.ac.uk>, 1999, 2000.
+# Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+# Simos Xenitellis <simos@hellug.gr>, 1999, 2000, 2001, 2002.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: textutils 2.0e\n"
-"POT-Creation-Date: 2002-08-03 11:41+0200\n"
-"PO-Revision-Date: 2000-06-03 18:00+0000\n"
-"Last-Translator: Simos Xenitellis <S.Xenitellis@rhbnc.ac.uk>\n"
+"Project-Id-Version: textutils 2.1\n"
+"POT-Creation-Date: 2002-09-01 02:25+0200\n"
+"PO-Revision-Date: 2002-08-11 11:25+0100\n"
+"Last-Translator: Simos Xenitellis <simos@hellug.gr>\n"
 "Language-Team: Greek <nls@tux.hellug.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=iso-8859-7\n"
 "Content-Transfer-Encoding: 8-bit\n"
 
+#
 #: lib/argmatch.c:161
-#, fuzzy, c-format
+#, c-format
 msgid "invalid argument %s for %s"
-msgstr "μη έγκυρο όρισμα %s για `%s'"
+msgstr "μη έγκυρο όρισμα %s για %s"
 
+#
 #: lib/argmatch.c:162
-#, fuzzy, c-format
+#, c-format
 msgid "ambiguous argument %s for %s"
-msgstr "ασαφές όρισμα %s για `%s'"
+msgstr "ασαφές όρισμα %s για %s"
 
+#
 #: lib/argmatch.c:181
 msgid "Valid arguments are:"
 msgstr "Έγκυρα ορίσματα είναι:"
 
+#
 #: lib/c-stack.c:368
-#, fuzzy
 msgid "program error"
-msgstr "σφάλμα ανάγνωσης"
+msgstr "σφάλμα προγράμματος"
 
+#
 #: lib/c-stack.c:369
 msgid "stack overflow"
-msgstr ""
+msgstr "υπερχείλιση στοίβας"
 
+#
 #: lib/closeout.c:107 src/cat.c:186 src/cat.c:267 src/cat.c:320
 #: src/cksum.c:267 src/head.c:152 src/head.c:195 src/tail.c:327
-#: src/tail.c:1651 src/tr.c:1667 src/tr.c:1913 src/tr.c:2021
+#: src/tail.c:1652 src/tr.c:1667 src/tr.c:1913 src/tr.c:2021
 msgid "write error"
 msgstr "σφάλμα εγγραφής"
 
+#
 #: lib/error.c:129 lib/error.c:157
 msgid "Unknown system error"
 msgstr "Άγνωστο σφάλμα συστήματος"
 
+#
 #: lib/file-type.c:42
 msgid "regular empty file"
-msgstr ""
+msgstr "κανονικό κενό αρχείο"
 
+#
 #: lib/file-type.c:42
 msgid "regular file"
-msgstr ""
+msgstr "κανονικό αρχείο"
 
+#
 #: lib/file-type.c:45
 msgid "directory"
-msgstr ""
+msgstr "κατάλογος"
 
+#
 #: lib/file-type.c:48
-#, fuzzy
 msgid "block special file"
-msgstr "μέγεθος μπλοκ"
+msgstr "ειδικό αρχείο μπλοκ"
 
+#
 #: lib/file-type.c:51
 msgid "character special file"
-msgstr ""
+msgstr "ειδικό αρχείο χαρακτήρων"
 
+#
 #: lib/file-type.c:54
 msgid "fifo"
-msgstr ""
+msgstr "φίφο"
 
+#
 #: lib/file-type.c:57
 msgid "symbolic link"
-msgstr ""
+msgstr "συμβολικός σύνδεσμος"
 
+#
 #: lib/file-type.c:60
 msgid "socket"
-msgstr ""
+msgstr "υποδοχέας"
 
+#
 #: lib/file-type.c:63
 msgid "message queue"
-msgstr ""
+msgstr "ουρά μηνυμάτων"
 
+#
 #: lib/file-type.c:66
 msgid "semaphore"
-msgstr ""
+msgstr "σημαφόρος"
 
+#
 #: lib/file-type.c:69
 msgid "shared memory object"
 msgstr ""
 
+#
 #: lib/file-type.c:71
-#, fuzzy
 msgid "weird file"
-msgstr "σφάλμα εγγραφής"
+msgstr "παράξενο αρχείο"
 
-#: lib/getopt.c:694
+#
+#: lib/getopt.c:692 lib/getopt.c:704
 #, c-format
 msgid "%s: option `%s' is ambiguous\n"
 msgstr "%s: η επιλογή `%s' είναι ασαφής\n"
 
-#: lib/getopt.c:719
+#
+#: lib/getopt.c:737 lib/getopt.c:741
 #, c-format
 msgid "%s: option `--%s' doesn't allow an argument\n"
 msgstr "%s: η επιλογή `--%s' δεν επιτρέπει ορίσματα\n"
 
-#: lib/getopt.c:724
+#
+#: lib/getopt.c:750 lib/getopt.c:755
 #, c-format
 msgid "%s: option `%c%s' doesn't allow an argument\n"
 msgstr "%s: η επιλογή `%c%s' δεν επιτρέπει ορίσματα\n"
 
-#: lib/getopt.c:742 lib/getopt.c:915
+#
+#: lib/getopt.c:791 lib/getopt.c:804 lib/getopt.c:1093 lib/getopt.c:1106
 #, c-format
 msgid "%s: option `%s' requires an argument\n"
 msgstr "%s: η επιλογή `-%s' απαιτεί ένα όρισμα\n"
 
-#: lib/getopt.c:771
+#
+#: lib/getopt.c:842 lib/getopt.c:845
 #, c-format
 msgid "%s: unrecognized option `--%s'\n"
 msgstr "%s: μη αναγνωρίσιμη επιλογή `--%s'\n"
 
-#: lib/getopt.c:775
+#
+#: lib/getopt.c:853 lib/getopt.c:856
 #, c-format
 msgid "%s: unrecognized option `%c%s'\n"
 msgstr "%s: μη αναγνωρίσιμη επιλογή `%c%s'\n"
 
-#: lib/getopt.c:801
+#
+#: lib/getopt.c:903 lib/getopt.c:906
 #, c-format
 msgid "%s: illegal option -- %c\n"
 msgstr "%s: μη αναγνωρίσιμη επιλογή -- %c\n"
 
-#: lib/getopt.c:804
+#
+#: lib/getopt.c:912 lib/getopt.c:915
 #, c-format
 msgid "%s: invalid option -- %c\n"
 msgstr "%s: μη έγκυρη επιλογή -- %c\n"
 
-#: lib/getopt.c:834 lib/getopt.c:964
+#
+#: lib/getopt.c:962 lib/getopt.c:973 lib/getopt.c:1159 lib/getopt.c:1172
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
 msgstr "%s: η επιλογή απαιτεί ένα όρισμα -- %c\n"
 
-#: lib/getopt.c:881
+#
+#: lib/getopt.c:1025 lib/getopt.c:1036
 #, c-format
 msgid "%s: option `-W %s' is ambiguous\n"
 msgstr "%s: η επιλογή `-W %s' είναι ασαφής\n"
 
-#: lib/getopt.c:899
+#
+#: lib/getopt.c:1060 lib/getopt.c:1072
 #, c-format
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "%s: η επιλογή `-W %s' δεν επιτρέπει ορίσματα\n"
 
+#
 #: lib/human.c:365
 msgid "block size"
 msgstr "μέγεθος μπλοκ"
 
+#
 #: lib/makepath.c:176 src/copy.c:1279 src/mkdir.c:172
 #, fuzzy, c-format
 msgid "cannot create directory %s"
 msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
 
+#
 #: lib/makepath.c:182 lib/makepath.c:423 src/cp.c:446 src/cp.c:468
 #, fuzzy, c-format
 msgid "%s exists but is not a directory"
 msgstr "το `%s' υπάρχει ήδη άλλα δεν είναι κατάλογος"
 
+#
 #: lib/makepath.c:319 lib/makepath.c:381 lib/makepath.c:442
 #, fuzzy, c-format
 msgid "cannot change owner and/or group of %s"
 msgstr "δεν είναι δυνατό να παραληφθεί χρήστης και ομάδα"
 
+#
 #: lib/makepath.c:341
 #, fuzzy, c-format
 msgid "cannot chdir to directory %s"
 msgstr "αδύνατη η αλλαγή στο κατάλογο %s"
 
+#
 #: lib/makepath.c:395 lib/makepath.c:448
 #, fuzzy, c-format
 msgid "cannot change permissions of %s"
 msgstr "αδυναμία αλλαγής ιδιοκτησίας στο %s"
 
-#: lib/obstack.c:494 lib/obstack.c:497 lib/xmalloc.c:66
-#, fuzzy
+#
+#: lib/obstack.c:500 lib/obstack.c:503 lib/xmalloc.c:66
 msgid "memory exhausted"
-msgstr "η μνήμη εξαντλήθηκε\n"
+msgstr "η μνήμη εξαντλήθηκε"
 
+#
 #: lib/quotearg.c:270
 msgid "`"
 msgstr "`"
 
+#
 #: lib/quotearg.c:271
 msgid "'"
 msgstr "'"
 
+#
 #: lib/rpmatch.c:78
 msgid "^[yY]"
 msgstr "^[yYνΝ]"
 
+#
 #: lib/rpmatch.c:81
 msgid "^[nN]"
 msgstr "^[nNοΟ]"
 
+#
 #: lib/unicodeio.c:159
 msgid "iconv function not usable"
 msgstr ""
 
+#
 #: lib/unicodeio.c:161
 msgid "iconv function not available"
 msgstr ""
 
+#
 #: lib/unicodeio.c:168
 #, fuzzy
 msgid "character out of range"
 msgstr "%s: αριθμός γραμμής έξω από τα όρια"
 
+#
 #: lib/unicodeio.c:231
 #, c-format
 msgid "cannot convert U+%04X to local character set"
 msgstr ""
 
+#
 #: lib/unicodeio.c:233
 #, c-format
 msgid "cannot convert U+%04X to local character set: %s"
 msgstr ""
 
+#
 #: lib/userspec.c:178
 msgid "invalid user"
 msgstr "μη έγκυρος χρήστης"
 
+#
 #: lib/userspec.c:179
 msgid "invalid group"
 msgstr "μη έγκυρη ομάδα"
 
+#
 #: lib/userspec.c:181
 msgid "cannot get the login group of a numeric UID"
 msgstr "αδύνατη η λήψη της ομάδας εισαγωγής στο σύστημα ενός αριθμητικού UID"
 
+#
 #: lib/userspec.c:183
 msgid "cannot omit both user and group"
 msgstr "δεν είναι δυνατό να παραληφθεί χρήστης και ομάδα"
 
+#
 #: lib/version-etc.c:61
 #, c-format
 msgid "Written by %s.\n"
 msgstr "Γραμμένο από τον/την %s.\n"
 
+#
 #: lib/version-etc.c:67
 msgid ""
 "This is free software; see the source for copying conditions.  There is NO\n"
@@ -255,19 +303,23 @@ msgstr ""
 "ΔΕΝ υπάρχει εγγύηση· ούτε ακόμα για ΧΡΗΣΙΜΟΤΗΤΑ ή ΚΑΤΑΛΛΗΛΟΤΗΤΑ ΓΙΑ ΕΝΑ\n"
 "ΣΥΓΚΕΚΡΙΜΕΝΟ ΣΚΟΠΟ.\n"
 
+#
 #: lib/xmemcoll.c:61
 msgid "string comparison failed"
 msgstr ""
 
+#
 #: lib/xmemcoll.c:62
 msgid "Set LC_ALL='C' to work around the problem."
-msgstr ""
+msgstr "Θέστε LC_ALL='C' για να παρακάμψετε το πρόβλημα."
 
+#
 #: lib/xmemcoll.c:64
 #, c-format
 msgid "The strings compared were %s and %s."
 msgstr ""
 
+#
 #: src/basename.c:50 src/cat.c:88 src/chgrp.c:122 src/chmod.c:239
 #: src/chown.c:95 src/chroot.c:41 src/cksum.c:276 src/comm.c:69 src/cp.c:160
 #: src/csplit.c:1490 src/cut.c:163 src/date.c:115 src/dd.c:287 src/df.c:750
@@ -275,10 +327,10 @@ msgstr ""
 #: src/env.c:115 src/expand.c:106 src/expr.c:85 src/factor.c:70 src/fmt.c:267
 #: src/fold.c:63 src/head.c:84 src/hostid.c:44 src/hostname.c:63 src/id.c:83
 #: src/install.c:597 src/join.c:140 src/kill.c:89 src/link.c:47 src/ln.c:335
-#: src/logname.c:44 src/ls.c:3598 src/md5sum.c:121 src/mkdir.c:57
+#: src/logname.c:44 src/ls.c:3618 src/md5sum.c:121 src/mkdir.c:57
 #: src/mkfifo.c:51 src/mknod.c:61 src/mv.c:310 src/nice.c:63 src/nl.c:172
 #: src/od.c:287 src/paste.c:399 src/pathchk.c:136 src/pinky.c:465
-#: src/pr.c:2752 src/printenv.c:59 src/printf.c:93 src/ptx.c:1855 src/pwd.c:43
+#: src/pr.c:2750 src/printenv.c:59 src/printf.c:93 src/ptx.c:1855 src/pwd.c:43
 #: src/rm.c:96 src/rmdir.c:140 src/seq.c:78 src/shred.c:171 src/sleep.c:67
 #: src/sort.c:275 src/split.c:91 src/stat.c:726 src/stty.c:497 src/su.c:433
 #: src/sum.c:56 src/sync.c:40 src/tac.c:123 src/tail.c:234 src/tee.c:59
@@ -290,6 +342,7 @@ msgstr ""
 msgid "Try `%s --help' for more information.\n"
 msgstr "Δοκιμάστε `%s --help' για περισσότερη βοήθεια.\n"
 
+#
 #: src/basename.c:54
 #, fuzzy, c-format
 msgid ""
@@ -310,6 +363,7 @@ msgstr ""
 "  --help      Εκτυπώνει αυτή την βοήθεια και τερματίζει\n"
 "  --version   Εκτυπώνει πληροφορίες έκδοσης και τερματίζει\n"
 
+#
 #: src/basename.c:66 src/cat.c:124 src/chgrp.c:152 src/chmod.c:265
 #: src/chown.c:139 src/chroot.c:59 src/cksum.c:291 src/comm.c:86 src/cp.c:257
 #: src/csplit.c:1532 src/cut.c:208 src/date.c:217 src/dd.c:334 src/df.c:789
@@ -317,10 +371,10 @@ msgstr ""
 #: src/env.c:134 src/expand.c:131 src/expr.c:148 src/factor.c:90
 #: src/false.c:28 src/fmt.c:297 src/fold.c:86 src/head.c:115 src/hostid.c:57
 #: src/hostname.c:76 src/id.c:104 src/install.c:652 src/join.c:180
-#: src/kill.c:119 src/link.c:59 src/ln.c:390 src/logname.c:55 src/ls.c:3727
+#: src/kill.c:119 src/link.c:59 src/ln.c:390 src/logname.c:55 src/ls.c:3747
 #: src/md5sum.c:157 src/mkdir.c:76 src/mkfifo.c:68 src/mknod.c:86 src/mv.c:364
 #: src/nice.c:77 src/nl.c:227 src/od.c:374 src/paste.c:423 src/pathchk.c:148
-#: src/pinky.c:492 src/pr.c:2864 src/printenv.c:72 src/printf.c:141
+#: src/pinky.c:492 src/pr.c:2862 src/printenv.c:72 src/printf.c:141
 #: src/pwd.c:54 src/rm.c:128 src/rmdir.c:160 src/seq.c:104 src/shred.c:234
 #: src/sleep.c:83 src/sort.c:346 src/split.c:123 src/stat.c:796 src/stty.c:711
 #: src/su.c:454 src/sum.c:76 src/sync.c:51 src/tac.c:146 src/tail.c:304
@@ -328,14 +382,15 @@ msgstr ""
 #: src/tsort.c:105 src/tty.c:70 src/uname.c:128 src/unexpand.c:394
 #: src/uniq.c:174 src/unlink.c:58 src/uptime.c:202 src/users.c:127
 #: src/wc.c:146 src/who.c:613 src/whoami.c:60 src/yes.c:61
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "\n"
 "Report bugs to <%s>.\n"
 msgstr ""
 "\n"
-"Αναφέρατε σφάλματα στο <bug-textutils@gnu.org>."
+"Αναφέρατε σφάλματα στο <%s>.\n"
 
+#
 #: src/basename.c:114 src/chgrp.c:210 src/chmod.c:353 src/chown.c:211
 #: src/chroot.c:78 src/csplit.c:1462 src/dirname.c:89 src/expr.c:177
 #: src/install.c:288 src/link.c:87 src/mkdir.c:124 src/mkfifo.c:113
@@ -344,6 +399,7 @@ msgstr ""
 msgid "too few arguments"
 msgstr "πολύ λίγα ορίσματα"
 
+#
 #: src/basename.c:115 src/dircolors.c:483 src/dirname.c:90 src/hostid.c:79
 #: src/hostname.c:122 src/link.c:93 src/mknod.c:143 src/seq.c:417
 #: src/split.c:527 src/tr.c:1849 src/unlink.c:94 src/uptime.c:244
@@ -351,15 +407,18 @@ msgstr "πολύ λίγα ορίσματα"
 msgid "too many arguments"
 msgstr "πάρα πολλά ορίσματα"
 
+#
 #: src/cat.c:42 src/split.c:42
 msgid "Torbjorn Granlund and Richard M. Stallman"
 msgstr ""
 
+#
 #: src/cat.c:92
 #, c-format
 msgid "Usage: %s [OPTION] [FILE]...\n"
 msgstr "Χρήση: %s [ΕΠΙΛΟΓΗ] [ΑΡΧΕΙΟ]...\n"
 
+#
 #: src/cat.c:96
 #, fuzzy
 msgid ""
@@ -381,7 +440,7 @@ msgstr ""
 "  -n, --number             αρίθμηση όλων των γραμμών εξόδου\n"
 "  -s, --squeeze-blank      ποτέ περισσότερο από μια μονή κενή γραμμή\n"
 "  -t                       ισοδύναμο με -vT\n"
-"  -T, --show-tabs          εμφάνιση χαρακτήτα TAB σαν ^I\n"
+"  -T, --show-tabs          εμφάνιση χαρακτήρα TAB σαν ^I\n"
 "  -u                       (αγνοείτε)\n"
 "  -v, --show-nonprinting   χρήση ^ και Μ- κωδικογραφή, εκτός για LFD και "
 "TAB\n"
@@ -390,6 +449,7 @@ msgstr ""
 "\n"
 "Χωρίς ΑΡΧΕΙΟ ή όταν το αρχείο είναι το -, ανάγνωση από την κανονική είσοδο.\n"
 
+#
 #: src/cat.c:106
 #, fuzzy
 msgid ""
@@ -407,7 +467,7 @@ msgstr ""
 "  -n, --number             αρίθμηση όλων των γραμμών εξόδου\n"
 "  -s, --squeeze-blank      ποτέ περισσότερο από μια μονή κενή γραμμή\n"
 "  -t                       ισοδύναμο με -vT\n"
-"  -T, --show-tabs          εμφάνιση χαρακτήτα TAB σαν ^I\n"
+"  -T, --show-tabs          εμφάνιση χαρακτήρα TAB σαν ^I\n"
 "  -u                       (αγνοείτε)\n"
 "  -v, --show-nonprinting   χρήση ^ και Μ- κωδικογραφή, εκτός για LFD και "
 "TAB\n"
@@ -416,12 +476,14 @@ msgstr ""
 "\n"
 "Χωρίς ΑΡΧΕΙΟ ή όταν το αρχείο είναι το -, ανάγνωση από την κανονική είσοδο.\n"
 
+#
 #: src/cat.c:114 src/sum.c:72
 msgid ""
 "\n"
 "With no FILE, or when FILE is -, read standard input.\n"
 msgstr ""
 
+#
 #: src/cat.c:119
 msgid ""
 "\n"
@@ -433,25 +495,42 @@ msgstr ""
 "κονσόλας.\n"
 "\n"
 
+#
 #: src/cat.c:308
 #, c-format
 msgid "cannot do ioctl on `%s'"
 msgstr "αδυναμία εκτέλεσης ioctl στο `%s'"
 
-#: src/cat.c:647 src/dd.c:1217 src/od.c:1014 src/tee.c:181
+#
+#: src/cat.c:663 src/dd.c:1220 src/od.c:1014 src/tee.c:181
 msgid "standard output"
 msgstr "κανονική έξοδος"
 
-#: src/cat.c:778
+#
+#: src/cat.c:794
 #, c-format
 msgid "%s: input file is output file"
 msgstr "%s: το αρχείο εισόδου είναι το αρχείο εξόδου"
 
+#
+#: src/cat.c:852
+#, fuzzy
+msgid "closing standard input"
+msgstr "κανονική είσοδος"
+
+#
+#: src/cat.c:855
+#, fuzzy
+msgid "closing standard output"
+msgstr "κανονική έξοδος"
+
+#
 #: src/chgrp.c:93
 #, fuzzy
 msgid "cannot change to null group"
 msgstr "δεν είναι δυνατό να παραληφθεί χρήστης και ομάδα"
 
+#
 #: src/chgrp.c:102
 #, fuzzy, c-format
 msgid "invalid group name %s"
@@ -461,11 +540,13 @@ msgstr "μη έγκυρη ομάδα"
 msgid "group number"
 msgstr "αριθμός ομάδας"
 
+#
 #: src/chgrp.c:109
 #, fuzzy, c-format
 msgid "invalid group number %s"
 msgstr "μη έγκυρος αριθμός"
 
+#
 #: src/chgrp.c:126
 #, fuzzy, c-format
 msgid ""
@@ -501,9 +582,9 @@ msgid ""
 "  -v, --verbose          output a diagnostic for every file processed\n"
 msgstr ""
 
-#: src/chgrp.c:218 src/chmod.c:158 src/chmod.c:365 src/chown-core.c:235
+#: src/chgrp.c:218 src/chmod.c:158 src/chmod.c:366 src/chown-core.c:235
 #: src/chown-core.c:247 src/chown.c:220 src/cp.c:303 src/touch.c:169
-#: src/touch.c:358
+#: src/touch.c:357
 #, fuzzy, c-format
 msgid "failed to get attributes of %s"
 msgstr "διατήρηση ωρών στο %s"
@@ -528,6 +609,7 @@ msgstr "αποτυχία αλλαγής των δικαιωμάτων του %s σε %04lo (%s)\n"
 msgid "mode of %s retained as %04lo (%s)\n"
 msgstr "τα δικαιώματα του %s διατηρούνται ως έχουν, δηλαδή %04lo (%s)\n"
 
+#
 #: src/chmod.c:180
 #, fuzzy, c-format
 msgid "changing permissions of %s"
@@ -581,12 +663,14 @@ msgid ""
 "one or more of the letters rwxXstugo.\n"
 msgstr ""
 
+#
 #: src/chmod.c:321
 #, fuzzy, c-format
 msgid "invalid character %s in mode string %s"
 msgstr "μη έγκυρος χαρακτήρας `%c' στο τύπο αλφαριθμητικού `%s'"
 
-#: src/chmod.c:361
+#
+#: src/chmod.c:362
 #, fuzzy, c-format
 msgid "invalid mode string: %s"
 msgstr "μη έγκυρο είδος αλφαριθμητικού `%s'"
@@ -606,6 +690,7 @@ msgstr "αποτυχία αλλαγής του ιδιοκτήτη από %s σε "
 msgid "changed group of %s to %s\n"
 msgstr "αποτυχία αλλαγής της ομάδας από %s σε %s\n"
 
+#
 #: src/chown-core.c:148
 #, fuzzy, c-format
 msgid "failed to change ownership of %s to %s\n"
@@ -631,11 +716,13 @@ msgstr "η ομάδα του %s έχει παραμείνει σε %s\n"
 msgid "changing ownership of %s"
 msgstr "διατήρηση ιδιοκτήτη για το %s"
 
+#
 #: src/chown-core.c:327
 #, fuzzy, c-format
 msgid "changing group of %s"
 msgstr "δεν είναι δυνατό να παραληφθεί χρήστης και ομάδα"
 
+#
 #: src/chown-core.c:345
 #, fuzzy, c-format
 msgid "unable to restore permissions of %s"
@@ -689,6 +776,7 @@ msgid ""
 "as symbolic.\n"
 msgstr ""
 
+#
 #: src/chroot.c:45
 #, fuzzy, c-format
 msgid ""
@@ -708,21 +796,25 @@ msgid ""
 "If no command is given, run ``${SHELL} -i'' (default: /bin/sh).\n"
 msgstr ""
 
-#: src/chroot.c:83
+#
+#: src/chroot.c:84
 #, fuzzy, c-format
 msgid "cannot change root directory to %s"
 msgstr "αδύνατη η αλλαγή στο κατάλογο %s"
 
-#: src/chroot.c:86
+#
+#: src/chroot.c:87
 #, fuzzy
 msgid "cannot chdir to root directory"
 msgstr "αδύνατη η αλλαγή στο κατάλογο %s"
 
+#
 #: src/cksum.c:234
 #, fuzzy, c-format
 msgid "%s: file too long"
 msgstr "το αρχείο μηδενίστηκε"
 
+#
 #: src/cksum.c:280
 #, fuzzy, c-format
 msgid ""
@@ -730,21 +822,25 @@ msgid ""
 "  or:  %s [OPTION]\n"
 msgstr "Χρήση: %s [ΕΠΙΛΟΓΗ]... [ΕΙΣΟΔΟΣ [ΕΞΟΔΟΣ]]\n"
 
+#
 #: src/cksum.c:285
 msgid ""
 "Print CRC checksum and byte counts of each FILE.\n"
 "\n"
 msgstr ""
 
+#
 #: src/comm.c:35 src/ls.c:130 src/uniq.c:40
 msgid "Richard Stallman and David MacKenzie"
-msgstr ""
+msgstr "Ρίτσαρντ Στάλμαν και Ντέιβιντ Μακένζη"
 
+#
 #: src/comm.c:73
 #, c-format
 msgid "Usage: %s [OPTION]... LEFT_FILE RIGHT_FILE\n"
 msgstr "Χρήση: %s [ΕΠΙΛΟΓΗ]... ΑΡΙΣΤΕΡΌ_ΑΡΧΕΊΟ ΔΕΞΙΌ_ΑΡΧΕΊΟ\n"
 
+#
 #: src/comm.c:77
 #, fuzzy
 msgid ""
@@ -763,6 +859,7 @@ msgstr ""
 "      --help      εμφάνιση αυτής της βοήθειας και έξοδος\n"
 "      --version   εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
 
+#
 #: src/copy.c:162
 #, fuzzy, c-format
 msgid "cannot access %s"
@@ -773,7 +870,8 @@ msgstr "αδύνατη η αλλαγή δικαιωμάτων στο %s"
 msgid "cannot open %s for reading"
 msgstr "αδυναμία μεταφοράς του `%s' στο `%s'"
 
-#: src/copy.c:232 src/copy.c:286 src/copy.c:301 src/dd.c:1195
+#
+#: src/copy.c:232 src/copy.c:286 src/copy.c:301 src/dd.c:1197
 #, fuzzy, c-format
 msgid "cannot fstat %s"
 msgstr "αδύνατη η αλλαγή δικαιωμάτων στο %s"
@@ -783,32 +881,38 @@ msgstr "αδύνατη η αλλαγή δικαιωμάτων στο %s"
 msgid "skipping file %s, as it was replaced while being copied"
 msgstr ""
 
-#: src/copy.c:262 src/copy.c:1041 src/ln.c:291 src/remove.c:724
-#: src/remove.c:771 src/remove.c:929
+#
+#: src/copy.c:262 src/copy.c:1041 src/ln.c:291 src/remove.c:735
+#: src/remove.c:782 src/remove.c:961
 #, fuzzy, c-format
 msgid "cannot remove %s"
 msgstr "αδύνατη η αλλαγή δικαιωμάτων στο %s"
 
+#
 #: src/copy.c:277
 #, fuzzy, c-format
 msgid "cannot create regular file %s"
 msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
 
-#: src/copy.c:328 src/dd.c:812 src/dd.c:1006
+#
+#: src/copy.c:328 src/dd.c:814 src/dd.c:1008
 #, fuzzy, c-format
 msgid "reading %s"
 msgstr "σφάλμα ανάγνωσης %s"
 
+#
 #: src/copy.c:362
 #, fuzzy, c-format
 msgid "cannot lseek %s"
 msgstr "αδύνατη η αλλαγή δικαιωμάτων στο %s"
 
-#: src/copy.c:377 src/copy.c:401 src/dd.c:1050 src/dd.c:1111
+#
+#: src/copy.c:377 src/copy.c:401 src/dd.c:1052 src/dd.c:1113
 #, fuzzy, c-format
 msgid "writing %s"
 msgstr "σφάλμα εγγραφής %s"
 
+#
 #: src/copy.c:409 src/copy.c:415
 #, fuzzy, c-format
 msgid "closing %s"
@@ -819,16 +923,19 @@ msgstr "κλείσιμο του %s (fd=%d)"
 msgid "%s: overwrite %s, overriding mode %04lo? "
 msgstr "%s: αντιγραφή πάνω στο `%s', παράκαμψη δικαιωμάτων %04lo; "
 
+#
 #: src/copy.c:616
 #, fuzzy, c-format
 msgid "%s: overwrite %s? "
 msgstr "%s: σφάλμα εγγραφής"
 
+#
 #: src/copy.c:817 src/copy.c:855 src/stat.c:684
 #, fuzzy, c-format
 msgid "cannot stat %s"
 msgstr "αδύνατη η αλλαγή δικαιωμάτων στο %s"
 
+#
 #: src/copy.c:827
 #, fuzzy, c-format
 msgid "omitting directory %s"
@@ -844,6 +951,7 @@ msgstr ""
 msgid "%s and %s are the same file"
 msgstr "τα `%s' και `%s' είναι το ίδιο αρχείο"
 
+#
 #: src/copy.c:883
 #, fuzzy, c-format
 msgid "cannot overwrite non-directory %s with directory %s"
@@ -854,16 +962,19 @@ msgstr "αδύνατη η αλλαγή στο κατάλογο %s"
 msgid "will not overwrite just-created %s with %s"
 msgstr "%s: δε μπορεί να γραφτεί μη-κατάλογος πάνω σε κατάλογο"
 
+#
 #: src/copy.c:911
 #, fuzzy, c-format
 msgid "cannot overwrite directory %s with non-directory"
 msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
 
+#
 #: src/copy.c:972
 #, fuzzy, c-format
 msgid "cannot overwrite directory %s"
 msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
 
+#
 #: src/copy.c:981
 #, fuzzy, c-format
 msgid "cannot move directory onto non-directory: %s -> %s"
@@ -883,6 +994,7 @@ msgstr ""
 "στη δημιουργία αντιγράφου ασφαλείας του `%s' θα κατέστρεφε τη πηγή· το `%s' "
 "δεν αντιγράφεται"
 
+#
 #: src/copy.c:1020 src/ln.c:273
 #, fuzzy, c-format
 msgid "cannot backup %s"
@@ -893,26 +1005,31 @@ msgstr "αδύνατη η αλλαγή δικαιωμάτων στο %s"
 msgid " (backup: %s)"
 msgstr " (αντίγραφο ασφαλείας: %s)"
 
+#
 #: src/copy.c:1106
 #, fuzzy, c-format
 msgid "cannot copy a directory, %s, into itself, %s"
 msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
 
+#
 #: src/copy.c:1113
 #, fuzzy, c-format
 msgid "will not create hard link %s to directory %s"
 msgstr "αδύνατη η αλλαγή στο κατάλογο %s"
 
+#
 #: src/copy.c:1122
 #, fuzzy, c-format
 msgid "cannot create hard link %s to %s"
 msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
 
+#
 #: src/copy.c:1177
 #, fuzzy, c-format
 msgid "cannot move %s to a subdirectory of itself, %s"
 msgstr "αδύνατη η αλλαγή στο κατάλογο %s"
 
+#
 #: src/copy.c:1220
 #, fuzzy, c-format
 msgid "cannot move %s to %s"
@@ -935,31 +1052,37 @@ msgstr ""
 "%s: δυνατότητα δημιουργίας σχετικών συμβολικών συνδέσμων μόνο στο τρέχον "
 "κατάλογο"
 
+#
 #: src/copy.c:1344
 #, fuzzy, c-format
 msgid "cannot create symbolic link %s to %s"
 msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
 
+#
 #: src/copy.c:1355
 #, fuzzy, c-format
 msgid "cannot create link %s"
 msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
 
+#
 #: src/copy.c:1380 src/mkfifo.c:133
 #, fuzzy, c-format
 msgid "cannot create fifo %s"
 msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
 
+#
 #: src/copy.c:1394
 #, fuzzy, c-format
 msgid "cannot create special file %s"
-msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
+msgstr "ειδικό αρχείο χαρακτήρων"
 
-#: src/copy.c:1406 src/ls.c:2352 src/stat.c:481
+#
+#: src/copy.c:1406 src/ls.c:2372 src/stat.c:481
 #, fuzzy, c-format
 msgid "cannot read symbolic link %s"
-msgstr "αδυναμία εκτέλεσης ioctl στο `%s'"
+msgstr "συμβολικός σύνδεσμος"
 
+#
 #: src/copy.c:1431
 #, fuzzy, c-format
 msgid "cannot create symbolic link %s"
@@ -985,11 +1108,13 @@ msgstr "διατήρηση ωρών στο %s"
 msgid "failed to preserve authorship for %s"
 msgstr "διατήρηση ιδιοκτήτη για το %s"
 
+#
 #: src/copy.c:1540
 #, fuzzy, c-format
 msgid "setting permissions for %s"
 msgstr "αδυναμία αλλαγής ιδιοκτησίας στο %s"
 
+#
 #: src/copy.c:1559 src/ln.c:326
 #, fuzzy, c-format
 msgid "cannot un-backup %s"
@@ -1022,11 +1147,12 @@ msgid ""
 "\n"
 msgstr ""
 
+#
 #: src/cp.c:174 src/csplit.c:1503 src/cut.c:175 src/df.c:760 src/du.c:193
 #: src/expand.c:119 src/fmt.c:277 src/fold.c:76 src/head.c:98
-#: src/install.c:613 src/kill.c:103 src/ln.c:354 src/ls.c:3608 src/mkdir.c:66
+#: src/install.c:613 src/kill.c:103 src/ln.c:354 src/ls.c:3628 src/mkdir.c:66
 #: src/mkfifo.c:60 src/mknod.c:70 src/mv.c:324 src/nl.c:185 src/paste.c:413
-#: src/pr.c:2765 src/ptx.c:1867 src/shred.c:181 src/sort.c:289 src/split.c:104
+#: src/pr.c:2763 src/ptx.c:1867 src/shred.c:181 src/sort.c:289 src/split.c:104
 #: src/tac.c:136 src/tail.c:248 src/touch.c:243 src/unexpand.c:384
 #: src/uniq.c:148
 msgid ""
@@ -1297,21 +1423,25 @@ msgstr ""
 msgid "failed to preserve times for %s"
 msgstr "διατήρηση ωρών στο %s"
 
+#
 #: src/cp.c:349
 #, fuzzy, c-format
 msgid "failed to preserve permissions for %s"
 msgstr "αδυναμία αλλαγής ιδιοκτησίας στο %s"
 
+#
 #: src/cp.c:434
 #, fuzzy, c-format
 msgid "cannot make directory %s"
 msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
 
+#
 #: src/cp.c:493
 #, fuzzy
 msgid "missing file arguments"
 msgstr "πολύ λίγα ορίσματα"
 
+#
 #: src/cp.c:498
 #, fuzzy
 msgid "missing destination file"
@@ -1322,6 +1452,7 @@ msgstr "έχει παραληφθεί η λίστα με τα πεδία"
 msgid "accessing %s"
 msgstr "διαγραφή καταλόγου %s\n"
 
+#
 #: src/cp.c:546
 #, fuzzy, c-format
 msgid "%s: specified target is not a directory"
@@ -1349,101 +1480,120 @@ msgstr ""
 "η υποστήρηξη για αυτό θα πάψει σε κάποια μελλοντική έκδοση. Κάντε\n"
 "χρήση του --backup=%s στη θέση του."
 
-#: src/cp.c:971 src/ln.c:463
+#
+#: src/cp.c:972 src/ln.c:464
 #, fuzzy
 msgid "symbolic links are not supported on this system"
 msgstr "προειδοποίηση: το --pid=PID δεν υποστηρίζεται σε αυτό το σύστημα"
 
-#: src/cp.c:1007
+#: src/cp.c:1008
 msgid "cannot make both hard and symbolic links"
 msgstr "αδυναμία δημιουργίας σθεναρών(hard) και συμβολικών συνδέσμων"
 
-#: src/cp.c:1015 src/install.c:279 src/ln.c:529 src/mv.c:486
+#: src/cp.c:1016 src/install.c:279 src/ln.c:530 src/mv.c:486
 msgid "backup type"
 msgstr "είδος αντιγράφου ασφάλειας"
 
+#
 #: src/csplit.c:41
 msgid "Stuart Kemp and David MacKenzie"
-msgstr ""
+msgstr "Στιούαρτ Κέμπ και Ντέιβιντ Μακένζη"
 
+#
 #: src/csplit.c:290 src/csplit.c:1479 src/tac-pipe.c:57 src/tee.c:220
 #: src/tr.c:1609 src/tr.c:1712 src/tr.c:1755
 msgid "read error"
 msgstr "σφάλμα ανάγνωσης"
 
+#
 #: src/csplit.c:584
 msgid "input disappeared"
 msgstr "η είσοδος εξαφανίστηκε"
 
+#
 #: src/csplit.c:706 src/csplit.c:717
 #, c-format
 msgid "%s: line number out of range"
 msgstr "%s: αριθμός γραμμής έξω από τα όρια"
 
+#
 #: src/csplit.c:744
 #, c-format
 msgid "%s: `%s': line number out of range"
 msgstr "%s: `%s': αριθμός γραμμής έξω από τα όρια"
 
+#
 #: src/csplit.c:747 src/csplit.c:793
 #, c-format
 msgid " on repetition %d\n"
 msgstr " στην επανάληψη %d\n"
 
+#
 #: src/csplit.c:789
 #, c-format
 msgid "%s: `%s': match not found"
 msgstr "%s: `%s': δεν βρέθηκε ταίριασμα"
 
+#
 #: src/csplit.c:850 src/csplit.c:890 src/tac.c:262
 msgid "error in regular expression search"
 msgstr "σφάλμα στην ανεύρεση μέσω κανονικής έκφρασης"
 
+#
 #: src/csplit.c:993
 #, c-format
 msgid "write error for `%s'"
 msgstr "σφάλμα εγγραφής για το `%s'"
 
+#
 #: src/csplit.c:1065
 #, c-format
 msgid "%s: `+' or `-' expected after delimeter"
 msgstr "%s: αναμενόταν `+' ή `-' μετά το διαχωριστή"
 
+#
 #: src/csplit.c:1069
 #, c-format
 msgid "%s: integer expected after `%c'"
 msgstr "%s: αναμενόταν ακέραιος μετά το `%c'"
 
+#
 #: src/csplit.c:1089
 #, c-format
 msgid "%s: `}' is required in repeat count"
 msgstr "%s: το `}' απαιτείται όταν δηλώνονται οι επαναλήψεις"
 
+#
 #: src/csplit.c:1099
 #, c-format
 msgid "%s}: integer required between `{' and `}'"
 msgstr "%s}: απαιτείται ακέραιος μεταξύ των `{' και `}'"
 
+#
 #: src/csplit.c:1126
 #, c-format
 msgid "%s: closing delimeter `%c' missing"
 msgstr "%s: ο τελεστής τερματισμού `%c' έχει παραληφθεί"
 
+#
 #: src/csplit.c:1142
 #, c-format
 msgid "%s: invalid regular expression: %s"
 msgstr "%s: μη έγκυρη κανονική έκφραση: %s"
 
+#
 #: src/csplit.c:1175
 #, c-format
 msgid "%s: invalid pattern"
 msgstr "%s: μη έγκυρη μορφή"
 
+#
 #: src/csplit.c:1178
 #, c-format
 msgid "%s: line number must be greater than zero"
 msgstr "%s: ο αριθμός γραμμής πρέπει να είναι μεγαλύτερος από το μηδέν"
 
+#
 #: src/csplit.c:1184
 #, c-format
 msgid "line number `%s' is smaller than preceding line number, %s"
@@ -1451,6 +1601,7 @@ msgstr ""
 "ο αριθμός γραμμής `%s' είναι μικρότερος από τον προηγούμενο αριθμό γραμμής, %"
 "s"
 
+#
 #: src/csplit.c:1190
 #, c-format
 msgid "warning: line number `%s' is the same as preceding line number"
@@ -1458,40 +1609,48 @@ msgstr ""
 "προειδοποίηση: ο αριθμός γραμμής `%s' είναι ίδιος με αυτόν της προηγούμενης "
 "γραμμής"
 
+#
 #: src/csplit.c:1312
 msgid "missing conversion specifier in suffix"
 msgstr "έχει παραληφθεί ο δηλωτής μετατροπής στην κατάληξη"
 
+#
 #: src/csplit.c:1318
 #, c-format
 msgid "invalid conversion specifier in suffix: %c"
 msgstr "μη έγκυρος δηλωτής μετατροπής στην κατάληξη: %c"
 
+#
 #: src/csplit.c:1321
 #, c-format
 msgid "invalid conversion specifier in suffix: \\%.3o"
 msgstr "μη έγκυρος δηλωτής μετατροπής στην κατάληξη: \\%.3o"
 
+#
 #: src/csplit.c:1353
 #, c-format
 msgid "missing %% conversion specification in suffix"
 msgstr "έχει παραληφθεί η δήλωση μετατροπής %% στην κατάληξη"
 
+#
 #: src/csplit.c:1356
 #, c-format
 msgid "too many %% conversion specifications in suffix"
 msgstr "πάρα πολλές δηλώσεις μετατροπής στην κατάληξη"
 
+#
 #: src/csplit.c:1439
 #, c-format
 msgid "%s: invalid number"
 msgstr "%s: μη έγκυρος αριθμός"
 
+#
 #: src/csplit.c:1494
 #, c-format
 msgid "Usage: %s [OPTION]... FILE PATTERN...\n"
 msgstr "Χρήση: %s [ΕΠΙΛΟΓΗ]... ΑΡΧΕΙΟ ΜΟΡΦΗ...\n"
 
+#
 #: src/csplit.c:1498
 msgid ""
 "Output pieces of FILE separated by PATTERN(s) to files `xx01', `xx02', ...,\n"
@@ -1499,6 +1658,7 @@ msgid ""
 "\n"
 msgstr ""
 
+#
 #: src/csplit.c:1506
 #, c-format
 msgid ""
@@ -1507,6 +1667,7 @@ msgid ""
 "  -k, --keep-files           do not remove output files on errors\n"
 msgstr ""
 
+#
 #: src/csplit.c:1511
 msgid ""
 "  -n, --digits=DIGITS        use specified number of digits instead of 2\n"
@@ -1514,12 +1675,14 @@ msgid ""
 "  -z, --elide-empty-files    remove empty output files\n"
 msgstr ""
 
+#
 #: src/csplit.c:1518
 msgid ""
 "\n"
 "Read standard input if FILE is -.  Each PATTERN may be:\n"
 msgstr ""
 
+#
 #: src/csplit.c:1522
 msgid ""
 "\n"
@@ -1532,24 +1695,28 @@ msgid ""
 "A line OFFSET is a required `+' or `-' followed by a positive integer.\n"
 msgstr ""
 
+#
 #: src/cut.c:39
 msgid "David Ihnat, David MacKenzie, and Jim Meyering"
 msgstr ""
 
+#
 #: src/cut.c:167 src/df.c:754 src/du.c:188 src/expand.c:110 src/fold.c:67
-#: src/head.c:88 src/ls.c:3602 src/nl.c:176 src/paste.c:403 src/pr.c:2756
+#: src/head.c:88 src/ls.c:3622 src/nl.c:176 src/paste.c:403 src/pr.c:2754
 #: src/sort.c:279 src/sum.c:60 src/tac.c:127 src/tail.c:238 src/tee.c:63
 #: src/unexpand.c:375 src/wc.c:128
 #, c-format
 msgid "Usage: %s [OPTION]... [FILE]...\n"
 msgstr "Χρήση: %s [ΕΠΙΛΟΓΕΣ]... [ΑΡΧΕΙΟ]...\n"
 
+#
 #: src/cut.c:171
 msgid ""
 "Print selected parts of lines from each FILE to standard output.\n"
 "\n"
 msgstr ""
 
+#
 #: src/cut.c:178
 #, fuzzy
 msgid ""
@@ -1566,6 +1733,7 @@ msgstr ""
 "      --help          εμφάνιση αυτής της βοήθειας και έξοδος\n"
 "      --version       εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
 
+#
 #: src/cut.c:183
 msgid ""
 "  -f, --fields=LIST       output only these fields;  also print any line\n"
@@ -1574,6 +1742,7 @@ msgid ""
 "  -n                      (ignored)\n"
 msgstr ""
 
+#
 #: src/cut.c:189
 msgid ""
 "  -s, --only-delimited    do not print lines not containing delimiters\n"
@@ -1581,6 +1750,7 @@ msgid ""
 "                            the default is to use the input delimiter\n"
 msgstr ""
 
+#
 #: src/cut.c:196
 msgid ""
 "\n"
@@ -1595,34 +1765,42 @@ msgid ""
 "With no FILE, or when FILE is -, read standard input.\n"
 msgstr ""
 
+#
 #: src/cut.c:263 src/cut.c:294 src/cut.c:354
 msgid "invalid byte or field list"
 msgstr "μη έγκυρο byte ή λίστα πεδίων"
 
+#
 #: src/cut.c:624 src/cut.c:633
 msgid "only one type of list may be specified"
 msgstr "μόνο ένα είδος λίστας μπορεί να οριστεί"
 
+#
 #: src/cut.c:627
 msgid "missing list of positions"
 msgstr "έχει παραληφθεί η λίστα με τις θέσεις"
 
+#
 #: src/cut.c:636
 msgid "missing list of fields"
 msgstr "έχει παραληφθεί η λίστα με τα πεδία"
 
+#
 #: src/cut.c:643
 msgid "the delimiter must be a single character"
 msgstr "ο διαχωριστής πρέπει να είναι ένας μόνο χαρακτήρας"
 
+#
 #: src/cut.c:673
 msgid "you must specify a list of bytes, characters, or fields"
 msgstr "πρέπει να ορίσετε λίστα από bytes, χαρακτήρες ή πεδία"
 
+#
 #: src/cut.c:676
 msgid "a delimiter may be specified only when operating on fields"
 msgstr "ένας διαχωριστής μπορεί να οριστεί μόνο όταν λειτουργούμε με πεδία"
 
+#
 #: src/cut.c:679
 msgid ""
 "suppressing non-delimited lines makes sense\n"
@@ -1757,18 +1935,21 @@ msgid ""
 "  `_' (underscore) pad the field with spaces\n"
 msgstr ""
 
-#: src/date.c:239 src/dd.c:1169 src/dircolors.c:540 src/head.c:220
-#: src/md5sum.c:334 src/md5sum.c:675 src/od.c:960 src/od.c:2000 src/pr.c:1166
-#: src/pr.c:1373 src/pr.c:1495 src/stty.c:912 src/tac.c:484 src/tac.c:490
+#
+#: src/date.c:239 src/dd.c:1171 src/dircolors.c:540 src/head.c:220
+#: src/md5sum.c:334 src/md5sum.c:675 src/od.c:960 src/od.c:2000 src/pr.c:1164
+#: src/pr.c:1371 src/pr.c:1493 src/stty.c:912 src/tac.c:484 src/tac.c:490
 #: src/tee.c:151 src/tr.c:2028 src/tsort.c:585
 msgid "standard input"
 msgstr "κανονική είσοδος"
 
+#
 #: src/date.c:270 src/date.c:462
 #, fuzzy, c-format
 msgid "invalid date `%s'"
 msgstr "μη έγκυρος αριθμός πεδίου: `%s'"
 
+#
 #: src/date.c:366
 #, fuzzy
 msgid "the options to specify dates for printing are mutually exclusive"
@@ -1780,6 +1961,7 @@ msgstr ""
 "Οι επιλογές για να εκτυπωθεί και να οριστεί η ώρα δεν μπορούν να\n"
 "χρησιμοποιηθούν παράλληλα."
 
+#
 #: src/date.c:379
 #, fuzzy, c-format
 msgid "too many non-option arguments: %s%s"
@@ -1797,6 +1979,7 @@ msgstr ""
 "κάθε παράμετρος που δεν είναι επιλογή πρέπει να είναι διαμορφωμένη έτσι\n"
 "ώστε να ξεκινάει με το `+'."
 
+#
 #: src/date.c:399
 #, fuzzy
 msgid ""
@@ -1807,6 +1990,7 @@ msgstr "δε μπορούν να δηλώνονται αρχεία όταν γίνεται χρήση του --string"
 msgid "undefined"
 msgstr "Μή ορισμένο"
 
+#
 #: src/date.c:437
 #, fuzzy
 msgid "cannot get time of day"
@@ -1816,10 +2000,13 @@ msgstr "δεν είναι δυνατό να γίνει διαχωρισμός σε περισσότερους από ένα τρόπο"
 msgid "cannot set date"
 msgstr "Δεν μπορεί να τεθεί η ημερομηνία."
 
+#
 #: src/dd.c:46
+#, fuzzy
 msgid "Paul Rubin, David MacKenzie, and Stuart Kemp"
-msgstr ""
+msgstr "Πωλ Ρούμπιν και Ντέιβιντ Μακένζη"
 
+#
 #: src/dd.c:291 src/tty.c:62 src/uname.c:110 src/whoami.c:52
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION]...\n"
@@ -1893,42 +2080,48 @@ msgstr "μηδενισμένη εγγραφή και γράψιμο πάνω σε αυτή (truncated)"
 msgid "truncated records"
 msgstr "μηδενισμένες εγγραφές και γράψιμο πάνω σε αυτές (truncated)"
 
-#: src/dd.c:386
+#
+#: src/dd.c:387
 #, fuzzy, c-format
 msgid "closing input file %s"
 msgstr "δημιουργία αρχείου `%s'\n"
 
-#: src/dd.c:388
+#: src/dd.c:390
 #, fuzzy, c-format
 msgid "closing output file %s"
 msgstr "διαγραφή καταλόγου %s\n"
 
-#: src/dd.c:472
+#
+#: src/dd.c:474
 #, fuzzy, c-format
 msgid "writing to %s"
 msgstr "σφάλμα εγγραφής %s"
 
-#: src/dd.c:504
+#
+#: src/dd.c:506
 #, fuzzy, c-format
 msgid "invalid conversion: %s"
 msgstr "μη έγκυρο είδος αλφαριθμητικού `%s'"
 
-#: src/dd.c:560
+#
+#: src/dd.c:562
 #, fuzzy, c-format
 msgid "unrecognized option %s"
-msgstr "μη αναγνωρίσημη επιλογή `-%c'"
+msgstr "απαράδεκτη επιλογή `-%c'"
 
-#: src/dd.c:607
+#
+#: src/dd.c:609
 #, fuzzy, c-format
 msgid "unrecognized option %s=%s"
-msgstr "μη αναγνωρίσημη επιλογή `-%c'"
+msgstr "απαράδεκτη επιλογή `-%c'"
 
-#: src/dd.c:613
+#
+#: src/dd.c:615
 #, fuzzy, c-format
 msgid "invalid number %s"
 msgstr "μη έγκυρος αριθμός"
 
-#: src/dd.c:643
+#: src/dd.c:645
 msgid ""
 "only one conv in {ascii,ebcdic,ibm}, {lcase,ucase}, {block,unblock}, "
 "{unblock,sync}"
@@ -1936,24 +2129,26 @@ msgstr ""
 "μόνο ένα conv στο {ascii,ebcdic,ibm}, {lcase,ucase}, {block,unblock}, "
 "{unblock,sync}"
 
-#: src/dd.c:778
+#: src/dd.c:780
 #, c-format
 msgid ""
 "warning: working around lseek kernel bug for file (%s)\n"
 "  of mt_type=0x%0lx -- see <sys/mtio.h> for the list of types"
 msgstr ""
 
-#: src/dd.c:1166 src/dd.c:1184
+#
+#: src/dd.c:1168 src/dd.c:1186
 #, fuzzy, c-format
 msgid "opening %s"
 msgstr "σφάλμα ανάγνωσης %s"
 
-#: src/dd.c:1192
+#
+#: src/dd.c:1194
 #, fuzzy
 msgid "file offset out of range"
 msgstr "%s: αριθμός γραμμής έξω από τα όρια"
 
-#: src/dd.c:1208
+#: src/dd.c:1211
 #, fuzzy, c-format
 msgid "advancing past %s bytes in output file %s"
 msgstr "διαγραφή καταλόγου %s\n"
@@ -2030,7 +2225,7 @@ msgid ""
 "  -v                    (ignored)\n"
 msgstr ""
 
-#: src/df.c:785 src/du.c:225 src/ls.c:3715
+#: src/df.c:785 src/du.c:225 src/ls.c:3735
 msgid ""
 "\n"
 "SIZE may be (or may be an integer optionally followed by) one of following:\n"
@@ -2051,6 +2246,7 @@ msgstr "Προειδοποίηση:"
 msgid "%scannot read table of mounted filesystems"
 msgstr "%sαδυναμία ανάγνωσης πίνακα προσαρτημένων συστήματος αρχείων"
 
+#
 #: src/dircolors.c:104
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION]... [FILE]\n"
@@ -2092,11 +2288,13 @@ msgid ""
 "For details on the format of these files, run `dircolors --print-database'.\n"
 msgstr ""
 
+#
 #: src/dircolors.c:300
 #, fuzzy, c-format
 msgid "%s:%lu: invalid line;  missing second token"
-msgstr "%s: μη έγκυτος αριθμός από δευτερόλεπτα"
+msgstr "%s: μη έγκυρος αριθμός δευτερολέπτων"
 
+#
 #: src/dircolors.c:372
 #, fuzzy, c-format
 msgid "%s:%lu: unrecognized keyword %s"
@@ -2132,6 +2330,7 @@ msgstr "δεν υπάρχει μεταβλητή περιβάλλοντος SHELL, και δεν δόθηκε είδος φλοιού"
 msgid "David MacKenzie and Jim Meyering"
 msgstr ""
 
+#
 #: src/dirname.c:46
 #, fuzzy, c-format
 msgid ""
@@ -2196,20 +2395,24 @@ msgid ""
 "                          --summarize\n"
 msgstr ""
 
+#
 #: src/du.c:388
 #, fuzzy, c-format
 msgid "cannot change to `..' from directory %s"
 msgstr "αδύνατη η αλλαγή στο κατάλογο %s"
 
+#
 #: src/du.c:467
 #, fuzzy, c-format
 msgid "cannot change to directory %s"
 msgstr "αδύνατη η αλλαγή στο κατάλογο %s"
 
-#: src/du.c:557 src/ls.c:2129 src/wc.c:589
+#
+#: src/du.c:557 src/ls.c:2149 src/wc.c:589
 msgid "total"
 msgstr "σύνολο"
 
+#
 #: src/du.c:621
 #, fuzzy, c-format
 msgid "invalid maximum depth %s"
@@ -2229,6 +2432,7 @@ msgstr "προειδοποίηση: η περίληψη είναι όμοιο με --max-depth=0"
 msgid "warning: summarizing conflicts with --max-depth=%d"
 msgstr "προειδοποίηση: η περίληψη έρχεται σε αντίφαση με το --max-depth=%d"
 
+#
 #: src/echo.c:77
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION]... [STRING]...\n"
@@ -2265,10 +2469,13 @@ msgid ""
 "  \\v     vertical tab\n"
 msgstr ""
 
+#
 #: src/env.c:93
+#, fuzzy
 msgid "Richard Mlynarik and David MacKenzie"
-msgstr ""
+msgstr "Ρίτσαρντ Στάλμαν και Ντέιβιντ Μακένζη"
 
+#
 #: src/env.c:119
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION]... [-] [NAME=VALUE]... [COMMAND [ARG]...]\n"
@@ -2298,6 +2505,7 @@ msgid ""
 "A mere - implies -i.  If no COMMAND, print the resulting environment.\n"
 msgstr ""
 
+#
 #: src/expand.c:114
 msgid ""
 "Convert tabs in each FILE to spaces, writing to standard output.\n"
@@ -2305,33 +2513,40 @@ msgid ""
 "\n"
 msgstr ""
 
+#
 #: src/expand.c:122
 msgid ""
 "  -i, --initial       do not convert TABs after non whitespace\n"
 "  -t, --tabs=NUMBER   have tabs NUMBER characters apart, not 8\n"
 msgstr ""
 
+#
 #: src/expand.c:126
 msgid ""
 "  -t, --tabs=LIST     use comma separated list of explicit tab positions\n"
 msgstr ""
 
+#
 #: src/expand.c:173 src/unexpand.c:153
 msgid "tab size contains an invalid character"
 msgstr "το μέγεθος στηλογνώμονα περιέχει μη έγκυρο χαρακτήρα"
 
+#
 #: src/expand.c:191 src/unexpand.c:171
 msgid "tab size cannot be 0"
 msgstr "το μέγεθος στηλογνώμονα δε μπορεί να είναι 0"
 
+#
 #: src/expand.c:193 src/unexpand.c:173
 msgid "tab sizes must be ascending"
 msgstr "τα μεγέθη του στηλογνώμονα πρέπει να είναι κατά αύξουσα σειρά"
 
+#
 #: src/expand.c:386
 msgid "`-LIST' option is obsolete; use `-t LIST'"
 msgstr ""
 
+#
 #: src/expr.c:89
 #, fuzzy, c-format
 msgid ""
@@ -2414,6 +2629,7 @@ msgstr ""
 "\\( και \\) ή κενό. Εαν \\( και \\) δεν χρησιμοποιήθηκαν, τοτε επιστρέφει\n"
 "τον αριθμό των χαρακτήρων που ταίριαξαν ή 0.\n"
 
+#
 #: src/expr.c:185 src/expr.c:456 src/expr.c:462 src/expr.c:467 src/expr.c:489
 #, fuzzy
 msgid "syntax error"
@@ -2429,6 +2645,7 @@ msgstr ""
 "η χρησιμοποίηση `^' για τον πρώτο χαρακτήρα μιας εκφρασης δεν είναι\n"
 "συμβατή; Αγνοείται."
 
+#
 #: src/expr.c:604 src/expr.c:643
 #, fuzzy
 msgid "non-numeric argument"
@@ -2438,6 +2655,7 @@ msgstr "όριο ορίσματος"
 msgid "division by zero"
 msgstr ""
 
+#
 #: src/factor.c:74
 #, fuzzy, c-format
 msgid ""
@@ -2490,11 +2708,13 @@ msgstr ""
 "  --help      Εκτυπώνει αυτή την βοήθεια και τερματίζει\n"
 "  --version   Εκτυπώνει πληροφορίες έκδοσης και τερματίζει\n"
 
+#
 #: src/fmt.c:271
 #, c-format
 msgid "Usage: %s [-DIGITS] [OPTION]... [FILE]...\n"
 msgstr "Χρήση: %s [-ΨΗΦΙΑ] [ΕΠΙΛΟΓΗ]... [ΑΡΧΕΙΟ]...\n"
 
+#
 #: src/fmt.c:272
 msgid ""
 "Reformat each paragraph in the FILE(s), writing to standard output.\n"
@@ -2502,6 +2722,7 @@ msgid ""
 "\n"
 msgstr ""
 
+#
 #: src/fmt.c:280
 #, fuzzy
 msgid ""
@@ -2515,7 +2736,7 @@ msgstr ""
 "κανονική είσοδο.\n"
 "\n"
 "Υποχρεωτικά ορίσματα στις μακρές επιλογές είναι υποχρεωτικά για σύντομες "
-"επιλογές επίσεις.\n"
+"επιλογές επίσης.\n"
 "  -c, --crown-margin        διατήρησε την εσοχή των δύο πρώτων γραμμών\n"
 "  -p, --prefix=ΑΛΦΑΡΙΘ      συνδύασε μόνο γραμμές με ΑΛΦΑΡΙΘΜητικό ως "
 "πρόθεμα\n"
@@ -2531,6 +2752,7 @@ msgstr ""
 "\n"
 "Στο -wΑΡΙΘΜΟΣ, το γράμμα `w' μπορεί να παραληφθεί.\n"
 
+#
 #: src/fmt.c:286
 #, fuzzy
 msgid ""
@@ -2544,7 +2766,7 @@ msgstr ""
 "κανονική είσοδο.\n"
 "\n"
 "Υποχρεωτικά ορίσματα στις μακρές επιλογές είναι υποχρεωτικά για σύντομες "
-"επιλογές επίσεις.\n"
+"επιλογές επίσης.\n"
 "  -c, --crown-margin        διατήρησε την εσοχή των δύο πρώτων γραμμών\n"
 "  -p, --prefix=ΑΛΦΑΡΙΘ      συνδύασε μόνο γραμμές με ΑΛΦΑΡΙΘΜητικό ως "
 "πρόθεμα\n"
@@ -2560,22 +2782,26 @@ msgstr ""
 "\n"
 "Στο -wΑΡΙΘΜΟΣ, το γράμμα `w' μπορεί να παραληφθεί.\n"
 
+#
 #: src/fmt.c:293
 msgid ""
 "\n"
 "In -wNUMBER, the letter `w' may be omitted.\n"
 msgstr ""
 
+#
 #: src/fmt.c:345
 #, fuzzy, c-format
 msgid "invalid width option: `%s'"
 msgstr "μη έγκυρο είδος αλφαριθμητικού `%s'"
 
+#
 #: src/fmt.c:385
 #, fuzzy, c-format
 msgid "invalid width: `%s'"
 msgstr "μη έγκυρος αριθμός πεδίου: `%s'"
 
+#
 #: src/fold.c:71
 msgid ""
 "Wrap input lines in each FILE (standard input by default), writing to\n"
@@ -2583,6 +2809,7 @@ msgid ""
 "\n"
 msgstr ""
 
+#
 #: src/fold.c:79
 msgid ""
 "  -b, --bytes         count bytes rather than columns\n"
@@ -2590,16 +2817,19 @@ msgid ""
 "  -w, --width=WIDTH   use WIDTH columns instead of 80\n"
 msgstr ""
 
+#
 #: src/fold.c:267
 #, c-format
 msgid "`%s' option is obsolete; use `%s'"
 msgstr ""
 
+#
 #: src/fold.c:295
 #, c-format
 msgid "invalid number of columns: `%s'"
 msgstr "μη έγκυρος αριθμός από στήλες: `%s'"
 
+#
 #: src/head.c:92
 #, fuzzy
 msgid ""
@@ -2629,55 +2859,66 @@ msgstr ""
 "ένας από τους πολλαπλασιαστές bkm ακολουθεί συνενωμένος, διαφορετικά "
 "ανάγνωσε -n ΤΙΜΗ\n"
 
+#
 #: src/head.c:101
 msgid ""
 "  -c, --bytes=SIZE         print first SIZE bytes\n"
 "  -n, --lines=NUMBER       print first NUMBER lines instead of first 10\n"
 msgstr ""
 
+#
 #: src/head.c:105
 msgid ""
 "  -q, --quiet, --silent    never print headers giving file names\n"
 "  -v, --verbose            always print headers giving file names\n"
 msgstr ""
 
+#
 #: src/head.c:111 src/split.c:119
 msgid ""
 "\n"
 "SIZE may have a multiplier suffix: b for 512, k for 1K, m for 1 Meg.\n"
 msgstr ""
 
+#
 #: src/head.c:189
 #, fuzzy, c-format
 msgid "cannot reposition file pointer for %s"
 msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
 
-#: src/head.c:255 src/tail.c:1378
+#
+#: src/head.c:255 src/tail.c:1379
 #, c-format
 msgid "%s: %s is so large that it is not representable"
 msgstr "%s: το %s είναι τόσο μεγάλο που δε μπορεί να αναπαρασταθεί"
 
-#: src/head.c:256 src/tail.c:1380
+#
+#: src/head.c:256 src/tail.c:1381
 msgid "number of lines"
 msgstr "αριθμός γραμμών"
 
-#: src/head.c:256 src/tail.c:1381
+#
+#: src/head.c:256 src/tail.c:1382
 msgid "number of bytes"
 msgstr "αριθμός από bytes"
 
-#: src/head.c:263 src/tail.c:1467
+#
+#: src/head.c:263 src/tail.c:1468
 msgid "invalid number of lines"
 msgstr "μη έγκυρος αριθμός από γραμμές"
 
-#: src/head.c:264 src/tail.c:1468
+#
+#: src/head.c:264 src/tail.c:1469
 msgid "invalid number of bytes"
 msgstr "μη έγκυρος αριθμός από bytes"
 
+#
 #: src/head.c:340
 #, c-format
 msgid "unrecognized option `-%c'"
-msgstr "μη αναγνωρίσημη επιλογή `-%c'"
+msgstr "απαράδεκτη επιλογή `-%c'"
 
+#
 #: src/head.c:347
 #, c-format
 msgid "`-%s' option is obsolete; use `-%c %.*s%.*s%s'"
@@ -2711,6 +2952,7 @@ msgstr ""
 "  --help      Εκτυπώνει αυτή την βοήθεια και τερματίζει\n"
 "  --version   Εκτυπώνει πληροφορίες έκδοσης και τερματίζει\n"
 
+#
 #: src/hostname.c:104
 #, fuzzy, c-format
 msgid "cannot set hostname to `%s'"
@@ -2726,10 +2968,13 @@ msgstr ""
 msgid "cannot determine hostname"
 msgstr "Δεν μπορεί να καθοριστεί το όνομα του συστήματος"
 
+#
 #: src/id.c:36
+#, fuzzy
 msgid "Arnold Robbins and David MacKenzie"
-msgstr ""
+msgstr "Πωλ Ρούμπιν και Ντέιβιντ Μακένζη"
 
+#
 #: src/id.c:87
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION]... [USERNAME]\n"
@@ -2767,37 +3012,39 @@ msgid ""
 "Without any OPTION, print some useful set of identified information.\n"
 msgstr ""
 
+#
 #: src/id.c:162
 #, fuzzy
 msgid "cannot print only user and only group"
 msgstr "δεν είναι δυνατό να παραληφθεί χρήστης και ομάδα"
 
-#: src/id.c:165
+#: src/id.c:166
 msgid "cannot print only names or real IDs in default format"
 msgstr ""
 "Δεν μπορεί να εκτυπωθούν μόνο ονόματα ή πραγματική ταυτότητα(read ID) σε\n"
 "τυπική μορφή"
 
-#: src/id.c:174
+#: src/id.c:175
 #, c-format
 msgid "%s: No such user"
 msgstr "%s: Δεν υπάρχει τέτοιος χρήστης."
 
-#: src/id.c:211
+#: src/id.c:212
 #, fuzzy, c-format
 msgid "cannot find name for user ID %u"
 msgstr "%s: δεν μπορει να βρεθεί όνομα χρήστη για το 'UID' %u\n"
 
-#: src/id.c:234
+#
+#: src/id.c:235
 #, fuzzy, c-format
 msgid "cannot find name for group ID %u"
 msgstr "δεν είναι δυνατό να παραληφθεί χρήστης και ομάδα"
 
-#: src/id.c:272
+#: src/id.c:273
 msgid "cannot get supplemental group list"
 msgstr "Δεν μπορεί να παρθεί ο συμπληρωματικός κατάλογος ομάδων."
 
-#: src/id.c:382
+#: src/id.c:383
 msgid " groups="
 msgstr " ομάδες="
 
@@ -2808,11 +3055,13 @@ msgstr ""
 "Η αλυσίδα μορφής δεν πρέπει να καθορίζεται όταν εκτυπώνονται\n"
 "αλυσίδες με ίσα μήκη."
 
+#
 #: src/install.c:296 src/mkdir.c:140
 #, fuzzy, c-format
 msgid "invalid mode %s"
 msgstr "μη έγκυρος αριθμός πεδίου: `%s'"
 
+#
 #: src/install.c:311 src/install.c:375
 #, fuzzy, c-format
 msgid "creating directory %s"
@@ -2825,41 +3074,48 @@ msgstr ""
 "εγκατάσταση πολλαπλών αρχείων, αλλά το τελευταίο όρισμα (%s) δεν είναι "
 "κατάλογος"
 
+#
 #: src/install.c:439
 #, fuzzy, c-format
 msgid "%s is a directory"
 msgstr "το `%s' υπάρχει ήδη άλλα δεν είναι κατάλογος"
 
+#
 #: src/install.c:499
 #, fuzzy, c-format
 msgid "cannot obtain time stamps for %s"
 msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
 
+#
 #: src/install.c:511
 #, fuzzy, c-format
 msgid "cannot set time stamps for %s"
 msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
 
+#
 #: src/install.c:532
 #, fuzzy
 msgid "fork system call failed"
-msgstr "μέγεθος μπλοκ"
+msgstr "ειδικό αρχείο μπλοκ"
 
 #: src/install.c:536
 #, fuzzy
 msgid "cannot run strip"
 msgstr "Δεν είναι δυνατόν να εκτελεστεί το %s"
 
+#
 #: src/install.c:543
 #, fuzzy
 msgid "strip failed"
-msgstr "σφάλμα εγγραφής"
+msgstr "αποτυχία εγγραφής"
 
+#
 #: src/install.c:564
 #, fuzzy, c-format
 msgid "invalid user %s"
 msgstr "μη έγκυρος χρήστης"
 
+#
 #: src/install.c:582
 #, fuzzy, c-format
 msgid "invalid group %s"
@@ -2938,11 +3194,13 @@ msgstr ""
 "                    απλά αντίγραφα\n"
 "  simple, never   πάντα δημιουργία απλών αντιγράφων\n"
 
+#
 #: src/join.c:144
 #, c-format
 msgid "Usage: %s [OPTION]... FILE1 FILE2\n"
 msgstr "Χρήση: %s [ΕΠΙΛΟΓΗ]... ΑΡΧΕΙΟ1 ΑΡΧΕΙΟ2\n"
 
+#
 #: src/join.c:148
 msgid ""
 "For each pair of input lines with identical join fields, write a line to\n"
@@ -2953,6 +3211,7 @@ msgid ""
 "  -e EMPTY          replace missing input fields with EMPTY\n"
 msgstr ""
 
+#
 #: src/join.c:156
 msgid ""
 "  -i, --ignore-case ignore differences in case when comparing fields\n"
@@ -2963,6 +3222,7 @@ msgid ""
 "  -t CHAR           use CHAR as input and output field separator\n"
 msgstr ""
 
+#
 #: src/join.c:164
 #, fuzzy
 msgid ""
@@ -2979,6 +3239,7 @@ msgstr ""
 "      --help      εμφάνιση αυτής της βοήθειας και έξοδος\n"
 "      --version   εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
 
+#
 #: src/join.c:171
 msgid ""
 "\n"
@@ -2990,39 +3251,47 @@ msgid ""
 "separated by CHAR.\n"
 msgstr ""
 
+#
 #: src/join.c:644
 #, c-format
 msgid "invalid field specifier: `%s'"
 msgstr "μη έγκυρος δηλωτής πεδίου: `%s'"
 
+#
 #: src/join.c:658 src/join.c:771 src/join.c:807
 #, c-format
 msgid "invalid field number: `%s'"
 msgstr "μη έγκυρος αριθμός πεδίου: `%s'"
 
+#
 #: src/join.c:671
 #, c-format
 msgid "invalid file number in field spec: `%s'"
 msgstr "μη έγκυρος αριθμός αρχείου στη δήλωση πεδίου: `%s'"
 
+#
 #: src/join.c:791
 #, c-format
 msgid "invalid field number for file 1: `%s'"
 msgstr "μη έγκυρος αριθμός πεδίου για το αρχείο 1: `%s'"
 
+#
 #: src/join.c:800
 #, c-format
 msgid "invalid field number for file 2: `%s'"
 msgstr "μη έγκυρος αριθμός πεδίου για το αρχείο 2: `%s'"
 
+#
 #: src/join.c:832
 msgid "too many non-option arguments"
 msgstr "πάρα πολλά ορίσματα που δεν έχουν επιλογές"
 
+#
 #: src/join.c:854
 msgid "too few non-option arguments"
 msgstr "πάρα πολλά ορίσματα που δεν έχουν επιλογές"
 
+#
 #: src/join.c:865
 msgid "both files cannot be standard input"
 msgstr "και τα δύο αρχεία δε μπορεί να είναι η κανονική είσοδος"
@@ -3066,21 +3335,25 @@ msgid ""
 "PID is an integer; if negative it identifies a process group.\n"
 msgstr ""
 
+#
 #: src/kill.c:163
 #, fuzzy, c-format
 msgid "%s: invalid signal"
 msgstr "%s: μη έγκυρος περιγραφέας διεργασίας (PID)"
 
+#
 #: src/kill.c:262
 #, fuzzy, c-format
 msgid "missing operand after `%s'"
 msgstr "%s: αναμενόταν ακέραιος μετά το `%c'"
 
+#
 #: src/kill.c:274
 #, fuzzy, c-format
 msgid "%s: invalid process id"
 msgstr "%s: μη έγκυρη μορφή"
 
+#
 #: src/kill.c:327
 #, fuzzy, c-format
 msgid "invalid option -- %c"
@@ -3099,6 +3372,7 @@ msgstr ""
 msgid "cannot combine signal with -l or -t"
 msgstr ""
 
+#
 #: src/link.c:51
 #, fuzzy, c-format
 msgid ""
@@ -3112,14 +3386,17 @@ msgid ""
 "\n"
 msgstr ""
 
+#
 #: src/link.c:98
 #, fuzzy, c-format
 msgid "cannot create link %s to %s"
 msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
 
+#
 #: src/ln.c:39
+#, fuzzy
 msgid "Mike Parker and David MacKenzie"
-msgstr ""
+msgstr "Σκοτ Μπάρτραμ και Ντέιβιντ Μακένζη"
 
 #: src/ln.c:167
 #, c-format
@@ -3133,6 +3410,7 @@ msgstr ""
 msgid "%s: hard link not allowed for directory"
 msgstr "Το `%s' δεν είναι κατάλογος."
 
+#
 #: src/ln.c:246
 #, fuzzy, c-format
 msgid "%s: cannot overwrite directory"
@@ -3148,10 +3426,11 @@ msgstr "%s: αντικατάσταση του `%s'; "
 msgid "%s: File exists"
 msgstr "%s: Το αρχείο υπάρχει ήδη"
 
+#
 #: src/ln.c:304
 #, fuzzy, c-format
 msgid "create symbolic link %s to %s"
-msgstr "δημιουργία συμβολικού συνδέσμου `%s' στο `%s'"
+msgstr "συμβολικός σύνδεσμος"
 
 #: src/ln.c:305
 #, fuzzy, c-format
@@ -3216,22 +3495,25 @@ msgid ""
 "  -v, --verbose               print name of each file before linking\n"
 msgstr ""
 
-#: src/ln.c:489 src/mv.c:462 src/shred.c:1609
+#
+#: src/ln.c:490 src/mv.c:462 src/shred.c:1609
 #, fuzzy
 msgid "missing file argument"
 msgstr "προσπέρασμα ορίσματος"
 
-#: src/ln.c:520
+#
+#: src/ln.c:521
 #, fuzzy, c-format
 msgid "%s: specified target directory is not a directory"
 msgstr "το `%s' υπάρχει ήδη άλλα δεν είναι κατάλογος"
 
-#: src/ln.c:541
+#: src/ln.c:542
 msgid "when making multiple links, last argument must be a directory"
 msgstr ""
 "όταν δημιουργήτε πολλαπλούς συνδέσμους, το τελευταίο όρισμα πρέπει να είναι "
 "κατάλογος"
 
+#
 #: src/logname.c:48 src/pwd.c:47 src/sync.c:44
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION]\n"
@@ -3243,18 +3525,23 @@ msgid ""
 "\n"
 msgstr ""
 
+#
 #: src/logname.c:99
 #, fuzzy, c-format
 msgid "%s: no login name\n"
 msgstr "%s: μη έγκυρος αριθμός"
 
+#
 #: src/ls.c:680
+#, fuzzy
 msgid "%b %e  %Y"
-msgstr ""
+msgstr "%b %e %H:%M %Y"
 
+#
 #: src/ls.c:688
+#, fuzzy
 msgid "%b %e %H:%M"
-msgstr ""
+msgstr "%b %e %H:%M %Y"
 
 #: src/ls.c:1239
 #, fuzzy, c-format
@@ -3273,54 +3560,66 @@ msgstr ""
 "αγνοείται μη έγκυρο μέγεθος οριζόντιου στηλοθέτη στη μεταβλητή περιβάλλοντος "
 "TABSIZE: %s"
 
+#
 #: src/ls.c:1406
 #, fuzzy, c-format
 msgid "invalid line width: %s"
 msgstr "μη έγκυρος αριθμός πεδίου: `%s'"
 
+#
 #: src/ls.c:1476
 #, fuzzy, c-format
 msgid "invalid tab size: %s"
 msgstr "μη έγκυρο είδος αλφαριθμητικού `%s'"
 
+#
 #: src/ls.c:1634
 #, fuzzy, c-format
 msgid "invalid time style format %s"
-msgstr "μη έγκυρο όρισμα %s για `%s'"
+msgstr "μη έγκυρο όρισμα %s για %s"
 
+#
 #: src/ls.c:1966
 #, fuzzy, c-format
 msgid "unrecognized prefix: %s"
-msgstr "μη αναγνωρίσημη επιλογή `-%c'"
+msgstr "απαράδεκτη επιλογή `-%c'"
 
 #: src/ls.c:1989
 msgid "unparsable value for LS_COLORS environment variable"
 msgstr ""
 "τιμή που δε μπορεί να αναγνωριστεί στη μεταβλητή περιβάλλοντος LS_COLORS"
 
+#
 #: src/ls.c:2057
 #, fuzzy, c-format
 msgid "cannot determine device and inode of %s"
 msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
 
+#
 #: src/ls.c:2067
 #, fuzzy, c-format
 msgid "not listing already-listed directory: %s"
 msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
 
-#: src/ls.c:2462
+#
+#: src/ls.c:2116 src/remove.c:904
+#, fuzzy, c-format
+msgid "reading directory %s"
+msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
+
+#: src/ls.c:2482
 #, fuzzy, c-format
 msgid "cannot compare file names %s and %s"
 msgstr "δεν είναι δυνατό να δημιουργηθεί το %s `%s' στο `%s'"
 
-#: src/ls.c:3603
+#: src/ls.c:3623
 msgid ""
 "List information about the FILEs (the current directory by default).\n"
 "Sort entries alphabetically if none of -cftuSUX nor --sort.\n"
 "\n"
 msgstr ""
 
-#: src/ls.c:3611
+#: src/ls.c:3631
 msgid ""
 "  -a, --all                  do not hide entries starting with .\n"
 "  -A, --almost-all           do not list implied . and ..\n"
@@ -3328,7 +3627,7 @@ msgid ""
 "  -b, --escape               print octal escapes for nongraphic characters\n"
 msgstr ""
 
-#: src/ls.c:3617
+#: src/ls.c:3637
 msgid ""
 "      --block-size=SIZE      use SIZE-byte blocks\n"
 "  -B, --ignore-backups       do not list implied entries ending with ~\n"
@@ -3339,7 +3638,7 @@ msgid ""
 "                               otherwise: sort by ctime\n"
 msgstr ""
 
-#: src/ls.c:3625
+#: src/ls.c:3645
 msgid ""
 "  -C                         list entries by columns\n"
 "      --color[=WHEN]         control whether color is used to distinguish "
@@ -3350,7 +3649,7 @@ msgid ""
 "  -D, --dired                generate output designed for Emacs' dired mode\n"
 msgstr ""
 
-#: src/ls.c:3632
+#: src/ls.c:3652
 msgid ""
 "  -f                         do not sort, enable -aU, disable -lst\n"
 "  -F, --classify             append indicator (one of */=@|) to entries\n"
@@ -3359,7 +3658,7 @@ msgid ""
 "      --full-time            like -l --time-style=full-iso\n"
 msgstr ""
 
-#: src/ls.c:3639
+#: src/ls.c:3659
 msgid ""
 "  -g                         like -l, but do not list owner\n"
 "  -G, --no-group             inhibit display of group information\n"
@@ -3369,7 +3668,7 @@ msgid ""
 "  -H, --dereference-command-line  follow symbolic links on the command line\n"
 msgstr ""
 
-#: src/ls.c:3646
+#: src/ls.c:3666
 msgid ""
 "      --indicator-style=WORD append indicator with style WORD to entry "
 "names:\n"
@@ -3381,7 +3680,7 @@ msgid ""
 "  -k                         like --block-size=1K\n"
 msgstr ""
 
-#: src/ls.c:3653
+#: src/ls.c:3673
 msgid ""
 "  -l                         use a long listing format\n"
 "  -L, --dereference          when showing file information for a symbolic\n"
@@ -3391,7 +3690,7 @@ msgid ""
 "entries\n"
 msgstr ""
 
-#: src/ls.c:3660
+#: src/ls.c:3680
 msgid ""
 "  -n, --numeric-uid-gid      like -l, but list numeric UIDs and GIDs\n"
 "  -N, --literal              print raw entry names (don't treat e.g. "
@@ -3401,7 +3700,7 @@ msgid ""
 "  -p, --file-type            append indicator (one of /=@|) to entries\n"
 msgstr ""
 
-#: src/ls.c:3667
+#: src/ls.c:3687
 #, fuzzy
 msgid ""
 "  -q, --hide-control-chars   print ? instead of non graphic characters\n"
@@ -3455,14 +3754,14 @@ msgstr ""
 "  -R, --recursive            εμφάνιση υποκαταλόγων αναδρομικά\n"
 "  -s, --size                 εμφάνιση μεγέθους κάθε αρχείου, σε μπλοκ\n"
 
-#: src/ls.c:3675
+#: src/ls.c:3695
 msgid ""
 "  -r, --reverse              reverse order while sorting\n"
 "  -R, --recursive            list subdirectories recursively\n"
 "  -s, --size                 print size of each file, in blocks\n"
 msgstr ""
 
-#: src/ls.c:3680
+#: src/ls.c:3700
 msgid ""
 "  -S                         sort by file size\n"
 "      --sort=WORD            extension -X, none -U, size -S, time -t,\n"
@@ -3475,7 +3774,7 @@ msgid ""
 "                               specified time as sort key if --sort=time\n"
 msgstr ""
 
-#: src/ls.c:3689
+#: src/ls.c:3709
 msgid ""
 "      --time-style=STYLE     show times using style STYLE:\n"
 "                               full-iso, long-iso, iso, locale, +FORMAT\n"
@@ -3489,7 +3788,7 @@ msgid ""
 "  -T, --tabsize=COLS         assume tab stops at each COLS instead of 8\n"
 msgstr ""
 
-#: src/ls.c:3700
+#: src/ls.c:3720
 msgid ""
 "  -u                         with -lt: sort by, and show, access time\n"
 "                               with -l: show access time and sort by name\n"
@@ -3498,7 +3797,7 @@ msgid ""
 "  -v                         sort by version\n"
 msgstr ""
 
-#: src/ls.c:3707
+#: src/ls.c:3727
 msgid ""
 "  -w, --width=COLS           assume screen width instead of current value\n"
 "  -x                         list entries by lines instead of by columns\n"
@@ -3506,7 +3805,7 @@ msgid ""
 "  -1                         list one file per line\n"
 msgstr ""
 
-#: src/ls.c:3719
+#: src/ls.c:3739
 msgid ""
 "\n"
 "By default, color is not used to distinguish types of files.  That is\n"
@@ -3516,10 +3815,12 @@ msgid ""
 "to a terminal (tty).\n"
 msgstr ""
 
+#
 #: src/md5sum.c:38
 msgid "Ulrich Drepper and Scott Miller"
 msgstr ""
 
+#
 #: src/md5sum.c:125
 #, c-format
 msgid ""
@@ -3529,6 +3830,7 @@ msgid ""
 "With no FILE, or when FILE is -, read standard input.\n"
 msgstr ""
 
+#
 #: src/md5sum.c:134
 #, c-format
 msgid ""
@@ -3540,6 +3842,7 @@ msgid ""
 "\n"
 msgstr ""
 
+#
 #: src/md5sum.c:142
 msgid ""
 "The following two options are useful only when verifying checksums:\n"
@@ -3548,6 +3851,7 @@ msgid ""
 "\n"
 msgstr ""
 
+#
 #: src/md5sum.c:150
 #, c-format
 msgid ""
@@ -3558,61 +3862,74 @@ msgid ""
 "text), and name for each FILE.\n"
 msgstr ""
 
+#
 #: src/md5sum.c:379
 #, fuzzy, c-format
 msgid "%s: %lu: improperly formatted %s checksum line"
 msgstr "%s: %lu: εσφαλμένα μορφοποιημένη γραμμή αθροίσματος ελέγχου MD5"
 
+#
 #: src/md5sum.c:401
 #, c-format
 msgid "%s: FAILED open or read\n"
 msgstr "%s: ΑΝΕΠΙΤΥΧΕΣ άνοιγμα ή ανάγνωση\n"
 
+#
 #: src/md5sum.c:425
 msgid "FAILED"
 msgstr "ΑΝΕΠΙΤΥΧΕΣ"
 
+#
 #: src/md5sum.c:425
 msgid "OK"
 msgstr "ΕΝΤΑΞΗ"
 
+#
 #: src/md5sum.c:438
 #, c-format
 msgid "%s: read error"
 msgstr "%s: σφάλμα ανάγνωσης"
 
+#
 #: src/md5sum.c:451
 #, fuzzy, c-format
 msgid "%s: no properly formatted %s checksum lines found"
 msgstr ""
 "%s: δε βρέθηκαν κανονικά μορφοποιημένες γραμμές αθροισμάτων ελέγχου MD5"
 
+#
 #: src/md5sum.c:464
 #, c-format
 msgid "WARNING: %d of %d listed %s could not be read"
 msgstr "ΠΡΟΕΙΔΟΠΟΙΗΣΗ: %d από %d αναφερόμενα %s δεν ήταν δυνατό να αναγνωστούν"
 
+#
 #: src/md5sum.c:467
 msgid "file"
 msgstr "αρχείο"
 
+#
 #: src/md5sum.c:467
 msgid "files"
 msgstr "αρχεία"
 
+#
 #: src/md5sum.c:473
 #, c-format
 msgid "WARNING: %d of %d computed %s did NOT match"
 msgstr "ΠΡΟΕΙΔΟΠΟΙΗΣΗ: %d από %d υπολόγισαν σε %s ΔΕΝ ταίριαξαν"
 
+#
 #: src/md5sum.c:476
 msgid "checksum"
 msgstr "άθροισμα ελέγχου"
 
+#
 #: src/md5sum.c:476
 msgid "checksums"
 msgstr "αθροίσματα ελέγχου"
 
+#
 #: src/md5sum.c:558
 msgid ""
 "the --binary and --text options are meaningless when verifying checksums"
@@ -3620,27 +3937,33 @@ msgstr ""
 "οι επιλογές --binary και --text δεν έχουν σημασία όταν επιβεβαιώνονται "
 "αθροίσματα ελέγχου"
 
+#
 #: src/md5sum.c:566
 msgid "the --string and --check options are mutually exclusive"
 msgstr "οι επιλογές --string και --check είναι αμοιβαίως αποκλειόμενες"
 
+#
 #: src/md5sum.c:573
 msgid "the --status option is meaningful only when verifying checksums"
 msgstr ""
 "η επιλογή --status έχει έννοια μόνο στην επιβεβαίωση αθροισμάτων ελέγχου"
 
+#
 #: src/md5sum.c:580
 msgid "the --warn option is meaningful only when verifying checksums"
 msgstr "η επιλογή --warn έχει έννοια μόνο στην επιβεβαίωση αθροισμάτων ελέγχου"
 
+#
 #: src/md5sum.c:590
 msgid "no files may be specified when using --string"
 msgstr "δε μπορούν να δηλώνονται αρχεία όταν γίνεται χρήση του --string"
 
+#
 #: src/md5sum.c:612
 msgid "only one argument may be specified when using --check"
 msgstr "μόνο ένα όρισμα μπορεί να δηλώνεται όταν γίνεται χρήση του --check"
 
+#
 #: src/mkdir.c:61
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION] DIRECTORY...\n"
@@ -3671,16 +3994,19 @@ msgstr ""
 "      --help        εμφάνιση αυτής της βοήθειας και έξοδος\n"
 "      --version     εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
 
+#
 #: src/mkdir.c:113
 #, fuzzy, c-format
 msgid "created directory %s"
 msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
 
+#
 #: src/mkdir.c:192
 #, fuzzy, c-format
 msgid "cannot set permissions of directory %s"
 msgstr "αδυναμία αλλαγής ιδιοκτησίας στο %s"
 
+#
 #: src/mkfifo.c:55
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION] NAME...\n"
@@ -3704,20 +4030,23 @@ msgstr ""
 "      --help        εμφάνιση αυτής της βοήθειας και έξοδος\n"
 "      --version     εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
 
-#: src/mkfifo.c:93 src/mknod.c:208
+#: src/mkfifo.c:93 src/mknod.c:210
 msgid "fifo files not supported"
 msgstr "αρχεία fifo δεν υποστηρίζονται"
 
+#
 #: src/mkfifo.c:123 src/mknod.c:131
 #, fuzzy
 msgid "invalid mode"
 msgstr "μη έγκυρος αριθμός"
 
+#
 #: src/mkfifo.c:142
 #, fuzzy, c-format
 msgid "cannot set permissions of fifo %s"
 msgstr "αδυναμία αλλαγής ιδιοκτησίας στο %s"
 
+#
 #: src/mknod.c:65
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION]... NAME TYPE [MAJOR MINOR]\n"
@@ -3753,19 +4082,23 @@ msgstr ""
 "  c, u   δημιουργία ειδικού αρχείου χαρακτήρων (χωρίς ενταμίευση)\n"
 "  p      δημιουργία αρχείου FIFO\n"
 
+#
 #: src/mknod.c:145
 #, fuzzy
 msgid "wrong number of arguments"
 msgstr "πολύ λίγα ορίσματα"
 
+#
 #: src/mknod.c:157
 #, fuzzy
 msgid "block special files not supported"
-msgstr "μέγεθος μπλοκ"
+msgstr "ειδικό αρχείο μπλοκ"
 
+#
 #: src/mknod.c:166
+#, fuzzy
 msgid "character special files not supported"
-msgstr "ειδικά αρχεία χαρακτήρων δεν υποστηρίζονται"
+msgstr "ειδικό αρχείο χαρακτήρων"
 
 #: src/mknod.c:175
 #, fuzzy
@@ -3776,27 +4109,31 @@ msgstr ""
 "όταν δημιουργούνται ειδικά αρχεία μπλοκ, οι major και minor\n"
 "αριθμοί συσκευής πρέπει να ορίζονται"
 
-#: src/mknod.c:189
+#
+#: src/mknod.c:190
 #, fuzzy, c-format
 msgid "invalid major device number %s"
 msgstr "μη έγκυρος αρχικός αριθμός γραμμής: `%s'"
 
-#: src/mknod.c:193
+#
+#: src/mknod.c:195
 #, fuzzy, c-format
 msgid "invalid minor device number %s"
 msgstr "μη έγκυρος αρχικός αριθμός γραμμής: `%s'"
 
-#: src/mknod.c:198
+#
+#: src/mknod.c:200
 #, fuzzy, c-format
 msgid "invalid device %s %s"
-msgstr "μη έγκυρο όρισμα %s για `%s'"
+msgstr "μη έγκυρο όρισμα %s για %s"
 
-#: src/mknod.c:212
+#: src/mknod.c:214
 msgid "major and minor device numbers may not be specified for fifo files"
 msgstr ""
 "major και minor αριθμοί συσκευής δεν πρέπει να ορίζονται στα αρχεία fifo"
 
-#: src/mknod.c:233
+#
+#: src/mknod.c:235
 #, fuzzy, c-format
 msgid "cannot set permissions of %s"
 msgstr "αδυναμία αλλαγής ιδιοκτησίας στο %s"
@@ -3864,6 +4201,7 @@ msgstr ""
 "      --version                εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
 "\n"
 
+#
 #: src/mv.c:470
 #, fuzzy, c-format
 msgid "specified target, %s is not a directory"
@@ -3875,6 +4213,7 @@ msgstr ""
 "όταν μετακινούνται πολλαπλά αρχεία, το τελευταίο όρισμα πρέπει να είναι "
 "κατάλογος"
 
+#
 #: src/nice.c:67
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION] [COMMAND [ARG]...]\n"
@@ -3899,11 +4238,13 @@ msgstr ""
 "      --help               Εκτυπώνει αυτή την βοήθεια και τερματίζει\n"
 "      --version            Εκτυπώνει πληροφορίες έκδοσης και τερματίζει\n"
 
+#
 #: src/nice.c:109 src/nice.c:122
 #, fuzzy, c-format
 msgid "invalid option `%s'"
 msgstr "μη έγκυρο είδος αλφαριθμητικού `%s'"
 
+#
 #: src/nice.c:147
 #, fuzzy, c-format
 msgid "invalid priority `%s'"
@@ -3913,20 +4254,24 @@ msgstr "μη έγκυρος αριθμός πεδίου: `%s'"
 msgid "a command must be given with an adjustment"
 msgstr "Μια εντολή πρέπει να δίνεται με μια προσαρμογή (προτεραιότητας)."
 
+#
 #: src/nice.c:178 src/nice.c:187
 #, fuzzy
 msgid "cannot get priority"
 msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
 
+#
 #: src/nice.c:192
 #, fuzzy
 msgid "cannot set priority"
 msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
 
+#
 #: src/nl.c:39
 msgid "Scott Bartram and David MacKenzie"
-msgstr ""
+msgstr "Σκοτ Μπάρτραμ και Ντέιβιντ Μακένζη"
 
+#
 #: src/nl.c:180
 msgid ""
 "Write each FILE to standard output, with line numbers added.\n"
@@ -3934,6 +4279,7 @@ msgid ""
 "\n"
 msgstr ""
 
+#
 #: src/nl.c:188
 #, fuzzy
 msgid ""
@@ -3952,6 +4298,7 @@ msgstr ""
 "      --help               εμφάνιση αυτής της βοήθειας και έξοδος\n"
 "      --version            εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
 
+#
 #: src/nl.c:193
 msgid ""
 "  -h, --header-numbering=STYLE    use STYLE for numbering header lines\n"
@@ -3964,12 +4311,14 @@ msgid ""
 "  -s, --number-separator=STRING   add STRING after (possible) line number\n"
 msgstr ""
 
+#
 #: src/nl.c:201
 msgid ""
 "  -v, --first-page=NUMBER         first line number on each logical page\n"
 "  -w, --number-width=NUMBER       use NUMBER columns for line numbers\n"
 msgstr ""
 
+#
 #: src/nl.c:207
 msgid ""
 "\n"
@@ -3978,6 +4327,7 @@ msgid ""
 "second character implies :.  Type \\\\ for \\.  STYLE is one of:\n"
 msgstr ""
 
+#
 #: src/nl.c:213
 msgid ""
 "\n"
@@ -3994,26 +4344,31 @@ msgid ""
 "\n"
 msgstr ""
 
+#
 #: src/nl.c:500
 #, c-format
 msgid "invalid starting line number: `%s'"
 msgstr "μη έγκυρος αρχικός αριθμός γραμμής: `%s'"
 
+#
 #: src/nl.c:510
 #, c-format
 msgid "invalid line number increment: `%s'"
 msgstr "μη έγκυρη αύξηση στον αριθμό εντολής: `%s'"
 
+#
 #: src/nl.c:523
 #, c-format
 msgid "invalid number of blank lines: `%s'"
 msgstr "μη έγκυρος αριθμός από κενές γραμμές: `%s'"
 
+#
 #: src/nl.c:537
 #, c-format
 msgid "invalid line number field width: `%s'"
 msgstr "μη έγκυρος μήκος πεδίου αριθμού γραμμής: `%s'"
 
+#
 #: src/od.c:291
 #, c-format
 msgid ""
@@ -4023,6 +4378,7 @@ msgstr ""
 "Χρήση: %s [ΕΠΙΛΟΓΗ]... [ΑΡΧΕΙΟ]...\n"
 "   ή:  %s --traditional [ΑΡΧΕΙΟ] [[+]ΘΕΣΗ [[+]ΧΑΡΑΚΤΗΡΙΣΤΙΚΟ]]\n"
 
+#
 #: src/od.c:296
 msgid ""
 "\n"
@@ -4033,16 +4389,19 @@ msgid ""
 "\n"
 msgstr ""
 
+#
 #: src/od.c:303
 msgid "All arguments to long options are mandatory for short options.\n"
 msgstr ""
 
+#
 #: src/od.c:306
 msgid ""
 "  -A, --address-radix=RADIX   decide how file offsets are printed\n"
 "  -j, --skip-bytes=BYTES      skip BYTES input bytes first\n"
 msgstr ""
 
+#
 #: src/od.c:310
 msgid ""
 "  -N, --read-bytes=BYTES      limit dump to BYTES input bytes\n"
@@ -4054,6 +4413,7 @@ msgid ""
 "      --traditional           accept arguments in traditional form\n"
 msgstr ""
 
+#
 #: src/od.c:320
 msgid ""
 "\n"
@@ -4064,6 +4424,7 @@ msgid ""
 "  -d   same as -t u2, select unsigned decimal shorts\n"
 msgstr ""
 
+#
 #: src/od.c:328
 msgid ""
 "  -f   same as -t fF, select floats\n"
@@ -4074,6 +4435,7 @@ msgid ""
 "  -x   same as -t x2, select hexadecimal shorts\n"
 msgstr ""
 
+#
 #: src/od.c:336
 msgid ""
 "\n"
@@ -4088,6 +4450,7 @@ msgid ""
 "  c          ASCII character or backslash escape\n"
 msgstr ""
 
+#
 #: src/od.c:348
 msgid ""
 "  d[SIZE]    signed decimal, SIZE bytes per integer\n"
@@ -4097,6 +4460,7 @@ msgid ""
 "  x[SIZE]    hexadecimal, SIZE bytes per integer\n"
 msgstr ""
 
+#
 #: src/od.c:355
 msgid ""
 "\n"
@@ -4106,6 +4470,7 @@ msgid ""
 "for sizeof(double) or L for sizeof(long double).\n"
 msgstr ""
 
+#
 #: src/od.c:362
 msgid ""
 "\n"
@@ -4116,17 +4481,20 @@ msgid ""
 "of output.  "
 msgstr ""
 
+#
 #: src/od.c:370
 msgid ""
 "--string without a number implies 3.  --width without a number\n"
 "implies 32.  By default, od uses -A o -t d2 -w 16.\n"
 msgstr ""
 
+#
 #: src/od.c:726 src/od.c:845
 #, c-format
 msgid "invalid type string `%s'"
 msgstr "μη έγκυρο είδος αλφαριθμητικού `%s'"
 
+#
 #: src/od.c:736
 #, c-format
 msgid ""
@@ -4136,6 +4504,7 @@ msgstr ""
 "μη έγκυρο είδος αλφαριθμητικού `%s';\n"
 "αυτό το σύστημα δεν παρέχει τον εσωτερικό τύπο δεδομένων %lu-byte"
 
+#
 #: src/od.c:855
 #, c-format
 msgid ""
@@ -4146,81 +4515,99 @@ msgstr ""
 "αυτό το σύστημα δεν παρέχει τον εσωτερικό τύπο δεδομένων κινητής "
 "υποδιαστολής %lu-byte"
 
+#
 #: src/od.c:918
 #, c-format
 msgid "invalid character `%c' in type string `%s'"
 msgstr "μη έγκυρος χαρακτήρας `%c' στο τύπο αλφαριθμητικού `%s'"
 
+#
 #: src/od.c:1145
 msgid "cannot skip past end of combined input"
-msgstr "αδυναμία προσπέρασης μετά το τέλος της συνδιασμένης εισόδου"
+msgstr "αδυναμία προσπέρασης μετά το τέλος της συνδυασμένης εισόδου"
 
+#
 #: src/od.c:1398
 msgid "old-style offset"
 msgstr "παλαιού είδους θέση"
 
+#
 #: src/od.c:1706
 #, c-format
 msgid "invalid output address radix `%c'; it must be one character from [doxn]"
 msgstr ""
 
+#
 #: src/od.c:1716
 msgid "skip argument"
 msgstr "προσπέρασμα ορίσματος"
 
+#
 #: src/od.c:1724
 msgid "limit argument"
 msgstr "όριο ορίσματος"
 
+#
 #: src/od.c:1734
 msgid "minimum string length"
 msgstr "ελάχιστο μέγεθος αλφαριθμητικού"
 
+#
 #: src/od.c:1739 src/od.c:1805
 #, c-format
 msgid "%s is too large"
-msgstr ""
+msgstr "το %s είναι πολύ μεγάλο"
 
+#
 #: src/od.c:1803
 msgid "width specification"
 msgstr "δήλωση πλάτους"
 
+#
 #: src/od.c:1825
 msgid "no type may be specified when dumping strings"
 msgstr "κανένα είδος δε μπορεί να δηλωθεί όταν τυπώνονται αλφαριθμητικά"
 
+#
 #: src/od.c:1873
 #, c-format
 msgid "invalid second operand in compatibility mode `%s'"
 msgstr "μη έγκυρος δεύτερος τελεστής σε κατάσταση συμβατότητας `%s'"
 
+#
 #: src/od.c:1894
 msgid "in compatibility mode, the last two arguments must be offsets"
 msgstr ""
-"σε κατάσταση σημβατότητας, τα τελευταία δύο ορίσματα πρέπει να είναι θέσεις"
+"σε κατάσταση συμβατότητας, τα τελευταία δύο ορίσματα πρέπει να είναι θέσεις"
 
+#
 #: src/od.c:1901
 msgid "compatibility mode supports at most three arguments"
 msgstr "η κατάσταση συμβατότητας υποστηρίζει το πολύ τρία ορίσματα"
 
+#
 #: src/od.c:1974
 #, c-format
 msgid "warning: invalid width %lu; using %d instead"
 msgstr ""
 
+#
 #: src/od.c:1990
 #, c-format
 msgid "%d: fmt=\"%s\" width=%d\n"
 msgstr "%d: fmt=\"%s\" πλάτος=%d\n"
 
+#
 #: src/paste.c:50
 msgid "David M. Ihnat and David MacKenzie"
 msgstr ""
 
+#
 #: src/paste.c:208
 msgid "standard input is closed"
 msgstr "η κανονική είσοδος είναι κλεισμένη"
 
+#
 #: src/paste.c:407
 msgid ""
 "Write lines consisting of the sequentially corresponding lines from\n"
@@ -4229,12 +4616,14 @@ msgid ""
 "\n"
 msgstr ""
 
+#
 #: src/paste.c:416
 msgid ""
 "  -d, --delimiters=LIST   reuse characters from LIST instead of TABs\n"
 "  -s, --serial            paste one file at a time instead of in parallel\n"
 msgstr ""
 
+#
 #: src/pathchk.c:140
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION]... NAME...\n"
@@ -4254,11 +4643,13 @@ msgstr ""
 "      --help          Εκτυπώνει αυτή την βοήθεια και τερματίζει\n"
 "      --version       Εκτυπώνει πληροφορίες έκδοσης και τερματίζει\n"
 
+#
 #: src/pathchk.c:231
 #, fuzzy, c-format
 msgid "path `%s' contains nonportable character `%c'"
 msgstr "το μέγεθος στηλογνώμονα περιέχει μη έγκυρο χαρακτήρα"
 
+#
 #: src/pathchk.c:251
 #, fuzzy, c-format
 msgid "`%s' is not a directory"
@@ -4296,9 +4687,11 @@ msgstr ""
 msgid "???\n"
 msgstr ""
 
+#
 #: src/pinky.c:318
+#, fuzzy
 msgid "Directory: "
-msgstr ""
+msgstr "κατάλογος"
 
 #: src/pinky.c:320
 msgid "Shell: "
@@ -4336,6 +4729,7 @@ msgstr ""
 msgid "Where"
 msgstr ""
 
+#
 #: src/pinky.c:469
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION]... [USER]...\n"
@@ -4368,119 +4762,141 @@ msgid ""
 "The utmp file will be %s.\n"
 msgstr ""
 
+#
 #: src/pinky.c:574
 #, fuzzy
 msgid "no username specified; at least one must be specified when using -l"
 msgstr "δε μπορούν να δηλώνονται αρχεία όταν γίνεται χρήση του --string"
 
+#
 #: src/pr.c:328
 msgid "Pete TerMaat and Roland Huebner"
-msgstr ""
+msgstr "Πιτ ΤερΜάτ και Ρόλαντ Χέμπνερ"
 
+#
 #: src/pr.c:805
 #, c-format
 msgid "`--pages' invalid range of page numbers: `%s'"
 msgstr "`--pages' μη έγκυρο όριο από αριθμούς σελίδων: `%s'"
 
+#
 #: src/pr.c:817
 #, c-format
 msgid "`--pages' invalid starting page number: `%s'"
 msgstr "`--pages' μη έγκυρος αριθμός αρχικής σελίδας: `%s'"
 
+#
 #: src/pr.c:829
 #, c-format
 msgid "`--pages' invalid ending page number: `%s'"
 msgstr "`--pages' μη έγκυρος αριθμός τελικής σελίδας: `%s'"
 
+#
 #: src/pr.c:836
 msgid "`--pages' starting page number is larger than ending page number"
 msgstr ""
 "`--pages' ο αριθμός αρχικής σελίδας είναι μεγαλύτερος από της τελικής σελίδας"
 
-#: src/pr.c:913
+#
+#: src/pr.c:911
 msgid "`--pages=FIRST_PAGE[:LAST_PAGE]' missing argument"
 msgstr "`--pages=ΠΡΩΤΗ_ΣΕΛΙΔΑ[:ΤΕΛΕΥΤΑΙΑ_ΣΕΛΙΔΑ]' απουσία ορίσματος"
 
-#: src/pr.c:924
+#
+#: src/pr.c:922
 #, c-format
 msgid "`--columns=COLUMN' invalid number of columns: `%s'"
 msgstr "`--columns=ΣΤΗΛΗ' μη έγκυρος αριθμός στηλών: `%s'"
 
-#: src/pr.c:978
+#
+#: src/pr.c:976
 #, c-format
 msgid "`-l PAGE_LENGTH' invalid number of lines: `%s'"
 msgstr "`-l ΜΗΚΟΣ_ΣΕΛΙΔΑΣ' μη έγκυρος αριθμός γραμμών: `%s'"
 
-#: src/pr.c:1002
+#
+#: src/pr.c:1000
 #, c-format
 msgid "`-N NUMBER' invalid starting line number: `%s'"
 msgstr "`-N ΑΡΙΘΜΟΣ' μη έγκυρος αριθμός αρχικής σελίδας: `%s'"
 
-#: src/pr.c:1014
+#
+#: src/pr.c:1012
 #, c-format
 msgid "`-o MARGIN' invalid line offset: `%s'"
 msgstr "`-o ΠΕΡΙΘΩΡΙΟ' μη έγκυρη θέση γραμμής: `%s'"
 
-#: src/pr.c:1055
+#
+#: src/pr.c:1053
 #, c-format
 msgid "`-w PAGE_WIDTH' invalid number of characters: `%s'"
 msgstr "`-w ΠΛΑΤΟΣ_ΣΕΛΙΔΑΣ' μη έγκυρος αριθμός χαρακτήρων : `%s'"
 
-#: src/pr.c:1067
+#
+#: src/pr.c:1065
 #, c-format
 msgid "`-W PAGE_WIDTH' invalid number of characters: `%s'"
 msgstr "`-W ΠΛΑΤΟΣ_ΣΕΛΙΔΑΣ' μη έγκυρος αριθμός χαρακτήρων : `%s'"
 
-#: src/pr.c:1081
+#
+#: src/pr.c:1079
 msgid "%b %e %H:%M %Y"
-msgstr ""
+msgstr "%b %e %H:%M %Y"
 
-#: src/pr.c:1090
+#
+#: src/pr.c:1088
 msgid "Cannot specify number of columns when printing in parallel."
 msgstr "Δεν είναι δυνατό να δηλωθεί αριθμός στηλών στην παράλληλη εκτύπωση."
 
-#: src/pr.c:1094
+#
+#: src/pr.c:1092
 msgid "Cannot specify both printing across and printing in parallel."
 msgstr "Δεν είναι δυνατό να δηλωθεί σειριακή και παράλληλη εκτύπωση."
 
-#: src/pr.c:1190
+#
+#: src/pr.c:1188
 #, c-format
 msgid "`-%c' extra characters or invalid number in the argument: `%s'"
 msgstr "`-%c' επιπλέον χαρακτήρες ή μη έγκυρος αριθμός στο όρισμα: `%s'"
 
-#: src/pr.c:1301
+#
+#: src/pr.c:1299
 msgid "page width too narrow"
 msgstr "το πλάτος σελίδας είναι πολύ στενό"
 
-#: src/pr.c:2364
+#
+#: src/pr.c:2362
 #, c-format
 msgid "starting page number larger than total number of pages: `%d'"
 msgstr ""
 "ο αρχικός αριθμός σελίδας είναι μεγαλύτερος από το συνολικό αριθμό σελίδων: `"
 "%d'"
 
-#: src/pr.c:2395
+#
+#: src/pr.c:2393
 #, c-format
 msgid "Page %d"
-msgstr ""
+msgstr "Σελίδα %d"
 
-#: src/pr.c:2761
+#
+#: src/pr.c:2759
 msgid ""
 "Paginate or columnate FILE(s) for printing.\n"
 "\n"
 msgstr ""
 
-#: src/pr.c:2768
+#: src/pr.c:2766
 msgid ""
 "  +FIRST_PAGE[:LAST_PAGE], --pages=FIRST_PAGE[:LAST_PAGE]\n"
 "                    begin [stop] printing with page FIRST_[LAST_]PAGE\n"
 "  -COLUMN, --columns=COLUMN\n"
-"                    produce COLUMN-column output and print columns down,\n"
+"                    output COLUMN columns and print columns down,\n"
 "                    unless -a is used. Balance number of lines in the\n"
 "                    columns on each page.\n"
 msgstr ""
 
-#: src/pr.c:2776
+#
+#: src/pr.c:2774
 msgid ""
 "  -a, --across      print columns across rather than down, used together\n"
 "                    with -COLUMN\n"
@@ -4490,7 +4906,8 @@ msgid ""
 "                    double space the output\n"
 msgstr ""
 
-#: src/pr.c:2784
+#
+#: src/pr.c:2782
 msgid ""
 "  -D, --date-format=FORMAT\n"
 "                    use FORMAT for the header date\n"
@@ -4502,7 +4919,8 @@ msgid ""
 "                    and trailer without -F)\n"
 msgstr ""
 
-#: src/pr.c:2794
+#
+#: src/pr.c:2792
 msgid ""
 "  -h HEADER, --header=HEADER\n"
 "                    use a centered HEADER instead of filename in page "
@@ -4515,7 +4933,8 @@ msgid ""
 "                    alignment, --sep-string[=STRING] sets separators\n"
 msgstr ""
 
-#: src/pr.c:2803
+#
+#: src/pr.c:2801
 msgid ""
 "  -l PAGE_LENGTH, --length=PAGE_LENGTH\n"
 "                    set the page length to PAGE_LENGTH (66) lines\n"
@@ -4524,7 +4943,8 @@ msgid ""
 "                    truncate lines, but join lines of full length with -J\n"
 msgstr ""
 
-#: src/pr.c:2810
+#
+#: src/pr.c:2808
 msgid ""
 "  -n[SEP[DIGITS]], --number-lines[=SEP[DIGITS]]\n"
 "                    number lines, use DIGITS (5) digits, then SEP (TAB),\n"
@@ -4534,7 +4954,8 @@ msgid ""
 "                    page printed (see +FIRST_PAGE)\n"
 msgstr ""
 
-#: src/pr.c:2818
+#
+#: src/pr.c:2816
 msgid ""
 "  -o MARGIN, --indent=MARGIN\n"
 "                    offset each line with MARGIN (zero) spaces, do not\n"
@@ -4543,7 +4964,8 @@ msgid ""
 "                    omit warning when a file cannot be opened\n"
 msgstr ""
 
-#: src/pr.c:2825
+#
+#: src/pr.c:2823
 msgid ""
 "  -s[CHAR],--separator[=CHAR]\n"
 "                    separate columns by a single character, default for "
@@ -4553,11 +4975,13 @@ msgid ""
 "                    options (-COLUMN|-a -COLUMN|-m) except -w is set\n"
 msgstr ""
 
-#: src/pr.c:2832
+#
+#: src/pr.c:2830
 msgid "  -SSTRING, --sep-string[=STRING]\n"
 msgstr ""
 
-#: src/pr.c:2835
+#
+#: src/pr.c:2833
 msgid ""
 "                    separate columns by STRING,\n"
 "                    without -S: Default separator <TAB> with -J and <space>\n"
@@ -4566,7 +4990,8 @@ msgid ""
 "  -t, --omit-header omit page headers and trailers\n"
 msgstr ""
 
-#: src/pr.c:2841
+#
+#: src/pr.c:2839
 msgid ""
 "  -T, --omit-pagination\n"
 "                    omit page headers and trailers, eliminate any "
@@ -4580,7 +5005,8 @@ msgid ""
 "(72)\n"
 msgstr ""
 
-#: src/pr.c:2851
+#
+#: src/pr.c:2849
 #, fuzzy
 msgid ""
 "  -W PAGE_WIDTH, --page-width=PAGE_WIDTH\n"
@@ -4598,7 +5024,8 @@ msgstr ""
 "      --help      εμφάνιση αυτής της βοήθειας και έξοδος\n"
 "      --version   εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
 
-#: src/pr.c:2859
+#
+#: src/pr.c:2857
 msgid ""
 "\n"
 "-T implied by -l nn when nn <= 10 or <= 3 with -F. With no FILE, or when\n"
@@ -4629,6 +5056,7 @@ msgid ""
 msgstr ""
 "ΠΡΟΣΟΧΗ: %s: οι χαρακτήρες που ακολουθούσαν τον χαρακτήρα σταθερά αγνοήθηκαν."
 
+#
 #: src/printf.c:97
 #, fuzzy, c-format
 msgid ""
@@ -4699,16 +5127,19 @@ msgstr "%s: η τιμή δεν έχει πλήρως μετατραπεί."
 msgid "missing hexadecimal number in escape"
 msgstr "Λείπει ο δεκαεξαδικός αριθμός στον χαρακτήρα διαφυγής."
 
+#
 #: src/printf.c:287
 #, fuzzy, c-format
 msgid "invalid universal character name \\%c%0*x"
 msgstr "μη έγκυρη τάξη χαρακτήρων `%s'"
 
+#
 #: src/printf.c:293
 #, fuzzy, c-format
 msgid "\\%c: invalid escape"
 msgstr "%s: μη έγκυρη μορφή"
 
+#
 #: src/printf.c:501
 #, fuzzy, c-format
 msgid "%%%c: invalid directive"
@@ -4724,11 +5155,13 @@ msgstr "Χρήση: %s ΜΟΡΦΗ [ΠΑΡΑΜΕΤΡΟΙ...]\n"
 msgid "warning: ignoring excess arguments, starting with `%s'"
 msgstr "ΠΡΟΣΟΧΗ: οι υπερβολικές παράμετροι αγνοήθηκαν."
 
+#
 #: src/ptx.c:410
 #, c-format
 msgid "%s (for regexp `%s')"
 msgstr "%s (για κανονική έκφραση `%s')"
 
+#
 #: src/ptx.c:1859
 #, c-format
 msgid ""
@@ -4738,6 +5171,7 @@ msgstr ""
 "Χρήση: %s [ΕΠΙΛΟΓΗ]... [ΕΙΣΟΔΟΣ]...   (χωρίς -G)\n"
 "   ή:  %s -G [ΕΠΙΛΟΓΗ]... [ΕΙΣΟΔΟΣ [ΕΞΟΔΟΣ]]\n"
 
+#
 #: src/ptx.c:1863
 msgid ""
 "Output a permuted index, including context, of the words in the input "
@@ -4745,6 +5179,7 @@ msgid ""
 "\n"
 msgstr ""
 
+#
 #: src/ptx.c:1870
 msgid ""
 "  -A, --auto-reference           output automatically generated references\n"
@@ -4753,6 +5188,7 @@ msgid ""
 "  -F, --flag-truncation=STRING   use STRING for flagging line truncations\n"
 msgstr ""
 
+#
 #: src/ptx.c:1876
 msgid ""
 "  -M, --macro-name=STRING        macro name to use instead of `xx'\n"
@@ -4762,6 +5198,7 @@ msgid ""
 "  -T, --format=tex               generate output as TeX directives\n"
 msgstr ""
 
+#
 #: src/ptx.c:1883
 msgid ""
 "  -W, --word-regexp=REGEXP       use REGEXP to match each keyword\n"
@@ -4772,6 +5209,7 @@ msgid ""
 "  -o, --only-file=FILE           read only word list from this FILE\n"
 msgstr ""
 
+#
 #: src/ptx.c:1891
 msgid ""
 "  -r, --references               first field of each line is a reference\n"
@@ -4780,12 +5218,14 @@ msgid ""
 "excluded\n"
 msgstr ""
 
+#
 #: src/ptx.c:1898
 msgid ""
 "\n"
 "With no FILE or if FILE is -, read Standard Input.  `-F /' by default.\n"
 msgstr ""
 
+#
 #: src/ptx.c:1978
 msgid ""
 "This program is free software; you can redistribute it and/or modify\n"
@@ -4795,6 +5235,7 @@ msgid ""
 "\n"
 msgstr ""
 
+#
 #: src/ptx.c:1985
 msgid ""
 "This program is distributed in the hope that it will be useful,\n"
@@ -4804,6 +5245,7 @@ msgid ""
 "\n"
 msgstr ""
 
+#
 #: src/ptx.c:1992
 msgid ""
 "You should have received a copy of the GNU General Public License\n"
@@ -4817,16 +5259,19 @@ msgid ""
 "\n"
 msgstr ""
 
+#
 #: src/pwd.c:75
 #, fuzzy
 msgid "ignoring non-option arguments"
 msgstr "πάρα πολλά ορίσματα που δεν έχουν επιλογές"
 
+#
 #: src/pwd.c:79
 #, fuzzy
 msgid "cannot get current directory"
 msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
 
+#
 #: src/remove.c:365
 #, fuzzy, c-format
 msgid "cannot chdir from %s to .."
@@ -4856,60 +5301,68 @@ msgstr ""
 "ΓΝΩΣΤΟΠΟΙΗΣΤΕ ΤΟ ΣΤΟ ΔΙΑΧΕΙΡΙΣΤΗ ΣΥΣΤΗΜΑΤΟΣ.\n"
 "Οι παρακάτω δύο κατάλογοι έχουν την ίδια τιμή i-κόμβου:\n"
 
-#: src/remove.c:570 src/remove.c:709 src/remove.c:850 src/remove.c:916
+#
+#: src/remove.c:581 src/remove.c:720 src/remove.c:876 src/remove.c:948
 #, fuzzy, c-format
 msgid "cannot lstat %s"
 msgstr "αδύνατη η αλλαγή δικαιωμάτων στο %s"
 
-#: src/remove.c:599
+#
+#: src/remove.c:610
 #, fuzzy, c-format
 msgid "%s: descend into write-protected directory %s? "
 msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
 
-#: src/remove.c:600
+#
+#: src/remove.c:611
 #, fuzzy, c-format
 msgid "%s: descend into directory %s? "
 msgstr "αδύνατη η αλλαγή στο κατάλογο %s"
 
-#: src/remove.c:611
+#: src/remove.c:622
 #, fuzzy, c-format
 msgid "%s: remove write-protected %s %s? "
 msgstr "%s: διαγραφή προστατευμένου από εγγραφή καταλόγου `%s'; "
 
-#: src/remove.c:612
+#: src/remove.c:623
 #, fuzzy, c-format
 msgid "%s: remove %s %s? "
 msgstr "%s: διαγραφή του `%s'; "
 
-#: src/remove.c:636
+#: src/remove.c:647
 #, fuzzy, c-format
 msgid "removed %s\n"
 msgstr "διαγραφή καταλόγου %s\n"
 
-#: src/remove.c:651 src/remove.c:986
+#
+#: src/remove.c:662 src/remove.c:1018
 #, fuzzy, c-format
 msgid "removed directory: %s\n"
 msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
 
-#: src/remove.c:731 src/remove.c:991
+#
+#: src/remove.c:742 src/remove.c:1023
 #, fuzzy, c-format
 msgid "cannot remove directory %s"
 msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
 
-#: src/remove.c:805
+#
+#: src/remove.c:816
 #, fuzzy, c-format
 msgid "cannot open directory %s"
 msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
 
-#: src/remove.c:855 src/remove.c:934
+#
+#: src/remove.c:881 src/remove.c:966
 #, fuzzy, c-format
 msgid "cannot chdir from %s to %s"
 msgstr "αδύνατη η αλλαγή στο κατάλογο %s"
 
-#: src/remove.c:1025
+#: src/remove.c:1057
 msgid "cannot remove `.' or `..'"
 msgstr "δεν είναι δυνατό να διαγραφούν τα `.' ή `..'"
 
+#
 #: src/rm.c:100 src/touch.c:238
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION]... FILE...\n"
@@ -4964,11 +5417,13 @@ msgid ""
 "truly unrecoverable, consider using shred.\n"
 msgstr ""
 
+#
 #: src/rmdir.c:114 src/rmdir.c:215
 #, fuzzy, c-format
 msgid "removing directory, %s"
 msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
 
+#
 #: src/rmdir.c:144
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION]... DIRECTORY...\n"
@@ -5003,6 +5458,7 @@ msgstr ""
 "      --help      εμφάνιση αυτής της βοήθειας και έξοδος\n"
 "      --version   εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
 
+#
 #: src/seq.c:82
 #, fuzzy, c-format
 msgid ""
@@ -5055,6 +5511,7 @@ msgstr ""
 "τις διαμορφώσεις της printf για κινητής υποδιαστολής αριθμό %%e, %%f, or %%"
 "g.\n"
 
+#
 #: src/seq.c:119
 #, fuzzy, c-format
 msgid "invalid floating point argument: %s"
@@ -5068,6 +5525,7 @@ msgstr ""
 "Οταν η αρχική τιμή είναι μεγαλύτερη του όριου,\n"
 "η αύξηση πρέπει να είναι αρνητική."
 
+#
 #: src/seq.c:213
 #, fuzzy
 msgid ""
@@ -5076,16 +5534,19 @@ msgid ""
 msgstr ""
 "το όρισμα έναρξης πεδίου αριθμού στην επιλογή `-k' πρέπει να είναι θετικός"
 
+#
 #: src/seq.c:423
 #, fuzzy, c-format
 msgid "invalid format string: `%s'"
 msgstr "μη έγκυρο είδος αλφαριθμητικού `%s'"
 
+#
 #: src/seq.c:445
 #, fuzzy
 msgid "format string may not be specified when printing equal width strings"
 msgstr "κανένα είδος δε μπορεί να δηλωθεί όταν τυπώνονται αλφαριθμητικά"
 
+#
 #: src/shred.c:175
 #, fuzzy, c-format
 msgid "Usage: %s [OPTIONS] FILE [...]\n"
@@ -5170,11 +5631,13 @@ msgstr "Δεν είναι δυνατόν να εκτελεστεί το %s"
 msgid "%s: pass %lu/%lu (%s)..."
 msgstr "%s: πέρασμα %lu/%lu (%s)..."
 
+#
 #: src/shred.c:882
 #, fuzzy, c-format
 msgid "%s: error writing at offset %s"
 msgstr "σφάλμα εγγραφής %s"
 
+#
 #: src/shred.c:913
 #, fuzzy, c-format
 msgid "%s: file too large"
@@ -5192,6 +5655,7 @@ msgstr "%s: πέρασμα %lu/%lu (%s)...%s"
 msgid "%s: pass %lu/%lu (%s)...%s/%s %d%%"
 msgstr "%s: πέρασμα %lu/%lu (%s)...%s/%s"
 
+#
 #: src/shred.c:1204
 #, fuzzy, c-format
 msgid "%s: invalid file type"
@@ -5203,6 +5667,7 @@ msgstr "%s: μη έγκυρος αριθμός γραμμών"
 msgid "%s: file has negative size"
 msgstr "%s: το αρχείο έχει αρνητικό μέγεθος"
 
+#
 #: src/shred.c:1273
 #, fuzzy, c-format
 msgid "%s: error truncating"
@@ -5219,6 +5684,7 @@ msgstr "%s: αδυναμία διάλυσης μόνο-προσθήκη περιγραφέα αρχείου"
 msgid "%s: removing"
 msgstr "%s: διαγράφεται"
 
+#
 #: src/shred.c:1420
 #, fuzzy, c-format
 msgid "%s: renamed to %s"
@@ -5234,11 +5700,13 @@ msgstr "%s: διεγράφει"
 msgid "%s: cannot remove"
 msgstr "%s: δε μπορεί να διαγραφεί"
 
+#
 #: src/shred.c:1559
 #, fuzzy, c-format
 msgid "%s: invalid number of passes"
-msgstr "%s: μη έγκυτος αριθμός από δευτερόλεπτα"
+msgstr "%s: μη έγκυρος αριθμός δευτερολέπτων"
 
+#
 #: src/shred.c:1576
 #, fuzzy, c-format
 msgid "%s: invalid file size"
@@ -5271,15 +5739,18 @@ msgstr ""
 msgid "cannot read realtime clock"
 msgstr ""
 
+#
 #: src/sleep.c:243
 #, fuzzy, c-format
 msgid "invalid time interval `%s'"
 msgstr "μη έγκυρος αριθμός πεδίου: `%s'"
 
+#
 #: src/sort.c:53
 msgid "Mike Haertel and Paul Eggert"
 msgstr ""
 
+#
 #: src/sort.c:283
 msgid ""
 "Write sorted concatenation of all FILE(s) to standard output.\n"
@@ -5288,6 +5759,7 @@ msgid ""
 "\n"
 msgstr ""
 
+#
 #: src/sort.c:292
 msgid ""
 "  -b, --ignore-leading-blanks ignore leading blanks\n"
@@ -5296,6 +5768,7 @@ msgid ""
 "  -f, --ignore-case           fold lower case to upper case characters\n"
 msgstr ""
 
+#
 #: src/sort.c:297
 msgid ""
 "  -g, --general-numeric-sort  compare according to general numerical value\n"
@@ -5306,6 +5779,7 @@ msgid ""
 "\n"
 msgstr ""
 
+#
 #: src/sort.c:305
 msgid ""
 "Other options:\n"
@@ -5319,6 +5793,7 @@ msgid ""
 "  -S, --buffer-size=SIZE    use SIZE for main memory buffer\n"
 msgstr ""
 
+#
 #: src/sort.c:315
 #, c-format
 msgid ""
@@ -5331,10 +5806,12 @@ msgid ""
 "run\n"
 msgstr ""
 
+#
 #: src/sort.c:322
 msgid "  -z, --zero-terminated     end lines with 0 byte, not newline\n"
 msgstr ""
 
+#
 #: src/sort.c:327
 #, fuzzy
 msgid ""
@@ -5355,6 +5832,7 @@ msgstr ""
 "γραμμής για κλειδί.  Χωρίς ΑΡΧΕΙΟ, ή όταν το ARXEIO είναι το -, ανάγνωση\n"
 "από την κανονική είσοδο.\n"
 
+#
 #: src/sort.c:336
 #, c-format
 msgid ""
@@ -5368,110 +5846,132 @@ msgid ""
 "native byte values.\n"
 msgstr ""
 
+#
 #: src/sort.c:447
 #, fuzzy
 msgid "cannot create temporary file"
 msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
 
+#
 #: src/sort.c:470
 msgid "open failed"
-msgstr ""
+msgstr "αποτυχία ανοίγματος"
 
+#
 #: src/sort.c:490 src/sort.c:2488
 #, fuzzy
 msgid "close failed"
 msgstr "σφάλμα κλεισίματος αρχείου"
 
+#
 #: src/sort.c:498
-#, fuzzy
 msgid "write failed"
-msgstr "σφάλμα εγγραφής"
+msgstr "αποτυχία εγγραφής"
 
+#
 #: src/sort.c:644
 #, fuzzy
 msgid "sort size"
 msgstr "μέγεθος μπλοκ"
 
+#
 #: src/sort.c:718
 msgid "stat failed"
 msgstr ""
 
+#
 #: src/sort.c:970
 msgid "read failed"
-msgstr ""
+msgstr "αποτυχία ανάγνωσης"
 
+#
 #: src/sort.c:1566
 #, fuzzy, c-format
 msgid "%s: %s:%s: disorder: "
 msgstr "%s: %s:%d: όχι σε σειρά: "
 
+#
 #: src/sort.c:1570
 msgid "standard error"
 msgstr "κανονικό σφάλμα"
 
+#
 #: src/sort.c:2028
 #, fuzzy, c-format
 msgid "%s: invalid field specification `%s'"
 msgstr "μη έγκυρη δήλωση πεδίου `%s'"
 
+#
 #: src/sort.c:2054
 #, c-format
 msgid "%s: count `%.*s' too large"
 msgstr ""
 
+#
 #: src/sort.c:2060
 #, fuzzy, c-format
 msgid "%s: invalid count at start of `%s'"
 msgstr "μη έγκυρο όρισμα %s για `%s'"
 
+#
 #: src/sort.c:2290
 #, fuzzy
 msgid "invalid number after `-'"
 msgstr "μη έγκυρος αριθμός από bytes"
 
+#
 #: src/sort.c:2293 src/sort.c:2339 src/sort.c:2366
 #, fuzzy
 msgid "invalid number after `.'"
 msgstr "μη έγκυρος αριθμός από bytes"
 
+#
 #: src/sort.c:2296 src/sort.c:2375
 msgid "stray character in field spec"
 msgstr ""
 
+#
 #: src/sort.c:2330
 #, fuzzy
 msgid "invalid number at field start"
 msgstr "μη έγκυρος αριθμός από γραμμές"
 
+#
 #: src/sort.c:2334 src/sort.c:2362
 #, fuzzy
 msgid "field number is zero"
 msgstr "μη έγκυρος αριθμός πεδίου: `%s'"
 
+#
 #: src/sort.c:2343
 msgid "character offset is zero"
 msgstr ""
 
+#
 #: src/sort.c:2358
 #, fuzzy
 msgid "invalid number after `,'"
 msgstr "μη έγκυρος αριθμός από bytes"
 
+#
 #: src/sort.c:2403
 #, fuzzy, c-format
 msgid "multi-character tab `%s'"
 msgstr "μη έγκυρη τάξη χαρακτήρων `%s'"
 
+#
 #: src/sort.c:2471
 #, c-format
 msgid "extra operand `%s' not allowed with -c"
 msgstr ""
 
+#
 #: src/split.c:95
 #, c-format
 msgid "Usage: %s [OPTION] [INPUT [PREFIX]]\n"
 msgstr "Χρήση: %s [ΕΠΙΛΟΓΗ] [ΕΙΣΟΔΟΣ [ΠΡΟΘΕΜΑ]]\n"
 
+#
 #: src/split.c:99
 msgid ""
 "Output fixed-size pieces of INPUT to PREFIXaa, PREFIXab, ...; default\n"
@@ -5479,6 +5979,7 @@ msgid ""
 "\n"
 msgstr ""
 
+#
 #: src/split.c:107
 #, fuzzy, c-format
 msgid ""
@@ -5506,54 +6007,65 @@ msgstr ""
 "ΜΕΓΕΘΟΣ μπορεί να έχει πρόθεμα πολλαπλασιαστή: b για 512, k για 1K, m για 1 "
 "Meg.\n"
 
+#
 #: src/split.c:113
 msgid ""
 "      --verbose           print a diagnostic to standard error just\n"
 "                            before each output file is opened\n"
 msgstr ""
 
+#
 #: src/split.c:170
 msgid "Output file suffixes exhausted"
 msgstr ""
 
+#
 #: src/split.c:188
 #, c-format
 msgid "creating file `%s'\n"
 msgstr "δημιουργία αρχείου `%s'\n"
 
+#
 #: src/split.c:407
 #, fuzzy, c-format
 msgid "%s: invalid suffix length"
 msgstr "%s: μη έγκυρος αριθμός γραμμών"
 
+#
 #: src/split.c:416 src/split.c:432 src/split.c:448 src/split.c:474
 msgid "cannot split in more than one way"
 msgstr "δεν είναι δυνατό να γίνει διαχωρισμός σε περισσότερους από ένα τρόπο"
 
+#
 #: src/split.c:423 src/split.c:456
 #, c-format
 msgid "%s: invalid number of bytes"
 msgstr "%s: μη έγκυρος αριθμός από bytes"
 
+#
 #: src/split.c:439
 #, c-format
 msgid "%s: invalid number of lines"
 msgstr "%s: μη έγκυρος αριθμός γραμμών"
 
+#
 #: src/split.c:499
 #, c-format
 msgid "`-%d' option is obsolete; use `-l %d'"
 msgstr ""
 
+#
 #: src/split.c:512
 msgid "invalid number"
 msgstr "μη έγκυρος αριθμός"
 
+#
 #: src/stat.c:654
 #, fuzzy, c-format
 msgid "cannot read file system information for %s"
 msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
 
+#
 #: src/stat.c:730
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION] FILE...\n"
@@ -5964,11 +6476,13 @@ msgstr ""
 "ή 127. Eιδικές τιμές όπως ^- ή το undef απενεργοποιούσαν τους ειδικούς\n"
 "χαρακτήρες.\n"
 
+#
 #: src/stty.c:790
 #, fuzzy
 msgid "only one device may be specified"
 msgstr "μόνο ένα όρισμα μπορεί να δηλωθεί"
 
+#
 #: src/stty.c:885
 #, fuzzy
 msgid ""
@@ -5987,16 +6501,18 @@ msgstr ""
 msgid "%s: couldn't reset non-blocking mode"
 msgstr ""
 
+#
 #: src/stty.c:960 src/stty.c:1067
 #, fuzzy, c-format
 msgid "invalid argument `%s'"
-msgstr "μη έγκυρο όρισμα %s για `%s'"
+msgstr "μη έγκυρο όρισμα %s για %s"
 
+#
 #: src/stty.c:971 src/stty.c:988 src/stty.c:1000 src/stty.c:1013
 #: src/stty.c:1025 src/stty.c:1044
 #, fuzzy, c-format
 msgid "missing argument to `%s'"
-msgstr "ασαφές όρισμα %s για `%s'"
+msgstr "ασαφές όρισμα %s για %s"
 
 #: src/stty.c:1120
 #, fuzzy, c-format
@@ -6009,12 +6525,13 @@ msgstr ""
 msgid "new_mode: mode\n"
 msgstr "νεα_κατάσταση: κατάσταση λειτουργίας\n"
 
-#: src/stty.c:1464
+#: src/stty.c:1465
 #, fuzzy, c-format
 msgid "%s: no size information for this device"
 msgstr "Δεν υπάρχουν πληροφορίες μεγέθους γι'αυτό το περιφερειακό"
 
-#: src/stty.c:1913
+#
+#: src/stty.c:1914
 #, fuzzy, c-format
 msgid "invalid integer argument `%s'"
 msgstr "μη έγκυρη αύξηση στον αριθμό εντολής: `%s'"
@@ -6027,21 +6544,25 @@ msgstr "Συνθηματικό:"
 msgid "getpass: cannot open /dev/tty"
 msgstr "getpass(): δεν είναι δυνατόν να ανοιχτεί το /dev/tty"
 
+#
 #: src/su.c:350
 #, fuzzy
 msgid "cannot set groups"
 msgstr "δεν είναι δυνατό να παραληφθεί χρήστης και ομάδα"
 
+#
 #: src/su.c:354
 #, fuzzy
 msgid "cannot set group id"
 msgstr "δεν είναι δυνατό να παραληφθεί χρήστης και ομάδα"
 
+#
 #: src/su.c:356
 #, fuzzy
 msgid "cannot set user id"
 msgstr "δεν είναι δυνατό να παραληφθεί χρήστης και ομάδα"
 
+#
 #: src/su.c:437
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION]... [-] [USER [ARG]...]\n"
@@ -6097,15 +6618,18 @@ msgstr "λάθος συνθηματικό"
 msgid "using restricted shell %s"
 msgstr "χρησιμοποιείται το περιορισμένο κέλυφος (restricted shell) %s"
 
+#
 #: src/su.c:580
 #, fuzzy, c-format
 msgid "warning: cannot change directory to %s"
 msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
 
+#
 #: src/sum.c:36
 msgid "Kayvan Aghaiepour and David MacKenzie"
 msgstr ""
 
+#
 #: src/sum.c:64
 #, fuzzy
 msgid ""
@@ -6132,20 +6656,20 @@ msgid ""
 "\n"
 msgstr ""
 
+#
 #: src/sync.c:70 src/tty.c:112
 #, fuzzy
 msgid "ignoring all arguments"
 msgstr "πάρα πολλά ορίσματα"
 
+#
 #: src/sys2.h:483
-#, fuzzy
 msgid "      --help     display this help and exit\n"
 msgstr ""
-"Εμφάνιση άθροισμα ελέγχου CRC και αριθμό bytes για κάθε ΑΡΧΕΙΟ.\n"
+"      --help       εμφάνιση αυτής της βοήθειας και έξοδος\n"
 "\n"
-"  --help       εμφάνιση αυτής της βοήθειας και έξοδος\n"
-"  --version    εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
 
+#
 #: src/sys2.h:485
 #, fuzzy
 msgid "      --version  output version information and exit\n"
@@ -6155,10 +6679,12 @@ msgstr ""
 "  --help       εμφάνιση αυτής της βοήθειας και έξοδος\n"
 "  --version    εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
 
+#
 #: src/tac.c:54
 msgid "Jay Lepreau and David MacKenzie"
 msgstr ""
 
+#
 #: src/tac.c:131
 msgid ""
 "Write each FILE to standard output, last line first.\n"
@@ -6166,6 +6692,7 @@ msgid ""
 "\n"
 msgstr ""
 
+#
 #: src/tac.c:139
 #, fuzzy
 msgid ""
@@ -6184,14 +6711,17 @@ msgstr ""
 "      --help               εμφάνιση αυτής της βοήθειας και έξοδος\n"
 "      --version            εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
 
+#
 #: src/tac.c:454 src/tac.c:593
 msgid "stdin: read error"
 msgstr "stdin: σφάλμα ανάγνωσης"
 
+#
 #: src/tac.c:639
 msgid "separator cannot be empty"
 msgstr "ο διαχωριστής δε μπορεί να είναι κενός"
 
+#
 #: src/tail.c:242
 #, fuzzy, c-format
 msgid ""
@@ -6221,6 +6751,7 @@ msgstr ""
 "ένας από τους πολλαπλασιαστές bkm ακολουθεί συνενωμένος, διαφορετικά "
 "ανάγνωσε -n ΤΙΜΗ\n"
 
+#
 #: src/tail.c:251
 msgid ""
 "      --retry              keep trying to open a file even if it is\n"
@@ -6229,6 +6760,7 @@ msgid ""
 "  -c, --bytes=N            output the last N bytes\n"
 msgstr ""
 
+#
 #: src/tail.c:257
 msgid ""
 "  -f, --follow[={name|descriptor}]\n"
@@ -6238,6 +6770,7 @@ msgid ""
 "  -F                       same as --follow=name --retry\n"
 msgstr ""
 
+#
 #: src/tail.c:264
 #, c-format
 msgid ""
@@ -6249,6 +6782,7 @@ msgid ""
 "                           (this is the usual case of rotated log files)\n"
 msgstr ""
 
+#
 #: src/tail.c:275
 msgid ""
 "      --pid=PID            with -f, terminate after process ID, PID dies\n"
@@ -6258,6 +6792,7 @@ msgid ""
 "  -v, --verbose            always output headers giving file names\n"
 msgstr ""
 
+#
 #: src/tail.c:284
 msgid ""
 "\n"
@@ -6268,6 +6803,7 @@ msgid ""
 "\n"
 msgstr ""
 
+#
 #: src/tail.c:292
 msgid ""
 "With --follow (-f), tail defaults to following the file descriptor, which\n"
@@ -6275,6 +6811,7 @@ msgid ""
 "its end.  "
 msgstr ""
 
+#
 #: src/tail.c:297
 msgid ""
 "This default behavior is not desirable when you really want to\n"
@@ -6284,73 +6821,87 @@ msgid ""
 "recreated by some other program.\n"
 msgstr ""
 
+#
 #: src/tail.c:335
 #, c-format
 msgid "closing %s (fd=%d)"
 msgstr "κλείσιμο του %s (fd=%d)"
 
+#
 #: src/tail.c:400
 #, c-format
 msgid "%s: cannot seek to offset %s%s"
 msgstr ""
 
+#
 #: src/tail.c:404
 #, c-format
 msgid "%s: cannot seek to relative offset %s%s"
 msgstr ""
 
-#: src/tail.c:408
+#
+#: src/tail.c:409
 #, c-format
 msgid "%s: cannot seek to end-relative offset %s%s"
 msgstr ""
 
-#: src/tail.c:814
+#
+#: src/tail.c:815
 #, c-format
 msgid "`%s' has become inaccessible"
 msgstr "το `%s' είναι μη-προσπελάσιμο"
 
-#: src/tail.c:831
+#
+#: src/tail.c:832
 #, fuzzy, c-format
 msgid "`%s' has been replaced with an untailable file; giving up on this name"
 msgstr ""
 "%s: αδύνατη η ακολούθηση του τέλους αυτού του είδους αρχείου· παράκαμψη"
 
-#: src/tail.c:852
+#
+#: src/tail.c:853
 #, c-format
 msgid "`%s' has become accessible"
 msgstr "το `%s' έχει γίνει προσπελάσιμο"
 
-#: src/tail.c:860
+#
+#: src/tail.c:861
 #, c-format
 msgid "`%s' has appeared;  following end of new file"
 msgstr "το `%s' εμφανίστηκε· ακολούθηση τέλους νέου αρχείου"
 
-#: src/tail.c:871
+#
+#: src/tail.c:872
 #, c-format
 msgid "`%s' has been replaced;  following end of new file"
 msgstr "το `%s' έχει αντικατασταθεί· ακολούθηση τέλους νέου αρχείου"
 
-#: src/tail.c:996
+#
+#: src/tail.c:997
 #, fuzzy, c-format
 msgid "%s: file truncated"
 msgstr "το αρχείο μηδενίστηκε"
 
-#: src/tail.c:1016
+#
+#: src/tail.c:1017
 msgid "no files remaining"
 msgstr "δεν υπολείπονται αρχεία"
 
-#: src/tail.c:1226
+#
+#: src/tail.c:1227
 #, c-format
 msgid "%s: cannot follow end of this type of file; giving up on this name"
 msgstr ""
 "%s: αδύνατη η ακολούθηση του τέλους αυτού του είδους αρχείου· παράκαμψη"
 
-#: src/tail.c:1346
+#
+#: src/tail.c:1347
 #, c-format
 msgid "%c: invalid suffix character in obsolescent option"
 msgstr "%c: μη έγκυρος χαρακτήρας κατάληξης σε εκτός χρήσης επιλογή"
 
-#: src/tail.c:1395
+#
+#: src/tail.c:1396
 #, fuzzy, c-format
 msgid ""
 "too many arguments;  When using tail's obsolescent option syntax (%s)\n"
@@ -6363,7 +6914,8 @@ msgstr ""
 "ή -c\n"
 "στη περίπτωση αυτή."
 
-#: src/tail.c:1404
+#
+#: src/tail.c:1405
 #, c-format
 msgid ""
 "Warning: it is not portable to use two or more file arguments with\n"
@@ -6376,60 +6928,72 @@ msgstr ""
 "ή -c\n"
 "στη περίπτωση αυτή."
 
-#: src/tail.c:1413
+#
+#: src/tail.c:1414
 #, c-format
 msgid "`%s' option is obsolete; use `%s-%c %.*s'"
 msgstr ""
 
-#: src/tail.c:1473
+#
+#: src/tail.c:1474
 #, fuzzy, c-format
 msgid "%s: is so large that it is not representable"
 msgstr "%s: το %s είναι τόσο μεγάλο που δε μπορεί να αναπαρασταθεί"
 
-#: src/tail.c:1477
+#
+#: src/tail.c:1478
 #, c-format
 msgid "%s is larger than the maximum file size on this system"
 msgstr ""
 
-#: src/tail.c:1503
+#
+#: src/tail.c:1504
 #, c-format
 msgid "%s: invalid maximum number of unchanged stats between opens"
 msgstr ""
 "%s: μη έγκυρος μέγιστος αριθμός από χωρίς μεταβολή `stats' μεταξύ ανοιγμάτων"
 
-#: src/tail.c:1515
+#
+#: src/tail.c:1516
 #, c-format
 msgid "%s: invalid maximum number of consecutive size changes"
 msgstr "%s: μη έγκυρος μέγιστος αριθμός από διαδοχικές αλλαγές μεγέθους"
 
-#: src/tail.c:1527
+#
+#: src/tail.c:1528
 #, c-format
 msgid "%s: invalid PID"
 msgstr "%s: μη έγκυρος περιγραφέας διεργασίας (PID)"
 
-#: src/tail.c:1545
+#
+#: src/tail.c:1546
 #, c-format
 msgid "%s: invalid number of seconds"
-msgstr "%s: μη έγκυτος αριθμός από δευτερόλεπτα"
+msgstr "%s: μη έγκυρος αριθμός δευτερολέπτων"
 
-#: src/tail.c:1565
+#
+#: src/tail.c:1566
 msgid "warning: --retry is useful only when following by name"
 msgstr ""
 "προειδοποίηση: το --retry είναι χρήσιμο μόνο με παρακολούθηση βάση ονόματος"
 
-#: src/tail.c:1569
+#
+#: src/tail.c:1570
 msgid "warning: PID ignored; --pid=PID is useful only when following"
 msgstr ""
 "προειδοποίηση: ο περιγραφέας διεργασίας αγνοείτε· το --pid=PID είναι χρήσιμο "
 "μόνο σε παρακολούθηση"
 
-#: src/tail.c:1572
+#
+#: src/tail.c:1573
 msgid "warning: --pid=PID is not supported on this system"
 msgstr "προειδοποίηση: το --pid=PID δεν υποστηρίζεται σε αυτό το σύστημα"
 
+#
 #: src/tee.c:33
+#, fuzzy
 msgid "Mike Parker, Richard M. Stallman, and David MacKenzie"
-msgstr ""
+msgstr "Ρίτσαρντ Στάλμαν και Ντέιβιντ Μακένζη"
 
 #: src/tee.c:64
 #, fuzzy
@@ -6536,6 +7100,7 @@ msgstr "-ef δεν δέχεται -l\n"
 msgid "-ot does not accept -l\n"
 msgstr "-nt δεν δέχεται -l\n"
 
+#
 #: src/test.c:603
 #, fuzzy
 msgid "unknown binary operator"
@@ -6546,6 +7111,7 @@ msgstr "Άγνωστο σφάλμα συστήματος"
 msgid "after -t"
 msgstr "μετά -lt"
 
+#
 #: src/test.c:989
 #, fuzzy, c-format
 msgid ""
@@ -6683,11 +7249,13 @@ msgstr ""
 msgid "missing `]'\n"
 msgstr "το `]' λείπει\n"
 
+#
 #: src/test.c:1135
 #, fuzzy
 msgid "too many arguments\n"
 msgstr "πάρα πολλά ορίσματα"
 
+#
 #: src/touch.c:164 src/touch.c:179 src/touch.c:217
 #, fuzzy, c-format
 msgid "creating %s"
@@ -6728,32 +7296,37 @@ msgid ""
 "Note that the -d and -t options accept different time-date formats.\n"
 msgstr ""
 
-#: src/touch.c:306 src/touch.c:327
+#
+#: src/touch.c:305 src/touch.c:325
 #, fuzzy, c-format
 msgid "invalid date format %s"
-msgstr "μη έγκυρο όρισμα %s για `%s'"
+msgstr "μη έγκυρο όρισμα %s για %s"
 
-#: src/touch.c:351
+#
+#: src/touch.c:349
 #, fuzzy
 msgid "cannot specify times from more than one source"
 msgstr "δεν είναι δυνατό να γίνει διαχωρισμός σε περισσότερους από ένα τρόπο"
 
-#: src/touch.c:374
+#: src/touch.c:372
 #, c-format
 msgid ""
 "warning: `touch %s' is obsolete; use `touch -t %04d%02d%02d%02d%02d.%02d'"
 msgstr ""
 
-#: src/touch.c:394
+#
+#: src/touch.c:392
 #, fuzzy
 msgid "file arguments missing"
 msgstr "πολύ λίγα ορίσματα"
 
+#
 #: src/tr.c:327
 #, c-format
 msgid "Usage: %s [OPTION]... SET1 [SET2]\n"
 msgstr "Χρήση: %s [ΕΠΙΛΟΓΗ]... ΣΥΝΟΛΟ1 [ΣΥΝΟΛΟ2]\n"
 
+#
 #: src/tr.c:331
 #, fuzzy
 msgid ""
@@ -6772,12 +7345,13 @@ msgstr ""
 "γράφοντας στη κανονική έξοδο.\n"
 "\n"
 "  -c, --complement        χρήση του συμπληρώματος του ΣΥΝΟΛΟ1\n"
-"  -d, --delete            διαγραγή χαρακτήρων από το ΣΥΝΟΛΟ1, όχι μετάφραση\n"
+"  -d, --delete            διαγραφή χαρακτήρων από το ΣΥΝΟΛΟ1, όχι μετάφραση\n"
 "  -s, --squeeze-repeats   αντικατάσταση ακολουθίας χαρακτήρων με ένα\n"
 "  -t, --truncate-set1     πρώτα ελάττωσε το ΣΥΝΟΛΟ1 στο μέγεθος του ΣΥΝΟΛΟ2\n"
 "      --help              εμφάνιση αυτής της βοήθειας και έξοδος\n"
 "      --version           εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
 
+#
 #: src/tr.c:344
 msgid ""
 "\n"
@@ -6794,6 +7368,7 @@ msgid ""
 "  \\t              horizontal tab\n"
 msgstr ""
 
+#
 #: src/tr.c:358
 msgid ""
 "  \\v              vertical tab\n"
@@ -6807,6 +7382,7 @@ msgid ""
 "  [:digit:]       all digits\n"
 msgstr ""
 
+#
 #: src/tr.c:369
 msgid ""
 "  [:graph:]       all printable characters, not including space\n"
@@ -6819,6 +7395,7 @@ msgid ""
 "  [=CHAR=]        all characters which are equivalent to CHAR\n"
 msgstr ""
 
+#
 #: src/tr.c:379
 msgid ""
 "\n"
@@ -6827,6 +7404,7 @@ msgid ""
 "SET1 by repeating its last character as necessary.  "
 msgstr ""
 
+#
 #: src/tr.c:385
 msgid ""
 "Excess characters\n"
@@ -6835,6 +7413,7 @@ msgid ""
 "only be used in pairs to specify case conversion.  "
 msgstr ""
 
+#
 #: src/tr.c:391
 msgid ""
 "-s uses SET1 if not\n"
@@ -6842,6 +7421,7 @@ msgid ""
 "translation or deletion.\n"
 msgstr ""
 
+#
 #: src/tr.c:557
 #, c-format
 msgid ""
@@ -6851,62 +7431,75 @@ msgstr ""
 "προειδοποίηση: ο ασαφής οκταδικός διαφυγής \\%c%c%c μεταφράζεται\n"
 "ως την ακολουθία δύο bytes \\0%c%c, `%c'"
 
+#
 #: src/tr.c:566
 msgid "invalid backslash escape at end of string"
 msgstr "μη έγκυρη διαφυγή με πισωκάθετο στο τέλος του αλφαριθμητικού"
 
+#
 #: src/tr.c:572
 #, c-format
 msgid "invalid backslash escape `\\%c'"
 msgstr "μη έγκυρη διαφυγή με πισωκάθετο `\\%c'`"
 
+#
 #: src/tr.c:725
 #, c-format
 msgid "range-endpoints of `%s-%s' are in reverse collating sequence order"
 msgstr "τα άκρη του διαστήματος `%s-%s' είναι σε αντίστροφη σειρά"
 
+#
 #: src/tr.c:906
 #, c-format
 msgid "invalid repeat count `%s' in [c*n] construct"
 msgstr "μη έγκυρη μέτρηση επανάληψης `%s' στη κατασκευή [c*n]"
 
+#
 #: src/tr.c:999
 #, fuzzy
 msgid "missing character class name `[::]'"
 msgstr "μη έγκυρη τάξη χαρακτήρων `%s'"
 
+#
 #: src/tr.c:1002
 msgid "missing equivalence class character `[==]'"
 msgstr ""
 
+#
 #: src/tr.c:1025
 #, c-format
 msgid "invalid character class `%s'"
 msgstr "μη έγκυρη τάξη χαρακτήρων `%s'"
 
+#
 #: src/tr.c:1050
 #, c-format
 msgid "%s: equivalence class operand must be a single character"
 msgstr "%s: ο τελεστής ισοδυναμίας τάξης πρέπει να είναι ένας μόνο χαρακτήρας"
 
+#
 #: src/tr.c:1522
 msgid "the [c*] repeat construct may not appear in string1"
 msgstr "η δομή επανάληψης [c*] δε μπορεί να εμφανίζεται στο αλφαριθμητικό1"
 
+#
 #: src/tr.c:1532
 msgid "only one [c*] repeat construct may appear in string2"
 msgstr "μόνο μια δομή επανάληψης [c*] μπορεί να εμφανιστεί στο αλφαριθμητικό2"
 
+#
 #: src/tr.c:1540
 msgid "[=c=] expressions may not appear in string2 when translating"
 msgstr ""
 "εκφράσεις [=c=] δεν μπορούν να εμφανίζονται στο αλφαριθμητικό 2 στη μετάφραση"
 
+#
 #: src/tr.c:1553
 msgid "when not truncating set1, string2 must be non-empty"
 msgstr ""
 "όταν δεν αποκόπτεται το σύνολο1, το αλφαριθμητικό 2 πρέπει να μην είναι κενό"
 
+#
 #: src/tr.c:1562
 msgid ""
 "when translating with complemented character classes,\n"
@@ -6916,6 +7509,7 @@ msgstr ""
 "το αλφαριθμητικό 2 πρέπει να αντιστοιχίζει όλους τους χαρακτήρες στην "
 "περιοχή με ένα"
 
+#
 #: src/tr.c:1569
 msgid ""
 "when translating, the only character classes that may appear in\n"
@@ -6924,36 +7518,43 @@ msgstr ""
 "στη μετάφραση, οι μόνες κλάσεις χαρακτήρων που μπορούν να εμφανιστούν\n"
 "στο αλφαριθμητικό 2 είναι `upper' και `lower'"
 
+#
 #: src/tr.c:1578
 msgid "the [c*] construct may appear in string2 only when translating"
 msgstr "η δομή [c*] μπορεί να εμφανιστεί στο αλφαριθμητικό2 μόνο στη μετάφραση"
 
+#
 #: src/tr.c:1854
 msgid "two strings must be given when translating"
 msgstr "δύο αλφαριθμητικά πρέπει να δίνονται στη μετάφραση"
 
+#
 #: src/tr.c:1857
 msgid "two strings must be given when both deleting and squeezing repeats"
 msgstr ""
 "δύο αλφαριθμητικά πρέπει να δίνονται όταν γίνονται διαγραφή και\n"
 "συμπυκνώσεις επαναλήψεων"
 
+#
 #: src/tr.c:1871
 msgid "only one string may be given when deleting without squeezing repeats"
 msgstr ""
 "μόνο ένα αλφαριθμητικό μπορεί να δοθεί όταν γίνεται διαγραφή χωρίς\n"
 "συμπυκνώσεις επαναλήψεων"
 
+#
 #: src/tr.c:1877
 msgid "at least one string must be given when squeezing repeats"
 msgstr ""
 "τουλάχιστον ένα αλφαριθμητικό πρέπει να δίνεται όταν συμπυκνώνονται\n"
 "επαναλήψεις"
 
+#
 #: src/tr.c:1968
 msgid "misaligned [:upper:] and/or [:lower:] construct"
-msgstr "κακώς αντιχοισμένη δομή [:upper:] και/ή [:lower:]"
+msgstr "κακώς στοιχισμένη δομή [:upper:] και/ή [:lower:]"
 
+#
 #: src/tr.c:1991
 msgid ""
 "invalid identity mapping;  when translating, any [:lower:] or [:upper:]\n"
@@ -6978,6 +7579,7 @@ msgstr ""
 "  --help      Εκτυπώνει αυτή την βοήθεια και τερματίζει\n"
 "  --version   Εκτυπώνει πληροφορίες έκδοσης και τερματίζει\n"
 
+#
 #: src/tsort.c:97
 #, fuzzy, c-format
 msgid ""
@@ -6994,11 +7596,13 @@ msgstr ""
 "      --help       εμφάνιση αυτής της βοήθειας και έξοδος\n"
 "      --version    εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
 
+#
 #: src/tsort.c:533
 #, c-format
 msgid "%s: input contains a loop:"
 msgstr "%s: η είσοδος περιέχει βρόχο:"
 
+#
 #: src/tsort.c:575
 msgid "only one argument may be specified"
 msgstr "μόνο ένα όρισμα μπορεί να δηλωθεί"
@@ -7056,11 +7660,13 @@ msgid ""
 "  -o, --operating-system   print the operating system\n"
 msgstr ""
 
+#
 #: src/uname.c:226
 #, fuzzy
 msgid "cannot get system name"
 msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
 
+#
 #: src/unexpand.c:379
 #, fuzzy
 msgid ""
@@ -7084,6 +7690,7 @@ msgstr ""
 "Αντί για -t ΑΡΙΘΜΟΣ ή -t ΛΙΣΤΑ, -ΑΡΙΘΜΟΣ ή -ΛΙΣΤΑ μπορούν να "
 "χρησιμοποιηθούν.\n"
 
+#
 #: src/unexpand.c:387
 msgid ""
 "  -a, --all           convert all whitespace, instead of initial whitespace\n"
@@ -7091,15 +7698,18 @@ msgid ""
 "  -t, --tabs=LIST     use comma separated list of explicit tab positions\n"
 msgstr ""
 
+#
 #: src/unexpand.c:463
 msgid "`-LIST' option is obsolete; use `--first-only -t LIST'"
 msgstr ""
 
+#
 #: src/uniq.c:139
 #, c-format
 msgid "Usage: %s [OPTION]... [INPUT [OUTPUT]]\n"
 msgstr "Χρήση: %s [ΕΠΙΛΟΓΗ]... [ΕΙΣΟΔΟΣ [ΕΞΟΔΟΣ]]\n"
 
+#
 #: src/uniq.c:143
 msgid ""
 "Discard all but one of successive identical lines from INPUT (or\n"
@@ -7107,12 +7717,14 @@ msgid ""
 "\n"
 msgstr ""
 
+#
 #: src/uniq.c:151
 msgid ""
 "  -c, --count           prefix lines by the number of occurrences\n"
 "  -d, --repeated        only print duplicate lines\n"
 msgstr ""
 
+#
 #: src/uniq.c:155
 msgid ""
 "  -D, --all-repeated[=delimit-method] print all duplicate lines\n"
@@ -7124,10 +7736,12 @@ msgid ""
 "  -u, --unique          only print unique lines\n"
 msgstr ""
 
+#
 #: src/uniq.c:164
 msgid "  -w, --check-chars=N   compare no more than N characters in lines\n"
 msgstr ""
 
+#
 #: src/uniq.c:169
 msgid ""
 "\n"
@@ -7135,46 +7749,55 @@ msgid ""
 "Fields are skipped before chars.\n"
 msgstr ""
 
+#
 #: src/uniq.c:381
 #, c-format
 msgid "error reading %s"
 msgstr "σφάλμα ανάγνωσης %s"
 
+#
 #: src/uniq.c:386
 #, c-format
 msgid "error writing %s"
 msgstr "σφάλμα εγγραφής %s"
 
+#
 #: src/uniq.c:433 src/uniq.c:450
 #, c-format
 msgid "extra operand `%s'"
 msgstr ""
 
+#
 #: src/uniq.c:473 src/uniq.c:498
 #, fuzzy
 msgid "invalid number of fields to skip"
 msgstr "μη έγκυρος αριθμός πεδίων προς προσπέραση: `%s'"
 
+#
 #: src/uniq.c:507
 #, fuzzy
 msgid "invalid number of bytes to skip"
 msgstr "μη έγκυρος αριθμός bytes προς προσπέραση: `%s'"
 
+#
 #: src/uniq.c:516
 #, fuzzy
 msgid "invalid number of bytes to compare"
 msgstr "μη έγκυρος αριθμός από bytes προς σύγκριση: `%s'"
 
+#
 #: src/uniq.c:530
 #, c-format
 msgid "`-%lu' option is obsolete; use `-f %lu'"
 msgstr ""
 
+#
 #: src/uniq.c:538
 msgid "printing all duplicated lines and repeat counts is meaningless"
 msgstr ""
 "εκτύπωση όλων των διπλών γραμμών και μετρητών επαναλήψεων δεν έχει έννοια"
 
+#
 #: src/unlink.c:51
 #, fuzzy, c-format
 msgid ""
@@ -7188,6 +7811,7 @@ msgid ""
 "\n"
 msgstr ""
 
+#
 #: src/unlink.c:99
 #, fuzzy, c-format
 msgid "cannot unlink %s"
@@ -7217,6 +7841,7 @@ msgid_plural "%d days"
 msgstr[0] "μέρα"
 msgstr[1] "μέρα"
 
+#
 #: src/uptime.c:144
 #, fuzzy, c-format
 msgid "%d user"
@@ -7229,6 +7854,7 @@ msgstr[1] "μη έγκυρος χρήστης"
 msgid ",  load average: %.2f"
 msgstr ",  Μέσος όρος φόρτου: %.2f"
 
+#
 #: src/uptime.c:191 src/users.c:118
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION]... [ FILE ]\n"
@@ -7250,9 +7876,11 @@ msgstr ""
 "      --help      Εκτυπώνει αυτή την βοήθεια και τερματίζει\n"
 "      --version   Εκτυπώνει πληροφορίες έκδοσης και τερματίζει\n"
 
+#
 #: src/users.c:35
+#, fuzzy
 msgid "Joseph Arceneaux and David MacKenzie"
-msgstr ""
+msgstr "Σκοτ Μπάρτραμ και Ντέιβιντ Μακένζη"
 
 #: src/users.c:119
 #, fuzzy, c-format
@@ -7268,10 +7896,12 @@ msgstr ""
 "      --help      Εκτυπώνει αυτή την βοήθεια και τερματίζει\n"
 "      --version   Εκτυπώνει πληροφορίες έκδοσης και τερματίζει\n"
 
+#
 #: src/wc.c:78
 msgid "Paul Rubin and David MacKenzie"
-msgstr ""
+msgstr "Πωλ Ρούμπιν και Ντέιβιντ Μακένζη"
 
+#
 #: src/wc.c:132
 #, fuzzy
 msgid ""
@@ -7284,7 +7914,7 @@ msgid ""
 msgstr ""
 "Εμφάνιση μετρητών γραμμών, λέξεων και byte για κάθε ΑΡΧΕΙΟ, και μια γραμμή "
 "συνόλων\n"
-"άν ορίζονται περισσότερο από ένα ΑΡΧΕΙΑ. Χωρίς ΑΡΧΕΙΟ, ή όταν το αρχείο "
+"αν ορίζονται περισσότερο από ένα ΑΡΧΕΙΑ. Χωρίς ΑΡΧΕΙΟ, ή όταν το αρχείο "
 "είναι το -,\n"
 "ανάγνωση από την κανονική είσοδο.\n"
 "  -c, --bytes, --chars   εμφάνιση του συνόλου των bytes\n"
@@ -7294,6 +7924,7 @@ msgstr ""
 "      --help             εμφάνιση αυτής της βοήθειας και έξοδος\n"
 "      --version          εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
 
+#
 #: src/wc.c:140
 #, fuzzy
 msgid ""
@@ -7358,6 +7989,7 @@ msgstr "ΓΡΑΜΜΗ"
 msgid "TIME"
 msgstr ""
 
+#
 #: src/who.c:498
 #, fuzzy
 msgid "IDLE"
@@ -7375,6 +8007,7 @@ msgstr ""
 msgid "EXIT"
 msgstr ""
 
+#
 #: src/who.c:574
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION]... [ FILE | ARG1 ARG2 ]\n"
@@ -7457,6 +8090,7 @@ msgstr ""
 msgid "%s: cannot find username for UID %u\n"
 msgstr "%s: δεν μπορει να βρεθεί όνομα χρήστη για το 'UID' %u\n"
 
+#
 #: src/yes.c:49
 #, fuzzy, c-format
 msgid ""
@@ -7470,18 +8104,22 @@ msgid ""
 "\n"
 msgstr ""
 
+#
 #, fuzzy
 #~ msgid "cannot execute %s"
 #~ msgstr "αδύνατη η αλλαγή δικαιωμάτων στο %s"
 
+#
 #, fuzzy
 #~ msgid "cannot run %s"
 #~ msgstr "αδύνατη η αλλαγή δικαιωμάτων στο %s"
 
+#
 #, fuzzy
 #~ msgid "Try %s --help' for more information.\n"
 #~ msgstr "Δοκιμάστε `%s --help' για περισσότερη βοήθεια.\n"
 
+#
 #, fuzzy
 #~ msgid "preserving permissions for %s"
 #~ msgstr "αδυναμία αλλαγής ιδιοκτησίας στο %s"
@@ -7490,10 +8128,12 @@ msgstr ""
 #~ msgid "cannot lstat `.'"
 #~ msgstr "Δεν μπορεί να τεθεί η ημερομηνία."
 
+#
 #, fuzzy
 #~ msgid "closing directory %s"
 #~ msgstr "αδύνατη η αλλαγή στο κατάλογο %s"
 
+#
 #, fuzzy
 #~ msgid "%s: remove directory %s? "
 #~ msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
@@ -7510,10 +8150,12 @@ msgstr ""
 #~ msgid "continue? "
 #~ msgstr "συνέχεια; "
 
+#
 #, fuzzy
 #~ msgid "cannot change back to directory %s via `..'"
 #~ msgstr "αδύνατη η αλλαγή στο κατάλογο %s"
 
+#
 #, fuzzy
 #~ msgid "%s: remove directory %s%s? "
 #~ msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
@@ -7525,10 +8167,12 @@ msgstr ""
 #~ msgid "removing the directory itself: %s\n"
 #~ msgstr "ΠΡΟΣΟΧΗ: δεν είναι δυνατόν να αλλαχτεί ο κατάλογος σε %s"
 
+#
 #, fuzzy
 #~ msgid "cannot remove current directory %s"
 #~ msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
 
+#
 #, fuzzy
 #~ msgid "cannot fork"
 #~ msgstr "αδύνατη η αλλαγή δικαιωμάτων στο %s"
@@ -7577,6 +8221,7 @@ msgstr ""
 #~ msgid "  or:  %s [-acm] MMDDhhmm[YY] FILE... (obsolete)\n"
 #~ msgstr "  η : %s [-acm] MMDDhhmm[YY] ΑΡΧΕΙΟ... (δεν είναι σε χρήση)\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "      --help             display this help and exit\n"
@@ -7587,6 +8232,7 @@ msgstr ""
 #~ "  --help       εμφάνιση αυτής της βοήθειας και έξοδος\n"
 #~ "  --version    εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "      --help              display this help and exit\n"
@@ -7597,6 +8243,7 @@ msgstr ""
 #~ "  --help       εμφάνιση αυτής της βοήθειας και έξοδος\n"
 #~ "  --version    εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "      --help                   display this help and exit\n"
@@ -7607,6 +8254,7 @@ msgstr ""
 #~ "  --help       εμφάνιση αυτής της βοήθειας και έξοδος\n"
 #~ "  --version    εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "      --help                  display this help and exit\n"
@@ -7617,6 +8265,7 @@ msgstr ""
 #~ "  --help       εμφάνιση αυτής της βοήθειας και έξοδος\n"
 #~ "  --version    εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "      --help      display this help and exit\n"
@@ -7627,6 +8276,7 @@ msgstr ""
 #~ "  --help       εμφάνιση αυτής της βοήθειας και έξοδος\n"
 #~ "  --version    εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "      --help            display this help and exit\n"
@@ -7637,6 +8287,7 @@ msgstr ""
 #~ "  --help       εμφάνιση αυτής της βοήθειας και έξοδος\n"
 #~ "  --version    εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "      --help          display this help and exit\n"
@@ -7647,6 +8298,7 @@ msgstr ""
 #~ "  --help       εμφάνιση αυτής της βοήθειας και έξοδος\n"
 #~ "  --version    εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "      --help                 display this help and exit\n"
@@ -7657,6 +8309,7 @@ msgstr ""
 #~ "  --help       εμφάνιση αυτής της βοήθειας και έξοδος\n"
 #~ "  --version    εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "      --help        display this help and exit\n"
@@ -7667,6 +8320,7 @@ msgstr ""
 #~ "  --help       εμφάνιση αυτής της βοήθειας και έξοδος\n"
 #~ "  --version    εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "      --help                   display this help and exit\n"
@@ -7678,6 +8332,7 @@ msgstr ""
 #~ "  --help       εμφάνιση αυτής της βοήθειας και έξοδος\n"
 #~ "  --version    εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "      --help     display this help and exit\n"
@@ -8509,6 +9164,7 @@ msgstr ""
 #~ "\n"
 #~ "FIXME maybe add more discussion here?"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "Force changed blocks to disk, update the super block.\n"
@@ -8566,6 +9222,7 @@ msgstr ""
 #~ "αναγνωρίζονται για τις επιλογές -d και -t καθώς και την επιλογή που\n"
 #~ "αγνοείται, είναι όλες διαφορετικές.\n"
 
+#
 #, fuzzy
 #~ msgid "Copyright (C) 2001 Free Software Foundation, Inc."
 #~ msgstr "Πνευματικά Δικαιώματα (C) 1999 Free Software Foundation, Inc."
@@ -8588,32 +9245,40 @@ msgstr ""
 #~ msgid "you are not a member of group %s"
 #~ msgstr "δεν είστε μέλος της ομάδας `%s'"
 
+#
 #, fuzzy
 #~ msgid "cannot make fifo %s"
 #~ msgstr "αδύνατη η αλλαγή δικαιωμάτων στο %s"
 
+#
 #, fuzzy
 #~ msgid "cannot change permissions for %s"
 #~ msgstr "αδυναμία αλλαγής ιδιοκτησίας στο %s"
 
+#
 #, fuzzy
 #~ msgid "cannot remove old link to %s"
 #~ msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
 
+#
 #~ msgid "virtual memory exhausted"
 #~ msgstr "η ιδεατή μνήμη εξαντλήθηκε"
 
+#
 #~ msgid "Memory exhausted"
 #~ msgstr "Η μνήμη εξαντλήθηκε"
 
+#
 #, fuzzy
 #~ msgid "cannot create directory `%s'"
 #~ msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
 
+#
 #, fuzzy
 #~ msgid "cannot remove `%s'"
 #~ msgstr "αδύνατη η αλλαγή δικαιωμάτων στο %s"
 
+#
 #, fuzzy
 #~ msgid "specified target, `%s' is not a directory"
 #~ msgstr "το `%s' υπάρχει ήδη άλλα δεν είναι κατάλογος"
@@ -8621,21 +9286,26 @@ msgstr ""
 #~ msgid "`%s' and `%s' are the same file"
 #~ msgstr "τα `%s' και `%s' είναι το ίδιο αρχείο"
 
+#
 #, fuzzy
 #~ msgid "cannot backup `%s'"
 #~ msgstr "αδύνατη η αλλαγή δικαιωμάτων στο %s"
 
+#
 #, fuzzy
 #~ msgid "cannot un-backup `%s'"
 #~ msgstr "αδύνατη η αλλαγή δικαιωμάτων στο %s"
 
+#
 #, fuzzy
 #~ msgid "cannot chown %s"
 #~ msgstr "αδύνατη η αλλαγή δικαιωμάτων στο %s"
 
+#
 #~ msgid "cannot chmod %s"
 #~ msgstr "αδύνατη η αλλαγή δικαιωμάτων στο %s"
 
+#
 #, fuzzy
 #~ msgid "`%s' exists but is not a directory"
 #~ msgstr "το `%s' υπάρχει ήδη άλλα δεν είναι κατάλογος"
@@ -8653,18 +9323,21 @@ msgstr ""
 #~ msgid "link"
 #~ msgstr "σύνδεσμος"
 
+#
 #, fuzzy
 #~ msgid "current directory"
-#~ msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
+#~ msgstr "κατάλογος"
 
+#
 #, fuzzy
 #~ msgid "starting directory"
-#~ msgstr "το `%s' υπάρχει ήδη άλλα δεν είναι κατάλογος"
+#~ msgstr "κατάλογος"
 
 # src/copy.c:549
 #~ msgid "%s -> %s (backup)\n"
 #~ msgstr "%s -> %s (αντίγραφο ασφαλείας)\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "Usage: %s [OPTION]... TARGET [LINK_NAME]\n"
@@ -8673,6 +9346,7 @@ msgstr ""
 #~ "Χρήση: %s [ΕΠΙΛΟΓΗ]... [ΕΙΣΟΔΟΣ]...   (χωρίς -G)\n"
 #~ "   ή:  %s -G [ΕΠΙΛΟΓΗ]... [ΕΙΣΟΔΟΣ [ΕΞΟΔΟΣ]]\n"
 
+#
 #, fuzzy
 #~ msgid "Usage: %s [OPTION]... EXISTING_DIR NEW_DIR\n"
 #~ msgstr "Χρήση: %s [ΕΠΙΛΟΓΗ]... ΣΥΝΟΛΟ1 [ΣΥΝΟΛΟ2]\n"
@@ -8684,6 +9358,7 @@ msgstr ""
 #~ msgid "sparse type"
 #~ msgstr "αραιό είδος"
 
+#
 #, fuzzy
 #~ msgid "%s is closed"
 #~ msgstr "η κανονική είσοδος είναι κλεισμένη"
@@ -8717,10 +9392,12 @@ msgstr ""
 #~ msgid "removing non-directory %s\n"
 #~ msgstr "ΠΡΟΣΟΧΗ: δεν είναι δυνατόν να αλλαχτεί ο κατάλογος σε %s"
 
+#
 #, fuzzy
 #~ msgid "remove directory `%s'%s? "
 #~ msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
 
+#
 #, fuzzy
 #~ msgid "Usage: %s [OPTION]... GROUP FILE...\n"
 #~ msgstr "Χρήση: %s [ΕΠΙΛΟΓΕΣ]... [ΑΡΧΕΙΟ]...\n"
@@ -8777,6 +9454,7 @@ msgstr ""
 #~ "      --version            Εκτυπώνει πληροφορίες για την έκδοση και "
 #~ "τερματίζει\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "Run COMMAND with root directory set to NEWROOT.\n"
@@ -9079,6 +9757,7 @@ msgstr ""
 #~ "στον σωστό τύπο.\n"
 #~ "Οι μεταβλητές μεταβλητού μήκος υποστηρίζονται.\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "Print the full filename of the current working directory.\n"
@@ -9347,6 +10026,7 @@ msgstr ""
 #~ "                 -xcase -tostop -echoprt echoctl echoke, και όλους τους\n"
 #~ "                  ειδικούς χαρακτήρες με τις εξ'ορισμού τιμές τους.\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "Exit with the status determined by EXPRESSION.\n"
@@ -9470,6 +10150,7 @@ msgstr ""
 #~ "Το %s σαν ΑΡΧΕΙΟ είναι κοινό. Εάν ΠΑΡΑΜ1 και ΠΑΡΑΜ2 δοθούν,\n"
 #~ "το -m εννοείται: `am i' ή `mom likes' είναι συνηθισμένα.\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "Repeatedly output a line with all specified STRING(s), or `y'.\n"
@@ -9504,14 +10185,17 @@ msgstr ""
 #~ msgid "Usage: %s [-v]\n"
 #~ msgstr "Χρήση: %s [ΕΠΙΛΟΓΗ]\n"
 
+#
 #, fuzzy
 #~ msgid "Usage: %s [OPTION]... [VARIABLE]...\n"
 #~ msgstr "Χρήση: %s [ΕΠΙΛΟΓΕΣ]... [ΑΡΧΕΙΟ]...\n"
 
+#
 #, fuzzy
 #~ msgid "Usage: %s [OPTION]... NUMBER[SUFFIX]\n"
 #~ msgstr "Χρήση: %s [ΕΠΙΛΟΓΕΣ]... [ΑΡΧΕΙΟ]...\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "\n"
@@ -9541,6 +10225,7 @@ msgstr ""
 #~ "ένας από τους πολλαπλασιαστές bkm ακολουθεί συνενωμένος, διαφορετικά "
 #~ "ανάγνωσε -n ΤΙΜΗ\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "  +POS1 [-POS2]             start a key at POS1, end it before POS2 "
@@ -9556,6 +10241,7 @@ msgstr ""
 #~ "      --help      εμφάνιση αυτής της βοήθειας και έξοδος\n"
 #~ "      --version   εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "      --help               display this help and exit\n"
@@ -9566,6 +10252,7 @@ msgstr ""
 #~ "  --help       εμφάνιση αυτής της βοήθειας και έξοδος\n"
 #~ "  --version    εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "      --help                display this help and exit\n"
@@ -9576,6 +10263,7 @@ msgstr ""
 #~ "  --help       εμφάνιση αυτής της βοήθειας και έξοδος\n"
 #~ "  --version    εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "      --help                      display this help and exit\n"
@@ -9586,6 +10274,7 @@ msgstr ""
 #~ "  --help       εμφάνιση αυτής της βοήθειας και έξοδος\n"
 #~ "  --version    εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "      --help                     display this help and exit\n"
@@ -9596,6 +10285,7 @@ msgstr ""
 #~ "  --help       εμφάνιση αυτής της βοήθειας και έξοδος\n"
 #~ "  --version    εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "  --help            display this help and exit\n"
@@ -9606,6 +10296,7 @@ msgstr ""
 #~ "  --help       εμφάνιση αυτής της βοήθειας και έξοδος\n"
 #~ "  --version    εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "Convert tabs in each FILE to spaces, writing to standard output.\n"
@@ -9632,6 +10323,7 @@ msgstr ""
 #~ "Αντί για -t ΑΡΙΘΜΟΣ ή -t ΛΙΣΤΑ, -ΑΡΙΘΜΟΣ ή -ΛΙΣΤΑ μπορούν να "
 #~ "χρησιμοποιηθούν.\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "  -t, --tabs=LIST     use comma separated list of explicit tab positions\n"
@@ -9657,6 +10349,7 @@ msgstr ""
 #~ "Αντί για -t ΑΡΙΘΜΟΣ ή -t ΛΙΣΤΑ, -ΑΡΙΘΜΟΣ ή -ΛΙΣΤΑ μπορούν να "
 #~ "χρησιμοποιηθούν.\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "Wrap input lines in each FILE (standard input by default), writing to\n"
@@ -9678,6 +10371,7 @@ msgstr ""
 #~ "      --help          εμφάνιση αυτής της βοήθειας και έξοδος\n"
 #~ "      --version       εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "Write lines consisting of the sequentially corresponding lines from\n"
@@ -9705,6 +10399,7 @@ msgstr ""
 #~ "      --version       εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
 #~ "\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "  -NUMBER                 same as -l NUMBER\n"
@@ -9735,6 +10430,7 @@ msgstr ""
 #~ "ΜΕΓΕΘΟΣ μπορεί να έχει πρόθεμα πολλαπλασιαστή: b για 512, k για 1K, m για "
 #~ "1 Meg.\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "Write each FILE to standard output, last line first.\n"
@@ -9754,6 +10450,7 @@ msgstr ""
 #~ "      --help               εμφάνιση αυτής της βοήθειας και έξοδος\n"
 #~ "      --version            εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "Print the last %d lines of each FILE to standard output.\n"
@@ -9789,6 +10486,7 @@ msgstr ""
 #~ "ένας από τους πολλαπλασιαστές bkm ακολουθεί συνενωμένος, διαφορετικά "
 #~ "ανάγνωσε -n ΤΙΜΗ\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "  -t, --tabs=NUMBER   have tabs NUMBER characters apart instead of 8\n"
@@ -9798,22 +10496,24 @@ msgstr ""
 #~ "\n"
 #~ "Instead of -t NUMBER or -t LIST, -NUMBER or -LIST may be used.\n"
 #~ msgstr ""
-#~ "Μετατροπή διαστημάτων σε κάθε ΑΡΧΕΙΟ σε στηλοθέτες, γράφοντας στην "
+#~ "Μετατροπή στηλογνωμόνων σε κάθε ΑΡΧΕΙΟ σε διαστήματα, με εγγραφή στην "
 #~ "κανονική έξοδο.\n"
-#~ "Χωρίς ΑΡΧΕΙΟ, ή όταν το αρχείο είναι το -, ανάγνωση από την κανονική "
+#~ "Χωρίς ΑΡΧΕΙΟ ή όταν το ΑΡΧΕΙΟ είναι το -, ανάγνωση από την κανονική "
 #~ "είσοδο.\n"
 #~ "\n"
-#~ "  -a, --all           μετατροπή όλων των λευκών χαρακτήρων, αντί μόνο των "
-#~ "αρχικών\n"
-#~ "  -t, --tabs=ΑΡΙΘΜΟΣ  οι στηλοθέτες να έχουν απόσταση ΑΡΙΘΜΟΣ αντί 8\n"
-#~ "  -t, --tabs=ΛΙΣΤΑ    χρήση λίστας χωρισμένης με κόμμα για τη δήλωση της "
-#~ "θέσης των στηλοθετών\n"
+#~ "  -i, --initial       να μη μετατραπούν τα TAB μετά από μη-λευκούς "
+#~ "χαρακτήρες\n"
+#~ "  -t, --tabs=ΑΡΙΘΜ    οι στηλογνώμονες να έχουν μέγεθος ΑΡΙΘΜός "
+#~ "χαρακτήρες, όχι 8\n"
+#~ "  -t, --tabs=ΛΙΣΤΑ    χρήση λίστας διαχωρισμένης με κόμματα για ορισμό "
+#~ "θέσεων στηλογνωμόνων\n"
 #~ "      --help          εμφάνιση αυτής της βοήθειας και έξοδος\n"
 #~ "      --version       εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
 #~ "\n"
 #~ "Αντί για -t ΑΡΙΘΜΟΣ ή -t ΛΙΣΤΑ, -ΑΡΙΘΜΟΣ ή -ΛΙΣΤΑ μπορούν να "
 #~ "χρησιμοποιηθούν.\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "Output pieces of FILE separated by PATTERN(s) to files `xx01', "
@@ -9860,7 +10560,7 @@ msgstr ""
 #~ "Ανάγνωση από κανονική είσοδο εάν ΑΡΧΕΙΟ είναι το -.  Κάθε ΜΟΡΦΗ μπορεί να "
 #~ "είναι:\n"
 #~ "\n"
-#~ "  ΑΚΕΡΑΙΟΣ           αντιγραφή μέχρι, αλλά χωρίς συμπεριληψη, αριθμό "
+#~ "  ΑΚΕΡΑΙΟΣ           αντιγραφή μέχρι, αλλά χωρίς συμπερίληψη, αριθμό "
 #~ "γραμμής\n"
 #~ "  /ΚΑΝΕΚΦ/[ΘΕΣΗ]     αντιγραφή μέχρι, αλλά χωρίς συμπερίληψη, μιας "
 #~ "γραμμής που ταιριάζει\n"
@@ -9873,6 +10573,7 @@ msgstr ""
 #~ "Η ΘΕΣΗ γραμμής είναι ένα υποχρεωτικό `+' ή `-' ακολουθούμενο από ένα "
 #~ "θετικό ακέραιο.\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "Print selected parts of lines from each FILE to standard output.\n"
@@ -9906,7 +10607,7 @@ msgstr ""
 #~ "\n"
 #~ "  -b, --bytes=ΛΙΣΤΑ       εμφάνιση μόνο αυτών των bytes\n"
 #~ "  -c, --characters=ΛΙΣΤΑ  εμφάνιση μόνο αυτών των χαρακτήρων\n"
-#~ "  -d, --delimiter=ΔΙΑΧΩΡ  χρήση ΔΙΑΧΩΡΙΣΤή αντί για TAB για διαχωριστή "
+#~ "  -d, --delimiter=ΔΙΑΧΩΡ  χρήση ΔΙΑΧΩΡιστή αντί TAB για διαχωριστή "
 #~ "πεδίου\n"
 #~ "  -f, --fields=ΛΙΣΤΑ      εμφάνιση μόνο αυτών των πεδίων\n"
 #~ "  -n                      (αγνοείτε)\n"
@@ -9928,11 +10629,12 @@ msgstr ""
 #~ "  N-    από το N-οστό byte, χαρακτήρα ή πεδίο, μέχρι τέλος γραμμής\n"
 #~ "  N-M   από Ν-οστό μέχρι Μ-οστό (συμπεριλαμβανομένων) byte, χαρακτήρα ή "
 #~ "πεδίο\n"
-#~ "  -M    από πρώτο εώς Μ-οστό (συμπεριλαμβανομένων) byte, χαρακτήρα ή "
+#~ "  -M    από πρώτο έως Μ-οστό (συμπεριλαμβανομένων) byte, χαρακτήρα ή "
 #~ "πεδίο\n"
 #~ "\n"
 #~ "Χωρίς ΑΡΧΕΙΟ ή όταν αρχείο είναι το -, ανάγνωση από κανονική είσοδο.\n"
 
+#
 #~ msgid ""
 #~ "For each pair of input lines with identical join fields, write a line to\n"
 #~ "standard output.  The default join field is the first, delimited\n"
@@ -9968,7 +10670,7 @@ msgstr ""
 #~ "δύο)\n"
 #~ "είναι το -, ανάγνωση από την κανονική είσοδο.\n"
 #~ "\n"
-#~ "  -a ΜΕΡΟΣ          εμφάνιση αταίριαστων γραμμών, προερχόμενεσ από το "
+#~ "  -a ΜΕΡΟΣ          εμφάνιση αταίριαστων γραμμών, προερχόμενες από το "
 #~ "αρχείο ΜΕΡΟΣ\n"
 #~ "  -e ΚΕΝΟ           αντικατάσταση ελλιπών πεδίων εισόδου με ΚΕΝΟ\n"
 #~ "  -i, --ignore-case αγνόηση διαφορών μεταξύ πεζών/κεφαλαίων όταν "
@@ -9996,6 +10698,7 @@ msgstr ""
 #~ "το πεδίο συνένωσης, τα υπόλοιπα πεδία από το ΑΡΧΕΙΟ1, τα υπόλοιπα πεδία\n"
 #~ "από το ΑΡΧΕΙΟ2, όλα διαχωρισμένα από το ΧΑΡΑΚΤήρα.\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "Usage: %s [OPTION] [FILE]...\n"
@@ -10045,7 +10748,7 @@ msgstr ""
 #~ "      --help              εμφάνιση αυτής της βοήθειας και έξοδος\n"
 #~ "      --version           εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
 #~ "\n"
-#~ "Τα αθροίσματα υπολογίζοντε όπως περιγράφεται στο RFC 1321.  Στον έλεγχο, "
+#~ "Τα αθροίσματα υπολογίζονται όπως περιγράφεται στο RFC 1321.  Στον έλεγχο, "
 #~ "η είσοδος\n"
 #~ "θα πρέπει να είναι μια προηγούμενη έξοδος αυτού του προγράμματος.  Η εξ "
 #~ "ορισμού κατάσταση\n"
@@ -10053,6 +10756,7 @@ msgstr ""
 #~ "ένδειξης τύπου\n"
 #~ "(`*' για δυαδικό, ` ' για κείμενο), και το όνομα για κάθε ΑΡΧΕΙΟ.\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "Write each FILE to standard output, with line numbers added.\n"
@@ -10110,7 +10814,7 @@ msgstr ""
 #~ "                                    επισέλιδου\n"
 #~ "  -i, --page-increment=ΑΡΙΘΜΟΣ    αύξηση αριθμού γραμμής σε κάθε γραμμή\n"
 #~ "  -l, --join-blank-lines=ΑΡΙΘΜΟΣ  ομάδα από ΑΡΙΘΜΟΣ κενών γραμμών που\n"
-#~ "                                    μετρούντε ως μία\n"
+#~ "                                    μετρούνται ως μία\n"
 #~ "  -n, --number-format=ΜΟΡΦΗ       εισαγωγή αρίθμηση γραμμών σύμφωνα με "
 #~ "ΜΟΡΦΗ\n"
 #~ "  -p, --no-renumber               να μη μηδενίζεται η αρίθμηση γραμμών "
@@ -10145,6 +10849,7 @@ msgstr ""
 #~ "  rz   στοίχιση στα δεξιά, χωρίς προπορευόμενα μηδενικά\n"
 #~ "\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "\n"
@@ -10194,7 +10899,7 @@ msgstr ""
 #~ "BYTES\n"
 #~ "                                γραφικούς χαρακτήρες\n"
 #~ "  -t, --format=ΕΙΔΟΣ          επιλογή μορφής εξόδου ή μορφές\n"
-#~ "  -v, --output-duplicates     να μη χρησιμοποιειθεί * να για υποδηλώσει\n"
+#~ "  -v, --output-duplicates     να μη χρησιμοποιηθεί * να για υποδηλώσει\n"
 #~ "                                απόρριψη γραμμής\n"
 #~ "  -w, --width[=BYTES]         εμφάνιση BYTES bytes για κάθε γραμμή "
 #~ "εξόδου\n"
@@ -10202,7 +10907,7 @@ msgstr ""
 #~ "      --help                  εμφάνιση αυτής της βοήθειας και έξοδος\n"
 #~ "      --version               εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
 #~ "\n"
-#~ "οι προ-POSIX δηλώσεις μορφών μπορούν να αναμιγνύοντε, δρούν προσθετικά:\n"
+#~ "οι προ-POSIX δηλώσεις μορφών μπορούν να αναμιγνύονται, δρουν προσθετικά:\n"
 #~ "  -a   ίδιο με -t a,  επιλογή δοθέντων χαρακτήρων\n"
 #~ "  -b   ίδιο με -t oC, επιλογή οκταδικών bytes\n"
 #~ "  -c   ίδιο με -t c,  επιλογή χαρακτήρων ASCII ή διαφυγές με πισωκάθετο\n"
@@ -10214,6 +10919,7 @@ msgstr ""
 #~ "  -o   ίδιο με -t o2, επιλογή οκταδικών μικρών ακεραίων\n"
 #~ "  -x   ίδιο με -t x2, επιλογή δεκαεξαδικών μικρών ακεραίων\n"
 
+#
 #~ msgid ""
 #~ "\n"
 #~ "For older syntax (second call format), OFFSET means -j OFFSET.  LABEL\n"
@@ -10266,7 +10972,7 @@ msgstr ""
 #~ "Το ΜΕΓΕΘΟΣ είναι ένας αριθμός.  Για το ΕΙΔΟΣ, το ΜΕΓΕΘΟΣ μπορεί να είναι "
 #~ "C\n"
 #~ "για sizeof(char), S για sizeof(short), I για sizeof(int) ή L για\n"
-#~ "sizeof(long).  Αν το ΕΙΔΟΣ είναι f, το ΜΕΓΕΘΟΣ μπορεί επίσεις να είναι F\n"
+#~ "sizeof(long).  Αν το ΕΙΔΟΣ είναι f, το ΜΕΓΕΘΟΣ μπορεί επίσης να είναι F\n"
 #~ "για sizeof(float), D για sizeof(double) ή L για sizeof(long double).\n"
 #~ "\n"
 #~ "Η ΒΑΣΗ είναι d για δεκαδικό, o για οκταδικό, x για δεκαεξαδικό ή n για "
@@ -10281,6 +10987,7 @@ msgstr ""
 #~ "3.  Το -w χωρίς αριθμό υποδηλώνει 32.\n"
 #~ "Εξ ορισμού, η od χρησιμοποιεί -A o -t d2 -w 16.\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "Paginate or columnate FILE(s) for printing.\n"
@@ -10327,7 +11034,7 @@ msgstr ""
 #~ "  -d, --double-space\n"
 #~ "                    διπλά διαστήματα στην έξοδο\n"
 #~ "  -e[ΧΑΡΑΚΤ[ΠΛΑΤΟΣ]], --expand-tabs[=ΧΑΡΑΚΤ[ΠΛΑΤΟΣ]]\n"
-#~ "                    ανάπτυξη ΧΑΡΑΚΤήρων εισόδου (TABs) σε στηλεθέτη με\n"
+#~ "                    ανάπτυξη ΧΑΡΑΚΤήρων εισόδου (TABs) σε στηλοθέτη με\n"
 #~ "                      πλάτος ΠΛΑΤΟΣ(8)\n"
 #~ "  -F, -f, --form-feed\n"
 #~ "                    χρήση χαρακτήρων αλλαγής σελίδας αντί χαρακτήρων "
@@ -10336,6 +11043,7 @@ msgstr ""
 #~ "                      (-F για επισέλιδο 3 γραμμών ή επισέλιδο 5 γραμμών\n"
 #~ "                      και ακόλουθο χωρίς -F)\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "  -h HEADER, --header=HEADER\n"
@@ -10409,6 +11117,7 @@ msgstr ""
 #~ "                    παράληψη προειδοποίησης όταν το αρχείο δεν μπορεί να\n"
 #~ "                      ανοιχτεί\n"
 
+#
 #~ msgid ""
 #~ "  -s[CHAR],--separator[=CHAR]\n"
 #~ "                    separate columns by a single character, default for "
@@ -10473,7 +11182,7 @@ msgstr ""
 #~ "τεθεί\n"
 #~ "                      στα αρχεία εισόδου\n"
 #~ "  -v, --show-nonprinting\n"
-#~ "                    χρήση οκταδική κωδικογραφή με πισωκάθετο\n"
+#~ "                    χρήση οκταδικής κωδικογραφής με πισωκάθετο\n"
 #~ "  -w ΠΛΑΤΟΣ_ΣΕΛΙΔΑΣ, --width=ΠΛΑΤΟΣ_ΣΕΛΙΔΑΣ\n"
 #~ "                    ορισμός πλάτους σελίδας σε ΠΛΑΤΟΣ_ΣΕΛΙΔΑΣ (72)\n"
 #~ "                      χαρακτήρες για\n"
@@ -10483,7 +11192,7 @@ msgstr ""
 #~ "                    ορισμός πλάτους σελίδας σε ΠΛΑΤΟΣ_ΣΕΛΙΔΑΣ (72)\n"
 #~ "                      χαρακτήρες πάντα,\n"
 #~ "                    μηδενισμός γραμμών, εκτός αν έχει τεθεί -J, καμία\n"
-#~ "                      παρεμβελή\n"
+#~ "                      παρεμβολή\n"
 #~ "                    με -S ή -s\n"
 #~ "  --help            εμφάνιση αυτής της βοήθειας και έξοδος\n"
 #~ "  --version         εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
@@ -10491,6 +11200,7 @@ msgstr ""
 #~ "Το -T εννοείτε από το -l nn όπου nn <= 10 ή <= 3 με -F. Χωρίς ΑΡΧΕΙΟ, ή\n"
 #~ "όταν το αρχείο είναι το -, ανάγνωση από την κανονική είσοδο.\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "Output a permuted index, including context, of the words in the input "
@@ -10528,9 +11238,9 @@ msgstr ""
 #~ "With no FILE or if FILE is -, read Standard Input.  `-F /' by default.\n"
 #~ msgstr ""
 #~ "Υποχρεωτικά ορίσματα για μακρές επιλογές είναι υποχρεωτικά για σύντομες\n"
-#~ "επιλογές επίσεις.\n"
+#~ "επιλογές επίσης.\n"
 #~ "\n"
-#~ "  -A, --auto-reference           εμφάνιση αυτόματα παραγώμενες αναφορές\n"
+#~ "  -A, --auto-reference           εμφάνιση αυτόματα παραγόμενες αναφορές\n"
 #~ "  -C, --copyright                εμφάνιση Copyright και κανόνες "
 #~ "αντιγραφής\n"
 #~ "  -G, --traditional              συμπεριφορά περισσότερο όμοια με του "
@@ -10574,6 +11284,7 @@ msgstr ""
 #~ "είσοδο.\n"
 #~ "Είναι `-F /' εξ ορισμού.\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "Other options:\n"
@@ -10625,7 +11336,7 @@ msgstr ""
 #~ "-b\n"
 #~ "  -i               θεώρησε μόνο τους χαρακτήρες [\\040-\\0176] στα "
 #~ "κλειδιά\n"
-#~ "  -k ΘΕΣΗ1[,ΘΕΣΗ2]   έναρξη κλειδού στη θέση ΘΕΣΗ1, τερματιστός *στη* "
+#~ "  -k ΘΕΣΗ1[,ΘΕΣΗ2]   έναρξη κλειδιού στη θέση ΘΕΣΗ1, τερματιστός *στη* "
 #~ "ΘΕΣΗ2\n"
 #~ "                     αριθμοί πεδίων και θέσεις χαρακτήρων αριθμούνται\n"
 #~ "                     αρχίζοντας από το ένα (σε αντίθεση με τη βασισμένη "
@@ -10653,6 +11364,7 @@ msgstr ""
 #~ "      --version    εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
 #~ "\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "Print the last %d lines of each FILE to standard output.\n"
@@ -10697,7 +11409,8 @@ msgstr ""
 #~ "      --retry              συνέχιση προσπάθειας ανοίγματος αρχείου ακόμα "
 #~ "και\n"
 #~ "                             αν αυτό δεν είναι προσπελάσιμο όταν η tail \n"
-#~ "                             εκκινήται ή αν γίνετε μη-προσπελάσιμο μετά\n"
+#~ "                             εκκινείται ή αν γίνεται μη-προσπελάσιμο "
+#~ "μετά\n"
 #~ "                             χρήσιμο μόνο με την παράμετρο -f\n"
 #~ "  -c, --bytes=N            εμφάνιση των τελευταίων N bytes\n"
 #~ "  -f, --follow[={name|descriptor}]  εμφάνιση προστιθέμενων δεδομένων "
@@ -10729,13 +11442,14 @@ msgstr ""
 #~ "να έχει πολλαπλασιαστικό πρόθεμα:\n"
 #~ "b για 512, k για 1024, m για 1048576 (1 Meg).  Μια πρώτη ΕΠΙΛΟΓΗ με -"
 #~ "ΤΙΜΗ\n"
-#~ "ή +ΤΙΜΗ θεωρήται για -n ΤΙΜΗ ή -n +ΤΙΜΗ εκτός αν η ΤΙΜΗ έχει ένα από τις\n"
+#~ "ή +ΤΙΜΗ θεωρείται για -n ΤΙΜΗ ή -n +ΤΙΜΗ εκτός αν η ΤΙΜΗ έχει ένα από "
+#~ "τις\n"
 #~ "πολλαπλασιαστικές καταλήξεις [bkm], στην οποία περίπτωση γίνεται χρήση "
 #~ "ως\n"
 #~ "-c ΤΙΜΗ ή -c +TIMH.\n"
 #~ "\n"
 #~ "Με --follow (-f), η tail εξ ορισμού παρακολουθεί τον περιγραφέα αρχείου,\n"
-#~ "που σημαίνει ότι ακόμα και αν το αρχείο μετανομοσθεί, η tail θα "
+#~ "που σημαίνει ότι ακόμα και αν το αρχείο μετονομασθεί, η tail θα "
 #~ "συνεχίσει\n"
 #~ "να το παρακολουθεί. Αυτή η εξ ορισμού συμπεριφορά δεν είναι επιθυμητή "
 #~ "όταν\n"
@@ -10744,9 +11458,10 @@ msgstr ""
 #~ "γραφέα αρχείου (π.χ. περιστροφή αρχείου καταγραφών). Κάντε χρήση του\n"
 #~ "--follow=name στην περίπτωση αυτή. Αυτό προκαλεί την tail να "
 #~ "παρακολουθεί\n"
-#~ "το αρχείο με το συγκεκριμένο όνομα ανοίγοντας το περιοδικά για να δεί αν\n"
+#~ "το αρχείο με το συγκεκριμένο όνομα ανοίγοντας το περιοδικά για να δει αν\n"
 #~ "έχει διαγραφεί και επαναδημιουργηθεί από κάποιο άλλο πρόγραμμα.\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "\n"
@@ -10816,6 +11531,7 @@ msgstr ""
 #~ "  [:xdigit:]      όλα τα δεκαεξαδικά ψηφία\n"
 #~ "  [=ΧΑΡΑΚΤ=]        όλοι οι χαρακτήρες που είναι ισοδύναμοι με το ΧΑΡΑΚΤ\n"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "Discard all but one of successive identical lines from INPUT (or\n"
@@ -10860,8 +11576,9 @@ msgstr ""
 #~ "\n"
 #~ "Πεδίο είναι μια σειρά από λευκούς χαρακτήρες, και μετά μη-λευκοί "
 #~ "χαρακτήρες.\n"
-#~ "Τα πεδία προσπερνόνται πριν τους χαρακτήρες.\n"
+#~ "Τα πεδία προσπερνώνται πριν τους χαρακτήρες.\n"
 
+#
 #~ msgid ""
 #~ "when using the old-style +POS and -POS key specifiers,\n"
 #~ "the +POS specifier must come first"
@@ -10869,13 +11586,16 @@ msgstr ""
 #~ "Όταν γίνετε χρήση παλιού-στυλ δηλωτών +ΘΕΣΗ και -ΘΕΣΗ,\n"
 #~ "ο δηλωτής +ΘΕΣΗ πρέπει να έρχεται πρώτος"
 
+#
 #~ msgid "option `-k' requires an argument"
 #~ msgstr "η επιλογή `-k' απαιτεί ένα όρισμα"
 
+#
 #~ msgid "starting field spec has `.' but lacks following character offset"
 #~ msgstr ""
 #~ "η δήλωση έναρξης πεδίου έχει `.' αλλά της λείπει η θέση επόμενου χαρακτήρα"
 
+#
 #, fuzzy
 #~ msgid ""
 #~ "starting field character offset argument to the `-k' option must be "
@@ -10884,41 +11604,52 @@ msgstr ""
 #~ "το όρισμα έναρξης πεδίου αριθμού στην επιλογή `-k'\n"
 #~ "πρέπει να είναι θετικός"
 
+#
 #~ msgid "field specification has `,' but lacks following field spec"
 #~ msgstr "η δήλωση πεδίου έχει `,' αλλά της λείπει η δήλωση επόμενου πεδίου"
 
+#
 #~ msgid "ending field number argument to the `-k' option must be positive"
 #~ msgstr ""
 #~ "το όρισμα τέρματος πεδίου αριθμού στην επιλογή `-k' πρέπει να είναι "
 #~ "θετικός"
 
+#
 #~ msgid "ending field spec has `.' but lacks following character offset"
 #~ msgstr ""
 #~ "η δήλωση τέρματος πεδίου έχει `.' αλλά της λείπει η θέση επόμενου "
 #~ "χαρακτήρα"
 
+#
 #~ msgid "option `-o' requires an argument"
 #~ msgstr "η επιλογή `-o' απαιτεί ένα όρισμα"
 
+#
 #, fuzzy
 #~ msgid "option `-S' requires an argument"
 #~ msgstr "η επιλογή `-k' απαιτεί ένα όρισμα"
 
+#
 #~ msgid "option `-t' requires an argument"
 #~ msgstr "η επιλογή `-t' απαιτεί ένα όρισμα"
 
+#
 #~ msgid "option `-T' requires an argument"
 #~ msgstr "η επιλογή `-T' απαιτεί ένα όρισμα"
 
+#
 #~ msgid "%s: unrecognized option `-%c'\n"
 #~ msgstr "%s: μη αναγνωρίσιμη επιλογή `-%c'\n"
 
+#
 #~ msgid "%s%*s%s%*sPage"
 #~ msgstr "%s%*s%s%*sΣελίδα"
 
+#
 #~ msgid "flushing file"
 #~ msgstr "ολοκλήρωση αρχείου"
 
+#
 #~ msgid ""
 #~ "specified number of bytes `%s' is larger than the maximum\n"
 #~ "representable value of type `long'"
@@ -10926,12 +11657,15 @@ msgstr ""
 #~ "ο δηλωμένος αριθμός bytes `%s' είναι μεγαλύτερος από το μέγιστο\n"
 #~ "που μπορεί να αναπαρασταθεί από το τύπο δεδομένων `long'"
 
+#
 #~ msgid "could not find loop"
 #~ msgstr "αδυναμία εύρεσης βρόχου"
 
+#
 #~ msgid "%s: cannot follow end of non-regular file"
 #~ msgstr "%s: αδυναμία ακολούθησης τέλους μη-κανονικού αρχείου"
 
+#
 #~ msgid ""
 #~ "\n"
 #~ "Report bugs to <textutils-bugs@gnu.org>."
@@ -10939,5 +11673,294 @@ msgstr ""
 #~ "\n"
 #~ "Αναφέρατε σφάλματα στο <bug-textutils@gnu.org>."
 
+#
 #~ msgid "`%s' has reappeared"
 #~ msgstr "το `%s' εμφανίστηκε ξανά"
+
+#
+#, fuzzy
+#~ msgid ""
+#~ "Convert tabs in each FILE to spaces, writing to standard output.\n"
+#~ "With no FILE, or when FILE is -, read standard input.\n"
+#~ "\n"
+#~ "  -i, --initial       do not convert TABs after non whitespace\n"
+#~ "  -t, --tabs=NUMBER   have tabs NUMBER characters apart, not 8\n"
+#~ "  -t, --tabs=LIST     use comma separated list of explicit tab positions\n"
+#~ "      --help          display this help and exit\n"
+#~ "      --version       output version information and exit\n"
+#~ "\n"
+#~ "Instead of -t NUMBER or -t LIST, -NUMBER or -LIST may be used.\n"
+#~ msgstr ""
+#~ "Μετατροπή διαστημάτων σε κάθε ΑΡΧΕΙΟ σε στηλοθέτες, γράφοντας στην "
+#~ "κανονική έξοδο.\n"
+#~ "Χωρίς ΑΡΧΕΙΟ, ή όταν το αρχείο είναι το -, ανάγνωση από την κανονική "
+#~ "είσοδο.\n"
+#~ "\n"
+#~ "  -a, --all           μετατροπή όλων των λευκών χαρακτήρων, αντί μόνο των "
+#~ "αρχικών\n"
+#~ "  -t, --tabs=ΑΡΙΘΜΟΣ  οι στηλοθέτες να έχουν απόσταση ΑΡΙΘΜΟΣ αντί 8\n"
+#~ "  -t, --tabs=ΛΙΣΤΑ    χρήση λίστας χωρισμένης με κόμμα για τη δήλωση της "
+#~ "θέσης των στηλοθετών\n"
+#~ "      --help          εμφάνιση αυτής της βοήθειας και έξοδος\n"
+#~ "      --version       εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
+#~ "\n"
+#~ "Αντί για -t ΑΡΙΘΜΟΣ ή -t ΛΙΣΤΑ, -ΑΡΙΘΜΟΣ ή -ΛΙΣΤΑ μπορούν να "
+#~ "χρησιμοποιηθούν.\n"
+
+#
+#~ msgid ""
+#~ "Reformat each paragraph in the FILE(s), writing to standard output.\n"
+#~ "If no FILE or if FILE is `-', read standard input.\n"
+#~ "\n"
+#~ "Mandatory arguments to long options are mandatory for short options too.\n"
+#~ "  -c, --crown-margin        preserve indentation of first two lines\n"
+#~ "  -p, --prefix=STRING       combine only lines having STRING as prefix\n"
+#~ "  -s, --split-only          split long lines, but do not refill\n"
+#~ "  -t, --tagged-paragraph    indentation of first line different from "
+#~ "second\n"
+#~ "  -u, --uniform-spacing     one space between words, two after sentences\n"
+#~ "  -w, --width=NUMBER        maximum line width (default of 75 columns)\n"
+#~ "      --help                display this help and exit\n"
+#~ "      --version             output version information and exit\n"
+#~ "\n"
+#~ "In -wNUMBER, the letter `w' may be omitted.\n"
+#~ msgstr ""
+#~ "Μορφοποίηση ξανά κάθε παραγράφου στο ΑΡΧΕΙΟ(Α), γράφοντας στην κανονική "
+#~ "έξοδο.\n"
+#~ "Αν κανένα ΑΡΧΕΙΟ δεν έχει οριστεί ή το ΑΡΧΕΙΟ είναι το `-', ανάγνωση από "
+#~ "κανονική είσοδο.\n"
+#~ "\n"
+#~ "Υποχρεωτικά ορίσματα στις μακρές επιλογές είναι υποχρεωτικά για σύντομες "
+#~ "επιλογές επίσεις.\n"
+#~ "  -c, --crown-margin        διατήρησε την εσοχή των δύο πρώτων γραμμών\n"
+#~ "  -p, --prefix=ΑΛΦΑΡΙΘ      συνδύασε μόνο γραμμές με ΑΛΦΑΡΙΘΜητικό ως "
+#~ "πρόθεμα\n"
+#~ "  -s, --split-only          χώρισε στα δύο τις μακρές γραμμές αλλά χωρίς "
+#~ "γέμισμα ξανά\n"
+#~ "  -t, --tagged-paragraph    η εσοχή της πρώτης γραμμής να είναι "
+#~ "διαφορετική από τη δεύτερη\n"
+#~ "  -u, --uniform-spacing     ένα διάστημα μεταξύ λέξεων, δύο μετά από "
+#~ "προτάσεις\n"
+#~ "  -w, --width=ΑΡΙΘΜΟΣ       μέγιστο πλάτος γραμμής (εξ ορισμού 75 "
+#~ "στήλες)\n"
+#~ "      --help                εμφάνιση αυτής της βοήθειας και έξοδος\n"
+#~ "      --version             εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
+#~ "\n"
+#~ "Στο -wΑΡΙΘΜΟΣ, το γράμμα `w' μπορεί να παραληφθεί.\n"
+
+#
+#~ msgid ""
+#~ "Print first 10 lines of each FILE to standard output.\n"
+#~ "With more than one FILE, precede each with a header giving the file "
+#~ "name.\n"
+#~ "With no FILE, or when FILE is -, read standard input.\n"
+#~ "\n"
+#~ "  -c, --bytes=SIZE         print first SIZE bytes\n"
+#~ "  -n, --lines=NUMBER       print first NUMBER lines instead of first 10\n"
+#~ "  -q, --quiet, --silent    never print headers giving file names\n"
+#~ "  -v, --verbose            always print headers giving file names\n"
+#~ "      --help               display this help and exit\n"
+#~ "      --version            output version information and exit\n"
+#~ "\n"
+#~ "SIZE may have a multiplier suffix: b for 512, k for 1K, m for 1 Meg.\n"
+#~ "If -VALUE is used as first OPTION, read -c VALUE when one of\n"
+#~ "multipliers bkm follows concatenated, else read -n VALUE.\n"
+#~ msgstr ""
+#~ "Εμφάνιση των 10 πρώτων γραμμών από κάθε ΑΡΧΕΙΟ στην κανονική έξοδο.\n"
+#~ "Με περισσότερα από ένα ΑΡΧΕΙΟ, να προηγηθεί επισέλιδο με το όνομα του "
+#~ "αρχείου.\n"
+#~ "Χωρίς ΑΡΧΕΙΟ ή όταν το ΑΡΧΕΙΟ είναι το -, ανάγνωση από την κανονική "
+#~ "είσοδο.\n"
+#~ "\n"
+#~ "  -c, --bytes=ΜΕΓΕΘΟΣ      εμφάνιση των πρώτων ΜΕΓΕΘΟΣ bytes\n"
+#~ "  -n, --lines=ΑΡΙΘΜΟΣ      εμφάνιση των πρώτων ΑΡΙΘΜΟΣ γραμμών αντί των "
+#~ "πρώτων 10\n"
+#~ "  -q, --quiet, --silent    να μην τυπώνονται επισέλιδα με τα ονόματα "
+#~ "αρχείων\n"
+#~ "  -v, --verbose            να τυπώνονται πάντα επισέλιδα με τα ονόματα "
+#~ "αρχείων\n"
+#~ "      --help               εμφάνιση αυτής της βοήθειας και έξοδος\n"
+#~ "      --version            εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
+#~ "\n"
+#~ "Το ΜΕΓΕΘΟΣ μπορεί να έχει κατάληξη με πολλαπλασιαστή: b για 512, k για "
+#~ "1K, m για 1 Meg.\n"
+#~ "Αν χρησιμοποιείται το -VALUE σαν πρώτη ΕΠΙΛΟΓΗ, ανάγνωσε -c ΤΙΜΗ όταν\n"
+#~ "ένας από τους πολλαπλασιαστές bkm ακολουθεί συνενωμένος, διαφορετικά "
+#~ "ανάγνωσε -n ΤΙΜΗ\n"
+
+#
+#~ msgid ""
+#~ "This program is free software; you can redistribute it and/or modify\n"
+#~ "it under the terms of the GNU General Public License as published by\n"
+#~ "the Free Software Foundation; either version 2, or (at your option)\n"
+#~ "any later version.\n"
+#~ "\n"
+#~ "This program is distributed in the hope that it will be useful,\n"
+#~ "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+#~ "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+#~ "GNU General Public License for more details.\n"
+#~ "\n"
+#~ "You should have received a copy of the GNU General Public License\n"
+#~ "along with this program; if not, write to the Free Software Foundation,\n"
+#~ "Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"
+#~ msgstr ""
+#~ "Αυτό το πρόγραμμα είναι ελεύθερο λογισμικό· μπορείτε να το \n"
+#~ "επαναδιανείμετε και/ή να το τροποποιήσετε υπό τους όρους της \n"
+#~ "Γενικής Δημόσιας ’δειας Χρήσεως Λογισμικού GNU (GNU General Public\n"
+#~ "Licence) όπως αυτή δημοσιεύτηκε από το Ίδρυμα Ελεύθερου Λογισμικού\n"
+#~ "(Free Software Foundation), είτε στην έκδοση 2, ή (κατά επιλογή σας)\n"
+#~ "οποιαδήποτε μεταγενέστερη έκδοση.\n"
+#~ "\n"
+#~ "Αυτό το πρόγραμμα διανέμεται με την ελπίδα ότι θα φανεί χρήσιμο,\n"
+#~ "αλλά ΧΩΡΙΣ ΚΑΜΙΑ ΕΓΓΥΗΣΗ, χωρίς καν την εγγύηση ΧΡΗΣΙΜΟΤΗΤΑΣ ΓΙΑ \n"
+#~ "ΣΥΓΚΕΚΡΙΜΕΝΟ ΣΚΟΠΟ. Παρακαλώ ανατρέξτε στη Γενική Δημόσια ’δεια \n"
+#~ "Χρήσης Λογισμικού GNU για περισσότερες λεπτομέρειες.\n"
+#~ "\n"
+#~ "Θα πρέπει να έχετε λάβει ένα αντίτυπο της άδειας αυτής μαζί με\n"
+#~ "αυτό το πρόγραμμα. Εάν όχι, γράψτε στο Ίδρυμα Ελεύθερου Λογισμικού\n"
+#~ "(Free Software Foundation) στη διεύθυνση Free Software Foundation,\n"
+#~ "Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"
+
+#
+#~ msgid ""
+#~ "Write sorted concatenation of all FILE(s) to standard output.\n"
+#~ "\n"
+#~ "  +POS1 [-POS2]    start a key at POS1, end it *before* POS2 "
+#~ "(obsolescent)\n"
+#~ "\t\t     field numbers and character offsets are numbered\n"
+#~ "                     starting with zero (contrast with the -k option)\n"
+#~ "  -b               ignore leading blanks in sort fields or keys\n"
+#~ "  -c               check if given files already sorted, do not sort\n"
+#~ "  -d               consider only [a-zA-Z0-9 ] characters in keys\n"
+#~ "  -f               fold lower case to upper case characters in keys\n"
+#~ "  -g               compare according to general numerical value, imply -"
+#~ "b\n"
+#~ "  -i               consider only [\\040-\\0176] characters in keys\n"
+#~ "  -k POS1[,POS2]   start a key at POS1, end it *at* POS2\n"
+#~ "\t\t     field numbers and character offsets are numbered\n"
+#~ "                     starting with one (contrast with zero-based +POS "
+#~ "form)\n"
+#~ "  -m               merge already sorted files, do not sort\n"
+#~ "  -M               compare (unknown) < `JAN' < ... < `DEC', imply -b\n"
+#~ "  -n               compare according to string numerical value, imply -b\n"
+#~ "  -o FILE          write result on FILE instead of standard output\n"
+#~ "  -r               reverse the result of comparisons\n"
+#~ "  -s               stabilize sort by disabling last resort comparison\n"
+#~ "  -t SEP           use SEParator instead of non- to whitespace "
+#~ "transition\n"
+#~ "  -T DIRECTORY     use DIRECTORY for temporary files, not $TMPDIR or %s\n"
+#~ "  -u               with -c, check for strict ordering;\n"
+#~ "                   with -m, only output the first of an equal sequence\n"
+#~ "  -z               end lines with 0 byte, not newline, for find -print0\n"
+#~ "      --help       display this help and exit\n"
+#~ "      --version    output version information and exit\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Εμφάνιση ταξινομημένης συνένωσης όλων των ΑΡΧΕΙΟ(ΩΝ) στην κανονική "
+#~ "έξοδο.\n"
+#~ "\n"
+#~ "  +ΘΕΣΗ1 [-ΘΕΣΗ2]    αρχή κλειδιού στη ΘΕΣΗ1, τερματισμός *πριν* τη "
+#~ "ΘΕΣΗ2\n"
+#~ "                       (εκτός χρήσης)\n"
+#~ "                       αριθμοί πεδίων και θέσεις χαρακτήρων αριθμούνται\n"
+#~ "                       αρχίζοντας από το μηδέν (σε αντίθεση με την "
+#~ "επιλογή -k)\n"
+#~ "  -b               αγνόηση προπορευόμενων κενών σε πεδία ταξινόμησης ή "
+#~ "κλειδιά\n"
+#~ "  -c               έλεγχος αν τα δοθέντα αρχεία είναι ήδη ταξινομημένα, "
+#~ "να\n"
+#~ "                     μην ταξινομηθούν\n"
+#~ "  -d               να θεωρηθούν μόνο οι χαρακτήρες [a-zA-Z0-9 ] στα "
+#~ "κλειδιά\n"
+#~ "  -f               αναδίπλωση πεζών χαρακτήρων σε κεφαλαία στα κλειδιά\n"
+#~ "  -g               σύγκριση σύμφωνα με τη γενική αριθμητική τιμή, θεώρησε "
+#~ "-b\n"
+#~ "  -i               θεώρησε μόνο τους χαρακτήρες [\\040-\\0176] στα "
+#~ "κλειδιά\n"
+#~ "  -k ΘΕΣΗ1[,ΘΕΣΗ2]   έναρξη κλειδού στη θέση ΘΕΣΗ1, τερματιστός *στη* "
+#~ "ΘΕΣΗ2\n"
+#~ "                     αριθμοί πεδίων και θέσεις χαρακτήρων αριθμούνται\n"
+#~ "                     αρχίζοντας από το ένα (σε αντίθεση με τη βασισμένη "
+#~ "στο\n"
+#~ "                     μηδέν μορφή +ΘΕΣΗ)\n"
+#~ "  -m               συνένωση μόνο ταξινομημένων αρχείων, να μη γίνει "
+#~ "ταξινόμηση\n"
+#~ "  -M               σύγκριση (άγνωστο) < `ΙΑΝ' < ... < `ΔΕΚ', θεώρησε -b\n"
+#~ "  -n               σύγκριση σύμφωνα με τη αλφαριθμητική αριθμητική τιμή, "
+#~ "θεώρησε -b\n"
+#~ "  -o ARXEIO        εγγραφή αποτελέσματος στο ΑΡΧΕΙΟ αντί στην κανονική "
+#~ "έξοδο\n"
+#~ "  -r               αντιστροφή των αποτελεσμάτων των συγκρίσεων\n"
+#~ "  -s               σταθεροποίηση της ταξινόμησης με απενεργοποίηση τη\n"
+#~ "                     σύγκρισης τελευταίας ελπίδας\n"
+#~ "  -t ΔΙΑΧ          χρήση ΔΙΑΧωριστή αντί της μετάστασης από μη-κενό σε\n"
+#~ "                     λευκό χαρακτήρα\n"
+#~ "  -T ΚΑΤΑΛΟΓΟΣ     χρήση ΚΑΤΑΛΟΓΟΣ για προσωρινά αρχεία, όχι το $TMPDIR ή "
+#~ "%s\n"
+#~ "  -u               με -c, έλεγχος για αυστηρή τοποθέτηση σε σειρά\n"
+#~ "                   με -m, μόνο έξοδος του πρώτου από μια ίση ακολουθία\n"
+#~ "  -z               τερματισμός γραμμών με 0 byte, όχι με νέα γραμμή, για\n"
+#~ "                     τη find -print0\n"
+#~ "      --help       εμφάνιση αυτής της βοήθειας και έξοδος\n"
+#~ "      --version    εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
+#~ "\n"
+
+#
+# xxx Check punctation
+# 2001-12-02 11:12:55 CET -ke-
+#~ msgid ""
+#~ "\n"
+#~ "Translation occurs if -d is not given and both SET1 and SET2 appear.\n"
+#~ "-t may be used only when translating.  SET2 is extended to length of\n"
+#~ "SET1 by repeating its last character as necessary.  Excess characters\n"
+#~ "of SET2 are ignored.  Only [:lower:] and [:upper:] are guaranteed to\n"
+#~ "expand in ascending order; used in SET2 while translating, they may\n"
+#~ "only be used in pairs to specify case conversion.  -s uses SET1 if not\n"
+#~ "translating nor deleting; else squeezing uses SET2 and occurs after\n"
+#~ "translation or deletion.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Μετάφραση συμβαίνει όταν δε δίνεται το -d και εμφανίζονται και τα δύο\n"
+#~ "ΣΥΝΟΛΟ1 και ΣΥΝΟΛΟ2. Το -t μπορεί να χρησιμοποιηθεί μόνο στη μετάφραση\n"
+#~ "Το ΣΥΝΟΛΟ2 αναπτύσσεται στο μήκος του ΣΥΝΟΛΟ1 με επανάληψη του "
+#~ "τελευταίου\n"
+#~ "χαρακτήρα, όπως χρειάζεται. Κατά υπέρβαση χαρακτήρες του ΣΥΝΟΛΟ2 "
+#~ "αγνοούνται\n"
+#~ "Μόνο τα [:lower:] και [:upper:] εγγυόνται την ανάπτυξη σε αύξουσα σειρά·\n"
+#~ "όταν χρησιμοποιούνται στο ΣΥΝΟΛΟ2 στη μετάφραση, μπορούν να "
+#~ "χρησιμοποιηθούν\n"
+#~ "μόνο σε ζεύγη για να ορίσουν μετατροπή μεταξύ πεζών/κεφαλαίων.  Το -s\n"
+#~ "κάνει χρήση του ΣΥΝΟΛΟ1 αν δε μεταφράζει ή διαγράφει· διαφορετικά "
+#~ "συμπυκνώνει\n"
+#~ "κάνωντας χρήση του ΣΥΝΟΛΟ2 και συμβαίνει μετά από μετάφραση ή διαγραφή\n"
+
+#
+#, fuzzy
+#~ msgid ""
+#~ "Convert spaces in each FILE to tabs, writing to standard output.\n"
+#~ "With no FILE, or when FILE is -, read standard input.\n"
+#~ "\n"
+#~ "  -a, --all           convert all whitespace, instead of initial "
+#~ "whitespace\n"
+#~ "  -t, --tabs=NUMBER   have tabs NUMBER characters apart instead of 8\n"
+#~ "  -t, --tabs=LIST     use comma separated list of explicit tab positions\n"
+#~ "      --help          display this help and exit\n"
+#~ "      --version       output version information and exit\n"
+#~ "\n"
+#~ "Instead of -t NUMBER or -t LIST, -NUMBER or -LIST may be used.\n"
+#~ msgstr ""
+#~ "Μετατροπή διαστημάτων σε κάθε ΑΡΧΕΙΟ σε στηλοθέτες, γράφοντας στην "
+#~ "κανονική έξοδο.\n"
+#~ "Χωρίς ΑΡΧΕΙΟ, ή όταν το αρχείο είναι το -, ανάγνωση από την κανονική "
+#~ "είσοδο.\n"
+#~ "\n"
+#~ "  -a, --all           μετατροπή όλων των λευκών χαρακτήρων, αντί μόνο των "
+#~ "αρχικών\n"
+#~ "  -t, --tabs=ΑΡΙΘΜΟΣ  οι στηλοθέτες να έχουν απόσταση ΑΡΙΘΜΟΣ αντί 8\n"
+#~ "  -t, --tabs=ΛΙΣΤΑ    χρήση λίστας χωρισμένης με κόμμα για τη δήλωση της "
+#~ "θέσης των στηλοθετών\n"
+#~ "      --help          εμφάνιση αυτής της βοήθειας και έξοδος\n"
+#~ "      --version       εμφάνιση πληροφοριών έκδοσης και έξοδος\n"
+#~ "\n"
+#~ "Αντί για -t ΑΡΙΘΜΟΣ ή -t ΛΙΣΤΑ, -ΑΡΙΘΜΟΣ ή -ΛΙΣΤΑ μπορούν να "
+#~ "χρησιμοποιηθούν.\n"

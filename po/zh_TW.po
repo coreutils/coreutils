@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: textutils 2.1\n"
-"POT-Creation-Date: 2002-08-03 11:41+0200\n"
+"POT-Creation-Date: 2002-09-01 02:25+0200\n"
 "PO-Revision-Date: 2002-08-04 06:10+0800\n"
 "Last-Translator: Abel Cheung <maddog@linux.org.hk>\n"
 "Language-Team: Chinese (traditional) <zh-l10n@linux.org.tw>\n"
@@ -38,7 +38,7 @@ msgstr "堆疊溢位"
 
 #: lib/closeout.c:107 src/cat.c:186 src/cat.c:267 src/cat.c:320
 #: src/cksum.c:267 src/head.c:152 src/head.c:195 src/tail.c:327
-#: src/tail.c:1651 src/tr.c:1667 src/tr.c:1913 src/tr.c:2021
+#: src/tail.c:1652 src/tr.c:1667 src/tr.c:1913 src/tr.c:2021
 msgid "write error"
 msgstr "寫入時發生錯誤"
 
@@ -94,57 +94,57 @@ msgstr "共用記憶體物件"
 msgid "weird file"
 msgstr "不正常的檔案"
 
-#: lib/getopt.c:694
+#: lib/getopt.c:692 lib/getopt.c:704
 #, c-format
 msgid "%s: option `%s' is ambiguous\n"
 msgstr "%s：選項‘%s’不明確\n"
 
-#: lib/getopt.c:719
+#: lib/getopt.c:737 lib/getopt.c:741
 #, c-format
 msgid "%s: option `--%s' doesn't allow an argument\n"
 msgstr "%s：選項‘--%s’不可配合引數使用\n"
 
-#: lib/getopt.c:724
+#: lib/getopt.c:750 lib/getopt.c:755
 #, c-format
 msgid "%s: option `%c%s' doesn't allow an argument\n"
 msgstr "%s：選項‘%c%s’不可配合引數使用\n"
 
-#: lib/getopt.c:742 lib/getopt.c:915
+#: lib/getopt.c:791 lib/getopt.c:804 lib/getopt.c:1093 lib/getopt.c:1106
 #, c-format
 msgid "%s: option `%s' requires an argument\n"
 msgstr "%s：選項‘%s’需要引數\n"
 
-#: lib/getopt.c:771
+#: lib/getopt.c:842 lib/getopt.c:845
 #, c-format
 msgid "%s: unrecognized option `--%s'\n"
 msgstr "%s：無法識別的選項‘--%s’\n"
 
-#: lib/getopt.c:775
+#: lib/getopt.c:853 lib/getopt.c:856
 #, c-format
 msgid "%s: unrecognized option `%c%s'\n"
 msgstr "%s：無法識別的選項‘%c%s’\n"
 
-#: lib/getopt.c:801
+#: lib/getopt.c:903 lib/getopt.c:906
 #, c-format
 msgid "%s: illegal option -- %c\n"
 msgstr "%s：不合法的選項 ─ %c\n"
 
-#: lib/getopt.c:804
+#: lib/getopt.c:912 lib/getopt.c:915
 #, c-format
 msgid "%s: invalid option -- %c\n"
 msgstr "%s：無效的選項 ─ %c\n"
 
-#: lib/getopt.c:834 lib/getopt.c:964
+#: lib/getopt.c:962 lib/getopt.c:973 lib/getopt.c:1159 lib/getopt.c:1172
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
 msgstr "%s：選項需要引數 ─ %c\n"
 
-#: lib/getopt.c:881
+#: lib/getopt.c:1025 lib/getopt.c:1036
 #, c-format
 msgid "%s: option `-W %s' is ambiguous\n"
 msgstr "%s：選項‘-W %s’不明確\n"
 
-#: lib/getopt.c:899
+#: lib/getopt.c:1060 lib/getopt.c:1072
 #, c-format
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "%s：選項‘-W %s’不可配合引數使用\n"
@@ -178,7 +178,7 @@ msgstr "無法進入%s目錄"
 msgid "cannot change permissions of %s"
 msgstr "無法更改%s的權限"
 
-#: lib/obstack.c:494 lib/obstack.c:497 lib/xmalloc.c:66
+#: lib/obstack.c:500 lib/obstack.c:503 lib/xmalloc.c:66
 msgid "memory exhausted"
 msgstr "記憶體耗盡"
 
@@ -269,10 +269,10 @@ msgstr "要比較的字串為%s及%s。"
 #: src/env.c:115 src/expand.c:106 src/expr.c:85 src/factor.c:70 src/fmt.c:267
 #: src/fold.c:63 src/head.c:84 src/hostid.c:44 src/hostname.c:63 src/id.c:83
 #: src/install.c:597 src/join.c:140 src/kill.c:89 src/link.c:47 src/ln.c:335
-#: src/logname.c:44 src/ls.c:3598 src/md5sum.c:121 src/mkdir.c:57
+#: src/logname.c:44 src/ls.c:3618 src/md5sum.c:121 src/mkdir.c:57
 #: src/mkfifo.c:51 src/mknod.c:61 src/mv.c:310 src/nice.c:63 src/nl.c:172
 #: src/od.c:287 src/paste.c:399 src/pathchk.c:136 src/pinky.c:465
-#: src/pr.c:2752 src/printenv.c:59 src/printf.c:93 src/ptx.c:1855 src/pwd.c:43
+#: src/pr.c:2750 src/printenv.c:59 src/printf.c:93 src/ptx.c:1855 src/pwd.c:43
 #: src/rm.c:96 src/rmdir.c:140 src/seq.c:78 src/shred.c:171 src/sleep.c:67
 #: src/sort.c:275 src/split.c:91 src/stat.c:726 src/stty.c:497 src/su.c:433
 #: src/sum.c:56 src/sync.c:40 src/tac.c:123 src/tail.c:234 src/tee.c:59
@@ -307,10 +307,10 @@ msgstr ""
 #: src/env.c:134 src/expand.c:131 src/expr.c:148 src/factor.c:90
 #: src/false.c:28 src/fmt.c:297 src/fold.c:86 src/head.c:115 src/hostid.c:57
 #: src/hostname.c:76 src/id.c:104 src/install.c:652 src/join.c:180
-#: src/kill.c:119 src/link.c:59 src/ln.c:390 src/logname.c:55 src/ls.c:3727
+#: src/kill.c:119 src/link.c:59 src/ln.c:390 src/logname.c:55 src/ls.c:3747
 #: src/md5sum.c:157 src/mkdir.c:76 src/mkfifo.c:68 src/mknod.c:86 src/mv.c:364
 #: src/nice.c:77 src/nl.c:227 src/od.c:374 src/paste.c:423 src/pathchk.c:148
-#: src/pinky.c:492 src/pr.c:2864 src/printenv.c:72 src/printf.c:141
+#: src/pinky.c:492 src/pr.c:2862 src/printenv.c:72 src/printf.c:141
 #: src/pwd.c:54 src/rm.c:128 src/rmdir.c:160 src/seq.c:104 src/shred.c:234
 #: src/sleep.c:83 src/sort.c:346 src/split.c:123 src/stat.c:796 src/stty.c:711
 #: src/su.c:454 src/sum.c:76 src/sync.c:51 src/tac.c:146 src/tail.c:304
@@ -406,14 +406,24 @@ msgstr ""
 msgid "cannot do ioctl on `%s'"
 msgstr "無法對‘%s’執行輸出入控制 (ioctl)"
 
-#: src/cat.c:647 src/dd.c:1217 src/od.c:1014 src/tee.c:181
+#: src/cat.c:663 src/dd.c:1220 src/od.c:1014 src/tee.c:181
 msgid "standard output"
 msgstr "標準輸出"
 
-#: src/cat.c:778
+#: src/cat.c:794
 #, c-format
 msgid "%s: input file is output file"
 msgstr "%s：輸出和輸入檔案是相同的"
+
+#: src/cat.c:852
+#, fuzzy
+msgid "closing standard input"
+msgstr "標準輸出"
+
+#: src/cat.c:855
+#, fuzzy
+msgid "closing standard output"
+msgstr "標準輸出"
 
 #: src/chgrp.c:93
 #, fuzzy
@@ -451,10 +461,10 @@ msgid ""
 "      --dereference      affect the referent of each symbolic link, rather\n"
 "                         than the symbolic link itself\n"
 msgstr ""
-"將每個<檔案>的所屬群組設定為<群組>。\n"
+"將每個 <檔案> 的所屬群組設定為 <群組>。\n"
 "\n"
 "  -c, --changes          像 --verbose，但只在有更改時才顯示結果\n"
-"      --dereference      會影響符號連結所指示的對象，而非符號連結本身\n"
+"      --dereference      會影響符號鏈結所指示的對象，而非符號鏈結本身\n"
 
 #: src/chgrp.c:138 src/chown.c:112
 msgid ""
@@ -463,8 +473,8 @@ msgid ""
 "                         (available only on systems that can change the\n"
 "                         ownership of a symlink)\n"
 msgstr ""
-"  -h, --no-dereference   會影響符號連結本身，而非符號連結所指示的目的地\n"
-"                         (當系統支援更改符號連結的擁有者，此選項才有效)\n"
+"  -h, --no-dereference   會影響符號鏈結本身，而非符號鏈結所指示的目的地\n"
+"                         (當系統支援更改符號鏈結的擁有者，此選項才有效)\n"
 
 #: src/chgrp.c:143
 msgid ""
@@ -475,36 +485,36 @@ msgid ""
 "  -v, --verbose          output a diagnostic for every file processed\n"
 msgstr ""
 "  -f, --silent, --quiet  去除大部份的錯誤訊息\n"
-"      --reference=參考檔   使用<參考檔>的所屬群組，而非指定的<群組>\n"
+"      --reference=參考檔   使用 <參考檔> 的所屬群組，而非指定的 <群組>\n"
 "  -R, --recursive        遞迴處理所有的檔案及副目錄\n"
 "  -v, --verbose          處理任何檔案都會顯示訊息\n"
 
-#: src/chgrp.c:218 src/chmod.c:158 src/chmod.c:365 src/chown-core.c:235
+#: src/chgrp.c:218 src/chmod.c:158 src/chmod.c:366 src/chown-core.c:235
 #: src/chown-core.c:247 src/chown.c:220 src/cp.c:303 src/touch.c:169
-#: src/touch.c:358
+#: src/touch.c:357
 #, c-format
 msgid "failed to get attributes of %s"
-msgstr "無法取得 %s 的屬性"
+msgstr "無法取得%s的屬性"
 
 #: src/chmod.c:103
 #, c-format
 msgid "getting new attributes of %s"
-msgstr "正在檢查 %s 的最新屬性"
+msgstr "正在檢查%s的最新屬性"
 
 #: src/chmod.c:125
 #, c-format
 msgid "mode of %s changed to %04lo (%s)\n"
-msgstr "%s 的權限模式已更改為 %04lo (%s)\n"
+msgstr "%s的權限模式已更改為 %04lo (%s)\n"
 
 #: src/chmod.c:128
 #, c-format
 msgid "failed to change mode of %s to %04lo (%s)\n"
-msgstr "無法將 %s 的權限模式更改為 %04lo (%s)\n"
+msgstr "無法將%s的權限模式更改為 %04lo (%s)\n"
 
 #: src/chmod.c:131
 #, c-format
 msgid "mode of %s retained as %04lo (%s)\n"
-msgstr "%s 的權限模式保留為 %04lo (%s)\n"
+msgstr "%s的權限模式保留為 %04lo (%s)\n"
 
 #: src/chmod.c:180
 #, fuzzy, c-format
@@ -533,12 +543,12 @@ msgid ""
 "      --reference=RFILE   use RFILE's mode instead of MODE values\n"
 "  -R, --recursive         change files and directories recursively\n"
 msgstr ""
-"更改每個<檔案>的權限<模式>。\n"
+"更改每個 <檔案> 的權限 <模式>。\n"
 "\n"
 "  -c, --changes           類似 --verbose，但只在有更改時才顯示結果\n"
 "  -f, --silent, --quiet   去除大部份的錯誤訊息\n"
 "  -v, --verbose           處理任何檔案都會顯示訊息\n"
-"      --reference=參考檔  使用<參考檔>的模式，而非自行指定權限模式\n"
+"      --reference=參考檔  使用 <參考檔> 的模式，而非自行指定權限模式\n"
 "  -R, --recursive         以遞迴方式更改所有的檔案及副目錄\n"
 
 #: src/chmod.c:260
@@ -548,7 +558,7 @@ msgid ""
 "one or more of the letters rwxXstugo.\n"
 msgstr ""
 "\n"
-"<模式>由三部份組成：一個或以上的 ugoa 字元，一個或以上的 +-=符號，\n"
+"<模式> 由三部份組成：一個或以上的 ugoa 字元、一個或以上的 +-=符號、\n"
 "和一個或以上的 rwxXstugo 字元。\n"
 
 #: src/chmod.c:321
@@ -556,7 +566,7 @@ msgstr ""
 msgid "invalid character %s in mode string %s"
 msgstr "類型‘%2$s’中含有無效的字元‘%1$c’。"
 
-#: src/chmod.c:361
+#: src/chmod.c:362
 #, fuzzy, c-format
 msgid "invalid mode string: %s"
 msgstr "無效的類型‘%s’"
@@ -564,17 +574,17 @@ msgstr "無效的類型‘%s’"
 #: src/chown-core.c:116
 #, c-format
 msgid "neither symbolic link %s nor referent has been changed\n"
-msgstr "符號連結 %s 和該連結所指示的對象都沒有更改\n"
+msgstr "符號鏈結%s和該鏈結所指示的對象都沒有更改\n"
 
 #: src/chown-core.c:143
 #, c-format
 msgid "changed ownership of %s to %s\n"
-msgstr "%s 的擁有者已更改為 %s\n"
+msgstr "%s的擁有者已更改為 %s\n"
 
 #: src/chown-core.c:144
 #, c-format
 msgid "changed group of %s to %s\n"
-msgstr "%s 的所屬群組已更改為 %s\n"
+msgstr "%s的所屬群組已更改為 %s\n"
 
 #: src/chown-core.c:148
 #, fuzzy, c-format
@@ -584,22 +594,22 @@ msgstr "無法更改%s的權限"
 #: src/chown-core.c:149
 #, c-format
 msgid "failed to change group of %s to %s\n"
-msgstr "無法更改 %s 的所屬群組為 %s\n"
+msgstr "無法更改%s的所屬群組為 %s\n"
 
 #: src/chown-core.c:153
 #, c-format
 msgid "ownership of %s retained as %s\n"
-msgstr "%s 的擁有者已保留為 %s\n"
+msgstr "%s的擁有者已保留為 %s\n"
 
 #: src/chown-core.c:154
 #, c-format
 msgid "group of %s retained as %s\n"
-msgstr "%s 的所屬群組已保留為 %s\n"
+msgstr "%s的所屬群組已保留為 %s\n"
 
 #: src/chown-core.c:326
 #, c-format
 msgid "changing ownership of %s"
-msgstr "正在更改 %s 的擁有者"
+msgstr "正在更改%s的擁有者"
 
 #: src/chown-core.c:327
 #, fuzzy, c-format
@@ -633,7 +643,7 @@ msgstr ""
 "更改每個 <檔案> 的 <擁有者> 及/或 <所屬群組>。\n"
 "\n"
 "  -c, --changes          像 --verbose，但只在有更改時才顯示結果\n"
-"      --dereference      受影響的是符號連結所指示的對象，而非符號連結本身\n"
+"      --dereference      受影響的是符號鏈結所指示的對象，而非符號鏈結本身\n"
 
 #: src/chown.c:117
 msgid ""
@@ -659,7 +669,7 @@ msgid ""
 "  -v, --verbose          output a diagnostic for every file processed\n"
 msgstr ""
 "  -f, --silent, --quiet  去除大部份的錯誤訊息\n"
-"      --reference=參考檔   使用<參考檔>的所屬群組，而非指定的<群組>\n"
+"      --reference=參考檔   使用 <參考檔> 的所屬群組，而非指定的 <群組>\n"
 "  -R, --recursive        遞迴處理所有的檔案及副目錄\n"
 "  -v, --verbose          處理任何檔案都會顯示訊息\n"
 
@@ -671,9 +681,9 @@ msgid ""
 "as symbolic.\n"
 msgstr ""
 "\n"
-"如果沒有指定<擁有者>，則不會更改。<群組>若沒有指定也不會更改，但當加上\n"
-"‘:’時<群組>會更改為指定擁有者的主要群組。<擁有者>和<群組>可以是數字\n"
-"或名稱。\n"
+"如果沒有指定 <擁有者>，則不會更改。<群組> 若沒有指定也不會更改，\n"
+"但當加上‘:’時 <群組> 會更改為指定擁有者的主要群組。\n"
+"<擁有者> 及 <群組> 可以是數字或名稱。\n"
 
 #: src/chroot.c:45
 #, fuzzy, c-format
@@ -696,12 +706,12 @@ msgid ""
 "If no command is given, run ``${SHELL} -i'' (default: /bin/sh).\n"
 msgstr ""
 
-#: src/chroot.c:83
+#: src/chroot.c:84
 #, fuzzy, c-format
 msgid "cannot change root directory to %s"
 msgstr "無法進入%s目錄"
 
-#: src/chroot.c:86
+#: src/chroot.c:87
 #, fuzzy
 msgid "cannot chdir to root directory"
 msgstr "無法進入%s目錄"
@@ -754,25 +764,25 @@ msgstr ""
 #: src/copy.c:162
 #, c-format
 msgid "cannot access %s"
-msgstr "無法存取 %s"
+msgstr "無法存取%s"
 
 #: src/copy.c:226
 #, c-format
 msgid "cannot open %s for reading"
-msgstr "無法開啟 %s 來讀取資料"
+msgstr "無法開啟%s來讀取資料"
 
-#: src/copy.c:232 src/copy.c:286 src/copy.c:301 src/dd.c:1195
+#: src/copy.c:232 src/copy.c:286 src/copy.c:301 src/dd.c:1197
 #, c-format
 msgid "cannot fstat %s"
-msgstr "無法 fstat %s"
+msgstr "無法 fstat%s"
 
 #: src/copy.c:242
 #, c-format
 msgid "skipping file %s, as it was replaced while being copied"
-msgstr "略過檔案 %s，因為準備複製時它已被其它檔案取代"
+msgstr "略過檔案%s，因為準備複製時它已被其它檔案取代"
 
-#: src/copy.c:262 src/copy.c:1041 src/ln.c:291 src/remove.c:724
-#: src/remove.c:771 src/remove.c:929
+#: src/copy.c:262 src/copy.c:1041 src/ln.c:291 src/remove.c:735
+#: src/remove.c:782 src/remove.c:961
 #, fuzzy, c-format
 msgid "cannot remove %s"
 msgstr "無法建立目錄%s"
@@ -782,7 +792,7 @@ msgstr "無法建立目錄%s"
 msgid "cannot create regular file %s"
 msgstr "無法建立暫存檔"
 
-#: src/copy.c:328 src/dd.c:812 src/dd.c:1006
+#: src/copy.c:328 src/dd.c:814 src/dd.c:1008
 #, fuzzy, c-format
 msgid "reading %s"
 msgstr "讀取 %s 時發生錯誤"
@@ -792,7 +802,7 @@ msgstr "讀取 %s 時發生錯誤"
 msgid "cannot lseek %s"
 msgstr "%s：無法搜尋至位置 %s%s"
 
-#: src/copy.c:377 src/copy.c:401 src/dd.c:1050 src/dd.c:1111
+#: src/copy.c:377 src/copy.c:401 src/dd.c:1052 src/dd.c:1113
 #, fuzzy, c-format
 msgid "writing %s"
 msgstr "寫入 %s 時發生錯誤"
@@ -825,12 +835,12 @@ msgstr "無法建立目錄%s"
 #: src/copy.c:841
 #, c-format
 msgid "warning: source file %s specified more than once"
-msgstr "警告：指定來源檔 %s 多於一次"
+msgstr "警告：指定了來源檔%s多於一次"
 
 #: src/copy.c:873 src/ln.c:237
 #, c-format
 msgid "%s and %s are the same file"
-msgstr "%s 及 %s 為同一檔案"
+msgstr "%s及%s為同一檔案"
 
 #: src/copy.c:883
 #, fuzzy, c-format
@@ -840,7 +850,7 @@ msgstr "無法進入%s目錄"
 #: src/copy.c:900
 #, c-format
 msgid "will not overwrite just-created %s with %s"
-msgstr "不會以 %2$s 覆寫剛建立的 %1$s"
+msgstr "不會以%2$s覆寫剛建立的%1$s"
 
 #: src/copy.c:911
 #, fuzzy, c-format
@@ -860,17 +870,17 @@ msgstr "無法進入%s目錄"
 #: src/copy.c:1004
 #, c-format
 msgid "backing up %s would destroy source;  %s not moved"
-msgstr "將 %s 備份會破壞來源檔，故不移動 %s。"
+msgstr "將%s備份會破壞來源檔，故不移動%s。"
 
 #: src/copy.c:1005
 #, c-format
 msgid "backing up %s would destroy source;  %s not copied"
-msgstr "將 %s 備份會破壞來源檔，故不複製 %s。"
+msgstr "將%s備份會破壞來源檔，故不複製%s。"
 
 #: src/copy.c:1020 src/ln.c:273
 #, c-format
 msgid "cannot backup %s"
-msgstr "無法備份 %s"
+msgstr "無法備份%s"
 
 #: src/copy.c:1056 src/ln.c:308
 #, c-format
@@ -905,17 +915,17 @@ msgstr "無法對‘%s’執行輸出入控制 (ioctl)"
 #: src/copy.c:1232
 #, c-format
 msgid "inter-device move failed: %s to %s; unable to remove target"
-msgstr "無法進行跨裝置的移動 (%s 至 %s)；無法移除目標檔案或目錄"
+msgstr "無法進行跨裝置的移動 (%s至%s)；無法移除目標檔案或目錄"
 
 #: src/copy.c:1260
 #, c-format
 msgid "cannot copy cyclic symbolic link %s"
-msgstr "無法複製循環的符號連結 %s"
+msgstr "無法複製循環的符號鏈結%s"
 
 #: src/copy.c:1337
 #, c-format
 msgid "%s: can make relative symbolic links only in current directory"
-msgstr "%s：只能於目前的目錄中建立相對符號連結"
+msgstr "%s：只能於目前的目錄中建立相對符號鏈結"
 
 #: src/copy.c:1344
 #, fuzzy, c-format
@@ -937,7 +947,7 @@ msgstr "無法建立目錄%s"
 msgid "cannot create special file %s"
 msgstr "字元特殊檔案"
 
-#: src/copy.c:1406 src/ls.c:2352 src/stat.c:481
+#: src/copy.c:1406 src/ls.c:2372 src/stat.c:481
 #, fuzzy, c-format
 msgid "cannot read symbolic link %s"
 msgstr "符號連結"
@@ -948,24 +958,24 @@ msgid "cannot create symbolic link %s"
 msgstr "無法建立目錄%s"
 
 #: src/copy.c:1447 src/copy.c:1510 src/cp.c:339
-#, fuzzy, c-format
+#, c-format
 msgid "failed to preserve ownership for %s"
-msgstr "保留 %s 的擁有者"
+msgstr "無法保留%s的擁有者及所屬群組"
 
 #: src/copy.c:1462
 #, c-format
 msgid "%s has unknown file type"
-msgstr "%s 的檔案類型不詳"
+msgstr "%s的檔案類型不詳"
 
 #: src/copy.c:1497
 #, c-format
 msgid "preserving times for %s"
-msgstr "保留 %s 的時間"
+msgstr "保留%s的時間"
 
 #: src/copy.c:1522
-#, fuzzy, c-format
+#, c-format
 msgid "failed to preserve authorship for %s"
-msgstr "保留 %s 的擁有者"
+msgstr "無法保留%s的著作者"
 
 #: src/copy.c:1540
 #, fuzzy, c-format
@@ -975,12 +985,12 @@ msgstr "無法更改%s的權限"
 #: src/copy.c:1559 src/ln.c:326
 #, c-format
 msgid "cannot un-backup %s"
-msgstr "無法將 %s 的備份還原"
+msgstr "無法將%s的備份還原"
 
 #: src/copy.c:1563
 #, c-format
 msgid "%s -> %s (unbackup)\n"
-msgstr "%s → %s (還原備份)\n"
+msgstr "%s→%s (還原備份)\n"
 
 #: src/cp.c:53
 #, fuzzy
@@ -1003,14 +1013,14 @@ msgid ""
 "Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n"
 "\n"
 msgstr ""
-"將<來源>檔案複製至<目的地>，或將多個<檔案>複製至<目錄>。\n"
+"將 <來源> 檔案複製至 <目的地>，或將多個 <檔案> 複製至指定 <目錄>。\n"
 "\n"
 
 #: src/cp.c:174 src/csplit.c:1503 src/cut.c:175 src/df.c:760 src/du.c:193
 #: src/expand.c:119 src/fmt.c:277 src/fold.c:76 src/head.c:98
-#: src/install.c:613 src/kill.c:103 src/ln.c:354 src/ls.c:3608 src/mkdir.c:66
+#: src/install.c:613 src/kill.c:103 src/ln.c:354 src/ls.c:3628 src/mkdir.c:66
 #: src/mkfifo.c:60 src/mknod.c:70 src/mv.c:324 src/nl.c:185 src/paste.c:413
-#: src/pr.c:2765 src/ptx.c:1867 src/shred.c:181 src/sort.c:289 src/split.c:104
+#: src/pr.c:2763 src/ptx.c:1867 src/shred.c:181 src/sort.c:289 src/split.c:104
 #: src/tac.c:136 src/tail.c:248 src/touch.c:243 src/unexpand.c:384
 #: src/uniq.c:148
 msgid ""
@@ -1042,11 +1052,11 @@ msgid ""
 "  -i, --interactive            prompt before overwrite\n"
 "  -H                           follow command-line symbolic links\n"
 msgstr ""
-"      --no-dereference         不會找出符號連結指示的真正目的地\n"
+"      --no-dereference         不會找出符號鏈結指示的真正目的地\n"
 "  -f, --force                  如果無法開啟已存在的檔案，會移除該檔案並再\n"
 "                                 嘗試開啟\n"
 "  -i, --interactive            覆寫檔案前需要確認\n"
-"  -H                           使用指令列中的符號連結指示的真正目的地\n"
+"  -H                           使用指令列中的符號鏈結指示的真正目的地\n"
 
 #: src/cp.c:191
 msgid ""
@@ -1058,7 +1068,7 @@ msgid ""
 "                                 additional attributes: links, all\n"
 msgstr ""
 "  -l, --link                   連結而非複製檔案\n"
-"  -L, --dereference            一定先找出符號連結指示的真正目的地\n"
+"  -L, --dereference            一定先找出符號鏈結指示的真正目的地\n"
 "  -p                           等於 --preserve=mode,ownership,timestamps\n"
 "      --preserve[=ATTR_LIST]   若可能，保留指定的檔案屬性\n"
 "                                 (預設值為：mode,ownership,timestamps)\n"
@@ -1071,7 +1081,7 @@ msgid ""
 "  -P                           same as `--no-dereference'\n"
 msgstr ""
 "      --no-preserve=ATTR_LIST  不保留指定的檔案屬性\n"
-"      --parents                複製前先在<目錄>建立來源檔路徑中的所有目錄\n"
+"      --parents                複製前先在 <目錄> 建立來源路徑中的所有目錄\n"
 "  -P                           等於‘--no-dereference’\n"
 
 #: src/cp.c:204
@@ -1095,7 +1105,7 @@ msgid ""
 msgstr ""
 "      --reply={yes,no,query}   指定如何處理已存在的目的地檔案\n"
 "      --sparse=WHEN            控制建立 sparse 檔案的方式\n"
-"      --strip-trailing-slashes 移除引數中所有<來源>檔案/目錄末端的斜號\n"
+"      --strip-trailing-slashes 移除引數中所有 <來源> 檔案/目錄末端的斜號\n"
 
 #: src/cp.c:216
 msgid ""
@@ -1104,9 +1114,9 @@ msgid ""
 "      --target-directory=DIRECTORY  move all SOURCE arguments into "
 "DIRECTORY\n"
 msgstr ""
-"  -s, --symbolic-link          只建立符號連結而不是複製檔案\n"
-"  -S, --suffix=後置字串        自行指定備份檔的<後置字串>\n"
-"      --target-directory=目錄  將所有引數指定的<來源>檔案/目錄複製至<目錄>\n"
+"  -s, --symbolic-link          只建立符號鏈結而不是複製檔案\n"
+"  -S, --suffix=後置字串        自行指定備份檔的 <後置字串>\n"
+"      --target-directory=目錄  將所有 <來源> 檔案/目錄複製至指定的 <目錄>\n"
 
 #: src/cp.c:221
 msgid ""
@@ -1116,8 +1126,8 @@ msgid ""
 "  -v, --verbose                explain what is being done\n"
 "  -x, --one-file-system        stay on this file system\n"
 msgstr ""
-"  -u, --update                 只在<來源>檔案比目的地檔案新，或目的地檔案\n"
-"                                 不存在時才進行複製\n"
+"  -u, --update                 只在 <來源> 檔案比目的地檔案新，\n"
+"                               或目的地檔案不存在時才進行複製\n"
 "  -v, --verbose                詳細顯示進行的步驟\n"
 "  -x, --one-file-system        不會跨越檔案系統進行操作\n"
 
@@ -1133,10 +1143,10 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"預設使用模式中，<來源>檔案是否 sparse 檔案會由一種粗略的方式決定，而且相應\n"
-"的<目的地>檔案也會是 sparse 檔案。此方式等於使用 --sparse=auto 選項。指定\n"
-"--sparse=always 則只要<來源>檔含有足夠長的 0 位元組都會產生 sparse 的\n"
-"<目的地>檔案。\n"
+"預設使用模式中，<來源> 檔案是否 sparse 檔案會由一種粗略的方式決定，而且相應\n"
+"的 <目的地> 檔案也會是 sparse 檔案。此方式等於使用 --sparse=auto 選項。指定\n"
+"--sparse=always 則只要 <來源> 檔含有足夠長的 0 位元組都會產生 sparse 的\n"
+"<目的地> 檔案。\n"
 "使用 --sparse=never 會禁止產生 sparse 檔案。\n"
 "\n"
 
@@ -1173,13 +1183,13 @@ msgid ""
 "regular file.\n"
 msgstr ""
 "\n"
-"有一個特別情況：如果同時指定 --force 和 --backup 選項，而且<來源>和<目的地>\n"
-"是同一個已存在的普通檔案的話，cp 會將<來源>檔案備份。\n"
+"有一個特別情況：如果同時指定 --force 和 --backup 選項，而且 <來源> 和\n"
+"<目的地> 是同一個已存在的普通檔案的話，cp 會將 <來源> 檔案備份。\n"
 
 #: src/cp.c:325
-#, fuzzy, c-format
+#, c-format
 msgid "failed to preserve times for %s"
-msgstr "保留 %s 的時間"
+msgstr "無法保留%s的時間"
 
 #: src/cp.c:349
 #, fuzzy, c-format
@@ -1204,7 +1214,7 @@ msgstr "缺少了欄位數值"
 #: src/cp.c:523 src/ln.c:161 src/ln.c:183 src/ln.c:210 src/ln.c:297
 #, c-format
 msgid "accessing %s"
-msgstr "正在存取 %s"
+msgstr "正在存取%s"
 
 #: src/cp.c:546
 #, fuzzy, c-format
@@ -1214,7 +1224,7 @@ msgstr "%s已存在但不是目錄"
 #: src/cp.c:554
 #, c-format
 msgid "copying multiple files, but last argument %s is not a directory"
-msgstr "複製多個檔案，但最後的引數 %s 並非目錄。"
+msgstr "複製多個檔案，但最後的引數%s並非目錄。"
 
 #: src/cp.c:652
 msgid "when preserving paths, the destination must be a directory"
@@ -1229,16 +1239,16 @@ msgstr ""
 "警告：--version-control (-V) 選項已經過時；將來的版本隨時可能不再支援\n"
 "此選項。請使用 --backup=%s。"
 
-#: src/cp.c:971 src/ln.c:463
+#: src/cp.c:972 src/ln.c:464
 #, fuzzy
 msgid "symbolic links are not supported on this system"
 msgstr "警告：此系統不支援 --pid=PID 選項"
 
-#: src/cp.c:1007
+#: src/cp.c:1008
 msgid "cannot make both hard and symbolic links"
-msgstr "無法同時建立實際及符號連結"
+msgstr "無法同時建立實際及符號鏈結"
 
-#: src/cp.c:1015 src/install.c:279 src/ln.c:529 src/mv.c:486
+#: src/cp.c:1016 src/install.c:279 src/ln.c:530 src/mv.c:486
 msgid "backup type"
 msgstr "備份方式"
 
@@ -1431,7 +1441,7 @@ msgid "David Ihnat, David MacKenzie, and Jim Meyering"
 msgstr "David Ihnat、David MacKenzie 及 Jim Meyering"
 
 #: src/cut.c:167 src/df.c:754 src/du.c:188 src/expand.c:110 src/fold.c:67
-#: src/head.c:88 src/ls.c:3602 src/nl.c:176 src/paste.c:403 src/pr.c:2756
+#: src/head.c:88 src/ls.c:3622 src/nl.c:176 src/paste.c:403 src/pr.c:2754
 #: src/sort.c:279 src/sum.c:60 src/tac.c:127 src/tail.c:238 src/tee.c:63
 #: src/unexpand.c:375 src/wc.c:128
 #, c-format
@@ -1657,9 +1667,9 @@ msgid ""
 "  `_' (underscore) pad the field with spaces\n"
 msgstr ""
 
-#: src/date.c:239 src/dd.c:1169 src/dircolors.c:540 src/head.c:220
-#: src/md5sum.c:334 src/md5sum.c:675 src/od.c:960 src/od.c:2000 src/pr.c:1166
-#: src/pr.c:1373 src/pr.c:1495 src/stty.c:912 src/tac.c:484 src/tac.c:490
+#: src/date.c:239 src/dd.c:1171 src/dircolors.c:540 src/head.c:220
+#: src/md5sum.c:334 src/md5sum.c:675 src/od.c:960 src/od.c:2000 src/pr.c:1164
+#: src/pr.c:1371 src/pr.c:1493 src/stty.c:912 src/tac.c:484 src/tac.c:490
 #: src/tee.c:151 src/tr.c:2028 src/tsort.c:585
 msgid "standard input"
 msgstr "標準輸出"
@@ -1734,10 +1744,10 @@ msgstr ""
 "複製檔案，並根據以下的選項將資料轉換和格式化。\n"
 "\n"
 "  bs=位元組       強迫 ibs=<位元組> 及 obs=<位元組>\n"
-"  cbs=位元組      每次轉換指定的<位元組>\n"
+"  cbs=位元組      每次轉換指定的 <位元組>\n"
 "  conv=關鍵字     根據以逗號分隔的關鍵字表示的方式來轉換檔案\n"
-"  count=區段數目  只複製指定<區段數目>的輸入資料\n"
-"  ibs=位元組      每次讀取指定的<位元組>\n"
+"  count=區段數目  只複製指定 <區段數目> 的輸入資料\n"
+"  ibs=位元組      每次讀取指定的 <位元組>\n"
 
 #: src/dd.c:301
 msgid ""
@@ -1747,11 +1757,11 @@ msgid ""
 "  seek=BLOCKS     skip BLOCKS obs-sized blocks at start of output\n"
 "  skip=BLOCKS     skip BLOCKS ibs-sized blocks at start of input\n"
 msgstr ""
-"  if=檔案         讀取<檔案>內容而非標準輸入的資料\n"
-"  obs=位元組      每次寫入指定的<位元組>\n"
-"  of=檔案         將資料寫入<檔案>而不在標準輸出顯示\n"
-"  seek=區段數目   先略過以 obs 為單位的指定<區段數目>的輸出資料\n"
-"  skip=區段數目   先略過以 ibs 為單位的指定<區段數目>的輸入資料\n"
+"  if=檔案         讀取 <檔案> 內容而非標準輸入的資料\n"
+"  obs=位元組      每次寫入指定的 <位元組>\n"
+"  of=檔案         將資料寫入 <檔案> 而不在標準輸出顯示\n"
+"  seek=區段數目   先略過以 obs 為單位的指定 <區段數目> 的輸出資料\n"
+"  skip=區段數目   先略過以 ibs 為單位的指定 <區段數目> 的輸入資料\n"
 
 #: src/dd.c:310
 msgid ""
@@ -1763,10 +1773,10 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"<區段數目>和<位元組>可以加上以下的單位：\n"
+"<區段數目> 及 <位元組> 可以加上以下的單位：\n"
 "xM=M，c=1，w=2，b=512，kB=1000，K=1024，MB=1000000，M=1048576，\n"
 "GB=1000000000，G=1073741824，還有 T、P、E、Z、Y 如此類推。\n"
-"每個<關鍵字>可以是：\n"
+"每個 <關鍵字> 可以是：\n"
 
 #: src/dd.c:318
 msgid ""
@@ -1780,10 +1790,10 @@ msgstr ""
 "  ascii     由 EBCDIC 轉換至 ASCII\n"
 "  ebcdic    由 ASCII 轉換至 EBCDIC\n"
 "  ibm       由 ASCII 轉換至 alternated EBCDIC\n"
-"  block     將以 newline 作為結束字元的區段的 newline 換成空格，直至空格\n"
-"              填滿 cbs 表示的大小\n"
-"  unblock   會將 cbs 大小的區段中所有結束的空格刪除，並轉換為一個 newline 字"
-"元\n"
+"  block     將以 newline 作為結束字元的區段的 newline 換成空格，\n"
+"            直至空格填滿 cbs 表示的大小\n"
+"  unblock   會將 cbs 大小的區段中所有結束的空格刪除，\n"
+"            並轉換為一個 newline 字元\n"
 "  lcase     將大寫字元轉換為小寫\n"
 
 #: src/dd.c:326
@@ -1799,8 +1809,8 @@ msgstr ""
 "  ucase     將小寫字元轉換為大寫\n"
 "  swab      交換每一對輸入資料位元組\n"
 "  noerror   讀取資料發生錯誤後仍然繼續\n"
-"  sync      將每個輸入資料區段以 NUL 字元填滿至 ibs 的大小；當配合 block\n"
-"              或 unblock 時，會以空格代替 NUL 字元填充\n"
+"  sync      將每個輸入資料區段以 NUL 字元填滿至 ibs 的大小；\n"
+"            當配合 block 或 unblock 時，會以空格代替 NUL 字元填充\n"
 
 #: src/dd.c:365
 #, c-format
@@ -1820,42 +1830,42 @@ msgstr "個被截斷了的區段"
 msgid "truncated records"
 msgstr "個被截斷了的區段"
 
-#: src/dd.c:386
+#: src/dd.c:387
 #, fuzzy, c-format
 msgid "closing input file %s"
 msgstr "正在建立檔案‘%s’\n"
 
-#: src/dd.c:388
+#: src/dd.c:390
 #, c-format
 msgid "closing output file %s"
-msgstr "正在關閉輸出檔 %s"
+msgstr "正在關閉輸出檔%s"
 
-#: src/dd.c:472
+#: src/dd.c:474
 #, fuzzy, c-format
 msgid "writing to %s"
 msgstr "寫入 %s 時發生錯誤"
 
-#: src/dd.c:504
+#: src/dd.c:506
 #, fuzzy, c-format
 msgid "invalid conversion: %s"
 msgstr "無效的寬度選項：‘%s’"
 
-#: src/dd.c:560
+#: src/dd.c:562
 #, fuzzy, c-format
 msgid "unrecognized option %s"
 msgstr "無法識別的選項‘-%c’"
 
-#: src/dd.c:607
+#: src/dd.c:609
 #, fuzzy, c-format
 msgid "unrecognized option %s=%s"
 msgstr "無法識別的選項‘-%c’"
 
-#: src/dd.c:613
+#: src/dd.c:615
 #, fuzzy, c-format
 msgid "invalid number %s"
 msgstr "無效的數字"
 
-#: src/dd.c:643
+#: src/dd.c:645
 msgid ""
 "only one conv in {ascii,ebcdic,ibm}, {lcase,ucase}, {block,unblock}, "
 "{unblock,sync}"
@@ -1863,7 +1873,7 @@ msgstr ""
 "每組只能選一項作為 conv 的關鍵字：\n"
 "{ascii,ebcdic,ibm}、{lcase,ucase}、{block,unblock}、{unblock,sync}"
 
-#: src/dd.c:778
+#: src/dd.c:780
 #, c-format
 msgid ""
 "warning: working around lseek kernel bug for file (%s)\n"
@@ -1872,20 +1882,20 @@ msgstr ""
 "警告：暫時避免有關檔案 (%s) 的 lseek 核心錯誤，檔案的 mt_type=0x%0lx ─\n"
 "      有關 mt_type 類型的清單請參考 <sys/mtio.h>"
 
-#: src/dd.c:1166 src/dd.c:1184
+#: src/dd.c:1168 src/dd.c:1186
 #, fuzzy, c-format
 msgid "opening %s"
 msgstr "讀取 %s 時發生錯誤"
 
-#: src/dd.c:1192
+#: src/dd.c:1194
 #, fuzzy
 msgid "file offset out of range"
 msgstr "%s：行號超出範圍以外"
 
-#: src/dd.c:1208
+#: src/dd.c:1211
 #, c-format
 msgid "advancing past %s bytes in output file %s"
-msgstr "略過輸出檔 %2$s 的最初 %1$s 個位元組"
+msgstr "略過輸出檔%2$s的最初 %1$s 個位元組"
 
 #: src/df.c:150
 msgid "Filesystem "
@@ -1930,7 +1940,7 @@ msgid ""
 "or all filesystems by default.\n"
 "\n"
 msgstr ""
-"顯示每個<檔案>所在的檔案系統的資訊，預設是顯示所有檔案系統。\n"
+"顯示每個 <檔案> 所在的檔案系統的資訊，預設是顯示所有檔案系統。\n"
 "\n"
 
 #: src/df.c:763
@@ -1942,7 +1952,7 @@ msgid ""
 "  -H, --si              likewise, but use powers of 1000 not 1024\n"
 msgstr ""
 "  -a, --all             包括大小為 0 個區段的檔案系統\n"
-"  -B, --block-size=大小 區段以指定<大小>的位元組為單位\n"
+"  -B, --block-size=大小 區段以指定 <大小> 的位元組為單位\n"
 "  -h, --human-readable  以容易理解的格式印出檔案系統大小 (例如 1K 234M 2G)\n"
 "  -H, --si              類似 -h，但取 1000 的次方而不是 1024\n"
 
@@ -1970,25 +1980,25 @@ msgid ""
 msgstr ""
 "  -P, --portability     使用 POSIX 輸出格式\n"
 "      --sync            取得使用量資料前先進行 sync 動作\n"
-"  -t, --type=類型       只印出指定<類型>的檔案系統資訊\n"
+"  -t, --type=類型       只印出指定 <類型> 的檔案系統資訊\n"
 "  -T, --print-type      印出檔案系統類型\n"
-"  -x, --exclude-type=類型   只印出不是指定<類型>的檔案系統資訊\n"
+"  -x, --exclude-type=類型   只印出不是指定 <類型> 的檔案系統資訊\n"
 "  -v                    (此選項不作處理)\n"
 
-#: src/df.c:785 src/du.c:225 src/ls.c:3715
+#: src/df.c:785 src/du.c:225 src/ls.c:3735
 msgid ""
 "\n"
 "SIZE may be (or may be an integer optionally followed by) one of following:\n"
 "kB 1000, K 1024, MB 1,000,000, M 1,048,576, and so on for G, T, P, E, Z, Y.\n"
 msgstr ""
 "\n"
-"<大小>可以是以下的單位 (單位前可加上整數)：\n"
+"<大小> 可以是以下的單位 (單位前可加上整數)：\n"
 "kB=1000，K=1024，MB=1000000，M=1048576，還有 G、T、P、E、Z、Y 如此類推。\n"
 
 #: src/df.c:897
 #, c-format
 msgid "file system type %s both selected and excluded"
-msgstr "不能同時選擇和排除檔案系統類型 %s"
+msgstr "不能同時選擇和排除檔案系統類型%s"
 
 #: src/df.c:941
 msgid "Warning: "
@@ -2028,7 +2038,7 @@ msgid ""
 "For details on the format of these files, run `dircolors --print-database'.\n"
 msgstr ""
 "\n"
-"如果指定<檔案>，則讀取該檔案的資料來決定檔案類型及延伸檔名相應的顏色。\n"
+"如果指定 <檔案>，則讀取該檔案的資料來決定檔案類型及延伸檔名相應的顏色。\n"
 "否則，會使用一個預設的資料庫。如要瞭解此檔案格式的細節，請執行\n"
 "‘dircolors --print-database’。\n"
 
@@ -2058,7 +2068,7 @@ msgstr ""
 msgid ""
 "no FILE arguments may be used with the option to output\n"
 "dircolors' internal database"
-msgstr "顯示 dircolors 內部資料庫時不能加上<檔案>引數"
+msgstr "顯示 dircolors 的內部資料庫時不能加上 <檔案> 引數"
 
 #: src/dircolors.c:505
 msgid "no SHELL environment variable, and no shell type option given"
@@ -2090,7 +2100,7 @@ msgid ""
 "Summarize disk usage of each FILE, recursively for directories.\n"
 "\n"
 msgstr ""
-"總結每個<檔案>的磁碟用量，目錄則取總用量。\n"
+"總結每個 <檔案> 的磁碟用量，目錄則取總用量。\n"
 "\n"
 
 #: src/du.c:196
@@ -2102,10 +2112,10 @@ msgid ""
 "  -D, --dereference-args  dereference PATHs when symbolic link\n"
 msgstr ""
 "  -a, --all             顯示目錄中所有檔案的佔用量，並非只是目錄的總用量\n"
-"  -B, --block-size=大小 區段以指定<大小>的位元組為單位\n"
+"  -B, --block-size=大小 區段以指定 <大小> 的位元組為單位\n"
 "  -b, --bytes           以位元組為單位印出佔用量\n"
 "  -c, --total           印出所有項目相加後的總用量\n"
-"  -D, --dereference-args  只找出指令列中的符號連結指示的真正目的地\n"
+"  -D, --dereference-args  只找出指令列中的符號鏈結指示的真正目的地\n"
 
 #: src/du.c:203
 msgid ""
@@ -2118,7 +2128,7 @@ msgstr ""
 "  -h, --human-readable  以容易理解的格式印出檔案大小 (例如 1K 234M 2G)\n"
 "  -H, --si              類似 -h，但取 1000 的次方而不是 1024\n"
 "  -k                    即 --block-size=1K\n"
-"  -l, --count-links     連實際連結 (hard link) 的大小也計算在內\n"
+"  -l, --count-links     連實際鏈結 (hard link) 的大小也計算在內\n"
 
 #: src/du.c:209
 msgid ""
@@ -2126,12 +2136,11 @@ msgid ""
 "  -S, --separate-dirs   do not include size of subdirectories\n"
 "  -s, --summarize       display only a total for each argument\n"
 msgstr ""
-"  -L, --dereference     找出任何符號連結指示的真正目的地\n"
+"  -L, --dereference     找出任何符號鏈結指示的真正目的地\n"
 "  -S, --separate-dirs   不包括副目錄的佔用量\n"
 "  -s, --summarize       只分別計算指令列中每個引數所佔的總用量\n"
 
 #: src/du.c:214
-#, fuzzy
 msgid ""
 "  -x, --one-file-system  skip directories on different filesystems\n"
 "  -X FILE, --exclude-from=FILE  Exclude files that match any pattern in "
@@ -2144,11 +2153,11 @@ msgid ""
 "                          --summarize\n"
 msgstr ""
 "  -x, --one-file-system  略過屬於其它檔案系統的目錄\n"
-"  -X 檔案, --exclude-from=檔案  由<檔案>讀取應排除的檔案的樣式\n"
-"      --exclude=PAT      排除符合指定<樣式>的檔案\n"
-"      --max-depth=N      只顯示引數指定的目錄 N 層或以內的副目錄的總用量\n"
-"                         (若使用 --all 選項，也會顯示檔案的佔用量)；\n"
-"                         --max-depth=0 的效果等於 --summarize\n"
+"  -X 檔案, --exclude-from=檔案  由 <檔案> 讀取應排除的檔案的樣式\n"
+"      --exclude=樣式    排除符合指定 <樣式> 的檔案\n"
+"      --max-depth=N     只顯示引數指定的目錄 N 層或以內的副目錄的總用量\n"
+"                        (若使用 --all 選項，也會顯示檔案的佔用量)；\n"
+"                        --max-depth=0 的效果等於 --summarize\n"
 
 #: src/du.c:388
 #, fuzzy, c-format
@@ -2160,7 +2169,7 @@ msgstr "無法進入%s目錄"
 msgid "cannot change to directory %s"
 msgstr "無法進入%s目錄"
 
-#: src/du.c:557 src/ls.c:2129 src/wc.c:589
+#: src/du.c:557 src/ls.c:2149 src/wc.c:589
 msgid "total"
 msgstr "總計"
 
@@ -2538,24 +2547,24 @@ msgstr ""
 msgid "cannot reposition file pointer for %s"
 msgstr "無法將 %s 的檔案指標重新定位"
 
-#: src/head.c:255 src/tail.c:1378
+#: src/head.c:255 src/tail.c:1379
 #, c-format
 msgid "%s: %s is so large that it is not representable"
 msgstr "%s：%s過大，因此無法表示"
 
-#: src/head.c:256 src/tail.c:1380
+#: src/head.c:256 src/tail.c:1381
 msgid "number of lines"
 msgstr "行數"
 
-#: src/head.c:256 src/tail.c:1381
+#: src/head.c:256 src/tail.c:1382
 msgid "number of bytes"
 msgstr "位元組數目"
 
-#: src/head.c:263 src/tail.c:1467
+#: src/head.c:263 src/tail.c:1468
 msgid "invalid number of lines"
 msgstr "無效的行數"
 
-#: src/head.c:264 src/tail.c:1468
+#: src/head.c:264 src/tail.c:1469
 msgid "invalid number of bytes"
 msgstr "無效的位元組數目"
 
@@ -2599,7 +2608,7 @@ msgstr ""
 #: src/hostname.c:117
 #, fuzzy
 msgid "cannot determine hostname"
-msgstr "無法更改 %s 的權限"
+msgstr "無法設定%s的權限"
 
 #: src/id.c:36
 #, fuzzy
@@ -2634,31 +2643,31 @@ msgstr ""
 msgid "cannot print only user and only group"
 msgstr "不可同時省略使用者和所屬群組"
 
-#: src/id.c:165
+#: src/id.c:166
 msgid "cannot print only names or real IDs in default format"
 msgstr ""
 
-#: src/id.c:174
+#: src/id.c:175
 #, c-format
 msgid "%s: No such user"
 msgstr ""
 
-#: src/id.c:211
+#: src/id.c:212
 #, c-format
 msgid "cannot find name for user ID %u"
 msgstr ""
 
-#: src/id.c:234
+#: src/id.c:235
 #, fuzzy, c-format
 msgid "cannot find name for group ID %u"
 msgstr "無法更改%s的擁有者和/或所屬群組"
 
-#: src/id.c:272
+#: src/id.c:273
 #, fuzzy
 msgid "cannot get supplemental group list"
 msgstr "無法改變所屬群組至沒有名稱的群組"
 
-#: src/id.c:382
+#: src/id.c:383
 msgid " groups="
 msgstr ""
 
@@ -2679,7 +2688,7 @@ msgstr "無法建立目錄%s"
 #: src/install.c:336
 #, c-format
 msgid "installing multiple files, but last argument, %s is not a directory"
-msgstr "正在安裝多個檔案，但最後的引數 %s 並非目錄。"
+msgstr "正在安裝多個檔案，但最後的引數%s並非目錄。"
 
 #: src/install.c:439
 #, fuzzy, c-format
@@ -2702,9 +2711,8 @@ msgid "fork system call failed"
 msgstr "區塊特殊檔案"
 
 #: src/install.c:536
-#, fuzzy
 msgid "cannot run strip"
-msgstr "無法將 %s 的備份還原"
+msgstr "無法執行 strip 指令"
 
 #: src/install.c:543
 #, fuzzy
@@ -2722,15 +2730,15 @@ msgid "invalid group %s"
 msgstr "無效的群組"
 
 #: src/install.c:601
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Usage: %s [OPTION]... SOURCE DEST           (1st format)\n"
 "  or:  %s [OPTION]... SOURCE... DIRECTORY   (2nd format)\n"
 "  or:  %s -d [OPTION]... DIRECTORY...       (3rd format)\n"
 msgstr ""
-"用法：%s [選項]... 來源 目的地\n"
-"  或：%s [選項]... 來源... 目錄\n"
-"  或：%s [選項]... --target-directory=目錄 來源...\n"
+"用法：%s [選項]... 來源 目的地    (第一種格式)\n"
+"  或：%s [選項]... 來源... 目錄   (第二種格式)\n"
+"  或：%s -d [選項]... 目錄...     (第三種格式)\n"
 
 #: src/install.c:607
 msgid ""
@@ -2739,9 +2747,12 @@ msgid ""
 "In the third format, create all components of the given DIRECTORY(ies).\n"
 "\n"
 msgstr ""
+"在最初兩種格式中，會將 <來源> 複製至 <目的地> 或將多個 <來源>\n"
+"複製至已存在的 <目錄>，同時設定權限模式及擁有者/所屬群組。\n"
+"在第三種格式中，會建立所有指定的目錄及它們的所有上層目錄。\n"
+"\n"
 
 #: src/install.c:616
-#, fuzzy
 msgid ""
 "      --backup[=CONTROL] make a backup of each existing destination file\n"
 "  -b                  like --backup but does not accept an argument\n"
@@ -2749,11 +2760,11 @@ msgid ""
 "  -d, --directory     treat all arguments as directory names; create all\n"
 "                        components of the specified directories\n"
 msgstr ""
-"  -a, --archive                等於 -dpR\n"
-"      --backup[=CONTROL]       為每個已存在的目的地檔案建立備份檔\n"
-"  -b                           類似 --backup，但不接受任何引數\n"
-"      --copy-contents          當使用遞迴模式時複製特殊檔案的內容\n"
-"  -d                           等於 --no-dereference --preserve=link\n"
+"      --backup[=CONTROL] 為每個已存在的目的地檔案進行備份\n"
+"  -b                  類似 --backup，但不接受任何引數\n"
+"  -c                  (此選項不作處理)\n"
+"  -d, --directory     所有引數都作為目錄處理；而且會建立指定目錄的所有主目"
+"錄\n"
 
 #: src/install.c:623
 msgid ""
@@ -2766,6 +2777,11 @@ msgid ""
 "x\n"
 "  -o, --owner=OWNER   set ownership (super-user only)\n"
 msgstr ""
+"  -D                  建立 <目的地> 前的所有上層目錄，然後將 <來源> 複製至\n"
+"                      <目的地>；在第一種使用格式中有用\n"
+"  -g, --group=群組    自行設定所屬群組，而不是程序目前的所屬群組\n"
+"  -m, --mode=模式     自行設定權限模式 (像 chmod)，而不是 rwxr-xr-x\n"
+"  -o, --owner=擁有者  自行設定擁有者 (只適用於最大權力使用者)\n"
 
 #: src/install.c:630
 msgid ""
@@ -2776,9 +2792,14 @@ msgid ""
 "  -S, --suffix=SUFFIX override the usual backup suffix\n"
 "  -v, --verbose       print the name of each directory as it is created\n"
 msgstr ""
+"  -p, --preserve-timestamps   以 <來源> 檔案的存取/修改時間作為相應的目的\n"
+"                      地檔案的時間屬性\n"
+"  -s, --strip         用 strip 指令移除 symbol table，只適用於第一及第二種\n"
+"                      使用格式\n"
+"  -S, --suffix=字串   自行指定備份檔的後置 <字串>\n"
+"  -v, --verbose       處理每個檔案/目錄時印出名稱\n"
 
 #: src/install.c:639 src/ln.c:377 src/mv.c:351
-#, fuzzy
 msgid ""
 "\n"
 "The backup suffix is `~', unless set with --suffix or SIMPLE_BACKUP_SUFFIX.\n"
@@ -2787,6 +2808,7 @@ msgid ""
 "the VERSION_CONTROL environment variable.  Here are the values:\n"
 "\n"
 msgstr ""
+"\n"
 "備份檔的後置字串為‘~’，除非以 --suffix 選項或是 SIMPLE_BACKUP_SUFFIX\n"
 "環境變數指定。版本控制的方式可透過 --backup 選項或 VERSION_CONTROL 環境\n"
 "變數來選擇。以下是可用的變數值：\n"
@@ -2971,6 +2993,8 @@ msgid ""
 "Call the link function to create a link named FILE2 to an existing FILE1.\n"
 "\n"
 msgstr ""
+"透過調用 link 函式，建立連至 <檔案1> 的鏈結，鏈結名稱為 <檔案2>。\n"
+"\n"
 
 #: src/link.c:98
 #, fuzzy, c-format
@@ -2985,12 +3009,12 @@ msgstr "Scott Bartram 及 David MacKenzie"
 #: src/ln.c:167
 #, c-format
 msgid "%s: warning: making a hard link to a symbolic link is not portable"
-msgstr ""
+msgstr "%s：警告：將實際鏈結 (hard link) 連至符號鏈結不是所有系統都適用的功能"
 
 #: src/ln.c:174
-#, fuzzy, c-format
+#, c-format
 msgid "%s: hard link not allowed for directory"
-msgstr "%s：指定的目標不是目錄"
+msgstr "%s: 不允許將實際鏈結 (hard link) 連至目錄"
 
 #: src/ln.c:246
 #, fuzzy, c-format
@@ -2998,14 +3022,14 @@ msgid "%s: cannot overwrite directory"
 msgstr "無法建立目錄%s"
 
 #: src/ln.c:251
-#, fuzzy, c-format
+#, c-format
 msgid "%s: replace %s? "
-msgstr "%s：是否覆寫%s? "
+msgstr "%s：是否置換%s? "
 
 #: src/ln.c:257
 #, c-format
 msgid "%s: File exists"
-msgstr ""
+msgstr "%s：檔案已存在"
 
 #: src/ln.c:304
 #, fuzzy, c-format
@@ -3013,30 +3037,30 @@ msgid "create symbolic link %s to %s"
 msgstr "符號連結"
 
 #: src/ln.c:305
-#, fuzzy, c-format
+#, c-format
 msgid "create hard link %s to %s"
-msgstr "無法建立連至 %2$s 的實際連結 (hard link) %1$s"
+msgstr "建立連至%2$s的實際鏈結 (hard link)%1$s"
 
 #: src/ln.c:319
-#, fuzzy, c-format
+#, c-format
 msgid "creating symbolic link %s to %s"
-msgstr "無法建立連至 %2$s 的符號連結 %1$s"
+msgstr "正在建立連至%2$s的符號鏈結%1$s"
 
 #: src/ln.c:320
-#, fuzzy, c-format
+#, c-format
 msgid "creating hard link %s to %s"
-msgstr "無法建立連至 %2$s 的實際連結 (hard link) %1$s"
+msgstr "正在建立連至%2$s的實際鏈結 (hard link)%1$s"
 
 #: src/ln.c:339
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Usage: %s [OPTION]... TARGET [LINK_NAME]\n"
 "  or:  %s [OPTION]... TARGET... DIRECTORY\n"
 "  or:  %s [OPTION]... --target-directory=DIRECTORY TARGET...\n"
 msgstr ""
-"用法：%s [選項]... 來源 目的地\n"
-"  或：%s [選項]... 來源... 目錄\n"
-"  或：%s [選項]... --target-directory=目錄 來源...\n"
+"用法：%s [選項]... 目標 [鏈結名稱]\n"
+"  或：%s [選項]... 目標... 目錄\n"
+"  或：%s [選項]... --target-directory=目錄 目標...\n"
 
 #: src/ln.c:345
 msgid ""
@@ -3048,9 +3072,15 @@ msgid ""
 "links with --symbolic.  When creating hard links, each TARGET must exist.\n"
 "\n"
 msgstr ""
+"建立連至指定 <目標> 的鏈結，並可選擇指定 <鏈結名稱>。\n"
+"如果沒有指定 <鏈結名稱>，會在目前的目錄中建立一個和 <目標> 名稱一樣的鏈結。\n"
+"當使用第二種格式而 <目標> 多於一個時，最後的引數必須是目錄；這樣會在指定的\n"
+"<目錄> 中分別建立連至每個 <目標> 的鏈結。預設的運作方式是建立實際鏈結 (hard\n"
+"link)，若使用 --symbolic 選項則建立符號鏈結。當建立實際鏈結時，每個 <目標>\n"
+"都必須存在。\n"
+"\n"
 
 #: src/ln.c:357
-#, fuzzy
 msgid ""
 "      --backup[=CONTROL]      make a backup of each existing destination "
 "file\n"
@@ -3058,25 +3088,24 @@ msgid ""
 "  -d, -F, --directory         hard link directories (super-user only)\n"
 "  -f, --force                 remove existing destination files\n"
 msgstr ""
-"  -a, --archive                等於 -dpR\n"
-"      --backup[=CONTROL]       為每個已存在的目的地檔案建立備份檔\n"
-"  -b                           類似 --backup，但不接受任何引數\n"
-"      --copy-contents          當使用遞迴模式時複製特殊檔案的內容\n"
-"  -d                           等於 --no-dereference --preserve=link\n"
+"      --backup[=CONTROL]      為每個已存在的目的地檔案建立備份檔\n"
+"  -b                          類似 --backup，但不接受任何引數\n"
+"  -d, -F, --directory         建立連至目錄的實際鏈結 (只適用於最大權力使用"
+"者)\n"
+"  -f, --force                 強迫移除任何已存在的目的地檔案\n"
 
 #: src/ln.c:363
-#, fuzzy
 msgid ""
 "  -n, --no-dereference        treat destination that is a symlink to a\n"
 "                                directory as if it were a normal file\n"
 "  -i, --interactive           prompt whether to remove destinations\n"
 "  -s, --symbolic              make symbolic links instead of hard links\n"
 msgstr ""
-"      --no-dereference         不會找出符號連結指示的真正目的地\n"
-"  -f, --force                  如果無法開啟已存在的檔案，會移除該檔案並再\n"
-"                                 嘗試開啟\n"
-"  -i, --interactive            覆寫檔案前需要確認\n"
-"  -H                           使用指令列中的符號連結指示的真正目的地\n"
+"  -n, --no-dereference        如果目的地是一個連結至某目錄的符號鏈結，會將\n"
+"                              該符號鏈結當作普通檔案處理，會先備份或移除該\n"
+"                              鏈結\n"
+"  -i, --interactive           確認是否移除目的地檔案\n"
+"  -s, --symbolic              建立符號鏈結而不是實際鏈結\n"
 
 #: src/ln.c:369
 msgid ""
@@ -3086,21 +3115,23 @@ msgid ""
 "                                the links\n"
 "  -v, --verbose               print name of each file before linking\n"
 msgstr ""
+"  -S, --suffix=後置字串       自行指定備份檔的 <後置字串>\n"
+"      --target-directory=目錄 在指定 <目錄> 中建立鏈結\n"
+"  -v, --verbose               連結前先印出每個檔案的名稱\n"
 
-#: src/ln.c:489 src/mv.c:462 src/shred.c:1609
+#: src/ln.c:490 src/mv.c:462 src/shred.c:1609
 #, fuzzy
 msgid "missing file argument"
 msgstr "略過引數"
 
-#: src/ln.c:520
+#: src/ln.c:521
 #, fuzzy, c-format
 msgid "%s: specified target directory is not a directory"
 msgstr "%s已存在但不是目錄"
 
-#: src/ln.c:541
-#, fuzzy
+#: src/ln.c:542
 msgid "when making multiple links, last argument must be a directory"
-msgstr "正在安裝多個檔案，但最後的引數 %s 並非目錄。"
+msgstr "建立多個鏈結時，最後的引數必需為目錄"
 
 #: src/logname.c:48 src/pwd.c:47 src/sync.c:44
 #, fuzzy, c-format
@@ -3131,17 +3162,17 @@ msgstr "%Y-%m-%d %H:%M"
 #: src/ls.c:1239
 #, c-format
 msgid "ignoring invalid value of environment variable QUOTING_STYLE: %s"
-msgstr ""
+msgstr "忽略無效的環境變數 QUOTING_STYLE 的變數值：%s"
 
 #: src/ls.c:1260
 #, c-format
 msgid "ignoring invalid width in environment variable COLUMNS: %s"
-msgstr ""
+msgstr "忽略無效的環境變數 COLUMNS 的寬度數值：%s"
 
 #: src/ls.c:1291
 #, c-format
 msgid "ignoring invalid tab size in environment variable TABSIZE: %s"
-msgstr ""
+msgstr "忽略無效的環境變數 TABSIZE 的 tab 字元定位值：%s"
 
 #: src/ls.c:1406
 #, fuzzy, c-format
@@ -3165,7 +3196,7 @@ msgstr "無法識別的選項‘-%c’"
 
 #: src/ls.c:1989
 msgid "unparsable value for LS_COLORS environment variable"
-msgstr ""
+msgstr "LS_COLORS 環境變數中存在無法分析的值"
 
 #: src/ls.c:2057
 #, fuzzy, c-format
@@ -3177,27 +3208,39 @@ msgstr "無法將 %s 的檔案指標重新定位"
 msgid "not listing already-listed directory: %s"
 msgstr "無法建立目錄%s"
 
-#: src/ls.c:2462
+#: src/ls.c:2116 src/remove.c:904
+#, fuzzy, c-format
+msgid "reading directory %s"
+msgstr "無法建立目錄%s"
+
+#: src/ls.c:2482
 #, fuzzy, c-format
 msgid "cannot compare file names %s and %s"
 msgstr "要比較的字串為%s及%s。"
 
-#: src/ls.c:3603
+#: src/ls.c:3623
 msgid ""
 "List information about the FILEs (the current directory by default).\n"
 "Sort entries alphabetically if none of -cftuSUX nor --sort.\n"
 "\n"
 msgstr ""
+"列出 <檔案> 的資訊 (預設為目前的目錄)。\n"
+"如果不指定 -cftuSUX 或 --sort 任何一個選項，則根據字母大小排序。\n"
+"\n"
 
-#: src/ls.c:3611
+#: src/ls.c:3631
 msgid ""
 "  -a, --all                  do not hide entries starting with .\n"
 "  -A, --almost-all           do not list implied . and ..\n"
 "      --author               print the author of each file\n"
 "  -b, --escape               print octal escapes for nongraphic characters\n"
 msgstr ""
+"  -a, --all                  不隱藏任何以 . 字元開始的項目\n"
+"  -A, --almost-all           列出除了 . 及 .. 以外的任何項目\n"
+"      --author               印出每個檔案的著作者\n"
+"  -b, --escape               以八進位溢出序列表示不可列印的字元\n"
 
-#: src/ls.c:3617
+#: src/ls.c:3637
 msgid ""
 "      --block-size=SIZE      use SIZE-byte blocks\n"
 "  -B, --ignore-backups       do not list implied entries ending with ~\n"
@@ -3207,8 +3250,14 @@ msgid ""
 "                               with -l: show ctime and sort by name\n"
 "                               otherwise: sort by ctime\n"
 msgstr ""
+"      --block-size=大小      區段以指定 <大小> 的位元組為單位\n"
+"  -B, --ignore-backups       不列出任何以 ~ 字元結束的項目\n"
+"  -c                         配合 -lt：根據 ctime 排序及顯示 ctime\n"
+"                              (檔案狀態最後更改的時間)\n"
+"                             配合 -l ：顯示 ctime 但根據名稱排序\n"
+"                             否則    ：根據 ctime 排序\n"
 
-#: src/ls.c:3625
+#: src/ls.c:3645
 msgid ""
 "  -C                         list entries by columns\n"
 "      --color[=WHEN]         control whether color is used to distinguish "
@@ -3218,8 +3267,13 @@ msgid ""
 "  -d, --directory            list directory entries instead of contents\n"
 "  -D, --dired                generate output designed for Emacs' dired mode\n"
 msgstr ""
+"  -C                         每欄由上至下列出項目\n"
+"      --color[=WHEN]         控制是否使用色彩分辨檔案。WHEN 可以是\n"
+"                               ‘never’、‘always’或‘auto’其中之一\n"
+"  -d, --directory            當遇到目錄時列出目錄本身而非目錄內的檔案\n"
+"  -D, --dired                產生適合 Emacs 的 dired 模式使用的結果\n"
 
-#: src/ls.c:3632
+#: src/ls.c:3652
 msgid ""
 "  -f                         do not sort, enable -aU, disable -lst\n"
 "  -F, --classify             append indicator (one of */=@|) to entries\n"
@@ -3227,9 +3281,13 @@ msgid ""
 "                               single-column -1, verbose -l, vertical -C\n"
 "      --full-time            like -l --time-style=full-iso\n"
 msgstr ""
+"  -f                         不進行排序，-aU 選項生效，-lst 選項失效\n"
+"  -F, --classify             加上檔案類型的指示符號 (*/=@| 其中一個)\n"
+"      --format=關鍵字        across -x，commas -m，horizontal -x，long -l，\n"
+"                               single-column -1，verbose -l，vertical -C\n"
+"      --full-time            即 -l --time-style=full-iso\n"
 
-#: src/ls.c:3639
-#, fuzzy
+#: src/ls.c:3659
 msgid ""
 "  -g                         like -l, but do not list owner\n"
 "  -G, --no-group             inhibit display of group information\n"
@@ -3238,12 +3296,13 @@ msgid ""
 "      --si                   likewise, but use powers of 1000 not 1024\n"
 "  -H, --dereference-command-line  follow symbolic links on the command line\n"
 msgstr ""
-"  -a, --all             包括大小為 0 個區段的檔案系統\n"
-"  -B, --block-size=大小 區段以指定<大小>的位元組為單位\n"
-"  -h, --human-readable  以容易理解的格式印出檔案系統大小 (例如 1K 234M 2G)\n"
-"  -H, --si              類似 -h，但取 1000 的次方而不是 1024\n"
+"  -g                         類似 -l，但不列出擁有者\n"
+"  -G, --no-group             不列出任何有關群組的資訊\n"
+"  -h, --human-readable       以容易理解的格式印出檔案大小 (例如 1K 234M 2G)\n"
+"      --si                   類似 -h，但取 1000 的次方而不是 1024\n"
+"  -H, --dereference-command-line    使用指令列中的符號鏈結指示的真正目的地\n"
 
-#: src/ls.c:3646
+#: src/ls.c:3666
 msgid ""
 "      --indicator-style=WORD append indicator with style WORD to entry "
 "names:\n"
@@ -3254,8 +3313,13 @@ msgid ""
 "PATTERN\n"
 "  -k                         like --block-size=1K\n"
 msgstr ""
+"      --indicator-style=方式 指定在每個項目名稱後加上指示符號 <方式>：\n"
+"                               none (預設)，classify (-F)，file-type (-p)\n"
+"  -i, --inode                印出每個檔案的 inode 編號\n"
+"  -I, --ignore=樣式          不印出任何符合 shell 萬用字元 <樣式> 的項目\n"
+"  -k                         即 --block-size=1K\n"
 
-#: src/ls.c:3653
+#: src/ls.c:3673
 msgid ""
 "  -l                         use a long listing format\n"
 "  -L, --dereference          when showing file information for a symbolic\n"
@@ -3264,8 +3328,12 @@ msgid ""
 "  -m                         fill width with a comma separated list of "
 "entries\n"
 msgstr ""
+"  -l                         使用較長格式列出資訊\n"
+"  -L, --dereference          當顯示符號鏈結的檔案資訊時，顯示符號鏈結所指示\n"
+"                               的目標而並非符號鏈結本身的資訊\n"
+"  -m                         所有項目以逗號分隔，並填滿整行行寬\n"
 
-#: src/ls.c:3660
+#: src/ls.c:3680
 msgid ""
 "  -n, --numeric-uid-gid      like -l, but list numeric UIDs and GIDs\n"
 "  -N, --literal              print raw entry names (don't treat e.g. "
@@ -3274,8 +3342,13 @@ msgid ""
 "  -o                         like -l, but do not list group information\n"
 "  -p, --file-type            append indicator (one of /=@|) to entries\n"
 msgstr ""
+"  -n, --numeric-uid-gid      類似 -l，但列出 UID 及 GID 編號\n"
+"  -N, --literal              印出未經處理的項目名稱 (例如不特別處理控制字"
+"元)\n"
+"  -o                         類似 -l，但不列出有關群組的資訊\n"
+"  -p, --file-type            加上檔案類型的指示符號 (/=@| 其中一個)\n"
 
-#: src/ls.c:3667
+#: src/ls.c:3687
 msgid ""
 "  -q, --hide-control-chars   print ? instead of non graphic characters\n"
 "      --show-control-chars   show non graphic characters as-is (default\n"
@@ -3286,15 +3359,25 @@ msgid ""
 "                               literal, locale, shell, shell-always, c, "
 "escape\n"
 msgstr ""
+"  -q, --hide-control-chars   以 ? 字元代替無法列印的字元\n"
+"      --show-control-chars   直接顯示無法列印的字元 (這是預設方式，除非調用\n"
+"                               的程式名稱是‘ls’而且是在終端機畫面輸出結果)\n"
+"  -Q, --quote-name           將項目名稱括上雙引號\n"
+"      --quoting-style=方式   使用指定的 quoting <方式>顯示項目的名稱：\n"
+"                               literal、locale、shell、shell-always、c、"
+"escape\n"
 
-#: src/ls.c:3675
+#: src/ls.c:3695
 msgid ""
 "  -r, --reverse              reverse order while sorting\n"
 "  -R, --recursive            list subdirectories recursively\n"
 "  -s, --size                 print size of each file, in blocks\n"
 msgstr ""
+"  -r, --reverse              依相反次序排列\n"
+"  -R, --recursive            同時列出所有副目錄層\n"
+"  -s, --size                 以區段大小為單位列出所有檔案的大小\n"
 
-#: src/ls.c:3680
+#: src/ls.c:3700
 msgid ""
 "  -S                         sort by file size\n"
 "      --sort=WORD            extension -X, none -U, size -S, time -t,\n"
@@ -3306,8 +3389,18 @@ msgid ""
 "                               atime, access, use, ctime or status; use\n"
 "                               specified time as sort key if --sort=time\n"
 msgstr ""
+"  -S                         根據檔案大小排序\n"
+"      --sort=WORD            以下是可選用的 WORD 和它們代表的相應選項：\n"
+"                               extension -X       status   -c\n"
+"                               none      -U       time     -t\n"
+"                               size      -S       atime    -u\n"
+"                               time      -t       access   -u\n"
+"                               version   -v       use      -u\n"
+"      --time=WORD            顯示 WORD 所代表的時間而非修改時間：\n"
+"                               atime、access、use、ctime 或 status；加上\n"
+"                               --sort=time 選項時會以指定時間作為排序索引\n"
 
-#: src/ls.c:3689
+#: src/ls.c:3709
 msgid ""
 "      --time-style=STYLE     show times using style STYLE:\n"
 "                               full-iso, long-iso, iso, locale, +FORMAT\n"
@@ -3320,8 +3413,17 @@ msgid ""
 "  -t                         sort by modification time\n"
 "  -T, --tabsize=COLS         assume tab stops at each COLS instead of 8\n"
 msgstr ""
+"      --time-style=樣式      根據 <樣式> 所代表的格式顯示時間：\n"
+"                               full-iso、long-iso、iso、locale、+FORMAT\n"
+"                             FORMAT 即是‘date’所用的時間格式；如果 FORMAT\n"
+"                             是 FORMAT1<newline>FORMAT2，FORMAT1 適用於較舊\n"
+"                             的檔案而 FORMAT2 適用於較新的檔案；\n"
+"                             如果 <樣式> 前加上‘posix-’，則只會在不使用\n"
+"                             POSIX 語系時使用該 <樣式>\n"
+"  -t                         根據修改時間排序\n"
+"  -T, --tabsize=寬度         另行指定 tab 的 <寬度>，而非 8 個字元\n"
 
-#: src/ls.c:3700
+#: src/ls.c:3720
 msgid ""
 "  -u                         with -lt: sort by, and show, access time\n"
 "                               with -l: show access time and sort by name\n"
@@ -3329,8 +3431,13 @@ msgid ""
 "  -U                         do not sort; list entries in directory order\n"
 "  -v                         sort by version\n"
 msgstr ""
+"  -u                         配合 -lt：顯示存取時間而且依存取時間排序\n"
+"                               配合 -l：顯示存取時間但根據名稱排序\n"
+"                               否則：根據存取時間排序\n"
+"  -U                         不進行排序；依檔案系統原有的次序列出項目\n"
+"  -v                         根據版本進行排序\n"
 
-#: src/ls.c:3707
+#: src/ls.c:3727
 #, fuzzy
 msgid ""
 "  -w, --width=COLS           assume screen width instead of current value\n"
@@ -3342,7 +3449,7 @@ msgstr ""
 "                            每一行，除非使用了 -s 選項\n"
 "  -n                      (不會作任何處理)\n"
 
-#: src/ls.c:3719
+#: src/ls.c:3739
 msgid ""
 "\n"
 "By default, color is not used to distinguish types of files.  That is\n"
@@ -3351,6 +3458,10 @@ msgid ""
 "--color=auto, color codes are output only if standard output is connected\n"
 "to a terminal (tty).\n"
 msgstr ""
+"\n"
+"預設是不會使用色彩來區別檔案的。此方式等於使用了 --color=none 選項。若使用\n"
+"--color 選項但不指定 WHEN 引數等於 --color=always。當使用 --color=auto 時，\n"
+"只當輸出至終端機畫面 (tty) 時才會顯示色彩。\n"
 
 #: src/md5sum.c:38
 msgid "Ulrich Drepper and Scott Miller"
@@ -3499,6 +3610,8 @@ msgid ""
 "Create the DIRECTORY(ies), if they do not already exist.\n"
 "\n"
 msgstr ""
+"若目錄不是已經存在則建立目錄。\n"
+"\n"
 
 #: src/mkdir.c:69
 msgid ""
@@ -3507,6 +3620,9 @@ msgid ""
 "  -p, --parents     no error if existing, make parent directories as needed\n"
 "  -v, --verbose     print a message for each created directory\n"
 msgstr ""
+"  -m, --mode=模式   設定權限 <模式> (類似 chmod)，而不是 rwxrwxrwx 減 umask\n"
+"  -p, --parents     需要時建立上層目錄，如目錄早已存在則不當作錯誤\n"
+"  -v, --verbose     每次建立新目錄都顯示訊息\n"
 
 #: src/mkdir.c:113
 #, fuzzy, c-format
@@ -3528,15 +3644,17 @@ msgid ""
 "Create named pipes (FIFOs) with the given NAMEs.\n"
 "\n"
 msgstr ""
+"以指定的 <名稱> 建立 named pipe (FIFO)。\n"
+"\n"
 
 #: src/mkfifo.c:63 src/mknod.c:73
 msgid ""
 "  -m, --mode=MODE   set permission mode (as in chmod), not a=rw - umask\n"
-msgstr ""
+msgstr "  -m, --mode=模式   指定權限模式 (類似 chmod)，而不是 a=rw 減 umask\n"
 
-#: src/mkfifo.c:93 src/mknod.c:208
+#: src/mkfifo.c:93 src/mknod.c:210
 msgid "fifo files not supported"
-msgstr ""
+msgstr "不支援 FIFO 檔案"
 
 #: src/mkfifo.c:123 src/mknod.c:131
 #, fuzzy
@@ -3558,6 +3676,8 @@ msgid ""
 "Create the special file NAME of the given TYPE.\n"
 "\n"
 msgstr ""
+"建立指定 <類型> 及 <名稱> 的特殊檔案。\n"
+"\n"
 
 #: src/mknod.c:78
 msgid ""
@@ -3568,6 +3688,13 @@ msgid ""
 "  c, u   create a character (unbuffered) special file\n"
 "  p      create a FIFO\n"
 msgstr ""
+"\n"
+"當 <類型> 為 p 時不可指定 MAJOR 及 MINOR，否則它們是必須指定的。\n"
+"<類型> 可以是：\n"
+"\n"
+"  b      建立 (有緩衝的) 區塊特殊檔案\n"
+"  c, u   建立 (沒有緩衝的) 字元特殊檔案\n"
+"  p      建立 FIFO 特殊檔案\n"
 
 #: src/mknod.c:145
 #, fuzzy
@@ -3588,28 +3715,28 @@ msgstr "字元特殊檔案"
 msgid ""
 "when creating special files, major and minor device\n"
 "numbers must be specified"
-msgstr ""
+msgstr "建立區塊特殊檔案時，必需指定 major 和 minor 裝置編號"
 
-#: src/mknod.c:189
+#: src/mknod.c:190
 #, fuzzy, c-format
 msgid "invalid major device number %s"
 msgstr "無效的開始行號：‘%s’"
 
-#: src/mknod.c:193
+#: src/mknod.c:195
 #, fuzzy, c-format
 msgid "invalid minor device number %s"
 msgstr "無效的開始行號：‘%s’"
 
-#: src/mknod.c:198
+#: src/mknod.c:200
 #, fuzzy, c-format
 msgid "invalid device %s %s"
 msgstr "%2$s的引數%1$s無效"
 
-#: src/mknod.c:212
+#: src/mknod.c:214
 msgid "major and minor device numbers may not be specified for fifo files"
-msgstr ""
+msgstr "不能為 fifo 檔案指定 major 和 minor 裝置編號"
 
-#: src/mknod.c:233
+#: src/mknod.c:235
 #, fuzzy, c-format
 msgid "cannot set permissions of %s"
 msgstr "無法更改%s的權限"
@@ -3620,16 +3747,14 @@ msgid "Mike Parker, David MacKenzie, and Jim Meyering"
 msgstr "David Ihnat、David MacKenzie 及 Jim Meyering"
 
 #: src/mv.c:320
-#, fuzzy
 msgid ""
 "Rename SOURCE to DEST, or move SOURCE(s) to DIRECTORY.\n"
 "\n"
 msgstr ""
-"將<來源>檔案複製至<目的地>，或將多個<檔案>複製至<目錄>。\n"
+"將 <來源> 名稱更改為 <目的地> 名稱，或將 <來源> 檔案移動至 <目錄>。\n"
 "\n"
 
 #: src/mv.c:327
-#, fuzzy
 msgid ""
 "      --backup[=CONTROL]       make a backup of each existing destination "
 "file\n"
@@ -3640,14 +3765,12 @@ msgid ""
 "  -i, --interactive            prompt before overwrite\n"
 "                                 equivalent to --reply=query\n"
 msgstr ""
-"  -a, --archive                等於 -dpR\n"
 "      --backup[=CONTROL]       為每個已存在的目的地檔案建立備份檔\n"
 "  -b                           類似 --backup，但不接受任何引數\n"
-"      --copy-contents          當使用遞迴模式時複製特殊檔案的內容\n"
-"  -d                           等於 --no-dereference --preserve=link\n"
+"  -f, --force                  覆寫檔案前不會進行確認，等於 --reply=yes\n"
+"  -i, --interactive            覆寫檔案前必須先確認，等於 --reply=query\n"
 
 #: src/mv.c:335
-#, fuzzy
 msgid ""
 "      --reply={yes,no,query}   specify how to handle the prompt about an\n"
 "                                 existing destination file\n"
@@ -3656,11 +3779,10 @@ msgid ""
 "  -S, --suffix=SUFFIX          override the usual backup suffix\n"
 msgstr ""
 "      --reply={yes,no,query}   指定如何處理已存在的目的地檔案\n"
-"      --sparse=WHEN            控制建立 sparse 檔案的方式\n"
-"      --strip-trailing-slashes 移除引數中所有<來源>檔案/目錄末端的斜號\n"
+"      --strip-trailing-slashes 移除引數中所有 <來源> 檔案/目錄末端的斜號\n"
+"  -S, --suffix=後置字串        自行指定備份檔的 <後置字串>\n"
 
 #: src/mv.c:342
-#, fuzzy
 msgid ""
 "      --target-directory=DIRECTORY  move all SOURCE arguments into "
 "DIRECTORY\n"
@@ -3669,10 +3791,10 @@ msgid ""
 "                                 destination file is missing\n"
 "  -v, --verbose                explain what is being done\n"
 msgstr ""
-"  -u, --update                 只在<來源>檔案比目的地檔案新，或目的地檔案\n"
-"                                 不存在時才進行複製\n"
+"      --target-directory=目錄  將所有 <來源> 檔案/目錄移動至 <目錄>\n"
+"  -u, --update                 只在 <來源> 檔案比目的地檔案新，或目的地檔案\n"
+"                               不存在時才會移動\n"
 "  -v, --verbose                詳細顯示進行的步驟\n"
-"  -x, --one-file-system        不會跨越檔案系統進行操作\n"
 
 #: src/mv.c:470
 #, fuzzy, c-format
@@ -3680,9 +3802,8 @@ msgid "specified target, %s is not a directory"
 msgstr "%s已存在但不是目錄"
 
 #: src/mv.c:478
-#, fuzzy
 msgid "when moving multiple files, last argument must be a directory"
-msgstr "複製多個檔案，但最後的引數 %s 並非目錄。"
+msgstr "移動多個檔案時，最後的引數必須為目錄。"
 
 #: src/nice.c:67
 #, fuzzy, c-format
@@ -4148,7 +4269,7 @@ msgstr ""
 #: src/pinky.c:35 src/uptime.c:39
 #, fuzzy
 msgid "Joseph Arceneaux, David MacKenzie, and Kaveh Ghazi"
-msgstr "Torbjorn Granlund、David MacKenzie 及 Jim Meyering"
+msgstr "Mike Parker、David MacKenzie 和 Jim Meyering"
 
 #: src/pinky.c:292
 msgid "Login name: "
@@ -4263,72 +4384,72 @@ msgstr "‘--pages’的結束頁碼無效：‘%s’"
 msgid "`--pages' starting page number is larger than ending page number"
 msgstr "‘--pages’的開始頁碼大於結束頁碼"
 
-#: src/pr.c:913
+#: src/pr.c:911
 msgid "`--pages=FIRST_PAGE[:LAST_PAGE]' missing argument"
 msgstr "‘--pages=開始頁碼[:結束頁碼]’缺少了引數"
 
-#: src/pr.c:924
+#: src/pr.c:922
 #, c-format
 msgid "`--columns=COLUMN' invalid number of columns: `%s'"
 msgstr "‘--columns=欄位’的欄位數目無效：‘%s’"
 
-#: src/pr.c:978
+#: src/pr.c:976
 #, c-format
 msgid "`-l PAGE_LENGTH' invalid number of lines: `%s'"
 msgstr "‘-l 每頁行數’的行數無效：‘%s’"
 
-#: src/pr.c:1002
+#: src/pr.c:1000
 #, c-format
 msgid "`-N NUMBER' invalid starting line number: `%s'"
 msgstr "‘-N 行號’的開始行號無效：‘%s’"
 
-#: src/pr.c:1014
+#: src/pr.c:1012
 #, c-format
 msgid "`-o MARGIN' invalid line offset: `%s'"
 msgstr "‘-o 邊界’的字元偏移值無效：‘%s’"
 
-#: src/pr.c:1055
+#: src/pr.c:1053
 #, c-format
 msgid "`-w PAGE_WIDTH' invalid number of characters: `%s'"
 msgstr "‘-w 頁寬’的字元數目無效：‘%s’"
 
-#: src/pr.c:1067
+#: src/pr.c:1065
 #, c-format
 msgid "`-W PAGE_WIDTH' invalid number of characters: `%s'"
 msgstr "‘-W 頁寬’的字元數目無效：‘%s’"
 
-#: src/pr.c:1081
+#: src/pr.c:1079
 msgid "%b %e %H:%M %Y"
 msgstr "%Y-%m-%d %H:%M"
 
-#: src/pr.c:1090
+#: src/pr.c:1088
 msgid "Cannot specify number of columns when printing in parallel."
 msgstr "並排列印時不能同時指定欄位數目。"
 
-#: src/pr.c:1094
+#: src/pr.c:1092
 msgid "Cannot specify both printing across and printing in parallel."
 msgstr "不能同時指定橫向列印與並排列印。"
 
-#: src/pr.c:1190
+#: src/pr.c:1188
 #, c-format
 msgid "`-%c' extra characters or invalid number in the argument: `%s'"
 msgstr "引數‘%2$s’含有多餘的字元‘-%1$c’或無效的數字"
 
-#: src/pr.c:1301
+#: src/pr.c:1299
 msgid "page width too narrow"
 msgstr "頁面太窄"
 
-#: src/pr.c:2364
+#: src/pr.c:2362
 #, c-format
 msgid "starting page number larger than total number of pages: `%d'"
 msgstr "開始頁碼大於總頁數：‘%d’"
 
-#: src/pr.c:2395
+#: src/pr.c:2393
 #, c-format
 msgid "Page %d"
 msgstr "第 %d 頁"
 
-#: src/pr.c:2761
+#: src/pr.c:2759
 msgid ""
 "Paginate or columnate FILE(s) for printing.\n"
 "\n"
@@ -4336,12 +4457,13 @@ msgstr ""
 "將 <檔案> 分頁或分欄以便列印。\n"
 "\n"
 
-#: src/pr.c:2768
+#: src/pr.c:2766
+#, fuzzy
 msgid ""
 "  +FIRST_PAGE[:LAST_PAGE], --pages=FIRST_PAGE[:LAST_PAGE]\n"
 "                    begin [stop] printing with page FIRST_[LAST_]PAGE\n"
 "  -COLUMN, --columns=COLUMN\n"
-"                    produce COLUMN-column output and print columns down,\n"
+"                    output COLUMN columns and print columns down,\n"
 "                    unless -a is used. Balance number of lines in the\n"
 "                    columns on each page.\n"
 msgstr ""
@@ -4351,7 +4473,7 @@ msgstr ""
 "                    將輸出分為指定的 <欄數> 顯示，而每一欄都是向下列印的，\n"
 "                    除非使用 -a 選項。它也會平均分佈每頁中所有欄位的行數。\n"
 
-#: src/pr.c:2776
+#: src/pr.c:2774
 msgid ""
 "  -a, --across      print columns across rather than down, used together\n"
 "                    with -COLUMN\n"
@@ -4368,7 +4490,7 @@ msgstr ""
 "                    隔行顯示結果\n"
 
 # -F and -f are just the same, help text is ambiguous -- maddog
-#: src/pr.c:2784
+#: src/pr.c:2782
 msgid ""
 "  -D, --date-format=FORMAT\n"
 "                    use FORMAT for the header date\n"
@@ -4388,7 +4510,7 @@ msgstr ""
 "                    使用 form feed 而不是 newline 字元來分頁 (使用此選項\n"
 "                    時只會印出三行標頭，否則會印出五行標頭再加註腳)\n"
 
-#: src/pr.c:2794
+#: src/pr.c:2792
 msgid ""
 "  -h HEADER, --header=HEADER\n"
 "                    use a centered HEADER instead of filename in page "
@@ -4408,7 +4530,7 @@ msgstr ""
 "  -J, --join-lines  將每行資料完整地合併；會關閉 -W 選項將每行截斷的效果；\n"
 "                    不將每欄對齊；--sep-string[=字串] 選項可設定分隔字串\n"
 
-#: src/pr.c:2803
+#: src/pr.c:2801
 msgid ""
 "  -l PAGE_LENGTH, --length=PAGE_LENGTH\n"
 "                    set the page length to PAGE_LENGTH (66) lines\n"
@@ -4422,7 +4544,7 @@ msgstr ""
 "  -m, --merge       並排顯示所有檔案 (每欄一個檔案)；會將資料截短至符合\n"
 "                    欄寬，但使用 -J 選項則不會截短任何一行\n"
 
-#: src/pr.c:2810
+#: src/pr.c:2808
 msgid ""
 "  -n[SEP[DIGITS]], --number-lines[=SEP[DIGITS]]\n"
 "                    number lines, use DIGITS (5) digits, then SEP (TAB),\n"
@@ -4437,7 +4559,7 @@ msgstr ""
 "  -N 行號, --first-line-number=行號\n"
 "                    指定每個檔案第一行的 <行號> (請參考 +開始頁碼 的說明)\n"
 
-#: src/pr.c:2818
+#: src/pr.c:2816
 msgid ""
 "  -o MARGIN, --indent=MARGIN\n"
 "                    offset each line with MARGIN (zero) spaces, do not\n"
@@ -4451,7 +4573,7 @@ msgstr ""
 "  -r, --no-file-warnings\n"
 "                    無法開啟檔案時不會印出警告訊息\n"
 
-#: src/pr.c:2825
+#: src/pr.c:2823
 msgid ""
 "  -s[CHAR],--separator[=CHAR]\n"
 "                    separate columns by a single character, default for "
@@ -4467,11 +4589,11 @@ msgstr ""
 "                    和欄位有關的選項截斷每行的資料： -欄位、-a -欄位、\n"
 "                    -m\n"
 
-#: src/pr.c:2832
+#: src/pr.c:2830
 msgid "  -SSTRING, --sep-string[=STRING]\n"
 msgstr "  -S字串, --sep-string[=字串]\n"
 
-#: src/pr.c:2835
+#: src/pr.c:2833
 msgid ""
 "                    separate columns by STRING,\n"
 "                    without -S: Default separator <TAB> with -J and <space>\n"
@@ -4485,7 +4607,7 @@ msgstr ""
 "                    欄位有關的選項\n"
 "  -t, --omit-header 不印出標頭和註腳\n"
 
-#: src/pr.c:2841
+#: src/pr.c:2839
 msgid ""
 "  -T, --omit-pagination\n"
 "                    omit page headers and trailers, eliminate any "
@@ -4508,7 +4630,7 @@ msgstr ""
 "元]\n"
 "                    會關閉此效果\n"
 
-#: src/pr.c:2851
+#: src/pr.c:2849
 msgid ""
 "  -W PAGE_WIDTH, --page-width=PAGE_WIDTH\n"
 "                    set page width to PAGE_WIDTH (72) characters always,\n"
@@ -4521,7 +4643,7 @@ msgstr ""
 "                    強行截短至符合頁寬，除非同時使用 -J 選項；不會影響 -S\n"
 "                    或 -s 選項\n"
 
-#: src/pr.c:2859
+#: src/pr.c:2857
 msgid ""
 "\n"
 "-T implied by -l nn when nn <= 10 or <= 3 with -F. With no FILE, or when\n"
@@ -4772,14 +4894,14 @@ msgid "cannot chdir from %s to .."
 msgstr "無法進入%s目錄"
 
 #: src/remove.c:377 src/remove.c:458
-#, fuzzy, c-format
+#, c-format
 msgid "cannot lstat `.' in %s"
-msgstr "stat%s失敗"
+msgstr "無法在%s中 lstat‘.’"
 
 #: src/remove.c:384 src/remove.c:462
 #, c-format
 msgid "%s changed dev/ino"
-msgstr ""
+msgstr "%s的所在裝置或 inode 改變了"
 
 #: src/remove.c:501
 #, c-format
@@ -4790,61 +4912,65 @@ msgid ""
 "The following directory is part of the cycle:\n"
 "  %s\n"
 msgstr ""
+"警告：發現循環的目錄架構。\n"
+"這幾乎可以肯定檔案系統已經損壞。\n"
+"** 請通知系統管理員。**\n"
+"以下的目錄是循環的一部份：\n"
+"  %s\n"
 
-#: src/remove.c:570 src/remove.c:709 src/remove.c:850 src/remove.c:916
-#, fuzzy, c-format
+#: src/remove.c:581 src/remove.c:720 src/remove.c:876 src/remove.c:948
+#, c-format
 msgid "cannot lstat %s"
-msgstr "stat%s失敗"
+msgstr "lstat%s失敗"
 
-#: src/remove.c:599
+#: src/remove.c:610
 #, fuzzy, c-format
 msgid "%s: descend into write-protected directory %s? "
 msgstr "無法建立目錄%s"
 
-#: src/remove.c:600
+#: src/remove.c:611
 #, fuzzy, c-format
 msgid "%s: descend into directory %s? "
 msgstr "無法進入%s目錄"
 
-#: src/remove.c:611
-#, fuzzy, c-format
+#: src/remove.c:622
+#, c-format
 msgid "%s: remove write-protected %s %s? "
-msgstr "%s：是否覆寫%s? "
+msgstr "%s：是否移除有防寫保護的%s%s? "
 
-#: src/remove.c:612
-#, fuzzy, c-format
+#: src/remove.c:623
+#, c-format
 msgid "%s: remove %s %s? "
-msgstr "%s：是否覆寫%s? "
+msgstr "%s：是否移除%s%s? "
 
-#: src/remove.c:636
-#, fuzzy, c-format
+#: src/remove.c:647
+#, c-format
 msgid "removed %s\n"
-msgstr "無法移除%s"
+msgstr "已移除%s\n"
 
-#: src/remove.c:651 src/remove.c:986
+#: src/remove.c:662 src/remove.c:1018
 #, fuzzy, c-format
 msgid "removed directory: %s\n"
 msgstr "無法建立目錄%s"
 
-#: src/remove.c:731 src/remove.c:991
+#: src/remove.c:742 src/remove.c:1023
 #, fuzzy, c-format
 msgid "cannot remove directory %s"
 msgstr "無法建立目錄%s"
 
-#: src/remove.c:805
+#: src/remove.c:816
 #, fuzzy, c-format
 msgid "cannot open directory %s"
 msgstr "無法建立目錄%s"
 
-#: src/remove.c:855 src/remove.c:934
+#: src/remove.c:881 src/remove.c:966
 #, fuzzy, c-format
 msgid "cannot chdir from %s to %s"
 msgstr "無法進入%s目錄"
 
-#: src/remove.c:1025
-#, fuzzy
+#: src/remove.c:1057
 msgid "cannot remove `.' or `..'"
-msgstr "無法移除%s"
+msgstr "無法移除‘.’或‘..’"
 
 #: src/rm.c:100 src/touch.c:238
 #, fuzzy, c-format
@@ -4862,6 +4988,13 @@ msgid ""
 "  -r, -R, --recursive   remove the contents of directories recursively\n"
 "  -v, --verbose         explain what is being done\n"
 msgstr ""
+"移除指定的 <檔案>。\n"
+"\n"
+"  -d, --directory       移除可能仍有資料的目錄 (只限最大權力使用者使用)\n"
+"  -f, --force           略過不存在的檔案，不顯示任何訊息\n"
+"  -i, --interactive     進行任何移除操作前必須先確認\n"
+"  -r, -R, --recursive   同時移除該目錄下的所有目錄層\n"
+"  -v, --verbose         詳細顯示進行的步驟\n"
 
 #: src/rm.c:113
 #, c-format
@@ -4873,6 +5006,11 @@ msgid ""
 "\n"
 "  %s ./-foo\n"
 msgstr ""
+"\n"
+"要移除第一個字元為‘-’的檔案 (例如‘-foo’)，請使用以下其中一種方法：\n"
+"  %s -- -foo\n"
+"\n"
+"  %s ./-foo\n"
 
 #: src/rm.c:122
 msgid ""
@@ -4882,6 +5020,9 @@ msgid ""
 "are\n"
 "truly unrecoverable, consider using shred.\n"
 msgstr ""
+"\n"
+"請注意，如果使用 rm 來移除檔案，通常仍可以將該檔案恢復原狀。如果想保證\n"
+"該檔案的內容無法還原，請考慮使用 shred。\n"
 
 #: src/rmdir.c:114 src/rmdir.c:215
 #, fuzzy, c-format
@@ -4901,6 +5042,10 @@ msgid ""
 "                  ignore each failure that is solely because a directory\n"
 "                  is non-empty\n"
 msgstr ""
+"如果 <目錄> 沒有資料則移除該目錄。\n"
+"\n"
+"      --ignore-fail-on-non-empty\n"
+"                  忽略任何因目錄仍有資料而造成的錯誤\n"
 
 #: src/rmdir.c:152
 msgid ""
@@ -4909,6 +5054,9 @@ msgid ""
 "                  similar to `rmdir a/b/c a/b a'.\n"
 "  -v, --verbose   output a diagnostic for every directory processed\n"
 msgstr ""
+"  -p, --parents   移除 <目錄>，然後嘗試移除指定路徑中的所有上層目錄。例如：\n"
+"                  ‘rmdir -p a/b/c’的效果等於‘rmdir a/b/c a/b a’。\n"
+"  -v, --verbose   處理每個目錄時都顯示訊息\n"
 
 #: src/seq.c:82
 #, fuzzy, c-format
@@ -4979,7 +5127,7 @@ msgid ""
 "Overwrite the specified FILE(s) repeatedly, in order to make it harder\n"
 "for even very expensive hardware probing to recover the data.\n"
 "\n"
-msgstr ""
+msgstr "重複覆寫 <檔案>，使得即使是昂貴的硬件偵測儀器也難以將資料復原。\n"
 
 #: src/shred.c:184
 #, c-format
@@ -4988,6 +5136,9 @@ msgid ""
 "  -n, --iterations=N  Overwrite N times instead of the default (%d)\n"
 "  -s, --size=N   shred this many bytes (suffixes like K, M, G accepted)\n"
 msgstr ""
+"  -f, --force    有需要時強迫程式可寫入檔案\n"
+"  -n, --iterations=N  自行指定重覆覆寫的次數 (預設為 %d 次)\n"
+"  -s, --size=N   覆寫指定的位元組數目 (可接受 K、M、G 等等的單位)\n"
 
 #: src/shred.c:189
 msgid ""
@@ -4997,6 +5148,11 @@ msgid ""
 "  -z, --zero     add a final overwrite with zeros to hide shredding\n"
 "  -              shred standard output\n"
 msgstr ""
+"  -u, --remove   覆寫後會截斷及移除該檔案\n"
+"  -v, --verbose  顯示進度\n"
+"  -x, --exact    不將檔案大小增加至最接近的區段大小\n"
+"  -z, --zero     最後一次會使用 0 位元組進行覆寫來隱藏覆寫動作\n"
+"  -              覆寫標準輸出的資料\n"
 
 #: src/shred.c:198
 msgid ""
@@ -5007,6 +5163,10 @@ msgid ""
 "files, most people use the --remove option.\n"
 "\n"
 msgstr ""
+"\n"
+"如果加上 --remove (-u) 選項表示移除 <檔案>。預設的方式是不移除檔案，\n"
+"因為覆寫像 /dev/hda 等的裝置檔案是很普遍的，而這些檔案通常不應移除。\n"
+"當覆寫普通檔案時，絕大多數人都會使用 --remove 選項。\n"
 
 #: src/shred.c:206
 msgid ""
@@ -5017,6 +5177,10 @@ msgid ""
 "not effective:\n"
 "\n"
 msgstr ""
+"警告：請注意使用 shred 時有一個很重要的條件：\n"
+"檔案系統會在原來的位置覆寫指定的資料。傳統的檔案系統符合此條件，但許多現代\n"
+"的檔案系統都不符合條件。以下是會令 shred 無效的檔案系統的例子：\n"
+"\n"
 
 #: src/shred.c:214
 msgid ""
@@ -5029,6 +5193,14 @@ msgid ""
 "* filesystems that make snapshots, such as Network Appliance's NFS server\n"
 "\n"
 msgstr ""
+"● 有紀錄結構或是日誌式檔案系統，像 AIX 及 Solaris 使用的檔案系統 (以及\n"
+"   JFS、ReiserFS、XFS、Ext3 等等)\n"
+"\n"
+"● 會重覆寫入資料，及即使一部份寫入動作失敗後仍可繼續的檔案系統，像使用\n"
+"   RAID 的檔案系統\n"
+"\n"
+"● 會不時進行快照紀錄的檔案系統，像 Network Applicance 的 NFS 伺服器\n"
+"\n"
 
 #: src/shred.c:224
 msgid ""
@@ -5041,16 +5213,22 @@ msgid ""
 "of the file that cannot be removed, and that will allow a shredded file\n"
 "to be recovered later.\n"
 msgstr ""
+"● 會將快取記憶放入暫存位置的檔案系統，像 NFS 第 3 版本的用戶端程式\n"
+"\n"
+"● 會壓縮資料的檔案系統\n"
+"\n"
+"另外，檔案系統的備份及遠端的 mirror 都可能擁有該檔案的複製本，這些複製本\n"
+"都是無法移除的，而且可能令已經用 shred 處理過的檔案恢復原狀。\n"
 
 #: src/shred.c:822
 #, c-format
 msgid "%s: cannot rewind"
-msgstr ""
+msgstr "%s：無法向後搜尋"
 
 #: src/shred.c:845
 #, c-format
 msgid "%s: pass %lu/%lu (%s)..."
-msgstr ""
+msgstr "%1$s：%3$lu 次之第 %2$lu 次 (%4$s)..."
 
 #: src/shred.c:882
 #, fuzzy, c-format
@@ -5065,12 +5243,12 @@ msgstr "%s：檔案過大"
 #: src/shred.c:934
 #, c-format
 msgid "%s: pass %lu/%lu (%s)...%s"
-msgstr ""
+msgstr "%1$s：%3$lu 次之第 %2$lu 次 (%4$s)...%5$s"
 
 #: src/shred.c:943
 #, c-format
 msgid "%s: pass %lu/%lu (%s)...%s/%s %d%%"
-msgstr ""
+msgstr "%1$s：%3$lu 次之第 %2$lu 次 (%4$s)...%5$s/%6$s %7$d%%"
 
 #: src/shred.c:1204
 #, fuzzy, c-format
@@ -5080,7 +5258,7 @@ msgstr "%s：無效的後置字串長度"
 #: src/shred.c:1221
 #, c-format
 msgid "%s: file has negative size"
-msgstr ""
+msgstr "%s：檔案的大小為負數"
 
 #: src/shred.c:1273
 #, fuzzy, c-format
@@ -5090,12 +5268,12 @@ msgstr "%s：檔案被截斷了"
 #: src/shred.c:1294
 #, c-format
 msgid "%s: cannot shred append-only file descriptor"
-msgstr ""
+msgstr "%s：不能將只可加上資料的檔案描述子 (file descriptor) 進行 shred 動作"
 
 #: src/shred.c:1379
 #, c-format
 msgid "%s: removing"
-msgstr ""
+msgstr "%s：正在移除"
 
 #: src/shred.c:1420
 #, fuzzy, c-format
@@ -5105,12 +5283,12 @@ msgstr "%s：讀取時發生錯誤"
 #: src/shred.c:1446
 #, c-format
 msgid "%s: removed"
-msgstr ""
+msgstr "%s：已經移除"
 
 #: src/shred.c:1511
-#, fuzzy, c-format
+#, c-format
 msgid "%s: cannot remove"
-msgstr "無法移除%s"
+msgstr "%s：無法移除"
 
 #: src/shred.c:1559
 #, fuzzy, c-format
@@ -5143,7 +5321,7 @@ msgstr ""
 #: src/sleep.c:176
 #, fuzzy
 msgid "cannot read realtime clock"
-msgstr "無法建立連結 %s"
+msgstr "無法建立鏈結%s"
 
 #: src/sleep.c:243
 #, fuzzy, c-format
@@ -5448,6 +5626,8 @@ msgstr "無法將 %s 的檔案指標重新定位"
 msgid "Usage: %s [OPTION] FILE...\n"
 msgstr "用法：%s [選項] [檔案]...\n"
 
+# How come the real behavior of -L is exactly the opposite of what docs
+# say? -- Abel
 #: src/stat.c:731
 msgid ""
 "Display file or filesystem status.\n"
@@ -5457,6 +5637,12 @@ msgid ""
 "  -L, --dereference     follow links\n"
 "  -t, --terse           print the information in terse form\n"
 msgstr ""
+"顯示檔案或檔案系統的狀態。\n"
+"\n"
+"  -f, --filesystem      顯示檔案系統的狀態，而不是檔案的狀態\n"
+"  -c  --format=格式     使用指定的 <格式> 代替預設的格式\n"
+"  -L, --dereference     讀取鏈結本身的資訊，而非鏈結指示的目標檔案/目錄\n"
+"  -t, --terse           只顯示簡略的資訊\n"
 
 #: src/stat.c:742
 msgid ""
@@ -5467,6 +5653,12 @@ msgid ""
 "  %a - Access rights in octal\n"
 "  %b - Number of blocks allocated\n"
 msgstr ""
+"\n"
+"適用於擷取檔案資訊 (即是不使用 --filesystem 選項) 的格式：\n"
+"\n"
+"  %A - 以容易理解的方式表示存取權限\n"
+"  %a - 以八進位數字方式表示存取權限\n"
+"  %b - 佔用的磁碟區段數目\n"
 
 #: src/stat.c:749
 msgid ""
@@ -5477,6 +5669,12 @@ msgid ""
 "  %G - Group name of owner\n"
 "  %g - Group ID of owner\n"
 msgstr ""
+"  %D - 以十六進位表示的裝置號碼\n"
+"  %d - 以十進位表示的裝置號碼\n"
+"  %F - 檔案類型\n"
+"  %f - 以十六進位表示的檔案類型/存取權限\n"
+"  %G - 所屬群組的名稱\n"
+"  %g - 所屬群組的號碼\n"
 
 #: src/stat.c:757
 msgid ""
@@ -5489,6 +5687,14 @@ msgid ""
 "  %T - Minor device type in hex\n"
 "  %t - Major device type in hex\n"
 msgstr ""
+"  %h - 實際連結 (hard link) 的數目\n"
+"  %i - Inode 號碼\n"
+"  %N - 加上引號後的檔案名稱，如果是符號鏈結則加上鏈結實際指示的檔案/目錄\n"
+"  %n - 檔案名稱\n"
+"  %o - 最理想的輸出/輸入資料區塊大小\n"
+"  %s - 大小 (以位元組計)\n"
+"  %T - 特殊檔案或裝置檔案的十六進位 minor 號碼\n"
+"  %t - 特殊檔案或裝置檔案的十六進位 major 號碼\n"
 
 #: src/stat.c:767
 msgid ""
@@ -5502,6 +5708,14 @@ msgid ""
 "  %z - Time of last change\n"
 "\n"
 msgstr ""
+"  %U - 擁有者的用戶名稱\n"
+"  %u - 擁有者的用戶識別碼\n"
+"  %X - 由 Epoch 時間至最後存取的時間之間經過的秒數\n"
+"  %x - 最後存取的時間\n"
+"  %Y - 由 Epoch 時間至最後更改的時間之間經過的秒數\n"
+"  %y - 最後更改的時間\n"
+"  %Z - 由 Epoch 時間至最後更改 inode 資訊的時間之間經過的秒數\n"
+"  %z - 最後更改 inode 資訊的時間\n"
 
 #: src/stat.c:779
 msgid ""
@@ -5513,6 +5727,13 @@ msgid ""
 "  %d - Free file nodes in file system\n"
 "  %f - Free blocks in file system\n"
 msgstr ""
+"適用於擷取檔案系統資訊的格式：\n"
+"\n"
+"  %a - 最高權力用戶以外的用戶可使用的空間\n"
+"  %b - 檔案系統的總容量\n"
+"  %c - 檔案系統可接受的最大檔案數目\n"
+"  %d - 檔案系統剩餘可用的最大檔案數目\n"
+"  %f - 檔案系統的剩餘空間\n"
 
 #: src/stat.c:788
 msgid ""
@@ -5523,6 +5744,12 @@ msgid ""
 "  %T - Type in human readable form\n"
 "  %t - Type in hex\n"
 msgstr ""
+"  %i - 以十六進位表示的檔案系統識別碼\n"
+"  %l - 可接受的檔案名稱最大長度\n"
+"  %n - 檔案名稱\n"
+"  %s - 搬移資料時最理想的區段大小\n"
+"  %T - 以容易理解的方式表示的檔案系統類型\n"
+"  %t - 以十六進位表示的檔案系統類型\n"
 
 #: src/stty.c:501
 #, c-format
@@ -5837,12 +6064,12 @@ msgstr ""
 msgid "new_mode: mode\n"
 msgstr ""
 
-#: src/stty.c:1464
+#: src/stty.c:1465
 #, c-format
 msgid "%s: no size information for this device"
 msgstr ""
 
-#: src/stty.c:1913
+#: src/stty.c:1914
 #, fuzzy, c-format
 msgid "invalid integer argument `%s'"
 msgstr "無效的行號增加值：‘%s’"
@@ -5854,7 +6081,7 @@ msgstr ""
 #: src/su.c:292
 #, fuzzy
 msgid "getpass: cannot open /dev/tty"
-msgstr "無法建立目錄 %s"
+msgstr "無法開啟目錄%s"
 
 #: src/su.c:350
 #, fuzzy
@@ -5934,6 +6161,8 @@ msgid ""
 "Force changed blocks to disk, update the super block.\n"
 "\n"
 msgstr ""
+"強迫將已更改的資料寫入磁碟，並更新 super block。\n"
+"\n"
 
 #: src/sync.c:70 src/tty.c:112
 #, fuzzy
@@ -6106,56 +6335,56 @@ msgstr "%s：無法搜尋至位置 %s%s"
 msgid "%s: cannot seek to relative offset %s%s"
 msgstr "%s：無法搜尋至相對位置 %s%s"
 
-#: src/tail.c:408
+#: src/tail.c:409
 #, c-format
 msgid "%s: cannot seek to end-relative offset %s%s"
 msgstr "%s：無法搜尋至末端相對位置 %s%s"
 
-#: src/tail.c:814
+#: src/tail.c:815
 #, c-format
 msgid "`%s' has become inaccessible"
 msgstr "已無法存取‘%s’"
 
-#: src/tail.c:831
+#: src/tail.c:832
 #, c-format
 msgid "`%s' has been replaced with an untailable file; giving up on this name"
 msgstr "%s：被一個無法 tail 的檔案取代；不會再檢查此檔案名稱"
 
-#: src/tail.c:852
+#: src/tail.c:853
 #, c-format
 msgid "`%s' has become accessible"
 msgstr "已經可以存取‘%s’"
 
-#: src/tail.c:860
+#: src/tail.c:861
 #, c-format
 msgid "`%s' has appeared;  following end of new file"
 msgstr "‘%s’已出現；正在檢查新檔案的末端"
 
-#: src/tail.c:871
+#: src/tail.c:872
 #, c-format
 msgid "`%s' has been replaced;  following end of new file"
 msgstr "‘%s’已被取代；正在檢查新檔案的末端"
 
-#: src/tail.c:996
+#: src/tail.c:997
 #, c-format
 msgid "%s: file truncated"
 msgstr "%s：檔案被截斷了"
 
-#: src/tail.c:1016
+#: src/tail.c:1017
 msgid "no files remaining"
 msgstr "已沒有任何剩餘的檔案"
 
-#: src/tail.c:1226
+#: src/tail.c:1227
 #, c-format
 msgid "%s: cannot follow end of this type of file; giving up on this name"
 msgstr "%s：無法檢查此類檔案的末端；不會再檢查此檔案名稱"
 
-#: src/tail.c:1346
+#: src/tail.c:1347
 #, c-format
 msgid "%c: invalid suffix character in obsolescent option"
 msgstr "%c：在已過時的選項中含有無效的後置字元"
 
-#: src/tail.c:1395
+#: src/tail.c:1396
 #, c-format
 msgid ""
 "too many arguments;  When using tail's obsolescent option syntax (%s)\n"
@@ -6165,7 +6394,7 @@ msgstr ""
 "參數過多；當使用已過時的 tail 選項語法 (%s) 時，不可指定多於一個的檔案\n"
 "參數。請使用同等的 -n 或 -c 選項。"
 
-#: src/tail.c:1404
+#: src/tail.c:1405
 #, c-format
 msgid ""
 "Warning: it is not portable to use two or more file arguments with\n"
@@ -6175,50 +6404,50 @@ msgstr ""
 "警告：將兩個或以上的檔案配合已過時的 tail 選項語法 (%s) 不是在所有系統\n"
 "都通用的。請使用同等的 -n 或 -c 選項。"
 
-#: src/tail.c:1413
+#: src/tail.c:1414
 #, c-format
 msgid "`%s' option is obsolete; use `%s-%c %.*s'"
 msgstr "‘%s’選項已過時；請使用‘%s-%c %.*s’"
 
-#: src/tail.c:1473
+#: src/tail.c:1474
 #, c-format
 msgid "%s: is so large that it is not representable"
 msgstr "%s：因為過大，所以無法表示"
 
-#: src/tail.c:1477
+#: src/tail.c:1478
 #, c-format
 msgid "%s is larger than the maximum file size on this system"
 msgstr "%s 大於此系統能接受的最大檔案大小"
 
-#: src/tail.c:1503
+#: src/tail.c:1504
 #, c-format
 msgid "%s: invalid maximum number of unchanged stats between opens"
 msgstr "%s：開啟檔案前 stat 資料沒有改變的最大次數無效"
 
-#: src/tail.c:1515
+#: src/tail.c:1516
 #, c-format
 msgid "%s: invalid maximum number of consecutive size changes"
 msgstr "%s：檔案連續改變大小的最大次數無效"
 
-#: src/tail.c:1527
+#: src/tail.c:1528
 #, c-format
 msgid "%s: invalid PID"
 msgstr "%s：無效的 PID"
 
-#: src/tail.c:1545
+#: src/tail.c:1546
 #, c-format
 msgid "%s: invalid number of seconds"
 msgstr "%s：無效的秒數"
 
-#: src/tail.c:1565
+#: src/tail.c:1566
 msgid "warning: --retry is useful only when following by name"
 msgstr "警告：只有檢查檔案名稱時 --retry 選項才會有效"
 
-#: src/tail.c:1569
+#: src/tail.c:1570
 msgid "warning: PID ignored; --pid=PID is useful only when following"
 msgstr "警告：會忽略 PID；--pid=PID 選項只在不斷檢查檔案時才會有效"
 
-#: src/tail.c:1572
+#: src/tail.c:1573
 msgid "warning: --pid=PID is not supported on this system"
 msgstr "警告：此系統不支援 --pid=PID 選項"
 
@@ -6455,15 +6684,15 @@ msgid "creating %s"
 msgstr "正在建立檔案‘%s’\n"
 
 #: src/touch.c:222
-#, fuzzy, c-format
+#, c-format
 msgid "setting times of %s"
-msgstr "保留 %s 的時間"
+msgstr "正在設定%s的時間"
 
 #: src/touch.c:239
 msgid ""
 "Update the access and modification times of each FILE to the current time.\n"
 "\n"
-msgstr ""
+msgstr "將每個 <檔案> 的存取及修改時間都更新為目前的時間。\n"
 
 #: src/touch.c:246
 msgid ""
@@ -6473,6 +6702,11 @@ msgid ""
 "  -f                     (ignored)\n"
 "  -m                     change only the modification time\n"
 msgstr ""
+"  -a                     只更改存取時間\n"
+"  -c, --no-create        不建立任何檔案\n"
+"  -d, --date=字串        使用 <字串> 所表示的時間而不是目前的時間\n"
+"  -f                     (此選項不作處理)\n"
+"  -m                     只更改修改時間\n"
 
 #: src/touch.c:253
 msgid ""
@@ -6482,30 +6716,37 @@ msgid ""
 "a)\n"
 "                           modify mtime (same as -m)\n"
 msgstr ""
+"  -r, --reference=檔案   使用指定 <檔案> 的時間屬性而非目前的時間\n"
+"  -t STAMP               使用 [[CC]YY]MMDDhhmm[.ss] 格式的時間而非目前的時"
+"間\n"
+"  --time=WORD            使用 WORD 指定的時間：access、atime、use 都等於 -a\n"
+"                           選項的效果，而 modify、mtime 等於 -m 選項的效果\n"
 
 #: src/touch.c:261
 msgid ""
 "\n"
 "Note that the -d and -t options accept different time-date formats.\n"
 msgstr ""
+"\n"
+"請注意，-d 和 -t 選項可接受不同的時間/日期格式。\n"
 
-#: src/touch.c:306 src/touch.c:327
+#: src/touch.c:305 src/touch.c:325
 #, fuzzy, c-format
 msgid "invalid date format %s"
 msgstr "%2$s的引數%1$s無效"
 
-#: src/touch.c:351
+#: src/touch.c:349
 #, fuzzy
 msgid "cannot specify times from more than one source"
 msgstr "不能用超過一種方式進行分割"
 
-#: src/touch.c:374
+#: src/touch.c:372
 #, c-format
 msgid ""
 "warning: `touch %s' is obsolete; use `touch -t %04d%02d%02d%02d%02d.%02d'"
-msgstr ""
+msgstr "警告：‘touch %s’已經過時；請使用‘touch -t %04d%02d%02d%02d%02d.%02d’"
 
-#: src/touch.c:394
+#: src/touch.c:392
 #, fuzzy
 msgid "file arguments missing"
 msgstr "引數過少"
@@ -6948,6 +7189,8 @@ msgid ""
 "Call the unlink function to remove the specified FILE.\n"
 "\n"
 msgstr ""
+"透過調用 unlink 函式來移除指定的 <檔案>。\n"
+"\n"
 
 #: src/unlink.c:99
 #, fuzzy, c-format
@@ -7048,7 +7291,7 @@ msgstr ""
 #: src/who.c:41
 #, fuzzy
 msgid "Joseph Arceneaux, David MacKenzie, and Michael Stone"
-msgstr "Torbjorn Granlund、David MacKenzie 及 Jim Meyering"
+msgstr "Mike Parker、David MacKenzie 和 Jim Meyering"
 
 #: src/who.c:223
 msgid " old "
@@ -7209,9 +7452,49 @@ msgid ""
 msgstr ""
 
 #, fuzzy
-msgid "cannot execute %s"
-msgstr "無法建立目錄%s"
+#~ msgid "cannot execute %s"
+#~ msgstr "無法建立目錄%s"
 
 #, fuzzy
-msgid "cannot run %s"
-msgstr "無法對‘%s’執行輸出入控制 (ioctl)"
+#~ msgid "cannot run %s"
+#~ msgstr "無法對‘%s’執行輸出入控制 (ioctl)"
+
+#~ msgid "cannot lstat `.'"
+#~ msgstr "lstat‘.’失敗"
+
+#, fuzzy
+#~ msgid "closing directory %s"
+#~ msgstr "無法進入%s目錄"
+
+#, fuzzy
+#~ msgid "%s: remove directory %s? "
+#~ msgstr "無法建立目錄%s"
+
+#~ msgid "%s: directory %s is write protected; descend into it anyway? "
+#~ msgstr "%s：目錄%s有防寫保護；是否仍然要進入? "
+
+#~ msgid "removing all entries of directory %s\n"
+#~ msgstr "正在移除目錄%s中的所有項目\n"
+
+#~ msgid "directory %s was replaced before being removed"
+#~ msgstr "正準備移除目錄%s時目錄已被置換"
+
+#, fuzzy
+#~ msgid "cannot change back to directory %s via `..'"
+#~ msgstr "無法進入%s目錄"
+
+#~ msgid "subdirectory of %s was moved while being removed"
+#~ msgstr "正準備移除%s的副目錄時該目錄已被移走"
+
+#, fuzzy
+#~ msgid "%s: remove directory %s%s? "
+#~ msgstr "無法建立目錄%s"
+
+#~ msgid " (might be nonempty)"
+#~ msgstr "（可能仍有資料）"
+
+#~ msgid "removing the directory itself: %s\n"
+#~ msgstr "移除目錄本身：%s\n"
+
+#~ msgid "continue? "
+#~ msgstr "是否繼續? "
