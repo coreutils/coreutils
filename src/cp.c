@@ -330,6 +330,8 @@ re_protect (const char *const_dst_path, int src_offset,
    Return 0 if parent of CONST_DIRPATH exists as a directory with the proper
    permissions when done, otherwise 1. */
 
+/* FIXME: find a way to synch this function with the one in lib/makepath.c. */
+
 static int
 make_path_private (const char *const_dirpath, int src_offset, int mode,
 		   const char *verbose_fmt_string, struct dir_attr **attr_list,
