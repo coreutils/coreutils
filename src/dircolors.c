@@ -1,13 +1,3 @@
-/* FIXME: accept, but ignore EIGHTBIT option
-   FIXME: add option to print that default mapping?
-
-   dircolors: use compiled-in defaults, output a string setting LS_COLORS
-   dircolors -p: output the compiled-in defaults
-   dircolors FILE: use FILE, output a string setting LS_COLORS
-
-   FIXME: Use obstack to accumulate rhs of setenv
- */
-
 /* FIXME: dircolors - parse a Slackware-style DIR_COLORS file.
    Copyright (C) 1994, 1995 H. Peter Anvin
    Copyright (C) 1996 Free Software Foundation, Inc.
@@ -38,14 +28,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 #include "getline.h"
 #include "long-options.h"
 #include "error.h"
+#include "obstack.h"
 #include "dircolors.h"
+
+#define obstack_chunk_alloc xmalloc
+#define obstack_chunk_free free
 
 char *xmalloc ();
 char *basename ();
 char *strndup();
-
-/* Nonzero if any of the files read were the standard input. */
-static int have_read_stdin;
 
 enum Shell_syntax
 {
@@ -56,6 +47,21 @@ enum Shell_syntax
 
 /* Parser needs these state variables.  */
 enum states { ST_TERMNO, ST_TERMYES, ST_TERMSURE, ST_GLOBAL };
+
+#define APPEND_CHAR(C) obstack_1grow (&lsc_obstack, C)
+#define APPEND_TWO_CHAR_STRING(S)					\
+  do									\
+    {									\
+      APPEND_CHAR (S[0]);						\
+      APPEND_CHAR (S[1]);						\
+    }									\
+  while (0)
+
+/* FIXME: */
+static struct obstack lsc_obstack;
+
+/* Nonzero if any of the files read were the standard input. */
+static int have_read_stdin;
 
 /* FIXME: associate with ls_codes? */
 static const char *const slack_codes[] =
@@ -105,6 +111,15 @@ Determine format of output:\n\
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
+static void *
+xstrndup (const char *s, size_t n)
+{
+  char *new = strndup (s, n);
+  if (new == NULL)
+    error (EXIT_FAILURE, 0, _("Memory exhausted"));
+  return new;
+}
+
 /* If the SHELL environment variable is set to `csh' or `tcsh,'
    assume C-shell.  Else Bourne shell.  */
 
@@ -149,7 +164,7 @@ parse_line (const char *line, char **keyword, char **arg)
       ++p;
     }
 
-  *keyword = strndup (keyword_start, p - keyword_start);
+  *keyword = xstrndup (keyword_start, p - keyword_start);
   if (*p  == '\0')
     return;
 
@@ -173,16 +188,16 @@ parse_line (const char *line, char **keyword, char **arg)
     }
   ++p;
 
-  *arg = strndup (arg_start, p - arg_start);
+  *arg = xstrndup (arg_start, p - arg_start);
 }
 
-/* Write a string to standard out, while watching for "dangerous"
+/* FIXME: Write a string to standard out, while watching for "dangerous"
    sequences like unescaped : and = characters.  */
 
 static void
-put_seq (const char *str, char follow)
+append_quoted (const char *str)
 {
-  int danger = 1;
+  int need_backslash = 1;
 
   while (*str != '\0')
     {
@@ -190,24 +205,23 @@ put_seq (const char *str, char follow)
 	{
 	case '\\':
 	case '^':
-	  danger = !danger;
+	  need_backslash = !need_backslash;
 	  break;
 
 	case ':':
 	case '=':
-	  if (danger)
-	    putchar ('\\');
+	  if (need_backslash)
+	    APPEND_CHAR ('\\');
 	  /* Fall through */
 
 	default:
-	  danger = 1;
+	  need_backslash = 1;
 	  break;
 	}
 
-      putchar (*str++);
+      APPEND_CHAR (*str);
+      ++str;
     }
-
-  putchar (follow);		/* The character that ends the sequence.  */
 }
 
 /* FIXME: Accumulate settings in obstack and convert to string in *RESULT.  */
@@ -275,22 +289,24 @@ dc_parse_stream (FILE *fp, const char *filename, char **result)
 	    {
 	      if (keywd[0] == '.')
 		{
-		  putchar ('*');
-		  put_seq (keywd, '=');
-		  put_seq (arg, ':');
+		  APPEND_CHAR ('*');
+		  append_quoted (keywd);
+		  APPEND_CHAR ('=');
+		  append_quoted (arg);
+		  APPEND_CHAR (':');
 		}
 	      else if (keywd[0] == '*')
 		{
-		  put_seq (keywd, '=');
-		  put_seq (arg, ':');
+		  append_quoted (keywd);
+		  APPEND_CHAR ('=');
+		  append_quoted (arg);
+		  APPEND_CHAR (':');
 		}
-	      else if (strcasecmp (keywd, "OPTIONS") == 0)
+	      else if (strcasecmp (keywd, "OPTIONS") == 0
+		       || strcasecmp (keywd, "COLOR") == 0
+		       || strcasecmp (keywd, "EIGHTBIT") == 0)
 		{
 		  /* Ignore.  */
-		}
-	      else if (strcasecmp (keywd, "COLOR") == 0)
-		{
-		   /* FIXME: ignored now.  */
 		}
 	      else
 		{
@@ -302,8 +318,10 @@ dc_parse_stream (FILE *fp, const char *filename, char **result)
 
 		  if (slack_codes[i] != NULL)
 		    {
-		      printf ("%s=", ls_codes[i]);
-		      put_seq (arg, ':');
+		      APPEND_TWO_CHAR_STRING (ls_codes[i]);
+		      APPEND_CHAR ('=');
+		      append_quoted (arg);
+		      APPEND_CHAR (':');
 		    }
 		  else
 		    {
@@ -450,10 +468,33 @@ dircolors' internal database"));
 	    }
 	}
 
+      obstack_init (&lsc_obstack);
       if (argc == 0)
 	err = dc_parse_stream (NULL, NULL, &ls_color_string);
       else
 	err = dc_parse_file (argv[0], &ls_color_string);
+
+      if (!err)
+	{
+	  size_t len = obstack_object_size (&lsc_obstack);
+	  char *s = obstack_finish (&lsc_obstack);
+	  const char *prefix;
+	  const char *suffix;
+
+	  if (syntax == SHELL_SYNTAX_BOURNE)
+	    {
+	      prefix = "LS_COLORS='";
+	      suffix = "';\nexport LS_COLORS\n";
+	    }
+	  else
+	    {
+	      prefix = "setenv LS_COLORS '";
+	      suffix = "'\n";
+	    }
+	  fputs (prefix, stdout);
+	  fwrite (s, 1, len, stdout);
+	  fputs (suffix, stdout);
+	}
     }
 
   if (fclose (stdout) == EOF)
