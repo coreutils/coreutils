@@ -160,26 +160,8 @@ do_link (const char *source, const char *dest)
     {
       if (STAT_LIKE_LINK (source, &source_stats) != 0)
 	{
-#if LINK_FOLLOWS_SYMLINKS
-	  /* This still could be a legitimate request:
-	     if SOURCE is a dangling symlink.  */
-	  if (errno == ENOENT && lstat (source, &source_stats) == 0)
-	    {
-	      /* Allow a hard link to a dangling symlink.  */
-	      /* But here's a little explanation before I remove the whole
-		 enclosing #if block:
-
-		 On systems where LINK_FOLLOWS_SYMLINKS, it is not possible
-		 to create a hard link to a dangling symlink, so the test above
-		 would be pointless.
-	      */
-	    }
-	  else
-#endif
-	    {
-	      error (0, errno, "%s", source);
-	      return 1;
-	    }
+	  error (0, errno, "%s", source);
+	  return 1;
 	}
 
       if (!hard_dir_link && S_ISDIR (source_stats.st_mode))
