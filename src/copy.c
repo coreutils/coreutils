@@ -1,5 +1,5 @@
 /* copy.c -- core functions for copying files and directories
-   Copyright (C) 89, 90, 91, 1995-2001 Free Software Foundation.
+   Copyright (C) 89, 90, 91, 1995-2002 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -216,16 +216,7 @@ copy_reg (const char *src_path, const char *dst_path,
   source_desc = open (src_path, O_RDONLY);
   if (source_desc < 0)
     {
-      /* If SRC_PATH doesn't exist, then chances are good that the
-	 user did something like this `cp --backup foo foo': and foo
-	 existed to start with, but copy_internal renamed DST_PATH
-	 with the backup suffix, thus also renaming SRC_PATH.  */
-      if (errno == ENOENT)
-	error (0, 0, _("%s and %s are the same file"),
-	       quote_n (0, src_path), quote_n (1, dst_path));
-      else
-	error (0, errno, _("cannot open %s for reading"), quote (src_path));
-
+      error (0, errno, _("cannot open %s for reading"), quote (src_path));
       return -1;
     }
 
@@ -472,15 +463,39 @@ same_file_ok (const char *src_path, const struct stat *src_sb,
 	return 1;
     }
 
-  /* The backup code ensures there's a copy, so it's ok to remove
-     any destination file.  But there's one exception: when both
+  /* The backup code ensures there's a copy, so it's usually ok to
+     remove any destination file.  One exception is when both
      source and destination are the same directory entry.  In that
      case, moving the destination file aside (in making the backup)
      would also rename the source file and result in an error.  */
   if (x->backup_type != none)
     {
       if (!same_link)
-	return 1;
+	{
+	  /* In copy mode when dereferencing symlinks, if the source is a
+	     symlink and the dest is not, then backing up the destination
+	     (moving it aside) would make it a dangling symlink, and the
+	     subsequent attempt to open it in copy_reg would fail with
+	     a misleading diagnostic.  Avoid that by returning zero in
+	     that case so the caller can make cp (or mv when it has to
+	     resort to reading the source file) fail now.  */
+
+	  /* FIXME-note: even with the following kludge, we can still provoke
+	     the offending diagnostic.  It's just a little harder to do :-)
+	     $ rm -f a b c; touch c; ln -s c b; ln -s b a; cp -b a b
+	     cp: cannot open `a' for reading: No such file or directory
+	     That's misleading, since a subsequent `ls' shows that `a'
+	     is still there.
+	     One solution would be to open the source file *before* moving
+	     aside the destination, but that'd involve a big rewrite. */
+	  if ( ! x->move_mode
+	       && x->dereference != DEREF_NEVER
+	       && S_ISLNK (src_sb_link->st_mode)
+	       && ! S_ISLNK (dst_sb_link->st_mode))
+	    return 0;
+
+	  return 1;
+	}
 
       return ! same_name (src_path, dst_path);
     }
@@ -985,8 +1000,10 @@ copy_internal (const char *src_path, const char *dst_path,
 
 	      /* Detect (and fail) when creating the backup file would
 		 destroy the source file.  Before, running the commands
-		 cd /tmp; rm -f a a~; : > a; echo A > a~; cp -b -V simple a~ a
+		 cd /tmp; rm -f a a~; : > a; echo A > a~; cp --b=simple a~ a
 		 would leave two zero-length files: a and a~.  */
+	      /* FIXME: but simply change e.g., the final a~ to `./a~'
+		 and the source will still be destroyed.  */
 	      if (STREQ (tmp_backup, src_path))
 		{
 		  const char *fmt;
@@ -1142,8 +1159,38 @@ copy_internal (const char *src_path, const char *dst_path,
 	  return 0;
 	}
 
-      /* Ignore other types of failure (e.g. EXDEV), since the following
-	 code will try to perform a copy, then remove.  */
+      /* WARNING: there probably exist systems for which an inter-device
+	 rename fails with a value of errno not handled here.
+	 If/as those are reported, add them to the condition below.
+	 If this happens to you, please do the following and send the output
+	 to the bug-reporting address (e.g., in the output of cp --help):
+	   touch k; perl -e 'rename "k","/tmp/k" or print "$!(",$!+0,")\n"'
+	 where your current directory is on one partion and /tmp is the other.
+	 Also, please try to find the E* errno macro name corresponding to
+	 the diagnostic and parenthesized integer, and include that in your
+	 e-mail.  One way to do that is to run a command like this
+	   find /usr/include/. -type f \
+	     | xargs grep 'define.*\<E[A-Z]*\>.*\<18\>' /dev/null
+	 where you'd replace `18' with the integer in parentheses that
+	 was output from the perl one-liner above.
+	 If necessary, of course, change `/tmp' to some other directory.  */
+      if (errno != EXDEV)
+	{
+	  /* There are many ways this can happen due to a race condition.
+	     When something happens between the initial xstat and the
+	     subsequent rename, we can get many different types of errors.
+	     For example, if the destination is initially a non-directory
+	     or non-existent, but it is created as a directory, the rename
+	     fails.  If two `mv' commands try to rename the same file at
+	     about the same time, one will succeed and the other will fail.
+	     If the permissions on the directory containing the source or
+	     destination file are made too restrictive, the rename will
+	     fail.  Etc.  */
+	  error (0, errno,
+		 _("cannot move %s to %s"),
+		 quote_n (0, src_path), quote_n (1, dst_path));
+	  return 1;
+	}
 
       /* Save this value of errno to use in case the unlink fails.  */
       rename_errno = errno;
