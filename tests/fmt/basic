@@ -29,6 +29,8 @@ my @Tests =
       {OUT=>"ça b\n"}],
      ['wide-1', '-32768',	{IN=> "a\n"}, {OUT=>"a\n"}],
      ['wide-2', '-2147483647',	{IN=> "a\n"}, {OUT=>"a\n"}],
+     ['bad-suffix', '-72x',	{IN=> ''},
+      {ERR => "fmt: invalid width option: `-72x'\n"}, {EXIT => 1}],
     );
 
 my $save_temps = $ENV{DEBUG};
