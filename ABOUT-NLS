@@ -134,8 +134,8 @@ Each translation team has its own mailing list, courtesy of Linux
 International.  You may reach your translation team at the address
 `LL@li.org', replacing LL by the two-letter ISO 639 code for your
 language.  Language codes are *not* the same as the country codes given
-in ISO 3166.  The following translation teams exist, as of December
-1996:
+in ISO 3166.  The following translation teams exist, as of February
+1997:
 
      Arabic `ar', Chinese `zh', Czech `cs', Danish `da', Dutch `nl',
      English `en', Esperanto `eo', Finnish `fi', French `fr', German
@@ -173,7 +173,7 @@ Available Packages
 
    Languages are not equally supported in all GNU packages.  The
 following matrix shows the current state of GNU internationalization,
-as of December 1996.  The matrix shows, in regard of each package, for
+as of February 1997.  The matrix shows, in regard of each package, for
 which languages PO files have been submitted to translation
 coordination.
 
@@ -182,33 +182,33 @@ coordination.
      bash            |    []          []       []                |  3
      bison           |    []          []       []                |  3
      clisp           |    [] []       []                         |  3
-     cpio            |    []          []       []    []          |  4
+     cpio            |    []    []    []       []    []          |  5
      diffutils       |          []    []             []       [] |  4
      enscript        |    []       [] []       []          []    |  5
      fileutils       |    []    []    []       []    [] [] [] [] |  8
-     findutils       |    []          []    [] []    []       [] |  6
-     flex            |                []                      [] |  2
+     findutils       |    []    []    []    [] []    []       [] |  7
+     flex            |                []    []                [] |  3
      gcal            |    []          []       []                |  3
      gettext         |    []    []    []    [] [] [] [] [] [] [] | 11
      grep            |          []    []    [] [] [] []    [] [] |  8
      hello           |    []    []    []    [] [] [] [] [] [] [] | 10
      id-utils        |    []          []                         |  2
-     indent          |                                           |  0
-     libc            |    []    []    []    [] []    []          |  6
+     indent          |    []                []                   |  2
+     libc            |    []    []    []    [] []    []       [] |  7
      m4              |    []          [] []    []             [] |  5
-     make            |    []    []          [] []    []          |  5
+     make            |    []    []    []    [] []    []          |  6
      music           |                []                         |  1
      ptx             |    []    []    []       [] [] [] []    [] |  8
-     recode          |    []    []    []       []    []    [] [] |  7
+     recode          |    []    []    []       []    [] [] [] [] |  8
      sh-utils        |    []          []       []       []    [] |  5
-     sharutils       |    []          []       []             [] |  4
+     sharutils       |    []    []    []       []             [] |  5
      tar             |    []          []    [] [] [] [] [] [] [] |  9
      texinfo         |                                           |  0
      textutils       |    []    []    []    [] []    []          |  6
      wdiff           | [] []    []    []       [] [] []       [] |  8
                      `-------------------------------------------'
        14 languages    cs de en es fi fr ja ko nl no pl pt sl sv
-       27 packages      1 21  1 11  1 24  1  8 20  7 14  6  7 14  136
+       27 packages      1 22  1 14  1 25  1 10 20  7 14  7  7 15  145
 
    Some counters in the preceding matrix are higher than the number of
 visible blocks let us expect.  This is because a few extra PO files are
@@ -221,6 +221,6 @@ distributed as such by its maintainer.  There might be an observable
 lag between the mere existence a PO file and its wide availability in a
 GNU distribution.
 
-   If December 1996 seems to be old, you may fetch a more recent copy
+   If February 1997 seems to be old, you may fetch a more recent copy
 of this `ABOUT-NLS' file on most GNU archive sites.
 
