@@ -56,10 +56,16 @@
 #include "error.h"
 #include "exclude.h"
 #include "human.h"
-#include "long-options.h"
 #include "save-cwd.h"
 #include "savedir.h"
+#include "version-etc.h"
 #include "xstrtol.h"
+
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "du"
+
+#define AUTHORS \
+  "Torbjorn Granlund, David MacKenzie, Larry McVoy, and Paul Eggert"
 
 /* Initial number of entries in each hash table entry's table of inodes.  */
 #define INITIAL_HASH_MODULE 100
@@ -189,6 +195,8 @@ static struct option const long_options[] =
   {"separate-dirs", no_argument, NULL, 'S'},
   {"summarize", no_argument, NULL, 's'},
   {"total", no_argument, NULL, 'c'},
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
 
@@ -250,10 +258,6 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
-
-  parse_long_options (argc, argv, "du", GNU_PACKAGE, VERSION,
-	    "Torbjorn Granlund, David MacKenzie, Larry McVoy, and Paul Eggert",
-		      usage);
 
   exclude = new_exclude ();
   xstat = lstat;
@@ -342,6 +346,10 @@ main (int argc, char **argv)
 	case CHAR_MAX + 2:
 	  human_block_size (optarg, 1, &output_block_size);
 	  break;
+
+	case_GETOPT_HELP_CHAR;
+
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
 	  usage (1);

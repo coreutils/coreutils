@@ -31,7 +31,12 @@
 #include "closeout.h"
 #include "dirname.h"
 #include "error.h"
-#include "long-options.h"
+#include "version-etc.h"
+
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "ln"
+
+#define AUTHORS "Mike Parker and David MacKenzie"
 
 int link ();			/* Some systems don't declare this anywhere. */
 
@@ -109,6 +114,8 @@ static struct option const long_options[] =
   {"symbolic", no_argument, NULL, 's'},
   {"verbose", no_argument, NULL, 'v'},
   {"version-control", required_argument, NULL, 'V'},
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
 
@@ -379,9 +386,6 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "ln", GNU_PACKAGE, VERSION,
-		      "Mike Parker and David MacKenzie", usage);
-
   /* FIXME: consider not calling getenv for SIMPLE_BACKUP_SUFFIX unless
      we'll actually use simple_backup_suffix.  */
   version = getenv ("SIMPLE_BACKUP_SUFFIX");
@@ -434,6 +438,8 @@ main (int argc, char **argv)
 	case 'V':
 	  version = optarg;
 	  break;
+	case_GETOPT_HELP_CHAR;
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 	default:
 	  usage (1);
 	  break;
