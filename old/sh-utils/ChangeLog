@@ -1,3 +1,8 @@
+Thu Oct 17 23:48:16 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (LIBS): Add -lypsec on m88k/svr3 DolphinOS systems
+	using YP.  From Arne Juul.
+
 Sun Oct 13 07:34:15 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in: Don't save and restore LIBS around AM_FUNC_GETLOADAVG.
