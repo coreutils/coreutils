@@ -1,3 +1,10 @@
+2004-05-20  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* tests/chgrp/basic: Test that chgrp -h does not fail on
+	symlinks, even on hosts where that's not supported.
+	Test that if -R is specified without -H or L, -h is assumed.
+	Test that chown() is not optimized away.
+
 2004-05-18  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Several fixes to chgrp and chown for compatibility with POSIX and BSD:
