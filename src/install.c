@@ -302,7 +302,7 @@ main (int argc, char **argv)
 	{
 	  errors |=
 	    make_path (argv[optind], mode, mode, owner_id, group_id, 0,
-		       (verbose ? "%s" : NULL));
+		       (verbose ? "creating directory `%s'" : NULL));
 	}
     }
   else
@@ -445,7 +445,7 @@ copy_file (const char *from, const char *to, int *to_created)
 
   /* Now it's the time to give some feedback if requested.  */
   if (verbose)
-    printf ("%s -> %s\n", from, to);
+    printf ("copying `%s' to `%s'\n", from, to);
 
   fromfd = open (from, O_RDONLY, 0);
   if (fromfd == -1)
