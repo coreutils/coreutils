@@ -59,19 +59,19 @@ C_STRTOD (char const *nptr, char **endptr)
 
 #else
 
-  char *saved_locale = setlocale (LC_ALL, NULL);
+  char *saved_locale = setlocale (LC_NUMERIC, NULL);
 
   if (saved_locale)
     {
       saved_locale = xstrdup (saved_locale);
-      setlocale (LC_ALL, "C");
+      setlocale (LC_NUMERIC, "C");
     }
 
   r = STRTOD (nptr, endptr);
 
   if (saved_locale)
     {
-      setlocale (LC_ALL, saved_locale);
+      setlocale (LC_NUMERIC, saved_locale);
       free (saved_locale);
     }
 
