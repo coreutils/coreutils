@@ -177,7 +177,7 @@ readname (name, size, stream)
   /* Skip blank space.  */
   while ((c = getc (stream)) != EOF && isspace (c))
     /* Do nothing. */ ;
-  
+
   while (c != EOF && !isspace (c))
     {
       (*name)[name_index++] = c;

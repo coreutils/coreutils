@@ -120,7 +120,7 @@ group_member (gid)
 	  break;
 	}
     }
-  
+
   free_group_info (gi);
 
   return found;
