@@ -333,8 +333,9 @@ usage (int status)
       printf (_("\
 Usage: %s [OPTION]... SOURCE DEST\n\
   or:  %s [OPTION]... SOURCE... DIRECTORY\n\
+  or:  %s [OPTION]... --target-directory=DIRECTORY SOURCE...\n\
 "),
-	      program_name, program_name);
+	      program_name, program_name, program_name);
       printf (_("\
 Rename SOURCE to DEST, or move SOURCE(s) to DIRECTORY.\n\
 \n\
@@ -342,7 +343,7 @@ Rename SOURCE to DEST, or move SOURCE(s) to DIRECTORY.\n\
   -f, --force                  remove existing destinations, never prompt\n\
   -i, --interactive            prompt before overwrite\n\
   -S, --suffix=SUFFIX          override the usual backup suffix\n\
-      --target-directory=DIR   move all SOURCE arguments into directory DIR\n\
+      --target-directory=DIRECTORY  move all SOURCE arguments into DIRECTORY\n\
   -u, --update                 move only older or brand new non-directories\n\
   -v, --verbose                explain what is being done\n\
       --help                   display this help and exit\n\
