@@ -175,7 +175,7 @@ noinst_HEADERS = \
   wheel.h wheel-size.h
 
 EXTRA_DIST = dcgen dircolors.hin tac-pipe.c \
-  groups.sh nohup.sh wheel-gen.pl
+  groups.sh nohup.sh wheel-gen.pl extract-magic
 
 CLEANFILES = $(SCRIPTS) su
 
@@ -255,7 +255,7 @@ editpl = sed -e 's,@''PERL''@,$(PERL),g'
 
 localedir = $(datadir)/locale
 
-BUILT_SOURCES = localedir.h dircolors.h wheel-size.h wheel.h false.c
+BUILT_SOURCES = localedir.h dircolors.h wheel-size.h wheel.h false.c fs.h
 DISTCLEANFILES = localedir.h
 
 wheel_size = 5
@@ -1534,6 +1534,11 @@ false.c: true.c
 	  $(srcdir)/true.c > $@-t
 	@chmod a-w $@-t
 	mv $@-t $@
+fs.h: stat.c extract-magic
+	rm -f $@
+	$(PERL) $(srcdir)/extract-magic $(srcdir)/stat.c > $@t
+	@chmod a-w $@t
+	mv $@t $@
 # Ensure that the list of programs in README matches the list
 # of programs we can build.
 check: check-README check-misc
