@@ -1,3 +1,5 @@
+t??.[12]
 t*.out
 t*.in
 t*.exp
+join-tests
