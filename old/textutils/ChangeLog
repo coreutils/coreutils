@@ -1,3 +1,7 @@
+1997-09-13  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* tests/sort-test/Test.pm: Add tests 19a and 19b.
+
 1997-07-21  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/tail.c (parse_obsolescent_option): #ifdef-out portability warning.
