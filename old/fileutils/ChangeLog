@@ -1,3 +1,14 @@
+Sat Oct  9 13:30:28 1993  Jim Meyering  (meyering@comco.com)
+
+	* configure.in [STATFS_OSF1]: Change name to STAT_STATFS3_OSF1
+	to be consistent with names of the other STAT_* macros.
+	* acconfig.h: Ditto.
+	* fsusage.c: Ditto.
+
+	* acconfig.h: Add comments.
+	* Makefile.in: Remove comments about -D flags that could be added
+	to DEFS; now (using autoheader) those comments end up in config.h.
+
 Thu Oct 07 12:57:10 1993  Jim Meyering  (meyering@comco.com)
 
 	* chgrp.c, chmod.c, chown.c, cp-aux.c, cp.c, dd.c, df.c, du.c,
@@ -8,8 +19,8 @@ Thu Oct 07 12:57:10 1993  Jim Meyering  (meyering@comco.com)
 
 	* lib/Makefile.in [libdir]: Make sure it's defined.
 
-        * posixtm.y [!__GNUC__ && !HAVE_ALLOCA_H]: Declare alloca as void*
-        rather than char*.  The latter conflicts with a dcl from bison.simple.
+	* posixtm.y [!__GNUC__ && !HAVE_ALLOCA_H]: Declare alloca as void*
+	rather than char*.  The latter conflicts with a dcl from bison.simple.
 
 Wed Oct 06 18:22:00 1993  Jim Meyering  (meyering@comco.com)
 
