@@ -1,3 +1,8 @@
+2004-03-22  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi: Tweak a few lines that resulted in
+	`overfull hbox' warnings.
+
 2004-03-03  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (du invocation): Document new option: --file0-from=F.
