@@ -1,3 +1,39 @@
+1998-12-31  Jim Meyering  <meyering@ascend.com>
+
+	* src/ls.c (indicator_style_types): New variable.
+	(format_types): Rename from `formats'.
+	(color_args): Remove unnecessary `no' string.
+	(color_types): Remove corresponding `color_never' entry.
+	(main): Use ARGMATCH_TO_ARGUMENT.
+	(decode_switches): Use ARGCASEMATCH instead of argmatch code
+	in each of several cases.
+	From Akim Demaille.
+
+	* src/cp.c (main):  Use XARGCASEMATCH in place of argmatch & co.
+	* src/touch.c (main): Likewise.
+	From Akim Demaille.
+
+	* lib/strncasecmp.c: New file.
+	* lib/argmatch.c (strncasecmp): Move to a separate file.
+	Add curly braces around some one-stmt-but-multiline blocks.
+
+	* lib/argmatch.c: Improvements from Akim Demaille.
+	* lib/argmatch.h: Likewise.
+
+	* lib/addext.c (addext): Protoize.
+	Indent cpp directives to match nesting.
+
+	Fix warnings from gcc -W -Wall
+	* lib/posixtm.c (posix_time_parse): Change type of index `i' from
+	int to unsigned int.
+	* lib/getdate.y (__attribute__): Define.
+	(ATTRIBUTE_UNUSED): Define.
+	(yyerror): Mark parameter as unused with ATTRIBUTE_UNUSED.
+	(MonthDayTable): Add initializers for last entry.
+	(UnitsTable): Likewise.
+	(OtherTable): Likewise.
+	(MilitaryTable): Likewise.
+
 1998-12-22  Jim Meyering  <meyering@ascend.com>
 
 	* Version 4.1-b1.
