@@ -1,5 +1,5 @@
 /* Parse dates for touch and date.
-   Copyright (C) 1989, 1990, 1991, 1998 Free Software Foundation Inc.
+   Copyright (C) 1989, 1990, 1991, 1998, 2000 Free Software Foundation Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -23,6 +23,9 @@
 #endif
 
 #include <stdio.h>
+#if HAVE_STDLIB_H
+# include <stdlib.h>
+#endif
 #include <sys/types.h>
 #if HAVE_STRING_H
 # include <string.h>
