@@ -1,6 +1,6 @@
 [4.5.2]
 * printf now honors the `--' command line delimiter
-* od's 8-bytes formats x8, o8, and u8 now work
+* od's 8-byte formats x8, o8, and u8 now work
 * tail now accepts fractional seconds for its --sleep-interval=S (-s) option
 [4.5.1]
 * du and ls now report sizes of symbolic links (before they'd always report 0)
