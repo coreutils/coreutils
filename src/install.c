@@ -78,7 +78,6 @@ gid_t getgid ();
 /* Number of bytes of a file to copy at a time. */
 #define READ_SIZE (32 * 1024)
 
-int full_write ();
 int isdir ();
 
 int stat ();
