@@ -5,6 +5,7 @@
 	(init_tokenbuffer): Remove unnecessary parentheses around malloc.
 
 	Update from gnulib.
+	* getdate.y: Include alloca.h unconditionally.
 	* xmemcoll.h: Include <stddef.h>.
 
 	* Makefile.am (MOSTLYCLEANFILES): Add alloca.h and alloca.ht.
