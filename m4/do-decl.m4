@@ -7,6 +7,8 @@ AC_DEFUN(jm_CHECK_DECLS,
     dnl This code is deliberately never run via ./configure.
     dnl FIXME: this is a gross hack to make autoheader put entries
     dnl for each of these symbols in the config.h.in.
+    dnl Otherwise, I'd have to update acconfig.h every time I change
+    dnl this list of functions.
     AC_CHECK_FUNCS(DECLARATION_FREE DECLARATION_MALLOC DECLARATION_REALLOC \
 		   DECLARATION_STPCPY DECLARATION_STRSTR)
   fi
