@@ -1,3 +1,8 @@
+Sat Oct 19 23:13:54 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/md5.c: Update from GNU libc.
+	* lib/md5.h: Update from GNU libc.
+
 Fri Oct 18 00:08:04 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in (AC_OUTPUT): Add tests/join-test/Makefile.
