@@ -1,4 +1,4 @@
-#serial 5
+#serial 6
 
 AC_DEFUN(AM_FUNC_GETLOADAVG,
 [ac_have_func=no # yes means we've found a way to get the load average.
@@ -47,7 +47,7 @@ else
   [ac_have_func=yes; AC_DEFINE(DGUX, 1, [FIXME])
   AC_CHECK_LIB(dgc, dg_sys_info)])
 
-  AC_CHECK_HEADER(locale.h)
+  AC_CHECK_HEADERS(locale.h)
   AC_CHECK_FUNCS(setlocale)
 
   # We cannot check for <dwarf.h>, because Solaris 2 does not use dwarf (it
