@@ -525,7 +525,7 @@ tac_mem (const char *buf, size_t n_bytes, FILE *out)
       {
 	/* Output the line (which includes a trailing newline)
 	   from NL+1 to BOL-1.  */
-	fwrite (nl + 1, 1, bol - 1 - (nl + 1), out);
+	fwrite (nl + 1, 1, bol - (nl + 1), out);
 
 	bol = nl + 1;
       }
