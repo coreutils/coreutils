@@ -2,6 +2,7 @@
 
 	* jm-macros.m4 (jm_MACROS): Require AC_FUNC_ACL.
 	Do not check for acl or sys/acl.h, as AC_FUNC_ACL does that now.
+	* acl.m4: New file.
 
 2002-02-16  gettextize  <bug-gnu-gettext@gnu.org>
 
