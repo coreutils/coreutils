@@ -334,7 +334,9 @@ writing to standard output.\n\
 \n\
   -c, --complement        first complement SET1\n\
   -d, --delete            delete characters in SET1, do not translate\n\
-  -s, --squeeze-repeats   replace sequence of characters with one\n\
+  -s, --squeeze-repeats   replace each input sequence of a repeated character\n\
+                            that is listed in SET1 with a single occurrence\n\
+                            of that character\n\
   -t, --truncate-set1     first truncate SET1 to length of SET2\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
