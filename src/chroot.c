@@ -102,8 +102,10 @@ main (int argc, char **argv)
 
   /* Execute the given command.  */
   execvp (argv[0], argv);
-  error (1, errno, _("cannot execute %s"), argv[0]);
 
-  exit (1);
-  return 1;
+  {
+    int exit_status = (errno == ENOENT ? 127 : 126);
+    error (0, errno, "%s", argv[0]);
+    exit (exit_status);
+  }
 }
