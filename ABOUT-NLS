@@ -28,7 +28,7 @@ One advise in advance
    If you want to exploit the full power of internationalization, you
 should configure it using
 
-     ./configure --with-gnu-gettext
+     ./configure --with-included-gettext
 
 to force usage of internationalizing routines provided within this
 package, despite the existence of internationalizing capabilities in
@@ -58,7 +58,7 @@ the GNU `gettext' package is *not* required.  Installers may use
 special options at configuration time for changing the default
 behaviour.  The commands:
 
-     ./configure --with-gnu-gettext
+     ./configure --with-included-gettext
      ./configure --with-catgets
      ./configure --disable-nls
 
@@ -75,7 +75,7 @@ should use the more recent version of the GNU `gettext' library.  I.e.
 if the file `intl/VERSION' shows that the library which comes with this
 package is more recent, you should use
 
-     ./configure --with-gnu-gettext
+     ./configure --with-included-gettext
 
 to prevent auto-detection.
 
@@ -205,10 +205,16 @@ languages PO files have been submitted to translation coordination.
                        cs de en es fi fr ja ko no pl pt sl sv
                         1 16  1  3  1 21  1  6  3  1  3  6  9
 
+   Some counters in the preceding matrix are higher than the number of
+visible blocks let us expect.  This is because a few extra PO files are
+used for implementing regional variants of languages, or language
+dialects.
+
    For a PO file in the matrix above to be effective, the package to
-which it applies should also have been internationalized and distributed
-as such by its maintainer.  There is often a lag between the mere
-existence a PO file and its wide availability in a GNU distribution.
+which it applies should also have been internationalized and
+distributed as such by its maintainer.  There might be an observable
+lag between the mere existence a PO file and its wide availability in a
+GNU distribution.
 
    If May 1996 seems to be old, you may fetch a more recent copy of
 this `ABOUT-NLS' file on most GNU archive sites.
