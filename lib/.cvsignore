@@ -4,6 +4,8 @@ charset.alias
 getdate.c
 getdate.tab.c
 lstat.c
+ref-add.sed
+ref-del.sed
 safe-lstat.c
 safe-lstat.h
 safe-stat.c
