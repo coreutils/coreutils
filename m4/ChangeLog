@@ -1,3 +1,11 @@
+2001-11-17  Jim Meyering  <meyering@lucent.com>
+
+	* mkstemp.m4 (UTILS_FUNC_MKSTEMP): New file and macro.
+	Prompted by a report from Bob Proulx.
+
+	* jm-macros.m4 (jm_MACROS): Don't test for mkstemp here.
+	Instead, require UTILS_FUNC_MKSTEMP.
+
 2001-11-11  Jim Meyering  <meyering@lucent.com>
 
 	* jm-macros.m4 (jm_MACROS): Remove code to set POW_LIBM.
