@@ -1,6 +1,11 @@
-2001-11-23  Jim Meyering  <meyering@lucent.com>
+2001-11-24  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.2.
+
+	* Makefile.cfg (move_if_change): Remove definition.
+	($(srcdir)/m4/jm-glibc-io.m4): Use mv, not move-if-change.
+
+2001-11-23  Jim Meyering  <meyering@lucent.com>
 
 	* cp.c, df.c, du.c, install.c, ln.c, ls.c, mkdir.c (usage):
 	* mkfifo.c, mknod.c, mv.c, shred.c, touch.c (usage):
