@@ -29,12 +29,12 @@
 #include "argmatch.h"
 #include "getdate.h"
 #include "safe-read.h"
+#include "posixtm.h"
 
 #ifndef STDC_HEADERS
 time_t time ();
 #endif
 
-time_t posixtime ();
 int full_write ();
 void invalid_arg ();
 
@@ -200,6 +200,8 @@ usage (int status)
   else
     {
       printf (_("Usage: %s [OPTION]... FILE...\n"), program_name);
+      printf (_("  or : %s [-acm] MMDDhhmm[YY] FILE... (obsolescent)\n"),
+	      program_name);
       printf (_("\
 Update the access and modification times of each FILE to the current time.\n\
 \n\
@@ -209,12 +211,14 @@ Update the access and modification times of each FILE to the current time.\n\
   -f                     (ignored)\n\
   -m                     change only the modification time\n\
   -r, --reference=FILE   use this file's times instead of current time\n\
-  -t STAMP               use MMDDhhmm[[CC]YY][.ss] instead of current time\n\
+  -t STAMP               use [[CC]YY]MMDDhhmm[.ss] instead of current time\n\
       --time=WORD        access -a, atime -a, mtime -m, modify -m, use -a\n\
       --help             display this help and exit\n\
       --version          output version information and exit\n\
 \n\
 STAMP may be used without -t if none of -drt, nor --, are used.\n\
+Note that the three time-date formats recognized for the -d and -t options\n\
+and for the obsolescent argument are all different.\n\
 "));
       puts (_("\nReport bugs to <fileutils-bugs@gnu.org>."));
       close_stdout ();
@@ -274,7 +278,8 @@ main (int argc, char **argv)
 
 	case 't':
 	  posix_date++;
-	  newtime = posixtime (optarg);
+	  newtime = posixtime (optarg,
+			       PDS_LEADING_YEAR | PDS_CENTURY | PDS_SECONDS);
 	  if (newtime == (time_t) -1)
 	    error (1, 0, _("invalid date format `%s'"), optarg);
 	  date_set++;
@@ -324,7 +329,7 @@ main (int argc, char **argv)
 
   if (!date_set && optind < argc && !STREQ (argv[optind - 1], "--"))
     {
-      newtime = posixtime (argv[optind]);
+      newtime = posixtime (argv[optind], PDS_TRAILING_YEAR);
       if (newtime != (time_t) -1)
 	{
 	  optind++;
