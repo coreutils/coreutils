@@ -3,7 +3,7 @@
 #   Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
 #   2000, 2001, 2002 Free Software Foundation, Inc.
 
-timestamp='2002-02-15'
+timestamp='2002-02-22'
 
 # This file is (in principle) common to ALL GNU software.
 # The presence of a machine in this file suggests that SOME GNU software
@@ -235,7 +235,7 @@ case $basic_machine in
 	| h8300 | h8500 | hppa | hppa1.[01] | hppa2.0 | hppa2.0[nw] | hppa64 \
 	| i370 | i860 | i960 | ia64 \
 	| m32r | m68000 | m68k | m88k | mcore \
-	| mips16 | mips64 | mips64el | mips64orion | mips64orionel \
+	| mips | mips16 | mips64 | mips64el | mips64orion | mips64orionel \
 	| mips64vr4100 | mips64vr4100el | mips64vr4300 \
 	| mips64vr4300el | mips64vr5000 | mips64vr5000el \
 	| mipsbe | mipseb | mipsel | mipsle | mipstx39 | mipstx39el \
@@ -308,7 +308,7 @@ case $basic_machine in
 	| sh-* | sh[34]-* | sh[34]eb-* | shbe-* | shle-* | sh64-* \
 	| sparc-* | sparc64-* | sparc86x-* | sparclite-* \
 	| sparcv9-* | sparcv9b-* | strongarm-* | sv1-* | sx?-* \
-	| t3e-* | tahoe-* | thumb-* | tic30-* | tic54x-* | tic80-* | tron-* \
+	| tahoe-* | thumb-* | tic30-* | tic54x-* | tic80-* | tron-* \
 	| v850-* | v850e-* | vax-* \
 	| we32k-* \
 	| x86-* | x86_64-* | xps100-* | xscale-* | xstormy16-* \
@@ -377,6 +377,10 @@ case $basic_machine in
 		basic_machine=ns32k-sequent
 		os=-dynix
 		;;
+	c90)
+		basic_machine=c90-cray
+		os=-unicos
+		;;
 	convex-c1)
 		basic_machine=c1-convex
 		os=-bsd
@@ -397,7 +401,7 @@ case $basic_machine in
 		basic_machine=c38-convex
 		os=-bsd
 		;;
-	cray | ymp | sv1 | [cj]90)
+	cray | j90)
 		basic_machine=j90-cray
 		os=-unicos
 		;;
@@ -600,14 +604,6 @@ case $basic_machine in
 	*mint | -mint[0-9]* | *MiNT | *MiNT[0-9]*)
 		basic_machine=m68k-atari
 		os=-mint
-		;;
-	mipsel*-linux*)
-		basic_machine=mipsel-unknown
-		os=-linux-gnu
-		;;
-	mips*-linux*)
-		basic_machine=mips-unknown
-		os=-linux-gnu
 		;;
 	mips3*-*)
 		basic_machine=`echo $basic_machine | sed -e 's/mips3/mips64/'`
@@ -870,12 +866,24 @@ case $basic_machine in
 	sun386 | sun386i | roadrunner)
 		basic_machine=i386-sun
 		;;
+        sv1)
+		basic_machine=sv1-cray
+		os=-unicos
+		;;
 	symmetry)
 		basic_machine=i386-sequent
 		os=-dynix
 		;;
-	t3d | t3e | t90)
-		basic_machine=${basic_machine}-cray
+	t3d)
+		basic_machine=alpha-cray
+		os=-unicos
+		;;
+	t3e)
+		basic_machine=alphaev5-cray
+		os=-unicos
+		;;
+	t90)
+		basic_machine=t90-cray
 		os=-unicos
 		;;
 	tic54x | c54x*)
@@ -945,6 +953,10 @@ case $basic_machine in
         xps | xps100)
 		basic_machine=xps100-honeywell
 		;;
+	ymp)
+		basic_machine=ymp-cray
+		os=-unicos
+		;;
 	z8k-*-coff)
 		basic_machine=z8k-unknown
 		os=-sim
@@ -964,13 +976,6 @@ case $basic_machine in
 		;;
 	op60c)
 		basic_machine=hppa1.1-oki
-		;;
-	mips)
-		if [ x$os = x-linux-gnu ]; then
-			basic_machine=mips-unknown
-		else
-			basic_machine=mips-mips
-		fi
 		;;
 	romp)
 		basic_machine=romp-ibm
