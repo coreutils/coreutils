@@ -2,8 +2,8 @@
 
 	* Version 5.0.92.
 
-	* Makefile.maint (sc_cast_of_x_alloc_return_value): Also check for
-	alloca casts.
+	* Makefile.maint (sc_cast_of_alloca_return_value): New rule.
+	(syntax-check-rules): Add it.
 
 	* src/copy.c: Remove unnecessary cast of alloca, since now it's
 	guaranteed to be (void *).
