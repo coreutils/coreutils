@@ -158,12 +158,11 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 
 EXTRA_PROGRAMS = chroot df hostid nice pinky stty su uname uptime users who
-EXTRA_SCRIPTS = nohup
 
 bin_SCRIPTS = groups $(OPTIONAL_BIN_ZCRIPTS)
 bin_PROGRAMS = [ chgrp chown chmod cp dd dircolors du \
   ginstall link ln dir vdir ls mkdir \
-  mkfifo mknod mv readlink rm rmdir shred stat sync touch unlink \
+  mkfifo mknod mv nohup readlink rm rmdir shred stat sync touch unlink \
   cat cksum comm csplit cut expand fmt fold head join md5sum \
   nl od paste pr ptx sha1sum sort split sum tac tail tr tsort unexpand uniq wc \
   basename date dirname echo env expr factor false \
@@ -180,7 +179,7 @@ noinst_HEADERS = \
   wheel.h wheel-size.h
 
 EXTRA_DIST = dcgen dircolors.hin tac-pipe.c \
-  groups.sh nohup.sh wheel-gen.pl extract-magic
+  groups.sh wheel-gen.pl extract-magic
 
 CLEANFILES = $(SCRIPTS) su
 
@@ -277,8 +276,7 @@ MAINTAINERCLEANFILES = $(BUILT_SOURCES)
 all_programs = \
     $(bin_PROGRAMS) \
     $(bin_SCRIPTS) \
-  $(EXTRA_PROGRAMS) \
-  $(EXTRA_SCRIPTS)
+  $(EXTRA_PROGRAMS)
 
 
 pm = progs-makefile
@@ -302,22 +300,23 @@ bin_PROGRAMS = [$(EXEEXT) chgrp$(EXEEXT) chown$(EXEEXT) chmod$(EXEEXT) \
 	cp$(EXEEXT) dd$(EXEEXT) dircolors$(EXEEXT) du$(EXEEXT) \
 	ginstall$(EXEEXT) link$(EXEEXT) ln$(EXEEXT) dir$(EXEEXT) \
 	vdir$(EXEEXT) ls$(EXEEXT) mkdir$(EXEEXT) mkfifo$(EXEEXT) \
-	mknod$(EXEEXT) mv$(EXEEXT) readlink$(EXEEXT) rm$(EXEEXT) \
-	rmdir$(EXEEXT) shred$(EXEEXT) stat$(EXEEXT) sync$(EXEEXT) \
-	touch$(EXEEXT) unlink$(EXEEXT) cat$(EXEEXT) cksum$(EXEEXT) \
-	comm$(EXEEXT) csplit$(EXEEXT) cut$(EXEEXT) expand$(EXEEXT) \
-	fmt$(EXEEXT) fold$(EXEEXT) head$(EXEEXT) join$(EXEEXT) \
-	md5sum$(EXEEXT) nl$(EXEEXT) od$(EXEEXT) paste$(EXEEXT) \
-	pr$(EXEEXT) ptx$(EXEEXT) sha1sum$(EXEEXT) sort$(EXEEXT) \
-	split$(EXEEXT) sum$(EXEEXT) tac$(EXEEXT) tail$(EXEEXT) \
-	tr$(EXEEXT) tsort$(EXEEXT) unexpand$(EXEEXT) uniq$(EXEEXT) \
-	wc$(EXEEXT) basename$(EXEEXT) date$(EXEEXT) dirname$(EXEEXT) \
-	echo$(EXEEXT) env$(EXEEXT) expr$(EXEEXT) factor$(EXEEXT) \
-	false$(EXEEXT) hostname$(EXEEXT) id$(EXEEXT) kill$(EXEEXT) \
-	logname$(EXEEXT) pathchk$(EXEEXT) printenv$(EXEEXT) \
-	printf$(EXEEXT) pwd$(EXEEXT) seq$(EXEEXT) sleep$(EXEEXT) \
-	tee$(EXEEXT) test$(EXEEXT) true$(EXEEXT) tty$(EXEEXT) \
-	whoami$(EXEEXT) yes$(EXEEXT) @OPTIONAL_BIN_PROGS@ @DF_PROG@
+	mknod$(EXEEXT) mv$(EXEEXT) nohup$(EXEEXT) readlink$(EXEEXT) \
+	rm$(EXEEXT) rmdir$(EXEEXT) shred$(EXEEXT) stat$(EXEEXT) \
+	sync$(EXEEXT) touch$(EXEEXT) unlink$(EXEEXT) cat$(EXEEXT) \
+	cksum$(EXEEXT) comm$(EXEEXT) csplit$(EXEEXT) cut$(EXEEXT) \
+	expand$(EXEEXT) fmt$(EXEEXT) fold$(EXEEXT) head$(EXEEXT) \
+	join$(EXEEXT) md5sum$(EXEEXT) nl$(EXEEXT) od$(EXEEXT) \
+	paste$(EXEEXT) pr$(EXEEXT) ptx$(EXEEXT) sha1sum$(EXEEXT) \
+	sort$(EXEEXT) split$(EXEEXT) sum$(EXEEXT) tac$(EXEEXT) \
+	tail$(EXEEXT) tr$(EXEEXT) tsort$(EXEEXT) unexpand$(EXEEXT) \
+	uniq$(EXEEXT) wc$(EXEEXT) basename$(EXEEXT) date$(EXEEXT) \
+	dirname$(EXEEXT) echo$(EXEEXT) env$(EXEEXT) expr$(EXEEXT) \
+	factor$(EXEEXT) false$(EXEEXT) hostname$(EXEEXT) id$(EXEEXT) \
+	kill$(EXEEXT) logname$(EXEEXT) pathchk$(EXEEXT) \
+	printenv$(EXEEXT) printf$(EXEEXT) pwd$(EXEEXT) seq$(EXEEXT) \
+	sleep$(EXEEXT) tee$(EXEEXT) test$(EXEEXT) true$(EXEEXT) \
+	tty$(EXEEXT) whoami$(EXEEXT) yes$(EXEEXT) @OPTIONAL_BIN_PROGS@ \
+	@DF_PROG@
 noinst_PROGRAMS = setuidgid$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS) $(noinst_PROGRAMS)
 
@@ -543,6 +542,11 @@ nl_OBJECTS = nl.$(OBJEXT)
 nl_LDADD = $(LDADD)
 nl_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 nl_LDFLAGS =
+nohup_SOURCES = nohup.c
+nohup_OBJECTS = nohup.$(OBJEXT)
+nohup_LDADD = $(LDADD)
+nohup_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
+nohup_LDFLAGS =
 od_SOURCES = od.c
 od_OBJECTS = od.$(OBJEXT)
 od_LDADD = $(LDADD)
@@ -785,29 +789,29 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/md5sum.Po ./$(DEPDIR)/mkdir.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/mkfifo.Po ./$(DEPDIR)/mknod.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/mv.Po ./$(DEPDIR)/nice.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/nl.Po ./$(DEPDIR)/od.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/paste.Po ./$(DEPDIR)/pathchk.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/pinky.Po ./$(DEPDIR)/pr.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/printenv.Po ./$(DEPDIR)/printf.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/ptx.Po ./$(DEPDIR)/pwd.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/readlink.Po ./$(DEPDIR)/remove.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/rm.Po ./$(DEPDIR)/rmdir.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/seq.Po ./$(DEPDIR)/setuidgid.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/sha1sum.Po ./$(DEPDIR)/shred.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/sleep.Po ./$(DEPDIR)/sort.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/split.Po ./$(DEPDIR)/stat.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/stty.Po ./$(DEPDIR)/su.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/sum.Po ./$(DEPDIR)/sync.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/tac.Po ./$(DEPDIR)/tail.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/tee.Po ./$(DEPDIR)/test.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/touch.Po ./$(DEPDIR)/tr.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/true.Po ./$(DEPDIR)/tsort.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/tty.Po ./$(DEPDIR)/uname.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/unexpand.Po ./$(DEPDIR)/uniq.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/unlink.Po ./$(DEPDIR)/uptime.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/users.Po ./$(DEPDIR)/wc.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/who.Po ./$(DEPDIR)/whoami.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/yes.Po
+@AMDEP_TRUE@	./$(DEPDIR)/nl.Po ./$(DEPDIR)/nohup.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/od.Po ./$(DEPDIR)/paste.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/pathchk.Po ./$(DEPDIR)/pinky.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/pr.Po ./$(DEPDIR)/printenv.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/printf.Po ./$(DEPDIR)/ptx.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/pwd.Po ./$(DEPDIR)/readlink.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/remove.Po ./$(DEPDIR)/rm.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/rmdir.Po ./$(DEPDIR)/seq.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/setuidgid.Po ./$(DEPDIR)/sha1sum.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/shred.Po ./$(DEPDIR)/sleep.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/sort.Po ./$(DEPDIR)/split.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/stat.Po ./$(DEPDIR)/stty.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/su.Po ./$(DEPDIR)/sum.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/sync.Po ./$(DEPDIR)/tac.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/tail.Po ./$(DEPDIR)/tee.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/test.Po ./$(DEPDIR)/touch.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/tr.Po ./$(DEPDIR)/true.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/tsort.Po ./$(DEPDIR)/tty.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/uname.Po ./$(DEPDIR)/unexpand.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/uniq.Po ./$(DEPDIR)/unlink.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/uptime.Po ./$(DEPDIR)/users.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/wc.Po ./$(DEPDIR)/who.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/whoami.Po ./$(DEPDIR)/yes.Po
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
@@ -818,8 +822,8 @@ DIST_SOURCES = $(__SOURCES) basename.c cat.c $(chgrp_SOURCES) chmod.c \
 	du.c echo.c env.c expand.c expr.c factor.c false.c fmt.c fold.c \
 	$(ginstall_SOURCES) head.c hostid.c hostname.c id.c join.c \
 	kill.c link.c ln.c logname.c $(ls_SOURCES) $(md5sum_SOURCES) \
-	mkdir.c mkfifo.c mknod.c $(mv_SOURCES) nice.c nl.c od.c paste.c \
-	pathchk.c pinky.c pr.c printenv.c printf.c ptx.c pwd.c \
+	mkdir.c mkfifo.c mknod.c $(mv_SOURCES) nice.c nl.c nohup.c od.c \
+	paste.c pathchk.c pinky.c pr.c printenv.c printf.c ptx.c pwd.c \
 	readlink.c $(rm_SOURCES) rmdir.c seq.c setuidgid.c \
 	$(sha1sum_SOURCES) shred.c sleep.c sort.c split.c stat.c stty.c \
 	su.c sum.c sync.c tac.c tail.c tee.c test.c touch.c tr.c true.c \
@@ -828,7 +832,7 @@ DIST_SOURCES = $(__SOURCES) basename.c cat.c $(chgrp_SOURCES) chmod.c \
 HEADERS = $(noinst_HEADERS)
 
 DIST_COMMON = $(noinst_HEADERS) Makefile.am Makefile.in
-SOURCES = $(__SOURCES) basename.c cat.c $(chgrp_SOURCES) chmod.c $(chown_SOURCES) chroot.c cksum.c comm.c $(cp_SOURCES) csplit.c cut.c date.c dd.c df.c $(dir_SOURCES) dircolors.c dirname.c du.c echo.c env.c expand.c expr.c factor.c false.c fmt.c fold.c $(ginstall_SOURCES) head.c hostid.c hostname.c id.c join.c kill.c link.c ln.c logname.c $(ls_SOURCES) $(md5sum_SOURCES) mkdir.c mkfifo.c mknod.c $(mv_SOURCES) nice.c nl.c od.c paste.c pathchk.c pinky.c pr.c printenv.c printf.c ptx.c pwd.c readlink.c $(rm_SOURCES) rmdir.c seq.c setuidgid.c $(sha1sum_SOURCES) shred.c sleep.c sort.c split.c stat.c stty.c su.c sum.c sync.c tac.c tail.c tee.c test.c touch.c tr.c true.c tsort.c tty.c uname.c unexpand.c uniq.c unlink.c uptime.c users.c $(vdir_SOURCES) wc.c who.c whoami.c yes.c
+SOURCES = $(__SOURCES) basename.c cat.c $(chgrp_SOURCES) chmod.c $(chown_SOURCES) chroot.c cksum.c comm.c $(cp_SOURCES) csplit.c cut.c date.c dd.c df.c $(dir_SOURCES) dircolors.c dirname.c du.c echo.c env.c expand.c expr.c factor.c false.c fmt.c fold.c $(ginstall_SOURCES) head.c hostid.c hostname.c id.c join.c kill.c link.c ln.c logname.c $(ls_SOURCES) $(md5sum_SOURCES) mkdir.c mkfifo.c mknod.c $(mv_SOURCES) nice.c nl.c nohup.c od.c paste.c pathchk.c pinky.c pr.c printenv.c printf.c ptx.c pwd.c readlink.c $(rm_SOURCES) rmdir.c seq.c setuidgid.c $(sha1sum_SOURCES) shred.c sleep.c sort.c split.c stat.c stty.c su.c sum.c sync.c tac.c tail.c tee.c test.c touch.c tr.c true.c tsort.c tty.c uname.c unexpand.c uniq.c unlink.c uptime.c users.c $(vdir_SOURCES) wc.c who.c whoami.c yes.c
 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -1017,6 +1021,9 @@ nice$(EXEEXT): $(nice_OBJECTS) $(nice_DEPENDENCIES)
 nl$(EXEEXT): $(nl_OBJECTS) $(nl_DEPENDENCIES) 
 	@rm -f nl$(EXEEXT)
 	$(LINK) $(nl_LDFLAGS) $(nl_OBJECTS) $(nl_LDADD) $(LIBS)
+nohup$(EXEEXT): $(nohup_OBJECTS) $(nohup_DEPENDENCIES) 
+	@rm -f nohup$(EXEEXT)
+	$(LINK) $(nohup_LDFLAGS) $(nohup_OBJECTS) $(nohup_LDADD) $(LIBS)
 od$(EXEEXT): $(od_OBJECTS) $(od_DEPENDENCIES) 
 	@rm -f od$(EXEEXT)
 	$(LINK) $(od_LDFLAGS) $(od_OBJECTS) $(od_LDADD) $(LIBS)
@@ -1241,6 +1248,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mv.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nice.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nohup.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/od.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/paste.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pathchk.Po@am__quote@
