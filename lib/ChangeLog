@@ -3,6 +3,15 @@
 	* save-cwd.c (save_cwd): Remove code to support the case
 	where fchdir is missing or flaky.
 
+	* Makefile.am (libfetish_a_SOURCES): Add version-etc-fsf.c.
+
+2005-01-20  Simon Josefsson  <jas@extundo.com>
+
+	* version-etc-fsf.c: New file, with version_etc_copyright.
+	* version-etc.c: Remove version_etc_copyright.
+	* version-etc.h (version_etc_copyright): Use [] instead of * in
+	prototype, suggested by Paul Eggert <eggert@CS.UCLA.EDU>.
+
 2005-01-19  Jim Meyering  <jim@meyering.net>
 
 	* openat.h (AT_SYMLINK_NOFOLLOW): Define to 4096, so it's the
