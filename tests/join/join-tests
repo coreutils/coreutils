@@ -288,7 +288,7 @@ else
   esac
 fi
 test -s 4e.E || rm -f 4e.E
-$xx -a1 -e - -o 1.1 2.2 $srcdir/5a.I1 $srcdir/5a.I2 > 5a.O 2> 5a.E
+$xx -a1 -e - -o 1.1,2.2 $srcdir/5a.I1 $srcdir/5a.I2 > 5a.O 2> 5a.E
 code=$?
 if test $code != 0; then
   $echo "Test 5a failed: $xx return code $code differs from expected value 0" 1>&2
@@ -306,7 +306,7 @@ else
   esac
 fi
 test -s 5a.E || rm -f 5a.E
-$xx -a1 -e - -o 1.1 2.2 $srcdir/5b.I1 $srcdir/5b.I2 > 5b.O 2> 5b.E
+$xx -a1 -e - -o 1.1,2.2 $srcdir/5b.I1 $srcdir/5b.I2 > 5b.O 2> 5b.E
 code=$?
 if test $code != 0; then
   $echo "Test 5b failed: $xx return code $code differs from expected value 0" 1>&2
@@ -324,7 +324,7 @@ else
   esac
 fi
 test -s 5b.E || rm -f 5b.E
-$xx -a1 -e - -o 1.1 2.2 $srcdir/5c.I1 $srcdir/5c.I2 > 5c.O 2> 5c.E
+$xx -a1 -e - -o 1.1,2.2 $srcdir/5c.I1 $srcdir/5c.I2 > 5c.O 2> 5c.E
 code=$?
 if test $code != 0; then
   $echo "Test 5c failed: $xx return code $code differs from expected value 0" 1>&2
@@ -342,7 +342,7 @@ else
   esac
 fi
 test -s 5c.E || rm -f 5c.E
-$xx -a1 -e - -o 1.1 2.2 $srcdir/5d.I1 $srcdir/5d.I2 > 5d.O 2> 5d.E
+$xx -a1 -e - -o 1.1,2.2 $srcdir/5d.I1 $srcdir/5d.I2 > 5d.O 2> 5d.E
 code=$?
 if test $code != 0; then
   $echo "Test 5d failed: $xx return code $code differs from expected value 0" 1>&2
@@ -360,7 +360,7 @@ else
   esac
 fi
 test -s 5d.E || rm -f 5d.E
-$xx -a2 -e - -o 1.1 2.2 $srcdir/5e.I1 $srcdir/5e.I2 > 5e.O 2> 5e.E
+$xx -a2 -e - -o 1.1,2.2 $srcdir/5e.I1 $srcdir/5e.I2 > 5e.O 2> 5e.E
 code=$?
 if test $code != 0; then
   $echo "Test 5e failed: $xx return code $code differs from expected value 0" 1>&2
@@ -378,7 +378,7 @@ else
   esac
 fi
 test -s 5e.E || rm -f 5e.E
-$xx -a2 -e - -o 2.2 1.1 $srcdir/5f.I1 $srcdir/5f.I2 > 5f.O 2> 5f.E
+$xx -a2 -e - -o 2.2,1.1 $srcdir/5f.I1 $srcdir/5f.I2 > 5f.O 2> 5f.E
 code=$?
 if test $code != 0; then
   $echo "Test 5f failed: $xx return code $code differs from expected value 0" 1>&2
@@ -396,7 +396,7 @@ else
   esac
 fi
 test -s 5f.E || rm -f 5f.E
-$xx -a1 -e - -o 2.2 1.1 $srcdir/5g.I1 $srcdir/5g.I2 > 5g.O 2> 5g.E
+$xx -a1 -e - -o 2.2,1.1 $srcdir/5g.I1 $srcdir/5g.I2 > 5g.O 2> 5g.E
 code=$?
 if test $code != 0; then
   $echo "Test 5g failed: $xx return code $code differs from expected value 0" 1>&2
@@ -414,7 +414,7 @@ else
   esac
 fi
 test -s 5g.E || rm -f 5g.E
-$xx -a1 -e - -o 2.2 1.1 $srcdir/5h.I1 $srcdir/5h.I2 > 5h.O 2> 5h.E
+$xx -a1 -e - -o 2.2,1.1 $srcdir/5h.I1 $srcdir/5h.I2 > 5h.O 2> 5h.E
 code=$?
 if test $code != 0; then
   $echo "Test 5h failed: $xx return code $code differs from expected value 0" 1>&2
@@ -432,7 +432,7 @@ else
   esac
 fi
 test -s 5h.E || rm -f 5h.E
-$xx -a1 -e - -o 1.1 2.2 $srcdir/5i.I1 $srcdir/5i.I2 > 5i.O 2> 5i.E
+$xx -a1 -e - -o 1.1,2.2 $srcdir/5i.I1 $srcdir/5i.I2 > 5i.O 2> 5i.E
 code=$?
 if test $code != 0; then
   $echo "Test 5i failed: $xx return code $code differs from expected value 0" 1>&2
@@ -450,7 +450,7 @@ else
   esac
 fi
 test -s 5i.E || rm -f 5i.E
-$xx -a2 -e - -o 2.2 1.1 $srcdir/5j.I1 $srcdir/5j.I2 > 5j.O 2> 5j.E
+$xx -a2 -e - -o 2.2,1.1 $srcdir/5j.I1 $srcdir/5j.I2 > 5j.O 2> 5j.E
 code=$?
 if test $code != 0; then
   $echo "Test 5j failed: $xx return code $code differs from expected value 0" 1>&2
@@ -468,7 +468,7 @@ else
   esac
 fi
 test -s 5j.E || rm -f 5j.E
-$xx -a2 -e - -o 2.2 1.1 $srcdir/5k.I1 $srcdir/5k.I2 > 5k.O 2> 5k.E
+$xx -a2 -e - -o 2.2,1.1 $srcdir/5k.I1 $srcdir/5k.I2 > 5k.O 2> 5k.E
 code=$?
 if test $code != 0; then
   $echo "Test 5k failed: $xx return code $code differs from expected value 0" 1>&2
@@ -486,7 +486,7 @@ else
   esac
 fi
 test -s 5k.E || rm -f 5k.E
-$xx -a1 -e - -o 2.2 1.1 $srcdir/5l.I1 $srcdir/5l.I2 > 5l.O 2> 5l.E
+$xx -a1 -e - -o 2.2,1.1 $srcdir/5l.I1 $srcdir/5l.I2 > 5l.O 2> 5l.E
 code=$?
 if test $code != 0; then
   $echo "Test 5l failed: $xx return code $code differs from expected value 0" 1>&2
@@ -504,7 +504,7 @@ else
   esac
 fi
 test -s 5l.E || rm -f 5l.E
-$xx -a2 -e - -o 2.2 1.1 $srcdir/5m.I1 $srcdir/5m.I2 > 5m.O 2> 5m.E
+$xx -a2 -e - -o 2.2,1.1 $srcdir/5m.I1 $srcdir/5m.I2 > 5m.O 2> 5m.E
 code=$?
 if test $code != 0; then
   $echo "Test 5m failed: $xx return code $code differs from expected value 0" 1>&2
