@@ -1,3 +1,14 @@
+Sun Mar 12 12:02:39 1995  Jim Meyering  (meyering@comco.com)
+
+	* configure.in (AC_REPLACE_FUNCS): Add memcmp.c.
+
+	* linebuffer.h: Undefine __P before defining it.
+	* long-options.h: Likewise.
+	* xstrtol.h: Likewise.
+
+	* memcpy.c: New file.
+	* lib/Makefile.in (SOURCES): Add memcpy.c.
+
 Fri Mar 10 21:14:11 1995  Jim Meyering  (meyering@comco.com)
 
 	* src/*.c: Update Copyright dates.
