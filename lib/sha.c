@@ -248,12 +248,12 @@ sha_process_block (const void *buffer, size_t len, struct sha_ctx *ctx)
   const md5_uint32 *words = buffer;
   size_t nwords = len / sizeof (md5_uint32);
   const md5_uint32 *endp = words + nwords;
-  md5_uint32 W[80];
-  md5_uint32 A = ctx->A;
-  md5_uint32 B = ctx->B;
-  md5_uint32 C = ctx->C;
-  md5_uint32 D = ctx->D;
-  md5_uint32 E = ctx->E;
+  md5_uint32 x[80];
+  md5_uint32 a = ctx->A;
+  md5_uint32 b = ctx->B;
+  md5_uint32 c = ctx->C;
+  md5_uint32 d = ctx->D;
+  md5_uint32 e = ctx->E;
 
   /* First increment the byte count.  RFC 1321 specifies the possible
      length of the file up to 2^64 bits.  Here we only compute the
@@ -262,65 +262,80 @@ sha_process_block (const void *buffer, size_t len, struct sha_ctx *ctx)
   if (ctx->total[0] < len)
     ++ctx->total[1];
 
+#define M(i) ( tm =   x[i&0x0f] ^ x[(i-14)&0x0f] \
+		    ^ x[(i-8)&0x0f] ^ x[(i-3)&0x0f] \
+	       , (x[i&0x0f] = (tm << 1) | (tm >> 31)) )
+
+#define R(a,b,c,d,e,f,k,m)  do { e += rol( a, 5 )     \
+				      + f( b, c, d )  \
+				      + k	      \
+				      + m;	      \
+				 b = rol( b, 30 );    \
+			       } while(0)
+
   while (words < endp)
     {
       int t;
       for (t = 0; t < 16; t++)
 	{
-	  W[t] = NOTSWAP (*words);
+	  x[t] = NOTSWAP (*words);
 	  words++;
 	}
 
       /* SHA1 Data expansion */
       for (t = 16; t < 80; t++)
 	{
-	  md5_uint32 tmp = W[t - 3] ^ W[t - 8] ^ W[t - 14] ^ W[t - 16];
-	  W[t] = rol (tmp, 1);
+	  md5_uint32 tmp = x[t - 3] ^ x[t - 8] ^ x[t - 14] ^ x[t - 16];
+	  x[t] = rol (tmp, 1);
 	}
 
       /* SHA1 main loop (t=0 to 79)
          This is broken down into four subloops in order to use
          the correct round function and constant */
+#if 1
       for (t = 0; t < 20; t++)
 	{
-	  md5_uint32 tmp = rol (A, 5) + F1 (B, C, D) + E + W[t] + K1;
-	  E = D;
-	  D = C;
-	  C = rol (B, 30);
-	  B = A;
-	  A = tmp;
+	  md5_uint32 tmp = rol (a, 5) + F1 (b, c, d) + e + x[t] + K1;
+	  e = d;
+	  d = c;
+	  c = rol (b, 30);
+	  b = a;
+	  a = tmp;
 	}
+#else
+
+#endif
       for (; t < 40; t++)
 	{
-	  md5_uint32 tmp = rol (A, 5) + F2 (B, C, D) + E + W[t] + K2;
-	  E = D;
-	  D = C;
-	  C = rol (B, 30);
-	  B = A;
-	  A = tmp;
+	  md5_uint32 tmp = rol (a, 5) + F2 (b, c, d) + e + x[t] + K2;
+	  e = d;
+	  d = c;
+	  c = rol (b, 30);
+	  b = a;
+	  a = tmp;
 	}
       for (; t < 60; t++)
 	{
-	  md5_uint32 tmp = rol (A, 5) + F3 (B, C, D) + E + W[t] + K3;
-	  E = D;
-	  D = C;
-	  C = rol (B, 30);
-	  B = A;
-	  A = tmp;
+	  md5_uint32 tmp = rol (a, 5) + F3 (b, c, d) + e + x[t] + K3;
+	  e = d;
+	  d = c;
+	  c = rol (b, 30);
+	  b = a;
+	  a = tmp;
 	}
       for (; t < 80; t++)
 	{
-	  md5_uint32 tmp = rol (A, 5) + F2 (B, C, D) + E + W[t] + K4;
-	  E = D;
-	  D = C;
-	  C = rol (B, 30);
-	  B = A;
-	  A = tmp;
+	  md5_uint32 tmp = rol (a, 5) + F2 (b, c, d) + e + x[t] + K4;
+	  e = d;
+	  d = c;
+	  c = rol (b, 30);
+	  b = a;
+	  a = tmp;
 	}
-      A = ctx->A += A;
-      B = ctx->B += B;
-      C = ctx->C += C;
-      D = ctx->D += D;
-      E = ctx->E += E;
+      a = ctx->A += a;
+      b = ctx->B += b;
+      c = ctx->C += c;
+      d = ctx->D += d;
+      e = ctx->E += e;
     }
 }
