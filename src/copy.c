@@ -1219,7 +1219,7 @@ copy_internal (const char *src_path, const char *dst_path,
 	{
 	  /* Use the value of errno from the failed rename.  */
 	  error (0, errno,
-	     _("inter-device move failed: %s to %s;  unable to remove target"),
+	     _("inter-device move failed: %s to %s; unable to remove target"),
 		 quote_n (0, src_path), quote_n (1, dst_path));
 	  return 1;
 	}
