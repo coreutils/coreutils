@@ -98,9 +98,9 @@ typedef long COST;
 
 /* Extra ctype(3)-style macros.  */
 
-#define	isopen(c)	(index ("([`'\"", c) != NULL)
-#define	isclose(c)	(index (")]'\"", c) != NULL)
-#define	isperiod(c)	(index (".?!", c) != NULL)
+#define	isopen(c)	(strchr ("([`'\"", c) != NULL)
+#define	isclose(c)	(strchr (")]'\"", c) != NULL)
+#define	isperiod(c)	(strchr (".?!", c) != NULL)
 
 /* Size of a tab stop, for expansion on input and re-introduction on
    output.  */
@@ -756,10 +756,10 @@ flush_paragraph ()
     }
   put_paragraph (split_point);
 
-  /* Copy text of words down to start of parabuf -- we use bcopy because
+  /* Copy text of words down to start of parabuf -- we use memmove because
      the source and target may overlap.  */
 
-  bcopy (split_point->text, parabuf, (size_t) (wptr - split_point->text));
+  memmove (parabuf, split_point->text, (size_t) (wptr - split_point->text));
   shift = split_point->text - parabuf;
   wptr -= shift;
 
@@ -768,10 +768,10 @@ flush_paragraph ()
   for (w = split_point; w <= word_limit; w++)
     w->text -= shift;
 
-  /* Copy words from split_point down to word -- we use bcopy because
+  /* Copy words from split_point down to word -- we use memmove because
      the source and target may overlap.  */
 
-  bcopy ((char *) split_point, (char *) word,
+  memmove ((char *) word, (char *) split_point,
 	 (word_limit - split_point + 1) * sizeof (WORD));
   word_limit -= split_point - word;
 }
