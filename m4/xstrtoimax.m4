@@ -1,4 +1,4 @@
-#serial 1
+#serial 2
 dnl Cloned from xstrtoumax.m4.  Keep these files in sync.
 
 # autoconf tests required for use of xstrtoimax.c
@@ -9,7 +9,7 @@ AC_DEFUN([jm_AC_PREREQ_XSTRTOIMAX],
   AC_REQUIRE([jm_AC_TYPE_UINTMAX_T])
   AC_REQUIRE([jm_AC_TYPE_LONG_LONG])
   AC_REQUIRE([jm_AC_TYPE_UNSIGNED_LONG_LONG])
-  AC_CHECK_DECLS([strtol, strtoll, strtoimax])
+  AC_CHECK_DECLS([strtol, strtoul, strtoll, strtoimax, strtoumax])
   AC_CHECK_HEADERS(limits.h stdlib.h inttypes.h)
 
   AC_CACHE_CHECK([whether <inttypes.h> defines strtoimax as a macro],
