@@ -438,7 +438,7 @@ static struct option const long_opts[] =
   {"force", no_argument, NULL, 'f'},
   {"iterations", required_argument, NULL, 'n'},
   {"size", required_argument, NULL, 's'},
-  {"remove", no_argument, NULL, 'R'},
+  {"remove", no_argument, NULL, 'u'},
   {"verbose", no_argument, NULL, 'v'},
   {"zero", required_argument, NULL, 'z'},
   {GETOPT_HELP_OPTION_DECL},
@@ -1732,7 +1732,7 @@ main (int argc, char **argv)
 	  }
 	  break;
 
-	case 'R':
+	case 'u':
 	  flags.remove_file = 1;
 	  break;
 
