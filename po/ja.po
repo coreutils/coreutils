@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GNU textutils 2.0.22\n"
 "Report-Msgid-Bugs-To: bug-coreutils@gnu.org\n"
-"POT-Creation-Date: 2004-02-18 18:49+0100\n"
+"POT-Creation-Date: 2004-03-12 14:56+0100\n"
 "PO-Revision-Date: 2002-07-27 22:54+0900\n"
 "Last-Translator: Masahito Yamaga <ma@yama-ga.com>\n"
 "Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
@@ -154,7 +154,7 @@ msgstr "ブロックサイズ"
 msgid "failed to return to initial working directory"
 msgstr ""
 
-#: lib/makepath.c:152 src/copy.c:1325 src/mkdir.c:171
+#: lib/makepath.c:152 src/copy.c:1343 src/mkdir.c:171
 #, c-format
 msgid "cannot create directory %s"
 msgstr "ディレクトリ %s を作成できません"
@@ -235,19 +235,19 @@ msgstr "U+%04X をローカル文字セットに変換できません"
 msgid "cannot convert U+%04X to local character set: %s"
 msgstr "U+%04X をローカル文字セット %s に変換できません"
 
-#: lib/userspec.c:148
+#: lib/userspec.c:147
 msgid "invalid user"
 msgstr "ユーザ指定が不正"
 
-#: lib/userspec.c:149
+#: lib/userspec.c:148
 msgid "invalid group"
 msgstr "グループ指定が不正"
 
-#: lib/userspec.c:151
+#: lib/userspec.c:150
 msgid "cannot get the login group of a numeric UID"
 msgstr "数字の UID のログイングループを取得できません"
 
-#: lib/userspec.c:153
+#: lib/userspec.c:152
 msgid "cannot omit both user and group"
 msgstr "ユーザとグループの両方を省略することはできません"
 
@@ -359,15 +359,15 @@ msgstr ""
 msgid "invalid argument: %s"
 msgstr "`%2$s' に対する引数 %1$s が間違っています"
 
-#: lib/xmemcoll.c:54 src/expr.c:711
+#: lib/xmemcoll.c:54 src/expr.c:740
 msgid "string comparison failed"
 msgstr "文字列の比較に失敗"
 
-#: lib/xmemcoll.c:55 src/expr.c:712
+#: lib/xmemcoll.c:55 src/expr.c:741
 msgid "Set LC_ALL='C' to work around the problem."
 msgstr "問題を回避するために LC_ALL='C' を指定してください."
 
-#: lib/xmemcoll.c:57 src/expr.c:714
+#: lib/xmemcoll.c:57 src/expr.c:743
 #, c-format
 msgid "The strings compared were %s and %s."
 msgstr "比較した文字列は %s と %s です."
@@ -381,7 +381,7 @@ msgstr "比較した文字列は %s と %s です."
 #: src/install.c:588 src/join.c:154 src/kill.c:90 src/link.c:47 src/ln.c:341
 #: src/logname.c:44 src/ls.c:3901 src/md5sum.c:120 src/mkdir.c:57
 #: src/mkfifo.c:51 src/mknod.c:51 src/mv.c:301 src/nice.c:65 src/nl.c:172
-#: src/nohup.c:49 src/od.c:282 src/paste.c:392 src/pathchk.c:136
+#: src/nohup.c:50 src/od.c:282 src/paste.c:392 src/pathchk.c:136
 #: src/pinky.c:464 src/pr.c:2748 src/printenv.c:62 src/printf.c:91
 #: src/ptx.c:1870 src/pwd.c:41 src/readlink.c:63 src/rm.c:103 src/rmdir.c:143
 #: src/seq.c:78 src/setuidgid.c:46 src/shred.c:155 src/sleep.c:48
@@ -415,15 +415,15 @@ msgstr ""
 "\n"
 
 #: src/basename.c:65 src/cat.c:123 src/chgrp.c:163 src/chmod.c:298
-#: src/chown.c:152 src/chroot.c:59 src/cksum.c:292 src/comm.c:85 src/cp.c:251
+#: src/chown.c:152 src/chroot.c:59 src/cksum.c:292 src/comm.c:93 src/cp.c:251
 #: src/csplit.c:1443 src/cut.c:223 src/date.c:216 src/dd.c:341 src/df.c:762
-#: src/dircolors.c:121 src/dirname.c:57 src/du.c:214 src/echo.c:104
+#: src/dircolors.c:121 src/dirname.c:57 src/du.c:216 src/echo.c:104
 #: src/env.c:133 src/expand.c:129 src/expr.c:161 src/factor.c:89
 #: src/false.c:43 src/fmt.c:297 src/fold.c:85 src/head.c:144 src/hostid.c:55
 #: src/hostname.c:75 src/id.c:103 src/install.c:643 src/join.c:195
 #: src/kill.c:120 src/link.c:59 src/ln.c:398 src/logname.c:55 src/ls.c:4035
 #: src/md5sum.c:156 src/mkdir.c:76 src/mkfifo.c:68 src/mknod.c:82 src/mv.c:355
-#: src/nice.c:79 src/nl.c:227 src/nohup.c:65 src/od.c:369 src/paste.c:416
+#: src/nice.c:79 src/nl.c:227 src/nohup.c:66 src/od.c:369 src/paste.c:416
 #: src/pathchk.c:148 src/pinky.c:491 src/pr.c:2860 src/printenv.c:75
 #: src/printf.c:140 src/ptx.c:1917 src/pwd.c:52 src/readlink.c:80 src/rm.c:141
 #: src/rmdir.c:163 src/seq.c:106 src/setuidgid.c:66 src/shred.c:219
@@ -442,9 +442,9 @@ msgstr ""
 "バグを発見したら <%s> 宛に報告して下さい.\n"
 
 #: src/basename.c:114 src/chgrp.c:246 src/chmod.c:395 src/chown.c:264
-#: src/chroot.c:80 src/comm.c:280 src/csplit.c:1373 src/dirname.c:89
+#: src/chroot.c:80 src/comm.c:288 src/csplit.c:1373 src/dirname.c:89
 #: src/expr.c:199 src/install.c:281 src/link.c:88 src/mkdir.c:125
-#: src/mkfifo.c:114 src/mknod.c:138 src/nohup.c:99 src/pathchk.c:189
+#: src/mkfifo.c:114 src/mknod.c:138 src/nohup.c:100 src/pathchk.c:189
 #: src/readlink.c:128 src/rm.c:231 src/rmdir.c:208 src/seq.c:374
 #: src/setuidgid.c:99 src/sleep.c:140 src/stat.c:825 src/unlink.c:89
 msgid "too few arguments"
@@ -655,17 +655,17 @@ msgstr "%s のモードを %04lo (%s) に変更できませんでした\n"
 msgid "mode of %s retained as %04lo (%s)\n"
 msgstr "%s のモードは %04lo (%s) として保留されました\n"
 
-#: src/chmod.c:167 src/chown-core.c:189 src/copy.c:158 src/du.c:339
+#: src/chmod.c:167 src/chown-core.c:189 src/copy.c:158 src/du.c:341
 #, fuzzy, c-format
 msgid "cannot access %s"
 msgstr "%s を実行できません"
 
-#: src/chmod.c:171 src/chown-core.c:193 src/du.c:345
+#: src/chmod.c:171 src/chown-core.c:193 src/du.c:347
 #, c-format
 msgid "%s"
 msgstr ""
 
-#: src/chmod.c:175 src/chown-core.c:197 src/du.c:352
+#: src/chmod.c:175 src/chown-core.c:197 src/du.c:354
 #, fuzzy, c-format
 msgid "cannot read directory %s"
 msgstr "ディレクトリ %s を作成できません"
@@ -675,7 +675,7 @@ msgstr "ディレクトリ %s を作成できません"
 msgid "changing permissions of %s"
 msgstr "%s の属性を変更できません"
 
-#: src/chmod.c:245 src/chown-core.c:327 src/du.c:502
+#: src/chmod.c:245 src/chown-core.c:327 src/du.c:504
 #, fuzzy
 msgid "fts_read failed"
 msgstr "読込み失敗"
@@ -897,7 +897,7 @@ msgstr "ディレクトリ %s に移動できません"
 msgid "cannot chdir to root directory"
 msgstr "ディレクトリ %s に移動できません"
 
-#: src/chroot.c:110 src/nohup.c:186 src/setuidgid.c:126
+#: src/chroot.c:110 src/nohup.c:192 src/setuidgid.c:126
 #, fuzzy, c-format
 msgid "cannot run command %s"
 msgstr "`%s' で ioctl() を実行できません"
@@ -924,18 +924,29 @@ msgstr ""
 "CRC チェックサムと各々のファイルのバイト数を表示.\n"
 "\n"
 
-#: src/comm.c:72
+#: src/comm.c:72 src/join.c:158
 #, c-format
-msgid "Usage: %s [OPTION]... LEFT_FILE RIGHT_FILE\n"
-msgstr "使用法: %s [オプション]... ファイルA  ファイルB\n"
+msgid "Usage: %s [OPTION]... FILE1 FILE2\n"
+msgstr "使用法: %s [オプション]... ファイル1 ファイル2\n"
 
 #: src/comm.c:76
+msgid "Compare sorted files FILE1 and FILE2 line by line.\n"
+msgstr ""
+
+#: src/comm.c:79
+msgid ""
+"\n"
+"With no options, produce three-column output.  Column one contains\n"
+"lines unique to FILE1, column two contains lines unique to FILE2,\n"
+"and column three contains lines common to both files.\n"
+msgstr ""
+
+#: src/comm.c:85
 #, fuzzy
 msgid ""
-"Compare sorted files LEFT_FILE and RIGHT_FILE line by line.\n"
 "\n"
-"  -1              suppress lines unique to left file\n"
-"  -2              suppress lines unique to right file\n"
+"  -1              suppress lines unique to FILE1\n"
+"  -2              suppress lines unique to FILE2\n"
 "  -3              suppress lines that appear in both files\n"
 msgstr ""
 "それぞれソートされた ファイルA と ファイルB とを行ごとに比較します.\n"
@@ -949,7 +960,7 @@ msgstr ""
 msgid "cannot open %s for reading"
 msgstr "%s を 読み込み用でオープンできません"
 
-#: src/copy.c:228 src/copy.c:282 src/copy.c:297 src/dd.c:1209 src/tail.c:1098
+#: src/copy.c:228 src/copy.c:282 src/copy.c:302 src/dd.c:1209 src/tail.c:1098
 #: src/tail.c:1170
 #, fuzzy, c-format
 msgid "cannot fstat %s"
@@ -960,7 +971,7 @@ msgstr "日時を設定できません"
 msgid "skipping file %s, as it was replaced while being copied"
 msgstr ""
 
-#: src/copy.c:258 src/copy.c:887 src/copy.c:1071 src/copy.c:1161 src/ln.c:297
+#: src/copy.c:258 src/copy.c:892 src/copy.c:1076 src/copy.c:1179 src/ln.c:297
 #: src/remove.c:727 src/remove.c:781 src/remove.c:902 src/remove.c:1009
 #, fuzzy, c-format
 msgid "cannot remove %s"
@@ -971,208 +982,208 @@ msgstr "ディレクトリ %s を作成できません"
 msgid "cannot create regular file %s"
 msgstr "一時ファイルを作成できません"
 
-#: src/copy.c:324 src/dd.c:825 src/dd.c:1019
+#: src/copy.c:329 src/dd.c:825 src/dd.c:1019
 #, fuzzy, c-format
 msgid "reading %s"
 msgstr "%s の読み込みエラー"
 
-#: src/copy.c:358 src/head.c:437
+#: src/copy.c:363 src/head.c:437
 #, fuzzy, c-format
 msgid "cannot lseek %s"
 msgstr "%s: オフセット %s%s を seek できません"
 
-#: src/copy.c:373 src/copy.c:397 src/dd.c:1063 src/dd.c:1124
+#: src/copy.c:378 src/copy.c:402 src/dd.c:1063 src/dd.c:1124
 #, fuzzy, c-format
 msgid "writing %s"
 msgstr "%s の書き込みエラー"
 
-#: src/copy.c:405 src/copy.c:411 src/head.c:874
+#: src/copy.c:410 src/copy.c:416 src/head.c:874
 #, fuzzy, c-format
 msgid "closing %s"
 msgstr "%s を閉じています (fd=%d)"
 
-#: src/copy.c:630
+#: src/copy.c:635
 #, c-format
 msgid "%s: overwrite %s, overriding mode %04lo? "
 msgstr "%s: %s のモード %04lo を無視して上書きしますか？ "
 
-#: src/copy.c:636
+#: src/copy.c:641
 #, c-format
 msgid "%s: overwrite %s? "
 msgstr "%s: %s を上書きしてもよろしいですか(yes/no)? "
 
-#: src/copy.c:831 src/copy.c:869 src/df.c:492 src/stat.c:655
+#: src/copy.c:836 src/copy.c:874 src/df.c:492 src/stat.c:655
 #, fuzzy, c-format
 msgid "cannot stat %s"
 msgstr "ディレクトリ %s を作成できません"
 
-#: src/copy.c:841
+#: src/copy.c:846
 #, fuzzy, c-format
 msgid "omitting directory %s"
 msgstr "ディレクトリ %s を作成できません"
 
-#: src/copy.c:855
+#: src/copy.c:860
 #, c-format
 msgid "warning: source file %s specified more than once"
 msgstr "警告: コピー元ファイル %s が複数指定されました"
 
-#: src/copy.c:900 src/ln.c:241
+#: src/copy.c:905 src/ln.c:241
 #, c-format
 msgid "%s and %s are the same file"
 msgstr "%s と %s は同じファイルです"
 
-#: src/copy.c:910
+#: src/copy.c:915
 #, fuzzy, c-format
 msgid "cannot overwrite non-directory %s with directory %s"
 msgstr "ディレクトリ %s に移動できません"
 
-#: src/copy.c:927
+#: src/copy.c:932
 #, c-format
 msgid "will not overwrite just-created %s with %s"
 msgstr "たった今作成した %s には %s で上書きしません"
 
-#: src/copy.c:938
+#: src/copy.c:943
 #, fuzzy, c-format
 msgid "cannot overwrite directory %s with non-directory"
 msgstr "ディレクトリ %s を作成できません"
 
-#: src/copy.c:999
+#: src/copy.c:1004
 #, fuzzy, c-format
 msgid "cannot overwrite directory %s"
 msgstr "ディレクトリ %s を作成できません"
 
-#: src/copy.c:1008
+#: src/copy.c:1013
 #, fuzzy, c-format
 msgid "cannot move directory onto non-directory: %s -> %s"
 msgstr "ディレクトリ %s に移動できません"
 
-#: src/copy.c:1031
+#: src/copy.c:1036
 #, c-format
 msgid "backing up %s would destroy source;  %s not moved"
 msgstr "%s をバックアップすると元ファイルが壊れます -- %s を移動しませんでした"
 
-#: src/copy.c:1032
+#: src/copy.c:1037
 #, c-format
 msgid "backing up %s would destroy source;  %s not copied"
 msgstr ""
 "%s をバックアップすると元ファイルが壊れます -- %s をコピーしませんでした"
 
-#: src/copy.c:1050 src/ln.c:279
+#: src/copy.c:1055 src/ln.c:279
 #, fuzzy, c-format
 msgid "cannot backup %s"
 msgstr "%s を実行できません"
 
-#: src/copy.c:1086 src/ln.c:314
+#: src/copy.c:1091 src/ln.c:314
 #, c-format
 msgid " (backup: %s)"
 msgstr " (バックアップ: %s)"
 
-#: src/copy.c:1136
+#: src/copy.c:1154
 #, fuzzy, c-format
 msgid "cannot copy a directory, %s, into itself, %s"
 msgstr "ディレクトリ %s を作成できません"
 
-#: src/copy.c:1143
+#: src/copy.c:1161
 #, fuzzy, c-format
 msgid "will not create hard link %s to directory %s"
 msgstr "ディレクトリ %s に移動できません"
 
-#: src/copy.c:1169
+#: src/copy.c:1187
 #, fuzzy, c-format
 msgid "cannot create hard link %s to %s"
 msgstr "ディレクトリ %s を作成できません"
 
-#: src/copy.c:1223
+#: src/copy.c:1241
 #, fuzzy, c-format
 msgid "cannot move %s to a subdirectory of itself, %s"
 msgstr "ディレクトリ %s に移動できません"
 
-#: src/copy.c:1266
+#: src/copy.c:1284
 #, fuzzy, c-format
 msgid "cannot move %s to %s"
 msgstr "`%s' で ioctl() を実行できません"
 
-#: src/copy.c:1278
+#: src/copy.c:1296
 #, c-format
 msgid "inter-device move failed: %s to %s; unable to remove target"
 msgstr ""
 
-#: src/copy.c:1306
+#: src/copy.c:1324
 #, c-format
 msgid "cannot copy cyclic symbolic link %s"
 msgstr "循環するシンボリックリンク %s はコピーできません"
 
-#: src/copy.c:1383
+#: src/copy.c:1401
 #, c-format
 msgid "%s: can make relative symbolic links only in current directory"
 msgstr "%s: カレントディレクトリ上でのみ相対シンボリックリンクができます"
 
-#: src/copy.c:1390
+#: src/copy.c:1408
 #, fuzzy, c-format
 msgid "cannot create symbolic link %s to %s"
 msgstr "ディレクトリ %s を作成できません"
 
-#: src/copy.c:1401
+#: src/copy.c:1419
 #, fuzzy, c-format
 msgid "cannot create link %s"
 msgstr "ディレクトリ %s を作成できません"
 
-#: src/copy.c:1423 src/mkfifo.c:134
+#: src/copy.c:1441 src/mkfifo.c:134
 #, fuzzy, c-format
 msgid "cannot create fifo %s"
 msgstr "ディレクトリ %s を作成できません"
 
-#: src/copy.c:1434
+#: src/copy.c:1452
 #, fuzzy, c-format
 msgid "cannot create special file %s"
 msgstr "キャラクタスペシャルファイル"
 
-#: src/copy.c:1446 src/ls.c:2554 src/stat.c:439
+#: src/copy.c:1464 src/ls.c:2554 src/stat.c:439
 #, fuzzy, c-format
 msgid "cannot read symbolic link %s"
 msgstr "シンボリックリンク"
 
-#: src/copy.c:1471
+#: src/copy.c:1489
 #, fuzzy, c-format
 msgid "cannot create symbolic link %s"
 msgstr "ディレクトリ %s を作成できません"
 
-#: src/copy.c:1487 src/copy.c:1548 src/cp.c:330
+#: src/copy.c:1505 src/copy.c:1566 src/cp.c:330
 #, fuzzy, c-format
 msgid "failed to preserve ownership for %s"
 msgstr "%s の所有者情報を保存中"
 
-#: src/copy.c:1502
+#: src/copy.c:1520
 #, c-format
 msgid "%s has unknown file type"
 msgstr "%s のファイルタイプが不明です"
 
-#: src/copy.c:1535
+#: src/copy.c:1553
 #, c-format
 msgid "preserving times for %s"
 msgstr "%s のタイムスタンプを保存中"
 
-#: src/copy.c:1560
+#: src/copy.c:1578
 #, fuzzy, c-format
 msgid "failed to lookup file %s"
 msgstr "%s のタイムスタンプを保存中"
 
-#: src/copy.c:1565
+#: src/copy.c:1583
 #, fuzzy, c-format
 msgid "failed to preserve authorship for %s"
 msgstr "%s の所有者情報を保存中"
 
-#: src/copy.c:1584
+#: src/copy.c:1602
 #, fuzzy, c-format
 msgid "setting permissions for %s"
 msgstr "%s の属性を変更できません"
 
-#: src/copy.c:1606 src/ln.c:332
+#: src/copy.c:1624 src/ln.c:332
 #, fuzzy, c-format
 msgid "cannot un-backup %s"
 msgstr "%s を実行できません"
 
-#: src/copy.c:1610
+#: src/copy.c:1628
 #, c-format
 msgid "%s -> %s (unbackup)\n"
 msgstr "%s -> %s (復元)\n"
@@ -2307,7 +2318,7 @@ msgstr ""
 "  -x, --exclude-type=TYPE  指定した種類のファイルシステムを除いて表示する\n"
 "  -v                    (無視される)\n"
 
-#: src/df.c:758 src/du.c:210 src/ls.c:4023
+#: src/df.c:758 src/du.c:212 src/ls.c:4023
 msgid ""
 "\n"
 "SIZE may be (or may be an integer optionally followed by) one of following:\n"
@@ -2448,10 +2459,11 @@ msgstr ""
 #: src/du.c:186
 #, fuzzy
 msgid ""
+"  -H                    like --si, but also evokes a warning; will soon\n"
+"                        change to be equivalent to --dereference-args (-D)\n"
 "  -h, --human-readable  print sizes in human readable format (e.g., 1K 234M "
 "2G)\n"
-"  -H, --si              likewise, but use powers of 1000 not 1024 "
-"(deprecated)\n"
+"      --si              like -h, but use powers of 1000 not 1024\n"
 "  -k                    like --block-size=1K\n"
 "  -l, --count-links     count sizes many times if hard linked\n"
 msgstr ""
@@ -2461,7 +2473,7 @@ msgstr ""
 "  -k, --kilobytes       --block-size=1024 と同様\n"
 "  -l, --count-links     ハードリンクであっても集計に含める\n"
 
-#: src/du.c:192
+#: src/du.c:194
 #, fuzzy
 msgid ""
 "  -L, --dereference     dereference all symbolic links\n"
@@ -2477,7 +2489,7 @@ msgstr ""
 "  -S, --separate-dirs   サブディレクトリのサイズを含めない\n"
 "  -s, --summarize       引数毎の総合計しか表示しない\n"
 
-#: src/du.c:199
+#: src/du.c:201
 #, fuzzy
 msgid ""
 "  -x, --one-file-system  skip directories on different filesystems\n"
@@ -2500,30 +2512,30 @@ msgstr ""
 "る\n"
 "                           --max-depth=0 なら --summarize 同等となる\n"
 
-#: src/du.c:524 src/ls.c:2224 src/wc.c:674
+#: src/du.c:526 src/ls.c:2224 src/wc.c:674
 msgid "total"
 msgstr "合計"
 
-#: src/du.c:604
+#: src/du.c:606
 msgid ""
 "WARNING: use --si, not -H; the meaning of the -H option will soon\n"
 "change to be the same as that of --dereference-args (-D)"
 msgstr ""
 
-#: src/du.c:626
+#: src/du.c:628
 #, fuzzy, c-format
 msgid "invalid maximum depth %s"
 msgstr "幅 `%s' が正しくありません"
 
-#: src/du.c:696
+#: src/du.c:698
 msgid "cannot both summarize and show all entries"
 msgstr "合計と全エントリの表示の両方を、一度に指定することはできません"
 
-#: src/du.c:703
+#: src/du.c:705
 msgid "warning: summarizing is the same as using --max-depth=0"
 msgstr "警告: 統計(-s)と -max-depth=0 は同じ用法です"
 
-#: src/du.c:709
+#: src/du.c:711
 #, c-format
 msgid "warning: summarizing conflicts with --max-depth=%d"
 msgstr "警告: 統計(-s)と -max-depth=%d の指定が競合しています"
@@ -2774,7 +2786,7 @@ msgstr ""
 msgid "syntax error"
 msgstr "標準エラー"
 
-#: src/expr.c:405
+#: src/expr.c:420
 #, c-format
 msgid ""
 "warning: unportable BRE: `%s': using `^' as the first character\n"
@@ -2783,12 +2795,12 @@ msgstr ""
 "警告: 可搬でない BRE: `%s': 基本的な正規表現の最初の文字として\n"
 "`^' を使うことは可搬ではないので無視します"
 
-#: src/expr.c:607 src/expr.c:646
+#: src/expr.c:632 src/expr.c:674
 #, fuzzy
 msgid "non-numeric argument"
 msgstr "入力の大きさ制限の引数"
 
-#: src/expr.c:613
+#: src/expr.c:638
 msgid "division by zero"
 msgstr "ゼロでの割り算"
 
@@ -3304,11 +3316,6 @@ msgstr ""
 "数\n"
 "を通じて選択できます。以下がその際の値です:\n"
 "\n"
-
-#: src/join.c:158
-#, c-format
-msgid "Usage: %s [OPTION]... FILE1 FILE2\n"
-msgstr "使用法: %s [オプション]... ファイル1 ファイル2\n"
 
 #: src/join.c:162
 #, fuzzy
@@ -4551,7 +4558,7 @@ msgstr "フィールド幅の指定行番号が正しくありません: `%s'"
 msgid "invalid line numbering format: %s"
 msgstr "行番号の増分が正しくありません: `%s'"
 
-#: src/nohup.c:53
+#: src/nohup.c:54
 #, fuzzy, c-format
 msgid ""
 "Usage: %s COMMAND [ARG]...\n"
@@ -4560,28 +4567,32 @@ msgstr ""
 "使用法: %s [ファイル]...\n"
 "または: %s [オプション]\n"
 
-#: src/nohup.c:59
+#: src/nohup.c:60
 msgid ""
 "Run COMMAND, ignoring hangup signals.\n"
 "\n"
 msgstr ""
 
-#: src/nohup.c:122 src/nohup.c:123
+#: src/nohup.c:123 src/nohup.c:124
 #, fuzzy, c-format
 msgid "failed to open %s"
 msgstr "%s のタイムスタンプを保存中"
 
-#: src/nohup.c:131
+#: src/nohup.c:132
 #, fuzzy
 msgid "failed to redirect standard output"
 msgstr "標準出力"
 
-#: src/nohup.c:133
+#: src/nohup.c:134
 #, fuzzy, c-format
 msgid "appending output to %s"
 msgstr "%s のオーナーとグループを変更できません"
 
-#: src/nohup.c:152
+#: src/nohup.c:155
+msgid "failed to set the copy of stderr to close on exec"
+msgstr ""
+
+#: src/nohup.c:158
 msgid "failed to redirect standard error"
 msgstr ""
 
@@ -5860,7 +5871,7 @@ msgid ""
 "\n"
 "If FIRST or INCREMENT is omitted, it defaults to 1.  That is, an\n"
 "omitted INCREMENT defaults to 1 even when LAST is smaller than FIRST.\n"
-" FIRST, INCREMENT, and LAST are interpreted as floating point values.\n"
+"FIRST, INCREMENT, and LAST are interpreted as floating point values.\n"
 "INCREMENT is usually positive if FIRST is smaller than LAST, and\n"
 "INCREMENT is usually negative if FIRST is greater than LAST.\n"
 "When given, the FORMAT argument must contain exactly one of\n"
@@ -8554,6 +8565,9 @@ msgid ""
 msgstr ""
 "指定された全ての文字列または `y' からなる行を繰り返し出力.\n"
 "\n"
+
+#~ msgid "Usage: %s [OPTION]... LEFT_FILE RIGHT_FILE\n"
+#~ msgstr "使用法: %s [オプション]... ファイルA  ファイルB\n"
 
 #, fuzzy
 #~ msgid "*** invalid date/time ***"

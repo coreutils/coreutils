@@ -37,10 +37,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: GNU coreutils 5.1.3\n"
+"Project-Id-Version: GNU coreutils 5.2.0\n"
 "Report-Msgid-Bugs-To: bug-coreutils@gnu.org\n"
-"POT-Creation-Date: 2004-02-18 18:49+0100\n"
-"PO-Revision-Date: 2004-02-09 10:45 +0100\n"
+"POT-Creation-Date: 2004-03-12 14:56+0100\n"
+"PO-Revision-Date: 2004-03-02 13:08 +0100\n"
 "Last-Translator: Michael Piefel <piefel@informatik.hu-berlin.de>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -184,7 +184,7 @@ msgstr "Blockgröße"
 msgid "failed to return to initial working directory"
 msgstr "konnte nicht in ursprüngliches Arbeitsverzeichnis zurückkehren"
 
-#: lib/makepath.c:152 src/copy.c:1325 src/mkdir.c:171
+#: lib/makepath.c:152 src/copy.c:1343 src/mkdir.c:171
 #, c-format
 msgid "cannot create directory %s"
 msgstr "kann Verzeichnis %s nicht anlegen"
@@ -266,19 +266,19 @@ msgstr "kann U+%04X nicht in lokalen Zeichensatz konvertieren"
 msgid "cannot convert U+%04X to local character set: %s"
 msgstr "kann U+%04X nicht in lokalen Zeichensatz konvertieren: %s"
 
-#: lib/userspec.c:148
+#: lib/userspec.c:147
 msgid "invalid user"
 msgstr "ungültiger Benutzer"
 
-#: lib/userspec.c:149
+#: lib/userspec.c:148
 msgid "invalid group"
 msgstr "ungültige Gruppe"
 
-#: lib/userspec.c:151
+#: lib/userspec.c:150
 msgid "cannot get the login group of a numeric UID"
 msgstr "kann die Login-Gruppe einer numerischen UID nicht ermitteln"
 
-#: lib/userspec.c:153
+#: lib/userspec.c:152
 msgid "cannot omit both user and group"
 msgstr "kann nicht sowohl Benutzer als auch Gruppe weglassen"
 
@@ -405,15 +405,15 @@ msgstr ""
 msgid "invalid argument: %s"
 msgstr "ungültiges Argument: %s"
 
-#: lib/xmemcoll.c:54 src/expr.c:711
+#: lib/xmemcoll.c:54 src/expr.c:740
 msgid "string comparison failed"
 msgstr "Zeichenkettenvergleich fehlgeschlagen"
 
-#: lib/xmemcoll.c:55 src/expr.c:712
+#: lib/xmemcoll.c:55 src/expr.c:741
 msgid "Set LC_ALL='C' to work around the problem."
 msgstr "Setzen Sie LC_ALL=C, um das Problem zu umgehen."
 
-#: lib/xmemcoll.c:57 src/expr.c:714
+#: lib/xmemcoll.c:57 src/expr.c:743
 #, c-format
 msgid "The strings compared were %s and %s."
 msgstr "Die verglichenen Zeichenketten waren %s und %s."
@@ -427,7 +427,7 @@ msgstr "Die verglichenen Zeichenketten waren %s und %s."
 #: src/install.c:588 src/join.c:154 src/kill.c:90 src/link.c:47 src/ln.c:341
 #: src/logname.c:44 src/ls.c:3901 src/md5sum.c:120 src/mkdir.c:57
 #: src/mkfifo.c:51 src/mknod.c:51 src/mv.c:301 src/nice.c:65 src/nl.c:172
-#: src/nohup.c:49 src/od.c:282 src/paste.c:392 src/pathchk.c:136
+#: src/nohup.c:50 src/od.c:282 src/paste.c:392 src/pathchk.c:136
 #: src/pinky.c:464 src/pr.c:2748 src/printenv.c:62 src/printf.c:91
 #: src/ptx.c:1870 src/pwd.c:41 src/readlink.c:63 src/rm.c:103 src/rmdir.c:143
 #: src/seq.c:78 src/setuidgid.c:46 src/shred.c:155 src/sleep.c:48
@@ -461,15 +461,15 @@ msgstr ""
 "\n"
 
 #: src/basename.c:65 src/cat.c:123 src/chgrp.c:163 src/chmod.c:298
-#: src/chown.c:152 src/chroot.c:59 src/cksum.c:292 src/comm.c:85 src/cp.c:251
+#: src/chown.c:152 src/chroot.c:59 src/cksum.c:292 src/comm.c:93 src/cp.c:251
 #: src/csplit.c:1443 src/cut.c:223 src/date.c:216 src/dd.c:341 src/df.c:762
-#: src/dircolors.c:121 src/dirname.c:57 src/du.c:214 src/echo.c:104
+#: src/dircolors.c:121 src/dirname.c:57 src/du.c:216 src/echo.c:104
 #: src/env.c:133 src/expand.c:129 src/expr.c:161 src/factor.c:89
 #: src/false.c:43 src/fmt.c:297 src/fold.c:85 src/head.c:144 src/hostid.c:55
 #: src/hostname.c:75 src/id.c:103 src/install.c:643 src/join.c:195
 #: src/kill.c:120 src/link.c:59 src/ln.c:398 src/logname.c:55 src/ls.c:4035
 #: src/md5sum.c:156 src/mkdir.c:76 src/mkfifo.c:68 src/mknod.c:82 src/mv.c:355
-#: src/nice.c:79 src/nl.c:227 src/nohup.c:65 src/od.c:369 src/paste.c:416
+#: src/nice.c:79 src/nl.c:227 src/nohup.c:66 src/od.c:369 src/paste.c:416
 #: src/pathchk.c:148 src/pinky.c:491 src/pr.c:2860 src/printenv.c:75
 #: src/printf.c:140 src/ptx.c:1917 src/pwd.c:52 src/readlink.c:80 src/rm.c:141
 #: src/rmdir.c:163 src/seq.c:106 src/setuidgid.c:66 src/shred.c:219
@@ -488,9 +488,9 @@ msgstr ""
 "Melden Sie Fehler (auf Englisch, mit LC_ALL=C) an <%s>.\n"
 
 #: src/basename.c:114 src/chgrp.c:246 src/chmod.c:395 src/chown.c:264
-#: src/chroot.c:80 src/comm.c:280 src/csplit.c:1373 src/dirname.c:89
+#: src/chroot.c:80 src/comm.c:288 src/csplit.c:1373 src/dirname.c:89
 #: src/expr.c:199 src/install.c:281 src/link.c:88 src/mkdir.c:125
-#: src/mkfifo.c:114 src/mknod.c:138 src/nohup.c:99 src/pathchk.c:189
+#: src/mkfifo.c:114 src/mknod.c:138 src/nohup.c:100 src/pathchk.c:189
 #: src/readlink.c:128 src/rm.c:231 src/rmdir.c:208 src/seq.c:374
 #: src/setuidgid.c:99 src/sleep.c:140 src/stat.c:825 src/unlink.c:89
 msgid "too few arguments"
@@ -716,17 +716,17 @@ msgstr "Änderung des Modus von %s nach %04lo (%s) fehlgeschlagen\n"
 msgid "mode of %s retained as %04lo (%s)\n"
 msgstr "Modus von %s als %04lo (%s) erhalten\n"
 
-#: src/chmod.c:167 src/chown-core.c:189 src/copy.c:158 src/du.c:339
+#: src/chmod.c:167 src/chown-core.c:189 src/copy.c:158 src/du.c:341
 #, c-format
 msgid "cannot access %s"
 msgstr "Zugriff auf %s nicht möglich"
 
-#: src/chmod.c:171 src/chown-core.c:193 src/du.c:345
+#: src/chmod.c:171 src/chown-core.c:193 src/du.c:347
 #, c-format
 msgid "%s"
 msgstr "%s"
 
-#: src/chmod.c:175 src/chown-core.c:197 src/du.c:352
+#: src/chmod.c:175 src/chown-core.c:197 src/du.c:354
 #, c-format
 msgid "cannot read directory %s"
 msgstr "kann Verzeichnis %s nicht lesen"
@@ -736,7 +736,7 @@ msgstr "kann Verzeichnis %s nicht lesen"
 msgid "changing permissions of %s"
 msgstr "Beim Setzen der Zugriffsrechte für %s"
 
-#: src/chmod.c:245 src/chown-core.c:327 src/du.c:502
+#: src/chmod.c:245 src/chown-core.c:327 src/du.c:504
 msgid "fts_read failed"
 msgstr "fts_read fehlgeschlagen"
 
@@ -966,7 +966,7 @@ msgstr "Es ist nicht möglich, das Wurzelverzeichnis in %s zu ändern"
 msgid "cannot chdir to root directory"
 msgstr "Es ist nicht möglich, in das Wurzelverzeichnis zu wechseln"
 
-#: src/chroot.c:110 src/nohup.c:186 src/setuidgid.c:126
+#: src/chroot.c:110 src/nohup.c:192 src/setuidgid.c:126
 #, c-format
 msgid "cannot run command %s"
 msgstr "es ist nicht möglich, %s auszuführen"
@@ -993,18 +993,29 @@ msgstr ""
 "CRC-Checksumme und Byteanzahl für jede DATEI ausgeben.\n"
 "\n"
 
-#: src/comm.c:72
+#: src/comm.c:72 src/join.c:158
 #, c-format
-msgid "Usage: %s [OPTION]... LEFT_FILE RIGHT_FILE\n"
-msgstr "Aufruf: %s [OPTION]... LINKE_DATEI RECHTE_DATEI\n"
+msgid "Usage: %s [OPTION]... FILE1 FILE2\n"
+msgstr "Aufruf: %s [OPTION]... DATEI1 DATEI2\n"
 
 #: src/comm.c:76
+msgid "Compare sorted files FILE1 and FILE2 line by line.\n"
+msgstr ""
+
+#: src/comm.c:79
+msgid ""
+"\n"
+"With no options, produce three-column output.  Column one contains\n"
+"lines unique to FILE1, column two contains lines unique to FILE2,\n"
+"and column three contains lines common to both files.\n"
+msgstr ""
+
+#: src/comm.c:85
 #, fuzzy
 msgid ""
-"Compare sorted files LEFT_FILE and RIGHT_FILE line by line.\n"
 "\n"
-"  -1              suppress lines unique to left file\n"
-"  -2              suppress lines unique to right file\n"
+"  -1              suppress lines unique to FILE1\n"
+"  -2              suppress lines unique to FILE2\n"
 "  -3              suppress lines that appear in both files\n"
 msgstr ""
 "Sortierte Dateien LINKE_DATEI und RECHTE_DATEI Zeile für Zeile vergleichen.\n"
@@ -1018,7 +1029,7 @@ msgstr ""
 msgid "cannot open %s for reading"
 msgstr "%s kann nicht zum Lesen geöffnet werden"
 
-#: src/copy.c:228 src/copy.c:282 src/copy.c:297 src/dd.c:1209 src/tail.c:1098
+#: src/copy.c:228 src/copy.c:282 src/copy.c:302 src/dd.c:1209 src/tail.c:1098
 #: src/tail.c:1170
 #, c-format
 msgid "cannot fstat %s"
@@ -1029,7 +1040,7 @@ msgstr "Aufruf von fstat für %s nicht möglich"
 msgid "skipping file %s, as it was replaced while being copied"
 msgstr "überspringe Datei %s, da sie während des Kopierens ersetzt wurde"
 
-#: src/copy.c:258 src/copy.c:887 src/copy.c:1071 src/copy.c:1161 src/ln.c:297
+#: src/copy.c:258 src/copy.c:892 src/copy.c:1076 src/copy.c:1179 src/ln.c:297
 #: src/remove.c:727 src/remove.c:781 src/remove.c:902 src/remove.c:1009
 #, c-format
 msgid "cannot remove %s"
@@ -1041,216 +1052,216 @@ msgid "cannot create regular file %s"
 msgstr "reguläre Datei %s kann nicht angelegt werden"
 
 # XLATE_REMARK: Check this out! is the %s replaced by the name of the directory?
-#: src/copy.c:324 src/dd.c:825 src/dd.c:1019
+#: src/copy.c:329 src/dd.c:825 src/dd.c:1019
 #, c-format
 msgid "reading %s"
 msgstr "Lesen von %s"
 
-#: src/copy.c:358 src/head.c:437
+#: src/copy.c:363 src/head.c:437
 #, c-format
 msgid "cannot lseek %s"
 msgstr "Aufruf von lseek für %s nicht möglich"
 
 # XLATE_REMARK: Check this out! is the %s replaced by the name of the directory?
-#: src/copy.c:373 src/copy.c:397 src/dd.c:1063 src/dd.c:1124
+#: src/copy.c:378 src/copy.c:402 src/dd.c:1063 src/dd.c:1124
 #, c-format
 msgid "writing %s"
 msgstr "Schreiben von %s"
 
 # XLATE_REMARK: Check this out! is the %s replaced by the name of the directory?
-#: src/copy.c:405 src/copy.c:411 src/head.c:874
+#: src/copy.c:410 src/copy.c:416 src/head.c:874
 #, c-format
 msgid "closing %s"
 msgstr "Schließen von %s"
 
-#: src/copy.c:630
+#: src/copy.c:635
 #, c-format
 msgid "%s: overwrite %s, overriding mode %04lo? "
 msgstr "%s: Überschreiben von %s, über Modus %04lo hinwegsetzen? "
 
-#: src/copy.c:636
+#: src/copy.c:641
 #, c-format
 msgid "%s: overwrite %s? "
 msgstr "%s: %s überschreiben? "
 
-#: src/copy.c:831 src/copy.c:869 src/df.c:492 src/stat.c:655
+#: src/copy.c:836 src/copy.c:874 src/df.c:492 src/stat.c:655
 #, c-format
 msgid "cannot stat %s"
 msgstr "Aufruf von stat für %s nicht möglich"
 
-#: src/copy.c:841
+#: src/copy.c:846
 #, c-format
 msgid "omitting directory %s"
 msgstr "Verzeichnis %s ausgelassen"
 
-#: src/copy.c:855
+#: src/copy.c:860
 #, c-format
 msgid "warning: source file %s specified more than once"
 msgstr "Warnung: Quelldatei %s mehr als einmal angegeben"
 
-#: src/copy.c:900 src/ln.c:241
+#: src/copy.c:905 src/ln.c:241
 #, c-format
 msgid "%s and %s are the same file"
 msgstr "%s und %s sind die gleiche Datei"
 
-#: src/copy.c:910
+#: src/copy.c:915
 #, c-format
 msgid "cannot overwrite non-directory %s with directory %s"
 msgstr ""
 "Überschreiben des Nicht-Verzeichnisses %s mit Verzeichnis %s nicht möglich."
 
-#: src/copy.c:927
+#: src/copy.c:932
 #, c-format
 msgid "will not overwrite just-created %s with %s"
 msgstr "Neu erstelltes %s wird nicht mit %s überschrieben."
 
-#: src/copy.c:938
+#: src/copy.c:943
 #, c-format
 msgid "cannot overwrite directory %s with non-directory"
 msgstr ""
 "Überschreiben des Verzeichnisses %s mit Nicht-Verzeichnis nicht möglich."
 
-#: src/copy.c:999
+#: src/copy.c:1004
 #, c-format
 msgid "cannot overwrite directory %s"
 msgstr "Überschreiben des Verzeichnisses %s nicht möglich"
 
-#: src/copy.c:1008
+#: src/copy.c:1013
 #, c-format
 msgid "cannot move directory onto non-directory: %s -> %s"
 msgstr ""
 "Verschieben von Verzeichnis auf ein Nicht-Verzeichnis nicht möglich: %s -> %s"
 
-#: src/copy.c:1031
+#: src/copy.c:1036
 #, c-format
 msgid "backing up %s would destroy source;  %s not moved"
 msgstr "Sicherung von %s würde Quelle zerstören; %s nicht verschoben"
 
-#: src/copy.c:1032
+#: src/copy.c:1037
 #, c-format
 msgid "backing up %s would destroy source;  %s not copied"
 msgstr "Sicherung von %s würde Quelle zerstören; %s nicht kopiert"
 
-#: src/copy.c:1050 src/ln.c:279
+#: src/copy.c:1055 src/ln.c:279
 #, c-format
 msgid "cannot backup %s"
 msgstr "Sicherung von %s nicht möglich"
 
-#: src/copy.c:1086 src/ln.c:314
+#: src/copy.c:1091 src/ln.c:314
 #, c-format
 msgid " (backup: %s)"
 msgstr " (Sicherung: %s)"
 
-#: src/copy.c:1136
+#: src/copy.c:1154
 #, c-format
 msgid "cannot copy a directory, %s, into itself, %s"
 msgstr "Kopieren eines Verzeichnisses, %s, in sich selbst (%s) nicht möglich"
 
-#: src/copy.c:1143
+#: src/copy.c:1161
 #, c-format
 msgid "will not create hard link %s to directory %s"
 msgstr "Harte Verknüpfung %s zu Verzeichnis %s wird nicht erzeugt"
 
-#: src/copy.c:1169
+#: src/copy.c:1187
 #, c-format
 msgid "cannot create hard link %s to %s"
 msgstr "Erzeugen von harter Verknüpfung %s zu Verzeichnis %s nicht möglich"
 
-#: src/copy.c:1223
+#: src/copy.c:1241
 #, c-format
 msgid "cannot move %s to a subdirectory of itself, %s"
 msgstr "Verschieben von %s in eigenes Unterverzeichnis (%s) nicht möglich"
 
-#: src/copy.c:1266
+#: src/copy.c:1284
 #, c-format
 msgid "cannot move %s to %s"
 msgstr "Verschieben von %s nach %s nicht möglich"
 
-#: src/copy.c:1278
+#: src/copy.c:1296
 #, c-format
 msgid "inter-device move failed: %s to %s; unable to remove target"
 msgstr ""
 "Verschieben zwischen Geräten fehlgeschlagen: %s zu %s; kann Ziel nicht "
 "entfernen"
 
-#: src/copy.c:1306
+#: src/copy.c:1324
 #, c-format
 msgid "cannot copy cyclic symbolic link %s"
 msgstr "Kopieren von zyklischer symbolischer Verknüpfung %s nicht möglich"
 
-#: src/copy.c:1383
+#: src/copy.c:1401
 #, c-format
 msgid "%s: can make relative symbolic links only in current directory"
 msgstr ""
 "%s: Erzeugen relativer symbolischer Verknüpfungen nur in momentanem "
 "Verzeichnis möglich"
 
-#: src/copy.c:1390
+#: src/copy.c:1408
 #, c-format
 msgid "cannot create symbolic link %s to %s"
 msgstr "Erzeugen der symbolischen Verknüpfung %s nach %s nicht möglich"
 
-#: src/copy.c:1401
+#: src/copy.c:1419
 #, c-format
 msgid "cannot create link %s"
 msgstr "Erzeugen von Verknüpfung %s nicht möglich"
 
-#: src/copy.c:1423 src/mkfifo.c:134
+#: src/copy.c:1441 src/mkfifo.c:134
 #, c-format
 msgid "cannot create fifo %s"
 msgstr "Erzeugen von FIFO %s nicht möglich"
 
-#: src/copy.c:1434
+#: src/copy.c:1452
 #, c-format
 msgid "cannot create special file %s"
 msgstr "Erzeugen der Spezialdatei %s nicht möglich"
 
-#: src/copy.c:1446 src/ls.c:2554 src/stat.c:439
+#: src/copy.c:1464 src/ls.c:2554 src/stat.c:439
 #, c-format
 msgid "cannot read symbolic link %s"
 msgstr "Lesen der symbolischen Verknüpfung %s nicht möglich"
 
-#: src/copy.c:1471
+#: src/copy.c:1489
 #, c-format
 msgid "cannot create symbolic link %s"
 msgstr "Erzeugen der symbolischen Verknüpfung %s nicht möglich"
 
-#: src/copy.c:1487 src/copy.c:1548 src/cp.c:330
+#: src/copy.c:1505 src/copy.c:1566 src/cp.c:330
 #, c-format
 msgid "failed to preserve ownership for %s"
 msgstr "konnte den Eigentümer für %s nicht erhalten"
 
-#: src/copy.c:1502
+#: src/copy.c:1520
 #, c-format
 msgid "%s has unknown file type"
 msgstr "%s hat einen unbekannten Dateityp"
 
-#: src/copy.c:1535
+#: src/copy.c:1553
 #, c-format
 msgid "preserving times for %s"
 msgstr "Erhalten der Zeiten für %s"
 
-#: src/copy.c:1560
+#: src/copy.c:1578
 #, c-format
 msgid "failed to lookup file %s"
 msgstr "konnte die Datei %s nicht finden"
 
-#: src/copy.c:1565
+#: src/copy.c:1583
 #, c-format
 msgid "failed to preserve authorship for %s"
 msgstr "konnte den Urheber für %s nicht erhalten"
 
-#: src/copy.c:1584
+#: src/copy.c:1602
 #, c-format
 msgid "setting permissions for %s"
 msgstr "Setzen der Zugriffsrechte für %s"
 
-#: src/copy.c:1606 src/ln.c:332
+#: src/copy.c:1624 src/ln.c:332
 #, c-format
 msgid "cannot un-backup %s"
 msgstr "Löschen der Sicherung von %s nicht möglich"
 
-#: src/copy.c:1610
+#: src/copy.c:1628
 #, c-format
 msgid "%s -> %s (unbackup)\n"
 msgstr "%s -> %s (Löschen der Sicherung)\n"
@@ -2422,7 +2433,7 @@ msgstr ""
 "begrenzen.\n"
 "  -v                        (ignoriert)\n"
 
-#: src/df.c:758 src/du.c:210 src/ls.c:4023
+#: src/df.c:758 src/du.c:212 src/ls.c:4023
 msgid ""
 "\n"
 "SIZE may be (or may be an integer optionally followed by) one of following:\n"
@@ -2574,11 +2585,13 @@ msgstr ""
 "                             symbolische Verknüpfungen handelt\n"
 
 #: src/du.c:186
+#, fuzzy
 msgid ""
+"  -H                    like --si, but also evokes a warning; will soon\n"
+"                        change to be equivalent to --dereference-args (-D)\n"
 "  -h, --human-readable  print sizes in human readable format (e.g., 1K 234M "
 "2G)\n"
-"  -H, --si              likewise, but use powers of 1000 not 1024 "
-"(deprecated)\n"
+"      --si              like -h, but use powers of 1000 not 1024\n"
 "  -k                    like --block-size=1K\n"
 "  -l, --count-links     count sizes many times if hard linked\n"
 msgstr ""
@@ -2591,7 +2604,7 @@ msgstr ""
 "  -l, --count-links        Größe mehrfach zählen, wenn durch harte\n"
 "                             Verknüpfungen verbunden\n"
 
-#: src/du.c:192
+#: src/du.c:194
 msgid ""
 "  -L, --dereference     dereference all symbolic links\n"
 "  -P, --no-dereference  don't follow any symbolic links (this is the "
@@ -2610,7 +2623,7 @@ msgstr ""
 "                             mitzählen\n"
 "  -s, --summarize          nur Summe für jedes Argument anzeigen\n"
 
-#: src/du.c:199
+#: src/du.c:201
 msgid ""
 "  -x, --one-file-system  skip directories on different filesystems\n"
 "  -X FILE, --exclude-from=FILE  Exclude files that match any pattern in "
@@ -2636,11 +2649,11 @@ msgstr ""
 "                             „--max-depth=0“ ist dasselbe wie „--"
 "summarize“.\n"
 
-#: src/du.c:524 src/ls.c:2224 src/wc.c:674
+#: src/du.c:526 src/ls.c:2224 src/wc.c:674
 msgid "total"
 msgstr "insgesamt"
 
-#: src/du.c:604
+#: src/du.c:606
 msgid ""
 "WARNING: use --si, not -H; the meaning of the -H option will soon\n"
 "change to be the same as that of --dereference-args (-D)"
@@ -2648,21 +2661,21 @@ msgstr ""
 "WARNUNG: Benutzen Sie --si, nicht -H; die Bedeutung von -H wird sich bald\n"
 "ändern und dann das gleiche bedeuten wie --dereference-args (-D)."
 
-#: src/du.c:626
+#: src/du.c:628
 #, c-format
 msgid "invalid maximum depth %s"
 msgstr "Ungültige maximale Tiefe %s"
 
-#: src/du.c:696
+#: src/du.c:698
 msgid "cannot both summarize and show all entries"
 msgstr ""
 "Zusammenfassung und Anzeige aller Einträge ist nicht gleichzeitig möglich"
 
-#: src/du.c:703
+#: src/du.c:705
 msgid "warning: summarizing is the same as using --max-depth=0"
 msgstr "Warnung: Zusammenfassen ist das gleiche wie --max-depth=0"
 
-#: src/du.c:709
+#: src/du.c:711
 #, c-format
 msgid "warning: summarizing conflicts with --max-depth=%d"
 msgstr "Warnung: Zusammenfassen widerspricht --max-depth=%d"
@@ -2923,7 +2936,7 @@ msgstr ""
 msgid "syntax error"
 msgstr "Syntaxfehler"
 
-#: src/expr.c:405
+#: src/expr.c:420
 #, c-format
 msgid ""
 "warning: unportable BRE: `%s': using `^' as the first character\n"
@@ -2932,11 +2945,11 @@ msgstr ""
 "Warnung: nicht portable BRE: „%s“: „^“ als erstes Zeichen eines einfachen\n"
 "regulären Ausdrucks ist nicht portabel; es wird ignoriert."
 
-#: src/expr.c:607 src/expr.c:646
+#: src/expr.c:632 src/expr.c:674
 msgid "non-numeric argument"
 msgstr "Argumente, die keine Zahlen sind"
 
-#: src/expr.c:613
+#: src/expr.c:638
 msgid "division by zero"
 msgstr "Teilung durch Null"
 
@@ -3465,11 +3478,6 @@ msgstr ""
 "SIMPLE_BACKUP_SUFFIX gesetzt wurde. Die Versionskontrolle kann mit\n"
 "--backup oder VERSION_CONTROL gesetzt werden. Mögliche Werte sind:\n"
 "\n"
-
-#: src/join.c:158
-#, c-format
-msgid "Usage: %s [OPTION]... FILE1 FILE2\n"
-msgstr "Aufruf: %s [OPTION]... DATEI1 DATEI2\n"
 
 #: src/join.c:162
 msgid ""
@@ -4773,7 +4781,7 @@ msgstr "ungültige Breite des Feldes für die Zeilennummer: %s"
 msgid "invalid line numbering format: %s"
 msgstr "ungültiges Zeilennummerformat: %s"
 
-#: src/nohup.c:53
+#: src/nohup.c:54
 #, c-format
 msgid ""
 "Usage: %s COMMAND [ARG]...\n"
@@ -4782,7 +4790,7 @@ msgstr ""
 "Aufruf: %s BEFEHL [ARGUMENT]...\n"
 " oder:  %s OPTION\n"
 
-#: src/nohup.c:59
+#: src/nohup.c:60
 msgid ""
 "Run COMMAND, ignoring hangup signals.\n"
 "\n"
@@ -4790,21 +4798,25 @@ msgstr ""
 "BEFEHL ausführen und dabei das Signal HUP ignorieren.\n"
 "\n"
 
-#: src/nohup.c:122 src/nohup.c:123
+#: src/nohup.c:123 src/nohup.c:124
 #, c-format
 msgid "failed to open %s"
 msgstr "konnte %s nicht öffnen"
 
-#: src/nohup.c:131
+#: src/nohup.c:132
 msgid "failed to redirect standard output"
 msgstr "konnte Standardausgabe nicht umleiten"
 
-#: src/nohup.c:133
+#: src/nohup.c:134
 #, c-format
 msgid "appending output to %s"
 msgstr "hänge Ausgabe an %s an"
 
-#: src/nohup.c:152
+#: src/nohup.c:155
+msgid "failed to set the copy of stderr to close on exec"
+msgstr ""
+
+#: src/nohup.c:158
 msgid "failed to redirect standard error"
 msgstr "konnte Standardfehlerausgabe nicht umleiten"
 
@@ -6130,12 +6142,12 @@ msgstr ""
 "  -w, --equal-width        gleiche Breite durch führende Nullen herstellen\n"
 
 #: src/seq.c:96
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "\n"
 "If FIRST or INCREMENT is omitted, it defaults to 1.  That is, an\n"
 "omitted INCREMENT defaults to 1 even when LAST is smaller than FIRST.\n"
-" FIRST, INCREMENT, and LAST are interpreted as floating point values.\n"
+"FIRST, INCREMENT, and LAST are interpreted as floating point values.\n"
 "INCREMENT is usually positive if FIRST is smaller than LAST, and\n"
 "INCREMENT is usually negative if FIRST is greater than LAST.\n"
 "When given, the FORMAT argument must contain exactly one of\n"
@@ -6522,7 +6534,7 @@ msgstr ""
 "  -S, --buffer-size=GRÖSSE  GRÖSSE für Hauptspeicherpuffer benutzen\n"
 
 #: src/sort.c:312
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "  -t, --field-separator=SEP use SEP instead of non-blank to blank "
 "transition\n"
@@ -6540,8 +6552,7 @@ msgstr ""
 "                            für temporäre Dateien VERZ statt $TMPDIR oder %"
 "s;\n"
 "                              kann mehrfach gegeben werden\n"
-"  -u, --unique              mit -c: auf strikte Odnung prüfen; anderenfalls: "
-"nur\n"
+"  -u, --unique              mit -c: auf strikte Odnung prüfen; ohne -c: nur\n"
 "                              das erste von mehreren Gleichen ausgeben\n"
 
 #: src/sort.c:319
@@ -8980,6 +8991,9 @@ msgid ""
 msgstr ""
 "Eine Zeile mit allen angegebenen ZEICHENKETTEN oder „y“ wiederholt "
 "ausgeben.\n"
+
+#~ msgid "Usage: %s [OPTION]... LEFT_FILE RIGHT_FILE\n"
+#~ msgstr "Aufruf: %s [OPTION]... LINKE_DATEI RECHTE_DATEI\n"
 
 #~ msgid "*** invalid date/time ***"
 #~ msgstr "*** ungültiges Datum/Zeit ***"
