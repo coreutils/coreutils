@@ -33,13 +33,15 @@ char *malloc ();
 # endif
 #endif
 
+#include "dirname.h"
+
 /* Return the leading directories part of PATH,
    allocated with malloc.  If out of memory, return 0.
    Assumes that trailing slashes have already been
    removed.  */
 
 char *
-dirname (char *path)
+dir_name (const char *path)
 {
   char *newpath;
   char *slash;
