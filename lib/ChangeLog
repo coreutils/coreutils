@@ -1,3 +1,8 @@
+2004-11-22  Jim Meyering  <jim@meyering.net>
+
+	* closeout.c (EBADF): Fail with `#error ...' if it's not defined,
+	asking the user to report the problem.
+
 2004-11-17  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* realloc.c (rpl_realloc): Call 'free' if n==0, since realloc
