@@ -32,6 +32,14 @@ AM_CPPFLAGS = -I.. -I$(srcdir) -I$(top_srcdir)/lib -I../lib
 # replacement functions defined in libfetish.a.
 LDADD = ../lib/libfetish.a $(LIBINTL) ../lib/libfetish.a
 
+# for eaccess in lib/euidaccess.c.
+cp_LDADD = $(LDADD) $(LIB_EACCESS)
+ginstall_LDADD = $(LDADD) $(LIB_EACCESS)
+mv_LDADD = $(LDADD) $(LIB_EACCESS)
+pathchk_LDADD = $(LDADD) $(LIB_EACCESS)
+rm_LDADD = $(LDADD) $(LIB_EACCESS)
+test_LDADD = $(LDADD) $(LIB_EACCESS)
+
 # for clock_gettime and fdatasync
 dd_LDADD = $(LDADD) $(LIB_FDATASYNC)
 dir_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
