@@ -1,6 +1,15 @@
-2004-02-05  Jim Meyering  <jim@meyering.net>
+2004-02-06  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.1.3.
+
+	* Makefile.maint (signatures): Remove definition.
+	Now, automake's gnupload handles this.
+	(%.sig: %): Remove now-unused rule.
+	(rel-files): Use automake's $(DIST_ARCHIVES), rather than
+	`$(distdir).tar.bz2 $(distdir).tar.gz'.
+	(emit-upload-commands): Adjust to use gnupload.
+
+2004-02-05  Jim Meyering  <jim@meyering.net>
 
 	* src/system.h (ST_TIME_CMP_NS, ST_TIME_CMP): Remove definitions.
 	(ATIME_CMP, CTIME_CMP, MTIME_CMP, TIMESPEC_NS): Likewise.
