@@ -374,9 +374,9 @@ xfclose (FILE *fp)
 }
 
 static void
-xfwrite (const char *buf, int size, int nelem, FILE *fp)
+write_bytes (const char *buf, size_t n_bytes, FILE *fp)
 {
-  if (fwrite (buf, size, nelem, fp) != nelem)
+  if (fwrite (buf, 1, n_bytes, fp) != n_bytes)
     {
       error (0, errno, _("write error"));
       cleanup ();
@@ -1307,7 +1307,7 @@ mergefps (FILE **fps, register int nfps, FILE *ofp)
 	{
 	  if (savedflag && compare (&saved, &lines[ord[0]].lines[cur[ord[0]]]))
 	    {
-	      xfwrite (saved.text, 1, saved.length, ofp);
+	      write_bytes (saved.text, saved.length, ofp);
 	      putc (eolchar, ofp);
 	      savedflag = 0;
 	    }
@@ -1339,8 +1339,8 @@ mergefps (FILE **fps, register int nfps, FILE *ofp)
 	}
       else
 	{
-	  xfwrite (lines[ord[0]].lines[cur[ord[0]]].text, 1,
-		   lines[ord[0]].lines[cur[ord[0]]].length, ofp);
+	  write_bytes (lines[ord[0]].lines[cur[ord[0]]].text,
+		       lines[ord[0]].lines[cur[ord[0]]].length, ofp);
 	  putc (eolchar, ofp);
 	}
 
@@ -1393,7 +1393,7 @@ mergefps (FILE **fps, register int nfps, FILE *ofp)
 
   if (unique && savedflag)
     {
-      xfwrite (saved.text, 1, saved.length, ofp);
+      write_bytes (saved.text, saved.length, ofp);
       putc (eolchar, ofp);
       free (saved.text);
     }
@@ -1546,7 +1546,7 @@ sort (char **files, int nfiles, FILE *ofp)
 	    if (!unique || i == 0
 		|| compare (&lines.lines[i], &lines.lines[i - 1]))
 	      {
-		xfwrite (lines.lines[i].text, 1, lines.lines[i].length, tfp);
+		write_bytes (lines.lines[i].text, lines.lines[i].length, tfp);
 		putc (eolchar, tfp);
 	      }
 	  if (tfp != ofp)
@@ -2048,7 +2048,7 @@ but lacks following character offset"));
 	      tmp = tempname ();
 	      ofp = xtmpfopen (tmp);
 	      while ((cc = fread (buf, 1, sizeof buf, fp)) > 0)
-		xfwrite (buf, 1, cc, ofp);
+		write_bytes (buf, cc, ofp);
 	      if (ferror (fp))
 		{
 		  error (0, errno, "%s", files[i]);
