@@ -238,11 +238,11 @@ bytes_split (size_t n_bytes, char *buf, size_t bufsize)
   while (n_read == bufsize);
 }
 
-/* Split into pieces of exactly NLINES lines.
+/* Split into pieces of exactly N_LINES lines.
    Use buffer BUF, whose size is BUFSIZE.  */
 
 static void
-lines_split (size_t nlines, char *buf, size_t bufsize)
+lines_split (size_t n_lines, char *buf, size_t bufsize)
 {
   size_t n_read;
   char *bp, *bp_out, *eob;
@@ -272,7 +272,7 @@ lines_split (size_t nlines, char *buf, size_t bufsize)
 	    }
 
 	  ++bp;
-	  if (++n >= nlines)
+	  if (++n >= n_lines)
 	    {
 	      cwrite (new_file_flag, bp_out, bp - bp_out);
 	      bp_out = bp;
