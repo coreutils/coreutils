@@ -16,7 +16,7 @@ mkdir $tmp || framework_failure=1
 cd $tmp || framework_failure=1
 
 if test $framework_failure = 1; then
-  echo 'failure in testing framework'
+  echo 'failure in testing framework' 1>&2
   (exit 1); exit
 fi
 
