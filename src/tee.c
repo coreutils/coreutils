@@ -31,13 +31,13 @@
 
 #define AUTHORS "Mike Parker", "Richard M. Stallman", "David MacKenzie"
 
-static int tee (int nfiles, const char **files);
+static bool tee (int nfiles, const char **files);
 
-/* If nonzero, append to output files rather than truncating them. */
-static int append;
+/* If true, append to output files rather than truncating them. */
+static bool append;
 
-/* If nonzero, ignore interrupts. */
-static int ignore_interrupts;
+/* If true, ignore interrupts. */
+static bool ignore_interrupts;
 
 /* The name that this program was run with. */
 char *program_name;
@@ -76,7 +76,7 @@ Copy standard input to each FILE, and also to standard output.\n\
 int
 main (int argc, char **argv)
 {
-  int errs;
+  bool ok;
   int optc;
 
   initialize_main (&argc, &argv);
@@ -87,8 +87,8 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  append = 0;
-  ignore_interrupts = 0;
+  append = false;
+  ignore_interrupts = false;
 
   while ((optc = getopt_long (argc, argv, "ai", long_options, NULL)) != -1)
     {
@@ -98,11 +98,11 @@ main (int argc, char **argv)
 	  break;
 
 	case 'a':
-	  append = 1;
+	  append = true;
 	  break;
 
 	case 'i':
-	  ignore_interrupts = 1;
+	  ignore_interrupts = true;
 	  break;
 
 	case_GETOPT_HELP_CHAR;
@@ -120,24 +120,25 @@ main (int argc, char **argv)
   /* Do *not* warn if tee is given no file arguments.
      POSIX requires that it work when given no arguments.  */
 
-  errs = tee (argc - optind, (const char **) &argv[optind]);
+  ok = tee (argc - optind, (const char **) &argv[optind]);
   if (close (STDIN_FILENO) != 0)
     error (EXIT_FAILURE, errno, _("standard input"));
 
-  exit (errs);
+  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
 /* Copy the standard input into each of the NFILES files in FILES
    and into the standard output.
-   Return 0 if successful, 1 if any errors occur. */
+   Return true if successful.  */
 
-static int
+static bool
 tee (int nfiles, const char **files)
 {
   FILE **descriptors;
   char buffer[BUFSIZ];
-  int bytes_read, i;
-  int ret = 0;
+  ssize_t bytes_read;
+  int i;
+  bool ok = true;
   const char *mode_string = (append ? "a" : "w");
 
   descriptors = xnmalloc (nfiles + 1, sizeof *descriptors);
@@ -161,7 +162,7 @@ tee (int nfiles, const char **files)
       if (descriptors[i] == NULL)
 	{
 	  error (0, errno, "%s", files[i]);
-	  ret = 1;
+	  ok = false;
 	}
       else
 	{
@@ -188,14 +189,14 @@ tee (int nfiles, const char **files)
 	  {
 	    error (0, errno, "%s", files[i]);
 	    descriptors[i] = NULL;
-	    ret = 1;
+	    ok = false;
 	  }
     }
 
   if (bytes_read == -1)
     {
       error (0, errno, _("read error"));
-      ret = 1;
+      ok = false;
     }
 
   /* Close the files, but not standard output.  */
@@ -203,10 +204,10 @@ tee (int nfiles, const char **files)
     if (descriptors[i] && fclose (descriptors[i]) != 0)
       {
 	error (0, errno, "%s", files[i]);
-	ret = 1;
+	ok = false;
       }
 
   free (descriptors);
 
-  return ret;
+  return ok;
 }
