@@ -362,9 +362,10 @@ md5_check (const char *checkfile_name, int binary)
 	  if (n_open_or_read_failures > 0)
 	    {
 	      error (0, 0,
-		   _("WARNING: %d of %d listed file%s could not be read\n"),
+		   _("WARNING: %d of %d listed %s could not be read\n"),
 		     n_open_or_read_failures, n_properly_formated_lines,
-		     (n_properly_formated_lines == 1 ? "" : "s"));
+		     (n_properly_formated_lines == 1
+		      ? _("file") : _("files")));
 	    }
 
 	  if (n_mismatched_checksums > 0)
