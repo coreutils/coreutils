@@ -9,6 +9,26 @@ use POSIX qw (assert);
 BEGIN { push @INC, '@srcdir@' if '@srcdir@' ne '.'; }
 use Test;
 
+sub validate
+{
+  my %seen;
+  my $test_vector;
+  foreach $test_vector (@Test::t)
+    {
+      my ($test_name, $flags, $in_spec, $expected, $e_ret_code, $rest) =
+	@{$test_vector};
+      assert (defined $e_ret_code && !defined $rest);
+      assert (!ref $test_name);
+      assert (!ref $flags);
+      assert (!ref $expected);
+      assert (!ref $e_ret_code);
+
+      die "$0: $.: duplicate test name \`$test_name'\n"
+	if (defined $seen{$test_name});
+      $seen{$test_name} = 1;
+    }
+}
+
 sub spec_to_list ($$$)
 {
   my ($spec, $test_name, $type) = @_;
@@ -75,7 +95,19 @@ sub spec_to_list ($$$)
 {
   $| = 1;
 
+  die "Usage: $0: program-name\n" if @ARGV != 1;
+
   my $xx = $ARGV[0];
+
+  if ($xx eq '--list-generated')
+    {
+      validate ();
+      # FIXME !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      # Output two lists of files:
+      # MAINT_GEN -- maintainer-generated files
+      # RUN_GEN -- files created when running the tests
+      exit 0;
+    }
 
   print <<EOF;
 #! /bin/sh
@@ -91,30 +123,12 @@ test "\$srcdir" || srcdir=.
 test "\$VERBOSE" && \$xx --version 2> /dev/null
 EOF
 
-  my %seen;
-
-  my $test_vector;
-
-  foreach $test_vector (@Test::t)
-    {
-      my ($test_name, $flags, $in_spec, $expected, $e_ret_code, $rest) =
-	@{$test_vector};
-      assert (defined $e_ret_code && !defined $rest);
-      assert (!ref $test_name);
-      assert (!ref $flags);
-      assert (!ref $expected);
-      assert (!ref $e_ret_code);
-
-      die "$0: $.: duplicate test name \`$test_name'\n"
-	if (defined $seen{$test_name});
-      $seen{$test_name} = 1;
-    }
-}
+validate ();
 
 my $test_vector;
 foreach $test_vector (@Test::t)
-  {
-    my ($test_name, $flags, $in_spec, $exp_spec, $e_ret_code)
+{
+  my ($test_name, $flags, $in_spec, $exp_spec, $e_ret_code)
 	= @{$test_vector};
 
     my $in = spec_to_list ($in_spec, $test_name, 'in');
@@ -163,3 +177,4 @@ fi
 test \$errors = 0 || errors=1
 exit \$errors
 EOF2
+}
