@@ -538,10 +538,8 @@ quotearg_n_options (int n, char const *arg, size_t argsize,
   if (nslots <= n0)
     {
       unsigned int n1 = n0 + 1;
-      size_t s = n1 * sizeof *slotvec;
 
-      if (SIZE_MAX / UINT_MAX <= sizeof *slotvec
-	  && n1 != s / sizeof *slotvec)
+      if (xalloc_oversized (n1, sizeof *slotvec))
 	xalloc_die ();
 
       if (slotvec == &slotvec0)
@@ -549,7 +547,7 @@ quotearg_n_options (int n, char const *arg, size_t argsize,
 	  slotvec = xmalloc (sizeof *slotvec);
 	  *slotvec = slotvec0;
 	}
-      slotvec = xrealloc (slotvec, s);
+      slotvec = xrealloc (slotvec, n1 * sizeof *slotvec);
       memset (slotvec + nslots, 0, (n1 - nslots) * sizeof *slotvec);
       nslots = n1;
     }
@@ -562,7 +560,9 @@ quotearg_n_options (int n, char const *arg, size_t argsize,
     if (size <= qsize)
       {
 	slotvec[n].size = size = qsize + 1;
-	slotvec[n].val = val = xrealloc (val == slot0 ? 0 : val, size);
+	if (val != slot0)
+	  free (val);
+	slotvec[n].val = val = xmalloc (size);
 	quotearg_buffer (val, size, arg, argsize, options);
       }
 
