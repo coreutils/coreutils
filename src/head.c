@@ -28,6 +28,7 @@
 
 #include <stdio.h>
 #include <getopt.h>
+#include <assert.h>
 #include <sys/types.h>
 
 #include "system.h"
@@ -45,7 +46,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "head"
 
-#define AUTHORS "David MacKenzie"
+#define AUTHORS "David MacKenzie and Jim Meyering"
 
 /* Number of lines/chars/blocks to head. */
 #define DEFAULT_NUMBER 10
@@ -193,7 +194,6 @@ copy_fd (int src_fd, FILE *o_stream, uintmax_t n_bytes)
       if (n_read == SAFE_READ_ERROR)
 	return COPY_FD_READ_ERROR;
 
-      /* assert (n_read <= n_bytes); */
       n_bytes -= n_read;
 
       if (n_read == 0 && n_bytes != 0)
@@ -206,6 +206,9 @@ copy_fd (int src_fd, FILE *o_stream, uintmax_t n_bytes)
   return COPY_FD_OK;
 }
 
+/* Print all but the last N_ELIDE lines from the input available via
+   the non-seekable file descriptor FD.  Return zero upon success.
+   Give a diagnostic and return nonzero upon error.  */
 static int
 elide_tail_bytes_pipe (const char *filename, int fd, uintmax_t n_elide_0)
 {
@@ -239,6 +242,8 @@ elide_tail_bytes_pipe (const char *filename, int fd, uintmax_t n_elide_0)
         allocate 2 * (READ_BUFSIZE + n_elide) bytes
      2) n_elide is too big for that, so we allocate only
         (READ_BUFSIZE + n_elide) bytes
+
+     FIXME: profile, to see if double-buffering is worthwhile
 
      CAUTION: do not fail (out of memory) when asked to elide
      a ridiculous amount, but when given only a small input.  */
@@ -401,11 +406,12 @@ elide_tail_bytes_pipe (const char *filename, int fd, uintmax_t n_elide_0)
     }
 }
 
-/* FIXME: describe.  */
+/* Print all but the last N_ELIDE lines from the input available
+   via file descriptor FD.  Return zero upon success.
+   Give a diagnostic and return nonzero upon error.  */
 
-/* NOTE Getting the length by seeking is not robust, due to a race condition.
-   The problem arises if the file grows or shrinks between the length
-   determination and the actual reading.  */
+/* NOTE: if the input file shrinks by more than N_ELIDE bytes between
+   the length determination and the actual reading, then head fails.  */
 
 static int
 elide_tail_bytes_file (const char *filename, int fd, uintmax_t n_elide)
@@ -459,13 +465,128 @@ elide_tail_bytes_file (const char *filename, int fd, uintmax_t n_elide)
     }
 }
 
-/* FIXME: comment */
+/* Print all but the last N_ELIDE lines from the input stream
+   open for reading via file descriptor FD.
+   Buffer the specified number of lines as a linked list of LBUFFERs,
+   adding them as needed.  Return 0 if successful, 1 upon error.  */
 
 static int
 elide_tail_lines_pipe (const char *filename, int fd, uintmax_t n_elide)
 {
-  /* FIXME: working here */
-  abort ();
+  struct linebuffer
+  {
+    unsigned int nbytes, nlines;
+    char buffer[BUFSIZ];
+    struct linebuffer *next;
+  };
+  typedef struct linebuffer LBUFFER;
+  LBUFFER *first, *last, *tmp;
+  size_t total_lines = 0;	/* Total number of newlines in all buffers.  */
+  int errors = 0;
+  size_t n_read;		/* Size in bytes of most recent read */
+
+  first = last = xmalloc (sizeof (LBUFFER));
+  first->nbytes = first->nlines = 0;
+  first->next = NULL;
+  tmp = xmalloc (sizeof (LBUFFER));
+
+  /* Always read into a fresh buffer.
+     Read, (producing no output) until we've accumulated at least
+     n_elide newlines, or until EOF, whichever comes first.  */
+  while (1)
+    {
+      n_read = tmp->nbytes = safe_read (fd, tmp->buffer, BUFSIZ);
+      if (n_read == 0 || n_read == SAFE_READ_ERROR)
+	break;
+      tmp->nlines = 0;
+      tmp->next = NULL;
+
+      /* Count the number of newlines just read.  */
+      {
+	char const *buffer_end = tmp->buffer + n_read;
+	char const *p = tmp->buffer;
+	while ((p = memchr (p, '\n', buffer_end - p)))
+	  {
+	    ++p;
+	    ++tmp->nlines;
+	  }
+      }
+      total_lines += tmp->nlines;
+
+      /* If there is enough room in the last buffer read, just append the new
+         one to it.  This is because when reading from a pipe, `n_read' can
+         often be very small.  */
+      if (tmp->nbytes + last->nbytes < BUFSIZ)
+	{
+	  memcpy (&last->buffer[last->nbytes], tmp->buffer, tmp->nbytes);
+	  last->nbytes += tmp->nbytes;
+	  last->nlines += tmp->nlines;
+	}
+      else
+	{
+	  /* If there's not enough room, link the new buffer onto the end of
+	     the list, then either free up the oldest buffer for the next
+	     read if that would leave enough lines, or else malloc a new one.
+	     Some compaction mechanism is possible but probably not
+	     worthwhile.  */
+	  last = last->next = tmp;
+	  if (n_elide < total_lines - first->nlines)
+	    {
+	      fwrite (first->buffer, 1, first->nbytes, stdout);
+	      tmp = first;
+	      total_lines -= first->nlines;
+	      first = first->next;
+	    }
+	  else
+	    tmp = xmalloc (sizeof (LBUFFER));
+	}
+    }
+
+  free (tmp);
+
+  if (n_read == SAFE_READ_ERROR)
+    {
+      error (0, errno, _("error reading %s"), quote (filename));
+      errors = 1;
+      goto free_lbuffers;
+    }
+
+  /* Count the incomplete line on files that don't end with a newline.  */
+  if (last->buffer[last->nbytes - 1] != '\n')
+    {
+      ++last->nlines;
+      ++total_lines;
+    }
+
+  for (tmp = first; n_elide < total_lines - tmp->nlines; tmp = tmp->next)
+    {
+      fwrite (tmp->buffer, 1, tmp->nbytes, stdout);
+      total_lines -= tmp->nlines;
+    }
+
+  /* Print the first `total_lines - n_elide' lines of tmp->buffer.  */
+  assert (n_elide <= total_lines);
+  {
+    size_t n = total_lines - n_elide;
+    char const *buffer_end = tmp->buffer + tmp->nbytes;
+    char const *p = tmp->buffer;
+    while (n && (p = memchr (p, '\n', buffer_end - p)))
+      {
+	++p;
+	++tmp->nlines;
+	--n;
+      }
+    fwrite (tmp->buffer, 1, p - tmp->buffer, stdout);
+  }
+
+free_lbuffers:
+  while (first)
+    {
+      tmp = first->next;
+      free ((char *) first);
+      first = tmp;
+    }
+  return errors;
 }
 
 /* Output all but the last N_LINES lines of the input stream defined by
@@ -587,18 +708,15 @@ elide_tail_lines_seekable (const char *pretty_filename, int fd,
       if (bytes_read == 0)
 	return 0;
     }
-
- done:;
-
 }
 
-/* FIXME: comment */
+/* Print all but the last N_ELIDE lines from the input available
+   via file descriptor FD.  Return zero upon success.
+   Give a diagnostic and return nonzero upon error.  */
 
 static int
 elide_tail_lines_file (const char *filename, int fd, uintmax_t n_elide)
 {
-  struct stat stats;
-
   /* We need binary input, since `head' relies on `lseek' and byte counts,
      while binary output will preserve the style (Unix/DOS) of text file.  */
   SET_BINARY2 (fd, STDOUT_FILENO);
@@ -952,17 +1070,18 @@ main (int argc, char **argv)
 
   if ( ! count_lines && elide_from_end && OFF_T_MAX < n_units)
     {
-      char buf[INT_BUFSIZE_BOUND (uintmax_t)];
+      char umax_buf[INT_BUFSIZE_BOUND (uintmax_t)];
       error (EXIT_FAILURE, 0, _("%s: number of bytes is too large"),
-	     umaxtostr (n_units, buf));
+	     umaxtostr (n_units, umax_buf));
     }
 
-  file_list = (argc - optind == 0
-	       ? default_file_list
-	       : (char const *const *) &argv[optind]);
+  file_list = (optind < argc
+	       ? (char const *const *) &argv[optind]
+	       : default_file_list);
 
   for (i = 0; file_list[i]; ++i)
-    exit_status |= head_file (file_list[i], n_units, count_lines, elide_from_end);
+    exit_status |= head_file (file_list[i], n_units, count_lines,
+			      elide_from_end);
 
   if (have_read_stdin && close (STDIN_FILENO) < 0)
     error (EXIT_FAILURE, errno, "-");
