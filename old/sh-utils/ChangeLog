@@ -1,3 +1,20 @@
+Sat Dec  7 12:52:00 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (jm_HEADER_TIOCGWINSZ_NEEDS_SYS_IOCTL): Use this variant
+	of the AM_ prefixed macro.
+	(check for TIOCGWINSZ in sys/pty): In essence, require
+	jm_HEADER_TIOCGWINSZ_IN_TERMIOS_H so that 
+	$jm_cv_sys_tiocgwinsz_needs_termios_h (renamed from
+	$gwinsz_in_termios_h) is defined.
+
+	* lib/strftime.c (strftime): Remove " %Z" part of format for %c.
+	Suggestion from Paul Eggert.
+
+Fri Dec  6 20:52:07 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* acinclude.m4 (jm_FUNC_MKTIME): Rather than including the text of
+	AM_FUNC_MKTIME, simply AC_REQUIRE it.
+
 Mon Dec  2 20:59:38 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in (su_cv_func_ut_host_in_utmp): Move test that can
