@@ -1,5 +1,5 @@
 /* mountlist.c -- return a list of mounted filesystems
-   Copyright (C) 1991, 1992, 1997-2002 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1992, 1997-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -730,16 +730,27 @@ read_filesystem_list (int need_fs_type)
     int bufsize;
     char *entries, *thisent;
     struct vmount *vmp;
+    int n_entries;
+    int i;
 
     /* Ask how many bytes to allocate for the mounted filesystem info.  */
-    mntctl (MCTL_QUERY, sizeof bufsize, (struct vmount *) &bufsize);
+    if (mntctl (MCTL_QUERY, sizeof bufsize, (struct vmount *) &bufsize) != 0)
+      return NULL;
     entries = xmalloc (bufsize);
 
     /* Get the list of mounted filesystems.  */
-    mntctl (MCTL_QUERY, bufsize, (struct vmount *) entries);
+    n_entries = mntctl (MCTL_QUERY, bufsize, (struct vmount *) entries);
+    if (n_entries < 0)
+      {
+	int saved_errno = errno;
+	free (entries);
+	errno = saved_errno;
+	return NULL;
+      }
 
-    for (thisent = entries; thisent < entries + bufsize;
-	 thisent += vmp->vmt_length)
+    for (i = 0, thisent = entries;
+	 i < n_entries;
+	 i++, thisent += vmp->vmt_length)
       {
 	char *options, *ignore;
 
