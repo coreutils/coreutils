@@ -1,3 +1,17 @@
+1998-02-07  Jim Meyering  <meyering@eng.ascend.com>
+
+	* GNUmakefile: New file.
+	* Makefile.am (EXTRA_DIST): Add GNUmakefile.
+	Don't include Makefile.maint from here.  It's included from GNUmakefile.
+
+	* configure.in: Don't use AM_MAINTAINER_MODE.
+	(jm_PERL): Use this.
+
+	* src/Makefile.am (EXTRA_DIST): Remove dcgen.pl.  Add dcgen.
+	(CLEANFILES): Remove dcgen.
+	(dircolors.h): Use $(PERL).
+	(.pl): Remove rule.
+
 1998-02-01  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* POTFILES.in: Add remove.c.  Reported by Santiago Vila.
