@@ -40,7 +40,6 @@ int stime ();
 char *xstrdup ();
 
 static void show_date PARAMS ((const char *format, time_t when));
-static void usage PARAMS ((int status));
 
 /* The name this program was run with, for error messages. */
 char *program_name;
@@ -82,6 +81,82 @@ static struct option const long_options[] =
 
 #define MAYBE_SET_TZ_UTC0 \
   do { if (universal_time) set_tz (TZ_UTC0); } while (0)
+
+void
+usage (int status)
+{
+  if (status != 0)
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
+	     program_name);
+  else
+    {
+      printf (_("\
+Usage: %s [OPTION]... [+FORMAT]\n\
+  or:  %s [OPTION] [MMDDhhmm[[CC]YY][.ss]]\n\
+"),
+	      program_name, program_name);
+      printf (_("\
+Display the current time in the given FORMAT, or set the system date.\n\
+\n\
+  -d, --date=STRING        display time described by STRING, not `now'\n\
+  -f, --file=DATEFILE      like --date once for each line of DATEFILE\n\
+  -r, --reference=FILE     display the last modification time of FILE\n\
+  -R, --rfc-822            output RFC-822 compliant date string\n\
+  -s, --set=STRING         set time described by STRING\n\
+  -u, --utc, --universal   print or set Coordinated Universal Time\n\
+      --help               display this help and exit\n\
+      --version            output version information and exit\n\
+"));
+      printf (_("\
+\n\
+FORMAT controls the output.  The only valid option for the second form\n\
+specifies Coordinated Universal Time.  Interpreted sequences are:\n\
+\n\
+  %%%%   a literal %%\n\
+  %%a   locale's abbreviated weekday name (Sun..Sat)\n\
+  %%A   locale's full weekday name, variable length (Sunday..Saturday)\n\
+  %%b   locale's abbreviated month name (Jan..Dec)\n\
+  %%B   locale's full month name, variable length (January..December)\n\
+  %%c   locale's date and time (Sat Nov 04 12:02:33 EST 1989)\n\
+  %%d   day of month (01..31)\n\
+  %%D   date (mm/dd/yy)\n\
+  %%e   day of month, blank padded ( 1..31)\n\
+  %%h   same as %%b\n\
+  %%H   hour (00..23)\n\
+  %%I   hour (01..12)\n\
+  %%j   day of year (001..366)\n\
+  %%k   hour ( 0..23)\n\
+  %%l   hour ( 1..12)\n\
+  %%m   month (01..12)\n\
+  %%M   minute (00..59)\n\
+  %%n   a newline\n\
+  %%p   locale's AM or PM\n\
+  %%r   time, 12-hour (hh:mm:ss [AP]M)\n\
+  %%s   seconds since 00:00:00, Jan 1, 1970 (a GNU extension)\n\
+  %%S   second (00..61)\n\
+  %%t   a horizontal tab\n\
+  %%T   time, 24-hour (hh:mm:ss)\n\
+  %%U   week number of year with Sunday as first day of week (00..53)\n\
+  %%V   week number of year with Monday as first day of week (01..52)\n\
+  %%w   day of week (0..6);  0 represents Sunday\n\
+  %%W   week number of year with Monday as first day of week (00..53)\n\
+  %%x   locale's date representation (mm/dd/yy)\n\
+  %%X   locale's time representation (%%H:%%M:%%S)\n\
+  %%y   last two digits of year (00..99)\n\
+  %%Y   year (1970...)\n\
+  %%z   RFC-822 style numeric timezone (-0500) (a nonstandard extension)\n\
+  %%Z   time zone (e.g., EDT), or nothing if no time zone is determinable\n\
+\n\
+By default, date pads numeric fields with zeroes.  GNU date recognizes\n\
+the following modifiers between `%%' and a numeric directive.\n\
+\n\
+  `-' (hyphen) do not pad the field\n\
+  `_' (underscore) pad the field with spaces\n\
+"));
+      puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
+    }
+  exit (status);
+}
 
 /* Set the TZ environment variable.  */
 
@@ -411,80 +486,4 @@ show_date (const char *format, time_t when)
 
   printf ("%s\n", out);
   free (out);
-}
-
-static void
-usage (int status)
-{
-  if (status != 0)
-    fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
-  else
-    {
-      printf (_("\
-Usage: %s [OPTION]... [+FORMAT]\n\
-  or:  %s [OPTION] [MMDDhhmm[[CC]YY][.ss]]\n\
-"),
-	      program_name, program_name);
-      printf (_("\
-Display the current time in the given FORMAT, or set the system date.\n\
-\n\
-  -d, --date=STRING        display time described by STRING, not `now'\n\
-  -f, --file=DATEFILE      like --date once for each line of DATEFILE\n\
-  -r, --reference=FILE     display the last modification time of FILE\n\
-  -R, --rfc-822            output RFC-822 compliant date string\n\
-  -s, --set=STRING         set time described by STRING\n\
-  -u, --utc, --universal   print or set Coordinated Universal Time\n\
-      --help               display this help and exit\n\
-      --version            output version information and exit\n\
-"));
-      printf (_("\
-\n\
-FORMAT controls the output.  The only valid option for the second form\n\
-specifies Coordinated Universal Time.  Interpreted sequences are:\n\
-\n\
-  %%%%   a literal %%\n\
-  %%a   locale's abbreviated weekday name (Sun..Sat)\n\
-  %%A   locale's full weekday name, variable length (Sunday..Saturday)\n\
-  %%b   locale's abbreviated month name (Jan..Dec)\n\
-  %%B   locale's full month name, variable length (January..December)\n\
-  %%c   locale's date and time (Sat Nov 04 12:02:33 EST 1989)\n\
-  %%d   day of month (01..31)\n\
-  %%D   date (mm/dd/yy)\n\
-  %%e   day of month, blank padded ( 1..31)\n\
-  %%h   same as %%b\n\
-  %%H   hour (00..23)\n\
-  %%I   hour (01..12)\n\
-  %%j   day of year (001..366)\n\
-  %%k   hour ( 0..23)\n\
-  %%l   hour ( 1..12)\n\
-  %%m   month (01..12)\n\
-  %%M   minute (00..59)\n\
-  %%n   a newline\n\
-  %%p   locale's AM or PM\n\
-  %%r   time, 12-hour (hh:mm:ss [AP]M)\n\
-  %%s   seconds since 00:00:00, Jan 1, 1970 (a GNU extension)\n\
-  %%S   second (00..61)\n\
-  %%t   a horizontal tab\n\
-  %%T   time, 24-hour (hh:mm:ss)\n\
-  %%U   week number of year with Sunday as first day of week (00..53)\n\
-  %%V   week number of year with Monday as first day of week (01..52)\n\
-  %%w   day of week (0..6);  0 represents Sunday\n\
-  %%W   week number of year with Monday as first day of week (00..53)\n\
-  %%x   locale's date representation (mm/dd/yy)\n\
-  %%X   locale's time representation (%%H:%%M:%%S)\n\
-  %%y   last two digits of year (00..99)\n\
-  %%Y   year (1970...)\n\
-  %%z   RFC-822 style numeric timezone (-0500) (a nonstandard extension)\n\
-  %%Z   time zone (e.g., EDT), or nothing if no time zone is determinable\n\
-\n\
-By default, date pads numeric fields with zeroes.  GNU date recognizes\n\
-the following modifiers between `%%' and a numeric directive.\n\
-\n\
-  `-' (hyphen) do not pad the field\n\
-  `_' (underscore) pad the field with spaces\n\
-"));
-      puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
-    }
-  exit (status);
 }
