@@ -1,6 +1,11 @@
-2003-10-17  Jim Meyering  <jim@meyering.net>
+2003-10-18  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.1.0.
+
+	* src/mv.c (usage): Tweak descriptions of -i and -f so that the
+	generated `man' page is more readable.  Suggestion from Dan Jacobson.
+
+2003-10-17  Jim Meyering  <jim@meyering.net>
 
 	* src/chown-core.c (change_file_owner): Handle the cases in
 	which fts_info indicates an error with the given entry.
