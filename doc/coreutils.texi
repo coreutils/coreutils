@@ -6708,14 +6708,14 @@ Besides directories, other special file types include named pipes
 
 
 @node link invocation
-@section @code{link}: Make a hard link via the link syscall
+@section @command{link}: Make a hard link via the link syscall
 
 @pindex link
 @cindex links, creating
 @cindex hard links, creating
 @cindex creating links (hard only)
 
-@code{link} creates a single hard link at a time.
+@command{link} creates a single hard link at a time.
 It is a minimalist interface to the system-provided
 @code{link} function.  @xref{Hard Links, , , libc,
 The GNU C Library Reference Manual}.
@@ -6727,7 +6727,7 @@ link @var{filename} @var{linkname}
 
 @var{filename} must specify an existing file, and @var{linkname}
 must specify a nonexistent entry in an existing directory.
-@code{link} simply calls @code{link (@var{filename}, @var{linkname})}
+@command{link} simply calls @code{link (@var{filename}, @var{linkname})}
 to create the link.
 
 @node ln invocation
@@ -7098,12 +7098,12 @@ Give a diagnostic for each successful removal.
 @xref{rm invocation}, for how to remove non-empty directories (recursively).
 
 @node unlink invocation
-@section @code{unlink}: Remove files via the unlink syscall
+@section @command{unlink}: Remove files via the unlink syscall
 
 @pindex unlink
 @cindex removing files or directories (via the unlink syscall)
 
-@code{unlink} deletes a single specified file name.
+@command{unlink} deletes a single specified file name.
 It is a minimalist interface to the system-provided
 @code{unlink} function.  @xref{Deleting Files, , , libc,
 The GNU C Library Reference Manual}.  Synopsis:
@@ -7116,10 +7116,10 @@ On some systems @code{unlink} can be used to delete the name of a
 directory.  On others, it can be used that way only by a privileged user.
 In the GNU system @code{unlink} can never delete the name of a directory.
 
-By default, @code{unlink} honors the @option{--help} and @option{--version}
+By default, @command{unlink} honors the @option{--help} and @option{--version}
 options.  That makes it a little harder to remove files named
 @code{--help} and @code{--version}, so when the environment variable
-@env{POSIXLY_CORRECT} is set, @code{unlink} treats such a command line
+@env{POSIXLY_CORRECT} is set, @command{unlink} treats such a command line
 arguments not as an option, but as an operand.
 
 
