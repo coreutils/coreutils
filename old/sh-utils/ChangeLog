@@ -1,3 +1,7 @@
+1999-03-17  Jim Meyering  <meyering@ascend.com>
+
+	* configure.in (ALL_LINGUAS): Add Italian (it) and Slovak (sk).
+
 1999-03-13  Jim Meyering  <meyering@ascend.com>
 
 	* lib/basename.c (base_name): If NAME is all slashes, return `/' (in
