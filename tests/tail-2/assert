@@ -30,9 +30,15 @@ tail --follow=name a foo > err 2>&1 &
 tail_pid=$!
 # Arrange for the tail process to die after 12 seconds.
 (sleep 12; kill $tail_pid) &
-rm -f foo
+
 echo sleeping for 7 seconds...
-sleep 7
+
+# Give the backgrounded `tail' a chance to start before removing foo.
+# Otherwise, without --retry, tail wouldn't try to open `foo' again.
+sleep 1
+
+rm -f foo
+sleep 6
 echo $ok > f
 mv f foo
 
