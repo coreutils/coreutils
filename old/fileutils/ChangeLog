@@ -1,3 +1,22 @@
+1998-05-15  Jim Meyering  <meyering@ascend.com>
+
+	* src/remove.c (hash_compare_strings): Return true or false, not 1/0.
+	(remove_cwd_entries): Use RM_OK, not equivalent literal `1'.
+
+	* lib/hash.c (is_prime): Ansideclify.
+	(next_prime): Ansideclify.  Add an assertion.
+
+	* lib/Makefile.am (EXTRA_DIST): Remove.  Automake groks the `LIBOBJS='
+	lines from the m4/*.m4 macros, so the hack of including some
+	custom-replaced C source file names here is no longer needed.
+
+	* configure.in (jm_MACROS): New wrapper macro.
+	Remove uses of most jm_* macros.
+
+	* acconfig.h (HAVE_STRUCT_UTIMBUF): Remove #undef.  Now it's handled
+	as part of utimbuf.m4.
+	(memcmp): Add #undef.
+
 1998-05-12  Jim Meyering  <meyering@ascend.com>
 
 	* Version 3.16o.
