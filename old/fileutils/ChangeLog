@@ -5,6 +5,7 @@
 	Patch by Akim Demaille.
 	* Makefile.cfg: New file with package-specific definitions.
 	* GNUmakefile: Include Makefile.cfg.
+	* Makefile.am (EXTRA_DIST): Add Makefile.cfg.
 
 2001-06-16  Jim Meyering  <meyering@lucent.com>
 
