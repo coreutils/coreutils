@@ -1,3 +1,7 @@
+2004-09-13  Jim Meyering  <jim@meyering.net>
+
+	* src/Makefile.am (localedir.h): Don't redirect directly to target.
+
 2004-09-13  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/id.c (print_full_info): Don't exit with failure status simply
