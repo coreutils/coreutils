@@ -63,4 +63,5 @@ AC_DEFUN(jm_CHECK_ALL_TYPES,
   AC_CHECK_TYPE(ino_t, unsigned long)
   AC_CHECK_TYPE(ssize_t, int)
   AC_REQUIRE([jm_AC_TYPE_UINTMAX_T])
+  AC_REQUIRE([jm_AC_TYPE_UNSIGNED_LONG_LONG])
 ])
