@@ -59,15 +59,17 @@ usage (int status)
   else
     {
       printf (_("Usage: %s [OPTION] DIRECTORY...\n"), program_name);
-      printf (_("\
+      fputs (_("\
 Create the DIRECTORY(ies), if they do not already exist.\n\
 \n\
   -m, --mode=MODE   set permission mode (as in chmod), not rwxrwxrwx - umask\n\
   -p, --parents     no error if existing, make parent directories as needed\n\
   -v, --verbose     print a message for each created directory\n\
+"), stdout);
+      fputs (_("\
       --help        display this help and exit\n\
       --version     output version information and exit\n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
     }
   exit (status);

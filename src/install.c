@@ -629,14 +629,14 @@ In the third format, create all components of the given DIRECTORY(ies).\n\
                         to corresponding destination files\n\
   -s, --strip         strip symbol tables, only for 1st and 2nd formats\n\
   -S, --suffix=SUFFIX override the usual backup suffix\n\
+  -v, --verbose       print the name of each directory as it is created\n\
 "), stdout);
       fputs (_("\
-  -v, --verbose       print the name of each directory as it is created\n\
       --help          display this help and exit\n\
       --version       output version information and exit\n\
-\n\
 "), stdout);
       fputs (_("\
+\n\
 The backup suffix is `~', unless set with --suffix or SIMPLE_BACKUP_SUFFIX.\n\
 The version control method may be selected via the --backup option or through\n\
 the VERSION_CONTROL environment variable.  Here are the values:\n\

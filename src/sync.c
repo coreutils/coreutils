@@ -42,12 +42,14 @@ usage (int status)
   else
     {
       printf (_("Usage: %s [OPTION]\n"), program_name);
-      printf (_("\
+      fputs (_("\
 Force changed blocks to disk, update the super block.\n\
 \n\
+"), stdout);
+      fputs (_("\
   --help      display this help and exit\n\
   --version   output version information and exit\n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
     }
   exit (status);

@@ -53,13 +53,15 @@ usage (int status)
   else
     {
       printf (_("Usage: %s [OPTION] NAME...\n"), program_name);
-      printf (_("\
+      fputs (_("\
 Create named pipes (FIFOs) with the given NAMEs.\n\
 \n\
   -m, --mode=MODE   set permission mode (as in chmod), not a=rw - umask\n\
+"), stdout);
+      fputs (_("\
       --help        display this help and exit\n\
       --version     output version information and exit\n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
     }
   exit (status);

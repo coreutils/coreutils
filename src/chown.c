@@ -126,14 +126,14 @@ Change the owner and/or group of each FILE to OWNER and/or GROUP.\n\
       --reference=RFILE  use RFILE's owner and group rather than\n\
                          the specified OWNER:GROUP values\n\
   -R, --recursive        operate on files and directories recursively\n\
+  -v, --verbose          output a diagnostic for every file processed\n\
 "), stdout);
       fputs (_("\
-  -v, --verbose          output a diagnostic for every file processed\n\
       --help             display this help and exit\n\
       --version          output version information and exit\n\
-\n\
 "), stdout);
       fputs (_("\
+\n\
 Owner is unchanged if missing.  Group is unchanged if missing, but changed\n\
 to login group if implied by a `:'.  OWNER and GROUP may be numeric as well\n\
 as symbolic.\n\

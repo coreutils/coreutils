@@ -92,14 +92,14 @@ Remove (unlink) the FILE(s).\n\
   -f, --force           ignore nonexistent files, never prompt\n\
   -i, --interactive     prompt before any removal\n\
   -r, -R, --recursive   remove the contents of directories recursively\n\
+  -v, --verbose         explain what is being done\n\
 "), stdout);
       fputs (_("\
-  -v, --verbose         explain what is being done\n\
       --help            display this help and exit\n\
       --version         output version information and exit\n\
-\n\
 "), stdout);
       printf (_("\
+\n\
 To remove a file whose name starts with a `-', for example `-foo',\n\
 use one of these commands:\n\
   %s -- -foo\n\

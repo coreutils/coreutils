@@ -148,12 +148,14 @@ Remove the DIRECTORY(ies), if they are empty.\n\
       --ignore-fail-on-non-empty\n\
                   ignore each failure that is solely because a directory\n\
                   is non-empty\n\
+"), stdout);
+      fputs (_("\
   -p, --parents   remove DIRECTORY, then try to remove each directory\n\
                   component of that path name.  E.g., `rmdir -p a/b/c' is\n\
                   similar to `rmdir a/b/c a/b a'.\n\
+  -v, --verbose   output a diagnostic for every directory processed\n\
 "), stdout);
       fputs (_("\
-  -v, --verbose   output a diagnostic for every directory processed\n\
       --help      display this help and exit\n\
       --version   output version information and exit\n\
 "), stdout);

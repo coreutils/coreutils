@@ -113,6 +113,8 @@ Determine format of output:\n\
       fputs (_("\
       --help                  display this help and exit\n\
       --version               output version information and exit\n\
+"), stdout);
+      fputs (_("\
 \n\
 If FILE is specified, read it to determine which colors to use for which\n\
 file types and extensions.  Otherwise, a precompiled database is used.\n\

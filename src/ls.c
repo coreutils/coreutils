@@ -3659,6 +3659,8 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
   -x                         list entries by lines instead of by columns\n\
   -X                         sort alphabetically by entry extension\n\
   -1                         list one file per line\n\
+"), stdout);
+      fputs (_("\
       --help                 display this help and exit\n\
       --version              output version information and exit\n\
 "), stdout);

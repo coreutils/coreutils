@@ -362,17 +362,19 @@ links with --symbolic.  When creating hard links, each TARGET must exist.\n\
                                 directory as if it were a normal file\n\
   -i, --interactive           prompt whether to remove destinations\n\
   -s, --symbolic              make symbolic links instead of hard links\n\
-  -S, --suffix=SUFFIX         override the usual backup suffix\n\
 "), stdout);
       fputs (_("\
+  -S, --suffix=SUFFIX         override the usual backup suffix\n\
       --target-directory=DIRECTORY  specify the DIRECTORY in which to create\n\
                                 the links\n\
   -v, --verbose               print name of each file before linking\n\
-      --help                  display this help and exit\n\
-      --version               output version information and exit\n\
-\n\
 "), stdout);
       fputs (_("\
+      --help                  display this help and exit\n\
+      --version               output version information and exit\n\
+"), stdout);
+      fputs (_("\
+\n\
 The backup suffix is `~', unless set with --suffix or SIMPLE_BACKUP_SUFFIX.\n\
 The version control method may be selected via the --backup option or through\n\
 the VERSION_CONTROL environment variable.  Here are the values:\n\

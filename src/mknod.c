@@ -63,19 +63,23 @@ usage (int status)
   else
     {
       printf (_("Usage: %s [OPTION]... NAME TYPE [MAJOR MINOR]\n"), program_name);
-      printf (_("\
+      fputs (_("\
 Create the special file NAME of the given TYPE.\n\
 \n\
   -m, --mode=MODE   set permission mode (as in chmod), not a=rw - umask\n\
+"), stdout);
+      fputs (_("\
       --help        display this help and exit\n\
       --version     output version information and exit\n\
+"), stdout);
+      fputs (_("\
 \n\
 MAJOR MINOR are forbidden for TYPE p, mandatory otherwise.  TYPE may be:\n\
 \n\
   b      create a block (buffered) special file\n\
   c, u   create a character (unbuffered) special file\n\
   p      create a FIFO\n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
     }
   exit (status);

@@ -212,18 +212,20 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
   -s, --symbolic-link          make symbolic links instead of copying\n\
   -S, --suffix=SUFFIX          override the usual backup suffix\n\
       --target-directory=DIRECTORY  move all SOURCE arguments into DIRECTORY\n\
+"), stdout);
+      fputs (_("\
   -u, --update                 copy only when the SOURCE file is newer\n\
                                  than the destination file or when the\n\
                                  destination file is missing\n\
-"), stdout);
-      fputs (_("\
   -v, --verbose                explain what is being done\n\
   -x, --one-file-system        stay on this file system\n\
-      --help                   display this help and exit\n\
-      --version                output version information and exit\n\
-\n\
 "), stdout);
       fputs (_("\
+      --help                   display this help and exit\n\
+      --version                output version information and exit\n\
+"), stdout);
+      fputs (_("\
+\n\
 By default, sparse SOURCE files are detected by a crude heuristic and the\n\
 corresponding DEST file is made sparse as well.  That is the behavior\n\
 selected by --sparse=auto.  Specify --sparse=always to create a sparse DEST\n\

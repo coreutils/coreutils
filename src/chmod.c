@@ -253,11 +253,13 @@ Change the mode of each FILE to MODE.\n\
   -f, --silent, --quiet   suppress most error messages\n\
   -v, --verbose           output a diagnostic for every file processed\n\
       --reference=RFILE   use RFILE's mode instead of MODE values\n\
+  -R, --recursive         change files and directories recursively\n\
 "), stdout);
       fputs (_("\
-  -R, --recursive         change files and directories recursively\n\
       --help              display this help and exit\n\
       --version           output version information and exit\n\
+"), stdout);
+      fputs (_("\
 \n\
 Each MODE is one or more of the letters ugoa, one of the symbols +-= and\n\
 one or more of the letters rwxXstugo.\n\

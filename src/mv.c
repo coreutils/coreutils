@@ -333,7 +333,7 @@ Usage: %s [OPTION]... SOURCE DEST\n\
   or:  %s [OPTION]... --target-directory=DIRECTORY SOURCE...\n\
 "),
 	      program_name, program_name, program_name);
-      printf (_("\
+      fputs (_("\
 Rename SOURCE to DEST, or move SOURCE(s) to DIRECTORY.\n\
 \n\
       --backup[=CONTROL]       make a backup of each existing destination file\n\
@@ -342,34 +342,38 @@ Rename SOURCE to DEST, or move SOURCE(s) to DIRECTORY.\n\
                                  equivalent to --reply=yes\n\
   -i, --interactive            prompt before overwrite\n\
                                  equivalent to --reply=query\n\
-"));
-      printf (_("\
+"), stdout);
+      fputs (_("\
       --reply={yes,no,query}   specify how to handle the prompt about an\n\
                                  existing destination file\n\
       --strip-trailing-slashes remove any trailing slashes from each SOURCE\n\
                                  argument\n\
   -S, --suffix=SUFFIX          override the usual backup suffix\n\
-"));
-      printf (_("\
+"), stdout);
+      fputs (_("\
       --target-directory=DIRECTORY  move all SOURCE arguments into DIRECTORY\n\
   -u, --update                 move only when the SOURCE file is newer\n\
                                  than the destination file or when the\n\
                                  destination file is missing\n\
   -v, --verbose                explain what is being done\n\
+"), stdout);
+      fputs (_("\
       --help                   display this help and exit\n\
       --version                output version information and exit\n\
 \n\
-"));
-      printf (_("\
+"), stdout);
+      fputs (_("\
 The backup suffix is `~', unless set with --suffix or SIMPLE_BACKUP_SUFFIX.\n\
 The version control method may be selected via the --backup option or through\n\
 the VERSION_CONTROL environment variable.  Here are the values:\n\
 \n\
+"), stdout);
+      fputs (_("\
   none, off       never make backups (even if --backup is given)\n\
   numbered, t     make numbered backups\n\
   existing, nil   numbered if numbered backups exist, simple otherwise\n\
   simple, never   always make simple backups\n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
     }
   exit (status);

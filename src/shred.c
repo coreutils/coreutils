@@ -478,11 +478,13 @@ for even very expensive hardware probing to recover the data.\n\
   -x, --exact    do not round file sizes up to the next full block\n\
   -z, --zero     add a final overwrite with zeros to hide shredding\n\
   -              shred standard output\n\
-      --help     display this help and exit\n\
-      --version  print version information and exit\n\
-\n\
 "), stdout);
       fputs (_("\
+      --help     display this help and exit\n\
+      --version  print version information and exit\n\
+"), stdout);
+      fputs (_("\
+\n\
 Delete FILE(s) if --remove (-u) is specified.  The default is not to remove\n\
 the files because it is common to operate on device files like /dev/hda,\n\
 and those files usually should not be removed.  When operating on regular\n\

@@ -304,6 +304,8 @@ Copy a file, converting and formatting according to the options.\n\
   of=FILE         write to FILE instead of stdout\n\
   seek=BLOCKS     skip BLOCKS obs-sized blocks at start of output\n\
   skip=BLOCKS     skip BLOCKS ibs-sized blocks at start of input\n\
+"), stdout);
+      fputs (_("\
       --help      display this help and exit\n\
       --version   output version information and exit\n\
 "), stdout);
