@@ -1,3 +1,7 @@
+Tue Nov 30 23:58:54 1993  Jim Meyering  (meyering@comco.com)
+
+	* Version 1.9.2.
+
 Mon Nov 29 00:28:35 1993  Jim Meyering  (meyering@comco.com)
 
 	* stty.c, configure.in, acconfig.h: Revert change of Nov 26.
