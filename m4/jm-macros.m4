@@ -1,4 +1,4 @@
-#serial 64   -*- autoconf -*-
+#serial 65   -*- autoconf -*-
 
 m4_undefine([AC_LANG_SOURCE(C)])
 dnl The following is identical to the definition in c.m4
@@ -148,6 +148,8 @@ AC_DEFUN([jm_MACROS],
 
   AC_REQUIRE([AC_FUNC_CLOSEDIR_VOID])
   AC_REQUIRE([jm_FUNC_UTIME])
+  AC_REQUIRE([gl_FUNC_VASPRINTF])
+  AC_REQUIRE([gl_FUNC_VASNPRINTF])
 
   AC_CHECK_FUNCS( \
     bcopy \
