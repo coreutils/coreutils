@@ -799,7 +799,7 @@ begfield (const struct line *line, const struct keyfield *key)
     while (ptr < lim && blanks[UCHAR (*ptr)])
       ++ptr;
 
-  if (schar < lim - ptr)
+  if (ptr + schar <= lim)
     ptr += schar;
   else
     ptr = lim;
@@ -902,7 +902,7 @@ limfield (const struct line *line, const struct keyfield *key)
       ++ptr;
 
   /* Advance PTR by ECHAR (if possible), but no further than LIM.  */
-  if (echar < lim - ptr)
+  if (ptr + echar < lim)
     ptr += echar;
   else
     ptr = lim;
@@ -992,9 +992,11 @@ fillbuf (struct buffer *buf, register FILE *fp, char const *file)
 		{
 		  /* Precompute the position of the first key for
                      efficiency. */
-		  line->keylim = key->eword == -1 ? p : limfield (line, key);
+		  line->keylim = (key->eword == (size_t) -1
+				  ? p
+				  : limfield (line, key));
 
-		  if (key->sword != -1)
+		  if (key->sword != (size_t) -1)
 		    line->keybeg = begfield (line, key);
 		  else
 		    {
@@ -1464,12 +1466,12 @@ keycompare (const struct line *a, const struct line *b)
 	break;
 
       /* Find the beginning and limit of the next field.  */
-      if (key->eword != -1)
+      if (key->eword != (size_t) -1)
 	lima = limfield (a, key), limb = limfield (b, key);
       else
 	lima = a->text + a->length - 1, limb = b->text + b->length - 1;
 
-      if (key->sword != -1)
+      if (key->sword != (size_t) -1)
 	texta = begfield (a, key), textb = begfield (b, key);
       else
 	{
