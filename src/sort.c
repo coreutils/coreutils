@@ -66,13 +66,6 @@ struct rlimit { size_t rlim_cur; };
 double strtod ();
 #endif
 
-/* Undefine, to avoid warning about redefinition on some systems.  */
-/* FIXME: Remove these: use MIN/MAX from sys2.h.  */
-#undef min
-#define min(a, b) ((a) < (b) ? (a) : (b))
-#undef max
-#define max(a, b) ((a) > (b) ? (a) : (b))
-
 #define UCHAR_LIM (UCHAR_MAX + 1)
 #define UCHAR(c) ((unsigned char) (c))
 
@@ -98,9 +91,9 @@ static char decimal_point;
 static int th_sep; /* if CHAR_MAX + 1, then there is no thousands separator */
 
 /* Nonzero if the corresponding locales are hard.  */
-static int hard_LC_COLLATE;
+static bool hard_LC_COLLATE;
 # if HAVE_NL_LANGINFO
-static int hard_LC_TIME;
+static bool hard_LC_TIME;
 # endif
 
 # define IS_THOUSANDS_SEP(x) ((x) == th_sep)
@@ -118,7 +111,7 @@ static int hard_LC_TIME;
 enum blanktype { bl_start, bl_end, bl_both };
 
 /* The character marking end of line. Default to \n. */
-static int eolchar = '\n';
+static char eolchar = '\n';
 
 /* Lines are held in core as counted strings. */
 struct line
@@ -142,32 +135,32 @@ struct buffer
   size_t alloc;			/* Number of bytes allocated. */
   size_t left;			/* Number of bytes left from previous reads. */
   size_t line_bytes;		/* Number of bytes to reserve for each line. */
-  int eof;			/* An EOF has been read.  */
+  bool eof;			/* An EOF has been read.  */
 };
 
 struct keyfield
 {
   size_t sword;			/* Zero-origin 'word' to start at. */
   size_t schar;			/* Additional characters to skip. */
-  int skipsblanks;		/* Skip leading white space at start. */
   size_t eword;			/* Zero-origin first word after field. */
   size_t echar;			/* Additional characters in field. */
-  int skipeblanks;		/* Skip trailing white space at finish. */
-  int *ignore;			/* Boolean array of characters to ignore. */
-  char *translate;		/* Translation applied to characters. */
-  int numeric;			/* Flag for numeric comparison.  Handle
+  bool const *ignore;		/* Boolean array of characters to ignore. */
+  char const *translate;	/* Translation applied to characters. */
+  bool skipsblanks;		/* Skip leading white space at start. */
+  bool skipeblanks;		/* Skip trailing white space at finish. */
+  bool numeric;			/* Flag for numeric comparison.  Handle
 				   strings of digits with optional decimal
 				   point, but no exponential notation. */
-  int general_numeric;		/* Flag for general, numeric comparison.
+  bool general_numeric;		/* Flag for general, numeric comparison.
 				   Handle numbers in exponential notation. */
-  int month;			/* Flag for comparison by month name. */
-  int reverse;			/* Reverse the sense of comparison. */
+  bool month;			/* Flag for comparison by month name. */
+  bool reverse;			/* Reverse the sense of comparison. */
   struct keyfield *next;	/* Next keyfield to try. */
 };
 
 struct month
 {
-  char *name;
+  char const *name;
   int val;
 };
 
@@ -175,20 +168,19 @@ struct month
 char *program_name;
 
 /* FIXME: None of these tables work with multibyte character sets.
-   Also, there are many other bugs when handling multibyte characters,
-   or even unibyte encodings where line boundaries are not in the
-   initial shift state.  One way to fix this is to rewrite `sort' to
-   use wide characters internally, but doing this with good
-   performance is a bit tricky.  */
+   Also, there are many other bugs when handling multibyte characters.
+   One way to fix this is to rewrite `sort' to use wide characters
+   internally, but doing this with good performance is a bit
+   tricky.  */
 
 /* Table of white space. */
-static int blanks[UCHAR_LIM];
+static bool blanks[UCHAR_LIM];
 
 /* Table of non-printing characters. */
-static int nonprinting[UCHAR_LIM];
+static bool nonprinting[UCHAR_LIM];
 
 /* Table of non-dictionary characters (not letters, digits, or blanks). */
-static int nondictionary[UCHAR_LIM];
+static bool nondictionary[UCHAR_LIM];
 
 /* Translation table folding lower case to upper.  */
 static char fold_toupper[UCHAR_LIM];
@@ -244,12 +236,12 @@ static size_t temp_dir_count;
 static size_t temp_dir_alloc;
 
 /* Flag to reverse the order of all comparisons. */
-static int reverse;
+static bool reverse;
 
 /* Flag for stable sort.  This turns off the last ditch bytewise
    comparison of lines, and instead leaves lines in the same order
    they were read if all keys compare equal.  */
-static int stable;
+static bool stable;
 
 /* Tab character separating fields.  If NUL, then fields are separated
    by the empty string between a non-whitespace character and a whitespace
@@ -258,10 +250,10 @@ static char tab;
 
 /* Flag to remove consecutive duplicate lines from the output.
    Only the last of a sequence of equal lines will be output. */
-static int unique;
+static bool unique;
 
 /* Nonzero if any of the input files are the standard input. */
-static int have_read_stdin;
+static bool have_read_stdin;
 
 /* List of key field comparisons to be tried.  */
 static struct keyfield *keylist;
@@ -395,7 +387,7 @@ static struct tempnode *volatile temphead;
 static void
 cleanup (void)
 {
-  struct tempnode *node;
+  struct tempnode const *node;
 
   for (node = temphead; node; node = node->next)
     unlink (node->name);
@@ -458,7 +450,7 @@ xfopen (const char *file, const char *how)
     {
       if (*how == 'r')
 	{
-	  have_read_stdin = 1;
+	  have_read_stdin = true;
 	  fp = stdin;
 	}
       else
@@ -535,8 +527,9 @@ zaptemp (const char *name)
 static int
 struct_month_cmp (const void *m1, const void *m2)
 {
-  return strcmp (((const struct month *) m1)->name,
-		 ((const struct month *) m2)->name);
+  struct month const *month1 = m1;
+  struct month const *month2 = m2;
+  return strcmp (month1->name, month2->name);
 }
 
 #endif
@@ -550,16 +543,10 @@ inittables (void)
 
   for (i = 0; i < UCHAR_LIM; ++i)
     {
-      if (ISBLANK (i))
-	blanks[i] = 1;
-      if (!ISPRINT (i))
-	nonprinting[i] = 1;
-      if (!ISALNUM (i) && !ISBLANK (i))
-	nondictionary[i] = 1;
-      if (ISLOWER (i))
-	fold_toupper[i] = toupper (i);
-      else
-	fold_toupper[i] = i;
+      blanks[i] = !!ISBLANK (i);
+      nonprinting[i] = !ISPRINT (i);
+      nondictionary[i] = !ISALNUM (i) && !ISBLANK (i);
+      fold_toupper[i] = (ISLOWER (i) ? toupper (i) : i);
     }
 
 #if HAVE_NL_LANGINFO
@@ -568,7 +555,7 @@ inittables (void)
     {
       for (i = 0; i < MONTHS_PER_YEAR; i++)
 	{
-	  char *s;
+	  char const *s;
 	  size_t s_len;
 	  size_t j;
 	  char *name;
@@ -757,7 +744,7 @@ initbuf (struct buffer *buf, size_t line_bytes, size_t alloc)
   buf->line_bytes = line_bytes;
   buf->alloc = alloc;
   buf->used = buf->left = buf->nlines = 0;
-  buf->eof = 0;
+  buf->eof = false;
 }
 
 /* Return one past the limit of the line array.  */
@@ -778,6 +765,9 @@ begfield (const struct line *line, const struct keyfield *key)
   register size_t sword = key->sword;
   register size_t schar = key->schar;
   register size_t remaining_bytes;
+
+  /* The leading field separator itself is included in a field when -t
+     is absent.  */
 
   if (tab)
     while (ptr < lim && sword--)
@@ -819,10 +809,6 @@ limfield (const struct line *line, const struct keyfield *key)
   register char *ptr = line->text, *lim = ptr + line->length - 1;
   register size_t eword = key->eword, echar = key->echar;
   register size_t remaining_bytes;
-
-  /* Note: from the POSIX spec:
-     The leading field separator itself is included in
-     a field when -t is not used.  FIXME: move this comment up... */
 
   /* Move PTR past EWORD fields or to one past the last byte on LINE,
      whichever comes first.  If there are more than EWORD fields, leave
@@ -915,22 +901,24 @@ limfield (const struct line *line, const struct keyfield *key)
   return ptr;
 }
 
-/* FIXME */
+/* Return the number of trailing blanks in FIELD, with LEN bytes.  */
 
-static void
-trim_trailing_blanks (const char *a_start, char **a_end)
+static size_t
+trailing_blanks (char const *field, size_t len)
 {
-  while (*a_end > a_start && blanks[UCHAR (*(*a_end - 1))])
-    --(*a_end);
+  size_t i;
+  for (i = len; 0 < i && blanks[UCHAR (field[i - 1])]; i--)
+    continue;
+  return len - i;
 }
 
 /* Fill BUF reading from FP, moving buf->left bytes from the end
    of buf->buf to the beginning first.  If EOF is reached and the
    file wasn't terminated by a newline, supply one.  Set up BUF's line
    table too.  FILE is the name of the file corresponding to FP.
-   Return nonzero if some input was read.  */
+   Return true if some input was read.  */
 
-static int
+static bool
 fillbuf (struct buffer *buf, register FILE *fp, char const *file)
 {
   struct keyfield const *key = keylist;
@@ -939,7 +927,7 @@ fillbuf (struct buffer *buf, register FILE *fp, char const *file)
   size_t mergesize = merge_buffer_size - MIN_MERGE_BUFFER_SIZE;
 
   if (buf->eof)
-    return 0;
+    return false;
 
   if (buf->used != buf->left)
     {
@@ -975,9 +963,9 @@ fillbuf (struct buffer *buf, register FILE *fp, char const *file)
 		die (_("read failed"), file);
 	      if (feof (fp))
 		{
-		  buf->eof = 1;
+		  buf->eof = true;
 		  if (buf->buf == ptrlim)
-		    return 0;
+		    return false;
 		  if (ptrlim[-1] != eol)
 		    *ptrlim++ = eol;
 		}
@@ -997,11 +985,11 @@ fillbuf (struct buffer *buf, register FILE *fp, char const *file)
 		{
 		  /* Precompute the position of the first key for
                      efficiency. */
-		  line->keylim = (key->eword == (size_t) -1
+		  line->keylim = (key->eword == SIZE_MAX
 				  ? p
 				  : limfield (line, key));
 
-		  if (key->sword != (size_t) -1)
+		  if (key->sword != SIZE_MAX)
 		    line->keybeg = begfield (line, key);
 		  else
 		    {
@@ -1011,7 +999,10 @@ fillbuf (struct buffer *buf, register FILE *fp, char const *file)
 		      line->keybeg = line_start;
 		    }
 		  if (key->skipeblanks)
-		    trim_trailing_blanks (line->keybeg, &line->keylim);
+		    {
+		      size_t keylen = line->keylim - line->keybeg;
+		      line->keylim -= trailing_blanks (line->keybeg, keylen);
+		    }
 		}
 
 	      line_start = ptr;
@@ -1028,7 +1019,7 @@ fillbuf (struct buffer *buf, register FILE *fp, char const *file)
 	{
 	  buf->left = ptr - line_start;
 	  merge_buffer_size = mergesize + MIN_MERGE_BUFFER_SIZE;
-	  return 1;
+	  return true;
 	}
 
       /* The current input line is too long to fit in the buffer.
@@ -1299,9 +1290,8 @@ getmonth (const char *s, size_t len)
   month = (char *) alloca (len + 1);
   for (i = 0; i < len; ++i)
     month[i] = fold_toupper[UCHAR (s[i])];
-  while (blanks[UCHAR (month[i - 1])])
-    --i;
-  month[i] = '\0';
+  len -= trailing_blanks (month, len);
+  month[len] = '\0';
 
   do
     {
@@ -1326,7 +1316,7 @@ getmonth (const char *s, size_t len)
 static int
 keycompare (const struct line *a, const struct line *b)
 {
-  struct keyfield *key = keylist;
+  struct keyfield const *key = keylist;
 
   /* For the first iteration only, the key positions have been
      precomputed for us. */
@@ -1339,8 +1329,8 @@ keycompare (const struct line *a, const struct line *b)
 
   for (;;)
     {
-      register unsigned char *translate = (unsigned char *) key->translate;
-      register int *ignore = key->ignore;
+      register char const *translate = key->translate;
+      register bool const *ignore = key->ignore;
 
       /* Find the lengths. */
       size_t lena = lima <= texta ? 0 : lima - texta;
@@ -1348,12 +1338,8 @@ keycompare (const struct line *a, const struct line *b)
 
       if (key->skipeblanks)
 	{
-	  char *a_end = texta + lena;
-	  char *b_end = textb + lenb;
-	  trim_trailing_blanks (texta, &a_end);
-	  trim_trailing_blanks (textb, &b_end);
-	  lena = a_end - texta;
-	  lenb = b_end - textb;
+	  lena -= trailing_blanks (texta, lena);
+	  lenb -= trailing_blanks (textb, lenb);
 	}
 
       /* Actually compare the fields. */
@@ -1379,7 +1365,7 @@ keycompare (const struct line *a, const struct line *b)
 	      size_t new_len_a, new_len_b, i;
 
 	      /* Ignore and/or translate chars before comparing.  */
-	      for (new_len_a = new_len_b = i = 0; i < max (lena, lenb); i++)
+	      for (new_len_a = new_len_b = i = 0; i < MAX (lena, lenb); i++)
 		{
 		  if (i < lena)
 		    {
@@ -1436,7 +1422,7 @@ keycompare (const struct line *a, const struct line *b)
 	    CMP_WITH_IGNORE (translate[UCHAR (*texta)],
 			     translate[UCHAR (*textb)]);
 	  else
-	    CMP_WITH_IGNORE (UCHAR (*texta), UCHAR (*textb));
+	    CMP_WITH_IGNORE (*texta, *textb);
 	}
       else if (lena == 0)
 	diff = - NONZERO (lenb);
@@ -1456,7 +1442,7 @@ keycompare (const struct line *a, const struct line *b)
 	    }
 	  else
 	    {
-	      diff = memcmp (texta, textb, min (lena, lenb));
+	      diff = memcmp (texta, textb, MIN (lena, lenb));
 	      if (diff)
 		goto not_equal;
 	    }
@@ -1471,12 +1457,12 @@ keycompare (const struct line *a, const struct line *b)
 	break;
 
       /* Find the beginning and limit of the next field.  */
-      if (key->eword != (size_t) -1)
+      if (key->eword != SIZE_MAX)
 	lima = limfield (a, key), limb = limfield (b, key);
       else
 	lima = a->text + a->length - 1, limb = b->text + b->length - 1;
 
-      if (key->sword != (size_t) -1)
+      if (key->sword != SIZE_MAX)
 	texta = begfield (a, key), textb = begfield (b, key);
       else
 	{
@@ -1515,7 +1501,7 @@ compare (register const struct line *a, register const struct line *b)
     {
       diff = keycompare (a, b);
       alloca (0);
-      if (diff != 0 || unique || stable)
+      if (diff | unique | stable)
 	return diff;
     }
 
@@ -1526,30 +1512,31 @@ compare (register const struct line *a, register const struct line *b)
   if (alen == 0)
     diff = - NONZERO (blen);
   else if (blen == 0)
-    diff = NONZERO (alen);
+    diff = 1;
   else if (HAVE_SETLOCALE && hard_LC_COLLATE)
     diff = xmemcoll (a->text, alen, b->text, blen);
-  else if (! (diff = memcmp (a->text, b->text, min (alen, blen))))
+  else if (! (diff = memcmp (a->text, b->text, MIN (alen, blen))))
     diff = alen < blen ? -1 : alen != blen;
 
   return reverse ? -diff : diff;
 }
 
-/* Check that the lines read from the given FP come in order.  Print a
+/* Check that the lines read from FILE_NAME come in order.  Print a
    diagnostic (FILE_NAME, line number, contents of line) to stderr and return
-   one if they are not in order.  Otherwise, print no diagnostic
-   and return zero.  */
+   false if they are not in order.  Otherwise, print no diagnostic
+   and return true.  */
 
-static int
-checkfp (FILE *fp, char *file_name)
+static bool
+check (char const *file_name)
 {
+  FILE *fp = xfopen (file_name, "r");
   struct buffer buf;		/* Input buffer. */
   struct line temp;		/* Copy of previous line. */
   size_t alloc = 0;
   uintmax_t line_number = 0;
-  struct keyfield *key = keylist;
-  int nonunique = 1 - unique;
-  int disordered = 0;
+  struct keyfield const *key = keylist;
+  bool nonunique = ! unique;
+  bool ordered = true;
 
   initbuf (&buf, sizeof (struct line),
 	   MAX (merge_buffer_size, sort_size));
@@ -1575,7 +1562,7 @@ checkfp (FILE *fp, char *file_name)
 		     umaxtostr (disorder_line_number, hr_buf));
 	    write_bytes (disorder_line->text, disorder_line->length, stderr,
 			 _("standard error"));
-	    disordered = 1;
+	    ordered = false;
 	    break;
 	  }
 	}
@@ -1616,7 +1603,7 @@ checkfp (FILE *fp, char *file_name)
   free (buf.buf);
   if (temp.text)
     free (temp.text);
-  return disordered;
+  return ordered;
 }
 
 /* Merge lines from FILES onto OFP.  NFILES cannot be greater than
@@ -1640,7 +1627,7 @@ mergefps (char **files, register int nfiles,
 				   such that cur[ord[0]] is the smallest line
 				   and will be next output. */
   register int i, j, t;
-  struct keyfield *key = keylist;
+  struct keyfield const *key = keylist;
   saved.text = NULL;
 
   /* Read initial lines from each input file. */
@@ -1896,22 +1883,22 @@ sortlines_temp (struct line *lines, size_t nlines, struct line *temp)
    output of a command like "cat OUTFILE".  */
 
 static int
-first_same_file (char **files, int nfiles, char const *outfile)
+first_same_file (char * const *files, int nfiles, char const *outfile)
 {
   int i;
-  int got_outstat = 0;
+  bool got_outstat = false;
   struct stat instat, outstat;
 
   for (i = 0; i < nfiles; i++)
     {
-      int standard_input = STREQ (files[i], "-");
+      bool standard_input = STREQ (files[i], "-");
 
       if (STREQ (outfile, files[i]) && ! standard_input)
 	return i;
 
       if (! got_outstat)
 	{
-	  got_outstat = 1;
+	  got_outstat = true;
 	  if ((STREQ (outfile, "-")
 	       ? fstat (STDOUT_FILENO, &outstat)
 	       : stat (outfile, &outstat))
@@ -1928,23 +1915,6 @@ first_same_file (char **files, int nfiles, char const *outfile)
     }
 
   return nfiles;
-}
-
-/* Check that each of the NFILES FILES is ordered.
-   Return a count of disordered files. */
-
-static int
-check (char **files, int nfiles)
-{
-  int i, disorders = 0;
-  FILE *fp;
-
-  for (i = 0; i < nfiles; ++i)
-    {
-      fp = xfopen (files[i], "r");
-      disorders += checkfp (fp, files[i]);
-    }
-  return disorders;
 }
 
 /* Merge NFILES FILES onto OUTPUT_FILE.  However, merge at most
@@ -1979,11 +1949,11 @@ merge (char **files, int nfiles, int max_merge, char const *output_file)
 /* Sort NFILES FILES onto OUTPUT_FILE. */
 
 static void
-sort (char **files, int nfiles, char const *output_file)
+sort (char * const *files, int nfiles, char const *output_file)
 {
   struct buffer buf;
   int n_temp_files = 0;
-  int output_file_created = 0;
+  bool output_file_created = false;
 
   static size_t size;
   if (! size && ! (size = sort_size))
@@ -2003,7 +1973,7 @@ sort (char **files, int nfiles, char const *output_file)
 	initbuf (&buf, bytes_per_line,
 		 sort_buffer_size (&fp, 1, files, nfiles,
 				   bytes_per_line, size));
-      buf.eof = 0;
+      buf.eof = false;
       files++;
       nfiles--;
 
@@ -2032,7 +2002,7 @@ sort (char **files, int nfiles, char const *output_file)
 	      xfclose (fp, file);
 	      tfp = xfopen (output_file, "w");
 	      temp_output = output_file;
-	      output_file_created = 1;
+	      output_file_created = true;
 	    }
 	  else
 	    {
@@ -2175,9 +2145,9 @@ set_ordering (register const char *s, struct keyfield *key,
 	{
 	case 'b':
 	  if (blanktype == bl_start || blanktype == bl_both)
-	    key->skipsblanks = 1;
+	    key->skipsblanks = true;
 	  if (blanktype == bl_end || blanktype == bl_both)
-	    key->skipeblanks = 1;
+	    key->skipeblanks = true;
 	  break;
 	case 'd':
 	  key->ignore = nondictionary;
@@ -2186,19 +2156,19 @@ set_ordering (register const char *s, struct keyfield *key,
 	  key->translate = fold_toupper;
 	  break;
 	case 'g':
-	  key->general_numeric = 1;
+	  key->general_numeric = true;
 	  break;
 	case 'i':
 	  key->ignore = nonprinting;
 	  break;
 	case 'M':
-	  key->month = 1;
+	  key->month = true;
 	  break;
 	case 'n':
-	  key->numeric = 1;
+	  key->numeric = true;
 	  break;
 	case 'r':
-	  key->reverse = 1;
+	  key->reverse = true;
 	  break;
 	default:
 	  return (char *) s;
@@ -2212,7 +2182,7 @@ static struct keyfield *
 new_key (void)
 {
   struct keyfield *key = xcalloc (1, sizeof *key);
-  key->eword = -1;
+  key->eword = SIZE_MAX;
   return key;
 }
 
@@ -2223,8 +2193,10 @@ main (int argc, char **argv)
   struct keyfield gkey;
   char const *s;
   int c = 0;
-  int checkonly = 0, mergeonly = 0, nfiles = 0;
-  int posix_pedantic = (getenv ("POSIXLY_CORRECT") != NULL);
+  bool checkonly = false;
+  bool mergeonly = false;
+  int nfiles = 0;
+  bool posixly_correct = (getenv ("POSIXLY_CORRECT") != NULL);
   bool obsolete_usage = (posix2_version () < 200112);
   char const *short_options = (obsolete_usage
 			       ? COMMON_SHORT_OPTIONS "y::"
@@ -2232,7 +2204,7 @@ main (int argc, char **argv)
   char *minus = "-", **files;
   char const *outfile = minus;
   static int const sigs[] = { SIGHUP, SIGINT, SIGPIPE, SIGTERM };
-  unsigned nsigs = sizeof sigs / sizeof *sigs;
+  int nsigs = sizeof sigs / sizeof *sigs;
 #ifdef SA_NOCLDSTOP
   struct sigaction oldact, newact;
 #endif
@@ -2256,7 +2228,7 @@ main (int argc, char **argv)
 #if HAVE_SETLOCALE
   /* Let's get locale's representation of the decimal point */
   {
-    struct lconv *lconvp = localeconv ();
+    struct lconv const *lconvp = localeconv ();
 
     /* If the locale doesn't define a decimal point, or if the decimal
        point is multibyte, use the C decimal point.  We don't support
@@ -2272,7 +2244,7 @@ main (int argc, char **argv)
   }
 #endif
 
-  have_read_stdin = 0;
+  have_read_stdin = false;
   inittables ();
 
   /* Change the way library functions fail.  */
@@ -2280,7 +2252,7 @@ main (int argc, char **argv)
 
 #ifdef SA_NOCLDSTOP
   {
-    unsigned i;
+    int i;
     sigemptyset (&caught_signals);
     for (i = 0; i < nsigs; i++)
       sigaddset (&caught_signals, sigs[i]);
@@ -2291,7 +2263,7 @@ main (int argc, char **argv)
 #endif
 
   {
-    unsigned i;
+    int i;
     for (i = 0; i < nsigs; i++)
       {
 	int sig = sigs[i];
@@ -2306,11 +2278,11 @@ main (int argc, char **argv)
       }
   }
 
-  gkey.sword = gkey.eword = -1;
+  gkey.sword = gkey.eword = SIZE_MAX;
   gkey.ignore = NULL;
   gkey.translate = NULL;
-  gkey.numeric = gkey.general_numeric = gkey.month = gkey.reverse = 0;
-  gkey.skipsblanks = gkey.skipeblanks = 0;
+  gkey.numeric = gkey.general_numeric = gkey.month = gkey.reverse = false;
+  gkey.skipsblanks = gkey.skipeblanks = false;
 
   files = xmalloc (sizeof (char *) * argc);
 
@@ -2322,7 +2294,7 @@ main (int argc, char **argv)
          "-o FILE" or "-oFILE".  */
 
       if (c == -1
-	  || (posix_pedantic && nfiles != 0
+	  || (posixly_correct && nfiles != 0
 	      && ! (obsolete_usage
 		    && ! checkonly
 		    && optind != argc
@@ -2349,7 +2321,7 @@ main (int argc, char **argv)
 	      if (s && *s == '.')
 		s = parse_field_count (s + 1, &key->schar, NULL);
 	      if (! (key->sword | key->schar))
-		key->sword = -1;
+		key->sword = SIZE_MAX;
 	      if (! s || *set_ordering (s, key, bl_start))
 		{
 		  free (key);
@@ -2394,7 +2366,7 @@ main (int argc, char **argv)
 	  break;
 
 	case 'c':
-	  checkonly = 1;
+	  checkonly = true;
 	  break;
 
 	case 'k':
@@ -2419,11 +2391,11 @@ main (int argc, char **argv)
 		}
 	    }
 	  if (! (key->sword | key->schar))
-	    key->sword = -1;
+	    key->sword = SIZE_MAX;
 	  s = set_ordering (s, key, bl_start);
 	  if (*s != ',')
 	    {
-	      key->eword = -1;
+	      key->eword = SIZE_MAX;
 	      key->echar = 0;
 	    }
 	  else
@@ -2452,7 +2424,7 @@ main (int argc, char **argv)
 	  break;
 
 	case 'm':
-	  mergeonly = 1;
+	  mergeonly = true;
 	  break;
 
 	case 'o':
@@ -2460,7 +2432,7 @@ main (int argc, char **argv)
 	  break;
 
 	case 's':
-	  stable = 1;
+	  stable = true;
 	  break;
 
 	case 'S':
@@ -2484,7 +2456,7 @@ main (int argc, char **argv)
 	  break;
 
 	case 'u':
-	  unique = 1;
+	  unique = true;
 	  break;
 
 	case 'y':
@@ -2508,9 +2480,10 @@ main (int argc, char **argv)
 
   /* Inheritance of global options to individual keys. */
   for (key = keylist; key; key = key->next)
-    if (!key->ignore && !key->translate && !key->skipsblanks && !key->reverse
-	&& !key->skipeblanks && !key->month && !key->numeric
-	&& !key->general_numeric)
+    if (! (key->ignore || key->translate
+	   || (key->skipsblanks | key->reverse
+	       | key->skipeblanks | key->month | key->numeric
+	       | key->general_numeric)))
       {
 	key->ignore = gkey.ignore;
 	key->translate = gkey.translate;
@@ -2522,9 +2495,9 @@ main (int argc, char **argv)
 	key->reverse = gkey.reverse;
       }
 
-  if (!keylist && (gkey.ignore || gkey.translate || gkey.skipsblanks
-		   || gkey.skipeblanks || gkey.month || gkey.numeric
-		   || gkey.general_numeric))
+  if (!keylist && (gkey.ignore || gkey.translate
+		   || (gkey.skipsblanks | gkey.skipeblanks | gkey.month
+		       | gkey.numeric | gkey.general_numeric)))
     insertkey (&gkey);
   reverse = gkey.reverse;
 
@@ -2548,7 +2521,7 @@ main (int argc, char **argv)
 
       /* POSIX requires that sort return 1 IFF invoked with -c and the
 	 input is not properly sorted.  */
-      exit (check (files, nfiles) == 0 ? EXIT_SUCCESS : SORT_OUT_OF_ORDER);
+      exit (check (files[0]) ? EXIT_SUCCESS : SORT_OUT_OF_ORDER);
     }
 
   if (mergeonly)
