@@ -146,6 +146,8 @@ print_header (void)
     printf ("    Inodes   IUsed   IFree IUse%%");
   else if (output_block_size < 0)
     printf ("    Size  Used Avail Use%%");
+  else if (posix_format)
+    printf (" %4d-blocks      Used Available Capacity", output_block_size);
   else
     {
       char buf[LONGEST_HUMAN_READABLE + 1];
@@ -194,13 +196,41 @@ excluded_fstype (const char *fstype)
   return 0;
 }
 
-/* Like human_readable, except return "-" if the argument is -1.  */
+/* Like human_readable, except return "-" if the argument is -1,
+   and take ceiling of fractions if posix_format.  */
 static char *
 df_readable (uintmax_t n, char *buf,
 	     int from_block_size, int t_output_block_size)
 {
   return (n == -1 ? "-"
-	  : human_readable (n, buf, from_block_size, t_output_block_size));
+	  : human_readable_inexact (n, buf, from_block_size,
+				    t_output_block_size,
+				    (posix_format
+				     ? human_ceiling
+				     : human_round_to_even)));
+}
+
+/* Return the ceiling of N * 100 / D.  Avoid the ceil function, so that
+   we needn't link the math library.  */
+static int
+ceil_percent (uintmax_t n, uintmax_t d)
+{
+  if (n <= (uintmax_t) -1 / 100)
+    {
+      uintmax_t n100 = n * 100;
+      return n100 / d + (n100 % d != 0);
+    }
+  else
+    {
+      /* Avoid integer overflow.  We should use multiple precision
+	 arithmetic here, but we'll be lazy and resort to floating
+	 point.  This can yield answers that are slightly off.  In
+	 practice it is quite rare to overflow uintmax_t, so this is
+	 good enough for now.  */
+      double pct = n * 100.0 / d;
+      int r = pct;
+      return r + (r != pct);
+    }
 }
 
 /* Display a space listing for the disk device with absolute path DISK.
@@ -315,15 +345,20 @@ show_dev (const char *disk, const char *mount_point, const char *fstype,
 	}
       else
 	{
+	  uintmax_t blocks_avail;
+
 	  blocks_used = fsu.fsu_blocks - fsu.fsu_bfree;
+	  blocks_avail = blocks_used + fsu.fsu_bavail;
 	  blocks_percent_used =
 	    ((fsu.fsu_bavail == -1
-	      || blocks_used + fsu.fsu_bavail == 0
+	      || blocks_avail == 0
 	      || (fsu.fsu_bavail_top_bit_set
 	          ? blocks_used < - fsu.fsu_bavail
 	          : fsu.fsu_bfree < fsu.fsu_bavail))
 	     ? -1
-	     : blocks_used * 100.0 / (blocks_used + fsu.fsu_bavail));
+	     : posix_format
+	     ? ceil_percent (blocks_used, blocks_avail)
+	     : blocks_used * 100.0 / blocks_avail);
 	}
 
       avail = df_readable ((fsu.fsu_bavail_top_bit_set
@@ -342,10 +377,14 @@ show_dev (const char *disk, const char *mount_point, const char *fstype,
 			      output_block_size),
 	      w, avail);
 
-      if (blocks_percent_used < 0)
-	printf ("  - ");
-      else
-	printf ("%3.0f%%", blocks_percent_used);
+      {
+	int use_width = posix_format ? 8 : 4;
+
+	if (blocks_percent_used < 0)
+	  printf ("%*s", use_width, "- ");
+	else
+	  printf ("%*.0f%%", use_width - 1, blocks_percent_used);
+      }
     }
 
   if (mount_point)
