@@ -249,7 +249,7 @@ static void
 printv (VALUE *v)
 {
   char *p;
-  char buf[INT_STRLEN_BOUND (intmax_t) + 1];
+  char buf[INT_BUFSIZE_BOUND (intmax_t)];
 
   switch (v->type)
     {
@@ -302,7 +302,7 @@ null (VALUE *v)
 static void
 tostring (VALUE *v)
 {
-  char buf[INT_STRLEN_BOUND (intmax_t) + 1];
+  char buf[INT_BUFSIZE_BOUND (intmax_t)];
 
   switch (v->type)
     {
