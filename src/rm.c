@@ -185,7 +185,7 @@ main (int argc, char **argv)
 	}
     }
 
-  remove_init ();
+  remove_init (&x);
 
   {
     struct stat cwd_sb;
