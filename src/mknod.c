@@ -222,7 +222,7 @@ major and minor device numbers may not be specified for fifo files"));
   if (specified_mode)
     {
       if (chmod (argv[optind], newmode))
-        error (0, errno, _("cannot set permissions of `%s'"),
+        error (0, errno, _("cannot set permissions of %s"),
                quote (argv[optind]));
     }
 

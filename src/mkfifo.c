@@ -1,5 +1,5 @@
 /* mkfifo -- make fifo's (named pipes)
-   Copyright (C) 90, 91, 1995-2000 Free Software Foundation, Inc.
+   Copyright (C) 90, 91, 1995-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -125,7 +125,7 @@ main (int argc, char **argv)
     {
       int fail = mkfifo (argv[optind], newmode);
       if (fail)
-	error (0, errno, _("cannot create fifo `%s'"), quote (argv[optind]));
+	error (0, errno, _("cannot create fifo %s"), quote (argv[optind]));
 
       /* If the containing directory happens to have a default ACL, chmod
 	 ensures the file mode permission bits are still set as desired.  */
@@ -134,7 +134,7 @@ main (int argc, char **argv)
  	{
  	  fail = chmod (argv[optind], newmode);
 	  if (fail)
-	    error (0, errno, _("cannot set permissions of fifo `%s'"),
+	    error (0, errno, _("cannot set permissions of fifo %s"),
 		   quote (argv[optind]));
  	}
 
