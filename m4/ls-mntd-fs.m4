@@ -1,4 +1,4 @@
-#serial 2
+#serial 3
 
 dnl From Jim Meyering.
 dnl
@@ -10,6 +10,8 @@ dnl are still in fileutils' configure.in:
 dnl FIXME: add AC_REQUIRE uses to pull in all definitions required
 dnl for all uses of $ac_cv_func_* and $ac_cv_header_* variables below.
 dnl
+
+AC_PREREQ(2.14a)
 
 AC_DEFUN(jm_LIST_MOUNTED_FILESYSTEMS,
   [
@@ -130,7 +132,7 @@ if test -z "$list_mounted_fs"; then
     AC_DEFINE(MOUNTED_VMOUNT, 1,
 	[Define if there is a function named mntctl that can be used to read
    the list of mounted filesystems, and there is a system header file
-   that declares \`struct vmount.'  (AIX)])
+   that declares `struct vmount.'  (AIX)])
   fi
 fi
 
