@@ -188,6 +188,6 @@ if test $ac_fsusage_space = no; then
     ac_fsusage_space=yes)
 fi
 
-AS_IF([test $ac_fsusage_space = found], [$1], [$2])
+AS_IF([test $ac_fsusage_space = yes], [$1], [$2])
 
 ])
