@@ -50,8 +50,7 @@
 
 #include "readtokens.h"
 #include "unlocked-io.h"
-void *xmalloc ();
-void *xrealloc ();
+#include "xalloc.h"
 
 #define STREQ(a,b) ((a) == (b) || ((a) && (b) && *(a) == *(b) \
 				   && strcmp(a, b) == 0))
