@@ -2,8 +2,8 @@
 
 	* Version 5.0.90.
 
-	* configure.ac: Use 5.0.90, rather than 5.0.2, per GNU maintainer
-	guidelines.  The next non-beta release will be 5.1.
+	* configure.ac (AC_INIT): Use 5.0.90 as the version, rather than 5.0.2,
+	per GNU maintainer guidelines.  The next non-beta release will be 5.1.
 
 	This script would have caught at least two recent bugs:
 	those in [ and kill.
