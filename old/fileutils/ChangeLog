@@ -1,7 +1,17 @@
+Sat May  4 20:54:32 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* system.h [IN_CTYPE_DOMAIN]: Rename from ISASCII.
+
 Wed May  1 00:20:00 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* lib/Makefile.am (EXTRA_DIST): Add strcasecmp.c.
+	* configure.in (AC_REPLACE_FUNCS): Add strcasecmp.
 
 	* ls.c (parse_ls_color, usage): Remove support for alternate spellings:
 	--colours and LS_COLOURS.
+	(parse_ls_color): Reverse sense of test for LS_COLORS environment
+	variable and return -- save a level of indentation on a 100+-line
+	block.
 
 Mon Apr 29 22:07:41 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
