@@ -354,7 +354,6 @@ Interpreted sequences are:\n\
   \\t              horizontal tab\n\
   \\v              vertical tab\n\
   CHAR1-CHAR2     all characters from CHAR1 to CHAR2 in ascending order\n\
-  [CHAR1-CHAR2]   same as CHAR1-CHAR2, if both SET1 and SET2 use this\n\
   [CHAR*]         in SET2, copies of CHAR until length of SET1\n\
   [CHAR*REPEAT]   REPEAT copies of CHAR, REPEAT octal if starting with 0\n\
   [:alnum:]       all letters and digits\n\
