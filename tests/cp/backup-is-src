@@ -1,0 +1,42 @@
+#!/bin/sh
+
+: ${CP=cp}
+: ${RM=rm}
+
+if test "$VERBOSE" = yes; then
+  set -x
+  $CP --version
+fi
+
+framework_failure=0
+$RM -f a a~ || framework_failure=1
+: > a || framework_failure=1
+echo a > a~ || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo 'failure in testing framework'
+  exit 1
+fi
+
+# Make sure we get English translations.
+LANGUAGE=C
+export LANGUAGE
+LC_ALL=C
+export LC_ALL
+LANG=C
+export LANG
+
+# This cp command should exit nonzero.
+$CP -b -V simple a~ a > out 2>&1 && fail=1
+
+sed "s,$CP:,XXX:," out > out2
+
+cat > exp <<\EOF
+XXX: backing up `a' would destroy source;  `a~' not copied
+EOF
+
+cmp out2 exp || fail=1
+
+#$RM -f $temp_files out out2 exp
+
+exit $fail
