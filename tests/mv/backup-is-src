@@ -49,7 +49,7 @@ cat > exp <<\EOF
 XXX: backing up `YYY' would destroy source;  `ZZZ' not moved
 EOF
 
-diff -u out2 exp || fail=1
+cmp out2 exp || fail=1
 
 $RM -fr out out2 exp $a $a2 $other_partition_tmpdir
 
