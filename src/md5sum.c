@@ -82,7 +82,7 @@
 static int have_read_stdin;
 
 /* The minimum length of a valid checksum line for the selected algorithm.  */
-static int min_digest_line_length;
+static size_t min_digest_line_length;
 
 /* Set to the length of a digest hex string for the selected algorithm.  */
 static size_t digest_hex_bytes;
@@ -160,8 +160,13 @@ text), and name for each FILE.\n"),
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
+/* Split the string S (of length S_LEN) into three parts:
+   a hexadecimal digest, binary flag, and the file name.
+   S is modified.  */
+
 static int
-split_3 (char *s, size_t s_len, unsigned char **u, int *binary, char **w)
+split_3 (char *s, size_t s_len,
+	 unsigned char **hex_digest, int *binary, char **file_name)
 {
   size_t i;
   int escaped_filename = 0;
@@ -172,11 +177,11 @@ split_3 (char *s, size_t s_len, unsigned char **u, int *binary, char **w)
   while (ISWHITE (s[i]))
     ++i;
 
-  /* The line must have at least `min_digest_line_length - 1' (or one more, if
+  /* Ignore this line if it is too short.
+     Each line must have at least `min_digest_line_length - 1' (or one more, if
      the first is a backslash) more characters to contain correct message digest
-     information.  Ignore this line if it is too short.  */
-  if (!(s_len - i >= min_digest_line_length
-	|| (s[i] == '\\' && s_len - i >= 1 + min_digest_line_length)))
+     information.  */
+  if (s_len - i < min_digest_line_length + (s[i] == '\\'))
     return 1;
 
   if (s[i] == '\\')
@@ -184,7 +189,7 @@ split_3 (char *s, size_t s_len, unsigned char **u, int *binary, char **w)
       ++i;
       escaped_filename = 1;
     }
-  *u = (unsigned char *) &s[i];
+  *hex_digest = (unsigned char *) &s[i];
 
   /* The first field has to be the n-character hexadecimal
      representation of the message digest.  If it is not followed
@@ -201,7 +206,7 @@ split_3 (char *s, size_t s_len, unsigned char **u, int *binary, char **w)
 
   /* All characters between the type indicator and end of line are
      significant -- that includes leading and trailing white space.  */
-  *w = &s[i];
+  *file_name = &s[i];
 
   if (escaped_filename)
     {
@@ -262,7 +267,8 @@ hex_digits (unsigned char const *s)
   return 1;
 }
 
-/* An interface to the function, DIGEST_STREAM, (either md5_stream or sha_stream).
+/* An interface to the function, DIGEST_STREAM,
+   (either md5_stream or sha_stream).
    Operate on FILENAME (it may be "-") and put the result in *BIN_RESULT.
    Return non-zero upon failure, zero to indicate success.  */
 
