@@ -31,7 +31,7 @@
 #include <regex.h>
 
 #include "error.h"
-#include "human.h"
+#include "inttostr.h"
 #include "safe-read.h"
 #include "xstrtol.h"
 
@@ -738,10 +738,10 @@ dump_rest_of_file (void)
 static void
 handle_line_error (const struct control *p, int repetition)
 {
-  char buf[LONGEST_HUMAN_READABLE + 1];
+  char buf[INT_BUFSIZE_BOUND (uintmax_t)];
 
   fprintf (stderr, _("%s: `%s': line number out of range"),
-	   program_name, human_readable (p->lines_required, buf, 1, 1));
+	   program_name, umaxtostr (p->lines_required, buf));
   if (repetition)
     fprintf (stderr, _(" on repetition %d\n"), repetition);
   else
@@ -1178,10 +1178,10 @@ parse_patterns (int argc, int start, char **argv)
 		   argv[i]);
 	  if (val < last_val)
 	    {
-	      char buf[LONGEST_HUMAN_READABLE + 1];
+	      char buf[INT_BUFSIZE_BOUND (uintmax_t)];
 	      error (EXIT_FAILURE, 0,
 	       _("line number `%s' is smaller than preceding line number, %s"),
-		     argv[i], human_readable (last_val, buf, 1, 1));
+		     argv[i], umaxtostr (last_val, buf));
 	    }
 
 	  if (val == last_val)
