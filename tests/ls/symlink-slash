@@ -6,6 +6,8 @@ if test "$VERBOSE" = yes; then
   ls --version
 fi
 
+. $srcdir/../lang-default
+
 tmp=t-ls.$$
 
 framework_failure=0
@@ -19,8 +21,6 @@ if test $framework_failure = 1; then
   echo 'failure in testing framework'
   exit 1
 fi
-
-. $srcdir/../lang-default
 
 fail=0
 set `ls -l symlink/`
