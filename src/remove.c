@@ -206,7 +206,7 @@ hash_pjw (const void *x, unsigned int tablesize)
 static bool
 hash_compare_strings (void const *x, void const *y)
 {
-  return STREQ (x, y);
+  return STREQ (x, y) ? true : false;
 }
 
 static inline void
@@ -568,7 +568,7 @@ remove_cwd_entries (const struct rm_options *x)
   if (CLOSEDIR (dirp))
     {
       error (0, errno, "%s", full_filename ("."));
-      status = 1;
+      status = RM_OK;
     }
   dirp = NULL;
 
