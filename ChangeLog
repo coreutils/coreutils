@@ -2,6 +2,24 @@
 
 	* Version 5.3.0.
 
+	* src/comm.c (compare_files): Assume setlocale exists.
+	* src/join.c (keycmp): Likewise.
+	* src/seq.c (decimal_point): Treat like sort.  Now char.
+	All uses changed.
+	(main): Assume localeconv exists.  Use same code as sort.
+	* src/sort.c (C_DECIMAL_POINT): Remove.  Use changed to '.'.
+	Assume setlocale exists.
+	(thousands_sep): Renamed from th_sep.
+	(IS_THOUSANDS_SEP): Remove.  All uses replaced by comparisons.
+	(NONZERO): Parenthesize use of arg.
+	(numcompare): Avoid duplicate loads.  Use ISDIGIT as boolean, for
+	consistency.  Avoid unnecessary negation by reversing
+	fraccompare args.
+	(main): Rewrite localeconv call to match seq.c.
+	* src/system.h: Assume locale.h exists.
+	(HAVE_SETLOCALE): Remove.
+	* src/uniq.c (different): Assume setlocale exists.
+
 	* src/ls.c (sort_files): Minor cleanup.  Remove an unnecessary
 	'volatile' on a local variable.  Rewrite to avoid unnecessary
 	double-assignment to 'func' in the usual case where strcoll does

@@ -1,3 +1,14 @@
+2004-12-01  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* hard-locale.c: Assume <locale.h> exists.
+	Include "strdup.h".
+	(GLIBC_VERSION): New macro.
+	(hard_locale): Assume setlocale exists.
+	Rewrite to avoid #ifdef.
+	Use strdup rather than malloc + strcpy.
+	* human.c: Assume <locale.h> exists.
+	(human_readable): Assume localeconv exists.
+
 2004-11-30  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* getcwd.c (is_ENAMETOOLONG): New macro.
