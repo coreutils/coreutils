@@ -91,8 +91,14 @@ AUTOMAKE_OPTIONS = 1.1 gnits
 
 TESTS = mv-special-1
 EXTRA_DIST = $(TESTS) setup
-TESTS_ENVIRONMENT = RM=../../src/rm MKDIR=../../src/mkdir \
-  MKNOD=../../src/mknod MV=../../src/mv DF=../../src/df
+TESTS_ENVIRONMENT = \
+  DF=../../src/df \
+  LS=../../src/ls \
+  MKDIR=../../src/mkdir \
+  MKNOD=../../src/mknod \
+  MV=../../src/mv \
+  RM=../../src/rm \
+  TOUCH=../../src/touch
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../config.h
 CONFIG_CLEAN_FILES = 
