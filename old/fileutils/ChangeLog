@@ -1,3 +1,8 @@
+Wed Jan  1 17:30:26 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (AC_ARG_PROGRAM): Remove explicit use.
+	It's implicit in AM_INIT_AUTOMAKE.  From Wayne Stewart.
+
 Sun Dec 29 21:55:13 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in (jm_FUNC_GETGROUPS): Use it.

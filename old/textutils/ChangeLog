@@ -1,3 +1,8 @@
+Wed Jan  1 17:32:18 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (AC_ARG_PROGRAM): Remove explicit use.
+	It's implicit in AM_INIT_AUTOMAKE.  From Wayne Stewart.
+
 Sun Dec 29 23:42:57 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/pr.c (init_header): Plug a small memory leak by using stack
