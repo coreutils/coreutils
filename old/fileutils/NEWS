@@ -3,6 +3,7 @@ Changes in release 3.17:
 * touch -d DATE now works on Unicos
 * du accepts new option --max-depth=N
 * rmdir accepts new options: --ignore-fail-on-non-empty and --verbose
+* du now overflows its accumulator for 1 terabyte directories, not 2GB.
 
 Changes in release 3.16:
 * du --megabytes (-m) works
