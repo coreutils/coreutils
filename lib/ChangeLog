@@ -12,6 +12,8 @@
 	(__xargmatch_internal): Remove case_sensitive argument.
 	(main): Use XARGMATCH instead of XARGCASEMATCH.
 
+	* argmatch.c: Include gettext.h instead of <locale.h> and <libintl.h>.
+
 2002-11-21  Bruno Haible  <bruno@clisp.org>
 
 	* xmalloc.c: Change compile-time error message. Add comment about
