@@ -13,21 +13,36 @@ sub test_vector
      ['1b', "-z ''", {}, '', 0],
      ['1c', 'any-string', {}, '', 0],
      ['1d', '-n any-string', {}, '', 0],
+     ['1e', "''", {}, '', 1],
+     ['1f', '-', {}, '', 0],
+     ['1g', '--', {}, '', 0],
+     ['1h', '-0', {}, '', 0],
+     ['1i', '-f', {}, '', 0],
+     ['1j', '--help', {}, '', 0],
+     ['1k', '--version', {}, '', 0],
 
      ['streq-1', 't = t', {}, '', 0],
      ['streq-2', 't = f', {}, '', 1],
+     ['streq-3', '! = !', {}, '', 0],
+     ['streq-4', '= = =', {}, '', 0],
+     ['streq-5', "'(' = '('", {}, '', 0],
+     ['streq-6', "'(' = ')'", {}, '', 1],
      ['strne-1', 't != t', {}, '', 1],
      ['strne-2', 't != f', {}, '', 0],
+     ['strne-3', '! != !', {}, '', 1],
+     ['strne-4', '= != =', {}, '', 1],
+     ['strne-5', "'(' != '('", {}, '', 1],
+     ['strne-6', "'(' != ')'", {}, '', 0],
 
      ['and-1', 't -a t', {}, '', 0],
-     ['and-2', '"" -a t', {}, '', 1],
-     ['and-3', 't -a ""', {}, '', 1],
-     ['and-4', '"" -a ""', {}, '', 1],
+     ['and-2', "'' -a t", {}, '', 1],
+     ['and-3', "t -a ''", {}, '', 1],
+     ['and-4', "'' -a ''", {}, '', 1],
 
      ['or-1', 't -o t', {}, '', 0],
-     ['or-2', '"" -o t', {}, '', 0],
-     ['or-3', 't -o ""', {}, '', 0],
-     ['or-4', '"" -o ""', {}, '', 1],
+     ['or-2', "'' -o t", {}, '', 0],
+     ['or-3', "t -o ''", {}, '', 0],
+     ['or-4', "'' -o ''", {}, '', 1],
 
      ['eq-1', '9 -eq 9', {}, '', 0],
      ['eq-2', '0 -eq 0', {}, '', 0],
@@ -46,10 +61,16 @@ sub test_vector
      ['lt-4', '-1 -lt -2', {}, '', 1],
 
      # This evokes `test: 0x0: integer expression expected'.
-     ['inv-1', '0x0 -eq 00', {}, '', 1],
+     ['inv-1', '0x0 -eq 00', {}, '', 2],
 
-     ['t1', "-t", {}, '', 1],
+     ['t1', "-t", {}, '', 0],
      ['t2', "-t 1", {}, '', 1],
+
+     ['paren-1', "'(' '' ')'", {}, '', 1],
+     ['paren-2', "'(' '(' ')'", {}, '', 0],
+     ['paren-3', "'(' ')' ')'", {}, '', 0],
+     ['paren-4', "'(' ! ')'", {}, '', 0],
+     ['paren-5', "'(' -a ')'", {}, '', 0],
     );
 
   my %inverse_op =
@@ -81,15 +102,24 @@ sub test_vector
 	}
     }
 
-  # Generate a negated and a double-negated version of each test.
+  # Generate parenthesized and negated versions of each test.
   # There are a few exceptions.
-  my %not_invertible = map {$_ => 1} qw (1a inv-1 t1);
+  my %not_N   = map {$_ => 1} qw (1a);
+  my %not_P   = map {$_ => 1} qw (1a
+				  streq-6 strne-6
+				  paren-1 paren-2 paren-3 paren-4 paren-5);
   foreach $t (@tvec)
     {
       my ($test_name, $flags, $in, $exp, $ret) = @$t;
-      next if $not_invertible{$test_name};
-      push (@tv, ["N-$test_name", "! '(' $flags ')'", $in, $exp, 1 - $ret]);
-      push (@tv, ["NN-$test_name", "! ! '(' $flags ')'", $in, $exp, $ret]);
+      next if $ret == 2;
+      push (@tv, ["N-$test_name", "! $flags", $in, $exp, 1 - $ret])
+	  unless $not_N{$test_name};
+      push (@tv, ["P-$test_name", "'(' $flags ')'", $in, $exp, $ret])
+	  unless $not_P{$test_name};
+      push (@tv, ["NP-$test_name", "! '(' $flags ')'", $in, $exp, 1 - $ret])
+	  unless $not_P{$test_name};
+      push (@tv, ["NNP-$test_name", "! ! '(' $flags ')'", $in, $exp, $ret])
+	  unless $not_P{$test_name};
     }
 
   return (@tv, @tvec);
