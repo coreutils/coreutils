@@ -1,3 +1,15 @@
+1999-09-17  Jim Meyering  <meyering@ascend.com>
+
+	* configure.in (AC_REPLACE_FUNCS): Remove strdup, now that this
+	is done in m4/jm-macros.m4.
+
+1999-09-09  Jim Meyering  <meyering@ascend.com>
+
+	* src/touch.c (usage): Remove misleading sentence in --help output.
+	From Karl Heuer.
+
+	* src/Makefile.am (EXTRAdir): Remove unused variable.
+
 1999-09-03  Paul Eggert  <eggert@twinsun.com>
 
 	* lib/lchown.h (ENOSYS): Don't use ENOMSG; it's not in NeXTStep3.3.
