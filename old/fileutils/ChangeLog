@@ -1,5 +1,6 @@
 2001-12-29  Jim Meyering  <meyering@lucent.com>
 
+	* tests/cp/r-vs-symlink: New file.
 	* tests/cp/Makefile.am (TESTS): Add r-vs-symlink.
 
 2001-12-21  Jim Meyering  <meyering@lucent.com>
