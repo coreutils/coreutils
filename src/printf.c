@@ -143,7 +143,8 @@ verify (const char *s, const char *end)
 
 #define STRTOX(TYPE, FUNC_NAME, LIB_FUNC_EXPR)				 \
 static TYPE								 \
-FUNC_NAME (const char *s)						 \
+FUNC_NAME (s)								 \
+     const char *s;							 \
 {									 \
   char *end;								 \
   TYPE val;								 \
