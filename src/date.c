@@ -54,17 +54,20 @@ enum Time_spec
   /* display date, hours, and minutes: 1999-03-25T03:23-0500 */
   TIME_SPEC_MINUTES,
   /* display date, hours, minutes, and seconds: 1999-03-25T03:23:14-0500 */
-  TIME_SPEC_SECONDS
+  TIME_SPEC_SECONDS,
+  /* similar, but display nanoseconds: 1999-03-25T03:23:14,123456789-0500 */
+  TIME_SPEC_NS
 };
 
 static char const *const time_spec_string[] =
 {
-  "date", "hours", "minutes", "seconds", 0
+  "date", "hours", "minutes", "seconds", "ns", 0
 };
 
 static enum Time_spec const time_spec[] =
 {
-  TIME_SPEC_DATE, TIME_SPEC_HOURS, TIME_SPEC_MINUTES, TIME_SPEC_SECONDS
+  TIME_SPEC_DATE, TIME_SPEC_HOURS, TIME_SPEC_MINUTES, TIME_SPEC_SECONDS,
+  TIME_SPEC_NS
 };
 
 /* The name this program was run with, for error messages. */
@@ -125,11 +128,10 @@ Display the current time in the given FORMAT, or set the system date.\n\
 \n\
   -d, --date=STRING         display time described by STRING, not `now'\n\
   -f, --file=DATEFILE       like --date once for each line of DATEFILE\n\
-  -ITIMESPEC, --iso-8601[=TIMESPEC]  output date/time in ISO 8601 format.\n\
-                            TIMESPEC=`date' for date only,\n\
-                            `hours', `minutes', or `seconds' for date and\n\
+      --iso-8601[=TIMESPEC] output date/time in ISO 8601 format.\n\
+                            TIMESPEC=`date' for date only (the default),\n\
+                            `hours', `minutes', `seconds', or `ns' for date and\n\
                             time to the indicated precision.\n\
-                            --iso-8601 without TIMESPEC defaults to `date'.\n\
 "), stdout);
       fputs (_("\
   -r, --reference=FILE      display the last modification time of FILE\n\
@@ -229,7 +231,6 @@ batch_convert (const char *input_filename, const char *format)
   int status;
   FILE *in_stream;
   char *line;
-  int line_length;
   size_t buflen;
   struct timespec when;
 
@@ -252,17 +253,14 @@ batch_convert (const char *input_filename, const char *format)
   status = 0;
   while (1)
     {
-      line_length = getline (&line, &buflen, in_stream);
+      ssize_t line_length = getline (&line, &buflen, in_stream);
       if (line_length < 0)
 	{
 	  /* FIXME: detect/handle error here.  */
 	  break;
 	}
 
-      when.tv_sec = get_date (line, NULL);
-      when.tv_nsec = 0; /* FIXME: get_date should set this.  */
-
-      if (when.tv_sec == -1)
+      if (! get_date (&when, line, NULL))
 	{
 	  if (line[line_length - 1] == '\n')
 	    line[line_length - 1] = '\0';
@@ -449,9 +447,7 @@ argument must be a format string beginning with `+'."),
 	    }
 	  else
 	    {
-	      when.tv_sec = get_date (datestr, NULL);
-	      when.tv_nsec = 0; /* FIXME: get_date should set this.  */
-	      valid_date = (when.tv_sec != (time_t) -1);
+	      valid_date = get_date (&when, datestr, NULL);
 	    }
 
 	  format = (n_args == 1 ? argv[optind] + 1 : NULL);
@@ -494,7 +490,8 @@ show_date (const char *format, struct timespec when)
     "%Y-%m-%d",
     "%Y-%m-%dT%H%z",
     "%Y-%m-%dT%H:%M%z",
-    "%Y-%m-%dT%H:%M:%S%z"
+    "%Y-%m-%dT%H:%M:%S%z",
+    "%Y-%m-%dT%H:%M:%S,%N%z"
   };
 
   if (format == NULL)
