@@ -1,6 +1,15 @@
-2002-09-29  Jim Meyering  <meyering@lucent.com>
+2002-10-01  Jim Meyering  <meyering@lucent.com>
+
+	* src/sys2.h (SSIZE_MAX): Define.
+
+2002-09-30  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.5.2.
+
+	* src/csplit.c: Don't include stdlib.h here.  It's already included
+	via system.h.
+
+2002-09-29  Jim Meyering  <meyering@lucent.com>
 
 	* src/tr.c (find_bracketed_repeat): Rearrange pointer/integer
 	expression to avoid bogus warning from gcc.
