@@ -1,4 +1,133 @@
-2004-08-01  Paul Eggert  <eggert@cs.ucla.edu>
+2004-08-02  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/fmt.c (COST, MAXWORDS): Add a comment describing some of
+	fmt's arbitrary limits.
+	(TRUE, FALSE): Remove; all uses changed to (true, false).
+	(main): Use bool for booleans.
+	Limit maximum width to MAXCHARS / 2.  Use xstrtoul, not xstrtol,
+	to parse width.
+	(copy_rest): Remove unnecessary cast.
+	(get_prefix): Rewrite to avoid cast.
+	(check_punctuation): Use char *, not unsigned char *; C89 requires
+	this.  Avoid off-by-one buffer read overrun when line is empty.
+	(flush_paragraph): Don't assume wptr-parabuf is <= INT_MAX.
+	Remove unnecessary casts.
+	* tests/fmt/basic (wide-1, wide-2, bad-suffix): Adjust to above changes.
+	
+	* src/expand.c (convert_entire_line, have_read_stdin, parse_tabstops,
+	next_file, expand, main):
+	Use bool for booleans.
+	(tab_size, tab_list, add_tabstop, parse_tabstops, validate_tabstops,
+	expand, main):
+	Use uintmax_t for column counts.
+	(add_tabstop): Don't reserve -1 (now UINTMAX_MAX) as a special value.
+	All callers changed.
+	(parse_tabstops): Don't pass a negative char to isblank.
+	Avoid memory leak with large tab stops.
+	(validate_tabstops, expand): Don't assume number of tab stops is
+	<= INT_MAX.
+	(next_file, main): Use EXIT_SUCCESS/EXIT_FAILURE rather than 0/1 when
+	storing values into exit_status.
+	(expand): Use same pattern as unexpand for reading chars.
+	Report an error when input line is too long, instead of silently
+	screwing up.  Do not mishandle tab stops when backspacing left
+	over start of line.
+	
+	* src/dircolors.c (have_read_stdin, append_quoted,
+	dc_parse_stream, dc_parse_file, main): Use bool for booleans.
+	(dc_parse_stream): Use enum for state, rather than int.
+	Use ssize_t to store getline result.
+
+	* src/dd.c (translation_needed, parse_integer, scanargs,
+	apply_translations, char_is_saved, swab_buffer, skip_via_lseek):
+	Use bool for booleans.
+	(translate_buffer): Use to_uchar rather than a cast.
+	(swab_buffer, copy_simple, copy_with_unblock):
+	Use size_t for sizes.
+	
+	* src/seq.c (equal_width, valid_format, main): Use bool for booleans.
+	* src/sleep.c (apply_suffix): Likewise.
+	* src/tail.c (struct File_spec, reopen_inaccessible_files, count_lines,
+	forever, from_start, print_headers, have_read_stdin, valid_file_spec,
+	write_header, file_lines, pipe_lines, pipe_bytes, recheck,
+	tail_forever, tail_bytes, tail_lines, tail, tail_file,
+	parse_obsolescent_option, parse_options, main): Likewise.
+	* src/sleep.c (apply_suffix): Invert sense of result.
+	Use int (not unsigned int) for multiplier, as this generates better
+	code with some compilers.  Simplify code a bit.
+	* src/tail.c (struct File_spec, max_n_unchanged_stats_between_opens,
+	parse_options): Use uintmax_t, not unsigned int or unsigned long int,
+	for state counters.
+	(tail_bytes, tail_lines): Redo test of return value (-1, 0, 1) to
+	make it a bit clearer.
+
+	* src/hostname.c: Include "xgethostname.h".
+	(xgethostname): Remove decl; xgethostname.h has it.
+	(sethostname) [!defined(HAVE_SETHOSTNAME) && defined(HAVE_SYSINFO)
+	&& defined (HAVE_SYS_SYSTEMINFO_H) && defined(HAVE_LIMITS_H)]: Use
+	prototypes rather than K&R form.  Assume any negative value from
+	sysinfo denotes failure, not just -1.
+	(main): Simplify use of sethostname.
+
+	* src/pinky.c (include_idle, include_heading, include_fullname,
+	include_project, include_plan, include_home_and_shell, do_short_format,
+	include_where, main): Use bool for booleans.
+	(count_ampersands, create_fullname, scan_entries, short_pinky):
+	Use size_t for sizes.
+	(create_fullname): Check for overflow in size calculations.
+	(idle_string): Don't assume that the number of idle days
+	is less than 10**8 and/or INT_MAX/(24*60*60).
+	(main): No need to pass a non-NULL last arg to getopt_long.
+	* src/uptime.c (print_uptime, uptime): Use size_t for sizes.
+	(print_uptime): Remove unused local variable.
+	(main): No need to pass a non-NULL last arg to getopt_long.
+	* src/users.c (list_entries_users, users): Use size_t for sizes.
+	(list_entries_users): Use char for bytes.
+	(main): No need to pass a non-NULL last arg to getopt_long.
+	* src/who.c (do_lookup, short_list, short_output, include_idle,
+	include_heading, include_mesg, include_exit, need_boottime,
+	need_deadprocs, need_login, need_initspawn, need_clockchange,
+	need_runlevel, need_users, my_line_only, main): Use bool for booleans.
+	(print_runlevel): Use unsigned char for bytes.
+	(list_entries_who, scan_entries, who): Use size_t for sizes.
+	(main): No need to pass a non-NULL last arg to getopt_long.
+	
+	* src/install.c (isdir): Remove decl.
+	(install_file_to_path): Rely on make_path to fail if the destination
+	is not a directory, by passing preserve_existing==true to it.
+	Hence we no longer need to call isdir.
+	Free dest_dir immediately when it's no longer needed, rather than
+	waiting until the end of the function.
+	(copy_file): Don't bother calling isdir, as copy will do the
+	right thing if the destination is a directory.
+
+	* src/du.c (fts_debug, opt_all, apparent_size, opt_count_all,
+	print_grand_total, opt_separate_dirs, hash_ins, process_file, main):
+	Use bool for booleans.
+	(max_depth): Now size_t, not int, to avoid an arbitrary limit
+	of INT_MAX on depth.
+	(G_fail): Remove: no longer needed, now that the relevant
+	functions return bool.
+	(process_file): Use return value to signal success rather than
+	setting a global.  Remove first_call static var; not needed, since
+	we can look at n_alloc.  Use size_t for depths.  Remove FIXME
+	about size_t casts, as it's now fixed.  Use xnrealloc rather
+	than the obsolescent XREALLOC.  Don't bother to check whether
+	reallocation is needed unless level > prev_level.
+	(du_files): Invert sense of result, for consistency with
+	other coreutils code.  All callers changed.
+	(main): Allow --max-depth values up to SIZE_MAX.
+
+	* src/df.c (inode_format, show_all_fs, show_local_fs,
+	show_listed_fs, posix_format, require_sync, print_type,
+	selected_fstype, excluded_fstype, show_dev, show_point, main):
+	Use bool for booleans.
+	(df_readable, show_dev): Use UINTMAX_MAX instead of -1.
+	(show_dev, show_point, main):
+	Use EXIT_SUCCESS/EXIT_FAILURE instead of 0/1.
+	Don't assume disk name lengths are <= INT_MAX.
+	Rewrite pct calculation to avoid cast.
+	(show_point): Don't assume resolved length is <= SSIZE_MAX.
 
 	* src/cut.c (hash_int) [!defined UINTPTR_MAX]: Use size_t
 	instead of uintptr_t.
