@@ -14,11 +14,11 @@ trap '(exit $?); exit' 1 2 13 15
 
 framework_failure=0
 
-# Record absolute path of srcdir.
+# Record absolute path of srcdir and cd back to current dir.
 cd $srcdir || framework_failure=1
 abs_srcdir=`pwd`
-
 cd $pwd || framework_failure=1
+
 mkdir $tmp || framework_failure=1
 cd $tmp || framework_failure=1
 
