@@ -1,3 +1,21 @@
+2003-08-17  Jim Meyering  <jim@meyering.net>
+
+	Avoid unnecessary and sometimes time-consuming hostname lookups.
+	* src/who.c (print_user): Use strchr, not strrchr.
+	* src/pinky.c (print_entry): Likewise.
+	Patch by Michael Stone.
+	This fixes a typo I introduced in who-users.c on 1996-02-23.
+
+	* Makefile.maint (makefile-check): Add 0-9 to the range of characters
+	disallowed between `@...@'.
+
+2003-08-16  Paul Eggert  <eggert@twinsun.com>
+
+	* configure.ac (fu_cv_sys_truncating_statfs): Remove; now
+	done by gnulib .m4 files.
+	(jm_DUMMY_1): Require gl_READUTMP, not jm_PREREQ_READUTMP.
+	* src/sys2.h (strtoull): Remove unused declaration.
+
 2003-08-16  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.91.
