@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.1f from Makefile.am
+# Makefile.in generated automatically by automake 1.1g from Makefile.am
 
 # Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -37,6 +37,15 @@ INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 transform = @program_transform_name@
+YACC = @YACC@
+DF_PROG = @DF_PROG@
+PERL = @PERL@
+MV = @MV@
+CC = @CC@
+RANLIB = @RANLIB@
+MVDIR_PROG = @MVDIR_PROG@
+LN = @LN@
+RM = @RM@
 
 info_TEXINFOS = fileutils.texi
 
@@ -49,11 +58,10 @@ EXTRA_DIST = perm.texi getdate.texi texinfo.tex
 # and those names all map to one 14-byte name (sh-utils.info-) on some crufty
 # old systems.
 MAKEINFO = makeinfo --no-split
-mkinstalldirs = $(top_srcdir)/mkinstalldirs
+mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../config.h
 CONFIG_CLEAN_FILES = 
 TEXI2DVI = texi2dvi
-INFOS = fileutils.info fileutils.info[-0-9]*
 INFO_DEPS = fileutils.info
 DVIS = fileutils.dvi
 TEXINFOS = fileutils.texi
@@ -65,19 +73,18 @@ PACKAGE = @PACKAGE@
 VERSION = @VERSION@
 
 DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) \
-	$(TEXINFOS) $(INFOS) $(MANS) $(EXTRA_DIST)
-DEP_DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) \
-	$(TEXINFOS) $(INFO_DEPS) $(MANS) $(EXTRA_DIST)
+	$(TEXINFOS) $(MANS) $(EXTRA_DIST)
 
 TAR = tar
 default: all
 
 
 $(srcdir)/Makefile.in: @MAINT@Makefile.am $(top_srcdir)/configure.in
-	cd $(top_srcdir) && automake $(subdir)/Makefile
+	cd $(top_srcdir) && automake --strictness=gnu $(subdir)/Makefile
 
 Makefile: $(top_builddir)/config.status $(srcdir)/Makefile.in $(BUILT_SOURCES)
-	cd $(top_builddir) && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= ./config.status
+	cd $(top_builddir) \
+	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
 
 version.texi: @MAINT@stamp-vti
 
@@ -119,7 +126,7 @@ fileutils.dvi: fileutils.texi version.texi
 .texinfo.dvi:
 	TEXINPUTS=$(srcdir):$$TEXINPUTS $(TEXI2DVI) $<
 
-install-info: $(INFO_DEPS)
+install-info-am: $(INFO_DEPS)
 	$(NORMAL_INSTALL)
 	$(mkinstalldirs) $(infodir)
 	for file in $(INFO_DEPS); do \
@@ -145,6 +152,16 @@ uninstall-info:
 	  test -z $ii || install-info --info-dir=$(infodir) --remove $$file; \
 	done
 
+dist-info: $(INFO_DEPS)
+	for base in $(INFO_DEPS); do \
+	  d=$(srcdir); \
+	  for file in `cd $$d && eval echo $$base*`; do \
+	    test -f $(distdir)/$$file \
+	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
+	    || cp -p $$d/$$file $(distdir)/$$file; \
+	  done; \
+	done
+
 mostlyclean-info:
 	rm -f fileutils.aux fileutils.cp fileutils.cps fileutils.dvi \
 	  fileutils.fn fileutils.fns fileutils.ky fileutils.log \
@@ -156,7 +173,7 @@ clean-info:
 distclean-info:
 
 maintainer-clean-info:
-	rm -f $(INFOS)
+	for i in $(INFO_DEPS); do rm `eval echo $i*`; done
 tags: TAGS
 TAGS:
 
@@ -164,12 +181,14 @@ TAGS:
 distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
 
 subdir = doc
-distdir: $(DEP_DISTFILES)
-	@for file in `cd $(srcdir) && echo $(DISTFILES)`; do \
+distdir: $(DISTFILES)
+	@for file in $(DISTFILES); do \
+	  d=$(srcdir); \
 	  test -f $(distdir)/$$file \
-	  || ln $(srcdir)/$$file $(distdir)/$$file 2> /dev/null \
-	  || cp -p $(srcdir)/$$file $(distdir)/$$file; \
+	  || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
+	  || cp -p $$d/$$file $(distdir)/$$file; \
 	done
+	$(MAKE) distdir="$(distdir)" dist-info
 info: $(INFO_DEPS)
 dvi: $(DVIS)
 check: all
@@ -177,7 +196,7 @@ installcheck:
 install-exec: 
 	$(NORMAL_INSTALL)
 
-install-data: install-info
+install-data: install-info-am
 	$(NORMAL_INSTALL)
 
 install: install-exec install-data all
@@ -220,7 +239,7 @@ maintainer-clean:  maintainer-clean-vti maintainer-clean-info \
 	@echo "it deletes files that may require special tools to rebuild."
 
 .PHONY: default mostlyclean-vti distclean-vti clean-vti \
-maintainer-clean-vti install-info uninstall-info mostlyclean-info \
+maintainer-clean-vti install-info-am uninstall-info mostlyclean-info \
 distclean-info clean-info maintainer-clean-info tags distdir info dvi \
 check installcheck install-exec install-data install uninstall all \
 installdirs mostlyclean-generic distclean-generic clean-generic \
