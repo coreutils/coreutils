@@ -1,5 +1,8 @@
 Wed May 15 22:54:31 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
+	* fsusage.c (get_fs_usage): Declare parameter PATH to be const.
+	* fsusage.h: Update prototype to match.
+
 	* chmod.c (describe_change): Declare pointer parameters to be const.
 	(change_file_mode): Likewise.
 	(change_dir_mode): Likewise.
