@@ -1,5 +1,8 @@
 #!/bin/sh
-# make sure touch succeeds with a single 8- or 10-digit file name argument
+# Test touch with obsolescent 8- or 10-digit time stamps.
+
+_POSIX2_VERSION=199209; export _POSIX2_VERSION
+POSIXLY_CORRECT=1; export POSIXLY_CORRECT
 
 if test "$VERBOSE" = yes; then
   set -x
@@ -22,9 +25,15 @@ fi
 
 fail=0
 
+yearstart=01010000
+
 for ones in 11111111 1111111111; do
-  touch $ones || fail=1
-  test -f $ones || fail=1
+  for args in $ones "-- $ones" "$yearstart $ones" "-- $yearstart $ones"; do
+    touch $args || fail=1
+    test -f $ones || fail=1
+    test -f $yearstart && fail=1
+    rm -f $ones || fail=1
+  done
 done
 
 (exit $fail); exit $fail
