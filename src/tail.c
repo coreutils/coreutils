@@ -876,7 +876,7 @@ parse_obsolescent_option (int argc, const char *const *argv,
   if (argc < 2)
     return 0;
 
-  if ( ! (p[0] == '+' || (p[0] == '-' && ISDIGIT (p[1])))
+  if ( ! (p[0] == '+' || (p[0] == '-' && ISDIGIT (p[1]))) )
     return 0;
 
   if (*p == '+')
