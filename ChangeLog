@@ -1,6 +1,11 @@
-2003-03-30  Jim Meyering  <jim@meyering.net>
+2003-04-02  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.
+
+	* src/Makefile.am (false.c): Change all occurrences of
+	`(EXIT_SUCCESS)' to `(EXIT_FAILURE)'.  Reported by Paul Jarc,
+
+2003-03-30  Jim Meyering  <jim@meyering.net>
 
 	* NEWS: Note the location of older NEWS files.
 
