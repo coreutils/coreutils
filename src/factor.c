@@ -182,6 +182,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  atexit (close_stdout);
+
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 		      AUTHORS, usage);
   /* The above handles --help and --version.
@@ -203,8 +205,6 @@ main (int argc, char **argv)
     }
   if (fail)
     usage (1);
-
-  close_stdout ();
 
   exit (fail);
 }
