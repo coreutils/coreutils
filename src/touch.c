@@ -41,7 +41,7 @@
 #include "closeout.h"
 #include "error.h"
 #include "argmatch.h"
-#include "get-date.h"
+#include "getdate.h"
 
 #ifndef STDC_HEADERS
 time_t time ();
