@@ -265,19 +265,21 @@ cat (
 	  if (outbuf + outsize <= bpout)
 	    {
 	      char *wp = outbuf;
+	      size_t remaining_bytes;
 	      do
 		{
 		  if (full_write (STDOUT_FILENO, wp, outsize) != outsize)
 		    error (EXIT_FAILURE, errno, _("write error"));
 		  wp += outsize;
+		  remaining_bytes = bpout - wp;
 		}
-	      while (wp + outsize <= bpout);
+	      while (outsize <= remaining_bytes);
 
 	      /* Move the remaining bytes to the beginning of the
 		 buffer.  */
 
-	      memmove (outbuf, wp, bpout - wp);
-	      bpout = outbuf + (bpout - wp);
+	      memmove (outbuf, wp, remaining_bytes);
+	      bpout = outbuf + remaining_bytes;
 	    }
 
 	  /* Is INBUF empty?  */
