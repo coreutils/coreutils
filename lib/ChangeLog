@@ -1,10 +1,13 @@
 2004-12-05  Jim Meyering  <jim@meyering.net>
 
-	* __fpending.c: Include <stdlib.h>.
-	(__fpending): Abort if PENDING_OUTPUT_N_BYTES is negative.
+	* Makefile.am (unit-test): New target.
+	(check): Depend on it.
+	(noinst_PROGRAMS): Define.
+
+	* t-fpending.c: New file.  Test the __fpending function.
 	This ensures that if there is an error in the definition of the
 	PENDING_OUTPUT_N_BYTES expression, we'll find about it right away;
-	this value is used only in the rare event that close_stdout's
+	that value is used only in the rare event that close_stdout's
 	fclose fails with EBADF.
 
 2004-12-02  Paul Eggert  <eggert@cs.ucla.edu>
