@@ -1,5 +1,5 @@
 /* dd -- convert a file while copying it.
-   Copyright (C) 85, 90, 91, 1995-1999 Free Software Foundation, Inc.
+   Copyright (C) 85, 90, 91, 1995-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -381,16 +381,16 @@ quit (int code)
 static RETSIGTYPE
 interrupt_handler (int sig)
 {
-#ifdef SA_INTERRUPT
+#ifdef SA_NOCLDSTOP
   struct sigaction sigact;
 
   sigact.sa_handler = SIG_DFL;
   sigemptyset (&sigact.sa_mask);
   sigact.sa_flags = 0;
   sigaction (sig, &sigact, NULL);
-#else				/* !SA_INTERRUPT */
+#else
   signal (sig, SIG_DFL);
-#endif				/* SA_INTERRUPT */
+#endif
   cleanup ();
   kill (getpid (), sig);
 }
@@ -406,7 +406,7 @@ siginfo_handler (int sig ATTRIBUTE_UNUSED)
 static void
 install_handler (int sig_num, RETSIGTYPE (*sig_handler) (int sig))
 {
-#ifdef _POSIX_VERSION
+#ifdef SA_NOCLDSTOP
   struct sigaction sigact;
   sigaction (sig_num, NULL, &sigact);
   if (sigact.sa_handler != SIG_IGN)
