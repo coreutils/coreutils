@@ -1,4 +1,6 @@
 User-visible changes in release 1.15
+* diagnose some improper or questionable invokations of csplit
+* properly handle `echo |csplit - 1 1', rather than aborting
 * join without -t now ignores leading blanks
 * sort accepts new option: -z for NUL terminated records
 * join accepts new option: --ignore-case, -i
