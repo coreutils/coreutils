@@ -1,3 +1,26 @@
+Sat Jan 08 22:22:45 1994  Jim Meyering  (meyering@comco.com)
+
+	* cat.c: Use full_write and safe_read instead of write and read resp.
+	* csplit.c: Ditto.
+	* head.c: Ditto.
+	* split.c: Ditto.
+	* tac.c: Ditto.
+
+	* sum.c: Use safe_read instead of read.
+	* tr.c: Ditto.
+	* wc.c: Ditto.
+
+	* tail.c: Replace calls to xwrite with calls to fwrite.
+	Use fopen/fclose instead of open/close.
+	(write_header): Use a single call to printf instead of four to xwrite.
+	Use safe_read instead of read.
+	* head.c: Ditto.
+
+Tue Dec 28 15:49:32 1993  Jim Meyering  (meyering@comco.com)
+
+	* install.sh: New file.
+	Makefile.in [DISTFILES]: Add it.
+
 Wed Dec 22 18:52:44 1993  Jim Meyering  (meyering@comco.com)
 
 	* memcmp.c: Use the latest version from the GNU C library.
