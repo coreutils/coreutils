@@ -23,6 +23,8 @@
 
 #if HAVE_INTTYPES_H
 # include <inttypes.h>
+#elif HAVE_STDINT_H
+# include <stdint.h>
 #endif
 
 #define __strtol strtoimax
