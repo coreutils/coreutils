@@ -1,3 +1,9 @@
+/* TODO:
+   - use getopt_long
+   - use error
+   - cvt strings for gettext
+ */
+
 /*
  * sterilize.c - by Colin Plumb.
  *
@@ -53,6 +59,9 @@
  *   I'd prefer to do it in one source file if possible.
  */
 
+
+#include <config.h>
+#include <getopt.h>
 #include <sys/stat.h>		/* For struct stat */
 #include <sys/time.h>		/* For struct timeval */
 #include <stdio.h>
@@ -63,6 +72,9 @@
 #include <string.h>		/* For strlen(), memcpy(), memset(), etc. */
 #include <limits.h>		/* For UINT_MAX, etc. */
 #include <errno.h>		/* For errno */
+
+#include "system.h"
+#include "error.h"
 
 static char const version_string[] =
 "sterilize 1.02";
@@ -81,21 +93,27 @@ static char const version_string[] =
  *
  * This generator is based somewhat on RC4, but has analysis
  * (http://ourworld.compuserve.com/homepages/bob_jenkins/randomnu.htm)
- * pointing to it actually being better.  I like because it's nice and
- * fast, and because the author did good work analyzing it.
+ * pointing to it actually being better.  I like it because it's nice
+ * and fast, and because the author did good work analyzing it.
  * --------------------------------------------------------------------
  */
 
 #if ULONG_MAX == 0xffffffff
 typedef unsigned long word32;
-#elif UINT_MAX == 0xffffffff
-typedef unsigned word32;
-#elif USHRT_MAX == 0xffffffff
-typedef unsigned short word32;
-#elif UCHAR_MAX == 0xffffffff
-typedef unsigned char word32;
 #else
-# error No 32-bit type available!
+# if UINT_MAX == 0xffffffff
+typedef unsigned word32;
+# else
+#  if USHRT_MAX == 0xffffffff
+typedef unsigned short word32;
+#  else
+#   if UCHAR_MAX == 0xffffffff
+typedef unsigned char word32;
+#   else
+#    error No 32-bit type available!
+#   endif
+#  endif
+# endif
 #endif
 
 /* Size of the state tables to use.  (You may change ISAAC_LOG) */
@@ -1277,7 +1295,8 @@ main (int argc, char **argv)
 		     "\n"
 	      "  -          Sterilize standard input (but don't delete it)\n"
 		     "             This will error unless you use <>file, a safety feature\n"
-		     "  -NUM       Overwrite NUM times instead of the default (25)\n"
+		     "  -NUM    cppi: standard input: line 101: unterminated #if
+   Overwrite NUM times instead of the default (25)\n"
 		     "  -d         Allow operation on devices (devices are never deleted)\n"
 		     "  -f         Force, change permissions to allow writing if necessary\n"
 	      "  -p         Preserve, do not delete file after overwriting\n"
