@@ -423,6 +423,7 @@ docolon (VALUE *sv, VALUE *pv)
   re_buffer.allocated = 2 * len;
   re_buffer.buffer = (unsigned char *) xmalloc (re_buffer.allocated);
   re_buffer.translate = 0;
+  re_syntax_options = RE_SYNTAX_POSIX_BASIC;
   errmsg = re_compile_pattern (pv->u.s, len, &re_buffer);
   if (errmsg)
     error (2, 0, "%s", errmsg);
