@@ -1,3 +1,6 @@
+	* unexpand.c: Reorder functions to obviate forward dcls.  Remove
+	forward dcls.  Protoize.  Add `const' attribute to some parameters.
+	
 Mon Oct 30 23:15:56 1995  Jim Meyering  (meyering@comco.com)
 
 	* wc.c: Reorder functions to obviate forward dcls.  Remove
