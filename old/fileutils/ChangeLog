@@ -1,3 +1,10 @@
+2001-11-06  Jim Meyering  <meyering@lucent.com>
+
+	* Version 4.1.2.
+
+	* src/dircolors.hin: Remove duplicate entry for .png.
+	Reported by Frédéric L. W. Meunier.
+
 2001-11-03  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.1.
