@@ -8,6 +8,12 @@
 	* tests/shred/remove: Use $file, not $tmp/file.  Exit 77 if run as
 	root.
 
+1999-12-20  Paul Eggert  <eggert@twinsun.com>
+
+	* src/df.c (ceil_percent): Remove.
+	(show_dev): Avoid overflow problems when calculating percent.
+	Do not display negative percents.
+
 1999-12-19  Jim Meyering  <meyering@ascend.com>
 
 	* Version 4.0l.
