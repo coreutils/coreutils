@@ -8,18 +8,18 @@ dnl the same distribution terms as the rest of that program.
 
 AC_DEFUN([gl_MOUNTLIST],
 [
-  gl_LIST_MOUNTED_FILESYSTEMS([gl_cv_list_mounted_fs=yes],
-                              [gl_cv_list_mounted_fs=no])
+  gl_LIST_MOUNTED_FILE_SYSTEMS([gl_cv_list_mounted_fs=yes],
+                       	       [gl_cv_list_mounted_fs=no])
   if test $gl_cv_list_mounted_fs = yes; then
     AC_LIBOBJ(mountlist)
     gl_PREREQ_MOUNTLIST_EXTRA
   fi
 ])
 
-# Prerequisites of lib/mountlist.c not done by gl_LIST_MOUNTED_FILESYSTEMS.
+# Prerequisites of lib/mountlist.c not done by gl_LIST_MOUNTED_FILE_SYSTEMS.
 AC_DEFUN([gl_PREREQ_MOUNTLIST_EXTRA],
 [
-  dnl Note gl_LIST_MOUNTED_FILESYSTEMS checks for mntent.h, not sys/mntent.h.
+  dnl Note gl_LIST_MOUNTED_FILE_SYSTEMS checks for mntent.h, not sys/mntent.h.
   AC_CHECK_HEADERS_ONCE(fcntl.h unistd.h)
   AC_CHECK_HEADERS(sys/mntent.h)
   gl_FSTYPENAME
