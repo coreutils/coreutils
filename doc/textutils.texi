@@ -1259,6 +1259,10 @@ less than @var{bytes} bytes of the line are left, then continue
 normally.  @var{bytes} has the same format as for the @samp{--bytes}
 option.
 
+@itemx --verbose=@var{bytes}
+@opindex --verbose
+Write a diagnostic to standard error just before each output file is opened.
+
 @end table
 
 
