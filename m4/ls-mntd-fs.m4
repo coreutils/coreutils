@@ -1,4 +1,4 @@
-#serial 3
+#serial 4
 
 dnl From Jim Meyering.
 dnl
@@ -197,6 +197,22 @@ if test -z "$ac_list_mounted_fs"; then
     AC_DEFINE(MOUNTED_GETMNT, 1,
       [Define if there is a function named getmnt for reading the list of
    mounted filesystems.  (Ultrix)])
+  fi
+fi
+
+if test -z "$ac_list_mounted_fs"; then
+  # BeOS
+  AC_MSG_CHECKING([for next_dev function])
+  AC_CACHE_VAL(fu_cv_sys_mounted_next_dev,
+    [AC_TRY_CPP([#include <fs_info.h>],
+       fu_cv_sys_mounted_next_dev=yes,
+       fu_cv_sys_mounted_next_dev=no)])
+  AC_MSG_RESULT($fu_cv_sys_mounted_next_dev)
+  if test $fu_cv_sys_mounted_next_dev = yes; then
+    ac_list_mounted_fs=found
+    AC_DEFINE(MOUNTED_NEXT_DEV, 1,
+      [Define if there are functions named next_dev and fs_stat_dev for
+   reading the list of mounted filesystems.  (BeOS)])
   fi
 fi
 
