@@ -1,5 +1,5 @@
 /* install - copy files and set attributes
-   Copyright (C) 89, 90, 91, 95, 96, 97, 1998 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 95, 96, 97, 1998, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -119,10 +119,8 @@ gid_t getgid ();
 /* Number of bytes of a file to copy at a time. */
 #define READ_SIZE (32 * 1024)
 
-char *base_name ();
 int full_write ();
 int isdir ();
-enum backup_type get_version ();
 
 int stat ();
 
@@ -138,7 +136,7 @@ static int install_file_in_file PARAMS ((const char *from, const char *to,
 					 const struct cp_options *x));
 static void get_ids PARAMS ((void));
 static void strip PARAMS ((const char *path));
-static void usage PARAMS ((int status));
+void usage PARAMS ((int status));
 
 /* The name this program was run with, for error messages. */
 char *program_name;
@@ -254,10 +252,12 @@ main (int argc, char **argv)
   dir_arg = 0;
   umask (0);
 
+  /* FIXME: consider not calling getenv for SIMPLE_BACKUP_SUFFIX unless
+     we'll actually use simple_backup_suffix.  */
   version = getenv ("SIMPLE_BACKUP_SUFFIX");
   if (version)
     simple_backup_suffix = version;
-  version = getenv ("VERSION_CONTROL");
+  version = NULL;
 
   while ((optc = getopt_long (argc, argv, "bcsDdg:m:o:pvV:S:", long_options,
 			      NULL)) != -1)
@@ -321,7 +321,7 @@ main (int argc, char **argv)
     error (1, 0,
 	   _("the strip option may not be used when installing a directory"));
 
-  x.backup_type = (make_backups ? get_version (version) : none);
+  x.backup_type = xget_version ("--version-control", version);
 
   n_files = argc - optind;
   file = argv + optind;
@@ -632,7 +632,7 @@ get_ids (void)
     group_id = (gid_t) -1;
 }
 
-static void
+void
 usage (int status)
 {
   if (status != 0)
@@ -674,9 +674,10 @@ In the third format, create all components of the given DIRECTORY(ies).\n\
 The backup suffix is ~, unless set with SIMPLE_BACKUP_SUFFIX.  The\n\
 version control may be set with VERSION_CONTROL, values are:\n\
 \n\
-  t, numbered     make numbered backups\n\
-  nil, existing   numbered if numbered backups exist, simple otherwise\n\
-  never, simple   always make simple backups\n\
+  none, off       never make backups (even if --backup is given)\n\
+  numbered, t     make numbered backups\n\
+  existing, nil   numbered if numbered backups exist, simple otherwise\n\
+  simple, never   always make simple backups\n\
 "));
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
       close_stdout ();
