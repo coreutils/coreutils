@@ -1,6 +1,7 @@
 2002-12-01  Jim Meyering  <jim@meyering.net>
 
 	* safe-read.c: Merge from gnulib.
+	(safe_read): Also exit the loop when read returns zero.
 	(CHAR_BIT, TYPE_SIGNED, TYPE_MINIMUM, TYPE_MAXIMUM, INT_MAX): Define.
 
 	* Makefile.am (libfetish_a_SOURCES): Add safe-write.c and safe-write.h.
