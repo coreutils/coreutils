@@ -1,7 +1,7 @@
-#ifndef _xstrtoul_h_
-# define _xstrtoul_h_ 1
+#ifndef XSTRTOUL_H_
+# define XSTRTOUL_H_ 1
 
 # define STRING_TO_UNSIGNED 1
 # include "xstrtol.h"
 
-#endif /* _xstrtoul_h_ */
+#endif /* not XSTRTOUL_H_ */
