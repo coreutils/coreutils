@@ -230,7 +230,7 @@ my @tv = (
 ['10ma', '-m -l 17 -f', [\'tFFt-lm', \'loli'], [\'ml17f-lm-lo'], 0],
 ['10mb', '-w 35 -m -l 17 -f', [\'tFFt-lm', \'loli'], [\'w35ml17f-lm-lo'], 0],
 ['10mc', '-j -m -l 17 -f', [\'tFFt-lm', \'loli'], [\'jml17f-lm-lo'], 0],
-['10md', '-w 35 -j -m -l 17 -f', [\'tFFt-lm', \'loli'], [\'w35jml17f-lm-lo'], 0],
+['10md', '-w 35 -j -m -l 17 -f', [\'tFFt-lm', \'loli'], [\'w35jml17f-lmlo'], 0],
 ['10me', '-n.3 -j -m -l 17 -f', [\'tFFt-lm', \'tFFt-lm', \'loli'], [\'njml17f-lm-lm-lo'], 0],
 ['10mf', '-n.3 -j -m -l 17 -f', [\'tFFt-lm', \'loli', \'tFFt-lm'], [\'njml17f-lm-lo-lm'], 0],
 ['10aa', '-a -3 -l 17 -f', [\'tFFt-lm'], [\'a3l17f-lm'], 0],
