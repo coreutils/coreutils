@@ -32,6 +32,8 @@ use strict;
 
 (my $ME = $ENV{ARGV_0}) =~ s|.*/||;
 
+my $verbose = $ENV{VERBOSE} && $ENV{VERBOSE} eq 'yes';
+
 # Ensure that the diagnostics are in English.
 $ENV{LC_ALL} = 'C';
 
