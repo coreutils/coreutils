@@ -1,11 +1,14 @@
 2002-09-29  Jim Meyering  <meyering@lucent.com>
 
+	* Version 4.5.2.
+
+	* src/tr.c (find_bracketed_repeat): Rearrange pointer/integer
+	expression to avoid bogus warning from gcc.
+
 	* src/cat.c (simple_cat): Use a temporary to avoid bogus warnings.
 	(cat): Declare insize and outsize to be of type size_t, not int.
 	Rearrange pointer/integer expressions to avoid bogus warnings.
 	(main): Declare insize and outsize to be of type size_t, not int.
-
-	* Version 4.5.2.
 
 	* src/tail.c (parse_options): Give a sensible diagnostic for
 	an invalid byte or line count.  Reported by Mikko Tuumanen.
@@ -18,9 +21,9 @@
 	In move mode, always first try to rename.  Before, upon failure to
 	rename a directory, this code would never attempt to rename any
 	other file in that directory, but would thenceforth always copy.
-	On some systems (NetApp version ??), renaming a directory may fail
-	with EXDEV, yet renaming files within that directory to a newly-
-	created destination directory succeeds.
+	On some systems (e.g., NetApp's OnTap-6.4), renaming a directory
+	may fail with EXDEV, yet renaming files within that directory to
+	a newly-created destination directory succeeds.
 	* src/copy.c (copy_internal): Remove local, move_mode;
 	use x->move_mode instead.  Based on a patch from Tom Haynes.
 
