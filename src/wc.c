@@ -79,9 +79,9 @@ Usage: %s [OPTION]... [FILE]...\n\
 Print line, word, and byte counts for each FILE, and a total line if\n\
 more than one FILE is specified.  With no FILE, or when FILE is -,\n\
 read standard input.\n\
+  -c, --bytes, --chars   print the byte counts\n\
   -l, --lines            print the newline counts\n\
   -w, --words            print the word counts\n\
-  -c, --bytes, --chars   print the byte counts\n\
       --help             display this help and exit\n\
       --version          output version information and exit\n\
 "));

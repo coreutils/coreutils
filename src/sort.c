@@ -221,8 +221,6 @@ Usage: %s [OPTION]... [FILE]...\n\
 Write sorted concatenation of all FILE(s) to standard output.\n\
 \n\
   +POS1 [-POS2]    start a key at POS1, end it before POS2\n\
-  -M               compare (unknown) < `JAN' < ... < `DEC', imply -b\n\
-  -T DIRECT        use DIRECT for temporary files, not $TMPDIR or %s\n\
   -b               ignore leading blanks in sort fields or keys\n\
   -c               check if given files already sorted, do not sort\n\
   -d               consider only [a-zA-Z0-9 ] characters in keys\n\
@@ -231,11 +229,13 @@ Write sorted concatenation of all FILE(s) to standard output.\n\
   -i               consider only [\\040-\\0176] characters in keys\n\
   -k POS1[,POS2]   same as +POS1 [-POS2], but all positions counted from 1\n\
   -m               merge already sorted files, do not sort\n\
+  -M               compare (unknown) < `JAN' < ... < `DEC', imply -b\n\
   -n               compare according to string numerical value, imply -b\n\
   -o FILE          write result on FILE instead of standard output\n\
   -r               reverse the result of comparisons\n\
   -s               stabilize sort by disabling last resort comparison\n\
   -t SEP           use SEParator instead of non- to whitespace transition\n\
+  -T DIRECT        use DIRECT for temporary files, not $TMPDIR or %s\n\
   -u               with -c, check for strict ordering\n\
   -u               with -m, only output the first of an equal sequence\n\
   -z               end lines with 0 byte, not newline, for find -print0\n\

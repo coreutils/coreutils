@@ -290,11 +290,11 @@ If no FILE or if FILE is `-', read standard input.\n\
 \n\
 Mandatory arguments to long options are mandatory for short options too.\n\
   -c, --crown-margin        preserve indentation of first two lines\n\
+  -p, --prefix=STRING       combine only lines having STRING as prefix\n\
   -s, --split-only          split long lines, but do not refill\n\
   -t, --tagged-paragraph    indentation of first line different from second\n\
   -u, --uniform-spacing     one space between words, two after sentences\n\
   -w, --width=NUMBER        maximum line width (default of 75 columns)\n\
-  -p, --prefix=STRING       combine only lines having STRING as prefix\n\
       --help                display this help and exit\n\
       --version             output version information and exit\n\
 \n\

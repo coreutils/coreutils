@@ -338,8 +338,8 @@ Write an unambiguous representation, octal bytes by default, of FILE\n\
 to standard output.  With no FILE, or when FILE is -, read standard input.\n\
 \n\
   -A, --address-radix=RADIX   decide how file offsets are printed\n\
-  -N, --read-bytes=BYTES      limit dump to BYTES input bytes per file\n\
   -j, --skip-bytes=BYTES      skip BYTES input bytes first on each file\n\
+  -N, --read-bytes=BYTES      limit dump to BYTES input bytes per file\n\
   -s, --strings[=BYTES]       output strings of at least BYTES graphic chars\n\
   -t, --format=TYPE           select output format or formats\n\
   -v, --output-duplicates     do not use * to mark line suppression\n\

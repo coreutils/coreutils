@@ -1860,12 +1860,12 @@ Paginate or columnate FILE(s) for printing.\n\
 \n\
   +PAGE             begin printing with page PAGE\n\
   -COLUMN           produce COLUMN-column output and print columns down\n\
-  -F, -f            simulate formfeed with newlines on output\n\
   -a                print columns across rather than down\n\
   -b                balance columns on the last page\n\
   -c                use hat notation (^G) and octal backslash notation\n\
   -d                double space the output\n\
   -e[CHAR[WIDTH]]   expand input CHARs (TABs) to tab WIDTH (8)\n\
+  -f, -F            simulate formfeed with newlines on output\n\
   -h HEADER         use HEADER instead of filename in page headers\n\
   -i[CHAR[WIDTH]]   replace spaces with CHARs (TABs) to tab WIDTH (8)\n\
   -l PAGE_LENGTH    set the page length to PAGE_LENGTH (66) lines\n\

@@ -108,8 +108,8 @@ Print or check MD5 checksums.\n\
 With no FILE, or when FILE is -, read standard input.\n\
 \n\
   -b, --binary            read files in binary mode\n\
-  -t, --text              read files in text mode (default)\n\
   -c, --check             check MD5 sums against given list\n\
+  -t, --text              read files in text mode (default)\n\
 \n\
 The following two options are useful only when verifying checksums:\n\
       --status            don't output anything, status code shows success\n\
