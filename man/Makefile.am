@@ -130,7 +130,7 @@ mapped_name = `echo $*|sed 's/install/ginstall/'`
 	    --output=$@ $t/$*$(EXEEXT);		\
 	rm -rf $t
 
-check-local: check-x-vs-1
+check-local: check-x-vs-1 check-programs-vs-1
 
 # Ensure that for each .x file in this directory, there is a
 # corresponding .1 file in the definition of $(dist_man_MANS) above.
@@ -142,3 +142,17 @@ check-x-vs-1:
 	echo $(dist_man_MANS) | fmt -w1 | sed 's/\.1$$//' | sort -u	\
 	  | diff - $$t || { rm $$t; exit 1; };				\
 	rm $$t
+
+programs =								\
+  echo 'spy:;@echo $$(all_programs)'					\
+    | MAKEFLAGS= $(MAKE) -s -C $(srcdir)/../src -f Makefile -f - spy	\
+    | fmt -1 | sort -u
+
+.PHONY: check-programs-vs-1
+check-programs-vs-1:
+	for p in `$(programs)`; do			\
+	  test $$p = ginstall && p=install || : ;	\
+	  test -f $(srcdir)/$$p.1			\
+	    || { echo missing $$p.1 1>&2; missing=1; };	\
+	done;						\
+	test "$$missing" = 1 && exit 1 || :
