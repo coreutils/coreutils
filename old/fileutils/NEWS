@@ -1,7 +1,7 @@
 Changes in release 3.17:
+[3.16g]
 * ln --backup is now consistent with cp and mv in that --force is no longer
   required when the destination is an existing non-directory.
-[3.16f]
 * install accepts new option, --verbose (-v)
 * mkdir -p is a lot faster when creating very deep directories on some systems
 * rm -i no longer exits with status indicating failure solely because the
