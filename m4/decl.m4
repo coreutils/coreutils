@@ -1,13 +1,7 @@
-#serial 3
+#serial 5
 
 AC_DEFUN(jm_CHECK_DECLARATION,
 [
-  AC_REQUIRE([AC_HEADER_STDC])dnl
-  test -z "$ac_cv_header_memory_h" && AC_CHECK_HEADERS(memory.h)
-  test -z "$ac_cv_header_string_h" && AC_CHECK_HEADERS(string.h)
-  test -z "$ac_cv_header_strings_h" && AC_CHECK_HEADERS(strings.h)
-  test -z "$ac_cv_header_stdlib_h" && AC_CHECK_HEADERS(stdlib.h)
-  test -z "$ac_cv_header_unistd_h" && AC_CHECK_HEADERS(unistd.h)
   AC_MSG_CHECKING([whether $1 is declared])
   AC_CACHE_VAL(jm_cv_func_decl_$1,
     [AC_TRY_COMPILE($2,
