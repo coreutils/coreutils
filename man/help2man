@@ -27,7 +27,7 @@ use Text::Tabs qw(expand);
 use POSIX qw(strftime setlocale LC_TIME);
 
 my $this_program = 'help2man';
-my $this_version = '1.015';
+my $this_version = '1.018';
 my $version_info = <<EOT;
 $this_program $this_version
 
@@ -56,15 +56,15 @@ EXECUTABLE should accept `--help' and `--version' options.
 EOT
 
 my $section = 1;
-my ($include, $opt_name, $opt_include, $opt_output, $opt_no_info);
+my ($opt_name, @opt_include, $opt_output, $opt_no_info);
 
 # Parse options.
 Getopt::Long::config('bundling');
 GetOptions (
     'n|name=s'		=> \$opt_name,
     's|section=s'	=> \$section,
-    'i|include=s'	=> \$include,
-    'I|opt-include=s'	=> \$opt_include,
+    'i|include=s'	=> sub { push @opt_include, [ pop, 1 ] },
+    'I|opt-include=s'	=> sub { push @opt_include, [ pop, 0 ] },
     'o|output=s'	=> \$opt_output,
     'N|no-info'		=> \$opt_no_info,
     help		=> sub { print $help_info; exit },
@@ -74,50 +74,82 @@ GetOptions (
 die $help_info unless @ARGV == 1;
 
 my %include = ();
+my %append = ();
 my @include = (); # retain order given in include file
+
+# Provide replacement `quote-regex' operator for pre-5.005.
+BEGIN { eval q(sub qr { '' =~ $_[0]; $_[0] }) if $] < 5.005 } 
 
 # Process include file (if given).  Format is:
 #
-# [section name]
-# verbatim text
+#   [section name]
+#   verbatim text
+#
+# or
+#
+#   /pattern/
+#   verbatim text
+#
 
-if ($include or $opt_include)
+for (@opt_include)
 {
-    if (open INC, $include || $opt_include)
+    my ($inc, $required) = @$_;
+
+    next unless -f $inc or $required;
+    die "$this_program: can't open `$inc' ($!)\n"
+	unless open INC, $inc;
+
+    my $key;
+    my $hash = \%include;
+
+    while (<INC>)
     {
-	my $sect;
-
-	while (<INC>)
+	# [section]
+	if (/^\[([^]]+)\]/)
 	{
-	    if (/^\[([^]]+)\]/)
-	    {
-		$sect = uc $1;
-		$sect =~ s/^\s+//;
-		$sect =~ s/\s+$//;
-		next;
-	    }
-
-	    # Silently ignore anything before the first
-	    # section--allows for comments and revision info.
-	    next unless $sect;
-
-	    push @include, $sect unless $include{$sect};
-	    $include{$sect} ||= '';
-	    $include{$sect} .= $_;
+	    $key = uc $1;
+	    $key =~ s/^\s+//;
+	    $key =~ s/\s+$//;
+	    $hash = \%include;
+	    push @include, $key unless $include{$key};
+	    next;
 	}
 
-	close INC;
+	# /pattern/
+	if (m!^/(.*)/([ims]*)!)
+	{
+	    my $pat = $2 ? "(?$2)$1" : $1;
 
-	die "$this_program: no valid information found in `$include'\n"
-	    unless %include;
+	    # Check pattern.
+	    eval { $key = qr($pat) };
+	    if ($@)
+	    {
+		$@ =~ s/ at .*? line \d.*//;
+		die "$inc:$.:$@";
+	    }
 
-	# Compress trailing blank lines.
-	for (keys %include) { $include{$_} =~ s/\n+$/\n/ }
+	    $hash = \%append;
+	    next;
+	}
+
+	# Silently ignore anything before the first
+	# section--allows for comments and revision info.
+	next unless $key;
+
+	$hash->{$key} ||= '';
+	$hash->{$key} .= $_;
     }
-    else
-    {
-	die "$this_program: can't open `$include' ($!)\n" if $include;
-    }
+
+    close INC;
+
+    die "$this_program: no valid information found in `$inc'\n"
+	unless $key;
+}
+
+# Compress trailing blank lines.
+for my $hash (\(%include, %append))
+{
+    for (keys %$hash) { $hash->{$_} =~ s/\n+$/\n/ }
 }
 
 # Turn off localisation of executable's ouput.
@@ -194,13 +226,14 @@ $include{NAME} ||= "$program \\- manual page for $program $version\n";
 my $PROGRAM = uc $program;
 
 # Extract usage clause(s) [if any] for SYNOPSIS.
-if ($help_text =~ s/^Usage: +(\S.*)(\n *or: +\S.*)*//m)
+if ($help_text =~ s/^Usage:( +(\S+))(.*)((?:\n(?: {6}\1| *or: +\S).*)*)//m)
 {
-    my @syn = $1;
+    my @syn = $2 . $3;
 
-    if ($_ = $2)
+    if ($_ = $4)
     {
-	for (split /\n/) { push @syn, $1 if /or: +(\S.*)/ }
+	s/^\n//;
+	for (split /\n/) { s/^ *(or: +)?//; push @syn, $_ }
     }
 
     my $synopsis = '';
@@ -238,6 +271,9 @@ s/\n\n+/\n\n/g;
 s/^\./\x80/mg;
 s/\\/\x81/g;
 
+# Start a new paragraph (if required) for these.
+s/([^\n])\n(Report +bugs|Email +bug +reports +to|Written +by)/$1\n\n$2/g;
+
 sub convert_option;
 
 while (length)
@@ -250,7 +286,7 @@ while (length)
     }
 
     # Copyright section
-    if (/^Copyright [\(\xa9]/)
+    if (/^Copyright +[(\xa9]/)
     {
 	$sect = 'COPYRIGHT';
 	$include{$sect} ||= '';
@@ -266,11 +302,11 @@ while (length)
 
 	    # Convert iso9959-1 copyright symbol or (c) to nroff
 	    # character.
-	    s/^Copyright (?:\xa9|\([Cc]\))/Copyright \\(co/mg;
+	    s/^Copyright +(?:\xa9|\([Cc]\))/Copyright \\(co/mg;
 
 	    # Insert line breaks before additional copyright messages
 	    # and the disclaimer.
-	    s/(.)\n(Copyright |This is free software)/$1\n.br\n$2/g;
+	    s/(.)\n(Copyright |This +is +free +software)/$1\n.br\n$2/g;
 
 	    # Join hyphenated lines.
 	    s/([A-Za-z])-\n */$1/g;
@@ -282,7 +318,7 @@ while (length)
     }
 
     # Catch bug report text.
-    if (/^Report bugs |^Email bug reports to /)
+    if (/^(Report +bugs|Email +bug +reports +to) /)
     {
 	$sect = 'REPORTING BUGS';
     }
@@ -310,19 +346,39 @@ while (length)
 	next;
     }
 
+    my $matched = '';
     $include{$sect} ||= '';
+
     # Sub-sections have a trailing colon and the second line indented.
     if (s/^(\S.*:) *\n / /)
     {
+	$matched .= $& if %append;
 	$include{$sect} .= qq(.SS "$1"\n);
     }
 
     my $indent = 0;
     my $content = '';
 
-    # Tagged paragraph.
-    if (s/^( +(\S.*?)  +)(\S.*)\n//)
+    # Tagged paragraph (option).
+    if (s/^( {1,10}(-\S+(?: \S+|(?:, *-\S+)*)))(?: +|\n( {20,}))(\S.*)\n//)
     {
+	$matched .= $& if %append;
+	$indent = length ($3 || $1);
+	my $tag = $2;
+	my $desc = $4;
+	unless ($3)
+	{
+	    $indent = length $1;
+	    $indent = length $1 if /^( {20,})[^\s-]/;
+	}
+
+	$content = ".TP\n\x82$tag\n\x82$desc\n";
+    }
+
+    # Tagged paragraph (other).
+    elsif (s/^( +(\S.*?)  +)(\S.*)\n//)
+    {
+	$matched .= $& if %append;
 	$indent = length $1;
 	$content = ".TP\n\x82$2\n\x82$3\n";
     }
@@ -330,20 +386,26 @@ while (length)
     # Indented paragraph.
     elsif (s/^( +)(\S.*)\n//)
     {
+	$matched .= $& if %append;
 	$indent = length $1;
-	$content .= ".IP\n\x82$2\n";
+	$content = ".IP\n\x82$2\n";
     }
 
     # Left justified paragraph.
     else
     {
 	s/(.*)\n//;
+	$matched .= $& if %append;
 	$content = ".PP\n" if $include{$sect};
 	$content .= "$1\n";
     }
 
     # Append continuations.
-    $content .= "$1\n" while s/^ {$indent}(\S.*)\n//;
+    while (s/^ {$indent}(\S.*)\n//)
+    {
+	$matched .= $& if %append;
+	$content .= "\x82$1\n"
+    }
 
     # Move to next paragraph.
     s/^\n+//;
@@ -356,6 +418,19 @@ while (length)
 
 	# Convert options.
 	s/(^| )(-[][\w=-]+)/$1 . convert_option $2/mge;
+    }
+
+    # Check if matched paragraph contains /pat/.
+    if (%append)
+    {
+	for my $pat (keys %append)
+	{
+	    if ($matched =~ $pat)
+	    {
+		$content .= ".PP\n" unless $append{$pat} =~ /^\./;
+		$content .= $append{$pat};
+	    }
+	}
     }
 
     $include{$sect} .= $content;
@@ -417,15 +492,15 @@ exit;
 # embolden.  Option arguments get italicised.
 sub convert_option
 {
-    my $option = '\fB' . shift;
+    local $_ = '\fB' . shift;
 
-    $option =~ s/-/\\-/g;
-    unless ($option =~ s/\[=(.*)\]$/\\fR[=\\fI$1\\fR]/)
+    s/-/\\-/g;
+    unless (s/\[=(.*)\]$/\\fR[=\\fI$1\\fR]/)
     {
-	$option =~ s/=(.)/\\fR=\\fI$1/;
-	$option =~ s/ (.)/ \\fI$1/;
-	$option .= '\fR';
+	s/=(.)/\\fR=\\fI$1/;
+	s/ (.)/ \\fI$1/;
+	$_ .= '\fR';
     }
 
-    $option;
+    $_;
 }
