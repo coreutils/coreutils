@@ -1,5 +1,9 @@
 1998-01-24  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* tests/ls/time-1 (test_failure): Rename does not update ctime;
+	link does -- so use ln, not mv.
+	Note that the SunOS4.1.4 failure of the ctime test is expected.
+
 	* Version 3.16l.
 
 	* src/system.h (TYPE_MINIMUM): Add extra outer cast to work around
