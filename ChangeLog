@@ -22,6 +22,16 @@
 	* src/md5sum.c (long_options): Likewise.
 	* src/mv.c (reply_args): Likewise.
 	* src/paste.c (longopts): Likewise.
+	* src/pinky.c (print_entry): Likewise.
+	* src/ptx.c (long_options, format_args): Likewise.
+	* src/readlink.c (longopts): Likewise.
+	* src/sort.c (long_options, mergefps): Likewise.
+	* src/stat.c (long_options): Likewise.
+	* src/tac.c (main): Likewise.
+	* src/touch.c (longopts, time_args): Likewise.
+	* src/uniq.c (delimit_method_string): Likewise.
+	* src/uptime.c (print_uptime): Likewise.
+	* src/who.c (print_user): Likewise.
 
 2005-03-27  Jim Meyering  <jim@meyering.net>
 
