@@ -42,7 +42,7 @@ struct Src_to_dest
   /* Destination path name (of non-directory or pre-existing directory)
      corresponding to the dev/ino of a copied file, or the destination path
      name corresponding to a dev/ino pair for a newly-created directory. */
-  char const* name;
+  char *name;
 };
 
 /* This table maps source dev/ino to destination file name.
@@ -77,7 +77,7 @@ static void
 src_to_dest_free (void *x)
 {
   struct Src_to_dest *a = x;
-  free ((char *) (a->name));
+  free (a->name);
   free (x);
 }
 
