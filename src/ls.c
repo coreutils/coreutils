@@ -3231,7 +3231,8 @@ quote_name (FILE *out, const char *name, struct quoting_options const *options,
 	    size_t *width)
 {
   char smallbuf[BUFSIZ];
-  size_t len = quotearg_buffer (smallbuf, sizeof smallbuf, name, -1, options);
+  size_t len = quotearg_buffer (smallbuf, sizeof smallbuf, name, SIZE_MAX,
+				options);
   char *buf;
   size_t displayed_width IF_LINT (= 0);
 
@@ -3240,7 +3241,7 @@ quote_name (FILE *out, const char *name, struct quoting_options const *options,
   else
     {
       buf = alloca (len + 1);
-      quotearg_buffer (buf, len + 1, name, -1, options);
+      quotearg_buffer (buf, len + 1, name, SIZE_MAX, options);
     }
 
   if (qmark_funny_chars)
