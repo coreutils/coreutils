@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2003-10-16.18}
+\def\texinfoversion{2003-10-29.10}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
@@ -23,21 +23,16 @@
 % to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 % Boston, MA 02111-1307, USA.
 %
-% In other words, you are welcome to use, share and improve this program.
-% You are forbidden to forbid anyone else to use, share and improve
-% what you give them.   Help stamp out software-hoarding!
-%
+% As a special exception, when this file is read by TeX when processing
+% a Texinfo source document, you may use the result without
+% restriction.  (This has been our intent since Texinfo was invented.)
+% 
 % Please try the latest version of texinfo.tex before submitting bug
 % reports; you can get the latest version from:
-%   ftp://ftp.gnu.org/gnu/texinfo/texinfo.tex
-%     (and all GNU mirrors, see http://www.gnu.org/order/ftp.html)
+%   http://www.gnu.org/software/texinfo/ (the Texinfo home page), or
 %   ftp://tug.org/tex/texinfo.tex
-%     (and all CTAN mirrors, see http://www.ctan.org),
-%   and /home/gd/gnu/doc/texinfo.tex on the GNU machines.
-%
-% The GNU Texinfo home page is http://www.gnu.org/software/texinfo.
-%
-% The texinfo.tex in any given Texinfo distribution could well be out
+%     (and all CTAN mirrors, see http://www.ctan.org).
+% The texinfo.tex in any given distribution could well be out
 % of date, so if that's what you're using, please check.
 %
 % Send bug reports to bug-texinfo@gnu.org.  Please include including a
@@ -59,6 +54,9 @@
 % It is possible to adapt texinfo.tex for other languages, to some
 % extent.  You can get the existing language-specific files from the
 % full Texinfo distribution.
+% 
+% The GNU Texinfo home page is http://www.gnu.org/software/texinfo.
+
 
 \message{Loading texinfo [version \texinfoversion]:}
 
@@ -335,80 +333,81 @@
 % the input line (except we remove a trailing comment).  #1 should be a
 % macro which expects an ordinary undelimited TeX argument.
 %
-\def\parsearg#1{%
-  \let\next = #1%
+\def\parsearg{\parseargusing{}}
+\def\parseargusing#1#2{%
+  \def\next{#2}%
   \begingroup
     \obeylines
-    \futurelet\temp\parseargx
+    #1%
+    \parseargx
 }
 
 % If the next token is an obeyed space (from an @example environment or
 % the like), remove it and recurse.  Otherwise, we're done.
-\def\parseargx{%
-  % \obeyedspace is defined far below, after the definition of \sepspaces.
-  \ifx\obeyedspace\temp
-    \expandafter\parseargdiscardspace
+\def\parseargx{\futurelet\temp\parseargy}
+\def\parseargy{%
+  \expandafter\ifx\obeyedspace\temp
+    \def\temp{\expandafter\parseargx\gobble}
   \else
-    \expandafter\parseargline
+    \def\temp{\parseargline\empty}% Insert the \empty token, see below.
   \fi
+  \temp
 }
-
-% Remove a single space (as the delimiter token to the macro call).
-{\obeyspaces %
- \gdef\parseargdiscardspace {\futurelet\temp\parseargx}}
 
 {\obeylines %
   \gdef\parseargline#1^^M{%
     \endgroup % End of the group started in \parsearg.
-    %
-    % First remove any @c comment, then any @comment.
-    % Result of each macro is put in \toks0.
-    \argremovec #1\c\relax %
-    \expandafter\argremovecomment \the\toks0 \comment\relax %
-    %
-    % Call the caller's macro, saved as \next in \parsearg.
-    \expandafter\next\expandafter{\the\toks0}%
+    \argremovecomment #1\comment\ArgTerm%
   }%
 }
 
-% Since all \c{,omment} does is throw away the argument, we can let TeX
-% do that for us.  The \relax here is matched by the \relax in the call
-% in \parseargline; it could be more or less anything, its purpose is
-% just to delimit the argument to the \c.
-\def\argremovec#1\c#2\relax{\toks0 = {#1}}
-\def\argremovecomment#1\comment#2\relax{\toks0 = {#1}}
-
-% \argremovec{,omment} might leave us with trailing spaces, though; e.g.,
+% First remove any @comment, then any @c comment.
+\def\argremovecomment#1\comment#2\ArgTerm{\argremovec #1\c\ArgTerm}
+\def\argremovec#1\c#2\ArgTerm{\removeactivespaces#1\ArgTerm}
+% \argremovec might leave us with trailing spaces, though; e.g.,
 %    @end itemize  @c foo
-% will have two active spaces as part of the argument with the
-% `itemize'.  Here we remove all active spaces from #1, and assign the
-% result to \toks0.
-%
-% This loses if there are any *other* active characters besides spaces
-% in the argument -- _ ^ +, for example -- since they get expanded.
-% Fortunately, Texinfo does not define any such commands.  (If it ever
-% does, the catcode of the characters in questionwill have to be changed
-% here.)  But this means we cannot call \removeactivespaces as part of
-% \argremovec{,omment}, since @c uses \parsearg, and thus the argument
-% that \parsearg gets might well have any character at all in it.
-%
-\def\removeactivespaces#1{%
-  \begingroup
-    \ignoreactivespaces
-    \edef\temp{#1}%
-    \global\toks0 = \expandafter{\temp}%
-  \endgroup
+{\obeyspaces
+  \gdef\removeactivespaces#1\ArgTerm{\removeactivespacesX#1\RemSpac \RemSpac\ArgTerm}
+  \gdef\removeactivespacesX#1 \RemSpac{\removeactivespacesY{#1}}
+}
+\def\removeactivespacesY#1#2\ArgTerm{%
+  \def\temp{#2}%
+  \ifx\temp\empty
+    \let\temp\finishparsearg
+  \else
+    \let\temp\removeactivespaces
+  \fi
+  \temp #1\ArgTerm
 }
 
-% Change the active space to expand to nothing.
-%
-\begingroup
+% If a _delimited_ argument is enclosed in braces, they get stripped; so
+% to get _exactly_ the rest of the line, we had to prevent such situation.
+% We prepended an \empty token at the very beginning and we expand it
+% just before passing the control to \next.
+% (But first, we have to remove the remaining \RemSpac token.)
+\def\finishparsearg#1\RemSpac\ArgTerm{\expandafter\next\expandafter{#1}}
+
+% Several utility definitions with active space:
+{
   \obeyspaces
-  \gdef\ignoreactivespaces{\obeyspaces\let =\empty}
-\endgroup
+  \gdef\obeyedspace{ }
+
+  % Make each space character in the input produce a normal interword
+  % space in the output.  Don't allow a line break at this space, as this
+  % is used only in environments like @example, where each line of input
+  % should produce a line of output anyway.
+  %
+  \gdef\sepspaces{\obeyspaces\let =\tie}
+
+  % If an index command is used in an @example environment, any spaces
+  % therein should become regular spaces in the raw index file, not the
+  % expansion of \tie (\leavevmode \penalty \@M \ ).
+  \gdef\unsepspaces{\let =\space}
+}
 
 
 \def\flushcr{\ifx\par\lisppar \def\next##1{}\else \let\next=\relax \fi \next}
+
 
 %% These are used to keep @begin/@end levels from running away
 %% Call \inENV within environments (after a \begingroup)
@@ -431,20 +430,21 @@
 %
 \def\end{\parsearg\endxxx}
 \def\endxxx #1{%
-  \removeactivespaces{#1}%
-  \edef\endthing{\the\toks0}%
-  %
-  \expandafter\ifx\csname E\endthing\endcsname\relax
-    \expandafter\ifx\csname \endthing\endcsname\relax
-      % There's no \foo, i.e., no ``environment'' foo.
-      \errhelp = \EMsimple
-      \errmessage{Undefined command `@end \endthing'}%
-    \else
-      \unmatchedenderror\endthing
-    \fi
+  \expandafter\ifx\csname E#1\endcsname\relax
+    \badenderror{#1}%
   \else
     % Everything's ok; the right environment has been started.
-    \csname E\endthing\endcsname
+    \csname E#1\endcsname
+  \fi
+}
+
+\def\badenderror#1{%
+  \expandafter\ifx\csname#1\endcsname\relax
+    % There's no \foo, i.e., no ``environment'' foo.
+    \errhelp = \EMsimple
+    \errmessage{Undefined command `@end #1'}%
+  \else
+    \unmatchedenderror{#1}%
   \fi
 }
 
@@ -1744,6 +1744,7 @@ where each line of input produces a line of output.}
 \def\ii#1{{\it #1}}             % italic font
 
 % @acronym downcases the argument and prints in smallcaps.
+% It would be nicer to go one point size down.
 \def\acronym#1{{\smallcaps \lowercase{#1}}}
 
 % @pounds{} is a sterling sign.
@@ -2131,9 +2132,10 @@ where each line of input produces a line of output.}
 \def\fnitemindex #1{\doind {fn}{\code{#1}}}%
 \def\vritemindex #1{\doind {vr}{\code{#1}}}%
 
-{\obeyspaces %
+{\obeyspaces
 \gdef\tabley#1#2 #3 #4 #5 #6 #7\endtabley{\endgroup%
-\tablez{#1}{#2}{#3}{#4}{#5}{#6}}}
+\tablez{#1}{#2}{#3}{#4}{#5}{#6}}%
+}
 
 \def\tablez #1#2#3#4#5#6{%
 \aboveenvbreak %
@@ -2594,7 +2596,9 @@ width0pt\relax} \fi
 \def\direntry{\doignore{direntry}}
 \def\documentdescriptionword{documentdescription}
 \def\documentdescription{\doignore{documentdescription}}
+\def\docbook{\doignore{docbook}}
 \def\html{\doignore{html}}
+\def\ifdocbook{\doignore{ifdocbook}}
 \def\ifhtml{\doignore{ifhtml}}
 \def\ifinfo{\doignore{ifinfo}}
 \def\ifnottex{\doignore{ifnottex}}
@@ -3049,12 +3053,6 @@ width0pt\relax} \fi
   % No macro expansion.
   \turnoffmacros
 }
-
-% If an index command is used in an @example environment, any spaces
-% therein should become regular spaces in the raw index file, not the
-% expansion of \tie (\leavevmode \penalty \@M \ ).
-{\obeyspaces
- \gdef\unsepspaces{\obeyspaces\let =\space}}
 
 
 % \indexnofonts is used when outputting the strings to sort the index
@@ -4494,19 +4492,6 @@ width0pt\relax} \fi
 % have any width.
 \def\lisppar{\null\endgraf}
 
-% Make each space character in the input produce a normal interword
-% space in the output.  Don't allow a line break at this space, as this
-% is used only in environments like @example, where each line of input
-% should produce a line of output anyway.
-%
-{\obeyspaces %
-\gdef\sepspaces{\obeyspaces\let =\tie}}
-
-% Define \obeyedspace to be our active space, whatever it is.  This is
-% for use in \parsearg.
-{\sepspaces%
-\global\let\obeyedspace= }
-
 % This space is always present above and below environments.
 \newskip\envskipamount \envskipamount = 0pt
 
@@ -4840,7 +4825,7 @@ width0pt\relax} \fi
   % ignore everything up to the first ^^M, that's the newline at the end
   % of the @verbatim input line itself.  Otherwise we get an extra blank
   % line in the output.
-  \gdef\doverbatim#1^^M#2@end verbatim{#2\end{verbatim}}%
+  \gdef\doverbatim#1^^M#2@end verbatim{#2\end verbatim}%
 \endgroup
 %
 \def\verbatim{%
@@ -4961,63 +4946,88 @@ width0pt\relax} \fi
 \newskip\defargsindent \defargsindent=50pt
 \newskip\deflastargmargin \deflastargmargin=18pt
 
-\newcount\parencount
-
 % We want ()&[] to print specially on the defun line.
 %
 \def\activeparens{%
   \catcode`\(=\active \catcode`\)=\active
-  \catcode`\&=\active
   \catcode`\[=\active \catcode`\]=\active
+  \catcode`\&=\active
 }
 
 % Make control sequences which act like normal parenthesis chars.
 \let\lparen = ( \let\rparen = )
 
-{\activeparens % Now, smart parens don't turn on until &foo (see \amprm)
-
 % Be sure that we always have a definition for `(', etc.  For example,
 % if the fn name has parens in it, \boldbrax will not be in effect yet,
 % so TeX would otherwise complain about undefined control sequence.
-\global\let(=\lparen \global\let)=\rparen
-\global\let[=\lbrack \global\let]=\rbrack
-
-\gdef\functionparens{\boldbrax\let&=\amprm\parencount=0 }
-\gdef\boldbrax{\let(=\opnr\let)=\clnr\let[=\lbrb\let]=\rbrb}
-% This is used to turn on special parens
-% but make & act ordinary (given that it's active).
-\gdef\boldbraxnoamp{\let(=\opnr\let)=\clnr\let[=\lbrb\let]=\rbrb\let&=\ampnr}
-
-% Definitions of (, ) and & used in args for functions.
-% This is the definition of ( outside of all parentheses.
-\gdef\oprm#1 {{\rm\char`\(}#1 \bf \let(=\opnested
-  \global\advance\parencount by 1
-}
-%
-% This is the definition of ( when already inside a level of parens.
-\gdef\opnested{\char`\(\global\advance\parencount by 1 }
-%
-\gdef\clrm{% Print a paren in roman if it is taking us back to depth of 0.
-  % also in that case restore the outer-level definition of (.
-  \ifnum \parencount=1 {\rm \char `\)}\sl \let(=\oprm \else \char `\) \fi
-  \global\advance \parencount by -1 }
-% If we encounter &foo, then turn on ()-hacking afterwards
-\gdef\amprm#1 {{\rm\&#1}\let(=\oprm \let)=\clrm\ }
-%
-\gdef\normalparens{\boldbrax\let&=\ampnr}
-} % End of definition inside \activeparens
-%% These parens (in \boldbrax) actually are a little bolder than the
-%% contained text.  This is especially needed for [ and ]
-\def\opnr{{\sf\char`\(}\global\advance\parencount by 1 }
-\def\clnr{{\sf\char`\)}\global\advance\parencount by -1 }
-\let\ampnr = \&
-\def\lbrb{{\bf\char`\[}}
-\def\rbrb{{\bf\char`\]}}
-
-% Active &'s sneak into the index arguments, so make sure it's defined.
 {
-  \catcode`& = \active
-  \global\let& = \ampnr
+  \activeparens
+  \global\let(=\lparen \global\let)=\rparen
+  \global\let[=\lbrack \global\let]=\rbrack
+  \global\let& = \&
+
+  \gdef\functionparens{\boldbrax\let&=\amprm}
+  \gdef\boldbrax{\let(=\opnr\let)=\clnr\let[=\lbrb\let]=\rbrb}
+}
+
+\newcount\parencount
+
+% If we encounter &foo, then turn on ()-hacking afterwards
+\newif\ifampseen
+\def\amprm#1 {\ampseentrue{\rm\&#1} }
+
+\def\parenfont{%
+  \ifampseen
+    % At the first level, print parens in roman,
+    % otherwise use the default font.
+    \ifnum \parencount=1 \rm \fi
+  \else
+    % The \sf parens (in \boldbrax) actually are a little bolder than
+    % the contained text.  This is especially needed for [ and ] .
+    \sf
+  \fi
+}
+\def\infirstlevel#1{%
+  \ifampseen
+    \ifnum\parencount=1
+      #1%
+    \fi
+  \fi
+}
+\def\bfafterword#1 {#1 \bf}
+
+\def\opnr{%
+  \global\advance\parencount by 1
+  {\parenfont(}%
+  \infirstlevel \bfafterword
+}
+\def\clnr{%
+  {\parenfont)}%
+  \infirstlevel \sl
+  \global\advance\parencount by -1
+}
+
+\newcount\brackcount
+\def\lbrb{%
+  \global\advance\brackcount by 1
+  {\bf[}%
+}
+\def\rbrb{%
+  {\bf]}%
+  \global\advance\brackcount by -1
+}
+
+\def\checkparencounts{%
+  \ifnum\parencount=0 \else \badparencount \fi
+  \ifnum\brackcount=0 \else \badbrackcount \fi
+}
+\def\badparencount{%
+  \errmessage{Unbalanced parentheses in @def}%
+  \global\parencount=0
+}
+\def\badbrackcount{%
+  \errmessage{Unbalanced square braces in @def}%
+  \global\brackcount=0
 }
 
 % \defname, which formats the name of the @def (not the args).
@@ -5025,40 +5035,35 @@ width0pt\relax} \fi
 % #2 is the type of definition, such as "Function".
 %
 \def\defname#1#2{%
-  % How we'll output the type name.  Putting it in brackets helps
+  % Get the values of \leftskip and \rightskip as they were outside the @def...
+  \advance\leftskip by -\defbodyindent
+  %
+  % How we'll format the type name.  Putting it in brackets helps
   % distinguish it from the body text that may end up on the next line
   % just below it.
   \def\temp{#2}%
-  \ifx\temp\empty
-    \def\defnametype{}%
-  \else
-    \def\defnametype{[\rm #2]}%
-  \fi
+  \setbox0=\hbox{\kern\deflastargmargin \ifx\temp\empty\else [\rm\temp]\fi}
   %
-  % Get the values of \leftskip and \rightskip as they were outside the @def...
-  \dimen2=\leftskip
-  \advance\dimen2 by -\defbodyindent
+  % Figure out line sizes for the paragraph shape.
+  % The first line needs space for \box0; but if \rightskip is nonzero,
+  % we need only space for the part of \box0 which exceeds it:
+  \dimen0=\hsize  \advance\dimen0 by -\wd0  \advance\dimen0 by \rightskip
+  % The continuations:
+  \dimen2=\hsize  \advance\dimen2 by -\defargsindent
+  % (plain.tex says that \dimen1 should be used only as global.)
+  \parshape 2 0in \dimen0 \defargsindent \dimen2
   %
-  % Figure out values for the paragraph shape.
-  \setbox0=\hbox{\hskip \deflastargmargin{\defnametype}}%
-  \dimen0=\hsize \advance \dimen0 by -\wd0  % compute size for first line
-  \dimen1=\hsize \advance \dimen1 by -\defargsindent  % size for continuations
-  \parshape 2 0in \dimen0 \defargsindent \dimen1
-  %
-  % Output arg 2 ("Function" or some such) but stuck inside a box of
-  % width 0 so it does not interfere with linebreaking.
+  % Put the type name to the right margin.
   \noindent
-  %
-  {% Adjust \hsize to exclude the ambient margins,
-   % so that \rightline will obey them.
-   \advance \hsize by -\dimen2
-   \dimen3 = 0pt  % was -1.25pc
-   \rlap{\rightline{\defnametype\kern\dimen3}}%
+  \hbox to 0pt{%
+    \hfil\box0 \kern-\hsize
+    % \hsize has to be shortened this way:
+    \kern\leftskip
+    % Intentionally do not respect \rightskip, since we need the space.
   }%
   %
   % Allow all lines to be underfull without complaint:
   \tolerance=10000 \hbadness=10000
-  \advance\leftskip by -\defbodyindent
   \exdentamount=\defbodyindent
   {\df #1}\enskip        % output function name
   % \defunargs will be called next to output the arguments, if any.
@@ -5071,19 +5076,21 @@ width0pt\relax} \fi
 %
 \def\parsebodycommon#1#2#3{%
   \begingroup\inENV
-  % If there are two @def commands in a row, we'll have a \nobreak,
-  % which is there to keep the function description together with its
-  % header.  But if there's nothing but headers, we need to allow a
-  % break somewhere.  Check for penalty 10002 (inserted by
-  % \defargscommonending) instead of 10000, since the sectioning
-  % commands insert a \penalty10000, and we don't want to allow a break
-  % between a section heading and a defun.
-  \ifnum\lastpenalty=10002 \penalty2000 \fi
-  %
-  % Similarly, after a section heading, do not allow a break.
-  % But do insert the glue.
-  \ifnum\lastpenalty<10000 \medbreak
-  \else \medskip  % preceded by discardable penalty, so not a breakpoint
+  \ifnum\lastpenalty<10000
+    \medbreak
+  \else
+    % If there are two @def commands in a row, we'll have a \nobreak,
+    % which is there to keep the function description together with its
+    % header.  But if there's nothing but headers, we need to allow a
+    % break somewhere.  Check for penalty 10002 (inserted by
+    % \defargscommonending) instead of 10000, since the sectioning
+    % commands insert a \penalty10000, and we don't want to allow a break
+    % between a section heading and a defun.
+    \ifnum\lastpenalty=10002 \penalty2000 \fi
+    %
+    % Similarly, after a section heading, do not allow a break.
+    % But do insert the glue.
+    \medskip  % preceded by discardable penalty, so not a breakpoint
   \fi
   %
   % Define the \E... end token that this defining construct specifies
@@ -5100,7 +5107,7 @@ width0pt\relax} \fi
 \def\defxbodycommon{%
   % As with \parsebodycommon above, allow line break if we have multiple
   % x headers in a row.  It's not a great place, though.
-  \ifnum\lastpenalty=10002 \penalty2000 \fi
+  \ifnum\lastpenalty=10002 \penalty3000 \fi
   %
   \begingroup\obeylines
 }
@@ -5260,15 +5267,15 @@ width0pt\relax} \fi
 {\tensl\hyphenchar\font=0}%
 #1%
 {\tensl\hyphenchar\font=45}%
-\ifnum\parencount=0 \else \errmessage{Unbalanced parentheses in @def}\fi%
+  \checkparencounts
   \defargscommonending
 }
 
 \def\deftypefunargs #1{%
 % Expand, preventing hyphenation at `-' chars.
 % Note that groups don't affect changes in \hyphenchar.
-% Use \boldbraxnoamp, not \functionparens, so that & is not special.
-\boldbraxnoamp
+% Use \boldbrax, not \functionparens, so that & is not special.
+\boldbrax
 \tclose{#1}% avoid \code because of side effects on active chars
   \defargscommonending
 }
@@ -5322,8 +5329,6 @@ width0pt\relax} \fi
 \def\deftypefnheaderx #1#2#3 #4\relax{%
 \doind {fn}{\code{#3}}% Make entry in function index
 \begingroup
-\normalparens % notably, turn off `&' magic, which prevents
-%               at least some C++ text from working
 \defname {\defheaderxcond#2\relax$.$#3}{#1}%
 \deftypefunargs {#4}\endgroup %
 \catcode\equalChar=\other % Turn off change made in \defparsebody
@@ -5449,7 +5454,9 @@ width0pt\relax} \fi
 % First, define the processing that is wanted for arguments of @defvar.
 % This is actually simple: just print them in roman.
 % This must expand the args and terminate the paragraph they make up
-\def\defvarargs #1{\normalparens #1%
+\def\defvarargs #1{%
+  \boldbrax
+  #1%
   \defargscommonending
 }
 
@@ -5819,12 +5826,16 @@ width0pt\relax} \fi
 % @alias.
 % We need some trickery to remove the optional spaces around the equal
 % sign.  Just make them active and then expand them all to nothing.
-\def\alias{\begingroup\obeyspaces\parsearg\aliasxxx}
+\def\alias{\parseargusing\obeyspaces\aliasxxx}
 \def\aliasxxx #1{\aliasyyy#1\relax}
-\def\aliasyyy #1=#2\relax{\ignoreactivespaces
-\edef\next{\global\let\expandafter\noexpand\csname#1\endcsname=%
-           \expandafter\noexpand\csname#2\endcsname}%
-\expandafter\endgroup\next}
+\def\aliasyyy #1=#2\relax{%
+  {%
+    \expandafter\let\obeyedspace=\empty
+    \xdef\next{\global\let\makecsname{#1}=\makecsname{#2}}%
+  }%
+  \next
+}
+\def\makecsname#1{\expandafter\noexpand\csname#1\endcsname}
 
 
 \message{cross references,}
@@ -5868,9 +5879,10 @@ width0pt\relax} \fi
 % \setref{NAME}{SNT} defines a cross-reference point NAME (a node or an
 % anchor), namely NAME-title (the corresponding @chapter/etc. name),
 % NAME-pg (the page number), and NAME-snt (section number and type).
-% Called from \foonoderef.
+% Called from \donoderef and \anchor.
 % 
-% We take care not to expand the title.
+% We take care not to fully expand the title, since it may contain
+% arbitrary macros.
 %
 % Use \turnoffactive so that punctuation chars such as underscore
 % and backslash work in node names.
@@ -5883,8 +5895,8 @@ width0pt\relax} \fi
       \edef\writexrdef##1##2{%
 	\write\auxfile{@xrdef{#1-% #1 of \setref, expanded by the \edef
 	  ##1}{##2}}% these are parameters of \writexrdef
-      }
-      \toks0 = \expandafter{\thissection}
+      }%
+      \toks0 = \expandafter{\thissection}%
       \immediate \writexrdef{title}{\the\toks0 }%
       \immediate \writexrdef{snt}{\csname #2\endcsname}% \Ynumbered etc.
       \writexrdef{pg}{\folio}% will be written later, during \shipout
@@ -6055,6 +6067,8 @@ width0pt\relax} \fi
 \def\xrdef#1{\expandafter\gdef\csname X#1\endcsname}
 
 % Read the last existing aux file, if any.  No error if none exists.
+% Open the new one.
+% 
 \def\readauxfile{\begingroup
   \catcode`\^^@=\other
   \catcode`\^^A=\other
@@ -6141,8 +6155,10 @@ width0pt\relax} \fi
     \input \jobname.aux
     \global\havexrefstrue
   \fi
-  % Open the new aux file.  TeX will close it automatically at exit.
-  \openout\auxfile=\jobname.aux
+  % Open the new aux file right away (otherwise the \immediate's in
+  % \setref cause spurious terminal output).  TeX will close it
+  % automatically at exit.
+  \immediate\openout\auxfile=\jobname.aux
 \endgroup}
 
 
@@ -6734,6 +6750,8 @@ should work if nowhere else does.}
 @c time-stamp-format: "%:y-%02m-%02d.%02H"
 @c time-stamp-end: "}"
 @c End:
+
+@c vim:sw=2:
 
 @ignore
    arch-tag: e1b36e32-c96e-4135-a41a-0b2efa2ea115
