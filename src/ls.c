@@ -340,16 +340,13 @@ char *program_name;
    `files_index' is the number actually in use.  */
 
 /* Address of block containing the files that are described.  */
-
-static struct fileinfo *files;
+static struct fileinfo *files;  /* FIXME: rename this to e.g. cwd_file */
 
 /* Length of block that `files' points to, measured in files.  */
-
-static int nfiles;
+static int nfiles;  /* FIXME: rename this to e.g. cwd_n_alloc */
 
 /* Index of first unused in `files'.  */
-
-static int files_index;
+static int files_index;  /* FIXME: rename this to e.g. cwd_n_used */
 
 /* When nonzero, in a color listing, color each symlink name according to the
    type of file it points to.  Otherwise, color them according to the `ln'
@@ -849,6 +846,7 @@ main (int argc, char **argv)
 {
   register int i;
   register struct pending *thispend;
+  unsigned int n_files;
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -896,8 +894,10 @@ main (int argc, char **argv)
 
   clear_files ();
 
-  if (i < argc)
+  n_files = argc - i;
+  if (0 <= n_files)
     dir_defaulted = 0;
+
   for (; i < argc; i++)
     {
       gobble_file (argv[i], unknown, 1, "");
@@ -924,7 +924,7 @@ main (int argc, char **argv)
       if (pending_dirs)
 	DIRED_PUTCHAR ('\n');
     }
-  else if (pending_dirs && pending_dirs->next == 0)
+  else if (n_files <= 1 && pending_dirs && pending_dirs->next == 0)
     print_dir_name = 0;
 
   while (pending_dirs)
