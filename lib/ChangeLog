@@ -1,3 +1,20 @@
+2000-08-07  Jim Meyering  <meyering@lucent.com>
+
+	* addext.c, argmatch.c, argmatch.h, backupfile.h, bumpalloc.h,
+	chown.c, diacrit.h, dirname.h, dup2.c, exclude.h, fileblocks.c,
+	fnmatch.c, fnmatch.h, fsusage.c, fsusage.h, getdate.h,
+	getgroups.c, gethostname.c, getopt.h, group-member.c,
+	hard-locale.c, hash.h, isdir.c, lchown.c, linebuffer.c,
+	linebuffer.h, long-options.h, malloc.c, md5.c, md5.h, memchr.c,
+	memcmp.c, memcoll.c, memset.c, mktime.c, modechange.h, obstack.h,
+	pathmax.h, realloc.c, rmdir.c, safe-read.c, save-cwd.c, stime.c,
+	stpcpy.c, strcasecmp.c, strcspn.c, strdup.c, stripslash.c,
+	strstr.c, strtod.c, strtol.c, strtoul.c, strtoull.c, strtoumax.c,
+	utime.c, version-etc.h, xalloc.h, xstrdup.c, xstrtoumax.c,
+	yesno.c: Back out Copyright date changes for each file with no change
+	this year.  This eases coordination with other programs using the same
+	source code modules.  From Paul Eggert.
+
 2000-08-03  Greg McGary  <greg@mcgary.org>
 
 	* regex.c (SET_HIGH_BOUND, MOVE_BUFFER_POINTER,
