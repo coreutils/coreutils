@@ -1,3 +1,7 @@
+2004-10-11  Jim Meyering  <jim@meyering.net>
+
+	* fr.po: Fix two typos reported in http://bugs.debian.org/275924
+
 2004-09-22  Jim Meyering  <jim@meyering.net>
 
 	* POTFILES.in: Remove lib/xmalloc.c.
