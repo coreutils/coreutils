@@ -1,3 +1,7 @@
+2004-11-23  Jim Meyering  <jim@meyering.net>
+
+	* closeout.c: Revert last change, since it seems EBADF is always defined.
+
 2004-11-22  Jim Meyering  <jim@meyering.net>
 
 	* closeout.c (EBADF): Fail with `#error ...' if it's not defined,
