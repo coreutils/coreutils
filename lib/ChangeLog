@@ -1,3 +1,8 @@
+2000-12-08  Andreas Schwab  <schwab@suse.de>
+
+	* mbswidth.c (mbsnwidth): Don't loop endlessly when called with an
+	invalid mulitbyte sequence and with the MBSW_ACCEPT_INVALID flag set.
+
 2000-12-07  Jim Meyering  <meyering@lucent.com>
 
 	* stripslash.c (ISSLASH): Define.
