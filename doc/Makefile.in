@@ -56,7 +56,9 @@ fileutils.dvi: fileutils.texi version.texi texinfo.tex
 installdirs:
 	$(srcdir)/../mkinstalldirs $(infodir)
 
-install: all installdirs
+install: install-exec install-data
+install-exec:
+install-data: all installdirs
 	cd $(srcdir) && for file in fileutils.info; do \
 	  $(INSTALL_DATA) $$file $(infodir)/$$file; \
 	done
@@ -93,8 +95,8 @@ subdir = doc
 Makefile: ../config.status Makefile.in
 	cd .. && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= ./config.status
 
-.PHONY: all check clean dist distclean dvi info install \
-installdirs maintainer-clean mostlyclean texclean uninstall
+.PHONY: all check clean dist distclean dvi info install install-data \
+install-exec installdirs maintainer-clean mostlyclean texclean uninstall
 
 # Tell versions [3.59,3.63) of GNU make not to export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

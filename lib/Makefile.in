@@ -66,7 +66,7 @@ Makefile: ../config.status Makefile.in
 
 installdirs:
 
-install: all
+install install-exec install-data: all
 
 uninstall:
 
@@ -133,8 +133,8 @@ makepath.o: makepath.h
 obstack.o: obstack.h
 group-member.o: group-member.h
 
-.PHONY: all check clean dist distclean install installdirs \
-maintainer-clean mostlyclean uninstall
+.PHONY: all check clean dist distclean install install-data install-exec \
+installdirs maintainer-clean mostlyclean uninstall
 
 # Tell versions [3.59,3.63) of GNU make not to export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
