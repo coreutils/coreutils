@@ -1,3 +1,9 @@
+2001-08-12  Jim Meyering  <meyering@lucent.com>
+
+	* gettimeofday.c: New file.
+	* gtod.h: New file.
+	* Makefile.am (libfetish_a_SOURCES): Add gtod.h.
+
 2001-08-04  Jim Meyering  <meyering@lucent.com>
 
 	* error.h (__attribute__): Remove `|| __STRICT_ANSI__' from #if stmt,
