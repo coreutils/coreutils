@@ -1,3 +1,14 @@
+2004-04-03  Dmitry V. Levin  <ldv@altlinux.org>
+
+	* Makefile.am (libfetish_a_SOURCES): Add canonicalize.c
+	unconditionally.
+	* canonicalize.h (canonicalize_mode_t): New type.
+	* canonicalize.c: Include "file-type.h".
+	(canonicalize_filename_mode): New function, based on
+	canonicalize_file_name, supports three canonicalize modes.
+	(canonicalize_file_name)
+	[!HAVE_CANONICALIZE_FILE_NAME && !HAVE_RESOLVEPATH]: Use it.
+
 2004-07-05  Jim Meyering  <jim@meyering.net>
 
 	* path-concat.c (path_concat): Improve comment.  From Paul Eggert.
