@@ -119,8 +119,8 @@ END-INFO-DIR-ENTRY
 @end ifinfo
 
 @copying
-This manual documents version @value{VERSION} of the @sc{gnu} command
-line utilities.
+This manual documents version @value{VERSION} of the @sc{gnu} core
+utilities, including the standard programs for text and file manipulation.
 
 Copyright @copyright{} 1994, 1995, 1996, 2000, 2001, 2002
 Free Software Foundation, Inc.
@@ -11933,6 +11933,12 @@ of the size of the file does not exceed the allotted space.
 Finally, note that the width of even the date/time field may change,
 depending on the current locale.  To avoid that, use an option
 like @option{--time-style='+%Y-%m-%d %H:%M:%S'}.
+
+And there's still another problem: if a file has more
+than 999 hard links to it, then that will change the alignment.
+The morale is that it is hard to use fixed byte offsets into
+a line of @command{ls} output.  Use a different tool, like
+find, but with @option{-printf} and carefully chosen format strings.
 
 @node The sort command
 @unnumberedsec The @command{sort} Command
