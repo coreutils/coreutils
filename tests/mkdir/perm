@@ -9,7 +9,7 @@ fi
 
 pwd=`pwd`
 tmp=perm.$$
-trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
+trap 'status=$?; cd $pwd; chmod -R u+rwx $tmp; rm -rf $tmp && exit $status' 0
 trap '(exit $?); exit' 1 2 13 15
 
 framework_failure=0
@@ -26,12 +26,12 @@ fail=0
 #                         parent        parent/dir
 # umask   -m option   resulting perm  resulting perm
 tests='
-    000  :            : drwxrwxrwx : drwxrwxrwx :
+    000  :   empty    : drwxrwxrwx : drwxrwxrwx :
     000  :   -m 016   : drwxrwxrwx : d-----xrw- :
-    077  :            : drwx------ : drwx------ :
-    050  :            : drwx-w-rwx : drwx-w-rwx :
+    077  :   empty    : drwx------ : drwx------ :
+    050  :   empty    : drwx-w-rwx : drwx-w-rwx :
     050  :   -m 312   : drwx-w-rwx : d-wx--x-w- :
-    160  :            : drwx--xrwx : drw---xrwx :
+    160  :   empty    : drwx--xrwx : drw---xrwx :
     160  :   -m 743   : drwx--xrwx : drwxr---wx :
     -    :   -        : last       : last       :
     '
@@ -46,6 +46,7 @@ for p in empty -p; do
   while :; do
     test "$VERBOSE" = yes && set -x
     umask=$1 mode=$2 parent_perms=$3 sub_perms=$4
+    test "_$mode" = _empty && mode=
     test $sub_perms = last && break
     # echo p=$p umask=$1 mode=$2 parent_perms=$3 sub_perms=$4
     shift; shift; shift; shift
