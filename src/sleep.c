@@ -40,6 +40,8 @@
 #if HAVE_FENV_H
 # include <fenv.h>
 #endif
+
+/* Tell the compiler that non-default rounding modes are used.  */
 #if 199901 <= __STDC_VERSION__
  #pragma STDC FENV_ACCESS ON
 #endif
@@ -149,7 +151,7 @@ timespec_subtract (struct timespec *diff,
   return y->tv_sec < x->tv_sec;
 }
 
-static void
+static struct timespec *
 clock_get_realtime (struct timespec *ts)
 {
   int fail;
@@ -167,6 +169,8 @@ clock_get_realtime (struct timespec *ts)
 
   if (fail)
     error (1, errno, _("cannot read realtime clock"));
+
+  return ts;
 }
 
 int
@@ -255,7 +259,7 @@ main (int argc, char **argv)
     {
       time_t t = ts_sleep.tv_sec + 1;
 
-      /* Detect floating point overflow (NaN) in interval length. */
+      /* Detect integer overflow.  */
       forever |= (t < ts_sleep.tv_sec);
 
       ts_sleep.tv_sec = t;
@@ -277,23 +281,15 @@ main (int argc, char **argv)
 
   if (forever)
     {
+      /* Fix ts_sleep and ts_stop, which may be garbage due to overflow.  */
       ts_sleep.tv_sec = ts_stop.tv_sec = TIME_T_MAX;
       ts_sleep.tv_nsec = ts_stop.tv_nsec = 999999999;
     }
 
-  while (1)
-    {
-      struct timespec remaining;
-      struct timespec ts_now;
-      int any_remaining;
-      int suspended = nanosleep (&ts_sleep, &remaining);
-      if (!suspended)
-	break;
-      clock_get_realtime (&ts_now);
-      any_remaining = timespec_subtract (&ts_sleep, &ts_stop, &ts_now);
-      if (! any_remaining)
-	break;
-    }
+  while (nanosleep (&ts_sleep, NULL) != 0
+	 && timespec_subtract (&ts_sleep, &ts_stop,
+			       clock_get_realtime (&ts_start)))
+    continue;
 
   exit (0);
 }
