@@ -191,6 +191,7 @@ static bool presume_input_pipe;
 enum
 {
   RETRY_OPTION = CHAR_MAX + 1,
+  ALLOW_MISSING_OPTION,   /* deprecated, FIXME: remove in late 2004 */
   MAX_UNCHANGED_STATS_OPTION,
 
   /* FIXME: remove this in 2001, unless someone can show a good
@@ -204,9 +205,8 @@ enum
 
 static struct option const long_options[] =
 {
-  /* --allow-missing is deprecated; use --retry instead
-     FIXME: remove it some day */
-  {"allow-missing", no_argument, NULL, RETRY_OPTION},
+  /* --allow-missing is deprecated; use --retry instead */
+  {"allow-missing", no_argument, NULL, ALLOW_MISSING_OPTION},
   {"bytes", required_argument, NULL, 'c'},
   {"follow", optional_argument, NULL, LONG_FOLLOW_OPTION},
   {"lines", required_argument, NULL, 'n'},
@@ -1555,6 +1555,10 @@ parse_options (int argc, char **argv,
 				     follow_mode_string, follow_mode_map);
 	  break;
 
+	case ALLOW_MISSING_OPTION:
+	  error (0, 0,
+	   _("the --allow-missing option is deprecated; use --retry instead"));
+	  /* fall through */
 	case RETRY_OPTION:
 	  reopen_inaccessible_files = 1;
 	  break;
