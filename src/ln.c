@@ -99,6 +99,12 @@ static int verbose;
 /* If nonzero, allow the superuser to make hard links to directories. */
 static int hard_dir_link;
 
+/* If nonzero, and the specified destination is a symbolic link to a
+   directory, treat it just as if it were a directory.  Otherwise, the
+   command `ln --force --no-dereference file symlink-to-dir' deletes
+   symlink-to-dir before creating the new link.  */
+static int dereference_dest_dir_symlinks = 1;
+
 /* If non-zero, display usage information and exit.  */
 static int show_help;
 
@@ -109,6 +115,7 @@ static struct option const long_options[] =
 {
   {"backup", no_argument, NULL, 'b'},
   {"directory", no_argument, &hard_dir_link, 1},
+  {"no-dereference", no_argument, NULL, 'n'},
   {"force", no_argument, NULL, 'f'},
   {"interactive", no_argument, NULL, 'i'},
   {"suffix", required_argument, NULL, 'S'},
@@ -140,7 +147,7 @@ main (argc, argv)
     = hard_dir_link = 0;
   errors = 0;
 
-  while ((c = getopt_long (argc, argv, "bdfisvFS:V:", long_options, (int *) 0))
+  while ((c = getopt_long (argc, argv, "bdfinsvFS:V:", long_options, (int *) 0))
 	 != EOF)
     {
       switch (c)
@@ -161,6 +168,9 @@ main (argc, argv)
 	case 'i':
 	  remove_existing_files = 0;
 	  interactive = 1;
+	  break;
+	case 'n':
+	  dereference_dest_dir_symlinks = 0;
 	  break;
 	case 's':
 #ifdef S_ISLNK
@@ -261,6 +271,7 @@ do_link (source, dest)
 {
   struct stat dest_stats;
   char *dest_backup = NULL;
+  int lstat_status;
 
   /* isdir uses stat instead of lstat.
      On SVR4, link does not follow symlinks, so this check disallows
@@ -271,15 +282,44 @@ do_link (source, dest)
       error (0, 0, "%s: hard link not allowed for directory", source);
       return 1;
     }
-  if (isdir (dest))
+
+  if (SAFE_LSTAT (dest, &dest_stats) != 0 && errno != ENOENT)
+    {
+      error (0, errno, "%s", dest);
+      return 1;
+    }
+
+  /* If the destination is a directory or (it is a symlink to a directory
+     and the user has not specified --no-dereference), then form the
+     actual destination name by appending basename (source) to the
+     specified destination directory.  */
+  lstat_status = SAFE_LSTAT (dest, &dest_stats);
+
+  if (lstat_status != 0 && errno != ENOENT)
+    {
+      error (0, errno, "%s", dest);
+      return 1;
+    }
+
+  if (lstat_status == 0
+      && S_ISDIR (dest_stats.st_mode)
+#ifdef S_ISLNK
+      || (dereference_dest_dir_symlinks
+	  && (S_ISLNK (dest_stats.st_mode)
+	  && isdir (dest)))
+#endif
+     )
     {
       /* Target is a directory; build the full filename. */
       char *new_dest;
       PATH_BASENAME_CONCAT (new_dest, dest, source);
       dest = new_dest;
+      /* Set this to non-zero to force another call to SAFE_LSTAT
+	 with the new destination.  */
+      lstat_status = 1;
     }
 
-  if (SAFE_LSTAT (dest, &dest_stats) == 0)
+  if (lstat_status == 0 || SAFE_LSTAT (dest, &dest_stats) == 0)
     {
       if (S_ISDIR (dest_stats.st_mode))
 	{
@@ -372,6 +412,8 @@ Usage: %s [OPTION]... SOURCE [DEST]\n\
   -b, --backup                 make backups for removed files\n\
   -d, -F, --directory          hard link directories (super-user only)\n\
   -f, --force                  remove existing destinations\n\
+  -n, --no-dereference         with --force, remove destination that is a\n\
+                                 symlink to a directory\n\
   -i, --interactive            prompt whether to remove destinations\n\
   -s, --symbolic               make symbolic links, instead of hard links\n\
   -v, --verbose                print name of each file before linking\n\
