@@ -100,17 +100,10 @@ struct AD_ent
      because the user declined.  */
   enum RM_status status;
 
-  union
-  {
-    /* The directory's dev/ino.  Used to ensure that `chdir some-subdir', then
-       `chdir ..' takes us back to the same directory from which we started).
-       (valid for all but the bottommost entry on the stack.  */
-    struct dev_ino a;
-
-    /* Enough information to restore the initial working directory.
-       (valid only for the bottommost entry on the stack)  */
-    struct saved_cwd saved_cwd;
-  } u;
+  /* The directory's dev/ino.  Used to ensure that `chdir some-subdir', then
+     `chdir ..' takes us back to the same directory from which we started).
+     (valid for all but the bottommost entry on the stack.  */
+  struct dev_ino dev_ino;
 };
 
 extern char *program_name;
@@ -374,11 +367,15 @@ AD_stack_pop (Dirstack_state *ds)
 /* chdir `up' one level.
    Whenever using chdir '..', verify that the post-chdir
    dev/ino numbers for `.' match the saved ones.
+   If they don't match, exit nonzero.
    Set *PREV_DIR to the name (in malloc'd storage) of the
    directory (usually now empty) from which we're coming.
-   Return true if successful.  */
-static bool
-AD_pop_and_chdir (Dirstack_state *ds, char **prev_dir)
+   If we're at the bottom of the AD stack (about to return
+   to the initial working directory), then use CWD.
+   If that restore_cwd fails, set CWD_STATE->saved_errno.  */
+static void
+AD_pop_and_chdir (Dirstack_state *ds, char **prev_dir,
+		  struct cwd_state *cwd_state)
 {
   enum RM_status old_status = AD_stack_top(ds)->status;
   struct AD_ent *top;
@@ -412,20 +409,22 @@ AD_pop_and_chdir (Dirstack_state *ds, char **prev_dir)
 	       _("cannot lstat `.' in %s"), quote (full_filename (".")));
 
       /*  Ensure that post-chdir dev/ino match the stored ones.  */
-      if ( ! SAME_INODE (sb, top->u.a))
+      if ( ! SAME_INODE (sb, top->dev_ino))
 	error (EXIT_FAILURE, 0,
 	       _("%s changed dev/ino"), quote (full_filename (".")));
     }
   else
     {
-      if (restore_cwd (&top->u.saved_cwd) != 0)
+      if (restore_cwd (&cwd_state->saved_cwd) != 0)
 	{
-	  /* failed to return to initial working directory */
-	  return false;
+	  /* We've failed to return to the initial working directory.
+	     That failure may be harmless if x->require_restore_cwd is false,
+	     but we do have to remember that fact, including the errno value,
+	     so we can give an accurate diagnostic when reporting the failure
+	     to remove a subsequent relative-named command-line argument.  */
+	  cwd_state->saved_errno = errno;
 	}
     }
-
-  return true;
 }
 
 /* Initialize *HT if it is NULL.
@@ -467,10 +466,10 @@ AD_mark_current_as_unremovable (Dirstack_state *ds)
   AD_mark_helper (&top->unremovable, curr);
 }
 
-/* Push the initial cwd info onto the stack.
+/* Push an initial dummy entry onto the stack.
    This will always be the bottommost entry on the stack.  */
 static void
-AD_push_initial (Dirstack_state *ds, struct saved_cwd const *cwd)
+AD_push_initial (Dirstack_state *ds)
 {
   struct AD_ent *top;
 
@@ -479,8 +478,13 @@ AD_push_initial (Dirstack_state *ds, struct saved_cwd const *cwd)
 
   /* Fill in the new values.  */
   top = AD_stack_top (ds);
-  top->u.saved_cwd = *cwd;
   top->unremovable = NULL;
+
+  /* These should never be used.
+     Give them values that might look suspicious
+     in a debugger or in a diagnostic.  */
+  top->dev_ino.st_dev = TYPE_MAXIMUM (dev_t);
+  top->dev_ino.st_ino = TYPE_MAXIMUM (ino_t);
 }
 
 /* Push info about the current working directory (".") onto the
@@ -509,8 +513,8 @@ AD_push (Dirstack_state *ds, char const *dir,
 
   /* Fill in the new values.  */
   top = AD_stack_top (ds);
-  top->u.a.st_dev = sb.st_dev;
-  top->u.a.st_ino = sb.st_ino;
+  top->dev_ino.st_dev = sb.st_dev;
+  top->dev_ino.st_ino = sb.st_ino;
   top->unremovable = NULL;
 }
 
@@ -1022,7 +1026,7 @@ remove_dir (Dirstack_state *ds, char const *dir, struct cwd_state **cwd_state,
       else
 	(*cwd_state)->saved_errno = 0;
 
-      AD_push_initial (ds, &(*cwd_state)->saved_cwd);
+      AD_push_initial (ds);
       AD_INIT_OTHER_MEMBERS ();
     }
 
@@ -1105,14 +1109,7 @@ remove_dir (Dirstack_state *ds, char const *dir, struct cwd_state **cwd_state,
 	   returned from, after nominally removing all of its contents.  */
 	char *empty_dir;
 
-	if (! AD_pop_and_chdir (ds, &empty_dir))
-	  (*cwd_state)->saved_errno = errno;
-
-	/* Note: the above may have failed due to restore_cwd failure.
-	   That failure may be harmless if x->require_restore_cwd is false,
-	   but we do have to remember that fact, including the errno value,
-	   so we can give an accurate diagnostic when reporting the failure
-	   to remove a subsequent relative-named command-line argument.  */
+	AD_pop_and_chdir (ds, &empty_dir, *cwd_state);
 
 	/* Try to remove D only if remove_cwd_entries succeeded.  */
 	if (tmp_status == RM_OK)
@@ -1194,7 +1191,9 @@ rm_1 (Dirstack_state *ds, char const *filename,
 }
 
 /* Remove all files and/or directories specified by N_FILES and FILE.
-   Apply the options in X.  */
+   Apply the options in X.  If X->require_restore_cwd is false, then
+   this function may return RM_OK even though it is unable to restore
+   the initial working directory.  */
 extern enum RM_status
 rm (size_t n_files, char const *const *file, struct rm_options const *x)
 {
