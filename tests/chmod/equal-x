@@ -5,26 +5,29 @@ if test "$VERBOSE" = yes; then
   chmod --version
 fi
 
+pwd=`pwd`
 tmp=eq-x-$$
-trap "rm -rf $tmp" 0 1 2 3 15
+trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
+trap '(exit $?); exit' 1 2 13 15
 
+file=f
 framework_failure=0
+mkdir $file || framework_failure=1
+cd $file || framework_failure=1
 
-rm -f $tmp
-> $tmp
-chmod 444 $tmp || framework_failure=1
+touch $file || framework_failure=1
+chmod 444 $file || framework_failure=1
 
 if test $framework_failure = 1; then
   echo 'failure in testing framework'
-  exit 1
+  (exit 1); exit
 fi
 
 umask 005
-chmod =x $tmp
-case "`ls -l $tmp`" in
+chmod =x $file
+case "`ls -l $file`" in
   ---x--x---*) fail=0 ;;
-  *) fail=1; ls -l $tmp ;;
+  *) fail=1; ls -l $file ;;
 esac
 
-rm -f $tmp
-exit $fail
+(exit $fail); exit
