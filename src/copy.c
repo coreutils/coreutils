@@ -337,7 +337,7 @@ copy_reg (const char *src_path, const char *dst_path,
 
       n_read_total += n_read;
 
-      ip = 0;
+      ip = NULL;
       if (make_holes)
 	{
 	  buf[n_read] = 1;	/* Sentinel to stop loop.  */
@@ -370,9 +370,9 @@ copy_reg (const char *src_path, const char *dst_path,
 	    }
 	  else
 	    /* Clear to indicate that a normal write is needed. */
-	    ip = 0;
+	    ip = NULL;
 	}
-      if (ip == 0)
+      if (ip == NULL)
 	{
 	  size_t n = n_read;
 	  if (full_write (dest_desc, buf, n) != n)
