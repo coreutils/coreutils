@@ -1,3 +1,24 @@
+2004-11-25  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* mempcpy.m4: New file, taken from gnulib.
+	* getcwd-path-max.m4 (gl_FUNC_GETCWD_PATH_MAX): Renamed from
+	GL_FUNC_GETCWD_PATH_MAX for consistency.  All uses changed.
+	Use the _ONCE methods, for efficiency.
+	Check for fcntl.h.  In test program, include <errno.h>
+	and <fcntl.h> if available.  Remove old K&R cruft from
+	test program.  Check for common errors in GNU/Linux,
+	OpenBSD, and Solaris.  Just set gl_cv_func_getcwd_path_max;
+	don't do AC_LIBOBJ, as that's getcwd.m4's job.
+	* getcwd.m4 (gl_FUNC_GETCWD_NULL): Renamed from
+	AC_FUNC_GETCWD_NULL.  All used changed.  Change cache variable
+	name accordingly.
+	(gl_FUNC_GETCWD, gl_PREREQ_GETCWD): New macros.  Revamp to
+	accommodate new getcwd.c.
+	* jm-macros.m4 (gl_MACROS): Don't require GL_FUNC_GETCWD_PATH_MAX.
+	* prereq.m4 (gl_PREREQ): Add gl_FUNC_MEMPCPY.
+	* xgetcwd.m4 (gl_XGETCWD): Replace with gl_FUNC_GETCWD, since
+	that's all we need now.
+
 2004-11-23  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* utimens.m4 (gl_UTIMENS): Check for futimes function.
