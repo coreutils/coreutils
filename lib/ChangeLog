@@ -1,3 +1,7 @@
+2005-03-09  Jim Meyering  <jim@meyering.net>
+
+	* cycle-check.c: Don't include "xalloc.h".  It's not used.
+
 2005-03-01  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Remove workaround for bug in Linux kernel 2.6.8 or thereabouts.
