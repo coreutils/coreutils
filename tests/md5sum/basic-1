@@ -1,0 +1,43 @@
+#!/bin/sh
+
+: ${PERL=perl}
+: ${srcdir=.}
+
+case "$PERL" in
+  *'missing perl')
+  echo 1>&2 "$0: configure didn't find a usable version of Perl, so can't run this test"
+  exit 77
+  ;;
+esac
+
+exec $PERL -w -I$srcdir/.. -MFetish -- - <<\EOF
+require 5.003;
+use strict;
+
+(my $program_name = $0) =~ s|.*/||;
+
+# Turn off localisation of executable's ouput.
+@ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
+
+my @Tests =
+    (
+     ['1', {IN=> {x=> ''}},	{OUT=>"d41d8cd98f00b204e9800998ecf8427e  x\n"}],
+     ['2', {IN=> {x=> 'a'}},		{OUT=>"0cc175b9c0f1b6a831c399e269772661  x\n"}],
+     ['3', {IN=> {x=> 'abc'}},	{OUT=>"900150983cd24fb0d6963f7d28e17f72  x\n"}],
+     ['4', {IN=> {x=> 'message digest'}},
+				{OUT=>"f96b697d7cb7938d525a2f31aaf161d0  x\n"}],
+     ['5', {IN=> {x=> 'abcdefghijklmnopqrstuvwxyz'}},
+				{OUT=>"c3fcd3d76192e4007dfb496cca67e13b  x\n"}],
+     ['6', {IN=> {x=> join ('', 'A'..'Z', 'a'..'z', '0'..'9')}},
+				{OUT=>"d174ab98d277d9f5a5611c2c9f419d9f  x\n"}],
+     ['7', {IN=> {x=> '1234567890' x 8}},
+				{OUT=>"57edf4a22be3c955ac49da2e2107b67a  x\n"}],
+    );
+
+my $save_temps = $ENV{DEBUG};
+my $verbose = $ENV{VERBOSE};
+
+my $prog = $ENV{PROG} || die "$0: \$PROG not specified in environment\n";
+my $fail = run_tests ($program_name, $prog, \@Tests, $save_temps, $verbose);
+exit $fail;
+EOF
