@@ -1,7 +1,13 @@
+2003-03-07  Jim Meyering  <jim@meyering.net>
+
+	* same.h (same_name): Remove unnecessary inclusion of config.h.
+	It also happened to lead to infinite recursion in getcwd.c.
+	(PARAMS): Remove definition and use.
+
 2003-03-06  Jim Meyering  <jim@meyering.net>
 
-	* getcwd.c [!HAVE_DECL_GETCWD]: Declare getcwd.
-	Suggestion from Nelson Beebe.
+	* getcwd.c: #undef getcwd before including system headers.
+	This avoid a build failure on IRIX 6.5.  Reported by Nelson Beebe.
 
 	Fix a bug that causes du to dump core on 64-bit systems.
 	* ftw.c (ftw_startup): Declare `func' parameter to be of type
