@@ -1,8 +1,14 @@
-Fri Mar  1 20:46:32 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+Fri Mar  1 23:46:32 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* expr.c (docolon): Don't initialize re_syntax_options to
  	deceptively-named RE_SYNTAX_POSIX_BASIC -- it recognizes non-BRE
 	\?, \+, and \|.  Use RE_SYNTAX_POSIX_MINIMAL_BASIC instead.
+
+	* od.c (WINDOWS_SETFILEMODE_BINARY): New macro.
+	(skip) [_WIN32 && _O_BINARY]: Use it.
+	(read_char): Likewise.
+	(read_block): Likewise.
+	Based on changes by Gary Newman <gnewman@shore.net>.
 
 Wed Feb 28 23:08:24 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
