@@ -1,3 +1,9 @@
+2001-03-17  Jim Meyering  <meyering@lucent.com>
+
+	* doc/fileutils.texi (touch invocation): Mention the obsolescent usage.
+	* src/touch.c (usage): Tweak the obsolescent usage line so that
+	help2man recognizes it as such.  Reported by Dan Jacobson.
+
 2001-03-16  Jim Meyering  <meyering@lucent.com>
 
 	* Makefile.maint (wget-update): Also get `missing'.
