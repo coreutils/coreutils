@@ -212,9 +212,9 @@ print_esc_char (int c)
    besides the backslash. */
 
 static int
-print_esc (char *escstart)
+print_esc (const char *escstart)
 {
-  register char *p = escstart + 1;
+  register const char *p = escstart + 1;
   int esc_value = 0;		/* Value of \nnn escape. */
   int esc_length;		/* Length of \nnn escape. */
 
@@ -247,7 +247,7 @@ print_esc (char *escstart)
 /* Print string STR, evaluating \ escapes. */
 
 static void
-print_esc_string (char *str)
+print_esc_string (const char *str)
 {
   for (; *str; str++)
     if (*str == '\\')
@@ -262,7 +262,7 @@ print_esc_string (char *str)
    '*' values in those fields. */
 
 static void
-print_direc (char *start, size_t length, int field_width, int precision, char *argument)
+print_direc (const char *start, size_t length, int field_width, int precision, const char *argument)
 {
   char *p;		/* Null-terminated copy of % directive. */
 
@@ -361,11 +361,11 @@ print_direc (char *start, size_t length, int field_width, int precision, char *a
    Return the number of elements of ARGV used.  */
 
 static int
-print_formatted (char *format, int argc, char **argv)
+print_formatted (const char *format, int argc, char **argv)
 {
   int save_argc = argc;		/* Preserve original value.  */
-  char *f;			/* Pointer into `format'.  */
-  char *direc_start;		/* Start of % directive.  */
+  const char *f;		/* Pointer into `format'.  */
+  const char *direc_start;	/* Start of % directive.  */
   size_t direc_length;		/* Length of % directive.  */
   int field_width;		/* Arg to first '*', or -1 if none.  */
   int precision;		/* Arg to second '*', or -1 if none.  */
