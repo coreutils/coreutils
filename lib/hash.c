@@ -1,12 +1,4 @@
-/* Global assumptions:
-   - ANSI C
-   - a certain amount of library support, at least <stdlib.h>
-   - C ints are at least 32-bits long
- */
-
-/* Things to do:
-   - add a sample do_all function for listing the hash table.
- */
+/* A generic hash table package.  */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,11 +7,9 @@
 #include "hash.h"
 
 #ifdef USE_OBSTACK
-/* This macro assumes that there is an HT with an initialized
-   HT_OBSTACK in scope.  */
-# define ZALLOC(n) obstack_alloc (&(ht->ht_obstack), (n))
+# define ZALLOC(Ht, N) obstack_alloc (&(ht->ht_obstack), (N))
 #else
-# define ZALLOC(n) malloc ((n))
+# define ZALLOC(Ht, N) malloc ((N))
 #endif
 
 #define BUCKET_HEAD(ht, idx) ((ht)->hash_table[(idx)])
@@ -78,7 +68,7 @@ hash_allocate_entry (HT *ht)
     }
   else
     {
-      new = (HASH_ENT *) ZALLOC (sizeof (HASH_ENT));
+      new = (HASH_ENT *) ZALLOC (ht, sizeof (HASH_ENT));
     }
   return new;
 }
