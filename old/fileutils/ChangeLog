@@ -1,3 +1,14 @@
+Sun Jun 15 07:04:29 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/makepath.c: Rewrite using save-cwd.c and chdir to remove
+	quadratic component of complexity.  Before, it processed O(n^2)
+	directory name components via stat and mkdir.  Now it's O(n).
+	This makes mkdir -p a lot more efficient when creating directories
+	with very many components.  On a Linux 2.0.30 ext2fs filesystem
+	this command: mkdir -p `perl -e 'print "a/" x 500'`  now runs in
+	0.77 seconds (user+sys).  Contrast that with the 9.5(!) seconds
+	it took before.
+
 Sat Jun 14 11:40:17 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* man/Makefile.am: (EXTRA_DIST): Put man_MANS here so they are
