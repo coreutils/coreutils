@@ -1584,7 +1584,10 @@ print_page (void)
 	  --lines_left_on_page;
 	}
 
-      if (double_space && pv && extremities)
+      if (cols_ready_to_print () <= 0 && !extremities)
+	break;
+
+      if (double_space && pv)
 	{
 	  putchar ('\n');
 	  --lines_left_on_page;
