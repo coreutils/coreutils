@@ -569,7 +569,7 @@ static char const *const time_args[] =
    and later output themselves.  */
 static size_t dired_pos;
 
-#define PUTCHAR(c) do {putchar ((c)); ++dired_pos;} while (0)
+#define DIRED_PUTCHAR(c) do {putchar ((c)); ++dired_pos;} while (0)
 
 /* Write S to STREAM and increment DIRED_POS by S_LEN.  */
 #define FPUTS(s, stream, s_len) \
@@ -753,7 +753,7 @@ main (int argc, char **argv)
     {
       print_current_files ();
       if (pending_dirs)
-	PUTCHAR ('\n');
+	DIRED_PUTCHAR ('\n');
     }
   else if (pending_dirs && pending_dirs->next == 0)
     print_dir_name = 0;
@@ -1609,18 +1609,18 @@ print_dir (const char *name, const char *realname)
       DIRED_INDENT ();
       p = _("total");
       FPUTS (p, stdout, strlen (p));
-      PUTCHAR (' ');
+      DIRED_PUTCHAR (' ');
       p = human_readable (total_blocks, buf, ST_NBLOCKSIZE, output_units,
 			  human_readable_base);
       FPUTS (p, stdout, strlen (p));
-      PUTCHAR ('\n');
+      DIRED_PUTCHAR ('\n');
     }
 
   if (files_index)
     print_current_files ();
 
   if (pending_dirs)
-    PUTCHAR ('\n');
+    DIRED_PUTCHAR ('\n');
 }
 
 /* Add `pattern' to the list of patterns for which files that match are
@@ -2161,7 +2161,7 @@ print_current_files (void)
       for (i = 0; i < files_index; i++)
 	{
 	  print_long_format (files + i);
-	  PUTCHAR ('\n');
+	  DIRED_PUTCHAR ('\n');
 	}
       break;
     }
@@ -2439,26 +2439,26 @@ static void
 print_type_indicator (unsigned int mode)
 {
   if (S_ISDIR (mode))
-    PUTCHAR ('/');
+    DIRED_PUTCHAR ('/');
 
 #ifdef S_ISLNK
   if (S_ISLNK (mode))
-    PUTCHAR ('@');
+    DIRED_PUTCHAR ('@');
 #endif
 
 #ifdef S_ISFIFO
   if (S_ISFIFO (mode))
-    PUTCHAR ('|');
+    DIRED_PUTCHAR ('|');
 #endif
 
 #ifdef S_ISSOCK
   if (S_ISSOCK (mode))
-    PUTCHAR ('=');
+    DIRED_PUTCHAR ('=');
 #endif
 
   if (S_ISREG (mode) && indicator_style == classify
       && (mode & S_IXUGO))
-    PUTCHAR ('*');
+    DIRED_PUTCHAR ('*');
 }
 
 static void
