@@ -8,4 +8,4 @@ TESTS_ENVIRONMENT = \
   PERL="@PERL@" \
   PATH=`pwd`/../../src:$$PATH
 
-TESTS = od-N
+TESTS = od-N x8
