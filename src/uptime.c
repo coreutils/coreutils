@@ -26,6 +26,8 @@
 #include "readutmp.h"
 #include "system.h"
 
+int getloadavg ();
+
 /* The name this program was run with. */
 char *program_name;
 
