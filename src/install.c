@@ -695,13 +695,16 @@ Usage: %s [OPTION]... SOURCE DEST           (1st format)\n\
 "),
 	      program_name, program_name, program_name);
       printf (_("\
-In first two formats, copy SOURCE to DEST or multiple SOURCE(s) to\n\
-DIRECTORY, while setting permission modes and owner/group.  In third\n\
-format, make all components of the given DIRECTORY(ies).\n\
+In the first two formats, copy SOURCE to DEST or multiple SOURCE(s) to\n\
+the existing DIRECTORY, while setting permission modes and owner/group.\n\
+In the third format, create all components of the given DIRECTORY(ies).\n\
 \n\
   -b, --backup        make backup before removal\n\
   -c                  (ignored)\n\
-  -d, --directory     create [leading] directories, mandatory for 3rd format\n\
+  -d, --directory     treat all arguments as directory names; create all\n\
+                        components of the specified directories\n\
+  -D                   create all leading components of DEST except the last,\n\
+                         then copy SOURCE to DEST;  useful in the 1st format\n\
   -g, --group=GROUP   set group ownership, instead of process' current group\n\
   -m, --mode=MODE     set permission mode (as in chmod), instead of rwxr-xr-x\n\
   -o, --owner=OWNER   set ownership (super-user only)\n\
