@@ -2,6 +2,9 @@
 
 	* Version 2.0.17.
 
+	* Makefile.cfg ($(srcdir)/m4/jm-glibc-io.m4): Use $(move_if_change),
+	not the literal `move-if-change'.
+
 	* src/tail.c (tail_forever): Add a cast.
 
 	Avoid compiler warnings.
