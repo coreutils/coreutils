@@ -188,7 +188,7 @@ copy_reg (const char *src_path, const char *dst_path,
 	error (0, 0, _("`%s' and `%s' are the same file"),
 	       src_path, dst_path);
       else
-	error (0, errno, "%s", src_path);
+	error (0, errno, _("cannot open `%s' for reading"), src_path);
 
       return -1;
     }
