@@ -474,7 +474,7 @@ main (int argc, char **argv)
 
   if (n_files == 0 || (n_files == 1 && !target_directory_specified))
     {
-      error (0, 0, "%s", _("missing file argument"));
+      error (0, 0, _("missing file argument"));
       usage (1);
     }
 
