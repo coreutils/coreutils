@@ -1,3 +1,8 @@
+Sun Sep  8 13:55:18 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* checks/sort-test/build-script.pl: Prefix $in with \$srcdir/
+	so make check works with VPATH build.  From Uli Drepper.
+
 Sat Sep  7 12:25:42 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/system.h: Add comments justifying IS* versions of ctype.h macros.
