@@ -1,3 +1,18 @@
+Sat Mar 16 10:46:23 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* configure.in (PACKAGE_VERSION): New macro.
+	* acconfig.h (PACKAGE_VERSION): Add it.
+	* src/Makefile.am: Remove rules for generating version.c.
+	Remove references to version.o, version.h, and stamp-v.
+	* version.c: Remove file.
+	* version.h: Remove file.
+	* chgrp.c chmod.c chown.c cp.c dd.c df.c du.c install.c ln.c
+	ls.c mkdir.c mkfifo.c mknod.c mv.c mvdir.c rm.c rmdir.c sync.c
+	touch.c: Don't include version.h.
+	(main): Use PACKAGE_VERSION instead of version_string.
+
+Sun Mar 10 22:36:11 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
 	* backupfile.c (max_backup_version): Declare file_name_length to
 	be of type size_t.  This avoid a warning from gcc -Wall.
 
