@@ -385,8 +385,8 @@ print_heading (void)
 {
   printf ("%-8s", _("Login"));
   if (include_fullname)
-    printf (" %-19s", _("   Name"));
-  printf (" %-9s", _("TTY"));
+    printf (" %-19s", _("Name"));
+  printf (" %-9s", _(" TTY"));
   if (include_idle)
     printf (" %-6s", _("Idle"));
   printf (" %-12s", _("When"));
