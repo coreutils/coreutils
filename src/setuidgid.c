@@ -1,5 +1,5 @@
 /* setuidgid - run a command with the UID and GID of a specified user
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -35,14 +35,14 @@
    D.J. Bernstein's program: http://cr.yp.to/daemontools/setuidgid.html.  */
 #define AUTHORS "Jim Meyering"
 
-#define FAIL_STATUS 111
+#define SETUIDGID_FAILURE 111
 
 char *program_name;
 
 void
 usage (int status)
 {
-  if (status != 0)
+  if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
@@ -80,6 +80,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  initialize_exit_failure (SETUIDGID_FAILURE);
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
@@ -96,40 +97,33 @@ main (int argc, char **argv)
   if (argc <= 2)
     {
       error (0, 0, _("too few arguments"));
-      usage (FAIL_STATUS);
+      usage (SETUIDGID_FAILURE);
     }
 
   user_id = argv[1];
   pwd = getpwnam (user_id);
   if (pwd == NULL)
-    {
-      error (0, errno, _("unknown user-ID: %s"), quote (user_id));
-      exit (FAIL_STATUS);
-    }
+    error (SETUIDGID_FAILURE, errno,
+	   _("unknown user-ID: %s"), quote (user_id));
 
   if (setgroups (1, &pwd->pw_gid))
-    {
-      error (0, errno, _("cannot set supplemental group"));
-      exit (FAIL_STATUS);
-    }
+    error (SETUIDGID_FAILURE, errno, _("cannot set supplemental group"));
 
   if (setgid (pwd->pw_gid))
-    {
-      error (0, errno, _("cannot set group-ID to %ld"), (long) pwd->pw_gid);
-      exit (FAIL_STATUS);
-    }
+    error (SETUIDGID_FAILURE, errno,
+	   _("cannot set group-ID to %ld"), (long int) pwd->pw_gid);
 
   if (setuid (pwd->pw_uid))
-    {
-      error (0, errno, _("cannot set user-ID to %ld"), (long) pwd->pw_uid);
-      exit (FAIL_STATUS);
-    }
+    error (SETUIDGID_FAILURE, errno,
+	   _("cannot set user-ID to %ld"), (long int) pwd->pw_uid);
 
   {
     char **cmd = argv + 2;
+    int exit_status;
     execvp (*cmd, cmd);
+    exit_status = (errno == ENOENT ? EXIT_ENOENT : EXIT_CANNOT_INVOKE);
 
     error (0, errno, _("cannot run command %s"), quote (*cmd));
-    exit (FAIL_STATUS);
+    exit (exit_status);
   }
 }
