@@ -1,2 +1,2 @@
 config-log
-config/config.guess
+build-aux/config.guess
