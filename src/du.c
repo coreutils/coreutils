@@ -223,7 +223,7 @@ Summarize disk usage of each FILE, recursively for directories.\n\
   -a, --all             write counts for all files, not just directories\n\
   -b, --bytes           print size in bytes\n\
   -c, --total           produce a grand total\n\
-  -h, --human           print sizes in human readable format (e.g. 1K 234M 2G)\n\
+  -h, --human-readable  print sizes in human readable format (e.g. 1K 234M 2G)\n\
   -k, --kilobytes       use 1024-byte blocks, not 512 despite POSIXLY_CORRECT\n\
   -l, --count-links     count sizes many times if hard linked\n\
   -m, --megabytes       use 1024K-byte blocks, not 512 despite POSIXLY_CORRECT\n\
