@@ -1,6 +1,17 @@
+[4.5.8]
+* du can now process arbitrarily deep hierarchies (subject to virtual memory).
+  Before, it would segfault on hierarchies deeper than 20,000-30,000 levels.
+* test now works properly when invoked from a set user ID or set group ID
+  context and when testing access to files subject to alternate protection
+  mechanisms.  For example, without this change, a set-UID program that invoked
+  `test -w F' (to see if F is writable) could mistakenly report that it *was*
+  writable, even though F was on a read-only file system, or F had an ACL
+  prohibiting write access, or F was marked as immutable.
+
 [4.5.7]
 * du would fail with more than one DIR argument when any but the last did not
   contain a slash (due to a bug in ftw.c)
+
 [4.5.6]
 * du no longer segfaults on Solaris systems (fixed heap-corrupting bug in ftw.c)
 * du --exclude=FILE works once again (this was broken by the rewrite for 4.5.5)
@@ -9,6 +20,7 @@
 * `who -r' no longer segfaults when using non-C-locale messages
 * df now displays a mount point (usually `/') for non-mounted
   character-special and block files
+
 [4.5.5]
 * ls --dired produces correct byte offset for file names containing
   nonprintable characters in a multibyte locale
