@@ -2,6 +2,7 @@
 
 	From gnulib, by Bruno Haible
 	* closeout.c: Include gettext.h instead of <libintl.h>.
+	* makepath.c: Likewise.
 	* error.c [!_LIBC]: Include gettext.h instead of <libintl.h>.
 
 	* mbswidth.h: Update from gnulib.
