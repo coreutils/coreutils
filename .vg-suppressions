@@ -1,0 +1,8 @@
+{
+   libc_dl_open
+   Memcheck:Cond
+   fun:_dl_relocate_object
+   obj:/lib/libc-2.3.2.so
+   fun:_dl_catch_error
+   fun:_dl_open
+}
