@@ -1,6 +1,6 @@
-# Makefile.in generated automatically by automake 1.4b from Makefile.am
+# Makefile.in generated automatically by automake 1.4e from Makefile.am
 
-# Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000
+# Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001
 # Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -48,6 +48,7 @@ INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_STRIP_FLAG =
+INSTALL_HEADER = $(INSTALL_DATA)
 transform = @program_transform_name@
 
 NORMAL_INSTALL = :
@@ -57,9 +58,10 @@ NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
 
-@SET_MAKE@
 host_alias = @host_alias@
 host_triplet = @host@
+
+@SET_MAKE@
 AMDEP = @AMDEP@
 AMTAR = @AMTAR@
 AWK = @AWK@
@@ -67,8 +69,6 @@ CATALOGS = @CATALOGS@
 CATOBJEXT = @CATOBJEXT@
 CC = @CC@
 CPP = @CPP@
-CXX = @CXX@
-CXXCPP = @CXXCPP@
 DATADIRNAME = @DATADIRNAME@
 DEPDIR = @DEPDIR@
 DF_PROG = @DF_PROG@
@@ -82,6 +82,8 @@ GNU_PACKAGE = @GNU_PACKAGE@
 GT_NO = @GT_NO@
 GT_YES = @GT_YES@
 INCLUDE_LOCALE_H = @INCLUDE_LOCALE_H@
+INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
+INSTALL_STRIP_PROGRAM_ENV = @INSTALL_STRIP_PROGRAM_ENV@
 INSTOBJEXT = @INSTOBJEXT@
 INTLDEPS = @INTLDEPS@
 INTLLIBS = @INTLLIBS@
@@ -107,11 +109,13 @@ POW_LIBM = @POW_LIBM@
 RANLIB = @RANLIB@
 SEQ_LIBM = @SEQ_LIBM@
 SQRT_LIBM = @SQRT_LIBM@
+STRIP = @STRIP@
 U = @U@
 USE_INCLUDED_LIBINTL = @USE_INCLUDED_LIBINTL@
 USE_NLS = @USE_NLS@
 VERSION = @VERSION@
 YACC = @YACC@
+_am_include = @_am_include@
 install_sh = @install_sh@
 l = @l@
 
@@ -166,7 +170,7 @@ SUFFIXES = .sed .sin
 CLEANFILES = charset.alias ref-add.sed ref-del.sed
 subdir = lib
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
-CONFIG_HEADER = ../config.h
+CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES = 
 LIBRARIES =  $(noinst_LIBRARIES)
 
@@ -197,61 +201,68 @@ DIST_SOURCES =  $(libfetish_a_SOURCES)
 HEADERS =  $(noinst_HEADERS)
 
 depcomp = $(SHELL) $(top_srcdir)/depcomp
-DEP_FILES =  @AMDEP@ $(DEPDIR)/__fpending.Po $(DEPDIR)/addext$U.Po \
-$(DEPDIR)/alloca.Po $(DEPDIR)/argmatch$U.Po $(DEPDIR)/atexit.Po \
-$(DEPDIR)/backupfile$U.Po $(DEPDIR)/basename$U.Po \
-$(DEPDIR)/canon-host$U.Po $(DEPDIR)/chown.Po $(DEPDIR)/closeout$U.Po \
-$(DEPDIR)/diacrit$U.Po $(DEPDIR)/dirname$U.Po $(DEPDIR)/dup2.Po \
-$(DEPDIR)/error.Po $(DEPDIR)/euidaccess.Po $(DEPDIR)/exclude$U.Po \
-$(DEPDIR)/fileblocks.Po $(DEPDIR)/filemode$U.Po $(DEPDIR)/fnmatch.Po \
-$(DEPDIR)/fsusage.Po $(DEPDIR)/ftruncate.Po $(DEPDIR)/full-write$U.Po \
-$(DEPDIR)/getdate$U.Po $(DEPDIR)/getgroups.Po $(DEPDIR)/gethostname.Po \
-$(DEPDIR)/getline.Po $(DEPDIR)/getloadavg.Po $(DEPDIR)/getopt$U.Po \
-$(DEPDIR)/getopt1$U.Po $(DEPDIR)/getpass.Po $(DEPDIR)/getstr$U.Po \
-$(DEPDIR)/getugroups$U.Po $(DEPDIR)/getusershell.Po \
-$(DEPDIR)/group-member.Po $(DEPDIR)/hard-locale$U.Po \
-$(DEPDIR)/hash$U.Po $(DEPDIR)/human$U.Po $(DEPDIR)/idcache$U.Po \
-$(DEPDIR)/isdir$U.Po $(DEPDIR)/lchown.Po $(DEPDIR)/linebuffer$U.Po \
-$(DEPDIR)/localcharset$U.Po $(DEPDIR)/long-options$U.Po \
-$(DEPDIR)/lstat.Po $(DEPDIR)/makepath$U.Po $(DEPDIR)/malloc.Po \
-$(DEPDIR)/mbswidth$U.Po $(DEPDIR)/md5$U.Po $(DEPDIR)/memcasecmp$U.Po \
-$(DEPDIR)/memchr.Po $(DEPDIR)/memcmp.Po $(DEPDIR)/memcoll$U.Po \
-$(DEPDIR)/memcpy.Po $(DEPDIR)/memmove.Po $(DEPDIR)/memrchr.Po \
-$(DEPDIR)/memset.Po $(DEPDIR)/mktime.Po $(DEPDIR)/modechange$U.Po \
-$(DEPDIR)/mountlist.Po $(DEPDIR)/nanosleep.Po $(DEPDIR)/obstack.Po \
-$(DEPDIR)/path-concat$U.Po $(DEPDIR)/physmem$U.Po \
-$(DEPDIR)/posixtm$U.Po $(DEPDIR)/putenv.Po $(DEPDIR)/quote$U.Po \
-$(DEPDIR)/quotearg$U.Po $(DEPDIR)/readtokens$U.Po $(DEPDIR)/readutmp.Po \
-$(DEPDIR)/realloc.Po $(DEPDIR)/regex.Po $(DEPDIR)/rename.Po \
-$(DEPDIR)/rmdir.Po $(DEPDIR)/rpmatch.Po $(DEPDIR)/safe-read$U.Po \
-$(DEPDIR)/same$U.Po $(DEPDIR)/save-cwd$U.Po $(DEPDIR)/savedir$U.Po \
-$(DEPDIR)/sha$U.Po $(DEPDIR)/stat.Po $(DEPDIR)/stime.Po \
-$(DEPDIR)/stpcpy.Po $(DEPDIR)/strcasecmp.Po $(DEPDIR)/strcspn.Po \
-$(DEPDIR)/strdup.Po $(DEPDIR)/strftime.Po $(DEPDIR)/stripslash$U.Po \
-$(DEPDIR)/strncasecmp.Po $(DEPDIR)/strndup.Po $(DEPDIR)/strnlen.Po \
-$(DEPDIR)/strpbrk.Po $(DEPDIR)/strstr.Po $(DEPDIR)/strtod.Po \
-$(DEPDIR)/strtol.Po $(DEPDIR)/strtoul.Po $(DEPDIR)/strtoull.Po \
-$(DEPDIR)/strtoumax.Po $(DEPDIR)/strverscmp.Po $(DEPDIR)/unicodeio$U.Po \
-$(DEPDIR)/userspec$U.Po $(DEPDIR)/utime.Po $(DEPDIR)/version-etc$U.Po \
-$(DEPDIR)/xgetcwd$U.Po $(DEPDIR)/xgethostname$U.Po \
-$(DEPDIR)/xmalloc$U.Po $(DEPDIR)/xstrdup$U.Po $(DEPDIR)/xstrtod$U.Po \
-$(DEPDIR)/xstrtol$U.Po $(DEPDIR)/xstrtoul$U.Po \
-$(DEPDIR)/xstrtoumax$U.Po $(DEPDIR)/yesno$U.Po
-DIST_COMMON =  README $(noinst_HEADERS) ChangeLog Makefile.am \
-Makefile.in TODO __fpending.c alloca.c atexit.c chown.c dup2.c error.c \
-error.h euidaccess.c fileblocks.c fnmatch.c fsusage.c ftruncate.c \
-getdate.c getgroups.c gethostname.c getline.c getloadavg.c getpass.c \
-getusershell.c group-member.c lchown.c malloc.c memchr.c memcmp.c \
-memcpy.c memmove.c memrchr.c memset.c mktime.c mountlist.c nanosleep.c \
-obstack.c obstack.h putenv.c readutmp.c realloc.c regex.c rename.c \
-rmdir.c rpmatch.c stime.c stpcpy.c strcasecmp.c strcspn.c strdup.c \
-strftime.c strncasecmp.c strndup.c strnlen.c strpbrk.c strstr.c \
-strtod.c strtol.c strtoul.c strtoull.c strtoumax.c strverscmp.c utime.c
+@AMDEP@DEP_FILES =  $(DEPDIR)/__fpending.Po $(DEPDIR)/addext$U.Po \
+@AMDEP@$(DEPDIR)/alloca.Po $(DEPDIR)/argmatch$U.Po $(DEPDIR)/atexit.Po \
+@AMDEP@$(DEPDIR)/backupfile$U.Po $(DEPDIR)/basename$U.Po \
+@AMDEP@$(DEPDIR)/canon-host$U.Po $(DEPDIR)/chown.Po \
+@AMDEP@$(DEPDIR)/closeout$U.Po $(DEPDIR)/diacrit$U.Po \
+@AMDEP@$(DEPDIR)/dirname$U.Po $(DEPDIR)/dup2.Po $(DEPDIR)/error.Po \
+@AMDEP@$(DEPDIR)/euidaccess.Po $(DEPDIR)/exclude$U.Po \
+@AMDEP@$(DEPDIR)/fileblocks.Po $(DEPDIR)/filemode$U.Po \
+@AMDEP@$(DEPDIR)/fnmatch.Po $(DEPDIR)/fsusage.Po $(DEPDIR)/ftruncate.Po \
+@AMDEP@$(DEPDIR)/full-write$U.Po $(DEPDIR)/getdate$U.Po \
+@AMDEP@$(DEPDIR)/getgroups.Po $(DEPDIR)/gethostname.Po \
+@AMDEP@$(DEPDIR)/getline.Po $(DEPDIR)/getloadavg.Po \
+@AMDEP@$(DEPDIR)/getopt$U.Po $(DEPDIR)/getopt1$U.Po \
+@AMDEP@$(DEPDIR)/getpass.Po $(DEPDIR)/getstr$U.Po \
+@AMDEP@$(DEPDIR)/getugroups$U.Po $(DEPDIR)/getusershell.Po \
+@AMDEP@$(DEPDIR)/group-member.Po $(DEPDIR)/hard-locale$U.Po \
+@AMDEP@$(DEPDIR)/hash$U.Po $(DEPDIR)/human$U.Po $(DEPDIR)/idcache$U.Po \
+@AMDEP@$(DEPDIR)/isdir$U.Po $(DEPDIR)/lchown.Po \
+@AMDEP@$(DEPDIR)/linebuffer$U.Po $(DEPDIR)/localcharset$U.Po \
+@AMDEP@$(DEPDIR)/long-options$U.Po $(DEPDIR)/lstat.Po \
+@AMDEP@$(DEPDIR)/makepath$U.Po $(DEPDIR)/malloc.Po \
+@AMDEP@$(DEPDIR)/mbswidth$U.Po $(DEPDIR)/md5$U.Po \
+@AMDEP@$(DEPDIR)/memcasecmp$U.Po $(DEPDIR)/memchr.Po \
+@AMDEP@$(DEPDIR)/memcmp.Po $(DEPDIR)/memcoll$U.Po $(DEPDIR)/memcpy.Po \
+@AMDEP@$(DEPDIR)/memmove.Po $(DEPDIR)/memrchr.Po $(DEPDIR)/memset.Po \
+@AMDEP@$(DEPDIR)/mkstemp.Po $(DEPDIR)/mktime.Po \
+@AMDEP@$(DEPDIR)/modechange$U.Po $(DEPDIR)/mountlist.Po \
+@AMDEP@$(DEPDIR)/nanosleep.Po $(DEPDIR)/obstack.Po \
+@AMDEP@$(DEPDIR)/path-concat$U.Po $(DEPDIR)/physmem$U.Po \
+@AMDEP@$(DEPDIR)/posixtm$U.Po $(DEPDIR)/putenv.Po $(DEPDIR)/quote$U.Po \
+@AMDEP@$(DEPDIR)/quotearg$U.Po $(DEPDIR)/readtokens$U.Po \
+@AMDEP@$(DEPDIR)/readutmp.Po $(DEPDIR)/realloc.Po $(DEPDIR)/regex.Po \
+@AMDEP@$(DEPDIR)/rename.Po $(DEPDIR)/rmdir.Po $(DEPDIR)/rpmatch.Po \
+@AMDEP@$(DEPDIR)/safe-read$U.Po $(DEPDIR)/same$U.Po \
+@AMDEP@$(DEPDIR)/save-cwd$U.Po $(DEPDIR)/savedir$U.Po \
+@AMDEP@$(DEPDIR)/sha$U.Po $(DEPDIR)/stat.Po $(DEPDIR)/stime.Po \
+@AMDEP@$(DEPDIR)/stpcpy.Po $(DEPDIR)/strcasecmp.Po $(DEPDIR)/strcspn.Po \
+@AMDEP@$(DEPDIR)/strdup.Po $(DEPDIR)/strftime.Po \
+@AMDEP@$(DEPDIR)/stripslash$U.Po $(DEPDIR)/strncasecmp.Po \
+@AMDEP@$(DEPDIR)/strndup.Po $(DEPDIR)/strnlen.Po $(DEPDIR)/strpbrk.Po \
+@AMDEP@$(DEPDIR)/strstr.Po $(DEPDIR)/strtod.Po $(DEPDIR)/strtol.Po \
+@AMDEP@$(DEPDIR)/strtoul.Po $(DEPDIR)/strtoull.Po \
+@AMDEP@$(DEPDIR)/strtoumax.Po $(DEPDIR)/strverscmp.Po \
+@AMDEP@$(DEPDIR)/tempname.Po $(DEPDIR)/unicodeio$U.Po \
+@AMDEP@$(DEPDIR)/userspec$U.Po $(DEPDIR)/utime.Po \
+@AMDEP@$(DEPDIR)/version-etc$U.Po $(DEPDIR)/xgetcwd$U.Po \
+@AMDEP@$(DEPDIR)/xgethostname$U.Po $(DEPDIR)/xmalloc$U.Po \
+@AMDEP@$(DEPDIR)/xstrdup$U.Po $(DEPDIR)/xstrtod$U.Po \
+@AMDEP@$(DEPDIR)/xstrtol$U.Po $(DEPDIR)/xstrtoul$U.Po \
+@AMDEP@$(DEPDIR)/xstrtoumax$U.Po $(DEPDIR)/yesno$U.Po
+DIST_COMMON =  mkstemp.c memrchr.c strtoull.c dup2.c rename.c memcpy.c \
+lchown.c Makefile.am euidaccess.c group-member.c strncasecmp.c \
+Makefile.in obstack.c strtoul.c strdup.c stime.c atexit.c obstack.h \
+rpmatch.c tempname.c fnmatch.c getline.c chown.c getloadavg.c \
+ftruncate.c strstr.c error.c regex.c malloc.c strcasecmp.c strftime.c \
+strtod.c memchr.c error.h stpcpy.c putenv.c TODO memcmp.c \
+getusershell.c nanosleep.c readutmp.c strtol.c rmdir.c strndup.c \
+gethostname.c __fpending.c mktime.c alloca.c $(noinst_HEADERS) \
+strpbrk.c getpass.c mountlist.c strcspn.c README fileblocks.c \
+getgroups.c getdate.c strverscmp.c utime.c ChangeLog strtoumax.c \
+strnlen.c memmove.c realloc.c fsusage.c memset.c
 
-
-DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-
-GZIP_ENV = --best
 SOURCES = $(libfetish_a_SOURCES)
 OBJECTS = $(am_libfetish_a_OBJECTS)
 
@@ -263,7 +274,7 @@ $(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4)
 
 Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) \
-	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
+	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= CONFIG_LINKS= $(SHELL) ./config.status
 
 
 mostlyclean-noinstLIBRARIES:
@@ -278,12 +289,8 @@ maintainer-clean-noinstLIBRARIES:
 mostlyclean-compile:
 	-rm -f *.o core *.core
 
-clean-compile:
-
 distclean-compile:
 	-rm -f *.tab.c
-
-maintainer-clean-compile:
 ../src/ansi2knr: ../src/ansi2knr.o
 	cd ../src && $(MAKE) $(AM_MAKEFLAGS) ansi2knr
 
@@ -293,12 +300,6 @@ maintainer-clean-compile:
 
 mostlyclean-kr:
 	-rm -f *_.c
-
-clean-kr:
-
-distclean-kr:
-
-maintainer-clean-kr:
 
 libfetish.a: $(libfetish_a_OBJECTS) $(libfetish_a_DEPENDENCIES)
 	-rm -f libfetish.a
@@ -416,6 +417,8 @@ memrchr_.c: memrchr.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/memrchr.c; then echo $(srcdir)/memrchr.c; else echo memrchr.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > memrchr_.c
 memset_.c: memset.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/memset.c; then echo $(srcdir)/memset.c; else echo memset.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > memset_.c
+mkstemp_.c: mkstemp.c $(ANSI2KNR)
+	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/mkstemp.c; then echo $(srcdir)/mkstemp.c; else echo mkstemp.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > mkstemp_.c
 mktime_.c: mktime.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/mktime.c; then echo $(srcdir)/mktime.c; else echo mktime.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > mktime_.c
 modechange_.c: modechange.c $(ANSI2KNR)
@@ -500,6 +503,8 @@ strtoumax_.c: strtoumax.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/strtoumax.c; then echo $(srcdir)/strtoumax.c; else echo strtoumax.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > strtoumax_.c
 strverscmp_.c: strverscmp.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/strverscmp.c; then echo $(srcdir)/strverscmp.c; else echo strverscmp.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > strverscmp_.c
+tempname_.c: tempname.c $(ANSI2KNR)
+	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/tempname.c; then echo $(srcdir)/tempname.c; else echo tempname.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > tempname_.c
 unicodeio_.c: unicodeio.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/unicodeio.c; then echo $(srcdir)/unicodeio.c; else echo unicodeio.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > unicodeio_.c
 userspec_.c: userspec.c $(ANSI2KNR)
@@ -536,14 +541,14 @@ group-member_.o hard-locale_.o hash_.o human_.o idcache_.o isdir_.o \
 lchown_.o linebuffer_.o localcharset_.o long-options_.o lstat_.o \
 makepath_.o malloc_.o mbswidth_.o md5_.o memcasecmp_.o memchr_.o \
 memcmp_.o memcoll_.o memcpy_.o memmove_.o memrchr_.o memset_.o \
-mktime_.o modechange_.o mountlist_.o nanosleep_.o obstack_.o \
+mkstemp_.o mktime_.o modechange_.o mountlist_.o nanosleep_.o obstack_.o \
 path-concat_.o physmem_.o posixtm_.o putenv_.o quote_.o quotearg_.o \
 readtokens_.o readutmp_.o realloc_.o regex_.o rename_.o rmdir_.o \
 rpmatch_.o safe-read_.o same_.o save-cwd_.o savedir_.o sha_.o stat_.o \
 stime_.o stpcpy_.o strcasecmp_.o strcspn_.o strdup_.o strftime_.o \
 stripslash_.o strncasecmp_.o strndup_.o strnlen_.o strpbrk_.o strstr_.o \
 strtod_.o strtol_.o strtoul_.o strtoull_.o strtoumax_.o strverscmp_.o \
-unicodeio_.o userspec_.o utime_.o version-etc_.o xgetcwd_.o \
+tempname_.o unicodeio_.o userspec_.o utime_.o version-etc_.o xgetcwd_.o \
 xgethostname_.o xmalloc_.o xstrdup_.o xstrtod_.o xstrtol_.o xstrtoul_.o \
 xstrtoumax_.o yesno_.o : $(ANSI2KNR)
 .y.c:
@@ -564,7 +569,7 @@ ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	       END { for (i in files) print i; }'`; \
 	mkid -fID $$unique $(LISP)
 
-TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
+TAGS: $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
 		$(TAGS_FILES) $(LISP)
 	tags=; \
 	here=`pwd`; \
@@ -582,135 +587,125 @@ GTAGS:
 	  && cd $(top_srcdir) \
 	  && gtags -i $$here
 
-mostlyclean-tags:
-
-clean-tags:
-
 distclean-tags:
 	-rm -f TAGS ID
 
-maintainer-clean-tags:
-
-@AMDEP@include $(DEPDIR)/__fpending.Po
-@AMDEP@include $(DEPDIR)/addext$U.Po
-@AMDEP@include $(DEPDIR)/alloca.Po
-@AMDEP@include $(DEPDIR)/argmatch$U.Po
-@AMDEP@include $(DEPDIR)/atexit.Po
-@AMDEP@include $(DEPDIR)/backupfile$U.Po
-@AMDEP@include $(DEPDIR)/basename$U.Po
-@AMDEP@include $(DEPDIR)/canon-host$U.Po
-@AMDEP@include $(DEPDIR)/chown.Po
-@AMDEP@include $(DEPDIR)/closeout$U.Po
-@AMDEP@include $(DEPDIR)/diacrit$U.Po
-@AMDEP@include $(DEPDIR)/dirname$U.Po
-@AMDEP@include $(DEPDIR)/dup2.Po
-@AMDEP@include $(DEPDIR)/error.Po
-@AMDEP@include $(DEPDIR)/euidaccess.Po
-@AMDEP@include $(DEPDIR)/exclude$U.Po
-@AMDEP@include $(DEPDIR)/fileblocks.Po
-@AMDEP@include $(DEPDIR)/filemode$U.Po
-@AMDEP@include $(DEPDIR)/fnmatch.Po
-@AMDEP@include $(DEPDIR)/fsusage.Po
-@AMDEP@include $(DEPDIR)/ftruncate.Po
-@AMDEP@include $(DEPDIR)/full-write$U.Po
-@AMDEP@include $(DEPDIR)/getdate$U.Po
-@AMDEP@include $(DEPDIR)/getgroups.Po
-@AMDEP@include $(DEPDIR)/gethostname.Po
-@AMDEP@include $(DEPDIR)/getline.Po
-@AMDEP@include $(DEPDIR)/getloadavg.Po
-@AMDEP@include $(DEPDIR)/getopt$U.Po
-@AMDEP@include $(DEPDIR)/getopt1$U.Po
-@AMDEP@include $(DEPDIR)/getpass.Po
-@AMDEP@include $(DEPDIR)/getstr$U.Po
-@AMDEP@include $(DEPDIR)/getugroups$U.Po
-@AMDEP@include $(DEPDIR)/getusershell.Po
-@AMDEP@include $(DEPDIR)/group-member.Po
-@AMDEP@include $(DEPDIR)/hard-locale$U.Po
-@AMDEP@include $(DEPDIR)/hash$U.Po
-@AMDEP@include $(DEPDIR)/human$U.Po
-@AMDEP@include $(DEPDIR)/idcache$U.Po
-@AMDEP@include $(DEPDIR)/isdir$U.Po
-@AMDEP@include $(DEPDIR)/lchown.Po
-@AMDEP@include $(DEPDIR)/linebuffer$U.Po
-@AMDEP@include $(DEPDIR)/localcharset$U.Po
-@AMDEP@include $(DEPDIR)/long-options$U.Po
-@AMDEP@include $(DEPDIR)/lstat.Po
-@AMDEP@include $(DEPDIR)/makepath$U.Po
-@AMDEP@include $(DEPDIR)/malloc.Po
-@AMDEP@include $(DEPDIR)/mbswidth$U.Po
-@AMDEP@include $(DEPDIR)/md5$U.Po
-@AMDEP@include $(DEPDIR)/memcasecmp$U.Po
-@AMDEP@include $(DEPDIR)/memchr.Po
-@AMDEP@include $(DEPDIR)/memcmp.Po
-@AMDEP@include $(DEPDIR)/memcoll$U.Po
-@AMDEP@include $(DEPDIR)/memcpy.Po
-@AMDEP@include $(DEPDIR)/memmove.Po
-@AMDEP@include $(DEPDIR)/memrchr.Po
-@AMDEP@include $(DEPDIR)/memset.Po
-@AMDEP@include $(DEPDIR)/mktime.Po
-@AMDEP@include $(DEPDIR)/modechange$U.Po
-@AMDEP@include $(DEPDIR)/mountlist.Po
-@AMDEP@include $(DEPDIR)/nanosleep.Po
-@AMDEP@include $(DEPDIR)/obstack.Po
-@AMDEP@include $(DEPDIR)/path-concat$U.Po
-@AMDEP@include $(DEPDIR)/physmem$U.Po
-@AMDEP@include $(DEPDIR)/posixtm$U.Po
-@AMDEP@include $(DEPDIR)/putenv.Po
-@AMDEP@include $(DEPDIR)/quote$U.Po
-@AMDEP@include $(DEPDIR)/quotearg$U.Po
-@AMDEP@include $(DEPDIR)/readtokens$U.Po
-@AMDEP@include $(DEPDIR)/readutmp.Po
-@AMDEP@include $(DEPDIR)/realloc.Po
-@AMDEP@include $(DEPDIR)/regex.Po
-@AMDEP@include $(DEPDIR)/rename.Po
-@AMDEP@include $(DEPDIR)/rmdir.Po
-@AMDEP@include $(DEPDIR)/rpmatch.Po
-@AMDEP@include $(DEPDIR)/safe-read$U.Po
-@AMDEP@include $(DEPDIR)/same$U.Po
-@AMDEP@include $(DEPDIR)/save-cwd$U.Po
-@AMDEP@include $(DEPDIR)/savedir$U.Po
-@AMDEP@include $(DEPDIR)/sha$U.Po
-@AMDEP@include $(DEPDIR)/stat.Po
-@AMDEP@include $(DEPDIR)/stime.Po
-@AMDEP@include $(DEPDIR)/stpcpy.Po
-@AMDEP@include $(DEPDIR)/strcasecmp.Po
-@AMDEP@include $(DEPDIR)/strcspn.Po
-@AMDEP@include $(DEPDIR)/strdup.Po
-@AMDEP@include $(DEPDIR)/strftime.Po
-@AMDEP@include $(DEPDIR)/stripslash$U.Po
-@AMDEP@include $(DEPDIR)/strncasecmp.Po
-@AMDEP@include $(DEPDIR)/strndup.Po
-@AMDEP@include $(DEPDIR)/strnlen.Po
-@AMDEP@include $(DEPDIR)/strpbrk.Po
-@AMDEP@include $(DEPDIR)/strstr.Po
-@AMDEP@include $(DEPDIR)/strtod.Po
-@AMDEP@include $(DEPDIR)/strtol.Po
-@AMDEP@include $(DEPDIR)/strtoul.Po
-@AMDEP@include $(DEPDIR)/strtoull.Po
-@AMDEP@include $(DEPDIR)/strtoumax.Po
-@AMDEP@include $(DEPDIR)/strverscmp.Po
-@AMDEP@include $(DEPDIR)/unicodeio$U.Po
-@AMDEP@include $(DEPDIR)/userspec$U.Po
-@AMDEP@include $(DEPDIR)/utime.Po
-@AMDEP@include $(DEPDIR)/version-etc$U.Po
-@AMDEP@include $(DEPDIR)/xgetcwd$U.Po
-@AMDEP@include $(DEPDIR)/xgethostname$U.Po
-@AMDEP@include $(DEPDIR)/xmalloc$U.Po
-@AMDEP@include $(DEPDIR)/xstrdup$U.Po
-@AMDEP@include $(DEPDIR)/xstrtod$U.Po
-@AMDEP@include $(DEPDIR)/xstrtol$U.Po
-@AMDEP@include $(DEPDIR)/xstrtoul$U.Po
-@AMDEP@include $(DEPDIR)/xstrtoumax$U.Po
-@AMDEP@include $(DEPDIR)/yesno$U.Po
-
-mostlyclean-depend:
-
-clean-depend:
+@AMDEP@@_am_include@ $(DEPDIR)/__fpending.Po
+@AMDEP@@_am_include@ $(DEPDIR)/addext$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/alloca.Po
+@AMDEP@@_am_include@ $(DEPDIR)/argmatch$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/atexit.Po
+@AMDEP@@_am_include@ $(DEPDIR)/backupfile$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/basename$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/canon-host$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/chown.Po
+@AMDEP@@_am_include@ $(DEPDIR)/closeout$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/diacrit$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/dirname$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/dup2.Po
+@AMDEP@@_am_include@ $(DEPDIR)/error.Po
+@AMDEP@@_am_include@ $(DEPDIR)/euidaccess.Po
+@AMDEP@@_am_include@ $(DEPDIR)/exclude$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/fileblocks.Po
+@AMDEP@@_am_include@ $(DEPDIR)/filemode$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/fnmatch.Po
+@AMDEP@@_am_include@ $(DEPDIR)/fsusage.Po
+@AMDEP@@_am_include@ $(DEPDIR)/ftruncate.Po
+@AMDEP@@_am_include@ $(DEPDIR)/full-write$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/getdate$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/getgroups.Po
+@AMDEP@@_am_include@ $(DEPDIR)/gethostname.Po
+@AMDEP@@_am_include@ $(DEPDIR)/getline.Po
+@AMDEP@@_am_include@ $(DEPDIR)/getloadavg.Po
+@AMDEP@@_am_include@ $(DEPDIR)/getopt$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/getopt1$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/getpass.Po
+@AMDEP@@_am_include@ $(DEPDIR)/getstr$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/getugroups$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/getusershell.Po
+@AMDEP@@_am_include@ $(DEPDIR)/group-member.Po
+@AMDEP@@_am_include@ $(DEPDIR)/hard-locale$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/hash$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/human$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/idcache$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/isdir$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/lchown.Po
+@AMDEP@@_am_include@ $(DEPDIR)/linebuffer$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/localcharset$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/long-options$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/lstat.Po
+@AMDEP@@_am_include@ $(DEPDIR)/makepath$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/malloc.Po
+@AMDEP@@_am_include@ $(DEPDIR)/mbswidth$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/md5$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/memcasecmp$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/memchr.Po
+@AMDEP@@_am_include@ $(DEPDIR)/memcmp.Po
+@AMDEP@@_am_include@ $(DEPDIR)/memcoll$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/memcpy.Po
+@AMDEP@@_am_include@ $(DEPDIR)/memmove.Po
+@AMDEP@@_am_include@ $(DEPDIR)/memrchr.Po
+@AMDEP@@_am_include@ $(DEPDIR)/memset.Po
+@AMDEP@@_am_include@ $(DEPDIR)/mkstemp.Po
+@AMDEP@@_am_include@ $(DEPDIR)/mktime.Po
+@AMDEP@@_am_include@ $(DEPDIR)/modechange$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/mountlist.Po
+@AMDEP@@_am_include@ $(DEPDIR)/nanosleep.Po
+@AMDEP@@_am_include@ $(DEPDIR)/obstack.Po
+@AMDEP@@_am_include@ $(DEPDIR)/path-concat$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/physmem$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/posixtm$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/putenv.Po
+@AMDEP@@_am_include@ $(DEPDIR)/quote$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/quotearg$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/readtokens$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/readutmp.Po
+@AMDEP@@_am_include@ $(DEPDIR)/realloc.Po
+@AMDEP@@_am_include@ $(DEPDIR)/regex.Po
+@AMDEP@@_am_include@ $(DEPDIR)/rename.Po
+@AMDEP@@_am_include@ $(DEPDIR)/rmdir.Po
+@AMDEP@@_am_include@ $(DEPDIR)/rpmatch.Po
+@AMDEP@@_am_include@ $(DEPDIR)/safe-read$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/same$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/save-cwd$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/savedir$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/sha$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/stat.Po
+@AMDEP@@_am_include@ $(DEPDIR)/stime.Po
+@AMDEP@@_am_include@ $(DEPDIR)/stpcpy.Po
+@AMDEP@@_am_include@ $(DEPDIR)/strcasecmp.Po
+@AMDEP@@_am_include@ $(DEPDIR)/strcspn.Po
+@AMDEP@@_am_include@ $(DEPDIR)/strdup.Po
+@AMDEP@@_am_include@ $(DEPDIR)/strftime.Po
+@AMDEP@@_am_include@ $(DEPDIR)/stripslash$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/strncasecmp.Po
+@AMDEP@@_am_include@ $(DEPDIR)/strndup.Po
+@AMDEP@@_am_include@ $(DEPDIR)/strnlen.Po
+@AMDEP@@_am_include@ $(DEPDIR)/strpbrk.Po
+@AMDEP@@_am_include@ $(DEPDIR)/strstr.Po
+@AMDEP@@_am_include@ $(DEPDIR)/strtod.Po
+@AMDEP@@_am_include@ $(DEPDIR)/strtol.Po
+@AMDEP@@_am_include@ $(DEPDIR)/strtoul.Po
+@AMDEP@@_am_include@ $(DEPDIR)/strtoull.Po
+@AMDEP@@_am_include@ $(DEPDIR)/strtoumax.Po
+@AMDEP@@_am_include@ $(DEPDIR)/strverscmp.Po
+@AMDEP@@_am_include@ $(DEPDIR)/tempname.Po
+@AMDEP@@_am_include@ $(DEPDIR)/unicodeio$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/userspec$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/utime.Po
+@AMDEP@@_am_include@ $(DEPDIR)/version-etc$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/xgetcwd$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/xgethostname$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/xmalloc$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/xstrdup$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/xstrtod$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/xstrtol$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/xstrtoul$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/xstrtoumax$U.Po
+@AMDEP@@_am_include@ $(DEPDIR)/yesno$U.Po
 
 distclean-depend:
 	-rm -rf $(DEPDIR)
-
-maintainer-clean-depend:
 
 @AMDEP@CCDEPMODE = @CCDEPMODE@
 
@@ -721,7 +716,10 @@ maintainer-clean-depend:
 	$(COMPILE) -c -o $@ `test -f $< || echo '$(srcdir)/'`$<
 
 
-distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
+DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+
+top_distdir = ..
+distdir = $(top_distdir)/$(PACKAGE)-$(VERSION)
 
 distdir: $(DISTFILES)
 	@for file in $(DISTFILES); do \
@@ -743,8 +741,8 @@ check-am: all-am
 check: check-am
 installcheck-am:
 installcheck: installcheck-am
-all-recursive-am: $(BUILT_SOURCES)
-	$(MAKE) $(AM_MAKEFLAGS) all-recursive
+all-redirect: $(BUILT_SOURCES)
+	$(MAKE) $(AM_MAKEFLAGS) all-am
 
 install-exec-am: install-exec-local
 install-exec: install-exec-am
@@ -758,9 +756,9 @@ install: install-am
 uninstall-am: uninstall-local
 uninstall: uninstall-am
 all-am: Makefile $(LIBRARIES) $(HEADERS) all-local
-all-redirect: all-am
 install-strip:
-	$(MAKE) $(AM_MAKEFLAGS) INSTALL_STRIP_FLAG=-s install
+	$(MAKE) $(AM_MAKEFLAGS) INSTALL_PROGRAM="$(INSTALL_STRIP_PROGRAM)" \
+	  INSTALL_PROGRAM_ENV='$(INSTALL_STRIP_PROGRAM_ENV)' install
 installdirs:
 
 
@@ -775,47 +773,40 @@ distclean-generic:
 	-test -z "$(DISTCLEANFILES)" || rm -f $(DISTCLEANFILES)
 
 maintainer-clean-generic:
+	@echo "This command is intended for maintainers to use"
+	@echo "it deletes files that may require special tools to rebuild."
 	-rm -f Makefile.in
 	-test -z "getdate.c$(BUILT_SOURCES)$(MAINTAINERCLEANFILES)" || rm -f getdate.c $(BUILT_SOURCES) $(MAINTAINERCLEANFILES)
-mostlyclean-am:  mostlyclean-noinstLIBRARIES mostlyclean-compile \
-		mostlyclean-kr mostlyclean-tags mostlyclean-depend \
-		mostlyclean-generic
+maintainer-clean-am: distclean-am maintainer-clean-generic \
+	maintainer-clean-noinstLIBRARIES
 
-mostlyclean: mostlyclean-am
-
-clean-am:  clean-noinstLIBRARIES clean-compile clean-kr clean-tags \
-		clean-depend clean-generic mostlyclean-am
-
-clean: clean-am
-
-distclean-am:  distclean-noinstLIBRARIES distclean-compile distclean-kr \
-		distclean-tags distclean-depend distclean-generic \
-		clean-am
+.PHONY: all all-am all-local all-redirect check check-am clean \
+	clean-generic clean-noinstLIBRARIES distclean distclean-compile \
+	distclean-depend distclean-generic distclean-noinstLIBRARIES \
+	distclean-tags distdir dvi dvi-am info info-am install \
+	install-am install-data install-data-am install-exec \
+	install-exec-am install-exec-local install-strip installcheck \
+	installcheck-am installdirs maintainer-clean \
+	maintainer-clean-generic maintainer-clean-noinstLIBRARIES \
+	mostlyclean mostlyclean-compile mostlyclean-generic \
+	mostlyclean-kr mostlyclean-noinstLIBRARIES tags uninstall \
+	uninstall-am uninstall-local
 
 distclean: distclean-am
 
-maintainer-clean-am:  maintainer-clean-noinstLIBRARIES \
-		maintainer-clean-compile maintainer-clean-kr \
-		maintainer-clean-tags maintainer-clean-depend \
-		maintainer-clean-generic distclean-am
-	@echo "This command is intended for maintainers to use;"
-	@echo "it deletes files that may require special tools to rebuild."
+clean-am: clean-generic clean-noinstLIBRARIES mostlyclean-am
+
+distclean-am: clean-am distclean-compile distclean-depend \
+	distclean-generic distclean-noinstLIBRARIES distclean-tags
 
 maintainer-clean: maintainer-clean-am
 
-.PHONY: mostlyclean-noinstLIBRARIES distclean-noinstLIBRARIES \
-clean-noinstLIBRARIES maintainer-clean-noinstLIBRARIES \
-mostlyclean-compile distclean-compile clean-compile \
-maintainer-clean-compile mostlyclean-kr distclean-kr clean-kr \
-maintainer-clean-kr tags mostlyclean-tags distclean-tags clean-tags \
-maintainer-clean-tags mostlyclean-depend distclean-depend clean-depend \
-maintainer-clean-depend distdir info-am info dvi-am dvi check check-am \
-installcheck-am installcheck all-recursive-am install-exec-local \
-install-exec-am install-exec install-data-am install-data install-am \
-install uninstall-local uninstall-am uninstall all-local all-redirect \
-all-am all install-strip installdirs mostlyclean-generic \
-distclean-generic clean-generic maintainer-clean-generic clean \
-mostlyclean distclean maintainer-clean
+mostlyclean-am: mostlyclean-compile mostlyclean-generic mostlyclean-kr \
+	mostlyclean-noinstLIBRARIES
+
+mostlyclean: mostlyclean-am
+
+clean: clean-am
 
 lstat.c: xstat.in
 	sed \
