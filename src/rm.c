@@ -33,6 +33,16 @@
 # define D_INO(dp) 1
 #endif
 
+/* An element in a stack of pointers into `pathname'.
+   `pathp' points to where in `pathname' the terminating '\0' goes
+   for this level's directory name.  */
+struct pathstack
+{
+  struct pathstack *next;
+  char *pathp;
+  ino_t inum;
+};
+
 char *basename (char *);
 char *stpcpy ();
 char *xmalloc ();
@@ -50,6 +60,11 @@ static void usage (int status);
 
 /* Name this program was run with.  */
 char *program_name;
+
+/* Linked list of pathnames of directories in progress in recursive rm.
+   The entries actually contain pointers into `pathname'.
+   `pathstack' is the current deepest level.  */
+static struct pathstack *pathstack = NULL;
 
 /* Path of file now being processed; extended as necessary.  */
 static char *pathname;
@@ -310,21 +325,6 @@ remove_dir (struct stat *statp)
     }
   return 0;
 }
-
-/* An element in a stack of pointers into `pathname'.
-   `pathp' points to where in `pathname' the terminating '\0' goes
-   for this level's directory name.  */
-struct pathstack
-{
-  struct pathstack *next;
-  char *pathp;
-  ino_t inum;
-};
-
-/* Linked list of pathnames of directories in progress in recursive rm.
-   The entries actually contain pointers into `pathname'.
-   `pathstack' is the current deepest level.  */
-static struct pathstack *pathstack = NULL;
 
 /* Read directory `pathname' and remove all of its entries,
    avoiding use of chdir.
