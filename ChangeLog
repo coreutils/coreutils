@@ -4,8 +4,7 @@
 
 	* Makefile.cfg (gnu_rel_host): Fix code to match the comment
 	so that a version number with a two-digit component can still count
-	as an alpha release.
-	Reported by Richard A Downing.
+	as an alpha release.  Reported by Richard A Downing.
 	(gnu_rel_host): Define in terms of $(RELEASE_TYPE) instead.
 
 2003-03-14  Jim Meyering  <jim@meyering.net>
