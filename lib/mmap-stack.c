@@ -55,7 +55,7 @@ get_context (ucontext_t *ctx, size_t size)
   if (getcontext (ctx))
     return 1;
 
-  /* use tmpfile if MAP_ANONYMOUS is not defined. */
+  /* use tmpfile if MAP_ANONYMOUS is not useful. */
 #if MAP_ANONYMOUS == 0
   {
     FILE *fp = tmpfile ();
