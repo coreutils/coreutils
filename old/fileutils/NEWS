@@ -5,7 +5,7 @@ Major changes in release 3.5:
   accepted since it is incompatible with the POSIX.2 standard
 * chmod accepts long-named options
 * dd conv=unblock doesn't hang
-* new df option --exclude fstype
+* new df option --exclude=fstype
 * new ls option --long-time
 
 Major changes in release 3.4:
