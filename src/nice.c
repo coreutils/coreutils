@@ -24,12 +24,15 @@
 
 #include <getopt.h>
 #include <sys/types.h>
+
+#include "system.h"
+
 #ifndef NICE_PRIORITY
-# include <time.h>
+/* Include this after "system.h" so we're sure to have definitions
+   (from time.h or sys/time.h) required for e.g. the ru_utime member.  */
 # include <sys/resource.h>
 #endif
 
-#include "system.h"
 #include "error.h"
 #include "long-options.h"
 #include "posixver.h"
