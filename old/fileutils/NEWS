@@ -2,7 +2,6 @@ Changes in release 3.15:
 * ls -l no longer misformats the date when run in a locale for which the
   locale's abbreviated week-day name (strftime's %a format) is shorter or
   longer than the `normal' three bytes (with LANG=de it's a two-byte string).
-[3.14b]:
 * Using --program-prefix no longer applies the prefix twice
 * ls --color properly restores color attributes upon completion when the
   normal (`no') color attribute is not the default color.
