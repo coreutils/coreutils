@@ -159,21 +159,39 @@ ftp-gnu = ftp://ftp.gnu.org/gnu
 # Use mv, if you don't have move-if-change.
 move-if-change = move-if-change
 
+# The following pseudo table associates a local directory and a URL
+# with each of the files that belongs to some other package and is
+# regularly updated from the specified URL.
+wget-files = config.guess config.sub ansi2knr.c texinfo.tex
+get-targets = $(patsubst %,get-%,$(wget-files))
+
+config.guess-local_dir = .
+config.guess-url_prefix = $(ftp-gnu)/config/
+config.sub-local_dir = .
+config.sub-url_prefix = $(ftp-gnu)/config/
+
+ansi2knr.c-local_dir = src
+ansi2knr.c-url_prefix = ftp://ftp.cs.wisc.edu/ghost/
+
+texinfo.tex-local_dir = doc
+texinfo.tex-url_prefix = $(ftp-gnu)/texinfo/
+
+target = $(patsubst get-%,%,$@)
+url = $($(target)-url_prefix)$(target)
+local_file = $($(target)-local_dir)/$(target)
+
+.PHONY: $(get-targets)
+$(get-targets):
+	$(WGET) $(url) -O $(target).t \
+	    && $(move-if-change) $(target).t $(local_file)
+
 automake_repo=:pserver:anoncvs@anoncvs.cygnus.com:/cvs/automake
 .PHONY: wget-update
-wget-update:
-	$(WGET) $(ftp-gnu)/texinfo/texinfo.tex -O $(srcdir)/doc/texinfo.tex
-	for f in config.guess config.sub; do				\
-	  $(WGET) $(ftp-gnu)/config/$$f -O $(srcdir)/$$f.t		\
-	    && $(move-if-change) $$f.t $$f;				\
-	done
-	f=ansi2knr.c;							\
-	  $(WGET) ftp://ftp.cs.wisc.edu/ghost/$$f -O $(srcdir)/src/$$f.t \
-	    && $(move-if-change) $$f.t $$f
+wget-update: $(get-targets)
 	for f in depcomp missing; do					\
 	  echo checking out $$f...;					\
-	  cvs -d $(automake_repo) co -p automake/lib/$$f > t$$$$	\
-	    && $(move-if-change) t$$$$ $$f;				\
+	  cvs -d $(automake_repo) co -p automake/lib/$$f > $$f.t	\
+	    && $(move-if-change) $$f.t $$f;				\
 	done
 
 define emit-rsync-commands
