@@ -2,6 +2,20 @@
 
 	* Version 5.0.92.
 
+	* basename.c, cat.c, chroot.c, cksum.c, comm.c, cp.c, csplit.c, cut.c:
+	* dd.c, df.c, dirname.c, du.c, echo.c, env.c, expr.c, factor.c, head.c:
+	* hostid.c, hostname.c, id.c, link.c, ln.c, logname.c, ls.c, md5sum.c:
+	* mv.c, nice.c, nl.c, nohup.c, paste.c, pathchk.c, pinky.c, pr.c:
+	* printenv.c, printf.c, pwd.c, rm.c, setuidgid.c, sleep.c, sort.c:
+	* split.c, stty.c, sum.c, sync.c, tac.c, tail.c, tee.c, test.c:
+	* touch.c, tsort.c, uniq.c, unlink.c, uptime.c, users.c, wc.c:
+	* who.c, whoami.c, yes.c: Update AUTHORS definition to be a
+	comma-separated list of strings and/or update the call to
+	parse_long_options so that `AUTHORS, NULL' are the last parameters.
+
+	* src/true.c (main): Append NULL to version_etc argument list.
+	* src/sys2.h (case_GETOPT_VERSION_CHAR): Likewise.
+
 	* src/sort.c (numcompare): Rename local, logb, to log_b to avoid
 	shadowing the math function name.  Also rename loga to log_a.
 
