@@ -1,6 +1,7 @@
 2000-11-03  Jim Meyering  <meyering@lucent.com>
 
-	* tests/sha1sum/sample-vec: New file.
+	* tests/sha1sum/sample-vec: New file, with tests derived from
+	http://csrc.nist.gov/cryptval/shs/sha1-vectors.zip
 	* tests/sha1sum/Makefile.am (TESTS): Add sample-vec.
 
 2000-10-30  Jim Meyering  <meyering@lucent.com>
