@@ -12,7 +12,7 @@
 	* src/tr.c: Remove stpcpy dcl.
 	On some systems, strstr and stpcpy are macros, so declaring them
 	unconditionally gets syntax errors.
-	Reported by Mark M._Kettenis" <kettenis@phys.uva.nl>.
+	Reported by Mark M. Kettenis.
 
 	* configure.in: Use jm_CHECK_DECLS.
 	* m4/Makefile.am (EXTRA_DIST): Add decl.m4 and do-decl.m4.
