@@ -1,6 +1,22 @@
+2000-12-02  Jim Meyering  <meyering@lucent.com>
+
+	* doc/textutils.texi (sort invocation): Clarify how -t works
+	when a sort key specifies a range of fields.  From Karl O. Pinc.
+
 2000-11-30  Jim Meyering  <meyering@lucent.com>
 
-	* src/sys2.h (SIZE_T_MAX): Define.
+	* src/sort.c: s/SIZE_T_MAX/SIZE_MAX/.
+
+2000-11-30  Paul Eggert  <eggert@twinsun.com>
+
+	* src/sys2.h: Include <stdint.h> if HAVE_STDINT_H.
+	(SIZE_MAX): Renamed from SIZE_T_MAX, as C99 uses SIZE_MAX.
+	All uses changed.
+
+2000-11-30  Jim Meyering  <meyering@lucent.com>
+
+	* src/sort.c: SIZE_MAX is not defined, so s/SIZE_MAX/SIZE_T_MAX/, and...
+	* src/sys2.h (SIZE_T_MAX): ... define.
 
 2000-11-29  Paul Eggert  <eggert@twinsun.com>
 
