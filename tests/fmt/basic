@@ -25,6 +25,8 @@ my @Tests =
      ['8-bit-pfx', qw (-p 'ç'),
       {IN=> "ça\nçb\n"},
       {OUT=>"ça b\n"}],
+     ['wide-1', '-32768',	{IN=> "a\n"}, {OUT=>"a\n"}],
+     ['wide-2', '-2147483647',	{IN=> "a\n"}, {OUT=>"a\n"}],
     );
 
 my $save_temps = $ENV{DEBUG};
