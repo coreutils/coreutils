@@ -413,6 +413,11 @@ main (int argc, char **argv)
 	{
 	  if (optind == argc)
 	    break;
+	  if (nfiles == 2)
+	    {
+	      error (0, 0, _("extra operand `%s'"), argv[optind]);
+	      usage (1);
+	    }
 	  file[nfiles++] = argv[optind++];
 	}
       else switch (optc)
