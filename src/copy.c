@@ -439,13 +439,24 @@ copy_internal (const char *src_path, const char *dst_path,
 	     file is a symlink, use stat (not xstat) to see if they refer
 	     to the same file.  */
 	  if (!same
+
+	      /* If we'll remove DST_PATH first, then this doesn't matter.  */
+	      && ! x->force
+
+	      /* Allow them to be the same (and don't set `same') if
+		 we're in move mode and they're both symlinks.  */
+	      && !(move_mode
+		   && S_ISLNK (src_sb.st_mode)
+		   && S_ISLNK (dst_sb.st_mode))
+
 	      /* If we're making a backup, we'll detect the problem case in
 		 copy_reg because SRC_PATH will no longer exist.  Allowing
 		 the test to be deferred lets cp do some useful things.
 		 But when creating hardlinks and SRC_PATH is a symlink
 		 but DST_PATH is not we must test anyway.  */
 	      && (x->backup_type == none
-		  || (x->hard_link && S_ISLNK (src_sb.st_mode)
+		  || (x->hard_link
+		      && S_ISLNK (src_sb.st_mode)
 		      && !S_ISLNK (dst_sb.st_mode)))
 	      && !x->dereference
 	      && (S_ISLNK (dst_sb.st_mode) || S_ISLNK (src_sb.st_mode)))
@@ -466,7 +477,7 @@ copy_internal (const char *src_path, const char *dst_path,
 	      if (x->hard_link)
 		return 0;
 
-	      if (x->backup_type == none)
+	      if (x->backup_type == none && !x->force)
 		{
 		  error (0, 0, _("`%s' and `%s' are the same file"),
 			 src_path, dst_path);
