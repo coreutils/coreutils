@@ -31,5 +31,5 @@ SUFFIXES = .pl
 	chmod +x-w $@.tmp
 	mv $@.tmp $@
 
-MAINTAINERCLEANFILES = $x-tests $(in) $(exp)
+MAINTAINERCLEANFILES = $x-tests $(in1) $(in2) $(exp)
 CLEANFILES = $(out) $(err)
