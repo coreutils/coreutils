@@ -884,8 +884,8 @@ EXPRESSION is true or false and sets exit status.  It is one of:\n\
       fputs (_("\
   -f FILE     FILE exists and is a regular file\n\
   -g FILE     FILE exists and is set-group-ID\n\
-  -h FILE     FILE exists and is a symbolic link (same as -L)\n\
   -G FILE     FILE exists and is owned by the effective group ID\n\
+  -h FILE     FILE exists and is a symbolic link (same as -L)\n\
   -k FILE     FILE exists and has its sticky bit set\n\
 "), stdout);
       fputs (_("\
