@@ -2,6 +2,8 @@
 
 	* Version 4.5.2.
 
+	* src/Makefile.am (PERL): Remove duplicate definition.
+
 	* tests/fmt/Makefile.am (TESTS): Add long-line.
 	* tests/fmt/long-line: New file/test, for the above fix.
 
