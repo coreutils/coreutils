@@ -195,10 +195,6 @@ static void
 show_dev (const char *disk, const char *mount_point, const char *fstype)
 {
   struct fs_usage fsu;
-  uintmax_t blocks_used;
-  double blocks_percent_used;
-  uintmax_t inodes_used;
-  double inodes_percent_used;
   const char *stat_file;
 
   if (!selected_fstype (fstype) || excluded_fstype (fstype))
@@ -217,29 +213,6 @@ show_dev (const char *disk, const char *mount_point, const char *fstype)
       return;
     }
 
-  if (fsu.fsu_blocks == 0)
-    {
-      if (!show_all_fs && !show_listed_fs)
-	return;
-      blocks_used = fsu.fsu_bavail = blocks_percent_used = 0;
-    }
-  else
-    {
-      blocks_used = fsu.fsu_blocks - fsu.fsu_bfree;
-      blocks_percent_used =
-	blocks_used * 100.0 / (blocks_used + fsu.fsu_bavail);
-    }
-
-  if (fsu.fsu_files == 0)
-    {
-      inodes_used = fsu.fsu_ffree = inodes_percent_used = 0;
-    }
-  else
-    {
-      inodes_used = fsu.fsu_files - fsu.fsu_ffree;
-      inodes_percent_used = inodes_used * 100.0 / fsu.fsu_files;
-    }
-
   if (! disk)
     disk = "-";			/* unknown */
 
@@ -255,6 +228,21 @@ show_dev (const char *disk, const char *mount_point, const char *fstype)
   if (inode_format)
     {
       char buf[3][LONGEST_HUMAN_READABLE + 1];
+      double inodes_percent_used;
+      uintmax_t inodes_used;
+
+      if (fsu.fsu_files == 0)
+	{
+	  inodes_used = 0;
+	  fsu.fsu_ffree = 0;
+	  inodes_percent_used = 0;
+	}
+      else
+	{
+	  inodes_used = fsu.fsu_files - fsu.fsu_ffree;
+	  inodes_percent_used = inodes_used * 100.0 / fsu.fsu_files;
+	}
+
       printf (" %7s %7s %7s %5.0f%%",
 	      human_readable (fsu.fsu_files, buf[0], 1, 1, 0),
 	      human_readable (inodes_used, buf[1], 1, 1, 0),
@@ -265,6 +253,24 @@ show_dev (const char *disk, const char *mount_point, const char *fstype)
     {
       int w = human_readable_base ? 5 : 7;
       char buf[3][LONGEST_HUMAN_READABLE + 1];
+      double blocks_percent_used;
+      uintmax_t blocks_used;
+
+      if (fsu.fsu_blocks == 0)
+	{
+	  if (!show_all_fs && !show_listed_fs)
+	    return;
+	  blocks_used = 0;
+	  fsu.fsu_bavail = 0;
+	  blocks_percent_used = 0;
+	}
+      else
+	{
+	  blocks_used = fsu.fsu_blocks - fsu.fsu_bfree;
+	  blocks_percent_used =
+	    blocks_used * 100.0 / (blocks_used + fsu.fsu_bavail);
+	}
+
       printf (" %*s %*s  %*s  %5.0f%% ",
 	      w, human_readable (fsu.fsu_blocks, buf[0], fsu.fsu_blocksize,
 				 output_units, human_readable_base),
