@@ -45,7 +45,7 @@ Repeatedly output a line with all specified STRING(s), or `y'.\n\
   exit (status);
 }
 
-void
+int
 main (int argc, char **argv)
 {
   program_name = argv[0];
