@@ -99,7 +99,7 @@ TESTS_ENVIRONMENT = \
   PATH=../../src:$$PATH \
   PROG=ls
 
-TESTS = quoting
+TESTS = tests
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../config.h
 CONFIG_CLEAN_FILES = 
