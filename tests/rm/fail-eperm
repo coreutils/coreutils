@@ -1,0 +1,101 @@
+#!/bin/sh
+# Ensure that rm gives the expected diagnostic when failing to remove a file
+# owned by some other user in a directory with theh stick bit set.
+
+: ${PERL=perl}
+: ${srcdir=.}
+
+case "$PERL" in
+  *'missing perl')
+  echo 1>&2 "$0: configure didn't find a usable version of Perl, so can't run this test"
+  exit 77
+  ;;
+esac
+
+ARGV_0=$0 exec $PERL -w -- - << \EOP
+require 5.003;
+use strict;
+
+(my $ME = $ENV{ARGV_0}) =~ s|.*/||;
+
+$ENV{VERBOSE} && $ENV{VERBOSE} eq 'yes'
+  and system qw (rm --version);
+
+# Ensure that the diagnostics are in English.
+$ENV{LC_ALL} = 'C';
+
+# Ensure that the effective UID is not 0.
+if ($> == 0)
+  {
+    warn "$ME: you may not run this test as root;  skipping it.\n";
+    exit 77;
+  }
+
+my @dir_list = qw(/tmp /var/tmp /usr/tmp);
+
+# Find a directory with the sticky bit set.
+my $found_dir;
+my $found_file;
+foreach my $dir (@dir_list)
+  {
+    if (-d $dir && -k _ && -r _ && -w _ && -x _)
+      {
+	$found_dir = 1;
+
+	# Find a non-directory there that's owned by someone else.
+	opendir DIR_HANDLE, $dir
+	  or die "$ME: couldn't open $dir: $!\n";
+
+	foreach my $f (readdir DIR_HANDLE)
+	  {
+	    # Skip files owned by self, and symlinks.
+	    # It's not technically necessary to skip symlinks, but it's simpler.
+	    -l $f || -o _
+	      and next;
+
+	    $found_file = 1;
+
+	    # Invoke rm on this file and ensure that we get the
+	    # expected exit code and diagnostic.
+	    my $target_file = "$dir/$f";
+	    my $cmd = "rm -f $target_file";
+	    open RM, "$cmd 2>&1 |"
+	      or die "$ME: cannot execute `$cmd'\n";
+
+	    my $line = <RM>;
+
+	    close RM;
+	    my $status = $? >> 8;
+	    $status == 1
+	      or die "$ME: unexpected exit status from `$cmd';\n"
+		. "  got $status, expected 1\n";
+
+	    my $exp = "rm: cannot remove `$dir/$f': Operation not permitted\n";
+	    $line eq $exp
+	      or die "$ME: unexpected dignostic from `$cmd';\n"
+		. "  got      $line  expected $exp";
+
+	    last;
+	  }
+
+	closedir DIR_HANDLE;
+	$found_file
+	  and last;
+      }
+  }
+
+if ( ! $found_dir)
+  {
+    warn "$ME: couldn't find a directory with the sticky bit set;"
+      . " skipping this test\n";
+    exit 77;
+  }
+
+if ( ! $found_file)
+  {
+    warn "$ME: couldn't find a file not owned by you\n"
+      . " in any of the following directories:\n  @dir_list\n"
+      . "...so, skipping this test\n";
+    exit 77;
+  }
+EOP
