@@ -100,7 +100,6 @@ libfetish_a_SOURCES = \
   same.c same.h \
   save-cwd.c save-cwd.h \
   savedir.c savedir.h \
-  search_.h \
   settime.c \
   sha1.c sha1.h \
   sig2str.h \
@@ -233,5 +232,3 @@ fnmatch.h: fnmatch_.h
 	cp $(srcdir)/fnmatch_.h $@-t
 	mv $@-t $@
 MOSTLYCLEANFILES += fnmatch.h fnmatch.h-t
-
-DISTCLEANFILES = ftw.h search.h
