@@ -2,7 +2,7 @@
 AUTOMAKE_OPTIONS = 1.3 gnits
 
 TESTS = mv-special-1 into-self into-self-2 into-self-3 backup-is-src \
-  i-1 hard-link-1 force
+  i-1 hard-link-1 force partition-perm
 
 EXTRA_DIST = $(TESTS) setup
 TESTS_ENVIRONMENT = \
