@@ -25,39 +25,36 @@
 
 int statfs ();
 
-#if defined (STAT_STATFS3_OSF1)	/* DEC Alpha running OSF/1 */
-#  include <sys/mount.h>
+#ifdef HAVE_SYS_PARAM_H
+#include <sys/param.h>
 #endif
 
-#if defined(STAT_STATFS2_BSIZE) && !defined(_IBMR2) /* 4.3BSD, SunOS 4, HP-UX, AIX PS/2.  */
+#ifdef HAVE_SYS_MOUNT_H
+#include <sys/mount.h>
+#endif
+
+#ifdef HAVE_SYS_VFS_H
 #include <sys/vfs.h>
 #endif
 
-#ifdef STAT_STATFS2_FSIZE	/* 4.4BSD.  */
-#include <sys/mount.h>
+#ifdef HAVE_SYS_FILSYS_H
+#include <sys/filsys.h>		/* SVR2.  */
 #endif
 
-#ifdef STAT_STATFS2_FS_DATA	/* Ultrix.  */
-#include <sys/param.h>
-#include <sys/mount.h>
-#endif
-
-#ifdef STAT_READ		/* SVR2.  */
-#include <sys/param.h>
-#include <sys/filsys.h>
+#ifdef HAVE_FCNTL_H
 #include <fcntl.h>
 #endif
 
-#if defined(STAT_STATFS4) || (defined(_AIX) && defined(_IBMR2)) /* SVR3, Dynix, Irix, AIX RS6000.  */
+#ifdef HAVE_SYS_STATFS_H
 #include <sys/statfs.h>
 #endif
 
-#if defined(_AIX) && defined(_I386) /* AIX PS/2.  */
+#ifdef HAVE_DUSTAT_H		/* AIX PS/2.  */
 #include <sys/stat.h>
 #include <sys/dustat.h>
 #endif
 
-#ifdef STAT_STATVFS		/* SVR4.  */
+#ifdef HAVE_SYS_STATVFS_H	/* SVR4.  */
 #include <sys/statvfs.h>
 int statvfs ();
 #endif
@@ -116,7 +113,7 @@ get_fs_usage (path, disk, fsp)
   fsp->fsu_ffree = fsd.fd_req.gfree;
 #endif
 
-#ifdef STAT_READ		/* SVR2.  */
+#ifdef STAT_READ_FILSYS		/* SVR2.  */
 #ifndef SUPERBOFF
 #define SUPERBOFF (SUPERB * 512)
 #endif
@@ -173,7 +170,7 @@ get_fs_usage (path, disk, fsp)
 #endif
 #endif
 
-#ifdef STAT_STATVFS		/* SVR4.  */
+#ifdef HAVE_SYS_STATVFS_H	/* SVR4.  */
   struct statvfs fsd;
 
   if (statvfs (path, &fsd) < 0)
@@ -183,7 +180,7 @@ get_fs_usage (path, disk, fsp)
   adjust_blocks ((b), fsd.f_frsize ? fsd.f_frsize : fsd.f_bsize, 512)
 #endif
 
-#if !defined(STAT_STATFS2_FS_DATA) && !defined(STAT_READ) /* !Ultrix && !SVR2.  */
+#if !defined(STAT_STATFS2_FS_DATA) && !defined(STAT_READ_FILSYS) /* !Ultrix && !SVR2.  */
   fsp->fsu_blocks = CONVERT_BLOCKS (fsd.f_blocks);
   fsp->fsu_bfree = CONVERT_BLOCKS (fsd.f_bfree);
   fsp->fsu_bavail = CONVERT_BLOCKS (fsd.f_bavail);
