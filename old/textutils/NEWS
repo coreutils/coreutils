@@ -1,4 +1,6 @@
 User-visible changes in release 1.13
+* sort -c prints `disorder on...' message on standard error, not stdout
+* sort -k works as described in the texinfo documentation
 * tail works on NetBSD
 * md5sum reads and writes (de facto) standard Plumb/Lankester format
 * sort accepts -.1 +.2 options for compatibility
