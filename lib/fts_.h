@@ -80,7 +80,9 @@ typedef struct {
 	   This data structure is used to detect directory cycles efficiently
 	   and promptly even when the depth of a hierarchy is in the tens
 	   of thousands.  Lazy checking, as done by GNU rm via cycle-check.c,
-	   wouldn't be appropriate for du.  */
+	   wouldn't be appropriate for du.
+	   FIXME: add an option so that we *do* use cycle-check.c, except
+	   when necessary.  */
 	void *fts_dir_signatures;
 } FTS;
 
