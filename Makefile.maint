@@ -49,7 +49,6 @@ null_AM_MAKEFLAGS = \
 
 t=./=test
 my-distcheck: writable-files po-check
-
 	-rm -rf $(t)
 	mkdir $(t)
 	GZIP=$(GZIP) $(AMTAR) -C $(t) -zxf $(distdir).tar.gz
@@ -61,8 +60,8 @@ my-distcheck: writable-files po-check
 	      AM_MAKEFLAGS='$(null_AM_MAKEFLAGS)' \
 	  && $(MAKE) dvi \
 	  && $(MAKE) check \
-	  && rm -rf $(DEPDIR) \
-	  && $(MAKE) distclean
+	  && $(MAKE) distclean \
+	  && rm -rf $(DEPDIR)
 	cd $(t) && mv $(distdir) $(distdir).old \
 	  && $(AMTAR) -zxf ../$(distdir).tar.gz
 	diff -ur $(t)/$(distdir).old $(t)/$(distdir)
