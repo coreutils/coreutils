@@ -371,33 +371,6 @@ implies 32.  By default, od uses -A o -t d2 -w 16.\n\
   exit (status);
 }
 
-/* Compute the greatest common denominator of U and V
-   using Euclid's algorithm.  */
-
-static unsigned int
-gcd (unsigned int u, unsigned int v)
-{
-  unsigned int t;
-  while (v != 0)
-    {
-      t = u % v;
-      u = v;
-      v = t;
-    }
-  return u;
-}
-
-/* Compute the least common multiple of U and V.  */
-
-static unsigned int
-lcm (unsigned int u, unsigned int v)
-{
-  unsigned int t = gcd (u, v);
-  if (t == 0)
-    return 0;
-  return u * v / t;
-}
-
 static void
 print_s_char (size_t n_bytes, const char *block, const char *fmt_string)
 {
