@@ -28,10 +28,15 @@
 # include <config.h>
 #endif
 
-/* Some systems need this in order to declare localtime_r properly.  */
+/* Some systems require that one of these symbols be defined in
+   order to declare localtime_r properly.  */
 #ifndef __EXTENSIONS__
 # define __EXTENSIONS__ 1
 #endif
+#ifndef _REENTRANT
+# define _REENTRANT 1
+#endif
+
 
 #ifdef _LIBC
 # define HAVE_LIMITS_H 1
