@@ -1,5 +1,6 @@
 #!/bin/sh
-# make sure --parents works with a trailing slash
+# Ensure that mkdir works with arguments specified with and without
+# a trailing slash.
 
 if test "$VERBOSE" = yes; then
   set -x
@@ -24,5 +25,9 @@ fail=0
 
 mkdir -p dir/ || fail=1
 test -d dir || fail=1
+
+# This failed on NetBSD for fileutils-4.0.33.
+mkdir d2/ || fail=1
+test -d d2 || fail=1
 
 (exit $fail); exit
