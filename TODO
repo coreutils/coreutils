@@ -53,3 +53,5 @@ Should printf '\0123' print "\n3"?
 printf: consider adapting builtins/printf.def from bash
 
 df: add `--total' option, suggested here http://bugs.debian.org/186007
+
+Martin Michlmayr's patch to provide ls with `--sort directory' option
