@@ -3,6 +3,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
+  sort is now up to 30% more CPU-efficient in some cases
+
   `test' is now more compatible with Bash and POSIX:
 
     `test -t', `test --help', and `test --version' now silently exit
@@ -43,7 +45,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Fewer arbitrary limitations
 
-  cut requires far less memory when very large field numbers or
+  cut requires 97% less memory when very large field numbers or
   byte offsets are specified.
 
 
