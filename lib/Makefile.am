@@ -20,7 +20,7 @@
 
 noinst_LIBRARIES = libfetish.a
 
-INCLUDES = -I.. -I$(srcdir)
+AM_CPPFLAGS = -I.. -I$(srcdir)
 DEFS += -DLIBDIR=\"$(libdir)\"
 
 ## Put relatively complex files at the beginning of the list so
