@@ -25,7 +25,7 @@
 
 #include "system.h"
 #include "error.h"
-#include "fts_.h"
+#include "xfts.h"
 #include "lchown.h"
 #include "quote.h"
 #include "savedir.h"
@@ -285,27 +285,7 @@ chown_files (char **files, int bit_flags,
 {
   int fail = 0;
 
-  FTS *fts = fts_open (files, bit_flags, NULL);
-  if (fts == NULL)
-    {
-      /* This can fail in three ways: out of memory, invalid bit_flags,
-	 and one or more of the FILES is an empty string.  We could try
-	 to decipher that errno==EINVAL means invalid bit_flags and
-	 errno==ENOENT means there's an empty string, but that seems wrong.
-	 Ideally, fts_open would return a proper error indicator.  For now,
-	 we'll presume that the bit_flags are valid and just check for
-	 empty strings.  */
-      bool invalid_arg = false;
-      for (; *files; ++files)
-	{
-	  if (**files == '\0')
-	    invalid_arg = true;
-	}
-      if (invalid_arg)
-	error (EXIT_FAILURE, 0, _("invalid argument: %s"), quote (""));
-      else
-	xalloc_die ();
-    }
+  FTS *fts = xfts_open (files, bit_flags, NULL);
 
   while (1)
     {
