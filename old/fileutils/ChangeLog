@@ -1,5 +1,8 @@
 1998-09-27  Jim Meyering  <meyering@ascend.com>
 
+	* lib/backupfile.h: Protect against multiple inclusion.
+	From Akim Demaille.
+
 	* configure.in: Remove use of AC_FUNC_FNMATCH and associated code.
 	Now, it is invoked through jm_MACROS.
 
