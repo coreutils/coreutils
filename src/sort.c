@@ -528,11 +528,13 @@ zaptemp (const char *name)
     if (node->name == name)
       {
 	/* Unlink the temporary file in a critical section, to avoid races.  */
+	struct tempnode *t = node->next;
 	sigprocmask (SIG_BLOCK, &caught_signals, &oldset);
 	unlink (name);
-	if (! (*pnode = node->next))
-	  temptail = pnode;
+	*pnode = t;
 	sigprocmask (SIG_SETMASK, &oldset, NULL);
+	if (! t)
+	  temptail = pnode;
 	free (node);
 	break;
       }
