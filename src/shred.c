@@ -1,6 +1,6 @@
 /* shred.c - overwrite files and devices to make it harder to recover data
 
-   Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    Copyright (C) 1997, 1998, 1999 Colin Plumb.
 
    This program is free software; you can redistribute it and/or modify
@@ -213,7 +213,7 @@ not effective:\n\
 "), stdout);
       fputs (_("\
 * log-structured or journaled filesystems, such as those supplied with\n\
-  AIX and Solaris (and JFS, ReiserFS, XFS, etc.)\n\
+  AIX and Solaris (and JFS, ReiserFS, XFS, Ext3, etc.)\n\
 \n\
 * filesystems that write redundant data and carry on even if some writes\n\
   fail, such as RAID-based filesystems\n\
