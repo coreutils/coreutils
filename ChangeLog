@@ -2,6 +2,9 @@
 
 	* Version 5.0.1.
 
+	* tests/du/fd-leak: New file.  Test for the bug in du that
+	was fixed by the 2003-05-12 change to lib/ftw.c.
+
 	* src/head.c (AUTHORS): Enclose string in N_(...), now that it
 	includes `and'.
 
