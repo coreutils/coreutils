@@ -323,7 +323,6 @@ int
 main (register int argc, register char **argv)
 {
   int optchar;
-  FILE *infile;
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -409,20 +408,30 @@ main (register int argc, register char **argv)
   if (optind == argc)
     fmt (stdin);
   else
-    for (; optind < argc; optind++)
-      if (strcmp (argv[optind], "-") == 0)
-	fmt (stdin);
-      else
+    {
+      for (; optind < argc; optind++)
 	{
-	  infile = fopen (argv[optind], "r");
-	  if (infile != NULL)
-	    {
-	      fmt (infile);
-	      fclose (infile);
-	    }
+	  char *file = argv[optind];
+	  if (strcmp (file, "-") == 0)
+	    fmt (stdin);
 	  else
-	    error (0, errno, argv[optind]);
+	    {
+	      FILE *in_stream;
+	      in_stream = fopen (file, "r");
+	      if (in_stream != NULL)
+		{
+		  fmt (in_stream);
+		  if (fclose (in_stream) == EOF)
+		    error (EXIT_FAILURE, errno, file);
+		}
+	      else
+		error (0, errno, file);
+	    }
 	}
+    }
+
+  if (ferror (stdout) || fclose (stdout) == EOF)
+    error (EXIT_FAILURE, errno, _("write error"));
 
   exit (EXIT_SUCCESS);
 }
