@@ -1,10 +1,21 @@
 1997-10-25  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* lib/xmalloc.c (xalloc_fail): Renamed from fixup_null_alloc.
+	(xcalloc): #ifdef-out unused function.
+	(xrealloc): Remove code to work around deficient versions of realloc.
+	Now we have an autoconf-enabled replacement version.
+	(xmalloc): Remove code to work around deficient versions of malloc.
+	Now we have an autoconf-enabled replacement version.
+
 	* configure.in (jm_FUNC_MALLOC): Use it.
 	(jm_FUNC_REALLOC): Use it.
 	* lib/Makefile.am (noinst_HEADERS): Add xalloc.h.
 	(EXTRA_DIST): Add realloc.c.
 	(EXTRA_DIST): Add malloc.c.
+
+	* lib/malloc.c: New file.
+	* m4/malloc.m4: New file.
+	* m4/Makefile.am (EXTRA_DIST): Add malloc.m4.
 
 	* lib/xalloc.h: New file.
 	* lib/xmalloc.c: Updated from textutils.
