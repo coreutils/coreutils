@@ -129,7 +129,8 @@ libfetish_a_SOURCES = \
   makepath.c mbswidth.c md5.c memcasecmp.c memcoll.c modechange.c \
   path-concat.c physmem.c \
   quote.c quotearg.c readtokens.c safe-read.c same.c save-cwd.c \
-  savedir.c sha.c stripslash.c unicodeio.c userspec.c version-etc.c xgetcwd.c \
+  savedir.c sha.c strftime.c stripslash.c \
+  unicodeio.c userspec.c version-etc.c xgetcwd.c \
   xgethostname.c xmalloc.c xstrdup.c xstrtod.c xstrtol.c xstrtoul.c \
   xstrtoumax.c yesno.c
 
@@ -188,12 +189,13 @@ am_libfetish_a_OBJECTS = getdate$U.$(OBJEXT) posixtm$U.$(OBJEXT) \
 	path-concat$U.$(OBJEXT) physmem$U.$(OBJEXT) quote$U.$(OBJEXT) \
 	quotearg$U.$(OBJEXT) readtokens$U.$(OBJEXT) \
 	safe-read$U.$(OBJEXT) same$U.$(OBJEXT) save-cwd$U.$(OBJEXT) \
-	savedir$U.$(OBJEXT) sha$U.$(OBJEXT) stripslash$U.$(OBJEXT) \
-	unicodeio$U.$(OBJEXT) userspec$U.$(OBJEXT) \
-	version-etc$U.$(OBJEXT) xgetcwd$U.$(OBJEXT) \
-	xgethostname$U.$(OBJEXT) xmalloc$U.$(OBJEXT) \
-	xstrdup$U.$(OBJEXT) xstrtod$U.$(OBJEXT) xstrtol$U.$(OBJEXT) \
-	xstrtoul$U.$(OBJEXT) xstrtoumax$U.$(OBJEXT) yesno$U.$(OBJEXT)
+	savedir$U.$(OBJEXT) sha$U.$(OBJEXT) strftime$U.$(OBJEXT) \
+	stripslash$U.$(OBJEXT) unicodeio$U.$(OBJEXT) \
+	userspec$U.$(OBJEXT) version-etc$U.$(OBJEXT) \
+	xgetcwd$U.$(OBJEXT) xgethostname$U.$(OBJEXT) \
+	xmalloc$U.$(OBJEXT) xstrdup$U.$(OBJEXT) xstrtod$U.$(OBJEXT) \
+	xstrtol$U.$(OBJEXT) xstrtoul$U.$(OBJEXT) xstrtoumax$U.$(OBJEXT) \
+	yesno$U.$(OBJEXT)
 libfetish_a_OBJECTS = $(am_libfetish_a_OBJECTS)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 @AMDEP_TRUE@DEP_FILES = $(DEPDIR)/__fpending.Po $(DEPDIR)/addext$U.Po \
@@ -241,20 +243,20 @@ depcomp = $(SHELL) $(top_srcdir)/depcomp
 @AMDEP_TRUE@	$(DEPDIR)/stat.Po $(DEPDIR)/stime.Po \
 @AMDEP_TRUE@	$(DEPDIR)/stpcpy.Po $(DEPDIR)/strcasecmp.Po \
 @AMDEP_TRUE@	$(DEPDIR)/strcspn.Po $(DEPDIR)/strdup.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strftime.Po $(DEPDIR)/stripslash$U.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strncasecmp.Po $(DEPDIR)/strndup.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strnlen.Po $(DEPDIR)/strpbrk.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strstr.Po $(DEPDIR)/strtod.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strtol.Po $(DEPDIR)/strtoul.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strtoull.Po $(DEPDIR)/strtoumax.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strverscmp.Po $(DEPDIR)/tempname.Po \
-@AMDEP_TRUE@	$(DEPDIR)/unicodeio$U.Po $(DEPDIR)/userspec$U.Po \
-@AMDEP_TRUE@	$(DEPDIR)/utime.Po $(DEPDIR)/version-etc$U.Po \
-@AMDEP_TRUE@	$(DEPDIR)/xgetcwd$U.Po $(DEPDIR)/xgethostname$U.Po \
-@AMDEP_TRUE@	$(DEPDIR)/xmalloc$U.Po $(DEPDIR)/xstrdup$U.Po \
-@AMDEP_TRUE@	$(DEPDIR)/xstrtod$U.Po $(DEPDIR)/xstrtol$U.Po \
-@AMDEP_TRUE@	$(DEPDIR)/xstrtoul$U.Po $(DEPDIR)/xstrtoumax$U.Po \
-@AMDEP_TRUE@	$(DEPDIR)/yesno$U.Po
+@AMDEP_TRUE@	$(DEPDIR)/strftime$U.Po $(DEPDIR)/strftime.Po \
+@AMDEP_TRUE@	$(DEPDIR)/stripslash$U.Po $(DEPDIR)/strncasecmp.Po \
+@AMDEP_TRUE@	$(DEPDIR)/strndup.Po $(DEPDIR)/strnlen.Po \
+@AMDEP_TRUE@	$(DEPDIR)/strpbrk.Po $(DEPDIR)/strstr.Po \
+@AMDEP_TRUE@	$(DEPDIR)/strtod.Po $(DEPDIR)/strtol.Po \
+@AMDEP_TRUE@	$(DEPDIR)/strtoul.Po $(DEPDIR)/strtoull.Po \
+@AMDEP_TRUE@	$(DEPDIR)/strtoumax.Po $(DEPDIR)/strverscmp.Po \
+@AMDEP_TRUE@	$(DEPDIR)/tempname.Po $(DEPDIR)/unicodeio$U.Po \
+@AMDEP_TRUE@	$(DEPDIR)/userspec$U.Po $(DEPDIR)/utime.Po \
+@AMDEP_TRUE@	$(DEPDIR)/version-etc$U.Po $(DEPDIR)/xgetcwd$U.Po \
+@AMDEP_TRUE@	$(DEPDIR)/xgethostname$U.Po $(DEPDIR)/xmalloc$U.Po \
+@AMDEP_TRUE@	$(DEPDIR)/xstrdup$U.Po $(DEPDIR)/xstrtod$U.Po \
+@AMDEP_TRUE@	$(DEPDIR)/xstrtol$U.Po $(DEPDIR)/xstrtoul$U.Po \
+@AMDEP_TRUE@	$(DEPDIR)/xstrtoumax$U.Po $(DEPDIR)/yesno$U.Po
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
@@ -389,6 +391,7 @@ libfetish.a: $(libfetish_a_OBJECTS) $(libfetish_a_DEPENDENCIES)
 @AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/strcasecmp.Po@_am_quote@
 @AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/strcspn.Po@_am_quote@
 @AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/strdup.Po@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/strftime$U.Po@_am_quote@
 @AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/strftime.Po@_am_quote@
 @AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/stripslash$U.Po@_am_quote@
 @AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/strncasecmp.Po@_am_quote@
