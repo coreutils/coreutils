@@ -1,3 +1,25 @@
+2001-11-23  Jim Meyering  <meyering@lucent.com>
+
+	Factor out some common strings to make translation easier.
+
+	* cat.c, cksum.c, comm.c, csplit.c, cut.c, expand.c, fmt.c, fold.c:
+	* head.c, join.c, md5sum.c, nl.c, od.c, paste.c, pr.c, ptx.c:
+	* sort.c, split.c, sum.c, tac.c, tail.c, tr.c, tsort.c, unexpand.c:
+	* uniq.c, wc.c: Split usage strings so that --help and --version
+	descriptions are alone in their own string.
+	Likewise for the one that says ``Mandatory arguments to long
+	options are mandatory for short options too.''
+	Suggestion from Karl Eichwalder.
+
+	* ptx.c (main): Don't split string in the middle of sentence.
+
+2001-11-23  Jim Meyering  <meyering@lucent.com>
+
+	* Version 2.0.18.
+
+	* src/ptx.c (main): Don't split copyright string in the middle
+	of a sentence.
+
 2001-11-22  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.17.
