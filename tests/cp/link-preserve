@@ -1,5 +1,6 @@
 #!/bin/sh
 # ensure that `cp -d' preserves hard-links between command line arguments
+# ensure that --preserve=links works with -RH and -RL
 
 if test "$VERBOSE" = yes; then
   set -x
@@ -33,7 +34,56 @@ fail=0
 
 a_inode=`ls -i c/a|sed 's,c/.*,,'`
 b_inode=`ls -i c/b|sed 's,c/.*,,'`
-
 test "$a_inode" = "$b_inode" || fail=1
+# --------------------------------------
+
+rm -rf a b c
+touch a
+ln -s a b
+mkdir c
+cp --preserve=links -R -H a b c
+a_inode=`ls -i c/a|sed 's,c/.*,,'`
+b_inode=`ls -i c/b|sed 's,c/.*,,'`
+test "$a_inode" = "$b_inode" || fail=1
+# --------------------------------------
+
+rm -rf a b c d
+mkdir d
+(cd d; touch a; ln -s a b)
+cp --preserve=links -R -L d c
+a_inode=`ls -i c/a|sed 's,c/.*,,'`
+b_inode=`ls -i c/b|sed 's,c/.*,,'`
+test "$a_inode" = "$b_inode" || fail=1
+# --------------------------------------
+
+# Ensure that --no-preserve=links works.
+rm -rf a b c d
+mkdir d
+(cd d; touch a; ln a b)
+cp -dR --no-preserve=links d c
+a_inode=`ls -i c/a|sed 's,c/.*,,'`
+b_inode=`ls -i c/b|sed 's,c/.*,,'`
+test "$a_inode" = "$b_inode" && fail=1
+# --------------------------------------
+
+# Ensure that -d still preserves hard links.
+rm -rf a b c d
+touch a; ln a b
+mkdir c
+cp -d a b c
+a_inode=`ls -i c/a|sed 's,c/.*,,'`
+b_inode=`ls -i c/b|sed 's,c/.*,,'`
+test "$a_inode" = "$b_inode" || fail=1
+# --------------------------------------
+
+# Ensure that --no-preserve=mode works
+rm -rf a b c d
+touch a; chmod 400 a
+umask 777
+cp -a --no-preserve=mode a b
+set _ `ls -l b`; shift; mode=$1
+test "$mode" = "----------" || fail=1
+umask 022
+# --------------------------------------
 
 (exit $fail); exit
