@@ -2,6 +2,9 @@
 
 	* Version 4.1.1.
 
+	* src/rm.c (usage): Clarify description of --directory (-d).
+	Based on a patch from Michael Stone.
+
 	* man/chmod.x: Describe sticky files and directories.
 	From Michael Stone.
 
