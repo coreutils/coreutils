@@ -1,3 +1,7 @@
+2003-08-08  Paul Eggert  <eggert@twinsun.com>
+
+	* tests/du/basic: Ensure that a/b/F has at least 65 bytes too.
+
 2003-08-09  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.91.
