@@ -48,6 +48,19 @@ GNU coreutils NEWS                                    -*- outline -*-
   If d/x is a directory and x a file, "ln x d/" now reports an error
   instead of incorrectly creating a link to d/x/x.
 
+  Fixes for "nice":
+
+    If it fails to lower the nice value due to lack of permissions,
+    it goes ahead and runs the command anyway, as POSIX requires.
+
+    It no longer incorrectly reports an error if the current nice
+    value happens to be -1.
+
+    It no longer assumes that nice values range from -20 through 19.
+
+    It now consistently adjusts out-of-range nice values to the
+    closest values in range; formerly it sometimes reported an error.
+
   ptx now diagnoses invalid values for its --width=N (-w)
   and --gap-size=N (-g) options.
 
