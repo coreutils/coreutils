@@ -821,7 +821,7 @@ ptr_align (void *ptr, size_t alignment)
 #ifdef __GNUC__
 # define VERIFY_GCC_EXPR(assertion) VERIFY_EXPR (assertion)
 #else
-# define VERIFY_GCC_EXPR(assertion) (void)0
+# define VERIFY_GCC_EXPR(assertion) (void) 0
 #endif
 
 /* If 10*Accum+Digit_val is larger than Type_max, then don't update Accum
