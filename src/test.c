@@ -43,6 +43,7 @@
 #include "system.h"
 #include "error.h"
 #include "euidaccess.h"
+#include "quote.h"
 
 #ifndef _POSIX_VERSION
 # include <sys/param.h>
@@ -199,7 +200,7 @@ advance (int f)
 static void
 beyond (void)
 {
-  test_syntax_error (_("argument expected\n"), NULL);
+  test_syntax_error (_("missing argument after %s"), quote (argv[argc - 1]));
 }
 
 /* Syntax error for when an integer argument was expected, but
@@ -1116,7 +1117,7 @@ main (int margc, char **margv)
   value = posixtest (argc - 1);
 
   if (pos != argc)
-    test_syntax_error (_("too many arguments\n"), NULL);
+    test_syntax_error (_("extra argument %s"), quote (argv[pos]));
 
   test_exit (SHELL_BOOLEAN (value));
 }
