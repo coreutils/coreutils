@@ -1,3 +1,8 @@
+1997-09-27  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* m4/memcmp.m4: Integrate test to detect bug in memcmp from the
+	Next x86 OpenStep C library.  Test program from William Lewis.
+
 1997-09-21  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/od.c [struct tspec] (hexl_mode_trailer): Rename from `trailer.'
