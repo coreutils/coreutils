@@ -77,39 +77,46 @@ typedef int uid_t;
 typedef int gid_t;
 #endif
 
+#include "makepath.h"
 #include "safe-stat.h"
 void error ();
 
 /* Ensure that the directory ARGPATH exists.
    Remove any trailing slashes from ARGPATH before calling this function.
 
-   Make any leading directories that don't already exist, with
+   Create any leading directories that don't already exist, with
    permissions PARENT_MODE.
    If the last element of ARGPATH does not exist, create it as
    a new directory with permissions MODE.
-   If OWNER and GROUP are non-negative, make them the UID and GID of
-   created directories.
+   If OWNER and GROUP are non-negative, use them to set the UID and GID of
+   any created directories.
    If VERBOSE_FMT_STRING is nonzero, use it as a printf format
    string for printing a message after successfully making a directory,
    with the name of the directory that was just made as an argument.
+   If PRESERVE_EXISTING is non-zero and ARGPATH is an existing directory,
+   then do not attempt to set its permissions and ownership.
 
    Return 0 if ARGPATH exists as a directory with the proper
    ownership and permissions when done, otherwise 1.  */
 
 int
-make_path (argpath, mode, parent_mode, owner, group, verbose_fmt_string)
-     char *argpath;
+make_path (argpath, mode, parent_mode, owner, group, preserve_existing,
+	   verbose_fmt_string)
+     const char *argpath;
      int mode;
      int parent_mode;
      uid_t owner;
      gid_t group;
-     char *verbose_fmt_string;
+     int preserve_existing;
+     const char *verbose_fmt_string;
 {
   char *dirpath;		/* A copy we can scribble NULs on.  */
   struct stat stats;
   int retval = 0;
   int oldmask = umask (0);
 
+  /* FIXME: move this alloca and strcpy into the if-block.
+     Set dirpath to argpath in the else-block.  */
   dirpath = (char *) alloca (strlen (argpath) + 1);
   strcpy (dirpath, argpath);
 
@@ -151,7 +158,7 @@ make_path (argpath, mode, parent_mode, owner, group, verbose_fmt_string)
 	    {
 	      if (mkdir (dirpath, tmp_mode))
 		{
-		  error (0, errno, "cannot make directory `%s'", dirpath);
+		  error (0, errno, "cannot create directory `%s'", dirpath);
 		  umask (oldmask);
 		  return 1;
 		}
@@ -196,14 +203,14 @@ make_path (argpath, mode, parent_mode, owner, group, verbose_fmt_string)
 	}
 
       /* We're done making leading directories.
-	 Make the final component of the path.  */
+	 Create the final component of the path.  */
 
       /* The path could end in "/." or contain "/..", so test
 	 if we really have to create the directory.  */
 
       if (SAFE_STAT (dirpath, &stats) && mkdir (dirpath, mode))
 	{
-	  error (0, errno, "cannot make directory `%s'", dirpath);
+	  error (0, errno, "cannot create directory `%s'", dirpath);
 	  umask (oldmask);
 	  return 1;
 	}
@@ -253,26 +260,29 @@ make_path (argpath, mode, parent_mode, owner, group, verbose_fmt_string)
 	  return 1;
 	}
 
-      /* chown must precede chmod because on some systems,
-	 chown clears the set[ug]id bits for non-superusers,
-	 resulting in incorrect permissions.
-	 On System V, users can give away files with chown and then not
-	 be able to chmod them.  So don't give files away.  */
+      if (!preserve_existing)
+	{
+	  /* chown must precede chmod because on some systems,
+	     chown clears the set[ug]id bits for non-superusers,
+	     resulting in incorrect permissions.
+	     On System V, users can give away files with chown and then not
+	     be able to chmod them.  So don't give files away.  */
 
-      if (owner != (uid_t) -1 && group != (gid_t) -1
-	  && chown (dirpath, owner, group)
+	  if (owner != (uid_t) -1 && group != (gid_t) -1
+	      && chown (dirpath, owner, group)
 #ifdef AFS
-	  && errno != EPERM
+	      && errno != EPERM
 #endif
-	  )
-	{
-	  error (0, errno, "%s", dirpath);
-	  retval = 1;
-	}
-      if (chmod (dirpath, mode))
-	{
-	  error (0, errno, "%s", dirpath);
-	  retval = 1;
+	      )
+	    {
+	      error (0, errno, "%s", dirpath);
+	      retval = 1;
+	    }
+	  if (chmod (dirpath, mode))
+	    {
+	      error (0, errno, "%s", dirpath);
+	      retval = 1;
+	    }
 	}
     }
 
