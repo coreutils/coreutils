@@ -1,3 +1,7 @@
+2003-08-18  Jim Meyering  <jim@meyering.net>
+
+	* getopt.h: Remove space before TAB.
+
 2003-08-17  Paul Eggert  <eggert@twinsun.com>
 
 	* same.c: Include <stdbool.h>, <limits.h>.
