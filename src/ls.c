@@ -2733,8 +2733,9 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
       printf (_("\
   -s, --size                 print size of each file, in blocks\n\
       --sort=WORD            ctime -c, extension -X, none -U, size -S,\n\
-                               status -c, time -t\n\
-      --time=WORD            atime -u, access -u, use -u\n\
+                             status -c, time -t, atime -u, access -u, use -u\n\
+      --time=WORD            show time as WORD instead of modification time:\n\
+                             atime, access, use, ctime or status\n\
   -T, --tabsize=COLS         assume tab stops at each COLS instead of 8\n\
   -t                         sort by modification time; with -l: show mtime\n\
   -U                         do not sort; list entries in directory order\n\
