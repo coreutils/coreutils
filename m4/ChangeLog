@@ -1,3 +1,8 @@
+1999-05-20  Jim Meyering  <meyering@ascend.com>
+
+	* search-libs.m4 [AC_SEARCH_LIBS]: Quote name in undefine.
+	Add a colon after each `then' in case $4 is empty.
+
 1999-05-16  Jim Meyering  <meyering@ascend.com>
 
 	* search-libs.m4: New file to override autoconf's AC_SEARCH_LIBS.
