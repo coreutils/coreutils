@@ -1,8 +1,8 @@
 #!/p/bin/perl5.000 -w
 
 $join = 'join';
-$join = './join';
 $join = '/usr/bin/join';
+$join = './join';
 $test = 0;
 $| = 1;
 
