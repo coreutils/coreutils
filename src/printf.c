@@ -199,28 +199,28 @@ print_esc_char (int c)
   switch (c)
     {
     case 'a':			/* Alert. */
-      putchar (7);
+      putchar ('\a');
       break;
     case 'b':			/* Backspace. */
-      putchar (8);
+      putchar ('\b');
       break;
     case 'c':			/* Cancel the rest of the output. */
       exit (EXIT_SUCCESS);
       break;
     case 'f':			/* Form feed. */
-      putchar (12);
+      putchar ('\f');
       break;
     case 'n':			/* New line. */
-      putchar (10);
+      putchar ('\n');
       break;
     case 'r':			/* Carriage return. */
-      putchar (13);
+      putchar ('\r');
       break;
     case 't':			/* Horizontal tab. */
-      putchar (9);
+      putchar ('\t');
       break;
     case 'v':			/* Vertical tab. */
-      putchar (11);
+      putchar ('\v');
       break;
     default:
       putchar (c);
