@@ -2,6 +2,9 @@
 
 	* Version 4.0.30.
 
+	* configure, config.h.in, Makefile.in, etc.: Regenerate using the
+	very latest version (in CVS) of autoconf.
+
 	* src/mkdir.c (main): Use make_dir instead of using mkdir directly.
 	Diagnose as failure when mkdir tries to create (without the
 	--parent (-p) option) a directory that already exists.
