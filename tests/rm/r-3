@@ -17,17 +17,15 @@ tmp=$TMPDIR/t-rm.$$
 framework_fail=0
 mkdir $tmp || framework_fail=1
 
-
 a=1
 n=300
 i=$a
 echo "creating $n files in $tmp..."
-( while :; do echo $i; test $i = 100 && break; i=`expr $i + 1`; done ) > $tmp/.1
-touch `cat $tmp/.1` || framework_fail=1
-( while :; do echo $i; test $i = 200 && break; i=`expr $i + 1`; done ) > $tmp/.2
-touch `cat $tmp/.2` || framework_fail=1
-( while :; do echo $i; test $i = $n && break; i=`expr $i + 1`; done ) > $tmp/.3
-touch `cat $tmp/.3` || framework_fail=1
+while :; do
+  touch $tmp/$i || framework_fail=1
+  test `expr $i = $n` = 1 && break
+  i=`expr $i + 1`
+done
 
 test -f $tmp/$a || framework_fail=1
 test -f $tmp/$n || framework_fail=1
