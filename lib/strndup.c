@@ -21,6 +21,9 @@ Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 # include "config.h"
 #endif
 
+#include <stdio.h>
+#include <sys/types.h>
+
 #ifdef STDC_HEADERS
 # include <string.h>
 # include <stdlib.h>
