@@ -14,7 +14,6 @@ dnl Search for a library defining FUNC, if it's not already available.
 
 AC_DEFUN(AC_SEARCH_LIBS,
 [
-  AC_PREREQ([2.13])
   AC_CACHE_CHECK([for library containing $1], [ac_cv_search_$1],
   [
     ac_func_search_save_LIBS="$LIBS"
