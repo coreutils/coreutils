@@ -611,7 +611,12 @@ prompt (char const *filename, struct rm_options const *x,
   return RM_OK;
 }
 
-#define DT_IS_DIR(D) ((D)->d_type == DT_DIR)
+#if HAVE_STRUCT_DIRENT_D_TYPE
+# define DT_IS_DIR(D) ((D)->d_type == DT_DIR)
+#else
+/* Use this only if the member exists -- i.e., don't return 0.  */
+# define DT_IS_DIR(D) do_not_use_this_macro
+#endif
 
 #define DO_UNLINK(Filename, X)						\
   do									\
@@ -675,13 +680,15 @@ remove_entry (char const *filename, struct rm_options const *x,
 
 #if ROOT_CAN_UNLINK_DIRS
 
-  /* If we don't already know whether FILENAME is a directory,
-     find out now.  */
+  /* If we don't already know whether FILENAME is a directory, find out now.
+     Then, if it's a non-directory, we can use unlink on it.  */
   if (is_dir == T_UNKNOWN)
     {
+# if HAVE_STRUCT_DIRENT_D_TYPE
       if (dp)
 	is_dir = DT_IS_DIR (dp) ? T_YES : T_NO;
       else
+# endif
 	{
 	  struct stat sbuf;
 	  if (lstat (filename, &sbuf))
