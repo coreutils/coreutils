@@ -38,8 +38,8 @@ usage (int status)
       printf (_("\
 Usage: %s [OPTION] NEWROOT [COMMAND...]\n
    or:  %s OPTION\n\
-", program_name, program_name);
-      printf (_"\
+"), program_name, program_name);
+      printf (_("\
 Run COMMAND with root directory set to NEWROOT.\n\
 \n\
       --help       display this help and exit\n\
