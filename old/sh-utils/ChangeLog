@@ -1,5 +1,7 @@
 1998-02-03  Philippe De Muyter  <phdm@macqel.be>
 
+	* src/id.c (xgetgroups): Guard function defn with #if HAVE_GETGROUPS.
+
 	* lib/putenv.c (sys/types.h): Include to get size_t on some systems.
         (NULL): Define if needed.
 
