@@ -3,7 +3,7 @@
 	* Version 4.5.10.
 
 	* tests/rm/fail-2eperm: Rather than simply using the first non-root
-	username, make sure that the selected user name has a usable shell.
+	user name, make sure that the selected user name has a usable shell.
 	Reported by Paul Jarc.
 
 	Before, when using shred on a device, one had to specify --exact,
