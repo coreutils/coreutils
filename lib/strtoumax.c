@@ -37,8 +37,12 @@
 # endif
 #endif
 
-#if HAVE_UNSIGNED_LONG_LONG && ! HAVE_STRTOULL
-  unsigned long long strtoull PARAMS ((char const *, char **, int));
+#ifndef HAVE_DECL_STRTOUL
+unsigned long long strtoul PARAMS ((char const *, char **, int));
+#endif
+
+#ifndef HAVE_DECL_STRTOULL
+unsigned long long strtoull PARAMS ((char const *, char **, int));
 #endif
 
 uintmax_t
@@ -56,3 +60,16 @@ strtoumax (char const *ptr, char **endptr, int base)
 
   abort ();
 }
+
+#ifdef TESTING
+# include <stdio.h>
+int
+main ()
+{
+  char *p, *endptr;
+  printf ("sizeof uintmax_t: %d\n", sizeof (uintmax_t));
+  printf ("sizeof strtoull(): %d\n", sizeof strtoull(p, &endptr, 10));
+  printf ("sizeof strtoul(): %d\n", sizeof strtoul(p, &endptr, 10));
+  exit (0);
+}
+#endif
