@@ -1,5 +1,5 @@
 /* du -- summarize disk usage
-   Copyright (C) 88, 89, 90, 91, 95, 96, 97, 1998 Free Software Foundation, Inc.
+   Copyright (C) 88, 89, 90, 91, 1995-1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by

@@ -1,5 +1,5 @@
 /* remove.c -- core functions for removing files and directories
-   Copyright (C) 88, 90, 91, 94, 95, 96, 97, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 88, 90, 91, 1994-1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
