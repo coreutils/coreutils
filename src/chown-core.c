@@ -233,7 +233,7 @@ change_file_owner (int cmdline_arg, const char *file, uid_t uid, gid_t gid,
   if (lstat (file, &file_stats))
     {
       if (chopt->force_silent == 0)
-	error (0, errno, _("getting attributes of %s"), quote (file));
+	error (0, errno, _("failed to get attributes of %s"), quote (file));
       return 1;
     }
 
@@ -245,7 +245,7 @@ change_file_owner (int cmdline_arg, const char *file, uid_t uid, gid_t gid,
 	  && stat (file, &file_stats))
 	{
 	  if (chopt->force_silent == 0)
-	    error (0, errno, _("getting attributes of %s"), quote (file));
+	    error (0, errno, _("failed to get attributes of %s"), quote (file));
 	  return 1;
 	}
 
