@@ -513,7 +513,7 @@ tail_lines (filename, fd, n_lines)
      long n_lines;
 {
   struct stat stats;
-  long length;
+  off_t length;
 
   if (fstat (fd, &stats))
     {
