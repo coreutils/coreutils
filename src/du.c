@@ -86,6 +86,9 @@ static int apparent_size = 0;
 /* If nonzero, count each hard link of files with multiple links.  */
 static int opt_count_all = 0;
 
+/* If true, output the NUL byte instead of a newline at the end of each line. */
+bool opt_nul_terminate_output = false;
+
 /* If nonzero, print a grand total at the end.  */
 static int print_totals = 0;
 
@@ -141,6 +144,7 @@ static struct option const long_options[] =
   {"si", no_argument, 0, HUMAN_SI_OPTION},
   {"kilobytes", no_argument, NULL, 'k'}, /* long form is obsolescent */
   {"max-depth", required_argument, NULL, MAX_DEPTH_OPTION},
+  {"null", no_argument, NULL, '0'},
   {"megabytes", no_argument, NULL, 'm'}, /* obsolescent */
   {"no-dereference", no_argument, NULL, 'P'},
   {"one-file-system", no_argument, NULL, 'x'},
@@ -188,6 +192,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (_("\
   -L, --dereference     dereference all symbolic links\n\
   -P, --no-dereference  don't follow any symbolic links (this is the default)\n\
+  -0, --null            end each output line with 0 byte rather than newline\n\
   -S, --separate-dirs   do not include size of subdirectories\n\
   -s, --summarize       display only a total for each argument\n\
 "), stdout);
@@ -291,7 +296,7 @@ static void
 print_size (uintmax_t n_bytes, const char *string)
 {
   print_only_size (n_bytes);
-  printf ("\t%s\n", string);
+  printf ("\t%s%c", string, opt_nul_terminate_output ? '\0' : '\n');
   fflush (stdout);
 }
 
@@ -466,7 +471,7 @@ process_file (FTS *fts, FTSENT *ent)
       print_only_size (size_to_print);
       fputc ('\t', stdout);
       fputs (file, stdout);
-      fputc ('\n', stdout);
+      fputc (opt_nul_terminate_output ? '\0' : '\n', stdout);
       fflush (stdout);
     }
 }
@@ -553,7 +558,7 @@ main (int argc, char **argv)
 				     &output_block_size);
 
   fail = 0;
-  while ((c = getopt_long (argc, argv, DEBUG_OPT "abchHklmsxB:DLPSX:",
+  while ((c = getopt_long (argc, argv, DEBUG_OPT "0abchHklmsxB:DLPSX:",
 			   long_options, NULL)) != -1)
     {
       long int tmp_long;
@@ -567,6 +572,10 @@ main (int argc, char **argv)
 	  fts_debug = 1;
 	  break;
 #endif
+
+	case '0':
+	  opt_nul_terminate_output = true;
+	  break;
 
 	case 'a':
 	  opt_all = 1;
