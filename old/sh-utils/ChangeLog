@@ -1,5 +1,8 @@
 1999-01-31  Jim Meyering  <meyering@ascend.com>
 
+	* src/chroot.c (main): Call chdir ("/") after chroot.
+	Suggestion from James Youngman.
+
 	* src/uptime.c (print_uptime): Use the C numeric locale for sscanf
 	of /proc/uptime data, then restore.
 	* lib/getloadavg.c: Include locale.h.
