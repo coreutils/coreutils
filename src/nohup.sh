@@ -74,14 +74,14 @@ if [ -t 1 ]; then
   if cat /dev/null >> nohup.out; then
     echo "nohup: appending output to \`nohup.out'" 2>&1
     umask $oldmask
-    exec "$niceprog" -5 -- "$@" >> nohup.out 2>&1
+    exec "$niceprog" -n 5 -- "$@" >> nohup.out 2>&1
   else
     cat /dev/null >> $HOME/nohup.out
     echo "nohup: appending output to \`$HOME/nohup.out'" 2>&1
     umask $oldmask
-    exec "$niceprog" -5 -- "$@" >> $HOME/nohup.out 2>&1
+    exec "$niceprog" -n 5 -- "$@" >> $HOME/nohup.out 2>&1
   fi
 else
   umask $oldmask
-  exec "$niceprog" -5 -- "$@"
+  exec "$niceprog" -n 5 -- "$@"
 fi
