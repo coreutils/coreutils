@@ -566,10 +566,10 @@ remove_cwd_entries (const struct rm_options *x)
 		  ht = hash_initialize (HT_INITIAL_CAPACITY, NULL, hash_pjw,
 					hash_compare_strings, NULL);
 		  if (ht == NULL)
-		    error (1, 0, _("virtual memory exhausted"));
+		    xalloc_die ();
 		}
 	      if (! hash_insert (ht, entry_name))
-		error (1, 0, _("virtual memory exhausted"));
+		xalloc_die ();
 	    }
 	  else
 	    {
@@ -883,7 +883,7 @@ The following two directories have the same inode number:\n"));
 
       /* Put this directory in the active_dir_map.  */
       if (! hash_insert (active_dir_map, new_ent))
-	error (1, 0, _("virtual memory exhausted"));
+	xalloc_die ();
     }
 #endif
 
