@@ -32,7 +32,7 @@
 
 /* Written by Richard Stallman and David MacKenzie.  */
 
-/* Colour support by Peter Anvin <Peter.Anvin@linux.org> and Dennis
+/* Color support by Peter Anvin <Peter.Anvin@linux.org> and Dennis
    Flaherty <dennisf@denix.elk.miles.com> based on original patches by
    Greg Lee <lee@uhunix.uhcc.hawaii.edu>.  */
 
