@@ -987,7 +987,8 @@ getmonth (const char *s, int len)
 static int
 keycompare (const struct line *a, const struct line *b)
 {
-  register char *texta, *textb, *lima, *limb, *translate;
+  register char *texta, *textb, *lima, *limb;
+  register unsigned char *translate;
   register int *ignore;
   struct keyfield *key;
   int diff = 0, iter = 0, lena, lenb;
@@ -995,7 +996,7 @@ keycompare (const struct line *a, const struct line *b)
   for (key = keyhead.next; key; key = key->next, ++iter)
     {
       ignore = key->ignore;
-      translate = key->translate;
+      translate = (unsigned char *) key->translate;
 
       /* Find the beginning and limit of each field. */
       if (iter || a->keybeg == NULL || b->keybeg == NULL)
@@ -1137,7 +1138,7 @@ keycompare (const struct line *a, const struct line *b)
 
 	CMP_WITH_IGNORE (translate[UCHAR (*texta)], translate[UCHAR (*textb)]);
       else if (ignore)
-	CMP_WITH_IGNORE (*texta, *textb);
+	CMP_WITH_IGNORE (UCHAR (*texta), UCHAR (*textb));
       else if (translate)
 	while (texta < lima && textb < limb)
 	  {
