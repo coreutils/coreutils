@@ -1,3 +1,10 @@
+2003-05-04  Paul Eggert  <eggert@twinsun.com>
+
+	* src/remove.c (HAVE_WORKING_READDIR): Define to 0 if not defined.
+	(IF_READDIR_NEEDS_REWINDDIR): Remove.
+	(remove_cwd_entries): Rewrite to avoid IF_READDIR_NEEDS_REWINDDIR,
+	which was a bit weird because it couldn't be emulated by a function.
+
 2003-05-03  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
