@@ -53,10 +53,6 @@
 # define fdatasync(fd) (errno = ENOSYS, -1)
 #endif
 
-#define ROUND_UP_OFFSET(X, M) ((M) - 1 - (((X) + (M) - 1) % (M)))
-#define PTR_ALIGN(Ptr, M) ((Ptr) \
-			   + ROUND_UP_OFFSET ((char *)(Ptr) - (char *)0, (M)))
-
 #define max(a, b) ((a) > (b) ? (a) : (b))
 #define output_char(c)				\
   do						\
@@ -1061,13 +1057,13 @@ dd_copy (void)
   ibuf = real_buf;
   ibuf += SWAB_ALIGN_OFFSET;	/* allow space for swab */
 
-  ibuf = PTR_ALIGN (ibuf, page_size);
+  ibuf = ptr_align (ibuf, page_size);
 
   if (conversions_mask & C_TWOBUFS)
     {
       /* Page-align the output buffer, too.  */
       real_obuf = xmalloc (output_blocksize + page_size - 1);
-      obuf = PTR_ALIGN (real_obuf, page_size);
+      obuf = ptr_align (real_obuf, page_size);
     }
   else
     {
