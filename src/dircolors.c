@@ -88,6 +88,7 @@ static struct option const long_options[] =
     {"csh", no_argument, NULL, 'c'},
     {"c-shell", no_argument, NULL, 'c'},
     {"help", no_argument, NULL, 'h'},
+    /* I deprecate --print-data-base.  `database' is one word.  */
     {"print-data-base", no_argument, NULL, 'p'},
     {"print-database", no_argument, NULL, 'p'},
     {"version", no_argument, NULL, 'v'},
@@ -111,9 +112,13 @@ Output commands to set the LS_COLORS environment variable.\n\
 Determine format of output:\n\
   -b, --sh, --bourne-shell    output Bourne shell code to set LS_COLORS\n\
   -c, --csh, --c-shell        output C shell code to set LS_COLORS\n\
-  -p, --print-data-base       output defaults\n\
+  -p, --print-database        output defaults\n\
       --help                  display this help and exit\n\
       --version               output version information and exit\n\
+\n\
+If FILE is specified, read it to determine which colors to use for which\n\
+file types and extensions.  Otherwise, a precompiled database is used.\n\
+For details on the format of these files, run `dircolors --print-database'.\n\
 "));
       puts (_("\nReport bugs to bug-gnu-utils@gnu.ai.mit.edu"));
     }
