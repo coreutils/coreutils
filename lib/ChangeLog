@@ -1,3 +1,11 @@
+2004-07-30  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* makepath.h: Include <stdbool.h>.
+	(make_path, make_dir): Use bool, not int, since we're not setting errno.
+	Use mode_t for modes, not int.  All uses changed.
+	* makepath.c: Likewise.
+	(errno): Remove decl; no longer needed since we assume C89.
+
 2004-07-29  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* modechange.c: Include <stdbool.h>.
