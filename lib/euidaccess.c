@@ -1,5 +1,5 @@
 /* euidaccess -- check if effective user id can access file
-   Copyright (C) 1990, 1991, 1995, 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1990, 1991, 1995, 1998, 2000, 2003 Free Software Foundation, Inc.
 
 This file is part of the GNU C Library.
 
@@ -69,6 +69,7 @@ extern int errno;
 #ifndef __set_errno
 # define __set_errno(val) errno = (val)
 #endif
+#include "euidaccess.h"
 
 #if defined(EACCES) && !defined(EACCESS)
 # define EACCESS EACCES
