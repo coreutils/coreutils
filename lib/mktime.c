@@ -127,22 +127,33 @@ time_t __mktime_internal __P ((struct tm *,
 #ifdef _LIBC
 # define localtime_r __localtime_r
 #else
-# if ! HAVE_LOCALTIME_R && ! defined localtime_r
-/* Approximate localtime_r as best we can in its absence.  */
-#  define localtime_r my_mktime_localtime_r
-static struct tm *localtime_r __P ((const time_t *, struct tm *));
+# if HAVE_LOCALTIME_R == defined (localtime_r)
+/* Provide our own substitute for a missing or possibly broken localtime_r.  */
+static struct tm *my_mktime_localtime_r __P ((const time_t *, struct tm *));
 static struct tm *
-localtime_r (t, tp)
+my_mktime_localtime_r (t, tp)
      const time_t *t;
      struct tm *tp;
 {
+#  ifdef localtime_r
+  /* Digital Unix 4.0A and 4.0D have a macro localtime_r with the
+     standard meaning, along with an unwanted, nonstandard function
+     localtime_r.  The placeholder function my_mktime_localtime_r
+     invokes the macro; use that instead of the system's bogus
+     localtime_r.  */
+  return localtime_r (t, tp);
+#   undef localtime_r
+#  else /* ! defined (localtime_r) */
+  /* Approximate localtime_r as best we can in its absence.  */
   struct tm *l = localtime (t);
   if (! l)
     return 0;
   *tp = *l;
   return tp;
+#  endif /* ! defined (localtime_r) */
 }
-# endif /* ! HAVE_LOCALTIME_R && ! defined (localtime_r) */
+#  define localtime_r my_mktime_localtime_r
+# endif /* HAVE_LOCALTIME_R == defined (localtime_r) */
 #endif /* ! _LIBC */
 
 
