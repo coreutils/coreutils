@@ -1,6 +1,6 @@
 # getcwd.m4 - check whether getcwd (NULL, 0) allocates memory for result
 
-# Copyright 2001 Free Software Foundation, Inc.
+# Copyright (C) 2001, 2003 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,14 +20,12 @@
 
 AC_DEFUN([AC_FUNC_GETCWD_NULL],
   [
-   AC_CHECK_HEADERS_ONCE(stdlib.h unistd.h)
+   AC_CHECK_HEADERS_ONCE(unistd.h)
    AC_CACHE_CHECK([whether getcwd (NULL, 0) allocates memory for result],
      [ac_cv_func_getcwd_null],
      [AC_TRY_RUN(
         [
-#	 ifdef HAVE_STDLIB_H
-#	  include <stdlib.h>
-#	 endif
+#	 include <stdlib.h>
 #	 ifdef HAVE_UNISTD_H
 #	  include <unistd.h>
 #	 endif
