@@ -1,8 +1,3 @@
-2000-03-24  Jim Meyering  <meyering@lucent.com>
-
-	* jm-macros.m4 (jm_MACROS): Invoke `AC_CONFIG_AUX_DIR(.)' to work
-	around bug that made cvs-automake complain it couldn't find lib/depcomp.
-
 2000-03-10  Jim Meyering  <meyering@lucent.com>
 
 	* lib-check.m4: Look for getspnam in -lgen, too.
