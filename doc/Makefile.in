@@ -105,7 +105,8 @@ fileutils.dvi: fileutils.texi version.texi
 	  && $(MAKEINFO) `echo $< | sed 's,.*/,,'`
 
 .texi.dvi:
-	TEXINPUTS=$(srcdir):$$TEXINPUTS $(TEXI2DVI) $<
+	TEXINPUTS=$(srcdir):$$TEXINPUTS \
+	  MAKEINFO='$(MAKEINFO) -I $(srcdir)' $(TEXI2DVI) $<
 
 .texinfo.info:
 	cd $(srcdir) \
