@@ -122,11 +122,11 @@ TESTS_ENVIRONMENT = \
   srcdir=$(srcdir) \
   PERL="@PERL@" \
   PATH=`pwd`/../../src:$$PATH \
-  PROG=shasum
+  PROG=sha1sum
 
 
 TESTS = basic-1
-subdir = tests/shasum
+subdir = tests/sha1sum
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../config.h
 CONFIG_CLEAN_FILES = 
@@ -140,7 +140,7 @@ GZIP_ENV = --best
 all: all-redirect
 .SUFFIXES:
 $(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
-	cd $(top_srcdir) && $(AUTOMAKE) --gnits tests/shasum/Makefile
+	cd $(top_srcdir) && $(AUTOMAKE) --gnits tests/sha1sum/Makefile
 
 Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) \
