@@ -105,6 +105,10 @@ extern char *tzname[];
 #define CHAR_BIT 8
 #endif
 
+#ifndef NULL
+#define NULL 0
+#endif
+
 #define TYPE_SIGNED(t) ((t) -1 < 0)
 
 /* Bound on length of the string representing an integer value of type t.
@@ -129,6 +133,8 @@ extern char *tzname[];
 # define gmtime_r __gmtime_r
 # define localtime_r __localtime_r
 extern int __tz_compute __P ((time_t timer, const struct tm *tm));
+# define tzname __tzname
+# define tzset __tzset
 #else
 # if ! HAVE_LOCALTIME_R
 #  if ! HAVE_TM_GMTOFF
@@ -193,23 +199,25 @@ static const char spaces[16] = "                ";
     {									      \
       int _n = (n);							      \
       int _delta = width - _n;						      \
-      i += _n + (_delta > 0 ? _delta : 0);				      \
-      if (i >= maxsize)							      \
+      int _incr = _n + (_delta > 0 ? _delta : 0);			      \
+      if (i + _incr >= maxsize)						      \
 	return 0;							      \
-      else								      \
-	if (p)								      \
-	  {								      \
-	    if (_delta > 0)						      \
-	      memset_space (p, _delta);					      \
-	    f;								      \
-	    p += _n;							      \
-	  }								      \
+      if (p)								      \
+	{								      \
+	  if (_delta > 0)						      \
+	    memset_space (p, _delta);					      \
+	  f;								      \
+	  p += _n;							      \
+	}								      \
+      i += _incr;							      \
     } while (0)
 
 #define	cpy(n, s) \
     add ((n),								      \
 	 if (to_lowcase)						      \
 	   memcpy_lowcase (p, (s), _n);					      \
+	 else if (to_uppcase)						      \
+	   memcpy_uppcase (p, (s), _n);					      \
 	 else								      \
 	   memcpy ((PTR) p, (PTR) (s), _n))
 
@@ -233,6 +241,19 @@ memcpy_lowcase (dest, src, len)
 {
   while (len-- > 0)
     dest[len] = TOLOWER (src[len]);
+  return dest;
+}
+
+static char *memcpy_uppcase __P ((char *dest, const char *src, size_t len));
+
+static char *
+memcpy_uppcase (dest, src, len)
+     char *dest;
+     const char *src;
+     size_t len;
+{
+  while (len-- > 0)
+    dest[len] = TOUPPER (src[len]);
   return dest;
 }
 
@@ -392,6 +413,7 @@ strftime (s, maxsize, format, tp)
 		    : INT_STRLEN_BOUND (int))];
       int width = -1;
       int to_lowcase = 0;
+      int to_uppcase = 0;
 
 #if DO_MULTIBYTE
 
@@ -467,16 +489,19 @@ strftime (s, maxsize, format, tp)
 #endif /* ! DO_MULTIBYTE */
 
       /* Check for flags that can modify a number format.  */
-      ++f;
       while (1)
 	{
-	  switch (*f)
+	  switch (*++f)
 	    {
 	    case '_':
 	    case '-':
 	    case '0':
-	      pad = *f++;
-	      break;
+	      pad = *f;
+	      continue;
+
+	    case '^':
+	      to_uppcase = 1;
+	      continue;
 
 	    default:
 	      pad = 0;
@@ -562,10 +587,18 @@ strftime (s, maxsize, format, tp)
 
 	subformat:
 	  {
+	    char *old_start = p;
 	    size_t len = strftime (NULL, maxsize - i, subfmt, tp);
 	    if (len == 0 && *subfmt)
 	      return 0;
 	    add (len, strftime (p, maxsize - i, subfmt, tp));
+
+	    if (to_uppcase)
+	      while (old_start < p)
+		{
+		  *old_start = TOUPPER (*old_start);
+		  ++old_start;
+		}
 	  }
 	  break;
 
