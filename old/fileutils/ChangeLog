@@ -1,3 +1,12 @@
+1997-11-08  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* m4/getline.m4: Fix typo in comment.
+	Add header check for string.h.
+
+	* m4/Makefile.am (EXTRA_DIST): Add readdir.m4.
+	* configure.in (jm_FUNC_READDIR): Use it.
+	(AC_FUNC_FNMATCH): Add mempcpy.
+
 1997-11-02  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* acconfig.h: Add malloc and realloc.
