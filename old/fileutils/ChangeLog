@@ -1,3 +1,12 @@
+2000-07-17  Jim Meyering  <meyering@lucent.com>
+
+	* src/shred.c (usage): Give a little more info.
+	Remove FIXME comment.
+
+	Avoid warnings.
+	* src/ls.c (struct bin_str): Declare `string' member to be `const'.
+	(put_indicator): Declare local `p' to be `const'.
+
 2000-07-15  Jim Meyering  <meyering@lucent.com>
 
 
