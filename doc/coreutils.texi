@@ -6722,11 +6722,12 @@ possible, their owner and group.  Synopses:
 @example
 install [@var{option}]@dots{} @var{source} @var{dest}
 install [@var{option}]@dots{} @var{source}@dots{} @var{directory}
+install [@var{option}]@dots{} --target-directory=@var{directory} @var{source}@dots{}
 install -d [@var{option}]@dots{} @var{directory}@dots{}
 @end example
 
 In the first of these, the @var{source} file is copied to the @var{dest}
-target file.  In the second, each of the @var{source} files are copied
+target file.  In the second and third, each @var{source} file is copied
 to the destination @var{directory}.  In the last, each @var{directory}
 (and any missing parent directories) is created.
 
