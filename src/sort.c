@@ -2054,7 +2054,7 @@ but lacks following character offset"));
 		  struct stat instat;
 		  if ((strcmp (files[i], "-")
 		       ? stat (files[i], &instat)
-		       : fstat (fileno (stdin), &instat)) != 0)
+		       : fstat (STDIN_FILENO, &instat)) != 0)
 		    {
 		      error (0, errno, "%s", files[i]);
 		      cleanup ();
