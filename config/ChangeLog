@@ -1,3 +1,7 @@
+2004-09-24  Jim Meyering  <jim@meyering.net>
+
+	* cvsu: New file, used by rules in coreutils' Makefile.maint.
+
 2004-08-05  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* config.guess, config.sub, install-sh, texinfo.tex: Sync from gnulib.
