@@ -55,18 +55,6 @@ enum section
 char *xmalloc ();
 char *xrealloc ();
 
-static enum section check_section ();
-static int build_type_arg ();
-static int nl_file ();
-static void usage ();
-static void process_file ();
-static void proc_header ();
-static void proc_body ();
-static void proc_footer ();
-static void proc_text ();
-static void print_lineno ();
-static void build_print_fmt ();
-
 /* The name this program was run with. */
 char *program_name;
 
@@ -174,6 +162,289 @@ static struct option const longopts[] =
   {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
+
+/* Print a usage message and quit. */
+
+static void
+usage (status)
+     int status;
+{
+  if (status != 0)
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
+	     program_name);
+  else
+    {
+      printf (_("\
+Usage: %s [OPTION]... [FILE]...\n\
+"),
+	      program_name);
+      printf (_("\
+Write each FILE to standard output, with line numbers added.\n\
+With no FILE, or when FILE is -, read standard input.\n\
+\n\
+  -b, --body-numbering=STYLE      use STYLE for numbering body lines\n\
+  -d, --section-delimiter=CC      use CC for separating logical pages\n\
+  -f, --footer-numbering=STYLE    use STYLE for numbering footer lines\n\
+  -h, --header-numbering=STYLE    use STYLE for numbering header lines\n\
+  -i, --page-increment=NUMBER     line number increment at each line\n\
+  -l, --join-blank-lines=NUMBER   group of NUMBER empty lines counted as one\n\
+  -n, --number-format=FORMAT      insert line numbers according to FORMAT\n\
+  -p, --no-renumber               do not reset line numbers at logical pages\n\
+  -s, --number-separator=STRING   add STRING after (possible) line number\n\
+  -v, --first-page=NUMBER         first line number on each logical page\n\
+  -w, --number-width=NUMBER       use NUMBER columns for line numbers\n\
+      --help                      display this help and exit\n\
+      --version                   output version information and exit\n\
+\n\
+By default, selects -v1 -i1 -l1 -sTAB -w6 -nrn -hn -bt -fn.  CC are\n\
+two delimiter characters for separating logical pages, a missing\n\
+second character implies :.  Type \\\\ for \\.  STYLE is one of:\n\
+\n\
+  a         number all lines\n\
+  t         number only nonempty lines\n\
+  n         number no lines\n\
+  pREGEXP   number only lines that contain a match for REGEXP\n\
+\n\
+FORMAT is one of:\n\
+\n\
+  ln   left justified, no leading zeros\n\
+  rn   right justified, no leading zeros\n\
+  rz   right justified, leading zeros\n\
+\n\
+"));
+    }
+  exit (status);
+}
+
+/* Build the printf format string, based on `lineno_format'. */
+
+static void
+build_print_fmt ()
+{
+  /* 12 = 10 chars for lineno_width, 1 for %, 1 for \0.  */
+  print_fmt = xmalloc (strlen (separator_str) + 12);
+  switch (lineno_format)
+    {
+    case FORMAT_RIGHT_NOLZ:
+      sprintf (print_fmt, "%%%dd%s", lineno_width, separator_str);
+      break;
+    case FORMAT_RIGHT_LZ:
+      sprintf (print_fmt, "%%0%dd%s", lineno_width, separator_str);
+      break;
+    case FORMAT_LEFT:
+      sprintf (print_fmt, "%%-%dd%s", lineno_width, separator_str);
+      break;
+    }
+}
+
+/* Set the command line flag TYPEP and possibly the regex pointer REGEXP,
+   according to `optarg'.  */
+
+static int
+build_type_arg (typep, regexp)
+     char **typep;
+     struct re_pattern_buffer *regexp;
+{
+  const char *errmsg;
+  int rval = TRUE;
+  int optlen;
+
+  switch (*optarg)
+    {
+    case 'a':
+    case 't':
+    case 'n':
+      *typep = optarg;
+      break;
+    case 'p':
+      *typep = optarg++;
+      optlen = strlen (optarg);
+      regexp->allocated = optlen * 2;
+      regexp->buffer = (unsigned char *) xmalloc (regexp->allocated);
+      regexp->translate = NULL;
+      regexp->fastmap = xmalloc (256);
+      regexp->fastmap_accurate = 0;
+      errmsg = re_compile_pattern (optarg, optlen, regexp);
+      if (errmsg)
+	error (1, 0, "%s", errmsg);
+      break;
+    default:
+      rval = FALSE;
+      break;
+    }
+  return rval;
+}
+
+/* Print and increment the line number. */
+
+static void
+print_lineno ()
+{
+  printf (print_fmt, line_no);
+  line_no += page_incr;
+}
+
+/* Switch to a header section. */
+
+static void
+proc_header ()
+{
+  current_type = header_type;
+  current_regex = &header_regex;
+  if (reset_numbers)
+    line_no = page_start;
+  putchar ('\n');
+}
+
+/* Switch to a body section. */
+
+static void
+proc_body ()
+{
+  current_type = body_type;
+  current_regex = &body_regex;
+  putchar ('\n');
+}
+
+/* Switch to a footer section. */
+
+static void
+proc_footer ()
+{
+  current_type = footer_type;
+  current_regex = &footer_regex;
+  putchar ('\n');
+}
+
+/* Process a regular text line in `line_buf'. */
+
+static void
+proc_text ()
+{
+  static int blank_lines = 0;	/* Consecutive blank lines so far. */
+
+  switch (*current_type)
+    {
+    case 'a':
+      if (blank_join > 1)
+	{
+	  if (line_buf.length || ++blank_lines == blank_join)
+	    {
+	      print_lineno ();
+	      blank_lines = 0;
+	    }
+	  else
+	    printf (print_no_line_fmt);
+	}
+      else
+	print_lineno ();
+      break;
+    case 't':
+      if (line_buf.length)
+	print_lineno ();
+      else
+	printf (print_no_line_fmt);
+      break;
+    case 'n':
+      printf (print_no_line_fmt);
+      break;
+    case 'p':
+      if (re_search (current_regex, line_buf.buffer, line_buf.length,
+		     0, line_buf.length, (struct re_registers *) 0) < 0)
+	printf (print_no_line_fmt);
+      else
+	print_lineno ();
+      break;
+    }
+  fwrite (line_buf.buffer, sizeof (char), line_buf.length, stdout);
+  putchar ('\n');
+}
+
+/* Return the type of line in `line_buf'. */
+
+static enum section
+check_section ()
+{
+  if (line_buf.length < 2 || memcmp (line_buf.buffer, section_del, 2))
+    return Text;
+  if (line_buf.length == header_del_len
+      && !memcmp (line_buf.buffer, header_del, header_del_len))
+    return Header;
+  if (line_buf.length == body_del_len
+      && !memcmp (line_buf.buffer, body_del, body_del_len))
+    return Body;
+  if (line_buf.length == footer_del_len
+      && !memcmp (line_buf.buffer, footer_del, footer_del_len))
+    return Footer;
+  return Text;
+}
+
+/* Read and process the file pointed to by FP. */
+
+static void
+process_file (fp)
+     FILE *fp;
+{
+  while (readline (&line_buf, fp))
+    {
+      switch ((int) check_section ())
+	{
+	case Header:
+	  proc_header ();
+	  break;
+	case Body:
+	  proc_body ();
+	  break;
+	case Footer:
+	  proc_footer ();
+	  break;
+	case Text:
+	  proc_text ();
+	  break;
+	}
+    }
+}
+
+/* Process file FILE to standard output.
+   Return 0 if successful, 1 if not. */
+
+static int
+nl_file (file)
+     char *file;
+{
+  FILE *stream;
+
+  if (!strcmp (file, "-"))
+    {
+      have_read_stdin = 1;
+      stream = stdin;
+    }
+  else
+    {
+      stream = fopen (file, "r");
+      if (stream == NULL)
+	{
+	  error (0, errno, "%s", file);
+	  return 1;
+	}
+    }
+
+  process_file (stream);
+
+  if (ferror (stream))
+    {
+      error (0, errno, "%s", file);
+      return 1;
+    }
+  if (!strcmp (file, "-"))
+    clearerr (stream);		/* Also clear EOF. */
+  else if (fclose (stream) == EOF)
+    {
+      error (0, errno, "%s", file);
+      return 1;
+    }
+  return 0;
+}
 
 void
 main (argc, argv)
@@ -319,287 +590,4 @@ main (argc, argv)
     error (1, errno, _("write error"));
 
   exit (exit_status);
-}
-
-/* Process file FILE to standard output.
-   Return 0 if successful, 1 if not. */
-
-static int
-nl_file (file)
-     char *file;
-{
-  FILE *stream;
-
-  if (!strcmp (file, "-"))
-    {
-      have_read_stdin = 1;
-      stream = stdin;
-    }
-  else
-    {
-      stream = fopen (file, "r");
-      if (stream == NULL)
-	{
-	  error (0, errno, "%s", file);
-	  return 1;
-	}
-    }
-
-  process_file (stream);
-
-  if (ferror (stream))
-    {
-      error (0, errno, "%s", file);
-      return 1;
-    }
-  if (!strcmp (file, "-"))
-    clearerr (stream);		/* Also clear EOF. */
-  else if (fclose (stream) == EOF)
-    {
-      error (0, errno, "%s", file);
-      return 1;
-    }
-  return 0;
-}
-
-/* Read and process the file pointed to by FP. */
-
-static void
-process_file (fp)
-     FILE *fp;
-{
-  while (readline (&line_buf, fp))
-    {
-      switch ((int) check_section ())
-	{
-	case Header:
-	  proc_header ();
-	  break;
-	case Body:
-	  proc_body ();
-	  break;
-	case Footer:
-	  proc_footer ();
-	  break;
-	case Text:
-	  proc_text ();
-	  break;
-	}
-    }
-}
-
-/* Return the type of line in `line_buf'. */
-
-static enum section
-check_section ()
-{
-  if (line_buf.length < 2 || memcmp (line_buf.buffer, section_del, 2))
-    return Text;
-  if (line_buf.length == header_del_len
-      && !memcmp (line_buf.buffer, header_del, header_del_len))
-    return Header;
-  if (line_buf.length == body_del_len
-      && !memcmp (line_buf.buffer, body_del, body_del_len))
-    return Body;
-  if (line_buf.length == footer_del_len
-      && !memcmp (line_buf.buffer, footer_del, footer_del_len))
-    return Footer;
-  return Text;
-}
-
-/* Switch to a header section. */
-
-static void
-proc_header ()
-{
-  current_type = header_type;
-  current_regex = &header_regex;
-  if (reset_numbers)
-    line_no = page_start;
-  putchar ('\n');
-}
-
-/* Switch to a body section. */
-
-static void
-proc_body ()
-{
-  current_type = body_type;
-  current_regex = &body_regex;
-  putchar ('\n');
-}
-
-/* Switch to a footer section. */
-
-static void
-proc_footer ()
-{
-  current_type = footer_type;
-  current_regex = &footer_regex;
-  putchar ('\n');
-}
-
-/* Process a regular text line in `line_buf'. */
-
-static void
-proc_text ()
-{
-  static int blank_lines = 0;	/* Consecutive blank lines so far. */
-
-  switch (*current_type)
-    {
-    case 'a':
-      if (blank_join > 1)
-	{
-	  if (line_buf.length || ++blank_lines == blank_join)
-	    {
-	      print_lineno ();
-	      blank_lines = 0;
-	    }
-	  else
-	    printf (print_no_line_fmt);
-	}
-      else
-	print_lineno ();
-      break;
-    case 't':
-      if (line_buf.length)
-	print_lineno ();
-      else
-	printf (print_no_line_fmt);
-      break;
-    case 'n':
-      printf (print_no_line_fmt);
-      break;
-    case 'p':
-      if (re_search (current_regex, line_buf.buffer, line_buf.length,
-		     0, line_buf.length, (struct re_registers *) 0) < 0)
-	printf (print_no_line_fmt);
-      else
-	print_lineno ();
-      break;
-    }
-  fwrite (line_buf.buffer, sizeof (char), line_buf.length, stdout);
-  putchar ('\n');
-}
-
-/* Print and increment the line number. */
-
-static void
-print_lineno ()
-{
-  printf (print_fmt, line_no);
-  line_no += page_incr;
-}
-
-/* Build the printf format string, based on `lineno_format'. */
-
-static void
-build_print_fmt ()
-{
-  /* 12 = 10 chars for lineno_width, 1 for %, 1 for \0.  */
-  print_fmt = xmalloc (strlen (separator_str) + 12);
-  switch (lineno_format)
-    {
-    case FORMAT_RIGHT_NOLZ:
-      sprintf (print_fmt, "%%%dd%s", lineno_width, separator_str);
-      break;
-    case FORMAT_RIGHT_LZ:
-      sprintf (print_fmt, "%%0%dd%s", lineno_width, separator_str);
-      break;
-    case FORMAT_LEFT:
-      sprintf (print_fmt, "%%-%dd%s", lineno_width, separator_str);
-      break;
-    }
-}
-
-/* Set the command line flag TYPEP and possibly the regex pointer REGEXP,
-   according to `optarg'.  */
-
-static int
-build_type_arg (typep, regexp)
-     char **typep;
-     struct re_pattern_buffer *regexp;
-{
-  const char *errmsg;
-  int rval = TRUE;
-  int optlen;
-
-  switch (*optarg)
-    {
-    case 'a':
-    case 't':
-    case 'n':
-      *typep = optarg;
-      break;
-    case 'p':
-      *typep = optarg++;
-      optlen = strlen (optarg);
-      regexp->allocated = optlen * 2;
-      regexp->buffer = (unsigned char *) xmalloc (regexp->allocated);
-      regexp->translate = NULL;
-      regexp->fastmap = xmalloc (256);
-      regexp->fastmap_accurate = 0;
-      errmsg = re_compile_pattern (optarg, optlen, regexp);
-      if (errmsg)
-	error (1, 0, "%s", errmsg);
-      break;
-    default:
-      rval = FALSE;
-      break;
-    }
-  return rval;
-}
-
-/* Print a usage message and quit. */
-
-static void
-usage (status)
-     int status;
-{
-  if (status != 0)
-    fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
-  else
-    {
-      printf (_("\
-Usage: %s [OPTION]... [FILE]...\n\
-"),
-	      program_name);
-      printf (_("\
-Write each FILE to standard output, with line numbers added.\n\
-With no FILE, or when FILE is -, read standard input.\n\
-\n\
-  -b, --body-numbering=STYLE      use STYLE for numbering body lines\n\
-  -d, --section-delimiter=CC      use CC for separating logical pages\n\
-  -f, --footer-numbering=STYLE    use STYLE for numbering footer lines\n\
-  -h, --header-numbering=STYLE    use STYLE for numbering header lines\n\
-  -i, --page-increment=NUMBER     line number increment at each line\n\
-  -l, --join-blank-lines=NUMBER   group of NUMBER empty lines counted as one\n\
-  -n, --number-format=FORMAT      insert line numbers according to FORMAT\n\
-  -p, --no-renumber               do not reset line numbers at logical pages\n\
-  -s, --number-separator=STRING   add STRING after (possible) line number\n\
-  -v, --first-page=NUMBER         first line number on each logical page\n\
-  -w, --number-width=NUMBER       use NUMBER columns for line numbers\n\
-      --help                      display this help and exit\n\
-      --version                   output version information and exit\n\
-\n\
-By default, selects -v1 -i1 -l1 -sTAB -w6 -nrn -hn -bt -fn.  CC are\n\
-two delimiter characters for separating logical pages, a missing\n\
-second character implies :.  Type \\\\ for \\.  STYLE is one of:\n\
-\n\
-  a         number all lines\n\
-  t         number only nonempty lines\n\
-  n         number no lines\n\
-  pREGEXP   number only lines that contain a match for REGEXP\n\
-\n\
-FORMAT is one of:\n\
-\n\
-  ln   left justified, no leading zeros\n\
-  rn   right justified, no leading zeros\n\
-  rz   right justified, leading zeros\n\
-\n\
-"));
-    }
-  exit (status);
 }
