@@ -66,6 +66,14 @@ my @Tests =
    # two file names, with final NUL
    ['2a', '--files0-from=-', '<',
     {IN=>{f=>"g\0g\0"}}, {AUX=>{g=>"x".64*1024}}, {OUT=>"4\tg\n4\tg\n"} ],
+
+   # Ensure that du processes FILEs following a zero-length name.
+   ['zero-len', '--files0-from=-', '<',
+    {IN=>{f=>"\0g\0"}}, {AUX=>{g=>"x".64*1024}},
+    {OUT=>"4\tg\n"},
+    {ERR => "du: -:1: invalid zero-length file name\n"},
+    {EXIT=>1}
+   ],
   );
 
 my $save_temps = $ENV{DEBUG};
