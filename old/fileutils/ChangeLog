@@ -1,5 +1,9 @@
 Wed Jan  8 16:38:24 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* Version 3.15.
+
+	* src/ls.c (print_long_format): Cast alloca return value to char*.
+
 	* lib/getopt.c (_getopt_internal): Use `_', rather than the
 	(sometimes-)expansion `gettext'.
 
