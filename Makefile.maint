@@ -34,7 +34,10 @@ po-check:
 	fi
 
 # Do not save the original name or timestamp in the .tar.gz file.
-GZIP_ENV = --no-name
+GZIP_ENV = '--no-name --best'
+
+# Automake 1.4 does not define AMTAR.
+AMTAR ?= $(TAR)
 
 # Tag before making distribution.  Also, don't make a distribution if
 # checks fail.  Also, make sure the NEWS file is up-to-date.
@@ -90,8 +93,8 @@ url_dir_list = $(foreach x,$(hosts),ftp://$($(x)_host)/$($(x)_url_dir))
 
 md5 = $(shell md5sum < $(my_distdir).tar.gz|sed 's/  -//')
 sha1 = $(shell sha1sum < $(my_distdir).tar.gz|sed 's/  -//')
-tgz-size = $(shell du --human $(my_distdir).tar.gz|sed 's/M.*/MB/')
-xd-size = $(shell du --human $(xd-delta)|sed 's/M.*/MB/')
+tgz-size = $(shell du --human $(my_distdir).tar.gz|sed 's/\([Mk]\).*/ \1B/')
+xd-size = $(shell du --human $(xd-delta)|sed 's/\([Mk]\).*/ \1B/')
 
 rel-check:
 	tarz=/tmp/rel-check-tarz-$$$$; \
@@ -140,8 +143,12 @@ announcement: NEWS ChangeLog $(distdir).tar.gz
 	)
 
 writable-files:
+	if test -d $(release-archive-dir); then :; else			\
+	  mkdir $(release-archive-dir);					\
+	fi
 	for file in $(distdir).tar.gz $(xd-delta)			\
-	  ../release/$(distdir).tar.gz ../release/$(xd-delta); do	\
+	            $(release-archive-dir)/$(distdir).tar.gz		\
+	            $(release-archive-dir)/$(xd-delta); do		\
 	  test -e $$file || continue;					\
 	  test -w $$file						\
 	    || { echo ERROR: $$file is not writable; fail=1; };		\
