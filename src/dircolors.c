@@ -35,6 +35,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 #define obstack_chunk_alloc xmalloc
 #define obstack_chunk_free free
 
+#ifndef STDC_HEADERS
+void free ();
+#endif
+
 char *xmalloc ();
 char *basename ();
 char *strndup();
