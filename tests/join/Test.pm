@@ -98,6 +98,13 @@ my @tv = (
 # From Paul Eggert: fixed in 1.22n
 ['sp-vs-blank', '', ["\f 1\n", "\f 2\n"], "\f 1 2\n", 0],
 
+# From Paul Eggert: fixed in 1.22n (this would fail on Solaris7,
+# with LC_ALL set to en_US).
+# Unfortunately, that Solaris7's en_US local folds case (making
+# the first input file sorted) is not portable, so this test would
+# fail on e.g. Linux systems, because the input to join isn't sorted.
+# ['lc-collate', '', ["a 1a\nB 1B\n", "B 2B\n"], "B 1B 2B\n", 0],
+
 );
 
 
