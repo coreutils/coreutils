@@ -1425,8 +1425,8 @@ dump (void)
   int err;
   size_t n_bytes_read;
 
-  block[0] = (char *) alloca (bytes_per_block);
-  block[1] = (char *) alloca (bytes_per_block);
+  block[0] = alloca (bytes_per_block);
+  block[1] = alloca (bytes_per_block);
 
   current_offset = n_bytes_to_skip;
 
