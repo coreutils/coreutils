@@ -157,7 +157,6 @@ AC_DEFUN([gl_MACROS],
   # If any of these functions don't exist (e.g. DJGPP 2.03),
   # use the corresponding stub.
   AC_CHECK_FUNC([fchdir], , [AC_LIBOBJ(fchdir-stub)])
-  AC_CHECK_FUNC([fchown], , [AC_LIBOBJ(fchown-stub)])
 
   AC_REQUIRE([gl_FUNC_FREE])
 ])
