@@ -1,3 +1,11 @@
+1999-08-17  Jim Meyering  <meyering@ascend.com>
+
+	* tests/stty/input-tty: New file, containing code factored out of
+	the two test scripts.  Mention `at' and `batch' in addition to `rsh'.
+	* tests/stty/basic-1: Source it.
+	* tests/stty/row-col-1: Source it.
+	* tests/stty/Makefile.am (EXTRA_DIST): Add input-tty.
+
 1999-08-14  Jim Meyering  <meyering@ascend.com>
 
 	* Version 2.0.
