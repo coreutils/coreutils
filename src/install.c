@@ -469,13 +469,13 @@ change_attributes (const char *path)
 #endif
       )
     {
-      error (0, errno, "cannot change ownership of %s", quote (path));
+      error (0, errno, _("cannot change ownership of %s"), quote (path));
       err = 1;
     }
 
   if (!err && chmod (path, mode))
     {
-      error (0, errno, "cannot change permissions of %s", quote (path));
+      error (0, errno, _("cannot change permissions of %s"), quote (path));
       err = 1;
     }
 
