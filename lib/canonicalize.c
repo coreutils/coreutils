@@ -147,6 +147,11 @@ canonicalize_file_name (const char *name)
       resolved_size = 2 * resolved_size + 1;
       resolved = xmalloc (resolved_size);
       resolved_len = resolvepath (name, resolved, resolved_size);
+      if (resolved_len < 0)
+	{
+	  free (resolved);
+	  return NULL;
+	}
       if (resolved_len < resolved_size)
 	break;
       free (resolved);
