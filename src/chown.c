@@ -240,7 +240,7 @@ Usage: %s [OPTION]... OWNER[.[GROUP]] FILE...\n\
 Change the owner and/or group of each FILE to OWNER and/or GROUP.\n\
 \n\
   -c, --changes          be verbose whenever change occurs\n\
-  -h, --no-dereference   affect symbolic links instead of any pointed-to file\n\
+  -h, --no-dereference   affect symbolic links instead of any referenced file\n\
                          (available only on systems with lchown system call)\n\
   -f, --silent, --quiet  suppress most error messages\n\
   -v, --verbose          explain what is being done\n\
