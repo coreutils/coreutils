@@ -1,4 +1,6 @@
 Changes in release 4.1:
+[4.0s]
+* install no longer performs chmod if chown fails (see ChangeLog for example)
 [4.0r]
 * `du dir/subdir1 dir/subdir2' no longer fails
 * chown accepts new option: --from=CURRENT_OWNER:CURRENT_GROUP

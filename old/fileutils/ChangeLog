@@ -1,7 +1,9 @@
 2000-05-01  Jim Meyering  <meyering@lucent.com>
 
 	* src/install.c (change_attributes): Don't even attempt the chmod
-	if the chown fails.  Reported by Marc Olzheim.
+	if the chown fails.  Before, when a non-root user ran `install -m 4755
+	-o nobody FILE DEST', DEST would set-uid not to `nobody' but rather to
+	the ID of the installing user.  Reported by Marc Olzheim.
 
 2000-04-30  Jim Meyering  <meyering@lucent.com>
 
