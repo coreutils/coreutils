@@ -42,8 +42,12 @@ extern int errno;
 #if HAVE_LIMITS_H
 # include <limits.h>
 #endif
-#ifndef MB_LEN_MAX
-# define MB_LEN_MAX 1
+
+/* MB_LEN_MAX is incorrectly defined to be 1 in at least one GCC
+   installation; work around this configuration error.  */
+#if MB_LEN_MAX < 6
+# undef MB_LEN_MAX
+# define MB_LEN_MAX 6
 #endif
 
 #if HAVE_ICONV
