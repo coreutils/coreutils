@@ -1578,10 +1578,18 @@ They are set with the syntax @samp{name value}, where the names are
 listed below and the value can be given either literally, in hat
 notation (@samp{^@var{c}}), or as an integer which may start with
 @samp{0x} to indicate hexadecimal, @samp{0} to indicate octal, or
-any other digit to indicate decimal.  Giving a value of @code{^-} or
-@code{undef} disables that special character.
+any other digit to indicate decimal.  
+
+@cindex disabling special characters
+@kindex u@r{, and disabling special characters}
+For GNU stty, giving a value of @code{^-} or @code{undef} disables that
+special character.  (This is incompatible with Ultrix @code{stty},
+which uses  a value of @samp{u} to disable a special character.  GNU
+@code{stty} treats a value @samp{u} like any other, namely to set that
+special character to @key{u}.)
 
 @table @samp
+
 @item intr
 @opindex intr
 Send an interrupt signal.
