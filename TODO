@@ -73,6 +73,8 @@ df: alignment problem of `Used' heading with e.g., -mP
 
 tr: support nontrivial equivalence classes, e.g. [=e=] with LC_COLLATE=fr_FR
 
+fix tail -f to work with named pipes; reported by Ian D. Allen
+
 lib/strftime.c: Since %N is the only format that we need but that
   glibc's strftime doesn't support, consider using a wrapper that
   would expand /%(-_)?\d*N/ to the desired string and then pass the
