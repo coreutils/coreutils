@@ -1,6 +1,15 @@
-2004-06-22  Jim Meyering  <jim@meyering.net>
+2004-06-22  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	* src/who.c (idle_string, print_user): New arg boottime,
+	specifying the most recent boot time.  All uses changed.
+	(idle_string) Consider a line to be "old" if it hasn't been used
+	since the last boot time.  Watch out for overflow when computing
+	times, and for times in the future.
+	(idle_string): Record latest boot time.
+
+2004-06-22  Jim Meyering  <jim@meyering.net>
 
 	* src/test.c (usage): Correct description of `-t FD'.  The file
 	descriptor, FD, is no longer optional.  Reported by Ton Nijkes.
