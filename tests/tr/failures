@@ -1,0 +1,14 @@
+# ./tr a '[c*]b'
+# ./tr -s abc zy
+# ./tr abc zy
+tr a '[:not-a-class:]'
+tr a '[:digit:]'
+tr '[c*]' k
+tr a '[=c=]'
+tr a '[c*][c*]'
+tr -ds abd '[c*]'
+tr -c '[:lower:]' '[:upper:]'
+tr '[:lower:]' '[:lower:]'
+tr '0-9[:lower:]' '[:upper:]'
+tr -s '\432'
+tr a ''
