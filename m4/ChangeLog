@@ -1,5 +1,6 @@
 2001-09-22  Jim Meyering  <meyering@lucent.com>
 
+	* gettext.m4: New file.  From gettext.
 	* lcmessage.m4: Sync with gettext -- this changes only comments.
 	* progtest.m4: Likewise
 	* isc-posix.m4: Decrement serial number to sync with gettext.
