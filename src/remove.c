@@ -374,13 +374,13 @@ AD_pop_and_chdir (Dirstack_state *ds)
   struct AD_ent *top;
 
   AD_stack_pop (ds);
+  top = AD_stack_top (ds);
 
   /* Propagate any failure to parent.  */
-  UPDATE_STATUS (AD_stack_top(ds)->status, old_status);
+  UPDATE_STATUS (top->status, old_status);
 
   assert (AD_stack_height (ds));
 
-  top = AD_stack_top (ds);
   if (1 < AD_stack_height (ds))
     {
       struct stat sb;
