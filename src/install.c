@@ -183,7 +183,7 @@ main (int argc, char **argv)
 {
   int optc;
   int errors = 0;
-  const char *symbolic_mode = NULL;
+  const char *specified_mode = NULL;
   int make_backups = 0;
   char *backup_suffix_string;
   char *version_control_string = NULL;
@@ -249,7 +249,7 @@ main (int argc, char **argv)
 	  group_name = optarg;
 	  break;
 	case 'm':
-	  symbolic_mode = optarg;
+	  specified_mode = optarg;
 	  break;
 	case 'o':
 	  owner_name = optarg;
@@ -285,11 +285,11 @@ main (int argc, char **argv)
       usage (1);
     }
 
-  if (symbolic_mode)
+  if (specified_mode)
     {
-      struct mode_change *change = mode_compile (symbolic_mode, 0);
+      struct mode_change *change = mode_compile (specified_mode, 0);
       if (change == MODE_INVALID)
-	error (1, 0, _("invalid mode %s"), quote (symbolic_mode));
+	error (1, 0, _("invalid mode %s"), quote (specified_mode));
       else if (change == MODE_MEMORY_EXHAUSTED)
 	xalloc_die ();
       mode = mode_adjust (0, change);
