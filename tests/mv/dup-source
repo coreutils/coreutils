@@ -1,0 +1,63 @@
+#!/bin/sh
+# Ensure that cp/mv merely warn when a non-directory source file is
+# listed on the command line more than once.  fileutils-4.1.1
+# made this fail:  cp a a d/
+
+if test "$VERBOSE" = yes; then
+  set -x
+  cp --version
+  mv --version
+fi
+
+. $srcdir/../envvar-check
+. $srcdir/../lang-default
+PRIV_CHECK_ARG=require-non-root . $srcdir/../priv-check
+
+pwd=`pwd`
+tmp=dup-src.$$
+trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
+trap '(exit $?); exit' 1 2 13 15
+
+framework_failure=0
+mkdir $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo '$0: failure in testing framework' 1>&2
+  (exit 1); exit
+fi
+
+fail=0
+
+for i in cp; do
+
+  # cp may not fail in this case.
+
+  rm -fr a d; touch a; mkdir d
+  $i a a d/ 2> out || fail=1
+  rm -fr a d; touch a; mkdir d
+  $i ./a a d/ 2>> out || fail=1
+  cat <<EOF > exp
+$i: warning: source file \`a' specified more than once
+$i: warning: source file \`a' specified more than once
+EOF
+  cmp out exp || fail=1
+  test $fail = 1 && diff out exp 2> /dev/null
+done
+
+for i in mv; do
+  # But mv *must* fail in this case.
+
+  rm -fr a d; touch a; mkdir d
+  $i a a d/ 2> out && fail=1
+  rm -fr a d; touch a; mkdir d
+  $i ./a a d/ 2>> out && fail=1
+  cat <<EOF > exp
+$i: cannot stat \`a': No such file or directory
+$i: cannot stat \`a': No such file or directory
+EOF
+  cmp out exp || fail=1
+  test $fail = 1 && diff out exp 2> /dev/null
+done
+
+(exit $fail); exit
