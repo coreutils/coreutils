@@ -1,4 +1,25 @@
-1999-12-17  Kalle Olavi Niemitalo  <tosi@stekt.oulu.fi>
+2000-01-02  Jim Meyering  <meyering@ascend.com>
+	1999-11-18  Paul Eggert  <eggert@twinsun.com>
+
+	* lib/strftime.c (my_strftime): Some old compilers object to
+	'\a', so don't bother optimizing for it.
+
+2000-01-01  Paul Eggert  <eggert@twinsun.com>
+
+	Fix bug: `df PATH' sometimes misbehaves when there is an
+	inaccessible mount point unrelated to PATH.
+	* configure.in (AC_CHECK_FUNCS): Add realpath, resolvepath.
+	* src/df.c (#pragma alloca): Add if _AIX is defined.
+	(path-concat.h): Include.
+	(show_point): If HAVE_REALPATH or HAVE_RESOLVEPATH is defined,
+	find the real absolute path for PATH, and use that to find the
+	mount point.
+
+	(show_point): Prefer non-dummy entries in shortcuts, too.
+	Disable bogus mount dirs instead of restatting them each time.
+
+1999-12-30  Jim Meyering  <meyering@ascend.com>
+	1999-12-17  Kalle Olavi Niemitalo  <tosi@stekt.oulu.fi>
 
 	* src/rmdir.c (remove_parents, main): Don't pass errno to error
 	when printing "removing directory" message.  Failure of rmdir is
