@@ -98,7 +98,6 @@ MSGMERGE = @MSGMERGE@
 NEED_SETGID = @NEED_SETGID@
 OBJEXT = @OBJEXT@
 OPTIONAL_BIN_PROGS = @OPTIONAL_BIN_PROGS@
-OPTIONAL_BIN_ZCRIPTS = @OPTIONAL_BIN_ZCRIPTS@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
@@ -159,7 +158,7 @@ target_alias = @target_alias@
 
 EXTRA_PROGRAMS = chroot df hostid nice pinky stty su uname uptime users who
 
-bin_SCRIPTS = groups $(OPTIONAL_BIN_ZCRIPTS)
+bin_SCRIPTS = groups
 bin_PROGRAMS = [ chgrp chown chmod cp dd dircolors du \
   ginstall link ln dir vdir ls mkdir \
   mkfifo mknod mv nohup readlink rm rmdir shred stat sync touch unlink \
@@ -1549,7 +1548,7 @@ localedir.h: Makefile
 	@rm -f $@-t
 	echo '#define LOCALEDIR "$(localedir)"' >$@-t
 	@chmod a-w $@-t
-	cmp $@-t $@ 2>&1 > /dev/null && rm -f $@-t || { rm -f $@; mv $@-t $@; }
+	cmp $@-t $@ > /dev/null 2>&1 && rm -f $@-t || { rm -f $@; mv $@-t $@; }
 dircolors.h: dcgen dircolors.hin
 	@rm -f $@ $@-t
 	$(PERL) -w -- $(srcdir)/dcgen $(srcdir)/dircolors.hin > $@-t
