@@ -24,6 +24,7 @@
 #include <sys/types.h>
 
 #include "system.h"
+#include "closeout.h"
 #include "error.h"
 #include "xstrtol.h"
 #include "xstrtod.h"
@@ -453,6 +454,8 @@ format string may not be specified when printing equal width strings"));
     }
 
   errs = print_numbers (format_str);
+
+  close_stdout ();
 
   exit (errs);
 }
