@@ -461,7 +461,8 @@ copy_internal (const char *src_path, const char *dst_path,
 	      if (x->hard_link)
 		return 0;
 
-	      if (x->backup_type == none && !x->force)
+	      if (x->backup_type == none
+		  && (!x->force || same_name (src_path, dst_path)))
 		{
 		  error (0, 0, _("`%s' and `%s' are the same file"),
 			 src_path, dst_path);
@@ -569,15 +570,6 @@ copy_internal (const char *src_path, const char *dst_path,
 		}
 	      else
 		{
-		  if (SAME_INODE (src_sb, dst_sb)
-		      && (src_sb.st_nlink == 1
-			  || same_name (src_path, dst_path)))
-		    {
-		      error (0, 0, _("`%s' and `%s' are the same file"),
-			     src_path, dst_path);
-		      return 1;
-		    }
-
 		  if (unlink (dst_path) && errno != ENOENT)
 		    {
 		      error (0, errno, _("cannot remove old link to `%s'"),
