@@ -43,6 +43,7 @@ libfetish_a_SOURCES = \
   c-strtod.c c-strtod.h c-strtold.c \
   canon-host.c \
   canonicalize.c canonicalize.h \
+  chdir.h \
   cloexec.c cloexec.h \
   closeout.c closeout.h \
   cycle-check.c cycle-check.h \
@@ -88,6 +89,7 @@ libfetish_a_SOURCES = \
   modechange.c modechange.h \
   mountlist.h \
   offtostr.c \
+  openat.h \
   open-safer.c \
   path-concat.c path-concat.h \
   pathmax.h \
