@@ -38,6 +38,14 @@ enum Verbosity
   V_off
 };
 
+enum Dereference_symlink
+{
+  DEREF_UNDEFINED = 1,
+  DEREF_NEVER,			/* -P */
+  DEREF_COMMAND_LINE_ARGUMENTS,	/* -H */
+  DEREF_ALWAYS			/* -L */
+};
+
 struct Chown_option
 {
   /* Level of verbosity.  */
@@ -46,9 +54,9 @@ struct Chown_option
   /* If nonzero, change the ownership of directories recursively. */
   int recurse;
 
-  /* If nonzero, and the systems has support for it, change the ownership
-     of symbolic links rather than any files they point to.  */
-  int change_symlinks;
+  /* This is useful only on systems with support for changing the
+     ownership of symbolic links.  */
+  enum Dereference_symlink dereference;
 
   /* If nonzero, force silence (no error messages). */
   int force_silent;
