@@ -553,3 +553,13 @@ enum
     }						\
   while (0)
 #endif
+
+#ifndef EOVERFLOW
+# define EOVERFLOW EINVAL
+#endif
+
+#if ! HAVE_FSEEKO && ! defined fseeko
+# define fseeko(s, o, w) ((o) == (long) (o)		\
+			  ? fseek ((s), (o), (w))	\
+			  : (errno = EOVERFLOW, -1))
+#endif
