@@ -1,3 +1,17 @@
+2002-04-13  Jim Meyering  <meyering@lucent.com>
+
+	* src/stat.c: Include system.h, error.h, and many other headers.
+	[HAVE_SYS_SYSMACROS_H]: Guard inclusion of sys/sysmacros.h.
+	(PROGRAM_NAME, AUTHORS): Define.
+	(long_options): Declare/define.
+	(print_human_access): Rewrite to use mode_string.
+	(usage): Rewrite.
+	(main): Use getopt_long.
+	(print_human_type): Call fputs once rather than calling
+	printf many times.
+	(print_human_fstype): Revamp in a similar fashion.  Don't use strdup.
+	Declare most functions to be `static'.
+
 2002-04-12  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.9.
