@@ -114,7 +114,7 @@ multipliers bkm follows concatenated, else read -n VALUE.\n\
    Return -1 if STR does not represent a valid unsigned integer. */
 
 static long
-atou (char *str)
+atou (const char *str)
 {
   int value;
 
@@ -149,7 +149,7 @@ parse_unit (char *str)
 }
 
 static void
-write_header (char *filename)
+write_header (const char *filename)
 {
   static int first_file = 1;
 
@@ -158,7 +158,7 @@ write_header (char *filename)
 }
 
 static int
-head_bytes (char *filename, int fd, long int bytes_to_write)
+head_bytes (const char *filename, int fd, long int bytes_to_write)
 {
   char buffer[BUFSIZE];
   int bytes_read;
@@ -183,7 +183,7 @@ head_bytes (char *filename, int fd, long int bytes_to_write)
 }
 
 static int
-head_lines (char *filename, int fd, long int lines_to_write)
+head_lines (const char *filename, int fd, long int lines_to_write)
 {
   char buffer[BUFSIZE];
   int bytes_read;
@@ -210,7 +210,7 @@ head_lines (char *filename, int fd, long int lines_to_write)
 }
 
 static int
-head (char *filename, int fd, long int number)
+head (const char *filename, int fd, long int number)
 {
   if (unit_size)
     return head_bytes (filename, fd, number);
@@ -219,7 +219,7 @@ head (char *filename, int fd, long int number)
 }
 
 static int
-head_file (char *filename, long int number)
+head_file (const char *filename, long int number)
 {
   int fd;
 
@@ -328,6 +328,7 @@ main (int argc, char **argv)
 	case 'n':
 	  unit_size = 0;
 	getnum:
+	  /* FIXME: use xstrtoul instead.  */
 	  number = atou (optarg);
 	  if (number == -1)
 	    error (1, 0, _("invalid number `%s'"), optarg);
