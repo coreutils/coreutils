@@ -80,48 +80,57 @@
 # define S_ISVTX 01000
 #endif
 
+#if !S_IRUSR && S_IREAD
+# define S_IRUSR S_IREAD
+#endif
+#if !S_IRUSR
+# define S_IRUSR 00400
+#endif
+#if !S_IRGRP
+# define S_IRGRP (S_IRUSR >> 3)
+#endif
+#if !S_IROTH
+# define S_IROTH (S_IRUSR >> 6)
+#endif
+
+#if !S_IWUSR && S_IWRITE
+# define S_IWUSR S_IWRITE
+#endif
 #if !S_IWUSR
-# if S_IWRITE
-#  define S_IWUSR S_IWRITE
-# else
-#  define S_IWUSR 00200
-# endif
+# define S_IWUSR 00200
+#endif
+#if !S_IWGRP
+# define S_IWGRP (S_IWUSR >> 3)
+#endif
+#if !S_IWOTH
+# define S_IWOTH (S_IWUSR >> 6)
 #endif
 
-#ifndef S_IWUSR
-# ifdef S_IWRITE
-#  define S_IWUSR S_IWRITE
-# else
-#  define S_IWUSR 00200
-# endif
-#endif
-
-#ifndef S_IEXEC
-# define S_IEXEC S_IXUSR
-#endif
-
-#ifndef S_IXUSR
+#if !S_IXUSR && S_IEXEC
 # define S_IXUSR S_IEXEC
 #endif
-#ifndef S_IXGRP
-# define S_IXGRP (S_IEXEC >> 3)
+#if !S_IXUSR
+# define S_IXUSR 00100
 #endif
-#ifndef S_IXOTH
-# define S_IXOTH (S_IEXEC >> 6)
+#if !S_IXGRP
+# define S_IXGRP (S_IXUSR >> 3)
+#endif
+#if !S_IXOTH
+# define S_IXOTH (S_IXUSR >> 6)
 #endif
 
-#ifndef S_IRWXU
+#if !S_IRWXU
 # define S_IRWXU (S_IRUSR | S_IWUSR | S_IXUSR)
 #endif
-#ifndef S_IRWXG
+#if !S_IRWXG
 # define S_IRWXG (S_IRGRP | S_IWGRP | S_IXGRP)
 #endif
-#ifndef S_IRWXO
+#if !S_IRWXO
 # define S_IRWXO (S_IROTH | S_IWOTH | S_IXOTH)
 #endif
 
 /* S_IXUGO is a common extension to POSIX.1.  */
-#ifndef S_IXUGO
+#if !S_IXUGO
 # define S_IXUGO (S_IXUSR | S_IXGRP | S_IXOTH)
 #endif
 
