@@ -18,6 +18,261 @@ export LC_ALL
 LANG=C
 export LANG
 
+$xx -n $srcdir/n1.I > n1.O 2> n1.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test n1 failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp n1.O $srcdir/n1.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed n1"; fi ;;
+    1) $echo "Test n1 failed: files n1.O and $srcdir/n1.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test n1 may have failed." 1>&2;
+       $echo The command "cmp n1.O $srcdir/n1.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s n1.E || rm -f n1.E
+$xx -n $srcdir/n2.I > n2.O 2> n2.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test n2 failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp n2.O $srcdir/n2.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed n2"; fi ;;
+    1) $echo "Test n2 failed: files n2.O and $srcdir/n2.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test n2 may have failed." 1>&2;
+       $echo The command "cmp n2.O $srcdir/n2.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s n2.E || rm -f n2.E
+$xx -n $srcdir/n3.I > n3.O 2> n3.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test n3 failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp n3.O $srcdir/n3.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed n3"; fi ;;
+    1) $echo "Test n3 failed: files n3.O and $srcdir/n3.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test n3 may have failed." 1>&2;
+       $echo The command "cmp n3.O $srcdir/n3.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s n3.E || rm -f n3.E
+$xx -n $srcdir/n4.I > n4.O 2> n4.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test n4 failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp n4.O $srcdir/n4.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed n4"; fi ;;
+    1) $echo "Test n4 failed: files n4.O and $srcdir/n4.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test n4 may have failed." 1>&2;
+       $echo The command "cmp n4.O $srcdir/n4.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s n4.E || rm -f n4.E
+$xx -n $srcdir/n5.I > n5.O 2> n5.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test n5 failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp n5.O $srcdir/n5.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed n5"; fi ;;
+    1) $echo "Test n5 failed: files n5.O and $srcdir/n5.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test n5 may have failed." 1>&2;
+       $echo The command "cmp n5.O $srcdir/n5.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s n5.E || rm -f n5.E
+$xx -n $srcdir/n6.I > n6.O 2> n6.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test n6 failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp n6.O $srcdir/n6.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed n6"; fi ;;
+    1) $echo "Test n6 failed: files n6.O and $srcdir/n6.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test n6 may have failed." 1>&2;
+       $echo The command "cmp n6.O $srcdir/n6.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s n6.E || rm -f n6.E
+$xx -n $srcdir/n7.I > n7.O 2> n7.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test n7 failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp n7.O $srcdir/n7.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed n7"; fi ;;
+    1) $echo "Test n7 failed: files n7.O and $srcdir/n7.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test n7 may have failed." 1>&2;
+       $echo The command "cmp n7.O $srcdir/n7.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s n7.E || rm -f n7.E
+$xx -s -n -k1,1 $srcdir/n8a.I > n8a.O 2> n8a.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test n8a failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp n8a.O $srcdir/n8a.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed n8a"; fi ;;
+    1) $echo "Test n8a failed: files n8a.O and $srcdir/n8a.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test n8a may have failed." 1>&2;
+       $echo The command "cmp n8a.O $srcdir/n8a.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s n8a.E || rm -f n8a.E
+$xx -s -n -k1,1 $srcdir/n8b.I > n8b.O 2> n8b.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test n8b failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp n8b.O $srcdir/n8b.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed n8b"; fi ;;
+    1) $echo "Test n8b failed: files n8b.O and $srcdir/n8b.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test n8b may have failed." 1>&2;
+       $echo The command "cmp n8b.O $srcdir/n8b.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s n8b.E || rm -f n8b.E
+$xx -s -n -k1,1 $srcdir/n9a.I > n9a.O 2> n9a.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test n9a failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp n9a.O $srcdir/n9a.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed n9a"; fi ;;
+    1) $echo "Test n9a failed: files n9a.O and $srcdir/n9a.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test n9a may have failed." 1>&2;
+       $echo The command "cmp n9a.O $srcdir/n9a.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s n9a.E || rm -f n9a.E
+$xx -s -n -k1,1 $srcdir/n9b.I > n9b.O 2> n9b.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test n9b failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp n9b.O $srcdir/n9b.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed n9b"; fi ;;
+    1) $echo "Test n9b failed: files n9b.O and $srcdir/n9b.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test n9b may have failed." 1>&2;
+       $echo The command "cmp n9b.O $srcdir/n9b.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s n9b.E || rm -f n9b.E
+$xx -s -n -k1,1 $srcdir/n10a.I > n10a.O 2> n10a.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test n10a failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp n10a.O $srcdir/n10a.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed n10a"; fi ;;
+    1) $echo "Test n10a failed: files n10a.O and $srcdir/n10a.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test n10a may have failed." 1>&2;
+       $echo The command "cmp n10a.O $srcdir/n10a.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s n10a.E || rm -f n10a.E
+$xx -s -n -k1,1 $srcdir/n10b.I > n10b.O 2> n10b.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test n10b failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp n10b.O $srcdir/n10b.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed n10b"; fi ;;
+    1) $echo "Test n10b failed: files n10b.O and $srcdir/n10b.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test n10b may have failed." 1>&2;
+       $echo The command "cmp n10b.O $srcdir/n10b.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s n10b.E || rm -f n10b.E
+$xx -s -n -k1,1 $srcdir/n11a.I > n11a.O 2> n11a.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test n11a failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp n11a.O $srcdir/n11a.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed n11a"; fi ;;
+    1) $echo "Test n11a failed: files n11a.O and $srcdir/n11a.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test n11a may have failed." 1>&2;
+       $echo The command "cmp n11a.O $srcdir/n11a.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s n11a.E || rm -f n11a.E
+$xx -s -n -k1,1 $srcdir/n11b.I > n11b.O 2> n11b.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test n11b failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp n11b.O $srcdir/n11b.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed n11b"; fi ;;
+    1) $echo "Test n11b failed: files n11b.O and $srcdir/n11b.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test n11b may have failed." 1>&2;
+       $echo The command "cmp n11b.O $srcdir/n11b.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s n11b.E || rm -f n11b.E
 $xx  $srcdir/01a.I > 01a.O 2> 01a.E
 code=$?
 if test $code != 0 ; then
@@ -1379,7 +1634,7 @@ else
 fi
 test -s 20a.E || rm -f 20a.E
 if test $errors = 0 ; then
-  $echo Passed all 80 tests. 1>&2
+  $echo Passed all 95 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi
