@@ -8,6 +8,10 @@
 	* tests/du/exclude: Test for this.
 	* NEWS: Document this.
 
+	Ensure that tests/Makefile.am's check-root actions stay up to date.
+	* Makefile.maint (sc_root_tests): New rule.
+	(syntax-check-rules): Add it to the list.
+
 2005-01-04  Jim Meyering  <jim@meyering.net>
 
 	* man/shred.x: Change one-line summary to reflect that shred does
