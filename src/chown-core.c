@@ -1,5 +1,5 @@
 /* chown-core.c -- core functions for changing ownership.
-   Copyright (C) 2000, 2002 Free Software Foundation.
+   Copyright (C) 2000, 2002, 2003 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -295,6 +295,8 @@ change_file_owner (int cmdline_arg, const char *file, uid_t uid, gid_t gid,
 		     file and use fchown on the resulting descriptor.  */
 		  int fd = open (file, O_RDONLY | O_NONBLOCK | O_NOCTTY);
 		  fail = (fd == -1 ? 1 : fchown (fd, new_uid, new_gid));
+		  if (fd != -1)
+		    close (fd);
 		}
 	      else
 		{
