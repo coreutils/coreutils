@@ -27,9 +27,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "sleep"
 
-#define AUTHORS "FIXME: unknown"
-
-static long argdecode PARAMS ((const char *s));
+#define AUTHORS "Jim Meyering"
 
 /* The name by which this program was run. */
 char *program_name;
@@ -61,6 +59,39 @@ h for hours or d for days.\n\
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
     }
   exit (status);
+}
+
+static long
+argdecode (const char *s)
+{
+  long value;
+  register const char *p = s;
+  register char c;
+
+  value = 0;
+  while ((c = *p++) >= '0' && c <= '9')
+    value = value * 10 + c - '0';
+
+  switch (c)
+    {
+    case 's':
+      break;
+    case 'm':
+      value *= 60;
+      break;
+    case 'h':
+      value *= 60 * 60;
+      break;
+    case 'd':
+      value *= 60 * 60 * 24;
+      break;
+    default:
+      p--;
+    }
+
+  if (*p)
+    error (1, 0, _("invalid time interval `%s'"), s);
+  return value;
 }
 
 int
@@ -102,37 +133,4 @@ main (int argc, char **argv)
   sleep (seconds);
 
   exit (0);
-}
-
-static long
-argdecode (const char *s)
-{
-  long value;
-  register const char *p = s;
-  register char c;
-
-  value = 0;
-  while ((c = *p++) >= '0' && c <= '9')
-    value = value * 10 + c - '0';
-
-  switch (c)
-    {
-    case 's':
-      break;
-    case 'm':
-      value *= 60;
-      break;
-    case 'h':
-      value *= 60 * 60;
-      break;
-    case 'd':
-      value *= 60 * 60 * 24;
-      break;
-    default:
-      p--;
-    }
-
-  if (*p)
-    error (1, 0, _("invalid time interval `%s'"), s);
-  return value;
 }
