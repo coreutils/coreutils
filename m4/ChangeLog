@@ -1,5 +1,7 @@
 2000-07-10  Jim Meyering  <meyering@lucent.com>
 
+	* strerror_r.m4: Mirror the correction made in autoconf.
+
 	* gnu-source.m4: Output to confdefs.h directly.
 	Suggestion from Akim Demaille.
 
