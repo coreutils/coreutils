@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1995, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1995, 2000, 2003 Free Software Foundation, Inc.
 
 NOTE: The canonical source of this file is maintained with the GNU C Library.
 Bugs can be reported to bug-glibc@prep.ai.mit.edu.
@@ -23,6 +23,12 @@ USA.  */
 #endif
 
 #include <errno.h>
+#if !_LIBC
+# if !defined errno
+extern int errno;
+# endif
+# define __set_errno(ev) ((errno) = (ev))
+#endif
 
 #if _LIBC || HAVE_STDLIB_H
 # include <stdlib.h>
@@ -36,6 +42,17 @@ USA.  */
 
 #ifndef	HAVE_GNU_LD
 # define __environ	environ
+#endif
+
+#if _LIBC
+/* This lock protects against simultaneous modifications of `environ'.  */
+# include <bits/libc-lock.h>
+__libc_lock_define_initialized (static, envlock)
+# define LOCK	__libc_lock_lock (envlock)
+# define UNLOCK	__libc_lock_unlock (envlock)
+#else
+# define LOCK
+# define UNLOCK
 #endif
 
 int
@@ -109,21 +126,46 @@ setenv (name, value, replace)
   return 0;
 }
 
-void
+/* WARNING: This function is not used by setenv-related code.
+   But it *is* used by putenv.c, so elide the code below.
+   Instead, use the static copy of the function that's in putenv.c.  */
+#if 0
+
+int
 unsetenv (name)
      const char *name;
 {
-  const size_t len = strlen (name);
+  size_t len;
   char **ep;
 
-  for (ep = __environ; *ep; ++ep)
+  if (name == NULL || *name == '\0' || strchr (name, '=') != NULL)
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
+
+  len = strlen (name);
+
+  LOCK;
+
+  ep = __environ;
+  while (*ep != NULL)
     if (!strncmp (*ep, name, len) && (*ep)[len] == '=')
       {
 	/* Found it.  Remove this pointer by moving later ones back.  */
 	char **dp = ep;
+
 	do
 	  dp[0] = dp[1];
 	while (*dp++);
 	/* Continue the loop in case NAME appears again.  */
       }
+    else
+      ++ep;
+
+  UNLOCK;
+
+  return 0;
 }
+
+#endif
