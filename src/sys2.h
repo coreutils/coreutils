@@ -62,7 +62,7 @@ char *alloca ();
    character >= 128 which gets sign-extended to a negative value.
    The macro ISUPPER protects against this as well."  */
 
-#if defined (STDC_HEADERS) || (!defined (isascii) && !defined (HAVE_ISASCII))
+#if STDC_HEADERS || (!defined (isascii) && !HAVE_ISASCII)
 # define IN_CTYPE_DOMAIN(c) 1
 #else
 # define IN_CTYPE_DOMAIN(c) isascii(c)
@@ -89,6 +89,14 @@ char *alloca ();
 #define ISUPPER(c) (IN_CTYPE_DOMAIN (c) && isupper (c))
 #define ISXDIGIT(c) (IN_CTYPE_DOMAIN (c) && isxdigit (c))
 #define ISDIGIT_LOCALE(c) (IN_CTYPE_DOMAIN (c) && isdigit (c))
+
+#if STDC_HEADERS
+# define TOLOWER(Ch) tolower (Ch)
+# define TOUPPER(Ch) toupper (Ch)
+#else
+# define TOLOWER(Ch) (ISUPPER (Ch) ? tolower (Ch) : (Ch))
+# define TOUPPER(Ch) (ISLOWER (Ch) ? toupper (Ch) : (Ch))
+#endif
 
 /* ISDIGIT differs from ISDIGIT_LOCALE, as follows:
    - Its arg may be any int or unsigned int; it need not be an unsigned char.
