@@ -631,6 +631,7 @@ main (argc, argv)
   int speed_was_set;
   int verbose_output;
   int recoverable_output;
+  int k;
 
   program_name = argv[0];
 
@@ -692,21 +693,21 @@ main (argc, argv)
 
   speed_was_set = 0;
   require_set_attr = 0;
-  optind = 1;
-  while (optind < argc)
+  k = 1;
+  while (k < argc)
     {
       int match_found = 0;
       int reversed = 0;
       int i;
 
-      if (argv[optind][0] == '-')
+      if (argv[k][0] == '-')
 	{
-	  ++argv[optind];
+	  ++argv[k];
 	  reversed = 1;
 	}
       for (i = 0; mode_info[i].name != NULL; ++i)
 	{
-	  if (!strcmp (argv[optind], mode_info[i].name))
+	  if (!strcmp (argv[k], mode_info[i].name))
 	    {
 	      match_found = set_mode (&mode_info[i], reversed, &mode);
 	      require_set_attr = 1;
@@ -715,23 +716,23 @@ main (argc, argv)
 	}
       if (match_found == 0 && reversed)
 	{
-	  error (0, 0, "invalid argument `%s'", --argv[optind]);
+	  error (0, 0, "invalid argument `%s'", --argv[k]);
 	  usage (1);
 	}
       if (match_found == 0)
 	{
 	  for (i = 0; control_info[i].name != NULL; ++i)
 	    {
-	      if (!strcmp (argv[optind], control_info[i].name))
+	      if (!strcmp (argv[k], control_info[i].name))
 		{
-		  if (optind == argc - 1)
+		  if (k == argc - 1)
 		    {
-		      error (0, 0, "missing argument to `%s'", argv[optind]);
+		      error (0, 0, "missing argument to `%s'", argv[k]);
 		      usage (1);
 		    }
 		  match_found = 1;
-		  ++optind;
-		  set_control_char (&control_info[i], argv[optind], &mode);
+		  ++k;
+		  set_control_char (&control_info[i], argv[k], &mode);
 		  require_set_attr = 1;
 		  break;
 		}
@@ -739,87 +740,87 @@ main (argc, argv)
 	}
       if (match_found == 0)
 	{
-	  if (!strcmp (argv[optind], "ispeed"))
+	  if (!strcmp (argv[k], "ispeed"))
 	    {
-	      if (optind == argc - 1)
+	      if (k == argc - 1)
 		{
-		  error (0, 0, "missing argument to `%s'", argv[optind]);
+		  error (0, 0, "missing argument to `%s'", argv[k]);
 		  usage (1);
 		}
-	      ++optind;
-	      set_speed (input_speed, argv[optind], &mode);
+	      ++k;
+	      set_speed (input_speed, argv[k], &mode);
 	      speed_was_set = 1;
 	      require_set_attr = 1;
 	    }
-	  else if (!strcmp (argv[optind], "ospeed"))
+	  else if (!strcmp (argv[k], "ospeed"))
 	    {
-	      if (optind == argc - 1)
+	      if (k == argc - 1)
 		{
-		  error (0, 0, "missing argument to `%s'", argv[optind]);
+		  error (0, 0, "missing argument to `%s'", argv[k]);
 		  usage (1);
 		}
-	      ++optind;
-	      set_speed (output_speed, argv[optind], &mode);
+	      ++k;
+	      set_speed (output_speed, argv[k], &mode);
 	      speed_was_set = 1;
 	      require_set_attr = 1;
 	    }
 #ifdef TIOCGWINSZ
-	  else if (!strcmp (argv[optind], "rows"))
+	  else if (!strcmp (argv[k], "rows"))
 	    {
-	      if (optind == argc - 1)
+	      if (k == argc - 1)
 		{
-		  error (0, 0, "missing argument to `%s'", argv[optind]);
+		  error (0, 0, "missing argument to `%s'", argv[k]);
 		  usage (1);
 		}
-	      ++optind;
-	      set_window_size ((int) integer_arg (argv[optind]), -1);
+	      ++k;
+	      set_window_size ((int) integer_arg (argv[k]), -1);
 	    }
-	  else if (!strcmp (argv[optind], "cols")
-		   || !strcmp (argv[optind], "columns"))
+	  else if (!strcmp (argv[k], "cols")
+		   || !strcmp (argv[k], "columns"))
 	    {
-	      if (optind == argc - 1)
+	      if (k == argc - 1)
 		{
-		  error (0, 0, "missing argument to `%s'", argv[optind]);
+		  error (0, 0, "missing argument to `%s'", argv[k]);
 		  usage (1);
 		}
-	      ++optind;
-	      set_window_size (-1, (int) integer_arg (argv[optind]));
+	      ++k;
+	      set_window_size (-1, (int) integer_arg (argv[k]));
 	    }
-	  else if (!strcmp (argv[optind], "size"))
+	  else if (!strcmp (argv[k], "size"))
 	    display_window_size (0);
 #endif
 #ifdef HAVE_C_LINE
-	  else if (!strcmp (argv[optind], "line"))
+	  else if (!strcmp (argv[k], "line"))
 	    {
-	      if (optind == argc - 1)
+	      if (k == argc - 1)
 		{
-		  error (0, 0, "missing argument to `%s'", argv[optind]);
+		  error (0, 0, "missing argument to `%s'", argv[k]);
 		  usage (1);
 		}
-	      ++optind;
-	      mode.c_line = integer_arg (argv[optind]);
+	      ++k;
+	      mode.c_line = integer_arg (argv[k]);
 	      require_set_attr = 1;
 	    }
 #endif
-	  else if (!strcmp (argv[optind], "speed"))
+	  else if (!strcmp (argv[k], "speed"))
 	    display_speed (&mode, 0);
-	  else if (string_to_baud (argv[optind]) != (speed_t) -1)
+	  else if (string_to_baud (argv[k]) != (speed_t) -1)
 	    {
-	      set_speed (both_speeds, argv[optind], &mode);
+	      set_speed (both_speeds, argv[k], &mode);
 	      speed_was_set = 1;
 	      require_set_attr = 1;
 	    }
 	  else
 	    {
-	      if (recover_mode (argv[optind], &mode) == 0)
+	      if (recover_mode (argv[k], &mode) == 0)
 		{
-		  error (0, 0, "invalid argument `%s'", argv[optind]);
+		  error (0, 0, "invalid argument `%s'", argv[k]);
 		  usage (1);
 		}
 	      require_set_attr = 1;
 	    }
 	}
-      optind++;
+      k++;
     }
 
   if (require_set_attr)
