@@ -1,3 +1,22 @@
+Thu Apr 29 02:01:27 1993  Jim Meyering  (meyering@comco.com)
+
+	* src/*.c and man/*.c except for sort: Add --help and --version
+	options.
+
+	* pr.c: Convert to use getopt_long.
+
+	* lib/memcmp.c: Use version from glibc.
+	[WORDS_BIGENDIAN]: Test this instead of the using glibc's
+	__BYTE_ORDER macro.
+	* configure.in: Use AC_WORDS_BIGENDIAN to set it.
+
+	* od.c (parse_old_offset): Allow `0X' as well as `0x' prefix to
+	indicate hex.
+
+	* Makefile.in (dist): Depend on Makefile so that changes to
+	Makefile.in (like adding new files to DISTRIB) are reflected
+	in the new distribution.
+
 Fri Apr 23 21:53:47 1993  Jim Meyering  (meyering@comco.com)
 
 	* {lib,src}/Makefile.in [.c.o]: Make CPPFLAGS and CFLAGS follow

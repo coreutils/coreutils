@@ -1,5 +1,5 @@
 /* Extended regular expression matching and search library,
-   version 0.11.
+   version 0.12.
    (Implements POSIX draft P10003.2/D11.2, except for
    internationalization features.)
 
@@ -127,7 +127,17 @@ init_syntax_once ()
 /* isalpha etc. are used for the character classes.  */
 #include <ctype.h>
 
-#if !defined (isascii) || defined (STDC_HEADERS)
+/* Jim Meyering writes:
+
+   "... Some ctype macros are valid only for character codes that
+   isascii says are ASCII (SGI's IRIX-4.0.5 is one such system --when
+   using /bin/cc or gcc but without giving an ansi option).  So, all
+   ctype uses should be through macros like ISPRINT...  If
+   STDC_HEADERS is defined, then autoconf has verified that the ctype
+   macros don't need to be guarded with references to isascii. ...
+   Defining isascii to 1 should let any compiler worth its salt
+   eliminate the && through constant folding."  */
+#if ! defined (isascii) || defined (STDC_HEADERS)
 #undef isascii
 #define isascii(c) 1
 #endif
@@ -1303,6 +1313,7 @@ regex_compile (pattern, size, syntax, bufp)
                    the `*'.  Do we have to do something analogous here
                    for null bytes, because of RE_DOT_NOT_NULL?  */
                 if (TRANSLATE (*(p - 2)) == TRANSLATE ('.')
+		    && zero_times_ok
                     && p < pend && TRANSLATE (*p) == TRANSLATE ('\n')
                     && !(syntax & RE_DOT_NEWLINE))
                   { /* We have .*\n.  */
@@ -1613,6 +1624,10 @@ regex_compile (pattern, size, syntax, bufp)
               fixup_alt_jump = 0;
               laststart = 0;
               begalt = b;
+	      /* If we've reached MAX_REGNUM groups, then this open
+		 won't actually generate any code, so we'll have to
+		 clear pending_exact explicitly.  */
+	      pending_exact = 0;
               break;
 
 
@@ -1662,6 +1677,10 @@ regex_compile (pattern, size, syntax, bufp)
                     : 0;
                 laststart = bufp->buffer + COMPILE_STACK_TOP.laststart_offset;
                 this_group_regnum = COMPILE_STACK_TOP.regnum;
+		/* If we've reached MAX_REGNUM groups, then this open
+		   won't actually generate any code, so we'll have to
+		   clear pending_exact explicitly.  */
+		pending_exact = 0;
 
                 /* We're at the end of the group, so now we know how many
                    groups were inside this one.  */
@@ -2931,7 +2950,8 @@ re_search_2 (bufp, string1, size1, string2, size2, startpos, range, regs, stop)
                  inside the loop.  */
 	      if (translate)
                 while (range > lim
-                       && !fastmap[(unsigned char) translate[*d++]])
+                       && !fastmap[(unsigned char)
+				   translate[(unsigned char) *d++]])
                   range--;
 	      else
                 while (range > lim && !fastmap[(unsigned char) *d++])
@@ -3454,7 +3474,11 @@ re_match_2 (bufp, string1, size1, string2, size2, pos, regs, stop)
                     }
                 }
               else
-                assert (bufp->regs_allocated == REGS_FIXED);
+		{
+		  /* These braces fend off a "empty body in an else-statement"
+		     warning under GCC when assert expands to nothing.  */
+		  assert (bufp->regs_allocated == REGS_FIXED);
+		}
 
               /* Convert the pointer data in `regstart' and `regend' to
                  indices.  Register zero has to be set differently,
@@ -4880,6 +4904,13 @@ regerror (errcode, preg, errbuf, errbuf_size)
        code generates an invalid error code, then the program has a bug.
        Dump core so we can fix it.  */
     abort ();
+
+  msg = re_error_msg[errcode];
+
+  /* POSIX doesn't require that we do anything in this case, but why
+     not be nice.  */
+  if (! msg)
+    msg = "Success";
 
   msg_size = strlen (msg) + 1; /* Includes the null.  */
   
