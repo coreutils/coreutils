@@ -7,6 +7,7 @@
 	* src/Makefile.am (bin_PROGRAMS): Add shasum.
 	(md5sum_SOURCES): Define.
 	(shasum_SOURCES): Define.
+	(noinst_HEADERS): Add checksum.h.
 
 	* src/md5sum.c: Factor out the differences between MD5 and SHA1,
 	and parameterize so this code may be used by both md5sum and the new
