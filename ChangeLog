@@ -1,6 +1,11 @@
-2002-10-09  Jim Meyering  <meyering@lucent.com>
+2002-10-10  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.5.3.
+
+	* tests/ln/Makefile.am (TESTS): Add target-1.
+	* tests/ln/target-1: New file/test, for the fix on 2002-10-08.
+
+2002-10-09  Jim Meyering  <meyering@lucent.com>
 
 	* tests/cp/backup-is-src: Ensure that certain environment variables
 	are not set (e.g., SIMPLA_BACKUP_SUFFIX).  Reported by Duncan Roe.
