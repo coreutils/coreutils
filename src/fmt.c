@@ -65,7 +65,7 @@
 
 typedef long COST;
 
-#define	MAXCOST	(~(((COST) 1) << (8 * sizeof (COST) -1)))
+#define	MAXCOST	(~(((unsigned long) 1) << (8 * sizeof (COST) -1)))
 
 #define	SQR(n)		((n) * (n))
 #define	EQUIV(n)	SQR ((COST) (n))
