@@ -49,7 +49,7 @@ rmdir (dpath)
   int cpid, status;
   struct stat statbuf;
 
-  if (SAFE_STAT (dpath, &statbuf) != 0)
+  if (safe_stat (dpath, &statbuf) != 0)
     return -1;			/* errno already set */
 
   if (!S_ISDIR (statbuf.st_mode))

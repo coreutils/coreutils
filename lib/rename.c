@@ -47,13 +47,13 @@ rename (from, to)
   struct stat from_stats, to_stats;
   int pid, status;
 
-  if (SAFE_STAT (from, &from_stats))
+  if (safe_stat (from, &from_stats))
     return -1;
 
   /* Be careful not to unlink `from' if it happens to be equal to `to' or
      (on filesystems that silently truncate filenames after 14 characters)
      if `from' and `to' share the significant characters. */
-  if (SAFE_STAT (to, &to_stats))
+  if (safe_stat (to, &to_stats))
     {
       if (errno != ENOENT)
         return -1;
