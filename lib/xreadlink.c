@@ -78,7 +78,7 @@ xreadlink (char const *filename)
 	  return NULL;
 	}
 
-      if (link_length < buf_size)
+      if ((size_t) link_length < buf_size)
 	{
 	  buffer[link_length] = 0;
 	  return buffer;
