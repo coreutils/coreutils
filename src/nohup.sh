@@ -76,4 +76,4 @@ if [ -t 2 ]; then
   exec 2>&1
 fi
 
-exec -- "$@"
+exec "$@"
