@@ -7,6 +7,11 @@ if test "$VERBOSE" = yes; then
   od --version
 fi
 
+od -t x8 /dev/null >/dev/null || {
+  echo >&2 "$0: 8-byte test skipped"
+  exit 77
+}
+
 pwd=`pwd`
 t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
 trap 'status=$?; cd $pwd; chmod -R u+rwx $t0; rm -rf $t0 && exit $status' 0
