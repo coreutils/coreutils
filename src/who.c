@@ -45,7 +45,15 @@
 
 #include <stdio.h>
 #include <sys/types.h>
+
+#ifdef HAVE_UTMPX_H
+#include <utmpx.h>
+#define STRUCT_UTMP struct utmpx
+#else
 #include <utmp.h>
+#define STRUCT_UTMP struct utmp
+#endif
+
 #include <time.h>
 #include <getopt.h>
 #ifndef _POSIX_SOURCE
@@ -55,13 +63,17 @@
 #include "system.h"
 #include "version.h"
 
-#ifndef UTMP_FILE
-#ifdef _PATH_UTMP		/* 4.4BSD.  */
+#if !defined (UTMP_FILE) && defined (_PATH_UTMP)	/* 4.4BSD.  */
 #define UTMP_FILE _PATH_UTMP
-#else				/* !_PATH_UTMP */
+#endif
+
+#if !defined (UTMP_FILE) && defined (UTMPX_FILE)	/* Solaris, SysVr4 */
+#define UTMP_FILE UTMPX_FILE
+#endif
+
+#ifndef UTMP_FILE
 #define UTMP_FILE "/etc/utmp"
-#endif				/* !_PATH_UTMP */
-#endif				/* !UTMP_FILE */
+#endif
 
 #ifndef MAXHOSTNAMELEN
 #define MAXHOSTNAMELEN 64
@@ -76,7 +88,7 @@ char *ttyname ();
 
 static int read_utmp ();
 static char *idle_string ();
-static struct utmp *search_entries ();
+static STRUCT_UTMP *search_entries ();
 static void list_entries ();
 static void print_entry ();
 static void print_heading ();
@@ -211,7 +223,7 @@ main (argc, argv)
   exit (0);
 }
 
-static struct utmp *utmp_contents;
+static STRUCT_UTMP *utmp_contents;
 
 /* Display a list of who is on the system, according to utmp file FILENAME. */
 
@@ -244,7 +256,7 @@ read_utmp (filename)
 
   fstat (desc, &file_stats);
   if (file_stats.st_size > 0)
-    utmp_contents = (struct utmp *) xmalloc ((unsigned) file_stats.st_size);
+    utmp_contents = (STRUCT_UTMP *) xmalloc ((unsigned) file_stats.st_size);
   else
     {
       close (desc);
@@ -258,14 +270,14 @@ read_utmp (filename)
   if (close (desc) != 0)
     error (1, errno, "%s", filename);
 
-  return file_stats.st_size / sizeof (struct utmp);
+  return file_stats.st_size / sizeof (STRUCT_UTMP);
 }
 
 /* Display a line of information about entry THIS. */
 
 static void
 print_entry (this)
-     struct utmp *this;
+     STRUCT_UTMP *this;
 {
   struct stat stats;
   time_t last_change;
@@ -316,7 +328,7 @@ static void
 list_entries (n)
      int n;
 {
-  register struct utmp *this = utmp_contents;
+  register STRUCT_UTMP *this = utmp_contents;
   register int entries = 0;
 
   while (n--)
@@ -350,7 +362,7 @@ list_entries (n)
 static void
 print_heading ()
 {
-  struct utmp *ut;
+  STRUCT_UTMP *ut;
 
   printf ("%-*s ", (int) sizeof (ut->ut_name), "USER");
   if (include_mesg)
@@ -368,7 +380,7 @@ static void
 scan_entries (n)
      int n;
 {
-  register struct utmp *this = utmp_contents;
+  register STRUCT_UTMP *this = utmp_contents;
 
   if (include_heading)
     print_heading ();
@@ -390,12 +402,12 @@ scan_entries (n)
    Return the first matching entry found, or NULL if there
    is no matching entry. */
 
-static struct utmp *
+static STRUCT_UTMP *
 search_entries (n, line)
      int n;
      char *line;
 {
-  register struct utmp *this = utmp_contents;
+  register STRUCT_UTMP *this = utmp_contents;
 
   while (n--)
     {
@@ -417,7 +429,7 @@ static void
 who_am_i (filename)
      char *filename;
 {
-  register struct utmp *utmp_entry;
+  register STRUCT_UTMP *utmp_entry;
   char hostname[MAXHOSTNAMELEN + 1];
   char *tty;
 
