@@ -14,6 +14,6 @@ distclean:
 .PHONY: clean
 clean: distclean
 
-.PHONY: realclean
-realclean: clean
+.PHONY: realclean maintainer-clean
+maintainer-clean realclean: clean
 	rm -f run-tests t*.in t*.exp t*.err
