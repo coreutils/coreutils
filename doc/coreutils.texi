@@ -23,9 +23,9 @@
 @ifinfo
 @format
 START-INFO-DIR-ENTRY
-* @sc{gnu} Utilities: (coreutils).              @sc{gnu} Utilities.
+* GNU Utilities: (coreutils).                   @sc{gnu} Utilities.
 * Common options: (coreutils)Common options.    Common options.
-* File permissions: (coreutils)File permission. Access modes.
+* File permissions: (coreutils)File permissions. Access modes.
 * Date input formats: (coreutils)Date input formats.
 
 * basename: (coreutils)basename invocation.     Strip directory and suffix.
