@@ -1,6 +1,6 @@
 %{
 /* Parse a string into an internal time stamp.
-   Copyright (C) 1999, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2002, 2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -27,10 +27,9 @@
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
-# ifdef HAVE_ALLOCA_H
-#  include <alloca.h>
-# endif
 #endif
+
+#include <alloca.h>
 
 /* Since the code of getdate.y is not included in the Emacs executable
    itself, there is no need to #define static in this file.  Even if
