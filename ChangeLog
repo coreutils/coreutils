@@ -2,6 +2,10 @@
 
 	* Version 5.0.91.
 
+	* src/cut.c (cut_fields): Don't read again after encountering EOF.
+	E.g., `cut -f2' would do so.
+	* tests/misc/tty-eof: Add a test for the above fix.
+
 	* src/sort.c (sortlines): Add description and references.
 	From Paul Eggert.
 
