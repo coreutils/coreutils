@@ -732,40 +732,57 @@ else
   esac
 fi
 test -s utc-0.E || rm -f utc-0.E
-TZ=UTC+2 $xx -d '1970-01-01 00:00:01' +%s  > utc-1.O 2> utc-1.E
+TZ=UTC+1 $xx -u --file=- '+%Y-%m-%d %T' < $srcdir/utc-1.I > utc-1.O 2> utc-1.E
 code=$?
 if test $code != 0 ; then
-  $echo "Test utc-1(TZ=UTC+2) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test utc-1(TZ=UTC+1) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp utc-1.O $srcdir/utc-1.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE" ; then $echo "passed utc-1(TZ=UTC+2)"; fi ;;
-    1) $echo "Test utc-1(TZ=UTC+2) failed: files utc-1.O and $srcdir/utc-1.X differ" 1>&2;
+    0) if test "$VERBOSE" ; then $echo "passed utc-1(TZ=UTC+1)"; fi ;;
+    1) $echo "Test utc-1(TZ=UTC+1) failed: files utc-1.O and $srcdir/utc-1.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
-    2) $echo "Test utc-1(TZ=UTC+2) may have failed." 1>&2;
+    2) $echo "Test utc-1(TZ=UTC+1) may have failed." 1>&2;
        $echo The command "cmp utc-1.O $srcdir/utc-1.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
 test -s utc-1.E || rm -f utc-1.E
-LANG=C TZ=UTC $xx -d 2000-01-01 +%s  > date2sec-0.O 2> date2sec-0.E
+TZ=UTC+2 $xx -d '1970-01-01 00:00:01' +%s  > date2sec-0.O 2> date2sec-0.E
 code=$?
 if test $code != 0 ; then
-  $echo "Test date2sec-0(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test date2sec-0(TZ=UTC+2) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp date2sec-0.O $srcdir/date2sec-0.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE" ; then $echo "passed date2sec-0(LANG=C TZ=UTC)"; fi ;;
-    1) $echo "Test date2sec-0(LANG=C TZ=UTC) failed: files date2sec-0.O and $srcdir/date2sec-0.X differ" 1>&2;
+    0) if test "$VERBOSE" ; then $echo "passed date2sec-0(TZ=UTC+2)"; fi ;;
+    1) $echo "Test date2sec-0(TZ=UTC+2) failed: files date2sec-0.O and $srcdir/date2sec-0.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
-    2) $echo "Test date2sec-0(LANG=C TZ=UTC) may have failed." 1>&2;
+    2) $echo "Test date2sec-0(TZ=UTC+2) may have failed." 1>&2;
        $echo The command "cmp date2sec-0.O $srcdir/date2sec-0.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
 test -s date2sec-0.E || rm -f date2sec-0.E
+LANG=C TZ=UTC $xx -d 2000-01-01 +%s  > date2sec-1.O 2> date2sec-1.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test date2sec-1(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp date2sec-1.O $srcdir/date2sec-1.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed date2sec-1(LANG=C TZ=UTC)"; fi ;;
+    1) $echo "Test date2sec-1(LANG=C TZ=UTC) failed: files date2sec-1.O and $srcdir/date2sec-1.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test date2sec-1(LANG=C TZ=UTC) may have failed." 1>&2;
+       $echo The command "cmp date2sec-1.O $srcdir/date2sec-1.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s date2sec-1.E || rm -f date2sec-1.E
 LANG=C TZ=UTC $xx -d '1970-01-01 UTC 946684800 sec' +'%Y-%m-%d %T %z'  > sec2date-0.O 2> sec2date-0.E
 code=$?
 if test $code != 0 ; then
@@ -784,7 +801,7 @@ else
 fi
 test -s sec2date-0.E || rm -f sec2date-0.E
 if test $errors = 0 ; then
-  $echo Passed all 45 tests. 1>&2
+  $echo Passed all 46 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi
