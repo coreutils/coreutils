@@ -59,6 +59,7 @@ host_alias = @host_alias@
 host_triplet = @host@
 AMTAR = @AMTAR@
 AWK = @AWK@
+BUILD_INCLUDED_LIBINTL = @BUILD_INCLUDED_LIBINTL@
 CATALOGS = @CATALOGS@
 CATOBJEXT = @CATOBJEXT@
 CC = @CC@
@@ -74,15 +75,13 @@ GLIBC21 = @GLIBC21@
 GMOFILES = @GMOFILES@
 GMSGFMT = @GMSGFMT@
 GNU_PACKAGE = @GNU_PACKAGE@
-GT_NO = @GT_NO@
-GT_YES = @GT_YES@
 HELP2MAN = @HELP2MAN@
-INCLUDE_LOCALE_H = @INCLUDE_LOCALE_H@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
 INSTOBJEXT = @INSTOBJEXT@
-INTLDEPS = @INTLDEPS@
+INTLBISON = @INTLBISON@
 INTLLIBS = @INTLLIBS@
 INTLOBJS = @INTLOBJS@
+INTL_LIBTOOL_SUFFIX_PREFIX = @INTL_LIBTOOL_SUFFIX_PREFIX@
 KMEM_GROUP = @KMEM_GROUP@
 LIBICONV = @LIBICONV@
 LIBOBJS = @LIBOBJS@
@@ -112,7 +111,6 @@ YACC = @YACC@
 am__include = @am__include@
 am__quote = @am__quote@
 install_sh = @install_sh@
-l = @l@
 
 AUTOMAKE_OPTIONS = ../src/ansi2knr
 
@@ -610,8 +608,6 @@ localcharset_.c: localcharset.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/localcharset.c; then echo $(srcdir)/localcharset.c; else echo localcharset.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > localcharset_.c || rm -f localcharset_.c
 long-options_.c: long-options.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/long-options.c; then echo $(srcdir)/long-options.c; else echo long-options.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > long-options_.c || rm -f long-options_.c
-lstat_.c: lstat.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/lstat.c; then echo $(srcdir)/lstat.c; else echo lstat.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > lstat_.c || rm -f lstat_.c
 makepath_.c: makepath.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/makepath.c; then echo $(srcdir)/makepath.c; else echo makepath.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > makepath_.c || rm -f makepath_.c
 malloc_.c: malloc.c $(ANSI2KNR)
@@ -686,8 +682,6 @@ savedir_.c: savedir.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/savedir.c; then echo $(srcdir)/savedir.c; else echo savedir.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > savedir_.c || rm -f savedir_.c
 sha_.c: sha.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/sha.c; then echo $(srcdir)/sha.c; else echo sha.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > sha_.c || rm -f sha_.c
-stat_.c: stat.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/stat.c; then echo $(srcdir)/stat.c; else echo stat.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > stat_.c || rm -f stat_.c
 stime_.c: stime.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/stime.c; then echo $(srcdir)/stime.c; else echo stime.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > stime_.c || rm -f stime_.c
 stpcpy_.c: stpcpy.c $(ANSI2KNR)
@@ -775,31 +769,30 @@ gettimeofday_.$(OBJEXT) getugroups_.$(OBJEXT) getusershell_.$(OBJEXT) \
 group-member_.$(OBJEXT) hard-locale_.$(OBJEXT) hash_.$(OBJEXT) \
 human_.$(OBJEXT) idcache_.$(OBJEXT) isdir_.$(OBJEXT) lchown_.$(OBJEXT) \
 linebuffer_.$(OBJEXT) localcharset_.$(OBJEXT) long-options_.$(OBJEXT) \
-lstat_.$(OBJEXT) makepath_.$(OBJEXT) malloc_.$(OBJEXT) \
-mbswidth_.$(OBJEXT) md5_.$(OBJEXT) memcasecmp_.$(OBJEXT) \
-memchr_.$(OBJEXT) memcmp_.$(OBJEXT) memcoll_.$(OBJEXT) \
-memcpy_.$(OBJEXT) memmove_.$(OBJEXT) memrchr_.$(OBJEXT) \
-memset_.$(OBJEXT) mkdir_.$(OBJEXT) mkstemp_.$(OBJEXT) mktime_.$(OBJEXT) \
+makepath_.$(OBJEXT) malloc_.$(OBJEXT) mbswidth_.$(OBJEXT) \
+md5_.$(OBJEXT) memcasecmp_.$(OBJEXT) memchr_.$(OBJEXT) \
+memcmp_.$(OBJEXT) memcoll_.$(OBJEXT) memcpy_.$(OBJEXT) \
+memmove_.$(OBJEXT) memrchr_.$(OBJEXT) memset_.$(OBJEXT) \
+mkdir_.$(OBJEXT) mkstemp_.$(OBJEXT) mktime_.$(OBJEXT) \
 modechange_.$(OBJEXT) mountlist_.$(OBJEXT) nanosleep_.$(OBJEXT) \
 obstack_.$(OBJEXT) path-concat_.$(OBJEXT) physmem_.$(OBJEXT) \
 posixtm_.$(OBJEXT) putenv_.$(OBJEXT) quote_.$(OBJEXT) \
 quotearg_.$(OBJEXT) readtokens_.$(OBJEXT) readutmp_.$(OBJEXT) \
 realloc_.$(OBJEXT) regex_.$(OBJEXT) rename_.$(OBJEXT) rmdir_.$(OBJEXT) \
 rpmatch_.$(OBJEXT) safe-read_.$(OBJEXT) same_.$(OBJEXT) \
-save-cwd_.$(OBJEXT) savedir_.$(OBJEXT) sha_.$(OBJEXT) stat_.$(OBJEXT) \
-stime_.$(OBJEXT) stpcpy_.$(OBJEXT) strcasecmp_.$(OBJEXT) \
-strcspn_.$(OBJEXT) strdup_.$(OBJEXT) strftime_.$(OBJEXT) \
-stripslash_.$(OBJEXT) strncasecmp_.$(OBJEXT) strndup_.$(OBJEXT) \
-strnlen_.$(OBJEXT) strpbrk_.$(OBJEXT) strstr_.$(OBJEXT) \
-strtod_.$(OBJEXT) strtoimax_.$(OBJEXT) strtol_.$(OBJEXT) \
-strtoll_.$(OBJEXT) strtoul_.$(OBJEXT) strtoull_.$(OBJEXT) \
-strtoumax_.$(OBJEXT) strverscmp_.$(OBJEXT) tempname_.$(OBJEXT) \
-unicodeio_.$(OBJEXT) userspec_.$(OBJEXT) utime_.$(OBJEXT) \
-version-etc_.$(OBJEXT) xgetcwd_.$(OBJEXT) xgethostname_.$(OBJEXT) \
-xmalloc_.$(OBJEXT) xreadlink_.$(OBJEXT) xstrdup_.$(OBJEXT) \
-xstrtod_.$(OBJEXT) xstrtoimax_.$(OBJEXT) xstrtol_.$(OBJEXT) \
-xstrtoul_.$(OBJEXT) xstrtoumax_.$(OBJEXT) yesno_.$(OBJEXT) : \
-$(ANSI2KNR)
+save-cwd_.$(OBJEXT) savedir_.$(OBJEXT) sha_.$(OBJEXT) stime_.$(OBJEXT) \
+stpcpy_.$(OBJEXT) strcasecmp_.$(OBJEXT) strcspn_.$(OBJEXT) \
+strdup_.$(OBJEXT) strftime_.$(OBJEXT) stripslash_.$(OBJEXT) \
+strncasecmp_.$(OBJEXT) strndup_.$(OBJEXT) strnlen_.$(OBJEXT) \
+strpbrk_.$(OBJEXT) strstr_.$(OBJEXT) strtod_.$(OBJEXT) \
+strtoimax_.$(OBJEXT) strtol_.$(OBJEXT) strtoll_.$(OBJEXT) \
+strtoul_.$(OBJEXT) strtoull_.$(OBJEXT) strtoumax_.$(OBJEXT) \
+strverscmp_.$(OBJEXT) tempname_.$(OBJEXT) unicodeio_.$(OBJEXT) \
+userspec_.$(OBJEXT) utime_.$(OBJEXT) version-etc_.$(OBJEXT) \
+xgetcwd_.$(OBJEXT) xgethostname_.$(OBJEXT) xmalloc_.$(OBJEXT) \
+xreadlink_.$(OBJEXT) xstrdup_.$(OBJEXT) xstrtod_.$(OBJEXT) \
+xstrtoimax_.$(OBJEXT) xstrtol_.$(OBJEXT) xstrtoul_.$(OBJEXT) \
+xstrtoumax_.$(OBJEXT) yesno_.$(OBJEXT) : $(ANSI2KNR)
 
 .y.c:
 	$(YACCCOMPILE) $< && mv y.tab.c $@

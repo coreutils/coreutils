@@ -1,5 +1,12 @@
 2001-09-22  Jim Meyering  <meyering@lucent.com>
 
+	* ABOUT-NLS: Upgrade to gettext 0.10.39.
+	* intl: Upgrade entire directory to gettext 0.10.39.
+	* po/ChangeLog: New file.
+
+	* Makefile.am (DISTCLEANFILES): Remove definition, since intl/libintl.h
+	is no longer created via configure.
+
 	* Version 2.0.15.
 
 	* tests/od/od-N: New test for the 2001-09-19 fix by Ian Bruce.
