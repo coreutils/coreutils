@@ -1,3 +1,11 @@
+2001-05-11  Jim Meyering  <meyering@lucent.com>
+
+	* doc/omni-utils.texi: New file.  The union of fileutils.texi,
+	sh-utils.texi, and textutils.texi.  Merged by Brian Youmans.
+
+	* doc/omni-utils.texi (shred invocation): Warn about backups.
+	From Nelson Beebe.
+
 2001-05-09  Jim Meyering  <meyering@lucent.com>
 
 	* src/ls.c (main): Don't set `format_needs_stat' for --recursive (-R),
