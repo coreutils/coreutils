@@ -2,6 +2,8 @@
 
 	* Version 5.0.92.
 
+	* src/du.c (MAX_N_DESCRIPTORS): Remove now-unused definition.
+
 	Deprecate existing use of -H (aka --si).
 	* src/du.c (enum) [HUMAN_SI_OPTION]: New member.
 	[long_options]: Use HUMAN_SI_OPTION, not 'H'.
