@@ -111,19 +111,10 @@ EOF
 my $test_vector;
 foreach $test_vector (@Test::t)
   {
-    my ($test_name, $flags, $in_spec, $expected, $e_ret_code)
+    my ($test_name, $flags, $in_spec, $exp_spec, $e_ret_code)
 	= @{$test_vector};
 
     my $in = spec_to_list ($in_spec, $test_name, 'in');
-
-    my $exp_name = "t$test_name.exp";
-    my $out = "t$test_name.out";
-
-    open (EXP, ">$exp_name") || die "$0: $exp_name: $!\n";
-    print EXP $expected;
-    close (EXP) || die "$0: $exp_name: $!\n";
-
-    my $err_output = "t$test_name.err";
 
     my @srcdir_rel_in_file;
     my $f;
@@ -132,9 +123,14 @@ foreach $test_vector (@Test::t)
 	push (@srcdir_rel_in_file, "\$srcdir/$f")
       }
 
+    my $Exp = spec_to_list ($exp_spec, $test_name, 'exp');
+    assert (@{ $Exp->{ALL_FILES} } == 1);
+    my $exp_name = "\$srcdir/$Exp->{ALL_FILES}->[0]";
+    my $out = "t$test_name.out";
+    my $err_output = "t$test_name.err";
+
     my $cmd = "\$xx $flags " . join (' ', @srcdir_rel_in_file)
       . " > $out 2> $err_output";
-    $exp_name = "\$srcdir/$exp_name";
     print <<EOF ;
 $cmd
 code=\$?
