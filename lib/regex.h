@@ -1,7 +1,7 @@
 /* Definitions for data structures and routines for the regular
-   expression library, version 0.11.
+   expression library, version 0.12.
 
-   Copyright (C) 1985, 89, 90, 91, 92 Free Software Foundation, Inc.
+   Copyright (C) 1985, 89, 90, 91, 92, 1993 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -20,7 +20,15 @@
 #ifndef __REGEXP_LIBRARY_H__
 #define __REGEXP_LIBRARY_H__
 
-/* POSIX says that <sys/types.h> must be included before <regex.h>.  */
+/* POSIX says that <sys/types.h> must be included (by the caller) before
+   <regex.h>.  */
+
+#ifdef VMS
+/* VMS doesn't have `size_t' in <sys/types.h>, even though POSIX says it
+   should be there.  */
+#include <stddef.h>
+#endif
+
 
 /* The following bits are used to determine the regexp syntax we
    recognize.  The set/not-set meanings are chosen so that Emacs syntax
@@ -122,6 +130,10 @@ typedef unsigned reg_syntax_t;
    If not set, then an unmatched ) is invalid.  */
 #define RE_UNMATCHED_RIGHT_PAREN_ORD (RE_NO_EMPTY_RANGES << 1)
 
+/* If this bit is set, succeed as soon as we match the whole pattern,
+   without further backtracking.  */
+#define RE_NO_POSIX_BACKTRACKING (RE_UNMATCHED_RIGHT_PAREN_ORD << 1)
+
 /* This global variable defines the particular regexp syntax to use (for
    some interfaces).  When a regexp is compiled, the syntax used is
    stored in the pattern buffer, so changing this does not affect
@@ -137,7 +149,7 @@ extern reg_syntax_t re_syntax_options;
 #define RE_SYNTAX_AWK							\
   (RE_BACKSLASH_ESCAPE_IN_LISTS | RE_DOT_NOT_NULL			\
    | RE_NO_BK_PARENS            | RE_NO_BK_REFS				\
-   | RE_NO_BK_VAR               | RE_NO_EMPTY_RANGES			\
+   | RE_NO_BK_VBAR               | RE_NO_EMPTY_RANGES			\
    | RE_UNMATCHED_RIGHT_PAREN_ORD)
 
 #define RE_SYNTAX_POSIX_AWK 						\
@@ -156,6 +168,9 @@ extern reg_syntax_t re_syntax_options;
 
 #define RE_SYNTAX_POSIX_EGREP						\
   (RE_SYNTAX_EGREP | RE_INTERVALS | RE_NO_BK_BRACES)
+
+/* P1003.2/D11.2, section 4.20.7.1, lines 5078ff.  */
+#define RE_SYNTAX_ED RE_SYNTAX_POSIX_BASIC
 
 #define RE_SYNTAX_SED RE_SYNTAX_POSIX_BASIC
 
@@ -311,12 +326,12 @@ struct re_pattern_buffer
 #define REGS_FIXED 2
   unsigned regs_allocated : 2;
 
-        /* Set to zero when regex_compile compiles a pattern; set to one
-           by re_compile_fastmap when it updates the fastmap, if any.  */
+        /* Set to zero when `regex_compile' compiles a pattern; set to one
+           by `re_compile_fastmap' if it updates the fastmap.  */
   unsigned fastmap_accurate : 1;
 
-        /* If set, regexec reports only success or failure and does not
-           return anything in pmatch.  */
+        /* If set, `re_match_2' does not return information about
+           subexpressions.  */
   unsigned no_sub : 1;
 
         /* If set, a beginning-of-line anchor doesn't match at the
@@ -333,11 +348,6 @@ struct re_pattern_buffer
 };
 
 typedef struct re_pattern_buffer regex_t;
-
-
-/* search.c (search_buffer) in Emacs needs this one opcode value.  It is
-   defined both in `regex.c' and here.  */
-#define RE_EXACTN_VALUE 1
 
 /* Type for byte offsets within the string.  POSIX mandates this.  */
 typedef int regoff_t;
@@ -376,19 +386,17 @@ typedef struct
    prototype (if we are ANSI), and once without (if we aren't) -- we
    use the following macro to declare argument types.  This
    unfortunately clutters up the declarations a bit, but I think it's
-   worth it.
-   
-   We also have to undo `const' if we are not ANSI and if it hasn't
-   previously being taken care of.  */
+   worth it.  */
 
 #if __STDC__
+
 #define _RE_ARGS(args) args
-#else
+
+#else /* not __STDC__ */
+
 #define _RE_ARGS(args) ()
-#ifndef const
-#define const
-#endif
-#endif
+
+#endif /* not __STDC__ */
 
 /* Sets the current default syntax to SYNTAX, and return the old syntax.
    You can also simply assign to the `re_syntax_options' variable.  */
@@ -456,9 +464,11 @@ extern void re_set_registers
   _RE_ARGS ((struct re_pattern_buffer *buffer, struct re_registers *regs,
              unsigned num_regs, regoff_t *starts, regoff_t *ends));
 
+#ifdef _REGEX_RE_COMP
 /* 4.2 bsd compatibility.  */
 extern char *re_comp _RE_ARGS ((const char *));
 extern int re_exec _RE_ARGS ((const char *));
+#endif
 
 /* POSIX compatibility.  */
 extern int regcomp _RE_ARGS ((regex_t *preg, const char *pattern, int cflags));
