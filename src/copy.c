@@ -41,6 +41,10 @@
       or if the target system doesn't support file ownership. */	\
    && ((errno != EPERM && errno != EINVAL) || x->myeuid == 0))
 
+#define SAME_INODE(Sb_1, Sb_2) \
+  ((Sb_1).st_ino == (Sb_2).st_ino \
+   && (Sb_1).st_dev == (Sb_2).st_dev)
+
 struct dir_list
 {
   struct dir_list *parent;
@@ -428,8 +432,7 @@ copy_internal (const char *src_path, const char *dst_path,
 
 	  /* The destination file exists already.  */
 
-	  same = (src_sb.st_ino == dst_sb.st_ino
-		  && src_sb.st_dev == dst_sb.st_dev);
+	  same = (SAME_INODE (src_sb, dst_sb));
 
 #ifdef S_ISLNK
 	  /* If we're preserving symlinks (--no-dereference) and either
@@ -451,8 +454,7 @@ copy_internal (const char *src_path, const char *dst_path,
 	      struct stat src2_sb;
 	      if (stat (dst_path, &dst2_sb) == 0
 		  && stat (src_path, &src2_sb) == 0
-		  && src2_sb.st_ino == dst2_sb.st_ino
-		  && src2_sb.st_dev == dst2_sb.st_dev)
+		  && SAME_INODE (src2_sb, dst2_sb))
 		{
 		  same = 1;
 		}
@@ -678,8 +680,7 @@ copy_internal (const char *src_path, const char *dst_path,
 	  not_current_dir = (!STREQ (".", dst_parent)
 			     && stat (".", &dot_sb) == 0
 			     && stat (dst_parent, &dst_parent_sb) == 0
-			     && (dot_sb.st_dev != dst_parent_sb.st_dev
-				 || dot_sb.st_ino != dst_parent_sb.st_ino));
+			     && !SAME_INODE (dot_sb, dst_parent_sb));
 	  free (dst_parent);
 
 	  if (not_current_dir)
