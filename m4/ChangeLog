@@ -1,3 +1,8 @@
+2001-05-21  Jim Meyering  <meyering@lucent.com>
+
+	* regex.m4: Change a couple backticks to single quotes to avoid shell
+	syntax errors.
+
 2001-05-19  Alexandre Duret-Lutz  <duret_g@epita.fr>
 
 	* dos.m4 (jm_AC_DOS): Check for _WIN32, __WIN32__, and __MSDOS__.
