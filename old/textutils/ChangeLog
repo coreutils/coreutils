@@ -1363,7 +1363,8 @@
 2000-06-22  Bruno Haible  <haible@clisp.cons.org>
 
 	* src/sum.c (sysv_sum_file): Avoid overflowing 32-bit accumulator
-	on files larger than 256 MB.
+	on files whose bytes sum to 2^32 or larger.  The smallest such file
+	contains 16,843,010 bytes, nearly all of which have the value 0xff.
 
 2000-06-22  Bruno Haible  <haible@clisp.cons.org>
 
