@@ -232,7 +232,10 @@ main (argc, argv)
      char *argv[];
 {
   int c;
-  char *cwd_only[] = {".", NULL};
+  char *cwd_only[2];
+
+  cwd_only[0] = ".";
+  cwd_only[1] = "NULL";
 
   program_name = argv[0];
   xstat = lstat;
