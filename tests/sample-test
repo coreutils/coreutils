@@ -8,8 +8,8 @@ fi
 
 # FIXME: . $srcdir/../envvar-check
 # FIXME: . $srcdir/../lang-default
-# FIXME: . $srcdir/../priv-check require-non-root
-# FIXME: . $srcdir/../priv-check require-root
+# FIXME: PRIV_CHECK_ARG=require-root . $srcdir/../priv-check
+# FIXME: PRIV_CHECK_ARG=require-non-root . $srcdir/../priv-check
 
 pwd=`pwd`
 tmp=FIXME.$$
