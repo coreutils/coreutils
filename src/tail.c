@@ -874,9 +874,9 @@ parse_obsolescent_option (int argc, const char *const *argv,
   int t_count_lines;
   int t_forever;
 
-  /* With the obsolescent form, there is one option string and at most
-     one file argument.  */
-  if (argc < 2 || argc > 3)
+  /* With the obsolescent form, there is one option string and
+     (technically) at most one file argument.  But we allow two or more.  */
+  if (argc < 2)
     return 0;
 
   /* If I were implementing this in Perl, the rest of this function
@@ -975,6 +975,14 @@ parse_obsolescent_option (int argc, const char *const *argv,
 
   if (!*fail)
     {
+      if (argc > 3)
+	{
+	  error (0, 0, _("\
+Warning: it is not portable to use two or more file arguments with\n\
+tail's obsolescent option syntax (%s).  Use the equivalent -n or -c option\n\
+to avoid this warning."), argv[1]);
+	}
+
       /* Set globals.  */
       from_start = t_from_start;
       count_lines = t_count_lines;
