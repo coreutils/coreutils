@@ -180,7 +180,7 @@ static struct option const longopts[] =
 /* Add VAL to the environment, checking for out of memory errors.  */
 
 static void
-xputenv (const char *val)
+xputenv (char *val)
 {
   if (putenv (val))
     xalloc_die ();
