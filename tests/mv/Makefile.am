@@ -2,6 +2,7 @@
 AUTOMAKE_OPTIONS = 1.3 gnits
 
 TESTS = \
+  i-link-no \
   part-fail \
   dup-source childproof i-4 update i-2 mv-special-1 \
   into-self into-self-2 into-self-3 into-self-4 \
