@@ -18,15 +18,15 @@
 #ifndef _error_h_
 #define _error_h_
 
-#if __GNUC__ >= 2 && defined (__GNUC_MINOR__) \
-    && __GNUC_MINOR__ >= 5 && !defined (__STRICT_ANSI__)
-#define PRINTF_ATTRIBUTE __attribute__ ((format (printf, 3, 4)))
-#else
-#define PRINTF_ATTRIBUTE /* empty */
+#ifndef __attribute__
+# if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 5) || __STRICT_ANSI__
+#  define __attribute__(Spec) /* empty */
+# endif
 #endif
 
-#if __GNUC__
-void error (int, int, const char *, ...) PRINTF_ATTRIBUTE ;
+#if __STDC__
+void error (int, int, const char *, ...) \
+  __attribute__ ((format (printf, 3, 4)));
 #else
 void error ();
 #endif
