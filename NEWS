@@ -36,6 +36,14 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   cut's --output-delimiter=D option works with abutting byte ranges.
 
+  The --date (-d) option of "date" and "touch" is now pickier about date values:
+  it rejects dates like "January 32" that have out-of-range components.
+  Also, date values can now have leading TZ="..." assignments that override
+  the environment only while that date is being processed.  For example,
+  the following shell command converts from Paris to New York time:
+
+     TZ="America/New_York" date --date='TZ="Europe/Paris" 2004-10-31 06:30'
+
   du no longer segfaults when a subdirectory of an operand
   directory is removed while du is traversing that subdirectory.
   Since the bug was in the underlying fts.c module, it also affected
