@@ -740,10 +740,10 @@ remove_dir (struct File_spec *fs, int need_save_cwd, const struct rm_options *x)
     if (!SAME_INODE (sb, *fs))
       {
 	error (EXIT_FAILURE, 0,
-	       _("ERROR: the directory `%s' initially had inode number %lu,\n\
-but now (after a chdir into it), the inode number of `.' is %lu.\n\
-That means the directory was replaced with either another directory\n\
-or a link to another directory."),
+	       _("ERROR: the directory `%s' initially had device/inode\n\
+numbers %lu/%lu, but now (after a chdir into it), the numbers for `.'\n\
+are %lu/%lu.  That means that while rm was running, the directory\n\
+was replaced with either another directory or a link to another directory."),
 	       full_filename (dir_name),
 	       (unsigned long)(fs->st_ino),
 	       (unsigned long)(sb.st_ino));
