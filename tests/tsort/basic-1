@@ -48,6 +48,11 @@ my @Tests =
    ['odd', {IN => "a\n"},
     {EXIT => 1},
     {ERR => "tsort: odd.1: input contains an odd number of tokens\n"}],
+
+   ['only-one', {IN => {f => ""}}, {IN => {g => ""}},
+    {EXIT => 1},
+    {ERR => "tsort: only one argument may be specified\n"
+     . "Try `tsort --help' for more information.\n"}],
   );
 
 my $save_temps = $ENV{DEBUG};
