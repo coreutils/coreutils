@@ -1316,7 +1316,7 @@ getmonth (const char *s, size_t len)
   if (len == 0)
     return 0;
 
-  month = (char *) alloca (len + 1);
+  month = alloca (len + 1);
   for (i = 0; i < len; ++i)
     month[i] = fold_toupper[UCHAR (s[i])];
   len -= trailing_blanks (month, len);
@@ -1389,7 +1389,7 @@ keycompare (const struct line *a, const struct line *b)
 	{
 	  if (ignore || translate)
 	    {
-	      char *copy_a = (char *) alloca (lena + 1 + lenb + 1);
+	      char *copy_a = alloca (lena + 1 + lenb + 1);
 	      char *copy_b = copy_a + lena + 1;
 	      size_t new_len_a, new_len_b, i;
 
