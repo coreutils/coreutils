@@ -3433,7 +3433,7 @@ However, fields that extend to the end of the line,
 as @option{-k 2}, or fields consisting of a range, as @option{-k 2,3},
 retain the field separators present between the endpoints of the range.
 
-To specify a zero byte (@acronym{ASCII} @sc{nul} (Null) character) as
+To specify a null character (@acronym{ASCII} @sc{nul}) as
 the field separator, use the two-character string @samp{\0}, e.g.,
 @samp{sort -t '\0'}.
 
@@ -3473,9 +3473,9 @@ uniq} inspects the entire line.  @xref{uniq invocation}.
 @opindex -z
 @opindex --zero-terminated
 @cindex sort zero-terminated lines
-Treat the input as a set of lines, each terminated by a zero byte
-(@acronym{ASCII} @sc{nul} (Null) character) instead of an
-@acronym{ASCII} @sc{lf} (Line Feed).
+Treat the input as a set of lines, each terminated by a null character
+(@acronym{ASCII} @sc{nul}) instead of a line feed
+(@acronym{ASCII} @sc{lf}).
 This option can be useful in conjunction with @samp{perl -0} or
 @samp{find -print0} and @samp{xargs -0} which do the same in order to
 reliably handle arbitrary file names (even those containing blanks
@@ -4416,7 +4416,7 @@ disabled, width of references is not taken into account in the output
 line width computations.
 
 @item
-All 256 characters, even @sc{nul}s, are always read and processed from
+All 256 bytes, even null bytes, are always read and processed from
 input file with no adverse effect, even if @sc{gnu} extensions are disabled.
 However, System V @command{ptx} does not accept 8-bit characters, a few
 control characters are rejected, and the tilde @kbd{~} is also rejected.
@@ -8890,14 +8890,14 @@ are often symbolic links.
 @opindex --files0-from=@var{FILE}
 @cindex including files from @command{du}
 Rather than processing files named on the command line, process those
-in the @sc{nul}-terminated list in file @var{FILE}.
+named in file @var{FILE}; each name is terminated by a null byte.
 This is useful with the @option{--total} (@option{-c}) option when
 the list of file names is so long that it may exceed a command line
 length limitation.
 In such cases, running @command{du} via @command{xargs} is undesirable
 because it splits the list into pieces and makes @command{du} print a
 total for each sublist rather than for the entire list.
-One way to produce a list of @sc{nul}-terminated file names is with @sc{gnu}
+One way to produce a list of null-byte-terminated file names is with @sc{gnu}
 @command{find}, using its @option{-print0} predicate.
 Do not specify any @var{FILE} on the command line when using this option.
 
@@ -8953,8 +8953,8 @@ is at level 0, so @code{du --max-depth=0} is equivalent to @code{du -s}.
 @opindex -0
 @itemx --null
 @opindex --null
-@cindex output @sc{nul}-terminated lines
-Output the zero byte (@sc{nul}) at the end of each line, rather than a newline.
+@cindex output null-byte-terminated lines
+Output a null byte at the end of each line, rather than a newline.
 This option enables other programs to parse the output of @command{du}
 even when that output would contain file names with embedded newlines.
 
