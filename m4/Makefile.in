@@ -44,6 +44,7 @@ transform = @program_transform_name@
 YACC = @YACC@
 RANLIB = @RANLIB@
 GENCAT = @GENCAT@
+PERL = @PERL@
 GMSGFMT = @GMSGFMT@
 CC = @CC@
 RANLIB = @RANLIB@
