@@ -344,7 +344,10 @@ argument must be a format string beginning with `+'."),
 	  /* Set the system clock to the specified date, then regardless of
 	     the success of that operation, format and print that date.  */
 	  if (stime (&when) == -1)
-	    error (0, errno, _("cannot set date"));
+	    {
+	      error (0, errno, _("cannot set date"));
+	      status = 1;
+	    }
 	}
 
       /* When given a universal time option, set TZ to UTC0 after
