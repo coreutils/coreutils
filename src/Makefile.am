@@ -278,7 +278,7 @@ s2 = '/^\#define AUTHORS \\\\/{;n;$(sed_filter);p;q;}'
 # Any that don't must be marked with `extern', but `main'
 # and `usage' are exceptions.  They're always extern, but
 # don't need to be marked.
-sc_src_functions_have_static_scope: $(all_programs)
+sc_tight_scope: $(all_programs)
 	@t=exceptions-$$$$;						\
 	trap "s=$$?; rm -f $$t; exit $$s" 0 1 2 13 15;			\
 	( printf '^main$$\n^usage$$\n';					\
