@@ -148,10 +148,10 @@ void strip_trailing_slashes ();
    function creates DIR and to zero otherwise.  Give a diagnostic and
    return non-zero if DIR cannot be created or cannot be determined to
    exist already.  Use DIRPATH in any diagnostic, not DIR.
-   Note that if DIR already exists, this function will return zero
-   (indicating success) and will set *CREATED_DIR_P to zero.  */
+   Note that if DIR already exists, this function returns zero
+   (indicating success) and sets *CREATED_DIR_P to zero.  */
 
-static int
+int
 make_dir (const char *dir, const char *dirpath, mode_t mode, int *created_dir_p)
 {
   int fail = 0;
