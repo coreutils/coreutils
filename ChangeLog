@@ -1,6 +1,21 @@
-2003-08-11  Jim Meyering  <jim@meyering.net>
+2003-08-15  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.91.
+
+	* Makefile.maint (sc_space_tab): Use exclusion list in separate file.
+	* .x-sc_space_tab: New file.
+
+	* man/help2man: Remove some SPACEs before TAB.
+
+2003-08-14  Paul Eggert  <eggert@twinsun.com>
+
+	* Makefile.maint (LC_ALL): Set to C.
+	* man/Makefile.am (ASSORT): New var.
+	(check-x-vs-1, programs): Use it.
+	* src/Makefile.am (ASSORT, check-README, ../AUTHORS): Likewise.
+	* tests/Makefile.am (ASSORT, all_programs): Likewise.
+
+2003-08-11  Jim Meyering  <jim@meyering.net>
 
 	fold -s -wN would infloop for N < 8 with TABs in the input.
 	E.g., this would not terminate: printf 'a\tb' | fold -w2 -s
