@@ -2706,8 +2706,8 @@ been specified, @code{sort} compares each pair of fields, in the
 order specified on the command line, according to the associated
 ordering options, until a difference is found or no fields are left.
 Unless otherwise specified, all comparisons use the character collating
-sequence specified by the @env{LC_COLLATE} locale.  @footnote{If you have
-arranged to use a non-@sc{posix} locale (e.g., by setting @env{LC_ALL}
+sequence specified by the @env{LC_COLLATE} locale.  @footnote{If you
+use a non-@sc{posix} locale (e.g., by setting @env{LC_ALL}
 to @samp{en_US}), then @command{sort} may produce output that is sorted
 differently than you're accustomed to.  In that case, set the @env{LC_ALL}
 environment variable to @samp{C}.  Note that setting only @env{LC_COLLATE}
