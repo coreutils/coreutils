@@ -1,6 +1,16 @@
-2002-09-13  Jim Meyering  <meyering@lucent.com>
+2002-09-14  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.5.2.
+
+	* src/id.c (print_full_info, print_group_list): Add casts to avoid
+	warnings about `signed and unsigned type in conditional expression'.
+
+	* src/md5sum.c: Change type of global, digest_hex_bytes, to size_t
+	to avoid warnings about `comparison between signed and unsigned'.
+	(split_3): Change parameter names to be readable and add comment.
+	Clean up the test for whether a line may be ignored.
+
+2002-09-13  Jim Meyering  <meyering@lucent.com>
 
 	* src/printf.c (main): Handle leading command line argument of `--'.
 	Reported by Raul: DervishD <raul@pleyades.net>
