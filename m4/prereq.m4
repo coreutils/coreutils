@@ -1,4 +1,4 @@
-#serial 28
+#serial 29
 
 dnl We use jm_ for non Autoconf macros.
 m4_pattern_forbid([^jm_[ABCDEFGHIJKLMNOPQRSTUVXYZ]])dnl
@@ -8,34 +8,34 @@ m4_pattern_forbid([^jm_[ABCDEFGHIJKLMNOPQRSTUVXYZ]])dnl
 
 AC_DEFUN([jm_PREREQ],
 [
-  jm_PREREQ_ADDEXT
-  jm_PREREQ_C_STACK
-  jm_PREREQ_CANON_HOST
-  jm_PREREQ_DIRNAME
-  jm_PREREQ_ERROR
-  jm_PREREQ_EXCLUDE
-  jm_PREREQ_GETPAGESIZE
-  jm_PREREQ_HARD_LOCALE
-  jm_PREREQ_HASH
-  jm_PREREQ_HUMAN
-  jm_PREREQ_MBSWIDTH
-  jm_PREREQ_MEMCHR
-  jm_PREREQ_PHYSMEM
-  jm_PREREQ_POSIXVER
-  jm_PREREQ_QUOTEARG
-  jm_PREREQ_READUTMP
-  jm_PREREQ_REGEX
-  jm_PREREQ_STAT
-  jm_PREREQ_STRNLEN
-  jm_PREREQ_TEMPNAME # called by mkstemp
-  jm_PREREQ_XGETCWD
-  jm_PREREQ_XREADLINK
+  AC_REQUIRE([jm_PREREQ_ADDEXT])
+  AC_REQUIRE([jm_PREREQ_C_STACK])
+  AC_REQUIRE([jm_PREREQ_CANON_HOST])
+  AC_REQUIRE([jm_PREREQ_DIRNAME])
+  AC_REQUIRE([jm_PREREQ_ERROR])
+  AC_REQUIRE([jm_PREREQ_EXCLUDE])
+  AC_REQUIRE([jm_PREREQ_GETPAGESIZE])
+  AC_REQUIRE([jm_PREREQ_HARD_LOCALE])
+  AC_REQUIRE([jm_PREREQ_HASH])
+  AC_REQUIRE([jm_PREREQ_HUMAN])
+  AC_REQUIRE([jm_PREREQ_MBSWIDTH])
+  AC_REQUIRE([jm_PREREQ_MEMCHR])
+  AC_REQUIRE([jm_PREREQ_PHYSMEM])
+  AC_REQUIRE([jm_PREREQ_POSIXVER])
+  AC_REQUIRE([jm_PREREQ_QUOTEARG])
+  AC_REQUIRE([jm_PREREQ_READUTMP])
+  AC_REQUIRE([jm_PREREQ_REGEX])
+  AC_REQUIRE([jm_PREREQ_STAT])
+  AC_REQUIRE([jm_PREREQ_STRNLEN])
+  AC_REQUIRE([jm_PREREQ_TEMPNAME]) # called by mkstemp
+  AC_REQUIRE([jm_PREREQ_XGETCWD])
+  AC_REQUIRE([jm_PREREQ_XREADLINK])
 ])
 
 AC_DEFUN([jm_PREREQ_ADDEXT],
 [
   dnl For addext.c.
-  AC_SYS_LONG_FILE_NAMES
+  AC_REQUIRE([AC_SYS_LONG_FILE_NAMES])
   AC_CHECK_FUNCS(pathconf)
   AC_CHECK_HEADERS(limits.h string.h unistd.h)
 ])
@@ -50,21 +50,20 @@ AC_DEFUN([jm_PREREQ_CANON_HOST],
   dnl These come from -lnsl on Solaris5.5.1.
   AC_CHECK_FUNCS(gethostbyname gethostbyaddr inet_ntoa)
 
-  AC_CHECK_FUNCS(gethostbyname gethostbyaddr inet_ntoa)
   AC_CHECK_HEADERS(unistd.h string.h netdb.h sys/socket.h \
                    netinet/in.h arpa/inet.h)
 ])
 
 AC_DEFUN([jm_PREREQ_DIRNAME],
 [
-  AC_HEADER_STDC
+  AC_REQUIRE([AC_HEADER_STDC])
   AC_CHECK_HEADERS(string.h)
 ])
 
 AC_DEFUN([jm_PREREQ_EXCLUDE],
 [
-  AC_FUNC_FNMATCH_GNU
-  AC_HEADER_STDBOOL
+  AC_REQUIRE([AC_FUNC_FNMATCH_GNU])
+  AC_REQUIRE([AC_HEADER_STDBOOL])
 ])
 
 AC_DEFUN([jm_PREREQ_GETPAGESIZE],
@@ -77,13 +76,13 @@ AC_DEFUN([jm_PREREQ_HARD_LOCALE],
 [
   AC_CHECK_HEADERS(locale.h stdlib.h string.h)
   AC_CHECK_FUNCS(setlocale)
-  AM_C_PROTOTYPES
+  AC_REQUIRE([AM_C_PROTOTYPES])
 ])
 
 AC_DEFUN([jm_PREREQ_HASH],
 [
   AC_CHECK_HEADERS(stdlib.h)
-  AC_HEADER_STDBOOL
+  AC_REQUIRE([AC_HEADER_STDBOOL])
   AC_REQUIRE([jm_CHECK_DECLS])
 ])
 
@@ -94,7 +93,7 @@ AC_DEFUN([jm_PREREQ_HUMAN],
   AC_CHECK_HEADERS(locale.h)
   AC_CHECK_DECLS([getenv])
   AC_CHECK_FUNCS(localeconv)
-  AC_HEADER_STDBOOL
+  AC_REQUIRE([AC_HEADER_STDBOOL])
   AC_REQUIRE([jm_AC_TYPE_UINTMAX_T])
 ])
 
@@ -118,22 +117,22 @@ AC_DEFUN([jm_PREREQ_POSIXVER],
 AC_DEFUN([jm_PREREQ_QUOTEARG],
 [
   AC_CHECK_FUNCS(isascii iswprint)
-  jm_FUNC_MBRTOWC
-  jm_FUNC_MEMCMP
+  AC_REQUIRE([jm_FUNC_MBRTOWC])
+  AC_REQUIRE([jm_FUNC_MEMCMP])
   AC_CHECK_HEADERS(limits.h stddef.h stdlib.h string.h wchar.h wctype.h)
-  AC_HEADER_STDC
-  AC_C_BACKSLASH_A
-  AC_TYPE_MBSTATE_T
-  AM_C_PROTOTYPES
+  AC_REQUIRE([AC_HEADER_STDC])
+  AC_REQUIRE([AC_C_BACKSLASH_A])
+  AC_REQUIRE([AC_TYPE_MBSTATE_T])
+  AC_REQUIRE([AM_C_PROTOTYPES])
 ])
 
 AC_DEFUN([jm_PREREQ_READUTMP],
 [
-  AC_HEADER_STDC
+  AC_REQUIRE([AC_HEADER_STDC])
   AC_CHECK_HEADERS(string.h utmp.h utmpx.h sys/param.h)
   AC_CHECK_FUNCS(utmpname)
   AC_CHECK_FUNCS(utmpxname)
-  AM_C_PROTOTYPES
+  AC_REQUIRE([AM_C_PROTOTYPES])
 
   if test $ac_cv_header_utmp_h = yes || test $ac_cv_header_utmpx_h = yes; then
     utmp_includes="\
@@ -176,8 +175,8 @@ AC_DEFUN([jm_PREREQ_REGEX],
   dnl to get them.
   AC_CHECK_FUNCS(bzero bcopy isascii btowc)
   AC_CHECK_HEADERS(alloca.h libintl.h wctype.h wchar.h)
-  AC_HEADER_STDC
-  AC_FUNC_ALLOCA
+  AC_REQUIRE([AC_HEADER_STDC])
+  AC_REQUIRE([AC_FUNC_ALLOCA])
 ])
 
 AC_DEFUN([jm_PREREQ_STAT],
@@ -185,7 +184,7 @@ AC_DEFUN([jm_PREREQ_STAT],
   AC_CHECK_HEADERS(sys/sysmacros.h sys/statvfs.h sys/vfs.h inttypes.h)
   AC_CHECK_HEADERS(sys/param.h sys/mount.h)
   AC_CHECK_FUNCS(statvfs)
-  jm_AC_TYPE_LONG_LONG
+  AC_REQUIRE([jm_AC_TYPE_LONG_LONG])
 
   statxfs_includes="\
 $ac_includes_default
@@ -216,8 +215,8 @@ $ac_includes_default
 
 AC_DEFUN([jm_PREREQ_STRNLEN],
 [
-  AC_FUNC_STRNLEN
-  AC_HEADER_STDC
+  AC_REQUIRE([AC_FUNC_STRNLEN])
+  AC_REQUIRE([AC_HEADER_STDC])
   AC_CHECK_HEADERS(memory.h)
   AC_CHECK_DECLS([memchr])
 
@@ -230,8 +229,8 @@ AC_DEFUN([jm_PREREQ_STRNLEN],
 
 AC_DEFUN([jm_PREREQ_TEMPNAME],
 [
-  AC_HEADER_STDC
-  AC_HEADER_STAT
+  AC_REQUIRE([AC_HEADER_STDC])
+  AC_REQUIRE([AC_HEADER_STAT])
   AC_CHECK_HEADERS(fcntl.h sys/time.h stdint.h unistd.h)
   AC_CHECK_FUNCS(__secure_getenv gettimeofday)
   AC_CHECK_DECLS([getenv])
@@ -240,14 +239,14 @@ AC_DEFUN([jm_PREREQ_TEMPNAME],
 
 AC_DEFUN([jm_PREREQ_XGETCWD],
 [
-  AC_C_PROTOTYPES
+  AC_REQUIRE([AC_C_PROTOTYPES])
   AC_CHECK_HEADERS(limits.h stdlib.h sys/param.h unistd.h)
   AC_CHECK_FUNCS(getcwd)
-  AC_FUNC_GETCWD_NULL
+  AC_REQUIRE([AC_FUNC_GETCWD_NULL])
 ])
 
 AC_DEFUN([jm_PREREQ_XREADLINK],
 [
-  AC_C_PROTOTYPES
+  AC_REQUIRE([AC_C_PROTOTYPES])
   AC_CHECK_HEADERS(limits.h stdlib.h sys/types.h unistd.h)
 ])
