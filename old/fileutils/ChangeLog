@@ -1,5 +1,10 @@
 2000-05-15  Jim Meyering  <meyering@lucent.com>
 
+	* src/ln.c (do_link): Use complete strings in diagnostics so they
+	are easier to translate.  Reported by Michel Robitaille.
+	(main): Drop support for the case in which S_ISLNK wasn't defined.
+	It was broken in any case.
+
 	* tests/ls/time-1: Set LC_ALL to `C' to avoid failure when the
 	current locale is not C (POSIX).  From Matthew Clarke.
 
