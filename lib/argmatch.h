@@ -35,6 +35,17 @@
 #  endif  /* GCC.  */
 # endif  /* Not PARAMS.  */
 
+/* Assert there are as many real arguments as there are values
+   (argument list ends with a NULL guard).  There is no execution
+   cost, since it will be statically evalauted to `assert (0)' or
+   `assert (1)'.  Unfortunately there is no -Wassert-0. */
+
+# undef ARRAY_CARDINALITY
+# define ARRAY_CARDINALITY(Array) (sizeof ((Array)) / sizeof (*(Array)))
+
+# define ARGMATCH_ASSERT(Arglist, Vallist)      \
+  assert (ARRAY_CARDINALITY ((Arglist)) == ARRAY_CARDINALITY ((Vallist)) + 1)
+
 /* Return the index of the element of ARGLIST (NULL terminated) that
    matches with ARG.  If VALLIST is not NULL, then use it to resolve
    false ambiguities (i.e., different matches of ARG but corresponding
