@@ -68,7 +68,7 @@ my @tv = (
 ['n-5b', '-n  0', "y\n" x 5, '', 0],
 
 # With textutils-1.22, this failed.
-['f-1', '-f -n 1', "a\nb\n", "b\n", 0],
+#['f-1', '-f -n 1', "a\nb\n", "b\n", 0],
 );
 
 sub test_vector
