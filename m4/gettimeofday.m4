@@ -1,4 +1,4 @@
-#serial 4
+#serial 5
 
 dnl From Jim Meyering.
 dnl
@@ -12,14 +12,11 @@ dnl the wrapper functions that work around the problem.
 AC_DEFUN([AC_FUNC_GETTIMEOFDAY_CLOBBER],
 [
  AC_REQUIRE([AC_HEADER_TIME])
- AC_CHECK_HEADERS_ONCE(stdlib.h string.h)
  AC_CACHE_CHECK([whether gettimeofday clobbers localtime buffer],
   jm_cv_func_gettimeofday_clobber,
   [AC_TRY_RUN([
 #include <stdio.h>
-#if HAVE_STRING_H
-# include <string.h>
-#endif
+#include <string.h>
 
 #if TIME_WITH_SYS_TIME
 # include <sys/time.h>
@@ -32,9 +29,7 @@ AC_DEFUN([AC_FUNC_GETTIMEOFDAY_CLOBBER],
 # endif
 #endif
 
-#if HAVE_STDLIB_H
-# include <stdlib.h>
-#endif
+#include <stdlib.h>
 
 int
 main ()
