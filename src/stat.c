@@ -326,7 +326,7 @@ human_access (struct stat const *statbuf)
 }
 
 static char *
-human_time (time_t const *t)
+human_time (time_t const *t, int t_ns)
 {
   static char str[80];
   struct tm *tm = localtime (t);
@@ -335,7 +335,7 @@ human_time (time_t const *t)
       G_fail = 1;
       return (char *) _("*** invalid date/time ***");
     }
-  nstrftime (str, sizeof str, "%Y-%m-%d %H:%M:%S.%N %z", tm, 0, 0);
+  nstrftime (str, sizeof str, "%Y-%m-%d %H:%M:%S.%N %z", tm, 0, t_ns);
   return str;
 }
 
@@ -525,7 +525,8 @@ print_stat (char *pformat, char m, char const *filename, void const *data)
       break;
     case 'x':
       strcat (pformat, "s");
-      printf (pformat, human_time (&(statbuf->st_atime)));
+      printf (pformat, human_time (&(statbuf->st_atime),
+				   TIMESPEC_NS (statbuf->st_atim)));
       break;
     case 'X':
       strcat (pformat, "d");
@@ -533,7 +534,8 @@ print_stat (char *pformat, char m, char const *filename, void const *data)
       break;
     case 'y':
       strcat (pformat, "s");
-      printf (pformat, human_time (&(statbuf->st_mtime)));
+      printf (pformat, human_time (&(statbuf->st_mtime),
+				   TIMESPEC_NS (statbuf->st_mtim)));
       break;
     case 'Y':
       strcat (pformat, "d");
@@ -541,7 +543,8 @@ print_stat (char *pformat, char m, char const *filename, void const *data)
       break;
     case 'z':
       strcat (pformat, "s");
-      printf (pformat, human_time (&(statbuf->st_ctime)));
+      printf (pformat, human_time (&(statbuf->st_ctime),
+				   TIMESPEC_NS (statbuf->st_ctim)));
       break;
     case 'Z':
       strcat (pformat, "d");
