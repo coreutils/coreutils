@@ -1,13 +1,13 @@
 Sat Nov 18 12:04:30 1995  Jim Meyering  (meyering@comco.com)
 
+	* src/Makefile.in (version.c): Depend on ../.version, not Makefile.
+
 	Update for autoconf-2.5:
-	* src/Makefile.in (prefix, exec_prefix): Remove them.
-	(libdir): Use @libdir@.
-	(bindir): Use @bindir@.
-	* doc/Makefile.in (prefix): Remove it.
-	(infodir): Use @infodir@.
-	* man/Makefile.in (prefix, exec_prefix): Remove them.
-	(mandir): Use @mandir@.
+	* src/Makefile.in (libdir): Set to @libdir@.
+	(bindir): Set to @bindir@.
+	* doc/Makefile.in (infodir): Set to @infodir@.
+	* man/Makefile.in (exec_prefix): Remove it.
+	(mandir): Set to @mandir@.
 	(bindir): Remove it.
 
 Thu Nov 16 21:25:45 1995  Jim Meyering  (meyering@comco.com)
