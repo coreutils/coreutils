@@ -1,3 +1,7 @@
+2003-06-06  Jim Meyering  <jim@meyering.net>
+
+	* posixtm.c: Include <stdbool.h> unconditionally.
+
 2003-06-05  Jim Meyering  <jim@meyering.net>
 
 	From gnulib.
