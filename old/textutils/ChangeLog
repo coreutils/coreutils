@@ -2,10 +2,9 @@ Wed Jun 26 21:35:10 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/Makefile.am (LDADD): Remove sort-specific hack to link
 	with -lm.
-
 	* aclocal.m4 (AM_FUNC_STRTOD): New macro.
 	* configure.in: Use AM_FUNC_STRTOD, and remove strtod from
-	AC_REPLACE_FUNCS
+	AC_REPLACE_FUNCS.  Suggested by Tom Tromey.
 
 	* po/Makefile.in.in (install-data): Add `else true;' to avoid
 	letting failing if-condition cause make to fail.
