@@ -174,7 +174,9 @@ Print selected parts of lines from each FILE to standard output.\n\
   -b, --bytes=LIST        output only these bytes\n\
   -c, --characters=LIST   output only these characters\n\
   -d, --delimiter=DELIM   use DELIM instead of TAB for field delimiter\n\
-  -f, --fields=LIST       output only these fields\n\
+  -f, --fields=LIST       output only these fields;  also print any line\n\
+                            that contains no delimiter character, unless\n\
+                            the -s option is specified\n\
   -n                      (ignored)\n\
   -s, --only-delimited    do not print lines not containing delimiters\n\
       --output-delimiter=STRING  use STRING as the output delimiter\n\
