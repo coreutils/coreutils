@@ -1,5 +1,5 @@
 #!/bin/sh
-# make sure ls does the right thing when invoked with no arguments.
+# make sure ls and `ls -R' do the right thing when invoked with no arguments.
 
 if test "$VERBOSE" = yes; then
   set -x
@@ -15,6 +15,7 @@ framework_failure=0
 mkdir $tmp || framework_failure=1
 cd $tmp || framework_failure=1
 mkdir -p dir/subdir || framework_failure=1
+touch dir/subdir/file2 || framework_failure=1
 ln -s f symlink || framework_failure=1
 
 cat > exp <<\EOF || framework_failure=1
@@ -32,6 +33,25 @@ fi
 fail=0
 
 ls > out || fail=1
+
+cmp out exp || fail=1
+test $fail = 1 && diff out exp 2> /dev/null
+
+cat > exp <<\EOF
+.:
+dir
+exp
+out
+symlink
+
+./dir:
+subdir
+
+./dir/subdir:
+file2
+EOF
+
+ls -R > out || fail=1
 
 cmp out exp || fail=1
 test $fail = 1 && diff out exp 2> /dev/null
