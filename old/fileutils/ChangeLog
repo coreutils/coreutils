@@ -2,6 +2,9 @@
 
 	* Version 4.1.3.
 
+	* tests/ls/rt-1: Compare all lines of output.
+	Update code to use `trap' and more up to date infrastructure.
+
 	The change of 2001-11-01 introduced a bug whereby some recursive
 	listings didn't have a blank line between per-directory groups of files.
 	* src/ls.c (print_dir): Print a newline before each directory name
