@@ -260,10 +260,13 @@ get_width_format ()
 
   if (min_val < 0.0)
     {
-      sprintf (buffer, "%g", rint (min_val));
+      double int_min_val = rint (min_val);
+      sprintf (buffer, "%g", int_min_val);
       if (buffer[strspn (buffer, "-0123456789")] != '\0')
 	return "%g";
-      width2 = strlen (buffer);
+      /* On some systems, `seq -w -.1 .1 .1' results in buffer being `-0'.
+	 On others, it is just `0'.  The former results in better output.  */
+      width2 = (int_min_val == 0 ? 2 : strlen (buffer));
 
       width1 = width1 > width2 ? width1 : width2;
     }
