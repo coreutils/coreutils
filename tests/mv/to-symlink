@@ -19,8 +19,7 @@ file=to-sym-$$
 
 fail=0
 
-trap 'rm -fr $file $other_partition_tmpdir; exit $fail' \
-  0 1 2 3 15
+trap 'rm -fr $file $other_partition_tmpdir; exit $fail' 0 1 2 3 15
 
 framework_failure=0
 rm -f $file || framework_failure=1
