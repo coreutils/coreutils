@@ -51,8 +51,12 @@
 /* Initial size of the hash table.  */
 #define INITIAL_TABLE_SIZE 103
 
-/* Initial size to allocate for `path'.  */
-#define INITIAL_PATH_SIZE 100
+/* The maximum number of simultaneously open file handles that
+   may be used by ftw.  */
+#define MAX_N_DESCRIPTORS	\
+  (UTILS_OPEN_MAX < 20		\
+   ? UTILS_OPEN_MAX		\
+   : UTILS_OPEN_MAX - 10)
 
 /* Hash structure for inode and device numbers.  The separate entry
    structure makes it easier to rehash "in place".  */
@@ -515,7 +519,6 @@ du_files (char **files, int ftw_flags)
 	  file = new_file;
 	}
 
-#define MAX_N_DESCRIPTORS (1000 - 1) /* FIXME-compute at configure time */
       err = nftw (file, process_file, MAX_N_DESCRIPTORS, ftw_flags);
       if (err)
 	error (0, errno, "%s", quote (orig));
