@@ -1,5 +1,10 @@
 2000-07-15  Jim Meyering  <meyering@lucent.com>
 
+	* makepath.c: Include quote.h.
+	(make_path): Convert "`%s'" in format strings to "%s", and wrap each
+	corresponding argument in a `quote (...)' call.
+	Give better diagnostics.
+
 	* Makefile.am (libfetish_a_SOURCES): Add quote.c.
 	(noinst_HEADERS): Add quote.h.
 
