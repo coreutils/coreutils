@@ -1,4 +1,4 @@
-User-visible changes in release 1.15
+Changes in release 1.15
 * fix a couple bugs in tr involving use of -c and/or -d flags -- see ChangeLog
 * diagnose some improper or questionable invocations of csplit
 * properly handle `echo |csplit - 1 1', rather than aborting
