@@ -63,12 +63,19 @@
 # if HAVE_STRUCT_STATVFS_F_NAMEMAX
 #  define SB_F_NAMEMAX(S) ((uintmax_t) ((S)->f_namemax))
 # endif
+# if STAT_STATVFS
+#  define STATFS statvfs
+# endif
 #else
 # define STRUCT_STATVFS struct statfs
 # define HAVE_STRUCT_STATXFS_F_TYPE HAVE_STRUCT_STATFS_F_TYPE
 # if HAVE_STRUCT_STATFS_F_NAMELEN
 #  define SB_F_NAMEMAX(S) ((uintmax_t) ((S)->f_namelen))
 # endif
+#endif
+
+#ifndef STATFS
+# define STATFS statfs
 #endif
 
 #ifndef SB_F_NAMEMAX
@@ -560,7 +567,7 @@ do_statfs (char const *filename, bool terse, char const *format)
 {
   STRUCT_STATVFS statfsbuf;
 
-  if (statfs (filename, &statfsbuf) != 0)
+  if (STATFS (filename, &statfsbuf) != 0)
     {
       error (0, errno, _("cannot read file system information for %s"),
 	     quote (filename));
