@@ -1,12 +1,11 @@
 ## Process this file with automake to produce Makefile.in -*-Makefile-*-
 
 EXTRA_PROGRAMS = chroot df hostid nice pinky stty su uname uptime users who
-EXTRA_SCRIPTS = nohup
 
 bin_SCRIPTS = groups $(OPTIONAL_BIN_ZCRIPTS)
 bin_PROGRAMS = [ chgrp chown chmod cp dd dircolors du \
   ginstall link ln dir vdir ls mkdir \
-  mkfifo mknod mv readlink rm rmdir shred stat sync touch unlink \
+  mkfifo mknod mv nohup readlink rm rmdir shred stat sync touch unlink \
   cat cksum comm csplit cut expand fmt fold head join md5sum \
   nl od paste pr ptx sha1sum sort split sum tac tail tr tsort unexpand uniq wc \
   basename date dirname echo env expr factor false \
@@ -21,7 +20,7 @@ noinst_HEADERS = \
   chown-core.h fs.h \
   wheel.h wheel-size.h
 EXTRA_DIST = dcgen dircolors.hin tac-pipe.c \
-  groups.sh nohup.sh wheel-gen.pl extract-magic
+  groups.sh wheel-gen.pl extract-magic
 CLEANFILES = $(SCRIPTS) su
 
 INCLUDES = -I.. -I$(srcdir) -I$(top_srcdir)/lib -I../lib
@@ -209,8 +208,7 @@ MAINTAINERCLEANFILES = $(BUILT_SOURCES)
 all_programs = \
     $(bin_PROGRAMS) \
     $(bin_SCRIPTS) \
-  $(EXTRA_PROGRAMS) \
-  $(EXTRA_SCRIPTS)
+  $(EXTRA_PROGRAMS)
 
 pm = progs-makefile
 pr = progs-readme
