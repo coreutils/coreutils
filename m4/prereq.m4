@@ -167,20 +167,35 @@ AC_DEFUN([jm_PREREQ_REGEX],
 AC_DEFUN([jm_PREREQ_STAT],
 [
   AC_CHECK_HEADERS(sys/sysmacros.h sys/statvfs.h sys/vfs.h inttypes.h)
+  AC_CHECK_HEADERS(sys/param.h sys/mount.h)
   AC_CHECK_FUNCS(statvfs)
   jm_AC_TYPE_LONG_LONG
-  statfs_includes="\
+
+  statxfs_includes="\
 $ac_includes_default
-#include <sys/vfs.h>
+#if HAVE_SYS_STATVFS_H
+# include <sys/statvfs.h>
+#endif
+#if HAVE_SYS_VFS_H
+# include <sys/vfs.h>
+#endif
+#if ( ! HAVE_SYS_STATVFS_H && ! HAVE_SYS_VFS_H && HAVE_SYS_MOUNT_H && HAVE_SYS_PARAM_H )
+/* NetBSD 1.5.2 needs these, for the declaration of struct statfs. */
+# include <sys/param.h>
+# include <sys/mount.h>
+#endif
 "
-  statvfs_includes="\
-$ac_includes_default
-#include <sys/statvfs.h>
-"
-  AC_CHECK_MEMBERS([struct statfs.f_basetype],,,[$statfs_includes])
-  AC_CHECK_MEMBERS([struct statvfs.f_basetype],,,[$statvfs_includes])
-  AC_CHECK_MEMBERS([struct statfs.f_type],,,[$statfs_includes])
-  AC_CHECK_MEMBERS([struct statvfs.f_type],,,[$statvfs_includes])
+  AC_CHECK_MEMBERS([struct statfs.f_basetype],,,[$statxfs_includes])
+  AC_CHECK_MEMBERS([struct statvfs.f_basetype],,,[$statxfs_includes])
+  AC_CHECK_MEMBERS([struct statfs.f_fstypename],,,[$statxfs_includes])
+  AC_CHECK_MEMBERS([struct statfs.f_type],,,[$statxfs_includes])
+  AC_CHECK_MEMBERS([struct statvfs.f_type],,,[$statxfs_includes])
+  AC_CHECK_MEMBERS([struct statfs.f_fsid.__val],,,[$statxfs_includes])
+  AC_CHECK_MEMBERS([struct statvfs.f_fsid.__val],,,[$statxfs_includes])
+  AC_CHECK_MEMBERS([struct statfs.f_namemax],,,[$statxfs_includes])
+  AC_CHECK_MEMBERS([struct statvfs.f_namemax],,,[$statxfs_includes])
+  AC_CHECK_MEMBERS([struct statfs.f_namelen],,,[$statxfs_includes])
+  AC_CHECK_MEMBERS([struct statvfs.f_namelen],,,[$statxfs_includes])
 ])
 
 AC_DEFUN([jm_PREREQ_STRNLEN],
