@@ -160,7 +160,6 @@ AC_DEFUN([jm_MACROS],
   AC_FUNC_OBSTACK
 
   AC_FUNC_STRTOD
-  AC_FUNC_STRNLEN
 
   # See if linking `seq' requires -lm.
   # It does on nearly every system.  The single exception (so far) is
