@@ -1,3 +1,12 @@
+2000-06-02  Jim Meyering  <meyering@lucent.com>
+
+	* mountlist.c: Back out last change.  Instead, do this...
+	* mountlist.c (read_filesystem_list) [MOUNTED_VMOUNT]: Set the me_dummy
+	member using the same `ignore'-testing code.
+	* mountlist.h (ME_DUMMY): Add `autofs' to the list of ignored
+	fs_type strings.
+	From Mark D. Roth.
+
 2000-05-29  Jim Meyering  <meyering@lucent.com>
 
 	* mountlist.c (read_filesystem_list) [MOUNTED_VMOUNT]: Ignore mounts
