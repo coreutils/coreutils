@@ -1,5 +1,8 @@
 2004-03-10  Jim Meyering  <jim@meyering.net>
 
+	* coreutils.texi (cp invocation): Improve description of
+	cp's --sparse=WHEN option.
+
 	* coreutils.texi (nl invocation): Specify that these are _basic_
 	regular expressions (BRE), and add a link to grep's documentation.
 	Suggestion from Dan Jacobson.
