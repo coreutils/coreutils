@@ -3,10 +3,10 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2004-11-25.16}
+\def\texinfoversion{2005-01-30.17}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
-% 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004 Free Software
+% 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005 Free Software
 % Foundation, Inc.
 %
 % This texinfo.tex file is free software; you can redistribute it and/or
@@ -2000,7 +2000,7 @@ where each line of input produces a line of output.}
 \def\eurofont{%
   % We set the font at each command, rather than predefining it in
   % \textfonts and the other font-switching commands, so that
-  % installations which never need the symbold don't have to have the
+  % installations which never need the symbol don't have to have the
   % font installed.
   % 
   % There is only one designed size (nominal 10pt), so we always scale
@@ -4289,11 +4289,11 @@ where each line of input produces a line of output.}
     \ifx\temptype\Ynothingkeyword
       \setbox0 = \hbox{}%
       \def\toctype{unnchap}%
-      \def\thischapter{#1}%
+      \gdef\thischapter{#1}%
     \else\ifx\temptype\Yomitfromtockeyword
       \setbox0 = \hbox{}% contents like unnumbered, but no toc entry
       \def\toctype{omit}%
-      \xdef\thischapter{}%
+      \gdef\thischapter{}%
     \else\ifx\temptype\Yappendixkeyword
       \setbox0 = \hbox{\putwordAppendix{} #3\enspace}%
       \def\toctype{app}%
