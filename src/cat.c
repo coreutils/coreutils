@@ -462,17 +462,6 @@ cat (
     }
 }
 
-/* This is gross, but necessary, because of the way close_stdout
-   works and because this program closes STDOUT_FILENO directly.  */
-static void (*closeout_func) (void) = close_stdout;
-
-static void
-close_stdout_wrapper (void)
-{
-  if (closeout_func)
-    (*closeout_func) ();
-}
-
 int
 main (int argc, char **argv)
 {
@@ -631,8 +620,6 @@ main (int argc, char **argv)
 	  usage (EXIT_FAILURE);
 	}
     }
-
-  closeout_func = NULL;
 
   /* Get device, i-node number, and optimal blocksize of output.  */
 
