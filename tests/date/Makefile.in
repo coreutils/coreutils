@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.1m from Makefile.am
+# Makefile.in generated automatically by automake 1.1n from Makefile.am
 
 # Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -42,7 +42,13 @@ INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 transform = @program_transform_name@
-ANSI2KNR = @ANSI2KNR@
+
+NORMAL_INSTALL = true
+PRE_INSTALL = true
+POST_INSTALL = true
+NORMAL_UNINSTALL = true
+PRE_UNINSTALL = true
+POST_UNINSTALL = true
 CATALOGS = @CATALOGS@
 CATOBJEXT = @CATOBJEXT@
 CC = @CC@
@@ -54,7 +60,6 @@ GMSGFMT = @GMSGFMT@
 GNU_PACKAGE = @GNU_PACKAGE@
 GT_NO = @GT_NO@
 GT_YES = @GT_YES@
-INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTOBJEXT = @INSTOBJEXT@
 INTLDEPS = @INTLDEPS@
 INTLLIBS = @INTLLIBS@
@@ -80,6 +85,7 @@ USE_INCLUDED_LIBINTL = @USE_INCLUDED_LIBINTL@
 USE_NLS = @USE_NLS@
 VERSION = @VERSION@
 YACC = @YACC@
+l = @l@
 
 x = date
 explicit =
@@ -124,7 +130,7 @@ default: all
 .SUFFIXES:
 .SUFFIXES: .pl
 $(srcdir)/Makefile.in: @MAINT@ Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
-	cd $(top_srcdir) && $(AUTOMAKE) --gnu tests/date/Makefile
+	cd $(top_srcdir) && $(AUTOMAKE) --gnits tests/date/Makefile
 
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status $(BUILT_SOURCES)
 	cd $(top_builddir) \
@@ -172,10 +178,10 @@ check: all
 	$(MAKE) check-TESTS
 installcheck:
 install-exec: 
-	$(NORMAL_INSTALL)
+	@$(NORMAL_INSTALL)
 
 install-data: 
-	$(NORMAL_INSTALL)
+	@$(NORMAL_INSTALL)
 
 install: install-exec install-data all
 	@:
