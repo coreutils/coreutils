@@ -1094,7 +1094,7 @@ skip (uintmax_t n_skip)
 
 	  if (S_ISREG (file_stats.st_mode) && 0 <= file_stats.st_size)
 	    {
-	      if (file_stats.st_size <= n_skip)
+	      if ((uintmax_t) file_stats.st_size <= n_skip)
 		n_skip -= file_stats.st_size;
 	      else
 		{
