@@ -1,0 +1,26 @@
+#!/bin/sh
+
+: ${RM=rm}
+test=f-1
+
+if test "$VERBOSE" = yes; then
+  set -x
+  $RM --version
+fi
+
+: ${RM_TMPDIR=.}
+tmp=$RM_TMPDIR/t-rm.$$
+
+test_failure=0
+mkdir $tmp || test_failure=1
+
+if test $test_failure = 1; then
+  echo 'failure in testing framework'
+  exit 1
+fi
+
+fail=0
+$RM -f $tmp/no-such-file || fail=1
+rm -rf $tmp
+
+exit $fail
