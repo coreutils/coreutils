@@ -47,6 +47,7 @@
 
 int gethostname ();
 char *ttyname ();
+char *canon_host ();
 
 /* The name this program was run with. */
 char *program_name;
@@ -173,10 +174,9 @@ print_entry (const STRUCT_UTMP *utmp_ent)
       else
 	printf ("   .  ");
     }
-#ifdef HAVE_UT_HOST
+#if HAVE_UT_HOST
   if (utmp_ent->ut_host[0] && do_lookup)
     {
-      extern char *canon_host ();
       char ut_host[sizeof (utmp_ent->ut_host) + 1];
       char *host = 0, *display = 0;
 
