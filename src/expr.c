@@ -1,5 +1,5 @@
 /* expr -- evaluate expressions.
-   Copyright (C) 86, 1991-1997, 1999-2003 Free Software Foundation, Inc.
+   Copyright (C) 86, 1991-1997, 1999-2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -36,7 +36,6 @@
 #include <regex.h>
 #include "long-options.h"
 #include "error.h"
-#include "exitfail.h"
 #include "inttostr.h"
 #include "quotearg.h"
 
@@ -58,7 +57,7 @@ enum
     EXPR_INVALID = 2,
 
     /* Some other error occurred.  */
-    EXPR_ERROR
+    EXPR_FAILURE
   };
 
 /* The kinds of value we can have.  */
@@ -95,7 +94,7 @@ static void printv (VALUE *v);
 void
 usage (int status)
 {
-  if (status != 0)
+  if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
@@ -182,9 +181,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  /* Change the way library functions fail.  */
-  exit_failure = EXPR_ERROR;
-
+  initialize_exit_failure (EXPR_FAILURE);
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
@@ -422,7 +419,7 @@ of the basic regular expression is not portable; it is being ignored"),
   re_syntax_options = RE_SYNTAX_POSIX_BASIC;
   errmsg = re_compile_pattern (pv->u.s, len, &re_buffer);
   if (errmsg)
-    error (EXPR_ERROR, 0, "%s", errmsg);
+    error (EXPR_FAILURE, 0, "%s", errmsg);
 
   matchlen = re_match (&re_buffer, sv->u.s, strlen (sv->u.s), 0, &re_regs);
   if (0 <= matchlen)
@@ -607,13 +604,13 @@ eval4 (void)
 	return l;
       r = eval5 ();
       if (!toarith (l) || !toarith (r))
-	error (EXPR_ERROR, 0, _("non-numeric argument"));
+	error (EXPR_FAILURE, 0, _("non-numeric argument"));
       if (fxn == multiply)
 	val = l->u.i * r->u.i;
       else
 	{
 	  if (r->u.i == 0)
-	    error (EXPR_ERROR, 0, _("division by zero"));
+	    error (EXPR_FAILURE, 0, _("division by zero"));
 	  val = fxn == divide ? l->u.i / r->u.i : l->u.i % r->u.i;
 	}
       freev (l);
@@ -646,7 +643,7 @@ eval3 (void)
 	return l;
       r = eval4 ();
       if (!toarith (l) || !toarith (r))
-	error (EXPR_ERROR, 0, _("non-numeric argument"));
+	error (EXPR_FAILURE, 0, _("non-numeric argument"));
       val = fxn == plus ? l->u.i + r->u.i : l->u.i - r->u.i;
       freev (l);
       freev (r);
@@ -713,7 +710,7 @@ eval2 (void)
 	{
 	  error (0, collation_errno, _("string comparison failed"));
 	  error (0, 0, _("Set LC_ALL='C' to work around the problem."));
-	  error (EXPR_ERROR, 0,
+	  error (EXPR_FAILURE, 0,
 		 _("The strings compared were %s and %s."),
 		 quotearg_n_style (0, locale_quoting_style, collation_arg1),
 		 quotearg_n_style (1, locale_quoting_style, r->u.s));
