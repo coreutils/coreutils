@@ -83,14 +83,16 @@ sub test_vector
      ['next-mo', "-d '$d1 next month' '+%Y-%m-%d %T'", {}, "$dm $t0", 0],
      ['next-y', "-d '$d1 next year'   '+%Y-%m-%d %T'", {}, "$dy $t0", 0],
 
-     # This failed for sh-utils-1.16.
+     # These two tests failed for sh-utils-1.16.
      ['utc-0', "-u -d '08/01/97 6:00' '+%D,%H:%M'", {}, "08/01/97,10:00", 0],
+     ['utc-1', "-u --file=- '+%Y-%m-%d %T'", "$d0 $t0\n$d0 $t0\n",
+      "$d0 $th\n$d0 $th", 0],
 
      # From the examples in the documentation.
-     ['utc-1', "-d '1970-01-01 00:00:01' +%s", {}, "7201", 0],
+     ['date2sec-0', "-d '1970-01-01 00:00:01' +%s", {}, "7201", 0],
 
      # From the examples in the documentation.
-     ['date2sec-0', "-d 2000-01-01 +%s", {}, "946684800", 0],
+     ['date2sec-1', "-d 2000-01-01 +%s", {}, "946684800", 0],
      ['sec2date-0', "-d '1970-01-01 UTC 946684800 sec' +'%Y-%m-%d %T %z'", {},
       "2000-01-01 00:00:00 +0000", 0],
 
@@ -107,7 +109,11 @@ sub test_vector
     }
 
   $Test::env{'utc-0'} = ['TZ=EST5EDT'];
-  $Test::env{'utc-1'} = ['TZ=UTC+2'];
+
+  $Test::env{'utc-1'} = ['TZ=UTC+1'];
+  $Test::input_via{'utc-1'} = {REDIR => 0};
+
+  $Test::env{'date2sec-0'} = ['TZ=UTC+2'];
 
   return @tv;
 }
