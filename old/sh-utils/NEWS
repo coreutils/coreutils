@@ -1,4 +1,6 @@
 Changes in release 1.17
+* who no longer does DNS lookups by default -- the new option, --lookup (-l),
+  enables lookups
  [1.16e]
 * pinky: new lightweight finger-style program
  [1.16d]
