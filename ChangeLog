@@ -3,6 +3,7 @@
 	* Version 5.3.1.
 
 	* src/pr.c (init_header): Add missing `%' in new format string.
+	(init_header): Use zero-filled `.%09d' format, not space-filled `.%9d'.
 
 2005-03-19  Jim Meyering  <jim@meyering.net>
 
