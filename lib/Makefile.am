@@ -3,7 +3,7 @@ noinst_LIBRARIES = libfu.a
 
 ## FIXME: Remove mvdir.c, and rmdir.c when
 ## automake is fixed -- probably for 1.1g
-EXTRA_DIST = mkdir.c rmdir.c getline.c
+EXTRA_DIST = mkdir.c rmdir.c getline.c mktime.c
 
 INCLUDES = -I.. -I$(srcdir) -I../intl
 
