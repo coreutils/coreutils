@@ -1,6 +1,12 @@
-2003-06-20  Jim Meyering  <jim@meyering.net>
+2003-06-27  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
+
+	split's --verbose option did nothing
+	* src/split.c (longopts): Use `1', not `0' as the value for
+	for &verbose.  Reported by Keith Thompson.
+
+2003-06-20  Jim Meyering  <jim@meyering.net>
 
 	* src/copy.c (copy_internal) [HAVE_STRUCT_STAT_ST_AUTHOR]:
 	Use `error_t' (rather than int) as type for local `err'.
