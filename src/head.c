@@ -31,16 +31,16 @@
 #include <sys/types.h>
 #include "system.h"
 #include "error.h"
+#include "xstrtoul.h"
+
+/* FIXME: someday, make this really *be* `long long'.  */
+typedef long int U_LONG_LONG;
 
 /* Number of lines/chars/blocks to head. */
 #define DEFAULT_NUMBER 10
 
 /* Size of atomic reads. */
 #define BUFSIZE (512 * 8)
-
-/* Number of bytes per item we are printing.
-   If 0, head in lines. */
-static int unit_size;
 
 /* If nonzero, print filename headers. */
 static int print_headers;
@@ -110,44 +110,6 @@ multipliers bkm follows concatenated, else read -n VALUE.\n\
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
-/* Convert STR, a string of ASCII digits, into an unsigned integer.
-   Return -1 if STR does not represent a valid unsigned integer. */
-
-static long
-atou (const char *str)
-{
-  int value;
-
-  for (value = 0; ISDIGIT (*str); ++str)
-    value = value * 10 + *str - '0';
-  return *str ? -1 : value;
-}
-
-static void
-parse_unit (char *str)
-{
-  int arglen = strlen (str);
-
-  if (arglen == 0)
-    return;
-
-  switch (str[arglen - 1])
-    {
-    case 'b':
-      unit_size = 512;
-      str[arglen - 1] = '\0';
-      break;
-    case 'k':
-      unit_size = 1024;
-      str[arglen - 1] = '\0';
-      break;
-    case 'm':
-      unit_size = 1048576;
-      str[arglen - 1] = '\0';
-      break;
-    }
-}
-
 static void
 write_header (const char *filename)
 {
@@ -158,7 +120,7 @@ write_header (const char *filename)
 }
 
 static int
-head_bytes (const char *filename, int fd, long int bytes_to_write)
+head_bytes (const char *filename, int fd, U_LONG_LONG bytes_to_write)
 {
   char buffer[BUFSIZE];
   int bytes_read;
@@ -183,7 +145,7 @@ head_bytes (const char *filename, int fd, long int bytes_to_write)
 }
 
 static int
-head_lines (const char *filename, int fd, long int lines_to_write)
+head_lines (const char *filename, int fd, U_LONG_LONG lines_to_write)
 {
   char buffer[BUFSIZE];
   int bytes_read;
@@ -210,16 +172,16 @@ head_lines (const char *filename, int fd, long int lines_to_write)
 }
 
 static int
-head (const char *filename, int fd, long int number)
+head (const char *filename, int fd, U_LONG_LONG n_units, int count_lines)
 {
-  if (unit_size)
-    return head_bytes (filename, fd, number);
+  if (count_lines)
+    return head_lines (filename, fd, n_units);
   else
-    return head_lines (filename, fd, number);
+    return head_bytes (filename, fd, n_units);
 }
 
 static int
-head_file (const char *filename, long int number)
+head_file (const char *filename, U_LONG_LONG n_units, int count_lines)
 {
   int fd;
 
@@ -229,7 +191,7 @@ head_file (const char *filename, long int number)
       filename = _("standard input");
       if (print_headers)
 	write_header (filename);
-      return head (filename, 0, number);
+      return head (filename, 0, n_units, count_lines);
     }
   else
     {
@@ -240,7 +202,7 @@ head_file (const char *filename, long int number)
 
 	  if (print_headers)
 	    write_header (filename);
-	  errors = head (filename, fd, number);
+	  errors = head (filename, fd, n_units, count_lines);
 	  if (close (fd) == 0)
 	    return errors;
 	}
@@ -249,13 +211,52 @@ head_file (const char *filename, long int number)
     }
 }
 
+/* Convert a string of digits, N_STRING, with a single, optional suffix
+   character (b, k, or m) to an integral value.  Upon successful conversion,
+   return that value.  If it cannot be converted, give a diagnostic and exit.
+   COUNT_LINES indicates whether N_STRING is a number of bytes or a number
+   of lines.  It is used solely to give a more specific diagnostic.  */
+
+static U_LONG_LONG
+string_to_ull (int count_lines, const char *n_string)
+{
+  strtol_error s_err;
+  unsigned long int tmp_ulong;
+
+  s_err = xstrtoul (n_string, NULL, 0, &tmp_ulong, "bkm");
+
+  if (s_err == LONGINT_INVALID)
+    {
+      error (EXIT_FAILURE, 0, "%s: %s", n_string,
+	     (count_lines
+	      ? _("invalid number of lines")
+	      : _("invalid number of bytes")));
+    }
+
+  if (s_err != LONGINT_OK)
+    {
+      error (EXIT_FAILURE, 0,
+	     _("%s: %s is so large that it is not representable"), n_string,
+	     count_lines ? _("number of lines") : _("number of bytes"));
+    }
+
+  return tmp_ulong;
+}
+
 int
 main (int argc, char **argv)
 {
   enum header_mode header_mode = multiple_files;
   int exit_status = 0;
-  long number = -1;		/* Number of items to print (-1 if undef.). */
-  int c;			/* Option character. */
+  char *n_string;
+  int c;
+
+  /* Number of items to print. */
+  U_LONG_LONG n_units = DEFAULT_NUMBER;
+
+  /* If nonzero, interpret the numeric argument as the number of lines.
+     Otherwise, interpret it as the number of bytes.  */
+  int count_lines = 1;
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -263,38 +264,45 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   have_read_stdin = 0;
-  unit_size = 0;
+
   print_headers = 0;
 
   if (argc > 1 && argv[1][0] == '-' && ISDIGIT (argv[1][1]))
     {
+      char *end_n_string;
+      char multiplier_char = 0;
+
+      n_string = &argv[1][1];
+
       /* Old option syntax; a dash, one or more digits, and one or
 	 more option letters.  Move past the number. */
-      for (number = 0, ++argv[1]; ISDIGIT (*argv[1]); ++argv[1])
-	number = number * 10 + *argv[1] - '0';
+      for (++argv[1]; ISDIGIT (*argv[1]); ++argv[1])
+	{
+	  /* empty */
+	}
+
+      /* Pointer to the byte after the last digit.  */
+      end_n_string = argv[1];
+
       /* Parse any appended option letters. */
       while (*argv[1])
 	{
 	  switch (*argv[1])
 	    {
-	    case 'b':
-	      unit_size = 512;
-	      break;
-
 	    case 'c':
-	      unit_size = 1;
+	      count_lines = 0;
+	      multiplier_char = 0;
 	      break;
 
+	    case 'b':
 	    case 'k':
-	      unit_size = 1024;
+	    case 'm':
+	      count_lines = 0;
+	      multiplier_char = *argv[1];
 	      break;
 
 	    case 'l':
-	      unit_size = 0;
-	      break;
-
-	    case 'm':
-	      unit_size = 1048576;
+	      count_lines = 1;
 	      break;
 
 	    case 'q':
@@ -311,11 +319,24 @@ main (int argc, char **argv)
 	    }
 	  ++argv[1];
 	}
+
+      /* Append the multiplier character (if any) onto the end of
+	 the digit string.  Then add NUL byte if necessary.  */
+      *end_n_string = multiplier_char;
+      if (multiplier_char)
+	*(++end_n_string) = 0;
+
+      n_units = string_to_ull (count_lines, n_string);
+
       /* Make the options we just parsed invisible to getopt. */
       argv[1] = argv[0];
       argv++;
       argc--;
+
+      /* FIXME: allow POSIX options if there were obsolescent ones?  */
+
     }
+
 
   while ((c = getopt_long (argc, argv, "c:n:qv", long_options, NULL)) != -1)
     {
@@ -325,16 +346,13 @@ main (int argc, char **argv)
 	  break;
 
 	case 'c':
-	  unit_size = 1;
-	  parse_unit (optarg);
-	  goto getnum;
+	  count_lines = 0;
+	  n_units = string_to_ull (count_lines, optarg);
+	  break;
+
 	case 'n':
-	  unit_size = 0;
-	getnum:
-	  /* FIXME: use xstrtoul instead.  */
-	  number = atou (optarg);
-	  if (number == -1)
-	    error (EXIT_FAILURE, 0, _("invalid number `%s'"), optarg);
+	  count_lines = 1;
+	  n_units = string_to_ull (count_lines, optarg);
 	  break;
 
 	case 'q':
@@ -359,21 +377,15 @@ main (int argc, char **argv)
   if (show_help)
     usage (0);
 
-  if (number == -1)
-    number = DEFAULT_NUMBER;
-
-  if (unit_size > 1)
-    number *= unit_size;
-
   if (header_mode == always
       || (header_mode == multiple_files && optind < argc - 1))
     print_headers = 1;
 
   if (optind == argc)
-    exit_status |= head_file ("-", number);
+    exit_status |= head_file ("-", n_units, count_lines);
 
   for (; optind < argc; ++optind)
-    exit_status |= head_file (argv[optind], number);
+    exit_status |= head_file (argv[optind], n_units, count_lines);
 
   if (have_read_stdin && close (0) < 0)
     error (EXIT_FAILURE, errno, "-");
