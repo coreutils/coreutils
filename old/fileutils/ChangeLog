@@ -5,6 +5,24 @@
 
 2000-01-11  Paul Eggert  <eggert@twinsun.com>
 
+	Quote multibyte characters correctly.
+
+	* lib/quotearg.c (ISGRAPH): Remove.
+	(ISPRINT): New macro.
+	(<wchar.h>): Include if HAVE_MBRTOWC && HAVE_WCHAR_H.
+	(isprint, mbrtowc, mbsinit, mbstate_t): New macros,
+	defined if ! (HAVE_MBRTOWC && HAVE_WCHAR_H).
+	(quotearg_buffer_restyled): New function, with most of the old
+	quotearg_buffer's contents.
+	Major rewrite to support multibyte characters.
+	(quotearg_buffer): Now just calls quotearg_buffer_restyled.
+
+	* m4/c-bs-a.m4: New file.
+	* m4/prereq.m4 (jm_PREREQ_QUOTEARG): New macro.
+	(jm_PREREQ): Use it.
+
+2000-01-11  Paul Eggert  <eggert@twinsun.com>
+
 	* lib/modechange.c (mode_compile): Use uintmax_t, not unsigned
 	long, to parse numeric modes.  Check for any unknown bits, not
 	just unknown bits left of the leftmost known bit.
