@@ -506,7 +506,7 @@ md5_file (filename, resblock, binary)
   /* Important: BLOCKSIZE must be a multiple of 64.  */
 #define BLOCKSIZE 4096
   struct md5_ctx ctx;
-  uint32 len[2] = {0, 0};
+  uint32 len[2];
   char buffer[BLOCKSIZE + 72];
   size_t pad, sum;
   FILETYPE f;
@@ -528,6 +528,9 @@ md5_file (filename, resblock, binary)
 
   /* Initialize the computation context.  */
   init (&ctx);
+
+  len[0] = 0;
+  len[1] = 0;
 
   /* Iterate over full file contents.  */
   while (1)
