@@ -1,3 +1,13 @@
+2000-04-12  Jim Meyering  <meyering@lucent.com>
+
+	* src/tail.c (usage): Tweak --help output.  Suggestions from Karl Berry.
+
+	Move some macros into m4/.
+	* configure.in (_GNU_SOURCE): Don't define here.
+	(AC_SYS_LARGEFILE): Don't use here.
+	(AM_C_PROTOTYPES): Don't use here.
+	* acconfig.h: Remove now-unused file.
+
 2000-04-09  Jim Meyering  <meyering@lucent.com>
 
 	* doc/textutils.texi: Include constants.texi.
