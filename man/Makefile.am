@@ -148,7 +148,7 @@ check-x-vs-1:
 programs =								\
   echo 'spy:;@echo $$(all_programs)'					\
     | MAKEFLAGS= $(MAKE) -s -C $(srcdir)/../src -f Makefile -f - spy	\
-    | fmt -1 | sort -u
+    | fmt -1 | sort -u | grep -v '\['
 
 .PHONY: check-programs-vs-x
 check-programs-vs-x:
