@@ -7,7 +7,7 @@ Changes in release 4.01:
 * mkdir, mknod, mkfifo, and chmod work better in conjunction with ACLs
 * `cp --parents dir1/ dir2' no longer gets a failed assertion
 * shred now determines the size of block devices like /dev/fd0
-* `shred --exact file1 file2' wouldn't touch `file1'
+* `shred --exact file1 file2' now operates on `file1'
 [4.0.27]
 * install once again unlinks an existing destination before trying to open it
 * mv no longer gets a failed assertion when moving a directory (specified with
