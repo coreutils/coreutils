@@ -162,11 +162,11 @@ HEADERS =  $(noinst_HEADERS)
 DIST_COMMON =  $(noinst_HEADERS) Makefile.am Makefile.in TODO alloca.c \
 chown.c dup2.c error.c error.h euidaccess.c fileblocks.c fnmatch.c \
 fsusage.c ftruncate.c getdate.c getgroups.c getline.c group-member.c \
-lchown.c malloc.c memchr.c memcmp.c memcpy.c memset.c mkdir.c mktime.c \
-mountlist.c obstack.c obstack.h realloc.c regex.c rename.c rmdir.c \
-rpmatch.c stpcpy.c strcasecmp.c strdup.c strftime.c strncasecmp.c \
-strndup.c strstr.c strtol.c strtoul.c strtoull.c strtoumax.c \
-strverscmp.c utime.c
+lchown.c malloc.c memchr.c memcmp.c memcpy.c memmove.c memset.c mkdir.c \
+mktime.c mountlist.c obstack.c obstack.h realloc.c regex.c rename.c \
+rmdir.c rpmatch.c stpcpy.c strcasecmp.c strdup.c strftime.c \
+strncasecmp.c strndup.c strstr.c strtol.c strtoul.c strtoull.c \
+strtoumax.c strverscmp.c utime.c
 
 
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -181,8 +181,8 @@ DEP_FILES =  .deps/addext.P .deps/alloca.P .deps/argmatch.P \
 .deps/group-member.P .deps/hash.P .deps/human.P .deps/idcache.P \
 .deps/isdir.P .deps/lchown.P .deps/long-options.P .deps/lstat.P \
 .deps/makepath.P .deps/malloc.P .deps/memchr.P .deps/memcmp.P \
-.deps/memcpy.P .deps/memset.P .deps/mkdir.P .deps/mktime.P \
-.deps/modechange.P .deps/mountlist.P .deps/obstack.P \
+.deps/memcpy.P .deps/memmove.P .deps/memset.P .deps/mkdir.P \
+.deps/mktime.P .deps/modechange.P .deps/mountlist.P .deps/obstack.P \
 .deps/path-concat.P .deps/posixtm.P .deps/quotearg.P .deps/realloc.P \
 .deps/regex.P .deps/rename.P .deps/rmdir.P .deps/rpmatch.P \
 .deps/safe-read.P .deps/same.P .deps/save-cwd.P .deps/savedir.P \
@@ -318,6 +318,8 @@ memcmp_.c: memcmp.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/memcmp.c; then echo $(srcdir)/memcmp.c; else echo memcmp.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > memcmp_.c
 memcpy_.c: memcpy.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/memcpy.c; then echo $(srcdir)/memcpy.c; else echo memcpy.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > memcpy_.c
+memmove_.c: memmove.c $(ANSI2KNR)
+	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/memmove.c; then echo $(srcdir)/memmove.c; else echo memmove.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > memmove_.c
 memset_.c: memset.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/memset.c; then echo $(srcdir)/memset.c; else echo memset.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > memset_.c
 mkdir_.c: mkdir.c $(ANSI2KNR)
@@ -408,12 +410,12 @@ fileblocks_.o filemode_.o fnmatch_.o fsusage_.o ftruncate_.o \
 full-write_.o getdate_.o getgroups_.o getline_.o getopt_.o getopt1_.o \
 group-member_.o hash_.o human_.o idcache_.o isdir_.o lchown_.o \
 long-options_.o lstat_.o makepath_.o malloc_.o memchr_.o memcmp_.o \
-memcpy_.o memset_.o mkdir_.o mktime_.o modechange_.o mountlist_.o \
-obstack_.o path-concat_.o posixtm_.o quotearg_.o realloc_.o regex_.o \
-rename_.o rmdir_.o rpmatch_.o safe-read_.o same_.o save-cwd_.o \
-savedir_.o stat_.o stpcpy_.o strcasecmp_.o strdup_.o strftime_.o \
-stripslash_.o strncasecmp_.o strndup_.o strstr_.o strtol_.o strtoul_.o \
-strtoull_.o strtoumax_.o strverscmp_.o userspec_.o utime_.o \
+memcpy_.o memmove_.o memset_.o mkdir_.o mktime_.o modechange_.o \
+mountlist_.o obstack_.o path-concat_.o posixtm_.o quotearg_.o \
+realloc_.o regex_.o rename_.o rmdir_.o rpmatch_.o safe-read_.o same_.o \
+save-cwd_.o savedir_.o stat_.o stpcpy_.o strcasecmp_.o strdup_.o \
+strftime_.o stripslash_.o strncasecmp_.o strndup_.o strstr_.o strtol_.o \
+strtoul_.o strtoull_.o strtoumax_.o strverscmp_.o userspec_.o utime_.o \
 version-etc_.o xgetcwd_.o xmalloc_.o xstrdup_.o xstrtol_.o xstrtoul_.o \
 xstrtoumax_.o yesno_.o : $(ANSI2KNR)
 .y.c:
