@@ -26,8 +26,8 @@
 
 	Now, du works better:
 	- the depth of hierarchy du can process is no longer limited by
-	    the user's stack size (nftw uses recursion, the fts implementation
-	    doesn't)
+	    the user's stack size (nftw uses explicit recursion, the fts
+	    implementation doesn't)
 	- works even when run from an inaccessible directory
 	- du -D now dereferences all symlinks specified on the command line,
 	    not just the ones that reference directories (FIXME: confirm
