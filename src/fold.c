@@ -74,6 +74,8 @@ standard output.\n\
   -b, --bytes         count bytes rather than columns\n\
   -s, --spaces        break at spaces\n\
   -w, --width=WIDTH   use WIDTH columns instead of 80\n\
+      --help          display this help and exit\n\
+      --version       output version information and exit\n\
 "));
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
