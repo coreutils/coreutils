@@ -7,11 +7,11 @@
 
 # Written by Paul Eggert and Jim Meyering.
 
-AC_DEFUN([gl_FUNC_TZSET],
+AC_DEFUN([gl_FUNC_TZSET_CLOBBER],
 [
   AC_REQUIRE([AC_HEADER_TIME])
-  AC_CACHE_CHECK([whether tzset works],
-                 gl_cv_func_tzset_vs_localtime,
+  AC_CACHE_CHECK([whether tzset clobbers localtime buffer],
+                 gl_cv_func_tzset_clobber,
   [
   AC_RUN_IFELSE([AC_LANG_SOURCE([[
 #if TIME_WITH_SYS_TIME
@@ -44,15 +44,20 @@ main ()
         || p->tm_sec != s.tm_sec);
 }
   ]])],
-       [gl_cv_func_tzset_vs_localtime=yes],
-       [gl_cv_func_tzset_vs_localtime=no],
-       [gl_cv_func_tzset_vs_localtime=no])])
+       [gl_cv_func_tzset_clobber=no],
+       [gl_cv_func_tzset_clobber=yes],
+       [gl_cv_func_tzset_clobber=yes])])
 
   AC_DEFINE(HAVE_RUN_TZSET_TEST, 1,
     [Define to 1 if you have run the test for working tzset.])
-  if test $gl_cv_func_tzset_vs_localtime = yes; then
-    AC_LIBOBJ(tzset)
+
+  if test $gl_cv_func_tzset_clobber = yes; then
+    AC_LIBOBJ(gettimeofday)
+    AC_DEFINE(localtime, rpl_localtime,
+      [Define to rpl_localtime if the replacement function should be used.])
     AC_DEFINE(tzset, rpl_tzset,
       [Define to rpl_tzset if the wrapper function should be used.])
+    AC_DEFINE(TZSET_CLOBBERS_LOCALTIME_BUFFER, 1,
+      [Define if tzset clobbers localtime's static buffer.])
   fi
 ])
