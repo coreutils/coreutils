@@ -209,6 +209,7 @@ PROGRAMS = $(noinst_PROGRAMS)
 t_fpending_SOURCES = t-fpending.c
 t_fpending_OBJECTS = t-fpending.$(OBJEXT)
 t_fpending_LDADD = $(LDADD)
+t_fpending_DEPENDENCIES = libfetish.a
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
 am__depfiles_maybe = depfiles
@@ -346,6 +347,7 @@ sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 noinst_LIBRARIES = libfetish.a
+LDADD = libfetish.a
 AM_CPPFLAGS = -I.. -I$(srcdir)
 libfetish_a_SOURCES = acl.h acl.c getdate.h getdate.y posixtm.c \
 	posixtm.h posixver.c posixver.h strftime.c strftime.h hash.c \
