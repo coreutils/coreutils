@@ -37,16 +37,25 @@ for i in cp; do
   $i a a d/ 2> out || fail=1
   rm -fr a d; touch a; mkdir d
   $i ./a a d/ 2>> out || fail=1
+
+  # cp succeeds with --backup=numbered.
+  rm -fr a d; touch a; mkdir d
+  $i --backup=numbered a a d/ 2>> out || fail=1
+
+  # But not with plain `--backup'
+  rm -fr a d; touch a; mkdir d
+  $i --backup a a d/ 2>> out && fail=1
   cat <<EOF > exp
 $i: warning: source file \`a' specified more than once
 $i: warning: source file \`a' specified more than once
+$i: will not overwrite just-created \`d/a' with \`a'
 EOF
   cmp out exp || fail=1
   test $fail = 1 && diff out exp 2> /dev/null
 done
 
 for i in mv; do
-  # But mv *must* fail in this case.
+  # But mv *does* fail in this case (it has to).
 
   rm -fr a d; touch a; mkdir d
   $i a a d/ 2> out && fail=1
