@@ -1,5 +1,7 @@
 Sun Oct 20 13:44:07 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* lib/Makefile.am (INCLUDES): Add -I../intl.  Reported by Eric Backus.
+
 	* Makefile.am (AUTOMAKE_OPTIONS): Set to `gnits'
 	(EXTRA_DIST): Remove.
 

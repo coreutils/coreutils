@@ -1,5 +1,7 @@
 Sun Oct 20 09:03:51 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* lib/Makefile.am (INCLUDES): Add -I../intl.  Reported by Eric Backus.
+
 	* src/Makefile.am (install-root): New rule.
 	Suggestion from François Pinard.
 
