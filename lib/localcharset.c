@@ -23,9 +23,16 @@
 # include <config.h>
 #endif
 
-#include <stddef.h>
+#if HAVE_STDDEF_H
+# include <stddef.h>
+#endif
+
 #include <stdio.h>
-#include <string.h>
+#if HAVE_STRING_H
+# include <string.h>
+#else
+# include <strings.h>
+#endif
 #if HAVE_STDLIB_H
 # include <stdlib.h>
 #endif
