@@ -1,3 +1,10 @@
+2004-08-07  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/system.h (O_BINARY) [!O_BINARY && defined O_BINARY]:
+	Do not define, to avoid annoying compiler messages on QNX 6.3.
+	Problem reported by Johan in:
+	http://lists.gnu.org/archive/html/bug-coreutils/2004-08/msg00050.html
+
 2004-08-04  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/system.h (PRIdMAX, PRIoMAX, PRIuMAX, PRIxMAX):
