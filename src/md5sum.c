@@ -127,11 +127,19 @@ Usage: %s [OPTION] [FILE]...\n\
   or:  %s [OPTION] --check [FILE]\n\
 Print or check %s (%d-bit) checksums.\n\
 With no FILE, or when FILE is -, read standard input.\n\
+"),
+	      program_name, program_name,
+	      DIGEST_TYPE_STRING (algorithm),
+	      DIGEST_BITS (algorithm));
+      printf (_("\
 \n\
   -b, --binary            read files in binary mode (default on DOS/Windows)\n\
   -c, --check             check %s sums against given list\n\
   -t, --text              read files in text mode (default)\n\
 \n\
+"),
+	      DIGEST_TYPE_STRING (algorithm));
+      printf (_("\
 The following two options are useful only when verifying checksums:\n\
       --status            don't output anything, status code shows success\n\
   -w, --warn              warn about improperly formated checksum lines\n\
@@ -139,16 +147,13 @@ The following two options are useful only when verifying checksums:\n\
       --help              display this help and exit\n\
       --version           output version information and exit\n\
 \n\
+"));
+      printf (_("\
 The sums are computed as described in %s.  When checking, the input\n\
 should be a former output of this program.  The default mode is to print\n\
 a line with checksum, a character indicating type (`*' for binary, ` ' for\n\
 text), and name for each FILE.\n"),
-	      program_name, program_name,
-	      DIGEST_TYPE_STRING (algorithm),
-	      DIGEST_BITS (algorithm),
-	      DIGEST_TYPE_STRING (algorithm),
-	      (algorithm == ALG_MD5 ? "RFC 1321" : "FIPS-180-1")
-	      );
+	      (algorithm == ALG_MD5 ? "RFC 1321" : "FIPS-180-1"));
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
 
