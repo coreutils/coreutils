@@ -1,3 +1,8 @@
+2003-08-26  Akim Demaille  <akim@epita.fr>
+
+	* announce-gen (print_changelog_deltas): Neutralize "<#" as
+        "<\#" to avoid magic from Gnus when posting parts of this script.
+
 2003-08-25  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.91.
