@@ -137,6 +137,10 @@ extern int errno;
 #define hpux
 #endif
 
+#if defined (__sun) && !defined (sun)
+#define sun
+#endif
+
 #if defined(hp300) && !defined(hpux)
 #define MORE_BSD
 #endif
