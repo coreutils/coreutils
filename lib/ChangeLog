@@ -1,3 +1,8 @@
+2000-07-03  Jim Meyering  <meyering@lucent.com>
+
+	* strndup.c: [!HAVE_DECL_STRNLEN]: Declare strnlen.
+	Reported by Bruno Haible.
+
 2000-07-04  Jim Meyering  <meyering@lucent.com>
 
 	* quotearg.c: Make inclusion of <wchar.h> independent of whether
