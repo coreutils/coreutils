@@ -1348,8 +1348,9 @@ wipefd (int fd, char const *qname, struct isaac_state *s,
 
 /* --- Name-wiping code --- */
 
-/* Characters allowed in a file name - a safe universal set. */
-static char const nameset[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+/* Characters allowed in a file name - a safe universal set.  */
+static char const nameset[] =
+"0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_.";
 
 /* Increment NAME (with LEN bytes).  NAME must be a big-endian base N
    number with the digits taken from nameset.  Return true if
