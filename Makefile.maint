@@ -296,7 +296,7 @@ wget-update: $(get-targets)
 define emit-upload-commands
 	echo =====================================
 	echo =====================================
-	echo upload $(my_distdir) $(PREV_VERSION) $(VERSION)
+	echo upload $(PACKAGE) $(PREV_VERSION) $(VERSION)
 	echo '# send the /tmp/announcement e-mail'
 	echo =====================================
 	echo =====================================
