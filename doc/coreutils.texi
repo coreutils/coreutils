@@ -9107,7 +9107,8 @@ The valid format sequences for file systems are:
 @item %i - File System ID in hex
 @item %l - Maximum length of file names
 @item %n - File name
-@item %s - Fundamental block size
+@item %s - Block size (for faster transfers)
+@item %S - Fundamental block size (for block counts)
 @item %t - Type in hex
 @item %T - Type in human readable form
 @end itemize
