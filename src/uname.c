@@ -42,6 +42,11 @@
 #include "error.h"
 #include "long-options.h"
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "uname"
+
+#define AUTHORS "David MacKenzie"
+
 static void print_element PARAMS ((unsigned int mask, char *element));
 
 /* Values that are bitwise or'd into `toprint'. */
@@ -118,8 +123,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "uname", GNU_PACKAGE, VERSION,
-		      "David MacKenzie", usage);
+  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
+		      AUTHORS, usage);
 
   toprint = 0;
 

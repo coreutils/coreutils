@@ -47,6 +47,11 @@
 #include "error.h"
 #include "long-options.h"
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "pathchk"
+
+#define AUTHORS "David MacKenzie and Jim Meyering"
+
 #ifdef _POSIX_VERSION
 # ifndef PATH_MAX
 #  define PATH_MAX_FOR(p) pathconf ((p), _PC_PATH_MAX)
@@ -135,8 +140,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "pathchk", GNU_PACKAGE, VERSION,
-		      "David MacKenzie and Jim Meyering", usage);
+  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
+		      AUTHORS, usage);
 
   while ((optc = getopt_long (argc, argv, "p", longopts, NULL)) != -1)
     {

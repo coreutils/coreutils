@@ -30,6 +30,11 @@
 #include "long-options.h"
 #include "posixtm.h"
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "date"
+
+#define AUTHORS "David MacKenzie"
+
 #ifndef STDC_HEADERS
 size_t strftime ();
 time_t time ();
@@ -280,8 +285,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "date", GNU_PACKAGE, VERSION,
-		      "David MacKenzie", usage);
+  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
+		      AUTHORS, usage);
 
   while ((optc = getopt_long (argc, argv, "d:f:r:Rs:u", long_options, NULL))
 	 != -1)

@@ -37,6 +37,11 @@
 #include "error.h"
 #include "long-options.h"
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "printenv"
+
+#define AUTHORS "David MacKenzie and Richard Mlynarik"
+
 /* The name this program was run with. */
 char *program_name;
 
@@ -81,8 +86,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "printenv", GNU_PACKAGE, VERSION,
-		      "David MacKenzie and Richard Mlynarik", usage);
+  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
+		      AUTHORS, usage);
 
   while ((c = getopt_long (argc, argv, "", long_options, NULL)) != -1)
     {

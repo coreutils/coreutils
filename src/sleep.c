@@ -24,6 +24,11 @@
 #include "error.h"
 #include "long-options.h"
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "sleep"
+
+#define AUTHORS "FIXME: unknown"
+
 static long argdecode PARAMS ((const char *s));
 
 /* The name by which this program was run. */
@@ -66,8 +71,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "sleep", GNU_PACKAGE, VERSION,
-		      "FIXME: unknown", usage);
+  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
+		      AUTHORS, usage);
 
   while ((c = getopt_long (argc, argv, "", long_options, NULL)) != -1)
     {

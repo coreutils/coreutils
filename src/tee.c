@@ -28,6 +28,11 @@
 #include "error.h"
 #include "long-options.h"
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "tee"
+
+#define AUTHORS "Mike Parker, Richard M. Stallman, and David MacKenzie"
+
 int full_write ();
 
 static int tee PARAMS ((int nfiles, const char **files));
@@ -81,9 +86,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "tee", GNU_PACKAGE, VERSION,
-		      "Mike Parker, Richard M. Stallman, and David MacKenzie",
-		      usage);
+  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
+		      AUTHORS, usage);
 
   append = 0;
   ignore_interrupts = 0;

@@ -30,6 +30,11 @@
 #include "error.h"
 #include "long-options.h"
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "id"
+
+#define AUTHORS "Arnold Robbins and David MacKenzie"
+
 #ifndef _POSIX_VERSION
 struct passwd *getpwuid ();
 struct group *getgrgid ();
@@ -119,8 +124,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "id", GNU_PACKAGE, VERSION,
-		      "Arnold Robbins and David MacKenzie", usage);
+  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
+		      AUTHORS, usage);
 
   while ((optc = getopt_long (argc, argv, "agnruG", longopts, NULL)) != -1)
     {

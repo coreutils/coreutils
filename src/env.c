@@ -87,6 +87,11 @@
 #include "error.h"
 #include "long-options.h"
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "env"
+
+#define AUTHORS "Richard Mlynarik and David MacKenzie"
+
 int putenv ();
 
 extern char **environ;
@@ -139,8 +144,8 @@ main (register int argc, register char **argv, char **envp)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "env", GNU_PACKAGE, VERSION,
-		      "Richard Mlynarik and David MacKenzie", usage);
+  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
+		      AUTHORS, usage);
 
   while ((optc = getopt_long (argc, argv, "+iu:", longopts, NULL)) != -1)
     {

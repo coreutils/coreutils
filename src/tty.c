@@ -32,6 +32,11 @@
 #include "error.h"
 #include "long-options.h"
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "tty"
+
+#define AUTHORS "David MacKenzie"
+
 /* The name under which this program was run. */
 char *program_name;
 
@@ -77,8 +82,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "tty", GNU_PACKAGE, VERSION,
-		      "David MacKenzie", usage);
+  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
+		      AUTHORS, usage);
 
   silent = 0;
 

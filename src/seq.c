@@ -28,6 +28,11 @@
 #include "long-options.h"
 #include "xstrtod.h"
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "seq"
+
+#define AUTHORS "Ulrich Drepper"
+
 static double scan_double_arg PARAMS ((const char *arg));
 static int check_format PARAMS ((const char *format_string));
 static char *get_width_format PARAMS ((void));
@@ -112,8 +117,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "seq", GNU_PACKAGE, VERSION,
-		      "Ulrich Drepper", usage);
+  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
+		      AUTHORS, usage);
 
   equal_width = 0;
   format_str = NULL;

@@ -115,6 +115,11 @@ uid_t getuid ();
 
 #include "error.h"
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "su"
+
+#define AUTHORS "David MacKenzie"
+
 #if HAVE_PATHS_H
 # include <paths.h>
 #endif
@@ -460,8 +465,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "su", GNU_PACKAGE, VERSION,
-		      "David MacKenzie", usage);
+  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
+		      AUTHORS, usage);
 
   fast_startup = 0;
   simulate_login = 0;

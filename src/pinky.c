@@ -27,6 +27,11 @@
 #include "long-options.h"
 #include "readutmp.h"
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "pinky"
+
+#define AUTHORS "Joseph Arceneaux, David MacKenzie, and Kaveh Ghazi"
+
 #ifndef MAXHOSTNAMELEN
 # define MAXHOSTNAMELEN 64
 #endif
@@ -435,9 +440,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "pinky", GNU_PACKAGE, VERSION,
-		      "Joseph Arceneaux, David MacKenzie, and Kaveh Ghazi",
-		      usage);
+  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
+		      AUTHORS, usage);
 
   while ((optc = getopt_long (argc, argv, "sfwiqbhlp", longopts, &longind))
 	 != -1)
