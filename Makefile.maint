@@ -282,7 +282,7 @@ $(get-targets):
 automake_repo=:pserver:anoncvs@anoncvs.cygnus.com:/cvs/automake
 .PHONY: wget-update
 wget-update: $(get-targets)
-	for f in depcomp missing; do                                    \
+	for f in depcomp missing mkinstalldirs; do                      \
 	  test -f $$f || continue;					\
 	  echo checking out $$f...;                                     \
 	  $(CVS) -d $(automake_repo) co -p automake/lib/$$f > $$f.t     \
