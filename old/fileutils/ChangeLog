@@ -1,7 +1,11 @@
 Fri Aug 16 21:59:24 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
-	* src/chgrp.c (parse_group): Fail when given an invalid group name.
-	Reported as Debian Bug#4119 via Erick Branderhorst (branderh@IAEhv.nl).
+	* src/chgrp.c (parse_group): Don't abort when given a group number
+	larger than INT_MAX.  Fix bug whereby root could run
+	`chgrp INVALID-GROUP FILE' and it wouldn't fail, but rather would
+	change FILE's group to some indeterminate value.  This problem
+	was reported as Debian Bug#4119 via Erick Branderhorst
+	(branderh@IAEhv.nl).
 	Declare pointer parameters const as appropriate.
 
 Thu Aug  1 22:12:15 1996  Jim Meyering  <meyering@na-net.ornl.gov>
