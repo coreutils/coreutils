@@ -29,7 +29,7 @@
 #ifdef FLASK_LINUX
 # include <selinux/fs_secure.h>
 # include <linux/flask/security.h>
-# include <selinux/flask_util.h>           /* for is_flask_enabled() */
+# include <selinux/flask_util.h>	/* for is_flask_enabled() */
 # define SECURITY_ID_T security_id_t
 #else
 # define SECURITY_ID_T int
@@ -290,8 +290,10 @@ print_human_time (time_t const *t)
 {
   char str[40];
 
-  if (strftime (str, 40, "%c", localtime (t)) > 0) fputs (str, stdout);
-  else printf ("Cannot calculate human readable time, sorry");
+  if (strftime (str, 40, "%c", localtime (t)) > 0)
+    fputs (str, stdout);
+  else
+    printf ("Cannot calculate human readable time, sorry");
 }
 
 /* print statfs info */
@@ -299,83 +301,84 @@ static void
 print_statfs (char *pformat, char m, char const *filename,
 	      void const *data, SECURITY_ID_T sid)
 {
-    struct statfs const *statfsbuf = data;
+  struct statfs const *statfsbuf = data;
 #ifdef FLASK_LINUX
-    char sbuf[256];
-    int rv;
-    unsigned int sbuflen = sizeof(sbuf);
+  char sbuf[256];
+  int rv;
+  unsigned int sbuflen = sizeof (sbuf);
 #endif
 
-    switch(m) {
-	case 'n':
-	    strcat(pformat, "s");
-	    printf(pformat, filename);
-	    break;
+  switch (m)
+    {
+    case 'n':
+      strcat (pformat, "s");
+      printf (pformat, filename);
+      break;
 
-	case 'i':
+    case 'i':
 #if !defined(__linux__) && defined (__GNU__)
-	    strcat(pformat, "Lx");
-	    printf(pformat, statfsbuf->f_fsid);
+      strcat (pformat, "Lx");
+      printf (pformat, statfsbuf->f_fsid);
 #else
-	    strcat(pformat, "x %-8x");
-	    printf(pformat, statfsbuf->f_fsid.__val[0],
-		   statfsbuf->f_fsid.__val[1]);
+      strcat (pformat, "x %-8x");
+      printf (pformat, statfsbuf->f_fsid.__val[0],
+	      statfsbuf->f_fsid.__val[1]);
 #endif
-	    break;
+      break;
 
-	case 'l':
-	    strcat(pformat, "llu");
-	    printf(pformat, (uintmax_t) (statfsbuf->f_namelen));
-	    break;
-	case 't':
-	    strcat(pformat, "lx");
-	    printf(pformat, (long int) (statfsbuf->f_type));
-	    break;
-	case 'T':
+    case 'l':
+      strcat (pformat, "llu");
+      printf (pformat, (uintmax_t) (statfsbuf->f_namelen));
+      break;
+    case 't':
+      strcat (pformat, "lx");
+      printf (pformat, (long int) (statfsbuf->f_type));
+      break;
+    case 'T':
 /*	    print_human_fstype(statfsbuf, pformat);*/
-	    print_human_fstype(statfsbuf);
-	    break;
-	case 'b':
-	    strcat(pformat, "lld");
-	    printf(pformat, (intmax_t) (statfsbuf->f_blocks));
-	    break;
-	case 'f':
-	    strcat(pformat, "lld");
-	    printf(pformat, (intmax_t) (statfsbuf->f_bfree));
-	    break;
-	case 'a':
-	    strcat(pformat, "lld");
-	    printf(pformat, (intmax_t) (statfsbuf->f_bavail));
-	    break;
-	case 's':
-	    strcat(pformat, "ld");
-	    printf(pformat, (long int) (statfsbuf->f_bsize));
-	    break;
-	case 'c':
-	    strcat(pformat, "lld");
-	    printf(pformat, (intmax_t) (statfsbuf->f_files));
-	    break;
-	case 'd':
-	    strcat(pformat, "lld");
-	    printf(pformat, (intmax_t) (statfsbuf->f_ffree));
-	    break;
+      print_human_fstype (statfsbuf);
+      break;
+    case 'b':
+      strcat (pformat, "lld");
+      printf (pformat, (intmax_t) (statfsbuf->f_blocks));
+      break;
+    case 'f':
+      strcat (pformat, "lld");
+      printf (pformat, (intmax_t) (statfsbuf->f_bfree));
+      break;
+    case 'a':
+      strcat (pformat, "lld");
+      printf (pformat, (intmax_t) (statfsbuf->f_bavail));
+      break;
+    case 's':
+      strcat (pformat, "ld");
+      printf (pformat, (long int) (statfsbuf->f_bsize));
+      break;
+    case 'c':
+      strcat (pformat, "lld");
+      printf (pformat, (intmax_t) (statfsbuf->f_files));
+      break;
+    case 'd':
+      strcat (pformat, "lld");
+      printf (pformat, (intmax_t) (statfsbuf->f_ffree));
+      break;
 #ifdef FLASK_LINUX
-	case 'S':
-	    strcat(pformat, "d");
-	    printf(pformat, sid);
-	    break;
-	case 'C':
-	    rv = security_sid_to_context(sid, (security_context_t *) &sbuf,
-					 &sbuflen);
-	    if ( rv < 0 )
-	    	sprintf(sbuf, "<error finding security context %d>", sid);
-	    printf(sbuf);
-	    break;
+    case 'S':
+      strcat (pformat, "d");
+      printf (pformat, sid);
+      break;
+    case 'C':
+      rv = security_sid_to_context (sid, (security_context_t *) & sbuf,
+				    &sbuflen);
+      if (rv < 0)
+	sprintf (sbuf, "<error finding security context %d>", sid);
+      printf (sbuf);
+      break;
 #endif
-	default:
-	    strcat(pformat, "c");
-	    printf(pformat, m);
-	    break;
+    default:
+      strcat (pformat, "c");
+      printf (pformat, m);
+      break;
     }
 }
 
@@ -384,157 +387,160 @@ static void
 print_stat (char *pformat, char m, char const *filename,
 	    void const *data, SECURITY_ID_T sid)
 {
-    char linkname[256];
-    int i;
-    struct stat *statbuf = (struct stat*)data;
-    struct passwd *pw_ent;
-    struct group *gw_ent;
+  char linkname[256];
+  int i;
+  struct stat *statbuf = (struct stat *) data;
+  struct passwd *pw_ent;
+  struct group *gw_ent;
 #ifdef FLASK_LINUX
-    char sbuf[256];
-    int rv;
-    unsigned int sbuflen = sizeof(sbuf);
+  char sbuf[256];
+  int rv;
+  unsigned int sbuflen = sizeof (sbuf);
 #endif
 
-    switch(m) {
-	case 'n':
-	    strcat(pformat, "s");
-	    printf(pformat, filename);
-	    break;
-	case 'N':
-	    strcat(pformat, "s");
-	    if ((statbuf->st_mode & S_IFMT) == S_IFLNK) {
-		if ((i = readlink(filename, linkname, 256)) == -1) {
-		    perror(filename);
-		    return;
-		}
-		linkname[(i >= 256) ? 255 : i] = '\0';
-		/*printf("\"%s\" -> \"%s\"", filename, linkname);*/
-		printf("\"");
-		printf(pformat, filename);
-		printf("\" -> \"");
-		printf(pformat, linkname);
-		printf("\"");
-	    } else {
-		printf("\"");
-		printf(pformat, filename);
-		printf("\"");
+  switch (m)
+    {
+    case 'n':
+      strcat (pformat, "s");
+      printf (pformat, filename);
+      break;
+    case 'N':
+      strcat (pformat, "s");
+      if ((statbuf->st_mode & S_IFMT) == S_IFLNK)
+	{
+	  if ((i = readlink (filename, linkname, 256)) == -1)
+	    {
+	      perror (filename);
+	      return;
 	    }
-	    break;
-	case 'd':
-	    strcat(pformat, "d");
-	    printf(pformat, (int)statbuf->st_dev);
-	    break;
-	case 'D':
-	    strcat(pformat, "x");
-	    printf(pformat, (int)statbuf->st_dev);
-	    break;
-	case 'i':
-	    strcat(pformat, "d");
-	    printf(pformat, (int)statbuf->st_ino);
-	    break;
-	case 'a':
-	    strcat(pformat, "o");
-	    printf(pformat, statbuf->st_mode & 07777);
-	    break;
-	case 'A':
-	    print_human_access(statbuf);
-	    break;
-	case 'f':
-	    strcat(pformat, "x");
-	    printf(pformat, statbuf->st_mode);
-	    break;
-	case 'F':
-	    print_human_type(statbuf->st_mode);
-	    break;
-	case 'h':
-	    strcat(pformat, "d");
-	    printf(pformat, (int)statbuf->st_nlink);
-	    break;
+	  linkname[(i >= 256) ? 255 : i] = '\0';
+	  /*printf("\"%s\" -> \"%s\"", filename, linkname); */
+	  printf ("\"");
+	  printf (pformat, filename);
+	  printf ("\" -> \"");
+	  printf (pformat, linkname);
+	  printf ("\"");
+	}
+      else
+	{
+	  printf ("\"");
+	  printf (pformat, filename);
+	  printf ("\"");
+	}
+      break;
+    case 'd':
+      strcat (pformat, "d");
+      printf (pformat, (int) statbuf->st_dev);
+      break;
+    case 'D':
+      strcat (pformat, "x");
+      printf (pformat, (int) statbuf->st_dev);
+      break;
+    case 'i':
+      strcat (pformat, "d");
+      printf (pformat, (int) statbuf->st_ino);
+      break;
+    case 'a':
+      strcat (pformat, "o");
+      printf (pformat, statbuf->st_mode & 07777);
+      break;
+    case 'A':
+      print_human_access (statbuf);
+      break;
+    case 'f':
+      strcat (pformat, "x");
+      printf (pformat, statbuf->st_mode);
+      break;
+    case 'F':
+      print_human_type (statbuf->st_mode);
+      break;
+    case 'h':
+      strcat (pformat, "d");
+      printf (pformat, (int) statbuf->st_nlink);
+      break;
 #ifdef FLASK_LINUX
-	case 'S':
-	    strcat(pformat, "d");
-	    printf(pformat, sid);
-	    break;
-	case 'C':
-	    rv = security_sid_to_context(sid, (security_context_t *) &sbuf,
-					 &sbuflen);
-	    if ( rv < 0 )
-	    	sprintf(sbuf, "<error finding security context %d>", sid);
-	    printf(sbuf);
-	    break;
+    case 'S':
+      strcat (pformat, "d");
+      printf (pformat, sid);
+      break;
+    case 'C':
+      rv = security_sid_to_context (sid, (security_context_t *) & sbuf,
+				    &sbuflen);
+      if (rv < 0)
+	sprintf (sbuf, "<error finding security context %d>", sid);
+      printf (sbuf);
+      break;
 #endif
-	case 'u':
-	    strcat(pformat, "d");
-	    printf(pformat, statbuf->st_uid);
-	    break;
-	case 'U':
-	    strcat(pformat, "s");
-	    setpwent();
-	    pw_ent = getpwuid(statbuf->st_uid);
-	    printf(pformat,
-		(pw_ent != 0L) ? pw_ent->pw_name : "UNKNOWN");
-	    break;
-	case 'g':
-	    strcat(pformat, "d");
-	    printf(pformat, statbuf->st_gid);
-	    break;
-	case 'G':
-	    strcat(pformat, "s");
-	    setgrent();
-	    gw_ent = getgrgid(statbuf->st_gid);
-	    printf(pformat,
-		(gw_ent != 0L) ? gw_ent->gr_name : "UNKNOWN");
-	    break;
-	case 't':
-	    strcat(pformat, "x");
-	    printf(pformat, major(statbuf->st_rdev));
-	    break;
-	case 'T':
-	    strcat(pformat, "x");
-	    printf(pformat, minor(statbuf->st_rdev));
-	    break;
-	case 's':
+    case 'u':
+      strcat (pformat, "d");
+      printf (pformat, statbuf->st_uid);
+      break;
+    case 'U':
+      strcat (pformat, "s");
+      setpwent ();
+      pw_ent = getpwuid (statbuf->st_uid);
+      printf (pformat, (pw_ent != 0L) ? pw_ent->pw_name : "UNKNOWN");
+      break;
+    case 'g':
+      strcat (pformat, "d");
+      printf (pformat, statbuf->st_gid);
+      break;
+    case 'G':
+      strcat (pformat, "s");
+      setgrent ();
+      gw_ent = getgrgid (statbuf->st_gid);
+      printf (pformat, (gw_ent != 0L) ? gw_ent->gr_name : "UNKNOWN");
+      break;
+    case 't':
+      strcat (pformat, "x");
+      printf (pformat, major (statbuf->st_rdev));
+      break;
+    case 'T':
+      strcat (pformat, "x");
+      printf (pformat, minor (statbuf->st_rdev));
+      break;
+    case 's':
 #ifdef __USE_FILE_OFFSET64
-	    strcat(pformat, "llu");
-	    printf(pformat, (unsigned long long)statbuf->st_size);
+      strcat (pformat, "llu");
+      printf (pformat, (unsigned long long) statbuf->st_size);
 #else
-	    strcat(pformat, "u");
-	    printf(pformat, (unsigned int)statbuf->st_size);
+      strcat (pformat, "u");
+      printf (pformat, (unsigned int) statbuf->st_size);
 #endif
-	    break;
-	case 'b':
-	    strcat(pformat, "u");
-	    printf(pformat, (unsigned int)statbuf->st_blocks);
-	    break;
-	case 'o':
-	    strcat(pformat, "d");
-	    printf(pformat, (int)statbuf->st_blksize);
-	    break;
-	case 'x':
-	    print_human_time(&(statbuf->st_atime));
-	    break;
-	case 'X':
-	    strcat(pformat, "d");
-	    printf(pformat, (int)statbuf->st_atime);
-	    break;
-	case 'y':
-	    print_human_time(&(statbuf->st_mtime));
-	    break;
-	case 'Y':
-	    strcat(pformat, "d");
-	    printf(pformat, (int)statbuf->st_mtime);
-	    break;
-	case 'z':
-	    print_human_time(&(statbuf->st_ctime));
-	    break;
-	case 'Z':
-	    strcat(pformat, "d");
-	    printf(pformat, (int)statbuf->st_ctime);
-	    break;
-	default:
-	    strcat(pformat, "c");
-	    printf(pformat, m);
-	    break;
+      break;
+    case 'b':
+      strcat (pformat, "u");
+      printf (pformat, (unsigned int) statbuf->st_blocks);
+      break;
+    case 'o':
+      strcat (pformat, "d");
+      printf (pformat, (int) statbuf->st_blksize);
+      break;
+    case 'x':
+      print_human_time (&(statbuf->st_atime));
+      break;
+    case 'X':
+      strcat (pformat, "d");
+      printf (pformat, (int) statbuf->st_atime);
+      break;
+    case 'y':
+      print_human_time (&(statbuf->st_mtime));
+      break;
+    case 'Y':
+      strcat (pformat, "d");
+      printf (pformat, (int) statbuf->st_mtime);
+      break;
+    case 'z':
+      print_human_time (&(statbuf->st_ctime));
+      break;
+    case 'Z':
+      strcat (pformat, "d");
+      printf (pformat, (int) statbuf->st_ctime);
+      break;
+    default:
+      strcat (pformat, "c");
+      printf (pformat, m);
+      break;
     }
 }
 
@@ -544,58 +550,62 @@ print_it (char const *masterformat, char const *filename,
 			      void const *, SECURITY_ID_T),
 	  void const *data, SECURITY_ID_T sid)
 {
-    char *m, *b, *format;
-    char pformat[65];
+  char *m, *b, *format;
+  char pformat[65];
 
-    /* create a working copy of the format string */
-    format = strdup(masterformat);
-    if (!format) {
-	perror(filename);
-	return;
-    }
-
-    b = format;
-    while (b)
+  /* create a working copy of the format string */
+  format = strdup (masterformat);
+  if (!format)
     {
-	if ((m = strchr(b, (int)'%')) != NULL)
-	{
-	    strcpy (pformat, "%");
-	    *m++ = '\0';
-	    fputs (b, stdout);
+      perror (filename);
+      return;
+    }
 
-	    /* copy all format specifiers to our format string */
-	    while (isdigit(*m) || strchr("#0-+. I", *m))
+  b = format;
+  while (b)
+    {
+      if ((m = strchr (b, (int) '%')) != NULL)
+	{
+	  strcpy (pformat, "%");
+	  *m++ = '\0';
+	  fputs (b, stdout);
+
+	  /* copy all format specifiers to our format string */
+	  while (isdigit (*m) || strchr ("#0-+. I", *m))
 	    {
-	    	char copy[2]="a";
+	      char copy[2] = "a";
 
-		*copy = *m;
-		/* make sure the format specifier is not too long */
-		if (strlen (pformat) > 63)
-			fprintf(stderr, "Warning: Format specifier too long, truncating: %s\n", pformat);
-		else
-			strcat (pformat, copy);
-	    	m++;
+	      *copy = *m;
+	      /* make sure the format specifier is not too long */
+	      if (strlen (pformat) > 63)
+		fprintf (stderr,
+			 "Warning: Format specifier too long, truncating: %s\n",
+			 pformat);
+	      else
+		strcat (pformat, copy);
+	      m++;
 	    }
 
-	    switch(*m) {
-		case '\0':
-		case '%':
-		    fputs("%", stdout);
-		    break;
-		default:
-		    print_func(pformat, *m, filename, data, sid);
-		    break;
+	  switch (*m)
+	    {
+	    case '\0':
+	    case '%':
+	      fputs ("%", stdout);
+	      break;
+	    default:
+	      print_func (pformat, *m, filename, data, sid);
+	      break;
 	    }
-	    b = m + 1;
+	  b = m + 1;
 	}
-	else
+      else
 	{
-	    fputs (b, stdout);
-	    b = NULL;
+	  fputs (b, stdout);
+	  b = NULL;
 	}
     }
-    free(format);
-    printf("\n");
+  free (format);
+  printf ("\n");
 }
 
 /* stat the filesystem and print what we find */
@@ -608,10 +618,10 @@ do_statfs (char const *filename, int terse, int secure, char const *format)
 
 #ifdef FLASK_LINUX
   if (secure)
-    i = statfs_secure(filename, &statfsbuf, &sid);
+    i = statfs_secure (filename, &statfsbuf, &sid);
   else
 #endif
-    i = statfs(filename, &statfsbuf);
+    i = statfs (filename, &statfsbuf);
   if (i == -1)
     {
       perror (filename);
@@ -620,35 +630,36 @@ do_statfs (char const *filename, int terse, int secure, char const *format)
 
   if (format == NULL)
     {
-	if (terse != 0)
-	  {
-		if (secure)
-	      		format = "%n %i %l %t %b %f %a %s %c %d %S %C";
-		else
-		      	format = "%n %i %l %t %b %f %a %s %c %d";
-	  }
-	else
-	  {
-		if (secure)
-		    format = "  File: \"%n\"\n"
-	                 "    ID: %-8i Namelen: %-7l Type: %T\n"
-	                 "Blocks: Total: %-10b Free: %-10f Available: %-10a Size: %s\n"
-	                 "Inodes: Total: %-10c Free: %-10d\n"
-	                 "   SID: %-14S  S_Context: %C\n";
-		else
-		    format = "  File: \"%n\"\n"
-	                 "    ID: %-8i Namelen: %-7l Type: %T\n"
-	                 "Blocks: Total: %-10b Free: %-10f Available: %-10a Size: %s\n"
-	                 "Inodes: Total: %-10c Free: %-10d";
-	  }
+      if (terse != 0)
+	{
+	  if (secure)
+	    format = "%n %i %l %t %b %f %a %s %c %d %S %C";
+	  else
+	    format = "%n %i %l %t %b %f %a %s %c %d";
+	}
+      else
+	{
+	  if (secure)
+	    format = "  File: \"%n\"\n"
+	      "    ID: %-8i Namelen: %-7l Type: %T\n"
+	      "Blocks: Total: %-10b Free: %-10f Available: %-10a Size: %s\n"
+	      "Inodes: Total: %-10c Free: %-10d\n"
+	      "   SID: %-14S  S_Context: %C\n";
+	  else
+	    format = "  File: \"%n\"\n"
+	      "    ID: %-8i Namelen: %-7l Type: %T\n"
+	      "Blocks: Total: %-10b Free: %-10f Available: %-10a Size: %s\n"
+	      "Inodes: Total: %-10c Free: %-10d";
+	}
     }
 
-    print_it (format, filename, print_statfs, &statfsbuf, sid);
+  print_it (format, filename, print_statfs, &statfsbuf, sid);
 }
 
 /* stat the file and print what we find */
 static void
-do_stat (char const *filename, int follow_links, int terse, int secure, char const *format)
+do_stat (char const *filename, int follow_links, int terse, int secure,
+	 char const *format)
 {
   struct stat statbuf;
   int i;
@@ -656,12 +667,11 @@ do_stat (char const *filename, int follow_links, int terse, int secure, char con
 
   if (secure)
     i = ((follow_links == 1)
-	 ? stat_secure(filename, &statbuf, &sid)
-	 : lstat_secure(filename, &statbuf, &sid));
+	 ? stat_secure (filename, &statbuf, &sid)
+	 : lstat_secure (filename, &statbuf, &sid));
   else
     i = ((follow_links == 1)
-	 ? stat(filename, &statbuf)
-	 : lstat(filename, &statbuf));
+	 ? stat (filename, &statbuf) : lstat (filename, &statbuf));
 
   if (i == -1)
     {
@@ -669,67 +679,60 @@ do_stat (char const *filename, int follow_links, int terse, int secure, char con
       return;
     }
 
-   if (format == NULL)
+  if (format == NULL)
     {
-       if (terse != 0)
-       {
-	   if (secure)
-		  format = "%n %s %b %f %u %g %D %i %h %t %T %X %Y %Z %o %S %C";
-	   else
-	          format = "%n %s %b %f %u %g %D %i %h %t %T %X %Y %Z %o";
-       }
-       else
-       {
-           /* tmp hack to match orignal output until conditional implemented */
-          i = statbuf.st_mode & S_IFMT;
-          if (i == S_IFCHR || i == S_IFBLK) {
-          	if (secure)
-               		format =
-	                   "  File: %N\n"
-        	           "  Size: %-10s\tBlocks: %-10b IO Block: %-6o %F\n"
-                	   "Device: %Dh/%dd\tInode: %-10i  Links: %-5h"
-	                   " Device type: %t,%T\n"
-        	           "Access: (%04a/%10.10A)  Uid: (%5u/%8U)   Gid: (%5g/%8G)\n"
-	                   "   SID: %-14S  S_Context: %C\n"
-	                   "Access: %x\n"
-        	           "Modify: %y\n"
-	                   "Change: %z\n";
-        	else
-        		format =
-	                   "  File: %N\n"
-        	           "  Size: %-10s\tBlocks: %-10b IO Block: %-6o %F\n"
-                	   "Device: %Dh/%dd\tInode: %-10i  Links: %-5h"
-	                   " Device type: %t,%T\n"
-	                   "Access: (%04a/%10.10A)  Uid: (%5u/%8U)   Gid: (%5g/%8G)\n"
-	                   "Access: %x\n"
-        	           "Modify: %y\n"
-                	   "Change: %z\n";
-           }
-	   else
-	   {
-	   	if (secure)
-	               format =
-        	           "  File: %N\n"
-                	   "  Size: %-10s\tBlocks: %-10b IO Block: %-6o %F\n"
-			   "Device: %Dh/%dd\tInode: %-10i  Links: %-5h\n"
-        	           "Access: (%04a/%10.10A)  Uid: (%5u/%8U)   Gid: (%5g/%8G)\n"
-                	   "   SID: %-14S  S_Context: %C\n"
-	                   "Access: %x\n"
-        	           "Modify: %y\n"
-                	   "Change: %z\n";
-                else
-                      format =
-	                   "  File: %N\n"
-        	           "  Size: %-10s\tBlocks: %-10b IO Block: %-6o %F\n"
-			   "Device: %Dh/%dd\tInode: %-10i  Links: %-5h\n"
-	                   "Access: (%04a/%10.10A)  Uid: (%5u/%8U)   Gid: (%5g/%8G)\n"
-        	           "Access: %x\n"
-	                   "Modify: %y\n"
-        	           "Change: %z\n";
-          }
-       }
+      if (terse != 0)
+	{
+	  if (secure)
+	    format = "%n %s %b %f %u %g %D %i %h %t %T %X %Y %Z %o %S %C";
+	  else
+	    format = "%n %s %b %f %u %g %D %i %h %t %T %X %Y %Z %o";
+	}
+      else
+	{
+	  /* tmp hack to match orignal output until conditional implemented */
+	  i = statbuf.st_mode & S_IFMT;
+	  if (i == S_IFCHR || i == S_IFBLK)
+	    {
+	      if (secure)
+		format =
+		  "  File: %N\n"
+		  "  Size: %-10s\tBlocks: %-10b IO Block: %-6o %F\n"
+		  "Device: %Dh/%dd\tInode: %-10i  Links: %-5h"
+		  " Device type: %t,%T\n"
+		  "Access: (%04a/%10.10A)  Uid: (%5u/%8U)   Gid: (%5g/%8G)\n"
+		  "   SID: %-14S  S_Context: %C\n"
+		  "Access: %x\n" "Modify: %y\n" "Change: %z\n";
+	      else
+		format =
+		  "  File: %N\n"
+		  "  Size: %-10s\tBlocks: %-10b IO Block: %-6o %F\n"
+		  "Device: %Dh/%dd\tInode: %-10i  Links: %-5h"
+		  " Device type: %t,%T\n"
+		  "Access: (%04a/%10.10A)  Uid: (%5u/%8U)   Gid: (%5g/%8G)\n"
+		  "Access: %x\n" "Modify: %y\n" "Change: %z\n";
+	    }
+	  else
+	    {
+	      if (secure)
+		format =
+		  "  File: %N\n"
+		  "  Size: %-10s\tBlocks: %-10b IO Block: %-6o %F\n"
+		  "Device: %Dh/%dd\tInode: %-10i  Links: %-5h\n"
+		  "Access: (%04a/%10.10A)  Uid: (%5u/%8U)   Gid: (%5g/%8G)\n"
+		  "   SID: %-14S  S_Context: %C\n"
+		  "Access: %x\n" "Modify: %y\n" "Change: %z\n";
+	      else
+		format =
+		  "  File: %N\n"
+		  "  Size: %-10s\tBlocks: %-10b IO Block: %-6o %F\n"
+		  "Device: %Dh/%dd\tInode: %-10i  Links: %-5h\n"
+		  "Access: (%04a/%10.10A)  Uid: (%5u/%8U)   Gid: (%5g/%8G)\n"
+		  "Access: %x\n" "Modify: %y\n" "Change: %z\n";
+	    }
+	}
     }
-    print_it(format, filename, print_stat, &statbuf, sid);
+  print_it (format, filename, print_stat, &statbuf, sid);
 }
 
 void
