@@ -153,6 +153,7 @@ cp_option_init (struct cp_options *x)
   x->myeuid = geteuid ();
   x->one_file_system = 0;
   x->preserve_ownership = 0;
+  x->preserve_links = 0;
   x->preserve_mode = 0;
   x->preserve_timestamps = 0;
   x->require_preserve = 0;
