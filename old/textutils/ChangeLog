@@ -1,5 +1,8 @@
 1998-05-16  Jim Meyering  <meyering@ascend.com>
 
+	* configure.in (jm_MACROS): New wrapper macro.
+	Remove uses of most jm_* macros.
+
 	* src/tac.c (tac_seekable): Fix error in handling regex separators.
 	* tests/tac/Test.pm (opt-b, opt-s, opt_sb, opt_r): New tests.
 	(opt_br): New test -- exercises above-fixed bug.
