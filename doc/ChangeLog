@@ -1,3 +1,8 @@
+2002-02-28  Jim Meyering  <meyering@lucent.com>
+
+	* coreutils.texi (pr invocation): Reword to avoid using `:'
+	in an @opindex entry -- info doesn't permit it.
+
 2002-02-27  Paul Eggert  <eggert@twinsun.com>
 
 	* coreutils.texi (Formatting file timestamps): Document new

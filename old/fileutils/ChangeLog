@@ -1,6 +1,11 @@
-2002-02-26  Jim Meyering  <meyering@lucent.com>
+2002-02-27  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.6.
+
+2002-02-27  Paul Eggert  <eggert@twinsun.com>
+
+	* src/ls.c (decode_switches, usage): Add --time-style=+FORMAT.
+	* doc/coreutils.texi (Formatting file timestamps): Document it.
 
 2002-02-25  Paul Eggert  <eggert@twinsun.com>
 
