@@ -1,6 +1,15 @@
-2002-06-22  Jim Meyering  <meyering@lucent.com>
+2002-07-02  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.22.
+
+	* src/cat.c, src/cksum.c, src/comm.c, src/csplit.c, src/cut.c (usage):
+	Use the PACKAGE_BUGREPORT e-mail address, rather than hard-coding it.
+	* src/expand.c, src/fmt.c, src/fold.c, src/head.c, src/join.c: Likewise.
+	* src/md5sum.c, src/nl.c, src/od.c, src/paste.c, src/pr.c: Likewise.
+	* src/sort.c, src/split.c, src/sum.c, src/tac.c, src/tail.c: Likewise.
+	* src/tr.c, src/tsort.c, src/unexpand.c, src/uniq.c, src/wc.c: Likewise.
+
+2002-06-22  Jim Meyering  <meyering@lucent.com>
 
 	* configure.ac: Invoke AC_GNU_SOURCE very early.
 
