@@ -182,8 +182,9 @@ wheel.h: wheel-gen.pl Makefile.am
 	mv $@-t $@
 
 # false exits nonzero even with --help or --version.
-# Tell automake to exempt it from that installcheck test.
-AM_INSTALLCHECK_STD_OPTIONS_EXEMPT = false
+# test doesn't support --help or --version.
+# Tell automake to exempt then from that installcheck test.
+AM_INSTALLCHECK_STD_OPTIONS_EXEMPT = false test
 
 BUILT_SOURCES += false.c
 false.c: true.c
