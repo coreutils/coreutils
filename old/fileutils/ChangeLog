@@ -1,3 +1,18 @@
+2000-09-09  Jim Meyering  <meyering@lucent.com>
+
+	* src/copy.c (SAME_OWNER, SAME_GROUP, SAME_OWNER_AND_GROUP): Define.
+	(copy_internal): Avoid calling chown if we know it's not necessary.
+
+	* src/copy.c (copy_internal): Call chmod also if we've made the
+	preceding chown call and we're supposed to preserve some special
+	permission bit(s) that would have been reset by chown.
+	Reported by Greg Louis.
+
+2000-09-08  Jim Meyering  <meyering@lucent.com>
+
+	* src/mkdir.c (S_IRWXUGO): Remove definition.
+	* src/sys2.h (S_IRWXUGO): Define here, instead.
+
 2000-09-07  Jim Meyering  <meyering@lucent.com>
 
 	* doc/texinfo.tex: Update from master repository.
