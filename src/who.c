@@ -106,6 +106,20 @@
 # define UT_EXIT_E_EXIT(U) 0
 #endif
 
+#define UT_TYPE_UNDEF 255
+
+#if HAVE_STRUCT_XTMP_UT_TYPE
+# define UT_TYPE(U) ((U)->ut_type)
+#else
+# define UT_TYPE(U) UT_TYPE_UNDEF
+#endif
+
+#define IS_USER_PROCESS(U)			\
+  (UT_USER (utmp_buf)[0]			\
+   && (UT_TYPE (utmp_buf) == USER_PROCESS	\
+       || (UT_TYPE (utmp_buf) == UT_TYPE_UNDEF	\
+	   && UT_TIME_MEMBER (utmp_buf) != 0)))
+
 int gethostname ();
 char *ttyname ();
 char *canon_host ();
@@ -244,7 +258,7 @@ print_line (const char *user, const char state, const char *line,
 	    const char *time_str, const char *idle, const char *pid,
 	    const char *comment, const char *exitstr)
 {
-  printf ("%-8s", user ? user : "   .");
+  printf ("%-8.8s", user ? user : "   .");
   if (include_mesg)
     printf (" %c", state);
   printf (" %-12s", line);
@@ -517,8 +531,7 @@ scan_entries (int n, const STRUCT_UTMP *utmp_buf)
 	  strncmp (ttyname_b, utmp_buf->ut_line,
 		   sizeof (utmp_buf->ut_line)) == 0)
 	{
-	  if (need_users && UT_USER (utmp_buf)[0]
-	      && UT_TYPE (utmp_buf) == USER_PROCESS)
+	  if (need_users && IS_USER_PROCESS (utmp_buf))
 	    print_user (utmp_buf);
 	  else if (need_runlevel && UT_TYPE (utmp_buf) == RUN_LVL)
 	    print_runlevel (utmp_buf);
