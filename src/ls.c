@@ -643,6 +643,14 @@ static bool format_needs_stat;
 
 static bool format_needs_type;
 
+/* An arbitrary limit on the number of bytes in a printed time stamp.
+   This is set to a relatively small value to avoid the need to worry
+   about denial-of-service attacks on servers that run "ls" on behalf
+   of remote clients.  1000 bytes should be enough for any practical
+   time stamp format.  */
+
+enum { TIME_STAMP_LEN_MAXIMUM = MAX (1000, INT_STRLEN_BOUND (time_t)) };
+
 /* strftime formats for non-recent and recent files, respectively, in
    -l output.  */
 
@@ -3047,32 +3055,18 @@ long_time_expected_width (void)
     {
       time_t epoch = 0;
       struct tm const *tm = localtime (&epoch);
-      char const *fmt = long_time_format[0];
-      char initbuf[100];
-      char *buf = initbuf;
-      size_t bufsize = sizeof initbuf;
-      size_t len;
+      char buf[TIME_STAMP_LEN_MAXIMUM + 1];
 
-      for (;;)
+      if (tm)
 	{
-	  *buf = '\1';
-	  len = nstrftime (buf, bufsize, fmt, tm, 0, 0);
-	  if (len || ! *buf)
-	    break;
-	  if (buf == initbuf)
-	    {
-	      buf = NULL;
-	      bufsize *= 2;
-	    }
-	  buf = x2nrealloc (buf, &bufsize, sizeof *buf);
+	  size_t len =
+	    nstrftime (buf, sizeof buf, long_time_format[0], tm, 0, 0);
+	  if (len != 0)
+	    width = mbsnwidth (buf, len, 0);
 	}
 
-      width = mbsnwidth (buf, len, 0);
       if (width < 0)
 	width = 0;
-
-      if (buf != initbuf)
-	free (buf);
     }
 
   return width;
@@ -3200,17 +3194,15 @@ static void
 print_long_format (const struct fileinfo *f)
 {
   char modebuf[12];
-  char init_bigbuf
+  char buf
     [LONGEST_HUMAN_READABLE + 1		/* inode */
      + LONGEST_HUMAN_READABLE + 1	/* size in blocks */
      + sizeof (modebuf) - 1 + 1		/* mode string */
      + INT_BUFSIZE_BOUND (uintmax_t)	/* st_nlink */
      + LONGEST_HUMAN_READABLE + 2	/* major device number */
      + LONGEST_HUMAN_READABLE + 1	/* minor device number */
-     + 35 + 1	/* usual length of time/date -- may be longer; see below */
+     + TIME_STAMP_LEN_MAXIMUM + 1	/* max length of time/date */
      ];
-  char *buf = init_bigbuf;
-  size_t bufsize = sizeof (init_bigbuf);
   size_t s;
   char *p;
   time_t when;
@@ -3320,7 +3312,11 @@ print_long_format (const struct fileinfo *f)
       p[-1] = ' ';
     }
 
-  if ((when_local = localtime (&when)))
+  when_local = localtime (&when);
+  s = 0;
+  *p = '\1';
+
+  if (when_local)
     {
       time_t six_months_ago;
       bool recent;
@@ -3349,28 +3345,12 @@ print_long_format (const struct fileinfo *f)
 		    || (when == current_time && when_ns <= current_time_ns)));
       fmt = long_time_format[recent];
 
-      for (;;)
-	{
-	  char *newbuf;
-	  *p = '\1';
-	  s = nstrftime (p, buf + bufsize - p - 1, fmt,
-			 when_local, 0, when_ns);
-	  if (s || ! *p)
-	    break;
-	  if (buf == init_bigbuf)
-	    {
-	      bufsize *= 2;
-	      newbuf = xmalloc (bufsize);
-	      memcpy (newbuf, buf, p - buf);
-	    }
-	  else
-	    {
-	      newbuf = x2nrealloc (buf, &bufsize, sizeof *buf);
-	    }
-	  p = newbuf + (p - buf);
-	  buf = newbuf;
-	}
+      s = nstrftime (p, TIME_STAMP_LEN_MAXIMUM + 1, fmt,
+		     when_local, 0, when_ns);
+    }
 
+  if (s || !*p)
+    {
       p += s;
       *p++ = ' ';
 
@@ -3379,7 +3359,7 @@ print_long_format (const struct fileinfo *f)
     }
   else
     {
-      /* The time cannot be represented as a local time;
+      /* The time cannot be converted using the desired format, so
 	 print it as a huge integer number of seconds.  */
       char hbuf[INT_BUFSIZE_BOUND (intmax_t)];
       sprintf (p, "%*s ", long_time_expected_width (),
@@ -3390,8 +3370,6 @@ print_long_format (const struct fileinfo *f)
     }
 
   DIRED_FPUTS (buf, stdout, p - buf);
-  if (buf != init_bigbuf)
-    free (buf);
   print_name_with_quoting (f->name, FILE_OR_LINK_MODE (f), f->linkok,
 			   &dired_obstack);
 
