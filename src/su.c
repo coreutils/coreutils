@@ -1,5 +1,5 @@
 /* su for GNU.  Run a shell with substitute user and group IDs.
-   Copyright (C) 1992-2003 Free Software Foundation, Inc.
+   Copyright (C) 1992-2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -346,13 +346,13 @@ change_identity (const struct passwd *pw)
 #ifdef HAVE_INITGROUPS
   errno = 0;
   if (initgroups (pw->pw_name, pw->pw_gid) == -1)
-    error (EXIT_FAILURE, errno, _("cannot set groups"));
+    error (EXIT_FAIL, errno, _("cannot set groups"));
   endgrent ();
 #endif
   if (setgid (pw->pw_gid))
-    error (EXIT_FAILURE, errno, _("cannot set group id"));
+    error (EXIT_FAIL, errno, _("cannot set group id"));
   if (setuid (pw->pw_uid))
-    error (EXIT_FAILURE, errno, _("cannot set user id"));
+    error (EXIT_FAIL, errno, _("cannot set user id"));
 }
 
 /* Run SHELL, or DEFAULT_SHELL if SHELL is empty.
@@ -398,7 +398,7 @@ run_shell (const char *shell, const char *command, char **additional_args)
   execv (shell, (char **) args);
 
   {
-    int exit_status = (errno == ENOENT ? 127 : 126);
+    int exit_status = (errno == ENOENT ? EXIT_ENOENT : EXIT_CANNOT_INVOKE);
     error (0, errno, "%s", shell);
     exit (exit_status);
   }
@@ -428,7 +428,7 @@ restricted_shell (const char *shell)
 void
 usage (int status)
 {
-  if (status != 0)
+  if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
@@ -472,6 +472,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  initialize_exit_failure (EXIT_FAIL);
   atexit (close_stdout);
 
   fast_startup = 0;
@@ -511,7 +512,7 @@ main (int argc, char **argv)
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
-	  usage (EXIT_FAILURE);
+	  usage (EXIT_FAIL);
 	}
     }
 
@@ -527,7 +528,7 @@ main (int argc, char **argv)
 
   pw = getpwnam (new_user);
   if (pw == 0)
-    error (EXIT_FAILURE, 0, _("user %s does not exist"), new_user);
+    error (EXIT_FAIL, 0, _("user %s does not exist"), new_user);
   endpwent ();
 
   /* Make sure pw->pw_shell is non-NULL.  It may be NULL when NEW_USER
@@ -550,7 +551,7 @@ main (int argc, char **argv)
 #ifdef SYSLOG_FAILURE
       log_su (pw, 0);
 #endif
-      error (EXIT_FAILURE, 0, _("incorrect password"));
+      error (EXIT_FAIL, 0, _("incorrect password"));
     }
 #ifdef SYSLOG_SUCCESS
   else
