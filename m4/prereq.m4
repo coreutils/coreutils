@@ -103,8 +103,8 @@ AC_DEFUN([jm_PREREQ_MEMCHR],
 
 AC_DEFUN([jm_PREREQ_PHYSMEM],
 [
-  AC_CHECK_HEADERS(sys/pstat.h unistd.h sys/sysget.h sys/sysinfo.h)
-  AC_CHECK_FUNCS(pstat_getstatic pstat_getdynamic sysget)
+  AC_CHECK_HEADERS(sys/pstat.h unistd.h sys/sysmp.h)
+  AC_CHECK_FUNCS(pstat_getstatic pstat_getdynamic)
 ])
 
 AC_DEFUN([jm_PREREQ_POSIXVER],
