@@ -1,5 +1,9 @@
 Thu Jan  4 20:32:52 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
+	* nl.c: Include rx.h after limit.h (not before) to avoid warning
+	about the redeclaration of RE_DUP_MAX in limit.h.  rx.h protects
+	its definition.  From Kaveh Ghazi.
+
 	* src/Makefile.am (DIST_OTHER): Include md5-test.rfc so make check
 	works again.  Reported by François Pinard and Kaveh Ghazi.
 
