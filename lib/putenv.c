@@ -23,21 +23,14 @@
 # include <config.h>
 #endif
 
-/* Disable the definition of putenv to rpl_putenv (from config.h) in this
-   file.  Otherwise, we'd get conflicting prototypes for rpl_putenv on
-   systems like Irix 5.3.  */
-#undef putenv
-
 #include <sys/types.h>
 
-#if defined (__GNU_LIBRARY__) || defined (HAVE_STDLIB_H)
-/* Some stdlib.h (e.g., Solaris 2.7) declare putenv with a non-const argument.
-   Since that would conflict with the declaration below, we rename putenv in
-   that incompatible prototype.  */
-# define putenv vendor_putenv_prototype
-# include <stdlib.h>
-# undef putenv
-#endif
+/* Don't include stdlib.h because some (e.g., Solaris 2.7) declare putenv
+   with a non-const argument.  That would conflict with the declaration of
+   rpl_putenv below (due to the #define putenv rpl_putenv from config.h).  */
+
+char *malloc ();
+void free ();
 
 #if defined (__GNU_LIBRARY__) || defined (HAVE_STRING_H)
 # include <string.h>
