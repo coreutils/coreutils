@@ -315,12 +315,12 @@ process_file (const char *file, const struct stat *sb, int file_type,
 	      struct FTW *info)
 {
   uintmax_t size;
-  uintmax_t size_including_subdirs;
-  uintmax_t size_to_propagate_to_parent;
+  uintmax_t size_to_print;
   static int first_call = 1;
   static size_t prev_level;
   static size_t n_alloc;
-  static uintmax_t *sum;
+  static uintmax_t *sum_ent;
+  static uintmax_t *sum_subdir;
 
   /* Always define info->skip before returning.  */
   info->skip = excluded_filename (exclude, file + info->base);
@@ -383,7 +383,8 @@ process_file (const char *file, const struct stat *sb, int file_type,
   if (first_call)
     {
       n_alloc = info->level + 10;
-      sum = XCALLOC (uintmax_t, n_alloc);
+      sum_ent = XCALLOC (uintmax_t, n_alloc);
+      sum_subdir = XCALLOC (uintmax_t, n_alloc);
     }
   else
     {
@@ -395,11 +396,12 @@ process_file (const char *file, const struct stat *sb, int file_type,
       if (n_alloc <= (size_t) info->level)
 	{
 	  n_alloc = info->level * 2;
-	  sum = XREALLOC (sum, uintmax_t, n_alloc);
+	  sum_ent = XREALLOC (sum_ent, uintmax_t, n_alloc);
+	  sum_subdir = XREALLOC (sum_subdir, uintmax_t, n_alloc);
 	}
     }
 
-  size_to_propagate_to_parent = size_including_subdirs = size;
+  size_to_print = size;
 
   if (! first_call)
     {
@@ -415,7 +417,7 @@ process_file (const char *file, const struct stat *sb, int file_type,
 	     e.g., from 1 to 10.  */
 	  int i;
 	  for (i = prev_level + 1; i <= info->level; i++)
-	    sum[i] = 0;
+	    sum_ent[i] = sum_subdir[i] = 0;
 	}
       else /* info->level < prev_level */
 	{
@@ -426,20 +428,23 @@ process_file (const char *file, const struct stat *sb, int file_type,
 	     Here, the current level is always one smaller than the
 	     previous one.  */
 	  assert ((size_t) info->level == prev_level - 1);
-	  size_to_propagate_to_parent = size_including_subdirs
-	    = size + sum[prev_level];
+	  size_to_print += sum_ent[prev_level];
+	  if (!opt_separate_dirs)
+	    size_to_print += sum_subdir[prev_level];
+	  sum_subdir[info->level] += (sum_ent[prev_level]
+				      + sum_subdir[prev_level]);
 	}
     }
-
-  if (opt_separate_dirs)
-    size_to_propagate_to_parent = 0;
 
   prev_level = info->level;
   first_call = 0;
 
-  sum[info->level] += size_to_propagate_to_parent;
+  /* Let the size of a directory entry contribute to the total for the
+     containing directory, unless --separate-dirs (-S) is specified.  */
+  if ( ! (opt_separate_dirs && IS_FTW_DIR_TYPE (file_type)))
+    sum_ent[info->level] += size;
 
-  /* Even if this directory was unreadable or we couldn't chdir into it,
+  /* Even if this directory is unreadable or we can't chdir into it,
      do let its size contribute to the total, ... */
   tot_size += size;
 
@@ -453,7 +458,7 @@ process_file (const char *file, const struct stat *sb, int file_type,
 		     (info->level <= max_depth || info->level == 0))
       || ((opt_all && info->level <= max_depth) || info->level == 0))
     {
-      print_only_size (size_including_subdirs);
+      print_only_size (size_to_print);
       fputc ('\t', stdout);
       if (arg_length)
 	{
