@@ -1,5 +1,10 @@
 2001-08-30  Paul Eggert  <eggert@twinsun.com>
 
+	* quotearg.c: BSD/OS 4.1 wchar.h requires FILE and struct
+	tm to be declared.
+
+2001-08-30  Paul Eggert  <eggert@twinsun.com>
+
 	* hash.c: Remove '2001' from copyright notice.
 
 2001-08-30  Paul Eggert  <eggert@twinsun.com>
@@ -97,7 +102,7 @@
 
 2001-08-12  Paul Eggert  <eggert@sic.twinsun.com>
 
-	* lib/addext.c (<errno.h>): Include.
+	* addext.c (<errno.h>): Include.
 	(errno): Declare if not defined.
 	(addext): Work correctly when pathconf returns -1 and leaves
 	errno alone because there is no limit.  Also, work even if
@@ -182,10 +187,10 @@
 
 2001-05-11  Paul Eggert  <eggert@twinsun.com>
 
-	* lib/Makefile.am (libfetish_a_SOURCES):
+	* Makefile.am (libfetish_a_SOURCES):
 	Add strftime.c, since we now compile it on all hosts.
 
-	* lib/strftime.c (my_strftime):
+	* strftime.c (my_strftime):
 	Define to nstrftime if emacs, but only if my_strftime is not defined.
 	(extra_args, extra_args_spec, extra_args_spec_iso): Rename from
 	ut_argument, ut_argument_spec, ut_argument_spec_iso, respectively.
@@ -310,8 +315,7 @@
 	Add dup-safer.c, fopen-safer.c.
 	(noinst_HEADERS): Add stdio-safer.h, unistd-safer.h.
 
-	* dup-safer.c, fopen-safer.c, stdio-safer.h,
-	lib/unistd-safer.h: New files.
+	* dup-safer.c, fopen-safer.c, stdio-safer.h, unistd-safer.h: New files.
 
 2001-02-25  Paul Eggert  <eggert@twinsun.com>
 
