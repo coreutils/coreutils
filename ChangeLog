@@ -2,6 +2,13 @@
 
 	* Version 5.0.91.
 
+	Make seq's --width (-w) option work properly even when the
+	endpoint requiring the largest width is negative and smaller than
+	the other endpoint.
+	* src/seq.c (get_width_format): Include `-' in the set of bytes
+	allowed in a `simple' number (no decimal point, no exponent).
+	Reported by Patrick Mauritz.
+
 2003-09-02  Paul Eggert  <eggert@twinsun.com>
 
 	* NEWS: sort -t '\0' now uses a NUL tab.
