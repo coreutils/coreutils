@@ -657,7 +657,7 @@ main (int argc, char **argv)
 
       if (check_redirection
 	  && stat_buf.st_dev == out_dev && stat_buf.st_ino == out_ino
-	  && (input_desc != fileno (stdin) || output_desc != fileno (stdout)))
+	  && (input_desc != STDIN_FILENO || output_desc != STDOUT_FILENO))
 	{
 	  error (0, 0, _("%s: input file is output file"), infile);
 	  exit_status = 1;
