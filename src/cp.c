@@ -489,11 +489,14 @@ do_copy (int n_files, char **file, const char *target_directory,
       --n_files;
     }
 
-  /* Initialize the hash table only if we'll need it.
-     The problem it is used to detect can arise only if there are
-     two or more files to copy.  */
+  /* Initialize these hash tables only if we'll need them.
+     The problems they're used to detect can arise only if
+     there are two or more files to copy.  */
   if (n_files >= 2)
-    dest_info_init (x);
+    {
+      dest_info_init (x);
+      src_info_init (x);
+    }
 
   if (lstat (dest, &sb))
     {
@@ -727,6 +730,7 @@ cp_option_init (struct cp_options *x)
   x->update = 0;
   x->verbose = 0;
   x->dest_info = NULL;
+  x->src_info = NULL;
 }
 
 /* Given a string, ARG, containing a comma-separated list of arguments
