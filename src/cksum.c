@@ -249,7 +249,7 @@ cksum (char *file, int print_name)
 
   crc = ~crc & 0xFFFFFFFF;
 
-  printf ("%10lu %8ld", crc, length);
+  printf ("%lu %ld", crc, length);
   if (print_name)
     printf (" %s", file);
   putchar ('\n');
