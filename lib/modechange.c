@@ -35,7 +35,7 @@
 #if STDC_HEADERS
 # include <stdlib.h>
 #else
-char *malloc;
+char *malloc ();
 #endif
 
 #ifndef NULL
