@@ -9,6 +9,7 @@ AC_DEFUN([AC_FUNC_FTW],
   AC_REQUIRE([AC_HEADER_DIRENT])
   AC_CHECK_HEADERS(sys/param.h)
   AC_CHECK_DECLS([stpcpy])
+  AC_CHECK_FUNC([tdestroy], , [need_tsearch=1])
 
   # The following test would fail prior to glibc-2.3.2, because `depth'
   # would be 2 rather than 4.
@@ -42,5 +43,11 @@ main ()
                [ac_cv_func_ftw_working=yes],
                [ac_cv_func_ftw_working=no],
                [ac_cv_func_ftw_working=no])])
-test $ac_cv_func_ftw_working = no && AC_LIBOBJ([ftw])
+if test $ac_cv_func_ftw_working = no; then
+  AC_LIBOBJ([ftw])
+  # Add tsearch.o IFF we have to use the replacement ftw.c.
+  if test -n "$need_tsearch"; then
+    AC_LIBOBJ([tsearch])
+  fi
+fi
 ])# AC_FUNC_FTW
