@@ -57,7 +57,7 @@ enum
 char *program_name;
 
 /* Remove any trailing slashes from each SOURCE argument.  */
-static int remove_trailing_slashes;
+static bool remove_trailing_slashes;
 
 /* Valid arguments to the `--reply' option. */
 static char const* const reply_args[] =
@@ -92,17 +92,17 @@ static struct option const long_options[] =
 static void
 rm_option_init (struct rm_options *x)
 {
-  x->unlink_dirs = 0;
-  x->ignore_missing_files = 0;
+  x->unlink_dirs = false;
+  x->ignore_missing_files = false;
   x->root_dev_ino = NULL;
-  x->recursive = 1;
+  x->recursive = true;
 
   /* Should we prompt for removal, too?  No.  Prompting for the `move'
      part is enough.  It implies removal.  */
   x->interactive = 0;
-  x->stdin_tty = 0;
+  x->stdin_tty = false;
 
-  x->verbose = 0;
+  x->verbose = false;
 
   /* Since this program may well have to process additional command
      line arguments after any call to `rm', that function must preserve
@@ -114,24 +114,24 @@ rm_option_init (struct rm_options *x)
 static void
 cp_option_init (struct cp_options *x)
 {
-  x->copy_as_regular = 0;  /* FIXME: maybe make this an option */
+  x->copy_as_regular = false;  /* FIXME: maybe make this an option */
   x->dereference = DEREF_NEVER;
-  x->unlink_dest_before_opening = 0;
-  x->unlink_dest_after_failed_open = 0;
-  x->hard_link = 0;
+  x->unlink_dest_before_opening = false;
+  x->unlink_dest_after_failed_open = false;
+  x->hard_link = false;
   x->interactive = I_UNSPECIFIED;
-  x->move_mode = 1;
+  x->move_mode = true;
   x->myeuid = geteuid ();
-  x->one_file_system = 0;
-  x->preserve_ownership = 1;
-  x->preserve_links = 1;
-  x->preserve_mode = 1;
-  x->preserve_timestamps = 1;
-  x->require_preserve = 0;  /* FIXME: maybe make this an option */
-  x->recursive = 1;
+  x->one_file_system = false;
+  x->preserve_ownership = true;
+  x->preserve_links = true;
+  x->preserve_mode = true;
+  x->preserve_timestamps = true;
+  x->require_preserve = false;  /* FIXME: maybe make this an option */
+  x->recursive = true;
   x->sparse_mode = SPARSE_AUTO;  /* FIXME: maybe make this an option */
-  x->symbolic_link = 0;
-  x->set_mode = 0;
+  x->symbolic_link = false;
+  x->set_mode = false;
   x->mode = 0;
   x->stdin_tty = isatty (STDIN_FILENO);
 
@@ -141,8 +141,8 @@ cp_option_init (struct cp_options *x)
      have been allowed with the mask this process was started with.  */
   x->umask_kill = ~ umask (0);
 
-  x->update = 0;
-  x->verbose = 0;
+  x->update = false;
+  x->verbose = false;
   x->dest_info = NULL;
   x->src_info = NULL;
 }
@@ -170,18 +170,16 @@ target_directory_operand (char const *file)
 
 /* Move SOURCE onto DEST.  Handles cross-file-system moves.
    If SOURCE is a directory, DEST must not exist.
-   Return 0 if successful, 1 if an error occurred.  */
+   Return true if successful.  */
 
-static int
+static bool
 do_move (const char *source, const char *dest, const struct cp_options *x)
 {
-  int copy_into_self;
-  int rename_succeeded;
-  int fail;
+  bool copy_into_self;
+  bool rename_succeeded;
+  bool ok = copy (source, dest, false, x, &copy_into_self, &rename_succeeded);
 
-  fail = copy (source, dest, 0, x, &copy_into_self, &rename_succeeded);
-
-  if (!fail)
+  if (ok)
     {
       char const *dir_to_remove;
       if (copy_into_self)
@@ -198,7 +196,7 @@ do_move (const char *source, const char *dest, const struct cp_options *x)
 	     and failing.  */
 
 	  dir_to_remove = NULL;
-	  fail = 1;
+	  ok = false;
 	}
       else if (rename_succeeded)
 	{
@@ -244,22 +242,22 @@ do_move (const char *source, const char *dest, const struct cp_options *x)
 	  status = rm (1, &dir_to_remove, &rm_options);
 	  assert (VALID_STATUS (status));
 	  if (status == RM_ERROR)
-	    fail = 1;
+	    ok = false;
 	}
     }
 
-  return fail;
+  return ok;
 }
 
 /* Move file SOURCE onto DEST.  Handles the case when DEST is a directory.
    Treat DEST as a directory if DEST_IS_DIR.
-   Return 0 if successful, non-zero if an error occurred.  */
+   Return true if successful.  */
 
-static int
+static bool
 movefile (char *source, char *dest, bool dest_is_dir,
 	  const struct cp_options *x)
 {
-  int fail;
+  bool ok;
 
   /* This code was introduced to handle the ambiguity in the semantics
      of mv that is induced by the varying semantics of the rename function.
@@ -278,15 +276,15 @@ movefile (char *source, char *dest, bool dest_is_dir,
       char const *src_basename = base_name (source);
       char *new_dest = path_concat (dest, src_basename, NULL);
       strip_trailing_slashes (new_dest);
-      fail = do_move (source, new_dest, x);
+      ok = do_move (source, new_dest, x);
       free (new_dest);
     }
   else
     {
-      fail = do_move (source, dest, x);
+      ok = do_move (source, dest, x);
     }
 
-  return fail;
+  return ok;
 }
 
 void
@@ -357,8 +355,8 @@ int
 main (int argc, char **argv)
 {
   int c;
-  int errors;
-  int make_backups = 0;
+  bool ok;
+  bool make_backups = false;
   char *backup_suffix_string;
   char *version_control_string = NULL;
   struct cp_options x;
@@ -381,8 +379,6 @@ main (int argc, char **argv)
      we'll actually use backup_suffix_string.  */
   backup_suffix_string = getenv ("SIMPLE_BACKUP_SUFFIX");
 
-  errors = 0;
-
   while ((c = getopt_long (argc, argv, "bfit:uvS:TV:", long_options, NULL))
 	 != -1)
     {
@@ -399,7 +395,7 @@ main (int argc, char **argv)
 	  /* Fall through.  */
 
 	case 'b':
-	  make_backups = 1;
+	  make_backups = true;
 	  if (optarg)
 	    version_control_string = optarg;
 	  break;
@@ -414,7 +410,7 @@ main (int argc, char **argv)
 				     reply_args, reply_vals);
 	  break;
 	case STRIP_TRAILING_SLASHES_OPTION:
-	  remove_trailing_slashes = 1;
+	  remove_trailing_slashes = true;
 	  break;
 	case 't':
 	  if (target_directory)
@@ -434,13 +430,13 @@ main (int argc, char **argv)
 	  no_target_directory = true;
 	  break;
 	case 'u':
-	  x.update = 1;
+	  x.update = true;
 	  break;
 	case 'v':
-	  x.verbose = 1;
+	  x.verbose = true;
 	  break;
 	case 'S':
-	  make_backups = 1;
+	  make_backups = true;
 	  backup_suffix_string = optarg;
 	  break;
 	case_GETOPT_HELP_CHAR;
@@ -504,11 +500,12 @@ main (int argc, char **argv)
       if (2 <= n_files)
 	dest_info_init (&x);
 
+      ok = true;
       for (i = 0; i < n_files; ++i)
-	errors |= movefile (file[i], target_directory, true, &x);
+	ok &= movefile (file[i], target_directory, true, &x);
     }
   else
-    errors = movefile (file[0], file[1], false, &x);
+    ok = movefile (file[0], file[1], false, &x);
 
-  exit (errors == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
+  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
