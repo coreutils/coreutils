@@ -1,5 +1,5 @@
 /* stat.c -- display file or file system status
-   Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation.
+   Copyright (C) 2001, 2002, 2003, 2004, 2005 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -659,38 +659,38 @@ Display file or file system status.\n\
       fputs (_("\n\
 The valid format sequences for files (without --file-system):\n\
 \n\
-  %A   Access rights in human readable form\n\
   %a   Access rights in octal\n\
-  %B   The size in bytes of each block reported by `%b'\n\
+  %A   Access rights in human readable form\n\
   %b   Number of blocks allocated (see %B)\n\
+  %B   The size in bytes of each block reported by %b\n\
 "), stdout);
       fputs (_("\
-  %D   Device number in hex\n\
   %d   Device number in decimal\n\
-  %F   File type\n\
+  %D   Device number in hex\n\
   %f   Raw mode in hex\n\
-  %G   Group name of owner\n\
+  %F   File type\n\
   %g   Group ID of owner\n\
+  %G   Group name of owner\n\
 "), stdout);
       fputs (_("\
   %h   Number of hard links\n\
   %i   Inode number\n\
-  %N   Quoted File name with dereference if symbolic link\n\
   %n   File name\n\
-  %o   IO block size\n\
+  %N   Quoted file name with dereference if symbolic link\n\
+  %o   I/O block size\n\
   %s   Total size, in bytes\n\
-  %T   Minor device type in hex\n\
   %t   Major device type in hex\n\
+  %T   Minor device type in hex\n\
 "), stdout);
       fputs (_("\
-  %U   User name of owner\n\
   %u   User ID of owner\n\
-  %X   Time of last access as seconds since Epoch\n\
+  %U   User name of owner\n\
   %x   Time of last access\n\
-  %Y   Time of last modification as seconds since Epoch\n\
+  %X   Time of last access as seconds since Epoch\n\
   %y   Time of last modification\n\
-  %Z   Time of last change as seconds since Epoch\n\
+  %Y   Time of last modification as seconds since Epoch\n\
   %z   Time of last change\n\
+  %Z   Time of last change as seconds since Epoch\n\
 \n\
 "), stdout);
 
@@ -704,12 +704,12 @@ Valid format sequences for file systems:\n\
   %f   Free blocks in file system\n\
 "), stdout);
       fputs (_("\
-  %i   File System id in hex\n\
+  %i   File System ID in hex\n\
   %l   Maximum length of filenames\n\
   %n   File name\n\
-  %s   Optimal transfer block size\n\
-  %T   Type in human readable form\n\
+  %s   Fundamental block size\n\
   %t   Type in hex\n\
+  %T   Type in human readable form\n\
 "), stdout);
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
