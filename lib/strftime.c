@@ -47,7 +47,7 @@
 # endif
 #endif
 
-#if HAVE_TZNAME || defined __LIBC
+#if HAVE_TZNAME
 extern char *tzname[];
 #endif
 
