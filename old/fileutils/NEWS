@@ -1,4 +1,5 @@
 Changes in release 3.14:
+* ls -l recognizes Cray's migrated dmf files.
 * chgrp no longer aborts when given a group number larger than INT_MAX
 * chgrp now fails when run by root with an unrecognized group name
 * when possible, cp -p preserves owner/group even on symlinks in case
