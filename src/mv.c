@@ -258,7 +258,7 @@ do_move (const char *source, const char *dest, const struct cp_options *x)
 	  rm_option_init (&rm_options);
 	  rm_options.verbose = x->verbose;
 
-	  remove_init ();
+	  remove_init (&rm_options);
 
 	  fspec_init_file (&fs, dir_to_remove);
 
