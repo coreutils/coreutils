@@ -2,9 +2,13 @@ Changes in release 1.15
 * fix several bugs in m4 macros used to create `configure' script
 * id works on systems with disfunctional getgroups function
 * uptime configure test detects /proc/uptime on Linux
+
 Changes in release 1.14
 * fix bug in getdate.y that broke date's --date=DATE option on systems
   like SunOS4.
+* expr treats unadorned ? and + as literals.  To make expr treat them as
+  operators you have to use \? and \+.
+
 Changes in release 1.13
 * two patches for ISC
 * Regenerate all Makefile.in using a patched version of automake-1.1l.
