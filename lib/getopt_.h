@@ -37,6 +37,7 @@
 # if HAVE_UNISTD_H
 #  include <unistd.h>
 # endif
+# undef __need_getopt
 # undef getopt
 # undef getopt_long
 # undef getopt_long_only
@@ -44,24 +45,40 @@
 # undef opterr
 # undef optind
 # undef optopt
-# define getopt __GETOPT_PREFIX##getopt
-# define getopt_long __GETOPT_PREFIX##getopt_long
-# define getopt_long_only __GETOPT_PREFIX##getopt_long_only
-# define optarg __GETOPT_PREFIX##optarg
-# define opterr __GETOPT_PREFIX##opterr
-# define optind __GETOPT_PREFIX##optind
-# define optopt __GETOPT_PREFIX##optopt
+# define __GETOPT_CONCAT(x, y) x ## y
+# define __GETOPT_XCONCAT(x, y) __GETOPT_CONCAT (x, y)
+# define __GETOPT_ID(y) __GETOPT_XCONCAT (__GETOPT_PREFIX, y)
+# define getopt __GETOPT_ID (getopt)
+# define getopt_long __GETOPT_ID (getopt_long)
+# define getopt_long_only __GETOPT_ID (getopt_long_only)
+# define optarg __GETOPT_ID (optarg)
+# define opterr __GETOPT_ID (opterr)
+# define optind __GETOPT_ID (optind)
+# define optopt __GETOPT_ID (optopt)
 #endif
 
 /* Standalone applications get correct prototypes for getopt_long and
    getopt_long_only; they declare "char **argv".  libc uses prototypes
    with "char *const *argv" that are incorrect because getopt_long and
    getopt_long_only can permute argv; this is required for backward
-   compatibility (e.g., for LSB 2.0.1).  */
-#if defined __GETOPT_PREFIX && !defined __need_getopt
-# define __getopt_argv_const /* empty */
-#else
-# define __getopt_argv_const const
+   compatibility (e.g., for LSB 2.0.1).
+
+   This used to be `#if defined __GETOPT_PREFIX && !defined __need_getopt',
+   but it caused redefinition warnings if both unistd.h and getopt.h were
+   included, since unistd.h includes getopt.h having previously defined
+   __need_getopt.
+   
+   The only place where __getopt_argv_const is used is in definitions
+   of getopt_long and getopt_long_only below, but these are visible
+   only if __need_getopt is not defined, so it is quite safe to rewrite
+   the conditional as follows:
+*/
+#if !defined __need_getopt
+# if defined __GETOPT_PREFIX 
+#  define __getopt_argv_const /* empty */
+# else
+#  define __getopt_argv_const const
+# endif
 #endif
 
 /* If __GNU_LIBRARY__ is not already defined, either we are being used

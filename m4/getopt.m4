@@ -25,16 +25,18 @@ AC_DEFUN([gl_GETOPT],
 [
   gl_PREREQ_GETOPT
 
-  GETOPT_H=
-  AC_CHECK_HEADERS([getopt.h], [], [GETOPT_H=getopt.h])
-  AC_CHECK_FUNCS([getopt_long_only], [], [GETOPT_H=getopt.h])
+  if test -z "$GETOPT_H"; then
+    GETOPT_H=
+    AC_CHECK_HEADERS([getopt.h], [], [GETOPT_H=getopt.h])
+    AC_CHECK_FUNCS([getopt_long_only], [], [GETOPT_H=getopt.h])
 
-  dnl BSD getopt_long uses an incompatible method to reset option processing,
-  dnl and (as of 2004-10-15) mishandles optional option-arguments.
-  AC_CHECK_DECL([optreset], [GETOPT_H=getopt.h], [], [#include <getopt.h>])
+    dnl BSD getopt_long uses an incompatible method to reset option processing,
+    dnl and (as of 2004-10-15) mishandles optional option-arguments.
+    AC_CHECK_DECL([optreset], [GETOPT_H=getopt.h], [], [#include <getopt.h>])
 
-  if test -n "$GETOPT_H"; then
-     gl_GETOPT_SUBSTITUTE
+    if test -n "$GETOPT_H"; then
+      gl_GETOPT_SUBSTITUTE
+    fi
   fi
 ])
 

@@ -2,6 +2,12 @@
 
 	* utimens.m4 (gl_UTIMENS): Check for futimes function.
 
+2004-11-23  Sergey Poznyakoff  <gray@Mirddin.farlep.net>
+
+	* getopt.m4 (gl_GETOPT): Check if GETOPT_H is already set, in
+	order not to spoil the result of an eventual previous invocation
+	of gl_GETOPT_SUBSTITUTE.
+
 2004-11-17  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* calloc.m4 (_AC_FUNC_CALLOC_IF): Check for buggy calloc implementations

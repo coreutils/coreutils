@@ -1,3 +1,7 @@
+2004-11-23  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* config.sub, texinfo.tex: Sync from gnulib.
+
 2004-11-17  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* config.guess, config.sub: Sync from gnulib.

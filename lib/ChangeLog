@@ -6,9 +6,22 @@
 	as utime and utimens.
 	* utimens.h (futimens): New decl.
 
+2004-11-23  Sergey Poznyakoff  <gray@Mirddin.farlep.net>
+
+	* getopt_.h: Re-addition of __getopt_argv_const caused
+	redefinition warnings. To avoid them, include the defines
+	in `#if !defined __need_getopt ... #endif'. The only place
+	where __getopt_argv_const is used is in definitions
+	of getopt_long and getopt_long_only below, which are as well
+	protected by `#ifndef __need_getopt'.
+	[defined __GETOPT_PREFIX && !defined __need_getopt]: Undef
+	__need_getopt after including <stdio.h> and <unistd.h> These
+	headers might have defined it.
+
 2004-11-23  Jim Meyering  <jim@meyering.net>
 
-	* closeout.c: Revert last change, since it seems EBADF is always defined.
+	* closeout.c: Revert last change, since it seems EBADF is always
+	defined.
 
 2004-11-22  Jim Meyering  <jim@meyering.net>
 
