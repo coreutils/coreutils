@@ -1,7 +1,3 @@
-2001-01-20  Jim Meyering  <meyering@lucent.com>
-
-	* hash.c: Fix typo in initializer list: s/false/0/.
-
 2001-01-16  Jim Meyering  <meyering@lucent.com>
 
 	* basename.c: Include <stdio.h>, needed by assert on SunOS4.
