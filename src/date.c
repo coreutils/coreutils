@@ -61,7 +61,7 @@ enum Time_spec
 
 static char const *const time_spec_string[] =
 {
-  "date", "hours", "minutes", "seconds", "ns", 0
+  "date", "hours", "minutes", "seconds", "ns", NULL
 };
 
 static enum Time_spec const time_spec[] =
