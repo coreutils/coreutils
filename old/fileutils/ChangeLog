@@ -1,3 +1,14 @@
+1998-06-30  Paul Eggert  <eggert@shade.twinsun.com>
+
+	* lib/mountlist.c: (read_filesystem_list):
+	Don't leak memory on failure.
+	Don't create a dummy struct mount_entry entry;
+	use the address-of-the-tail-address method instead.
+	Preserve errno if possible on failure, setting it to 0 if inapplicable.
+	Close file descriptor leak if the F_SETLKW failed.
+	Report an error if SVR4 lock file cannot be opened for some reason
+	other than a nonexistent lock file.
+
 1998-07-03  Jim Meyering  <meyering@ascend.com>
 
 	* configure.in (AM_WITH_REGEX): Remove.  Now the replacement
