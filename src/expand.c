@@ -173,10 +173,11 @@ parse_tabstops (char const *stops)
 	      num_start = stops;
 	    }
 	  {
+	    int new_t;
+
 	    /* Detect overflow.  */
-	    int prev = tabval;
-	    tabval = tabval * 10 + *stops - '0';
-	    if (tabval < prev)
+	    new_t = 10 * tabval + *stops - '0';
+	    if (INT_MAX / 10 < tabval || new_t < tabval * 10)
 	      {
 		size_t len = strspn (num_start, "0123456789");
 		char *bad_num = xstrndup (num_start, len);
@@ -184,6 +185,7 @@ parse_tabstops (char const *stops)
 		fail = 1;
 		stops = num_start + len - 1;
 	      }
+	    tabval = new_t;
 	  }
 	}
       else
