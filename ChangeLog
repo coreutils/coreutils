@@ -8,6 +8,12 @@
 	sys_siglist, and friends.  Problem reported by Toney Leneis in
 	<http://mail.gnu.org/archive/html/bug-coreutils/2004-02/msg00136.html>.
 
+2004-02-25  Paul Eggert  <eggert@twinsun.com>
+
+	* tests/du/deref-args, tests/du/exclude, tests/du/slash:
+	* tests/du/trailing-slash: Run envvar-check in case BLOCK_SIZE
+	etc. are set.
+
 2004-02-23  Jim Meyering  <jim@meyering.net>
 
 	* src/seq.c (usage): Remove stray space after \n in --help output.
