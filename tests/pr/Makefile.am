@@ -2,52 +2,25 @@
 
 ##test-files-begin
 x = pr
-explicit = 0Ft 0F 0Fnt 0F 0Ft 3-0F 0Ft 3f-0F 0Ft a3-0F 0Ft a3f-0F 0Fnt a3f-0F \
-0Ft 3a3f-0F 0Ft b3-0F 0Ft b3f-0F 0Fnt b3f-0F 0Ft 3b3f-0F 0FFt 0FF 0FnFnt 0FF \
-0FFt a3f-0FF 0FFnt a3f-0FF 0FFt b3f-0FF 0FFnt b3f-0FF 0FnFt b3f-0FF 0FnFnt \
-b3f-0FF 0FFt 3b3f-0FF 0FFnt 3b3f-0FF FFn FF FnFn FF FFn 3-FF FFn 3f-FF FFn \
-a3f-FF FFtn a3f-FF FFn b3f-FF FFtn b3f-FF FnFn b3f-FF tFFn b3f-FF tFnFt \
-b3f-FF FFn 3b3f-FF FFtn 3b3f-FF FFn l24-FF FFtn l24-FF FnFn l24-FF tFFn \
-l24-FF tFnFt l24-FF tFFt l24-FF FFn a2l17-FF FFtn a2l17-FF FnFn a2l17-FF tFFn \
-a2l17-FF tFnFt a2l17-FF tFFt a2l17-FF FFn a2l15-FF FFtn a2l15-FF FnFn \
-a2l15-FF tFFn a2l15-FF tFnFt a2l15-FF FFn b2l17-FF FFtn b2l17-FF FnFn \
-b2l17-FF tFFn b2l17-FF tFnFt b2l17-FF tFFt b2l17-FF FFn b2l15-FF FFtn \
-b2l15-FF FnFn b2l15-FF tFFn b2l15-FF tFnFt b2l15-FF FFn 4l24-FF FFtn 4l24-FF \
-FnFn 4l24-FF tFFn 4l24-FF tFnFt 4l24-FF tFFt 4l24-FF tFFt 4-7l24-FF FFn \
-3a2l17-FF FFtn 3a2l17-FF FnFn 3a2l17-FF tFFn 3a2l17-FF tFnFt 3a2l17-FF tFFt \
-3a2l17-FF FFn 3b2l17-FF FFtn 3b2l17-FF FnFn 3b2l17-FF tFFn 3b2l17-FF tFnFt \
-3b2l17-FF tFFt 3b2l17-FF tn l24-t tn l17f-t tn 3l24-t tn 3l17f-t tn 3-5l17f-t \
-tn a3l15-t tn a3l8f-t tn 3a3l15-t tn 3a3l8f-t tn b3l15-t tn b3l8f-t tn \
-3b3l15-t tn 3b3l8f-t tn tn ml24-t tn tn ml17f-t tn tn 3ml24-t tn tn 3ml17f-t \
-0Ft 0Ft ml17f-0F 0Ft 0Fnt ml17f-0F tn 0Ft ml17f-t-0F tFFn tFnFt ml24-FF tFFn \
-FFn ml24-FF tn FFn ml24-t-FF FFn tn ml20-FF-t FFn FnFn 3ml24-FF tFFn FFn \
-3ml24-FF tn FFn 3ml24-t-FF tn t-t tn t-t tFFt-bl t-bl 0FnFnt t-0FF FFn t-FF \
-FnFn t-FF FFn t-FF 0FnFnt ta3-0FF FFn ta3-FF FnFn ta3-FF 0FnFnt tb3-0FF FFn \
-tb3-FF FnFn tb3-FF tn T-t tn T-t tFFt-bl T-bl 0FnFnt T-0FF FFn T-FF FnFn T-FF \
-FFn T-FF 0FnFnt Ta3-0FF FFn Ta3-FF FnFn Ta3-FF 0FnFnt Tb3-0FF FFn Tb3-FF FnFn \
-Tb3-FF tFFt-bl nl17f-bl tFFt-bl nN15l17f-bl tFFt-bl n+2l17f-bl tFFt-bl \
-n+3l17f-bl tFFt-bl nN1+3l17f-bl 0FFt n+2l17f-0FF 0FFnt n+2l17f-0FF 0FnFt \
-n+2l17f-0FF 0FnFnt n+2l17f-0FF 0FFt n+2-5l17f-0FF 0FFt n+3l17f-0FF 0FFnt \
-n+3l17f-0FF 0FnFt n+3l17f-0FF 0FnFnt n+3l17f-0FF FFn n+7l24-FF FFtn n+7l24-FF \
-FnFn n+7l24-FF FnFn n+3-7l24-FF tFFn n+8l20-FF tFnFt n+8l20-FF tFFt n+8l20-FF \
-0FFt n+5a3l6f-0FF 0FFnt n+5a3l6f-0FF 0FnFt n+5a3l6f-0FF 0FnFnt n+5a3l6f-0FF \
-FFn n+6a2l17-FF FFtn n+6a2l17-FF FnFn n+6a2l17-FF tFFn n+6a2l17-FF tFnFt \
-n+6a2l17-FF tFFt n+6a2l17-FF tFFt n+4-8a2l17-FF 0FFt n+4b2l10f-0FF 0FFnt \
-n+4b2l10f-0FF 0FnFt n+4b2l10f-0FF 0FnFnt n+4b2l10f-0FF FFn n+6b3l6f-FF FFtn \
-n+6b3l6f-FF FnFn n+6b3l6f-FF tFFn n+6b3l6f-FF tFnFt n+6b3l6f-FF tFFt \
-n+6b3l6f-FF FnFn n+5-8b3l10f-FF tFFt-bl FnFn n+3ml13f-bl-FF tFFt-bl tn \
-n+3ml17f-bl-tn tn tFFt-bl n+3ml17f-tn-bl 0FnFnt w72j-0FF tFFt-lm w48l17f-lm \
-tFFt-lm w26l17f-lm tFFt-lm w25l17f-lm tFFt-lm w20l17f-lm tFFt-lm loli \
-ml17f-lm-lo tFFt-lm loli w35ml17f-lm-lo tFFt-lm loli jml17f-lm-lo tFFt-lm \
-loli w35jml17f-lm-lo tFFt-lm tFFt-lm loli njml17f-lm-lm-lo tFFt-lm loli \
-tFFt-lm njml17f-lm-lo-lm tFFt-lm a3l17f-lm tFFt-lm w35a3l17f-lm tFFt-lm \
-ja3l17f-lm tFFt-lm w35ja3l17f-lm tFFt-lm b3l17f-lm tFFt-lm w35b3l17f-lm \
-tFFt-lm jb3l17f-lm tFFt-lm w35jb3l17f-lm tFFt-bl FnFn nsml13-bl-FF tFFt-bl \
-FnFn nsml17-bl-FF tn tn FnFn nsml13-t-t-FF tn tn FnFn nsml17-t-t-FF tn tn \
-FnFn FnFn nsml13-t-t-FF-FF tn tn FnFn FnFn nsml17-t-t-FF-FF tn o3a3l17f-tn tn \
-o3a3sl17f-tn tn o3a3snl17f-tn tn o3b3l17f-tn tn o3b3sl17f-tn tn o3b3snl17f-tn \
-tFFt-bl tn o3ml17f-bl-tn tFFt-bl tn o3msl17f-bl-tn tFFt-bl tn o3msnl17f-bl-tn \
-tFFt-lm loli o3jml17f-lm-lo
+explicit = 0F 0FF 0FFnt 0FFt 0FnFnt 0FnFt 0Fnt 0Ft 3-0F 3-5l17f-t 3-FF \
+3a2l17-FF 3a3f-0F 3a3l15-t 3a3l8f-t 3b2l17-FF 3b3f-0F 3b3f-0FF 3b3f-FF \
+3b3l15-t 3b3l8f-t 3f-0F 3f-FF 3l17f-t 3l24-t 3ml17f-t 3ml24-FF 3ml24-t \
+3ml24-t-FF 4-7l24-FF 4l24-FF FF FFn FFtn FnFn T-0FF T-FF T-bl T-t Ta3-0FF \
+Ta3-FF Tb3-0FF Tb3-FF a2l15-FF a2l17-FF a3-0F a3f-0F a3f-0FF a3f-FF a3l15-t \
+a3l17f-lm a3l8f-t b2l15-FF b2l17-FF b3-0F b3f-0F b3f-0FF b3f-FF b3l15-t \
+b3l17f-lm b3l8f-t ja3l17f-lm jb3l17f-lm jml17f-lm-lo l17f-t l24-FF l24-t loli \
+ml17f-0F ml17f-lm-lo ml17f-t ml17f-t-0F ml20-FF-t ml24-FF ml24-t ml24-t-FF \
+n+2-5l17f-0FF n+2l17f-0FF n+2l17f-bl n+3-7l24-FF n+3l17f-0FF n+3l17f-bl \
+n+3ml13f-bl-FF n+3ml17f-bl-tn n+3ml17f-tn-bl n+4-8a2l17-FF n+4b2l10f-0FF \
+n+5-8b3l10f-FF n+5a3l6f-0FF n+6a2l17-FF n+6b3l6f-FF n+7l24-FF n+8l20-FF \
+nN1+3l17f-bl nN15l17f-bl njml17f-lm-lm-lo njml17f-lm-lo-lm nl17f-bl \
+nsml13-bl-FF nsml13-t-t-FF nsml13-t-t-FF-FF nsml17-bl-FF nsml17-t-t-FF \
+nsml17-t-t-FF-FF o3a3l17f-tn o3a3sl17f-tn o3a3snl17f-tn o3b3l17f-tn \
+o3b3sl17f-tn o3b3snl17f-tn o3jml17f-lm-lo o3ml17f-bl-tn o3msl17f-bl-tn \
+o3msnl17f-bl-tn t-0FF t-FF t-bl t-t tFFn tFFt tFFt-bl tFFt-lm tFnFt ta3-0FF \
+ta3-FF tb3-0FF tb3-FF tn w20l17f-lm w25l17f-lm w26l17f-lm w35a3l17f-lm \
+w35b3l17f-lm w35ja3l17f-lm w35jb3l17f-lm w35jml17f-lm-lo w35ml17f-lm-lo \
+w48l17f-lm w72j-0FF
 maint_gen =
 run_gen = t1a.out t1a.err t1b.out t1b.err t1c.out t1c.err t1d.out t1d.err \
 t1e.out t1e.err t1f.out t1f.err t1g.out t1g.err t1h.out t1h.err t1i.out \
