@@ -86,8 +86,8 @@ uninstall-local: all-local
 	fi
 
 charset.alias: config.charset
-	$(SHELL) $(srcdir)/config.charset '@host@' > $@-t
-	mv $@-t $@
+	$(SHELL) $(srcdir)/config.charset '@host@' > t-$@
+	mv t-$@ $@
 
 SUFFIXES = .sed .sin
 .sin.sed:
