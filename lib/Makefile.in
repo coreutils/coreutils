@@ -58,7 +58,7 @@ all: libfu.a
 .SUFFIXES: .c .o
 
 .c.o:
-	$(CC) -c $(CPPFLAGS) $(DEFS) -I. -I.. -I$(srcdir) $(CFLAGS) $<
+	$(CC) -c $(CPPFLAGS) $(DEFS) -I.. -I$(srcdir) $(CFLAGS) $<
 
 subdir = lib
 Makefile: ../config.status Makefile.in
@@ -83,7 +83,7 @@ mostlyclean: clean
 distclean: clean
 	rm -f Makefile *.tab.c tposixtm.c
 
-realclean: distclean
+maintainer-clean: distclean
 	rm -f TAGS getdate.c posixtm.c
 
 distdir = ../`cat ../distname`/$(subdir)
@@ -132,6 +132,9 @@ xgetcwd.o: pathmax.h
 makepath.o: makepath.h
 obstack.o: obstack.h
 group-member.o: group-member.h
+
+.PHONY: all check clean dist distclean install installdirs \
+maintainer-clean mostlyclean uninstall
 
 # Tell versions [3.59,3.63) of GNU make not to export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
