@@ -32,6 +32,7 @@ check-texinfo:
 	grep timezone $(srcdir)/*.texi && fail=1; \
 	grep -w IO $(srcdir)/*.texi && fail=1; \
 	grep non-zero $(srcdir)/*.texi && fail=1; \
+	grep '@url{' $(srcdir)/*.texi && fail=1; \
 	grep -w NUL $(srcdir)/*.texi && fail=1; \
 	grep '\$$@"' $(srcdir)/*.texi && fail=1; \
 	grep -n '[^[:punct:]]@footnote' $(srcdir)/*.texi && fail=1; \
