@@ -6,6 +6,8 @@ if test "$VERBOSE" = yes; then
   split --version
 fi
 
+. $srcdir/../lang-default
+
 pwd=`pwd`
 t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
 trap 'status=$?; cd $pwd; chmod -R u+rwx $t0; rm -rf $t0 && exit $status' 0
@@ -43,5 +45,14 @@ split --bytes=$_4gb in || fail=1
 # with `invalid number of bytes' for M=2^32 or larger.  Test it.
 # Of course, this is an artificial limit and should be fixed.
 split --line-bytes=$_4gb 2> /dev/null in && fail=1
+
+# Make sure that a huge obsolete option evokes the right failure.
+env -u _POSIX2_VERSION split -99999999999999999991 2> out && fail=1
+cat <<\EOF > exp
+split: line count option -99999999999999999991... is too large
+EOF
+cmp out exp || fail=1
+test $fail = 1 && diff out exp 2> /dev/null
+
 
 (exit $fail); exit $fail
