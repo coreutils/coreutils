@@ -20,7 +20,7 @@
 
 /* Implementation overview:
 
-   In the `usual' case RM saves no state for directories it is processing.
+   In the `usual' case, RM saves no state for directories it is processing.
    When a removal fails (either due to an error or to an interactive `no'
    reply), the failure is noted (see description of `ht' in remove_cwd_entries)
    so that when/if the containing directory is reopened, RM doesn't try to
