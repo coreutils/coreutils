@@ -1,5 +1,5 @@
 /* system-dependent definitions for fileutils programs.
-   Copyright (C) 89, 91, 92, 93, 94, 1996 Free Software Foundation, Inc.
+   Copyright (C) 89, 91, 92, 93, 94, 96, 1997 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
