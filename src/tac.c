@@ -501,6 +501,7 @@ tac_stdin (void)
   return errors;
 }
 
+#if 0
 /* BUF_END points one byte past the end of the buffer to be searched.  */
 
 static void *
@@ -515,7 +516,6 @@ memrchr (const char *buf_start, const char *buf_end, int c)
   return NULL;
 }
 
-#if 0
 /* FIXME: describe */
 
 static int
