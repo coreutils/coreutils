@@ -1,5 +1,5 @@
 /* userspec.c -- Parse a user and group string.
-   Copyright (C) 1989-1992, 1997, 1998, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1989-1992, 1997-1998, 2000, 2002-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -21,19 +21,7 @@
 # include <config.h>
 #endif
 
-#ifdef __GNUC__
-# define alloca __builtin_alloca
-#else
-# if HAVE_ALLOCA_H
-#  include <alloca.h>
-# else
-#  ifdef _AIX
- #  pragma alloca
-#  else
-char *alloca ();
-#  endif
-# endif
-#endif
+#include <alloca.h>
 
 #include <stdio.h>
 #include <sys/types.h>
@@ -44,9 +32,7 @@ char *alloca ();
 # include <sys/param.h>
 #endif
 
-#if HAVE_LIMITS_H
-# include <limits.h>
-#endif
+#include <limits.h>
 
 #if HAVE_STRING_H
 # include <string.h>
@@ -84,10 +70,6 @@ struct group *getgrgid ();
 
 #ifndef HAVE_ENDPWENT
 # define endpwent() ((void) 0)
-#endif
-
-#ifndef CHAR_BIT
-# define CHAR_BIT 8
 #endif
 
 /* The extra casts work around common compiler bugs.  */
