@@ -462,7 +462,8 @@ usage (int status)
     {
       printf (_("Usage: %s [OPTIONS] FILE [...]\n"), program_name);
       printf (_("\
-Delete a file securely, first overwriting it to hide its contents.\n\
+Overwrite the specified FILE(s) repeatedly, in order to make it harder\n\
+for even very expensive hardware probing to recover the data.\n\
 \n\
   -f, --force    change permissions to allow writing if necessary\n\
   -n, --iterations=N  Overwrite N times instead of the default (%d)\n\
@@ -475,7 +476,11 @@ Delete a file securely, first overwriting it to hide its contents.\n\
       --help     display this help and exit\n\
       --version  print version information and exit\n\
 \n\
-FIXME maybe add more discussion here?"), DEFAULT_PASSES);
+Delete FILE(s) if --remove (-u) is specified.  The default is not to remove\n\
+the files because it is common to operate on device files like /dev/hda,\n\
+and those files usually should not be removed.  When operating on regular\n\
+files, most people use the --remove option.\n\
+"), DEFAULT_PASSES);
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
     }
   exit (status);
