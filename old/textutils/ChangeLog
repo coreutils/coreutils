@@ -6,7 +6,8 @@ Sun Oct 29 14:04:36 1995  Jim Meyering  (meyering@comco.com)
 	* nl.c: Protoize.  Reorder functions to obviate forward dcls.
 	Remove forward dcls.
 	* tac.c: Likewise.
-	* src/Makefile.in:
+	* src/Makefile.in (OBJECTS): Reflect that all of the above
+	now use prototypes.
 
 	* sum.c (bsd_sum_file): Give file name parameter const attribute.
 	(sysv_sum_file): Likewise.
