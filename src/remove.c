@@ -120,7 +120,7 @@ static struct obstack len_stack;
    This construct is used to detect directory cycles so that RM can warn
    about them rather than iterating endlessly.  */
 #ifdef ENABLE_CYCLE_CHECK
-static struct hash_table *active_dir_map;
+static Hash_table *active_dir_map;
 #endif
 
 static inline unsigned int
@@ -425,7 +425,7 @@ remove_cwd_entries (const struct rm_options *x)
   /* NULL or a malloc'd and initialized hash table of entries in the
      current directory that have been processed but not removed --
      due either to an error or to an interactive `no' response.  */
-  struct hash_table *ht = NULL;
+  Hash_table *ht = NULL;
 
   /* FIXME: describe */
   static struct obstack entry_name_pool;

@@ -84,7 +84,7 @@ struct entry
 };
 
 /* A set of dev/ino pairs.  */
-static struct hash_table *htab;
+static Hash_table *htab;
 
 /* Structure for dynamically resizable strings. */
 

@@ -50,7 +50,7 @@ struct Src_to_dest
 
 /* This table maps source dev/ino to destination file name.
    We use it to preserve hard links when copying.  */
-static struct hash_table *src_to_dest;
+static Hash_table *src_to_dest;
 
 /* Initial size of the above hash table.  */
 #define INITIAL_TABLE_SIZE 103
