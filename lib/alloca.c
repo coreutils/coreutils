@@ -204,9 +204,6 @@ alloca (size_t size)
 
     new = xmalloc (combined_size);
 
-    if (new == 0)
-      abort();
-
     ((header *) new)->h.next = last_alloca_header;
     ((header *) new)->h.deep = depth;
 
