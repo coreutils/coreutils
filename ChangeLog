@@ -1,5 +1,12 @@
 2003-03-08  Jim Meyering  <jim@meyering.net>
 
+	* Version 4.5.10.
+
+	* src/du.c (process_file): If a file's size is not being counted
+	e.g., because it's a hard link to a file we've already counted,
+	then don't print a line for it.
+
+	* tests/du/hard-link: New test for the above-fixed bug.
 	* tests/du/Makefile.am (TESTS): Add hard-link.
 
 	`du -S' didn't work
@@ -11,8 +18,6 @@
 	Check the block/size of a small file, too.
 	Correct expected results for simple dir1/dir2/file case.
 	Add another test of du -S.
-
-	* Version 4.5.10.
 
 2003-03-07  John David Anglin  <dave.anglin@nrc-cnrc.gc.ca>
 
