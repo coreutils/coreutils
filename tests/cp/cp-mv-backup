@@ -12,10 +12,10 @@ LANG=C; export LANG
 umask 022
 
 pwd=`pwd`
-actual=actual-$$
-expected=expected-$$
-dir=dir-$$
-trap "cd $pwd; rm -rf $actual $expected $dir" 0 1 2 3 15
+dir=cpmvbak-$$
+actual=$dir/actual
+expected=$dir/expected
+trap "cd $pwd; rm -rf $dir" 0 1 2 3 15
 
 mkdir $dir
 unset VERSION_CONTROL SIMPLE_BACKUP_SUFFIX
@@ -37,59 +37,59 @@ exec 1> $actual
 
 fail=0
 for prog in cp mv; do
-  for initial_files in 'a' 'a b' 'a b b~' 'a b b.~1~' 'a b b~ b.~1~'; do
+  for initial_files in 'x' 'x y' 'x y y~' 'x y y.~1~' 'x y y~ y.~1~'; do
     for opt in none off  numbered t  existing nil  simple never; do
       ( cd $dir; touch $initial_files )
-	$prog --backup=$opt $dir/a $dir/b || fail=1
-      ( cd $dir; echo $initial_files $opt: `ls`; rm -f a b b~ b.~?~ )
+	$prog --backup=$opt $dir/x $dir/y || fail=1
+      ( cd $dir; echo $initial_files $opt: `ls [xy]*`; rm -f x y y~ y.~?~ )
     done
   done
 done
 
 cat <<\EOF > $expected-tmp
-a none: a b
-a off: a b
-a numbered: a b
-a t: a b
-a existing: a b
-a nil: a b
-a simple: a b
-a never: a b
-a b none: a b
-a b off: a b
-a b numbered: a b b.~1~
-a b t: a b b.~1~
-a b existing: a b b~
-a b nil: a b b~
-a b simple: a b b~
-a b never: a b b~
-a b b~ none: a b b~
-a b b~ off: a b b~
-a b b~ numbered: a b b.~1~ b~
-a b b~ t: a b b.~1~ b~
-a b b~ existing: a b b~
-a b b~ nil: a b b~
-a b b~ simple: a b b~
-a b b~ never: a b b~
-a b b.~1~ none: a b b.~1~
-a b b.~1~ off: a b b.~1~
-a b b.~1~ numbered: a b b.~1~ b.~2~
-a b b.~1~ t: a b b.~1~ b.~2~
-a b b.~1~ existing: a b b.~1~ b.~2~
-a b b.~1~ nil: a b b.~1~ b.~2~
-a b b.~1~ simple: a b b.~1~ b~
-a b b.~1~ never: a b b.~1~ b~
-a b b~ b.~1~ none: a b b.~1~ b~
-a b b~ b.~1~ off: a b b.~1~ b~
-a b b~ b.~1~ numbered: a b b.~1~ b.~2~ b~
-a b b~ b.~1~ t: a b b.~1~ b.~2~ b~
-a b b~ b.~1~ existing: a b b.~1~ b.~2~ b~
-a b b~ b.~1~ nil: a b b.~1~ b.~2~ b~
-a b b~ b.~1~ simple: a b b.~1~ b~
-a b b~ b.~1~ never: a b b.~1~ b~
+x none: x y
+x off: x y
+x numbered: x y
+x t: x y
+x existing: x y
+x nil: x y
+x simple: x y
+x never: x y
+x y none: x y
+x y off: x y
+x y numbered: x y y.~1~
+x y t: x y y.~1~
+x y existing: x y y~
+x y nil: x y y~
+x y simple: x y y~
+x y never: x y y~
+x y y~ none: x y y~
+x y y~ off: x y y~
+x y y~ numbered: x y y.~1~ y~
+x y y~ t: x y y.~1~ y~
+x y y~ existing: x y y~
+x y y~ nil: x y y~
+x y y~ simple: x y y~
+x y y~ never: x y y~
+x y y.~1~ none: x y y.~1~
+x y y.~1~ off: x y y.~1~
+x y y.~1~ numbered: x y y.~1~ y.~2~
+x y y.~1~ t: x y y.~1~ y.~2~
+x y y.~1~ existing: x y y.~1~ y.~2~
+x y y.~1~ nil: x y y.~1~ y.~2~
+x y y.~1~ simple: x y y.~1~ y~
+x y y.~1~ never: x y y.~1~ y~
+x y y~ y.~1~ none: x y y.~1~ y~
+x y y~ y.~1~ off: x y y.~1~ y~
+x y y~ y.~1~ numbered: x y y.~1~ y.~2~ y~
+x y y~ y.~1~ t: x y y.~1~ y.~2~ y~
+x y y~ y.~1~ existing: x y y.~1~ y.~2~ y~
+x y y~ y.~1~ nil: x y y.~1~ y.~2~ y~
+x y y~ y.~1~ simple: x y y.~1~ y~
+x y y~ y.~1~ never: x y y.~1~ y~
 EOF
 
-sed 's/: a/:/' $expected-tmp |cat $expected-tmp - > $expected
+sed 's/: x/:/' $expected-tmp |cat $expected-tmp - > $expected
 
 # Uncomment this if you see a failure and want to try to diagnose it.
 # diff -u $expected $actual 1>&2
