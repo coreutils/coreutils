@@ -258,7 +258,12 @@ libfetish_a_SOURCES = \
   xstrtoul.c \
   xstrtoimax.c \
   xstrtoumax.c \
-  yesno.c
+  yesno.c\
+\
+  printf-args.h \
+  printf-parse.h \
+  vasprintf.h \
+  vasnprintf.h
 
 
 libfetish_a_LIBADD = $(LIBOBJS) $(ALLOCA)
@@ -319,6 +324,7 @@ DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
 am__depfiles_maybe = depfiles
 @AMDEP_TRUE@DEP_FILES = $(DEPDIR)/__fpending.Po $(DEPDIR)/alloca.Po \
+@AMDEP_TRUE@	$(DEPDIR)/asnprintf.Po $(DEPDIR)/asprintf.Po \
 @AMDEP_TRUE@	$(DEPDIR)/atexit.Po $(DEPDIR)/canonicalize.Po \
 @AMDEP_TRUE@	$(DEPDIR)/chown.Po $(DEPDIR)/dirfd.Po \
 @AMDEP_TRUE@	$(DEPDIR)/dup2.Po $(DEPDIR)/error.Po \
@@ -338,7 +344,8 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	$(DEPDIR)/memset.Po $(DEPDIR)/mkdir.Po \
 @AMDEP_TRUE@	$(DEPDIR)/mkstemp.Po $(DEPDIR)/mktime.Po \
 @AMDEP_TRUE@	$(DEPDIR)/mountlist.Po $(DEPDIR)/nanosleep.Po \
-@AMDEP_TRUE@	$(DEPDIR)/obstack.Po $(DEPDIR)/putenv.Po \
+@AMDEP_TRUE@	$(DEPDIR)/obstack.Po $(DEPDIR)/printf-args.Po \
+@AMDEP_TRUE@	$(DEPDIR)/printf-parse.Po $(DEPDIR)/putenv.Po \
 @AMDEP_TRUE@	$(DEPDIR)/raise.Po $(DEPDIR)/readlink-stub.Po \
 @AMDEP_TRUE@	$(DEPDIR)/readutmp.Po $(DEPDIR)/realloc.Po \
 @AMDEP_TRUE@	$(DEPDIR)/regex.Po $(DEPDIR)/rename.Po \
@@ -354,6 +361,7 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	$(DEPDIR)/strtoull.Po $(DEPDIR)/strtoumax.Po \
 @AMDEP_TRUE@	$(DEPDIR)/strverscmp.Po $(DEPDIR)/tempname.Po \
 @AMDEP_TRUE@	$(DEPDIR)/tsearch.Po $(DEPDIR)/utime.Po \
+@AMDEP_TRUE@	$(DEPDIR)/vasnprintf.Po $(DEPDIR)/vasprintf.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/acl.Po ./$(DEPDIR)/addext.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/argmatch.Po ./$(DEPDIR)/backupfile.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/basename.Po ./$(DEPDIR)/canon-host.Po \
@@ -399,19 +407,21 @@ LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 YACCCOMPILE = $(YACC) $(YFLAGS) $(AM_YFLAGS)
 DIST_SOURCES = $(libfetish_a_SOURCES)
 DIST_COMMON = README ChangeLog Makefile.am Makefile.in TODO \
-	__fpending.c alloca.c atexit.c canonicalize.c chown.c dirfd.c \
-	dup2.c error.c error.h euidaccess.c fchdir-stub.c fchown-stub.c \
-	fileblocks.c fnmatch.c fsusage.c ftruncate.c ftw.c getcwd.c \
-	getdate.c getgroups.c gethostname.c getline.c getloadavg.c \
-	getpass.c gettimeofday.c getusershell.c group-member.c lchown.c \
-	lstat-stub.c lstat.c malloc.c memchr.c memcmp.c memcpy.c \
-	memmove.c memrchr.c memset.c mkdir.c mkstemp.c mktime.c \
-	mountlist.c nanosleep.c obstack.c obstack.h putenv.c raise.c \
-	readlink-stub.c readutmp.c realloc.c regex.c rename.c rmdir.c \
-	rpmatch.c sig2str.c stat.c stpcpy.c strcasecmp.c strcspn.c \
-	strdup.c strncasecmp.c strndup.c strnlen.c strpbrk.c strstr.c \
-	strtod.c strtoimax.c strtol.c strtoll.c strtoul.c strtoull.c \
-	strtoumax.c strverscmp.c tempname.c tsearch.c utime.c
+	__fpending.c alloca.c asnprintf.c asprintf.c atexit.c \
+	canonicalize.c chown.c dirfd.c dup2.c error.c error.h \
+	euidaccess.c fchdir-stub.c fchown-stub.c fileblocks.c fnmatch.c \
+	fsusage.c ftruncate.c ftw.c getcwd.c getdate.c getgroups.c \
+	gethostname.c getline.c getloadavg.c getpass.c gettimeofday.c \
+	getusershell.c group-member.c lchown.c lstat-stub.c lstat.c \
+	malloc.c memchr.c memcmp.c memcpy.c memmove.c memrchr.c \
+	memset.c mkdir.c mkstemp.c mktime.c mountlist.c nanosleep.c \
+	obstack.c obstack.h printf-args.c printf-parse.c putenv.c \
+	raise.c readlink-stub.c readutmp.c realloc.c regex.c rename.c \
+	rmdir.c rpmatch.c sig2str.c stat.c stpcpy.c strcasecmp.c \
+	strcspn.c strdup.c strncasecmp.c strndup.c strnlen.c strpbrk.c \
+	strstr.c strtod.c strtoimax.c strtol.c strtoll.c strtoul.c \
+	strtoull.c strtoumax.c strverscmp.c tempname.c tsearch.c \
+	utime.c vasnprintf.c vasprintf.c
 SOURCES = $(libfetish_a_SOURCES)
 
 all: $(BUILT_SOURCES)
@@ -442,6 +452,8 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/__fpending.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/alloca.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/asnprintf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/asprintf.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/atexit.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/canonicalize.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/chown.Po@am__quote@
@@ -481,6 +493,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/mountlist.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/nanosleep.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/obstack.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/printf-args.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/printf-parse.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/putenv.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/raise.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/readlink-stub.Po@am__quote@
@@ -512,6 +526,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/tempname.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/tsearch.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/utime.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/vasnprintf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/vasprintf.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/acl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/addext.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/argmatch.Po@am__quote@
