@@ -19,6 +19,8 @@
 #ifndef YESNO_H_
 # define YESNO_H_
 
-int yesno (void);
+# include <stdbool.h>
+
+bool yesno (void);
 
 #endif
