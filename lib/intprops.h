@@ -27,9 +27,9 @@
    an integer.  */
 #define TYPE_IS_INTEGER(t) ((t) 1.5 == 1)
 
-/* True if negative values of the signed integer type T use twos
-   complement, ones complement, or signed magnitude representation,
-   respectively.  Much GNU code assumes twos complement, but some
+/* True if negative values of the signed integer type T use two's
+   complement, one's complement, or signed magnitude representation,
+   respectively.  Much GNU code assumes two's complement, but some
    people like to be portable to all possible C hosts.  */
 #define TYPE_TWOS_COMPLEMENT(t) ((t) ~ (t) 0 == (t) -1)
 #define TYPE_ONES_COMPLEMENT(t) ((t) ~ (t) 0 == 0)
@@ -53,13 +53,13 @@
 	? (t) -1 \
 	: ~ (~ (t) 0 << (sizeof (t) * CHAR_BIT - 1))))
 
-/* Bound on length of the string representing an integer value or type T.
+/* Bound on length of the string representing an integer type or expression T.
    Subtract 1 for the sign bit if t is signed; log10 (2.0) < 146/485;
    add 1 for integer division truncation; add 1 more for a minus sign
    if needed.  */
 #define INT_STRLEN_BOUND(t) \
   ((sizeof (t) * CHAR_BIT - 1) * 146 / 485 + 2)
 
-/* Bound on buffer size needed to represent an integer value or type T,
+/* Bound on buffer size needed to represent an integer type or expression T,
    including the terminating null.  */
 #define INT_BUFSIZE_BOUND(t) (INT_STRLEN_BOUND (t) + 1)
