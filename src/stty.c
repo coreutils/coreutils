@@ -1510,6 +1510,11 @@ recover_mode (char *arg, struct termios *mode)
       mode->c_cc[i] = chr;
       arg += n;
     }
+
+  /* Fail if there are too many fields.  */
+  if (*arg != '\0')
+    return 0;
+
   return 1;
 }
 
