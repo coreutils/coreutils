@@ -1,6 +1,12 @@
-2005-01-11  Jim Meyering  <jim@meyering.net>
+2005-01-12  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* tests/tr/Test.pm (repeat-bigC): Change test name from
+	`repeat-Compl', to avoid 8.3 conflict with `repeat-compl'.
+	Reported by Eric Blake.
+
+2005-01-11  Jim Meyering  <jim@meyering.net>
 
 	* configure.ac: Update version to 5.3.1.
 
