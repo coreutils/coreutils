@@ -60,6 +60,7 @@ stat.c: xstat.in
 all-local: charset.alias
 
 install-exec-local: all-local
+	$(mkinstalldirs) $(DESTDIR)$(libdir)
 	$(INSTALL_DATA) charset.alias $(libdir)/charset.alias
 
 # Probably not a good idea. Other packages need $(libdir)/charset.alias too.
