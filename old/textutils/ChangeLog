@@ -1,3 +1,14 @@
+2000-05-12  Jim Meyering  <meyering@lucent.com>
+
+	New option: --first-only
+	* src/unexpand.c (anonymous enum) [CONVERT_FIRST_ONLY_OPTION]: Define.
+	(long_options): Add `first-only'.
+	(main): Handle new option.
+
+2000-05-11  Jim Meyering  <meyering@lucent.com>
+
+	* tests/unexpand/basic-1: New tests.
+
 2000-04-17  Bruno Haible  <haible@clisp.cons.org>
 
 	* src/system.h [__BEOS__]: Ignore O_BINARY and O_TEXT.

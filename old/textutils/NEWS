@@ -1,4 +1,6 @@
 Changes in release 2.1
+[2.0f]
+* unexpand accepts new option: --first-only
 [2.0e]
 * `tail -f directory' no longer gets a failed assertion
 * sort: big performance improvement when sorting many small files;
