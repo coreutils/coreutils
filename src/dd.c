@@ -1166,6 +1166,7 @@ by w for x2, by b for x512, by k for x1024.  Each KEYWORD may be:\n\
   block     pad newline-terminated records with spaces to cbs-size\n\
   unblock   replace trailing spaces in cbs-size records with newline\n\
   lcase     change upper case to lower case\n\
+  notrunc   do not truncate the output file\n\
   ucase     change lower case to upper case\n\
   swab      swap every pair of input bytes\n\
   noerror   continue after read errors\n\
