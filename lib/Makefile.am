@@ -39,11 +39,9 @@ libfetish_a_SOURCES = \
   full-read.c full-read.h \
   full-write.c full-write.h \
   gettext.h \
-  imaxtostr.c \
   linebuffer.c linebuffer.h \
   localcharset.c localcharset.h \
   mbswidth.c mbswidth.h \
-  offtostr.c \
   open-safer.c \
   readtokens0.c readtokens0.h \
   regex.h \
@@ -52,7 +50,6 @@ libfetish_a_SOURCES = \
   stdio-safer.h \
   stripslash.c \
   time_r.c time_r.h \
-  umaxtostr.c \
   unicodeio.c unicodeio.h \
   unistd-safer.h \
   version-etc.c version-etc.h version-etc-fsf.c \
@@ -89,8 +86,7 @@ MOSTLYCLEANFILES =
 SUFFIXES =
 
 EXTRA_DIST = getdate.c config.charset ref-add.sin ref-del.sin \
-  getndelim2.c getndelim2.h \
-  inttostr.c inttostr.h
+  getndelim2.c getndelim2.h
 
 # We need the following in order to install a simple file in $(libdir)
 # which is shared with other installed packages. We use a list of referencing
