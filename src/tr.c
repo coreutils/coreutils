@@ -547,11 +547,10 @@ unquote (s, len)
 	    case '\0':
 	      error (0, 0, "invalid backslash escape at end of string");
 	      return 1;
-	      break;
+
 	    default:
 	      error (0, 0, "invalid backslash escape `\\%c'", s[i + 1]);
 	      return 1;
-	      break;
 	    }
 	  ++i;
 	  s[j++] = c;
@@ -696,8 +695,8 @@ append_normal_char (list, c)
 static int
 append_range (list, first, last)
      struct Spec_list *list;
-     size_t first;
-     size_t last;
+     unsigned int first;
+     unsigned int last;
 {
   struct List_element *new;
 
@@ -838,22 +837,27 @@ substr (p, first_idx, last_idx)
 
 /* Search forward starting at START_IDX for the 2-char sequence
    (PRE_BRACKET_CHAR,']') in the string P of length P_LEN.  If such
-   a sequence is found, return the index of the first character,
-   otherwise return -1.  P may contain zero bytes.  */
+   a sequence is found, set *RESULT_IDX to the index of the first
+   character and return non-zero. Otherwise return zero.  P may contain
+   zero bytes.  */
 
 static int
-find_closing_delim (p, start_idx, p_len, pre_bracket_char)
+find_closing_delim (p, start_idx, p_len, pre_bracket_char, result_idx)
      const unsigned char *p;
      size_t start_idx;
      size_t p_len;
      unsigned int pre_bracket_char;
+     size_t *result_idx;
 {
   size_t i;
 
   for (i = start_idx; i < p_len - 1; i++)
     if (p[i] == pre_bracket_char && p[i + 1] == ']')
-      return i;
-  return -1;
+      {
+	*result_idx = i;
+	return 1;
+      }
+  return 0;
 }
 
 /* Convert a string S with explicit length LEN, possibly
@@ -903,9 +907,8 @@ non_neg_strtol (s, len, val)
 
 /* Parse the bracketed repeat-char syntax.  If the P_LEN characters
    beginning with P[ START_IDX ] comprise a valid [c*n] construct,
-   return the character and the repeat count through the arg pointers,
-   CHAR_TO_REPEAT and N, and then return the index of the closing
-   bracket as the function value.  If the second character following
+   then set *CHAR_TO_REPEAT, *REPEAT_COUNT, and *CLOSING_BRACKET_IDX
+   and return zero. If the second character following
    the opening bracket is not `*' or if no closing bracket can be
    found, return -1.  If a closing bracket is found and the
    second char is `*', but the string between the `*' and `]' isn't
@@ -913,12 +916,14 @@ non_neg_strtol (s, len, val)
    and return -2.  */
 
 static int
-find_bracketed_repeat (p, start_idx, p_len, char_to_repeat, n)
+find_bracketed_repeat (p, start_idx, p_len, char_to_repeat, repeat_count,
+		       closing_bracket_idx)
      const unsigned char *p;
      size_t start_idx;
      size_t p_len;
      unsigned int *char_to_repeat;
-     size_t *n;
+     size_t *repeat_count;
+     size_t *closing_bracket_idx;
 {
   size_t i;
 
@@ -937,21 +942,24 @@ find_bracketed_repeat (p, start_idx, p_len, char_to_repeat, n)
 	  if (digit_str_len == 0)
 	    {
 	      /* We've matched [c*] -- no explicit repeat count.  */
-	      *n = 0;
-	      return i;
+	      *repeat_count = 0;
+	      *closing_bracket_idx = i;
+	      return 0;
 	    }
 
 	  /* Here, we have found [c*s] where s should be a string
 	     of octal or decimal digits.  */
 	  digit_str = &p[start_idx + 2];
-	  if (non_neg_strtol (digit_str, digit_str_len, n))
+	  if (non_neg_strtol (digit_str, digit_str_len, repeat_count))
 	    {
 	      char *tmp = make_printable_str (digit_str, digit_str_len);
-	      error (0, 0, "invalid repeat count `%s' in [c*n] construct", tmp);
+	      error (0, 0, "invalid repeat count `%s' in [c*n] construct",
+		     tmp);
 	      free (tmp);
 	      return -2;
 	    }
-	  return i;
+	  *closing_bracket_idx = i;
+	  return 0;
 	}
     }
   return -1;			/* No bracket found.  */
@@ -992,6 +1000,8 @@ build_spec_list (unescaped_string, len, result)
       switch (p[i])
 	{
 	  int fall_through;
+	  int err;
+
 	case '[':
 	  fall_through = 0;
 	  switch (p[i + 1])
@@ -1000,10 +1010,13 @@ build_spec_list (unescaped_string, len, result)
 	      int closing_bracket_idx;
 	      unsigned int char_to_repeat;
 	      size_t repeat_count;
+	      int found;
+
 	    case ':':
 	    case '=':
-	      closing_delim_idx = find_closing_delim (p, i + 2, len, p[i + 1]);
-	      if (closing_delim_idx >= 0)
+	      found = find_closing_delim (p, i + 2, len, p[i + 1],
+					  &closing_delim_idx);
+	      if (found)
 		{
 		  int parse_failed;
 		  unsigned char *opnd_str = substr (p, i + 2,
@@ -1027,15 +1040,16 @@ build_spec_list (unescaped_string, len, result)
 	    default:
 	      /* Determine whether this is a bracketed repeat range
 	         matching the RE \[.\*(dec_or_oct_number)?\].  */
-	      closing_bracket_idx = find_bracketed_repeat (p, i + 1,
-				       len, &char_to_repeat, &repeat_count);
-	      if (closing_bracket_idx >= 0)
+	      err = find_bracketed_repeat (p, i + 1, len, &char_to_repeat,
+					   &repeat_count,
+					   &closing_bracket_idx);
+	      if (err == 0)
 		{
 		  append_repeated_char (result, char_to_repeat, repeat_count);
 		  i = closing_bracket_idx + 1;
 		  break;
 		}
-	      else if (closing_bracket_idx == -1)
+	      else if (err == -1)
 		{
 		  fall_through = 1;
 		}
