@@ -1,4 +1,14 @@
+Tue Feb  4 22:03:13 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/stty.c: Bracket inclusion of termios.h with #if HAVE_TERMIOS_H.
+	Masami Takikawa reported that NeXTStep 3.0 doesn't have termios.h.
+	* configure.in (AC_CHECK_HEADERS): Add termios.h.
+
 Fri Jan 31 21:13:13 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/*.c (usage): Bracket bug-reporting address with <> and append
+	a period.
+	* src/*.sh: Likewise.
 
 	* src/*.c: Compare getopt_long return value against -1, not EOF.
 	Use NULL, not `(int *) 0' as last parameter in getopt_long call.
