@@ -1,3 +1,12 @@
+2003-02-18  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.am (CLEANFILES): Remove ftw.h and search.h.
+	(DISTCLEANFILES): Add them here.
+	Add fnmatch.h, too.
+
+	* sha.c (sha_stream): Rearrange loop exit tests so as to avoid
+	performing an additional fread after encountering an error or EOF.
+
 2003-02-17  Jim Meyering  <jim@meyering.net>
 
 	* mmap-stack.h (RUN_WITH_BIG_STACK_4): Define.
