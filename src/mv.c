@@ -307,9 +307,7 @@ movefile (char *source, char *dest, int dest_is_dir,
       if (new_dest == NULL)
 	xalloc_die ();
       fail = do_move (source, new_dest, x);
-
-      /* Do not free new_dest.  It may have been squirreled away by
-	 the remember_copied function.  */
+      free (new_dest);
     }
   else
     {
