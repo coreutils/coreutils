@@ -1,3 +1,11 @@
+2001-01-30  Jim Meyering  <meyering@lucent.com>
+
+	Don't use filenames that are 8.3-equivalent to "conftest" on DOS.
+	* chown.m4: Rename conftestchown to conftest.chown.
+	* rename.m4: s/conftestdir/conftest.d1/ and s/conftestdir2/conftest.d2/.
+	* utimes.m4: s/conftestdata/conftest.data/
+	Inspired by Pavel Roskin's change in autoconf.
+
 2001-01-27  Jim Meyering  <meyering@lucent.com>
 
 	* ls-mntd-fs.m4 (jm_LIST_MOUNTED_FILESYSTEMS): Open-code what was
