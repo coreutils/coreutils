@@ -1,4 +1,4 @@
-#serial 7
+#serial 8
 
 # A replacement for autoconf's macro by the same name.  This version
 # accepts an optional argument specifying the name of the $srcdir-relative
@@ -15,7 +15,7 @@ AC_DEFUN([AC_FUNC_GETLOADAVG],
 # By default, expect to find getloadavg.c in $srcdir/.
 ac_lib_dir_getloadavg=$srcdir
 # But if there's an argument, DIR, expect to find getloadavg.c in $srcdir/DIR.
-ifval([$1], [ac_lib_dir_getloadavg=$srcdir/$1])
+m4_ifval([$1], [ac_lib_dir_getloadavg=$srcdir/$1])
 # Make sure getloadavg.c is where it belongs, at ./configure-time.
 test -f $ac_lib_dir_getloadavg/getloadavg.c \
   || AC_MSG_ERROR([getloadavg.c is not in $ac_lib_dir_getloadavg])
