@@ -1,10 +1,16 @@
+2000-12-27  Paul Eggert  <eggert@twinsun.com>
+
+	* src/copy.c (same_file_ok): Use a single auto var for
+	tmp_dst_sb, instead of two static vars.  Likewise for
+	tmp_src_sb.
+
 2000-12-26  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.0.35.
 
 	* Regenerate build/config framework to use automake-1.4b and
 	the latest CVS version autoconf.
-	
+
 	* tests/mkdir/perm: Disable the test if the working directory has
 	the sticky bit set.
 	* tests/cp/cp-parents: Likewise.
