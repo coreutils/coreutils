@@ -87,7 +87,7 @@ dist: $(DISTFILES)
 
 subdir = doc
 Makefile: ../config.status Makefile.in
-	cd ..; CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= ./config.status
+	cd .. && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= ./config.status
 
 # Tell versions [3.59,3.63) of GNU make not to export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
