@@ -54,7 +54,7 @@ CFLAGS = @CFLAGS@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CYGPATH_W = @CYGPATH_W@
-DEFS = -DLIBDIR=\"$(libdir)\" @DEFS@
+DEFS = @DEFS@ -DLIBDIR=\"$(libdir)\"
 DEPDIR = @DEPDIR@
 DF_PROG = @DF_PROG@
 ECHO_C = @ECHO_C@
@@ -258,7 +258,7 @@ libfetish_a_SOURCES = \
   yesno.c
 
 
-libfetish_a_LIBADD = @LIBOBJS@ @ALLOCA@
+libfetish_a_LIBADD = $(LIBOBJS) $(ALLOCA)
 libfetish_a_DEPENDENCIES = $(libfetish_a_LIBADD)
 
 BUILT_SOURCES = getdate.c
@@ -846,7 +846,7 @@ charset.alias: config.charset
 	$(SHELL) $(srcdir)/config.charset '@host@' > t-$@
 	mv t-$@ $@
 .sin.sed:
-	sed -e '/^#/d' -e 's/@''PACKAGE''@/@PACKAGE@/g' $< > t-$@
+	sed -e '/^#/d' -e 's/@''PACKAGE''@/$(PACKAGE)/g' $< > t-$@
 	mv t-$@ $@
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

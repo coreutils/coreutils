@@ -160,6 +160,8 @@ target_alias = @target_alias@
 info_TEXINFOS = coreutils.texi
 
 EXTRA_DIST = perm.texi getdate.texi constants.texi doclicense.texi
+
+MAINTAINERCLEANFILES = constants.texi
 subdir = doc
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
@@ -344,6 +346,7 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
+	-test -z "$(MAINTAINERCLEANFILES)" || rm -f $(MAINTAINERCLEANFILES)
 clean: clean-am
 
 clean-am: clean-generic mostlyclean-am
@@ -426,17 +429,11 @@ uninstall-am: uninstall-info-am
 	pdf-am ps ps-am uninstall uninstall-am uninstall-info-am
 
 
-# Remove `DISABLED_' when fileutils, textutils, and sh-utils have
-# all been merged into one package.
-DISABLED_constants.texi: $(top_srcdir)/src/tail.c
+constants.texi: $(top_srcdir)/src/tail.c
 	LC_ALL=C \
 	sed -n -e 's/^#define \(DEFAULT_MAX[_A-Z]*\) \(.*\)/@set \1 \2/p' \
 	  $(top_srcdir)/src/tail.c > t-$@
 	mv t-$@ $@
-
-# Uncomment this when fileutils, textutils, and sh-utils have
-# all been merged into one package.
-# MAINTAINERCLEANFILES = constants.texi
 
 $(DVIS): $(EXTRA_DIST)
 $(INFO_DEPS): $(EXTRA_DIST)

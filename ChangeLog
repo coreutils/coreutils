@@ -2,6 +2,10 @@
 
 	* Version 5.0.1.
 
+	* Makefile.am (nearly all of them):
+	Use $(VAR) rather than @VAR@, now that we can rely on automake to
+	emit a definition for each substituted variable.
+
 	* tests/rm/rm5: Add a comment explaining why this test fails when
 	using Tru64's broken sed.
 	* tests/rm/rm3: Likewise.

@@ -153,7 +153,7 @@ AUTOMAKE_OPTIONS = 1.4 gnits
 TESTS = basic deref recurse
 EXTRA_DIST = $(TESTS)
 TESTS_ENVIRONMENT = \
-  PATH="`pwd`/../../src@PATH_SEPARATOR@$$PATH"
+  PATH="`pwd`/../../src$(PATH_SEPARATOR)$$PATH"
 
 subdir = tests/chgrp
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4

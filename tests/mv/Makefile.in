@@ -151,6 +151,7 @@ target_alias = @target_alias@
 AUTOMAKE_OPTIONS = 1.3 gnits
 
 TESTS = \
+  hard-4 \
   hard-3 \
   hard-2 \
   perm-1 \
@@ -165,8 +166,8 @@ TESTS = \
 
 EXTRA_DIST = $(TESTS) setup
 TESTS_ENVIRONMENT = \
-  PERL="@PERL@" \
-  PATH="`pwd`/../../src@PATH_SEPARATOR@$$PATH" \
+  PERL="$(PERL)" \
+  PATH="`pwd`/../../src$(PATH_SEPARATOR)$$PATH" \
   PROG=mv
 
 subdir = tests/mv
