@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2003-07-23.17}
+\def\texinfoversion{2003-07-24.06}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
@@ -4038,12 +4038,12 @@ width0pt\relax} \fi
 }
 
 % @heading, @subheading, @subsubheading.
-\def\heading{\parsearg\secheadingyyy}
-\def\subheading{\parsearg\subsecheadingyyy}
-\def\subsubheading{\parsearg\subsubsecheadingyyy}
-\def\headingyyy#1{\plainsecheading{#1}\suppressfirstparagraphindent}
-\def\subheadingyyy#1{\plainsubsecheading{#1}\suppressfirstparagraphindent}
-\def\subsubheadingyyy#1{\plainsubsubsecheading{#1}\suppressfirstparagraphindent}
+\def\heading{\parsearg\doheading}
+\def\subheading{\parsearg\dosubheading}
+\def\subsubheading{\parsearg\dosubsubheading}
+\def\doheading#1{\plainsecheading{#1}\suppressfirstparagraphindent}
+\def\dosubheading#1{\plainsubsecheading{#1}\suppressfirstparagraphindent}
+\def\dosubsubheading#1{\plainsubsubsecheading{#1}\suppressfirstparagraphindent}
 
 % These macros generate a chapter, section, etc. heading only
 % (including whitespace, linebreaking, etc. around it),
