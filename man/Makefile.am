@@ -149,14 +149,14 @@ check-x-vs-1:
 	PATH=../src$(PATH_SEPARATOR)$$PATH; export PATH;		\
 	t=ls-files.$$$$;						\
 	(cd $(srcdir) && ls -1 *.x) | sed 's/\.x$$//' | $(ASSORT) > $$t;\
-	echo $(dist_man_MANS) | fmt -w1 | sed 's/\.1$$//' | $(ASSORT)	\
-	  | diff - $$t || { rm $$t; exit 1; };				\
+	echo $(dist_man_MANS) | tr -s ' ' '\n' | sed 's/\.1$$//'	\
+	  | $(ASSORT) | diff - $$t || { rm $$t; exit 1; };		\
 	rm $$t
 
 programs =								\
   echo 'spy:;@echo $$(all_programs)'					\
     | MAKEFLAGS= $(MAKE) -s -C ../src -f Makefile -f - spy	\
-    | fmt -1 | $(ASSORT) -u | grep -v '\['
+    | ../src/tr -s ' ' '\n' | $(ASSORT) -u | grep -v '\['
 
 .PHONY: check-programs-vs-x
 check-programs-vs-x:
