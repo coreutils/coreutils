@@ -145,7 +145,7 @@ extern void *md5_buffer __P ((const char *buffer, size_t len, void *resblock));
 
 /* The following is from gnupg-1.0.2's cipher/bithelp.h.  */
 /* Rotate a 32 bit integer by n bytes */
-#if defined(__GNUC__) && defined(__i386__)
+#if defined __GNUC__ && defined __i386__
 static inline md5_uint32
 rol(md5_uint32 x, int n)
 {
