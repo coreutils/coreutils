@@ -1,5 +1,6 @@
 1997-11-15  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* acconfig.h: Add mktime.
 	* configure.in (jm_FUNC_MKTIME): Use it.
 	* lib/mktime.c: New file.
 	* lib/Makefile.am (EXTRA_DIST): Add mktime.c
