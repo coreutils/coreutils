@@ -1,5 +1,5 @@
 ^configure$
-/ChangeLog
+ChangeLog
 ^lib/mktime\.c$
 ^lib/getloadavg\.c$
 ^lib/euidaccess\.c$
