@@ -1,3 +1,8 @@
+2000-01-02  Jim Meyering  <meyering@ascend.com>
+
+	* search-libs.m4: Escape `$' in $3 of dnl comment.  I no longer
+	remember if this is necessary.
+
 1999-12-26  Jim Meyering  <meyering@ascend.com>
 
 	* jm-macros.m4: Use it here.
