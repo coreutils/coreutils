@@ -1269,7 +1269,9 @@ Use `--si' for the old meaning."));
 	  break;
 
 	case '1':
-	  format = one_per_line;
+	  /* -1 has no effect after --l.  */
+	  if (format != long_format)
+	    format = one_per_line;
 	  break;
 
 	case SORT_OPTION:
