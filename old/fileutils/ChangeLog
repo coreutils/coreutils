@@ -2,6 +2,9 @@
 
 	* Version 4.0.35.
 
+	* Regenerate build/config framework to use automake-1.4b and
+	the latest CVS version autoconf.
+	
 	* tests/mkdir/perm: Disable the test if the working directory has
 	the sticky bit set.
 	* tests/cp/cp-parents: Likewise.
