@@ -1,3 +1,19 @@
+[4.1.5]
+* The block size notation is now compatible with SI and with IEC 60027-2.
+  For example, --block-size=1MB now means --block-size=1000000,
+  whereas --block-size=1MiB now means --block-size=1048576.
+  A missing `B' (e.g. `1M') has the same meaning as before.
+  A trailing `B' now means decimal, not binary; this is a silent change.
+  The nonstandard `D' suffix (e.g. `1MD') is now obsolescent.
+* -H or --si now outputs the trailing 'B', for consistency with the above.
+* Programs now output trailing 'K' (not 'k') to mean 1024, as per IEC 60027-2.
+* New df, du short option -B is short for --block-size.
+* You can omit an integer `1' before a block size suffix,
+  e.g. `df -BG' is equivalent to `df -B 1G' and to `df --block-size=1G'.
+* The following options are now obsolescent, as their names are
+  incompatible with IEC 60027-2:
+   df, du: -m or --megabytes (use -BM or --block-size=1M)
+   df, du, ls: --kilobytes (use --block-size=1K)
 [4.1.4]
 * df --local no longer lists smbfs file systems whose name starts with //
 * dd now detects the Linux/tape/lseek bug at run time and warns about it.
