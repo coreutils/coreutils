@@ -412,6 +412,16 @@ fspec_filetype_mode (const struct File_spec *fs)
   return fs->mode;
 }
 
+static int
+same_file (const char *file_1, const char *file_2)
+{
+  struct stat sb1, sb2;
+  return (lstat (file_1, &sb1) == 0
+	  && lstat (file_2, &sb2) == 0
+	  && SAME_INODE (sb1, sb2));
+}
+
+
 /* Recursively remove all of the entries in the current directory.
    Return an indication of the success of the operation.  */
 
@@ -735,8 +745,24 @@ remove_dir (struct File_spec *fs, int need_save_cwd, const struct rm_options *x)
 
   if (rmdir (dir_name) && (errno != ENOENT || !x->ignore_missing_files))
     {
-      error (0, errno, _("cannot remove directory `%s'"),
-	     full_filename (dir_name));
+      int saved_errno = errno;
+
+#ifndef EINVAL
+# define EINVAL 0
+#endif
+      /* See if rmdir just failed because DIR_NAME is the current directory.
+	 If so, give a better diagnostic than `rm: cannot remove directory
+	 `...': Invalid argument'  */
+      if (errno == EINVAL && same_file (".", dir_name))
+	{
+	  error (0, 0, _("cannot remove current directory `%s'"),
+		 full_filename (dir_name));
+	}
+      else
+	{
+	  error (0, saved_errno, _("cannot remove directory `%s'"),
+		 full_filename (dir_name));
+	}
       return RM_ERROR;
     }
 
