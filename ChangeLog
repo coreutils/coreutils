@@ -1,6 +1,11 @@
-2003-09-14  Jim Meyering  <jim@meyering.net>
+2003-09-18  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.92.
+
+	* src/sort.c (numcompare): Rename local, logb, to log_b to avoid
+	shadowing the math function name.  Also rename loga to log_a.
+
+2003-09-14  Jim Meyering  <jim@meyering.net>
 
 	* src/factor.c (print_factors): Give a separate diagnostic
 	for numbers that are too large, but otherwise valid.
