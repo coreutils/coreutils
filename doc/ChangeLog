@@ -1,3 +1,12 @@
+2003-12-03  Paul Eggert  <eggert@twinsun.com>
+
+	* coreutils.texi (What information is listed, chroot invocation):
+	Adjust example 'ls' output to match new behavior with narrower
+	output columns.
+	(The cut command): Remove example that cut the output of
+	'ls -l'.  The output was incorrect even with the old 'ls', and
+	the whole idea of using 'cut' on 'ls -l' output is bogus anyway.
+
 2003-11-24  Paul Eggert  <eggert@twinsun.com>
 
 	Parse floating-point operands and options in the C locale.
