@@ -16,6 +16,11 @@ mkdir $tmp $tmp/a $tmp/a/b
 > $tmp/a/f
 > $tmp/a/b/g
 
+LANGUAGE=C
+export LANGUAGE
+LC_ALL=C
+export LC_ALL
+
 # FIXME: if this fails, it's a framework failure
 cat <<EOF | sort > $tmp/$test.E
 removing all entries of directory $tmp/a
@@ -25,11 +30,6 @@ removing the directory itself: $tmp/a/b
 removing $tmp/a/f
 removing the directory itself: $tmp/a
 EOF
-
-LANGUAGE=C
-export LANGUAGE
-LANG=C
-export LANG
 
 # Note that both the expected output (above) and the actual output lines
 # are sorted, because directory entries may be processed in arbitrary order.
