@@ -25,6 +25,7 @@
 
 #include "system.h"
 #include "closeout.h"
+#include "argmatch.h"
 #include "linebuffer.h"
 #include "error.h"
 #include "xstrtol.h"
@@ -81,11 +82,31 @@ static enum output_mode mode;
 /* If nonzero, ignore case when comparing.  */
 static int ignore_case;
 
+enum delimit_method
+{
+  delimit_none,          /* --all-repeated[=none] No delimiters output. */
+  delimit_all,           /* --all-repeated=all Delimiter precedes all groups. */
+  delimit_minimum,       /* --all-repeated=minimum Delimit all groups. */
+};
+
+static char const *const delimit_method_string[] =
+{
+  "none", "all", "minimum", 0
+};
+
+static enum delimit_method const delimit_method_map[] =
+{
+  delimit_none, delimit_all, delimit_minimum,
+};
+
+/* Select whether/how to delimit groups of duplicate lines.  */
+static enum delimit_method delimit_groups;
+
 static struct option const longopts[] =
 {
   {"count", no_argument, NULL, 'c'},
   {"repeated", no_argument, NULL, 'd'},
-  {"all-repeated", no_argument, NULL, 'D'},
+  {"all-repeated", optional_argument, NULL, 'D'},
   {"ignore-case", no_argument, NULL, 'i'},
   {"unique", no_argument, NULL, 'u'},
   {"skip-fields", required_argument, NULL, 'f'},
@@ -114,7 +135,9 @@ standard input), writing to OUTPUT (or standard output).\n\
 \n\
   -c, --count           prefix lines by the number of occurrences\n\
   -d, --repeated        only print duplicate lines\n\
-  -D, --all-repeated    print all duplicate lines\n\
+  -D, --all-repeated[=delimit-method] print all duplicate lines\n\
+                        delimit-method={all,minimum,none(default)}\n\
+                        Delimiting is done with blank lines.\n\
   -f, --skip-fields=N   avoid comparing the first N fields\n\
   -i, --ignore-case     ignore differences in case when comparing\n\
   -s, --skip-chars=N    avoid comparing the first N characters\n\
@@ -276,6 +299,7 @@ check_file (const char *infile, const char *outfile)
       char *prevfield;
       size_t prevlen;
       int match_count = 0;
+      int first_delimiter = 1;
 
       if (readline (prevline, istream) == 0)
 	goto closefiles;
@@ -295,6 +319,22 @@ check_file (const char *infile, const char *outfile)
 
 	  if (match)
 	    ++match_count;
+
+          if (mode == output_all_repeated && delimit_groups != delimit_none)
+	    {
+	      if (!match)
+		{
+		  if (match_count) /* a previous match */
+		    first_delimiter = 0; /* Only used when delimit_minimum */
+		}
+	      else if (match_count == 1)
+		{
+		  if ((delimit_groups == delimit_all)
+		      || (delimit_groups == delimit_minimum
+			  && !first_delimiter))
+		    putc ('\n', ostream);
+		}
+	    }
 
 	  if (!match || mode == output_all_repeated)
 	    {
@@ -341,6 +381,7 @@ main (int argc, char **argv)
   check_chars = 0;
   mode = output_all;
   countmode = count_none;
+  delimit_groups = delimit_none;
 
   while ((optc = getopt_long (argc, argv, "0123456789cdDf:is:uw:", longopts,
 			      NULL)) != -1)
@@ -373,6 +414,12 @@ main (int argc, char **argv)
 
 	case 'D':
 	  mode = output_all_repeated;
+	  if (optarg == NULL)
+	    delimit_groups = delimit_none;
+	  else
+	    delimit_groups = XARGMATCH ("--all-repeated", optarg,
+					delimit_method_string,
+					delimit_method_map);
 	  break;
 
 	case 'f':		/* Like '-#'. */
