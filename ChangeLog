@@ -1,6 +1,12 @@
-2004-01-20  Jim Meyering  <jim@meyering.net>
+2004-01-21  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.1.2.
+
+	* tests/touch/relative: Test only year/month/day, not hours/min/sec,
+	so as to avoid problems with systems using TAI clocks.
+	Although it's no longer necessary, set TZ=UTC0 also for the
+	initial touch command.  Reported by Paul Jarc here:
+	http://article.gmane.org/gmane.comp.gnu.core-utils.bugs/1504
 
 2004-01-20  Diego Biurrun  <diego@biurrun.de>
 
