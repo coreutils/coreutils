@@ -1,5 +1,5 @@
-/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
+/* Copyright (C) 1998, 1999, 2001 Free Software Foundation, Inc.
+   This file is derived from the one in the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -16,6 +16,13 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <config.h>
+
+/* Disable the definition of mkstemp to rpl_mkstemp (from config.h) in this
+   file.  Otherwise, we'd get conflicting prototypes for rpl_mkstemp on
+   most systems.  */
+#undef mkstemp
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -30,8 +37,7 @@ int __gen_tempname ();
    they are replaced with a string that makes the filename unique.
    Then open the file and return a fd. */
 int
-mkstemp (template)
-     char *template;
+rpl_mkstemp (char *template)
 {
   return __gen_tempname (template, __GT_FILE);
 }
