@@ -1,5 +1,5 @@
 /* userspec.c -- Parse a user and group string.
-   Copyright (C) 1989-1992, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1989-1992, 1997, 1998, 2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -83,7 +83,15 @@ struct group *getgrgid ();
     }									\
   while (0)
 
-#define isdigit(c) ((c) >= '0' && (c) <= '9')
+/* ISDIGIT differs from isdigit, as follows:
+   - Its arg may be any int or unsigned int; it need not be an unsigned char.
+   - It's guaranteed to evaluate its argument exactly once.
+   - It's typically faster.
+   Posix 1003.2-1992 section 2.5.2.1 page 50 lines 1556-1558 says that
+   only '0' through '9' are digits.  Prefer ISDIGIT to isdigit unless
+   it's important to use the locale's definition of `digit' even when the
+   host does not conform to Posix.  */
+#define ISDIGIT(c) ((unsigned) (c) - '0' <= 9)
 
 #ifndef strdup
 char *strdup ();
@@ -96,7 +104,7 @@ static int
 is_number (const char *str)
 {
   for (; *str; str++)
-    if (!isdigit (*str))
+    if (!ISDIGIT (*str))
       return 0;
   return 1;
 }
