@@ -1,3 +1,7 @@
+1998-11-15  Jim Meyering  <meyering@ascend.com>
+
+	* lib/error.c (error): Don't use strerror_r's return value.
+
 1998-11-14  Jim Meyering  <meyering@ascend.com>
 
 	* Version 4.0.
