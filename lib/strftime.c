@@ -25,6 +25,7 @@
 # define HAVE_LIMITS_H 1
 # define HAVE_MBLEN 1
 # define HAVE_MBRLEN 1
+# define HAVE_STRUCT_ERA_ENTRY 1
 # define HAVE_TM_GMTOFF 1
 # define HAVE_TM_ZONE 1
 # define MULTIBYTE_IS_FORMAT_SAFE 1
@@ -182,14 +183,17 @@ tm_diff (a, b)
      const struct tm *a;
      const struct tm *b;
 {
-  int ay = a->tm_year + TM_YEAR_BASE - 1;
-  int by = b->tm_year + TM_YEAR_BASE - 1;
-  /* Divide years by 100, rounding towards minus infinity.  */
-  int ac = ay / 100 - (ay % 100 < 0);
-  int bc = by / 100 - (by % 100 < 0);
-  int intervening_leap_days =
-    ((ay >> 2) - (by >> 2)) - (ac - bc) + ((ac >> 2) - (bc >> 2));
-  int years = ay - by;
+  /* Compute intervening leap days correctly even if year is negative.
+     Take care to avoid int overflow in leap day calculations,
+     but it's OK to assume that A and B are close to each other.  */
+  int a4 = (a->tm_year >> 2) + (TM_YEAR_BASE >> 2) - ! (a->tm_year & 3);
+  int b4 = (b->tm_year >> 2) + (TM_YEAR_BASE >> 2) - ! (b->tm_year & 3);
+  int a100 = a4 / 25 - (a4 % 25 < 0);
+  int b100 = b4 / 25 - (b4 % 25 < 0);
+  int a400 = a100 >> 2;
+  int b400 = b100 >> 2;
+  int intervening_leap_days = (a4 - b4) - (a100 - b100) + (a400 - b400);
+  int years = a->tm_year - b->tm_year;
   int days = (365 * years + intervening_leap_days
 	      + (a->tm_yday - b->tm_yday));
   return (60 * (60 * (24 * days + (a->tm_hour - b->tm_hour))
@@ -258,12 +262,9 @@ strftime (s, maxsize, format, tp)
   const char *const f_month = _NL_CURRENT (LC_TIME, MON_1 + tp->tm_mon);
   const char *const ampm = _NL_CURRENT (LC_TIME,
 					hour12 > 11 ? PM_STR : AM_STR);
-  size_t aw_len = strlen(a_wkday);
-  size_t am_len = strlen(a_month);
+  size_t aw_len = strlen (a_wkday);
+  size_t am_len = strlen (a_month);
   size_t ap_len = strlen (ampm);
-
-  const char *alt_digits = _NL_CURRENT (LC_TIME, ALT_DIGITS);
-  const char *end_alt_digits = _NL_CURRENT (LC_TIME, ALT_DIGITS + 1);
 #else
   const char *const f_wkday = weekday_name[tp->tm_wday];
   const char *const f_month = month_name[tp->tm_mon];
@@ -421,9 +422,6 @@ strftime (s, maxsize, format, tp)
 #define DO_NUMBER_SPACEPAD(d, v) \
 	  digits = d; number_value = v; goto do_number_spacepad
 
-	case '\0':		/* GNU extension: % at end of format.  */
-	    --f;
-	    /* Fall through.  */
 	case '%':
 	  if (modifier != 0)
 	    goto bad_format;
@@ -478,8 +476,17 @@ strftime (s, maxsize, format, tp)
 	case 'C':		/* POSIX.2 extension.  */
 	  if (modifier == 'O')
 	    goto bad_format;
-#ifdef _NL_CURRENT
-	  /* XXX %EC is not implemented yet.  */
+#if HAVE_STRUCT_ERA_ENTRY
+	  if (modifier == 'E')
+	    {
+	      struct era_entry *era = _nl_get_era_entry (tp);
+	      if (era)
+		{
+		  size_t len = strlen (era->name_fmt);
+		  cpy (len, era->name_fmt);
+		  break;
+		}
+	    }
 #endif
 	  {
 	    int year = tp->tm_year + TM_YEAR_BASE;
@@ -525,19 +532,13 @@ strftime (s, maxsize, format, tp)
 	  /* Format the number according to the MODIFIER flag.  */
 
 #ifdef _NL_CURRENT
-	  if (modifier == 'O')
+	  if (modifier == 'O' && 0 <= number_value)
 	    {
-	      /* ALT_DIGITS is the first entry in an array with
-		 alternative digit symbols.  We have to find string
-		 number NUMBER_VALUE, but must not look beyond
-		 END_ALT_DIGITS.  */
-	      int run = number_value;
-	      const char *cp = alt_digits;
+	      /* Get the locale specific alternate representation of
+		 the number NUMBER_VALUE.  If none exist NULL is returned.  */
+	      const char *cp = _nl_get_alt_digit (number_value);
 
-	      while (run > 0 && cp < end_alt_digits)
-		cp = strchr (cp, '\0') + 1;
-
-	      if (cp < end_alt_digits)
+	      if (cp != NULL)
 		{
 		  size_t digitlen = strlen (cp);
 		  if (digitlen != 0)
@@ -645,15 +646,14 @@ strftime (s, maxsize, format, tp)
 
 	case 'r':		/* POSIX.2 extension.  */
 #ifdef _NL_CURRENT
-	  subfmt = _NL_CURRENT (LC_TIME, T_FMT_AMPM);
-#else
-	  subfmt = "%I:%M:%S %p";
+	  if (*(subfmt = _NL_CURRENT (LC_TIME, T_FMT_AMPM)) == '\0')
 #endif
+	    subfmt = "%I:%M:%S %p";
 	  goto subformat;
 
 	case 'S':
 	  if (modifier == 'E')
-	    return 0;
+	    goto bad_format;
 
 	  DO_NUMBER (2, tp->tm_sec);
 
@@ -777,10 +777,16 @@ strftime (s, maxsize, format, tp)
 	  DO_NUMBER (1, tp->tm_wday);
 
 	case 'Y':
-#ifdef _NL_CURRENT
-	  if (modifier == 'E'
-	      && *(subfmt = _NL_CURRENT (LC_TIME, ERA_YEAR)) != '\0')
-	    goto subformat;
+#if HAVE_STRUCT_ERA_ENTRY
+	  if (modifier == 'E')
+	    {
+	      struct era_entry *era = _nl_get_era_entry (tp);
+	      if (era)
+		{
+		  subfmt = strchr (era->name_fmt, '\0') + 1;
+		  goto subformat;
+		}
+	    }
 #endif
 	  if (modifier == 'O')
 	    goto bad_format;
@@ -788,8 +794,17 @@ strftime (s, maxsize, format, tp)
 	    DO_NUMBER (1, tp->tm_year + TM_YEAR_BASE);
 
 	case 'y':
-#ifdef _NL_CURRENT
-	  /* XXX %Ey is not implemented yet.  */
+#if HAVE_STRUCT_ERA_ENTRY
+	  if (modifier == 'E')
+	    {
+	      struct era_entry *era = _nl_get_era_entry (tp);
+	      if (era)
+		{
+		  int delta = tp->tm_year - era->start_date[0];
+		  DO_NUMBER (1, (era->offset
+				 + (era->direction == '-' ? -delta : delta)));
+		}
+	    }
 #endif
 	  DO_NUMBER (2, (tp->tm_year % 100 + 100) % 100);
 
@@ -848,6 +863,9 @@ strftime (s, maxsize, format, tp)
 	    DO_NUMBER (4, (diff / 60) * 100 + diff % 60);
 	  }
 
+	case '\0':		/* GNU extension: % at end of format.  */
+	    --f;
+	    /* Fall through.  */
 	default:
 	  /* Unknown format; output the format, including the '%',
 	     since this is most likely the right thing to do if a
@@ -855,7 +873,7 @@ strftime (s, maxsize, format, tp)
 	bad_format:
 	  {
 	    int flen;
-	    for (flen = 2; f[1 - flen] != '%'; flen++)
+	    for (flen = 1; f[1 - flen] != '%'; flen++)
 	      continue;
 	    cpy (flen, &f[1 - flen]);
 	  }
