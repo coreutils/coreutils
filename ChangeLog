@@ -1,5 +1,8 @@
 2004-07-28  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* tests/chown/basic: Test for proper handling of uids like
+	"010", which must be parsed as decimal.
+
 	* tests/misc/pwd: Don't assume that Perl's getpwd agrees with our
 	pwd when there are multiple names for the working directory
 	(which can happen with an automounter, sigh).
