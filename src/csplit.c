@@ -27,10 +27,20 @@
 #ifdef HAVE_LIMITS_H
 #include <limits.h>
 #endif /* HAVE_LIMITS_H */
+
+#ifndef UINT_MAX
+# define UINT_MAX ((unsigned int) ~(unsigned int) 0)
+#endif
+
+#ifndef INT_MAX
+# define INT_MAX ((int) (UINT_MAX >> 1))
+#endif
+
 #include "regex.h"
 #include "system.h"
 #include "version.h"
 #include "error.h"
+#include "xstrtoul.h"
 
 #ifdef STDC_HEADERS
 #include <stdlib.h>
@@ -1096,31 +1106,6 @@ new_control_record (void)
   return p;
 }
 
-/* Convert string NUM to an integer and put the value in *RESULT.
-   Return a TRUE if the string consists entirely of digits,
-   FALSE if not. */
-/* FIXME: use xstrtoul in place of this function.  */
-
-static boolean
-string_to_number (int *result, const char *num)
-{
-  char ch;
-  int val = 0;
-
-  if (*num == '\0')
-    return FALSE;
-
-  while ((ch = *num++))
-    {
-      if (!ISDIGIT (ch))
-	return FALSE;
-      val = val * 10 + ch - '0';
-    }
-
-  *result = val;
-  return TRUE;
-}
-
 /* Check if there is a numeric offset after a regular expression.
    STR is the entire command line argument.
    P is the control record for this regular expression.
@@ -1129,11 +1114,15 @@ string_to_number (int *result, const char *num)
 static void
 check_for_offset (struct control *p, const char *str, const char *num)
 {
+  unsigned long val;
+
   if (*num != '-' && *num != '+')
     error (1, 0, _("%s: `+' or `-' expected after delimeter"), str);
 
-  if (!string_to_number (&p->offset, num + 1))
+  if (xstrtoul (num + 1, NULL, 10, &val, NULL) != LONGINT_OK
+      || val > UINT_MAX)
     error (1, 0, _("%s: integer expected after `%c'"), str, *num);
+  p->offset = (unsigned int) val;
 
   if (*num == '-')
     p->offset = -p->offset;
@@ -1147,6 +1136,7 @@ check_for_offset (struct control *p, const char *str, const char *num)
 static void
 parse_repeat_count (int argnum, struct control *p, char *str)
 {
+  unsigned long val;
   char *end;
 
   end = str + strlen (str) - 1;
@@ -1157,9 +1147,15 @@ parse_repeat_count (int argnum, struct control *p, char *str)
   if (str+1 == end-1 && *(str+1) == '*')
     p->repeat_forever = 1;
   else
-    if (!string_to_number (&p->repeat, str +  1))
-      error (1, 0, _("%s}: integer required between `{' and `}'"),
-	     global_argv[argnum]);
+    {
+      if (xstrtoul (str + 1, NULL, 10, &val, NULL) != LONGINT_OK
+	  || val > UINT_MAX)
+	{
+	  error (1, 0, _("%s}: integer required between `{' and `}'"),
+		 global_argv[argnum]);
+	}
+      p->repeat = (unsigned int) val;
+    }
 
   *end = '}';
 }
@@ -1215,6 +1211,7 @@ parse_patterns (int argc, int start, char **argv)
 {
   int i;			/* Index into ARGV. */
   struct control *p;		/* New control record created. */
+  unsigned long val;
 
   for (i = start; i < argc; i++)
     {
@@ -1226,8 +1223,10 @@ parse_patterns (int argc, int start, char **argv)
 	{
 	  p = new_control_record ();
 	  p->argnum = i;
-	  if (!string_to_number (&p->lines_required, argv[i]))
+	  if (xstrtoul (argv[i], NULL, 10, &val, NULL) != LONGINT_OK
+	      || val > INT_MAX)
 	    error (1, 0, _("%s: invalid pattern"), argv[i]);
+	  p->lines_required = (int) val;
 	}
 
       if (i + 1 < argc && *argv[i + 1] == '{')
@@ -1395,6 +1394,7 @@ void
 main (int argc, char **argv)
 {
   int optc;
+  unsigned long val;
 #ifdef SA_INTERRUPT
   struct sigaction oldact, newact;
 #endif				/* SA_INTERRUPT */
@@ -1458,8 +1458,10 @@ main (int argc, char **argv)
 	break;
 
       case 'n':
-	if (!string_to_number (&digits, optarg))
+	if (xstrtoul (optarg, NULL, 10, &val, NULL) != LONGINT_OK
+	    || val > INT_MAX)
 	  error (1, 0, _("%s: invalid number"), optarg);
+	digits = (int) val;
 	break;
 
       case 's':
