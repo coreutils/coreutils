@@ -1,5 +1,5 @@
 /* tac - concatenate and print files in reverse
-   Copyright (C) 1988-1991, 1995-2002 Free Software Foundation, Inc.
+   Copyright (C) 1988-1991, 1995-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -227,7 +227,7 @@ tac_seekable (int input_fd, const char *file)
      in the input file. */
 
   if (lseek (input_fd, file_pos, SEEK_SET) < 0)
-    error (0, errno, "%s: seek failed", file);
+    error (0, errno, _("%s: seek failed"), file);
 
   if (safe_read (input_fd, G_buffer, saved_record_size) != saved_record_size)
     {
