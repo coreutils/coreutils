@@ -30,6 +30,8 @@
 #include "save-cwd.h"
 #include "error.h"
 
+char *dirname ();
+void strip_trailing_slashes ();
 char *xmalloc ();
 char *xstrdup ();
 char *xgetcwd ();
@@ -310,7 +312,7 @@ show_dev (const char *disk, const char *mount_point, const char *fstype)
     disk = "-";			/* unknown */
 
   printf ((print_type ? "%-13s" : "%-20s"), disk);
-  if (strlen (disk) > (print_type ? 13 : 20) && !posix_format)
+  if ((int) strlen (disk) > (print_type ? 13 : 20) && !posix_format)
     printf ((print_type ? "\n%13s" : "\n%20s"), "");
 
   if (! fstype)
@@ -396,22 +398,13 @@ find_mount_point (file, file_stat)
     /* FILE is some other kind of file, we need to use its directory.  */
     {
       int rv;
-      char *dir = xstrdup (file);
-      char *end = dir + strlen (dir);
+      char *tmp = xstrdup (file);
+      char *dir;
 
-      /* Strip off the last pathname element of FILE to get the directory.  */
-      while (end > dir + 1 && end[-1] == '/')
-	*--end = '\0';
-      while (end > dir && end[-1] != '/')
-	end--;
-      if (end == dir)
-	/* FILE only has a single element, use the cwd's parent.  */
-	rv = chdir ("..");
-      else
-	{
-	  *end = '\0';
-	  rv = chdir (dir);
-	}
+      strip_trailing_slashes (tmp);
+      dir = dirname (tmp);
+      free (tmp);
+      rv = chdir (dir);
       free (dir);
 
       if (rv < 0)
