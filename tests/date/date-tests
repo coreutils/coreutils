@@ -1080,8 +1080,26 @@ else
   esac
 fi
 test -s relative-2.E || rm -f relative-2.E
+LANG=C TZ=UTC0 $xx -d '1999-06-01' +%3004Y  > wide-fmt.O 2> wide-fmt.E
+code=$?
+if test $code != 0; then
+  $echo "Test wide-fmt(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp wide-fmt.O $srcdir/wide-fmt.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE"; then $echo "passed wide-fmt(LANG=C TZ=UTC0)"; fi;;
+    1) $echo "Test wide-fmt(LANG=C TZ=UTC0) failed: files wide-fmt.O and $srcdir/wide-fmt.X differ" 1>&2
+       (diff -c wide-fmt.O $srcdir/wide-fmt.X) 2> /dev/null
+       errors=`expr $errors + 1`;;
+    2) $echo "Test wide-fmt(LANG=C TZ=UTC0) may have failed." 1>&2
+       $echo The command "cmp wide-fmt.O $srcdir/wide-fmt.X" failed. 1>&2
+       errors=`expr $errors + 1`;;
+  esac
+fi
+test -s wide-fmt.E || rm -f wide-fmt.E
 if test $errors = 0; then
-  $echo Passed all 59 tests. 1>&2
+  $echo Passed all 60 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi
