@@ -1,3 +1,9 @@
+2001-09-23  Jim Meyering  <meyering@lucent.com>
+
+	* ls-mntd-fs.m4 (jm_LIST_MOUNTED_FILESYSTEMS): Add a compile-test
+	instead of the mere test for existence of mntent.h.  The latter
+	would get a false-positive on AIX 3.4 systems.
+
 2001-09-22  Jim Meyering  <meyering@lucent.com>
 
 	* gettext.m4: New file.  From gettext.
