@@ -241,12 +241,12 @@ POTFILES: POTFILES.in
 	  else \
 	    posrcprefix="../"; \
 	  fi; \
-	  rm -f POTFILES-t POTFILES \
+	  rm -f $@-t $@ \
 	    && sed -e '/^#/d' -e '/^[ 	]*$$/d' \
 	      -e "s@.*@	$$posrcprefix& \\\\@" \
-	      -e '$$s/\(.*\) \\/\1/' < $(srcdir)/POTFILES.in > POTFILES-t \
-	    && chmod a-w POTFILES-t \
-	    && mv POTFILES-t POTFILES )
+	      -e '$$s/\(.*\) \\/\1/' < $(srcdir)/$@.in > $@-t \
+	    && chmod a-w $@-t \
+	    && mv $@-t $@ )
 
 Makefile: Makefile.in.in ../config.status POTFILES
 	cd .. \
