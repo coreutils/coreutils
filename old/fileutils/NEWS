@@ -1,3 +1,7 @@
+User-visible changes in release 3.12:
+* None.
+User-visible changes in release 3.11:
+* None.
 User-visible changes in release 3.10:
 * mkdir -p now ignores arguments that are existing directories.  Before,
   (contrary to POSIX spec) it would attempt to change ownership and/or

@@ -1,6 +1,23 @@
+Sun Nov 06 00:18:56 1994  Jim Meyering  (meyering@comco.com)
+
+	* Version 3.12.
+
+Sat Nov 05 15:20:07 1994  Jim Meyering  (meyering@comco.com)
+
+	* group-member.c: Use up-to-date version.
+	* group-member.h: New file.
+	* lib/Makefile.in (DISTFILES): Add group-member.h.
+	(group-member.o): Depend on group-member.h.
+
+	* Version 3.11.
+
+	* src/Makefile.in (obstack.o): Depend on obstack.h.
+	* makepath.c (makepath) [__STDC__]: Add an ANSI-style prototype.
+	From Kaveh Ghazi.
+
 Fri Nov 04 17:27:55 1994  Jim Meyering  (meyering@comco.com)
 
-	Version 3.10.
+	* Version 3.10.
 
 Thu Nov 03 12:59:34 1994  Jim Meyering  (meyering@comco.com)
 

@@ -48,7 +48,7 @@ stripslash.o xgetcwd.o xmalloc.o xstrdup.o userspec.o yesno.o \
 @LIBOBJS@ @ALLOCA@
 
 DISTFILES = Makefile.in backupfile.h getopt.h long-options.h modechange.h \
-fnmatch.h fsusage.h makepath.h mountlist.h obstack.h pathmax.h \
+fnmatch.h fsusage.h group-member.h makepath.h mountlist.h obstack.h pathmax.h \
 safe-xstat.cin safe-xstat.hin getdate.c posixtm.c $(SOURCES)
 
 all: libfu.a
@@ -153,6 +153,8 @@ mountlist.o: mountlist.h
 xgetcwd.o: pathmax.h
 euidaccess.o fsusage.o isdir.o makepath.o mkdir.o rename.o: safe-stat.h
 makepath.o: makepath.h
+obstack.o: obstack.h
+group-member.o: group-member.h
 
 # Tell versions [3.59,3.63) of GNU make not to export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
