@@ -1,6 +1,14 @@
-2003-10-19  Jim Meyering  <jim@meyering.net>
+2003-10-21  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.1.0.
+
+	Don't fail when run with VERBOSE=yes.
+	* tests/chgrp/basic: Do `set +x' before starting the subshell
+	from which we invoke chgrp.  Otherwise, the output from the
+	VERBOSE=yes-induced `set -x' would result in spurious differences.
+	Reported by Russel Coker via Michael Stone.
+
+2003-10-19  Jim Meyering  <jim@meyering.net>
 
 	chmod now uses fts to perform a directory traversal when -R is
 	specified.  Before, it operated on full path names, and as such
