@@ -1,4 +1,4 @@
-#serial 3
+#serial 4
 
 dnl Misc lib-related macros for fileutils, sh-utils, textutils.
 
@@ -51,7 +51,7 @@ $ac_includes_default
 # include <shadow.h>
 #endif
 "
-  AC_CHECK_MEMBERS((struct spwd.sp_pwdp),,,[$shadow_includes])
+  AC_CHECK_MEMBERS([struct spwd.sp_pwdp],,,[$shadow_includes])
   AC_CHECK_FUNCS(getspnam)
 
   # SCO-ODT-3.0 is reported to need -lufc for crypt.
