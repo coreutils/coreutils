@@ -82,8 +82,13 @@ $(DOMAIN).pot-update: $(POTFILES) $(srcdir)/POTFILES.in
 	  --files-from=$(srcdir)/POTFILES.in \
 	  --copyright-holder='$(COPYRIGHT_HOLDER)' \
 	&& test ! -f $(DOMAIN).po \
-	   || ( rm -f $(srcdir)/$(DOMAIN).pot \
-		&& mv $(DOMAIN).po $(srcdir)/$(DOMAIN).pot )
+	   || ( if diff -u -IPOT-Creation-Date: \
+	      	     $(DOMAIN).po $(srcdir)/$(DOMAIN).pot>/dev/null 2>&1;then \
+		  rm -f $(DOMAIN).po; \
+		else \
+	          rm -f $(srcdir)/$(DOMAIN).pot; \
+		  mv $(DOMAIN).po $(srcdir)/$(DOMAIN).pot; \
+		fi )
 
 $(srcdir)/$(DOMAIN).pot:
 	$(MAKE) $(DOMAIN).pot-update
