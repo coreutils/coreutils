@@ -12,8 +12,10 @@ use FileHandle;
 use File::Compare qw(compare);
 
 @ISA = qw(Exporter);
-($VERSION = '$Revision: 1.4 $ ') =~ tr/[0-9].//cd;
+($VERSION = '$Revision: 1.5 $ ') =~ tr/[0-9].//cd;
 @EXPORT = qw (run_tests);
+
+my $debug = $ENV{DEBUG};
 
 my @Types = qw (IN OUT ERR EXIT PRE POST);
 my %Types = map {$_ => 1} @Types;
@@ -63,9 +65,9 @@ sub _shell_quote ($)
   return "'$string'";
 }
 
-sub _create_file ($$$$$)
+sub _create_file ($$$$)
 {
-  my ($program_name, $test_name, $file_name, $data, $verbose) = @_;
+  my ($program_name, $test_name, $file_name, $data) = @_;
   my $file;
   if (defined $file_name)
     {
@@ -77,7 +79,7 @@ sub _create_file ($$$$$)
       ++$Global_count;
     }
 
-  warn "creating file `$file' with contents `$data'\n" if $verbose;
+  warn "creating file `$file' with contents `$data'\n" if $debug;
 
   # The test spec gave a string.
   # Write it to a temp file and return tempfile name.
@@ -196,7 +198,7 @@ sub run_tests ($$$$$)
 	  my $is_junk_file = (! defined $file_name
 			      || ($type eq 'IN' && defined $contents));
 	  my $file = _create_file ($program_name, $test_name,
-				   $file_name, $contents, $verbose);
+				   $file_name, $contents);
 	  if ($type eq 'IN')
 	    {
 	      push @args, _shell_quote $file;
@@ -229,7 +231,7 @@ sub run_tests ($$$$$)
 	  if (!exists $expect->{$eo})
 	    {
 	      $expect->{$eo} = _create_file ($program_name, $test_name,
-					     undef, '', $verbose);
+					     undef, '');
 	      push @junk_files, $expect->{$eo};
 	    }
 	}
@@ -245,7 +247,7 @@ sub run_tests ($$$$$)
       push @junk_files, $tmp{OUT}, $tmp{ERR};
       my @cmd = ($prog, @args, "> $tmp{OUT}", "2> $tmp{ERR}");
       my $cmd_str = join ' ', @cmd;
-      warn "Running command: `$cmd_str'\n" if $verbose;
+      warn "Running command: `$cmd_str'\n" if $debug;
       my $rc = 0xffff & system $cmd_str;
       if ($rc == 0xff00)
 	{
