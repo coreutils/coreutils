@@ -705,8 +705,8 @@ In the third format, create all components of the given DIRECTORY(ies).\n\
   -c                  (ignored)\n\
   -d, --directory     treat all arguments as directory names; create all\n\
                         components of the specified directories\n\
-  -D                   create all leading components of DEST except the last,\n\
-                         then copy SOURCE to DEST;  useful in the 1st format\n\
+  -D                  create all leading components of DEST except the last,\n\
+                        then copy SOURCE to DEST;  useful in the 1st format\n\
   -g, --group=GROUP   set group ownership, instead of process' current group\n\
   -m, --mode=MODE     set permission mode (as in chmod), instead of rwxr-xr-x\n\
   -o, --owner=OWNER   set ownership (super-user only)\n\
