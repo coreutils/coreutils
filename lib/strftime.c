@@ -273,7 +273,7 @@ memcpy_uppcase (CHAR_T *dest, const CHAR_T *src,
    measured in seconds, ignoring leap seconds.  */
 # define tm_diff ftime_tm_diff
 static int
-tm_diff (const struct tm *, const struct tm *)
+tm_diff (const struct tm *a, const struct tm *b)
 {
   /* Compute intervening leap days correctly even if year is negative.
      Take care to avoid int overflow in leap day calculations,
