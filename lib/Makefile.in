@@ -93,11 +93,11 @@ LINK = $(CC) $(LDFLAGS) -o $@
 HEADERS =  $(noinst_HEADERS)
 
 DIST_COMMON =  Makefile.am Makefile.in alloca.c basename.c error.c \
-error.h euidaccess.c fileblocks.c fsusage.c ftruncate.c getdate.c \
-group-member.c interlock memcmp.c memcpy.c memset.c mkdir.c mountlist.c \
-obstack.c obstack.h posixtm.c regex.c regex.h rename.c rmdir.c \
-rpmatch.c rx.c rx.h stpcpy.c strcasecmp.c strdup.c strndup.c strstr.c \
-strtol.c strtoul.c ylwrap
+error.h euidaccess.c fileblocks.c fnmatch.c fsusage.c ftruncate.c \
+getdate.c group-member.c interlock memcmp.c memcpy.c memset.c mkdir.c \
+mountlist.c obstack.c obstack.h posixtm.c regex.c regex.h rename.c \
+rmdir.c rpmatch.c rx.c rx.h stpcpy.c strcasecmp.c strdup.c strndup.c \
+strstr.c strtol.c strtoul.c ylwrap
 
 
 PACKAGE = @PACKAGE@
@@ -109,13 +109,13 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) \
 TAR = tar
 DEP_FILES =  .deps/alloca.P .deps/argmatch.P .deps/backupfile.P \
 .deps/basename.P .deps/dirname.P .deps/error.P .deps/euidaccess.P \
-.deps/fileblocks.P .deps/filemode.P .deps/fsusage.P .deps/ftruncate.P \
-.deps/full-write.P .deps/getdate.P .deps/getopt.P .deps/getopt1.P \
-.deps/getversion.P .deps/group-member.P .deps/idcache.P .deps/isdir.P \
-.deps/long-options.P .deps/makepath.P .deps/memcmp.P .deps/memcpy.P \
-.deps/memset.P .deps/mkdir.P .deps/modechange.P .deps/mountlist.P \
-.deps/obstack.P .deps/path-concat.P .deps/posixtm.P .deps/regex.P \
-.deps/rename.P .deps/rmdir.P .deps/rpmatch.P .deps/rx.P \
+.deps/fileblocks.P .deps/filemode.P .deps/fnmatch.P .deps/fsusage.P \
+.deps/ftruncate.P .deps/full-write.P .deps/getdate.P .deps/getopt.P \
+.deps/getopt1.P .deps/getversion.P .deps/group-member.P .deps/idcache.P \
+.deps/isdir.P .deps/long-options.P .deps/makepath.P .deps/memcmp.P \
+.deps/memcpy.P .deps/memset.P .deps/mkdir.P .deps/modechange.P \
+.deps/mountlist.P .deps/obstack.P .deps/path-concat.P .deps/posixtm.P \
+.deps/regex.P .deps/rename.P .deps/rmdir.P .deps/rpmatch.P .deps/rx.P \
 .deps/safe-read.P .deps/save-cwd.P .deps/savedir.P .deps/stpcpy.P \
 .deps/strcasecmp.P .deps/strdup.P .deps/stripslash.P .deps/strndup.P \
 .deps/strstr.P .deps/strtol.P .deps/strtoul.P .deps/userspec.P \
@@ -129,7 +129,7 @@ default: all
 .SUFFIXES:
 .SUFFIXES: .c .o .y
 $(srcdir)/Makefile.in: @MAINT@ Makefile.am $(top_srcdir)/configure.in 
-	cd $(top_srcdir) && automake --gnu Makefile
+	cd $(top_srcdir) && automake --gnits Makefile
 
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status $(BUILT_SOURCES)
 	cd $(top_builddir) \
