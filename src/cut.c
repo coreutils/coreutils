@@ -116,7 +116,7 @@ struct range_pair
 static char *field_1_buffer;
 
 /* The number of bytes allocated for FIELD_1_BUFFER.  */
-static int field_1_bufsize;
+static size_t field_1_bufsize;
 
 /* The largest field or byte index used as an endpoint of a closed
    or degenerate range specification;  this doesn't include the starting
