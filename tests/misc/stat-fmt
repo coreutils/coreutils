@@ -22,7 +22,7 @@ fi
 
 fail=0
 
-for i in $(seq 50); do
+for i in `seq 50`; do
   fmt=`printf "%${i}s" %`
   out=`stat --form="$fmt" .`
   test "$out" = "$fmt" || fail=1
