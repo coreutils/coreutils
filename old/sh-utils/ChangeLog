@@ -1,3 +1,12 @@
+Sun Jul 03 08:44:00 1994  Jim Meyering  (meyering@comco.com)
+
+	* configure.in [AC_HAVE_HEADERS]: Add sys/param.h, for
+	definition of HAVE_SYS_PARAM_H, now tested in pathmax.h.
+
+	* configure.in [AC_WORDS_BIGENDIAN]: Add it.  This macro is
+	required by memcmp.c on big-endian systems.  Its absence was
+	diagnosed by Lars Duening (duening@ibr.cs.tu-bs.de).
+
 Sun Jun 19 00:18:06 1994  Jim Meyering  (meyering@comco.com)
 
 	* nice.c (main): Accept options like `--5' (equivalent to `-n -5')
