@@ -91,7 +91,8 @@ read standard input.\n\
 }
 
 static void
-write_counts (long unsigned int lines, long unsigned int words, long unsigned int chars, char *file)
+write_counts (long unsigned int lines, long unsigned int words,
+	      long unsigned int chars, const char *file)
 {
   if (print_lines)
     printf ("%7lu", lines);
@@ -113,7 +114,7 @@ write_counts (long unsigned int lines, long unsigned int words, long unsigned in
 }
 
 static void
-wc (int fd, char *file)
+wc (int fd, const char *file)
 {
   char buf[BUFFER_SIZE + 1];
   register int bytes_read;
@@ -228,7 +229,7 @@ wc (int fd, char *file)
 }
 
 static void
-wc_file (char *file)
+wc_file (const char *file)
 {
   if (!strcmp (file, "-"))
     {
