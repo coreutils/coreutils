@@ -111,7 +111,7 @@ TESTS_ENVIRONMENT = \
   PROG=tail
 
 
-TESTS = assert fflush
+TESTS = assert
 subdir = tests/tail-2
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../config.h
