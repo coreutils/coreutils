@@ -25,7 +25,7 @@
 	[unlink_dest_after_failed_open]: Add member.
 
 	* src/copy.c (same_file_ok): New function, extracted from copy_internal,
-	and partially rewritten.
+	and rewritten.
 	(copy_internal): Unlink destination file when unlink_dest_before_opening
 	option is set, and when the source is neither a regular file nor a
 	directory.
