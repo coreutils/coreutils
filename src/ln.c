@@ -495,9 +495,9 @@ main (int argc, char **argv)
   if (!target_directory)
     target_directory = file[n_files - 1];
 
-  /* If there's only one file argument, then pretend `.' was given
-     as the second argument.  */
-  if (n_files == 1)
+  /* If target directory is not specified, and there's only one
+     file argument, then pretend `.' was given as the second argument.  */
+  if (!target_directory_specified && n_files == 1)
     {
       static char *dummy[2];
       dummy[0] = file[0];
