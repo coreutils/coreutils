@@ -2,6 +2,13 @@
 
 	* Version 4.5.9.
 
+	* README: Refer new feature discussion to bug-coreutils@gnu.org,
+	rather than bug-gnu-utils, now that the former is better known.
+	Suggestion from Göran Uddeborg.
+
+	* src/stat.c (usage): Capitalize consistently.
+	Reported by Göran Uddeborg.
+
 	* Makefile.maint (rel-files): Include $(signatures), so that
 	those files are also copied into $(release_archive_dir).
 
