@@ -24,14 +24,14 @@
 #include <sys/types.h>
 #include <getopt.h>
 
+#if HAVE_LIMITS_H
+# include <limits.h>
+#endif
+
 #if WITH_REGEX
 # include <regex.h>
 #else
 # include <rx.h>
-#endif
-
-#if HAVE_LIMITS_H
-# include <limits.h>
 #endif
 
 #ifndef UINT_MAX
