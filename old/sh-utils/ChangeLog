@@ -1,6 +1,14 @@
-2001-09-23  Jim Meyering  <meyering@lucent.com>
+2001-09-25  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.12.
+
+	* src/Makefile.am:
+	(factor_DEPENDENCIES, printf_DEPENDENCIES seq_DEPENDENCIES):
+	(sleep_DEPENDENCIES uptime_DEPENDENCIES su_DEPENDENCIES):
+	Remove unnecessary definitions.  They can cause trouble
+	when @INTLLIBS@ expands to -lintl.
+
+2001-09-23  Jim Meyering  <meyering@lucent.com>
 
 	* Makefile.am (SUBDIRS): When using newer gettext (in which
 	intl/libintl.h is created by rules intl/Makefile)
