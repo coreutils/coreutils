@@ -2,6 +2,12 @@
 
 	* Version 4.1.1.
 
+	* src/copy.h (struct cp_options) [failed_unlink_is_fatal]: Remove
+	unused member.
+	* src/mv.c (cp_option_init): Don't set it.
+	* src/cp.c (cp_option_init): Likewise.
+	* src/install.c (cp_option_init): Likewise.
+
 	* src/copy.h (struct cp_options): Rename members:
 	s/preserve_owner_and_group/preserve_ownership/, and
 	s/preserve_chmod_bits/preserve_mode/.
