@@ -1,5 +1,22 @@
 2001-09-15  Jim Meyering  <meyering@lucent.com>
 
+	* src/copy.c (copy_internal) [move_mode]: Support the new
+	--reply=... option.
+	(UNWRITABLE): Define (factored out of copy_internal).
+	(copy_internal): Use UNWRITABLE.
+
+	Accept new option: --reply={yes,no,query}
+	* src/mv.c: Include argmatch.h.
+	(enum) [REPLY_OPTION]: Define.
+	(usage): Describe new option.
+	Split long usage string into smaller pieces.
+	(main): Handle new option.
+
+	* src/cp.c (main): Reflect renaming: s/I_ON/I_ASK_USER/.
+
+	* src/copy.h (enum Interactive): Remove members, I_OFF and I_ON.
+	Instead, add I_ALWAYS_YES, I_ALWAYS_NO, and I_ASK_USER.
+
 	* Version 4.1.1.
 
 	* tests/mv/i-2: Clean up: use priv-check rather than open-coding it.
