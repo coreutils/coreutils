@@ -1,3 +1,17 @@
+Sun Jul  9 11:41:15 1995  Jim Meyering  (meyering@comco.com)
+
+	* sort.c (main): When using obsolescent +pos -pos syntax, allow
+	omission of field spec only when character offset is specified.
+	Otherwise, -. +. would be accepted.
+
+Sat Jul  8 13:48:06 1995  Jim Meyering  (meyering@comco.com)
+
+	* sort.c (main): Allow field spec, M, to be omitted in +M.N or -M.N
+	position specification.  For compatibility with existing practice
+	(what vendors?), omitting M is now equivalent to specifying `0' for M,
+	but only when using the +pos -pos syntax, not with the -k option.
+	From Rick Sladkey (jrs@world.std.com).
+
 Thu Jul  6 23:44:20 1995  Jim Meyering  (meyering@comco.com)
 
 	* od.c (dump): Correct loop-termination criterion.
