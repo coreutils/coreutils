@@ -2,7 +2,11 @@
 
 	* Version 4.5.4.
 
-	* tests/ls/file-type: New file.
+	* src/ls.c (gobble_file): Also stat the file if it's a
+	regular file and --indicator-style=classify (aka -F).
+	Thanks to Ed Santiago for opening my eyes.
+
+	* tests/ls/file-type: New file.  Test for the above.
 	A test to contrast ls -F and ls --indicator-style=file-type.
 
 2002-12-04  Jim Meyering  <jim@meyering.net>
@@ -40,8 +44,8 @@
 	Reported by Jeff Sheinberg as Debian bug #168203.
 	* tests/ls-2/tests (sl-F-color, sl-dF-color): New tests for the above.
 
-	ls is now more efficient: it no longer needs to stat each directory
-	entry on systems with valid dirent.d_type.
+	ls is now more efficient: with certain options, it no longer needs
+	to stat each directory entry on systems with valid dirent.d_type.
 	* src/ls.c (print_dir): Add DT_LNK and DT_REG.
 	(main): Make --recursive set format_needs_type, not format_needs_stat.
 	(gobble_file): Remove a FIXME comment, now that it's fixed.
