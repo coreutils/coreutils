@@ -1,3 +1,14 @@
+1999-11-17  Jim Meyering  <meyering@ascend.com>
+
+	* src/mkdir.c (S_IRWXUGO): Define if necessary.
+	(main): Use chmod to set the permissions if bits other than those
+	of S_IRWXUGO were requested.  Reported by Sami Farin.
+
+1999-11-14  Paul Eggert  <eggert@twinsun.com>
+
+	* touch.c (touch): Simplify code a tad, using fd == -1 instead
+	of separate valid_fd variable.
+
 1999-11-13  Jim Meyering  <meyering@ascend.com>
 
 	* src/touch.c (touch): Don't fail just because we couldn't open
