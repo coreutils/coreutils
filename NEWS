@@ -1,5 +1,5 @@
 GNU coreutils NEWS                                    -*- outline -*-
-* Major changes in release 5.0.2:
+* Major changes in release 5.0.90:
 
 ** Bug fixes
 - `sort --version' and `sort --help' fail, as they should
