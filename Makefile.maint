@@ -22,6 +22,7 @@ tag-this-version = $(subst .,_,$(VERSION))
 tag-prev-version = $(subst .,_,$(PREV_VERSION))
 this-cvs-tag = $(tag-package)-$(tag-this-version)
 prev-cvs-tag = $(tag-package)-$(tag-prev-version)
+my_distdir = $(PACKAGE)-$(VERSION)
 
 # Verify that all source files using _() are listed in po/POTFILES.in.
 po-check:
@@ -91,8 +92,8 @@ real_dir = fetish-ftp
 
 url_dir_list = $(foreach x,a b,ftp://$($(x)_host)/$($(x)_url_dir))
 
-md5 = $(shell md5sum < $(distdir).tar.gz|sed 's/  -//')
-sha1 = $(shell sha1sum < $(distdir).tar.gz|sed 's/  -//')
+md5 = $(shell md5sum < $(my_distdir).tar.gz|sed 's/  -//')
+sha1 = $(shell sha1sum < $(my_distdir).tar.gz|sed 's/  -//')
 
 rel-check:
 	tarz=/tmp/rel-check-tarz-$$$$; \
@@ -109,12 +110,12 @@ xd-delta = $(PACKAGE)-$(PREV_VERSION)-$(VERSION).xdelta
 
 announcement: NEWS ChangeLog $(distdir).tar.gz
 	@( \
-	  echo Subject: $(distdir) released; \
+	  echo Subject: $(my_distdir) released; \
 	  echo; \
 	  echo FIXME: put comments here; \
 	  echo; \
 	  for url in $(url_dir_list); do \
-	    echo "  $$url/$(distdir).tar.gz"; \
+	    echo "  $$url/$(my_distdir).tar.gz"; \
 	  done; \
 	  echo; \
 	  echo And here are xdelta-style diffs; \
@@ -125,8 +126,8 @@ announcement: NEWS ChangeLog $(distdir).tar.gz
 	  echo; \
 	  echo "Here are the MD5 and SHA1 signatures for the .tar.gz file"; \
 	  echo; \
-	  echo "$(md5)  $(distdir).tar.gz"; \
-	  echo "$(sha1)  $(distdir).tar.gz"; \
+	  echo "$(md5)  $(my_distdir).tar.gz"; \
+	  echo "$(sha1)  $(my_distdir).tar.gz"; \
 	  echo; \
 	  echo NEWS:; \
 	  sed -n "/$(THIS_VERSION_REGEXP)/,/^\[$(PREV_VERSION_REGEXP)/p" NEWS \
@@ -164,7 +165,7 @@ define emit-rsync-commands
 	echo =====================================
 	echo =====================================
 	echo 'for host in $(a_host) $(b_host); do \'
-	echo '  rsync -e ssh --pro -av $(xd-delta) $(distdir).tar.gz \'
+	echo '  rsync -e ssh --pro -av $(xd-delta) $(my_distdir).tar.gz \'
 	echo '    $$host:$(real_dir); done'
 	echo '# send the /tmp/announcement e-mail'
 	echo =====================================
@@ -173,7 +174,7 @@ endef
 
 alpha: writable-files po-check
 	$(MAKE) cvs-dist
-	$(MAKE) -s announcement > /tmp/announce-$(PACKAGE)-$(VERSION)
+	$(MAKE) -s announcement > /tmp/announce-$(my_distdir)
 	ln $(distdir).tar.gz ../release
 	chmod a-w $(distdir).tar.gz
 	cd $(release-archive-dir) \
