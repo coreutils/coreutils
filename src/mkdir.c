@@ -131,7 +131,7 @@ main (int argc, char **argv)
       if (change == MODE_INVALID)
 	error (1, 0, _("invalid mode %s"), quote (symbolic_mode));
       else if (change == MODE_MEMORY_EXHAUSTED)
-	error (1, 0, _("virtual memory exhausted"));
+	xalloc_die ();
       newmode = mode_adjust (newmode, change);
     }
 
