@@ -50,6 +50,7 @@
 
 	* src/sys2.h (OFF_T_MIN): Define here instead.
 	(OFF_T_MAX): Likewise.
+	(CHAR_BIT): Define.
 
 	* src/tail.c (parse_options): Use xstrtoumax to parse the byte and line
 	offset.  Give a better diagnostic when the requested offset is still
