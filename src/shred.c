@@ -1361,7 +1361,7 @@ incname (char *name, size_t len)
 {
   while (len--)
     {
-      char const *p = strchr (nameset, name[--len]);
+      char const *p = strchr (nameset, name[len]);
 
       /* If this character has a successor, use it.  */
       if (p[1])
