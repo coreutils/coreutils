@@ -1,3 +1,11 @@
+2004-05-03  Jim Meyering  <jim@meyering.net>
+
+	Temporary work-around for the problem reported here:
+	http://sources.redhat.com/ml/bug-automake/2004/msg00339.html
+
+	* gettext.m4 (AM_GNU_GETTEXT): Don't require AM_INTL_SUBDIR.
+	(AM_INTL_SUBDIR): Comment out definition.
+
 2004-05-01  Jim Meyering  <jim@meyering.net>
 
 	* jm-mktime.m4: Remove file.  This is now part of mktime.m4.
