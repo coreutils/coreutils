@@ -30,24 +30,21 @@ extern "C" {
 enum backup_type
 {
   /* Never make backups. */
-  none,
+  no_backups,
 
   /* Make simple backups of every file. */
-  simple,
+  simple_backups,
 
   /* Make numbered backups of files that already have numbered backups,
      and simple backups of the others. */
-  numbered_existing,
+  numbered_existing_backups,
 
   /* Make numbered backups of every file. */
-  numbered
+  numbered_backups
 };
 
 # define VALID_BACKUP_TYPE(Type)	\
-  ((Type) == none			\
-   || (Type) == simple			\
-   || (Type) == numbered_existing	\
-   || (Type) == numbered)
+  ((unsigned int) (Type) <= numbered_backups)
 
 extern char const *simple_backup_suffix;
 
