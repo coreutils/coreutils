@@ -32,10 +32,6 @@
 
 #ifdef _POSIX_VERSION
 #include <limits.h>
-#if !defined(NGROUPS_MAX) || NGROUPS_MAX < 1
-#undef NGROUPS_MAX
-#define NGROUPS_MAX sysconf (_SC_NGROUPS_MAX)
-#endif /* !NGROUPS_MAX */
 
 #else /* not _POSIX_VERSION */
 struct passwd *getpwuid ();
@@ -45,9 +41,6 @@ gid_t getgid ();
 uid_t geteuid ();
 gid_t getegid ();
 #include <sys/param.h>
-#if !defined(NGROUPS_MAX) && defined(NGROUPS)
-#define NGROUPS_MAX NGROUPS
-#endif /* not NGROUPS_MAX and NGROUPS */
 #endif /* not _POSIX_VERSION */
 
 char *xmalloc ();
@@ -240,26 +233,29 @@ print_group_list (username)
       print_group (egid);
     }
 
-#if defined(NGROUPS_MAX) && defined(HAVE_GETGROUPS)
+#if HAVE_GETGROUPS
   {
-    int ngroups;
+    int ng, n_groups;
     GETGROUPS_T *groups;
     register int i;
 
-    groups = (GETGROUPS_T *) xmalloc (NGROUPS_MAX * sizeof (GETGROUPS_T));
+    n_groups = getgroups (0, NULL);
+    /* Add 1 just in case n_groups is zero.  */
+    groups = (GETGROUPS_T *) xmalloc (n_groups * sizeof (GETGROUPS_T) + 1);
     if (username == 0)
-      ngroups = getgroups (NGROUPS_MAX, groups);
+      ng = getgroups (n_groups, groups);
     else
-      ngroups = getugroups (NGROUPS_MAX, groups, username);
-    if (ngroups < 0)
+      ng = getugroups (n_groups, groups, username);
+
+    if (ng < 0)
       {
 	error (0, errno, _("cannot get supplemental group list"));
-	problems++;
+	++problems;
 	free (groups);
 	return;
       }
 
-    for (i = 0; i < ngroups; i++)
+    for (i = 0; i < n_groups; i++)
       if (groups[i] != rgid && groups[i] != egid)
 	{
 	  putchar (' ');
@@ -313,18 +309,20 @@ print_full_info (username)
 	printf ("(%s)", grp->gr_name);
     }
 
-#if defined(NGROUPS_MAX) && defined(HAVE_GETGROUPS)
+#if HAVE_GETGROUPS
   {
-    int ngroups;
+    int ng, n_groups;
     GETGROUPS_T *groups;
     register int i;
 
-    groups = (GETGROUPS_T *) xmalloc (NGROUPS_MAX * sizeof (GETGROUPS_T));
+    n_groups = getgroups (0, NULL);
+    /* Add 1 just in case n_groups is zero.  */
+    groups = (GETGROUPS_T *) xmalloc (n_groups * sizeof (GETGROUPS_T) + 1);
     if (username == 0)
-      ngroups = getgroups (NGROUPS_MAX, groups);
+      ng = getgroups (n_groups, groups);
     else
-      ngroups = getugroups (NGROUPS_MAX, groups, username);
-    if (ngroups < 0)
+      ng = getugroups (n_groups, groups, username);
+    if (ng < 0)
       {
 	error (0, errno, _("cannot get supplemental group list"));
 	problems++;
@@ -332,9 +330,9 @@ print_full_info (username)
 	return;
       }
 
-    if (ngroups > 0)
+    if (n_groups > 0)
       fputs (_(" groups="), stdout);
-    for (i = 0; i < ngroups; i++)
+    for (i = 0; i < n_groups; i++)
       {
 	if (i > 0)
 	  putchar (',');
