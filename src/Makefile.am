@@ -23,7 +23,7 @@ EXTRA_DIST = dcgen dircolors.hin tac-pipe.c \
   groups.sh wheel-gen.pl extract-magic
 CLEANFILES = $(SCRIPTS) su
 
-INCLUDES = -I.. -I$(srcdir) -I$(top_srcdir)/lib -I../lib
+AM_CPPFLAGS = -I.. -I$(srcdir) -I$(top_srcdir)/lib -I../lib
 
 # Sometimes, the expansion of $(LIBINTL) includes -lc which may
 # include modules defining variables like `optind', so libfetish.a
