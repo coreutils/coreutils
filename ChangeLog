@@ -1,3 +1,7 @@
+2004-05-28  Jim Meyering  <jim@meyering.net>
+
+	* src/remove.c (AD_mark_helper): Eliminate unnecessary comparison.
+
 2004-05-22  Jim Meyering  <jim@meyering.net>
 
 	* src/remove.c (struct cwd_state): Define.
