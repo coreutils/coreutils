@@ -1062,8 +1062,44 @@ else
   esac
 fi
 test -s rfc822-1.E || rm -f rfc822-1.E
+LANG=C TZ=UTC0 $xx --utc -d '1970-01-01 00:00:00 UTC +961062237 sec' '+%Y-%m-%d %T'  > relative-1.O 2> relative-1.E
+code=$?
+if test $code != 0; then
+  $echo "Test relative-1(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp relative-1.O $srcdir/relative-1.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE"; then $echo "passed relative-1(LANG=C TZ=UTC0)"; fi;;
+    1) $echo "Test relative-1(LANG=C TZ=UTC0) failed: files relative-1.O and $srcdir/relative-1.X differ" 1>&2
+       (diff -c relative-1.O $srcdir/relative-1.X) 2> /dev/null
+       errors=`expr $errors + 1`;;
+    2) $echo "Test relative-1(LANG=C TZ=UTC0) may have failed." 1>&2
+       $echo The command "cmp relative-1.O $srcdir/relative-1.X" failed. 1>&2
+       errors=`expr $errors + 1`;;
+  esac
+fi
+test -s relative-1.E || rm -f relative-1.E
+TZ=UTC+1 $xx --utc -d '1970-01-01 UTC +961062237 sec' '+%Y-%m-%d %T'  > relative-2.O 2> relative-2.E
+code=$?
+if test $code != 0; then
+  $echo "Test relative-2(TZ=UTC+1) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp relative-2.O $srcdir/relative-2.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE"; then $echo "passed relative-2(TZ=UTC+1)"; fi;;
+    1) $echo "Test relative-2(TZ=UTC+1) failed: files relative-2.O and $srcdir/relative-2.X differ" 1>&2
+       (diff -c relative-2.O $srcdir/relative-2.X) 2> /dev/null
+       errors=`expr $errors + 1`;;
+    2) $echo "Test relative-2(TZ=UTC+1) may have failed." 1>&2
+       $echo The command "cmp relative-2.O $srcdir/relative-2.X" failed. 1>&2
+       errors=`expr $errors + 1`;;
+  esac
+fi
+test -s relative-2.E || rm -f relative-2.E
 if test $errors = 0; then
-  $echo Passed all 58 tests. 1>&2
+  $echo Passed all 60 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi
