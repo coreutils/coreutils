@@ -32,9 +32,8 @@ AC_DEFUN([UTILS_SYS_OPEN_MAX],
     }
   ]])],
        [utils_cv_sys_open_max=`cat conftest.omax`],
-       [utils_cv_sys_open_max='internal error in open-max.m4']
-       [utils_cv_sys_open_max='cross compiling run-test in open-max.m4'],
-       )])
+       [utils_cv_sys_open_max='internal error in open-max.m4'],
+       [utils_cv_sys_open_max='cross compiling run-test in open-max.m4'])])
 
   AC_DEFINE_UNQUOTED([UTILS_OPEN_MAX],
     $utils_cv_sys_open_max,
