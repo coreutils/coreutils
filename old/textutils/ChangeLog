@@ -1,3 +1,31 @@
+1999-08-22  Jim Meyering  <meyering@ascend.com>
+
+	* man/help2man: Escape backslashes so tr's manual comes out right.
+	Reported by Andreas Schwab.
+
+	* src/tsort.c (usage): Correct bug-reporting email address.
+	(tsort): Remove trailing `\n' in error format.
+
+	* src/md5sum.c (md5_check): Remove trailing `\n' in error format.
+
+	* src/sys2.h (IF_LINT): Define new macro.
+	* src/od.c (dump): Use IF_LINT macro instead of #ifdef lint...
+	(main): Likewise.
+	* src/paste.c (paste_parallel): Likewise.
+	* src/pr.c (read_line): Likewise.
+	* src/sort.c (checkfp): Likewise.
+	(mergefps): Likewise.
+
+	* src/cksum.c (cksum): Constify a char*.
+	* src/comm.c (writeline): Likewise.
+
+	* src/uniq.c (check_file): Move declarations of local variables
+	into the scopes where they're used.
+	(min): Remove macro definition.
+	(different): Use MIN, not min.
+	(SWAP_LINES): New macro.
+	(check_file): Use it here.
+
 1999-08-15  Jim Meyering  <meyering@ascend.com>
 
 	* src/tail.c (ENOSYS): Define to a bogus value if not already defined.
