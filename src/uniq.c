@@ -244,6 +244,7 @@ check_file (const char *infile, const char *outfile)
 
   while (!feof (istream))
     {
+      int match;
       if (readline (thisline, istream) == 0)
 	break;
       thisfield = find_field (thisline);
