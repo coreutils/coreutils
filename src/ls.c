@@ -1902,6 +1902,10 @@ gobble_file (const char *name, enum filetype type, int explicit_arg,
   files[files_index].linkmode = 0;
   files[files_index].linkok = 0;
 
+  /* FIXME: this use of ls: `mkdir a; touch a/{b,c,d}; ls -R a'
+     shouldn't require that ls stat b, c, and d -- at least
+     not on systems with usable d_type.  The problem is that
+     format_needs_stat is set, because of the -R.  */
   if (explicit_arg || format_needs_stat
       || (format_needs_type && type == unknown))
     {
