@@ -810,12 +810,27 @@ remove_cwd_entries (char **subdir, struct stat *subdir_sb,
 
   while (1)
     {
-      struct dirent *dp = readdir (dirp);
+      struct dirent *dp;
       enum RM_status tmp_status;
       const char *f;
 
-      if (dp == NULL)
-	break;
+      /* Set errno to zero so we can distinguish between a readdir failure
+	 and when readdir simply finds that there are no more entries.  */
+      errno = 0;
+      if ((dp = readdir (dirp)) == NULL)
+	{
+	  if (errno)
+	    {
+	      /* Save/restore errno across closedir call.  */
+	      int e = errno;
+	      CLOSEDIR (dirp);
+	      errno = e;
+
+	      /* Arrange to give a diagnostic after exiting this loop.  */
+	      dirp = NULL;
+	    }
+	  break;
+	}
 
       f = dp->d_name;
       if (DOT_OR_DOTDOT (f))
@@ -871,8 +886,10 @@ remove_cwd_entries (char **subdir, struct stat *subdir_sb,
 	break;
     }
 
-  if (CLOSEDIR (dirp) != 0)
+  if (dirp == NULL || CLOSEDIR (dirp) != 0)
     {
+      /* Note that this diagnostic serves for both readdir
+	 and closedir failures.  */
       error (0, errno, _("reading directory %s"), quote (full_filename (".")));
       status = RM_ERROR;
     }
