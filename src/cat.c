@@ -486,10 +486,10 @@ main (int argc, char **argv)
   int argind;
 
   /* Device number of the output (file or whatever).  */
-  int out_dev;
+  dev_t out_dev;
 
   /* I-node number of the output.  */
-  int out_ino;
+  ino_t out_ino;
 
   /* Nonzero if the output file should not be the same as any input file. */
   int check_redirection = 1;
