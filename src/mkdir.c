@@ -34,6 +34,8 @@
 
 #define AUTHORS "David MacKenzie"
 
+void strip_trailing_slashes ();
+
 /* The name this program was run with. */
 char *program_name;
 
@@ -147,6 +149,17 @@ main (int argc, char **argv)
 	  fail = make_path (parents, parent_mode, parent_mode,
 			    -1, -1, 1, verbose_fmt_string);
 	  free (parents);
+
+	  /* If we're creating parent directories, then it's ok to remove
+	     trailing slashes.  In fact, *not* removing them would lead
+	     to calling `mkdir ("dir/", mode)' for the command `mkdir -p dir/',
+	     and such a call fails on NetBSD systems if `dir' doesn't already
+	     exist.  */
+	  /* An alternate approach would be to change make_path to interpret
+	     an argument with a trailing slash as if it also had a trailing
+	     `.'.  In fact, that would be more consistent with POSIX, so
+	     FIXME: some day.  */
+	  strip_trailing_slashes (argv[optind]);
 	}
 
       if (fail == 0)
