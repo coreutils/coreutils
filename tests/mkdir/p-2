@@ -10,7 +10,7 @@ if test "$VERBOSE" = yes; then
   $MKDIR --version
 fi
 
-tmp=$TMPDIR/t-mkdir.$$/a/b/c
+tmp=$TMPDIR/t-mkdir.$$
 temp_files=$tmp
 rm -rf $temp_files
 
