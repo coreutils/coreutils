@@ -1008,9 +1008,12 @@ remove_dir (Dirstack_state *ds, char const *dir, struct cwd_state **cwd_state,
 	  (*cwd_state)->saved_errno = errno;
 	  assert (errno != 0);
 
-	  /* Pretend we started from ".".  That is fine as long as there
-	     is no requirement to return to the original working directory.  */
-	  (*cwd_state)->saved_cwd.name = xstrdup (".");
+	  /* Pretend we started from "/".  That is fine as long as there
+	     is no requirement to return to the original working directory.
+	     Use "/", not ".", so that we chdir out of a non-root target
+	     directory before attempting to remove it: some hosts don't let
+	     you remove a working directory.  */
+	  (*cwd_state)->saved_cwd.name = xstrdup ("/");
 	}
       else
 	(*cwd_state)->saved_errno = 0;
