@@ -23,8 +23,9 @@ VPATH = @srcdir@
 CC = @CC@
 AR = ar
 RANLIB = @RANLIB@
-DEFS = @DEFS@
+DEFS = -DMVDIR="\"$(libdir)/mvdir\"" @DEFS@
 CFLAGS = @CFLAGS@
+YACC = @YACC@
 
 SOURCES = getdate.y posixtm.y \
 argmatch.c backupfile.c basename.c dirname.c eaccess.c \

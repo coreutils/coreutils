@@ -1,3 +1,15 @@
+Wed Oct 06 18:22:00 1993  Jim Meyering  (meyering@comco.com)
+
+	* chmod.c (change_file_mode): Add an argument to control how symbolic
+	links are treated.
+	(main, change_dir_mode): Reflect changed calling sequence.
+	Now symlinks listed on the command line are processed (they
+	were ignored before); the permissions of the dereferenced files are
+	changed.  Symlinks encountered in recursive traversals are still
+	ignored.  This makes GNU chmod act more like e.g. Sun's.
+	From Nick Holloway <alfie@dcs.warwick.ac.uk>.
+	* chmod.1: Document it.
+
 Tue Oct 05 14:52:02 1993  Jim Meyering  (meyering@comco.com)
 
 	* configure.in: Add AC_STAT_MACROS_BROKEN.
@@ -26,11 +38,16 @@ Tue Oct 05 14:52:02 1993  Jim Meyering  (meyering@comco.com)
 	* configure.in [AC_CONFIG_HEADER]: Use it.
 
 	* configure.in (rename.o) [MVDIR definition]: Remove it.
-	* src/Makefile.in [DEFS]: Put it here instead.
+	* lib/Makefile.in [DEFS]: Put it here instead.
 
 	* config.h.in, acconfig.h: New files
 	* Makefile [DISTFILES]: Add them.
 	(config.h.in): Add a rule to warn if it may need to be rebuilt.
+
+	* lib/Makefile [YACC]: Get definition from @YACC@.
+
+	* system.h: Include <unistd.h>.  This is needed for the definition
+	of _POSIX_VERSION.
 
 Thu Sep  9 08:52:10 1993  Jim Meyering  (meyering@comco.com)
 

@@ -1,4 +1,9 @@
 Major changes in release 3.9:
+* GNU chmod treats symlinks the same way other vendor's versions do.
+  Now symlinks listed on the command line are processed (they were
+  ignored before); the permissions of the dereferenced files are
+  changed.  Symlinks encountered in recursive traversals are still
+  ignored.  This makes GNU chmod act more like e.g. Sun's.
 * configure uses config.h, so DEFS won't exceed preprocessor limits of
   some compilers on the number of symbols defined via -D.
 * ls and cp can handle mount points on more systems
