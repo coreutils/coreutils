@@ -56,13 +56,6 @@
 char *xmalloc ();
 char *xrealloc ();
 
-static FILE *next_file ();
-static void add_tabstop ();
-static void expand ();
-static void parse_tabstops ();
-static void usage ();
-static void validate_tabstops ();
-
 /* The name this program was run with. */
 char *program_name;
 
@@ -112,82 +105,48 @@ static struct option const longopts[] =
   {NULL, 0, NULL, 0}
 };
 
-void
-main (argc, argv)
-     int argc;
-     char **argv;
+static void
+usage (status)
+     int status;
 {
-  int tabval = -1;		/* Value of tabstop being read, or -1. */
-  int c;			/* Option character. */
-
-  have_read_stdin = 0;
-  exit_status = 0;
-  convert_entire_line = 1;
-  tab_list = NULL;
-  first_free_tab = 0;
-  program_name = argv[0];
-
-  while ((c = getopt_long (argc, argv, "it:,0123456789", longopts, (int *) 0))
-	 != EOF)
-    {
-      switch (c)
-	{
-	case 0:
-	  break;
-
-	case '?':
-	  usage (1);
-	case 'i':
-	  convert_entire_line = 0;
-	  break;
-	case 't':
-	  parse_tabstops (optarg);
-	  break;
-	case ',':
-	  add_tabstop (tabval);
-	  tabval = -1;
-	  break;
-	default:
-	  if (tabval == -1)
-	    tabval = 0;
-	  tabval = tabval * 10 + c - '0';
-	  break;
-	}
-    }
-
-  if (show_version)
-    {
-      printf ("expand - %s\n", version_string);
-      exit (0);
-    }
-
-  if (show_help)
-    usage (0);
-
-  add_tabstop (tabval);
-
-  validate_tabstops (tab_list, first_free_tab);
-
-  if (first_free_tab == 0)
-    tab_size = 8;
-  else if (first_free_tab == 1)
-    tab_size = tab_list[0];
+  if (status != 0)
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
+	     program_name);
   else
-    tab_size = 0;
+    {
+      printf (_("\
+Usage: %s [OPTION]... [FILE]...\n\
+"),
+	      program_name);
+      printf (_("\
+Convert tabs in each FILE to spaces, writing to standard output.\n\
+With no FILE, or when FILE is -, read standard input.\n\
+\n\
+  -i, --initial       do not convert TABs after non whitespace\n\
+  -t, --tabs=NUMBER   have tabs NUMBER characters apart, not 8\n\
+  -t, --tabs=LIST     use comma separated list of explicit tab positions\n\
+      --help          display this help and exit\n\
+      --version       output version information and exit\n\
+\n\
+Instead of -t NUMBER or -t LIST, -NUMBER or -LIST may be used.\n\
+"));
+    }
+  exit (status);
+}
 
-  if (optind == argc)
-    file_list = stdin_argv;
-  else
-    file_list = &argv[optind];
+/* Add tab stop TABVAL to the end of `tab_list', except
+   if TABVAL is -1, do nothing. */
 
-  expand ();
-
-  if (have_read_stdin && fclose (stdin) == EOF)
-    error (1, errno, "-");
-  if (ferror (stdout) || fclose (stdout) == EOF)
-    error (1, errno, _("write error"));
-
-  exit (exit_status);
+static void
+add_tabstop (tabval)
+     int tabval;
+{
+  if (tabval == -1)
+    return;
+  if (first_free_tab % TABLIST_BLOCK == 0)
+    tab_list = (int *) xrealloc (tab_list, first_free_tab
+				 + TABLIST_BLOCK * sizeof (tab_list[0]));
+  tab_list[first_free_tab++] = tabval;
 }
 
 /* Add the comma or blank separated list of tabstops STOPS
@@ -219,21 +178,6 @@ parse_tabstops (stops)
   add_tabstop (tabval);
 }
 
-/* Add tab stop TABVAL to the end of `tab_list', except
-   if TABVAL is -1, do nothing. */
-
-static void
-add_tabstop (tabval)
-     int tabval;
-{
-  if (tabval == -1)
-    return;
-  if (first_free_tab % TABLIST_BLOCK == 0)
-    tab_list = (int *) xrealloc (tab_list, first_free_tab
-				 + TABLIST_BLOCK * sizeof (tab_list[0]));
-  tab_list[first_free_tab++] = tabval;
-}
-
 /* Check that the list of tabstops TABS, with ENTRIES entries,
    contains only nonzero, ascending values. */
 
@@ -253,6 +197,54 @@ validate_tabstops (tabs, entries)
 	error (1, 0, _("tab sizes must be ascending"));
       prev_tab = tabs[i];
     }
+}
+
+/* Close the old stream pointer FP if it is non-NULL,
+   and return a new one opened to read the next input file.
+   Open a filename of `-' as the standard input.
+   Return NULL if there are no more input files.  */
+
+static FILE *
+next_file (fp)
+     FILE *fp;
+{
+  static char *prev_file;
+  char *file;
+
+  if (fp)
+    {
+      if (ferror (fp))
+	{
+	  error (0, errno, "%s", prev_file);
+	  exit_status = 1;
+	}
+      if (fp == stdin)
+	clearerr (fp);		/* Also clear EOF. */
+      else if (fclose (fp) == EOF)
+	{
+	  error (0, errno, "%s", prev_file);
+	  exit_status = 1;
+	}
+    }
+
+  while ((file = *file_list++) != NULL)
+    {
+      if (file[0] == '-' && file[1] == '\0')
+	{
+	  have_read_stdin = 1;
+	  prev_file = file;
+	  return stdin;
+	}
+      fp = fopen (file, "r");
+      if (fp)
+	{
+	  prev_file = file;
+	  return fp;
+	}
+      error (0, errno, "%s", file);
+      exit_status = 1;
+    }
+  return NULL;
 }
 
 /* Change tabs to spaces, writing to stdout.
@@ -336,79 +328,80 @@ expand ()
     }
 }
 
-/* Close the old stream pointer FP if it is non-NULL,
-   and return a new one opened to read the next input file.
-   Open a filename of `-' as the standard input.
-   Return NULL if there are no more input files.  */
-
-static FILE *
-next_file (fp)
-     FILE *fp;
+void
+main (argc, argv)
+     int argc;
+     char **argv;
 {
-  static char *prev_file;
-  char *file;
+  int tabval = -1;		/* Value of tabstop being read, or -1. */
+  int c;			/* Option character. */
 
-  if (fp)
+  have_read_stdin = 0;
+  exit_status = 0;
+  convert_entire_line = 1;
+  tab_list = NULL;
+  first_free_tab = 0;
+  program_name = argv[0];
+
+  while ((c = getopt_long (argc, argv, "it:,0123456789", longopts, (int *) 0))
+	 != EOF)
     {
-      if (ferror (fp))
+      switch (c)
 	{
-	  error (0, errno, "%s", prev_file);
-	  exit_status = 1;
-	}
-      if (fp == stdin)
-	clearerr (fp);		/* Also clear EOF. */
-      else if (fclose (fp) == EOF)
-	{
-	  error (0, errno, "%s", prev_file);
-	  exit_status = 1;
+	case 0:
+	  break;
+
+	case '?':
+	  usage (1);
+	case 'i':
+	  convert_entire_line = 0;
+	  break;
+	case 't':
+	  parse_tabstops (optarg);
+	  break;
+	case ',':
+	  add_tabstop (tabval);
+	  tabval = -1;
+	  break;
+	default:
+	  if (tabval == -1)
+	    tabval = 0;
+	  tabval = tabval * 10 + c - '0';
+	  break;
 	}
     }
 
-  while ((file = *file_list++) != NULL)
+  if (show_version)
     {
-      if (file[0] == '-' && file[1] == '\0')
-	{
-	  have_read_stdin = 1;
-	  prev_file = file;
-	  return stdin;
-	}
-      fp = fopen (file, "r");
-      if (fp)
-	{
-	  prev_file = file;
-	  return fp;
-	}
-      error (0, errno, "%s", file);
-      exit_status = 1;
+      printf ("expand - %s\n", version_string);
+      exit (0);
     }
-  return NULL;
-}
 
-static void
-usage (status)
-     int status;
-{
-  if (status != 0)
-    fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+  if (show_help)
+    usage (0);
+
+  add_tabstop (tabval);
+
+  validate_tabstops (tab_list, first_free_tab);
+
+  if (first_free_tab == 0)
+    tab_size = 8;
+  else if (first_free_tab == 1)
+    tab_size = tab_list[0];
   else
-    {
-      printf (_("\
-Usage: %s [OPTION]... [FILE]...\n\
-"),
-	      program_name);
-      printf (_("\
-Convert tabs in each FILE to spaces, writing to standard output.\n\
-With no FILE, or when FILE is -, read standard input.\n\
-\n\
-  -i, --initial       do not convert TABs after non whitespace\n\
-  -t, --tabs=NUMBER   have tabs NUMBER characters apart, not 8\n\
-  -t, --tabs=LIST     use comma separated list of explicit tab positions\n\
-      --help          display this help and exit\n\
-      --version       output version information and exit\n\
-\n\
-Instead of -t NUMBER or -t LIST, -NUMBER or -LIST may be used.\n\
-"));
-    }
-  exit (status);
+    tab_size = 0;
+
+  if (optind == argc)
+    file_list = stdin_argv;
+  else
+    file_list = &argv[optind];
+
+  expand ();
+
+  if (have_read_stdin && fclose (stdin) == EOF)
+    error (1, errno, "-");
+  if (ferror (stdout) || fclose (stdout) == EOF)
+    error (1, errno, _("write error"));
+
+  exit (exit_status);
 }
