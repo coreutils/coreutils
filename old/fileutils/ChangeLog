@@ -1,6 +1,25 @@
-2001-11-24  Jim Meyering  <meyering@lucent.com>
+2001-11-27  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.3.
+
+	The change of 2001-11-01 introduced a bug whereby some recursive
+	listings didn't have a blank line between per-directory groups of files.
+	* src/ls.c (print_dir): Print a newline before each directory name
+	except the first one, rather than after each except the last, since
+	now (after the changes of 2001-11-01) detecting whether a `pending*'
+	is the last would involve more work.  Reported by Andreas Schwab.
+	* tests/ls/recursive: New file.  Test for the above.
+
+	This change has no net effect.
+	* src/ls.c (main): Remove always-true conjunct and add a comment.
+
+2001-11-26  Jim Meyering  <meyering@lucent.com>
+
+	* src/shred.c: Don't include "gtod.h"
+	(main): Don't `call' GETTIMEOFDAY_INIT.
+	* src/ls.c: Likewise.
+
+2001-11-24  Jim Meyering  <meyering@lucent.com>
 
 	* Makefile.maint: Include signatures for the xdelta file, too.
 
