@@ -22,7 +22,7 @@
 	* getopt1.c: Likewise.
 	* memcmp.c: Likewise.
 
-	* getusershell.c (setusershell) [HAVE_FSEEKO]: Use fseek0.
+	* getusershell.c (setusershell) [HAVE_FSEEKO]: Use fseeko.
 	Patch by Ulrich Drepper.
 
 2000-10-26  Jim Meyering  <meyering@lucent.com>
