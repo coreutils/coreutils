@@ -36,9 +36,21 @@ test $fail = 1 && diff out exp 2> /dev/null
 
 rm -f out exp
 # Until coreutils-4.5.10, this would elicit a segfault.
-$prog '%*sy\n' -3 x > out || fail=1
+$prog '1 %*sy\n' -3 x >  out || fail=1
+
+# Until coreutils-4.5.12, these would fail.
+POSIXLY_CORRECT=1 \
+$prog '2 \x'          >> out || fail=1; echo >> out
+$prog '3 \x40\n'      >> out || fail=1
+POSIXLY_CORRECT=1 \
+$prog '4 \x40\n'      >> out || fail=1
+$prog '5 % +d\n' 234  >> out || fail=1
 cat <<\EOF > exp
-x  y
+1 x  y
+2 \x
+3 @
+4 \x40
+5 +234
 EOF
 
 cmp out exp || fail=1
