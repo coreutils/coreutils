@@ -25,13 +25,15 @@
 
 # ifdef HAVE_UTMPX_H
 #  include <utmpx.h>
-#  define STRUCT_UTMP struct utmpx
+#  define UTMP_STRUCT_NAME utmpx
 #  define UT_TIME_MEMBER(UT_PTR) ((UT_PTR)->ut_tv.tv_sec)
 # else
 #  include <utmp.h>
-#  define STRUCT_UTMP struct utmp
+#  define UTMP_STRUCT_NAME utmp
 #  define UT_TIME_MEMBER(UT_PTR) ((UT_PTR)->ut_time)
 # endif
+
+typedef struct UTMP_STRUCT_NAME STRUCT_UTMP;
 
 # include <time.h>
 # ifdef HAVE_SYS_PARAM_H
@@ -69,8 +71,6 @@ extern int errno;
 #  define WTMP_FILE "/etc/wtmp"
 # endif
 
-extern STRUCT_UTMP * utmp_contents;
-
 # undef PARAMS
 # if defined (__STDC__) && __STDC__
 #  define PARAMS(Args) Args
@@ -78,7 +78,8 @@ extern STRUCT_UTMP * utmp_contents;
 #  define PARAMS(Args) ()
 # endif
 
-extern char * extract_trimmed_name PARAMS((const STRUCT_UTMP *ut));
-extern int read_utmp PARAMS((const char *filename));
+extern char *extract_trimmed_name PARAMS ((const STRUCT_UTMP *ut));
+extern int read_utmp PARAMS ((const char *filename,
+			      int *n_entries, STRUCT_UTMP **utmp_buf));
 
 #endif /* __READUTMP_H__ */
