@@ -1,4 +1,18 @@
+Tue Apr 16 20:24:44 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* src/Makefile.am (who.c): Qualify who-users.c reference with
+	$(srcdir)/ prefix.
+	(users.c): Likewise.
+	(uptime.c): Likewise.
+	From François Pinard.
+
+	* configure.in: Always invoke AC_GETLOADAVG, not just if we're
+	building uptime.
+
 Sat Apr 13 13:24:35 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* getloadavg.c: Test cpp-defined __sun as well as sun, because
+	in strict ANSI mode, only __sun is defined.  From Kaveh Ghazi.
 
 	* date.c (usage): Add missing `\n\' at the end of newly added
 	lines for %e and %z.
