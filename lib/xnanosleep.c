@@ -123,9 +123,16 @@ xnanosleep (double seconds)
 	  ts_sleep.tv_nsec = BILLION - 1;
 	}
 
+      /* Linux-2.6.8.1's nanosleep returns -1, but doesn't set errno
+	 when resumed after being suspended.  Earlier versions would
+	 set errno to EINTR.  nanosleep from linux-2.6.10, as well as
+	 implementations by (all?) other vendors, doesn't return -1
+	 in that case;  either it continues sleeping (if time remains)
+	 or it returns zero (if the wake-up time has passed).  */
+      errno = 0;
       if (nanosleep (&ts_sleep, NULL) == 0)
 	break;
-      if (errno != EINTR)
+      if (errno != EINTR && errno != 0)
 	return -1;
 
       if (NANOSLEEP_BUG_WORKAROUND)
