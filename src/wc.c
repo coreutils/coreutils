@@ -1,5 +1,5 @@
 /* wc - print the number of bytes, words, and lines in files
-   Copyright (C) 85, 91, 95, 96, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 85, 91, 1995-1998, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -142,6 +142,9 @@ wc (int fd, const char *file)
   uintmax_t lines, words, chars, linelength;
 
   lines = words = chars = linelength = 0;
+
+  /* We need binary input, since `wc' relies on `lseek' and byte counts.  */
+  SET_BINARY (fd);
 
   /* When counting only bytes, save some line- and word-counting
      overhead.  If FD is a `regular' Unix file, using lseek is enough
