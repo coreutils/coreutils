@@ -1,0 +1,214 @@
+# Makefile for program source directory in GNU NLS utilities package.
+# Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+PACKAGE = @PACKAGE@
+VERSION = @VERSION@
+
+SHELL = /bin/sh
+@SET_MAKE@
+
+srcdir = @srcdir@
+top_srcdir = @top_srcdir@
+VPATH = @srcdir@
+
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+datadir = $(prefix)/@DATADIRNAME@
+localedir = $(datadir)/locale
+gnulocaledir = $(prefix)/share/locale
+gettextsrcdir = $(prefix)/share/gettext
+subdir = po
+
+INSTALL = @INSTALL@
+INSTALL_DATA = @INSTALL_DATA@
+
+CC = @CC@
+GENCAT = @GENCAT@
+GMSGFMT = @GMSGFMT@
+MSGFMT = @MSGFMT@
+XGETTEXT = @XGETTEXT@
+TUPDATE = tupdate
+
+DEFS = @DEFS@
+CFLAGS = @CFLAGS@
+CPPFLAGS = @CPPFLAGS@
+
+INCLUDES = -I.. -I$(top_srcdir)/intl
+
+COMPILE = $(CC) -c $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS) $(XCFLAGS)
+
+SOURCES = cat-id-tbl.c
+POFILES = @POFILES@
+GMOFILES = @GMOFILES@
+DISTFILES = ChangeLog Makefile.in.in POTFILES.in $(PACKAGE).pot \
+stamp-cat-id $(POFILES) $(GMOFILES) $(SOURCES)
+
+POTFILES = \
+
+CATALOGS = @CATALOGS@
+CATOBJEXT = @CATOBJEXT@
+INSTOBJEXT = @INSTOBJEXT@
+
+.SUFFIXES:
+.SUFFIXES: .c .o .po .pox .gmo .mo .msg .cat
+
+.c.o:
+	$(COMPILE) $<
+
+.po.pox:
+	$(MAKE) $(PACKAGE).pot
+	$(TUPDATE) $(srcdir)/$(PACKAGE).pot $< > $*.pox
+
+.po.mo:
+	$(MSGFMT) -o $@ $<
+
+.po.gmo:
+	file=$(srcdir)/`echo $* | sed 's,.*/,,'`.gmo \
+	  && rm -f $$file && $(GMSGFMT) -o $$file $<
+
+.po.cat:
+	sed -f ../intl/po2msg.sed < $< > $*.msg \
+	  && rm -f $@ && $(GENCAT) $@ $*.msg
+
+
+all: all-@USE_NLS@
+
+all-yes: cat-id-tbl.c $(CATALOGS)
+all_no:
+
+$(PACKAGE).pot: $(POTFILES)
+	$(XGETTEXT) --default-domain=$(PACKAGE) --directory=$(top_srcdir) \
+	  --add-comments --keyword=_ --keyword=N_ \
+	  --files-from=$(srcdir)/POTFILES.in
+	if cmp -s $(PACKAGE).po $(srcdir)/$(PACKAGE).pot; then \
+	  rm -f $(PACKAGE).po; \
+	else \
+	  rm -f $(srcdir)/$(PACKAGE).pot \
+	    && mv $(PACKAGE).po $(srcdir)/$(PACKAGE).pot; \
+	fi
+
+cat-id-tbl.c: stamp-cat-id
+stamp-cat-id: $(PACKAGE).pot
+	rm -f cat-id-tbl.tmp.c
+	sed -f ../intl/po2tbl.sed $(srcdir)/$(PACKAGE).pot \
+		| sed -e "s/@PACKAGE NAME@/$(PACKAGE)/" > cat-id-tbl.tmp.c
+	if cmp -s cat-id-tbl.tmp.c $(srcdir)/cat-id-tbl.c; then \
+	  rm cat-id-tbl.tmp.c; \
+	else \
+	  echo cat-id-tbl.c changed; \
+	  rm -f $(srcdir)/cat-id-tbl.c; \
+	  mv cat-id-tbl.tmp.c $(srcdir)/cat-id-tbl.c; \
+	fi
+	cd $(srcdir) && rm -f stamp-cat-id && echo timestamp > stamp-cat-id
+
+
+install: install-exec install-data
+install-exec:
+install-data: all
+	$(top_srcdir)/mkinstalldirs $(datadir)
+	catalogs='$(CATALOGS)'; \
+	for cat in $$catalogs; do \
+	  case "$$cat" in \
+	    *.gmo) destdir=$(gnulocaledir);; \
+	    *)     destdir=$(localedir);; \
+	  esac; \
+	  lang=`echo $$cat | sed 's/$(CATOBJEXT)$$//'`; \
+	  dir=$$destdir/$$lang/LC_MESSAGES; \
+	  $(top_srcdir)/mkinstalldirs $$dir; \
+	  if test -r $$cat; then \
+	    $(INSTALL_DATA) $$cat $$dir/$(PACKAGE)$(INSTOBJEXT); \
+	  else \
+	    $(INSTALL_DATA) $(srcdir)/$$cat $$dir/$(PACKAGE)$(INSTOBJEXT); \
+	  fi; \
+	done
+
+# This installation goal is only used in GNU gettext.  Packages which
+# only use the library should use install instead.
+install-src: install
+	$(top_srcdir)/mkinstalldirs $(gettextsrcdir)
+	cd $(srcdir) && \
+	  $(INSTALL_DATA) Makefile.in.in $(gettextsrcdir)/po-Makefile.in.in
+
+uninstall:
+	catalogs='$(CATALOGS)'; \
+	for cat in $$catalogs; do \
+	  lang=`echo $$cat | sed 's/$(CATOBJEXT)$$//'`; \
+	  rm -f $(localedir)/$$lang/LC_MESSAGES/$(PACKAGE)$(INSTOBJEXT); \
+	  rm -f $(gnulocaledir)/$$lang/LC_MESSAGES/$(PACKAGE)$(INSTOBJEXT); \
+	done
+	rm -f $(gettextsrcdir)/po-Makefile.in.in
+
+check: all
+
+cat-id-tbl.o: ../intl/libgettext.h
+
+TAGS ID:
+
+mostlyclean:
+	rm -f core core.* *.pox $(PACKAGE).po *.old.po cat-id-tbl.tmp.c
+	rm -fr *.o
+
+clean: mostlyclean
+
+distclean: clean
+	rm -f Makefile Makefile.in POTFILES *.mo *.msg *.cat
+
+maintainer-clean: distclean
+	@echo "This command is intended for maintainers to use;"
+	@echo "it deletes files that may require special tools to rebuild."
+
+distdir = ../$(PACKAGE)-$(VERSION)/$(subdir)
+dist dist-gettext: update-po $(DISTFILES)
+	for file in $(DISTFILES); do \
+	  ln $(srcdir)/$$file $(distdir) 2> /dev/null \
+	    || cp -p $(srcdir)/$$file $(distdir); \
+	done
+
+update-po: Makefile
+	$(MAKE) $(PACKAGE).pot
+	cd $(srcdir); \
+	catalogs='$(CATALOGS)'; \
+	for cat in $$catalogs; do \
+	  lang=`echo $$cat | sed 's/$(CATOBJEXT)$$//'`; \
+	  mv $$lang.po $$lang.old.po; \
+	  if $(TUPDATE) $(PACKAGE).pot $$lang.old.po > $$lang.po; then \
+	    rm -f $$lang.old.po; \
+	  else \
+	    echo "tupdate for $$cat failed!"; \
+	    rm -f $$lang.po; \
+	    mv $$lang.old.po $$lang.po; \
+	  fi; \
+	done
+
+POTFILES: POTFILES.in
+	( if test 'x$(srcdir)' != 'x.'; then \
+	    posrcprefix='$(top_srcdir)/'; \
+	  else \
+	    posrcprefix="../"; \
+	  fi; \
+	  sed -e '/^#/d' -e '/^[ 	]*$$/d' \
+	      -e "s@.*@	$$posrcprefix& \\\\@" \
+	      -e '$$s/\(.*\) \\/\1/' < $(srcdir)/POTFILES.in > POTFILES )
+
+Makefile: Makefile.in.in ../config.status POTFILES
+	cd .. \
+	  && CONFIG_FILES=$(subdir)/$@.in CONFIG_HEADERS= \
+	       $(SHELL) ./config.status
+
+# Tell versions [3.59,3.63) of GNU make not to export all variables.
+# Otherwise a system limit (for SysV at least) may be exceeded.
+.NOEXPORT:
