@@ -50,7 +50,7 @@ static struct option const longopts[] =
 };
 
 #ifdef S_ISFIFO
-static void
+void
 usage (int status)
 {
   if (status != 0)

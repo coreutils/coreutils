@@ -115,7 +115,7 @@ remove_parents (char *path)
   return fail;
 }
 
-static void
+void
 usage (int status)
 {
   if (status != 0)

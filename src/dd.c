@@ -279,7 +279,7 @@ static struct option const long_options[] =
   {0, 0, 0, 0}
 };
 
-static void
+void
 usage (int status)
 {
   if (status != 0)

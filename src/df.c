@@ -574,7 +574,7 @@ add_excluded_fs_type (const char *fstype)
   fs_exclude_list = fsp;
 }
 
-static void
+void
 usage (int status)
 {
   if (status != 0)
