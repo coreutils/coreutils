@@ -82,6 +82,11 @@ int rpl_lstat PARAMS((const char *, struct stat *));
 int euidaccess ();
 int yesno ();
 
+/* FIXME: remove this declaration and instead write a new function,
+   error_no_prog, that saves error.c's error_print_progname, sets it to
+   point to function that does nothing, calls error, then restores
+   the original value of error_print_progname.  Use error_no_prog in
+   place of `fprintf (stderr,'.  */
 extern char *program_name;
 
 /* state initialized by remove_init, freed by remove_fini  */
