@@ -54,6 +54,7 @@ lib-ld.m4 \
 lib-link.m4 \
 lib-prefix.m4 \
 link-follow.m4 \
+longdouble.m4 \
 longlong.m4 \
 ls-mntd-fs.m4 \
 lstat.m4 \
@@ -76,6 +77,7 @@ rename.m4 \
 restrict.m4 \
 rmdir-errno.m4 \
 search-libs.m4 \
+signed.m4 \
 st_dm_mode.m4 \
 st_mtim.m4 \
 stat.m4 \
@@ -91,7 +93,10 @@ uptime.m4 \
 utimbuf.m4 \
 utime.m4 \
 utimes.m4 \
+vasnprintf.m4 \
 vasprintf.m4 \
+wchar_t.m4 \
+wint_t.m4 \
 xstrtoimax.m4 \
 xstrtoumax.m4
 ##m4-files-end
