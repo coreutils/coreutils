@@ -1358,7 +1358,7 @@ main (int argc, char **argv)
 
   for (i = 0; i < n_files; i++)
     {
-      if STREQ (file[i], "-")
+      if (STREQ (file[i], "-"))
 	{
 	  if (wipefd (0, file[i], &s, (size_t) n_passes, &flags) < 0)
 	    err = 1;
