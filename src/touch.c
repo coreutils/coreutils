@@ -28,6 +28,7 @@
 #include "error.h"
 #include "getdate.h"
 #include "posixtm.h"
+#include "quote.h"
 #include "safe-read.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -149,7 +150,10 @@ touch (const char *file)
 	 or FILE is inaccessible or a directory, so we have to use stat.  */
       if (fd != -1 ? fstat (fd, &sbuf) : stat (file, &sbuf))
 	{
-	  error (0, open_errno ? open_errno : errno, "%s", file);
+	  if (open_errno)
+	    error (0, open_errno, _("creating %s"), quote (file));
+	  else
+	    error (0, errno, _("obtaining attributes of %s"), quote (file));
 	  close (fd);
 	  return 1;
 	}
@@ -157,7 +161,7 @@ touch (const char *file)
 
   if (fd != -1 && close (fd) < 0)
     {
-      error (0, errno, "%s", file);
+      error (0, errno, _("creating %s"), quote (file));
       return 1;
     }
 
@@ -194,7 +198,10 @@ touch (const char *file)
 
   if (status)
     {
-      error (0, open_errno ? open_errno : errno, "%s", file);
+      if (open_errno)
+	error (0, open_errno, _("creating %s"), quote (file));
+      else
+	error (0, errno, _("setting times of %s"), quote (file));
       return 1;
     }
 
@@ -271,7 +278,7 @@ main (int argc, char **argv)
 	  flexible_date++;
 	  newtime = get_date (optarg, NULL);
 	  if (newtime == (time_t) -1)
-	    error (1, 0, _("invalid date format `%s'"), optarg);
+	    error (1, 0, _("invalid date format %s"), quote (optarg));
 	  date_set++;
 	  break;
 
@@ -292,7 +299,7 @@ main (int argc, char **argv)
 	  newtime = posixtime (optarg,
 			       PDS_LEADING_YEAR | PDS_CENTURY | PDS_SECONDS);
 	  if (newtime == (time_t) -1)
-	    error (1, 0, _("invalid date format `%s'"), optarg);
+	    error (1, 0, _("invalid date format %s"), quote (optarg));
 	  date_set++;
 	  break;
 
@@ -323,7 +330,7 @@ main (int argc, char **argv)
   if (use_ref)
     {
       if (stat (ref_file, &ref_stats))
-	error (1, errno, "%s", ref_file);
+	error (1, errno, _("obtaining attributes of %s"), quote (ref_file));
       date_set++;
     }
 
