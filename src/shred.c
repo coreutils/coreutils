@@ -1217,7 +1217,7 @@ wipename (char *oldname, struct Options const *flags)
   close (dirfd);
   if (origname)
     {
-      if (!err)
+      if (!err && flags->verbose)
 	pfstatus (_("%s: deleted"), origname);
       free (origname);
     }
