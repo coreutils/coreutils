@@ -239,7 +239,7 @@ signatures ?= $(distdir).tar.bz2.sig $(distdir).tar.gz.sig
 	gpg --detach-sign $<
 
 # This is useful when sending via GNUS in Emacs.
-mail_gpg_sign_cookie ?= echo '<#secure method=pgpmime mode=sign>'
+mail_gpg_sign_cookie ?= echo '<\#secure method=pgpmime mode=sign>'
 
 rel-files = $(xd-delta) $(distdir).tar.bz2 $(distdir).tar.gz
 announcement: NEWS ChangeLog $(rel-files) $(signatures)
@@ -388,7 +388,9 @@ endef
 $(xd-delta): $(release_archive_dir)/$(prev-tgz) $(distdir).tar.gz
 	xdelta delta -9 $^ $@ || :
 
-alpha: $(local-check)
+.PHONY: alpha release
+alpha: release
+release: $(local-check)
 	$(MAKE) cvs-dist
 	$(MAKE) $(xd-delta)
 	$(MAKE) -s announcement > /tmp/announce-$(my_distdir)
