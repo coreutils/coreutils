@@ -143,11 +143,7 @@ FIXME maybe add more discussion here?\n\
 }
 
 #if ! HAVE_FDATASYNC
-static int
-fdatasync (int fd)
-{
-  return fsync (fd);
-}
+# define fdatasync(Fd) fsync (Fd)
 #endif
 
 /*
