@@ -1,5 +1,8 @@
 2003-08-18  Jim Meyering  <jim@meyering.net>
 
+	* gettextext.m4 (AM_PO_SUBDIRS, AM_NLS): Don't define as no-ops.
+	Their absence provoked a failure due to non-creation of po/Makefile.
+
 	* getloadavg.m4: Use [\t ], not [ \t] (where \t is a literal TAB).
 	* lib-ld.m4: Likewise.
 	* po.m4: Likewise.
