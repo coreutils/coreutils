@@ -1802,5 +1802,11 @@ deleting and squeezing repeats");
 	}
     }
 
+  if (fclose (stdout) == EOF)
+    error (2, errno, "write error");
+
+  if (close (0) != 0)
+    error (2, errno, "standard input");
+
   exit (0);
 }

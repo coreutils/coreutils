@@ -43,7 +43,7 @@
 
    Original version by Paul Rubin <phr@ocf.berkeley.edu>.
    Extensions by David MacKenzie <djm@gnu.ai.mit.edu>.
-   tail -f for multiple files by Ian Lance Taylor <ian@cygnus.com>.  */
+   tail -f for multiple files by Ian Lance Taylor <ian@airs.com>.  */
 
 #include <stdio.h>
 #include <getopt.h>
@@ -907,9 +907,22 @@ tail_forever (names, nfiles)
 
   pids = (int *) xmalloc (nfiles * sizeof (int));
 
-  /* fork once for each file.  If this is too ugly for you, don't use
-     tail -f on multiple files.  Maybe we could use select as an
-     alternative, though it's less portable.  Is it worth the bother?  */
+  /* fork once for each file.  This approach uses one process and
+     one file descriptor for each file we tail.
+     More resource-efficient approaches would be:
+
+     1.  Keep an off_t array of the last-seen sizes of the files,
+     and fstat them each in turn, watching for growth.
+     This would be more portable, but still use the same number of
+     file descriptors, and would probably use more CPU.
+     For pipes, perhaps a separate process would have to be forked to
+     read from the pipe and write to a temporary file.
+
+     2.  Keep an off_t array, but only keep recently changed files open
+     and use stat for the others, opening them only if they change.
+     This would save file descriptors, to allow tail -f on a large number
+     of files.  It's probably not worth the trouble for most uses, though,
+     and GNU won't have arbitrary limits on things like file descriptors.  */
 
   signal (SIGUSR1, sigusr1);
 
@@ -929,11 +942,11 @@ tail_forever (names, nfiles)
 	  close (pipe_descs[0]);
 
 	  /* Each child reads continually from a file and writes to
-	     the pipe.  Each write to a pipe is the index of the file
+	     the pipe.  Each write to the pipe is the index of the file
 	     being read, followed by the number of bytes read from the
-	     file, followed by the actual bytes.  Each child is
+	     file, followed by the actual data.  Each child is
 	     careful to write no more than PIPE_BUF bytes to the pipe,
-	     so that the data from the various children does not get
+	     so that the data from the various children do not get
 	     intermixed.  */
 
 	  /* The file index for this child is always the same.  */

@@ -107,7 +107,7 @@ static int linelength = 30;
 #define LINEALLOC 262144
 
 /* Prefix for temporary file names. */
-static char *prefix;
+static char *temp_file_prefix;
 
 /* Flag to reverse the order of all comparisons. */
 static int reverse;
@@ -292,15 +292,15 @@ static char *
 tempname ()
 {
   static int seq;
-  int len = strlen (prefix);
+  int len = strlen (temp_file_prefix);
   char *name = xmalloc (len + 16);
   struct tempnode *node =
   (struct tempnode *) xmalloc (sizeof (struct tempnode));
 
-  if (len && prefix[len - 1] != '/')
-    sprintf (name, "%s/sort%5.5d%5.5d", prefix, getpid (), ++seq);
+  if (len && temp_file_prefix[len - 1] != '/')
+    sprintf (name, "%s/sort%5.5d%5.5d", temp_file_prefix, getpid (), ++seq);
   else
-    sprintf (name, "%ssort%5.5d%5.5d", prefix, getpid (), ++seq);
+    sprintf (name, "%ssort%5.5d%5.5d", temp_file_prefix, getpid (), ++seq);
   node->name = name;
   node->next = temphead.next;
   temphead.next = node;
@@ -1427,9 +1427,9 @@ main (argc, argv)
   have_read_stdin = 0;
   inittables ();
 
-  prefix = getenv ("TMPDIR");
-  if (prefix == NULL)
-    prefix = "/tmp";
+  temp_file_prefix = getenv ("TMPDIR");
+  if (temp_file_prefix == NULL)
+    temp_file_prefix = "/tmp";
 
 #ifdef _POSIX_VERSION
   newact.sa_handler = sighandler;
@@ -1625,6 +1625,17 @@ main (argc, argv)
 		    else
 		      error (2, 0, "option `-t' requires an argument");
 		    break;
+		  case 'T':
+		    if (s[1])
+		      temp_file_prefix = ++s;
+		    else if (i < argc - 1)
+		      {
+			temp_file_prefix = argv[++i];
+			goto outer;
+		      }
+		    else
+		      error (2, 0, "option `-T' requires an argument");
+		    break;
 		  case 'u':
 		    unique = 1;
 		    break;
@@ -1725,8 +1736,8 @@ static void
 usage ()
 {
   fprintf (stderr, "\
-Usage: %s [-cmus] [-t separator] [-o output-file] [-bdfiMnr] [+POS1 [-POS2]]\n\
-       [-k POS1[,POS2]] [file...]\n",
+Usage: %s [-cmus] [-t separator] [-o output-file] [-T tempdir] [-bdfiMnr]\n\
+       [+POS1 [-POS2]] [-k POS1[,POS2]] [file...]\n",
 	   program_name);
   exit (2);
 }

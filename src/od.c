@@ -1,4 +1,4 @@
-/* od -- dump in octal (and other formats) the contents of files
+/* od -- dump files in octal and other formats
    Copyright (C) 1992 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -1624,13 +1624,13 @@ main (argc, argv)
 	     specs.  GNU od accepts any combination of old- and
 	     new-style options.  Format specification options accumulate.  */
 
-#define CASE_OLD_ARG(old_char,new_string)				\
-	case old_char:							\
-	  {								\
-	    int tmp;							\
-	    tmp = decode_format_string (new_string);			\
-	    assert (tmp == 0);						\
-	  }								\
+#define CASE_OLD_ARG(old_char,new_string)		\
+	case old_char:					\
+	  {						\
+	    int tmp;					\
+	    tmp = decode_format_string (new_string);	\
+	    assert (tmp == 0);				\
+	  }						\
 	  break
 
 	  CASE_OLD_ARG ('a', "a");

@@ -25,10 +25,6 @@
 #include "regex.h"
 #include "system.h"
 
-#if !defined(USG) && !defined(STDC_HEADERS)
-char *memchr ();
-#endif
-
 #ifdef STDC_HEADERS
 #include <stdlib.h>
 #else

@@ -1,4 +1,4 @@
-Tue Dec  8 10:31:14 CST 1992
+Tue Dec  8 10:31:14 1992  Jim Meyering  (meyering@idefix.comco.com)
 
 	* tr.c (is_char_class_member): Remove unreached return after abort.
 
@@ -18,11 +18,16 @@ Wed Dec  2 12:28:10 1992  Jim Meyering  (meyering@idefix.comco.com)
 	struct option to use new macros from getopt.h: no_argument,
 	required_argument, and optional_argument.
 
-Wed Nov 25 07:51:55 1992  Jim Meyering  (meyering@idefix.comco.com)
+Tue Dec 01 10:57:24 1992  Jim Meyering  (meyering@idefix.comco.com)
 
-	* pr.c, sort.c, od.c: Make definitions of ISPRINT etc consistent.
+	* od.c, pr.c, sort.c: Make uses of ctype.h macros consistent.
 
-	* tr.c (main): Close stdin and stdout.
+	* tr.c (main): Close stdin and stdout and check return status.
+
+Tue Nov 24 09:26:08 1992  David J. MacKenzie  (djm@goldman.gnu.ai.mit.edu)
+
+	* system.h, csplit.c: Use HAVE_FCNTL_H and HAVE_STRING_H
+	instead of USG.
 
 Tue Nov 24 08:42:30 1992  Jim Meyering  (meyering@idefix.comco.com)
 
@@ -47,6 +52,10 @@ Tue Nov 24 08:42:30 1992  Jim Meyering  (meyering@idefix.comco.com)
 	just before exiting.
 	(write_block, dump_strings, dump): Don't test return value from
 	functions that operate on streams.  Rely on later ferror tests.
+
+Sat Nov 21 12:41:49 1992  David J. MacKenzie  (djm@goldman.gnu.ai.mit.edu)
+
+	* sort.c (main, usage): Add -T option.
 
 Thu Nov 19 14:33:40 1992  David J. MacKenzie  (djm@goldman.gnu.ai.mit.edu)
 
