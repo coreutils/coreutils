@@ -83,7 +83,7 @@ src_to_dest_free (void *x)
 
 /* Remove the entry matching INO/DEV from the table
    that maps source ino/dev to destination file name.  */
-void
+extern void
 forget_created (ino_t ino, dev_t dev)
 {
   struct Src_to_dest probe;
@@ -101,7 +101,7 @@ forget_created (ino_t ino, dev_t dev)
 /* Add PATH to the list of files that we have created.
    Return 1 if we can't stat PATH, otherwise 0.  */
 
-int
+extern int
 remember_created (const char *path)
 {
   struct stat sb;
@@ -119,7 +119,7 @@ remember_created (const char *path)
 /* If INO/DEV correspond to an already-copied source file, return the
    name of the corresponding destination file.  Otherwise, return NULL.  */
 
-char *
+extern char *
 src_to_dest_lookup (ino_t ino, dev_t dev)
 {
   struct Src_to_dest ent;
@@ -134,7 +134,7 @@ src_to_dest_lookup (ino_t ino, dev_t dev)
    to the list of files we have copied.
    Return NULL if inserted, otherwise non-NULL. */
 
-char *
+extern char *
 remember_copied (const char *name, ino_t ino, dev_t dev)
 {
   struct Src_to_dest *ent;
@@ -166,7 +166,7 @@ remember_copied (const char *name, ino_t ino, dev_t dev)
 }
 
 /* Initialize the hash table.  */
-void
+extern void
 hash_init (void)
 {
   src_to_dest = hash_initialize (INITIAL_TABLE_SIZE, NULL,
@@ -180,7 +180,7 @@ hash_init (void)
 /* Reset the hash structure in the global variable `htab' to
    contain no entries.  */
 
-void
+extern void
 forget_all (void)
 {
   hash_free (src_to_dest);
