@@ -193,6 +193,7 @@ static struct option const long_options[] =
   {"owner", required_argument, NULL, 'o'},
   {"preserve-timestamps", no_argument, NULL, 'p'},
   {"backup", no_argument, NULL, 'b'},
+  {"suffix", required_argument, NULL, 'S'},
   {"version-control", required_argument, NULL, 'V'},
   {"verbose", no_argument, NULL, 'v'},
   {"help", no_argument, &show_help, 1},
