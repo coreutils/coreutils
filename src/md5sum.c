@@ -178,8 +178,6 @@ hex_digits (const char *s)
 }
 
 /* FIXME: allow newline in filename by encoding it. */
-/* FIXME: distinguish between file open/read failure and inconsistent
-   checksum. */
 
 static int
 md5_file (const char *filename, int binary, unsigned char *md5_result)
