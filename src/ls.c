@@ -2453,7 +2453,10 @@ print_long_format (const struct fileinfo *f)
 
   if ((when_local = localtime (&when)))
     {
-      while (! (s = strftime (p, buf + bufsize - p - 1, fmt, when_local)))
+      *p = '\1';
+
+      while (! (s = strftime (p, buf + bufsize - p - 1, fmt, when_local))
+	     && *p)
 	{
 	  char *newbuf = (char *) alloca (bufsize *= 2);
 	  memcpy (newbuf, buf, p - buf);
