@@ -73,7 +73,7 @@ struct control
   struct re_pattern_buffer re_compiled;	/* Compiled regular expression. */
   int offset;			/* Offset from regexp to split at. */
   int lines_required;		/* Number of lines required. */
-  int repeat;			/* Repeat count. */
+  unsigned int repeat;		/* Repeat count. */
   int repeat_forever;		/* Non-zero if `*' used as a repeat count. */
   int argnum;			/* ARGV index. */
   boolean ignore;		/* If true, produce no output (for regexp). */
