@@ -1,3 +1,15 @@
+2002-12-05  Paul Eggert  <eggert@twinsun.com>
+
+	* alloca.c [defined emacs]: Include "lisp.h".
+	(xalloc_die) [defined emacs]: New macro.
+	(free) [defined emacs && defined EMACS_FREE]: Define to EMACS_FREE.
+	[! defined emacs]: Include <xalloc.h>.
+	(POINTER_TYPE) [!defined POINTER_TYPE]: New macro.
+	(pointer): Typedef to POINTER_TYPE *.
+	(malloc): Remove decl; we now always use xmalloc.
+	(alloca): Use old-style definition, since Emacs needs this.
+	Check for arithmetic overflow when computing combined size.
+
 2002-12-04  Jim Meyering  <jim@meyering.net>
 
 	Reflect the fact that stat.c and lstat.c are no longer generated.
