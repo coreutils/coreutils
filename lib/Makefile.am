@@ -129,6 +129,12 @@ libfetish_a_SOURCES = \
   xstrtoumax.c \
   yesno.c
 
+libfetish_a_SOURCES += \
+  printf-args.h \
+  printf-parse.h \
+  vasprintf.h \
+  vasnprintf.h
+
 libfetish_a_LIBADD = $(LIBOBJS) $(ALLOCA)
 libfetish_a_DEPENDENCIES = $(libfetish_a_LIBADD)
 
