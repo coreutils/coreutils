@@ -57,41 +57,32 @@ extern int errno;
    Tru64 5.1.  */
 #define MAX_BYTES_TO_READ INT_MAX
 
+#ifndef EINTR
+/* If a system doesn't have support for EINTR, define it
+   to be a value to which errno will never be set.  */
+# define EINTR (INT_MAX - 10)
+#endif
+
 /* Read up to COUNT bytes at BUF from descriptor FD, retrying if interrupted.
    Return the actual number of bytes read, zero for EOF, or SAFE_READ_ERROR
    upon error.  */
 size_t
 safe_read (int fd, void *buf, size_t count)
 {
-  size_t total_read = 0;
-  char *ptr = buf;
+  size_t nbytes_to_read = count;
+  ssize_t result;
 
-  while (count > 0)
+  /* Limit the number of bytes to read, to avoid running
+     into unspecified behaviour.  But keep the file pointer block
+     aligned when doing so.  */
+  if (nbytes_to_read > MAX_BYTES_TO_READ)
+    nbytes_to_read = MAX_BYTES_TO_READ & ~8191;
+
+  do
     {
-      size_t nbytes_to_read = count;
-      ssize_t result;
-
-      /* Limit the number of bytes to read in one round, to avoid running
-	 into unspecified behaviour.  But keep the file pointer block
-	 aligned when doing so.  */
-      if (nbytes_to_read > MAX_BYTES_TO_READ)
-	nbytes_to_read = MAX_BYTES_TO_READ & ~8191;
-
-      result = read (fd, ptr, nbytes_to_read);
-      if (result == 0)
-	break;
-      if (result < 0)
-	{
-#ifdef EINTR
-	  if (errno == EINTR)
-	    continue;
-#endif
-	  return SAFE_READ_ERROR;
-	}
-      total_read += result;
-      ptr += result;
-      count -= result;
+      result = read (fd, buf, nbytes_to_read);
     }
+  while (result < 0 && errno == EINTR);
 
-  return total_read;
+  return (size_t) result;
 }
