@@ -614,7 +614,6 @@ main (int argc, char **argv)
 #endif /* WHO */
 
 	default:
-	  error (0, 0, _("too many arguments"));
 	  usage (1);
 	}
     }
@@ -655,6 +654,7 @@ main (int argc, char **argv)
 #endif /* WHO */
 
     default:			/* lose */
+      error (0, 0, _("too many arguments"));
       usage (1);
     }
 
