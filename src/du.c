@@ -474,7 +474,8 @@ process_file (const char *file, const struct stat *sb, int file_type,
 	  fwrite (file, arg_length, 1, stdout);
 	  /* Print everything after what we appended.  */
 	  fputs (file + arg_length + suffix_length
-		 + (file[arg_length + suffix_length] == '/'), stdout);
+		 + (file[arg_length - 1] == '/'
+		    && file[arg_length + suffix_length] == '/'), stdout);
 	}
       else
 	{
