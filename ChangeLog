@@ -2,6 +2,9 @@
 
 	* Version 5.0.90.
 
+	* README: When running tests as root, suggest using
+	sudo with NON_ROOT_USERNAME=$USER.
+
 	* tests/Makefile.am (all_programs): Makefile is in ../src, not
 	$(srcdir)/../src.
 
