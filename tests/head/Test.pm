@@ -11,30 +11,53 @@ my @tv = (
 ['idem-3', '', "a\n", "a\n", 0],
 
 ['basic-0-10', '',
- "1\n2\n3\n4\n5\n6\n7\n8\n9\na\n",
- "1\n2\n3\n4\n5\n6\n7\n8\n9\na\n", 0],
+ "1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n",
+ "1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n", 0],
 
 ['basic-0-09', '',
  "1\n2\n3\n4\n5\n6\n7\n8\n9\n",
  "1\n2\n3\n4\n5\n6\n7\n8\n9\n", 0],
 
 ['basic-0-11', '',
- "1\n2\n3\n4\n5\n6\n7\n8\n9\na\nb\n",
- "1\n2\n3\n4\n5\n6\n7\n8\n9\na\n", 0],
+ "1\n2\n3\n4\n5\n6\n7\n8\n9\n0\nb\n",
+ "1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n", 0],
 
+['obs-0', '-1', "1\n2\n", "1\n", 0],
+['obs-1', '-1c', "", "", 0],
+['obs-2', '-1c', "12", "1", 0],
+['obs-3', '-14c', "1234567890abcdefg", "1234567890abcd", 0],
 
 );
 
 sub test_vector
 {
   my $t;
+  my @new_tv;
   foreach $t (@tv)
     {
       my ($test_name, $flags, $in, $exp, $ret) = @$t;
-      $Test::input_via{$test_name} = {REDIR => 0, FILE => 0, PIPE => 0}
+      if ($test_name =~ /^obs-/)
+	{
+	  $test_name =~ s/^obs-/posix-/;
+	  if ($flags =~ /-(\d+)$/)
+	    {
+	      $flags = "-n $1";
+	    }
+	  elsif ($flags =~ /-(\d+)([cbk])$/)
+	    {
+	      my $suffix = $2;
+	      $suffix = '' if $suffix eq 'c';
+	      $flags = "-c $1$suffix";
+	    }
+	  else
+	    {
+	      $flags = "-l $`";
+	    }
+	}
+      push (@new_tv, [$test_name, $flags, $in, $exp, $ret]);
     }
 
-  return @tv;
+  return @new_tv;
 }
 
 1;
