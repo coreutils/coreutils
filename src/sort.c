@@ -45,8 +45,6 @@ char *realloc ();
 void free ();
 #endif
 
-static void usage ();
-
 /* Undefine, to avoid warning about redefinition on some systems.  */
 #undef min
 #define min(a, b) ((a) < (b) ? (a) : (b))
@@ -185,6 +183,52 @@ static struct keyfield
   struct keyfield *next;	/* Next keyfield to try. */
 } keyhead;
 
+static void
+usage (int status)
+{
+  if (status != 0)
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
+	     program_name);
+  else
+    {
+      printf (_("\
+Usage: %s [OPTION]... [FILE]...\n\
+"),
+	      program_name);
+      printf (_("\
+Write sorted concatenation of all FILE(s) to standard output.\n\
+\n\
+  +POS1 [-POS2]    start a key at POS1, end it before POS2\n\
+  -M               compare (unknown) < `JAN' < ... < `DEC', imply -b\n\
+  -T DIRECT        use DIRECT for temporary files, not $TMPDIR or %s\n\
+  -b               ignore leading blanks in sort fields or keys\n\
+  -c               check if given files already sorted, do not sort\n\
+  -d               consider only [a-zA-Z0-9 ] characters in keys\n\
+  -f               fold lower case to upper case characters in keys\n\
+  -i               consider only [\\040-\\0176] characters in keys\n\
+  -k POS1[,POS2]   same as +POS1 [-POS2], but all positions counted from 1\n\
+  -m               merge already sorted files, do not sort\n\
+  -n               compare according to string numerical value, imply -b\n\
+  -o FILE          write result on FILE instead of standard output\n\
+  -r               reverse the result of comparisons\n\
+  -s               stabilize sort by disabling last resort comparison\n\
+  -t SEP           use SEParator instead of non- to whitespace transition\n\
+  -u               with -c, check for strict ordering\n\
+  -u               with -m, only output the first of an equal sequence\n\
+      --help       display this help and exit\n\
+      --version    output version information and exit\n\
+\n\
+POS is F[.C][OPTS], where F is the field number and C the character\n\
+position in the field, both counted from zero.  OPTS is made up of one\n\
+or more of Mbdfinr, this effectively disable global -Mbdfinr settings\n\
+for that key.  If no key given, use the entire line as key.  With no\n\
+FILE, or when FILE is -, read standard input.\n\
+")
+	      , DEFAULT_TMPDIR);
+    }
+  exit (status);
+}
+
 /* The list of temporary files. */
 static struct tempnode
 {
@@ -195,7 +239,7 @@ static struct tempnode
 /* Clean up any remaining temporary files. */
 
 static void
-cleanup ()
+cleanup (void)
 {
   struct tempnode *node;
 
@@ -206,8 +250,7 @@ cleanup ()
 /* Allocate N bytes of memory dynamically, with error checking.  */
 
 char *
-xmalloc (n)
-     unsigned n;
+xmalloc (unsigned int n)
 {
   char *p;
 
@@ -227,9 +270,7 @@ xmalloc (n)
    If N is 0, run free and return NULL.  */
 
 char *
-xrealloc (p, n)
-     char *p;
-     unsigned n;
+xrealloc (char *p, unsigned int n)
 {
   if (p == 0)
     return xmalloc (n);
@@ -249,8 +290,7 @@ xrealloc (p, n)
 }
 
 static FILE *
-xfopen (file, how)
-     char *file, *how;
+xfopen (char *file, char *how)
 {
   FILE *fp = strcmp (file, "-") ? fopen (file, how) : stdin;
 
@@ -266,8 +306,7 @@ xfopen (file, how)
 }
 
 static void
-xfclose (fp)
-     FILE *fp;
+xfclose (FILE *fp)
 {
   if (fp == stdin)
     {
@@ -296,10 +335,7 @@ xfclose (fp)
 }
 
 static void
-xfwrite (buf, size, nelem, fp)
-     char *buf;
-     int size, nelem;
-     FILE *fp;
+xfwrite (const char *buf, int size, int nelem, FILE *fp)
 {
   if (fwrite (buf, size, nelem, fp) != nelem)
     {
@@ -312,7 +348,7 @@ xfwrite (buf, size, nelem, fp)
 /* Return a name for a temporary file. */
 
 static char *
-tempname ()
+tempname (void)
 {
   static unsigned int seq;
   int len = strlen (temp_file_prefix);
@@ -341,8 +377,7 @@ tempname ()
    remove it if it is found on the list. */
 
 static void
-zaptemp (name)
-     char *name;
+zaptemp (char *name)
 {
   struct tempnode *node, *temp;
 
@@ -362,7 +397,7 @@ zaptemp (name)
 /* Initialize the character class tables. */
 
 static void
-inittables ()
+inittables (void)
 {
   int i;
 
@@ -386,9 +421,7 @@ inittables ()
 /* Initialize BUF, allocating ALLOC bytes initially. */
 
 static void
-initbuf (buf, alloc)
-     struct buffer *buf;
-     int alloc;
+initbuf (struct buffer *buf, int alloc)
 {
   buf->alloc = alloc;
   buf->buf = xmalloc (buf->alloc);
@@ -401,9 +434,7 @@ initbuf (buf, alloc)
    of bytes buffered. */
 
 static int
-fillbuf (buf, fp)
-     struct buffer *buf;
-     FILE *fp;
+fillbuf (struct buffer *buf, FILE *fp)
 {
   int cc;
 
@@ -445,10 +476,7 @@ fillbuf (buf, fp)
    for, ever.  */
 
 static void
-initlines (lines, alloc, limit)
-     struct lines *lines;
-     int alloc;
-     int limit;
+initlines (struct lines *lines, int alloc, int limit)
 {
   lines->alloc = alloc;
   lines->lines = (struct line *) xmalloc (lines->alloc * sizeof (struct line));
@@ -460,9 +488,7 @@ initlines (lines, alloc, limit)
    by KEY in LINE. */
 
 static char *
-begfield (line, key)
-     struct line *line;
-     struct keyfield *key;
+begfield (const struct line *line, const struct keyfield *key)
 {
   register char *ptr = line->text, *lim = ptr + line->length;
   register int sword = key->sword, schar = key->schar;
@@ -498,9 +524,7 @@ begfield (line, key)
    in LINE specified by KEY. */
 
 static char *
-limfield (line, key)
-     struct line *line;
-     struct keyfield *key;
+limfield (const struct line *line, const struct keyfield *key)
 {
   register char *ptr = line->text, *lim = ptr + line->length;
   register int eword = key->eword, echar = key->echar;
@@ -533,12 +557,10 @@ limfield (line, key)
 }
 
 /* Find the lines in BUF, storing pointers and lengths in LINES.
-   Also replace newlines with NULs. */
+   Also replace newlines in BUF with NULs. */
 
 static void
-findlines (buf, lines)
-     struct buffer *buf;
-     struct lines *lines;
+findlines (struct buffer *buf, struct lines *lines)
 {
   register char *beg = buf->buf, *lim = buf->buf + buf->used, *ptr;
   struct keyfield *key = keyhead.next;
@@ -602,8 +624,7 @@ findlines (buf, lines)
    of the fraction.  Strings not of this form are considered to be zero. */
 
 static int
-fraccompare (a, b)
-     register char *a, *b;
+fraccompare (register const char *a, register const char *b)
 {
   register tmpa = UCHAR (*a), tmpb = UCHAR (*b);
 
@@ -658,8 +679,7 @@ fraccompare (a, b)
    hideously fast. */
 
 static int
-numcompare (a, b)
-     register char *a, *b;
+numcompare (register const char *a, register const char *b)
 {
   register int tmpa, tmpb, loga, logb, tmp;
 
@@ -758,9 +778,7 @@ numcompare (a, b)
    0 if the name in S is not recognized. */
 
 static int
-getmonth (s, len)
-     char *s;
-     int len;
+getmonth (const char *s, int len)
 {
   char month[4];
   register int i, lo = 0, hi = 12;
@@ -789,8 +807,7 @@ getmonth (s, len)
    are no more keys or a difference is found. */
 
 static int
-keycompare (a, b)
-     struct line *a, *b;
+keycompare (const struct line *a, const struct line *b)
 {
   register char *texta, *textb, *lima, *limb, *translate;
   register int *ignore;
@@ -920,8 +937,7 @@ keycompare (a, b)
    depending on whether A compares less than, equal to, or greater than B. */
 
 static int
-compare (a, b)
-     register struct line *a, *b;
+compare (register const struct line *a, register const struct line *b)
 {
   int diff, tmpa, tmpb, mini;
 
@@ -964,8 +980,7 @@ compare (a, b)
    FIXME: return number of first out-of-order line if not sorted.  */
 
 static int
-checkfp (fp)
-     FILE *fp;
+checkfp (FILE *fp)
 {
   struct buffer buf;		/* Input buffer. */
   struct lines lines;		/* Lines scanned from the buffer. */
@@ -1042,9 +1057,7 @@ finish:
    Close FPS before returning. */
 
 static void
-mergefps (fps, nfps, ofp)
-     FILE *fps[], *ofp;
-     register int nfps;
+mergefps (FILE **fps, register int nfps, FILE *ofp)
 {
   struct buffer buffer[NMERGE];	/* Input buffers for each file. */
   struct lines lines[NMERGE];	/* Line tables for each buffer. */
@@ -1206,9 +1219,7 @@ mergefps (fps, nfps, ofp)
 /* Sort the array LINES with NLINES members, using TEMP for temporary space. */
 
 static void
-sortlines (lines, nlines, temp)
-     struct line *lines, *temp;
-     int nlines;
+sortlines (struct line *lines, int nlines, struct line *temp)
 {
   register struct line *lo, *hi, *t;
   register int nlo, nhi;
@@ -1249,9 +1260,7 @@ sortlines (lines, nlines, temp)
    Return a count of disordered files. */
 
 static int
-check (files, nfiles)
-     char *files[];
-     int nfiles;
+check (char **files, int nfiles)
 {
   int i, disorders = 0;
   FILE *fp;
@@ -1271,10 +1280,7 @@ check (files, nfiles)
 /* Merge NFILES FILES onto OFP. */
 
 static void
-merge (files, nfiles, ofp)
-     char *files[];
-     int nfiles;
-     FILE *ofp;
+merge (char **files, int nfiles, FILE *ofp)
 {
   int i, j, t;
   char *temp;
@@ -1315,10 +1321,7 @@ merge (files, nfiles, ofp)
 /* Sort NFILES FILES onto OFP. */
 
 static void
-sort (files, nfiles, ofp)
-     char **files;
-     int nfiles;
-     FILE *ofp;
+sort (char **files, int nfiles, FILE *ofp)
 {
   struct buffer buf;
   struct lines lines;
@@ -1387,8 +1390,7 @@ sort (files, nfiles, ofp)
 /* Insert key KEY at the end of the list (`keyhead'). */
 
 static void
-insertkey (key)
-     struct keyfield *key;
+insertkey (struct keyfield *key)
 {
   struct keyfield *k = &keyhead;
 
@@ -1399,8 +1401,7 @@ insertkey (key)
 }
 
 static void
-badfieldspec (s)
-     char *s;
+badfieldspec (const char *s)
 {
   error (2, 0, _("invalid field specification `%s'"), s);
 }
@@ -1408,8 +1409,7 @@ badfieldspec (s)
 /* Handle interrupts and hangups. */
 
 static void
-sighandler (sig)
-     int sig;
+sighandler (int sig)
 {
 #ifdef SA_INTERRUPT
   struct sigaction sigact;
@@ -1431,10 +1431,8 @@ sighandler (sig)
    BLANKTYPE is the kind of blanks that 'b' should skip. */
 
 static char *
-set_ordering (s, key, blanktype)
-     register char *s;
-     struct keyfield *key;
-     enum blanktype blanktype;
+set_ordering (register const char *s, struct keyfield *key,
+	      enum blanktype blanktype)
 {
   while (*s)
     {
@@ -1474,17 +1472,15 @@ set_ordering (s, key, blanktype)
 	  key->reverse = 1;
 	  break;
 	default:
-	  return s;
+	  return (char *) s;
 	}
       ++s;
     }
-  return s;
+  return (char *) s;
 }
 
 void
-main (argc, argv)
-     int argc;
-     char *argv[];
+main (int argc, char **argv)
 {
   struct keyfield *key = NULL, gkey;
   char *s;
@@ -1857,51 +1853,4 @@ main (argc, argv)
     error (1, errno, _("%s: write error"), outfile);
 
   exit (0);
-}
-
-static void
-usage (status)
-     int status;
-{
-  if (status != 0)
-    fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
-  else
-    {
-      printf (_("\
-Usage: %s [OPTION]... [FILE]...\n\
-"),
-	      program_name);
-      printf (_("\
-Write sorted concatenation of all FILE(s) to standard output.\n\
-\n\
-  +POS1 [-POS2]    start a key at POS1, end it before POS2\n\
-  -M               compare (unknown) < `JAN' < ... < `DEC', imply -b\n\
-  -T DIRECT        use DIRECT for temporary files, not $TMPDIR or %s\n\
-  -b               ignore leading blanks in sort fields or keys\n\
-  -c               check if given files already sorted, do not sort\n\
-  -d               consider only [a-zA-Z0-9 ] characters in keys\n\
-  -f               fold lower case to upper case characters in keys\n\
-  -i               consider only [\\040-\\0176] characters in keys\n\
-  -k POS1[,POS2]   same as +POS1 [-POS2], but all positions counted from 1\n\
-  -m               merge already sorted files, do not sort\n\
-  -n               compare according to string numerical value, imply -b\n\
-  -o FILE          write result on FILE instead of standard output\n\
-  -r               reverse the result of comparisons\n\
-  -s               stabilize sort by disabling last resort comparison\n\
-  -t SEP           use SEParator instead of non- to whitespace transition\n\
-  -u               with -c, check for strict ordering\n\
-  -u               with -m, only output the first of an equal sequence\n\
-      --help       display this help and exit\n\
-      --version    output version information and exit\n\
-\n\
-POS is F[.C][OPTS], where F is the field number and C the character\n\
-position in the field, both counted from zero.  OPTS is made up of one\n\
-or more of Mbdfinr, this effectively disable global -Mbdfinr settings\n\
-for that key.  If no key given, use the entire line as key.  With no\n\
-FILE, or when FILE is -, read standard input.\n\
-")
-	      , DEFAULT_TMPDIR);
-    }
-  exit (status);
 }
