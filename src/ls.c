@@ -1683,8 +1683,7 @@ quote_filename (register const char *p, size_t *quoted_length)
 	}
       else
 	{
-	  if (!ISPRINT (c)
-	      && qmark_funny_chars)
+	  if (!ISPRINT (c) && qmark_funny_chars)
 	    found_quotable = 1;
 	}
       if (found_quotable)

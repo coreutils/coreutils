@@ -1,3 +1,9 @@
+Sun Mar 31 11:18:09 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* ls.c (quote_filename): Use ISGRAPH and ISPRINT in place of
+	ASCII-centric tests against literals.
+	(length_of_file_name_and_frills): Likewise.
+
 Fri Mar 29 22:13:10 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* src/Makefile.am (INCLUDES): Replace -I$(top_srcdir)/intl with
