@@ -1,5 +1,5 @@
 /* cp.c  -- file copying (main routines)
-   Copyright (C) 89, 90, 91, 1995-2003 Free Software Foundation.
+   Copyright (C) 89, 90, 91, 1995-2004 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -116,9 +116,6 @@ static int const reply_vals[] =
   I_ALWAYS_YES, I_ALWAYS_NO, I_ASK_USER
 };
 
-/* The error code to return to the system. */
-static int exit_status = 0;
-
 static struct option const long_opts[] =
 {
   {"archive", no_argument, NULL, 'a'},
@@ -153,7 +150,7 @@ static struct option const long_opts[] =
 void
 usage (int status)
 {
-  if (status != 0)
+  if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
@@ -821,6 +818,7 @@ int
 main (int argc, char **argv)
 {
   int c;
+  int exit_status;
   int make_backups = 0;
   char *backup_suffix_string;
   char *version_control_string = NULL;
@@ -1046,7 +1044,7 @@ main (int argc, char **argv)
 
   hash_init ();
 
-  exit_status |= do_copy (argc - optind, argv + optind, target_directory, &x);
+  exit_status = do_copy (argc - optind, argv + optind, target_directory, &x);
 
   forget_all ();
 
