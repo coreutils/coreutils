@@ -1,4 +1,4 @@
-# Makefile for GNU shell utils documentation.
+# Makefile for GNU file utilities documentation.
 # Copyright (C) 1994 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
@@ -41,7 +41,7 @@ version.texi: $(srcdir)/../src/version.c
 	    -e 's/[^"]*"\([^"]*\)".*/@set VERSION \1/' \
 	    -e q $(srcdir)/../src/version.c \
 	  > $@-t
-	echo '@set RELEASE_DATE '`date '+%B %Y'` >> $@-t
+	echo '@set RELEASEDATE '`date '+%B %Y'` >> $@-t
 	mv $@-t $@
 
 fileutils.info: fileutils.texi version.texi
@@ -49,7 +49,7 @@ fileutils.info: fileutils.texi version.texi
 
 dvi: fileutils.dvi
 
-fileutils.dvi: fileutils.texi
+fileutils.dvi: fileutils.texi version.texi
 	$(TEXI2DVI) $(srcdir)/fileutils.texi
 
 installdirs:

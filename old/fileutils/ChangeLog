@@ -1,3 +1,31 @@
+Fri Oct 07 20:27:48 1994  Jim Meyering  (meyering@comco.com)
+
+	* Makefile.in (install, uninstall): Prepend ginstall->install
+	mapping to standard $(transform) sed mapping.
+
+	* chgrp.c, chmod.c, chown.c, install.c, mkdir.c, mkfifo.c, mknod.c,
+	rm.c, rmdir.c (main): Diagnose wrong number of argument -- usually
+	too few -- instead of just referring the user to the --help option.
+	* mknod.c (main): Give diagnostics explaining specific problems
+	instead of just the usage message.  Reported by Karl Berry.
+
+	* configure.in: Overhaul tests that determine how to get filesystem
+	usage statistics.  Now, most use AC_TRY_RUN and test for the precise
+	feature that will be used.  I know that that will make configuring a
+	little harder for the people who cross compile, but if one of them
+	is annoyed enough (or complains loudly enough :-) maybe someone will
+	find the time to add tests to be used solely when cross compiling.
+	* acconfig.h (STAT_READ): Rename to STAT_READ_FILSYS.
+	* fsusage.c: Reorganize accordingly.
+
+Tue Oct 04 20:38:12 1994  Jim Meyering  (meyering@comco.com)
+
+	* chmod.c (main): Remove trailing slashes from file name arguments.
+	Otherwise, `chmod 600 foo/; chmod 700 foo/' failed with the error
+	`chmod: foo/: Permission denied' under Linux 1.1.51.  Reported by
+	Thomas Koenig (ig25@fg70.rz.uni-karlsruhe.de).
+	* chown.c (main): Likewise.
+
 Sat Oct 01 21:23:27 1994  Jim Meyering  (meyering@comco.com)
 
 	* src/*.c: Remove CONFIG_BROKETS conditional.
