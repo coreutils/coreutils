@@ -1,3 +1,8 @@
+1999-02-07  Jim Meyering  <meyering@ascend.com>
+
+	* configure.in (jm_FUNC_GETGROUPS): Move the test into a new file,
+	group-member.m4, and just use this new macro.
+
 1999-01-31  Jim Meyering  <meyering@ascend.com>
 
 	* doc/sh-utils.texi: Wrap the @top node in @ifnottex instead of
