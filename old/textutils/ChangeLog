@@ -2,6 +2,15 @@
 
 	* Version 1.22g.
 
+	* src/tsort.c: Move inclusion of assert.h to follow that of stdio.h.
+	Some losing systems require this.
+	Use STREQ macro instead of strcmp in a few places.
+
+	* man/Makefile.maint ($(man_MANS)): `exit 1' if any of help2man,
+	chmod, or mv fails.  Otherwise, the failure could go unnoticed.
+
+	* man/Makefile.summ: Add entries for ptx and tsort.
+
 	* src/tsort.c: Include readtokens.h.
 	(zeros): Rename global from `rr'.
 	(getstr): Remove function.
@@ -15,7 +24,7 @@
 	* man/Makefile.am (man_MANS): Add ptx.1.
 	* man/ptx.x: New file.
 
-	* src/tail.c (parse_options): Use XARGCASEMATCH in place of argmatch.
+	* src/tail.c (parse_options): Use XARGMATCH in place of argmatch.
 
 	* man/Makefile.am (man_MANS): Add tsort.1.
 	* man/tsort.x: New (essentially empty) file.
