@@ -1,4 +1,6 @@
 Changes in release 4.0:
+[4.0-b5]
+* still *more* mktime.c portability tweaks
 [4.0-b4]
 * mktime.c portability tweak for headers with GNU libc 5.4.44.
 [4.0-b3]
