@@ -1,4 +1,4 @@
-#serial 41   -*- autoconf -*-
+#serial 42   -*- autoconf -*-
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
@@ -134,6 +134,7 @@ AC_DEFUN([jm_MACROS],
     getmntinfo \
     hasmntopt \
     isascii \
+    iswspace \
     lchown \
     listmntent \
     localeconv \
