@@ -561,6 +561,51 @@ ftw_dir (struct ftw_data *data, struct STAT *st)
 }
 
 
+#ifdef _LIBC
+# define ISSLASH(C) ((C) == '/')
+# define FILESYSTEM_PREFIX_LEN(Filename) 0
+#endif
+
+/* In general, we can't use the builtin `basename' function if available,
+   since it has different meanings in different environments.
+   In some environments the builtin `basename' modifies its argument.
+
+   Return the address of the last file name component of NAME.  If
+   NAME has no file name components because it is all slashes, return
+   NAME if it is empty, the address of its last slash otherwise.  */
+
+static char *
+base_name (char const *name)
+{
+  char const *base = name + FILESYSTEM_PREFIX_LEN (name);
+  char const *p;
+
+  for (p = base; *p; p++)
+    {
+      if (ISSLASH (*p))
+	{
+	  /* Treat multiple adjacent slashes like a single slash.  */
+	  do p++;
+	  while (ISSLASH (*p));
+
+	  /* If the file name ends in slash, use the trailing slash as
+	     the basename if no non-slashes have been found.  */
+	  if (! *p)
+	    {
+	      if (ISSLASH (*base))
+		base = p - 1;
+	      break;
+	    }
+
+	  /* *P is a non-slash preceded by a slash.  */
+	  base = p;
+	}
+    }
+
+  return (char *) base;
+}
+
+
 static int
 internal_function
 ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
@@ -571,7 +616,7 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
   int result = 0;
   int save_err;
   char *cwd = NULL;
-  char *cp;
+  size_t dir_len;
 
   /* First make sure the parameters are reasonable.  */
   if (dir[0] == '\0')
@@ -586,26 +631,21 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
 						 * sizeof (struct dir_data *));
   memset (data.dirstreams, '\0', data.maxdir * sizeof (struct dir_data *));
 
+  dir_len = strlen (dir);
 #ifdef PATH_MAX
-  data.dirbufsize = MAX (2 * strlen (dir), PATH_MAX);
+  data.dirbufsize = MAX (2 * dir_len, PATH_MAX);
 #else
-  data.dirbufsize = 2 * strlen (dir);
+  data.dirbufsize = 2 * dir_len;
 #endif
   data.dirbuf = (char *) malloc (data.dirbufsize);
   if (data.dirbuf == NULL)
     return -1;
-  cp = __stpcpy (data.dirbuf, dir);
-  /* Strip trailing slashes.  */
-  while (cp > data.dirbuf + 1 && cp[-1] == '/')
-    --cp;
-  *cp = '\0';
+  memcpy (data.dirbuf, dir, dir_len + 1);
 
   data.ftw.level = 0;
 
-  /* Find basename.  */
-  while (cp > data.dirbuf && cp[-1] != '/')
-    --cp;
-  data.ftw.base = cp - data.dirbuf;
+  /* Find offset of basename.  */
+  data.ftw.base = base_name (data.dirbuf) - data.dirbuf;
 
   data.flags = flags;
 
