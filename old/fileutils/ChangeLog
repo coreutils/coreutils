@@ -1,3 +1,23 @@
+1999-10-17  Jim Meyering  <meyering@ascend.com>
+
+	* tests/mv/backup-is-src: Remove use of mv's now-deprecated
+	-V option.  Use --b=simple instead of -b -V simple.
+
+	* src/mv.c: Convert --backup to take an optional argument.
+	Deprecate --version-control (-V) in comments.
+	(usage): Remove mention of --version-control.
+	(main): Make -V warn then fall through into --backup case.
+	[--backup case]: Handle optional arg.
+
+	Accept new option: --target-directory=DIR
+	* src/cp.c (TARGET_DIRECTORY_OPTION): Define.
+	(SPARSE_OPTION): Define.
+	(usage): Describe it.
+	(do_copy): Change meanings/names of first two parameters: use `n_files'
+	in place of `argc - optind', and `file' instead of `argv + optind'.
+	Add parameter, target_directory.
+	(main): Pass new arg, target_directory.
+
 1999-10-16  Jim Meyering  <meyering@ascend.com>
 
 	* tests/cp/backup-is-src: Remove use of cp's now-deprecated -V option.
