@@ -110,30 +110,12 @@ libfetish_a_LIBADD = @LIBOBJS@ @ALLOCA@
 libfetish_a_DEPENDENCIES = $(libfetish_a_LIBADD)
 
 
-BUILT_SOURCES = getdate.c lstat.c stat.c unlocked-io.h
+BUILT_SOURCES = getdate.c unlocked-io.h
 MAINTAINERCLEANFILES = $(BUILT_SOURCES)
-DISTCLEANFILES = lstat.c stat.c unlocked-io.h
+DISTCLEANFILES = unlocked-io.h
 
-EXTRA_DIST = xstat.in config.charset ref-add.sin ref-del.sin gen-uio \
+EXTRA_DIST = config.charset ref-add.sin ref-del.sin gen-uio \
   fnmatch_loop.c inttostr.c inttostr.h
-
-lstat.c: xstat.in
-	sed \
-	  -e '/@IGNORE@/d' \
-	  -e 's/@xstat@/lstat/g' \
-	  -e '/_LSTAT_ONLY@/d' \
-	  -e '/@BEGIN_STAT_ONLY@/,/@END_STAT_ONLY@/d' \
-	  $(srcdir)/xstat.in > t-$@
-	mv t-$@ $@
-
-stat.c: xstat.in
-	sed \
-	  -e '/@IGNORE@/d' \
-	  -e 's/@xstat@/stat/g' \
-	  -e '/_STAT_ONLY@/d' \
-	  -e '/@BEGIN_LSTAT_ONLY@/,/@END_LSTAT_ONLY@/d' \
-	  $(srcdir)/xstat.in > t-$@
-	mv t-$@ $@
 
 # The following is needed in order to install a simple file in $(libdir)
 # which is shared with other installed packages. We use a list of referencing
@@ -142,7 +124,7 @@ stat.c: xstat.in
 # On systems with glibc-2.1 or newer, the file is redundant, therefore we
 # avoid installing it.
 
-all-local: charset.alias ref-add.sed ref-del.sed lstat.c stat.c unlocked-io.h
+all-local: charset.alias ref-add.sed ref-del.sed unlocked-io.h
 
 charset_alias = $(DESTDIR)$(libdir)/charset.alias
 charset_tmp = $(DESTDIR)$(libdir)/charset.tmp
