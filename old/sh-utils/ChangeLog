@@ -1,5 +1,14 @@
 Sat Jan  6 05:13:40 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
+	* configure.in (PACKAGE, VERSION): New variables.
+	(fp_C_PROTOTYPES): Use it.
+
+	* printf.c (print_esc_char): Change type of argument from char
+	to int to avoid potential promotion problem.
+	* uname.c (print_element): Likewise.
+
+	* system.h [__P]: New macro.
+
 	* basename.c, date.c, dirname.c, echo.c, env.c, expr.c, factor.c,
 	hostname.c, id.c, logname.c, nice.c, pathchk.c, printenv.c,
 	printf.c, pwd.c, seq.c, sleep.c, tee.c, test.c, tty.c, uname.c,
