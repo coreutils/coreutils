@@ -261,7 +261,7 @@ Operating on characters
 @command{tr}: Translate, squeeze, and/or delete characters
 
 * Character sets::              Specifying sets of characters.
-* Translating::                 Changing one characters to another.
+* Translating::                 Changing one set of characters to another.
 * Squeezing::                   Squeezing repeats and deleting.
 * Warnings in tr::              Warning messages.
 
@@ -4406,7 +4406,7 @@ complement (all of the characters that are not in @var{set1}).
 
 @menu
 * Character sets::              Specifying sets of characters.
-* Translating::                 Changing one characters to another.
+* Translating::                 Changing one set of characters to another.
 * Squeezing::                   Squeezing repeats and deleting.
 * Warnings in tr::              Warning messages.
 @end menu
