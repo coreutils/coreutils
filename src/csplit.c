@@ -34,6 +34,10 @@ char *malloc ();
 char *realloc ();
 #endif
 
+#ifndef MAX
+#define MAX(a,b) (((a) > (b)) ? (a) : (b))
+#endif
+
 void error ();
 
 
@@ -122,6 +126,13 @@ struct buffer_record
 
 /* The name this program was run with. */
 char *program_name;
+
+/* Convert the number of 8-bit bytes of a binary representation to
+   the number of characters required to represent the same quantity
+   as an unsigned octal.  For example, a 32-bit (4-byte) quantity may
+   require a field width as wide as 11 characters.  */
+static const unsigned int bytes_to_octal_digits[] =
+{0, 3, 6, 8, 11, 14, 16, 19, 22, 25, 27, 30, 32, 35, 38, 41, 43};
 
 /* Input file descriptor. */
 static int input_desc = 0;
@@ -1255,26 +1266,26 @@ get_format_flags (format_ptr)
   unsigned count = 0;
 
   for (; **format_ptr; (*format_ptr)++)
-    switch (**format_ptr)
-      {
-      case '-':
-	break;
+    {
+      switch (**format_ptr)
+	{
+	case '-':
+	  break;
 
-      case '+':
-	count++;
-	break;
+	case '+':
+	case ' ':
+	  count++;
+	  break;
 
-      case ' ':
-	count++;
-	break;
+	case '#':
+	  count += 2;	/* Allow for 0x prefix preceeding an `x' conversion.  */
+	  break;
 
-      case '#':
-	count += 2;	/* Allow for 0x prefix preceeding an `x' conversion */
-	break;
-
-      default:
-	return count;
-      }
+	default:
+	  return count;
+	}
+    }
+  return count;
 }
 
 static unsigned
@@ -1293,12 +1304,10 @@ get_format_width (format_ptr)
   ch_save = **format_ptr;
   **format_ptr = '\0';
   /* In the case where no minimum field width is explicitly specified,
-     allow for enough digits to encode (in octal) the value of LONG_MAX
-     for a 32 bit machine.  If the user attempts to use csplit to create
-     anywhere near 077777777777 output files... well... he'll probably
-     run into other problems before he runs out of space in the area set
-     aside to hold the filenames.  */
-  count = (*format_ptr == start) ? 11 : atoi (start);
+     allow for enough octal digits to represent the value of LONG_MAX.  */
+  count = ((*format_ptr == start)
+	   ? bytes_to_octal_digits[sizeof (long)]
+	   : atoi (start));
   **format_ptr = ch_save;
   return count;
 }
@@ -1321,13 +1330,17 @@ get_format_prec (format_ptr)
       is_negative = (**format_ptr == '-');
       (*format_ptr)++;
     }
+  else
+    {
+      is_negative = 0;
+    }
 
   start = *format_ptr;
   for (; **format_ptr; (*format_ptr)++)
     if (**format_ptr < '0' || **format_ptr > '9')
       break;
 
-  /* ANSI 4.9.6.1 says that is the precision is negative, it's as good as
+  /* ANSI 4.9.6.1 says that if the precision is negative, it's as good as
      not there. */
   if (is_negative)
     start = *format_ptr;
@@ -1348,20 +1361,25 @@ get_format_conv_type (format_ptr)
 
   switch (ch)
     {
-    case 'd': case 'i': case 'o': case 'u': case 'x': case 'X':
+    case 'd':
+    case 'i':
+    case 'o':
+    case 'u':
+    case 'x':
+    case 'X':
+      break;
+
+    case 0:
+      error (1, 0, "missing conversion specifier in suffix");
       break;
 
     default:
-      if (ch < '~' && ch > ' ')
+      if (ISPRINT (ch))
         error (1, 0, "invalid conversion specifier in suffix: %c", ch);
       else
-        error (1, 0, "invalid conversion specifier in suffix: \\%.3o", ch);
+	error (1, 0, "invalid conversion specifier in suffix: \\%.3o", ch);
     }
 }
-
-#ifndef max
-#define max(a,b) (((a) > (b)) ? (a) : (b))
-#endif
 
 static unsigned
 max_out (format)
@@ -1384,16 +1402,16 @@ max_out (format)
 	    int width = get_format_width (&format);
 	    int prec = get_format_prec (&format);
 
-	    out_count += max (width, prec);
+	    out_count += MAX (width, prec);
 	  }
 	  get_format_conv_type (&format);
 	}
     }
 
   if (percents == 0)
-    error (1, 0, "missing % conversion specification in suffix");
+    error (1, 0, "missing %% conversion specification in suffix");
   else if (percents > 1)
-    error (1, 0, "too many % conversion specification in suffix");
+    error (1, 0, "too many %% conversion specifications in suffix");
 
   return out_count;
 }
