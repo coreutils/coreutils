@@ -1,5 +1,5 @@
 /* dd -- convert a file while copying it.
-   Copyright (C) 85, 90, 91, 1995-2004 Free Software Foundation, Inc.
+   Copyright (C) 85, 90, 91, 1995-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@
 #include "system.h"
 #include "error.h"
 #include "full-write.h"
+#include "gethrxtime.h"
 #include "getpagesize.h"
 #include "human.h"
 #include "inttostr.h"
@@ -36,6 +37,7 @@
 #include "quote.h"
 #include "safe-read.h"
 #include "xstrtol.h"
+#include "xtime.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "dd"
@@ -161,7 +163,7 @@ static uintmax_t r_full = 0;
 static uintmax_t w_bytes = 0;
 
 /* Time that dd started.  */
-static struct timespec start_time;
+static xtime_t start_time;
 
 /* True if input is seekable.  */
 static bool input_seekable;
@@ -477,18 +479,15 @@ multiple_bits_set (int i)
 static void
 print_stats (void)
 {
+  xtime_t now = gethrxtime ();
   char buf[2][MAX (INT_BUFSIZE_BOUND (uintmax_t), LONGEST_HUMAN_READABLE + 1)];
-  struct timespec now;
   int human_opts =
     (human_autoscale | human_round_to_nearest
      | human_space_before_unit | human_SI | human_B);
-  uintmax_t start_sec = start_time.tv_sec;
-  enum { BILLION = 1000000000 };
-  double BILLIONe0 = BILLION;
+  double XTIME_PRECISIONe0 = XTIME_PRECISION;
   double delta_s;
   char const *bytes_per_second;
 
-  gettime (&now);
   fprintf (stderr, _("%s+%s records in\n"),
 	   umaxtostr (r_full, buf[0]), umaxtostr (r_partial, buf[1]));
   fprintf (stderr, _("%s+%s records out\n"),
@@ -505,9 +504,8 @@ print_stats (void)
   if (status_flags & STATUS_NOXFER)
     return;
 
-  /* Use integer arithmetic to compute the transfer rate if possible,
-     since that makes it easy to use SI abbreviations; otherwise, fall
-     back on floating-point without abbreviations.  */
+  /* Use integer arithmetic to compute the transfer rate,
+     since that makes it easy to use SI abbreviations.  */
 
   fprintf (stderr,
 	   ngettext ("%s byte (%s) copied",
@@ -515,26 +513,18 @@ print_stats (void)
 	   umaxtostr (w_bytes, buf[0]),
 	   human_readable (w_bytes, buf[1], human_opts, 1, 1));
 
-  if ((start_time.tv_sec < now.tv_sec
-       || (start_time.tv_sec == now.tv_sec
-	   && start_time.tv_nsec < now.tv_nsec))
-      && now.tv_sec - start_sec < UINTMAX_MAX / BILLION)
+  if (start_time < now)
     {
-      uintmax_t delta_ns = (BILLION * (now.tv_sec - start_sec)
-			    + now.tv_nsec - start_time.tv_nsec);
-      delta_s = delta_ns / BILLIONe0;
+      uintmax_t delta_xtime = now;
+      delta_xtime -= start_time;
+      delta_s = delta_xtime / XTIME_PRECISIONe0;
       bytes_per_second = human_readable (w_bytes, buf[1], human_opts,
-					 BILLION, delta_ns);
+					 XTIME_PRECISION, delta_xtime);
     }
   else
     {
-      delta_s = now.tv_sec;
-      delta_s -= start_time.tv_sec;
-      delta_s += (now.tv_nsec - start_time.tv_nsec) / BILLIONe0;
-      if (0 < delta_s)
-	sprintf (buf[1], "%gB", w_bytes / delta_s);
-      else
-	sprintf (buf[1], "%s B", _("Infinity"));
+      delta_s = 0;
+      sprintf (buf[1], "%s B", _("Infinity"));
       bytes_per_second = buf[1];
     }
 
@@ -1540,7 +1530,7 @@ main (int argc, char **argv)
   install_handler (SIGPIPE, interrupt_handler);
   install_handler (SIGINFO, siginfo_handler);
 
-  gettime (&start_time);
+  start_time = gethrxtime ();
 
   exit_status = dd_copy ();
 
