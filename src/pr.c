@@ -837,17 +837,17 @@ first_last_page (char const *pages)
    within range of the type of `columns') set the global variables
    columns and explicit_columns and return true.
    Otherwise, return false.  */
-static bool
+static void
 parse_column_count (char const *s)
 {
   long int tmp_long;
   if (xstrtol (s, NULL, 10, &tmp_long, "") != LONGINT_OK
       || !(1 <= tmp_long && tmp_long <= INT_MAX))
-    return false;
+    error (EXIT_FAILURE, 0,
+	   _("invalid number of columns: `%s'"), s);
 
   columns = tmp_long;
   explicit_columns = true;
-  return true;
 }
 
 /* Estimate length of col_sep_string with option -S.  */
@@ -870,15 +870,10 @@ main (int argc, char **argv)
   bool old_s = false;
   char **file_names;
 
-  /* Use this buffer to accumulate the digits of old-style options like -99.
-     Make it one byte larger than the size required for the largest value;
-     if the user-supplied string would overflow, we'll discover that fact
-     (and fail) when accumulating the first additional byte.
-     FIXME: we're using INT_BUFSIZE_BOUND (uintmax_t) here already, in
-     anticipation of the clean-up that changes the type of `columns'
-     from int to size_t.  */
-  char column_count_string[1 + INT_BUFSIZE_BOUND (uintmax_t)];
+  /* Accumulate the digits of old-style options like -99.  */
+  char *column_count_string = NULL;
   size_t n_digits = 0;
+  size_t n_alloc = 0;
 
   char const *short_options = (posix2_version () < 200112
 			       ? COMMON_SHORT_OPTIONS "S::"
@@ -902,10 +897,13 @@ main (int argc, char **argv)
     {
       if (ISDIGIT (c))
 	{
+	  /* Accumulate column-count digits specified via old-style options. */
+	  if (n_digits == n_alloc)
+	    column_count_string
+	      = x2nrealloc (column_count_string, &n_alloc,
+			    sizeof *column_count_string);
 	  column_count_string[n_digits++] = c;
 	  column_count_string[n_digits] = 0;
-	  if ( ! parse_column_count (column_count_string))
-	    error (EXIT_FAILURE, 0, _("column count too large"));
 	  continue;
 	}
 
@@ -932,9 +930,14 @@ main (int argc, char **argv)
 
 	case COLUMNS_OPTION:	/* --columns=COLUMN */
 	  {
-	    if ( ! parse_column_count (optarg))
-	      error (EXIT_FAILURE, 0,
-		     _("invalid number of columns: `%s'"), optarg);
+	    parse_column_count (optarg);
+
+	    /* If there was a prior column count specified via the
+	       short-named option syntax, e.g., -9, ensure that this
+	       long-name-specified value overrides it.  */
+	    free (column_count_string);
+	    column_count_string = NULL;
+	    n_alloc = 0;
 	    break;
 	  }
 
@@ -1086,6 +1089,9 @@ main (int argc, char **argv)
 	  break;
 	}
     }
+
+  if (column_count_string)
+    parse_column_count (column_count_string);
 
   if (! date_format)
     date_format = (getenv ("POSIXLY_CORRECT") && !hard_locale (LC_TIME)
