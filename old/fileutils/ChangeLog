@@ -1,3 +1,8 @@
+1998-08-16  Jim Meyering  <meyering@ascend.com>
+
+	* lib/filemode.h (PARAMS): Define and use.
+	From Kaveh Ghazi.
+
 1998-08-15  Jim Meyering  <meyering@ascend.com>
 
 	* Version 3.16u.
