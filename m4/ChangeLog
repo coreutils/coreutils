@@ -1,8 +1,10 @@
 2001-01-27  Jim Meyering  <meyering@lucent.com>
 
-	* ls-mntd-fs.m4 (jm_LIST_MOUNTED_FILESYSTEMS): Add `[]' between use of
-	AS_IF and following `dnl'.
+	* ls-mntd-fs.m4 (jm_LIST_MOUNTED_FILESYSTEMS): Open-code what was
+	a use of AS_IF.
 	* fsusage.m4 (jm_FILE_SYSTEM_USAGE): Likewise.
+
+	* configure, aclocal.m4, etc.: Regenerate using autoconf-2.49c.
 
 2001-01-26  Jim Meyering  <meyering@lucent.com>
 
