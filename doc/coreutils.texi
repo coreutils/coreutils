@@ -8391,17 +8391,13 @@ are often symbolic links.
 @cindex human-readable output
 Append a size letter to each size, such as @samp{M} for mebibytes.
 Powers of 1024 are used, not 1000; @samp{M} stands for 1,048,576 bytes.
-Use the @option{-H} or @option{--si} option if you prefer powers of 1000.
+Use the @option{--si} option if you prefer powers of 1000.
 
 @item -H
-@itemx --si
 @opindex -H
-@opindex --si
-@cindex SI output
-Append an SI-style abbreviation to each size, such as @samp{MB} for
-megabytes.  Powers of 1000 are used, not 1024; @samp{MB} stands for
-1,000,000 bytes.  Use the @option{-h} or @option{--human-readable} option if
-you prefer powers of 1024.
+Currently @option{-H} is the same as @option{--si}.
+This option will be changed to be equivalent to
+@option{--dereference-args} (@option{-D}).
 
 @item -k
 @opindex -k
@@ -8450,6 +8446,14 @@ is at level 0, so @code{du --max-depth=0} is equivalent to @code{du -s}.
 Output the zero byte (@kbd{NUL}) at the end of each line, rather than a newline.
 This option enables other programs to parse the output of @command{du}
 even when that output would contain file names with embedded newlines.
+
+@itemx --si
+@opindex --si
+@cindex SI output
+Append an SI-style abbreviation to each size, such as @samp{MB} for
+megabytes.  Powers of 1000 are used, not 1024; @samp{MB} stands for
+1,000,000 bytes.  Use the @option{-h} or @option{--human-readable} option if
+you prefer powers of 1024.
 
 @item -s
 @itemx --summarize
