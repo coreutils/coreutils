@@ -321,6 +321,10 @@
 #include "posixver.h"
 #include "xstrtol.h"
 
+#if ! (HAVE_DECL_STRTOUMAX || defined strtoumax)
+uintmax_t strtoumax ();
+#endif
+
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "pr"
 
@@ -418,7 +422,7 @@ static bool read_line (COLUMN *p);
 static bool print_page (void);
 static bool print_stored (COLUMN *p);
 static bool open_file (char *name, COLUMN *p);
-static bool skip_to_page (int page);
+static bool skip_to_page (uintmax_t page);
 static void print_header (void);
 static void pad_across_to (int position);
 static void add_line_number (COLUMN *p);
@@ -439,7 +443,6 @@ static void read_rest_of_line (COLUMN *p);
 static void skip_read (COLUMN *p, int column_number);
 static void print_char (char c);
 static void cleanup (void);
-static void first_last_page (char *pages);
 static void print_sep_string (void);
 static void separator_string (const char *optarg_S);
 
@@ -609,14 +612,14 @@ static int columns = 1;
 
 /* (+NNN:MMM) Page numbers on which to begin and stop printing.
    first_page_number = 0  will be used to check input only. */
-static int first_page_number = 0;
-static int last_page_number = 0;
+static uintmax_t first_page_number = 0;
+static uintmax_t last_page_number = UINTMAX_MAX;
 
 /* Number of files open (not closed, not on hold). */
 static int files_ready_to_read = 0;
 
 /* Current page number.  Displayed in header. */
-static int page_number;
+static uintmax_t page_number;
 
 /* Current line number.  Displayed when -n flag is specified.
 
@@ -794,45 +797,39 @@ cols_ready_to_print (void)
 /* Estimate first_ / last_page_number
    using option +FIRST_PAGE:LAST_PAGE */
 
-static void
-first_last_page (char *pages)
+static bool
+first_last_page (char const *pages)
 {
-  char *str1;
+  char *p;
+  uintmax_t first;
+  uintmax_t last = UINTMAX_MAX;
+  int err;
 
-  if (*pages == ':')
+  errno = 0;
+  first = strtoumax (pages, &p, 10);
+  err = errno;
+  if (p == pages || !first)
+    return false;
+
+  if (*p == ':')
     {
-      error (0, 0, _("`--pages' invalid range of page numbers: `%s'"), pages);
-      usage (EXIT_FAILURE);
+      char const *p1 = p + 1;
+      errno = 0;
+      last = strtoumax (p1, &p, 10);
+      err |= errno;
+      if (p1 == p || last < first)
+	return false;
     }
 
-  str1 = strchr (pages, ':');
-  if (str1 != NULL)
-    *str1 = '\0';
+  if (*p)
+    return false;
 
-  {
-    long int tmp_long;
-    if (xstrtol (pages, NULL, 10, &tmp_long, "") != LONGINT_OK
-	|| tmp_long < 1 || tmp_long > INT_MAX)
-      error (EXIT_FAILURE, 0, _("`--pages' invalid starting page number: `%s'"),
-	     pages);
-    first_page_number = tmp_long;
-  }
+  if (err)
+    error (EXIT_FAILURE, err, _("Page range `%s'"), pages);
 
-  if (str1 == NULL)
-    return;
-
-  {
-    long int tmp_long;
-    if (xstrtol (str1 + 1, NULL, 10, &tmp_long, "") != LONGINT_OK
-	|| tmp_long <= 0 || tmp_long > INT_MAX)
-      error (EXIT_FAILURE, 0, _("`--pages' invalid ending page number: `%s'"),
-	     str1 + 1);
-    last_page_number = tmp_long;
-  }
-
-  if (first_page_number > last_page_number)
-    error (EXIT_FAILURE, 0,
-	_("`--pages' starting page number is larger than ending page number"));
+  first_page_number = first;
+  last_page_number = last;
+  return true;
 }
 
 /* Estimate length of col_sep_string with option -S.  */
@@ -889,23 +886,19 @@ main (int argc, char **argv)
       switch (c)
 	{
 	case 1:			/* Non-option argument. */
-	  if (*optarg == '+')
-	    {
-	      /* long option --page dominates old `+FIRST_PAGE ...' */
-	      if (first_page_number <= 0 && last_page_number <= 0)
-		first_last_page (optarg);
-	    }
-	  else
+	  /* long option --page dominates old `+FIRST_PAGE ...'.  */
+	  if (! (first_page_number == 0
+		 && *optarg == '+' && first_last_page (optarg + 1)))
 	    file_names[n_files++] = optarg;
 	  break;
 
 	case PAGES_OPTION:	/* --pages=FIRST_PAGE[:LAST_PAGE] */
 	  {			/* dominates old opt +... */
-	    if (optarg)
-	      first_last_page (optarg);
-	    else
+	    if (! optarg)
 	      error (EXIT_FAILURE, 0,
 		     _("`--pages=FIRST_PAGE[:LAST_PAGE]' missing argument"));
+	    else if (! first_last_page (optarg))
+	      error (EXIT_FAILURE, 0, _("Invalid page range `%s'"), optarg);
 	    break;
 	  }
 
@@ -1875,7 +1868,7 @@ print_page (void)
       print_a_FF = false;
     }
 
-  if (last_page_number && page_number > last_page_number)
+  if (last_page_number < page_number)
     return false;		/* Stop printing with LAST_PAGE */
 
   reset_status ();		/* Change ON_HOLD to OPEN. */
@@ -2325,9 +2318,11 @@ print_char (char c)
    PAGE may be larger than total number of pages. */
 
 static bool
-skip_to_page (int page)
+skip_to_page (uintmax_t page)
 {
-  int n, i, j;
+  uintmax_t n;
+  int i;
+  int j;
   COLUMN *p;
 
   for (n = 1; n < page; ++n)
@@ -2356,8 +2351,9 @@ skip_to_page (int page)
 	  /* It's very helpful, normally the total number of pages is
 	     not known in advance.  */
 	  error (0, 0,
-	     _("starting page number larger than total number of pages: `%d'"),
-		 n);
+		 _("starting page number %"PRIuMAX
+		   " exceeds page count %"PRIuMAX),
+		 page, n);
           break;
 	}
     }
@@ -2372,7 +2368,7 @@ skip_to_page (int page)
 static void
 print_header (void)
 {
-  char page_text[256 + INT_STRLEN_BOUND (int)];
+  char page_text[256 + INT_STRLEN_BOUND (page_number)];
   int available_width;
   int lhs_spaces;
   int rhs_spaces;
@@ -2384,10 +2380,13 @@ print_header (void)
   pad_across_to (chars_per_margin);
   print_white_space ();
 
+  if (page_number == 0)
+    error (EXIT_FAILURE, 0, _("Page number overflow"));
+
   /* The translator must ensure that formatting the translation of
-     "Page %d" does not generate more than (sizeof page_text - 1)
+     "Page %"PRIuMAX does not generate more than (sizeof page_text - 1)
      bytes.  */
-  sprintf (page_text, _("Page %d"), page_number++);
+  sprintf (page_text, _("Page %"PRIuMAX), page_number++);
   available_width = header_width_available - mbswidth (page_text, 0);
   available_width = MAX (0, available_width);
   lhs_spaces = available_width >> 1;
