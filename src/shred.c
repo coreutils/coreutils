@@ -823,16 +823,25 @@ sigill_handler (int signum)
   longjmp (env, 1);  /* Trivial, just return an indication that it happened */
 }
 
+/* FIXME: find a better way.
+   This signal-handling code may well end up being ripped out eventually.
+   An example of how fragile it is, on an i586-sco-sysv5uw7.0.1 system, with
+   gcc-2.95.3pl1, the "rdtsc" instruction causes a segmentation violation.
+   So now, the code catches SIGSEGV.  It'd probably be better to remove all
+   of that mess and find a better source of random data.  Patches welcome.  */
+
 static void
 isaac_seed_machdep (struct isaac_state *s)
 {
-  RETSIGTYPE (*oldhandler) (int);
+  RETSIGTYPE (*old_handler[2]) (int);
 
   /* This is how one does try/except in C */
-  oldhandler = signal (SIGILL, sigill_handler);
+  old_handler[0] = signal (SIGILL, sigill_handler);
+  old_handler[1] = signal (SIGSEGV, sigill_handler);
   if (setjmp (env))  /* ANSI: Must be entire controlling expression */
     {
-      (void) signal (SIGILL, oldhandler);
+      signal (SIGILL, old_handler[0]);
+      signal (SIGSEGV, old_handler[1]);
     }
   else
     {
@@ -860,7 +869,8 @@ isaac_seed_machdep (struct isaac_state *s)
       unsigned long t;
       __asm__ __volatile__ ("rd	%%tick, %0" : "=r" (t));
 # endif
-     (void) signal (SIGILL, oldhandler);
+     signal (SIGILL, old_handler[0]);
+     signal (SIGSEGV, old_handler[1]);
      isaac_seed_data (s, &t, sizeof t);
   }
 }
