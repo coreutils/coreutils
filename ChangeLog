@@ -2,6 +2,12 @@
 
 	* Version 4.5.2.
 
+	* src/who.c (print_user): Change type of local to size_t
+	to avoid warnings about `comparison between signed and unsigned'.
+
+	* src/dd.c (main, skip): Add casts to avoid warnings about
+	`comparison between signed and unsigned'.
+
 	* src/id.c (print_full_info, print_group_list): Add casts to avoid
 	warnings about `signed and unsigned type in conditional expression'.
 
