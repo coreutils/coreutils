@@ -1,3 +1,16 @@
+2004-11-14  Jim Meyering  <jim@meyering.net>
+
+	* closeout.c (close_stdout): Don't fail just because stdout was
+	closed initially, since some programs don't write to stdout in the
+	normal course of operation (other than --version and --help), and
+	we don't want this function to make e.g. `cp 1 2 >&-' fail.
+	But do fail if it was closed and someone has tried to write to it.
+	E.g., printf 'foo' >&-
+
+	* __fpending.c, __fpending.h: Restore these files.
+	They're useful after all.
+	* Makefile.am (libfetish_a_SOURCES): Add __fpending.h.
+
 2004-11-11  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* getopt.c, getopt1.c, getopt_.h, getopt_int.h:
