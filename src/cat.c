@@ -76,8 +76,7 @@ static int newlines2 = 0;
 static int exit_stat = 0;
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
@@ -113,7 +112,7 @@ With no FILE, or when FILE is -, read standard input.\n\
 /* Compute the next line number.  */
 
 static void
-next_line_num ()
+next_line_num (void)
 {
   char *endp = line_num_end;
   do
@@ -441,9 +440,7 @@ cat (
 }
 
 void
-main (argc, argv)
-     int argc;
-     char *argv[];
+main (int argc, char **argv)
 {
   /* Optimal size of i/o operations of output.  */
   int outsize;
