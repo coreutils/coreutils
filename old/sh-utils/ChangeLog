@@ -1,3 +1,7 @@
+2001-06-09  Jim Meyering  <meyering@lucent.com>
+
+	(PIDSTR_DECL_AND_INIT): Define.
+
 2001-06-05  Jim Meyering  <meyering@lucent.com>
 
 	* configure.in (ALL_LINGUAS): Add Turkish (tr).
@@ -6,10 +10,26 @@
 
 	* src/dirname.c (main): Add `const' to declaration of local, `result'.
 
-2001-04-01  Michael Stone  <mstone@debian.org>
+2001-04-01  Jim Meyering  <meyering@lucent.com>
 
 	Add options to make `who' more POSIX compliant.
-	* who.c: FIXME: in progress...
+	* who.c: Accept new options: --all (-a), --boot (-b), --dead (-d),
+	--login, --process (-p), --runlevel (-r), --short (-s), --time (-t),
+	--users (-u).
+	The -u option now produces POSIX-specified results and is the same as
+	the long option `--users'.  --idle is no longer the same as -u.
+	(time_string, print_line, print_boottime, print_deadprocs, print_login,
+	print_initspawn, print_clockchange, print_runlevel): New functions.
+	(print_user): Renamed from print_entry and reworked.
+	(search_entries): Remove function.
+	(who_am_i): Likewise.
+	(usage): Describe new options.
+	(main): Handle new options.
+	Mostly from Michael Stone.
+
+	FIXME (remove this, later): This probably doesn't compile on any
+	type of system except Linux, due to the unprotected uses of e.g.,
+	utmp_ent->ut_exit.e_termination.
 
 2001-05-11  Paul Eggert  <eggert@twinsun.com>
 
