@@ -1,3 +1,8 @@
+1999-04-18  Jim Meyering  <meyering@ascend.com>
+
+	* xstrtoumax.m4 (jm_AC_PREREQ_XSTRTOUMAX): New file/macro.
+	* jm-macros.m4: Use it.
+
 1999-04-06  Jim Meyering  <meyering@ascend.com>
 
 	* strftime.m4: Remove test for %f.
