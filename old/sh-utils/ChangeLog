@@ -46,6 +46,9 @@ Mon Jan 24 22:57:18 1994  Jim Meyering  (meyering@comco.com)
 	* src/Makefile.in: Use both LDFLAGS and CFLAGS when linking.
 	* man/Makefile.in: Use binprefix as the default manprefix.
 
+	* nohup.sh: Redirect usage message to stderr.
+	From Andreas Schwab <schwab@issan.informatik.uni-dortmund.de>.
+
 Thu Jan 13 17:27:38 1994  Jim Meyering  (meyering@comco.com)
 
 	* src/Makefile.in: Change all link commands to use both $(CFLAGS)

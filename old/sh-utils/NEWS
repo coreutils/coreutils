@@ -1,5 +1,6 @@
 User visible changes in release 1.9.3
 * stty defaults `swtch' to undefined for Solaris so `susp' (^Z) will work.
+  Before, with the default settings ^Z did nothing.
 * stty no longer gives an error message when it finds a spurious difference
   (due to buggy tcsetattr/tcsetattr) between requested and current tty
   modes under SunOS 4.1.x.

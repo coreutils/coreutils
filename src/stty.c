@@ -1122,7 +1122,8 @@ set_speed (type, arg, mode)
    Return zero for success, non-zero if both ioctl's failed.  */
 
 static int
-get_win_size (struct winsize *win)
+get_win_size (win)
+     struct winsize *win;
 {
   int err;
 

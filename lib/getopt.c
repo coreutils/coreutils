@@ -195,11 +195,9 @@ my_index (str, chr)
 }
 
 /* If using GCC, we can safely declare strlen this way.
-   If not using GCC, it is ok not to declare it.
-   (Supposedly there are some machines where it might get a warning,
-   but changing this conditional to __STDC__ is too risky.)  */
+   If not using GCC, it is ok not to declare it.  */
 #ifdef __GNUC__
-#if ! (defined (emacs) && !defined (__STDC__))
+#ifndef __STDC__
 #ifdef IN_GCC
 #include "gstddef.h"
 #else /* not IN_GCC */
@@ -208,7 +206,7 @@ my_index (str, chr)
 #include <stddef.h>
 #endif /* not IN_GCC */
 extern size_t strlen (const char *);
-#endif /* ! (defined (emacs) && !defined (__STDC__)) */
+#endif /* not __STDC__ */
 #endif /* __GNUC__ */
 
 #endif /* not __GNU_LIBRARY__ */
