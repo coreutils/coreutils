@@ -1,5 +1,7 @@
 2002-07-28  Jim Meyering  <meyering@lucent.com>
 
+	* Version 4.1.12.
+
 	* configure.ac: Require automake-1.6b.
 
 	* TODO: Remove entry that mentions rm's HAVE_WORKING_READDIR.
