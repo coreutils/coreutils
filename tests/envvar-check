@@ -4,6 +4,8 @@ else
   as_unset=false
 fi
 
+# FIXME-someday: The following is begging to be factored, ...
+
 $as_unset VERSION_CONTROL SIMPLE_BACKUP_SUFFIX
 $as_unset BLOCK_SIZE DU_BLOCK_SIZE DF_BLOCK_SIZE LS_BLOCK_SIZE
 
