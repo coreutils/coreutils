@@ -1,3 +1,8 @@
+2003-02-06  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi: Adjust alignment and mention `file, text, shell'
+	on the `* Coreutils:...' dirently line.  From Karl Berry.
+
 2003-02-05  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (check-texinfo): Allow bare `POSIX' to be used on
