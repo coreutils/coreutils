@@ -1,3 +1,11 @@
+2002-06-18  Paul Eggert  <eggert@twinsun.com>
+
+	* file-type.h: Report an error if neither S_ISREG nor
+	S_IFREG is defined, instead of using a test specific to glibc
+	2.2.  This should be safe, since POSIX requires S_ISREG and
+	Unix Version 7 had S_IFREG.  We don't need to check for
+	<sys/types.h> since we don't use any symbols that it defines.
+
 2002-06-15  Jim Meyering  <meyering@lucent.com>
 
 	* file-type.h (FILE_TYPE_H): Guard entire contents with #ifndef.
