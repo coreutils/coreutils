@@ -1,5 +1,9 @@
 2001-04-21  Jim Meyering  <meyering@lucent.com>
 
+	* doc/fileutils.texi (touch invocation): Discuss ctime.
+	Based on suggestions and contributions from Aharon Robbins
+	and Dan Jacobson
+
 	* src/ls.c (main): When given two or more arguments but the only one
 	that exists is a directory, don't treat it as if it were the only
 	argument.  Before, `mkdir d; ls no-dir d 2>/dev/null' would act like
