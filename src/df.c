@@ -376,9 +376,7 @@ show_disk (const char *disk)
 /* Return the root mountpoint of the filesystem on which FILE exists, in
    malloced storage.  FILE_STAT should be the result of stating FILE.  */
 static char *
-find_mount_point (file, file_stat)
-     char *file;
-     struct stat *file_stat;
+find_mount_point (const char *file, const struct stat *file_stat)
 {
   struct saved_cwd cwd;
   struct stat last_stat;
