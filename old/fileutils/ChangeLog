@@ -1,3 +1,8 @@
+Tue Oct  1 12:56:23 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/Makefile.am (fu_SOURCES): Remove getline.c
+	(EXTRA_DIST): Add getline.c
+
 Mon Sep 30 20:08:45 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/Makefile.am (dircolors.h): Don't depend on anything unless
