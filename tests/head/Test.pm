@@ -32,32 +32,33 @@ my @tv = (
 sub test_vector
 {
   my $t;
-  my @new_tv;
+  my @derived_tests;
   foreach $t (@tv)
     {
       my ($test_name, $flags, $in, $exp, $ret) = @$t;
-      if ($test_name =~ /^obs-/)
+
+      # Derive equivalent, posix-style tests from the obsolescent ones.
+      next if $test_name !~ /^obs-/;
+
+      $test_name =~ s/^obs-/posix-/;
+      if ($flags =~ /-(\d+)$/)
 	{
-	  $test_name =~ s/^obs-/posix-/;
-	  if ($flags =~ /-(\d+)$/)
-	    {
-	      $flags = "-n $1";
-	    }
-	  elsif ($flags =~ /-(\d+)([cbk])$/)
-	    {
-	      my $suffix = $2;
-	      $suffix = '' if $suffix eq 'c';
-	      $flags = "-c $1$suffix";
-	    }
-	  else
-	    {
-	      $flags = "-l $`";
-	    }
+	  $flags = "-n $1";
 	}
-      push (@new_tv, [$test_name, $flags, $in, $exp, $ret]);
+      elsif ($flags =~ /-(\d+)([cbk])$/)
+	{
+	  my $suffix = $2;
+	  $suffix = '' if $suffix eq 'c';
+	  $flags = "-c $1$suffix";
+	}
+      else
+	{
+	  $flags = "-l $`";
+	}
+      push (@derived_tests, [$test_name, $flags, $in, $exp, $ret]);
     }
 
-  return @new_tv;
+  return (@tv, @derived_tests);
 }
 
 1;
