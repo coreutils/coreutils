@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.1e from Makefile.am
+# Makefile.in generated automatically by automake 1.1f from Makefile.am
 
 # Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -64,18 +64,18 @@ CLEANFILES = $(out) $(err)
 mkinstalldirs = $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../config.h
 CONFIG_CLEAN_FILES = 
-SCRIPTS = $(noinst_SCRIPTS)
+SCRIPTS =  $(noinst_SCRIPTS)
 
-DIST_COMMON = Makefile.am Makefile.in
+DIST_COMMON =  Makefile.am Makefile.in
 
 
 PACKAGE = @PACKAGE@
 VERSION = @VERSION@
 
-DISTFILES = $(DIST_COMMON) $(SOURCES) $(BUILT_SOURCES) $(HEADERS) \
-	$(TEXINFOS) $(INFOS) $(MANS) $(EXTRA_DIST) $(DATA)
-DEP_DISTFILES = $(DIST_COMMON) $(SOURCES) $(BUILT_SOURCES) $(HEADERS) \
-	$(TEXINFOS) $(INFO_DEPS) $(MANS) $(EXTRA_DIST) $(DATA)
+DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) \
+	$(TEXINFOS) $(INFOS) $(MANS) $(EXTRA_DIST)
+DEP_DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) \
+	$(TEXINFOS) $(INFO_DEPS) $(MANS) $(EXTRA_DIST)
 
 TAR = tar
 default: all
@@ -84,7 +84,7 @@ default: all
 $(srcdir)/Makefile.in: @MAINT@Makefile.am $(top_srcdir)/configure.in
 	cd $(top_srcdir) && automake $(subdir)/Makefile
 
-Makefile: $(top_builddir)/config.status Makefile.in
+Makefile: $(top_builddir)/config.status $(srcdir)/Makefile.in
 	cd $(top_builddir) && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= ./config.status
 tags: TAGS
 TAGS:
@@ -121,13 +121,9 @@ check-TESTS: $(TESTS)
 	  echo "$$failed of $$all tests failed"; \
 	fi
 info:
-
 dvi:
-
 check: all check-TESTS
-
 installcheck:
-
 install-exec: 
 	$(NORMAL_INSTALL)
 
@@ -151,11 +147,11 @@ mostlyclean-generic:
 
 clean-generic:
 	test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
-	test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 
 distclean-generic:
 	rm -f Makefile $(DISTCLEANFILES)
-	rm -f config.cache config.log $(CONFIG_HEADER) stamp-h
+	rm -f config.cache config.log stamp-h
+	test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 
 maintainer-clean-generic:
 	test -z "$(MAINTAINERCLEANFILES)" || rm -f $(MAINTAINERCLEANFILES)
