@@ -37,6 +37,7 @@
 	(usage): Describe.
 	(main): New case.
 	From Andries Brouwer.
+	* doc/fileutils.texi (invoking chown): Document it.
 
 2000-04-16  Jim Meyering  <meyering@lucent.com>
 
