@@ -28,6 +28,7 @@
 #include <sys/types.h>
 
 #include "system.h"
+#include "dirname.h"
 #include "error.h"
 #include "quote.h"
 
