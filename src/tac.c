@@ -1,5 +1,5 @@
 /* tac - concatenate and print files in reverse
-   Copyright (C) 88,89,90,91,95,96,97, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1988-1991, 1995-1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -363,6 +363,7 @@ tac_file (const char *file)
       error (0, errno, "%s", file);
       return 1;
     }
+  SET_BINARY (fileno (in));
   errors = tac_seekable (fileno (in), file);
   if (ferror (in) || fclose (in) == EOF)
     {
@@ -371,6 +372,36 @@ tac_file (const char *file)
     }
   return errors;
 }
+
+#if DONT_UNLINK_WHILE_OPEN
+/* FIXME: currently this code is never automatically enabled.
+   Eventually, it will be on systems for which the regular mechanism
+   (of unlinking an open file and expecting to be able to write, seek
+   back to the beginning, then reread it) doesn't work.  E.g., Windows
+   and DOS systems.  */
+
+static const char *file_to_remove;
+static FILE *fp_to_close;
+
+static void
+unlink_tempfile (void)
+{
+  fclose (fp_to_close);
+  unlink (file_to_remove);
+}
+
+static void
+record_tempfile (const char *fn, FILE *fp)
+{
+  if (!file_to_remove)
+    {
+      file_to_remove = fn;
+      fp_to_close = fp;
+      atexit (unlink_tempfile);
+    }
+}
+
+#endif
 
 /* Make a copy of the standard input in `FIXME'. */
 
@@ -404,7 +435,11 @@ save_stdin (FILE **g_tmp, char **g_tempfile)
   if (tmp == NULL)
     error (EXIT_FAILURE, errno, "%s", tempfile);
 
+#if DONT_UNLINK_WHILE_OPEN
+  record_tempfile (tempfile, tmp);
+#else
   unlink (tempfile);
+#endif
 
   while (1)
     {
@@ -423,6 +458,7 @@ save_stdin (FILE **g_tmp, char **g_tempfile)
 
   rewind (tmp);
 
+  SET_BINARY (fileno (tmp));
   *g_tmp = tmp;
   *g_tempfile = tempfile;
 }
@@ -644,6 +680,9 @@ main (int argc, char **argv)
   if (optind == argc)
     {
       have_read_stdin = 1;
+      /* We need binary I/O, since `tac' relies
+	 on `lseek' and byte counts.  */
+      SET_BINARY2 (STDIN_FILENO, STDOUT_FILENO);
       errors = tac_stdin ();
     }
   else
@@ -653,10 +692,17 @@ main (int argc, char **argv)
 	  if (STREQ (argv[optind], "-"))
 	    {
 	      have_read_stdin = 1;
+	      SET_BINARY2 (STDIN_FILENO, STDOUT_FILENO);
 	      errors |= tac_stdin ();
 	    }
 	  else
 	    {
+	      /* Binary output will leave the lines' ends (NL or
+		 CR/LF) intact when the output is a disk file.
+		 Writing a file with CR/LF pairs at end of lines in
+		 text mode has no visible effect on console output,
+		 since two CRs in a row are just like one CR.  */
+	      SET_BINARY (STDOUT_FILENO);
 	      errors |= tac_file (argv[optind]);
 	    }
 	}
