@@ -214,46 +214,48 @@ make_path (argpath, mode, parent_mode, owner, group, preserve_existing,
 	    basename_dir = dirpath;
 
 	  *slash = '\0';
-	  if (stat (basename_dir, &stats))
+	  if (mkdir (basename_dir, tmp_mode))
 	    {
-	      if (mkdir (basename_dir, tmp_mode))
+	      if (stat (basename_dir, &stats))
 		{
 		  error (0, errno, "cannot create directory `%s'", dirpath);
 		  CLEANUP;
 		  return 1;
 		}
+	      else if (!S_ISDIR (stats.st_mode))
+		{
+		  error (0, 0, "`%s' exists but is not a directory", dirpath);
+		  CLEANUP;
+		  return 1;
+		}
 	      else
 		{
-		  if (verbose_fmt_string != NULL)
-		    error (0, 0, verbose_fmt_string, dirpath);
-
-		  if (owner != (uid_t) -1 && group != (gid_t) -1
-		      && chown (basename_dir, owner, group)
-#if defined(AFS) && defined (EPERM)
-		      && errno != EPERM
-#endif
-		      )
-		    {
-		      error (0, errno, "%s", dirpath);
-		      CLEANUP;
-		      return 1;
-		    }
-
-		  if (re_protect)
-		    {
-		      struct ptr_list *new = (struct ptr_list *)
-			alloca (sizeof (struct ptr_list));
-		      new->dirname_end = slash;
-		      new->next = leading_dirs;
-		      leading_dirs = new;
-		    }
+		  /* DIRPATH already exists and is a directory. */
 		}
 	    }
-	  else if (!S_ISDIR (stats.st_mode))
+
+	  if (verbose_fmt_string != NULL)
+	    error (0, 0, verbose_fmt_string, dirpath);
+
+	  if (owner != (uid_t) -1 && group != (gid_t) -1
+	      && chown (basename_dir, owner, group)
+#if defined(AFS) && defined (EPERM)
+	      && errno != EPERM
+#endif
+	      )
 	    {
-	      error (0, 0, "`%s' exists but is not a directory", dirpath);
+	      error (0, errno, "%s", dirpath);
 	      CLEANUP;
 	      return 1;
+	    }
+
+	  if (re_protect)
+	    {
+	      struct ptr_list *new = (struct ptr_list *)
+		alloca (sizeof (struct ptr_list));
+	      new->dirname_end = slash;
+	      new->next = leading_dirs;
+	      leading_dirs = new;
 	    }
 
 	  if (saved_cwd && chdir (basename_dir) < 0)
