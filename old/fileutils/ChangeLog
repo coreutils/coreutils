@@ -1,5 +1,9 @@
 1999-11-27  Jim Meyering  <meyering@ascend.com>
 
+	Add test for 1999-05-23 change to src/copy.c (copy_internal).
+	* tests/mv/partition-perm: New file.
+	* tests/mv/Makefile.am (TESTS): Add partition-perm.
+
 	* Version 4.0j.
 
 1999-11-22  Paul Eggert  <eggert@twinsun.com>
@@ -591,7 +595,6 @@
 
 1999-05-23  Jim Meyering  <meyering@ascend.com>
 
-	FIXME: add a test for this
 	* src/copy.c (copy_internal): Don't apply the umask in move_mode.
 	Otherwise, `mv' would not preserve the permissions when copying
 	between partitions.  Reported by David Godfrey

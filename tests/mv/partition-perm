@@ -1,0 +1,52 @@
+#!/bin/sh
+# Make sure permissions are preserved when moving from one partition to another.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  mv --version
+fi
+
+. $srcdir/setup
+
+if test -z "$other_partition_tmpdir"; then
+  exit 77
+fi
+
+LANGUAGE=C; export LANGUAGE
+LANG=C; export LANG
+
+pwd=`pwd`
+dir=p-perm-$$
+trap "cd $pwd; rm -rf $dir $other_partition_tmpdir" 0 1 2 3 15
+
+mkdir $dir
+unset VERSION_CONTROL SIMPLE_BACKUP_SUFFIX
+
+if test "${VERSION_CONTROL+set}" = set; then
+  echo '$0: the VERSION_CONTROL envvar is set --' \
+    ' unset it and rerun this test' >&2
+  exit 1
+fi
+
+if test "${SIMPLE_BACKUP_SUFFIX+set}" = set; then
+  echo '$0: the SIMPLE_BACKUP_SUFFIX envvar is set --' \
+    ' unset it and rerun this test' >&2
+    >&2
+  exit 1
+fi
+
+cd $dir
+: > file
+chmod a=rwx file
+
+umask 777
+mv file $other_partition_tmpdir
+
+fail=0
+test -f file && fail=1
+test -f $other_partition_tmpdir/file || fail=1
+
+# This would have failed with the mv from fileutils-4.0i.
+test -r $other_partition_tmpdir/file || fail=1
+
+exit $fail
