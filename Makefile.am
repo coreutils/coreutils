@@ -5,6 +5,7 @@ EXTRA_DIST = Makefile.cfg Makefile.maint GNUmakefile \
   .kludge-stamp .prev-version THANKS-to-translators THANKStt.in \
   .x-sc_space_tab .x-sc_sun_os_names \
   announce-gen \
+  m4/ChangeLog \
   old/fileutils/ChangeLog \
   old/fileutils/ChangeLog-1997 \
   old/sh-utils/ChangeLog \
