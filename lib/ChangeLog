@@ -1,3 +1,22 @@
+2003-01-22  Jim Meyering  <jim@meyering.net>
+
+	* ftw.c (process_entry): Handle FTW_DCHP.
+	(ftw_dir): Handle FTW_DCH.
+
+	* ftw_.h [!_LIBC && !__USE_XOPEN_EXTENDED]: Define __USE_XOPEN_EXTENDED
+	and FTW_H_STANDALONE.
+	[anon enum] (FTW_DCH, FTW_DCHP): New members.
+	(FTW_DCH, FTW_DCHP): Define.
+
+	* ftw.c: Include autoconf-recommended block of dirent/NAMELEN
+	related definitions and includes.  Use NAMELEN throughout,
+	rather than _D_EXACT_NAMLEN.
+	[_LIBC]: Define NAMELEN to _D_EXACT_NAMLEN.
+	(stpcpy): Declare, if necessary.
+	(mempcpy): Define, if necessary.
+	[!_LIBC] (__stpcpy, __mempcpy): Define.
+	[!_LIBC] (LXSTAT, XSTAT): Define.
+
 2003-01-21  Jim Meyering  <jim@meyering.net>
 
 	* tsearch.c: New file, from GNU libc.
