@@ -54,7 +54,7 @@ static struct option const long_options[] =
 
 extern char **environ;
 
-static void
+void
 usage (int status)
 {
   if (status != 0)

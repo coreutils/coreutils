@@ -476,7 +476,7 @@ wrapf (const char *message,...)
   current_col += buflen;
 }
 
-static void
+void
 usage (int status)
 {
   if (status != 0)

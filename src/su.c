@@ -423,7 +423,7 @@ restricted_shell (const char *shell)
   return 1;
 }
 
-static void
+void
 usage (int status)
 {
   if (status != 0)

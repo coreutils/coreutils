@@ -152,7 +152,7 @@ uptime (const char *filename)
   print_uptime (n_users, utmp_buf);
 }
 
-static void
+void
 usage (int status)
 {
   if (status != 0)

@@ -42,7 +42,7 @@ static struct option const long_options[] =
   {0, 0, 0, 0}
 };
 
-static void
+void
 usage (int status)
 {
   if (status != 0)
@@ -94,7 +94,6 @@ main (int argc, char **argv)
 
   if (show_help)
     usage (0);
-
 
   if (optind != argc)
     usage (1);

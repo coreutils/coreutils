@@ -399,7 +399,7 @@ long_pinky (const int argc_names, char *const argv_names[])
     print_long_entry (argv_names[i]);
 }
 
-static void
+void
 usage (int status)
 {
   if (status != 0)

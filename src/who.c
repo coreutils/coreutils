@@ -347,7 +347,7 @@ who_am_i (const char *filename)
   print_entry (utmp_entry);
 }
 
-static void
+void
 usage (int status)
 {
   if (status != 0)

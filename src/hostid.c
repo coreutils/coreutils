@@ -32,7 +32,7 @@
 /* The name this program was run with, for error messages. */
 char *program_name;
 
-static void
+void
 usage (int status)
 {
   if (status != 0)

@@ -89,7 +89,7 @@ static void tostring PARAMS ((VALUE *v));
 static void trace ();
 #endif
 
-static void
+void
 usage (int status)
 {
   if (status != 0)

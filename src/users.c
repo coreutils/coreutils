@@ -105,7 +105,7 @@ users (const char *filename)
   list_entries_users (n_users, utmp_buf);
 }
 
-static void
+void
 usage (int status)
 {
   if (status != 0)

@@ -977,7 +977,7 @@ posixtest (void)
 #if defined (TEST_STANDALONE)
 # include "long-options.h"
 
-static void
+void
 usage (int status)
 {
   if (status != 0)
