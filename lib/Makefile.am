@@ -75,6 +75,7 @@ libfetish_a_SOURCES = \
   readutmp.h \
   regex.h \
   safe-read.c safe-read.h \
+  safe-write.c safe-write.h \
   same.c same.h \
   save-cwd.c save-cwd.h \
   savedir.c savedir.h \
