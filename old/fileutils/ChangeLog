@@ -1,8 +1,5 @@
 1999-10-31  Jim Meyering  <meyering@ascend.com>
 
-	* Makefile.am (DISTCLEANFILES): Add the .deps directory.  FIXME: this
-	is a temporary kludge while we wait for a fix in automake.
-
 	* doc/fileutils.texi: Document new --backup[=METHOD] option for
 	cp, mv, ln, and install.
 
