@@ -1,3 +1,8 @@
+2004-10-13  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (sort invocation): Move LC_ALL, LC_COLLATE
+	index entries to proper paragraph.
+
 2004-10-12  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (check-texinfo): Add `builtin' and `builtins' to
