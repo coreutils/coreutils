@@ -82,7 +82,7 @@ usage (int status)
   else
     {
       (void) printf (_("\
-Usage: %s [OPTION]... [FROM [INCR]] TO\n\
+Usage: %s [OPTION]... [START [INCREMENT]] LIMIT\n\
 "), program_name);
       (void) printf (_("\
 \n\
@@ -92,9 +92,10 @@ Usage: %s [OPTION]... [FROM [INCR]] TO\n\
       --version            output version information and exit\n\
   -w, --equal-width        equalize width by padding with leading zeroes\n\
 \n\
-  FROM, INCR, TO are interpreted as floating point.  INCR should be > 0 if\n\
-  FROM is smaller than TO and vice versa.  When given, the FORMAT argument\n\
-  must contain exactly one of the float output formats %%e, %%f, or %%g.\n\
+  START, INCREMENT, and LIMIT are interpreted as floating point values.\n\
+  INCREMENT should be positive if START is smaller than LIMIT and negative\n\
+  otherwise.  When given, the FORMAT argument must contain exactly one of\n\
+  the printf-style, floating point output formats %%e, %%f, or %%g.\n\
 "));
     }
   exit (status);
@@ -395,7 +396,8 @@ print_numbers (const char *format_str)
       if (step >= 0)
 	{
 	  error (0, 0,
-		 _("when FROM is larger than TO, INCR must be negative"));
+		 _("when the starting value is larger than the limit,\n\
+the increment must be negative"));
 	  usage (1);
 	  /* NOTREACHED */
 	}
@@ -419,7 +421,8 @@ print_numbers (const char *format_str)
       if (step <= 0)
 	{
 	  error (0, 0,
-		 _("when FROM is smaller than TO, INCR must be positive"));
+		 _("when the starting value is smaller than the limit,\n\
+the increment must be positive"));
 	  usage (1);
 	  /* NOTREACHED */
 	}
