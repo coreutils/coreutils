@@ -29,6 +29,8 @@ $x-tests: @MAINT@mk-script Test.pm
 	mv $@.n $@
 	chmod 755 $@
 
+mk-script: ../../config.status
+
 SUFFIXES = .pl
 
 .pl:
