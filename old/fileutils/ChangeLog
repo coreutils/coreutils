@@ -1,8 +1,9 @@
 Tue Jun 18 20:54:05 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* cp.c (copy_reg): Cast both sides of comparison to size_t
-	to avoid warning about `comparison between signed and unsigned'
+	to avoid a warning about `comparison between signed and unsigned'
 	from gcc -Wall.
+	Declare pointer parameters const as appropriate.
 
 	* ln.c (do_link): Refine last change so we don't disallow commands
 	like `ln --force A B' when A and B are hard links to the same file.
@@ -22,7 +23,6 @@ Tue Jun 18 20:54:05 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 	* ln.c (STREQ): Remove macro definition
 	* system.h (STREQ): Add it here instead.
 	* cp.c (do_copy): Use STREQ here instead of strcmp(...) == 0.
-	Declare pointer parameters const as appropriate.
 
 	* cp.c (do_copy): When the force and backup options have been
 	specified and the source and destination are the same name for an
