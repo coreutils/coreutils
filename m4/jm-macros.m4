@@ -1,4 +1,4 @@
-#serial 48   -*- autoconf -*-
+#serial 49   -*- autoconf -*-
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
@@ -148,6 +148,7 @@ AC_DEFUN([jm_MACROS],
     strchr \
     strerror \
     strrchr \
+    sysctl \
     sysinfo \
     wcrtomb \
     tzset \
@@ -230,6 +231,7 @@ AC_DEFUN([jm_CHECK_ALL_HEADERS],
     sys/socket.h \
     sys/statfs.h \
     sys/statvfs.h \
+    sys/sysctl.h \
     sys/systeminfo.h \
     sys/time.h \
     sys/timeb.h \
