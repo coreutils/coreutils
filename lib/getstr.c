@@ -25,8 +25,6 @@
 #include <stdio.h>
 #include <sys/types.h>
 
-#include <assert.h>
-
 #if STDC_HEADERS
 # include <stdlib.h>
 #else
@@ -49,7 +47,7 @@ int
 getstr (char **lineptr, size_t *n, FILE *stream, int delim1, int delim2,
 	size_t offset)
 {
-  int nchars_avail;		/* Allocated but unused chars in *LINEPTR.  */
+  size_t nchars_avail;		/* Allocated but unused chars in *LINEPTR.  */
   char *read_pos;		/* Where we're reading into *LINEPTR. */
   int ret;
 
@@ -64,6 +62,9 @@ getstr (char **lineptr, size_t *n, FILE *stream, int delim1, int delim2,
 	return -1;
     }
 
+  if (*n < offset)
+    return -1;
+
   nchars_avail = *n - offset;
   read_pos = *lineptr + offset;
 
@@ -75,7 +76,6 @@ getstr (char **lineptr, size_t *n, FILE *stream, int delim1, int delim2,
 	 always (unless we get an error while reading the first char)
 	 NUL-terminate the line buffer.  */
 
-      assert(*n - nchars_avail == read_pos - *lineptr);
       if (nchars_avail < 2)
 	{
 	  if (*n > MIN_CHUNK)
@@ -88,7 +88,6 @@ getstr (char **lineptr, size_t *n, FILE *stream, int delim1, int delim2,
 	  if (!*lineptr)
 	    return -1;
 	  read_pos = *n - nchars_avail + *lineptr;
-	  assert(*n - nchars_avail == read_pos - *lineptr);
 	}
 
       if (c == EOF || ferror (stream))
