@@ -1,3 +1,18 @@
+1998-12-12  Jim Meyering  <meyering@ascend.com>
+
+	1998-10-15  Akim Demaille  <demaille@inf.enst.fr>
+	* src/ls.c: Group DIRED's code together.
+	(full_time, inhibit_group, col_ext_type): Declare static.
+	(dired_dump_obstack): Apply sizeof to variable, instead of its type.
+	(parse_ls_color): Rename ext2 as e2.  Move into the block where it
+	is used.
+
+	1998-10-15  Akim Demaille  <demaille@inf.enst.fr>
+	* src/ls.c: In order to distinguish col(umn|or):
+	(init_column_info): Renamed from init_col_info.
+	(struct column_info): Renamed from struct col_info.
+	(struct color_ext_type): Renamed from struct col_ext_type.
+
 1998-12-11  Jim Meyering  <meyering@ascend.com>
 
 	* Version 4.1-b1.
