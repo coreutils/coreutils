@@ -1,3 +1,7 @@
+2002-05-19  Paul Eggert  <eggert@twinsun.com>
+
+	* coreutils.texi (ls invocation): Document new option: --author.
+
 2002-06-03  Jim Meyering  <meyering@lucent.com>
 
 	* coreutils.texi (rm invocation): Add the warning (also in the --help
