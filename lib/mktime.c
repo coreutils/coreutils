@@ -1,5 +1,5 @@
 /* mktime: convert a `struct tm' to a time_t value
-   Copyright (C) 1993-1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1993-1998, 1999 Free Software Foundation, Inc.
    Contributed by Paul Eggert (eggert@twinsun.com).
 
    NOTE: The canonical source of this file is maintained with the GNU C Library.
@@ -57,7 +57,7 @@
 #endif /* DEBUG */
 
 #ifndef __P
-# if defined (__GNUC__) || (defined (__STDC__) && __STDC__)
+# if defined __GNUC__ || (defined __STDC__ && __STDC__)
 #  define __P(args) args
 # else
 #  define __P(args) ()
@@ -318,28 +318,32 @@ __mktime_internal (struct tm *tp,
 
   /* If we have a match, check whether tm.tm_isdst has the requested
      value, if any.  */
-  if (dt == 0 && 0 <= isdst && 0 <= tm.tm_isdst)
+  if (dt == 0 && isdst != tm.tm_isdst && 0 <= isdst && 0 <= tm.tm_isdst)
     {
-      int dst_diff = (isdst != 0) - (tm.tm_isdst != 0);
-      if (dst_diff)
+      /* tm.tm_isdst has the wrong value.  Look for a neighboring
+	 time with the right value, and use its UTC offset.
+	 Heuristic: probe the previous three calendar quarters (approximately),
+	 looking for the desired isdst.  This isn't perfect,
+	 but it's good enough in practice.  */
+      int quarter = 7889238; /* seconds per average 1/4 Gregorian year */
+      int i;
+
+      /* If we're too close to the time_t limit, look in future quarters.  */
+      if (t < TIME_T_MIN + 3 * quarter)
+	quarter = -quarter;
+
+      for (i = 1; i <= 3; i++)
 	{
-	  /* Move two hours in the direction indicated by the disagreement,
-	     probe some more, and switch to a new time if found.
-	     The largest known fallback due to daylight savings is two hours:
-	     once, in Newfoundland, 1988-10-30 02:00 -> 00:00.  */
-	  time_t ot = t - 2 * 60 * 60 * dst_diff;
-	  while (--remaining_probes != 0)
+	  time_t ot = t - i * quarter;
+	  struct tm otm;
+	  ranged_convert (convert, &ot, &otm);
+	  if (otm.tm_isdst == isdst)
 	    {
-	      struct tm otm;
-	      if (! (dt = ydhms_tm_diff (year, yday, hour, min, sec,
-					 ranged_convert (convert, &ot, &otm))))
-		{
-		  t = ot;
-		  tm = otm;
-		  break;
-		}
-	      if ((ot += dt) == t)
-		break;  /* Avoid a redundant probe.  */
+	      /* We found the desired tm_isdst.
+		 Extrapolate back to the desired time.  */
+	      t = ot + ydhms_tm_diff (year, yday, hour, min, sec, &otm);
+	      ranged_convert (convert, &t, &tm);
+	      break;
 	    }
 	}
     }
