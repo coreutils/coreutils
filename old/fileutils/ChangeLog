@@ -1,3 +1,10 @@
+Fri Apr 12 21:40:44 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* mkdir.c (main): Add new option: --verbose.
+	Remove long-deprecated and nowhere-documented --path, a synonym
+	for --parents.  It was confusing to get an error about `--p'
+	being ambiguous.
+
 Thu Apr  4 21:28:03 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* configure.in (LINGUAS): Add de.
