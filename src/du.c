@@ -54,10 +54,7 @@
 
 /* The maximum number of simultaneously open file handles that
    may be used by ftw.  */
-#define MAX_N_DESCRIPTORS	\
-  (UTILS_OPEN_MAX < 20		\
-   ? UTILS_OPEN_MAX		\
-   : UTILS_OPEN_MAX - 10)
+#define MAX_N_DESCRIPTORS (3 * UTILS_OPEN_MAX / 4)
 
 /* Hash structure for inode and device numbers.  The separate entry
    structure makes it easier to rehash "in place".  */
