@@ -1,3 +1,24 @@
+2000-08-07  Paul Eggert  <eggert@twinsun.com>
+
+	Standardize on "memory exhausted" instead of "Memory exhausted"
+	or "virtual memory exhausted".
+	* obstack.c (print_and_abort): Use "memory exhausted", not
+	"virtual memory exhausted".
+	* same.c (same_name): Invoke xalloc_die instead of printing
+	our own message.
+	* userspec.c (parse_user_spec): Likewise.
+	* bumpalloc.h: comment fix
+	* same.c, userspec.c: Include xalloc.h.
+
+	* xalloc.h (xalloc_msg_memory_exhausted): Now char const[],
+	not char *const and pointing to a constant array.
+	* xmalloc.c (xalloc_msg_memory_exhausted): Likewise.
+	(xrealloc): Comment fix.
+
+	* userspec.c (parse_user_spec):
+	Don't translate a message until just before returning,
+	to avoid unnecessary translation.
+
 2000-08-07  Jim Meyering  <meyering@lucent.com>
 
 	* addext.c, argmatch.c, argmatch.h, backupfile.h, bumpalloc.h,
@@ -31,7 +52,7 @@
 
 2000-07-31  Paul Eggert  <eggert@twinsun.com>
 
-	* lib/quotearg.c (quotearg_n_options): Don't make the initial
+	* quotearg.c (quotearg_n_options): Don't make the initial
 	slot vector a constant, since it might get modified.
 
 2000-07-31  Jim Meyering  <meyering@lucent.com>
@@ -86,7 +107,7 @@
 
 2000-07-23  Paul Eggert  <eggert@twinsun.com>
 
-	* lib/quotearg.c:
+	* quotearg.c:
 	Include <wchar.h> even if ! (HAVE_MBRTOWC && 1 < MB_LEN_MAX),
 	so that mbstate_t is always defined.
 
@@ -98,7 +119,7 @@
 
 2000-07-23  Paul Eggert  <eggert@twinsun.com>
 
-	* lib/quotearg.c: Streamline by invoking multibyte code only if needed.
+	* quotearg.c: Streamline by invoking multibyte code only if needed.
 	<wchar.h>: Include only if HAVE_MBRTOWC && 1 < MB_LEN_MAX.
 	(MB_CUR_MAX): Redefine to 1 if ! (HAVE_MBRTOWC && 1 < MB_LEN_MAX).
 	(quotearg_buffer_restyled): If a unibyte locale, don't bother to
@@ -215,7 +236,7 @@
 2000-07-03  Paul Eggert  <eggert@twinsun.com>
 	and Bruno Haible  <haible@clisp.cons.org>
 
-	* lib/quotearg.c (mbrtowc):
+	* quotearg.c (mbrtowc):
 	Assign to *pwc, and return 1 only if result is nonzero.
 	(iswprint): Use ISPRINT when substituting our own mbrtowc.
 
