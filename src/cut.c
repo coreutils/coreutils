@@ -58,8 +58,7 @@
     {									\
       if (n_rp >= n_rp_allocated)					\
 	{								\
-	  n_rp_allocated *= 2;						\
-	  (rp) = xrealloc (rp, n_rp_allocated * sizeof (*(rp)));	\
+	  (rp) = x2nrealloc (rp, &n_rp_allocated, sizeof (*(rp)));	\
 	}								\
       rp[n_rp].lo = (low);						\
       rp[n_rp].hi = (high);						\
@@ -311,15 +310,11 @@ set_fields (const char *fieldstr)
   int field_found = 0;		/* Non-zero if at least one field spec
 				   has been processed.  */
 
-  struct range_pair *rp;
-  unsigned int n_rp;
-  unsigned int n_rp_allocated;
+  struct range_pair *rp = NULL;
+  unsigned int n_rp = 0;
+  unsigned int n_rp_allocated = 0;
   unsigned int i;
   bool in_digits = false;
-
-  n_rp = 0;
-  n_rp_allocated = 16;
-  rp = xmalloc (n_rp_allocated * sizeof (*rp));
 
   /* Collect and store in RP the range end points.
      It also sets EOL_RANGE_START if appropriate.  */
@@ -463,8 +458,8 @@ set_fields (const char *fieldstr)
      the field numbers corresponding to all finite ranges
      (i.e. `2-6' or `-4', but not `5-') in FIELDSTR.  */
 
-  printable_field = xcalloc (((max_range_endpoint / CHAR_BIT + 1)
-			      * sizeof (*printable_field)), 1);
+  printable_field = xcalloc (max_range_endpoint / CHAR_BIT + 1,
+			     sizeof *printable_field);
 
   /* Set the array entries corresponding to integers in the ranges of RP.  */
   for (i = 0; i < n_rp; i++)
