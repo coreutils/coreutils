@@ -74,6 +74,8 @@ EOF
   }
 print <<EOF2 ;
 if test \$errors -gt 0 ; then
-  echo Failed \$errors tests. 1>&2
+  echo "Failed \$errors tests." 1>&2
+else
+  echo 'Passed all tests.' 1>&2
 fi
 EOF2
