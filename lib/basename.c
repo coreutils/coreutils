@@ -20,11 +20,11 @@
 #endif
 
 #ifndef FILESYSTEM_PREFIX_LEN
-# define FILESYSTEM_PREFIX_LEN(f) 0
+# define FILESYSTEM_PREFIX_LEN(Filename) 0
 #endif
 
 #ifndef ISSLASH
-# define ISSLASH(c) ((c) == '/')
+# define ISSLASH(C) ((C) == '/')
 #endif
 
 /* In general, we can't use the builtin `basename' function if available,
@@ -32,8 +32,7 @@
    In some environments the builtin `basename' modifies its argument.  */
 
 char *
-base_name (name)
-     char const *name;
+base_name (char const *name)
 {
   char const *base = name += FILESYSTEM_PREFIX_LEN (name);
 
