@@ -1,3 +1,7 @@
+Sun Jun 16 13:44:36 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* doc/Makefile.am (EXTRA_DIST): Add texinfo.tex.
+
 Thu Jun  6 21:57:08 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* po/Makefile.in.in: Update from gettext-0.10.16.

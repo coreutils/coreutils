@@ -1,5 +1,7 @@
 Sun Jun 16 13:40:22 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* doc/Makefile.am (EXTRA_DIST): Add texinfo.tex.
+
 	* Makefile.am (cvs-dist): Use -c option in cvs tag command.
 
 Sat Jun 15 22:21:09 1996  Jim Meyering  <meyering@na-net.ornl.gov>
