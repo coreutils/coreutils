@@ -1,3 +1,47 @@
+2004-08-03  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/nohup.c (main): Use bool for booleans.
+	* src/paste.c (paste_parallel, paste_serial, main): Likewise.
+	* src/pathchk.c (validate-path, main, portable_chars_only): Likewise.
+	(portable_chars_only): Use to_uchar rather than a cast.
+	* src/printenv.c (main): Use bool for booleans.
+	Do not assume that the environ has at most one matching entry
+	for each option (integer overflow was possible otherwise).
+
+	* src/od.c (FMT_BYTES_ALLOCATED): Now an enum, not a decimal
+	constant.  Do not assume PRIdMAX etc. are strings of length 3 or
+	less.
+	(struct tspec): Use it.  fmt_string is now an array, not
+	a pointer, as there's little point to the indirection here.
+	(struct tspec, flag_dump_strings,
+	traditional, flag_pseudo_start, limit_bytes_to_format,
+	abbreviate_duplicate_blocks, have_read_stdin, simple_strtoul,
+	decode_one_format, open_next_file, check_and_close,
+	decode_format_string, skip, write_block, read_char, read_block,
+	parse_old_offset, dump, dump_strings, main):
+	Use bool for booleans.
+	(struct tspec): Use void *, not char *, for generic pointers.
+	(bytes_to_oct_digits, bytes_to_signed_dec_digits,
+	bytes_to_unsigned_dec_digits, bytes_to_hex_digits):
+	Use char, not unsigned int, since char suffices.
+	(print_s_char, print_char, print_s_short, print_short,
+	print_int, print_long, print_long_long, print_float,
+	print_double, print_long_double): Rewrite to avoid casts.
+	These now take void * arguments, instead of char *.
+	Use the same body for all functions, except for the choice
+	of type.  Assume C89 to simplify handling of signed char.
+	(dump_hexl_mode_trailer, print_named_ascii, print_ascii):
+	Rewrite to avoid casts.
+	(print_named_ascii, print_ascii): Now takes void *, not char *.
+	(decode_one_format): Use int for printf field widths, not
+	unsigned int.  Pass void * to subsidiary printers,
+	not char *.  Simplify handling of floating-point formats
+	by factoring out common code dealing with precision and field width.
+	(decode_format_string): Avoid need for temporary copy of
+	each decoded struct tspec.
+	(get_lcm): Remove unnecessary cast.
+	(main): Fix bug where more than INT_MAX failed decodes were ignored.
+
 2004-08-02  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/nl.c (TRUE, FALSE): Remove; all uses changed to true, false.
