@@ -1,5 +1,5 @@
 /* path-concat.c -- concatenate two arbitrary pathnames
-   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -59,6 +59,10 @@ char *strdup ();
 # define DIRECTORY_SEPARATOR '/'
 #endif
 
+#ifndef FILESYSTEM_PREFIX_LEN
+# define FILESYSTEM_PREFIX_LEN(Filename) 0
+#endif
+
 #ifndef ISSLASH
 # define ISSLASH(C) ((C) == DIRECTORY_SEPARATOR)
 #endif
@@ -105,11 +109,11 @@ path_concat (const char *dir, const char *base, char **base_in_result)
 
   p = mempcpy (p_concat, dir, dir_len);
 
-  if (dir_len > 0)
+  if (dir_len > FILESYSTEM_PREFIX_LEN (dir))
     {
-      if (ISSLASH (*(p - 1)) && ISSLASH(*base))
+      if (ISSLASH (*(p - 1)) && ISSLASH (*base))
 	--p;
-      else if (!ISSLASH (*(p - 1)) && !ISSLASH(*base))
+      else if (!ISSLASH (*(p - 1)) && !ISSLASH (*base))
 	*p++ = DIRECTORY_SEPARATOR;
     }
 
