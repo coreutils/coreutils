@@ -92,9 +92,10 @@ l = @l@
 
 AUTOMAKE_OPTIONS = 1.2 gnits
 
-TESTS = sf-1 misc
+TESTS = sf-1 misc backup-1
 EXTRA_DIST = $(TESTS)
-TESTS_ENVIRONMENT = LN=../../src/ln
+TESTS_ENVIRONMENT =    PATH=`pwd`/../../src:$$PATH
+
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../config.h
 CONFIG_CLEAN_FILES = 
