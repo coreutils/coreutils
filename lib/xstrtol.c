@@ -1,7 +1,7 @@
 /* A more useful interface to strtol.
 
-   Copyright (C) 1995, 1996, 1998, 1999, 2000, 2001, 2003, 2004 Free
-   Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1998, 1999, 2000, 2001, 2003, 2004, 2005
+   Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -23,6 +23,8 @@
 # include <config.h>
 #endif
 
+#include "xstrtol.h"
+
 #ifndef __strtol
 # define __strtol strtol
 # define __strtol_t long int
@@ -42,12 +44,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* The extra casts work around common compiler bugs.  */
-#define TYPE_SIGNED(t) (! ((t) 0 < (t) -1))
-#define TYPE_MINIMUM(t) ((t) (TYPE_SIGNED (t) \
-			      ? ~ (t) 0 << (sizeof (t) * CHAR_BIT - 1) \
-			      : (t) 0))
-#define TYPE_MAXIMUM(t) ((t) (~ (t) 0 - TYPE_MINIMUM (t)))
+#include "intprops.h"
 
 #ifndef STRTOL_T_MINIMUM
 # define STRTOL_T_MINIMUM TYPE_MINIMUM (__strtol_t)
@@ -61,8 +58,6 @@
 #endif
 
 #define ISSPACE(c) (IN_CTYPE_DOMAIN (c) && isspace (c))
-
-#include "xstrtol.h"
 
 #if !HAVE_DECL_STRTOIMAX && !defined strtoimax
 intmax_t strtoimax ();
