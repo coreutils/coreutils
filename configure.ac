@@ -6,7 +6,7 @@ AC_CONFIG_AUX_DIR(config)
 AM_CONFIG_HEADER(config.h:config.hin)
 AC_CANONICAL_HOST
 
-AM_INIT_AUTOMAKE([1.6 gnits dist-bzip2])
+AM_INIT_AUTOMAKE([1.6b gnits dist-bzip2])
 
 AC_GNU_SOURCE
 jm_PERL
