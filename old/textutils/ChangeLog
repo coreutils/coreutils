@@ -1,3 +1,24 @@
+2000-10-21  Jim Meyering  <meyering@lucent.com>
+
+	* src/sort.c (SORT_OUT_OF_ORDER): Define.
+	(main): Use it instead of hard-coding the `1'.
+
+2000-10-10  Jim Meyering  <meyering@lucent.com>
+
+	* src/sort.c (main): Use EXIT_SUCCESS rather than 0.
+	Fail when checking (-c) with more than one file argument,
+	rather than simply ignoring the extra arguments.
+
+2000-09-28  Jim Meyering  <meyering@lucent.com>
+
+	* src/cat.c (MAX_LINE_BUF): Define.
+
+2000-09-22  Jan Nieuwenhuizen  <janneke@gnu.org>
+
+       * src/cat.c (MAX_LINE_BUF): Fixed size of line number buffer to
+       prevent buffer overrun.  Replaced raw value by #define.
+       (next_line_num): Fixed (now academic) possible line buffer overrun.
+
 2000-09-07  Jim Meyering  <meyering@lucent.com>
 
 	* src/cut.c: Remove obsolete comment block.
