@@ -431,7 +431,7 @@ tac_stdin (void)
      Use fstat instead of checking for errno == ESPIPE because
      lseek doesn't work on some special files but doesn't return an
      error, either. */
-  if (fstat (0, &stats))
+  if (fstat (STDIN_FILENO, &stats))
     {
       error (0, errno, _("standard input"));
       return 1;
