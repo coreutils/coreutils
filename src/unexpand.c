@@ -44,6 +44,19 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
+
+#ifdef HAVE_LIMITS_H
+# include <limits.h>
+#endif
+
+#ifndef UINT_MAX
+# define UINT_MAX ((unsigned int) ~(unsigned int) 0)
+#endif
+
+#ifndef INT_MAX
+# define INT_MAX ((int) (UINT_MAX >> 1))
+#endif
+
 #include "error.h"
 
 /* The number of bytes added at a time to the amount of memory
@@ -440,7 +453,11 @@ main (int argc, char **argv)
   else if (first_free_tab == 1)
     tab_size = tab_list[0];
   else
-    tab_size = 0;
+    {
+      /* Append a sentinel to the list of tab stop indices.  */
+      add_tabstop (INT_MAX);
+      tab_size = 0;
+    }
 
   if (optind == argc)
     file_list = stdin_argv;
