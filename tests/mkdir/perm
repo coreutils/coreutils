@@ -23,15 +23,17 @@ fi
 
 fail=0
 
-# umask   -m option   resulting perm
+#                         parent        parent/dir
+# umask   -m option   resulting perm  resulting perm
 tests='
-    000  :            :drwxrwxrwx:
-    000  :   -m 016   :d-----xrw-:
-    077  :            :drwx------:
-    050  :            :drwx-w-rwx:
-    050  :   -m 312   :d-wx--x-w-:
-    160  :            :drw---xrwx:
-    -    :   -        :last:
+    000  :            :drwxrwxrwx:drwxrwxrwx:
+    000  :   -m 016   :drwxrwxrwx:d-----xrw-:
+    077  :            :drwx------:drwx------:
+    050  :            :drwx-w-rwx:drwx-w-rwx:
+    050  :   -m 312   :drwx-w-rwx:d-wx--x-w-:
+    160  :            :drwx--xrwx:drw---xrwx:
+    160  :   -m 743   :drwx--xrwx:drwxr---wx:
+    -    :   -        :last:last:
     '
 for p in empty -p; do
   test _$p = _empty && p=
@@ -43,16 +45,33 @@ for p in empty -p; do
   IFS=$old_IFS
 
   while :; do
-    umask=$1 mode=$2 expected_perms=$3
-    test $expected_perms = last && break
-    shift; shift; shift
+    test "$VERBOSE" = yes && set -x
+    umask=$1 mode=$2 parent_perms=$3 sub_perms=$4
+    test $sub_perms = last && break
+    # echo p=$p umask=$1 mode=$2 parent_perms=$3 sub_perms=$4
+    shift; shift; shift; shift
     umask $umask
-    mkdir $p $mode d || fail=1
 
-    actual_perms=`ls -ld d | sed 's/ .*//'`
-    test "$expected_perms" = "$actual_perms" \
-      || { fail=1; echo expected $expected_perms, got $actual_perms; }
-    rmdir d || fail=1
+    # If we're not using -p, then create the parent manually,
+    # and adjust expectations accordingly.
+    test x$p = x && \
+      {
+	mkdir -m =,u=rwx parent || fail=1
+	parent_perms=drwx------
+      }
+
+    mkdir $p $mode parent/sub || fail=1
+
+    perms=`ls -ld parent | sed 's/ .*//'`
+    test "$parent_perms" = "$perms" \
+      || { fail=1; echo parent: expected $parent_perms, got $perms; }
+
+    perms=`ls -ld parent/sub | sed 's/ .*//'`
+    test "$sub_perms" = "$perms" \
+      || { fail=1; echo parent/sub: expected $sub_perms, got $perms; }
+
+    chmod -R u+rwx parent
+    rm -rf parent || fail=1
   done
 done
 
