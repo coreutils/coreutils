@@ -1,5 +1,13 @@
 2003-03-17  Jim Meyering  <jim@meyering.net>
 
+	* raise.c (raise): Rename from rpl_raise.
+	Without that change, systems lacking raise (SunOS4) would not be
+	able to link programs using raise.  Reported by Volker Borchert.
+
+	* ftw.c (FTW_STAT): Rename from `STAT', to avoid conflict
+	with STAT definition from <sys/dir.h> on AIX 5.1.
+	Suggestion from Mike Jetzer.
+
 	* fchown-stub.c (fchown): Put function type on its own line.
 	* readlink-stub.c (readlink): Likewise.
 	* lstat-stub.c (lstat): Likewise.
