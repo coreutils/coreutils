@@ -187,7 +187,7 @@ static void extract_dirs_from_files PARAMS ((const char *dirname,
 					     int recursive));
 static void get_link_name PARAMS ((const char *filename, struct fileinfo *f));
 static void indent PARAMS ((int from, int to));
-static void init_col_info PARAMS ((void));
+static void init_column_info PARAMS ((void));
 static void print_current_files PARAMS ((void));
 static void print_dir PARAMS ((const char *name, const char *realname));
 static void print_file_name_and_frills PARAMS ((const struct fileinfo *f));
@@ -378,11 +378,11 @@ static const char *const indicator_name[]=
     "bd", "cd", "mi", "or", "ex", NULL
   };
 
-struct col_ext_type
+struct color_ext_type
   {
     struct bin_str ext;		/* The extension we're looking for */
     struct bin_str seq;		/* The sequence to output when we do */
-    struct col_ext_type *next;	/* Next in list */
+    struct color_ext_type *next;	/* Next in list */
   };
 
 static struct bin_str color_indicator[] =
@@ -404,7 +404,7 @@ static struct bin_str color_indicator[] =
   };
 
 /* FIXME: comment  */
-static struct col_ext_type *col_ext_list = NULL;
+static struct color_ext_type *color_ext_list = NULL;
 
 /* Buffer for color sequences */
 static char *color_buf;
@@ -588,7 +588,7 @@ static enum color_type const color_types[] =
   };
 
 /* Information about filling a column.  */
-struct col_info
+struct column_info
 {
   int valid_len;
   int line_len;
@@ -596,7 +596,7 @@ struct col_info
 };
 
 /* Array with information about column filledness.  */
-static struct col_info *col_info;
+static struct column_info *column_info;
 
 /* Maximum number of columns ever possible for this display.  */
 static int max_idx;
@@ -1383,7 +1383,7 @@ get_funky_string (char **dest, const char **src, int equals_end)
 	      *(q++) = *(p++) & 037;
 	      ++count;
 	    }
-	  else if ( *p == '?')
+	  else if (*p == '?')
 	    {
 	      *(q++) = 127;
 	      ++count;
@@ -1393,7 +1393,7 @@ get_funky_string (char **dest, const char **src, int equals_end)
 	  break;
 
 	default:
-	  abort();
+	  abort ();
 	}
     }
 
@@ -1411,7 +1411,7 @@ parse_ls_color (void)
   int state;			/* State of parser */
   int ind_no;			/* Indicator number */
   char label[3];		/* Indicator label */
-  struct col_ext_type *ext;	/* Extension we are working on */
+  struct color_ext_type *ext;	/* Extension we are working on */
 
   if ((p = getenv ("LS_COLORS")) == NULL || *p == '\0')
     return;
@@ -1443,10 +1443,10 @@ parse_ls_color (void)
 		 override an earlier one, which can be useful for
 		 having terminal-specific defs override global).  */
 
-	      ext = (struct col_ext_type *)
-		xmalloc (sizeof (struct col_ext_type));
-	      ext->next = col_ext_list;
-	      col_ext_list = ext;
+	      ext = (struct color_ext_type *)
+		xmalloc (sizeof (struct color_ext_type));
+	      ext->next = color_ext_list;
+	      color_ext_list = ext;
 
 	      ++p;
 	      ext->ext.string = buf;
@@ -1510,13 +1510,13 @@ parse_ls_color (void)
 
   if (state < 0)
     {
-      struct col_ext_type *e;
-      struct col_ext_type *e2;
+      struct color_ext_type *e;
+      struct color_ext_type *e2;
 
       error (0, 0,
 	     _("unparsable value for LS_COLORS environment variable"));
       free (color_buf);
-      for (e = col_ext_list; e != NULL ; /* empty */)
+      for (e = color_ext_list; e != NULL; /* empty */)
 	{
 	  e2 = e;
 	  e = e->next;
@@ -2132,12 +2132,12 @@ print_current_files (void)
       break;
 
     case many_per_line:
-      init_col_info ();
+      init_column_info ();
       print_many_per_line ();
       break;
 
     case horizontal:
-      init_col_info ();
+      init_column_info ();
       print_horizontal ();
       break;
 
@@ -2453,7 +2453,7 @@ static void
 print_color_indicator (const char *name, unsigned int mode, int linkok)
 {
   int type = C_FILE;
-  struct col_ext_type *ext;	/* Color extension */
+  struct color_ext_type *ext;	/* Color extension */
   size_t len;			/* Length of name */
 
   /* Is this a nonexistent file?  If so, linkok == -1.  */
@@ -2505,7 +2505,7 @@ print_color_indicator (const char *name, unsigned int mode, int linkok)
 
 	  len = strlen (name);
 	  name += len;		/* Pointer to final \0.  */
-	  for (ext = col_ext_list; ext != NULL; ext = ext->next)
+	  for (ext = color_ext_list; ext != NULL; ext = ext->next)
 	    {
 	      if ((size_t) ext->ext.len <= len
 		  && strncmp (name - ext->ext.len, ext->ext.string,
@@ -2576,7 +2576,7 @@ length_of_file_name_and_frills (const struct fileinfo *f)
 static void
 print_many_per_line (void)
 {
-  struct col_info *line_fmt;
+  struct column_info *line_fmt;
   int filesno;			/* Index into files. */
   int row;			/* Current row. */
   int max_name_length;		/* Length of longest file name + frills. */
@@ -2600,17 +2600,17 @@ print_many_per_line (void)
 
       for (i = 0; i < max_cols; ++i)
 	{
-	  if (col_info[i].valid_len)
+	  if (column_info[i].valid_len)
 	    {
 	      int idx = filesno / ((files_index + i) / (i + 1));
 	      int real_length = name_length + (idx == i ? 0 : 2);
 
-	      if (real_length > col_info[i].col_arr[idx])
+	      if (real_length > column_info[i].col_arr[idx])
 		{
-		  col_info[i].line_len += (real_length
-					   - col_info[i].col_arr[idx]);
-		  col_info[i].col_arr[idx] = real_length;
-		  col_info[i].valid_len = col_info[i].line_len < line_length;
+		  column_info[i].line_len += (real_length
+					   - column_info[i].col_arr[idx]);
+		  column_info[i].col_arr[idx] = real_length;
+		  column_info[i].valid_len = column_info[i].line_len < line_length;
 		}
 	    }
 	}
@@ -2619,11 +2619,11 @@ print_many_per_line (void)
   /* Find maximum allowed columns.  */
   for (cols = max_cols; cols > 1; --cols)
     {
-      if (col_info[cols - 1].valid_len)
+      if (column_info[cols - 1].valid_len)
 	break;
     }
 
-  line_fmt = &col_info[cols - 1];
+  line_fmt = &column_info[cols - 1];
 
   /* Calculate the number of rows that will be in each column except possibly
      for a short column on the right. */
@@ -2655,7 +2655,7 @@ print_many_per_line (void)
 static void
 print_horizontal (void)
 {
-  struct col_info *line_fmt;
+  struct column_info *line_fmt;
   int filesno;
   int max_name_length;
   int name_length;
@@ -2678,17 +2678,17 @@ print_horizontal (void)
 
       for (i = 0; i < max_cols; ++i)
 	{
-	  if (col_info[i].valid_len)
+	  if (column_info[i].valid_len)
 	    {
 	      int idx = filesno % (i + 1);
 	      int real_length = name_length + (idx == i ? 0 : 2);
 
-	      if (real_length > col_info[i].col_arr[idx])
+	      if (real_length > column_info[i].col_arr[idx])
 		{
-		  col_info[i].line_len += (real_length
-					   - col_info[i].col_arr[idx]);
-		  col_info[i].col_arr[idx] = real_length;
-		  col_info[i].valid_len = col_info[i].line_len < line_length;
+		  column_info[i].line_len += (real_length
+					   - column_info[i].col_arr[idx]);
+		  column_info[i].col_arr[idx] = real_length;
+		  column_info[i].valid_len = column_info[i].line_len < line_length;
 		}
 	    }
 	}
@@ -2697,11 +2697,11 @@ print_horizontal (void)
   /* Find maximum allowed columns.  */
   for (cols = max_cols; cols > 1; --cols)
     {
-      if (col_info[cols - 1].valid_len)
+      if (column_info[cols - 1].valid_len)
 	break;
     }
 
-  line_fmt = &col_info[cols - 1];
+  line_fmt = &column_info[cols - 1];
 
   pos = 0;
 
@@ -2811,7 +2811,7 @@ attach (char *dest, const char *dirname, const char *name)
 }
 
 static void
-init_col_info (void)
+init_column_info (void)
 {
   int i;
   int allocate = 0;
@@ -2820,10 +2820,10 @@ init_col_info (void)
   if (max_idx == 0)
     max_idx = 1;
 
-  if (col_info == NULL)
+  if (column_info == NULL)
     {
-      col_info = (struct col_info *) xmalloc (max_idx
-					      * sizeof (struct col_info));
+      column_info = (struct column_info *) xmalloc (max_idx
+						    * sizeof (struct column_info));
       allocate = 1;
     }
 
@@ -2831,14 +2831,14 @@ init_col_info (void)
     {
       int j;
 
-      col_info[i].valid_len = 1;
-      col_info[i].line_len = (i + 1) * MIN_COLUMN_WIDTH;
+      column_info[i].valid_len = 1;
+      column_info[i].line_len = (i + 1) * MIN_COLUMN_WIDTH;
 
       if (allocate)
-	col_info[i].col_arr = (int *) xmalloc ((i + 1) * sizeof (int));
+	column_info[i].col_arr = (int *) xmalloc ((i + 1) * sizeof (int));
 
       for (j = 0; j <= i; ++j)
-	col_info[i].col_arr[j] = MIN_COLUMN_WIDTH;
+	column_info[i].col_arr[j] = MIN_COLUMN_WIDTH;
     }
 }
 
