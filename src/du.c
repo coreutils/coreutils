@@ -173,6 +173,9 @@ static int show_help;
 /* If non-zero, print the version on standard output and exit.  */
 static int show_version;
 
+/* Grand total size of all args. */
+static long tot_size = 0L;
+
 static struct option const long_options[] =
 {
   {"all", no_argument, &opt_all, 1},
@@ -229,6 +232,7 @@ main (argc, argv)
      char *argv[];
 {
   int c;
+  char *cwd_only[] = {".", NULL};
 
   program_name = argv[0];
   xstat = lstat;
@@ -304,20 +308,7 @@ main (argc, argv)
 
   str_init (&path, INITIAL_PATH_SIZE);
 
-  if (optind == argc)
-    {
-      str_copyc (path, ".");
-
-      /* Initialize the hash structure for inode numbers.  */
-      hash_reset ();
-
-      /* Get the size of the current directory only.  */
-      count_entry (".", 1, 0);
-    }
-  else
-    {
-      du_files (argv + optind);
-    }
+  du_files (optind == argc ? cwd_only : argv + optind);
 
   exit (exit_status);
 }
@@ -332,7 +323,6 @@ du_files (files)
   char *wd;
   ino_t initial_ino;		/* Initial directory's inode. */
   dev_t initial_dev;		/* Initial directory's device. */
-  long tot_size = 0L;		/* Grand total size of all args. */
   int i;			/* Index in FILES. */
 
   wd = xgetcwd ();
@@ -369,7 +359,7 @@ du_files (files)
       if (!opt_combined_arguments)
 	hash_reset ();
 
-      tot_size += count_entry (arg, 1, 0);
+      count_entry (arg, 1, 0);
 
       /* chdir if `count_entry' has changed the working directory.  */
       if (stat (".", &stat_buf))
@@ -420,6 +410,8 @@ count_entry (ent, top, last_dev)
     size = stat_buf.st_size;
   else
     size = ST_NBLOCKS (stat_buf);
+
+  tot_size += size;
 
   if (S_ISDIR (stat_buf.st_mode))
     {
