@@ -1,5 +1,8 @@
 2002-05-27  Jim Meyering  <meyering@lucent.com>
 
+	* gettimeofday.m4 (AC_FUNC_GETTIMEOFDAY_CLOBBER): Also replace
+	localtime.
+
 	* readdir.m4 (jm_FUNC_READDIR): Undefine `rmdir' so we don't try to
 	use the replacement function; it wouldn't resolve at link time.
 	Reported by Volker Borchert.
