@@ -111,7 +111,7 @@ char *xmalloc ();
 char *xrealloc ();
 
 static int hash_insert __P ((ino_t ino, dev_t dev));
-static int hash_insert2 __P ((struct htab *htab, ino_t ino, dev_t dev));
+static int hash_insert2 __P ((struct htab *_htab, ino_t ino, dev_t dev));
 static long count_entry __P ((char *ent, int top, dev_t last_dev));
 static void du_files __P ((char **files));
 static void hash_init __P ((unsigned int modulus,
@@ -761,10 +761,10 @@ hash_insert (ino_t ino, dev_t dev)
    already existed.  */
 
 static int
-hash_insert2 (struct htab *htab, ino_t ino, dev_t dev)
+hash_insert2 (struct htab *ht, ino_t ino, dev_t dev)
 {
   struct entry **hp, *ep2, *ep;
-  hp = &htab->hash[ino % htab->modulus];
+  hp = &ht->hash[ino % ht->modulus];
   ep2 = *hp;
 
   /* Collision?  */
@@ -787,7 +787,7 @@ hash_insert2 (struct htab *htab, ino_t ino, dev_t dev)
 
     }
 
-  ep = *hp = &htab->entry_tab[htab->first_free_entry++];
+  ep = *hp = &ht->entry_tab[ht->first_free_entry++];
   ep->ino = ino;
   ep->dev = dev;
   ep->coll_link = ep2;		/* `ep2' is NULL if no collision.  */
