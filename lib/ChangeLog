@@ -1,3 +1,32 @@
+2005-03-09  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Factor int-properties macros into a single file, except for
+	glibc-related files.
+	* intprops.h: New file.
+	* getloadavg.c: Include it instead of limits.h.
+	(INT_STRLEN_BOUND): Remove.
+	* human.c: Include intprops.h.
+	(group_number): Use INT_STRLEN_BOUND instead of rolling it ourself.
+	* human.h (LONGEST_HUMAN_READABLE): Use 146/485 rather than 302/1000.
+	* inttostr.h: Include intprops.h instead of limits.h.
+	(INT_STRLEN_BOUND, INT_BUFSIZE_BOUND): Remove.
+	* mktime.c (TYPE_IS_INTEGER, TYPE_TWOS_COMPLEMENT): New macros,
+	for consistency with intprops.h.
+	(time_t_is_integer, twos_complement_arithmetic): Use them.
+	* sig2str.h: Include <signal.h>, intprops.h.
+	(INT_STRLEN_BOUND): Remove.
+	* strftime.c (TYPE_SIGNED): Remove.
+	(INT_STRLEN_BOUND): Switch to same implementation as intprops.h.
+	* strtol.c: Adjust comments to match intprops.h.
+	* userspec.c: Include intprops.h.
+	(TYPE_SIGNED, TYPE_MINIMUM, TYPE_MAXIMUM): Remove.
+	* utimecmp.c, xnanosleep.c, xstrtol.c: Likewise.
+	* utimecmp.c (utimecmp): Use TYPE_IS_INTEGER, TYPE_TWOS_COMPLEMENT
+	instead of rolling our own expressions.
+	* xstrtol.c: Include xstrtol.h first, to test interface.
+	* fts.c: Include intprops.h.
+	(TYPE_SIGNED): Remove.
+
 2005-03-09  Jim Meyering  <jim@meyering.net>
 
 	More migration to AC_LIBSOURCES/AC_LIBOBJ.
