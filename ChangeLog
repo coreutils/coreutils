@@ -1,3 +1,7 @@
+2003-06-04  Paul Eggert  <eggert@twinsun.com>
+
+	* src/system.h: Include <stdbool.h> unconditionally.
+
 2003-06-04  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
