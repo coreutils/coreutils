@@ -1,14 +1,14 @@
 2000-11-23  Jim Meyering  <meyering@lucent.com>
 
+	* Version 4.0.33.
+
 	* src/chmod.c (mode_changed): New function.
 	(change_file_mode): Use it to determine accurately when -c should
 	make chmod announce there's been a change.
 	Based on a patch from Michael Stone.
 	Reported by root@khms.westfalen.de.
 
-	* Version 4.0.33.
-
-	* tests/chmod/c-option: New test.
+	* tests/chmod/c-option: New test for the above fix.
 	* tests/chmod/Makefile.am (TESTS): Add c-option
 
 	* tests/sticky-check: New file.  Factored out of tests/mkdir/parents.
