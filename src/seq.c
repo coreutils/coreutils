@@ -42,8 +42,8 @@ static double from;
 /* The name that this program was run with. */
 char *program_name;
 
-/* The string used to seperate two number. */
-static char *seperator;
+/* The string used to separate two number. */
+static char *separator;
 
 /* If non-zero, display usage information and exit.  */
 static int show_help;
@@ -62,7 +62,7 @@ static struct option const long_options[] =
   { "equal-width", no_argument, NULL, 'w'},
   { "format", required_argument, NULL, 'f'},
   { "help", no_argument, &show_help, 1},
-  { "seperator", required_argument, NULL, 's'},
+  { "separator", required_argument, NULL, 's'},
   { "version", no_argument, &show_version, 1},
   { NULL, 0, NULL, 0}
 };
@@ -83,7 +83,7 @@ Usage: %s [OPTION]... [from [step]] to\n\
 \n\
   -f, --format FORMAT      use printf(3) style FORMAT (default: %%g)\n\
       --help               display this help and exit\n\
-  -s, --seperator STRING   use STRING for seperating numbers (default: \\n)\n\
+  -s, --separator STRING   use STRING for separating numbers (default: \\n)\n\
       --version            output version information and exit\n\
   -w, --equal-width        equalize width by padding with leading zeroes\n\
 \n\
@@ -107,7 +107,7 @@ main (argc, argv)
   program_name = argv[0];
   equal_width = 0;
   format_str = NULL;
-  seperator = "\n";
+  separator = "\n";
   from = 1.0;
   step_is_set = 0;
 
@@ -134,7 +134,7 @@ main (argc, argv)
 	  break;
 
 	case 's':
-	  seperator = optarg;
+	  separator = optarg;
 	  break;
 
 	case 'w':
@@ -392,11 +392,12 @@ print_numbers (format_str)
 	{
 	  (void) printf (format_str, from);
 
+	  /* FIXME: don't increment!!!  Use `first + i * step'.  */
 	  from += step;
 	  if (from < last)
 	    break;
 
-	  (void) fputs (seperator, stdout);
+	  (void) fputs (separator, stdout);
 	}
     }
   else
@@ -412,11 +413,12 @@ print_numbers (format_str)
 	{
 	  (void) printf (format_str, from);
 
+	  /* FIXME: don't increment!!!  Use `first + i * step'.  */
 	  from += step;
 	  if (from > last)
 	    break;
 
-	  (void) fputs (seperator, stdout);
+	  (void) fputs (separator, stdout);
 	}
     }
 
