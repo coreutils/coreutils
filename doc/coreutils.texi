@@ -8475,13 +8475,14 @@ all of the given @var{argument}s.
 
 @command{printf} has one additional directive, @samp{%b}, which prints its
 argument string with @samp{\} escapes interpreted in the same way as in
-the @var{format} string.
+the @var{format} string, except that octal escapes are of the form
+@samp{\0@var{ooo}} where @var{ooo} is 0 to 3 octal digits.
 
 @kindex \@var{ooo}
 @kindex \x@var{hh}
 
 @command{printf} interprets @samp{\@var{ooo}} in @var{format} as an octal number
-(if @var{ooo} is 0 to 3 octal digits) specifying a character to print,
+(if @var{ooo} is 1 to 3 octal digits) specifying a character to print,
 and @samp{\x@var{hh}} as a hexadecimal number (if @var{hh} is 1 to 2 hex
 digits) specifying a character to print.
 
