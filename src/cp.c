@@ -70,10 +70,11 @@ struct dir_attr
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
-  TARGET_DIRECTORY_OPTION = CHAR_MAX + 1,
+  PARENTS_OPTION = CHAR_MAX + 1,
+  REPLY_OPTION,
   SPARSE_OPTION,
   STRIP_TRAILING_SLASHES_OPTION,
-  PARENTS_OPTION,
+  TARGET_DIRECTORY_OPTION,
   UNLINK_DEST_BEFORE_OPENING
 };
 
@@ -103,6 +104,18 @@ static enum Sparse_type const sparse_type[] =
   SPARSE_NEVER, SPARSE_AUTO, SPARSE_ALWAYS
 };
 
+/* Valid arguments to the `--reply' option. */
+static char const* const reply_args[] =
+{
+  "yes", "no", "query", 0
+};
+
+/* The values that correspond to the above strings. */
+static int const reply_vals[] =
+{
+  I_ALWAYS_YES, I_ALWAYS_NO, I_ASK_USER
+};
+
 /* The error code to return to the system. */
 static int exit_status = 0;
 
@@ -122,6 +135,7 @@ static struct option const long_opts[] =
   {"preserve", no_argument, NULL, 'p'},
   {"recursive", no_argument, NULL, 'R'},
   {"remove-destination", no_argument, NULL, UNLINK_DEST_BEFORE_OPENING},
+  {"reply", required_argument, NULL, REPLY_OPTION},
   {"strip-trailing-slashes", no_argument, NULL, STRIP_TRAILING_SLASHES_OPTION},
   {"suffix", required_argument, NULL, 'S'},
   {"symbolic-link", no_argument, NULL, 's'},
@@ -159,6 +173,8 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
                                  opened, remove it and try again\n\
   -i, --interactive            prompt before overwrite\n\
   -H                           follow command-line symbolic links\n\
+"));
+      printf (_("\
   -l, --link                   link files instead of copying\n\
   -L, --dereference            always follow symbolic links\n\
   -p, --preserve               preserve file attributes if possible\n\
@@ -174,6 +190,8 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
       printf (_("\
       --sparse=WHEN            control creation of sparse files\n\
   -R, --recursive              copy directories recursively\n\
+      --reply={yes,no,query}   specify how to handle the prompt about an\n\
+                                 existing destination file\n\
       --strip-trailing-slashes remove any trailing slashes from each SOURCE\n\
                                  argument\n\
   -s, --symbolic-link          make symbolic links instead of copying\n\
@@ -182,6 +200,8 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
   -u, --update                 copy only when the SOURCE file is newer\n\
                                  than the destination file or when the\n\
                                  destination file is missing\n\
+"));
+      printf (_("\
   -v, --verbose                explain what is being done\n\
   -x, --one-file-system        stay on this file system\n\
       --help                   display this help and exit\n\
@@ -802,6 +822,11 @@ main (int argc, char **argv)
 	case 'R':
 	  x.recursive = 1;
 	  x.copy_as_regular = 0;
+	  break;
+
+	case REPLY_OPTION:
+	  x.interactive = XARGMATCH ("--reply", optarg,
+				     reply_args, reply_vals);
 	  break;
 
 	case UNLINK_DEST_BEFORE_OPENING:
