@@ -98,7 +98,7 @@ enum delimit_method
 
 static char const *const delimit_method_string[] =
 {
-  "none", "prepend", "separate", 0
+  "none", "prepend", "separate", NULL
 };
 
 static enum delimit_method const delimit_method_map[] =
