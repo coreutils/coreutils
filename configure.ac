@@ -33,29 +33,6 @@ jm_MACROS
 AC_HEADER_TIOCGWINSZ()
 jm_WINSIZE_IN_PTEM
 
-# Check for SunOS statfs brokenness wrt partitions 2GB and larger.
-# If <sys/vfs.h> exists and struct statfs has a member named f_spare,
-# enable the work-around code in fsusage.c.
-AC_MSG_CHECKING([for statfs that truncates block counts])
-AC_CACHE_VAL(fu_cv_sys_truncating_statfs,
-[AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
-#if !defined(sun) && !defined(__sun)
-choke -- this is a workaround for a Sun-specific problem
-#endif
-#include <sys/types.h>
-#include <sys/vfs.h>]],
-  [[struct statfs t; long c = *(t.f_spare);]])],
-  [fu_cv_sys_truncating_statfs=yes],
-  [fu_cv_sys_truncating_statfs=no])])
-if test $fu_cv_sys_truncating_statfs = yes; then
-  AC_DEFINE(STATFS_TRUNCATES_BLOCK_COUNTS, 1,
-[  Define if the block counts reported by statfs may be truncated to 2GB
-   and the correct values may be stored in the f_spare array.
-   (SunOS 4.1.2, 4.1.3, and 4.1.3_U1 are reported to have this problem.
-   SunOS 4.1.1 seems not to be affected.)])
-fi
-AC_MSG_RESULT($fu_cv_sys_truncating_statfs)
-
 AC_MSG_CHECKING(whether localtime caches TZ)
 AC_CACHE_VAL(utils_cv_localtime_cache,
 [if test x$ac_cv_func_tzset = xyes; then
@@ -144,7 +121,7 @@ fi
 
 AC_DEFUN(jm_DUMMY_1,
 [
-  AC_REQUIRE([jm_PREREQ_READUTMP])
+  AC_REQUIRE([gl_READUTMP])
   if test $ac_cv_header_utmp_h = yes || test $ac_cv_header_utmpx_h = yes; then
     OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS pinky\$(EXEEXT)"
     OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS users\$(EXEEXT)"
