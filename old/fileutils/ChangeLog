@@ -1,3 +1,15 @@
+2000-01-07  Jim Meyering  <meyering@ascend.com>
+
+	* tests/dir/Makefile.am: (TESTS_ENVIRONMENT): Add `pwd`/ prefix
+	to exported PATH value (though not strictly necessary, here).
+	* tests/dd/Makefile.am: Likewise.
+	* tests/dircolors/Makefile.am: Likewise.
+	* tests/rm/Makefile.am: Likewise.
+	* tests/rmdir/Makefile.am: Likewise.
+	* tests/shred/Makefile.am: Likewise.
+	* tests/touch/Makefile.am: Likewise.
+	* tests/shred/Makefile.am: Likewise.
+
 2000-01-06  Jim Meyering  <meyering@ascend.com>
 
 	* man/help2man: Import version 1.020.
