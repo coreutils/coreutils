@@ -1819,7 +1819,7 @@ visible (unsigned int ch)
   char *bpout = buf;
 
   if (ch == _POSIX_VDISABLE)
-    return _("<undef>");
+    return "<undef>";
 
   if (ch >= 32)
     {
