@@ -1,5 +1,11 @@
 Sun Oct 20 09:03:51 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* Makefile.am (AUTOMAKE_OPTIONS): Set to `gnits'.
+	(EXTRA_DIST): Remove @README_ALPHA@.
+
+	* configure.in: Remove README_ALPHA related code.  Automake takes
+	care of it automatically now when in gnits mode.
+
 	* acinclude.m4 (AM_FUNC_GETLOADAVG): Use $srcdir (not $top_srcdir) in
 	#include $srcdir/lib/getloadavg.c.  The latter isn't defined at that
 	point in configure script.  From Eric Backus.

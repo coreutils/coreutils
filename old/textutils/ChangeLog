@@ -1,3 +1,14 @@
+Sun Oct 20 13:44:07 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* Makefile.am (AUTOMAKE_OPTIONS): Set to `gnits'
+	(EXTRA_DIST): Remove.
+
+	* configure.in: Remove README_ALPHA related code.  Automake takes
+	care of it automatically now when in gnits mode.
+
+	* lib/md5.c (md5_process_bytes): Cast void* pointer to char* before
+	doing arithmetic with it.
+
 Sat Oct 19 23:13:54 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/md5.c: Update from GNU libc.

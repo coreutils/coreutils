@@ -1,3 +1,11 @@
+Sun Oct 20 13:49:25 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* Makefile.am (AUTOMAKE_OPTIONS): Set to `gnits'.
+	(EXTRA_DIST): Remove.
+
+	* configure.in: Remove README_ALPHA related code.  Automake takes
+	care of it automatically now when in gnits mode.
+
 Sun Oct 13 14:02:41 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/ls.c (print_long_format): Use strftime of localtime
