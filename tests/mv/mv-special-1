@@ -1,0 +1,18 @@
+#! /bin/sh
+
+: ${MV=mv}
+: ${RM=rm}
+: ${MKNOD=mknod}
+
+. $srcdir/setup
+
+if test -z $other_partition_tmpdir; then
+  exit 77
+fi
+
+null=.mv-null
+$RM -f $null
+$MKNOD $null p
+$MV $null $other_partition_tmpdir
+
+$RM -rf $null $other_partition_tmpdir
