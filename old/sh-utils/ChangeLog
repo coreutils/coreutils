@@ -1,3 +1,7 @@
+1999-11-22  Jim Meyering  <meyering@ascend.com>
+
+	* lib/Makefile.am (DISTCLEANFILES): Add lstat.c and stat.c.
+
 1999-11-09  Jim Meyering  <meyering@ascend.com>
 
 	* src/expr.c (NEW): Undefine to avoid warning about redefinition.
