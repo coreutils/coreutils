@@ -41,6 +41,13 @@ my @Tests =
     {OUT => "a\nb\nc\nx\nd\ny\ne\nz\nf\ng\n"}],
    ['tree-2', {IN => "a b b c c d d e e f f g\nc x x y y z\nf r r s s t\n"},
     {OUT => "a\nb\nc\nx\nd\ny\ne\nz\nf\nr\ng\ns\nt\n"}],
+
+   # Before coreutils-5.0.1, given an odd number of input tokens,
+   # tsort would accept that and treat the input as if an additional
+   # copy of the final token were appended.
+   ['odd', {IN => "a\n"},
+    {EXIT => 1},
+    {ERR => "tsort: odd.1: input contains an odd number of tokens\n"}],
   );
 
 my $save_temps = $ENV{DEBUG};
