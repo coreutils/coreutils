@@ -2906,6 +2906,9 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
   -o                         use long listing format without group info\n\
   -p, --file-type            append indicator (one of /=@|) to entries\n\
   -q, --hide-control-chars   print ? instead of non graphic characters\n\
+                             (This is the default unless the output is a\n\
+                             terminal and the program is `ls';  otherwise,\n\
+                             the default is --show-control-chars)\n\
       --show-control-chars   show non graphic characters as-is (default)\n\
   -Q, --quote-name           enclose entry names in double quotes\n\
       --quoting-style=WORD   use quoting style WORD for entry names:\n\
