@@ -1,3 +1,7 @@
+2004-01-16  Jim Meyering  <jim@meyering.net>
+
+	* onceonly.m4: Sync with version from gettext-0.13.1.
+
 2003-10-08  Paul Eggert  <eggert@twinsun.com>
 
 	Merge from gnulib.
