@@ -1,3 +1,8 @@
+1998-02-03  Philippe De Muyter  <phdm@macqel.be>
+
+	* lib/putenv.c (sys/types.h): Include to get size_t on some systems.
+        (NULL): Define if needed.
+
 1998-01-31  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in (AC_LFS): Use it.
