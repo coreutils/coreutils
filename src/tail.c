@@ -862,7 +862,6 @@ tail_forever (struct File_spec *f, int nfiles)
 		  recheck (&f[i]);
 		  f[i].n_unchanged_stats = 0;
 		}
-
 	      continue;
 	    }
 
@@ -877,6 +876,7 @@ tail_forever (struct File_spec *f, int nfiles)
 	    {
 	      f[i].n_consecutive_size_changes = 0;
 	      recheck (&f[i]);
+	      continue;
 	    }
 
 	  /* This file has changed size.  Print out what we can, and
