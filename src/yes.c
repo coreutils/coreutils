@@ -32,9 +32,6 @@
 
 #define WRITTEN_BY _("Written by David MacKenzie.")
 
-/* How many iterations between ferror checks.  */
-#define UNROLL 10000
-
 /* The name this program was run with. */
 char *program_name;
 
@@ -81,34 +78,19 @@ main (int argc, char **argv)
 
   if (argc == 1)
     {
-      while (1)
-	{
-	  int i;
-	  for (i = 0; i < UNROLL; i++)
-	    puts ("y");
-	  if (ferror (stdout))
-	    break;
-	}
-    }
-  else
-    {
-      while (1)
-	{
-	  int i;
-	  for (i = 0; i < UNROLL; i++)
-	    {
-	      int j;
-	      for (j = 1; j < argc; j++)
-		{
-		  fputs (argv[j], stdout);
-		  putchar (j == argc - 1 ? '\n' : ' ');
-		}
-	    }
-	  if (ferror (stdout))
-	    break;
-	}
+      argv[1] = "y";
+      argc = 2;
     }
 
-  error (0, errno, _("standard output"));
-  exit (EXIT_FAILURE);
+  for (;;)
+    {
+      int i;
+      for (i = 1; i < argc; i++)
+	if (fputs (argv[i], stdout) == EOF
+	    || putchar (i == argc - 1 ? '\n' : ' ') == EOF)
+	  {
+	    error (0, errno, _("standard output"));
+	    exit (EXIT_FAILURE);
+	  }
+    }
 }
