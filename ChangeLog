@@ -4,6 +4,87 @@
 
 	* Use automake-1.7.8.  Regenerate dependent files.
 
+2003-09-29  Paul Eggert  <eggert@twinsun.com>
+
+	csplit cleanup.
+
+	* doc/coreutils.texi (csplit invocation):
+	The regexp offset need not have a sign; POSIX requires support
+	for signless offets.
+
+	Be more careful about int widths.  For example, remove some
+	arbitrary limits by replacing 'unsigned' with 'size_t',
+	'uintmax_t', etc.  Use standard bool rather than a homegrown type.
+	* lib/Makefile.am (libfetish_a_SOURCES): Add xstrtoimax.c.
+	* src/csplit.c (FALSE, TRUE, boolean): Remove.  All uses changed
+	to <stdbool.h> usage.
+	(struct control): offset is now intmax_t, not int.
+	repeat_forever is now bool, not int.
+	(struct cstring): len is now size_t, not unsigned int.
+	(struct buffer_record): bytes_alloc, bytes_used, num_lines are now
+	size_t, not unsigned.  start_line, first_available are now
+	uintmax_t, not unsigned.
+	(hold_count, control_used): Now size_t, not unsigned.
+	(last_line_number, current_line, bytes_written):
+	Now uintmax_t, not unsigned.
+	(save_to_hold_area, red_input, keep_new_line, record_line_starts,
+	create_new_buffer, get_new_buffer, load_buffer, find_line,
+	process_regexp, split_file, new_control_record, extract_regexp,
+	get_format_width, get_format_prec, max_out):
+	size args, locals, and returned values are now size_t, not unsigned
+	or int.
+	(get_first_line_in_buffer, find_line, write_to_file,
+	handle_line_error, process_line_count, regexp_error, process_regexp,
+	split_file):
+	File line, byte, and repetition counts are now uintmax_t, not unsigned.
+	(check_for_offset): Don't require a sign before the offset.
+	Use xstrtoimax to do the real work.
+	(extract_regexp): Remove harmful cast of size to unsigned.
+	256 -> 1<<CHAR_BIT, for clarity.
+	(get_format_flags): Return at most 3, to avoid worries about overflow.
+
+	(bytes_to_octal_digits): Remove.
+
+	(cleanup): Don't check whether output_stream is NULL, since
+	close_output_file does that for us.
+
+	(new_line_control, create_new_buffer): Use "foo *p = xmalloc
+	(sizeof *p);" instead of the more long-winded alternatives.
+
+	(get_new_buffer): Use O(1) algorithm for resizing a buffer
+	to a much larger size, instead of an O(N) algorithm.
+
+	(process_regexp): Use plain NULL rather than casted 0.
+
+	(make_filename): Use %u, not %d, to format unsigned file number.
+
+	(new_control_record): Use xrealloc exclusively, since it handles
+	NULL reliably,
+
+	(extract_regexp): Change misspelled word in diagnostic.
+
+	(get_format_width): Even if a minimum field width is specified,
+	allow room for enough octal digits to represent the value of
+	the maximum representible integer.  This fixes a potential
+	buffer overrun.  Calculate this room at compile-time, not
+	at run-time; this removes the need for bytes_to_octal_digits.
+	Check for overflow; this removes a FIXME.
+
+	(get_format_prec): Don't allow precision to be signed; it's
+	not ANSI.  Check for overflow.  Remove hardcoded "11" as
+	default precision; this fixes a potential buffer overrun
+	on hosts with wider size_t.
+
+	(get_format_conv_type): Change local variable to be of type
+	unsigned char, not int; this removes a potential subscript
+	violation on hosts where char is signed.
+
+	(max_out): Replace "for (;*p;)" with more-standard "while (*p)".
+	Allow "%%" in format.  Don't overflow when
+	counting lots of percents.
+
+	(usage): Default sprintf format is %02u, not %d.
+
 2003-10-05  Jim Meyering  <jim@meyering.net>
 
 	* src/chown-core.c (change_file_owner): Remove set-but-not-used local.
