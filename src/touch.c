@@ -273,7 +273,8 @@ Update the access and modification times of each FILE to the current time.\n\
   -m                     change only the modification time\n\
   -r, --reference=FILE   use this file's times instead of current time\n\
   -t STAMP               use [[CC]YY]MMDDhhmm[.ss] instead of current time\n\
-      --time=WORD        access -a, atime -a, mtime -m, modify -m, use -a\n\
+  --time=WORD            set time given by WORD: access atime use (same as -a)\n\
+                           modify mtime (same as -m)\n\
       --help             display this help and exit\n\
       --version          output version information and exit\n\
 \n\
