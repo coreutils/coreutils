@@ -69,3 +69,6 @@ tail: don't use xlseek; it *exits*.
   Instead, maybe use a macro and return nonzero.
 
 add mktemp?  Suggested by Nelson Beebe
+
+Now that AC_FUNC_LSTAT and AC_FUNC_STAT are in autoconf,
+remove m4/stat.m4 and m4/lstat.m4.
