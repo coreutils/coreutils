@@ -2,7 +2,7 @@
 
 	* Version 5.3.0.
 
-	* src/dircolors.hin: Add .flac as an audio suffix.
+	* src/dircolors.hin: Add .flac and .mpc as audio suffixes.
 	From Jesus Climent in http://bugs.debian.org/276149.
 
 2004-10-05  Paul Eggert  <eggert@cs.ucla.edu>
