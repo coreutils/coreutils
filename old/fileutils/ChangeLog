@@ -9,7 +9,11 @@
 
 2000-05-19  Jim Meyering  <meyering@lucent.com>
 
-	Save device number as well as inode number for each directory.
+	Save device number as well as inode number for each directory,
+	and use it in comparisons.  This makes the directory cycle test
+	more robust, and closes the small remaining hole whereby an
+	attacker could subvert a running `rm -r' command.
+
 	* src/remove.c (struct active_dir_ent) [st_dev]: New member.
 	[st_ino]: Rename from `inum'.
 	(make_active_dir_ent) [device]: New parameter.
