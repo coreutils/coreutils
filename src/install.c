@@ -94,7 +94,8 @@ void usage (int status);
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
-  TARGET_DIRECTORY_OPTION = CHAR_MAX + 1
+  NO_TARGET_DIRECTORY_OPTION = CHAR_MAX + 1,
+  TARGET_DIRECTORY_OPTION
 };
 
 /* The name this program was run with, for error messages. */
@@ -130,6 +131,7 @@ static struct option const long_options[] =
   {"directory", no_argument, NULL, 'd'},
   {"group", required_argument, NULL, 'g'},
   {"mode", required_argument, NULL, 'm'},
+  {"no-target-directory", no_argument, NULL, NO_TARGET_DIRECTORY_OPTION},
   {"owner", required_argument, NULL, 'o'},
   {"preserve-timestamps", no_argument, NULL, 'p'},
   {"strip", no_argument, NULL, 's'},
@@ -211,6 +213,7 @@ main (int argc, char **argv)
   int mkdir_and_install = 0;
   struct cp_options x;
   char const *target_directory = NULL;
+  bool no_target_directory = false;
   int n_files;
   char **file;
 
@@ -278,6 +281,9 @@ main (int argc, char **argv)
 	case 'm':
 	  specified_mode = optarg;
 	  break;
+	case NO_TARGET_DIRECTORY_OPTION:
+	  no_target_directory = true;
+	  break;
 	case 'o':
 	  owner_name = optarg;
 	  break;
@@ -339,7 +345,19 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
-  if (!target_directory)
+  if (no_target_directory)
+    {
+      if (target_directory)
+	error (EXIT_FAILURE, 0,
+	       _("Cannot combine --target-directory "
+		 "and --no-target-directory"));
+      if (2 < n_files)
+	{
+	  error (0, 0, _("extra operand %s"), quote (file[2]));
+	  usage (EXIT_FAILURE);
+	}
+    }
+  else if (!target_directory)
     {
       if (2 <= n_files && target_directory_operand (file[n_files - 1]))
 	target_directory = file[--n_files];
@@ -679,6 +697,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -s, --strip         strip symbol tables, only for 1st and 2nd formats\n\
   -S, --suffix=SUFFIX override the usual backup suffix\n\
       --target-directory=DIRECTORY  copy all SOURCE arguments into DIRECTORY\n\
+      --no-target-directory  treat DEST as a normal file\n\
   -v, --verbose       print the name of each directory as it is created\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
