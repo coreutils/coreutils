@@ -1,6 +1,11 @@
-2001-11-12  Jim Meyering  <meyering@lucent.com>
+2001-11-17  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.2.
+
+	* configure.ac: Replace use of the one-arg form of AC_INIT
+	with a use of the 3-arg form and a use of AC_CONFIG_SRCDIR.
+
+2001-11-12  Jim Meyering  <meyering@lucent.com>
 
 	* tests/rm/r-3: Clean up.
 
