@@ -133,7 +133,7 @@ bsd_sum_file (const char *file, int print_name)
     }
 
   printf ("%05d %5s", checksum,
-	  human_readable_inexact (total_bytes, hbuf, 1, 1024, human_ceiling));
+	  human_readable (total_bytes, hbuf, human_ceiling, 1, 1024));
   if (print_name > 1)
     printf (" %s", file);
   putchar ('\n');
@@ -207,7 +207,7 @@ sysv_sum_file (const char *file, int print_name)
   checksum = (r & 0xffff) + (r >> 16);
 
   printf ("%d %s", checksum,
-	  human_readable_inexact (total_bytes, hbuf, 1, 512, human_ceiling));
+	  human_readable (total_bytes, hbuf, human_ceiling, 1, 512));
   if (print_name)
     printf (" %s", file);
   putchar ('\n');
