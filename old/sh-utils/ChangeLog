@@ -28,10 +28,10 @@ Thu Dec 12 06:07:30 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* Version 1.14.
 
-	* src/system.h: (ISDIGIT): New definition from Paul Eggert.
-	This one evaluates its argument exactly once and is more efficient
-	on some systems.
-	(ISDIGIT_LOCALE): Renamed from ISDIGIT.
+	* src/system.h (ISDIGIT): Replace with smaller, faster edition
+	that yields nonzero only on ASCII digits.
+	(ISDIGIT_LOCALE): New macro, with same meaning that ISDIGIT
+	used to have.  From Paul Eggert.
 
 	* configure.in: Bump version to 1.14.
 
