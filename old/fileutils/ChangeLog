@@ -1,3 +1,7 @@
+Sun Sep 15 23:08:48 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* Makefile.am (EXTRA_DIST): Remove acinclude.m4.
+
 Mon Sep  9 21:39:49 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/cp.c (do_copy): Describe in a little more detail the code

@@ -1,3 +1,7 @@
+Sun Sep 15 23:08:48 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* Makefile.am (EXTRA_DIST): Remove acinclude.m4.
+
 Mon Sep  9 22:10:45 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in: Improve handling of math library so -lm is used

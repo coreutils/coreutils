@@ -1,3 +1,7 @@
+Sun Sep 15 23:08:48 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* Makefile.am (EXTRA_DIST): Remove acinclude.m4.
+
 Thu Sep 12 17:05:23 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/Makefile.am (EXTRA_DIST): Add getline.c.
