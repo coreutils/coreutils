@@ -1,6 +1,11 @@
-2004-02-06  Jim Meyering  <jim@meyering.net>
+2004-02-07  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.1.3.
+
+	* Makefile.cfg (gnu_ftp_host-alpha, etc.): Un-factor .gnu.org suffix,
+	so that emit_upload_commands can use these variables, too.
+
+2004-02-06  Jim Meyering  <jim@meyering.net>
 
 	* tests/rm/deep-1: Remove `du' stack space test.
 	Apparently, `ulimit -s N' isn't portable enough.
