@@ -11,12 +11,30 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   rm no longer gets a failed assertion under some unusual conditions.
 
-  chgrp and chown no longer affect symbolic links by default.
-  Now, they operate on whatever a symbolic points to, instead.
-  To get the old behavior, use --no-dereference (-h).
+  Several fixes to chgrp and chown for compatibility with POSIX and BSD:
 
-  chown --dereference now works, even when the specified owner
-  and/or group match those of an affected symlink.
+    Do not affect symbolic links by default.
+    Now, operate on whatever a symbolic points to, instead.
+    To get the old behavior, use --no-dereference (-h).
+
+    --dereference now works, even when the specified owner
+    and/or group match those of an affected symlink.
+
+    Check for incompatible options.  When -R and --dereference are
+    both used, then either -H or -L must also be used.  When -R and -h
+    are both used, then -P must be in effect.
+
+    -H, -L, and -P have no effect unless -R is also specified.
+    If -P and -R are both specified, -h is assumed.
+
+    Do not optimize away the chown() system call when the file's owner
+    and group already have the desired value.  This optimization was
+    incorrect, as it failed to updated the last-changed time and reset
+    special permission bits, as POSIX requires.
+
+    Do not report an error if the owner or group of a
+    recursively-encountered symbolic link cannot be updated because
+    the file system does not support it.
 
   rm no longer required read access to the current directory.
 
