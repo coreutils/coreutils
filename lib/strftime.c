@@ -302,7 +302,7 @@ static const CHAR_T zeroes[16] = /* "0000000000000000" */
     const char *__s = os;						      \
     memset (&__st, '\0', sizeof (__st));				      \
     l = __mbsrtowcs_l (NULL, &__s, 0, &__st, loc);			      \
-    ws = alloca ((l + 1) * sizeof (wchar_t));				      \
+    ws = (wchar_t *) alloca ((l + 1) * sizeof (wchar_t));		      \
     (void) __mbsrtowcs_l (ws, &__s, l, &__st, loc);			      \
   }
 #endif
