@@ -38,21 +38,20 @@
 
 #define AUTHORS "Scott Bartram", "David MacKenzie"
 
-#ifndef TRUE
-# define TRUE   1
-# define FALSE  0
-#endif
+/* Line-number formats.  They are given an int width, an intmax_t
+   value, and a string separator.  */
 
-/* Line-number formats. */
-enum number_format
-{
-  FORMAT_RIGHT_NOLZ,		/* Right justified, no leading zeroes.  */
-  FORMAT_RIGHT_LZ,		/* Right justified, leading zeroes.  */
-  FORMAT_LEFT			/* Left justified, no leading zeroes.  */
-};
+/* Right justified, no leading zeroes.  */
+static char const FORMAT_RIGHT_NOLZ[] = "%*" PRIdMAX "%s";
+
+/* Right justified, leading zeroes.  */
+static char const FORMAT_RIGHT_LZ[] = "%0*" PRIdMAX "%s";
+
+/* Left justified, no leading zeroes.  */
+static char const FORMAT_LEFT[] = "%-*" PRIdMAX "%s";
 
 /* Default section delimiter characters.  */
-#define DEFAULT_SECTION_DELIMITERS  "\\:"
+static char const DEFAULT_SECTION_DELIMITERS[] = "\\:";
 
 /* Types of input lines: either one of the section delimiters,
    or text to output. */
@@ -92,7 +91,7 @@ static struct re_pattern_buffer *current_regex = NULL;
 static char *separator_str = "\t";
 
 /* Input section delimiter string (-d).  */
-static char *section_del = DEFAULT_SECTION_DELIMITERS;
+static char const *section_del = DEFAULT_SECTION_DELIMITERS;
 
 /* Header delimiter string.  */
 static char *header_del = NULL;
@@ -115,35 +114,32 @@ static size_t footer_del_len;
 /* Input buffer.  */
 static struct linebuffer line_buf;
 
-/* printf format string for line number.  */
-static char *print_fmt;
-
 /* printf format string for unnumbered lines.  */
 static char *print_no_line_fmt = NULL;
 
 /* Starting line number on each page (-v).  */
-static int starting_line_number = 1;
+static intmax_t starting_line_number = 1;
 
 /* Line number increment (-i).  */
-static int page_incr = 1;
+static intmax_t page_incr = 1;
 
-/* If TRUE, reset line number at start of each page (-p).  */
-static int reset_numbers = TRUE;
+/* If true, reset line number at start of each page (-p).  */
+static bool reset_numbers = true;
 
 /* Number of blank lines to consider to be one line for numbering (-l).  */
-static int blank_join = 1;
+static intmax_t blank_join = 1;
 
 /* Width of line numbers (-w).  */
 static int lineno_width = 6;
 
 /* Line number format (-n).  */
-static enum number_format lineno_format = FORMAT_RIGHT_NOLZ;
+static char const *lineno_format = FORMAT_RIGHT_NOLZ;
 
 /* Current print line number.  */
-static int line_no;
+static intmax_t line_no;
 
-/* Nonzero if we have ever read standard input. */
-static int have_read_stdin;
+/* True if we have ever read standard input.  */
+static bool have_read_stdin;
 
 static struct option const longopts[] =
 {
@@ -230,39 +226,15 @@ FORMAT is one of:\n\
   exit (status);
 }
 
-/* Build the printf format string, based on `lineno_format'. */
-
-static void
-build_print_fmt (void)
-{
-  print_fmt = xmalloc (  1 /* for `%' */
-		       + 1 /* for `-' or `0' */
-		       + INT_STRLEN_BOUND (lineno_width)
-		       + 1 /* for `d' */
-		       + 1 /* for trailing NUL byte */ );
-  switch (lineno_format)
-    {
-    case FORMAT_RIGHT_NOLZ:
-      sprintf (print_fmt, "%%%dd", lineno_width);
-      break;
-    case FORMAT_RIGHT_LZ:
-      sprintf (print_fmt, "%%0%dd", lineno_width);
-      break;
-    case FORMAT_LEFT:
-      sprintf (print_fmt, "%%-%dd", lineno_width);
-      break;
-    }
-}
-
 /* Set the command line flag TYPEP and possibly the regex pointer REGEXP,
    according to `optarg'.  */
 
-static int
+static bool
 build_type_arg (char **typep, struct re_pattern_buffer *regexp)
 {
   const char *errmsg;
-  int rval = TRUE;
-  int optlen;
+  bool rval = true;
+  size_t optlen;
 
   switch (*optarg)
     {
@@ -284,7 +256,7 @@ build_type_arg (char **typep, struct re_pattern_buffer *regexp)
 	error (EXIT_FAILURE, 0, "%s", errmsg);
       break;
     default:
-      rval = FALSE;
+      rval = false;
       break;
     }
   return rval;
@@ -295,9 +267,14 @@ build_type_arg (char **typep, struct re_pattern_buffer *regexp)
 static void
 print_lineno (void)
 {
-  printf (print_fmt, line_no);
-  fputs (separator_str, stdout);
-  line_no += page_incr;
+  intmax_t next_line_no;
+
+  printf (lineno_format, lineno_width, line_no, separator_str);
+  
+  next_line_no = line_no + page_incr;
+  if (next_line_no < line_no)
+    error (EXIT_FAILURE, 0, _("line number overflow"));
+  line_no = next_line_no;
 }
 
 /* Switch to a header section. */
@@ -337,7 +314,7 @@ proc_footer (void)
 static void
 proc_text (void)
 {
-  static int blank_lines = 0;	/* Consecutive blank lines so far. */
+  static intmax_t blank_lines = 0;	/* Consecutive blank lines so far. */
 
   switch (*current_type)
     {
@@ -403,7 +380,7 @@ process_file (FILE *fp)
 {
   while (readlinebuffer (&line_buf, fp))
     {
-      switch ((int) check_section ())
+      switch (check_section ())
 	{
 	case Header:
 	  proc_header ();
@@ -422,16 +399,16 @@ process_file (FILE *fp)
 }
 
 /* Process file FILE to standard output.
-   Return 0 if successful, 1 if not. */
+   Return true if successful.  */
 
-static int
+static bool
 nl_file (const char *file)
 {
   FILE *stream;
 
   if (STREQ (file, "-"))
     {
-      have_read_stdin = 1;
+      have_read_stdin = true;
       stream = stdin;
     }
   else
@@ -440,7 +417,7 @@ nl_file (const char *file)
       if (stream == NULL)
 	{
 	  error (0, errno, "%s", file);
-	  return 1;
+	  return false;
 	}
     }
 
@@ -449,24 +426,24 @@ nl_file (const char *file)
   if (ferror (stream))
     {
       error (0, errno, "%s", file);
-      return 1;
+      return false;
     }
   if (STREQ (file, "-"))
     clearerr (stream);		/* Also clear EOF. */
   else if (fclose (stream) == EOF)
     {
       error (0, errno, "%s", file);
-      return 1;
+      return false;
     }
-  return 0;
+  return true;
 }
 
 int
 main (int argc, char **argv)
 {
-  int c, exit_status = 0;
+  int c;
   size_t len;
-  int fail = 0;
+  bool ok = true;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -476,7 +453,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  have_read_stdin = 0;
+  have_read_stdin = false;
 
   while ((c = getopt_long (argc, argv, "h:b:f:v:i:pl:s:w:n:d:", longopts,
 			   NULL)) != -1)
@@ -487,80 +464,58 @@ main (int argc, char **argv)
 	  break;
 
 	case 'h':
-	  if (build_type_arg (&header_type, &header_regex) != TRUE)
+	  if (! build_type_arg (&header_type, &header_regex))
 	    {
 	      error (0, 0, _("invalid header numbering style: %s"),
 		     quote (optarg));
-	      fail = 1;
+	      ok = false;
 	    }
 	  break;
 	case 'b':
-	  if (build_type_arg (&body_type, &body_regex) != TRUE)
+	  if (! build_type_arg (&body_type, &body_regex))
 	    {
 	      error (0, 0, _("invalid body numbering style: %s"),
 		     quote (optarg));
-	      fail = 1;
+	      ok = false;
 	    }
 	  break;
 	case 'f':
-	  if (build_type_arg (&footer_type, &footer_regex) != TRUE)
+	  if (! build_type_arg (&footer_type, &footer_regex))
 	    {
 	      error (0, 0, _("invalid footer numbering style: %s"),
 		     quote (optarg));
-	      fail = 1;
+	      ok = false;
 	    }
 	  break;
 	case 'v':
-	  {
-	    long int tmp_long;
-	    if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
-		/* Allow it to be negative.  */
-		|| tmp_long > INT_MAX)
-	      {
-		error (0, 0, _("invalid starting line number: %s"),
-		       quote (optarg));
-		fail = 1;
-	      }
-	    else
-	      {
-		starting_line_number = (int) tmp_long;
-	      }
-	  }
+	  if (xstrtoimax (optarg, NULL, 10, &starting_line_number, "")
+	      != LONGINT_OK)
+	    {
+	      error (0, 0, _("invalid starting line number: %s"),
+		     quote (optarg));
+	      ok = false;
+	    }
 	  break;
 	case 'i':
-	  {
-	    long int tmp_long;
-	    if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
-		|| tmp_long <= 0 || tmp_long > INT_MAX)
-	      {
-		error (0, 0, _("invalid line number increment: %s"),
-		       quote (optarg));
-		fail = 1;
-	      }
-	    else
-	      {
-		page_incr = (int) tmp_long;
-	      }
-	  }
+	  if (! (xstrtoimax (optarg, NULL, 10, &page_incr, "") == LONGINT_OK
+		 && 0 < page_incr))
+	    {
+	      error (0, 0, _("invalid line number increment: %s"),
+		     quote (optarg));
+	      ok = false;
+	    }
 	  break;
 	case 'p':
-	  reset_numbers = FALSE;
+	  reset_numbers = false;
 	  break;
 	case 'l':
-	  {
-	    long int tmp_long;
-	    if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
-		|| tmp_long <= 0 || tmp_long > INT_MAX)
-	      {
-		error (0, 0, _("invalid number of blank lines: %s"),
-		       quote (optarg));
-		fail = 1;
-	      }
-	    else
-	      {
-		blank_join = (int) tmp_long;
-	      }
-	  }
+	  if (! (xstrtoimax (optarg, NULL, 10, &blank_join, "") == LONGINT_OK
+		 && 0 < blank_join))
+	    {
+	      error (0, 0, _("invalid number of blank lines: %s"),
+		     quote (optarg));
+	      ok = false;
+	    }
 	  break;
 	case 's':
 	  separator_str = optarg;
@@ -573,11 +528,11 @@ main (int argc, char **argv)
 	      {
 		error (0, 0, _("invalid line number field width: %s"),
 		       quote (optarg));
-		fail = 1;
+		ok = false;
 	      }
 	    else
 	      {
-		lineno_width = (int) tmp_long;
+		lineno_width = tmp_long;
 	      }
 	  }
 	  break;
@@ -592,7 +547,7 @@ main (int argc, char **argv)
 	    {
 	      error (0, 0, _("invalid line numbering format: %s"),
 		     quote (optarg));
-	      fail = 1;
+	      ok = false;
 	    }
 	  break;
 	case 'd':
@@ -601,12 +556,12 @@ main (int argc, char **argv)
 	case_GETOPT_HELP_CHAR;
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 	default:
-	  fail = 1;
+	  ok = false;
 	  break;
 	}
     }
 
-  if (fail)
+  if (!ok)
     usage (EXIT_FAILURE);
 
   /* Initialize the section delimiters.  */
@@ -636,21 +591,17 @@ main (int argc, char **argv)
   line_no = starting_line_number;
   current_type = body_type;
   current_regex = &body_regex;
-  build_print_fmt ();
 
   /* Main processing. */
 
   if (optind == argc)
-    exit_status |= nl_file ("-");
+    ok = nl_file ("-");
   else
     for (; optind < argc; optind++)
-      exit_status |= nl_file (argv[optind]);
+      ok &= nl_file (argv[optind]);
 
   if (have_read_stdin && fclose (stdin) == EOF)
-    {
-      error (0, errno, "-");
-      exit_status = 1;
-    }
+    error (EXIT_FAILURE, errno, "-");
 
-  exit (exit_status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
+  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
