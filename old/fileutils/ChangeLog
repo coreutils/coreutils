@@ -1,3 +1,8 @@
+Sat Jul 20 17:01:56 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (PACKAGE_VERSION): Use space instead of hyphen to
+	separate PACKAGE and VERSION.
+
 Fri Jul 19 23:28:36 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/cp.c (path_concat): Rewrite to return new parameter.
