@@ -49,7 +49,7 @@
 # endif
 #endif
 
-/* This use of `MIN' is our sole concession to arbitrary limitations.
+/* FIXME: this use of `MIN' is our sole concession to arbitrary limitations.
    If, for some system, PATH_MAX is larger than 8191 and you call
    rpl_chdir with a directory name that is longer than PATH_MAX,
    yet that contains a single component that is more than 8191 bytes
