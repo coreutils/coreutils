@@ -31,7 +31,7 @@ AC_DEFUN([UTILS_FUNC_DIRFD],
 	  DEFS="$DEFS -DDIR_TO_FD=$ac_expr"
 	  AC_TRY_COMPILE(
 	    [#include <sys/types.h>
-	     #include <dirent.h>
+#include <dirent.h>
 	    ],
 	    [DIR *dir_p = opendir("."); (void) ($ac_expr);],
 	    dir_fd_done=yes
