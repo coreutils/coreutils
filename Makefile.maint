@@ -91,6 +91,7 @@ b_real_dir = fetish-ftp
 url_dir_list = $(foreach x,a b,ftp://$($(x)_host)/$($(x)_url_dir))
 
 md5 = $(shell md5sum < $(distdir).tar.gz|sed 's/  -//')
+sha1 = $(shell sha1sum < $(distdir).tar.gz|sed 's/  -//')
 
 rel-check:
 	tarz=/tmp/rel-check-tarz-$$$$; \
@@ -120,8 +121,10 @@ announcement: NEWS ChangeLog $(distdir).tar.gz
 	  for url in $(url_dir_list); do \
 	    echo "  $$url/$(xd-delta)"; \
 	  done; \
+	  echo "Here are the MD5 and SHA1 signatures for the .tar.gz file"; \
 	  echo; \
 	  echo "$(md5)  $(distdir).tar.gz"; \
+	  echo "$(sha1)  $(distdir).tar.gz"; \
 	  echo; \
 	  echo NEWS:; \
 	  sed -n "/$(THIS_VERSION_REGEXP)/,/^\[$(PREV_VERSION_REGEXP)/p" NEWS \
