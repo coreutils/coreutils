@@ -1,0 +1,7 @@
+*.I
+*.E
+*.X
+*.O
+*-tests
+Makefile
+mk-script
