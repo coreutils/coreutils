@@ -46,6 +46,11 @@
 # endif
 #endif
 
+#ifdef __APPLE__
+#include <mach/machine.h>
+#include <mach-o/arch.h>
+#endif
+
 #include "system.h"
 #include "error.h"
 #include "quote.h"
@@ -259,10 +264,25 @@ main (int argc, char **argv)
 	  static int mib[] = { CTL_HW, UNAME_PROCESSOR };
 	  if (sysctl (mib, 2, processor, &s, 0, 0) >= 0)
 	    element = processor;
-# ifdef __POWERPC__
+
+# ifdef __APPLE__
 	  /* This kludge works around a bug in Mac OS X.  */
 	  if (element == unknown)
-	    element = "powerpc";
+	    {
+	      cpu_type_t cputype;
+	      size_t s = sizeof cputype;
+	      NXArchInfo const *ai;
+	      if (sysctlbyname ("hw.cputype", &cputype, &s, NULL, 0) == 0
+		  && (ai = NXGetArchInfoFromCpuType (cputype,
+						     CPU_SUBTYPE_MULTIPLE))
+		  != NULL)
+		element = ai->name;
+
+	      /* Hack "safely" around the ppc vs. powerpc return value. */
+	      if (cputype == CPU_TYPE_POWERPC
+		  && strncmp (element, "ppc", 3) == 0)
+		element = "powerpc";
+	    }
 # endif
 	}
 #endif
