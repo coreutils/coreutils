@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2003-01-27.05}
+\def\texinfoversion{2003-01-27.08}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
@@ -482,13 +482,16 @@
 \let\{=\mylbrace
 \let\}=\myrbrace
 \begingroup
-  % Definitions to produce actual \{ & \} command in an index.
+  % Definitions to produce \{ and \} commands for indices,
+  % and @{ and @} for the aux file.
   \catcode`\{ = \other \catcode`\} = \other
   \catcode`\[ = 1 \catcode`\] = 2
-  \catcode`\@ = 0 \catcode`\\ = \other
-  @gdef@lbracecmd[\{]%
-  @gdef@rbracecmd[\}]%
-@endgroup
+  \catcode`\! = 0 \catcode`\\ = \other
+  !gdef!lbracecmd[\{]%
+  !gdef!rbracecmd[\}]%
+  !gdef!lbraceatcmd[@{]%
+  !gdef!rbraceatcmd[@}]%
+!endgroup
 
 % Accents: @, @dotaccent @ringaccent @ubaraccent @udotaccent
 % Others are defined by plain TeX: @` @' @" @^ @~ @= @u @v @H.
@@ -2920,44 +2923,81 @@ width0pt\relax} \fi
 \def\docodeindex#1{\edef\indexname{#1}\parsearg\singlecodeindexer}
 \def\singlecodeindexer #1{\doind{\indexname}{\code{#1}}}
 
-% Define \#1 as \realbackslash #1\space, thus effectively preventing its
-% expansion.  This is used only for control words, not control
-% characters, because the \space would be incorrect for control
-% characters, but is needed to separate the control word from whatever
-% follows.
-% 
-% This can be used both for control words that take an argument and
-% those that do not.  If it does take an argument, then it'll be
-% followed by {arg} in the input, which will dutifully get written to
-% the index (or wherever).
-% 
-\def\definedummyword#1{%
-  \expandafter\def\csname #1\endcsname{\realbackslash #1\space}%
-}
-
 % Take care of Texinfo commands that can appear in an index entry.
 % Since there are some commands we want to expand, and others we don't,
 % we have to laboriously prevent expansion for those that we don't.
 % 
 \def\indexdummies{%
-  \def\ {\realbackslash }%
-  \def\@{@}% change to @@ when we switch to @ as escape char in aux files.
+  \def\@{@}% change to @@ when we switch to @ as escape char in index files.
+  \def\ {\realbackslash\space }%
   % Need these in case \tex is in effect and \{ is a \delimiter again.
   % But can't use \lbracecmd and \rbracecmd because texindex assumes
   % braces and backslashes are used only as delimiters.  
   \let\{ = \mylbrace
   \let\} = \myrbrace
-  \def\_{{\realbackslash _}}%
+  %
+  % \definedummyword defines \#1 as \realbackslash #1\space, thus
+  % effectively preventing its expansion.  This is used only for control
+  % words, not control letters, because the \space would be incorrect
+  % for control characters, but is needed to separate the control word
+  % from whatever follows.
+  % 
+  % For control letters, we have \definedummyletter, which omits the
+  % space.
+  % 
+  % These can be used both for control words that take an argument and
+  % those that do not.  If it is followed by {arg} in the input, then
+  % that will dutifully get written to the index (or wherever).
+  % 
+  \def\definedummyword##1{%
+    \expandafter\def\csname ##1\endcsname{\realbackslash ##1\space}%
+  }%
+  \def\definedummyletter##1{%
+    \expandafter\def\csname ##1\endcsname{\realbackslash ##1}%
+  }%
+  %
+  % Do the redefinitions.
+  \commondummies
+}
+
+% For the aux file, @ is the escape character.  So we want to redefine
+% everything using @ instead of \realbackslash.  When everything uses 
+% @, this will be simpler.
+% 
+\def\atdummies{%
+  \def\@{@@}%
+  \def\ {@ }%
+  \let\{ = \lbraceatcmd
+  \let\} = \rbraceatcmd
+  %
+  % (See comments in \indexdummies.)
+  \def\definedummyword##1{%
+    \expandafter\def\csname ##1\endcsname{@##1\space}%
+  }%
+  \def\definedummyletter##1{%
+    \expandafter\def\csname ##1\endcsname{@##1}%
+  }%
+  %
+  % Do the redefinitions.
+  \commondummies
+}
+
+% Called from \indexdummies and \atdummies.  \definedummyword and
+% \definedummyletter must be defined first.
+% 
+\def\commondummies{%
+  %
   \normalturnoffactive
   %
-  % Accents.
-  \def\,{\realbackslash ,}%
-  \def\"{\realbackslash "}%
-  \def\`{\realbackslash `}%
-  \def\'{\realbackslash '}%
-  \def\^{\realbackslash ^}%
-  \def\~{\realbackslash ~}%
-  \def\={\realbackslash =}%
+  % Control letters and accents.
+  \definedummyletter{_}%
+  \definedummyletter{,}%
+  \definedummyletter{"}%
+  \definedummyletter{`}%
+  \definedummyletter{'}%
+  \definedummyletter{^}%
+  \definedummyletter{~}%
+  \definedummyletter{=}%
   \definedummyword{u}%
   \definedummyword{v}%
   \definedummyword{H}%
@@ -3019,11 +3059,16 @@ width0pt\relax} \fi
   \definedummyword{var}%
   \definedummyword{w}%
   %
-  % These math commands don't seem likely to be used in index entries.
+  % Assorted special characters.
+  \definedummyword{bullet}%
   \definedummyword{copyright}%
+  \definedummyword{dots}%
+  \definedummyword{enddots}%
   \definedummyword{equiv}%
   \definedummyword{error}%
   \definedummyword{expansion}%
+  \definedummyword{minus}%
+  \definedummyword{pounds}%
   \definedummyword{point}%
   \definedummyword{print}%
   \definedummyword{result}%
@@ -3048,9 +3093,9 @@ width0pt\relax} \fi
 
 
 % \indexnofonts is used when outputting the strings to sort the index
-% by.  Therefore, it eliminates all control sequences and just writes
-% whatever the best ASCII sort string would be for a given command
-% (usually its argument).
+% by, and when constructing control sequence names.  It eliminates all
+% control sequences and just writes whatever the best ASCII sort string
+% would be for a given command (usually its argument).
 %
 \def\indexdummytex{TeX}
 \def\indexdummydots{...}
@@ -5747,16 +5792,22 @@ width0pt\relax} \fi
 \gdef\anchor#1{\savesf \setref{#1}{Ynothing}\restoresf \ignorespaces}
 
 % \setref{NAME}{SNT} defines a cross-reference point NAME (a node or an
-% anchor), namely NAME-title (the corresponding @chapter name), NAME-pg
-% (the page number), and NAME-snt (section number).  Called from
-% \foonoderef.  We have to set \indexdummies so commands such as @code
-% in a section title aren't expanded.  It would be nicer not to expand
-% the titles in the first place, but there's so many layers that that is
-% hard to do.
+% anchor), namely NAME-title (the corresponding @chapter/etc. name),
+% NAME-pg (the page number), and NAME-snt (section number and type).
+% Called from \foonoderef.
+% 
+% We have to set \indexdummies so commands such as @code in a section
+% title aren't expanded.  It would be nicer not to expand the titles in
+% the first place, but there's so many layers that that is hard to do.
 %
+% Likewise, use \turnoffactive so that punctuation chars such as underscore
+% and backslash work in node names.
+% 
 \def\setref#1#2{{%
-  \indexdummies
+  \atdummies
   \pdfmkdest{#1}%
+  %
+  \turnoffactive
   \dosetq{#1-title}{Ytitle}%
   \dosetq{#1-pg}{Ypagenumber}%
   \dosetq{#1-snt}{#2}%
@@ -5842,20 +5893,17 @@ width0pt\relax} \fi
   \endlink
 \endgroup}
 
-% \dosetq is the interface for calls from other macros
-
-% Use \turnoffactive so that punctuation chars such as underscore
-% and backslash work in node names.
+% \dosetq is called from \setref to do the actual \write (\iflinks).
+%
 \def\dosetq#1#2{%
   {\let\folio=0%
-   \turnoffactive
    \edef\next{\write\auxfile{\internalsetq{#1}{#2}}}%
    \iflinks \next \fi
   }%
 }
 
 % \internalsetq{foo}{page} expands into
-%   CHARACTERS @xrdef{foo}{...expansion of \Ypage...}
+%   CHARACTERS @xrdef{foo}{...expansion of \page...}
 \def\internalsetq#1#2{@xrdef{#1}{\csname #2\endcsname}}
 
 % Things to be expanded by \internalsetq.
@@ -5892,7 +5940,7 @@ width0pt\relax} \fi
 % messages, but if we're using an old version of TeX, don't do anything.
 %
 \ifx\inputlineno\thisisundefined
-  \let\linenumber = \empty % Non-3.0.
+  \let\linenumber = \empty % Pre-3.0.
 \else
   \def\linenumber{\the\inputlineno:\space}
 \fi
