@@ -91,7 +91,7 @@ static int opt_count_all = 0;
 bool opt_nul_terminate_output = false;
 
 /* If nonzero, print a grand total at the end.  */
-static int print_totals = 0;
+static int print_grand_total = 0;
 
 /* If nonzero, do not add sizes of subdirectories.  */
 static int opt_separate_dirs = 0;
@@ -521,7 +521,7 @@ du_files (char **files, int bit_flags)
 	  /* This is a space optimization.  If we aren't printing totals,
 	     then it's ok to clear the duplicate-detection tables after
 	     each command line hierarchy has been processed.  */
-	  if (ent->fts_level == 0 && ent->fts_info == FTS_D && !print_totals)
+	  if (ent->fts_level == 0 && ent->fts_info == FTS_D && !print_grand_total)
 	    hash_clear (htab);
 
 	  process_file (fts, ent);
@@ -533,7 +533,7 @@ du_files (char **files, int bit_flags)
       fts_close (fts);
     }
 
-  if (print_totals)
+  if (print_grand_total)
     print_size (tot_size, _("total"));
 
   return fail;
@@ -607,7 +607,7 @@ main (int argc, char **argv)
 	  break;
 
 	case 'c':
-	  print_totals = 1;
+	  print_grand_total = 1;
 	  break;
 
 	case 'h':
