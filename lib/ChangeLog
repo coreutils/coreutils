@@ -1,3 +1,9 @@
+2005-02-27  Jim Meyering  <jim@meyering.net>
+
+	* xnanosleep.c (xnanosleep): Work around bug in Linux-2.6.8.1's
+	nanosleep whereby it fails without setting errno upon being resumed
+	after being suspended.
+
 2005-02-25  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* vasnprintf.c (VASNPRINTF) [!USE_SNPRINTF]: Correct the test for
