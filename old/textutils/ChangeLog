@@ -1,5 +1,7 @@
 Sat Jan 25 00:12:29 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* lib/xstrtoul.h (XSTRTOL_H): Undefine it.
+
 	* lib/xstrtol.h [!_STRTOL_ERROR]: Define the type `enum strtol_error'
 	only if it hasn't already been defined.
 	(_STRTOL_ERROR): Undefine.
