@@ -8,15 +8,15 @@
 
 2000-10-06  Paul Eggert  <eggert@twinsun.com>
 
-        Undo the effect of the 1997-07-12 change to date.c; it
-        broke "date -u MMDDhhmm" and it wasn't documented.
-        This reverts to the behavior of the 1996-01-03 patch.
+	Undo the effect of the 1997-07-12 change to date.c; it
+	broke "date -u MMDDhhmm" and it wasn't documented.
+	This reverts to the behavior of the 1996-01-03 patch.
 
-        * src/date.c (TZ_UTC0, MAYBE_SET_TZ_UTC0, set_tz): Remove.
-        (batch_convert): Don't futz with TZ.
-        (main): -u now parses all dates as UTC, not just some.
-        * tests/date/Test.pm (utc-0, utc-1, relative-2): Adjust to
-        above change.
+	* src/date.c (TZ_UTC0, MAYBE_SET_TZ_UTC0, set_tz): Remove.
+	(batch_convert): Don't futz with TZ.
+	(main): -u now parses all dates as UTC, not just some.
+	* tests/date/Test.pm (utc-0, utc-1, relative-2): Adjust to
+	above change.
 
 2000-09-29  Jim Meyering  <meyering@lucent.com>
 
@@ -466,8 +466,8 @@
 
 2000-01-21  Bruno Haible  <haible@linuix.math.u-bordeaux.fr>
 
-        Add support for octal and hexadecimal output.
-        * seq.c (intconv): New variable.
+	Add support for octal and hexadecimal output.
+	* seq.c (intconv): New variable.
 	(usage): Update.
 	(main): Call scan_arg instead of scan_double_arg. Call check_format
 	before scan_arg.
@@ -1828,8 +1828,8 @@
 1997-08-31  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/who.c (main): New option --lookup (-l).
-   	(print_entry): Only call canon_host if user explicitly asks for it.
-   	(usage): Describe --lookup.
+	(print_entry): Only call canon_host if user explicitly asks for it.
+	(usage): Describe --lookup.
 	From Galen Hazelwood.
 
 	* configure.in (ALL_LINGUAS): Add Spanish (es).
