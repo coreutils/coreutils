@@ -2033,7 +2033,7 @@ construct in string1 must be aligned with a corresponding construct\n\
 	      else
 		{
 		  /* The following should have been checked by validate...  */
-		  if (c2 == -1)
+		  if (c1 == -1 || c2 == -1)
 		    break;
 		  xlate[c1] = c2;
 		}
