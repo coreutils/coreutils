@@ -39,13 +39,15 @@ for args in 'foo symlink' 'symlink foo' 'foo foo' 'sl1 sl2' 'foo hardlink'; do
 		 -l -dl -fl -dfl -bl -bdl -bfl -bdfl; do
     case $args$options in
       # These tests are not portable.
-      'sl1 sl2'-bd*l)
-	continue;;
       'symlink foo'-dfl)
 	continue;;
       'symlink foo'-bdfl)
 	continue;;
       'sl1 sl2'-dfl)
+	continue;;
+      'sl1 sl2'-bd*l)
+	continue;;
+      'sl1 sl2'-dl)
 	continue;;
     esac
     rm -rf dir
@@ -154,7 +156,6 @@ cat <<\EOF > $expected
 0 -bf (foo sl1 -> foo sl2 sl2.~1~ -> foo)
 0 -bdf (foo sl1 -> foo sl2 -> foo sl2.~1~ -> foo)
 0 -l (foo sl1 -> foo sl2 -> foo)
-0 -dl (foo sl1 -> foo sl2 -> foo)
 0 -fl (foo sl1 -> foo sl2 -> foo)
 0 -bl (foo sl1 -> foo sl2 -> foo)
 0 -bfl (foo sl1 -> foo sl2 -> foo)
