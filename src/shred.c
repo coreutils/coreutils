@@ -1,6 +1,6 @@
 /* shred.c - overwrite files and devices to make it harder to recover data
 
-   Copyright (C) 1999-2004 Free Software Foundation, Inc.
+   Copyright (C) 1999-2005 Free Software Foundation, Inc.
    Copyright (C) 1997, 1998, 1999 Colin Plumb.
 
    This program is free software; you can redistribute it and/or modify
@@ -589,20 +589,14 @@ isaac_seed (struct isaac_state *s)
   {
 #if HAVE_GETHRTIME
     hrtime_t t = gethrtime ();
-    ISAAC_SEED (s, t);
-#else
-# if HAVE_CLOCK_GETTIME		/* POSIX ns-resolution */
+#elif HAVE_CLOCK_GETTIME		/* POSIX ns-resolution */
     struct timespec t;
     clock_gettime (CLOCK_REALTIME, &t);
-# else
-#  if HAVE_GETTIMEOFDAY
+#elif HAVE_GETTIMEOFDAY
     struct timeval t;
     gettimeofday (&t, (struct timezone *) 0);
-#  else
-    time_t t;
-    t = time (NULL);
-#  endif
-# endif
+#else
+    time_t t = time (NULL);
 #endif
     ISAAC_SEED (s, t);
   }
