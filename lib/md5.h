@@ -25,31 +25,15 @@
 #define _MD5_H 1
 
 #include <stdio.h>
-#include <limits.h>
 
-/* The following contortions are an attempt to use the C preprocessor
-   to determine an unsigned integral type that is exactly 32 bits wide.  */
-
+#if HAVE_INTTYPES_H
+# include <inttypes.h>
+#endif
 #if HAVE_STDINT_H || _LIBC
 # include <stdint.h>
 #endif
 
-#ifdef UINT32_MAX
 typedef uint32_t md5_uint32;
-#else
-# define UINT_MAX_32_BITS 4294967295U
-# if UINT_MAX == UINT_MAX_32_BITS
-   typedef unsigned int md5_uint32;
-# elif USHRT_MAX == UINT_MAX_32_BITS
-   typedef unsigned short int md5_uint32;
-# elif ULONG_MAX == UINT_MAX_32_BITS
-   typedef unsigned long md5_uint32;
-# else
-   /* The following line is intended to evoke an error.
-      Using #error is not portable enough.  */
-   "Cannot determine unsigned 32-bit data type."
-# endif
-#endif
 
 /* Structure to save state of computation between the single steps.  */
 struct md5_ctx
