@@ -13,6 +13,12 @@ case "$PERL" in
   ;;
 esac
 
+# Avoid a problem when run in a UTF-8 locale.
+# Otherwise, Perl would try to (and fail to) interpret
+# each string below as a sequence of multi-byte characters.
+LC_ALL=C
+export LC_ALL
+
 pwd=`pwd`
 tmp=sum-s.$$
 trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
