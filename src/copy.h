@@ -52,7 +52,7 @@ struct cp_options
 
   /* If nonzero, first try to open each existing destination nondirectory,
      then, if the open fails, unlink and try again.
-     This option must be set for `cp', in case the destination file
+     This option must be set for `cp -f', in case the destination file
      exists when the open is attempted.  It is irrelevant to `mv' since
      any destination is sure to be removed before the open.  */
   int unlink_dest_after_failed_open;
@@ -62,6 +62,7 @@ struct cp_options
      Otherwise, the failure still elicits a diagnostic, but it doesn't
      change copy's return value.  This is nonzero for cp and mv, and zero
      for install.  */
+  /* FIXME: this is now unused.  */
   int failed_unlink_is_fatal;
 
   /* If nonzero, create hard links instead of copying files.
