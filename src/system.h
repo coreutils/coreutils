@@ -810,5 +810,5 @@ ptr_align (void *ptr, size_t alignment)
 {
   char *p0 = ptr;
   char *p1 = p0 + alignment - 1;
-  return p1 - (uintptr_t) p1 % alignment;
+  return p1 - (size_t) p1 % alignment;
 }
