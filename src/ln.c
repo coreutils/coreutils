@@ -36,6 +36,13 @@
 
 #define AUTHORS "Mike Parker and David MacKenzie"
 
+/* For long options that have no equivalent short option, use a
+   non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
+enum
+{
+  TARGET_DIRECTORY_OPTION = CHAR_MAX + 1,
+};
+
 int link ();			/* Some systems don't declare this anywhere. */
 
 #ifdef S_ISLNK
@@ -109,6 +116,7 @@ static struct option const long_options[] =
   {"force", no_argument, NULL, 'f'},
   {"interactive", no_argument, NULL, 'i'},
   {"suffix", required_argument, NULL, 'S'},
+  {"target-directory", required_argument, NULL, TARGET_DIRECTORY_OPTION},
   {"symbolic", no_argument, NULL, 's'},
   {"verbose", no_argument, NULL, 'v'},
   {"version-control", required_argument, NULL, 'V'},
@@ -316,6 +324,7 @@ with --symbolic.  When creating hard links, each TARGET must exist.\n\
   -i, --interactive           prompt whether to remove destinations\n\
   -s, --symbolic              make symbolic links instead of hard links\n\
   -S, --suffix=SUFFIX         override the usual backup suffix\n\
+      --target-directory=DIR   move all SOURCE arguments into directory DIR\n\
   -v, --verbose               print name of each file before linking\n\
   -V, --version-control=WORD  override the usual version control\n\
       --help                  display this help and exit\n\
@@ -344,6 +353,11 @@ main (int argc, char **argv)
   int errors;
   int make_backups = 0;
   const char *version;
+  char *target_directory = NULL;
+  int target_directory_specified;
+  unsigned int n_files;
+  char **file;
+  int dest_is_dir;
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -393,6 +407,9 @@ main (int argc, char **argv)
 	  error (1, 0, _("symbolic links are not supported on this system"));
 #endif
 	  break;
+	case TARGET_DIRECTORY_OPTION:
+	  target_directory = optarg;
+	  break;
 	case 'v':
 	  verbose = 1;
 	  break;
@@ -410,15 +427,34 @@ main (int argc, char **argv)
 	}
     }
 
-  if (optind == argc)
+  n_files = argc - optind;
+  file = argv + optind;
+
+  if (n_files == 0)
     {
       error (0, 0, _("missing file argument"));
       usage (1);
     }
 
-  backup_type = (make_backups
-		 ? xget_version (_("--version-control"), version)
-		 : none);
+  target_directory_specified = (target_directory != NULL);
+  if (!target_directory)
+    target_directory = file[n_files - 1];
+
+  /* If there's only one file argument, then pretend `.' was given
+     as the second argument.  */
+  if (n_files == 1)
+    {
+      static char *dummy[2];
+      dummy[0] = file[0];
+      dummy[1] = ".";
+      file = dummy;
+      n_files = 2;
+      dest_is_dir = 1;
+    }
+  else
+    {
+      dest_is_dir = isdir (target_directory);
+    }
 
 #ifdef S_ISLNK
   if (symbolic_link)
@@ -435,17 +471,39 @@ main (int argc, char **argv)
   link_type_string = _("link");
 #endif
 
-  if (optind == argc - 1)
-    errors = do_link (argv[optind], ".");
-  else if (optind == argc - 2)
+  if (target_directory_specified && !dest_is_dir)
+    {
+      error (0, 0, _("specified target directory, `%s' is not a directory"),
+	     target_directory);
+      usage (1);
+    }
+
+  backup_type = (make_backups
+		 ? xget_version (_("--version-control"), version)
+		 : none);
+
+  if (target_directory_specified || n_files > 2)
+    {
+      int i;
+      unsigned int last_file_idx = (target_directory_specified
+				    ? n_files - 1
+				    : n_files - 2);
+
+      if (!target_directory_specified && !dest_is_dir)
+	error (1, 0,
+	   _("when making multiple links, last argument must be a directory"));
+      for (i = 0; i <= last_file_idx; ++i)
+	errors += do_link (file[i], target_directory);
+    }
+  else
     {
       struct stat source_stats;
       const char *source;
       char *dest;
       char *new_dest;
 
-      source = argv[optind];
-      dest = argv[optind + 1];
+      source = file[0];
+      dest = file[1];
 
       /* When the destination is specified with a trailing slash and the
 	 source exists but is not a directory, convert the user's command
@@ -463,16 +521,6 @@ main (int argc, char **argv)
 	}
 
       errors = do_link (source, new_dest);
-    }
-  else
-    {
-      char *to;
-
-      to = argv[argc - 1];
-      if (!isdir (to))
-	error (1, 0, _("when making multiple links, last argument must be a directory"));
-      for (; optind < argc - 1; ++optind)
-	errors += do_link (argv[optind], to);
     }
 
   if (verbose)
