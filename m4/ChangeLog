@@ -1,3 +1,8 @@
+2002-02-25  Paul Eggert  <eggert@twinsun.com>
+
+	* jm-macros.m4 (jm_MACROS): Require AC_FUNC_ACL.
+	Do not check for acl or sys/acl.h, as AC_FUNC_ACL does that now.
+
 2002-02-16  gettextize  <bug-gnu-gettext@gnu.org>
 
 	* codeset.m4: Upgrade to gettext-0.11.
