@@ -1,5 +1,5 @@
 /* yes - output a string repeatedly until killed
-   Copyright (C) 1991-1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1991-1997, 1999, 2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@
 #include <sys/types.h>
 #include <getopt.h>
 
+#include "error.h"
 #include "system.h"
 #include "long-options.h"
 
@@ -29,6 +30,8 @@
 #define PROGRAM_NAME "yes"
 
 #define AUTHORS "David MacKenzie"
+
+#define UNROLL 10000
 
 /* The name this program was run with. */
 char *program_name;
@@ -66,17 +69,35 @@ main (int argc, char **argv)
 			AUTHORS, usage);
 
   if (argc == 1)
-    while (1)
-      puts ("y");
-
-  while (1)
     {
-      int i;
-
-      for (i = 1; i < argc; i++)
+      while (1)
 	{
-	  fputs (argv[i], stdout);
-	  putchar (i == argc - 1 ? '\n' : ' ');
+	  int i;
+	  for (i = 0; i < UNROLL; i++)
+	    puts ("y");
+	  if (ferror (stdout))
+	    break;
 	}
     }
+  else
+    {
+      while (1)
+	{
+	  int i;
+	  for (i = 0; i < UNROLL; i++)
+	    {
+	      int j;
+	      for (j = 1; j < argc; j++)
+		{
+		  fputs (argv[j], stdout);
+		  putchar (j == argc - 1 ? '\n' : ' ');
+		}
+	    }
+	  if (ferror (stdout))
+	    break;
+	}
+    }
+
+  error (0, errno, "standard output");
+  exit (EXIT_FAILURE);
 }
