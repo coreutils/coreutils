@@ -1,3 +1,7 @@
+2004-12-17  Jim Meyering  <jim@meyering.net>
+
+	* install-sh: Sync from gnulib.
+
 2004-12-16  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* mdate-sh: Sync from gnulib.
