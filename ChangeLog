@@ -1,6 +1,21 @@
-2003-05-21  Jim Meyering  <jim@meyering.net>
+2003-05-24  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
+
+	* src/md5sum.c (split_3): Accept the BSD format only when in MD5 mode.
+	* tests/sha1sum/basic-1: Make sure `sha1sum --check' doesn't
+	accept the BSD format.
+
+2003-03-28  Joe Orton  <jorton@redhat.com>
+
+	* src/md5sum.c (bsd_split_3): New function.
+	(split_3): Detect checksums from BSD 'md5' command and handle them
+	using bsd_split_3.
+
+	* tests/md5sum/basic-1: New tests for --check exit status, and for
+	BSD-style checksum files.
+
+2003-05-21  Jim Meyering  <jim@meyering.net>
 
 	* src/head.c (elide_tail_lines_pipe): Fix a thinko.
 	This sort of thing is why it'd be *Really Good* to factor

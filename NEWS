@@ -1,4 +1,7 @@
 [5.0.1]
+* md5sum --check now accepts the output of the BSD md5sum program, e.g.,
+  MD5 (f) = d41d8cd98f00b204e9800998ecf8427e
+* du no longer runs out of file descriptors unnecessarily
 * date's `-' (no-pad) format flag now affects the space-padded-by-default
   conversion specifiers, %e, %k, %l
 * FEATURE: head now accepts --lines=-N (--bytes=-N) to print all but the
