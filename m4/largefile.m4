@@ -1,4 +1,4 @@
-#serial 8
+#serial 9
 
 dnl By default, many hosts won't let programs access large files;
 dnl one must use special compiler options to get large-file access to work.
@@ -25,10 +25,14 @@ AC_DEFUN(AC_SYS_LARGEFILE_FLAGS,
 	       ac_cv_sys_largefile_CFLAGS=-D__STDC_EXT__
 	     fi
 	     ;;
-	   # IRIX 6.2 and later require cc -n32.
+	   # IRIX 6.2 and later do not support large files by default,
+	   # so use the -n32 ABI unless the installer said otherwise.
 [	   irix6.[2-9]* | irix6.1[0-9]* | irix[7-9].* | irix[1-9][0-9]*)]
 	     if test "$GCC" != yes; then
-	       ac_cv_sys_largefile_CFLAGS=-n32
+	       case "$CC $CFLAGS " in
+	       *' -o32 '*|*' -n32 '*|*' -64 '*) ;;
+	       *) ac_cv_sys_largefile_CFLAGS=-n32 ;;
+	       esac
 	     fi
 	   esac
 	   if test "$ac_cv_sys_largefile_CFLAGS" != no; then
