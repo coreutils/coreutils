@@ -1,3 +1,10 @@
+2001-01-02  Paul Eggert  <eggert@twinsun.com>
+
+	* src/ls.c (long_time_expected_width): New function.
+	(print_long_format): Use it, so that we don't assume a
+	particular width for time stamps in an internationalized
+	environment.
+
 2001-01-01  Paul Eggert  <eggert@twinsun.com>
 
 	* doc/fileutils.texi, NEWS:
