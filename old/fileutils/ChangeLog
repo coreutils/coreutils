@@ -1,5 +1,24 @@
 1997-09-13  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* lib/strverscmp.h [HAVE_CONFIG_H]: Include config.h.
+
+	* lib/oa-hash.c: Use K&R style function dcls, not ANSI.
+	(HASH_MALLOC): Prefix with (Type*) cast to placate old compilers.
+	Use assert, not ASSERT.
+	Include assert.h.
+	(HASH_DELETED_ITEM_MARKER): Define to address of file-scoped static,
+	not less-portable ((void *) (~0U)).
+	(HASH_VACANT): Define here, not in hash.h.
+
+	* lib/oa-hash.c: (HASH_DELETED_ITEM_MARKER): Move definition to hash.c.
+	(HASH_VACANT): Likewise.
+
+	* lib/strverscmp.c [HAVE_CONFIG_H]: Include config.h.
+	(strverscmp): Use `1' not `+1' -- some compilers (sunos' cc) can't
+	parse it.
+
+	* lib/strdup.c [HAVE_CONFIG_H]: Include config.h.
+
 	* src/rm.c: Finish rewrite to use chdir and hash tables.
 
 1997-09-11  Jim Meyering  <meyering@na-net.ornl.gov>
