@@ -239,17 +239,6 @@ sha_process_bytes (const void *buffer, size_t len, struct sha_ctx *ctx)
 #define F2(B,C,D) (B ^ C ^ D)
 #define F3(B,C,D) ( ( B & C ) | ( D & ( B | C ) ) )
 
-#if SHA_DEBUG
-char bin2hex[16]={'0','1','2','3','4','5','6','7',
-		  '8','9','a','b','c','d','e','f'};
-# define BH(x) bin2hex[x]
-# define PH(x) \
-      printf("%c%c%c%c%c%c%c%c\t", BH((x>>28)&0xf), \
-	     BH((x>>24)&0xf), BH((x>>20)&0xf), BH((x>>16)&0xf),\
-	     BH((x>>12)&0xf), BH((x>>8)&0xf), BH((x>>4)&0xf),\
-	     BH(x&0xf));
-#endif
-
 /* Process LEN bytes of BUFFER, accumulating context into CTX.
    It is assumed that LEN % 64 == 0.  */
 
