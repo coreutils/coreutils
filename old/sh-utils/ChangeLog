@@ -2,7 +2,7 @@
 
 	* lib/getdate.y (OtherTable[]): Use tDAY_UNIT for `tomorrow,'
 	`yesterday,' `today,' and `now' rather than tMINUTE_UNIT.  Of course
-	with correspondingly smaller numbers for tomrrow and yesterday.
+	with correspondingly smaller numbers for tomorrow and yesterday.
 	This change does not change the way the code works, since the
 	grammar rules for the two symbols are analogous.
 	From Tadayoshi Funaba.
