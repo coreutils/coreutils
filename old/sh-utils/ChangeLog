@@ -1,5 +1,10 @@
 1998-05-16  Jim Meyering  <meyering@ascend.com>
 
+	* lib/readutmp.c (read_utmp): Add variant for systems that have
+	the utmpname function.
+	Ansideclify.
+	* configure.in: Check for utmpname.
+
 	* configure.in (jm_MACROS): New wrapper macro.
 	Remove uses of most jm_* macros.
 
