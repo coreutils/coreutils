@@ -207,10 +207,13 @@ change_file_group (const char *file, int group)
 	}
     }
   else if (verbose && changes_only == 0)
-    describe_change (file, 0);
+    {
+      describe_change (file, 0);
+    }
 
   if (recurse && S_ISDIR (file_stats.st_mode))
     errors |= change_dir_group (file, group, &file_stats);
+
   return errors;
 }
 
