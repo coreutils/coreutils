@@ -1,0 +1,19 @@
+# -*- sh -*-
+# Set `groups' to a space-separated list of at least two groups of which
+# the user is a member.
+
+groups=${FETISH_GROUPS-`id -nG 2>/dev/null`}
+case "$groups" in
+  *' '*) ;;
+  *) cat <<EOF 1>&2
+$0: this test requires that you be a member of more than one group,
+but running \`id -nG' either failed or found just one.  If you really
+are a member of at least two group, then rerun this test with FETISH_GROUPS
+set in your environment to the space-separated list of names.  E.g.,
+
+  env FETISH_GROUPS='users cdrom' make check
+
+EOF
+     (exit 77); exit
+     ;;
+esac
