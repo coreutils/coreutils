@@ -1,3 +1,10 @@
+2000-08-14  Jim Meyering  <meyering@lucent.com>
+
+	* src/copy.c (copy_reg): Move declaration of local, `n_read', into
+	the scope where it's used.
+	(copy_internal): In calling copy_reg, pass not the raw `src_mode',
+	but the possibly-umask-relative mode, `get_dest_mode (x, src_mode)'.
+
 2000-08-13  Jim Meyering  <meyering@lucent.com>
 
 	* src/copy.c (get_dest_mode): Rename from new_nondir_mode.
