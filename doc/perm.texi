@@ -342,7 +342,7 @@ og+rX-w
 gives users other than the owner of the file read permission and, if
 it is a directory or if someone already had execute permission
 to it, gives them execute permission; and it also denies them write
-permission to it file.  It does not affect the permission that the
+permission to the file.  It does not affect the permission that the
 owner of the file has for it.  The above mode is equivalent to
 the two modes:
 
