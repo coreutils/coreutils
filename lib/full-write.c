@@ -1,5 +1,7 @@
 /* full-write.c -- an interface to write that retries after interrupts
-   Copyright (C) 1993, 1994, 1997, 1998, 2000 Free Software Foundation, Inc.
+
+   Copyright 1993, 1994, 1997, 1998, 1999, 2000, 2001 Free Software
+   Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -15,14 +17,15 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-   Copied largely from GNU C's cccp.c.
-   */
+   Written by Paul Eggert.  */
 
 #if HAVE_CONFIG_H
 # include <config.h>
 #endif
 
 #include <sys/types.h>
+
+#include "full-write.h"
 
 #if HAVE_UNISTD_H
 # include <unistd.h>
@@ -33,30 +36,28 @@
 extern int errno;
 #endif
 
-/* Write LEN bytes at PTR to descriptor DESC, retrying if interrupted.
-   Return LEN upon success, write's (negative) error code otherwise.  */
+/* Write LEN bytes at PTR to descriptor DESC, retrying if interrupted
+   or if partial writes occur.  Return the number of bytes successfully
+   written, setting errno if that is less than LEN.  */
 
-int
+size_t
 full_write (int desc, const char *ptr, size_t len)
 {
-  int total_written;
+  size_t total_written = 0;
 
-  total_written = 0;
   while (len > 0)
     {
-      int written = write (desc, ptr, len);
-      /* write on an old Slackware Linux 1.2.13 returns zero when
-	 I try to write more data than there is room on a floppy disk.
-	 This puts dd into an infinite loop.  Reproduce with
-	 dd if=/dev/zero of=/dev/fd0.  If you have this problem,
-	 consider upgrading to a newer kernel.  */
-      if (written < 0)
+      ssize_t written = write (desc, ptr, len);
+      if (written <= 0)
 	{
+	  /* Some buggy drivers return 0 when you fall off a device's end.  */
+	  if (written == 0)
+	    errno = ENOSPC;
 #ifdef EINTR
 	  if (errno == EINTR)
 	    continue;
 #endif
-	  return written;
+	  break;
 	}
       total_written += written;
       ptr += written;
