@@ -41,15 +41,11 @@ INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 transform = @program_transform_name@
-YACC = @YACC@
+RANLIB = @RANLIB@
 GENCAT = @GENCAT@
 PERL = @PERL@
-MV = @MV@
 GMSGFMT = @GMSGFMT@
 CC = @CC@
-RANLIB = @RANLIB@
-LN = @LN@
-RM = @RM@
 
 EXTRA_DIST = README \
 ccstdc.m4 dmalloc.m4 error.m4 getgroups.m4 getline.m4 getloadavg.m4 \
