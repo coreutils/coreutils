@@ -1866,6 +1866,7 @@ sort (char **files, int nfiles, char const *output_file)
 {
   struct buffer buf;
   int n_temp_files = 0;
+  int output_file_created = 0;
 
   buf.alloc = 0;
 
@@ -1909,6 +1910,7 @@ sort (char **files, int nfiles, char const *output_file)
 	      xfclose (fp, file);
 	      tfp = xfopen (output_file, "w");
 	      temp_output = output_file;
+	      output_file_created = 1;
 	    }
 	  else
 	    {
@@ -1928,7 +1930,7 @@ sort (char **files, int nfiles, char const *output_file)
 
 	  xfclose (tfp, temp_output);
 
-	  if (! n_temp_files)
+	  if (output_file_created)
 	    goto finish;
 	}
       xfclose (fp, file);
@@ -1937,7 +1939,7 @@ sort (char **files, int nfiles, char const *output_file)
  finish:
   free (buf.buf);
 
-  if (n_temp_files)
+  if (! output_file_created)
     {
       int i = n_temp_files;
       struct tempnode *node;
