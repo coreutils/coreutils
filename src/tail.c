@@ -611,7 +611,7 @@ tail_forever (struct File_spec *f, int nfiles)
 {
   int last;
 
-  last = -1;
+  last = nfiles - 1;
 
   while (1)
     {
@@ -640,8 +640,11 @@ tail_forever (struct File_spec *f, int nfiles)
 		  /* open/fstat the file and announce if dev/ino
 		     have changed */
 		  struct stat new_stats;
-		  int fd = open (f[i].name, O_RDONLY);
+		  int fd;
 		  int fail = 0;
+		  int is_stdin = (STREQ (f[i].name, "-"));
+
+		  fd = (is_stdin ? STDIN_FILENO : open (f[i].name, O_RDONLY));
 
 		  if (fd == -1 || fstat (fd, &new_stats) < 0)
 		    {
@@ -659,6 +662,8 @@ cannot follow end of non-regular file"),
 
 		  if (fail)
 		    {
+		      if (fd != STDIN_FILENO)
+			close (fd);
 		      if (f[i].fd != STDIN_FILENO)
 			close (f[i].fd);
 		      f[i].fd = -1;
@@ -673,19 +678,19 @@ cannot follow end of non-regular file"),
 		      /* File has been replaced (e.g., via log rotation) --
 			 tail the new one.  */
 		      error (0, 0,
-			     _("%s has been replaced;  follow end of new file"),
+			 _("%s has been replaced;  following end of new file"),
 			     f[i].pretty_name);
 		      f[i].fd = fd;
 		      f[i].size = new_stats.st_size;
 		      f[i].dev = new_stats.st_dev;
 		      f[i].ino = new_stats.st_ino;
 		      f[i].no_change_counter = 0;
+		      lseek (f[i].fd, new_stats.st_size, SEEK_SET);
 		    }
-
-		  /* NEW options: --follow-fd vs. --follow-file */
-		  /* File has been removed -- continue tailing?.  */
-		  /* File has been replaced (e.g., log rotation) --
-		     continue tailing old or open the new one?.  */
+		  else
+		    {
+		      close (fd);
+		    }
 
 		  f[i].no_change_counter = 0;
 		};
