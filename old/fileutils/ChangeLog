@@ -1,6 +1,6 @@
 2000-12-28  Jim Meyering  <meyering@lucent.com>
 
-	* src/copy.c (same_file_ok): Fix typo from my 2000-09-03 change:
+	* src/copy.c (same_file_ok): Fix two typos from my 2000-09-03 change:
 	s/tmp_dst_sb/tmp_src_sb/.
 
 2000-12-27  Paul Eggert  <eggert@twinsun.com>
