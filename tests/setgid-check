@@ -1,0 +1,21 @@
+# -*- sh -*-
+# Disable the current test if the working directory seems to have
+# the setgid bit set.
+
+# This test should be run in the temporary directory that ends
+# up being removed via the trap commands.
+
+cwd_is_setgid=no
+
+setgid_tmpdir=setgid-$$
+(umask 77; mkdir $setgid_tmpdir)
+p=`ls -ld $setgid_tmpdir|sed 's/ .*//'`
+rmdir $setgid_tmpdir
+case $p in drwx------);; *) cwd_is_setgid=yes;; esac
+if test $cwd_is_setgid = yes; then
+  cat <<EOF >&2
+$0: Since it looks like you're running this test in a directory with
+the setgid bit set, we're skipping this test.
+EOF
+  (exit 77); exit
+fi
