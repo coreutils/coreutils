@@ -1,4 +1,5 @@
 ^tests/pr/
 Makefile\.in$
 ^config-log/
+^config/texinfo\.tex$
 \.gdb-history$
