@@ -1,5 +1,5 @@
 /* tsort - topological sort.
-   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -556,7 +556,7 @@ main (int argc, char **argv)
 
   exit_status = 0;
 
-  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
+  parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE, VERSION,
 		      AUTHORS, usage);
 
   while ((opt = getopt_long (argc, argv, "", long_options, NULL)) != -1)
