@@ -41,8 +41,12 @@ struct group *getgrent ();
 # include <strings.h>
 #endif
 
-/* Like `getgroups', but for user USERNAME instead of for
-   the current process. */
+/* Like `getgroups', but for user USERNAME instead of for the current
+   process.  Store at most MAXCOUNT group IDs in the GROUPLIST array.
+   If GID is not -1, store it first (if possible).  GID should be the
+   group ID (pw_gid) obtained from getpwuid, in case USERNAME is not
+   listed in /etc/groups.
+   Always return the number of groups of which USERNAME is a member.  */
 
 int
 getugroups (int maxcount, GETGROUPS_T *grouplist, char *username, gid_t gid)
@@ -51,8 +55,12 @@ getugroups (int maxcount, GETGROUPS_T *grouplist, char *username, gid_t gid)
   register char **cp;
   register int count = 0;
 
-  if (maxcount != 0)
-    grouplist[count++] = gid;
+  if (gid != -1)
+    {
+      if (maxcount != 0)
+	grouplist[count] = gid;
+      ++count;
+    }
 
   setgrent ();
   while ((grp = getgrent ()) != 0)
