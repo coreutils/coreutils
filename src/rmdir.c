@@ -38,6 +38,13 @@ char *program_name;
 /* If nonzero, remove empty parent directories. */
 static int empty_paths;
 
+/* If nonzero, don't treat failure to remove a nonempty directory
+   as an error.  */
+static int ignore_fail_on_non_empty;
+
+/* If nonzero, output a diagnostic for every directory processed.  */
+static int verbose;
+
 /* If nonzero, display usage information and exit.  */
 static int show_help;
 
@@ -46,22 +53,29 @@ static int show_version;
 
 static struct option const longopts[] =
 {
-  {"path", no_argument, &empty_paths, 1},
-  {"parents", no_argument, &empty_paths, 1},
+  /* Don't name this `--force' because it's not close enough in meaning
+     to e.g. rm's -f option.  */
+  {"ignore-fail-on-non-empty", no_argument, NULL, 13},
+
+  {"path", no_argument, NULL, 'p'},
+  {"parents", no_argument, NULL, 'p'},
+  {"verbose", no_argument, NULL, 14},
   {"help", no_argument, &show_help, 1},
   {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
-/* Remove any empty parent directories of `path'.
-   Replaces '/' characters in `path' with NULs. */
+/* Remove any empty parent directories of PATH.
+   If PATH contains slash characters, at least one of them
+   (beginning with the rightmost) is replaced with a NUL byte.  */
 
-static void
+static int
 remove_parents (char *path)
 {
   char *slash;
+  int fail = 0;
 
-  do
+  while (1)
     {
       slash = strrchr (path, '/');
       if (slash == NULL)
@@ -71,8 +85,24 @@ remove_parents (char *path)
       while (slash > path && *slash == '/')
 	--slash;
       slash[1] = 0;
+      fail = rmdir (path);
+
+      /* Give a diagnostic for each successful removal if --verbose.  */
+      if (verbose && !fail)
+	error (0, errno, _("removed directory, %s"), path);
+
+      if (fail)
+	{
+	  /* Give a diagnostic and set fail if not --ignore.  */
+	  if (!ignore_fail_on_non_empty || errno != ENOTEMPTY)
+	    {
+	      error (0, errno, "%s", path);
+	      fail = 1;
+	    }
+	  break;
+	}
     }
-  while (rmdir (path) == 0);
+  return fail;
 }
 
 static void
@@ -87,7 +117,11 @@ usage (int status)
       printf (_("\
 Remove the DIRECTORY(ies), if they are empty.\n\
 \n\
+      --ignore-fail-on-non-empty\n\
+                  ignore each failure that is solely because the\n\
+                  directory is non-empty\n\
   -p, --parents   remove explicit parent directories if being emptied\n\
+      --verbose   output a diagnostic for every directory processed\n\
       --help      display this help and exit\n\
       --version   output version information and exit\n\
 "));
@@ -118,6 +152,12 @@ main (int argc, char **argv)
 	case 'p':
 	  empty_paths = 1;
 	  break;
+	case 13:
+	  ignore_fail_on_non_empty = 1;
+	  break;
+	case 14:
+	  verbose = 1;
+	  break;
 	default:
 	  usage (1);
 	}
@@ -140,17 +180,29 @@ main (int argc, char **argv)
 
   for (; optind < argc; ++optind)
     {
+      int fail;
+      char *dir = argv[optind];
+
       /* Stripping slashes is harmless for rmdir;
 	 if the arg is not a directory, it will fail with ENOTDIR.  */
-      strip_trailing_slashes (argv[optind]);
-      if (rmdir (argv[optind]) != 0)
+      strip_trailing_slashes (dir);
+      fail = rmdir (dir);
+
+      /* Give a diagnostic for each successful removal if --verbose.  */
+      if (verbose && !fail)
+	error (0, errno, _("removed directory, %s"), dir);
+
+      if (fail)
 	{
-	  error (0, errno, "%s", argv[optind]);
-	  errors = 1;
+	  if (!ignore_fail_on_non_empty || errno != ENOTEMPTY)
+	    {
+	      error (0, errno, "%s", dir);
+	      errors = 1;
+	    }
 	}
       else if (empty_paths)
-	remove_parents (argv[optind]);
+	errors += remove_parents (dir);
     }
 
-  exit (errors);
+  exit (errors == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
