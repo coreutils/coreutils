@@ -1,3 +1,7 @@
+2000-08-14  Jim Meyering  <meyering@lucent.com>
+
+	* src/tee.c (main): Remove incorrect `FIXME' comment.
+
 2000-08-07  Paul Eggert  <eggert@twinsun.com>
 
 	* src/su.c (xputenv): Invoke xalloc_die instead of printing
