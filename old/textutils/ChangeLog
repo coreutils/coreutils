@@ -1,5 +1,11 @@
 Sun Aug 11 20:49:21 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* configure.in: Rename a few macros for automake-1.1c.
+	(AC_REPLACE_GNU_GETOPT): Remove.
+	(AC_PATH_PROG): Find perl -- needed only for checks if you
+	change or remove things with e.g. make maintainerclean.
+
+
 	* lib/Makefile.am (tu_LIBADD): Remove @REGEXOBJ@.  New AM_WITH_REGEX
 	adds .o files to @LIBOBJ@.
 	(tu_SOURCES): Add getopt.c and getopt1.c.
