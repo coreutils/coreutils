@@ -1,9 +1,18 @@
+2001-01-19  Paul Eggert  <eggert@twinsun.com>
+
+	* closeout.c (close_stdout_status): If ferror (stdout), do
+	not silently exit merely because the output buffer happens to
+	have nothing pending.
+
 2001-12-18  Paul Eggert  <eggert@twinsun.com>
 
 	See the big note in ../ChangeLog.
 	* human.c (suffixes): Prefer K to k for 1024.
 	(generate_suffix_backwards): New function.
 	(human_readable_inexact): Use it.
+	* xstrtol.c (__xstrtol): If there is no number but there
+	is a valid suffix, assume 1.  "MB" now means decimal, "MiB" binary.
+	Accept 'K' as well as 'k'.
 
 2001-12-15  Jim Meyering  <meyering@lucent.com>
 
