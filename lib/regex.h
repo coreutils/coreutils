@@ -2,24 +2,24 @@
    expression library, version 0.12.
    Copyright (C) 1985,89,90,91,92,93,95,96,97 Free Software Foundation, Inc.
 
-   the C library, however.  The master source lives in /gd/gnu/lib.
 
-NOTE: The canonical source of this file is maintained with the 
-GNU C Library.  Bugs can be reported to bug-glibc@prep.ai.mit.edu.
+   NOTE: The canonical source of this file is maintained with the GNU C Library.
+   Bugs can be reported to bug-glibc@prep.ai.mit.edu.
 
-This program is free software; you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by the
-Free Software Foundation; either version 2, or (at your option) any
-later version.
+   This program is free software; you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the
+   Free Software Foundation; either version 2, or (at your option) any
+   later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software Foundation, 
-Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+   USA.  */
 
 #ifndef _REGEX_H
 #define _REGEX_H 1
@@ -32,10 +32,10 @@ extern "C" {
 /* POSIX says that <sys/types.h> must be included (by the caller) before
    <regex.h>.  */
 
-#if !defined (_POSIX_C_SOURCE) && !defined (_POSIX_SOURCE) && defined (VMS)
+#if !defined _POSIX_C_SOURCE && !defined _POSIX_SOURCE && defined VMS
 /* VMS doesn't have `size_t' in <sys/types.h>, even though POSIX says it
    should be there.  */
-#include <stddef.h>
+# include <stddef.h>
 #endif
 
 /* The following two types have to be signed and unsigned integer type
@@ -240,7 +240,7 @@ extern reg_syntax_t re_syntax_options;
    (erroneously) define this in other header files, but we want our
    value, so remove any previous define.  */
 #ifdef RE_DUP_MAX
-#undef RE_DUP_MAX
+# undef RE_DUP_MAX
 #endif
 /* If sizeof(int) == 2, then ((1 << 15) - 1) overflows.  */
 #define RE_DUP_MAX (0x7fff)
@@ -283,6 +283,10 @@ extern reg_syntax_t re_syntax_options;
    `re_error_msg' table in regex.c.  */
 typedef enum
 {
+#if (_XOPEN_SOURCE - 0) == 500
+  REG_NOSYS = -1,	/* This will never happen for this implementation.  */
+#endif
+
   REG_NOERROR = 0,	/* Success.  */
   REG_NOMATCH,		/* Didn't find a match (for regexec).  */
 
@@ -314,7 +318,7 @@ typedef enum
    private to the regex routines.  */
 
 #ifndef RE_TRANSLATE_TYPE
-#define RE_TRANSLATE_TYPE char *
+# define RE_TRANSLATE_TYPE char *
 #endif
 
 struct re_pattern_buffer
@@ -405,7 +409,7 @@ struct re_registers
    `re_match_2' returns information about at least this many registers
    the first time a `regs' structure is passed.  */
 #ifndef RE_NREGS
-#define RE_NREGS 30
+# define RE_NREGS 30
 #endif
 
 
@@ -428,11 +432,11 @@ typedef struct
 
 #if __STDC__
 
-#define _RE_ARGS(args) args
+# define _RE_ARGS(args) args
 
 #else /* not __STDC__ */
 
-#define _RE_ARGS(args) ()
+# define _RE_ARGS(args) ()
 
 #endif /* not __STDC__ */
 
@@ -503,11 +507,11 @@ extern void re_set_registers
              unsigned num_regs, regoff_t *starts, regoff_t *ends));
 
 #ifdef _REGEX_RE_COMP
-#ifndef _CRAY
+# ifndef _CRAY
 /* 4.2 bsd compatibility.  */
 extern char *re_comp _RE_ARGS ((const char *));
 extern int re_exec _RE_ARGS ((const char *));
-#endif
+# endif
 #endif
 
 /* POSIX compatibility.  */
