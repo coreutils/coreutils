@@ -102,6 +102,7 @@ struct File_spec
 #ifndef STDC_HEADERS
 void free ();
 char *malloc ();
+char *realloc ();
 #endif
 
 char *base_name ();
@@ -110,7 +111,6 @@ char *stpcpy ();
 char *stpncpy ();
 void strip_trailing_slashes ();
 char *xmalloc ();
-char *xrealloc ();
 int yesno ();
 
 /* Forward dcl for recursively called function.  */
@@ -381,14 +381,12 @@ full_filename (const char *filename)
 
   if (n_bytes_needed > n_allocated)
     {
-      /* FIXME: use realloc, not xrealloc.  */
-      /* But be sure realloc accepts NULL first arg.
-	 FIXME: replace with rpl_realloc if not.  */
-      /* This funciton can't use xrealloc.  Otherwise, out-of-memory
+      /* This code requires that realloc accept NULL as the first arg.
+         This function cannot use xrealloc.  Otherwise, out-of-memory
 	 errors involving a file name to be expanded here wouldn't ever
 	 be issued.  Use realloc and fall back on using a static buffer
-	 if memory is a problem.  */
-      buf = xrealloc (buf, n_bytes_needed);
+	 if memory allocation fails.  */
+      buf = realloc (buf, n_bytes_needed);
       n_allocated = n_bytes_needed;
 
       if (buf == NULL)
