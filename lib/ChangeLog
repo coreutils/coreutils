@@ -1,3 +1,8 @@
+2003-10-19  Jim Meyering  <jim@meyering.net>
+
+	* vasnprintf.c (vasnprintf): Work around losing snprintf on
+	e.g. HPUX 10.20.
+
 2003-09-25  Jim Meyering  <jim@meyering.net>
 	    Bruno Haible  <bruno@clisp.org>
 
