@@ -31,7 +31,7 @@
 #include "error.h"
 #include "full-write.h"
 #include "getpagesize.h"
-#include "human.h"
+#include "inttostr.h"
 #include "long-options.h"
 #include "quote.h"
 #include "safe-read.h"
@@ -358,17 +358,15 @@ bit_count (register int i)
 static void
 print_stats (void)
 {
-  char buf[2][LONGEST_HUMAN_READABLE + 1];
+  char buf[2][INT_BUFSIZE_BOUND (uintmax_t)];
   fprintf (stderr, _("%s+%s records in\n"),
-	   human_readable (r_full, buf[0], 1, 1),
-	   human_readable (r_partial, buf[1], 1, 1));
+	   umaxtostr (r_full, buf[0]), umaxtostr (r_partial, buf[1]));
   fprintf (stderr, _("%s+%s records out\n"),
-	   human_readable (w_full, buf[0], 1, 1),
-	   human_readable (w_partial, buf[1], 1, 1));
+	   umaxtostr (w_full, buf[0]), umaxtostr (w_partial, buf[1]));
   if (r_truncate > 0)
     {
       fprintf (stderr, "%s %s\n",
-	       human_readable (r_truncate, buf[0], 1, 1),
+	       umaxtostr (r_truncate, buf[0]),
 	       (r_truncate == 1
 		? _("truncated record")
 		: _("truncated records")));
@@ -1211,11 +1209,10 @@ main (int argc, char **argv)
 		  || S_ISDIR (stdout_stat.st_mode)
 		  || S_TYPEISSHM (&stdout_stat)))
 	    {
-	      char buf[LONGEST_HUMAN_READABLE + 1];
+	      char buf[INT_BUFSIZE_BOUND (off_t)];
 	      error (EXIT_FAILURE, errno,
 		     _("advancing past %s bytes in output file %s"),
-		     human_readable (o, buf, 1, 1),
-		     quote (output_file));
+		     offtostr (o, buf), quote (output_file));
 	    }
 	}
 #endif
