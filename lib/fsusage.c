@@ -70,7 +70,7 @@ adjust_blocks (blocks, fromsize, tosize)
   else if (fromsize > tosize)	/* E.g., from 2048 to 512.  */
     return blocks * (fromsize / tosize);
   else				/* E.g., from 256 to 512.  */
-    return (blocks + (blocks < 0 ? -1 : +1)) / (tosize / fromsize);
+    return (blocks + (blocks < 0 ? -1 : 1)) / (tosize / fromsize);
 }
 
 /* Fill in the fields of FSP with information about space usage for

@@ -1,3 +1,32 @@
+Tue Oct 05 14:52:02 1993  Jim Meyering  (meyering@comco.com)
+
+	* configure.in: Add AC_STAT_MACROS_BROKEN.
+
+	* isdir.c, makepath.c, rename.c, system.h [STAT_MACROS_BROKEN]:
+	Test this.
+
+	* xmalloc.c [CONFIG_BROKETS]: Test this.
+
+Thu Sep  9 08:52:10 1993  Jim Meyering  (meyering@comco.com)
+
+	* src/*.c: Print version on standard output, not stderr.
+
+Fri Aug 27 23:53:50 1993  Jim Meyering  (meyering@comco.com)
+
+	* cp.c (copy), ls.c (get_link_name): Don't use PATH_MAX as array
+	length in declarations because on some systems it gets defined
+	to the function pathconf.  Use dynamic allocation instead.
+
+	* fsusage.c (adjust_blocks): Use `1' instead of `+1'.  Many
+	compilers don't parse the latter.  From Kaveh R. Ghazi.
+
+Fri Aug 27 10:27:13 1993  Paul Eggert  (eggert@twinsun.com)
+
+	* xmalloc.c: Include "config.h" if HAVE_CONFIG_H.  Use size_t,
+	not int, when needed.
+	(VOID): New macro.  Use it when needed.
+	(error): Declaration uses varargs if required.
+
 Thu Aug 26 22:26:09 1993  Jim Meyering  (meyering@comco.com)
 
 	* ls.c (print_long_format, print_file_name_and_frills): Cast inode

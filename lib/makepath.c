@@ -38,8 +38,15 @@ char *alloca ();
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
+
+#ifdef	STAT_MACROS_BROKEN
+#ifdef S_ISDIR
+#undef S_ISDIR
+#endif
+#endif	/* STAT_MACROS_BROKEN.  */
+
 #if !defined(S_ISDIR) && defined(S_IFDIR)
-#define	S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
+#define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
 #endif
 
 #ifdef STDC_HEADERS
