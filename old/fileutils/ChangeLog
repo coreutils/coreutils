@@ -1,6 +1,7 @@
 Sat Jul  6 12:46:27 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in (AC_REPLACE_FUNCS): Add group_member.
+	(AC_LINK_FILES): Create link lib/group_member.c to lib/group-member.c.
 	* lib/Makefile.am (fu_SOURCES): Remove group-member.c.
 	(EXTRA_DIST): Add group-member.c here.
 
