@@ -38,10 +38,6 @@
 #include "system.h"
 #include "error.h"
 
-#ifdef HAVE_LCHOWN
-# define chown(PATH, OWNER, GROUP) lchown(PATH, OWNER, GROUP)
-#endif
-
 #ifndef _POSIX_VERSION
 struct passwd *getpwnam ();
 struct group *getgrnam ();
@@ -50,6 +46,12 @@ struct group *getgrgid ();
 
 #ifndef HAVE_ENDPWENT
 # define endpwent() ((void) 0)
+#endif
+
+#ifdef HAVE_LCHOWN
+# define LCHOWN(FILE, OWNER, GROUP) lchown (FILE, OWNER, GROUP)
+#else
+# define LCHOWN(FILE, OWNER, GROUP) 1
 #endif
 
 char *savedir ();
@@ -63,6 +65,10 @@ static int change_dir_owner __P ((char *dir, uid_t user, gid_t group,
 
 /* The name the program was run with. */
 char *program_name;
+
+/* If nonzero, and the systems has support for it, change the ownership
+   of symbolic links rather than any files they point to.  */
+static int change_symlinks;
 
 /* If nonzero, change the ownership of directories recursively. */
 static int recurse;
@@ -92,8 +98,9 @@ static struct option const long_options[] =
 {
   {"recursive", no_argument, 0, 'R'},
   {"changes", no_argument, 0, 'c'},
-  {"silent", no_argument, 0, 'f'},
+  {"no-dereference", no_argument, 0, 'h'},
   {"quiet", no_argument, 0, 'f'},
+  {"silent", no_argument, 0, 'f'},
   {"verbose", no_argument, 0, 'v'},
   {"help", no_argument, &show_help, 1},
   {"version", no_argument, &show_version, 1},
@@ -139,9 +146,17 @@ change_file_owner (char *file, uid_t user, gid_t group)
   newgroup = group == (gid_t) -1 ? file_stats.st_gid : group;
   if (newuser != file_stats.st_uid || newgroup != file_stats.st_gid)
     {
+      int fail;
+
       if (verbose)
 	describe_change (file, 1);
-      if (chown (file, newuser, newgroup))
+
+      if (change_symlinks)
+	fail = LCHOWN (file, newuser, newgroup);
+      else
+	fail = chown (file, newuser, newgroup);
+
+      if (fail)
 	{
 	  if (force_silent == 0)
 	    error (0, errno, "%s", file);
@@ -224,12 +239,14 @@ Usage: %s [OPTION]... OWNER[.[GROUP]] FILE...\n\
       printf (_("\
 Change the owner and/or group of each FILE to OWNER and/or GROUP.\n\
 \n\
-  -c, --changes           be verbose whenever change occurs\n\
-  -f, --silent, --quiet   suppress most error messages\n\
-  -v, --verbose           explain what is being done\n\
-  -R, --recursive         change files and directories recursively\n\
-      --help              display this help and exit\n\
-      --version           output version information and exit\n\
+  -c, --changes          be verbose whenever change occurs\n\
+  -h, --no-dereference   affect symbolic links instead of any pointed-to file\n\
+                         (available only on systems with lchown system call)\n\
+  -f, --silent, --quiet  suppress most error messages\n\
+  -v, --verbose          explain what is being done\n\
+  -R, --recursive        change files and directories recursively\n\
+      --help             display this help and exit\n\
+      --version          output version information and exit\n\
 \n\
 Owner is unchanged if missing.  Group is unchanged if missing, but changed\n\
 to login group if implied by a period.  A colon may replace the period.\n"));
@@ -253,7 +270,7 @@ main (int argc, char **argv)
 
   recurse = force_silent = verbose = changes_only = 0;
 
-  while ((optc = getopt_long (argc, argv, "Rcfv", long_options, (int *) 0))
+  while ((optc = getopt_long (argc, argv, "Rcfhv", long_options, (int *) 0))
 	 != EOF)
     {
       switch (optc)
@@ -269,6 +286,9 @@ main (int argc, char **argv)
 	  break;
 	case 'f':
 	  force_silent = 1;
+	  break;
+	case 'h':
+	  change_symlinks = 1;
 	  break;
 	case 'v':
 	  verbose = 1;
@@ -292,6 +312,13 @@ main (int argc, char **argv)
       error (0, 0, _("too few arguments"));
       usage (1);
     }
+
+#ifndef HAVE_LCHOWN
+  if (change_symlinks)
+    {
+      error (1, 0, _("--no-dereference (-h) is not supported on this system"));
+    }
+#endif
 
   e = parse_user_spec (argv[optind], &user, &group, &username, &groupname);
   if (e)
