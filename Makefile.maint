@@ -63,14 +63,15 @@ local-check = \
 # It's not a big deal -- just aesthetics.
 .PHONY: $(syntax-check-rules)
 syntax-check-rules = \
-  sc_unmarked_diagnostics \
   sc_cast_of_argument_to_free \
   sc_cast_of_x_alloc_return_value \
-  sc_space_tab \
-  sc_error_exit_success \
-  sc_xalloc_h_in_src \
   sc_changelog \
-  sc_system_h_headers
+  sc_error_exit_success \
+  sc_space_tab \
+  sc_sun_os_names \
+  sc_system_h_headers \
+  sc_unmarked_diagnostics \
+  sc_xalloc_h_in_src
 
 syntax-check: $(syntax-check-rules)
 #	@grep -E '#  *include <(limits|std(def|arg|bool))\.h>'		\
@@ -164,6 +165,14 @@ sc_system_h_headers:
 	@grep -E '^# *include ["<]($(h_re))\.h[">]'			\
 	    $(srcdir)/src/*.c &&					\
 	  { echo '$(ME): the above are already included via system.h' 1>&2; \
+	    exit 1; } || :
+
+sc_sun_os_names:
+	@( cvsu --list ) > /dev/null 2>&1 || : && \
+	grep -Ei \
+	    'solaris[^[:alnum:]]*2\.(7|8|9|[1-9][0-9])|sunos[^[:alnum:]][6-9]' \
+	  $$(cvsu --list | grep -vE 'config-log|ChangeLog|config\.guess') && \
+	  { echo '$(ME): found misuse of Sun OS version numbers' 1>&2;	\
 	    exit 1; } || :
 
 # Ensure that date's --help output stays in sync with the info
