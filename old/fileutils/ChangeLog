@@ -1,6 +1,13 @@
-2002-04-16  Jim Meyering  <meyering@lucent.com>
+2002-04-17  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.9.
+
+	* src/touch.c (touch): Don't report errors for nonexistent files
+	when --no-create is in effect.  Based on a patch from TAKAI Kousuke.
+	* tests/touch/no-create-missing: New file/test for above.
+	* tests/touch/Makefile.am (TESTS): Add no-create-missing.
+
+2002-04-16  Jim Meyering  <meyering@lucent.com>
 
 	* src/stat.c: Add copyright comment.
 	(human_fstype): Rename from print_human_fstype, and rework accordingly.

@@ -1,5 +1,5 @@
 #!/bin/sh
-# Ensure that touch -c no-such-file no longer fails.
+# Ensure that touch -c no-such-file no longer fails (it did in 4.1.8).
 
 if test "$VERBOSE" = yes; then
   set -x
