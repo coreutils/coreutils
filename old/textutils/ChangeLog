@@ -1,4 +1,19 @@
+Sun Dec 22 08:11:27 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* tests/md5sum-test/Makefile.am: Use same framework as other tests.
+	* tests/md5sum-test/Test.pm: New file.
+
 Sat Dec 21 20:32:58 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* tests/Makefile.am (EXTRA_DIST): Add README and Makefile.am.in.
+
+	* tests/Makefile.am.in: New file.
+
+	* tests/sort-test/Makefile.am: Clone the Makefile.am from join-test.
+	Replace only the definition of $x and the auto-generated lists of
+	test files.
+	* tests/cut-test/Makefile.am: Likewise.
+	* tests/tr-test/Makefile.am: Likewise.
 
 	* tests/join-test/Makefile.am: Add @MAINT@-protected rule for
 	verifying that Makefile.am is consistent with Test.pm.
