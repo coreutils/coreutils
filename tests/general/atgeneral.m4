@@ -207,7 +207,7 @@ fi
 # over files, the full test suite cleans up both before and after test groups.
 
 if $1 --version | grep "$at_package.*$at_version" >/dev/null; then
-  at_banner="Testing suite for $at_package, version $at_version"
+  at_banner="Test suite for $at_package, version $at_version"
   at_dashes=`echo $at_banner | sed s/./=/g`
   echo "$at_dashes"
   echo "$at_banner"
