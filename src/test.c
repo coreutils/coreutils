@@ -849,6 +849,9 @@ Usage: test EXPRESSION\n\
   or:  [ EXPRESSION ]\n\
   or:  [ ]\n\
   or:  [ OPTION\n\
+"), stdout);
+      printf (USAGE_BUILTIN_WARNING, _("test and/or ["));
+      fputs (_("\
 Exit with the status determined by EXPRESSION.\n\
 \n\
 "), stdout);

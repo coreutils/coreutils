@@ -1,5 +1,5 @@
 /* Exit with a status code indicating success.
-   Copyright (C) 1999-2003 Free Software Foundation, Inc.
+   Copyright (C) 1999-2003, 2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -32,14 +32,18 @@ usage (int status)
   printf (_("\
 Usage: %s [ignored command line arguments]\n\
   or:  %s OPTION\n\
+"),
+	  program_name, program_name);
+  printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
+  fputs (_("\
 Exit with a status code indicating success.\n\
 \n\
 These option names may not be abbreviated.\n\
 \n\
 "),
-	  program_name, program_name);
-      fputs (HELP_OPTION_DESCRIPTION, stdout);
-      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+	 stdout);
+  fputs (HELP_OPTION_DESCRIPTION, stdout);
+  fputs (VERSION_OPTION_DESCRIPTION, stdout);
   printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
   exit (status);
 }
