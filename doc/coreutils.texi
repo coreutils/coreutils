@@ -11060,7 +11060,7 @@ User-defined signal 2.
 @end table
 
 @noindent
-@acronym{POSIX} 1003.1-2001 systems that support the @sc{xsi} extension
+@acronym{POSIX} 1003.1-2001 systems that support the @acronym{XSI} extension
 also support the following signals:
 
 @table @samp
@@ -11081,7 +11081,7 @@ File size limit exceeded.
 @end table
 
 @noindent
-@acronym{POSIX} 1003.1-2001 systems that support the @sc{xrt} extension
+@acronym{POSIX} 1003.1-2001 systems that support the @acronym{XRT} extension
 also support at least eight real-time signals called @samp{RTMIN},
 @samp{RTMIN+1}, @dots{}, @samp{RTMAX-1}, @samp{RTMAX}.
 
