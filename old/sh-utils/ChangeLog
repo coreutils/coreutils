@@ -3,12 +3,6 @@ Sun Oct 20 09:03:51 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 	* src/who-users.c (print_entry): Don't take address of UT_TIME_MEMBER
 	directly.  From Ulrich Drepper.
 
-	The problem is that GNU libc (and perhaps other libcs as well) have
-	extended utmp file formats which do not use a simple time_t ut_time
-	field.  In glibc ut_time is a macro which selects for backward
-	compatibility the tv_sec member of a struct timeval value.
-
-
 	* Makefile.am (AUTOMAKE_OPTIONS): Set to `gnits'.
 	(EXTRA_DIST): Remove @README_ALPHA@.
 
