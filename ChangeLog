@@ -1,8 +1,8 @@
 2003-01-07  Jim Meyering  <jim@meyering.net>
 
-	* src/cut.c (set_fields): Fix typo in comment.
-
 	* Version 4.5.5.
+
+	* src/cut.c (set_fields): Fix typo in comment.
 
 	* tests/touch/not-owner: New test, mostly extracted from fail-diag.
 	* tests/touch/Makefile.am (TESTS): Add not-owner.
@@ -87,7 +87,6 @@
 	Reported by Karl Berry.
 
 	* tests/rm/isatty: Enable this test.
-
 
 2002-12-31  Jim Meyering  <meyering@lucent.com>
 
