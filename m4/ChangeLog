@@ -1,3 +1,7 @@
+2002-05-19  Paul Eggert  <eggert@twinsun.com>
+
+	* jm-macros.m4 (jm_CHECK_ALL_TYPES): Check for st_author.
+
 2002-06-07  Jim Meyering  <meyering@lucent.com>
 
 	* prereq.m4 (jm_PREREQ_STAT): Check for sys/param.h and sys/mount.h.
