@@ -67,3 +67,13 @@
 ('G', 'abc', '', 'a[b*512]c', '1[x*]2', '1x2', 0);
 ('H', 'abc', '', 'a[b*513]c', '1[x*]2', '1x2', 0);
 ('I', 'abc-z', '', 'a\-z', 'A-Z', 'AbcBC', 0);
+#
+# From Ross
+('R0', '', '-cs', '[:upper:]', 'X[Y*]', '', 1);
+('R1', 'AMZamz123.-+AMZ', '-cs', '[:upper:]', '[X*]', 'AMZXAMZ', 0);
+('R2', 'amzAMZ123.-+amz', '-dcs', '[:lower:]', 'n-rs-z', 'amzamz', 0);
+('R3', '.ZABCDEFGzabcdefg.0123456788899.GG', '-ds', \
+     '[:xdigit:]', '[:alnum:]', '.ZGzg..G', 0);
+('R4', '', '-dcs', '[:alnum:]', '[:digit:]', '', 0);
+('R5', '', '-dc', '[:lower:]', '', '', 0);
+('R6', '', '-dc', '[:upper:]', '', '', 0);
