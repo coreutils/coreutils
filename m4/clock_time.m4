@@ -17,8 +17,8 @@ AC_DEFUN([gl_CLOCK_TIME],
   # library, inducing unnecessary run-time overhead.
   fetish_saved_libs=$LIBS
     AC_SEARCH_LIBS(clock_gettime, [rt posix4],
-                   [LIB_CLOCK_GETTIME=$ac_cv_search_clock_gettime
-                   test -z "$LIB_CLOCK_GETTIME" && LIB_CLOCK_GETTIME=])
+                   [test "$ac_cv_search_clock_gettime" = "none required" ||
+                    LIB_CLOCK_GETTIME=$ac_cv_search_clock_gettime])
     AC_SUBST(LIB_CLOCK_GETTIME)
     AC_CHECK_FUNCS(clock_gettime clock_settime)
   LIBS=$fetish_saved_libs
