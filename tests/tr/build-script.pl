@@ -25,7 +25,7 @@ while (<>)
   {
     next if (/^\s*#/);
 
-    chop;
+    chomp;
     my ($test_name, $input, $flags, $s1, $s2, $expected, $e_ret_code);
     my $prog =
        '($test_name, $input, $flags, $s1, $s2, $expected, $e_ret_code) = '
