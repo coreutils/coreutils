@@ -1026,8 +1026,26 @@ else
   esac
 fi
 test -s regress-1.E || rm -f regress-1.E
+LANG=C TZ=UTC $xx -d 000909 '+%Y-%m-%d %T'  > datevtime-1.O 2> datevtime-1.E
+code=$?
+if test $code != 0; then
+  $echo "Test datevtime-1(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp datevtime-1.O $srcdir/datevtime-1.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE"; then $echo "passed datevtime-1(LANG=C TZ=UTC)"; fi;;
+    1) $echo "Test datevtime-1(LANG=C TZ=UTC) failed: files datevtime-1.O and $srcdir/datevtime-1.X differ" 1>&2
+       (diff -c datevtime-1.O $srcdir/datevtime-1.X) 2> /dev/null
+       errors=`expr $errors + 1`;;
+    2) $echo "Test datevtime-1(LANG=C TZ=UTC) may have failed." 1>&2
+       $echo The command "cmp datevtime-1.O $srcdir/datevtime-1.X" failed. 1>&2
+       errors=`expr $errors + 1`;;
+  esac
+fi
+test -s datevtime-1.E || rm -f datevtime-1.E
 if test $errors = 0; then
-  $echo Passed all 56 tests. 1>&2
+  $echo Passed all 57 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi
