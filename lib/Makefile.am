@@ -1,6 +1,6 @@
 ## Makefile for gnulib/lib				-*-Makefile-*-
 
-# Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002 Free
+# Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003 Free
 # Software Foundation, Inc.
 
 ## This program is free software; you can redistribute it and/or modify
@@ -61,6 +61,7 @@ libfetish_a_SOURCES = \
   fnmatch_.h \
   fopen-safer.c \
   fsusage.h \
+  full-read.c full-read.h \
   full-write.c full-write.h \
   getline.h \
   getpagesize.h \
