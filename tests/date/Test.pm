@@ -113,6 +113,9 @@ sub test_vector
 
      ['risks-1', "-d 'Nov 10 1996' $fmt", {}, "1996-11-10 00:00:00", 0],
 
+     ['regress-1', "-u -d '1996-11-10 0:00:00 +0' $fmt", {},
+      "1996-11-10 00:00:00", 0],
+
      # FIXME: add a lot more...
      );
 
@@ -126,6 +129,10 @@ sub test_vector
     }
 
   $Test::env{'utc-0'} = ['TZ=UTC+4'];
+
+  # This one would pass if TZ (with any, or even no, value) were in
+  # the environment.
+  $Test::env{'regress-1'} = ['LANG=C'];
 
   $Test::env{'utc-1'} = ['TZ=UTC+1'];
   $Test::input_via{'utc-1'} = {REDIR => 0};
