@@ -43,6 +43,7 @@ extern int errno;
 #include "closeout.h"
 #include "error.h"
 #include "quotearg.h"
+#include "__fpending.h"
 
 static int default_exit_status = EXIT_FAILURE;
 static const char *file_name;
@@ -86,10 +87,14 @@ close_stdout_set_file_name (const char *file)
    It's important to detect such failures and exit nonzero because many
    tools (most notably `make' and other build-management systems) depend
    on being able to detect failure in other tools via their exit status.  */
+
 void
 close_stdout_status (int status)
 {
   int e = ferror (stdout) ? 0 : -1;
+
+  if (__fpending (stdout) == 0)
+    return;
 
   if (fclose (stdout) != 0)
     e = errno;
