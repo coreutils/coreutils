@@ -41,6 +41,8 @@ struct group *getgrent ();
 # include <strings.h>
 #endif
 
+#define STREQ(s1, s2) ((strcmp (s1, s2) == 0))
+
 /* Like `getgroups', but for user USERNAME instead of for the current
    process.  Store at most MAXCOUNT group IDs in the GROUPLIST array.
    If GID is not -1, store it first (if possible).  GID should be the
@@ -64,14 +66,17 @@ getugroups (int maxcount, GETGROUPS_T *grouplist, char *username, gid_t gid)
 
   setgrent ();
   while ((grp = getgrent ()) != 0)
-    for (cp = grp->gr_mem; *cp; ++cp)
-      if (!strcmp (username, *cp))
+    {
+      for (cp = grp->gr_mem; *cp; ++cp)
 	{
 	  int n;
 
+	  if ( ! STREQ (username, *cp))
+	    continue;
+
 	  /* See if this group number is already on the list.  */
 	  for (n = 0; n < count; ++n)
-	    if (grouplist[n] == grp->gr_gid)
+	    if (grouplist && grouplist[n] == grp->gr_gid)
 	      break;
 
 	  /* If it's a new group number, then try to add it to the list.  */
@@ -89,6 +94,8 @@ getugroups (int maxcount, GETGROUPS_T *grouplist, char *username, gid_t gid)
 	      count++;
 	    }
 	}
+    }
   endgrent ();
+
   return count;
 }
