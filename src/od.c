@@ -1138,7 +1138,8 @@ format_address_paren (uintmax_t address, char c)
 {
   putchar ('(');
   format_address_std (address, ')');
-  putchar (c);
+  if (c)
+    putchar (c);
 }
 
 static void
