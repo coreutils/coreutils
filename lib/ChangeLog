@@ -1,3 +1,15 @@
+2002-10-13  Jim Meyering  <meyering@lucent.com>
+
+	* xnanosleep.c (initialized): Remove declaration now that it's unused.
+
+2002-10-12  Paul Eggert  <eggert@twionsun.com>
+
+	* xnanosleep.c: There's no need to futz with the rounding mode,
+	since the code should work properly even in the default rounding mode.
+	(<fenv.h>): Do not include.
+	(#pragma STDC FENV_ACCESS ON): Remove.
+	(xnanosleep): Don't futz with rounding state.
+
 2002-10-06  Jim Meyering  <meyering@lucent.com>
 
 	* safe-read.c (safe_read): Change type of function
