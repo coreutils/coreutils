@@ -110,19 +110,21 @@ usage (int status)
 Usage: %s [OPTION]... [FILE]...\n\
 "),
 	      program_name);
-      printf (_("\
+      fputs (_("\
 Convert tabs in each FILE to spaces, writing to standard output.\n\
 With no FILE, or when FILE is -, read standard input.\n\
 \n\
 Mandatory arguments to long options are mandatory for short options too.\n\
   -i, --initial       do not convert TABs after non whitespace\n\
   -t, --tabs=NUMBER   have tabs NUMBER characters apart, not 8\n\
+"), stdout);
+      fputs (_("\
   -t, --tabs=LIST     use comma separated list of explicit tab positions\n\
       --help          display this help and exit\n\
       --version       output version information and exit\n\
 \n\
 Instead of -t NUMBER or -t LIST, -NUMBER or -LIST may be used.\n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);

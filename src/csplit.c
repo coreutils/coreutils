@@ -1503,14 +1503,16 @@ usage (int status)
 Usage: %s [OPTION]... FILE PATTERN...\n\
 "),
 	      program_name);
-      printf (_("\
+      fputs (_("\
 Output pieces of FILE separated by PATTERN(s) to files `xx01', `xx02', ...,\n\
 and output byte counts of each piece to standard output.\n\
 \n\
 Mandatory arguments to long options are mandatory for short options too.\n\
-  -b, --suffix-format=FORMAT use sprintf FORMAT instead of %%d\n\
+  -b, --suffix-format=FORMAT use sprintf FORMAT instead of %d\n\
   -f, --prefix=PREFIX        use PREFIX instead of `xx'\n\
   -k, --keep-files           do not remove output files on errors\n\
+"), stdout);
+      fputs (_("\
   -n, --digits=DIGITS        use specified number of digits instead of 2\n\
   -s, --quiet, --silent      do not print counts of output file sizes\n\
   -z, --elide-empty-files    remove empty output files\n\
@@ -1518,15 +1520,17 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       --version              output version information and exit\n\
 \n\
 Read standard input if FILE is -.  Each PATTERN may be:\n\
+"), stdout);
+      fputs (_("\
 \n\
   INTEGER            copy up to but not including specified line number\n\
   /REGEXP/[OFFSET]   copy up to but not including a matching line\n\
-  %%REGEXP%%[OFFSET]   skip to, but not including a matching line\n\
+  %REGEXP%[OFFSET]   skip to, but not including a matching line\n\
   {INTEGER}          repeat the previous pattern specified number of times\n\
   {*}                repeat the previous pattern as many times as possible\n\
 \n\
 A line OFFSET is a required `+' or `-' followed by a positive integer.\n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
