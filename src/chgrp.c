@@ -35,13 +35,14 @@
 # define INT_MAX ((int) (UINT_MAX >> 1))
 #endif
 
-#ifndef MAXUID
-# define MAXUID INT_MAX
-#endif
-
 #include "system.h"
 #include "xstrtoul.h"
 #include "error.h"
+
+/* MAXUID may come from limits.h *or* sys/params.h (via system.h) above. */
+#ifndef MAXUID
+# define MAXUID INT_MAX
+#endif
 
 #ifndef _POSIX_VERSION
 struct group *getgrnam ();
