@@ -1,3 +1,7 @@
+2001-01-14  Jim Meyering  <meyering@lucent.com>
+
+	* Version 4.0.36.
+
 2001-01-02  Volker Borchert  <bt@teknon.de>
 
 	Work around a broken rename system call, e.g. on SunOS 4.1.1_U1,
