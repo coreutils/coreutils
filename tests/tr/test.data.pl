@@ -59,3 +59,5 @@
 ("A", "abc",    '',  'a-a','z',         "zbc",               0);
 #
 ("B", "",       '',  'a',"''",          "",                  1);
+("C", "abcxyzABCXYZ", '', '[:lower:]', '[:upper:]', "ABCXYZABCXYZ", 0);
+("D", "abcxyzABCXYZ", '', '[:upper:]', '[:lower:]', "abcxyzabcxyz", 0);
