@@ -89,7 +89,7 @@ size_t quotearg_buffer PARAMS ((char *buffer, size_t buffersize,
    The returned value points to static storage that can be
    reused by the next call to this function with the same value of N.
    N must be nonnegative.  */
-char *quotearg_n PARAMS ((unsigned int n, char const *arg));
+char *quotearg_n PARAMS ((int n, char const *arg));
 
 /* Equivalent to quotearg_n (0, ARG).  */
 char *quotearg PARAMS ((char const *arg));
@@ -97,8 +97,7 @@ char *quotearg PARAMS ((char const *arg));
 /* Use style S and storage slot N to return a quoted version of the string ARG.
    This is like quotearg_n (N, ARG), except that it uses S with no other
    options to specify the quoting method.  */
-char *quotearg_n_style PARAMS ((unsigned int n, enum quoting_style s,
-				char const *arg));
+char *quotearg_n_style PARAMS ((int n, enum quoting_style s, char const *arg));
 
 /* Equivalent to quotearg_n_style (0, S, ARG).  */
 char *quotearg_style PARAMS ((enum quoting_style s, char const *arg));
