@@ -1,5 +1,5 @@
-# canon-host.m4 serial 3
-dnl Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+# canon-host.m4 serial 4
+dnl Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
 dnl Public License, this file may be distributed as part of a program
@@ -18,5 +18,5 @@ AC_DEFUN([gl_CANON_HOST],
   AC_SEARCH_LIBS(gethostbyname, [inet nsl])
 
   dnl These come from -lnsl on Solaris 2.5.1.
-  AC_CHECK_FUNCS(gethostbyname gethostbyaddr inet_ntoa)
+  AC_CHECK_FUNCS(getaddrinfo gethostbyname gethostbyaddr inet_ntoa)
 ])
