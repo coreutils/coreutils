@@ -1,5 +1,5 @@
 /* df - summarize free disk space
-   Copyright (C) 91, 1995-2003 Free Software Foundation, Inc.
+   Copyright (C) 91, 1995-2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -719,7 +719,7 @@ add_excluded_fs_type (const char *fstype)
 void
 usage (int status)
 {
-  if (status != 0)
+  if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
@@ -918,7 +918,7 @@ main (int argc, char **argv)
 	 Fail if df was invoked with no file name arguments;
 	 Otherwise, merely give a warning and proceed.  */
       const char *warning = (optind < argc ? _("Warning: ") : "");
-      int status = (optind < argc ? 0 : 1);
+      int status = (optind < argc ? 0 : EXIT_FAILURE);
       error (status, errno,
 	     _("%scannot read table of mounted filesystems"), warning);
     }
@@ -946,5 +946,5 @@ main (int argc, char **argv)
       show_all_entries ();
     }
 
-  exit (exit_status);
+  exit (exit_status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
