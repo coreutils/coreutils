@@ -17,6 +17,8 @@
 	* man/Makefile.maint (helpful-men): Define.
 	* man/Makefile.summ ($(helpless-men)): New manual-generating rules to
 	accommodate the fact that false and true no longer accept --help.
+	* doc/sh-utils.texi: Include a couple of sentences from the
+	truefalse package.
 	Prompted by Christi Alice Scarborough's truefalse package.
 
 1999-07-30  Jim Meyering  <meyering@ascend.com>
