@@ -196,7 +196,7 @@ cwrite (int new_file_flag, const char *bp, size_t bytes)
     error (EXIT_FAILURE, errno, "%s", outfile);
 }
 
-/* Split into pieces of exactly NCHARS bytes.
+/* Split into pieces of exactly N_BYTES bytes.
    Use buffer BUF, whose size is BUFSIZE.  */
 
 static void
@@ -285,8 +285,8 @@ lines_split (size_t nlines, char *buf, size_t bufsize)
 }
 
 /* Split into pieces that are as large as possible while still not more
-   than NCHARS bytes, and are split on line boundaries except
-   where lines longer than NCHARS bytes occur. */
+   than N_BYTES bytes, and are split on line boundaries except
+   where lines longer than N_BYTES bytes occur. */
 
 static void
 line_bytes_split (size_t n_bytes)
