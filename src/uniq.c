@@ -490,7 +490,7 @@ main (int argc, char **argv)
 	    if (skip_field_option_type == SFO_NEW)
 	      skip_fields = 0;
 
-	    if (DECIMAL_DIGIT_ACCUMULATE (skip_fields, optc - '0', SIZE_MAX))
+	    if (!DECIMAL_DIGIT_ACCUMULATE (skip_fields, optc - '0', SIZE_MAX))
 	      error (EXIT_FAILURE, 0, "%s",
 		     _("invalid number of fields to skip"));
 	    skip_field_option_type = SFO_OBSOLETE;
