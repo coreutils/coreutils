@@ -1,5 +1,11 @@
 2000-09-05  Jim Meyering  <meyering@lucent.com>
 
+	* tests/mv/part-symlink: Redirect stdout to stderr before trying to
+	remove the temp directory.  Otherwise, the `rm -rf' would get an
+	error because the output file wouldn't be closed and the directory
+	wouldn't be `empty'.
+	* tests/cp/same-file: Likewise.
+
 	* tests/cp/same-file: Remove the `cp -dl sl1 sl2' case,
 	since it's no longer portable (hard link to a symlink).
 	Likewise for the `cp -bdl symlink foo' case.
