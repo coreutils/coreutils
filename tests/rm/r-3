@@ -3,12 +3,10 @@
 # An early version of my rewritten rm failed to remove all of
 # the files on SunOS4 when there were 254 or more in a directory.
 
-: ${RM=rm}
-
 : ${TMPDIR=.}
 
 if test "$VERBOSE" = yes; then
-  $RM --version
+  rm --version
   set -x
 fi
 
@@ -22,7 +20,7 @@ n=300
 i=$a
 echo "creating $n files in $tmp..."
 while :; do
-  > $tmp/$i || framework_fail=1
+  touch $tmp/$i || framework_fail=1
   test $i = $n && break
   i=`expr $i + 1`
 done
@@ -36,7 +34,7 @@ if test $framework_fail = 1; then
 fi
 
 fail=0
-$RM -rf $tmp || fail=1
+rm -rf $tmp || fail=1
 test -d $tmp && fail=1
 
 exit $fail
