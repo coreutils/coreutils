@@ -1,5 +1,5 @@
 /* dd -- convert a file while copying it.
-   Copyright (C) 85, 90, 91, 95, 96, 1997 Free Software Foundation, Inc.
+   Copyright (C) 85, 90, 91, 95, 96, 97, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@
 
 #include "human.h"
 #include "system.h"
+#include "closeout.h"
 #include "error.h"
 
 #ifndef SIGINFO
@@ -351,6 +352,7 @@ main (int argc, char **argv)
   if (show_version)
     {
       printf ("dd (%s) %s\n", GNU_PACKAGE, VERSION);
+      close_stdout ();
       exit (0);
     }
 
@@ -1137,6 +1139,7 @@ by w for x2, by b for x512, by k for x1024.  Each KEYWORD may be:\n\
   sync      pad every input block with NULs to ibs-size\n\
 "));
       puts (_("\nReport bugs to <fileutils-bugs@gnu.org>."));
+      close_stdout ();
     }
   exit (status);
 }

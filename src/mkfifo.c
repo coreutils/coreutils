@@ -1,5 +1,5 @@
 /* mkfifo -- make fifo's (named pipes)
-   Copyright (C) 90, 91, 95, 96, 1997 Free Software Foundation, Inc.
+   Copyright (C) 90, 91, 95, 96, 97, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@
 
 #include "system.h"
 #include "modechange.h"
+#include "closeout.h"
 #include "error.h"
 
 /* The name this program was run with. */
@@ -66,6 +67,7 @@ Create named pipes (FIFOs) with the given NAMEs.\n\
       --version     output version information and exit\n\
 "));
       puts (_("\nReport bugs to <fileutils-bugs@gnu.org>."));
+      close_stdout ();
     }
   exit (status);
 }
@@ -107,6 +109,7 @@ main (int argc, char **argv)
   if (show_version)
     {
       printf ("mkfifo (%s) %s\n", GNU_PACKAGE, VERSION);
+      close_stdout ();
       exit (0);
     }
 

@@ -1,5 +1,5 @@
 /* `ln' program to create links between files.
-   Copyright (C) 86, 89, 90, 91, 95, 96, 1997 Free Software Foundation, Inc.
+   Copyright (C) 86, 89, 90, 91, 95, 96, 97, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@
 
 #include "system.h"
 #include "backupfile.h"
+#include "closeout.h"
 #include "error.h"
 
 int link ();			/* Some systems don't declare this anywhere. */
@@ -353,6 +354,7 @@ version control may be set with VERSION_CONTROL, values are:\n\
   never, simple   always make simple backups\n\
 "));
       puts (_("\nReport bugs to <fileutils-bugs@gnu.org>."));
+      close_stdout ();
     }
   exit (status);
 }
@@ -429,6 +431,7 @@ main (int argc, char **argv)
   if (show_version)
     {
       printf ("ln (%s) %s\n", GNU_PACKAGE, VERSION);
+      close_stdout ();
       exit (0);
     }
 
@@ -499,5 +502,7 @@ main (int argc, char **argv)
 	errors += do_link (argv[optind], to);
     }
 
+  if (verbose)
+    close_stdout ();
   exit (errors != 0);
 }

@@ -1,5 +1,5 @@
 /* `rm' file deletion utility for GNU.
-   Copyright (C) 88, 90, 91, 94, 95, 96, 1997 Free Software Foundation, Inc.
+   Copyright (C) 88, 90, 91, 94, 95, 96, 97, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -51,6 +51,7 @@
 
 #include "save-cwd.h"
 #include "system.h"
+#include "closeout.h"
 #include "error.h"
 #include "obstack.h"
 #include "hash.h"
@@ -307,6 +308,7 @@ Remove (unlink) the FILE(s).\n\
       --version         output version information and exit\n\
 "));
       puts (_("\nReport bugs to <fileutils-bugs@gnu.org>."));
+      close_stdout ();
     }
   exit (status);
 }
@@ -992,6 +994,7 @@ main (int argc, char **argv)
   if (show_version)
     {
       printf ("rm (%s) %s\n", GNU_PACKAGE, VERSION);
+      close_stdout ();
       exit (0);
     }
 
@@ -1040,5 +1043,7 @@ main (int argc, char **argv)
   hash_free (active_dir_map);
 #endif
 
+  if (verbose)
+    close_stdout ();
   exit (fail);
 }

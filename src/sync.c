@@ -1,5 +1,5 @@
 /* sync - update the super block
-   Copyright (C) 94, 95, 96, 1997 Free Software Foundation, Inc.
+   Copyright (C) 94, 95, 96, 97, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@
 
 #include "system.h"
 #include "long-options.h"
+#include "closeout.h"
 #include "error.h"
 
 /* The name this program was run with. */
@@ -44,6 +45,7 @@ Force changed blocks to disk, update the super block.\n\
   --version   output version information and exit\n\
 "));
       puts (_("\nReport bugs to <fileutils-bugs@gnu.org>."));
+      close_stdout ();
     }
   exit (status);
 }

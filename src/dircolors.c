@@ -1,6 +1,6 @@
 /* dircolors - output commands to set the LS_COLOR environment variable
    Copyright (C) 1994, 1995, 1997 H. Peter Anvin
-   Copyright (C) 96, 1997 Free Software Foundation, Inc.
+   Copyright (C) 96, 97, 1998 Free Software Foundation, Inc.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 #include "system.h"
 #include "getline.h"
 #include "long-options.h"
+#include "closeout.h"
 #include "error.h"
 #include "obstack.h"
 #include "dircolors.h"
@@ -114,6 +115,7 @@ file types and extensions.  Otherwise, a precompiled database is used.\n\
 For details on the format of these files, run `dircolors --print-database'.\n\
 "));
       puts (_("\nReport bugs to <fileutils-bugs@gnu.org>."));
+      close_stdout ();
     }
 
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
@@ -516,8 +518,7 @@ dircolors' internal database"));
 	}
     }
 
-  if (fclose (stdout) == EOF)
-    error (EXIT_FAILURE, errno, _("write error"));
+  close_stdout ();
 
   if (have_read_stdin && fclose (stdin) == EOF)
     error (EXIT_FAILURE, errno, _("standard input"));

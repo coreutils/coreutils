@@ -1,5 +1,5 @@
 /* du -- summarize disk usage
-   Copyright (C) 88, 89, 90, 91, 95, 96, 1997 Free Software Foundation, Inc.
+   Copyright (C) 88, 89, 90, 91, 95, 96, 97, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -54,6 +54,7 @@
 #include "exclude.h"
 #include "system.h"
 #include "save-cwd.h"
+#include "closeout.h"
 #include "error.h"
 #include "human.h"
 #include "xstrtol.h"
@@ -238,6 +239,7 @@ Summarize disk usage of each FILE, recursively for directories.\n\
       --version         output version information and exit\n\
 "));
       puts (_("\nReport bugs to <fileutils-bugs@gnu.org>."));
+      close_stdout ();
     }
   exit (status);
 }
@@ -372,6 +374,7 @@ main (int argc, char **argv)
   if (show_version)
     {
       printf ("du (%s) %s\n", GNU_PACKAGE, VERSION);
+      close_stdout ();
       exit (0);
     }
 
@@ -405,6 +408,7 @@ main (int argc, char **argv)
 
   du_files (optind == argc ? cwd_only : argv + optind);
 
+  close_stdout ();
   exit (exit_status);
 }
 

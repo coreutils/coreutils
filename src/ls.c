@@ -1,5 +1,5 @@
 /* `dir', `vdir' and `ls' directory listing programs for GNU.
-   Copyright (C) 85, 88, 90, 91, 95, 96, 1997 Free Software Foundation, Inc.
+   Copyright (C) 85, 88, 90, 91, 95, 96, 97, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -65,6 +65,7 @@
 
 #include "obstack.h"
 #include "ls.h"
+#include "closeout.h"
 #include "error.h"
 #include "human.h"
 #include "argmatch.h"
@@ -698,6 +699,7 @@ main (int argc, char **argv)
 	      (ls_mode == LS_LS ? "ls"
 	       : (ls_mode == LS_MULTI_COL ? "dir" : "vdir")),
 	      GNU_PACKAGE, VERSION);
+      close_stdout ();
       exit (EXIT_SUCCESS);
     }
 
@@ -782,9 +784,6 @@ main (int argc, char **argv)
       dired_dump_obstack ("//SUBDIRED//", quoting_style, &subdired_obstack);
     }
 
-  if (fclose (stdout) == EOF)
-    error (EXIT_FAILURE, errno, _("write error"));
-
   /* Restore default color before exiting */
   if (print_with_color)
     {
@@ -792,6 +791,7 @@ main (int argc, char **argv)
       put_indicator (&color_indicator[C_RIGHT]);
     }
 
+  close_stdout ();
   exit (exit_status);
 }
 
@@ -2990,6 +2990,7 @@ optional WHEN argument is equivalent to using --color=always.  With\n\
 to a terminal (tty).\n\
 "));
       puts (_("\nReport bugs to <fileutils-bugs@gnu.org>."));
+      close_stdout ();
     }
   exit (status);
 }
