@@ -133,12 +133,6 @@ Adapt these contribution guidelines for coreutils:
   http://sources.redhat.com/automake/contribute.html
 
 
-Bug-fix changes expected to go in, right after 5.2.0:
-====================================================
-
-  expr patch from Paul Eggert
-
-
 Changes expected to go in, post-5.2.1:
 ======================================
 
