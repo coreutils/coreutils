@@ -1612,8 +1612,11 @@ keycompare (const struct line *a, const struct line *b)
 	      int x;
 
 	      x = nls_month_is_either_locale (texta, lena);
-	      if (nls_month_found = !nls_months_collide[x])
-		diff = x - getmonth (textb, lenb);
+	      nls_month_found = !nls_months_collide[x];
+	      if (nls_month_found)
+		{
+		  diff = x - getmonth (textb, lenb);
+		}
 	      else
 		{
 		  diff = nls_month_is_either_locale (textb, lenb);
