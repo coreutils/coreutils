@@ -1232,7 +1232,7 @@ Enable RTS/CTS flow control.  Non-POSIX.  May be negated.
 @item ignbrk
 @opindex ignbrk
 @cindex breaks, ignoring
-Ignore breaks.  May be negated.
+Ignore break characters.  May be negated.
 
 @item brkint
 @opindex brkint
@@ -1242,7 +1242,7 @@ Make breaks cause an interrupt signal.  May be negated.
 @item ignpar
 @opindex ignpar
 @cindex parity, ignoring
-Ignore parity errors.  May be negated.
+Ignore characters with parity errors.  May be negated.
 
 @item parmrk
 @opindex parmrk
