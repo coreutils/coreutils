@@ -800,7 +800,9 @@ append_equiv_class (list, equiv_class_str, len)
   return 0;
 }
 
-/* Return a newly allocated copy of the substring P[FIRST_IDX..LAST_IDX].  */
+/* Return a newly allocated copy of the substring P[FIRST_IDX..LAST_IDX].
+   The returned string has length LAST_IDX - FIRST_IDX + 1, may contain
+   NUL bytes, and is not NUL-terminated.  */
 
 static unsigned char *
 substr (p, first_idx, last_idx)
@@ -812,9 +814,9 @@ substr (p, first_idx, last_idx)
   unsigned char *tmp = (unsigned char *) xmalloc (len + 1);
 
   assert (first_idx <= last_idx);
-  /* We must use bcopy or memcpy rather than strncpy
-     because `p' may contain zero-bytes.  */
-  bcopy (p + first_idx, tmp, len);
+  /* Use memcpy rather than strncpy because `p' may contain zero-bytes.  */
+  memcpy (tmp, p + first_idx, len);
+  /* FIXME: then why nul-terminate.  */
   tmp[len] = '\0';
   return tmp;
 }
@@ -1210,7 +1212,7 @@ card_of_complement (s)
   int cardinality = N_CHARS;
   SET_TYPE in_set[N_CHARS];
 
-  bzero (in_set, N_CHARS * sizeof (in_set[0]));
+  memset (in_set, 0, N_CHARS * sizeof (in_set[0]));
   s->state = BEGIN_STATE;
   while ((c = get_next (s, NULL)) != -1)
     if (!in_set[c]++)
@@ -1694,7 +1696,7 @@ set_initialize (s, complement_this_set, in_set)
   int c;
   int i;
 
-  bzero (in_set, N_CHARS * sizeof (in_set[0]));
+  memset (in_set, 0, N_CHARS * sizeof (in_set[0]));
   s->state = BEGIN_STATE;
   while ((c = get_next (s, NULL)) != -1)
     in_set[c] = 1;
