@@ -31,8 +31,7 @@ void free ();
 /* Initialize linebuffer LINEBUFFER for use. */
 
 void
-initbuffer (linebuffer)
-     struct linebuffer *linebuffer;
+initbuffer (struct linebuffer *linebuffer)
 {
   linebuffer->length = 0;
   linebuffer->size = 200;
@@ -45,9 +44,7 @@ initbuffer (linebuffer)
    Otherwise, return LINEBUFFER.  */
 
 struct linebuffer *
-readline (linebuffer, stream)
-     struct linebuffer *linebuffer;
-     FILE *stream;
+readline (struct linebuffer *linebuffer, FILE *stream)
 {
   int c;
   char *buffer = linebuffer->buffer;
@@ -88,8 +85,7 @@ readline (linebuffer, stream)
 /* Free linebuffer LINEBUFFER and its data, all allocated with malloc. */
 
 void
-freebuffer (linebuffer)
-     struct linebuffer *linebuffer;
+freebuffer (struct linebuffer *linebuffer)
 {
   free (linebuffer->buffer);
   free (linebuffer);
