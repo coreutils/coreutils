@@ -2185,11 +2185,13 @@ Without this option, when tail encounters a file that doesn't
 exist or is otherwise inaccessible, it reports that fact and
 never checks it again.
 
-@itemx --sleep-interval=@var{n}
+@itemx --sleep-interval=@var{number}
 @opindex --sleep-interval
-Change the number of seconds to wait between iterations (the default is 1).
+Change the number of seconds to wait between iterations (the default is 1.0).
 During one iteration, every specified file is checked to see if it has
-changed size.
+Historical implementations of @command{tail} have required that
+@var{number} be an integer.  However, GNU @command{tail} accepts
+an arbitrary floating point number.
 
 @itemx --pid=@var{pid}
 @opindex --pid
