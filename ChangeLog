@@ -1,6 +1,10 @@
-2004-06-09  Jim Meyering  <jim@meyering.net>
+2004-06-11  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	* src/who.c (list_entries_who): Don't output a trailing space.
+
+2004-06-09  Jim Meyering  <jim@meyering.net>
 
 	* src/touch.c (usage): Improve wording in description of the
 	--time=WORD option.  Reported by Dan Jacobson.
