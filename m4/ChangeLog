@@ -1,5 +1,25 @@
 2003-09-12  Paul Eggert  <eggert@twinsun.com>
 
+	More patches to assume C89 or better.
+
+	* mkstemp.m4 (jm_PREREQ_TEMPNAME): Do not require standard C headers.
+	* strdup.m4 (gl_PREREQ_STRDUP): Likewise.
+	* userspec.m4 (gl_USERSPEC): Likewise.
+	* xalloc.m4 (gl_PREREQ_XMALLOC): Likewise.
+	* xstrtod.m4 (gl_XSTRTOD): Likewise.
+	* xstrtol.m4 (gl_PREREQ_XSTRTOL): Likewise.
+	* strftime.m4 (_jm_STRFTIME_PREREQS): Don't check for limits.h,
+	memcpy, memset.
+	(jm_FUNC_GNU_STRFTIME): Don't require standard C headers.
+	* strtod.m4 (gl_FUNC_STRTOD): Do not check for float.h.
+	* strtoimax.m4 (gl_PREREQ_STRTOIMAX): Do not check for stdlib.h, strtol.
+	* strtol.m4 (gl_FUNC_STRTOL): Do not check for limits.h.
+	* userspec.m4 (gl_USERSPEC): Do not check for string.h.
+	* xstrtol.m4 (gl_PREREQ_XSTRTOL): Do not check for string.h, strtol,
+	strtoul.
+
+2003-09-12  Paul Eggert  <eggert@twinsun.com>
+
 	* error.m4 (gl_ERROR): Don't check for vprintf.
 	Require AC_FUNC_STRERROR_R rather than invoking it.
 
