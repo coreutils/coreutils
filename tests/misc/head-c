@@ -1,0 +1,32 @@
+#!/bin/sh
+# exercize the fix of 2001-08-18, based on test case from Ian Bruce
+
+if test "$VERBOSE" = yes; then
+  set -x
+  head --version
+fi
+
+pwd=`pwd`
+tmp=head-c.$$
+trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
+trap '(exit $?); exit' 1 2 13 15
+
+framework_failure=0
+mkdir $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+echo abc > in || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo 'failure in testing framework' 1>&2
+  (exit 1); exit
+fi
+
+fail=0
+
+(head -c1; head -c1) < in > out || fail=1
+case "`cat out`" in
+  ab) ;;
+  *) fail=1 ;;
+esac
+
+(exit $fail); exit
