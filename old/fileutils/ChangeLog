@@ -1,5 +1,7 @@
 2000-12-02  Jim Meyering  <meyering@lucent.com>
 
+	* tests/dd/skip-seek: Remove test #2, now that support for the
+	`B' suffix is gone.
 	* tests/dd/Makefile.am (TESTS): Add skip-seek2
 	* tests/dd/skip-seek2: New file.
 
