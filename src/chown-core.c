@@ -306,7 +306,7 @@ change_file_owner (FTS *fts, FTSENT *ent,
    If REQUIRED_UID and/or REQUIRED_GID is not -1, then change only
    files with user ID and group ID that match the non-(-1) value(s).
    Return true if successful.  */
-bool
+extern bool
 chown_files (char **files, int bit_flags,
 	     uid_t uid, gid_t gid,
 	     uid_t required_uid, gid_t required_gid,
