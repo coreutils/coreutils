@@ -6,3 +6,4 @@ t*.exp
 join-tests
 build-script
 Makefile
+mk-script
