@@ -15,7 +15,9 @@ pwd=`pwd`
 dir=cpmvbak-$$
 actual=$dir/actual
 expected=$dir/expected
-trap "cd $pwd; rm -rf $dir" 0 1 2 3 15
+
+# Be careful to close $actual before removing the containing directory.
+trap "cd $pwd; exec 1<&-; rm -rf $dir" 0 1 2 3 15
 
 mkdir $dir
 unset VERSION_CONTROL SIMPLE_BACKUP_SUFFIX
