@@ -230,7 +230,7 @@ xfields (struct line *line)
 	}
     }
 
-  if (ptr > line->beg && ((tab && ISSPACE (ptr[-1])) || ptr[-1] == tab))
+  if (ptr > line->beg && ((!tab && ISSPACE (ptr[-1])) || ptr[-1] == tab))
     {
       /* Add one more (empty) field because the last character of the
 	 line was a delimiter.  */
