@@ -36,10 +36,6 @@
 # define _(Text) Text
 #endif
 
-#ifndef EXIT_BADARG
-# define EXIT_BADARG 1
-#endif
-
 #include "quotearg.h"
 
 /* When reporting a failing argument, make sure to show invisible
@@ -181,41 +177,10 @@ argmatch_valid (const char *const *arglist,
   putc ('\n', stderr);
 }
 
-/* Call __argmatch_internal, but handle the error so that it never
-   returns.  Errors are reported to the users with a list of valid
-   values.
-
-   KIND is a description of the type of entity that was being matched.
-   ARG, ARGLIST, and SENSITIVE are the same as in __argmatch_internal
-   VALIST, and VALSIZE are the same as in valid_args */
-int
-__xargmatch_internal (const char *kind, const char *arg,
-		      const char *const *arglist,
-		      const char *vallist, size_t valsize,
-		      int case_sensitive)
-{
-  int i;
-
-  i = __argmatch_internal (arg, arglist, vallist, valsize, case_sensitive);
-  if (i >= 0)
-    {
-      /* Success */
-      return i;
-    }
-  else
-    {
-      /* Failure */
-      argmatch_invalid (kind, arg, i);
-      argmatch_valid (arglist, vallist, valsize);
-      exit (EXIT_BADARG);
-    }
-  return -1; 	/* To please some compilers */
-}
-
 /* Look for VALUE in VALLIST, an array of objects of size VALSIZE and
    return the first corresponding argument in ARGLIST */
 const char *
-argmatch_to_argument (char *value,
+argmatch_to_argument (const char *value,
 		      const char *const *arglist,
 		      const char *vallist, size_t valsize)
 {
