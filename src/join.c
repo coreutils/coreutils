@@ -685,7 +685,7 @@ add_field_list (const char *c_str)
   char *p, *str;
 
   /* Make a writable copy of c_str.  */
-  str = (char *) alloca (strlen (c_str) + 1);
+  str = alloca (strlen (c_str) + 1);
   strcpy (str, c_str);
 
   p = str;
