@@ -1,4 +1,7 @@
 Changes in release 4.01:
+[4.0.42]
+* Using ls's short-named `-H' option evokes the warning that the
+   meaning of `-H' will soon change.  Use `--si' instead.
 [4.0.41]
 * fix bug in rm introduced in 4.0.38: `chmod 0 f; rm f' would no longer prompt
     before removal.
