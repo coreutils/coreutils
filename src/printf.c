@@ -63,13 +63,14 @@
 #include "version.h"
 #include "long-options.h"
 
-#if !defined (isascii) || defined (STDC_HEADERS)
-#undef isascii
-#define isascii(c) 1
+#if defined (STDC_HEADERS) || (!defined (isascii) && !defined (HAVE_ISASCII))
+#define ISASCII(c) 1
+#else
+#define ISASCII(c) isascii(c)
 #endif
 
-#define ISDIGIT(c) (isascii (c) && isdigit (c))
-#define ISXDIGIT(c) (isascii (c) && isxdigit (c))
+#define ISDIGIT(c) (ISASCII (c) && isdigit (c))
+#define ISXDIGIT(c) (ISASCII (c) && isxdigit (c))
 
 #ifndef STDC_HEADERS
 double strtod ();

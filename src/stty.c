@@ -428,7 +428,7 @@ wrapf (message, va_alist)
   vsprintf (buf, message, args);
   va_end (args);
   buflen = strlen (buf);
-  if (current_col + buflen >= max_col)
+  if (current_col + (current_col > 0) + buflen >= max_col)
     {
       putchar ('\n');
       current_col = 0;
@@ -624,6 +624,7 @@ main (argc, argv)
      char **argv;
 {
   struct termios mode;
+  struct termios new_mode;
   enum output_type output_type = changed;
   int optc;
 
@@ -661,6 +662,9 @@ done:;
   if (show_help)
     usage (0);
 
+  /* Initialize to all zeroes so there is no risk memcmp will report a
+     spurious difference in uninitialized portion of the structure.  */
+  bzero (&mode, sizeof (mode));
   if (tcgetattr (0, &mode))
     error (1, errno, "standard input");
 
@@ -794,6 +798,29 @@ done:;
 
   if (tcsetattr (0, TCSADRAIN, &mode))
     error (1, errno, "standard input");
+
+  /* POSIX (according to Zlotnick's book) tcsetattr returns zero if it
+     performs *any* of the requested operations.  This means it can report
+     `success' when it has actually failed to perform some proper subset
+     of the requested operations.  To detect this partial failure, get the
+     current terminal attributes and compare them to the requested ones.  */
+
+  /* Initialize to all zeroes so there is no risk memcmp will report a
+     spurious difference in uninitialized portion of the structure.  */
+  bzero (&new_mode, sizeof (new_mode));
+  if (tcgetattr (0, &new_mode))
+    error (1, errno, "standard input");
+
+  /* Normally, one shouldn't use memcmp to compare structures that
+     may have `holes' containing uninitialized data, but we have been
+     careful to initialize the storage of these two variables to all
+     zeroes.  One might think it more efficient simply to compare the
+     modified fields, but that would require enumerating those fields --
+     and not all systems have the same fields in this structure.  */
+
+  if (memcmp (&mode, &new_mode, sizeof (mode)) != 0)
+    error (1, 0,
+	   "standard input: unable to perform all requested operations");
 
   exit (0);
 }

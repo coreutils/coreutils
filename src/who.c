@@ -297,15 +297,17 @@ print_entry (this)
       last_change = 0;
     }
   
-  printf ("%-*.*s",
-	  (int) sizeof (this->ut_name), (int) sizeof (this->ut_name),
-	  this->ut_name);
+  printf ("%-8.*s", (int) sizeof (this->ut_name), this->ut_name);
   if (include_mesg)
     printf ("  %c  ", mesg);
-  printf (" %-*.*s",
-	  (int) sizeof (this->ut_line), (int) sizeof (this->ut_line),
-	  this->ut_line);
+  printf (" %-8.*s", (int) sizeof (this->ut_line), this->ut_line);
+
+#ifdef HAVE_UTMPX_H
+  printf (" %-12.12s", ctime (&this->ut_tv.tv_sec) + 4);
+#else
   printf (" %-12.12s", ctime (&this->ut_time) + 4);
+#endif
+
   if (include_idle)
     {
       if (last_change)
@@ -362,12 +364,10 @@ list_entries (n)
 static void
 print_heading ()
 {
-  STRUCT_UTMP *ut;
-
-  printf ("%-*s ", (int) sizeof (ut->ut_name), "USER");
+  printf ("%-8s ", "USER");
   if (include_mesg)
     printf ("MESG ");
-  printf ("%-*s ", (int) sizeof (ut->ut_line), "LINE");
+  printf ("%-8s ", "LINE");
   printf ("LOGIN-TIME   ");
   if (include_idle)
     printf ("IDLE  ");

@@ -1,3 +1,8 @@
+User visible changes in release 1.9.2:
+* fix a minor problem in formatting of output from `stty -a'
+* yes with arguments outputs newlines again
+* partial stty failures are reported
+
 Major changes in release 1.9.1:
 * stty can be built on Suns again
 * minor fix for who -q
