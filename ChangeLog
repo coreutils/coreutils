@@ -2,6 +2,10 @@
 
 	* Version 5.3.1.
 
+	* src/test.c (is_int): Don't overflow when evaluating integer
+	constants.  Before, ./test $(echo 2^64|bc) -eq 0 && echo FAIL
+	would print `FAIL'.
+
 	* tests/Fetish.pm (run_tests): Add code (if-0'd out) to detect
 	names of temporary files that would clash on 8.3 file systems.
 	* tests/mk-script (validate): Likewise.
