@@ -1,5 +1,5 @@
 /* pr -- convert text files for printing.
-   Copyright (C) 88, 91, 1995-2004 Free Software Foundation, Inc.
+   Copyright (C) 88, 91, 1995-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -1329,7 +1329,7 @@ init_fps (int number_of_files, char **av)
 
   if (column_vector != NULLCOL)
     free (column_vector);
-  column_vector = xmalloc (columns * sizeof (COLUMN));
+  column_vector = xnmalloc (columns, sizeof (COLUMN));
 
   if (parallel_files)
     {
