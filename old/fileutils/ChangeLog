@@ -1,3 +1,9 @@
+Tue Sep  3 08:13:09 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/rpmatch.c (rpmatch): Set yesexpr to "^[yY]" and noexpr to
+	"^[nN]"; this conforms to POSIX.2. From Paul Eggert
+	<eggert@twinsun.com>.
+
 Mon Sep  2 10:59:10 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* POTFILES.in: Add lib/rpmatch.c.
