@@ -159,6 +159,10 @@ canonicalize_file_name (const char *name)
     }
 
   free (extra_buf);
+
+  /* NUL-terminate the resulting name.  */
+  resolved[resolved_len] = '\0';
+
   return resolved;
 
 #else /* !HAVE_RESOLVEPATH */
