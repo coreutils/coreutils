@@ -1,6 +1,11 @@
-2003-08-18  Jim Meyering  <jim@meyering.net>
+2003-08-19  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.91.
+
+	* src/system.h: Include stdlib.h unconditionally,
+	as we're now assuming that part of hosted C89.
+
+2003-08-18  Jim Meyering  <jim@meyering.net>
 
 	* src/sys2.h (textdomain, bindtextdomain) [! ENABLE_NLS]: Define away,
 	to avoid warnings from gcc.
