@@ -86,6 +86,10 @@ long int strtol ();
 unsigned long int strtoul ();
 #endif
 
+#ifndef strtoimax
+intmax_t strtoimax ();
+#endif
+
 #ifndef strtoumax
 uintmax_t strtoumax ();
 #endif
