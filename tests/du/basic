@@ -20,8 +20,12 @@ mkdir -p $tmp || framework_failure=1
 cd $tmp || framework_failure=1
 mkdir -p a/b d d/sub || framework_failure=1
 printf 'make-sure-the-file-is-non-empty\n' > a/b/F || framework_failure=1
-echo nonempty-file > d/1
-echo nonempty-file > d/sub/2
+
+# Ensure that these files contain more than 64 bytes, so that we don't
+# immediately disqualify file systems (e.g., NetApp) on which smaller
+# files take up zero disk blocks.
+seq 200 > d/1
+seq 200 > d/sub/2
 
 if test $framework_failure = 1; then
   echo "$0: failure in testing framework" 1>&2
