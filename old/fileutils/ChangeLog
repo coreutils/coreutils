@@ -1,3 +1,7 @@
+1999-11-27  Jim Meyering  <meyering@ascend.com>
+
+	* Version 4.0i.
+
 1999-11-22  Paul Eggert  <eggert@twinsun.com>
 
 	* src/df.c (df_readable): Now returns char const *, not char *.
