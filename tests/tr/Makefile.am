@@ -41,6 +41,9 @@ $(srcdir)/$x-tests: $(mk_script) Test.pm
 MAINTAINERCLEANFILES = $x-tests $(maint_gen)
 CLEANFILES = $(run_gen)
 
+TESTS_ENVIRONMENT = \
+  PATH="`pwd`/../../src$(PATH_SEPARATOR)$$PATH"
+
 check: $(maint_gen)
 
 $(srcdir)/Makefile.am: ../Makefile.am.in Test.pm $(mk_script)
