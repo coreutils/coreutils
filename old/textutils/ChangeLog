@@ -7,8 +7,9 @@
 	* src/tr.c (xmemdup): Rename from `substr' and rewrite to
 	take only pointer/length parameters.
 	(build_spec_list): Update sole caller.
-	Before calling xmemdup, compute operand length and fail if it's zero.
-	Pawel Prokop reported that `tr [::] _' elicits a failed assertion.
+	Properly diagnose the invalid specs [::] and [==].
+	Pawel Prokop reported that `tr '[::]' x' elicits a failed assertion.
+	* tests/tr/Test.pm: Add tests for the above fix.
 
 2002-01-14  Paul Eggert  <eggert@twinsun.com>
 
