@@ -81,6 +81,17 @@ extern int errno;
 
 #define WX_USR (S_IWUSR | S_IXUSR)
 
+#if HAVE_LOCALE_H
+# include <locale.h>
+#endif
+
+#if ENABLE_NLS
+# include <libintl.h>
+# define _(Text) gettext (Text)
+#else
+# define _(Text) Text
+#endif
+
 #ifdef __MSDOS__
 typedef int uid_t;
 typedef int gid_t;
@@ -145,12 +156,12 @@ make_dir (const char *dir, const char *dirpath, mode_t mode, int *created_dir_p)
 
       if (stat (dir, &stats))
 	{
-	  error (0, errno, "cannot create directory `%s'", dirpath);
+	  error (0, errno, _("cannot create directory `%s'"), dirpath);
 	  fail = 1;
 	}
       else if (!S_ISDIR (stats.st_mode))
 	{
-	  error (0, 0, "`%s' exists but is not a directory", dirpath);
+	  error (0, 0, _("`%s' exists but is not a directory"), dirpath);
 	  fail = 1;
 	}
       else
@@ -309,7 +320,7 @@ make_path (const char *argpath,
 	     stat and mkdir process O(n^2) file name components.  */
 	  if (do_chdir && chdir (basename_dir) < 0)
 	    {
-	      error (0, errno, "cannot chdir to directory, %s", dirpath);
+	      error (0, errno, _("cannot chdir to directory, %s"), dirpath);
 	      CLEANUP;
 	      return 1;
 	    }
@@ -348,13 +359,13 @@ make_path (const char *argpath,
 #endif
 	      )
 	    {
-	      error (0, errno, "cannot chown %s", dirpath);
+	      error (0, errno, _("cannot chown %s"), dirpath);
 	      retval = 1;
 	    }
 	  /* chown may have turned off some permission bits we wanted.  */
 	  if ((mode & 07000) != 0 && chmod (basename_dir, mode))
 	    {
-	      error (0, errno, "cannot chmod %s", dirpath);
+	      error (0, errno, _("cannot chmod %s"), dirpath);
 	      retval = 1;
 	    }
 	}
@@ -382,7 +393,7 @@ make_path (const char *argpath,
 
       if (!S_ISDIR (stats.st_mode))
 	{
-	  error (0, 0, "`%s' exists but is not a directory", dirpath);
+	  error (0, 0, _("`%s' exists but is not a directory"), dirpath);
 	  return 1;
 	}
 
