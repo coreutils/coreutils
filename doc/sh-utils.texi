@@ -3144,7 +3144,11 @@ The program accepts the following options.  Also see @ref{Common options}.
 @cindex formatting of numbers in @code{seq}
 Print all numbers using @var{format}; default @samp{%g}.
 @var{format} must contain exactly one of the standarding float output
-formats @samp{%e}, @samp{%f}, or @samp{%g}.
+formats @samp{%e}, @samp{%f}, @samp{%g}, or integer output formats
+@samp{%d}, @samp{%u}, @samp{%o}, @samp{%x}, @samp{%X}.  However, currently
+the integer formats are restricted to those that take `int' arguments.
+That is, the `long' and `long long' variants like @samp{%ld} and @samp{%llu}
+are not supported.
 
 @item -s @var{string}
 @itemx --separator=@var{string}
