@@ -2,7 +2,7 @@
 
 /* Modified to run with the GNU shell by bfox. */
 
-/* Copyright (C) 1987-1993, 1994, 95, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1987-1996, 1997 Free Software Foundation, Inc.
 
    This file is part of GNU Bash, the Bourne Again SHell.
 
@@ -61,9 +61,8 @@ char *program_name;
 extern int errno;
 #endif
 
-#if !defined (STREQ)
-# define STREQ(a, b) ((a)[0] == (b)[0] && strcmp (a, b) == 0)
-#endif /* !STREQ */
+#undef STREQ
+#define STREQ(a, b) ((a)[0] == (b)[0] && strcmp (a, b) == 0)
 
 #if !defined (member)
 # define member(c, s) ((c) ? (strchr ((s), (c)) ? 1 : 0) : 0)
