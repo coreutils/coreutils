@@ -1,3 +1,8 @@
+2000-05-01  Jim Meyering  <meyering@lucent.com>
+
+	* src/install.c (change_attributes): Don't even attempt the chmod
+	if the chown fails.  Reported by Marc Olzheim.
+
 2000-04-30  Jim Meyering  <meyering@lucent.com>
 
 	* src/touch.c (O_NOCTTY): Define if not defined already.

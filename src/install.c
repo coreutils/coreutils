@@ -517,13 +517,6 @@ change_attributes (const char *path)
       err = 1;
     }
 
-  if (err)
-    {
-      error (0, 0, "removing file: `%s'", path);
-      if (unlink (path))
-	error (0, errno, "cannot remove `%s'", path);
-    }
-
   return err;
 }
 
