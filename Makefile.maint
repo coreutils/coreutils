@@ -70,6 +70,7 @@ syntax-check-rules = \
   sc_cast_of_x_alloc_return_value \
   sc_cast_of_alloca_return_value \
   sc_changelog \
+  sc_dd_max_sym_length \
   sc_error_exit_success \
   sc_prohibit_atoi_atof \
   sc_space_tab \
@@ -148,6 +149,21 @@ sc_changelog:
 	@grep '^[^12	]' $$(find . -name ChangeLog -maxdepth 2) &&	\
 	  { echo '$(ME): found unexpected prefix in a ChangeLog' 1>&2;	\
 	    exit 1; } || :
+
+# Ensure that dd's definition of LONGEST_SYMBOL stays in sync
+# with the strings from the two affected variables.
+dd_c = $(srcdir)/src/dd.c
+sc_dd_max_sym_length:
+	len=$$( (sed -n '/conversions\[\] =$$/,/^};/p' $(dd_c);	\
+		 sed -n '/flags\[\] =$$/,/^};/p' $(dd_c) )	\
+		|sed -n '/"/s/^[^"]*"\([^"]*\)".*/\1/p'		\
+              | wc --max-line-length);				\
+	max=$$(sed -n '/^#define LONGEST_SYMBOL /s///p' $(dd_c)	\
+	      |tr -d '"' | wc --max-line-length);		\
+	if test "$$len" = "$$max"; then :; else			\
+	  echo 'dd.c: LONGEST_SYMBOL is not longest' 1>&2;	\
+	  exit 1;						\
+	fi
 
 header_regexp = \
   alloca\
