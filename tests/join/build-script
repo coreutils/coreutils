@@ -25,11 +25,11 @@ while (<>)
 	die "$0: $.: duplicate test name \`$test_name'\n";
       }
     $seen{$test_name} = 1;
-    $in1 = "t$test_name.1"; 
-    $in2 = "t$test_name.2"; 
-    $log = "t$test_name.log"; 
-    $exp_name = 't' . $test_name . '.exp'; 
-    $out = "t$test_name.out"; 
+    $in1 = "t$test_name.1";
+    $in2 = "t$test_name.2";
+    $log = "t$test_name.log";
+    $exp_name = 't' . $test_name . '.exp';
+    $out = "t$test_name.out";
 
     open(IN, ">$in1") || die "Couldn't open $in1 for writing.\n";
     print IN $f1;
