@@ -722,56 +722,56 @@ Display file or filesystem status.\n\
       fputs (_("\n\
 The valid format sequences for files (without --filesystem):\n\
 \n\
-  %A - Access rights in human readable form\n\
-  %a - Access rights in octal\n\
-  %b - Number of blocks allocated\n\
+  %A   Access rights in human readable form\n\
+  %a   Access rights in octal\n\
+  %b   Number of blocks allocated\n\
 "), stdout);
       fputs (_("\
-  %D - Device number in hex\n\
-  %d - Device number in decimal\n\
-  %F - File type\n\
-  %f - raw mode in hex\n\
-  %G - Group name of owner\n\
-  %g - Group ID of owner\n\
+  %D   Device number in hex\n\
+  %d   Device number in decimal\n\
+  %F   File type\n\
+  %f   raw mode in hex\n\
+  %G   Group name of owner\n\
+  %g   Group ID of owner\n\
 "), stdout);
       fputs (_("\
-  %h - Number of hard links\n\
-  %i - Inode number\n\
-  %N - Quoted File name with dereference if symbolic link\n\
-  %n - File name\n\
-  %o - IO block size\n\
-  %s - Total size, in bytes\n\
-  %T - Minor device type in hex\n\
-  %t - Major device type in hex\n\
+  %h   Number of hard links\n\
+  %i   Inode number\n\
+  %N   Quoted File name with dereference if symbolic link\n\
+  %n   File name\n\
+  %o   IO block size\n\
+  %s   Total size, in bytes\n\
+  %T   Minor device type in hex\n\
+  %t   Major device type in hex\n\
 "), stdout);
       fputs (_("\
-  %U - User name of owner\n\
-  %u - User ID of owner\n\
-  %X - Time of last access as seconds since Epoch\n\
-  %x - Time of last access\n\
-  %Y - Time of last modification as seconds since Epoch\n\
-  %y - Time of last modification\n\
-  %Z - Time of last change as seconds since Epoch\n\
-  %z - Time of last change\n\
+  %U   User name of owner\n\
+  %u   User ID of owner\n\
+  %X   Time of last access as seconds since Epoch\n\
+  %x   Time of last access\n\
+  %Y   Time of last modification as seconds since Epoch\n\
+  %y   Time of last modification\n\
+  %Z   Time of last change as seconds since Epoch\n\
+  %z   Time of last change\n\
 \n\
 "), stdout);
 
       fputs (_("\
 Valid format sequences for file systems:\n\
 \n\
-  %a - Free blocks available to non-superuser\n\
-  %b - Total data blocks in file system\n\
-  %c - Total file nodes in file system\n\
-  %d - Free file nodes in file system\n\
-  %f - Free blocks in file system\n\
+  %a   Free blocks available to non-superuser\n\
+  %b   Total data blocks in file system\n\
+  %c   Total file nodes in file system\n\
+  %d   Free file nodes in file system\n\
+  %f   Free blocks in file system\n\
 "), stdout);
       fputs (_("\
-  %i - File System id in hex\n\
-  %l - Maximum length of filenames\n\
-  %n - File name\n\
-  %s - Optimal transfer block size\n\
-  %T - Type in human readable form\n\
-  %t - Type in hex\n\
+  %i   File System id in hex\n\
+  %l   Maximum length of filenames\n\
+  %n   File name\n\
+  %s   Optimal transfer block size\n\
+  %T   Type in human readable form\n\
+  %t   Type in hex\n\
 "), stdout);
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
