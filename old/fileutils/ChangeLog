@@ -1,4 +1,18 @@
+2002-04-25  Jim Meyering  <meyering@lucent.com>
+
+	* intl/: Remove directory.
+	* Makefile.am (SUBDIRS): Remove intl.
+	(DISTCLEANFILES): Remove definition.
+
+	* src/sys2.h: Remove ENABLE_NLS-related code.
+	(_, N_) Remove definitions.
+	Include "gettext.h" instead.
+
+	* src/Makefile.am (INCLUDES): Remove -I../intl.
+
 2002-04-22  Jim Meyering  <meyering@lucent.com>
+
+	* src/remove.c (rm): Call exit with EXIT_FAILURE, not `1'.
 
 	* Version 4.1.9.
 
