@@ -1,3 +1,10 @@
+2000-06-26  Jim Meyering  <meyering@lucent.com>
+
+	`id -Gn' (invoked by groups) would fail without giving a diagnostic
+	on malconfigured systems.
+	* src/id.c (print_user): Give a diagnostic if number->name lookup fails.
+	(print_group): Likewise.
+
 2000-06-25  Jim Meyering  <meyering@lucent.com>
 
 	* configure.in (ALL_LINGUAS): Add Danish (da).
