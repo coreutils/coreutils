@@ -1,3 +1,7 @@
+2000-11-26  Paul Eggert  <eggert@twinsun.com>
+
+	* jm-macros.m4 (jm_MACROS): Do not check for fseeko; no longer used.
+
 2001-04-21  Jim Meyering  <meyering@lucent.com>
 
 	* rmdir-errno.m4: Write to a new file, so that a restrictive umask
