@@ -29,6 +29,11 @@
 
 #include <stdio.h>
 
+#include <errno.h>
+#ifndef errno
+extern int errno;
+#endif
+
 #if HAVE_ICONV
 # include <iconv.h>
 /* Name of UCS-4 encoding with machine dependent endianness and alignment.  */
