@@ -25,10 +25,10 @@
 #include "system.h"
 #include "error.h"
 
-static double scan_double_arg __P ((char *arg));
-static int check_format __P ((char *format_string));
+static double scan_double_arg __P ((const char *arg));
+static int check_format __P ((const char *format_string));
 static char *get_width_format __P ((void));
-static int print_numbers __P ((char *format_str));
+static int print_numbers __P ((const char *format_str));
 
 /* If nonzero print all number with equal width.  */
 static int equal_width;
@@ -37,13 +37,18 @@ static int equal_width;
 static char *format_str;
 
 /* The starting number.  */
-static double from;
+static double first;
 
 /* The name that this program was run with.  */
 char *program_name;
 
-/* The string used to separate two number.  */
+/* The string used to separate two numbers.  */
 static char *separator;
+
+/* The string output after all numbers have been output.
+   Usually "\n" or "\0".  */
+/* FIXME: make this an option.  */
+static char *terminator = "\n";
 
 /* If nonzero, display usage information and exit.  */
 static int show_help;
@@ -76,7 +81,7 @@ usage (int status)
   else
     {
       (void) printf (_("\
-Usage: %s [OPTION]... [from [step]] to\n\
+Usage: %s [OPTION]... [FIRST [step]] LAST\n\
 "), program_name);
       (void) printf (_("\
 \n\
@@ -109,7 +114,7 @@ main (int argc, char **argv)
   equal_width = 0;
   format_str = NULL;
   separator = "\n";
-  from = 1.0;
+  first = 1.0;
   step_is_set = 0;
 
   /* We have to handle negative numbers in the command line but this
@@ -170,7 +175,7 @@ main (int argc, char **argv)
 
   if (optind < argc)
     {
-      from = last;
+      first = last;
       last = scan_double_arg (argv[optind++]);
 
       if (optind < argc)
@@ -196,7 +201,7 @@ format string may not be specified when printing equal width strings"));
 
   if (!step_is_set)
     {
-      step = from <= last ? 1.0 : -1.0;
+      step = first <= last ? 1.0 : -1.0;
     }
 
   if (format_str != NULL)
@@ -225,7 +230,7 @@ format string may not be specified when printing equal width strings"));
    Return if the string is correct else signal error.  */
 
 static double
-scan_double_arg (char *arg)
+scan_double_arg (const char *arg)
 {
   char *end_ptr;
   double ret_val;
@@ -247,7 +252,7 @@ scan_double_arg (char *arg)
    Return 0 if not, 1 if correct.  */
 
 static int
-check_format (char *format_string)
+check_format (const char *format_string)
 {
   while (*format_string != '\0')
     {
@@ -308,15 +313,15 @@ get_width_format ()
   double min_val;
   double temp;
 
-  if (from > last)
+  if (first > last)
     {
-      min_val = from - step * floor ((from - last) / step);
-      max_val = from;
+      min_val = first - step * floor ((first - last) / step);
+      max_val = first;
     }
   else
     {
-      min_val = from;
-      max_val = from + step * floor ((last - from) / step);
+      min_val = first;
+      max_val = first + step * floor ((last - first) / step);
     }
 
   (void) sprintf (buffer, "%g", rint (max_val));
@@ -383,10 +388,12 @@ get_width_format (void)
 /* Actually print the sequence of numbers in the specified range, with the
    given or default stepping and format.  */
 static int
-print_numbers (char *format_str)
+print_numbers (const char *format_str)
 {
-  if (from > last)
+  if (first > last)
     {
+      int i;
+
       if (step >= 0)
 	{
 	  error (0, 0, _("invalid increment: %g"), step);
@@ -394,20 +401,21 @@ print_numbers (char *format_str)
 	  /* NOTREACHED */
 	}
 
-      while (1)
+      for (i = 0; /* empty */; i++)
 	{
-	  (void) printf (format_str, from);
+	  double x = first + i * step;
+	  printf (format_str, x);
 
-	  /* FIXME: don't increment!!!  Use `first + i * step'.  */
-	  from += step;
-	  if (from < last)
+	  if (x <= last)
 	    break;
 
-	  (void) fputs (separator, stdout);
+	  fputs (separator, stdout);
 	}
     }
   else
     {
+      int i;
+
       if (step <= 0)
 	{
 	  error (0, 0, _("invalid increment: %g"), step);
@@ -415,18 +423,18 @@ print_numbers (char *format_str)
 	  /* NOTREACHED */
 	}
 
-      while (1)
+      for (i = 0; /* empty */; i++)
 	{
-	  (void) printf (format_str, from);
+	  double x = first + i * step;
+	  printf (format_str, x);
 
-	  /* FIXME: don't increment!!!  Use `first + i * step'.  */
-	  from += step;
-	  if (from > last)
+	  if (x >= last)
 	    break;
 
-	  (void) fputs (separator, stdout);
+	  fputs (separator, stdout);
 	}
     }
+  fputs (terminator, stdout);
 
   return 0;
 }
