@@ -19,23 +19,23 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
 USA.  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+# include <config.h>
 #endif
 
 #include <errno.h>
 
 #if _LIBC || HAVE_STDLIB_H
-#include <stdlib.h>
+# include <stdlib.h>
 #endif
 #if _LIBC || HAVE_STRING_H
-#include <string.h>
+# include <string.h>
 #endif
 #if _LIBC || HAVE_UNISTD_H
-#include <unistd.h>
+# include <unistd.h>
 #endif
 
 #ifndef	HAVE_GNU_LD
-#define	__environ	environ
+# define	__environ	environ
 #endif
 
 int

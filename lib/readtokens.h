@@ -1,12 +1,12 @@
 #ifndef H_READTOKENS_H
-#define H_READTOKENS_H
+# define H_READTOKENS_H
 
-#ifndef INITIAL_TOKEN_LENGTH
-#define INITIAL_TOKEN_LENGTH 20
-#endif
+# ifndef INITIAL_TOKEN_LENGTH
+#  define INITIAL_TOKEN_LENGTH 20
+# endif
 
-#ifndef TOKENBUFFER_DEFINED
-#define TOKENBUFFER_DEFINED
+# ifndef TOKENBUFFER_DEFINED
+#  define TOKENBUFFER_DEFINED
 struct tokenbuffer
 {
   long size;
@@ -14,14 +14,14 @@ struct tokenbuffer
 };
 typedef struct tokenbuffer token_buffer;
 
-#endif /* not TOKENBUFFER_DEFINED */
+# endif /* not TOKENBUFFER_DEFINED */
 
-#undef __P
-#if defined (__STDC__) && __STDC__
-#define	__P(x) x
-#else
-#define	__P(x) ()
-#endif
+# undef __P
+# if defined (__STDC__) && __STDC__
+#  define	__P(x) x
+# else
+#  define	__P(x) ()
+# endif
 
 void init_tokenbuffer __P ((token_buffer *tokenbuffer));
 

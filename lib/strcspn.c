@@ -15,16 +15,16 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+# include <config.h>
 #endif
 
 #ifdef HAVE_STRING_H
-#include <string.h>
+# include <string.h>
 #else
-#include <strings.h>
-#ifndef strchr
-#define strchr index
-#endif
+# include <strings.h>
+# ifndef strchr
+#  define strchr index
+# endif
 #endif
 
 /* Return the length of the maximum inital segment of S

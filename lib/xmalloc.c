@@ -16,19 +16,19 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+# include <config.h>
 #endif
 
 #if __STDC__
-#define VOID void
+# define VOID void
 #else
-#define VOID char
+# define VOID char
 #endif
 
 #include <sys/types.h>
 
 #if STDC_HEADERS
-#include <stdlib.h>
+# include <stdlib.h>
 #else
 VOID *malloc ();
 VOID *realloc ();
@@ -44,7 +44,7 @@ void free ();
 #endif
 
 #ifndef EXIT_FAILURE
-#define EXIT_FAILURE 1
+# define EXIT_FAILURE 1
 #endif
 
 /* Exit value when the requested amount of memory is not available.

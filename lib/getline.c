@@ -42,17 +42,17 @@ getline (lineptr, n, stream)
 
 #else /* ! have getdelim */
 
-#define NDEBUG
-#include <assert.h>
+# define NDEBUG
+# include <assert.h>
 
-#if STDC_HEADERS
-# include <stdlib.h>
-#else
+# if STDC_HEADERS
+#  include <stdlib.h>
+# else
 char *malloc (), *realloc ();
-#endif
+# endif
 
 /* Always add at least this many bytes when extending the buffer.  */
-#define MIN_CHUNK 64
+# define MIN_CHUNK 64
 
 /* Read up to (and including) a TERMINATOR from STREAM into *LINEPTR
    + OFFSET (and null-terminate it). *LINEPTR is a pointer returned from

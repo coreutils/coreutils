@@ -62,19 +62,19 @@ USA.  */
 #endif
 
 #ifndef __P
-#if defined (__GNUC__) || (defined (__STDC__) && __STDC__)
-#define __P(args) args
-#else
-#define __P(args) ()
-#endif  /* GCC.  */
+# if defined (__GNUC__) || (defined (__STDC__) && __STDC__)
+#  define __P(args) args
+# else
+#  define __P(args) ()
+# endif  /* GCC.  */
 #endif  /* Not __P.  */
 
 #ifndef PTR
-#ifdef __STDC__
-#define PTR void *
-#else
-#define PTR char *
-#endif
+# ifdef __STDC__
+#  define PTR void *
+# else
+#  define PTR char *
+# endif
 #endif
 
 static unsigned int week __P((const struct tm *const, int, int));
@@ -96,9 +96,9 @@ static unsigned int week __P((const struct tm *const, int, int));
 #define	cpy(n, s)	add((n), memcpy((PTR) p, (PTR) (s), (n)))
 
 #ifdef _LIBC
-#define	fmt(n, args)	add((n), if (sprintf args != (n)) return 0)
+# define	fmt(n, args)	add((n), if (sprintf args != (n)) return 0)
 #else
-#define	fmt(n, args)	add((n), sprintf args; if (strlen (p) != (n)) return 0)
+# define	fmt(n, args)	add((n), sprintf args; if (strlen (p) != (n)) return 0)
 #endif
 
 

@@ -18,19 +18,19 @@
 /* Written by David MacKenzie <djm@gnu.ai.mit.edu> */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+# include <config.h>
 #endif
 
 #ifndef SHELLS_FILE
 /* File containing a list of nonrestricted shells, one per line. */
-#define SHELLS_FILE "/etc/shells"
+# define SHELLS_FILE "/etc/shells"
 #endif
 
 #include <stdio.h>
 #include <ctype.h>
 
 #ifdef STDC_HEADERS
-#include <stdlib.h>
+# include <stdlib.h>
 #else
 char *malloc ();
 char *realloc ();

@@ -18,7 +18,7 @@
 /* Written by David MacKenzie <djm@gnu.ai.mit.edu>.  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+# include <config.h>
 #endif
 
 #include <stdio.h>
@@ -31,7 +31,7 @@ extern int errno;
 
 #ifndef HAVE_GETCWD
 char *getwd ();
-#define getcwd(buf, max) getwd (buf)
+# define getcwd(buf, max) getwd (buf)
 #else
 char *getcwd ();
 #endif

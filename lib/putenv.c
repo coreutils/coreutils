@@ -21,7 +21,7 @@ Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 #include <errno.h>
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+# include <config.h>
 #endif
 
 /* Define-away any (possibly conflicting) prototype of putenv.
@@ -29,26 +29,26 @@ Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 #define putenv _sys_putenv
 
 #if defined (__GNU_LIBRARY__) || defined (HAVE_STDLIB_H)
-#include <stdlib.h>
+# include <stdlib.h>
 #endif
 #if defined (__GNU_LIBRARY__) || defined (HAVE_STRING_H)
-#include <string.h>
+# include <string.h>
 #endif
 #if defined (__GNU_LIBRARY__) || defined (HAVE_UNISTD_H)
-#include <unistd.h>
+# include <unistd.h>
 #endif
 
 #undef putenv
 
 #if !defined (__GNU_LIBRARY__) && !defined (HAVE_STRCHR)
-#define strchr index
+# define strchr index
 #endif
 #if !defined (__GNU_LIBRARY__) && !defined (HAVE_MEMCPY)
-#define memcpy(d,s,n) bcopy ((s), (d), (n))
+# define memcpy(d,s,n) bcopy ((s), (d), (n))
 #endif
 
 #if HAVE_GNU_LD
-#define environ __environ
+# define environ __environ
 #else
 extern char **environ;
 #endif

@@ -15,17 +15,17 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 #ifndef _getline_h_
-#define _getline_h_ 1
+# define _getline_h_ 1
 
-#include <stdio.h>
+# include <stdio.h>
 
-#ifndef PARAMS
-# if defined (__GNUC__) || __STDC__
-#  define PARAMS(args) args
-# else
-#  define PARAMS(args) ()
-# endif  /* GCC.  */
-#endif  /* Not PARAMS.  */
+# ifndef PARAMS
+#  if defined (__GNUC__) || __STDC__
+#   define PARAMS(args) args
+#  else
+#   define PARAMS(args) ()
+#  endif  /* GCC.  */
+# endif  /* Not PARAMS.  */
 
 int
 getline PARAMS ((char **_lineptr, size_t *_n, FILE *_stream));

@@ -18,11 +18,11 @@
 /* David MacKenzie <djm@gnu.ai.mit.edu> */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+# include <config.h>
 #endif
 
 #ifdef HAVE_UNAME
-#include <sys/utsname.h>
+# include <sys/utsname.h>
 #endif
 
 /* Put up to LEN chars of the host name into NAME.

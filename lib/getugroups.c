@@ -18,7 +18,7 @@
 /* Written by David MacKenzie. */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+# include <config.h>
 #endif
 
 #include <sys/types.h>
@@ -26,7 +26,7 @@
 #include <grp.h>
 
 #ifdef HAVE_UNISTD_H
-#include <unistd.h>
+# include <unistd.h>
 #endif
 
 /* setgrent, getgrent, and endgrent are not specified by POSIX.1,
@@ -36,9 +36,9 @@
 struct group *getgrent ();
 
 #if defined(STDC_HEADERS) || defined(HAVE_STRING_H)
-#include <string.h>
+# include <string.h>
 #else
-#include <strings.h>
+# include <strings.h>
 #endif
 
 /* Like `getgroups', but for user USERNAME instead of for

@@ -18,11 +18,11 @@
 /* Written by Jim Meyering.  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+# include <config.h>
 #endif
 
 #ifdef STDC_HEADERS
-#include <stdlib.h>
+# include <stdlib.h>
 #else
 double strtod ();
 #endif

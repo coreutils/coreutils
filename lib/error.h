@@ -16,22 +16,22 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 #ifndef _error_h_
-#define _error_h_
+# define _error_h_
 
-#ifndef __attribute__
+# ifndef __attribute__
 /* This feature is available in gcc versions 2.5 and later.  */
-# if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 5) || __STRICT_ANSI__
-#  define __attribute__(Spec) /* empty */
-# endif
+#  if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 5) || __STRICT_ANSI__
+#   define __attribute__(Spec) /* empty */
+#  endif
 /* The __-protected variants of `format' and `printf' attributes
    are accepted by gcc versions 2.6.4 (effectively 2.7) and later.  */
-# if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 7)
-#  define __format__ format
-#  define __printf__ printf
+#  if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 7)
+#   define __format__ format
+#   define __printf__ printf
+#  endif
 # endif
-#endif
 
-#if defined (__STDC__) && __STDC__
+# if defined (__STDC__) && __STDC__
 
 /* Print a message with `fprintf (stderr, FORMAT, ...)';
    if ERRNUM is nonzero, follow it with ": " and strerror (ERRNUM).
@@ -49,11 +49,11 @@ extern void error_at_line (int status, int errnum, const char *fname,
    function without parameters instead.  */
 extern void (*error_print_progname) (void);
 
-#else
+# else
 void error ();
 void error_at_line ();
 extern void (*error_print_progname) ();
-#endif
+# endif
 
 /* This variable is incremented each time `error' is called.  */
 extern unsigned int error_message_count;

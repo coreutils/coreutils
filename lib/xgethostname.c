@@ -18,7 +18,7 @@
 /* Written by Jim Meyering, meyering@comco.com */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+# include <config.h>
 #endif
 
 #include <sys/types.h>
@@ -28,7 +28,7 @@ char *xmalloc ();
 char *xrealloc ();
 
 #ifndef INITIAL_HOSTNAME_LENGTH
-#define INITIAL_HOSTNAME_LENGTH 33
+# define INITIAL_HOSTNAME_LENGTH 33
 #endif
 
 char *

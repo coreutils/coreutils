@@ -108,12 +108,12 @@ extern int errno;
 #else
 # define LONG long
 
-#ifndef ULONG_MAX
-# define ULONG_MAX ((unsigned long) ~(unsigned long) 0)
-#endif
-#ifndef LONG_MAX
-# define LONG_MAX ((long int) (ULONG_MAX >> 1))
-#endif
+# ifndef ULONG_MAX
+#  define ULONG_MAX ((unsigned long) ~(unsigned long) 0)
+# endif
+# ifndef LONG_MAX
+#  define LONG_MAX ((long int) (ULONG_MAX >> 1))
+# endif
 #endif
 
 #ifdef USE_WIDE_CHAR
@@ -342,9 +342,9 @@ noconv:
 
 #undef __P
 #if defined (__STDC__) && __STDC__
-#define __P(args) args
+# define __P(args) args
 #else
-#define __P(args) ()
+# define __P(args) ()
 #endif
 
 /* Prototype.  */
