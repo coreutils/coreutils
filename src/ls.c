@@ -1860,7 +1860,6 @@ gobble_file (const char *name, enum filetype type, int explicit_arg,
 	     const char *dirname)
 {
   register uintmax_t blocks;
-  register int val;
   register char *path;
 
   if (files_index == nfiles)
@@ -1878,6 +1877,7 @@ gobble_file (const char *name, enum filetype type, int explicit_arg,
       || (format_needs_type && type == unknown))
     {
       /* `path' is the absolute pathname of this file. */
+      int val;
 
       if (name[0] == '/' || dirname[0] == 0)
 	path = (char *) name;
@@ -2068,9 +2068,7 @@ static void
 extract_dirs_from_files (const char *dirname, int recursive)
 {
   register int i, j;
-  int dirlen;
 
-  dirlen = strlen (dirname) + 2;
   /* Queue the directories last one first, because queueing reverses the
      order.  */
   for (i = files_index - 1; i >= 0; i--)
