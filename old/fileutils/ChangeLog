@@ -1,3 +1,8 @@
+1999-03-30  Jim Meyering  <meyering@ascend.com>
+
+	* src/*.c: Don't include closeout.h or version-etc.h explicitly.
+	Now, they're included via sys2.h.
+
 1999-03-29  Jim Meyering  <meyering@ascend.com>
 
 	* configure.in (GNU_PACKAGE): Remove related code -- now it's in
