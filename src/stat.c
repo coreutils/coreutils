@@ -9,7 +9,9 @@
 #include <grp.h>
 #include <unistd.h>
 #include <time.h>
-#include <sys/vfs.h>
+#if HAVE_SYS_VFS_H
+# include <sys/vfs.h>
+#endif
 #include <string.h>
 #include <malloc.h>
 #include <ctype.h>
@@ -285,15 +287,15 @@ print_human_time (time_t const *t)
 {
   char str[40];
 
-  if (strftime(str, 40, "%c", localtime(t)) > 0) printf(str);
-  else printf("Cannot calculate human readable time, sorry");
+  if (strftime (str, 40, "%c", localtime (t)) > 0) fputs (str, stdout);
+  else printf ("Cannot calculate human readable time, sorry");
 }
 
 /* print statfs info */
 static void
-print_statfs(char *pformat, char m, char *filename, void *data, SECURITY_ID_T sid)
+print_statfs (char *pformat, char m, char const *filename, void const *data, SECURITY_ID_T sid)
 {
-    struct statfs *statfsbuf = (struct statfs*)data;
+    struct statfs const *statfsbuf = data;
 #ifdef FLASK_LINUX
     char sbuf[256];
     int rv;
@@ -305,23 +307,22 @@ print_statfs(char *pformat, char m, char *filename, void *data, SECURITY_ID_T si
 	    strcat(pformat, "s");
 	    printf(pformat, filename);
 	    break;
-#if !defined(__linux__) && defined (__GNU__)
+
 	case 'i':
+#if !defined(__linux__) && defined (__GNU__)
 	    strcat(pformat, "Lx");
 	    printf(pformat, statfsbuf->f_fsid);
-	    break;
 #else
-	case 'i':
 	    strcat(pformat, "x %-8x");
 	    printf(pformat, statfsbuf->f_fsid.__val[0], statfsbuf->f_fsid.__val[1]);
-	    break;
 #endif
+	    break;
 
 	case 'l':
 #ifdef __USE_FILE_OFFSET64
 	    strcat(pformat, "lu");
 #else
-	    strcat(pformat, "d");
+	    strcat(pformat, "u");
 #endif
 	    printf(pformat, statfsbuf->f_namelen);
 	    break;
@@ -426,7 +427,7 @@ print_statfs(char *pformat, char m, char *filename, void *data, SECURITY_ID_T si
 
 /* print stat info */
 static void
-print_stat(char *pformat, char m, char *filename, void *data, SECURITY_ID_T sid)
+print_stat (char *pformat, char m, char const *filename, void const *data, SECURITY_ID_T sid)
 {
     char linkname[256];
     int i;
@@ -582,9 +583,9 @@ print_stat(char *pformat, char m, char *filename, void *data, SECURITY_ID_T sid)
 }
 
 static void
-print_it (char *masterformat, char *filename,
-	  void (*print_func) (char*, char, char*, void*, SECURITY_ID_T),
-	  void *data, SECURITY_ID_T sid)
+print_it (char const *masterformat, char const *filename,
+	  void (*print_func) (char *, char, char const *, void const *, SECURITY_ID_T),
+	  void const *data, SECURITY_ID_T sid)
 {
     char *m, *b, *format;
     char pformat[65];
@@ -603,7 +604,7 @@ print_it (char *masterformat, char *filename,
 	{
 	    strcpy (pformat, "%");
 	    *m++ = '\0';
-	    printf(b);
+	    fputs (b, stdout);
 
 	    /* copy all format specifiers to our format string */
 	    while (isdigit(*m) || strchr("#0-+. I", *m))
@@ -622,7 +623,7 @@ print_it (char *masterformat, char *filename,
 	    switch(*m) {
 		case '\0':
 		case '%':
-		    printf("%%");
+		    fputs("%", stdout);
 		    break;
 		default:
 		    print_func(pformat, *m, filename, data, sid);
@@ -632,7 +633,7 @@ print_it (char *masterformat, char *filename,
 	}
 	else
 	{
-	    printf(b);
+	    fputs (b, stdout);
 	    b = NULL;
 	}
     }
@@ -642,21 +643,21 @@ print_it (char *masterformat, char *filename,
 
 /* stat the filesystem and print what we find */
 static void
-do_statfs (char *filename, int terse, int secure, char *format)
+do_statfs (char const *filename, int terse, int secure, char const *format)
 {
   struct statfs statfsbuf;
   SECURITY_ID_T sid = -1;
   int i;
 
 #ifdef FLASK_LINUX
-  if(!is_flask_enabled())
+  if (!is_flask_enabled())
     secure = 0;
-  if(secure)
+  if (secure)
     i = statfs_secure(filename, &statfsbuf, &sid);
   else
 #endif
     i = statfs(filename, &statfsbuf);
-  if(i == -1)
+  if (i == -1)
     {
       perror (filename);
       return;
@@ -667,7 +668,7 @@ do_statfs (char *filename, int terse, int secure, char *format)
 	if (terse != 0)
 	  {
 #ifdef FLASK_LINUX
-		if(secure)
+		if (secure)
 	      		format = "%n %i %l %t %b %f %a %s %c %d %S %C";
 		else
 #endif
@@ -676,7 +677,7 @@ do_statfs (char *filename, int terse, int secure, char *format)
 	else
 	  {
 #ifdef FLASK_LINUX
-		if(secure)
+		if (secure)
 		    format = "  File: \"%n\"\n"
 	                 "    ID: %-8i Namelen: %-7l Type: %T\n"
 	                 "Blocks: Total: %-10b Free: %-10f Available: %-10a Size: %s\n"
@@ -691,21 +692,22 @@ do_statfs (char *filename, int terse, int secure, char *format)
 	  }
     }
 
-    print_it(format, filename, print_statfs, &statfsbuf, sid);
+    print_it (format, filename, print_statfs, &statfsbuf, sid);
 }
 
 /* stat the file and print what we find */
 static void
-do_stat (char *filename, int follow_links, int terse, int secure, char *format)
+do_stat (char const *filename, int follow_links, int terse, int secure, char const *format)
 {
   struct stat statbuf;
   int i;
   SECURITY_ID_T sid = -1;
 
 #ifdef FLASK_LINUX
-  if(!is_flask_enabled())
+  /* FIXME: hoist this test into main.  */
+  if (!is_flask_enabled())
     secure = 0;
-  if(secure)
+  if (secure)
     i = (follow_links == 1) ? stat_secure(filename, &statbuf, &sid) : lstat_secure(filename, &statbuf, &sid);
   else
 #endif
