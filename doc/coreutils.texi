@@ -559,6 +559,11 @@ context that requires a file name.
 @node Exit status
 @section Exit status
 
+@macro exitstatus
+An exit status of zero indicates success,
+and a value of @samp{1} indicates failure.
+@end macro
+
 Nearly every command invocation yields an integral @dfn{exit status}
 that can be used to change how other commands work.
 For the vast majority of commands, an exit status of zero indicates
@@ -1130,6 +1135,8 @@ characters at the end of each line are also visible.
 
 @end table
 
+@exitstatus
+
 
 @node tac invocation
 @section @command{tac}: Concatenate and write files in reverse
@@ -1176,6 +1183,8 @@ instead of the Unix-style LF.
 Use @var{separator} as the record separator, instead of newline.
 
 @end table
+
+@exitstatus
 
 
 @node nl invocation
@@ -1335,6 +1344,8 @@ Set the initial line number on each logical page to @var{number} (default 1).
 Use @var{number} characters for line numbers (default 6).
 
 @end table
+
+@exitstatus
 
 
 @node od invocation
@@ -1583,6 +1594,8 @@ address.
 
 @end table
 
+@exitstatus
+
 
 @node Formatting file contents
 @chapter Formatting file contents
@@ -1692,6 +1705,8 @@ line.  One use is to format certain kinds of program comments, while
 leaving the code unchanged.
 
 @end table
+
+@exitstatus
 
 
 @node pr invocation
@@ -2062,6 +2077,8 @@ line is never truncated.
 
 @end table
 
+@exitstatus
+
 
 @node fold invocation
 @section @command{fold}: Wrap input lines to fit in specified width
@@ -2118,6 +2135,8 @@ conformance}) does not allow this; use @option{-w @var{width}}
 instead.
 
 @end table
+
+@exitstatus
 
 
 @node Output of parts of files
@@ -2203,6 +2222,9 @@ by a size letter (@samp{b}, @samp{k}, @samp{m}) as in @code{-c}, or
 @samp{l} to mean count by lines, or other option letters (@samp{cqv}).
 @acronym{POSIX} 1003.1-2001 (@pxref{Standards conformance}) does not allow
 this; use @option{-c @var{count}} or @option{-n @var{count}} instead.
+
+@exitstatus
+
 
 @node tail invocation
 @section @command{tail}: Output the last part of files
@@ -2381,6 +2403,9 @@ an obsolete option @option{+@var{count}} with the same meaning as
 conformance}) does not allow these options; use @option{-c
 @var{count}} or @option{-n @var{count}} instead.
 
+@exitstatus
+
+
 @node split invocation
 @section @command{split}: Split a file into fixed-size pieces
 
@@ -2459,6 +2484,8 @@ Use digits in suffixes rather than lower-case letters.
 Write a diagnostic to standard error just before each output file is opened.
 
 @end table
+
+@exitstatus
 
 
 @node csplit invocation
@@ -2589,6 +2616,8 @@ Do not print counts of output file sizes.
 
 @end table
 
+@exitstatus
+
 
 @node Summarizing files
 @chapter Summarizing files
@@ -2687,6 +2716,8 @@ Print only the maximum line lengths.
 
 @end table
 
+@exitstatus
+
 
 @node sum invocation
 @section @command{sum}: Print checksum and block counts
@@ -2736,6 +2767,8 @@ Compute checksums using an algorithm compatible with System V
 @command{sum} is provided for compatibility; the @command{cksum} program (see
 next section) is preferable in new applications.
 
+@exitstatus
+
 
 @node cksum invocation
 @section @command{cksum}: Print CRC checksum and byte counts
@@ -2767,6 +2800,8 @@ previous section); it is more robust.
 
 The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
+
+@exitstatus
 
 
 @node md5sum invocation
@@ -2863,6 +2898,8 @@ This option is useful only if all but a few lines in the checked input
 are valid.
 
 @end table
+
+@exitstatus
 
 
 @node Operating on sorted files
@@ -3494,6 +3531,8 @@ compared.
 
 @end table
 
+@exitstatus
+
 
 @node comm invocation
 @section @command{comm}: Compare two sorted files line by line
@@ -3689,6 +3728,9 @@ Anyhow, that's where tsort came from.  To solve an old problem with
 the way the linker handled archive files, which has since been solved
 in different ways.
 
+@exitstatus
+
+
 @node ptx invocation
 @section @command{ptx}: Produce permuted indexes
 
@@ -3772,6 +3814,8 @@ Print the program version on standard output, then exit without further
 processing.
 
 @end table
+
+@exitstatus
 
 
 @node Charset selection in ptx
@@ -4249,6 +4293,8 @@ output @var{output_delim_string} between ranges of selected bytes.
 
 @end table
 
+@exitstatus
+
 
 @node paste invocation
 @section @command{paste}: Merge lines of files
@@ -4316,6 +4362,8 @@ $ paste -d '%_' num2 let3 num2
 @end example
 
 @end table
+
+@exitstatus
 
 
 @node join invocation
@@ -4437,6 +4485,8 @@ In addition, when @sc{gnu} @command{join} is invoked with exactly one argument,
 the @option{--help} and @option{--version} options are recognized.
 @xref{Common options}.
 
+@exitstatus
+
 
 @node Operating on characters
 @chapter Operating on characters
@@ -4482,6 +4532,8 @@ sets of characters, referred to below as @var{set1} and @var{set2}.  These
 sets are the characters of the input that @command{tr} operates on.
 The @option{--complement} (@option{-c}) option replaces @var{set1} with its
 complement (all of the characters that are not in @var{set1}).
+
+@exitstatus
 
 @menu
 * Character sets::              Specifying sets of characters.
@@ -4888,6 +4940,8 @@ characters) on each line to spaces.
 
 @end table
 
+@exitstatus
+
 
 @node unexpand invocation
 @section @command{unexpand}: Convert spaces to tabs
@@ -4940,6 +4994,8 @@ ones, to tabs.
 
 @end table
 
+@exitstatus
+
 
 @node Directory listing
 @chapter Directory listing
@@ -4988,6 +5044,8 @@ options over the years.  They are described in the subsections below;
 within each section, options are listed alphabetically (ignoring case).
 The division of options into the subsections is not absolute, since some
 options affect more than one aspect of @command{ls}'s operation.
+
+@exitstatus
 
 Also see @ref{Common options}.
 
@@ -5927,6 +5985,8 @@ of the possibilities.
 
 @end table
 
+@exitstatus
+
 
 @node Basic operations
 @chapter Basic operations
@@ -6285,6 +6345,8 @@ However, mount point directories @emph{are} copied.
 
 @end table
 
+@exitstatus
+
 
 @node dd invocation
 @section @command{dd}: Convert and copy a file
@@ -6456,6 +6518,8 @@ zero bytes.
 
 @end table
 
+@exitstatus
+
 
 @node install invocation
 @section @command{install}: Copy files and set attributes
@@ -6597,6 +6661,8 @@ argument can be @samp{none} (or @samp{off}), @samp{numbered} (or
 
 @end table
 
+@exitstatus
+
 
 @node mv invocation
 @section @command{mv}: Move (rename) files
@@ -6725,6 +6791,8 @@ argument can be @samp{none} (or @samp{off}), @samp{numbered} (or
 
 @end table
 
+@exitstatus
+
 
 @node rm invocation
 @section @command{rm}: Remove files or directories
@@ -6837,6 +6905,8 @@ rm ./-f
 @opindex - @r{and Unix @command{rm}}
 The Unix @command{rm} program's use of a single @samp{-} for this purpose
 predates the development of the getopt standard syntax.
+
+@exitstatus
 
 
 @node shred invocation
@@ -7045,6 +7115,9 @@ your hard disk, you could give a command like this:
 shred --verbose /dev/sda5
 @end example
 
+@exitstatus
+
+
 @node Special file types
 @chapter Special file types
 
@@ -7102,6 +7175,9 @@ link @var{filename} @var{linkname}
 must specify a nonexistent entry in an existing directory.
 @command{link} simply calls @code{link (@var{filename}, @var{linkname})}
 to create the link.
+
+@exitstatus
+
 
 @node ln invocation
 @section @command{ln}: Make links between files
@@ -7265,6 +7341,8 @@ ln -s /some/name myname  # creates link ./myname pointing to /some/name
 ln -s a b ..      # creates links ../a and ../b pointing to ./a and ./b
 @end smallexample
 
+@exitstatus
+
 
 @node mkdir invocation
 @section @command{mkdir}: Make directories
@@ -7279,8 +7357,8 @@ ln -s a b ..      # creates links ../a and ../b pointing to ./a and ./b
 mkdir [@var{option}]@dots{} @var{name}@dots{}
 @end example
 
-If a @var{name} is an existing file but not a directory, @command{mkdir} prints a
-warning message on stderr and will exit with a status of 1 after
+If a @var{name} is an existing file but not a directory, @command{mkdir} prints
+a warning message on stderr and will exit with a status of 1 after
 processing any remaining @var{name}s.  The same is done when a @var{name} is an
 existing directory and the -p option is not given.  If a @var{name} is an
 existing directory and the -p option is given, @command{mkdir} will ignore it.
@@ -7319,6 +7397,8 @@ Print a message for each created directory.  This is most useful with
 @option{--parents}.
 @end table
 
+@exitstatus
+
 
 @node mkfifo invocation
 @section @command{mkfifo}: Make FIFOs (named pipes)
@@ -7354,6 +7434,8 @@ Set the mode of created FIFOs to @var{mode}, which is symbolic as in
 the bits set in the umask for the point of departure.  @xref{File permissions}.
 
 @end table
+
+@exitstatus
 
 
 @node mknod invocation
@@ -7424,6 +7506,8 @@ of departure.  @xref{File permissions}.
 
 @end table
 
+@exitstatus
+
 
 @node readlink invocation
 @section @command{readlink}: Print the referent of a symbolic link
@@ -7445,7 +7529,7 @@ of a symbolic link, it produces no output and exits with a nonzero exit code.
 
 @command{readlink} outputs the absolute name of the given file which contains
 no `.', `..' components nor any repeated path separators (`/') or symlinks.
-In any path component is missing or unavailable,
+If any path component is missing or unavailable,
 it produces no output and exits with a nonzero exit code.
 
 @end table
@@ -7491,6 +7575,8 @@ Report error messages.
 @end table
 
 The @command{readlink} utility first appeared in OpenBSD 2.1.
+
+@exitstatus
 
 
 @node rmdir invocation
@@ -7543,6 +7629,9 @@ Give a diagnostic for each successful removal.
 
 @xref{rm invocation}, for how to remove non-empty directories (recursively).
 
+@exitstatus
+
+
 @node unlink invocation
 @section @command{unlink}: Remove files via the unlink syscall
 
@@ -7567,6 +7656,8 @@ options.  That makes it a little harder to remove files named
 @code{--help} and @code{--version}, so when the environment variable
 @env{POSIXLY_CORRECT} is set, @command{unlink} treats such a command line
 arguments not as an option, but as an operand.
+
+@exitstatus
 
 
 @node Changing file attributes
@@ -7785,6 +7876,8 @@ Recursively change ownership of directories and their contents.
 
 @end table
 
+@exitstatus
+
 
 @node chgrp invocation
 @section @command{chgrp}: Change group ownership
@@ -7891,6 +7984,8 @@ Recursively change the group ownership of directories and their contents.
 
 @end table
 
+@exitstatus
+
 
 @node chmod invocation
 @section @command{chmod}: Change access permissions
@@ -7973,6 +8068,8 @@ of the symbolic link, but rather that of the file it refers to.
 Recursively change permissions of directories and their contents.
 
 @end table
+
+@exitstatus
 
 
 @node touch invocation
@@ -8081,6 +8178,8 @@ is 20 for years in the range 0 @dots{} 68, and 19 for years in
 the argument is interpreted as a date in the current year.
 
 @end table
+
+@exitstatus
 
 
 @node Disk usage
@@ -8306,6 +8405,8 @@ Ignored; for compatibility with System V versions of @command{df}.
 
 @end table
 
+@exitstatus
+
 
 @node du invocation
 @section @command{du}: Estimate file space usage
@@ -8501,6 +8602,8 @@ systems, it reports sizes that are twice the correct values for
 files that are NFS-mounted from BSD systems.  This is due to a flaw
 in HP-UX; it also affects the HP-UX @command{du} program.
 
+@exitstatus
+
 
 @node stat invocation
 @section @command{stat}: Report file or filesystem status
@@ -8600,6 +8703,8 @@ Interpreted sequences for filesystem stat are:
 @end itemize
 @end table
 
+@exitstatus
+
 
 @node sync invocation
 @section @command{sync}: Synchronize data on disk with memory
@@ -8623,6 +8728,9 @@ result. @command{sync} ensures everything in memory is written to disk.
 
 Any arguments are ignored, except for a lone @option{--help} or
 @option{--version} (@pxref{Common options}).
+
+@exitstatus
+
 
 @node Printing text
 @chapter Printing text
@@ -8693,6 +8801,8 @@ a valid octal number, it is printed literally.
 @end table
 
 @end table
+
+@exitstatus
 
 
 @node printf invocation
@@ -8789,6 +8899,8 @@ $ recode BIG5..JAVA < sample.txt \
     > sample.sh
 @end smallexample
 
+@exitstatus
+
 
 @node yes invocation
 @section @command{yes}: Print a string until interrupted
@@ -8799,6 +8911,8 @@ $ recode BIG5..JAVA < sample.txt \
 @command{yes} prints the command line arguments, separated by spaces and
 followed by a newline, forever until it is killed.  If no arguments are
 given, it prints @samp{y} followed by a newline forever until killed.
+
+Upon a write error, @command{yes} exits with status @samp{1}.
 
 The only options are a lone @option{--help} or @option{--version}.
 @xref{Common options}.
@@ -9488,6 +9602,8 @@ Ignore interrupt signals.
 
 @end table
 
+@exitstatus
+
 
 @node File name manipulation
 @chapter File name manipulation
@@ -9529,6 +9645,8 @@ result on standard output.
 The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
 
+@exitstatus
+
 
 @node dirname invocation
 @section @command{dirname}: Strip non-directory suffix from a file name
@@ -9550,6 +9668,8 @@ If @var{name} is a single component, @command{dirname} prints @samp{.}
 
 The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
+
+@exitstatus
 
 
 @node pathchk invocation
@@ -9645,6 +9765,8 @@ different functionality than that described here.
 The only options are a lone @option{--help} or
 @option{--version}.  @xref{Common options}.
 
+@exitstatus
+
 
 @node stty invocation
 @section @command{stty}: Print or change terminal characteristics
@@ -9715,6 +9837,8 @@ extensions.  Such arguments are marked below with ``Non-@acronym{POSIX}'' in the
 description.  On non-@acronym{POSIX} systems, those or other settings also may not
 be available, but it's not feasible to document all the variations: just
 try it and see.
+
+@exitstatus
 
 @menu
 * Control::                     Control settings
@@ -10441,6 +10565,8 @@ Print only the user id.
 
 @end table
 
+@exitstatus
+
 
 @node logname invocation
 @section @command{logname}: Print current login name
@@ -10461,6 +10587,8 @@ an error message and exits with a status of 1.
 The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
 
+@exitstatus
+
 
 @node whoami invocation
 @section @command{whoami}: Print effective user id
@@ -10474,6 +10602,8 @@ effective user id.  It is equivalent to the command @samp{id -un}.
 
 The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
+
+@exitstatus
 
 
 @node groups invocation
@@ -10496,6 +10626,8 @@ The group lists are equivalent to the output of the command @samp{id -Gn}.
 
 The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
+
+@exitstatus
 
 
 @node users invocation
@@ -10524,6 +10656,8 @@ uses that file instead.  A common choice is @file{/etc/wtmp}.
 
 The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
+
+@exitstatus
 
 
 @node who invocation
@@ -10663,6 +10797,8 @@ After each login name print a character indicating the user's message status:
 
 @end table
 
+@exitstatus
+
 
 @node System context
 @chapter System context
@@ -10709,6 +10845,8 @@ current time and date (or the time and date specified by the
 which is the same as in the @code{strftime} function.  Except for
 directives, which start with @samp{%}, characters in the format string
 are printed unchanged.  The directives are described below.
+
+@exitstatus
 
 @menu
 * Time directives::             %[HIklMprsSTXzZ]
@@ -11316,6 +11454,9 @@ Print the kernel version.
 
 @end table
 
+@exitstatus
+
+
 @node hostname invocation
 @section @command{hostname}: Print or set system name
 
@@ -11336,6 +11477,8 @@ hostname [@var{name}]
 
 The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
+
+@exitstatus
 
 
 @node hostid invocation
@@ -11359,6 +11502,8 @@ $ hostid
 On that system, the 32-bit quantity happens to be closely
 related to the system's Internet address, but that isn't always
 the case.
+
+@exitstatus
 
 
 @node Modified command invocation
@@ -11435,6 +11580,18 @@ files to the required positions under your intended new root directory.
 Finally, if the executable requires any other files (e.g., data, state,
 device files), copy them into place, too.
 
+@cindex exit status of @command{chroot}
+Exit status:
+
+@display
+1   if there are invalid options, if the chroot syscall fails,
+    or if the subsequent @samp{chdir ("/")} fails
+126 if @var{command} is found but cannot be invoked
+127 if @var{command} cannot be found
+127 if @var{command} cannot be found
+the exit status of @var{command} otherwise
+@end display
+
 
 @node env invocation
 @section @command{env}: Run a command in a modified environment
@@ -11489,6 +11646,18 @@ Start with an empty environment, ignoring the inherited environment.
 
 @end table
 
+@cindex exit status of @command{env}
+Exit status:
+
+@display
+0   if no @var{command} was specified and the environment was output
+1   if no @var{command} was specified and there was a write error while
+    printing the environment
+126 if @var{command} is found but cannot be invoked
+127 if @var{command} cannot be found
+the exit status of @var{command} otherwise
+@end display
+
 
 @node nice invocation
 @section @command{nice}: Run a command with modified scheduling priority
@@ -11535,6 +11704,18 @@ conformance}) does not allow this; use @option{-n @var{adjustment}}
 instead.
 
 @end table
+
+@cindex exit status of @command{nice}
+Exit status:
+
+@display
+0   if no @var{command} was specified and the current priority was output
+1   if there are invalid options or if no @var{command} was specified and
+      there was a write error
+126 if @var{command} is found but cannot be invoked
+127 if @var{command} cannot be found
+the exit status of @var{command} otherwise
+@end display
 
 
 @node nohup invocation
@@ -11583,8 +11764,8 @@ options}.
 Exit status:
 
 @display
-126 if @var{command} was found but could not be invoked
-127 if @command{nohup} itself failed or if @var{command} could not be found
+126 if @var{command} is found but cannot be invoked
+127 if @command{nohup} itself fails or if @var{command} cannot be found
 the exit status of @var{command} otherwise
 @end display
 
@@ -11946,6 +12127,8 @@ digits).
 The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
 
+@exitstatus
+
 
 @node Numeric operations
 @chapter Numeric operations
@@ -11996,6 +12179,9 @@ over a tenth of a second:
 $ factor `echo '2^64-1'|bc`
 18446744073709551615: 3 5 17 257 641 65537 6700417
 @end example
+
+@exitstatus
+
 
 @node seq invocation
 @section @command{seq}: Print numeric sequences
@@ -12129,6 +12315,9 @@ In general, when using an @var{increment} with a fractional part, where
 number, specify a slightly larger (or smaller, if @var{increment} is negative)
 value for @var{last} to ensure that @var{last} is the final value printed
 by seq.
+
+@exitstatus
+
 
 @node File permissions
 @chapter File permissions
