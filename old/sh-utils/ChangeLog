@@ -1,5 +1,9 @@
 Wed Nov 11 18:19:10 1992  Jim Meyering  (meyering@hal.gnu.ai.mit.edu)
 
+	* All files in src: Make all functions and extern variables static.
+	Make all longopts arrays const as well as static.
+	Make a couple statically initialized aggregates `const.'
+
 	* stty.c (set_mode): Parenthesize expressions with bit operations
 	to correctly set/reset modes bits.
 
