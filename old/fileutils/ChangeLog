@@ -1,3 +1,7 @@
+Sun Dec  4 14:53:12 1994  Jim Meyering  (meyering@comco.com)
+
+	* doc/Makefile.in (DISTFILES): Add getdate.texi.
+
 Sun Nov 06 00:18:56 1994  Jim Meyering  (meyering@comco.com)
 
 	* Version 3.12.

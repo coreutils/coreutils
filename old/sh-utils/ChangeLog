@@ -1,3 +1,23 @@
+Sun Dec  4 14:53:12 1994  Jim Meyering  (meyering@comco.com)
+
+	* doc/Makefile.in (DISTFILES): Add getdate.texi.
+
+Sat Dec  3 07:59:55 1994  Jim Meyering  (meyering@comco.com)
+
+	* configure.in (AC_CHECK_FUNCS): Add strchr and strrchr.
+	(AC_CHECK_HEADERS): Add stdlib.h.
+	(LIBS): If the strtod replacement is required, check for pow in -lm.
+	* src/Makefile.in (printf): Remove hard-coded -lm.  Not every
+	system has it.
+
+Thu Nov 17 23:47:26 1994  Jim Meyering  (meyering@comco.com)
+
+	* who.c (list_entries): Delete.  Split in two actually...
+	(list_entries_users, list_entries_who, userid_compare): New functions.
+	(list_entries_users): Sort the user names.  Reported by
+	Michael I Bushnell.
+	Topologically sort the functions and remove fwd declarations.
+
 Sat Nov 05 08:35:25 1994  Jim Meyering  (meyering@comco.com)
 
 	* Version 1.12.
