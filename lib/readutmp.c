@@ -1,5 +1,5 @@
 /* GNU's read utmp module.
-   Copyright (C) 92, 93, 94, 95, 96, 1997 Free Software Foundation, Inc.
+   Copyright (C) 92, 93, 94, 95, 96, 1997, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -34,8 +34,7 @@ char *xmalloc ();
    trailing spaces from the copy, NUL terminate it, and return the copy.  */
 
 char *
-extract_trimmed_name (ut)
-  const STRUCT_UTMP *ut;
+extract_trimmed_name (const STRUCT_UTMP *ut)
 {
   char *p, *trimmed_name;
 
@@ -54,11 +53,74 @@ extract_trimmed_name (ut)
    number of entries read, and return zero.  If there is any error,
    return non-zero and don't modify the parameters.  */
 
+#ifdef HAVE_UTMPNAME
+
 int
-read_utmp (filename, n_entries, utmp_buf)
-  const char *filename;
-  int *n_entries;
-  STRUCT_UTMP **utmp_buf;
+read_utmp (const char *filename, int *n_entries, STRUCT_UTMP **utmp_buf)
+{
+  int count_utmp = 0;
+  int n_read;
+  STRUCT_UTMP *u;
+  STRUCT_UTMP *uptr;
+  STRUCT_UTMP *utmp_contents;
+
+  if (utmpname (filename))
+    {
+      return 1;
+    }
+
+  /* FIXME: going through the list twice is wasteful. */
+
+  /* count the entries in utmp */
+  setutent ();
+  while ((u = getutent ()) != NULL)
+    ++count_utmp;
+
+  if (count_utmp == 0)
+    return 0;
+
+  utmp_contents = (STRUCT_UTMP *) xmalloc (count_utmp * sizeof (STRUCT_UTMP));
+
+  /* read the entries in utmp */
+
+  /* FIXME: can this fail? */
+  setutent ();
+
+  n_read = 0;
+  uptr = utmp_contents;
+  while ((u = getutent ()) != NULL)
+    {
+      ++n_read;
+      if (n_read > count_utmp)
+	{
+	  STRUCT_UTMP *old_utmp_contents = utmp_contents;
+	  ++count_utmp;
+	  utmp_contents = (STRUCT_UTMP *) xrealloc (utmp_contents,
+						    (count_utmp
+						     * sizeof (STRUCT_UTMP)));
+	  uptr = utmp_contents + (uptr - old_utmp_contents);
+	}
+      *uptr = *u;
+      ++uptr;
+    }
+
+  if (n_read != count_utmp)
+    utmp_contents = (STRUCT_UTMP *) xrealloc (utmp_contents,
+					      n_read * sizeof (STRUCT_UTMP));
+
+  /* FIXME: can this fail? */
+  endutent ();
+
+  *n_entries = n_read;
+  *utmp_buf = utmp_contents;
+
+  return 0;
+}
+
+#else
+
+int
+read_utmp (const char *filename, int *n_entries, STRUCT_UTMP **utmp_buf)
 {
   FILE *utmp;
   struct stat file_stats;
@@ -91,3 +153,5 @@ read_utmp (filename, n_entries, utmp_buf)
 
   return 0;
 }
+
+#endif /* HAVE_UTMPNAME */
