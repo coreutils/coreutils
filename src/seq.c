@@ -1,5 +1,5 @@
 /* seq - print sequence of numbers to standard output.
-   Copyright (C) 1994-2001 Free Software Foundation, Inc.
+   Copyright (C) 1994-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -87,8 +87,8 @@ Usage: %s [OPTION]... LAST\n\
       fputs (_("\
 Print numbers from FIRST to LAST, in steps of INCREMENT.\n\
 \n\
-  -f, --format FORMAT      use printf(3) style FORMAT (default: %g)\n\
-  -s, --separator STRING   use STRING to separate numbers (default: \\n)\n\
+  -f, --format=FORMAT      use printf style floating-point FORMAT (default: %g)\n\
+  -s, --separator=STRING   use STRING to separate numbers (default: \\n)\n\
   -w, --equal-width        equalize width by padding with leading zeroes\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
