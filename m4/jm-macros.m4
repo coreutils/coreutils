@@ -1,4 +1,4 @@
-#serial 24
+#serial 25
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
@@ -209,6 +209,7 @@ AC_DEFUN(jm_MACROS,
   jm_LANGINFO_CODESET
   jm_GLIBC21
   jm_ICONV
+  jm_FUNC_UNLINK_BUSY_TEXT
 
   # These tests are for df.
   jm_LIST_MOUNTED_FILESYSTEMS([list_mounted_fs=yes], [list_mounted_fs=no])
