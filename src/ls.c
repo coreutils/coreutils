@@ -727,8 +727,10 @@ decode_switches (int argc, char **argv)
   }
 #endif
 
+  /* TABSIZE is not POSIX-approved.
+     Ignore it when POSIXLY_CORRECT is set.  */
   tabsize = 8;
-  if (!posix_pedantic && (p = getenv ("TABSIZE")))
+  if (getenv ("POSIXLY_CORRECT") == 0 && (p = getenv ("TABSIZE")))
     {
       if (xstrtol (p, NULL, 0, &tmp_long, NULL) == LONGINT_OK
 	  && 0 < tmp_long && tmp_long <= INT_MAX)
