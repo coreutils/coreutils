@@ -2,6 +2,8 @@
 
 	* Version 5.1.0.
 
+	* Use automake-1.7.9.  Regenerate dependent files.
+
 	* src/rm.c: Support new options: --preserve-root and --no-preserve-root.
 	* src/chown.c: Likewise.
 
