@@ -188,7 +188,7 @@ idle_string (time_t when)
 /* Display a line of information about entry THIS. */
 
 static void
-print_entry (struct utmp *this)
+print_entry (STRUCT_UTMP *this)
 {
   struct stat stats;
   time_t last_change;
