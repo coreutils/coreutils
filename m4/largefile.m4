@@ -1,4 +1,4 @@
-#serial 4
+#serial 5
 
 dnl By default, many hosts won't let programs access large files;
 dnl one must use special compiler options to get large-file access to work.
@@ -89,7 +89,7 @@ AC_DEFUN(AC_SYS_LARGEFILE,
      AC_SYS_LARGEFILE_SPACE_APPEND(LIBS, "$ac_cv_sys_largefile_LIBS")
      AC_SYS_LARGEFILE_MACRO_VALUE(_FILE_OFFSET_BITS,
        ac_cv_sys_file_offset_bits,
-       [Number of bits in a file offset, on hosts where this is settable.]
+       [Number of bits in a file offset, on hosts where this is settable.],
        [case "$host_os" in
 	# HP-UX 10.20 and later
 	hpux10.[2-9][0-9]* | hpux1[1-9]* | hpux[2-9][0-9]*)
