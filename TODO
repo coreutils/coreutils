@@ -136,9 +136,8 @@ Adapt these contribution guidelines for coreutils:
 Changes expected to go in, post-5.2.1:
 ======================================
 
-  du and wc: add an option, --files0-from, to make them read NUL-delimited
+  wc: add an option, --files0-from [as for du] to make it read NUL-delimited
     file name arguments from a file.
-    [I now have a patch adding --files0-from for du]
 
   dd patch from Olivier Delhomme
 
