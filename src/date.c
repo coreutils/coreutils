@@ -79,9 +79,6 @@ static int iso_8601_format = 0;
 /* If non-zero, display time in RFC-822 format for mail or news. */
 static int rfc_format = 0;
 
-/* If nonzero, print or set Coordinated Universal Time.  */
-static int universal_time = 0;
-
 static struct option const long_options[] =
 {
   {"date", required_argument, NULL, 'd'},
@@ -308,7 +305,12 @@ main (int argc, char **argv)
 	set_date = 1;
 	break;
       case 'u':
- 	universal_time = 1;
+	/* POSIX.2 says that `date -u' is equivalent to setting the TZ
+	   environment variable, so this option should do nothing other
+	   than setting TZ.  */
+	if (putenv ("TZ=UTC0") != 0)
+	  xalloc_die ();
+	TZSET;
 	break;
       case_GETOPT_HELP_CHAR;
       case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
@@ -355,13 +357,6 @@ argument must be a format string beginning with `+'."),
 
   if (set_date)
     datestr = set_datestr;
-
-  if (universal_time)
-    {
-      if (putenv ("TZ=UTC0") != 0)
-	xalloc_die ();
-      TZSET;
-    }
 
   if (batch_file != NULL)
     {
@@ -439,14 +434,13 @@ show_date (const char *format, time_t when)
   struct tm *tm;
   char *out = NULL;
   size_t out_length = 0;
-  /* ISO 8601 formats, in local and UTC.  See below regarding %z */
-  static char *iso_format_string[5][2] =
+  /* ISO 8601 formats.  See below regarding %z */
+  static char const * const iso_format_string[] =
   {
-    {"", ""},
-    {"%Y-%m-%d", "%Y-%m-%d"},
-    {"%Y-%m-%dT%H%z", "%Y-%m-%dT%HZ"},
-    {"%Y-%m-%dT%H:%M%z", "%Y-%m-%dT%H:%MZ"},
-    {"%Y-%m-%dT%H:%M:%S%z", "%Y-%m-%dT%H:%M:%SZ"}
+    "%Y-%m-%d",
+    "%Y-%m-%dT%H%z",
+    "%Y-%m-%dT%H:%M%z",
+    "%Y-%m-%dT%H:%M:%S%z"
   };
 
   tm = localtime (&when);
@@ -461,11 +455,9 @@ show_date (const char *format, time_t when)
 	 RFC time format outside the continental United States and GMT. */
 
       if (rfc_format)
-	format = (universal_time
-		  ? "%a, %_d %b %Y %H:%M:%S GMT"
-		  : "%a, %_d %b %Y %H:%M:%S %z");
+	format = "%a, %_d %b %Y %H:%M:%S %z";
       else if (iso_8601_format)
-	format = iso_format_string[iso_8601_format][universal_time];
+	format = iso_format_string[iso_8601_format - 1];
       else
 	{
 	  char *date_fmt = DATE_FMT_LANGINFO ();
