@@ -405,7 +405,7 @@ static struct control_info control_info[] =
 
 static char const *visible (cc_t ch);
 static unsigned long int baud_to_value (speed_t speed);
-static bool recover_mode (char *arg, struct termios *mode);
+static bool recover_mode (char const *arg, struct termios *mode);
 static int screen_columns (void);
 static bool set_mode (struct mode_info *info, bool reversed,
 		      struct termios *mode);
@@ -826,7 +826,7 @@ main (int argc, char **argv)
     }
   else
     {
-      fd = 0;
+      fd = STDIN_FILENO;
       device_name = _("standard input");
     }
 
@@ -846,27 +846,24 @@ main (int argc, char **argv)
 
   speed_was_set = false;
   require_set_attr = false;
-  k = 1;
-  while (k < argc)
+  for (k = 1; k < argc; k++)
     {
+      char const *arg = argv[k];
       bool match_found = false;
       bool reversed = false;
       int i;
 
-      if (argv[k] == 0)
-	{
-	  k++;
-	  continue;
-	}
+      if (! arg)
+	continue;
 
-      if (argv[k][0] == '-')
+      if (arg[0] == '-')
 	{
-	  ++argv[k];
+	  ++arg;
 	  reversed = true;
 	}
       for (i = 0; mode_info[i].name != NULL; ++i)
 	{
-	  if (STREQ (argv[k], mode_info[i].name))
+	  if (STREQ (arg, mode_info[i].name))
 	    {
 	      match_found = set_mode (&mode_info[i], reversed, &mode);
 	      require_set_attr = true;
@@ -875,18 +872,18 @@ main (int argc, char **argv)
 	}
       if (!match_found & reversed)
 	{
-	  error (0, 0, _("invalid argument `%s'"), --argv[k]);
+	  error (0, 0, _("invalid argument `%s'"), arg - 1);
 	  usage (EXIT_FAILURE);
 	}
       if (!match_found)
 	{
 	  for (i = 0; control_info[i].name != NULL; ++i)
 	    {
-	      if (STREQ (argv[k], control_info[i].name))
+	      if (STREQ (arg, control_info[i].name))
 		{
 		  if (k == argc - 1)
 		    {
-		      error (0, 0, _("missing argument to `%s'"), argv[k]);
+		      error (0, 0, _("missing argument to `%s'"), arg);
 		      usage (EXIT_FAILURE);
 		    }
 		  match_found = true;
@@ -899,11 +896,11 @@ main (int argc, char **argv)
 	}
       if (!match_found)
 	{
-	  if (STREQ (argv[k], "ispeed"))
+	  if (STREQ (arg, "ispeed"))
 	    {
 	      if (k == argc - 1)
 		{
-		  error (0, 0, _("missing argument to `%s'"), argv[k]);
+		  error (0, 0, _("missing argument to `%s'"), arg);
 		  usage (EXIT_FAILURE);
 		}
 	      ++k;
@@ -911,11 +908,11 @@ main (int argc, char **argv)
 	      speed_was_set = true;
 	      require_set_attr = true;
 	    }
-	  else if (STREQ (argv[k], "ospeed"))
+	  else if (STREQ (arg, "ospeed"))
 	    {
 	      if (k == argc - 1)
 		{
-		  error (0, 0, _("missing argument to `%s'"), argv[k]);
+		  error (0, 0, _("missing argument to `%s'"), arg);
 		  usage (EXIT_FAILURE);
 		}
 	      ++k;
@@ -924,30 +921,30 @@ main (int argc, char **argv)
 	      require_set_attr = true;
 	    }
 #ifdef TIOCGWINSZ
-	  else if (STREQ (argv[k], "rows"))
+	  else if (STREQ (arg, "rows"))
 	    {
 	      if (k == argc - 1)
 		{
-		  error (0, 0, _("missing argument to `%s'"), argv[k]);
+		  error (0, 0, _("missing argument to `%s'"), arg);
 		  usage (EXIT_FAILURE);
 		}
 	      ++k;
 	      set_window_size (integer_arg (argv[k], INT_MAX), -1,
 			       fd, device_name);
 	    }
-	  else if (STREQ (argv[k], "cols")
-		   || STREQ (argv[k], "columns"))
+	  else if (STREQ (arg, "cols")
+		   || STREQ (arg, "columns"))
 	    {
 	      if (k == argc - 1)
 		{
-		  error (0, 0, _("missing argument to `%s'"), argv[k]);
+		  error (0, 0, _("missing argument to `%s'"), arg);
 		  usage (EXIT_FAILURE);
 		}
 	      ++k;
 	      set_window_size (-1, integer_arg (argv[k], INT_MAX),
 			       fd, device_name);
 	    }
-	  else if (STREQ (argv[k], "size"))
+	  else if (STREQ (arg, "size"))
 	    {
 	      max_col = screen_columns ();
 	      current_col = 0;
@@ -955,12 +952,12 @@ main (int argc, char **argv)
 	    }
 #endif
 #ifdef HAVE_C_LINE
-	  else if (STREQ (argv[k], "line"))
+	  else if (STREQ (arg, "line"))
 	    {
 	      unsigned long int value;
 	      if (k == argc - 1)
 		{
-		  error (0, 0, _("missing argument to `%s'"), argv[k]);
+		  error (0, 0, _("missing argument to `%s'"), arg);
 		  usage (EXIT_FAILURE);
 		}
 	      ++k;
@@ -970,28 +967,27 @@ main (int argc, char **argv)
 	      require_set_attr = true;
 	    }
 #endif
-	  else if (STREQ (argv[k], "speed"))
+	  else if (STREQ (arg, "speed"))
 	    {
 	      max_col = screen_columns ();
 	      display_speed (&mode, false);
 	    }
-	  else if (string_to_baud (argv[k]) != (speed_t) -1)
+	  else if (string_to_baud (arg) != (speed_t) -1)
 	    {
-	      set_speed (both_speeds, argv[k], &mode);
+	      set_speed (both_speeds, arg, &mode);
 	      speed_was_set = true;
 	      require_set_attr = true;
 	    }
 	  else
 	    {
-	      if (! recover_mode (argv[k], &mode))
+	      if (! recover_mode (arg, &mode))
 		{
-		  error (0, 0, _("invalid argument `%s'"), argv[k]);
+		  error (0, 0, _("invalid argument `%s'"), arg);
 		  usage (EXIT_FAILURE);
 		}
 	      require_set_attr = true;
 	    }
 	}
-      k++;
     }
 
   if (require_set_attr)
@@ -1651,7 +1647,7 @@ display_recoverable (struct termios *mode)
 }
 
 static bool
-recover_mode (char *arg, struct termios *mode)
+recover_mode (char const *arg, struct termios *mode)
 {
   size_t i;
   int n;
