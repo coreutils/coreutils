@@ -1,5 +1,9 @@
 2000-01-02  Jim Meyering  <meyering@ascend.com>
 
+	* Version 2.0b.
+
+	* lib/Makefile.in: Regenerate.
+
 	* Version 2.0a.
 
 1999-12-26  Jim Meyering  <meyering@ascend.com>
