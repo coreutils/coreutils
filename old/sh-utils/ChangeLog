@@ -1,3 +1,9 @@
+2001-08-18  Jim Meyering  <meyering@lucent.com>
+
+	* src/test.c (binary_operator): Move declarations of lt,rt `down'
+	into the scopes where they're actually used.
+	(unary_operator): Likewise for `fd'.
+
 2001-06-20  Paul Eggert  <eggert@twinsun.com>
 
 	* src/test.c (isint, binary_operator, unary_operator):
