@@ -2696,6 +2696,24 @@ Convert each sequence of repeated newlines to a single newline:
 tr -s '\n'
 @end example
 
+@item
+Find doubled occurrences of words in a document.
+For example, people often write ``the the'' with the duplicated words
+separated by a newline.  The bourne shell script below works first
+by converting each sequence of punctuation and blank characters to a
+single newline.  That puts each ``word'' on a line by itself.
+Next it maps all uppercase characters to lower case, and finally it
+runs @code{uniq} with the @samp{-d} option to print out only the words
+that were adjacent duplicates.
+
+@example
+#!/bin/sh
+cat "$@@" \
+  | tr -s '[:punct:][:blank:]' '\n' \
+  | tr '[:upper:]' '[:lower:]' \
+  | uniq -d
+@end example
+
 @end itemize
 
 
