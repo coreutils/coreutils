@@ -221,7 +221,7 @@ range, or many ranges separated by commas.  Each range is one of:\n\
 With no FILE, or when FILE is -, read standard input.\n\
 "));
     }
-  exit (status);
+  exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
 /* The following function was copied from getline.c, but with these changes:
@@ -737,7 +737,7 @@ main (int argc, char **argv)
   if (show_version)
     {
       printf ("cut - %s\n", PACKAGE_VERSION);
-      exit (0);
+      exit (EXIT_SUCCESS);
     }
 
   if (show_help)
@@ -770,5 +770,5 @@ main (int argc, char **argv)
   if (ferror (stdout) || fclose (stdout) == EOF)
     error (1, errno, _("write error"));
 
-  exit (exit_status);
+  exit (exit_status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

@@ -129,7 +129,7 @@ A field is a run of whitespace, than non-whitespace characters.\n\
 Fields are skipped before chars. \n\
 "));
     }
-  exit (status);
+  exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
 /* Given a linebuffer LINE,
@@ -363,7 +363,7 @@ main (int argc, char **argv)
   if (show_version)
     {
       printf ("uniq - %s\n", PACKAGE_VERSION);
-      exit (0);
+      exit (EXIT_SUCCESS);
     }
 
   if (show_help)
@@ -396,5 +396,5 @@ main (int argc, char **argv)
 
   check_file (infile, outfile);
 
-  exit (0);
+  exit (EXIT_SUCCESS);
 }

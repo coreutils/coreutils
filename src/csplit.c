@@ -259,7 +259,7 @@ static void
 cleanup_fatal (void)
 {
   cleanup ();
-  exit (1);
+  exit (EXIT_FAILURE);
 }
 
 static RETSIGTYPE
@@ -904,7 +904,7 @@ process_regexp (struct control *p, int repetition)
 		      dump_rest_of_file ();
 		      close_output_file ();
 		    }
-		  exit (0);
+		  exit (EXIT_SUCCESS);
 		}
 	      else
 		regexp_error (p, repetition, ignore);
@@ -944,7 +944,7 @@ process_regexp (struct control *p, int repetition)
 		      dump_rest_of_file ();
 		      close_output_file ();
 		    }
-		  exit (0);
+		  exit (EXIT_SUCCESS);
 		}
 	      else
 		regexp_error (p, repetition, ignore);
@@ -1512,7 +1512,7 @@ main (int argc, char **argv)
   if (show_version)
     {
       printf ("csplit - %s\n", PACKAGE_VERSION);
-      exit (0);
+      exit (EXIT_SUCCESS);
     }
 
   if (show_help)
@@ -1541,7 +1541,7 @@ main (int argc, char **argv)
       cleanup_fatal ();
     }
 
-  exit (0);
+  exit (EXIT_SUCCESS);
 }
 
 static void
@@ -1580,5 +1580,5 @@ Read standard input if FILE is -.  Each PATTERN may be:\n\
 A line OFFSET is a required `+' or `-' followed by a positive integer.\n\
 "));
     }
-  exit (status);
+  exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

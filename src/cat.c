@@ -72,7 +72,7 @@ static char *line_num_end = line_buf + 10;
 static int newlines2 = 0;
 
 /* Count of non-fatal error conditions.  */
-static int exit_stat = 0;
+static int exit_status = 0;
 
 static void
 usage (int status)
@@ -105,7 +105,7 @@ Concatenate FILE(s), or standard input, to standard output.\n\
 With no FILE, or when FILE is -, read standard input.\n\
 "));
     }
-  exit (status);
+  exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
 /* Compute the next line number.  */
@@ -151,7 +151,7 @@ simple_cat (
       if (n_read < 0)
 	{
 	  error (0, errno, "%s", infile);
-	  exit_stat = 1;
+	  exit_status = 1;
 	  return;
 	}
 
@@ -286,7 +286,7 @@ cat (
 		  else
 		    {
 		      error (0, errno, _("cannot do ioctl on `%s'"), infile);
-		      exit_stat = 1;
+		      exit_status = 1;
 		      newlines2 = newlines;
 		      return;
 		    }
@@ -307,7 +307,7 @@ cat (
 	      if (n_read < 0)
 		{
 		  error (0, errno, "%s", infile);
-		  exit_stat = 1;
+		  exit_status = 1;
 		  newlines2 = newlines;
 		  return;
 		}
@@ -573,14 +573,14 @@ main (int argc, char **argv)
 	  break;
 
 	default:
-	  usage (2);
+	  usage (EXIT_FAILURE);
 	}
     }
 
   if (show_version)
     {
       printf ("cat - %s\n", PACKAGE_VERSION);
-      exit (0);
+      exit (EXIT_SUCCESS);
     }
 
   if (show_help)
@@ -637,7 +637,7 @@ main (int argc, char **argv)
 	  if (input_desc < 0)
 	    {
 	      error (0, errno, "%s", infile);
-	      exit_stat = 1;
+	      exit_status = 1;
 	      continue;
 	    }
 	}
@@ -645,7 +645,7 @@ main (int argc, char **argv)
       if (fstat (input_desc, &stat_buf) < 0)
 	{
 	  error (0, errno, "%s", infile);
-	  exit_stat = 1;
+	  exit_status = 1;
 	  goto contin;
 	}
       insize = ST_BLKSIZE (stat_buf);
@@ -660,7 +660,7 @@ main (int argc, char **argv)
 	  && (input_desc != fileno (stdin) || output_desc != fileno (stdout)))
 	{
 	  error (0, 0, _("%s: input file is output file"), infile);
-	  exit_stat = 1;
+	  exit_status = 1;
 	  goto contin;
 	}
 
@@ -710,7 +710,7 @@ main (int argc, char **argv)
       if (strcmp (infile, "-") && close (input_desc) < 0)
 	{
 	  error (0, errno, "%s", infile);
-	  exit_stat = 1;
+	  exit_status = 1;
 	}
     }
   while (++argind < argc);
@@ -720,5 +720,5 @@ main (int argc, char **argv)
   if (close (1) < 0)
     error (1, errno, _("write error"));
 
-  exit (exit_stat);
+  exit (exit_status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

@@ -79,7 +79,7 @@ Compare sorted files LEFT_FILE and RIGHT_FILE line by line.\n\
       --version   output version information and exit\n\
 "));
     }
-  exit (status);
+  exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
 /* Output the line in linebuffer LINE to stream STREAM
@@ -250,7 +250,7 @@ main (int argc, char **argv)
   if (show_version)
     {
       printf ("comm - %s\n", PACKAGE_VERSION);
-      exit (0);
+      exit (EXIT_SUCCESS);
     }
 
   if (show_help)
@@ -259,5 +259,6 @@ main (int argc, char **argv)
   if (optind + 2 != argc)
     usage (1);
 
-  exit (compare_files (argv + optind));
+  exit (compare_files (argv + optind) == 0
+	? EXIT_SUCCESS : EXIT_FAILURE);
 }

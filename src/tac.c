@@ -145,7 +145,7 @@ With no FILE, or when FILE is -, read standard input.\n\
       --version            output version information and exit\n\
 "));
     }
-  exit (status);
+  exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
 static void
@@ -158,7 +158,7 @@ static void
 cleanup_fatal (void)
 {
   cleanup ();
-  exit (1);
+  exit (EXIT_FAILURE);
 }
 
 static RETSIGTYPE
@@ -622,7 +622,7 @@ main (int argc, char **argv)
   if (show_version)
     {
       printf ("tac - %s\n", PACKAGE_VERSION);
-      exit (0);
+      exit (EXIT_SUCCESS);
     }
 
   if (show_help)
@@ -681,5 +681,5 @@ main (int argc, char **argv)
     error (1, errno, "-");
   if (close (1) < 0)
     error (1, errno, _("write error"));
-  exit (errors);
+  exit (errors == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

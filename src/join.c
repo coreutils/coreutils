@@ -198,7 +198,7 @@ the remaining fields from FILE1, the remaining fields from FILE2, all\n\
 separated by CHAR.\n\
 "));
     }
-  exit (status);
+  exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
 /* Like memcmp, but ignore differences in case.  */
@@ -803,7 +803,7 @@ main (int argc, char **argv)
 	case 'a':
 	  if (xstrtol (optarg, NULL, 10, &val, NULL) != LONGINT_OK
 	      || (val != 1 && val != 2))
-	    error (2, 0, _("invalid field number: `%s'"), optarg);
+	    error (EXIT_FAILURE, 0, _("invalid field number: `%s'"), optarg);
 	  if (val == 1)
 	    print_unpairables_1 = 1;
 	  else
@@ -822,7 +822,8 @@ main (int argc, char **argv)
 	  if (xstrtol (optarg, NULL, 10, &val, NULL) != LONGINT_OK
 	      || val <= 0 || val > INT_MAX)
 	    {
-	      error (2, 0, _("invalid field number for file 1: `%s'"), optarg);
+	      error (EXIT_FAILURE, 0,
+		     _("invalid field number for file 1: `%s'"), optarg);
 	    }
 	  join_field_1 = (int) val - 1;
 	  break;
@@ -830,20 +831,21 @@ main (int argc, char **argv)
 	case '2':
 	  if (xstrtol (optarg, NULL, 10, &val, NULL) != LONGINT_OK
 	      || val <= 0 || val > INT_MAX)
-	    error (2, 0, _("invalid field number for file 2: `%s'"), optarg);
+	    error (EXIT_FAILURE, 0,
+		   _("invalid field number for file 2: `%s'"), optarg);
 	  join_field_2 = (int) val - 1;
 	  break;
 
 	case 'j':
 	  if (xstrtol (optarg, NULL, 10, &val, NULL) != LONGINT_OK
 	      || val <= 0 || val > INT_MAX)
-	    error (2, 0, _("invalid field number: `%s'"), optarg);
+	    error (EXIT_FAILURE, 0, _("invalid field number: `%s'"), optarg);
 	  join_field_1 = join_field_2 = (int) val - 1;
 	  break;
 
 	case 'o':
 	  if (add_field_list (optarg))
-	    exit (1);
+	    exit (EXIT_FAILURE);
 	  break;
 
 	case 't':
@@ -854,7 +856,7 @@ main (int argc, char **argv)
 	  if (prev_optc == 'o' && optind <= argc - 2)
 	    {
 	      if (add_field_list (optarg))
-		exit (1);
+		exit (EXIT_FAILURE);
 
 	      /* Might be continuation of args to -o.  */
 	      continue;		/* Don't change `prev_optc'.  */
@@ -903,5 +905,5 @@ main (int argc, char **argv)
   if (ferror (stdout) || fclose (stdout) == EOF)
     error (1, errno, _("write error"));
 
-  exit (0);
+  exit (EXIT_SUCCESS);
 }

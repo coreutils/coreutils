@@ -118,7 +118,7 @@ a line with checksum, a character indicating type (`*' for binary, ` ' for\n\
 text), and name for each FILE.\n"),
 	    program_name, program_name, program_name);
 
-  exit (status);
+  exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
 /* FIXME: this format loses with filenames containing newline.  */

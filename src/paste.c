@@ -426,7 +426,7 @@ With no FILE, or when FILE is -, read standard input.\n\
 \n\
 "));
     }
-  exit (status);
+  exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
 int
@@ -473,7 +473,7 @@ main (int argc, char **argv)
   if (show_version)
     {
       printf ("paste - %s\n", PACKAGE_VERSION);
-      exit (0);
+      exit (EXIT_SUCCESS);
     }
 
   if (show_help)
@@ -492,5 +492,5 @@ main (int argc, char **argv)
     error (1, errno, "-");
   if (ferror (stdout) || fclose (stdout) == EOF)
     error (1, errno, _("write error"));
-  exit (exit_status);
+  exit (exit_status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

@@ -106,7 +106,7 @@ If -VALUE is used as first OPTION, read -c VALUE when one of\n\
 multipliers bkm follows concatenated, else read -n VALUE.\n\
 "));
     }
-  exit (status);
+  exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
 /* Convert STR, a string of ASCII digits, into an unsigned integer.
@@ -353,7 +353,7 @@ main (int argc, char **argv)
   if (show_version)
     {
       printf ("head - %s\n", PACKAGE_VERSION);
-      exit (0);
+      exit (EXIT_SUCCESS);
     }
 
   if (show_help)
@@ -380,5 +380,5 @@ main (int argc, char **argv)
   if (fclose (stdout) == EOF)
     error (1, errno, _("write error"));
 
-  exit (exit_status);
+  exit (exit_status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

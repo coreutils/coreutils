@@ -301,7 +301,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 In -wNUMBER, the letter `w' may be omitted.\n"),
 	     stdout);
     }
-  exit (status);
+  exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
 /* Decode options and launch execution.  */
@@ -398,7 +398,7 @@ main (register int argc, register char **argv)
   if (show_version)
     {
       printf ("fmt - %s\n", PACKAGE_VERSION);
-      exit (0);
+      exit (EXIT_SUCCESS);
     }
 
   if (show_help)
@@ -424,7 +424,7 @@ main (register int argc, register char **argv)
 	    error (0, errno, argv[optind]);
 	}
 
-  exit (0);
+  exit (EXIT_SUCCESS);
 }
 
 /* Trim space from the front and back of the string P, yielding the prefix,

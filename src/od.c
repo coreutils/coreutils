@@ -386,7 +386,7 @@ number implies 3.  -w without a number implies 32.  By default, od\n\
 uses -A o -t d2 -w 16.\n\
 "));
     }
-  exit (status);
+  exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
 /* Compute the greatest common denominator of U and V
@@ -1037,7 +1037,7 @@ skip (off_t n_skip)
     }
 
   if (n_skip != 0)
-    error (2, 0, _("cannot skip past end of combined input"));
+    error (EXIT_FAILURE, 0, _("cannot skip past end of combined input"));
 
   return err;
 }
@@ -1654,8 +1654,9 @@ main (int argc, char **argv)
 	      address_pad_len = 0;
 	      break;
 	    default:
-	      error (2, 0,
-		     _("invalid output address radix `%c'; it must be one character from [doxn]"),
+	      error (EXIT_FAILURE, 0,
+		     _("invalid output address radix `%c'; \
+it must be one character from [doxn]"),
 		     optarg[0]);
 	      break;
 	    }
@@ -1679,7 +1680,8 @@ main (int argc, char **argv)
 	    STRTOL_FATAL_ERROR (optarg, _("limit argument"), s_err);
 
 	  if (tmp > OFF_T_MAX)
-	    error (2, 0, _("specified number of bytes `%s' is larger than \
+	    error (EXIT_FAILURE, 0,
+		   _("specified number of bytes `%s' is larger than \
 the maximum\nrepresentable value of type off_t"), optarg);
 	  break;
 
@@ -1697,7 +1699,7 @@ the maximum\nrepresentable value of type off_t"), optarg);
 
 	case 't':
 	  if (decode_format_string (optarg))
-	    error (2, 0, _("invalid type string `%s'"), optarg);
+	    error (EXIT_FAILURE, 0, _("invalid type string `%s'"), optarg);
 	  break;
 
 	case 'v':
@@ -1758,14 +1760,15 @@ the maximum\nrepresentable value of type off_t"), optarg);
   if (show_version)
     {
       printf ("od - %s\n", PACKAGE_VERSION);
-      exit (0);
+      exit (EXIT_SUCCESS);
     }
 
   if (show_help)
     usage (0);
 
   if (flag_dump_strings && n_specs > 0)
-    error (2, 0, _("no type may be specified when dumping strings"));
+    error (EXIT_FAILURE, 0,
+	   _("no type may be specified when dumping strings"));
 
   n_files = argc - optind;
 
@@ -1928,10 +1931,10 @@ the maximum\nrepresentable value of type off_t"), optarg);
 cleanup:;
 
   if (have_read_stdin && fclose (stdin) == EOF)
-    error (2, errno, _("standard input"));
+    error (EXIT_FAILURE, errno, _("standard input"));
 
   if (fclose (stdout) == EOF)
-    error (2, errno, _("write error"));
+    error (EXIT_FAILURE, errno, _("write error"));
 
-  exit (err);
+  exit (err == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

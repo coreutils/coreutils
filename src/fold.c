@@ -94,7 +94,7 @@ standard output.\n\
   -w, --width=WIDTH   use WIDTH columns instead of 80\n\
 "));
     }
-  exit (status);
+  exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
 /* Assuming the current column is COLUMN, return the column that
@@ -309,7 +309,7 @@ main (int argc, char **argv)
   if (show_version)
     {
       printf ("fold - %s\n", PACKAGE_VERSION);
-      exit (0);
+      exit (EXIT_SUCCESS);
     }
 
   if (show_help)
@@ -326,5 +326,5 @@ main (int argc, char **argv)
   if (fclose (stdout) == EOF)
     error (1, errno, _("write error"));
 
-  exit (errs);
+  exit (errs == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

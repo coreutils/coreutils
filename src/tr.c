@@ -413,7 +413,7 @@ translating nor deleting; else squeezing uses SET2 and occurs after\n\
 translation or deletion.\n\
 "));
     }
-  exit (status);
+  exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
 /* Return nonzero if the character C is a member of the
@@ -1832,7 +1832,7 @@ main (int argc, char **argv)
   if (show_version)
     {
       printf ("tr - %s\n", PACKAGE_VERSION);
-      exit (0);
+      exit (EXIT_SUCCESS);
     }
 
   if (show_help)
@@ -1882,13 +1882,13 @@ without squeezing repeats"));
 
   spec_init (s1);
   if (parse_str ((unsigned char *) argv[optind], s1))
-    exit (1);
+    exit (EXIT_FAILURE);
 
   if (non_option_args == 2)
     {
       spec_init (s2);
       if (parse_str ((unsigned char *) argv[optind + 1], s2))
-	exit (1);
+	exit (EXIT_FAILURE);
     }
   else
     s2 = NULL;
@@ -1993,10 +1993,10 @@ without squeezing repeats"));
     }
 
   if (fclose (stdout) == EOF)
-    error (2, errno, _("write error"));
+    error (EXIT_FAILURE, errno, _("write error"));
 
   if (close (0) != 0)
-    error (2, errno, _("standard input"));
+    error (EXIT_FAILURE, errno, _("standard input"));
 
-  exit (0);
+  exit (EXIT_SUCCESS);
 }

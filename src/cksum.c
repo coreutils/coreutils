@@ -99,7 +99,7 @@ main ()
 	      remainder (i * 5 + 4), remainder (i * 5 + 5));
     }
   printf ("\n};\n");
-  exit (0);
+  exit (EXIT_SUCCESS);
 }
 
 #else /* !CRCTAB */
@@ -276,7 +276,7 @@ Print CRC checksum and byte counts of each FILE.\n\
   --version   output version information and exit\n\
 "));
     }
-  exit (status);
+  exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
 int
@@ -307,7 +307,7 @@ main (int argc, char **argv)
   if (show_version)
     {
       printf ("cksum - %s\n", PACKAGE_VERSION);
-      exit (0);
+      exit (EXIT_SUCCESS);
     }
 
   if (show_help)
@@ -327,7 +327,7 @@ main (int argc, char **argv)
 
   if (have_read_stdin && fclose (stdin) == EOF)
     error (1, errno, "-");
-  exit (errors);
+  exit (errors == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
 #endif /* !CRCTAB */

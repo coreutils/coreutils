@@ -121,7 +121,7 @@ PREFIX is `x'.  With no INPUT, or when INPUT is -, read standard input.\n\
 SIZE may have a multiplier suffix: b for 512, k for 1K, m for 1 Meg.\n\
 "));
     }
-  exit (status);
+  exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
 /* Compute the next sequential output file name suffix and store it
@@ -454,7 +454,7 @@ main (int argc, char **argv)
   if (show_version)
     {
       printf ("split - %s\n", PACKAGE_VERSION);
-      exit (0);
+      exit (EXIT_SUCCESS);
     }
 
   if (show_help)
@@ -538,5 +538,5 @@ main (int argc, char **argv)
   if (output_desc >= 0 && close (output_desc) < 0)
     error (1, errno, "%s", outfile);
 
-  exit (0);
+  exit (EXIT_SUCCESS);
 }

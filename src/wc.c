@@ -86,7 +86,7 @@ read standard input.\n\
       --version          output version information and exit\n\
 "));
     }
-  exit (status);
+  exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
 static void
@@ -293,7 +293,7 @@ main (int argc, char **argv)
   if (show_version)
     {
       printf ("wc - %s\n", PACKAGE_VERSION);
-      exit (0);
+      exit (EXIT_SUCCESS);
     }
 
   if (show_help)
@@ -321,5 +321,5 @@ main (int argc, char **argv)
   if (have_read_stdin && close (0))
     error (1, errno, "-");
 
-  exit (exit_status);
+  exit (exit_status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

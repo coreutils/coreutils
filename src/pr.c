@@ -617,7 +617,7 @@ main (int argc, char **argv)
   if (show_version)
     {
       printf ("pr - %s\n", PACKAGE_VERSION);
-      exit (0);
+      exit (EXIT_SUCCESS);
     }
 
   if (show_help)
@@ -661,7 +661,7 @@ main (int argc, char **argv)
     error (1, errno, _("write error"));
   if (failed_opens > 0)
     exit(1);
-  exit (0);
+  exit (EXIT_SUCCESS);
 }
 
 /* Parse options of the form -scNNN.
@@ -1884,5 +1884,5 @@ Paginate or columnate FILE(s) for printing.\n\
 spaces.  With no FILE, or when FILE is -, read standard input.\n\
 "));
     }
-  exit (status);
+  exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

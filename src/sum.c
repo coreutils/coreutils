@@ -75,7 +75,7 @@ Print checksum and block counts for each FILE.\n\
 With no FILE, or when FILE is -, read standard input.\n\
 "));
     }
-  exit (status);
+  exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
 /* Calculate and print the rotated checksum and the size in 1K blocks
@@ -235,7 +235,7 @@ main (int argc, char **argv)
   if (show_version)
     {
       printf ("sum - %s\n", PACKAGE_VERSION);
-      exit (0);
+      exit (EXIT_SUCCESS);
     }
 
   if (show_help)
@@ -254,6 +254,6 @@ main (int argc, char **argv)
 
   if (have_read_stdin && fclose (stdin) == EOF)
     error (1, errno, "-");
-  exit (errors);
+  exit (errors == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
