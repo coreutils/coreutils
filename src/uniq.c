@@ -50,13 +50,13 @@
 char *program_name;
 
 /* Number of fields to skip on each line when doing comparisons. */
-static int skip_fields;
+static size_t skip_fields;
 
 /* Number of chars to skip after skipping any fields. */
-static int skip_chars;
+static size_t skip_chars;
 
-/* Number of chars to compare; if 0, compare the whole lines. */
-static int check_chars;
+/* Number of chars to compare. */
+static size_t check_chars;
 
 enum countmode
 {
@@ -161,13 +161,26 @@ Fields are skipped before chars.\n\
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
+/* Convert OPT to size_t, reporting an error using MSGID if it does
+   not fit.  */
+
+static size_t
+size_opt (char const *opt, char const *msgid)
+{
+  unsigned long int size;
+  if (xstrtoul (opt, NULL, 10, &size, "") != LONGINT_OK
+      || SIZE_MAX < size)
+    error (EXIT_FAILURE, 0, "%s: %s", opt, _(msgid));
+  return size;
+}
+
 /* Given a linebuffer LINE,
    return a pointer to the beginning of the line's field to be compared. */
 
 static char *
 find_field (const struct linebuffer *line)
 {
-  register int count;
+  register size_t count;
   register char *lp = line->buffer;
   register size_t size = line->length - 1;
   register size_t i = 0;
@@ -196,13 +209,10 @@ different (const char *old, const char *new, size_t oldlen, size_t newlen)
 {
   register int order;
 
-  if (check_chars)
-    {
-      if (oldlen > check_chars)
-	oldlen = check_chars;
-      if (newlen > check_chars)
-	newlen = check_chars;
-    }
+  if (check_chars < oldlen)
+    oldlen = check_chars;
+  if (check_chars < newlen)
+    newlen = check_chars;
 
   /* Use an if-statement here rather than a function variable to
      avoid portability hassles of getting a non-conflicting declaration
@@ -383,7 +393,7 @@ main (int argc, char **argv)
 
   skip_chars = 0;
   skip_fields = 0;
-  check_chars = 0;
+  check_chars = SIZE_MAX;
   mode = output_all;
   countmode = count_none;
   delimit_groups = DM_NONE;
@@ -406,7 +416,13 @@ main (int argc, char **argv)
 	case '7':
 	case '8':
 	case '9':
-	  skip_fields = skip_fields * 10 + optc - '0';
+	  {
+	    size_t s = skip_fields;
+	    skip_fields = s * 10 + optc - '0';
+	    if (SIZE_MAX / 10 < s || skip_fields < s)
+	      error (EXIT_FAILURE, 0, "%s",
+		     _("invalid number of fields to skip"));
+	  }
 	  break;
 
 	case 'c':
@@ -428,15 +444,8 @@ main (int argc, char **argv)
 	  break;
 
 	case 'f':		/* Like '-#'. */
-	  {
-	    long int tmp_long;
-	    if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
-		|| tmp_long <= 0 || tmp_long > INT_MAX)
-	      error (EXIT_FAILURE, 0,
-		     _("invalid number of fields to skip: `%s'"),
-		     optarg);
-	    skip_fields = (int) tmp_long;
-	  }
+	  skip_fields = size_opt (optarg,
+				  N_("invalid number of fields to skip"));
 	  break;
 
 	case 'i':
@@ -444,15 +453,8 @@ main (int argc, char **argv)
 	  break;
 
 	case 's':		/* Like '+#'. */
-	  {
-	    long int tmp_long;
-	    if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
-		|| tmp_long <= 0 || tmp_long > INT_MAX)
-	      error (EXIT_FAILURE, 0,
-		     _("invalid number of bytes to skip: `%s'"),
-		     optarg);
-	    skip_chars = (int) tmp_long;
-	  }
+	  skip_chars = size_opt (optarg,
+				 N_("invalid number of bytes to skip"));
 	  break;
 
 	case 'u':
@@ -460,15 +462,8 @@ main (int argc, char **argv)
 	  break;
 
 	case 'w':
-	  {
-	    long int tmp_long;
-	    if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
-		|| tmp_long <= 0 || tmp_long > INT_MAX)
-	      error (EXIT_FAILURE, 0,
-		     _("invalid number of bytes to compare: `%s'"),
-		     optarg);
-	    check_chars = (int) tmp_long;
-	  }
+	  check_chars = size_opt (optarg,
+				  N_("invalid number of bytes to compare"));
 	  break;
 
 	case_GETOPT_HELP_CHAR;
@@ -485,16 +480,8 @@ main (int argc, char **argv)
       /* Interpret non-option arguments with leading `+' only
 	 if we haven't seen `--'.  */
       while (optind < argc && argv[optind][0] == '+')
-	{
-	  char *opt_str = argv[optind++];
-	  long int tmp_long;
-	  if (xstrtol (opt_str, NULL, 10, &tmp_long, "") != LONGINT_OK
-	      || tmp_long <= 0 || tmp_long > INT_MAX)
-	    error (EXIT_FAILURE, 0,
-		   _("invalid number of bytes to skip: `%s'"),
-		   opt_str);
-	  skip_chars = (int) tmp_long;
-	}
+	skip_chars = size_opt (argv[optind++],
+			       N_("invalid number of bytes to skip"));
     }
 
   if (optind < argc)
