@@ -13,7 +13,7 @@ Thu Dec 14 21:13:22 1995  Jim Meyering  (meyering@comco.com)
 
 	* fold.c (main): Use xstrtol instead of atoi.
 	(fold_file): Make a couple locals `int', not size_t, and cast
-	to size_t fwrite's third parameter.
+	fwrite's third parameter to size_t.
 
 	* nl.c (main): Use xstrtol instead of atoi.
 	Rename misleading --first-page=N option to --starting-line-number=N.
