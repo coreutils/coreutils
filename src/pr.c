@@ -316,6 +316,7 @@
 #include <sys/types.h>
 #include "system.h"
 #include "error.h"
+#include "hard-locale.h"
 #include "mbswidth.h"
 #include "posixver.h"
 #include "xstrtol.h"
@@ -1074,8 +1075,8 @@ main (int argc, char **argv)
     }
 
   if (! date_format)
-    date_format = (getenv ("POSIXLY_CORRECT")
-		   ? dcgettext (NULL, "%b %e %H:%M %Y", LC_TIME)
+    date_format = (getenv ("POSIXLY_CORRECT") && !hard_locale (LC_TIME)
+		   ? "%b %e %H:%M %Y"
 		   : "%Y-%m-%d %H:%M");
 
   /* Now we can set a reasonable initial value: */
