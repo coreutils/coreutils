@@ -2,6 +2,9 @@
 
 	* Version 4.0.34.
 
+	* src/ls.c (gobble_file) [USE_ACL]: Set have_acl member unconditionally
+	to avoid uninitialized memory reference via FILE_HAS_ACL.
+
 	* Makefile.maint (alpha): Use rsync rather than scp, so the destination
 	file is created only after the successful completion of the copy.
 
