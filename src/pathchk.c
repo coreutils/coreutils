@@ -1,5 +1,5 @@
 /* pathchk -- check whether pathnames are valid or portable
-   Copyright (C) 91, 92, 93, 94, 95, 96, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1991-1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -92,7 +92,6 @@
 char *xstrdup ();
 
 static int validate_path PARAMS ((char *path, int portability));
-static void usage PARAMS ((int status));
 
 /* The name this program was run with. */
 char *program_name;
@@ -110,6 +109,27 @@ static struct option const longopts[] =
   {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
+
+void
+usage (int status)
+{
+  if (status != 0)
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
+	     program_name);
+  else
+    {
+      printf (_("Usage: %s [OPTION]... NAME...\n"), program_name);
+      printf (_("\
+Diagnose unportable constructs in NAME.\n\
+\n\
+  -p, --portability   check for all POSIX systems, not only this one\n\
+      --help          display this help and exit\n\
+      --version       output version information and exit\n\
+"));
+      puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
+    }
+  exit (status);
+}
 
 int
 main (int argc, char **argv)
@@ -348,25 +368,4 @@ validate_path (char *path, int portability)
     }
 
   return 0;
-}
-
-static void
-usage (int status)
-{
-  if (status != 0)
-    fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
-  else
-    {
-      printf (_("Usage: %s [OPTION]... NAME...\n"), program_name);
-      printf (_("\
-Diagnose unportable constructs in NAME.\n\
-\n\
-  -p, --portability   check for all POSIX systems, not only this one\n\
-      --help          display this help and exit\n\
-      --version       output version information and exit\n\
-"));
-      puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
-    }
-  exit (status);
 }
