@@ -1,10 +1,19 @@
+Fri May 10 20:46:13 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* po/Makefile.in.in (all-yes): Always depend on CATALOGS.  Otherwise
+	they won't be built and install could fail.  From Ulrich Drepper.
+	(.po.mo): Disable dependency and rule when not in maintainer mode.
+
+	* aclocal.m4 (ud_WITH_NLS): Make DATADIRNAME and CATOBJEXT depend
+	on whether we're using GNU gettext.  From Ulrich Drepper.
+
 Wed May  8 21:10:43 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* intl/Makefile.in (distdir): Renamed from dist. For compatibility
 	with automake-0.32.
 	* po/Makefile.in.in (distdir): Likewise.
 
-	* po/Makefile.in.in (all-yes): Also dependend on GMOFILES.
+	* po/Makefile.in.in (all-yes): Depend on GMOFILES.
 	Depend on CATALOGS and GMOFILES files only in maintainer mode.
 
 Tue May  7 22:10:20 1996  Jim Meyering  (meyering@na-net.ornl.gov)
