@@ -7,7 +7,7 @@
 	(jm_CHECK_ALL_HEADERS): New functions with the above checks.
 	(jm_CHECK_ALL_TYPES): Require jm_CHECK_ALL_HEADERS.
 	Alan Iwi reported a build failure on an alphaev5-cray-unicosmk2.0.5.X;
-	ssize_t vs. unistd.h.
+	The check for ssize_t was mistakenly run before the test for unistd.h.
 
 	The configure-time check for stdbool.h was missing.
 	* prereq.m4 (jm_PREREQ): Add jm_PREREQ_HASH.
