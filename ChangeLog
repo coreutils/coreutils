@@ -2,6 +2,14 @@
 
 	* Version 4.5.2.
 
+	Factor nanosleep-related code into ../lib/xnanosleep.c.
+	* src/sleep.c: Include xnanosleep.h.
+	Factor out fenv.h-related code.
+	(timespec_subtract): Remove function.
+	(main): Remove code that deals with computing start and stop times
+	as well as the loop around nanosleep.  Now that's in xnanosleep.c.
+
+	Allow S (in --sleep-interval=S) to be a floating point value.
 	* src/tail.c: Include xnanosleep.h and xstrtod.h.
 	Move declaration of global variable, sleep_interval, to ...
 	(main): ...here.

@@ -1,3 +1,5 @@
+[4.5.2]
+* tail now accepts fractional seconds for its --sleep-interval=S (-s) option
 [4.5.1]
 * du and ls now report sizes of symbolic links (before they'd always report 0)
 * uniq now obeys the LC_COLLATE locale, as per POSIX 1003.1-2001 TC1.
