@@ -4,7 +4,7 @@ AUTOMAKE_OPTIONS = 1.2 gnits
 
 TESTS = \
   inode dangle file-type recursive dired infloop \
-  rt-1 time-1 symlink-slash follow-slink no-arg
+  rt-1 time-1 symlink-slash follow-slink no-arg m-option
 
 EXTRA_DIST = $(TESTS)
 TESTS_ENVIRONMENT = \
