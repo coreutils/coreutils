@@ -199,29 +199,24 @@ int rpl_lstat PARAMS((const char *, struct stat *));
 
 #if defined _DIRENT_HAVE_D_TYPE || defined DTTOIF
 # define HAVE_STRUCT_DIRENT_D_TYPE 1
+# define DT_INIT(Val) = Val
 #else
 # define HAVE_STRUCT_DIRENT_D_TYPE 0
+# define DT_INIT(Val) /* empty */
 #endif
 
 enum filetype
   {
-#if HAVE_STRUCT_DIRENT_D_TYPE
-    unknown = DT_UNKNOWN,
-    fifo = DT_FIFO,
-    chardev = DT_CHR,
-    directory = DT_DIR,
-    blockdev = DT_BLK,
-    normal = DT_REG,
-    symbolic_link = DT_LNK,
-    sock = DT_SOCK,
-    arg_directory = 2 * (DT_UNKNOWN | DT_FIFO | DT_CHR | DT_DIR | DT_BLK
-			 | DT_REG | DT_LNK | DT_SOCK)
-#else
-    symbolic_link,
-    directory,
-    arg_directory,		/* Directory given as command line arg. */
-    normal			/* All others. */
-#endif
+    unknown DT_INIT (DT_UNKNOWN),
+    fifo DT_INIT (DT_FIFO),
+    chardev DT_INIT (DT_CHR),
+    directory DT_INIT (DT_DIR),
+    blockdev DT_INIT (DT_BLK),
+    normal DT_INIT (DT_REG),
+    symbolic_link DT_INIT (DT_LNK),
+    sock DT_INIT (DT_SOCK),
+    arg_directory DT_INIT (2 * (DT_UNKNOWN | DT_FIFO | DT_CHR | DT_DIR | DT_BLK
+				| DT_REG | DT_LNK | DT_SOCK))
   };
 
 struct fileinfo
