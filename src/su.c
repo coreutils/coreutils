@@ -154,6 +154,8 @@ char *xstrdup ();
 
 extern char **environ;
 
+static void run_shell (const char *, const char *, char **) ATTRIBUTE_NORETURN;
+
 /* The name this program was run with.  */
 char *program_name;
 
@@ -398,7 +400,8 @@ run_shell (const char *shell, const char *command, char **additional_args)
       args[argno++] = *additional_args;
   args[argno] = NULL;
   execv (shell, (char **) args);
-  error (1, errno, _("cannot run %s"), shell);
+  error (0, errno, _("cannot run %s"), shell);
+  exit (1);
 }
 
 /* Return 1 if SHELL is a restricted shell (one not returned by
