@@ -12,7 +12,7 @@ use FileHandle;
 use File::Compare qw(compare);
 
 @ISA = qw(Exporter);
-($VERSION = '$Revision: 1.10 $ ') =~ tr/[0-9].//cd;
+($VERSION = '$Revision: 1.11 $ ') =~ tr/[0-9].//cd;
 @EXPORT = qw (run_tests);
 
 my $debug = $ENV{DEBUG};
@@ -189,7 +189,7 @@ sub run_tests ($$$$$)
   # FIXME
 
   # Verify that test names are distinct.
-  my $found_duplicate = 0;
+  my $bad_test_name = 0;
   my %seen;
   my $t;
   foreach $t (@$t_spec)
@@ -198,11 +198,20 @@ sub run_tests ($$$$$)
       if ($seen{$test_name})
 	{
 	  warn "$program_name: $test_name: duplicate test name\n";
-	  $found_duplicate = 1;
+	  $bad_test_name = 1;
 	}
       $seen{$test_name} = 1;
+
+      # The test name may be no longer than 12 bytes,
+      # so that we can add a two-byte suffix without exceeding
+      # the maximum of 14 imposed on some old file systems.
+      if (14 < (length $test_name) + 2)
+	{
+	  warn "$program_name: $test_name: test name is too long (> 12)\n";
+	  $bad_test_name = 1;
+	}
     }
-  return 1 if $found_duplicate;
+  return 1 if $bad_test_name;
 
   # FIXME check exit status
   system ($prog, '--version') if $verbose;
