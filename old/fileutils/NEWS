@@ -4,6 +4,26 @@
 * ls -H now means the same as ls --dereference-command-line, as per POSIX.
 * ls -g now acts like ls -l, except it does not display owner, as per POSIX.
 * ls -n now implies -l, as per POSIX.
+* ls can now display dates and times in one of four time styles:
+
+  - The `full-iso' time style gives full ISO-style time stamps like
+    `2001-05-14 23:45:56.477817180 -0700'.
+  - The 'iso' time style gives ISO-style time stamps like '2001-05-14 '
+    and '05-14 23:45'.
+  - The 'locale' time style gives locale-dependent time stamps like
+    'touko  14  2001' and 'touko  14 23:45' (in a Finnish locale).
+  - The 'posix-iso' time style gives traditional POSIX-locale
+    time stamps like 'May 14  2001' and 'May 14 23:45' unless the user
+    specifies a non-POSIX locale, in which case it uses ISO-style dates.
+    This is the default.
+
+  You can specify a time style with an option like --time-style='iso'
+  or with an environment variable like TIME_STYLE='iso'.  GNU Emacs 21
+  and later can parse ISO dates, but older Emacs versions cannot, so
+  if you are using an older version of Emacs outside the default POSIX
+  locale, you may need to set TIME_STYLE="locale".
+
+* --full-time is now an alias for "-l --time-style=full-iso".
 
 Changes in release 4.1:
 [4.0.45]
