@@ -1,5 +1,7 @@
 1999-02-07  Jim Meyering  <meyering@ascend.com>
 
+	* Version 4.0d (aka 4.1-b4).
+
 	* Makefile.maint (my-distcheck): Don't depend on dist, now that this
 	is hooked up to the distcheck rule.
 	* Makefile.am (distcheck-hook): New target and rule -- link to shared
