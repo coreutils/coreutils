@@ -508,16 +508,22 @@ files, most people use the --remove option.\n\
  * --------------------------------------------------------------------
  */
 
-#if ULONG_MAX == 0xffffffff
+#if defined __STDC__ && __STDC__
+# define UINT_MAX_32_BITS 4294967295U
+#else
+# define UINT_MAX_32_BITS 0xFFFFFFFF
+#endif
+
+#if ULONG_MAX == UINT_MAX_32_BITS
 typedef unsigned long word32;
 #else
-# if UINT_MAX == 0xffffffff
+# if UINT_MAX == UINT_MAX_32_BITS
 typedef unsigned word32;
 # else
-#  if USHRT_MAX == 0xffffffff
+#  if USHRT_MAX == UINT_MAX_32_BITS
 typedef unsigned short word32;
 #  else
-#   if UCHAR_MAX == 0xffffffff
+#   if UCHAR_MAX == UINT_MAX_32_BITS
 typedef unsigned char word32;
 #   else
      "No 32-bit type available!"
