@@ -175,6 +175,9 @@ head_lines (const char *filename, int fd, uintmax_t lines_to_write)
 static int
 head (const char *filename, int fd, uintmax_t n_units, int count_lines)
 {
+  if (print_headers)
+    write_header (filename);
+
   if (count_lines)
     return head_lines (filename, fd, n_units);
   else
@@ -189,10 +192,7 @@ head_file (const char *filename, uintmax_t n_units, int count_lines)
   if (STREQ (filename, "-"))
     {
       have_read_stdin = 1;
-      filename = _("standard input");
-      if (print_headers)
-	write_header (filename);
-      return head (filename, STDIN_FILENO, n_units, count_lines);
+      return head (_("standard input"), STDIN_FILENO, n_units, count_lines);
     }
   else
     {
@@ -201,8 +201,6 @@ head_file (const char *filename, uintmax_t n_units, int count_lines)
 	{
 	  int errors;
 
-	  if (print_headers)
-	    write_header (filename);
 	  errors = head (filename, fd, n_units, count_lines);
 	  if (close (fd) == 0)
 	    return errors;
