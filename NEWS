@@ -3,11 +3,13 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
-  chmod can now process hierarchies of virtually unlimited depth
+  chgrp, chmod, and chown can now process (with -R) hierarchies of virtually
+  unlimited depth.  Before, they would fail to operate on any file they
+  encountered with a relative name of length PATH_MAX (often 4096) or longer.
+
   chmod accepts new options: --preserve-root, --no-preserve-root
 
-  chown and chgrp can now process hierarchies of virtually unlimited depth
-  chown and chgrp now accept POSIX-mandated -L, -H, and -P options
+  chgrp and chown now accept POSIX-mandated -L, -H, and -P options
 
   du can now process hierarchies of virtually unlimited depth.
   Before, du was limited by the user's stack size and it would get a
