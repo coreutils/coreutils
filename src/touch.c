@@ -218,7 +218,7 @@ main (argc, argv)
 
   if (use_ref)
     {
-      if (SAFE_STAT (ref_file, &ref_stats))
+      if (safe_stat (ref_file, &ref_stats))
 	error (1, errno, "%s", ref_file);
       date_set++;
     }
@@ -263,7 +263,7 @@ touch (file)
   struct stat sbuf;
   int fd;
 
-  if (SAFE_STAT (file, &sbuf))
+  if (safe_stat (file, &sbuf))
     {
       if (errno != ENOENT)
 	{

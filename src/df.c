@@ -228,7 +228,7 @@ main (argc, argv)
       stats = (struct stat *)
 	xmalloc ((argc - optind) * sizeof (struct stat));
       for (i = optind; i < argc; ++i)
-	if (SAFE_STAT (argv[i], &stats[i - optind]))
+	if (safe_stat (argv[i], &stats[i - optind]))
 	  {
 	    error (0, errno, "%s", argv[i]);
 	    exit_status = 1;
@@ -341,7 +341,7 @@ show_point (point, statp)
     {
       if (me->me_dev == (dev_t) -1)
 	{
-	  if (SAFE_STAT (me->me_mountdir, &disk_stats) == 0)
+	  if (safe_stat (me->me_mountdir, &disk_stats) == 0)
 	    me->me_dev = disk_stats.st_dev;
 	  else
 	    {

@@ -199,7 +199,7 @@ rm ()
       return 1;
     }
 
-  if (SAFE_LSTAT (pathname, &path_stats))
+  if (safe_lstat (pathname, &path_stats))
     {
       if (errno == ENOENT && ignore_missing_files)
 	return 0;

@@ -194,7 +194,7 @@ change_file_mode (file, changes, deref_symlink)
   unsigned short newmode;
   int errors = 0;
 
-  if (SAFE_LSTAT (file, &file_stats))
+  if (safe_lstat (file, &file_stats))
     {
       if (force_silent == 0)
 	error (0, errno, "%s", file);
@@ -206,7 +206,7 @@ change_file_mode (file, changes, deref_symlink)
       if (! deref_symlink)
 	return 0;
       else 
-	if (SAFE_STAT (file, &file_stats))
+	if (safe_stat (file, &file_stats))
 	  {
 	    if (force_silent == 0)
 	      error (0, errno, "%s", file);

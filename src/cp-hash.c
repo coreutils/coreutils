@@ -37,7 +37,7 @@ remember_created (path)
 {
   struct stat sb;
 
-  if (SAFE_STAT (path, &sb) < 0)
+  if (safe_stat (path, &sb) < 0)
     {
       error (0, errno, "%s", path);
       return 1;

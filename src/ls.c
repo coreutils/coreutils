@@ -1471,14 +1471,14 @@ gobble_file (name, explicit_arg, dirname)
 
       if (trace_links)
 	{
-	  val = SAFE_STAT (path, &files[files_index].stat);
+	  val = safe_stat (path, &files[files_index].stat);
 	  if (val < 0)
 	    /* Perhaps a symbolically-linked to file doesn't exist; stat
 	       the link instead. */
-	    val = SAFE_LSTAT (path, &files[files_index].stat);
+	    val = safe_lstat (path, &files[files_index].stat);
 	}
       else
-	val = SAFE_LSTAT (path, &files[files_index].stat);
+	val = safe_lstat (path, &files[files_index].stat);
       if (val < 0)
 	{
 	  error (0, errno, "%s", path);
@@ -1501,7 +1501,7 @@ gobble_file (name, explicit_arg, dirname)
 	  if (linkpath
 	      && ((explicit_arg && format != long_format)
 		  || indicator_style != none || print_with_color)
-	      && SAFE_STAT (linkpath, &linkstats) == 0)
+	      && safe_stat (linkpath, &linkstats) == 0)
 	    {
 	      /* Symbolic links to directories that are mentioned on the
 	         command line are automatically traced if not being

@@ -349,7 +349,7 @@ du_files (files)
   }
 
   /* Remember the inode and device number of the current directory.  */
-  if (SAFE_STAT (".", &stat_buf))
+  if (safe_stat (".", &stat_buf))
     error (1, errno, "current directory");
   initial_ino = stat_buf.st_ino;
   initial_dev = stat_buf.st_dev;
@@ -381,7 +381,7 @@ du_files (files)
       count_entry (arg, 1, 0);
 
       /* chdir if `count_entry' has changed the working directory.  */
-      if (SAFE_STAT (".", &stat_buf))
+      if (safe_stat (".", &stat_buf))
 	error (1, errno, ".");
       if (stat_buf.st_ino != initial_ino || stat_buf.st_dev != initial_dev)
 	{
@@ -423,7 +423,7 @@ count_entry (ent, top, last_dev)
   long size;
 
   if (((top && opt_dereference_arguments)
-       ? SAFE_STAT (ent, &stat_buf)
+       ? safe_stat (ent, &stat_buf)
        : (*xstat) (ent, &stat_buf)) < 0)
     {
       error (0, errno, "%s", path->text);

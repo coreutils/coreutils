@@ -226,7 +226,7 @@ main (argc, argv)
 	 `ln source dest/' to `ln source dest/basename(source)'.  */
 
       if (dest[strlen (dest) - 1] == '/'
-	  && SAFE_LSTAT (source, &source_stats) == 0
+	  && safe_lstat (source, &source_stats) == 0
 	  && !S_ISDIR (source_stats.st_mode))
 	{
 	  PATH_BASENAME_CONCAT (new_dest, dest, source);
@@ -274,7 +274,7 @@ do_link (source, dest)
     {
       struct stat source_stats;
 
-      if (SAFE_STAT (source, &source_stats) != 0)
+      if (safe_stat (source, &source_stats) != 0)
 	{
 	  error (0, errno, "%s", source);
 	  return 1;
@@ -286,7 +286,7 @@ do_link (source, dest)
 	}
     }
 
-  if (SAFE_LSTAT (dest, &dest_stats) != 0 && errno != ENOENT)
+  if (safe_lstat (dest, &dest_stats) != 0 && errno != ENOENT)
     {
       error (0, errno, "%s", dest);
       return 1;
@@ -296,7 +296,7 @@ do_link (source, dest)
      and the user has not specified --no-dereference), then form the
      actual destination name by appending basename (source) to the
      specified destination directory.  */
-  lstat_status = SAFE_LSTAT (dest, &dest_stats);
+  lstat_status = safe_lstat (dest, &dest_stats);
 
   if (lstat_status != 0 && errno != ENOENT)
     {
@@ -317,12 +317,12 @@ do_link (source, dest)
       char *new_dest;
       PATH_BASENAME_CONCAT (new_dest, dest, source);
       dest = new_dest;
-      /* Set this to non-zero to force another call to SAFE_LSTAT
+      /* Set this to non-zero to force another call to safe_lstat
 	 with the new destination.  */
       lstat_status = 1;
     }
 
-  if (lstat_status == 0 || SAFE_LSTAT (dest, &dest_stats) == 0)
+  if (lstat_status == 0 || safe_lstat (dest, &dest_stats) == 0)
     {
       if (S_ISDIR (dest_stats.st_mode))
 	{

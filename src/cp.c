@@ -320,7 +320,7 @@ do_copy (argc, argv)
 
   dest = argv[argc - 1];
 
-  if (SAFE_LSTAT (dest, &sb))
+  if (safe_lstat (dest, &sb))
     {
       if (errno != ENOENT)
 	{
@@ -337,7 +337,7 @@ do_copy (argc, argv)
       /* If `dest' is not a symlink to a nonexistent file, use
 	 the results of stat instead of lstat, so we can copy files
 	 into symlinks to directories. */
-      if (SAFE_STAT (dest, &sbx) == 0)
+      if (safe_stat (dest, &sbx) == 0)
 	sb = sbx;
     }
 
@@ -429,7 +429,7 @@ do_copy (argc, argv)
 	 `cp source dest/' to `cp source dest/basename(source)'.  */
 
       if (dest[strlen (dest) - 1] == '/'
-	  && SAFE_LSTAT (source, &source_stats) == 0
+	  && safe_lstat (source, &source_stats) == 0
 	  && !S_ISDIR (source_stats.st_mode))
 	{
 	  char *source_base;
