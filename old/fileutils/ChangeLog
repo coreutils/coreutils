@@ -1,6 +1,11 @@
-1998-12-18  Jim Meyering  <meyering@ascend.com>
+1998-12-19  Jim Meyering  <meyering@ascend.com>
 
 	* Version 4.1-b1.
+
+	* Makefile.maint (my-distcheck): Run make with
+	CFLAGS='-Wformat -Werror'.
+
+1998-12-18  Jim Meyering  <meyering@ascend.com>
 
 	* src/copy.c (copy_internal): Remove errnoeous `%s: ' prefix
 	from format string.  From Michiel Bacchiani.
