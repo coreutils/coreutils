@@ -1,3 +1,7 @@
+2003-10-25  Jim Meyering  <jim@meyering.net>
+
+	* obstack.c, obstack.h: Update from gnulib.
+
 2003-10-25  Jim Meyering  <meyering@lucent.com>
 
 	* fts_.h: Include <features.h> only if _LIBC.
