@@ -103,14 +103,14 @@ static size_t conversion_blocksize = 0;
 /* Skip this many records of `input_blocksize' bytes before input. */
 static uintmax_t skip_records = 0;
 
+/* Nonzero if SKIP_RECORDS is actually a byte count, not a record count.  */
+static int skip_bytes = 0;
+
 /* Skip this many records of `output_blocksize' bytes before output. */
-static uintmax_t seek_record = 0;
+static uintmax_t seek_records = 0;
 
-/* Skip this many bytes before input. */
-static uintmax_t skip_bytes = 0;
-
-/* Skip this many bytes before output. */
-static uintmax_t seek_bytes = 0;
+/* Nonzero if SEEK_RECORDS is actually a byte count, not a record count.  */
+static int seek_bytes = 0;
 
 /* Copy only this many records.  The default is effectively infinity.  */
 static uintmax_t max_records = (uintmax_t) -1;
@@ -304,18 +304,14 @@ Copy a file, converting and formatting according to the options.\n\
   obs=BYTES       write BYTES bytes at a time\n\
   of=FILE         write to FILE instead of stdout\n\
   seek=BLOCKS     skip BLOCKS obs-sized blocks at start of output\n\
-  bseek=BYTES     skip BYTES at start of output\n\
   skip=BLOCKS     skip BLOCKS ibs-sized blocks at start of input\n\
-  bskip=BYTES     skip BYTES at start of input\n\
       --help      display this help and exit\n\
       --version   output version information and exit\n\
 \n\
-Only one of each of the [b]seek or [b]skip option pairs may be used\n\
-at any one time.\n\
-\n\
-BYTES may be followed by the following multiplicative suffixes:\n\
+BLOCKS and BYTES may be followed by the following multiplicative suffixes:\n\
 xM M, c 1, w 2, b 512, kD 1000, k 1024, MD 1,000,000, M 1,048,576,\n\
 GD 1,000,000,000, G 1,073,741,824, and so on for T, P, E, Z, Y.\n\
+For seek= and skip=, a B suffix for BLOCKS means it counts bytes not blocks.\n\
 Each KEYWORD may be:\n\
 \n\
   ascii     from EBCDIC to ASCII\n\
@@ -570,7 +566,18 @@ scanargs (int argc, char **argv)
       else
 	{
 	  int invalid = 0;
-	  uintmax_t n = parse_integer (val, &invalid);
+	  uintmax_t n;
+	  int count_bytes = 0;
+
+	  if (STREQ (name, "seek") || STREQ (name, "skip"))
+	    {
+	      size_t vallen = strlen (val);
+	      count_bytes = vallen && val[vallen - 1] == 'B';
+	      if (count_bytes)
+		val[vallen - 1] = '\0';
+	    }
+
+	  n = parse_integer (val, &invalid);
 
 	  if (STREQ (name, "ibs"))
 	    {
@@ -598,26 +605,12 @@ scanargs (int argc, char **argv)
 	  else if (STREQ (name, "skip"))
 	    {
 	      skip_records = n;
-	      /* may use option only when bskip=BYTES option is not used */
-	      invalid |= skip_bytes != 0;
+	      skip_bytes = count_bytes;
 	    }
 	  else if (STREQ (name, "seek"))
 	    {
-	      seek_record = n;
-	      /* may use option only when bseek=BYTES option is not used */
-	      invalid |= seek_bytes != 0;
-	    }
-	  else if (STREQ (name, "bseek"))
-	    {
-	      seek_bytes = n;
-	      /* may use option only when seek=BLOCKS option is not used */
-	      invalid |= seek_record != 0;
-	    }
-	  else if (STREQ (name, "bskip"))
-	    {
-	      skip_bytes = n;
-	      /* may use option only when skip=BLOCKS option is not used */
-	      invalid |= skip_records != 0;
+	      seek_records = n;
+	      seek_bytes = count_bytes;
 	    }
 	  else if (STREQ (name, "count"))
 	    max_records = n;
@@ -784,67 +777,43 @@ buggy_lseek_support (int fdesc)
 	  && (S_ISCHR (stats.st_mode)));
 }
 
-enum Unit
-{
-  U_BYTES,
-  U_BLOCKS
-};
-typedef enum Unit Unit;
-
-/* Discard N bytes or blocks (determined by UNITS) of the data on file
-   descriptor FDESC, which is open with read permission for FILE.
-   Store up to BLOCKSIZE bytes of the data at a time in BUF, if necessary.
-   RECORDS must be nonzero.  */
+/* Throw away RECORDS blocks of BLOCKSIZE bytes on file descriptor FDESC,
+   which is open with read permission for FILE.  Store up to BLOCKSIZE
+   bytes of the data at a time in BUF, if necessary.  RECORDS must be
+   nonzero.  */
 
 static void
-skip (int fdesc, char const *file, uintmax_t n, Unit units, size_t blocksize,
+skip (int fdesc, char *file, uintmax_t records, size_t blocksize,
       unsigned char *buf)
 {
-  off_t o = (units == U_BYTES ? n : n * blocksize);
+  off_t o;
 
   /* Try lseek and if an error indicates it was an inappropriate
      operation, fall back on using read.  Some broken versions of
      lseek may return zero, so count that as an error too as a valid
      zero return is not possible here.  */
-
-  if ((units == U_BYTES || o / blocksize == n)
-      && !buggy_lseek_support (fdesc)
-      && lseek (fdesc, o, SEEK_CUR) > 0)
-    return;
-
-  do
+  o = records * blocksize;
+  if (o / blocksize != records
+      || buggy_lseek_support (fdesc)
+      || lseek (fdesc, o, SEEK_CUR) <= 0)
     {
-      int nread;
-
-      /* Decrement N according to UNITS: if we're counting blocks, then
-	 simply decrement N by 1.  Otherwise, decrement N by BLOCKSIZE
-	 (the last read may be smaller than BLOCKSIZE).  */
-      if (units == U_BLOCKS)
-	--n;
-      else
+      while (records-- > 0)
 	{
-	  if (blocksize <= n)
-	    n -= blocksize;
-	  else
+	  int nread;
+
+	  nread = safe_read (fdesc, buf, blocksize);
+	  if (nread < 0)
 	    {
-	      n = 0;
-	      blocksize = n;
+	      error (0, errno, _("reading %s"), quote (file));
+	      quit (1);
 	    }
+	  /* POSIX doesn't say what to do when dd detects it has been
+	     asked to skip past EOF, so I assume it's non-fatal.
+	     FIXME: maybe give a warning.  */
+	  if (nread == 0)
+	    break;
 	}
-
-      nread = safe_read (fdesc, buf, blocksize);
-      if (nread < 0)
-	{
-	  error (0, errno, _("reading %s"), quote (file));
-	  quit (1);
-	}
-      /* POSIX doesn't say what to do when dd detects it has been
-	 asked to skip past EOF, so I assume it's non-fatal.
-	 FIXME: maybe give a warning.  */
-      if (nread == 0)
-	break;
     }
-  while (n > 0);
 }
 
 /* Copy NREAD bytes of BUF, with no conversions.  */
@@ -992,14 +961,10 @@ dd_copy (void)
     }
 
   if (skip_records != 0)
-    skip (STDIN_FILENO, input_file, skip_records, U_BLOCKS,
-	  input_blocksize, ibuf);
+    skip (STDIN_FILENO, input_file, skip_records,
+	  skip_bytes ? 1 : input_blocksize, ibuf);
 
-  if (skip_bytes != 0)
-    skip (STDIN_FILENO, input_file, skip_bytes, U_BYTES,
-	  input_blocksize, ibuf);
-
-  if (seek_record != 0)
+  if (seek_records != 0)
     {
       /* FIXME: this loses for
 	 % ./dd if=dd seek=1 |:
@@ -1008,13 +973,9 @@ dd_copy (void)
 	 0+0 records out
 	 */
 
-      skip (STDOUT_FILENO, output_file, seek_record, U_BLOCKS,
-	    output_blocksize, obuf);
+      skip (STDOUT_FILENO, output_file, seek_records,
+	    seek_bytes ? 1 : output_blocksize, obuf);
     }
-
-  if (seek_bytes != 0)
-    skip (STDOUT_FILENO, output_file, seek_bytes, U_BYTES,
-	  output_blocksize, obuf);
 
   if (max_records == 0)
     quit (exit_status);
@@ -1206,34 +1167,24 @@ main (int argc, char **argv)
       mode_t perms = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH;
       int opts
 	= (O_CREAT
-	   | ((seek_record || seek_bytes)
-	      || (conversions_mask & C_NOTRUNC) ? 0 : O_TRUNC));
+	   | (seek_records || (conversions_mask & C_NOTRUNC) ? 0 : O_TRUNC));
 
       /* Open the output file with *read* access only if we might
 	 need to read to satisfy a `seek=' request.  If we can't read
 	 the file, go ahead with write-only access; it might work.  */
-      if (((seek_record == 0
-	    && seek_bytes == 0)
+      if ((! seek_records
 	   || open_fd (STDOUT_FILENO, output_file, O_RDWR | opts, perms) < 0)
 	  && open_fd (STDOUT_FILENO, output_file, O_WRONLY | opts, perms) < 0)
 	error (1, errno, _("opening %s"), quote (output_file));
 
 #if HAVE_FTRUNCATE
-      if ((seek_record != 0 || seek_bytes != 0)
-	  && !(conversions_mask & C_NOTRUNC))
+      if (seek_records != 0 && !(conversions_mask & C_NOTRUNC))
 	{
 	  struct stat stdout_stat;
-	  off_t o;
-	  if (seek_record)
-	    {
-	      o = seek_record * output_blocksize;
-	      if (o / output_blocksize != seek_record)
-		error (1, 0, _("file offset out of range"));
-	    }
-	  else
-	    {
-	      o = seek_bytes;
-	    }
+	  size_t blocksize = seek_bytes ? 1 : output_blocksize;
+	  off_t o = seek_records * blocksize;
+	  if (o / blocksize != seek_records)
+	    error (1, 0, _("file offset out of range"));
 
 	  if (fstat (STDOUT_FILENO, &stdout_stat) != 0)
 	    error (1, errno, _("cannot fstat %s"), quote (output_file));
@@ -1249,16 +1200,9 @@ main (int argc, char **argv)
 		  || S_TYPEISSHM (stdout_stat.st_mode)))
 	    {
 	      char buf[LONGEST_HUMAN_READABLE + 1];
-	      if (seek_record)
-		error (1, errno,
-		       _("advancing past %s blocks in output file %s"),
-		       human_readable (seek_record, buf, 1, 1),
-		       quote (output_file));
-	      else
-		error (1, errno,
-		       _("advancing past %s bytes in output file %s"),
-		       human_readable (seek_bytes, buf, 1, 1),
-		       quote (output_file));
+	      error (1, errno, _("advancing past %s bytes in output file %s"),
+		     human_readable (o, buf, 1, 1),
+		     quote (output_file));
 	    }
 	}
 #endif
