@@ -1,4 +1,6 @@
 Changes in release 1.23
+[1.22o]
+* tail accepts new option: --pid=PID
 [1.22n]
 * tail accepts the following new options (some of which were added in 1.22g):
   --retry
