@@ -463,7 +463,7 @@ remove_cwd_entries (const struct rm_options *x)
       if (CLOSEDIR (dirp))
 	{
 	  /* FIXME-someday: but this is actually the previously opened dir.  */
-	  error (0, errno, "%s", full_filename ("."));
+	  error (0, errno, "%s", quote (full_filename (".")));
 	  status = RM_ERROR;
 	}
       dirp = NULL;
