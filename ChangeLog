@@ -2,6 +2,10 @@
 
 	* Version 5.2.1.
 
+	* tests/du/deref-args: Also convert sizes in the 70-79 kB range,
+	so that this test works with SELinux-enable systems.
+	Based on a patch from Tim Waugh.
+
 	`join -1 x' would give a misleading diagnostic
 	* src/join.c (string_to_join_field): Report that a non-numeric field
 	number is invalid, rather than `so large that it is not representable'.
