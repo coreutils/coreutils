@@ -125,6 +125,7 @@ DEFS = -DLIBDIR=\"$(libdir)\" @DEFS@
 libfetish_a_SOURCES = \
   getdate.h getdate.y \
   posixtm.c posixtm.h \
+  posixver.c posixver.h \
   strftime.c \
   getopt.c getopt.h getopt1.c \
   hash.c hash.h \
@@ -232,9 +233,9 @@ LIBRARIES = $(noinst_LIBRARIES)
 
 libfetish_a_AR = $(AR) cru
 am_libfetish_a_OBJECTS = getdate$U.$(OBJEXT) posixtm$U.$(OBJEXT) \
-	strftime$U.$(OBJEXT) getopt$U.$(OBJEXT) getopt1$U.$(OBJEXT) \
-	hash$U.$(OBJEXT) hash-pjw$U.$(OBJEXT) addext$U.$(OBJEXT) \
-	argmatch$U.$(OBJEXT) backupfile$U.$(OBJEXT) \
+	posixver$U.$(OBJEXT) strftime$U.$(OBJEXT) getopt$U.$(OBJEXT) \
+	getopt1$U.$(OBJEXT) hash$U.$(OBJEXT) hash-pjw$U.$(OBJEXT) \
+	addext$U.$(OBJEXT) argmatch$U.$(OBJEXT) backupfile$U.$(OBJEXT) \
 	basename$U.$(OBJEXT) canon-host$U.$(OBJEXT) \
 	closeout$U.$(OBJEXT) diacrit$U.$(OBJEXT) dirname$U.$(OBJEXT) \
 	dup-safer$U.$(OBJEXT) exclude$U.$(OBJEXT) filemode$U.$(OBJEXT) \
@@ -319,7 +320,8 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/modechange$U.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/path-concat$U.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/physmem$U.Po ./$(DEPDIR)/posixtm$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/quote$U.Po ./$(DEPDIR)/quotearg$U.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/posixver$U.Po ./$(DEPDIR)/quote$U.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/quotearg$U.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/readtokens$U.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/safe-read$U.Po ./$(DEPDIR)/same$U.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/save-cwd$U.Po ./$(DEPDIR)/savedir$U.Po \
@@ -366,6 +368,8 @@ all: $(BUILT_SOURCES)
 $(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.ac $(ACLOCAL_M4)
 	cd $(top_srcdir) && \
 	  $(AUTOMAKE) --gnu  lib/Makefile
+Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__depfiles_maybe)
 
 AR = ar
 
@@ -488,6 +492,7 @@ mostlyclean-kr:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/path-concat$U.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/physmem$U.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/posixtm$U.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/posixver$U.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/quote$U.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/quotearg$U.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/readtokens$U.Po@am__quote@
@@ -671,6 +676,8 @@ physmem_.c: physmem.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/physmem.c; then echo $(srcdir)/physmem.c; else echo physmem.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > physmem_.c || rm -f physmem_.c
 posixtm_.c: posixtm.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/posixtm.c; then echo $(srcdir)/posixtm.c; else echo posixtm.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > posixtm_.c || rm -f posixtm_.c
+posixver_.c: posixver.c $(ANSI2KNR)
+	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/posixver.c; then echo $(srcdir)/posixver.c; else echo posixver.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > posixver_.c || rm -f posixver_.c
 putenv_.c: lib/putenv.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/lib/putenv.c; then echo $(srcdir)/lib/putenv.c; else echo lib/putenv.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > putenv_.c || rm -f putenv_.c
 quote_.c: quote.c $(ANSI2KNR)
@@ -800,24 +807,25 @@ memmove_.$(OBJEXT) memrchr_.$(OBJEXT) memset_.$(OBJEXT) \
 mkdir_.$(OBJEXT) mkstemp_.$(OBJEXT) mktime_.$(OBJEXT) \
 modechange_.$(OBJEXT) mountlist_.$(OBJEXT) nanosleep_.$(OBJEXT) \
 obstack_.$(OBJEXT) path-concat_.$(OBJEXT) physmem_.$(OBJEXT) \
-posixtm_.$(OBJEXT) putenv_.$(OBJEXT) quote_.$(OBJEXT) \
-quotearg_.$(OBJEXT) readtokens_.$(OBJEXT) readutmp_.$(OBJEXT) \
-realloc_.$(OBJEXT) regex_.$(OBJEXT) rename_.$(OBJEXT) rmdir_.$(OBJEXT) \
-rpmatch_.$(OBJEXT) safe-read_.$(OBJEXT) same_.$(OBJEXT) \
-save-cwd_.$(OBJEXT) savedir_.$(OBJEXT) sha_.$(OBJEXT) stat_.$(OBJEXT) \
-stime_.$(OBJEXT) stpcpy_.$(OBJEXT) strcasecmp_.$(OBJEXT) \
-strcspn_.$(OBJEXT) strdup_.$(OBJEXT) strftime_.$(OBJEXT) \
-stripslash_.$(OBJEXT) strncasecmp_.$(OBJEXT) strndup_.$(OBJEXT) \
-strnlen_.$(OBJEXT) strpbrk_.$(OBJEXT) strstr_.$(OBJEXT) \
-strtod_.$(OBJEXT) strtoimax_.$(OBJEXT) strtol_.$(OBJEXT) \
-strtoll_.$(OBJEXT) strtoul_.$(OBJEXT) strtoull_.$(OBJEXT) \
-strtoumax_.$(OBJEXT) strverscmp_.$(OBJEXT) tempname_.$(OBJEXT) \
-unicodeio_.$(OBJEXT) userspec_.$(OBJEXT) utime_.$(OBJEXT) \
-version-etc_.$(OBJEXT) xgetcwd_.$(OBJEXT) xgethostname_.$(OBJEXT) \
-xmalloc_.$(OBJEXT) xmemcoll_.$(OBJEXT) xreadlink_.$(OBJEXT) \
-xstrdup_.$(OBJEXT) xstrtod_.$(OBJEXT) xstrtoimax_.$(OBJEXT) \
-xstrtol_.$(OBJEXT) xstrtoul_.$(OBJEXT) xstrtoumax_.$(OBJEXT) \
-yesno_.$(OBJEXT) : $(ANSI2KNR)
+posixtm_.$(OBJEXT) posixver_.$(OBJEXT) putenv_.$(OBJEXT) \
+quote_.$(OBJEXT) quotearg_.$(OBJEXT) readtokens_.$(OBJEXT) \
+readutmp_.$(OBJEXT) realloc_.$(OBJEXT) regex_.$(OBJEXT) \
+rename_.$(OBJEXT) rmdir_.$(OBJEXT) rpmatch_.$(OBJEXT) \
+safe-read_.$(OBJEXT) same_.$(OBJEXT) save-cwd_.$(OBJEXT) \
+savedir_.$(OBJEXT) sha_.$(OBJEXT) stat_.$(OBJEXT) stime_.$(OBJEXT) \
+stpcpy_.$(OBJEXT) strcasecmp_.$(OBJEXT) strcspn_.$(OBJEXT) \
+strdup_.$(OBJEXT) strftime_.$(OBJEXT) stripslash_.$(OBJEXT) \
+strncasecmp_.$(OBJEXT) strndup_.$(OBJEXT) strnlen_.$(OBJEXT) \
+strpbrk_.$(OBJEXT) strstr_.$(OBJEXT) strtod_.$(OBJEXT) \
+strtoimax_.$(OBJEXT) strtol_.$(OBJEXT) strtoll_.$(OBJEXT) \
+strtoul_.$(OBJEXT) strtoull_.$(OBJEXT) strtoumax_.$(OBJEXT) \
+strverscmp_.$(OBJEXT) tempname_.$(OBJEXT) unicodeio_.$(OBJEXT) \
+userspec_.$(OBJEXT) utime_.$(OBJEXT) version-etc_.$(OBJEXT) \
+xgetcwd_.$(OBJEXT) xgethostname_.$(OBJEXT) xmalloc_.$(OBJEXT) \
+xmemcoll_.$(OBJEXT) xreadlink_.$(OBJEXT) xstrdup_.$(OBJEXT) \
+xstrtod_.$(OBJEXT) xstrtoimax_.$(OBJEXT) xstrtol_.$(OBJEXT) \
+xstrtoul_.$(OBJEXT) xstrtoumax_.$(OBJEXT) yesno_.$(OBJEXT) : \
+$(ANSI2KNR)
 
 .y.c:
 	$(YACCCOMPILE) $<
@@ -997,8 +1005,6 @@ stat.c: xstat.in
 	  -e '/@BEGIN_LSTAT_ONLY@/,/@END_LSTAT_ONLY@/d' \
 	  $(srcdir)/xstat.in > $@-t
 	mv $@-t $@
-
-Makefile: $(BUILT_SOURCES)
 
 # The following is needed in order to install a simple file in $(libdir)
 # which is shared with other installed packages. We use a list of referencing
