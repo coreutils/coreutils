@@ -21,9 +21,18 @@
 
 2004-01-03  Jim Meyering  <jim@meyering.net>
 
-	* src/paste.c (paste_parallel): Remove needless complexity of
+	* src/paste.c: Use `bool' (not int) as the type for a few
+	global variables.
+	(collapse_escapes): Rewrite to set globals rather than modifying
+	its parameter.
+	Use size_t (not int) for all counters and related index variables.
+	(paste_parallel): Remove needless complexity of
 	using xrealloc in the loop;  just allocate the buffers up front.
 	Free the two temporary buffers.
+	Move declarations of locals `down' into scope where used.
+	(paste_serial): Remove `register' attributes.
+	(main): Simplify delim-related code.
+	Free `delims', now that it's malloc'd.
 
 2004-01-02  Jim Meyering  <jim@meyering.net>
 
