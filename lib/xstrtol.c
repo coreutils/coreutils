@@ -91,15 +91,14 @@ __xstrtol (s, ptr, base, val, valid_suffixes)
     return LONGINT_OVERFLOW;
   if (*p == s)
     return LONGINT_INVALID;
+
+  /* Let valid_suffixes == NULL mean `allow any suffix'.  */
+  /* FIXME: update all callers except the one in tail.c changing
+     last parameter NULL to `""'.  */
   if (!valid_suffixes)
     {
-      if (**p == '\0')
-	{
-	  *val = tmp;
-	  return LONGINT_OK;
-	}
-      else
-	return LONGINT_INVALID_SUFFIX_CHAR;
+      *val = tmp;
+      return LONGINT_OK;
     }
 
   if (**p != '\0')
