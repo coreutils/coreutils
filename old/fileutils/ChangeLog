@@ -1,3 +1,43 @@
+2001-09-01  Jim Meyering  <meyering@lucent.com>
+
+	* Version 4.1.1.
+
+	* src/ls.c: Include "xreadlink.h".
+	(get_link_name): Don't use PATH_MAX.
+	Rewrite to use xreadlink.
+
+2001-08-30  Paul Eggert  <eggert@twinsun.com>
+
+	* src/chgrp.c: Do not include savedir.h; not used.
+	* src/chown.c: Likewise.
+
+	* src/chmod.c (change_dir_mode): Remove statp arg; no longer needed.
+	* src/chown-core.c (change_dir_owner): Likewise.
+	* src/du.c (count_entry): Remove st_size argument.
+	* src/copy.c (copy_dir): Likewise.
+
+2001-08-30  Paul Eggert  <eggert@twinsun.com>
+
+	* src/copy.c: Include full-write.h.
+	* src/dd.c: Likewise.
+
+	* src/copy.c (full_write): Remove decl; not needed.
+	* src/dd.c: Likewise.
+	* src/install.c: Likewise.
+	* src/mv.c: Likewise.
+
+	* src/copy.c (copy_reg):
+	Don't assume read and write size fits in int.
+	* src/dd.c (open_fd): Likewise.
+
+2001-08-30  Paul Eggert  <eggert@twinsun.com>
+
+	* src/remove.c (bool): Remove; moved to...
+	* src/system.h: ...here.
+
+	* src/du.c (count_entry, main): Reflect changes to the
+	exclude functions.
+
 2001-08-13  Jim Meyering  <meyering@lucent.com>
 
 	* src/cp.c, src/dd.c, src/ln.c, src/ls.c, src/mv.c (AUTHORS): Mark
