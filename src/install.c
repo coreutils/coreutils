@@ -78,6 +78,9 @@
 #include "closeout.h"
 #include "error.h"
 #include "xstrtol.h"
+#include "path-concat.h"
+#include "cp-hash.h"
+#include "copy.h"
 
 #if HAVE_SYS_WAIT_H
 # include <sys/wait.h>
@@ -103,6 +106,12 @@ gid_t getgid ();
 # define endpwent() ((void) 0)
 #endif
 
+/* Initial number of entries in each hash table entry's table of inodes.  */
+#define INITIAL_HASH_MODULE 100
+
+/* Initial number of entries in the inode hash table.  */
+#define INITIAL_ENTRY_TAB_SIZE 70
+
 /* True if C is an ASCII octal digit. */
 #define isodigit(c) ((c) >= '0' && c <= '7')
 
@@ -119,18 +128,22 @@ gid_t getgid ();
 
 char *base_name ();
 char *dirname ();
-int safe_read ();
 int full_write ();
 int isdir ();
 enum backup_type get_version ();
 
+int stat ();
+
 static int change_timestamps PARAMS ((const char *from, const char *to));
-static int change_attributes PARAMS ((const char *path, int no_need_to_chown));
+static int change_attributes PARAMS ((const char *path, mode_t mode));
 static int copy_file PARAMS ((const char *from, const char *to,
-			      int *to_created));
-static int install_file_to_path PARAMS ((const char *from, const char *to));
-static int install_file_in_dir PARAMS ((const char *from, const char *to_dir));
-static int install_file_in_file PARAMS ((const char *from, const char *to));
+			      const struct cp_options *x));
+static int install_file_to_path PARAMS ((const char *from, const char *to,
+					 const struct cp_options *x));
+static int install_file_in_dir PARAMS ((const char *from, const char *to_dir,
+					const struct cp_options *x));
+static int install_file_in_file PARAMS ((const char *from, const char *to,
+					 const struct cp_options *x));
 static void get_ids PARAMS ((void));
 static void strip PARAMS ((const char *path));
 static void usage PARAMS ((int status));
@@ -155,21 +168,11 @@ static char *group_name;
 /* The group ID corresponding to `group_name'. */
 static gid_t group_id;
 
-/* The permissions to which the files will be set.  The umask has
-   no effect. */
-static int mode;
-
 /* If nonzero, strip executable files after copying them. */
 static int strip_files;
 
-/* If nonzero, preserve timestamps when installing files. */
-static int preserve_timestamps;
-
 /* If nonzero, install a directory instead of a regular file. */
 static int dir_arg;
-
-/* If nonzero, show what we are doing.  */
-static int verbose;
 
 /* If nonzero, display usage information and exit.  */
 static int show_help;
@@ -193,6 +196,35 @@ static struct option const long_options[] =
   {NULL, 0, NULL, 0}
 };
 
+static void
+cp_option_init (struct cp_options *x)
+{
+  x->copy_as_regular = 1;
+  x->dereference = 1;
+  x->force = 1;
+
+  /* If unlink fails, try to proceed anyway.  */
+  x->failed_unlink_is_fatal = 0;
+
+  x->hard_link = 0;
+  x->interactive = 0;
+  x->myeuid = geteuid ();
+  x->one_file_system = 0;
+  x->preserve_owner_and_group = 0;
+  x->preserve_chmod_bits = 0;
+  x->preserve_timestamps = 0;
+  x->require_preserve = 0;
+  x->recursive = 0;
+  x->sparse_mode = SPARSE_AUTO;
+  x->symbolic_link = 0;
+  x->use_mode = 1;
+  x->mode = 0755;
+  x->umask_kill = 0;
+  x->update = 0;
+  x->verbose = 0;
+  x->xstat = stat;
+}
+
 int
 main (int argc, char **argv)
 {
@@ -202,19 +234,21 @@ main (int argc, char **argv)
   int make_backups = 0;
   char *version;
   int mkdir_and_install = 0;
+  struct cp_options x;
+  int n_files;
+  char **file;
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  cp_option_init (&x);
+
   owner_name = NULL;
   group_name = NULL;
-  mode = 0755;
   strip_files = 0;
-  preserve_timestamps = 0;
   dir_arg = 0;
-  verbose = 0;
   umask (0);
 
   version = getenv ("SIMPLE_BACKUP_SUFFIX");
@@ -244,7 +278,7 @@ main (int argc, char **argv)
 	  mkdir_and_install = 1;
 	  break;
 	case 'v':
-	  verbose = 1;
+	  x.verbose = 0;
 	  break;
 	case 'g':
 	  group_name = optarg;
@@ -256,7 +290,7 @@ main (int argc, char **argv)
 	  owner_name = optarg;
 	  break;
 	case 'p':
-	  preserve_timestamps = 1;
+	  x.preserve_timestamps = 1;
 	  break;
 	case 'S':
 	  simple_backup_suffix = optarg;
@@ -284,9 +318,12 @@ main (int argc, char **argv)
     error (1, 0,
 	   _("the strip option may not be used when installing a directory"));
 
-  backup_type = (make_backups ? get_version (version) : none);
+  x.backup_type = (make_backups ? get_version (version) : none);
 
-  if (optind == argc || (optind == argc - 1 && !dir_arg))
+  n_files = argc - optind;
+  file = argv + optind;
+
+  if (n_files == 0 || (n_files == 1 && !dir_arg))
     {
       error (0, 0, _("too few arguments"));
       usage (1);
@@ -299,43 +336,49 @@ main (int argc, char **argv)
 	error (1, 0, _("invalid mode `%s'"), symbolic_mode);
       else if (change == MODE_MEMORY_EXHAUSTED)
 	error (1, 0, _("virtual memory exhausted"));
-      mode = mode_adjust (0, change);
+      x.mode = mode_adjust (0, change);
     }
 
   get_ids ();
 
   if (dir_arg)
     {
-      for (; optind < argc; ++optind)
+      int i;
+      for (i = 0; i < n_files; i++)
 	{
 	  errors |=
-	    make_path (argv[optind], mode, mode, owner_id, group_id, 0,
-		       (verbose ? "creating directory `%s'" : NULL));
+	    make_path (file[i], x.mode, x.mode, owner_id, group_id, 0,
+		       (x.verbose ? "creating directory `%s'" : NULL));
 	}
     }
   else
     {
-      if (optind == argc - 2)
+      /* FIXME: it's a little gross that this initialization is
+	 required by copy.c::copy. */
+      hash_init (INITIAL_HASH_MODULE, INITIAL_ENTRY_TAB_SIZE);
+
+      if (n_files == 2)
         {
           if (mkdir_and_install)
-	    errors = install_file_to_path (argv[argc - 2], argv[argc - 1]);
-	  else if (!isdir (argv[argc - 1]))
-	    errors = install_file_in_file (argv[argc - 2], argv[argc - 1]);
+	    errors = install_file_to_path (file[0], file[1], &x);
+	  else if (!isdir (file[1]))
+	    errors = install_file_in_file (file[0], file[1], &x);
 	  else
-	    errors = install_file_in_dir (argv[argc - 2], argv[argc - 1]);
+	    errors = install_file_in_dir (file[0], file[1], &x);
 	}
       else
 	{
-	  if (!isdir (argv[argc - 1]))
+	  int i;
+	  if (!isdir (file[1]))
 	    usage (1);
-	  for (; optind < argc - 1; ++optind)
+	  for (i = 0; i < n_files - 1; i++)
 	    {
-	      errors |= install_file_in_dir (argv[optind], argv[argc - 1]);
+	      errors |= install_file_in_dir (file[i], file[n_files - 1], &x);
 	    }
 	}
     }
 
-  if (verbose)
+  if (x.verbose)
     close_stdout ();
   exit (errors);
 }
@@ -344,7 +387,8 @@ main (int argc, char **argv)
    Return 0 if successful, 1 if an error occurs */
 
 static int
-install_file_to_path (const char *from, const char *to)
+install_file_to_path (const char *from, const char *to,
+		      const struct cp_options *x)
 {
   char *dest_dir;
   int fail;
@@ -362,12 +406,12 @@ install_file_to_path (const char *from, const char *to)
 	 rules, it's not so bad.  Maybe use something like this instead:
 	 int parent_dir_mode = (mode | (S_IRUGO | S_IXUGO)) & (~SPECIAL_BITS);
 	 */
-      fail = make_path (dest_dir, mode, mode, owner_id, group_id, 0,
-			(verbose ? _("creating directory `%s'") : NULL));
+      fail = make_path (dest_dir, x->mode, x->mode, owner_id, group_id, 0,
+			(x->verbose ? _("creating directory `%s'") : NULL));
     }
   else
     {
-      fail = install_file_in_file (from, to);
+      fail = install_file_in_file (from, to, x);
     }
 
   free (dest_dir);
@@ -380,21 +424,16 @@ install_file_to_path (const char *from, const char *to)
    Return 0 if successful, 1 if an error occurs. */
 
 static int
-install_file_in_file (const char *from, const char *to)
+install_file_in_file (const char *from, const char *to,
+		      const struct cp_options *x)
 {
-  int to_created;
-  int no_need_to_chown;
-
-  if (copy_file (from, to, &to_created))
+  if (copy_file (from, to, x))
     return 1;
   if (strip_files)
     strip (to);
-  no_need_to_chown = (to_created
-		      && owner_name == NULL
-		      && group_name == NULL);
-  if (change_attributes (to, no_need_to_chown))
+  if (change_attributes (to, x->mode))
     return 1;
-  if (preserve_timestamps)
+  if (x->preserve_timestamps)
     return change_timestamps (from, to);
   return 0;
 }
@@ -404,151 +443,49 @@ install_file_in_file (const char *from, const char *to)
    Return 0 if successful, 1 if not. */
 
 static int
-install_file_in_dir (const char *from, const char *to_dir)
+install_file_in_dir (const char *from, const char *to_dir,
+		     const struct cp_options *x)
 {
   char *from_base;
   char *to;
   int ret;
 
   from_base = base_name (from);
-  to = xmalloc ((unsigned) (strlen (to_dir) + strlen (from_base) + 2));
-  stpcpy (stpcpy (stpcpy (to, to_dir), "/"), from_base);
-  ret = install_file_in_file (from, to);
+  to = path_concat (to_dir, from_base, NULL);
+  ret = install_file_in_file (from, to, x);
   free (to);
   return ret;
 }
 
-/* A chunk of a file being copied. */
-static char buffer[READ_SIZE];
-
 /* Copy file FROM onto file TO, creating TO if necessary.
-   Return 0 if the copy is successful, 1 if not.  If the copy is
-   successful, set *TO_CREATED to nonzero if TO was created (if it did
-   not exist or did, but was unlinked) and to zero otherwise.  If the
-   copy fails, don't modify *TO_CREATED.  */
+   Return 0 if the copy is successful, 1 if not.  */
 
 static int
-copy_file (const char *from, const char *to, int *to_created)
+copy_file (const char *from, const char *to, const struct cp_options *x)
 {
-  int fromfd, tofd;
-  int bytes;
-  int ret = 0;
-  struct stat from_stats, to_stats;
-  int target_created = 1;
-
-  if (stat (from, &from_stats))
-    {
-      error (0, errno, "%s", from);
-      return 1;
-    }
+  int fail;
+  int nonexistent_dst = 0;
+  int copy_into_self;
 
   /* Allow installing from non-regular files like /dev/null.
      Charles Karney reported that some Sun version of install allows that
      and that sendmail's installation process relies on the behavior.  */
-  if (S_ISDIR (from_stats.st_mode))
+  if (isdir (from))
     {
       error (0, 0, _("`%s' is a directory"), from);
       return 1;
     }
-  if (stat (to, &to_stats) == 0)
-    {
-      if (!S_ISREG (to_stats.st_mode))
-	{
-	  error (0, 0, _("`%s' is not a regular file"), to);
-	  return 1;
-	}
-      if (from_stats.st_dev == to_stats.st_dev
-	  && from_stats.st_ino == to_stats.st_ino)
-	{
-	  error (0, 0, _("`%s' and `%s' are the same file"), from, to);
-	  return 1;
-	}
 
-      /* The destination file exists.  Try to back it up if required.  */
-      if (backup_type != none)
-        {
-	  char *tmp_backup = find_backup_file_name (to, backup_type);
-	  char *dst_backup;
+  fail = copy (from, to, nonexistent_dst, x, &copy_into_self);
 
-	  if (tmp_backup == NULL)
-	    error (1, 0, "virtual memory exhausted");
-	  dst_backup = (char *) alloca (strlen (tmp_backup) + 1);
-	  strcpy (dst_backup, tmp_backup);
-	  free (tmp_backup);
-	  if (rename (to, dst_backup))
-	    {
-	      if (errno != ENOENT)
-		{
-		  error (0, errno, "cannot backup `%s'", to);
-		  return 1;
-		}
-	    }
-	}
-
-      /* If unlink fails, try to proceed anyway.  */
-      if (unlink (to))
-	target_created = 0;
-    }
-
-  /* Now it's the time to give some feedback if requested.  */
-  if (verbose)
-    printf ("copying `%s' to `%s'\n", from, to);
-
-  fromfd = open (from, O_RDONLY, 0);
-  if (fromfd == -1)
-    {
-      error (0, errno, "%s", from);
-      return 1;
-    }
-
-  /* Make sure to open the file in a mode that allows writing. */
-  tofd = open (to, O_WRONLY | O_CREAT | O_TRUNC, 0600);
-  if (tofd == -1)
-    {
-      error (0, errno, "%s", to);
-      close (fromfd);
-      return 1;
-    }
-
-  while ((bytes = safe_read (fromfd, buffer, READ_SIZE)) > 0)
-    if (full_write (tofd, buffer, bytes) < 0)
-      {
-	error (0, errno, "%s", to);
-	goto copy_error;
-      }
-
-  if (bytes == -1)
-    {
-      error (0, errno, "%s", from);
-      goto copy_error;
-    }
-
-  if (close (fromfd) < 0)
-    {
-      error (0, errno, "%s", from);
-      ret = 1;
-    }
-  if (close (tofd) < 0)
-    {
-      error (0, errno, "%s", to);
-      ret = 1;
-    }
-  if (ret == 0)
-    *to_created = target_created;
-  return ret;
-
- copy_error:
-  close (fromfd);
-  close (tofd);
-  return 1;
+  return fail;
 }
 
 /* Set the attributes of file or directory PATH.
-   If NO_NEED_TO_CHOWN is nonzero, don't call chown.
    Return 0 if successful, 1 if not. */
 
 static int
-change_attributes (const char *path, int no_need_to_chown)
+change_attributes (const char *path, mode_t mode)
 {
   int err = 0;
 
@@ -558,9 +495,6 @@ change_attributes (const char *path, int no_need_to_chown)
      On System V, users can give away files with chown and then not
      be able to chmod them.  So don't give files away.
 
-     We don't pass -1 to chown to mean "don't change the value"
-     because SVR3 and earlier non-BSD systems don't support that.
-
      We don't normally ignore errors from chown because the idea of
      the install command is that the file is supposed to end up with
      precisely the attributes that the user specified (or defaulted).
@@ -568,7 +502,7 @@ change_attributes (const char *path, int no_need_to_chown)
      want to know.  But AFS returns EPERM when you try to change a
      file's group; thus the kludge.  */
 
-  if (!no_need_to_chown && chown (path, owner_id, group_id)
+  if (chown (path, owner_id, group_id)
 #ifdef AFS
       && errno != EPERM
 #endif
