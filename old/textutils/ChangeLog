@@ -1,3 +1,20 @@
+2000-08-11  Jim Meyering  <meyering@lucent.com>
+
+	* doc/textutils.texi (wc invocation): Update accordingly.
+
+2000-08-10  Paul Eggert  <eggert@twinsun.com>
+
+	* doc/textutils.texi: Recommend against the System V syntax
+	for tr ranges, and don't use it in examples.  Use POSIX
+	classes rather than ranges, for portability.
+	* src/tr.c (usage): Don't describe System V syntax, as it
+	doesn't always work.
+
+	* src/sort.c (usage): Describe -d and -i in a locale-independent way.
+
+	* doc/Makefile.am (constants.texi): Use the C locale so that
+	[A-Z] works as expected.
+
 2000-08-07  Paul Eggert  <eggert@twinsun.com>
 
 	* src/cut.c (cut_fields): Invoke xalloc_die instead of printing
