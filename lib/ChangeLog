@@ -3,6 +3,8 @@
 	* dirname.c (dir_name): Support for DOS-style file names with drive
 	letters.
 
+	* quotearg.c [HAVE_WCTYPE_H]: Include <wctype.h>.
+
 	* strverscmp.c (ISDIGIT): Define.
 	(strverscmp): Use ISDIGIT, not isdigit.
 
