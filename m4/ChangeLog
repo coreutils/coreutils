@@ -1,3 +1,8 @@
+2004-04-19  Jim Meyering  <jim@meyering.net>
+
+	* readutmp.m4 (gl_PREREQ_READUTMP): Require gl_FUNC_FREE,
+	now that readutmp.c may call `free (0)'.
+
 2004-04-14  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am: Remove file.  With automake-1.8.3, it's no longer needed.
