@@ -2,88 +2,99 @@ package Test;
 require 5.002;
 use strict;
 
+$Test::input_via_stdin = 1;
+
 @Test::t = (
-# test input    flags  1 or 2 strings   expected output    expected return code
+# test flags  1 or 2 strings   input    expected output    expected return code
 #
-['1', 'abcd',   '',    'abcd','[]*]',   ']]]]',              0],
-['2', 'abc',    '',    'abc','[%*]xyz',  'xyz',              0],
-['3', 'abc',    '',    '','[.*]',        'abc',              0],
+['1',         q|'abcd' '[]*]'|,   'abcd',   ']]]]',              0],
+['2',         q|'abc' '[%*]xyz'|,  'abc',    'xyz',              0],
+['3',         q|'' '[.*]'|,        'abc',    'abc',              0],
 # Test --truncate-set1 behavior when string1 is longer than string2
-['4', 'abcde', '-t',   'abcd','xy',     'xycde',            0],
+['4', '-t ' . q|'abcd' 'xy'|,     'abcde', 'xycde',            0],
 # Test bsd behavior (the default) when string1 is longer than string2
-['5', 'abcde', '',      'abcd','xy',     'xyyye',            0],
+['5',         q|'abcd' 'xy'|,     'abcde', 'xyyye',            0],
 # Do it the posix way
-['6', 'abcde', '',      'abcd','x[y*]',  'xyyye',            0],
+['6',         q|'abcd' 'x[y*]'|,  'abcde', 'xyyye',            0],
 #
-['7', 'abcdefghijklmnop', '-s', 'a-p','%[.*]$', '%.$',       0],
-['8', 'abcdefghijklmnop', '-s', 'a-p','[.*]$', '.$',         0],
-['9', 'abcdefghijklmnop', '-s', 'a-p','%[.*]', '%.',         0],
-['a', 'aabbcc', '-s', '[a-z]','',        'abc',              0],
-['b', 'aabbcc', '-s', '[a-c]','',        'abc',              0],
-['c', 'aabbcc', '-s', '[a-b]','',        'abcc',             0],
-['d', 'aabbcc', '-s', '[b-c]','',        'aabc',             0],
-['e', "\0\0a\1\1b\2\2\2c\3\3\3d\4\4\4\4e\5\5",
-	   '-s',    '[\0-\5]','', "\0a\1b\2c\3d\4e\5",  0],
+['7', '-s ' . q|'a-p' '%[.*]$'|, 'abcdefghijklmnop', '%.$',       0],
+['8', '-s ' . q|'a-p' '[.*]$'|, 'abcdefghijklmnop', '.$',         0],
+['9', '-s ' . q|'a-p' '%[.*]'|, 'abcdefghijklmnop', '%.',         0],
+['a', '-s ' . q|'[a-z]'|,        'aabbcc', 'abc',              0],
+['b', '-s ' . q|'[a-c]'|,        'aabbcc', 'abc',              0],
+['c', '-s ' . q|'[a-b]'|,        'aabbcc', 'abcc',             0],
+['d', '-s ' . q|'[b-c]'|,        'aabbcc', 'aabc',             0],
+['e', '-s ' . q|'[\0-\5]'|,
+ "\0\0a\1\1b\2\2\2c\3\3\3d\4\4\4\4e\5\5",
+ "\0a\1b\2c\3d\4e\5",  0],
 # tests of delete
-['f', '[[[[[[[]]]]]]]]', '-d', '[=[=]','', ']]]]]]]]', 0],
-['g', '[[[[[[[]]]]]]]]', '-d', '[=]=]','', '[[[[[[[', 0],
-['h', '0123456789acbdefABCDEF', '-d', '[:xdigit:]','', '', 0],
-['i', 'w0x1y2z3456789acbdefABCDEFz', '-d', '[:xdigit:]','', 'wxyzz', 0],
-['j', '0123456789', '-d', '[:digit:]','', '', 0],
-['k', 'a0b1c2d3e4f5g6h7i8j9k', '-d', '[:digit:]','', 'abcdefghijk', 0],
-['l', 'abcdefghijklmnopqrstuvwxyz', '-d', '[:lower:]','', '', 0],
-['m', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', '-d', '[:upper:]','', '', 0],
-['n', 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
-    '-d', '[:lower:][:upper:]','', '', 0],
-['o', 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
-    '-d', '[:alpha:]','', '', 0],
-['p', 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
-    '-d', '[:alnum:]','', '', 0],
-['q', '.abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.',
-    '-d', '[:alnum:]','', '..', 0],
-['r', '.abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.',
-    '-ds', '[:alnum:]','.', '.', 0],
+['f', '-d ' . q|'[=[=]'|, '[[[[[[[]]]]]]]]', ']]]]]]]]', 0],
+['g', '-d ' . q|'[=]=]'|, '[[[[[[[]]]]]]]]', '[[[[[[[', 0],
+['h', '-d ' . q|'[:xdigit:]'|, '0123456789acbdefABCDEF', '', 0],
+['i', '-d ' . q|'[:xdigit:]'|, 'w0x1y2z3456789acbdefABCDEFz', 'wxyzz', 0],
+['j', '-d ' . q|'[:digit:]'|, '0123456789', '', 0],
+['k', '-d ' . q|'[:digit:]'|, 'a0b1c2d3e4f5g6h7i8j9k', 'abcdefghijk', 0],
+['l', '-d ' . q|'[:lower:]'|, 'abcdefghijklmnopqrstuvwxyz', '', 0],
+['m', '-d ' . q|'[:upper:]'|, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', '', 0],
+['n', '-d ' . q|'[:lower:][:upper:]'|,
+ 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', '', 0],
+['o', '-d ' . q|'[:alpha:]'|,
+ 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', '', 0],
+['p', '-d ' . q|'[:alnum:]'|,
+ 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', '', 0],
+['q', '-d ' . q|'[:alnum:]'|,
+ '.abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.', '..', 0],
+['r', '-ds ' . q|'[:alnum:]' '.'|,
+ '.abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.', '.', 0],
+
 # The classic example, with string2 BSD-style
-['s', 'The big black fox jumped over the fence.',
-    '-cs', '[:alnum:]','\n',
-    "The\nbig\nblack\nfox\njumped\nover\nthe\nfence\n", 0],
+['s', '-cs ' . q|'[:alnum:]' '\n'|,
+ 'The big black fox jumped over the fence.',
+ "The\nbig\nblack\nfox\njumped\nover\nthe\nfence\n", 0],
+
 # The classic example, POSIX-style
-['t', 'The big black fox jumped over the fence.',
-    '-cs', '[:alnum:]','[\n*]',
-    "The\nbig\nblack\nfox\njumped\nover\nthe\nfence\n", 0],
-['u', 'aabbaa', '-ds', 'b','a',          'a',             0],
-['v', 'ZZ0123456789acbdefABCDEFZZ',
-	   '-ds', '[:xdigit:]','Z', 'Z', 0],
+['t', '-cs ' . q|'[:alnum:]' '[\n*]'|,
+ 'The big black fox jumped over the fence.',
+ "The\nbig\nblack\nfox\njumped\nover\nthe\nfence\n", 0],
+['u', '-ds ' . q|'b' 'a'|,          'aabbaa', 'a',             0],
+['v', '-ds ' . q|'[:xdigit:]' 'Z'|,
+ 'ZZ0123456789acbdefABCDEFZZ', 'Z', 0],
+
 # Try some data with 8th bit set in case something is mistakenly sign-extended.
-['w', "\300\301\377\345\345\350\345",
-	   '-ds', '\350','\345', "\300\301\377\345", 0],
-['x', 'abcdefghijklmnop', '-s', 'abcdefghijklmn','[:*016]', ':op', 0],
-['y', 'abc $code', '-d', 'a-z','', ' $', 0],
-['z', 'a.b.c $$$$code\\', '-ds', 'a-z','$.', '. $\\', 0],
+['w', '-ds ' . q|'\350' '\345'|,
+ "\300\301\377\345\345\350\345",
+ "\300\301\377\345", 0],
+['x', '-s ' . q|'abcdefghijklmn' '[:*016]'|, 'abcdefghijklmnop', ':op', 0],
+['y', '-d ' . q|'a-z'|, 'abc $code', ' $', 0],
+['z', '-ds ' . q|'a-z' '$.'|, 'a.b.c $$$$code\\', '. $\\', 0],
 # Make sure that a-a is accepted, even though POSIX 1001.2 says it is illegal.
-['A', 'abc',    '',  'a-a','z',         'zbc',               0],
+['A',     q|'a-a' 'z'|,         'abc',    'zbc',               0],
 #
-['B', '',       '',  'a',"''",          '',                  1],
-['C', "abcxyzABCXYZ", '', '[:lower:]', '[:upper:]', 'ABCXYZABCXYZ', 0],
-['D', 'abcxyzABCXYZ', '', '[:upper:]', '[:lower:]', 'abcxyzabcxyz', 0],
+['B',     q|'a' ''''|,          '',       '',                  1],
+['C',     q|'[:lower:]' '[:upper:]'|,	'abcxyzABCXYZ', 'ABCXYZABCXYZ', 0],
+['D',     q|'[:upper:]' '[:lower:]'|,	'abcxyzABCXYZ', 'abcxyzabcxyz', 0],
 #
-['E', 'a=c', '', 'a[=*2][=c=]', 'xyyz', 'xyz', 0],
-['F', ':1239', '', '[:*3][:digit:]', 'a-m', 'cefgm', 0],
-['G', 'abc', '', 'a[b*512]c', '1[x*]2', '1x2', 0],
-['H', 'abc', '', 'a[b*513]c', '1[x*]2', '1x2', 0],
-['I', 'abc-z', '', 'a\-z', 'A-Z', 'AbcBC', 0],
+['E',     q|'a[=*2][=c=]' 'xyyz'|,	'a=c', 'xyz', 0],
+['F',     q|'[:*3][:digit:]' 'a-m'|,	':1239', 'cefgm', 0],
+['G',     q|'a[b*512]c' '1[x*]2'|,	'abc', '1x2', 0],
+['H',     q|'a[b*513]c' '1[x*]2'|,	'abc', '1x2', 0],
+['I',     q|'a\-z' 'A-Z'|,		'abc-z', 'AbcBC', 0],
+
+
+
+
 #
 # From Ross
-['R0.0', '', '-cs', '[:upper:]', 'X[Y*]', '', 1],
-['R0.1', '', '-cs', '[:cntrl:]', 'X[Y*]', '', 1],
-['R1.0', 'AMZamz123.-+AMZ', '-cs', '[:upper:]', '[X*]', 'AMZXAMZ', 0],
-['R1.1', '', '-cs', '[:upper:][:digit:]', '[Z*]', '', 0],
-['R2', 'amzAMZ123.-+amz', '-dcs', '[:lower:]', 'n-rs-z', 'amzamz', 0],
-['R3', '.ZABCDEFGzabcdefg.0123456788899.GG', '-ds',
-     '[:xdigit:]', '[:alnum:]', '.ZGzg..G', 0],
-['R4', '', '-dcs', '[:alnum:]', '[:digit:]', '', 0],
-['R5', '', '-dc', '[:lower:]', '', '', 0],
-['R6', '', '-dc', '[:upper:]', '', '', 0],
+['R0.0', '-cs ' . q|'[:upper:]' 'X[Y*]'|,	'', '', 1],
+['R0.1', '-cs ' . q|'[:cntrl:]' 'X[Y*]'|,	'', '', 1],
+['R1.0', '-cs ' . q|'[:upper:]' '[X*]'|,	'AMZamz123.-+AMZ', 'AMZXAMZ', 0],
+['R1.1', '-cs ' . q|'[:upper:][:digit:]' '[Z*]'|, '', '', 0],
+['R2', '-dcs ' . q|'[:lower:]' 'n-rs-z'|,	'amzAMZ123.-+amz', 'amzamz', 0],
+['R3', '-ds ' . q|'[:xdigit:]' '[:alnum:]'|,
+ '.ZABCDEFGzabcdefg.0123456788899.GG', '.ZGzg..G', 0],
+['R4', '-dcs ' . q|'[:alnum:]' '[:digit:]'|,	'', '', 0],
+['R5', '-dc ' . q|'[:lower:]'|,		'', '', 0],
+['R6', '-dc ' . q|'[:upper:]'|,		'', '', 0],
 );
 
 1;
