@@ -1,9 +1,6 @@
 #!/bin/sh
 # move a directory into itself, with a twist
 
-: ${MV=mv}
-: ${RM=rm}
-
 if test "$VERBOSE" = yes; then
   set -x
   mv --version
