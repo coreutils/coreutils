@@ -1,5 +1,8 @@
 2001-07-15  Jim Meyering  <meyering@lucent.com>
 
+	* src/Makefile.am (INCLUDES): Add -I../lib so sys2.h can include
+	the new, generated file, unlocked-io.h.
+
 	* src/sys2.h: Include "unlocked-io.h", rather than hard-coding the
 	HAVE_*_UNLOCKED macros.
 
