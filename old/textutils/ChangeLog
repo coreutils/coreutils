@@ -1,3 +1,23 @@
+1998-04-04  Jim Meyering  <meyering@eng.ascend.com>
+
+	* Version 1.22e.
+
+	* Makefile.am (ACLOCAL_AMFLAGS): Define this, so automake/aclocal
+	know about the m4/ subdirectory.
+	* Makefile.maint (aclocal-files): Remove now-unnecessary (with
+	automake-1.2h and the above change) aclocal-related rules and includes.
+
+1998-04-03  Jim Meyering  <meyering@eng.ascend.com>
+
+	* lib/closeout.c: New file.
+	* lib/closeout.h: New file.
+	* lib/Makefile.am (libtu_a_SOURCES): Add closeout.c.
+	(noinst_HEADERS): Add closeout.h.
+
+1998-03-31  Jim Meyering  <meyering@eng.ascend.com>
+
+	* lib/xstrtol.c: Merge with the version from fileutils.
+
 1998-03-27  Jim Meyering  <meyering@eng.ascend.com>
 
 	* Makefile.am (AUTOMAKE_OPTIONS): Require 1.2h.
@@ -33,8 +53,6 @@
 	* lib/Makefile.am (EXTRA_DIST): Add lstat.c and stat.c.
 
 1998-02-06  Jim Meyering  <meyering@eng.ascend.com>
-
-	* Version 1.22e.
 
 	* configure.in: Don't use AM_MAINTAINER_MODE or
 	AC_PATH_PROG(PERL, perl).
