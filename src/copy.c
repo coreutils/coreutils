@@ -49,6 +49,11 @@
 #define SAME_GROUP(A, B) ((A).st_gid == (B).st_gid)
 #define SAME_OWNER_AND_GROUP(A, B) (SAME_OWNER (A, B) && SAME_GROUP (A, B))
 
+#define UNWRITABLE(File_name, File_mode)		\
+  ( /* euidaccess is not meaningful for symlinks */	\
+    ! S_ISLNK (File_mode)				\
+    && euidaccess (File_name, W_OK) != 0)
+
 struct dir_list
 {
   struct dir_list *parent;
@@ -696,18 +701,15 @@ copy_internal (const char *src_path, const char *dst_path,
 
 		  if (x->interactive == I_ALWAYS_NO)
 		    {
-		      if (! S_ISLNK (dst_sb.st_mode)
-			  && euidaccess (dst_path, W_OK) != 0)
+		      if (UNWRITABLE (dst_path, dst_sb.st_mode))
 			{
 			  do_move = 0;
 			}
 		    }
 		  else if (x->interactive == I_ASK_USER
 			   || (x->interactive == I_UNSPECIFIED
-			       && (x->stdin_tty
-				   /* euidaccess is not meaningful for symlinks */
-				   && ! S_ISLNK (dst_sb.st_mode)
-				   && euidaccess (dst_path, W_OK) != 0)))
+			       && x->stdin_tty
+			       && UNWRITABLE (dst_path, dst_sb.st_mode)))
 		    {
 		      overwrite_prompt (dst_path, &dst_sb);
 		      if (!yesno ())
