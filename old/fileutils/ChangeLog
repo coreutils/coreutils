@@ -1,3 +1,12 @@
+1998-02-21  Jim Meyering  <meyering@eng.ascend.com>
+
+	* Version 3.16m.
+
+	* configure.in (AC_OUTPUT): Add tests/mv/Makefile.
+	* tests/Makefile.am (SUBDIRS): Add mv.
+	* tests/mv: New directory
+	* tests/mv/mv-special-1: New test.
+
 1998-02-20  Jim Meyering  <meyering@eng.ascend.com>
 
 	* src/touch.c: Include get-date.h.
@@ -10,8 +19,6 @@
 	* lib/Makefile.am (noinst_HEADERS): s/getdate.h/get-date.h/
 
 1998-02-19  Jim Meyering  <meyering@eng.ascend.com>
-
-	* Version 3.16m.
 
 	* lib/dirname.c (dirname): Include ctype.h.
 	[IN_CTYPE_DOMAIN]: Define.
