@@ -1,3 +1,7 @@
+1999-03-07  Jim Meyering  <meyering@ascend.com>
+
+	* jm-glibc-io.m4: Use only those *_unlocked macros that are declared.
+
 1999-02-17  Jim Meyering  <meyering@ascend.com>
 
 	* gettext.m4 (AM_GNU_GETTEXT): Do `changequote' around use of brackets
