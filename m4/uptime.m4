@@ -1,4 +1,4 @@
-#serial 2
+#serial 3
 
 AC_PREREQ(2.13)
 
@@ -8,7 +8,7 @@ AC_DEFUN(jm_SYS_PROC_UPTIME,
   AC_CACHE_CHECK([for /proc/uptime], jm_cv_have_proc_uptime,
   [jm_cv_have_proc_uptime=no
     test -f /proc/uptime \
-      && test $ac_cv_prog_cc_cross = no \
+      && test $cross_compiling = no \
       && cat < /proc/uptime >/dev/null 2>/dev/null \
       && jm_cv_have_proc_uptime=yes])
   if test $jm_cv_have_proc_uptime = yes; then
