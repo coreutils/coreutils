@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.4e from Makefile.am.
+# Makefile.in generated automatically by automake 1.4g from Makefile.am.
 
 # Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001
 # Free Software Foundation, Inc.
@@ -77,7 +77,6 @@ GT_NO = @GT_NO@
 GT_YES = @GT_YES@
 INCLUDE_LOCALE_H = @INCLUDE_LOCALE_H@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
-INSTALL_STRIP_PROGRAM_ENV = @INSTALL_STRIP_PROGRAM_ENV@
 INSTOBJEXT = @INSTOBJEXT@
 INTLDEPS = @INTLDEPS@
 INTLLIBS = @INTLLIBS@
@@ -102,7 +101,6 @@ POW_LIBM = @POW_LIBM@
 RANLIB = @RANLIB@
 SEQ_LIBM = @SEQ_LIBM@
 SQRT_LIBM = @SQRT_LIBM@
-STRIP = @STRIP@
 U = @U@
 USE_INCLUDED_LIBINTL = @USE_INCLUDED_LIBINTL@
 USE_NLS = @USE_NLS@
@@ -240,19 +238,18 @@ install-am: all-am
 installcheck: installcheck-am
 install-strip:
 	$(MAKE) $(AM_MAKEFLAGS) INSTALL_PROGRAM="$(INSTALL_STRIP_PROGRAM)" \
-	  INSTALL_PROGRAM_ENV='$(INSTALL_STRIP_PROGRAM_ENV)' install
+	  `test -z '$(STRIP)' || \
+	    echo "INSTALL_PROGRAM_ENV=STRIPPROG='$(STRIP)'"` install
 mostlyclean-generic:
 
 clean-generic:
 
 distclean-generic:
-	-rm -f Makefile $(CONFIG_CLEAN_FILES)
-	-rm -f config.cache config.log stamp-h stamp-h[0-9]*
+	-rm -f Makefile $(CONFIG_CLEAN_FILES) stamp-h stamp-h[0-9]*
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
-	-rm -f Makefile.in
 clean: clean-am
 
 clean-am: clean-generic mostlyclean-am
