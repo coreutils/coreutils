@@ -1,3 +1,8 @@
+2001-07-16  Jim Meyering  <meyering@lucent.com>
+
+	* gettimeofday.m4: New file.
+	Prompted by a report from Bernhard Baehr.
+
 2001-07-15  Jim Meyering  <meyering@lucent.com>
 
 	* Makefile.am.in (Makefile.am): Remove most of the unlocked-io.h stuff.
