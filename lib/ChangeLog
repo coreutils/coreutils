@@ -1,3 +1,8 @@
+2000-05-08  Jim Meyering  <meyering@lucent.com>
+
+	* long-options.c: Don't include closeout.h.
+	(parse_long_options): Don't call close_stdout for --version.
+
 2000-05-06  Jim Meyering  <meyering@lucent.com>
 
 	* strnlen.c: Undefine __strnlen and strnlen.
