@@ -79,6 +79,7 @@ enum Verbosity
 };
 
 static int change_dir_owner PARAMS ((const char *dir, uid_t user, gid_t group,
+				     uid_t old_user, gid_t old_group,
 				     const struct stat *statp));
 
 /* The name the program was run with. */
@@ -112,7 +113,8 @@ static char *reference_file;
 enum
 {
   REFERENCE_FILE_OPTION = CHAR_MAX + 1,
-  DEREFERENCE_OPTION
+  DEREFERENCE_OPTION,
+  FROM_OPTION
 };
 
 static struct option const long_options[] =
@@ -120,6 +122,7 @@ static struct option const long_options[] =
   {"recursive", no_argument, 0, 'R'},
   {"changes", no_argument, 0, 'c'},
   {"dereference", no_argument, 0, DEREFERENCE_OPTION},
+  {"from", required_argument, 0, FROM_OPTION},
   {"no-dereference", no_argument, 0, 'h'},
   {"quiet", no_argument, 0, 'f'},
   {"silent", no_argument, 0, 'f'},
@@ -166,12 +169,14 @@ describe_change (const char *file, enum Change_status changed)
     printf ("%s\n", username);
 }
 
-/* Change the ownership of FILE to UID USER and GID GROUP.
+/* Change the ownership of FILE to UID USER and GID GROUP
+   provided it presently has UID OLDUSER and GID OLDGROUP.
    If it is a directory and -R is given, recurse.
    Return 0 if successful, 1 if errors occurred. */
 
 static int
-change_file_owner (int cmdline_arg, const char *file, uid_t user, gid_t group)
+change_file_owner (int cmdline_arg, const char *file, uid_t user, gid_t group,
+		   uid_t old_user, gid_t old_group)
 {
   struct stat file_stats;
   uid_t newuser;
@@ -185,51 +190,58 @@ change_file_owner (int cmdline_arg, const char *file, uid_t user, gid_t group)
       return 1;
     }
 
-  newuser = user == (uid_t) -1 ? file_stats.st_uid : user;
-  newgroup = group == (gid_t) -1 ? file_stats.st_gid : group;
-  if (newuser != file_stats.st_uid || newgroup != file_stats.st_gid)
+  if ((old_user == (uid_t) -1  || file_stats.st_uid == old_user) &&
+      (old_group == (gid_t) -1 || file_stats.st_gid == old_group))
     {
-      int fail;
-      int symlink_changed = 1;
-
-      if (S_ISLNK (file_stats.st_mode) && change_symlinks)
+      newuser = user == (uid_t) -1 ? file_stats.st_uid : user;
+      newgroup = group == (gid_t) -1 ? file_stats.st_gid : group;
+      if (newuser != file_stats.st_uid || newgroup != file_stats.st_gid)
 	{
-	  fail = lchown (file, newuser, newgroup);
+	  int fail;
+	  int symlink_changed = 1;
 
-	  /* Ignore the failure if it's due to lack of support (ENOSYS)
-	     and this is not a command line argument.  */
-	  if (!cmdline_arg && fail && errno == ENOSYS)
+	  if (S_ISLNK (file_stats.st_mode) && change_symlinks)
 	    {
-	      fail = 0;
-	      symlink_changed = 0;
+	      fail = lchown (file, newuser, newgroup);
+
+	      /* Ignore the failure if it's due to lack of support (ENOSYS)
+		 and this is not a command line argument.  */
+	      if (!cmdline_arg && fail && errno == ENOSYS)
+		{
+		  fail = 0;
+		  symlink_changed = 0;
+		}
+	    }
+	  else
+	    {
+	      fail = chown (file, newuser, newgroup);
+	    }
+
+	  if (verbosity == V_high || (verbosity == V_changes_only && !fail))
+	    {
+	      enum Change_status ch_status = (! symlink_changed
+					      ? CH_NOT_APPLIED
+					      : (fail
+						 ? CH_FAILED : CH_SUCCEEDED));
+	      describe_change (file, ch_status);
+	    }
+
+	  if (fail)
+	    {
+	      if (force_silent == 0)
+		error (0, errno, "%s", file);
+	      errors = 1;
 	    }
 	}
-      else
+      else if (verbosity == V_high)
 	{
-	  fail = chown (file, newuser, newgroup);
+	  describe_change (file, CH_NO_CHANGE_REQUESTED);
 	}
-
-      if (verbosity == V_high || (verbosity == V_changes_only && !fail))
-	{
-	  enum Change_status ch_status = (! symlink_changed ? CH_NOT_APPLIED
-					  : (fail ? CH_FAILED : CH_SUCCEEDED));
-	  describe_change (file, ch_status);
-	}
-
-      if (fail)
-	{
-	  if (force_silent == 0)
-	    error (0, errno, "%s", file);
-	  errors = 1;
-	}
-    }
-  else if (verbosity == V_high)
-    {
-      describe_change (file, CH_NO_CHANGE_REQUESTED);
     }
 
   if (recurse && S_ISDIR (file_stats.st_mode))
-    errors |= change_dir_owner (file, user, group, &file_stats);
+    errors |= change_dir_owner (file, user, group,
+				old_user, old_group, &file_stats);
   return errors;
 }
 
@@ -240,6 +252,7 @@ change_file_owner (int cmdline_arg, const char *file, uid_t user, gid_t group)
 
 static int
 change_dir_owner (const char *dir, uid_t user, gid_t group,
+		  uid_t old_user, gid_t old_group,
 		  const struct stat *statp)
 {
   char *name_space, *namep;
@@ -279,7 +292,7 @@ change_dir_owner (const char *dir, uid_t user, gid_t group,
 	  path = xrealloc (path, pathlength);
 	}
       strcpy (path + dirlength, namep);
-      errors |= change_file_owner (0, path, user, group);
+      errors |= change_file_owner (0, path, user, group, old_user, old_group);
     }
   free (path);
   free (name_space);
@@ -309,6 +322,11 @@ Change the owner and/or group of each FILE to OWNER and/or GROUP.\n\
   -h, --no-dereference   affect symbolic links instead of any referenced file\n\
                          (available only on systems that can change the\n\
                          ownership of a symlink)\n\
+      --from=CURRENT_OWNER:CURRENT_GROUP\n\
+                         change the owner and/or group of each file only if\n\
+                         its current owner and/or group match those specified\n\
+                         here.  Either may be omitted, in which case a match\n\
+                         is not required for the omitted attribute.\n\
   -f, --silent, --quiet  suppress most error messages\n\
       --reference=RFILE  use RFILE's owner and group rather than\n\
                          the specified OWNER:GROUP values\n\
@@ -318,7 +336,8 @@ Change the owner and/or group of each FILE to OWNER and/or GROUP.\n\
       --version          output version information and exit\n\
 \n\
 Owner is unchanged if missing.  Group is unchanged if missing, but changed\n\
-to login group if implied by a `:'.\n\
+to login group if implied by a `:'.  OWNER and GROUP may be numeric as well\n\
+as symbolic.\n\
 "));
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
       close_stdout ();
@@ -331,6 +350,9 @@ main (int argc, char **argv)
 {
   uid_t user = (uid_t) -1;	/* New uid; -1 if not to be changed. */
   gid_t group = (uid_t) -1;	/* New gid; -1 if not to be changed. */
+  uid_t old_user = (uid_t) -1;	/* Old uid; -1 if unrestricted. */
+  gid_t old_group = (uid_t) -1;	/* Old gid; -1 if unrestricted. */
+
   int errors = 0;
   int optc;
 
@@ -353,6 +375,15 @@ main (int argc, char **argv)
 	case DEREFERENCE_OPTION:
 	  change_symlinks = 0;
 	  break;
+	case FROM_OPTION:
+	  {
+	    char *u_dummy, *g_dummy;
+	    const char *e = parse_user_spec (argv[optind], &old_user, &old_group,
+					     &u_dummy, &g_dummy);
+	    if (e)
+	      error (1, 0, "%s: %s", argv[optind], e);
+	    break;
+	  }
 	case 'R':
 	  recurse = 1;
 	  break;
@@ -406,7 +437,8 @@ main (int argc, char **argv)
   for (; optind < argc; ++optind)
     {
       strip_trailing_slashes (argv[optind]);
-      errors |= change_file_owner (1, argv[optind], user, group);
+      errors |= change_file_owner (1, argv[optind], user, group,
+				   old_user, old_group);
     }
 
   if (verbosity != V_off)
