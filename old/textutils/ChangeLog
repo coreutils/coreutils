@@ -1,3 +1,13 @@
+1999-07-20  Jim Meyering  <meyering@ascend.com>
+
+	* configure.in (AC_REPLACE_FUNCS) Remove memmove, now that it's
+	AC_REPLACE...'d in m4/jm-macros.m4.
+
+	* src/wc.c (posixly_correct): Declare global.
+	(write_counts): Use it to select printf formats.
+	(main): Set posixly_correct from the POSIXLY_CORRECT envvar.
+	From Peter Moulder.
+
 1999-07-15  Jim Meyering  <meyering@ascend.com>
 
 	* tests/md5sum/Makefile.am: Revert the 1999-02-15 change.
@@ -1311,7 +1321,6 @@
 	* src/tail.c (parse_obsolescent_option): Do not interpret `-f -n 1 ...'
 	as obsolescent options.
 	Accept new option: --sleep-interval=SECONDS (-s).
-	FIXME: document new option in textutils.texi.
 	(parse_options): Recognize it.
 	(usage): Describe it.
 	(tail_forever): Use it.
