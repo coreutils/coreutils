@@ -1,3 +1,8 @@
+1998-03-26  Jim Meyering  <meyering@eng.ascend.com>
+
+	* src/date.c (batch_convert): Remove spurious space in error message.
+	Reported by Karl Berry.
+
 1998-03-13  Jim Meyering  <meyering@eng.ascend.com>
 
 	* lib/getugroups.c (getugroups): Don't add a group number if it
