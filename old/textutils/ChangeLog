@@ -1,6 +1,12 @@
-Wed May 24 01:13:44 1995  Jim Meyering  (meyering@comco.com)
+Thu May 25 00:06:50 1995  Jim Meyering  (meyering@comco.com)
 
-	* Version 1.11.3.
+	* Version 1.11.4.
+
+	* tail.c (tail_lines): Change one more `long' to `off_t'.
+	Otherwise, tail didn't work on NetBSD.  From by Arne H. Juul.
+
+	* csplit.c [struct control]: Change type of `repeat' to unsigned
+	long to avoid conversion warning.
 
 Sun May 21 07:50:00 1995  Jim Meyering  (meyering@comco.com)
 
