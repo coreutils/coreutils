@@ -1,4 +1,11 @@
+Tue Aug  8 22:57:34 1995  Jim Meyering  (meyering@comco.com)
+
+	* yes.c: Include system.h to get definition of _.
+
 Mon Aug  7 23:27:54 1995  Jim Meyering  (meyering@comco.com)
+
+	* system.h (_): Define macro -- as empty for now.
+	* src/*.c: Annotate localizable strings with _(...).  From Franc,ois.
 
 	* Makefile.in (DISTFILES): Don't distribute unneeded COPYING.LIB.
 	From Franc,ois.
