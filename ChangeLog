@@ -1,3 +1,14 @@
+2004-07-22  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/tail.c (main): Ignore -f if no file operand is specified
+	and standard input is a pipe.
+	* doc/coreutils.texi (tail invocation): Do not ignore -f for
+	all pipes, just for when standard input is a pipe and no
+	file operand is specified.
+	* tests/tail/Test.pm: Reinstate f-1 test, since we now pass.
+	Add a new commented-out f-2 test, which we still fail.
+	(test_vector): All f-* tests are special cases, not just f-1.
+	
 2004-07-12  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/uptime.c: Include c-strtod.h.
