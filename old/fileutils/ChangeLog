@@ -1,3 +1,12 @@
+2000-10-23  Paul Eggert  <eggert@twinsun.com>
+
+	* doc/getdate.texi: Use @sc where appropriate.  Document the
+	ranges of supported times more precisely.  Correct menu
+	spacing.  Document old Latin 12m/12pm tradition.  Remove list
+	of alphabetic time zone names, as it wasn't correct and people
+	shouldn't be relying on it anyway.  Relative items also
+	account for non-DST adjustments.  Fix some misspellings.
+
 2000-10-30  Jim Meyering  <meyering@lucent.com>
 
 	* configure, config.h.in, Makefile.in, etc.: Regenerate using the
