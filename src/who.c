@@ -33,6 +33,7 @@
 
 #include "readutmp.h"
 #include "error.h"
+#include "hard-locale.h"
 #include "inttostr.h"
 #include "quote.h"
 #include "vasprintf.h"
@@ -168,6 +169,11 @@ static int need_users;
 /* If nonzero, display info only for the controlling tty */
 static int my_line_only;
 
+/* The strftime format to use for login times, and its expected
+   output width.  */
+static char const *time_format;
+static int time_format_width;
+
 /* for long options with no corresponding short option, use enum */
 enum
 {
@@ -222,31 +228,28 @@ idle_string (time_t when)
   return _(" old ");
 }
 
-/* Return a standard time string, "mon dd hh:mm"
-   FIXME: handle localization */
+/* Return a time string.  */
 static const char *
 time_string (const STRUCT_UTMP *utmp_ent)
 {
+  static char buf[INT_STRLEN_BOUND (intmax_t) + sizeof "-%m-%d %H:%M"];
+
   /* Don't take the address of UT_TIME_MEMBER directly.
      Ulrich Drepper wrote:
      ``... GNU libc (and perhaps other libcs as well) have extended
      utmp file formats which do not use a simple time_t ut_time field.
      In glibc, ut_time is a macro which selects for backward compatibility
      the tv_sec member of a struct timeval value.''  */
-  time_t tm = UT_TIME_MEMBER (utmp_ent);
+  time_t t = UT_TIME_MEMBER (utmp_ent);
+  struct tm *tmp = localtime (&t);
 
-  char *ptr = ctime (&tm);
-  if (ptr)
+  if (tmp)
     {
-      ptr += 4;
-      ptr[12] = '\0';
+      strftime (buf, sizeof buf, time_format, tmp);
+      return buf;
     }
   else
-    {
-      static char buf[INT_BUFSIZE_BOUND (intmax_t)];
-      ptr = (TYPE_SIGNED (time_t) ? imaxtostr (tm, buf) : umaxtostr (tm, buf));
-    }
-  return ptr;
+    return TYPE_SIGNED (time_t) ? imaxtostr (t, buf) : umaxtostr (t, buf);
 }
 
 /* Print formatted output line. Uses mostly arbitrary field sizes, probably
@@ -286,7 +289,7 @@ print_line (const char *user, const char state, const char *line,
 		  "%-8s"
 		  "%s"
 		  " %-12s"
-		  " %-12s"
+		  " %-*s"
 		  "%s"
 		  "%s"
 		  " %-8s"
@@ -295,6 +298,7 @@ print_line (const char *user, const char state, const char *line,
 		  user ? user : "   .",
 		  include_mesg ? mesg : "",
 		  line,
+		  time_format_width,
 		  time_str,
 		  x_idle,
 		  x_pid,
@@ -794,6 +798,17 @@ main (int argc, char **argv)
   if (include_exit)
     {
       short_output = 0;
+    }
+
+  if (hard_locale (LC_TIME))
+    {
+      time_format = "%Y-%m-%d %H:%M";
+      time_format_width = 4 + 1 + 2 + 1 + 2 + 1 + 2 + 1 + 2;
+    }
+  else
+    {
+      time_format = "%b %e %H:%M";
+      time_format_width = 3 + 1 + 2 + 1 + 2 + 1 + 2;
     }
 
   switch (argc - optind)
