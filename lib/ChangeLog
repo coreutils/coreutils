@@ -1,5 +1,16 @@
 2001-08-12  Jim Meyering  <meyering@lucent.com>
 
+	* xgetcwd.c (xgetcwd) [defined __GLIBC__ && __GLIBC__ >= 2]:
+	Simply `return getcwd (NULL, 0);'.
+	[! (defined __GLIBC__ && __GLIBC__ >= 2)]:
+	Use 1300 as initial value for length, not PATH_MAX.
+
+2001-08-12  Jim Meyering  <meyering@lucent.com>
+
+	* pathmax.h: Clean up cpp syntax.
+
+2001-08-12  Jim Meyering  <meyering@lucent.com>
+
 	* gettimeofday.c: New file.
 	* gtod.h: New file.
 	* Makefile.am (libfetish_a_SOURCES): Add gtod.h.
