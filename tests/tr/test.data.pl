@@ -49,7 +49,7 @@
 ("u", "aabbaa", '-ds', 'b','a',          "a",             0);
 ("v", "ZZ0123456789acbdefABCDEFZZ", \
 	   '-ds', '[:xdigit:]','Z', "Z", 0);
-# Try some data with 8th bit set in case something is mistakenly sign-extended. 
+# Try some data with 8th bit set in case something is mistakenly sign-extended.
 ("w", "\300\301\377\345\345\350\345", \
 	   '-ds', '\350','\345', "\300\301\377\345", 0);
 ("x", "abcdefghijklmnop", '-s', 'abcdefghijklmn','[:*016]', ":op", 0);
@@ -61,3 +61,9 @@
 ("B", "",       '',  'a',"''",          "",                  1);
 ("C", "abcxyzABCXYZ", '', '[:lower:]', '[:upper:]', "ABCXYZABCXYZ", 0);
 ("D", "abcxyzABCXYZ", '', '[:upper:]', '[:lower:]', "abcxyzabcxyz", 0);
+
+("E", "a=c", '', 'a[=*2][=c=]', 'xyyz', "xyz", 0);
+("F", ":1239", '', '[:*3][:digit:]', 'a-m', "cefgm", 0);
+("G", "abc", '', 'a[b*512]c', '1[x*]2', "1x2", 0);
+("H", "abc", '', 'a[b*513]c', '1[x*]2', "1x2", 0);
+("I", "abc-z", '', 'a\-z', 'A-Z', "AbcBC", 0);
