@@ -6176,7 +6176,7 @@ may be either a group name or a numeric group id.
 @cindex permissions of installed files, setting
 Set the permissions for the installed file or directory to @var{mode},
 which can be either an octal number, or a symbolic mode as in
-@code{chmod}, with 0 as the point of departure (@pxref{File
+@command{chmod}, with 0 as the point of departure (@pxref{File
 permissions}).  The default mode is @samp{u=rwx,go=rx}---read, write,
 and execute for the owner, and read and execute for group and other.
 
@@ -6374,22 +6374,22 @@ argument can be @samp{none} (or @samp{off}), @samp{numbered} (or
 
 
 @node rm invocation
-@section @code{rm}: Remove files or directories
+@section @command{rm}: Remove files or directories
 
 @pindex rm
 @cindex removing files or directories
 
-@code{rm} removes each given @var{file}.  By default, it does not remove
+@command{rm} removes each given @var{file}.  By default, it does not remove
 directories.  Synopsis:
 
 @example
 rm [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
-@cindex prompting, and @code{rm}
+@cindex prompting, and @command{rm}
 If a file is unwritable, standard input is a terminal, and the @option{-f}
 or @option{--force} option is not given, or the @option{-i} or
-@option{--interactive} option @emph{is} given, @code{rm} prompts the user
+@option{--interactive} option @emph{is} given, @command{rm} prompts the user
 for whether to remove the file.  If the response does not begin with
 @samp{y} or @samp{Y}, the file is skipped.
 
@@ -6404,12 +6404,13 @@ The program accepts the following options.  Also see @ref{Common options}.
 @cindex directories, removing with @code{unlink}
 @findex unlink
 @pindex fsck
-Attempt to remove directories with @code{unlink} instead of @code{rmdir}, and
+Attempt to remove directories using the @code{unlink} function rather than
+the @code{rmdir} function, and
 don't require a directory to be empty before trying to unlink it.  This works
 only if you have appropriate privileges and if your operating system supports
 @code{unlink} for directories.  Because unlinking a directory causes any files
-in the deleted directory to become unreferenced, it is wise to @code{fsck} the
-filesystem after doing this.
+in the deleted directory to become unreferenced, it is wise to @command{fsck}
+the filesystem after doing this.
 
 @item -f
 @itemx --force
@@ -6446,7 +6447,7 @@ Print the name of each file before removing it.
 @cindex files beginning with @samp{-}, removing
 @cindex @samp{-}, removing files beginning with
 One common question is how to remove files whose names begin with a
-@samp{-}.  @sc{gnu} @code{rm}, like every program that uses the @code{getopt}
+@samp{-}.  @sc{gnu} @command{rm}, like every program that uses the @code{getopt}
 function to parse its arguments, lets you use the @samp{--} option to
 indicate that all following arguments are non-options.  To remove a file
 called @file{-f} in the current directory, you could type either:
@@ -6462,8 +6463,8 @@ or:
 rm ./-f
 @end example
 
-@opindex - @r{and Unix @code{rm}}
-The Unix @code{rm} program's use of a single @samp{-} for this purpose
+@opindex - @r{and Unix @command{rm}}
+The Unix @command{rm} program's use of a single @samp{-} for this purpose
 predates the development of the getopt standard syntax.
 
 
@@ -6680,7 +6681,7 @@ shred --verbose /dev/sda5
 @cindex file types, special
 
 This chapter describes commands which create special types of files (and
-@code{rmdir}, which removes directories, one special file type).
+@command{rmdir}, which removes directories, one special file type).
 
 @cindex special file types
 @cindex file types
@@ -6892,24 +6893,24 @@ ln -s a b ..      # creates links ../a and ../b pointing to ./a and ./b
 
 
 @node mkdir invocation
-@section @code{mkdir}: Make directories
+@section @command{mkdir}: Make directories
 
 @pindex mkdir
 @cindex directories, creating
 @cindex creating directories
 
-@code{mkdir} creates directories with the specified names.  Synopsis:
+@command{mkdir} creates directories with the specified names.  Synopsis:
 
 @example
 mkdir [@var{option}]@dots{} @var{name}@dots{}
 @end example
 
-If a @var{name} is an existing file but not a directory, @code{mkdir} prints a
+If a @var{name} is an existing file but not a directory, @command{mkdir} prints a
 warning message on stderr and will exit with a status of 1 after
 processing any remaining @var{name}s.  The same is done when a @var{name} is an
 existing directory and the -p option is not given.  If a @var{name} is an
-existing directory and the -p option is given, @code{mkdir} will ignore it.
-That is, @code{mkdir} will not print a warning, raise an error, or change
+existing directory and the -p option is given, @command{mkdir} will ignore it.
+That is, @command{mkdir} will not print a warning, raise an error, or change
 the mode of the directory (even if the -m option is given), and will
 move on to processing any remaining @var{name}s.
 
@@ -6923,7 +6924,7 @@ The program accepts the following options.  Also see @ref{Common options}.
 @opindex --mode
 @cindex modes of created directories, setting
 Set the mode of created directories to @var{mode}, which is symbolic as
-in @code{chmod} and uses @samp{a=rwx} (read, write and execute allowed for
+in @command{chmod} and uses @samp{a=rwx} (read, write and execute allowed for
 everyone) minus the bits set in the umask for the point of the
 departure.  @xref{File permissions}.
 
@@ -6946,14 +6947,14 @@ Print a message for each created directory.  This is most useful with
 
 
 @node mkfifo invocation
-@section @code{mkfifo}: Make FIFOs (named pipes)
+@section @command{mkfifo}: Make FIFOs (named pipes)
 
 @pindex mkfifo
 @cindex FIFOs, creating
 @cindex named pipes, creating
 @cindex creating FIFOs (named pipes)
 
-@code{mkfifo} creates FIFOs (also called @dfn{named pipes}) with the
+@command{mkfifo} creates FIFOs (also called @dfn{named pipes}) with the
 specified names.  Synopsis:
 
 @example
@@ -6975,7 +6976,7 @@ The program accepts the following option.  Also see @ref{Common options}.
 @opindex --mode
 @cindex modes of created FIFOs, setting
 Set the mode of created FIFOs to @var{mode}, which is symbolic as in
-@code{chmod} and uses @samp{a=rw} (read and write allowed for everyone) minus
+@command{chmod} and uses @samp{a=rw} (read and write allowed for everyone) minus
 the bits set in the umask for the point of departure.  @xref{File permissions}.
 
 @end table
@@ -7041,20 +7042,20 @@ The program accepts the following option.  Also see @ref{Common options}.
 @opindex -m
 @opindex --mode
 Set the mode of created files to @var{mode}, which is symbolic as in
-@code{chmod} and uses @samp{a=rw} minus the bits set in the umask as the point
+@command{chmod} and uses @samp{a=rw} minus the bits set in the umask as the point
 of departure.  @xref{File permissions}.
 
 @end table
 
 
 @node rmdir invocation
-@section @code{rmdir}: Remove empty directories
+@section @command{rmdir}: Remove empty directories
 
 @pindex rmdir
 @cindex removing empty directories
 @cindex directories, removing empty
 
-@code{rmdir} removes empty directories.  Synopsis:
+@command{rmdir} removes empty directories.  Synopsis:
 
 @example
 rmdir [@var{option}]@dots{} @var{directory}@dots{}
@@ -7082,7 +7083,7 @@ Remove @var{directory}, then try to remove each component of @var{directory}.
 So, for example, @samp{rmdir -p a/b/c} is similar to @samp{rmdir a/b/c a/b a}.
 As such, it fails if any of those directories turns out not to be empty.
 Use the @option{--ignore-fail-on-non-empty} option to make it so such
-a failure does not evoke a diagnostic and does not cause @code{rmdir} to
+a failure does not evoke a diagnostic and does not cause @command{rmdir} to
 exit unsuccessfully.
 
 @item -v
@@ -7148,7 +7149,7 @@ These commands change file attributes.
 
 
 @node chown invocation
-@section @code{chown}: Change file owner and group
+@section @command{chown}: Change file owner and group
 
 @pindex chown
 @cindex file ownership, changing
@@ -7156,7 +7157,7 @@ These commands change file attributes.
 @cindex changing file ownership
 @cindex changing group ownership
 
-@code{chown} changes the user and/or group ownership of each given @var{file}
+@command{chown} changes the user and/or group ownership of each given @var{file}
 to @var{new-owner} or to the user and group of an existing reference file.
 Synopsis:
 
@@ -7192,13 +7193,13 @@ made the owner of the files and the group of the files is changed to
 @itemx @samp{:}group
 If the colon and following @var{group} are given, but the owner
 is omitted, only the group of the files is changed; in this case,
-@code{chown} performs the same function as @code{chgrp}.
+@command{chown} performs the same function as @command{chgrp}.
 
 @end table
 
 You may use @samp{.} in place of the @samp{:} separator.  This is a
 @sc{gnu} extension for compatibility with older scripts.
-New scripts should avoid the use of @samp{.} because @sc{gnu} @code{chown}
+New scripts should avoid the use of @samp{.} because @sc{gnu} @command{chown}
 may fail if @var{owner} contains @samp{.} characters.
 
 The program accepts the following options.  Also see @ref{Common options}.
@@ -7239,7 +7240,7 @@ find / -owner OLDUSER -print0 | xargs -0 chown NEWUSER
 @end smallexample
 
 But that is dangerous because the interval between when the @code{find}
-tests the existing file's owner and when the @code{chown} is actually run
+tests the existing file's owner and when the @command{chown} is actually run
 may be quite large.
 One way to narrow the gap would be to invoke chown for each file
 as it is found:
@@ -7272,7 +7273,7 @@ Act on symbolic links themselves instead of what they point to.
 This is the default.
 This mode relies on the @code{lchown} system call.
 On systems that do not provide the @code{lchown} system call,
-@code{chown} fails when a file specified on the command line
+@command{chown} fails when a file specified on the command line
 is a symbolic link.
 By default, no diagnostic is issued for symbolic links encountered
 during a recursive traversal, but see @option{--verbose}.
@@ -7305,13 +7306,13 @@ Recursively change ownership of directories and their contents.
 
 
 @node chgrp invocation
-@section @code{chgrp}: Change group ownership
+@section @command{chgrp}: Change group ownership
 
 @pindex chgrp
 @cindex group ownership, changing
 @cindex changing group ownership
 
-@code{chgrp} changes the group ownership of each given @var{file}
+@command{chgrp} changes the group ownership of each given @var{file}
 to @var{group} (which can be either a group name or a numeric group id)
 or to the group of an existing reference file.  Synopsis:
 
@@ -7357,7 +7358,7 @@ Act on symbolic links themselves instead of what they point to.
 This is the default.
 This mode relies on the @code{lchown} system call.
 On systems that do not provide the @code{lchown} system call,
-@code{chgrp} fails when a file specified on the command line
+@command{chgrp} fails when a file specified on the command line
 is a symbolic link.
 By default, no diagnostic is issued for symbolic links encountered
 during a recursive traversal, but see @option{--verbose}.
@@ -7389,26 +7390,26 @@ Recursively change the group ownership of directories and their contents.
 
 
 @node chmod invocation
-@section @code{chmod}: Change access permissions
+@section @command{chmod}: Change access permissions
 
 @pindex chmod
 @cindex changing access permissions
 @cindex access permissions, changing
 @cindex permissions, changing access
 
-@code{chmod} changes the access permissions of the named files.  Synopsis:
+@command{chmod} changes the access permissions of the named files.  Synopsis:
 
 @example
 chmod [@var{option}]@dots{} @{@var{mode} | --reference=@var{ref_file}@} @var{file}@dots{}
 @end example
 
 @cindex symbolic links, permissions of
-@code{chmod} never changes the permissions of symbolic links, since
-the @code{chmod} system call cannot change their permissions.
+@command{chmod} never changes the permissions of symbolic links, since
+the @command{chmod} system call cannot change their permissions.
 This is not a problem since the permissions of symbolic links are
 never used.  However, for each symbolic link listed on the command
-line, @code{chmod} changes the permissions of the pointed-to file.
-In contrast, @code{chmod} ignores symbolic links encountered during
+line, @command{chmod} changes the permissions of the pointed-to file.
+In contrast, @command{chmod} ignores symbolic links encountered during
 recursive directory traversals.
 
 If used, @var{mode} specifies the new permissions.
@@ -7950,24 +7951,24 @@ in HP-UX; it also affects the HP-UX @code{du} program.
 
 
 @node sync invocation
-@section @code{sync}: Synchronize data on disk with memory
+@section @command{sync}: Synchronize data on disk with memory
 
 @pindex sync
 @cindex synchronize disk and memory
 
 @cindex superblock, writing
 @cindex inodes, written buffered
-@code{sync} writes any data buffered in memory out to disk.  This can
+@command{sync} writes any data buffered in memory out to disk.  This can
 include (but is not limited to) modified superblocks, modified inodes,
 and delayed reads and writes.  This must be implemented by the kernel;
-The @code{sync} program does nothing but exercise the @code{sync} system
+The @command{sync} program does nothing but exercise the @code{sync} system
 call.
 
 @cindex crashes and corruption
 The kernel keeps data in memory to avoid doing (relatively slow) disk
 reads and writes.  This improves performance, but if the computer
 crashes, data may be lost or the filesystem corrupted as a
-result. @code{sync} ensures everything in memory is written to disk.
+result. @command{sync} ensures everything in memory is written to disk.
 
 Any arguments are ignored, except for a lone @option{--help} or
 @option{--version} (@pxref{Common options}).
