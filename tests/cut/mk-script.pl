@@ -61,6 +61,7 @@ sub spec_to_list ($$$)
       ++$i;
     }
 
+  # GEN_FILES is currently unused.  FIXME
   my %h = (
     ALL_FILES => \@all_file,
     GEN_FILES => \@gen_file
