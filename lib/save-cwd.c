@@ -15,7 +15,7 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
-/* Written Jim Meyering <meyering@na-net.ornl.gov>.  */
+/* Written by Jim Meyering <meyering@na-net.ornl.gov>.  */
 
 #ifdef HAVE_CONFIG_H
 # include "config.h"
