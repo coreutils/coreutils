@@ -362,9 +362,26 @@ copy_internal (const char *src_path, const char *dst_path,
 	}
       else
 	{
-	  /* The file exists already.  */
+	  int same;
 
-	  if (src_sb.st_ino == dst_sb.st_ino && src_sb.st_dev == dst_sb.st_dev)
+	  /* The destination file exists already.  */
+
+	  same = (src_sb.st_ino == dst_sb.st_ino
+		  && src_sb.st_dev == dst_sb.st_dev);
+
+	  /* If we're preserving symlinks (--no-dereference) and the
+	     destination file is a symlink, use stat (not xstat) to
+	     see if it points back to the source.  */
+	  if (!same && !x->dereference && S_ISLNK (dst_sb.st_mode))
+	    {
+	      struct stat dst2_sb;
+	      if (stat (dst_path, &dst2_sb) == 0
+		  && (src_sb.st_ino == dst2_sb.st_ino &&
+		      src_sb.st_dev == dst2_sb.st_dev))
+		same = 1;
+	    }
+
+	  if (same)
 	    {
 	      if (x->hard_link)
 		return 0;
@@ -630,14 +647,14 @@ copy_internal (const char *src_path, const char *dst_path,
 	{
 	  /* Preserve the owner and group of the just-`copied'
 	     symbolic link, if possible.  */
-#ifdef HAVE_LCHOWN
+# ifdef HAVE_LCHOWN
 	  if (DO_CHOWN (lchown, dst_path, src_sb.st_uid, src_sb.st_gid))
 	    {
 	      error (0, errno, _("preserving ownership for %s"), dst_path);
 	      goto un_backup;
 	    }
-#else
-# ifdef ROOT_CHOWN_AFFECTS_SYMLINKS
+# else
+#  ifdef ROOT_CHOWN_AFFECTS_SYMLINKS
 	  if (x->myeuid == 0)
 	    {
 	      if (DO_CHOWN (chown, dst_path, src_sb.st_uid, src_sb.st_gid))
@@ -651,13 +668,13 @@ copy_internal (const char *src_path, const char *dst_path,
 	      /* FIXME: maybe give a diagnostic: you must be root
 		 to preserve ownership and group of symlinks.  */
 	    }
-# else
+#  else
 	  /* Can't preserve ownership of symlinks.
 	     FIXME: maybe give a warning or even error for symlinks
 	     in directories with the sticky bit set -- there, not
 	     preserving owner/group is a potential security problem.  */
+#  endif
 # endif
-#endif
 	}
 
       return 0;
@@ -726,8 +743,11 @@ un_backup:
 static int
 valid_options (const struct cp_options *co)
 {
+  assert (co != NULL);
+
   /* FIXME: make sure xstat and dereference are consistent.  */
   assert (co->xstat);
+
   assert (co->sparse_mode != SPARSE_UNUSED);
 }
 
