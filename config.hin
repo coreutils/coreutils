@@ -139,6 +139,10 @@
    */
 #undef HAVE_DECL_DIRFD
 
+/* Define to 1 if you have the declaration of `euidaccess', and to 0 if you
+   don't. */
+#undef HAVE_DECL_EUIDACCESS
+
 /* Define to 1 if you have the declaration of `feof_unlocked', and to 0 if you
    don't. */
 #undef HAVE_DECL_FEOF_UNLOCKED
@@ -531,6 +535,9 @@
 /* Define to 1 if you have the <mach/mach.h> header file. */
 #undef HAVE_MACH_MACH_H
 
+/* Define to 1 if you have the `makecontext' function. */
+#undef HAVE_MAKECONTEXT
+
 /* Define to 1 if your system has a GNU libc compatible `malloc' function, and
    to 0 otherwise. */
 #undef HAVE_MALLOC
@@ -582,6 +589,13 @@
 
 /* Define to 1 if you have the `mkstemp' function. */
 #undef HAVE_MKSTEMP
+
+/* Define to 1 if you have a working `mmap' system call. */
+#undef HAVE_MMAP
+
+/* Define to 1 if there is sufficient support (mmap, getcontext, makecontext,
+   setcontext) for running a process with mmap'd memory for its stack. */
+#undef HAVE_MMAP_STACK
 
 /* Define to 1 if you have the <mntent.h> header file. */
 #undef HAVE_MNTENT_H
@@ -653,11 +667,20 @@
 /* Define to 1 if you have the `rpmatch' function. */
 #undef HAVE_RPMATCH
 
+/* Define to 1 if you have the `setcontext' function. */
+#undef HAVE_SETCONTEXT
+
 /* Define to 1 if you have the `sethostname' function. */
 #undef HAVE_SETHOSTNAME
 
 /* Define to 1 if you have the `setlocale' function. */
 #undef HAVE_SETLOCALE
+
+/* Define to 1 if you have the `setregid' function. */
+#undef HAVE_SETREGID
+
+/* Define to 1 if you have the `setreuid' function. */
+#undef HAVE_SETREUID
 
 /* Define to 1 if you have the <shadow.h> header file. */
 #undef HAVE_SHADOW_H
@@ -681,6 +704,9 @@
    name argument. The stat from SunOS4.1.4 and the Hurd as of 1998-11-01) do
    this. */
 #undef HAVE_STAT_EMPTY_STRING_BUG
+
+/* Define to 1 if you have the <stdarg.h> header file. */
+#undef HAVE_STDARG_H
 
 /* Define to 1 if stdbool.h conforms to C99. */
 #undef HAVE_STDBOOL_H
@@ -923,6 +949,9 @@
 /* Define to 1 if you have the <sys/ioctl.h> header file. */
 #undef HAVE_SYS_IOCTL_H
 
+/* Define to 1 if you have the <sys/mman.h> header file. */
+#undef HAVE_SYS_MMAN_H
+
 /* Define to 1 if you have the <sys/mntent.h> header file. */
 #undef HAVE_SYS_MNTENT_H
 
@@ -960,6 +989,9 @@
 /* Define to 1 if you have the <sys/sysmacros.h> header file. */
 #undef HAVE_SYS_SYSMACROS_H
 
+/* Define to 1 if you have the <sys/sysmp.h> header file. */
+#undef HAVE_SYS_SYSMP_H
+
 /* Define to 1 if you have the <sys/systeminfo.h> header file. */
 #undef HAVE_SYS_SYSTEMINFO_H
 
@@ -983,6 +1015,9 @@
 
 /* Define to 1 if you have the <termios.h> header file. */
 #undef HAVE_TERMIOS_H
+
+/* Define to 1 if you have the `tmpfile' function. */
+#undef HAVE_TMPFILE
 
 /* Define if struct tm has the tm_gmtoff member. */
 #undef HAVE_TM_GMTOFF
@@ -1390,6 +1425,10 @@
 
 /* Define to rpl_realloc if the replacement function should be used. */
 #undef realloc
+
+/* Define to equivalent of C99 restrict keyword, or to nothing if this is not
+   supported. Do not define if restrict is supported directly. */
+#undef restrict
 
 /* Define to `unsigned' if <sys/types.h> does not define. */
 #undef size_t

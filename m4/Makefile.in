@@ -203,6 +203,7 @@ mbswidth.m4 \
 memcmp.m4 \
 mkdir-slash.m4 \
 mkstemp.m4 \
+mmap-stack.m4 \
 nanosleep.m4 \
 onceonly.m4 \
 open-max.m4 \
@@ -212,6 +213,7 @@ progtest.m4 \
 putenv.m4 \
 regex.m4 \
 rename.m4 \
+restrict.m4 \
 rmdir-errno.m4 \
 search-libs.m4 \
 st_dm_mode.m4 \

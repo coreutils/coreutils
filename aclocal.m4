@@ -888,6 +888,7 @@ AC_DEFUN([jm_MACROS],
   AC_REQUIRE([jm_FUNC_GNU_STRFTIME])
   AC_REQUIRE([jm_FUNC_MKTIME])
   AC_REQUIRE([jm_FUNC_FPENDING])
+  AC_REQUIRE([AC_SYS_MMAP_STACK])
 
   # This is for od and stat, and any other program that
   # uses the PRI.MAX macros from inttypes.h.
@@ -987,6 +988,9 @@ AC_DEFUN([jm_MACROS],
     wcrtomb \
     tzset \
   )
+
+  # for test.c
+  AC_CHECK_FUNCS(setreuid setregid)
 
   AM_FUNC_GETLINE
   if test $am_cv_func_working_getline != yes; then
@@ -1168,7 +1172,7 @@ AC_DEFUN([AC_ISC_POSIX],
   ]
 )
 
-#serial 14
+#serial 15
 
 dnl Initially derived from code in GNU grep.
 dnl Mostly written by Jim Meyering.
@@ -1275,11 +1279,41 @@ AC_DEFUN([jm_PREREQ_REGEX],
   dnl Persuade glibc <string.h> to declare mempcpy().
   AC_REQUIRE([AC_GNU_SOURCE])
 
+  AC_REQUIRE([ACX_C_RESTRICT])
   AC_REQUIRE([AC_FUNC_ALLOCA])
   AC_REQUIRE([AC_HEADER_STDC])
   AC_CHECK_HEADERS_ONCE(limits.h string.h wchar.h wctype.h)
   AC_CHECK_FUNCS_ONCE(isascii mempcpy)
   AC_CHECK_FUNCS(btowc)
+])
+
+#serial 1001
+dnl based on acx_restrict.m4, from the GNU Autoconf Macro Archive at:
+dnl http://www.gnu.org/software/ac-archive/htmldoc/acx_restrict.html
+
+# Determine whether the C/C++ compiler supports the "restrict" keyword
+# introduced in ANSI C99, or an equivalent.  Do nothing if the compiler
+# accepts it.  Otherwise, if the compiler supports an equivalent (like
+# gcc's __restrict__) define "restrict" to be that.  Otherwise, define
+# "restrict" to be empty.
+
+AC_DEFUN([ACX_C_RESTRICT],
+[AC_CACHE_CHECK([for C/C++ restrict keyword], acx_cv_c_restrict,
+  [acx_cv_c_restrict=no
+   # Try the official restrict keyword, then gcc's __restrict__.
+   for acx_kw in restrict __restrict__; do
+     AC_COMPILE_IFELSE([AC_LANG_SOURCE(
+      [float * $acx_kw x;])],
+      [acx_cv_c_restrict=$acx_kw; break])
+   done
+  ])
+ case $acx_cv_c_restrict in
+   restrict) ;;
+   no) AC_DEFINE(restrict,,
+	[Define to equivalent of C99 restrict keyword, or to nothing if this
+	is not supported.  Do not define if restrict is supported directly.]) ;;
+   *)  AC_DEFINE_UNQUOTED(restrict, $acx_cv_c_restrict) ;;
+ esac
 ])
 
 # onceonly.m4 serial 1
@@ -1600,7 +1634,7 @@ AC_DEFUN([jm_CHECK_TYPE_STRUCT_DIRENT_D_INO],
   ]
 )
 
-#serial 18
+#serial 19
 
 dnl This is just a wrapper function to encapsulate this kludge.
 dnl Putting it in a separate file like this helps share it between
@@ -1654,6 +1688,7 @@ AC_DEFUN([jm_CHECK_DECLS],
 '
 
   AC_CHECK_DECLS([
+    euidaccess,
     free,
     getenv,
     geteuid,
@@ -1791,7 +1826,7 @@ AC_DEFUN([jm_PREREQ_MEMCHR],
 
 AC_DEFUN([jm_PREREQ_PHYSMEM],
 [
-  AC_CHECK_HEADERS(sys/pstat.h unistd.h)
+  AC_CHECK_HEADERS(sys/pstat.h unistd.h sys/sysmp.h)
   AC_CHECK_FUNCS(pstat_getstatic pstat_getdynamic)
 ])
 
@@ -3315,6 +3350,37 @@ AC_DEFUN([jm_FUNC_FPENDING],
     AC_DEFINE_UNQUOTED(PENDING_OUTPUT_N_BYTES,
       $ac_cv_sys_pending_output_n_bytes,
       [the number of pending output bytes on stream `fp'])
+  fi
+])
+
+#serial 1
+# Arrange to define HAVE_MMAP_STACK and to compile mmap-stack.c
+# if there is sufficient support.
+# From Jim Meyering
+
+AC_DEFUN([AC_SYS_MMAP_STACK],
+[
+  # prerequisites
+  AC_REQUIRE([AC_FUNC_MMAP])
+  AC_CHECK_HEADERS_ONCE(sys/mman.h ucontext.h stdarg.h)
+  AC_CHECK_FUNCS_ONCE(getcontext makecontext setcontext)
+
+  # For now, require tmpfile. FIXME: if there's a system with working mmap
+  # and *context functions yet that lacks tmpfile, we can provide a replacement.
+  AC_CHECK_FUNCS_ONCE(tmpfile)
+
+  ac_i=$ac_cv_func_tmpfile
+  ac_i=$ac_i:$ac_cv_func_getcontext
+  ac_i=$ac_i:$ac_cv_func_makecontext
+  ac_i=$ac_i:$ac_cv_func_setcontext
+  ac_i=$ac_i:$ac_cv_func_mmap_fixed_mapped
+
+  if test $ac_i = yes:yes:yes:yes:yes; then
+    AC_LIBOBJ(mmap-stack)
+    AC_DEFINE(HAVE_MMAP_STACK, 1,
+      [Define to 1 if there is sufficient support (mmap, getcontext,
+       makecontext, setcontext) for running a process with mmap'd
+       memory for its stack.])
   fi
 ])
 
