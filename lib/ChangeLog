@@ -1,3 +1,9 @@
+2004-07-06  Jim Meyering  <jim@meyering.net>
+
+	* canonicalize.c: Include "stat-macros.h".
+	(canonicalize_filename_mode): Remove #ifdef S_ISLNK, now that
+	S_ISLNK is guaranteed to be defined (via stat-macros.h).
+
 2004-04-03  Dmitry V. Levin  <ldv@altlinux.org>
 
 	* Makefile.am (libfetish_a_SOURCES): Add canonicalize.c
