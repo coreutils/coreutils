@@ -129,7 +129,7 @@ else
 fi
 test -s t7.err || rm -f t7.err
 if test $errors = 0 ; then
-  $echo Passed all tests. 1>&2
+  $echo Passed all 7 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi

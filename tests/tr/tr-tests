@@ -911,7 +911,7 @@ else
 fi
 test -s tR6.err || rm -f tR6.err
 if test $errors = 0 ; then
-  $echo Passed all tests. 1>&2
+  $echo Passed all 53 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi

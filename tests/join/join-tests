@@ -605,7 +605,7 @@ else
 fi
 test -s t9a.err || rm -f t9a.err
 if test $errors = 0 ; then
-  $echo Passed all tests. 1>&2
+  $echo Passed all 35 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi
