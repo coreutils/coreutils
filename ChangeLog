@@ -1,6 +1,16 @@
-2005-03-22  Jim Meyering  <jim@meyering.net>
+2005-03-25  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/system.h (DECIMAL_DIGIT_ACCUMULATE): Reverse the sense of
+	the return value, and update callers:
+	* src/cut.c (set_fields): Update use of DECIMAL_DIGIT_ACCUMULATE.
+	* src/expand.c (parse_tab_stops, main): Likewise.
+	* src/split.c (main): Likewise.
+	* src/unexpand.c (parse_tab_stops, main): Likewise.
+	* src/uniq.c (main): Likewise.
+
+2005-03-22  Jim Meyering  <jim@meyering.net>
 
 	* build-aux: New directory.  Renamed from config.
 	* configure.ac: Reflect renaming: config -> build-aux.
