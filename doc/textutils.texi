@@ -1789,7 +1789,7 @@ positions are numbered starting with 1.  See below.
 
 @item +@var{pos1}[-@var{pos2}]
 The obsolete, traditional option for specifying a sort field.  The field
-consists of the line between @var{pos1} and up to but not including
+consists of the line between @var{pos1} and up to but @emph{not including}
 @var{pos2} (or the end of the line if @var{pos2} is omitted).  Fields
 and character positions are numbered starting with 0.  See below.
 

@@ -1,6 +1,10 @@
+Sat Aug  5 23:51:25 1995  Jim Meyering  (meyering@comco.com)
+
+	* Version 1.12.1.
+
 Fri Aug  4 23:21:46 1995  Jim Meyering  (meyering@comco.com)
 
-	* src/Makefile.in (DISTFILES): Include ansi2knr.c and ansi2knr.1. 
+	* src/Makefile.in (DISTFILES): Include ansi2knr.c and ansi2knr.1.
 	Add suffixes, dependencies, and rules to convert ANSI source to K&R
 	when required.  Mark tr.o and comm.o as the only such files (for now).
 
