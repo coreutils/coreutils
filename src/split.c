@@ -73,7 +73,7 @@ static struct option const longopts[] =
 };
 
 static void
-usage (int status, char *reason)
+usage (int status, const char *reason)
 {
   if (reason != NULL)
     fprintf (stderr, "%s: %s\n", program_name, reason);
@@ -107,7 +107,7 @@ SIZE may have a multiplier suffix: b for 512, k for 1K, m for 1 Meg.\n\
 /* Return nonzero if the string STR is composed entirely of decimal digits.  */
 
 static int
-isdigits (char *str)
+isdigits (const char *str)
 {
   do
     {
@@ -125,7 +125,7 @@ isdigits (char *str)
    Return 0 if STR is valid, -1 if not. */
 
 static int
-convint (char *str, int *val)
+convint (const char *str, int *val)
 {
   int multiplier = 1;
   int arglen = strlen (str);
@@ -201,7 +201,7 @@ next_file_name (void)
    Otherwise add to the same output file already in use.  */
 
 static void
-cwrite (int new_file_flag, char *bp, int bytes)
+cwrite (int new_file_flag, const char *bp, int bytes)
 {
   if (new_file_flag)
     {
