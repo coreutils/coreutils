@@ -1,6 +1,6 @@
-# getcwd.m4 - check whether getcwd (NULL, 0) allocates memory for result
+# getcwd.m4 - check for working getcwd that is compatible with glibc
 
-# Copyright (C) 2001, 2003 Free Software Foundation, Inc.
+# Copyright (C) 2001, 2003, 2004 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,11 +18,11 @@
 
 # Written by Paul Eggert.
 
-AC_DEFUN([AC_FUNC_GETCWD_NULL],
+AC_DEFUN([gl_FUNC_GETCWD_NULL],
   [
    AC_CHECK_HEADERS_ONCE(unistd.h)
    AC_CACHE_CHECK([whether getcwd (NULL, 0) allocates memory for result],
-     [ac_cv_func_getcwd_null],
+     [gl_cv_func_getcwd_null],
      [AC_TRY_RUN(
         [
 #	 include <stdlib.h>
@@ -43,10 +43,35 @@ AC_DEFUN([AC_FUNC_GETCWD_NULL],
 	       exit (! (f && f[0] == '/' && !f[1]));
 	     }
 	 }],
-	[ac_cv_func_getcwd_null=yes],
-	[ac_cv_func_getcwd_null=no],
-	[ac_cv_func_getcwd_null=no])])
-   if test $ac_cv_func_getcwd_null = yes; then
-     AC_DEFINE(HAVE_GETCWD_NULL, 1,
-	       [Define if getcwd (NULL, 0) allocates memory for result.])
-   fi])
+	[gl_cv_func_getcwd_null=yes],
+	[gl_cv_func_getcwd_null=no],
+	[gl_cv_func_getcwd_null=no])])
+])
+
+AC_DEFUN([gl_FUNC_GETCWD],
+[
+  AC_REQUIRE([gl_FUNC_GETCWD_NULL])
+
+  case $gl_cv_func_getcwd_null in
+  yes) gl_FUNC_GETCWD_PATH_MAX;;
+  esac
+
+  case $gl_cv_func_getcwd_null,$gl_cv_func_getcwd_path_max in
+  yes,yes) ;;
+  *)
+    AC_LIBOBJ([getcwd])
+    AC_DEFINE([__GETCWD_PREFIX], [[rpl_]],
+      [Define to rpl_ if the getcwd replacement function should be used.])
+    gl_PREREQ_GETCWD;;
+  esac
+])
+
+# Prerequisites of lib/getcwd.c.
+AC_DEFUN([gl_PREREQ_GETCWD],
+[
+  AC_REQUIRE([gl_USE_SYSTEM_EXTENSIONS])
+  AC_REQUIRE([AC_HEADER_DIRENT])
+  AC_REQUIRE([gl_CHECK_TYPE_STRUCT_DIRENT_D_INO])
+  AC_CHECK_HEADERS_ONCE(fcntl.h)
+  :
+])
