@@ -1,3 +1,13 @@
+Sat Jan 25 00:12:29 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/xstrtol.h [!_STRTOL_ERROR]: Define the type `enum strtol_error'
+	only if it hasn't already been defined.
+	(_STRTOL_ERROR): Undefine.
+
+	* lib/xstrtol.c (__xstrtol): Change interpretation of
+	VALID_SUFFIXES == NULL vs VALID_SUFFIXES == "".  Use the former
+	when any suffix is valid, the later when no suffix is allowed.
+
 Fri Jan 24 23:36:00 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/long-options.c (parse_long_options): Reset optind to zero
