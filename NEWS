@@ -1,5 +1,6 @@
 [5.0.1]
 * FEATURE: tail FIXME
+* sleep now works on AIX systems that lack support for clock_gettime
 * df and `readlink --canonicalize' no longer corrupt the heap on
   non-glibc, non-solaris systems
 * `env -u SOME_ALREADY_UNSET_VARIABLE' no longer dumps core on non-glibc systems
