@@ -115,9 +115,15 @@ get_charset_aliases ()
     {
 #if !(defined VMS || defined WIN32)
       FILE *fp;
-      const char *dir = relocate (LIBDIR);
+      const char *dir;
       const char *base = "charset.alias";
       char *file_name;
+
+      /* Make it possible to override the charset.alias location.  This is
+	 necessary for running the testsuite before "make install".  */
+      dir = getenv ("CHARSETALIASDIR");
+      if (dir == NULL || dir[0] == '\0')
+	dir = relocate (LIBDIR);
 
       /* Concatenate dir and base into freshly allocated file_name.  */
       {

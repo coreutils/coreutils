@@ -1,9 +1,10 @@
 #!/bin/sh
 # Get modification time of a file or directory and pretty-print it.
 
-scriptversion=2004-12-08.12
+scriptversion=2005-02-07.09
 
-# Copyright (C) 1995, 1996, 1997, 2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 1995, 1996, 1997, 2003, 2004, 2005 Free Software
+# Foundation, Inc.
 # written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, June 1995
 #
 # This program is free software; you can redistribute it and/or modify
@@ -42,11 +43,11 @@ Pretty-print the modification time of FILE.
 
 Report bugs to <bug-automake@gnu.org>.
 EOF
-    exit 0
+    exit $?
     ;;
   -v | --v*)
     echo "mdate-sh $scriptversion"
-    exit 0
+    exit $?
     ;;
 esac
 
@@ -107,13 +108,32 @@ do
 done
 
 # Get the extended ls output of the file or directory.
-set x`eval "$ls_command \"\$save_arg1\""`
+set dummy x`eval "$ls_command \"\$save_arg1\""`
 
 # Remove all preceding arguments
 eval $command
 
-# Get the month.  Next argument is day, followed by the year or time.
-case $1 in
+# Because of the dummy argument above, month is in $2.
+#
+# On a POSIX system, we should have
+#
+# $# = 5
+# $1 = file size
+# $2 = month
+# $3 = day
+# $4 = year or time
+# $5 = filename
+#
+# On Darwin 7.7.0 and 7.6.0, we have
+#
+# $# = 4
+# $1 = day
+# $2 = month
+# $3 = year or time
+# $4 = filename
+
+# Get the month.
+case $2 in
   Jan) month=January; nummonth=1;;
   Feb) month=February; nummonth=2;;
   Mar) month=March; nummonth=3;;
@@ -128,7 +148,10 @@ case $1 in
   Dec) month=December; nummonth=12;;
 esac
 
-day=$2
+case $3 in
+  ???*) day=$1;;
+  *) day=$3; shift;;
+esac
 
 # Here we have to deal with the problem that the ls output gives either
 # the time of day or the year.

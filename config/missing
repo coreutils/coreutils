@@ -1,9 +1,9 @@
 #! /bin/sh
 # Common stub for a few missing GNU programs while installing.
 
-scriptversion=2004-09-07.08
+scriptversion=2005-02-08.22
 
-# Copyright (C) 1996, 1997, 1999, 2000, 2002, 2003, 2004
+# Copyright (C) 1996, 1997, 1999, 2000, 2002, 2003, 2004, 2005
 #   Free Software Foundation, Inc.
 # Originally by Fran,cois Pinard <pinard@iro.umontreal.ca>, 1996.
 
@@ -87,12 +87,12 @@ Supported PROGRAM values:
   yacc         create \`y.tab.[ch]', if possible, from existing .[ch]
 
 Send bug reports to <bug-automake@gnu.org>."
-    exit 0
+    exit $?
     ;;
 
   -v|--v|--ve|--ver|--vers|--versi|--versio|--version)
     echo "missing $scriptversion (GNU Automake)"
-    exit 0
+    exit $?
     ;;
 
   -*)
@@ -288,10 +288,14 @@ WARNING: \`$1' is $msg.  You should only need it if
          call might also be the consequence of using a buggy \`make' (AIX,
          DU, IRIX).  You might want to install the \`Texinfo' package or
          the \`GNU make' package.  Grab either from any GNU archive site."
+    # The file to touch is that specified with -o ...
     file=`echo "$*" | sed -n 's/.*-o \([^ ]*\).*/\1/p'`
     if test -z "$file"; then
-      file=`echo "$*" | sed 's/.* \([^ ]*\) *$/\1/'`
-      file=`sed -n '/^@setfilename/ { s/.* \([^ ]*\) *$/\1/; p; q; }' $file`
+      # ... or it is the one specified with @setfilename ...
+      infile=`echo "$*" | sed 's/.* \([^ ]*\) *$/\1/'`
+      file=`sed -n '/^@setfilename/ { s/.* \([^ ]*\) *$/\1/; p; q; }' $infile`
+      # ... or it is derived from the source name (dir/f.texi becomes f.info)
+      test -z "$file" && file=`echo "$infile" | sed 's,.*/,,;s,.[^.]*$,,'`.info
     fi
     touch $file
     ;;

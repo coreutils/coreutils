@@ -1,5 +1,5 @@
-# lib-prefix.m4 serial 3 (gettext-0.13)
-dnl Copyright (C) 2001-2003 Free Software Foundation, Inc.
+# lib-prefix.m4 serial 4 (gettext-0.14.2)
+dnl Copyright (C) 2001-2005 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
@@ -69,7 +69,7 @@ AC_DEFUN([AC_LIB_PREFIX],
         if test "X$additional_includedir" = "X/usr/local/include"; then
           if test -n "$GCC"; then
             case $host_os in
-              linux*) haveit=yes;;
+              linux* | gnu* | k*bsd*-gnu) haveit=yes;;
             esac
           fi
         fi

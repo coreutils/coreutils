@@ -1,3 +1,7 @@
+2005-02-25  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* config.charset, gettext.h, localcharset.c: Sync from gnulib.
+
 2005-02-23  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* strftime.c: Include <stdbool.h>.  Use bool where appropriate,

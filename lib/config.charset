@@ -37,12 +37,12 @@
 #   ISO-8859-4              Y   osf solaris freebsd darwin
 #   ISO-8859-5              Y   glibc aix hpux irix osf solaris freebsd darwin
 #   ISO-8859-6              Y   glibc aix hpux solaris
-#   ISO-8859-7              Y   glibc aix hpux irix osf solaris
+#   ISO-8859-7              Y   glibc aix hpux irix osf solaris darwin
 #   ISO-8859-8              Y   glibc aix hpux osf solaris
-#   ISO-8859-9              Y   glibc aix hpux irix osf solaris
-#   ISO-8859-13                 glibc
+#   ISO-8859-9              Y   glibc aix hpux irix osf solaris darwin
+#   ISO-8859-13                 glibc darwin
 #   ISO-8859-14                 glibc
-#   ISO-8859-15                 glibc aix osf solaris freebsd
+#   ISO-8859-15                 glibc aix osf solaris freebsd darwin
 #   KOI8-R                  Y   glibc solaris freebsd darwin
 #   KOI8-U                  Y   glibc freebsd darwin
 #   KOI8-T                      glibc
@@ -99,7 +99,7 @@
 #   HP-KANA8                    hpux
 #   DEC-KANJI                   osf
 #   DEC-HANYU                   osf
-#   UTF-8                   Y   glibc aix hpux osf solaris
+#   UTF-8                   Y   glibc aix hpux osf solaris darwin
 #
 # Note: Names which are not marked as being a MIME name should not be used in
 # Internet protocols for information interchange (mail, news, etc.).
@@ -395,7 +395,7 @@ case "$os" in
 	echo "BIG5 BIG5"
 	echo "SJIS SHIFT_JIS"
 	;;
-    darwin*)
+    darwin[56]*)
 	# Darwin 6.8 doesn't have nl_langinfo(CODESET); therefore
 	# localcharset.c falls back to using the full locale name
 	# from the environment variables.
@@ -435,6 +435,36 @@ case "$os" in
 	echo "ja_JP.EUC EUC-JP"
 	echo "ja_JP.SJIS SHIFT_JIS"
 	echo "ko_KR.EUC EUC-KR"
+	;;
+    darwin*)
+	# Darwin 7.5 has nl_langinfo(CODESET), but it is useless:
+	# - It returns the empty string when LANG is set to a locale of the
+	#   form ll_CC, although ll_CC/LC_CTYPE is a symlink to an UTF-8
+	#   LC_CTYPE file.
+	# - The environment variables LANG, LC_CTYPE, LC_ALL are not set by
+	#   the system; nl_langinfo(CODESET) returns "US-ASCII" in this case.
+	# - The documentation says:
+	#     "... all code that calls BSD system routines should ensure
+	#      that the const *char parameters of these routines are in UTF-8
+	#      encoding. All BSD system functions expect their string
+	#      parameters to be in UTF-8 encoding and nothing else."
+	#   It also says
+	#     "An additional caveat is that string parameters for files,
+	#      paths, and other file-system entities must be in canonical
+	#      UTF-8. In a canonical UTF-8 Unicode string, all decomposable
+	#      characters are decomposed ..."
+	#   but this is not true: You can pass non-decomposed UTF-8 strings
+	#   to file system functions, and it is the OS which will convert
+	#   them to decomposed UTF-8 before accessing the file system.
+	# - The Apple Terminal application displays UTF-8 by default.
+	# - However, other applications are free to use different encodings:
+	#   - xterm uses ISO-8859-1 by default.
+	#   - TextEdit uses MacRoman by default.
+	# We prefer UTF-8 over decomposed UTF-8-MAC because one should
+	# minimize the use of decomposed Unicode. Unfortunately, through the
+	# Darwin file system, decomposed UTF-8 strings are leaked into user
+	# space nevertheless.
+	echo "* UTF-8"
 	;;
     beos*)
 	# BeOS has a single locale, and it has UTF-8 encoding.

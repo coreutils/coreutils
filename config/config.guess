@@ -1,9 +1,9 @@
 #! /bin/sh
 # Attempt to guess a canonical system name.
 #   Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
-#   2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+#   2000, 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
 
-timestamp='2004-11-12'
+timestamp='2005-02-10'
 
 # This file is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by
@@ -53,7 +53,7 @@ version="\
 GNU config.guess ($timestamp)
 
 Originally written by Per Bothner.
-Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004
+Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005
 Free Software Foundation, Inc.
 
 This is free software; see the source for copying conditions.  There is NO
@@ -804,6 +804,9 @@ EOF
     i*:UWIN*:*)
 	echo ${UNAME_MACHINE}-pc-uwin
 	exit 0 ;;
+    amd64:CYGWIN*:*:*)
+	echo x86_64-unknown-cygwin
+	exit 0 ;;
     p*:CYGWIN*:*)
 	echo powerpcle-unknown-cygwin
 	exit 0 ;;
@@ -1196,6 +1199,9 @@ EOF
 	exit 0 ;;
     *:QNX:*:4*)
 	echo i386-pc-qnx
+	exit 0 ;;
+    NSE-?:NONSTOP_KERNEL:*:*)
+	echo nse-tandem-nsk${UNAME_RELEASE}
 	exit 0 ;;
     NSR-?:NONSTOP_KERNEL:*:*)
 	echo nsr-tandem-nsk${UNAME_RELEASE}
