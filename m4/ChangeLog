@@ -1,3 +1,8 @@
+2004-06-15  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* getcwd-path-max.m4 (GL_FUNC_GETCWD_PATH_MAX): Fix typo: getcwd
+	was being replaced when it shouldn't have been, and vice versa.
+
 2004-06-09  Jim Meyering  <jim@meyering.net>
 
 	* calloc.m4 (AC_FUNC_CALLOC): Remove use of AN_FUNCTION.
