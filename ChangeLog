@@ -5,6 +5,11 @@
 	* tests/du/exclude: New file.
 	* tests/du/Makefile.am (TESTS): Add exclude.
 
+2003-02-04  Dmitry V. Levin  <ldv@altlinux.org>
+
+	* src/who.c (print_boottime, print_deadprocs, print_runlevel):
+	Fix memory allocation arithmetic.
+
 2003-02-04  Jim Meyering  <jim@meyering.net>
 
 	`df /dev/block-or-char-device-file--not-mounted' now reports

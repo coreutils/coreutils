@@ -1,3 +1,9 @@
+[4.5.6]
+* du no longer segfaults on Solaris systems (fixed heap-corrupting bug in ftw.c)
+* du --exclude=FILE works once again (this was broken by the rewrite for 4.5.5)
+* du no longer gets a failed assertion for certain hierarchy lay-outs
+  involving hard-linked directories
+* `who -r' no longer segfaults when using non-C-locale messages
 [4.5.5]
 * ls --dired produces correct byte offset for file names containing
   nonprintable characters in a multibyte locale
