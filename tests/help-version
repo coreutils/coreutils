@@ -10,6 +10,9 @@ expected_failure_status_tty=3
 expected_failure_status_sort=2
 expected_failure_status_expr=3
 expected_failure_status_lbracket=2
+expected_failure_status_dir=2
+expected_failure_status_ls=2
+expected_failure_status_vdir=2
 
 case "$all_programs" in
   *groups*)
