@@ -7,7 +7,6 @@ dnl to do with the function we need.
 AC_DEFUN(AM_FUNC_GETLINE,
 [dnl
   am_getline_needs_run_time_check=no
-  am_cv_func_working_getline=yes
   AC_CHECK_FUNC(getline,
 		dnl Found it in some library.  Verify that it works.
 		am_getline_needs_run_time_check=yes,
