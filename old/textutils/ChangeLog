@@ -1,3 +1,8 @@
+Thu Apr 18 22:13:14 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* tail.c (main): Make code clearer:  use new variable `n_files' in
+	place of `argc - optind'.  Use `file' instead of `argv + optind'.
+
 Sat Apr 13 13:08:29 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* lib/Makefile.am (noinst_HEADERS): Include memcasecmp.h,
