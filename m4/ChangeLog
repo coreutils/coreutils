@@ -1,3 +1,7 @@
+2004-01-12  Jim Meyering  <jim@meyering.net>
+
+	* posixver.m4 (gl_DEFAULT_POSIX2_VERSION): New macro.
+
 2003-12-20  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4: Don't require UTILS_SYS_OPEN_MAX.
