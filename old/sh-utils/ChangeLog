@@ -1,3 +1,9 @@
+Thu Nov 28 00:28:37 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (AM_GNU_GETTEXT): Renamed from ud_GNU_GETTEXT
+	for gettext-0.10.25.
+	(AM_FUNC_GETLINE): Move the test to just before the check for getdelim.
+
 Sun Nov 24 11:02:29 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/system.h [!defined STDIN_FILENO]: Define it.
