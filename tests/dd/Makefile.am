@@ -9,4 +9,4 @@ TESTS_ENVIRONMENT = \
   PATH=`pwd`/../../src:$$PATH \
   PROG=ls
 
-TESTS = misc
+TESTS = misc not-rewound
