@@ -54,9 +54,6 @@ enum
   REPLY_OPTION
 };
 
-int isdir ();
-int lstat ();
-
 /* The name this program was run with. */
 char *program_name;
 
@@ -150,35 +147,37 @@ cp_option_init (struct cp_options *x)
   x->src_info = NULL;
 }
 
-/* If PATH is an existing directory, return nonzero, else 0.  */
+/* FILE is the last operand of this command.  Return true if FILE is a
+   directory.  But report an error there is a problem accessing FILE,
+   or if FILE does not exist but would have to refer to an existing
+   directory if it referred to anything at all.  */
 
-static int
-is_real_dir (const char *path)
+static bool
+target_directory_operand (char const *file)
 {
-  struct stat stats;
-
-  return lstat (path, &stats) == 0 && S_ISDIR (stats.st_mode);
+  char const *b = base_name (file);
+  size_t blen = strlen (b);
+  bool looks_like_a_dir = (blen == 0 || ISSLASH (b[blen - 1]));
+  struct stat st;
+  int err = (stat (file, &st) == 0 ? 0 : errno);
+  bool is_a_dir = !err && S_ISDIR (st.st_mode);
+  if (err && err != ENOENT)
+    error (EXIT_FAILURE, err, _("accessing %s"), quote (file));
+  if (is_a_dir < looks_like_a_dir)
+    error (EXIT_FAILURE, err, _("target %s is not a directory"), quote (file));
+  return is_a_dir;
 }
 
 /* Move SOURCE onto DEST.  Handles cross-filesystem moves.
    If SOURCE is a directory, DEST must not exist.
-   Return 0 if successful, non-zero if an error occurred.  */
+   Return 0 if successful, 1 if an error occurred.  */
 
 static int
 do_move (const char *source, const char *dest, const struct cp_options *x)
 {
-  static int first = 1;
   int copy_into_self;
   int rename_succeeded;
   int fail;
-
-  if (first)
-    {
-      first = 0;
-
-      /* Allocate space for remembering copied and created files.  */
-      hash_init ();
-    }
 
   fail = copy (source, dest, 0, x, &copy_into_self, &rename_succeeded);
 
@@ -253,15 +252,13 @@ do_move (const char *source, const char *dest, const struct cp_options *x)
 }
 
 /* Move file SOURCE onto DEST.  Handles the case when DEST is a directory.
-   DEST_IS_DIR must be nonzero when DEST is a directory or a symlink to a
-   directory and zero otherwise.
+   Treat DEST as a directory if DEST_IS_DIR.
    Return 0 if successful, non-zero if an error occurred.  */
 
 static int
-movefile (char *source, char *dest, int dest_is_dir,
+movefile (char *source, char *dest, bool dest_is_dir,
 	  const struct cp_options *x)
 {
-  int dest_had_trailing_slash = strip_trailing_slashes (dest);
   int fail;
 
   /* This code was introduced to handle the ambiguity in the semantics
@@ -271,19 +268,13 @@ movefile (char *source, char *dest, int dest_is_dir,
      function that ignores a trailing slash.  I believe the Linux
      rename semantics are POSIX and susv2 compliant.  */
 
+  strip_trailing_slashes (dest);
   if (remove_trailing_slashes)
     strip_trailing_slashes (source);
 
-  /* In addition to when DEST is a directory, if DEST has a trailing
-     slash and neither SOURCE nor DEST is a directory, presume the target
-     is DEST/`basename source`.  This converts `mv x y/' to `mv x y/x'.
-     This change means that the command `mv any file/' will now fail
-     rather than performing the move.  The case when SOURCE is a
-     directory and DEST is not is properly diagnosed by do_move.  */
-
-  if (dest_is_dir || (dest_had_trailing_slash && !is_real_dir (source)))
+  if (dest_is_dir)
     {
-      /* DEST is a directory; build full target filename. */
+      /* Treat DEST as a directory; build the full filename.  */
       char const *src_basename = base_name (source);
       char *new_dest = path_concat (dest, src_basename, NULL);
       if (new_dest == NULL)
@@ -369,13 +360,11 @@ main (int argc, char **argv)
   int c;
   int errors;
   int make_backups = 0;
-  int dest_is_dir;
   char *backup_suffix_string;
   char *version_control_string = NULL;
   struct cp_options x;
   char *target_directory = NULL;
-  int target_directory_specified;
-  unsigned int n_files;
+  int n_files;
   char **file;
 
   initialize_main (&argc, &argv);
@@ -427,6 +416,17 @@ main (int argc, char **argv)
 	  remove_trailing_slashes = 1;
 	  break;
 	case TARGET_DIRECTORY_OPTION:
+	  if (target_directory)
+	    error (EXIT_FAILURE, 0, _("multiple target directories specified"));
+	  else
+	    {
+	      struct stat st;
+	      if (stat (optarg, &st) != 0)
+		error (EXIT_FAILURE, errno, _("accessing %s"), quote (optarg));
+	      if (! S_ISDIR (st.st_mode))
+		error (EXIT_FAILURE, 0, _("target %s is not a directory"),
+		       quote (optarg));
+	    }
 	  target_directory = optarg;
 	  break;
 	case 'u':
@@ -446,39 +446,26 @@ main (int argc, char **argv)
 	}
     }
 
-  n_files = (optind < argc ? argc - optind : 0);
+  n_files = argc - optind;
   file = argv + optind;
 
-  target_directory_specified = (target_directory != NULL);
-  if (target_directory == NULL && n_files != 0)
-    target_directory = file[n_files - 1];
-
-  dest_is_dir = (n_files > 0 && isdir (target_directory));
-
-  if (n_files == 0 || (n_files == 1 && !target_directory_specified))
+  if (n_files <= !target_directory)
     {
-      if (n_files == 0)
+      if (n_files <= 0)
 	error (0, 0, _("missing file operand"));
       else
-	error (0, 0, _("missing file operand after %s"),
-	       quote (argv[argc - 1]));
+	error (0, 0, _("missing destination file operand after %s"),
+	       quote (file[0]));
       usage (EXIT_FAILURE);
     }
 
-  if (target_directory_specified)
+  if (!target_directory)
     {
-      if (!dest_is_dir)
-	{
-	  error (0, 0, _("specified target, %s is not a directory"),
-		 quote (target_directory));
-	  usage (EXIT_FAILURE);
-	}
-    }
-  else if (n_files > 2 && !dest_is_dir)
-    {
-      error (0, 0,
-	    _("when moving multiple files, last argument must be a directory"));
-      usage (EXIT_FAILURE);
+      if (2 <= n_files && target_directory_operand (file[n_files - 1]))
+	target_directory = file[--n_files];
+      else if (2 < n_files)
+	error (EXIT_FAILURE, 0, _("target %s is not a directory"),
+	       quote (file[n_files - 1]));
     }
 
   if (backup_suffix_string)
@@ -489,22 +476,23 @@ main (int argc, char **argv)
 				   version_control_string)
 		   : none);
 
-  /* Move each arg but the last into the target_directory.  */
-  {
-    unsigned int last_file_idx = (target_directory_specified
-				  ? n_files - 1
-				  : n_files - 2);
-    unsigned int i;
+  hash_init ();
 
-    /* Initialize the hash table only if we'll need it.
-       The problem it is used to detect can arise only if there are
-       two or more files to move.  */
-    if (last_file_idx)
-      dest_info_init (&x);
+  if (target_directory)
+    {
+      int i;
 
-    for (i = 0; i <= last_file_idx; ++i)
-      errors |= movefile (file[i], target_directory, dest_is_dir, &x);
-  }
+      /* Initialize the hash table only if we'll need it.
+	 The problem it is used to detect can arise only if there are
+	 two or more files to move.  */
+      if (2 <= n_files)
+	dest_info_init (&x);
+
+      for (i = 0; i < n_files; ++i)
+	errors |= movefile (file[i], target_directory, true, &x);
+    }
+  else
+    errors = movefile (file[0], file[1], false, &x);
 
   exit (errors == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
