@@ -1768,8 +1768,8 @@ Exit status:
 @cindex print terminal file name
 @cindex terminal file name, printing
 
-@code{tty} prints the file name of the tty connected to its standard
-input.  It prints @samp{not a tty} if standard input is not a tty.
+@code{tty} prints the file name of the terminal connected to its standard
+input.  It prints @samp{not a tty} if standard input is not a terminal.
 Synopsis:
 
 @example
@@ -1794,8 +1794,8 @@ Print nothing; only return an exit status.
 Exit status:
 
 @display
-0 if standard input is a tty
-1 if standard input is not a tty
+0 if standard input is a terminal
+1 if standard input is not a terminal
 2 if given incorrect arguments
 3 if a write error occurs
 @end display
@@ -2203,7 +2203,7 @@ standard.)
 day of week (0@dots{}6) with 0 corresponding to Sunday
 @item %W
 week number of year with Monday as first day of week (00@dots{}53).
-Days in a new year preceding the first Sunday are in week zero.
+Days in a new year preceding the first Monday are in week zero.
 @item %x
 locale's date representation (mm/dd/yy)
 @item %y
@@ -2714,7 +2714,7 @@ nohup @var{command} [@var{arg}]@dots{}
 
 @flindex nohup.out
 @code{nohup} increases the scheduling priority of @var{command} by 5, so
-it has a slightly smaller change to run.  If standard output is a tty,
+it has a slightly smaller change to run.  If standard output is a terminal,
 it and standard error are redirected so that they are appended to the
 file @file{nohup.out}; if that cannot be written to, they are appended
 to the file @file{$HOME/nohup.out}.  If that cannot be written to, the
