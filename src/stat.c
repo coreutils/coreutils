@@ -450,16 +450,16 @@ print_stat (char *pformat, char m, char const *filename, void const *data)
 	}
       break;
     case 'd':
-      strcat (pformat, "lu");
-      printf (pformat, (unsigned long int) statbuf->st_dev);
+      strcat (pformat, PRIuMAX);
+      printf (pformat, (uintmax_t) statbuf->st_dev);
       break;
     case 'D':
-      strcat (pformat, "lx");
-      printf (pformat, (unsigned long int) statbuf->st_dev);
+      strcat (pformat, PRIxMAX);
+      printf (pformat, (uintmax_t) statbuf->st_dev);
       break;
     case 'i':
-      strcat (pformat, "lu");
-      printf (pformat, (unsigned long int) statbuf->st_ino);
+      strcat (pformat, PRIuMAX);
+      printf (pformat, (uintmax_t) statbuf->st_ino);
       break;
     case 'a':
       strcat (pformat, "lo");
