@@ -1,0 +1,22 @@
+#!/bin/sh
+
+: ${CP=cp}
+
+suffix=.b
+tmp=b1.$$
+tmp_backup="$tmp$suffix"
+rm -f $tmp
+
+set -e
+echo test > $tmp || exit 1
+
+$CP --force --backup --version-control=simple --suffix=$suffix $tmp $tmp \
+  || exit 1
+
+test $? = 0 || exit 1
+
+test -f $tmp || exit 1
+test -f $tmp_backup || exit 1
+cmp $tmp $tmp_backup > /dev/null
+
+exit 0
