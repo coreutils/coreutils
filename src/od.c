@@ -787,7 +787,7 @@ decode_one_format (s, next, tspec)
 	case SHORT:
 	  print_function = (fmt == SIGNED_DECIMAL
 			    ? print_s_short
-			    : print_short);;
+			    : print_short);
 	  break;
 
 	case INT:
