@@ -317,6 +317,7 @@
 #include "system.h"
 #include "error.h"
 #include "hard-locale.h"
+#include "inttostr.h"
 #include "mbswidth.h"
 #include "posixver.h"
 #include "xstrtol.h"
@@ -832,6 +833,23 @@ first_last_page (char const *pages)
   return true;
 }
 
+/* Parse column count string S, and if it's valid (1 or larger and
+   within range of the type of `columns') set the global variables
+   columns and explicit_columns and return true.
+   Otherwise, return false.  */
+static bool
+parse_column_count (char const *s)
+{
+  long int tmp_long;
+  if (xstrtol (s, NULL, 10, &tmp_long, "") != LONGINT_OK
+      || !(1 <= tmp_long && tmp_long <= INT_MAX))
+    return false;
+
+  columns = tmp_long;
+  explicit_columns = true;
+  return true;
+}
+
 /* Estimate length of col_sep_string with option -S.  */
 
 static void
@@ -846,12 +864,22 @@ int
 main (int argc, char **argv)
 {
   int c;
-  int accum = 0;
   int n_files;
   bool old_options = false;
   bool old_w = false;
   bool old_s = false;
   char **file_names;
+
+  /* Use this buffer to accumulate the digits of old-style options like -99.
+     Make it one byte larger than the size required for the largest value;
+     if the user-supplied string would overflow, we'll discover that fact
+     (and fail) when accumulating the first additional byte.
+     FIXME: we're using INT_BUFSIZE_BOUND (uintmax_t) here already, in
+     anticipation of the clean-up that changes the type of `columns'
+     from int to size_t.  */
+  char column_count_string[1 + INT_BUFSIZE_BOUND (uintmax_t)];
+  size_t n_digits = 0;
+
   char const *short_options = (posix2_version () < 200112
 			       ? COMMON_SHORT_OPTIONS "S::"
 			       : COMMON_SHORT_OPTIONS "S:");
@@ -874,17 +902,14 @@ main (int argc, char **argv)
     {
       if (ISDIGIT (c))
 	{
-	  int new_c = accum * 10 + c - '0';
-	  if (INT_MAX / 10 < accum || new_c < 0)
+	  column_count_string[n_digits++] = c;
+	  column_count_string[n_digits] = 0;
+	  if ( ! parse_column_count (column_count_string))
 	    error (EXIT_FAILURE, 0, _("column count too large"));
-	  accum = new_c;
-	  columns = accum;
-	  explicit_columns = true;
 	  continue;
 	}
 
-      if (accum > 0)            /* reset for subsequent params */
-	accum = 0;
+      n_digits = 0;
 
       switch (c)
 	{
@@ -907,16 +932,9 @@ main (int argc, char **argv)
 
 	case COLUMNS_OPTION:	/* --columns=COLUMN */
 	  {
-	    long int tmp_long;
-	    if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
-		|| tmp_long <= 0 || tmp_long > INT_MAX)
-	      {
-		error (EXIT_FAILURE, 0,
-		       _("`--columns=COLUMN' invalid number of columns: `%s'"),
-		       optarg);
-	      }
-	    columns = tmp_long;
-	    explicit_columns = true;
+	    if ( ! parse_column_count (optarg))
+	      error (EXIT_FAILURE, 0,
+		     _("invalid number of columns: `%s'"), optarg);
 	    break;
 	  }
 
