@@ -1049,7 +1049,10 @@ main (int argc, char **argv)
 
       if (seek_record == 0 && !(conversions_mask & C_NOTRUNC))
 	omode |= O_TRUNC;
-      output_fd = open (output_file, omode, 0666);
+      output_fd = open (output_file, omode,
+			(S_IRUSR | S_IWUSR
+			 | S_IRGRP | S_IWGRP
+			 | S_IROTH | S_IWOTH));
       if (output_fd < 0)
 	error (1, errno, "%s", output_file);
 #if HAVE_FTRUNCATE
