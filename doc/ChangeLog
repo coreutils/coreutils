@@ -1,5 +1,7 @@
 2001-05-24  Jim Meyering  <meyering@lucent.com>
 
+	* texinfo.tex: Update from master source.
+
 	* omni-utils.texi (ls invocation): Document more clearly what ls
 	does when given no arguments.
 
