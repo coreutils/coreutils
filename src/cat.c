@@ -55,19 +55,26 @@ static char *infile;
 /* Descriptor on which input file is open.  */
 static int input_desc;
 
-/* Buffer for line numbers.  */
-static char line_buf[13] =
-{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '0', '\t', '\0'};
+/* Buffer for line numbers.
+   An 11 digit counter may overflow within an hour on a P2/466,
+   an 18 digit counter needs about 1000y */
+#define LINE_COUNTER_BUF_LEN 20
+static char line_buf[LINE_COUNTER_BUF_LEN] =
+  {
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+    ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '0',
+    '\t', '\0'
+  };
 
 /* Position in `line_buf' where printing starts.  This will not change
    unless the number of lines is larger than 999999.  */
-static char *line_num_print = line_buf + 5;
+static char *line_num_print = line_buf + LINE_COUNTER_BUF_LEN - 8;
 
 /* Position of the first digit in `line_buf'.  */
-static char *line_num_start = line_buf + 10;
+static char *line_num_start = line_buf + LINE_COUNTER_BUF_LEN - 3;
 
 /* Position of the last digit in `line_buf'.  */
-static char *line_num_end = line_buf + 10;
+static char *line_num_end = line_buf + LINE_COUNTER_BUF_LEN - 3;
 
 /* Preserves the `cat' function's local `newlines' between invocations.  */
 static int newlines2 = 0;
@@ -129,7 +136,10 @@ next_line_num (void)
       *endp-- = '0';
     }
   while (endp >= line_num_start);
-  *--line_num_start = '1';
+  if (line_num_start > line_buf)
+    *--line_num_start = '1';
+  else
+    *line_buf = '>';
   if (line_num_start < line_num_print)
     line_num_print--;
 }
@@ -775,8 +785,8 @@ main (int argc, char **argv)
 	{
 	  inbuf = (unsigned char *) xmalloc (insize + 1);
 
-	  /* Why are (OUTSIZE - 1 + INSIZE * 4 + 13) bytes allocated for
-	     the output buffer?
+	  /* Why are (OUTSIZE - 1 + INSIZE * 4 + LINE_COUNTER_BUF_LEN)
+	     bytes allocated for the output buffer?
 
 	     A test whether output needs to be written is done when the input
 	     buffer empties or when a newline appears in the input.  After
@@ -788,10 +798,12 @@ main (int argc, char **argv)
 	     If the last character in the preceding block of input was a
 	     newline, a line number may be written (according to the given
 	     options) as the first thing in the output buffer. (Done after the
-	     new input is read, but before processing of the input begins.)  A
-	     line number requires seldom more than 13 positions.  */
+	     new input is read, but before processing of the input begins.)
+	     A line number requires seldom more than LINE_COUNTER_BUF_LEN
+	     positions.  */
 
-	  outbuf = (unsigned char *) xmalloc (outsize - 1 + insize * 4 + 13);
+	  outbuf = (unsigned char *) xmalloc (outsize - 1 + insize * 4
+					      + LINE_COUNTER_BUF_LEN);
 
 	  cat (inbuf, insize, outbuf, outsize, quote,
 	       output_tabs, numbers, numbers_at_empty_lines, mark_line_ends,
