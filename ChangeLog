@@ -2,7 +2,11 @@
 
 	* Version 4.5.4.
 
-	* src/stat.c (usage): Transform --help output via s/ - /   /,
+	* src/ls.c (gobble_file): Make `ls -dF --color symlink-to-dir' work
+	properly.  Reported by Jeff Sheinberg as Debian bug #168203.
+	Patch by Michael Stone.
+
+	* src/stat.c (usage): Transform --help items output via s/ - /   /,
 	so that help2man produces properly formatted man pages.
 	Reported by Herbert Xu as Debian bug #168400.
 
