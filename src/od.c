@@ -50,22 +50,6 @@ typedef double LONG_DOUBLE;
 # define MIN(a,b) (((a) < (b)) ? (a) : (b))
 #endif
 
-#if defined (_WIN32) && defined (_O_BINARY)
-# define WINDOWS_SETFILEMODE_BINARY(IN_STREAM, FILENAME)		\
-    do									\
-      { /* Turn off DOS text file modes, "rb" doesn't work on stdin.  */\
-	if (_setmode (_fileno ((IN_STREAM)), _O_BINARY) == -1)		\
-          {								\
-	    error (0, errno, "%s", (FILENAME));				\
-	    err = 1;							\
-	    continue;							\
-	  }								\
-      }									\
-    while (0)
-#else
-# define WINDOWS_SETFILEMODE_BINARY(IN_STREAM, FILENAME) /* empty */
-#endif
-
 /* The default number of input bytes per output line.  */
 #define DEFAULT_BYTES_PER_BLOCK 16
 
@@ -978,7 +962,7 @@ skip (off_t n_skip)
 	      continue;
 	    }
 	}
-      WINDOWS_SETFILEMODE_BINARY (in_stream, input_filename);
+      SET_BINARY (fileno (in_stream));
 
       if (n_skip == 0)
 	break;
@@ -1236,7 +1220,7 @@ read_char (int *c)
 		  err = 1;
 		}
 	    }
-	  WINDOWS_SETFILEMODE_BINARY (in_stream, input_filename);
+	  SET_BINARY (fileno (in_stream));
 	}
       while (in_stream == NULL);
     }
@@ -1309,7 +1293,7 @@ read_block (size_t n, char *block, size_t *n_bytes_in_buffer)
 		  err = 1;
 		}
 	    }
-	  WINDOWS_SETFILEMODE_BINARY (in_stream, input_filename);
+	  SET_BINARY (fileno (in_stream));
 	}
       while (in_stream == NULL);
     }
