@@ -33,6 +33,7 @@
 
 #include "system.h"
 #include "argmatch.h"
+#include "c-strtod.h"
 #include "error.h"
 #include "inttostr.h"
 #include "posixver.h"
@@ -1610,7 +1611,7 @@ parse_options (int argc, char **argv,
 	case 's':
 	  {
 	    double s;
-	    if (xstrtod (optarg, NULL, &s) || ! (0 <= s))
+	    if (xstrtod (optarg, NULL, &s, c_strtod) || ! (0 <= s))
 	      error (EXIT_FAILURE, 0,
 		     _("%s: invalid number of seconds"), optarg);
 	    *sleep_interval = s;
