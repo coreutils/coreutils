@@ -8,7 +8,7 @@ ASSORT = LC_ALL=C sort
 all_programs =								\
   echo 'spy:;@echo $$(all_programs)'					\
     | MAKEFLAGS= $(MAKE) -s -C ../src -f Makefile -f - spy		\
-    | fmt -1 | $(ASSORT) -u
+    | ../src/tr -s ' ' '\n' | $(ASSORT) -u
 
 TESTS = help-version
 TESTS_ENVIRONMENT = \
