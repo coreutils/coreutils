@@ -1,3 +1,8 @@
+2004-07-07  Jim Meyering  <jim@meyering.net>
+
+	* canonicalize.c (canonicalize_filename_mode): Remove do-while(0) loop.
+	Replace each corresponding `break' stmt with `continue'.
+
 2004-07-06  Jim Meyering  <jim@meyering.net>
 
 	* canonicalize.c: Include "stat-macros.h".
