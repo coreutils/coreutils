@@ -1,3 +1,8 @@
+2000-07-09  Jim Meyering  <meyering@lucent.com>
+
+	* config.guess: Update from FSF.
+	* config.sub: Likewise.
+
 2000-07-05  Paul Eggert  <eggert@twinsun.com>
 
 	* doc/fileutils.texi: Don't use ` and ' for quoting.

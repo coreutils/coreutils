@@ -1,5 +1,8 @@
 2000-07-09  Jim Meyering  <meyering@lucent.com>
 
+	* config.guess: Update from FSF.
+	* config.sub: Likewise.
+
 	* src/Makefile.am (seq_LDADD): Don't hard-code `-lm' -- some systems
 	don't have/need it.  From Bruno Haible.
 
