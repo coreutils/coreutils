@@ -1,6 +1,11 @@
-2003-11-20  Jim Meyering  <jim@meyering.net>
+2003-11-22  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.1.0.
+
+	* Makefile.maint (sc_xalloc_h_in_src): Remove rule.  Subsumed by...
+	(sc_system_h_headers): Do this test only if sys2.h exists.
+
+2003-11-20  Jim Meyering  <jim@meyering.net>
 
 	FIXME: update coreutils.texi:
 	chmod's new options: --preserve-root and --no-preserve-root.
