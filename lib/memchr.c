@@ -33,6 +33,10 @@ Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 # define __ptr_t char *
 #endif /* C++ or ANSI C.  */
 
+#if defined (_LIBC)
+# include <string.h>
+#endif
+
 #if defined (HAVE_LIMITS_H) || defined (_LIBC)
 # include <limits.h>
 #endif
@@ -62,8 +66,9 @@ memchr (s, c, n)
 
   /* Handle the first few characters by reading one character at a time.
      Do this until CHAR_PTR is aligned on a longword boundary.  */
-  for (char_ptr = s; n > 0 && ((unsigned long int) char_ptr
-			       & (sizeof (longword) - 1)) != 0;
+  for (char_ptr = (const unsigned char *) s;
+       n > 0 && ((unsigned long int) char_ptr
+		 & (sizeof (longword) - 1)) != 0;
        --n, ++char_ptr)
     if (*char_ptr == c)
       return (__ptr_t) char_ptr;
@@ -76,9 +81,9 @@ memchr (s, c, n)
   /* Bits 31, 24, 16, and 8 of this number are zero.  Call these bits
      the "holes."  Note that there is a hole just to the left of
      each byte, with an extra at the end:
-     
+
      bits:  01111110 11111110 11111110 11111111
-     bytes: AAAAAAAA BBBBBBBB CCCCCCCC DDDDDDDD 
+     bytes: AAAAAAAA BBBBBBBB CCCCCCCC DDDDDDDD
 
      The 1-bits make sure that carries propagate to the next 0-bit.
      The 0-bits provide holes for carries to fall into.  */
@@ -142,10 +147,10 @@ memchr (s, c, n)
 
       /* Add MAGIC_BITS to LONGWORD.  */
       if ((((longword + magic_bits)
-	
+
 	    /* Set those bits that were unchanged by the addition.  */
 	    ^ ~longword)
-	       
+
 	   /* Look at only the hole bits.  If any of the hole bits
 	      are unchanged, most likely one of the bytes was a
 	      zero.  */
