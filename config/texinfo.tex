@@ -3,10 +3,10 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2003-01-10.08}
+\def\texinfoversion{2003-01-12.11}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
-% 1996, 1997, 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+% 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
 %
 % This texinfo.tex file is free software; you can redistribute it and/or
 % modify it under the terms of the GNU General Public License as
@@ -55,9 +55,10 @@
 % The extra TeX runs get the cross-reference information correct.
 % Sometimes one run after texindex suffices, and sometimes you need more
 % than two; texi2dvi does it as many times as necessary.
-%
-% It is possible to adapt texinfo.tex for other languages.  You can get
-% the existing language-specific files from the full Texinfo distribution.
+% 
+% It is possible to adapt texinfo.tex for other languages, to some
+% extent.  You can get the existing language-specific files from the
+% full Texinfo distribution.
 
 \message{Loading texinfo [version \texinfoversion]:}
 
@@ -139,6 +140,18 @@
 \ifx\putwordDeftypevar\undefined\gdef\putwordDeftypevar{Variable}\fi
 \ifx\putwordDeffunc\undefined   \gdef\putwordDeffunc{Function}\fi
 \ifx\putwordDeftypefun\undefined\gdef\putwordDeftypefun{Function}\fi
+
+% In some macros, we cannot use the `\? notation---the left quote is
+% in some cases the escape char.
+\chardef\colonChar = `\:
+\chardef\commaChar = `\,
+\chardef\dotChar   = `\.
+\chardef\equalChar = `\=
+\chardef\exclamChar= `\!
+\chardef\questChar = `\?
+\chardef\semiChar  = `\;
+\chardef\spaceChar = `\ %
+\chardef\underChar = `\_
 
 % Ignore a token.
 %
@@ -470,21 +483,22 @@
 \let\}=\myrbrace
 \begingroup
   % Definitions to produce actual \{ & \} command in an index.
-  \catcode`\{ = 12 \catcode`\} = 12
+  \catcode`\{ = \other \catcode`\} = \other
   \catcode`\[ = 1 \catcode`\] = 2
-  \catcode`\@ = 0 \catcode`\\ = 12
+  \catcode`\@ = 0 \catcode`\\ = \other
   @gdef@lbracecmd[\{]%
   @gdef@rbracecmd[\}]%
 @endgroup
 
 % Accents: @, @dotaccent @ringaccent @ubaraccent @udotaccent
-% Others are defined by plain TeX: @` @' @" @^ @~ @= @v @H.
+% Others are defined by plain TeX: @` @' @" @^ @~ @= @u @v @H.
 \let\, = \c
 \let\dotaccent = \.
 \def\ringaccent#1{{\accent23 #1}}
 \let\tieaccent = \t
 \let\ubaraccent = \b
 \let\udotaccent = \d
+\let\acuteaccent = \'  % workaround aux file using ' as escape
 
 % Other special characters: @questiondown @exclamdown
 % Plain TeX defines: @AA @AE @O @OE @L (plus lowercase versions) @ss.
@@ -756,30 +770,36 @@ where each line of input produces a line of output.}
 % @include file    insert text of that file as input.
 % Allow normal characters that  we make active in the argument (a file name).
 \def\include{\begingroup
-  \catcode`\\=12
-  \catcode`~=12
-  \catcode`^=12
-  \catcode`_=12
-  \catcode`|=12
-  \catcode`<=12
-  \catcode`>=12
-  \catcode`+=12
+  \catcode`\\=\other
+  \catcode`~=\other
+  \catcode`^=\other
+  \catcode`_=\other
+  \catcode`|=\other
+  \catcode`<=\other
+  \catcode`>=\other
+  \catcode`+=\other
   \parsearg\includezzz}
 % Restore active chars for included file.
 \def\includezzz#1{\endgroup\begingroup
   % Read the included file in a group so nested @include's work.
   \def\thisfile{#1}%
+  \let\value=\expandablevalue
   \input\thisfile
 \endgroup}
 
 \def\thisfile{}
 
-% @center line   outputs that line, centered
-
-\def\center{\parsearg\centerzzz}
-\def\centerzzz #1{{\advance\hsize by -\leftskip
-\advance\hsize by -\rightskip
-\centerline{#1}}}
+% @center line
+% outputs that line, centered.
+%
+\def\center{\parsearg\docenter}
+\def\docenter#1{{%
+  \ifhmode \hfil\break \fi
+  \advance\hsize by -\leftskip
+  \advance\hsize by -\rightskip
+  \line{\hfil \ignorespaces#1\unskip \hfil}%
+  \ifhmode \break \fi
+}}
 
 % @sp n   outputs n lines of vertical space
 
@@ -851,9 +871,9 @@ where each line of input produces a line of output.}
 % _ within @math be active (mathcode "8000), and distinguish by seeing
 % if the current family is \slfam, which is what @var uses.
 % 
-{\catcode95 = \active  % 95 = _
+{\catcode\underChar = \active
 \gdef\mathunderscore{%
-  \catcode95=\active
+  \catcode\underChar=\active
   \def_{\ifnum\fam=\slfam \_\else\sb\fi}%
 }}
 %
@@ -1193,9 +1213,10 @@ where each line of input produces a line of output.}
   \setfont\textrm\rmshape{10}{\mainmagstep}
   \setfont\texttt\ttshape{10}{\mainmagstep}
 \fi
-% Instead of cmb10, you many want to use cmbx10.
+% Instead of cmb10, you may want to use cmbx10.
 % cmbx10 is a prettier font on its own, but cmb10
-% looks better when embedded in a line with cmr10.
+% looks better when embedded in a line with cmr10
+% (in Bob's opinion).
 \setfont\textbf\bfshape{10}{\mainmagstep}
 \setfont\textit\itshape{10}{\mainmagstep}
 \setfont\textsl\slshape{10}{\mainmagstep}
@@ -1388,6 +1409,17 @@ where each line of input produces a line of output.}
 \def\nohyphenation{\hyphenchar\font = -1  \aftergroup\restorehyphenation}
 \def\restorehyphenation{\hyphenchar\font = `- }
 
+% Set sfcode to normal for the chars that usually have another value.
+% Can't use plain's \frenchspacing because it uses the `\x notation, and
+% sometimes \x has an active definition that messes things up.
+% 
+\catcode`@=11
+  \def\frenchspacing{%
+    \sfcode\dotChar  =\@m \sfcode\questChar=\@m \sfcode\exclamChar=\@m
+    \sfcode\colonChar=\@m \sfcode\semiChar =\@m \sfcode\commaChar =\@m
+  }
+\catcode`@=\other
+
 \def\t#1{%
   {\tt \rawbackslash \frenchspacing #1}%
   \null
@@ -1487,15 +1519,17 @@ where each line of input produces a line of output.}
     \gdef\kbdexamplefont{\ttsl}\gdef\kbdfont{\tt}%
   \else\ifx\arg\wordcode
     \gdef\kbdexamplefont{\tt}\gdef\kbdfont{\tt}%
+  \else
+    \errhelp = \EMsimple
+    \errmessage{Unknown @kbdinputstyle `\arg'}%
   \fi\fi\fi
 }
 \def\worddistinct{distinct}
 \def\wordexample{example}
 \def\wordcode{code}
 
-% Default is kbdinputdistinct.  (Too much of a hassle to call the macro,
-% the catcodes are wrong for parsearg to work.)
-\gdef\kbdexamplefont{\ttsl}\gdef\kbdfont{\ttsl}
+% Default is `distinct.'
+\kbdinputstyle distinct
 
 \def\xkey{\key}
 \def\kbdfoo#1#2#3\par{\def\one{#1}\def\three{#3}\def\threex{??}%
@@ -2008,11 +2042,6 @@ where each line of input produces a line of output.}
 \def\itemcontents{#1}%
 \let\item=\itemizeitem}
 
-% Set sfcode to normal for the chars that usually have another value.
-% These are `.?!:;,'
-\def\frenchspacing{\sfcode46=1000 \sfcode63=1000 \sfcode33=1000
-  \sfcode58=1000 \sfcode59=1000 \sfcode44=1000 }
-
 % \splitoff TOKENS\endmark defines \first to be the first token in
 % TOKENS, and \rest to be the remainder.
 %
@@ -2234,8 +2263,8 @@ where each line of input produces a line of output.}
          \let\go\pickupwholefraction
       \else
          \global\advance\colcount by 1
-         \setbox0=\hbox{#1\unskip }% Add a normal word space as a separator;
-                            % typically that is always in the input, anyway.
+         \setbox0=\hbox{#1\unskip\space}% Add a normal word space as a
+                   % separator; typically that is always in the input, anyway.
          \expandafter\xdef\csname col\the\colcount\endcsname{\the\wd0}%
       \fi
     \fi
@@ -2521,7 +2550,7 @@ width0pt\relax} \fi
   \long\def\doignoretext##1@end #1{\enddoignore}%
   %
   % Make sure that spaces turn into tokens that match what \doignoretext wants.
-  \catcode32 = 10
+  \catcode\spaceChar = 10
   %
   % Ignore braces, too, so mismatched braces don't cause trouble.
   \catcode`\{ = 9
@@ -2682,7 +2711,7 @@ width0pt\relax} \fi
   % we're called from @code, as @code{@value{foo-bar_}}.  So \let any
   % such active characters to their normal equivalents.
   \gdef\value{\begingroup
-    \catcode`\-=12 \catcode`\_=12
+    \catcode`\-=\other \catcode`\_=\other
     \indexbreaks \let_\normalunderscore
     \valuexxx}
 }
@@ -2691,15 +2720,17 @@ width0pt\relax} \fi
 % We have this subroutine so that we can handle at least some @value's
 % properly in indexes (we \let\value to this in \indexdummies).  Ones
 % whose names contain - or _ still won't work, but we can't do anything
-% about that.  The command has to be fully expandable, since the result
-% winds up in the index file.  This means that if the variable's value
-% contains other Texinfo commands, it's almost certain it will fail
-% (although perhaps we could fix that with sufficient work to do a
-% one-level expansion on the result, instead of complete).
+% about that.  The command has to be fully expandable (if the variable
+% is set), since the result winds up in the index file.  This means that
+% if the variable's value contains other Texinfo commands, it's almost
+% certain it will fail (although perhaps we could fix that with
+% sufficient work to do a one-level expansion on the result, instead of
+% complete).
 %
 \def\expandablevalue#1{%
   \expandafter\ifx\csname SET#1\endcsname\relax
     {[No value for ``#1'']}%
+    \message{Variable `#1', used in @value, is not set.}%
   \else
     \csname SET#1\endcsname
   \fi
@@ -2708,13 +2739,14 @@ width0pt\relax} \fi
 % @ifset VAR ... @end ifset reads the `...' iff VAR has been defined
 % with @set.
 %
-\def\ifset{\parsearg\ifsetxxx}
-\def\ifsetxxx #1{%
+\def\ifset{\parsearg\doifset}
+\def\doifset#1{%
   \expandafter\ifx\csname SET#1\endcsname\relax
-    \expandafter\ifsetfail
+    \let\next=\ifsetfail
   \else
-    \expandafter\ifsetsucceed
+    \let\next=\ifsetsucceed
   \fi
+  \next
 }
 \def\ifsetsucceed{\conditionalsucceed{ifset}}
 \def\ifsetfail{\nestedignore{ifset}}
@@ -2723,13 +2755,14 @@ width0pt\relax} \fi
 % @ifclear VAR ... @end ifclear reads the `...' iff VAR has never been
 % defined with @set, or has been undefined with @clear.
 %
-\def\ifclear{\parsearg\ifclearxxx}
-\def\ifclearxxx #1{%
+\def\ifclear{\parsearg\doifclear}
+\def\doifclear#1{%
   \expandafter\ifx\csname SET#1\endcsname\relax
-    \expandafter\ifclearsucceed
+    \let\next=\ifclearsucceed
   \else
-    \expandafter\ifclearfail
+    \let\next=\ifclearfail
   \fi
+  \next
 }
 \def\ifclearsucceed{\conditionalsucceed{ifclear}}
 \def\ifclearfail{\nestedignore{ifclear}}
@@ -2748,28 +2781,13 @@ width0pt\relax} \fi
 \defineunmatchedend{ifnotinfo}
 \defineunmatchedend{ifnotplaintext}
 
-% We can't just want to start a group at @iftex (etc.) and end it at
-% @end iftex, since then @set commands inside the conditional have no
-% effect (they'd get reverted at the end of the group).  So we must
-% define \Eiftex to redefine itself to be its previous value.  (We can't
-% just define it to fail again with an ``unmatched end'' error, since
-% the @ifset might be nested.)
+% True conditional.  Since \set globally defines its variables, we can
+% just start and end a group (to keep the @end definition undefined at
+% the outer level).
 %
-\def\conditionalsucceed#1{%
-  \edef\temp{%
-    % Remember the current value of \E#1.
-    \let\nece{prevE#1} = \nece{E#1}%
-    %
-    % At the `@end #1', redefine \E#1 to be its previous value.
-    \def\nece{E#1}{\let\nece{E#1} = \nece{prevE#1}}%
-  }%
-  \temp
+\def\conditionalsucceed#1{\begingroup
+  \expandafter\def\csname E#1\endcsname{\endgroup}%
 }
-
-% We need to expand lots of \csname's, but we don't want to expand the
-% control sequences after we've constructed them.
-%
-\def\nece#1{\expandafter\noexpand\csname#1\endcsname}
 
 % @defininfoenclose.
 \let\definfoenclose=\comment
@@ -2862,12 +2880,27 @@ width0pt\relax} \fi
 \def\docodeindex#1{\edef\indexname{#1}\parsearg\singlecodeindexer}
 \def\singlecodeindexer #1{\doind{\indexname}{\code{#1}}}
 
-% Take care of texinfo commands likely to appear in an index entry.
-% (Must be a way to avoid doing expansion at all, and thus not have to
-% laboriously list every single command here.)
+% Define \#1 as \realbackslash #1\space, thus effectively preventing its
+% expansion.  This is used only for control words, not control
+% characters, because the \space would be incorrect for control
+% characters, but is needed to separate the control word from whatever
+% follows.
+% 
+% This can be used both for control words that take an argument and
+% those that do not.  If it does take an argument, then it'll be
+% followed by {arg} in the input, which will dutifully get written to
+% the index (or wherever).
+% 
+\def\definedummyword#1{%
+  \expandafter\def\csname #1\endcsname{\realbackslash #1\space}%
+}
+
+% Take care of Texinfo commands that can appear in an index entry.
+% Since there are some commands we want to expand, and others we don't,
+% we have to laboriously prevent expansion for those that we don't.
 % 
 \def\indexdummies{%
-  \def\ { }%
+  \def\ {\realbackslash }%
   \def\@{@}% change to @@ when we switch to @ as escape char in aux files.
   % Need these in case \tex is in effect and \{ is a \delimiter again.
   % But can't use \lbracecmd and \rbracecmd because texindex assumes
@@ -2878,92 +2911,92 @@ width0pt\relax} \fi
   \normalturnoffactive
   %
   % Accents.
-  \def\,##1{\realbackslash ,{##1}}%
+  \def\,{\realbackslash ,}%
   \def\"{\realbackslash "}%
   \def\`{\realbackslash `}%
-  \def\'{\realbackslash '}%
+  \def\'{\realbackslash acuteaccent }% workaround aux file using ' as escape
   \def\^{\realbackslash ^}%
   \def\~{\realbackslash ~}%
   \def\={\realbackslash =}%
-  \def\b{\realbackslash b}%
-  \def\c{\realbackslash c}%
-  \def\d{\realbackslash d}%
-  \def\u{\realbackslash u}%
-  \def\v{\realbackslash v}%
-  \def\H{\realbackslash H}%
-  \def\dotaccent##1{\realbackslash dotaccent {##1}}%
-  \def\ringaccent##1{\realbackslash ringaccent {##1}}%
-  \def\tieaccent##1{\realbackslash tieaccent {##1}}%
-  \def\ubaraccent##1{\realbackslash ubaraccent {##1}}%
-  \def\udotaccent##1{\realbackslash udotaccent {##1}}%
-  \def\dotless##1{\realbackslash dotless {##1}}%
+  \definedummyword{u}%
+  \definedummyword{v}%
+  \definedummyword{H}%
+  \definedummyword{dotaccent}%
+  \definedummyword{ringaccent}%
+  \definedummyword{tieaccent}%
+  \definedummyword{ubaraccent}%
+  \definedummyword{udotaccent}%
+  \definedummyword{dotless}%
+  %
   % Other non-English letters.
-  \def\AA{\realbackslash AA}%
-  \def\AE{\realbackslash AE}%
-  \def\L{\realbackslash L}%
-  \def\OE{\realbackslash OE}%
-  \def\O{\realbackslash O}%
-  \def\aa{\realbackslash aa}%
-  \def\ae{\realbackslash ae}%
-  \def\l{\realbackslash l}%
-  \def\oe{\realbackslash oe}%
-  \def\o{\realbackslash o}%
-  \def\ss{\realbackslash ss}%
+  \definedummyword{AA}%
+  \definedummyword{AE}%
+  \definedummyword{L}%
+  \definedummyword{OE}%
+  \definedummyword{O}%
+  \definedummyword{aa}%
+  \definedummyword{ae}%
+  \definedummyword{l}%
+  \definedummyword{oe}%
+  \definedummyword{o}%
+  \definedummyword{ss}%
   %
-  % Although these internals commands shouldn't show up, sometimes they do.
-  \def\bf{\realbackslash bf }%
-  \def\gtr{\realbackslash gtr}%
-  \def\hat{\realbackslash hat}%
-  \def\less{\realbackslash less}%
-  %\def\rm{\realbackslash rm }%
-  \def\sf{\realbackslash sf}%
-  \def\sl{\realbackslash sl }%
-  \def\tclose##1{\realbackslash tclose {##1}}%
-  \def\tt{\realbackslash tt}%
+  % Although these internal commands shouldn't show up, sometimes they do.
+  \definedummyword{bf}%
+  \definedummyword{gtr}%
+  \definedummyword{hat}%
+  \definedummyword{less}%
+  \definedummyword{sf}%
+  \definedummyword{sl}%
+  \definedummyword{tclose}%
+  \definedummyword{tt}%
   %
-  \def\b##1{\realbackslash b {##1}}%
-  \def\i##1{\realbackslash i {##1}}%
-  \def\r##1{\realbackslash r {##1}}%
-  \def\sc##1{\realbackslash sc {##1}}%
-  \def\t##1{\realbackslash t {##1}}%
+  % Texinfo font commands.
+  \definedummyword{b}%
+  \definedummyword{i}%
+  \definedummyword{r}%
+  \definedummyword{sc}%
+  \definedummyword{t}%
   %
-  \def\TeX{\realbackslash TeX}%
-  \def\acronym##1{\realbackslash acronym {##1}}%
-  \def\cite##1{\realbackslash cite {##1}}%
-  \def\code##1{\realbackslash code {##1}}%
-  \def\command##1{\realbackslash command {##1}}%
-  \def\dfn##1{\realbackslash dfn {##1}}%
-  \def\dots{\realbackslash dots }%
-  \def\emph##1{\realbackslash emph {##1}}%
-  \def\env##1{\realbackslash env {##1}}%
-  \def\file##1{\realbackslash file {##1}}%
-  \def\kbd##1{\realbackslash kbd {##1}}%
-  \def\key##1{\realbackslash key {##1}}%
-  \def\math##1{\realbackslash math {##1}}%
-  \def\option##1{\realbackslash option {##1}}%
-  \def\samp##1{\realbackslash samp {##1}}%
-  \def\strong##1{\realbackslash strong {##1}}%
-  \def\uref##1{\realbackslash uref {##1}}%
-  \def\url##1{\realbackslash url {##1}}%
-  \def\var##1{\realbackslash var {##1}}%
-  \def\w{\realbackslash w }%
+  \definedummyword{TeX}%
+  \definedummyword{acronym}%
+  \definedummyword{cite}%
+  \definedummyword{code}%
+  \definedummyword{command}%
+  \definedummyword{dfn}%
+  \definedummyword{dots}%
+  \definedummyword{emph}%
+  \definedummyword{env}%
+  \definedummyword{file}%
+  \definedummyword{kbd}%
+  \definedummyword{key}%
+  \definedummyword{math}%
+  \definedummyword{option}%
+  \definedummyword{samp}%
+  \definedummyword{strong}%
+  \definedummyword{uref}%
+  \definedummyword{url}%
+  \definedummyword{var}%
+  \definedummyword{w}%
   %
   % These math commands don't seem likely to be used in index entries.
-  \def\copyright{\realbackslash copyright}%
-  \def\equiv{\realbackslash equiv}%
-  \def\error{\realbackslash error}%
-  \def\expansion{\realbackslash expansion}%
-  \def\point{\realbackslash point}%
-  \def\print{\realbackslash print}%
-  \def\result{\realbackslash result}%
+  \definedummyword{copyright}%
+  \definedummyword{equiv}%
+  \definedummyword{error}%
+  \definedummyword{expansion}%
+  \definedummyword{point}%
+  \definedummyword{print}%
+  \definedummyword{result}%
   %
   % Handle some cases of @value -- where the variable name does not
   % contain - or _, and the value does not contain any
   % (non-fully-expandable) commands.
   \let\value = \expandablevalue
   %
+  % Normal spaces, not active ones.
   \unsepspaces
-  % Turn off macro expansion
+  %
+  % No macro expansion.
   \turnoffmacros
 }
 
@@ -2973,11 +3006,15 @@ width0pt\relax} \fi
 {\obeyspaces
  \gdef\unsepspaces{\obeyspaces\let =\space}}
 
-% \indexnofonts no-ops all font-change commands.
-% This is used when outputting the strings to sort the index by.
+
+% \indexnofonts is used when outputting the strings to sort the index
+% by.  Therefore, it eliminates all control sequences and just writes
+% whatever the best ASCII sort string would be for a given command
+% (usually its argument).
+%
 \def\indexdummytex{TeX}
 \def\indexdummydots{...}
-
+%
 \def\indexnofonts{%
   \def\ { }%
   \def\@{@}%
@@ -2991,9 +3028,6 @@ width0pt\relax} \fi
   \let\^=\asis
   \let\~=\asis
   \let\==\asis
-  \let\b=\asis
-  \let\c=\asis
-  \let\d=\asis
   \let\u=\asis
   \let\v=\asis
   \let\H=\asis
@@ -3003,7 +3037,8 @@ width0pt\relax} \fi
   \let\ubaraccent=\asis
   \let\udotaccent=\asis
   \let\dotless=\asis
-  % Take care of the plain tex special European modified letters.
+  %
+  % Other non-English letters.
   \def\AA{AA}%
   \def\AE{AE}%
   \def\L{L}%
@@ -3015,12 +3050,15 @@ width0pt\relax} \fi
   \def\oe{oe}%
   \def\o{o}%
   \def\ss{ss}%
+  \def\exclamdown{!}%
+  \def\questiondown{?}%
   %
   % Don't no-op \tt, since it isn't a user-level command
   % and is used in the definitions of the active chars like <, >, |, etc.
   % Likewise with the other plain tex font commands.
   %\let\tt=\asis
   %
+  % Texinfo font commands.
   \let\b=\asis
   \let\i=\asis
   \let\r=\asis
@@ -4264,14 +4302,14 @@ width0pt\relax} \fi
 \def\tex{\begingroup
   \catcode `\\=0 \catcode `\{=1 \catcode `\}=2
   \catcode `\$=3 \catcode `\&=4 \catcode `\#=6
-  \catcode `\^=7 \catcode `\_=8 \catcode `\~=13 \let~=\tie
+  \catcode `\^=7 \catcode `\_=8 \catcode `\~=\active \let~=\tie
   \catcode `\%=14
-  \catcode 43=12 % plus
-  \catcode`\"=12
-  \catcode`\==12
-  \catcode`\|=12
-  \catcode`\<=12
-  \catcode`\>=12
+  \catcode `\+=\other
+  \catcode `\"=\other
+  \catcode `\==\other
+  \catcode `\|=\other
+  \catcode `\<=\other
+  \catcode `\>=\other
   \escapechar=`\\
   %
   \let\b=\ptexb
@@ -4699,9 +4737,12 @@ width0pt\relax} \fi
      % Restore active chars for included file.
   \endgroup
   \begingroup
-  \def\thisfile{#1}%
-  \expandafter\expandafter\setupverbatiminclude\input\thisfile
-  \endgroup\nonfillfinish\endgroup
+    \let\value=\expandablevalue
+    \def\thisfile{#1}%
+    \expandafter\expandafter\setupverbatiminclude\input\thisfile
+  \endgroup
+  \nonfillfinish
+  \endgroup
 }
 
 % @copying ... @end copying.
@@ -4838,7 +4879,7 @@ width0pt\relax} \fi
 
 % Active &'s sneak into the index arguments, so make sure it's defined.
 {
-  \catcode`& = 13
+  \catcode`& = \active
   \global\let& = \ampnr
 }
 
@@ -4923,7 +4964,7 @@ width0pt\relax} \fi
 \def\defparsebody#1#2#3{%
   \parsebodycommon{#1}{#2}{#3}%
   \def#2{\defxbodycommon \activeparens \spacesplit#3}%
-  \catcode61=\active % 61 is `='
+  \catcode\equalChar=\active
   \begingroup\obeylines\activeparens
   \spacesplit#3%
 }
@@ -4985,7 +5026,7 @@ width0pt\relax} \fi
 \def\defvarparsebody #1#2#3{%
   \parsebodycommon{#1}{#2}{#3}%
   \def#2{\defxbodycommon \spacesplit#3}%
-  \catcode61=\active %
+  \catcode\equalChar=\active
   \begingroup\obeylines
   \spacesplit#3%
 }
@@ -5089,7 +5130,7 @@ width0pt\relax} \fi
 
 \def\deffnheader #1#2#3{\doind {fn}{\code{#2}}%
 \begingroup\defname {#2}{#1}\defunargs{#3}\endgroup %
-\catcode 61=\other % Turn off change made in \defparsebody
+\catcode\equalChar=\other % Turn off change made in \defparsebody
 }
 
 % @defun == @deffn Function
@@ -5099,7 +5140,7 @@ width0pt\relax} \fi
 \def\defunheader #1#2{\doind {fn}{\code{#1}}% Make entry in function index
 \begingroup\defname {#1}{\putwordDeffunc}%
 \defunargs {#2}\endgroup %
-\catcode 61=\other % Turn off change made in \defparsebody
+\catcode\equalChar=\other % Turn off change made in \defparsebody
 }
 
 % @deftypefun int foobar (int @var{foo}, float @var{bar})
@@ -5113,7 +5154,7 @@ width0pt\relax} \fi
 \doind {fn}{\code{#2}}% Make entry in function index
 \begingroup\defname {\defheaderxcond#1\relax$.$#2}{\putwordDeftypefun}%
 \deftypefunargs {#3}\endgroup %
-\catcode 61=\other % Turn off change made in \defparsebody
+\catcode\equalChar=\other % Turn off change made in \defparsebody
 }
 
 % @deftypefn {Library Function} int foobar (int @var{foo}, float @var{bar})
@@ -5134,7 +5175,7 @@ width0pt\relax} \fi
 %               at least some C++ text from working
 \defname {\defheaderxcond#2\relax$.$#3}{#1}%
 \deftypefunargs {#4}\endgroup %
-\catcode 61=\other % Turn off change made in \defparsebody
+\catcode\equalChar=\other % Turn off change made in \defparsebody
 }
 
 % @defmac == @deffn Macro
@@ -5144,7 +5185,7 @@ width0pt\relax} \fi
 \def\defmacheader #1#2{\doind {fn}{\code{#1}}% Make entry in function index
 \begingroup\defname {#1}{\putwordDefmac}%
 \defunargs {#2}\endgroup %
-\catcode 61=\other % Turn off change made in \defparsebody
+\catcode\equalChar=\other % Turn off change made in \defparsebody
 }
 
 % @defspec == @deffn Special Form
@@ -5154,7 +5195,7 @@ width0pt\relax} \fi
 \def\defspecheader #1#2{\doind {fn}{\code{#1}}% Make entry in function index
 \begingroup\defname {#1}{\putwordDefspec}%
 \defunargs {#2}\endgroup %
-\catcode 61=\other % Turn off change made in \defparsebody
+\catcode\equalChar=\other % Turn off change made in \defparsebody
 }
 
 % @defop CATEGORY CLASS OPERATION ARG...
@@ -5352,7 +5393,7 @@ width0pt\relax} \fi
  \def\scanmacro#1{%
    \begingroup \newlinechar`\^^M
    % Undo catcode changes of \startcontents and \doprintindex
-   \catcode`\@=0 \catcode`\\=12 \escapechar=`\@
+   \catcode`\@=0 \catcode`\\=\other \escapechar=`\@
    % Append \endinput to make sure that TeX does not see the ending newline.
    \toks0={#1\endinput}%
    \immediate\openout\macscribble=\jobname.tmp
@@ -5366,7 +5407,7 @@ width0pt\relax} \fi
 \def\scanmacro#1{%
 \begingroup \newlinechar`\^^M
 % Undo catcode changes of \startcontents and \doprintindex
-\catcode`\@=0 \catcode`\\=12 \escapechar=`\@
+\catcode`\@=0 \catcode`\\=\other \escapechar=`\@
 \let\xeatspaces\eatspaces\scantokens{#1\endinput}\endgroup}
 \fi
 
@@ -5396,7 +5437,7 @@ width0pt\relax} \fi
 }
 
 % Trim a single trailing ^^M off a string.
-{\catcode`\^^M=12\catcode`\Q=3%
+{\catcode`\^^M=\other \catcode`\Q=3%
 \gdef\eatcr #1{\eatcra #1Q^^MQ}%
 \gdef\eatcra#1^^MQ{\eatcrb#1Q}%
 \gdef\eatcrb#1Q#2Q{#1}%
@@ -5411,29 +5452,29 @@ width0pt\relax} \fi
 % body, and then making it the \newlinechar in \scanmacro.
 
 \def\macrobodyctxt{%
-  \catcode`\~=12
-  \catcode`\^=12
-  \catcode`\_=12
-  \catcode`\|=12
-  \catcode`\<=12
-  \catcode`\>=12
-  \catcode`\+=12
-  \catcode`\{=12
-  \catcode`\}=12
-  \catcode`\@=12
-  \catcode`\^^M=12
+  \catcode`\~=\other
+  \catcode`\^=\other
+  \catcode`\_=\other
+  \catcode`\|=\other
+  \catcode`\<=\other
+  \catcode`\>=\other
+  \catcode`\+=\other
+  \catcode`\{=\other
+  \catcode`\}=\other
+  \catcode`\@=\other
+  \catcode`\^^M=\other
   \usembodybackslash}
 
 \def\macroargctxt{%
-  \catcode`\~=12
-  \catcode`\^=12
-  \catcode`\_=12
-  \catcode`\|=12
-  \catcode`\<=12
-  \catcode`\>=12
-  \catcode`\+=12
-  \catcode`\@=12
-  \catcode`\\=12}
+  \catcode`\~=\other
+  \catcode`\^=\other
+  \catcode`\_=\other
+  \catcode`\|=\other
+  \catcode`\<=\other
+  \catcode`\>=\other
+  \catcode`\+=\other
+  \catcode`\@=\other
+  \catcode`\\=\other}
 
 % \mbodybackslash is the definition of \ in @macro bodies.
 % It maps \foo\ => \csname macarg.foo\endcsname => #N
@@ -5474,29 +5515,30 @@ width0pt\relax} \fi
   \else \expandafter\parsemacbody
   \fi}
 
-\def\unmacro{\parsearg\unmacroxxx}
-\def\unmacroxxx#1{%
+\def\unmacro{\parsearg\dounmacro}
+\def\dounmacro#1{%
   \if1\csname ismacro.#1\endcsname
     \global\cslet{#1}{macsave.#1}%
     \global\expandafter\let \csname ismacro.#1\endcsname=0%
-    % Remove the macro name from \macrolist
+    % Remove the macro name from \macrolist:
     \begingroup
-      \edef\tempa{\expandafter\noexpand\csname#1\endcsname}%
-      \def\do##1{%
-        \def\tempb{##1}%
-        \ifx\tempa\tempb
-          % remove this
-        \else
-          \toks0 = \expandafter{\newmacrolist\do}%
-          \edef\newmacrolist{\the\toks0\expandafter\noexpand\tempa}%
-        \fi}%
-      \def\newmacrolist{}%
-      % Execute macro list to define \newmacrolist
-      \macrolist
-      \global\let\macrolist\newmacrolist
+      \expandafter\let\csname#1\endcsname \relax
+      \let\do\unmacrodo
+      \xdef\macrolist{\macrolist}%
     \endgroup
   \else
     \errmessage{Macro #1 not defined}%
+  \fi
+}
+
+% Called by \do from \dounmacro on each macro.  The idea is to omit any
+% macro definitions that have been changed to \relax.
+% 
+\def\unmacrodo#1{%
+  \ifx#1\relax
+    % remove this
+  \else
+    \noexpand\do \noexpand #1%
   \fi
 }
 
@@ -6452,8 +6494,6 @@ should work if nowhere else does.}
 \def+{{\tt \char 43}}
 \catcode`\$=\active
 \def${\ifusingit{{\sl\$}}\normaldollar}%$ font-lock fix
-%\catcode 27=\active
-%\def^^[{$\diamondsuit$}
 
 % Set up an active definition for =, but don't enable it most of the time.
 {\catcode`\==\active
@@ -6482,7 +6522,6 @@ should work if nowhere else does.}
 % \normalbackslash outputs one backslash in fixed width font.
 \def\normalbackslash{{\tt\rawbackslashxx}}
 
-% \catcode 17=0   % Define control-q
 \catcode`\\=\active
 
 % Used sometimes to turn off (effectively) the active characters
