@@ -1055,7 +1055,7 @@ static void (*closeout_func) (void) = close_stdout;
 static void
 close_stdout_wrapper (void)
 {
-  if (*closeout_func)
+  if (closeout_func)
     (*closeout_func) ();
 }
 
