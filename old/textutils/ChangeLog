@@ -1,6 +1,6 @@
 Mon Feb 12 21:12:28 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
-	Adapt for automake-0.29.
+	Update for automake-0.29.
 	* Makefile.in (CONFIG_HEADER): Don't define.  Automake now does it.
 	* src/Makefile.in: Likewise.
 	* lib/Makefile.in: Likewise.
