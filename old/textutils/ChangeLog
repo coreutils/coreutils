@@ -1,3 +1,11 @@
+Fri Dec 20 00:08:36 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* tests/join-test/Makefile.am (MAINTAINERCLEANFILES): Use $(in1)
+	and $(in2), not $(in).
+
+	* tests/join-test/mk-script.pl: New option: --list.
+	Generate lists of files used/generated.
+
 Thu Dec 19 23:28:41 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* tests/join-test/mk-script.pl: Rewrite to be more general -- so

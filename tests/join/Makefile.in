@@ -62,7 +62,7 @@ TESTS = $x-tests
 
 SUFFIXES = .pl
 
-MAINTAINERCLEANFILES = $x-tests $(in) $(exp)
+MAINTAINERCLEANFILES = $x-tests $(in1) $(in2) $(exp)
 CLEANFILES = $(out) $(err)
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../config.h
