@@ -18,12 +18,10 @@
    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
    USA.  */
 
-/* When this file is included, it may be preceded only by preprocessor
-   declarations.  Thanks to AIX.  Therefore we include it right after
-   "config.h", not later.  */
-
-#ifndef _ALLOCA_H
-# define _ALLOCA_H
+/* Avoid using the symbol _ALLOCA_H here, as Bison assumes _ALLOCA_H
+   means there is a real alloca function.  */
+#ifndef _GNULIB_ALLOCA_H
+# define _GNULIB_ALLOCA_H
 
 /* alloca (N) returns a pointer to N bytes of memory
    allocated on the stack, which will last until the function returns.
@@ -51,4 +49,4 @@ extern "C"
 void *alloca (size_t);
 #endif
 
-#endif /* _ALLOCA_H */
+#endif /* _GNULIB_ALLOCA_H */
