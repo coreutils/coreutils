@@ -6,6 +6,8 @@
 	Include <assert.h>.
 	Add an assertion and a test driver.
 	This fixes a bug introduced on 2004-07-02.
+	Andreas Schwab reported the resulting failure of cp --parents:
+	http://lists.gnu.org/archive/html/bug-coreutils/2005-01/msg00130.html
 
 2005-01-23  Jim Meyering  <jim@meyering.net>
 
