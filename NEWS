@@ -1,4 +1,6 @@
 [4.5.7]
+* du would fail with more than one DIR argument when any but the last did not
+  contain a slash (due to a bug in ftw.c)
 [4.5.6]
 * du no longer segfaults on Solaris systems (fixed heap-corrupting bug in ftw.c)
 * du --exclude=FILE works once again (this was broken by the rewrite for 4.5.5)
