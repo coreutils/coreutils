@@ -23,7 +23,7 @@ VPATH = @srcdir@
 CC = @CC@
 AR = ar
 RANLIB = @RANLIB@
-DEFS = -Dlint @DEFS@
+DEFS = @DEFS@
 CFLAGS = @CFLAGS@
 YACC = @YACC@
 
@@ -49,7 +49,7 @@ stripslash.o xgetcwd.o xmalloc.o xstrdup.o userspec.o yesno.o \
 
 DISTFILES = Makefile.in backupfile.h getopt.h long-options.h modechange.h \
 fnmatch.h fsusage.h group-member.h makepath.h mountlist.h obstack.h pathmax.h \
-safe-xstat.cin safe-xstat.hin getdate.c posixtm.c $(SOURCES)
+safe-xstat.cin safe-xstat.hin getdate.c posixtm.c error.h $(SOURCES)
 
 all: libfu.a
 
