@@ -1,3 +1,8 @@
+2003-02-21  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (du invocation): Document --apparent-size.
+	Adjust documentation of --bytes (-b).
+
 2003-02-07  Richard Dawe  <rich@phekda.freeserve.co.uk>
 
 	* coreutils.texi: Use @command instead of @code for program names.
