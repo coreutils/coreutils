@@ -2,6 +2,12 @@
 
 	* Version 1.22f.
 
+	* tests/cut/Test.pm: Add tests for new --output-delimiter option,
+	as well as for NUL input delimiter (--delimiter='').
+	* src/cut.c (cut_fields): Honor new --output-delimiter option.
+	(main): Fix handling of --delimiter='' (-d '').  Until now, it has
+	never worked as advertised.  I guess no one tried it.
+
 	* tests/sort/Test.pm: Add two tests relating to this.
 	* src/sort.c (main): Stat all non-`-' input file files (and fail if a
 	stat fails) when an output file is specified by `-o' but doesn't exist.
