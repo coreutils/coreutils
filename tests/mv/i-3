@@ -9,7 +9,7 @@ fi
 
 . $srcdir/../envvar-check
 . $srcdir/../lang-default
-. $srcdir/../priv-check require-non-root
+PRIV_CHECK_ARG=require-non-root . $srcdir/../priv-check
 
 pwd=`pwd`
 tmp=mv-i.$$
