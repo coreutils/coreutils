@@ -70,7 +70,8 @@
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
-  TARGET_DIRECTORY_OPTION = CHAR_MAX + 1
+  TARGET_DIRECTORY_OPTION = CHAR_MAX + 1,
+  STRIP_TRAILING_SLASHES_OPTION
 };
 
 int euidaccess ();
@@ -82,11 +83,14 @@ int yesno ();
 /* The name this program was run with. */
 char *program_name;
 
+static int remove_trailing_slashes;
+
 static struct option const long_options[] =
 {
   {"backup", optional_argument, NULL, 'b'},
   {"force", no_argument, NULL, 'f'},
   {"interactive", no_argument, NULL, 'i'},
+  {"strip-trailing-slash", no_argument, NULL, STRIP_TRAILING_SLASHES_OPTION},
   {"suffix", required_argument, NULL, 'S'},
   {"target-directory", required_argument, NULL, TARGET_DIRECTORY_OPTION},
   {"update", no_argument, NULL, 'u'},
@@ -288,6 +292,36 @@ movefile (char *source, char *dest, int dest_is_dir,
   int dest_had_trailing_slash = strip_trailing_slashes_2 (dest);
   int fail;
 
+  /* This code was introduced to handle the ambiguity in the semantics
+     of mv that is induced by the varying semantics of the rename function.
+     Some systems (e.g., Linux) have a rename function that honors a
+     trailing slash, while others (like Solaris 5,6,7) have a rename
+     function that ignores a trailing slash.  I believe the Linux
+     rename semantics are POSIX and susv2 compliant.  */
+
+  if (remove_trailing_slashes)
+    {
+      strip_trailing_slashes_2 (source);
+    }
+  else
+    {
+      char *src_copy = xstrdup (source);
+      int src_has_trailing_slash = strip_trailing_slashes_2 (src_copy);
+      if (src_has_trailing_slash)
+	{
+	  /* See if lstat says the trailing-slash-free src_copy
+	     is a symbolic link.  */
+	  struct stat stat_buf;
+	  if (lstat (src_copy, &stat_buf) == 0 && S_ISLNK (stat_buf.st_mode)
+	      && stat (src_copy, &stat_buf) == 0 && S_ISDIR (stat_buf.st_mode))
+	    {
+	      error (0, 0, _("%s: warning: moving a symlink-to-directory\
+ referenced with a\ntrailing slash may move the directory, not the symlink"),
+		     source);
+	    }
+	}
+    }
+
   /* In addition to when DEST is a directory, if DEST has a trailing
      slash and neither SOURCE nor DEST is a directory, presume the target
      is DEST/`basename source`.  This converts `mv x y/' to `mv x y/x'.
@@ -342,6 +376,8 @@ Rename SOURCE to DEST, or move SOURCE(s) to DIRECTORY.\n\
   -b, --backup[=CONTROL]       make backup before removal\n\
   -f, --force                  remove existing destinations, never prompt\n\
   -i, --interactive            prompt before overwrite\n\
+      --strip-trailing-slashes  remove any trailing slashes from each SOURCE\n\
+                                 argument\n\
   -S, --suffix=SUFFIX          override the usual backup suffix\n\
       --target-directory=DIRECTORY  move all SOURCE arguments into DIRECTORY\n\
   -u, --update                 move only older or brand new non-directories\n\
@@ -420,6 +456,9 @@ main (int argc, char **argv)
 	case 'i':
 	  x.interactive = 1;
 	  x.force = 0;
+	  break;
+	case STRIP_TRAILING_SLASHES_OPTION:
+	  remove_trailing_slashes = 1;
 	  break;
 	case TARGET_DIRECTORY_OPTION:
 	  target_directory = optarg;
