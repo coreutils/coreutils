@@ -68,18 +68,15 @@ v = Version
 
 a_host=alpha.gnu.org
 b_host=tug.org
-c_host=ftp.enst.fr
 
 a_url_dir=gnu/fetish
 b_url_dir=gnu/fetish
-c_url_dir=pub/gnu/gnits/fetish
 
 a_real_dir=/fs/share/ftp/gnu/fetish
 b_real_dir=/home/ftp/pub/gnu/fetish
-c_real_dir=/pub/gnu/gnits/fetish
 
-url_dir_list = $(foreach x,a b c,ftp://$($(x)_host)/$($(x)_url_dir))
-real_dir_list = $(foreach x,a b c,ftp://$($(x)_host)$($(x)_real_dir))
+url_dir_list = $(foreach x,a b,ftp://$($(x)_host)/$($(x)_url_dir))
+real_dir_list = $(foreach x,a b,ftp://$($(x)_host)$($(x)_real_dir))
 
 md5 = $(shell md5sum < $(distdir).tar.gz|sed 's/  -//')
 
