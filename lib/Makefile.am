@@ -102,6 +102,7 @@ libfetish_a_SOURCES = \
   same.c same.h \
   save-cwd.c save-cwd.h \
   savedir.c savedir.h \
+  setenv.c setenv.h \
   settime.c \
   sha1.c sha1.h \
   sig2str.h \
