@@ -810,6 +810,31 @@ dosync (int fd, char const *qname)
   return 0;
 }
 
+/* Turn on or off direct I/O mode for file descriptor FD, if possible.
+   Try to turn it on if ENABLE is true.  Otherwise, try to turn it off.  */
+static void
+direct_mode (int fd, bool enable)
+{
+  if (O_DIRECT)
+    {
+      int fd_flags = fcntl (fd, F_GETFL);
+      if (0 < fd_flags)
+	{
+	  int new_flags = (enable
+			   ? (fd_flags | O_DIRECT)
+			   : (fd_flags & ~O_DIRECT));
+	  if (new_flags != fd_flags)
+	    fcntl (fd, F_SETFL, new_flags);
+	}
+    }
+
+#if HAVE_DIRECTIO && defined DIRECTIO_ON
+  /* This is Solaris-specific.  See the following for details:
+     http://docs.sun.com/db/doc/816-0213/6m6ne37so?q=directio&a=view  */
+  directio (fd, DIRECTIO_ON);
+#endif
+}
+
 /*
  * Do pass number k of n, writing "size" bytes of the given pattern "type"
  * to the file descriptor fd.   Qname, k and n are passed in only for verbose
@@ -836,6 +861,7 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
   size_t ralign = lcm (getpagesize (), sizeof *r); /* Fill alignment.  */
   char pass_string[PASS_NAME_SIZE];	/* Name of current pass */
   bool write_error = false;
+  bool first_write = true;
 
   /* Printable previous offset into the file */
   char previous_offset_buf[LONGEST_HUMAN_READABLE + 1];
@@ -890,7 +916,7 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
       if (type < 0)
 	fillrand (s, r, rsize, lim);
       /* Loop to retry partial writes. */
-      for (soff = 0; soff < lim; soff += ssize)
+      for (soff = 0; soff < lim; soff += ssize, first_write = false)
 	{
 	  ssize = write (fd, (char *) r + soff, lim - soff);
 	  if (ssize <= 0)
@@ -906,6 +932,20 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
 		{
 		  int errnum = errno;
 		  char buf[INT_BUFSIZE_BOUND (uintmax_t)];
+
+		  /* If the first write of the first pass for a given file
+		     has just failed with EINVAL, turn off direct mode I/O
+		     and try again.  This works around a bug in linux-2.4
+		     whereby opening with O_DIRECT would succeed for some
+		     file system types (e.g., ext3), but any attempt to
+		     access a file through the resulting descriptor would
+		     fail with EINVAL.  */
+		  if (k == 1 && first_write && errno == EINVAL)
+		    {
+		      direct_mode (fd, false);
+		      ssize = 0;
+		      continue;
+		    }
 		  error (0, errnum, _("%s: error writing at offset %s"),
 			 qname, umaxtostr ((uintmax_t) offset + soff, buf));
 		  /*
@@ -1242,6 +1282,8 @@ do_wipefd (int fd, char const *qname, struct isaac_state *s,
       error (0, 0, _("%s: invalid file type"), qname);
       return false;
     }
+
+  direct_mode (fd, true);
 
   /* Allocate pass array */
   passarray = xnmalloc (flags->n_iterations, sizeof *passarray);
