@@ -1,5 +1,15 @@
 1999-09-19  Jim Meyering  <meyering@ascend.com>
 
+	* lib/lchown.c [STAT_MACROS_BROKEN] (S_ISLNK): Undefine.
+	(S_ISLNK): Define if necessary.
+	This is necessary on a NEC SX-4 with SUPER-UX 9.1.
+	Based on a patch from Holger Berger.
+
+	* src/dd.c (siginfo_handler): Mark parameter with ATTRIBUTE_UNUSED.
+	Change many counter and index variables to be of unsigned type.
+	(dd_copy): Add new unsigned variable, n_bytes_read, in place of
+	many uses of `nread'.
+
 	* src/sys2.h (__attribute__): Define.
 	(ATTRIBUTE_NORETURN): Remove #else clause.
 	(ATTRIBUTE_UNUSED): Define.
