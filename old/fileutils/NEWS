@@ -1,4 +1,6 @@
 Changes in release 4.1:
+[4.0z]
+* fix a typo in install-sh
 [4.0y]
 * cp now accepts the POSIX-mandated -H and -L options.
 * cp -p and mv now try to preserve uid even if you're not root, as per POSIX.2.
