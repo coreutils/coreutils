@@ -153,3 +153,6 @@ patch from Olivier Delhomme
 du: add option to use \0 as line terminator rather than \n so that
   tools like xdiskusage that parse du output don't choke on file names
   with embedded newlines.
+
+Remove suspicious uses of alloca (ones that may allocate more than
+   about 4k)
