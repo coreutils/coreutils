@@ -1,4 +1,4 @@
-#serial 18
+#serial 19
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
@@ -78,7 +78,7 @@ AC_DEFUN(jm_MACROS,
   AC_REQUIRE([jm_FUNC_STAT])
   AC_REQUIRE([jm_FUNC_REALLOC])
   AC_REQUIRE([jm_FUNC_MALLOC])
-  AC_REQUIRE([jm_FUNC_STRERROR_R])
+  AC_REQUIRE([AC_FUNC_STRERROR_R])
   AC_REQUIRE([jm_FUNC_NANOSLEEP])
   AC_REQUIRE([jm_FUNC_READDIR])
   AC_REQUIRE([jm_FUNC_MEMCMP])
