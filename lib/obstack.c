@@ -468,7 +468,7 @@ _obstack_memory_used (h)
 static void
 print_and_abort ()
 {
-  fputs (_("virtual memory exhausted"), stderr);
+  fputs (_("memory exhausted"), stderr);
   fputc ('\n', stderr);
   exit (obstack_exit_failure);
 }
