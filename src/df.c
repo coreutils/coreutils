@@ -55,11 +55,9 @@ static int show_all_fs;
    command line argument -- even if it's a dummy (automounter) entry.  */
 static int show_listed_fs;
 
-/* base used for human style output */
-static int human_readable_base;
-
-/* The units to count in.  */
-static int output_units;
+/* If positive, the units to use when printing sizes;
+   if negative, the human-readable base.  */
+static int output_block_size;
 
 /* If nonzero, use the POSIX output format.  */
 static int posix_format;
@@ -114,6 +112,7 @@ static int print_type;
 static struct option const long_options[] =
 {
   {"all", no_argument, &show_all_fs, 1},
+  {"block-size", required_argument, 0, 131},
   {"inodes", no_argument, &inode_format, 1},
   {"human-readable", no_argument, 0, 'h'},
   {"si", no_argument, 0, 'H'},
@@ -141,15 +140,16 @@ print_header (void)
     printf ("       ");
 
   if (inode_format)
-    printf ("    Inodes   IUsed   IFree  %%IUsed ");
+    printf ("    Inodes   IUsed   IFree IUse%%");
+  else if (output_block_size < 0)
+    printf ("    Size  Used Avail Use%%");
   else
-    if (output_units == 1024 * 1024)
-      printf (" MB-blocks    Used Available Capacity");
-    else if (human_readable_base)
-      printf ("    Size  Used  Avail  Capacity");
-    else
-      printf (" %s  Used Available Capacity",
-	      output_units == 1024 ? "1024-blocks" : " 512-blocks");
+    {
+      char buf[LONGEST_HUMAN_READABLE + 1];
+      printf (" %4s-blocks      Used Available Use%%",
+	      human_readable (output_block_size, buf, 1, -1024));
+    }
+
   printf (" Mounted on\n");
 }
 
@@ -187,9 +187,11 @@ excluded_fstype (const char *fstype)
 
 /* Like human_readable, except return "-" if the argument is -1.  */
 static char *
-df_readable (uintmax_t n, char *buf, int from_units, int to_units, int base)
+df_readable (uintmax_t n, char *buf,
+	     int from_block_size, int output_block_size)
 {
-  return n == -1 ? "-" : human_readable (n, buf, from_units, to_units, base);
+  return (n == -1 ? "-"
+	  : human_readable (n, buf, from_block_size, output_block_size));
 }
 
 /* Display a space listing for the disk device with absolute path DISK.
@@ -241,6 +243,7 @@ show_dev (const char *disk, const char *mount_point, const char *fstype)
       char buf[3][LONGEST_HUMAN_READABLE + 1];
       double inodes_percent_used;
       uintmax_t inodes_used;
+      int inode_units = output_block_size < 0 ? output_block_size : 1;
 
       if (fsu.fsu_files == -1 || fsu.fsu_files < fsu.fsu_ffree)
 	{
@@ -256,18 +259,18 @@ show_dev (const char *disk, const char *mount_point, const char *fstype)
 	}
 
       printf (" %7s %7s %7s ",
-	      df_readable (fsu.fsu_files, buf[0], 1, 1, human_readable_base),
-	      df_readable (inodes_used, buf[1], 1, 1, human_readable_base),
-	      df_readable (fsu.fsu_ffree, buf[2], 1, 1, human_readable_base));
+	      df_readable (fsu.fsu_files, buf[0], 1, inode_units),
+	      df_readable (inodes_used, buf[1], 1, inode_units),
+	      df_readable (fsu.fsu_ffree, buf[2], 1, inode_units));
 
       if (inodes_percent_used < 0)
-	printf ("     - ");
+	printf ("   - ");
       else
-	printf (" %5.0f%%", inodes_percent_used);
+	printf ("%4.0f%%", inodes_percent_used);
     }
   else
     {
-      int w = human_readable_base ? 5 : 8;
+      int w = output_block_size < 0 ? 5 : 9;
       char buf[2][LONGEST_HUMAN_READABLE + 1];
       char availbuf[LONGEST_HUMAN_READABLE + 2];
       char *avail;
@@ -296,22 +299,22 @@ show_dev (const char *disk, const char *mount_point, const char *fstype)
 			    ? - fsu.fsu_bavail
 			    : fsu.fsu_bavail),
 			   availbuf + 1, fsu.fsu_blocksize,
-			   output_units, human_readable_base);
+			   output_block_size);
 
       if (fsu.fsu_bavail_top_bit_set)
 	*--avail = '-';
 
-      printf (" %*s %*s  %*s ",
+      printf (" %*s %*s %*s ",
 	      w, df_readable (fsu.fsu_blocks, buf[0], fsu.fsu_blocksize,
-			      output_units, human_readable_base),
+			      output_block_size),
 	      w, df_readable (blocks_used, buf[1], fsu.fsu_blocksize,
-			      output_units, human_readable_base),
+			      output_block_size),
 	      w, avail);
 
       if (blocks_percent_used < 0)
-	printf ("     -  ");
+	printf ("  - ");
       else
-	printf (" %5.0f%% ", blocks_percent_used);
+	printf ("%3.0f%%", blocks_percent_used);
     }
 
   if (mount_point)
@@ -325,7 +328,7 @@ show_dev (const char *disk, const char *mount_point, const char *fstype)
       else if (strncmp ("/tmp_mnt/", mount_point, 9) == 0)
 	mount_point += 8;
 #endif
-      printf ("  %s", mount_point);
+      printf (" %s", mount_point);
     }
   PUTCHAR ('\n');
 }
@@ -534,11 +537,12 @@ Show information about the filesystem on which each FILE resides,\n\
 or all filesystems by default.\n\
 \n\
   -a, --all             include filesystems having 0 blocks\n\
+      --block-size=SIZE use SIZE-byte blocks\n\
   -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n\
   -H, --si              likewise, but use powers of 1000 not 1024\n\
   -i, --inodes          list inode information instead of block usage\n\
-  -k, --kilobytes       use 1024-byte blocks\n\
-  -m, --megabytes       use 1048576-byte blocks\n\
+  -k, --kilobytes       like --block-size=1024\n\
+  -m, --megabytes       like --block-size=1048576\n\
       --no-sync         do not invoke sync before getting usage info (default)\n\
   -P, --portability     use the POSIX output format\n\
       --sync            invoke sync before getting usage info\n\
@@ -572,25 +576,7 @@ main (int argc, char **argv)
   show_all_fs = 0;
   show_listed_fs = 0;
 
-  if (getenv ("POSIXLY_CORRECT"))
-    output_units = 512;
-  else
-    {
-      char *bs;
-      if ((bs = getenv ("BLOCKSIZE"))
-	  && strncmp (bs, "HUMAN", sizeof ("HUMAN") - 1) == 0)
-	{
-	  human_readable_base = 1024;
-	  output_units = 1;
-	}
-      else if (bs && STREQ (bs, "SI"))
-	{
-	  human_readable_base = 1000;
-	  output_units = 1;
-	}
-      else
-	output_units = 1024;
-    }
+  human_block_size (getenv ("DF_BLOCK_SIZE"), 0, &output_block_size);
 
   print_type = 0;
   posix_format = 0;
@@ -610,20 +596,16 @@ main (int argc, char **argv)
 	  inode_format = 1;
 	  break;
 	case 'h':
-	  human_readable_base = 1024;
-	  output_units = 1;
+	  output_block_size = -1024;
 	  break;
 	case 'H':
-	  human_readable_base = 1000;
-	  output_units = 1;
+	  output_block_size = -1000;
 	  break;
 	case 'k':
-	  human_readable_base = 0;
-	  output_units = 1024;
+	  output_block_size = 1024;
 	  break;
 	case 'm':
-	  human_readable_base = 0;
-	  output_units = 1024 * 1024;
+	  output_block_size = 1024 * 1024;
 	  break;
 	case 'T':
 	  print_type = 1;
@@ -636,6 +618,10 @@ main (int argc, char **argv)
 	  break;
 	case 130:
 	  require_sync = 0;
+	  break;
+
+	case 131:
+	  human_block_size (optarg, 1, &output_block_size);
 	  break;
 
 	case 'F':
@@ -664,15 +650,6 @@ main (int argc, char **argv)
 
   if (show_help)
     usage (0);
-
-  if (posix_format && output_units == 1024 * 1024)
-    error (1, 0, _("the option for counting 1MB blocks may not be used\n\
-with the portable output format"));
-
-  if (posix_format && human_readable_base)
-    error (1, 0,
-	   _("the option for printing with adaptive units may not be used\n\
-with the portable output format"));
 
   /* Fail if the same file system type was both selected and excluded.  */
   {
