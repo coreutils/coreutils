@@ -522,19 +522,30 @@ is_empty_dir (char const *dir)
 {
   DIR *dirp = opendir (dir);
   if (dirp == NULL)
-    return false;
+    {
+      closedir (dirp);
+      return false;
+    }
 
   while (1)
     {
-      struct dirent *dp = readdir (dirp);
+      struct dirent *dp;
       const char *f;
 
+      errno = 0;
+      dp = readdir (dirp);
       if (dp == NULL)
-	return true;
+	{
+	  closedir (dirp);
+	  return errno == 0 ? true : false;
+	}
 
       f = dp->d_name;
       if ( ! DOT_OR_DOTDOT (f))
-	return false;
+	{
+	  closedir (dirp);
+	  return false;
+	}
     }
 }
 
