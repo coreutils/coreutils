@@ -1,3 +1,12 @@
+1999-05-22  Paul Eggert  <eggert@twinsun.com>
+
+	* doc/textutils.texi: Document locale-specific changes to `sort',
+	as well as the new, POSIX-compliant definition of line comparison,
+	and -g's more careful treatment of NaNs, infinities and zeros.
+
+	* src/sort.c (general_numcompare): Put exceptional cases
+	first, not last, to be consistent with -M.
+
 1999-05-21  Paul Eggert  <eggert@twinsun.com>
 
 	* src/sort.c (strtod): Declare if STDC_HEADERS is not defined.
