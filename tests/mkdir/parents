@@ -34,11 +34,13 @@ fail=0
 mkdir -p e-dir || fail=1
 mkdir e-dir > /dev/null 2>&1 && fail=1
 
+# Create an existing directory.
 umask 077
 mode_str=drwxr-x-wx
 mode_arg=`$abs_srcdir/../rwx-to-mode $mode_str`
 mkdir -m $mode_arg a || fail=1
 
+# this `mkdir -p ...' shouldn't change perms of existing dir `a'.
 d_mode_str=drwx-w--wx
 d_mode_arg=`$abs_srcdir/../rwx-to-mode $d_mode_str`
 mkdir -p -m $d_mode_arg a/b/c/d
