@@ -420,7 +420,7 @@
 2000-05-26  Bruno Haible  <haible@clisp.cons.org>
 
 	* glibc21.m4: New file.
-	* jm-macros.m4: (jm_MACROS): Call jm_GLIBC21.
+	* jm-macros.m4 (jm_MACROS): Call jm_GLIBC21.
 
 2000-05-28  Jim Meyering  <meyering@lucent.com>
 
@@ -471,7 +471,7 @@
 	* rmdir-errno.m4 (fetish_FUNC_RMDIR_NOTEMPTY): New macro and file.
 	* jm-macros.m4: Require fetish_FUNC_RMDIR_NOTEMPTY.
 
-	* nanosleep.m4: (jm_FUNC_NANOSLEEP): Save and restore LIBS around
+	* nanosleep.m4 (jm_FUNC_NANOSLEEP): Save and restore LIBS around
 	AC_SEARCH_LIBS call for nanosleep.
 	(LIB_NANOSLEEP): Set and AC_SUBST.
 
@@ -520,13 +520,13 @@
 2000-04-17  Jim Meyering  <meyering@lucent.com>
 
 	Get it right :-)
-	* jm-macros.m4: (jm_CHECK_ALL_TYPES) [_GNU_SOURCE]: Emit the
+	* jm-macros.m4 (jm_CHECK_ALL_TYPES) [_GNU_SOURCE]: Emit the
 	actual #define via AH_VERBATIM.  Don't need separate AC_DEFINE.
 	Suggestion from Akim Demaille.
 
 2000-04-14  Jim Meyering  <meyering@lucent.com>
 
-	* jm-macros.m4: (jm_CHECK_ALL_TYPES) [_GNU_SOURCE]: Use the one-arg form
+	* jm-macros.m4 (jm_CHECK_ALL_TYPES) [_GNU_SOURCE]: Use the one-arg form
 	of AC_DEFINE.  Otherwise, the #ifndef in AH_VERBATIM gets clobbered.
 
 2000-04-13  Jim Meyering  <meyering@lucent.com>
@@ -655,7 +655,7 @@
 
 2000-02-05  Jim Meyering  <meyering@lucent.com>
 
-	* jm-macros.m4: (jm_CHECK_ALL_TYPES): Require most macros.
+	* jm-macros.m4 (jm_CHECK_ALL_TYPES): Require most macros.
 	Remove explicit use of AC_HEADER_TIME.  It is required by
 	jm_CHECK_TYPE_STRUCT_TIMESPEC.  Using AC_HEADER_TIME and
 	`AC_REQUIRE'ing jm_CHECK_TYPE_STRUCT_TIMESPEC provoked a but
@@ -716,10 +716,10 @@
 	(jm_FILE_SYSTEM_USAGE): Take two parameters.
 
 	* ftruncate.m4: New file (derived from part of fileutils/configure.in).
-	* jm-macros.m4: (jm_FUNC_FTRUNCATE): AC_REQUIRE it.
+	* jm-macros.m4 (jm_FUNC_FTRUNCATE): AC_REQUIRE it.
 	(jm_CHECK_ALL_TYPES): Require AC_HEADER_MAJOR and AC_HEADER_DIRENT.
 
-	* jm-macros.m4: (OPTIONAL_BIN_PROGS, OPTIONAL_BIN_ZCRIPTS, MAN):
+	* jm-macros.m4 (OPTIONAL_BIN_PROGS, OPTIONAL_BIN_ZCRIPTS, MAN):
 	AC_SUBST these here, rather than just in sh-util/configure.in, so
 	that the now-shared-by-fileutils-and-textutils lib/Makefile.am are
 	all the same.
@@ -809,7 +809,7 @@
 
 	* d-type.m4 (jm_CHECK_TYPE_STRUCT_DIRENT_D_TYPE): Rename from
 	jm_STRUCT_DIRENT_D_TYPE.
-	* d-ino.m4: (jm_CHECK_TYPE_STRUCT_DIRENT_D_INO): Rename from
+	* d-ino.m4 (jm_CHECK_TYPE_STRUCT_DIRENT_D_INO): Rename from
 	jm_STRUCT_DIRENT_D_INO.
 	* utimbuf.m4 (jm_CHECK_TYPE_STRUCT_UTIMBUF): Rename from
 	jm_STRUCT_UTIMBUF.
@@ -998,7 +998,7 @@
 
 1999-07-15  Jim Meyering  <meyering@ascend.com>
 
-	* jm-macros.m4: (AC_CHECK_FUNCS): Check for getpagesize.
+	* jm-macros.m4 (AC_CHECK_FUNCS): Check for getpagesize.
 
 1999-05-22  Jim Meyering  <meyering@ascend.com>
 

@@ -482,7 +482,7 @@
 2000-03-12  Jim Meyering  <meyering@lucent.com>
 
 	Merge from textutils.
-	* src/system.h: (O_BINARY, O_TEXT): Define if necessary.
+	* src/system.h (O_BINARY, O_TEXT): Define if necessary.
 	(SET_BINARY, SET_BINARY2): Define.
 	(DEV_BSIZE): Define to BBSIZE if appropriate.
 
@@ -993,7 +993,7 @@
 	* src/false.c: New file.
 	* src/true.sh: Removed.
 	* src/false.sh: Removed.
-	* src/Makefile.am: (bin_PROGRAMS): Add true and false.
+	* src/Makefile.am (bin_PROGRAMS): Add true and false.
 	(bin_SCRIPTS): Remove true and false.
 	(EXTRA_DIST): Remove false.sh and true.sh.
 	* man/true.1in: New file.
@@ -1288,7 +1288,7 @@
 
 	Running `id USER' doesn't report any groups if there is no entry
 	for USER in /etc/group.  Always include the one from /etc/passwd.
-	* src/id.c: (xgetgroups): Take new parameter, gid, and pass
+	* src/id.c (xgetgroups): Take new parameter, gid, and pass
 	it to getugroups.
 	(print_group_list): Call getpwuid and adjust calls to xgetgroups
 	to include new parameter.
@@ -1624,7 +1624,7 @@
 	* configure.in (jm_MACROS): New wrapper macro.
 	Remove uses of most jm_* macros.
 
-	* acconfig.h: (chown): Add undef.
+	* acconfig.h (chown): Add undef.
 	(D_INO_IN_DIRENT): Likewise.
 	(D_TYPE_IN_DIRENT): Likewise.
 	(ssize_t): Likewise.
@@ -2202,7 +2202,7 @@ Thu May  1 00:10:11 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 Sun Apr 27 18:30:53 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
-	* src/printf.c: (cfcc_msg): File-scope constant.
+	* src/printf.c (cfcc_msg): File-scope constant.
 	(STRTOX): Use new constant as error message format string in macro.
 	Suggestion from Andreas Schwab.
 	(STRTOX): Don't fail because of extra character(s) following a
@@ -2216,7 +2216,7 @@ Sun Apr  6 14:29:14 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 	(xstrtod, xstrtol, xstrtoul): Remove functions.
 	Use the STRTOX instead.
 
-	* src/printf.c: (STRTOX): Interpret arguments like 'a and "a
+	* src/printf.c (STRTOX): Interpret arguments like 'a and "a
 	as POSIX requires.  Derived from a patch by Dennis Henriksen.
 
 Sun Mar 23 15:20:17 1997  Jim Meyering  <meyering@na-net.ornl.gov>
@@ -2268,7 +2268,7 @@ Tue Mar 18 06:46:54 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 Thu Mar 13 21:27:36 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
-	* lib/mktime.c: (TIME_T_MIN): Work around a bug in Cray C 5.0.3.0.
+	* lib/mktime.c (TIME_T_MIN): Work around a bug in Cray C 5.0.3.0.
 
 Wed Feb 19 23:06:46 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
@@ -2360,7 +2360,7 @@ Wed Jan 22 20:12:31 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 	* lib/strftime.c (_strftime_copytm):
 	New function, to work around Solaris 2.5 tzset bug.
 
-	* m4/mktime.m4: (AM_FUNC_MKTIME): Fix bug in mktime test -- don't
+	* m4/mktime.m4 (AM_FUNC_MKTIME): Fix bug in mktime test -- don't
 	test now, test a couple of thousand times.
 
 	* m4/strftime.m4 (main): Use TZ=GMT0, not TZ=GMT, since only GMT0 is
@@ -3879,7 +3879,7 @@ Mon Aug  7 23:27:54 1995  Jim Meyering  (meyering@comco.com)
 
 Fri Jun 23 23:04 1995  Jim Meyering  (meyering@comco.com)
 
-	* configure.in: (AC_REPLACE_FUNCS): Add memcpy and memset.
+	* configure.in (AC_REPLACE_FUNCS): Add memcpy and memset.
 	Add checks for floor, modf, and rint -- all used by seq.c.
 
 Mon Jun 12 00:26:54 1995  Jim Meyering  (meyering@comco.com)
@@ -3929,7 +3929,7 @@ Fri May 12 21:25:50 1995  Jim Meyering  (meyering@comco.com)
 
 Tue Apr 18 22:57:43 1995  Jim Meyering  (meyering@comco.com)
 
-	* configure.in: (AC_OUTPUT): Use echo, not date, to avoid creating
+	* configure.in (AC_OUTPUT): Use echo, not date, to avoid creating
 	unnecessary conflicts for people using version control software
 	like RCS and CVS.
 	(AC_ARG_PROGRAM): Use it.
