@@ -120,6 +120,9 @@
 /* Define to 1 if you have the `chsize' function. */
 #undef HAVE_CHSIZE
 
+/* Define to 1 if you have the `clearerr_unlocked' function. */
+#undef HAVE_CLEARERR_UNLOCKED
+
 /* Define to 1 if you have the `clock_gettime' function. */
 #undef HAVE_CLOCK_GETTIME
 
@@ -362,14 +365,35 @@
 /* Define to 1 if you have the `fdatasync' function. */
 #undef HAVE_FDATASYNC
 
+/* Define to 1 if you have the `feof_unlocked' function. */
+#undef HAVE_FEOF_UNLOCKED
+
+/* Define to 1 if you have the `ferror_unlocked' function. */
+#undef HAVE_FERROR_UNLOCKED
+
 /* Define to 1 if you have the `fesetround' function. */
 #undef HAVE_FESETROUND
+
+/* Define to 1 if you have the `fflush_unlocked' function. */
+#undef HAVE_FFLUSH_UNLOCKED
+
+/* Define to 1 if you have the `fgets_unlocked' function. */
+#undef HAVE_FGETS_UNLOCKED
 
 /* Define to 1 if you have the <float.h> header file. */
 #undef HAVE_FLOAT_H
 
 /* Define to 1 if you have the `floor' function. */
 #undef HAVE_FLOOR
+
+/* Define to 1 if you have the `fputc_unlocked' function. */
+#undef HAVE_FPUTC_UNLOCKED
+
+/* Define to 1 if you have the `fputs_unlocked' function. */
+#undef HAVE_FPUTS_UNLOCKED
+
+/* Define to 1 if you have the `fread_unlocked' function. */
+#undef HAVE_FREAD_UNLOCKED
 
 /* Define to 1 if fseeko (and presumably ftello) exists and is declared. */
 #undef HAVE_FSEEKO
@@ -386,8 +410,14 @@
 /* Define to 1 if you have the `ftruncate' function. */
 #undef HAVE_FTRUNCATE
 
+/* Define to 1 if you have the `fwrite_unlocked' function. */
+#undef HAVE_FWRITE_UNLOCKED
+
 /* Define if struct statfs has the f_fstypename member. */
 #undef HAVE_F_FSTYPENAME_IN_STATFS
+
+/* Define to 1 if you have the `getchar_unlocked' function. */
+#undef HAVE_GETCHAR_UNLOCKED
 
 /* Define to 1 if you have the `getcontext' function. */
 #undef HAVE_GETCONTEXT
@@ -397,6 +427,9 @@
 
 /* Define if getcwd (NULL, 0) allocates memory for result. */
 #undef HAVE_GETCWD_NULL
+
+/* Define to 1 if you have the `getc_unlocked' function. */
+#undef HAVE_GETC_UNLOCKED
 
 /* Define to 1 if you have the `getdelim' function. */
 #undef HAVE_GETDELIM
@@ -632,6 +665,12 @@
 
 /* Define to 1 if you have the `pstat_getstatic' function. */
 #undef HAVE_PSTAT_GETSTATIC
+
+/* Define to 1 if you have the `putchar_unlocked' function. */
+#undef HAVE_PUTCHAR_UNLOCKED
+
+/* Define to 1 if you have the `putc_unlocked' function. */
+#undef HAVE_PUTC_UNLOCKED
 
 /* Define to 1 if you have the <pwd.h> header file. */
 #undef HAVE_PWD_H
