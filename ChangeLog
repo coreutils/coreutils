@@ -1,6 +1,18 @@
-2005-03-29  Jim Meyering  <jim@meyering.net>
+2005-03-30  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	* src/pinky.c (short_pinky): Adjust to read_utmp signature change.
+	* src/uptime.c (uptime): New arg OPTIONS.  All uses changed.
+	* src/users.c (users): Likewise.
+	* src/who.c (who): Likewise.
+	* src/uptime.c (main): Check PIDs when invoked with zero arguments.
+	* src/users.c (main): Likewise.
+	* src/who.c (main): Likewise.  Also with two arguments.
+	Omit duplicate code in 2-arg case.
+	(UT_PID): Moved to ../lib/readutmp.h.
+
+2005-03-29  Jim Meyering  <jim@meyering.net>
 
 	* src/system.h (ptr_align): Declare `ptr' parameter to be a
 	`const' pointer, since this function never writes through it.
