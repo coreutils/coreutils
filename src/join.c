@@ -246,6 +246,13 @@ xfields (struct line *line)
   ptr = line->beg;
   lim = line->lim;
 
+  if (!tab)
+    {
+      /* Skip leading blanks before the first field.  */
+      while (ptr < lim && ISSPACE (*ptr))
+	++ptr;
+    }
+
   for (i = 0; ptr < lim; ++i)
     {
       if (tab)
