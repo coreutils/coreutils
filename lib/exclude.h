@@ -1,5 +1,7 @@
 /* exclude.h -- declarations for excluding file names
-   Copyright 1992, 1993, 1994, 1997, 1999, 2001 Free Software Foundation, Inc.
+
+   Copyright (C) 1992, 1993, 1994, 1997, 1999, 2001, 2002 Free
+   Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -30,14 +32,14 @@
 
 /* Patterns must match the start of file names, instead of matching
    anywhere after a '/'.  */
-#define EXCLUDE_ANCHORED (1 << 5)
+#define EXCLUDE_ANCHORED (1 << 30)
 
 /* Include instead of exclude.  */
-#define EXCLUDE_INCLUDE (1 << 6)
+#define EXCLUDE_INCLUDE (1 << 29)
 
 /* '?', '*', '[', and '\\' are special in patterns.  Without this
    option, these characters are ordinary and fnmatch is not used.  */
-#define EXCLUDE_WILDCARDS (1 << 7)
+#define EXCLUDE_WILDCARDS (1 << 28)
 
 struct exclude;
 
