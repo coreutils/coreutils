@@ -1,7 +1,10 @@
 2003-01-04  Jim Meyering  <jim@meyering.net>
 
-	rm could be tricked into mistakenly reporting a cycle.
+	* src/copy.h: Remove use of PARAMS.
+	* src/remove.h: Likewise.
+	* src/chown-core.h: Likewise.
 
+	rm could be tricked into mistakenly reporting a cycle.
 	* src/remove.c: [cycle_check_state]: New global.
 	(remove_cwd_entries): Adapt to new semantics of cycle_check.
 	(rm): Call cycle_check_init and cycle_check_free for each file.
