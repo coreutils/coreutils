@@ -54,7 +54,6 @@ Repeatedly output a line with all specified STRING(s), or `y'.\n\
   --version   output version information and exit\n"));
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
     }
-  close_stdout ();
   exit (status);
 }
 
@@ -65,6 +64,8 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+
+  atexit (close_stdout);
 
   /* Don't recognize --help or --version if POSIXLY_CORRECT is set.  */
   if (getenv ("POSIXLY_CORRECT") == NULL)

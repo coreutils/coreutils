@@ -81,7 +81,6 @@ point number.\n\
 "),
 	      program_name, program_name);
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
-      close_stdout ();
     }
   exit (status);
 }
@@ -199,6 +198,8 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+
+  atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 		      AUTHORS, usage);

@@ -26,7 +26,6 @@ These option names may not be abbreviated.\n\
 ")
 	  , program_name, program_name);
   puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
-  close_stdout ();
   exit (status);
 }
 
@@ -37,6 +36,8 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+
+  atexit (close_stdout);
 
   /* Recognize --help or --version only if it's the only command-line
      argument and if POSIXLY_CORRECT is not set.  */
