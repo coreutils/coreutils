@@ -1,7 +1,8 @@
 Thu Mar 25 22:41:01 1993  Jim Meyering  (meyering@comco.com)
 
-	* configure.in: Add AC_IRIX_SUN to get -lsun because Irix-4.0.5's
-	libc.a doesn't have yp/NIS entrypoints.
+	* configure.in: Add AC_IRIX_SUN to get -lsun because
+	Irix-4.0.5's libc.a doesn't have yp/NIS entrypoints.
+	From Kjetil Wiekhorst J|rgensen <jorgens@pvv.unit.no>.
 
 Sun Dec  6 23:17:09 1992  Jim Meyering  (meyering@comco.com)
 
