@@ -1,5 +1,5 @@
 /* split.c -- split a file into pieces.
-   Copyright (C) 88, 91, 1995-2000 Free Software Foundation, Inc.
+   Copyright (C) 88, 91, 1995-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -30,6 +30,7 @@
 #include "system.h"
 #include "closeout.h"
 #include "error.h"
+#include "full-write.h"
 #include "safe-read.h"
 #include "xstrtol.h"
 
@@ -37,8 +38,6 @@
 #define PROGRAM_NAME "split"
 
 #define AUTHORS N_ ("Torbjorn Granlund and Richard M. Stallman")
-
-int full_write ();
 
 /* The name this program was run with. */
 char *program_name;
@@ -161,7 +160,7 @@ cwrite (int new_file_flag, const char *bp, int bytes)
       if (output_desc < 0)
 	error (EXIT_FAILURE, errno, "%s", outfile);
     }
-  if (full_write (output_desc, bp, bytes) < 0)
+  if (full_write (output_desc, bp, bytes) != bytes)
     error (EXIT_FAILURE, errno, "%s", outfile);
 }
 
