@@ -1,4 +1,4 @@
-/* FIXME: dircolors - parse a Slackware-style DIR_COLORS file.
+/* dircolors - output commands to set the LS_COLOR environment variable
    Copyright (C) 1994, 1995 H. Peter Anvin
    Copyright (C) 1996 Free Software Foundation, Inc.
 
