@@ -83,6 +83,9 @@ sub test_vector
      ['next-mo', "-d '$d1 next month' '+%Y-%m-%d %T'", {}, "$dm $t0", 0],
      ['next-y', "-d '$d1 next year'   '+%Y-%m-%d %T'", {}, "$dy $t0", 0],
 
+     ['utc-0', "-u -d '08/01/97 6:00' '+%D,%H:%M'", {}, "08/01/97,10:00", 0],
+     ['utc-1', "-d '1970-01-01 00:00:01' '+%s'", {}, "7201", 0],
+
      # FIXME: add a lot more...
      );
 
@@ -94,6 +97,9 @@ sub test_vector
       # Append a newline to end of each expected string.
       push (@tv, [$test_name, $flags, $in, "$exp\n", $ret]);
     }
+
+  $Test::env{'utc-0'} = ['TZ=EST5EDT'];
+  $Test::env{'utc-1'} = ['TZ=UTC+2'];
 
   return @tv;
 }
