@@ -104,6 +104,7 @@
 
 #include "system.h"
 #include "xstrtol.h"
+#include "dirname.h"
 #include "error.h"
 #include "getpagesize.h"
 #include "human.h"
@@ -217,10 +218,6 @@ to be recovered later.\n\
     }
   exit (status);
 }
-
-#if ! HAVE_FDATASYNC
-# define fdatasync(fd) -1
-#endif
 
 /*
  * --------------------------------------------------------------------
@@ -776,6 +773,42 @@ passname (unsigned char const *data, char name[PASS_NAME_SIZE])
     memcpy (name, "random", PASS_NAME_SIZE);
 }
 
+/* Request that all data for FD be transferred to the corresponding
+   storage device.  QNAME is the file name (quoted for colons), and
+   *ST its status.  Report any errors found.  Return 0 on success, -1
+   (setting errno) on failure.  It is not an error if fdatasync and/or
+   fsync is not supported for this file.  */
+static int
+dosync (int fd, char const *qname)
+{
+  int err;
+
+#if HAVE_FDATASYNC
+  if (fdatasync (fd) == 0)
+    return 0;
+  err = errno;
+  if (err != EINVAL)
+    {
+      error (0, err, "%s: fdatasync", qname);
+      errno = err;
+      return -1;
+    }
+#endif
+
+  if (fsync (fd) == 0)
+    return 0;
+  err = errno;
+  if (err != EINVAL)
+    {
+      error (0, err, "%s: fsync", qname);
+      errno = err;
+      return -1;
+    }
+
+  sync ();
+  return 0;
+}
+
 /*
  * Do pass number k of n, writing "size" bytes of the given pattern "type"
  * to the file descriptor fd.   Qname, k and n are passed in only for verbose
@@ -783,6 +816,8 @@ passname (unsigned char const *data, char name[PASS_NAME_SIZE])
  *
  * If *sizep == -1, the size is unknown, and it will be filled in as soon
  * as writing fails.
+ *
+ * Return 1 on write error, -1 on other error, 0 on success.
  */
 static int
 dopass (int fd, char const *qname, off_t *sizep, int type,
@@ -799,6 +834,7 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
   size_t rsize = 3 * MAX (ISAAC_WORDS, 1024) * sizeof *r; /* Fill size.  */
   size_t ralign = lcm (getpagesize (), sizeof *r); /* Fill alignment.  */
   char pass_string[PASS_NAME_SIZE];	/* Name of current pass */
+  bool write_error = false;
 
   /* Printable previous offset into the file */
   char previous_offset_buf[LONGEST_HUMAN_READABLE + 1];
@@ -885,6 +921,7 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
 			  != -1)
 			{
 			  soff += 512;
+			  write_error = true;
 			  continue;
 			}
 		      error (0, errno, "%s: lseek", qname);
@@ -953,22 +990,25 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
 	       * It's a common problem with programs that do lots of writes,
 	       * like mkfs.
 	       */
-	      if (fdatasync (fd) < 0 && fsync (fd) < 0)
+	      if (dosync (fd, qname) != 0)
 		{
-		  error (0, errno, "%s: fsync", qname);
-		  return -1;
+		  if (errno != EIO)
+		    return -1;
+		  write_error = true;
 		}
 	    }
 	}
     }
 
   /* Force what we just wrote to hit the media. */
-  if (fdatasync (fd) < 0 && fsync (fd) < 0)
+  if (dosync (fd, qname) != 0)
     {
-      error (0, errno, "%s: fsync", qname);
-      return -1;
+      if (errno != EIO)
+	return -1;
+      write_error = true;
     }
-  return 0;
+
+  return write_error;
 }
 
 /*
@@ -1167,9 +1207,9 @@ genpattern (int *dest, size_t num, struct isaac_state *s)
 
 /*
  * The core routine to actually do the work.  This overwrites the first
- * size bytes of the given fd.  Returns -1 on error, 0 on success.
+ * size bytes of the given fd.  Return true if successful.
  */
-static int
+static bool
 do_wipefd (int fd, char const *qname, struct isaac_state *s,
 	   struct Options const *flags)
 {
@@ -1178,6 +1218,7 @@ do_wipefd (int fd, char const *qname, struct isaac_state *s,
   off_t size;			/* Size to write, size to read */
   unsigned long n;		/* Number of passes for printing purposes */
   int *passarray;
+  bool ok = true;
 
   n = 0;		/* dopass takes n -- 0 to mean "don't print progress" */
   if (flags->verbose)
@@ -1186,7 +1227,7 @@ do_wipefd (int fd, char const *qname, struct isaac_state *s,
   if (fstat (fd, &st))
     {
       error (0, errno, "%s: fstat", qname);
-      return -1;
+      return false;
     }
 
   /* If we know that we can't possibly shred the file, give up now.
@@ -1197,7 +1238,7 @@ do_wipefd (int fd, char const *qname, struct isaac_state *s,
       || S_ISSOCK (st.st_mode))
     {
       error (0, 0, _("%s: invalid file type"), qname);
-      return -1;
+      return false;
     }
 
   /* Allocate pass array */
@@ -1214,7 +1255,7 @@ do_wipefd (int fd, char const *qname, struct isaac_state *s,
 	  if (size < 0)
 	    {
 	      error (0, 0, _("%s: file has negative size"), qname);
-	      return -1;
+	      return false;
 	    }
 	}
       else
@@ -1245,11 +1286,16 @@ do_wipefd (int fd, char const *qname, struct isaac_state *s,
   /* Do the work */
   for (i = 0; i < flags->n_iterations; i++)
     {
-      if (dopass (fd, qname, &size, passarray[i], s, i + 1, n) < 0)
+      int err = dopass (fd, qname, &size, passarray[i], s, i + 1, n);
+      if (err)
 	{
-	  memset (passarray, 0, flags->n_iterations * sizeof (int));
-	  free (passarray);
-	  return -1;
+	  if (err < 0)
+	    {
+	      memset (passarray, 0, flags->n_iterations * sizeof (int));
+	      free (passarray);
+	      return false;
+	    }
+	  ok = false;
 	}
     }
 
@@ -1257,8 +1303,15 @@ do_wipefd (int fd, char const *qname, struct isaac_state *s,
   free (passarray);
 
   if (flags->zero_fill)
-    if (dopass (fd, qname, &size, 0, s, flags->n_iterations + 1, n) < 0)
-      return -1;
+    {
+      int err = dopass (fd, qname, &size, 0, s, flags->n_iterations + 1, n);
+      if (err)
+	{
+	  if (err < 0)
+	    return false;
+	  ok = false;
+	}
+    }
 
   /* Okay, now deallocate the data.  The effect of ftruncate on
      non-regular files is unspecified, so don't worry about any
@@ -1267,14 +1320,14 @@ do_wipefd (int fd, char const *qname, struct isaac_state *s,
       && S_ISREG (st.st_mode))
     {
       error (0, errno, _("%s: error truncating"), qname);
-      return -1;
+      return false;
     }
 
-  return 0;
+  return ok;
 }
 
 /* A wrapper with a little more checking for fds on the command line */
-static int
+static bool
 wipefd (int fd, char const *qname, struct isaac_state *s,
 	struct Options const *flags)
 {
@@ -1283,12 +1336,12 @@ wipefd (int fd, char const *qname, struct isaac_state *s,
   if (fd_flags < 0)
     {
       error (0, errno, "%s: fcntl", qname);
-      return -1;
+      return false;
     }
   if (fd_flags & O_APPEND)
     {
       error (0, 0, _("%s: cannot shred append-only file descriptor"), qname);
-      return -1;
+      return false;
     }
   return do_wipefd (fd, qname, s, flags);
 }
@@ -1296,43 +1349,32 @@ wipefd (int fd, char const *qname, struct isaac_state *s,
 /* --- Name-wiping code --- */
 
 /* Characters allowed in a file name - a safe universal set. */
-static char const nameset[] =
-"0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_+=%@#.";
+static char const nameset[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-/*
- * This increments the name, considering it as a big-endian base-N number
- * with the digits taken from nameset.  Characters not in the nameset
- * are considered to come before nameset[0].
- *
- * It's not obvious, but this will explode if name[0..len-1] contains
- * any 0 bytes.
- *
- * This returns the carry (1 on overflow).
- */
-static int
-incname (char *name, unsigned len)
+/* Increment NAME (with LEN bytes).  NAME must be a big-endian base N
+   number with the digits taken from nameset.  Return true if
+   successful if not (because NAME already has the greatest possible
+   value.  */
+
+static bool
+incname (char *name, size_t len)
 {
-  char const *p;
-
-  if (!len)
-    return 1;
-
-  p = strchr (nameset, name[--len]);
-  /* If the character is not found, replace it with a 0 digit */
-  if (!p)
+  while (len--)
     {
+      char const *p = strchr (nameset, name[--len]);
+
+      /* If this character has a successor, use it.  */
+      if (p[1])
+	{
+	  name[len] = p[1];
+	  return true;
+	}
+
+      /* Otherwise, set this digit to 0 and increment the prefix.  */
       name[len] = nameset[0];
-      return 0;
     }
-  /* If this character has a successor, use it */
-  if (p[1])
-    {
-      name[len] = p[1];
-      return 0;
-    }
-  /* Otherwise, set this digit to 0 and increment the prefix */
-  name[len] = nameset[0];
-  return incname (name, len);
+
+  return false;
 }
 
 /*
@@ -1361,34 +1403,20 @@ incname (char *name, unsigned len)
  * This is fairly significantly Unix-specific.  Of course, on any
  * filesystem with synchronous metadata updates, this is unnecessary.
  */
-static int
+static bool
 wipename (char *oldname, char const *qoldname, struct Options const *flags)
 {
-  char *newname, *base;	  /* Base points to filename part of newname */
-  unsigned len;
-  int first = 1;
-  int err;
-  int dir_fd;			/* Try to open directory to sync *it* */
+  char *newname = xstrdup (oldname);
+  char *base = base_name (newname);
+  size_t len = base_len (base);
+  char *dir = dir_name (newname);
+  char *qdir = xstrdup (quotearg_colon (dir));
+  int dir_fd = open (dir, O_RDONLY | O_NOCTTY);
+  bool first = true;
+  bool ok = true;
 
-  newname = xstrdup (oldname);
   if (flags->verbose)
     error (0, 0, _("%s: removing"), qoldname);
-
-  /* Find the file name portion */
-  base = strrchr (newname, '/');
-  /* Temporary hackery to get a directory fd */
-  if (base)
-    {
-      *base = '\0';
-      dir_fd = open (newname, O_RDONLY | O_NOCTTY);
-      *base = '/';
-    }
-  else
-    {
-      dir_fd = open (".", O_RDONLY | O_NOCTTY);
-    }
-  base = base ? base + 1 : newname;
-  len = strlen (base);
 
   while (len)
     {
@@ -1401,9 +1429,8 @@ wipename (char *oldname, char const *qoldname, struct Options const *flags)
 	    {
 	      if (rename (oldname, newname) == 0)
 		{
-		  if (dir_fd < 0
-		      || (fdatasync (dir_fd) < 0 && fsync (dir_fd) < 0))
-		    sync ();	/* Force directory out */
+		  if (0 <= dir_fd && dosync (dir_fd, qdir) != 0)
+		    ok = false;
 		  if (flags->verbose)
 		    {
 		      /*
@@ -1414,7 +1441,7 @@ wipename (char *oldname, char const *qoldname, struct Options const *flags)
 		       */
 		      char const *old = (first ? qoldname : oldname);
 		      error (0, 0, _("%s: renamed to %s"), old, newname);
-		      first = 0;
+		      first = false;
 		    }
 		  memcpy (oldname + (base - newname), base, len + 1);
 		  break;
@@ -1430,17 +1457,30 @@ wipename (char *oldname, char const *qoldname, struct Options const *flags)
 	      /* newname exists, so increment BASE so we use another */
 	    }
 	}
-      while (!incname (base, len));
+      while (incname (base, len));
       len--;
     }
-  free (newname);
-  err = unlink (oldname);
-  if (dir_fd < 0 || (fdatasync (dir_fd) < 0 && fsync (dir_fd) < 0))
-    sync ();
-  close (dir_fd);
-  if (!err && flags->verbose)
+  if (unlink (oldname) != 0)
+    {
+      error (0, errno, "%s: remove", qoldname);
+      ok = false;
+    }
+  else if (flags->verbose)
     error (0, 0, _("%s: removed"), qoldname);
-  return err;
+  if (0 <= dir_fd)
+    {
+      if (dosync (dir_fd, qdir) != 0)
+	ok = false;
+      if (close (dir_fd) != 0)
+	{
+	  error (0, errno, "%s: close", qdir);
+	  ok = false;
+	}
+    }
+  free (newname);
+  free (dir);
+  free (qdir);
+  return ok;
 }
 
 /*
@@ -1455,11 +1495,12 @@ wipename (char *oldname, char const *qoldname, struct Options const *flags)
  * again or EPERM, which both give similar error messages.
  * Does anyone disagree?
  */
-static int
+static bool
 wipefile (char *name, char const *qname,
 	  struct isaac_state *s, struct Options const *flags)
 {
-  int err, fd;
+  bool ok;
+  int fd;
 
   fd = open (name, O_WRONLY | O_NOCTTY);
   if (fd < 0)
@@ -1491,29 +1532,25 @@ wipefile (char *name, char const *qname,
   if (fd < 0)
     {
       error (0, errno, "%s", qname);
-      return -1;
+      return false;
     }
 
-  err = do_wipefd (fd, qname, s, flags);
+  ok = do_wipefd (fd, qname, s, flags);
   if (close (fd) != 0)
     {
-      error (0, 0, "%s: close", qname);
-      err = -1;
+      error (0, errno, "%s: close", qname);
+      ok = false;
     }
-  if (err == 0 && flags->remove_file)
-    {
-      err = wipename (name, qname, flags);
-      if (err < 0)
-	error (0, 0, _("%s: cannot remove"), qname);
-    }
-  return err;
+  if (ok && flags->remove_file)
+    ok = wipename (name, qname, flags);
+  return ok;
 }
 
 int
 main (int argc, char **argv)
 {
   struct isaac_state s;
-  int err = 0;
+  bool ok = true;
   struct Options flags;
   char **file;
   int n_files;
@@ -1612,14 +1649,12 @@ main (int argc, char **argv)
       char *qname = xstrdup (quotearg_colon (file[i]));
       if (STREQ (file[i], "-"))
 	{
-	  if (wipefd (STDOUT_FILENO, qname, &s, &flags) < 0)
-	    err = 1;
+	  ok &= wipefd (STDOUT_FILENO, qname, &s, &flags);
 	}
       else
 	{
 	  /* Plain filename - Note that this overwrites *argv! */
-	  if (wipefile (file[i], qname, &s, &flags) < 0)
-	    err = 1;
+	  ok &= wipefile (file[i], qname, &s, &flags);
 	}
       free (qname);
     }
@@ -1627,7 +1662,7 @@ main (int argc, char **argv)
   /* Just on general principles, wipe s. */
   memset (&s, 0, sizeof s);
 
-  exit (err == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
+  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 /*
  * vim:sw=2:sts=2:
