@@ -6,6 +6,8 @@
 	function `down' so that it precedes definition of tac_nonseekable.
 
 	`tac /proc/modules' would print nothing
+	Reported by Harald Dunkel in http://bugs.debian.org/278604.
+
 	* src/tac.c (copy_to_temp): Renamed from save_stdin, since
 	now it copies a general file descriptor, not just stdin.
 	(tac_nonseekable): Renamed/adapted from tac_stdin.
@@ -15,7 +17,6 @@
 	by trying to `lseek' to its end, and dispatch to tac_seekable or
 	tac_nonseekable accordingly.
 	(main): Rewrite argument handling now that it uses only tac_file.
-	Reported by Harald Dunkel in http://bugs.debian.org/278604.
 
 2004-10-21  Jim Meyering  <jim@meyering.net>
 
