@@ -59,17 +59,21 @@
 # include <string.h>
 #endif
 
-#if HAVE_WCHAR_H
-# include <wchar.h>
-#endif
-
-#if HAVE_MBRTOWC
+#if HAVE_MBRTOWC && 1 < MB_LEN_MAX
 size_t mbrtowc ();
+# if HAVE_WCHAR_H
+#  include <wchar.h>
+# endif
 # ifdef mbstate_t
 #  define mbrtowc(pwc, s, n, ps) (mbrtowc) (pwc, s, n, 0)
 #  define mbsinit(ps) 1
 # endif
 #else
+/* Disable multibyte processing entirely.  Since MB_CUR_MAX is 1, the
+   other macros are defined only for documentation and to satisfy C
+   syntax.  */
+# undef MB_CUR_MAX
+# define MB_CUR_MAX 1
 # define mbrtowc(pwc, s, n, ps) ((*(pwc) = *(s)) != 0)
 # define mbsinit(ps) 1
 # define iswprint(wc) ISPRINT ((unsigned char) (wc))
@@ -213,6 +217,7 @@ quotearg_buffer_restyled (char *buffer, size_t buffersize,
   char const *quote_string = 0;
   size_t quote_string_len = 0;
   int backslash_escapes = 0;
+  int unibyte_locale = MB_CUR_MAX == 1;
 
 #define STORE(c) \
     do \
@@ -398,57 +403,59 @@ quotearg_buffer_restyled (char *buffer, size_t buffersize,
 	     we can't easily escape single characters within it.  */
 	  {
 	    /* Length of multibyte sequence found so far.  */
-	    size_t m = 0;
+	    size_t m;
 
-	    int printable = 1;
-	    mbstate_t mbstate;
-	    memset (&mbstate, 0, sizeof mbstate);
+	    int printable;
 
-	    if (argsize == (size_t) -1)
-	      argsize = strlen (arg);
-
-	    do
+	    if (unibyte_locale)
 	      {
-		wchar_t w;
-		size_t bytes = mbrtowc (&w, &arg[i + m],
-					argsize - (i + m), &mbstate);
-		if (bytes == 0)
-		  break;
-		else if (bytes == (size_t) -1)
-		  {
-		    printable = 0;
-		    break;
-		  }
-		else if (bytes == (size_t) -2)
-		  {
-		    printable = 0;
-		    while (i + m < argsize && arg[i + m])
-		      m++;
-		    break;
-		  }
-		else
-		  {
-		    if (! iswprint (w))
-		      printable = 0;
-		    m += bytes;
-		  }
+		m = 1;
+		printable = ISPRINT (c);
 	      }
-	    while (! mbsinit (&mbstate));
-
-	    if (m <= 1)
+	    else
 	      {
-		/* Escape a unibyte character like a multibyte
-		   sequence if using backslash escapes, and if the
-		   character is not printable.  */
-		m = backslash_escapes && ! ISPRINT (c);
-		printable = 0;
+		mbstate_t mbstate;
+		memset (&mbstate, 0, sizeof mbstate);
+
+		m = 0;
+		printable = 1;
+		if (argsize == (size_t) -1)
+		  argsize = strlen (arg);
+
+		do
+		  {
+		    wchar_t w;
+		    size_t bytes = mbrtowc (&w, &arg[i + m],
+					    argsize - (i + m), &mbstate);
+		    if (bytes == 0)
+		      break;
+		    else if (bytes == (size_t) -1)
+		      {
+			printable = 0;
+			break;
+		      }
+		    else if (bytes == (size_t) -2)
+		      {
+			printable = 0;
+			while (i + m < argsize && arg[i + m])
+			  m++;
+			break;
+		      }
+		    else
+		      {
+			if (! iswprint (w))
+			  printable = 0;
+			m += bytes;
+		      }
+		  }
+		while (! mbsinit (&mbstate));
 	      }
 
-	    if (m)
+	    if (1 < m || (backslash_escapes && ! printable))
 	      {
 		/* Output a multibyte sequence, or an escaped
 		   unprintable unibyte character.  */
-		size_t imax = i + m - 1;
+		size_t ilim = i + m;
 
 		for (;;)
 		  {
@@ -459,7 +466,7 @@ quotearg_buffer_restyled (char *buffer, size_t buffersize,
 			STORE ('0' + ((c >> 3) & 7));
 			c = '0' + (c & 7);
 		      }
-		    if (i == imax)
+		    if (ilim <= i + 1)
 		      break;
 		    STORE (c);
 		    c = arg[++i];
