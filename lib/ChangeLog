@@ -7,7 +7,7 @@
 2003-07-23  Jim Meyering  <jim@meyering.net>
 
 	* lstat.c, save-cwd.c, stat.c, utime.c, xgethostname.c: Normalize
-	naming of Sun operating systems, e.g., SunOS4 -> SunOS 4,
+	naming of Sun operating systems in comments, e.g., SunOS4 -> SunOS 4,
 	Solaris5.9 -> Solaris 9.  From Paul Eggert.
 
 2003-07-22  Paul Eggert  <eggert@twinsun.com>

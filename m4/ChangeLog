@@ -1,3 +1,9 @@
+2003-07-23  Jim Meyering  <jim@meyering.net>
+
+	* lstat.m4, mkstemp.m4, regex.m4, stat.m4: Normalize naming of Sun
+	operating systems in comments, e.g., SunOS4 -> SunOS 4,
+	Solaris5.9 -> Solaris 9.  From Paul Eggert.
+
 2003-07-18  Paul Eggert  <eggert@twinsun.com>
 
 	* jm-macros.m4 (jm_MACROS): Invoke gl_MEMCOLL.
@@ -626,7 +632,7 @@
 2001-11-20  Jim Meyering  <jim@meyering.net>
 
 	* mkstemp.m4 (UTILS_FUNC_MKSTEMP): Update comment to reflect that
-	SunOS4.1.4 and solaris2.5.1 lose, too.
+	SunOS 4.1.4 and Solaris 2.5.1 lose, too.
 
 2001-11-19  Jim Meyering  <jim@meyering.net>
 
@@ -715,7 +721,7 @@
 
 	* ls-mntd-fs.m4 (jm_LIST_MOUNTED_FILESYSTEMS)
 	[one-argument getmntent function]): Include stdio.h before mntent.h.
-	SunOS4.1.x needs it for the declaration of `FILE'.
+	SunOS 4.1.x needs it for the declaration of `FILE'.
 	Patch by Volker Borchert.
 
 	* ls-mntd-fs.m4 (jm_LIST_MOUNTED_FILESYSTEMS)
@@ -1540,7 +1546,7 @@
 
 	* search-libs.m4: Update from autoconf.
 
-	su doesn't work on Solaris2.6.
+	su doesn't work on Solaris 2.6.
 	* lib-check.m4: When checking for struct spwd.sp_pwdp, also include
 	<shadow.h>.  Reported by Dragos Harabor.
 
