@@ -149,13 +149,11 @@ main (int argc, char **argv)
 
       if (create_parents)
 	{
-	  char *parents = dir_name (argv[optind]);
-	  fail = make_path (parents, parent_mode, parent_mode,
+	  char *dir = argv[optind];
+	  fail = make_path (dir, newmode, parent_mode,
 			    -1, -1, 1, verbose_fmt_string);
-	  free (parents);
 	}
-
-      if (fail == 0)
+      else
 	{
 	  const char *dir = argv[optind];
 	  int dir_created;
