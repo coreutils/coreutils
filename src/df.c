@@ -48,7 +48,6 @@
 #define AUTHORS \
   "Torbjorn Granlund, David MacKenzie, Larry McVoy, and Paul Eggert"
 
-void strip_trailing_slashes ();
 char *xgetcwd ();
 
 /* Name this program was run with. */
@@ -454,14 +453,8 @@ find_mount_point (const char *file, const struct stat *file_stat)
   else
     /* FILE is some other kind of file, we need to use its directory.  */
     {
-      int rv;
-      char *tmp = xstrdup (file);
-      char *dir;
-
-      strip_trailing_slashes (tmp);
-      dir = dir_name (tmp);
-      free (tmp);
-      rv = chdir (dir);
+      char *dir = dir_name (file);
+      int rv = chdir (dir);
       free (dir);
 
       if (rv < 0)
