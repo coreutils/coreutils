@@ -100,24 +100,16 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(BUILT_SOURCES) $(HEADERS) \
 	$(TEXINFOS) $(INFOS) $(MANS) $(DIST_OTHER) $(DATA)
 DEP_DISTFILES = $(DIST_COMMON) $(SOURCES) $(BUILT_SOURCES) $(HEADERS) \
 	$(TEXINFOS) $(INFO_DEPS) $(MANS) $(DIST_OTHER) $(DATA)
-DEP_FILES = $(srcdir)/.deps/alloca.P $(srcdir)/.deps/argmatch.P \
-    $(srcdir)/.deps/backupfile.P $(srcdir)/.deps/basename.P \
-    $(srcdir)/.deps/dirname.P $(srcdir)/.deps/error.P \
-    $(srcdir)/.deps/fileblocks.P $(srcdir)/.deps/filemode.P \
-    $(srcdir)/.deps/fnmatch.P $(srcdir)/.deps/fsusage.P \
-    $(srcdir)/.deps/ftruncate.P $(srcdir)/.deps/full-write.P \
-    $(srcdir)/.deps/getdate.P $(srcdir)/.deps/getopt.P \
-    $(srcdir)/.deps/getopt1.P $(srcdir)/.deps/getversion.P \
-    $(srcdir)/.deps/group-member.P $(srcdir)/.deps/idcache.P \
-    $(srcdir)/.deps/isdir.P $(srcdir)/.deps/long-options.P \
-    $(srcdir)/.deps/makepath.P $(srcdir)/.deps/modechange.P \
-    $(srcdir)/.deps/mountlist.P $(srcdir)/.deps/obstack.P \
-    $(srcdir)/.deps/posixtm.P $(srcdir)/.deps/safe-read.P \
-    $(srcdir)/.deps/save-cwd.P $(srcdir)/.deps/savedir.P \
-    $(srcdir)/.deps/stripslash.P $(srcdir)/.deps/userspec.P \
-    $(srcdir)/.deps/xgetcwd.P $(srcdir)/.deps/xmalloc.P \
-    $(srcdir)/.deps/xstrdup.P $(srcdir)/.deps/xstrtol.P \
-    $(srcdir)/.deps/xstrtoul.P $(srcdir)/.deps/yesno.P
+DEP_FILES = .deps/alloca.P .deps/argmatch.P .deps/backupfile.P \
+    .deps/basename.P .deps/dirname.P .deps/error.P .deps/fileblocks.P \
+    .deps/filemode.P .deps/fnmatch.P .deps/fsusage.P .deps/ftruncate.P \
+    .deps/full-write.P .deps/getdate.P .deps/getopt.P .deps/getopt1.P \
+    .deps/getversion.P .deps/group-member.P .deps/idcache.P \
+    .deps/isdir.P .deps/long-options.P .deps/makepath.P \
+    .deps/modechange.P .deps/mountlist.P .deps/obstack.P \
+    .deps/posixtm.P .deps/safe-read.P .deps/save-cwd.P .deps/savedir.P \
+    .deps/stripslash.P .deps/userspec.P .deps/xgetcwd.P .deps/xmalloc.P \
+    .deps/xstrdup.P .deps/xstrtol.P .deps/xstrtoul.P .deps/yesno.P
 SOURCES = $(fu_SOURCES)
 OBJECTS = $(fu_OBJECTS)
 
@@ -190,15 +182,15 @@ dist: $(DEP_DISTFILES)
 
 MKDEP = gcc -MM $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 
--include $(srcdir)/.deps/.P
-$(srcdir)/.deps/.P: $(BUILT_SOURCES)
-	cd $(srcdir) && test -d .deps || mkdir .deps
+-include .deps/.P
+.deps/.P: $(BUILT_SOURCES)
+	test -d .deps || mkdir .deps
 	echo > $@
 
 -include $(DEP_FILES)
-$(DEP_FILES): $(srcdir)/.deps/.P
+$(DEP_FILES): .deps/.P
 
-$(srcdir)/.deps/%.P: $(srcdir)/%.c
+.deps/%.P: %.c
 	@echo "mkdeps $< > $@"
 	@re=`echo 's,^$(srcdir)//*,,g;s, $(srcdir)//*, ,g' | sed 's,\.,\\\\.,g'`; \
 	  $(MKDEP) $< | sed "$$re" > $@-tmp
