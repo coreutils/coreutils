@@ -2,7 +2,7 @@
 # This Makefile fragment is shared between the coreutils,
 # CPPI, Bison, and Autoconf.
 
-## Copyright (C) 2001-2003 Free Software Foundation, Inc.
+## Copyright (C) 2001-2004 Free Software Foundation, Inc.
 ##
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -230,6 +230,7 @@ m4-check:
 # Verify that all source files using _() are listed in po/POTFILES.in.
 # FIXME: don't hard-code src/false.c below; use a more general mechanism.
 po-check:
+	( cvsu --list ) > /dev/null 2>&1 || : &&			\
 	if test -f po/POTFILES.in; then					\
 	  grep -E -v '^(#|$$)' po/POTFILES.in				\
 	    | grep -v '^src/false\.c$$' | sort > $@-1;			\
