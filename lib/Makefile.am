@@ -4,7 +4,7 @@ noinst_LIBRARIES = fu
 EXTRA_DIST = alloca.c basename.c error.c euidaccess.c fnmatch.c fsusage.c \
 ftruncate.c getdate.y getopt.c getopt1.c group-member.c \
 memcmp.c memcpy.c memset.c \
-mkdir.c mktime.c mountlist.c obstack.c posixtm.y rename.c rmdir.c \
+mkdir.c mktime.c mountlist.c obstack.c posixtm.y rename.c rmdir.c rpmatch.c \
 stpcpy.c strcasecmp.c strdup.c strndup.c strstr.c strtol.c strtoul.c
 
 INCLUDES = -I.. -I$(srcdir)
