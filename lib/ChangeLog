@@ -1,8 +1,16 @@
 2001-11-17  Jim Meyering  <meyering@lucent.com>
 
+	* readtokens.c: Remove explicit declarations of xmalloc and xrealloc,
+	Instead, include "xalloc.h".
+
+	* mountlist.c: Include unlocked-io.h after all system headers.
+	Remove explicit declarations of xmalloc, xrealloc,
+	and xstrdup.  Instead, include "xalloc.h".
+
 	* argmatch.c, closeout.c, error.c, exclude.c: Include unlocked-io.h.
 	* fatal.c, getdate.y, getpass.c, getstr.c, getusershell.c: Likewise.
 	* mountlist.c, posixtm.c, readtokens.c, readutmp.c: Likewise.
+
 	* regex.c, sha.c, version-etc.c, yesno.c: Likewise.
 	Reported by Padraig Brady.
 
