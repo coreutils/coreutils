@@ -64,6 +64,10 @@
 #  if defined VMS
 #   define TEXT1TO1 "rb", "ctx=stm"
 #   define TEXTCNVT "r", "ctx=stm"
+#  else
+    /* The following line is intended to evoke an error.
+       Using #error is not portable enough.  */
+    "Cannot determine system type."
 #  endif
 # endif
 # define FILETYPE FILE *
@@ -113,8 +117,8 @@
 #  if ULONG_MAX == UINT_MAX_32_BITS
     typedef unsigned long uint32;
 #  else
-    /* The following line is intended to throw an error.  Using #error is
-       not portable enough.  */
+    /* The following line is intended to evoke an error.
+       Using #error is not portable enough.  */
     "Cannot determine unsigned 32-bit data type."
 #  endif
 # endif
@@ -333,6 +337,8 @@ main (argc, argv)
   if (n_strings > 0)
     {
       /* --quiet does not make much sense with --string.  */
+
+      /* FIXME: allow newline in filename by encoding it. */
       if (optind < argc)
 	{
 	  error (0, 0, _("no files may be specified when using --string"));
@@ -373,7 +379,8 @@ main (argc, argv)
     }
   else
     {
-      FILE *cfp;
+      FILE *checkfile_stream;
+      char *checkfile_name;
       int n_tests = 0;
       int n_tests_failed = 0;
 
@@ -385,15 +392,19 @@ main (argc, argv)
 	}
 
       if (optind == argc || strcmp (argv[optind], "-") == 0)
-	cfp = stdin;
+	{
+	  checkfile_name = "-";
+	  checkfile_stream = stdin;
+	}
       else
 	{
-	  cfp = fopen (argv[optind], "r");
-	  if (cfp == NULL)
+	  checkfile_name = argv[optind];
+	  checkfile_stream = fopen (checkfile_name, "r");
+	  if (checkfile_stream == NULL)
 	    if (quiet)
 	      exit (1);
 	    else
-	      error (1, errno, _("check file: %s"), argv[optind]);
+	      error (1, errno, _("check file: %s"), checkfile_name);
 	}
 
       do
@@ -405,7 +416,7 @@ main (argc, argv)
 	  int err;
 
 	  /* FIXME: Use getline, not fgets.  */
-	  if (fgets (line, 1024, cfp) == NULL)
+	  if (fgets (line, 1024, checkfile_stream) == NULL)
 	    break;
 
 	  /* Ignore comment lines, which begin with a '#' character.  */
@@ -456,14 +467,19 @@ main (argc, argv)
 		puts (cnt < 16 ? _("FAILED") : _("OK"));
 	    }
 	}
-      while (!feof (cfp));
-      fclose (cfp);
+      while (!feof (checkfile_stream));
+
+      if (fclose (checkfile_stream) == EOF)
+	error (1, errno, checkfile_name);
 
       if (!quiet)
 	printf (_("%d out of %d tests failed\n"), n_tests_failed, n_tests);
 
       exit (n_tests_failed > 0);
     }
+
+  if (fclose (stdout) == EOF)
+    error (1, errno, "write error");
 
   exit (0);
 }
