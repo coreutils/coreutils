@@ -1,5 +1,7 @@
 1999-03-07  Jim Meyering  <meyering@ascend.com>
 
+	* src/pr.c (usage): Add missing \n\.
+
 	The newline test would always fail on MSDOS/Windows systems --
 	so move it to a separate file where we can test for that.
 	* tests/md5sum/basic-1: Remove newline test.
