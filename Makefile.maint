@@ -52,7 +52,7 @@ release_archive_dir ?= ../release
 # new ChangeLog entries.
 local-check = \
   po-check copyright-check writable-files m4-check author_mark_check \
-  changelog-check strftime-check header-check
+  changelog-check strftime-check header-check makefile_path_separator_check
 .PHONY: $(local-check)
 
 # Make sure C source files in src/ don't include xalloc.h directly,
@@ -119,7 +119,17 @@ author_mark_check:
 	  { echo 'Makefile.maint: enclose the above strings in N_ (...)' 1>&2; \
 	    exit 1; } || :
 
-# Check that `make alpha' will not fail at the end of the process.
+# Sometimes it is useful to change the PATH environment variable
+# in Makefiles.  When doing so, it's better not to use the Unix-centric
+# path separator of `:', but rather the automake-provided `@PATH_SEPARATOR@'.
+# It'd be better to use `find -print0 ...|xargs -0 ...', but less portable,
+# and there probably aren't many projects with so many Makefile.am files
+# that we'd have to worry about limits on command line length.
+msg = 'Makefile.maint: Do not use `:'\'' above; use @PATH_SEPARATOR@ instead'
+makefile_path_separator_check:
+	@grep 'PATH=.*:' `find $(srcdir) -name Makefile.am` \
+	  && { echo $(msg) 1>&2; exit 1; } || :
+
 writable-files:
 	if test -d $(release_archive_dir); then :; else			\
 	  mkdir $(release_archive_dir);					\
