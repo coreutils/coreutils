@@ -33,19 +33,31 @@
 
 #define AUTHORS "Ulrich Drepper"
 
+/* The C type of value to be printed with format_str.  */
+enum Format_type
+{
+  FT_DOUBLE,
+  FT_INT
+};
+typedef enum Format_type Format_type;
+
+#define DO_printf(Format, Value)		\
+  do						\
+    {						\
+      if (format_type == FT_DOUBLE)		\
+	printf ((Format), (Value));		\
+      else					\
+	printf ((Format), (int) (Value));	\
+    }						\
+  while (0)
+
 static double scan_arg PARAMS ((const char *arg));
-static int check_format PARAMS ((const char *format_string, int *intconv));
+static int check_format PARAMS ((const char *format_string, Format_type *format_type));
 static char *get_width_format PARAMS ((void));
 static int print_numbers PARAMS ((const char *format_str));
 
 /* If nonzero print all number with equal width.  */
 static int equal_width;
-
-/* The printf(3) format used for output.  */
-static char *format_str;
-
-/* If nonzero, format_str prints an integer. If zero, it prints a double.  */
-static int intconv;
 
 /* The name that this program was run with.  */
 char *program_name;
@@ -61,6 +73,9 @@ static char *terminator = "\n";
 /* The representation of the decimal point in the current locale.
    Always "." if the localeconv function is not supported.  */
 static char *decimal_point = ".";
+
+/* The C type of value to be printed with format_str.  */
+static Format_type format_type = FT_DOUBLE;
 
 /* The starting number.  */
 static double first;
@@ -123,13 +138,15 @@ main (int argc, char **argv)
   int step_is_set;
   int format_ok;
 
+  /* The printf(3) format used for output.  */
+  char *format_str = NULL;
+
   program_name = argv[0];
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
   equal_width = 0;
-  format_str = NULL;
   separator = "\n";
   first = 1.0;
   step_is_set = 0;
@@ -190,11 +207,14 @@ main (int argc, char **argv)
 	}
     }
 
-  /* Set intconv before calling scan_arg.  */
+  /* Set format_type before calling scan_arg.  */
   if (format_str != NULL)
-    format_ok = check_format (format_str, &intconv);
+    format_ok = check_format (format_str, &format_type);
   else
-    format_ok = 1, intconv = 0;
+    {
+      format_ok = 1;
+      format_type = FT_DOUBLE;
+    }
 
   if (optind >= argc)
     {
@@ -300,22 +320,26 @@ scan_int_arg (const char *arg)
 static double
 scan_arg (const char *arg)
 {
-  if (intconv)
-    return (double) scan_int_arg (arg);
-  else
-    return scan_double_arg (arg);
+  switch (format_type)
+    {
+    case FT_INT:
+      return (double) scan_int_arg (arg);
+    case FT_DOUBLE:
+      return scan_double_arg (arg);
+    default:
+      abort ();
+    }
 }
 
-/* Check whether the format string is valid for a single double
-   argument or a single int argument.
-   Return 0 if not, 1 if correct.
-   Also returns in *INTCONV one if the conversion specifier is valid
-   for a single int argument, otherwise zero.  */
+/* Check whether the format string is valid for a single `double'
+   argument or a single `int' argument.  Return 0 if not, 1 if correct.
+   Set *INTCONV to non-zero if the conversion specifier is valid
+   for a single `int' argument, otherwise to zero.  */
 
 static int
-check_format (const char *fmt, int *intconv)
+check_format (const char *fmt, Format_type *format_type_ptr)
 {
-  *intconv = 0;
+  *format_type_ptr = FT_DOUBLE;
 
   while (*fmt != '\0')
     {
@@ -341,7 +365,7 @@ check_format (const char *fmt, int *intconv)
     }
 
   if (*fmt == 'd' || *fmt == 'u' || *fmt == 'o' || *fmt == 'x' || *fmt == 'X')
-    *intconv = 1;
+    *format_type_ptr = FT_INT;
   else if (!(*fmt == 'e' || *fmt == 'f' || *fmt == 'g'))
     return 0;
 
@@ -473,11 +497,7 @@ the increment must be negative"));
 	  /* NOTREACHED */
 	}
 
-      if (intconv)
-	printf (fmt, (int) first);
-      else
-	printf (fmt, first);
-
+      DO_printf (fmt, first);
       for (i = 1; /* empty */; i++)
 	{
 	  double x = first + i * step;
@@ -486,11 +506,7 @@ the increment must be negative"));
 	    break;
 
 	  fputs (separator, stdout);
-
-	  if (intconv)
-	    printf (fmt, (int) x);
-	  else
-	    printf (fmt, x);
+	  DO_printf (fmt, x);
 	}
     }
   else
@@ -506,11 +522,7 @@ the increment must be positive"));
 	  /* NOTREACHED */
 	}
 
-      if (intconv)
-	printf (fmt, (int) first);
-      else
-	printf (fmt, first);
-
+      DO_printf (fmt, first);
       for (i = 1; /* empty */; i++)
 	{
 	  double x = first + i * step;
@@ -519,11 +531,7 @@ the increment must be positive"));
 	    break;
 
 	  fputs (separator, stdout);
-
-	  if (intconv)
-	    printf (fmt, (int) x);
-	  else
-	    printf (fmt, x);
+	  DO_printf (fmt, x);
 	}
     }
   fputs (terminator, stdout);
