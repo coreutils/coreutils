@@ -41,6 +41,7 @@ transform = @program_transform_name@
 AUTOMAKE_OPTIONS = 1.1
 
 TESTS = md5-rfc
+EXTRA_DIST = $(TESTS)
 mkinstalldirs = $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../config.h
 CONFIG_CLEAN_FILES = 
