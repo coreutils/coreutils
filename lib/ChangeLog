@@ -1,3 +1,7 @@
+2005-03-23  Jim Meyering  <jim@meyering.net>
+
+	* canonicalize.c: Remove duplicate `#include "stat-macros.h"'.
+
 2005-03-21  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Makefile.am (libfetish_a_SOURCES): Remove stat-macros.h, xstrtoul.c,
