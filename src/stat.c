@@ -576,7 +576,7 @@ print_it (char const *masterformat, char const *filename,
 	    {
 	    case '\0':
 	    case '%':
-	      fputs ("%", stdout);
+	      putchar ('%');
 	      break;
 	    default:
 	      print_func (dest, *p, filename, data);
