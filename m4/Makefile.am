@@ -5,6 +5,7 @@ EXTRA_DIST = \
   README Makefile.am.in \
 acl.m4 \
 afs.m4 \
+alloca.m4 \
 assert.m4 \
 bison.m4 \
 boottime.m4 \
@@ -33,6 +34,7 @@ glibc.m4 \
 glibc21.m4 \
 group-member.m4 \
 host-os.m4 \
+human.m4 \
 iconv.m4 \
 intdiv0.m4 \
 inttypes-pri.m4 \
@@ -58,6 +60,7 @@ mbswidth.m4 \
 memcmp.m4 \
 mkdir-slash.m4 \
 mkstemp.m4 \
+mktime.m4 \
 nanosleep.m4 \
 onceonly.m4 \
 open-max.m4 \
