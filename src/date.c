@@ -26,7 +26,7 @@
 #include "system.h"
 #include "getline.h"
 #include "error.h"
-#include "getdate.h"
+#include "get-date.h"
 
 #ifndef STDC_HEADERS
 size_t strftime ();
