@@ -1,4 +1,4 @@
-#serial 5
+#serial 6
 
 dnl From Jim Meyering.
 dnl
@@ -239,6 +239,6 @@ if test -z "$ac_list_mounted_fs"; then
   # Can't build mountlist.c or anything that needs its functions
 fi
 
-AC_SHELL_IFELSE([test $ac_list_mounted_fs = found], [$1], [$2])dnl
+AS_IFELSE([test $ac_list_mounted_fs = found], [$1], [$2])dnl
 
   ])

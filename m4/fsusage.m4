@@ -1,4 +1,4 @@
-#serial 3
+#serial 4
 
 # From fileutils/configure.in
 
@@ -187,6 +187,6 @@ AC_TRY_CPP([#include <sys/filsys.h>],
   ac_fsusage_space=yes)
 fi
 
-AC_SHELL_IFELSE([test $ac_fsusage_space = yes], [$1], [$2])dnl
+AS_IFELSE([test $ac_fsusage_space = yes], [$1], [$2])dnl
 
 ])
