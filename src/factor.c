@@ -1,5 +1,5 @@
 /* factor -- print prime factors of n.
-   Copyright (C) 86, 1995-2002 Free Software Foundation, Inc.
+   Copyright (C) 86, 1995-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -147,10 +147,14 @@ print_factors (const char *s)
   int n_factors;
   int i;
   char buf[INT_BUFSIZE_BOUND (uintmax_t)];
+  strtol_error err;
 
-  if (xstrtoumax (s, NULL, 10, &n, "") != LONGINT_OK)
+  if ((err = xstrtoumax (s, NULL, 10, &n, "")) != LONGINT_OK)
     {
-      error (0, 0, _("`%s' is not a valid positive integer"), s);
+      if (err == LONGINT_OVERFLOW)
+	error (0, 0, _("`%s' is too large"), s);
+      else
+	error (0, 0, _("`%s' is not a valid positive integer"), s);
       return 1;
     }
   n_factors = factor (n, MAX_N_FACTORS, factors);
