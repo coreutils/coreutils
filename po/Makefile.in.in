@@ -150,13 +150,11 @@ install-data-yes: all
 	      true; \
 	    fi; \
 	  fi; \
-	  if test "$(PACKAGE)" = "fileutils"; then \
-	    timedir=$$destdir/$$lang/LC_TIME; \
-	    rm -fr $$timedir; \
-	    ln -s LC_MESSAGES $$timedir \
-	    || (mkdir $$timedir && ln $$dir/* $$timedir); \
-	    echo "installing $$timedir as an alias for $$dir"; \
-	  fi; \
+	  timedir=$$destdir/$$lang/LC_TIME; \
+	  rm -fr $$timedir; \
+	  ln -s LC_MESSAGES $$timedir \
+	  || (mkdir $$timedir && ln $$dir/* $$timedir); \
+	  echo "installing $$timedir as an alias for $$dir"; \
 	done
 	if test "$(PACKAGE)" = "gettext"; then \
 	  if test -x "$(MKINSTALLDIRS)"; then \
@@ -178,10 +176,13 @@ uninstall:
 	for cat in $$catalogs; do \
 	  cat=`basename $$cat`; \
 	  lang=`echo $$cat | sed 's/\$(CATOBJEXT)$$//'`; \
-	  rm -f $(DESTDIR)$(localedir)/$$lang/LC_MESSAGES/$(PACKAGE)$(INSTOBJEXT); \
-	  rm -f $(DESTDIR)$(localedir)/$$lang/LC_MESSAGES/$(PACKAGE)$(INSTOBJEXT).m; \
-	  rm -f $(DESTDIR)$(gnulocaledir)/$$lang/LC_MESSAGES/$(PACKAGE)$(INSTOBJEXT); \
-	  rm -f $(DESTDIR)$(gnulocaledir)/$$lang/LC_MESSAGES/$(PACKAGE)$(INSTOBJEXT).m; \
+	  for dir in $(localedir) $(gnulocaledir); do \
+	    for lc in LC_MESSAGES LC_TIME; do \
+	      for x in '' .m; do \
+		rm -f $(DESTDIR)$$dir/$$lang/$$lc/$(PACKAGE)$(INSTOBJEXT)$$x; \
+	      done; \
+	    done; \
+	  done; \
 	done
 
 check: all
