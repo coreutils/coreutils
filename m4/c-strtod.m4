@@ -1,4 +1,4 @@
-# c-strtod.m4 serial 1
+# c-strtod.m4 serial 2
 
 # Copyright (C) 2004 Free Software Foundation, Inc.
 
@@ -21,6 +21,7 @@
 AC_DEFUN([gl_C_STRTOD],
 [
   dnl Prerequisites of lib/c-strtod.c.
+  AC_REQUIRE([gl_USE_SYSTEM_EXTENSIONS])
   :
 ])
 
