@@ -26,6 +26,7 @@
 #include "system.h"
 #include "closeout.h"
 #include "error.h"
+#include "posixver.h"
 #include "xstrtol.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -79,10 +80,6 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -b, --bytes         count bytes rather than columns\n\
   -s, --spaces        break at spaces\n\
   -w, --width=WIDTH   use WIDTH columns instead of 80\n\
-"), stdout);
-      if (POSIX2_VERSION < 200112)
-	fputs (_("\
-  -WIDTH              (obsolete) same as -w WIDTH\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -250,29 +247,29 @@ main (int argc, char **argv)
 
   break_spaces = count_bytes = have_read_stdin = 0;
 
-  /* If obsolete, turn any numeric options into -w options.  */
-  if (POSIX2_VERSION < 200112)
-    for (i = 1; i < argc; i++)
-      {
-	char const *a = argv[i];
-	if (a[0] == '-')
-	  {
-	    if (a[1] == '-' && ! a[2])
-	      break;
-	    if (ISDIGIT (a[1]))
-	      {
-		char *s = xmalloc (strlen (a) + 2);
-		s[0] = '-';
-		s[1] = 'w';
-		strcpy (s + 2, a + 1);
-		argv[i] = s;
-		if (OBSOLETE_OPTION_WARNINGS && ! getenv ("POSIXLY_CORRECT"))
-		  error (0, 0,
-			 _("warning: `fold %s' is obsolete; use `fold -w %s'"),
-			 a, a + 1);
-	      }
-	  }
-      }
+  /* Turn any numeric options into -w options.  */
+  for (i = 1; i < argc; i++)
+    {
+      char const *a = argv[i];
+      if (a[0] == '-')
+	{
+	  if (a[1] == '-' && ! a[2])
+	    break;
+	  if (ISDIGIT (a[1]))
+	    {
+	      char *s = xmalloc (strlen (a) + 2);
+	      s[0] = '-';
+	      s[1] = 'w';
+	      strcpy (s + 2, a + 1);
+	      argv[i] = s;
+	      if (200112 <= posix2_version ())
+		{
+		  error (0, 0, _("`%s' option is obsolete; use `%s'"), a, s);
+		  usage (EXIT_FAILURE);
+		}
+	    }
+	}
+    }
 
   while ((optc = getopt_long (argc, argv, "bsw:", longopts, NULL)) != -1)
     {
