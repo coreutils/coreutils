@@ -60,8 +60,10 @@ enum
 # define FTW_DNR	 FTW_DNR
   FTW_NS,		/* Unstatable file.  */
 # define FTW_NS	 FTW_NS
-  FTW_DCH,		/* Can't chdir to directory.  */
+  FTW_DCH,		/* Can't chdir to named directory.  */
 # define FTW_DCH FTW_DCH
+  FTW_DCHP,		/* Can't chdir to parent of named directory.  */
+# define FTW_DCHP FTW_DCHP
 
 # if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 
