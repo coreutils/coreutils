@@ -1127,9 +1127,10 @@ main (int argc, char **argv)
   format_needs_stat = sort_type == sort_time || sort_type == sort_size
     || format == long_format
     || dereference == DEREF_ALWAYS
-    || recursive || print_block_size || print_inode;
+    || print_block_size || print_inode;
   format_needs_type = (format_needs_stat == 0
-		       && (print_with_color || indicator_style != none));
+		       && (recursive || print_with_color
+			   || indicator_style != none));
 
   if (dired && format == long_format)
     {
@@ -2184,9 +2185,13 @@ print_dir (const char *name, const char *realname)
 	  enum filetype type = unknown;
 
 #if HAVE_STRUCT_DIRENT_D_TYPE
-	  if (next->d_type == DT_DIR || next->d_type == DT_CHR
-	      || next->d_type == DT_BLK || next->d_type == DT_SOCK
-	      || next->d_type == DT_FIFO)
+	  if (next->d_type == DT_BLK
+	      || next->d_type == DT_CHR
+	      || next->d_type == DT_DIR
+	      || next->d_type == DT_FIFO
+	      || next->d_type == DT_LNK
+	      || next->d_type == DT_REG
+	      || next->d_type == DT_SOCK)
 	    type = next->d_type;
 #endif
 	  total_blocks += gobble_file (next->d_name, type, 0, name);
@@ -2318,10 +2323,6 @@ gobble_file (const char *name, enum filetype type, int explicit_arg,
   files[files_index].linkmode = 0;
   files[files_index].linkok = 0;
 
-  /* FIXME: this use of ls: `mkdir a; touch a/{b,c,d}; ls -R a'
-     shouldn't require that ls stat b, c, and d -- at least
-     not on systems with usable d_type.  The problem is that
-     format_needs_stat is set, because of the -R.  */
   if (explicit_arg || format_needs_stat
       || (format_needs_type && type == unknown))
     {
