@@ -1,6 +1,16 @@
-2003-09-23  Jim Meyering  <jim@meyering.net>
+2003-09-25  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.92.
+
+	* Use autoconf-2.57d.  Regenerate dependent files.
+
+2003-09-24  Jim Meyering  <jim@meyering.net>
+
+	Minor efficiency tweak.
+	* src/ln.c (PATH_BASENAME_CONCAT): Use memcpy rather than strcpy.
+	(do_link): Likewise.
+
+2003-09-23  Jim Meyering  <jim@meyering.net>
 
 	* src/paste.c (paste_serial): Save errno after input error,
 	to report proper errno value.
