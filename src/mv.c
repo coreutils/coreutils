@@ -72,7 +72,6 @@ int full_write ();
 enum backup_type get_version ();
 int isdir ();
 int lstat ();
-int safe_read ();
 int yesno ();
 
 /* The name this program was run with. */
