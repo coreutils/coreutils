@@ -1360,7 +1360,7 @@ main (int argc, char **argv)
 
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE, VERSION,
 		      usage, AUTHORS, (char const *) NULL);
-  if (getopt_long (argc, argv, "", NULL, NULL) != -1)
+  if (getopt (argc, argv, "") != -1)
     usage (EXIT_FAILURE);
 
   /* Don't close stdout on exit from here on.  */
