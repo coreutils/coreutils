@@ -104,8 +104,8 @@
 
 struct range_pair
   {
-    int lo;
-    int hi;
+    unsigned int lo;
+    unsigned int hi;
   };
 
 char *xmalloc ();
@@ -127,11 +127,11 @@ static int field_1_bufsize;
    or degenerate range specification;  this doesn't include the starting
    index of right-open-ended ranges.  For example, with either range spec
    `2-5,9-', `2-3,5,9-' this variable would be set to 5.  */
-static int max_range_endpoint;
+static unsigned int max_range_endpoint;
 
 /* If nonzero, this is the index of the first field in a range that goes
    to end of line. */
-static int eol_range_start;
+static unsigned int eol_range_start;
 
 /* In byte mode, which bytes to output.
    In field mode, which DELIM-separated fields to output.
@@ -309,7 +309,7 @@ getstr (char **lineptr, int *n, FILE *stream, char terminator)
 }
 
 static int
-print_kth (int k)
+print_kth (unsigned int k)
 {
   return ((0 < eol_range_start && eol_range_start <= k)
 	  || (k <= max_range_endpoint && printable_field[k]));
@@ -334,9 +334,9 @@ print_kth (int k)
 static int
 set_fields (const char *fieldstr)
 {
-  int initial = 1;		/* Value of first number in a range.  */
+  unsigned int initial = 1;	/* Value of first number in a range.  */
+  unsigned int value = 0;	/* If nonzero, a number being accumulated.  */
   int dash_found = 0;		/* Nonzero if a '-' is found in this field.  */
-  int value = 0;		/* If nonzero, a number being accumulated.  */
   int field_found = 0;		/* Non-zero if at least one field spec
 				   has been processed.  */
 
@@ -402,7 +402,7 @@ set_fields (const char *fieldstr)
 			  /* No, the new sequence starts before the
 			     old.  Does the old range going to end of line
 			     extend into the new range?  */
-			  if (value >= eol_range_start - 1)
+			  if (value + 1 >= eol_range_start)
 			    {
 			      /* Yes.  Simply move the end of line marker. */
 			      eol_range_start = initial;
@@ -470,7 +470,7 @@ set_fields (const char *fieldstr)
   /* Set the array entries corresponding to integers in the ranges of RP.  */
   for (i = 0; i < n_rp; i++)
     {
-      int j;
+      unsigned int j;
       for (j = rp[i].lo; j <= rp[i].hi; j++)
 	{
 	  printable_field[j] = 1;
@@ -487,7 +487,7 @@ set_fields (const char *fieldstr)
 static void
 cut_bytes (FILE *stream)
 {
-  int byte_idx;			/* Number of chars in the line so far. */
+  unsigned int byte_idx;	/* Number of chars in the line so far. */
 
   byte_idx = 0;
   while (1)
@@ -524,7 +524,7 @@ static void
 cut_fields (FILE *stream)
 {
   int c;
-  int field_idx;
+  unsigned int field_idx;
   int found_any_selected_field;
   int buffer_first_field;
 
