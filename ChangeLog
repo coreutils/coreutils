@@ -1,6 +1,14 @@
 2002-08-09  Jim Meyering  <meyering@lucent.com>
 
-	* Version 0.1.0.
+	* Version 4.5.1.
+
+	* src/pr.c (main): Don't ignore -COLUMN if it's the last option.
+	(usage): Clarify help text for the -COLUMN option.
+	Patch by Padraig Brady.
+	* tests/pr/Test.pm [col-last]: New test for the above.
+
+	* configure.ac: Start with version 4.5.1, chosen so that it's larger
+	than the latest version numbers of the component packages.
 
 	* man/Makefile.am (check-x-vs-1): Set and export PATH so we use
 	programs in ../src.
