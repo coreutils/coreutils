@@ -164,12 +164,12 @@ static int copy_rest _ ((FILE *f, int c));
 static bool same_para _ ((int c));
 static void flush_paragraph _ ((void));
 static void fmt_paragraph _ ((void));
-static void check_punctuation _ ((WORD * w));
-static COST base_cost _ ((WORD * this));
-static COST line_cost _ ((WORD * next, int len));
-static void put_paragraph _ ((WORD * finish));
-static void put_line _ ((WORD * w, int indent));
-static void put_word _ ((WORD * w));
+static void check_punctuation _ ((WORD *w));
+static COST base_cost _ ((WORD *this));
+static COST line_cost _ ((WORD *next, int len));
+static void put_paragraph _ ((WORD *finish));
+static void put_line _ ((WORD *w, int indent));
+static void put_word _ ((WORD *w));
 static void put_space _ ((int space));
 
 /* The name this program was run with.  */
@@ -199,7 +199,7 @@ static bool uniform;
 static const char *prefix;
 
 /* User-supplied maximum line width (default WIDTH).  The only output
-lines
+   lines
    longer than this will each comprise a single word.  */
 static int max_width;
 
@@ -335,7 +335,7 @@ main (argc, argv)
     {
       max_width = 0;
       /* Old option syntax; a dash followed by one or more digits.
-	 Move past the number. */
+         Move past the number. */
       for (++argv[1]; ISDIGIT (*argv[1]); ++argv[1])
 	{
 	  /* FIXME: use strtol to detect overflow.  */
@@ -461,10 +461,10 @@ fmt (f)
    maximal number of non-blank (excluding any prefix) lines subject to:
    * In split mode, a paragraph is a single non-blank line.
    * In crown mode, the second and subsequent lines must have the
-     same indentation, but possibly different from the indent of the
-     first line.
+   same indentation, but possibly different from the indent of the
+   first line.
    * Tagged mode is similar, but the first and second lines must have
-     different indentations.
+   different indentations.
    * Otherwise, all lines of a paragraph must have the same indent.
    If a prefix is in effect, it must be present at the same indent for
    each line in the paragraph.
@@ -571,7 +571,7 @@ copy_rest (f, c)
     {
       put_space (next_prefix_indent);
       for (s = prefix; out_column != in_column; out_column++)
-	putchar(*s++);
+	putchar (*s++);
     }
   while (c != '\n' && c != EOF)
     {
@@ -642,7 +642,7 @@ get_line (f, c)
       if (c == '\n' || c == EOF || uniform)
 	word_limit->space = word_limit->final ? 2 : 1;
       if (word_limit == end_of_word)
-	flush_paragraph();
+	flush_paragraph ();
       word_limit++;
       if (c == EOF)
 	return EOF;
@@ -922,7 +922,7 @@ put_line (w, indent)
   put_space (indent - out_column);
 
   endline = w->next_break - 1;
-  for ( ; w != endline; w++)
+  for (; w != endline; w++)
     {
       put_word (w);
       put_space (w->space);
@@ -943,7 +943,7 @@ put_word (w)
 
   s = w->text;
   for (n = w->length; n != 0; n--)
-    putchar(*s++);
+    putchar (*s++);
   out_column += w->length;
 }
 
