@@ -298,7 +298,7 @@ FORMAT controls the output.  Interpreted sequences are:\n\
   %%n   a newline\n\
   %%p   locale's AM or PM\n\
   %%r   time, 12-hour (hh:mm:ss [AP]M)\n\
-  %%s   seconds since 00:00:00, Jan 1, 1970 (a nonstandard extension)\n\
+  %%s   seconds since 00:00:00, Jan 1, 1970 (a GNU extension)\n\
   %%S   second (00..61)\n\
   %%t   a horizontal tab\n\
   %%T   time, 24-hour (hh:mm:ss)\n\
@@ -310,6 +310,13 @@ FORMAT controls the output.  Interpreted sequences are:\n\
   %%y   last two digits of year (00..99)\n\
   %%Y   year (1970...)\n\
   %%Z   time zone (e.g., EDT), or nothing if no time zone is determinable\n\
+\n\
+By default, `date' pads numeric fields with zeroes.  GNU `date'\n\
+recognizes the following nonstandard modifiers between `%' and a\n\
+numeric directive.\n\
+\n\
+  `-' (hyphen) do not pad the field\n\
+  `_' (underscore) pad the field with spaces\n\
 ");
     }
   exit (status);
