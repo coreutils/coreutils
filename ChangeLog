@@ -2,7 +2,7 @@
 
 	* Version 5.0.1.
 
-	* src/head.c (elide_tail_lines_pipe): Use `if', not an assert.
+	* src/head.c (elide_tail_lines_pipe): Use `if', not assert.
 	Now that assert is no longer used, don't include <assert.h>.
 
 2003-05-12  Jim Meyering  <jim@meyering.net>
