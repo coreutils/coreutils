@@ -1,3 +1,9 @@
+2000-06-03  Jim Meyering  <meyering@lucent.com>
+
+	* jm-glibc-io.m4: Add a kludge to make autoheader emit the required
+	#undefs.  E.g., #undef HAVE_DECL_FERROR_UNLOCKED.
+	Use []-quoted list in AC_CHECK_DECLS, now that autoconf requires that.
+
 2000-05-26  Bruno Haible  <haible@clisp.cons.org>
 
 	* glibc21.m4: New file.
