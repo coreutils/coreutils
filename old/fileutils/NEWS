@@ -1,4 +1,7 @@
 Changes in release 3.17:
+[3.16t]
+* install once again does the -m-specified chmod *after* running strip
+  (this fixes another bug introduced in 3.16o)
 [3.16s]
 * df accept a new option --local (-l)
 * touch works around a system-specific bug so it now affects existing,
