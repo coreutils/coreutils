@@ -120,6 +120,13 @@ use strict;
 ["15c", '-i -u', "a\1\na\n", "a\1\n", 0],
 ["15d", '-i -u', "\1a\na\n", "\1a\n", 0],
 ["15e", '-i -u', "a\n\1\1\1\1\1a\1\1\1\1\n", "a\n", 0],
+
+# From Erick Branderhorst -- fixed around 1.19e
+["16a", '-f',
+ "éminence\nüberhaupt\n's-Gravenhage\naëroclub\nAag\naagtappels\n",
+ "'s-Gravenhage\nAag\naagtappels\naëroclub\néminence\nüberhaupt\n",
+ 0],
+
 );
 
 1;
