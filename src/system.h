@@ -92,6 +92,10 @@ you must include <sys/types.h> before including this file
 #endif
 #undef HAVE_MAJOR
 
+#if ! defined makedev && defined mkdev
+# define makedev(maj, min)  mkdev (maj, min)
+#endif
+
 #if HAVE_UTIME_H
 # include <utime.h>
 #endif
