@@ -81,6 +81,10 @@ char *program_name;
    of symbolic links rather than any files they point to.  */
 static int change_symlinks = 1;
 
+/* When change_symlinks is set, this should be set to `lstat', otherwise,
+   it should be `stat'.  */
+static int (*xstat) ();
+
 /* If nonzero, change the ownership of directories recursively. */
 static int recurse;
 
@@ -196,7 +200,7 @@ change_file_group (int cmdline_arg, const char *file, gid_t group)
   struct stat file_stats;
   int errors = 0;
 
-  if (lstat (file, &file_stats))
+  if ((*xstat) (file, &file_stats))
     {
       if (force_silent == 0)
 	error (0, errno, "%s", file);
@@ -408,6 +412,11 @@ main (int argc, char **argv)
       error (0, 0, _("too few arguments"));
       usage (1);
     }
+
+  if (change_symlinks)
+    xstat = lstat;
+  else
+    xstat = stat;
 
   if (reference_file)
     {
