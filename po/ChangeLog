@@ -2,10 +2,10 @@
 
 	* Makefile.in.in: Upgrade to gettext-0.11.5.
 
-2002-09-16  Jim Meyering  <meyering@lucent.com>
+2002-09-16  Jim Meyering  <jim@meyering.net>
 
 	* LINGUAS: Add be (Belarusian).
 
-2002-09-02  Jim Meyering  <meyering@lucent.com>
+2002-09-02  Jim Meyering  <jim@meyering.net>
 
 	* LINGUAS: Add lg (Luganda).
