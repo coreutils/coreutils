@@ -1,5 +1,7 @@
 Sat Dec 10 00:02:09 1994  Jim Meyering  (meyering@comco.com)
 
+	* safe-read.c (safe_read): Get this function from gcc's cccp.c.
+
 	* Makefile.in (install): Install `install' first as transformed
 	`ginstall,' then remove the target (transformed `install')
 	and move GNU install into its place.  Before, the installation
