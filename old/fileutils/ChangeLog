@@ -1,12 +1,12 @@
 1998-02-13  Jim Meyering  <meyering@eng.ascend.com>
 
+	* Version 3.16m.
+
 	* src/mv.c (cp_option_init): Set copy_as_regular to 0, not 1.
 	Otherwise, mv tries to open special files.
 	Reported by Kjetil Torgrim Homme.
 
 1998-02-08  Jim Meyering  <meyering@eng.ascend.com>
-
-	* Version 3.16m.
 
 	* Makefile.maint (cvs-dist): Update po/ to clear modified status
 	of *.po files before running cvs tag -c.
