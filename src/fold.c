@@ -1,5 +1,5 @@
 /* fold -- wrap each input line to fit in specified width.
-   Copyright (C) 91, 1995-2003 Free Software Foundation, Inc.
+   Copyright (C) 91, 1995-2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -263,10 +263,11 @@ main (int argc, char **argv)
 	    break;
 	  if (ISDIGIT (a[1]))
 	    {
-	      char *s = xmalloc (strlen (a) + 2);
+	      size_t len_a = strlen (a);
+	      char *s = xmalloc (len_a + 2);
 	      s[0] = '-';
 	      s[1] = 'w';
-	      strcpy (s + 2, a + 1);
+	      memcpy (s + 2, a + 1, len_a);
 	      argv[i] = s;
 	      if (200112 <= posix2_version ())
 		{
