@@ -1,4 +1,3 @@
-Changes in release 2.1
  [2.0.15]
 * date no longer accepts e.g., September 31 in the MMDDhhmm syntax
 * fix a bug in this package's .m4 files and in configure.ac
