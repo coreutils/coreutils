@@ -264,12 +264,17 @@ char *alloca ();
 
 #if ENABLE_NLS
 # include <libintl.h>
+# if HAVE_GETTEXT && !HAVE_DCGETTEXT && !defined dcgettext
+#  define dcgettext(Domain, Text, Category) Text
+# endif
 # define _(Text) gettext (Text)
 #else
 # undef bindtextdomain
 # define bindtextdomain(Domain, Directory) /* empty */
 # undef textdomain
 # define textdomain(Domain) /* empty */
+# undef dcgettext
+# define dcgettext(Domainname, Text, Category) Text
 # define _(Text) Text
 #endif
 #define N_(Text) Text
