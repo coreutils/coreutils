@@ -1,3 +1,21 @@
+2000-06-16  Jim Meyering  <meyering@lucent.com>
+
+	* src/copy.c (copy_reg): Give a slightly better diagnostic upon
+	open failure.
+
+2000-06-15  Paul Eggert  <eggert@twinsun.com>
+
+	* NEWS, doc/fileutils.texi: df, du, and ls now round disk
+	usage up and disk free space down.
+
+	* src/df.c (df_readable): New arg for rounding style.
+	Round negative numbers correctly.
+	(show_dev): Round disk usage up and disk free space down.
+
+	* src/ls.c: (print_dir, gobble_file, print_long_format,
+	print_file_name_and_frills): Round disk usage up.
+	* src/du.c (print_size): Likewise.
+
 2000-06-14  Andreas Schwab  <schwab@suse.de>
 
 	* tests/rm/r-1 (framework_failure): Initialize this instead of
