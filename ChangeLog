@@ -16,6 +16,7 @@
         Use uintmax_t, not size_t, for file sizes.
         (main): Give a better diagnostic for option arguments == 0.
 	Use umaxtostr to print file sizes.
+	Reported by Luke Hassell.
 
 2003-04-08  Jim Meyering  <jim@meyering.net>
 
