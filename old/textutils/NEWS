@@ -1,4 +1,5 @@
 Changes in release 1.15
+* od gives better diagnostics for invalid format specs
 * uses automake-generated Makefile templates
 * configure takes a new option: --enable-maintainer-mode
 * fix a bug in fmt when prefix has trailing white space
