@@ -35,7 +35,7 @@
 
 % This automatically updates the version number based on RCS.
 \def\deftexinfoversion$#1: #2 ${\def\texinfoversion{#2}}
-\deftexinfoversion$Revision: 1.10 $
+\deftexinfoversion$Revision: 1.11 $
 \message{Loading texinfo package [Version \texinfoversion]:}
 
 % If in a .fmt file, print the version number
@@ -73,6 +73,7 @@
  \gdef\tie{\leavevmode\penalty\tiepenalty\ }
 }
 \let\~ = \tie                  % And make it available as @~.
+
 
 \message{Basics,}
 \chardef\other=12
@@ -579,7 +580,7 @@ where each line of input produces a line of output.}
 % @sp n   outputs n lines of vertical space
 
 \def\sp{\parsearg\spxxx}
-\def\spxxx #1{\par \vskip #1\baselineskip}
+\def\spxxx #1{\vskip #1\baselineskip}
 
 % @comment ...line which is ignored...
 % @c is the same as @comment
@@ -591,6 +592,9 @@ where each line of input produces a line of output.}
 \def\commentxxx #1{\catcode 64=0 \catcode 123=1 \catcode 125=2 }
 
 \let\c=\comment
+
+% @paragraphindent  is defined for the Info formatting commands only.
+\let\paragraphindent=\comment
 
 % Prevent errors for section commands.
 % Used in @ignore and in failing conditionals.
@@ -626,6 +630,7 @@ where each line of input produces a line of output.}
 % incorrectly.
 %
 \def\ignoremorecommands{%
+  \let\defcodeindex = \relax
   \let\defcv = \relax
   \let\deffn = \relax
   \let\deffnx = \relax
@@ -666,7 +671,6 @@ where each line of input produces a line of output.}
   \let\set = \relax
   \let\clear = \relax
   \let\item = \relax
-  \let\message = \relax
 }
 
 % Ignore @ignore ... @end ignore.
@@ -681,10 +685,15 @@ where each line of input produces a line of output.}
 \def\menu{\doignore{menu}}
 \def\direntry{\doignore{direntry}}
 
+% Also ignore @macro ... @end macro.  The user must run texi2dvi,
+% which runs makeinfo to do macro expansion.  Ignore @unmacro, too.
+\def\macro{\doignore{macro}}
+\let\unmacro = \comment
+
+
 % @dircategory CATEGORY  -- specify a category of the dir file
 % which this file should belong to.  Ignore this in TeX.
-
-\def\dircategory{\comment}
+\let\dircategory = \comment
 
 % Ignore text until a line `@end #1'.
 %
@@ -938,16 +947,13 @@ where each line of input produces a line of output.}
    \comment % Ignore the actual filename.
 }
 
+% @bye.
 \outer\def\bye{\pagealignmacro\tracingstats=1\ptexend}
 
-\def\inforef #1{\inforefzzz #1,,,,**}
-\def\inforefzzz #1,#2,#3,#4**{\putwordSee{} \putwordInfo{} \putwordfile{} \file{\ignorespaces #3{}},
-  node \samp{\ignorespaces#1{}}}
-
-\def\macro#1{\begingroup\ignoresections\catcode`\#=6\def\macrotemp{#1}\parsearg\macroxxx}
-\def\macroxxx#1#2 \end macro{%
-\expandafter\gdef\macrotemp#1{#2}%
-\endgroup}
+% \def\macro#1{\begingroup\ignoresections\catcode`\#=6\def\macrotemp{#1}\parsearg\macroxxx}
+% \def\macroxxx#1#2 \end macro{%
+% \expandafter\gdef\macrotemp#1{#2}%
+% \endgroup}
 
 %\def\linemacro#1{\begingroup\ignoresections\catcode`\#=6\def\macrotemp{#1}\parsearg\linemacroxxx}
 %\def\linemacroxxx#1#2 \end linemacro{%
@@ -958,6 +964,7 @@ where each line of input produces a line of output.}
 %\endgroup}
 
 %\def\butfirst#1{}
+
 
 \message{fonts,}
 
@@ -1028,7 +1035,7 @@ where each line of input produces a line of output.}
 \setfont\deftt\ttshape{10}{\magstep1}
 \def\df{\let\tentt=\deftt \let\tenbf = \defbf \bf}
 
-% Fonts for indices and small examples.
+% Fonts for indices and small examples (9pt).
 % We actually use the slanted font rather than the italic,
 % because texinfo normally uses the slanted fonts for that.
 % Do not make many font distinctions in general in the index, since they
@@ -1045,7 +1052,7 @@ where each line of input produces a line of output.}
 \font\indi=cmmi9
 \font\indsy=cmsy9
 
-% Fonts for headings
+% Chapter (and unnumbered) fonts (17.28pt).
 \setfont\chaprm\rmbshape{12}{\magstep2}
 \setfont\chapit\itbshape{10}{\magstep3}
 \setfont\chapsl\slbshape{10}{\magstep3}
@@ -1057,6 +1064,7 @@ where each line of input produces a line of output.}
 \font\chapi=cmmi12 scaled \magstep2
 \font\chapsy=cmsy10 scaled \magstep3
 
+% Section fonts (14.4pt).
 \setfont\secrm\rmbshape{12}{\magstep1}
 \setfont\secit\itbshape{10}{\magstep2}
 \setfont\secsl\slbshape{10}{\magstep2}
@@ -1082,6 +1090,7 @@ where each line of input produces a line of output.}
 
 %\let\ssecbf=\ssecrm
 
+% Subsection fonts (13.15pt).
 \setfont\ssecrm\rmbshape{12}{\magstephalf}
 \setfont\ssecit\itbshape{10}{1315}
 \setfont\ssecsl\slbshape{10}{1315}
@@ -1127,22 +1136,23 @@ where each line of input produces a line of output.}
   \let\tenrm=\chaprm \let\tenit=\chapit \let\tensl=\chapsl
   \let\tenbf=\chapbf \let\tentt=\chaptt \let\smallcaps=\chapsc
   \let\tensf=\chapsf \let\teni=\chapi \let\tensy=\chapsy \let\tenttsl=\chapttsl
-  \resetmathfonts}
+  \resetmathfonts \setleading{19pt}}
 \def\secfonts{%
   \let\tenrm=\secrm \let\tenit=\secit \let\tensl=\secsl
   \let\tenbf=\secbf \let\tentt=\sectt \let\smallcaps=\secsc
   \let\tensf=\secsf \let\teni=\seci \let\tensy=\secsy \let\tenttsl=\secttsl
-  \resetmathfonts}
+  \resetmathfonts \setleading{16pt}}
 \def\subsecfonts{%
   \let\tenrm=\ssecrm \let\tenit=\ssecit \let\tensl=\ssecsl
   \let\tenbf=\ssecbf \let\tentt=\ssectt \let\smallcaps=\ssecsc
   \let\tensf=\ssecsf \let\teni=\sseci \let\tensy=\ssecsy \let\tenttsl=\ssecttsl
-  \resetmathfonts}
+  \resetmathfonts \setleading{15pt}}
+\let\subsubsecfonts = \subsecfonts % Maybe make sssec fonts scaled magstephalf?
 \def\indexfonts{%
   \let\tenrm=\indrm \let\tenit=\indit \let\tensl=\indsl
   \let\tenbf=\indbf \let\tentt=\indtt \let\smallcaps=\indsc
   \let\tensf=\indsf \let\teni=\indi \let\tensy=\indsy \let\tenttsl=\indttsl
-  \resetmathfonts}
+  \resetmathfonts \setleading{12pt}}
 
 % Set up the default fonts, so we can use them for creating boxes.
 %
@@ -1186,11 +1196,21 @@ where each line of input produces a line of output.}
 }
 \let\ttfont=\t
 \def\samp #1{`\tclose{#1}'\null}
-\def\key #1{{\ttsl \nohyphenation \uppercase{#1}}\null}
+\setfont\smallrm\rmshape{8}{1000}
+\font\smallsy=cmsy9
+\def\key#1{{\smallrm\textfont2=\smallsy \leavevmode\hbox{%
+  \raise0.4pt\hbox{$\langle$}\kern-.08em\vtop{%
+    \vbox{\hrule\kern-0.4pt
+     \hbox{\raise0.4pt\hbox{\vphantom{$\langle$}}#1}}%
+    \kern-0.4pt\hrule}%
+  \kern-.06em\raise0.4pt\hbox{$\rangle$}}}}
+% The old definition, with no lozenge:
+%\def\key #1{{\ttsl \nohyphenation \uppercase{#1}}\null}
 \def\ctrl #1{{\tt \rawbackslash \hat}#1}
 
 \let\file=\samp
 \let\url=\samp % perhaps include a hypertex \special eventually
+\def\email#1{$\langle${\tt #1}$\rangle$}
 
 % @code is a modification of @t,
 % which makes spaces the same size as normal in the surrounding text.
@@ -1222,7 +1242,7 @@ where each line of input produces a line of output.}
 % Unfortunately, TeX uses one parameter (\hyphenchar) to control
 % both hyphenation at - and hyphenation within words.
 % We must therefore turn them both off (\tclose does that)
-% and arrange explicitly to hyphenate an a dash.
+% and arrange explicitly to hyphenate at a dash.
 %  -- rms.
 {
 \catcode`\-=\active
@@ -1273,6 +1293,10 @@ where each line of input produces a line of output.}
 % Use of \lowercase was suggested.
 \def\sc#1{{\smallcaps#1}}	% smallcaps font
 \def\ii#1{{\it #1}}		% italic font
+
+% @pounds{} is a sterling sign.
+\def\pounds{{\it\$}}
+
 
 \message{page headings,}
 
@@ -1419,7 +1443,8 @@ where each line of input produces a line of output.}
 % @headings after	turns on double-sided headings after this page.
 % @headings doubleafter	turns on double-sided headings after this page.
 % @headings singleafter turns on single-sided headings after this page.
-% By default, they are off.
+% By default, they are off at the start of a document,
+% and turned `on' after @end titlepage.
 
 \def\headings #1 {\csname HEADINGS#1\endcsname}
 
@@ -1433,22 +1458,24 @@ where each line of input produces a line of output.}
 % title on inside top of left hand pages, and page numbers on outside top
 % edge of all pages.
 \def\HEADINGSdouble{
-%\pagealignmacro
 \global\pageno=1
 \global\evenfootline={\hfil}
 \global\oddfootline={\hfil}
 \global\evenheadline={\line{\folio\hfil\thistitle}}
 \global\oddheadline={\line{\thischapter\hfil\folio}}
+\global\let\contentsalignmacro = \chapoddpage
 }
+\let\contentsalignmacro = \chappager
+
 % For single-sided printing, chapter title goes across top left of page,
 % page number on top right.
 \def\HEADINGSsingle{
-%\pagealignmacro
 \global\pageno=1
 \global\evenfootline={\hfil}
 \global\oddfootline={\hfil}
 \global\evenheadline={\line{\thischapter\hfil\folio}}
 \global\oddheadline={\line{\thischapter\hfil\folio}}
+\global\let\contentsalignmacro = \chappager
 }
 \def\HEADINGSon{\HEADINGSdouble}
 
@@ -1459,6 +1486,7 @@ where each line of input produces a line of output.}
 \global\oddfootline={\hfil}
 \global\evenheadline={\line{\folio\hfil\thistitle}}
 \global\oddheadline={\line{\thischapter\hfil\folio}}
+\global\let\contentsalignmacro = \chapoddpage
 }
 
 \def\HEADINGSsingleafter{\let\HEADINGShook=\HEADINGSsinglex}
@@ -1467,6 +1495,7 @@ where each line of input produces a line of output.}
 \global\oddfootline={\hfil}
 \global\evenheadline={\line{\thischapter\hfil\folio}}
 \global\oddheadline={\line{\thischapter\hfil\folio}}
+\global\let\contentsalignmacro = \chappager
 }
 
 % Subroutines used in generating headings
@@ -1489,6 +1518,7 @@ July\or August\or September\or October\or November\or December\fi
 \def\thistitle{No Title}
 \def\settitle{\parsearg\settitlezzz}
 \def\settitlezzz #1{\gdef\thistitle{#1}}
+
 
 \message{tables,}
 
@@ -1812,6 +1842,7 @@ July\or August\or September\or October\or November\or December\fi
 %   current hsize to be used for each column. You may use as many
 %   columns as desired.
 
+
 % Or use a template:
 %   @multitable {Column 1 template} {Column 2 template} {Column 3 template}
 %   @item ...
@@ -1832,7 +1863,7 @@ July\or August\or September\or October\or November\or December\fi
 % with nothing between them for as many times as empty columns are needed,
 % ie, @tab@tab@tab will produce two empty columns.
 
-% @item, @tab, @multicolumn or @endmulticolumn do not need to be on their
+% @item, @tab, @multitable or @end multitable do not need to be on their
 % own lines, but it will not hurt if they are.
 
 % Sample multitable:
@@ -1856,8 +1887,9 @@ July\or August\or September\or October\or November\or December\fi
 % @multitableparskip is vertical space between paragraphs in table.
 % @multitableparindent is paragraph indent in table.
 % @multitablecolmargin is horizontal space to be left between columns.
-% @multitablelinespace is space to leave between table items;
-%   0 means it depends on current normal line spacing.
+% @multitablelinespace is space to leave between table items, baseline
+%                                                            to baseline.
+%   0pt means it depends on current normal line spacing.
 
 %%%%
 % Dimensions 
@@ -1936,7 +1968,7 @@ July\or August\or September\or October\or November\or December\fi
  % \vtop will set a single line and will also let text wrap and 
  % continue for many paragraphs if desired.
 \halign\bgroup&\global\advance\colcount by 1\relax%
-\vtop{\hsize=\expandafter\csname col\the\colcount\endcsname
+\multistrut\vtop{\hsize=\expandafter\csname col\the\colcount\endcsname
  % In order to keep entries from bumping into each other
  % we will add a \leftskip of \multitablecolspace to all columns after
  % the first one.
@@ -1958,26 +1990,30 @@ July\or August\or September\or October\or November\or December\fi
  % In either case we will make \leftskip=\multitablecolspace:
 \leftskip=\multitablecolspace
 \fi
-\noindent##%\par
-%\vskip\multitablelinespace
-}\cr%
+\noindent##}\cr%
  % \everycr will reset column counter, \colcount, at the end of
  % each line. Every column  entry will cause \colcount to advance by one. 
  % The table preamble
  % looks at the current \colcount to find the correct column width.
-\global\everycr{\noalign{\nointerlineskip\vskip\multitablelinespace 
+\global\everycr{\noalign{%
 \filbreak%% keeps underfull box messages off when table breaks over pages.
-\global\colcount=0\relax}}}
+\global\colcount=0\relax}}
+}
 
 \def\setmultitablespacing{% test to see if user has set \multitablelinespace.
 % If so, do nothing. If not, give it an appropriate dimension based on
 % current baselineskip.
+\setbox0=\vbox{Xy}
 \ifdim\multitablelinespace=0pt
-\setbox0=\vbox{X}\global\multitablelinespace=\the\baselineskip
-\global\advance\multitablelinespace by-\ht0\fi
+%% strut to put in table in case some entry doesn't have descenders,
+%% to keep lines equally spaced
+\gdef\multistrut{\vrule height\ht0 depth\dp0 width0pt\relax}
 %% Test to see if parskip is larger than space between lines of
 %% table. If not, do nothing. 
 %%        If so, set to same dimension as multitablelinespace.
+\else
+\gdef\multistrut{\vrule height\multitablelinespace depth\dp0
+width0pt\relax} \fi
 \ifdim\multitableparskip>\multitablelinespace
 \global\multitableparskip=\multitablelinespace
 \global\advance\multitableparskip-7pt %% to keep parskip somewhat smaller
@@ -1988,6 +2024,8 @@ July\or August\or September\or October\or November\or December\fi
 \global\advance\multitableparskip-7pt %% to keep parskip somewhat smaller
                                       %% than skip between lines in the table.
 \fi}
+
+
 \message{indexing,}
 % Index generation facilities
 
@@ -2276,26 +2314,17 @@ July\or August\or September\or October\or November\or December\fi
 
 \def\printindex{\parsearg\doprintindex}
 
-\def\doprintindex#1{%
-  \tex
-  \dobreak \chapheadingskip {10000}
-  \catcode`\%=\other\catcode`\&=\other\catcode`\#=\other
-  \catcode`\$=\other
-  \catcode`\~=\other
-  \indexbreaks
+\def\doprintindex#1{\begingroup
+  \dobreak \chapheadingskip{10000}%
   %
-  % The following don't help, since the chars were translated
-  % when the raw index was written, and their fonts were discarded
-  % due to \indexnofonts.
-  %\catcode`\"=\active
-  %\catcode`\^=\active
-  %\catcode`\_=\active
-  %\catcode`\|=\active
-  %\catcode`\<=\active
-  %\catcode`\>=\active
-  % %
-  \def\indexbackslash{\rawbackslashxx}
-  \indexfonts\rm \tolerance=9500 \advance\baselineskip -1pt
+  \indexfonts \rm
+  \tolerance = 9500
+  \indexbreaks
+  \def\indexbackslash{\rawbackslashxx}%
+  % Index files are almost Texinfo source, but we use \ as the escape
+  % character.  It would be better to use @, but that's too big a change
+  % to make right now.
+  \catcode`\\ = 0
   \begindoublecolumns
   %
   % See if the index file exists and is nonempty.
@@ -2306,7 +2335,7 @@ July\or August\or September\or October\or November\or December\fi
     % index.  The easiest way to prevent this problem is to make sure
     % there is some text.
     (Index is nonexistent)
-    \else
+  \else
     %
     % If the index file exists but is empty, then \openin leaves \ifeof
     % false.  We have to make TeX try to read something from the file, so
@@ -2320,8 +2349,7 @@ July\or August\or September\or October\or November\or December\fi
   \fi
   \closein 1
   \enddoublecolumns
-  \Etex
-}
+\endgroup}
 
 % These macros are used by the sorted index file itself.
 % Change them to control the appearance of the index.
@@ -2496,8 +2524,9 @@ July\or August\or September\or October\or November\or December\fi
     \fi
   \fi
 }
-
 \catcode `\@=\other
+
+
 \message{sectioning,}
 % Define chapters, sections, etc.
 
@@ -2669,6 +2698,10 @@ July\or August\or September\or October\or November\or December\fi
 \global\let\subsubsection = \appendixsubsubsec
 }}
 
+% @centerchap is like @unnumbered, but the heading is centered.
+\outer\def\centerchap{\parsearg\centerchapyyy}
+\def\centerchapyyy #1{{\let\unnumbchapmacro=\centerchapmacro \unnumberedyyy{#1}}}
+
 \outer\def\top{\parsearg\unnumberedyyy}
 \outer\def\unnumbered{\parsearg\unnumberedyyy}
 \def\unnumberedyyy #1{\unnmhead0{#1}} % normally unnmhead0 calls unnumberedzzz
@@ -2771,7 +2804,7 @@ July\or August\or September\or October\or November\or December\fi
 \outer\def\unnumberedsubsec{\parsearg\unnumberedsubsecyyy}
 \def\unnumberedsubsecyyy #1{\unnmhead2{#1}} %normally calls unnumberedsubseczzz
 \def\unnumberedsubseczzz #1{\seccheck{unnumberedsubsec}%
-\plainsecheading {#1}\gdef\thissection{#1}%
+\plainsubsecheading {#1}\gdef\thissection{#1}%
 {\chapternofonts%
 \edef\temp{{\realbackslash unnumbsubsecentry{#1}{\noexpand\folio}}}%
 \escapechar=`\\%
@@ -2816,7 +2849,7 @@ July\or August\or September\or October\or November\or December\fi
 \outer\def\unnumberedsubsubsec{\parsearg\unnumberedsubsubsecyyy}
 \def\unnumberedsubsubsecyyy #1{\unnmhead3{#1}} %normally unnumberedsubsubseczzz
 \def\unnumberedsubsubseczzz #1{\seccheck{unnumberedsubsubsec}%
-\plainsecheading {#1}\gdef\thissection{#1}%
+\plainsubsubsecheading {#1}\gdef\thissection{#1}%
 {\chapternofonts%
 \edef\temp{{\realbackslash unnumbsubsubsecentry{#1}{\noexpand\folio}}}%
 \escapechar=`\\%
@@ -2875,11 +2908,10 @@ July\or August\or September\or October\or November\or December\fi
                   \parindent=0pt\raggedright
                   \rm #1\hfill}}\bigskip \par\penalty 200}
 
-\def\heading{\parsearg\secheadingi}
-
-\def\subheading{\parsearg\subsecheadingi}
-
-\def\subsubheading{\parsearg\subsubsecheadingi}
+% @heading, @subheading, @subsubheading.
+\def\heading{\parsearg\plainsecheading}
+\def\subheading{\parsearg\plainsubsecheading}
+\def\subsubheading{\parsearg\plainsubsubsecheading}
 
 % These macros generate a chapter, section, etc. heading only
 % (including whitespace, linebreaking, etc. around it),
@@ -2893,7 +2925,7 @@ July\or August\or September\or October\or November\or December\fi
 %%% Define plain chapter starts, and page on/off switching for it
 % Parameter controlling skip before chapter headings (if needed)
 
-\newskip \chapheadingskip \chapheadingskip = 30pt plus 8pt minus 4pt
+\newskip\chapheadingskip
 
 \def\chapbreak{\dobreak \chapheadingskip {-4000}}
 \def\chappager{\par\vfill\supereject}
@@ -2902,15 +2934,18 @@ July\or August\or September\or October\or November\or December\fi
 \def\setchapternewpage #1 {\csname CHAPPAG#1\endcsname}
 
 \def\CHAPPAGoff{
+\global\let\contentsalignmacro = \chappager
 \global\let\pchapsepmacro=\chapbreak
 \global\let\pagealignmacro=\chappager}
 
 \def\CHAPPAGon{
+\global\let\contentsalignmacro = \chappager
 \global\let\pchapsepmacro=\chappager
 \global\let\pagealignmacro=\chappager
 \global\def\HEADINGSon{\HEADINGSsingle}}
 
 \def\CHAPPAGodd{
+\global\let\contentsalignmacro = \chapoddpage
 \global\let\pchapsepmacro=\chapoddpage
 \global\let\pagealignmacro=\chapoddpage
 \global\def\HEADINGSon{\HEADINGSdouble}}
@@ -2919,25 +2954,39 @@ July\or August\or September\or October\or November\or December\fi
 
 \def\CHAPFplain{
 \global\let\chapmacro=\chfplain
-\global\let\unnumbchapmacro=\unnchfplain}
+\global\let\unnumbchapmacro=\unnchfplain
+\global\let\centerchapmacro=\centerchfplain}
 
-\def\chfplain #1#2{%
+% Plain chapter opening.
+% #1 is the text, #2 the chapter number or empty if unnumbered.
+\def\chfplain#1#2{%
   \pchapsepmacro
   {%
-    \chapfonts \vbox{\hyphenpenalty=10000\tolerance=5000
-                     \parindent=0pt\raggedright
-                     \rm #2\enspace #1}%
+    \chapfonts \rm
+    \def\chapnum{#2}%
+    \setbox0 = \hbox{#2\ifx\chapnum\empty\else\enspace\fi}%
+    \vbox{\hyphenpenalty=10000 \tolerance=5000 \parindent=0pt \raggedright
+          \hangindent = \wd0 \centerparametersmaybe
+          \unhbox0 #1\par}%
   }%
-  \bigskip
-  \penalty5000
+  \nobreak\bigskip % no page break after a chapter title
+  \nobreak
 }
 
-\def\unnchfplain #1{%
-\pchapsepmacro %
-{\chapfonts \vbox{\hyphenpenalty=10000\tolerance=5000
-                  \parindent=0pt\raggedright
-                  \rm #1\hfill}}\bigskip \par\penalty 10000 %
-}
+% Plain opening for unnumbered.
+\def\unnchfplain#1{\chfplain{#1}{}}
+
+% @centerchap -- centered and unnumbered.
+\let\centerparametersmaybe = \relax
+\def\centerchfplain#1{{%
+  \def\centerparametersmaybe{%
+    \advance\rightskip by 3\rightskip
+    \leftskip = \rightskip
+    \parfillskip = 0pt
+  }%
+  \chfplain{#1}{}%
+}}
+
 \CHAPFplain % The default
 
 \def\unnchfopen #1{%
@@ -2951,65 +3000,73 @@ July\or August\or September\or October\or November\or December\fi
 \par\penalty 5000 %
 }
 
+\def\centerchfopen #1{%
+\chapoddpage {\chapfonts \vbox{\hyphenpenalty=10000\tolerance=5000
+                       \parindent=0pt
+                       \hfill {\rm #1}\hfill}}\bigskip \par\penalty 10000 %
+}
+
 \def\CHAPFopen{
 \global\let\chapmacro=\chfopen
-\global\let\unnumbchapmacro=\unnchfopen}
+\global\let\unnumbchapmacro=\unnchfopen
+\global\let\centerchapmacro=\centerchfopen}
 
-% Parameter controlling skip before section headings.
 
-\newskip \subsecheadingskip  \subsecheadingskip = 17pt plus 8pt minus 4pt
-\def\subsecheadingbreak{\dobreak \subsecheadingskip {-500}}
-
-\newskip \secheadingskip  \secheadingskip = 21pt plus 8pt minus 4pt
+% Section titles.
+\newskip\secheadingskip
 \def\secheadingbreak{\dobreak \secheadingskip {-1000}}
+\def\secheading#1#2#3{\sectionheading{sec}{#2.#3}{#1}}
+\def\plainsecheading#1{\sectionheading{sec}{}{#1}}
 
-% @paragraphindent  is defined for the Info formatting commands only.
-\let\paragraphindent=\comment
+% Subsection titles.
+\newskip \subsecheadingskip
+\def\subsecheadingbreak{\dobreak \subsecheadingskip {-500}}
+\def\subsecheading#1#2#3#4{\sectionheading{subsec}{#2.#3.#4}{#1}}
+\def\plainsubsecheading#1{\sectionheading{subsec}{}{#1}}
 
-% Section fonts are the base font at magstep2, which produces
-% a size a bit more than 14 points in the default situation.
-
-\def\secheading #1#2#3{\secheadingi {#2.#3\enspace #1}}
-\def\plainsecheading #1{\secheadingi {#1}}
-\def\secheadingi #1{{\advance \secheadingskip by \parskip %
-\secheadingbreak}%
-{\secfonts \vbox{\hyphenpenalty=10000\tolerance=5000
-                 \parindent=0pt\raggedright
-                 \rm #1\hfill}}%
-\ifdim \parskip<10pt \kern 10pt\kern -\parskip\fi \penalty 10000 }
+% Subsubsection titles.
+\let\subsubsecheadingskip = \subsecheadingskip
+\let\subsubsecheadingbreak = \subsecheadingbreak
+\def\subsubsecheading#1#2#3#4#5{\sectionheading{subsubsec}{#2.#3.#4.#5}{#1}}
+\def\plainsubsubsecheading#1{\sectionheading{subsubsec}{}{#1}}
 
 
-% Subsection fonts are the base font at magstep1,
-% which produces a size of 12 points.
-
-\def\subsecheading #1#2#3#4{\subsecheadingi {#2.#3.#4\enspace #1}}
-\def\subsecheadingi #1{{\advance \subsecheadingskip by \parskip %
-\subsecheadingbreak}%
-{\subsecfonts \vbox{\hyphenpenalty=10000\tolerance=5000
-                     \parindent=0pt\raggedright
-                     \rm #1\hfill}}%
-\ifdim \parskip<10pt \kern 10pt\kern -\parskip\fi \penalty 10000 }
-
-\def\subsubsecfonts{\subsecfonts} % Maybe this should change:
-				  % Perhaps make sssec fonts scaled
-				  % magstep half
-\def\subsubsecheading #1#2#3#4#5{\subsubsecheadingi {#2.#3.#4.#5\enspace #1}}
-\def\subsubsecheadingi #1{{\advance \subsecheadingskip by \parskip %
-\subsecheadingbreak}%
-{\subsubsecfonts \vbox{\hyphenpenalty=10000\tolerance=5000
-                       \parindent=0pt\raggedright
-                       \rm #1\hfill}}%
-\ifdim \parskip<10pt \kern 10pt\kern -\parskip\fi \penalty 10000}
+% Print any size section title.
+% 
+% #1 is the section type (sec/subsec/subsubsec), #2 is the section
+% number (maybe empty), #3 the text.
+\def\sectionheading#1#2#3{%
+  {%
+    \expandafter\advance\csname #1headingskip\endcsname by \parskip
+    \csname #1headingbreak\endcsname
+  }%
+  {%
+    % Switch to the right set of fonts.
+    \csname #1fonts\endcsname \rm
+    %
+    % Only insert the separating space if we have a section number.
+    \def\secnum{#2}%
+    \setbox0 = \hbox{#2\ifx\secnum\empty\else\enspace\fi}%
+    %
+    \vbox{\hyphenpenalty=10000 \tolerance=5000 \parindent=0pt \raggedright
+          \hangindent = \wd0 % zero if no section number
+          \unhbox0 #3}%
+  }%
+  \ifdim\parskip<10pt \nobreak\kern10pt\nobreak\kern-\parskip\fi \nobreak
+}
 
 
 \message{toc printing,}
-
 % Finish up the main text and prepare to read what we've written
 % to \contentsfile.
 
 \newskip\contentsrightmargin \contentsrightmargin=1in
 \def\startcontents#1{%
-   \pagealignmacro
+   % If @setchapternewpage on, and @headings double, the contents should
+   % start on an odd page, unlike chapters.  Thus, we maintain
+   % \contentsalignmacro in parallel with \pagealignmacro.
+   % From: Torbjorn Granlund <tege@matematik.su.se>
+   \contentsalignmacro
    \immediate\closeout \contentsfile
    \ifnum \pageno>0
       \pageno = -1		% Request roman numbered pages.
@@ -3184,12 +3241,11 @@ July\or August\or September\or October\or November\or December\fi
 %                                      depth .1ex\hfil}
 %}
 
+% @point{}, @result{}, @expansion{}, @print{}, @equiv{}.
 \def\point{$\star$}
-
 \def\result{\leavevmode\raise.15ex\hbox to 1em{\hfil$\Rightarrow$\hfil}}
 \def\expansion{\leavevmode\raise.1ex\hbox to 1em{\hfil$\mapsto$\hfil}}
 \def\print{\leavevmode\lower.1ex\hbox to 1em{\hfil$\dashv$\hfil}}
-
 \def\equiv{\leavevmode\lower.1ex\hbox to 1em{\hfil$\ptexequiv$\hfil}}
 
 % Adapted from the TeXbook's \boxit.
@@ -3235,6 +3291,8 @@ July\or August\or September\or October\or November\or December\fi
 \let\.=\ptexdot
 \let\*=\ptexstar
 \let\dots=\ptexdots
+\def\endldots{\mathinner{\ldots\ldots\ldots\ldots}}
+\def\enddots{\relax\ifmmode\endldots\else$\mathsurround=0pt \endldots\,$\fi}
 \def\@{@}%
 \let\bullet=\ptexbullet
 \let\b=\ptexb \let\c=\ptexc \let\i=\ptexi \let\t=\ptext \let\l=\ptexl
@@ -3403,8 +3461,7 @@ July\or August\or September\or October\or November\or December\fi
   \let\Esmalllisp = \nonfillfinish
   \let\Esmallexample = \nonfillfinish
   %
-  % Smaller interline space and fonts for small examples.
-  \setleading{10pt}%
+  % Smaller fonts for small examples.
   \indexfonts \tt
   \rawbackslash % make \ output the \ character from the current font (tt)
   \gobble
@@ -3932,12 +3989,18 @@ July\or August\or September\or October\or November\or December\fi
 
 \def\deftpx #1 {\errmessage{@deftpx in invalid context}}
 
+
 \message{cross reference,}
 % Define cross-reference macros
 \newwrite \auxfile
 
 \newif\ifhavexrefs  % True if xref values are known.
 \newif\ifwarnedxrefs  % True if we warned once that they aren't known.
+
+% @inforef is simple.
+\def\inforef #1{\inforefzzz #1,,,,**}
+\def\inforefzzz #1,#2,#3,#4**{\putwordSee{} \putwordInfo{} \putwordfile{} \file{\ignorespaces #3{}},
+  node \samp{\ignorespaces#1{}}}
 
 % \setref{foo} defines a cross-reference point named foo.
 
@@ -4174,7 +4237,8 @@ July\or August\or September\or October\or November\or December\fi
 % The trailing space in the following definition for supereject is
 % vital for proper filling; pages come out unaligned when you do a
 % pagealignmacro call if that space before the closing brace is
-% removed.
+% removed. (Generally, numeric constants should always be followed by a
+% space to prevent strange expansion errors.)
 \def\supereject{\par\penalty -20000\footnoteno =0 }
 
 % @footnotestyle is meaningful for info output only..
@@ -4299,12 +4363,17 @@ July\or August\or September\or October\or November\or December\fi
 
 % Set some numeric style parameters, for 8.5 x 11 format.
 
-%\hsize = 6.5in
+\hsize = 6in
+\hoffset = .25in
 \newdimen\defaultparindent \defaultparindent = 15pt
 \parindent = \defaultparindent
-\parskip 18pt plus 1pt
-\setleading{15pt}
+\parskip 3pt plus 2pt minus 1pt
+\setleading{13.2pt}
 \advance\topskip by 1.2cm
+
+\chapheadingskip = 15pt plus 4pt minus 2pt
+\secheadingskip = 12pt plus 3pt minus 2pt
+\subsecheadingskip = 9pt plus 2pt minus 2pt
 
 % Prevent underfull vbox error messages.
 \vbadness=10000
@@ -4328,30 +4397,28 @@ July\or August\or September\or October\or November\or December\fi
 
 % Use @smallbook to reset parameters for 7x9.5 format  (or else 7x9.25)
 \def\smallbook{
-
-% These values for secheadingskip and subsecheadingskip are
-% experiments.  RJC 7 Aug 1992
-\global\secheadingskip = 17pt plus 6pt minus 3pt
-\global\subsecheadingskip = 14pt plus 6pt minus 3pt
-
-\global\lispnarrowing = 0.3in
-\setleading{12pt}
-\advance\topskip by -1cm
-\global\parskip 3pt plus 1pt
-\global\hsize = 5in
-\global\vsize=7.5in
-\global\tolerance=700
-\global\hfuzz=1pt
-\global\contentsrightmargin=0pt
-\global\deftypemargin=0pt
-\global\defbodyindent=.5cm
-
-\global\pagewidth=\hsize
-\global\pageheight=\vsize
-
-\global\let\smalllisp=\smalllispx
-\global\let\smallexample=\smalllispx
-\global\def\Esmallexample{\Esmalllisp}
+  \global\chapheadingskip = 15pt plus 4pt minus 2pt
+  \global\secheadingskip = 12pt plus 3pt minus 2pt
+  \global\subsecheadingskip = 9pt plus 2pt minus 2pt
+  %
+  \global\lispnarrowing = 0.3in
+  \setleading{12pt}
+  \advance\topskip by -1cm
+  \global\parskip 2pt plus 1pt
+  \global\hsize = 5in
+  \global\vsize=7.5in
+  \global\tolerance=700
+  \global\hfuzz=1pt
+  \global\contentsrightmargin=0pt
+  \global\deftypemargin=0pt
+  \global\defbodyindent=.5cm
+  %
+  \global\pagewidth=\hsize
+  \global\pageheight=\vsize
+  %
+  \global\let\smalllisp=\smalllispx
+  \global\let\smallexample=\smalllispx
+  \global\def\Esmallexample{\Esmalllisp}
 }
 
 % Use @afourpaper to print on European A4 paper.
