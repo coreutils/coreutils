@@ -1,4 +1,4 @@
-#serial 9
+#serial 10
 
 dnl From Jim Meyering.
 dnl
@@ -9,7 +9,7 @@ dnl
 # jm_LIST_MOUNTED_FILESYSTEMS([ACTION-IF-FOUND[, ACTION-IF-NOT-FOUND]])
 AC_DEFUN(jm_LIST_MOUNTED_FILESYSTEMS,
   [
-AC_CHECK_FUNCS(listmntent getmntent getmntinfo)
+AC_CHECK_FUNCS(listmntent getmntinfo)
 AC_CHECK_HEADERS(mntent.h)
 
 # Determine how to get the list of mounted filesystems.
