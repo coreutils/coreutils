@@ -1,5 +1,15 @@
 1999-01-02  Jim Meyering  <meyering@ascend.com>
 
+	* lib/argmatch.c (argmatch_invalid): Remove double quotes from the
+	offending quoted argument before using it in explanatory diagnostic.
+	Use a single fprintf stmt.
+
+	* lib/argmatch.h (XARGMATCH): Don't return a value;  instead,
+	modify a parameter.  Add a `Die_stmt' parameter.
+	Add parentheses.
+	* lib/argmatch.c (__xargmatch_internal): Remove now-unused function.
+	(argmatch_to_argument): Add `const' attribute to first parameter.
+
 	* configure.in (AC_REPLACE_FUNCS): Remove strcasecmp (now it's
 	done in m4/jm-macros.m4).
 
