@@ -13,3 +13,5 @@ doc/coreutils.texi:
   Better still: fix the code so it's *not* system-dependent.
 
 implement --target-directory=DIR for install (per texinfo documentation)
+
+du: make it so du is not stack-limited by depth of hierarchy
