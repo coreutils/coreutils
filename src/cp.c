@@ -24,13 +24,9 @@
 #include <config.h>
 #include <stdio.h>
 #include <sys/types.h>
-
-/* FIXME: uncomment for release
-#define NDEBUG
-*/
 #include <assert.h>
-
 #include <getopt.h>
+
 #include "system.h"
 #include "backupfile.h"
 #include "argmatch.h"
