@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{1999-08-09.17} % updated for pdfTeX
+\def\texinfoversion{1999-09-25.10}
 %
 % Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99
 % Free Software Foundation, Inc.
@@ -29,15 +29,15 @@
 %
 % Please try the latest version of texinfo.tex before submitting bug
 % reports; you can get the latest version from:
-%   ftp://ftp.gnu.org/pub/gnu/texinfo.tex
+%   ftp://ftp.gnu.org/gnu/texinfo.tex
 %   (and all GNU mirrors, see http://www.gnu.org/order/ftp.html)
-%   ftp://tug.org/tex/texinfo.tex
-%   ftp://ctan.org/macros/texinfo/texinfo.tex
-%   (and all CTAN mirrors, finger ctan@ctan.org for a list).
+%   ftp://texinfo.org/tex/texinfo.tex
+%   ftp://us.ctan.org/macros/texinfo/texinfo.tex
+%   (and all CTAN mirrors, finger ctan@us.ctan.org for a list).
 %   /home/gd/gnu/doc/texinfo.tex on the GNU machines.
 % The texinfo.tex in any given Texinfo distribution could well be out
 % of date, so if that's what you're using, please check.
-% There is a small home page for Texinfo at http://texinfo.org/.
+% Texinfo has a small home page at http://texinfo.org/.
 %
 % Send bug reports to bug-texinfo@gnu.org.  Please include including a
 % complete document in each bug report with which we can reproduce the
@@ -599,36 +599,42 @@ where each line of input produces a line of output.}
 %}}
 
 \def\needx#1{%
-  % Go into vertical mode, so we don't make a big box in the middle of a
+  % Ensure vertical mode, so we don't make a big box in the middle of a
   % paragraph.
   \par
   %
-  % Don't add any leading before our big empty box, but allow a page
-  % break, since the best break might be right here.
-  \allowbreak
-  \nointerlineskip
-  \vtop to #1\mil{\vfil}%
-  %
-  % TeX does not even consider page breaks if a penalty added to the
-  % main vertical list is 10000 or more.  But in order to see if the
-  % empty box we just added fits on the page, we must make it consider
-  % page breaks.  On the other hand, we don't want to actually break the
-  % page after the empty box.  So we use a penalty of 9999.
-  %
-  % There is an extremely small chance that TeX will actually break the
-  % page at this \penalty, if there are no other feasible breakpoints in
-  % sight.  (If the user is using lots of big @group commands, which
-  % almost-but-not-quite fill up a page, TeX will have a hard time doing
-  % good page breaking, for example.)  However, I could not construct an
-  % example where a page broke at this \penalty; if it happens in a real
-  % document, then we can reconsider our strategy.
-  \penalty9999
-  %
-  % Back up by the size of the box, whether we did a page break or not.
-  \kern -#1\mil
-  %
-  % Do not allow a page break right after this kern.
-  \nobreak
+  % If the @need value is less than one line space, it's useless.
+  \dimen0 = #1\mil
+  \dimen2 = \ht\strutbox
+  \advance\dimen2 by \dp\strutbox
+  \ifdim\dimen0 > \dimen2
+    %
+    % Do a \strut just to make the height of this box be normal, so the
+    % normal leading is inserted relative to the preceding line.
+    % And a page break here is fine.
+    \vtop to #1\mil{\strut\vfil}%
+    %
+    % TeX does not even consider page breaks if a penalty added to the
+    % main vertical list is 10000 or more.  But in order to see if the
+    % empty box we just added fits on the page, we must make it consider
+    % page breaks.  On the other hand, we don't want to actually break the
+    % page after the empty box.  So we use a penalty of 9999.
+    %
+    % There is an extremely small chance that TeX will actually break the
+    % page at this \penalty, if there are no other feasible breakpoints in
+    % sight.  (If the user is using lots of big @group commands, which
+    % almost-but-not-quite fill up a page, TeX will have a hard time doing
+    % good page breaking, for example.)  However, I could not construct an
+    % example where a page broke at this \penalty; if it happens in a real
+    % document, then we can reconsider our strategy.
+    \penalty9999
+    %
+    % Back up by the size of the box, whether we did a page break or not.
+    \kern -#1\mil
+    %
+    % Do not allow a page break right after this kern.
+    \nobreak
+  \fi
 }
 
 % @br   forces paragraph break
@@ -1083,23 +1089,17 @@ where each line of input produces a line of output.}
 \setfont\deftt\ttshape{10}{\magstep1}
 \def\df{\let\tentt=\deftt \let\tenbf = \defbf \bf}
 
-% Fonts for indices and small examples (9pt).
-% We actually use the slanted font rather than the italic,
-% because texinfo normally uses the slanted fonts for that.
-% Do not make many font distinctions in general in the index, since they
-% aren't very useful.
-\setfont\ninett\ttshape{9}{1000}
-\setfont\ninettsl\ttslshape{10}{900}
-\setfont\indrm\rmshape{9}{1000}
-\setfont\indit\itshape{9}{1000}
-\setfont\indsl\slshape{9}{1000}
-\let\indtt=\ninett
-\let\indttsl=\ninettsl
-\let\indsf=\indrm
-\let\indbf=\indrm
-\setfont\indsc\scshape{10}{900}
-\font\indi=cmmi9
-\font\indsy=cmsy9
+% Fonts for indices, footnotes, small examples (9pt).
+\setfont\smallrm\rmshape{9}{1000}
+\setfont\smalltt\ttshape{9}{1000}
+\setfont\smallbf\bfshape{10}{900}
+\setfont\smallit\itshape{9}{1000}
+\setfont\smallsl\slshape{9}{1000}
+\setfont\smallsf\sfshape{9}{1000}
+\setfont\smallsc\scshape{10}{900}
+\setfont\smallttsl\ttslshape{10}{900}
+\font\smalli=cmmi9
+\font\smallsy=cmsy9
 
 % Fonts for title page:
 \setfont\titlerm\rmbshape{12}{\magstep3}
@@ -1213,11 +1213,12 @@ where each line of input produces a line of output.}
   \let\tensf=\ssecsf \let\teni=\sseci \let\tensy=\ssecsy \let\tenttsl=\ssecttsl
   \resetmathfonts \setleading{15pt}}
 \let\subsubsecfonts = \subsecfonts % Maybe make sssec fonts scaled magstephalf?
-\def\indexfonts{%
-  \let\tenrm=\indrm \let\tenit=\indit \let\tensl=\indsl
-  \let\tenbf=\indbf \let\tentt=\indtt \let\smallcaps=\indsc
-  \let\tensf=\indsf \let\teni=\indi \let\tensy=\indsy \let\tenttsl=\indttsl
-  \resetmathfonts \setleading{12pt}}
+\def\smallfonts{%
+  \let\tenrm=\smallrm \let\tenit=\smallit \let\tensl=\smallsl
+  \let\tenbf=\smallbf \let\tentt=\smalltt \let\smallcaps=\smallsc
+  \let\tensf=\smallsf \let\teni=\smalli \let\tensy=\smallsy
+  \let\tenttsl=\smallttsl
+  \resetmathfonts \setleading{11pt}}
 
 % Set up the default fonts, so we can use them for creating boxes.
 %
@@ -1266,9 +1267,9 @@ where each line of input produces a line of output.}
 }
 \let\ttfont=\t
 \def\samp#1{`\tclose{#1}'\null}
-\setfont\smallrm\rmshape{8}{1000}
-\font\smallsy=cmsy9
-\def\key#1{{\smallrm\textfont2=\smallsy \leavevmode\hbox{%
+\setfont\keyrm\rmshape{8}{1000}
+\font\keysy=cmsy9
+\def\key#1{{\keyrm\textfont2=\keysy \leavevmode\hbox{%
   \raise0.4pt\hbox{\angleleft}\kern-.08em\vtop{%
     \vbox{\hrule\kern-0.4pt
      \hbox{\raise0.4pt\hbox{\vphantom{\angleleft}}#1}}%
@@ -1379,7 +1380,8 @@ where each line of input produces a line of output.}
 % a hypertex \special here.
 %
 \def\uref#1{\douref #1,,,\finish}
-\def\douref#1,#2,#3,#4\finish{%
+\def\douref#1,#2,#3,#4\finish{\begingroup
+  \unsepspaces
   \pdfurl{#1}%
   \setbox0 = \hbox{\ignorespaces #3}%
   \ifdim\wd0 > 0pt
@@ -1397,7 +1399,7 @@ where each line of input produces a line of output.}
     \fi
   \fi
   \endlink
-}
+\endgroup}
 
 % rms does not like angle brackets --karl, 17may97.
 % So now @email is just like @uref, unless we are pdf.
@@ -1405,12 +1407,13 @@ where each line of input produces a line of output.}
 %\def\email#1{\angleleft{\tt #1}\angleright}
 \ifpdf
   \def\email#1{\doemail#1,,\finish}
-  \def\doemail#1,#2,#3\finish{%
+  \def\doemail#1,#2,#3\finish{\begingroup
+    \unsepspaces
     \pdfurl{mailto:#1}%
     \setbox0 = \hbox{\ignorespaces #2}%
     \ifdim\wd0>0pt\unhbox0\else\code{#1}\fi
     \endlink
-  }
+  \endgroup}
 \else
   \let\email=\uref
 \fi
@@ -1538,7 +1541,6 @@ where each line of input produces a line of output.}
 }
 
 \def\finishtitlepage{%
-   \message{FINISH TITLE}
    \vskip4pt \hrule height 2pt width \hsize
    \vskip\titlepagebottomglue
    \finishedtitlepagetrue
@@ -2185,15 +2187,18 @@ where each line of input produces a line of output.}
 % If so, do nothing. If not, give it an appropriate dimension based on
 % current baselineskip.
 \ifdim\multitablelinespace=0pt
+\setbox0=\vbox{X}\global\multitablelinespace=\the\baselineskip
+\global\advance\multitablelinespace by-\ht0
 %% strut to put in table in case some entry doesn't have descenders,
 %% to keep lines equally spaced
 \let\multistrut = \strut
+\else
+%% FIXME: what is \box0 supposed to be?
+\gdef\multistrut{\vrule height\multitablelinespace depth\dp0
+width0pt\relax} \fi
 %% Test to see if parskip is larger than space between lines of
 %% table. If not, do nothing.
 %%        If so, set to same dimension as multitablelinespace.
-\else
-\gdef\multistrut{\vrule height\multitablelinespace depth\dp0
-width0pt\relax} \fi
 \ifdim\multitableparskip>\multitablelinespace
 \global\multitableparskip=\multitablelinespace
 \global\advance\multitableparskip-7pt %% to keep parskip somewhat smaller
@@ -2400,14 +2405,13 @@ width0pt\relax} \fi
     % stuff compared to the main input.
     %
     \nullfont
-    \let\tenrm = \nullfont  \let\tenit = \nullfont  \let\tensl = \nullfont
-    \let\tenbf = \nullfont  \let\tentt = \nullfont  \let\smallcaps = \nullfont
-    \let\tensf = \nullfont
-    % Similarly for index fonts (mostly for their use in
-    % smallexample)
-    \let\indrm = \nullfont  \let\indit = \nullfont  \let\indsl = \nullfont
-    \let\indbf = \nullfont  \let\indtt = \nullfont  \let\indsc = \nullfont
-    \let\indsf = \nullfont
+    \let\tenrm=\nullfont \let\tenit=\nullfont \let\tensl=\nullfont
+    \let\tenbf=\nullfont \let\tentt=\nullfont \let\smallcaps=\nullfont
+    \let\tensf=\nullfont
+    % Similarly for index fonts (mostly for their use in smallexample).
+    \let\smallrm=\nullfont \let\smallit=\nullfont \let\smallsl=\nullfont
+    \let\smallbf=\nullfont \let\smalltt=\nullfont \let\smallsc=\nullfont
+    \let\smallsf=\nullfont
     %
     % Don't complain when characters are missing from the fonts.
     \tracinglostchars = 0
@@ -2784,6 +2788,7 @@ width0pt\relax} \fi
 \let\url=\indexdummyfont
 \let\uref=\indexdummyfont
 \let\env=\indexdummyfont
+\let\acronym=\indexdummyfont
 \let\command=\indexdummyfont
 \let\option=\indexdummyfont
 \let\file=\indexdummyfont
@@ -2937,7 +2942,7 @@ width0pt\relax} \fi
 \def\doprintindex#1{\begingroup
   \dobreak \chapheadingskip{10000}%
   %
-  \indexfonts \rm
+  \smallfonts \rm
   \tolerance = 9500
   \indexbreaks
   %
@@ -3865,10 +3870,14 @@ width0pt\relax} \fi
 % We could simplify the code here by writing out an \appendixentry
 % command in the toc file for appendices, instead of using \chapentry
 % for both, but it doesn't seem worth it.
-\setbox0 = \hbox{\shortcontrm \putwordAppendix }
-\newdimen\shortappendixwidth \shortappendixwidth = \wd0
-
+%
+\newdimen\shortappendixwidth
+%
 \def\shortchaplabel#1{%
+  % Compute width of word "Appendix", may change with language.
+  \setbox0 = \hbox{\shortcontrm \putwordAppendix}%
+  \shortappendixwidth = \wd0
+  %
   % We typeset #1 in a box of constant width, regardless of the text of
   % #1, so the chapter titles will come out aligned.
   \setbox0 = \hbox{#1}%
@@ -4205,7 +4214,7 @@ width0pt\relax} \fi
 \def\smalllispx{\begingroup
   \def\Esmalllisp{\nonfillfinish\endgroup}%
   \def\Esmallexample{\nonfillfinish\endgroup}%
-  \indexfonts
+  \smallfonts
   \lisp
 }
 
@@ -4221,7 +4230,7 @@ width0pt\relax} \fi
 %
 \def\smalldisplayx{\begingroup
   \def\Esmalldisplay{\nonfillfinish\endgroup}%
-  \indexfonts \rm
+  \smallfonts \rm
   \display
 }
 
@@ -4238,7 +4247,7 @@ width0pt\relax} \fi
 %
 \def\smallformatx{\begingroup
   \def\Esmallformat{\nonfillfinish\endgroup}%
-  \indexfonts \rm
+  \smallfonts \rm
   \format
 }
 
@@ -5115,7 +5124,14 @@ width0pt\relax} \fi
 
 
 % @alias.
-\def\alias#1=#2{\gdef#1{#2}}
+% We need some trickery to remove the optional spaces around the equal
+% sign.  Just make them active and then expand them all to nothing.
+\def\alias{\begingroup\obeyspaces\parsearg\aliasxxx}
+\def\aliasxxx #1{\aliasyyy#1\relax}
+\def\aliasyyy #1=#2\relax{\ignoreactivespaces
+\edef\next{\global\let\expandafter\noexpand\csname#1\endcsname=%
+           \expandafter\noexpand\csname#2\endcsname}%
+\expandafter\endgroup\next}
 
 
 \message{cross references,}
@@ -5163,20 +5179,10 @@ width0pt\relax} \fi
 
 % @anchor{NAME} -- define xref target at arbitrary point.
 %
-{ \catcode`\@ = 11
-% From latex.ltx, to make @anchor truely invisible.
-\newdimen\@savsk
-\newcount\@savsf
-\gdef\@bsphack{\relax
-  \ifhmode \@savsk\lastskip \@savsf\spacefactor \fi
-}
-\gdef\@esphack{\relax
-  \ifhmode \spacefactor\@savsf
-    \ifdim\@savsk>\z@ \ignorespaces \fi
-  \fi
-}
-\gdef\anchor#1{\@bsphack \setref{#1}{Ynothing}\@esphack}
-}
+\newcount\savesfregister
+\gdef\savesf{\relax \ifhmode \savesfregister=\spacefactor \fi}
+\gdef\restoresf{\relax \ifhmode \spacefactor=\savesfregister \fi}
+\gdef\anchor#1{\savesf \setref{#1}{Ynothing}\restoresf \ignorespaces}
 
 % \setref{NAME}{SNT} defines a cross-reference point NAME, namely
 % NAME-title, NAME-pg, and NAME-SNT.  Called from \foonoderef.  We have
@@ -5186,7 +5192,7 @@ width0pt\relax} \fi
 %
 \def\setref#1#2{{%
   \indexdummies
-  \pdfmkdest{#1}
+  \pdfmkdest{#1}%
   \dosetq{#1-title}{Ytitle}%
   \dosetq{#1-pg}{Ypagenumber}%
   \dosetq{#1-snt}{#2}%
@@ -5201,6 +5207,7 @@ width0pt\relax} \fi
 \def\xref#1{\putwordSee{} \xrefX[#1,,,,,,,]}
 \def\ref#1{\xrefX[#1,,,,,,,]}
 \def\xrefX[#1,#2,#3,#4,#5,#6]{\begingroup
+  \unsepspaces
   \def\printedmanual{\ignorespaces #5}%
   \def\printednodename{\ignorespaces #3}%
   \setbox1=\hbox{\printedmanual}%
@@ -5503,6 +5510,8 @@ width0pt\relax} \fi
   \xspaceskip\z@skip
   \parindent\defaultparindent
   %
+  \smallfonts \rm
+  %
   % Hang the footnote text off the number.
   \hang
   \textindent{\thisfootno}%
@@ -5517,7 +5526,7 @@ width0pt\relax} \fi
   \else\let\next\f@t\fi \next}
 \def\f@@t{\bgroup\aftergroup\@foot\let\next}
 \def\f@t#1{#1\@foot}
-\def\@foot{\strut\egroup}
+\def\@foot{\strut\par\egroup}
 
 }%end \catcode `\@=11
 
