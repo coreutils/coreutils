@@ -77,7 +77,7 @@ main (int argc, char **argv)
 {
   mode_t newmode;
   mode_t parent_mode;
-  const char *symbolic_mode = NULL;
+  const char *specified_mode = NULL;
   const char *verbose_fmt_string = NULL;
   int errors = 0;
   int optc;
@@ -101,7 +101,7 @@ main (int argc, char **argv)
 	  create_parents = 1;
 	  break;
 	case 'm':
-	  symbolic_mode = optarg;
+	  specified_mode = optarg;
 	  break;
 	case 'v': /* --verbose  */
 	  verbose_fmt_string = _("created directory %s");
@@ -120,12 +120,12 @@ main (int argc, char **argv)
     }
 
   newmode = S_IRWXUGO;
-  if (symbolic_mode)
+  if (specified_mode)
     {
-      struct mode_change *change = mode_compile (symbolic_mode, 0);
+      struct mode_change *change = mode_compile (specified_mode, 0);
       newmode &= ~ umask (0);
       if (change == MODE_INVALID)
-	error (1, 0, _("invalid mode %s"), quote (symbolic_mode));
+	error (1, 0, _("invalid mode %s"), quote (specified_mode));
       else if (change == MODE_MEMORY_EXHAUSTED)
 	xalloc_die ();
       newmode = mode_adjust (newmode, change);
@@ -155,7 +155,7 @@ main (int argc, char **argv)
 	     This extra step is necessary in some cases when the containing
 	     directory has a default ACL.  */
 
-	  if (fail == 0 && symbolic_mode)
+	  if (fail == 0 && specified_mode)
 	    {
 	      fail = chmod (argv[optind], newmode);
 	      if (fail)
