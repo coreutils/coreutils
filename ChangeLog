@@ -1,5 +1,6 @@
 2003-07-23  Jim Meyering  <jim@meyering.net>
 
+
 	* Version 5.0.90.
 
 	Don't include headers already included by system.h:
@@ -10,6 +11,7 @@
 	* src/pr.c: Don't include time.h.
 	* src/pathchk.c: Don't include errno.h.
 	* src/nice.c: Don't include sys/time.h.
+	* src/ls.c: Don't include stdlib.h.
 
 	* tests/rm/fail-2eperm: Add a check for whether $NON_ROOT_USERNAME
 	can access the required version of rm.
