@@ -1990,49 +1990,73 @@ sort_files (void)
 static int
 compare_ctime (const struct fileinfo *file1, const struct fileinfo *file2)
 {
-  return longdiff (file2->stat.st_ctime, file1->stat.st_ctime);
+  int diff = longdiff (file2->stat.st_ctime, file1->stat.st_ctime);
+  if (diff == 0)
+    diff = strcmp (file1->name, file2->name);
+  return diff;
 }
 
 static int
 rev_cmp_ctime (const struct fileinfo *file2, const struct fileinfo *file1)
 {
-  return longdiff (file2->stat.st_ctime, file1->stat.st_ctime);
+  int diff = longdiff (file2->stat.st_ctime, file1->stat.st_ctime);
+  if (diff == 0)
+    diff = strcmp (file1->name, file2->name);
+  return diff;
 }
 
 static int
 compare_mtime (const struct fileinfo *file1, const struct fileinfo *file2)
 {
-  return longdiff (file2->stat.st_mtime, file1->stat.st_mtime);
+  int diff = longdiff (file2->stat.st_mtime, file1->stat.st_mtime);
+  if (diff == 0)
+    diff = strcmp (file1->name, file2->name);
+  return diff;
 }
 
 static int
 rev_cmp_mtime (const struct fileinfo *file2, const struct fileinfo *file1)
 {
-  return longdiff (file2->stat.st_mtime, file1->stat.st_mtime);
+  int diff = longdiff (file2->stat.st_mtime, file1->stat.st_mtime);
+  if (diff == 0)
+    diff = strcmp (file1->name, file2->name);
+  return diff;
 }
 
 static int
 compare_atime (const struct fileinfo *file1, const struct fileinfo *file2)
 {
-  return longdiff (file2->stat.st_atime, file1->stat.st_atime);
+  int diff = longdiff (file2->stat.st_atime, file1->stat.st_atime);
+  if (diff == 0)
+    diff = strcmp (file1->name, file2->name);
+  return diff;
 }
 
 static int
 rev_cmp_atime (const struct fileinfo *file2, const struct fileinfo *file1)
 {
-  return longdiff (file2->stat.st_atime, file1->stat.st_atime);
+  int diff = longdiff (file2->stat.st_atime, file1->stat.st_atime);
+  if (diff == 0)
+    diff = strcmp (file1->name, file2->name);
+  return diff;
 }
 
 static int
 compare_size (const struct fileinfo *file1, const struct fileinfo *file2)
 {
-  return longdiff (file2->stat.st_size, file1->stat.st_size);
+  int diff = longdiff (file2->stat.st_size, file1->stat.st_size);
+  if (diff == 0)
+    diff = strcmp (file1->name, file2->name);
+  return diff;
 }
 
 static int
 rev_cmp_size (const struct fileinfo *file2, const struct fileinfo *file1)
 {
-  return longdiff (file2->stat.st_size, file1->stat.st_size);
+  int diff = longdiff (file2->stat.st_size, file1->stat.st_size);
+  if (diff == 0)
+    diff = strcmp (file1->name, file2->name);
+  return diff;
 }
 
 static int
