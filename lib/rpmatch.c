@@ -74,8 +74,8 @@ rpmatch (response)
   static regex_t yesre, nore;
   int result;
 
-  return ((result = try (response, _("^[yY][[:alpha:]]*"), 1, 0,
+  return ((result = try (response, _("^[yY]"), 1, 0,
 			 &yesexpr, &yesre))
 	  ? result
-	  : try (response, _("^[nN][[:alpha:]]*"), 0, -1, &noexpr, &nore));
+	  : try (response, _("^[nN]"), 0, -1, &noexpr, &nore));
 }
