@@ -166,13 +166,11 @@ describe_change (const char *file, enum Change_status changed,
 
 /* Recursively change the ownership of the files in directory DIR to user-id,
    UID, and group-id, GID, according to the options specified by CHOPT.
-   STATP points to the results of lstat on DIR.
    Return 0 if successful, 1 if errors occurred. */
 
 static int
 change_dir_owner (const char *dir, uid_t uid, gid_t gid,
 		  uid_t old_uid, gid_t old_gid,
-		  const struct stat *statp,
 		  struct Chown_option const *chopt)
 {
   char *name_space, *namep;
@@ -182,7 +180,7 @@ change_dir_owner (const char *dir, uid_t uid, gid_t gid,
   unsigned pathlength;		/* Bytes allocated for `path'. */
   int errors = 0;
 
-  name_space = savedir (dir, statp->st_size);
+  name_space = savedir (dir);
   if (name_space == NULL)
     {
       if (chopt->force_silent == 0)
@@ -360,7 +358,6 @@ change_file_owner (int cmdline_arg, const char *file, uid_t uid, gid_t gid,
     }
 
   if (chopt->recurse && is_directory)
-    errors |= change_dir_owner (file, uid, gid,
-				old_uid, old_gid, &file_stats, chopt);
+    errors |= change_dir_owner (file, uid, gid, old_uid, old_gid, chopt);
   return errors;
 }
