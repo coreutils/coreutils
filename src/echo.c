@@ -65,11 +65,16 @@ usage (int status)
       fputs (_("\
 Echo the STRING(s) to standard output.\n\
 \n\
-  -n              do not output the trailing newline\n\
-  -e              enable interpretation of the backslash-escaped characters\n\
-                    listed below\n\
-  -E              disable interpretation of those sequences in STRINGs\n\
+  -n             do not output the trailing newline\n\
 "), stdout);
+      fputs (_(DEFAULT_ECHO_TO_XPG
+	       ? "\
+  -e             enable interpretation of backslash escapes (default)\n\
+  -E             disable interpretation of backslash escapes\n"
+	       : "\
+  -e             enable interpretation of backslash escapes\n\
+  -E             disable interpretation of backslash escapes (default)\n"),
+	     stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
