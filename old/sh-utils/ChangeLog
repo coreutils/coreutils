@@ -1,6 +1,20 @@
-2002-07-17  Jim Meyering  <meyering@lucent.com>
+2002-07-18  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.13.
+
+	* src/uname.c (main): Test sysctl(...) >= 0, not == 0, since
+	on NetBSD the return value may well be positive.
+	Use one-line aggregate initializations.
+	Use tightly scoped static buffers to avoid warnings about
+	unused variables on some systems.
+
+2002-05-07  Paul Eggert  <eggert@twinsun.com>
+
+	* src/uname.c (UNAME_HARDWARE_PLATFORM, UNAME_PROCESSOR): New macros.
+	(main): Use them, along with sysctl, to support uname -i and uname -p
+	on BSD hosts.
+
+2002-07-17  Jim Meyering  <meyering@lucent.com>
 
 	* src/uptime.c (print_uptime): Restore use of (equivalent, but
 	more readable) `>=' from Bruno's patch.
