@@ -316,7 +316,7 @@ pretty_name (struct File_spec const *f)
 }
 
 static void
-xwrite (int fd, char *const buffer, size_t n_bytes)
+xwrite (int fd, char const *buffer, size_t n_bytes)
 {
   assert (fd == STDOUT_FILENO);
   if (n_bytes > 0 && fwrite (buffer, 1, n_bytes, stdout) == 0)
@@ -349,7 +349,7 @@ static long
 dump_remainder (const char *pretty_filename, int fd, off_t n_bytes)
 {
   char buffer[BUFSIZ];
-  int bytes_read;
+  size_t bytes_read;
   long n_written;
   off_t n_remaining = n_bytes;
 
@@ -358,14 +358,14 @@ dump_remainder (const char *pretty_filename, int fd, off_t n_bytes)
     {
       long n = MIN (n_remaining, (off_t) BUFSIZ);
       bytes_read = safe_read (fd, buffer, n);
-      if (bytes_read <= 0)
+      if (bytes_read == SAFE_READ_ERROR)
+	error (EXIT_FAILURE, errno, "%s", pretty_filename);
+      if (bytes_read == 0)
 	break;
       xwrite (STDOUT_FILENO, buffer, bytes_read);
       n_remaining -= bytes_read;
       n_written += bytes_read;
     }
-  if (bytes_read == -1)
-    error (EXIT_FAILURE, errno, "%s", pretty_filename);
 
   return n_written;
 }
@@ -425,7 +425,7 @@ file_lines (const char *pretty_filename, int fd, long int n_lines,
 	    off_t start_pos, off_t file_length)
 {
   char buffer[BUFSIZ];
-  int bytes_read;
+  size_t bytes_read;
   off_t pos = file_length;
 
   if (n_lines == 0)
@@ -441,7 +441,7 @@ file_lines (const char *pretty_filename, int fd, long int n_lines,
   pos -= bytes_read;
   xlseek (fd, pos, SEEK_SET, pretty_filename);
   bytes_read = safe_read (fd, buffer, bytes_read);
-  if (bytes_read == -1)
+  if (bytes_read == SAFE_READ_ERROR)
     {
       error (0, errno, "%s", pretty_filename);
       return 1;
@@ -453,22 +453,28 @@ file_lines (const char *pretty_filename, int fd, long int n_lines,
 
   do
     {
-      int i;			/* Index into `buffer' for scanning.  */
       /* Scan backward, counting the newlines in this bufferfull.  */
-      for (i = bytes_read - 1; i >= 0; i--)
+
+      size_t n = bytes_read;
+      while (n)
 	{
-	  /* Have we counted the requested number of newlines yet?  */
-	  if (buffer[i] == '\n' && n_lines-- == 0)
+	  char const *nl;
+	  nl = memrchr (buffer, '\n', n);
+	  if (nl == NULL)
+	    break;
+	  n = nl - buffer;
+	  if (n_lines-- == 0)
 	    {
-	      /* If this newline wasn't the last character in the buffer,
-	         print the text after it.  */
-	      if (i != bytes_read - 1)
-		xwrite (STDOUT_FILENO, &buffer[i + 1], bytes_read - (i + 1));
+	      /* If this newline isn't the last character in the buffer,
+	         output the part that is after it.  */
+	      if (n != bytes_read - 1)
+		xwrite (STDOUT_FILENO, nl + 1, bytes_read - (n + 1));
 	      dump_remainder (pretty_filename, fd,
 			      file_length - (pos + bytes_read));
 	      return 0;
 	    }
 	}
+
       /* Not enough newlines in that bufferfull.  */
       if (pos == start_pos)
 	{
@@ -479,14 +485,15 @@ file_lines (const char *pretty_filename, int fd, long int n_lines,
 	}
       pos -= BUFSIZ;
       xlseek (fd, pos, SEEK_SET, pretty_filename);
-    }
-  while ((bytes_read = safe_read (fd, buffer, BUFSIZ)) > 0);
 
-  if (bytes_read == -1)
-    {
-      error (0, errno, "%s", pretty_filename);
-      return 1;
+      bytes_read = safe_read (fd, buffer, BUFSIZ);
+      if (bytes_read == SAFE_READ_ERROR)
+	{
+	  error (0, errno, "%s", pretty_filename);
+	  return 1;
+	}
     }
+  while (bytes_read > 0);
 
   return 0;
 }
@@ -712,23 +719,30 @@ free_cbuffers:
 
 /* Skip N_BYTES characters from the start of pipe FD, and print
    any extra characters that were read beyond that.
-   Return 1 on error, 0 if ok.  */
+   Return 1 on error, 0 if ok, -1 if EOF.  */
 
 static int
 start_bytes (const char *pretty_filename, int fd, off_t n_bytes)
 {
   char buffer[BUFSIZ];
-  int bytes_read = 0;
+  size_t bytes_read = 0;
 
-  while (n_bytes > 0 && (bytes_read = safe_read (fd, buffer, BUFSIZ)) > 0)
-    n_bytes -= bytes_read;
-  if (bytes_read == -1)
+  while (0 < n_bytes)
     {
-      error (0, errno, "%s", pretty_filename);
-      return 1;
+      bytes_read = safe_read (fd, buffer, BUFSIZ);
+      if (bytes_read == 0)
+	return -1;
+      if (bytes_read == SAFE_READ_ERROR)
+	{
+	  error (0, errno, "%s", pretty_filename);
+	  return 1;
+	}
+      n_bytes -= bytes_read;
     }
-  else if (n_bytes < 0)
+
+  if (n_bytes < 0)
     xwrite (STDOUT_FILENO, &buffer[bytes_read + n_bytes], -n_bytes);
+
   return 0;
 }
 
@@ -740,29 +754,27 @@ static int
 start_lines (const char *pretty_filename, int fd, long int n_lines)
 {
   char buffer[BUFSIZ];
-  int bytes_read = 0;
-  int bytes_to_skip = 0;
+  size_t bytes_read = 0;
+  size_t bytes_to_skip = 0;
 
   if (n_lines == 0)
     return 0;
 
-  while (n_lines && (bytes_read = safe_read (fd, buffer, BUFSIZ)) > 0)
+  while (n_lines)
     {
       bytes_to_skip = 0;
+      bytes_read = safe_read (fd, buffer, BUFSIZ);
+      if (bytes_read == 0) /* EOF */
+	return -1;
+      if (bytes_read == SAFE_READ_ERROR) /* error */
+	{
+	  error (0, errno, "%s", pretty_filename);
+	  return 1;
+	}
+
       while (bytes_to_skip < bytes_read)
 	if (buffer[bytes_to_skip++] == '\n' && --n_lines == 0)
 	  break;
-    }
-
-  /* EOF */
-  if (bytes_read == 0)
-    return -1;
-
-  /* error */
-  if (bytes_read == -1)
-    {
-      error (0, errno, "%s", pretty_filename);
-      return 1;
     }
 
   if (bytes_to_skip < bytes_read)
@@ -1059,9 +1071,13 @@ tail_bytes (const char *pretty_filename, int fd, off_t n_bytes)
 	{
 	  xlseek (fd, n_bytes, SEEK_CUR, pretty_filename);
 	}
-      else if (start_bytes (pretty_filename, fd, n_bytes))
+      else
 	{
-	  return 1;
+	  int t;
+	  if ((t = start_bytes (pretty_filename, fd, n_bytes)) < 0)
+	    return 0;
+	  if (t)
+	    return 1;
 	}
       dump_remainder (pretty_filename, fd, COPY_TO_EOF);
     }
