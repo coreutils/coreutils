@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1994, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994, 2000, 2002 Free Software Foundation, Inc.
    NOTE: The canonical source of this file is maintained with the GNU C Library.
    Bugs can be reported to bug-glibc@prep.ai.mit.edu.
 
@@ -20,7 +20,7 @@
 # include <config.h>
 #endif
 
-/* Find the first ocurrence in S of any character in ACCEPT.  */
+/* Find the first occurrence in S of any character in ACCEPT.  */
 char *
 strpbrk (const char *s, const char *accept)
 {
