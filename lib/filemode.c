@@ -48,6 +48,25 @@
 # endif
 #endif
 
+#if !S_IRGRP
+# define S_IRGRP (S_IRUSR >> 3)
+#endif
+#if !S_IWGRP
+# define S_IWGRP (S_IWUSR >> 3)
+#endif
+#if !S_IXGRP
+# define S_IXGRP (S_IXUSR >> 3)
+#endif
+#if !S_IROTH
+# define S_IROTH (S_IRUSR >> 6)
+#endif
+#if !S_IWOTH
+# define S_IWOTH (S_IWUSR >> 6)
+#endif
+#if !S_IXOTH
+# define S_IXOTH (S_IXUSR >> 6)
+#endif
+
 #ifdef STAT_MACROS_BROKEN
 # undef S_ISBLK
 # undef S_ISCHR
@@ -93,22 +112,11 @@
 # define S_ISDOOR(m) (((m) & S_IFMT) == S_IFDOOR)
 #endif
 
-/* Look at read, write, and execute bits in BITS and set
-   flags in CHARS accordingly.  */
-
-static void
-rwx (short unsigned int bits, char *chars)
-{
-  chars[0] = (bits & S_IRUSR) ? 'r' : '-';
-  chars[1] = (bits & S_IWUSR) ? 'w' : '-';
-  chars[2] = (bits & S_IXUSR) ? 'x' : '-';
-}
-
 /* Set the 's' and 't' flags in file attributes string CHARS,
    according to the file mode BITS.  */
 
 static void
-setst (short unsigned int bits, char *chars)
+setst (mode_t bits, char *chars)
 {
 #ifdef S_ISUID
   if (bits & S_ISUID)
@@ -157,7 +165,7 @@ setst (short unsigned int bits, char *chars)
    '?' for any other file type.  */
 
 static char
-ftypelet (long int bits)
+ftypelet (mode_t bits)
 {
 #ifdef S_ISBLK
   if (S_ISBLK (bits))
@@ -216,12 +224,18 @@ ftypelet (long int bits)
    is given as an argument.  */
 
 void
-mode_string (short unsigned int mode, char *str)
+mode_string (mode_t mode, char *str)
 {
-  str[0] = ftypelet ((long) mode);
-  rwx ((mode & 0700) << 0, &str[1]);
-  rwx ((mode & 0070) << 3, &str[4]);
-  rwx ((mode & 0007) << 6, &str[7]);
+  str[0] = ftypelet (mode);
+  str[1] = mode & S_IRUSR ? 'r' : '-';
+  str[2] = mode & S_IWUSR ? 'w' : '-';
+  str[3] = mode & S_IXUSR ? 'x' : '-';
+  str[4] = mode & S_IRGRP ? 'r' : '-';
+  str[5] = mode & S_IWGRP ? 'w' : '-';
+  str[6] = mode & S_IXGRP ? 'x' : '-';
+  str[7] = mode & S_IROTH ? 'r' : '-';
+  str[8] = mode & S_IWOTH ? 'w' : '-';
+  str[9] = mode & S_IXOTH ? 'x' : '-';
   setst (mode, str);
 }
 
