@@ -3,6 +3,11 @@
 PATH=../../../src:$PATH
 tmp=t2-ln.$$
 
+if test "$VERBOSE" = yes; then
+  set -x
+  $LN --version
+fi
+
 test_failure=0
 mkdir $tmp || test_failure=1
 cd $tmp || test_failure=1
@@ -84,6 +89,6 @@ test -f $ld || fail=1
 rm -rf $d $f $ld
 
 cd ..
-rm -rf $tmp
+../../src/rm -rf $tmp
 
 exit $fail
