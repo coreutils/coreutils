@@ -1,5 +1,88 @@
 2004-08-02  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* src/nl.c (TRUE, FALSE): Remove; all uses changed to true, false.
+	(enum number_format): Remove.
+	(FORMAT_RIGHT_NOLZ, FORMAT_RIGHT_LZ, FORMAT_LEFT): Now strings,
+	not enum values.
+	(DEFAULT_SECTION_DELIMITERS): Now an array constant, not a macro.
+	(section_del): Now const.
+	(print_fmt): Remove.
+	(starting_line_number, page_incr, blank_join, line_no,
+	print_lineno, proc_text, main):
+	Use intmax_t for line numbers.
+	(reset_numbers, have_read_stdin, build_type_arg, nl_file, main):
+	Use bool for booleans.
+	(lineno_format): Now a string, not an enum value.
+	(build_print_fmt): Remove.  All calls removed.  This work is
+	now done within print_lineno.
+	(build_type_arg): Use size_t for sizes.
+	(print_lineno): Check for line number overflow.
+	(proc_text, main): Remove unnecessary cast.
+
+	* src/ln.c (symbolic_link, interactive, remove_existing_files,
+	verbose, hard_dir_link, dereference_dest_dir_symlinks,
+	do_link, main): Use bool for booleans.
+
+	* src/ls.c (struct fileinfo, file_interesting,
+	extract_dirs_from_files, color_symlink_as_referent,
+	FILE_OR_LINK_MODE, sort_reverse, print_owner, print_group,
+	numeric_ids, print_block_size, dired, print_with_color,
+	check_symlink_color, print_inode, recursive, immediate_dirs,
+	all_files, really_all_files, qmark_funny_chars,
+	print_dir_name, format_needs_stat, format_needs_type, visit_dir,
+	main, decode_switches, parse_ls_color, print_dir, file_interesting,
+	gobble_file, make_link_path, basename_is_dot_or_dotdot,
+	extract_dirs_from_files, print_long_format):
+	Use bool for booleans.
+	(dir_defaulted): Remove; no longer needed.
+	(main): Use int to count files, since it suffices for argv.
+	Rewrite to avoid need for dir_defaulted.
+	(main, print_dir, gobble_file, get_link_name,
+	xstrcoll):
+	Set exit status to EXIT_SUCCES/EXIT_FAILURE rather than 0/1.
+	(decode_switches): Put back check for ws.ws_col <= SIZE_MAX.
+	Remove unnecessary cast to int.  Use int instead of unsigned
+	int to count from 0 to 1.
+	(get_funky_string, print_type_indicator): Use char for bytes, not int.
+	(make_link_path): Use NULL for null pointers.
+	(quote_name): Use to_uchar instead of cast.
+
+	* src/id.c (use_name, main, print_user, xgetgroups, print_group_list,
+	print_full_info): Use bool for booleans.
+	(problems): Remove, replacing with....
+	(ok): New var (inverted from old sense).
+	(print_user, print_group, print_full_info):
+	Print uids/gids with %lu, not %u.
+	(xgetgroups): Don't run out of memory if getgroups or getugroups
+	returns -1.
+	* src/setuidgid.c (main): Print uids/gids with %lu, not %ld.
+
+	* src/factor.c (wheel_tab): Use unsigned char instead of unsigned
+	int, since it suffices.
+	(factor, print_factors): Use size_t for sizes.
+	(print_factors, do_stdin, main): Use bool for booleans.
+	* src/fold.c (TAB_WIDTH): New macro; use it instead of "8".
+	(fold_file, main): Use bool for booleans.
+	(fold_file, main): Use size_t for sizes.
+	(main): Allow -w options up to SIZE_MAX - TAB_WIDTH - 1, instead
+	of prohibiting widths greater than INT_MAX.
+	* src/head.c (presume_input_pipe, print_headers, have_read_stdin,
+	write_header, elide_tail_bytes_pipe, elide_tail_bytes_file,
+	elide_tail_lines_pipe, elide_tail_lines_seekable,
+	elide_tail_lines_file, head_bytes, head_lines, head, head_file,
+	string_to_integer, main):
+	Use bool for booleans.
+	(main): Rewrite to avoid cast.
+
+	* src/csplit.c (struct line): Use size_t for sizes.
+	(main): Remove unnecessary cast.
+	* src/cut.c (cut_fields): Use to_uchar rather than a cast.
+	* src/cut.c (cut_file, main): Use bool for booleans.
+	* src/date.c (show_date, rfc_format, batch_convert, main): Likewise.
+	* src/env.c (main): Likewise.
+	* src/expr.c (nextarg): Likewise.
+	* src/env.c (main): Remove unused and nonstandard envp arg.
+
 	* src/fmt.c (COST, MAXWORDS): Add a comment describing some of
 	fmt's arbitrary limits.
 	(TRUE, FALSE): Remove; all uses changed to (true, false).
@@ -12,8 +95,9 @@
 	this.  Avoid off-by-one buffer read overrun when line is empty.
 	(flush_paragraph): Don't assume wptr-parabuf is <= INT_MAX.
 	Remove unnecessary casts.
-	* tests/fmt/basic (wide-1, wide-2, bad-suffix): Adjust to above changes.
-	
+	* tests/fmt/basic (wide-1, wide-2, bad-suffix): Adjust to above
+	changes.
+
 	* src/expand.c (convert_entire_line, have_read_stdin, parse_tabstops,
 	next_file, expand, main):
 	Use bool for booleans.
@@ -32,7 +116,7 @@
 	Report an error when input line is too long, instead of silently
 	screwing up.  Do not mishandle tab stops when backspacing left
 	over start of line.
-	
+
 	* src/dircolors.c (have_read_stdin, append_quoted,
 	dc_parse_stream, dc_parse_file, main): Use bool for booleans.
 	(dc_parse_stream): Use enum for state, rather than int.
@@ -44,7 +128,7 @@
 	(translate_buffer): Use to_uchar rather than a cast.
 	(swab_buffer, copy_simple, copy_with_unblock):
 	Use size_t for sizes.
-	
+
 	* src/seq.c (equal_width, valid_format, main): Use bool for booleans.
 	* src/sleep.c (apply_suffix): Likewise.
 	* src/tail.c (struct File_spec, reopen_inaccessible_files, count_lines,
@@ -91,7 +175,7 @@
 	(print_runlevel): Use unsigned char for bytes.
 	(list_entries_who, scan_entries, who): Use size_t for sizes.
 	(main): No need to pass a non-NULL last arg to getopt_long.
-	
+
 	* src/install.c (isdir): Remove decl.
 	(install_file_to_path): Rely on make_path to fail if the destination
 	is not a directory, by passing preserve_existing==true to it.
