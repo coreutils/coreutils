@@ -83,11 +83,14 @@ point number.\n\
     }
   exit (status);
 }
-
-/* FIXME: describe */
+/* Given a floating point value *X, and a suffix character, SUFFIX_CHAR,
+   scale *X by the multiplier implied by SUFFIX_CHAR.  SUFFIX_CHAR may
+   be the NUL byte or `s' to denote seconds, `m' for minutes, `h' for
+   hours, or `d' for days.  If SUFFIX_CHAR is invalid, don't modify *X
+   and return nonzero.  Otherwise return zero.  */
 
 static int
-apply_suffix (double *s, char suffix_char)
+apply_suffix (double *x, char suffix_char)
 {
   unsigned int multiplier;
 
@@ -113,7 +116,7 @@ apply_suffix (double *s, char suffix_char)
   if (multiplier == 0)
     return 1;
 
-  *s *= multiplier;
+  *x *= multiplier;
 
   return 0;
 }
