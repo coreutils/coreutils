@@ -26,10 +26,9 @@ sub is_prime ($)
 
   my $d = 2;
   my $w = 1;
-  my $q;
   while (1)
     {
-      $q = $n / $d;
+      my $q = $n / $d;
       ($n == $q * $d)
         and return 0;
       $d += $w;
