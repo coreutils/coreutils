@@ -31,6 +31,7 @@
 #include "copy.h"
 #include "cp-hash.h"
 #include "dirname.h"
+#include "euidaccess.h"
 #include "error.h"
 #include "full-write.h"
 #include "getpagesize.h"
@@ -78,7 +79,6 @@ struct F_triple
 /* Initial size of the above hash table.  */
 #define DEST_INFO_INITIAL_CAPACITY 61
 
-int euidaccess ();
 int yesno ();
 
 static int copy_internal (const char *src_path, const char *dst_path,
