@@ -1,5 +1,7 @@
 1998-10-17  Jim Meyering  <meyering@ascend.com>
 
+	* Version 4.0-b4.
+
 	* lib/mktime.c: Declare localtime_r if necessary.
 	* lib/strftime.c: Likewise.
 
