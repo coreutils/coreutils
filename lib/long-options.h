@@ -7,4 +7,5 @@
 
 void
   parse_long_options __P ((int _argc, char **_argv, const char *_command_name,
+			   const char *_package,
 			   const char *_version_string, void (*_usage) (int)));
