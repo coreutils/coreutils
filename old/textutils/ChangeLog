@@ -1,6 +1,10 @@
-2002-01-27  Jim Meyering  <meyering@lucent.com>
+2002-01-28  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.21.
+
+	* configure.ac (ALL_LINGUAS): Add the bokmål dialect of Norwegian (nb).
+
+2002-01-27  Jim Meyering  <meyering@lucent.com>
 
 	tail -n +2 would perform an extra read after encountering EOF
 	* src/tail.c (start_lines): Detect EOF, inform caller.
