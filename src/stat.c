@@ -448,7 +448,7 @@ print_stat (char *pformat, char m, char const *filename, void const *data)
       break;
     case 'N':
       strcat (pformat, "s");
-      if ((statbuf->st_mode & S_IFMT) == S_IFLNK)
+      if (S_ISLNK (statbuf->st_mode))
 	{
 	  char *linkname = xreadlink (filename);
 	  if (linkname == NULL)
