@@ -2,6 +2,9 @@
 
 	* Version 2.0g.
 
+	* doc/getdate.texi (Calendar date item): Fix typos.
+	From Per Cederqvist.
+
 2000-03-18  Jim Meyering  <meyering@lucent.com>
 
 	* src/uptime.c (print_uptime): Use `buf' only if fgets succeeds.
