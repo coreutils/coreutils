@@ -1,4 +1,6 @@
 Changes in release 3.15:
+* fix a bug in ls that manifested with e.g., LANG=de by eliding the first
+  character of the month name.
 [3.14b]:
 * Using --program-prefix no longer applies the prefix twice
 * ls --color properly restores color attributes upon completion when the
