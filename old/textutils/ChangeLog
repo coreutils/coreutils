@@ -2,6 +2,8 @@
 
 	* Version 2.0.21.
 
+	* tests/head/Test.pm: Tell head to accept old-style options like `-1'.
+
 	* Makefile.cfg (wget_files): Reflect new location of these files.
 
 2002-02-16  Jim Meyering  <meyering@lucent.com>
