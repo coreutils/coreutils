@@ -1,4 +1,4 @@
-#serial 4
+#serial 5
 dnl Closely related to xstrtoimax.m4.  Keep these files in sync.
 
 # autoconf tests required for use of xstrtoumax.c
