@@ -9,4 +9,4 @@ TESTS_ENVIRONMENT = \
   PATH=../../src:$$PATH \
   PROG=tail
 
-TESTS = infloop-1
+TESTS = infloop-1 assert
