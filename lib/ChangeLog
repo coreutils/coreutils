@@ -1,3 +1,19 @@
+2003-09-18  Jim Meyering  <jim@meyering.net>
+
+	This lets translators provide better translations for the
+	`Written by ...' part of --version output.
+	* version-etc.c: Include stdarg.h, stdlib.h, string.h, and xalloc.h.
+	(version_etc): Make this function variadic,
+	with a NULL-terminated list of author name strings.
+	(version_etc_va): New function.
+	Suggestion from Gary V. Vaughan.
+	* version-etc.h (version_etc_va): Declare it.
+
+	* long-options.c: Include stdarg.h.
+	(parse_long_options): Make this function variadic (authors), too.
+	Call version_etc_va, not version_etc.
+	* long-options.h (parse_long_options): Update prototype.
+
 2003-09-16  Paul Eggert  <eggert@twinsun.com>
 
 	* linebuffer.c (readlinebuffer): Return NULL immediately upon
