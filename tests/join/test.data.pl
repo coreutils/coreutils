@@ -9,3 +9,5 @@
 ('2a', '-a1 -e .',  "a\nb\nc\n", "a x y\nb\nc\n", "a x y\nb\nc\n", 0);
 ('2b', '-a1 -e . -o 2.1,2.2,2.3',  "a\nb\nc\n", "a x y\nb\nc\n", "a x y\nb . .\nc . .\n", 0);
 ('2c', '-a1 -e . -o 2.1,2.2,2.3',  "a\nb\nc\nd\n", "a x y\nb\nc\n", "a x y\nb . .\nc . .\nd\n", 0);
+
+('3a', '-t:', "a:1\nb:1\n", "a:2:\nb:2:\n", "a:1:2:\nb:1:2:\n", 0);
