@@ -371,7 +371,6 @@ AD_pop_and_chdir (Dirstack_state *ds)
   /* Get the name of the current directory from the top of the stack.  */
   char *dir = top_dir (ds);
   enum RM_status old_status = AD_stack_top(ds)->status;
-  struct stat sb;
   struct AD_ent *top;
 
   AD_stack_pop (ds);
@@ -384,6 +383,8 @@ AD_pop_and_chdir (Dirstack_state *ds)
   top = AD_stack_top (ds);
   if (1 < AD_stack_height (ds))
     {
+      struct stat sb;
+
       /* We can give a better diagnostic here, since the target is relative. */
       if (chdir (".."))
 	{
@@ -391,24 +392,21 @@ AD_pop_and_chdir (Dirstack_state *ds)
 		 _("cannot chdir from %s to .."),
 		 quote (full_filename (".")));
 	}
+
+      if (lstat (".", &sb))
+	error (EXIT_FAILURE, errno,
+	       _("cannot lstat `.' in %s"), quote (full_filename (".")));
+
+      /*  Ensure that post-chdir dev/ino match the stored ones.  */
+      if ( ! SAME_INODE (sb, top->u.a))
+	error (EXIT_FAILURE, 0,
+	       _("%s changed dev/ino"), quote (full_filename (".")));
     }
   else
     {
       if (restore_cwd (&top->u.saved_cwd))
 	error (EXIT_FAILURE, errno,
 	       _("failed to return to initial working directory"));
-    }
-
-  if (lstat (".", &sb))
-    error (EXIT_FAILURE, errno,
-	   _("cannot lstat `.' in %s"), quote (full_filename (".")));
-
-  if (1 < AD_stack_height (ds))
-    {
-      /*  Ensure that post-chdir dev/ino match the stored ones.  */
-      if ( ! SAME_INODE (sb, top->u.a))
-	error (EXIT_FAILURE, 0,
-	       _("%s changed dev/ino"), quote (full_filename (".")));
     }
 
   return dir;
