@@ -1,6 +1,8 @@
 2003-01-12  Jim Meyering  <jim@meyering.net>
 
 	* ftw.c (ftw_startup): Rename local-shadowing local to pacify gcc.
+	Also work on systems that have `struct direct', using autoconf's
+	AC_HEADER_DIRENT.
 
 	* ftw.h, ftw.c: New files, from glibc/io.
 
