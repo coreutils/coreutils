@@ -297,6 +297,20 @@ leave_dir (FTS *fts, FTSENT *ent)
     }
 }
 
+/* Open the directory DIR if possible, and return a file
+   descriptor.  Return -1 and set errno on failure.  It doesn't matter
+   whether the file descriptor has read or write access.  */
+
+static int
+internal_function
+diropen (char const *dir)
+{
+  int fd = open (dir, O_RDONLY | O_DIRECTORY);
+  if (fd < 0)
+    fd = open (dir, O_WRONLY | O_DIRECTORY);
+  return fd;
+}
+
 FTS *
 fts_open(argv, options, compar)
 	char * const *argv;
@@ -416,7 +430,7 @@ fts_open(argv, options, compar)
 	 * descriptor we run anyway, just more slowly.
 	 */
 	if (!ISSET(FTS_NOCHDIR)
-	    && (sp->fts_rfd = open(".", O_RDONLY, 0)) < 0)
+	    && (sp->fts_rfd = diropen (".")) < 0)
 		SET(FTS_NOCHDIR);
 
 	return (sp);
@@ -554,7 +568,7 @@ fts_read(sp)
 	    (p->fts_info == FTS_SL || p->fts_info == FTS_SLNONE)) {
 		p->fts_info = fts_stat(sp, p, true);
 		if (p->fts_info == FTS_D && !ISSET(FTS_NOCHDIR)) {
-			if ((p->fts_symfd = open(".", O_RDONLY, 0)) < 0) {
+			if ((p->fts_symfd = diropen (".")) < 0) {
 				p->fts_errno = errno;
 				p->fts_info = FTS_ERR;
 			} else
@@ -656,8 +670,7 @@ next:	tmp = p;
 		if (p->fts_instr == FTS_FOLLOW) {
 			p->fts_info = fts_stat(sp, p, true);
 			if (p->fts_info == FTS_D && !ISSET(FTS_NOCHDIR)) {
-				if ((p->fts_symfd =
-				    open(".", O_RDONLY, 0)) < 0) {
+				if ((p->fts_symfd = diropen (".")) < 0) {
 					p->fts_errno = errno;
 					p->fts_info = FTS_ERR;
 				} else
@@ -802,7 +815,7 @@ fts_children(sp, instr)
 	    ISSET(FTS_NOCHDIR))
 		return (sp->fts_child = fts_build(sp, instr));
 
-	if ((fd = open(".", O_RDONLY, 0)) < 0)
+	if ((fd = diropen (".")) < 0)
 		return (sp->fts_child = NULL);
 	sp->fts_child = fts_build(sp, instr);
 	if (fchdir(fd)) {
@@ -1387,7 +1400,7 @@ fts_maxarglen(argv)
 }
 
 /*
- * Change to dir specified by fd or p->fts_accpath without getting
+ * Change to dir specified by fd or path without getting
  * tricked by someone changing the world out from underneath us.
  * Assumes p->fts_dev and p->fts_ino are filled in.
  */
@@ -1405,7 +1418,7 @@ fts_safe_changedir(sp, p, fd, path)
 	newfd = fd;
 	if (ISSET(FTS_NOCHDIR))
 		return (0);
-	if (fd < 0 && (newfd = open(path, O_RDONLY, 0)) < 0)
+	if (fd < 0 && (newfd = diropen (path)) < 0)
 		return (-1);
 	if (fstat(newfd, &sb)) {
 		ret = -1;
