@@ -1,5 +1,5 @@
 /* mountlist.h -- declarations for list of mounted filesystems
-   Copyright (C) 1991, 1992, 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1992, 1998, 2000, 2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -38,13 +38,19 @@ struct mount_entry
 struct mount_entry *read_filesystem_list PARAMS ((int need_fs_type));
 
 #ifndef ME_DUMMY
-# define ME_DUMMY(fs_name, fs_type) \
-    (!strcmp (fs_type, "auto") \
-     || !strcmp (fs_type, "autofs") \
+# define ME_DUMMY(Fs_name, Fs_type) \
+    (!strcmp (Fs_type, "auto") \
+     || !strcmp (Fs_type, "autofs") \
      /* for Irix 6.5 */ \
-     || !strcmp (fs_type, "ignore"))
+     || !strcmp (Fs_type, "ignore"))
 #endif
 
 #ifndef ME_REMOTE
-# define ME_REMOTE(fs_name, fs_type) (strchr (fs_name, ':') != 0)
+/* A file system is `remote' if its Fs_name contains a `:'
+   or if (it is of type smbfs and its Fs_name starts with `//').  */
+# define ME_REMOTE(Fs_name, Fs_type)	\
+    (strchr ((Fs_name), ':') != 0	\
+     || ((Fs_name)[0] == '/'		\
+	 && (Fs_name)[1] == '/'		\
+	 && STREQ (Fs_type, "smbfs")))
 #endif
