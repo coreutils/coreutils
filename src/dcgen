@@ -1,10 +1,6 @@
 #!/usr/bin/perl -w
-# -*- perl -*-
+# dcgen -- convert dircolors.hin to dircolors.h.
 
-eval 'exec /p/bin/perl -S $0 ${1+"$@"}'
-    if 0;
-
-# dcgen -- generate C declarations of arrays of lines and line lengths
 # Copyright (C) 1996, 1998, 2004, 2005 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
@@ -24,40 +20,37 @@ eval 'exec /p/bin/perl -S $0 ${1+"$@"}'
 
 # written by Jim Meyering
 
-# If you uncomment the following lines, you should also do
-# s/chop/chomp and s/local/my/.
-#require 5.002;
-#use strict;
+require 5.002;
+use strict;
+(my $ME = $0) =~ s|.*/||;
 
-# Convert an arbitrary file to dcl of two arrays.
-# One of lines, the other of lengths.
+# A global destructor to close standard output with error checking.
+sub END
+{
+  defined fileno STDOUT
+    or return;
+  close STDOUT
+    and return;
+  warn "$ME: closing standard output: $!\n";
+  $? ||= 1;
+}
 
-local $prefix = 'G_';
-
-local @line;
+my @line;
 while (<>)
   {
-    chop;
+    chomp;
     s/[[:blank:]]*#.*//;
     s/[[:blank:]]+/ /g;
-    if ($_)
-      {
-	push (@line, $_);
-      }
+    $_
+      and push @line, $_;
   }
 
-local $indent = '  ';
+my $last_line = pop @line;
+my $indent = '  ';
 
-print "static char const ${prefix}line[] =\n";
-while (1)
+print "static char const G_line[] =\n";
+foreach (@line)
   {
-    $_ = shift (@line);
-    if (!@line)
-      {
-	print "$indent\"$_\";\n";
-	last;
-      }
     print "$indent\"$_\\0\"\n";
   }
-
-exit (0);
+print "$indent\"$last_line\";\n";
