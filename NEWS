@@ -1,11 +1,16 @@
 [4.5.8]
+* du accepts new option: --apparent-size
+* du --bytes (-b) works the same way it did in fileutils-3.16 and before
+* du reports proper sizes for directories (not zero) (broken in 4.5.6 or 4.5.7)
 * df now always displays under `Filesystem', the device file name
   corresponding to the listed mount point.  Before, for a block- or character-
   special file command line argument, df would display that argument.  E.g.,
   `df /dev/hda' would list `/dev/hda' as the `Filesystem', rather than say
   /dev/hda3 (the device on which `/' is mounted), as it does now.
-* du can now process much deeper hierarchies (subject to virtual memory).
-  Before, it would segfault on hierarchies deeper than 20,000-30,000 levels.
+* du can now process much deeper hierarchies on some systems (subject to
+  mmap support, size of virtual memory, etc.).  Before, it would segfault
+  on hierarchies deeper than 20,000-30,000 levels due to stack limitation
+  and excessive recursion.
 * test now works properly when invoked from a set user ID or set group ID
   context and when testing access to files subject to alternate protection
   mechanisms.  For example, without this change, a set-UID program that invoked
