@@ -1,3 +1,9 @@
+Changes in release 4.1:
+[4.1-b1]
+* fix `ls -R .' formatting bug that broke mktexlsr
+* moving a directory into itself is properly diagnosed in more cases
+* moving a directory containing hard-linked files now works
+
 Changes in release 4.0:
 [4.0-b7]
 * rm -rf '' no longer gets a failed assertion on the Hurd
