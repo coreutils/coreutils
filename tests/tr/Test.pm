@@ -103,6 +103,12 @@ my @tv = (
 ['empty-eq', q|'[==]' x|,		'', '', 1],
 ['empty-cc', q|'[::]' x|,		'', '', 1],
 
+# Weird repeat counts.
+['repeat-bs-9',          q|abc '[b*\9]'|, 'abcd', '[b*d', 0],
+['repeat-0',             q|abc '[b*0]'|, 'abcd', 'bbbd', 0],
+['repeat-000',           q|abc '[b*00000000000000000000]'|, 'abcd', 'bbbd', 0],
+['repeat-compl', '-c ' . q|'[a*65536]\n' '[b*]'|, 'abcd', 'abbb', 0],
+
 );
 
 sub test_vector
