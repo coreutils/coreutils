@@ -34,6 +34,7 @@
 #include "hard-locale.h"
 #include "human.h"
 #include "memcoll.h"
+#include "physmem.h"
 #include "xalloc.h"
 #include "xstrtol.h"
 
@@ -57,6 +58,7 @@ double strtod ();
 #endif
 
 /* Undefine, to avoid warning about redefinition on some systems.  */
+/* FIXME: Remove these: use MIN/MAX from sys2.h.  */
 #undef min
 #define min(a, b) ((a) < (b) ? (a) : (b))
 #undef max
@@ -215,20 +217,18 @@ static MONTHTAB_CONST struct month monthtab[] =
 /* During the merge phase, the number of files to merge at once. */
 #define NMERGE 16
 
-/* Initial buffer size for in-core sorting.  The buffer will grow only
-   if a line longer than this is seen. */
-#define SORTALLOC (8 * 1024 * 1024)
-static size_t const sortalloc = SORTALLOC;
+/* Minimum text buffer size.  */
+#define SORTALLOC_MIN (4 * NMERGE * sizeof (struct line))
 
-/* Initial buffer size for in core merge buffers.  Bear in mind that
-   up to NMERGE * mergealloc bytes may be allocated for merge buffers. */
-static size_t const mergealloc = SORTALLOC / NMERGE / 2;
+/* Minimum text buffer size if the user does not specify a size.  */
+#define SORTALLOC_DEFAULT_MIN max (SORTALLOC_MIN, 1024 * 1024)
+
+/* Initial text buffer size for main-memory sorting.  The buffer will
+   grow only if a line longer than this is seen.  */
+static size_t sortalloc;
 
 /* Guess of average line length. */
 static size_t const linelength = 30;
-
-/* Maximum number of elements for the array(s) of struct line's, in bytes.  */
-#define LINEALLOC (SORTALLOC / 2)
 
 /* Array of directory names in which any temporary files are to be created. */
 static char const **temp_dirs;
@@ -298,6 +298,7 @@ Write sorted concatenation of all FILE(s) to standard output.\n\
   -o FILE          write result on FILE instead of standard output\n\
   -r               reverse the result of comparisons\n\
   -s               stabilize sort by disabling last resort comparison\n\
+  -S SIZE          use SIZE for main memory sorting\n\
   -t SEP           use SEParator instead of non- to whitespace transition\n\
   -T DIRECTORY     use DIRECTORY for temporary files, not $TMPDIR or %s\n\
 		     multiple -T options specify multiple directories\n\
@@ -314,7 +315,12 @@ POS is F[.C][OPTS], where F is the field number and C the character position\n\
 in the field, both counted from one with -k, from zero with the obsolescent\n\
 form.  OPTS is made up of one or more of Mbdfinr; this effectively disables\n\
 global -Mbdfinr settings for that key.  If no key is given, use the entire\n\
-line as the key.  With no FILE, or when FILE is -, read standard input.\n\
+line as the key.\n\
+\n\
+SIZE may be followed by the following multiplicative suffixes:\n\
+%% 1%% of memory, b 1, k 1024 (default), and so on for M, G, T, P, E, Z, Y.\n\
+\n\
+With no FILE, or when FILE is -, read standard input.\n\
 \n\
 *** WARNING ***\n\
 The locale specified by the environment affects sort order.\n\
@@ -558,6 +564,79 @@ inittables (void)
 #endif /* NLS */
 }
 
+/* Specify the amount of main memory to use when sorting.  */
+static void
+specify_sort_size (char const *s)
+{
+  uintmax_t n;
+  char *suffix;
+  enum strtol_error e = xstrtoumax (s, &suffix, 10, &n, "EgGkmMPtTYZ");
+
+  /* The default unit is kB.  */
+  if (e == LONGINT_OK && ISDIGIT (suffix[-1]))
+    {
+      if (n <= UINTMAX_MAX / 1024)
+	n *= 1024;
+      else
+	e = LONGINT_OVERFLOW;
+    }
+
+  /* A 'b' suffix means bytes; a '%' suffix means percent of memory.  */
+  if (e == LONGINT_INVALID_SUFFIX_CHAR && ISDIGIT (suffix[-1]) && ! suffix[1])
+    switch (suffix[0])
+    {
+    case 'b':
+      e = LONGINT_OK;
+      break;
+
+    case '%':
+      {
+	double mem = physmem_total () * n / 100;
+
+	/* Use "<", not "<=", to avoid problems with rounding.  */
+	if (mem < UINTMAX_MAX)
+	  {
+	    n = mem;
+	    e = LONGINT_OK;
+	  }
+	else
+	  e = LONGINT_OVERFLOW;
+      }
+      break;
+    }
+
+  if (e == LONGINT_OK)
+    {
+      /* Normally a buffer is allocated with sortalloc bytes, and a
+	 line table with at most sortalloc / 2 bytes.  So adjust the
+	 size so that size * 1.5 is about n.  */
+      sortalloc = (n / 3) * 2;
+      if (sortalloc == (n / 3) * 2)
+	{
+	  if (sortalloc < SORTALLOC_MIN)
+	    sortalloc = SORTALLOC_MIN;
+	  return;
+	}
+
+      e = LONGINT_OVERFLOW;
+    }
+
+  STRTOL_FATAL_ERROR (s, _("sort size"), e);
+}
+
+/* Set the sort size to the default.  */
+static void
+default_sort_size (void)
+{
+  /* Set sortalloc to 50% of available memory, unless it overflows.  */
+  double mem = physmem_available ();
+  sortalloc = min (mem, SIZE_MAX);
+  sortalloc >>= 1;
+
+  if (sortalloc < SORTALLOC_DEFAULT_MIN)
+    sortalloc = SORTALLOC_DEFAULT_MIN;
+}
+
 /* Initialize BUF, allocating ALLOC bytes initially. */
 
 static void
@@ -631,6 +710,8 @@ fillbuf (struct buffer *buf, FILE *fp)
 static void
 initlines (struct lines *lines, size_t alloc, size_t limit)
 {
+  if (limit < alloc)
+    alloc = limit;
   lines->alloc = alloc;
   if (SIZE_MAX / sizeof (struct line) < alloc)
     xalloc_die ();
@@ -806,7 +887,7 @@ findlines (struct buffer *buf, struct lines *lines)
 
       if (lines->used == lines->alloc)
 	{
-	  lines->alloc *= 2;
+	  lines->alloc = min (2 * lines->alloc, lines->limit);
 	  if (SIZE_MAX / sizeof (struct line) < lines->alloc)
 	    xalloc_die ();
 	  lines->lines = (struct line *)
@@ -1360,10 +1441,11 @@ checkfp (FILE *fp, const char *file_name)
   struct line *disorder_line IF_LINT (= NULL);
   uintmax_t disorder_line_number = 0;
   struct keyfield *key = keylist;
+  size_t mergealloc = sortalloc / (2 * NMERGE);
 
   initbuf (&buf, mergealloc);
   initlines (&lines, mergealloc / linelength + 1,
-	     LINEALLOC / ((NMERGE + NMERGE) * sizeof (struct line)));
+	     sortalloc / (4 * NMERGE * sizeof (struct line)));
   alloc = linelength;
   temp.text = xmalloc (alloc);
 
@@ -1460,6 +1542,7 @@ mergefps (FILE **fps, register int nfps, FILE *ofp, const char *output_file)
   struct line saved;		/* Saved line storage for unique check. */
   struct line const *savedline IF_LINT (= NULL);
 				/* &saved if there is a saved line. */
+  size_t mergealloc = sortalloc / (2 * NMERGE);
   size_t savealloc IF_LINT (= 0); /* Size allocated for the saved line. */
   size_t cur[NMERGE];		/* Current line in each line table. */
   int ord[NMERGE];		/* Table representing a permutation of fps,
@@ -1494,7 +1577,7 @@ mergefps (FILE **fps, register int nfps, FILE *ofp, const char *output_file)
       else
 	{
 	  initlines (&lines[i], mergealloc / linelength + 1,
-		     LINEALLOC / ((NMERGE + NMERGE) * sizeof (struct line)));
+		     sortalloc / (4 * NMERGE * sizeof (struct line)));
 	  findlines (&buffer[i], &lines[i]);
 	  cur[i] = 0;
 	}
@@ -1721,7 +1804,7 @@ sort (char **files, int nfiles, FILE *ofp, const char *output_file)
 
   initbuf (&buf, sortalloc);
   initlines (&lines, sortalloc / linelength + 1,
-	     LINEALLOC / sizeof (struct line));
+	     sortalloc / (2 * sizeof (struct line)));
 
   while (nfiles--)
     {
@@ -2181,6 +2264,15 @@ but lacks following character offset"));
 		  case 's':
 		    stable = 1;
 		    break;
+		  case 'S':
+		    if (s[1])
+		      specify_sort_size (++s);
+		    else if (i < argc - 1)
+		      specify_sort_size (argv[++i]);
+		    else
+		      error (SORT_FAILURE, 0,
+			     _("option `-S' requires an argument"));
+		    goto outer;
 		  case 't':
 		    if (s[1])
 		      tab = *++s;
@@ -2268,6 +2360,9 @@ but lacks following character offset"));
       nfiles = 1;
       files = &minus;
     }
+
+  if (sortalloc == 0)
+    default_sort_size ();
 
   if (checkonly)
     {
