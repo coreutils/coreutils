@@ -1,5 +1,5 @@
 /* fold -- wrap each input line to fit in specified width.
-   Copyright (C) 91, 1995-2004 Free Software Foundation, Inc.
+   Copyright (C) 91, 1995-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -123,7 +123,7 @@ static bool
 fold_file (char *filename, size_t width)
 {
   FILE *istream;
-  register int c;
+  int c;
   size_t column = 0;		/* Screen column where next char will go. */
   size_t offset_out = 0;	/* Index in `line_out' for next char. */
   static char *line_out = NULL;

@@ -1,5 +1,5 @@
 /* GNU fmt -- simple text formatter.
-   Copyright (C) 1994-2004 Free Software Foundation, Inc.
+   Copyright (C) 1994-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -318,7 +318,7 @@ static const struct option long_options[] =
 };
 
 int
-main (register int argc, register char **argv)
+main (int argc, char **argv)
 {
   int optchar;
   bool ok = true;
@@ -443,9 +443,9 @@ main (register int argc, register char **argv)
    and record the lengths of the prefix and the space trimmed.  */
 
 static void
-set_prefix (register char *p)
+set_prefix (char *p)
 {
-  register char *s;
+  char *s;
 
   prefix_lead_space = 0;
   while (*p == ' ')
@@ -528,7 +528,7 @@ set_other_indent (bool same_paragraph)
 static bool
 get_paragraph (FILE *f)
 {
-  register int c;
+  int c;
 
   last_line_length = 0;
   c = next_char;
@@ -602,9 +602,9 @@ get_paragraph (FILE *f)
    Return the character (\n or EOF) ending the line.  */
 
 static int
-copy_rest (FILE *f, register int c)
+copy_rest (FILE *f, int c)
 {
-  register const char *s;
+  const char *s;
 
   out_column = 0;
   if (in_column > next_prefix_indent && c != '\n' && c != EOF)
@@ -627,7 +627,7 @@ copy_rest (FILE *f, register int c)
    otherwise false.  */
 
 static bool
-same_para (register int c)
+same_para (int c)
 {
   return (next_prefix_indent == prefix_indent
 	  && in_column >= next_prefix_indent + prefix_full_length
@@ -643,11 +643,11 @@ same_para (register int c)
    Return the first non-blank character of the next line.  */
 
 static int
-get_line (FILE *f, register int c)
+get_line (FILE *f, int c)
 {
   int start;
-  register char *end_of_parabuf;
-  register WORD *end_of_word;
+  char *end_of_parabuf;
+  WORD *end_of_word;
 
   end_of_parabuf = &parabuf[MAXCHARS];
   end_of_word = &word[MAXWORDS - 2];
@@ -701,7 +701,7 @@ get_line (FILE *f, register int c)
 static int
 get_prefix (FILE *f)
 {
-  register int c;
+  int c;
 
   in_column = 0;
   c = get_space (f, getc (f));
@@ -729,7 +729,7 @@ get_prefix (FILE *f)
    in_column up-to-date.  Return first non-blank character.  */
 
 static int
-get_space (FILE *f, register int c)
+get_space (FILE *f, int c)
 {
   for (;;)
     {
@@ -749,7 +749,7 @@ get_space (FILE *f, register int c)
 /* Set extra fields in word W describing any attached punctuation.  */
 
 static void
-check_punctuation (register WORD *w)
+check_punctuation (WORD *w)
 {
   char const *start = w->text;
   char const *finish = start + (w->length - 1);
@@ -769,7 +769,7 @@ static void
 flush_paragraph (void)
 {
   WORD *split_point;
-  register WORD *w;
+  WORD *w;
   int shift;
   COST best_break;
 
@@ -832,9 +832,9 @@ flush_paragraph (void)
 static void
 fmt_paragraph (void)
 {
-  register WORD *start, *w;
-  register int len;
-  register COST wcost, best;
+  WORD *start, *w;
+  int len;
+  COST wcost, best;
   int saved_length;
 
   word_limit->best_cost = 0;
@@ -886,9 +886,9 @@ fmt_paragraph (void)
    word THIS.  */
 
 static COST
-base_cost (register WORD *this)
+base_cost (WORD *this)
 {
-  register COST cost;
+  COST cost;
 
   cost = LINE_COST;
 
@@ -919,10 +919,10 @@ base_cost (register WORD *this)
    depends on LEN, the length of the line beginning there.  */
 
 static COST
-line_cost (register WORD *next, register int len)
+line_cost (WORD *next, int len)
 {
-  register int n;
-  register COST cost;
+  int n;
+  COST cost;
 
   if (next == word_limit)
     return 0;
@@ -940,9 +940,9 @@ line_cost (register WORD *next, register int len)
    FINISH, which must be in the next_break chain from word.  */
 
 static void
-put_paragraph (register WORD *finish)
+put_paragraph (WORD *finish)
 {
-  register WORD *w;
+  WORD *w;
 
   put_line (word, first_indent);
   for (w = word->next_break; w != finish; w = w->next_break)
@@ -953,9 +953,9 @@ put_paragraph (register WORD *finish)
    INDENT, including the prefix (if any).  */
 
 static void
-put_line (register WORD *w, int indent)
+put_line (WORD *w, int indent)
 {
-  register WORD *endline;
+  WORD *endline;
 
   out_column = 0;
   put_space (prefix_indent);
@@ -977,10 +977,10 @@ put_line (register WORD *w, int indent)
 /* Output to stdout the word W.  */
 
 static void
-put_word (register WORD *w)
+put_word (WORD *w)
 {
-  register const char *s;
-  register int n;
+  const char *s;
+  int n;
 
   s = w->text;
   for (n = w->length; n != 0; n--)
@@ -993,7 +993,7 @@ put_word (register WORD *w)
 static void
 put_space (int space)
 {
-  register int space_target, tab_target;
+  int space_target, tab_target;
 
   space_target = out_column + space;
   if (tabs)

@@ -1,5 +1,5 @@
 /* cksum -- calculate and print POSIX checksums and sizes of files
-   Copyright (C) 92, 1995-2004 Free Software Foundation, Inc.
+   Copyright (C) 92, 1995-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -191,7 +191,7 @@ cksum (const char *file, bool print_name)
   uint_fast32_t crc = 0;
   uintmax_t length = 0;
   size_t bytes_read;
-  register FILE *fp;
+  FILE *fp;
   char length_buf[INT_BUFSIZE_BOUND (uintmax_t)];
   char const *hp;
 

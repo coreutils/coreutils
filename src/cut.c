@@ -1,5 +1,5 @@
 /* cut - remove parts of lines of files
-   Copyright (C) 1997-2004 Free Software Foundation, Inc.
+   Copyright (C) 1997-2005 Free Software Foundation, Inc.
    Copyright (C) 1984 David M. Ihnat
 
    This program is free software; you can redistribute it and/or modify
@@ -537,7 +537,7 @@ cut_bytes (FILE *stream)
   print_delimiter = false;
   while (1)
     {
-      register int c;		/* Each character from the file. */
+      int c;		/* Each character from the file. */
 
       c = getc (stream);
 
