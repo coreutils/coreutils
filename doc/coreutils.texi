@@ -5583,6 +5583,17 @@ Use the @option{--recursive} (@option{-R}) option instead if you want
 to copy special files, preserving their special nature
 rather than reading from them to copy their contents.
 
+@itemx @w{@kbd{--reply}[=@var{how}]}
+@opindex --reply
+@cindex interactivity
+Using @option{--reply=yes} makes @code{cp} act as if @samp{yes} were
+given as a response to every prompt about a destination file.  That effectively
+cancels any preceding @option{--interactive} or @option{-i} option.
+Specify @option{--reply=no} to make @code{cp} act as if @samp{no} were
+given as a response to every prompt about a destination file.
+Specify @option{--reply=query} to make @code{cp} prompt the user
+about each existing destination file.
+
 @item -R
 @itemx --recursive
 @opindex -R
