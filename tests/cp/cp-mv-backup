@@ -1,19 +1,94 @@
 #!/bin/sh
 
+if test "$VERBOSE" = yes; then
+  set -x
+  cp --version
+fi
+
+LANGUAGE=C; export LANGUAGE
+LANG=C; export LANG
+
 umask 022
 
-rm -f out
+pwd=`pwd`
+actual=actual-$$
+expected=expected-$$
+dir=dir-$$
+trap "cd $pwd; rm -rf $actual $expected $dir" 0 1 2 3 15
+
+mkdir $dir
+unset VERSION_CONTROL SIMPLE_BACKUP_SUFFIX
+
+if test "${VERSION_CONTROL+set}" = set; then
+  echo '$0: the VERSION_CONTROL envvar is set --' \
+    ' unset it and rerun this test' >&2
+  exit 1;
+fi
+
+if test "${SIMPLE_BACKUP_SUFFIX+set}" = set; then
+  echo '$0: the SIMPLE_BACKUP_SUFFIX envvar is set --' \
+    ' unset it and rerun this test' >&2
+    >&2
+  exit 1;
+fi
+
+exec 1> $actual
 
 fail=0
 for initial_files in 'a' 'a b' 'a b b~' 'a b b.~1~' 'a b b~ b.~1~'; do
-  for opt in existing never nil none numbered off simple t; do
-    touch $initial_files
-    env -i -- cp --backup=$opt a b || fail=1
-    echo $initial_files $opt: `ls a b*` >> out
-    rm -f a b*
+  for opt in none off  numbered t  existing nil  simple never; do
+    ( cd $dir; touch $initial_files )
+      cp --backup=$opt $dir/a $dir/b || fail=1
+    ( cd $dir; echo $initial_files $opt: `ls a b*`; rm -f a b b~ b.~?~ )
   done
 done
 
-# rm -f out
+cat <<\EOF > $expected
+a none: a b
+a off: a b
+a numbered: a b
+a t: a b
+a existing: a b
+a nil: a b
+a simple: a b
+a never: a b
+a b none: a b
+a b off: a b
+a b numbered: a b b.~1~
+a b t: a b b.~1~
+a b existing: a b b~
+a b nil: a b b~
+a b simple: a b b~
+a b never: a b b~
+a b b~ none: a b b~
+a b b~ off: a b b~
+a b b~ numbered: a b b.~1~ b~
+a b b~ t: a b b.~1~ b~
+a b b~ existing: a b b~
+a b b~ nil: a b b~
+a b b~ simple: a b b~
+a b b~ never: a b b~
+a b b.~1~ none: a b b.~1~
+a b b.~1~ off: a b b.~1~
+a b b.~1~ numbered: a b b.~1~ b.~2~
+a b b.~1~ t: a b b.~1~ b.~2~
+a b b.~1~ existing: a b b.~1~ b.~2~
+a b b.~1~ nil: a b b.~1~ b.~2~
+a b b.~1~ simple: a b b.~1~ b~
+a b b.~1~ never: a b b.~1~ b~
+a b b~ b.~1~ none: a b b.~1~ b~
+a b b~ b.~1~ off: a b b.~1~ b~
+a b b~ b.~1~ numbered: a b b.~1~ b.~2~ b~
+a b b~ b.~1~ t: a b b.~1~ b.~2~ b~
+a b b~ b.~1~ existing: a b b.~1~ b.~2~ b~
+a b b~ b.~1~ nil: a b b.~1~ b.~2~ b~
+a b b~ b.~1~ simple: a b b.~1~ b~
+a b b~ b.~1~ never: a b b.~1~ b~
+EOF
+
+# Uncomment this if you see a failure and want to try to diagnose it.
+# diff -u $expected $actual 1>&2
+
+cmp $expected $actual || fail=1
 
 exit $fail
