@@ -1,5 +1,5 @@
 /* xnanosleep.c -- a more convenient interface to nanosleep
-   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -22,15 +22,13 @@
 # include <config.h>
 #endif
 
+#include <limits.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <assert.h>
 #include <errno.h>
 #include <sys/types.h>
 #include <time.h>
-
-#ifndef CHAR_BIT
-# define CHAR_BIT 8
-#endif
 
 /* The extra casts work around common compiler bugs.  */
 #define TYPE_SIGNED(t) (! ((t) 0 < (t) -1))
@@ -49,12 +47,12 @@
 #include "xnanosleep.h"
 
 /* Subtract the `struct timespec' values X and Y by computing X - Y.
-   If the difference is negative or zero, return 0.
-   Otherwise, return 1 and store the difference in DIFF.
+   If the difference is negative or zero, return false.
+   Otherwise, return true and store the difference in DIFF.
    X and Y must have valid ts_nsec values, in the range 0 to 999999999.
    If the difference would overflow, store the maximum possible difference.  */
 
-static int
+static bool
 timespec_subtract (struct timespec *diff,
 		   struct timespec const *x, struct timespec const *y)
 {
@@ -62,7 +60,7 @@ timespec_subtract (struct timespec *diff,
   long int nsec = x->tv_nsec - y->tv_nsec;
 
   if (x->tv_sec < y->tv_sec)
-    return 0;
+    return false;
 
   if (sec < 0)
     {
@@ -71,7 +69,7 @@ timespec_subtract (struct timespec *diff,
       nsec = 999999999;
     }
   else if (sec == 0 && nsec <= 0)
-    return 0;
+    return false;
 
   if (nsec < 0)
     {
@@ -81,7 +79,7 @@ timespec_subtract (struct timespec *diff,
 
   diff->tv_sec = sec;
   diff->tv_nsec = nsec;
-  return 1;
+  return true;
 }
 
 /* Sleep until the time (call it WAKE_UP_TIME) specified as
@@ -94,7 +92,7 @@ timespec_subtract (struct timespec *diff,
 int
 xnanosleep (double seconds)
 {
-  int overflow;
+  bool overflow;
   double ns;
   struct timespec ts_start;
   struct timespec ts_sleep;
