@@ -1,3 +1,8 @@
+1999-01-03  Jim Meyering  <meyering@ascend.com>
+
+	* src/md5sum.c (usage): Remove third program_name argument -- there
+	were only two `%s' in the format string.
+
 1999-01-02  Jim Meyering  <meyering@ascend.com>
 
 	* Version 1.22g.
