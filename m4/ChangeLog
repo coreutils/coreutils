@@ -1,3 +1,11 @@
+2003-01-15  Jim Meyering  <jim@meyering.net>
+
+	* jm-macros.m4: Require AC_FUNC_FTW.
+
+2003-01-12  Jim Meyering  <jim@meyering.net>
+
+	* ftw.m4: New file.
+
 2003-01-11  Jim Meyering  <jim@meyering.net>
 
 	* canonicalize.m4 (AC_FUNC_CANONICALIZE_FILE_NAME): New file and macro.
