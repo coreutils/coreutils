@@ -1,4 +1,7 @@
 [4.5.9]
+* `df /some/mount-point' no longer hangs on a GNU libc system when another
+  hard-mounted NFS file system (preceding /some/mount-point in /proc/mounts)
+  is inaccessible.
 * rm -rf now gives an accurate diagnostic when failing to remove a file
   under certain unusual conditions
 * mv and `cp --preserve=links' now preserve multiple hard links even under
