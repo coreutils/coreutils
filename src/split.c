@@ -76,11 +76,16 @@ static int show_help;
 /* If non-zero, print the version on standard output then exit.  */
 static int show_version;
 
+/* If non-zero, print a diagnostic on standard error just before each
+   output file is opened. */
+static int verbose;
+
 static struct option const longopts[] =
 {
   {"bytes", required_argument, NULL, 'b'},
   {"lines", required_argument, NULL, 'l'},
   {"line-bytes", required_argument, NULL, 'C'},
+  {"verbose", no_argument, NULL, 2},
   {"help", no_argument, &show_help, 1},
   {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
@@ -108,6 +113,8 @@ PREFIX is `x'.  With no INPUT, or when INPUT is -, read standard input.\n\
   -C, --line-bytes=SIZE   put at most SIZE bytes of lines per output file\n\
   -b, --bytes=SIZE        put SIZE bytes per output file\n\
   -l, --lines=NUMBER      put NUMBER lines per output file\n\
+      --verbose           print a diagnostic to standard error just\n\
+			    before each output file is opened\n\
   -NUMBER                 same as -l NUMBER\n\
       --help              display this help and exit\n\
       --version           output version information and exit\n\
@@ -173,6 +180,8 @@ cwrite (int new_file_flag, const char *bp, int bytes)
 	error (1, errno, "%s", outfile);
 
       next_file_name ();
+      if (verbose)
+	fprintf (stderr, _("creating file `%s'\n"), outfile);
       output_desc = open (outfile, O_WRONLY | O_CREAT | O_TRUNC, 0666);
       if (output_desc < 0)
 	error (1, errno, "%s", outfile);
@@ -373,7 +382,7 @@ main (int argc, char **argv)
       int this_optind = optind ? optind : 1;
       long int tmp_long;
 
-      c = getopt_long (argc, argv, "0123456789b:l:C:", longopts, (int *) 0);
+      c = getopt_long (argc, argv, "0123456789vb:l:C:", longopts, (int *) 0);
       if (c == EOF)
 	break;
 
@@ -429,6 +438,10 @@ main (int argc, char **argv)
 	  digits_optind = this_optind;
 	  split_type = type_digits;
 	  accum = accum * 10 + c - '0';
+	  break;
+
+	case 2:
+	  verbose = 1;
 	  break;
 
 	default:
