@@ -1,5 +1,19 @@
 2003-01-04  Jim Meyering  <jim@meyering.net>
 
+	* src/remove.c (struct dirstack_state): Define.
+	To be used in place of these file-scoped globals ...
+	(dir_stack, len_stack, Active_dir): Remove globals.
+	(ds_init, ds_free): New functions.
+	(full_filename): Define.
+	(full_filename_): Rename from full_filename.
+
+	Begin to make AD_* functions more generic.
+	* src/remove.c (AD_push_initial): Don't set status to RM_OK here.
+        (AD_push): Likewise.
+        (AD_INIT_OTHER_MEMBERS): Define.
+        (remove_dir): Define the `status' member manually after each
+        call to AD_push or AD_push_initial.
+
 	* src/Makefile.am (check-misc): New rule, to ensure that no more
 	S_IS* macro definitions sneak into the code.
 	(check): Depend on check-misc.
@@ -55,7 +69,7 @@
 
 2003-01-01  Jim Meyering  <meyering@lucent.com>
 
-	* src/remove.c (cycle_check): Remove function.
+	* src/remove.c (cycle_check, is_power_of_two): Remove functions.
 	Instead, include cycle-check.h and use it.
 
 2002-12-31  Jim Meyering  <meyering@lucent.com>
