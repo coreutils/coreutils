@@ -140,11 +140,11 @@ Tue Apr 23 22:05:35 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 	* lib/Makefile.am (fu_SOURCES): Remove getopt.c and getopt1.c.
 	(EXTRA_DIST): Add getopt.c and getopt1.c
 
-        * configure.in (AC_CHECK_FUNCS): Add lchown.
-        * chgrp.c [HAVE_LCHOWN]: Define chown to lchown.
-        * chown.c [HAVE_LCHOWN]: Likewise.
-        * cp.c [HAVE_LCHOWN]: Likewise.
-        * mv.c [HAVE_LCHOWN]: Likewise.
+	* configure.in (AC_CHECK_FUNCS): Add lchown.
+	* chgrp.c [HAVE_LCHOWN]: Define chown to lchown.
+	* chown.c [HAVE_LCHOWN]: Likewise.
+	* cp.c [HAVE_LCHOWN]: Likewise.
+	* mv.c [HAVE_LCHOWN]: Likewise.
 	Suggested by François Pinard.
 
 	* backupfile.c (find_backup_file_name, max_backup_version,
@@ -279,13 +279,13 @@ Sun Mar 10 22:36:11 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 	Link an nls file.
 	(AC_OUTPUT): Reflect addition of two new directories, intl and po.
 	Create po/Makefile.
-  	From François Pinard.
+	From François Pinard.
 
 Thu Mar  7 20:26:07 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* df.c (main): Tell read_filesystem_list that it should determine
 	file system type when the user specifies --print-type or -T.
- 	From Michael Rendell <michael@cs.mun.ca>.
+	From Michael Rendell <michael@cs.mun.ca>.
 
 Tue Feb 27 23:13:46 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
@@ -314,7 +314,7 @@ Thu Feb 15 23:08:41 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 	destroy the source file.  Before, running the commands
 	cd /tmp; rm -f a a~; : > a; echo A > a~; cp -b -V simple a~ a
 	would leave two zero-length files: a and a~.
- 	Reported by Martin C. Martin <mcm@cs.cmu.edu>.
+	Reported by Martin C. Martin <mcm@cs.cmu.edu>.
 
 Mon Feb 12 23:23:25 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
@@ -515,7 +515,7 @@ Sun Oct 29 06:06:13 1995  Jim Meyering  (meyering@comco.com)
 
 	* touch.c: Change long option name `--file' to `--reference'.
 	Leave --file as an alias, for now.  It will be removed later.
- 	(usage): Reflect option name change.  From Franc,ois Pinard.
+	(usage): Reflect option name change.  From Franc,ois Pinard.
 
 Wed Oct 18 23:09:55 1995  Jim Meyering  (meyering@comco.com)
 
@@ -585,8 +585,8 @@ Sun Oct  1 13:22:36 1995  Jim Meyering  (meyering@comco.com)
 Tue Sep 26 23:05:01 1995  Jim Meyering  (meyering@comco.com)
 
 	* man/Makefile.in (install-data, uninstall): Use sed not basename.
- 	The GNU Coding Standard suggests that only a select set of
- 	relatively standard utilities be used in Makefiles.  basename is
+	The GNU Coding Standard suggests that only a select set of
+	relatively standard utilities be used in Makefiles.  basename is
 	not among them.  Suggested by Ulrich Drepper.
 
 Mon Sep 25 23:12:37 1995  Jim Meyering  <meyering@gremlin.comco.com>
@@ -608,7 +608,7 @@ Mon Aug  7 23:27:54 1995  Jim Meyering  (meyering@comco.com)
 Fri Aug  4 22:11:06 1995  Jim Meyering  (meyering@comco.com)
 
 	* install.c (isnumber): Rename to is_number to avoid conflict with
-  	FreeBSD 2.0.5 macro definition.  Reported by David O'Brien
+	FreeBSD 2.0.5 macro definition.  Reported by David O'Brien
 	(obrien@sea.legent.com).
 
 	* lib/save-cwd.c: New file.
@@ -767,9 +767,9 @@ Mon Feb 20 22:54:39 1995  Jim Meyering  (meyering@comco.com)
 
 Sat Feb 11 07:52:01 1995  Jim Meyering  (meyering@comco.com)
 
-        * configure.in (AC_REPLACE_FUNCS): Add memcmp, memcpy, and memset.
-        (AC_CHECK_FUNCS): Add strchr and strrchr.
-        * lib/Makefile.in (SOURCES): Add memcmp.c, memcpy.c, and memset.c.
+	* configure.in (AC_REPLACE_FUNCS): Add memcmp, memcpy, and memset.
+	(AC_CHECK_FUNCS): Add strchr and strrchr.
+	* lib/Makefile.in (SOURCES): Add memcmp.c, memcpy.c, and memset.c.
 
 	* system.h: Remove index/rindex and bcmp/bcopy/bzero references.
 	Separate errno declaration from STDC_HEADERS.
@@ -780,7 +780,7 @@ Sat Feb 11 07:52:01 1995  Jim Meyering  (meyering@comco.com)
 	* fsusage.c (get_fs_usage, statfs): Use safe_read, and safe_stat
 	rather than bare read and stat.  From Bruno Haible.
 
-        * lib/Makefile.in (DISTFILES): Add error.h.
+	* lib/Makefile.in (DISTFILES): Add error.h.
 
 	* chgrp.c, chmod.c, chown.c, cp-hash.c, cp.c, df.c, du.c, install.c,
 	ln.c, ls.c, mv.c, mvdir.c, rm.c, touch.c: Rename SAFE_STAT and
@@ -830,16 +830,16 @@ Sun Dec  4 14:53:12 1994  Jim Meyering  (meyering@comco.com)
 
 Fri Nov 11 11:15:20 1994  Jim Meyering  (meyering@comco.com)
 
-        * mknod.c (my_strtol): New function.
-        (main): Use it instead of atoi to convert argument strings to
-        major and minor device numbers.  Now, mknod diagnoses invalid
-        device numbers and accepts octal and hexadecimal as well as
-        decimal string arguments.  Ralf Lammers
-        <rlammers@physik.uni-osnabrueck.de> suggested that mknod accept
-        hex device numbers for compatibility with HPUX's mknod program.
+	* mknod.c (my_strtol): New function.
+	(main): Use it instead of atoi to convert argument strings to
+	major and minor device numbers.  Now, mknod diagnoses invalid
+	device numbers and accepts octal and hexadecimal as well as
+	decimal string arguments.  Ralf Lammers
+	<rlammers@physik.uni-osnabrueck.de> suggested that mknod accept
+	hex device numbers for compatibility with HPUX's mknod program.
 
-        * configure.in (AC_REPLACE_FUNCS): Add strtol.
-        * lib/Makefile.in (SOURCES): Add strtol.c.
+	* configure.in (AC_REPLACE_FUNCS): Add strtol.
+	* lib/Makefile.in (SOURCES): Add strtol.c.
 
 Sun Nov 06 00:18:56 1994  Jim Meyering  (meyering@comco.com)
 
