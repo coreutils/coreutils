@@ -18,6 +18,11 @@
 /* written by Jim Meyering */
 
 #include <config.h>
+
+/* Undefine nanosleep here so any prototype is not redefined to be a
+   prototype for rpl_nanosleep. (they'd conflict e.g., on alpha-dec-osf3.2)  */
+#undef nanosleep
+
 #include <stdio.h>
 #include <sys/types.h>
 #include <signal.h>
@@ -58,7 +63,7 @@ my_usleep (const struct timespec *ts_delay)
 /* FIXME: comment */
 
 int
-nanosleep (const struct timespec *requested_delay,
+rpl_nanosleep (const struct timespec *requested_delay,
 	   struct timespec *remaining_delay)
 {
 #ifdef SA_NOCLDSTOP
