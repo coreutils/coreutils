@@ -1,3 +1,8 @@
+2003-09-08  Paul Eggert  <eggert@twinsun.com>
+
+	* utime.c [!HAVE_UTIMES_NULL]: Include <sys/stat.h>, <fcntl.h>.
+	(utime_null): Fix typo: 'st' was sometimes called 'sb'.
+
 2003-09-09  Jim Meyering  <jim@meyering.net>
 
 	* getversion.c: Remove unused file.  Reported by Paul Eggert.
