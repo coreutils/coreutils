@@ -1,3 +1,7 @@
+2000-07-05  Paul Eggert  <eggert@twinsun.com>
+
+	* doc/fileutils.texi: Don't use ` and ' for quoting.
+
 2000-07-01  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.0w.

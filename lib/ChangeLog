@@ -1,3 +1,19 @@
+2000-07-05  Paul Eggert  <eggert@twinsun.com>
+
+	The old behavior of quoting `like this' doesn't look good with
+	newer, ISO-style fonts.  See:
+	http://www.cl.cam.ac.uk/~mgk25/ucs/quotes.html
+
+	Instead, quote "like this" by default.  Let the translator
+	tailor the locale-specific quoting behavior by providing
+	translations for {LEFT QUOTATION MARK} and {RIGHT QUOTATION MARK}.
+
+	* quotearg.c (N_): New macro.
+	(gettext_default): New function.
+	(quotearg_buffer_restyled): Use
+	gettext_default ("{LEFT QUOTATION MARK}", "\"") for left quote, and
+	gettext_default ("{RIGHT QUOTATION MARK}", "\"") for right quote.
+
 2000-07-09  Jim Meyering  <meyering@lucent.com>
 
 	* Most files: Update copyright dates to include 2000.
