@@ -118,6 +118,7 @@ gid_t getgid ();
 #endif
 
 char *base_name ();
+char *dirname ();
 int safe_read ();
 int full_write ();
 int isdir ();
@@ -344,6 +345,7 @@ static int
 install_file_to_path (const char *from, const char *to)
 {
   char *dest_dir;
+  int fail;
 
   dest_dir = dirname (to);
 
@@ -351,12 +353,11 @@ install_file_to_path (const char *from, const char *to)
   if (!STREQ (dest_dir, ".")
       && !isdir (dest_dir))
     {
-      /* FIXME: Note that it's a little kludgey (maybe even dangerous)
-	 that we derive the permissions for parent directories from the
-	 permissions specfied for the file, but since this option is
-	 intended mainly to help installers when the distribution doesn't
-	 provide proper install rules, it's not so bad.
-	 Maybe use something like this instead:
+      /* FIXME: Note that it's a little kludgey (even dangerous) that we
+	 derive the permissions for parent directories from the permissions
+	 specfied for the file, but since this option is intended mainly to
+	 help installers when the distribution doesn't provide proper install
+	 rules, it's not so bad.  Maybe use something like this instead:
 	 int parent_dir_mode = (mode | (S_IRUGO | S_IXUGO)) & (~SPECIAL_BITS);
 	 */
       fail = make_path (dest_dir, mode, mode, owner_id, group_id, 0,
