@@ -4,6 +4,8 @@
 @cindex date input formats
 @findex getdate
 
+First, a quote:
+
 @quotation
 Our units of temporal measurement, from seconds on up to months, are so
 complicated, asymmetrical and disjunctive so as to make coherent mental
