@@ -201,6 +201,9 @@ char *alloca ();
 # define ISGRAPH(c) (IN_CTYPE_DOMAIN (c) && isprint (c) && !isspace (c))
 #endif
 
+/* This is defined in <sys/euc.h> on at least Solaris2.6 systems.  */
+#undef ISPRINT
+
 #define ISPRINT(c) (IN_CTYPE_DOMAIN (c) && isprint (c))
 #define ISALNUM(c) (IN_CTYPE_DOMAIN (c) && isalnum (c))
 #define ISALPHA(c) (IN_CTYPE_DOMAIN (c) && isalpha (c))
