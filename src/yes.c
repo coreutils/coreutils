@@ -71,10 +71,16 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  /* Don't recognize --help or --version if POSIXLY_CORRECT is set.  */
-  if (getenv ("POSIXLY_CORRECT") == NULL)
-    parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-			usage, AUTHORS, (char const *) NULL);
+  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
+		      usage, AUTHORS, (char const *) NULL);
+
+  /* The above handles --help and --version.
+     Since there is no other invocation of getopt, handle `--' here.  */
+  if (1 < argc && STREQ (argv[1], "--"))
+    {
+      --argc;
+      ++argv;
+    }
 
   if (argc == 1)
     {

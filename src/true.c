@@ -56,8 +56,8 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   /* Recognize --help or --version only if it's the only command-line
-     argument and if POSIXLY_CORRECT is not set.  */
-  if (argc == 2 && getenv ("POSIXLY_CORRECT") == NULL)
+     argument.  */
+  if (argc == 2)
     {
       if (STREQ (argv[1], "--help"))
 	usage (EXIT_SUCCESS);
