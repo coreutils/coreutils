@@ -1151,7 +1151,8 @@ wipename (char *oldname, struct Options const *flags)
   int err;
   int dirfd;			/* Try to open directory to sync *it* */
 
-  pfstatus (_("%s: deleting"), oldname);
+  if (flags->verbose)
+    pfstatus (_("%s: deleting"), oldname);
 
   newname = strdup (oldname);	/* This is a malloc */
   if (!newname)
