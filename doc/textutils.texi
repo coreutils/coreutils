@@ -3430,6 +3430,10 @@ Many historically common and even accepted uses of ranges are not
 portable.  For example, on @sc{ebcdic} hosts using the @samp{A-Z}
 range will not do what most would expect because @samp{A} through @samp{Z}
 are not contiguous as they are in @sc{ascii}.
+If you can rely on a @sc{posix} compliant version of @code{tr}, then
+the best way to work around this is to use character classes (see below).
+Otherwise, it is most portable (and most ugly) to enumerate the members
+of the ranges.
 
 @item Repeated characters
 @cindex repeated characters
@@ -3538,6 +3542,9 @@ tr a-z A-Z
 tr '[:lower:]' '[:upper:]'
 @end example
 
+@noindent
+But note that using ranges like @code{a-z} above is not portable.
+
 When @code{tr} is performing translation, @var{set1} and @var{set2}
 typically have the same length.  If @var{set1} is shorter than
 @var{set2}, the extra characters at the end of @var{set2} are ignored.
@@ -3564,6 +3571,14 @@ tr -cs A-Za-z0-9 '\012'
 because it converts only zero bytes (the first element in the
 complement of @var{set1}), rather than all non-alphanumerics, to
 newlines.
+
+@noindent
+By the way, the above idiom is not portable because it uses ranges.
+Assuming a @sc{posix} compliant @code{tr}, here is a better way to write it:
+
+@example
+tr -cs '[:alnum:]' '[\n*]'
+@end example
 
 
 @node Squeezing
@@ -3604,7 +3619,7 @@ non-alphanumeric characters to newlines, then squeezes each string
 of repeated newlines into a single newline:
 
 @example
-tr -cs 'a-zA-Z0-9' '[\n*]'
+tr -cs '[:alnum:]' '[\n*]'
 @end example
 
 @item
