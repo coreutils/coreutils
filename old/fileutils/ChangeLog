@@ -15,6 +15,7 @@
 	Remove workaround macros for hosts that have mbrtowc but not
 	mbstate_t, as we now insist on proper declarations for both
 	before using mbrtowc.
+	Reported by Matt Schalit.
 
 2001-02-17  Jim Meyering  <meyering@lucent.com>
 
