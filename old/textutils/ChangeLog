@@ -1,3 +1,9 @@
+Thu Apr 20 23:09:33 1995  Jim Meyering  (meyering@comco.com)
+
+	* expand.c (add_tabstop): Give correct size when reallocating
+	tab_list buffer.  From Geoff Odhner (geoff@franklin.com).
+	Reproduce with expand --t=`perl -e "print join (',', (1..300));"`.
+
 Tue Apr 18 22:57:43 1995  Jim Meyering  (meyering@comco.com)
 
 	* configure.in: (AC_OUTPUT): Use echo, not date, to avoid creating
