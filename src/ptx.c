@@ -2056,7 +2056,6 @@ Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"),
 	  break;
 
 	case 'w':
-	  line_width = atoi (optarg);
 	  {
 	    unsigned long int tmp_ulong;
 	    if (xstrtoul (optarg, NULL, 0, &tmp_ulong, NULL) != LONGINT_OK
@@ -2066,7 +2065,6 @@ Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"),
 	    line_width = tmp_ulong;
 	    break;
 	  }
-	  break;
 
 	case 'A':
 	  auto_reference = 1;
