@@ -1,8 +1,26 @@
 2000-07-30  Jim Meyering  <meyering@lucent.com>
 
+	* src/df.c: Convert "`%s'" in format strings to "%s", and wrap each
+	corresponding argument in a `quote (...)' call.
+	* src/dircolors.c: Likewise.
+	* src/du.c: Likewise.
+	* src/mkdir.c: Likewise.
+
+	* src/chgrp.c: Convert "`%s'" in format strings to "%s", and wrap each
+	corresponding argument in a `quote (...)' call.
+	Add more precise diagnostics.
+	* src/chmod.c: Likewise.
+	* src/chown.c: Likewise.
+
+	* src/remove.c (remove_cwd_entries): Quote one more file name.
+
 	* src/help-version: Remove file.  Move it to ...
 	* tests/help-version: ...here
 	* tests/Makefile.am (TESTS): Set to help-version.
+	(TESTS_ENVIRONMENT): Define.
+	* src/Makefile.am (EXTRA_DIST): Remove help-version.
+	(TESTS): Remove definition.
+	(TESTS_ENVIRONMENT): Remove definition.
 
 2000-07-24  Bruno Haible  <haible@clisp.cons.org>
 
