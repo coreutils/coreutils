@@ -1,6 +1,10 @@
-2003-06-07  Jim Meyering  <jim@meyering.net>
+2003-06-10  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
+
+	* tests/date/Test.pm: Add a test for the new format, e.g., May-23-2003.
+
+2003-06-07  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.maint (syntax-check): Add commented-out (over-aggressive)
 	rule.
