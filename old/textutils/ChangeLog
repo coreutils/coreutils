@@ -1,5 +1,8 @@
 2000-12-02  Jim Meyering  <meyering@lucent.com>
 
+	* src/sort.c (NONZERO): Define and use it to make the code a tiny
+	bit more readable.
+
 	* doc/textutils.texi (sort invocation): Clarify how -t works
 	when a sort key specifies a range of fields.  From Karl O. Pinc.
 
