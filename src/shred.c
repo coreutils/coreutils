@@ -1126,36 +1126,38 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
 	{
 	  ssize = write (fd, (char *) r + soff, lim - soff);
 	  if (ssize <= 0)
-	    if ((ssize == 0 || errno == EIO || errno == ENOSPC)
-	       	&& size == (off_t)-1)
-	      {
-		/* Ah, we have found the end of the file */
-		*sizep = thresh = size = offset + soff;
-		break;
-	      }
-	    else
-	      {
-		error (0, errno, _("%s: error writing at offset %lu"),
-		       qname, (unsigned long)(offset+soff));
-		/*
-		 * I sometimes use shred on bad media, before throwing it
-		 * out.  Thus, I don't want it to give up on bad blocks.
-		 * This code assumes 512-byte blocks and tries to skip
-		 * over them.  It works because lim is always a multiple
-		 * of 512, except at the end.
-		 */
-		if (errno == EIO && soff % 512 == 0 && lim >= soff+512
-		    && size != (off_t)-1)
-		  {
-		    if (lseek (fd, SEEK_CUR, 512) != (off_t)-1)
-		      {
-			soff += 512;
-			continue;
-		      }
-		    error (0, errno, _("%s: lseek"), qname);
-		  }
-		return -1;
-	      }
+	    {
+	      if ((ssize == 0 || errno == EIO || errno == ENOSPC)
+		  && size == (off_t)-1)
+		{
+		  /* Ah, we have found the end of the file */
+		  *sizep = thresh = size = offset + soff;
+		  break;
+		}
+	      else
+		{
+		  error (0, errno, _("%s: error writing at offset %lu"),
+			 qname, (unsigned long)(offset+soff));
+		  /*
+		   * I sometimes use shred on bad media, before throwing it
+		   * out.  Thus, I don't want it to give up on bad blocks.
+		   * This code assumes 512-byte blocks and tries to skip
+		   * over them.  It works because lim is always a multiple
+		   * of 512, except at the end.
+		   */
+		  if (errno == EIO && soff % 512 == 0 && lim >= soff+512
+		      && size != (off_t)-1)
+		    {
+		      if (lseek (fd, SEEK_CUR, 512) != (off_t)-1)
+			{
+			  soff += 512;
+			  continue;
+			}
+		      error (0, errno, _("%s: lseek"), qname);
+		    }
+		  return -1;
+		}
+	    }
 	}
 
       /* Okay, we have written "lim" bytes. */
@@ -1403,7 +1405,7 @@ do_wipefd (int fd, char const *qname, struct isaac_state *s,
 {
   size_t i;
   struct stat st;
-  off_t size, seedsize;		/* Size to write, size to read */
+  off_t size;			/* Size to write, size to read */
   unsigned long n;		/* Number of passes for printing purposes */
   int *passarray;
 
@@ -1495,7 +1497,7 @@ wipefd (int fd, char const *qname, struct isaac_state *s,
       return -1;
     }
   /* Ugly, but I think it's portable... */
-  if (fd_flags & (O_RDONLY | O_WRONLY | O_RDWR) == O_RDONLY)
+  if ((fd_flags & (O_RDONLY | O_WRONLY | O_RDWR)) == O_RDONLY)
     {
       error (0, 0, _("%s: cannot shred read-only file descriptor"), qname);
       return -1;
