@@ -55,8 +55,7 @@ enum Verbosity
 };
 
 static int change_dir_mode PARAMS ((const char *dir,
-				    const struct mode_change *changes,
-				    const struct stat *statp));
+				    const struct mode_change *changes));
 
 /* The name the program was run with. */
 char *program_name;
@@ -185,18 +184,16 @@ change_file_mode (const char *file, const struct mode_change *changes,
     }
 
   if (recurse && S_ISDIR (file_stats.st_mode))
-    errors |= change_dir_mode (file, changes, &file_stats);
+    errors |= change_dir_mode (file, changes);
   return errors;
 }
 
 /* Recursively change the modes of the files in directory DIR
    according to the list of operations CHANGES.
-   STATP points to the results of lstat on DIR.
    Return 0 if successful, 1 if errors occurred. */
 
 static int
-change_dir_mode (const char *dir, const struct mode_change *changes,
-		 const struct stat *statp)
+change_dir_mode (const char *dir, const struct mode_change *changes)
 {
   char *name_space, *namep;
   char *path;			/* Full path of each entry to process. */
@@ -205,7 +202,7 @@ change_dir_mode (const char *dir, const struct mode_change *changes,
   unsigned pathlength;		/* Bytes allocated for `path'. */
   int errors = 0;
 
-  name_space = savedir (dir, statp->st_size);
+  name_space = savedir (dir);
   if (name_space == NULL)
     {
       if (force_silent == 0)
