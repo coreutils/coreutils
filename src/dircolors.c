@@ -34,6 +34,8 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "dircolors"
 
+#define AUTHORS "H. Peter Anvin"
+
 #define obstack_chunk_alloc malloc
 #define obstack_chunk_free free
 
@@ -446,7 +448,7 @@ main (int argc, char **argv)
 
       case_GETOPT_HELP_CHAR;
 
-      case_GETOPT_VERSION_CHAR (PROGRAM_NAME, "H. Peter Anvin");
+      case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
       default:
 	usage (1);
