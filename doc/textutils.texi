@@ -1695,6 +1695,7 @@ mode:
 @cindex checking for sortedness
 Check whether the given files are already sorted: if they are not all
 sorted, print an error message and exit with a status of 1.
+Otherwise, exit successfully.
 
 @item -m
 @opindex -m
@@ -1727,6 +1728,8 @@ GNU @code{sort} (as specified for all GNU utilities) has no limits on
 input line length or restrictions on bytes allowed within lines.  In
 addition, if the final byte of an input file is not a newline, GNU
 @code{sort} silently supplies one.
+
+Upon any error @code{sort} exits with status of @samp{2}.
 
 @vindex TMPDIR
 If the environment variable @code{TMPDIR} is set, @code{sort} uses its
