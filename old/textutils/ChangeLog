@@ -23,7 +23,7 @@ Thu Oct 31 17:48:24 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 	(add_field): Update assertion.
 
 	* src/tr.c (es_free): New function.
-	(parse_str): Use it to plug small memory leak.
+	(parse_str): Use it to plug a small memory leak.
 
 Wed Oct 23 22:02:24 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
