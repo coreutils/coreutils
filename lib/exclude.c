@@ -35,22 +35,11 @@ extern int errno;
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#if HAVE_INTTYPES_H
-# include <inttypes.h>
-#else
-# if HAVE_STDINT_H
-#  include <stdint.h>
-# endif
-#endif
 
 #include "exclude.h"
 #include "fnmatch.h"
 #include "unlocked-io.h"
 #include "xalloc.h"
-
-#ifndef SIZE_MAX
-# define SIZE_MAX ((size_t) -1)
-#endif
 
 #if STDC_HEADERS || (! defined isascii && ! HAVE_ISASCII)
 # define IN_CTYPE_DOMAIN(c) true
@@ -106,7 +95,7 @@ new_exclude (void)
 {
   struct exclude *ex = xmalloc (sizeof *ex);
   ex->exclude_count = 0;
-  ex->exclude_alloc = (1 << 6); /* This must be a power of 2.  */
+  ex->exclude_alloc = 60;
   ex->exclude = xmalloc (ex->exclude_alloc * sizeof ex->exclude[0]);
   return ex;
 }
@@ -201,11 +190,9 @@ add_exclude (struct exclude *ex, char const *pattern, int options)
 
   if (ex->exclude_alloc <= ex->exclude_count)
     {
-      size_t s = 2 * ex->exclude_alloc;
-      if (! (0 < s && s <= SIZE_MAX / sizeof ex->exclude[0]))
-	xalloc_die ();
-      ex->exclude_alloc = s;
-      ex->exclude = xrealloc (ex->exclude, s * sizeof ex->exclude[0]);
+      ex->exclude = xnrealloc (ex->exclude, ex->exclude_alloc,
+			       2 * sizeof *ex->exclude);
+      ex->exclude_alloc *= 2;
     }
 
   patopts = &ex->exclude[ex->exclude_count++];
@@ -229,7 +216,7 @@ add_exclude_file (void (*add_func) (struct exclude *, char const *, int),
   char *p;
   char const *pattern;
   char const *lim;
-  size_t buf_alloc = (1 << 10);  /* This must be a power of two.  */
+  size_t buf_alloc = 1000;
   size_t buf_count = 0;
   int c;
   int e = 0;
@@ -246,10 +233,8 @@ add_exclude_file (void (*add_func) (struct exclude *, char const *, int),
       buf[buf_count++] = c;
       if (buf_count == buf_alloc)
 	{
+	  buf = xnrealloc (buf, buf_alloc, 2);
 	  buf_alloc *= 2;
-	  if (! buf_alloc)
-	    xalloc_die ();
-	  buf = xrealloc (buf, buf_alloc);
 	}
     }
 
