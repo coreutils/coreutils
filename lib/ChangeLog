@@ -7,7 +7,8 @@
 
 	This avoids a core dump on systems without GNU putenv,
 	when running `env -u SOME_ALREADY_UNSET_VARIABLE'.
-	* putenv.c (unsetenv): New static function, from GNU libc.
+	* putenv.c (__set_errno, LOCK, UNLOCK): Define.
+	(unsetenv): New static function, from GNU libc.
 	(rpl_putenv): Use it.
 
 2003-05-02  Jim Meyering  <jim@meyering.net>
