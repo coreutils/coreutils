@@ -1,5 +1,15 @@
 2000-07-23  Jim Meyering  <meyering@lucent.com>
 
+	* src/remove.c (ASSIGN_STRDUPA): Remove macro definition.
+	* src/sys2.h (ASSIGN_STRDUPA): New macro (moved here from remove.c).
+
+	Fix cp so that `cp -r DIR1/ DIR2' works once again.
+	* src/cp.c (ASSIGN_BASENAME_STRDUPA): New macro.
+	(do_copy): Use it here (so we always strip trailing slashes before
+	calling base_name).
+	Reported by Michael Stone.
+
+	Test for the above fix.
 	* tests/cp/Makefile.am (TESTS): Add dir-slash.
 	* tests/cp/dir-slash: New file.
 
@@ -10,14 +20,13 @@
 	(wget-update): New rule, based on the one in autoconf.
 
 	* src/shred.c (usage): Give a little more info.
-	Remove FIXME comment.
+	Remove a FIXME comment.
 
 	Avoid warnings.
 	* src/ls.c (struct bin_str): Declare `string' member to be `const'.
 	(put_indicator): Declare local `p' to be `const'.
 
 2000-07-15  Jim Meyering  <meyering@lucent.com>
-
 
 	Begin converting "`%s'" in format strings to "%s", and wrap each
 	corresponding argument in a `quote (...)' call -- if there's only one.
