@@ -2,7 +2,7 @@
 # This Makefile fragment is shared between fileutils, sh-utils, textutils,
 # CPPI, Bison, and Autoconf.
 
-## Copyright (C) 2001-2002 Free Software Foundation, Inc.
+## Copyright (C) 2001-2003 Free Software Foundation, Inc.
 ##
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -196,7 +196,7 @@ my-distcheck: $(local-check)
 	GZIP=$(GZIP_ENV) $(AMTAR) -C $(t) -zxf $(distdir).tar.gz
 	cd $(t)/$(distdir) \
 	  && ./configure --disable-nls \
-	  && $(MAKE) CFLAGS='-Wformat -Werror' \
+	  && $(MAKE) CFLAGS='-Wformat' \
 	      AM_MAKEFLAGS='$(null_AM_MAKEFLAGS)' \
 	  && $(MAKE) dvi \
 	  && $(MAKE) check \
@@ -335,7 +335,8 @@ $(get-targets):
 	$(WGET) $(url) -O $(target).t \
 	  && $(move_if_change) $(target).t $(target)
 
-cvs_files ?= $(srcdir)/config/depcomp $(srcdir)/config/missing $(srcdir)/config/mkinstalldirs \
+cvs_files ?= $(srcdir)/config/depcomp $(srcdir)/config/missing \
+	     $(srcdir)/config/mkinstalldirs \
              $(srcdir)/config/install-sh $(srcdir)/src/ansi2knr.c
 automake_repo=:pserver:anoncvs:anoncvs@sources.redhat.com:/cvs/automake
 .PHONY: wget-update
@@ -343,12 +344,15 @@ wget-update: $(get-targets)
 
 .PHONY: cvs-update
 cvs-update:
-	for f in $(cvs_files); do				      \
-	  test -f $$f || { echo "*** skipping $$f" 1>&2; continue; }; \
-	  file=$$(basename $$f);				      \
-	  echo checking out $$file...;				      \
-	  $(CVS) -d $(automake_repo) co -p automake/lib/$$file> $$f.t \
-	    && $(move_if_change) $$f.t $$f;			      \
+	for f in $(cvs_files); do					\
+	  test -f $$f || { echo "*** skipping $$f" 1>&2; continue; };	\
+	  cvs diff $$f > /dev/null					\
+	    || { echo "*** $$f is locally modified; skipping it" 1>&2;	\
+		 continue; };						\
+	  file=$$(basename $$f);					\
+	  echo checking out $$file...;					\
+	  $(CVS) -d $(automake_repo) co -p automake/lib/$$file> $$f.t	\
+	    && $(move_if_change) $$f.t $$f;				\
 	done
 
 define emit-upload-commands
