@@ -4,7 +4,6 @@ Changes in release 3.17:
 * ls now quotes file names for the shell by default, if they contain
   characters that need quoting.  Use -N to get the old default behavior.
   The new behavior is also enabled by the new option -e or --quote-shell.
-[3.16g]
 * ln --backup is now consistent with cp and mv in that --force is no longer
   required when the destination is an existing non-directory.
 * install accepts new option, --verbose (-v)
