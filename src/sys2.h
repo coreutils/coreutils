@@ -607,7 +607,7 @@ enum
 
 #if defined strdupa
 # define ASSIGN_STRDUPA(DEST, S)		\
-  do { DEST = strdupa(S); } while (0)
+  do { DEST = strdupa (S); } while (0)
 #else
 # define ASSIGN_STRDUPA(DEST, S)		\
   do						\
