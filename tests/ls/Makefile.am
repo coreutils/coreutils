@@ -3,7 +3,7 @@
 AUTOMAKE_OPTIONS = 1.2 gnits
 
 TESTS = \
-  file-type recursive dired infloop \
+  inode dangle file-type recursive dired infloop \
   rt-1 time-1 symlink-slash follow-slink no-arg
 
 EXTRA_DIST = $(TESTS)
