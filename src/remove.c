@@ -1111,9 +1111,12 @@ enum RM_status
 rm (size_t n_files, char const *const *file, struct rm_options const *x)
 {
   struct saved_cwd *cwd_state = NULL;
-  enum RM_status status = RM_OK;
-  size_t i;
   Dirstack_state *ds;
+
+  /* Put the following two variables in static storage, so they can't
+     be clobbered by the potential longjmp into this function.  */
+  static enum RM_status status = RM_OK;
+  static size_t i;
 
   ds = ds_init ();
 
