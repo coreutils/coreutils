@@ -90,9 +90,9 @@ VERSION = @VERSION@
 YACC = @YACC@
 l = @l@
 
-AUTOMAKE_OPTIONS = 1.2 gnits
+AUTOMAKE_OPTIONS = 1.3 gnits
 
-TESTS = mv-special-1 into-self
+TESTS = mv-special-1 into-self backup-is-src
 EXTRA_DIST = $(TESTS) setup
 TESTS_ENVIRONMENT = \
   DF=../../src/df \
@@ -105,7 +105,7 @@ TESTS_ENVIRONMENT = \
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../config.h
 CONFIG_CLEAN_FILES = 
-DIST_COMMON =  README Makefile.am Makefile.in
+DIST_COMMON =  Makefile.am Makefile.in
 
 
 DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
