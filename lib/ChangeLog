@@ -1,5 +1,10 @@
 2000-06-17  Bruno Haible  <haible@clisp.cons.org>
 
+	* canon-host.c (canon_host): Use malloc and memcpy to copy an
+	address, not strdup.  Include <stdlib.h> and don't declare free().
+
+2000-06-17  Bruno Haible  <haible@clisp.cons.org>
+
 	* path-concat.c (path_concat): Don't access dir[-1] if dir is
 	the empty string.
 
