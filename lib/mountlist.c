@@ -292,12 +292,7 @@ read_filesystem_list (need_fs_type, all_fs)
 {
   struct mount_entry *mount_list;
   struct mount_entry *me;
-  struct mount_entry *mtail;
-
-  /* Start the list off with a dummy entry. */
-  me = (struct mount_entry *) xmalloc (sizeof (struct mount_entry));
-  me->me_next = NULL;
-  mount_list = mtail = me;
+  struct mount_entry **mtail = &mount_list;
 
 #ifdef MOUNTED_LISTMNTENT
   {
@@ -320,9 +315,8 @@ read_filesystem_list (need_fs_type, all_fs)
       me->me_mountdir = xstrdup(mnt->mnt_dir);
       me->me_type = xstrdup(mnt->mnt_type);
       me->me_dev = -1;
-      me->me_next = NULL;
-      mtail->me_next = me;
-      mtail = me;
+      *mtail = me;
+      mtail = &me->me_next;
       p = p->next;
     }
     freemntlist(mntlist);
@@ -360,15 +354,14 @@ read_filesystem_list (need_fs_type, all_fs)
 	  }
 	else
 	  me->me_dev = (dev_t) -1;	/* Magic; means not known yet. */
-	me->me_next = NULL;
 
 	/* Add to the linked list. */
-	mtail->me_next = me;
-	mtail = me;
+	*mtail = me;
+	mtail = &me->me_next;
       }
 
     if (endmntent (fp) == 0)
-      return NULL;
+      goto free_then_fail;
   }
 #endif /* MOUNTED_GETMNTENT1. */
 
@@ -387,11 +380,10 @@ read_filesystem_list (need_fs_type, all_fs)
 	me->me_mountdir = xstrdup (fsp->f_mntonname);
 	me->me_type = fsp_to_string (fsp);
 	me->me_dev = (dev_t) -1;	/* Magic; means not known yet. */
-	me->me_next = NULL;
 
 	/* Add to the linked list. */
-	mtail->me_next = me;
-	mtail = me;
+	*mtail = me;
+	mtail = &me->me_next;
 	fsp++;
       }
   }
@@ -403,22 +395,22 @@ read_filesystem_list (need_fs_type, all_fs)
     int val;
     struct fs_data fsd;
 
-    while ((val = getmnt (&offset, &fsd, sizeof (fsd), NOSTAT_MANY,
-			  (char *) 0)) > 0)
+    while (errno = 0,
+	   0 <= (val = getmnt (&offset, &fsd, sizeof (fsd), NOSTAT_MANY,
+			       (char *) 0)))
       {
 	me = (struct mount_entry *) xmalloc (sizeof (struct mount_entry));
 	me->me_devname = xstrdup (fsd.fd_req.devname);
 	me->me_mountdir = xstrdup (fsd.fd_req.path);
 	me->me_type = gt_names[fsd.fd_req.fstype];
 	me->me_dev = fsd.fd_req.dev;
-	me->me_next = NULL;
 
 	/* Add to the linked list. */
-	mtail->me_next = me;
-	mtail = me;
+	*mtail = me;
+	mtail = &me->me_next;
       }
     if (val < 0)
-      return NULL;
+      goto free_then_fail;
   }
 #endif /* MOUNTED_GETMNT. */
 
@@ -448,11 +440,10 @@ read_filesystem_list (need_fs_type, all_fs)
 	me->me_mountdir = xstrdup (stats[counter].f_mntonname);
 	me->me_type = mnt_names[stats[counter].f_type];
 	me->me_dev = (dev_t) -1;	/* Magic; means not known yet. */
-	me->me_next = NULL;
 
 	/* Add to the linked list. */
-	mtail->me_next = me;
-	mtail = me;
+	*mtail = me;
+	mtail = &me->me_next;
       }
 
     free (stats);
@@ -493,15 +484,22 @@ read_filesystem_list (need_fs_type, all_fs)
 	      me->me_type = xstrdup (typebuf);
 	  }
 # endif
-	me->me_next = NULL;
 
 	/* Add to the linked list. */
-	mtail->me_next = me;
-	mtail = me;
+	*mtail = me;
+	mtail = &me->me_next;
+      }
+
+    if (ferror (fp))
+      {
+	int saved_errno = errno;
+	fclose (fp);
+	errno = saved_errno;
+	goto free_then_fail;
       }
 
     if (fclose (fp) == EOF)
-      return NULL;
+      goto free_then_fail;
   }
 #endif /* MOUNTED_FREAD || MOUNTED_FREAD_FSTYP.  */
 
@@ -515,11 +513,10 @@ read_filesystem_list (need_fs_type, all_fs)
 	me->me_mountdir = xstrdup( (*ent)->mt_directory);
 	me->me_type =  xstrdup ((*ent)->mt_fstype);
 	me->me_dev = (dev_t) -1;	/* Magic; means not known yet. */
-	me->me_next = NULL;
 
 	/* Add to the linked list. */
-	mtail->me_next = me;
-	mtail = me;
+	*mtail = me;
+	mtail = &me->me_next;
       }
     endmnttbl();
   }
@@ -551,13 +548,21 @@ read_filesystem_list (need_fs_type, all_fs)
 	flock.l_len = 0;
 	while (fcntl (lockfd, F_SETLKW, &flock) == -1)
 	  if (errno != EINTR)
-	    return NULL;
+	    {
+	      int saved_errno = errno;
+	      close (lockfd);
+	      errno = saved_errno;
+	      return NULL;
+	    }
       }
+    else if (errno != ENOENT)
+      return NULL;
 # endif
 
+    errno = 0;
     fp = fopen (table, "r");
     if (fp == NULL)
-      ret = 1;
+      ret = errno;
     else
       {
 	while ((ret = getmntent (fp, &mnt)) == 0)
@@ -571,22 +576,23 @@ read_filesystem_list (need_fs_type, all_fs)
 	    me->me_mountdir = xstrdup (mnt.mnt_mountp);
 	    me->me_type = xstrdup (mnt.mnt_fstype);
 	    me->me_dev = (dev_t) -1;	/* Magic; means not known yet. */
-	    me->me_next = NULL;
 
 	    /* Add to the linked list. */
-	    mtail->me_next = me;
-	    mtail = me;
+	    *mtail = me;
+	    mtail = &me->me_next;
 	  }
 
-	if (fclose (fp) == EOF)
-	  ret = 1;
+	ret = fclose (fp) == EOF ? errno : 0 < ret ? 0 : -1;
       }
 
     if (0 <= lockfd && close (lockfd) != 0)
-      return NULL;
+      ret = errno;
 
-    if (ret > 0)
-      return NULL;
+    if (0 <= ret)
+      {
+	errno = ret;
+	goto free_then_fail;
+      }
   }
 #endif /* MOUNTED_GETMNTENT2.  */
 
@@ -628,19 +634,32 @@ read_filesystem_list (need_fs_type, all_fs)
 	me->me_mountdir = xstrdup (thisent + vmp->vmt_data[VMT_STUB].vmt_off);
 	me->me_type = xstrdup (fstype_to_string (vmp->vmt_gfstype));
 	me->me_dev = (dev_t) -1; /* vmt_fsid might be the info we want.  */
-	me->me_next = NULL;
 
 	/* Add to the linked list. */
-	mtail->me_next = me;
-	mtail = me;
+	*mtail = me;
+	mtail = &me->me_next;
       }
     free (entries);
   }
 #endif /* MOUNTED_VMOUNT. */
 
-  /* Free the dummy head. */
-  me = mount_list;
-  mount_list = mount_list->me_next;
-  free (me);
+  *mtail = NULL;
   return mount_list;
+
+
+ free_then_fail:
+  {
+    int saved_errno = errno;
+    *mtail = NULL;
+    
+    while (mount_list)
+      {
+	me = mount_list->me_next;
+	free (mount_list);
+	mount_list = me;
+      }
+
+    errno = saved_errno;
+    return NULL;
+  }
 }
