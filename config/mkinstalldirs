@@ -84,17 +84,17 @@ do
       mkdir "$pathcomp" || lasterr=$?
 
       if test ! -d "$pathcomp"; then
-  	errstatus=$lasterr
+	errstatus=$lasterr
       else
-  	if test ! -z "$dirmode"; then
+	if test ! -z "$dirmode"; then
 	  echo "chmod $dirmode $pathcomp"
-    	  lasterr=""
-  	  chmod "$dirmode" "$pathcomp" || lasterr=$?
+	  lasterr=""
+	  chmod "$dirmode" "$pathcomp" || lasterr=$?
 
-  	  if test ! -z "$lasterr"; then
-  	    errstatus=$lasterr
-  	  fi
-  	fi
+	  if test ! -z "$lasterr"; then
+	    errstatus=$lasterr
+	  fi
+	fi
       fi
     fi
 
