@@ -1,5 +1,5 @@
 /* pr -- convert text files for printing.
-   Copyright (C) 88, 91, 1995-2000 Free Software Foundation, Inc.
+   Copyright (C) 88, 91, 1995-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -150,6 +150,8 @@
 
    -d, --double-space	Double space the output.
 
+   -D FORMAT, --date-format=FORMAT  Use FORMAT for the header date.
+
    -e[CHAR[WIDTH]], --expand-tabs[=CHAR[WIDTH]]
 		Expand tabs to spaces on input.  Optional argument CHAR
 		is the input TAB character. (Default is TAB).  Optional
@@ -162,12 +164,7 @@
 
    -h HEADER, --header=HEADER
 		Replace the filename in the header with the string HEADER.
-		Checking and left-hand-side truncation of the length of the
-		standard and custom header string. A centered header is used.
-		The format of date and time has been shortened
-		to  yyyy-mm-dd HH:MM  to give place to a maximal filename
-		information.
-		-h ""  now prints a blank line header. -h"" shows an error.
+		A centered header is used.
 
    -i[CHAR[WIDTH]], --output-tabs[=CHAR[WIDTH]]
 		Replace spaces with tabs on output.  Optional argument
@@ -320,6 +317,7 @@
 #include "system.h"
 #include "closeout.h"
 #include "error.h"
+#include "mbswidth.h"
 #include "xstrtol.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -505,10 +503,6 @@ static int print_a_FF = FALSE;
 /* True means we need to print a header as soon as we know we've got input
    to print after it. */
 static int print_a_header;
-
-/* (-h) True means we're using the standard header rather than a
-   customized one specified by the -h flag. */
-static int standard_header = TRUE;
 
 /* (-f) True means use formfeeds instead of newlines to separate pages. */
 static int use_form_feed = FALSE;
@@ -711,8 +705,15 @@ static int pad_vertically;
 /* (-h) String of characters used in place of the filename in the header. */
 static char *custom_header;
 
-/* String containing the date, filename or custom header, and "Page ". */
-static char *header;
+/* (-D) Date format for the header.  */
+static char const *date_format;
+
+/* Date and file name for the header.  */
+static char *date_text;
+static char const *file_text;
+
+/* Output columns available, not counting the date and file name.  */
+static int header_width_available;
 
 static int *clump_buff;
 
@@ -721,10 +722,6 @@ static int *clump_buff;
    "FF set by hand" and "full_page_printed", see above the definition of
    structure COLUMN. */
 static int last_line = FALSE;
-
-/* If nonzero, print a non-variable date and time with the header
-   -h HEADER using pr test-suite */
-static int test_suite;
 
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
@@ -736,12 +733,12 @@ enum
 
 static struct option const long_options[] =
 {
-  {"test", no_argument, &test_suite, 1},
   {"pages", required_argument, NULL, PAGES_OPTION},
   {"columns", required_argument, NULL, COLUMNS_OPTION},
   {"across", no_argument, NULL, 'a'},
   {"show-control-chars", no_argument, NULL, 'c'},
   {"double-space", no_argument, NULL, 'd'},
+  {"date-format", required_argument, NULL, 'D'},
   {"expand-tabs", optional_argument, NULL, 'e'},
   {"form-feed", no_argument, NULL, 'f'},
   {"header", required_argument, NULL, 'h'},
@@ -862,7 +859,7 @@ main (int argc, char **argv)
 		: NULL);
 
   while ((c = getopt_long (argc, argv,
-			   "-0123456789abcde::fFh:i::Jl:mn::N:o:rs::S::tTvw:W:",
+			   "-0123456789abcdD:e::fFh:i::Jl:mn::N:o:rs::S::tTvw:W:",
 			   long_options, NULL))
 	 != -1)
     {
@@ -932,6 +929,9 @@ main (int argc, char **argv)
 	case 'd':
 	  double_space = TRUE;
 	  break;
+	case 'D':
+	  date_format = optarg;
+	  break;
 	case 'e':
 	  if (optarg)
 	    getoptarg (optarg, 'e', &input_tab_char,
@@ -945,7 +945,6 @@ main (int argc, char **argv)
 	  break;
 	case 'h':
 	  custom_header = optarg;
-	  standard_header = FALSE;
 	  break;
 	case 'i':
 	  if (optarg)
@@ -1064,6 +1063,11 @@ main (int argc, char **argv)
 	  break;
 	}
     }
+
+  if (! date_format)
+    date_format = (getenv ("POSIXLY_CORRECT")
+		   ? dcgettext (NULL, "%b %e %H:%M %Y", LC_TIME)
+		   : "%Y-%m-%d %H:%M");
 
   /* Now we can set a reasonable initial value: */
   if (first_page_number == 0)
@@ -1624,90 +1628,47 @@ print_files (int number_of_files, char **av)
     ;
 }
 
-/* Estimate the number of characters taken up by a short format date and
-   time:  "yy-mm-dd HH:MM"  and:  "Page NNNN". */
-#define CHARS_FOR_DATE_AND_PAGE	25
-
-#define T_BUF_FMT "%Y-%m-%d %H:%M"	/* date/time short format */
-
-/* Add `2' because the expansion of %Y occupies 4 bytes, which is two more
-   than the length of `%Y'.  Each of the other formats expand to two bytes.  */
-#define T_BUF_SIZE (2 + sizeof T_BUF_FMT)
-
-/* This string is exactly the same length as the expansion of T_BUF_FMT.  */
-#define NO_DATE "-- Date/Time -- "
-
 /* Initialize header information.
    If DESC is non-negative, it is a file descriptor open to
-   FILENAME for reading.
-
-   Allocate space for a header string,
-   Determine the time, insert file name or user-specified string.
-   Make use of a centered header with left-hand-side truncation marked by
-   a '*` in front, if necessary. */
+   FILENAME for reading.  */
 
 static void
 init_header (char *filename, int desc)
 {
-  char *f = filename;
+  char *buf;
+  char initbuf[MAX (256, INT_STRLEN_BOUND (long) + 1)];
   struct stat st;
-  size_t header_buf_size;
+  struct tm *tm;
 
-  if (filename == NULL)
-    f = "";
+  /* If parallel files or standard input, use current date. */
+  if (STREQ (filename, "-"))
+    desc = -1;
+  if (desc < 0 || fstat (desc, &st) != 0)
+    st.st_mtime = time (NULL);
 
-  if (header != NULL)
-    free (header);
-
-  /* Allow a space on each side of the the filename-or-header.  */
-  header_buf_size = MAX (chars_per_line, CHARS_FOR_DATE_AND_PAGE + 2) + 1;
-  header = (char *) xmalloc (header_buf_size);
-
-  if (!standard_header && *custom_header == '\0')
-    *header = '\0';			/* blank line header */
+  buf = initbuf;
+  tm = localtime (&st.st_mtime);
+  if (! tm)
+    sprintf (buf, "%ld", (long) st.st_mtime);
   else
     {
-      int chars_per_middle, lhs_blanks, rhs_blanks;
-      struct tm *tmptr;
-      char t_buf[T_BUF_SIZE];
-      char *header_text;
-
-      /* If parallel files or standard input, use current time. */
-      if (desc < 0 || STREQ (filename, "-") || fstat (desc, &st))
-	st.st_mtime = time (NULL);
-
-      tmptr = localtime (&st.st_mtime);
-      strftime (t_buf, T_BUF_SIZE, T_BUF_FMT, tmptr);
-
-      chars_per_middle = header_buf_size - 1 - CHARS_FOR_DATE_AND_PAGE;
-      if (chars_per_middle < 3)
+      size_t bufsize = sizeof initbuf;
+      for (;;)
 	{
-	  header_text = "";	/* Nothing free for a heading */
-	  lhs_blanks = 1;
-	  rhs_blanks = 1;
+	  *buf = '\1';
+	  if (strftime (buf, bufsize, date_format, tm) || ! *buf)
+	    break;
+	  buf = alloca (bufsize *= 2);
 	}
-      else
-	{
-	  int chars_free;
-	  header_text = standard_header ? f : custom_header;
-	  chars_free = chars_per_middle - (int) strlen (header_text);
-	  if (chars_free > 1)
-	    {
-	      lhs_blanks = chars_free / 2;	/* text not truncated */
-	      rhs_blanks = chars_free - lhs_blanks;
-	    }
-	  else
-	    {			/* lhs truncation */
-	      header_text = header_text - chars_free + 2;
-	      *header_text = '*';
-	      lhs_blanks = 1;
-	      rhs_blanks = 1;
-	    }
-	}
-
-      sprintf (header, _("%s%*s%s%*sPage"), (test_suite ? NO_DATE : t_buf),
-	       lhs_blanks, " ", header_text, rhs_blanks, " ");
     }
+
+  if (date_text)
+    free (date_text);
+  date_text = xstrdup (buf);
+  file_text = custom_header ? custom_header : desc < 0 ? "" : filename;
+  header_width_available = (chars_per_line
+			    - mbswidth (date_text, 0)
+			    - mbswidth (file_text, 0));
 }
 
 /* Set things up for printing a page
@@ -2404,20 +2365,29 @@ skip_to_page (int page)
 static void
 print_header (void)
 {
+  char page_text[256 + INT_STRLEN_BOUND (int)];
+  int available_width;
+  int lhs_spaces;
+  int rhs_spaces;
+
   if (!use_form_feed)
-    fprintf (stdout, "\n\n");
+    printf ("\n\n");
 
   output_position = 0;
   pad_across_to (chars_per_margin);
   print_white_space ();
 
-  if (!standard_header && *custom_header == '\0')
-    {
-      fprintf (stdout, "%s\n\n\n", header);
-      page_number++;
-    }
-  else
-    fprintf (stdout, "%s%5d\n\n\n", header, page_number++);
+  /* The translator must ensure that formatting the translation of
+     "Page %d" does not generate more than (sizeof page_text - 1)
+     bytes.  */
+  sprintf (page_text, _("Page %d"), page_number++);
+  available_width = header_width_available - mbswidth (page_text, 0);
+  available_width = MAX (0, available_width);
+  lhs_spaces = available_width >> 1;
+  rhs_spaces = available_width - lhs_spaces;
+
+  printf ("%s%*s%s%*s%s\n\n\n",
+	  date_text, lhs_spaces, " ", file_text, rhs_spaces, " ", page_text);
 
   print_a_header = FALSE;
   output_position = 0;
@@ -2791,6 +2761,8 @@ Paginate or columnate FILE(s) for printing.\n\
                     use hat notation (^G) and octal backslash notation\n\
   -d, --double-space\n\
                     double space the output\n\
+  -D, --date-format=FORMAT\n\
+                    use FORMAT for the header date\n\
   -e[CHAR[WIDTH]], --expand-tabs[=CHAR[WIDTH]]\n\
                     expand input CHARs (TABs) to tab WIDTH (8)\n\
   -F, -f, --form-feed\n\
@@ -2801,7 +2773,6 @@ Paginate or columnate FILE(s) for printing.\n\
       printf (_("\
   -h HEADER, --header=HEADER\n\
                     use a centered HEADER instead of filename in page header,\n\
-                    with long headers left-hand-side truncation may occur,\n\
                     -h \"\" prints a blank line, don't use -h\"\"\n\
   -i[CHAR[WIDTH]], --output-tabs[=CHAR[WIDTH]]\n\
                     replace spaces with CHARs (TABs) to tab WIDTH (8)\n\
