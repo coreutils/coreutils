@@ -55,10 +55,6 @@
 # define chown(PATH, OWNER, GROUP) lchown(PATH, OWNER, GROUP)
 #endif
 
-#ifndef _POSIX_VERSION
-uid_t geteuid ();
-#endif
-
 char *base_name ();
 enum backup_type get_version ();
 int isdir ();
@@ -86,9 +82,6 @@ static int verbose;
 
 /* If nonzero, stdin is a tty. */
 static int stdin_tty;
-
-/* This process's effective user ID.  */
-static uid_t myeuid;
 
 /* If nonzero, display usage information and exit.  */
 static int show_help;
@@ -118,6 +111,50 @@ is_real_dir (const char *path)
   struct stat stats;
 
   return lstat (path, &stats) == 0 && S_ISDIR (stats.st_mode);
+}
+
+/* Apply as many of the file attributes (the struct stat fields: st_atime,
+   st_mtime, st_uid, st_gid, st_mode) of ATTR to FILE as possible.
+   Return non-zero if any operation failed; return zero otherwise.  */
+
+static int
+apply_attributes (const char *file, const struct stat *attr)
+{
+  struct utimbuf tv;
+  mode_t mode = attr->st_mode;
+  int fail = 0;
+
+  /* Try to apply the modtime and access time.  */
+  tv.actime = attr->st_atime;
+  tv.modtime = attr->st_mtime;
+  if (utime (file, &tv))
+    {
+      error (0, errno, "%s: unable to restore file times", file);
+      fail = 1;
+    }
+
+  /* chown would turn off set[ug]id bits for non-root, so do the
+     chown before the chmod.  */
+
+  /* Try to apply group ID and owner ID.  */
+  if (chown (file, attr->st_uid, attr->st_gid))
+    {
+      error (0, errno, "%s: unable to restore owner and group IDs", file);
+
+      /* If the owner and group cannot be preserved, then mask off
+	 any setgid and setuid bits.  */
+      mode &= (~(S_ISUID | S_ISGID));
+      fail = 1;
+    }
+
+  /* Try to apply file mode.  */
+  if (chmod (file, mode & 07777))
+    {
+      error (0, errno, "%s: unable to restore file mode", file);
+      fail = 1;
+    }
+
+  return fail;
 }
 
 /* Copy regular file SOURCE onto file DEST.  SOURCE_STATS must be
@@ -192,36 +229,10 @@ copy_reg (const char *source, const char *dest, const struct stat *source_stats)
       return 1;
     }
 
-  /* chown turns off set[ug]id bits for non-root,
-     so do the chmod last.  */
-
-  /* Try to copy the old file's modtime and access time.  */
-  {
-    struct utimbuf tv;
-
-    tv.actime = source_stats->st_atime;
-    tv.modtime = source_stats->st_mtime;
-    if (utime (dest, &tv))
-      {
-	error (0, errno, "%s", dest);
-	return 1;
-      }
-  }
-
-  /* Try to preserve ownership.  For non-root it might fail, but that's ok.
-     But root probably wants to know, e.g. if NFS disallows it.  */
-  if (chown (dest, source_stats->st_uid, source_stats->st_gid)
-      && (errno != EPERM || myeuid == 0))
-    {
-      error (0, errno, "%s", dest);
-      return 1;
-    }
-
-  if (chmod (dest, source_stats->st_mode & 07777))
-    {
-      error (0, errno, "%s", dest);
-      return 1;
-    }
+  /* Try to apply the attributes of SOURCE to DEST.
+     Each failure gets a diagnostic, but POSIX requires that failure
+     to preserve attributes not change mv's exit status.  */
+  apply_attributes (dest, source_stats);
 
   return 0;
 }
@@ -455,7 +466,6 @@ main (int argc, char **argv)
     simple_backup_suffix = version;
   version = getenv ("VERSION_CONTROL");
 
-  myeuid = geteuid ();
   interactive = override_mode = verbose = update = 0;
   errors = 0;
 
