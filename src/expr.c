@@ -36,13 +36,15 @@
 #include <regex.h>
 #include "long-options.h"
 #include "error.h"
+#include "xalloc.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "expr"
 
 #define AUTHORS "Mike Parker"
 
-#define NEW(type) ((type *) xmalloc (sizeof (type)))
+#undef NEW
+#define NEW(Type) XMALLOC (Type, 1)
 #define OLD(x) free ((char *) x)
 
 /* The kinds of value we can have.  */
