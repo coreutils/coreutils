@@ -33,6 +33,7 @@
 #include "getline.h"
 #include "posixtm.h"
 #include "posixver.h"
+#include "quote.h"
 #include "strftime.h"
 #include "timespec.h"
 
@@ -242,7 +243,7 @@ batch_convert (const char *input_filename, const char *format)
       in_stream = fopen (input_filename, "r");
       if (in_stream == NULL)
 	{
-	  error (EXIT_FAILURE, errno, "`%s'", input_filename);
+	  error (EXIT_FAILURE, errno, "%s", quote (input_filename));
 	}
     }
 
