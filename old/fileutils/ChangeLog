@@ -2,6 +2,9 @@
 
 	* Version 4.0.33.
 
+	* tests/touch/no-rights: Use touch with `-d tomorrow' to avoid
+	race condition.
+
 	* tests/Fetish.pm (_compare_files): New function.
 	(_process_file_spec): Likewise.
 	(_at_replace): Likewise.
