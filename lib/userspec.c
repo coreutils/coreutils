@@ -1,5 +1,5 @@
 /* userspec.c -- Parse a user and group string.
-   Copyright (C) 1989-1992, 1997-1998, 2000, 2002-2004 Free Software
+   Copyright (C) 1989-1992, 1997-1998, 2000, 2002-2005 Free Software
    Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -43,6 +43,7 @@
 # include <unistd.h>
 #endif
 
+#include "intprops.h"
 #include "inttostr.h"
 #include "strdup.h"
 #include "xalloc.h"
@@ -65,14 +66,6 @@ struct group *getgrgid ();
 #ifndef HAVE_ENDPWENT
 # define endpwent() ((void) 0)
 #endif
-
-/* The extra casts work around common compiler bugs.  */
-#define TYPE_SIGNED(t) (! ((t) 0 < (t) -1))
-/* The outer cast is needed to work around a bug in Cray C 5.0.3.0.
-   It is necessary at least when t == time_t.  */
-#define TYPE_MINIMUM(t) ((t) (TYPE_SIGNED (t) \
-			      ? ~ (t) 0 << (sizeof (t) * CHAR_BIT - 1) : (t) 0))
-#define TYPE_MAXIMUM(t) ((t) (~ (t) 0 - TYPE_MINIMUM (t)))
 
 #ifndef UID_T_MAX
 # define UID_T_MAX TYPE_MAXIMUM (uid_t)
