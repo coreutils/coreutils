@@ -1,5 +1,5 @@
 /* linebuffer.h -- declarations for reading arbitrarily long lines
-   Copyright (C) 1986, 1991 Free Software Foundation, Inc.
+   Copyright (C) 1986, 1991, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -14,7 +14,10 @@
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
-
+
+#if !defined LINEBUFFER_H
+# define LINEBUFFER_H
+
 /* A `struct linebuffer' holds a line of text. */
 
 struct linebuffer
@@ -24,12 +27,13 @@ struct linebuffer
   char *buffer;
 };
 
-#undef PARAMS
-#if defined (__STDC__) && __STDC__
-# define PARAMS(Args) Args
-#else
-# define PARAMS(Args) ()
-#endif
+# ifndef PARAMS
+#  if defined PROTOTYPES || (defined __STDC__ && __STDC__)
+#   define PARAMS(Args) Args
+#  else
+#   define PARAMS(Args) ()
+#  endif
+# endif
 
 /* Initialize linebuffer LINEBUFFER for use. */
 void initbuffer PARAMS ((struct linebuffer *linebuffer));
@@ -42,3 +46,5 @@ struct linebuffer *readline PARAMS ((struct linebuffer *linebuffer,
 
 /* Free linebuffer LINEBUFFER and its data, all allocated with malloc. */
 void freebuffer PARAMS ((struct linebuffer *));
+
+#endif /* LINEBUFFER_H */
