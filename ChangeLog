@@ -1,5 +1,7 @@
 2003-07-23  Jim Meyering  <jim@meyering.net>
 
+	* src/expand.c (parse_tabstops): Detect overflow in tabstop sizes.
+
 	* src/dircolors.c: Include xstrndup.h.
 	(xstrndup): Remove function, now that it's been factored out into
 	it's own file.
