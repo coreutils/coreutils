@@ -1,3 +1,24 @@
+1998-09-12  Jim Meyering  <meyering@ascend.com>
+
+	* Version 3.16x.
+
+	* src/remove.c (remove_cwd_entries): Declare to be static.
+
+	Automatically generate man pages from combination of --help
+	output and the contents of new, man/*.x files.
+	* man/Makefile.am (HELP2MAN): Define.
+	(man_aux): Define.
+	(EXTRA_DIST): Add $(HELP2MAN) and $(man_aux).
+	(MAINTAINERCLEANFILES): Add $(man_MANS).
+	* man/*.x: New files.
+	* man/GNUmakefile: New file.
+	* man/Makefile.maint: New file.
+	* man/help2man: New file.
+
+1998-09-09  Jim Meyering  <meyering@ascend.com>
+
+	* lib/modechange.c: Protoize.
+
 1998-09-07  Jim Meyering  <meyering@ascend.com>
 
 	* Version 3.16w.
