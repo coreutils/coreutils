@@ -115,7 +115,6 @@ file types and extensions.  Otherwise, a precompiled database is used.\n\
 For details on the format of these files, run `dircolors --print-database'.\n\
 "));
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
-      close_stdout ();
     }
 
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
@@ -429,6 +428,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  atexit (close_stdout);
+
   while ((optc = getopt_long (argc, argv, "bcp", long_options, NULL)) != -1)
     switch (optc)
       {
@@ -530,7 +531,6 @@ dircolors' internal database"));
 	}
     }
 
-  close_stdout ();
 
   if (have_read_stdin && fclose (stdin) == EOF)
     error (EXIT_FAILURE, errno, _("standard input"));

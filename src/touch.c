@@ -231,7 +231,6 @@ Note that the three time-date formats recognized for the -d and -t options\n\
 and for the obsolescent argument are all different.\n\
 "));
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
-      close_stdout ();
     }
   exit (status);
 }
@@ -247,6 +246,8 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+
+  atexit (close_stdout);
 
   change_times = no_create = use_ref = posix_date = flexible_date = 0;
   newtime = (time_t) -1;

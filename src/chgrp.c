@@ -1,5 +1,5 @@
 /* chgrp -- change group ownership of files
-   Copyright (C) 89, 90, 91, 1995-1999 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 1995-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -356,7 +356,6 @@ Change the group membership of each FILE to GROUP.\n\
       --version          output version information and exit\n\
 "));
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
-      close_stdout ();
     }
   exit (status);
 }
@@ -372,6 +371,8 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+
+  atexit (close_stdout);
 
   recurse = force_silent = 0;
 
@@ -434,7 +435,5 @@ main (int argc, char **argv)
   for (; optind < argc; ++optind)
     errors |= change_file_group (1, argv[optind], group);
 
-  if (verbosity != V_off)
-    close_stdout ();
   exit (errors);
 }

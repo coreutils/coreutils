@@ -201,7 +201,6 @@ options are given and SOURCE and DEST are the same name for an existing,\n\
 regular file.\n\
 "));
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
-      close_stdout ();
     }
   exit (status);
 }
@@ -683,6 +682,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  atexit (close_stdout);
+
   cp_option_init (&x);
 
   /* FIXME: consider not calling getenv for SIMPLE_BACKUP_SUFFIX unless
@@ -835,7 +836,5 @@ main (int argc, char **argv)
 
   exit_status |= do_copy (argc - optind, argv + optind, target_directory, &x);
 
-  if (x.verbose)
-    close_stdout ();
   exit (exit_status);
 }

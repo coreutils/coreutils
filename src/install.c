@@ -238,6 +238,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  atexit (close_stdout);
+
   cp_option_init (&x);
 
   owner_name = NULL;
@@ -380,8 +382,6 @@ is not a directory"),
 	}
     }
 
-  if (x.verbose)
-    close_stdout ();
   exit (errors);
 }
 
@@ -674,7 +674,6 @@ the VERSION_CONTROL environment variable.  Here are the values:\n\
   simple, never   always make simple backups\n\
 "));
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
-      close_stdout ();
     }
   exit (status);
 }

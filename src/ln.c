@@ -372,7 +372,6 @@ the VERSION_CONTROL environment variable.  Here are the values:\n\
   simple, never   always make simple backups\n\
 "));
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
-      close_stdout ();
     }
   exit (status);
 }
@@ -395,6 +394,8 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+
+  atexit (close_stdout);
 
   /* FIXME: consider not calling getenv for SIMPLE_BACKUP_SUFFIX unless
      we'll actually use backup_suffix_string.  */
@@ -560,7 +561,5 @@ main (int argc, char **argv)
       errors = do_link (source, new_dest);
     }
 
-  if (verbose)
-    close_stdout ();
   exit (errors != 0);
 }

@@ -227,7 +227,6 @@ Summarize disk usage of each FILE, recursively for directories.\n\
       --version         output version information and exit\n\
 "));
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
-      close_stdout ();
     }
   exit (status);
 }
@@ -656,6 +655,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  atexit (close_stdout);
+
   exclude = new_exclude ();
   xstat = lstat;
 
@@ -783,6 +784,5 @@ main (int argc, char **argv)
 
   du_files (optind == argc ? cwd_only : argv + optind);
 
-  close_stdout ();
   exit (exit_status);
 }

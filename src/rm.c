@@ -104,7 +104,6 @@ use one of these commands:\n\
 "),
 	      program_name, program_name);
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
-      close_stdout ();
     }
   exit (status);
 }
@@ -131,6 +130,8 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+
+  atexit (close_stdout);
 
   rm_option_init (&x);
 
@@ -195,7 +196,5 @@ main (int argc, char **argv)
 
   remove_fini ();
 
-  if (x.verbose)
-    close_stdout ();
   exit (fail);
 }

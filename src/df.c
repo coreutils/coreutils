@@ -752,7 +752,6 @@ or all filesystems by default.\n\
       --version         output version information and exit\n\
 "));
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
-      close_stdout ();
     }
   exit (status);
 }
@@ -768,6 +767,8 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+
+  atexit (close_stdout);
 
   fs_select_list = NULL;
   fs_exclude_list = NULL;
@@ -932,6 +933,5 @@ main (int argc, char **argv)
 	  show_entry (argv[i], &stats[i - optind]);
     }
 
-  close_stdout ();
   exit (exit_status);
 }

@@ -340,7 +340,6 @@ to login group if implied by a `:'.  OWNER and GROUP may be numeric as well\n\
 as symbolic.\n\
 "));
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
-      close_stdout ();
     }
   exit (status);
 }
@@ -360,6 +359,8 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+
+  atexit (close_stdout);
 
   recurse = force_silent = 0;
 
@@ -441,7 +442,5 @@ main (int argc, char **argv)
 				   old_user, old_group);
     }
 
-  if (verbosity != V_off)
-    close_stdout ();
   exit (errors);
 }

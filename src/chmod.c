@@ -1,5 +1,5 @@
 /* chmod -- change permission modes of files
-   Copyright (C) 89, 90, 91, 1995-1999 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 1995-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -263,7 +263,6 @@ Each MODE is one or more of the letters ugoa, one of the symbols +-= and\n\
 one or more of the letters rwxXstugo.\n\
 "));
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
-      close_stdout ();
     }
   exit (status);
 }
@@ -284,6 +283,8 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+
+  atexit (close_stdout);
 
   recurse = force_silent = 0;
 
@@ -364,7 +365,5 @@ main (int argc, char **argv)
       errors |= change_file_mode (argv[optind], changes, 1);
     }
 
-  if (verbosity != V_off)
-    close_stdout ();
   exit (errors);
 }

@@ -65,7 +65,6 @@ Create named pipes (FIFOs) with the given NAMEs.\n\
       --version     output version information and exit\n\
 "));
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
-      close_stdout ();
     }
   exit (status);
 }
@@ -84,6 +83,8 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+
+  atexit (close_stdout);
 
   symbolic_mode = NULL;
 

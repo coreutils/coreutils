@@ -774,6 +774,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  atexit (close_stdout);
+
 #define N_ENTRIES(Array) (sizeof Array / sizeof *(Array))
   assert (N_ENTRIES (color_indicator) + 1 == N_ENTRIES (indicator_name));
 
@@ -873,7 +875,6 @@ main (int argc, char **argv)
       put_indicator (&color_indicator[C_RIGHT]);
     }
 
-  close_stdout ();
   exit (exit_status);
 }
 
@@ -3002,7 +3003,6 @@ optional WHEN argument is equivalent to using --color=always.  With\n\
 to a terminal (tty).\n\
 "));
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
-      close_stdout ();
     }
   exit (status);
 }

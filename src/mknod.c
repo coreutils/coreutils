@@ -76,7 +76,6 @@ MAJOR MINOR are forbidden for TYPE p, mandatory otherwise.  TYPE may be:\n\
   p      create a FIFO\n\
 "));
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
-      close_stdout ();
     }
   exit (status);
 }
@@ -96,6 +95,8 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+
+  atexit (close_stdout);
 
   symbolic_mode = NULL;
 

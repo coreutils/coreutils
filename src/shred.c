@@ -477,7 +477,6 @@ Delete a file securely, first overwriting it to hide its contents.\n\
 \n\
 FIXME maybe add more discussion here?"), DEFAULT_PASSES);
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
-      close_stdout ();
     }
   exit (status);
 }
@@ -1715,6 +1714,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  atexit (close_stdout);
+
   isaac_seed (&s);
 
   memset (&flags, 0, sizeof flags);
@@ -1812,8 +1813,6 @@ main (int argc, char **argv)
 
   /* Just on general principles, wipe s. */
   memset (&s, 0, sizeof s);
-
-  close_stdout ();
 
   exit (err);
 }
