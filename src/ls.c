@@ -652,6 +652,20 @@ static int format_needs_type;
 
 static int exit_status;
 
+/* For long options that have no equivalent short option, use a
+   non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
+enum
+{
+  BLOCK_SIZE_OPTION = CHAR_MAX + 1,
+  COLOR_OPTION,
+  FORMAT_OPTION,
+  INDICATOR_STYLE_OPTION,
+  QUOTING_STYLE_OPTION,
+  SHOW_CONTROL_CHARS_OPTION,
+  SORT_OPTION,
+  TIME_OPTION
+};
+
 static struct option const long_options[] =
 {
   {"all", no_argument, 0, 'a'},
@@ -674,19 +688,19 @@ static struct option const long_options[] =
   {"file-type", no_argument, 0, 'p'},
   {"si", no_argument, 0, 'H'},
   {"ignore", required_argument, 0, 'I'},
-  {"indicator-style", required_argument, 0, 14},
+  {"indicator-style", required_argument, 0, INDICATOR_STYLE_OPTION},
   {"dereference", no_argument, 0, 'L'},
   {"literal", no_argument, 0, 'N'},
   {"quote-name", no_argument, 0, 'Q'},
-  {"quoting-style", required_argument, 0, 15},
+  {"quoting-style", required_argument, 0, QUOTING_STYLE_OPTION},
   {"recursive", no_argument, 0, 'R'},
-  {"format", required_argument, 0, 12},
-  {"show-control-chars", no_argument, 0, 16},
-  {"sort", required_argument, 0, 10},
+  {"format", required_argument, 0, FORMAT_OPTION},
+  {"show-control-chars", no_argument, 0, SHOW_CONTROL_CHARS_OPTION},
+  {"sort", required_argument, 0, SORT_OPTION},
   {"tabsize", required_argument, 0, 'T'},
-  {"time", required_argument, 0, 11},
-  {"color", optional_argument, 0, 13},
-  {"block-size", required_argument, 0, 17},
+  {"time", required_argument, 0, TIME_OPTION},
+  {"color", optional_argument, 0, COLOR_OPTION},
+  {"block-size", required_argument, 0, BLOCK_SIZE_OPTION},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
@@ -1250,20 +1264,20 @@ decode_switches (int argc, char **argv)
 	  format = one_per_line;
 	  break;
 
-	case 10:		/* --sort */
+	case SORT_OPTION:
 	  sort_type = XARGMATCH ("--sort", optarg, sort_args, sort_types);
 	  sort_type_specified = 1;
 	  break;
 
-	case 11:		/* --time */
+	case TIME_OPTION:
 	  time_type = XARGMATCH ("--time", optarg, time_args, time_types);
 	  break;
 
-	case 12:		/* --format */
+	case FORMAT_OPTION:
 	  format = XARGMATCH ("--format", optarg, format_args, format_types);
 	  break;
 
-	case 13:		/* --color */
+	case COLOR_OPTION:
 	  if (optarg)
 	    i = XARGMATCH ("--color", optarg, color_args, color_types);
 	  else
@@ -1284,24 +1298,24 @@ decode_switches (int argc, char **argv)
 	    }
 	  break;
 
-	case 14:		/* --indicator-style */
+	case INDICATOR_STYLE_OPTION:
 	  indicator_style = XARGMATCH ("--indicator-style", optarg,
 				       indicator_style_args,
 				       indicator_style_types);
 	  break;
 
-	case 15:		/* --quoting-style */
+	case QUOTING_STYLE_OPTION:
 	  set_quoting_style (NULL,
 			     XARGMATCH ("--quoting-style", optarg,
 					quoting_style_args,
 					quoting_style_vals));
 	  break;
 
-	case 16:
+	case SHOW_CONTROL_CHARS_OPTION:
 	  qmark_funny_chars = 0;
 	  break;
 
-	case 17:
+	case BLOCK_SIZE_OPTION:
 	  human_block_size (optarg, 1, &output_block_size);
 	  break;
 
