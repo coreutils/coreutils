@@ -21,8 +21,8 @@ EXTRA_DIST = \
 SUBDIRS = \
   basename chgrp chmod chown cp cut date dd dircolors du expr factor \
   fmt head install join ln ls ls-2 md5sum misc mkdir mv od pr readlink \
-  rm rmdir seq sha1sum shred sort stty sum tac tail tail-2 test touch \
-  tr tsort unexpand uniq wc
+  rm rmdir seq sha1sum shred sort stty sum tac tail tail-2 tee test \
+  touch tr tsort unexpand uniq wc
 
 .PHONY: check-root
 check-root:
