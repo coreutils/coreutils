@@ -227,8 +227,7 @@ do_link (const char *source, const char *dest)
 	 misleading.  */
       && (backup_type == none || !symbolic_link)
       && (!symbolic_link || stat (source, &source_stats) == 0)
-      && source_stats.st_dev == dest_stats.st_dev
-      && source_stats.st_ino == dest_stats.st_ino
+      && SAME_INODE (source_stats, dest_stats)
       /* The following detects whether removing DEST will also remove
 	 SOURCE.  If the file has only one link then both are surely
 	 the same link.  Otherwise check whether they point to the same
