@@ -58,6 +58,13 @@ struct group *getgrnam ();
 # define LCHOWN(FILE, OWNER, GROUP) 1
 #endif
 
+enum Change_status
+{
+  CH_SUCCEEDED,
+  CH_FAILED,
+  CH_NO_CHANGE_REQUESTED
+};
+
 char *group_member ();
 char *savedir ();
 char *xmalloc ();
@@ -112,16 +119,28 @@ static struct option const long_options[] =
   {0, 0, 0, 0}
 };
 
-/* Tell the user the group name to which ownership of FILE
-   has been given; if CHANGED is zero, FILE was that group already. */
+/* Tell the user how/if the group of FILE has been changed.
+   CHANGED describes what (if anything) has happened. */
 
 static void
-describe_change (const char *file, int changed)
+describe_change (const char *file, enum Change_status changed)
 {
-  if (changed)
-    printf (_("group of %s changed to %s\n"), file, groupname);
-  else
-    printf (_("group of %s retained as %s\n"), file, groupname);
+  const char *fmt;
+  switch (changed)
+    {
+    case CH_SUCCEEDED:
+      fmt = _("group of %s changed to %s\n");
+      break;
+    case CH_FAILED:
+      fmt = _("failed to change group of %s to %s\n");
+      break;
+    case CH_NO_CHANGE_REQUESTED:
+      fmt = _("group of %s retained as %s\n");
+      break;
+    default:
+      abort ();
+    }
+  printf (fmt, file, groupname);
 }
 
 /* Set *G according to NAME. */
@@ -179,13 +198,13 @@ change_file_group (const char *file, int group)
     {
       int fail;
 
-      if (verbose)
-	describe_change (file, 1);
-
       if (change_symlinks)
 	fail = LCHOWN (file, (uid_t) -1, group);
       else
 	fail = chown (file, (uid_t) -1, group);
+
+      if (verbose || (changes_only && !fail))
+	describe_change (file, (fail ? CH_FAILED : CH_SUCCEEDED));
 
       if (fail)
 	{
@@ -213,7 +232,7 @@ change_file_group (const char *file, int group)
     }
   else if (verbose && changes_only == 0)
     {
-      describe_change (file, 0);
+      describe_change (file, CH_NO_CHANGE_REQUESTED);
     }
 
   if (recurse && S_ISDIR (file_stats.st_mode))
