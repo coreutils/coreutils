@@ -1,5 +1,5 @@
 /* argmatch.h -- definitions and prototypes for argmatch.c
-   Copyright (C) 1990, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1990, 1998, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -48,10 +48,10 @@ int argcasematch
 	   const char *vallist, size_t valsize));
 
 # define ARGMATCH(Arg, Arglist, Vallist) \
-  argmatch (Arg, Arglist, (const char *) Vallist, sizeof (*Vallist))
+  argmatch ((Arg), (Arglist), (const char *) (Vallist), sizeof (*(Vallist)))
 
 # define ARGCASEMATCH(Arg, Arglist, Vallist) \
-  argcasematch (Arg, Arglist, (const char *) Vallist, sizeof (*Vallist))
+  argcasematch ((Arg), (Arglist), (const char *) (Vallist), sizeof (*(Vallist)))
 
 
 
@@ -63,7 +63,7 @@ void argmatch_invalid
 /* Left for compatibility with the old name invalid_arg */
 
 # define invalid_arg(Kind, Value, Problem) \
-	argmatch_invalid (Kind, Value, Problem)
+  argmatch_invalid ((Kind), (Value), (Problem))
 
 
 
@@ -74,36 +74,38 @@ void argmatch_valid
 	   const char *vallist, size_t valsize));
 
 # define ARGMATCH_VALID(Arglist, Vallist) \
-  valid_args (Arglist, (const char *) Vallist, sizeof (*Vallist))
+  argmatch_valid (Arglist, (const char *) Vallist, sizeof (*Vallist))
 
 
-/* Returns matches, or, upon error, report explanatory message and
-   exit.  */
+/* Set *Result_ptr to the value in Vallist corresponding to the Arg
+   in Arglist.  If Arg doesn't match any string in Arglist, give a
+   diagnostic and (presumably) exit via the Die_stmt, leaving *Result_ptr
+   unmodified.  */
 
-int __xargmatch_internal
-  PARAMS ((const char *kind,
-	   const char *arg, const char *const *arglist,
-	   const char *vallist, size_t valsize,
-	   int sensitive));
-
-# define XARGMATCH(Kind, Arg, Arglist, Vallist) \
-  Vallist [__xargmatch_internal (Kind, Arg, Arglist, \
-                        (const char *) Vallist, sizeof (*Vallist), 1)]
-
-# define XARGCASEMATCH(Kind, Arg, Arglist, Vallist) \
-  Vallist [__xargmatch_internal (Kind, Arg, Arglist, \
-                        (const char *) Vallist, sizeof (*Vallist), 0)]
-
+# define XARGMATCH(Result_ptr, Kind, Arg, Arglist, Vallist, Die_stmt)	\
+  do 									\
+    {									\
+      int _i = ARGMATCH (Arg, Arglist, Vallist);			\
+      if (_i >= 0)							\
+	*(Result_ptr) = (Vallist) [_i];					\
+      else								\
+	{								\
+	  argmatch_invalid ((Kind), (Arg), _i);				\
+	  ARGMATCH_VALID (Arglist, Vallist);				\
+	  Die_stmt;							\
+	}								\
+    }									\
+  while (0)
 
 
 /* Convert a value into a corresponding argument. */
 
 const char *argmatch_to_argument
-  PARAMS ((char *value, const char *const *arglist,
+  PARAMS ((char const *value, const char *const *arglist,
 	   const char *vallist, size_t valsize));
 
-# define ARGMATCH_TO_ARGUMENT(Value, Arglist, Vallist) 	\
-   argmatch_to_argument ((char *) &Value, Arglist, 	\
-			 (const char *) Vallist, sizeof (*Vallist))
+# define ARGMATCH_TO_ARGUMENT(Value, Arglist, Vallist)			\
+  argmatch_to_argument ((char const *) &(Value), (Arglist), 		\
+		        (const char *) (Vallist), sizeof (*(Vallist)))
 
 #endif /* ARGMATCH_H_ */
