@@ -1,5 +1,10 @@
 Sun Sep 22 09:24:22 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/sort.c (keycompare): Declare translate to be unsigned char *.
+	Otherwise, sign extension caused misordering when using e.g. -f.
+	Reported by Erick Branderhorst.
+	* tests/sort-test/Test.pm: Add Erick's test for that fix.
+
 	* tests/Makefile.am (SUBDIRS): Add md5sum-test.
 
 Sat Sep 21 13:34:59 1996  Jim Meyering  <meyering@na-net.ornl.gov>
