@@ -1718,8 +1718,25 @@ else
   esac
 fi
 test -s n-5b.E || rm -f n-5b.E
+cat $srcdir/f-1.I | $xx -f -n 1 > f-1.O 2> f-1.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test f-1 failed: ../../src/tail return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp f-1.O $srcdir/f-1.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed f-1"; fi ;;
+    1) $echo "Test f-1 failed: files f-1.O and $srcdir/f-1.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test f-1 may have failed." 1>&2;
+       $echo The command "cmp f-1.O $srcdir/f-1.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s f-1.E || rm -f f-1.E
 if test $errors = 0 ; then
-  $echo Passed all 100 tests. 1>&2
+  $echo Passed all 101 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi
