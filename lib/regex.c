@@ -4938,9 +4938,9 @@ re_compile_pattern (pattern, length, bufp)
 }     
 
 /* Entry points compatible with 4.2 BSD regex library.  We don't define
-   them if this is an Emacs or POSIX compilation.  */
+   them unless specifically requested.  */
 
-#if !defined (emacs) && !defined (_POSIX_SOURCE)
+#ifdef _REGEX_RE_COMP
 
 /* BSD has one and only one pattern buffer.  */
 static struct re_pattern_buffer re_comp_buf;
@@ -4991,7 +4991,7 @@ re_exec (s)
   return
     0 <= re_search (&re_comp_buf, s, len, 0, len, (struct re_registers *) 0);
 }
-#endif /* not emacs and not _POSIX_SOURCE */
+#endif /* _REGEX_RE_COMP */
 
 /* POSIX.2 functions.  Don't define these for Emacs.  */
 
