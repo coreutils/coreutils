@@ -6,6 +6,7 @@ if test "$VERBOSE" = yes; then
   ls --version
 fi
 
+. $srcdir/../envvar-check
 . $srcdir/../lang-default
 
 tmp=t-ls.$$
