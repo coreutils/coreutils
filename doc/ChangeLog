@@ -1,3 +1,10 @@
+2003-01-24  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (The cut command): Give an example of using cut -c
+	with an output delimiter.  From Jan Nieuwenhuizen.
+	(The cut command): Extend the new example a little.
+	(Formatting file timestamps): Fix typo: s/%M:S/%M:%S/.
+
 2003-01-19  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (Which files are listed): Document new option:
