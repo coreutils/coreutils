@@ -34,7 +34,7 @@
 		the sizes of subdirectories.
    -D		Dereference only symbolic links given on the command line.
    -L		Dereference all symbolic links.
-   --exclude=PAT Exclude files that match PAT.
+   --exclude=PATTERN Exclude files that match PATTERN.
    -X FILE	Exclude files that match patterns taken from FILE.
 
    By tege@sics.se, Torbjorn Granlund,
@@ -214,7 +214,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (_("\
   -x, --one-file-system  skip directories on different filesystems\n\
   -X FILE, --exclude-from=FILE  Exclude files that match any pattern in FILE.\n\
-      --exclude=PAT     Exclude files that match PAT.\n\
+      --exclude=PATTERN Exclude files that match PATTERN.\n\
       --max-depth=N     print the total for a directory (or file, with --all)\n\
                           only if it is N or fewer levels below the command\n\
                           line argument;  --max-depth=0 is the same as\n\
