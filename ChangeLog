@@ -6,6 +6,10 @@
 	* src/split.c (longopts): Use `1', not `0' as the value for
 	for &verbose.  Reported by Keith Thompson.
 
+	Test for the above fix.
+	* tests/misc/split-a: Also use --verbose and compare stderr
+	output with what we'd expect.
+
 2003-06-20  Jim Meyering  <jim@meyering.net>
 
 	* src/copy.c (copy_internal) [HAVE_STRUCT_STAT_ST_AUTHOR]:
