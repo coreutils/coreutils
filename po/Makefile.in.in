@@ -73,8 +73,8 @@ INSTOBJEXT = @INSTOBJEXT@
 	$(MAKE) $(PACKAGE).pot
 	$(MSGMERGE) $< $(srcdir)/$(PACKAGE).pot -o $*.pox
 
-.po.mo:
-	$(MSGFMT) -o $@ $<
+@MAINT@.po.mo:
+@MAINT@	$(MSGFMT) -o $@ $<
 
 .po.gmo:
 	file=$(srcdir)/`echo $* | sed 's,.*/,,'`.gmo \
@@ -87,7 +87,7 @@ INSTOBJEXT = @INSTOBJEXT@
 
 all: all-@USE_NLS@
 
-all-yes all-gettext: cat-id-tbl.c @MAINT@$(CATALOGS) $(GMOFILES)
+all-yes all-gettext: cat-id-tbl.c $(CATALOGS) @MAINT@$(GMOFILES)
 all-no:
 
 $(PACKAGE).pot: $(POTFILES)
