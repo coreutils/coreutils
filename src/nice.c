@@ -125,7 +125,10 @@ main (argc, argv)
   if (optind == argc)
     {
       if (adjustment_given)
-	usage (1);
+	{
+	  error (0, 0, "a command must be given with an adjustment");
+	  usage (1);
+	}
       /* No command given; print the priority. */
       errno = 0;
       current_priority = GET_PRIORITY ();
@@ -157,7 +160,7 @@ static int
 isinteger (s)
      char *s;
 {
-  if (*s == '-')
+  if (*s == '-' || *s == '+')
     ++s;
   if (*s == 0)
     return 0;
