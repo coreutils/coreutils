@@ -11880,9 +11880,46 @@ $ cut -d: -f1,5 /etc/passwd
 @end example
 
 With the @option{-c} option, @command{cut} will cut out specific characters
-(i.e., columns) in the input lines.  This command looks like it might be
-useful for data filtering.
+(i.e., columns) in the input lines.  This is useful for input data
+that has fixed width fields, and does not have a field separator.  For
+example, list the Monday dates for the current month:
 
+@c Is using cal ok?  Looked at gcal, but I don't like it.
+@example
+$ cal | cut -c 3-5
+@print{}Mo
+@print{}
+@print{}  6
+@print{} 13
+@print{} 20
+@print{} 27
+@end example
+
+Cut can also add field separators to fixed width data, using the
+@option{--output-delimiter} option.  This can be very useful to fill a
+database:
+
+@c [Why] can't that silly total line for directories be switched off?
+@example
+$ ls -ld ~/* | cut --output-delimiter=, -c1,2-4,5-7,8-10,57- | tee home.cs
+@print{} d,rwx,r-x,r-x,CVS
+@print{} d,rwx,---,---,Mail
+@print{} d,rwx,r-x,r-x,lilypond
+@print{} d,rwx,r-x,r-x,savannah
+$ mysql -e 'create table home \
+  (d char(1),u char(3), g char (3), o char (3), name text)' test
+$ mysqlimport --fields-terminated-by=, test home.cs
+@print{} test.home: Records: 4  Deleted: 0  Skipped: 0  Warnings: 0
+$ mysql -e 'select * from home' test
+@print{} +------+------+------+------+---------------------+
+@print{} | d    | u    | g    | o    | name                |
+@print{} +------+------+------+------+---------------------+
+@print{} | d    | rwx  | r-x  | r-x  | /home/fred/CVS      |
+@print{} | d    | rwx  | ---  | ---  | /home/fred/Mail     |
+@print{} | d    | rwx  | r-x  | r-x  | /home/fred/lilypond |
+@print{} | d    | rwx  | r-x  | r-x  | /home/fred/savannah |
+@print{} +------+------+------+------+---------------------+
+@end example
 
 @node The sort command
 @unnumberedsec The @command{sort} Command
