@@ -216,7 +216,7 @@ main (int argc, char **argv)
   int errors = 0;
   int optc;
   int files_given;
-  int (*sum_func) () = bsd_sum_file;
+  int (*sum_func) PARAMS ((const char *, int)) = bsd_sum_file;
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
