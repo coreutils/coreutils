@@ -1,6 +1,11 @@
-2001-10-12  Jim Meyering  <meyering@lucent.com>
+2001-10-13  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.1.
+
+	* man/chown.x: Fix typo: s/Sh/SH/ before OPTIONS.
+	Reported by Eric S. Raymond.
+
+2001-10-12  Jim Meyering  <meyering@lucent.com>
 
 	* tests/ls/Makefile.am (TESTS): Add infloop.
 	(XFAIL_TESTS): Mark it as a test that we expect to fail (temporarily).
