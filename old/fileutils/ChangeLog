@@ -10,6 +10,7 @@ Sun Apr  4 09:38:00 1993  Jim Meyering  (meyering@comco.com)
 	value to (char *).
 	* ln.c (do_link): Ditto
 	* mv.c (do_move): Ditto
+	* makepath.c (make_path): Ditto
 
 Sat Apr  3 18:17:23 1993  Jim Meyering  (meyering@comco.com)
 
