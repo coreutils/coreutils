@@ -314,17 +314,23 @@ xfwrite (buf, size, nelem, fp)
 static char *
 tempname ()
 {
-  static int seq;
+  static unsigned int seq;
   int len = strlen (temp_file_prefix);
-  char *name = xmalloc (len + 16);
-  struct tempnode *node =
-  (struct tempnode *) xmalloc (sizeof (struct tempnode));
+  char *name = xmalloc (len + 1 + sizeof ("sort") - 1 + 5 + 5 + 1);
+  struct tempnode *node;
 
+  node = (struct tempnode *) xmalloc (sizeof (struct tempnode));
   sprintf (name,
 	   "%s%ssort%5.5d%5.5d",
 	   temp_file_prefix,
 	   (len && temp_file_prefix[len - 1] != '/') ? "/" : "",
-	   (unsigned int) getpid () & 0xffff, ++seq);
+	   (unsigned int) getpid () & 0xffff, seq);
+
+  /* Make sure that SEQ's value fits in 5 digits.  */
+  ++seq;
+  if (seq >= 100000)
+    seq = 0;
+
   node->name = name;
   node->next = temphead.next;
   temphead.next = node;
@@ -657,7 +663,8 @@ numcompare (a, b)
 {
   register int tmpa, tmpb, loga, logb, tmp;
 
-  tmpa = UCHAR (*a), tmpb = UCHAR (*b);
+  tmpa = UCHAR (*a);
+  tmpb = UCHAR (*b);
 
   while (blanks[tmpa])
     tmpa = UCHAR (*++a);
