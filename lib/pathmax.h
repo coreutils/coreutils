@@ -1,5 +1,5 @@
 /* Define PATH_MAX somehow.  Requires sys/types.h.
-   Copyright (C) 1992 Free Software Foundation, Inc.
+   Copyright (C) 1992, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -16,38 +16,39 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 #ifndef _PATHMAX_H
-#define _PATHMAX_H
+# define _PATHMAX_H
 
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
+# ifdef HAVE_UNISTD_H
+#  include <unistd.h>
+# endif
 
 /* Non-POSIX BSD systems might have gcc's limits.h, which doesn't define
    PATH_MAX but might cause redefinition warnings when sys/param.h is
    later included (as on MORE/BSD 4.3).  */
-#if defined(_POSIX_VERSION) || (defined(HAVE_LIMITS_H) && !defined(__GNUC__))
-#include <limits.h>
-#endif
+# if defined(_POSIX_VERSION) || (defined(HAVE_LIMITS_H) && !defined(__GNUC__))
+#  include <limits.h>
+# endif
 
-#ifndef _POSIX_PATH_MAX
-#define _POSIX_PATH_MAX 255
-#endif
+# ifndef _POSIX_PATH_MAX
+#  define _POSIX_PATH_MAX 255
+# endif
 
-#if !defined(PATH_MAX) && defined(_PC_PATH_MAX)
-#define PATH_MAX (pathconf ("/", _PC_PATH_MAX) < 1 ? 1024 : pathconf ("/", _PC_PATH_MAX))
-#endif
+# if !defined(PATH_MAX) && defined(_PC_PATH_MAX)
+#  define PATH_MAX (pathconf ("/", _PC_PATH_MAX) < 1 ? 1024 \
+		    : pathconf ("/", _PC_PATH_MAX))
+# endif
 
 /* Don't include sys/param.h if it already has been.  */
-#if defined(HAVE_SYS_PARAM_H) && !defined(PATH_MAX) && !defined(MAXPATHLEN)
-#include <sys/param.h>
-#endif
+# if defined(HAVE_SYS_PARAM_H) && !defined(PATH_MAX) && !defined(MAXPATHLEN)
+#  include <sys/param.h>
+# endif
 
-#if !defined(PATH_MAX) && defined(MAXPATHLEN)
-#define PATH_MAX MAXPATHLEN
-#endif
+# if !defined(PATH_MAX) && defined(MAXPATHLEN)
+#  define PATH_MAX MAXPATHLEN
+# endif
 
-#ifndef PATH_MAX
-#define PATH_MAX _POSIX_PATH_MAX
-#endif
+# ifndef PATH_MAX
+#  define PATH_MAX _POSIX_PATH_MAX
+# endif
 
 #endif /* _PATHMAX_H */
