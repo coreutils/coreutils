@@ -92,7 +92,7 @@ int wait ();
 /* Number of bytes of a file to copy at a time. */
 #define READ_SIZE (32 * 1024)
 
-char *basename (char *);
+char *basename ();
 char *stpcpy ();
 char *xmalloc ();
 int safe_read ();
