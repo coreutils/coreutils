@@ -1,3 +1,9 @@
+2000-08-15  Jim Meyering  <meyering@lucent.com>
+
+	* src/du.c (count_entry): Remember the current directory also for `.'
+	and `..'.  Reported by Stephen Smoogen, based on a patch from H.J. Lu.
+	* tests/du/two-args: Add a test for this.
+
 2000-08-14  Jim Meyering  <meyering@lucent.com>
 
 	* src/copy.c (copy_reg): Move declaration of local, `n_read', into
