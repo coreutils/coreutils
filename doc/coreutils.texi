@@ -751,6 +751,7 @@ used for display is independent of any filesystem block size.
 Fractional block counts are rounded up to the nearest integer.
 
 @opindex --block-size=@var{size}
+@vindex BLOCKSIZE
 @vindex BLOCK_SIZE
 @vindex DF_BLOCK_SIZE
 @vindex DU_BLOCK_SIZE
@@ -771,9 +772,18 @@ Similarly, @env{DU_BLOCK_SIZE} specifies the default for @command{du} and
 This specifies the default block size for all three commands, if the
 above command-specific environment variables are not set.
 
+@item BLOCKSIZE
+This specifies the default block size for all values that are normally
+printed as blocks, if neither @env{BLOCK_SIZE} nor the above
+command-specific environment variables are set.  Unlike the other
+environment variables, @env{BLOCKSIZE} does not affect values that are
+normally printed as byte counts, e.g., the file sizes contained in
+@code{ls -l} output.
+
 @item POSIXLY_CORRECT
-If neither the @env{@var{command}_BLOCK_SIZE} nor the @env{BLOCK_SIZE}
-variables are set, but this variable is set, the block size defaults to 512.
+If neither @env{@var{command}_BLOCK_SIZE}, nor @env{BLOCK_SIZE}, nor
+@env{BLOCKSIZE} is set, but this variable is set, the block size
+defaults to 512.
 
 @end table
 
