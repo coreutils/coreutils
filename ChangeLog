@@ -2,6 +2,9 @@
 
 	* Version 5.0.1.
 
+	* Makefile.maint: Remove (or replace-with-TAB(s) to retain alignment)
+	each sequence of spaces before a TAB character.
+
 	* src/remove.c (is_empty_dir): Don't closedir (NULL).
 
 2003-04-12  Jim Meyering  <jim@meyering.net>
