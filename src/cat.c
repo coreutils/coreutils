@@ -524,7 +524,7 @@ cat (inbuf, insize, outbuf, outsize, quote,
 	      /* Move the remaining bytes to the beginning of the
 		 buffer.  */
 
-	      bcopy (wp, outbuf, bpout - wp);
+	      memmove (outbuf, wp, bpout - wp);
 	      bpout = outbuf + (bpout - wp);
 	    }
 
