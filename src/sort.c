@@ -381,12 +381,12 @@ xfclose (FILE *fp)
   if (fp == stdin)
     {
       /* Allow reading stdin from tty more than once. */
-      if (feof (fp))
-	clearerr (fp);
+      if (FEOF (fp))
+	CLEARERR (fp);
     }
   else if (fp == stdout)
     {
-      if (fflush (fp) != 0)
+      if (FFLUSH (fp) != 0)
 	{
 	  error (0, errno, _("flushing file"));
 	  cleanup ();
@@ -395,7 +395,7 @@ xfclose (FILE *fp)
     }
   else
     {
-      if (fclose (fp) != 0)
+      if (FCLOSE (fp) != 0)
 	{
 	  error (0, errno, _("error closing file"));
 	  cleanup ();
@@ -407,7 +407,7 @@ xfclose (FILE *fp)
 static void
 write_bytes (const char *buf, size_t n_bytes, FILE *fp)
 {
-  if (fwrite (buf, 1, n_bytes, fp) != n_bytes)
+  if (FWRITE (buf, 1, n_bytes, fp) != n_bytes)
     {
       error (0, errno, _("write error"));
       cleanup ();
@@ -618,7 +618,7 @@ fillbuf (struct buffer *buf, FILE *fp)
   memmove (buf->buf, buf->buf + buf->used - buf->left, buf->left);
   buf->used = buf->left;
 
-  while (!feof (fp) && (buf->used == 0
+  while (!FEOF (fp) && (buf->used == 0
 			|| !memchr (buf->buf, eolchar, buf->used)))
     {
       if (buf->used == buf->alloc)
@@ -626,8 +626,8 @@ fillbuf (struct buffer *buf, FILE *fp)
 	  buf->alloc *= 2;
 	  buf->buf = xrealloc (buf->buf, buf->alloc);
 	}
-      cc = fread (buf->buf + buf->used, 1, buf->alloc - buf->used, fp);
-      if (ferror (fp))
+      cc = FREAD (buf->buf + buf->used, 1, buf->alloc - buf->used, fp);
+      if (FERROR (fp))
 	{
 	  error (0, errno, _("read error"));
 	  cleanup ();
@@ -636,7 +636,7 @@ fillbuf (struct buffer *buf, FILE *fp)
       buf->used += cc;
     }
 
-  if (feof (fp) && buf->used && buf->buf[buf->used - 1] != eolchar)
+  if (FEOF (fp) && buf->used && buf->buf[buf->used - 1] != eolchar)
     {
       if (buf->used == buf->alloc)
 	{
@@ -1901,7 +1901,7 @@ finish:
       fprintf (stderr, _("%s: %s:%d: disorder: "), program_name, file_name,
 	       disorder_line_number);
       write_bytes (disorder_line->text, disorder_line->length, stderr);
-      putc (eolchar, stderr);
+      PUTC (eolchar, stderr);
     }
 
   free (buf.buf);
@@ -1982,7 +1982,7 @@ mergefps (FILE **fps, register int nfps, FILE *ofp)
 	  if (savedflag && compare (&saved, &lines[ord[0]].lines[cur[ord[0]]]))
 	    {
 	      write_bytes (saved.text, saved.length, ofp);
-	      putc (eolchar, ofp);
+	      PUTC (eolchar, ofp);
 	      savedflag = 0;
 	    }
 	  if (!savedflag)
@@ -2015,7 +2015,7 @@ mergefps (FILE **fps, register int nfps, FILE *ofp)
 	{
 	  write_bytes (lines[ord[0]].lines[cur[ord[0]]].text,
 		       lines[ord[0]].lines[cur[ord[0]]].length, ofp);
-	  putc (eolchar, ofp);
+	  PUTC (eolchar, ofp);
 	}
 
       /* Check if we need to read more lines into core. */
@@ -2070,7 +2070,7 @@ mergefps (FILE **fps, register int nfps, FILE *ofp)
   if (unique && savedflag)
     {
       write_bytes (saved.text, saved.length, ofp);
-      putc (eolchar, ofp);
+      PUTC (eolchar, ofp);
       free (saved.text);
     }
 }
@@ -2279,7 +2279,7 @@ sort (char **files, int nfiles, FILE *ofp)
 	    nls_numeric_format (lines.lines, lines.used);
 #endif
 	  sortlines (lines.lines, lines.used, tmp);
-	  if (feof (fp) && !nfiles && !n_temp_files && !buf.left)
+	  if (FEOF (fp) && !nfiles && !n_temp_files && !buf.left)
 	    tfp = ofp;
 	  else
 	    {
@@ -2291,7 +2291,7 @@ sort (char **files, int nfiles, FILE *ofp)
 		|| compare (&lines.lines[i], &lines.lines[i - 1]))
 	      {
 		write_bytes (lines.lines[i].text, lines.lines[i].length, tfp);
-		putc (eolchar, tfp);
+		PUTC (eolchar, tfp);
 	      }
 	  if (tfp != ofp)
 	    xfclose (tfp);
@@ -2883,9 +2883,9 @@ but lacks following character offset"));
 	      fp = xfopen (files[i], "r");
 	      tmp = tempname ();
 	      ofp = xtmpfopen (tmp);
-	      while ((cc = fread (buf, 1, sizeof buf, fp)) > 0)
+	      while ((cc = FREAD (buf, 1, sizeof buf, fp)) > 0)
 		write_bytes (buf, cc, ofp);
-	      if (ferror (fp))
+	      if (FERROR (fp))
 		{
 		  error (0, errno, "%s", files[i]);
 		  cleanup ();
@@ -2910,14 +2910,14 @@ but lacks following character offset"));
   /* If we wait for the implicit flush on exit, and the parent process
      has closed stdout (e.g., exec >&- in a shell), then the output file
      winds up empty.  I don't understand why.  This is under SunOS,
-     Solaris, Ultrix, and Irix.  This premature fflush makes the output
+     Solaris, Ultrix, and Irix.  This premature FFLUSH makes the output
      reappear. --karl@cs.umb.edu  */
-  if (fflush (ofp) < 0)
+  if (FFLUSH (ofp) < 0)
     error (SORT_FAILURE, errno, _("%s: write error"), outfile);
 
-  if (have_read_stdin && fclose (stdin) == EOF)
+  if (have_read_stdin && FCLOSE (stdin) == EOF)
     error (SORT_FAILURE, errno, outfile);
-  if (ferror (stdout) || fclose (stdout) == EOF)
+  if (FERROR (stdout) || fclose (stdout) == EOF)
     error (SORT_FAILURE, errno, _("%s: write error"), outfile);
 
   exit (EXIT_SUCCESS);

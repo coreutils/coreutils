@@ -208,7 +208,7 @@ print_line (FILE *out_stream, const Buf *x,
     {
       char *a = (i == bol->i ? bol->ptr : x->p[i].start);
       char *b = (i == bol_next->i ? bol_next->ptr : ONE_PAST_END (x, i));
-      fwrite (a, 1, b - a, out_stream);
+      FWRITE (a, 1, b - a, out_stream);
     }
 }
 

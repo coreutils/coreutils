@@ -136,7 +136,7 @@ head_bytes (const char *filename, int fd, U_LONG_LONG bytes_to_write)
 	break;
       if (bytes_read > bytes_to_write)
 	bytes_read = bytes_to_write;
-      if (fwrite (buffer, 1, bytes_read, stdout) == 0)
+      if (FWRITE (buffer, 1, bytes_read, stdout) == 0)
 	error (EXIT_FAILURE, errno, _("write error"));
       bytes_to_write -= bytes_read;
     }
@@ -164,7 +164,7 @@ head_lines (const char *filename, int fd, U_LONG_LONG lines_to_write)
       while (bytes_to_write < bytes_read)
 	if (buffer[bytes_to_write++] == '\n' && --lines_to_write == 0)
 	  break;
-      if (fwrite (buffer, 1, bytes_to_write, stdout) == 0)
+      if (FWRITE (buffer, 1, bytes_to_write, stdout) == 0)
 	error (EXIT_FAILURE, errno, _("write error"));
     }
   return 0;
@@ -388,7 +388,7 @@ main (int argc, char **argv)
 
   if (have_read_stdin && close (0) < 0)
     error (EXIT_FAILURE, errno, "-");
-  if (fclose (stdout) == EOF)
+  if (FCLOSE (stdout) == EOF)
     error (EXIT_FAILURE, errno, _("write error"));
 
   exit (exit_status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);

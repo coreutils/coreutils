@@ -175,14 +175,14 @@ next_file (FILE *fp)
 
   if (fp)
     {
-      if (ferror (fp))
+      if (FERROR (fp))
 	{
 	  error (0, errno, "%s", prev_file);
 	  exit_status = 1;
 	}
       if (fp == stdin)
-	clearerr (fp);		/* Also clear EOF. */
-      else if (fclose (fp) == EOF)
+	CLEARERR (fp);		/* Also clear EOF. */
+      else if (FCLOSE (fp) == EOF)
 	{
 	  error (0, errno, "%s", prev_file);
 	  exit_status = 1;
@@ -231,7 +231,7 @@ unexpand (void)
 
   for (;;)
     {
-      c = getc (fp);
+      c = GETC (fp);
 
       if (c == ' ' && convert)
 	{
@@ -270,7 +270,7 @@ unexpand (void)
 	     then print the rest as spaces. */
 	  if (pending == 1)
 	    {
-	      putchar (' ');
+	      PUTCHAR (' ');
 	      pending = 0;
 	    }
 	  column -= pending;
@@ -293,7 +293,7 @@ unexpand (void)
 		}
 	      if (next_tab_column - column <= pending)
 		{
-		  putchar ('\t');
+		  PUTCHAR ('\t');
 		  pending -= next_tab_column - column;
 		  column = next_tab_column;
 		}
@@ -303,7 +303,7 @@ unexpand (void)
 		  column += pending;
 		  while (pending != 0)
 		    {
-		      putchar (' ');
+		      PUTCHAR (' ');
 		      pending--;
 		    }
 		}
@@ -333,7 +333,7 @@ unexpand (void)
 		}
 	    }
 
-	  putchar (c);
+	  PUTCHAR (c);
 
 	  if (c == '\n')
 	    {
@@ -450,9 +450,9 @@ main (int argc, char **argv)
 
   unexpand ();
 
-  if (have_read_stdin && fclose (stdin) == EOF)
+  if (have_read_stdin && FCLOSE (stdin) == EOF)
     error (EXIT_FAILURE, errno, "-");
-  if (fclose (stdout) == EOF)
+  if (FCLOSE (stdout) == EOF)
     error (EXIT_FAILURE, errno, _("write error"));
   exit (exit_status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

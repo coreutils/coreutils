@@ -134,7 +134,7 @@ fold_file (char *filename, int width)
       return 1;
     }
 
-  while ((c = getc (istream)) != EOF)
+  while ((c = GETC (istream)) != EOF)
     {
       if (offset_out + 1 >= allocated_out)
 	{
@@ -145,7 +145,7 @@ fold_file (char *filename, int width)
       if (c == '\n')
 	{
 	  line_out[offset_out++] = c;
-	  fwrite (line_out, sizeof (char), (size_t) offset_out, stdout);
+	  FWRITE (line_out, sizeof (char), (size_t) offset_out, stdout);
 	  column = offset_out = 0;
 	  continue;
 	}
@@ -173,9 +173,9 @@ fold_file (char *filename, int width)
 
 		  /* Found a blank.  Don't output the part after it. */
 		  logical_end++;
-		  fwrite (line_out, sizeof (char), (size_t) logical_end,
+		  FWRITE (line_out, sizeof (char), (size_t) logical_end,
 			  stdout);
-		  putchar ('\n');
+		  PUTCHAR ('\n');
 		  /* Move the remainder to the beginning of the next line.
 		     The areas being copied here might overlap. */
 		  memmove (line_out, line_out + logical_end,
@@ -195,7 +195,7 @@ fold_file (char *filename, int width)
 		}
 	    }
 	  line_out[offset_out++] = '\n';
-	  fwrite (line_out, sizeof (char), (size_t) offset_out, stdout);
+	  FWRITE (line_out, sizeof (char), (size_t) offset_out, stdout);
 	  column = offset_out = 0;
 	  goto rescan;
 	}
@@ -204,22 +204,22 @@ fold_file (char *filename, int width)
     }
 
   if (offset_out)
-    fwrite (line_out, sizeof (char), (size_t) offset_out, stdout);
+    FWRITE (line_out, sizeof (char), (size_t) offset_out, stdout);
 
-  if (ferror (istream))
+  if (FERROR (istream))
     {
       error (0, errno, "%s", filename);
       if (!STREQ (filename, "-"))
-	fclose (istream);
+	FCLOSE (istream);
       return 1;
     }
-  if (!STREQ (filename, "-") && fclose (istream) == EOF)
+  if (!STREQ (filename, "-") && FCLOSE (istream) == EOF)
     {
       error (0, errno, "%s", filename);
       return 1;
     }
 
-  if (ferror (stdout))
+  if (FERROR (stdout))
     {
       error (0, errno, _("write error"));
       return 1;
@@ -304,9 +304,9 @@ main (int argc, char **argv)
     for (i = optind; i < argc; i++)
       errs |= fold_file (argv[i], width);
 
-  if (have_read_stdin && fclose (stdin) == EOF)
+  if (have_read_stdin && FCLOSE (stdin) == EOF)
     error (EXIT_FAILURE, errno, "-");
-  if (fclose (stdout) == EOF)
+  if (FCLOSE (stdout) == EOF)
     error (EXIT_FAILURE, errno, _("write error"));
 
   exit (errs == 0 ? EXIT_SUCCESS : EXIT_FAILURE);

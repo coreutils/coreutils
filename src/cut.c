@@ -254,7 +254,7 @@ getstr (char **lineptr, int *n, FILE *stream, char terminator)
 
   for (;;)
     {
-      register int c = getc (stream);
+      register int c = GETC (stream);
 
       /* We always want at least one char left in the buffer, since we
 	 always (unless we get an error while reading the first char)
@@ -276,7 +276,7 @@ getstr (char **lineptr, int *n, FILE *stream, char terminator)
 	  assert (*n - nchars_avail == read_pos - *lineptr);
 	}
 
-      if (feof (stream) || ferror (stream))
+      if (FEOF (stream) || ferror (stream))
 	{
 	  /* Return partial line, if any.  */
 	  if (read_pos == *lineptr)
@@ -484,17 +484,17 @@ cut_bytes (FILE *stream)
     {
       register int c;		/* Each character from the file. */
 
-      c = getc (stream);
+      c = GETC (stream);
 
       if (c == '\n')
 	{
-	  putchar ('\n');
+	  PUTCHAR ('\n');
 	  byte_idx = 0;
 	}
       else if (c == EOF)
 	{
 	  if (byte_idx > 0)
-	    putchar ('\n');
+	    PUTCHAR ('\n');
 	  break;
 	}
       else
@@ -502,7 +502,7 @@ cut_bytes (FILE *stream)
 	  ++byte_idx;
 	  if (print_kth (byte_idx))
 	    {
-	      putchar (c);
+	      PUTCHAR (c);
 	    }
 	}
     }
@@ -522,7 +522,7 @@ cut_fields (FILE *stream)
   found_any_selected_field = 0;
   field_idx = 1;
 
-  c = getc (stream);
+  c = GETC (stream);
   empty_input = (c == EOF);
   if (c != EOF)
     ungetc (c, stream);
@@ -558,17 +558,17 @@ cut_fields (FILE *stream)
 		}
 	      else
 		{
-		  fwrite (field_1_buffer, sizeof (char), len, stdout);
+		  FWRITE (field_1_buffer, sizeof (char), len, stdout);
 		  /* Make sure the output line is newline terminated.  */
 		  if (field_1_buffer[len - 1] != '\n')
-		    putchar ('\n');
+		    PUTCHAR ('\n');
 		}
 	      continue;
 	    }
 	  if (print_kth (1))
 	    {
 	      /* Print the field, but not the trailing delimiter.  */
-	      fwrite (field_1_buffer, sizeof (char), len - 1, stdout);
+	      FWRITE (field_1_buffer, sizeof (char), len - 1, stdout);
 	      found_any_selected_field = 1;
 	    }
 	  ++field_idx;
@@ -581,18 +581,18 @@ cut_fields (FILE *stream)
 	      if (found_any_selected_field)
 		{
 		  /* FIXME: use output delimiter here */
-		  putchar (delim);
+		  PUTCHAR (delim);
 		}
 	      found_any_selected_field = 1;
 
-	      while ((c = getc (stream)) != delim && c != '\n' && c != EOF)
+	      while ((c = GETC (stream)) != delim && c != '\n' && c != EOF)
 		{
-		  putchar (c);
+		  PUTCHAR (c);
 		}
 	    }
 	  else
 	    {
-	      while ((c = getc (stream)) != delim && c != '\n' && c != EOF)
+	      while ((c = GETC (stream)) != delim && c != '\n' && c != EOF)
 		{
 		  /* Empty.  */
 		}
@@ -601,7 +601,7 @@ cut_fields (FILE *stream)
 
       if (c == '\n')
 	{
-	  c = getc (stream);
+	  c = GETC (stream);
 	  if (c != EOF)
 	    {
 	      ungetc (c, stream);
@@ -615,7 +615,7 @@ cut_fields (FILE *stream)
 	{
 	  if (found_any_selected_field
 	      || (!empty_input && !(suppress_non_delimited && field_idx == 1)))
-	    putchar ('\n');
+	    PUTCHAR ('\n');
 	  if (c == EOF)
 	    break;
 	  field_idx = 1;
@@ -658,14 +658,14 @@ cut_file (char *file)
 
   cut_stream (stream);
 
-  if (ferror (stream))
+  if (FERROR (stream))
     {
       error (0, errno, "%s", file);
       return 1;
     }
   if (STREQ (file, "-"))
-    clearerr (stream);		/* Also clear EOF. */
-  else if (fclose (stream) == EOF)
+    CLEARERR (stream);		/* Also clear EOF. */
+  else if (FCLOSE (stream) == EOF)
     {
       error (0, errno, "%s", file);
       return 1;
@@ -765,12 +765,12 @@ main (int argc, char **argv)
     for (; optind < argc; optind++)
       exit_status |= cut_file (argv[optind]);
 
-  if (have_read_stdin && fclose (stdin) == EOF)
+  if (have_read_stdin && FCLOSE (stdin) == EOF)
     {
       error (0, errno, "-");
       exit_status = 1;
     }
-  if (ferror (stdout) || fclose (stdout) == EOF)
+  if (FERROR (stdout) || fclose (stdout) == EOF)
     error (EXIT_FAILURE, errno, _("write error"));
 
   exit (exit_status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);

@@ -409,7 +409,7 @@ main (register int argc, register char **argv)
 	      if (in_stream != NULL)
 		{
 		  fmt (in_stream);
-		  if (fclose (in_stream) == EOF)
+		  if (FCLOSE (in_stream) == EOF)
 		    error (EXIT_FAILURE, errno, file);
 		}
 	      else
@@ -418,7 +418,7 @@ main (register int argc, register char **argv)
 	}
     }
 
-  if (ferror (stdout) || fclose (stdout) == EOF)
+  if (FERROR (stdout) || fclose (stdout) == EOF)
     error (EXIT_FAILURE, errno, _("write error"));
 
   exit (EXIT_SUCCESS);
@@ -497,7 +497,7 @@ get_paragraph (FILE *f)
 	  next_char = EOF;
 	  return FALSE;
 	}
-      putchar ('\n');
+      PUTCHAR ('\n');
       c = get_prefix (f);
     }
 
@@ -573,13 +573,13 @@ copy_rest (FILE *f, register int c)
     {
       put_space (next_prefix_indent);
       for (s = prefix; out_column != in_column && *s; out_column++)
-	putchar (*s++);
+	PUTCHAR (*s++);
       put_space (in_column - out_column);
     }
   while (c != '\n' && c != EOF)
     {
-      putchar (c);
-      c = getc (f);
+      PUTCHAR (c);
+      c = GETC (f);
     }
   return c;
 }
@@ -625,7 +625,7 @@ get_line (FILE *f, register int c)
 	  if (wptr == end_of_parabuf)
 	    flush_paragraph ();
 	  *wptr++ = c;
-	  c = getc (f);
+	  c = GETC (f);
 	}
       while (c != EOF && !ISSPACE (c));
       in_column += word_limit->length = wptr - word_limit->text;
@@ -661,7 +661,7 @@ get_prefix (FILE *f)
   register const char *p;
 
   in_column = 0;
-  c = get_space (f, getc (f));
+  c = get_space (f, GETC (f));
   if (prefix_length == 0)
     next_prefix_indent = prefix_lead_space < in_column ?
       prefix_lead_space : in_column;
@@ -673,7 +673,7 @@ get_prefix (FILE *f)
 	  if (c != *p)
 	    return c;
 	  in_column++;
-	  c = getc (f);
+	  c = GETC (f);
 	}
       c = get_space (f, c);
     }
@@ -697,7 +697,7 @@ get_space (FILE *f, register int c)
 	}
       else
 	return c;
-      c = getc (f);
+      c = GETC (f);
     }
 }
 
@@ -919,7 +919,7 @@ put_line (register WORD *w, int indent)
     }
   put_word (w);
   last_line_length = out_column;
-  putchar ('\n');
+  PUTCHAR ('\n');
 }
 
 /* Output to stdout the word W.  */
@@ -932,7 +932,7 @@ put_word (register WORD *w)
 
   s = w->text;
   for (n = w->length; n != 0; n--)
-    putchar (*s++);
+    PUTCHAR (*s++);
   out_column += w->length;
 }
 
@@ -950,13 +950,13 @@ put_space (int space)
       if (out_column + 1 < tab_target)
 	while (out_column < tab_target)
 	  {
-	    putchar ('\t');
+	    PUTCHAR ('\t');
 	    out_column = (out_column / TABWIDTH + 1) * TABWIDTH;
 	  }
     }
   while (out_column < space_target)
     {
-      putchar (' ');
+      PUTCHAR (' ');
       out_column++;
     }
 }

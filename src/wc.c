@@ -130,7 +130,7 @@ write_counts (uintmax_t lines,
     }
   if (*file)
     printf (" %s", file);
-  putchar ('\n');
+  PUTCHAR ('\n');
 }
 
 static void

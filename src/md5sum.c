@@ -264,11 +264,11 @@ md5_file (const char *filename, int binary, unsigned char *md5_result)
     {
       error (0, errno, "%s", filename);
       if (fp != stdin)
-	fclose (fp);
+	FCLOSE (fp);
       return 1;
     }
 
-  if (fp != stdin && fclose (fp) == EOF)
+  if (fp != stdin && FCLOSE (fp) == EOF)
     {
       error (0, errno, "%s", filename);
       return 1;
@@ -358,7 +358,7 @@ md5_check (const char *checkfile_name)
 	      if (!status_only)
 		{
 		  printf (_("%s: FAILED open or read\n"), filename);
-		  fflush (stdout);
+		  FFLUSH (stdout);
 		}
 	    }
 	  else
@@ -380,23 +380,23 @@ md5_check (const char *checkfile_name)
 		{
 		  printf ("%s: %s\n", filename,
 			  (cnt != 16 ? _("FAILED") : _("OK")));
-		  fflush (stdout);
+		  FFLUSH (stdout);
 		}
 	    }
 	}
     }
-  while (!feof (checkfile_stream) && !ferror (checkfile_stream));
+  while (!FEOF (checkfile_stream) && !ferror (checkfile_stream));
 
   if (line)
     free (line);
 
-  if (ferror (checkfile_stream))
+  if (FERROR (checkfile_stream))
     {
       error (0, 0, _("%s: read error"), checkfile_name);
       return 1;
     }
 
-  if (checkfile_stream != stdin && fclose (checkfile_stream) == EOF)
+  if (checkfile_stream != stdin && FCLOSE (checkfile_stream) == EOF)
     {
       error (0, errno, "%s", checkfile_name);
       return 1;
@@ -577,16 +577,16 @@ verifying checksums"));
 	      /* Output a leading backslash if the file name contains
 		 a newline.  */
 	      if (strchr (file, '\n'))
-		putchar ('\\');
+		PUTCHAR ('\\');
 
 	      for (i = 0; i < 16; ++i)
 		printf ("%02x", md5buffer[i]);
 
-	      putchar (' ');
+	      PUTCHAR (' ');
 	      if (binary)
-		putchar ('*');
+		PUTCHAR ('*');
 	      else
-		putchar (' ');
+		PUTCHAR (' ');
 
 	      /* Translate each NEWLINE byte to the string, "\\n",
 		 and each backslash to "\\\\".  */
@@ -603,19 +603,19 @@ verifying checksums"));
 		      break;
 
 		    default:
-		      putchar (file[i]);
+		      PUTCHAR (file[i]);
 		      break;
 		    }
 		}
-	      putchar ('\n');
+	      PUTCHAR ('\n');
 	    }
 	}
     }
 
-  if (fclose (stdout) == EOF)
+  if (FCLOSE (stdout) == EOF)
     error (EXIT_FAILURE, errno, _("write error"));
 
-  if (have_read_stdin && fclose (stdin) == EOF)
+  if (have_read_stdin && FCLOSE (stdin) == EOF)
     error (EXIT_FAILURE, errno, _("standard input"));
 
   exit (err == 0 ? EXIT_SUCCESS : EXIT_FAILURE);

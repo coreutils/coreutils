@@ -107,7 +107,7 @@ bsd_sum_file (const char *file, int print_name)
 	}
     }
 
-  while ((ch = getc (fp)) != EOF)
+  while ((ch = GETC (fp)) != EOF)
     {
       total_bytes++;
       ROTATE_RIGHT (checksum);
@@ -115,15 +115,15 @@ bsd_sum_file (const char *file, int print_name)
       checksum &= 0xffff;	/* Keep it within bounds. */
     }
 
-  if (ferror (fp))
+  if (FERROR (fp))
     {
       error (0, errno, "%s", file);
       if (!STREQ (file, "-"))
-	fclose (fp);
+	FCLOSE (fp);
       return -1;
     }
 
-  if (!STREQ (file, "-") && fclose (fp) == EOF)
+  if (!STREQ (file, "-") && FCLOSE (fp) == EOF)
     {
       error (0, errno, "%s", file);
       return -1;
@@ -132,7 +132,7 @@ bsd_sum_file (const char *file, int print_name)
   printf ("%05lu %5ld", checksum, (total_bytes + 1024 - 1) / 1024);
   if (print_name > 1)
     printf (" %s", file);
-  putchar ('\n');
+  PUTCHAR ('\n');
 
   return 0;
 }
@@ -192,7 +192,7 @@ sysv_sum_file (const char *file, int print_name)
   printf ("%lu %ld", checksum % 0xffff, (total_bytes + 512 - 1) / 512);
   if (print_name)
     printf (" %s", file);
-  putchar ('\n');
+  PUTCHAR ('\n');
 
   return 0;
 }
@@ -252,7 +252,7 @@ main (int argc, char **argv)
       if ((*sum_func) (argv[optind], files_given) < 0)
 	errors = 1;
 
-  if (have_read_stdin && fclose (stdin) == EOF)
+  if (have_read_stdin && FCLOSE (stdin) == EOF)
     error (EXIT_FAILURE, errno, "-");
   exit (errors == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

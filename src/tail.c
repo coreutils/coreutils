@@ -197,7 +197,7 @@ xwrite (int fd, char *const buffer, size_t n_bytes)
 {
   assert (fd == 1);
   assert (n_bytes >= 0);
-  if (n_bytes > 0 && fwrite (buffer, 1, n_bytes, stdout) == 0)
+  if (n_bytes > 0 && FWRITE (buffer, 1, n_bytes, stdout) == 0)
     error (EXIT_FAILURE, errno, _("write error"));
 }
 
@@ -583,7 +583,7 @@ dump_remainder (const char *pretty_filename, int fd)
     error (EXIT_FAILURE, errno, "%s", pretty_filename);
 
   if (forever)
-    fflush (stdout);
+    FFLUSH (stdout);
 
   return total;
 }
@@ -1291,7 +1291,7 @@ main (int argc, char **argv)
 
   if (have_read_stdin && close (0) < 0)
     error (EXIT_FAILURE, errno, "-");
-  if (fclose (stdout) == EOF)
+  if (FCLOSE (stdout) == EOF)
     error (EXIT_FAILURE, errno, _("write error"));
   exit (exit_status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

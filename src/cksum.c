@@ -217,7 +217,7 @@ cksum (char *file, int print_name)
 	}
     }
 
-  while ((bytes_read = fread (buf, 1, BUFLEN, fp)) > 0)
+  while ((bytes_read = FREAD (buf, 1, BUFLEN, fp)) > 0)
     {
       unsigned char *cp = buf;
 
@@ -226,15 +226,15 @@ cksum (char *file, int print_name)
 	crc = (crc << 8) ^ crctab[((crc >> 24) ^ *(cp++)) & 0xFF];
     }
 
-  if (ferror (fp))
+  if (FERROR (fp))
     {
       error (0, errno, "%s", file);
       if (!STREQ (file, "-"))
-	fclose (fp);
+	FCLOSE (fp);
       return -1;
     }
 
-  if (!STREQ (file, "-") && fclose (fp) == EOF)
+  if (!STREQ (file, "-") && FCLOSE (fp) == EOF)
     {
       error (0, errno, "%s", file);
       return -1;
@@ -252,7 +252,7 @@ cksum (char *file, int print_name)
   printf ("%lu %ld", crc, length);
   if (print_name)
     printf (" %s", file);
-  putchar ('\n');
+  PUTCHAR ('\n');
 
   return 0;
 }
@@ -326,7 +326,7 @@ main (int argc, char **argv)
 	  errors = 1;
     }
 
-  if (have_read_stdin && fclose (stdin) == EOF)
+  if (have_read_stdin && FCLOSE (stdin) == EOF)
     error (EXIT_FAILURE, errno, "-");
   exit (errors == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
