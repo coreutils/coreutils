@@ -1,3 +1,37 @@
+Sat Jan 18 09:32:26 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+	1997-01-06  Paul Eggert  <eggert@twinsun.com>
+
+	* getdate.y: Rewrite to use mktime.
+
+	<sys/timeb.h>: Don't include.
+	(mktime): Declare.
+
+	(struct timeb, timezone, DOOMSDAY, SECSPERDAY, DSTMODE, yyDSTmode,
+	ToSeconds, Convert, DSTcorrect, RelativeDate, RelativeMonth): Remove.
+	(ToHour): New function (part of the old ToSeconds fn).
+	(ToYear): New function (part of the old Convert fn).
+
+	(TABLE.value, yyDayOrdinal, yyDayNumber, yyTimezone, yyDay, yyHour,
+	yyMinutes, yyMonth, yySeconds, yyYear, yyRelMonth, yyRelSeconds,
+	Number): Now int instead of time_t.
+	(HOUR): Don't cast to time_t.
+
+	(tDAY_UNIT, tHOUR_UNIT, tYEAR_UNIT): New %tokens.
+	(UnitsTable): Use new units that are closer to the keywords.
+
+	(yyRelDay, yyRelHour, yyRelMinutes, yyRelYear): New variables.
+	(rel, relunit, get_date): Add support for them.
+
+	(time): Fix timezone calculations for negative half-hour offsets
+	when integer division truncates towards minus infinity.
+
+	(zone): Incorporiate DST calculation directly.
+
+	(get_date): 2nd arg is now time_t *, not struct timeb *.
+	Use mktime to do most of the work, instead of computing it ourselves.
+	Guard against falsely reporting errors near the time_t boundaries
+	when parsing times in other time zones.
+
 Thu Jan 16 20:58:40 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* m4/getloadavg.m4 (AM_FUNC_GETLOADAVG): Check for pstat_getdynamic.
