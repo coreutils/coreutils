@@ -1,3 +1,11 @@
+1999-02-06  Jim Meyering  <meyering@ascend.com>
+
+	* jm-macros.m4: Actually invoke jm_WITH_REGEX now that it requires
+	an argument.
+
+	* regex.m4: Add a run-time Test for proper operation of
+	re_compile_pattern.
+
 1999-01-31  Jim Meyering  <meyering@ascend.com>
 
 	* getloadavg.m4: Check for locale.h and the function, setlocale.
