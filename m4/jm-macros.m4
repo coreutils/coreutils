@@ -1,4 +1,4 @@
-#serial 42   -*- autoconf -*-
+#serial 43   -*- autoconf -*-
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
@@ -159,6 +159,7 @@ AC_DEFUN([jm_MACROS],
   AC_FUNC_OBSTACK
 
   AC_FUNC_STRTOD
+  AC_FUNC_STRNLEN
 
   # See if linking `seq' requires -lm.
   # It does on nearly every system.  The single exception (so far) is
@@ -188,7 +189,7 @@ AC_DEFUN([jm_MACROS],
   jm_FSTYPENAME
   jm_FILE_SYSTEM_USAGE([space=yes], [space=no])
   if test $list_mounted_fs = yes && test $space = yes; then
-    DF_PROG="df"
+    DF_PROG=df
     AC_LIBOBJ(fsusage)
     AC_LIBOBJ(mountlist)
   fi
