@@ -254,7 +254,7 @@ main (argc, argv)
 	  if (items != 3)
 	    {
 	      if (verbose)
-		error (0, 0, _("illegal line in check file: %s"), line);
+		error (0, 0, _("invalid line in check file: %s"), line);
 	    }
 	  else
 	    {
