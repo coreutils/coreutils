@@ -89,12 +89,13 @@ struct htab
 
 /* Structure for dynamically resizable strings. */
 
-typedef struct
+struct String
 {
   unsigned alloc;		/* Size of allocation for the text.  */
   unsigned length;		/* Length of the text currently.  */
   char *text;			/* Pointer to the text.  */
-} *string, stringstruct;
+};
+typedef struct String String;
 
 int stat ();
 int lstat ();
@@ -107,10 +108,10 @@ static void du_files __P ((char **files));
 static void hash_init __P ((unsigned int modulus,
 			    unsigned int entry_tab_size));
 static void hash_reset __P ((void));
-static void str_concatc __P ((string s1, char *cstr));
-static void str_copyc __P ((string s1, char *cstr));
-static void str_init __P ((string *s1, unsigned int size));
-static void str_trunc __P ((string s1, unsigned int length));
+static void str_concatc __P ((String *s1, char *cstr));
+static void str_copyc __P ((String *s1, char *cstr));
+static void str_init __P ((String **s1, unsigned int size));
+static void str_trunc __P ((String *s1, unsigned int length));
 
 /* Name under which this program was invoked.  */
 char *program_name;
@@ -145,7 +146,7 @@ static int human_readable_base;
 static int output_units;
 
 /* Accumulated path for file or directory being processed.  */
-static string path;
+static String *path;
 
 /* Pointer to hash structure, used by the hash routines.  */
 static struct htab *htab;
@@ -741,14 +742,14 @@ hash_insert2 (struct htab *ht, ino_t ino, dev_t dev)
   return 0;
 }
 
-/* Initialize the struct string S1 for holding SIZE characters.  */
+/* Initialize string S1 to hold SIZE characters.  */
 
 static void
-str_init (string *s1, unsigned int size)
+str_init (String **s1, unsigned int size)
 {
-  string s;
+  String *s;
 
-  s = (string) xmalloc (sizeof (stringstruct));
+  s = (String *) xmalloc (sizeof (struct String));
   s->text = xmalloc (size + 1);
 
   s->alloc = size;
@@ -756,7 +757,7 @@ str_init (string *s1, unsigned int size)
 }
 
 static void
-ensure_space (string s, unsigned int size)
+ensure_space (String * s, unsigned int size)
 {
   if (s->alloc < size)
     {
@@ -768,7 +769,7 @@ ensure_space (string s, unsigned int size)
 /* Assign the null-terminated C-string CSTR to S1.  */
 
 static void
-str_copyc (string s1, char *cstr)
+str_copyc (String *s1, char *cstr)
 {
   unsigned l = strlen (cstr);
   ensure_space (s1, l);
@@ -777,7 +778,7 @@ str_copyc (string s1, char *cstr)
 }
 
 static void
-str_concatc (string s1, char *cstr)
+str_concatc (String *s1, char *cstr)
 {
   unsigned l1 = s1->length;
   unsigned l2 = strlen (cstr);
@@ -791,7 +792,7 @@ str_concatc (string s1, char *cstr)
 /* Truncate the string S1 to have length LENGTH.  */
 
 static void
-str_trunc (string s1, unsigned int length)
+str_trunc (String *s1, unsigned int length)
 {
   if (s1->length > length)
     {
