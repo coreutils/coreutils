@@ -45,6 +45,7 @@ extern int errno;
 #include "same.h"
 #include "dirname.h"
 #include "error.h"
+#include "xalloc.h"
 
 #if ENABLE_NLS
 # include <libintl.h>
@@ -81,7 +82,7 @@ same_name (const char *source, const char *dest)
   source_dirname = dir_name (source);
   dest_dirname = dir_name (dest);
   if (source_dirname == NULL || dest_dirname == NULL)
-    error (1, 0, _("virtual memory exhausted"));
+    xalloc_die ();
 
   if (stat (source_dirname, &source_dir_stats))
     {
