@@ -42,6 +42,7 @@ join
 kill
 link
 ln
+localedir.h
 logname
 ls
 md5sum
