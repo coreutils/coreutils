@@ -1,10 +1,5 @@
 2000-11-06  Jim Meyering  <meyering@lucent.com>
 
-	* tests/rwx-to-mode: New file.
-	* tests/mkdir/parents: New file.
-
-	* tests/mkdir/Makefile.am (TESTS_ENVIRONMENT): Define srcdir=$(srcdir).
-
 	* tests/cp/cp-parents: Move mkdir tests into ../mkdir.
 
 	* doc/fileutils.texi: Use Free Documentation Licence.
@@ -15,15 +10,18 @@
 	* config.guess: Likewise.
 	* man/help2man: Update from latest version: 1.23.
 
-2000-11-02  Won-kyu Park  <wkpark@chem.skku.ac.kr>
-
-	* src/df.c (print_header): Mark strings for translation.
-
-2000-11-06  Jim Meyering  <meyering@lucent.com>
-
 	* src/mkdir.c: Do not set the permissions of the final directory
 	component if it was not just created.
 	Based on a patch from Volker Borchert.
+
+	* tests/rwx-to-mode: New file.
+	* tests/mkdir/parents: New test for the above mkdir.c fix.
+	* tests/mkdir/Makefile.am (TESTS): Add parents.
+	(TESTS_ENVIRONMENT): Define srcdir=$(srcdir).
+
+2000-11-02  Won-kyu Park  <wkpark@chem.skku.ac.kr>
+
+	* src/df.c (print_header): Mark strings for translation.
 
 2000-11-05  Jim Meyering  <meyering@lucent.com>
 
