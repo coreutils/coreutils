@@ -1,6 +1,6 @@
 /* argmatch.c -- find a match for a string in an array
 
-   Copyright (C) 1990, 1998, 1999, 2001, 2002, 2003, 2004 Free
+   Copyright (C) 1990, 1998, 1999, 2001, 2002, 2003, 2004, 2005 Free
    Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -73,7 +73,7 @@ argmatch_exit_fn argmatch_die = __argmatch_die;
 
 
 /* If ARG is an unambiguous match for an element of the
-   null-terminated array ARGLIST, return the index in ARGLIST
+   NULL-terminated array ARGLIST, return the index in ARGLIST
    of the matched element, else -1 if it does not match any element
    or -2 if it is ambiguous (is a prefix of more than one element).
 
