@@ -1,6 +1,6 @@
 /* acl.c - access control lists
 
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@
 # include <config.h>
 #endif
 
+#include <sys/types.h>
 #include <sys/stat.h>
 #ifndef S_ISLNK
 # define S_ISLNK(Mode) 0
