@@ -17,7 +17,7 @@
   would fail to remove all files in DIR if there were more than 338.
 * tail's byte and line counts are no longer limited to OFF_T_MAX.
   Now the limit is UINTMAX_MAX (usually 2^64).
-* tsort now fails when given an odd number of input tokens.
+* tsort now fails when given an odd number of input tokens, as required by POSIX
   Before, it would act as if the final token appeared one additional time.
 * readlink's --canonicalize option now works on systems like Solaris that
   lack the canonicalize_file_name function but do have resolvepath.
