@@ -845,7 +845,7 @@ rm (struct File_spec *fs, int user_specified_name,
     }
 
 #ifdef ENABLE_CYCLE_CHECK
-  if (S_ISDIR (filetype_mode))
+  if (x->recursive && S_ISDIR (filetype_mode))
     {
       struct active_dir_ent *old_ent;
       struct active_dir_ent *new_ent;
@@ -906,18 +906,19 @@ The following two directories have the same inode number:\n"));
       status = remove_dir (fs, need_save_cwd, x, cwd_dev_ino);
 
 #ifdef ENABLE_CYCLE_CHECK
-      {
-	struct active_dir_ent tmp;
-	struct active_dir_ent *old_ent;
+      if (active_dir_map)
+	{
+	  struct active_dir_ent tmp;
+	  struct active_dir_ent *old_ent;
 
-	/* Remove this directory from the active_dir_map.  */
-	tmp.st_ino = fs->st_ino;
-	assert (fs->have_device);
-	tmp.st_dev = fs->st_dev;
-	old_ent = hash_delete (active_dir_map, &tmp);
-	assert (old_ent != NULL);
-	free (old_ent);
-      }
+	  /* Remove this directory from the active_dir_map.  */
+	  tmp.st_ino = fs->st_ino;
+	  assert (fs->have_device);
+	  tmp.st_dev = fs->st_dev;
+	  old_ent = hash_delete (active_dir_map, &tmp);
+	  assert (old_ent != NULL);
+	  free (old_ent);
+	}
 #endif
 
       return status;
@@ -925,16 +926,18 @@ The following two directories have the same inode number:\n"));
 }
 
 void
-remove_init (void)
+remove_init (struct rm_options const *x)
 {
   /* Initialize dir-stack obstacks.  */
   obstack_init (&dir_stack);
   obstack_init (&len_stack);
 
 #ifdef ENABLE_CYCLE_CHECK
-  active_dir_map = hash_initialize (ACTIVE_DIR_INITIAL_CAPACITY, NULL,
-				    hash_active_dir_ent,
-				    hash_compare_active_dir_ents, free);
+  if (x->recursive)
+    active_dir_map
+      = hash_initialize (ACTIVE_DIR_INITIAL_CAPACITY, NULL,
+			 hash_active_dir_ent,
+			 hash_compare_active_dir_ents, free);
 #endif
 }
 
@@ -942,7 +945,8 @@ void
 remove_fini (void)
 {
 #ifdef ENABLE_CYCLE_CHECK
-  hash_free (active_dir_map);
+  if (active_dir_map)
+    hash_free (active_dir_map);
 #endif
 
   obstack_free (&dir_stack, NULL);
