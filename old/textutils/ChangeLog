@@ -1,3 +1,22 @@
+Tue Jan 19 13:35:24 1993  David J. MacKenzie  (djm@kropotkin.gnu.ai.mit.edu)
+
+	* Version 1.4.
+
+	* system.h: Try BBSIZE if BSIZE isn't defined.
+	From Tony Robinson <ajr@eng.cam.ac.uk>.
+
+Sat Dec 12 12:37:00 1992  David J. MacKenzie  (djm@kropotkin.gnu.ai.mit.edu)
+
+	* tail.c (tail_forever): Use an array of file descriptors
+	instead of forking processes.
+	(dump_remainder): Return number of bytes read.
+	(tail_file): Fill in the new array.
+	From Ian Lance Taylor.
+
+Fri Dec 11 17:18:16 1992  David J. MacKenzie  (djm@kropotkin.gnu.ai.mit.edu)
+
+	* system.h: Only define index, bcmp, etc. if not already defined.
+
 Tue Dec  8 10:31:14 1992  Jim Meyering  (meyering@idefix.comco.com)
 
 	* tr.c (is_char_class_member): Remove unreached return after abort.

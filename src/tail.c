@@ -70,6 +70,9 @@ static int forever_multiple;
 /* Array of file descriptors if forever_multiple is 1.  */
 static int *file_descs;
 
+/* Array of file sizes if forever_multiple is 1.  */
+static off_t *file_sizes;
+
 /* If nonzero, count from start of file instead of end. */
 static int from_start;
 
@@ -96,7 +99,7 @@ static int tail_bytes ();
 static int tail_file ();
 static int tail_lines ();
 static long atou();
-static void dump_remainder ();
+static long dump_remainder ();
 static void tail_forever ();
 static void parse_unit ();
 static void usage ();
@@ -263,6 +266,7 @@ main (argc, argv)
       forever_multiple = 1;
       forever = 0;
       file_descs = (int *) xmalloc ((argc - optind) * sizeof (int));
+      file_sizes = (off_t *) xmalloc ((argc - optind) * sizeof (off_t));
     }
 
   if (header_mode == always
@@ -297,6 +301,7 @@ tail_file (filename, number, filenum)
      int filenum;
 {
   int fd, errors;
+  struct stat stats;
 
   if (!strcmp (filename, "-"))
     {
@@ -306,7 +311,26 @@ tail_file (filename, number, filenum)
 	write_header (filename);
       errors = tail (filename, 0, number);
       if (forever_multiple)
-	file_descs[filenum] = errors ? -1 : 0;
+	{
+	  if (fstat (0, &stats) < 0)
+	    {
+	      error (0, errno, "standard input");
+	      errors = 1;
+	    }
+	  else if (!S_ISREG (stats.st_mode))
+	    {
+	      error (0, 0,
+		     "standard input: cannot follow end of non-regular file");
+	      errors = 1;
+	    }
+	  if (errors)
+	    file_descs[filenum] = -1;
+	  else
+	    {
+	      file_descs[filenum] = 0;
+	      file_sizes[filenum] = stats.st_size;
+	    }
+	}
     }
   else
     {
@@ -326,13 +350,26 @@ tail_file (filename, number, filenum)
 	  errors = tail (filename, fd, number);
 	  if (forever_multiple)
 	    {
+	      if (fstat (fd, &stats) < 0)
+		{
+		  error (0, errno, "%s", filename);
+		  errors = 1;
+		}
+	      else if (!S_ISREG (stats.st_mode))
+		{
+		  error (0, 0, "%s: cannot follow end of non-regular file");
+		  errors = 1;
+		}
 	      if (errors)
 		{
 		  close (fd);
 		  file_descs[filenum] = -1;
 		}
 	      else
-		file_descs[filenum] = fd;
+		{
+		  file_descs[filenum] = fd;
+		  file_sizes[filenum] = stats.st_size;
+		}
 	    }
 	  else
 	    {
@@ -821,21 +858,26 @@ start_lines (filename, fd, number)
   return 0;
 }
 
-/* Display file FILENAME from the current position in FD
-   to the end.  If `forever' is nonzero, keep reading from the
-   end of the file until killed. */
+/* Display file FILENAME from the current position in FD to the end.
+   If `forever' is nonzero, keep reading from the end of the file
+   until killed.  Return the number of bytes read from the file.  */
 
-static void
+static long
 dump_remainder (filename, fd)
      char *filename;
      int fd;
 {
   char buffer[BUFSIZE];
   int bytes_read;
+  long total;
 
+  total = 0;
 output:
   while ((bytes_read = read (fd, buffer, BUFSIZE)) > 0)
-    xwrite (1, buffer, bytes_read);
+    {
+      xwrite (1, buffer, bytes_read);
+      total += bytes_read;
+    }
   if (bytes_read == -1)
     error (1, errno, "%s", filename);
   if (forever)
@@ -843,174 +885,61 @@ output:
       sleep (1);
       goto output;
     }
+  return total;
 }
 
-#ifndef SIGUSR1
-#define SIGUSR1 SIGSYS
-#endif
-
-/* To support tail_forever we use a signal handler that just quietly
-   exits.  We are going to fork once for each file; we send a SIGUSR1
-   to kill the children if an error occurs.  */
-
-static RETSIGTYPE
-sigusr1 (sig)
-     int sig;
-{
-  exit (0);
-}
-
-/* Print error message MESSAGE for errno ERRNUM;
-   send SIGUSR1 to the KIDS processes in PIDS;
-   exit with status 1.  */
-
-static void
-kill_kids (errnum, message, pids, kids)
-     int errnum;
-     char *message;
-     int *pids;
-     int kids;
-{
-  int i;
-
-  error (0, errnum, message);
-  for (i = 0; i < kids; i++)
-    kill (pids[i], SIGUSR1);
-  exit (1);
-}
-
-/* The number of bytes that a pipe can hold (atomic read or write).  */
-#ifndef PIPE_BUF
-#define PIPE_BUF 512
-#endif
-
-/* Tail NFILES (>1) files forever until killed.  The file names are in NAMES.
-   The open file descriptors are in `file_descs'.  Fork a process for each
-   file, let all the processes write to a single pipe, and then read
-   the pipe.  */
-/* Should we reap the zombies with wait?  */
+/* Tail NFILES (>1) files forever until killed.  The file names are in
+   NAMES.  The open file descriptors are in `file_descs', and the size
+   at which we stopped tailing them is in `file_sizes'.  We loop over
+   each of them, doing an fstat to see if they have changed size.  If
+   none of them have changed size in one iteration, we sleep for a
+   second and try again.  We do this until the user interrupts us.  */
 
 static void
 tail_forever (names, nfiles)
      char **names;
      int nfiles;
 {
-  int pipe_descs[2];
-  int *pids;
-  int i;
-  char *buffer = xmalloc (PIPE_BUF); /* malloc assures `int' alignment.  */
-  int bytes_read;
-  int ilast;
+  int last;
 
-  if (pipe (pipe_descs) < 0)
-    error (1, errno, "cannot make pipe");
+  last = -1;
 
-  pids = (int *) xmalloc (nfiles * sizeof (int));
-
-  /* fork once for each file.  This approach uses one process and
-     one file descriptor for each file we tail.
-     More resource-efficient approaches would be:
-
-     1.  Keep an off_t array of the last-seen sizes of the files,
-     and fstat them each in turn, watching for growth.
-     This would be more portable, but still use the same number of
-     file descriptors, and would probably use more CPU.
-     For pipes, perhaps a separate process would have to be forked to
-     read from the pipe and write to a temporary file.
-
-     2.  Keep an off_t array, but only keep recently changed files open
-     and use stat for the others, opening them only if they change.
-     This would save file descriptors, to allow tail -f on a large number
-     of files.  It's probably not worth the trouble for most uses, though,
-     and GNU won't have arbitrary limits on things like file descriptors.  */
-
-  signal (SIGUSR1, sigusr1);
-
-  for (i = 0; i < nfiles; i++)
+  while (1)
     {
-      if (file_descs[i] == -1)
-	continue;
-      
-      pids[i] = fork ();
-      if (pids[i] == -1)
-	kill_kids (errno, "cannot fork", pids, i);
-      if (pids[i] == 0)
+      int i;
+      int changed;
+
+      changed = 0;
+      for (i = 0; i < nfiles; i++)
 	{
-	  /* Child.  */
-	  int offset;
+	  struct stat stats;
 
-	  close (pipe_descs[0]);
-
-	  /* Each child reads continually from a file and writes to
-	     the pipe.  Each write to the pipe is the index of the file
-	     being read, followed by the number of bytes read from the
-	     file, followed by the actual data.  Each child is
-	     careful to write no more than PIPE_BUF bytes to the pipe,
-	     so that the data from the various children do not get
-	     intermixed.  */
-
-	  /* The file index for this child is always the same.  */
-	  *(int *) buffer = i;
-
-	  offset = sizeof i + sizeof bytes_read;
-
-	  while (1)
+	  if (file_descs[i] < 0)
+	    continue;
+	  if (fstat (file_descs[i], &stats) < 0)
 	    {
-	      while ((bytes_read = read (file_descs[i], buffer + offset,
-					 PIPE_BUF - offset)) > 0)
-		{
-		  *(int *) (buffer + sizeof i) = bytes_read;
-		  if (write (pipe_descs[1], buffer, offset + bytes_read)
-		      != offset + bytes_read)
-		    _exit (0);	/* Somebody killed our parent?  */
-		}
-	      if (bytes_read == -1)
-		{
-		  error (0, errno, "%s", names[i]);
-		  _exit (1);
-		}
-	      sleep (1);
+	      error (0, errno, "%s", names[i]);
+	      file_descs[i] = -1;
+	      continue;
 	    }
+	  if (stats.st_size == file_sizes[i])
+	    continue;
+
+	  /* This file has changed size.  Print out what we can, and
+	     then keep looping.  */
+	  if (i != last)
+	    {
+	      write_header (names[i]);
+	      last = i;
+	    }
+	  changed = 1;
+	  file_sizes[i] += dump_remainder (names[i], file_descs[i]);
 	}
+
+      /* If none of the files changed size, sleep.  */
+      if (! changed)
+	sleep (1);
     }
-
-  /* Parent.  */
-
-  close (pipe_descs[1]);
-
-  /* Wait for input to come in on the pipe.  Read the file index
-     and the number of bytes.  Then read that many bytes and print
-     them out.  Repeat until all the children have closed the pipe.  */
-
-  ilast = -1;
-
-  while ((bytes_read = read (pipe_descs[0], buffer,
-			     sizeof i + sizeof bytes_read)) > 0)
-    {
-      int igot;			/* Index of latest process that wrote.  */
-
-      if (bytes_read != sizeof i + sizeof bytes_read)
-	kill_kids (errno, "read error", pids, nfiles); /* Yikes.  */
-
-      /* Extract the file index and the number of bytes.  */
-      igot = *(int *) buffer;
-      bytes_read = *(int *) (buffer + sizeof i);
-
-      if (print_headers && igot != ilast)
-	write_header (names[igot]);
-      ilast = igot;
-
-      errno = 0;
-      if (read (pipe_descs[0], buffer, bytes_read) != bytes_read)
-	kill_kids (errno, "read error", pids, nfiles);
-      if (write (1, buffer, bytes_read) != bytes_read)
-	kill_kids (errno, "write error", pids, nfiles);
-    }
-	
-  for (i = 0; i < nfiles; i++)
-    kill (pids[i], SIGUSR1);
-
-  free (buffer);
 }
 
 static void
