@@ -2,42 +2,41 @@
 # Copyright (C) 1998 Free Software Foundation, Inc.
 # Cyro Mendes De Moraes Neto <neto@conectiva.com.br>, 1998.
 # Rodrigo Stulzer Lopes <rodrigo@conectiva.com.br>, 2001.
+# Juan Carlos Castro y Castro <jcastro@vialink.com.br>, 2003.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: GNU textutils 2.0.14\n"
-"POT-Creation-Date: 2003-02-21 18:14+0100\n"
-"PO-Revision-Date: 2001-05-10 18:57GMT-0300\n"
-"Last-Translator: Edison Assumpc,a~o Taca~o <tacao@conectiva.com.br>\n"
+"Project-Id-Version: coreutils 4.5.8\n"
+"POT-Creation-Date: 2003-03-05 08:46+0100\n"
+"PO-Revision-Date: 2003-02-24 12:23-0300\n"
+"Last-Translator: Juan Carlos Castro y Castro <jcastro@vialink.com.br>\n"
 "Language-Team: Brazilian Portuguese <ldp-br@bazar.conectiva.com.br>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 0.8\n"
 
 # , c-format
 #: lib/argmatch.c:129
-#, fuzzy, c-format
+#, c-format
 msgid "invalid argument %s for %s"
 msgstr "argumento inválido %s para '%s'"
 
 #: lib/argmatch.c:130
-#, fuzzy, c-format
+#, c-format
 msgid "ambiguous argument %s for %s"
-msgstr "Argumentos ambíguos %s para `%s'"
+msgstr "argumento ambíguo %s para `%s'"
 
 #: lib/argmatch.c:149
 msgid "Valid arguments are:"
 msgstr "Os argumentos válidos são:"
 
 #: lib/c-stack.c:368
-#, fuzzy
 msgid "program error"
-msgstr "erro de leitura"
+msgstr "erro de programa"
 
 #: lib/c-stack.c:369
 msgid "stack overflow"
-msgstr ""
+msgstr "estouro de pilha"
 
 #: lib/closeout.c:103 src/cat.c:189 src/cat.c:272 src/cat.c:326
 #: src/cksum.c:269 src/head.c:152 src/head.c:196 src/tail.c:323
@@ -51,55 +50,51 @@ msgstr "Erro de sistema desconhecido"
 
 #: lib/file-type.c:42
 msgid "regular empty file"
-msgstr ""
+msgstr "arquivo comum vazio"
 
 #: lib/file-type.c:42
-#, fuzzy
 msgid "regular file"
-msgstr "falha na leitura"
+msgstr "arquivo comum"
 
 #: lib/file-type.c:45
 msgid "directory"
 msgstr ""
 
 #: lib/file-type.c:48
-#, fuzzy
 msgid "block special file"
-msgstr "tamanho do bloco"
+msgstr "arquivo especial de bloco"
 
 #: lib/file-type.c:51
-#, fuzzy
 msgid "character special file"
-msgstr "o offset de caracteres é zero"
+msgstr "arquivo especial caracter"
 
 #: lib/file-type.c:54
 msgid "fifo"
-msgstr ""
+msgstr "fifo"
 
 #: lib/file-type.c:57
 msgid "symbolic link"
-msgstr ""
+msgstr "link simbólico"
 
 #: lib/file-type.c:60
 msgid "socket"
-msgstr ""
+msgstr "socket"
 
 #: lib/file-type.c:63
 msgid "message queue"
-msgstr ""
+msgstr "fila de mensagens"
 
 #: lib/file-type.c:66
 msgid "semaphore"
-msgstr ""
+msgstr "semáforo"
 
 #: lib/file-type.c:69
 msgid "shared memory object"
-msgstr ""
+msgstr "objeto de memória compartilhada"
 
 #: lib/file-type.c:71
-#, fuzzy
 msgid "weird file"
-msgstr "falha na leitura"
+msgstr "arquivo estranho"
 
 #: lib/getopt.c:688 lib/getopt.c:700
 #, c-format
@@ -164,30 +159,34 @@ msgstr "%s: opção `-W %s' não permite um argumento\n"
 msgid "block size"
 msgstr "tamanho do bloco"
 
+#: lib/makepath.c:124 src/df.c:497 src/remove.c:402
+msgid "failed to return to initial working directory"
+msgstr ""
+
 # , c-format
-#: lib/makepath.c:167 src/copy.c:1270 src/mkdir.c:170
+#: lib/makepath.c:173 src/copy.c:1288 src/mkdir.c:170
 #, c-format
 msgid "cannot create directory %s"
 msgstr "não é possível criar o diretório %s"
 
-#: lib/makepath.c:173 lib/makepath.c:415 src/cp.c:444 src/cp.c:466
+#: lib/makepath.c:179 lib/makepath.c:421 src/cp.c:444 src/cp.c:466
 #, c-format
 msgid "%s exists but is not a directory"
 msgstr "%s existe, mas não é um diretório"
 
-#: lib/makepath.c:310 lib/makepath.c:372 lib/makepath.c:434
+#: lib/makepath.c:316 lib/makepath.c:378 lib/makepath.c:440
 #, c-format
 msgid "cannot change owner and/or group of %s"
 msgstr "não pode substituir dono e/ou grupo de %s"
 
 # , c-format
-#: lib/makepath.c:332
-#, fuzzy, c-format
+#: lib/makepath.c:338
+#, c-format
 msgid "cannot chdir to directory %s"
-msgstr "não pode executar 'chdir' sobre `%s'"
+msgstr "impossível mudar para diretório %s"
 
 # , c-format
-#: lib/makepath.c:386 lib/makepath.c:440
+#: lib/makepath.c:392 lib/makepath.c:446
 #, c-format
 msgid "cannot change permissions of %s"
 msgstr "não é possível mudar permissões de %s"
@@ -217,20 +216,17 @@ msgid "^[nN]"
 msgstr "^[nN]"
 
 #: lib/unicodeio.c:155
-#, fuzzy
 msgid "iconv function not usable"
-msgstr "impossível exibir U+%04X: função iconv não utilizável"
+msgstr "função iconv não utilizável"
 
 #: lib/unicodeio.c:157
-#, fuzzy
 msgid "iconv function not available"
-msgstr "impossível exibir U+%04X: função iconv não disponível"
+msgstr "função iconv não disponível"
 
 # , c-format
 #: lib/unicodeio.c:164
-#, fuzzy
 msgid "character out of range"
-msgstr "U+%04X: caractere fora de faixa"
+msgstr "caractere fora de faixa"
 
 #: lib/unicodeio.c:227
 #, c-format
@@ -238,9 +234,9 @@ msgid "cannot convert U+%04X to local character set"
 msgstr "impossível converter U+%04X para o conjunto local de caracteres"
 
 #: lib/unicodeio.c:229
-#, fuzzy, c-format
+#, c-format
 msgid "cannot convert U+%04X to local character set: %s"
-msgstr "impossível converter U+%04X para o conjunto local de caracteres"
+msgstr "impossível converter U+%04X para o conjunto local de caracteres: %s"
 
 #: lib/userspec.c:174
 msgid "invalid user"
@@ -288,8 +284,8 @@ msgstr ""
 # , c-format
 #: src/basename.c:50 src/cat.c:88 src/chgrp.c:122 src/chmod.c:238
 #: src/chown.c:95 src/chroot.c:41 src/cksum.c:278 src/comm.c:69 src/cp.c:158
-#: src/csplit.c:1492 src/cut.c:170 src/date.c:113 src/dd.c:284 src/df.c:711
-#: src/dircolors.c:99 src/dirname.c:42 src/du.c:174 src/echo.c:73
+#: src/csplit.c:1492 src/cut.c:170 src/date.c:113 src/dd.c:284 src/df.c:707
+#: src/dircolors.c:99 src/dirname.c:42 src/du.c:171 src/echo.c:73
 #: src/env.c:115 src/expand.c:106 src/expr.c:86 src/factor.c:70 src/fmt.c:267
 #: src/fold.c:63 src/head.c:84 src/hostid.c:44 src/hostname.c:63 src/id.c:83
 #: src/install.c:593 src/join.c:140 src/kill.c:89 src/link.c:47 src/ln.c:335
@@ -310,16 +306,15 @@ msgstr "Tente `%s --help' para mais informação.\n"
 
 # , c-format
 #: src/basename.c:54
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Usage: %s NAME [SUFFIX]\n"
 "  or:  %s OPTION\n"
 msgstr ""
-"Uso: %s [ARQUIVO]...\n"
-" ou:  %s [OPÇÃO]\n"
+"Uso:  %s NOME [SUFIXO]\n"
+" ou:  %s OPÇÃO\n"
 
 #: src/basename.c:59
-#, fuzzy
 msgid ""
 "Print NAME with any leading directory components removed.\n"
 "If specified, also remove a trailing SUFFIX.\n"
@@ -328,13 +323,11 @@ msgstr ""
 "Mostra o NOME sem quaisquer componentes de diretório.\n"
 "Se for especificado, remove também o SUFIXO final.\n"
 "\n"
-"   --help      mostrar esta ajuda\n"
-"   --version   mostrar informação de versão e sair\n"
 
 #: src/basename.c:66 src/cat.c:124 src/chgrp.c:152 src/chmod.c:264
 #: src/chown.c:139 src/chroot.c:59 src/cksum.c:293 src/comm.c:86 src/cp.c:255
-#: src/csplit.c:1534 src/cut.c:215 src/date.c:215 src/dd.c:331 src/df.c:750
-#: src/dircolors.c:120 src/dirname.c:58 src/du.c:223 src/echo.c:105
+#: src/csplit.c:1534 src/cut.c:215 src/date.c:215 src/dd.c:331 src/df.c:746
+#: src/dircolors.c:120 src/dirname.c:58 src/du.c:220 src/echo.c:105
 #: src/env.c:134 src/expand.c:131 src/expr.c:149 src/factor.c:90
 #: src/false.c:45 src/fmt.c:297 src/fold.c:86 src/head.c:115 src/hostid.c:57
 #: src/hostname.c:76 src/id.c:104 src/install.c:648 src/join.c:181
@@ -349,13 +342,13 @@ msgstr ""
 #: src/tr.c:396 src/true.c:45 src/tsort.c:105 src/tty.c:70 src/uname.c:128
 #: src/unexpand.c:395 src/uniq.c:174 src/unlink.c:58 src/uptime.c:202
 #: src/users.c:127 src/wc.c:143 src/who.c:613 src/whoami.c:60 src/yes.c:61
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "\n"
 "Report bugs to <%s>.\n"
 msgstr ""
 "\n"
-"Comunicar `bugs' para <bug-textutils@gnu.org>."
+"Comunicar `bugs' para <%s>.\n"
 
 #: src/basename.c:114 src/chgrp.c:210 src/chmod.c:352 src/chown.c:211
 #: src/chroot.c:78 src/csplit.c:1464 src/dirname.c:89 src/expr.c:178
@@ -375,7 +368,7 @@ msgstr "muitos argumentos"
 
 #: src/cat.c:42 src/split.c:43
 msgid "Torbjorn Granlund and Richard M. Stallman"
-msgstr ""
+msgstr "Torbjorn Granlund e Richard M. Stallman"
 
 # , c-format
 #: src/cat.c:92
@@ -384,7 +377,6 @@ msgid "Usage: %s [OPTION] [FILE]...\n"
 msgstr "Uso: %s [OPÇÃO] [ARQUIVO]...\n"
 
 #: src/cat.c:96
-#, fuzzy
 msgid ""
 "Concatenate FILE(s), or standard input, to standard output.\n"
 "\n"
@@ -395,26 +387,16 @@ msgid ""
 "  -n, --number             number all output lines\n"
 "  -s, --squeeze-blank      never more than one single blank line\n"
 msgstr ""
-"Concatena ARQUIVO(s), ou a entrada padrão, na saída padrão.\n"
+"Concatena ARQUIVO(s), ou a entrada padrão, para a saída padrão.\n"
 "\n"
 "  -A, --show-all          o mesmo que -vET\n"
 "  -b, --number-nonblank   numera as linhas que não estão vazias\n"
 "  -e                      o mesmo que -vE\n"
 "  -E, --show-ends         mostra '$' no final de cada linha\n"
-"  -n, --number            numera todas as linhas\n"
+"  -n, --number            numera todas as linhas de saída\n"
 "  -s, --squeeze-blank     nunca mostra mais de uma linha vazia,\n"
-"  -t                      equivalente a -vT\n"
-"  -T, --show-tabs         mostra os caracteres de tabulação como ^I\n"
-"  -u                      (sem efeito)\n"
-"  -v, --show-nonprinting  utiliza a notação ^ e M-, salvo para LFD y TAB\n"
-"      --help              mostra esta ajuda e finaliza\n"
-"      --version           informa a versão e finaliza\n"
-"\n"
-"Sem 'ARQUIVO', ou quando ARQUIVO é -, lê a entrada padrão.\n"
-"\n"
 
 #: src/cat.c:106
-#, fuzzy
 msgid ""
 "  -t                       equivalent to -vT\n"
 "  -T, --show-tabs          display TAB characters as ^I\n"
@@ -422,28 +404,18 @@ msgid ""
 "  -v, --show-nonprinting   use ^ and M- notation, except for LFD and TAB\n"
 msgstr ""
 "Concatena ARQUIVO(s), ou a entrada padrão, na saída padrão.\n"
-"\n"
-"  -A, --show-all          o mesmo que -vET\n"
-"  -b, --number-nonblank   numera as linhas que não estão vazias\n"
-"  -e                      o mesmo que -vE\n"
-"  -E, --show-ends         mostra '$' no final de cada linha\n"
-"  -n, --number            numera todas as linhas\n"
-"  -s, --squeeze-blank     nunca mostra mais de uma linha vazia,\n"
 "  -t                      equivalente a -vT\n"
 "  -T, --show-tabs         mostra os caracteres de tabulação como ^I\n"
 "  -u                      (sem efeito)\n"
-"  -v, --show-nonprinting  utiliza a notação ^ e M-, salvo para LFD y TAB\n"
-"      --help              mostra esta ajuda e finaliza\n"
-"      --version           informa a versão e finaliza\n"
-"\n"
-"Sem 'ARQUIVO', ou quando ARQUIVO é -, lê a entrada padrão.\n"
-"\n"
+"  -v, --show-nonprinting  utiliza a notação ^ e M-, salvo para LFD e TAB\n"
 
 #: src/cat.c:114 src/sum.c:72
 msgid ""
 "\n"
 "With no FILE, or when FILE is -, read standard input.\n"
 msgstr ""
+"\n"
+"Sem ARQUIVO, ou quando ARQUIVO é -, lê a entrada padrão.\n"
 
 #: src/cat.c:119
 msgid ""
@@ -472,43 +444,40 @@ msgid "%s: input file is output file"
 msgstr "%s: os arquivos de entrada e saída são os mesmos"
 
 #: src/cat.c:858
-#, fuzzy
 msgid "closing standard input"
-msgstr "entrada padrão"
+msgstr "fechando entrada padrão"
 
 #: src/cat.c:861
-#, fuzzy
 msgid "closing standard output"
-msgstr "saída padrão"
+msgstr "fechando saída padrão"
 
 #: src/chgrp.c:93
-#, fuzzy
 msgid "cannot change to null group"
-msgstr "não pode substituir dono e/ou grupo de %s"
+msgstr "impossível mudar para grupo nulo"
 
 #: src/chgrp.c:102
-#, fuzzy, c-format
+#, c-format
 msgid "invalid group name %s"
-msgstr "grupo inválido"
+msgstr "nome de grupo inválido %s"
 
 #: src/chgrp.c:106
 msgid "group number"
-msgstr "grupo número"
+msgstr "número de grupo"
 
 #: src/chgrp.c:109
-#, fuzzy, c-format
+#, c-format
 msgid "invalid group number %s"
-msgstr "número inválido"
+msgstr "número de grupo inválido %s"
 
 # , c-format
 #: src/chgrp.c:126
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Usage: %s [OPTION]... GROUP FILE...\n"
 "  or:  %s [OPTION]... --reference=RFILE FILE...\n"
 msgstr ""
-"Uso: %s [OPÇÃO]... [ARQUIVO]...\n"
-" ou: %s --traditional [ARQUIVO] [[+]OFFSET [[+]RÓTULO]\n"
+"Uso: %s [OPÇÃO]... GRUPO ARQUIVO...\n"
+" ou: %s [OPÇÃO]... --reference=ARQUIVOREF ARQUIVO...\n"
 
 #: src/chgrp.c:131
 msgid ""
@@ -539,9 +508,9 @@ msgstr ""
 #: src/chgrp.c:218 src/chmod.c:157 src/chmod.c:365 src/chown-core.c:235
 #: src/chown-core.c:247 src/chown.c:220 src/cp.c:301 src/touch.c:169
 #: src/touch.c:363
-#, fuzzy, c-format
+#, c-format
 msgid "failed to get attributes of %s"
-msgstr "obtendo atributos de %s"
+msgstr "falha ao obter atributos de %s"
 
 #: src/chmod.c:102
 #, c-format
@@ -565,23 +534,22 @@ msgstr "modo de %s mantido como %04lo (%s)\n"
 
 # , c-format
 #: src/chmod.c:179
-#, fuzzy, c-format
+#, c-format
 msgid "changing permissions of %s"
-msgstr "não é possível mudar permissões de %s"
+msgstr "mudando permissões de %s"
 
 #: src/chmod.c:242
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Usage: %s [OPTION]... MODE[,MODE]... FILE...\n"
 "  or:  %s [OPTION]... OCTAL-MODE FILE...\n"
 "  or:  %s [OPTION]... --reference=RFILE FILE...\n"
 msgstr ""
-"Uso: %s [OPÇÃO]... ÚLTIMO\n"
-"  ou:  %s [OPÇÃO]... PRIMEIRO ÚLTIMO\n"
-"  ou:  %s [OPÇÃO]... PRIMEIRO INCREMENTO ÚLTIMO\n"
+"Uso:  %s [OPÇÃO]... MODO[,MODO]... ARQUIVO...\n"
+" ou:  %s [OPÇÃO]... MODO-OCTAL ARQUIVO...\n"
+" ou:  %s [OPÇÃO]... --reference=ARQUIVOREF ARQUIVO...\n"
 
 #: src/chmod.c:248
-#, fuzzy
 msgid ""
 "Change the mode of each FILE to MODE.\n"
 "\n"
@@ -594,17 +562,12 @@ msgid ""
 msgstr ""
 "Troca o modo de cada ARQUIVO para MODO.\n"
 "\n"
-"  -c, --changes         como o modo \"verbose\" mas só avisa quando uma \n"
+"  -c, --changes         como o modo \"verbose\" mas só avisa quando uma\n"
 "                        alteração for feita\n"
 "  -f, --silent, --quiet desligar a maior parte das mensagens de erro\n"
 "  -v, --verbose         mostrar um diagnóstico para cada arquivo processado\n"
-"    --reference=ARQUIVO usa o modo do ARQUIVO em vez dos valores de MODO\n"
+"      --reference=ARQR  usa modo do arquivo ARQR em vez dos valores de MODO\n"
 "  -R, --recursive       mudar arquivos e diretórios recursivamente\n"
-"      --help            mostrar esta ajuda e sai\n"
-"      --version         mostrar informação sobre versão e sai\n"
-"\n"
-"Cada MODO é uma ou mais das letras ugoa, um dos símbolos +-= e uma ou\n"
-"mais das letras rwxXstugo.\n"
 
 #: src/chmod.c:259
 msgid ""
@@ -612,18 +575,21 @@ msgid ""
 "Each MODE is one or more of the letters ugoa, one of the symbols +-= and\n"
 "one or more of the letters rwxXstugo.\n"
 msgstr ""
+"\n"
+"Cada MODO é uma ou mais das letras ugoa, um dos símbolos +-= e uma ou mais\n"
+"das letras rwxXstugo.\n"
 
 # , c-format
 #: src/chmod.c:320
-#, fuzzy, c-format
+#, c-format
 msgid "invalid character %s in mode string %s"
-msgstr "caracter inválido `%c' na cadeia `%s'"
+msgstr "caracter inválido %s na cadeia de modo %s"
 
 # , c-format
 #: src/chmod.c:361
-#, fuzzy, c-format
+#, c-format
 msgid "invalid mode string: %s"
-msgstr "tipo de cadeia inválida `%s'"
+msgstr "cadeia de modo inválida: %s"
 
 #: src/chown-core.c:116
 #, c-format
@@ -642,9 +608,9 @@ msgstr "alterado o grupo de %s para %s\n"
 
 # , c-format
 #: src/chown-core.c:148
-#, fuzzy, c-format
+#, c-format
 msgid "failed to change ownership of %s to %s\n"
-msgstr "não é possível mudar permissões de %s"
+msgstr "erro ao mudar proprietário de %s para %s\n"
 
 #: src/chown-core.c:149
 #, c-format
@@ -667,26 +633,26 @@ msgid "changing ownership of %s"
 msgstr "mudando permissões de %s"
 
 #: src/chown-core.c:327
-#, fuzzy, c-format
+#, c-format
 msgid "changing group of %s"
-msgstr "não pode substituir dono e/ou grupo de %s"
+msgstr "mudando grupo de %s"
 
 # , c-format
 #: src/chown-core.c:345
-#, fuzzy, c-format
+#, c-format
 msgid "unable to restore permissions of %s"
-msgstr "não é possível mudar permissões de %s"
+msgstr "não é possível restaurar permissões de %s"
 
 #: src/chown.c:99
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Usage: %s [OPTION]... OWNER[:[GROUP]] FILE...\n"
 "  or:  %s [OPTION]... :GROUP FILE...\n"
 "  or:  %s [OPTION]... --reference=RFILE FILE...\n"
 msgstr ""
-"Uso: %s [OPÇÃO]... ÚLTIMO\n"
-"  ou:  %s [OPÇÃO]... PRIMEIRO ÚLTIMO\n"
-"  ou:  %s [OPÇÃO]... PRIMEIRO INCREMENTO ÚLTIMO\n"
+"Uso:  %s [OPÇÃO]... DONO[:[GRUPO]] ARQUIVO...\n"
+" ou:  %s [OPÇÃO]... :GRUPO ARQUIVO...\n"
+" ou:  %s [OPÇÃO]... --reference=ARQUIVOREF ARQUIVO...\n"
 
 #: src/chown.c:105
 msgid ""
@@ -696,6 +662,12 @@ msgid ""
 "      --dereference      affect the referent of each symbolic link, rather\n"
 "                         than the symbolic link itself\n"
 msgstr ""
+"Muda o dono e/ou grupo de cada ARQUIVO para DONO e/ou GRUPO.\n"
+"\n"
+"  -c, --changes          como o modo \"verbose\" mas só avisa quando uma\n"
+"                         alteração for feita\n"
+"      --dereference      afeta o que for apontado por cada link simbólico,\n"
+"                         em vez do link simbólico em si\n"
 
 #: src/chown.c:117
 msgid ""
@@ -707,6 +679,12 @@ msgid ""
 "match\n"
 "                         is not required for the omitted attribute.\n"
 msgstr ""
+"      --from=DONO_ATUAL:GRUPO_ATUAL\n"
+"                         muda dono e/ou grupo de cada arquivo apenas se seu\n"
+"                         dono e/ou grupo atual forem iguais aos "
+"especificados\n"
+"                         nesta opção. Um ou outro pode ser omitido; nesse\n"
+"                         caso, não será testado o atributo omitido.\n"
 
 #: src/chown.c:124
 msgid ""
@@ -716,52 +694,62 @@ msgid ""
 "  -R, --recursive        operate on files and directories recursively\n"
 "  -v, --verbose          output a diagnostic for every file processed\n"
 msgstr ""
+"  -f, --silent, --quiet  desligar a maior parte das mensagens de erro\n"
+"      --reference=ARQR   usa dono e grupo do arquivo ARQR em vez dos "
+"valores\n"
+"                         de DONO:GRUPO especificados\n"
+"  -R, --recursive        mudar arquivos e diretórios recursivamente\n"
+"  -v, --verbose          mostrar um diagnóstico para cada arquivo "
+"processado\n"
 
 #: src/chown.c:133
-#, fuzzy
 msgid ""
 "\n"
 "Owner is unchanged if missing.  Group is unchanged if missing, but changed\n"
 "to login group if implied by a `:'.  OWNER and GROUP may be numeric as well\n"
 "as symbolic.\n"
 msgstr ""
+"\n"
 "Dono, caso não informado, permanece inalterado. Grupo é alterado para \n"
 "o grupo de login caso login seja seguido por `:'. DONO e GRUPO pode ser \n"
 "numérico bem como simbólico.\n"
 
 # , c-format
 #: src/chroot.c:45
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Usage: %s NEWROOT [COMMAND...]\n"
 "  or:  %s OPTION\n"
 msgstr ""
-"Uso: %s [ARQUIVO]...\n"
-" ou:  %s [OPÇÃO]\n"
+"Uso:  %s NOVORAIZ [COMANDO...]\n"
+" ou:  %s OPÇÃO\n"
 
 #: src/chroot.c:49
 msgid ""
 "Run COMMAND with root directory set to NEWROOT.\n"
 "\n"
 msgstr ""
+"Executa COMANDO com o diretório raiz modificado para NOVORAIZ.\n"
+"\n"
 
 #: src/chroot.c:55
 msgid ""
 "\n"
 "If no command is given, run ``${SHELL} -i'' (default: /bin/sh).\n"
 msgstr ""
+"\n"
+"Se não for dado COMANDO, roda ``${SHELL} -i'' (padrão: /bin/sh).\n"
 
 # , c-format
 #: src/chroot.c:84
-#, fuzzy, c-format
+#, c-format
 msgid "cannot change root directory to %s"
-msgstr "não pode executar 'chdir' sobre `%s'"
+msgstr "impossível mudar diretório raiz para %s"
 
 # , c-format
 #: src/chroot.c:87
-#, fuzzy
 msgid "cannot chdir to root directory"
-msgstr "não pode executar 'chdir' sobre `%s'"
+msgstr "impossível mudar para o diretório raiz"
 
 #: src/cksum.c:234
 #, c-format
@@ -775,7 +763,7 @@ msgid ""
 "Usage: %s [FILE]...\n"
 "  or:  %s [OPTION]\n"
 msgstr ""
-"Uso: %s [ARQUIVO]...\n"
+"Uso:  %s [ARQUIVO]...\n"
 " ou:  %s [OPÇÃO]\n"
 
 #: src/cksum.c:287
@@ -783,10 +771,12 @@ msgid ""
 "Print CRC checksum and byte counts of each FILE.\n"
 "\n"
 msgstr ""
+"Exibe checagem de CRC e contagem de bytes de cada ARQUIVO.\n"
+"\n"
 
 #: src/comm.c:35 src/ls.c:131 src/uniq.c:40
 msgid "Richard Stallman and David MacKenzie"
-msgstr ""
+msgstr "Richard Stallman e David MacKenzie"
 
 # , c-format
 #: src/comm.c:73
@@ -795,7 +785,6 @@ msgid "Usage: %s [OPTION]... LEFT_FILE RIGHT_FILE\n"
 msgstr "Uso: %s [OPÇÃO]... ARQUIVO1 ARQUIVO2\n"
 
 #: src/comm.c:77
-#, fuzzy
 msgid ""
 "Compare sorted files LEFT_FILE and RIGHT_FILE line by line.\n"
 "\n"
@@ -803,18 +792,16 @@ msgid ""
 "  -2              suppress lines unique to right file\n"
 "  -3              suppress lines that appear in both files\n"
 msgstr ""
-"Compara os arquivos ordenados ARQUIVO1 e ARQUIVO2, linha por linha.\n"
+"Compara os arquivos ordenados ARQUIVO1 e ARQUIVO2, linha a linha.\n"
 "\n"
 "  -1              suprime as linhas que só estão em ARQUIVO1\n"
 "  -2              suprime as linhas que só estão em ARQUIVO2\n"
-"  -3              mostra as linhas que só estão em um deles\n"
-"      --help      mostra esta ajuda e finaliza\n"
-"      --version   informa a versão e finaliza\n"
+"  -3              suprime as linhas que estão em ambos os arquivos\n"
 
-#: src/copy.c:162 src/du.c:335
-#, fuzzy, c-format
+#: src/copy.c:162 src/du.c:332
+#, c-format
 msgid "cannot access %s"
-msgstr "não consigo executar %s"
+msgstr "impossível acessar %s"
 
 #: src/copy.c:226
 #, c-format
@@ -822,49 +809,49 @@ msgid "cannot open %s for reading"
 msgstr "não foi possível abrir %s para leitura"
 
 #: src/copy.c:232 src/copy.c:286 src/copy.c:301 src/dd.c:1199
-#, fuzzy, c-format
+#, c-format
 msgid "cannot fstat %s"
-msgstr "não consigo alterar data"
+msgstr "impossível fazer fstat em %s"
 
 #: src/copy.c:242
 #, c-format
 msgid "skipping file %s, as it was replaced while being copied"
-msgstr ""
+msgstr "pulando arquivo %s; ele foi substituído durante a cópia"
 
 # , c-format
-#: src/copy.c:262 src/copy.c:1034 src/ln.c:291 src/remove.c:725
-#: src/remove.c:779 src/remove.c:978
-#, fuzzy, c-format
+#: src/copy.c:262 src/copy.c:1034 src/copy.c:1124 src/ln.c:291
+#: src/remove.c:726 src/remove.c:780 src/remove.c:892 src/remove.c:996
+#, c-format
 msgid "cannot remove %s"
-msgstr "não é possível criar o diretório %s"
+msgstr "imposível remover %s"
 
 # , c-format
 #: src/copy.c:277
-#, fuzzy, c-format
+#, c-format
 msgid "cannot create regular file %s"
-msgstr "impossível criar arquivo temporário"
+msgstr "impossível criar arquivo comum %s"
 
 # , c-format
 #: src/copy.c:328 src/dd.c:816 src/dd.c:1010
-#, fuzzy, c-format
+#, c-format
 msgid "reading %s"
-msgstr "erro lendo %s"
+msgstr "lendo %s"
 
 #: src/copy.c:362
-#, fuzzy, c-format
+#, c-format
 msgid "cannot lseek %s"
-msgstr "não consigo executar %s"
+msgstr "impossível fazer lseek em %s"
 
 # , c-format
 #: src/copy.c:377 src/copy.c:401 src/dd.c:1054 src/dd.c:1115
-#, fuzzy, c-format
+#, c-format
 msgid "writing %s"
-msgstr "erro escrevendo %s"
+msgstr "escrevendo %s"
 
 #: src/copy.c:409 src/copy.c:415
-#, fuzzy, c-format
+#, c-format
 msgid "closing %s"
-msgstr "fechando %s (fd=%d)"
+msgstr "fechando %s"
 
 #: src/copy.c:610
 #, c-format
@@ -878,20 +865,20 @@ msgstr "%s: sobrescrever %s? "
 
 # , c-format
 #: src/copy.c:810 src/copy.c:848 src/stat.c:637
-#, fuzzy, c-format
+#, c-format
 msgid "cannot stat %s"
-msgstr "não é possível criar o diretório %s"
+msgstr "impossível fazer stat em %s"
 
 # , c-format
 #: src/copy.c:820
-#, fuzzy, c-format
+#, c-format
 msgid "omitting directory %s"
-msgstr "não é possível criar o diretório %s"
+msgstr "omitindo diretório %s"
 
 #: src/copy.c:834
 #, c-format
 msgid "warning: source file %s specified more than once"
-msgstr ""
+msgstr "aviso: arquivo origem %s especificado mais de uma vez"
 
 #: src/copy.c:866 src/ln.c:237
 #, c-format
@@ -900,32 +887,32 @@ msgstr "%s e %s são o mesmo arquivo"
 
 # , c-format
 #: src/copy.c:876
-#, fuzzy, c-format
+#, c-format
 msgid "cannot overwrite non-directory %s with directory %s"
-msgstr "não pode executar 'chdir' sobre `%s'"
+msgstr "impossível sobrescrever não-diretório %s com diretório %s"
 
 #: src/copy.c:893
-#, fuzzy, c-format
+#, c-format
 msgid "will not overwrite just-created %s with %s"
-msgstr "não é possível sobrescrever não-diretório %s com diretório %s"
+msgstr "não sobrescreverá recém-criado %s com %s"
 
 # , c-format
 #: src/copy.c:904
-#, fuzzy, c-format
+#, c-format
 msgid "cannot overwrite directory %s with non-directory"
-msgstr "não é possível criar o diretório %s"
+msgstr "impossível sobrescrever diretório %s com não-diretório"
 
 # , c-format
 #: src/copy.c:965
-#, fuzzy, c-format
+#, c-format
 msgid "cannot overwrite directory %s"
-msgstr "não é possível criar o diretório %s"
+msgstr "impossível sobrescrever diretório %s"
 
 # , c-format
 #: src/copy.c:974
-#, fuzzy, c-format
+#, c-format
 msgid "cannot move directory onto non-directory: %s -> %s"
-msgstr "não pode executar 'chdir' sobre `%s'"
+msgstr "imposível mover diretório para não-diretório: %s -> %s"
 
 #: src/copy.c:997
 #, c-format
@@ -938,153 +925,156 @@ msgid "backing up %s would destroy source;  %s not copied"
 msgstr "fazer backup de %s iria destruir o original; %s não copiado"
 
 #: src/copy.c:1013 src/ln.c:273
-#, fuzzy, c-format
+#, c-format
 msgid "cannot backup %s"
-msgstr "não consigo executar %s"
+msgstr "impossível fazer backup de %s"
 
 #: src/copy.c:1049 src/ln.c:308
 #, c-format
 msgid " (backup: %s)"
-msgstr "(backup: %s)"
+msgstr " (backup: %s)"
 
 # , c-format
 #: src/copy.c:1099
-#, fuzzy, c-format
+#, c-format
 msgid "cannot copy a directory, %s, into itself, %s"
-msgstr "não é possível criar o diretório %s"
+msgstr "impossível copiar um diretório, %s, para si próprio, %s"
 
 # , c-format
 #: src/copy.c:1106
-#, fuzzy, c-format
+#, c-format
 msgid "will not create hard link %s to directory %s"
-msgstr "não pode executar 'chdir' sobre `%s'"
+msgstr "não criará link físico %s para diretório %s"
 
 # , c-format
-#: src/copy.c:1115
-#, fuzzy, c-format
+#: src/copy.c:1132
+#, c-format
 msgid "cannot create hard link %s to %s"
-msgstr "não é possível criar o diretório %s"
+msgstr "impossível criar link físico %s para %s"
 
 # , c-format
-#: src/copy.c:1168
-#, fuzzy, c-format
+#: src/copy.c:1186
+#, c-format
 msgid "cannot move %s to a subdirectory of itself, %s"
-msgstr "não pode executar 'chdir' sobre `%s'"
+msgstr "impossível mover %s para um subdiretório de si próprio, %s"
 
 # , c-format
-#: src/copy.c:1211
-#, fuzzy, c-format
+#: src/copy.c:1229
+#, c-format
 msgid "cannot move %s to %s"
-msgstr "não pode executar a função 'ioctl' sobre `%s'"
+msgstr "impossível mover %s para %s"
 
-#: src/copy.c:1223
+#: src/copy.c:1241
 #, c-format
 msgid "inter-device move failed: %s to %s; unable to remove target"
 msgstr ""
+"falha ao mover entre dispositivos: %s para %s: impossível remover destino"
 
-#: src/copy.c:1251
+#: src/copy.c:1269
 #, c-format
 msgid "cannot copy cyclic symbolic link %s"
-msgstr "não é possível copiar link simbólico cíclico %s"
+msgstr "impossível copiar link simbólico cíclico %s"
 
-#: src/copy.c:1328
+#: src/copy.c:1346
 #, c-format
 msgid "%s: can make relative symbolic links only in current directory"
 msgstr "%s: só é possível fazer links simbólicos no diretório corrente"
 
 # , c-format
-#: src/copy.c:1335
-#, fuzzy, c-format
+#: src/copy.c:1353
+#, c-format
 msgid "cannot create symbolic link %s to %s"
-msgstr "não é possível criar o diretório %s"
+msgstr "impossível criar link simbólico %s para %s"
 
 # , c-format
-#: src/copy.c:1346
-#, fuzzy, c-format
+#: src/copy.c:1364
+#, c-format
 msgid "cannot create link %s"
-msgstr "não é possível criar o diretório %s"
+msgstr "impossível criar link %s"
 
 # , c-format
-#: src/copy.c:1371 src/mkfifo.c:133
-#, fuzzy, c-format
+#: src/copy.c:1389 src/mkfifo.c:133
+#, c-format
 msgid "cannot create fifo %s"
-msgstr "não é possível criar o diretório %s"
+msgstr "impossível criar fifo %s"
 
-#: src/copy.c:1385
-#, fuzzy, c-format
+#: src/copy.c:1403
+#, c-format
 msgid "cannot create special file %s"
-msgstr "o offset de caracteres é zero"
+msgstr "impossível criar arquivo especial %s"
 
 # , c-format
-#: src/copy.c:1397 src/ls.c:2493 src/stat.c:425
-#, fuzzy, c-format
+#: src/copy.c:1415 src/ls.c:2493 src/stat.c:425
+#, c-format
 msgid "cannot read symbolic link %s"
-msgstr "não pode executar a função 'ioctl' sobre `%s'"
+msgstr "impossível ler link simbólico %s"
 
 # , c-format
-#: src/copy.c:1422
-#, fuzzy, c-format
+#: src/copy.c:1440
+#, c-format
 msgid "cannot create symbolic link %s"
-msgstr "não é possível criar o diretório %s"
+msgstr "impossível criar link simbólico %s"
 
-#: src/copy.c:1438 src/copy.c:1501 src/cp.c:337
-#, fuzzy, c-format
+#: src/copy.c:1456 src/copy.c:1519 src/cp.c:337
+#, c-format
 msgid "failed to preserve ownership for %s"
-msgstr "preservando permissões para %s"
+msgstr "impossível preservar proprietário para %s"
 
-#: src/copy.c:1453
+#: src/copy.c:1471
 #, c-format
 msgid "%s has unknown file type"
 msgstr "%s tem tipo de arquivo desconhecido"
 
-#: src/copy.c:1488
+#: src/copy.c:1506
 #, c-format
 msgid "preserving times for %s"
 msgstr "preservando horário para %s"
 
-#: src/copy.c:1513
-#, fuzzy, c-format
+#: src/copy.c:1531
+#, c-format
 msgid "failed to preserve authorship for %s"
-msgstr "preservando permissões para %s"
+msgstr "impossível preservar autoria para %s"
 
 # , c-format
-#: src/copy.c:1531
-#, fuzzy, c-format
+#: src/copy.c:1549
+#, c-format
 msgid "setting permissions for %s"
-msgstr "não é possível mudar permissões de %s"
+msgstr "definindo permissões para %s"
 
-#: src/copy.c:1550 src/ln.c:326
-#, fuzzy, c-format
+#: src/copy.c:1571 src/ln.c:326
+#, c-format
 msgid "cannot un-backup %s"
-msgstr "não consigo executar %s"
+msgstr "impossível desfazer backup %s"
 
-#: src/copy.c:1554
+#: src/copy.c:1575
 #, c-format
 msgid "%s -> %s (unbackup)\n"
 msgstr "%s -> %s (unbackup)\n"
 
 #: src/cp.c:54
 msgid "Torbjorn Granlund, David MacKenzie, and Jim Meyering"
-msgstr ""
+msgstr "Torbjorn Granlund, David MacKenzie e Jim Meyering"
 
 #: src/cp.c:162 src/mv.c:311
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Usage: %s [OPTION]... SOURCE DEST\n"
 "  or:  %s [OPTION]... SOURCE... DIRECTORY\n"
 "  or:  %s [OPTION]... --target-directory=DIRECTORY SOURCE...\n"
 msgstr ""
-"Uso: %s [OPÇÃO]... ÚLTIMO\n"
-"  ou:  %s [OPÇÃO]... PRIMEIRO ÚLTIMO\n"
-"  ou:  %s [OPÇÃO]... PRIMEIRO INCREMENTO ÚLTIMO\n"
+"Uso:  %s [OPÇÃO]... ORIGEM DESTINO\n"
+" ou:  %s [OPÇÃO]... ORIGEM... DIRETÓRIO\n"
+" ou:  %s [OPÇÃO]... --target-directory=DIRETÓRIO ORIGEM...\n"
 
 #: src/cp.c:168
 msgid ""
 "Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n"
 "\n"
 msgstr ""
+"Copia ORIGEM para DESTINO, ou múltiplas ORIGENs para DIRETÓRIO.\n"
+"\n"
 
-#: src/cp.c:172 src/csplit.c:1505 src/cut.c:182 src/df.c:721 src/du.c:183
+#: src/cp.c:172 src/csplit.c:1505 src/cut.c:182 src/df.c:717 src/du.c:180
 #: src/expand.c:119 src/fmt.c:277 src/fold.c:76 src/head.c:98
 #: src/install.c:609 src/kill.c:103 src/ln.c:354 src/ls.c:3767 src/mkdir.c:66
 #: src/mkfifo.c:60 src/mknod.c:61 src/mv.c:321 src/nl.c:185 src/paste.c:413
@@ -1094,6 +1084,7 @@ msgstr ""
 msgid ""
 "Mandatory arguments to long options are mandatory for short options too.\n"
 msgstr ""
+"Argumentos obrigatórios para opções longas também o são para opções curtas\n"
 
 #: src/cp.c:175
 msgid ""
@@ -1328,31 +1319,29 @@ msgstr ""
 "regular já existente.\n"
 
 #: src/cp.c:323
-#, fuzzy, c-format
+#, c-format
 msgid "failed to preserve times for %s"
-msgstr "preservando horário para %s"
+msgstr "falha ao preservar horário para %s"
 
 # , c-format
 #: src/cp.c:347
-#, fuzzy, c-format
+#, c-format
 msgid "failed to preserve permissions for %s"
-msgstr "não é possível mudar permissões de %s"
+msgstr "falha ao preservar permissões para %s"
 
 # , c-format
 #: src/cp.c:432
-#, fuzzy, c-format
+#, c-format
 msgid "cannot make directory %s"
-msgstr "não é possível criar o diretório %s"
+msgstr "impossível criar diretório %s"
 
 #: src/cp.c:491 src/ln.c:490 src/mv.c:459 src/shred.c:1599
-#, fuzzy
 msgid "missing file argument"
-msgstr "argumento ignorado"
+msgstr "falta argumento de arquivo"
 
 #: src/cp.c:496
-#, fuzzy
 msgid "missing destination file"
-msgstr "faltando a lista de campos"
+msgstr "falta arquivo destino"
 
 #: src/cp.c:521 src/ln.c:161 src/ln.c:183 src/ln.c:210 src/ln.c:297
 #, c-format
@@ -1360,9 +1349,9 @@ msgid "accessing %s"
 msgstr "acessando %s"
 
 #: src/cp.c:544
-#, fuzzy, c-format
+#, c-format
 msgid "%s: specified target is not a directory"
-msgstr "%s existe, mas não é um diretório"
+msgstr "%s: destino especificado não é um diretório"
 
 #: src/cp.c:552
 #, c-format
@@ -1384,14 +1373,12 @@ msgstr ""
 "numa versão futura.  Use --backup=%s."
 
 #: src/cp.c:989 src/ln.c:464
-#, fuzzy
 msgid "symbolic links are not supported on this system"
-msgstr "atenção: --pid=PID não é suportado neste sistema"
+msgstr "links simbólicos não são suportados neste sistema"
 
 #: src/cp.c:1025
 msgid "cannot make both hard and symbolic links"
-msgstr ""
-"não é possível fazer links simbólicos e fixos (hard links) ao mesmo tempo"
+msgstr "impossível fazer links simbólicos e físicos ao mesmo tempo"
 
 #: src/cp.c:1033 src/install.c:275 src/ln.c:530 src/mv.c:483
 msgid "backup type"
@@ -1399,7 +1386,7 @@ msgstr "tipo de backup"
 
 #: src/csplit.c:41
 msgid "Stuart Kemp and David MacKenzie"
-msgstr ""
+msgstr "Stuart Kemp e David MacKenzie"
 
 #: src/csplit.c:289 src/csplit.c:1481 src/tac-pipe.c:57 src/tee.c:220
 #: src/tr.c:1609 src/tr.c:1711 src/tr.c:1754
@@ -1426,7 +1413,7 @@ msgstr "%s: `%s': número de linha fora de tamanho"
 #: src/csplit.c:746 src/csplit.c:792
 #, c-format
 msgid " on repetition %d\n"
-msgstr " repetido %d\n"
+msgstr " na repetição %d\n"
 
 # , c-format
 #: src/csplit.c:788
@@ -1536,7 +1523,7 @@ msgstr "%s: número inválido"
 #: src/csplit.c:1496
 #, c-format
 msgid "Usage: %s [OPTION]... FILE PATTERN...\n"
-msgstr "Uso: %s [OPÇÃO]... [ARQUIVO PADRÃO]...\n"
+msgstr "Uso: %s [OPÇÃO]... ARQUIVO PADRÃO...\n"
 
 #: src/csplit.c:1500
 msgid ""
@@ -1583,7 +1570,7 @@ msgid "David Ihnat, David MacKenzie, and Jim Meyering"
 msgstr ""
 
 # , c-format
-#: src/cut.c:174 src/df.c:715 src/du.c:178 src/expand.c:110 src/fold.c:67
+#: src/cut.c:174 src/df.c:711 src/du.c:175 src/expand.c:110 src/fold.c:67
 #: src/head.c:88 src/ls.c:3761 src/nl.c:176 src/paste.c:403 src/pr.c:2754
 #: src/sort.c:276 src/sum.c:60 src/tac.c:127 src/tail.c:234 src/tee.c:63
 #: src/unexpand.c:375 src/wc.c:125
@@ -1815,24 +1802,24 @@ msgstr "entrada padrão"
 
 # , c-format
 #: src/date.c:268 src/date.c:460
-#, fuzzy, c-format
+#, c-format
 msgid "invalid date `%s'"
-msgstr "número de campo inválido: `%s'"
+msgstr "data inválida `%s'"
 
 #: src/date.c:364
-#, fuzzy
 msgid "the options to specify dates for printing are mutually exclusive"
-msgstr "as opções --string e --check são mutuamente excludentes"
+msgstr ""
+"as opções que especificam datas para exibição são mutuamente exclusivas"
 
 #: src/date.c:371
 msgid "the options to print and set the time may not be used together"
 msgstr ""
-"as opções para imprimir e alterar o horário não podem ser usadas juntas "
+"as opções para imprimir e alterar o horário não podem ser usadas juntas"
 
 #: src/date.c:377
-#, fuzzy, c-format
+#, c-format
 msgid "too many non-option arguments: %s%s"
-msgstr "muitos argumentos"
+msgstr "argumentos não-opção em demasia: %s%s"
 
 #: src/date.c:385
 #, c-format
@@ -1843,37 +1830,36 @@ msgid ""
 msgstr ""
 "o argumento `%s' não tem um `+' inicial;\n"
 "Quando usado uma opção que especifique data(s), qualquer argumento sem "
-"opção \n"
+"opção\n"
 "tem que ser uma string de formatação começando com `+'."
 
 #: src/date.c:397
-#, fuzzy
 msgid ""
 "a format string may not be specified when using the --rfc-822 (-R) option"
-msgstr "não é possível especificar arquivo quando se usa --string"
+msgstr ""
+"string de formatação não pode ser especificada com a opção --rfc-822 (-R)"
 
 #: src/date.c:433
 msgid "undefined"
 msgstr "indefinido"
 
 #: src/date.c:435
-#, fuzzy
 msgid "cannot get time of day"
-msgstr "não é possível sub-dividir em mais de uma forma"
+msgstr "impossível obter hora"
 
 #: src/date.c:468
 msgid "cannot set date"
-msgstr "não consigo alterar data"
+msgstr "impossível alterar data"
 
 #: src/dd.c:43
 msgid "Paul Rubin, David MacKenzie, and Stuart Kemp"
-msgstr ""
+msgstr "Paul Rubin, David MacKenzie e Stuart Kemp"
 
 # , c-format
 #: src/dd.c:288 src/tty.c:62 src/uname.c:110 src/whoami.c:52
-#, fuzzy, c-format
+#, c-format
 msgid "Usage: %s [OPTION]...\n"
-msgstr "Uso: %s [OPÇÃO] [ARQUIVO]...\n"
+msgstr "Uso: %s [OPÇÃO]...\n"
 
 #: src/dd.c:289
 msgid ""
@@ -1945,9 +1931,9 @@ msgstr "registros truncados"
 
 # , c-format
 #: src/dd.c:382
-#, fuzzy, c-format
+#, c-format
 msgid "closing input file %s"
-msgstr "criando arquivo `%s'\n"
+msgstr "fechando arquivo de entrada %s"
 
 #: src/dd.c:385
 #, c-format
@@ -1956,32 +1942,32 @@ msgstr "fechando arquivo de saída %s"
 
 # , c-format
 #: src/dd.c:469
-#, fuzzy, c-format
+#, c-format
 msgid "writing to %s"
-msgstr "erro escrevendo %s"
+msgstr "escrevendo em %s"
 
 # , c-format
 #: src/dd.c:501
-#, fuzzy, c-format
+#, c-format
 msgid "invalid conversion: %s"
-msgstr "tipo de cadeia inválida `%s'"
+msgstr "conversão inválida: %s"
 
 # , c-format
 #: src/dd.c:557
-#, fuzzy, c-format
+#, c-format
 msgid "unrecognized option %s"
-msgstr "opção não reconhecida '-%c'"
+msgstr "opção não reconhecida %s"
 
 # , c-format
 #: src/dd.c:610
-#, fuzzy, c-format
+#, c-format
 msgid "unrecognized option %s=%s"
-msgstr "opção não reconhecida '-%c'"
+msgstr "opção não reconhecida %s=%s"
 
 #: src/dd.c:616
-#, fuzzy, c-format
+#, c-format
 msgid "invalid number %s"
-msgstr "número inválido"
+msgstr "número inválido %s"
 
 #: src/dd.c:646
 msgid ""
@@ -2001,15 +1987,14 @@ msgstr ""
 
 # , c-format
 #: src/dd.c:1170 src/dd.c:1188
-#, fuzzy, c-format
+#, c-format
 msgid "opening %s"
-msgstr "erro lendo %s"
+msgstr "abrindo %s"
 
 # , c-format
 #: src/dd.c:1196
-#, fuzzy
 msgid "file offset out of range"
-msgstr "%s: número de linha fora de tamanho"
+msgstr "posição no arquivo fora da faixa"
 
 #: src/dd.c:1214
 #, c-format
@@ -2018,53 +2003,55 @@ msgstr "avançando %s bytes no arquivo de saída %s"
 
 #: src/df.c:49
 msgid "Torbjorn Granlund, David MacKenzie, Larry McVoy, and Paul Eggert"
-msgstr ""
-
-#: src/df.c:151
-msgid "   Type"
-msgstr "   Tipo"
+msgstr "Torbjorn Granlund, David MacKenzie, Larry McVoy e Paul Eggert"
 
 #: src/df.c:153
-msgid "Filesystem "
+#, fuzzy
+msgid "Filesystem    Type"
 msgstr "Sistema de Arquivo "
 
-#: src/df.c:163
+#: src/df.c:155
+#, fuzzy
+msgid "Filesystem        "
+msgstr "Sistema de Arquivo "
+
+#: src/df.c:158
 #, c-format
 msgid "    Inodes   IUsed   IFree IUse%%"
 msgstr "    Inodes   IUsados ILivr IUso%%"
 
-#: src/df.c:167
+#: src/df.c:162
 #, c-format
 msgid "    Size  Used Avail Use%%"
 msgstr "    Tam   Usad Disp  Uso%%"
 
-#: src/df.c:169
-#, fuzzy, c-format
+#: src/df.c:164
+#, c-format
 msgid "     Size   Used  Avail Use%%"
-msgstr "    Tam   Usad Disp  Uso%%"
+msgstr "     Tam    Usado Disp  Uso%%"
 
-#: src/df.c:172
-#, fuzzy, c-format
+#: src/df.c:167
+#, c-format
 msgid " %4s-blocks      Used Available Capacity"
-msgstr " %4d-blocos      Usad Dispon.   Capacidade"
+msgstr " %4s-blocos      Usad Dispon.   Capacidade"
 
-#: src/df.c:203
+#: src/df.c:198
 #, c-format
 msgid " %4s-blocks      Used Available Use%%"
 msgstr " %4s-blocos      Usad Dispon.   Uso%%"
 
-#: src/df.c:207
+#: src/df.c:202
 msgid " Mounted on\n"
-msgstr "Montado em\n"
+msgstr " Montado em\n"
 
-#: src/df.c:716
+#: src/df.c:712
 msgid ""
 "Show information about the filesystem on which each FILE resides,\n"
 "or all filesystems by default.\n"
 "\n"
 msgstr ""
 
-#: src/df.c:724
+#: src/df.c:720
 msgid ""
 "  -a, --all             include filesystems having 0 blocks\n"
 "  -B, --block-size=SIZE use SIZE-byte blocks\n"
@@ -2073,7 +2060,7 @@ msgid ""
 "  -H, --si              likewise, but use powers of 1000 not 1024\n"
 msgstr ""
 
-#: src/df.c:730
+#: src/df.c:726
 msgid ""
 "  -i, --inodes          list inode information instead of block usage\n"
 "  -k                    like --block-size=1K\n"
@@ -2082,7 +2069,7 @@ msgid ""
 "(default)\n"
 msgstr ""
 
-#: src/df.c:736
+#: src/df.c:732
 msgid ""
 "  -P, --portability     use the POSIX output format\n"
 "      --sync            invoke sync before getting usage info\n"
@@ -2092,32 +2079,32 @@ msgid ""
 "  -v                    (ignored)\n"
 msgstr ""
 
-#: src/df.c:746 src/du.c:219 src/ls.c:3879
+#: src/df.c:742 src/du.c:216 src/ls.c:3879
 msgid ""
 "\n"
 "SIZE may be (or may be an integer optionally followed by) one of following:\n"
 "kB 1000, K 1024, MB 1,000,000, M 1,048,576, and so on for G, T, P, E, Z, Y.\n"
 msgstr ""
 
-#: src/df.c:863
+#: src/df.c:859
 #, c-format
 msgid "file system type %s both selected and excluded"
 msgstr "sistema de arquivos de tipo %s selecionado e excluído"
 
-#: src/df.c:907
+#: src/df.c:903
 msgid "Warning: "
 msgstr "Aviso: "
 
-#: src/df.c:910
+#: src/df.c:906
 #, c-format
 msgid "%scannot read table of mounted filesystems"
 msgstr "%s não foi possível ler a tabela dos sistemas de arquivos montados"
 
 # , c-format
 #: src/dircolors.c:103
-#, fuzzy, c-format
+#, c-format
 msgid "Usage: %s [OPTION]... [FILE]\n"
-msgstr "Uso: %s [OPÇÃO]... [ARQUIVO]...\n"
+msgstr "Uso: %s [OPÇÃO]... [ARQUIVO]\n"
 
 #: src/dircolors.c:104
 #, fuzzy
@@ -2198,13 +2185,13 @@ msgstr ""
 
 # , c-format
 #: src/dirname.c:46
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Usage: %s NAME\n"
 "  or:  %s OPTION\n"
 msgstr ""
-"Uso: %s [ARQUIVO]...\n"
-" ou:  %s [OPÇÃO]\n"
+"Uso:  %s NOME\n"
+" ou:  %s OPÇÃO\n"
 
 #: src/dirname.c:51
 #, fuzzy
@@ -2225,14 +2212,15 @@ msgid ""
 "Torbjorn Granlund, David MacKenzie, Larry McVoy, Paul Eggert, and Jim "
 "Meyering"
 msgstr ""
+"Torbjorn Granlund, David MacKenzie, Larry McVoy, Paul Eggert e Jim Meyering"
 
-#: src/du.c:179
+#: src/du.c:176
 msgid ""
 "Summarize disk usage of each FILE, recursively for directories.\n"
 "\n"
 msgstr ""
 
-#: src/du.c:186
+#: src/du.c:183
 msgid ""
 "  -a, --all             write counts for all files, not just directories\n"
 "      --apparent-size   print apparent sizes, rather than disk usage; "
@@ -2246,7 +2234,7 @@ msgid ""
 "  -D, --dereference-args  dereference FILEs that are symbolic links\n"
 msgstr ""
 
-#: src/du.c:197
+#: src/du.c:194
 msgid ""
 "  -h, --human-readable  print sizes in human readable format (e.g., 1K 234M "
 "2G)\n"
@@ -2255,14 +2243,14 @@ msgid ""
 "  -l, --count-links     count sizes many times if hard linked\n"
 msgstr ""
 
-#: src/du.c:203
+#: src/du.c:200
 msgid ""
 "  -L, --dereference     dereference all symbolic links\n"
 "  -S, --separate-dirs   do not include size of subdirectories\n"
 "  -s, --summarize       display only a total for each argument\n"
 msgstr ""
 
-#: src/du.c:208
+#: src/du.c:205
 msgid ""
 "  -x, --one-file-system  skip directories on different filesystems\n"
 "  -X FILE, --exclude-from=FILE  Exclude files that match any pattern in "
@@ -2276,42 +2264,42 @@ msgid ""
 msgstr ""
 
 # , c-format
-#: src/du.c:340
-#, fuzzy, c-format
+#: src/du.c:337
+#, c-format
 msgid "cannot change to parent of directory %s"
-msgstr "não pode executar 'chdir' sobre `%s'"
+msgstr "imposível mudar para pai do diretório %s"
 
 # , c-format
-#: src/du.c:348
-#, fuzzy, c-format
+#: src/du.c:345
+#, c-format
 msgid "cannot change to directory %s"
-msgstr "não pode executar 'chdir' sobre `%s'"
+msgstr "imposível mudar para diretório %s"
 
 # , c-format
-#: src/du.c:355
-#, fuzzy, c-format
+#: src/du.c:352
+#, c-format
 msgid "cannot read directory %s"
-msgstr "não é possível criar o diretório %s"
+msgstr "imposível ler diretório %s"
 
-#: src/du.c:546 src/ls.c:2241 src/wc.c:591
+#: src/du.c:543 src/ls.c:2241 src/wc.c:591
 msgid "total"
 msgstr "total"
 
 # , c-format
-#: src/du.c:633
-#, fuzzy, c-format
+#: src/du.c:630
+#, c-format
 msgid "invalid maximum depth %s"
-msgstr "número de campo inválido: `%s'"
+msgstr "profundidade máxima inválida %s"
 
-#: src/du.c:699
+#: src/du.c:696
 msgid "cannot both summarize and show all entries"
 msgstr "não é possível resumir e mostrar todas as entradas ao mesmo tempo"
 
-#: src/du.c:706
+#: src/du.c:703
 msgid "warning: summarizing is the same as using --max-depth=0"
 msgstr "alerta: summarizing é o mesmo que usar --max-depth=0"
 
-#: src/du.c:712
+#: src/du.c:709
 #, c-format
 msgid "warning: summarizing conflicts with --max-depth=%d"
 msgstr "alerta: summarizing conflita com --max-depth=%d"
@@ -3426,7 +3414,7 @@ msgid "not listing already-listed directory: %s"
 msgstr "não é possível criar o diretório %s"
 
 # , c-format
-#: src/ls.c:2208 src/remove.c:910
+#: src/ls.c:2208 src/remove.c:928
 #, fuzzy, c-format
 msgid "reading directory %s"
 msgstr "não é possível criar o diretório %s"
@@ -5051,73 +5039,73 @@ msgstr ""
 msgid "cannot chdir from %s to .."
 msgstr "não pode executar 'chdir' sobre `%s'"
 
-#: src/remove.c:406 src/remove.c:487
+#: src/remove.c:407 src/remove.c:488
 #, fuzzy, c-format
 msgid "cannot lstat `.' in %s"
 msgstr "não consigo executar %s"
 
-#: src/remove.c:413 src/remove.c:491
+#: src/remove.c:414 src/remove.c:492
 #, c-format
 msgid "%s changed dev/ino"
 msgstr ""
 
-#: src/remove.c:572 src/remove.c:710 src/remove.c:873 src/remove.c:965
+#: src/remove.c:573 src/remove.c:711 src/remove.c:880 src/remove.c:983
 #, fuzzy, c-format
 msgid "cannot lstat %s"
 msgstr "não consigo alterar data"
 
 # , c-format
-#: src/remove.c:601
+#: src/remove.c:602
 #, fuzzy, c-format
 msgid "%s: descend into write-protected directory %s? "
 msgstr "não é possível criar o diretório %s"
 
 # , c-format
-#: src/remove.c:602
+#: src/remove.c:603
 #, fuzzy, c-format
 msgid "%s: descend into directory %s? "
 msgstr "não pode executar 'chdir' sobre `%s'"
 
-#: src/remove.c:612
+#: src/remove.c:613
 #, fuzzy, c-format
 msgid "%s: remove write-protected %s %s? "
 msgstr "%s: remover arquivo %s protegido contra escrita? "
 
-#: src/remove.c:613
+#: src/remove.c:614
 #, fuzzy, c-format
 msgid "%s: remove %s %s? "
 msgstr "%s: remover %s? "
 
-#: src/remove.c:637
+#: src/remove.c:638
 #, fuzzy, c-format
 msgid "removed %s\n"
 msgstr "removendo %s\n"
 
 # , c-format
-#: src/remove.c:652 src/remove.c:1040
+#: src/remove.c:653 src/remove.c:1058
 #, fuzzy, c-format
 msgid "removed directory: %s\n"
 msgstr "não é possível criar o diretório %s"
 
 # , c-format
-#: src/remove.c:732 src/remove.c:749 src/remove.c:1045
+#: src/remove.c:733 src/remove.c:750 src/remove.c:1063
 #, fuzzy, c-format
 msgid "cannot remove directory %s"
 msgstr "não é possível criar o diretório %s"
 
 # , c-format
-#: src/remove.c:813
+#: src/remove.c:814
 #, fuzzy, c-format
 msgid "cannot open directory %s"
 msgstr "não é possível criar o diretório %s"
 
 # , c-format
-#: src/remove.c:878 src/remove.c:983
+#: src/remove.c:895 src/remove.c:1001
 #, fuzzy, c-format
 msgid "cannot chdir from %s to %s"
 msgstr "não pode executar 'chdir' sobre `%s'"
 
-#: src/remove.c:886
+#: src/remove.c:903
 #, fuzzy, c-format
 msgid ""
 "WARNING: Circular directory structure.\n"
@@ -5132,7 +5120,7 @@ msgstr ""
 "NOTIFIQUE O ADMINISTRADOR DO SISTEMA.\n"
 "Os próximos dois diretórios tem o mesmo número de inode:\n"
 
-#: src/remove.c:1079
+#: src/remove.c:1097
 msgid "cannot remove `.' or `..'"
 msgstr "não é possível remover `.' ou `..'"
 
@@ -5881,7 +5869,7 @@ msgid ""
 "  %D   Device number in hex\n"
 "  %d   Device number in decimal\n"
 "  %F   File type\n"
-"  %f   raw mode in hex\n"
+"  %f   Raw mode in hex\n"
 "  %G   Group name of owner\n"
 "  %g   Group ID of owner\n"
 msgstr ""
@@ -6638,7 +6626,7 @@ msgstr "%s: arquivo truncado"
 
 #: src/tail.c:1020
 msgid "no files remaining"
-msgstr "nenhum aquivo encontrado"
+msgstr "nenhum aquivo restante"
 
 #: src/tail.c:1236
 #, c-format
@@ -6675,9 +6663,9 @@ msgstr ""
 
 # , c-format
 #: src/tail.c:1423
-#, fuzzy, c-format
+#, c-format
 msgid "`%s' option is obsolete; use `%s-%c %.*s'"
-msgstr "atenção: largura %lu inválida; será usado %d em seu lugar"
+msgstr "opção `%s' é obsoleta; use `%s-%c %.*s'"
 
 #: src/tail.c:1484
 #, c-format
@@ -6723,7 +6711,7 @@ msgstr "atenção: --pid=PID não é suportado neste sistema"
 
 #: src/tee.c:33
 msgid "Mike Parker, Richard M. Stallman, and David MacKenzie"
-msgstr ""
+msgstr "Mike Parker, Richard M. Stallman e David MacKenzie"
 
 #: src/tee.c:64
 #, fuzzy
@@ -6828,14 +6816,12 @@ msgid "-ef does not accept -l\n"
 msgstr "-ef não aceita -l\n"
 
 #: src/test.c:586
-#, fuzzy
 msgid "-ot does not accept -l\n"
-msgstr "-nt não aceita -l\n"
+msgstr "-ot não aceita -l\n"
 
 #: src/test.c:593
-#, fuzzy
 msgid "unknown binary operator"
-msgstr "Erro de sistema desconhecido"
+msgstr "operador binário desconhecido"
 
 #: src/test.c:781
 msgid "after -t"
@@ -6972,16 +6958,15 @@ msgstr ""
 
 #: src/test.c:1067
 msgid "FIXME: ksb and mjb"
-msgstr ""
+msgstr "CORRIJA-ME: ksb e mjb"
 
 #: src/test.c:1111
 msgid "missing `]'\n"
-msgstr "falta um `]'\n"
+msgstr "falta `]'\n"
 
 #: src/test.c:1125
-#, fuzzy
 msgid "too many arguments\n"
-msgstr "muitos argumentos"
+msgstr "muitos argumentos\n"
 
 #: src/touch.c:39
 msgid ""
@@ -6990,9 +6975,9 @@ msgstr ""
 
 # , c-format
 #: src/touch.c:164 src/touch.c:179
-#, fuzzy, c-format
+#, c-format
 msgid "creating %s"
-msgstr "criando arquivo `%s'\n"
+msgstr "criando %s"
 
 # , c-format
 #: src/touch.c:222
@@ -7037,14 +7022,13 @@ msgstr ""
 
 # , c-format
 #: src/touch.c:311 src/touch.c:331
-#, fuzzy, c-format
+#, c-format
 msgid "invalid date format %s"
-msgstr "argumento inválido %s para '%s'"
+msgstr "formato de data inválido %s"
 
 #: src/touch.c:355
-#, fuzzy
 msgid "cannot specify times from more than one source"
-msgstr "não é possível sub-dividir em mais de uma forma"
+msgstr "impossível  especificar horas de mais de uma fonte"
 
 # , c-format
 #: src/touch.c:378
@@ -7054,9 +7038,8 @@ msgid ""
 msgstr "atenção: largura %lu inválida; será usado %d em seu lugar"
 
 #: src/touch.c:399
-#, fuzzy
 msgid "file arguments missing"
-msgstr "poucos argumentos"
+msgstr "argumentos de arquivo faltando"
 
 # , c-format
 #: src/tr.c:327
@@ -7209,13 +7192,12 @@ msgstr "número de repetições `%s' inválido na especificação [c*n]"
 
 # , c-format
 #: src/tr.c:999
-#, fuzzy
 msgid "missing character class name `[::]'"
-msgstr "classe de caracteres inválida `%s'"
+msgstr "nome de classe de caracteres faltando `[::]'"
 
 #: src/tr.c:1002
 msgid "missing equivalence class character `[==]'"
-msgstr ""
+msgstr "caracter de classe de equivalência faltando `[==]'"
 
 # , c-format
 #: src/tr.c:1025
@@ -7520,13 +7502,13 @@ msgstr ""
 
 # , c-format
 #: src/unlink.c:51
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Usage: %s FILE\n"
 "  or:  %s OPTION\n"
 msgstr ""
-"Uso: %s [ARQUIVO]...\n"
-" ou:  %s [OPÇÃO]\n"
+"Uso:  %s ARQUIVO\n"
+" ou:  %s OPÇÃO\n"
 
 #: src/unlink.c:54
 msgid ""
@@ -7674,7 +7656,7 @@ msgstr ""
 
 #: src/who.c:446
 msgid "clock change"
-msgstr ""
+msgstr "mudança de relógio"
 
 #: src/who.c:458 src/who.c:459
 msgid "run-level"
@@ -7695,7 +7677,7 @@ msgstr ""
 
 #: src/who.c:498
 msgid "NAME"
-msgstr ""
+msgstr "NOME"
 
 #: src/who.c:498
 msgid "LINE"
@@ -7703,24 +7685,23 @@ msgstr "LINHA"
 
 #: src/who.c:498
 msgid "TIME"
-msgstr ""
+msgstr "TEMPO"
 
 #: src/who.c:498
-#, fuzzy
 msgid "IDLE"
-msgstr "A soma não coincide"
+msgstr "PARADO"
 
 #: src/who.c:498
 msgid "PID"
-msgstr ""
+msgstr "PID"
 
 #: src/who.c:499
 msgid "COMMENT"
-msgstr ""
+msgstr "COMENTÁRIO"
 
 #: src/who.c:499
 msgid "EXIT"
-msgstr ""
+msgstr "SAIR"
 
 # , c-format
 #: src/who.c:574
@@ -7822,3103 +7803,5 @@ msgid ""
 "\n"
 msgstr ""
 
-#, fuzzy
-#~ msgid "cannot convert time"
-#~ msgstr "não consigo alterar data"
-
-#, fuzzy
-#~ msgid "cannot format time"
-#~ msgstr "não consigo executar %s"
-
-# , c-format
-#, fuzzy
-#~ msgid "cannot change to `..' from directory %s"
-#~ msgstr "não pode executar 'chdir' sobre `%s'"
-
-#, fuzzy
-#~ msgid "missing file arguments"
-#~ msgstr "poucos argumentos"
-
-#, fuzzy
-#~ msgid "environment variable, QUOTING_STYLE"
-#~ msgstr ""
-#~ "ignorando tamanho de tab inválido na variável de ambiente TABSIZE: %s"
-
-#~ msgid "%s: is so large that it is not representable"
-#~ msgstr "%s: é tão grande que não pode ser mostrado"
-
-# , c-format
-#, fuzzy
-#~ msgid "cannot execute %s"
-#~ msgstr "não é possível criar o diretório %s"
-
-# , c-format
-#, fuzzy
-#~ msgid "Try %s --help' for more information.\n"
-#~ msgstr "Tente `%s --help' para mais informação.\n"
-
-# , c-format
-#, fuzzy
-#~ msgid "preserving permissions for %s"
-#~ msgstr "não é possível mudar permissões de %s"
-
-#, fuzzy
-#~ msgid "cannot lstat `.'"
-#~ msgstr "não consigo alterar data"
-
-# , c-format
-#, fuzzy
-#~ msgid "closing directory %s"
-#~ msgstr "não pode executar 'chdir' sobre `%s'"
-
-# , c-format
-#, fuzzy
-#~ msgid "%s: remove directory %s? "
-#~ msgstr "não é possível criar o diretório %s"
-
-#~ msgid "%s: directory %s is write protected; descend into it anyway? "
-#~ msgstr ""
-#~ "%s: diretório %s é protegido contra escrita; entrar nele mesmo assim? "
-
-#~ msgid "removing all entries of directory %s\n"
-#~ msgstr "removendo todas as entradas do diretório %s\n"
-
-#~ msgid "continue? "
-#~ msgstr "continuar? "
-
-# , c-format
-#, fuzzy
-#~ msgid "cannot change back to directory %s via `..'"
-#~ msgstr "não pode executar 'chdir' sobre `%s'"
-
-# , c-format
-#, fuzzy
-#~ msgid "%s: remove directory %s%s? "
-#~ msgstr "não é possível criar o diretório %s"
-
-#~ msgid " (might be nonempty)"
-#~ msgstr " (pode não estar vazio)"
-
-#, fuzzy
-#~ msgid "removing the directory itself: %s\n"
-#~ msgstr "aviso: não consigo mudar para o diretório %s"
-
-#, fuzzy
-#~ msgid ""
-#~ "ERROR: the source file %s initially had device/inode\n"
-#~ "numbers %lu/%lu, but now (after opening it), the numbers\n"
-#~ "are %lu/%lu.  That means that while this program was running,\n"
-#~ "the file was replaced with another one.  Skipping this file."
-#~ msgstr ""
-#~ "ERRO: o  diretório `%s' inicialmente tinha números de dispositivo/inode\n"
-#~ " %lu/%lu, mas agora (depois de um chdir para ele), os números para `.'\n"
-#~ "são %lu/%lu.  Isto quer dizer que enquanto o rm estava rodando, o "
-#~ "diretório\n"
-#~ "foi trocado por outro ou por um link para outro diretório."
-
-#~ msgid ""
-#~ "ERROR: the directory %s initially had device/inode\n"
-#~ "numbers %lu/%lu, but now (after a chdir into it), the numbers for `.'\n"
-#~ "are %lu/%lu.  That means that while rm was running, the directory\n"
-#~ "was replaced with either another directory or a link to another directory."
-#~ msgstr ""
-#~ "ERRO: o  diretório `%s' inicialmente tinha números de dispositivo/inode\n"
-#~ " %lu/%lu, mas agora (depois de um chdir para ele), os números para `.'\n"
-#~ "são %lu/%lu.  Isto quer dizer que enquanto o rm estava rodando, o "
-#~ "diretório\n"
-#~ "foi trocado por outro ou por um link para outro diretório."
-
-#, fuzzy
-#~ msgid ""
-#~ "ERROR: the directory %s initially had device/inode\n"
-#~ "numbers %lu/%lu, but now (after changing into at least one subdirectory\n"
-#~ "and changing back via `..'), the numbers for `.' are %lu/%lu.\n"
-#~ "That means that while rm was running, a partially-removed subdirectory\n"
-#~ "was moved to a different position in the file system hierarchy."
-#~ msgstr ""
-#~ "ERRO: o  diretório `%s' inicialmente tinha números de dispositivo/inode\n"
-#~ " %lu/%lu, mas agora (depois de um chdir para ele), os números para `.'\n"
-#~ "são %lu/%lu.  Isto quer dizer que enquanto o rm estava rodando, o "
-#~ "diretório\n"
-#~ "foi trocado por outro ou por um link para outro diretório."
-
-#, fuzzy
-#~ msgid "  or:  %s [-acm] MMDDhhmm[YY] FILE... (obsolete)\n"
-#~ msgstr "  ou : %s [-acm] MMDDhhmm[YY] ARQUIVO... (obsoleto)\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "      --help             display this help and exit\n"
-#~ "      --version          output version information and exit\n"
-#~ msgstr ""
-#~ "Mostra o CRC e o número de bytes de cada ARQUIVO.\n"
-#~ "\n"
-#~ "  --help      mostra esta ajuda e finaliza\n"
-#~ "  --version   informa a versão e finaliza\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "      --help              display this help and exit\n"
-#~ "      --version           output version information and exit\n"
-#~ msgstr ""
-#~ "Mostra o CRC e o número de bytes de cada ARQUIVO.\n"
-#~ "\n"
-#~ "  --help      mostra esta ajuda e finaliza\n"
-#~ "  --version   informa a versão e finaliza\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "      --help                   display this help and exit\n"
-#~ "      --version                output version information and exit\n"
-#~ msgstr ""
-#~ "Mostra o CRC e o número de bytes de cada ARQUIVO.\n"
-#~ "\n"
-#~ "  --help      mostra esta ajuda e finaliza\n"
-#~ "  --version   informa a versão e finaliza\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "      --help                  display this help and exit\n"
-#~ "      --version               output version information and exit\n"
-#~ msgstr ""
-#~ "Mostra o CRC e o número de bytes de cada ARQUIVO.\n"
-#~ "\n"
-#~ "  --help      mostra esta ajuda e finaliza\n"
-#~ "  --version   informa a versão e finaliza\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "      --help      display this help and exit\n"
-#~ "      --version   output version information and exit\n"
-#~ msgstr ""
-#~ "Mostra o CRC e o número de bytes de cada ARQUIVO.\n"
-#~ "\n"
-#~ "  --help      mostra esta ajuda e finaliza\n"
-#~ "  --version   informa a versão e finaliza\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "      --help            display this help and exit\n"
-#~ "      --version         output version information and exit\n"
-#~ msgstr ""
-#~ "Mostra o CRC e o número de bytes de cada ARQUIVO.\n"
-#~ "\n"
-#~ "  --help      mostra esta ajuda e finaliza\n"
-#~ "  --version   informa a versão e finaliza\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "      --help          display this help and exit\n"
-#~ "      --version       output version information and exit\n"
-#~ msgstr ""
-#~ "Mostra o CRC e o número de bytes de cada ARQUIVO.\n"
-#~ "\n"
-#~ "  --help      mostra esta ajuda e finaliza\n"
-#~ "  --version   informa a versão e finaliza\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "      --help                 display this help and exit\n"
-#~ "      --version              output version information and exit\n"
-#~ msgstr ""
-#~ "Mostra o CRC e o número de bytes de cada ARQUIVO.\n"
-#~ "\n"
-#~ "  --help      mostra esta ajuda e finaliza\n"
-#~ "  --version   informa a versão e finaliza\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "      --help        display this help and exit\n"
-#~ "      --version     output version information and exit\n"
-#~ msgstr ""
-#~ "Mostra o CRC e o número de bytes de cada ARQUIVO.\n"
-#~ "\n"
-#~ "  --help      mostra esta ajuda e finaliza\n"
-#~ "  --version   informa a versão e finaliza\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "      --help                   display this help and exit\n"
-#~ "      --version                output version information and exit\n"
-#~ "\n"
-#~ msgstr ""
-#~ "Mostra o CRC e o número de bytes de cada ARQUIVO.\n"
-#~ "\n"
-#~ "  --help      mostra esta ajuda e finaliza\n"
-#~ "  --version   informa a versão e finaliza\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "      --help     display this help and exit\n"
-#~ "      --version  output version information and exit\n"
-#~ msgstr ""
-#~ "Mostra o CRC e o número de bytes de cada ARQUIVO.\n"
-#~ "\n"
-#~ "  --help      mostra esta ajuda e finaliza\n"
-#~ "  --version   informa a versão e finaliza\n"
-
-#~ msgid ""
-#~ "Change the group membership of each FILE to GROUP.\n"
-#~ "\n"
-#~ "  -c, --changes          like verbose but report only when a change is "
-#~ "made\n"
-#~ "      --dereference      affect the referent of each symbolic link, "
-#~ "rather\n"
-#~ "                         than the symbolic link itself\n"
-#~ "  -h, --no-dereference   affect symbolic links instead of any referenced "
-#~ "file\n"
-#~ "                         (available only on systems that can change the\n"
-#~ "                         ownership of a symlink)\n"
-#~ "  -f, --silent, --quiet  suppress most error messages\n"
-#~ "      --reference=RFILE  use RFILE's group rather than the specified\n"
-#~ "                         GROUP value\n"
-#~ "  -R, --recursive        operate on files and directories recursively\n"
-#~ "  -v, --verbose          output a diagnostic for every file processed\n"
-#~ "      --help             display this help and exit\n"
-#~ "      --version          output version information and exit\n"
-#~ msgstr ""
-#~ "Muda as permissões de grupo de cada ARQUIVO para GRUPO.\n"
-#~ "\n"
-#~ "  -c, --changes         como o modo \"verbose\" mas só avisa quando uma \n"
-#~ "                        alteração for feita\n"
-#~ "      --dereference     afeta a referência de cada ligação simbólica, ao "
-#~ "invés\n"
-#~ "                        da própria ligação simbólica\n"
-#~ "  -h, --no-dereference  afetar ligações simbólicas (symlinks) em vez dos\n"
-#~ "                        arquivos referenciados (disponível somente em "
-#~ "sistemas\n"
-#~ "                        que podem trocar as permissões de ligações "
-#~ "simbólicas)\n"
-#~ "  -f, --silent, --quiet desligar a maior parte das mensagens de erro\n"
-#~ "      --reference=RARQ  usa grupo de RARQ invés do valor especificado em "
-#~ "GRUPO\n"
-#~ "  -R, --recursive       mudar arquivos e diretórios recursivamente\n"
-#~ "  -v, --verbose         mostrar um diagnóstico para cada arquivo "
-#~ "processado\n"
-#~ "      --help            mostrar esta ajuda e sair\n"
-#~ "      --version         mostrar informação sobre versão e sair\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "Change the owner and/or group of each FILE to OWNER and/or GROUP.\n"
-#~ "\n"
-#~ "  -c, --changes          like verbose but report only when a change is "
-#~ "made\n"
-#~ "      --dereference      affect the referent of each symbolic link, "
-#~ "rather\n"
-#~ "                         than the symbolic link itself\n"
-#~ "  -h, --no-dereference   affect symbolic links instead of any referenced "
-#~ "file\n"
-#~ "                         (available only on systems that can change the\n"
-#~ "                         ownership of a symlink)\n"
-#~ "      --from=CURRENT_OWNER:CURRENT_GROUP\n"
-#~ "                         change the owner and/or group of each file only "
-#~ "if\n"
-#~ "                         its current owner and/or group match those "
-#~ "specified\n"
-#~ "                         here.  Either may be omitted, in which case a "
-#~ "match\n"
-#~ "                         is not required for the omitted attribute.\n"
-#~ "  -f, --silent, --quiet  suppress most error messages\n"
-#~ "      --reference=RFILE  use RFILE's owner and group rather than\n"
-#~ "                         the specified OWNER:GROUP values\n"
-#~ "  -R, --recursive        operate on files and directories recursively\n"
-#~ "  -v, --verbose          output a diagnostic for every file processed\n"
-#~ "      --help             display this help and exit\n"
-#~ "      --version          output version information and exit\n"
-#~ "\n"
-#~ msgstr ""
-#~ "Muda o dono e/ou grupo de cada ARQUIVO para DONO e/ou GRUPO.\n"
-#~ "\n"
-#~ "   -c, --changes           ser detalhado quando forem feitas alterações\n"
-#~ "       --dereference       afeta a referência de cada ligação simbólica "
-#~ "ao\n"
-#~ "                           invés da própria ligação simbólica\n"
-#~ "   -h, --no-dereference    afetar ligações simbólicas (symlinks) em vez "
-#~ "dos\n"
-#~ "                           arquivos referenciados.\n"
-#~ "                           (disponível somente em sistemas que "
-#~ "possibilitam\n"
-#~ "                            a mudança de propriedade de um link "
-#~ "simbólico)\n"
-#~ "   --from=DONO_CORRENTE:GRUPO_CORRENTE\n"
-#~ "                           troca o done e/o grupo de cada arquivo somente "
-#~ "se\n"
-#~ "                           o seu dono e/ou grupo atual for igual aos\n"
-#~ "                           especificados aqui. Qualquer um pode ser "
-#~ "omitido.\n"
-#~ "                           Neste caso a busca é feita somente no dado "
-#~ "passado.\n"
-#~ "   -f, --silent, --quiet   desliga a maioria das mensagens de erro\n"
-#~ "       --reference=RARQ    usa dono e grupo de RARQ ao invés dos valores\n"
-#~ "                           especificados em DONO.GRUPO\n"
-#~ "   -R, --recursive         trabalha em arquivos e diretórios "
-#~ "recursivamente\n"
-#~ "   -v, --verbose           explica o que está sendo feito\n"
-#~ "       --help              mostra esta ajuda e sai\n"
-#~ "       --version           mostra informação sobre versão e sai\n"
-#~ "\n"
-#~ "O Dono é mantido  se inexistente. O Grupo é mantido se inexistente, mas "
-#~ "mudado \n"
-#~ "para grupo de login se implícito com um `:'. DONO e GRUPO podem ser "
-#~ "dados \n"
-#~ "numéricos assim como simbólicos.\n"
-#~ "\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "  -l, --link                   link files instead of copying\n"
-#~ "  -L, --dereference            always follow symbolic links\n"
-#~ "  -p                           same as --preserve=mode,ownership,"
-#~ "timestamps\n"
-#~ "      --preserve[=ATTR_LIST]   preserve the specified attributes "
-#~ "(default:\n"
-#~ "                                 mode,ownership,timestamps), if possible\n"
-#~ "                                 additional attributes: links, all\n"
-#~ "      --no-preserve=ATTR_LIST  don't preserve the specified attributes\n"
-#~ "      --parents                append source path to DIRECTORY\n"
-#~ "  -P                           same as `--no-dereference'\n"
-#~ "  -r                           copy recursively, non-directories as "
-#~ "files\n"
-#~ "                                 WARNING: use -R instead when you might "
-#~ "copy\n"
-#~ "                                 special files like FIFOs or /dev/zero\n"
-#~ "      --remove-destination     remove each existing destination file "
-#~ "before\n"
-#~ "                                 attempting to open it (contrast with --"
-#~ "force)\n"
-#~ msgstr ""
-#~ "Copiar ORIGEM para DESTINO, ou multiplicar ORIGEM(s) para DIRETÓRIOS.\n"
-#~ "\n"
-#~ "  -a, --archive                o mesmo que -dpR\n"
-#~ "      --backup[=CONTROLE]      faz um backup para cada arquivo de "
-#~ "destino\n"
-#~ "  -b                           existente. Como --backup mas não aceita "
-#~ "um\n"
-#~ "                               parâmetro.\n"
-#~ "  -d, --no-dereference         nunca segue links simbólicos\n"
-#~ "  -f, --force                  se o arquivo de destino não pode ser "
-#~ "aberto\n"
-#~ "                               remove-o e tenta novamente\n"
-#~ "  -i, --interactive            espera por entrada antes de sobrescrever\n"
-#~ "  -H                           segue links simbólicos\n"
-#~ "  -l, --link                   usa links ao invés de copiar os arquivos\n"
-#~ "  -L, --dereference            sempre segue links simbólicos\n"
-#~ "  -p, --preserve               preserva atributos de arquivos caso "
-#~ "possível\n"
-#~ "      --parents                inclui rota de origem para o DIRETÓRIO\n"
-#~ "  -P                           o mesmo que `--parents' por enquanto; \n"
-#~ "                               brevemente será trocado por `--no-"
-#~ "dereference' \n"
-#~ "                               para atender o POSIX\n"
-#~ "  -r                           cópia recursiva, não-diretórios como "
-#~ "arquivos\n"
-#~ "                               CUIDADO: use -R quando desejar copiar "
-#~ "arquivos\n"
-#~ "                               especiais como FIFOs ou /dev/zero\n"
-#~ "      --remove-destination     remove arquivos de destino existentes "
-#~ "antes \n"
-#~ "                               de tentar abrí-los (contrasta com --"
-#~ "force)\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "Copy a file, converting and formatting according to the options.\n"
-#~ "\n"
-#~ "  bs=BYTES        force ibs=BYTES and obs=BYTES\n"
-#~ "  cbs=BYTES       convert BYTES bytes at a time\n"
-#~ "  conv=KEYWORDS   convert the file as per the comma separated keyword "
-#~ "list\n"
-#~ "  count=BLOCKS    copy only BLOCKS input blocks\n"
-#~ "  ibs=BYTES       read BYTES bytes at a time\n"
-#~ "  if=FILE         read from FILE instead of stdin\n"
-#~ "  obs=BYTES       write BYTES bytes at a time\n"
-#~ "  of=FILE         write to FILE instead of stdout\n"
-#~ "  seek=BLOCKS     skip BLOCKS obs-sized blocks at start of output\n"
-#~ "  skip=BLOCKS     skip BLOCKS ibs-sized blocks at start of input\n"
-#~ "      --help      display this help and exit\n"
-#~ "      --version   output version information and exit\n"
-#~ "\n"
-#~ "BLOCKS and BYTES may be followed by the following multiplicative "
-#~ "suffixes:\n"
-#~ "xM M, c 1, w 2, b 512, kD 1000, k 1024, MD 1,000,000, M 1,048,576,\n"
-#~ "GD 1,000,000,000, G 1,073,741,824, and so on for T, P, E, Z, Y.\n"
-#~ "Each KEYWORD may be:\n"
-#~ "\n"
-#~ "  ascii     from EBCDIC to ASCII\n"
-#~ "  ebcdic    from ASCII to EBCDIC\n"
-#~ "  ibm       from ASCII to alternated EBCDIC\n"
-#~ "  block     pad newline-terminated records with spaces to cbs-size\n"
-#~ "  unblock   replace trailing spaces in cbs-size records with newline\n"
-#~ "  lcase     change upper case to lower case\n"
-#~ "  notrunc   do not truncate the output file\n"
-#~ "  ucase     change lower case to upper case\n"
-#~ "  swab      swap every pair of input bytes\n"
-#~ "  noerror   continue after read errors\n"
-#~ "  sync      pad every input block with NULs to ibs-size; when used\n"
-#~ "              with block or unblock, pad with spaces rather than NULs\n"
-#~ msgstr ""
-#~ "Copia um arquivo, convertendo e formatando de acordo com as opções.\n"
-#~ "\n"
-#~ "   bs=BYTES        forçar ibs=BYTES e obs=BYTES\n"
-#~ "   cbs=BYTES       converter BYTES bytes de cada vez\n"
-#~ "   conv=PALAVRAS-CHAVE converter o arquivo de acordo com lista de "
-#~ "palavras-\n"
-#~ "                   chave separadas por vírgulas\n"
-#~ "   count=BLOCOS    copiar só BLOCOS blocos de entrada\n"
-#~ "   ibs=BYTES       ler BYTES bytes de cada vez\n"
-#~ "   if=ARQUIVO      ler de ARQUIVO em vez de stdin\n"
-#~ "   obs=BYTES       escrever BYTES bytes de cada vez\n"
-#~ "   of=ARQUIVO      escrever em ARQUIVO em vez de stdout\n"
-#~ "   seek=BLOCOS     desconsiderar os primeiros BLOCOS blocos de tamanho \n"
-#~ "                   obs no início da saída\n"
-#~ "   skip=BLOCOS     desconsiderar os primeiros BLOCOS blocos de tamanho \n"
-#~ "                   ibs no início da entrada\n"
-#~ "       --help      mostrar esta ajuda e sai\n"
-#~ "       --version   mostrar informação sobre versão e sai\n"
-#~ "\n"
-#~ "BYTES pode ser seguido pelos sufixos multiplicativos a seguir: \n"
-#~ "xM M, c 1, w 2, b 512, kD 1000, k 1024, MD 1,000,000, M 1,048,576,\\n\"\n"
-#~ "\"GD 1,000,000,000, G 1,073,741,824, e assim por diante para T, P, E, Z, "
-#~ "Y.\\n\"\n"
-#~ "\n"
-#~ "Cada PALAVRA-CHAVE pode ser:\n"
-#~ "\n"
-#~ "   ascii     de EBCDIC para ASCII\n"
-#~ "   ebcdic    de ASCII para EBCDIC\n"
-#~ "   ibm       de ASCII para EBCDIC alternado\n"
-#~ "   block     completar com espaços os registros terminados com fim de "
-#~ "linha\n"
-#~ "             até o tamanho cbs\n"
-#~ "   unblock   substituir os espaços no fim dos registros de tamanho cbs "
-#~ "com \n"
-#~ "             um fim de linha\n"
-#~ "   lcase     mudar de letras maiúsculas para minúsculas\n"
-#~ "   notrunc   não trunca o arquivo de saída\n"
-#~ "   ucase     mudar de letras minúsculas para maiúsculas\n"
-#~ "   swab      trocar cada par dos bytes de entrada\n"
-#~ "   noerror   continuar mesmo depois de erros de leitura\n"
-#~ "   sync      completar cada bloco de entrada com NULs até o tamanho ibs\n"
-
-#~ msgid ""
-#~ "Show information about the filesystem on which each FILE resides,\n"
-#~ "or all filesystems by default.\n"
-#~ "\n"
-#~ "  -a, --all             include filesystems having 0 blocks\n"
-#~ "      --block-size=SIZE use SIZE-byte blocks\n"
-#~ "  -h, --human-readable  print sizes in human readable format (e.g., 1K "
-#~ "234M 2G)\n"
-#~ "  -H, --si              likewise, but use powers of 1000 not 1024\n"
-#~ "  -i, --inodes          list inode information instead of block usage\n"
-#~ "  -k, --kilobytes       like --block-size=1024\n"
-#~ "  -l, --local           limit listing to local filesystems\n"
-#~ "  -m, --megabytes       like --block-size=1048576\n"
-#~ "      --no-sync         do not invoke sync before getting usage info "
-#~ "(default)\n"
-#~ "  -P, --portability     use the POSIX output format\n"
-#~ "      --sync            invoke sync before getting usage info\n"
-#~ "  -t, --type=TYPE       limit listing to filesystems of type TYPE\n"
-#~ "  -T, --print-type      print filesystem type\n"
-#~ "  -x, --exclude-type=TYPE   limit listing to filesystems not of type "
-#~ "TYPE\n"
-#~ "  -v                    (ignored)\n"
-#~ "      --help            display this help and exit\n"
-#~ "      --version         output version information and exit\n"
-#~ msgstr ""
-#~ "Mostrar informações sobre o sistema de arquivos onde cada ARQUIVO "
-#~ "reside,\n"
-#~ "ou todos os sistemas de arquivos por default.\n"
-#~ "\n"
-#~ "  -a, --all          incluir sistemas de arquivos com 0 blocos\n"
-#~ "      --block-size=SIZE usa blocos de SIZE-byte\n"
-#~ "  -h, --human-readable  mostrar tamanhos em formato legível por humanos\n"
-#~ "                     (ex. 1K 234M 2G)\n"
-#~ "  -H, --si           como o anterior, mas usa o padrão de 1000 e não "
-#~ "1024\n"
-#~ "  -i, --inodes       mostra informação sobre inodes em vez de blocos "
-#~ "utilizados\n"
-#~ "  -k, --kilobytes    como  --block-size=1024\n"
-#~ "  -l, --local        limita a listagem ao sistema de arquivos local\n"
-#~ "  -m, --megabytes    como --block-size=1048576\n"
-#~ "      --no-sync      não chamar sync antes de obter as informações "
-#~ "(default)\n"
-#~ "  -P, --portability  usar o formato POSIX de saída\n"
-#~ "      --sync         chamar sync antes de obter as informações\n"
-#~ "  -t, --type=TIPO    limitar a listagem a sistemas de arquivos do tipo "
-#~ "TIPO\n"
-#~ "  -T, --print-type   mostrar o tipo do sistema de arquivos\n"
-#~ "  -x, --exclude-type=TIPO limitar a listagem a sistemas de arquivos que "
-#~ "não\n"
-#~ "                     sejam do tipo TIPO\n"
-#~ "  -v                 (ignorado)\n"
-#~ "      --help         mostrar esta ajuda e sai\n"
-#~ "      --version      mostrar informação sobre versão e sai\n"
-
-#~ msgid ""
-#~ "Summarize disk usage of each FILE, recursively for directories.\n"
-#~ "\n"
-#~ "  -a, --all             write counts for all files, not just directories\n"
-#~ "      --block-size=SIZE use SIZE-byte blocks\n"
-#~ "  -b, --bytes           print size in bytes\n"
-#~ "  -c, --total           produce a grand total\n"
-#~ "  -D, --dereference-args  dereference PATHs when symbolic link\n"
-#~ "  -h, --human-readable  print sizes in human readable format (e.g., 1K "
-#~ "234M 2G)\n"
-#~ "  -H, --si              likewise, but use powers of 1000 not 1024\n"
-#~ "  -k, --kilobytes       like --block-size=1024\n"
-#~ "  -l, --count-links     count sizes many times if hard linked\n"
-#~ "  -L, --dereference     dereference all symbolic links\n"
-#~ "  -m, --megabytes       like --block-size=1048576\n"
-#~ "  -S, --separate-dirs   do not include size of subdirectories\n"
-#~ "  -s, --summarize       display only a total for each argument\n"
-#~ "  -x, --one-file-system  skip directories on different filesystems\n"
-#~ "  -X FILE, --exclude-from=FILE  Exclude files that match any pattern in "
-#~ "FILE.\n"
-#~ "      --exclude=PAT     Exclude files that match PAT.\n"
-#~ "      --max-depth=N     print the total for a directory (or file, with --"
-#~ "all)\n"
-#~ "                          only if it is N or fewer levels below the "
-#~ "command\n"
-#~ "                          line argument;  --max-depth=0 is the same as\n"
-#~ "                          --summarize\n"
-#~ "      --help            display this help and exit\n"
-#~ "      --version         output version information and exit\n"
-#~ msgstr ""
-#~ "Mostrar o uso de disco de cada ARQUIVO, recursivamente para diretórios.\n"
-#~ "\n"
-#~ "   -a, --all             escreve a contagem para todos os arquivos, não\n"
-#~ "                         apenas diretórios\n"
-#~ "       --block-size=SIZE usa blocos de SIZE-bytes\n"
-#~ "   -b, --bytes           imprimir o tamanho em bytes\n"
-#~ "   -c, --total           produzir um total final\n"
-#~ "   -D, --dereference-args  desreferenciar rotas se link simbólico\n"
-#~ "   -h, --human-readable  imprimir tamanhos em formato legível por "
-#~ "humanos\n"
-#~ "                         (ex. 1K 234M 2G)\n"
-#~ "   -H, --si              como o anterior, mas usa o padrão de 1000 em vez "
-#~ "de 1024\n"
-#~ "   -k, --kilobytes       como --block-size=1024\n"
-#~ "   -l, --count-links     contar tamanho várias vezes se houver links "
-#~ "físicos\n"
-#~ "                         (hard links)\n"
-#~ "   -L, --dereference     desreferenciar todos os links simbólicos\n"
-#~ "   -m, --megabytes       usar blocos de 1024K bytes em vez de 512,\n"
-#~ "                         apesar de POSIXLY_CORRECT\n"
-#~ "   -S, --separate-dirs   não incluir tamanho de sub-diretórios\n"
-#~ "   -s, --summarize       mostrar só um total para cada argumento\n"
-#~ "   -x, --one-file-sysyem desconsiderar diretórios em sistemas de "
-#~ "arquivos\n"
-#~ "                         diferentes\n"
-#~ "   -X ARQUIVO, --exclude-from=ARQUIVO Exclui arquivos que combinem com "
-#~ "qualquer\n"
-#~ "                         padrão em ARQUIVO.\n"
-#~ "       --exclude=PAD     Exclui arquivos que combinem com PAD.\\n\"\n"
-#~ "       --max-depth=N     mostra o total para um diretório (ou arquivo, "
-#~ "com --all)\"\n"
-#~ "                         somente se estiver N ou menos níveis abaixo do "
-#~ "parâmetro\n"
-#~ "                         da linha de comando; --max-depth=0 é o mesmo "
-#~ "que \n"
-#~ "                         --summarize                         \n"
-#~ "       --help            mostrar esta ajuda e sai\n"
-#~ "       --version         mostrar informação sobre versão e sai\n"
-
-#~ msgid ""
-#~ "In the first two formats, copy SOURCE to DEST or multiple SOURCE(s) to\n"
-#~ "the existing DIRECTORY, while setting permission modes and owner/group.\n"
-#~ "In the third format, create all components of the given DIRECTORY(ies).\n"
-#~ "\n"
-#~ "      --backup[=CONTROL] make a backup of each existing destination file\n"
-#~ "  -b                  like --backup but does not accept an argument\n"
-#~ "  -c                  (ignored)\n"
-#~ "  -d, --directory     treat all arguments as directory names; create all\n"
-#~ "                        components of the specified directories\n"
-#~ "  -D                  create all leading components of DEST except the "
-#~ "last,\n"
-#~ "                        then copy SOURCE to DEST;  useful in the 1st "
-#~ "format\n"
-#~ "  -g, --group=GROUP   set group ownership, instead of process' current "
-#~ "group\n"
-#~ "  -m, --mode=MODE     set permission mode (as in chmod), instead of rwxr-"
-#~ "xr-x\n"
-#~ "  -o, --owner=OWNER   set ownership (super-user only)\n"
-#~ "  -p, --preserve-timestamps   apply access/modification times of SOURCE "
-#~ "files\n"
-#~ "                        to corresponding destination files\n"
-#~ "  -s, --strip         strip symbol tables, only for 1st and 2nd formats\n"
-#~ "  -S, --suffix=SUFFIX override the usual backup suffix\n"
-#~ "  -v, --verbose       print the name of each directory as it is created\n"
-#~ "      --help          display this help and exit\n"
-#~ "      --version       output version information and exit\n"
-#~ "\n"
-#~ msgstr ""
-#~ "Nos dois primeiros formatos, copia FONTE para DESTINO ou múltiplos\n"
-#~ "FONTE(s) para DIRETÓRIO, ao mesmo tempo em que define permissões e\n"
-#~ "dono/grupo. No terceiro formato, cria todos os componentes do(s)\n"
-#~ "DIRETÓRIO(s) dado(s).\n"
-#~ "\n"
-#~ "   -b, --backup[=CONTROLE]     fazer backup antes da remoção\n"
-#~ "   -c                  (ignorado)\n"
-#~ "   -d, --directory     trata todos os parâmetros como nomes de "
-#~ "diretórios;\n"
-#~ "                       cria todos os componentes do diretório "
-#~ "especificado\n"
-#~ "   -D                  cria todos os componentes iniciais do DESTINO "
-#~ "exceto o \n"
-#~ "                       último, então copia o FONTE para o DESTINO; útil "
-#~ "no\n"
-#~ "                       1o formato\n"
-#~ "   -g, --group=GRUPO   define o grupo como GRUPO em vez do grupo atual do "
-#~ "processo\n"
-#~ "   -m, --mode=MODO     define as permissões como MODO (como no chmod)\n"
-#~ "                       em vez de rwxr-xr-x\n"
-#~ "   -o, --owner=DONO    define o dono (somente para o superusuário)\n"
-#~ "   -p, --preserve-timestamps aplica horário de acesso/modificações dos "
-#~ "arquivos\n"
-#~ "                       FONTE\n"
-#~ "   -s, --strip         retirar as tabelas de símbolos, só para o 1º ou "
-#~ "2º\n"
-#~ "                       formato\n"
-#~ "   -S, --sufix=SUFIXO  usar SUFIXO em vez do sufixo habitual de backup\n"
-#~ "       --verbose       mostra o nome de cada diretório enquanto são "
-#~ "criados\n"
-#~ "       --help          mostrar esta ajuda e sai\n"
-#~ "       --version       mostrar informação sobre versão e sai\n"
-
-#~ msgid ""
-#~ "Create a link to the specified TARGET with optional LINK_NAME.\n"
-#~ "If LINK_NAME is omitted, a link with the same basename as the TARGET is\n"
-#~ "created in the current directory.  When using the second form with more\n"
-#~ "than one TARGET, the last argument must be a directory;  create links\n"
-#~ "in DIRECTORY to each TARGET.  Create hard links by default, symbolic\n"
-#~ "links with --symbolic.  When creating hard links, each TARGET must "
-#~ "exist.\n"
-#~ "\n"
-#~ "      --backup[=CONTROL]      make a backup of each existing destination "
-#~ "file\n"
-#~ "  -b                          like --backup but does not accept an "
-#~ "argument\n"
-#~ "  -d, -F, --directory         hard link directories (super-user only)\n"
-#~ "  -f, --force                 remove existing destination files\n"
-#~ "  -n, --no-dereference        treat destination that is a symlink to a\n"
-#~ "                                directory as if it were a normal file\n"
-#~ "  -i, --interactive           prompt whether to remove destinations\n"
-#~ "  -s, --symbolic              make symbolic links instead of hard links\n"
-#~ "  -S, --suffix=SUFFIX         override the usual backup suffix\n"
-#~ "      --target-directory=DIRECTORY  specify the DIRECTORY in which to "
-#~ "create\n"
-#~ "                                the links\n"
-#~ "  -v, --verbose               print name of each file before linking\n"
-#~ "      --help                  display this help and exit\n"
-#~ "      --version               output version information and exit\n"
-#~ "\n"
-#~ msgstr ""
-#~ "Cria um link para o DESTINO específico com NOME_DE_LINK opcional. Se "
-#~ "existir\n"
-#~ "mais de um DESTINO, o último parâmetro deve ser um diretório; cria links\n"
-#~ "em DIRETÓRIO para cada DESTINO. Cria links por padrão, ou simbólicos "
-#~ "com \n"
-#~ "--symbolic. Quando criando links, cada DESTINO deve existir.\n"
-#~ "\n"
-#~ "     --backup[=CONTROLE]       fazer backup de arquivos de destino "
-#~ "existentes\n"
-#~ "  -b                           o mesmo que --backup mas não aceita "
-#~ "parâmetros\n"
-#~ "  -d, -F, --directory          fazer links fixos para diretórios\n"
-#~ "                               (só superusuário)\n"
-#~ "  -f, --force                  remover destinos existentes\n"
-#~ "  -n, --no-dereference         tratar destinos que sejam links "
-#~ "simbólicos\n"
-#~ "                               para um diretório como arquivos normais\n"
-#~ "  -i, --interactive            perguntar se deve apagar destinos\n"
-#~ "  -s, --symbolic               fazer links simbólicos em vez de links "
-#~ "fixos\n"
-#~ "  -S, --suffix=SUFIXO          usar SUFIXO em vez do sufixo de backup "
-#~ "usual\n"
-#~ "      --target-directory=DIR   move  os parâmetros FONTE para o diretório "
-#~ "DIR\n"
-#~ "  -v, --verbose                mostra o nome de cada arquivo antes de\n"
-#~ "                               criar o link\n"
-#~ "      --help                   mostrar esta ajuda e sair\n"
-#~ "      --version                mostrar informação sobre versão e sair\n"
-#~ "\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "List information about the FILEs (the current directory by default).\n"
-#~ "Sort entries alphabetically if none of -cftuSUX nor --sort.\n"
-#~ "\n"
-#~ "  -a, --all                  do not hide entries starting with .\n"
-#~ "  -A, --almost-all           do not list implied . and ..\n"
-#~ "  -b, --escape               print octal escapes for nongraphic "
-#~ "characters\n"
-#~ "      --block-size=SIZE      use SIZE-byte blocks\n"
-#~ "  -B, --ignore-backups       do not list implied entries ending with ~\n"
-#~ "  -c                         with -lt: sort by, and show, ctime (time of "
-#~ "last\n"
-#~ "                               modification of file status information)\n"
-#~ "                               with -l: show ctime and sort by name\n"
-#~ "                               otherwise: sort by ctime\n"
-#~ "  -C                         list entries by columns\n"
-#~ "      --color[=WHEN]         control whether color is used to distinguish "
-#~ "file\n"
-#~ "                               types.  WHEN may be `never', `always', or "
-#~ "`auto'\n"
-#~ "  -d, --directory            list directory entries instead of contents\n"
-#~ "  -D, --dired                generate output designed for Emacs' dired "
-#~ "mode\n"
-#~ "  -f                         do not sort, enable -aU, disable -lst\n"
-#~ "  -F, --classify             append indicator (one of */=@|) to entries\n"
-#~ "      --format=WORD          across -x, commas -m, horizontal -x, long -"
-#~ "l,\n"
-#~ "                               single-column -1, verbose -l, vertical -C\n"
-#~ "      --full-time            like -l --time-style=full-iso\n"
-#~ msgstr ""
-#~ "Lista informação sobre os ARQUIVOs (no diretório corrente por padrão).\n"
-#~ "Ordena alfabeticamente se não forem usadas as opções -cftuSUX ou -sort.\n"
-#~ "\n"
-#~ "  -a, --all                  não esconder entradas que começam com .\n"
-#~ "  -A, --almost-all           não mostrar . e .. implícitos\n"
-#~ "  -b, --escape               mostrar caracteres de escape octais para \n"
-#~ "                             caracteres não-gráficos\n"
-#~ "      --block-size=TAM       use TAM-byte blocos\n"
-#~ "  -B, --ignore-backups       não mostrar entradas implícitas acabando em "
-#~ "~\n"
-#~ "  -c                         com -lt:ordena e mostra, ctime (hora da "
-#~ "última \n"
-#~ "                                     modificação das informações do "
-#~ "arquivo\n"
-#~ "                             com  -l: mostra ctime e ordena por nome\n"
-#~ "  -C                         mostrar entradas em colunas\n"
-#~ "      --color[=QUANDO]       controlar se a cor é usada para distinguir\n"
-#~ "                             tipos de arquivos. QUANDO pode ser 'never',\n"
-#~ "                             'always' ou 'auto'\n"
-#~ "  -d, --directory            mostrar os nomes dos diretórios em vez do\n"
-#~ "                             seu conteúdo\n"
-#~ "  -D, --dired                gerar saída formatada para o modo dired do \n"
-#~ "                             Emacs\n"
-#~ "  -f                         não ordenar, liga -aU, desliga -lst\n"
-#~ "  -F, --classify             acrescentar um caracter para tipificar cada\n"
-#~ "                             entrada\n"
-#~ "      --format=PALAVRA       across -x, commas -m, horizontal -x, long -"
-#~ "l,\n"
-#~ "                             single-column -1, verbose -l, vertical -C\n"
-#~ "                             (veja a opção de um caractere "
-#~ "correspondente\n"
-#~ "                             a cada uma das palavras)      \n"
-#~ "      --full-time            mostrar data e hora completas\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "  -g                         like -l, but do not list owner\n"
-#~ "  -G, --no-group             inhibit display of group information\n"
-#~ "  -h, --human-readable  print sizes in human readable format (e.g., 1K "
-#~ "234M 2G)\n"
-#~ "      --si                   likewise, but use powers of 1000 not 1024\n"
-#~ "  -H, --dereference-command-line  follow symbolic links on the command "
-#~ "line\n"
-#~ "      --indicator-style=WORD append indicator with style WORD to entry "
-#~ "names:\n"
-#~ "                               none (default), classify (-F), file-type (-"
-#~ "p)\n"
-#~ "  -i, --inode                print index number of each file\n"
-#~ "  -I, --ignore=PATTERN       do not list implied entries matching shell "
-#~ "PATTERN\n"
-#~ "  -k, --kilobytes            like --block-size=1024\n"
-#~ "  -l                         use a long listing format\n"
-#~ "  -L, --dereference          when showing file information for a "
-#~ "symbolic\n"
-#~ "                               link, show information for the file the "
-#~ "link\n"
-#~ "                               references rather than for the link "
-#~ "itself\n"
-#~ "  -m                         fill width with a comma separated list of "
-#~ "entries\n"
-#~ msgstr ""
-#~ "  -g                         (ignorado)\n"
-#~ "  -G, --no-group             não mostra o grupo\n"
-#~ "  -h, --human-readable       mostra tamanhos em formato de leitura para \n"
-#~ "                             humanos (ex: 1K 234M 2G)\n"
-#~ "  -H, --si                   como o anterior, mas usa o multiplicador \n"
-#~ "                             1000 em vez de 1024\n"
-#~ "      --indicator-style=PALAVRA  concatena o indicador com o estilo \n"
-#~ "                             PALAVRA na entrada de nomes:\n"
-#~ "                               none             (padrao)\n"
-#~ "                               classificado     (-F)\n"
-#~ "                               tipo-de-arquivo  (-p)\n"
-#~ "  -i, --inode                mostrar o número de índice de cada arquivo\n"
-#~ "  -I, --ignore=PADRÃO        não mostrar entradas que coincidam com o\n"
-#~ "                             PADRÃO de shell\n"
-#~ "  -k, --kilobytes            como --block-size=1024\n"
-#~ "  -l                         usar formato longo de listagem\n"
-#~ "  -L, --dereference          mostrar entradas apontadas pelos\n"
-#~ "                             links simbólicos\n"
-#~ "  -m                         preencher largura com as entradas separadas "
-#~ "por\n"
-#~ "                             vírgulas\n"
-#~ "  -n, --numeric-uid-gid      mostrar UIDs e GIDs numéricos em vez dos "
-#~ "nomes\n"
-#~ "  -N, --literal              mostrar os nomes das entradas sem tratar\n"
-#~ "                             tratar caracteres de controle\n"
-#~ "  -o                         usar formato de listagem longo sem "
-#~ "informação\n"
-#~ "                             de grupo\n"
-#~ "  -p, --file-type            acrescentar um indicador (/=@|) nas "
-#~ "entradas\n"
-#~ "  -q, --hide-control-chars   mostrar ? em vez de caracteres não gráficos\n"
-#~ "      --show-control-chars   mostra caracteres não gráficos como são "
-#~ "(padrão\n"
-#~ "                             a menos que o programa seja o `ls' e a "
-#~ "saída\n"
-#~ "                             seja um terminal)\n"
-#~ "  -Q, --quote-name           colocar aspas nos nomes das entradas\n"
-#~ "      --quoting-style=PALAVRA use estilo de quote para nomes de entrada:\n"
-#~ "                              literal, shell, shell-always, c, escape\n"
-#~ "  -r, --reverse              inverter a ordem na ordenação\n"
-#~ "  -R, --recursive            mostrar subdiretórios recursivamente\n"
-#~ "  -s, --size                 mostrar o tamanho de cada arquivo, em "
-#~ "blocos\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "  -S                         sort by file size\n"
-#~ "      --sort=WORD            extension -X, none -U, size -S, time -t,\n"
-#~ "                               version -v\n"
-#~ "                             status -c, time -t, atime -u, access -u, use "
-#~ "-u\n"
-#~ "      --time=WORD            show time as WORD instead of modification "
-#~ "time:\n"
-#~ "                               atime, access, use, ctime or status; use\n"
-#~ "                               specified time as sort key if --sort=time\n"
-#~ "      --time-style=WORD      show times using style WORD:\n"
-#~ "                               full-iso, iso, locale, posix-iso\n"
-#~ "  -t                         sort by modification time\n"
-#~ "  -T, --tabsize=COLS         assume tab stops at each COLS instead of 8\n"
-#~ "  -u                         with -lt: sort by, and show, access time\n"
-#~ "                               with -l: show access time and sort by "
-#~ "name\n"
-#~ "                               otherwise: sort by access time\n"
-#~ "  -U                         do not sort; list entries in directory "
-#~ "order\n"
-#~ "  -v                         sort by version\n"
-#~ "  -w, --width=COLS           assume screen width instead of current "
-#~ "value\n"
-#~ "  -x                         list entries by lines instead of by columns\n"
-#~ "  -X                         sort alphabetically by entry extension\n"
-#~ "  -1                         list one file per line\n"
-#~ "      --help                 display this help and exit\n"
-#~ "      --version              output version information and exit\n"
-#~ "\n"
-#~ "By default, color is not used to distinguish types of files.  That is\n"
-#~ "equivalent to using --color=none.  Using the --color option without the\n"
-#~ "optional WHEN argument is equivalent to using --color=always.  With\n"
-#~ "--color=auto, color codes are output only if standard output is "
-#~ "connected\n"
-#~ "to a terminal (tty).\n"
-#~ msgstr ""
-#~ "  -S                         ordenar pelo tamanho do arquivo\n"
-#~ "      --sort=PALAVRA         ctime -c, extension -X, none -U, size -S,\n"
-#~ "                             status -c, time -t, atime -u, access -u, "
-#~ "use\n"
-#~ "                             -u (veja a opção de um caractere "
-#~ "correspondente\n"
-#~ "                             a cada uma das palavras)\n"
-#~ "      --time=PALAVRA         mostra hora como PALAVRA em vez da hora de\n"
-#~ "                             alteração: atime, access, use, ctime or "
-#~ "status\n"
-#~ "  -t                         ordenar por tempo da última alteração;\n"
-#~ "                             com -l: mostrar mtime\n"
-#~ "  -T, --tabsize=COLUNA       assumir que há tabs de COLUNA em COLUNA \n"
-#~ "                             colunas em vez de 8 em 8\n"
-#~ "  -u                         ordenar por tempo do último acesso;\n"
-#~ "                             com -l: mostrar atime\n"
-#~ "  -U                         não ordenar; mostrar entradas na ordem do\n"
-#~ "                             diretório\n"
-#~ "  -v                         ordena por versão\n"
-#~ "  -w, --width=COLUNAS        assumir que a tela tem largura COLUNAS\n"
-#~ "  -x                         mostrar entradas por linhas em vez de "
-#~ "colunas\n"
-#~ "  -X                         ordenar alfabeticamente pela extensão da\n"
-#~ "                             entrada\n"
-#~ "  -1                         mostrar um arquivo por linha\n"
-#~ "      --help                 mostrar esta ajuda e sair\n"
-#~ "      --version              mostrar informação sobre versão e sair\n"
-#~ "\n"
-#~ "Por padrão não é usada cor para distinguir entre os tipos de arquivos.\n"
-#~ "Isto é equivalente a usar --color=none. Usar a opção --color sem o "
-#~ "argumento\n"
-#~ "opcional QUANDO é equivalente a usar --color=always. Com --color=autousam-"
-#~ "se\n"
-#~ "códigos de cores só se a saída padrão for um terminal (tty)\n"
-
-#~ msgid ""
-#~ "Update the access and modification times of each FILE to the current "
-#~ "time.\n"
-#~ "\n"
-#~ "  -a                     change only the access time\n"
-#~ "  -c, --no-create        do not create any files\n"
-#~ "  -d, --date=STRING      parse STRING and use it instead of current time\n"
-#~ "  -f                     (ignored)\n"
-#~ "  -m                     change only the modification time\n"
-#~ "  -r, --reference=FILE   use this file's times instead of current time\n"
-#~ "  -t STAMP               use [[CC]YY]MMDDhhmm[.ss] instead of current "
-#~ "time\n"
-#~ "  --time=WORD            set time given by WORD: access atime use (same "
-#~ "as -a)\n"
-#~ "                           modify mtime (same as -m)\n"
-#~ "      --help             display this help and exit\n"
-#~ "      --version          output version information and exit\n"
-#~ "\n"
-#~ "Note that the three time-date formats recognized for the -d and -t "
-#~ "options\n"
-#~ "and for the obsolescent argument are all different.\n"
-#~ msgstr ""
-#~ "Atualizar os tempos de acesso e modificação de cada ARQUIVO para o tempo\n"
-#~ "atual.\n"
-#~ "\n"
-#~ "  -a                      mudar só os tempos de acesso\n"
-#~ "  -c, --no-create         não criar arquivos\n"
-#~ "  -d, --date=STRING       analisar STRING e usá-la em vez do tempo atual\n"
-#~ "  -f                      (ignorado)\n"
-#~ "  -m                      mudar só os tempos de modificação\n"
-#~ "  -r, --reference=ARQUIVO usar os tempos do ARQUIVO em vez do tempo "
-#~ "atual\n"
-#~ "  -t TEMPO                usar MMDDhhmm[[CC]YY][.ss] em vez do tempo "
-#~ "atual\n"
-#~ "      --time=PALAVRA      acess -a, atime -a, mtime -m, modify -m,\n"
-#~ "                          use -a\n"
-#~ "      --help              mostrar esta ajuda e sair\n"
-#~ "      --version           mostrar informação sobre versão e sair\n"
-#~ "\n"
-#~ "Note que os três formatos de data reconhecidos pelas opções -d e -t e \n"
-#~ "para o parâmetro obsoleto são diferentes.\n"
-
-#~ msgid ""
-#~ "Warning: the meaning of `-P' will change in the future to conform to "
-#~ "POSIX.\n"
-#~ "Use `--parents' for the old meaning, and `--no-dereference' for the new "
-#~ "one."
-#~ msgstr ""
-#~ "Aviso: -P será mudado no futuro para padronização com o POSIX. Use \n"
-#~ "        --parents para o efeito antigo e --no-dereference para o novo."
-
-#, fuzzy
-#~ msgid "Copyright (C) 2001 Free Software Foundation, Inc."
-#~ msgstr "Copyright (C) 2001 Free Software Foundation, Inc."
-
-#, fuzzy
-#~ msgid "%a %b %d %H:%M:%S %Y"
-#~ msgstr "%b %e %H:%M %Y"
-
-#~ msgid ""
-#~ "when creating character special files, major and minor device\n"
-#~ "numbers must be specified"
-#~ msgstr ""
-#~ "ao criar arquivos especiais de tipo caracter é necessário especificar\n"
-#~ "os números \"major\" e \"minor\" do dispositivo"
-
-#~ msgid "days"
-#~ msgstr "dias"
-
-#~ msgid "users"
-#~ msgstr "usuários"
-
-#, fuzzy
-#~ msgid "%s: only one signal specififier allowed"
-#~ msgstr "somente um argumento pode ser especificado"
-
-#, fuzzy
-#~ msgid ""
-#~ "Display the current time in the given FORMAT, or set the system date.\n"
-#~ "\n"
-#~ "  -d, --date=STRING         display time described by STRING, not `now'\n"
-#~ "  -f, --file=DATEFILE       like --date once for each line of DATEFILE\n"
-#~ msgstr ""
-#~ "Mostra a data e hora corrente num dado FORMATO, ou altera a data do "
-#~ "sistema.\n"
-#~ "\n"
-#~ "   -d, --date=STRING         mostra a hora descrito em STRING, em vez da\n"
-#~ "                             hora real\n"
-#~ "   -f, --file=ARQUIVODATAS   igual a --date só que uma vez para cada "
-#~ "linha de\n"
-#~ "                             ARQUIVODATAS\n"
-#~ "   -I, --iso-8601[=TIMESPEC] mostra uma data compatível com o ISO-8601.\n"
-#~ "                             TIMESPEC=`date' (ou omisso) somente para "
-#~ "data,\n"
-#~ "                             `hours', `minutes', ou `seconds' para data "
-#~ "e \n"
-#~ "                             hora para a precisão indicada.\n"
-#~ "   -r, --reference=ARQUIVO   mostra a última data de alteração de "
-#~ "ARQUIVO\n"
-#~ "   -R, --rfc-822             mostra a data no formato RFC-822\n"
-#~ "   -s, --set=STRING          altera a hora para o valor de STRING\n"
-#~ "   -u, --utc, --universal    mostra ou altera o Tempo Universal "
-#~ "Coordenado\n"
-#~ "       --help                mostra esta ajuda e sai\n"
-#~ "       --version             mostra a informação de versão e sai\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "Run COMMAND with root directory set to NEWROOT.\n"
-#~ "\n"
-#~ "      --help       display this help and exit\n"
-#~ "      --version    output version information and exit\n"
-#~ "\n"
-#~ "If no command is given, run ``${SHELL} -i'' (default: /bin/sh).\n"
-#~ msgstr ""
-#~ "Mostra o CRC e o número de bytes de cada ARQUIVO.\n"
-#~ "\n"
-#~ "  --help      mostra esta ajuda e finaliza\n"
-#~ "  --version   informa a versão e finaliza\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "\n"
-#~ "FORMAT controls the output.  The only valid option for the second form\n"
-#~ "specifies Coordinated Universal Time.  Interpreted sequences are:\n"
-#~ "\n"
-#~ "  %%%%   a literal %%\n"
-#~ "  %%a   locale's abbreviated weekday name (Sun..Sat)\n"
-#~ "  %%A   locale's full weekday name, variable length (Sunday..Saturday)\n"
-#~ "  %%b   locale's abbreviated month name (Jan..Dec)\n"
-#~ "  %%B   locale's full month name, variable length (January..December)\n"
-#~ "  %%c   locale's date and time (Sat Nov 04 12:02:33 EST 1989)\n"
-#~ "  %%C   century (year divided by 100 and truncated to an integer) [00-"
-#~ "99]\n"
-#~ "  %%d   day of month (01..31)\n"
-#~ "  %%D   date (mm/dd/yy)\n"
-#~ "  %%e   day of month, blank padded ( 1..31)\n"
-#~ "  %%h   same as %%b\n"
-#~ "  %%H   hour (00..23)\n"
-#~ "  %%I   hour (01..12)\n"
-#~ "  %%j   day of year (001..366)\n"
-#~ "  %%k   hour ( 0..23)\n"
-#~ "  %%l   hour ( 1..12)\n"
-#~ "  %%m   month (01..12)\n"
-#~ "  %%M   minute (00..59)\n"
-#~ "  %%n   a newline\n"
-#~ "  %%p   locale's AM or PM\n"
-#~ "  %%r   time, 12-hour (hh:mm:ss [AP]M)\n"
-#~ "  %%s   seconds since `00:00:00 1970-01-01 UTC' (a GNU extension)\n"
-#~ "  %%S   second (00..60)\n"
-#~ "  %%t   a horizontal tab\n"
-#~ "  %%T   time, 24-hour (hh:mm:ss)\n"
-#~ "  %%u   day of week (1..7);  1 represents Monday\n"
-#~ "  %%U   week number of year with Sunday as first day of week (00..53)\n"
-#~ "  %%V   week number of year with Monday as first day of week (01..53)\n"
-#~ "  %%w   day of week (0..6);  0 represents Sunday\n"
-#~ "  %%W   week number of year with Monday as first day of week (00..53)\n"
-#~ "  %%x   locale's date representation (mm/dd/yy)\n"
-#~ "  %%X   locale's time representation (%%H:%%M:%%S)\n"
-#~ "  %%y   last two digits of year (00..99)\n"
-#~ "  %%Y   year (1970...)\n"
-#~ "  %%z   RFC-822 style numeric timezone (-0500) (a nonstandard extension)\n"
-#~ "  %%Z   time zone (e.g., EDT), or nothing if no time zone is "
-#~ "determinable\n"
-#~ "\n"
-#~ "By default, date pads numeric fields with zeroes.  GNU date recognizes\n"
-#~ "the following modifiers between `%%' and a numeric directive.\n"
-#~ "\n"
-#~ "  `-' (hyphen) do not pad the field\n"
-#~ "  `_' (underscore) pad the field with spaces\n"
-#~ msgstr ""
-#~ "\n"
-#~ "FORMATO controla a saída. A única opção válida para a segunda forma,\n"
-#~ "específica o Fuso Horário. Sequências interpretadas são:\n"
-#~ "\n"
-#~ "   %%%%  um %% literal\n"
-#~ "   %%a   dia da semana local abreviado (Dom..Sab)\n"
-#~ "   %%A   dia da semana local, de comprimento variável (Domingo..Sábado)\n"
-#~ "   %%b   nome do mês local abreviado (Jan..Dez)\n"
-#~ "   %%B   nome do mês local, de comprimento variável (Janeiro..Dezembro)\n"
-#~ "   %%c   data e hora locais (Sab Nov 02 12:02:33 EST 1989)\n"
-#~ "   %%d   dia do mês (01..31)\n"
-#~ "   %%D   data (mm/dd/aa)\n"
-#~ "   %%e   dia do mês, com espaços em vez de zeros à esquerda ( 1..31)\n"
-#~ "   %%h   o mesmo que %%b\n"
-#~ "   %%H   hora (00..23)\n"
-#~ "   %%I   hora (01..12)\n"
-#~ "   %%j   dia do ano (001..366)\n"
-#~ "   %%k   hora ( 0..23)\n"
-#~ "   %%l   hora ( 1..12)\n"
-#~ "   %%m   mês (01..12)\n"
-#~ "   %%M   minutos (00..59)\n"
-#~ "   %%n   um separador de linha\n"
-#~ "   %%p   AM ou PM locais\n"
-#~ "   %%r   hora, formato 12-horas (hh:mm:ss [AP]M)\n"
-#~ "   %%s   segundos desde 00:00:00, Jan 1, 1970 (uma extensão da GNU)\n"
-#~ "   %%S   segundos (00..61)\n"
-#~ "   %%t   um tab horizontal\n"
-#~ "   %%T   hora, formato 24-horas (hh:mm:ss)\n"
-#~ "   %%U   número da semana no ano com Domingo como primeiro dia da "
-#~ "semana \n"
-#~ "         (00..53)\n"
-#~ "   %%V   número da semana no ano com Domingo como primeiro dia da "
-#~ "semana \n"
-#~ "         (01..53)\n"
-#~ "   %%w   dia da semana (0..6); 0 representa o Domingo\n"
-#~ "   %%W   número da semana no ano com Segunda-Feira como primeiro dia da \n"
-#~ "         semana (00..53)\n"
-#~ "   %%x   representação da data local (mm/dd/aa)\n"
-#~ "   %%X   representação da hora local (%%H:%%M:%%S)\n"
-#~ "   %%y   últimos dois dígitos do ano (00..99)\n"
-#~ "   %%Y   ano (1970...)\n"
-#~ "   %%z   fuso horário local em formato numérico de acordo com RFC-822 \n"
-#~ "         (+0100) (uma extensão não padrão)\n"
-#~ "   %%Z   fuso horário (ex. EDT), ou nada caso não se consiga determinar\n"
-#~ "         nenhum fuso\n"
-#~ "\n"
-#~ "   Por default o date preenche os campos numéricos com zeros. O GNU date\n"
-#~ "reconhece os seguintes modificadores entre `%%' e uma diretriz numérica.\n"
-#~ "\n"
-#~ "   `-' (hífen) não preencher o campo\n"
-#~ "   `_' (underscore) preencher o campo com espaços\n"
-
-#~ msgid ""
-#~ "Echo the STRING(s) to standard output.\n"
-#~ "\n"
-#~ "  -n              do not output the trailing newline\n"
-#~ "  -e              enable interpretation of the backslash-escaped "
-#~ "characters\n"
-#~ "                    listed below\n"
-#~ "  -E              disable interpretation of those sequences in STRINGs\n"
-#~ "      --help      display this help and exit (should be alone)\n"
-#~ "      --version   output version information and exit (should be alone)\n"
-#~ "\n"
-#~ "Without -E, the following sequences are recognized and interpolated:\n"
-#~ "\n"
-#~ "  \\NNN   the character whose ASCII code is NNN (octal)\n"
-#~ "  \\\\     backslash\n"
-#~ "  \\a     alert (BEL)\n"
-#~ "  \\b     backspace\n"
-#~ "  \\c     suppress trailing newline\n"
-#~ "  \\f     form feed\n"
-#~ "  \\n     new line\n"
-#~ "  \\r     carriage return\n"
-#~ "  \\t     horizontal tab\n"
-#~ "  \\v     vertical tab\n"
-#~ msgstr ""
-#~ "Ecoar STRING(s) para a saída padrão (stdout).\n"
-#~ "\n"
-#~ "   -n              não ecoar a fim-de-linha final\n"
-#~ "   -e              habilita a interpretação de caracteres especiais "
-#~ "(escaped)\n"
-#~ "                   listados a seguir\n"
-#~ "   -E              desligar a interpolação de algumas sequências em "
-#~ "STRINGs\n"
-#~ "      --help       mostra esta ajuda e sai (deve ser a única opção "
-#~ "usada)\n"
-#~ "      --version    mostra a informação de versão e sai (deve ser "
-#~ "única)          \n"
-#~ "\n"
-#~ "Sem -E, as seguintes sequências são reconhecidas e interpoladas:\n"
-#~ "\n"
-#~ "   \\NNN   o caractere cujo código ASCII é NNN (octal)\n"
-#~ "   \\\\    contra-barra\n"
-#~ "   \\a     alerta (BEL)\n"
-#~ "   \\b     backspace\n"
-#~ "   \\c     elimina o newline no final\n"
-#~ "   \\f     form feed\n"
-#~ "   \\n     newline\n"
-#~ "   \\r     carriage return\n"
-#~ "   \\t     tab horizontal\n"
-#~ "   \\v     tab vertical\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "Print the value of EXPRESSION to standard output.  A blank line below\n"
-#~ "separates increasing precedence groups.  EXPRESSION may be:\n"
-#~ "\n"
-#~ "  ARG1 | ARG2       ARG1 if it is neither null nor 0, otherwise ARG2\n"
-#~ "\n"
-#~ "  ARG1 & ARG2       ARG1 if neither argument is null or 0, otherwise 0\n"
-#~ "\n"
-#~ "  ARG1 < ARG2       ARG1 is less than ARG2\n"
-#~ "  ARG1 <= ARG2      ARG1 is less than or equal to ARG2\n"
-#~ "  ARG1 = ARG2       ARG1 is equal to ARG2\n"
-#~ "  ARG1 != ARG2      ARG1 is unequal to ARG2\n"
-#~ "  ARG1 >= ARG2      ARG1 is greater than or equal to ARG2\n"
-#~ "  ARG1 > ARG2       ARG1 is greater than ARG2\n"
-#~ "\n"
-#~ "  ARG1 + ARG2       arithmetic sum of ARG1 and ARG2\n"
-#~ "  ARG1 - ARG2       arithmetic difference of ARG1 and ARG2\n"
-#~ "\n"
-#~ "  ARG1 * ARG2       arithmetic product of ARG1 and ARG2\n"
-#~ "  ARG1 / ARG2       arithmetic quotient of ARG1 divided by ARG2\n"
-#~ "  ARG1 %% ARG2       arithmetic remainder of ARG1 divided by ARG2\n"
-#~ "\n"
-#~ "  STRING : REGEXP   anchored pattern match of REGEXP in STRING\n"
-#~ "\n"
-#~ "  match STRING REGEXP        same as STRING : REGEXP\n"
-#~ "  substr STRING POS LENGTH   substring of STRING, POS counted from 1\n"
-#~ "  index STRING CHARS         index in STRING where any CHARS is found, or "
-#~ "0\n"
-#~ "  length STRING              length of STRING\n"
-#~ "  + TOKEN                    interpret TOKEN as a string, even if it is "
-#~ "a\n"
-#~ "                               keyword like `match' or an operator like "
-#~ "`/'\n"
-#~ "\n"
-#~ "  ( EXPRESSION )             value of EXPRESSION\n"
-#~ msgstr ""
-#~ "Mostra o valor de EXPRESSÃO na saída padrão (stdout). Uma linha em\n"
-#~ "branco na seguinte listagem separa grupos em ordem ascendente de\n"
-#~ "precedência. EXPRESSÃO pode ser:\n"
-#~ "\n"
-#~ "   ARG1 | ARG2       ARG1 se não for caractere 'null' ou 0, caso "
-#~ "contrário ARG2\n"
-#~ "\n"
-#~ "   ARG1 & ARG2       ARG1 se nenhum argumento for null ou 0, caso "
-#~ "contrário\n"
-#~ "0\n"
-#~ "   ARG1 < ARG2       ARG1 é menor que ARG2\n"
-#~ "   ARG2 <= ARG2      ARG1 é menor ou igual a ARG2\n"
-#~ "   ARG1 = ARG2       ARG1 é igual a ARG2\n"
-#~ "   ARG1 != ARG2      ARG1 é diferente de ARG2\n"
-#~ "   ARG1 >= ARG2      ARG1 é maior ou igual a ARG2\n"
-#~ "   ARG1 > ARG2       ARG1 é maior que ARG2\n"
-#~ "\n"
-#~ "   ARG1 + ARG2       soma aritmética de ARG1 e ARG2\n"
-#~ "   ARG1 - ARG2       diferença aritmética entre ARG1 e ARG2\n"
-#~ "\n"
-#~ "   ARG1 * ARG2       produto aritmético de ARG1 e ARG2\n"
-#~ "   ARG1 / ARG2       quociente da divisão de ARG1 por ARG2\n"
-#~ "\n"
-#~ "   STRING : REGEXP   resultado de procurar REGEXP em STRING\n"
-#~ "\n"
-#~ "   match STRING REGEXP           o mesmo que STRING : REGEXP\n"
-#~ "   substr STRING POS COMPRIMENTO substring de STRING, POS contado de 1\n"
-#~ "   index STRING CHARS            índice na STRING onde qualquer CHARS foi "
-#~ "encontrado, ou 0\n"
-#~ "  length STRING              tamanho da STRING\n"
-#~ "  quote TOKEN                interpreta TOKEN como uma string, ainda que "
-#~ "ele é uma\n"
-#~ "                               palavra-chave como `match' ou um operador "
-#~ "como `/'\n"
-#~ "\n"
-#~ "   ( EXPRESSÃO )                 valor de EXPRESSÃO\n"
-#~ "\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "\n"
-#~ "  -l              produce long format output for the specified USERs\n"
-#~ "  -b              omit the user's home directory and shell in long "
-#~ "format\n"
-#~ "  -h              omit the user's project file in long format\n"
-#~ "  -p              omit the user's plan file in long format\n"
-#~ "  -s              do short format output, this is the default\n"
-#~ "  -f              omit the line of column headings in short format\n"
-#~ "  -w              omit the user's full name in short format\n"
-#~ "  -i              omit the user's full name and remote host in short "
-#~ "format\n"
-#~ "  -q              omit the user's full name, remote host and idle time\n"
-#~ "                  in short format\n"
-#~ "      --help      display this help and exit\n"
-#~ "      --version   output version information and exit\n"
-#~ "\n"
-#~ "A lightweight `finger' program;  print user information.\n"
-#~ "The utmp file will be %s.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "  -l              saida em formato longo\n"
-#~ "  -b              omite o diretório home do usuário e o interpretador \n"
-#~ "                  em formato longo\n"
-#~ "  -h              omite o arquivo de projetos do usuário em formato "
-#~ "longo\n"
-#~ "  -p              omite o arquivo de planos do usuário em formato longo\n"
-#~ "  -s              saida em formato curto, este é o padrão\n"
-#~ "  -f              omite o line of column headings in short format\n"
-#~ "  -w              omite o nome completo do usuário em formato curto\n"
-#~ "  -i              omite o nome completo e máquina remota do usuário em "
-#~ "formato curto\n"
-#~ "  -q              omite o nome completo, máquina remota e tempo ocioso do "
-#~ "usuário\n"
-#~ "                  em formato curto\n"
-#~ "      --help      mostra esta ajuda e sai\n"
-#~ "      --version   mostra informações da versão e sai\n"
-#~ "\n"
-#~ "Um programa `finger' leve;  mostra informações do usuário.\n"
-#~ "O arquivo utmp será %s.\n"
-
-#~ msgid ""
-#~ "Print ARGUMENT(s) according to FORMAT.\n"
-#~ "\n"
-#~ "  --help      display this help and exit\n"
-#~ "  --version   output version information and exit\n"
-#~ "\n"
-#~ "FORMAT controls the output as in C printf.  Interpreted sequences are:\n"
-#~ "\n"
-#~ "  \\\"      double quote\n"
-#~ "  \\0NNN   character with octal value NNN (0 to 3 digits)\n"
-#~ "  \\\\      backslash\n"
-#~ "  \\a      alert (BEL)\n"
-#~ "  \\b      backspace\n"
-#~ "  \\c      produce no further output\n"
-#~ "  \\f      form feed\n"
-#~ "  \\n      new line\n"
-#~ "  \\r      carriage return\n"
-#~ "  \\t      horizontal tab\n"
-#~ "  \\v      vertical tab\n"
-#~ "  \\xNNN   byte with hexadecimal value NNN (1 to 3 digits)\n"
-#~ "\n"
-#~ "  \\uNNNN  character with hexadecimal value NNNN (4 digits)\n"
-#~ "  \\UNNNNNNNN  character with hexadecimal value NNNNNNNN (8 digits)\n"
-#~ "  %%%%      a single %%\n"
-#~ "  %%b      ARGUMENT as a string with `\\' escapes interpreted\n"
-#~ "\n"
-#~ "and all C format specifications ending with one of diouxXfeEgGcs, with\n"
-#~ "ARGUMENTs converted to proper type first.  Variable widths are handled.\n"
-#~ msgstr ""
-#~ "Mostra PARÂMETROS(S) de acordo com FORMATO.\n"
-#~ "\n"
-#~ "   --help      mostra esta ajuda e sai\n"
-#~ "   --version   mostrar informações da versão e sai\n"
-#~ "\n"
-#~ "FORMATO controla o que é escrito como na função printf do C. As "
-#~ "sequências\n"
-#~ "interpretadas são:\n"
-#~ "\n"
-#~ "   \\\"       aspas aspas\n"
-#~ "   \\ONNN     caractere com valor octal NNN (0 até 3 dígitos)\n"
-#~ "   \\\\       contra barra\n"
-#~ "   \\a        alerta (BEL)\n"
-#~ "   \\b        backspace\n"
-#~ "   \\c        não produzir mais nenhuma saída\n"
-#~ "   \\f        form feed\n"
-#~ "   \\n        nova linha\n"
-#~ "   \\r        retorno\n"
-#~ "   \\t        tab horizontal\n"
-#~ "   \\v        tab vertical\n"
-#~ "   \\xNNN     caractere com valor hexadecimal NNN (1 a 3 dígitos)\n"
-#~ "   \\uNNNN    caractere com valor hexadecimal NNNN (4 dígitos)\n"
-#~ "   \\uNNNNNNNN    caractere com valor hexadecimal NNNNNNNN (8 dígitos)\n"
-#~ "\n"
-#~ "   %%%%      um único %%\n"
-#~ "   %%b       PARÂMETRO como uma string com '\\' escapes interpretados\n"
-#~ "\n"
-#~ "e todas as especificações de formato da linguagem C terminando com um "
-#~ "dos\n"
-#~ " seguintes caracteres: diouxXfeEgGcs, com ARGUMENTO(s) convertidos "
-#~ "primeira-\n"
-#~ "mente para o tipo adequado. Tamanhos variáveis também são suportados.\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "Print the full filename of the current working directory.\n"
-#~ "\n"
-#~ "  --help      display this help and exit\n"
-#~ "  --version   output version information and exit\n"
-#~ msgstr ""
-#~ "Mostra o CRC e o número de bytes de cada ARQUIVO.\n"
-#~ "\n"
-#~ "  --help      mostra esta ajuda e finaliza\n"
-#~ "  --version   informa a versão e finaliza\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "\n"
-#~ "Special characters:\n"
-#~ " * dsusp CHAR    CHAR will send a terminal stop signal once input "
-#~ "flushed\n"
-#~ "   eof CHAR      CHAR will send an end of file (terminate the input)\n"
-#~ "   eol CHAR      CHAR will end the line\n"
-#~ " * eol2 CHAR     alternate CHAR for ending the line\n"
-#~ "   erase CHAR    CHAR will erase the last character typed\n"
-#~ "   intr CHAR     CHAR will send an interrupt signal\n"
-#~ "   kill CHAR     CHAR will erase the current line\n"
-#~ " * lnext CHAR    CHAR will enter the next character quoted\n"
-#~ "   quit CHAR     CHAR will send a quit signal\n"
-#~ " * rprnt CHAR    CHAR will redraw the current line\n"
-#~ "   start CHAR    CHAR will restart the output after stopping it\n"
-#~ "   stop CHAR     CHAR will stop the output\n"
-#~ "   susp CHAR     CHAR will send a terminal stop signal\n"
-#~ " * swtch CHAR    CHAR will switch to a different shell layer\n"
-#~ " * werase CHAR   CHAR will erase the last word typed\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Caracteres especiais:\n"
-#~ "\n"
-#~ "* dsusp  CHAR     CHAR enviará um sinal 'terminal stop' quando a entrada "
-#~ "for \n"
-#~ "                   descarregada\n"
-#~ "  eof    CHAR     CHAR enviará um fim de arquivo (terminando a entrada)\n"
-#~ "  eol    CHAR     CHAR terminará a linha\n"
-#~ "* eol2   CHAR     caractere alternativo para terminar a linha\n"
-#~ "  erase  CHAR     CHAR apagará o último caractere escrito\n"
-#~ "  intr   CHAR     CHAR enviará um sinal de interrupção\n"
-#~ "  kill   CHAR     CHAR apagará a linha corrente\n"
-#~ "* lnext  CHAR     CHAR dará entrada ao próximo caractere entre aspas\n"
-#~ "  quit   CHAR     CHAR enviará um sinal de quit\n"
-#~ "* rprnt  CHAR     CHAR redesenhará a linha corrente\n"
-#~ "  start  CHAR     CHAR recomeçará o output depois deste ter sido \n"
-#~ "                  interrompido\n"
-#~ "  stop   CHAR     CHAR terminará o output\n"
-#~ "  susp   CHAR     CHAR enviará um sinal de stop ao terminal\n"
-#~ "* swtch  CHAR     CHAR mudará para uma shell diferente\n"
-#~ "* werase CHAR     CHAR apagará a última palavra escrita\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "\n"
-#~ "Special settings:\n"
-#~ "  N             set the input and output speeds to N bauds\n"
-#~ " * cols N        tell the kernel that the terminal has N columns\n"
-#~ " * columns N     same as cols N\n"
-#~ "   ispeed N      set the input speed to N\n"
-#~ " * line N        use line discipline N\n"
-#~ "   min N         with -icanon, set N characters minimum for a completed "
-#~ "read\n"
-#~ "   ospeed N      set the output speed to N\n"
-#~ " * rows N        tell the kernel that the terminal has N rows\n"
-#~ " * size          print the number of rows and columns according to the "
-#~ "kernel\n"
-#~ "   speed         print the terminal speed\n"
-#~ "   time N        with -icanon, set read timeout of N tenths of a second\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Parâmetros especiais:\n"
-#~ "  N               colocar a velocidade de entrada/saída a N bauds\n"
-#~ "* cols N          dizer ao kernel que o terminal tem N colunas\n"
-#~ "* columns N       o mesmo que cols N\n"
-#~ "  ispeed N        colocar a velocidade de entrada a N\n"
-#~ "* line N          usar disciplina de linha N \n"
-#~ "  min N           com -icanon, colocar a N o número mínimo de "
-#~ "caracteres \n"
-#~ "                  para uma leitura completa.\n"
-#~ "* rows N          dizer ao kernel que o terminal tem N linhas\n"
-#~ "* size            mostrar o número de colunas e de linhas de acordo com "
-#~ "o\n"
-#~ "                  kernel\n"
-#~ "  speed           mostrar a velocidade do terminal\n"
-#~ "  time N          com -icanon, colocar o limite de tempo em N décimos de\n"
-#~ "                  segundo\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "\n"
-#~ "Input settings:\n"
-#~ "   [-]brkint     breaks cause an interrupt signal\n"
-#~ "   [-]icrnl      translate carriage return to newline\n"
-#~ "   [-]ignbrk     ignore break characters\n"
-#~ "   [-]igncr      ignore carriage return\n"
-#~ "   [-]ignpar     ignore characters with parity errors\n"
-#~ " * [-]imaxbel    beep and do not flush a full input buffer on a "
-#~ "character\n"
-#~ "   [-]inlcr      translate newline to carriage return\n"
-#~ "   [-]inpck      enable input parity checking\n"
-#~ "   [-]istrip     clear high (8th) bit of input characters\n"
-#~ " * [-]iuclc      translate uppercase characters to lowercase\n"
-#~ " * [-]ixany      let any character restart output, not only start "
-#~ "character\n"
-#~ "   [-]ixoff      enable sending of start/stop characters\n"
-#~ "   [-]ixon       enable XON/XOFF flow control\n"
-#~ "   [-]parmrk     mark parity errors (with a 255-0-character sequence)\n"
-#~ "   [-]tandem     same as [-]ixoff\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Parâmetros de entrada:\n"
-#~ "   [-]brkint     break causa um sinal de interrupção\n"
-#~ "   [-]icrnl      converter os carriage return para newline\n"
-#~ "   [-]ignbrk     ignorar caracteres de break\n"
-#~ "   [-]igncr      ignorar 'carriage return'\n"
-#~ "   [-]ignpar     ignorar caracteres com erros de paridade\n"
-#~ "   [-]imaxbel    não esvaziar um buffer de entrada cheio num caractere e\n"
-#~ "                 fazer beep quando tal ocorrer\n"
-#~ "   [-]inlcr      converter de newline para carriage return\n"
-#~ "   [-]inpck      habilita verificação de paridade na entrada\n"
-#~ "   [-]istrip     limpar o maior bit (oitavo) dos caracteres de entrada\n"
-#~ "   [-]iuclc      traduzir caracteres maiúsculos para minúsculos\n"
-#~ "   [-]ixany      permitir que qualquer caractere recomece a saída, e "
-#~ "não \n"
-#~ "                 apenas os de start\n"
-#~ "   [-]ixoff      habilita o envio de bits de start/stop\n"
-#~ "   [-]ixon       habilita o controle de fluxo usando XON/XOFF\n"
-#~ "   [-]parmrk     marcar erros de paridade (com uma sequência de 255-0\n"
-#~ "                 caracteres\n"
-#~ "   [-]tandem     o mesmo que [-]ixoff\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "\n"
-#~ "Local settings:\n"
-#~ "   [-]crterase   echo erase characters as backspace-space-backspace\n"
-#~ " * crtkill       kill all line by obeying the echoprt and echoe settings\n"
-#~ " * -crtkill      kill all line by obeying the echoctl and echok settings\n"
-#~ " * [-]ctlecho    echo control characters in hat notation (`^c')\n"
-#~ "   [-]echo       echo input characters\n"
-#~ " * [-]echoctl    same as [-]ctlecho\n"
-#~ "   [-]echoe      same as [-]crterase\n"
-#~ "   [-]echok      echo a newline after a kill character\n"
-#~ " * [-]echoke     same as [-]crtkill\n"
-#~ "   [-]echonl     echo newline even if not echoing other characters\n"
-#~ " * [-]echoprt    echo erased characters backward, between `\\' and '/'\n"
-#~ "   [-]icanon     enable erase, kill, werase, and rprnt special "
-#~ "characters\n"
-#~ "   [-]iexten     enable non-POSIX special characters\n"
-#~ "   [-]isig       enable interrupt, quit, and suspend special characters\n"
-#~ "   [-]noflsh     disable flushing after interrupt and quit special "
-#~ "characters\n"
-#~ " * [-]prterase   same as [-]echoprt\n"
-#~ " * [-]tostop     stop background jobs that try to write to the terminal\n"
-#~ " * [-]xcase      with icanon, escape with `\\' for uppercase characters\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Parâmetros locais:\n"
-#~ "   [-] crterase  ecoar caracteres erase como backspace-space-backspace\n"
-#~ "*  crtkill       eliminar a linha inteira obedecendo aos parâmetros "
-#~ "echoprt e\n"
-#~ "                 echoe\n"
-#~ "*  -crtkill      eliminar a linha inteira obedecendo aos parâmetros "
-#~ "echoctl e\n"
-#~ "                 echok\n"
-#~ "*  [-]ctlecho    ecoar os caracteres de controle com \"chapéus\" ('^c')\n"
-#~ "   [-]echo       ecoar os caracteres de entrada\n"
-#~ "*  [-]echoctl    o mesmo que [-]ctlecho\n"
-#~ "   [-]echoe      o mesmo que [-]crterase\n"
-#~ "   [-]echok      ecoar um newline depois de um caractere kill\n"
-#~ "*  [-]echoke     o mesmo que [-]crtkill\n"
-#~ "   [-]echonl     ecoar newline mesmo se não estivermos ecoando outros\n"
-#~ "\t\t caracteres\n"
-#~ "*  [-]echoprt    ecoar caracteres apagados para trás, entre '\\' e '/'\n"
-#~ "   [-]icanon     permite os caracteres especiais erase,kill,werase e "
-#~ "rprnt\n"
-#~ "   [-]iexten     permite caracteres especiais não-POSIX\n"
-#~ "   [-]isig       permite os caracteres especiais interrupção,quit e "
-#~ "suspend\n"
-#~ "   [-]noflush    desabilita flush, após um caractere especial interrupt "
-#~ "ou quit\n"
-#~ "*  [-]prterase   o mesmo que [-]echoprt\n"
-#~ "*  [-]tostop     parar processos que estão executando em background e "
-#~ "tentam escrever no terminal\n"
-#~ "*  [-]xcase      com icanon, os caracteres maiúsculos ficam marcados com\n"
-#~ "                 '\\'\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "\n"
-#~ "Combination settings:\n"
-#~ " * [-]LCASE      same as [-]lcase\n"
-#~ "   cbreak        same as -icanon\n"
-#~ "   -cbreak       same as icanon\n"
-#~ "   cooked        same as brkint ignpar istrip icrnl ixon opost isig\n"
-#~ "                 icanon, eof and eol characters to their default values\n"
-#~ "   -cooked       same as raw\n"
-#~ "   crt           same as echoe echoctl echoke\n"
-#~ "   dec           same as echoe echoctl echoke -ixany intr ^c erase 0177\n"
-#~ "                 kill ^u\n"
-#~ " * [-]decctlq    same as [-]ixany\n"
-#~ "   ek            erase and kill characters to their default values\n"
-#~ "   evenp         same as parenb -parodd cs7\n"
-#~ "   -evenp        same as -parenb cs8\n"
-#~ " * [-]lcase      same as xcase iuclc olcuc\n"
-#~ "   litout        same as -parenb -istrip -opost cs8\n"
-#~ "   -litout       same as parenb istrip opost cs7\n"
-#~ "   nl            same as -icrnl -onlcr\n"
-#~ "   -nl           same as icrnl -inlcr -igncr onlcr -ocrnl -onlret\n"
-#~ "   oddp          same as parenb parodd cs7\n"
-#~ "   -oddp         same as -parenb cs8\n"
-#~ "   [-]parity     same as [-]evenp\n"
-#~ "   pass8         same as -parenb -istrip cs8\n"
-#~ "   -pass8        same as parenb istrip cs7\n"
-#~ "   raw           same as -ignbrk -brkint -ignpar -parmrk -inpck -istrip\n"
-#~ "                 -inlcr -igncr -icrnl  -ixon  -ixoff  -iuclc  -ixany\n"
-#~ "                 -imaxbel -opost -isig -icanon -xcase min 1 time 0\n"
-#~ "   -raw          same as cooked\n"
-#~ "   sane          same as cread -ignbrk brkint -inlcr -igncr icrnl\n"
-#~ "                 -ixoff -iuclc -ixany imaxbel opost -olcuc -ocrnl onlcr\n"
-#~ "                 -onocr -onlret -ofill -ofdel nl0 cr0 tab0 bs0 vt0 ff0\n"
-#~ "                 isig icanon iexten echo echoe echok -echonl -noflsh\n"
-#~ "                 -xcase -tostop -echoprt echoctl echoke, all special\n"
-#~ "                 characters to their default values.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Combinações de estilos:\n"
-#~ "\n"
-#~ "* [-]LCASE       o mesmo que [-]lcase\n"
-#~ "  cbreak         o mesmo que -icanon\n"
-#~ "  -cbreak        o mesmo que icanon\n"
-#~ "  cooked         o mesmo que colocar os valores default, os caracteres: "
-#~ "brkint\n"
-#~ "                 ignpar istrip icrnl ixon opost isig icanon, eof e eol\n"
-#~ "  -cooked        o mesmo que raw\n"
-#~ "  crt            o mesmo que echoe echoctl echoke\n"
-#~ "  dec            o mesmo que echoe echoctl echoke -ixany intr ^c erase \n"
-#~ "                 0177 kill ^u\\n\n"
-#~ "* [-]decctlq     o mesmo que [-]ixany\n"
-#~ "  ek             apagar e recuperar os valores default dos caracteres \n"
-#~ "  evenp          o mesmo que parenb -parodd cs7\n"
-#~ "  -evenp         o mesmo que -parenb cs8\n"
-#~ "* [-]lcase       o mesmo que xcase iuclc olcuc\n"
-#~ "  litout         o mesmo que -parenb -istrip -opost cs8\n"
-#~ "  -litout        o mesmo que parenb istrip opost cs7\n"
-#~ "  nl             o mesmo que -icrnl -onlcr\n"
-#~ "  -nl            o mesmo que icrnl -inlcr -igncr onlcr -ocrnl -onlret\n"
-#~ "  oddp           o mesmo que parenb parodd cs7\n"
-#~ "  -oddp          o mesmo que -parenb cs8\n"
-#~ "  [-]parity      o mesmo que [-]evenp\n"
-#~ "  pass8          o mesmo que -parenb -istrip cs8\n"
-#~ "  -pass8         o mesmo que parenb istrip cs7\n"
-#~ "  raw            o mesmo que -ignbrk -brkint -ignpar -parmrk -inpck -"
-#~ "istrip\n"
-#~ "                 -inlcr -igncr -icrnl -ixon  -ixoff  -iuclc  -ixany\n"
-#~ "                 -imaxbel -opost -isig -icanon -xcase min 1 time 0\n"
-#~ "  -raw           o mesmo que cooked\n"
-#~ "  sane           o mesmo que cread -ignbrk brkint -inlcr -igncr icrnl\n"
-#~ "                 -ixoff -iucl -ixany imaxbel opost -olcuc -ocrnl onlcr\n"
-#~ "                 -onocr -onlret -ofill -ofdel nl0 cr0 tab0 bs0 vt0 ff0\n"
-#~ "                 isig icanon iexten echo echoe echok -echonl -noflsh\n"
-#~ "                 -xcase -tostop -echoprt echoctl echoke, todos "
-#~ "caracteres \n"
-#~ "                 com seus valores defaults\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "Exit with the status determined by EXPRESSION.\n"
-#~ "\n"
-#~ "  --help      display this help and exit\n"
-#~ "  --version   output version information and exit\n"
-#~ "\n"
-#~ "EXPRESSION is true or false and sets exit status.  It is one of:\n"
-#~ msgstr ""
-#~ "Mostra o CRC e o número de bytes de cada ARQUIVO.\n"
-#~ "\n"
-#~ "  --help      mostra esta ajuda e finaliza\n"
-#~ "  --version   informa a versão e finaliza\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "\n"
-#~ "  FILE1 -ef FILE2   FILE1 and FILE2 have the same device and inode "
-#~ "numbers\n"
-#~ "  FILE1 -nt FILE2   FILE1 is newer (modification date) than FILE2\n"
-#~ "  FILE1 -ot FILE2   FILE1 is older than FILE2\n"
-#~ "\n"
-#~ "  -b FILE     FILE exists and is block special\n"
-#~ "  -c FILE     FILE exists and is character special\n"
-#~ "  -d FILE     FILE exists and is a directory\n"
-#~ "  -e FILE     FILE exists\n"
-#~ "  -f FILE     FILE exists and is a regular file\n"
-#~ "  -g FILE     FILE exists and is set-group-ID\n"
-#~ "  -h FILE     FILE exists and is a symbolic link (same as -L)\n"
-#~ "  -G FILE     FILE exists and is owned by the effective group ID\n"
-#~ "  -k FILE     FILE exists and has its sticky bit set\n"
-#~ "  -L FILE     FILE exists and is a symbolic link (same as -h)\n"
-#~ "  -O FILE     FILE exists and is owned by the effective user ID\n"
-#~ "  -p FILE     FILE exists and is a named pipe\n"
-#~ "  -r FILE     FILE exists and is readable\n"
-#~ "  -s FILE     FILE exists and has a size greater than zero\n"
-#~ "  -S FILE     FILE exists and is a socket\n"
-#~ "  -t [FD]     file descriptor FD (stdout by default) is opened on a "
-#~ "terminal\n"
-#~ "  -u FILE     FILE exists and its set-user-ID bit is set\n"
-#~ "  -w FILE     FILE exists and is writable\n"
-#~ "  -x FILE     FILE exists and is executable\n"
-#~ msgstr ""
-#~ "\n"
-#~ "   ARQUIVO1 -ef ARQUIVO2   ARQUIVO1 e ARQUIVO2 têm o mesmo número de \n"
-#~ "\t\t\t     dispositivo e inode\n"
-#~ "   ARQUIVO1 -nt ARQUIVO2   ARQUIVO1 é mais recente (data modificação) "
-#~ "que\n"
-#~ "                           ARQUIVO2\n"
-#~ "   ARQUIVO1 -ot ARQUIVO2   ARQUIVO1 é mais antigo que ARQUIVO2\n"
-#~ "\n"
-#~ "   -b ARQUIVO            ARQUIVO  existe e é um arquivo especial de "
-#~ "bloco\n"
-#~ "   -c ARQUIVO            ARQUIVO  existe e é um arquivo especial de "
-#~ "caracter\n"
-#~ "   -d ARQUIVO            ARQUIVO  existe e é um diretório\n"
-#~ "   -e ARQUIVO            ARQUIVO  existe\n"
-#~ "   -f ARQUIVO            ARQUIVO  existe e é um arquivo normal\n"
-#~ "   -g ARQUIVO            ARQUIVO  existe e tem o bit set-group-ID "
-#~ "ligado \n"
-#~ "   -G ARQUIVO            ARQUIVO  existe e tem como dono o ID de grupo "
-#~ "efetivo\n"
-#~ "   -k ARQUIVO            ARQUIVO  existe e tem o bit sticky ligado \n"
-#~ "   -L ARQUIVO            ARQUIVO  existe e é uma ligação simbólica\n"
-#~ "   -O ARQUIVO            ARQUIVO  existe e tem como dono o usuário "
-#~ "efetivo ID\n"
-#~ "   -p ARQUIVO            ARQUIVO  existe e é um pipe com nome\n"
-#~ "   -r ARQUIVO            ARQUIVO  existe e é legível\n"
-#~ "   -s ARQUIVO            ARQUIVO  existe e tem tamanho maior que zero\n"
-#~ "   -S ARQUIVO            ARQUIVO  existe e é uma socket\n"
-#~ "   -t [FD]               o descritor de arquivo FD (stdout default) está\n"
-#~ "                         aberto num terminal\n"
-#~ "   -u ARQUIVO            ARQUIVO  existe e tem o bit set-user-ID ligado\n"
-#~ "   -w ARQUIVO            ARQUIVO  existe e pode-se escrever nele\n"
-#~ "   -x ARQUIVO            ARQUIVO  existe e é executável\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "\n"
-#~ "  -a, --all         same as -b -d --login -p -r -t -T -u\n"
-#~ "  -b, --boot        time of last system boot\n"
-#~ "  -d, --dead        print dead processes\n"
-#~ "  -H, --heading     print line of column headings\n"
-#~ "  -i, --idle        add idle time as HOURS:MINUTES, . or old\n"
-#~ "                    (deprecated, use -u)\n"
-#~ "      --login       print system login processes\n"
-#~ "                    (equivalent to SUS -l)\n"
-#~ "  -l, --lookup      attempt to canonicalize hostnames via DNS\n"
-#~ "                    (-l is deprecated, use --lookup)\n"
-#~ "  -m                only hostname and user associated with stdin\n"
-#~ "  -p, --process     print active processes spawned by init\n"
-#~ "  -q, --count       all login names and number of users logged on\n"
-#~ "  -r, --runlevel    print current runlevel\n"
-#~ "  -s, --short       print only name, line, and time (default)\n"
-#~ "  -t, --time        print last system clock change\n"
-#~ "  -T, -w, --mesg    add user's message status as +, - or ?\n"
-#~ "  -u, --users       lists users logged in\n"
-#~ "      --message     same as -T\n"
-#~ "      --writable    same as -T\n"
-#~ "      --help        display this help and exit\n"
-#~ "      --version     output version information and exit\n"
-#~ "\n"
-#~ "If FILE is not specified, use %s.  %s as FILE is common.\n"
-#~ "If ARG1 ARG2 given, -m presumed: `am i' or `mom likes' are usual.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "  -H, --heading   mostra linha com cabeçalho para as colunas\n"
-#~ "  -i, -u, --idle  mostra tempo de inatividade do usuário como HORAS:"
-#~ "MINUTOS, .\n"
-#~ "                  ou velho\n"
-#~ "   -l, --lookup   tenta canonizar os nomes de máquina através do DNS\n"
-#~ "  -m              somente nome da máquina e usuário associado a entrada "
-#~ "padrão\n"
-#~ "  -q, --count     Todos os nomes de login e o número de usuários "
-#~ "conectados\n"
-#~ "  -s              (ignorado)\n"
-#~ "  -T, -w, --mesg  adiciona status do usuário como +, - ou ?\n"
-#~ "      --message   mesmo que -T\n"
-#~ "      --writable  mesmo que -T\n"
-#~ "      --help      mostra esta ajuda e sai\n"
-#~ "      --version   mostra informação de versão e sai\n"
-#~ "\n"
-#~ "Se ARQUIVO não for especificado use %s. %s em ARQUIVO é comum.\n"
-#~ "Se ARG1 ARG2 forem informados -m é presumido: `am i' ou `mom likes' são "
-#~ "comuns.\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "Repeatedly output a line with all specified STRING(s), or `y'.\n"
-#~ "\n"
-#~ "  --help      display this help and exit\n"
-#~ "  --version   output version information and exit\n"
-#~ msgstr ""
-#~ "Mostra o CRC e o número de bytes de cada ARQUIVO.\n"
-#~ "\n"
-#~ "  --help      mostra esta ajuda e finaliza\n"
-#~ "  --version   informa a versão e finaliza\n"
-
-#~ msgid "cannot get processor type"
-#~ msgstr "não consigo obter tipo do processador"
-
-#~ msgid "USER"
-#~ msgstr "USUÁRIO"
-
-#~ msgid "MESG "
-#~ msgstr "MENS "
-
-#~ msgid "LOGIN-TIME   "
-#~ msgstr "HORA-LOGIN   "
-
-#~ msgid "FROM\n"
-#~ msgstr "DE\n"
-
-#, fuzzy
-#~ msgid "virtual memory exhausted"
-#~ msgstr "memória esgotada"
-
-#, fuzzy
-#~ msgid "Memory exhausted"
-#~ msgstr "memória esgotada"
-
-#~ msgid "<undef>"
-#~ msgstr "<indefinido>"
-
-#~ msgid "Usage: %s [-v]\n"
-#~ msgstr "Uso: %s [-v]\n"
-
-# , c-format
-#, fuzzy
-#~ msgid "Usage: %s [OPTION]... [VARIABLE]...\n"
-#~ msgstr "Uso: %s [OPÇÃO]... [ARQUIVO]...\n"
-
-# , c-format
-#, fuzzy
-#~ msgid "Usage: %s [OPTION]... NUMBER[SUFFIX]\n"
-#~ msgstr "Uso: %s [OPÇÃO]... [ARQUIVO]...\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "\n"
-#~ "(obsolete)  If -VALUE is used as first OPTION, same as -c VALUE when one "
-#~ "of\n"
-#~ "multipliers bkm follows concatenated, else same as -n VALUE.\n"
-#~ msgstr ""
-#~ "Mostra as primeiras 10 linhas de cada ARQUIVO na saída padrão.\n"
-#~ "Se especificados vários ARQUIVO(s), mostra o nome de cada um.\n"
-#~ "Sem ARQUIVO especificado, ou ARQUIVO é `-', lê da entrada padrão.\n"
-#~ "\n"
-#~ "  -c, --bytes=TAMANHO     mostra os primeiros TAMANHO bytes\n"
-#~ "  -n, --lines=N           mostra as N primeiras linhas em vez de 10\n"
-#~ "  -q, --quiet, --silent   no mostra as início com o nome do arquivo\n"
-#~ "  -v, --verbose           mostra sempre os inícios com nomes dos "
-#~ "arquivos\n"
-#~ "      --help              mostra esta ajuda e finaliza\n"
-#~ "      --version           informa a versão e finaliza\n"
-#~ "\n"
-#~ "TAMANHO pode ter um sufixo: `b' para 512, `k' para 1K, `m' para 1Meg.\n"
-#~ "Se -VALOR for informado como primeira opção, lê -c VALOR se um dos \n"
-#~ "sufixo bkm seguir concatenado a VALOR, ou lê -n VALOR\n"
-
-# , c-format
-#, fuzzy
-#~ msgid "warning: `od -w' is obsolete; use `od --width'"
-#~ msgstr "atenção: largura %lu inválida; será usado %d em seu lugar"
-
-# , c-format
-#, fuzzy
-#~ msgid "warning: `pr -S' is obsolete; use `pr --sep-string'"
-#~ msgstr "atenção: largura %lu inválida; será usado %d em seu lugar"
-
-#, fuzzy
-#~ msgid ""
-#~ "  +POS1 [-POS2]             start a key at POS1, end it before POS2 "
-#~ "(origin 0)\n"
-#~ "                              Warning: this option is obsolete\n"
-#~ msgstr ""
-#~ "Compara os arquivos ordenados ARQUIVO1 e ARQUIVO2, linha por linha.\n"
-#~ "\n"
-#~ "  -1              suprime as linhas que só estão em ARQUIVO1\n"
-#~ "  -2              suprime as linhas que só estão em ARQUIVO2\n"
-#~ "  -3              mostra as linhas que só estão em um deles\n"
-#~ "      --help      mostra esta ajuda e finaliza\n"
-#~ "      --version   informa a versão e finaliza\n"
-
-# , c-format
-#, fuzzy
-#~ msgid "warning: `sort -y' is obsolete; omit `-y'"
-#~ msgstr "atenção: largura %lu inválida; será usado %d em seu lugar"
-
-# , c-format
-#, fuzzy
-#~ msgid "warning: `tail %s' is obsolete; use -n or -c instead"
-#~ msgstr "atenção: largura %lu inválida; será usado %d em seu lugar"
-
-# , c-format
-#, fuzzy
-#~ msgid "warning: `uniq %s' is obsolete; use `uniq -s %s' instead"
-#~ msgstr "atenção: largura %lu inválida; será usado %d em seu lugar"
-
-#, fuzzy
-#~ msgid ""
-#~ "      --help               display this help and exit\n"
-#~ "      --version            output version information and exit\n"
-#~ msgstr ""
-#~ "Mostra o CRC e o número de bytes de cada ARQUIVO.\n"
-#~ "\n"
-#~ "  --help      mostra esta ajuda e finaliza\n"
-#~ "  --version   informa a versão e finaliza\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "      --help                display this help and exit\n"
-#~ "      --version             output version information and exit\n"
-#~ msgstr ""
-#~ "Mostra o CRC e o número de bytes de cada ARQUIVO.\n"
-#~ "\n"
-#~ "  --help      mostra esta ajuda e finaliza\n"
-#~ "  --version   informa a versão e finaliza\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "      --help                      display this help and exit\n"
-#~ "      --version                   output version information and exit\n"
-#~ msgstr ""
-#~ "Mostra o CRC e o número de bytes de cada ARQUIVO.\n"
-#~ "\n"
-#~ "  --help      mostra esta ajuda e finaliza\n"
-#~ "  --version   informa a versão e finaliza\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "      --help                     display this help and exit\n"
-#~ "      --version                  output version information and exit\n"
-#~ msgstr ""
-#~ "Mostra o CRC e o número de bytes de cada ARQUIVO.\n"
-#~ "\n"
-#~ "  --help      mostra esta ajuda e finaliza\n"
-#~ "  --version   informa a versão e finaliza\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "  --help            display this help and exit\n"
-#~ "  --version         output version information and exit\n"
-#~ msgstr ""
-#~ "Mostra o CRC e o número de bytes de cada ARQUIVO.\n"
-#~ "\n"
-#~ "  --help      mostra esta ajuda e finaliza\n"
-#~ "  --version   informa a versão e finaliza\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "Convert tabs in each FILE to spaces, writing to standard output.\n"
-#~ "With no FILE, or when FILE is -, read standard input.\n"
-#~ "\n"
-#~ "Mandatory arguments to long options are mandatory for short options too.\n"
-#~ "  -i, --initial       do not convert TABs after non whitespace\n"
-#~ "  -t, --tabs=NUMBER   have tabs NUMBER characters apart, not 8\n"
-#~ msgstr ""
-#~ "Converte as tabulações de cada ARQUIVO em espaços, escrevendo o\n"
-#~ "resultado na saída padrão. Se não for informado ARQUIVO ou quando \n"
-#~ "ARQUIVO é  `-', lê-se da entrada padrão.\n"
-#~ "\n"
-#~ "  -i, --initial       só converte as tabulações iniciais de cada linha\n"
-#~ "  -t, --tabs=NÚMERO   usa N espaços em cada tabulação, em vez de 8\n"
-#~ "  -t, --tabs=LISTA    usa a LISTA de posições separadas por vírgula para\n"
-#~ "                      definir as posições de tabulação\n"
-#~ "      --help          mostra esta ajuda e finaliza\n"
-#~ "      --version       informa a versão e finaliza\n"
-#~ "\n"
-#~ "Em vez de `-t N' ou `-t LISTA' pode usar-se -N ou -LISTA.\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "  -t, --tabs=LIST     use comma separated list of explicit tab positions\n"
-#~ "      --help          display this help and exit\n"
-#~ "      --version       output version information and exit\n"
-#~ "\n"
-#~ "Instead of -t NUMBER or -t LIST, -NUMBER or -LIST may be used.\n"
-#~ msgstr ""
-#~ "Converte as tabulações de cada ARQUIVO em espaços, escrevendo o\n"
-#~ "resultado na saída padrão. Se não for informado ARQUIVO ou quando \n"
-#~ "ARQUIVO é  `-', lê-se da entrada padrão.\n"
-#~ "\n"
-#~ "  -i, --initial       só converte as tabulações iniciais de cada linha\n"
-#~ "  -t, --tabs=NÚMERO   usa N espaços em cada tabulação, em vez de 8\n"
-#~ "  -t, --tabs=LISTA    usa a LISTA de posições separadas por vírgula para\n"
-#~ "                      definir as posições de tabulação\n"
-#~ "      --help          mostra esta ajuda e finaliza\n"
-#~ "      --version       informa a versão e finaliza\n"
-#~ "\n"
-#~ "Em vez de `-t N' ou `-t LISTA' pode usar-se -N ou -LISTA.\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "Wrap input lines in each FILE (standard input by default), writing to\n"
-#~ "standard output.\n"
-#~ "\n"
-#~ "Mandatory arguments to long options are mandatory for short options too.\n"
-#~ "  -b, --bytes         count bytes rather than columns\n"
-#~ "  -s, --spaces        break at spaces\n"
-#~ "  -w, --width=WIDTH   use WIDTH columns instead of 80\n"
-#~ "      --help          display this help and exit\n"
-#~ "      --version       output version information and exit\n"
-#~ msgstr ""
-#~ "Ajusta o largura das linhas em cada ARQUIVO (entrada padrão por "
-#~ "default),\n"
-#~ "escrevendo o resultado na saída padrão\n"
-#~ "\n"
-#~ "  -b, --bytes         conta bytes em vez de colunas\n"
-#~ "  -s, --spaces        quebra nos espaços\n"
-#~ "  -w, --width=WIDTH   utiliza WIDTH colunas em vez de 80\n"
-#~ "      --help                mostra esta ajuda e finaliza\n"
-#~ "      --version             informa a versão e finaliza\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "Write lines consisting of the sequentially corresponding lines from\n"
-#~ "each FILE, separated by TABs, to standard output.\n"
-#~ "With no FILE, or when FILE is -, read standard input.\n"
-#~ "\n"
-#~ "Mandatory arguments to long options are mandatory for short options too.\n"
-#~ "  -d, --delimiters=LIST   reuse characters from LIST instead of TABs\n"
-#~ "  -s, --serial            paste one file at a time instead of in "
-#~ "parallel\n"
-#~ "      --help              display this help and exit\n"
-#~ "      --version           output version information and exit\n"
-#~ "\n"
-#~ msgstr ""
-#~ "Escreve seqüencialmente na saída padrão cada linha de cada ARQUIVO\n"
-#~ "especificado, separadas por TABs.\n"
-#~ "Se ARQUIVO não especificado ou ARQUIVO é `-', lê a entrada padrão.\n"
-#~ "\n"
-#~ "  -d, delimiters=LISTA   usa os caracteres indicados em LISTA no lugar "
-#~ "de\n"
-#~ "                         tabuladores\n"
-#~ "  -s, --serial           usa um arquivo de cada vez, em lugar de fazê-los "
-#~ "em\n"
-#~ "                         paralelo\n"
-#~ "      --help             mostra esta ajuda e finaliza\n"
-#~ "      --version          informa a versão e finaliza\n"
-#~ "\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "  -NUMBER                 same as -l NUMBER\n"
-#~ "      --verbose           print a diagnostic to standard error just\n"
-#~ "                            before each output file is opened\n"
-#~ "      --help              display this help and exit\n"
-#~ "      --version           output version information and exit\n"
-#~ "\n"
-#~ "SIZE may have a multiplier suffix: b for 512, k for 1K, m for 1 Meg.\n"
-#~ msgstr ""
-#~ "Divide ARQUIVO em arquivos menores de tamanho fixo e os nomeia PREFIXOaa, "
-#~ "PREFIXOab...\n"
-#~ ". O PREFIXO default é x.Sem informar ARQUIVO, ou se ARQUIVO é `-', lê da "
-#~ "entrada padrão\n"
-#~ "\n"
-#~ "  -b, --bytes=BYTES       escreve BYTES bytes em cada arquivo de saída\n"
-#~ "  -C, --line-bytes=BYTES  escreve um máximo de BYTES bytes sem quebrar "
-#~ "linhas\n"
-#~ "  -l, --lines=NÚMERO      escreve NÚMERO linhas em cada arquivo de saída\n"
-#~ "  -NÚMERO                 o mesmo que -l NÚMERO\n"
-#~ "      --verbose           mostra um diagnóstico na saída de erro padrão\n"
-#~ "                          antes de abrir cada arquivo\n"
-#~ "       --help             mostra esta ajuda e finaliza\n"
-#~ "       --version          informa a versão e finaliza\n"
-#~ "\n"
-#~ "BYTES pode ter um fator indicado com o sufixo: b para 512, k para 1k,\n"
-#~ "m para 1 mega.\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "Write each FILE to standard output, last line first.\n"
-#~ "With no FILE, or when FILE is -, read standard input.\n"
-#~ "\n"
-#~ "Mandatory arguments to long options are mandatory for short options too.\n"
-#~ "  -b, --before             attach the separator before instead of after\n"
-#~ msgstr ""
-#~ "Escreve cada ARQUIVO na saída padrão começando pela última linha\n"
-#~ "Sem informar ARQUIVO, ou se ARQUIVO é `-', lê da entrada padrão\n"
-#~ "\n"
-#~ "  -b,  --before           colocar o separador antes de cada linha, em vez "
-#~ "de\n"
-#~ "                          colocar depois\n"
-#~ "  -r,  --regex            interpretar o separador como uma expressão "
-#~ "regular\n"
-#~ "  -s,  --separator=STRING usar STRING como separador, em vez de um salto "
-#~ "de\n"
-#~ "                          linha\n"
-#~ "       --help             mostrar esta ajuda e sair\n"
-#~ "       --version          mostrar a versão e sair\n"
-#~ "\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "Print the last %d lines of each FILE to standard output.\n"
-#~ "With more than one FILE, precede each with a header giving the file "
-#~ "name.\n"
-#~ "With no FILE, or when FILE is -, read standard input.\n"
-#~ "\n"
-#~ "Mandatory arguments to long options are mandatory for short options too.\n"
-#~ "      --retry              keep trying to open a file even if it is\n"
-#~ "                           inaccessible when tail starts or if it "
-#~ "becomes\n"
-#~ "                           inaccessible later -- useful only with -f\n"
-#~ msgstr ""
-#~ "Mostra as primeiras 10 linhas de cada ARQUIVO na saída padrão.\n"
-#~ "Se especificados vários ARQUIVO(s), mostra o nome de cada um.\n"
-#~ "Sem ARQUIVO especificado, ou ARQUIVO é `-', lê da entrada padrão.\n"
-#~ "\n"
-#~ "  -c, --bytes=TAMANHO     mostra os primeiros TAMANHO bytes\n"
-#~ "  -n, --lines=N           mostra as N primeiras linhas em vez de 10\n"
-#~ "  -q, --quiet, --silent   no mostra as início com o nome do arquivo\n"
-#~ "  -v, --verbose           mostra sempre os inícios com nomes dos "
-#~ "arquivos\n"
-#~ "      --help              mostra esta ajuda e finaliza\n"
-#~ "      --version           informa a versão e finaliza\n"
-#~ "\n"
-#~ "TAMANHO pode ter um sufixo: `b' para 512, `k' para 1K, `m' para 1Meg.\n"
-#~ "Se -VALOR for informado como primeira opção, lê -c VALOR se um dos \n"
-#~ "sufixo bkm seguir concatenado a VALOR, ou lê -n VALOR\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "  -t, --tabs=NUMBER   have tabs NUMBER characters apart instead of 8\n"
-#~ "  -t, --tabs=LIST     use comma separated list of explicit tab positions\n"
-#~ "      --help          display this help and exit\n"
-#~ "      --version       output version information and exit\n"
-#~ "\n"
-#~ "Instead of -t NUMBER or -t LIST, -NUMBER or -LIST may be used.\n"
-#~ msgstr ""
-#~ "Converte os espaços de cada ARQUIVO em tabulações, escrevendo o\n"
-#~ "Sem informar ARQUIVO, ou se ARQUIVO é `-', lê da entrada padrão\n"
-#~ "\n"
-#~ "  -a, --all          converter todos os espaços em branco, não só os "
-#~ "iniciais\n"
-#~ "  -t, --tabs=NÚMERO  usar N espaços em cada tabulação, em vez de 8\n"
-#~ "  -t, --tabs=LISTA   usar a LISTA de posições separadas por vírgulas "
-#~ "para\n"
-#~ "                     definir as posições de tabulação\n"
-#~ "      --help         mostrar esta ajuda e sair\n"
-#~ "      --version      mostrar a versão e sair\n"
-#~ "\n"
-#~ "Em vez de `-t NÚMERO' ou `-t LISTA' pode se usar -NÚMERO ou -LISTA.\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "Output pieces of FILE separated by PATTERN(s) to files `xx01', "
-#~ "`xx02', ...,\n"
-#~ "and output byte counts of each piece to standard output.\n"
-#~ "\n"
-#~ "Mandatory arguments to long options are mandatory for short options too.\n"
-#~ "  -b, --suffix-format=FORMAT use sprintf FORMAT instead of %%d\n"
-#~ "  -f, --prefix=PREFIX        use PREFIX instead of `xx'\n"
-#~ "  -k, --keep-files           do not remove output files on errors\n"
-#~ "  -n, --digits=DIGITS        use specified number of digits instead of 2\n"
-#~ "  -s, --quiet, --silent      do not print counts of output file sizes\n"
-#~ "  -z, --elide-empty-files    remove empty output files\n"
-#~ "      --help                 display this help and exit\n"
-#~ "      --version              output version information and exit\n"
-#~ "\n"
-#~ "Read standard input if FILE is -.  Each PATTERN may be:\n"
-#~ "\n"
-#~ "  INTEGER            copy up to but not including specified line number\n"
-#~ "  /REGEXP/[OFFSET]   copy up to but not including a matching line\n"
-#~ "  %%REGEXP%%[OFFSET]   skip to, but not including a matching line\n"
-#~ "  {INTEGER}          repeat the previous pattern specified number of "
-#~ "times\n"
-#~ "  {*}                repeat the previous pattern as many times as "
-#~ "possible\n"
-#~ "\n"
-#~ "A line OFFSET is a required `+' or `-' followed by a positive integer.\n"
-#~ msgstr ""
-#~ "Partes de saída de ARQUIVO separadas por PADRÕE(s) para arquivos  `xx01', "
-#~ "`xx02', ...,\n"
-#~ "e contagem de bytes de saída de cada parate para saída padrão.\n"
-#~ "\n"
-#~ "  -b, --suffix-format=FORMATO use sprintf FORMAT em vez de %%d\n"
-#~ "  -f, --prefix=PREFIXO       usar PREFIXO em vez de `xx'\n"
-#~ "  -k, --keep-files           não remover arquivos de saída em erros\n"
-#~ "  -n, --digits=DIGITOS       usar número especificado de dígitos em vez "
-#~ "de 2\n"
-#~ "  -s, --quiet, --silent      não imprimir contagem de tamanhos de "
-#~ "arquivos de saída\n"
-#~ "  -z, --elide-empty-files    remover arquivos de saída vazios\n"
-#~ "      --help                 exibir esta ajuda e sair\n"
-#~ "      --version              informação da versão de saída e sair\n"
-#~ "\n"
-#~ "Ler entrada padrão se ARQUIVO for -.  Cada PADRÃO pode ser:\n"
-#~ "\n"
-#~ "  INTEGER              copiar para mas sem incluir número de linha "
-#~ "especificado\n"
-#~ "  /REGEXP/[OFFSET]     copiar para mas não incluir uma linha que combina\n"
-#~ "  %%REGEXP%%[OFFSET]   saltar para, mas não incluir uma linha que "
-#~ "combina\n"
-#~ "  {INTEGER}            repetir o esquema anterior especificando o número "
-#~ "de vezes\n"
-#~ "  {*}                  repetir o esquema anterior tantas vezes quanto "
-#~ "possível\n"
-#~ "\n"
-#~ "Uma linha OFFSET é necessária `+' ou `-' seguida por um positivo "
-#~ "inteiro.\n"
-
-# , c-format
-#, fuzzy
-#~ msgid ""
-#~ "Print selected parts of lines from each FILE to standard output.\n"
-#~ "\n"
-#~ "Mandatory arguments to long options are mandatory for short options too.\n"
-#~ "  -b, --bytes=LIST        output only these bytes\n"
-#~ "  -c, --characters=LIST   output only these characters\n"
-#~ "  -d, --delimiter=DELIM   use DELIM instead of TAB for field delimiter\n"
-#~ "  -f, --fields=LIST       output only these fields;  also print any line\n"
-#~ "                            that contains no delimiter character, unless\n"
-#~ "                            the -s option is specified\n"
-#~ "  -n                      (ignored)\n"
-#~ "  -s, --only-delimited    do not print lines not containing delimiters\n"
-#~ "      --output-delimiter=STRING  use STRING as the output delimiter\n"
-#~ "                            the default is to use the input delimiter\n"
-#~ "      --help              display this help and exit\n"
-#~ "      --version           output version information and exit\n"
-#~ "\n"
-#~ "Use one, and only one of -b, -c or -f.  Each LIST is made up of one\n"
-#~ "range, or many ranges separated by commas.  Each range is one of:\n"
-#~ "\n"
-#~ "  N     N'th byte, character or field, counted from 1\n"
-#~ "  N-    from N'th byte, character or field, to end of line\n"
-#~ "  N-M   from N'th to M'th (included) byte, character or field\n"
-#~ "  -M    from first to M'th (included) byte, character or field\n"
-#~ "\n"
-#~ "With no FILE, or when FILE is -, read standard input.\n"
-#~ msgstr ""
-#~ "Exibe as partes selecionadas de cada ARQUIVO na saída padrão:\n"
-#~ "\n"
-#~ "  -b, --bytes=LISTA           mostra somente estes bytes\n"
-#~ "  -c, --characters=LISTA      mostra somente estes caracteres\n"
-#~ "  -d, --delimiter=DELIM       usa DELIM em vez de caracteres de "
-#~ "tabulação\n"
-#~ "                              para delimitar os campos\n"
-#~ "  -f, --fields=LISTA          mostra somente estes campos; também exibe\n"
-#~ "                              todas as linhas que não contenham "
-#~ "caracteres\n"
-#~ "                              delimitadores, a menos que a opção -s seja\n"
-#~ "                              especificada\n"
-#~ "  -n                          (não tem efeito)\n"
-#~ "  -s, --only-delimited        não mostra as linhas que não contém\n"
-#~ "                              delimitadores\n"
-#~ "      --output-delimiter=STRING  usa STRING como delimitador de saída\n"
-#~ "                              o padrão é usar o delimitador de entrada\n"
-#~ "      --help                  mostra esta ajuda e finaliza\n"
-#~ "      --version               informa a versão e finaliza\n"
-#~ "\n"
-#~ "Use uma e somente uma das opções -b, -c ou -f. Cada LISTA se compõe\n"
-#~ "de uma ou mais faixas separadas por vírgula. Cada faixa pode ser:\n"
-#~ "\n"
-#~ "   N    o eNésimo byte, caractere ou campo contado desde 1\n"
-#~ "   N-   A partir do eNésimo byte, caractere ou campo até o final da "
-#~ "linha\n"
-#~ "   N-M  Desde o byte, caractere ou campo N até o byte M\n"
-#~ "   -M   desde o primeiro byte, caractere ou campo até  a posição M\n"
-#~ "\n"
-#~ "Se não for passado ARQUIVO, ou quando ARQUIVO é `-', lê-se da entrada "
-#~ "padrão.\n"
-
-#~ msgid ""
-#~ "For each pair of input lines with identical join fields, write a line to\n"
-#~ "standard output.  The default join field is the first, delimited\n"
-#~ "by whitespace.  When FILE1 or FILE2 (not both) is -, read standard "
-#~ "input.\n"
-#~ "\n"
-#~ "  -a SIDE           print unpairable lines coming from file SIDE\n"
-#~ "  -e EMPTY          replace missing input fields with EMPTY\n"
-#~ "  -i, --ignore-case ignore differences in case when comparing fields\n"
-#~ "  -j FIELD          (obsolescent) equivalent to `-1 FIELD -2 FIELD'\n"
-#~ "  -j1 FIELD         (obsolescent) equivalent to `-1 FIELD'\n"
-#~ "  -j2 FIELD         (obsolescent) equivalent to `-2 FIELD'\n"
-#~ "  -o FORMAT         obey FORMAT while constructing output line\n"
-#~ "  -t CHAR           use CHAR as input and output field separator\n"
-#~ "  -v SIDE           like -a SIDE, but suppress joined output lines\n"
-#~ "  -1 FIELD          join on this FIELD of file 1\n"
-#~ "  -2 FIELD          join on this FIELD of file 2\n"
-#~ "      --help        display this help and exit\n"
-#~ "      --version     output version information and exit\n"
-#~ "\n"
-#~ "Unless -t CHAR is given, leading blanks separate fields and are ignored,\n"
-#~ "else fields are separated by CHAR.  Any FIELD is a field number counted\n"
-#~ "from 1.  FORMAT is one or more comma or blank separated specifications,\n"
-#~ "each being `SIDE.FIELD' or `0'.  Default FORMAT outputs the join field,\n"
-#~ "the remaining fields from FILE1, the remaining fields from FILE2, all\n"
-#~ "separated by CHAR.\n"
-#~ msgstr ""
-#~ "Mostra uma linha na saída padrão por cada par de linhas que contenham \n"
-#~ "campos idênticos. O campo a comparar por default é o primeiro, "
-#~ "delimitado\n"
-#~ "por um espaço em branco. Se ARQUIVO1 o ARQUIVO2 é `-' (nunca ambos),\n"
-#~ "lê a entrada padrão.\n"
-#~ "\n"
-#~ "  -a ARQ            mostra linhas não concatenadas do arquivo ARQ\n"
-#~ "  -e VAZIO          troca campos inexistentes por VAZIO\n"
-#~ "  -i, --ignore-case ignora diferença entre maiúsculas e minúsculas\n"
-#~ "  -j CAMPO          (Obsoleto) equivalente a '-1 CAMPO -2 CAMPO'\n"
-#~ "  -j1 CAMPO         (Obsoleto) equivalente a '-1 CAMPO'\n"
-#~ "  -j2 CAMPO         (Obsoleto) equivalente a '-2 CAMPO'\n"
-#~ "  -o FORMATO        utiliza FORMATO para mostrar as linhas de saída\n"
-#~ "  -t CHAR           Usa CHAR como delimitador de campos, na entrada e "
-#~ "saída\n"
-#~ "  -v ARQ            Como -a ARQ, só que mostra as linhas concatenadas\n"
-#~ "  -1 CAMPO          concatena neste campo do arquivo 1\n"
-#~ "  -2 CAMPO          concatena neste campo do arquivo 2\n"
-#~ "      --help        mostra esta ajuda e finaliza\n"
-#~ "      --version     informa versão e finaliza\n"
-#~ "\n"
-#~ "Delimitadores de campos deixados em branco são ignorados, a menos que \n"
-#~ "especificado -t CHAR, então campos são delimitados por CHAR. CAMPO é o\n"
-#~ "número de campo contado a partir de 1. FORMATO é uma lista de elementos "
-#~ "da\n"
-#~ "forma `LADO.CAMPO' ou `0', separada por vírgula o por espaços em branco.\n"
-#~ "FORMATO por default mostra o campo concatenado, os restantes campos do\n"
-#~ "ARQUIVO1 e do ARQUIVO2, todos delimitados por CARACTERE.\n"
-
-# , c-format
-#~ msgid ""
-#~ "Usage: %s [OPTION] [FILE]...\n"
-#~ "  or:  %s [OPTION] --check [FILE]\n"
-#~ "Print or check %s (%d-bit) checksums.\n"
-#~ "With no FILE, or when FILE is -, read standard input.\n"
-#~ "\n"
-#~ "  -b, --binary            read files in binary mode (default on DOS/"
-#~ "Windows)\n"
-#~ "  -c, --check             check %s sums against given list\n"
-#~ "  -t, --text              read files in text mode (default)\n"
-#~ "\n"
-#~ "The following two options are useful only when verifying checksums:\n"
-#~ "      --status            don't output anything, status code shows "
-#~ "success\n"
-#~ "  -w, --warn              warn about improperly formated checksum lines\n"
-#~ "\n"
-#~ "      --help              display this help and exit\n"
-#~ "      --version           output version information and exit\n"
-#~ "\n"
-#~ "The sums are computed as described in %s.  When checking, the input\n"
-#~ "should be a former output of this program.  The default mode is to print\n"
-#~ "a line with checksum, a character indicating type (`*' for binary, ` ' "
-#~ "for\n"
-#~ "text), and name for each FILE.\n"
-#~ msgstr ""
-#~ "Uso: %s [OPÇÃO] [ARQUIVO]...\n"
-#~ " ou: %s [OPÇÃO] --check [ARQUIVO]\n"
-#~ "Mostra ou verifica a soma de comprovação (checksum) %s (%d-bit).\n"
-#~ "Sem especificação do ARQUIVO ou ARQUIVO é `-', lê da entrada padrão.\n"
-#~ "\n"
-#~ "  -b, --binary           lê arquivos em modo binário (padrão no DOS/"
-#~ "Windows)\n"
-#~ "  -c, --check            compara as somas %s com a lista dada\n"
-#~ "  -t, --text             lê os arquivos em modo de texto (por padrão)\n"
-#~ "\n"
-#~ "As duas opções seguintes são úteis apenas para verificar somas de\n"
-#~ "comprovação (checksum):\n"
-#~ "      --status           não mostra nada, o valor de retorno indica o\n"
-#~ "                         resultado\n"
-#~ "  -w, --warn             avisa sobre linhas de comprovação de somas MD5\n"
-#~ "                         que não estão corretamente formatadas\n"
-#~ "\n"
-#~ "      --help             mostra esta ajuda e finaliza\n"
-#~ "      --version          informa versão e finaliza\n"
-#~ "\n"
-#~ "As somas se calculam tal e como se descreve em %s. Na verificação, a\n"
-#~ "entrada deve ser um resultado anterior deste programa. Por padrão se\n"
-#~ "mostra uma linha com a soma de comprovação, um caractere indicando o "
-#~ "tipo\n"
-#~ "do arquivo (`*' para binário, ` ' para texto), e o nome de cada ARQUIVO.\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "Write each FILE to standard output, with line numbers added.\n"
-#~ "With no FILE, or when FILE is -, read standard input.\n"
-#~ "\n"
-#~ "Mandatory arguments to long options are mandatory for short options too.\n"
-#~ "  -b, --body-numbering=STYLE      use STYLE for numbering body lines\n"
-#~ "  -d, --section-delimiter=CC      use CC for separating logical pages\n"
-#~ "  -f, --footer-numbering=STYLE    use STYLE for numbering footer lines\n"
-#~ "  -h, --header-numbering=STYLE    use STYLE for numbering header lines\n"
-#~ "  -i, --page-increment=NUMBER     line number increment at each line\n"
-#~ "  -l, --join-blank-lines=NUMBER   group of NUMBER empty lines counted as "
-#~ "one\n"
-#~ "  -n, --number-format=FORMAT      insert line numbers according to "
-#~ "FORMAT\n"
-#~ "  -p, --no-renumber               do not reset line numbers at logical "
-#~ "pages\n"
-#~ "  -s, --number-separator=STRING   add STRING after (possible) line "
-#~ "number\n"
-#~ "  -v, --first-page=NUMBER         first line number on each logical page\n"
-#~ "  -w, --number-width=NUMBER       use NUMBER columns for line numbers\n"
-#~ "      --help                      display this help and exit\n"
-#~ "      --version                   output version information and exit\n"
-#~ "\n"
-#~ "By default, selects -v1 -i1 -l1 -sTAB -w6 -nrn -hn -bt -fn.  CC are\n"
-#~ "two delimiter characters for separating logical pages, a missing\n"
-#~ "second character implies :.  Type \\\\ for \\.  STYLE is one of:\n"
-#~ "\n"
-#~ "  a         number all lines\n"
-#~ "  t         number only nonempty lines\n"
-#~ "  n         number no lines\n"
-#~ "  pREGEXP   number only lines that contain a match for REGEXP\n"
-#~ "\n"
-#~ "FORMAT is one of:\n"
-#~ "\n"
-#~ "  ln   left justified, no leading zeros\n"
-#~ "  rn   right justified, no leading zeros\n"
-#~ "  rz   right justified, leading zeros\n"
-#~ "\n"
-#~ msgstr ""
-#~ "Escreve cada ARQUIVO na saída padrão, com as linhas numeradas.\n"
-#~ "Se não for especificado ARQUIVO ou ARQUIVO é `-', lê a entrada padrão.\n"
-#~ "\n"
-#~ "  -b, --body-numbering=ESTILO   usa ESTILO para a numeração das linhas\n"
-#~ "  -d, --section-delimiter=CC    usa CC para separar páginas\n"
-#~ "  -f, --footer-numbering=ESTILO usa ESTILO para numerar as linhas finais\n"
-#~ "  -h, --header-numbering=ESTILO usa ESTILO para numerar as linhas de "
-#~ "cabeçalho\n"
-#~ "  -i, --page-increment=NÚMERO   incrementa número de linha em NÚMERO "
-#~ "para\n"
-#~ "                                cada linha\n"
-#~ "  -l, --join-blank-lines=NÚMERO um grupo de NÚMERO linhas vazias se "
-#~ "contam\n"
-#~ "                                como uma só\n"
-#~ "  -n, --number-format=FORMATO   inseri os números de linha com FORMATO\n"
-#~ "  -p, --no-renumber             não reinicializa o número de linhas "
-#~ "para                                 cada página\n"
-#~ "  -s, --number-separator=STRING inclui STRING depois do número de linha\n"
-#~ "  -v, --first-page=NÚMERO       primeiro número de linha para cada "
-#~ "página\n"
-#~ "  -w, --number-width=LARGURA    usa LARGURA colunas para números de "
-#~ "linha\n"
-#~ "      --help                    mostra esta ajuda e finaliza\n"
-#~ "      --version                 informa versão e finaliza\n"
-#~ "\n"
-#~ "Por default é `-v1 -i1 -l1 -sTAB -w6 -nrn -hn -bt -fn'. `CC' são dois\n"
-#~ "caracteres delimitadores para separar páginas; se só especificado um\n"
-#~ "deles, o outro se supõe:`.'\n"
-#~ "Utilize \\\\ para obter \\. ESTILO pode ser um de o seguintes:\n"
-#~ "\n"
-#~ "  a       numera todas as linhas\n"
-#~ "  t       numera só as linhas não vazias\n"
-#~ "  n       não numera nenhuma linha\n"
-#~ "  pEXPREG numera só as linhas que coincidem com a expressão regular "
-#~ "REGEXP\n"
-#~ "\n"
-#~ "FORMATO é um dos seguintes:\n"
-#~ "\n"
-#~ "  ln       justificação a esquerda, sem zeros a  esquerda\n"
-#~ "  rn       justificação a direita, sem zeros a esquerda\n"
-#~ "  rz       justificação a direita, com zeros a esquerda\n"
-#~ "\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "\n"
-#~ "Write an unambiguous representation, octal bytes by default,\n"
-#~ "of FILE to standard output.  With more than one FILE argument,\n"
-#~ "concatenate them in the listed order to form the input.\n"
-#~ "With no FILE, or when FILE is -, read standard input.\n"
-#~ "\n"
-#~ "Mandatory arguments to long options are mandatory for short options too.\n"
-#~ "  -A, --address-radix=RADIX   decide how file offsets are printed\n"
-#~ "  -j, --skip-bytes=BYTES      skip BYTES input bytes first\n"
-#~ "  -N, --read-bytes=BYTES      limit dump to BYTES input bytes\n"
-#~ "  -s, --strings[=BYTES]       output strings of at least BYTES graphic "
-#~ "chars\n"
-#~ "  -t, --format=TYPE           select output format or formats\n"
-#~ "  -v, --output-duplicates     do not use * to mark line suppression\n"
-#~ "  -w, --width[=BYTES]         output BYTES bytes per output line\n"
-#~ "      --traditional           accept arguments in pre-POSIX form\n"
-#~ "      --help                  display this help and exit\n"
-#~ "      --version               output version information and exit\n"
-#~ "\n"
-#~ "Pre-POSIX format specifications may be intermixed, they accumulate:\n"
-#~ "  -a   same as -t a,  select named characters\n"
-#~ "  -b   same as -t oC, select octal bytes\n"
-#~ "  -c   same as -t c,  select ASCII characters or backslash escapes\n"
-#~ "  -d   same as -t u2, select unsigned decimal shorts\n"
-#~ "  -f   same as -t fF, select floats\n"
-#~ "  -h   same as -t x2, select hexadecimal shorts\n"
-#~ "  -i   same as -t d2, select decimal shorts\n"
-#~ "  -l   same as -t d4, select decimal longs\n"
-#~ "  -o   same as -t o2, select octal shorts\n"
-#~ "  -x   same as -t x2, select hexadecimal shorts\n"
-#~ msgstr ""
-#~ "Escreve uma representação inequívoca, por default em base octal, de "
-#~ "ARQUIVO\n"
-#~ "na saída padrão. Se não for especificado ARQUIVO ou ARQUIVO for `-', lê "
-#~ "a\n"
-#~ "entrada padrão.\n"
-#~ "\n"
-#~ "  -A, --address-radix=BASE    indica como mostrar as posições do arquivo\n"
-#~ "  -N, --read-bytes=BYTES      restringe a saída a BYTES bytes por "
-#~ "arquivo\n"
-#~ "  -j, --skip-bytes=BYTES      descarta os primeiros BYTES bytes de cada "
-#~ "arquivo\n"
-#~ "  -s, --strings[=BYTES]       mostra strings de caracteres de pelo menos\n"
-#~ "                              BYTES caracteres gráficos\n"
-#~ "  -t, --format=TIPO           seleciona o formato de saída\n"
-#~ "  -v, --output-duplicates     não usa * para indicar linhas repetidas\n"
-#~ "  -w, --width[=BYTES]         mostra BYTES bytes por linha de saída\n"
-#~ "      --traditional           aceita os argumentos em formato pre-POSIX\n"
-#~ "      --help                  mostra esta ajuda e finaliza\n"
-#~ "      --version               informa versão e finaliza\n"
-#~ "\n"
-#~ "As especificações de formato pre-POSIX podem estar intercalada e se "
-#~ "acumularem:\n"
-#~ "  -a   o mesmo que -t a,  seleciona os caracteres nomeados\n"
-#~ "  -b   o mesmo que -t oC, seleciona bytes em base octal\n"
-#~ "  -c   o mesmo que -t c,  seleciona caracteres ASCII ou sequências de\n"
-#~ "                          escape\n"
-#~ "  -d   o mesmo que -t u2, seleciona decimais curtos(shorts) sem sinal\n"
-#~ "  -f   o mesmo que -t fF, seleciona números em ponto flutuante\n"
-#~ "  -h   o mesmo que -t x2, seleciona hexadecimais curtos(shorts)\n"
-#~ "  -i   o mesmo que -t d2, seleciona decimais curtos(shorts)\n"
-#~ "  -l   o mesmo que -t d4, seleciona decimais longos(longs)\n"
-#~ "  -o   o mesmo que -t o2, seleciona octais curtos(shorts)\n"
-#~ "  -x   o mesmo que -t x2, seleciona hexadecimais curtos(shorts)\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "For older syntax (second call format), OFFSET means -j OFFSET.  LABEL\n"
-#~ "is the pseudo-address at first byte printed, incremented when dump is\n"
-#~ "progressing.  For OFFSET and LABEL, a 0x or 0X prefix indicates\n"
-#~ "hexadecimal, suffixes maybe . for octal and b multiply by 512.\n"
-#~ "\n"
-#~ "TYPE is made up of one or more of these specifications:\n"
-#~ "\n"
-#~ "  a          named character\n"
-#~ "  c          ASCII character or backslash escape\n"
-#~ "  d[SIZE]    signed decimal, SIZE bytes per integer\n"
-#~ "  f[SIZE]    floating point, SIZE bytes per integer\n"
-#~ "  o[SIZE]    octal, SIZE bytes per integer\n"
-#~ "  u[SIZE]    unsigned decimal, SIZE bytes per integer\n"
-#~ "  x[SIZE]    hexadecimal, SIZE bytes per integer\n"
-#~ "\n"
-#~ "SIZE is a number.  For TYPE in doux, SIZE may also be C for\n"
-#~ "sizeof(char), S for sizeof(short), I for sizeof(int) or L for\n"
-#~ "sizeof(long).  If TYPE is f, SIZE may also be F for sizeof(float), D\n"
-#~ "for sizeof(double) or L for sizeof(long double).\n"
-#~ "\n"
-#~ "RADIX is d for decimal, o for octal, x for hexadecimal or n for none.\n"
-#~ "BYTES is hexadecimal with 0x or 0X prefix, it is multiplied by 512\n"
-#~ "with b suffix, by 1024 with k and by 1048576 with m.  Adding a z suffix "
-#~ "to\n"
-#~ "any type adds a display of printable characters to the end of each line\n"
-#~ "of output.  -s without a number implies 3.  -w without a number implies "
-#~ "32.\n"
-#~ "By default, od uses -A o -t d2 -w 16.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Na sintaxe antiga, OFFSET significa -j OFFSET. ROTULO\n"
-#~ "é o pseudo endereço do primeiro byte mostrado, incrementado quando o "
-#~ "\"dump\"\n"
-#~ "está sendo processado. Para OFFSET e LABEL, o prefixo 0x ou 0X indica\n"
-#~ "hexadecimal, os sufixos poden ser . para octal e b para blocos de 512 "
-#~ "bytes.\n"
-#~ "\n"
-#~ "TIPO é feito com uma o mais de as seguintes especificações:\n"
-#~ "\n"
-#~ "  a           um determinado caracter\n"
-#~ "  c           caracter ASCII ou sequência de escape\n"
-#~ "  d[TAMANHO]  decimal com sinal, TAMANHO bytes por cada inteiro\n"
-#~ "  f[TAMANHO]  ponto flutuante, TAMANHO bytes por cada inteiro\n"
-#~ "  o[TAMANHO]  octal, TAMANHO bytes por cada inteiro\n"
-#~ "  u[TAMANHO]  decimal sem sinal, TAMANHO bytes por cada inteiro\n"
-#~ "  x[TAMANHO]  hexadecimal, TAMANHO bytes por cada inteiro\n"
-#~ "\n"
-#~ "TAMANHO é um número.\n"
-#~ "Para os TIPOS d o u x, TAMANHO pode ser também:\n"
-#~ " C para `sizeof(char)', S para `sizeof(short)', I para `sizeof(int)' ou\n"
-#~ " L para `sizeof(long)'.\n"
-#~ " Se o TIPO é f, TAMANHO pode ser também:\n"
-#~ " F para `sizeof(float)', D para `sizeof(double)' ou\n"
-#~ " L para `sizeof(long double)'.\n"
-#~ "\n"
-#~ "BASE é d para decimal, o para octal, x para hexadecimal o n para "
-#~ "nenhuma.\n"
-#~ "BYTES é hexadecimal com 0x ou 0X como prefixo, multiplicado por 512 se o\n"
-#~ "prefixo é b, por 1024 se é k e por 1048576 se é m. -s sem um número\n"
-#~ "implica 3. -w sem um número indica 32. Por default usa `-A o -t d2 -w "
-#~ "16'.\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "Paginate or columnate FILE(s) for printing.\n"
-#~ "\n"
-#~ "Mandatory arguments to long options are mandatory for short options too.\n"
-#~ "  +FIRST_PAGE[:LAST_PAGE], --pages=FIRST_PAGE[:LAST_PAGE]\n"
-#~ "                    begin [stop] printing with page FIRST_[LAST_]PAGE\n"
-#~ "  -COLUMN, --columns=COLUMN\n"
-#~ "                    produce COLUMN-column output and print columns down,\n"
-#~ "                    unless -a is used. Balance number of lines in the\n"
-#~ "                    columns on each page.\n"
-#~ "  -a, --across      print columns across rather than down, used together\n"
-#~ "                    with -COLUMN\n"
-#~ "  -c, --show-control-chars\n"
-#~ "                    use hat notation (^G) and octal backslash notation\n"
-#~ "  -d, --double-space\n"
-#~ "                    double space the output\n"
-#~ "  -D, --date-format=FORMAT\n"
-#~ "                    use FORMAT for the header date\n"
-#~ "  -e[CHAR[WIDTH]], --expand-tabs[=CHAR[WIDTH]]\n"
-#~ "                    expand input CHARs (TABs) to tab WIDTH (8)\n"
-#~ "  -F, -f, --form-feed\n"
-#~ "                    use form feeds instead of newlines to separate pages\n"
-#~ "                    (by a 3-line page header with -F or a 5-line header\n"
-#~ "                    and trailer without -F)\n"
-#~ msgstr ""
-#~ "Paginar ou colunar ARQUIVO(s) para impressão.\n"
-#~ "\n"
-#~ "  +PRIMERA_PAG[:ÚLTIMA_PAG], --pages=PRIMEIRA_PÁGINA[:ÚLTIMA_PÁGINA]\n"
-#~ "                    começa [termina] a imprimir por PRIMERA_[ÚLTIMA_]PAG\n"
-#~ "  -COLUNAS, --columns=COLUNA\n"
-#~ "                    mostra a saída no número de colunas indicado"
-#~ "(COLUNAS),\n"
-#~ "                    a menos que se especifique -a. Equilibra o número de\n"
-#~ "                    linhas de cada coluna em cada página.\n"
-#~ "  -a, --across      cria as colunas transversalmente em vez de em "
-#~ "paralelo,\n"
-#~ "                    usado em conjunto com -COLUNAS\n"
-#~ "  -c  --show-control-chars\n"
-#~ "                    mostra os caracteres de controle com notação\n"
-#~ "                    circunflexo (^G) ou sequências de escape octais\n"
-#~ "  -d  --double-space\n"
-#~ "                    saída com espaçamento duplo\n"
-#~ "  -D, --date-format=FORMATO\n"
-#~ "                    usa FORMATO para a data de cabeçalho\n"
-#~ "  -e[CHAR[LARG]], --expand-tabs[CHAR[LARG]]\n"
-#~ "                    expande o caractere de tabulação (ou o CHAR) para\n"
-#~ "                    LARG (8) espaços\n"
-#~ "  -F, -f, --form-feed\n"
-#~ "                    usa form feeds em vez de newlines para separar "
-#~ "páginas\n"
-#~ "                    (com um header de página de 3 linhas com -f ou\n"
-#~ "                    de 5 linhas e trailer sem -f)\n"
-
-#~ msgid ""
-#~ "  -h HEADER, --header=HEADER\n"
-#~ "                    use a centered HEADER instead of filename in page "
-#~ "header,\n"
-#~ "                    -h \"\" prints a blank line, don't use -h\"\"\n"
-#~ "  -i[CHAR[WIDTH]], --output-tabs[=CHAR[WIDTH]]\n"
-#~ "                    replace spaces with CHARs (TABs) to tab WIDTH (8)\n"
-#~ "  -J, --join-lines  merge full lines, turns off -W line truncation, no "
-#~ "column\n"
-#~ "                    alignment, -S[STRING] sets separators\n"
-#~ "  -l PAGE_LENGTH, --length=PAGE_LENGTH\n"
-#~ "                    set the page length to PAGE_LENGTH (66) lines\n"
-#~ "                    (default number of lines of text 56, and with -F 63)\n"
-#~ "  -m, --merge       print all files in parallel, one in each column,\n"
-#~ "                    truncate lines, but join lines of full length with -"
-#~ "J\n"
-#~ "  -n[SEP[DIGITS]], --number-lines[=SEP[DIGITS]]\n"
-#~ "                    number lines, use DIGITS (5) digits, then SEP (TAB),\n"
-#~ "                    default counting starts with 1st line of input file\n"
-#~ "  -N NUMBER, --first-line-number=NUMBER\n"
-#~ "                    start counting with NUMBER at 1st line of first\n"
-#~ "                    page printed (see +FIRST_PAGE)\n"
-#~ "  -o MARGIN, --indent=MARGIN\n"
-#~ "                    offset each line with MARGIN (zero) spaces, do not\n"
-#~ "                    affect -w or -W, MARGIN will be added to PAGE_WIDTH\n"
-#~ "  -r, --no-file-warnings\n"
-#~ "                    omit warning when a file cannot be opened\n"
-#~ msgstr ""
-#~ "  -h  CABEÇALHO, --header=CABEÇALHO\n"
-#~ "                    use um CABEÇALHO centralizado em vez do nome do "
-#~ "arquivo\n"
-#~ "                    no cabeçalho da página.\n"
-#~ "                    -h \"\" mostra uma linha em branco, não use -h\"\"\n"
-#~ "  -i[CARACTER[LARGURA]], --output-tabs[=CARACTER[LARGURA]]\n"
-#~ "                    substitui os espaços com CARACTERes por LARGURA "
-#~ "de                    tabulação (8)\n"
-#~ "  -J, --join-lines  une linhas completas, desliga a truncagem de linha -"
-#~ "W,\n"
-#~ "                    sem alinhamento de colunas\n"
-#~ "                    -S[STRING] configura separadores\n"
-#~ "  -l COMP_PÁGINA, --length COMP_PÁGINA\n"
-#~ "                    configura o comprimento da página para COMP_PÁGINA\n"
-#~ "                    (66) linhas (o número padrão de linhas no texto é 56, "
-#~ "e\n"
-#~ "                    com -F é 63)\n"
-#~ "  -m merge          mostra todos os arquivos em paralelo em cada uma "
-#~ "das \n"
-#~ "                    colunas, trunca linhas, mas une as linhas de \n"
-#~ "                    comprimento total com -J\n"
-#~ " -n[SEP[DIGITOS]], --number-lines[=SEP[DIGITOS]]\n"
-#~ "                    numera linhas, usa DIGITOS (5 digitos) e SEP (TAB),\n"
-#~ "                    a contagem padrão inicia com a primeira linha\n"
-#~ "                    do arquivo de entrada\n"
-#~ "  -N NÚMERO, --first-line-number=NÚMERO\n"
-#~ "                    inicia contando com o NÚMERO da primeira linha da\n"
-#~ "                    primeira página impressa (veja +PRIMEIRA_PÁGINA)\n"
-#~ "  -o MARGEM, --indent=MARGEM\n"
-#~ "                    desloca cada linha com MARGEM (zero) espaços, não "
-#~ "afeta\n"
-#~ "                    -w ou -W, a MARGEM será adicionada a \n"
-#~ "                    COMP_PÁGINA\n"
-#~ "  -r, --no-file-warnings\n"
-#~ "                    omite avisos quando o arquivo não pode ser aberto\n"
-
-#~ msgid ""
-#~ "  -s[CHAR],--separator[=CHAR]\n"
-#~ "                    separate columns by a single character, default for "
-#~ "CHAR\n"
-#~ "                    is the <TAB> character without -w and 'no char' with -"
-#~ "w\n"
-#~ "                    -s[CHAR] turns off line truncation of all 3 column\n"
-#~ "                    options (-COLUMN|-a -COLUMN|-m) except -w is set\n"
-#~ "  -S[STRING], --sep-string[=STRING]\n"
-#~ "                    separate columns by an optional STRING, don't use\n"
-#~ "                    -S \"STRING\", -S only: No separator used (same as -S"
-#~ "\"\"),\n"
-#~ "                    without -S: Default separator <TAB> with -J and "
-#~ "<space>\n"
-#~ "                    otherwise (same as -S\" \"), no effect on column "
-#~ "options\n"
-#~ "  -t, --omit-header omit page headers and trailers\n"
-#~ "  -T, --omit-pagination\n"
-#~ "                    omit page headers and trailers, eliminate any "
-#~ "pagination\n"
-#~ "                    by form feeds set in input files\n"
-#~ "  -v, --show-nonprinting\n"
-#~ "                    use octal backslash notation\n"
-#~ "  -w PAGE_WIDTH, --width=PAGE_WIDTH\n"
-#~ "                    set page width to PAGE_WIDTH (72) characters for\n"
-#~ "                    multiple text-column output only, -s[char] turns off "
-#~ "(72)\n"
-#~ "  -W PAGE_WIDTH, --page-width=PAGE_WIDTH\n"
-#~ "                    set page width to PAGE_WIDTH (72) characters always,\n"
-#~ "                    truncate lines, except -J option is set, no "
-#~ "interference\n"
-#~ "                    with -S or -s\n"
-#~ "  --help            display this help and exit\n"
-#~ "  --version         output version information and exit\n"
-#~ "\n"
-#~ "-T implied by -l nn when nn <= 10 or <= 3 with -F. With no FILE, or when\n"
-#~ "FILE is -, read standard input.\n"
-#~ msgstr ""
-#~ "  -s[CARACTERE],--separator[=CARACTERE]\n"
-#~ "                    separa as colunas por um caracter simples, o default "
-#~ "para                     CARACTERE é o <TAB> caractere sem -w e 'no char' "
-#~ "com -w\n"
-#~ "                    -s[CHARARACTER] desliga o truncamento de linha das\n"
-#~ "                    columas opções (-COLUMA|-a -COLUMA|-m) exeto -w está\n"
-#~ "                    configurado\n"
-#~ "  -S[STRING], --sep-string[=STRING]\n"
-#~ "                    separa as colunas por uma STRING opcional, não use\n"
-#~ "                    -S \"STRING\", somente -S\n"
-#~ "  -t, --omit-header omite páginas de cabeçalho e trailers\n"
-#~ "  -T, --omit-pagination\n"
-#~ "                    omite páginas de cabeçalho e trailers, eliminando "
-#~ "qualquerpaginação\n"
-#~ "  -v, --show-nonprinting\n"
-#~ "                    use notação octal para a contra-barra (barra "
-#~ "invertida)\n"
-#~ "  -w PÁGINA_EXTENSÃO, --width=PÁGINA_EXTENSÃO\n"
-#~ "                    configure a extensão da página para (72) characters \n"
-#~ "                    para multiplo texto-coluna somente para saída,\n"
-#~ "                    -s[caractere] desliga (72)\n"
-#~ "  -W PÁGINA_EXTENSÃO, --page-width=PÁGINA_EXTENSÃO\n"
-#~ "                    configure a extensao da página para (72) characters\n"
-#~ "                    sempre, linhas truncadas, exceto a opcão -J é setada, "
-#~ "seminterferencia com -S ou -s\n"
-#~ "  --help            mostra esta ajuda e finaliza\n"
-#~ "  --version         informa a versao e finaliza\n"
-#~ "\n"
-#~ "-T implica em -l nn onde nn <= 10 ou <= 3 com -F. Com \"no FILE\", ou "
-#~ "onde\n"
-#~ "FILE é -, lido na entrada padrão.\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "Output a permuted index, including context, of the words in the input "
-#~ "files.\n"
-#~ "\n"
-#~ "Mandatory arguments to long options are mandatory for short options too.\n"
-#~ "  -A, --auto-reference           output automatically generated "
-#~ "references\n"
-#~ "  -C, --copyright                display Copyright and copying "
-#~ "conditions\n"
-#~ "  -G, --traditional              behave more like System V `ptx'\n"
-#~ "  -F, --flag-truncation=STRING   use STRING for flagging line "
-#~ "truncations\n"
-#~ "  -M, --macro-name=STRING        macro name to use instead of `xx'\n"
-#~ "  -O, --format=roff              generate output as roff directives\n"
-#~ "  -R, --right-side-refs          put references at right, not counted in -"
-#~ "w\n"
-#~ "  -S, --sentence-regexp=REGEXP   for end of lines or end of sentences\n"
-#~ "  -T, --format=tex               generate output as TeX directives\n"
-#~ "  -W, --word-regexp=REGEXP       use REGEXP to match each keyword\n"
-#~ "  -b, --break-file=FILE          word break characters in this FILE\n"
-#~ "  -f, --ignore-case              fold lower case to upper case for "
-#~ "sorting\n"
-#~ "  -g, --gap-size=NUMBER          gap size in columns between output "
-#~ "fields\n"
-#~ "  -i, --ignore-file=FILE         read ignore word list from FILE\n"
-#~ "  -o, --only-file=FILE           read only word list from this FILE\n"
-#~ "  -r, --references               first field of each line is a reference\n"
-#~ "  -t, --typeset-mode               - not implemented -\n"
-#~ "  -w, --width=NUMBER             output width in columns, reference "
-#~ "excluded\n"
-#~ "      --help                     display this help and exit\n"
-#~ "      --version                  output version information and exit\n"
-#~ "\n"
-#~ "With no FILE or if FILE is -, read Standard Input.  `-F /' by default.\n"
-#~ msgstr ""
-#~ "Os argumentos obrigatórios para as opções largas são também obrigatórios "
-#~ "para as opções curtas.\n"
-#~ "  -A, --auto-reference           output automatically generated "
-#~ "references\n"
-#~ "  -C, --copyright                display Copyright and copying "
-#~ "conditions\n"
-#~ "  -G, --traditional              behave more like System V `ptx'\n"
-#~ "  -F, --flag-truncation=STRING   use STRING for flagging line "
-#~ "truncations\n"
-#~ "  -M, --macro-name=STRING        macro name to use instead of `xx'\n"
-#~ "  -O, --format=roff              generate output as roff directives\n"
-#~ "  -R, --right-side-refs          put references at right, not counted in -"
-#~ "w\n"
-#~ "  -S, --sentence-regexp=REGEXP   for end of lines or end of sentences\n"
-#~ "  -T, --format=tex               generate output as TeX directives\n"
-
-#~ msgid ""
-#~ "Other options:\n"
-#~ "\n"
-#~ "  -c, --check               check whether input is sorted; do not sort\n"
-#~ "  -k, --key=POS1[,POS2]     start a key at POS1, end it at POS 2 (origin "
-#~ "1)\n"
-#~ "  -m, --merge               merge already sorted files; do not sort\n"
-#~ "  -o, --output=FILE         write result to FILE instead of standard "
-#~ "output\n"
-#~ "  -s, --stable              stabilize sort by disabling last-resort "
-#~ "comparison\n"
-#~ "  -S, --buffer-size=SIZE    use SIZE for main memory buffer\n"
-#~ "  -t, --field-separator=SEP use SEP instead of non- to whitespace "
-#~ "transition\n"
-#~ "  -T, --temporary-directory=DIR  use DIR for temporaries, not $TMPDIR or %"
-#~ "s\n"
-#~ "                              multiple options specify multiple "
-#~ "directories\n"
-#~ "  -u, --unique              with -c: check for strict ordering\n"
-#~ "                              otherwise: output only the first of an "
-#~ "equal run\n"
-#~ "  -z, --zero-terminated     end lines with 0 byte, not newline\n"
-#~ "  +POS1 [-POS2]             start a key at POS1, end it before POS2 "
-#~ "(origin 0)\n"
-#~ "                              Warning: this option is obsolescent\n"
-#~ "      --help       display this help and exit\n"
-#~ "      --version    output version information and exit\n"
-#~ "\n"
-#~ msgstr ""
-#~ "Outras opções:\n"
-#~ "\n"
-#~ "  -c, --check               verifica se a entrada está classificada; não "
-#~ "classifica\n"
-#~ "  -k, --key=POS1[,POS2]     inicia uma chave em POS1, finaliza em POS 2 "
-#~ "(origem 1)\n"
-#~ "  -m, --merge               mescla arquivos já classificados; não "
-#~ "classifica\n"
-#~ "  -o, --output=ARQUIVO      escreve resultado no ARQUIVO em vez da saída "
-#~ "padrão\n"
-#~ "  -s, --stable              estabiliza classificação desabilitando a "
-#~ "comparação last-resort\n"
-#~ "  -S, --buffer-size=TAMANHO usa TAMANHO para o buffer principal de "
-#~ "memória\n"
-#~ "  -t, --field-separator=SEP usa SEP no lugar de non- para transição de "
-#~ "espaços\n"
-#~ "  -T, --temporary-directory=DIR  usa DIR para temporários, não $TMPDIR ou "
-#~ "%s\n"
-#~ "                              múltiplas opções especificam múltiplos "
-#~ "diretórios\n"
-#~ "  -u, --unique              com -c: verifica ordenação restrita\n"
-#~ "                              caso contrário: exterioriza apenas o "
-#~ "primeiro de uma execução\n"
-#~ "                              igual\n"
-#~ "  -z, --zero-terminated     termina linhas com o byte 0, não fim-de-"
-#~ "linha\n"
-#~ "  +POS1 [-POS2]             inicia uma chave em POS1, termina antes de "
-#~ "POS2 (origem 0)\n"
-#~ "                              Atenção: esta opção é obsoleta\n"
-#~ "      --help       exibe esta ajuda e finaliza\n"
-#~ "      --version    exibe informações da versão e finaliza\n"
-#~ "\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "Print the last %d lines of each FILE to standard output.\n"
-#~ "With more than one FILE, precede each with a header giving the file "
-#~ "name.\n"
-#~ "With no FILE, or when FILE is -, read standard input.\n"
-#~ "\n"
-#~ "Mandatory arguments to long options are mandatory for short options too.\n"
-#~ "      --retry              keep trying to open a file even if it is\n"
-#~ "                           inaccessible when tail starts or if it "
-#~ "becomes\n"
-#~ "                           inaccessible later -- useful only with -f\n"
-#~ "  -c, --bytes=N            output the last N bytes\n"
-#~ "  -f, --follow[={name|descriptor}]\n"
-#~ "                           output appended data as the file grows;\n"
-#~ "                           -f, --follow, and --follow=descriptor are\n"
-#~ "                           equivalent\n"
-#~ "  -F                       same as --follow=name --retry\n"
-#~ "  -n, --lines=N            output the last N lines, instead of the last %"
-#~ "d\n"
-#~ "      --max-unchanged-stats=N\n"
-#~ "                           with --follow=name, reopen a FILE which has "
-#~ "not\n"
-#~ "                           changed size after N (default %d) iterations\n"
-#~ "                           to see if it has been unlinked or renamed\n"
-#~ "                           (this is the usual case of rotated log files)\n"
-#~ "      --pid=PID            with -f, terminate after process ID, PID dies\n"
-#~ "  -q, --quiet, --silent    never output headers giving file names\n"
-#~ "  -s, --sleep-interval=S   with -f, each iteration lasts approximately S\n"
-#~ "                           (default 1) seconds\n"
-#~ "  -v, --verbose            always output headers giving file names\n"
-#~ "      --help               display this help and exit\n"
-#~ "      --version            output version information and exit\n"
-#~ "\n"
-#~ msgstr ""
-#~ "Imprime as últimas %d linhas de cada ARQUIVO na saída padrão.\n"
-#~ "Com mais de um ARQUIVO, precede cada com um cabeçalho dado no nome do "
-#~ "arquivo.\n"
-#~ "Sem ARQUIVO, ou quando ARQUIVO for -, ler entrada padrão.\n"
-#~ "\n"
-#~ "      --retry              continuar tentando abrir um arquivo mesmo se "
-#~ "for \n"
-#~ "                             inacessível quando 'tail' inicia ou se for\n"
-#~ "                             inacessível mais tarde  -- útil somente com -"
-#~ "f\n"
-#~ "  -c, --bytes=N            apresentar saída dos últimos N bytes\n"
-#~ "  -f, --follow[={nome|descritor}] mostra dados anexados conforme o "
-#~ "arquivo\n"
-#~ "                             aumenta; -f, --follow, e --follow=descritor "
-#~ "são\n"
-#~ "                             equivalentes\n"
-#~ "  -n, --lines=N            apresentar a saída das últimas N linhas, em "
-#~ "vez da última %d\n"
-#~ "      --max-unchanged-stats=N\n"
-#~ "                           com --follow=nome, reabre um ARQUIVO que não\n"
-#~ "                           foi alterado após N (o padrão é %d) iterações\n"
-#~ "                           para ver se ele foi removido ou renomeado\n"
-#~ "                           (este é o caso normal de arquivos de log\n"
-#~ "                           rotacionados)\n"
-#~ "      --pid=PID            com -f, terminado após processo ID, PID morre\n"
-#~ "  -q, --quiet, --silent    nunca colocar cabeçalhos na saída dando nomes "
-#~ "de arquivos\n"
-#~ "  -s, --sleep-interval=S   com -f, espera S segundos (o padrão é 1) "
-#~ "entre\n"
-#~ "                           as iterações\n"
-#~ "  -v, --verbose            sempre colocar cabeçalhos na saída dando nomes "
-#~ "de arquivos\n"
-#~ "      --help               mostra esta ajuda e sai\n"
-#~ "      --version            mostra informações da versão e sai\n"
-#~ "\n"
-
-#~ msgid ""
-#~ "If the first character of N (the number of bytes or lines) is a `+',\n"
-#~ "print beginning with the Nth item from the start of each file, "
-#~ "otherwise,\n"
-#~ "print the last N items in the file.  N may have a multiplier suffix:\n"
-#~ "b for 512, k for 1024, m for 1048576 (1 Meg).  A first OPTION of -VALUE\n"
-#~ "or +VALUE is treated like -n VALUE or -n +VALUE unless VALUE has one of\n"
-#~ "the [bkm] suffix multipliers, in which case it is treated like -c VALUE\n"
-#~ "or -c +VALUE.  Warning: a first option of +VALUE is obsolescent, and "
-#~ "support\n"
-#~ "for it will be withdrawn.\n"
-#~ "\n"
-#~ "With --follow (-f), tail defaults to following the file descriptor, "
-#~ "which\n"
-#~ "means that even if a tail'ed file is renamed, tail will continue to "
-#~ "track\n"
-#~ "its end.  This default behavior is not desirable when you really want to\n"
-#~ "track the actual name of the file, not the file descriptor (e.g., log\n"
-#~ "rotation).  Use --follow=name in that case.  That causes tail to track "
-#~ "the\n"
-#~ "named file by reopening it periodically to see if it has been removed "
-#~ "and\n"
-#~ "recreated by some other program.\n"
-#~ "\n"
-#~ msgstr ""
-#~ "Se o primeiro caracter de N (o número de bytes ou linhas) for um `+',\n"
-#~ "imprime iniciando no eNésimo ítem a partir do início de cada arquivo,\n"
-#~ "caso contrário, imprime os últimos N ítens no arquivo. N pode ter um\n"
-#~ "sufixo multiplicador: b para 512, k para 1024, m para 1048576 (1 Meg).\n"
-#~ "Uma primeira OPÇÃO de -VALUE ou +VALUE é tratada como -n VALUE ou\n"
-#~ "-n +VALUE a menos que VALUE tenha um dos multiplicadores de sufixo\n"
-#~ "[bkm], caso em que é tratado como -c VALUE ou -c +VALUE. Atenção: uma\n"
-#~ "primeira opção de +VALUE é obsoleta e o suporte a ela será extinto.\n"
-#~ "\n"
-#~ "Com --follow (-f), o padrão do tail é seguir o descritor de arquivos,\n"
-#~ "o que significa que mesmo se um arquivo no qual tenha sido aplicado um\n"
-#~ "tail for renomeado, o tail irá continuar a rastrear seu final. Este\n"
-#~ "comportamento padrão não é desejável quando você realmente quer rastrear\n"
-#~ "o nome real do arquivo, e não o descritor do arquivo (por exemplo,\n"
-#~ "rotação do log). Use --follow=name neste caso. Isto faz com que o tail\n"
-#~ "rastreie o arquivo reabrindo-o periodicamente para ver se ele foi\n"
-#~ "removido e recriado por algum outro programa.\n"
-#~ "\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "SETs are specified as strings of characters.  Most represent themselves.\n"
-#~ "Interpreted sequences are:\n"
-#~ "\n"
-#~ "  \\NNN            character with octal value NNN (1 to 3 octal digits)\n"
-#~ "  \\\\              backslash\n"
-#~ "  \\a              audible BEL\n"
-#~ "  \\b              backspace\n"
-#~ "  \\f              form feed\n"
-#~ "  \\n              new line\n"
-#~ "  \\r              return\n"
-#~ "  \\t              horizontal tab\n"
-#~ "  \\v              vertical tab\n"
-#~ "  CHAR1-CHAR2     all characters from CHAR1 to CHAR2 in ascending order\n"
-#~ "  [CHAR*]         in SET2, copies of CHAR until length of SET1\n"
-#~ "  [CHAR*REPEAT]   REPEAT copies of CHAR, REPEAT octal if starting with 0\n"
-#~ "  [:alnum:]       all letters and digits\n"
-#~ "  [:alpha:]       all letters\n"
-#~ "  [:blank:]       all horizontal whitespace\n"
-#~ "  [:cntrl:]       all control characters\n"
-#~ "  [:digit:]       all digits\n"
-#~ "  [:graph:]       all printable characters, not including space\n"
-#~ "  [:lower:]       all lower case letters\n"
-#~ "  [:print:]       all printable characters, including space\n"
-#~ "  [:punct:]       all punctuation characters\n"
-#~ "  [:space:]       all horizontal or vertical whitespace\n"
-#~ "  [:upper:]       all upper case letters\n"
-#~ "  [:xdigit:]      all hexadecimal digits\n"
-#~ "  [=CHAR=]        all characters which are equivalent to CHAR\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Os CONJUNTOs são especificados como strings de caracteres. A maior parte\n"
-#~ "representa eles mesmos.\n"
-#~ " As sequências válidas são as seguintes:\n"
-#~ "\n"
-#~ "  \\NNN            caractere com valor octal NNN (de um a três dígitos)\n"
-#~ "  \\\\             barra invertida\n"
-#~ "  \\a              beep audível (BEL)\n"
-#~ "  \\b              backspace\n"
-#~ "  \\f              salto de página\n"
-#~ "  \\n              salto de linha\n"
-#~ "  \\r              retorno de carro\n"
-#~ "  \\t              tabulação horizontal\n"
-#~ "  \\v              tabulação vertical\n"
-#~ "  CAR1-CAR2       todos os caracteres de CAR1 a CAR2 em ordem ascendente\n"
-#~ "  [CAR*]          em CONJUNTO2, copia de CAR até que se alcance a "
-#~ "largura\n"
-#~ "                  de CONJUNTO1\n"
-#~ "  [CAR*REPETE]    copia REPETE vezes CAR; REPETE é octal se começa com 0\n"
-#~ "  [:alnum:]       todas as letras e dígitos\n"
-#~ "  [:alpha:]       todas as letras\n"
-#~ "  [:blank:]       todos os espaços em branco horizontais\n"
-#~ "  [:cntrl:]       todos os caracteres de control\n"
-#~ "  [:digit:]       todos os dígitos\n"
-#~ "  [:graph:]       todos os caracteres imprimíveis, sem incluir o espaço\n"
-#~ "  [:lower:]       todas as letras minúsculas\n"
-#~ "  [:print:]       todos os caracteres imprimíveis, incluindo o espaço\n"
-#~ "  [:punct:]       todos os caracteres de pontuação\n"
-#~ "  [:space:]       todos os espaços em branco horizontais e verticais\n"
-#~ "  [:upper:]       todas as letras maiúsculas\n"
-#~ "  [:xdigit:]      todos os números hexadecimais\n"
-#~ "  [=CAR=]         todos os caracteres que são iguais a CAR\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "Discard all but one of successive identical lines from INPUT (or\n"
-#~ "standard input), writing to OUTPUT (or standard output).\n"
-#~ "\n"
-#~ "Mandatory arguments to long options are mandatory for short options too.\n"
-#~ "  -c, --count           prefix lines by the number of occurrences\n"
-#~ "  -d, --repeated        only print duplicate lines\n"
-#~ "  -D, --all-repeated[=delimit-method] print all duplicate lines\n"
-#~ "                        delimit-method={none(default),prepend,separate)}\n"
-#~ "                        Delimiting is done with blank lines.\n"
-#~ "  -f, --skip-fields=N   avoid comparing the first N fields\n"
-#~ "  -i, --ignore-case     ignore differences in case when comparing\n"
-#~ "  -s, --skip-chars=N    avoid comparing the first N characters\n"
-#~ "  -u, --unique          only print unique lines\n"
-#~ "  -w, --check-chars=N   compare no more than N characters in lines\n"
-#~ "  -N                    same as -f N\n"
-#~ "  +N                    same as -s N (obsolescent; will be withdrawn)\n"
-#~ "      --help            display this help and exit\n"
-#~ "      --version         output version information and exit\n"
-#~ "\n"
-#~ "A field is a run of whitespace, then non-whitespace characters.\n"
-#~ "Fields are skipped before chars.\n"
-#~ msgstr ""
-#~ "Descarta todas (menos uma) as linhas sucessivas idênticas de ENTRADA\n"
-#~ "(ou entrada padrão), escrevendo em SAÍDA (ou na saída padrão).\n"
-#~ "\n"
-#~ "   -c, --count          preceder as linhas com o número de ocorrências\n"
-#~ "   -d, --repeated       mostrar só as linhas duplicadas\n"
-#~ "   -D, --all-repeated   mostra todas as linhas duplicadas\n"
-#~ "   -f, --skip-fields=N  ignorar os primeiros N campos\n"
-#~ "   -i, --ignore-case    ignorar as diferenças entre maiúsculas e\n"
-#~ "                        minúsculas\n"
-#~ "   -s, --skip-chars=N   ignorar os primeiros N caracteres\n"
-#~ "   -u, --unique         mostrar só as linhas que são únicas\n"
-#~ "   -w, --check-chars=N  só comparar os primeiros N caracteres da linha\n"
-#~ "   -N                   o mesmo que -f N\n"
-#~ "   +N                   o mesmo que -s N (obsoleto; será extinto)\n"
-#~ "       --help           mostrar esta ajuda e sair\n"
-#~ "       --version        mostrar a versão e sair\n"
-#~ "\n"
-#~ "Um campo é cada conjunto de caracteres separados por espaços.\n"
-#~ "Os campos são ignorados antes dos caracteres.\n"
+#~ msgid "   Type"
+#~ msgstr "   Tipo"

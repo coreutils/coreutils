@@ -4,9 +4,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: coreutils 4.5.7\n"
-"POT-Creation-Date: 2003-02-21 18:14+0100\n"
-"PO-Revision-Date: 2003-02-17 17:20+0200\n"
+"Project-Id-Version: coreutils 4.5.8\n"
+"POT-Creation-Date: 2003-03-05 08:46+0100\n"
+"PO-Revision-Date: 2003-02-23 16:58+0200\n"
 "Last-Translator: Toomas Soome <Toomas.Soome@microlink.ee>\n"
 "Language-Team: Estonian <et@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -153,34 +153,38 @@ msgstr "%s: võti `-W %s' ei luba kasutada argumenti\n"
 msgid "block size"
 msgstr "bloki suurus"
 
-#: lib/makepath.c:167 src/copy.c:1270 src/mkdir.c:170
+#: lib/makepath.c:124 src/df.c:497 src/remove.c:402
+msgid "failed to return to initial working directory"
+msgstr ""
+
+#: lib/makepath.c:173 src/copy.c:1288 src/mkdir.c:170
 #, c-format
 msgid "cannot create directory %s"
 msgstr "kataloogi `%s' ei õnnestu luua"
 
-#: lib/makepath.c:173 lib/makepath.c:415 src/cp.c:444 src/cp.c:466
+#: lib/makepath.c:179 lib/makepath.c:421 src/cp.c:444 src/cp.c:466
 #, c-format
 msgid "%s exists but is not a directory"
 msgstr "`%s' on olemas, aga ei ole kataloog"
 
-#: lib/makepath.c:310 lib/makepath.c:372 lib/makepath.c:434
+#: lib/makepath.c:316 lib/makepath.c:378 lib/makepath.c:440
 #, c-format
 msgid "cannot change owner and/or group of %s"
 msgstr "%s omanikku ja/või gruppi ei õnnestu muuta"
 
-#: lib/makepath.c:332
+#: lib/makepath.c:338
 #, c-format
 msgid "cannot chdir to directory %s"
 msgstr "ei saa minna kataloogi %s"
 
-#: lib/makepath.c:386 lib/makepath.c:440
+#: lib/makepath.c:392 lib/makepath.c:446
 #, c-format
 msgid "cannot change permissions of %s"
 msgstr "ei õnnestu muuta %s õigusi"
 
 #: lib/mmap-stack.h:31 lib/mmap-stack.h:45
 msgid "warning: unable to use large stack"
-msgstr ""
+msgstr "hoiatus: suurt pinu ei saa kasutada"
 
 #: lib/obstack.c:487 lib/obstack.c:490 lib/xmalloc.c:63
 msgid "memory exhausted"
@@ -269,8 +273,8 @@ msgstr "Võrreldi sõnesid %s ja %s."
 
 #: src/basename.c:50 src/cat.c:88 src/chgrp.c:122 src/chmod.c:238
 #: src/chown.c:95 src/chroot.c:41 src/cksum.c:278 src/comm.c:69 src/cp.c:158
-#: src/csplit.c:1492 src/cut.c:170 src/date.c:113 src/dd.c:284 src/df.c:711
-#: src/dircolors.c:99 src/dirname.c:42 src/du.c:174 src/echo.c:73
+#: src/csplit.c:1492 src/cut.c:170 src/date.c:113 src/dd.c:284 src/df.c:707
+#: src/dircolors.c:99 src/dirname.c:42 src/du.c:171 src/echo.c:73
 #: src/env.c:115 src/expand.c:106 src/expr.c:86 src/factor.c:70 src/fmt.c:267
 #: src/fold.c:63 src/head.c:84 src/hostid.c:44 src/hostname.c:63 src/id.c:83
 #: src/install.c:593 src/join.c:140 src/kill.c:89 src/link.c:47 src/ln.c:335
@@ -310,8 +314,8 @@ msgstr ""
 
 #: src/basename.c:66 src/cat.c:124 src/chgrp.c:152 src/chmod.c:264
 #: src/chown.c:139 src/chroot.c:59 src/cksum.c:293 src/comm.c:86 src/cp.c:255
-#: src/csplit.c:1534 src/cut.c:215 src/date.c:215 src/dd.c:331 src/df.c:750
-#: src/dircolors.c:120 src/dirname.c:58 src/du.c:223 src/echo.c:105
+#: src/csplit.c:1534 src/cut.c:215 src/date.c:215 src/dd.c:331 src/df.c:746
+#: src/dircolors.c:120 src/dirname.c:58 src/du.c:220 src/echo.c:105
 #: src/env.c:134 src/expand.c:131 src/expr.c:149 src/factor.c:90
 #: src/false.c:45 src/fmt.c:297 src/fold.c:86 src/head.c:115 src/hostid.c:57
 #: src/hostname.c:76 src/id.c:104 src/install.c:648 src/join.c:181
@@ -775,7 +779,7 @@ msgstr ""
 "  -2              jäta vahele read, mis on ainult paremas failis\n"
 "  -3              jäta vahele read, mis on mõlemas failis\n"
 
-#: src/copy.c:162 src/du.c:335
+#: src/copy.c:162 src/du.c:332
 #, c-format
 msgid "cannot access %s"
 msgstr "%s ei saa kasutada"
@@ -795,8 +799,8 @@ msgstr "fstat %s ei õnnestu"
 msgid "skipping file %s, as it was replaced while being copied"
 msgstr "jätan %s vahele, kuna see asendati kopeerimise ajal"
 
-#: src/copy.c:262 src/copy.c:1034 src/ln.c:291 src/remove.c:725
-#: src/remove.c:779 src/remove.c:978
+#: src/copy.c:262 src/copy.c:1034 src/copy.c:1124 src/ln.c:291
+#: src/remove.c:726 src/remove.c:780 src/remove.c:892 src/remove.c:996
 #, c-format
 msgid "cannot remove %s"
 msgstr "%s ei saa kustutada"
@@ -911,99 +915,99 @@ msgstr "kataloogi %s ei saa iseendasse, %s, kopeerida"
 msgid "will not create hard link %s to directory %s"
 msgstr "ei loo viidet %s kataloogile %s"
 
-#: src/copy.c:1115
+#: src/copy.c:1132
 #, c-format
 msgid "cannot create hard link %s to %s"
 msgstr "ei õnnestu luua viidet %s -> %s"
 
-#: src/copy.c:1168
+#: src/copy.c:1186
 #, c-format
 msgid "cannot move %s to a subdirectory of itself, %s"
 msgstr "%s ei saa tõsta iseenda alamkataloogi %s"
 
-#: src/copy.c:1211
+#: src/copy.c:1229
 #, c-format
 msgid "cannot move %s to %s"
 msgstr "ei õnnestu tõsta %s -> %s"
 
-#: src/copy.c:1223
+#: src/copy.c:1241
 #, c-format
 msgid "inter-device move failed: %s to %s; unable to remove target"
 msgstr ""
 "seadmete-vaheline teisaldamine ebaõnnestus: %s -> %s; allikat ei saa "
 "kustutada"
 
-#: src/copy.c:1251
+#: src/copy.c:1269
 #, c-format
 msgid "cannot copy cyclic symbolic link %s"
 msgstr "tsüklilist nimeviita %s ei õnnestu kopeerida"
 
-#: src/copy.c:1328
+#: src/copy.c:1346
 #, c-format
 msgid "%s: can make relative symbolic links only in current directory"
 msgstr "%s: suhtelisi nimeviiteid saab luua ainult jooksvas kataloogis"
 
-#: src/copy.c:1335
+#: src/copy.c:1353
 #, c-format
 msgid "cannot create symbolic link %s to %s"
 msgstr "ei õnnestu luua nimeviidet %s -> %s"
 
-#: src/copy.c:1346
+#: src/copy.c:1364
 #, c-format
 msgid "cannot create link %s"
 msgstr "ei õnnestu luua viidet %s"
 
-#: src/copy.c:1371 src/mkfifo.c:133
+#: src/copy.c:1389 src/mkfifo.c:133
 #, c-format
 msgid "cannot create fifo %s"
 msgstr "ei õnnestu luua fifot %s"
 
-#: src/copy.c:1385
+#: src/copy.c:1403
 #, c-format
 msgid "cannot create special file %s"
 msgstr "ei õnnestu luua seadmefaili %s"
 
-#: src/copy.c:1397 src/ls.c:2493 src/stat.c:425
+#: src/copy.c:1415 src/ls.c:2493 src/stat.c:425
 #, c-format
 msgid "cannot read symbolic link %s"
 msgstr "ei õnnestu lugeda nimeviidet %s"
 
-#: src/copy.c:1422
+#: src/copy.c:1440
 #, c-format
 msgid "cannot create symbolic link %s"
 msgstr "ei õnnestu luua nimeviidet %s"
 
-#: src/copy.c:1438 src/copy.c:1501 src/cp.c:337
+#: src/copy.c:1456 src/copy.c:1519 src/cp.c:337
 #, c-format
 msgid "failed to preserve ownership for %s"
 msgstr "%s omanikku ei õnnestu säilitada"
 
-#: src/copy.c:1453
+#: src/copy.c:1471
 #, c-format
 msgid "%s has unknown file type"
 msgstr "%s on tundmatut tüüpi fail"
 
-#: src/copy.c:1488
+#: src/copy.c:1506
 #, c-format
 msgid "preserving times for %s"
 msgstr "jätan %s ajad muutmata"
 
-#: src/copy.c:1513
+#: src/copy.c:1531
 #, c-format
 msgid "failed to preserve authorship for %s"
 msgstr "%s autorit ei õnnestu säilitada"
 
-#: src/copy.c:1531
+#: src/copy.c:1549
 #, c-format
 msgid "setting permissions for %s"
 msgstr "sean %s õigusi"
 
-#: src/copy.c:1550 src/ln.c:326
+#: src/copy.c:1571 src/ln.c:326
 #, c-format
 msgid "cannot un-backup %s"
 msgstr "%s ei saa taastada"
 
-#: src/copy.c:1554
+#: src/copy.c:1575
 #, c-format
 msgid "%s -> %s (unbackup)\n"
 msgstr "%s -> %s (taastamine)\n"
@@ -1031,7 +1035,7 @@ msgstr ""
 "Kopeeri allikas sihtpunkti või kataloogi või mitu allikat kataloogi.\n"
 "\n"
 
-#: src/cp.c:172 src/csplit.c:1505 src/cut.c:182 src/df.c:721 src/du.c:183
+#: src/cp.c:172 src/csplit.c:1505 src/cut.c:182 src/df.c:717 src/du.c:180
 #: src/expand.c:119 src/fmt.c:277 src/fold.c:76 src/head.c:98
 #: src/install.c:609 src/kill.c:103 src/ln.c:354 src/ls.c:3767 src/mkdir.c:66
 #: src/mkfifo.c:60 src/mknod.c:61 src/mv.c:321 src/nl.c:185 src/paste.c:413
@@ -1466,7 +1470,7 @@ msgstr ""
 msgid "David Ihnat, David MacKenzie, and Jim Meyering"
 msgstr "David Ihnat, David MacKenzie ja Jim Meyering"
 
-#: src/cut.c:174 src/df.c:715 src/du.c:178 src/expand.c:110 src/fold.c:67
+#: src/cut.c:174 src/df.c:711 src/du.c:175 src/expand.c:110 src/fold.c:67
 #: src/head.c:88 src/ls.c:3761 src/nl.c:176 src/paste.c:403 src/pr.c:2754
 #: src/sort.c:276 src/sum.c:60 src/tac.c:127 src/tail.c:234 src/tee.c:63
 #: src/unexpand.c:375 src/wc.c:125
@@ -1997,44 +2001,46 @@ msgstr "liigun %s baiti üle lõpu väljundfailis %s"
 msgid "Torbjorn Granlund, David MacKenzie, Larry McVoy, and Paul Eggert"
 msgstr "Torbjorn Granlund, David MacKenzie, Larry McVoy ja Paul Eggert"
 
-#: src/df.c:151
-msgid "   Type"
-msgstr "   Tüüp"
-
 #: src/df.c:153
-msgid "Filesystem "
+#, fuzzy
+msgid "Filesystem    Type"
 msgstr "Failisüsteem "
 
-#: src/df.c:163
+#: src/df.c:155
+#, fuzzy
+msgid "Filesystem        "
+msgstr "Failisüsteem "
+
+#: src/df.c:158
 #, c-format
 msgid "    Inodes   IUsed   IFree IUse%%"
 msgstr "  I-kirjeid  IKasut   IVaba IKas%%"
 
-#: src/df.c:167
+#: src/df.c:162
 #, c-format
 msgid "    Size  Used Avail Use%%"
 msgstr "    Maht Kasut  Vaba Kas%%"
 
-#: src/df.c:169
+#: src/df.c:164
 #, c-format
 msgid "     Size   Used  Avail Use%%"
 msgstr "     Maht Kasut  Vaba Kas%%"
 
-#: src/df.c:172
+#: src/df.c:167
 #, c-format
 msgid " %4s-blocks      Used Available Capacity"
 msgstr " %4s-plokki      Kasut Vaba    Maht"
 
-#: src/df.c:203
+#: src/df.c:198
 #, c-format
 msgid " %4s-blocks      Used Available Use%%"
 msgstr "%4s-blokke     Kasut      Vaba Kas%%"
 
-#: src/df.c:207
+#: src/df.c:202
 msgid " Mounted on\n"
 msgstr " Haagitud\n"
 
-#: src/df.c:716
+#: src/df.c:712
 msgid ""
 "Show information about the filesystem on which each FILE resides,\n"
 "or all filesystems by default.\n"
@@ -2044,7 +2050,7 @@ msgstr ""
 "Vaikimisi esita infot igast haagitud failisüsteemist.\n"
 "\n"
 
-#: src/df.c:724
+#: src/df.c:720
 msgid ""
 "  -a, --all             include filesystems having 0 blocks\n"
 "  -B, --block-size=SIZE use SIZE-byte blocks\n"
@@ -2058,7 +2064,7 @@ msgstr ""
 "2G)\n"
 "  -H, --si              sama, kui kasuta 1000 kordseid, mitte 1024\n"
 
-#: src/df.c:730
+#: src/df.c:726
 msgid ""
 "  -i, --inodes          list inode information instead of block usage\n"
 "  -k                    like --block-size=1K\n"
@@ -2071,7 +2077,7 @@ msgstr ""
 "  -l, --local           näita ainult lokaalseid failisüsteeme\n"
 "      --no-sync         enne info lugemist ära kasuta synci (vikimisi)\n"
 
-#: src/df.c:736
+#: src/df.c:732
 msgid ""
 "  -P, --portability     use the POSIX output format\n"
 "      --sync            invoke sync before getting usage info\n"
@@ -2087,7 +2093,7 @@ msgstr ""
 "  -x, --exclude-type=TÜÜP  ära väljasta infot antud tüüpi failisüsteemidest\n"
 "  -v                    (ignoreeritakse)\n"
 
-#: src/df.c:746 src/du.c:219 src/ls.c:3879
+#: src/df.c:742 src/du.c:216 src/ls.c:3879
 msgid ""
 "\n"
 "SIZE may be (or may be an integer optionally followed by) one of following:\n"
@@ -2099,16 +2105,16 @@ msgstr ""
 "kB 1000, K 1024, MB 1,000,000, M 1,048,576 ja nii edasi tähtedega\n"
 "G, T, P, E, Z, Y.\n"
 
-#: src/df.c:863
+#: src/df.c:859
 #, c-format
 msgid "file system type %s both selected and excluded"
 msgstr "failisüsteemi tüüp %s on nii valitute kui ka väljaarvatute nimekirjas"
 
-#: src/df.c:907
+#: src/df.c:903
 msgid "Warning: "
 msgstr "Hoiatus: "
 
-#: src/df.c:910
+#: src/df.c:906
 #, c-format
 msgid "%scannot read table of mounted filesystems"
 msgstr "%s külgehaagitud failisüsteemide tabeli lugemine ei õnnestu"
@@ -2211,7 +2217,7 @@ msgid ""
 msgstr ""
 "Torbjorn Granlund, David MacKenzie, Larry McVoy, Paul Eggert ja Jim Meyering"
 
-#: src/du.c:179
+#: src/du.c:176
 msgid ""
 "Summarize disk usage of each FILE, recursively for directories.\n"
 "\n"
@@ -2219,8 +2225,7 @@ msgstr ""
 "Summeeri iga faili kettakasutus, kataloogid rekursiivselt.\n"
 "\n"
 
-#: src/du.c:186
-#, fuzzy
+#: src/du.c:183
 msgid ""
 "  -a, --all             write counts for all files, not just directories\n"
 "      --apparent-size   print apparent sizes, rather than disk usage; "
@@ -2234,12 +2239,19 @@ msgid ""
 "  -D, --dereference-args  dereference FILEs that are symbolic links\n"
 msgstr ""
 "  -a, --all             väljasta loendurid kõikidele failidele\n"
+"      --apparent-size   väljasta ketta kasutamise asemel nähtav suurus; "
+"kuigi\n"
+"                        nähtav suurus on tavaliselt väiksem, võib see olla\n"
+"                        tegelikkuses ka suurem tänu aukudega failidele, "
+"sise-\n"
+"                        misele fragmenteerumisele, kaudsetele blokkidele "
+"jms\n"
 "  -B, --block-size=MAHT kasuta määratud ploki suurust\n"
 "  -b, --bytes           väljasta maht baitides\n"
 "  -c, --total           väljasta kogumaht\n"
 "  -D, --dereference-args  kasuta nimeviidete korral viidatavaid\n"
 
-#: src/du.c:197
+#: src/du.c:194
 msgid ""
 "  -h, --human-readable  print sizes in human readable format (e.g., 1K 234M "
 "2G)\n"
@@ -2253,7 +2265,7 @@ msgstr ""
 "  -k, --kilobytes       sama, kui --block-size=1K\n"
 "  -l, --count-links     loenda viiteid eraldi failidena\n"
 
-#: src/du.c:203
+#: src/du.c:200
 msgid ""
 "  -L, --dereference     dereference all symbolic links\n"
 "  -S, --separate-dirs   do not include size of subdirectories\n"
@@ -2263,7 +2275,7 @@ msgstr ""
 "  -S, --separate-dirs   ära arvesta kataloogide suurusi\n"
 "  -s, --summarize       väljasta iga argumendi kohta summa\n"
 
-#: src/du.c:208
+#: src/du.c:205
 msgid ""
 "  -x, --one-file-system  skip directories on different filesystems\n"
 "  -X FILE, --exclude-from=FILE  Exclude files that match any pattern in "
@@ -2284,39 +2296,39 @@ msgstr ""
 "                        kui käsurea argument; --max-depth=0 on sama, kui\n"
 "                        --summarize\n"
 
-#: src/du.c:340
+#: src/du.c:337
 #, c-format
 msgid "cannot change to parent of directory %s"
 msgstr "ei õnnestu minna vanemkataloogi %s"
 
-#: src/du.c:348
+#: src/du.c:345
 #, c-format
 msgid "cannot change to directory %s"
 msgstr "ei õnnestu minna kataloogi %s"
 
-#: src/du.c:355
+#: src/du.c:352
 #, c-format
 msgid "cannot read directory %s"
 msgstr "kataloogi %s ei õnnestu lugeda"
 
-#: src/du.c:546 src/ls.c:2241 src/wc.c:591
+#: src/du.c:543 src/ls.c:2241 src/wc.c:591
 msgid "total"
 msgstr "kokku"
 
-#: src/du.c:633
+#: src/du.c:630
 #, c-format
 msgid "invalid maximum depth %s"
 msgstr "vigane maksimaalne sügavus %s"
 
-#: src/du.c:699
+#: src/du.c:696
 msgid "cannot both summarize and show all entries"
 msgstr "korraga ei saa summeerida ja näidata kõiki"
 
-#: src/du.c:706
+#: src/du.c:703
 msgid "warning: summarizing is the same as using --max-depth=0"
 msgstr "hoiatus: summeerimine on sama, kui kasutada --max-depth=0"
 
-#: src/du.c:712
+#: src/du.c:709
 #, c-format
 msgid "warning: summarizing conflicts with --max-depth=%d"
 msgstr "hoiatus: summeerimine on konfliktne võtmega --max-depth=%d"
@@ -3043,7 +3055,6 @@ msgid "Usage: %s [OPTION]... FILE1 FILE2\n"
 msgstr "Kasutamine: %s [VÕTI]... FAIL1 FAIL2\n"
 
 #: src/join.c:148
-#, fuzzy
 msgid ""
 "For each pair of input lines with identical join fields, write a line to\n"
 "standard output.  The default join field is the first, delimited\n"
@@ -3059,7 +3070,7 @@ msgstr ""
 "tühemikuga. Kui FAIL1 või FAIL2 (aga mitte mõlemad) on -, loe standard-\n"
 "sisendit.\n"
 "\n"
-"  -a POOL           väljasta paariliseta read failist POOL\n"
+"  -a FAILINUM       väljasta paariliseta read failist FAILINUM\n"
 "  -e TÜHI           asenda puuduvad sisendväljad sõnaga TÜHI\n"
 
 #: src/join.c:157
@@ -3079,18 +3090,16 @@ msgstr ""
 "  -t SÜMBOL         kasuta SÜMBOLit sisend- ja väljundväljade eraldajana\n"
 
 #: src/join.c:165
-#, fuzzy
 msgid ""
 "  -v FILENUM        like -a FILENUM, but suppress joined output lines\n"
 "  -1 FIELD          join on this FIELD of file 1\n"
 "  -2 FIELD          join on this FIELD of file 2\n"
 msgstr ""
-"  -v KÜLG           sama, kui -a KÜLG, aga ei väljasta vastavaid ridu\n"
+"  -v FAILINUM       sama, kui -a FAILINUM, aga ei väljasta vastavaid ridu\n"
 "  -1 VÄLI           ühenda see VÄLI failist 1\n"
 "  -2 VÄLI           ühenda see VÄLI failist 2\n"
 
 #: src/join.c:172
-#, fuzzy
 msgid ""
 "\n"
 "Unless -t CHAR is given, leading blanks separate fields and are ignored,\n"
@@ -3105,7 +3114,8 @@ msgstr ""
 "tühikuid,\n"
 "muidu kasutatakse väljade eraldajana võtmega -t määratud sümbolit. Välja\n"
 "tähistatakse välja numbriga, loendamist alustatakse ühest. Vorming on üks\n"
-"või enam komade või tühikurtega eraldatud määranguid kujul `KÜLG.VÄLI' või\n"
+"või enam komade või tühikurtega eraldatud määranguid kujul `FAILINUM.VÄLI' "
+"või\n"
 "`0'. Vaikimisi vorming väljastab ühendatud väljad, siis ülejäänud väljad\n"
 "failist FAIL1, siis ülejäänud väljad failist FAIL2. Väljad eraldatakse\n"
 "SÜMBOLiga.\n"
@@ -3446,7 +3456,7 @@ msgstr "ei õnnestu tuvastada %s seadet ja i-kirje numbrit"
 msgid "not listing already-listed directory: %s"
 msgstr "ei näita juba näidatud kataloogi: %s"
 
-#: src/ls.c:2208 src/remove.c:910
+#: src/ls.c:2208 src/remove.c:928
 #, c-format
 msgid "reading directory %s"
 msgstr "loen kataloogi %s"
@@ -5292,67 +5302,67 @@ msgstr ""
 msgid "cannot chdir from %s to .."
 msgstr "ei saa minna kataloogist %s kataloogi .."
 
-#: src/remove.c:406 src/remove.c:487
+#: src/remove.c:407 src/remove.c:488
 #, c-format
 msgid "cannot lstat `.' in %s"
 msgstr "kataloogis %s ei õnnestu lstat `.'"
 
-#: src/remove.c:413 src/remove.c:491
+#: src/remove.c:414 src/remove.c:492
 #, c-format
 msgid "%s changed dev/ino"
 msgstr "%s seade/inum muutus"
 
-#: src/remove.c:572 src/remove.c:710 src/remove.c:873 src/remove.c:965
+#: src/remove.c:573 src/remove.c:711 src/remove.c:880 src/remove.c:983
 #, c-format
 msgid "cannot lstat %s"
 msgstr "lstat %s ei õnnestu"
 
-#: src/remove.c:601
+#: src/remove.c:602
 #, c-format
 msgid "%s: descend into write-protected directory %s? "
 msgstr "%s: laskun kirjutamise kaitsega kataloogi %s? "
 
-#: src/remove.c:602
+#: src/remove.c:603
 #, c-format
 msgid "%s: descend into directory %s? "
 msgstr "%s: laskun kataloogi %s? "
 
-#: src/remove.c:612
+#: src/remove.c:613
 #, c-format
 msgid "%s: remove write-protected %s %s? "
 msgstr "%s: eemaldan kirjutuskaitsega %s %s? "
 
-#: src/remove.c:613
+#: src/remove.c:614
 #, c-format
 msgid "%s: remove %s %s? "
 msgstr "%s: eemaldan %s %s? "
 
-#: src/remove.c:637
+#: src/remove.c:638
 #, c-format
 msgid "removed %s\n"
 msgstr "%s eemaldatud\n"
 
-#: src/remove.c:652 src/remove.c:1040
+#: src/remove.c:653 src/remove.c:1058
 #, c-format
 msgid "removed directory: %s\n"
 msgstr "kustutatud kataloog: %s\n"
 
-#: src/remove.c:732 src/remove.c:749 src/remove.c:1045
+#: src/remove.c:733 src/remove.c:750 src/remove.c:1063
 #, c-format
 msgid "cannot remove directory %s"
 msgstr "kataloogi %s ei õnnestu kustutada"
 
-#: src/remove.c:813
+#: src/remove.c:814
 #, c-format
 msgid "cannot open directory %s"
 msgstr "kataloogi %s ei saa avada"
 
-#: src/remove.c:878 src/remove.c:983
+#: src/remove.c:895 src/remove.c:1001
 #, c-format
 msgid "cannot chdir from %s to %s"
 msgstr "kataloogist %s ei saa minna kataloogi %s"
 
-#: src/remove.c:886
+#: src/remove.c:903
 #, c-format
 msgid ""
 "WARNING: Circular directory structure.\n"
@@ -5367,7 +5377,7 @@ msgstr ""
 "Järgnev kataloog on tsükli osa:\n"
 "  %s\n"
 
-#: src/remove.c:1079
+#: src/remove.c:1097
 msgid "cannot remove `.' or `..'"
 msgstr "ei õnnestu eemaldada `.' või `..'"
 
@@ -6092,7 +6102,6 @@ msgstr ""
 "  -t, --terse           esita info lakooniliselt\n"
 
 #: src/stat.c:695
-#, fuzzy
 msgid ""
 "\n"
 "The valid format sequences for files (without --filesystem):\n"
@@ -6107,14 +6116,16 @@ msgstr ""
 "\n"
 "  %A - Õigused inimesele loetaval kujul\n"
 "  %a - Õigused kaheksandesituses\n"
+"  %B - Iga `%b' poolt antud bloki maht baitides\n"
 "  %b - Kasutatud blokkide arv\n"
 
 #: src/stat.c:703
+#, fuzzy
 msgid ""
 "  %D   Device number in hex\n"
 "  %d   Device number in decimal\n"
 "  %F   File type\n"
-"  %f   raw mode in hex\n"
+"  %f   Raw mode in hex\n"
 "  %G   Group name of owner\n"
 "  %g   Group ID of owner\n"
 msgstr ""
@@ -8202,3 +8213,6 @@ msgid ""
 msgstr ""
 "Väljasta korduvalt rida antud sõnedega või `y'.\n"
 "\n"
+
+#~ msgid "   Type"
+#~ msgstr "   Tüüp"

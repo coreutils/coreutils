@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GNU textutils 2.0d\n"
-"POT-Creation-Date: 2003-02-21 18:14+0100\n"
+"POT-Creation-Date: 2003-03-05 08:46+0100\n"
 "PO-Revision-Date: 2000-03-17 17:45+01:00\n"
 "Last-Translator: Ivo Timmermans <itimmermans@bigfoot.com>\n"
 "Language-Team: Dutch <nl@li.org>\n"
@@ -156,27 +156,31 @@ msgstr "%s: optie `-W %s' staat geen argumenten toe\n"
 msgid "block size"
 msgstr "blokgrootte"
 
-#: lib/makepath.c:167 src/copy.c:1270 src/mkdir.c:170
+#: lib/makepath.c:124 src/df.c:497 src/remove.c:402
+msgid "failed to return to initial working directory"
+msgstr ""
+
+#: lib/makepath.c:173 src/copy.c:1288 src/mkdir.c:170
 #, fuzzy, c-format
 msgid "cannot create directory %s"
 msgstr "kan map `%s' niet aanmaken"
 
-#: lib/makepath.c:173 lib/makepath.c:415 src/cp.c:444 src/cp.c:466
+#: lib/makepath.c:179 lib/makepath.c:421 src/cp.c:444 src/cp.c:466
 #, fuzzy, c-format
 msgid "%s exists but is not a directory"
 msgstr "`%s' bestaat maar is geen map"
 
-#: lib/makepath.c:310 lib/makepath.c:372 lib/makepath.c:434
+#: lib/makepath.c:316 lib/makepath.c:378 lib/makepath.c:440
 #, fuzzy, c-format
 msgid "cannot change owner and/or group of %s"
 msgstr "u kunt niet zowel de gebruiker als de groep weglaten"
 
-#: lib/makepath.c:332
+#: lib/makepath.c:338
 #, fuzzy, c-format
 msgid "cannot chdir to directory %s"
 msgstr "kan niet naar map gaan, %s"
 
-#: lib/makepath.c:386 lib/makepath.c:440
+#: lib/makepath.c:392 lib/makepath.c:446
 #, fuzzy, c-format
 msgid "cannot change permissions of %s"
 msgstr "kan de eigenaar van %s niet veranderen"
@@ -274,8 +278,8 @@ msgstr ""
 
 #: src/basename.c:50 src/cat.c:88 src/chgrp.c:122 src/chmod.c:238
 #: src/chown.c:95 src/chroot.c:41 src/cksum.c:278 src/comm.c:69 src/cp.c:158
-#: src/csplit.c:1492 src/cut.c:170 src/date.c:113 src/dd.c:284 src/df.c:711
-#: src/dircolors.c:99 src/dirname.c:42 src/du.c:174 src/echo.c:73
+#: src/csplit.c:1492 src/cut.c:170 src/date.c:113 src/dd.c:284 src/df.c:707
+#: src/dircolors.c:99 src/dirname.c:42 src/du.c:171 src/echo.c:73
 #: src/env.c:115 src/expand.c:106 src/expr.c:86 src/factor.c:70 src/fmt.c:267
 #: src/fold.c:63 src/head.c:84 src/hostid.c:44 src/hostname.c:63 src/id.c:83
 #: src/install.c:593 src/join.c:140 src/kill.c:89 src/link.c:47 src/ln.c:335
@@ -316,8 +320,8 @@ msgstr ""
 
 #: src/basename.c:66 src/cat.c:124 src/chgrp.c:152 src/chmod.c:264
 #: src/chown.c:139 src/chroot.c:59 src/cksum.c:293 src/comm.c:86 src/cp.c:255
-#: src/csplit.c:1534 src/cut.c:215 src/date.c:215 src/dd.c:331 src/df.c:750
-#: src/dircolors.c:120 src/dirname.c:58 src/du.c:223 src/echo.c:105
+#: src/csplit.c:1534 src/cut.c:215 src/date.c:215 src/dd.c:331 src/df.c:746
+#: src/dircolors.c:120 src/dirname.c:58 src/du.c:220 src/echo.c:105
 #: src/env.c:134 src/expand.c:131 src/expr.c:149 src/factor.c:90
 #: src/false.c:45 src/fmt.c:297 src/fold.c:86 src/head.c:115 src/hostid.c:57
 #: src/hostname.c:76 src/id.c:104 src/install.c:648 src/join.c:181
@@ -774,7 +778,7 @@ msgstr ""
 "      --help      toon deze hulptekst en beëindig programma\n"
 "      --version   toon versie-informatie en beëindig programma\n"
 
-#: src/copy.c:162 src/du.c:335
+#: src/copy.c:162 src/du.c:332
 #, fuzzy, c-format
 msgid "cannot access %s"
 msgstr "kan de rechten van %s niet veranderen"
@@ -794,8 +798,8 @@ msgstr "kan de rechten van %s niet veranderen"
 msgid "skipping file %s, as it was replaced while being copied"
 msgstr ""
 
-#: src/copy.c:262 src/copy.c:1034 src/ln.c:291 src/remove.c:725
-#: src/remove.c:779 src/remove.c:978
+#: src/copy.c:262 src/copy.c:1034 src/copy.c:1124 src/ln.c:291
+#: src/remove.c:726 src/remove.c:780 src/remove.c:892 src/remove.c:996
 #, fuzzy, c-format
 msgid "cannot remove %s"
 msgstr "kan de rechten van %s niet veranderen"
@@ -912,97 +916,97 @@ msgstr "kan map `%s' niet aanmaken"
 msgid "will not create hard link %s to directory %s"
 msgstr "kan niet naar map gaan, %s"
 
-#: src/copy.c:1115
+#: src/copy.c:1132
 #, fuzzy, c-format
 msgid "cannot create hard link %s to %s"
 msgstr "kan map `%s' niet aanmaken"
 
-#: src/copy.c:1168
+#: src/copy.c:1186
 #, fuzzy, c-format
 msgid "cannot move %s to a subdirectory of itself, %s"
 msgstr "kan niet naar map gaan, %s"
 
-#: src/copy.c:1211
+#: src/copy.c:1229
 #, fuzzy, c-format
 msgid "cannot move %s to %s"
 msgstr "kan de rechten van %s niet veranderen"
 
-#: src/copy.c:1223
+#: src/copy.c:1241
 #, c-format
 msgid "inter-device move failed: %s to %s; unable to remove target"
 msgstr ""
 
-#: src/copy.c:1251
+#: src/copy.c:1269
 #, fuzzy, c-format
 msgid "cannot copy cyclic symbolic link %s"
 msgstr "%s: kan cyclische symbolische koppeling niet kopiëren"
 
-#: src/copy.c:1328
+#: src/copy.c:1346
 #, c-format
 msgid "%s: can make relative symbolic links only in current directory"
 msgstr "%s: kan relatieve symbolische koppelingen alleen in huidige map maken"
 
-#: src/copy.c:1335
+#: src/copy.c:1353
 #, fuzzy, c-format
 msgid "cannot create symbolic link %s to %s"
 msgstr "kan map `%s' niet aanmaken"
 
-#: src/copy.c:1346
+#: src/copy.c:1364
 #, fuzzy, c-format
 msgid "cannot create link %s"
 msgstr "kan map `%s' niet aanmaken"
 
-#: src/copy.c:1371 src/mkfifo.c:133
+#: src/copy.c:1389 src/mkfifo.c:133
 #, fuzzy, c-format
 msgid "cannot create fifo %s"
 msgstr "kan map `%s' niet aanmaken"
 
-#: src/copy.c:1385
+#: src/copy.c:1403
 #, fuzzy, c-format
 msgid "cannot create special file %s"
 msgstr "kan map `%s' niet aanmaken"
 
-#: src/copy.c:1397 src/ls.c:2493 src/stat.c:425
+#: src/copy.c:1415 src/ls.c:2493 src/stat.c:425
 #, fuzzy, c-format
 msgid "cannot read symbolic link %s"
 msgstr "kan geen ioctl doen op `%s'"
 
-#: src/copy.c:1422
+#: src/copy.c:1440
 #, fuzzy, c-format
 msgid "cannot create symbolic link %s"
 msgstr "kan map `%s' niet aanmaken"
 
-#: src/copy.c:1438 src/copy.c:1501 src/cp.c:337
+#: src/copy.c:1456 src/copy.c:1519 src/cp.c:337
 #, fuzzy, c-format
 msgid "failed to preserve ownership for %s"
 msgstr "bezig met kopiëren van de eigenaar van %s"
 
-#: src/copy.c:1453
+#: src/copy.c:1471
 #, fuzzy, c-format
 msgid "%s has unknown file type"
 msgstr "%s: onbekend bestandstype"
 
-#: src/copy.c:1488
+#: src/copy.c:1506
 #, c-format
 msgid "preserving times for %s"
 msgstr "bezig met kopiëren van de tijden van %s"
 
-#: src/copy.c:1513
+#: src/copy.c:1531
 #, fuzzy, c-format
 msgid "failed to preserve authorship for %s"
 msgstr "bezig met kopiëren van de eigenaar van %s"
 
-#: src/copy.c:1531
+#: src/copy.c:1549
 #, fuzzy, c-format
 msgid "setting permissions for %s"
 msgstr "kan de eigenaar van %s niet veranderen"
 
-#: src/copy.c:1550 src/ln.c:326
+#: src/copy.c:1571 src/ln.c:326
 #, fuzzy, c-format
 msgid "cannot un-backup %s"
 msgstr "kan de rechten van %s niet veranderen"
 
-#: src/copy.c:1554
+#: src/copy.c:1575
 #, c-format
 msgid "%s -> %s (unbackup)\n"
 msgstr "%s -> %s (reservekopie verwijderd)\n"
@@ -1028,7 +1032,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/cp.c:172 src/csplit.c:1505 src/cut.c:182 src/df.c:721 src/du.c:183
+#: src/cp.c:172 src/csplit.c:1505 src/cut.c:182 src/df.c:717 src/du.c:180
 #: src/expand.c:119 src/fmt.c:277 src/fold.c:76 src/head.c:98
 #: src/install.c:609 src/kill.c:103 src/ln.c:354 src/ls.c:3767 src/mkdir.c:66
 #: src/mkfifo.c:60 src/mknod.c:61 src/mv.c:321 src/nl.c:185 src/paste.c:413
@@ -1516,7 +1520,7 @@ msgstr ""
 msgid "David Ihnat, David MacKenzie, and Jim Meyering"
 msgstr ""
 
-#: src/cut.c:174 src/df.c:715 src/du.c:178 src/expand.c:110 src/fold.c:67
+#: src/cut.c:174 src/df.c:711 src/du.c:175 src/expand.c:110 src/fold.c:67
 #: src/head.c:88 src/ls.c:3761 src/nl.c:176 src/paste.c:403 src/pr.c:2754
 #: src/sort.c:276 src/sum.c:60 src/tac.c:127 src/tail.c:234 src/tee.c:63
 #: src/unexpand.c:375 src/wc.c:125
@@ -1944,51 +1948,51 @@ msgstr "verwijder %s\n"
 msgid "Torbjorn Granlund, David MacKenzie, Larry McVoy, and Paul Eggert"
 msgstr ""
 
-#: src/df.c:151
-msgid "   Type"
-msgstr ""
-
 #: src/df.c:153
-msgid "Filesystem "
+msgid "Filesystem    Type"
 msgstr ""
 
-#: src/df.c:163
+#: src/df.c:155
+msgid "Filesystem        "
+msgstr ""
+
+#: src/df.c:158
 #, c-format
 msgid "    Inodes   IUsed   IFree IUse%%"
 msgstr ""
 
-#: src/df.c:167
+#: src/df.c:162
 #, c-format
 msgid "    Size  Used Avail Use%%"
 msgstr ""
 
-#: src/df.c:169
+#: src/df.c:164
 #, c-format
 msgid "     Size   Used  Avail Use%%"
 msgstr ""
 
-#: src/df.c:172
+#: src/df.c:167
 #, c-format
 msgid " %4s-blocks      Used Available Capacity"
 msgstr ""
 
-#: src/df.c:203
+#: src/df.c:198
 #, c-format
 msgid " %4s-blocks      Used Available Use%%"
 msgstr ""
 
-#: src/df.c:207
+#: src/df.c:202
 msgid " Mounted on\n"
 msgstr ""
 
-#: src/df.c:716
+#: src/df.c:712
 msgid ""
 "Show information about the filesystem on which each FILE resides,\n"
 "or all filesystems by default.\n"
 "\n"
 msgstr ""
 
-#: src/df.c:724
+#: src/df.c:720
 msgid ""
 "  -a, --all             include filesystems having 0 blocks\n"
 "  -B, --block-size=SIZE use SIZE-byte blocks\n"
@@ -1997,7 +2001,7 @@ msgid ""
 "  -H, --si              likewise, but use powers of 1000 not 1024\n"
 msgstr ""
 
-#: src/df.c:730
+#: src/df.c:726
 msgid ""
 "  -i, --inodes          list inode information instead of block usage\n"
 "  -k                    like --block-size=1K\n"
@@ -2006,7 +2010,7 @@ msgid ""
 "(default)\n"
 msgstr ""
 
-#: src/df.c:736
+#: src/df.c:732
 msgid ""
 "  -P, --portability     use the POSIX output format\n"
 "      --sync            invoke sync before getting usage info\n"
@@ -2016,23 +2020,23 @@ msgid ""
 "  -v                    (ignored)\n"
 msgstr ""
 
-#: src/df.c:746 src/du.c:219 src/ls.c:3879
+#: src/df.c:742 src/du.c:216 src/ls.c:3879
 msgid ""
 "\n"
 "SIZE may be (or may be an integer optionally followed by) one of following:\n"
 "kB 1000, K 1024, MB 1,000,000, M 1,048,576, and so on for G, T, P, E, Z, Y.\n"
 msgstr ""
 
-#: src/df.c:863
+#: src/df.c:859
 #, fuzzy, c-format
 msgid "file system type %s both selected and excluded"
 msgstr "bestandssysteem type `%s' beide geselecteerd en buitengesloten"
 
-#: src/df.c:907
+#: src/df.c:903
 msgid "Warning: "
 msgstr "Waarschuwing: "
 
-#: src/df.c:910
+#: src/df.c:906
 #, c-format
 msgid "%scannot read table of mounted filesystems"
 msgstr "%skan tabel van aangehechte bestandssystemen niet lezen"
@@ -2141,13 +2145,13 @@ msgid ""
 "Meyering"
 msgstr ""
 
-#: src/du.c:179
+#: src/du.c:176
 msgid ""
 "Summarize disk usage of each FILE, recursively for directories.\n"
 "\n"
 msgstr ""
 
-#: src/du.c:186
+#: src/du.c:183
 msgid ""
 "  -a, --all             write counts for all files, not just directories\n"
 "      --apparent-size   print apparent sizes, rather than disk usage; "
@@ -2161,7 +2165,7 @@ msgid ""
 "  -D, --dereference-args  dereference FILEs that are symbolic links\n"
 msgstr ""
 
-#: src/du.c:197
+#: src/du.c:194
 msgid ""
 "  -h, --human-readable  print sizes in human readable format (e.g., 1K 234M "
 "2G)\n"
@@ -2170,14 +2174,14 @@ msgid ""
 "  -l, --count-links     count sizes many times if hard linked\n"
 msgstr ""
 
-#: src/du.c:203
+#: src/du.c:200
 msgid ""
 "  -L, --dereference     dereference all symbolic links\n"
 "  -S, --separate-dirs   do not include size of subdirectories\n"
 "  -s, --summarize       display only a total for each argument\n"
 msgstr ""
 
-#: src/du.c:208
+#: src/du.c:205
 msgid ""
 "  -x, --one-file-system  skip directories on different filesystems\n"
 "  -X FILE, --exclude-from=FILE  Exclude files that match any pattern in "
@@ -2190,40 +2194,40 @@ msgid ""
 "                          --summarize\n"
 msgstr ""
 
-#: src/du.c:340
+#: src/du.c:337
 #, fuzzy, c-format
 msgid "cannot change to parent of directory %s"
 msgstr "kan niet naar map gaan, %s"
 
-#: src/du.c:348
+#: src/du.c:345
 #, fuzzy, c-format
 msgid "cannot change to directory %s"
 msgstr "kan niet naar map gaan, %s"
 
-#: src/du.c:355
+#: src/du.c:352
 #, fuzzy, c-format
 msgid "cannot read directory %s"
 msgstr "kan map `%s' niet aanmaken"
 
-#: src/du.c:546 src/ls.c:2241 src/wc.c:591
+#: src/du.c:543 src/ls.c:2241 src/wc.c:591
 msgid "total"
 msgstr "totaal"
 
-#: src/du.c:633
+#: src/du.c:630
 #, fuzzy, c-format
 msgid "invalid maximum depth %s"
 msgstr "ongeldig veldnummer: `%s'"
 
-#: src/du.c:699
+#: src/du.c:696
 msgid "cannot both summarize and show all entries"
 msgstr ""
 "totalen berekenen kan niet gelijktijdig met het tonen van alle ingangen"
 
-#: src/du.c:706
+#: src/du.c:703
 msgid "warning: summarizing is the same as using --max-depth=0"
 msgstr "waarschuwing: totalen geven is het zelfde als --max-depth=0 gebruiken"
 
-#: src/du.c:712
+#: src/du.c:709
 #, c-format
 msgid "warning: summarizing conflicts with --max-depth=%d"
 msgstr "waarschuwing: het geven van totalen is in conflict met --max-depth=%d"
@@ -3283,7 +3287,7 @@ msgstr "kan map `%s' niet aanmaken"
 msgid "not listing already-listed directory: %s"
 msgstr "kan map `%s' niet aanmaken"
 
-#: src/ls.c:2208 src/remove.c:910
+#: src/ls.c:2208 src/remove.c:928
 #, fuzzy, c-format
 msgid "reading directory %s"
 msgstr "kan map `%s' niet aanmaken"
@@ -4859,67 +4863,67 @@ msgstr ""
 msgid "cannot chdir from %s to .."
 msgstr "kan niet naar map gaan, %s"
 
-#: src/remove.c:406 src/remove.c:487
+#: src/remove.c:407 src/remove.c:488
 #, fuzzy, c-format
 msgid "cannot lstat `.' in %s"
 msgstr "kan %s niet uitvoeren"
 
-#: src/remove.c:413 src/remove.c:491
+#: src/remove.c:414 src/remove.c:492
 #, c-format
 msgid "%s changed dev/ino"
 msgstr ""
 
-#: src/remove.c:572 src/remove.c:710 src/remove.c:873 src/remove.c:965
+#: src/remove.c:573 src/remove.c:711 src/remove.c:880 src/remove.c:983
 #, fuzzy, c-format
 msgid "cannot lstat %s"
 msgstr "kan de rechten van %s niet veranderen"
 
-#: src/remove.c:601
+#: src/remove.c:602
 #, fuzzy, c-format
 msgid "%s: descend into write-protected directory %s? "
 msgstr "kan map `%s' niet aanmaken"
 
-#: src/remove.c:602
+#: src/remove.c:603
 #, fuzzy, c-format
 msgid "%s: descend into directory %s? "
 msgstr "kan niet naar map gaan, %s"
 
-#: src/remove.c:612
+#: src/remove.c:613
 #, fuzzy, c-format
 msgid "%s: remove write-protected %s %s? "
 msgstr "%s: bestand `%s' is tegen schrijven beveiligd; toch verwijderen? "
 
-#: src/remove.c:613
+#: src/remove.c:614
 #, fuzzy, c-format
 msgid "%s: remove %s %s? "
 msgstr "%s: `%s' verwijderen? "
 
-#: src/remove.c:637
+#: src/remove.c:638
 #, fuzzy, c-format
 msgid "removed %s\n"
 msgstr "verwijder %s\n"
 
-#: src/remove.c:652 src/remove.c:1040
+#: src/remove.c:653 src/remove.c:1058
 #, fuzzy, c-format
 msgid "removed directory: %s\n"
 msgstr "kan map `%s' niet aanmaken"
 
-#: src/remove.c:732 src/remove.c:749 src/remove.c:1045
+#: src/remove.c:733 src/remove.c:750 src/remove.c:1063
 #, fuzzy, c-format
 msgid "cannot remove directory %s"
 msgstr "kan map `%s' niet aanmaken"
 
-#: src/remove.c:813
+#: src/remove.c:814
 #, fuzzy, c-format
 msgid "cannot open directory %s"
 msgstr "kan map `%s' niet aanmaken"
 
-#: src/remove.c:878 src/remove.c:983
+#: src/remove.c:895 src/remove.c:1001
 #, fuzzy, c-format
 msgid "cannot chdir from %s to %s"
 msgstr "kan niet naar map gaan, %s"
 
-#: src/remove.c:886
+#: src/remove.c:903
 #, fuzzy, c-format
 msgid ""
 "WARNING: Circular directory structure.\n"
@@ -4933,7 +4937,7 @@ msgstr ""
 "WAARSCHUW UW SYSTEEM BEHEERDER.\n"
 "De volgende twee mappen hebben het zelfde inode nummer:\n"
 
-#: src/remove.c:1079
+#: src/remove.c:1097
 msgid "cannot remove `.' or `..'"
 msgstr "kan `.' of `..' niet verwijderen"
 
@@ -5604,7 +5608,7 @@ msgid ""
 "  %D   Device number in hex\n"
 "  %d   Device number in decimal\n"
 "  %F   File type\n"
-"  %f   raw mode in hex\n"
+"  %f   Raw mode in hex\n"
 "  %G   Group name of owner\n"
 "  %g   Group ID of owner\n"
 msgstr ""

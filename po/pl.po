@@ -1,16 +1,16 @@
 # Polish translation of GNU coreutils messages
 # Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
 # Rafa³ Maszkowski <rzm@icm.edu.pl>, 1996-2001, 2003.
-# ptx: Pawe³ Krawczyk <kravietz@pipeta.chemia.pk.edu.pl>, 1996
+# ptx: Pawe³ Krawczyk <kravietz@pipeta.chemia.pk.edu.pl>, 1996.
 # sh-utils: Pawe³ Krawczyk <kravietz@ceti.pl>, 1997, 1998, 1999.
 # fileutils: Thanks for help to Marta Bartnicka, 1999.
-# fileutils: Andrzej Krzysztofowicz  <ankry@mif.pg.gda.pl>, 2002
+# fileutils: Andrzej Krzysztofowicz  <ankry@mif.pg.gda.pl>, 2002.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: coreutils 4.5.7\n"
-"POT-Creation-Date: 2003-02-21 18:14+0100\n"
-"PO-Revision-Date: 2003-02-14 23:59+0100\n"
+"Project-Id-Version: coreutils 4.5.8\n"
+"POT-Creation-Date: 2003-03-05 08:46+0100\n"
+"PO-Revision-Date: 2003-02-27 03:00+0100\n"
 "Last-Translator: Rafa³ Maszkowski <rzm@icm.edu.pl>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -158,34 +158,38 @@ msgstr "%s: opcja `-W %s' nie mo¿e mieæ argumentu\n"
 msgid "block size"
 msgstr "rozmiar bloku"
 
-#: lib/makepath.c:167 src/copy.c:1270 src/mkdir.c:170
+#: lib/makepath.c:124 src/df.c:497 src/remove.c:402
+msgid "failed to return to initial working directory"
+msgstr ""
+
+#: lib/makepath.c:173 src/copy.c:1288 src/mkdir.c:170
 #, c-format
 msgid "cannot create directory %s"
 msgstr "nie mo¿na utworzyæ katalogu %s"
 
-#: lib/makepath.c:173 lib/makepath.c:415 src/cp.c:444 src/cp.c:466
+#: lib/makepath.c:179 lib/makepath.c:421 src/cp.c:444 src/cp.c:466
 #, c-format
 msgid "%s exists but is not a directory"
 msgstr "%s istnieje, ale nie jest katalogiem"
 
-#: lib/makepath.c:310 lib/makepath.c:372 lib/makepath.c:434
+#: lib/makepath.c:316 lib/makepath.c:378 lib/makepath.c:440
 #, c-format
 msgid "cannot change owner and/or group of %s"
 msgstr "nie mo¿na zmieniæ u¿ytkownika i/lub grupy %s"
 
-#: lib/makepath.c:332
+#: lib/makepath.c:338
 #, c-format
 msgid "cannot chdir to directory %s"
 msgstr "nie mo¿na przej¶æ do katalogu %s"
 
-#: lib/makepath.c:386 lib/makepath.c:440
+#: lib/makepath.c:392 lib/makepath.c:446
 #, c-format
 msgid "cannot change permissions of %s"
 msgstr "nie mo¿na zmieniæ uprawnieñ do %s"
 
 #: lib/mmap-stack.h:31 lib/mmap-stack.h:45
 msgid "warning: unable to use large stack"
-msgstr ""
+msgstr "uwaga: nie mo¿na uzyæ du¿ego stosu"
 
 #: lib/obstack.c:487 lib/obstack.c:490 lib/xmalloc.c:63
 msgid "memory exhausted"
@@ -274,8 +278,8 @@ msgstr "Porównywane ³añcuchy znaków do %s i %s."
 
 #: src/basename.c:50 src/cat.c:88 src/chgrp.c:122 src/chmod.c:238
 #: src/chown.c:95 src/chroot.c:41 src/cksum.c:278 src/comm.c:69 src/cp.c:158
-#: src/csplit.c:1492 src/cut.c:170 src/date.c:113 src/dd.c:284 src/df.c:711
-#: src/dircolors.c:99 src/dirname.c:42 src/du.c:174 src/echo.c:73
+#: src/csplit.c:1492 src/cut.c:170 src/date.c:113 src/dd.c:284 src/df.c:707
+#: src/dircolors.c:99 src/dirname.c:42 src/du.c:171 src/echo.c:73
 #: src/env.c:115 src/expand.c:106 src/expr.c:86 src/factor.c:70 src/fmt.c:267
 #: src/fold.c:63 src/head.c:84 src/hostid.c:44 src/hostname.c:63 src/id.c:83
 #: src/install.c:593 src/join.c:140 src/kill.c:89 src/link.c:47 src/ln.c:335
@@ -315,8 +319,8 @@ msgstr ""
 
 #: src/basename.c:66 src/cat.c:124 src/chgrp.c:152 src/chmod.c:264
 #: src/chown.c:139 src/chroot.c:59 src/cksum.c:293 src/comm.c:86 src/cp.c:255
-#: src/csplit.c:1534 src/cut.c:215 src/date.c:215 src/dd.c:331 src/df.c:750
-#: src/dircolors.c:120 src/dirname.c:58 src/du.c:223 src/echo.c:105
+#: src/csplit.c:1534 src/cut.c:215 src/date.c:215 src/dd.c:331 src/df.c:746
+#: src/dircolors.c:120 src/dirname.c:58 src/du.c:220 src/echo.c:105
 #: src/env.c:134 src/expand.c:131 src/expr.c:149 src/factor.c:90
 #: src/false.c:45 src/fmt.c:297 src/fold.c:86 src/head.c:115 src/hostid.c:57
 #: src/hostname.c:76 src/id.c:104 src/install.c:648 src/join.c:181
@@ -791,7 +795,7 @@ msgstr ""
 "  -2              bez pokazania linii, które s± tylko w prawym pliku\n"
 "  -3              bez pokazania linii, które s± tylko w jednym pliku\n"
 
-#: src/copy.c:162 src/du.c:335
+#: src/copy.c:162 src/du.c:332
 #, c-format
 msgid "cannot access %s"
 msgstr "nie ma dostêpu do %s"
@@ -811,8 +815,8 @@ msgstr "nie mo¿na fstat %s"
 msgid "skipping file %s, as it was replaced while being copied"
 msgstr "plik %s zosta³ ominiêty, bo zosta³ zmieniony w trakcie kopiowania"
 
-#: src/copy.c:262 src/copy.c:1034 src/ln.c:291 src/remove.c:725
-#: src/remove.c:779 src/remove.c:978
+#: src/copy.c:262 src/copy.c:1034 src/copy.c:1124 src/ln.c:291
+#: src/remove.c:726 src/remove.c:780 src/remove.c:892 src/remove.c:996
 #, c-format
 msgid "cannot remove %s"
 msgstr "nie mo¿na usun±æ %s"
@@ -930,100 +934,100 @@ msgstr "nie mo¿na skopiowaæ katalogu %s do siebie samego %s"
 msgid "will not create hard link %s to directory %s"
 msgstr "nie mo¿na utworzyæ dowi±zania zwyk³ego %s do katalogu %s"
 
-#: src/copy.c:1115
+#: src/copy.c:1132
 #, c-format
 msgid "cannot create hard link %s to %s"
 msgstr "nie mo¿na utworzyæ dowi±zania zwyk³ego %s do %s"
 
-#: src/copy.c:1168
+#: src/copy.c:1186
 #, c-format
 msgid "cannot move %s to a subdirectory of itself, %s"
 msgstr "nie mo¿na przenie¶æ %s do w³asnego podkatalogu %s"
 
-#: src/copy.c:1211
+#: src/copy.c:1229
 #, c-format
 msgid "cannot move %s to %s"
 msgstr "nie mo¿na przenie¶æ %s do %s"
 
-#: src/copy.c:1223
+#: src/copy.c:1241
 #, c-format
 msgid "inter-device move failed: %s to %s; unable to remove target"
 msgstr ""
 "nie uda³o siê przeniesienie miêdzy urz±dzeniami: %s do %s; nie uda³o siê "
 "usunaæ pliku docelowego"
 
-#: src/copy.c:1251
+#: src/copy.c:1269
 #, c-format
 msgid "cannot copy cyclic symbolic link %s"
 msgstr "nie mo¿na skopiowaæ cyklicznego dowi±zania symbolicznego %s"
 
-#: src/copy.c:1328
+#: src/copy.c:1346
 #, c-format
 msgid "%s: can make relative symbolic links only in current directory"
 msgstr ""
 "%s: mo¿na zrobiæ tylko wzglêdne dowi±zanie symboliczne w bie¿±cym katalogu"
 
-#: src/copy.c:1335
+#: src/copy.c:1353
 #, c-format
 msgid "cannot create symbolic link %s to %s"
 msgstr "nie mo¿na utworzyæ dowi±zania symbolicznego %s do %s"
 
-#: src/copy.c:1346
+#: src/copy.c:1364
 #, c-format
 msgid "cannot create link %s"
 msgstr "nie mo¿na utworzyæ dowi±zania symbolicznego %s"
 
-#: src/copy.c:1371 src/mkfifo.c:133
+#: src/copy.c:1389 src/mkfifo.c:133
 #, c-format
 msgid "cannot create fifo %s"
 msgstr "nie mo¿na utworzyæ potoku %s"
 
-#: src/copy.c:1385
+#: src/copy.c:1403
 #, c-format
 msgid "cannot create special file %s"
 msgstr "nie mo¿na utworzyæ pliku specjalnego %s"
 
-#: src/copy.c:1397 src/ls.c:2493 src/stat.c:425
+#: src/copy.c:1415 src/ls.c:2493 src/stat.c:425
 #, c-format
 msgid "cannot read symbolic link %s"
 msgstr "nie mo¿na przeczytaæ dowi±zania symbolicznego %s"
 
-#: src/copy.c:1422
+#: src/copy.c:1440
 #, c-format
 msgid "cannot create symbolic link %s"
 msgstr "nie mo¿na utworzyæ dowi±zania symbolicznego %s"
 
-#: src/copy.c:1438 src/copy.c:1501 src/cp.c:337
+#: src/copy.c:1456 src/copy.c:1519 src/cp.c:337
 #, c-format
 msgid "failed to preserve ownership for %s"
 msgstr "nie uda³o siê zachowaæ w³asno¶ci %s"
 
-#: src/copy.c:1453
+#: src/copy.c:1471
 #, c-format
 msgid "%s has unknown file type"
 msgstr "%s to nieznany typ pliku"
 
-#: src/copy.c:1488
+#: src/copy.c:1506
 #, c-format
 msgid "preserving times for %s"
 msgstr "zachowanie czasu %s"
 
-#: src/copy.c:1513
+#: src/copy.c:1531
 #, c-format
 msgid "failed to preserve authorship for %s"
 msgstr "nie uda³o siê zachowaæ autorstwa %s"
 
-#: src/copy.c:1531
+#: src/copy.c:1549
 #, c-format
 msgid "setting permissions for %s"
 msgstr "nie mo¿na ustawiæ uprawnieñ do %s"
 
-#: src/copy.c:1550 src/ln.c:326
+#: src/copy.c:1571 src/ln.c:326
 #, c-format
 msgid "cannot un-backup %s"
 msgstr "nie mo¿na przywróciæ kopii zapasowej %s"
 
-#: src/copy.c:1554
+#: src/copy.c:1575
 #, c-format
 msgid "%s -> %s (unbackup)\n"
 msgstr "%s -> %s (przywrócenie kopii zapasowej)\n"
@@ -1051,7 +1055,7 @@ msgstr ""
 "Skopiowanie ¯RÓD£A do CELU lub ¬RÓD£A/¬RÓDE£ do KATALOGU.\n"
 "\n"
 
-#: src/cp.c:172 src/csplit.c:1505 src/cut.c:182 src/df.c:721 src/du.c:183
+#: src/cp.c:172 src/csplit.c:1505 src/cut.c:182 src/df.c:717 src/du.c:180
 #: src/expand.c:119 src/fmt.c:277 src/fold.c:76 src/head.c:98
 #: src/install.c:609 src/kill.c:103 src/ln.c:354 src/ls.c:3767 src/mkdir.c:66
 #: src/mkfifo.c:60 src/mknod.c:61 src/mv.c:321 src/nl.c:185 src/paste.c:413
@@ -1499,7 +1503,7 @@ msgstr ""
 msgid "David Ihnat, David MacKenzie, and Jim Meyering"
 msgstr "David Ihnat, David MacKenzie i Jim Meyering"
 
-#: src/cut.c:174 src/df.c:715 src/du.c:178 src/expand.c:110 src/fold.c:67
+#: src/cut.c:174 src/df.c:711 src/du.c:175 src/expand.c:110 src/fold.c:67
 #: src/head.c:88 src/ls.c:3761 src/nl.c:176 src/paste.c:403 src/pr.c:2754
 #: src/sort.c:276 src/sum.c:60 src/tac.c:127 src/tail.c:234 src/tee.c:63
 #: src/unexpand.c:375 src/wc.c:125
@@ -2041,44 +2045,46 @@ msgstr "przesuniêcie o %s bajtów w pliku wyj¶ciowych %s"
 msgid "Torbjorn Granlund, David MacKenzie, Larry McVoy, and Paul Eggert"
 msgstr "Torbjorn Granlund, David MacKenzie, Larry McVoy i Paul Eggert"
 
-#: src/df.c:151
-msgid "   Type"
-msgstr "   typ "
-
 #: src/df.c:153
-msgid "Filesystem "
+#, fuzzy
+msgid "Filesystem    Type"
 msgstr "System plików "
 
-#: src/df.c:163
+#: src/df.c:155
+#, fuzzy
+msgid "Filesystem        "
+msgstr "System plików "
+
+#: src/df.c:158
 #, c-format
 msgid "    Inodes   IUsed   IFree IUse%%"
 msgstr "    inody   u¿yteI  wolneI %%u¿.I"
 
-#: src/df.c:167
+#: src/df.c:162
 #, c-format
 msgid "    Size  Used Avail Use%%"
 msgstr "    rozm. u¿yte dost. %%u¿."
 
-#: src/df.c:169
+#: src/df.c:164
 #, c-format
 msgid "     Size   Used  Avail Use%%"
 msgstr "     rozm.  u¿yte dost.  %%u¿."
 
-#: src/df.c:172
+#: src/df.c:167
 #, c-format
 msgid " %4s-blocks      Used Available Capacity"
 msgstr " bl.%4s-B       u¿yte dostêpne pojemno¶æ"
 
-#: src/df.c:203
+#: src/df.c:198
 #, c-format
 msgid " %4s-blocks      Used Available Use%%"
 msgstr " bl.%4s B        u¿yte dostêpne %%u¿."
 
-#: src/df.c:207
+#: src/df.c:202
 msgid " Mounted on\n"
 msgstr " zamont. na\n"
 
-#: src/df.c:716
+#: src/df.c:712
 msgid ""
 "Show information about the filesystem on which each FILE resides,\n"
 "or all filesystems by default.\n"
@@ -2089,7 +2095,7 @@ msgstr ""
 "o wszystkich systemach plików.\n"
 "\n"
 
-#: src/df.c:724
+#: src/df.c:720
 msgid ""
 "  -a, --all             include filesystems having 0 blocks\n"
 "  -B, --block-size=SIZE use SIZE-byte blocks\n"
@@ -2102,7 +2108,7 @@ msgstr ""
 "  -h, --human-readable  rozmiary w formacie dla ludzi (np. 1K 234M 2G)\n"
 "  -H, --si              podobnie, ale z u¿yciem potêg 1000, nie 1024\n"
 
-#: src/df.c:730
+#: src/df.c:726
 msgid ""
 "  -i, --inodes          list inode information instead of block usage\n"
 "  -k                    like --block-size=1K\n"
@@ -2116,7 +2122,7 @@ msgstr ""
 "      --no-sync         bez wywo³ania sync przez pobraniem informacji o\n"
 "                        systemach plików (domy¶lnie)\n"
 
-#: src/df.c:736
+#: src/df.c:732
 msgid ""
 "  -P, --portability     use the POSIX output format\n"
 "      --sync            invoke sync before getting usage info\n"
@@ -2132,7 +2138,7 @@ msgstr ""
 "  -x, --exclude-type=TYP   pokazanie tylko systemów plików nie tego TYPU\n"
 "  -v                    (ignorowane)\n"
 
-#: src/df.c:746 src/du.c:219 src/ls.c:3879
+#: src/df.c:742 src/du.c:216 src/ls.c:3879
 msgid ""
 "\n"
 "SIZE may be (or may be an integer optionally followed by) one of following:\n"
@@ -2143,16 +2149,16 @@ msgstr ""
 "przyrostkiem): kB 1000, K 1024, MB 1000000, M 1048576 itd. dla G, T, P, E,\n"
 "Z, Y.\n"
 
-#: src/df.c:863
+#: src/df.c:859
 #, c-format
 msgid "file system type %s both selected and excluded"
 msgstr "typ systemu plików %s równocze¶nie wybrany i wykluczony"
 
-#: src/df.c:907
+#: src/df.c:903
 msgid "Warning: "
 msgstr "Uwaga: "
 
-#: src/df.c:910
+#: src/df.c:906
 #, c-format
 msgid "%scannot read table of mounted filesystems"
 msgstr "%snie mo¿na przeczytaæ tablicy zamontowanych systemów plików"
@@ -2256,7 +2262,7 @@ msgid ""
 msgstr ""
 "Torbjorn Granlund, David MacKenzie, Larry McVoy, Paul Eggert i Jim Meyering"
 
-#: src/du.c:179
+#: src/du.c:176
 msgid ""
 "Summarize disk usage of each FILE, recursively for directories.\n"
 "\n"
@@ -2264,8 +2270,7 @@ msgstr ""
 "Podsumowuje zajêto¶æ dysku przez ka¿dy PLIK, rekursywnie dla katalogów.\n"
 "\n"
 
-#: src/du.c:186
-#, fuzzy
+#: src/du.c:183
 msgid ""
 "  -a, --all             write counts for all files, not just directories\n"
 "      --apparent-size   print apparent sizes, rather than disk usage; "
@@ -2280,12 +2285,19 @@ msgid ""
 msgstr ""
 "  -a, --all             podanie podliczenia dla plików, nie samych "
 "katalogów\n"
-"  -B, --block-size=ROZM u¿ycie bloków o podanym ROZMIARZE\n"
-"  -b, --bytes           wypisanie rozmiarów w bajtach\n"
+"      --apparent-size   podanie rozmiarów pozornych zamiast zu¿ycia dysku;\n"
+"                          chocia¿ rozmiar pozorny jest zwykle mniejszy, "
+"mo¿e\n"
+"                          byæ te¿ wiêkszy z powodu dziur (pliku rzadkie -\n"
+"                          sparse), wewnêtrznej fragmentacji, bloków "
+"po¶rednich\n"
+"                          itp.\n"
+"  -B, --block-size=ROZM u¿ycie bloków o podanym ROZMIARZE w bajtach\n"
+"  -b, --bytes           równowa¿ne `--apparent-size --block-size=1'\n"
 "  -c, --total           wypisanie podsumowania ca³o¶ci\n"
 "  -D, --dereference-args  rozwijanie PLIKÓW - dowi±zañ symbolicznych\n"
 
-#: src/du.c:197
+#: src/du.c:194
 msgid ""
 "  -h, --human-readable  print sizes in human readable format (e.g., 1K 234M "
 "2G)\n"
@@ -2300,7 +2312,7 @@ msgstr ""
 "  -l, --count-links     liczenie rozmiaru wielokrotnie je¿eli plik ma "
 "dowi±zania\n"
 
-#: src/du.c:203
+#: src/du.c:200
 msgid ""
 "  -L, --dereference     dereference all symbolic links\n"
 "  -S, --separate-dirs   do not include size of subdirectories\n"
@@ -2310,7 +2322,7 @@ msgstr ""
 "  -S, --separate-dirs   bez uwzglêdniania rozmiarów katalogów\n"
 "  -s, --summarize       wypisanie tylko podsumowañ dla ka¿dego argumentu\n"
 
-#: src/du.c:208
+#: src/du.c:205
 msgid ""
 "  -x, --one-file-system  skip directories on different filesystems\n"
 "  -X FILE, --exclude-from=FILE  Exclude files that match any pattern in "
@@ -2334,39 +2346,39 @@ msgstr ""
 "jest\n"
 "                          tym samym co -summarize\n"
 
-#: src/du.c:340
+#: src/du.c:337
 #, c-format
 msgid "cannot change to parent of directory %s"
 msgstr "nie mo¿na przej¶æ do katalogu nadrzêdnego %s"
 
-#: src/du.c:348
+#: src/du.c:345
 #, c-format
 msgid "cannot change to directory %s"
 msgstr "nie mo¿na przej¶æ do katalogu %s"
 
-#: src/du.c:355
+#: src/du.c:352
 #, c-format
 msgid "cannot read directory %s"
 msgstr "nie mo¿na przeczytaæ katalogu %s"
 
-#: src/du.c:546 src/ls.c:2241 src/wc.c:591
+#: src/du.c:543 src/ls.c:2241 src/wc.c:591
 msgid "total"
 msgstr "razem"
 
-#: src/du.c:633
+#: src/du.c:630
 #, c-format
 msgid "invalid maximum depth %s"
 msgstr "b³êdny maksymalny poziom zag³êbienia: `%s'"
 
-#: src/du.c:699
+#: src/du.c:696
 msgid "cannot both summarize and show all entries"
 msgstr "nie mo¿na równocze¶nie tylko podsumowaæ i wypisaæ wszystkich danych"
 
-#: src/du.c:706
+#: src/du.c:703
 msgid "warning: summarizing is the same as using --max-depth=0"
 msgstr "ostrze¿enie: --summarizie jest tym samym co --max-depth=0"
 
-#: src/du.c:712
+#: src/du.c:709
 #, c-format
 msgid "warning: summarizing conflicts with --max-depth=%d"
 msgstr "ostrze¿enie: --summarize nie mo¿e byæ u¿yte rezem z --max-depth=%d"
@@ -3117,7 +3129,6 @@ msgid "Usage: %s [OPTION]... FILE1 FILE2\n"
 msgstr "Sk³adnia: %s [OPCJA]... PLIK1 PLIK2\n"
 
 #: src/join.c:148
-#, fuzzy
 msgid ""
 "For each pair of input lines with identical join fields, write a line to\n"
 "standard output.  The default join field is the first, delimited\n"
@@ -3132,8 +3143,10 @@ msgstr ""
 "odstêpem. Gdy PLIK1 albo PLIK2 (nie oba) to -, czytane jest standardowe\n"
 "wej¶cie.\n"
 "\n"
-"  -a NUMER         wypisanie linii nie do pary z pliku NUMER\n"
-"  -e PUSTE         zamienia brakuj±ce pola na wej¶ciu na PUSTE\n"
+"  -a NUMER          wypisanie linii nie do pary z pliku NUMER, gdzie numer "
+"to\n"
+"                      1 albo 2, odpowiadaj±cy PLIKOWI1 albi PLIKOWI2\n"
+"  -e PUSTE          zamienia brakuj±ce pola na wej¶ciu na PUSTE\n"
 
 #: src/join.c:157
 msgid ""
@@ -3154,18 +3167,17 @@ msgstr ""
 "  -t ZNAK           u¿ycie ZNAKU jako separatora pól linii wej. i wyj.\n"
 
 #: src/join.c:165
-#, fuzzy
 msgid ""
 "  -v FILENUM        like -a FILENUM, but suppress joined output lines\n"
 "  -1 FIELD          join on this FIELD of file 1\n"
 "  -2 FIELD          join on this FIELD of file 2\n"
 msgstr ""
-"  -v NUMER          jak -a NUMER, ale bez wypisania po³±czonych linii wyj.\n"
-"  -1 POLE           po³aczenie plików na tym POLU pliku 1\n"
-"  -2 POLE           po³aczenie plików na tym POLU pliku 2\n"
+"  -v NUMER          jak -a NUMER, ale bez wypisania po³±czonych linii "
+"wyj¶c.\n"
+"  -1 POLE           po³±czenie plików na tym POLU pliku 1\n"
+"  -2 POLE           po³±czenie plików na tym POLU pliku 2\n"
 
 #: src/join.c:172
-#, fuzzy
 msgid ""
 "\n"
 "Unless -t CHAR is given, leading blanks separate fields and are ignored,\n"
@@ -3529,7 +3541,7 @@ msgstr "nie mo¿na ustaliæ urz±dzenia i inode'u %s"
 msgid "not listing already-listed directory: %s"
 msgstr "nie bêdzie wylistowany katalog %s ju¿ wylistowany poprzednio"
 
-#: src/ls.c:2208 src/remove.c:910
+#: src/ls.c:2208 src/remove.c:928
 #, c-format
 msgid "reading directory %s"
 msgstr "czytowanie katalogu %s"
@@ -5457,67 +5469,67 @@ msgstr ""
 msgid "cannot chdir from %s to .."
 msgstr "nie mo¿na przej¶æ z %s do .."
 
-#: src/remove.c:406 src/remove.c:487
+#: src/remove.c:407 src/remove.c:488
 #, c-format
 msgid "cannot lstat `.' in %s"
 msgstr "nie mo¿na lstat `.' w %s"
 
-#: src/remove.c:413 src/remove.c:491
+#: src/remove.c:414 src/remove.c:492
 #, c-format
 msgid "%s changed dev/ino"
 msgstr "%s zmieni³ urz±dznie/inode"
 
-#: src/remove.c:572 src/remove.c:710 src/remove.c:873 src/remove.c:965
+#: src/remove.c:573 src/remove.c:711 src/remove.c:880 src/remove.c:983
 #, c-format
 msgid "cannot lstat %s"
 msgstr "nie mo¿na lstat %s"
 
-#: src/remove.c:601
+#: src/remove.c:602
 #, c-format
 msgid "%s: descend into write-protected directory %s? "
 msgstr "%s: wej¶æ w katalog %s, zabezpieczony przez zapisem? "
 
-#: src/remove.c:602
+#: src/remove.c:603
 #, c-format
 msgid "%s: descend into directory %s? "
 msgstr "%s: przej¶æ do katalogu %s? "
 
-#: src/remove.c:612
+#: src/remove.c:613
 #, c-format
 msgid "%s: remove write-protected %s %s? "
 msgstr "%s: usun±æ zabezpieczony przez zapisem %s %s? "
 
-#: src/remove.c:613
+#: src/remove.c:614
 #, c-format
 msgid "%s: remove %s %s? "
 msgstr "%s: usun±æ %s %s? "
 
-#: src/remove.c:637
+#: src/remove.c:638
 #, c-format
 msgid "removed %s\n"
 msgstr "usuniêty %s\n"
 
-#: src/remove.c:652 src/remove.c:1040
+#: src/remove.c:653 src/remove.c:1058
 #, c-format
 msgid "removed directory: %s\n"
 msgstr "usuniêty katalog %s\n"
 
-#: src/remove.c:732 src/remove.c:749 src/remove.c:1045
+#: src/remove.c:733 src/remove.c:750 src/remove.c:1063
 #, c-format
 msgid "cannot remove directory %s"
 msgstr "nie mo¿na usun±æ katalogu %s"
 
-#: src/remove.c:813
+#: src/remove.c:814
 #, c-format
 msgid "cannot open directory %s"
 msgstr "nie mo¿na otworzyæ katalogu %s"
 
-#: src/remove.c:878 src/remove.c:983
+#: src/remove.c:895 src/remove.c:1001
 #, c-format
 msgid "cannot chdir from %s to %s"
 msgstr "nie mo¿na przej¶æ z %s do %s"
 
-#: src/remove.c:886
+#: src/remove.c:903
 #, c-format
 msgid ""
 "WARNING: Circular directory structure.\n"
@@ -5532,7 +5544,7 @@ msgstr ""
 "nastêpuj±ce dwa katalogi s± czê¶ci± cyklu:\n"
 "  %s\n"
 
-#: src/remove.c:1079
+#: src/remove.c:1097
 msgid "cannot remove `.' or `..'"
 msgstr "nie mo¿na usun±æ `.' lub `..'"
 
@@ -6274,7 +6286,6 @@ msgstr ""
 "  -t, --terse           wypisywanie informacji w skróconej formie\n"
 
 #: src/stat.c:695
-#, fuzzy
 msgid ""
 "\n"
 "The valid format sequences for files (without --filesystem):\n"
@@ -6289,14 +6300,16 @@ msgstr ""
 "\n"
 "  %A   prawa dostêpu w postaci czytelnej dla cz³owieka\n"
 "  %a   prawa dostêpu ósemkowo\n"
-"  %b   ilo¶æ zajêtych bloków\n"
+"  %B   rozmiar w bajtach ka¿dego bloku podanego przez `%b'\n"
+"  %b   ilo¶æ zajêtych bloków (zobacz %B)\n"
 
 #: src/stat.c:703
+#, fuzzy
 msgid ""
 "  %D   Device number in hex\n"
 "  %d   Device number in decimal\n"
 "  %F   File type\n"
-"  %f   raw mode in hex\n"
+"  %f   Raw mode in hex\n"
 "  %G   Group name of owner\n"
 "  %g   Group ID of owner\n"
 msgstr ""
@@ -8412,3 +8425,6 @@ msgid ""
 "\n"
 msgstr ""
 "Powtarzanie na wyj¶ciu linii ze wszystkimi podanymi £AÑCUCH(AMI) albo `y'\n"
+
+#~ msgid "   Type"
+#~ msgstr "   typ "

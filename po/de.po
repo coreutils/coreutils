@@ -10,6 +10,8 @@
 # similar or even identical to other tools' lib directories. Therefore take
 # care to have consistent translation. I have made this identical to the
 # translation in sh-utils and fileutils. -MPi
+# PS: This file now contains sh-utils and fileutils, but the lib dir is in
+# other projects, too.
 #
 # TAB: spell it out ("Tabulatoren"). -ke-
 # Don't use obscure abbreviations, please.  -ke-
@@ -35,9 +37,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: GNU coreutils 4.5.5\n"
-"POT-Creation-Date: 2003-02-21 18:14+0100\n"
-"PO-Revision-Date: 2003-02-04 11:35:48+0100\n"
+"Project-Id-Version: GNU coreutils 4.5.8\n"
+"POT-Creation-Date: 2003-03-05 08:46+0100\n"
+"PO-Revision-Date: 2003-02-24 10:51:09+0100\n"
 "Last-Translator: Michael Piefel <piefel@informatik.hu-berlin.de>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -184,34 +186,38 @@ msgstr "%s: Option »-W %s« erlaubt kein Argument\n"
 msgid "block size"
 msgstr "Blockgröße"
 
-#: lib/makepath.c:167 src/copy.c:1270 src/mkdir.c:170
+#: lib/makepath.c:124 src/df.c:497 src/remove.c:402
+msgid "failed to return to initial working directory"
+msgstr ""
+
+#: lib/makepath.c:173 src/copy.c:1288 src/mkdir.c:170
 #, c-format
 msgid "cannot create directory %s"
 msgstr "kann Verzeichnis %s nicht anlegen"
 
-#: lib/makepath.c:173 lib/makepath.c:415 src/cp.c:444 src/cp.c:466
+#: lib/makepath.c:179 lib/makepath.c:421 src/cp.c:444 src/cp.c:466
 #, c-format
 msgid "%s exists but is not a directory"
 msgstr "%s existiert, ist aber kein Verzeichnis"
 
-#: lib/makepath.c:310 lib/makepath.c:372 lib/makepath.c:434
+#: lib/makepath.c:316 lib/makepath.c:378 lib/makepath.c:440
 #, c-format
 msgid "cannot change owner and/or group of %s"
 msgstr "kann Besitzer und/oder Gruppe von %s nicht ändern."
 
-#: lib/makepath.c:332
+#: lib/makepath.c:338
 #, c-format
 msgid "cannot chdir to directory %s"
 msgstr "kann nicht in Verzeichnis %s wechseln"
 
-#: lib/makepath.c:386 lib/makepath.c:440
+#: lib/makepath.c:392 lib/makepath.c:446
 #, c-format
 msgid "cannot change permissions of %s"
 msgstr "kann Zugriffsrechte von %s nicht ändern"
 
 #: lib/mmap-stack.h:31 lib/mmap-stack.h:45
 msgid "warning: unable to use large stack"
-msgstr ""
+msgstr "Warnung: kann großen Stack nicht verwenden"
 
 #: lib/obstack.c:487 lib/obstack.c:490 lib/xmalloc.c:63
 msgid "memory exhausted"
@@ -300,8 +306,8 @@ msgstr "Die verglichenen Zeichenketten waren %s und %s."
 
 #: src/basename.c:50 src/cat.c:88 src/chgrp.c:122 src/chmod.c:238
 #: src/chown.c:95 src/chroot.c:41 src/cksum.c:278 src/comm.c:69 src/cp.c:158
-#: src/csplit.c:1492 src/cut.c:170 src/date.c:113 src/dd.c:284 src/df.c:711
-#: src/dircolors.c:99 src/dirname.c:42 src/du.c:174 src/echo.c:73
+#: src/csplit.c:1492 src/cut.c:170 src/date.c:113 src/dd.c:284 src/df.c:707
+#: src/dircolors.c:99 src/dirname.c:42 src/du.c:171 src/echo.c:73
 #: src/env.c:115 src/expand.c:106 src/expr.c:86 src/factor.c:70 src/fmt.c:267
 #: src/fold.c:63 src/head.c:84 src/hostid.c:44 src/hostname.c:63 src/id.c:83
 #: src/install.c:593 src/join.c:140 src/kill.c:89 src/link.c:47 src/ln.c:335
@@ -341,8 +347,8 @@ msgstr ""
 
 #: src/basename.c:66 src/cat.c:124 src/chgrp.c:152 src/chmod.c:264
 #: src/chown.c:139 src/chroot.c:59 src/cksum.c:293 src/comm.c:86 src/cp.c:255
-#: src/csplit.c:1534 src/cut.c:215 src/date.c:215 src/dd.c:331 src/df.c:750
-#: src/dircolors.c:120 src/dirname.c:58 src/du.c:223 src/echo.c:105
+#: src/csplit.c:1534 src/cut.c:215 src/date.c:215 src/dd.c:331 src/df.c:746
+#: src/dircolors.c:120 src/dirname.c:58 src/du.c:220 src/echo.c:105
 #: src/env.c:134 src/expand.c:131 src/expr.c:149 src/factor.c:90
 #: src/false.c:45 src/fmt.c:297 src/fold.c:86 src/head.c:115 src/hostid.c:57
 #: src/hostname.c:76 src/id.c:104 src/install.c:648 src/join.c:181
@@ -831,7 +837,7 @@ msgstr ""
 "  -2              Zeilen unterdrücken, die nur in RECHTE_DATEI auftauchen\n"
 "  -3              Zeilen unterdrücken, die in beiden Dateien auftauchen\n"
 
-#: src/copy.c:162 src/du.c:335
+#: src/copy.c:162 src/du.c:332
 #, c-format
 msgid "cannot access %s"
 msgstr "Zugriff auf %s nicht möglich"
@@ -851,8 +857,8 @@ msgstr "Aufruf von fstat für %s nicht möglich"
 msgid "skipping file %s, as it was replaced while being copied"
 msgstr "überspringe Datei %s, da sie während des Kopierens ersetzt wurde"
 
-#: src/copy.c:262 src/copy.c:1034 src/ln.c:291 src/remove.c:725
-#: src/remove.c:779 src/remove.c:978
+#: src/copy.c:262 src/copy.c:1034 src/copy.c:1124 src/ln.c:291
+#: src/remove.c:726 src/remove.c:780 src/remove.c:892 src/remove.c:996
 #, c-format
 msgid "cannot remove %s"
 msgstr "Entfernen von %s nicht möglich"
@@ -973,101 +979,101 @@ msgstr "Kopieren eines Verzeichnisses, %s, in sich selbst (%s) nicht möglich"
 msgid "will not create hard link %s to directory %s"
 msgstr "Harte Verknüpfung %s zu Verzeichnis %s wird nicht erzeugt"
 
-#: src/copy.c:1115
+#: src/copy.c:1132
 #, c-format
 msgid "cannot create hard link %s to %s"
 msgstr "Erzeugen von harter Verknüpfung %s zu Verzeichnis %s nicht möglich"
 
-#: src/copy.c:1168
+#: src/copy.c:1186
 #, c-format
 msgid "cannot move %s to a subdirectory of itself, %s"
 msgstr "Verschieben von %s in eigenes Unterverzeichnis (%s) nicht möglich"
 
-#: src/copy.c:1211
+#: src/copy.c:1229
 #, c-format
 msgid "cannot move %s to %s"
 msgstr "Verschieben von %s nach %s nicht möglich"
 
-#: src/copy.c:1223
+#: src/copy.c:1241
 #, c-format
 msgid "inter-device move failed: %s to %s; unable to remove target"
 msgstr ""
 "Verschieben zwischen Geräten fehlgeschlagen: %s zu %s; kann Ziel nicht "
 "entfernen"
 
-#: src/copy.c:1251
+#: src/copy.c:1269
 #, c-format
 msgid "cannot copy cyclic symbolic link %s"
 msgstr "Kopieren von zyklischer symbolischer Verknüpfung %s nicht möglich"
 
-#: src/copy.c:1328
+#: src/copy.c:1346
 #, c-format
 msgid "%s: can make relative symbolic links only in current directory"
 msgstr ""
 "%s: Erzeugen relativer symbolischer Verknüpfungen nur in momentanem "
 "Verzeichnis möglich"
 
-#: src/copy.c:1335
+#: src/copy.c:1353
 #, c-format
 msgid "cannot create symbolic link %s to %s"
 msgstr "Erzeugen der symbolischen Verknüpfung %s nach %s nicht möglich"
 
-#: src/copy.c:1346
+#: src/copy.c:1364
 #, c-format
 msgid "cannot create link %s"
 msgstr "Erzeugen von Verknüpfung %s nicht möglich"
 
-#: src/copy.c:1371 src/mkfifo.c:133
+#: src/copy.c:1389 src/mkfifo.c:133
 #, c-format
 msgid "cannot create fifo %s"
 msgstr "Erzeugen von FIFO %s nicht möglich"
 
-#: src/copy.c:1385
+#: src/copy.c:1403
 #, c-format
 msgid "cannot create special file %s"
 msgstr "Erzeugen der Spezialdatei %s nicht möglich"
 
-#: src/copy.c:1397 src/ls.c:2493 src/stat.c:425
+#: src/copy.c:1415 src/ls.c:2493 src/stat.c:425
 #, c-format
 msgid "cannot read symbolic link %s"
 msgstr "Lesen der symbolischen Verknüpfung %s nicht möglich"
 
-#: src/copy.c:1422
+#: src/copy.c:1440
 #, c-format
 msgid "cannot create symbolic link %s"
 msgstr "Erzeugen der symbolischen Verknüpfung %s nicht möglich"
 
-#: src/copy.c:1438 src/copy.c:1501 src/cp.c:337
+#: src/copy.c:1456 src/copy.c:1519 src/cp.c:337
 #, c-format
 msgid "failed to preserve ownership for %s"
 msgstr "konnte den Eigentümer für %s nicht erhalten"
 
-#: src/copy.c:1453
+#: src/copy.c:1471
 #, c-format
 msgid "%s has unknown file type"
 msgstr "%s hat einen unbekannten Dateityp"
 
-#: src/copy.c:1488
+#: src/copy.c:1506
 #, c-format
 msgid "preserving times for %s"
 msgstr "Erhalten der Zeiten für %s"
 
-#: src/copy.c:1513
+#: src/copy.c:1531
 #, c-format
 msgid "failed to preserve authorship for %s"
 msgstr "konnte den Urheber für %s nicht erhalten"
 
-#: src/copy.c:1531
+#: src/copy.c:1549
 #, c-format
 msgid "setting permissions for %s"
 msgstr "Setzen der Zugriffsrechte für %s"
 
-#: src/copy.c:1550 src/ln.c:326
+#: src/copy.c:1571 src/ln.c:326
 #, c-format
 msgid "cannot un-backup %s"
 msgstr "Löschen der Sicherung von %s nicht möglich"
 
-#: src/copy.c:1554
+#: src/copy.c:1575
 #, c-format
 msgid "%s -> %s (unbackup)\n"
 msgstr "%s -> %s (Löschen der Sicherung)\n"
@@ -1095,7 +1101,7 @@ msgstr ""
 "Kopieren von QUELLE nach ZIEL, oder mehrere QUELLE(n) in VERZEICHNIS\n"
 "\n"
 
-#: src/cp.c:172 src/csplit.c:1505 src/cut.c:182 src/df.c:721 src/du.c:183
+#: src/cp.c:172 src/csplit.c:1505 src/cut.c:182 src/df.c:717 src/du.c:180
 #: src/expand.c:119 src/fmt.c:277 src/fold.c:76 src/head.c:98
 #: src/install.c:609 src/kill.c:103 src/ln.c:354 src/ls.c:3767 src/mkdir.c:66
 #: src/mkfifo.c:60 src/mknod.c:61 src/mv.c:321 src/nl.c:185 src/paste.c:413
@@ -1550,7 +1556,7 @@ msgstr ""
 msgid "David Ihnat, David MacKenzie, and Jim Meyering"
 msgstr "David Ihnat, David MacKenzie und Jim Meyering"
 
-#: src/cut.c:174 src/df.c:715 src/du.c:178 src/expand.c:110 src/fold.c:67
+#: src/cut.c:174 src/df.c:711 src/du.c:175 src/expand.c:110 src/fold.c:67
 #: src/head.c:88 src/ls.c:3761 src/nl.c:176 src/paste.c:403 src/pr.c:2754
 #: src/sort.c:276 src/sum.c:60 src/tac.c:127 src/tail.c:234 src/tee.c:63
 #: src/unexpand.c:375 src/wc.c:125
@@ -2105,44 +2111,46 @@ msgstr "an %s Bytes vorbei fortbewegen in Ausgabedatei %s"
 msgid "Torbjorn Granlund, David MacKenzie, Larry McVoy, and Paul Eggert"
 msgstr "Torbjörn Granlund, David MacKenzie, Larry McVoy und Paul Eggert"
 
-#: src/df.c:151
-msgid "   Type"
-msgstr "   Typ "
-
 #: src/df.c:153
-msgid "Filesystem "
+#, fuzzy
+msgid "Filesystem    Type"
 msgstr "Dateisystem"
 
-#: src/df.c:163
+#: src/df.c:155
+#, fuzzy
+msgid "Filesystem        "
+msgstr "Dateisystem"
+
+#: src/df.c:158
 #, c-format
 msgid "    Inodes   IUsed   IFree IUse%%"
 msgstr "    INodes  IBenut.  IFrei IBen%%"
 
-#: src/df.c:167
+#: src/df.c:162
 #, c-format
 msgid "    Size  Used Avail Use%%"
 msgstr "   Größe Benut  Verf Ben%%"
 
-#: src/df.c:169
+#: src/df.c:164
 #, c-format
 msgid "     Size   Used  Avail Use%%"
 msgstr "    Größe   Benut  Verf Ben%%"
 
-#: src/df.c:172
+#: src/df.c:167
 #, c-format
 msgid " %4s-blocks      Used Available Capacity"
 msgstr " %4s-Blöcke   Benutzt Verfügbar Kapazit."
 
-#: src/df.c:203
+#: src/df.c:198
 #, c-format
 msgid " %4s-blocks      Used Available Use%%"
 msgstr " %4s-Blöcke   Benutzt Verfügbar Ben%%"
 
-#: src/df.c:207
+#: src/df.c:202
 msgid " Mounted on\n"
 msgstr " Eingehängt auf\n"
 
-#: src/df.c:716
+#: src/df.c:712
 msgid ""
 "Show information about the filesystem on which each FILE resides,\n"
 "or all filesystems by default.\n"
@@ -2152,7 +2160,7 @@ msgstr ""
 "DATEI befindet, oder alle Dateisysteme als Standardvorgabe.\n"
 "\n"
 
-#: src/df.c:724
+#: src/df.c:720
 msgid ""
 "  -a, --all             include filesystems having 0 blocks\n"
 "  -B, --block-size=SIZE use SIZE-byte blocks\n"
@@ -2168,7 +2176,7 @@ msgstr ""
 "                              ausgeben.\n"
 "  -H, --si                  Wie »-h«, aber mit 1000 statt 1024 als Teiler.\n"
 
-#: src/df.c:730
+#: src/df.c:726
 msgid ""
 "  -i, --inodes          list inode information instead of block usage\n"
 "  -k                    like --block-size=1K\n"
@@ -2183,7 +2191,7 @@ msgstr ""
 "      --no-sync             »sync« vor Erlangen der Benutzungsinformation\n"
 "                              nicht aufrufen (Standardvorgabe).\n"
 
-#: src/df.c:736
+#: src/df.c:732
 msgid ""
 "  -P, --portability     use the POSIX output format\n"
 "      --sync            invoke sync before getting usage info\n"
@@ -2201,7 +2209,7 @@ msgstr ""
 "begrenzen.\n"
 "  -v                        (ignoriert)\n"
 
-#: src/df.c:746 src/du.c:219 src/ls.c:3879
+#: src/df.c:742 src/du.c:216 src/ls.c:3879
 msgid ""
 "\n"
 "SIZE may be (or may be an integer optionally followed by) one of following:\n"
@@ -2214,16 +2222,16 @@ msgstr ""
 "kB 1000, K 1024, MB 1.000.000, M 1.048.576 und so weiter für G, T, P, E, Z, "
 "Y.\n"
 
-#: src/df.c:863
+#: src/df.c:859
 #, c-format
 msgid "file system type %s both selected and excluded"
 msgstr "Dateisystemtyp %s ist sowohl ausgewählt als auch ausgeschlossen"
 
-#: src/df.c:907
+#: src/df.c:903
 msgid "Warning: "
 msgstr "Warnung: "
 
-#: src/df.c:910
+#: src/df.c:906
 #, c-format
 msgid "%scannot read table of mounted filesystems"
 msgstr "%sLesen der Tabelle eingehängter Dateisysteme nicht möglich"
@@ -2328,7 +2336,7 @@ msgid ""
 msgstr ""
 "Torbjörn Granlund, David MacKenzie, Larry McVoy, Paul Eggert und Jim Meyering"
 
-#: src/du.c:179
+#: src/du.c:176
 msgid ""
 "Summarize disk usage of each FILE, recursively for directories.\n"
 "\n"
@@ -2336,8 +2344,7 @@ msgstr ""
 "Summierung der Plattennutzung jeder DATEI, rekursiv für Verzeichnisse\n"
 "\n"
 
-#: src/du.c:186
-#, fuzzy
+#: src/du.c:183
 msgid ""
 "  -a, --all             write counts for all files, not just directories\n"
 "      --apparent-size   print apparent sizes, rather than disk usage; "
@@ -2352,13 +2359,19 @@ msgid ""
 msgstr ""
 "  -a, --all                Zählung für jede Datei ausgeben, nicht nur für\n"
 "                             Verzeichnisse.\n"
+"      --apparent-size      die sichtbare Größe ausgeben statt "
+"Platzverbrauchs;\n"
+"                             diese ist meist kleiner, kann aber auch größer\n"
+"                             sein durch Löcher in (»sparse«-)Dateien, "
+"interne\n"
+"                             Fragmentierung, indirekte Blöcke und ähnliches\n"
 "  -B, --block-size=GRÖßE   GRÖßE große Blöcke verwenden.\n"
-"  -b, --bytes              Größe in Bytes ausgeben.\n"
+"  -b, --bytes              äquivalent zu »--apparent-size --block-size=1«\n"
 "  -c, --total              Gesamtsumme erzeugen.\n"
 "  -D, --dereference-args   Dateien dereferenzieren, wenn es sich um\n"
 "                             symbolische Verknüpfungen handelt.\n"
 
-#: src/du.c:197
+#: src/du.c:194
 msgid ""
 "  -h, --human-readable  print sizes in human readable format (e.g., 1K 234M "
 "2G)\n"
@@ -2374,7 +2387,7 @@ msgstr ""
 "  -l, --count-links        Größe mehrfach zählen, wenn durch harte\n"
 "                             Verknüpfungen verbunden.\n"
 
-#: src/du.c:203
+#: src/du.c:200
 msgid ""
 "  -L, --dereference     dereference all symbolic links\n"
 "  -S, --separate-dirs   do not include size of subdirectories\n"
@@ -2385,7 +2398,7 @@ msgstr ""
 "                             mitzählen.\n"
 "  -s, --summarize          Nur Summe für jedes Argument anzeigen.\n"
 
-#: src/du.c:208
+#: src/du.c:205
 msgid ""
 "  -x, --one-file-system  skip directories on different filesystems\n"
 "  -X FILE, --exclude-from=FILE  Exclude files that match any pattern in "
@@ -2411,39 +2424,39 @@ msgstr ""
 "                             »--max-depth=0« ist dasselbe wie »--"
 "summarize«.\n"
 
-#: src/du.c:340
+#: src/du.c:337
 #, c-format
 msgid "cannot change to parent of directory %s"
 msgstr "Kann nicht in das übergeordnete Verzeichnis von %s wechseln"
 
-#: src/du.c:348
+#: src/du.c:345
 #, c-format
 msgid "cannot change to directory %s"
 msgstr "Kann nicht in Verzeichnis %s wechseln"
 
-#: src/du.c:355
+#: src/du.c:352
 #, c-format
 msgid "cannot read directory %s"
 msgstr "kann Verzeichnis %s nicht lesen"
 
-#: src/du.c:546 src/ls.c:2241 src/wc.c:591
+#: src/du.c:543 src/ls.c:2241 src/wc.c:591
 msgid "total"
 msgstr "insgesamt"
 
-#: src/du.c:633
+#: src/du.c:630
 #, c-format
 msgid "invalid maximum depth %s"
 msgstr "Ungültige maximale Tiefe %s"
 
-#: src/du.c:699
+#: src/du.c:696
 msgid "cannot both summarize and show all entries"
 msgstr "Sowohl zusammenfassen, als auch Anzeige aller Einträge nicht möglich"
 
-#: src/du.c:706
+#: src/du.c:703
 msgid "warning: summarizing is the same as using --max-depth=0"
 msgstr "Warnung: Zusammenfassen ist das gleiche wie --max-depth=0"
 
-#: src/du.c:712
+#: src/du.c:709
 #, c-format
 msgid "warning: summarizing conflicts with --max-depth=%d"
 msgstr "Warnung: Zusammenfassen widerspricht --max-depth=%d"
@@ -3198,7 +3211,6 @@ msgid "Usage: %s [OPTION]... FILE1 FILE2\n"
 msgstr "Aufruf: %s [OPTION]... DATEI1 DATEI2\n"
 
 #: src/join.c:148
-#, fuzzy
 msgid ""
 "For each pair of input lines with identical join fields, write a line to\n"
 "standard output.  The default join field is the first, delimited\n"
@@ -3208,14 +3220,17 @@ msgid ""
 "                      FILENUM is 1 or 2, corresponding to FILE1 or FILE2\n"
 "  -e EMPTY          replace missing input fields with EMPTY\n"
 msgstr ""
-"Für jedes Eingabezeilenpaar mit identischen Verschmelzungsfeldern, eine "
+"Für jedes Eingabezeilenpaar mit identischen Verschmelzungsfeldern eine "
 "Zeile\n"
-"auf Standardausgabe schreiben.  Das voreingestellte Verschmelzungsfeld ist "
+"auf Standardausgabe schreiben. Das voreingestellte Verschmelzungsfeld ist "
 "das\n"
-"erste durch Leerzeichen/Tabulator begrenzte Feld.  Wenn DATEI1 oder DATEI2\n"
+"erste durch Leerzeichen/Tabulator begrenzte Feld. Wenn DATEI1 oder DATEI2\n"
 "(nicht beide) »-« ist, Standardeingabe lesen.\n"
 "\n"
-"  -a SEITE           nicht-passende Zeilen von Datei SEITE ausgeben\n"
+"  -a DATEINR         nicht-passende Zeilen aus der Datei DATEINR ausgeben, "
+"wobei\n"
+"                       DATEINR 1 oder 2 ist, entsprechend DATEI1 oder "
+"DATEI2\n"
 "  -e LEER            fehlende Eingabefelder durch LEER ersetzen\n"
 
 #: src/join.c:157
@@ -3237,19 +3252,17 @@ msgstr ""
 "                       benutzen\n"
 
 #: src/join.c:165
-#, fuzzy
 msgid ""
 "  -v FILENUM        like -a FILENUM, but suppress joined output lines\n"
 "  -1 FIELD          join on this FIELD of file 1\n"
 "  -2 FIELD          join on this FIELD of file 2\n"
 msgstr ""
-"  -v SEITE           wie -a SEITE, aber verschmolzene Ausgabezeilen\n"
+"  -v DATEINR         wie -a DATEINR, aber verschmolzene Ausgabezeilen\n"
 "                       unterdrücken\n"
 "  -1 FELD            mit diesem FELD von DATEI1 unterdrücken\n"
 "  -2 FELD            mit diesem FELD von DATEI2 unterdrücken\n"
 
 #: src/join.c:172
-#, fuzzy
 msgid ""
 "\n"
 "Unless -t CHAR is given, leading blanks separate fields and are ignored,\n"
@@ -3262,16 +3275,17 @@ msgstr ""
 "\n"
 "Außer wenn -t ZEICHEN angegeben wurde, trennen führende Leerzeichen Felder "
 "und\n"
-"sie werden ignoriert; andernfalls werden Felder von ZEICHEN getrennt.  "
+"sie werden ignoriert; andernfalls werden Felder durch ZEICHEN getrennt.  "
 "Jedes\n"
-"FELD ist eine Feldnummer, beginnend mit 1.  FORMAT sind eine oder mehrere "
+"FELD ist eine Feldnummer, beginnend mit 1. FORMAT sind eine oder mehrere "
 "durch\n"
-"Komma- oder Leerzeichen getrennte Spezifikationen, jede beginnt mit\n"
-"»SEITE.FELD« oder »0«.  Das voreingestellte FORMAT gibt das "
-"Verschmelzungsfeld\n"
-"aus, die restlichen Felder von DATEI1, die restlichen Felder von DATEI2, "
-"alle\n"
-"getrennt mit ZEICHEN.\n"
+"Komma- oder Leerzeichen getrennte Spezifikationen, wobei jede »DATEINR."
+"FELD«\n"
+"oder »0« ist. Das voreingestellte FORMAT gibt das Verschmelzungsfeld aus, "
+"die\n"
+"restlichen Felder von DATEI1, die restlichen Felder von DATEI2, alle "
+"getrennt\n"
+"mit ZEICHEN.\n"
 
 #: src/join.c:645
 #, c-format
@@ -3629,7 +3643,7 @@ msgstr "kann Gerät und INode von %s nicht bestimmen"
 msgid "not listing already-listed directory: %s"
 msgstr "zeige schon angezeigtes Verzeichnis nicht an: %s"
 
-#: src/ls.c:2208 src/remove.c:910
+#: src/ls.c:2208 src/remove.c:928
 #, c-format
 msgid "reading directory %s"
 msgstr "lese Verzeichnis %s"
@@ -5572,67 +5586,67 @@ msgstr ""
 msgid "cannot chdir from %s to .."
 msgstr "kann nicht von Verzeichnis %s nach .. wechseln"
 
-#: src/remove.c:406 src/remove.c:487
+#: src/remove.c:407 src/remove.c:488
 #, c-format
 msgid "cannot lstat `.' in %s"
 msgstr "lstat von ».« in %s nicht möglich"
 
-#: src/remove.c:413 src/remove.c:491
+#: src/remove.c:414 src/remove.c:492
 #, c-format
 msgid "%s changed dev/ino"
 msgstr "%s geändertes Gerät/Inode"
 
-#: src/remove.c:572 src/remove.c:710 src/remove.c:873 src/remove.c:965
+#: src/remove.c:573 src/remove.c:711 src/remove.c:880 src/remove.c:983
 #, c-format
 msgid "cannot lstat %s"
 msgstr "Aufruf von lstat für %s nicht möglich"
 
-#: src/remove.c:601
+#: src/remove.c:602
 #, c-format
 msgid "%s: descend into write-protected directory %s? "
 msgstr "%s: in schreibgeschütztes Verzeichnis %s absteigen? "
 
-#: src/remove.c:602
+#: src/remove.c:603
 #, c-format
 msgid "%s: descend into directory %s? "
 msgstr "%s: in Verzeichnis %s absteigen? "
 
-#: src/remove.c:612
+#: src/remove.c:613
 #, c-format
 msgid "%s: remove write-protected %s %s? "
 msgstr "%s: %s (schreibgeschützt) %s entfernen? "
 
-#: src/remove.c:613
+#: src/remove.c:614
 #, c-format
 msgid "%s: remove %s %s? "
 msgstr "%s: %s %s entfernen? "
 
-#: src/remove.c:637
+#: src/remove.c:638
 #, c-format
 msgid "removed %s\n"
 msgstr "%s entfernt\n"
 
-#: src/remove.c:652 src/remove.c:1040
+#: src/remove.c:653 src/remove.c:1058
 #, c-format
 msgid "removed directory: %s\n"
 msgstr "Verzeichnis wurde entfernt: %s\n"
 
-#: src/remove.c:732 src/remove.c:749 src/remove.c:1045
+#: src/remove.c:733 src/remove.c:750 src/remove.c:1063
 #, c-format
 msgid "cannot remove directory %s"
 msgstr "Entfernen von Verzeichnis %s nicht möglich"
 
-#: src/remove.c:813
+#: src/remove.c:814
 #, c-format
 msgid "cannot open directory %s"
 msgstr "Öffnen von Verzeichnis %s nicht möglich"
 
-#: src/remove.c:878 src/remove.c:983
+#: src/remove.c:895 src/remove.c:1001
 #, c-format
 msgid "cannot chdir from %s to %s"
 msgstr "kann nicht aus Verzeichnis %s in %s wechseln"
 
-#: src/remove.c:886
+#: src/remove.c:903
 #, c-format
 msgid ""
 "WARNING: Circular directory structure.\n"
@@ -5647,7 +5661,7 @@ msgstr ""
 "Das folgende Verzeichnis ist Teil des Zyklus:\n"
 "  %s\n"
 
-#: src/remove.c:1079
+#: src/remove.c:1097
 msgid "cannot remove `.' or `..'"
 msgstr "Weder ».« noch »..« kann gelöscht werden"
 
@@ -6421,7 +6435,6 @@ msgstr ""
 "  -t, --terse           Informationen in knapper Form ausgeben\n"
 
 #: src/stat.c:695
-#, fuzzy
 msgid ""
 "\n"
 "The valid format sequences for files (without --filesystem):\n"
@@ -6436,14 +6449,16 @@ msgstr ""
 "\n"
 "  %A   Zugriffsrechte in menschenlesbarer Form\n"
 "  %a   Zugriffsrechte im Oktalformat\n"
+"  %B   die Größe in Bytes jedes mit »%b« gemeldeten Blocks\n"
 "  %b   Anzahl der beanspruchten Blöcke\n"
 
 #: src/stat.c:703
+#, fuzzy
 msgid ""
 "  %D   Device number in hex\n"
 "  %d   Device number in decimal\n"
 "  %F   File type\n"
-"  %f   raw mode in hex\n"
+"  %f   Raw mode in hex\n"
 "  %G   Group name of owner\n"
 "  %g   Group ID of owner\n"
 msgstr ""
@@ -8616,6 +8631,9 @@ msgid ""
 msgstr ""
 "Eine Zeile mit allen angegebenen ZEICHENKETTEN oder »y« wiederholt "
 "ausgeben.\n"
+
+#~ msgid "   Type"
+#~ msgstr "   Typ "
 
 #~ msgid "missing file arguments"
 #~ msgstr "Fehlende Dateiargumente"
