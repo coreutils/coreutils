@@ -1,6 +1,17 @@
-1998-01-01  Jim Meyering  <meyering@na-net.ornl.gov>
+1998-01-02  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/install.c (get_ids): When otherwise unspecified,
+	set uid and gid to -1.
 
 	* Version 3.16i.
+
+	* lib/makepath.c (make_path): Try to change ownership only if we've
+	just created the directory.  Fix latent bug (s/&&/||/ in two places --
+	also, note that it could not be exercised via install or mkdir)
+	whereby chown would not be invoked when only one of owner/group is
+	not -1.
+
+1998-01-01  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/rm.c (remove_cwd_entries): Initialize the entry-name obstack
 	only once and never free it.
