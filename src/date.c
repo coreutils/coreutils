@@ -191,6 +191,7 @@ the following modifiers between `%%' and a numeric directive.\n\
   `_' (underscore) pad the field with spaces\n\
 "));
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
+      close_stdout_status (2);
     }
   exit (status);
 }
