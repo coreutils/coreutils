@@ -1,12 +1,12 @@
 #!/p/bin/perl5.000 -w
 
 $join = 'join';
-$join = '/usr/bin/join';
 $join = './join';
+$join = '/usr/bin/join';
 $test = 0;
 $| = 1;
 
-print ":\nerrors=0\n";
+print ":\n$join --version\nerrors=0\n";
 $expected = '';
 $flags = '';
 $f1 = '';
@@ -14,12 +14,17 @@ $f2 = '';
 
 while (<>)
   {
-    next if (/^\s*#/);
+    next if (/^\s*#/ || /^\s+$/);
 
     $test++;
     chop;
     $prog = '($test_name, $flags,$f1,$f2,$expected,$e_ret_code) = ' . $_ . ';';
     eval $prog;
+    if (defined ($seen{$test_name}))
+      {
+	die "$0: $.: duplicate test name \`$test_name'\n";
+      }
+    $seen{$test_name} = 1;
     $in1 = "t$test_name.1"; 
     $in2 = "t$test_name.2"; 
     $exp_name = 't' . $test_name . '.exp'; 
