@@ -1,3 +1,8 @@
+Mon Jul  1 23:47:29 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/ln.c (do_link): Update messages to ease translation.
+	Suggestion from Santiago Vila.
+
 Sun Jun 30 16:41:45 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/install.c (usage): Fix typo, 3nd->3rd, in usage message.
