@@ -130,7 +130,7 @@ libfetish_a_SOURCES = \
   makepath.c mbswidth.c md5.c memcasecmp.c memcoll.c modechange.c \
   path-concat.c \
   quote.c quotearg.c readtokens.c safe-read.c same.c save-cwd.c \
-  savedir.c stripslash.c unicodeio.c userspec.c version-etc.c xgetcwd.c \
+  savedir.c sha.c stripslash.c unicodeio.c userspec.c version-etc.c xgetcwd.c \
   xgethostname.c xmalloc.c xstrdup.c xstrtod.c xstrtol.c xstrtoul.c \
   xstrtoumax.c yesno.c
 
@@ -146,7 +146,7 @@ noinst_HEADERS = \
   linebuffer.h long-options.h mbswidth.h md5.h memcasecmp.h memcoll.h \
   makepath.h mbswidth.h modechange.h mountlist.h nanosleep.h obstack.h \
   path-concat.h pathmax.h posixtm.h quote.h quotearg.h readtokens.h \
-  readutmp.h regex.h safe-read.h same.h save-cwd.h savedir.h \
+  readutmp.h regex.h safe-read.h same.h save-cwd.h savedir.h sha.h \
   strverscmp.h unicodeio.h version-etc.h xalloc.h xstrtod.h xstrtol.h
 
 
@@ -181,9 +181,9 @@ hash$U.o human$U.o idcache$U.o isdir$U.o linebuffer$U.o \
 localcharset$U.o long-options$U.o makepath$U.o mbswidth$U.o md5$U.o \
 memcasecmp$U.o memcoll$U.o modechange$U.o path-concat$U.o quote$U.o \
 quotearg$U.o readtokens$U.o safe-read$U.o same$U.o save-cwd$U.o \
-savedir$U.o stripslash$U.o unicodeio$U.o userspec$U.o version-etc$U.o \
-xgetcwd$U.o xgethostname$U.o xmalloc$U.o xstrdup$U.o xstrtod$U.o \
-xstrtol$U.o xstrtoul$U.o xstrtoumax$U.o yesno$U.o
+savedir$U.o sha$U.o stripslash$U.o unicodeio$U.o userspec$U.o \
+version-etc$U.o xgetcwd$U.o xgethostname$U.o xmalloc$U.o xstrdup$U.o \
+xstrtod$U.o xstrtol$U.o xstrtoul$U.o xstrtoumax$U.o yesno$U.o
 libfetish_a_OBJECTS =  $(am_libfetish_a_OBJECTS)
 AR = ar
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -220,18 +220,19 @@ $(DEPDIR)/posixtm$U.Po $(DEPDIR)/putenv.Po $(DEPDIR)/quote$U.Po \
 $(DEPDIR)/quotearg$U.Po $(DEPDIR)/readtokens$U.Po $(DEPDIR)/readutmp.Po \
 $(DEPDIR)/realloc.Po $(DEPDIR)/regex.Po $(DEPDIR)/rmdir.Po \
 $(DEPDIR)/rpmatch.Po $(DEPDIR)/safe-read$U.Po $(DEPDIR)/same$U.Po \
-$(DEPDIR)/save-cwd$U.Po $(DEPDIR)/savedir$U.Po $(DEPDIR)/stat.Po \
-$(DEPDIR)/stime.Po $(DEPDIR)/stpcpy.Po $(DEPDIR)/strcasecmp.Po \
-$(DEPDIR)/strcspn.Po $(DEPDIR)/strdup.Po $(DEPDIR)/strftime.Po \
-$(DEPDIR)/stripslash$U.Po $(DEPDIR)/strncasecmp.Po $(DEPDIR)/strndup.Po \
-$(DEPDIR)/strnlen.Po $(DEPDIR)/strpbrk.Po $(DEPDIR)/strstr.Po \
-$(DEPDIR)/strtod.Po $(DEPDIR)/strtol.Po $(DEPDIR)/strtoul.Po \
-$(DEPDIR)/strtoull.Po $(DEPDIR)/strtoumax.Po $(DEPDIR)/strverscmp.Po \
-$(DEPDIR)/unicodeio$U.Po $(DEPDIR)/userspec$U.Po $(DEPDIR)/utime.Po \
-$(DEPDIR)/version-etc$U.Po $(DEPDIR)/xgetcwd$U.Po \
-$(DEPDIR)/xgethostname$U.Po $(DEPDIR)/xmalloc$U.Po \
-$(DEPDIR)/xstrdup$U.Po $(DEPDIR)/xstrtod$U.Po $(DEPDIR)/xstrtol$U.Po \
-$(DEPDIR)/xstrtoul$U.Po $(DEPDIR)/xstrtoumax$U.Po $(DEPDIR)/yesno$U.Po
+$(DEPDIR)/save-cwd$U.Po $(DEPDIR)/savedir$U.Po $(DEPDIR)/sha$U.Po \
+$(DEPDIR)/stat.Po $(DEPDIR)/stime.Po $(DEPDIR)/stpcpy.Po \
+$(DEPDIR)/strcasecmp.Po $(DEPDIR)/strcspn.Po $(DEPDIR)/strdup.Po \
+$(DEPDIR)/strftime.Po $(DEPDIR)/stripslash$U.Po \
+$(DEPDIR)/strncasecmp.Po $(DEPDIR)/strndup.Po $(DEPDIR)/strnlen.Po \
+$(DEPDIR)/strpbrk.Po $(DEPDIR)/strstr.Po $(DEPDIR)/strtod.Po \
+$(DEPDIR)/strtol.Po $(DEPDIR)/strtoul.Po $(DEPDIR)/strtoull.Po \
+$(DEPDIR)/strtoumax.Po $(DEPDIR)/strverscmp.Po $(DEPDIR)/unicodeio$U.Po \
+$(DEPDIR)/userspec$U.Po $(DEPDIR)/utime.Po $(DEPDIR)/version-etc$U.Po \
+$(DEPDIR)/xgetcwd$U.Po $(DEPDIR)/xgethostname$U.Po \
+$(DEPDIR)/xmalloc$U.Po $(DEPDIR)/xstrdup$U.Po $(DEPDIR)/xstrtod$U.Po \
+$(DEPDIR)/xstrtol$U.Po $(DEPDIR)/xstrtoul$U.Po \
+$(DEPDIR)/xstrtoumax$U.Po $(DEPDIR)/yesno$U.Po
 DIST_COMMON =  README $(noinst_HEADERS) ChangeLog Makefile.am \
 Makefile.in TODO __fpending.c alloca.c atexit.c chown.c dup2.c error.c \
 error.h euidaccess.c fileblocks.c fnmatch.c fsusage.c ftruncate.c \
@@ -449,6 +450,8 @@ save-cwd_.c: save-cwd.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/save-cwd.c; then echo $(srcdir)/save-cwd.c; else echo save-cwd.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > save-cwd_.c
 savedir_.c: savedir.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/savedir.c; then echo $(srcdir)/savedir.c; else echo savedir.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > savedir_.c
+sha_.c: sha.c $(ANSI2KNR)
+	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/sha.c; then echo $(srcdir)/sha.c; else echo sha.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > sha_.c
 stat_.c: stat.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/stat.c; then echo $(srcdir)/stat.c; else echo stat.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > stat_.c
 stime_.c: stime.c $(ANSI2KNR)
@@ -526,7 +529,7 @@ memcmp_.o memcoll_.o memcpy_.o memmove_.o memset_.o mktime_.o \
 modechange_.o mountlist_.o nanosleep_.o obstack_.o path-concat_.o \
 posixtm_.o putenv_.o quote_.o quotearg_.o readtokens_.o readutmp_.o \
 realloc_.o regex_.o rmdir_.o rpmatch_.o safe-read_.o same_.o \
-save-cwd_.o savedir_.o stat_.o stime_.o stpcpy_.o strcasecmp_.o \
+save-cwd_.o savedir_.o sha_.o stat_.o stime_.o stpcpy_.o strcasecmp_.o \
 strcspn_.o strdup_.o strftime_.o stripslash_.o strncasecmp_.o \
 strndup_.o strnlen_.o strpbrk_.o strstr_.o strtod_.o strtol_.o \
 strtoul_.o strtoull_.o strtoumax_.o strverscmp_.o unicodeio_.o \
@@ -648,6 +651,7 @@ maintainer-clean-tags:
 @AMDEP@include $(DEPDIR)/same$U.Po
 @AMDEP@include $(DEPDIR)/save-cwd$U.Po
 @AMDEP@include $(DEPDIR)/savedir$U.Po
+@AMDEP@include $(DEPDIR)/sha$U.Po
 @AMDEP@include $(DEPDIR)/stat.Po
 @AMDEP@include $(DEPDIR)/stime.Po
 @AMDEP@include $(DEPDIR)/stpcpy.Po
