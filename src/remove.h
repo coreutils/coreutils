@@ -1,3 +1,22 @@
+/* Remove directory entries.
+
+   Copyright (C) 1998, 2000, 2002, 2003, 2004 Free Software
+   Foundation, Inc.
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2, or (at your option)
+   any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+
 #ifndef REMOVE_H
 # define REMOVE_H
 
@@ -5,29 +24,29 @@
 
 struct rm_options
 {
-  /* If nonzero, ignore nonexistent files.  */
-  int ignore_missing_files;
+  /* If true, ignore nonexistent files.  */
+  bool ignore_missing_files;
 
-  /* If nonzero, query the user about whether to remove each file.  */
-  int interactive;
+  /* If true, query the user about whether to remove each file.  */
+  bool interactive;
 
-  /* If nonzero, recursively remove directories.  */
-  int recursive;
+  /* If true, recursively remove directories.  */
+  bool recursive;
 
   /* Pointer to the device and inode numbers of `/', when --recursive.
      Otherwise NULL.  */
   struct dev_ino *root_dev_ino;
 
   /* If nonzero, stdin is a tty.  */
-  int stdin_tty;
+  bool stdin_tty;
 
-  /* If nonzero, remove directories with unlink instead of rmdir, and don't
+  /* If true, remove directories with unlink instead of rmdir, and don't
      require a directory to be empty before trying to unlink it.
      Only works for the super-user.  */
-  int unlink_dirs;
+  bool unlink_dirs;
 
-  /* If nonzero, display the name of each file removed.  */
-  int verbose;
+  /* If true, display the name of each file removed.  */
+  bool verbose;
 
   /* If true, treat the failure by the rm function to restore the
      current working directory as a fatal error.  I.e., if this field
