@@ -518,7 +518,12 @@ main (int argc, char **argv)
 	      tabval = 0;
 	      have_tabval = true;
 	    }
-	  tabval = tabval * 10 + c - '0';
+	  {
+	    uintmax_t new_t = tabval * 10 + c - '0';
+	    if (UINTMAX_MAX / 10 < tabval || new_t < tabval * 10)
+	      error (EXIT_FAILURE, 0, _("tab stop value is too large"));
+	    tabval = new_t;
+	  }
 	  obsolete_tablist = true;
 	  break;
 	}
