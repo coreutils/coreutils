@@ -81,6 +81,7 @@
 #ifndef STDC_HEADERS
 char *ctime ();
 time_t time ();
+void free ();
 #endif
 
 void mode_string ();
@@ -1749,7 +1750,7 @@ quote_filename (p, quoted_length)
 		{
 		  char buf[5];
 		  sprintf (buf, "\\%03o", (unsigned int) c);
-		  q = stpcpy (p, buf);
+		  q = stpcpy (q, buf);
 		}
 	    }
 	}
