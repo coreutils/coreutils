@@ -15,7 +15,8 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-   Written by Torbjorn Granlund, Sweden (tege@sics.se). */
+   Written by Torbjorn Granlund, Sweden (tege@sics.se).
+   Rewritten to use lib/hash.c by Jim Meyering.  */
 
 #include <config.h>
 
@@ -25,37 +26,57 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include "system.h"
+
+#include "same.h"
+#include "quote.h"
+#include "hash.h"
 #include "error.h"
 #include "cp-hash.h"
-#include "quote.h"
 
-struct entry
+/* Use ST_DEV and ST_INO as the key, FILENAME as the value.
+   These are used e.g., in copy.c to associate the destination path with
+   the source device/inode pair so that if we encounter a matching dev/ino
+   pair in the source tree we can arrange to create a hard link between
+   the corresponding names in the destination tree.  */
+struct Src_to_dest
 {
-  ino_t ino;
-  dev_t dev;
+  ino_t st_ino;
+  dev_t st_dev;
   /* Destination path name (of non-directory or pre-existing directory)
      corresponding to the dev/ino of a copied file, or the destination path
      name corresponding to a dev/ino pair for a newly-created directory. */
-  char *node;
-
-  struct entry *coll_link;	/* 0 = entry not occupied.  */
+  char const* name;
 };
 
-struct htab
+/* This table maps source dev/ino to destination file name.
+   We use it to preserve hard links when copying.  */
+static struct hash_table *src_to_dest;
+
+/* Initial size of the above hash table.  */
+#define INITIAL_TABLE_SIZE 103
+
+static unsigned int
+src_to_dest_hash (void const *x, unsigned int table_size)
 {
-  unsigned modulus;		/* Size of the `hash' pointer vector.  */
-  struct entry *entry_tab;	/* Pointer to dynamically growing vector.  */
-  unsigned entry_tab_size;	/* Size of current `entry_tab' allocation.  */
-  unsigned first_free_entry;	/* Index in `entry_tab'.  */
-  struct entry *hash[1];	/* Vector of pointers in `entry_tab'.  */
-};
+  struct Src_to_dest const *p = x;
 
-static struct htab *htab;
+  /* Ignoring the device number here should be fine.  */
+  /* The cast to uintmax_t prevents negative remainders
+     if st_ino is negative.  */
+  return (uintmax_t) p->st_ino % table_size;
+}
 
-static char *cph_hash_insert PARAMS ((ino_t ino, dev_t dev, const char *node));
+/* Compare two Src_to_dest entries.  Return true if their keys are judged `equal'.  */
+static bool
+src_to_dest_compare (void const *x, void const *y)
+{
+  struct Src_to_dest const *a = x;
+  struct Src_to_dest const *b = y;
+  return SAME_INODE (*a, *b) ? true : false;
+}
 
 /* Add PATH to the list of files that we have created.
-   Return 0 if successful, 1 if not. */
+   Return 1 if we can't stat PATH, otherwise 0.  */
 
 int
 remember_created (const char *path)
@@ -68,43 +89,52 @@ remember_created (const char *path)
       return 1;
     }
 
-  cph_hash_insert (sb.st_ino, sb.st_dev, path);
+  remember_copied (path, sb.st_ino, sb.st_dev);
   return 0;
 }
 
-/* Add path NODE, copied from inode number INO and device number DEV,
+/* Add path NAME, copied from inode number INO and device number DEV,
    to the list of files we have copied.
    Return NULL if inserted, otherwise non-NULL. */
 
 char *
-remember_copied (const char *node, ino_t ino, dev_t dev)
+remember_copied (const char *name, ino_t ino, dev_t dev)
 {
-  return cph_hash_insert (ino, dev, node);
+  struct Src_to_dest *ent;
+  struct Src_to_dest *ent_from_table;
+
+  ent = (struct Src_to_dest *) xmalloc (sizeof *ent);
+  ent->name = name;
+  ent->st_ino = ino;
+  ent->st_dev = dev;
+
+  ent_from_table = hash_insert (src_to_dest, ent);
+  if (ent_from_table == NULL)
+    {
+      /* Insertion failed due to lack of memory.  */
+      xalloc_die ();
+    }
+
+  /* Determine whether there was already an entry in the table
+     with a matching key.  If so, free ENT (it wasn't inserted) and
+     return the `name' from the table entry.  */
+  if (ent_from_table != ent)
+    {
+      free (ent);
+      return (char *) ent_from_table->name;
+    }
+
+  /* New key;  insertion succeeded.  */
+  return NULL;
 }
 
-/* Allocate space for the hash structures, and set the global
-   variable `htab' to point to it.  The initial hash module is specified in
-   MODULUS, and the number of entries are specified in ENTRY_TAB_SIZE.  (The
-   hash structure will be rebuilt when ENTRY_TAB_SIZE entries have been
-   inserted, and MODULUS and ENTRY_TAB_SIZE in the global `htab' will be
-   doubled.)  */
-
+/* Initialize the hash table.  */
 void
-hash_init (unsigned int modulus, unsigned int entry_tab_size)
+hash_init (void)
 {
-  struct htab *htab_r;
-
-  htab_r = (struct htab *)
-    xmalloc (sizeof (struct htab) + sizeof (struct entry *) * modulus);
-
-  htab_r->entry_tab = (struct entry *)
-    xmalloc (sizeof (struct entry) * entry_tab_size);
-
-  htab_r->modulus = modulus;
-  htab_r->entry_tab_size = entry_tab_size;
-  htab = htab_r;
-
-  forget_all ();
+  src_to_dest = hash_initialize (INITIAL_TABLE_SIZE, NULL,
+				 src_to_dest_hash,
+				 src_to_dest_compare, free);
 }
 
 /* Reset the hash structure in the global variable `htab' to
@@ -113,123 +143,5 @@ hash_init (unsigned int modulus, unsigned int entry_tab_size)
 void
 forget_all (void)
 {
-  int i;
-  struct entry **p;
-
-  htab->first_free_entry = 0;
-
-  p = htab->hash;
-  for (i = htab->modulus; i > 0; i--)
-    *p++ = NULL;
-}
-
-/* Insert path NODE, copied from inode number INO and device number DEV,
-   into the hash structure HTAB, if not already present.
-   Return NULL if inserted, otherwise non-NULL. */
-
-static char *
-hash_insert2 (struct htab *ht, ino_t ino, dev_t dev, const char *node)
-{
-  struct entry **hp, *ep2, *ep;
-
-  /* The cast to uintmax_t prevents negative remainders if ino is negative.  */
-  hp = &ht->hash[(uintmax_t) ino % ht->modulus];
-
-  ep2 = *hp;
-
-  /* Collision?  */
-
-  if (ep2 != NULL)
-    {
-      ep = ep2;
-
-      /* Search for an entry with the same data.  */
-
-      do
-	{
-	  if (ep->ino == ino && ep->dev == dev)
-	    return ep->node;	/* Found an entry with the same data.  */
-	  ep = ep->coll_link;
-	}
-      while (ep != NULL);
-
-      /* Did not find it.  */
-
-    }
-
-  ep = *hp = &ht->entry_tab[ht->first_free_entry++];
-  ep->ino = ino;
-  ep->dev = dev;
-  ep->node = (char *) node;
-  ep->coll_link = ep2;		/* ep2 is NULL if not collision.  */
-
-  return NULL;
-}
-
-/* Insert path NODE, copied from inode number INO and device number DEV,
-   into the hash structure in the global variable `htab', if an entry with
-   the same inode and device was not found already.
-   Return NULL if inserted, otherwise non-NULL. */
-
-static char *
-cph_hash_insert (ino_t ino, dev_t dev, const char *node)
-{
-  struct htab *htab_r = htab;
-
-  if (htab_r->first_free_entry >= htab_r->entry_tab_size)
-    {
-      int i;
-      struct entry *ep;
-      unsigned modulus;
-      unsigned entry_tab_size;
-
-      /* Increase the number of hash entries, and re-hash the data.
-	 The method of shrinking and increasing is made to compactify
-	 the heap.  If twice as much data would be allocated
-	 straightforwardly, we would never re-use a byte of memory.  */
-
-      /* Let htab shrink.  Keep only the header, not the pointer vector.  */
-
-      htab_r = (struct htab *)
-	xrealloc ((char *) htab_r, sizeof (struct htab));
-
-      modulus = 2 * htab_r->modulus;
-      entry_tab_size = 2 * htab_r->entry_tab_size;
-
-      /* Increase the number of possible entries.  */
-
-      htab_r->entry_tab = (struct entry *)
-	xrealloc ((char *) htab_r->entry_tab,
-		  sizeof (struct entry) * entry_tab_size);
-
-      /* Increase the size of htab again.  */
-
-      htab_r = (struct htab *)
-	xrealloc ((char *) htab_r,
-		  sizeof (struct htab) + sizeof (struct entry *) * modulus);
-
-      htab_r->modulus = modulus;
-      htab_r->entry_tab_size = entry_tab_size;
-      htab = htab_r;
-
-      i = htab_r->first_free_entry;
-
-      /* Make the increased hash table empty.  The entries are still
-	 available in htab->entry_tab.  */
-
-      forget_all ();
-
-      /* Go through the entries and install them in the pointer vector
-	 htab->hash.  The items are actually inserted in htab->entry_tab at
-	 the position where they already are.  The htab->coll_link need
-	 however be updated.  Could be made a little more efficient.  */
-
-      for (ep = htab_r->entry_tab; i > 0; i--)
-	{
-	  hash_insert2 (htab_r, ep->ino, ep->dev, ep->node);
-	  ep++;
-	}
-    }
-
-  return hash_insert2 (htab_r, ino, dev, node);
+  hash_clear (src_to_dest);
 }
