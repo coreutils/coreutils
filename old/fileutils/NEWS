@@ -1,4 +1,8 @@
 Changes in release 4.1:
+[4.0e]
+* No longer use *_unlocked I/O macros on systems (like solaris5.5.1) where
+  they're not declared, so selected executables (e.g., rm) that are linked
+  with shared libraries will once again run on solaris5.6 systems.
 [4.0d (aka 4.1-b3)]
 * ls recognizes solaris 2 `doors'
 * new program: shred
