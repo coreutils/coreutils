@@ -1,3 +1,8 @@
+Sat Jun 14 11:40:17 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* man/Makefile.am: (EXTRA_DIST): Put man_MANS here so they are
+	distributed.  This is necessary for automake-1.1p.
+
 Tue Jun  3 15:00:00 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/fileblocks.c [HAVE_UNISTD_H]: Include unistd.h.
