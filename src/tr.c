@@ -37,11 +37,6 @@
 
 enum { N_CHARS = UCHAR_MAX + 1 };
 
-/* Convert a possibly-signed character to an unsigned character.  This is
-   a bit safer than casting to unsigned char, since it catches some type
-   errors that the cast doesn't.  */
-static inline unsigned char to_uchar (char ch) { return ch; }
-
 /* An unsigned integer type big enough to hold a repeat count or an
    unsigned character.  POSIX requires support for repeat counts as
    high as 2**31 - 1.  Since repeat counts might need to expand to
@@ -375,13 +370,13 @@ is_equiv_class_member (unsigned char equiv_class, unsigned char c)
   return (equiv_class == c);
 }
 
-/* Return nonzero if the character C is a member of the
+/* Return true if the character C is a member of the
    character class CHAR_CLASS.  */
 
-static int
+static bool
 is_char_class_member (enum Char_class char_class, unsigned char c)
 {
-  int result;
+  bool result;
 
   switch (char_class)
     {
