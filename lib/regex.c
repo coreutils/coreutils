@@ -1201,8 +1201,8 @@ typedef struct
    if we ever fail back to it.
 
    Requires variables fail_stack, regstart, regend, reg_info, and
-   num_regs be declared.  DOUBLE_FAIL_STACK requires `destination' be
-   declared.
+   num_regs_pushed be declared.  DOUBLE_FAIL_STACK requires `destination'
+   be declared.
 
    Does `return FAILURE_CODE' if runs out of memory.  */
 
@@ -3092,8 +3092,6 @@ re_compile_fastmap (bufp)
 #ifndef REGEX_MALLOC
   char *destination;
 #endif
-  /* We don't push any register information onto the failure stack.  */
-  unsigned num_regs = 0;
 
   register char *fastmap = bufp->fastmap;
   unsigned char *pattern = bufp->buffer;
