@@ -15,7 +15,7 @@ use POSIX qw (assert);
 BEGIN { push @INC, '.' if '.' ne '.'; }
 use Test;
 
-my $srcdir = '.';
+my $srcdir = shift;
 
 sub validate
 {
@@ -170,7 +170,7 @@ sub wrap
 {
   $| = 1;
 
-  die "Usage: $0: program-name\n" if @ARGV != 1;
+  die "Usage: $0: srcdir program-name\n" if @ARGV != 1;
 
   my $xx = $ARGV[0];
 
