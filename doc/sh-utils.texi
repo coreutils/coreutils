@@ -1999,7 +1999,7 @@ Synopsis:
 
 @example
 date [ @var{option} ]@dots{} [ +@var{format} ] @c
-[@var{MMDDhhmm}[[@var{CC}]@var{YY}][.@var{ss}] ]
+date [ @var{option} ] [@var{MMDDhhmm}[[@var{CC}]@var{YY}][.@var{ss}] ]
 @end example
 
 @findex strftime @r{and @code{date}}
@@ -2143,6 +2143,11 @@ a horizontal tab
 
 If given an argument that does not start with @samp{+}, @code{date}
 sets the system clock to the time and date specified by that argument.
+The @samp{--date} and @samp{--set} options may not be used with
+such an argument.
+The @samp{--universal} option may be used with this date format to indicate
+that the specified time and date are relative to Coordinated Universal Time
+rather than to the local time zone.
 The argument must consist entirely of digits, which have the following
 meaning:
 
@@ -2163,6 +2168,8 @@ last two digits of year (optional)
 second (optional)
 @end table
 
+@comment FIXME: Mention that --set=STRING may also be used to set the clock.
+@comment FIXME: --set=STRING is a GNU extension.
 You must have appropriate privileges to set the system clock.
 
 
@@ -2220,19 +2227,19 @@ Here are a few examples.
 @item
 To print the date of the day before yesterday:
 @example
-date --date '2 days ago'
+date --date='2 days ago'
 @end example
 
 @item
 To print the date of the day three months and one day hence:
 @example
-date --date '3 months 1 day'
+date --date='3 months 1 day'
 @end example
 
 @item
 To print the day of year of Christmas in the current year:
 @example
-date --date '25 Dec' +%j
+date --date='25 Dec' +%j
 @end example
 
 @item
@@ -2251,6 +2258,19 @@ of month, you can use the nonstandard @code{-} modifier to suppress
 the padding altogether.
 @example
 date -d 1-may '+%B %-d'
+@end example
+
+@item
+To print the current date and time in the format required by some
+versions of @code{date} when setting the system clock:
+@example
+date +%m%d%H%M%Y.%s
+@end example
+
+@item
+To set the system clock forward by two minutes:
+@example
+date --set='+2 minutes'
 @end example
 
 @end itemize
