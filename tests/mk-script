@@ -281,34 +281,35 @@ EOF1
 	  my $via_msg = ($n_vias == 1 ? '' : $via_msg_string{$via});
 	  my $file_args = join (' ', @srcdir_rel_in_file);
 
+	  my $env = $Test::env{$test_name} || $Test::env_default || [''];
+	  @$env == 1
+	    or die "$program_name: unexpected environment: @$env\n";
+	  $env = $env->[0];
+
 	  if ($via eq 'FILE')
 	    {
-	      $cmd = "\$xx $flags $file_args > $out 2> $err_output";
+	      $cmd = "$env \$xx $flags $file_args > $out 2> $err_output";
 	    }
 	  elsif ($via eq 'PIPE')
 	    {
 	      $via_msg = "|$val" if $val;
 	      $val ||= 'cat';
-	      $cmd = "$val $file_args | \$xx $flags > $out 2> $err_output";
+	      $cmd = "$val $file_args | $env \$xx $flags > $out 2> $err_output";
 	    }
 	  else
 	    {
 	      assert (@srcdir_rel_in_file == 1);
-	      $cmd = "\$xx $flags < $file_args > $out 2> $err_output";
+	      $cmd = "$env \$xx $flags < $file_args > $out 2> $err_output";
 	    }
 
-	  my $env = $Test::env{$test_name} || $Test::env_default || [''];
-	  my $e;
-	  foreach $e (@$env)
-	    {
-	      my $sep = ($via_msg && $e ? ':' : '');
-	      my $msg = "$e$sep$via_msg";
-	      $msg = "($msg)" if $msg;
-	      my $t_name = "$test_name$msg";
-	      my $e_cmd = ($e ? "$e " : '');
-	      ++$n_tests;
-	      print <<EOF;
-$e_cmd$cmd
+	  my $e = $env;
+	  my $sep = ($via_msg && $e ? ':' : '');
+	  my $msg = "$e$sep$via_msg";
+	  $msg = "($msg)" if $msg;
+	  my $t_name = "$test_name$msg";
+	  ++$n_tests;
+	  print <<EOF;
+$cmd
 code=\$?
 if test \$code != $e_ret_code; then
   \$echo "Test $t_name failed: $xx return code \$code differs from expected value $e_ret_code" 1>&2
@@ -327,7 +328,6 @@ else
 fi
 test -s $err_output || rm -f $err_output
 EOF
-	    }
 	}
     }
   print <<EOF3
