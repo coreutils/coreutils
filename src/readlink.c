@@ -1,5 +1,5 @@
 /* readlink -- display value of a symbolic link.
-   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -137,7 +137,9 @@ main (int argc, char *const argv[])
       usage (EXIT_FAILURE);
     }
 
-  value = (canonicalize ? canonicalize_file_name : xreadlink) (fname);
+  value = (canonicalize
+	   ? canonicalize_file_name (fname)
+	   : xreadlink (fname, 1024));
   if (value)
     {
       printf ("%s%s", value, (no_newline ? "" : "\n"));
