@@ -3160,7 +3160,7 @@ Print all numbers with the same width, by padding with leading zeroes.
 @end table
 
 If you want to use @code{seq} to print sequences of large integer values,
-you should not use the default @samp{%g} format since it can result in
+don't use the default @samp{%g} format since it can result in
 loss of precision:
 
 @example
