@@ -84,10 +84,10 @@ char *xstrdup ();
 
 #ifdef ENABLE_NLS
 # define NLS_MEMCMP(S1, S2, Len) strncoll (S1, S2, Len)
-# define NLS_STRCMP(S1, S2) strcoll (S1, S2)
+# define NLS_STRNCMP(S1, S2, Len) strncoll_s2_readonly (S1, S2, Len)
 #else
 # define NLS_MEMCMP(S1, S2, Len) memcmp (S1, S2, Len)
-# define NLS_STRCMP(S1, S2) strcmp (S1, S2)
+# define NLS_STRNCMP(S1, S2, Len) strcmp (S1, S2, Len)
 #endif
 
 #ifdef ENABLE_NLS
@@ -202,7 +202,7 @@ static char fold_toupper[UCHAR_LIM];
 
 /* Table mapping 3-letter month names to integers.
    Alphabetic order allows binary search. */
-static struct month us_monthtab[] =
+static const struct month us_monthtab[] =
 {
   {"APR", 4},
   {"AUG", 8},
@@ -236,7 +236,7 @@ static struct nls_keyfield *nls_keyhead = NULL;
 #endif
 
 /* Which month table to use in the program, default C */
-static struct month *monthtab = us_monthtab;
+static const struct month *monthtab = us_monthtab;
 
 /* During the merge phase, the number of files to merge at once. */
 #define NMERGE 16
@@ -528,9 +528,10 @@ zaptemp (const char *name)
 /* Initialize the character class tables. */
 
 static int
-nls_sort_month_comp (struct month *m1, struct month *m2)
+nls_sort_month_comp (const void *m1, const void *m2)
 {
-  return strcoll (m1->name, m2->name);
+  return strcoll (((const struct month *) m1)->name,
+		  ((const struct month *) m2)->name);
 }
 
 /* Do collation on strings S1 and S2, but for at most L characters.
@@ -542,7 +543,7 @@ strncoll (unsigned char *s1, unsigned char *s2, int len)
 
   if (need_locale)
     {
-      /* Emulate a strncoll() function, by forcing strcoll to compare
+      /* Emulate a strncoll function, by forcing strcoll to compare
 	 only the first LEN characters in each string. */
       register unsigned char n1 = s1[len];
       register unsigned char n2 = s2[len];
@@ -551,6 +552,34 @@ strncoll (unsigned char *s1, unsigned char *s2, int len)
       diff = strcoll (s1, s2);
       s1[len] = n1;
       s2[len] = n2;
+    }
+  else
+    {
+      diff = memcmp (s1, s2, len);
+    }
+
+  return diff;
+}
+
+/* Do collation on strings S1 and S2, but for at most L characters.
+   Use the fact, that we KNOW that S2 is the shorter string and has
+   length LEN.  */
+static int
+strncoll_s2_readonly (unsigned char *s1, const unsigned char *s2, int len)
+{
+  register int diff;
+
+  assert (len <= strlen (s1));
+
+  if (need_locale)
+    {
+      /* Emulate a strncoll function, by forcing strcoll to compare
+	 only the first LEN characters in each string. */
+      register unsigned char n1 = s1[len];
+
+      s1[len] = 0;
+      diff = strcoll (s1, s2);
+      s1[len] = n1;
     }
   else
     {
@@ -585,8 +614,6 @@ inittables (void)
   /* If We're not in the "C" locale, read in different names for months. */
   if (need_locale)
     {
-      int (*comp) () = nls_sort_month_comp;
-
       nls_months_collide[0] = 1;	/* if an error, look again       */
       for (i = 0; i < NLS_NUM_MONTHS; i++)
 	{
@@ -607,19 +634,21 @@ inittables (void)
 
 	  nls_months_collide[nls_monthtab[i].val] = 0;
 	  for (j = 0; j < NLS_NUM_MONTHS; ++j)
-	    if (STREQ (nls_monthtab[i].name, us_monthtab[i].name))
-	      {
-		/* There are indeed some month names in English which
-		   collide with the NLS name.  */
-		nls_months_collide[nls_monthtab[i].val] = 1;
-		break;
-	      }
+	    {
+	      if (STREQ (nls_monthtab[i].name, us_monthtab[i].name))
+		{
+		  /* There are indeed some month names in English which
+		     collide with the NLS name.  */
+		  nls_months_collide[nls_monthtab[i].val] = 1;
+		  break;
+		}
+	    }
 	}
       /* Now quicksort the month table (should be sorted already!).
          However, another locale doesn't rule out the possibility
          of a different order of month names. */
       qsort ((void *) nls_monthtab, NLS_NUM_MONTHS,
-	     sizeof (struct month), comp);
+	     sizeof (struct month), nls_sort_month_comp);
       monthtab = nls_monthtab;
     }
 #endif /* NLS */
@@ -1147,7 +1176,7 @@ nls_set_fraction (register unsigned char ch)
 static void
 look_for_fraction (unsigned const char *s, unsigned const char *e)
 {
-  register unsigned const char *p = s;
+  register unsigned const char *p;
   register unsigned short n = 0;
   static unsigned short max_groups = 0;
   static unsigned short *groups = NULL;
@@ -1161,7 +1190,7 @@ look_for_fraction (unsigned const char *s, unsigned const char *e)
   while (blanks[*s] || *s == NEGATIVE_SIGN)
     s++;
   /* groups = {}, n = 0 */
-  for (; p < e; p++)
+  for (p = s; p < e; p++)
     {
       /* groups[n]={number of digits leading to separator n}
          n = number of separators so far */
@@ -1193,21 +1222,21 @@ look_for_fraction (unsigned const char *s, unsigned const char *e)
       /* a legal trailing group, iff groups[n] == first rule */
       if (groups[n] != (short) *p)
 	nls_set_fraction (*s);
-      else {
-	if (n == 2)
-	  {			/* Only two groups */
-	    if (groups[n - 1] > max (p[0], p[1]))
-	      return nls_set_fraction (*s);
-	    return;
-	  }
-	/* if the separators are the same, it's a thousands */
-	if (*s != *(s - groups[n]))
-	  nls_set_fraction (*s);
-	/* s[0] = thousands separator */
-	else if (*s == FLOATING_COMMA)
-	  nls_set_fraction (FLOATING_POINT);
-      }
-      nls_fraction_found = 1;
+      else
+	{
+	  if (n == 2)
+	    {			/* Only two groups */
+	      if (groups[n - 1] > max (p[0], p[1]))
+		nls_set_fraction (*s);
+	      return;
+	    }
+	  /* if the separators are the same, it's a thousands */
+	  if (*s != *(s - groups[n]))
+	    nls_set_fraction (*s);
+	  /* s[0] = thousands separator */
+	  else if (*s == th_sep)
+	    nls_fraction_found = 1;
+	}
     }
   else /* no grouping allowed here, last separator IS decimal point */
     {
@@ -1458,8 +1487,8 @@ general_numcompare (const char *sa, const char *sb)
   return a == b ? 0 : a < b ? -1 : 1;
 }
 
-/* Return an integer <= 12 associated with month name S with length LEN,
-   0 if the name in S is not recognized. */
+/* Return an integer in 1..12 of the month name S with length LEN.
+   Return 0 if the name in S is not recognized.  */
 
 static int
 getmonth (const char *s, int len)
@@ -1468,7 +1497,10 @@ getmonth (const char *s, int len)
   register int i, lo = 0, hi = 12, result;
 
   while (len > 0 && blanks[UCHAR (*s)])
-    ++s, --len;
+    {
+      ++s;
+      --len;
+    }
 
   if (len == 0)
     return 0;
@@ -1485,14 +1517,19 @@ getmonth (const char *s, int len)
     --i;
   month[i] = '\0';
 
-  while (hi - lo > 1)
+  do
     {
-      if (NLS_STRCMP (month, monthtab[(lo + hi) / 2].name) < 0)
-	hi = (lo + hi) / 2;
+      int ix  = (lo + hi) / 2;
+
+      len  = strlen (monthtab[ix].name);
+      if (NLS_STRNCMP (month, monthtab[ix].name, len) < 0)
+	hi = ix;
       else
-	lo = (lo + hi) / 2;
+	lo = ix;
     }
-  result = (STREQ (month, monthtab[lo].name) ? monthtab[lo].val : 0);
+  while (hi - lo > 1);
+
+  result = (!strncmp (month, monthtab[lo].name, len) ? monthtab[lo].val : 0);
 
 #ifndef HAVE_ALLOCA
   free (month);
