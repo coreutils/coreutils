@@ -46,40 +46,41 @@
 #include <getopt.h>
 #include <sys/types.h>
 
+/* FIXME: uncomment for release
+#define NDEBUG
+*/
+#include <assert.h>
+
 #include "system.h"
 #include "path-concat.h"
 #include "backupfile.h"
 #include "closeout.h"
+#include "cp-hash.h"
+#include "copy.h"
+#include "remove.h"
 #include "error.h"
 
 #ifdef HAVE_LCHOWN
 # define chown(PATH, OWNER, GROUP) lchown(PATH, OWNER, GROUP)
 #endif
 
+/* Initial number of entries in each hash table entry's table of inodes.  */
+#define INITIAL_HASH_MODULE 100
+
+/* Initial number of entries in the inode hash table.  */
+#define INITIAL_ENTRY_TAB_SIZE 70
+
 char *base_name ();
+int euidaccess ();
+int full_write ();
 enum backup_type get_version ();
 int isdir ();
-int yesno ();
+int lstat ();
 int safe_read ();
-int full_write ();
-int euidaccess ();
+int yesno ();
 
 /* The name this program was run with. */
 char *program_name;
-
-/* If nonzero, query the user before overwriting files. */
-static int interactive;
-
-/* If nonzero, do not query the user before overwriting unwritable
-   files. */
-static int override_mode;
-
-/* If nonzero, do not move a nondirectory that has an existing destination
-   with the same or newer modification time. */
-static int update = 0;
-
-/* If nonzero, list each file as it is moved. */
-static int verbose;
 
 /* If nonzero, stdin is a tty. */
 static int stdin_tty;
@@ -96,13 +97,58 @@ static struct option const long_options[] =
   {"force", no_argument, NULL, 'f'},
   {"interactive", no_argument, NULL, 'i'},
   {"suffix", required_argument, NULL, 'S'},
-  {"update", no_argument, &update, 1},
-  {"verbose", no_argument, &verbose, 1},
+  {"update", no_argument, NULL, 'u'},
+  {"verbose", no_argument, NULL, 'v'},
   {"version-control", required_argument, NULL, 'V'},
   {"help", no_argument, &show_help, 1},
   {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
+
+static void
+rm_option_init (struct rm_options *x)
+{
+  x->unlink_dirs = 0;
+
+  /* FIXME: maybe this should be 1.  The POSIX spec doesn't specify.  */
+  x->ignore_missing_files = 0;
+
+  x->recursive = 1;
+
+  /* Should we prompt for removal, too?  No.  Prompting for the `move'
+     part is enough.  It implies removal.  */
+  x->interactive = 0;
+  x->stdin_tty = 0;
+
+  x->verbose = 0;
+}
+
+static void
+cp_option_init (struct cp_options *x)
+{
+  x->copy_as_regular = 1;  /* FIXME: maybe make this an option */
+  x->dereference = 0;
+  x->force = 0;
+  x->hard_link = 0;
+  x->interactive = 0;
+  x->myeuid = geteuid ();
+  x->one_file_system = 0;
+  x->preserve = 1;
+  x->require_preserve = 0;  /* FIXME: maybe make this an option */
+  x->recursive = 1;
+  x->sparse_mode = SPARSE_AUTO;  /* FIXME: maybe make this an option */
+  x->symbolic_link = 0;
+
+  /* Find out the current file creation mask, to knock the right bits
+     when using chmod.  The creation mask is set to be liberal, so
+     that created directories can be written, even if it would not
+     have been allowed with the mask this process was started with.  */
+  x->umask_kill = 0777777 ^ umask (0);
+
+  x->update = 0;
+  x->verbose = 0;
+  x->xstat = lstat;
+}
 
 /* If PATH is an existing directory, return nonzero, else 0.  */
 
@@ -114,140 +160,17 @@ is_real_dir (const char *path)
   return lstat (path, &stats) == 0 && S_ISDIR (stats.st_mode);
 }
 
-/* Apply as many of the file attributes (the struct stat fields: st_atime,
-   st_mtime, st_uid, st_gid, st_mode) of ATTR to FILE as possible.
-   Return non-zero if any operation failed; return zero otherwise.  */
-
-static int
-apply_attributes (const char *file, const struct stat *attr)
-{
-  struct utimbuf tv;
-  mode_t mode = attr->st_mode;
-  int fail = 0;
-
-  /* Try to apply the modtime and access time.  */
-  tv.actime = attr->st_atime;
-  tv.modtime = attr->st_mtime;
-  if (utime (file, &tv))
-    {
-      error (0, errno, "%s: unable to restore file times", file);
-      fail = 1;
-    }
-
-  /* chown would turn off set[ug]id bits for non-root, so do the
-     chown before the chmod.  */
-
-  /* Try to apply group ID and owner ID.  */
-  if (chown (file, attr->st_uid, attr->st_gid))
-    {
-      error (0, errno, "%s: unable to restore owner and group IDs", file);
-
-      /* If the owner and group cannot be preserved, then mask off
-	 any setgid and setuid bits.  */
-      mode &= (~(S_ISUID | S_ISGID));
-      fail = 1;
-    }
-
-  /* Try to apply file mode.  */
-  if (chmod (file, mode & 07777))
-    {
-      error (0, errno, "%s: unable to restore file mode", file);
-      fail = 1;
-    }
-
-  return fail;
-}
-
-/* Copy regular file SOURCE onto file DEST.  SOURCE_STATS must be
-   the result of calling lstat on SOURCE.
-   Return 1 if an error occurred, 0 if successful. */
-
-static int
-copy_reg (const char *source, const char *dest, const struct stat *source_stats)
-{
-  int ifd;
-  int ofd;
-  char buf[1024 * 8];
-  int len;			/* Number of bytes read into `buf'. */
-
-  if (!S_ISREG (source_stats->st_mode))
-    {
-      error (0, 0,
-	     _("cannot move `%s' across filesystems: Not a regular file"),
-	     source);
-      return 1;
-    }
-
-  if (unlink (dest) && errno != ENOENT)
-    {
-      error (0, errno, _("cannot remove `%s'"), dest);
-      return 1;
-    }
-
-  ifd = open (source, O_RDONLY, 0);
-  if (ifd < 0)
-    {
-      error (0, errno, "%s", source);
-      return 1;
-    }
-  ofd = open (dest, O_WRONLY | O_CREAT | O_TRUNC, 0600);
-  if (ofd < 0)
-    {
-      error (0, errno, "%s", dest);
-      close (ifd);
-      return 1;
-    }
-
-  while ((len = safe_read (ifd, buf, sizeof (buf))) > 0)
-    {
-      if (full_write (ofd, buf, len) < 0)
-	{
-	  error (0, errno, "%s", dest);
-	  close (ifd);
-	  close (ofd);
-	  unlink (dest);
-	  return 1;
-	}
-    }
-  if (len < 0)
-    {
-      error (0, errno, "%s", source);
-      close (ifd);
-      close (ofd);
-      unlink (dest);
-      return 1;
-    }
-
-  if (close (ifd) < 0)
-    {
-      error (0, errno, "%s", source);
-      close (ofd);
-      return 1;
-    }
-  if (close (ofd) < 0)
-    {
-      error (0, errno, "%s", dest);
-      return 1;
-    }
-
-  /* Try to apply the attributes of SOURCE to DEST.
-     Each failure gets a diagnostic, but POSIX requires that failure
-     to preserve attributes not change mv's exit status.  */
-  apply_attributes (dest, source_stats);
-
-  return 0;
-}
-
 /* Move SOURCE onto DEST.  Handles cross-filesystem moves.
    If SOURCE is a directory, DEST must not exist.
    Return 0 if successful, non-zero if an error occurred.  */
 
 static int
-do_move (const char *source, const char *dest)
+do_move (const char *source, const char *dest, const struct cp_options *x)
 {
   char *dest_backup = NULL;
   struct stat source_stats;
   struct stat dest_stats;
+  int nonexistent_dst;
   int fail;
 
   if (lstat (source, &source_stats) != 0)
@@ -256,8 +179,10 @@ do_move (const char *source, const char *dest)
       return 1;
     }
 
+  nonexistent_dst = 1;
   if (lstat (dest, &dest_stats) == 0)
     {
+      nonexistent_dst = 0;
 
       if (source_stats.st_dev == dest_stats.st_dev
 	  && source_stats.st_ino == dest_stats.st_ino)
@@ -272,11 +197,11 @@ do_move (const char *source, const char *dest)
 	  return 1;
 	}
 
-      if (!S_ISDIR (source_stats.st_mode) && update
+      if (!S_ISDIR (source_stats.st_mode) && x->update
 	  && source_stats.st_mtime <= dest_stats.st_mtime)
 	return 0;
 
-      if (!override_mode && (interactive || stdin_tty)
+      if (!x->force && (x->interactive || stdin_tty)
 	  && euidaccess (dest, W_OK))
 	{
 	  fprintf (stderr, _("%s: replace `%s', overriding mode %04o? "),
@@ -285,16 +210,16 @@ do_move (const char *source, const char *dest)
 	  if (!yesno ())
 	    return 0;
 	}
-      else if (interactive)
+      else if (x->interactive)
 	{
 	  fprintf (stderr, _("%s: replace `%s'? "), program_name, dest);
 	  if (!yesno ())
 	    return 0;
 	}
 
-      if (backup_type != none)
+      if (x->backup_type != none)
 	{
-	  char *tmp_backup = find_backup_file_name (dest);
+	  char *tmp_backup = find_backup_file_name (dest, x->backup_type);
 	  if (tmp_backup == NULL)
 	    error (1, 0, _("virtual memory exhausted"));
 	  dest_backup = (char *) alloca (strlen (tmp_backup) + 1);
@@ -318,7 +243,7 @@ do_move (const char *source, const char *dest)
       return 1;
     }
 
-  if (verbose)
+  if (x->verbose)
     printf ("%s -> %s\n", source, dest);
 
   /* Always try rename first.  */
@@ -346,7 +271,17 @@ do_move (const char *source, const char *dest)
 	 This function used to resort to copying only when rename failed
 	 and set errno to EXDEV.  */
 
-      fail = copy_reg (source, dest, &source_stats);
+      static int first = 1;
+
+      if (first)
+	{
+	  first = 0;
+
+	  /* Allocate space for remembering copied and created files.  */
+	  hash_init (INITIAL_HASH_MODULE, INITIAL_ENTRY_TAB_SIZE);
+	}
+
+      fail = copy (source, dest, nonexistent_dst, x);
       if (fail)
 	{
 	  /* Restore original destination file DEST if made a backup.  */
@@ -355,7 +290,23 @@ do_move (const char *source, const char *dest)
 	}
       else
 	{
-	  fail = unlink (source);
+	  struct rm_options rm_options;
+	  struct File_spec fs;
+	  enum RM_status status;
+
+	  rm_option_init (&rm_options);
+	  rm_options.verbose = x->verbose;
+
+	  remove_init ();
+
+	  fspec_init_file (&fs, source);
+	  status = rm (&fs, 1, &rm_options);
+	  assert (VALID_STATUS (status));
+	  if (status == RM_ERROR)
+	    fail = 1;
+
+	  remove_fini ();
+
 	  if (fail)
 	    error (0, errno, _("cannot remove `%s'"), source);
 	}
@@ -382,7 +333,7 @@ strip_trailing_slashes_2 (char *path)
    Return 0 if successful, non-zero if an error occurred.  */
 
 static int
-movefile (char *source, char *dest, int dest_is_dir)
+movefile (char *source, char *dest, int dest_is_dir, const struct cp_options *x)
 {
   int dest_had_trailing_slash = strip_trailing_slashes_2 (dest);
   int fail;
@@ -408,12 +359,12 @@ movefile (char *source, char *dest, int dest_is_dir)
       new_dest = path_concat (dest, src_basename, NULL);
       if (new_dest == NULL)
 	error (1, 0, _("virtual memory exhausted"));
-      fail = do_move (source, new_dest);
+      fail = do_move (source, new_dest, x);
       free (new_dest);
     }
   else
     {
-      fail = do_move (source, dest);
+      fail = do_move (source, dest, x);
     }
 
   return fail;
@@ -439,7 +390,7 @@ Rename SOURCE to DEST, or move SOURCE(s) to DIRECTORY.\n\
   -f, --force                  remove existing destinations, never prompt\n\
   -i, --interactive            prompt before overwrite\n\
   -S, --suffix=SUFFIX          override the usual backup suffix\n\
-  -u, --update                 move only older or brand new files\n\
+  -u, --update                 move only older or brand new non-directories\n\
   -v, --verbose                explain what is being done\n\
   -V, --version-control=WORD   override the usual version control\n\
       --help                   display this help and exit\n\
@@ -468,18 +419,20 @@ main (int argc, char **argv)
   int make_backups = 0;
   int dest_is_dir;
   char *version;
+  struct cp_options x;
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  cp_option_init (&x);
+
   version = getenv ("SIMPLE_BACKUP_SUFFIX");
   if (version)
     simple_backup_suffix = version;
   version = getenv ("VERSION_CONTROL");
 
-  interactive = override_mode = verbose = update = 0;
   errors = 0;
 
   while ((c = getopt_long (argc, argv, "bfiuvS:V:", long_options, NULL)) != -1)
@@ -492,18 +445,18 @@ main (int argc, char **argv)
 	  make_backups = 1;
 	  break;
 	case 'f':
-	  interactive = 0;
-	  override_mode = 1;
+	  x.interactive = 0;
+	  x.force = 1;
 	  break;
 	case 'i':
-	  interactive = 1;
-	  override_mode = 0;
+	  x.interactive = 1;
+	  x.force = 0;
 	  break;
 	case 'u':
-	  update = 1;
+	  x.update = 1;
 	  break;
 	case 'v':
-	  verbose = 1;
+	  x.verbose = 1;
 	  break;
 	case 'S':
 	  simple_backup_suffix = optarg;
@@ -534,8 +487,7 @@ main (int argc, char **argv)
       usage (1);
     }
 
-  if (make_backups)
-    backup_type = get_version (version);
+  x.backup_type = (make_backups ? get_version (version) : none);
 
   stdin_tty = isatty (STDIN_FILENO);
   dest_is_dir = isdir (argv[argc - 1]);
@@ -546,9 +498,9 @@ main (int argc, char **argv)
 
   /* Move each arg but the last onto the last. */
   for (; optind < argc - 1; ++optind)
-    errors |= movefile (argv[optind], argv[argc - 1], dest_is_dir);
+    errors |= movefile (argv[optind], argv[argc - 1], dest_is_dir, &x);
 
-  if (verbose)
+  if (x.verbose)
     close_stdout ();
   exit (errors);
 }
