@@ -1,5 +1,5 @@
 /* comm -- compare two sorted files line by line.
-   Copyright (C) 86, 90, 91, 1995-2002 Free Software Foundation, Inc.
+   Copyright (C) 86, 90, 91, 1995-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -261,7 +261,10 @@ main (int argc, char **argv)
       }
 
   if (optind + 2 != argc)
-    usage (EXIT_FAILURE);
+    {
+      error (0, 0, _("too few arguments"))
+      usage (EXIT_FAILURE);
+    }
 
   exit (compare_files (argv + optind) == 0
 	? EXIT_SUCCESS : EXIT_FAILURE);
