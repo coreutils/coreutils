@@ -1667,13 +1667,14 @@ main (argc, argv)
 		  case 'T':
 		    if (s[1])
 		      temp_file_prefix = ++s;
-		    else if (i < argc - 1)
-		      {
-			temp_file_prefix = argv[++i];
-			goto outer;
-		      }
 		    else
-		      error (2, 0, "option `-T' requires an argument");
+		      {
+			if (i < argc - 1)
+			  temp_file_prefix = argv[++i];
+			else
+			  error (2, 0, "option `-T' requires an argument");
+		      }
+		    goto outer;
 		    break;
 		  case 'u':
 		    unique = 1;

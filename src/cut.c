@@ -22,6 +22,8 @@
    POSIX changes, bug fixes, long-named options, and cleanup
    by David MacKenzie <djm@gnu.ai.mit.edu>.
 
+   Rewrite cut_fields and cut_bytes -- Jim Meyering (meyering@comco.com).
+
    Options:
    --bytes=byte-list
    -b byte-list			Print only the bytes in positions listed
@@ -73,8 +75,7 @@
 
 #include <stdio.h>
 
-/* FIXME */
-/* #define NDEBUG */
+#define NDEBUG
 #include <assert.h>
 
 #include <getopt.h>
@@ -90,11 +91,9 @@
     }									\
   while (0)
 
-struct range_pair
-  {
-    int lo;
-    int hi;
-  };
+/* Append LOW, HIGH to the list RP of range pairs, allocating additional
+   space if necessary.  Update local variable N_RP.  When allocating,
+   update global variable N_RP_ALLOCATED.  */
 
 #define ADD_RANGE_PAIR(rp, low, high)					\
   do									\
@@ -111,14 +110,26 @@ struct range_pair
     }									\
   while (0)
 
+struct range_pair
+  {
+    int lo;
+    int hi;
+  };
+
 char *xmalloc ();
 char *xrealloc ();
 void error ();
 
-/* FIXME: Comment.  */
+/* This buffer is used to support the semantics of the -s option
+   (or lack of same) when the specified field list includes (does
+   not include) the first field.  In both of those cases, the entire
+   first field must be read into this buffer to determine whether it
+   is followed by a delimiter or a newline before any of it may be
+   output.  Otherwise, cut_fields can do the job without using this
+   buffer.  */
 static char *field_1_buffer;
 
-/* FIXME: Comment.  */
+/* The number of bytes allocated for FIELD_1_BUFFER.  */
 static int field_1_bufsize;
 
 /* The largest field or byte index used as an endpoint of a closed
@@ -223,7 +234,13 @@ With no FILE, or when FILE is -, read standard input.\n\
   exit (status);
 }
 
-/* Begin ------------ from getline.c */
+/* The following function was copied from getline.c, but with these changes:
+   - Read up to and including a newline or TERMINATOR, whichever comes first.
+   The original does not treat newline specially.
+   - Remove unused argument, OFFSET.
+   - Use xmalloc and xrealloc instead of malloc and realloc.
+   - Declare this function static.  */
+
 /* Always add at least this many bytes when extending the buffer.  */
 #define MIN_CHUNK 64
 
@@ -233,7 +250,7 @@ With no FILE, or when FILE is -, read standard input.\n\
    xrealloc'd as necessary.  Return the number of characters read (not
    including the null terminator), or -1 on error or EOF.  */
 
-int
+static int
 getstr (lineptr, n, stream, terminator)
      char **lineptr;
      int *n;
@@ -318,12 +335,19 @@ print_kth (k)
    to its starting index.  FIELDSTR should be composed of one or more
    numbers or ranges of numbers, separated by blanks or commas.
    Incomplete ranges may be given: `-m' means `1-m'; `n-' means `n'
-   through end of line or last field.  Return non-zero if FIELDSTR
-   contains at least one field specification, zero otherwise.  */
+   through end of line.  Return non-zero if FIELDSTR contains at least
+   one field specification, zero otherwise.  */
+
+/* FIXME-someday:  What if the user wants to cut out the 1,000,000-th field
+   of some huge input file?  This function shouldn't have to alloate a table
+   of a million ints just so we can test every field < 10^6 with an array
+   dereference.  Instead, consider using a dynamic hash table.  It would be
+   simpler and nearly as good a solution to use a 32K x 4-byte table with
+   one bit per field index instead of a whole `int' per index.  */
 
 static int
 set_fields (fieldstr)
-     char *fieldstr;
+     const char *fieldstr;
 {
   int initial = 1;		/* Value of first number in a range.  */
   int dash_found = 0;		/* Nonzero if a '-' is found in this field.  */
@@ -337,8 +361,7 @@ set_fields (fieldstr)
   int i;
 
   n_rp = 0;
-  /* FIXME: use 1 only for testing.  */
-  n_rp_allocated = 1;
+  n_rp_allocated = 16;
   rp = (struct range_pair *) xmalloc (n_rp_allocated * sizeof (*rp));
 
   /* Collect and store in RP the range end points.
@@ -474,18 +497,17 @@ set_fields (fieldstr)
   return field_found;
 }
 
-/* Print the file open for reading on stream STREAM
-   with the bytes marked `FIELD_OMIT' in `fields' removed from each line. */
+/* Read from stream STREAM, printing to standard output any selected bytes.  */
 
 static void
 cut_bytes (stream)
      FILE *stream;
 {
-  int n_bytes;			/* Number of chars in the line so far. */
+  int byte_idx;			/* Number of chars in the line so far. */
   int printed_from_curr_line;
 
   printed_from_curr_line = 0;
-  n_bytes = 0;
+  byte_idx = 0;
   while (1)
     {
       register int c;		/* Each character from the file. */
@@ -499,23 +521,21 @@ cut_bytes (stream)
 	  if (c == EOF)
 	    break;
 	  printed_from_curr_line = 0;
-	  n_bytes = 0;
+	  byte_idx = 0;
 	}
       else
 	{
-	  ++n_bytes;
-	  if (print_kth (n_bytes))
+	  ++byte_idx;
+	  if (print_kth (byte_idx))
 	    {
 	      printed_from_curr_line = 1;
 	      putchar (c);
 	    }
 	}
-      /* WORKING */
     }
 }
 
-/* Read from stream STREAM, printing to standard output any selected fields.
-   FIXME: comment.  */
+/* Read from stream STREAM, printing to standard output any selected fields.  */
 
 static void
 cut_fields (FILE *stream)
@@ -523,7 +543,7 @@ cut_fields (FILE *stream)
   int c;
   int field_idx;
   int found_any_selected_field;
-  int first_field_special;
+  int buffer_first_field;
 
   found_any_selected_field = 0;
   field_idx = 1;
@@ -534,11 +554,11 @@ cut_fields (FILE *stream)
      and the first field has been selected, or if non-delimited lines
      must be suppressed and the first field has *not* been selected.
      That is because a non-delimited line has exactly one field.  */
-  first_field_special = (suppress_non_delimited ^ !print_kth (1));
+  buffer_first_field = (suppress_non_delimited ^ !print_kth (1));
 
   while (1)
     {
-      if (field_idx == 1 && first_field_special)
+      if (field_idx == 1 && buffer_first_field)
 	{
 	  int len;
 
@@ -715,9 +735,8 @@ main (argc, argv)
 
 	case 'd':
 	  /* New delimiter. */
-	  if (optarg[0] == '\0')
-	    FATAL_ERROR ("missing delimiter argument");
-	  if (optarg[1] != '\0')
+	  /* Interpret -d '' to mean `use the NUL byte as the delimiter.'  */
+	  if (optarg[0] != '\0' && optarg[1] != '\0')
 	    FATAL_ERROR ("the delimiter must be a single character");
 	  delim = optarg[0];
 	  break;
@@ -746,9 +765,12 @@ main (argc, argv)
   if (operating_mode == undefined_mode)
     FATAL_ERROR ("you must specify a list of bytes, characters, or fields");
 
-  /* FIXME: what is this?  */
-  if ((suppress_non_delimited || delim != '\0') && operating_mode != field_mode)
+  if (delim != '\0' && operating_mode != field_mode)
     FATAL_ERROR ("a delimiter may be specified only when operating on fields");
+
+  if (suppress_non_delimited && operating_mode != field_mode)
+    FATAL_ERROR ("suppressing non-delimited lines makes sense\n\
+\tonly when operating on fields");
 
   if (delim == '\0')
     delim = '\t';

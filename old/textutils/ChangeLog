@@ -1,3 +1,35 @@
+Wed Dec 22 18:52:44 1993  Jim Meyering  (meyering@comco.com)
+
+	* memcmp.c: Use the latest version from the GNU C library.
+
+	* cut.c [ADD_RANGE_PAIR]: New macro.
+	(set_fields): Collect the list of all selected ranges before
+	allocating and initializing the boolean lookup table.
+	(cut_bytes, cut_fields): Complete rewrite.  Avoid copying
+	into buffer whenever possible.  Properly handle input without
+	trailing newline.
+	(getstr): New function.  Copied from getline.c, but with minor changes.
+
+	* sort.c (main): Properly handle -Tdir.
+	Before, `sort -T/var/tmp' gave `sort: unrecognized option `-v''.
+	Reported by Kristoffer Rose (kris@diku.dk).
+
+	* cut.c (main): Give separate errors for `-s without -f'
+	and `-d without -f'.
+	(main): Now -d '' means `use the NUL byte as the delimiter'.
+	Before, it got an error.
+
+Mon Dec 20 23:29:30 1993  Jim Meyering  (meyering@comco.com)
+
+	* configure.in [test for 8-bit clean memcmp]: Add a test to detect
+	losing memcmp from SunOS4.1.x.
+
+Sat Dec 18 01:12:24 1993  Jim Meyering  (meyering@comco.com)
+
+	* configure.in (AC_OUTPUT): Put `touch stamp-config' in second arg
+	so it goes in config.status.  This eliminates unnecessary second run
+	of configure.
+
 Thu Dec 02 23:53:03 1993  Jim Meyering  (meyering@comco.com)
 
 	* configure.in (AC_HAVE_FUNCS): Add isascii.

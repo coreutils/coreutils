@@ -1,3 +1,11 @@
+User-visible changes in release 1.10
+* cut interprets -d '' to mean `use the NUL byte as the delimiter.' rather
+  than reporting that no delimiter was specified.
+* `echo a:b:c: | cut -d: -f3,4' prints `c:'.  Before it printed just `c'.
+* cut has been rewritten, is markedly faster for large inputs, and passes a
+  fairly large test suite.
+* sort properly handles the argument to the -T option.
+
 Major changes in release 1.9.1:
 * cut no longer ignores the last line of input when that line lacks a
   trailing newline character
