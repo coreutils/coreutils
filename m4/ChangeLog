@@ -1,3 +1,7 @@
+1998-03-15  Jim Meyering  <meyering@eng.ascend.com>
+
+	* Makefile.am (EXTRA_DIST): Add error.m4.
+
 1998-02-07  Jim Meyering  <meyering@eng.ascend.com>
 
 	* getline.m4: Don't set am_cv_func_working_getline before the
