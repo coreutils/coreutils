@@ -1,17 +1,16 @@
 #!/bin/sh
 
-: ${RM=rm}
 test=ir-1
 
 if test "$VERBOSE" = yes; then
   set -x
-  $RM --version
+  rm --version
 fi
 
-# Don't require use of TMPDIR.
-: ${RM_TMPDIR=.}
-
-tmp=$RM_TMPDIR/t-rm.$$
+pwd=`pwd`
+tmp=`echo "$0"|sed 's,.*/,,'`.tmp
+trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
+trap '(exit $?); exit' 1 2 13 15
 
 test_failure=0
 mkdir $tmp $tmp/a $tmp/b $tmp/c || test_failure=1
@@ -42,7 +41,7 @@ EOF
 # determine which one was removed based on order of dir entries.
 # This is a good argument for switching to a dejagnu-style test suite.
 fail=0
-$RM --verbose -i -r $tmp < $test.I > /dev/null 2>&1 || fail=1
+rm --verbose -i -r $tmp < $test.I > /dev/null 2>&1 || fail=1
 
 # $tmp should not have been removed.
 test -d $tmp || fail=1
