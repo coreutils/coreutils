@@ -1,6 +1,7 @@
 1999-01-16  Jim Meyering  <meyering@ascend.com>
 
-	* jm-macros.m4: Define ARGMATCH_DIE.
+	* jm-macros.m4 (ARGMATCH_DIE): Define.
+	(ARGMATCH_DIE_DECL): Define.
 
 1999-01-12  Jim Meyering  <meyering@ascend.com>
 
