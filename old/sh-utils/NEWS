@@ -1,4 +1,6 @@
 Changes in release 1.17
+ [1.16h]
+* who works on Solaris
  [1.16g]
 * factor now uses uintmax_t, so the largest number it can factor is now 2^64 - 1
   on systems with type `long long'.
