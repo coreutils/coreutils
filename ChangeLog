@@ -2,8 +2,33 @@
 
 	* Version 5.0.91.
 
+	* Use automake-1.7.6b and autoconf-2.57b.  Regenerate dependent files.
+
 	* tests/tail-2/tail-n0f: Wait .5 seconds for backgrounded process
 	to start, rather than just .1.  Upon failure, print unexpected state.
+
+2003-09-04  Paul Eggert  <eggert@twinsun.com>
+
+	Fix a bug reported by Andreas Schwab in
+	<http://mail.gnu.org/archive/html/bug-coreutils/2003-09/msg00009.html>.
+	* src/head.c (elide_tail_lines_pipe): Don't assign 0 or
+	SAFE_READ_ERROR to tmp->nbytes.
+	* src/tail.c (pipe_lines, pipe_bytes): Likewise.
+
+	* src/head.c (struct linebuffer): Change nbytes and nlines
+	from unsigned int to size_t.  unsigned int is safe (after the
+	changes noted above) but size_t is cleaner.
+	* src/tail.c (struct linebuffer, struct charbuffer): Likewise.
+	(pipe_bytes): Likewise for local variable 'i', which was 'int'.
+
+	Standardize on BUFSIZ as opposed to other macro names and values.
+	* src/head.c (BUFSIZE): Remove.  All uses changed to BUFSIZ.
+	* src/tail.c (BUFSIZ) [!defined BUFSIZ]: Remove.
+	stdio.h has always defined it,
+	and other code already assumes it's defined.
+	* src/tr.c (BUFSIZ) [!defined BUFSIZ]: Likewise.
+	(IO_BUF_SIZE): Remove; replace all uses with sizeof io_buf.
+	(io_buf): IO_BUF_SIZE -> BUFSIZ.
 
 2003-09-04  Paul Eggert  <eggert@twinsun.com>
 
