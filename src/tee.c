@@ -210,7 +210,7 @@ tee (int nfiles, const char **files)
 	 Standard output is the first one.  */
       for (i = 0; i <= nfiles; i++)
 	if (descriptors[i]
-	    && fwrite (buffer, bytes_read, 1, descriptors[i]) != bytes_read)
+	    && fwrite (buffer, 1, bytes_read, descriptors[i]) != bytes_read)
 	  {
 	    error (0, errno, "%s", files[i]);
 	    descriptors[i] = NULL;
