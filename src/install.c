@@ -164,6 +164,9 @@ static int preserve_timestamps;
 /* If nonzero, install a directory instead of a regular file. */
 static int dir_arg;
 
+/* If nonzero, show what we are doing.  */
+static int verbose;
+
 /* If nonzero, display usage information and exit.  */
 static int show_help;
 
@@ -180,6 +183,7 @@ static struct option const long_options[] =
   {"preserve-timestamps", no_argument, NULL, 'p'},
   {"backup", no_argument, NULL, 'b'},
   {"version-control", required_argument, NULL, 'V'},
+  {"verbose", no_argument, NULL, 'v'},
   {"help", no_argument, &show_help, 1},
   {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
@@ -205,6 +209,7 @@ main (int argc, char **argv)
   strip_files = 0;
   preserve_timestamps = 0;
   dir_arg = 0;
+  verbose = 0;
   umask (0);
 
    version = getenv ("SIMPLE_BACKUP_SUFFIX");
@@ -212,7 +217,7 @@ main (int argc, char **argv)
       simple_backup_suffix = version;
    version = getenv ("VERSION_CONTROL");
 
-  while ((optc = getopt_long (argc, argv, "bcsdg:m:o:pV:S:", long_options,
+  while ((optc = getopt_long (argc, argv, "bcsdg:m:o:pvV:S:", long_options,
 			      NULL)) != -1)
     {
       switch (optc)
@@ -229,6 +234,9 @@ main (int argc, char **argv)
 	  break;
 	case 'd':
 	  dir_arg = 1;
+	  break;
+	case 'v':
+	  verbose = 1;
 	  break;
 	case 'g':
 	  group_name = optarg;
@@ -293,7 +301,8 @@ main (int argc, char **argv)
       for (; optind < argc; ++optind)
 	{
 	  errors |=
-	    make_path (argv[optind], mode, mode, owner_id, group_id, 0, NULL);
+	    make_path (argv[optind], mode, mode, owner_id, group_id, 0,
+		       (verbose ? "%s" : NULL));
 	}
     }
   else
@@ -433,6 +442,10 @@ copy_file (const char *from, const char *to, int *to_created)
       if (unlink (to))
 	target_created = 0;
     }
+
+  /* Now it's the time to give some feedback if requested.  */
+  if (verbose)
+    printf ("%s -> %s\n", from, to);
 
   fromfd = open (from, O_RDONLY, 0);
   if (fromfd == -1)
