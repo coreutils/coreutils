@@ -1,3 +1,10 @@
+Wed Feb 26 23:46:39 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/copy.c (copy_internal): When there is any potential for
+	ambiguity in a diagnostic, give explanatory diagnostic in addition
+	to file name.
+	* src/cp.c (re_protect): Likewise.
+
 Sat Feb 22 14:10:25 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/getdate.y
@@ -6,6 +13,7 @@ Sat Feb 22 14:10:25 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 	(tHOUR_UNIT): Likewise for yyRelHour.
 	(tMINUTE_UNIT): Likewise for yyRelMinutes.
 	(tSEC_UNIT): Likewise for yyRelSeconds.
+	Matthew S. Levine reported that touch -d yesterday didn't work.
 
 Thu Feb 20 20:16:59 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
