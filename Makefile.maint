@@ -122,7 +122,7 @@ announcement: NEWS ChangeLog $(distdir).tar.gz
 	  echo "$(md5)  $(distdir).tar.gz"; \
 	  echo; \
 	  echo NEWS:; \
-	  sed -n "/$(THIS_VERSION_REGEXP)/,/$(PREV_VERSION_REGEXP)/p" NEWS \
+	  sed -n "/$(THIS_VERSION_REGEXP)/,/^\[$(PREV_VERSION_REGEXP)/p" NEWS \
 	    | grep -v '^\['; \
 	  echo; \
 	  echo ChangeLog entries:; \
