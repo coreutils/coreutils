@@ -1,3 +1,8 @@
+2000-04-05  Paul Eggert  <eggert@twinsun.com>
+
+	* largefile.m4 (AC_SYS_LARGEFILE_FLAGS): Don't use -n32 on
+	IRIX if the installer said otherwise.
+
 2000-04-05  Jim Meyering  <meyering@lucent.com>
 
 	Portability tweaks required for ultrix4.3.
@@ -19,7 +24,7 @@
 
 2000-04-02  Paul Eggert  <eggert@twinsun.com>
 
-	* m4/strftime.m4 (jm_FUNC_GNU_STRFTIME): Set TZ environment
+	* strftime.m4 (jm_FUNC_GNU_STRFTIME): Set TZ environment
 	variable in the shell rather than using putenv, which isn't
 	portable.  This avoids the configure-time inter-test dependency
 	on the potentially-renamed putenv function.
@@ -32,7 +37,7 @@
 
 2000-03-29  Paul Eggert  <eggert@twinsun.com>
 
-	* m4/strftime.m4 (_jm_STRFTIME_PREREQS): Check for strftime,
+	* strftime.m4 (_jm_STRFTIME_PREREQS): Check for strftime,
 	since strftime.c uses HAVE_STRFTIME to decide whether to use
 	the underlying strftime.
 
@@ -239,13 +244,13 @@
 2000-01-11  Paul Eggert  <eggert@twinsun.com>
 
 	Quote multibyte characters correctly.
-	* m4/c-bs-a.m4: New file.
-	* m4/prereq.m4 (jm_PREREQ_QUOTEARG): New macro.
+	* c-bs-a.m4: New file.
+	* prereq.m4 (jm_PREREQ_QUOTEARG): New macro.
 	(jm_PREREQ): Use it.
 
 2000-01-11  Paul Eggert  <eggert@twinsun.com>
 
-	* m4/uintmax_t.m4: Port to autoconf 2.13.
+	* uintmax_t.m4: Port to autoconf 2.13.
 
 2000-01-08  Jim Meyering  <meyering@ascend.com>
 
@@ -308,7 +313,7 @@
 
 1999-11-18  Paul Eggert  <eggert@twinsun.com>
 
-	* m4/largefile.m4 (AC_SYS_LARGEFILE_FLAGS): Work around a
+	* largefile.m4 (AC_SYS_LARGEFILE_FLAGS): Work around a
 	problem with the QNX 4.25 shell, which doesn't propagate exit
 	status of failed commands inside shell assignments.
 
@@ -381,7 +386,7 @@
 
 1999-08-17  Paul Eggert  <eggert@twinsun.com>
 
-	* m4/largefile.m4 (AC_SYS_LARGEFILE): Fix typo: missing comma
+	* largefile.m4 (AC_SYS_LARGEFILE): Fix typo: missing comma
 	in value for _FILE_OFFSET_BITS, which broke ports to HP-UX 10.20.
 
 1999-08-05  Jim Meyering  <meyering@ascend.com>
