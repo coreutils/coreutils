@@ -5,7 +5,7 @@ case $# in
   *) xx="$1";;
 esac
 test "$VERBOSE" && echo=echo || echo=:
-$echo testing with ../../src/tr=$xx
+$echo testing program: $xx
 errors=0
 test "$srcdir" || srcdir=.
 test "$VERBOSE" && $xx --version 2> /dev/null
@@ -15,7 +15,7 @@ if test $code != 0 ; then
   $echo Test 1 failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t1.out $srcdir/$srcdir/t1.exp
+  cmp t1.out $srcdir/t1.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed 1; fi ;; # equal files
     1) $echo Test 1 failed: files t1.out and $srcdir/t1.exp differ 1>&2;
@@ -32,7 +32,7 @@ if test $code != 0 ; then
   $echo Test 2 failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t2.out $srcdir/$srcdir/t2.exp
+  cmp t2.out $srcdir/t2.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed 2; fi ;; # equal files
     1) $echo Test 2 failed: files t2.out and $srcdir/t2.exp differ 1>&2;
@@ -49,7 +49,7 @@ if test $code != 0 ; then
   $echo Test 3 failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t3.out $srcdir/$srcdir/t3.exp
+  cmp t3.out $srcdir/t3.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed 3; fi ;; # equal files
     1) $echo Test 3 failed: files t3.out and $srcdir/t3.exp differ 1>&2;
@@ -66,7 +66,7 @@ if test $code != 0 ; then
   $echo Test 4 failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t4.out $srcdir/$srcdir/t4.exp
+  cmp t4.out $srcdir/t4.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed 4; fi ;; # equal files
     1) $echo Test 4 failed: files t4.out and $srcdir/t4.exp differ 1>&2;
@@ -83,7 +83,7 @@ if test $code != 0 ; then
   $echo Test 5 failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t5.out $srcdir/$srcdir/t5.exp
+  cmp t5.out $srcdir/t5.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed 5; fi ;; # equal files
     1) $echo Test 5 failed: files t5.out and $srcdir/t5.exp differ 1>&2;
@@ -100,7 +100,7 @@ if test $code != 0 ; then
   $echo Test 6 failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t6.out $srcdir/$srcdir/t6.exp
+  cmp t6.out $srcdir/t6.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed 6; fi ;; # equal files
     1) $echo Test 6 failed: files t6.out and $srcdir/t6.exp differ 1>&2;
@@ -117,7 +117,7 @@ if test $code != 0 ; then
   $echo Test 7 failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t7.out $srcdir/$srcdir/t7.exp
+  cmp t7.out $srcdir/t7.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed 7; fi ;; # equal files
     1) $echo Test 7 failed: files t7.out and $srcdir/t7.exp differ 1>&2;
@@ -134,7 +134,7 @@ if test $code != 0 ; then
   $echo Test 8 failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t8.out $srcdir/$srcdir/t8.exp
+  cmp t8.out $srcdir/t8.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed 8; fi ;; # equal files
     1) $echo Test 8 failed: files t8.out and $srcdir/t8.exp differ 1>&2;
@@ -151,7 +151,7 @@ if test $code != 0 ; then
   $echo Test 9 failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t9.out $srcdir/$srcdir/t9.exp
+  cmp t9.out $srcdir/t9.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed 9; fi ;; # equal files
     1) $echo Test 9 failed: files t9.out and $srcdir/t9.exp differ 1>&2;
@@ -168,7 +168,7 @@ if test $code != 0 ; then
   $echo Test a failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp ta.out $srcdir/$srcdir/ta.exp
+  cmp ta.out $srcdir/ta.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed a; fi ;; # equal files
     1) $echo Test a failed: files ta.out and $srcdir/ta.exp differ 1>&2;
@@ -185,7 +185,7 @@ if test $code != 0 ; then
   $echo Test b failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp tb.out $srcdir/$srcdir/tb.exp
+  cmp tb.out $srcdir/tb.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed b; fi ;; # equal files
     1) $echo Test b failed: files tb.out and $srcdir/tb.exp differ 1>&2;
@@ -202,7 +202,7 @@ if test $code != 0 ; then
   $echo Test c failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp tc.out $srcdir/$srcdir/tc.exp
+  cmp tc.out $srcdir/tc.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed c; fi ;; # equal files
     1) $echo Test c failed: files tc.out and $srcdir/tc.exp differ 1>&2;
@@ -219,7 +219,7 @@ if test $code != 0 ; then
   $echo Test d failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp td.out $srcdir/$srcdir/td.exp
+  cmp td.out $srcdir/td.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed d; fi ;; # equal files
     1) $echo Test d failed: files td.out and $srcdir/td.exp differ 1>&2;
@@ -236,7 +236,7 @@ if test $code != 0 ; then
   $echo Test e failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp te.out $srcdir/$srcdir/te.exp
+  cmp te.out $srcdir/te.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed e; fi ;; # equal files
     1) $echo Test e failed: files te.out and $srcdir/te.exp differ 1>&2;
@@ -253,7 +253,7 @@ if test $code != 0 ; then
   $echo Test f failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp tf.out $srcdir/$srcdir/tf.exp
+  cmp tf.out $srcdir/tf.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed f; fi ;; # equal files
     1) $echo Test f failed: files tf.out and $srcdir/tf.exp differ 1>&2;
@@ -270,7 +270,7 @@ if test $code != 0 ; then
   $echo Test g failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp tg.out $srcdir/$srcdir/tg.exp
+  cmp tg.out $srcdir/tg.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed g; fi ;; # equal files
     1) $echo Test g failed: files tg.out and $srcdir/tg.exp differ 1>&2;
@@ -287,7 +287,7 @@ if test $code != 0 ; then
   $echo Test h failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp th.out $srcdir/$srcdir/th.exp
+  cmp th.out $srcdir/th.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed h; fi ;; # equal files
     1) $echo Test h failed: files th.out and $srcdir/th.exp differ 1>&2;
@@ -304,7 +304,7 @@ if test $code != 0 ; then
   $echo Test i failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp ti.out $srcdir/$srcdir/ti.exp
+  cmp ti.out $srcdir/ti.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed i; fi ;; # equal files
     1) $echo Test i failed: files ti.out and $srcdir/ti.exp differ 1>&2;
@@ -321,7 +321,7 @@ if test $code != 0 ; then
   $echo Test j failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp tj.out $srcdir/$srcdir/tj.exp
+  cmp tj.out $srcdir/tj.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed j; fi ;; # equal files
     1) $echo Test j failed: files tj.out and $srcdir/tj.exp differ 1>&2;
@@ -338,7 +338,7 @@ if test $code != 0 ; then
   $echo Test k failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp tk.out $srcdir/$srcdir/tk.exp
+  cmp tk.out $srcdir/tk.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed k; fi ;; # equal files
     1) $echo Test k failed: files tk.out and $srcdir/tk.exp differ 1>&2;
@@ -355,7 +355,7 @@ if test $code != 0 ; then
   $echo Test l failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp tl.out $srcdir/$srcdir/tl.exp
+  cmp tl.out $srcdir/tl.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed l; fi ;; # equal files
     1) $echo Test l failed: files tl.out and $srcdir/tl.exp differ 1>&2;
@@ -372,7 +372,7 @@ if test $code != 0 ; then
   $echo Test m failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp tm.out $srcdir/$srcdir/tm.exp
+  cmp tm.out $srcdir/tm.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed m; fi ;; # equal files
     1) $echo Test m failed: files tm.out and $srcdir/tm.exp differ 1>&2;
@@ -389,7 +389,7 @@ if test $code != 0 ; then
   $echo Test n failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp tn.out $srcdir/$srcdir/tn.exp
+  cmp tn.out $srcdir/tn.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed n; fi ;; # equal files
     1) $echo Test n failed: files tn.out and $srcdir/tn.exp differ 1>&2;
@@ -406,7 +406,7 @@ if test $code != 0 ; then
   $echo Test o failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp to.out $srcdir/$srcdir/to.exp
+  cmp to.out $srcdir/to.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed o; fi ;; # equal files
     1) $echo Test o failed: files to.out and $srcdir/to.exp differ 1>&2;
@@ -423,7 +423,7 @@ if test $code != 0 ; then
   $echo Test p failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp tp.out $srcdir/$srcdir/tp.exp
+  cmp tp.out $srcdir/tp.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed p; fi ;; # equal files
     1) $echo Test p failed: files tp.out and $srcdir/tp.exp differ 1>&2;
@@ -440,7 +440,7 @@ if test $code != 0 ; then
   $echo Test q failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp tq.out $srcdir/$srcdir/tq.exp
+  cmp tq.out $srcdir/tq.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed q; fi ;; # equal files
     1) $echo Test q failed: files tq.out and $srcdir/tq.exp differ 1>&2;
@@ -457,7 +457,7 @@ if test $code != 0 ; then
   $echo Test r failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp tr.out $srcdir/$srcdir/tr.exp
+  cmp tr.out $srcdir/tr.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed r; fi ;; # equal files
     1) $echo Test r failed: files tr.out and $srcdir/tr.exp differ 1>&2;
@@ -474,7 +474,7 @@ if test $code != 0 ; then
   $echo Test s failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp ts.out $srcdir/$srcdir/ts.exp
+  cmp ts.out $srcdir/ts.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed s; fi ;; # equal files
     1) $echo Test s failed: files ts.out and $srcdir/ts.exp differ 1>&2;
@@ -491,7 +491,7 @@ if test $code != 0 ; then
   $echo Test t failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp tt.out $srcdir/$srcdir/tt.exp
+  cmp tt.out $srcdir/tt.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed t; fi ;; # equal files
     1) $echo Test t failed: files tt.out and $srcdir/tt.exp differ 1>&2;
@@ -508,7 +508,7 @@ if test $code != 0 ; then
   $echo Test u failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp tu.out $srcdir/$srcdir/tu.exp
+  cmp tu.out $srcdir/tu.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed u; fi ;; # equal files
     1) $echo Test u failed: files tu.out and $srcdir/tu.exp differ 1>&2;
@@ -525,7 +525,7 @@ if test $code != 0 ; then
   $echo Test v failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp tv.out $srcdir/$srcdir/tv.exp
+  cmp tv.out $srcdir/tv.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed v; fi ;; # equal files
     1) $echo Test v failed: files tv.out and $srcdir/tv.exp differ 1>&2;
@@ -542,7 +542,7 @@ if test $code != 0 ; then
   $echo Test w failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp tw.out $srcdir/$srcdir/tw.exp
+  cmp tw.out $srcdir/tw.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed w; fi ;; # equal files
     1) $echo Test w failed: files tw.out and $srcdir/tw.exp differ 1>&2;
@@ -559,7 +559,7 @@ if test $code != 0 ; then
   $echo Test x failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp tx.out $srcdir/$srcdir/tx.exp
+  cmp tx.out $srcdir/tx.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed x; fi ;; # equal files
     1) $echo Test x failed: files tx.out and $srcdir/tx.exp differ 1>&2;
@@ -576,7 +576,7 @@ if test $code != 0 ; then
   $echo Test y failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp ty.out $srcdir/$srcdir/ty.exp
+  cmp ty.out $srcdir/ty.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed y; fi ;; # equal files
     1) $echo Test y failed: files ty.out and $srcdir/ty.exp differ 1>&2;
@@ -593,7 +593,7 @@ if test $code != 0 ; then
   $echo Test z failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp tz.out $srcdir/$srcdir/tz.exp
+  cmp tz.out $srcdir/tz.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed z; fi ;; # equal files
     1) $echo Test z failed: files tz.out and $srcdir/tz.exp differ 1>&2;
@@ -610,7 +610,7 @@ if test $code != 0 ; then
   $echo Test A failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp tA.out $srcdir/$srcdir/tA.exp
+  cmp tA.out $srcdir/tA.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed A; fi ;; # equal files
     1) $echo Test A failed: files tA.out and $srcdir/tA.exp differ 1>&2;
@@ -627,7 +627,7 @@ if test $code != 1 ; then
   $echo Test B failed: ../../src/tr return code $code differs from expected value 1 1>&2
   errors=`expr $errors + 1`
 else
-  cmp tB.out $srcdir/$srcdir/tB.exp
+  cmp tB.out $srcdir/tB.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed B; fi ;; # equal files
     1) $echo Test B failed: files tB.out and $srcdir/tB.exp differ 1>&2;
@@ -644,7 +644,7 @@ if test $code != 0 ; then
   $echo Test C failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp tC.out $srcdir/$srcdir/tC.exp
+  cmp tC.out $srcdir/tC.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed C; fi ;; # equal files
     1) $echo Test C failed: files tC.out and $srcdir/tC.exp differ 1>&2;
@@ -661,7 +661,7 @@ if test $code != 0 ; then
   $echo Test D failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp tD.out $srcdir/$srcdir/tD.exp
+  cmp tD.out $srcdir/tD.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed D; fi ;; # equal files
     1) $echo Test D failed: files tD.out and $srcdir/tD.exp differ 1>&2;
@@ -678,7 +678,7 @@ if test $code != 0 ; then
   $echo Test E failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp tE.out $srcdir/$srcdir/tE.exp
+  cmp tE.out $srcdir/tE.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed E; fi ;; # equal files
     1) $echo Test E failed: files tE.out and $srcdir/tE.exp differ 1>&2;
@@ -695,7 +695,7 @@ if test $code != 0 ; then
   $echo Test F failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp tF.out $srcdir/$srcdir/tF.exp
+  cmp tF.out $srcdir/tF.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed F; fi ;; # equal files
     1) $echo Test F failed: files tF.out and $srcdir/tF.exp differ 1>&2;
@@ -712,7 +712,7 @@ if test $code != 0 ; then
   $echo Test G failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp tG.out $srcdir/$srcdir/tG.exp
+  cmp tG.out $srcdir/tG.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed G; fi ;; # equal files
     1) $echo Test G failed: files tG.out and $srcdir/tG.exp differ 1>&2;
@@ -729,7 +729,7 @@ if test $code != 0 ; then
   $echo Test H failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp tH.out $srcdir/$srcdir/tH.exp
+  cmp tH.out $srcdir/tH.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed H; fi ;; # equal files
     1) $echo Test H failed: files tH.out and $srcdir/tH.exp differ 1>&2;
@@ -746,7 +746,7 @@ if test $code != 0 ; then
   $echo Test I failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp tI.out $srcdir/$srcdir/tI.exp
+  cmp tI.out $srcdir/tI.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed I; fi ;; # equal files
     1) $echo Test I failed: files tI.out and $srcdir/tI.exp differ 1>&2;
@@ -763,7 +763,7 @@ if test $code != 1 ; then
   $echo Test R0.0 failed: ../../src/tr return code $code differs from expected value 1 1>&2
   errors=`expr $errors + 1`
 else
-  cmp tR0.0.out $srcdir/$srcdir/tR0.0.exp
+  cmp tR0.0.out $srcdir/tR0.0.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed R0.0; fi ;; # equal files
     1) $echo Test R0.0 failed: files tR0.0.out and $srcdir/tR0.0.exp differ 1>&2;
@@ -780,7 +780,7 @@ if test $code != 1 ; then
   $echo Test R0.1 failed: ../../src/tr return code $code differs from expected value 1 1>&2
   errors=`expr $errors + 1`
 else
-  cmp tR0.1.out $srcdir/$srcdir/tR0.1.exp
+  cmp tR0.1.out $srcdir/tR0.1.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed R0.1; fi ;; # equal files
     1) $echo Test R0.1 failed: files tR0.1.out and $srcdir/tR0.1.exp differ 1>&2;
@@ -797,7 +797,7 @@ if test $code != 0 ; then
   $echo Test R1.0 failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp tR1.0.out $srcdir/$srcdir/tR1.0.exp
+  cmp tR1.0.out $srcdir/tR1.0.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed R1.0; fi ;; # equal files
     1) $echo Test R1.0 failed: files tR1.0.out and $srcdir/tR1.0.exp differ 1>&2;
@@ -814,7 +814,7 @@ if test $code != 0 ; then
   $echo Test R1.1 failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp tR1.1.out $srcdir/$srcdir/tR1.1.exp
+  cmp tR1.1.out $srcdir/tR1.1.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed R1.1; fi ;; # equal files
     1) $echo Test R1.1 failed: files tR1.1.out and $srcdir/tR1.1.exp differ 1>&2;
@@ -831,7 +831,7 @@ if test $code != 0 ; then
   $echo Test R2 failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp tR2.out $srcdir/$srcdir/tR2.exp
+  cmp tR2.out $srcdir/tR2.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed R2; fi ;; # equal files
     1) $echo Test R2 failed: files tR2.out and $srcdir/tR2.exp differ 1>&2;
@@ -848,7 +848,7 @@ if test $code != 0 ; then
   $echo Test R3 failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp tR3.out $srcdir/$srcdir/tR3.exp
+  cmp tR3.out $srcdir/tR3.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed R3; fi ;; # equal files
     1) $echo Test R3 failed: files tR3.out and $srcdir/tR3.exp differ 1>&2;
@@ -865,7 +865,7 @@ if test $code != 0 ; then
   $echo Test R4 failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp tR4.out $srcdir/$srcdir/tR4.exp
+  cmp tR4.out $srcdir/tR4.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed R4; fi ;; # equal files
     1) $echo Test R4 failed: files tR4.out and $srcdir/tR4.exp differ 1>&2;
@@ -882,7 +882,7 @@ if test $code != 0 ; then
   $echo Test R5 failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp tR5.out $srcdir/$srcdir/tR5.exp
+  cmp tR5.out $srcdir/tR5.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed R5; fi ;; # equal files
     1) $echo Test R5 failed: files tR5.out and $srcdir/tR5.exp differ 1>&2;
@@ -899,7 +899,7 @@ if test $code != 0 ; then
   $echo Test R6 failed: ../../src/tr return code $code differs from expected value 0 1>&2
   errors=`expr $errors + 1`
 else
-  cmp tR6.out $srcdir/$srcdir/tR6.exp
+  cmp tR6.out $srcdir/tR6.exp
   case $? in
     0) if test "$VERBOSE" ; then $echo passed R6; fi ;; # equal files
     1) $echo Test R6 failed: files tR6.out and $srcdir/tR6.exp differ 1>&2;
