@@ -1,5 +1,9 @@
 Thu Sep 19 08:54:05 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* tests/: Rename from checks.
+	* Makefile.am (SUBDIRS): Change `checks' to `tests'.
+	* configure.in (AC_OUTPUT): Likewise.
+
 	* configure.in ($PACKAGE, $VERSION): Don't AC_DEFINE_UNQUOTED these.
 	AM_INIT_AUTOMAKE now does it (as of automake-1.1e).
 
