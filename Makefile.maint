@@ -106,12 +106,11 @@ sc_cast_of_x_alloc_return_value:
 	    exit 1; } || :
 
 sc_space_tab:
-	@grep -E '[ ]	' --exclude=$(srcdir)/lib/regex.c		\
-		$(srcdir)/{lib,src}/*.[chly]				\
-		$(find -name Makefile.am) &&				\
+	@( cvsu --list ) > /dev/null 2>&1 || : &&			\
+	  grep '[ ]	' $$(cvsu --list				\
+	    | grep -vE 'configure|config\.(guess|sub)') &&		\
 	  { echo '$(ME): found SPACE-TAB sequence; remove the SPACE'	\
-		1>&2; \
-	    exit 1; } || :
+		1>&2; exit 1; } || :
 
 # Using EXIT_SUCCESS as the first argument to error is misleading,
 # since when that parameter is 0, error does not exit.  Use `0' instead.
@@ -121,6 +120,7 @@ sc_error_exit_success:
 	  { echo '$(ME): found error (EXIT_SUCCESS' 1>&2;		\
 	    exit 1; } || :
 
+# FIXME: merge this with sc_system_h_headers below.
 # xalloc.h is included via system.h, so should not be included
 # directly by any file in src/.
 sc_xalloc_h_in_src:
@@ -129,6 +129,8 @@ sc_xalloc_h_in_src:
 	    exit 1;							\
 	  fi;								\
 	fi
+
+# FIXME: warn about definitions of EXIT_FAILURE, EXIT_SUCCESS, STREQ
 
 # Each nonempty line must start with a year number, or a TAB.
 sc_changelog:
@@ -162,10 +164,11 @@ h_re := $(shell echo '$(header_regexp)'|tr -d ' ')
 # Get list of candidates with this:
 # grep -h include src/sys*.h|sed 's/.*include //'|sort -
 sc_system_h_headers:
-	@grep -E '^# *include ["<]($(h_re))\.h[">]'			\
-	    $(srcdir)/src/*.c &&					\
-	  { echo '$(ME): the above are already included via system.h' 1>&2; \
-	    exit 1; } || :
+	@( cvsu --list ) > /dev/null 2>&1 || : &&			\
+	grep -E '^# *include ["<]($(h_re))\.h[">]'			\
+	    $$(cvsu --list src | grep -Ev 'sys(2|tem)\.h$$')		\
+	  && { echo '$(ME): the above are already included via system.h'\
+		1>&2; exit 1; } || :
 
 sc_sun_os_names:
 	@( cvsu --list ) > /dev/null 2>&1 || : && \
@@ -203,6 +206,15 @@ changelog-check:
 	else \
 	  echo "$(VERSION) not in ChangeLog" 1>&2; \
 	  exit 1; \
+	fi
+
+cvs-diff-check:
+	if $(CVS) diff >cvs-diffs; then				\
+	  rm cvs-diffs;						\
+	else							\
+	  echo "Some files are locally modified:" 1>&2;		\
+	  cat cvs-diffs;					\
+	  exit 1;						\
 	fi
 
 m4-check:
