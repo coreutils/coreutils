@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.1l from Makefile.am
+# Makefile.in generated automatically by automake 1.1n from Makefile.am
 
 # Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -32,15 +32,50 @@ pkgincludedir = $(includedir)/@PACKAGE@
 
 top_builddir = ../..
 
+ACLOCAL = @ACLOCAL@
+AUTOCONF = @AUTOCONF@
+AUTOMAKE = @AUTOMAKE@
+AUTOHEADER = @AUTOHEADER@
+
 INSTALL = @INSTALL@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 transform = @program_transform_name@
-RANLIB = @RANLIB@
-GENCAT = @GENCAT@
-GMSGFMT = @GMSGFMT@
+
+NORMAL_INSTALL = true
+PRE_INSTALL = true
+POST_INSTALL = true
+NORMAL_UNINSTALL = true
+PRE_UNINSTALL = true
+POST_UNINSTALL = true
+CATALOGS = @CATALOGS@
+CATOBJEXT = @CATOBJEXT@
 CC = @CC@
+DATADIRNAME = @DATADIRNAME@
+GENCAT = @GENCAT@
+GMOFILES = @GMOFILES@
+GMSGFMT = @GMSGFMT@
+GT_NO = @GT_NO@
+GT_YES = @GT_YES@
+INSTOBJEXT = @INSTOBJEXT@
+INTLDEPS = @INTLDEPS@
+INTLLIBS = @INTLLIBS@
+INTLOBJS = @INTLOBJS@
+LIBOBJS = @LIBOBJS@
+MAINT = @MAINT@
+MKINSTALLDIRS = @MKINSTALLDIRS@
+MSGFMT = @MSGFMT@
+PACKAGE = @PACKAGE@
+POFILES = @POFILES@
+POSUB = @POSUB@
+POW_LIBM = @POW_LIBM@
+RANLIB = @RANLIB@
+U = @U@
+USE_INCLUDED_LIBINTL = @USE_INCLUDED_LIBINTL@
+USE_NLS = @USE_NLS@
+VERSION = @VERSION@
+l = @l@
 
 x = sort
 explicit =
@@ -91,19 +126,16 @@ SCRIPTS =  $(noinst_SCRIPTS)
 DIST_COMMON =  Makefile.am Makefile.in TODO
 
 
-PACKAGE = @PACKAGE@
-VERSION = @VERSION@
-
-DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) \
-	$(TEXINFOS) $(MANS) $(EXTRA_DIST)
+DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 
 TAR = tar
+GZIP = --best
 default: all
 
 .SUFFIXES:
 .SUFFIXES: .pl
-$(srcdir)/Makefile.in: @MAINT@ Makefile.am $(top_srcdir)/configure.in $(ACLOCAL) 
-	cd $(top_srcdir) && automake --gnu tests/sort-test/Makefile
+$(srcdir)/Makefile.in: @MAINT@ Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
+	cd $(top_srcdir) && $(AUTOMAKE) --gnu tests/sort-test/Makefile
 
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status $(BUILT_SOURCES)
 	cd $(top_builddir) \
@@ -151,10 +183,10 @@ check: all
 	$(MAKE) check-TESTS
 installcheck:
 install-exec: 
-	$(NORMAL_INSTALL)
+	@$(NORMAL_INSTALL)
 
 install-data: 
-	$(NORMAL_INSTALL)
+	@$(NORMAL_INSTALL)
 
 install: install-exec install-data all
 	@:
