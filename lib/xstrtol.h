@@ -1,6 +1,6 @@
 /* A more useful interface to strtol.
 
-   Copyright (C) 1995, 1996, 1998, 1999, 2001, 2002, 2003 Free
+   Copyright (C) 1995, 1996, 1998, 1999, 2001, 2002, 2003, 2004 Free
    Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -19,6 +19,8 @@
 
 #ifndef XSTRTOL_H_
 # define XSTRTOL_H_ 1
+
+# include "exitfail.h"
 
 /* Get uintmax_t.  */
 # if HAVE_INTTYPES_H
@@ -81,7 +83,7 @@ _DECLARE_XSTRTOL (xstrtoumax, uintmax_t)
   while (0)
 
 # define STRTOL_FATAL_ERROR(Str, Argument_type_string, Err)		\
-  _STRTOL_ERROR (2, Str, Argument_type_string, Err)
+  _STRTOL_ERROR (exit_failure, Str, Argument_type_string, Err)
 
 # define STRTOL_FAIL_WARN(Str, Argument_type_string, Err)		\
   _STRTOL_ERROR (0, Str, Argument_type_string, Err)
