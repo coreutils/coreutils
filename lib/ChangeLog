@@ -1,3 +1,15 @@
+2005-02-23  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* strftime.c: Include <stdbool.h>.  Use bool where appropriate,
+	instead of int.
+	(my_strftime): Do not mishandle years close to INT_MAX, by doing
+	the right thing even if adding 1900 would overflow.  Similarly
+	for tm_mon + 1 and tm_yday + 1.
+	Make %Y always equivalent to %C%y, and similarly for %G and %g.
+	(DO_NUMBER, DO_NUMBER_SPACEPAD): Set digits to d, not a conditional.
+	(DO_SIGNED_NUMBER): New macro.
+	(my_strftime) [HAVE_TZNAME]: Don't dump core if tp->tm_dst > 1.
+
 2005-02-21  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Makefile.am (libfetish_a_SOURCES): Remove xnanosleep.c,
