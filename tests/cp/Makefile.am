@@ -3,7 +3,7 @@ AUTOMAKE_OPTIONS = 1.1 gnits
 
 TESTS = \
   backup-1 no-deref-link1 no-deref-link2 no-deref-link3 backup-is-src \
-  same-file cp-mv-backup
+  same-file cp-mv-backup symlink-slash
 EXTRA_DIST = $(TESTS)
 TESTS_ENVIRONMENT = \
   PATH=`pwd`/../../src:$$PATH
