@@ -1,3 +1,8 @@
+1998-02-06  Jim Meyering  <meyering@eng.ascend.com>
+
+	* tests/nice: Fail immediately if this test is run with `nice'
+	level different from zero.  Reported by Philippe De Muyter.
+
 1998-02-03  Philippe De Muyter  <phdm@macqel.be>
 
 	* src/id.c (xgetgroups): Guard function defn with #if HAVE_GETGROUPS.
