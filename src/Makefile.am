@@ -183,7 +183,7 @@ false.c: true.c
 
 pm = progs-makefile
 pr = progs-readme
-# Ensure that the list of programs in ../README matches the list
+# Ensure that the list of programs in README matches the list
 # of programs we can build.
 check: check-README
 .PHONY: check-README
