@@ -1,4 +1,4 @@
-#serial 12
+#serial 13
 
 dnl This is just a wrapper function to encapsulate this kludge.
 dnl Putting it in a separate file like this helps share it between
@@ -68,5 +68,5 @@ AC_DEFUN(_jm_DECL_HEADERS,
 [
   AC_REQUIRE([AC_HEADER_STDC])
   AC_CHECK_HEADERS(memory.h string.h strings.h stdlib.h unistd.h sys/time.h \
-                   utmpx.h)
+                   utmp.h utmpx.h)
 ])
