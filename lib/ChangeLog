@@ -1,5 +1,7 @@
 2003-06-08  Jim Meyering  <jim@meyering.net>
 
+	* getline.h: Update from gnulib.
+
 	Clean up, as part of merge with emacs version of strftime.c.
 	* strftime.c (my_strftime) [!_LIBC && HAVE_TZNAME && HAVE_TZSET]:
 	Remove function, now that we can rely on a working tzset function.
