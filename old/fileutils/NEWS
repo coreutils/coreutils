@@ -1,4 +1,6 @@
 Changes in release 3.17:
+[3.16A]
+* fix serious bug whereby `touch a b; echo n|mv -i a b' would remove b.
 [3.16z]
 * portability tweaks
 * avoid `root `cp -a' from Netapp snapshot' corruption
