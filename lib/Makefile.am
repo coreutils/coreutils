@@ -1,6 +1,6 @@
 ## Makefile for gnulib/lib				-*-Makefile-*-
 
-# Copyright (C) 1995-2004 Free Software Foundation, Inc.
+# Copyright (C) 1995-2005 Free Software Foundation, Inc.
 
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -123,7 +123,7 @@ libfetish_a_SOURCES = \
   userspec.c userspec.h \
   utimecmp.c utimecmp.h \
   utimens.c utimens.h \
-  version-etc.c version-etc.h \
+  version-etc.c version-etc.h version-etc-fsf.c \
   xalloc.h \
   xalloc-die.c \
   xfts.c xfts.h \
