@@ -36,17 +36,15 @@
 # define _(Text) Text
 #endif
 
+#include "error.h"
 #include "quotearg.h"
 
-/* When reporting a failing argument, make sure to show invisible
-   characters hidden using the quoting style
-   ARGMATCH_QUOTING_STYLE. literal_quoting_style is not good.  */
-
+/* When reporting an invalid argument, show nonprinting characters
+   by using the quoting style ARGMATCH_QUOTING_STYLE.  Do not use
+   literal_quoting_style.  */
 #ifndef ARGMATCH_QUOTING_STYLE
 # define ARGMATCH_QUOTING_STYLE escape_quoting_style
 #endif
-
-extern char *program_name;
 
 /* The following test is to work around the gross typo in
    systems like Sony NEWS-OS Release 4.0C, whereby EXIT_FAILURE
@@ -71,7 +69,10 @@ __argmatch_die (void)
   ARGMATCH_DIE;
 }
 
+/* Used by XARGMATCH and XARGCASEMATCH.  See description in argmatch.h.
+   Default to __argmatch_die, but allow caller to change this at run-time. */
 argmatch_exit_fn argmatch_die = __argmatch_die;
+
 
 /* If ARG is an unambiguous match for an element of the
    null-terminated array ARGLIST, return the index in ARGLIST
@@ -163,10 +164,10 @@ argmatch_invalid (const char *context, const char *value, int problem)
   set_quoting_style (NULL, ARGMATCH_QUOTING_STYLE);
 
   format = (problem == -1
-	    ? _("%s: invalid argument `%s' for `%s'\n")
-	    : _("%s: ambiguous argument `%s' for `%s'\n"));
+	    ? _("invalid argument `%s' for `%s'")
+	    : _("ambiguous argument `%s' for `%s'"));
 
-  fprintf (stderr, format, program_name, quotearg (value), context);
+  error (0, 0, format, quotearg (value), context);
 
   set_quoting_style (NULL, saved_quoting_style);
 }
