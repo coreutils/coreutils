@@ -1,10 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 noinst_LIBRARIES = fu
 
-EXTRA_DIST = basename.c euidaccess.c \
-group-member.c memcpy.c memset.c mkdir.c \
-rename.c rmdir.c rpmatch.c \
-stpcpy.c strcasecmp.c strdup.c strndup.c strstr.c strtol.c strtoul.c
+EXTRA_DIST = group-member.c
 
 INCLUDES = -I.. -I$(srcdir)
 INCLUDES = -I.. -I$(srcdir) -I../intl
