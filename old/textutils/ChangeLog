@@ -1,5 +1,20 @@
 1999-01-01  Jim Meyering  <meyering@ascend.com>
 
+	* Version 1.22g.
+
+	* src/tsort.c: Include readtokens.h.
+	(zeros): Rename global from `rr'.
+	(getstr): Remove function.
+	(tsort) Use readtoken instead of getstr.
+
+	* lib/readtokens.c: New file.
+	* lib/readtokens.h: New file.
+	* lib/Makefile.am (libtu_a_SOURCES): Add readtokens.c.
+	(noinst_HEADERS): Add readtokens.h.
+
+	* man/Makefile.am (man_MANS): Add ptx.1.
+	* man/ptx.x: New file.
+
 	* src/tail.c (parse_options): Use XARGCASEMATCH in place of argmatch.
 
 	* man/Makefile.am (man_MANS): Add tsort.1.
@@ -15,6 +30,65 @@
 	* lib/Makefile.am (libtu_a_SOURCES): Add quotearg.c.
 	(noinst_HEADERS): Add quotearg.h.
 
+	============================
+	All of the following are from:
+	1998-04-17  Eli Zaretskii  <eliz@is.elta.co.il>
+
+	* src/system.h (SET_BINARY, SET_BINARY2, fileno, setmode): New
+	macros.
+
+	* src/cat.c (usage) [O_BINARY]: Describe -B,--binary option.
+	(main) [O_BINARY]: binary_files, binary_output, file_open_mode:
+	new variables. 	Add --binary to long_options[].  Switch stdin and
+	stdout to binary mode unless file contents are not important
+	anyway.  Open files in binary mode when required.
+
+	* src/cksum.c (cksum) [O_BINARY]: Read redirected stdin in binary
+	mode.
+
+	* src/expand.c (expand): Use binary I/O where appropriate.
+
+	* src/head.c (head_bytes, head_lines) [O_BINARY]: Use binary I/O.
+
+	* src/md5sum.c (OPENOPTS) [O_BINARY]: Use binary I/O when non-zero
+	argument.
+	(md5_file) [O_BINARY]: Switch redirected stdin to binary mode.
+	(main) [O_BINARY]: Use binary reads by default on those systems
+	which care about the difference.
+
+	* src/od.c (skip, read_char, read_block) [O_BINARY]: Switch input
+	stream to binary mode.
+
+	* src/sort.c (PATH_MAX_IN_DIR) [HAVE_UNISTD_H]: New macro, for max
+	file name characters in a given directory.
+	(tempname): Make sure the temp file name is unique even if long
+	file names aren't supported.
+
+	* src/split.c (cwrite) [O_BINARY]: Write output in binary mode.
+	(main) [O_BINARY]: Read input in binary mode.
+
+	* src/sum.c (bsd_sum_file, sysv_sum_file) [O_BINARY]: Read input
+	in binary mode.
+
+	* src/tac.c (record_tempfile, unlink_tempfile)
+	[DONT_UNLINK_WHILE_OPEN]: New functions, for systems where a file
+	cannot be removed before it is closed.
+	(save_stdin) [DONT_UNLINK_WHILE_OPEN]: Record the temporary file,
+	to be removed before exit.
+	(tac_file, save_stdin, main): Use binary I/O when appropriate.
+
+	* src/tail.c (tail_lines, tail_bytes) [O_BINARY]: Use binary I/O
+	when appropriate.
+
+	* src/tr.c (main) [O_BINARY]: Use binary I/O when appropriate.
+
+	* src/unexpand.c (unexpand): Use binary I/O where appropriate.
+
+	* src/wc.c (wc): Use binary mode for input.
+
+	* doc/textutil.texi: Add comments about peculiarities of Textutils
+	operation on MS-DOS/MS-Windows.
+
 1998-12-22  Jim Meyering  <meyering@ascend.com>
 
 	* configure.in (ALL_LINGUAS): Add chinese (zh).
@@ -29,8 +103,6 @@
 	continually-growing unlinked or renamed file.
 
 1998-12-13  Jim Meyering  <meyering@ascend.com>
-
-	* Version 1.22g.
 
 	* tests/uniq/Test.pm: New file.
 	* tests/uniq/Makefile.am: New file.
