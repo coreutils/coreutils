@@ -1,5 +1,10 @@
 1997-09-13  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/ls.c (print_many_per_line): Add some non-essential curly braces.
+	(print_horizontal): Likewise.
+	(struct col_info) [valid_len]: Rename from `valid' which conflicted
+	with the macro in locale.h of SunOS4.1.4.
+
 	* src/rm.c: (PARAMS): Define.
 	(rm): Guard prototype in forward dcl with PARAMS.
 
