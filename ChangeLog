@@ -1,6 +1,10 @@
-2003-03-23  Jim Meyering  <jim@meyering.net>
+2003-03-26  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.12.
+
+	* src/copy.h (struct cp_options): Add a comment.
+
+2003-03-23  Jim Meyering  <jim@meyering.net>
 
 	* README: Describe problem with 64-bit mode on HPUX 11.x,
 	with patch for /usr/include/inttypes.h.
