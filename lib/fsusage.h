@@ -25,8 +25,13 @@ struct fs_usage
   long fsu_ffree;		/* Free file nodes. */
 };
 
-#if __STDC__
-int get_fs_usage (char *path, char *disk, struct fs_usage *fsp);
+#ifndef __P
+#if defined (__GNUC__) || (defined (__STDC__) && __STDC__)
+#define __P(args) args
 #else
-int get_fs_usage ();
-#endif
+#define __P(args) ()
+#endif  /* GCC.  */
+#endif  /* Not __P.  */
+
+int get_fs_usage __P ((const char *path, const char *disk,
+		       struct fs_usage *fsp));
