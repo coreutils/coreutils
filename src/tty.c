@@ -1,5 +1,5 @@
 /* tty -- print the path of the terminal connected to standard input
-   Copyright (C) 1990-2002 Free Software Foundation, Inc.
+   Copyright (C) 1990-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -108,7 +108,7 @@ main (int argc, char **argv)
 	}
     }
 
-  if (optind != argc)
+  if (optind < argc)
     error (0, 0, _("ignoring all arguments"));
 
   tty = ttyname (0);
