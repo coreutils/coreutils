@@ -105,7 +105,7 @@ static void copy_with_block (unsigned char *buf, int nread);
 static void copy_with_unblock (unsigned char *buf, int nread);
 static void parse_conversion (char *str);
 static void print_stats (void);
-static void translate_charset (unsigned char *new_trans);
+static void translate_charset (const unsigned char *new_trans);
 static void quit (int code);
 static void scanargs (int argc, char **argv);
 static void skip (int fdesc, char *file, long int records, long int blocksize, char *buf);
@@ -1008,7 +1008,7 @@ only one conv in {ascii,ebcdic,ibm}, {lcase,ucase}, {block,unblock}, {unblock,sy
 }
 
 static void
-translate_charset (unsigned char *new_trans)
+translate_charset (const unsigned char *new_trans)
 {
   int i;
 
