@@ -11,20 +11,25 @@ maintainer-check:
 	$(MAKE) distcheck
 	$(MAKE) my-distcheck
 
+prev-version := $(shell echo $(VERSION)|tr a-z Xa-y)
+tag-package = $(shell echo "$(PACKAGE)" | tr a-z A-Z)
+tag-this-version = $(subst .,_,$(VERSION))
+tag-prev-version = $(subst .,_,$(prev-version))
+this-cvs-tag = $(tag-package)-$(tag-this-version)
+prev-cvs-tag = $(tag-package)-$(tag-prev-version)
+
+
 # Tag before making distribution.  Also, don't make a distribution if
 # checks fail.  Also, make sure the NEWS file is up-to-date.
 # FIXME: use dist-hook/my-dist like distcheck-hook/my-distcheck.
 cvs-dist: maintainer-check
-	pkg=`echo "$(PACKAGE)" | tr a-z A-Z`; \
-	ver=`echo "$(VERSION)" | sed 's/\./_/g'`; \
-	tag="$$pkg-$$ver"; \
-	echo tag=$$tag; \
-	if cvs -n log -h README| grep -e $$tag: > /dev/null; then \
+	echo $(this-cvs-tag); \
+	if cvs -n log -h README| grep -e $(this-cvs-tag): > /dev/null; then \
 	  echo "VERSION not new; not tagging" 1>&2; \
 	  exit 1; \
 	fi; \
 	cvs update po; \
-	cvs tag -c $$tag
+	cvs tag -c $(this-cvs-tag)
 	$(MAKE) dist
 
 t=./=test
@@ -95,8 +100,11 @@ announcement: NEWS ChangeLog $(distdir).tar.gz
 	    | grep -v '^\['; \
 	  echo; \
 	  echo ChangeLog entries:; \
-	  sed -n "1,/$v $(PREV_VERSION_REGEXP)/p" \
-	    ChangeLog; \
+	  find . -name ChangeLog \
+	    | xargs cvs diff -up -r$(prev-cvs-tag) -rHEAD \
+	    | sed -n 's/^+//p' \
+	    | perl -ne 'm!^\+\+ (\./)?! or print,next;'	\
+	      -e 'print "\n"."*"x70 ."\n"; s///; print; print "*"x70 ."\n"'; \
 	)
 
 alpha:
