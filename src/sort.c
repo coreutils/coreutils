@@ -1133,7 +1133,7 @@ static int
 numcompare (register const char *a, register const char *b)
 {
   register int tmpa, tmpb, tmp;
-  register size_t loga, logb;
+  register size_t log_a, log_b;
 
   tmpa = *a;
   tmpb = *b;
@@ -1186,20 +1186,20 @@ numcompare (register const char *a, register const char *b)
 
       tmp = tmpb - tmpa;
 
-      for (loga = 0; ISDIGIT (tmpa); ++loga)
+      for (log_a = 0; ISDIGIT (tmpa); ++log_a)
 	do
 	  tmpa = *++a;
 	while (IS_THOUSANDS_SEP (tmpa));
 
-      for (logb = 0; ISDIGIT (tmpb); ++logb)
+      for (log_b = 0; ISDIGIT (tmpb); ++log_b)
 	do
 	  tmpb = *++b;
 	while (IS_THOUSANDS_SEP (tmpb));
 
-      if (loga != logb)
-	return loga < logb ? 1 : -1;
+      if (log_a != log_b)
+	return log_a < log_b ? 1 : -1;
 
-      if (!loga)
+      if (!log_a)
 	return 0;
 
       return tmp;
@@ -1248,20 +1248,20 @@ numcompare (register const char *a, register const char *b)
 
       tmp = tmpa - tmpb;
 
-      for (loga = 0; ISDIGIT (tmpa); ++loga)
+      for (log_a = 0; ISDIGIT (tmpa); ++log_a)
 	do
 	  tmpa = *++a;
 	while (IS_THOUSANDS_SEP (tmpa));
 
-      for (logb = 0; ISDIGIT (tmpb); ++logb)
+      for (log_b = 0; ISDIGIT (tmpb); ++log_b)
 	do
 	  tmpb = *++b;
 	while (IS_THOUSANDS_SEP (tmpb));
 
-      if (loga != logb)
-	return loga < logb ? -1 : 1;
+      if (log_a != log_b)
+	return log_a < log_b ? -1 : 1;
 
-      if (!loga)
+      if (!log_a)
 	return 0;
 
       return tmp;
