@@ -1,6 +1,37 @@
-2001-10-21  Jim Meyering  <meyering@lucent.com>
+2001-10-22  Paul Eggert  <eggert@twinsun.com>
 
 	* Version 4.1.1.
+
+	* src/sys2.h (alloca): Define to __builtin_alloca if __GNUC__,
+	to avoid a warning if -Wall.
+
+2001-10-21  Paul Eggert  <eggert@twinsun.com>
+
+	* src/dd.c: Remove as many instances of 'unsigned' as
+	possible, as some of them were not conforming to ANSI C, and
+	they made the code hard to read.  Avoiding 'unsigned' cuts
+	down on the number of casts.
+
+	(newline_character, space_character, save_char):
+	Now char, not unsigned char.
+	(obuf): Now char *, not unsigned char *.
+	(ascii_to_ebcdic, ascii_to_ibm, ebcdic_to_ascii):
+	Now char[], not unsigned char[].
+	(translate_charset, translate_buffer, swab_buffer, skip, copy_simple,
+	copy_with_block, copy_with_unblock):
+	Arg now points to char, not unsigned char.
+	All callers changed.
+	(translate_charset, parse_conversion, apply_translations):
+	Use int index, not unsigned int.
+	(bit_count): Arg is now int, not unsigned int.
+	Callers not changed, as they already assumed this.
+	(translate_buffer): Cast char to unsigned char before using
+	it as a subscript.
+	(swab_buffer): Returns char *, not unsigned char *.
+	(dd_copy): Use char, not unsigned char, for buffers.
+	Use size_t for possibly-large index, not unsigned int.
+
+2001-10-21  Jim Meyering  <meyering@lucent.com>
 
 	* src/shred.c (isaac_seed_machdep): Handle SIGSEGV, too.  Ick.
 
