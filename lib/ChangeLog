@@ -1,3 +1,8 @@
+2000-12-24  Jim Meyering  <meyering@lucent.com>
+
+	* hash.c (is_prime): Return explicit boolean values.
+	(hash_get_first): Return NULL to appease Irix5.6's 89.
+
 2000-10-31  Bruno Haible  <haible@clisp.cons.org>
 
 	* localcharset.c (locale_charset): Add support for Win32.
