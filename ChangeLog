@@ -1,3 +1,11 @@
+2003-03-19  Jim Meyering  <jim@meyering.net>
+
+	* Version 4.5.11.
+
+	* tests/mv/part-symlink: Unset CDPATH.  Otherwise, having the
+	CDPATH shell variable set could cause this test to fail.
+	Reported by Karl Berry.
+
 2003-03-18  Jim Meyering  <jim@meyering.net>
 
 	* src/fmt.c [struct Word] (paren, period, punct, final): Change the
@@ -6,8 +14,6 @@
 	Patch by Petter Reinholdtsen.  Also reported by Mike Jetzer.
 
 2003-03-16  Jim Meyering  <jim@meyering.net>
-
-	* Version 4.5.11.
 
 	* src/remove.c (rm): Put two local variables in static storage,
 	so they can't be clobbered by the potential longjmp.
