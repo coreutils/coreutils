@@ -78,7 +78,7 @@
 #define Sword 1
 
 /* The name this program was run with. */
-const char *program_name;
+char *program_name;
 
 /* If nonzero, display usage information and exit.  */
 static int show_help = 0;
