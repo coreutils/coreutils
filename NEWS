@@ -47,6 +47,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   Since the bug was in the underlying fts.c module, it also affected
   chown, chmod, and chgrp.
 
+  du --exclude=P now compares pattern P against the entire name
+  of each file, rather than just the final component.
+
   echo now conforms to POSIX better.  It supports the \0ooo syntax for
   octal escapes, and \c now terminates printing immediately.  If
   POSIXLY_CORRECT is set and the first argument is not "-n", echo now
