@@ -1,5 +1,7 @@
 2000-01-05  Jim Meyering  <meyering@ascend.com>
 
+	Some systems lack a definition of struct timespec (AIX, Ultrix)
+	Reported by Christian Krackowizer.
 	* lib/Makefile.am (noinst_HEADERS): Add nanosleep.h.
 	* lib/nanosleep.h: New file.
 	* lib/nanosleep.c: Include it.
