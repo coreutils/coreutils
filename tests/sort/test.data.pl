@@ -103,3 +103,5 @@
 #
 # From Carl Johnson <carlj@cjlinux.home.org>
 ("14a", '-d -u', "mal\nmal-\nmala\n", "mal\nmala\n", 0);
+# Be sure to fix the (translate && ignore) case in keycompare.
+("14b", '-f -d -u', "mal\nmal-\nmala\n", "mal\nmala\n", 0);
