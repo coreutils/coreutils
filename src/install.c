@@ -1,5 +1,5 @@
 /* install - copy files and set attributes
-   Copyright (C) 89, 90, 91, 95, 96, 97, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 1995-1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -141,9 +141,6 @@ void usage PARAMS ((int status));
 /* The name this program was run with, for error messages. */
 char *program_name;
 
-/* FIXME: document */
-enum backup_type backup_type;
-
 /* The user name that will own the files, or NULL to make the owner
    the current user ID. */
 static char *owner_name;
@@ -213,6 +210,7 @@ cp_option_init (struct cp_options *x)
   x->recursive = 0;
   x->sparse_mode = SPARSE_AUTO;
   x->symbolic_link = 0;
+  x->backup_type = none;
 
   /* Create destination files initially writable so we can run strip on them.
      Although GNU strip works fine on read-only files, some others
@@ -321,7 +319,8 @@ main (int argc, char **argv)
     error (1, 0,
 	   _("the strip option may not be used when installing a directory"));
 
-  x.backup_type = xget_version ("--version-control", version);
+  if (make_backups)
+    x.backup_type = xget_version ("--version-control", version);
 
   n_files = argc - optind;
   file = argv + optind;
