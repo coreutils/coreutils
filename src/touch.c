@@ -36,7 +36,6 @@ time_t time ();
 #endif
 
 int full_write ();
-void invalid_arg ();
 
 /* Bitmasks for `change_times'. */
 #define CH_ATIME 1
@@ -285,14 +284,9 @@ main (int argc, char **argv)
 	  date_set++;
 	  break;
 
-	case CHAR_MAX + 1:
-	  i = argmatch (optarg, time_args);
-	  if (i < 0)
-	    {
-	      invalid_arg (_("time selector"), optarg, i);
-	      usage (1);
-	    }
-	  change_times |= time_masks[i];
+	case CHAR_MAX + 1:	/* --time */
+	  change_times |= XARGCASEMATCH ("--time", optarg, 
+					 time_args, time_masks);
 	  break;
 
 	default:
