@@ -1,4 +1,9 @@
 #!/bin/bash
+cat - <<\EOF
+Invoke e.g., like this
+DU1=du-4.5.2 DU2=du ./du-tests
+EOF
+
 test -x "$DU1" || { echo DU1 envvar not set; exit 1; }
 test -x "$DU2" || { echo DU2 envvar not set; exit 1; }
 # Expects $DU1 and $DU2 to be the binaries to compare.
