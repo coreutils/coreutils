@@ -66,10 +66,16 @@
 #endif
 
 /* Return an int indicating the result of comparing two longs. */
-#ifdef INT_16_BITS
+#if SIZEOF_INT == 2
 #define longdiff(a, b) ((a) < (b) ? -1 : (a) > (b) ? 1 : 0)
 #else
 #define longdiff(a, b) ((a) - (b))
+#endif
+
+/* The maximum number of digits required to print an inode number
+   in an unsigned format.  */
+#ifndef INODE_DIGITS
+#define INODE_DIGITS 7
 #endif
 
 #ifndef STDC_HEADERS
@@ -137,7 +143,7 @@ enum filetype
   normal			/* All others. */
 };
 
-struct file
+struct fileinfo
 {
   /* The file name. */
   char *name;
@@ -156,13 +162,13 @@ struct file
 
 /* The table of files in the current directory:
 
-   `files' points to a vector of `struct file', one per file.
+   `files' points to a vector of `struct fileinfo', one per file.
    `nfiles' is the number of elements space has been allocated for.
    `files_index' is the number actually in use.  */
 
 /* Address of block containing the files that are described.  */
 
-static struct file *files;
+static struct fileinfo *files;
 
 /* Length of block that `files' points to, measured in files.  */
 
@@ -473,7 +479,7 @@ main (argc, argv)
     || print_block_size || print_inode;
 
   nfiles = 100;
-  files = (struct file *) xmalloc (sizeof (struct file) * nfiles);
+  files = (struct fileinfo *) xmalloc (sizeof (struct fileinfo) * nfiles);
   files_index = 0;
 
   clear_files ();
@@ -966,7 +972,7 @@ gobble_file (name, explicit_arg, dirname)
   if (files_index == nfiles)
     {
       nfiles *= 2;
-      files = (struct file *) xrealloc (files, sizeof (struct file) * nfiles);
+      files = (struct fileinfo *) xrealloc (files, sizeof (*files) * nfiles);
     }
 
   files[files_index].linkname = 0;
@@ -1086,7 +1092,7 @@ gobble_file (name, explicit_arg, dirname)
 static void
 get_link_name (filename, f)
      char *filename;
-     struct file *f;
+     struct fileinfo *f;
 {
   char *linkbuf;
   register int linksize;
@@ -1248,77 +1254,77 @@ sort_files ()
       abort ();
     }
 
-  qsort (files, files_index, sizeof (struct file), func);
+  qsort (files, files_index, sizeof (struct fileinfo), func);
 }
 
 /* Comparison routines for sorting the files. */
 
 static int
 compare_ctime (file1, file2)
-     struct file *file1, *file2;
+     struct fileinfo *file1, *file2;
 {
   return longdiff (file2->stat.st_ctime, file1->stat.st_ctime);
 }
 
 static int
 rev_cmp_ctime (file2, file1)
-     struct file *file1, *file2;
+     struct fileinfo *file1, *file2;
 {
   return longdiff (file2->stat.st_ctime, file1->stat.st_ctime);
 }
 
 static int
 compare_mtime (file1, file2)
-     struct file *file1, *file2;
+     struct fileinfo *file1, *file2;
 {
   return longdiff (file2->stat.st_mtime, file1->stat.st_mtime);
 }
 
 static int
 rev_cmp_mtime (file2, file1)
-     struct file *file1, *file2;
+     struct fileinfo *file1, *file2;
 {
   return longdiff (file2->stat.st_mtime, file1->stat.st_mtime);
 }
 
 static int
 compare_atime (file1, file2)
-     struct file *file1, *file2;
+     struct fileinfo *file1, *file2;
 {
   return longdiff (file2->stat.st_atime, file1->stat.st_atime);
 }
 
 static int
 rev_cmp_atime (file2, file1)
-     struct file *file1, *file2;
+     struct fileinfo *file1, *file2;
 {
   return longdiff (file2->stat.st_atime, file1->stat.st_atime);
 }
 
 static int
 compare_size (file1, file2)
-     struct file *file1, *file2;
+     struct fileinfo *file1, *file2;
 {
   return longdiff (file2->stat.st_size, file1->stat.st_size);
 }
 
 static int
 rev_cmp_size (file2, file1)
-     struct file *file1, *file2;
+     struct fileinfo *file1, *file2;
 {
   return longdiff (file2->stat.st_size, file1->stat.st_size);
 }
 
 static int
 compare_name (file1, file2)
-     struct file *file1, *file2;
+     struct fileinfo *file1, *file2;
 {
   return strcmp (file1->name, file2->name);
 }
 
 static int
 rev_cmp_name (file2, file1)
-     struct file *file1, *file2;
+     struct fileinfo *file1, *file2;
 {
   return strcmp (file1->name, file2->name);
 }
@@ -1328,7 +1334,7 @@ rev_cmp_name (file2, file1)
 
 static int
 compare_extension (file1, file2)
-     struct file *file1, *file2;
+     struct fileinfo *file1, *file2;
 {
   register char *base1, *base2;
   register int cmp;
@@ -1349,7 +1355,7 @@ compare_extension (file1, file2)
 
 static int
 rev_cmp_extension (file2, file1)
-     struct file *file1, *file2;
+     struct fileinfo *file1, *file2;
 {
   register char *base1, *base2;
   register int cmp;
@@ -1409,7 +1415,7 @@ print_current_files ()
 
 static void
 print_long_format (f)
-     struct file *f;
+     struct fileinfo *f;
 {
   char modebuf[20];
   char timebuf[40];
@@ -1452,7 +1458,7 @@ print_long_format (f)
     }
 
   if (print_inode)
-    printf ("%6lu ", (unsigned long) f->stat.st_ino);
+    printf ("%*lu ", INODE_DIGITS, (unsigned long) f->stat.st_ino);
 
   if (print_block_size)
     printf ("%*u ", block_size_size,
@@ -1461,7 +1467,7 @@ print_long_format (f)
 
   /* The space between the mode and the number of links is the POSIX
      "optional alternate access method flag". */
-  printf ("%s %3u ", modebuf, f->stat.st_nlink);
+  printf ("%s %3u ", modebuf, (unsigned int) f->stat.st_nlink);
 
   if (numeric_users)
     printf ("%-8u ", (unsigned int) f->stat.st_uid);
@@ -1575,10 +1581,10 @@ print_name_with_quoting (p)
 
 static void
 print_file_name_and_frills (f)
-     struct file *f;
+     struct fileinfo *f;
 {
   if (print_inode)
-    printf ("%6lu ", (unsigned long) f->stat.st_ino);
+    printf ("%*lu ", INODE_DIGITS, (unsigned long) f->stat.st_ino);
 
   if (print_block_size)
     printf ("%*u ", block_size_size,
@@ -1620,14 +1626,14 @@ print_type_indicator (mode)
 
 static int
 length_of_file_name_and_frills (f)
-     struct file *f;
+     struct fileinfo *f;
 {
   register char *p = f->name;
   register char c;
   register int len = 0;
 
   if (print_inode)
-    len += 7;
+    len += INODE_DIGITS + 1;
 
   if (print_block_size)
     len += 1 + block_size_size;
