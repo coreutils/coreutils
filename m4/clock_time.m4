@@ -1,4 +1,4 @@
-# clock_time.m4 serial 2
+# clock_time.m4 serial 3
 dnl Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
@@ -17,7 +17,8 @@ AC_DEFUN([gl_CLOCK_TIME],
   # library, inducing unnecessary run-time overhead.
   fetish_saved_libs=$LIBS
     AC_SEARCH_LIBS(clock_gettime, [rt posix4],
-                   [LIB_CLOCK_GETTIME=$ac_cv_search_clock_gettime])
+                   [LIB_CLOCK_GETTIME=$ac_cv_search_clock_gettime
+                   test -z "$LIB_CLOCK_GETTIME" && LIB_CLOCK_GETTIME=])
     AC_SUBST(LIB_CLOCK_GETTIME)
     AC_CHECK_FUNCS(clock_gettime clock_settime)
   LIBS=$fetish_saved_libs
