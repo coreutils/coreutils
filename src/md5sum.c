@@ -53,13 +53,6 @@
 # define OPENOPTS(BINARY) ((BINARY) != 0 ? TEXT1TO1 : TEXTCNVT)
 #endif
 
-#undef __P
-#if defined __STDC__ && __STDC__
-# define __P(args) args
-#else
-# define __P(args) ()
-#endif
-
 #if _LIBC || STDC_HEADERS
 # define TOLOWER(c) tolower (c)
 #else
