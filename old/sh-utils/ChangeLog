@@ -1,3 +1,18 @@
+Mon Dec  9 06:58:11 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* acinclude.m4 (AM_FUNC_GETLOADAVG): Put shell assignments to
+	ac_save_LIBS and LIBS on separate lines to avoid order-of-evaluation
+	problems -- some versions of sh (e.g. SunOS4.1.3's) evaluate such
+	space-separated assignments from right to left.  Patch from Karl Heuer.
+	(AM_FUNC_GETLOADAVG): Fix typo: su_save_LIBS => am_cv_saved_LIBS.
+	Patch from Karl Heuer.
+
+	* lib/strftime.c [HAVE_TZNAME]: Declare tzname.
+	Patch from Karl Heuer.
+
+	* src/Makefile.am (.sh): Also substitute @bindir@.
+	Reported by Karl Heuer.
+
 Sun Dec  8 07:22:38 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	=========== Update for automake-1.1k.
