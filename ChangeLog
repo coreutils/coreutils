@@ -1,6 +1,13 @@
-2003-12-18  Jim Meyering  <jim@meyering.net>
+2003-12-19  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.1.0.
+
+	* src/du.c (fts_debug): New global.
+	(FTS_CROSS_CHECK, DEBUG_OPT): Define.
+	(main): Make fts use FTS_TIGHT_CYCLE_CHECK.
+	(main) [DU_DEBUG]: Accept -d option.
+
+2003-12-18  Jim Meyering  <jim@meyering.net>
 
 	* src/ls.c (format_user): Increment dired_pos via two statements,
 	`dired_pos += width; dired_pos++;' rather than one,
