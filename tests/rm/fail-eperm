@@ -52,16 +52,17 @@ foreach my $dir (@dir_list)
 
 	foreach my $f (readdir DIR_HANDLE)
 	  {
+	    my $target_file = "$dir/$f";
+
 	    # Skip files owned by self, symlinks, and directories.
 	    # It's not technically necessary to skip symlinks, but it's simpler.
-	    -l $f || -o _ || -d _
+	    -l $target_file || -o _ || -d _
 	      and next;
 
 	    $found_file = 1;
 
 	    # Invoke rm on this file and ensure that we get the
 	    # expected exit code and diagnostic.
-	    my $target_file = "$dir/$f";
 	    my $cmd = "rm -f $target_file";
 	    open RM, "$cmd 2>&1 |"
 	      or die "$ME: cannot execute `$cmd'\n";
