@@ -2,6 +2,8 @@
 
 	* Version 4.5.2.
 
+	* src/touch.c (main): Split a long line.
+
 	* tests/du/Makefile.am (TESTS): Add slink.
 	* tests/du/slink: New test for system.h change of 2002-08-31.
 
