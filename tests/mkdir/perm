@@ -1,5 +1,6 @@
 #!/bin/sh
-# FIXME
+# Verify that mkdir's `-m MODE' option works properly
+# with various umask settings.
 
 if test "$VERBOSE" = yes; then
   set -x
@@ -24,6 +25,8 @@ fail=0
 
 # umask   -m option   resulting perm
 tests='
+    000  :            :drwxrwxrwx:
+    000  :   -m 016   :d-----xrw-:
     077  :            :drwx------:
     050  :            :drwx-w-rwx:
     050  :   -m 312   :d-wx--x-w-:
@@ -45,7 +48,8 @@ while :; do
   mkdir $mode d || fail=1
 
   actual_perms=`ls -ld d | sed 's/ .*//'`
-  test "$expected_perms" = "$actual_perms" || fail=1
+  test "$expected_perms" = "$actual_perms" \
+    || { fail=1; echo expected $expected_perms, got $actual_perms; }
   rmdir d || fail=1
 done
 
