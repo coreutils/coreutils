@@ -1,6 +1,34 @@
-2002-03-04  Jim Meyering  <meyering@lucent.com>
+2002-03-08  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.7.
+
+	Don't allow a malicious user to trick another user's rm process into
+	removing unintended files.  In one scenario, if root is removing a
+	hierarchy that is writable by the malicious user, that user may trick
+	root into removing all of `/'.  Reported by Wojciech Purczynski.
+
+	* src/remove.c (remove_dir): After chdir `..', call lstat to get the
+	dev/inode of "." and fail if they aren't the same as the old numbers.
+	(remove_cwd_entries): New parameter, `cwd_dev_ino'.
+	(remove_dir): Likewise.
+	(rm): Likewise.
+	Adjust all callers.
+	* src/mv.c (do_move): The first time we resort to copy/remove,
+	call lstat `.' to get the device/inode numbers now required for rm.
+	* src/rm.c (main): Call lstat `.' to get the device/inode numbers
+	now required for rm.
+	* src/remove.h (struct dev_ino): Declare new type.
+	(rm): Add a parameter to the prototype.
+
+2002-03-06  Jim Meyering  <meyering@lucent.com>
+
+	* Use automake-1.6.  Regenerate dependent files.
+
+2002-03-05  Jim Meyering  <meyering@lucent.com>
+
+	* Makefile.am (EXTRA_DIST): Add config/config.rpath.
+
+2002-03-04  Jim Meyering  <meyering@lucent.com>
 
 	* Makefile.maint (tgz-size): Also handle a suffix of `K', since
 	the sizes in the output of `du -h' now look like `29K'

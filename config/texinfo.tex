@@ -987,11 +987,11 @@ where each line of input produces a line of output.}
       \let\appendixentry = \chapentry
       \def\unnumbchapentry ##1##2{}
       \def\secentry ##1##2##3##4{\advancenumber{chap##2}}
-      \def\unnumbsecentry ##1##2{}
+      \def\unnumbsecentry ##1##2##3{\advancenumber{chap##2}}
       \def\subsecentry ##1##2##3##4##5{\advancenumber{sec##2.##3}}
-      \def\unnumbsubsecentry ##1##2{}
+      \def\unnumbsubsecentry ##1##2##3##4{\advancenumber{sec##2.##3}}
       \def\subsubsecentry ##1##2##3##4##5##6{\advancenumber{subsec##2.##3.##4}}
-      \def\unnumbsubsubsecentry ##1##2{}
+      \def\unnumbsubsubsecentry ##1##2##3##4##5{\advancenumber{subsec##2.##3.##4}}
       \input \jobname.toc
       \def\chapentry ##1##2##3{%
         \pdfoutline goto name{\pdfmkpgn{##3}}count-\expnumber{chap##2}{##1}}
@@ -1000,16 +1000,16 @@ where each line of input produces a line of output.}
         \pdfoutline goto name{\pdfmkpgn{##2}}{##1}}
       \def\secentry ##1##2##3##4{%
         \pdfoutline goto name{\pdfmkpgn{##4}}count-\expnumber{sec##2.##3}{##1}}
-      \def\unnumbsecentry ##1##2{%
-        \pdfoutline goto name{\pdfmkpgn{##2}}{##1}}
+      \def\unnumbsecentry ##1##2##3{%
+        \pdfoutline goto name{\pdfmkpgn{##3}}{##1}}
       \def\subsecentry ##1##2##3##4##5{%
         \pdfoutline goto name{\pdfmkpgn{##5}}count-\expnumber{subsec##2.##3.##4}{##1}}
-      \def\unnumbsubsecentry ##1##2{%
-        \pdfoutline goto name{\pdfmkpgn{##2}}{##1}}
+      \def\unnumbsubsecentry ##1##2##3##4{%
+        \pdfoutline goto name{\pdfmkpgn{##4}}{##1}}
       \def\subsubsecentry ##1##2##3##4##5##6{%
         \pdfoutline goto name{\pdfmkpgn{##6}}{##1}}
-      \def\unnumbsubsubsecentry ##1##2{%
-        \pdfoutline goto name{\pdfmkpgn{##2}}{##1}}
+      \def\unnumbsubsubsecentry ##1##2##3##4##5{%
+        \pdfoutline goto name{\pdfmkpgn{##5}}{##1}}
       \input \jobname.toc
     \endgroup\fi
   }}
@@ -3613,7 +3613,8 @@ width0pt\relax} \fi
 \def\unnumberedseczzz #1{%
 \plainsecheading {#1}\gdef\thissection{#1}%
 \toks0 = {#1}%
-\edef\temp{\noexpand\writetocentry{\realbackslash unnumbsecentry{\the\toks0}}}%
+\edef\temp{\noexpand\writetocentry{\realbackslash unnumbsecentry%
+  {\the\toks0}{\the\chapno}}}%
 \temp
 \unnumbnoderef
 \nobreak
@@ -3652,7 +3653,7 @@ width0pt\relax} \fi
 \plainsubsecheading {#1}\gdef\thissection{#1}%
 \toks0 = {#1}%
 \edef\temp{\noexpand\writetocentry{\realbackslash unnumbsubsecentry%
-                                    {\the\toks0}}}%
+  {\the\toks0}{\the\chapno}{\the\secno}}}%
 \temp
 \unnumbnoderef
 \nobreak
@@ -3693,7 +3694,7 @@ width0pt\relax} \fi
 \plainsubsubsecheading {#1}\gdef\thissection{#1}%
 \toks0 = {#1}%
 \edef\temp{\noexpand\writetocentry{\realbackslash unnumbsubsubsecentry%
-                                    {\the\toks0}}}%
+  {\the\toks0}{\the\chapno}{\the\secno}{\the\subsecno}}}%
 \temp
 \unnumbnoderef
 \nobreak
@@ -3978,11 +3979,11 @@ width0pt\relax} \fi
       \hyphenpenalty = 10000
       \advance\baselineskip by 1pt % Open it up a little.
       \def\secentry ##1##2##3##4{}
-      \def\unnumbsecentry ##1##2{}
+      \def\unnumbsecentry ##1##2##3{}
       \def\subsecentry ##1##2##3##4##5{}
-      \def\unnumbsubsecentry ##1##2{}
+      \def\unnumbsubsecentry ##1##2##3##4{}
       \def\subsubsecentry ##1##2##3##4##5##6{}
-      \def\unnumbsubsubsecentry ##1##2{}
+      \def\unnumbsubsubsecentry ##1##2##3##4##5{}
       \openin 1 \jobname.toc
       \ifeof 1 \else
         \closein 1
@@ -4044,16 +4045,16 @@ width0pt\relax} \fi
 
 % Sections.
 \def\secentry#1#2#3#4{\dosecentry{#2.#3\labelspace#1}{#4}}
-\def\unnumbsecentry#1#2{\dosecentry{#1}{#2}}
+\def\unnumbsecentry#1#2#3{\dosecentry{#1}{#3}}
 
 % Subsections.
 \def\subsecentry#1#2#3#4#5{\dosubsecentry{#2.#3.#4\labelspace#1}{#5}}
-\def\unnumbsubsecentry#1#2{\dosubsecentry{#1}{#2}}
+\def\unnumbsubsecentry#1#2#3#4{\dosubsecentry{#1}{#4}}
 
 % And subsubsections.
 \def\subsubsecentry#1#2#3#4#5#6{%
   \dosubsubsecentry{#2.#3.#4.#5\labelspace#1}{#6}}
-\def\unnumbsubsubsecentry#1#2{\dosubsubsecentry{#1}{#2}}
+\def\unnumbsubsubsecentry#1#2#3#4#5{\dosubsubsecentry{#1}{#5}}
 
 % This parameter controls the indentation of the various levels.
 \newdimen\tocindent \tocindent = 3pc
