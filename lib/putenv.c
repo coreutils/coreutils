@@ -146,7 +146,7 @@ rpl_putenv (const char *string)
       new_environ[size] = (char *) string;
       new_environ[size + 1] = NULL;
       if (last_environ != NULL)
-	free ((void *) last_environ);
+	free (last_environ);
       last_environ = new_environ;
       environ = new_environ;
     }
