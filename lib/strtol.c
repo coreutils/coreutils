@@ -340,6 +340,13 @@ noconv:
 
 /* External user entry point.  */
 
+#undef __P
+#if defined (__STDC__) && __STDC__
+#define __P(args) args
+#else
+#define __P(args) ()
+#endif
+
 /* Prototype.  */
 INT WEAKNAME (strtol) __P ((const STRING_TYPE *nptr, STRING_TYPE **endptr,
 			    int base));
