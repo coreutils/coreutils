@@ -1,5 +1,8 @@
 2003-04-02  Jim Meyering  <jim@meyering.net>
 
+	* coreutils.texi (false invocation): Note that false exits
+	unsuccessfully even with --help and --version.
+
 	* Makefile.am (check-texinfo): Don't fail if perl is missing.
 	Reported by Nelson Beebe.
 
