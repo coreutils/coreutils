@@ -1,5 +1,5 @@
 /* dirname.c -- return all but the last element in a path
-   Copyright 1990, 1998, 2000, 2001, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1990, 1998, 2000, 2001, 2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -19,11 +19,9 @@
 # include <config.h>
 #endif
 
-#if STDC_HEADERS || HAVE_STRING_H
-# include <string.h>
-#endif
-
 #include "dirname.h"
+
+#include <string.h>
 #include "xalloc.h"
 
 /* Return the length of `dirname (PATH)', or zero if PATH is
