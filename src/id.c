@@ -343,25 +343,19 @@ print_full_info (const char *username)
 
   printf ("uid=%lu", (unsigned long int) ruid);
   pwd = getpwuid (ruid);
-  if (pwd == NULL)
-    ok = false;
-  else
+  if (pwd)
     printf ("(%s)", pwd->pw_name);
 
   printf (" gid=%lu", (unsigned long int) rgid);
   grp = getgrgid (rgid);
-  if (grp == NULL)
-    ok = false;
-  else
+  if (grp)
     printf ("(%s)", grp->gr_name);
 
   if (euid != ruid)
     {
       printf (" euid=%lu", (unsigned long int) euid);
       pwd = getpwuid (euid);
-      if (pwd == NULL)
-	ok = false;
-      else
+      if (pwd)
 	printf ("(%s)", pwd->pw_name);
     }
 
@@ -369,9 +363,7 @@ print_full_info (const char *username)
     {
       printf (" egid=%lu", (unsigned long int) egid);
       grp = getgrgid (egid);
-      if (grp == NULL)
-	ok = false;
-      else
+      if (grp)
 	printf ("(%s)", grp->gr_name);
     }
 
@@ -396,9 +388,7 @@ print_full_info (const char *username)
 	  putchar (',');
 	printf ("%lu", (unsigned long int) groups[i]);
 	grp = getgrgid (groups[i]);
-	if (grp == NULL)
-	  ok = false;
-	else
+	if (grp)
 	  printf ("(%s)", grp->gr_name);
       }
     free (groups);
