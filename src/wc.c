@@ -220,7 +220,7 @@ wc (fd, file)
 
       if (fstat (fd, &stats) == 0 && S_ISREG (stats.st_mode)
 	  && (current_pos = lseek (fd, (off_t) 0, SEEK_CUR)) != -1
-	  && (end_pos  = lseek (fd, (off_t) 0, SEEK_END)) != -1)
+	  && (end_pos = lseek (fd, (off_t) 0, SEEK_END)) != -1)
 	{
 	  off_t diff;
 	  /* Be careful here.  The current position may actually be
