@@ -2,6 +2,9 @@
 
 	* Version 5.0.91.
 
+	* man/Makefile.am (programs): Use ../src, not $(srcdir)/../src.
+	(check-programs-vs-x): Fail if $(programs) is empty.
+
 	* src/remove.c: Add a comment.
 
 2003-09-07  Jim Meyering  <jim@meyering.net>
