@@ -1,5 +1,5 @@
 /* mknod -- make special files
-   Copyright (C) 90, 91, 1995-2000 Free Software Foundation, Inc.
+   Copyright (C) 90, 91, 1995-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -88,9 +88,7 @@ main (int argc, char **argv)
   struct mode_change *change;
   const char *specified_mode;
   int optc;
-  int i_major, i_minor;
-  long int tmp_major, tmp_minor;
-  char *s;
+  mode_t node_type;
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -151,57 +149,49 @@ main (int argc, char **argv)
 #ifndef S_IFBLK
       error (4, 0, _("block special files not supported"));
 #else
-      if (argc - optind != 4)
-	{
-	  error (0, 0, _("\
-when creating block special files, major and minor device\n\
-numbers must be specified"));
-	  usage (1);
-	}
-
-      s = argv[optind + 2];
-      if (xstrtol (s, NULL, 0, &tmp_major, NULL) != LONGINT_OK)
-	error (1, 0, _("invalid major device number %s"), quote (s));
-
-      s = argv[optind + 3];
-      if (xstrtol (s, NULL, 0, &tmp_minor, NULL) != LONGINT_OK)
-	error (1, 0, _("invalid minor device number %s"), quote (s));
-
-      i_major = (int) tmp_major;
-      i_minor = (int) tmp_minor;
-
-      if (mknod (argv[optind], newmode | S_IFBLK, makedev (i_major, i_minor)))
-	error (1, errno, "%s", quote (argv[optind]));
+      node_type = S_IFBLK;
 #endif
-      break;
+      goto block_or_character;
 
     case 'c':			/* `character' */
     case 'u':			/* `unbuffered' */
 #ifndef S_IFCHR
       error (4, 0, _("character special files not supported"));
 #else
+      node_type = S_IFCHR;
+#endif
+      goto block_or_character;
+
+    block_or_character:
       if (argc - optind != 4)
 	{
 	  error (0, 0, _("\
-when creating character special files, major and minor device\n\
+when creating special files, major and minor device\n\
 numbers must be specified"));
 	  usage (1);
 	}
 
-      s = argv[optind + 2];
-      if (xstrtol (s, NULL, 0, &tmp_major, NULL) != LONGINT_OK)
-	error (1, 0, _("invalid major device number %s"), quote (s));
+      {
+	char const *s_major = argv[optind + 2];
+	char const *s_minor = argv[optind + 3];
+	uintmax_t i_major, i_minor;
+	dev_t device;
 
-      s = argv[optind + 3];
-      if (xstrtol (s, NULL, 0, &tmp_minor, NULL) != LONGINT_OK)
-	error (1, 0, _("invalid minor device number %s"), quote (s));
+	if (xstrtoumax (s_major, NULL, 0, &i_major, NULL) != LONGINT_OK
+	    || i_major != (major_t) i_major)
+	  error (1, 0, _("invalid major device number %s"), quote (s_major));
 
-      i_major = (int) tmp_major;
-      i_minor = (int) tmp_minor;
+	if (xstrtoumax (s_minor, NULL, 0, &i_minor, NULL) != LONGINT_OK
+	    || i_minor != (minor_t) i_minor)
+	  error (1, 0, _("invalid minor device number %s"), quote (s_minor));
 
-      if (mknod (argv[optind], newmode | S_IFCHR, makedev (i_major, i_minor)))
-	error (1, errno, "%s", quote (argv[optind]));
-#endif
+	device = makedev (i_major, i_minor);
+	if (device == NODEV)
+	  error (1, 0, _("invalid device %s %s"), s_major, s_minor);
+
+	if (mknod (argv[optind], newmode | node_type, device) != 0)
+	  error (1, errno, "%s", quote (argv[optind]));
+      }
       break;
 
     case 'p':			/* `pipe' */
