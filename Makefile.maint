@@ -312,6 +312,7 @@ xd-delta = $(PACKAGE)-$(PREV_VERSION)-$(VERSION).xdelta
 
 signatures ?= $(distdir).tar.bz2.asc $(distdir).tar.gz.asc
 %.asc: %
+	rm -f $@
 	gpg --armor --detach-sign -o $@ $<
 
 rel-files = $(xd-delta) $(distdir).tar.bz2 $(distdir).tar.gz $(signatures)
