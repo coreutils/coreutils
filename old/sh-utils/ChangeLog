@@ -173,7 +173,7 @@ Fri Jun 23 23:04 1995  Jim Meyering  (meyering@comco.com)
 Mon Jun 12 00:26:54 1995  Jim Meyering  (meyering@comco.com)
 
 	* getdate.y (Convert): Use 2037 as threshold, not 1999.
-	Otherwise years after 1999 are treated as invalid.
+	Before years after 1999 were treated as invalid.
 	From Andreas Schwab.
 
 Sat May 27 00:35:47 1995  Jim Meyering  (meyering@comco.com)
@@ -296,7 +296,7 @@ Mon Dec 19 22:05:12 1994  Jim Meyering  (meyering@comco.com)
 
 Mon Dec 12 22:42:09 1994  Jim Meyering  (meyering@comco.com)
 
-	* (docolon): Zero out re_buffer and re_regs before using them.
+	* expr.c (docolon): Zero out re_buffer and re_regs before using them.
 	From H.J. Lu <hjl@nynexst.com>.
 
 Sun Dec  4 14:53:12 1994  Jim Meyering  (meyering@comco.com)
