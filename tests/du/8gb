@@ -30,6 +30,20 @@ if test $? != 0; then
   (exit 77); exit 77
 fi
 
+# FIXME: this should be a test of dd.
+# On some systems (at least linux-2.4.18 + NFS to disks on a Solaris system)
+# the `dd' command above mistakenly creates a file of length `0', yet
+# doesn't fail.  The root of that failure is that the ftruncate call
+# returns zero but doesn't do its job.  Detect this failure.
+set x `ls -gG big`
+size=$4
+if test "$size" = 0; then
+  echo "$0: cannot create a file large enough for this test;" 1>&2
+  echo "$0: possibly because this system's NFS support is buggy;" 1>&2
+  echo "$0: Consider rerunning this test on a different file system." 1>&2
+  (exit 77); exit 77
+fi
+
 fail=0
 
 # This would print `0	big' with coreutils-4.5.8.
