@@ -89,6 +89,12 @@ void free ();
 #define CHARS_IN_ABM 3
 
 #ifdef ENABLE_NLS
+# define NLS_MEMCMP(S1, S2, Len) strncoll (S1, S2, Len)
+#else
+# define NLS_MEMCMP(S1, S2, Len) memcmp (S1, S2, Len)
+#endif
+
+#ifdef ENABLE_NLS
 
 static unsigned char decimal_point = '.';
 static unsigned char th_sep = ',';
@@ -1443,7 +1449,7 @@ getmonth (const char *s, int len)
   char month[4];
   register int i, lo = 0, hi = 12;
 
-  while (len > 0 && blanks[UCHAR(*s)])
+  while (len > 0 && blanks[UCHAR (*s)])
     ++s, --len;
 
   if (len < 3)
@@ -1453,16 +1459,17 @@ getmonth (const char *s, int len)
     month[i] = fold_toupper[UCHAR (s[i])];
   month[3] = '\0';
 
-  while (hi - lo > 1) {
+  while (hi - lo > 1)
+    {
 #ifdef ENABLE_NLS
-    if (strcoll (month, monthtab[(lo+hi)/2].name) < 0)
+      if (strcoll (month, monthtab[(lo + hi) / 2].name) < 0)
 #else
-    if (strcmp (month, monthtab[(lo + hi) / 2].name) < 0)
+      if (strcmp (month, monthtab[(lo + hi) / 2].name) < 0)
 #endif
-      hi = (lo + hi) / 2;
-    else
-      lo = (lo + hi) / 2;
-  }
+	hi = (lo + hi) / 2;
+      else
+	lo = (lo + hi) / 2;
+    }
   if (!strcmp (month, monthtab[lo].name))
     return monthtab[lo].val;
   return 0;
@@ -1471,16 +1478,18 @@ getmonth (const char *s, int len)
 #ifdef ENABLE_NLS
 /* Look for the month in locale table, and if that fails try with
    us month name table                                              */
-static int nls_month_is_either_locale(const char *s, int len)
+static int
+nls_month_is_either_locale (const char *s, int len)
 {
   int ind;
 
   monthtab = nls_monthtab;
-  ind = getmonth(s, len);
-  if (ind == 0) {
-    monthtab = us_monthtab;
-    ind = getmonth(s, len);
-  }
+  ind = getmonth (s, len);
+  if (ind == 0)
+    {
+      monthtab = us_monthtab;
+      ind = getmonth (s, len);
+    }
   return ind;
 }
 #endif
@@ -1714,15 +1723,9 @@ keycompare (const struct line *a, const struct line *b)
 	      }
 	  }
       else
-#ifndef ENABLE_NLS
-	diff = memcmp (texta, textb, min (lena, lenb));
-#else
-	/* since we don't have a strncoll, should one be emulated? */
-	/* as the normal behaviour of the sort program, when two   */
-	/* equivalent keys are met, is to sort according to length */
-
-	diff = strncoll (texta, textb, min (lena, lenb));
-#endif
+	{
+	  diff = NLS_MEMCMP (texta, textb, min (lena, lenb));
+	}
 
       if (diff)
 	return key->reverse ? -diff : diff;
@@ -1765,16 +1768,15 @@ compare (register const struct line *a, register const struct line *b)
 
 #ifdef ENABLE_NLS
       if (need_locale)  /* want absolutely correct sorting */
-	return reverse ? -strcoll(ap, bp) : strcoll(ap, bp);
+	{
+	  diff = strcoll (ap, bp);
+	  return reverse ? -diff : diff;
+	}
 #endif
       diff = NLS_MAP (*ap) - NLS_MAP (*bp);
       if (diff == 0)
 	{
-#ifdef ENABLE_NLS
-	  diff = strncoll (ap, bp, mini);
-#else
-	  diff = memcmp (ap, bp, mini);
-#endif
+	  diff = NLS_MEMCMP (ap, bp, mini);
 	  if (diff == 0)
 	    diff = tmpa - tmpb;
 	}
