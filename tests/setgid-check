@@ -11,7 +11,11 @@ setgid_tmpdir=setgid-$$
 (umask 77; mkdir $setgid_tmpdir)
 p=`ls -ld $setgid_tmpdir|sed 's/ .*//'`
 rmdir $setgid_tmpdir
-case $p in drwx------);; *) cwd_is_setgid=yes;; esac
+case $p in
+  drwx------);;
+  drwxr-xr-x);;  # Windows98 + DJGPP 2.03 + fileutils-4.1 does this.
+  *) cwd_is_setgid=yes;;
+esac
 if test $cwd_is_setgid = yes; then
   cat <<EOF >&2
 $0: Since it looks like you're running this test in a directory with
