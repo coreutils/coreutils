@@ -1,5 +1,5 @@
 /* `dir', `vdir' and `ls' directory listing programs for GNU.
-   Copyright (C) 85, 88, 90, 91, 95, 96, 97, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 85, 88, 90, 91, 1995-1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -372,13 +372,13 @@ enum color_type
 enum indicator_no
   {
     C_LEFT, C_RIGHT, C_END, C_NORM, C_FILE, C_DIR, C_LINK, C_FIFO, C_SOCK,
-    C_BLK, C_CHR, C_MISSING, C_ORPHAN, C_EXEC
+    C_BLK, C_CHR, C_MISSING, C_ORPHAN, C_EXEC, C_DOOR
   };
 
 static const char *const indicator_name[]=
   {
     "lc", "rc", "ec", "no", "fi", "di", "ln", "pi", "so",
-    "bd", "cd", "mi", "or", "ex", NULL
+    "bd", "cd", "mi", "or", "ex", "do", NULL
   };
 
 struct color_ext_type
@@ -2415,6 +2415,11 @@ print_type_indicator (unsigned int mode)
     DIRED_PUTCHAR ('=');
 #endif
 
+#ifdef S_ISDOOR
+  if (S_ISDOOR (mode))
+    DIRED_PUTCHAR ('>');
+#endif
+
   if (S_ISREG (mode) && indicator_style == classify
       && (mode & S_IXUGO))
     DIRED_PUTCHAR ('*');
@@ -2463,6 +2468,11 @@ print_color_indicator (const char *name, unsigned int mode, int linkok)
 #ifdef S_ISCHR
       else if (S_ISCHR (mode))
 	type = C_CHR;
+#endif
+
+#ifdef S_ISDOOR
+      else if (S_ISDOOR (mode))
+	type = C_DOOR;
 #endif
 
       if (type == C_FILE && (mode & S_IXUGO) != 0)
@@ -2536,6 +2546,9 @@ length_of_file_name_and_frills (const struct fileinfo *f)
 #endif
 #ifdef S_ISSOCK
 	       || S_ISSOCK (filetype)
+#endif
+#ifdef S_ISDOOR
+	       || S_ISDOOR (filetype)
 #endif
 	)
 	len += 1;
