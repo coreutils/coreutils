@@ -8,6 +8,7 @@ expected_failure_status_date=2
 expected_failure_status_printenv=2
 expected_failure_status_tty=3
 expected_failure_status_sort=2
+expected_failure_status_expr=3
 
 case "$all_programs" in
   *groups*)
