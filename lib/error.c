@@ -31,7 +31,6 @@
 #else
 # include "gettext.h"
 #endif
-#define _(msgid) gettext (msgid)
 
 #ifdef _LIBC
 # include <wchar.h>
@@ -59,7 +58,14 @@ void exit ();
 #endif
 
 #include "error.h"
-#include "unlocked-io.h"
+
+#if !_LIBC
+# include "unlocked-io.h"
+#endif
+
+#ifndef _
+# define _(String) String
+#endif
 
 /* If NULL, error will flush stdout, then print on stderr the program
    name, a colon and a space.  Otherwise, error will call this
