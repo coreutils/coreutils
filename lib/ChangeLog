@@ -1,5 +1,7 @@
 2003-11-11  Jim Meyering  <jim@meyering.net>
 
+	* ftw.c, ftw_.h: Remove files.  No longer used.
+
 	* xalloc.h: Update from gnulib.
 
 2003-11-09  Jim Meyering  <jim@meyering.net>
