@@ -1,4 +1,4 @@
-#!/sw/tools/bin/perl -w
+#!/usr/bin/perl -w
 
 # Generate a short man page from --help and --version output.
 # Copyright © 1997, 98, 99 Free Software Foundation, Inc.
@@ -27,7 +27,7 @@ use Text::Tabs qw(expand);
 use POSIX qw(strftime setlocale LC_TIME);
 
 my $this_program = 'help2man';
-my $this_version = '1.019';
+my $this_version = '1.020';
 my $version_info = <<EOT;
 $this_program $this_version
 
@@ -239,7 +239,8 @@ if ($help_text =~ s/^Usage:( +(\S+))(.*)((?:\n(?: {6}\1| *or: +\S).*)*)//m)
     for (@syn)
     {
 	$synopsis .= ".br\n" if $synopsis;
-	s/(\S+) *//;
+	s!^\S*/!!;
+	s/^(\S+) *//;
 	$synopsis .= ".B $1\n";
 	s/\s+$//;
 	s/(([][]|\.\.+)+)/\\fR$1\\fI/g;
