@@ -303,10 +303,11 @@ tempname ()
   struct tempnode *node =
   (struct tempnode *) xmalloc (sizeof (struct tempnode));
 
-  if (len && temp_file_prefix[len - 1] != '/')
-    sprintf (name, "%s/sort%5.5d%5.5d", temp_file_prefix, getpid (), ++seq);
-  else
-    sprintf (name, "%ssort%5.5d%5.5d", temp_file_prefix, getpid (), ++seq);
+  sprintf (name,
+	   (len && temp_file_prefix[len - 1] != '/'
+	    ? "%s/sort%5.5d%5.5d"
+	    : "%ssort%5.5d%5.5d"),
+	   temp_file_prefix, (int) getpid (), ++seq);
   node->name = name;
   node->next = temphead.next;
   temphead.next = node;
