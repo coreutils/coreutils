@@ -87,7 +87,7 @@ alpha:
 	ln $(distdir).tar.gz ../release
 	chmod a-w $(distdir).tar.gz
 	@echo =====================================
-	@echo 'ncftp -u $(dir $(url))/'
+	@echo 'ncftp -u $(dir $(url))'
 	@echo '#   put $(distdir).tar.gz'
 	@echo '# send the /tmp/announcement e-mail'
 	@echo 'pot-mail $(distdir).tar.gz | bash'
