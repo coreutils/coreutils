@@ -715,7 +715,7 @@ main (int argc, char **argv)
   if (verbose_output && recoverable_output)
     error (2, 0,
 	   _("the options for verbose and stty-readable output styles are\n\
-\tmutually exclusive"));
+mutually exclusive"));
 
   /* Specifying any other arguments with -a or -g gets an error.  */
   if (argc - optind > 0 && (verbose_output || recoverable_output))
