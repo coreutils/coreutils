@@ -12,6 +12,10 @@
 	* src/true.c (usage):
 	* src/system.h (USAGE_BUILTIN_WARNING): New macro.
 
+	* man/echo.x: Remove `DESCRIPTION' section, now that --help includes it.
+	* man/printf.x: Likewise.
+	* man/pwd.x: Likewise.
+
 2005-04-03  Jim Meyering  <jim@meyering.net>
 
 	* src/pr.c (main): Fix off-by-one error.
