@@ -155,17 +155,17 @@ typedef struct _ftsent {
 # define FTS_SL		12		/* symbolic link */
 # define FTS_SLNONE	13		/* symbolic link without target */
 # define FTS_W		14		/* whiteout object */
-	u_short fts_info;		/* user flags for FTSENT structure */
+	unsigned short int fts_info;	/* user flags for FTSENT structure */
 
 # define FTS_DONTCHDIR	 0x01		/* don't chdir .. to the parent */
 # define FTS_SYMFOLLOW	 0x02		/* followed a symlink to get here */
-	u_short fts_flags;		/* private flags for FTSENT structure */
+	unsigned short int fts_flags;	/* private flags for FTSENT structure */
 
 # define FTS_AGAIN	 1		/* read node again */
 # define FTS_FOLLOW	 2		/* follow symbolic link */
 # define FTS_NOINSTR	 3		/* no instructions */
 # define FTS_SKIP	 4		/* discard node */
-	u_short fts_instr;		/* fts_set() instructions */
+	unsigned short int fts_instr;	/* fts_set() instructions */
 
 	struct stat fts_statp[1];	/* stat(2) information */
 	char fts_name[1];		/* file name */
