@@ -921,7 +921,8 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
 		      if (lseek (fd, (off_t) (offset + soff + 512), SEEK_SET)
 			  != -1)
 			{
-			  soff += 512;
+			  /* Arrange to skip this block. */
+			  ssize = 512;
 			  write_error = true;
 			  continue;
 			}
