@@ -1,5 +1,10 @@
 2001-03-11  Paul Eggert  <eggert@twinsun.com>
 
+	* src/sort.c (die): New message arg, to describe failures
+	better.  All callers changed.
+
+2001-03-11  Paul Eggert  <eggert@twinsun.com>
+
 	* src/sort.c: Decrease buffer size when only merging or checking.
 	(sort_size): Now the user-specified sort size.
 	(MIN_MERGE_BUFFER_SIZE): New macro.
