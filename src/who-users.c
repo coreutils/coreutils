@@ -1,5 +1,5 @@
 /* GNU's uptime/users/who.
-   Copyright (C) 92, 93, 94, 95, 1996 Free Software Foundation, Inc.
+   Copyright (C) 92, 93, 94, 95, 96, 1997 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
