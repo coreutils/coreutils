@@ -2,6 +2,10 @@
 
 	* Version 4.0.32.
 
+	* tests/mkdir/perm: Don't put a newline in IFS;  that's not portable to
+	NetBSD's /bin/sh.  Instead, filter newlines and leading/trailing blanks
+	out of `tests' before the `set -'.
+
 	* Makefile.maint (announcement): Limit depth of ChangeLog `find' to 2.
 
 	* src/ls.c (print_long_format): Wrap the `--full-time' date format
