@@ -95,7 +95,7 @@ char *xmalloc ();
 int safe_read ();
 int full_write ();
 
-static RETSIGTYPE interrupt_handler __P ((void));
+static RETSIGTYPE interrupt_handler __P ((int));
 static int bit_count __P ((register unsigned int i));
 static int parse_integer __P ((char *str));
 static void apply_translations __P ((void));
@@ -1043,21 +1043,37 @@ print_stats (void)
 }
 
 static void
-quit (int code)
+cleanup (void)
 {
-  int errcode = code ? code : 1;
   print_stats ();
   if (close (input_fd) < 0)
-    error (errcode, errno, "%s", input_file);
+    error (1, errno, "%s", input_file);
   if (close (output_fd) < 0)
-    error (errcode, errno, "%s", output_file);
+    error (1, errno, "%s", output_file);
+}
+
+static void
+quit (int code)
+{
+  cleanup ();
   exit (code);
 }
 
 static RETSIGTYPE
-interrupt_handler (void)
+interrupt_handler (int sig)
 {
-  quit (1);
+#ifdef SA_INTERRUPT
+  struct sigaction sigact;
+
+  sigact.sa_handler = SIG_DFL;
+  sigemptyset (&sigact.sa_mask);
+  sigact.sa_flags = 0;
+  sigaction (sig, &sigact, NULL);
+#else				/* !SA_INTERRUPT */
+  signal (sig, SIG_DFL);
+#endif				/* SA_INTERRUPT */
+  cleanup ();
+  kill (getpid (), sig);
 }
 
 static void
