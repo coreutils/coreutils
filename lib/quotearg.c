@@ -115,6 +115,7 @@ char const *const quoting_style_args[] =
   "c",
   "escape",
   "locale",
+  "clocale",
   0
 };
 
@@ -126,7 +127,8 @@ enum quoting_style const quoting_style_vals[] =
   shell_always_quoting_style,
   c_quoting_style,
   escape_quoting_style,
-  locale_quoting_style
+  locale_quoting_style,
+  clocale_quoting_style
 };
 
 /* The default quoting options.  */
@@ -175,13 +177,15 @@ set_char_quoting (struct quoting_options *o, char c, int i)
   return r;
 }
 
-/* Return the translation of MSGID if there is one, and
-   DEFAULT_TRANSLATION otherwise.  */
+/* MSGID approximates a quotation mark.  Return its translation if it
+   has one; otherwise, return either it or "\"", depending on S.  */
 static char const *
-gettext_default (char const *msgid, char const *default_translation)
+gettext_quote (char const *msgid, enum quoting_style s)
 {
   char const *translation = _(msgid);
-  return translation == msgid ? default_translation : translation;
+  if (translation == msgid && s == clocale_quoting_style)
+    translation = "\"";
+  return translation;
 }
 
 /* Place into buffer BUFFER (of size BUFFERSIZE) a quoted version of
@@ -232,30 +236,25 @@ quotearg_buffer_restyled (char *buffer, size_t buffersize,
       break;
 
     case locale_quoting_style:
+    case clocale_quoting_style:
       {
 	/* Get translations for open and closing quotation marks.
 
-	   The message catalog should translate "{LEFT QUOTATION
-	   MARK}" to a left quotation mark suitable for the locale,
-	   and similarly for "{RIGHT QUOTATION MARK}".  If the catalog
-	   has no translation, the code below uses a neutral
-	   (vertical) quotation mark instead, as it is the most
-	   appropriate for the C locale.
+	   The message catalog should translate "`" to a left
+	   quotation mark suitable for the locale, and similarly for
+	   "'".  If the catalog has no translation,
+	   locale_quoting_style quotes `like this', and
+	   clocale_quoting_style quotes "like this".
 
 	   For example, an American English Unicode locale should
-	   translate the string "{LEFT QUOTATION MARK}" to the
-	   character U+201C (LEFT DOUBLE QUOTATION MARK), and should
-	   translate the string "{RIGHT QUOTATION MARK}" to the
-	   character U+201D (RIGHT DOUBLE QUOTATION MARK).  A British
-	   English Unicode locale should instead translate these to
-	   U+2018 (LEFT SINGLE QUOTATION MARK) and U+2019 (RIGHT
-	   SINGLE QUOTATION MARK), respectively.  */
+	   translate "`" to U+201C (LEFT DOUBLE QUOTATION MARK), and
+	   should translate "'" to U+201D (RIGHT DOUBLE QUOTATION
+	   MARK).  A British English Unicode locale should instead
+	   translate these to U+2018 (LEFT SINGLE QUOTATION MARK) and
+	   U+2019 (RIGHT SINGLE QUOTATION MARK), respectively.  */
 
-	static char const quotation_mark[] = "\"";
-	char const *left = gettext_default (N_("{LEFT QUOTATION MARK}"),
-					    quotation_mark);
-	char const *right = gettext_default (N_("{RIGHT QUOTATION MARK}"),
-					     quotation_mark);
+	char const *left = gettext_quote (N_("`"), quoting_style);
+	char const *right = gettext_quote (N_("'"), quoting_style);
 	for (quote_string = left; *quote_string; quote_string++)
 	  STORE (*quote_string);
 	backslash_escapes = 1;
