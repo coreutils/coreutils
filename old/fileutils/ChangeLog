@@ -22,6 +22,17 @@
 	* sys/xalloc.h: Likewise.
 	* sys/xstrtol.h: Likewise.
 
+1997-12-16  Paul Eggert  <eggert@twinsun.com>
+
+	Add --exclude and --exclude-from or -X options to du.
+
+	* lib/exclude.h, lib/exclude.c: New files.
+	* lib/Makefile.am (libfu_a_SOURCES): Add exclude.c.
+	(noinst_HEADERS): Add exclude.h.
+	* du.c: Include exclude.h.
+	(exclude): New static var.
+	(long_options, usage, main): Add --exclude and --exclude-from or -X.
+	(count_entry): Skip excluded entries.
 
 1997-12-16  Jim Meyering  <meyering@na-net.ornl.gov>
 
@@ -1007,8 +1018,8 @@ Fri Jan 31 21:13:04 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 1997-01-27  Paul Eggert  <eggert@twinsun.com>
 
-        * src/ls.c (print_long_format): Fix off-by-one problem in size
-        being passed to strftime.
+	* src/ls.c (print_long_format): Fix off-by-one problem in size
+	being passed to strftime.
 
 Sun Jan 26 20:17:50 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
