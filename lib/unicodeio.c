@@ -28,7 +28,11 @@
 #endif
 
 #include <stdio.h>
-#include <string.h>
+#if HAVE_STRING_H
+# include <string.h>
+#else
+# include <strings.h>
+#endif
 
 #include <errno.h>
 #ifndef errno
