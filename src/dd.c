@@ -574,18 +574,24 @@ scanargs (int argc, char **argv)
 
 	  if (STREQ (name, "ibs"))
 	    {
+	      /* Ensure that each blocksize is <= SSIZE_MAX.  */
+	      invalid |= SSIZE_MAX < n;
 	      input_blocksize = n;
 	      invalid |= input_blocksize != n || input_blocksize == 0;
 	      conversions_mask |= C_TWOBUFS;
 	    }
 	  else if (STREQ (name, "obs"))
 	    {
+	      /* Ensure that each blocksize is <= SSIZE_MAX.  */
+	      invalid |= SSIZE_MAX < n;
 	      output_blocksize = n;
 	      invalid |= output_blocksize != n || output_blocksize == 0;
 	      conversions_mask |= C_TWOBUFS;
 	    }
 	  else if (STREQ (name, "bs"))
 	    {
+	      /* Ensure that each blocksize is <= SSIZE_MAX.  */
+	      invalid |= SSIZE_MAX < n;
 	      output_blocksize = input_blocksize = n;
 	      invalid |= output_blocksize != n || output_blocksize == 0;
 	    }
@@ -806,8 +812,8 @@ skip (int fdesc, char const *file, uintmax_t records, size_t blocksize,
     {
       while (records--)
 	{
-	  ssize_t nread = safe_read (fdesc, buf, blocksize);
-	  if (nread < 0)
+	  size_t nread = safe_read (fdesc, buf, blocksize);
+	  if (nread == SAFE_READ_ERROR)
 	    {
 	      error (0, errno, _("reading %s"), quote (file));
 	      quit (1);
@@ -923,7 +929,7 @@ dd_copy (void)
   char *ibuf, *bufstart;	/* Input buffer. */
   char *real_buf;		/* real buffer address before alignment */
   char *real_obuf;
-  ssize_t nread;		/* Bytes read in the current block. */
+  size_t nread;			/* Bytes read in the current block. */
   int exit_status = 0;
   size_t page_size = getpagesize ();
   size_t n_bytes_read;
@@ -1001,7 +1007,7 @@ dd_copy (void)
       if (nread == 0)
 	break;			/* EOF.  */
 
-      if (nread < 0)
+      if (nread == SAFE_READ_ERROR)
 	{
 	  error (0, errno, _("reading %s"), quote (input_file));
 	  if (conversions_mask & C_NOERROR)
