@@ -1,5 +1,9 @@
 2003-07-22  Jim Meyering  <jim@meyering.net>
 
+	* src/cut.c (set_fields): Mark all selected indices before trying to
+	determine range endpoints.
+	* tests/cut/Test.pm: New test for the above fix.
+
 	* Version 5.0.90.
 
 	Begin to address this comment: What if someone wants to
