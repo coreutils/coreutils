@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.1c from Makefile.am
+# Makefile.in generated automatically by automake 1.1e from Makefile.am
 
 # Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -136,8 +136,10 @@ check: all check-TESTS
 installcheck:
 
 install-exec: 
+	$(NORMAL_INSTALL)
 
 install-data: 
+	$(NORMAL_INSTALL)
 
 install: install-exec install-data all
 	@:
