@@ -1,5 +1,5 @@
 /* cp.c  -- file copying (main routines)
-   Copyright (C) 89, 90, 91, 1995-2001 Free Software Foundation.
+   Copyright (C) 89, 90, 91, 1995-2002 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -834,6 +834,8 @@ main (int argc, char **argv)
   char *version_control_string = NULL;
   struct cp_options x;
   char *target_directory = NULL;
+  bool seen_option_a = false;
+  bool seen_option_a_then_r = false;
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -870,6 +872,7 @@ main (int argc, char **argv)
 	  x.require_preserve = 1;
 	  x.recursive = 1;
 	  x.copy_as_regular = 0;
+	  seen_option_a = true;
 	  break;
 
 	case 'V':  /* FIXME: this is deprecated.  Remove it in 2001.  */
@@ -945,6 +948,8 @@ main (int argc, char **argv)
 	  x.recursive = 1;
 	  x.copy_as_regular = 1;
 	  x.dereference = DEREF_ALWAYS;
+	  if (seen_option_a)
+	    seen_option_a_then_r = true;
 	  break;
 
 	case 'R':
@@ -1001,6 +1006,15 @@ main (int argc, char **argv)
 	default:
 	  usage (1);
 	}
+    }
+
+  if (seen_option_a_then_r)
+    {
+      error (0, 0,
+	     _("do not specify -r after --archive (-a);\
+ -r is obsolescent.\nIf you're sure you want that combination,\
+ use -dpr instead."));
+      usage (1);
     }
 
   if (x.hard_link && x.symbolic_link)
