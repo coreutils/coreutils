@@ -1,3 +1,7 @@
+2003-06-02  Jim Meyering  <jim@meyering.net>
+
+	* jm-macros.m4 (jm_MACROS): Require AM_STDBOOL_H.
+
 2003-05-26  Jim Meyering  <jim@meyering.net>
 
 	* dirfd.m4 (UTILS_FUNC_DIRFD): Merge in change from gnulib,
