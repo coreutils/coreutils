@@ -1,6 +1,13 @@
-2001-09-08  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.1.
+
+2001-05-11  Paul Eggert  <eggert@twinsun.com>
+
+	* src/chmod.c, src/chown.c, src/mkdir.c, src/rm.c, src/rmdir.c (main):
+	Don't strip trailing slashes; POSIX doesn't allow it here.
+	Don't include "dirname.h" when no longer needed.
+
+2001-09-08  Jim Meyering  <meyering@lucent.com>
 
 	* src/copy.c (copy_internal): Add braces around now-multi-stmt
 	if-block.  This fixes a bug introduced by my 2001-08-06 change.
