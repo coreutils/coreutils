@@ -1,4 +1,6 @@
-/* Copyright (C) 1991, 1993, 1995, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1995, 1997, 1998, 2003 Free Software
+   Foundation, Inc.
+
    Contributed by Torbjorn Granlund (tege@sics.se).
 
    NOTE: The canonical source of this file is maintained with the GNU C Library.
@@ -23,26 +25,7 @@
 # include "config.h"
 #endif
 
-#undef	__ptr_t
-#if defined __cplusplus || (defined __STDC__ && __STDC__)
-# define __ptr_t	void *
-#else /* Not C++ or ANSI C.  */
-# undef	const
-# define const
-# define __ptr_t	char *
-#endif /* C++ or ANSI C.  */
-
-#ifndef __P
-# if defined __GNUC__ || (defined __STDC__ && __STDC__)
-#  define __P(args) args
-# else
-#  define __P(args) ()
-# endif  /* GCC.  */
-#endif  /* Not __P.  */
-
-#if defined HAVE_STRING_H || defined _LIBC
-# include <string.h>
-#endif
+#include <string.h>
 
 #undef memcmp
 
@@ -103,8 +86,6 @@ typedef unsigned char byte;
    A and B are known to be different.
    This is needed only on little-endian machines.  */
 
-static int memcmp_bytes __P((op_t, op_t));
-
 # ifdef  __GNUC__
 __inline
 # endif
@@ -126,8 +107,6 @@ memcmp_bytes (long unsigned int a, long unsigned int b)
   return a0 - b0;
 }
 #endif
-
-static int memcmp_common_alignment __P((long, long, size_t));
 
 /* memcmp_common_alignment -- Compare blocks at SRCP1 and SRCP2 with LEN `op_t'
    objects (not LEN bytes!).  Both SRCP1 and SRCP2 should be aligned for
@@ -213,8 +192,6 @@ memcmp_common_alignment (long int srcp1, long int srcp2, size_t len)
     return CMP_LT_OR_GT (a1, b1);
   return 0;
 }
-
-static int memcmp_not_common_alignment __P((long, long, size_t));
 
 /* memcmp_not_common_alignment -- Compare blocks at SRCP1 and SRCP2 with LEN
    `op_t' objects (not LEN bytes!).  SRCP2 should be aligned for memory
