@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1997, 1999 Free Software Foundation, Inc.
    Based on strlen implementation by Torbjorn Granlund (tege@sics.se),
    with help from Dan Sahlin (dan@sics.se) and
    commentary by Jim Blandy (jimb@ai.mit.edu);
@@ -24,7 +24,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
 USA.  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+# include <config.h>
 #endif
 
 #undef __ptr_t
@@ -45,7 +45,7 @@ USA.  */
 #define LONG_MAX_32_BITS 2147483647
 
 #ifndef LONG_MAX
-#define LONG_MAX LONG_MAX_32_BITS
+# define LONG_MAX LONG_MAX_32_BITS
 #endif
 
 #include <sys/types.h>
