@@ -2,6 +2,10 @@
 
 	* Version 4.0l.
 
+	* doc/fileutils.texi: Clarify and combine descriptions of -c and of
+	--time=ctime.
+	Likewise for -u/--time=atime.
+
 	* src/ls.c [! LSTAT_FOLLOWS_SLASHED_SYMLINK]: Use lstat wrapper.
 	[Notice the new configure-time test in m4/lstat-slash.m4. ]
 	(main): Back out change from 1999-02-19 that made ls remove
@@ -9,6 +13,11 @@
 	versions of Linux.  Now, `ls symlink-to-dir/' acts like
 	`ls symlink-to-dir/.' thus following the symbolic link, as POSIX says
 	it should.  Suggestion from Bruno Haible and Andreas Schwab.
+
+	* lib/xstat.in (slash_aware_lstat): New function.
+	(rpl_@xstat@): Use it.
+	* lib/Makefile.am (lstat.c): Adapt rule to handle new parts of xstat.in.
+	(lstat.c): Likewise.
 
 	Make sure ls does the right thing with symlinks and trailing slashes.
 	* tests/ls/Makefile.am (TESTS): Add symlink-slash.
