@@ -91,7 +91,7 @@ static struct option const long_options[] =
    CHANGED describes what (if anything) has happened. */
 
 static void
-describe_change (const char *file, short unsigned int mode,
+describe_change (const char *file, mode_t mode,
 		 enum Change_status changed)
 {
   char perms[11];		/* "-rwxrwxrwx" ls-style modes. */
@@ -102,18 +102,18 @@ describe_change (const char *file, short unsigned int mode,
   switch (changed)
     {
     case CH_SUCCEEDED:
-      fmt = _("mode of %s changed to %04o (%s)\n");
+      fmt = _("mode of %s changed to %04lo (%s)\n");
       break;
     case CH_FAILED:
-      fmt = _("failed to change mode of %s to %04o (%s)\n");
+      fmt = _("failed to change mode of %s to %04lo (%s)\n");
       break;
     case CH_NO_CHANGE_REQUESTED:
-      fmt = _("mode of %s retained as %04o (%s)\n");
+      fmt = _("mode of %s retained as %04lo (%s)\n");
       break;
     default:
       abort ();
     }
-  printf (fmt, file, mode & 07777, &perms[1]);
+  printf (fmt, file, (unsigned long) (mode & CHMOD_MODE_BITS), &perms[1]);
 }
 
 /* Change the mode of FILE according to the list of operations CHANGES.
@@ -126,7 +126,7 @@ change_file_mode (const char *file, const struct mode_change *changes,
 		  const int deref_symlink)
 {
   struct stat file_stats;
-  unsigned short newmode;
+  mode_t newmode;
   int errors = 0;
 
   if (lstat (file, &file_stats))
@@ -152,9 +152,9 @@ change_file_mode (const char *file, const struct mode_change *changes,
 
   newmode = mode_adjust (file_stats.st_mode, changes);
 
-  if (newmode != (file_stats.st_mode & 07777))
+  if (newmode != (file_stats.st_mode & CHMOD_MODE_BITS))
     {
-      int fail = chmod (file, (int) newmode);
+      int fail = chmod (file, newmode);
 
       if (verbosity == V_high || (verbosity == V_changes_only && !fail))
 	describe_change (file, newmode, (fail ? CH_FAILED : CH_SUCCEEDED));
