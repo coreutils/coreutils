@@ -1,4 +1,25 @@
+1998-11-29  Jim Meyering  <meyering@ascend.com>
+
+	Per Kristian Hove reported that a certain move-directory-into-self
+	wasn't properly diagnosed.
+
+	* tests/mv/into-self-3: New file.
+	* tests/mv/Makefile.am (TESTS): Add into-self-3.
+	* src/copy.c (copy_internal): Remove earlier (but less effective)
+	test for move/copy-into-self.
+	Instead, deduce the move-into-self condition from errno==EINVAL
+	after a failed rename.
+	* src/mv.c (do_move): Don't arrange to remove DEST in the
+	copied-into-self case.
+
 1998-11-15  Jim Meyering  <meyering@ascend.com>
+
+	Bob McCracken reported that mv couldn't handle certain combinations
+	of hard linked source files.
+
+	* tests/mv/hard-link-1: New file.
+	* tests/mv/Makefile.am (TESTS): Add hard-link-1.
+	* src/mv.c (movefile): Don't free new_dest.
 
 	* lib/error.c (error): Don't use strerror_r's return value.
 	From Johan Danielsson.

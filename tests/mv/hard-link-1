@@ -1,0 +1,54 @@
+#!/bin/sh
+# move a directory containing hard-linked files and
+# make sure the links are preserved
+
+: ${MV=mv}
+: ${RM=rm}
+: ${MKDIR=mkdir}
+: ${LN=ln}
+: ${LS=ls}
+
+if test "$VERBOSE" = yes; then
+  set -x
+  $MV --version
+fi
+
+. $srcdir/setup
+
+if test -z "$other_partition_tmpdir"; then
+  exit 77
+fi
+
+dir=hlink
+
+framework_failure=0
+$MKDIR $dir || framework_failure=1
+> $dir/a || framework_failure=1
+$LN $dir/a $dir/b || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo 'failure in testing framework'
+  exit 1
+fi
+
+# Make sure we get English translations.
+LANGUAGE=C
+export LANGUAGE
+LC_ALL=C
+export LC_ALL
+LANG=C
+export LANG
+
+$MV $dir $other_partition_tmpdir || fail=1
+
+# Display inode numbers, one per line.
+$LS -1i $other_partition_tmpdir/$dir > out || fail=1
+
+# Make sure the inode numbers are the same.
+a=`sed -n 's/ a$//p' out`
+b=`sed -n 's/ b$//p' out`
+test "$a" = "$b" || fail=1
+
+$RM -fr out $dir $other_partition_tmpdir
+
+exit $fail
