@@ -1,3 +1,8 @@
+2000-10-30  Jim Meyering  <meyering@lucent.com>
+
+	* configure, config.h.in, Makefile.in, etc.: Regenerate using the
+	very latest version (in CVS) of autoconf.
+
 2000-10-29  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.0.29.
