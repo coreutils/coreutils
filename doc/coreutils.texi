@@ -5163,23 +5163,23 @@ $ touch a/sub/deeper/file
 $ ls -gloRF --dired a
   a:
   total 8
-  -rw-r--r--    1        0 Nov  9 18:30 f1
-  -rw-r--r--    1        0 Nov  9 18:30 f2
-  drwxr-xr-x    3     4096 Nov  9 18:30 sub/
-  drwxr-xr-x    2     4096 Nov  9 18:30 sub2/
+  -rw-r--r--  1    0 Dec  3 00:50 f1
+  -rw-r--r--  1    0 Dec  3 00:50 f2
+  drwxr-xr-x  3 4096 Dec  3 00:50 sub/
+  drwxr-xr-x  2 4096 Dec  3 00:50 sub2/
 
   a/sub:
   total 4
-  drwxr-xr-x    2     4096 Nov  9 18:30 deeper/
+  drwxr-xr-x  2 4096 Dec  3 00:50 deeper/
 
   a/sub/deeper:
   total 0
-  -rw-r--r--    1        0 Nov  9 18:30 file
+  -rw-r--r--  1 0 Dec  3 00:50 file
 
   a/sub2:
   total 0
-//DIRED// 55 57 98 100 141 144 186 190 252 258 327 331
-//SUBDIRED// 2 3 195 200 263 275 335 341
+//DIRED// 49 51 86 88 123 126 162 166 222 228 288 292
+//SUBDIRED// 2 3 171 176 233 245 296 302
 //DIRED-OPTIONS// --quoting-style=literal
 @end example
 
@@ -5190,11 +5190,11 @@ The offsets on the @samp{//SUBDIRED//} line delimit the following
 directory names: @file{a}, @file{a/sub}, @file{a/sub/deeper}, @file{a/sub2}.
 
 Here is an example of how to extract the fifth entry name, @samp{deeper},
-corresponding to the pair of offsets, 252 and 258:
+corresponding to the pair of offsets, 222 and 228:
 
 @example
 $ ls -gloRF --dired a > out
-$ dd bs=1 skip=252 count=6 < out 2>/dev/null; echo
+$ dd bs=1 skip=222 count=6 < out 2>/dev/null; echo
 deeper
 @end example
 
@@ -5208,8 +5208,8 @@ on a file whose name contains special characters, notice that the backslash
 @example
 $ touch 'a b'
 $ ls -blog --dired 'a b'
-  -rw-r--r--    1        0 Nov  9 18:41 a\ b
-//DIRED// 40 44
+  -rw-r--r--  1 0 Dec  3 00:52 a\ b
+//DIRED// 31 35
 //DIRED-OPTIONS// --quoting-style=escape
 @end example
 
@@ -11417,7 +11417,7 @@ Then you'll see output like this:
 @example
 /:
 total 1023
--rwxr-xr-x    1 0        0         1041745 Aug 16 11:17 ls
+-rwxr-xr-x  1 0 0 1041745 Aug 16 11:17 ls
 @end example
 
 If you want to use a dynamically linked executable, say @command{bash},
@@ -12319,51 +12319,6 @@ $ cal | cut -c 3-5
 @print{} 20
 @print{} 27
 @end example
-
-Cut can also add field separators to fixed width data, using the
-@option{--output-delimiter} option.  This can be very useful to fill a
-database:
-
-@c [Why] can't that silly total line for directories be switched off?
-@example
-$ ls -ld ~/* | cut --output-delimiter=, -c1,2-4,5-7,8-10,57- | tee home.cs
-@print{} d,rwx,r-x,r-x,CVS
-@print{} d,rwx,---,---,Mail
-@print{} d,rwx,r-x,r-x,lilypond
-@print{} d,rwx,r-x,r-x,savannah
-$ mysql -e 'create table home \
-  (d char(1),u char(3), g char (3), o char (3), name text)' test
-$ mysqlimport --fields-terminated-by=, test home.cs
-@print{} test.home: Records: 4  Deleted: 0  Skipped: 0  Warnings: 0
-$ mysql -e 'select * from home' test
-@print{} +------+------+------+------+----------+
-@print{} | d    | u    | g    | o    | name     |
-@print{} +------+------+------+------+----------+
-@print{} | d    | rwx  | r-x  | r-x  | CVS      |
-@print{} | d    | rwx  | ---  | ---  | Mail     |
-@print{} | d    | rwx  | r-x  | r-x  | lilypond |
-@print{} | d    | rwx  | r-x  | r-x  | savannah |
-@print{} +------+------+------+------+----------+
-@end example
-
-But beware of assumptions.
-The above invocation of @command{ls} assumes that the owner
-and group names are no longer than eight bytes each,
-and that no file has size larger than 99999999 bytes.
-Otherwise, the byte offset of @samp{57} would need to be larger.
-To avoid such problems, suppress output of the owner and group
-names with the @option{-g} and @option{-G} options respectively,
-and add the @option{-h} option to ensure that the representation
-of the size of the file does not exceed the allotted space.
-Finally, note that the width of even the date/time field may change,
-depending on the current locale.  To avoid that, use an option
-like @option{--time-style='+%Y-%m-%d %H:%M:%S'}.
-
-And there's still another problem: if a file has more
-than 999 hard links to it, then that will change the alignment.
-The morale is that it is hard to use fixed byte offsets into
-a line of @command{ls} output.  Use a different tool, like
-find, but with @option{-printf} and carefully chosen format strings.
 
 @node The sort command
 @unnumberedsec The @command{sort} Command
