@@ -1,4 +1,4 @@
-#serial 1
+#serial 2
 
 dnl Derived from code in GNU grep.
 
