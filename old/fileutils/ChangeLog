@@ -1,6 +1,16 @@
-2001-09-29  Jim Meyering  <meyering@lucent.com>
+2001-10-05  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.1.
+
+	* src/copy.c: Include hash-pjw.h and remove definition of hash_pjw.
+	* src/remove.c: Likewise.
+
+2001-10-01  Jim Meyering  <meyering@lucent.com>
+
+	* src/remove.c (hash_pjw): Remove function.
+	* src/copy.c: Likewise.
+
+2001-09-29  Jim Meyering  <meyering@lucent.com>
 
 	* src/copy.c (copy_internal): Call record_dest for all types of
 	files (for which this makes sense), not just regular ones.
