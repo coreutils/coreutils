@@ -1,5 +1,10 @@
 Thu Sep  5 18:12:44 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/chmod.c (main): Don't set verbose flag for --changes.
+	(change_file_mode): If chmod succeeds and --changes was given,
+	give a diagnostic describing the new permissions.
+	Reported by Philippe Schnoebelen (phs@fing.edu.uy).
+
 	* src/cp.c (do_copy): When concatenating DEST (with a trailing `/')
 	and the basename part of non-directory SOURCE, don't add a slash
 	between them.
