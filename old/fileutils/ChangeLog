@@ -1,3 +1,7 @@
+2001-12-31  Jim Meyering  <meyering@lucent.com>
+
+	* Version 4.1.5.
+
 2001-12-29  Jim Meyering  <meyering@lucent.com>
 
 	* src/cp.c (main): With -r, always dereference symlinks.
@@ -51,8 +55,6 @@
 	trailing "B".
 
 2001-12-17  Jim Meyering  <meyering@lucent.com>
-
-	* Version 4.1.5.
 
 	* Makefile.maint (real_dir): Remove unused variable.
 	(url_dir_list): Don't set define it here, but...
