@@ -1,3 +1,11 @@
+2004-02-23  Paul Eggert  <eggert@twinsun.com>
+
+	* userspec.c: Don't include "posixver.h".
+	(parse_user_spec): Fall back on USER.GROUP parsing regardless
+	of POSIX version, as POSIX 1003.1-2001 allows that behavior as a
+	compatible extension.  Simplify code by removing a boolean int
+	that was always nonzero if a string was nonnull.
+
 2004-02-05  Jim Meyering  <jim@meyering.net>
 
 	* timespec.h (ST_TIME_CMP_NS, ST_TIME_CMP): Define.
