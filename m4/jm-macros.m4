@@ -1,4 +1,4 @@
-#serial 28   -*- autoconf -*-
+#serial 29   -*- autoconf -*-
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
