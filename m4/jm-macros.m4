@@ -136,6 +136,7 @@ AC_DEFUN(jm_CHECK_ALL_TYPES,
 [
   dnl Checks for typedefs, structures, and compiler characteristics.
   AC_C_BIGENDIAN
+  AC_PROG_CC_STDC
   AC_C_CONST
   AC_C_INLINE
   AC_C_LONG_DOUBLE
