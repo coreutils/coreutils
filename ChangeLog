@@ -1,6 +1,10 @@
-2005-03-14  Paul Eggert  <eggert@cs.ucla.edu>
+2005-03-15  Corinna Vinschen  <corinna@vinschen.de>  (tiny change)
 
 	* Version 5.3.1.
+
+	* src/copy.c (copy_reg): Copy regular files in binary mode.
+
+2005-03-14  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: Restate why ls limits time stamp lengths.
 
