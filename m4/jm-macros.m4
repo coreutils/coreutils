@@ -14,6 +14,14 @@ AC_DEFUN(jm_MACROS,
   dnl This macro actually runs replacement code.  See isc-posix.m4.
   AC_REQUIRE([AC_ISC_POSIX])dnl
 
+  AC_CHECK_HEADERS(string.h fcntl.h limits.h sys/time.h sys/timeb.h \
+    errno.h unistd.h stdlib.h \
+    sys/param.h sys/statfs.h sys/fstyp.h mnttab.h mntent.h utime.h \
+    sys/statvfs.h sys/vfs.h sys/mntent.h sys/mount.h sys/filsys.h \
+    sys/fs_types.h \
+    sys/acl.h \
+    sys/wait.h sys/ioctl.h sys/fs/s5param.h termios.h values.h)
+
   jm_INCLUDED_REGEX([lib/regex.c])
 
   AC_REQUIRE([jm_BISON])
