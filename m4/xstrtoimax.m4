@@ -1,4 +1,5 @@
 #serial 1
+dnl Cloned from xstrtoumax.m4.  Keep these files in sync.
 
 # autoconf tests required for use of xstrtoimax.c
 
@@ -29,13 +30,20 @@ AC_DEFUN([jm_AC_PREREQ_XSTRTOIMAX],
   dnl so we need the replacement strtoll only if strtoimax does not exist.
   case "$ac_cv_type_long_long,$jm_cv_func_strtoimax_macro,$ac_cv_func_strtoimax" in
     yes,no,no)
-      AC_REPLACE_FUNCS(strtoll strtol)
+      AC_REPLACE_FUNCS(strtoll)
+
+      dnl Check for strtol.  Mainly as a cue to cause automake to include
+      dnl strtol.c -- that file is included by each of strtoul.c and strtoull.c.
+      AC_REPLACE_FUNCS(strtol)
       ;;
   esac
 
   case "$jm_cv_func_strtoimax_macro,$ac_cv_func_strtoimax" in
     no,no)
-      AC_REPLACE_FUNCS(strtoul strtol)
+      AC_REPLACE_FUNCS(strtoul)
+
+      dnl See explanation above.
+      AC_REPLACE_FUNCS(strtol)
       ;;
   esac
 
