@@ -725,7 +725,7 @@ main (int argc, char **argv)
   if (opt_summarize_only)
     max_depth = 0;
 
-  files = (optind == argc ? cwd_only : argv + optind);
+  files = (optind < argc ? argv + optind : cwd_only);
 
   /* Initialize the hash structure for inode numbers.  */
   hash_init ();
