@@ -195,7 +195,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -B, --block-size=SIZE use SIZE-byte blocks\n\
   -b, --bytes           print size in bytes\n\
   -c, --total           produce a grand total\n\
-  -D, --dereference-args  dereference PATHs when symbolic link\n\
+  -D, --dereference-args  dereference FILEs that are symbolic links\n\
 "), stdout);
       fputs (_("\
   -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n\
