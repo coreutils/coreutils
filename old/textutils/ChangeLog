@@ -1,5 +1,9 @@
 Sun Feb 16 08:30:29 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* tests/Makefile.am (SUBDIRS): Add tac.
+	* tests/tac: New directory.
+	* configure.in (AC_OUTPUT): Add tests/tac/Makefile.
+
 	* tests/pr-test/{tt-0FF, tt-bl, tta3-0FF, ttb3-0FF, tt-FF, tt-t,
 	tta3-FF, ttb3-FF}: New files.  Renamed (s/T/tt/) to avoid name clashes
 	on case-independent filesystems.
