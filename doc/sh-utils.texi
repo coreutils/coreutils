@@ -721,7 +721,7 @@ Exit status:
 @menu
 * Relations for expr::          | & < <= = == != >= >
 * Numeric expressions::         + - * / %
-* String expressions::          <colon> match substr index length
+* String expressions::          <colon> match substr index length quote
 * Examples of expr::            Examples.
 @end menu
 
@@ -853,6 +853,16 @@ Returns the first position in @var{string} where the first character in
 @item length @var{string}
 @findex length
 Returns the length of @var{string}.
+
+@item quote @var{token}
+@findex quote
+Interpret @var{token} as a string, even if it is a keyword like @var{match}
+or an operator like @code{/}.
+This makes it possible to test @code{expr length quote "$x"} or
+@code{expr quote "$x" : '.*/\(.\)'} and have it do the right thing even if
+the value of @var{$x} happens to be @code{/} or @code{index}.
+This operator is provided as a GNU extension.  It is disabled when
+the environment variable, @var{POSIXLY_CORRECT} is set.
 
 @end table
 
