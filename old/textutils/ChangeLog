@@ -1,3 +1,8 @@
+2001-08-12  Jim Meyering  <meyering@lucent.com>
+
+	* tests/mk-script ($program_name): Define.
+	(main): Use $program_name, rather than long-inaccurate `build-script'.
+
 2001-08-04  Jim Meyering  <meyering@lucent.com>
 
 	* Makefile.am (EXTRA_DIST): Add Makefile.cfg.
