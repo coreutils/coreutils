@@ -379,7 +379,9 @@ _obstack_memory_used (struct obstack *h)
 # else
 #  include "gettext.h"
 # endif
-# define _(msgid) gettext (msgid)
+# ifndef _
+#  define _(msgid) gettext (msgid)
+# endif
 
 # ifdef _LIBC
 #  include <libio/iolibio.h>
