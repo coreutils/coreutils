@@ -1,3 +1,8 @@
+Tue Feb 13 23:49:16 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* who-users.c (main): When failing because there were
+	`too many arguments,' say so.
+
 Mon Feb 12 23:26:05 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* configure.in (AC_CHECK_FUNCS): Add gethostbyname, gethostbyaddr,
