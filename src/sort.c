@@ -1204,12 +1204,12 @@ compare (register const struct line *a, register const struct line *b)
 }
 
 /* Check that the lines read from the given FP come in order.  Print a
-   diagnostic to stderr (POSIX says -c shouldn't write to stdout) and return
+   diagnostic (FILE_NAME, line number, contents of line) to stderr and return
    the line number of the first out-of-order line (counting from 1) if they
    are not in order.  Otherwise, print no diagnostic and return zero.  */
 
 static int
-checkfp (FILE *fp, const char *file)
+checkfp (FILE *fp, const char *file_name)
 {
   struct buffer buf;		/* Input buffer. */
   struct lines lines;		/* Lines scanned from the buffer. */
@@ -1294,7 +1294,7 @@ finish:
 
   if (disorder_line_number)
     {
-      fprintf (stderr, _("%s: %s:%d: disorder: "), program_name, file,
+      fprintf (stderr, _("%s: %s:%d: disorder: "), program_name, file_name,
 	       disorder_line_number);
       write_bytes (disorder_line->text, disorder_line->length, stderr);
       putc (eolchar, stderr);
