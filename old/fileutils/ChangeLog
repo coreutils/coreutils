@@ -1,5 +1,7 @@
 1998-01-04  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* Version 3.16j.
+
 	* src/chgrp.c: Use a single enumerated type, Verbosity, instead of
 	the two booleans, verbose and changes_only.  This fixes a bug whereby
 	--change had the same effect as --verbose.
