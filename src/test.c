@@ -229,7 +229,7 @@ beyond (void)
 /* Syntax error for when an integer argument was expected, but
    something else was found. */
 static void
-integer_expected_error (char *pch)
+integer_expected_error (char const *pch)
 {
   test_syntax_error (_("integer expression expected %s\n"), pch);
 }
