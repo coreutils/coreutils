@@ -227,3 +227,78 @@ n
 p slash
 p slash - path + 1
 q
+q
+r
+b asprintf
+q
+b main
+r
+n
+s
+q
+r
+q
+b asprintf
+r
+n
+s
+s
+s
+b 515
+fin
+b 515
+c
+p length
+c
+p length
+c
+p length
+n
+p maxlen
+p allocated
+n
+n
+p arg
+p maxlen
+n
+p count
+p result
+b 153
+r
+c
+c
+c
+p length
+b 147
+r
+c
+p cp
+cp dp->dir_start
+p dp->dir_start
+p cp
+p length
+n
+n
+q
+r
+q
+b vasnprintf
+n 20
+r
+n 29
+n
+p allocated
+n 20
+n
+complete p alloca
+p allocated 
+p length
+n
+p maxlen
+n
+p maxlen
+n
+p arg
+n
+p result
+q
