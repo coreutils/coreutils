@@ -1,3 +1,8 @@
+2004-06-11  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* readutmp.c (extract_trimmed_name): Don't apply strchr to a
+	non-string; this leads to undefined behavior.
+
 2004-05-18  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* fts.c (fts_stat, fts_alloc): Always allocate and use a struct
