@@ -17,9 +17,9 @@
 	files.  Suggestion from Ben Elliston.
 	(usage): Say it.
 
-	* tests/misc/tty-eof: Also check for the log_user method, to avoid
-	spurious failure when using an old version of Expect.pm (e.g., 1.07).
-	Reported by Bob Proulx.
+	* tests/misc/tty-eof: Require at least version 1.11 of Expect.pm.
+	Old versions of Expect.pm (e.g., 1.07) lack the log_user function.
+	Patch by Bob Proulx.
 
 	* src/Makefile.am (check-misc): Check for use of `defined' in
 	#define directives.
