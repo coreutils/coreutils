@@ -895,15 +895,15 @@ EXPRESSION is true or false and sets exit status.  It is one of:\n\
   -L FILE     FILE exists and is a symbolic link (same as -h)\n\
   -O FILE     FILE exists and is owned by the effective user ID\n\
   -p FILE     FILE exists and is a named pipe\n\
-  -r FILE     FILE exists and is readable\n\
+  -r FILE     FILE exists and read permission is granted\n\
   -s FILE     FILE exists and has a size greater than zero\n\
 "), stdout);
       fputs (_("\
   -S FILE     FILE exists and is a socket\n\
   -t FD       file descriptor FD is opened on a terminal\n\
   -u FILE     FILE exists and its set-user-ID bit is set\n\
-  -w FILE     FILE exists and is writable\n\
-  -x FILE     FILE exists and is executable\n\
+  -w FILE     FILE exists and write permission is granted\n\
+  -x FILE     FILE exists and execute (or search) permission is granted\n\
 "), stdout);
       fputs (_("\
 \n\
