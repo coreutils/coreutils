@@ -782,7 +782,7 @@ numcompare (register const char *a, register const char *b)
       tmpa = UCHAR (*++a);
       if (tmpb != '-')
 	{
-	  if (digits[tmpa] && digits[tmpb])
+	  if ((tmpa == 0 || digits[tmpa]) && digits[tmpb])
 	    return -1;
 	  return 0;
 	}
@@ -821,7 +821,8 @@ numcompare (register const char *a, register const char *b)
     }
   else if (tmpb == '-')
     {
-      if (digits[UCHAR (tmpa)] && digits[UCHAR (*++b)])
+      ++b;
+      if (digits[UCHAR (tmpa)] && (UCHAR (*b) == 0 || digits[UCHAR (*b)]))
 	return 1;
       return 0;
     }
