@@ -1,3 +1,7 @@
+2001-02-13  Bruno Haible  <haible@clisp.cons.org>
+
+	* mbswidth.h (mbswidth): Also define as macro, to avoid prototype clash.
+
 2001-02-17  Paul Eggert  <eggert@twinsun.com>
 
 	* mbswidth.c, quotearg.c (mbrtowc, mbsinit):
