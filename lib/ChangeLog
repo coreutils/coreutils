@@ -1,3 +1,10 @@
+2003-05-06  Jim Meyering  <jim@meyering.net>
+
+	* xnanosleep.c (clock_get_realtime): Use gettime.c's gettime function,
+	rather than an inferior, open-coded version that would fail on
+	AIX systems due to clock_gettime failing with errno == ENOSYS.
+	Reported by Jérôme Zago.
+
 2003-05-05  Jim Meyering  <jim@meyering.net>
 
 	Avoid array overrun.
