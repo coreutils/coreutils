@@ -1,3 +1,11 @@
+Sun Aug  4 10:50:46 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* checks/: New directory.
+	* checks/Makefile.am: New file.
+	* configure.in (AC_OUTPUT): Add new directories: checks,
+	checks/tr-test.
+	* Makefile.am (SUBDIRS): Likewise.
+
 Sat Jul 27 17:22:14 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/system.h (bindtextdomain) [!ENABLE_NLS]: Undefine to avoid
