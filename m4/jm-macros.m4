@@ -57,9 +57,6 @@ AC_DEFUN(jm_MACROS,
     values.h \
   )
 
-  AC_CHECK_HEADERS(langinfo.h)
-  AC_CHECK_FUNCS(nl_langinfo)
-
   jm_INCLUDED_REGEX([lib/regex.c])
 
   AC_REQUIRE([jm_BISON])
