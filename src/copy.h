@@ -165,7 +165,10 @@ struct cp_options
      When renaming, it protects all non-directories.
      Use dest_info_init to initialize it, or set it to NULL to disable
      this feature.  */
-  struct hash_table *dest_info;
+  Hash_table *dest_info;
+
+  /* FIXME */
+  Hash_table *src_info;
 };
 
 int stat ();
@@ -198,5 +201,7 @@ copy PARAMS ((const char *src_path, const char *dst_path,
 
 void
 dest_info_init PARAMS ((struct cp_options *));
+void
+src_info_init PARAMS ((struct cp_options *));
 
 #endif
