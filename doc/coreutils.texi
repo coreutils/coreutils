@@ -196,6 +196,7 @@ Free Documentation License''.
 
 Common Options
 
+* Exit status::                 Indicating program success or failure.
 * Backup options::              Backup options
 * Block size::                  Block size
 * Target directory::            Target directory
@@ -542,12 +543,29 @@ output and reads from standard input, and is equivalent to plain
 context that requires a file name.
 
 @menu
+* Exit status::                 Indicating program success or failure.
 * Backup options::              -b -S -V, in some programs.
 * Block size::                  BLOCK_SIZE and --block-size, in some programs.
 * Target directory::            --target-directory, in some programs.
 * Trailing slashes::            --strip-trailing-slashes, in some programs.
 * Standards conformance::       Conformance to the @acronym{POSIX} standard.
 @end menu
+
+
+@node Exit status
+@section Exit status
+
+Nearly every command invocation yields an integral @dfn{exit status}
+that can be used to change how other commands work.
+For the vast majority of commands, an exit status of zero indicates
+success, and a value of @samp{1} indicates failure.
+However, some of the programs documented here do produce
+different exit status values and a few associate different
+meanings with the values @samp{0} and @samp{1}.
+Here are some of the exceptions:
+@command{expr}, @command{false}, @command{nohup}, @command{printenv},
+@command{sort}, @command{test}, @command{true}, @command{tty},
+@command{uniq}.
 
 
 @node Backup options
