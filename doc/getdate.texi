@@ -1,8 +1,20 @@
+@c GNU date syntax documentation
+
+@c Copyright (C) 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,
+@c 2003, 2004 Free Software Foundation, Inc.
+
+@c Permission is granted to copy, distribute and/or modify this document
+@c under the terms of the GNU Free Documentation License, Version 1.1 or
+@c any later version published by the Free Software Foundation; with no
+@c Invariant Sections, with no Front-Cover Texts, and with no Back-Cover
+@c Texts.  A copy of the license is included in the ``GNU Free
+@c Documentation License'' file as part of this distribution.
+
 @node Date input formats
 @chapter Date input formats
 
 @cindex date input formats
-@findex getdate
+@findex get_date
 
 First, a quote:
 
@@ -33,19 +45,7 @@ or a week from Sunday, with feelings of helpless confusion.  @dots{}
 This section describes the textual date representations that @sc{gnu}
 programs accept.  These are the strings you, as a user, can supply as
 arguments to the various programs.  The C interface (via the
-@code{getdate} function) is not described here.
-
-@cindex beginning of time, for @acronym{POSIX}
-@cindex epoch, for @acronym{POSIX}
-Although the date syntax here can represent any possible time since the
-year zero, computer integers often cannot represent such a wide range of
-time.  On @acronym{POSIX} systems, the clock starts at 1970-01-01 00:00:00
-@sc{utc}: @acronym{POSIX} does not require support for times before the
-@acronym{POSIX} Epoch and times far in the future.  Traditional Unix systems
-have 32-bit signed @code{time_t} and can represent times from 1901-12-13
-20:45:52 through 2038-01-19 03:14:07 @sc{utc}.  Systems with 64-bit
-signed @code{time_t} can represent all the times in the known
-lifetime of the universe.
+@code{get_date} function) is not described here.
 
 @menu
 * General date syntax::            Common rules.
@@ -55,7 +55,8 @@ lifetime of the universe.
 * Day of week items::              Monday and others.
 * Relative items in date strings:: next tuesday, 2 years ago.
 * Pure numbers in date strings::   19931219, 1440.
-* Authors of getdate::             Bellovin, Eggert, Salz, Berets, et al.
+* Seconds since the Epoch::        @@1078100502.
+* Authors of get_date::            Bellovin, Eggert, Salz, Berets, et al.
 @end menu
 
 
@@ -117,15 +118,17 @@ ways to do this:
 
 @example
 $ LC_ALL=C TZ=UTC0 date
-Fri Dec 15 19:48:05 UTC 2000
-$ TZ=UTC0 date +"%Y-%m-%d %H:%M:%SZ"
-2000-12-15 19:48:05Z
-$ date --iso-8601=seconds  # a GNU extension
-2000-12-15T11:48:05-0800
+Mon Mar  1 00:21:42 UTC 2004
+$ TZ=UTC0 date +'%Y-%m-%d %H:%M:%SZ'
+2004-03-01 00:21:42Z
+$ date --iso-8601=ns  # a GNU extension
+2004-02-29T16:21:42,692722128-0800
 $ date --rfc-2822  # a GNU extension
-Fri, 15 Dec 2000 11:48:05 -0800
-$ date +"%Y-%m-%d %H:%M:%S %z"  # %z is a GNU extension.
-2000-12-15 11:48:05 -0800
+Sun, 29 Feb 2004 16:21:42 -0800
+$ date +'%Y-%m-%d %H:%M:%S %z'  # %z is a GNU extension.
+2004-02-29 16:21:42 -0800
+$ date +'@@%s.%N'  # %s and %N are GNU extensions.
+@@1078100502.692722128
 @end example
 
 @cindex case, ignored in dates
@@ -216,7 +219,7 @@ A @dfn{time of day item} in date strings specifies the time on a given
 day.  Here are some examples, all of which represent the same time:
 
 @example
-20:02:0
+20:02:00.000000
 20:02
 8:02pm
 20:02-0500      # In @sc{est} (U.S. Eastern Standard Time).
@@ -225,7 +228,9 @@ day.  Here are some examples, all of which represent the same time:
 More generally, the time of the day may be given as
 @samp{@var{hour}:@var{minute}:@var{second}}, where @var{hour} is
 a number between 0 and 23, @var{minute} is a number between 0 and
-59, and @var{second} is a number between 0 and 59.  Alternatively,
+59, and @var{second} is a number between 0 and 59 possibly followed by
+@samp{.} or @samp{,} and a fraction containing one or more digits.
+Alternatively,
 @samp{:@var{second}} can be omitted, in which case it is taken to
 be zero.
 
@@ -379,7 +384,7 @@ current month.  For example:
 @example
 $ date -R
 Thu, 31 Jul 2003 13:02:39 -0700
-$ date --date="-1 month" +'Last month was %B?'
+$ date --date='-1 month' +'Last month was %B?'
 Last month was July?
 $ date --date="$(date +%Y-%m-15) -1 month" +'Last month was %B!'
 Last month was June!
@@ -415,10 +420,42 @@ in the date string, but no relative item, then the number overrides the
 year.
 
 
-@node Authors of getdate
-@section Authors of @code{getdate}
+@node Seconds since the Epoch
+@section Seconds since the Epoch
 
-@cindex authors of @code{getdate}
+If you precede a number with @samp{@@}, it represents an internal time
+stamp as a count of seconds.  The number can contain an internal
+decimal point (either @samp{.} or @samp{,}); any excess precision not
+supported by the internal representation is truncated toward minus
+infinity.
+
+@cindex beginning of time, for @acronym{POSIX}
+@cindex epoch, for @acronym{POSIX}
+Internally, computer times are represented as a count of seconds since
+an epoch---a well-defined point of time.  On @acronym{GNU} and
+@acronym{POSIX} systems, the epoch is 1970-01-01 00:00:00 @sc{utc}, so
+@samp{@@0} represents this time, @samp{@@1} represents 1970-01-01
+00:00:01 @sc{utc}, and so forth.  @acronym{GNU} and most other
+@acronym{POSIX}-compliant systems support such times as an extension
+to @acronym{POSIX}, using negative counts, so that @samp{@@-1}
+represents 1969-12-31 23:59:59 @sc{utc}.
+
+Traditional Unix systems count seconds with 32-bit two's-complement
+integers and can represent times from 1901-12-13 20:45:52 through
+2038-01-19 03:14:07 @sc{utc}.  More modern systems use 64-bit counts
+of seconds with nanosecond subcounts, and can represent all the times
+in the known lifetime of the universe to a resolution of 1 nanosecond.
+
+On most systems, these counts ignore the presence of leap seconds.
+For example, on most systems @samp{@@915148799} represents 1998-12-31
+23:59:59 @sc{utc}, @samp{@@915148800} represents 1999-01-01 00:00:00
+@sc{utc}, and there is no way to represent the intervening leap second
+1998-12-31 23:59:60 @sc{utc}.
+
+@node Authors of get_date
+@section Authors of @code{get_date}
+
+@cindex authors of @code{get_date}
 
 @cindex Bellovin, Steven M.
 @cindex Salz, Rich
@@ -426,7 +463,7 @@ year.
 @cindex MacKenzie, David
 @cindex Meyering, Jim
 @cindex Eggert, Paul
-@code{getdate} was originally implemented by Steven M. Bellovin
+@code{get_date} was originally implemented by Steven M. Bellovin
 (@email{smb@@research.att.com}) while at the University of North Carolina
 at Chapel Hill.  The code was later tweaked by a couple of people on
 Usenet, then completely overhauled by Rich $alz (@email{rsalz@@bbn.com})
