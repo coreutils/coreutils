@@ -1,6 +1,11 @@
-2001-11-10  Jim Meyering  <meyering@lucent.com>
+2001-11-11  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.17.
+
+	* src/Makefile.am (sort_LDADD): Reflect spelling change:
+	s/POW_LIBM/POW_LIB/.
+
+2001-11-10  Jim Meyering  <meyering@lucent.com>
 
 	* src/nl.c (proc_text): Use `puts' to output a string of spaces,
 	not printf.  This avoids a warning from gcc's -Wformat-security.
