@@ -29,6 +29,13 @@ GNU coreutils NEWS                                    -*- outline -*-
   (--dereference-args, aka -D) rather then the current meaning of --si.
   Now, using -H elicits a warning to that effect.
 
+  When given -l and similar options, ls now adjusts the output column
+  widths to fit the data, so that output lines are shorter and have
+  columns that line up better.  This may adversely affect shell
+  scripts that expect fixed-width columns, but such shell scripts were
+  not portable anyway, even with old GNU ls where the columns became
+  ragged when a datum was too wide.
+
 ** Bug fixes
 
   printf, seq, tail, and sleep now parse floating-point operands
