@@ -1572,7 +1572,6 @@ consistent. Synopsis:
 @example
 md5sum [@var{option}]@dots{} [@var{file}]@dots{}
 md5sum [@var{option}]@dots{} --check [@var{file}]
-md5sum [@var{option}]@dots{} --string=@var{string} @dots{}
 @end example
 
 For each @var{file}, @samp{md5sum} outputs the MD5 checksum, a flag
@@ -1628,11 +1627,6 @@ standard error.
 If all listed files are readable and are consistent with the associated
 MD5 checksums, exit successfully.  Otherwise exit with a status code
 indicating there was a failure.
-
-@itemx --string=@var{string}
-@opindex --string
-Compute the message digest for @var{string}, instead of for a file.  The
-result is the same as for a file that contains exactly @var{string}.
 
 @item -t
 @itemx --text
