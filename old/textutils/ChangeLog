@@ -1,6 +1,12 @@
-2002-03-16  Jim Meyering  <meyering@lucent.com>
+2002-04-12  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.22.
+
+	* src/Makefile.am (LDADD): List ../lib/libfetish.a both before
+	and after @LIBINTL@.  Thanks to Paul Eggert for the fix and to
+	Bruno Haible for diagnosing the problem.
+
+2002-03-16  Jim Meyering  <meyering@lucent.com>
 
 	* src/Makefile.am (datadir): Don't override $(datadir)
 	which might be set by --datadir and different from $(prefix)/share.
