@@ -2,6 +2,9 @@
 
 	* Version 4.1.2.
 
+	* src/mknod.c (main): Add a literal format string to suppress
+	a warning from gcc's -Wformat-security.
+
 	copy.c shouldn't maintain static state.
 
 	* src/copy.c (dest_info): Remove declaration of file-scoped global.
@@ -9,7 +12,6 @@
 	Update all callers.
 	(seen_dest): Require a hash table parameter.  Update callers.
 	(record_dest): Likewise.
-
 	* src/copy.h: Include hash.h.
 	(struct cp_options) [dest_info]: New member.
 	* src/install.c (cp_option_init): Initialize new member.
