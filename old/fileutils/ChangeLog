@@ -1,4 +1,14 @@
+1999-03-28  Jim Meyering  <meyering@ascend.com>
+
+	* configure.in (AC_OUTPUT): Add tests/chmod/Makefile.
+	* tests/Makefile.am (SUBDIRS): Add chmod.
+	* tests/chmod: New directory
+	* tests/chmod/equal-x: New file.
+
 1999-03-27  Jim Meyering  <meyering@ascend.com>
+
+	* lib/modechange.c (mode_compile): Upon allocation failure, free
+	everything starting with the head, not the tail.
 
 	* src/install.c (strip): Use pid_t, not int.
 	From John Bley.

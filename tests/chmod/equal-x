@@ -1,0 +1,30 @@
+#!/bin/sh
+
+if test "$VERBOSE" = yes; then
+  set -x
+  chmod --version
+fi
+
+tmp=eq-x-$$
+trap "rm -rf $tmp" 0 1 2 3 15
+
+framework_failure=0
+
+rm -f $tmp
+> $tmp
+chmod 444 $tmp || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo 'failure in testing framework'
+  exit 1
+fi
+
+umask 005
+chmod =x $tmp
+case "`ls -l $tmp`" in
+  ---x--x---*) fail=0 ;;
+  *) fail=1; ls -l $tmp ;;
+esac
+
+rm -f $tmp
+exit $fail
