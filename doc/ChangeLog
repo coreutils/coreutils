@@ -1,3 +1,9 @@
+2005-01-04  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (shred invocation): Clarify that shred works fine
+	with journaled file systems that are configured not to journal
+	file system data.  Also mention BFS and NTFS.
+
 2004-12-15  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (ls invocation): Change minor problem to be
