@@ -55,13 +55,23 @@ release_archive_dir ?= ../release
 # new ChangeLog entries.
 local-check = \
   ac-check po-check copyright-check writable-files m4-check author_mark_check \
-  changelog-check strftime-check
+  changelog-check strftime-check header-check
 .PHONY: $(local-check)
 
+# Make sure C source files in src/ don't include xalloc.h directly,
+# since they all already include it via sys2.h.
+# It's not a big deal -- just aesthetics.
+header-check:
+	if test -f $(srcdir)/src/sys2.h; then				\
+	  grep 'xalloc\.h' $(srcdir)/src/*.c || exit 1;			\
+	fi
+
+# Ensure that date's --help output stays in sync with the info
+# documentation for GNU strftime.
 extract_char = sed 's/^[^%][^%]*%\(.\).*/\1/'
 strftime-check:
-	if test -f $(srcdir)/date.c; then				\
-	  grep '^  %.  ' $(srcdir)/date.c | sort			\
+	if test -f $(srcdir)/src/date.c; then				\
+	  grep '^  %.  ' $(srcdir)/src/date.c | sort			\
 	    | $(extract_char) > $@-src;					\
 	  info libc date calendar format | sort | grep '^    `%.'\'	\
 	    | $(extract_char) > $@-info;				\
