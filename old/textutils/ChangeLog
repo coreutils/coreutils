@@ -1,3 +1,9 @@
+1998-03-03  Paul Eggert  <eggert@twinsun.com>
+
+	* src/sort.c (xtmpfopen): Open temporary file exclusively, to
+	foil a common denial-of-service attack.
+	* src/tac.c (save_stdin): Likewise.
+
 1998-02-16  Jim Meyering  <meyering@eng.ascend.com>
 
         * configure.in (jm_FUNC_LSTAT): Use it.
