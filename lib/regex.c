@@ -1297,7 +1297,7 @@ typedef struct
     {									\
       for (this_reg = highest_active_reg; this_reg > high_reg; this_reg--) \
 	{								\
-	  reg_info[this_reg].word = 0;					\
+	  reg_info[this_reg].word.integer = 0;				\
 	  regend[this_reg] = 0;						\
 	  regstart[this_reg] = 0;					\
 	}								\
