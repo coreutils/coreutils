@@ -1,3 +1,11 @@
+Sun May 01 08:38:18 EDT 1994
+
+	* who.c: Add #ifdefs to build the `users' executable.
+	* src/Makefile.in: Add corresponding rules.
+	* Makefile.in (PROGS): Add users.
+	From Kaveh R. Ghazi <ghazi@noc.rutgers.edu>.
+	* users.1: Document it.
+
 Thu Apr 28 00:45:02 1994  Jim Meyering  (meyering@comco.com)
 
 	* pwd.c: New program.
