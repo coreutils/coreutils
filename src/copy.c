@@ -40,6 +40,7 @@
 #include "path-concat.h"
 #include "quote.h"
 #include "same.h"
+#include "xreadlink.h"
 
 #define DO_CHOWN(Chown, File, New_uid, New_gid)				\
   (Chown (File, New_uid, New_gid)					\
@@ -1277,36 +1278,32 @@ copy_internal (const char *src_path, const char *dst_path,
 #ifdef S_ISLNK
   if (S_ISLNK (src_type))
     {
-      char *link_val;
-      int link_size;
-
       preserve_metadata = 0;
-      link_val = (char *) alloca (PATH_MAX + 2);
-      link_size = readlink (src_path, link_val, PATH_MAX + 1);
-      if (link_size < 0)
+      char *src_link_val = xreadlink (src_path);
+      if (src_link_val == NULL)
 	{
 	  error (0, errno, _("cannot read symbolic link %s"), quote (src_path));
 	  goto un_backup;
 	}
-      link_val[link_size] = '\0';
 
-      if (symlink (link_val, dst_path))
+      if (!symlink (src_link_val, dst_path))
+	free (src_link_val);
+      else
 	{
 	  int saved_errno = errno;
 	  int same_link = 0;
 	  if (x->update && !new_dst && S_ISLNK (dst_sb.st_mode))
 	    {
 	      /* See if the destination is already the desired symlink.  */
-	      char *dest_link_name = (char *) alloca (PATH_MAX + 2);
-	      int dest_link_len = readlink (dst_path, dest_link_name,
-					    PATH_MAX + 1);
-	      if (dest_link_len > 0)
-		{
-		  dest_link_name[dest_link_len] = '\0';
-		  if (STREQ (dest_link_name, link_val))
-		    same_link = 1;
-		}
+	      size_t src_link_len = strlen (src_link_val);
+	      char *dest_link_val = (char *) alloca (src_link_len + 1);
+	      int dest_link_len = readlink (dst_path, dest_link_val,
+					    src_link_len + 1);
+	      if (dest_link_len == src_link_len
+		  && strncmp (dest_link_val, src_link_val, src_link_len) == 0)
+		same_link = 1;
 	    }
+	  free (src_link_val);
 
 	  if (! same_link)
 	    {
