@@ -2,6 +2,9 @@
 
 	* Version 5.3.0.
 
+	* src/shred.c (isaac_seed_start) [AVOID_USED_UNINITIALIZED_WARNINGS]:
+	Initialize a buffer to avoid warnings from tools like valgrind.
+
 	* Makefile.maint (sc_trailing_blank): New rule.
 	(syntax-check-rules): Add it.
 	* .x-sc_trailing_blank: New file.
