@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2003-08-11.14}
+\def\texinfoversion{2003-09-22.06}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
@@ -89,6 +89,7 @@
 \let\ptexhat=^
 \let\ptexi=\i
 \let\ptexindent=\indent
+\let\ptexnoindent=\noindent
 \let\ptexlbrace=\{
 \let\ptexless=<
 \let\ptexplus=+
@@ -257,6 +258,9 @@
     \normalturnoffactive  % \ in index entries must not stay \, e.g., if
                    % the page break happens to be in the middle of an example.
     \shipout\vbox{%
+      % Do this early so pdf references go to the beginning of the page.
+      \ifpdfmakepagedest \pdfmkdest{\the\pageno}\fi
+      %
       \ifcropmarks \vbox to \outervsize\bgroup
         \hsize = \outerhsize
         \vskip-\topandbottommargin
@@ -275,9 +279,6 @@
           \ifodd\pageno\hskip\bindingoffset\fi
           \vbox\bgroup
       \fi
-      %
-      % Do this early so pdf references go to the beginning of the page.
-      \ifpdfmakepagedest \pdfmkdest{\the\pageno}\fi
       %
       \unvbox\headlinebox
       \pagebody{#1}%
@@ -921,15 +922,24 @@ where each line of input produces a line of output.}
 %
 \gdef\dosuppressfirstparagraphindent{%
   \gdef\indent{%
-    \global\let\indent=\ptexindent
-    \global\everypar = {}%
+    \restorefirstparagraphindent
+    \indent
+  }%
+  \gdef\noindent{%
+    \restorefirstparagraphindent
+    \noindent
   }%
   \global\everypar = {%
-    \kern-\parindent
-    \global\let\indent=\ptexindent
-    \global\everypar = {}%
+    \kern -\parindent
+    \restorefirstparagraphindent
   }%
-}%
+}
+
+\gdef\restorefirstparagraphindent{%
+  \global \let \indent = \ptexindent
+  \global \let \noindent = \ptexnoindent
+  \global \everypar = {}%
+}
 
 
 % @asis just yields its argument.  Used with @table, for example.
@@ -1065,6 +1075,7 @@ where each line of input produces a line of output.}
   \pdftrue
   \pdfoutput = 1
   \input pdfcolor
+  \pdfcatalog{/PageMode /UseOutlines}%
   \def\dopdfimage#1#2#3{%
     \def\imagewidth{#2}%
     \def\imageheight{#3}%
@@ -1094,9 +1105,26 @@ where each line of input produces a line of output.}
   \def\expnumber#1{\expandafter\ifx\csname#1\endcsname\relax 0%
     \else \csname#1\endcsname \fi}
   \def\advancenumber#1{\tempnum=\expnumber{#1}\relax
-    \advance\tempnum by1
+    \advance\tempnum by 1
     \expandafter\xdef\csname#1\endcsname{\the\tempnum}}
-  \def\pdfmakeoutlines{{%
+  %
+  % #1 is the section text.  #2 is the pdf expression for the number
+  % of subentries (or empty, for subsubsections).  #3 is the node
+  % text, which might be empty if this toc entry had no
+  % corresponding node.  #4 is the page number.
+  % 
+  \def\dopdfoutline#1#2#3#4{%
+    % Generate a link to the node text if that exists; else, use the
+    % page number.  We could generate a destination for the section
+    % text in the case where a section has no node, but it doesn't
+    % seem worthwhile, since most documents are normally structured.
+    \def\pdfoutlinedest{#3}%
+    \ifx\pdfoutlinedest\empty \def\pdfoutlinedest{#4}\fi
+    %
+    \pdfoutline goto name{\pdfmkpgn{\pdfoutlinedest}}#2{#1}%
+  }
+  %
+  \def\pdfmakeoutlines{%
     \openin 1 \jobname.toc
     \ifeof 1\else\begingroup
       \closein 1
@@ -1104,40 +1132,49 @@ where each line of input produces a line of output.}
       \edef\mylbrace{\iftrue \string{\else}\fi}\let\{=\mylbrace
       \edef\myrbrace{\iffalse{\else\string}\fi}\let\}=\myrbrace
       %
-      % Read toc first time in order to get the counts of subentries for
-      % \pdfoutline.
-      \def\chapentry##1##2##3{}
-      \def\secentry##1##2##3##4{\advancenumber{chap##2}}
-      \def\subsecentry##1##2##3##4##5{\advancenumber{sec##2.##3}}
-      \def\subsubsecentry##1##2##3##4##5##6{\advancenumber{subsec##2.##3.##4}}
+      % Read toc silently, to get counts of subentries for \pdfoutline.
+      \def\numchapentry##1##2##3##4{\def\thischapnum{##2}}%
+      \def\numsecentry##1##2##3##4{%
+        \def\thissecnum{##2}%
+        \advancenumber{chap\thischapnum}}%
+      \def\numsubsecentry##1##2##3##4{%
+        \def\thissubsecnum{##2}%
+        \advancenumber{sec\thissecnum}}%
+      \def\numsubsubsecentry##1##2##3##4{\advancenumber{subsec\thissubsecnum}}%
+      %
       % use \def rather than \let here because we redefine \chapentry et
       % al. a second time, below.
-      \def\appendixentry{\chapentry}
-      \def\unnumbchapentry{\chapentry}
-      \def\unnumbsecentry{\secentry}
-      \def\unnumbsubsecentry{\subsecentry}
-      \def\unnumbsubsubsecentry{\subsubsecentry}
+      \def\appentry{\numchapentry}%
+      \def\appsecentry{\numsecentry}%
+      \def\appsubsecentry{\numsubsecentry}%
+      \def\appsubsubsecentry{\numsubsubsecentry}%
+      \def\unnchapentry{\numchapentry}%
+      \def\unnsecentry{\numsecentry}%
+      \def\unnsubsecentry{\numsubsecentry}%
+      \def\unnsubsubsecentry{\numsubsubsecentry}%
       \input \jobname.toc
       %
       % Read toc second time, this time actually producing the outlines.
       % The `-' means take the \expnumber as the absolute number of
       % subentries, which we calculated on our first read of the .toc above.
-      \def\chapentry##1##2##3{%
-        \pdfoutline goto name{\pdfmkpgn{##3}}count-\expnumber{chap##2}{##1}}
-      \def\secentry##1##2##3##4{%
-        \pdfoutline goto name{\pdfmkpgn{##1}}count-\expnumber{sec##2.##3}{##1}}
-      \def\subsecentry##1##2##3##4##5{%
-        \pdfoutline goto name{\pdfmkpgn{##5}}count-\expnumber{subsec##2.##3.##4}{##1}}
-      \def\subsubsecentry##1##2##3##4##5##6{%
-        \pdfoutline goto name{\pdfmkpgn{##6}}{##1}}
+      % 
+      % We use the node names as the destinations.
+      \def\numchapentry##1##2##3##4{%
+        \dopdfoutline{##1}{count-\expnumber{chap##2}}{##3}{##4}}%
+      \def\numsecentry##1##2##3##4{%
+        \dopdfoutline{##1}{count-\expnumber{sec##2}}{##3}{##4}}%
+      \def\numsubsecentry##1##2##3##4{%
+        \dopdfoutline{##1}{count-\expnumber{subsec##2}}{##3}{##4}}%
+      \def\numsubsubsecentry##1##2##3##4{% count is always zero
+        \dopdfoutline{##1}{}{##3}{##4}}%
       %
       % Make special characters normal for writing to the pdf file.
       \indexnofonts
-      \let\tt=\relax
       \turnoffactive
       \input \jobname.toc
     \endgroup\fi
-  }}
+  }
+  %
   \def\makelinks #1,{%
     \def\params{#1}\def\E{END}%
     \ifx\params\E
@@ -3536,6 +3573,12 @@ width0pt\relax} \fi
 \message{sectioning,}
 % Chapters, sections, etc.
 
+% \unnumberedno is an oxymoron, of course.  But we count the unnumbered
+% sections so that we can refer to them unambiguously in the pdf
+% outlines by their "section number".  We avoid collisions with chapter
+% numbers by starting them at 10000.  (If a document ever has 10000
+% chapters, we're in trouble anyway, I'm sure.)
+\newcount\unnumberedno \unnumberedno = 10000
 \newcount\chapno
 \newcount\secno        \secno=0
 \newcount\subsecno     \subsecno=0
@@ -3543,9 +3586,12 @@ width0pt\relax} \fi
 
 % This counter is funny since it counts through charcodes of letters A, B, ...
 \newcount\appendixno  \appendixno = `\@
+%
 % \def\appendixletter{\char\the\appendixno}
-% We do the following for the sake of pdftex, which needs the actual
+% We do the following ugly conditional instead of the above simple
+% construct for the sake of pdftex, which needs the actual
 % letter in the expansion, not just typeset.
+% 
 \def\appendixletter{%
   \ifnum\appendixno=`A A%
   \else\ifnum\appendixno=`B B%
@@ -3583,11 +3629,12 @@ width0pt\relax} \fi
 
 % Each @chapter defines this as the name of the chapter.
 % page headings and footings can use it.  @section does likewise.
+% However, they are not reliable, because we don't use marks.
 \def\thischapter{}
 \def\thissection{}
 
 \newcount\absseclevel % used to calculate proper heading level
-\newcount\secbase\secbase=0 % @raise/lowersections modify this count
+\newcount\secbase\secbase=0 % @raisesections/@lowersections modify this count
 
 % @raisesections: treat @section as chapter, @subsection as section, etc.
 \def\raisesections{\global\advance\secbase by -1}
@@ -3660,42 +3707,29 @@ width0pt\relax} \fi
 }
 
 % @chapter, @appendix, @unnumbered.
-\def\thischaptername{No Chapter Title}
+%
 \outer\def\chapter{\parsearg\chapteryyy}
-\def\chapteryyy #1{\numhead0{#1}} % normally numhead0 calls chapterzzz
-\def\chapterzzz #1{%
-  \secno=0 \subsecno=0 \subsubsecno=0
-  \global\advance \chapno by 1 \message{\putwordChapter\space \the\chapno}%
-  \chapmacro {#1}{\the\chapno}%
-  \gdef\thissection{#1}%
-  \gdef\thischaptername{#1}%
-  % We don't substitute the actual chapter name into \thischapter
-  % because we don't want its macros evaluated now.
-  \xdef\thischapter{\putwordChapter{} \the\chapno: \noexpand\thischaptername}%
-  \writetocentry{chap}{#1}{{\the\chapno}}
-  \donoderef
+\def\chapteryyy#1{\numhead0{#1}} % normally numhead0 calls chapterzzz
+\def\chapterzzz#1{%
+  \secno=0 \subsecno=0 \subsubsecno=0  \advance\chapno by 1
+  \message{\putwordChapter\space \the\chapno}%
+  %
+  % Write the actual heading.
+  \chapmacro{#1}{Ynumbered}{\the\chapno}%
+  %
+  % So @section and the like are numbered underneath this chapter.
   \global\let\section = \numberedsec
   \global\let\subsection = \numberedsubsec
   \global\let\subsubsection = \numberedsubsubsec
 }
 
-% we use \chapno to avoid indenting back
-\def\appendixbox#1{%
-  \setbox0 = \hbox{\putwordAppendix{} \the\chapno}%
-  \hbox to \wd0{#1\hss}}
-
 \outer\def\appendix{\parsearg\appendixyyy}
-\def\appendixyyy #1{\apphead0{#1}} % normally apphead0 calls appendixzzz
-\def\appendixzzz #1{%
-  \secno=0 \subsecno=0 \subsubsecno=0
-  \global\advance \appendixno by 1
-  \message{\putwordAppendix\space \appendixletter}%
-  \chapmacro {#1}{\appendixbox{\putwordAppendix{} \appendixletter}}%
-  \gdef\thissection{#1}%
-  \gdef\thischaptername{#1}%
-  \xdef\thischapter{\putwordAppendix{} \appendixletter: \noexpand\thischaptername}%
-  \writetocentry{appendix}{#1}{{\appendixletter}}
-  \appendixnoderef
+\def\appendixyyy#1{\apphead0{#1}} % normally apphead0 calls appendixzzz
+\def\appendixzzz#1{%
+  \secno=0 \subsecno=0 \subsubsecno=0  \advance\appendixno by 1
+  \def\appendixnum{\putwordAppendix\space \appendixletter}%
+  \message{\appendixnum}%
+  \chapmacro{#1}{Yappendix}{\appendixletter}%
   \global\let\section = \appendixsec
   \global\let\subsection = \appendixsubsec
   \global\let\subsubsection = \appendixsubsubsec
@@ -3703,15 +3737,15 @@ width0pt\relax} \fi
 
 % @centerchap is like @unnumbered, but the heading is centered.
 \outer\def\centerchap{\parsearg\centerchapyyy}
-\def\centerchapyyy #1{{\let\unnumbchapmacro=\centerchapmacro \unnumberedyyy{#1}}}
+\def\centerchapyyy#1{{\unnumberedyyy{#1}}}
 
 % @top is like @unnumbered.
 \outer\def\top{\parsearg\unnumberedyyy}
 
 \outer\def\unnumbered{\parsearg\unnumberedyyy}
-\def\unnumberedyyy #1{\unnmhead0{#1}} % normally unnmhead0 calls unnumberedzzz
-\def\unnumberedzzz #1{%
-  \secno=0 \subsecno=0 \subsubsecno=0
+\def\unnumberedyyy#1{\unnmhead0{#1}} % normally unnmhead0 calls unnumberedzzz
+\def\unnumberedzzz#1{%
+  \secno=0 \subsecno=0 \subsubsecno=0  \advance\unnumberedno by 1
   %
   % This used to be simply \message{#1}, but TeX fully expands the
   % argument to \message.  Therefore, if #1 contained @-commands, TeX
@@ -3726,10 +3760,8 @@ width0pt\relax} \fi
   % the toc entries.)
   \toks0 = {#1}\message{(\the\toks0)}%
   %
-  \unnumbchapmacro {#1}%
-  \gdef\thischapter{#1}\gdef\thissection{#1}%
-  \writetocentry{unnumbchap}{#1}{{\the\chapno}}
-  \unnumbnoderef
+  \chapmacro{#1}{Ynothing}{\the\unnumberedno}%
+  %
   \global\let\section = \unnumberedsec
   \global\let\subsection = \unnumberedsubsec
   \global\let\subsubsection = \unnumberedsubsubsec
@@ -3737,99 +3769,78 @@ width0pt\relax} \fi
 
 % Sections.
 \outer\def\numberedsec{\parsearg\secyyy}
-\def\secyyy #1{\numhead1{#1}} % normally calls seczzz
-\def\seczzz #1{%
-  \subsecno=0 \subsubsecno=0 \global\advance \secno by 1 %
-  \gdef\thissection{#1}\secheading {#1}{\the\chapno}{\the\secno}%
-  \writetocentry{sec}{#1}{{\the\chapno}{\the\secno}}
-  \donoderef
-  \nobreak
+\def\secyyy#1{\numhead1{#1}} % normally calls seczzz
+\def\seczzz#1{%
+  \subsecno=0 \subsubsecno=0  \advance\secno by 1
+  \sectionheading{#1}{sec}{Ynumbered}{\the\chapno.\the\secno}%
 }
 
 \outer\def\appendixsection{\parsearg\appendixsecyyy}
 \outer\def\appendixsec{\parsearg\appendixsecyyy}
-\def\appendixsecyyy #1{\apphead1{#1}} % normally calls appendixsectionzzz
-\def\appendixsectionzzz #1{%
-  \subsecno=0 \subsubsecno=0 \global\advance \secno by 1 %
-  \gdef\thissection{#1}\secheading {#1}{\appendixletter}{\the\secno}%
-  \writetocentry{sec}{#1}{{\appendixletter}{\the\secno}}
-  \appendixnoderef
-  \nobreak
+\def\appendixsecyyy#1{\apphead1{#1}} % normally calls appendixsectionzzz
+\def\appendixsectionzzz#1{%
+  \subsecno=0 \subsubsecno=0  \advance\secno by 1
+  \sectionheading{#1}{sec}{Yappendix}{\appendixletter.\the\secno}%
 }
 
 \outer\def\unnumberedsec{\parsearg\unnumberedsecyyy}
-\def\unnumberedsecyyy #1{\unnmhead1{#1}} % normally calls unnumberedseczzz
-\def\unnumberedseczzz #1{%
-  \plainsecheading {#1}\gdef\thissection{#1}%
-  \writetocentry{unnumbsec}{#1}{{\the\chapno}{\the\secno}}
-  \unnumbnoderef
-  \nobreak
+\def\unnumberedsecyyy#1{\unnmhead1{#1}} % normally calls unnumberedseczzz
+\def\unnumberedseczzz#1{%
+  \subsecno=0 \subsubsecno=0  \advance\secno by 1
+  \sectionheading{#1}{sec}{Ynothing}{\the\unnumberedno.\the\secno}%
 }
 
 % Subsections.
 \outer\def\numberedsubsec{\parsearg\numberedsubsecyyy}
-\def\numberedsubsecyyy #1{\numhead2{#1}} % normally calls numberedsubseczzz
-\def\numberedsubseczzz #1{%
-  \gdef\thissection{#1}\subsubsecno=0 \global\advance \subsecno by 1 %
-  \subsecheading {#1}{\the\chapno}{\the\secno}{\the\subsecno}%
-  \writetocentry{subsec}{#1}{{\the\chapno}{\the\secno}{\the\subsecno}}
-  \donoderef
-  \nobreak
+\def\numberedsubsecyyy#1{\numhead2{#1}} % normally calls numberedsubseczzz
+\def\numberedsubseczzz#1{%
+  \subsubsecno=0  \advance\subsecno by 1
+  \sectionheading{#1}{subsec}{Ynumbered}{\the\chapno.\the\secno.\the\subsecno}%
 }
 
 \outer\def\appendixsubsec{\parsearg\appendixsubsecyyy}
-\def\appendixsubsecyyy #1{\apphead2{#1}} % normally calls appendixsubseczzz
-\def\appendixsubseczzz #1{%
-  \gdef\thissection{#1}\subsubsecno=0 \global\advance \subsecno by 1 %
-  \subsecheading {#1}{\appendixletter}{\the\secno}{\the\subsecno}%
-  \writetocentry{subsec}{#1}{{\appendixletter}{\the\secno}{\the\subsecno}}
-  \appendixnoderef
-  \nobreak
+\def\appendixsubsecyyy#1{\apphead2{#1}} % normally calls appendixsubseczzz
+\def\appendixsubseczzz#1{%
+  \subsubsecno=0  \advance\subsecno by 1
+  \sectionheading{#1}{subsec}{Yappendix}%
+                 {\appendixletter.\the\secno.\the\subsecno}%
 }
 
 \outer\def\unnumberedsubsec{\parsearg\unnumberedsubsecyyy}
-\def\unnumberedsubsecyyy #1{\unnmhead2{#1}} %normally calls unnumberedsubseczzz
-\def\unnumberedsubseczzz #1{%
-  \plainsubsecheading {#1}\gdef\thissection{#1}%
-  \writetocentry{unnumbsubsec}{#1}{{\the\chapno}{\the\secno}{\the\subsecno}}
-  \unnumbnoderef
-  \nobreak
+\def\unnumberedsubsecyyy#1{\unnmhead2{#1}} %normally calls unnumberedsubseczzz
+\def\unnumberedsubseczzz#1{%
+  \subsubsecno=0  \advance\subsecno by 1
+  \sectionheading{#1}{subsec}{Ynothing}%
+                 {\the\unnumberedno.\the\secno.\the\subsecno}%
 }
 
 % Subsubsections.
 \outer\def\numberedsubsubsec{\parsearg\numberedsubsubsecyyy}
-\def\numberedsubsubsecyyy #1{\numhead3{#1}} % normally numberedsubsubseczzz
-\def\numberedsubsubseczzz #1{%
-  \gdef\thissection{#1}\global\advance \subsubsecno by 1 %
-  \subsubsecheading {#1}
-    {\the\chapno}{\the\secno}{\the\subsecno}{\the\subsubsecno}%
-  \writetocentry{subsubsec}{#1}{{\the\chapno}{\the\secno}{\the\subsecno}{\the\subsubsecno}}
-  \donoderef
-  \nobreak
+\def\numberedsubsubsecyyy#1{\numhead3{#1}} % normally numberedsubsubseczzz
+\def\numberedsubsubseczzz#1{%
+  \advance\subsubsecno by 1
+  \sectionheading{#1}{subsubsec}{Ynumbered}%
+                 {\the\chapno.\the\secno.\the\subsecno.\the\subsubsecno}%
 }
 
 \outer\def\appendixsubsubsec{\parsearg\appendixsubsubsecyyy}
-\def\appendixsubsubsecyyy #1{\apphead3{#1}} % normally appendixsubsubseczzz
-\def\appendixsubsubseczzz #1{%
-  \gdef\thissection{#1}\global\advance \subsubsecno by 1 %
-  \subsubsecheading {#1}
-    {\appendixletter}{\the\secno}{\the\subsecno}{\the\subsubsecno}%
-  \writetocentry{subsubsec}{#1}{{\appendixletter}{\the\secno}{\the\subsecno}{\the\subsubsecno}}
-  \appendixnoderef
-  \nobreak
+\def\appendixsubsubsecyyy#1{\apphead3{#1}} % normally appendixsubsubseczzz
+\def\appendixsubsubseczzz#1{%
+  \advance\subsubsecno by 1
+  \sectionheading{#1}{subsubsec}{Yappendix}%
+                 {\appendixletter.\the\secno.\the\subsecno.\the\subsubsecno}%
 }
 
 \outer\def\unnumberedsubsubsec{\parsearg\unnumberedsubsubsecyyy}
-\def\unnumberedsubsubsecyyy #1{\unnmhead3{#1}} %normally unnumberedsubsubseczzz
-\def\unnumberedsubsubseczzz #1{%
-  \plainsubsubsecheading {#1}\gdef\thissection{#1}%
-  \writetocentry{unnumbsubsubsec}{#1}{{\the\chapno}{\the\secno}{\the\subsecno}{\the\subsubsecno}}
-  \unnumbnoderef
-  \nobreak
+\def\unnumberedsubsubsecyyy#1{\unnmhead3{#1}} %normally unnumberedsubsubseczzz
+\def\unnumberedsubsubseczzz#1{%
+  \advance\subsubsecno by 1
+  \sectionheading{#1}{subsubsec}{Ynothing}%
+                 {\the\unnumberedno.\the\secno.\the\subsecno.\the\subsubsecno}%
 }
 
 % These are variants which are not "outer", so they can appear in @ifinfo.
-% Actually, they should now be obsolete; ordinary section commands should work.
+% Actually, they are now be obsolete; ordinary section commands should work.
 \def\infotop{\parsearg\unnumberedzzz}
 \def\infounnumbered{\parsearg\unnumberedzzz}
 \def\infounnumberedsec{\parsearg\unnumberedseczzz}
@@ -3849,9 +3860,9 @@ width0pt\relax} \fi
 % These macros control what the section commands do, according
 % to what kind of chapter we are in (ordinary, appendix, or unnumbered).
 % Define them by default for a numbered chapter.
-\global\let\section = \numberedsec
-\global\let\subsection = \numberedsubsec
-\global\let\subsubsection = \numberedsubsubsec
+\let\section = \numberedsec
+\let\subsection = \numberedsubsec
+\let\subsubsection = \numberedsubsubsec
 
 % Define @majorheading, @heading and @subheading
 
@@ -3870,7 +3881,7 @@ width0pt\relax} \fi
 }
 
 \def\chapheading{\chapbreak \parsearg\chapheadingzzz}
-\def\chapheadingzzz #1{%
+\def\chapheadingzzz#1{%
   {\chapfonts \vbox{\hyphenpenalty=10000\tolerance=5000
                     \parindent=0pt\raggedright
                     \rm #1\hfill}}%
@@ -3882,9 +3893,12 @@ width0pt\relax} \fi
 \def\heading{\parsearg\doheading}
 \def\subheading{\parsearg\dosubheading}
 \def\subsubheading{\parsearg\dosubsubheading}
-\def\doheading#1{\plainsecheading{#1}\suppressfirstparagraphindent}
-\def\dosubheading#1{\plainsubsecheading{#1}\suppressfirstparagraphindent}
-\def\dosubsubheading#1{\plainsubsubsecheading{#1}\suppressfirstparagraphindent}
+\def\doheading#1{\sectionheading{#1}{sec}{Yomitfromtoc}{}
+  \suppressfirstparagraphindent}
+\def\dosubheading#1{\sectionheading{#1}{subsec}{Yomitfromtoc}{}
+  \suppressfirstparagraphindent}
+\def\dosubsubheading#1{\sectionheading{#1}{subsubsec}{Yomitfromtoc}{}
+  \suppressfirstparagraphindent}
 
 % These macros generate a chapter, section, etc. heading only
 % (including whitespace, linebreaking, etc. around it),
@@ -3927,27 +3941,77 @@ width0pt\relax} \fi
 
 \def\CHAPFplain{%
 \global\let\chapmacro=\chfplain
-\global\let\unnumbchapmacro=\unnchfplain
 \global\let\centerchapmacro=\centerchfplain}
 
-% Plain chapter opening.
-% #1 is the text, #2 the chapter number or empty if unnumbered.
-\def\chfplain#1#2{%
+% Normal chapter opening.
+% 
+% #1 is the text, #2 is the section type (Ynumbered, Ynothing,
+% Yappendix, Yomitfromtoc), #3 the chapter number.
+% 
+% To test against our argument.
+\def\Ynothingkeyword{Ynothing}
+\def\Yomitfromtockeyword{Yomitfromtoc}
+\def\Yappendixkeyword{Yappendix}
+%
+\def\chfplain#1#2#3{%
   \pchapsepmacro
   {%
     \chapfonts \rm
-    \def\chapnum{#2}%
-    \setbox0 = \hbox{#2\ifx\chapnum\empty\else\enspace\fi}%
+    %
+    % Have to define \thissection before calling \donoderef, because the
+    % xref code eventually uses it, as \Ytitle.  On the other hand, it
+    % has to be called after \pchapsepmacro, or the headline will change
+    % too soon.
+    \gdef\thissection{#1}%
+    \gdef\thischaptername{#1}%
+    %
+    % Only insert the separating space if we have a chapter/appendix
+    % number, and don't print the unnumbered ``number''.
+    \def\temptype{#2}%
+    \ifx\temptype\Ynothingkeyword
+      \setbox0 = \hbox{}%
+      \def\toctype{unnchap}%
+      \def\thischapter{#1}%
+    \else\ifx\temptype\Yomitfromtockeyword
+      \setbox0 = \hbox{}% contents like unnumbered, but no toc entry
+      \def\toctype{omit}%
+      \xdef\thischapter{}%
+    \else\ifx\temptype\Yappendixkeyword
+      \setbox0 = \hbox{\putwordAppendix{} #3\enspace}%
+      \def\toctype{app}%
+      % We don't substitute the actual chapter name into \thischapter
+      % because we don't want its macros evaluated now.  And we don't
+      % use \thissection because that changes with each section.
+      %
+      \xdef\thischapter{\putwordAppendix{} \appendixletter:
+                        \noexpand\thischaptername}%
+    \else
+      \setbox0 = \hbox{#3\enspace}%
+      \def\toctype{numchap}%
+      \xdef\thischapter{\putwordChapter{} \the\chapno:
+                        \noexpand\thischaptername}%
+    \fi\fi\fi
+    %
+    % Write the toc entry for this chapter.  Must come before the
+    % \donoderef, because we include the current node name in the toc
+    % entry, and \donoderef resets it to empty.
+    \writetocentry{\toctype}{#1}{#3}%
+    %
+    % For pdftex, we have to write out the node definition (aka, make
+    % the pdfdest) after any page break, but before the actual text has
+    % been typeset.  If the destination for the pdf outline is after the
+    % text, then jumping from the outline may wind up with the text not
+    % being visible, for instance under high magnification.
+    \donoderef{#2}%
+    %
+    % Typeset the actual heading.
     \vbox{\hyphenpenalty=10000 \tolerance=5000 \parindent=0pt \raggedright
-          \hangindent = \wd0 \centerparametersmaybe
+          \hangindent=\wd0 \centerparametersmaybe
           \unhbox0 #1\par}%
   }%
   \nobreak\bigskip % no page break after a chapter title
   \nobreak
 }
-
-% Plain opening for unnumbered.
-\def\unnchfplain#1{\chfplain{#1}{}}
 
 % @centerchap -- centered and unnumbered.
 \let\centerparametersmaybe = \relax
@@ -3957,11 +4021,14 @@ width0pt\relax} \fi
     \leftskip = \rightskip
     \parfillskip = 0pt
   }%
-  \chfplain{#1}{}%
+  \chfplain{#1}{Ynothing}{}%
 }}
 
 \CHAPFplain % The default
 
+% I don't think this chapter style is supported any more, so I'm not
+% updating it with the new noderef stuff.  We'll see.  --karl, 11aug03.
+% 
 \def\unnchfopen #1{%
 \chapoddpage {\chapfonts \vbox{\hyphenpenalty=10000\tolerance=5000
                        \parindent=0pt\raggedright
@@ -3981,60 +4048,81 @@ width0pt\relax} \fi
 
 \def\CHAPFopen{%
 \global\let\chapmacro=\chfopen
-\global\let\unnumbchapmacro=\unnchfopen
 \global\let\centerchapmacro=\centerchfopen}
 
 
-% Section titles.
+% Section titles.  These macros combine the section number parts and
+% call the generic \sectionheading to do the printing.
+% 
 \newskip\secheadingskip
-\def\secheadingbreak{\dobreak \secheadingskip {-1000}}
-\def\secheading#1#2#3{\sectionheading{sec}{#2.#3}{#1}}
-\def\plainsecheading#1{\sectionheading{sec}{}{#1}}
+\def\secheadingbreak{\dobreak \secheadingskip{-1000}}
 
 % Subsection titles.
-\newskip \subsecheadingskip
-\def\subsecheadingbreak{\dobreak \subsecheadingskip {-500}}
-\def\subsecheading#1#2#3#4{\sectionheading{subsec}{#2.#3.#4}{#1}}
-\def\plainsubsecheading#1{\sectionheading{subsec}{}{#1}}
+\newskip\subsecheadingskip
+\def\subsecheadingbreak{\dobreak \subsecheadingskip{-500}}
 
 % Subsubsection titles.
-\let\subsubsecheadingskip = \subsecheadingskip
-\let\subsubsecheadingbreak = \subsecheadingbreak
-\def\subsubsecheading#1#2#3#4#5{\sectionheading{subsubsec}{#2.#3.#4.#5}{#1}}
-\def\plainsubsubsecheading#1{\sectionheading{subsubsec}{}{#1}}
+\def\subsubsecheadingskip{\subsecheadingskip}
+\def\subsubsecheadingbreak{\subsecheadingbreak}
 
 
-% Print any size section title.
-%
-% #1 is the section type (sec/subsec/subsubsec), #2 is the section
-% number (maybe empty), #3 the text.
-\def\sectionheading#1#2#3{%
-  {%
-    \expandafter\advance\csname #1headingskip\endcsname by \parskip
-    \csname #1headingbreak\endcsname
-  }%
+% Print any size, any type, section title.
+% 
+% #1 is the text, #2 is the section level (sec/subsec/subsubsec), #3 is
+% the section type for xrefs (Ynumbered, Ynothing, Yappendix), #4 is the
+% section number.
+% 
+\def\sectionheading#1#2#3#4{%
   {%
     % Switch to the right set of fonts.
-    \csname #1fonts\endcsname \rm
+    \csname #2fonts\endcsname \rm
     %
-    % Only insert the separating space if we have a section number.
-    \def\secnum{#2}%
-    \setbox0 = \hbox{#2\ifx\secnum\empty\else\enspace\fi}%
+    % Insert space above the heading.
+    \csname #2headingbreak\endcsname
     %
+    % Only insert the space after the number if we have a section number.
+    \def\sectionlevel{#2}%
+    \def\temptype{#3}%
+    %
+    \ifx\temptype\Ynothingkeyword
+      \setbox0 = \hbox{}%
+      \def\toctype{unn}%
+      \gdef\thissection{#1}%
+    \else\ifx\temptype\Yomitfromtockeyword
+      % for @headings -- no section number, don't include in toc,
+      % and don't redefine \thissection.
+      \setbox0 = \hbox{}%
+      \def\toctype{omit}%
+      \let\sectionlevel=\empty
+    \else\ifx\temptype\Yappendixkeyword
+      \setbox0 = \hbox{#4\enspace}%
+      \def\toctype{app}%
+      \gdef\thissection{#1}%
+    \else
+      \setbox0 = \hbox{#4\enspace}%
+      \def\toctype{num}%
+      \gdef\thissection{#1}%
+    \fi\fi\fi
+    %
+    % Write the toc entry (before \donoderef).  See comments in \chfplain.
+    \writetocentry{\toctype\sectionlevel}{#1}{#4}%
+    %
+    % Write the node reference (= pdf destination for pdftex).
+    % Again, see comments in \chfplain.
+    \donoderef{#3}%
+    %
+    % Output the actual section heading.
     \vbox{\hyphenpenalty=10000 \tolerance=5000 \parindent=0pt \raggedright
-          \hangindent = \wd0 % zero if no section number
-          \unhbox0 #3}%
+          \hangindent=\wd0  % zero if no section number
+          \unhbox0 #1}%
   }%
-  % Add extra space after the heading -- either a line space or a
-  % paragraph space, whichever is more.  (Some people like to set
-  % \parskip to large values for some reason.)  Don't allow stretch, though.
-  \nobreak
-  \ifdim\parskip>\normalbaselineskip
-    \kern\parskip
-  \else
-    \kern\normalbaselineskip
-  \fi
-  \nobreak
+  % Add extra space after the heading -- half of whatever came above it.
+  % Don't allow stretch, though.
+  \nobreak \kern .5 \csname #2headingskip\endcsname
+  %
+  % We'll almost certainly start a paragraph next, so don't let that
+  % glue accumulate.  Avoid a break.
+  \nobreak \vskip-\parskip
 }
 
 
@@ -4043,41 +4131,53 @@ width0pt\relax} \fi
 \newwrite\tocfile
 
 % Write an entry to the toc file, opening it if necessary.
-% Called from @chapter, etc.  We supply {\folio} at the end of the
-% argument, which will end up as the last argument to the \...entry macro.
-%
-% Usage: \writetocentry{chap}{The Name of The Game}{{\the\chapno}}
+% Called from @chapter, etc.  
+% 
+% Example usage: \writetocentry{sec}{Section Name}{\the\chapno.\the\secno}
+% We append the current node name (if any) and page number as additional
+% arguments for the \{chap,sec,...}entry macros which will eventually
+% read this.  The node name is used in the pdf outlines as the
+% destination to jump to.
+% 
 % We open the .toc file for writing here instead of at @setfilename (or
 % any other fixed time) so that @contents can be anywhere in the document.
+% But if #1 is `omit', then we don't do anything.  This is used for the
+% table of contents chapter openings themselves.
 %
 \newif\iftocfileopened
+\def\omitkeyword{omit}%
+%
 \def\writetocentry#1#2#3{%
-  \iftocfileopened\else
-    \immediate\openout\tocfile = \jobname.toc
-    \global\tocfileopenedtrue
+  \edef\writetoctype{#1}%
+  \ifx\writetoctype\omitkeyword \else
+    \iftocfileopened\else
+      \immediate\openout\tocfile = \jobname.toc
+      \global\tocfileopenedtrue
+    \fi
+    %
+    \iflinks
+      \toks0 = {#2}%
+      \toks2 = \expandafter{\lastnode}%
+      \edef\temp{\write\tocfile{\realbackslash #1entry{\the\toks0}{#3}%
+                               {\the\toks2}{\noexpand\folio}}}%
+      \temp
+    \fi
   \fi
   %
-  \iflinks
-    \toks0 = {#2}%
-    \edef\temp{\write\tocfile{\realbackslash #1entry{\the\toks0}#3{\folio}}}%
-    \temp
-  \fi
-  %
-  % Tell \shipout to create a page destination if we're doing pdf, which
-  % will be the target of the links in the table of contents.  We can't
-  % just do it on every page because the title pages are numbered 1 and
-  % 2 (the page numbers aren't printed), and so are the first two pages
-  % of the document.  Thus, we'd have two destinations named `1', and
-  % two named `2'.
-  \ifpdf \pdfmakepagedesttrue \fi
+  % Tell \shipout to create a pdf destination on each page, if we're
+  % writing pdf.  These are used in the table of contents.  We can't
+  % just write one on every page because the title pages are numbered
+  % 1 and 2 (the page numbers aren't printed), and so are the first
+  % two pages of the document.  Thus, we'd have two destinations named
+  % `1', and two named `2'.
+  \ifpdf \global\pdfmakepagedesttrue \fi
 }
 
 \newskip\contentsrightmargin \contentsrightmargin=1in
 \newcount\savepageno
 \newcount\lastnegativepageno \lastnegativepageno = -1
 
-% Finish up the main text and prepare to read what we've written
-% to \tocfile.
+% Prepare to read what we've written to \tocfile.
 %
 \def\startcontents#1{%
    % If @setchapternewpage on, and @headings double, the contents should
@@ -4089,7 +4189,9 @@ width0pt\relax} \fi
    %
    % Don't need to put `Contents' or `Short Contents' in the headline.
    % It is abundantly clear what they are.
-   \unnumbchapmacro{#1}\def\thischapter{}%
+   \def\thischapter{}%
+   \chapmacro{#1}{Yomitfromtoc}{}%
+   %
    \savepageno = \pageno
    \begingroup                  % Set up to handle contents files properly.
       \catcode`\\=0  \catcode`\{=1  \catcode`\}=2  \catcode`\@=11
@@ -4124,9 +4226,9 @@ width0pt\relax} \fi
 \def\summarycontents{%
    \startcontents{\putwordShortTOC}%
       %
-      \let\chapentry = \shortchapentry
-      \let\appendixentry = \shortappendixentry
-      \let\unnumbchapentry = \shortunnumberedentry
+      \let\numchapentry = \shortchapentry
+      \let\appentry = \shortchapentry
+      \let\unnchapentry = \shortunnchapentry
       % We want a true roman here for the page numbers.
       \secfonts
       \let\rm=\shortcontrm \let\bf=\shortcontbf
@@ -4134,12 +4236,15 @@ width0pt\relax} \fi
       \rm
       \hyphenpenalty = 10000
       \advance\baselineskip by 1pt % Open it up a little.
-      \def\secentry ##1##2##3##4{}
-      \def\subsecentry ##1##2##3##4##5{}
-      \def\subsubsecentry ##1##2##3##4##5##6{}
-      \let\unnumbsecentry = \secentry
-      \let\unnumbsubsecentry = \subsecentry
-      \let\unnumbsubsubsecentry = \subsubsecentry
+      \def\numsecentry##1##2##3##4{}
+      \let\appsecentry = \numsecentry
+      \let\unnsecentry = \numsecentry
+      \let\numsubsecentry = \numsecentry
+      \let\appsubsecentry = \numsecentry
+      \let\unnsubsecentry = \numsecentry
+      \let\numsubsubsecentry = \numsecentry
+      \let\appsubsubsecentry = \numsecentry
+      \let\unnsubsubsecentry = \numsecentry
       \openin 1 \jobname.toc
       \ifeof 1 \else
         \closein 1
@@ -4153,38 +4258,8 @@ width0pt\relax} \fi
 }
 \let\shortcontents = \summarycontents
 
-\ifpdf
-  \pdfcatalog{/PageMode /UseOutlines}%
-\fi
-
-% These macros generate individual entries in the table of contents.
-% The first argument is the chapter or section name.
-% The last argument is the page number.
-% The arguments in between are the chapter number, section number, ...
-
-% Chapters, in the main contents.
-\def\chapentry#1#2#3{\dochapentry{#2\labelspace#1}{#3}}
-%
-% Chapters, in the short toc.
-% See comments in \dochapentry re vbox and related settings.
-\def\shortchapentry#1#2#3{%
-  \tocentry{\shortchaplabel{#2}\labelspace #1}{\doshortpageno\bgroup#3\egroup}%
-}
-
-% Appendices, in the main contents.
-\def\appendixentry#1#2#3{%
-  \dochapentry{\appendixbox{\putwordAppendix{} #2}\labelspace#1}{#3}}
-%
-% Appendices, in the short toc.
-\let\shortappendixentry = \shortchapentry
-
 % Typeset the label for a chapter or appendix for the short contents.
-% The arg is, e.g., `Appendix A' for an appendix, or `3' for a chapter.
-% We could simplify the code here by writing out an \appendixentry
-% command in the toc file for appendices, instead of using \chapentry
-% for both, but it doesn't seem worth it.
-%
-\newdimen\shortappendixwidth
+% The arg is, e.g., `A' for an appendix, or `3' for a chapter.
 %
 \def\shortchaplabel#1{%
   % This space should be enough, since a single number is .5em, and the
@@ -4192,26 +4267,57 @@ width0pt\relax} \fi
   % But use \hss just in case.
   % (This space doesn't include the extra space that gets added after
   % the label; that gets put in by \shortchapentry above.)
-  \dimen0 = 1em
-  \hbox to \dimen0{#1\hss}%
+  % 
+  % We'd like to right-justify chapter numbers, but that looks strange
+  % with appendix letters.  And right-justifying numbers and
+  % left-justifying letters looks strange when there is less than 10
+  % chapters.  Have to read the whole toc once to know how many chapters
+  % there are before deciding ...
+  \hbox to 1em{#1\hss}%
 }
 
+% These macros generate individual entries in the table of contents.
+% The first argument is the chapter or section name.
+% The last argument is the page number.
+% The arguments in between are the chapter number, section number, ...
+
+% Chapters, in the main contents.
+\def\numchapentry#1#2#3#4{\dochapentry{#2\labelspace#1}{#4}}
+%
+% Chapters, in the short toc.
+% See comments in \dochapentry re vbox and related settings.
+\def\shortchapentry#1#2#3#4{%
+  \tocentry{\shortchaplabel{#2}\labelspace #1}{\doshortpageno\bgroup#4\egroup}%
+}
+
+% Appendices, in the main contents.
+% Need the word Appendix, and a fixed-size box.
+% 
+\def\appendixbox#1{%
+  % We use M since it's probably the widest letter.
+  \setbox0 = \hbox{\putwordAppendix{} M}%
+  \hbox to \wd0{\putwordAppendix{} #1\hss}}
+%
+\def\appentry#1#2#3#4{\dochapentry{\appendixbox{#2}\labelspace#1}{#4}}
+
 % Unnumbered chapters.
-\def\unnumbchapentry#1#2#3{\dochapentry{#1}{#3}}
-\def\shortunnumberedentry#1#2#3{\tocentry{#1}{\doshortpageno\bgroup#3\egroup}}
+\def\unnchapentry#1#2#3#4{\dochapentry{#1}{#4}}
+\def\shortunnchapentry#1#2#3#4{\tocentry{#1}{\doshortpageno\bgroup#4\egroup}}
 
 % Sections.
-\def\secentry#1#2#3#4{\dosecentry{#2.#3\labelspace#1}{#4}}
-\def\unnumbsecentry#1#2#3#4{\dosecentry{#1}{#4}}
+\def\numsecentry#1#2#3#4{\dosecentry{#2\labelspace#1}{#4}}
+\let\appsecentry=\numsecentry
+\def\unnsecentry#1#2#3#4{\dosecentry{#1}{#4}}
 
 % Subsections.
-\def\subsecentry#1#2#3#4#5{\dosubsecentry{#2.#3.#4\labelspace#1}{#5}}
-\def\unnumbsubsecentry#1#2#3#4#5{\dosubsecentry{#1}{#5}}
+\let\numsubsecentry=\numsecentry
+\let\appsubsecentry=\numsecentry
+\let\unnsubsecentry=\unnsecentry
 
 % And subsubsections.
-\def\subsubsecentry#1#2#3#4#5#6{%
-  \dosubsubsecentry{#2.#3.#4.#5\labelspace#1}{#6}}
-\def\unnumbsubsubsecentry#1#2#3#4#5#6{\dosubsubsecentry{#1}{#6}}
+\let\numsubsubsecentry=\numsecentry
+\let\appsubsubsecentry=\numsecentry
+\let\unnsubsubsecentry=\unnsecentry
 
 % This parameter controls the indentation of the various levels.
 \newdimen\tocindent \tocindent = 3pc
@@ -4265,8 +4371,8 @@ width0pt\relax} \fi
 
 \def\chapentryfonts{\secfonts \rm}
 \def\secentryfonts{\textfonts}
-\let\subsecentryfonts = \textfonts
-\let\subsubsecentryfonts = \textfonts
+\def\subsecentryfonts{\textfonts}
+\def\subsubsecentryfonts{\textfonts}
 
 
 \message{environments,}
@@ -4333,6 +4439,7 @@ width0pt\relax} \fi
   \let\!=\ptexexclam
   \let\i=\ptexi
   \let\indent=\ptexindent
+  \let\noindent=\ptexnoindent
   \let\{=\ptexlbrace
   \let\+=\tabalign
   \let\}=\ptexrbrace
@@ -5688,7 +5795,6 @@ width0pt\relax} \fi
 
 
 \message{cross references,}
-% @xref etc.
 
 \newwrite\auxfile
 
@@ -5700,39 +5806,28 @@ width0pt\relax} \fi
 \def\inforefzzz #1,#2,#3,#4**{\putwordSee{} \putwordInfo{} \putwordfile{} \file{\ignorespaces #3{}},
   node \samp{\ignorespaces#1{}}}
 
-% @node's job is to define \lastnode.
+% @node's only job in TeX is to define \lastnode, which is used in
+% cross-references.
 \def\node{\ENVcheck\parsearg\nodezzz}
 \def\nodezzz#1{\nodexxx #1,\finishnodeparse}
 \def\nodexxx#1,#2\finishnodeparse{\gdef\lastnode{#1}}
 \let\nwnode=\node
-\let\lastnode=\relax
+\let\lastnode=\empty
 
-% The sectioning commands (@chapter, etc.) call these.
-\def\donoderef{%
-  \ifx\lastnode\relax\else
-    \expandafter\expandafter\expandafter\setref{\lastnode}%
-      {Ysectionnumberandtype}%
-    \global\let\lastnode=\relax
+% Write a cross-reference definition for the current node.  #1 is the
+% type (Ynumbered, Yappendix, Ynothing).
+% 
+\def\donoderef#1{%
+  \ifx\lastnode\empty\else
+    \expandafter\expandafter\expandafter\setref{\lastnode}{#1}%
+    \global\let\lastnode=\empty
   \fi
 }
-\def\unnumbnoderef{%
-  \ifx\lastnode\relax\else
-    \expandafter\expandafter\expandafter\setref{\lastnode}{Ynothing}%
-    \global\let\lastnode=\relax
-  \fi
-}
-\def\appendixnoderef{%
-  \ifx\lastnode\relax\else
-    \expandafter\expandafter\expandafter\setref{\lastnode}%
-      {Yappendixletterandtype}%
-    \global\let\lastnode=\relax
-  \fi
-}
-
 
 % @anchor{NAME} -- define xref target at arbitrary point.
 %
 \newcount\savesfregister
+%
 \gdef\savesf{\relax \ifhmode \savesfregister=\spacefactor \fi}
 \gdef\restoresf{\relax \ifhmode \spacefactor=\savesfregister \fi}
 \gdef\anchor#1{\savesf \setref{#1}{Ynothing}\restoresf \ignorespaces}
@@ -5868,7 +5963,8 @@ width0pt\relax} \fi
 \def\Ypagenumber{\folio}
 \def\Ytitle{\thissection}
 \def\Ynothing{}
-\def\Ysectionnumberandtype{%
+\def\Yomitfromtoc{}
+\def\Ynumbered{%
   \ifnum\secno=0
     \putwordChapter@tie \the\chapno
   \else \ifnum\subsecno=0
@@ -5879,8 +5975,7 @@ width0pt\relax} \fi
     \putwordSection@tie \the\chapno.\the\secno.\the\subsecno.\the\subsubsecno
   \fi\fi\fi
 }
-
-\def\Yappendixletterandtype{%
+\def\Yappendix{%
   \ifnum\secno=0
      \putwordAppendix@tie @char\the\appendixno{}%
   \else \ifnum\subsecno=0
@@ -6049,6 +6144,7 @@ width0pt\relax} \fi
 % Auto-number footnotes.  Otherwise like plain.
 \gdef\footnote{%
   \let\indent=\ptexindent
+  \let\noindent=\ptexnoindent
   \global\advance\footnoteno by \@ne
   \edef\thisfootno{$^{\the\footnoteno}$}%
   %
