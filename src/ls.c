@@ -478,6 +478,11 @@ static struct color_ext_type *color_ext_list = NULL;
 /* Buffer for color sequences */
 static char *color_buf;
 
+/* Nonzero means to check for orphaned symbolic link, for displaying
+   colors.  */
+
+static int check_symlink_color;
+
 /* Nonzero means mention the inode number of each file.  -i  */
 
 static int print_inode;
@@ -763,6 +768,11 @@ main (int argc, char **argv)
     {
       parse_ls_color ();
       prep_non_filename_text ();
+      /* Avoid following symbolic links when possible.  */
+      if (color_indicator[C_ORPHAN].string != NULL
+	  || (color_indicator[C_MISSING].string != NULL
+	      && format == long_format))
+	check_symlink_color = 1;
     }
 
   format_needs_stat = sort_type == sort_time || sort_type == sort_size
@@ -1764,7 +1774,7 @@ gobble_file (const char *name, int explicit_arg, const char *dirname)
 	}
 
       if (S_ISLNK (files[files_index].stat.st_mode)
-	  && (explicit_arg || format == long_format || print_with_color))
+	  && (explicit_arg || format == long_format || check_symlink_color))
 	{
 	  char *linkpath;
 	  struct stat linkstats;
@@ -1777,7 +1787,7 @@ gobble_file (const char *name, int explicit_arg, const char *dirname)
 	  if (linkpath
 	      && ((explicit_arg && format != long_format)
 		  || indicator_style != none
-		  || print_with_color)
+		  || check_symlink_color)
 	      && stat (linkpath, &linkstats) == 0)
 	    {
 	      files[files_index].linkok = 1;
