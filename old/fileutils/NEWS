@@ -1,4 +1,5 @@
 Major changes in release 3.5:
+* configuring with gcc uses CFLAGS='-g -O' by default
 * all programs accept --help and --version options
 * long-named options must be introduced with `--'; `+' is no longer
   accepted since it is incompatible with the POSIX.2 standard

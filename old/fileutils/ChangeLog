@@ -26,6 +26,10 @@ Sun Apr  4 09:38:00 1993  Jim Meyering  (meyering@comco.com)
 	* system.h [rindex, incl, bcopy, bzero]: Ditto.
 	* userspec.c [index]: Ditto.
 
+	* Makefile.in [CFLAGS, LDFLAGS]: Don't hard-code these; get their
+	definitions from configure.
+	* configure.in [CFLAGS, LDFLAGS]: Assign reasonable defaults.
+
 Sat Apr  3 18:17:23 1993  Jim Meyering  (meyering@comco.com)
 
 	* Makefile.in [Makefile]: Add dependencies and a rule to remake it.
