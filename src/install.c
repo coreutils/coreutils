@@ -229,7 +229,7 @@ main (int argc, char **argv)
   int errors = 0;
   const char *symbolic_mode = NULL;
   int make_backups = 0;
-  char *version;
+  const char *version;
   int mkdir_and_install = 0;
   struct cp_options x;
   int n_files;
