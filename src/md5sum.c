@@ -231,8 +231,9 @@ static int
 md5_check (const char *checkfile_name, int binary)
 {
   FILE *checkfile_stream;
-  int n_tests = 0;
-  int n_tests_failed = 0;
+  int n_properly_formated_lines = 0;
+  int n_mismatched_checksums = 0;
+  int n_open_or_read_failures = 0;
   unsigned char md5buffer[16];
   size_t line_number;
   char *line;
@@ -297,11 +298,20 @@ md5_check (const char *checkfile_name, int binary)
 					  'c', 'd', 'e', 'f' };
 	  int fail;
 
-	  ++n_tests;
+	  ++n_properly_formated_lines;
 
 	  fail = md5_file (filename, binary, md5buffer);
 
-	  if (!fail)
+	  if (fail)
+	    {
+	      ++n_open_or_read_failures;
+	      if (!status_only)
+		{
+		  printf (_("%s: FAILED open or read\n"), filename);
+		  fflush (stdout);
+		}
+	    }
+	  else
 	    {
 	      size_t cnt;
 	      /* Compare generated binary number with text representation
@@ -314,16 +324,14 @@ md5_check (const char *checkfile_name, int binary)
 		    break;
 		}
 	      if (cnt != 16)
-		fail = 1;
-	    }
+		++n_mismatched_checksums;
 
-	  if (fail)
-	    ++n_tests_failed;
-
-	  if (!status_only)
-	    {
-	      printf ("%s: %s\n", filename, (fail ? _("FAILED") : _("OK")));
-	      fflush (stdout);
+	      if (!status_only)
+		{
+		  printf ("%s: %s\n", filename,
+			  (cnt != 16 ? _("FAILED") : _("OK")));
+		  fflush (stdout);
+		}
 	    }
 	}
     }
@@ -344,7 +352,7 @@ md5_check (const char *checkfile_name, int binary)
       return 1;
     }
 
-  if (n_tests == 0)
+  if (n_properly_formated_lines == 0)
     {
       /* Warn if no tests are found.  */
       error (0, 0, _("%s: no properly formatted MD5 checksum lines found"),
@@ -354,23 +362,36 @@ md5_check (const char *checkfile_name, int binary)
     {
       if (!status_only)
 	{
-	  if (n_tests_failed == 0)
+	  int n_computed_checkums = (n_properly_formated_lines
+				     - n_open_or_read_failures);
+
+	  if (n_open_or_read_failures > 0)
 	    {
-	      printf (n_tests == 1
+	      printf (n_properly_formated_lines == 1
+		? _("WARNING: the single listed file could not be read\n")
+		: _("WARNING: %d of the listed files could not be read\n"),
+		      n_open_or_read_failures);
+	    }
+
+	  if (n_mismatched_checksums == 0)
+	    {
+	      printf (n_properly_formated_lines == 1
 		      ? _("the single computed checksum matched\n")
-		      : _("all %d computed checksums matched\n"), n_tests);
+		      : _("all %d computed checksums matched\n"),
+		      n_computed_checkums);
 	    }
 	  else
 	    {
-	      printf (n_tests == 1
+	      printf (n_properly_formated_lines == 1
 	      ? _("WARNING: the single computed checksum did NOT match\n")
 	      : _("WARNING: %d out of %d computed checksums did NOT match\n"),
-		      n_tests_failed, n_tests);
+		      n_mismatched_checksums, n_computed_checkums);
 	    }
 	}
     }
 
-  return ((n_tests > 0 && n_tests_failed == 0) ? 0 : 1);
+  return ((n_properly_formated_lines > 0 && n_mismatched_checksums == 0
+	   && n_open_or_read_failures == 0) ? 0 : 1);
 }
 
 int
