@@ -1002,12 +1002,8 @@ parse_options (int argc, char **argv,
 	  break;
 
 	case 'c':
-	  count_lines = 0;
-	  goto getnum;
-
 	case 'n':
-	  count_lines = 1;
-	getnum:
+	  count_lines = (c == 'n');
 	  if (*optarg == '+')
 	    from_start = 1;
 	  else if (*optarg == '-')
