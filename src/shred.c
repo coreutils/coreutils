@@ -513,7 +513,7 @@ typedef unsigned short word32;
 #   if UCHAR_MAX == 0xffffffff
 typedef unsigned char word32;
 #   else
-#    error No 32-bit type available!
+     "No 32-bit type available!"
 #   endif
 #  endif
 # endif
