@@ -1,3 +1,12 @@
+2000-12-24  Jim Meyering  <meyering@lucent.com>
+
+	ln --backup=simple --suffix=SUFFIX doesn't use SUFFIX
+	* src/ln.c (main): Actually use the local variable,
+	`backup_suffix_string'.  Nelson Beebe reported the unused variable.
+	* tests/ln/misc: Add a test for this.
+
+	* man/help2man: Update to version 1.24.
+
 2000-12-22  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.0.34.
