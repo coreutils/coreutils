@@ -177,7 +177,7 @@ AC_DEFUN([gl_MACROS],
   AC_CHECK_FUNC([fchdir], , [AC_LIBOBJ(fchdir-stub)])
 
   AC_REQUIRE([gl_FUNC_FREE])
-  AC_REQUIRE([gl_FUNC_CHDIR])
+  AC_REQUIRE([gl_FUNC_CHDIR_LONG])
 ])
 
 # These tests must be run before any use of AC_CHECK_TYPE,
