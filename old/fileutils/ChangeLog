@@ -1,5 +1,7 @@
 2001-04-21  Jim Meyering  <meyering@lucent.com>
 
+	* Version 4.0.44.
+
 	* configure, aclocal.m4, etc.: Regenerate using autoconf-2.49e.
 
 	* doc/fileutils.texi (touch invocation): Discuss ctime.
