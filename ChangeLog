@@ -1,13 +1,13 @@
 2003-07-12  Jim Meyering  <jim@meyering.net>
 
+	* src/remove.c: Remove `#pragma alloca'
+
 	* Version 5.0.1.
 
 	* src/chown-core.c (change_file_owner): Do not restore any special
 	permission bits (e.g., set-user-ID, set-group-ID) that are reset
 	by chown(2) on some systems.  Suggestion and insistence :-) from
 	Michael Stone.
-
-	* src/remove.c: Remove `#pragma alloca'
 
 	* tests/input-tty: Also check `test -t 1'.
 	This is necessary on linux-2.4.21.  Otherwise, the stty/basic-1
@@ -16,8 +16,8 @@
 2003-07-11  Jim Meyering  <jim@meyering.net>
 
 	* tests/sample-test: Also fail if cat-to-create-expected-output
-	fails.  Otherwise, if both `exp' and `out' end up empty because
-	of e.g., a full disk, they would mistakenly compare equal.
+	fails.  Otherwise, if both `exp' and `out' were to end up empty
+	because of e.g., a full disk, they would mistakenly compare equal.
 
 	* src/nohup.c: New file.  Rewrite of nohup.sh in C.
 	This solves a portability problem: on at least Solaris systems,
