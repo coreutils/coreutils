@@ -343,6 +343,9 @@ my @tv = (
 # This test would segfault with 2.0f and earlier.
 ['narrow-1', '-W1 -t', "12345\n", "1\n", 0],
 
+# This test would fail with textutils-2.1 and earlier.
+['col-last', '-W3 -t2', "a\nb\nc\n", "a c\nb\n", 0],
+
 );
 #']]);
 
