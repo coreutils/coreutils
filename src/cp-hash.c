@@ -1,5 +1,5 @@
 /* cp-hash.c  -- file copying (hash search routines)
-   Copyright (C) 89, 90, 91, 1995-2002 Free Software Foundation.
+   Copyright (C) 89, 90, 91, 1995-2003 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -126,7 +126,7 @@ remember_copied (const char *name, ino_t ino, dev_t dev)
   struct Src_to_dest *ent;
   struct Src_to_dest *ent_from_table;
 
-  ent = (struct Src_to_dest *) xmalloc (sizeof *ent);
+  ent = xmalloc (sizeof *ent);
   ent->name = xstrdup (name);
   ent->st_ino = ino;
   ent->st_dev = dev;

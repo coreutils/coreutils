@@ -301,7 +301,7 @@ line_bytes_split (size_t n_bytes)
   char *bp;
   int eof = 0;
   size_t n_buffered = 0;
-  char *buf = (char *) xmalloc (n_bytes);
+  char *buf = xmalloc (n_bytes);
 
   do
     {

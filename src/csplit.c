@@ -1,5 +1,5 @@
 /* csplit - split a file into sections determined by context lines
-   Copyright (C) 91, 1995-2002 Free Software Foundation, Inc.
+   Copyright (C) 91, 1995-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -321,7 +321,7 @@ new_line_control (void)
 {
   struct line *p;
 
-  p = (struct line *) xmalloc (sizeof (struct line));
+  p = xmalloc (sizeof (struct line));
 
   p->next = NULL;
   clear_line_control (p);
@@ -423,7 +423,7 @@ create_new_buffer (unsigned int size)
   new_buffer = (struct buffer_record *)
     xmalloc (sizeof (struct buffer_record));
 
-  new_buffer->buffer = (char *) xmalloc (size + 1);
+  new_buffer->buffer = xmalloc (size + 1);
 
   new_buffer->bytes_alloc = size;
   new_buffer->line_start = new_buffer->curr_line = NULL;
@@ -1038,7 +1038,7 @@ new_control_record (void)
     {
       control_allocated += ALLOC_SIZE;
       controls = (struct control *)
-	xrealloc ((char *) controls,
+	xrealloc (controls,
 		  sizeof (struct control) * control_allocated);
     }
   p = &controls[control_used++];
@@ -1129,10 +1129,10 @@ extract_regexp (int argnum, boolean ignore, char *str)
   p->argnum = argnum;
   p->ignore = ignore;
 
-  p->regexpr = (char *) xmalloc ((unsigned) (len + 1));
+  p->regexpr = xmalloc ((unsigned) (len + 1));
   strncpy (p->regexpr, str + 1, len);
   p->re_compiled.allocated = len * 2;
-  p->re_compiled.buffer = (unsigned char *) xmalloc (p->re_compiled.allocated);
+  p->re_compiled.buffer = xmalloc (p->re_compiled.allocated);
   p->re_compiled.fastmap = xmalloc (256);
   p->re_compiled.translate = 0;
   err = re_compile_pattern (p->regexpr, len, &p->re_compiled);
@@ -1466,9 +1466,9 @@ main (int argc, char **argv)
     }
 
   if (suffix)
-    filename_space = (char *) xmalloc (strlen (prefix) + max_out (suffix) + 2);
+    filename_space = xmalloc (strlen (prefix) + max_out (suffix) + 2);
   else
-    filename_space = (char *) xmalloc (strlen (prefix) + digits + 2);
+    filename_space = xmalloc (strlen (prefix) + digits + 2);
 
   set_input_file (argv[optind++]);
 

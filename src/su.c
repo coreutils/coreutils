@@ -1,5 +1,5 @@
 /* su for GNU.  Run a shell with substitute user and group IDs.
-   Copyright (C) 1992-2002 Free Software Foundation, Inc.
+   Copyright (C) 1992-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -193,7 +193,7 @@ static char *
 concat (const char *s1, const char *s2, const char *s3)
 {
   int len1 = strlen (s1), len2 = strlen (s2), len3 = strlen (s3);
-  char *result = (char *) xmalloc (len1 + len2 + len3 + 1);
+  char *result = xmalloc (len1 + len2 + len3 + 1);
 
   strcpy (result, s1);
   strcpy (result + len1, s2);
@@ -310,7 +310,7 @@ modify_environment (const struct passwd *pw, const char *shell)
       /* Leave TERM unchanged.  Set HOME, SHELL, USER, LOGNAME, PATH.
          Unset all other environment variables.  */
       term = getenv ("TERM");
-      environ = (char **) xmalloc (2 * sizeof (char *));
+      environ = xmalloc (2 * sizeof (char *));
       environ[0] = 0;
       if (term)
 	xputenv (concat ("TERM", "=", term));
@@ -368,10 +368,10 @@ run_shell (const char *shell, const char *command, char **additional_args)
   int argno = 1;
 
   if (additional_args)
-    args = (const char **) xmalloc (sizeof (char *)
+    args = xmalloc (sizeof (char *)
 				    * (10 + elements (additional_args)));
   else
-    args = (const char **) xmalloc (sizeof (char *) * 10);
+    args = xmalloc (sizeof (char *) * 10);
   if (simulate_login)
     {
       char *arg0;

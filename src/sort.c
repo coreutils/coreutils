@@ -1,5 +1,5 @@
 /* sort - sort lines of text (with all kinds of options).
-   Copyright (C) 88, 1991-2002 Free Software Foundation, Inc.
+   Copyright (C) 88, 1991-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -422,7 +422,7 @@ create_temp_file (FILE **pfp)
   char const *temp_dir = temp_dirs[temp_dir_index];
   size_t len = strlen (temp_dir);
   struct tempnode *node =
-    (struct tempnode *) xmalloc (sizeof node->next + len + sizeof slashbase);
+    xmalloc (sizeof node->next + len + sizeof slashbase);
   char *file = node->name;
 
   memcpy (file, temp_dir, len);
@@ -572,7 +572,7 @@ inittables (void)
 
 	  s = (char *) nl_langinfo (ABMON_1 + i);
 	  s_len = strlen (s);
-	  monthtab[i].name = name = (char *) xmalloc (s_len + 1);
+	  monthtab[i].name = name = xmalloc (s_len + 1);
 	  monthtab[i].val = i + 1;
 
 	  for (j = 0; j < s_len; j++)
@@ -2001,7 +2001,7 @@ sort (char **files, int nfiles, char const *output_file)
     {
       int i = n_temp_files;
       struct tempnode *node;
-      char **tempfiles = (char **) xmalloc (n_temp_files * sizeof (char *));
+      char **tempfiles = xmalloc (n_temp_files * sizeof (char *));
       for (node = temphead; i > 0; node = node->next)
 	tempfiles[--i] = node->name;
       merge (tempfiles, n_temp_files, NMERGE, output_file);
@@ -2147,7 +2147,7 @@ set_ordering (register const char *s, struct keyfield *key,
 static struct keyfield *
 new_key (void)
 {
-  struct keyfield *key = (struct keyfield *) xcalloc (1, sizeof *key);
+  struct keyfield *key = xcalloc (1, sizeof *key);
   key->eword = -1;
   return key;
 }
@@ -2245,7 +2245,7 @@ main (int argc, char **argv)
   gkey.numeric = gkey.general_numeric = gkey.month = gkey.reverse = 0;
   gkey.skipsblanks = gkey.skipeblanks = 0;
 
-  files = (char **) xmalloc (sizeof (char *) * argc);
+  files = xmalloc (sizeof (char *) * argc);
 
   for (;;)
     {

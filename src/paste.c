@@ -1,5 +1,5 @@
 /* paste - merge lines of files
-   Copyright (C) 1984, 1997-2002 by David M. Ihnat
+   Copyright (C) 1984, 1997-2003 by David M. Ihnat
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -171,8 +171,8 @@ paste_parallel (int nfiles, char **fnamptr)
   int i;			/* Loop index. */
   int opened_stdin = 0;		/* Nonzero if any fopen got fd 0. */
 
-  delbuf = (char *) xmalloc (file_list_size + 2);
-  fileptr = (FILE **) xmalloc ((file_list_size + 1) * sizeof (FILE *));
+  delbuf = xmalloc (file_list_size + 2);
+  fileptr = xmalloc ((file_list_size + 1) * sizeof (FILE *));
 
   /* Attempt to open all files.  This could be expanded to an infinite
      number of files, but at the (considerable) expense of remembering
@@ -183,9 +183,8 @@ paste_parallel (int nfiles, char **fnamptr)
       if (files_open == file_list_size - 2)
 	{
 	  file_list_size += 12;
-	  delbuf = (char *) xrealloc (delbuf, file_list_size + 2);
-	  fileptr = (FILE **) xrealloc ((char *) fileptr, (file_list_size + 1)
-					* sizeof (FILE *));
+	  delbuf = xrealloc (delbuf, file_list_size + 2);
+	  fileptr = xrealloc (fileptr, (file_list_size + 1) * sizeof (FILE *));
 	}
       if (STREQ (fnamptr[files_open], "-"))
 	{

@@ -1,5 +1,5 @@
 /* nl -- number lines of files
-   Copyright (C) 89, 92, 1995-2002 Free Software Foundation, Inc.
+   Copyright (C) 89, 92, 1995-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -274,7 +274,7 @@ build_type_arg (char **typep, struct re_pattern_buffer *regexp)
       *typep = optarg++;
       optlen = strlen (optarg);
       regexp->allocated = optlen * 2;
-      regexp->buffer = (unsigned char *) xmalloc (regexp->allocated);
+      regexp->buffer = xmalloc (regexp->allocated);
       regexp->translate = NULL;
       regexp->fastmap = xmalloc (256);
       regexp->fastmap_accurate = 0;

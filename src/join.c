@@ -189,9 +189,9 @@ ADD_FIELD (struct line *line, const unsigned char *field, size_t len)
   if (line->nfields >= line->nfields_allocated)
     {
       line->nfields_allocated = (3 * line->nfields_allocated) / 2 + 1;
-      line->fields = (struct field *) xrealloc ((char *) line->fields,
-						(line->nfields_allocated
-						 * sizeof (struct field)));
+      line->fields = xrealloc (line->fields,
+			       (line->nfields_allocated
+				* sizeof (struct field)));
     }
   line->fields[line->nfields].beg = field;
   line->fields[line->nfields].len = len;
@@ -287,7 +287,7 @@ initseq (struct seq *seq)
 {
   seq->count = 0;
   seq->alloc = 1;
-  seq->lines = (struct line *) xmalloc (seq->alloc * sizeof (struct line));
+  seq->lines = xmalloc (seq->alloc * sizeof (struct line));
 }
 
 /* Read a line from FP and add it to SEQ.  Return 0 if EOF, 1 otherwise.  */
@@ -299,7 +299,7 @@ getseq (FILE *fp, struct seq *seq)
     {
       seq->alloc *= 2;
       seq->lines = (struct line *)
-	xrealloc ((char *) seq->lines, seq->alloc * sizeof (struct line));
+	xrealloc (seq->lines, seq->alloc * sizeof (struct line));
     }
 
   if (get_line (fp, &seq->lines[seq->count]))
@@ -608,7 +608,7 @@ add_field (int file, int field)
   assert (file == 0 || file == 1 || file == 2);
   assert (file == 0 ? field < 0 : field >= 0);
 
-  o = (struct outlist *) xmalloc (sizeof (struct outlist));
+  o = xmalloc (sizeof (struct outlist));
   o->file = file;
   o->field = field;
   o->next = NULL;
@@ -720,7 +720,7 @@ make_blank (struct line *blank, int count)
   blank->buf.buffer = xmalloc (blank->buf.size);
   buffer = (unsigned char *) blank->buf.buffer;
   blank->fields = fields =
-    (struct field *) xmalloc (sizeof (struct field) * count);
+    xmalloc (sizeof (struct field) * count);
   for (i = 0; i < count; i++)
     {
       buffer[i] = '\t';

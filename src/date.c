@@ -1,5 +1,5 @@
 /* date - print or set the system date and time
-   Copyright (C) 1989-2002 Free Software Foundation, Inc.
+   Copyright (C) 1989-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -526,7 +526,7 @@ show_date (const char *format, struct timespec when)
     {
       int done;
       out_length += 200;
-      out = (char *) xrealloc (out, out_length);
+      out = xrealloc (out, out_length);
 
       /* Mark the first byte of the buffer so we can detect the case
 	 of nstrftime producing an empty string.  Otherwise, this loop

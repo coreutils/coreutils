@@ -1,5 +1,5 @@
 /* GNU's users.
-   Copyright (C) 1992-2002 Free Software Foundation, Inc.
+   Copyright (C) 1992-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -58,7 +58,7 @@ list_entries_users (int n, const STRUCT_UTMP *this)
   int n_entries;
 
   n_entries = 0;
-  u = (char **) xmalloc (n * sizeof (u[0]));
+  u = xmalloc (n * sizeof (u[0]));
   for (i = 0; i < n; i++)
     {
       if (UT_USER (this) [0]

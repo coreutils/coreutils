@@ -1,5 +1,5 @@
 /* od -- dump files in octal and other formats
-   Copyright (C) 92, 1995-2002 Free Software Foundation, Inc.
+   Copyright (C) 92, 1995-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -1041,9 +1041,7 @@ decode_format_string (const char *s)
       if (n_specs >= n_specs_allocated)
 	{
 	  n_specs_allocated = 1 + (3 * n_specs_allocated) / 2;
-	  spec = (struct tspec *) xrealloc ((char *) spec,
-					    (n_specs_allocated
-					     * sizeof (struct tspec)));
+	  spec = xrealloc (spec, (n_specs_allocated * sizeof (struct tspec)));
 	}
 
       memcpy ((char *) &spec[n_specs], (char *) &tspec,
@@ -1662,7 +1660,7 @@ main (int argc, char **argv)
 
   n_specs = 0;
   n_specs_allocated = 5;
-  spec = (struct tspec *) xmalloc (n_specs_allocated * sizeof (struct tspec));
+  spec = xmalloc (n_specs_allocated * sizeof (struct tspec));
 
   format_address = format_address_std;
   address_base = 8;

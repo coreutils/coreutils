@@ -1,5 +1,5 @@
 /* tr -- a filter to translate characters
-   Copyright (C) 91, 1995-2002 Free Software Foundation, Inc.
+   Copyright (C) 91, 1995-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -484,8 +484,8 @@ unquote (const unsigned char *s, struct E_string *es)
 
   len = strlen ((char *) s);
 
-  es->s = (unsigned char *) xmalloc (len);
-  es->escaped = (int *) xmalloc (len * sizeof (es->escaped[0]));
+  es->s = xmalloc (len);
+  es->escaped = xmalloc (len * sizeof (es->escaped[0]));
   for (i = 0; i < len; i++)
     es->escaped[i] = 0;
 
@@ -697,7 +697,7 @@ append_normal_char (struct Spec_list *list, unsigned int c)
 {
   struct List_element *new;
 
-  new = (struct List_element *) xmalloc (sizeof (struct List_element));
+  new = xmalloc (sizeof (struct List_element));
   new->next = NULL;
   new->type = RE_NORMAL_CHAR;
   new->u.normal_char = c;
@@ -728,7 +728,7 @@ append_range (struct Spec_list *list, unsigned int first, unsigned int last)
       free (tmp2);
       return 1;
     }
-  new = (struct List_element *) xmalloc (sizeof (struct List_element));
+  new = xmalloc (sizeof (struct List_element));
   new->next = NULL;
   new->type = RE_RANGE;
   new->u.range.first_char = first;
@@ -754,7 +754,7 @@ append_char_class (struct Spec_list *list,
   char_class = look_up_char_class (char_class_str, len);
   if (char_class == CC_NO_CLASS)
     return 1;
-  new = (struct List_element *) xmalloc (sizeof (struct List_element));
+  new = xmalloc (sizeof (struct List_element));
   new->next = NULL;
   new->type = RE_CHAR_CLASS;
   new->u.char_class = char_class;
@@ -775,7 +775,7 @@ append_repeated_char (struct Spec_list *list, unsigned int the_char,
 {
   struct List_element *new;
 
-  new = (struct List_element *) xmalloc (sizeof (struct List_element));
+  new = xmalloc (sizeof (struct List_element));
   new->next = NULL;
   new->type = RE_REPEATED_CHAR;
   new->u.repeated_char.the_repeated_char = the_char;
@@ -799,7 +799,7 @@ append_equiv_class (struct Spec_list *list,
 
   if (len != 1)
     return 1;
-  new = (struct List_element *) xmalloc (sizeof (struct List_element));
+  new = xmalloc (sizeof (struct List_element));
   new->next = NULL;
   new->type = RE_EQUIV_CLASS;
   new->u.equiv_code = *equiv_class_str;
@@ -815,7 +815,7 @@ append_equiv_class (struct Spec_list *list,
 static unsigned char *
 xmemdup (const unsigned char *p, size_t len)
 {
-  unsigned char *tmp = (unsigned char *) xmalloc (len);
+  unsigned char *tmp = xmalloc (len);
 
   /* Use memcpy rather than strncpy because `p' may contain zero-bytes.  */
   memcpy (tmp, p, len);
@@ -1394,7 +1394,7 @@ static void
 spec_init (struct Spec_list *spec_list)
 {
   spec_list->head = spec_list->tail =
-    (struct List_element *) xmalloc (sizeof (struct List_element));
+    xmalloc (sizeof (struct List_element));
   spec_list->head->next = NULL;
 }
 

@@ -414,7 +414,7 @@ make_path_private (const char *const_dirpath, int src_offset, int mode,
 	  /* Add this directory to the list of directories whose modes need
 	     fixing later. */
 	  struct dir_attr *new =
-	    (struct dir_attr *) xmalloc (sizeof (struct dir_attr));
+	    xmalloc (sizeof (struct dir_attr));
 	  new->slash_offset = slash - dirpath;
 	  new->next = *attr_list;
 	  *attr_list = new;

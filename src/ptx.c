@@ -403,7 +403,7 @@ alloc_and_compile_regex (const char *string)
   pattern->buffer = NULL;
   pattern->allocated = 0;
   pattern->translate = ignore_case ? (char *) folded_chars : NULL;
-  pattern->fastmap = (char *) xmalloc ((size_t) CHAR_SET_SIZE);
+  pattern->fastmap = xmalloc ((size_t) CHAR_SET_SIZE);
 
   message = re_compile_pattern (string, (int) strlen (string), pattern);
   if (message)
@@ -420,7 +420,7 @@ alloc_and_compile_regex (const char *string)
   if (pattern->allocated > pattern->used)
     {
       pattern->buffer
-	= (unsigned char *) xrealloc (pattern->buffer, (size_t) pattern->used);
+	= xrealloc (pattern->buffer, (size_t) pattern->used);
       pattern->allocated = pattern->used;
     }
 
@@ -543,7 +543,7 @@ swallow_file_in_memory (const char *file_name, BLOCK *block)
     {
       size_t in_memory_size;
 
-      block->start = (char *) xmalloc ((size_t) stat_block.st_size);
+      block->start = xmalloc ((size_t) stat_block.st_size);
 
       if ((in_memory_size = read (file_handle,
 				  block->start, (size_t) stat_block.st_size))
@@ -557,7 +557,7 @@ swallow_file_in_memory (const char *file_name, BLOCK *block)
 	     CR+LF.  */
 	  if (in_memory_size != (size_t)-1
 	      && in_memory_size >= stat_block.st_size / 2)
-	    block->start = (char *) xrealloc (block->start, in_memory_size);
+	    block->start = xrealloc (block->start, in_memory_size);
 	  else
 #endif /* not MSDOS */
 
@@ -567,7 +567,7 @@ swallow_file_in_memory (const char *file_name, BLOCK *block)
     }
   else
     {
-      block->start = (char *) xmalloc ((size_t) 1 << SWALLOW_REALLOC_LOG);
+      block->start = xmalloc ((size_t) 1 << SWALLOW_REALLOC_LOG);
       used_length = 0;
       allocated_length = (1 << SWALLOW_REALLOC_LOG);
 
@@ -581,7 +581,7 @@ swallow_file_in_memory (const char *file_name, BLOCK *block)
 	    {
 	      allocated_length += (1 << SWALLOW_REALLOC_LOG);
 	      block->start
-		= (char *) xrealloc (block->start, allocated_length);
+		= xrealloc (block->start, allocated_length);
 	    }
 	}
 
@@ -1267,7 +1267,7 @@ fix_output_parameters (void)
 	    reference_max_width = reference_width;
 	}
       reference_max_width++;
-      reference.start = (char *) xmalloc ((size_t) reference_max_width + 1);
+      reference.start = xmalloc ((size_t) reference_max_width + 1);
     }
 
   /* If the reference appears to the left of the output line, reserve some
@@ -2090,8 +2090,8 @@ Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"),
 
       /* No more argument simply means: read standard input.  */
 
-      input_file_name = (const char **) xmalloc (sizeof (const char *));
-      file_line_count = (int *) xmalloc (sizeof (int));
+      input_file_name = xmalloc (sizeof (const char *));
+      file_line_count = xmalloc (sizeof (int));
       number_input_files = 1;
       input_file_name[0] = NULL;
     }
@@ -2099,9 +2099,9 @@ Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"),
     {
       number_input_files = argc - optind;
       input_file_name
-	= (const char **) xmalloc (number_input_files * sizeof (const char *));
+	= xmalloc (number_input_files * sizeof (const char *));
       file_line_count
-	= (int *) xmalloc (number_input_files * sizeof (int));
+	= xmalloc (number_input_files * sizeof (int));
 
       for (file_index = 0; file_index < number_input_files; file_index++)
 	{
@@ -2119,8 +2119,8 @@ Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"),
       /* There is one necessary input file.  */
 
       number_input_files = 1;
-      input_file_name = (const char **) xmalloc (sizeof (const char *));
-      file_line_count = (int *) xmalloc (sizeof (int));
+      input_file_name = xmalloc (sizeof (const char *));
+      file_line_count = xmalloc (sizeof (int));
       if (!*argv[optind] || strcmp (argv[optind], "-") == 0)
 	input_file_name[0] = NULL;
       else

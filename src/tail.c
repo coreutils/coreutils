@@ -1,5 +1,5 @@
 /* tail -- output the last part of file(s)
-   Copyright (C) 1989, 90, 91, 1995-2002 Free Software Foundation, Inc.
+   Copyright (C) 1989, 90, 91, 1995-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -514,10 +514,10 @@ pipe_lines (const char *pretty_filename, int fd, long int n_lines)
   int errors = 0;
   int nbytes;			/* Size of most recent read */
 
-  first = last = (LBUFFER *) xmalloc (sizeof (LBUFFER));
+  first = last = xmalloc (sizeof (LBUFFER));
   first->nbytes = first->nlines = 0;
   first->next = NULL;
-  tmp = (LBUFFER *) xmalloc (sizeof (LBUFFER));
+  tmp = xmalloc (sizeof (LBUFFER));
 
   /* Input is always read into a fresh buffer.  */
   while ((nbytes = tmp->nbytes = safe_read (fd, tmp->buffer, BUFSIZ)) > 0)
@@ -555,7 +555,7 @@ pipe_lines (const char *pretty_filename, int fd, long int n_lines)
 	      first = first->next;
 	    }
 	  else
-	    tmp = (LBUFFER *) xmalloc (sizeof (LBUFFER));
+	    tmp = xmalloc (sizeof (LBUFFER));
 	}
     }
 
@@ -637,10 +637,10 @@ pipe_bytes (const char *pretty_filename, int fd, off_t n_bytes)
   int total_bytes = 0;		/* Total characters in all buffers.  */
   int errors = 0;
 
-  first = last = (CBUFFER *) xmalloc (sizeof (CBUFFER));
+  first = last = xmalloc (sizeof (CBUFFER));
   first->nbytes = 0;
   first->next = NULL;
-  tmp = (CBUFFER *) xmalloc (sizeof (CBUFFER));
+  tmp = xmalloc (sizeof (CBUFFER));
 
   /* Input is always read into a fresh buffer.  */
   while ((tmp->nbytes = safe_read (fd, tmp->buffer, BUFSIZ)) > 0)
@@ -672,7 +672,7 @@ pipe_bytes (const char *pretty_filename, int fd, off_t n_bytes)
 	    }
 	  else
 	    {
-	      tmp = (CBUFFER *) xmalloc (sizeof (CBUFFER));
+	      tmp = xmalloc (sizeof (CBUFFER));
 	    }
 	}
     }
@@ -1641,7 +1641,7 @@ main (int argc, char **argv)
       file = &dummy_stdin;
     }
 
-  F = (struct File_spec *) xmalloc (n_files * sizeof (F[0]));
+  F = xmalloc (n_files * sizeof (F[0]));
   for (i = 0; i < n_files; i++)
     F[i].name = file[i];
 

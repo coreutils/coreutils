@@ -1,5 +1,5 @@
 /* cut - remove parts of lines of files
-   Copyright (C) 1984, 1997, 1998, 1999, 2000, 2001, 2002, 2003 by David M. Ihnat
+   Copyright (C) 1984, 1997-2003 by David M. Ihnat
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -56,8 +56,7 @@
       if (n_rp >= n_rp_allocated)					\
 	{								\
 	  n_rp_allocated *= 2;						\
-	  (rp) = (struct range_pair *) xrealloc ((char *) (rp),		\
-				   n_rp_allocated * sizeof (*(rp)));	\
+	  (rp) = xrealloc (rp, n_rp_allocated * sizeof (*(rp)));	\
 	}								\
       rp[n_rp].lo = (low);						\
       rp[n_rp].hi = (high);						\
@@ -274,7 +273,7 @@ set_fields (const char *fieldstr)
 
   n_rp = 0;
   n_rp_allocated = 16;
-  rp = (struct range_pair *) xmalloc (n_rp_allocated * sizeof (*rp));
+  rp = xmalloc (n_rp_allocated * sizeof (*rp));
 
   /* Collect and store in RP the range end points.
      It also sets EOL_RANGE_START if appropriate.  */
@@ -390,7 +389,7 @@ set_fields (const char *fieldstr)
      the field numbers corresponding to all finite ranges
      (i.e. `2-6' or `-4', but not `5-') in FIELDSTR.  */
 
-  printable_field = (int *) xmalloc ((max_range_endpoint + 1) * sizeof (int));
+  printable_field = xmalloc ((max_range_endpoint + 1) * sizeof (int));
   memset (printable_field, 0, (max_range_endpoint + 1) * sizeof (int));
 
   /* Set the array entries corresponding to integers in the ranges of RP.  */

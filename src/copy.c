@@ -756,7 +756,7 @@ record_file (Hash_table *ht, char const *filename,
   if (ht == NULL)
     return;
 
-  ent = (struct F_triple *) xmalloc (sizeof *ent);
+  ent = xmalloc (sizeof *ent);
   ent->name = xstrdup (filename);
   if (stats)
     {

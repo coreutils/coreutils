@@ -251,7 +251,7 @@ hash_ins (ino_t ino, dev_t dev)
   struct entry *ent;
   struct entry *ent_from_table;
 
-  ent = (struct entry *) xmalloc (sizeof *ent);
+  ent = xmalloc (sizeof *ent);
   ent->st_ino = ino;
   ent->st_dev = dev;
 

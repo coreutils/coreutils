@@ -123,8 +123,7 @@ add_tabstop (int tabval)
   if (tabval == -1)
     return;
   if (first_free_tab % TABLIST_BLOCK == 0)
-    tab_list = (int *) xrealloc ((char *) tab_list,
-				 first_free_tab + TABLIST_BLOCK);
+    tab_list = xrealloc (tab_list, first_free_tab + TABLIST_BLOCK);
   tab_list[first_free_tab++] = tabval;
 }
 

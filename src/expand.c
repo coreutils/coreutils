@@ -1,5 +1,5 @@
 /* expand - convert tabs to spaces
-   Copyright (C) 89, 91, 1995-2002 Free Software Foundation, Inc.
+   Copyright (C) 89, 91, 1995-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -142,9 +142,8 @@ add_tabstop (int tabval)
   if (tabval == -1)
     return;
   if (first_free_tab % TABLIST_BLOCK == 0)
-    tab_list = (int *) xrealloc ((char *) tab_list,
-				 (first_free_tab
-				  + TABLIST_BLOCK * sizeof (tab_list[0])));
+    tab_list = xrealloc (tab_list, (first_free_tab
+				    + TABLIST_BLOCK * sizeof (tab_list[0])));
   tab_list[first_free_tab++] = tabval;
 }
 

@@ -1,5 +1,5 @@
 /* expr -- evaluate expressions.
-   Copyright (C) 86, 1991-1997, 1999-2002 Free Software Foundation, Inc.
+   Copyright (C) 86, 1991-1997, 1999-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -393,7 +393,7 @@ of the basic regular expression is not portable; it is being ignored"),
   re_buffer.allocated = 2 * len;
   if (re_buffer.allocated < len)
     xalloc_die ();
-  re_buffer.buffer = (unsigned char *) xmalloc (re_buffer.allocated);
+  re_buffer.buffer = xmalloc (re_buffer.allocated);
   re_buffer.translate = 0;
   re_syntax_options = RE_SYNTAX_POSIX_BASIC;
   errmsg = re_compile_pattern (pv->u.s, len, &re_buffer);
@@ -515,7 +515,7 @@ eval6 (void)
 	{
 	  v = NEW (VALUE);
 	  v->type = string;
-	  v->u.s = strncpy ((char *) xmalloc (i2->u.i + 1),
+	  v->u.s = strncpy (xmalloc (i2->u.i + 1),
 			    l->u.s + i1->u.i - 1, i2->u.i);
 	  v->u.s[i2->u.i] = 0;
 	}

@@ -1,5 +1,5 @@
 /* pr -- convert text files for printing.
-   Copyright (C) 88, 91, 1995-2002 Free Software Foundation, Inc.
+   Copyright (C) 88, 91, 1995-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -842,7 +842,7 @@ static void
 separator_string (const char *optarg_S)
 {
   col_sep_length = (int) strlen (optarg_S);
-  col_sep_string = (char *) xmalloc (col_sep_length + 1);
+  col_sep_string = xmalloc (col_sep_length + 1);
   strcpy (col_sep_string, optarg_S);
 }
 
@@ -869,7 +869,7 @@ main (int argc, char **argv)
 
   n_files = 0;
   file_names = (argc > 1
-		? (char **) xmalloc ((argc - 1) * sizeof (char *))
+		? xmalloc ((argc - 1) * sizeof (char *))
 		: NULL);
 
   while ((c = getopt_long (argc, argv, short_options, long_options, NULL))
@@ -1302,7 +1302,7 @@ init_parameters (int number_of_files)
     {
       if (number_buff != NULL)
 	free (number_buff);
-      number_buff = (char *) xmalloc (2 * chars_per_number);
+      number_buff = xmalloc (2 * chars_per_number);
     }
 
   /* Pick the maximum between the tab width and the width of an
@@ -1312,7 +1312,7 @@ init_parameters (int number_of_files)
      to expand a tab which is not an input_tab-char. */
   if (clump_buff != NULL)
     free (clump_buff);
-  clump_buff = (int *) xmalloc ((chars_per_input_tab > 8
+  clump_buff = xmalloc ((chars_per_input_tab > 8
 				? chars_per_input_tab : 8) * sizeof (int));
 }
 
@@ -1339,7 +1339,7 @@ init_fps (int number_of_files, char **av)
 
   if (column_vector != NULLCOL)
     free ((char *) column_vector);
-  column_vector = (COLUMN *) xmalloc (columns * sizeof (COLUMN));
+  column_vector = xmalloc (columns * sizeof (COLUMN));
 
   if (parallel_files)
     {
@@ -1909,18 +1909,18 @@ init_store_cols (void)
   if (line_vector != NULL)
     free ((int *) line_vector);
   /* FIXME: here's where it was allocated.  */
-  line_vector = (int *) xmalloc ((total_lines + 1) * sizeof (int *));
+  line_vector = xmalloc ((total_lines + 1) * sizeof (int *));
 
   if (end_vector != NULL)
     free ((int *) end_vector);
-  end_vector = (int *) xmalloc (total_lines * sizeof (int *));
+  end_vector = xmalloc (total_lines * sizeof (int *));
 
   if (buff != NULL)
     free (buff);
   buff_allocated = (use_col_separator
 		    ? 2 * chars_if_truncate
 		    : chars_if_truncate);	/* Tune this. */
-  buff = (char *) xmalloc (buff_allocated);
+  buff = xmalloc (buff_allocated);
 }
 
 /* Store all but the rightmost column.
@@ -2015,7 +2015,7 @@ store_char (int c)
     {
       /* May be too generous. */
       buff_allocated = 2 * buff_allocated;
-      buff = (char *) xrealloc (buff, buff_allocated * sizeof (char));
+      buff = xrealloc (buff, buff_allocated * sizeof (char));
     }
   buff[buff_current++] = (char) c;
 }

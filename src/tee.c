@@ -1,5 +1,5 @@
 /* tee - read from standard input and write to standard output and files.
-   Copyright (C) 85,1990-2002 Free Software Foundation, Inc.
+   Copyright (C) 85,1990-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -166,7 +166,7 @@ tee (int nfiles, const char **files)
   int ret = 0;
   const char *mode_string = (append ? "a" : "w");
 
-  descriptors = (FILE **) xmalloc ((nfiles + 1) * sizeof (descriptors[0]));
+  descriptors = xmalloc ((nfiles + 1) * sizeof (descriptors[0]));
 
   /* Move all the names `up' one in the argv array to make room for
      the entry for standard output.  This writes into argv[argc].  */

@@ -681,7 +681,7 @@ add_fs_type (const char *fstype)
 {
   struct fs_type_list *fsp;
 
-  fsp = (struct fs_type_list *) xmalloc (sizeof (struct fs_type_list));
+  fsp = xmalloc (sizeof (struct fs_type_list));
   fsp->fs_name = (char *) fstype;
   fsp->fs_next = fs_select_list;
   fs_select_list = fsp;
@@ -694,7 +694,7 @@ add_excluded_fs_type (const char *fstype)
 {
   struct fs_type_list *fsp;
 
-  fsp = (struct fs_type_list *) xmalloc (sizeof (struct fs_type_list));
+  fsp = xmalloc (sizeof (struct fs_type_list));
   fsp->fs_name = (char *) fstype;
   fsp->fs_next = fs_exclude_list;
   fs_exclude_list = fsp;
