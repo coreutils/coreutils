@@ -1,3 +1,13 @@
+2003-03-18  Jim Meyering  <jim@meyering.net>
+
+	* ls-mntd-fs.m4 (jm_LIST_MOUNTED_FILESYSTEMS): Move the MOUNTED_VMOUNT
+	test to precede the MOUNTED_GETMNTENT1 tests, since otherwise, AIX 5.1
+	systems would end up using the latter.  MOUNTED_GETMNTENT1 support
+	is inadequate on such systems: 1) detecting whether a file system
+	is remote doesn't work  2) the MOUNTED_VMOUNT code reports the
+	HOSTNAME:/MOUNT_POINT, while the MOUNTED_GETMNTENT1 code reports
+	merely /MOUNT_POINT.  Reported by Mike Jetzer.
+
 2003-03-17  Jim Meyering  <jim@meyering.net>
 
 	* dirfd.m4 (UTILS_FUNC_DIRFD): Test the cache variable, not one
