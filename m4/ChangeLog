@@ -1,3 +1,8 @@
+2005-02-23  Jim Meyering  <jim@meyering.net>
+
+	* extensions.m4 (gl_USE_SYSTEM_EXTENSIONS): Revert yesteday's change.
+	Thanks to Bruno Haible for catching it.
+
 2005-02-22  Jim Meyering  <jim@meyering.net>
 
 	* extensions.m4 (gl_USE_SYSTEM_EXTENSIONS): Fix typo: s/ifndef/ifdef/.
