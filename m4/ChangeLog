@@ -1,3 +1,8 @@
+1998-03-23  Jim Meyering  <meyering@eng.ascend.com>
+
+	* inttypes_h.m4: Kludges so I don't have to add HAVE_INTTYPES_H
+	in acconfig.h.
+
 1998-03-15  Jim Meyering  <meyering@eng.ascend.com>
 
 	* prereq.m4: New file.
