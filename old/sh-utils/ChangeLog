@@ -1,3 +1,22 @@
+Sat Oct 01 00:14:10 1994  Jim Meyering  (meyering@comco.com)
+
+	* safe-xstat.hin: Don't include <sys/types.h> or <sys/stat.h>.
+	Otherwise, we'd lose when the includer has already included
+	<sys/stat.h> on systems that aren't protected against multiple
+	inclusion.  Add a note that those headers must be included before
+	this one.  Don't include <config.h> either.
+	* safe-xstat.cin: Include <sys/types.h> and <sys/stat.h> here instead.
+	Include <config.h> here, too.
+	Kaveh Gahzi reported this problem.
+
+Fri Sep 30 22:40:21 1994  Jim Meyering  (meyering@comco.com)
+
+	* date.c (main): Accept new option: (-f) --file=datefile.
+	(batch_convert): New function.  Suggested by Karl Berry.
+
+	* date.c (main): Diagnose use of conflicting options.
+	Revamp non-option argument processing.
+	Detect write errors.
 
 	* lib/*.c, src/*.c: Remove CONFIG_BROKETS conditional.
 	* lib/Makefile.in src/Makefile.in: Don't define it.
