@@ -1,5 +1,12 @@
 2003-02-18  Jim Meyering  <jim@meyering.net>
 
+	* md5.c (md5_stream) [BLOCKSIZE]: Move definition to top of file.
+	Ensure that it is a multiple of 64.
+	Rearrange loop exit tests so as to avoid performing an
+	additional fread after encountering an error or EOF.
+	Reported by Michael Bacarella.
+	* sha.c (sha_stream): Likewise.
+
 	* Makefile.am (CLEANFILES): Remove ftw.h and search.h.
 	(DISTCLEANFILES): Add them here.
 	Add fnmatch.h, too.
