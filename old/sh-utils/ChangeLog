@@ -2277,7 +2277,7 @@
 1998-12-13  Jim Meyering  <meyering@ascend.com>
 
 	* lib/putenv.c: Don't include stdlib.h and declare malloc and free.
-	This works around Solaris 2.7's conflicting prototype.
+	This works around Solaris 5.7's conflicting prototype.
 	Reported by Karl Berry.
 
 	* lib/Makefile.am (lstat.c): Add rule to generate this from xstat.in.
