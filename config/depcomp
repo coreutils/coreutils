@@ -299,7 +299,7 @@ tru64)
 
 dashmstdout)
   # Important note: in order to support this mode, a compiler *must*
-  # always write the proprocessed file to stdout, regardless of -o.
+  # always write the preprocessed file to stdout, regardless of -o.
   "$@" || exit $?
 
   # Remove the call to Libtool.
@@ -395,7 +395,7 @@ makedepend)
 
 cpp)
   # Important note: in order to support this mode, a compiler *must*
-  # always write the proprocessed file to stdout.
+  # always write the preprocessed file to stdout.
   "$@" || exit $?
 
   # Remove the call to Libtool.
@@ -437,7 +437,7 @@ cpp)
 
 msvisualcpp)
   # Important note: in order to support this mode, a compiler *must*
-  # always write the proprocessed file to stdout, regardless of -o,
+  # always write the preprocessed file to stdout, regardless of -o,
   # because we must use -o when running libtool.
   "$@" || exit $?
   IFS=" "
