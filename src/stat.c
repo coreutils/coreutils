@@ -272,7 +272,7 @@ print_human_fstype (struct statfs const *statfsbuf)
 }
 
 static void
-print_human_access(struct stat const *statbuf)
+print_human_access (struct stat const *statbuf)
 {
   char modebuf[11];
   mode_string (statbuf->st_mode, modebuf);
@@ -281,7 +281,7 @@ print_human_access(struct stat const *statbuf)
 }
 
 static void
-print_human_time(time_t *t)
+print_human_time (time_t const *t)
 {
   char str[40];
 
