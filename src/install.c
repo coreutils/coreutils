@@ -168,15 +168,15 @@ static int dir_arg;
 
 static struct option const long_options[] =
 {
-  {"strip", no_argument, NULL, 's'},
+  {"backup", optional_argument, NULL, 'b'},
   {"directory", no_argument, NULL, 'd'},
   {"group", required_argument, NULL, 'g'},
   {"mode", required_argument, NULL, 'm'},
   {"owner", required_argument, NULL, 'o'},
   {"preserve-timestamps", no_argument, NULL, 'p'},
-  {"backup", no_argument, NULL, 'b'},
+  {"strip", no_argument, NULL, 's'},
   {"suffix", required_argument, NULL, 'S'},
-  {"version-control", required_argument, NULL, 'V'},
+  {"version-control", required_argument, NULL, 'V'}, /* Deprecated. FIXME. */
   {"verbose", no_argument, NULL, 'v'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
@@ -226,7 +226,8 @@ main (int argc, char **argv)
   int errors = 0;
   const char *symbolic_mode = NULL;
   int make_backups = 0;
-  const char *version;
+  char *backup_suffix_string;
+  char *version_control_string = NULL;
   int mkdir_and_install = 0;
   struct cp_options x;
   int n_files;
@@ -246,11 +247,8 @@ main (int argc, char **argv)
   umask (0);
 
   /* FIXME: consider not calling getenv for SIMPLE_BACKUP_SUFFIX unless
-     we'll actually use simple_backup_suffix.  */
-  version = getenv ("SIMPLE_BACKUP_SUFFIX");
-  if (version)
-    simple_backup_suffix = version;
-  version = NULL;
+     we'll actually use backup_suffix_string.  */
+  backup_suffix_string = getenv ("SIMPLE_BACKUP_SUFFIX");
 
   while ((optc = getopt_long (argc, argv, "bcsDdg:m:o:pvV:S:", long_options,
 			      NULL)) != -1)
@@ -259,8 +257,18 @@ main (int argc, char **argv)
 	{
 	case 0:
 	  break;
+
+	case 'V':  /* FIXME: this is deprecated.  Remove it in 2001.  */
+	  error (0, 0,
+		 _("warning: --version-control (-V) is obsolete;  support for\
+ it\nwill be removed in some future release.  Use --backup=%s instead."
+		   ), optarg);
+	  /* Fall through.  */
+
 	case 'b':
 	  make_backups = 1;
+	  if (optarg)
+	    version_control_string = optarg;
 	  break;
 	case 'c':
 	  break;
@@ -289,10 +297,8 @@ main (int argc, char **argv)
 	  x.preserve_timestamps = 1;
 	  break;
 	case 'S':
-	  simple_backup_suffix = optarg;
-	  break;
-        case 'V':
-	  version = optarg;
+	  make_backups = 1;
+	  backup_suffix_string = optarg;
 	  break;
 	case_GETOPT_HELP_CHAR;
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
@@ -307,7 +313,7 @@ main (int argc, char **argv)
 	   _("the strip option may not be used when installing a directory"));
 
   if (make_backups)
-    x.backup_type = xget_version ("--version-control", version);
+    x.backup_type = xget_version ("--version-control", version_control_string);
 
   n_files = argc - optind;
   file = argv + optind;
@@ -639,7 +645,7 @@ In the first two formats, copy SOURCE to DEST or multiple SOURCE(s) to\n\
 the existing DIRECTORY, while setting permission modes and owner/group.\n\
 In the third format, create all components of the given DIRECTORY(ies).\n\
 \n\
-  -b, --backup        make backup before removal\n\
+  -b, --backup[=CONTROL]  make a backup of each existing destination file\n\
   -c                  (ignored)\n\
   -d, --directory     treat all arguments as directory names; create all\n\
                         components of the specified directories\n\
@@ -653,14 +659,14 @@ In the third format, create all components of the given DIRECTORY(ies).\n\
   -s, --strip         strip symbol tables, only for 1st and 2nd formats\n\
   -S, --suffix=SUFFIX override the usual backup suffix\n\
       --verbose       print the name of each directory as it is created\n\
-  -V, --version-control=WORD   override the usual version control\n\
       --help          display this help and exit\n\
       --version       output version information and exit\n\
 \n\
 "));
       printf (_("\
-The backup suffix is ~, unless set with SIMPLE_BACKUP_SUFFIX.  The\n\
-version control may be set with VERSION_CONTROL, values are:\n\
+The backup suffix is `~', unless set with --suffix or SIMPLE_BACKUP_SUFFIX.\n\
+The version control method may be selected via the --backup option or through\n\
+the VERSION_CONTROL environment variable.  Here are the values:\n\
 \n\
   none, off       never make backups (even if --backup is given)\n\
   numbered, t     make numbered backups\n\
