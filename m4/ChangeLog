@@ -1,3 +1,8 @@
+2002-01-26  Jim Meyering  <meyering@lucent.com>
+
+	* jm-macros.m4 (jm_MACROS): Require autoconf-2.52g.
+	* strnlen.m4: Remove file, now that it's part of autoconf.
+
 2002-01-22  Paul Eggert  <eggert@twinsun.com>
 
 	* jm-macros.m4 (jm_MACROS): Require AC_FUNC_FSEEKO.
