@@ -1,5 +1,5 @@
 /* printf - format and print data
-   Copyright (C) 1990-2002, Free Software Foundation, Inc.
+   Copyright (C) 1990-2003, Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -283,7 +283,7 @@ print_esc (const char *escstart)
 	 0000009F, or 0000D800 through 0000DFFF inclusive. A universal
 	 character name shall not designate a character in the required
 	 character set.  */
-      if ((uni_value >= 0x00 && uni_value <= 0x9f
+      if ((uni_value <= 0x9f
 	   && uni_value != 0x24 && uni_value != 0x40 && uni_value != 0x60)
 	  || (uni_value >= 0xd800 && uni_value <= 0xdfff))
 	error (EXIT_FAILURE, 0, _("invalid universal character name \\%c%0*x"),
