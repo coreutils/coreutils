@@ -51,9 +51,6 @@
 #include "error.h"
 #include "xstrtol.h"
 
-#define	convert_blocks(b, size) (size == size_kilobytes ? ((b) + 1) / 2 : \
-    size == size_megabytes ? ((b) + 1024) / 2048 : (b))
-
 /* Initial number of entries in each hash table entry's table of inodes.  */
 #define INITIAL_HASH_MODULE 100
 
@@ -145,19 +142,17 @@ static int opt_dereference_arguments = 0;
    is at level 0, so `du --max-depth=0' is equivalent to `du -s'.  */
 static int max_depth = INT_MAX;
 
-enum output_size
+enum Output_units
 {
-  size_blocks,			/* 512-byte blocks. */
-  size_kilobytes,		/* 1K blocks. */
-  size_megabytes,		/* 1024K blocks. */
-  size_bytes			/* 1-byte blocks. */
+  Unit_byte,			/* 1-byte blocks. */
+  Unit_block,			/* 512-byte blocks. */
+  Unit_kilobyte,		/* 1K blocks. */
+  Unit_megabyte,		/* 1024K blocks. */
+  Unit_variable			/* --human-readable. */
 };
 
-/* human style output */
-static int opt_human_readable;
-
-/* The units to count in. */
-static enum output_size output_size;
+/* The units of output values -- when not --human-readable. */
+static enum Output_units output_units;
 
 /* Accumulated path for file or directory being processed.  */
 static string path;
@@ -181,8 +176,8 @@ static int show_help;
 /* If nonzero, print the version on standard output and exit.  */
 static int show_version;
 
-/* Grand total size of all args. */
-static long tot_size = 0L;
+/* Grand total size of all args, in units of 512-byte blocks. */
+static long tot_size = 0;
 
 static struct option const long_options[] =
 {
@@ -266,15 +261,14 @@ main (int argc, char **argv)
   xstat = lstat;
 
   if (getenv ("POSIXLY_CORRECT"))
-    output_size = size_blocks;
+    output_units = Unit_block;
   else if ((bs = getenv ("BLOCKSIZE"))
 	   && strncmp (bs, "HUMAN", sizeof ("HUMAN") - 1) == 0)
     {
-      opt_human_readable = 1;
-      output_size = size_bytes;
+      output_units = Unit_variable;
     }
   else
-    output_size = size_kilobytes;
+    output_units = Unit_kilobyte;
 
   while ((c = getopt_long (argc, argv, "abchklmsxDLS", long_options, NULL))
 	 != -1)
@@ -290,8 +284,7 @@ main (int argc, char **argv)
 	  break;
 
 	case 'b':
-	  output_size = size_bytes;
-	  opt_human_readable = 0;
+	  output_units = Unit_byte;
 	  break;
 
 	case 'c':
@@ -299,13 +292,11 @@ main (int argc, char **argv)
 	  break;
 
 	case 'h':
-	  output_size = size_bytes;
-	  opt_human_readable = 1;
+	  output_units = Unit_variable;
 	  break;
 
 	case 'k':
-	  output_size = size_kilobytes;
-	  opt_human_readable = 0;
+	  output_units = Unit_kilobyte;
 	  break;
 
 	case 13:		/* --max-depth=N */
@@ -318,8 +309,7 @@ main (int argc, char **argv)
  	  break;
 
 	case 'm':
-	  output_size = size_megabytes;
-	  opt_human_readable = 0;
+	  output_units = Unit_megabyte;
 	  break;
 
 	case 'l':
@@ -390,7 +380,8 @@ main (int argc, char **argv)
   exit (exit_status);
 }
 
-/* Convert N_BYTES to a more readable string than %d would.
+/* Convert N_BLOCKS, the number of 512-byte blocks, to a more readable
+   string than %d would.
    Most people visually process strings of 3-4 digits effectively,
    but longer strings of digits are more prone to misinterpretation.
    Hence, converting to an abbreviated form usually improves readability.
@@ -400,7 +391,7 @@ main (int argc, char **argv)
    than 1024 aren't modified.  */
 
 static char *
-human_readable (int n_bytes, char *buf, int buf_len)
+human_readable (int n_blocks, char *buf, int buf_len)
 {
   const char *suffix;
   double amt;
@@ -409,21 +400,21 @@ human_readable (int n_bytes, char *buf, int buf_len)
   assert (buf_len > LONGEST_HUMAN_READABLE);
 
   p = buf;
-  amt = n_bytes;
+  amt = n_blocks;
 
-  if (amt >= 1024 * 1024 * 1024)
+  if (amt >= 1024 * 1024 * 2)
     {
-      amt /= (1024 * 1024 * 1024);
+      amt /= (1024 * 1024 * 2);
       suffix = "G";
     }
-  else if (amt >= 1024 * 1024)
+  else if (amt >= 1024 * 2)
     {
-      amt /= (1024 * 1024);
+      amt /= (1024 * 2);
       suffix = "M";
     }
-  else if (amt >= 1024)
+  else if (amt >= 2)
     {
-      amt /= 1024;
+      amt /= 2;
       suffix = "K";
     }
   else
@@ -444,6 +435,49 @@ human_readable (int n_bytes, char *buf, int buf_len)
       sprintf (p, "%.1f%s", amt, suffix);
     }
   return (p);
+}
+
+/* Convert the number of 512-byte blocks, N_BLOCKS, to OUTPUT_UNITS and
+   then print the the result on stdout.  */
+
+static void
+print_size (long int n_blocks)
+{
+  if (output_units == Unit_variable)
+    {
+      char buf[LONGEST_HUMAN_READABLE + 1];
+      printf ("%s", human_readable (n_blocks, buf, LONGEST_HUMAN_READABLE + 1));
+    }
+  else
+    {
+      double d;
+
+      /* Convert to double precision before converting N_BLOCKS to output
+	 units in case that number is larger than LONG_MAX.  */
+      switch (output_units)
+	{
+	case Unit_byte:
+	  d = 512 * (double) n_blocks;
+	  break;
+
+	case Unit_block:
+	  d = n_blocks;
+	  break;
+
+	case Unit_kilobyte:
+	  d = (n_blocks + 1) / 2;
+	  break;
+
+	case Unit_megabyte:
+	  d = (n_blocks + 1024) / 2048;
+	  break;
+
+	default:
+	  abort ();
+	}
+      printf ("%.0f", d);
+    }
+  fflush (stdout);
 }
 
 /* Recursively print the sizes of the directories (and, if selected, files)
@@ -504,25 +538,16 @@ du_files (char **files)
 
   if (opt_combined_arguments)
     {
-      if (opt_human_readable)
-	{
-	  char buf[LONGEST_HUMAN_READABLE + 1];
-	  printf("%s\ttotal\n", human_readable (tot_size, buf,
-						LONGEST_HUMAN_READABLE + 1));
-	}
-      else
-	{
-	  printf (_("%ld\ttotal\n"), convert_blocks (tot_size, output_size));
-	}
-      fflush (stdout);
+      print_size (tot_size);
+      printf ("\ttotal\n");
     }
 
   free_cwd (&cwd);
 }
 
-/* Print (if appropriate) and return the size
-   (in units determined by `output_size') of file or directory ENT.
-   TOP is one for external calls, zero for recursive calls.
+/* Print (if appropriate) the size (in units determined by `output_units')
+   of file or directory ENT. Return the size of ENT in units of 512-byte
+   blocks.  TOP is one for external calls, zero for recursive calls.
    LAST_DEV is the device that the parent directory of ENT is on.
    DEPTH is the number of levels (in hierarchy) down from a command
    line argument.  Don't print if DEPTH > max_depth.  */
@@ -530,7 +555,7 @@ du_files (char **files)
 static long
 count_entry (const char *ent, int top, dev_t last_dev, int depth)
 {
-  long size;
+  long int size;
 
   if (((top && opt_dereference_arguments)
        ? stat (ent, &stat_buf)
@@ -546,11 +571,7 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
       && hash_insert (stat_buf.st_ino, stat_buf.st_dev))
     return 0;			/* Have counted this already.  */
 
-  if (output_size == size_bytes)
-    size = stat_buf.st_size;
-  else
-    size = ST_NBLOCKS (stat_buf);
-
+  size = ST_NBLOCKS (stat_buf);
   tot_size += size;
 
   if (S_ISDIR (stat_buf.st_mode))
@@ -639,19 +660,8 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
       str_trunc (path, pathlen - 1); /* Remove the "/" we added.  */
       if (depth <= max_depth || top)
 	{
-	  if (opt_human_readable)
-	    {
-	      char buf[LONGEST_HUMAN_READABLE + 1];
-	      printf("%s\t%s\n",
-		     human_readable (size, buf, LONGEST_HUMAN_READABLE + 1),
-		     path->length > 0 ? path->text : "/");
-	    }
-	  else
-	    {
-	      printf ("%ld\t%s\n", convert_blocks (size, output_size),
-		      path->length > 0 ? path->text : "/");
-	    }
-	  fflush (stdout);
+	  print_size (size);
+	  printf ("\t%s\n", path->length > 0 ? path->text : "/");
 	}
       return opt_separate_dirs ? 0 : size;
     }
@@ -661,19 +671,8 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
       int print_only_dir_size = 0;
       if (!print_only_dir_size)
 	{
-	  if (opt_human_readable)
-	    {
-	      char buf[LONGEST_HUMAN_READABLE + 1];
-	      printf("%s\t%s\n",
-		     human_readable (size, buf, LONGEST_HUMAN_READABLE + 1),
-		     path->length > 0 ? path->text : "/");
-	    }
-	  else
-	    {
-	      printf ("%ld\t%s\n", convert_blocks (size, output_size),
-		      path->text);
-	    }
-	  fflush (stdout);
+	  print_size (size);
+	  printf ("\t%s\n", path->length > 0 ? path->text : "/");
 	}
     }
 
