@@ -1,5 +1,7 @@
 2003-01-22  Jim Meyering  <jim@meyering.net>
 
+	* Makefile.am (CLEANFILES): Add generated files: ftw.h search.h.
+
 	* ftw.c (process_entry): Handle FTW_DCHP.
 	(ftw_dir): Handle FTW_DCH.
 
