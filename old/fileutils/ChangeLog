@@ -1,6 +1,12 @@
-2000-11-09  Jim Meyering  <meyering@lucent.com>
+2000-11-10  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.0.32.
+
+	* src/touch.c (main): Interpret a lone numeric argument of 8 or 10
+	digits as a file name, rather than as a date/time in the obsolescent
+	`MMDDhhmm[YY]' format.  Reported by Wenjun Zheng.
+	* tests/touch/obsolescent: New test for this.
+	* tests/touch/Makefile.am (TESTS): Add obsolescent.
 
 2000-11-06  Jim Meyering  <meyering@lucent.com>
 
