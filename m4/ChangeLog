@@ -1,7 +1,7 @@
 2004-12-20  Jim Meyering  <jim@meyering.net>
 
 	* mkstemp.m4: Rather than using "conftestXXXXXX" as the mkstemp
-        template, use a temporary directory and an 8.3-friendly template
+	template, use a temporary directory and an 8.3-friendly template
 	to avoid trouble on systems like DJGPP.
 	Reported by Juan M. Guerrero via Stepan Kasal.
 
