@@ -400,7 +400,7 @@ do_copy (int argc, char **argv)
   if (optind >= argc)
     usage (2, _("missing file arguments"));
   if (optind >= argc - 1)
-    usage (2, _("missing file argument"));
+    usage (2, _("missing destination file"));
 
   dest = argv[argc - 1];
 
