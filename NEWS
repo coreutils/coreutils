@@ -63,6 +63,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   `tail -n0 -f FILE' and `tail -c0 -f FILE' no longer perform what amounted
   to a busy wait, rather than sleeping between iterations.
 
+  tail's long-undocumented --allow-missing option now elicits a warning
+
 
 * Major changes in release 5.0.90:
 
