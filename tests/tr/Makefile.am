@@ -3,16 +3,15 @@
 AUTOMAKE_OPTIONS = 1.1c
 
 x = tr
-in = \
-  t1.in t2.in t3.in t4.in t5.in t6.in t7.in t8.in t9.in tA.in tB.in \
-  tC.in tD.in tE.in tF.in tG.in tH.in tI.in tR0.0.in tR0.1.in tR1.0.in \
-  tR1.1.in tR2.in tR3.in tR4.in tR5.in tR6.in ta.in tb.in tc.in td.in \
-  te.in tf.in tg.in th.in ti.in tj.in tk.in tl.in tm.in tn.in to.in \
-  tp.in tq.in tr.in ts.in tt.in tu.in tv.in tw.in tx.in ty.in tz.in
+t = \
+  t1 t2 t3 t4 t5 t6 t7 t8 t9 tA tB tC tD tE tF tG tH tI tR0.0 tR0.1 tR1.0 \
+  tR1.1 tR2 tR3 tR4 tR5 tR6 ta tb tc td te tf tg th ti tj tk tl tm tn to \
+  tp tq tr ts tt tu tv tw tx ty tz
 
-exp = $(in:.in=.exp)
-out = $(in:.in=.out)
-err = $(in:.in=.err)
+in = $(t:=.in)
+exp = $(t:=.exp)
+out = $(t:=.out)
+err = $(t:=.err)
 
 EXTRA_DIST = build-script.pl Test.pm $x-tests $(in) $(exp)
 noinst_SCRIPTS = $x-tests
