@@ -7528,7 +7528,7 @@ dependent upon the policy and functionality of the underlying system
 which may make system-dependent file mode modifications outside the
 control of the @command{chown} command.  On some systems (e.g., Linux)
 the @command{chown} command clears the set-UID and set-GID bits because
-the underlying system @function{chown} function clears them.  On other
+the underlying, system @code{chown} function clears them.  On other
 systems (e.g., HP-UX and Solaris) the @command{chown} command does not
 affect those bits when operated as the superuser.  On systems which allow
 non-privileged use of chown those bits are always cleared by the system.
