@@ -23,8 +23,6 @@
 #include <sys/types.h>
 #include <pwd.h>
 #include <grp.h>
-#include <unistd.h>
-#include <time.h>
 #if HAVE_SYS_STATVFS_H && HAVE_STRUCT_STATVFS_F_BASETYPE
 # include <sys/statvfs.h>
 #elif HAVE_SYS_VFS_H
