@@ -1,9 +1,22 @@
 1999-01-25  Jim Meyering  <meyering@ascend.com>
 
+	* configure.in (fdatasync): Use AC_CHECK_FUNCS instead of
+	AC_REPLACE_FUNCS.
+	(AC_CHECK_FUNCS): Add clock_gettime.
+
 	* src/shred.c (isaac_seed): Guard clock_gettime with test of
 	HAVE_CLOCK_GETTIME, not CLOCK_REALTIME.
 	(wipename): Rename local dirfd to dir_fd to avoid shadowing the
 	function declared in Linux's dirent.h.
+
+1999-01-25  Akim Demaille  <demaille@inf.enst.fr>
+
+	* lib/argmatch.h (ARRAY_CARDINALITY): Define.
+	(ARGMATCH_ASSERT): New macro.
+
+	* lib/argmatch.c (program_name): Remove dcl.
+	Include error.h.
+	(argmatch_invalid): Use error rather than fprintf.
 
 1999-01-24  Jim Meyering  <meyering@ascend.com>
 
