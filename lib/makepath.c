@@ -86,6 +86,7 @@ typedef int uid_t;
 typedef int gid_t;
 #endif
 
+#include "safe-stat.h"
 void error ();
 
 /* Ensure that the directory ARGPATH exists.
@@ -121,7 +122,7 @@ make_path (argpath, mode, parent_mode, owner, group, verbose_fmt_string)
   dirpath = (char *) alloca (strlen (argpath) + 1);
   strcpy (dirpath, argpath);
 
-  if (stat (dirpath, &stats))
+  if (SAFE_STAT (dirpath, &stats))
     {
       char *slash;
       int tmp_mode;		/* Initial perms for leading dirs.  */
@@ -155,7 +156,7 @@ make_path (argpath, mode, parent_mode, owner, group, verbose_fmt_string)
       while ((slash = index (slash, '/')))
 	{
 	  *slash = '\0';
-	  if (stat (dirpath, &stats))
+	  if (SAFE_STAT (dirpath, &stats))
 	    {
 	      if (mkdir (dirpath, tmp_mode))
 		{
@@ -209,7 +210,7 @@ make_path (argpath, mode, parent_mode, owner, group, verbose_fmt_string)
       /* The path could end in "/." or contain "/..", so test
 	 if we really have to create the directory.  */
 
-      if (stat (dirpath, &stats) && mkdir (dirpath, mode))
+      if (SAFE_STAT (dirpath, &stats) && mkdir (dirpath, mode))
 	{
 	  error (0, errno, "cannot make directory `%s'", dirpath);
 	  umask (oldmask);

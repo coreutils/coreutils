@@ -28,6 +28,7 @@
 
 #include <sys/types.h>
 #include "fsusage.h"
+#include "safe-stat.h"
 
 int statfs ();
 
@@ -211,7 +212,7 @@ statfs (path, fsb)
   struct stat stats;
   struct dustat fsd;
 
-  if (stat (path, &stats))
+  if (SAFE_STAT (path, &stats))
     return -1;
   if (dustat (stats.st_dev, 0, &fsd, sizeof (fsd)))
     return -1;

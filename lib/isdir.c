@@ -15,11 +15,30 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
+#ifdef HAVE_CONFIG_H
+#if defined (CONFIG_BROKETS)
+/* We use <config.h> instead of "config.h" so that a compilation
+   using -I. -I$srcdir will use ./config.h rather than $srcdir/config.h
+   (which it would do because it found this file in $srcdir).  */
+#include <config.h>
+#else
+#include "config.h"
+#endif
+#endif
+
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#include "safe-stat.h"
+
+#ifdef	STAT_MACROS_BROKEN
+#ifdef S_ISDIR
+#undef S_ISDIR
+#endif
+#endif	/* STAT_MACROS_BROKEN.  */
+
 #if !defined(S_ISDIR) && defined(S_IFDIR)
-#define	S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
+#define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
 #endif
 
 /* If PATH is an existing directory or symbolic link to a directory,
@@ -31,5 +50,5 @@ isdir (path)
 {
   struct stat stats;
 
-  return stat (path, &stats) == 0 && S_ISDIR (stats.st_mode);
+  return SAFE_STAT (path, &stats) == 0 && S_ISDIR (stats.st_mode);
 }
