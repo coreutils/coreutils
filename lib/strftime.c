@@ -47,6 +47,10 @@
 # endif
 #endif
 
+#if HAVE_TZNAME
+extern char *tzname[];
+#endif
+
 /* Do multibyte processing if multibytes are supported, unless
    multibyte sequences are safe in formats.  Multibyte sequences are
    safe if they cannot contain byte sequences that look like format
