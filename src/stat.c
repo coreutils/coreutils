@@ -59,13 +59,13 @@
 
 #if HAVE_STRUCT_STATVFS_F_BASETYPE
 # define STRUCT_STATVFS struct statvfs
-# define HAVE_STRUCT_STATXFS_F_TYPE HAVE_STRUCT_STATVFS
+# define HAVE_STRUCT_STATXFS_F_TYPE HAVE_STRUCT_STATVFS_F_TYPE
 # if HAVE_STRUCT_STATVFS_F_NAMEMAX
 #  define SB_F_NAMEMAX(S) ((uintmax_t) ((S)->f_namemax))
 # endif
 #else
 # define STRUCT_STATVFS struct statfs
-# define HAVE_STRUCT_STATXFS_F_TYPE HAVE_STRUCT_STATFS
+# define HAVE_STRUCT_STATXFS_F_TYPE HAVE_STRUCT_STATFS_F_TYPE
 # if HAVE_STRUCT_STATFS_F_NAMELEN
 #  define SB_F_NAMEMAX(S) ((uintmax_t) ((S)->f_namelen))
 # endif
@@ -108,14 +108,12 @@ char *program_name;
    Some systems have statfvs.f_basetype[FSTYPSZ]. (AIX, HP-UX, and Solaris)
    Others have statfs.f_fstypename[MFSNAMELEN]. (NetBSD 1.5.2)
    Still others have neither and have to get by with f_type (Linux).  */
-static char *
+static char const *
 human_fstype (STRUCT_STATVFS const *statfsbuf)
 {
 #ifdef STATXFS_FILE_SYSTEM_TYPE_MEMBER_NAME
-  /* Cast away the `const' attribute.  */
-  return (char *) statfsbuf->STATXFS_FILE_SYSTEM_TYPE_MEMBER_NAME;
+  return statfsbuf->STATXFS_FILE_SYSTEM_TYPE_MEMBER_NAME;
 #else
-  char const *type;
   switch (statfsbuf->f_type)
     {
 # if defined __linux__
@@ -126,192 +124,136 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
 	 combined to produce the #define directives in fs.h.  */
 
     case S_MAGIC_AFFS: /* 0xADFF */
-      type = "affs";
-      break;
+      return "affs";
     case S_MAGIC_DEVPTS: /* 0x1CD1 */
-      type = "devpts";
-      break;
+      return "devpts";
     case S_MAGIC_EXT: /* 0x137D */
-      type = "ext";
-      break;
+      return "ext";
     case S_MAGIC_EXT2_OLD: /* 0xEF51 */
-      type = "ext2";
-      break;
+      return "ext2";
     case S_MAGIC_EXT2: /* 0xEF53 */
-      type = "ext2/ext3";
-      break;
+      return "ext2/ext3";
     case S_MAGIC_HPFS: /* 0xF995E849 */
-      type = "hpfs";
-      break;
+      return "hpfs";
     case S_MAGIC_ISOFS: /* 0x9660 */
-      type = "isofs";
-      break;
+      return "isofs";
     case S_MAGIC_ISOFS_WIN: /* 0x4000 */
-      type = "isofs";
-      break;
+      return "isofs";
     case S_MAGIC_ISOFS_R_WIN: /* 0x4004 */
-      type = "isofs";
-      break;
+      return "isofs";
     case S_MAGIC_MINIX: /* 0x137F */
-      type = "minix";
-      break;
+      return "minix";
     case S_MAGIC_MINIX_30: /* 0x138F */
-      type = "minix (30 char.)";
-      break;
+      return "minix (30 char.)";
     case S_MAGIC_MINIX_V2: /* 0x2468 */
-      type = "minix v2";
-      break;
+      return "minix v2";
     case S_MAGIC_MINIX_V2_30: /* 0x2478 */
-      type = "minix v2 (30 char.)";
-      break;
+      return "minix v2 (30 char.)";
     case S_MAGIC_MSDOS: /* 0x4d44 */
-      type = "msdos";
-      break;
+      return "msdos";
     case S_MAGIC_FAT: /* 0x4006 */
-      type = "fat";
-      break;
+      return "fat";
     case S_MAGIC_NCP: /* 0x564c */
-      type = "novell";
-      break;
+      return "novell";
     case S_MAGIC_NFS: /* 0x6969 */
-      type = "nfs";
-      break;
+      return "nfs";
     case S_MAGIC_PROC: /* 0x9fa0 */
-      type = "proc";
-      break;
+      return "proc";
     case S_MAGIC_SMB: /* 0x517B */
-      type = "smb";
-      break;
+      return "smb";
     case S_MAGIC_XENIX: /* 0x012FF7B4 */
-      type = "xenix";
-      break;
+      return "xenix";
     case S_MAGIC_SYSV4: /* 0x012FF7B5 */
-      type = "sysv4";
-      break;
+      return "sysv4";
     case S_MAGIC_SYSV2: /* 0x012FF7B6 */
-      type = "sysv2";
-      break;
+      return "sysv2";
     case S_MAGIC_COH: /* 0x012FF7B7 */
-      type = "coh";
-      break;
+      return "coh";
     case S_MAGIC_UFS: /* 0x00011954 */
-      type = "ufs";
-      break;
+      return "ufs";
     case S_MAGIC_XIAFS: /* 0x012FD16D */
-      type = "xia";
-      break;
+      return "xia";
     case S_MAGIC_NTFS: /* 0x5346544e */
-      type = "ntfs";
-      break;
+      return "ntfs";
     case S_MAGIC_TMPFS: /* 0x1021994 */
-      type = "tmpfs";
-      break;
+      return "tmpfs";
     case S_MAGIC_REISERFS: /* 0x52654973 */
-      type = "reiserfs";
-      break;
+      return "reiserfs";
     case S_MAGIC_CRAMFS: /* 0x28cd3d45 */
-      type = "cramfs";
-      break;
+      return "cramfs";
     case S_MAGIC_ROMFS: /* 0x7275 */
-      type = "romfs";
-      break;
+      return "romfs";
+    case S_MAGIC_RAMFS: /* 0x858458f6 */
+      return "ramfs";
+    case S_MAGIC_SQUASHFS: /* 0x73717368 */
+      return "squashfs";
+    case S_MAGIC_SYSFS: /* 0x62656572 */
+      return "sysfs";
 # elif __GNU__
     case FSTYPE_UFS:
-      type = "ufs";
-      break;
+      return "ufs";
     case FSTYPE_NFS:
-      type = "nfs";
-      break;
+      return "nfs";
     case FSTYPE_GFS:
-      type = "gfs";
-      break;
+      return "gfs";
     case FSTYPE_LFS:
-      type = "lfs";
-      break;
+      return "lfs";
     case FSTYPE_SYSV:
-      type = "sysv";
-      break;
+      return "sysv";
     case FSTYPE_FTP:
-      type = "ftp";
-      break;
+      return "ftp";
     case FSTYPE_TAR:
-      type = "tar";
-      break;
+      return "tar";
     case FSTYPE_AR:
-      type = "ar";
-      break;
+      return "ar";
     case FSTYPE_CPIO:
-      type = "cpio";
-      break;
+      return "cpio";
     case FSTYPE_MSLOSS:
-      type = "msloss";
-      break;
+      return "msloss";
     case FSTYPE_CPM:
-      type = "cpm";
-      break;
+      return "cpm";
     case FSTYPE_HFS:
-      type = "hfs";
-      break;
+      return "hfs";
     case FSTYPE_DTFS:
-      type = "dtfs";
-      break;
+      return "dtfs";
     case FSTYPE_GRFS:
-      type = "grfs";
-      break;
+      return "grfs";
     case FSTYPE_TERM:
-      type = "term";
-      break;
+      return "term";
     case FSTYPE_DEV:
-      type = "dev";
-      break;
+      return "dev";
     case FSTYPE_PROC:
-      type = "proc";
-      break;
+      return "proc";
     case FSTYPE_IFSOCK:
-      type = "ifsock";
-      break;
+      return "ifsock";
     case FSTYPE_AFS:
-      type = "afs";
-      break;
+      return "afs";
     case FSTYPE_DFS:
-      type = "dfs";
-      break;
+      return "dfs";
     case FSTYPE_PROC9:
-      type = "proc9";
-      break;
+      return "proc9";
     case FSTYPE_SOCKET:
-      type = "socket";
-      break;
+      return "socket";
     case FSTYPE_MISC:
-      type = "misc";
-      break;
+      return "misc";
     case FSTYPE_EXT2FS:
-      type = "ext2/ext3";
-      break;
+      return "ext2/ext3";
     case FSTYPE_HTTP:
-      type = "http";
-      break;
+      return "http";
     case FSTYPE_MEMFS:
-      type = "memfs";
-      break;
+      return "memfs";
     case FSTYPE_ISO9660:
-      type = "iso9660";
-      break;
+      return "iso9660";
 # endif
     default:
-      type = NULL;
-      break;
+      {
+	unsigned long int type = statfsbuf->f_type;
+	static char buf[sizeof "UNKNOWN (0x%lx)" - 3
+			+ (sizeof type * CHAR_BIT + 3) / 4];
+	sprintf (buf, "UNKNOWN (0x%lx)", type);
+	return buf;
+      }
     }
-
-  if (type)
-    return (char *) type;
-
-  {
-    static char buf[sizeof "UNKNOWN (0x%lx)" - 3
-		    + 2 * sizeof (statfsbuf->f_type)];
-    sprintf (buf, "UNKNOWN (0x%lx)", (unsigned long int) statfsbuf->f_type);
-    return buf;
-  }
 #endif
 }
 
