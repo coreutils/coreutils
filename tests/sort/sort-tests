@@ -1327,8 +1327,42 @@ else
   esac
 fi
 test -s 18e.E || rm -f 18e.E
+$xx +0 +1nr $srcdir/19a.I > 19a.O 2> 19a.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test 19a failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp 19a.O $srcdir/19a.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed 19a"; fi ;;
+    1) $echo "Test 19a failed: files 19a.O and $srcdir/19a.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test 19a may have failed." 1>&2;
+       $echo The command "cmp 19a.O $srcdir/19a.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s 19a.E || rm -f 19a.E
+$xx -k1,1 -k2nr $srcdir/19b.I > 19b.O 2> 19b.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test 19b failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp 19b.O $srcdir/19b.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed 19b"; fi ;;
+    1) $echo "Test 19b failed: files 19b.O and $srcdir/19b.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test 19b may have failed." 1>&2;
+       $echo The command "cmp 19b.O $srcdir/19b.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s 19b.E || rm -f 19b.E
 if test $errors = 0 ; then
-  $echo Passed all 77 tests. 1>&2
+  $echo Passed all 79 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi
