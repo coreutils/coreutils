@@ -73,15 +73,6 @@ struct Dest_info
   dev_t st_dev;
 };
 
-/* This is a set of destination name/inode/dev triples.  Each such triple
-   represents a file we have created corresponding to a source file name
-   that was specified on the command line.  Use it to avoid clobbering
-   source files in commands like this:
-     rm -rf a b c; mkdir a b c; touch a/f b/f; mv a/f b/f c
-   For now, it protects only regular files when copying (i.e. not renaming).
-   When renaming, it protects all non-directories.  */
-static struct hash_table *dest_info;
-
 /* Initial size of the above hash table.  */
 #define DEST_INFO_INITIAL_CAPACITY 61
 
@@ -626,18 +617,22 @@ dest_info_free (void *x)
 
 /* Initialize the hash table implementing a set of dest_info entries.  */
 void
-dest_info_init ()
+dest_info_init (struct cp_options *x)
 {
-  dest_info = hash_initialize (DEST_INFO_INITIAL_CAPACITY, NULL,
-			       dest_info_hash,
-			       dest_info_compare,
-			       dest_info_free);
+  x->dest_info
+    = hash_initialize (DEST_INFO_INITIAL_CAPACITY,
+		       NULL,
+		       dest_info_hash,
+		       dest_info_compare,
+		       dest_info_free);
 }
 
 /* Return nonzero if the file described by name, DEST, and DEST_STATS
-   has already been created.  Otherwise, return zero.  */
+   has already been created (and hence has an entry in DEST_INFO).
+   Otherwise, return zero.  */
 static int
-seen_dest (char const *dest, struct stat dest_stats)
+seen_dest (Hash_table const *dest_info, char const *dest,
+	   struct stat dest_stats)
 {
   struct Dest_info new_ent;
 
@@ -652,13 +647,14 @@ seen_dest (char const *dest, struct stat dest_stats)
 }
 
 /* Record destination filename, DEST, and dev/ino from *DEST_STATS, in
-   the global table, DEST_INFO, so that if we are asked to overwrite that
+   the hash table, DEST_INFO, so that if we are asked to overwrite that
    file again, we can detect it and fail.  If DEST_INFO is NULL, return
    immediately.  If DEST_STATS is NULL, call lstat on DEST to get device
    and inode numbers.  If that lstat fails, simply return.  If memory
    allocation fails, exit immediately.  */
 static void
-record_dest (char const *dest, struct stat const *dest_stats)
+record_dest (Hash_table *dest_info, char const *dest,
+	     struct stat const *dest_stats)
 {
   struct Dest_info *ent;
 
@@ -840,7 +836,7 @@ copy_internal (const char *src_path, const char *dst_path,
 		 Note that it works fine if you use --backup=numbered.  */
 	      if (command_line_arg
 		  && x->backup_type != numbered
-		  && seen_dest (dst_path, dst_sb))
+		  && seen_dest (x->dest_info, dst_path, dst_sb))
 		{
 		  error (0, 0,
 			 _("will not overwrite just-created %s with %s"),
@@ -1059,7 +1055,7 @@ copy_internal (const char *src_path, const char *dst_path,
 		 changed those, and `mv' always uses lstat.
 		 We could limit it further by operating
 		 only on non-directories.  */
-	      record_dest (dst_path, &src_sb);
+	      record_dest (x->dest_info, dst_path, &src_sb);
 	    }
 
 	  return 0;
@@ -1341,7 +1337,7 @@ copy_internal (const char *src_path, const char *dst_path,
     }
 
   if (command_line_arg)
-    record_dest (dst_path, NULL);
+    record_dest (x->dest_info, dst_path, NULL);
 
   if ( ! preserve_metadata)
     return 0;
