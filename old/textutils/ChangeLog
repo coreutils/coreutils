@@ -1,4 +1,24 @@
+Tue Jan 24 22:18:19 1995  Jim Meyering  (meyering@comco.com)
+
+	* fmt.c (copy_rest): Replace `||' with `&&'.  Before, a paragraph
+	not followed by a newline would be followed by data copied from
+	uninitialized storage.  Repeat by `printf abc|fmt|od -ac'.
+	Reported by Franc,ois Pinard.
+
+	* od.c: Rename macros with FP_ prefix.  Use FLOAT_ instead.
+	AIX-2.2.1 declares a typedef, FP_DOUBLE, that conflicted.
+	Be careful to use off_t instead of explicit `unsigned long'.
+	Otherwise, systems like 4.4BSD lose on calls to fseek that
+	expect off_t (which is long long on that system).
+	(parse_old_offset): Use xstrtoul
+	(main): Likewise.
+
+	* src/Makefile.in (od.o, tail.o): Depend on ../lib/strtol.h.
+
 Mon Dec 19 22:13:55 1994  Jim Meyering  (meyering@comco.com)
+
+	* tail.c (numerous functions): Give char* filename arguments the
+	const attribute.
 
 	* lib/Makefile.in (SOURCES): Remove xwrite.c.  It was no longer used.
 	Add xstrtol.c and xstrtoul.c.
@@ -6,7 +26,8 @@ Mon Dec 19 22:13:55 1994  Jim Meyering  (meyering@comco.com)
 	(DISTFILES): Add error.h and xstrtol.h and xstrtoul.h.
 
 	* lib/Makefile.in (DISTFILES): Remove safe-xstat.cin.
-	Remove all related dependencies.
+	(distclean): Remove references to safe-l?stat.c.
+	Remove all related rules and dependencies.
 
 	* src/Makefile.in: $(OBJECTS): Depend on ../lib/error.h.
 
