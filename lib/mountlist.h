@@ -26,6 +26,7 @@ struct mount_entry
   dev_t me_dev;			/* Device number of me_mountdir. */
   unsigned int me_dummy : 1;	/* Nonzero for dummy filesystems. */
   unsigned int me_remote : 1;	/* Nonzero for remote fileystems. */
+  unsigned int me_type_malloced : 1; /* Nonzero if me_type was malloced. */
   struct mount_entry *me_next;
 };
 
