@@ -26,5 +26,5 @@
 int
 dirfd (DIR const *dir_p)
 {
-  return DIR_TO_FD;
+  return DIR_TO_FD (dir_p);
 }
