@@ -112,6 +112,7 @@ static int rev_cmp_name ();
 static int compare_extension ();
 static int rev_cmp_extension ();
 static int decode_switches ();
+static void parse_ls_color ();
 static int file_interesting ();
 static int gobble_file ();
 static int is_not_dot_or_dotdot ();
@@ -130,6 +131,8 @@ static void print_long_format ();
 static void print_many_per_line ();
 static void print_name_with_quoting ();
 static void print_type_indicator ();
+static void print_color_indicator ();
+static void put_indicator ();
 static void print_with_commas ();
 static void queue_directory ();
 static void sort_files ();
@@ -303,6 +306,63 @@ enum indicator_style
 
 static enum indicator_style indicator_style;
 
+/* Nonzero means use colors to mark types.  Also define the different
+   colors as well as the stuff for the LS_COLORS environment variable.
+   The LS_COLORS variable is now in a termcap-like format.  -o or
+   --color-if-tty. */
+
+int print_with_color;
+
+enum color_type
+{
+  color_no,                   /* 0: default or --color=no */
+  color_yes,                  /* 1: -o or --color=yes */
+  color_if_tty                        /* 2: --color=tty */
+};
+
+/* Note that color_no and color_yes equals boolean values; they will
+   be assigned to print_with_color which is a boolean variable */
+
+#define MAXCOLORLEN  16      /* Max # of characters in a color sequence */
+
+enum indicator_no
+{ C_LEFT, C_RIGHT, C_END, C_FILE, C_DIR, C_LINK, C_FIFO, C_SOCK, 
+  C_BLK, C_CHR, C_EXEC };
+
+char *indicator_name[]=
+{
+  "lc","rc","ec","fi","di","ln","pi","so","bd","cd","ex",NULL
+};
+
+struct indicator_type
+{
+  int len;
+  char string[MAXCOLORLEN];
+};
+
+struct indicator_type color_indicator[] =
+{
+  { 2, "\033[" },             /* lc: Left of color sequence */
+  { 1, "m" },                 /* rc: Right of color sequence */
+  { 4, "\033[0m" },           /* ec: End color */
+  { 1, "0" },                 /* fi: File: default */
+  { 2, "32" },                /* di: Directory: green */
+  { 2, "36" },                /* ln: Symlink: cyan */
+  { 2, "31" },                /* pi: Pipe: red */
+  { 2, "33" },                /* so: Socket: yellow/brown */
+  { 5, "44;37" },             /* bd: Block device: white on blue */
+  { 5, "44;37" },             /* cd: Char device: white on blue */
+  { 2, "35" },                /* ex: Executable: purple */
+};
+
+/* Nonzero means print using ISO 8859 characters.  The default is specified
+   here as well.  -8 enables, -7 disables.  */
+
+int print_iso8859;
+#ifndef DEFAULT_ISO8859
+#define DEFAULT_ISO8859  1
+#endif
+
 /* Nonzero means mention the inode number of each file.  -i  */
 
 static int print_inode;
@@ -423,6 +483,10 @@ static struct option const long_options[] =
   {"time", required_argument, 0, 11},
   {"help", no_argument, &show_help, 1},
   {"version", no_argument, &show_version, 1},
+  {"color", optional_argument, 0, 'o'},
+  {"colour", optional_argument, 0, 'o'},
+  {"7bit", no_argument, 0, '7'},
+  {"8bit", no_argument, 0, '8'},
   {0, 0, 0, 0}
 };
 
@@ -501,6 +565,17 @@ static enum time_type const time_types[] =
   time_atime, time_atime, time_atime, time_ctime, time_ctime
 };
 
+static char const* color_args[] = 
+{
+  /* Note: "no" is a prefix of "none" so we don't include it */
+  "yes", "force", "none", "tty", "if-tty"
+};
+
+static enum color_type const color_types[] =
+{
+  color_yes, color_yes, color_no, color_if_tty, color_if_tty
+};
+
 
 /* Write to standard output the string PREFIX followed by a space-separated
    list of the integers stored in OS all on one line.  */
@@ -550,7 +625,7 @@ main (argc, argv)
   format_needs_stat = sort_type == sort_time || sort_type == sort_size
     || format == long_format
     || trace_links || trace_dirs || indicator_style != none
-    || print_block_size || print_inode;
+    || print_block_size || print_inode || print_with_color;
 
   if (dired && format == long_format)
     {
@@ -682,6 +757,8 @@ decode_switches (argc, argv)
   really_all_files = 0;
   ignore_patterns = 0;
   quote_as_string = 0;
+  print_with_color = 0;
+  print_iso8859 = DEFAULT_ISO8859;  
 
   p = getenv ("COLUMNS");
   line_length = p ? atoi (p) : 80;
@@ -697,8 +774,11 @@ decode_switches (argc, argv)
 
   p = getenv ("TABSIZE");
   tabsize = p ? atoi (p) : 8;
+  if (tabsize < 1)
+    error (1, 0, "invalid tab size in enironment variable TABSIZE: %s",
+	   optarg);
 
-  while ((c = getopt_long (argc, argv, "abcdfgiklmnpqrstuw:xABCDFGI:LNQRST:UX1",
+  while ((c = getopt_long (argc, argv, "abcdfgiklmnopqrstuw:xABCDFGI:LNQRST:UX178",
 			   long_options, (int *) 0)) != EOF)
     {
       switch (c)
@@ -758,6 +838,30 @@ decode_switches (argc, argv)
 	case 'n':
 	  numeric_users = 1;
 	  break;
+
+      case 'o':
+        if (optarg)
+          {
+            i = argmatch(optarg, color_args);
+            if (i < 0)
+              {
+                invalid_arg("colorization criterion", optarg, i);
+                usage(1);
+              }
+            i = color_types[i];
+          }
+        else
+          i = color_yes;      /* -o or --color -> do colorize */
+
+        if ( i == color_if_tty )
+          print_with_color = isatty(1) ? 1 : 0;
+        else
+          print_with_color = i;
+
+        if ( print_with_color )
+          tabsize = line_length; /* Some systems don't like tabs and
+                                    color codes in combination */
+        break;
 
 	case 'p':
 	  indicator_style = not_programs;
@@ -864,7 +968,15 @@ decode_switches (argc, argv)
 	  format = one_per_line;
 	  break;
 
-	case 10:		/* +sort */
+	case '7':
+	  print_iso8859 = 0;
+          break;
+
+        case '8':
+          print_iso8859 = 1;
+          break;
+
+	case 10:		/* --sort */
 	  i = argmatch (optarg, sort_args);
 	  if (i < 0)
 	    {
@@ -874,7 +986,7 @@ decode_switches (argc, argv)
 	  sort_type = sort_types[i];
 	  break;
 
-	case 11:		/* +time */
+	case 11:		/* --time */
 	  i = argmatch (optarg, time_args);
 	  if (i < 0)
 	    {
@@ -884,7 +996,7 @@ decode_switches (argc, argv)
 	  time_type = time_types[i];
 	  break;
 
-	case 12:		/* +format */
+	case 12:		/* --format */
 	  i = argmatch (optarg, format_args);
 	  if (i < 0)
 	    {
@@ -899,7 +1011,257 @@ decode_switches (argc, argv)
 	}
     }
 
+  if ( print_with_color )
+    {
+      parse_ls_color();
+    } 
+
   return optind;
+}
+
+/* Parse the LS_COLORS/LS_COLOURS variable */
+
+static void
+parse_ls_color ()
+{
+  register char *p;           /* Pointer to character being parsed */
+  char *whichvar;             /* LS_COLORS or LS_COLOURS? */
+  int state;                  /* State of parser */
+  int ind_no;                 /* Indicator number */
+  int ccount;                 /* Character count */
+  int num;                    /* Escape char numeral */
+  char label[3] = "??";               /* Indicator label */
+  
+  if ( (p = getenv(whichvar = "LS_COLORS")) ||
+       (p = getenv(whichvar = "LS_COLOURS")) )
+    {
+      state = 1;
+      while ( state > 0 )
+      {
+        switch(state)
+          {
+          case 1:             /* First label character */
+            if ( *p )
+              {
+                label[0] = *(p++);
+                state = 2;
+              }
+            else
+              state = 0;      /* Done */
+            break;
+            
+          case 2:             /* Second label character */
+            if ( *p )
+              {
+                label[1] = *(p++);
+                state = 3;
+              }
+            else
+              state = -1;     /* Error */
+            break;
+            
+          case 3:             /* Should be equal sign */
+            if ( *(p++) != '=' )
+              state = -1; /* Error state */
+            else
+              {
+                ind_no = 0;
+                state = -1; /* In case we fail */
+                while ( indicator_name[ind_no] != NULL )
+                  {
+                    if ( strcmp(label,indicator_name[ind_no]) == 0 )
+                      {
+                        state = 4;  /* We found it */
+                        ccount = 0; /* Nothing stored yet */
+                        break;
+                     }
+                    else
+                      ind_no++;
+                  }
+              }
+            break;
+            
+          case 4:             /* Character to store */
+            switch ( *p )
+              {
+              case ':':
+                color_indicator[ind_no].len = ccount;
+                state = 1;
+                break;
+              case '\\':
+                /* The escape sequence will always generate a character,
+                   so enter error state if the buffer is full */
+                state = ( ccount >= MAXCOLORLEN ) ? -1 : 5;
+                break;
+              case '^':
+                /* Control character in the ^X notation */
+                state = ( ccount >= MAXCOLORLEN ) ? -1 : 8;
+                break;
+              case '\0':
+                color_indicator[ind_no].len = ccount;
+                state = 0; /* Done */
+                break;
+              default:
+                if ( ccount >= MAXCOLORLEN )
+                  state = -1; /* Too long */
+                else
+                  color_indicator[ind_no].string[ccount++] = *p;
+              }
+            p++;
+            break;
+            
+          case 5:             /* Escape character */
+            num = -1;
+            switch( *p )
+              {
+              case '0':
+              case '1':
+              case '2':
+              case '3':
+              case '4':
+              case '5':
+              case '6':
+              case '7':
+                state = 6; /* Octal numeral */
+                num = *p - '0';
+                break;
+              case 'x':
+              case 'X':
+                state = 7; /* Hex numeral */
+                num = 0;
+                break;
+              case 'a':       /* Bell */
+                num = 7;
+                break;
+              case 'b':       /* Backspace */
+                num = '\b';
+                break;
+              case 'e':       /* Escape */
+                num = 27;
+                break;
+              case 'f':       /* Formfeed */
+                num = '\f';
+                break;
+              case 'n':       /* Newline */
+                num = '\n';
+                break;
+              case 'r':       /* Return */
+                num = '\r';
+                break;
+              case 't':       /* Tab */
+                num = '\t';
+                break;
+              case 'v':       /* Vtab */
+                num = '\v';
+                break;
+              case '?':       /* Delete */
+                num = 127;
+                break;
+              case '\0':      /* End of string */
+                state = -1; /* Error */
+                break;
+              default:        /* Escaped character */
+                num = *p;
+                break;
+              }
+            if ( state == 5 )
+              {
+                color_indicator[ind_no].string[ccount++] = num;
+                state = 4;
+              }
+            p++;
+            break;
+            
+          case 6:             /* Octal numeral */
+            switch ( *p )
+              {
+              case ':':
+              case '\0':
+                color_indicator[ind_no].string[ccount++] = num;
+                color_indicator[ind_no].len = ccount;
+                state = ( *(p++) == ':' ) ? 1 : 0;
+                p++;
+                break;
+              case '0':
+              case '1':
+              case '2':
+              case '3':
+              case '4':
+              case '5':
+              case '6':
+              case '7':
+                num = ( num << 3 ) + ( *(p++) - '0' );
+                break;
+              default:
+                color_indicator[ind_no].string[ccount++] = num;
+                state = 4;
+                break;
+              }
+            break;
+            
+          case 7:             /* Hex numeral */
+            switch ( *p )
+              {
+              case ':':
+              case '\0':
+                color_indicator[ind_no].string[ccount++] = num;
+                color_indicator[ind_no].len = ccount;
+                state = ( *(p++) == ':' ) ? 1 : 0;
+                break;
+              case '0':
+              case '1':
+              case '2':
+              case '3':
+              case '4':
+              case '5':
+              case '6':
+              case '7':
+              case '8':
+              case '9':
+                num = ( num << 4 ) + ( *(p++) - '0' );
+                break;
+              case 'A':
+              case 'B':
+              case 'C':
+              case 'D':
+              case 'E':
+              case 'F':
+                num = ( num << 4 ) + ( *(p++) - 'A' + 10 );
+                break;
+              case 'a':
+              case 'b':
+              case 'c':
+              case 'd':
+              case 'e':
+              case 'f':
+                num = ( num << 4 ) + ( *(p++) - 'a' + 10 );
+                break;
+              default:
+                color_indicator[ind_no].string[ccount++] = num;
+                state = 4;
+                break;
+              }
+            break;
+
+          case 8:             /* ^ notation */
+            state = 4;        /* Usually the next state */
+            if ( *p >= '@' && *p <= '~' )
+                color_indicator[ind_no].string[ccount++] = *p & 037;
+            else if ( *p == '?' )
+              color_indicator[ind_no].string[ccount++] = 127;
+            else
+              state = -1;     /* Error */
+            p++;
+            break;
+          }
+      }
+      
+      if ( state < 0 )
+      {
+        fprintf(stderr,"Bad %s variable\n",whichvar);
+        print_with_color = 0;
+      }
+    }
 }
 
 /* Request that the directory named `name' have its contents listed later.
@@ -1124,7 +1486,7 @@ gobble_file (name, explicit_arg, dirname)
 	     they won't be traced and when no indicator is needed. */
 	  if (linkpath
 	      && ((explicit_arg && format != long_format)
-		   || indicator_style != none)
+		   || indicator_style != none || print_with_color)
 	      && SAFE_STAT (linkpath, &linkstats) == 0)
 	    {
 	      /* Symbolic links to directories that are mentioned on the
@@ -1617,7 +1979,11 @@ print_long_format (f)
   DIRED_INDENT ();
   FPUTS (bigbuf, stdout, p - bigbuf);
   PUSH_CURRENT_DIRED_POS (&dired_obstack);
+  if (print_with_color)
+    print_color_indicator (f->stat.st_mode);
   print_name_with_quoting (f->name);
+  if (print_with_color)
+    put_indicator(C_END);
   PUSH_CURRENT_DIRED_POS (&dired_obstack);
 
   if (f->filetype == symbolic_link)
@@ -1625,7 +1991,11 @@ print_long_format (f)
       if (f->linkname)
 	{
 	  FPUTS_LITERAL (" -> ", stdout);
+	  if (print_with_color)
+	    print_color_indicator (f->linkmode);
 	  print_name_with_quoting (f->linkname);
+	  if (print_with_color)
+	    put_indicator(C_END);
 	  if (indicator_style != none)
 	    print_type_indicator (f->linkmode);
 	}
@@ -1675,14 +2045,17 @@ quote_filename (p, quoted_length)
 
 	    default:
 	      /* FIXME: why not just use the ISPRINT macro here?  */
-	      if (!(c > 040 && c < 0177))
+	      if (!( (c > 040 && c < 0177)
+		     || (print_iso8859 && c >= 0200 && c <= 0377) ) )
 		found_quotable = 1;
 	      break;
 	    }
 	}
       else
 	{
-	  if (!(c >= 040 && c < 0177) && qmark_funny_chars)
+	  if (!( (c >= 040 && c < 0177) 
+		 || (print_iso8859 && c >= 0xA1 && c <= 0xFF) )
+	      && qmark_funny_chars)
 	    found_quotable = 1;
 	}
       if (found_quotable)
@@ -1746,7 +2119,8 @@ quote_filename (p, quoted_length)
 	      break;
 
 	    default:
-	      if (c > 040 && c < 0177)
+	      if ( (c > 040 && c < 0177)
+		   || (print_iso8859 && c >= 0200 && c <= 0377) )
 		SAVECHAR (c);
 	      else
 		{
@@ -1758,7 +2132,8 @@ quote_filename (p, quoted_length)
 	}
       else
 	{
-	  if (c >= 040 && c < 0177)
+	  if ( (c >= 040 && c < 0177)
+	       || (print_iso8859 && c >= 0200 && c <= 0377) )
 	    SAVECHAR (c);
 	  else if (!qmark_funny_chars)
 	    SAVECHAR (c);
@@ -1806,7 +2181,11 @@ print_file_name_and_frills (f)
 	    (unsigned) convert_blocks (ST_NBLOCKS (f->stat),
 				       kilobyte_blocks));
 
+  if (print_with_color)
+    print_color_indicator (f->stat.st_mode);
   print_name_with_quoting (f->name);
+  if (print_with_color)
+    put_indicator(C_END);
 
   if (indicator_style != none)
     print_type_indicator (f->stat.st_mode);
@@ -1839,12 +2218,72 @@ print_type_indicator (mode)
     PUTCHAR ('*');
 }
 
+static void
+print_color_indicator (mode)
+     unsigned int mode;
+{
+  int i;
+  int shi;                    /* Bits to shift mode */
+  int type = C_FILE;
+  
+  if (S_ISDIR (mode))
+    type = C_DIR;
+  
+#ifdef S_ISLNK
+  else if (S_ISLNK (mode))
+    type = C_LINK;
+#endif
+
+#ifdef S_ISFIFO
+  else if (S_ISFIFO (mode))
+    type = C_FIFO;
+#endif
+
+#ifdef S_ISSOCK
+  else if (S_ISSOCK (mode))
+    type = C_SOCK;
+#endif
+
+#ifdef S_ISBLK
+  else if (S_ISBLK (mode))
+    type = C_BLK;
+#endif
+
+#ifdef S_ISCHR
+  else if (S_ISCHR (mode))
+    type = C_CHR;
+#endif
+
+  if ( type == C_FILE && (mode & (S_IEXEC|S_IEXEC>>3|S_IEXEC>>6)) )
+    type = C_EXEC;
+  
+  put_indicator(C_LEFT);
+  put_indicator(type);
+  put_indicator(C_RIGHT);
+}
+
+/* Output a color indicator (which may contain nulls) */
+static void
+put_indicator(n)
+     int n;
+{
+  register int i;
+  register char *p;
+
+  p = color_indicator[n].string;
+
+  for ( i = color_indicator[n].len ; i ; i-- )
+    {
+       putchar(*(p++));
+    }
+}
+
 static int
 length_of_file_name_and_frills (f)
      struct fileinfo *f;
 {
   register char *p = f->name;
-  register char c;
+  register unsigned char c;
   register int len = 0;
 
   if (print_inode)
@@ -1880,7 +2319,8 @@ length_of_file_name_and_frills (f)
 	      break;
 
 	    default:
-	      if (c >= 040 && c < 0177)
+	      if ( (c >= 040 && c < 0177)
+		  || (print_iso8859 && c >= 0200 && c <= 0377) )
 		len += 1;
 	      else
 		len += 4;
@@ -2134,6 +2574,8 @@ usage (status)
   -m                         fill width with a comma separated list of entries\n\
   -N, --literal              do not quote entry names\n\
   -n, --numeric-uid-gid      list numeric UIDs and GIDs instead of names\n\
+  -o, --color, --colour      colorize entries according to type\n\
+      --colo(u)r=WORD        yes -o, no, tty (if output is a terminal)\n\
   -p                         append a character for typing each entry\n\
   -Q, --quote-name           enclose entry names in double quotes\n\
   -q, --hide-control-chars   print ? instead of non graphic characters\n\
@@ -2154,6 +2596,8 @@ usage (status)
   -x                         list entries by lines instead of by columns\n\
   -X                         sort alphabetically by entry extension\n\
   -1                         list one file per line\n\
+  -7, --7bit                 allow only 7-bit ASCII characters to be printed\n\
+  -8, --8bit                 allow 8-bit ISO 8859 characters to be printed\n\
       --help                 display this help and exit\n\
       --version              output version information and exit\n\
 \n\
