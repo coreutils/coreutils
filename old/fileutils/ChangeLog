@@ -1,3 +1,28 @@
+Thu May 27 00:03:51 1993  Jim Meyering  (meyering@comco.com)
+
+	* Version 3.8.
+
+	* configure.in (STAT_OSF1): Reference the statfs f_fsize member
+	so that configure defines STAT_OSF1 only if there is such a member.
+	Without such a reference, a Pyramid MIServer running OSx 5.1
+	improperly defined STAT_OSF1 instead of the one it needed:
+	STAT_STATFS2_BSIZE.
+
+Wed May 26 00:57:46 1993  Jim Meyering  (meyering@comco.com)
+
+	* ls.h, ls-ls.c ls-dir.c, ls-vdir.c: New files that define or
+	simply set the new global variable ls_mode.  ls_mode defines whether
+	the executable built from ls.o should act like ls, dir, or vdir.
+	* ls.c (decode_switches): Use the variable instead of #ifdefs.
+	This is modelled after the approach used in GNU binutils 2.x for
+	ar and ranlib.  Here we avoid two rudundant compilations.
+
+	* install.c (change_attributes, copy_file, install_file_in_file):
+	Don't call chown if we can efficiently determine that doing so is
+	unnecessary.  On some systems, calls to chown (even with your own
+	uid and gid) fail unless made by root.  On such systems install
+	got spurious failures.
+
 Sat May 22 02:13:12 1993  Jim Meyering  (meyering@comco.com)
 
 	* Version 3.6.

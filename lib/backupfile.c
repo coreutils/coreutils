@@ -216,7 +216,7 @@ concat (str1, str2)
      char *str1, *str2;
 {
   char *newstr;
-  char str1_length = strlen (str1);
+  int str1_length = strlen (str1);
 
   newstr = malloc (str1_length + strlen (str2) + 1);
   if (newstr == 0)

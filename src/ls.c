@@ -45,6 +45,8 @@
 #include <getopt.h>
 #include "system.h"
 #include <fnmatch.h>
+
+#include "ls.h"
 #include "version.h"
 
 #ifndef S_IEXEC
@@ -525,29 +527,37 @@ decode_switches (argc, argv)
 
   /* initialize all switches to default settings */
 
-#ifdef MULTI_COL
-  /* This is for the `dir' program.  */
-  format = many_per_line;
-  quote_funny_chars = 1;
-#else
-#ifdef LONG_FORMAT
-  /* This is for the `vdir' program.  */
-  format = long_format;
-  quote_funny_chars = 1;
-#else
-  /* This is for the `ls' program.  */
-  if (isatty (1))
+  switch (ls_mode)
     {
+    case LS_MULTI_COL:
+      /* This is for the `dir' program.  */
       format = many_per_line;
-      qmark_funny_chars = 1;
+      quote_funny_chars = 1;
+      break;
+
+    case LS_LONG_FORMAT:
+      /* This is for the `vdir' program.  */
+      format = long_format;
+      quote_funny_chars = 1;
+      break;
+
+    case LS_LS:
+      /* This is for the `ls' program.  */
+      if (isatty (1))
+	{
+	  format = many_per_line;
+	  qmark_funny_chars = 1;
+	}
+      else
+	{
+	  format = one_per_line;
+	  qmark_funny_chars = 0;
+	}
+      break;
+
+    default:
+      abort ();
     }
-  else
-    {
-      format = one_per_line;
-      qmark_funny_chars = 0;
-    }
-#endif
-#endif
 
   time_type = time_mtime;
   full_time = 0;

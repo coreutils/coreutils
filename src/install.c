@@ -263,11 +263,17 @@ install_file_in_file (from, to)
      char *from;
      char *to;
 {
-  if (copy_file (from, to))
+  int to_created;
+  int no_need_to_chown;
+
+  if (copy_file (from, to, &to_created))
     return 1;
   if (strip_files)
     strip (to);
-  return change_attributes (to);
+  no_need_to_chown = (to_created
+		      && owner_name == NULL
+		      && group_name == NULL);
+  return change_attributes (to, no_need_to_chown);
 }
 
 /* Copy file FROM into directory TO_DIR, keeping its same name,
@@ -295,17 +301,22 @@ install_file_in_dir (from, to_dir)
 static char buffer[READ_SIZE];
 
 /* Copy file FROM onto file TO, creating TO if necessary.
-   Return 0 if the copy is successful, 1 if not. */
+   Return 0 if the copy is successful, 1 if not.  If the copy is
+   successful, set *TO_CREATED to non-zero if TO was created (if it did
+   not exist or did, but was unlinked) and to zero otherwise.  If the
+   copy fails, don't modify *TO_CREATED.  */
 
 static int
-copy_file (from, to)
+copy_file (from, to, to_created)
      char *from;
      char *to;
+     int *to_created;
 {
   int fromfd, tofd;
   int bytes;
   int ret = 0;
   struct stat from_stats, to_stats;
+  int target_created = 1;
 
   if (stat (from, &from_stats))
     {
@@ -331,7 +342,8 @@ copy_file (from, to)
 	  return 1;
 	}
       /* If unlink fails, try to proceed anyway.  */
-      unlink (to);
+      if (unlink (to))
+	target_created = 0;
     }
 
   fromfd = open (from, O_RDONLY, 0);
@@ -373,6 +385,8 @@ copy_file (from, to)
       error (0, errno, "%s", to);
       ret = 1;
     }
+  if (ret == 0)
+    *to_created = target_created;
   return ret;
 
  copy_error:
@@ -382,11 +396,13 @@ copy_file (from, to)
 }
 
 /* Set the attributes of file or directory PATH.
+   If NO_NEED_TO_CHOWN is non-zero, don't call chown.
    Return 0 if successful, 1 if not. */
 
 static int
-change_attributes (path)
+change_attributes (path, no_need_to_chown)
      char *path;
+     int no_need_to_chown;
 {
   int err = 0;
 
@@ -406,7 +422,7 @@ change_attributes (path)
      want to know.  But AFS returns EPERM when you try to change a
      file's group; thus the kludge.  */
 
-  if (chown (path, owner_id, group_id)
+  if (!no_need_to_chown && chown (path, owner_id, group_id)
 #ifdef AFS
       && errno != EPERM
 #endif
