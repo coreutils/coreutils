@@ -39,12 +39,13 @@ $@ and (warn "$ME: this script requires Perl's Expect package >=1.11\n"),
       # No input for cut -f2.
       $cmd =~ /^cut/
 	or $exp->send("a b\n");
-      $exp->send('');  # FIXME: it'd be better not to hard-code ^D here
+      $exp->send("\cD");  # This is Control-D.  FIXME: what if that's not EOF?
       $exp->expect (0, '-re', "^a b\\r?\$");
       my $found = $exp->expect (1, '-re', "^.+\$");
       # $found and warn "F: $found: " . $exp->exp_match () . "\n";
       $exp->expect(1, 'eof');
-      defined $found
+      # Expect no output from cut, since we gave it no input.
+      defined $found || $cmd =~ /^cut/
 	or (warn "$ME: $cmd didn't produce expected output\n"),
 	  $fail=1, next;
       defined defined $exp->exitstatus
