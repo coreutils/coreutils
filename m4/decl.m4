@@ -52,7 +52,7 @@ AC_DEFUN(jm_CHECK_DECLARATIONS,
   do
     jm_CHECK_DECLARATION($jm_func,
     [
-      jm_tr_func=HAVE_DECLARATION_`echo $jm_func | tr abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ`
+      jm_tr_func=HAVE_DECL_`echo $jm_func | tr abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ`
       AC_DEFINE_UNQUOTED($jm_tr_func) $2], $3)dnl
   done
 ])
