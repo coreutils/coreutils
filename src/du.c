@@ -122,9 +122,11 @@ static int opt_dereference_arguments = 0;
    is at level 0, so `du --max-depth=0' is equivalent to `du -s'.  */
 static int max_depth = INT_MAX;
 
-/* If positive, the units to use when printing sizes;
-   if negative, the human-readable base.  */
-static int output_block_size;
+/* Human-readable options for output.  */
+static int human_output_opts;
+
+/* The units to use when printing sizes.  */
+static uintmax_t output_block_size;
 
 /* Accumulated path for file or directory being processed.  */
 static String *path;
@@ -351,17 +353,16 @@ str_trunc (String *s1, unsigned int length)
 }
 
 /* Print N_BLOCKS followed by STRING on a line.  NBLOCKS is the number of
-   ST_NBLOCKSIZE-byte blocks; convert it to OUTPUT_BLOCK_SIZE units before
-   printing.  If OUTPUT_BLOCK_SIZE is negative, use a human readable
-   notation instead.  */
+   ST_NBLOCKSIZE-byte blocks; convert it to a readable value before
+   printing.  */
 
 static void
 print_size (uintmax_t n_blocks, const char *string)
 {
   char buf[LONGEST_HUMAN_READABLE + 1];
   printf ("%s\t%s\n",
-	  human_readable_inexact (n_blocks, buf, ST_NBLOCKSIZE,
-				  output_block_size, human_ceiling),
+	  human_readable (n_blocks, buf, human_output_opts,
+			  ST_NBLOCKSIZE, output_block_size),
 	  string);
   fflush (stdout);
 }
@@ -581,7 +582,8 @@ main (int argc, char **argv)
   exclude = new_exclude ();
   xstat = lstat;
 
-  human_block_size (getenv ("DU_BLOCK_SIZE"), 0, &output_block_size);
+  human_output_opts = human_options (getenv ("DU_BLOCK_SIZE"), false,
+				     &output_block_size);
 
   while ((c = getopt_long (argc, argv, "abchHklmsxB:DLSX:", long_options, NULL))
 	 != -1)
@@ -597,6 +599,7 @@ main (int argc, char **argv)
 	  break;
 
 	case 'b':
+	  human_output_opts = 0;
 	  output_block_size = 1;
 	  break;
 
@@ -605,14 +608,17 @@ main (int argc, char **argv)
 	  break;
 
 	case 'h':
-	  output_block_size = -1024;
+	  human_output_opts = human_autoscale | human_SI | human_base_1024;
+	  output_block_size = 1;
 	  break;
 
 	case 'H':
-	  output_block_size = -1000;
+	  human_output_opts = human_autoscale | human_SI;
+	  output_block_size = 1;
 	  break;
 
 	case 'k':
+	  human_output_opts = 0;
 	  output_block_size = 1024;
 	  break;
 
@@ -626,6 +632,7 @@ main (int argc, char **argv)
  	  break;
 
 	case 'm': /* obsolescent */
+	  human_output_opts = 0;
 	  output_block_size = 1024 * 1024;
 	  break;
 
@@ -642,7 +649,7 @@ main (int argc, char **argv)
 	  break;
 
 	case 'B':
-	  human_block_size (optarg, 1, &output_block_size);
+	  human_output_opts = human_options (optarg, true, &output_block_size);
 	  break;
 
 	case 'D':
