@@ -40,6 +40,8 @@ char *alloca ();
 #include <sys/types.h>
 #include "system.h"
 #include "version.h"
+#include "xstrtoul.h"
+#include "error.h"
 
 #if defined(__GNUC__) || defined(STDC_HEADERS)
 #include <float.h>
@@ -100,7 +102,6 @@ typedef double LONG_DOUBLE;
 
 char *xmalloc ();
 char *xrealloc ();
-void error ();
 
 enum size_spec
   {
@@ -398,97 +399,6 @@ lcm (u, v)
   if (t == 0)
     return 0;
   return u * v / t;
-}
-
-static strtoul_error
-my_strtoul (s, base, val, allow_bkm_suffix)
-     const char *s;
-     int base;
-     long unsigned int *val;
-     int allow_bkm_suffix;
-{
-  char *p;
-  unsigned long int tmp;
-
-  assert (0 <= base && base <= 36);
-
-  errno = 0;
-  tmp = strtoul (s, &p, base);
-  if (errno != 0)
-    return UINT_OVERFLOW;
-  if (p == s)
-    return UINT_INVALID;
-  if (!allow_bkm_suffix)
-    {
-      if (*p == '\0')
-	{
-	  *val = tmp;
-	  return UINT_OK;
-	}
-      else
-	return UINT_INVALID_SUFFIX_CHAR;
-    }
-
-  switch (*p)
-    {
-    case '\0':
-      break;
-
-#define BKM_SCALE(x,scale_factor,error_return)		\
-      do						\
-	{						\
-	  if (x > (double) ULONG_MAX / scale_factor)	\
-	    return error_return;			\
-	  x *= scale_factor;				\
-	}						\
-      while (0)
-
-    case 'b':
-      BKM_SCALE (tmp, 512, UINT_OVERFLOW);
-      break;
-
-    case 'k':
-      BKM_SCALE (tmp, 1024, UINT_OVERFLOW);
-      break;
-
-    case 'm':
-      BKM_SCALE (tmp, 1024 * 1024, UINT_OVERFLOW);
-      break;
-
-    default:
-      return UINT_INVALID_SUFFIX_CHAR;
-      break;
-    }
-
-  *val = tmp;
-  return UINT_OK;
-}
-
-static void
-uint_fatal_error (str, argument_type_string, err)
-     const char *str;
-     const char *argument_type_string;
-     strtoul_error err;
-{
-  switch (err)
-    {
-    case UINT_OK:
-      abort ();
-
-    case UINT_INVALID:
-      error (2, 0, "invalid %s `%s'", argument_type_string, str);
-      break;
-
-    case UINT_INVALID_SUFFIX_CHAR:
-      error (2, 0, "invalid character following %s `%s'",
-	     argument_type_string, str);
-      break;
-
-    case UINT_OVERFLOW:
-      error (2, 0, "%s `%s' larger than maximum unsigned long",
-	     argument_type_string, str);
-      break;
-    }
 }
 
 static void
@@ -1443,6 +1353,16 @@ parse_old_offset (s)
     return -1;
   if (*suffix == '.')
     ++suffix;
+
+#define BKM_SCALE(x, scale_factor, error_return)			\
+      do								\
+	{								\
+	  if (x > (double) ULONG_MAX / scale_factor)			\
+	    return error_return;					\
+	  x *= scale_factor;						\
+	}								\
+      while (0)
+
   switch (*suffix)
     {
     case 'b':
@@ -1776,17 +1696,17 @@ main (argc, argv)
 	  break;
 
 	case 'j':
-	  s_err = my_strtoul (optarg, 0, &n_bytes_to_skip, 1);
-	  if (s_err != UINT_OK)
-	    uint_fatal_error (optarg, "skip argument", s_err);
+	  s_err = xstrtoul (optarg, NULL, 0, &n_bytes_to_skip, 1);
+	  if (s_err != LONGINT_OK)
+	    STRTOL_FATAL_ERROR (optarg, "skip argument", s_err);
 	  break;
 
 	case 'N':
 	  limit_bytes_to_format = 1;
 
-	  s_err = my_strtoul (optarg, 0, &max_bytes_to_format, 1);
-	  if (s_err != UINT_OK)
-	    uint_fatal_error (optarg, "limit argument", s_err);
+	  s_err = xstrtoul (optarg, NULL, 0, &max_bytes_to_format, 1);
+	  if (s_err != LONGINT_OK)
+	    STRTOL_FATAL_ERROR (optarg, "limit argument", s_err);
 	  break;
 
 	case 's':
@@ -1794,9 +1714,9 @@ main (argc, argv)
 	    string_min = 3;
 	  else
 	    {
-	      s_err = my_strtoul (optarg, 0, &string_min, 1);
-	      if (s_err != UINT_OK)
-		uint_fatal_error (optarg, "minimum string length", s_err);
+	      s_err = xstrtoul (optarg, NULL, 0, &string_min, 1);
+	      if (s_err != LONGINT_OK)
+		STRTOL_FATAL_ERROR (optarg, "minimum string length", s_err);
 	    }
 	  ++flag_dump_strings;
 	  break;
@@ -1849,9 +1769,10 @@ main (argc, argv)
 	    }
 	  else
 	    {
-	      s_err = my_strtoul (optarg, 10, &desired_width, 0);
-	      if (s_err != UINT_OK)
-		error (2, 0, "invalid width specification `%s'", optarg);
+	      s_err = xstrtoul (optarg, NULL, 10, &desired_width, 0);
+	      if (s_err != LONGINT_OK)
+		STRTOL_FATAL_ERROR (optarg, "invalid width specification",
+				    s_err);
 	    }
 	  break;
 
@@ -2008,7 +1929,7 @@ main (argc, argv)
 	bytes_per_block = desired_width;
       else
 	{
-	  error (0, 0, "warning: invalid width %d; using %d instead",
+	  error (0, 0, "warning: invalid width %lu; using %d instead",
 		 desired_width, l_c_m);
 	  bytes_per_block = l_c_m;
 	}
