@@ -1,6 +1,10 @@
-2003-02-06  Jim Meyering  <jim@meyering.net>
+2003-02-08  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.7.
+
+	* src/rm.c: Correct now-invalid comment about cycle-detection.
+
+2003-02-06  Jim Meyering  <jim@meyering.net>
 
 	* NEWS: Add entries from old/*/NEWS
 	from fileutils-4.1 through 4.1.11 and
