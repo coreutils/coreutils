@@ -324,10 +324,6 @@
 #include "timespec.h"
 #include "xstrtol.h"
 
-#if ! (HAVE_DECL_STRTOUMAX || defined strtoumax)
-uintmax_t strtoumax ();
-#endif
-
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "pr"
 
@@ -806,29 +802,25 @@ first_last_page (char const *pages)
   char *p;
   uintmax_t first;
   uintmax_t last = UINTMAX_MAX;
-  int err;
+  strtol_error err = xstrtoumax (pages, &p, 10, &first, "");
+  if (err != LONGINT_OK && err != LONGINT_INVALID_SUFFIX_CHAR)
+    _STRTOL_ERROR (EXIT_FAILURE, pages, _("page range"), err);
 
-  errno = 0;
-  first = strtoumax (pages, &p, 10);
-  err = errno;
   if (p == pages || !first)
     return false;
 
   if (*p == ':')
     {
       char const *p1 = p + 1;
-      errno = 0;
-      last = strtoumax (p1, &p, 10);
-      err |= errno;
+      err = xstrtoumax (p1, &p, 10, &last, "");
+      if (err != LONGINT_OK)
+	_STRTOL_ERROR (EXIT_FAILURE, pages, _("page range"), err);
       if (p1 == p || last < first)
 	return false;
     }
 
   if (*p)
     return false;
-
-  if (err)
-    error (EXIT_FAILURE, err, _("Page range `%s'"), pages);
 
   first_page_number = first;
   last_page_number = last;
