@@ -615,7 +615,7 @@ my_strftime (s, maxsize, format, tp extra_args LOCALE_PARAM)
       int pad = 0;		/* Padding for number ('-', '_', or 0).  */
       int modifier;		/* Field modifier ('E', 'O', or 0).  */
       int digits;		/* Max digits for numeric format.  */
-      int number_value; 	/* Numeric value to be printed.  */
+      int number_value;		/* Numeric value to be printed.  */
       int negative_number;	/* 1 if the number is negative.  */
       const CHAR_T *subfmt;
       CHAR_T *bufp;
@@ -1029,7 +1029,7 @@ my_strftime (s, maxsize, format, tp extra_args LOCALE_PARAM)
 	    do
 	      *--bufp = u % 10 + L_('0');
 	    while ((u /= 10) != 0);
-  	  }
+	  }
 
 	do_number_sign_and_padding:
 	  if (negative_number)
@@ -1186,7 +1186,7 @@ my_strftime (s, maxsize, format, tp extra_args LOCALE_PARAM)
 	  DO_NUMBER (2, tp->tm_sec);
 
 	case L_('s'):		/* GNU extension.  */
-  	  {
+	  {
 	    struct tm ltm;
 	    time_t t;
 
