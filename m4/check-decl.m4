@@ -1,4 +1,4 @@
-#serial 5
+#serial 6
 
 dnl This is just a wrapper function to encapsulate this kludge.
 dnl Putting it in a separate file like this helps share it between
@@ -7,20 +7,20 @@ AC_DEFUN(jm_CHECK_DECLS,
 [
   headers='
 #include <stdio.h>
-#ifdef HAVE_STRING_H
+#if HAVE_STRING_H
 # if !STDC_HEADERS && HAVE_MEMORY_H
 #  include <memory.h>
 # endif
 # include <string.h>
 #else
-# ifdef HAVE_STRINGS_H
+# if HAVE_STRINGS_H
 #  include <strings.h>
 # endif
 #endif
-#ifdef HAVE_STDLIB_H
+#if STDC_HEADERS
 # include <stdlib.h>
 #endif
-#ifdef HAVE_UNISTD_H
+#if HAVE_UNISTD_H
 # include <unistd.h>
 #endif
 '
@@ -38,8 +38,10 @@ AC_DEFUN(jm_CHECK_DECLS,
     AC_DEFINE(HAVE_DECL_REALLOC, 1, [Define if this function is declared.])
     AC_DEFINE(HAVE_DECL_STPCPY, 1, [Define if this function is declared.])
     AC_DEFINE(HAVE_DECL_STRSTR, 1, [Define if this function is declared.])
+    AC_DEFINE(HAVE_DECL_STRTOUL, 1, [Define if this function is declared.])
+    AC_DEFINE(HAVE_DECL_STRTOULL, 1, [Define if this function is declared.])
   fi
 
   jm_CHECK_DECLARATIONS($headers, free lseek malloc \
-                        memchr realloc stpcpy strstr)
+                        memchr realloc stpcpy strstr strtoul strtoull)
 ])
