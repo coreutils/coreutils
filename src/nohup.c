@@ -149,7 +149,8 @@ main (int argc, char **argv)
 	 the post-failed-execve diagnostic.  */
       saved_stderr_fd = dup (STDERR_FILENO);
 
-      if (set_cloexec_flag (saved_stderr_fd, 1) == -1)
+      if (saved_stderr_fd != -1
+	  && ! set_cloexec_flag (saved_stderr_fd, true))
 	error (NOHUP_FAILURE, errno,
 	       _("failed to set the copy of stderr to close on exec"));
 
