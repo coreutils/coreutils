@@ -2,6 +2,12 @@
 
 	* Version 4.5.5.
 
+	* src/remove.c (remove_entry) [ROOT_CAN_UNLINK_DIRS
+	&& HAVE_STRUCT_DIRENT_D_TYPE]: If a file has d_type == DT_UNKNOWN
+	it may still be a directory -- or not (e.g., with FreeBSD on an
+	NFS-mounted file system), so resort to calling lstat to find out.
+	Based on a patch by Michael van Elst.
+
 	* tests/cp/same-file: Don't assume that the file owner username
 	length is less than 9 in ls output: instead, omit that field
 	altogether.  Reported by, and suggested fix from, Ferdinand.
