@@ -2,6 +2,9 @@
 
 	* Version 3.16o.
 
+	* tests/Makefile.am (SUBDIRS): Add install.
+	* tests/install: New subdir, with one basic test.
+
 	* src/dd.c: Include safe-read.h.
 	Don't declare safe_read.
 	* src/touch.c: Likewise.
