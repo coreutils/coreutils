@@ -1,3 +1,18 @@
+1998-12-06  Jim Meyering  <meyering@ascend.com>
+
+	Fix `ls -R .' formatting bug that broke mktexlsr.
+	* src/ls.c: Include path-concat.h.
+	(basename_is_dot_or_dotdot): New function, derived from
+	is_not_dot_or_dotdot.
+	(is_not_dot_or_dotdot): Remove function.
+	(extract_dirs_from_files): Use `!basename_is_dot_or_dotdot'
+	instead of is_not_dot_or_dotdot and use path_concat instead of attach.
+
+	* tests/ls-2/tests: New file (renamed from quoting),
+	with new test for the `ls -R .' fix.
+	* tests/ls-2/quoting: Remove file.
+	* tests/ls-2/Makefile.am (TESTS): s/quoting/tests/.
+
 1998-11-29  Jim Meyering  <meyering@ascend.com>
 
 	* src/remove.c (DOT_OR_DOTDOT): Move definition from this file...
