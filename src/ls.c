@@ -1416,12 +1416,10 @@ decode_switches (int argc, char **argv)
   }
 #endif
 
-  /* Using the TABSIZE environment variable is not POSIX-approved.
-     Ignore it when POSIXLY_CORRECT is set.  */
   {
-    char const *p;
+    char const *p = getenv ("TABSIZE");
     tabsize = 8;
-    if (!getenv ("POSIXLY_CORRECT") && (p = getenv ("TABSIZE")))
+    if (p)
       {
 	unsigned long int tmp_ulong;
 	if (xstrtoul (p, NULL, 0, &tmp_ulong, NULL) == LONGINT_OK
