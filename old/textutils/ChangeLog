@@ -1,3 +1,16 @@
+Fri Aug  4 23:21:46 1995  Jim Meyering  (meyering@comco.com)
+
+	* src/Makefile.in (DISTFILES): Include ansi2knr.c and ansi2knr.1. 
+	Add suffixes, dependencies, and rules to convert ANSI source to K&R
+	when required.  Mark tr.o and comm.o as the only such files (for now).
+
+	* tr.c: Protoize.
+	* comm.c: Protoize.
+
+	* Makefile.in (DISTFILES): Add aclocal.m4 and acconfig.h.
+	(configure): Depend on aclocal.m4.
+	(stamp.h.in): Depend on aclocal.m4 and acconfig.h.
+
 Sun Jul 30 00:01:58 1995  Jim Meyering  (meyering@comco.com)
 
 	* md5sum.c (md5_check): Use getline instead of fgets.
