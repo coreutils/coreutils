@@ -102,6 +102,15 @@ Summary:
 
 #ifndef __OBSTACK_H__
 #define __OBSTACK_H__
+
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
+
+#if !defined (HAVE_BCOPY) && defined (HAVE_MEMCPY) && !defined (bcopy)
+# define bcopy(from, to, len) memcpy ((to), (from), (len))
+#endif
+
 
 /* We use subtraction of (char *)0 instead of casting to int
    because on word-addressable machines a simple cast to int
