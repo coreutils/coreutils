@@ -1,5 +1,5 @@
 /* touch -- change modification and access times of files
-   Copyright (C) 87, 1989-1991, 1995-2003 Free Software Foundation, Inc.
+   Copyright (C) 87, 1989-1991, 1995-2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -56,9 +56,6 @@ static int change_times;
 /* (-c) If nonzero, don't create if not already there. */
 static int no_create;
 
-/* (-d) If nonzero, date supplied on command line in get_date formats. */
-static int flexible_date;
-
 /* (-r) If nonzero, use times from a reference file. */
 static int use_ref;
 
@@ -111,6 +108,19 @@ static int const time_masks[] =
 {
   CH_ATIME, CH_ATIME, CH_ATIME, CH_MTIME, CH_MTIME
 };
+
+/* Interpret FLEX_DATE as a date, relative to NOW, and return the
+   respresented time.  If NOW is null, use the current time.
+   FIXME: add support for subsecond resolution.  */
+
+static time_t
+get_reldate (char const *flex_date, time_t const *now)
+{
+  time_t r = get_date (flex_date, now);
+  if (r == (time_t) -1)
+    error (EXIT_FAILURE, 0, _("invalid date format %s"), quote (flex_date));
+  return r;
+}
 
 /* Update the time of file FILE according to the options given.
    Return 0 if successful, 1 if an error occurs. */
@@ -273,6 +283,7 @@ main (int argc, char **argv)
   int c;
   int date_set = 0;
   int err = 0;
+  char const *flex_date = NULL;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -282,7 +293,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  change_times = no_create = use_ref = posix_date = flexible_date = 0;
+  change_times = no_create = use_ref = posix_date = 0;
 
   while ((c = getopt_long (argc, argv, "acd:fmr:t:", longopts, NULL)) != -1)
     {
@@ -300,11 +311,7 @@ main (int argc, char **argv)
 	  break;
 
 	case 'd':
-	  flexible_date++;
-	  newtime.tv_sec = get_date (optarg, NULL);
-	  newtime.tv_nsec = 0; /* FIXME: get_date should set this.  */
-	  if (newtime.tv_sec == (time_t) -1)
-	    error (EXIT_FAILURE, 0, _("invalid date format %s"), quote (optarg));
+	  flex_date = optarg;
 	  date_set++;
 	  break;
 
@@ -346,8 +353,7 @@ main (int argc, char **argv)
   if (change_times == 0)
     change_times = CH_ATIME | CH_MTIME;
 
-  if ((use_ref && (posix_date || flexible_date))
-      || (posix_date && flexible_date))
+  if (posix_date && (use_ref || flex_date))
     {
       error (0, 0, _("cannot specify times from more than one source"));
       usage (EXIT_FAILURE);
@@ -358,7 +364,22 @@ main (int argc, char **argv)
       if (stat (ref_file, &ref_stats))
 	error (EXIT_FAILURE, errno,
 	       _("failed to get attributes of %s"), quote (ref_file));
+      if (flex_date)
+	{
+	  if (change_times & CH_ATIME)
+	    ref_stats.st_atime = get_reldate (flex_date, &ref_stats.st_atime);
+	  if (change_times & CH_MTIME)
+	    ref_stats.st_mtime = get_reldate (flex_date, &ref_stats.st_mtime);
+	}
       date_set++;
+    }
+  else
+    {
+      if (flex_date)
+	{
+	  newtime.tv_sec = get_reldate (flex_date, NULL);
+	  newtime.tv_nsec = 0;
+	}
     }
 
   /* The obsolete `MMDDhhmm[YY]' form is valid IFF there are
