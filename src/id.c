@@ -42,6 +42,7 @@
 #ifdef _POSIX_VERSION
 #include <limits.h>
 #if !defined(NGROUPS_MAX) || NGROUPS_MAX < 1
+#undef NGROUPS_MAX
 #define NGROUPS_MAX sysconf (_SC_NGROUPS_MAX)
 #endif /* !NGROUPS_MAX */
 

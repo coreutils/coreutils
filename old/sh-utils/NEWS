@@ -1,3 +1,7 @@
+Major changes in release 1.9.1:
+* stty can be built on Suns again
+* minor fix for who -q
+
 Major changes in release 1.9:
 * su fails gracefully when getpass is unable to open /dev/tty.
 * printenv and tty detect and report write errors

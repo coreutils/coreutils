@@ -327,7 +327,19 @@ list_entries (n)
 #endif
 	 )
 	{
-	  printf ("%s ", this->ut_name);
+	  char trimmed_name[sizeof (this->ut_name) + 1];
+	  int i;
+
+	  strncpy (trimmed_name, this->ut_name, sizeof (this->ut_name));
+	  trimmed_name[sizeof (this->ut_name)] = ' ';
+	  for (i = 0; i <= sizeof (this->ut_name); i++)
+	    {
+	      if (trimmed_name[i] == ' ')
+		break;
+	    }
+	  trimmed_name[i] = '\0';
+
+	  printf ("%s ", trimmed_name);
 	  entries++;
 	}
       this++;

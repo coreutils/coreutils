@@ -1,3 +1,23 @@
+Sat Nov 13 00:11:19 1993  Jim Meyering  (meyering@comco.com)
+
+	* Version 1.9.1.
+
+	* configure.in [LIBS]: Add -lbsd if that is necessary to get the
+	syslog function.  With help from Kaveh Ghazi.
+
+Thu Nov 11 23:55:48 1993  Jim Meyering  (meyering@comco.com)
+
+	* id.c [NGROUPS_MAX]: Undefine before redefining.
+	From Kaveh R. Ghazi (ghazi@noc.rutgers.edu).
+
+	* who.c (list_entries): Trim any trailing blanks from ut_name
+	and make sure the string is NUL-terminated before printing it.
+	Before, `who -q' displayed 8-character names with a tty
+	(e.g. `q1') suffix.
+
+	* stty.c [CFLUSHO]: Move this definition so it follows the
+	one for VFLUSHO.
+
 Mon Nov 08 23:16:36 1993  Jim Meyering  (meyering@comco.com)
 
 	* Version 1.9.

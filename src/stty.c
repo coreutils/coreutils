@@ -118,11 +118,11 @@
 #if defined(VLNEXT) && !defined(CLNEXT)
 #define	CLNEXT Control ('v')
 #endif
-#if defined(VFLUSHO) && !defined(CFLUSHO)
-#define CFLUSHO Control ('o')
-#endif
 #if defined(VDISCARD) && !defined(VFLUSHO)
 #define VFLUSHO VDISCARD
+#endif
+#if defined(VFLUSHO) && !defined(CFLUSHO)
+#define CFLUSHO Control ('o')
 #endif
 #if defined(VSTATUS) && !defined(CSTATUS)
 #define CSTATUS Control ('t')
