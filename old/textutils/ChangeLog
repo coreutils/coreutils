@@ -53,7 +53,7 @@ Thu Oct 31 17:48:24 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 	This fixes a UMR of the general_numeric field.
 
 	* src/join.c (decode_field_spec): Always give FIELD_INDEX a value.
-	This avoids a spurious report UMR from purify.
+	This avoids a spurious UMR report from purify.
 	(prjoin): Add an assertion.
 	(add_field): Update assertion.
 
