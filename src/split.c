@@ -218,7 +218,6 @@ bytes_split (uintmax_t n_bytes, char *buf, size_t bufsize)
       to_read = n_read;
       for (;;)
 	{
-	  size_t last_bufsize;
 	  if (to_read < to_write)
 	    {
 	      if (to_read)	/* do not write 0 bytes! */
@@ -229,13 +228,15 @@ bytes_split (uintmax_t n_bytes, char *buf, size_t bufsize)
 		}
 	      break;
 	    }
-
-	  last_bufsize = to_write;
-	  cwrite (new_file_flag, bp_out, last_bufsize);
-	  bp_out += to_write;
-	  to_read -= to_write;
-	  new_file_flag = 1;
-	  to_write = n_bytes;
+	  else
+	    {
+	      size_t w = to_write;
+	      cwrite (new_file_flag, bp_out, w);
+	      bp_out += w;
+	      to_read -= w;
+	      new_file_flag = 1;
+	      to_write = n_bytes;
+	    }
 	}
     }
   while (n_read == bufsize);
