@@ -1,3 +1,14 @@
+1998-01-05  Paul Eggert  <eggert@twinsun.com>
+
+	* lib/fsusage.c (PROPAGATE_ALL_ONES): New macro.
+	(get_fs_usage): If a value consists entirely of 1 bits,
+	propagate this info to the output by setting it to (uintmax_t) -1.
+	* src/df.c (df_readable): New function.
+	(show_dev): If a value consists entirely of 1 bits, or is derived
+	from some other value that consists entirely of 1 bits, report "-".
+	Check inode and block counts more carefully for plausibility,
+	to avoid arithmetic overflow when computing percentages.
+
 1998-01-04  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* Version 3.16j.
