@@ -22,6 +22,14 @@ enum Sparse_type
   SPARSE_ALWAYS
 };
 
+enum Dereference_symlink
+{
+  DEREF_UNDEFINED = 1,
+  DEREF_ALWAYS,
+  DEREF_NEVER,
+  DEREF_COMMAND_LINE_ARGUMENTS
+};
+
 # define VALID_SPARSE_MODE(Mode)	\
   ((Mode) == SPARSE_NEVER		\
    || (Mode) == SPARSE_AUTO		\
@@ -36,7 +44,7 @@ struct cp_options
   int copy_as_regular;
 
   /* If nonzero, dereference symbolic links (copy the files they point to). */
-  int dereference;
+  enum Dereference_symlink dereference;
 
   /* If nonzero, remove existing destination nondirectories. */
   int force;
