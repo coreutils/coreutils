@@ -1,4 +1,4 @@
-#serial 14
+#serial 15
 
 dnl These are the prerequisite macros for files in the lib/
 dnl directories of the fileutils, sh-utils, and textutils packages.
@@ -10,6 +10,7 @@ AC_DEFUN(jm_PREREQ,
   jm_PREREQ_DIRNAME
   jm_PREREQ_ERROR
   jm_PREREQ_GETPAGESIZE
+  jm_PREREQ_HASH
   jm_PREREQ_HUMAN
   jm_PREREQ_MBSWIDTH
   jm_PREREQ_MEMCHR
@@ -51,6 +52,12 @@ AC_DEFUN(jm_PREREQ_GETPAGESIZE,
 [
   AC_CHECK_FUNCS(getpagesize)
   AC_CHECK_HEADERS(OS.h unistd.h)
+])
+
+AC_DEFUN(jm_PREREQ_HASH,
+[
+  AC_CHECK_HEADERS(stdlib.h stdbool.h)
+  AC_REQUIRE([jm_CHECK_DECLS])
 ])
 
 # If you use human.c, you need the following files:
