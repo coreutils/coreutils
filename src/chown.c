@@ -39,6 +39,7 @@
 #include "fts_.h"
 #include "lchown.h"
 #include "quote.h"
+#include "root-dev-ino.h"
 #include "userspec.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -57,8 +58,10 @@ static char *reference_file;
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
-  FROM_OPTION = CHAR_MAX + 1,
-  DEREFERENCE_OPTION,
+  DEREFERENCE_OPTION = CHAR_MAX + 1,
+  FROM_OPTION,
+  NO_PRESERVE_ROOT,
+  PRESERVE_ROOT,
   REFERENCE_FILE_OPTION
 };
 
@@ -69,6 +72,8 @@ static struct option const long_options[] =
   {"dereference", no_argument, 0, DEREFERENCE_OPTION},
   {"from", required_argument, 0, FROM_OPTION},
   {"no-dereference", no_argument, 0, 'h'},
+  {"no-preserve-root", no_argument, 0, NO_PRESERVE_ROOT},
+  {"preserve-root", no_argument, 0, PRESERVE_ROOT},
   {"quiet", no_argument, 0, 'f'},
   {"silent", no_argument, 0, 'f'},
   {"reference", required_argument, 0, REFERENCE_FILE_OPTION},
@@ -113,6 +118,10 @@ With --reference, change the owner and group of each FILE to those of RFILE.\n\
                          is not required for the omitted attribute.\n\
 "), stdout);
       fputs (_("\
+      --no-preserve-root do not treat `/' specially (the default)\n\
+      --preserve-root    fail to operate recursively on `/'\n\
+"), stdout);
+      fputs (_("\
   -f, --silent, --quiet  suppress most error messages\n\
       --reference=RFILE  use RFILE's owner and group rather than\n\
                          the specifying OWNER:GROUP values\n\
@@ -148,6 +157,8 @@ as symbolic.\n\
 int
 main (int argc, char **argv)
 {
+  bool preserve_root = false;
+
   uid_t uid = -1;	/* Specified uid; -1 if not to be changed. */
   gid_t gid = -1;	/* Specified gid; -1 if not to be changed. */
 
@@ -200,6 +211,14 @@ main (int argc, char **argv)
 	case DEREFERENCE_OPTION: /* --dereference: affect the referent
 				    of each symlink */
 	  chopt.affect_symlink_referent = true;
+	  break;
+
+	case NO_PRESERVE_ROOT:
+	  preserve_root = false;
+	  break;
+
+	case PRESERVE_ROOT:
+	  preserve_root = true;
 	  break;
 
 	case REFERENCE_FILE_OPTION:
@@ -270,6 +289,15 @@ main (int argc, char **argv)
         chopt.user_name = "";
 
       optind++;
+    }
+
+  if (chopt.recurse && preserve_root)
+    {
+      static struct dev_ino dev_ino_buf;
+      chopt.root_dev_ino = get_root_dev_ino (&dev_ino_buf);
+      if (chopt.root_dev_ino == NULL)
+	error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
+	       quote ("/"));
     }
 
   fail = chown_files (argv + optind, bit_flags,
