@@ -1,5 +1,5 @@
 /* date - print or set the system date and time
-   Copyright (C) 1989-2004 Free Software Foundation, Inc.
+   Copyright (C) 1989-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -424,8 +424,7 @@ argument must be a format string beginning with `+'."),
 	    {
 	      /* Prepare to print the current date/time.  */
 	      datestr = _("undefined");
-	      if (gettime (&when) != 0)
-		error (EXIT_FAILURE, errno, _("cannot get time of day"));
+	      gettime (&when);
 	      format = (n_args == 1 ? argv[optind] + 1 : NULL);
 	    }
 	}
