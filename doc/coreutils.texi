@@ -201,6 +201,8 @@ Common Options
 * Block size::                  Block size
 * Target directory::            Target directory
 * Trailing slashes::            Trailing slashes
+* Traversing symlinks::         Traversing symlinks to directories
+* Treating / specially::        Treating / specially
 * Standards conformance::       Standards conformance
 
 Output of entire files
@@ -548,6 +550,8 @@ context that requires a file name.
 * Block size::                  BLOCK_SIZE and --block-size, in some programs.
 * Target directory::            --target-directory, in some programs.
 * Trailing slashes::            --strip-trailing-slashes, in some programs.
+* Traversing symlinks::         -H, -L, or -P, in some programs.
+* Treating / specially::        --preserve-root and --no-preserve-root.
 * Standards conformance::       Conformance to the @acronym{POSIX} standard.
 @end menu
 
@@ -893,6 +897,79 @@ and so must rename the indirectly referenced @emph{directory} and not
 the symbolic link.  Although it may seem surprising that such behavior
 be the default, it is required by @acronym{POSIX} and is consistent with
 other parts of that standard.
+
+@node Traversing symlinks
+@section Traversing symlinks
+
+@macro chownchgrpoptions
+
+@cindex symbolic link to directory, controlling traversal of
+
+The following options modify how @command{chown} and @command{chgrp}
+@c FIXME: note that `du' has these options, too, but they have slightly
+@c different meaning.
+traverse a hierarchy when the @option{--recursive} (@option{-R})
+option is also specified.
+If more than one is specified, only the final one takes effect.
+These options determine whether processing a symbolic link to a directory
+entails operating on just the symbolic link or on all files in the
+hierarchy rooted at that directory.
+Note that these options are independent of @option{--dereference} and
+@option{--no-dereference} (@option{-h}), which control whether to modify
+a symlink or its referent.
+
+@table @samp
+
+@item -H
+@opindex -H
+@cindex symbolic link to directory, traverse each that is specified on the command line
+If @option{--recursive} (@option{-R}) is specified and
+a command line argument is a symbolic link to a directory, traverse it.
+
+@item -L
+@opindex -L
+@cindex symbolic link to directory, traverse each that is encountered
+In a recursive traversal, traverse every symbolic link to a directory
+that is encountered.
+
+@item -P
+@opindex -P
+@cindex symbolic link to directory, never traverse
+Do not traverse any symbolic links.
+This is the default if none of @option{-H}, @option{-L},
+or @option{-P} is specified.
+
+@end table
+@end macro
+
+@chownchgrpoptions
+
+
+@node Treating / specially
+@section Treating / specially
+
+Certain commands can operate destructively on entire hierarchies.
+For example, if a user with appropriate privileges mistakenly runs
+@samp{rm -rf / tmp/junk} or @samp{cd /bin; rm -rf ../}, that may remove
+all files on the entire system.  Since there are so few
+@footnote{If you know of one, please write to @email{bug-coreutils@@gnu.org}.}
+legitimate uses for such a command,
+@sc{gnu} @command{rm} provides the @option{--preserve-root} option
+to make it so @command{rm} declines to operate on any directory
+that resolves to @file{/}.  The default is still to allow
+@samp{rm -rf /} to operate unimpeded.
+Another new option, @option{--no-preserve-root}, cancels the
+effect of any preceding @option{--preserve-root} option.
+Note that the @option{--preserve-root} behavior may become the default
+for @command{rm}.
+
+The commands @command{chgrp}, @command{chmod} and @command{chown}
+can also operate destructively on entire hierarchies, so they too
+support these options.  Although, unlike @command{rm}, they don't
+actually unlink files, these commands are arguably more dangerous
+when operating recursively on @file{/}, since they often work much
+more quickly, and hence damage more files before an alert user can
+interrupt them.
 
 @node Standards conformance
 @section Standards conformance
@@ -6705,6 +6782,20 @@ Prompt whether to remove each file.  If the response does not begin
 with @samp{y} or @samp{Y}, the file is skipped.
 Ignore any previous @option{--force} (@option{-f}) option.
 
+@itemx --preserve-root
+@opindex --preserve-root
+@cindex root directory, disallow recursive destruction
+Fail upon any attempt to remove the filesystem root, @file{/},
+when used with the @option{--recursive} option.
+Without @option{--recursive}, this option has no effect.
+@xref{Treating / specially}.
+
+@itemx --no-preserve-root
+@opindex --no-preserve-root
+@cindex root directory, allow recursive destruction
+Cancel the effect of any preceding @option{--preserve-root} option.
+@xref{Treating / specially}.
+
 @item -r
 @itemx -R
 @itemx --recursive
@@ -7644,6 +7735,19 @@ is a symbolic link.
 By default, no diagnostic is issued for symbolic links encountered
 during a recursive traversal, but see @option{--verbose}.
 
+@itemx --preserve-root
+@opindex --preserve-root
+@cindex root directory, disallow recursive modification
+Fail upon any attempt to recursively change the filesystem root, @file{/}.
+Without @option{--recursive}, this option has no effect.
+@xref{Treating / specially}.
+
+@itemx --no-preserve-root
+@opindex --no-preserve-root
+@cindex root directory, allow recursive modification
+Cancel the effect of any preceding @option{--preserve-root} option.
+@xref{Treating / specially}.
+
 @item --reference=@var{ref_file}
 @opindex --reference
 Change the user and group of each @var{file} to be the same as those of
@@ -7669,45 +7773,6 @@ its referent is being changed.
 Recursively change ownership of directories and their contents.
 
 @end table
-
-@macro chownchgrpoptions
-
-@cindex symbolic links, controlling traversal of
-
-The following options modify how @command{chown} and @command{chgrp}
-traverse a hierarchy when the @option{--recursive} (@option{-R})
-option is also specified.
-If more than one is specified, only the final one takes effect.
-These options determine whether processing a symbolic link to a directory
-entails operating on just the symbolic link or on all files in the
-hierarchy rooted at that directory.
-Note that these options are independent of @option{--dereference} and
-@option{--no-dereference} (@option{-h}), which control whether to modify
-a symlink or its referent.
-
-@table @samp
-
-@item -H
-@opindex -H
-@cindex traverse symbolic links specified on the command line
-If @option{--recursive} (@option{-R}) is specified and
-a command line argument is a symbolic link to a directory, traverse it.
-
-@item -L
-@opindex -L
-@cindex traverse every symbolic link to a directory encountered
-In a recursive traversal, traverse every symbolic link to a directory
-that is encountered.
-
-@item -P
-@opindex -P
-@cindex do not traverse any symbolic links
-Do not traverse any symbolic links.
-This is the default if none of @option{-H}, @option{-L},
-or @option{-P} is specified.
-
-@end table
-@end macro
 
 @chownchgrpoptions
 
@@ -7769,6 +7834,19 @@ On systems that do not provide the @code{lchown} system call,
 is a symbolic link.
 By default, no diagnostic is issued for symbolic links encountered
 during a recursive traversal, but see @option{--verbose}.
+
+@itemx --preserve-root
+@opindex --preserve-root
+@cindex root directory, disallow recursive modification
+Fail upon any attempt to recursively change the filesystem root, @file{/}.
+Without @option{--recursive}, this option has no effect.
+@xref{Treating / specially}.
+
+@itemx --no-preserve-root
+@opindex --no-preserve-root
+@cindex root directory, allow recursive modification
+Cancel the effect of any preceding @option{--preserve-root} option.
+@xref{Treating / specially}.
 
 @item --reference=@var{ref_file}
 @opindex --reference
@@ -7844,6 +7922,19 @@ actually changes.
 @cindex error messages, omitting
 Do not print error messages about files whose permissions cannot be
 changed.
+
+@itemx --preserve-root
+@opindex --preserve-root
+@cindex root directory, disallow recursive modification
+Fail upon any attempt to recursively change the filesystem root, @file{/}.
+Without @option{--recursive}, this option has no effect.
+@xref{Treating / specially}.
+
+@itemx --no-preserve-root
+@opindex --no-preserve-root
+@cindex root directory, allow recursive modification
+Cancel the effect of any preceding @option{--preserve-root} option.
+@xref{Treating / specially}.
 
 @item -v
 @itemx --verbose
