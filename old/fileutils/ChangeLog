@@ -1,3 +1,7 @@
+2000-09-07  Jim Meyering  <meyering@lucent.com>
+
+	* doc/texinfo.tex: Update from master repository.
+
 2000-09-05  Jim Meyering  <meyering@lucent.com>
 
 	* tests/mv/part-symlink: Redirect stdout to stderr before trying to
