@@ -34,7 +34,7 @@ Report bugs to <@PACKAGE_BUGREPORT@>."
 if [ $# -eq 0 ]; then
   echo >&2 "$usage"
   echo >&2 "$usage_try"
-  exit 1
+  exit 127
 fi
 
 fail=0
@@ -42,46 +42,38 @@ case $# in
   1 )
     case "z${1}" in
       z--help )
-	 echo "$usage" || fail=1; echo "$usage_help" || fail=1; exit $fail;;
+	 echo "$usage" || fail=127; echo "$usage_help" || fail=127
+	 exit $fail;;
       z--version )
-	 echo "nohup (@GNU_PACKAGE@) @VERSION@" || fail=1; exit $fail;;
+	 echo "nohup (@GNU_PACKAGE@) @VERSION@" || fail=127
+	 exit $fail;;
       * ) ;;
     esac
     ;;
   * ) ;;
 esac
 
-# Make sure we get GNU nice, if possible; also allow
-# it to be somewhere else in PATH if not installed yet.
-# But do not modify PATH itself.
-IFS="${IFS=	 }"; save_ifs="$IFS"; IFS=":"
-nicepath="@bindir@:$PATH"
-niceprog="nice"
-for nicedir in $nicepath; do
-  test -z "$nicedir" && nicedir="."
-  if test -x "$nicedir/nice"; then
-    niceprog="$nicedir/nice"
-    break
-  fi
-done
-IFS="$save_ifs"
-
 trap "" 1
-oldmask=`umask`; umask 077
-# Only redirect the output if the user didn't already do it.
+
+# Redirect stdout if the user didn't already do it.
 if [ -t 1 ]; then
+  oldmask=`umask`; umask 077
   # If we cannot write to the current directory, use the home directory.
-  if cat /dev/null >> nohup.out; then
-    echo "nohup: appending output to \`nohup.out'" 2>&1
-    umask $oldmask
-    exec "$niceprog" -n 5 -- "$@" >> nohup.out 2>&1
+  if exec >> nohup.out; then
+    echo "nohup: appending output to \`nohup.out'" >&2
+  elif exec >> "$HOME/nohup.out"; then
+    echo "nohup: appending output to \`$HOME/nohup.out'" >&2
   else
-    cat /dev/null >> $HOME/nohup.out
-    echo "nohup: appending output to \`$HOME/nohup.out'" 2>&1
-    umask $oldmask
-    exec "$niceprog" -n 5 -- "$@" >> $HOME/nohup.out 2>&1
+    echo "nohup: cannot append to either \`nohup.out' or \`$HOME/nohup.out'" \
+      >&2
+    exit 127
   fi
-else
   umask $oldmask
-  exec "$niceprog" -n 5 -- "$@"
 fi
+
+# Redirect stderr if the user didn't already do it.
+if [ -t 2 ]; then
+  exec 2>&1
+fi
+
+exec -- "$@"
