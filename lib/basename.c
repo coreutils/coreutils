@@ -22,7 +22,7 @@
 #if STDC_HEADERS || HAVE_STRING_H
 # include <string.h>
 #endif
-#include <dirname.h>
+#include "dirname.h"
 
 /* In general, we can't use the builtin `basename' function if available,
    since it has different meanings in different environments.
