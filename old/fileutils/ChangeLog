@@ -10,8 +10,8 @@
 	the same code, both with and without -p, to create the final
 	component in each file name.  Reported by Bob Proulx.
 
+	Add tests for the above fix.
 	* tests/cp/cp-parents: Add some permission tests.
-
 	* tests/mkdir/perm: Fix the test so it actually does something.
 	Run each test also with mkdir's `-p' option and check permissions
 	on the parent directories.
