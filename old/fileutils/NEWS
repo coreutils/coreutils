@@ -27,7 +27,7 @@ Changes in release 3.17:
 * rmdir accepts new options: --ignore-fail-on-non-empty and --verbose
 * on most hosts df, du, and ls now overflow at 2**64 bytes, not 2**31 bytes
 * all programs now work on large files on LFS systems like Solaris 2.6 and
-  Linux with the pre-2.1 release of GNU libc.
+  Linux with the pre-2.1 development version of GNU libc.
 * df now works with OpenBSD 2.1 beta
 * cp -d FILE SYMLINK-TO-FILE doesn't erase FILE.  Now it gives an error.
 
