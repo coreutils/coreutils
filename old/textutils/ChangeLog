@@ -1,3 +1,15 @@
+Sun Nov 07 00:50:05 1993  Jim Meyering  (meyering@comco.com)
+
+	* Version 1.9.
+
+Sat Nov 06 22:51:31 1993  Jim Meyering  (meyering@comco.com)
+
+	* cut.c (cut_fields): Revert July 27 change.  Instead, strip off
+	trailing delimiter unless given a range of fields like `3-' that
+	extends to end of line.
+	(set_fields): Moved local `eol_range_start' to file-scope.
+	Reported by Arne H. Juul (arnej@solan.unit.no).
+
 Tue Nov 02 00:53:41 1993  Jim Meyering  (meyering@comco.com)
 
 	* fold.c (fold_file): Don't get stuck in an endless loop when

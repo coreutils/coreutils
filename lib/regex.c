@@ -930,7 +930,7 @@ static const char *re_error_msg[] =
    change it ourselves.  */
 int re_max_failures = 2000;
 
-typedef const unsigned char *fail_stack_elt_t;
+typedef unsigned char *fail_stack_elt_t;
 
 typedef struct
 {
@@ -2733,7 +2733,7 @@ re_compile_fastmap (bufp)
   register char *fastmap = bufp->fastmap;
   unsigned char *pattern = bufp->buffer;
   unsigned long size = bufp->used;
-  const unsigned char *p = pattern;
+  unsigned char *p = pattern;
   register unsigned char *pend = pattern + size;
 
   /* Assume that each path through the pattern can be null until
@@ -3188,8 +3188,10 @@ static boolean alt_match_null_string_p (),
 
 /* This converts PTR, a pointer into one of the search strings `string1'
    and `string2' into an offset from the beginning of that string.  */
-#define POINTER_TO_OFFSET(ptr)						\
-  (FIRST_STRING_P (ptr) ? (ptr) - string1 : (ptr) - string2 + size1)
+#define POINTER_TO_OFFSET(ptr)			\
+  (FIRST_STRING_P (ptr)				\
+   ? ((regoff_t) ((ptr) - string1))		\
+   : ((regoff_t) ((ptr) - string2 + size1)))
 
 /* Macros for dealing with the split strings in re_match_2.  */
 
@@ -3628,8 +3630,9 @@ re_match_2 (bufp, string1, size1, string2, size2, pos, regs, stop)
               if (regs->num_regs > 0)
                 {
                   regs->start[0] = pos;
-                  regs->end[0] = (MATCHING_IN_FIRST_STRING ? d - string1
-			          : d - string2 + size1);
+                  regs->end[0] = (MATCHING_IN_FIRST_STRING
+				  ? ((regoff_t) (d - string1))
+			          : ((regoff_t) (d - string2 + size1)));
                 }
               
               /* Go through the first `min (num_regs, regs->num_regs)'
@@ -3640,8 +3643,10 @@ re_match_2 (bufp, string1, size1, string2, size2, pos, regs, stop)
                     regs->start[mcnt] = regs->end[mcnt] = -1;
                   else
                     {
-		      regs->start[mcnt] = POINTER_TO_OFFSET (regstart[mcnt]);
-                      regs->end[mcnt] = POINTER_TO_OFFSET (regend[mcnt]);
+		      regs->start[mcnt]
+			= (regoff_t) POINTER_TO_OFFSET (regstart[mcnt]);
+                      regs->end[mcnt]
+			= (regoff_t) POINTER_TO_OFFSET (regend[mcnt]);
                     }
 		}
               

@@ -110,8 +110,8 @@ static char *inbufptr;
 /* What can be done about a byte or field. */
 enum field_action
 {
-  field_omit,
-  field_output
+  FIELD_OMIT,
+  FIELD_OUTPUT
 };
 
 /* In byte mode, which bytes to output.
@@ -145,6 +145,10 @@ static unsigned char delim;
 
 /* Nonzero if we have ever read standard input. */
 static int have_read_stdin;
+
+/* If nonzero, this is the index of the first field in a range that goes
+   to end of line. */
+static int eol_range_start;
 
 /* If non-zero, display usage information and exit.  */
 static int show_help;
@@ -185,7 +189,7 @@ main (argc, argv)
   inbuf = (char *) xmalloc (line_size);
 
   for (optc = 0; optc < line_size; optc++)
-    fields[optc] = field_omit;
+    fields[optc] = FIELD_OMIT;
 
   while ((optc = getopt_long (argc, argv, "b:c:d:f:ns", longopts, (int *) 0))
 	 != EOF)
@@ -286,8 +290,6 @@ set_fields (fieldstr)
   int dash_found = 0;		/* Nonzero if a '-' is found in this field. */
   int value = 0;		/* If nonzero, a number being accumulated. */
   int fields_selected = 0;	/* Number of fields selected so far. */
-  /* If nonzero, index of first field in a range that goes to end of line. */
-  int eol_range_start = 0;
 
   for (;;)
     {
@@ -352,7 +354,7 @@ set_fields (fieldstr)
 			      /* No.  A simple range, before and disjoint from
 				 the range going to end of line.  Fill it. */
 			      for (; initial <= value; initial++)
-				fields[initial] = field_output;
+				fields[initial] = FIELD_OUTPUT;
 			    }
 
 			  /* In any case, some fields were selected. */
@@ -363,7 +365,7 @@ set_fields (fieldstr)
 		    {
 		      /* There is no range going to end of line. */
 		      for (; initial <= value; initial++)
-			fields[initial] = field_output;
+			fields[initial] = FIELD_OUTPUT;
 		      fields_selected++;
 		    }
 		  value = 0;
@@ -375,7 +377,7 @@ set_fields (fieldstr)
 	      if (value >= line_size)
 		enlarge_line (value);
 
-	      fields[value] = field_output;
+	      fields[value] = FIELD_OUTPUT;
 	      value = 0;
 	      fields_selected++;
 	    }
@@ -386,7 +388,7 @@ set_fields (fieldstr)
 		 array from the end of line point.  */
 	      if (eol_range_start)
 		for (initial = eol_range_start; initial < line_size; initial++)
-		  fields[initial] = field_output;
+		  fields[initial] = FIELD_OUTPUT;
 
 	      return fields_selected;
 	    }
@@ -455,7 +457,7 @@ cut_stream (stream)
 }
 
 /* Print the file open for reading on stream STREAM
-   with the bytes marked `field_omit' in `fields' removed from each line. */
+   with the bytes marked `FIELD_OMIT' in `fields' removed from each line. */
 
 static void
 cut_bytes (stream)
@@ -485,7 +487,7 @@ cut_bytes (stream)
 	  if (++char_count == line_size - 1)
 	    enlarge_line (char_count);
 
-	  if (fields[char_count] == field_output || c == '\n')
+	  if (fields[char_count] == FIELD_OUTPUT || c == '\n')
 	    *outbufptr++ = c;
 	}
       while (c != '\n');
@@ -496,7 +498,7 @@ cut_bytes (stream)
 }
 
 /* Print the file open for reading on stream STREAM
-   with the fields marked `field_omit' in `fields' removed from each line.
+   with the fields marked `FIELD_OMIT' in `fields' removed from each line.
    All characters are initially stowed in the raw input buffer, until
    at least one field has been found. */
 
@@ -527,7 +529,7 @@ cut_fields (stream)
 	      break;
 	    }
 
-	  if (fields[curr_field] == field_output && c != '\n')
+	  if (fields[curr_field] == FIELD_OUTPUT && c != '\n')
 	    {
 	      /* Working on a field.  It, and its terminating
 		 delimiter, go only into the processed buffer. */
@@ -543,14 +545,26 @@ cut_fields (stream)
 	      *inbufptr++ = c;
 	    }
 
-	  if (c == delim && ++curr_field == line_size - 1)
-	    enlarge_line (curr_field);
+	  if (c == delim)
+	    {
+	      ++curr_field;
+	      if (curr_field == line_size - 1)
+		enlarge_line (curr_field);
+	    }
 	}
       while (c != '\n');
 
       if (fieldfound)
 	{
 	  /* Something was found. Print it. */
+
+	  if ((unsigned char) outbufptr[-1] == delim && eol_range_start == 0)
+	    {
+	      /* Suppress the trailing delimiter unless there is a range
+		 extending to end of line. */
+	      --outbufptr;
+	    }
+
 	  fwrite (outbuf, sizeof (char), outbufptr - outbuf, stdout);
 	  if (c == '\n')
 	    putc (c, stdout);
@@ -585,7 +599,7 @@ enlarge_line (new_size)
   inbuf = newp;
 
   for (i = line_size; i < new_size; i++)
-    fields[i] = field_omit;
+    fields[i] = FIELD_OMIT;
   line_size = new_size;
 }
 
