@@ -1,6 +1,12 @@
-2000-11-10  Jim Meyering  <meyering@lucent.com>
+2000-11-11  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.0.32.
+
+	* src/ls.c (print_long_format): Wrap the --full-time' date format
+	string in _(...), so it too may be internationalized.
+	Suggestion from Jungshik Shin.
+
+2000-11-10  Jim Meyering  <meyering@lucent.com>
 
 	* src/touch.c (main): Interpret a lone numeric argument of 8 or 10
 	digits as a file name, rather than as a date/time in the obsolescent
