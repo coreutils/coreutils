@@ -1,3 +1,15 @@
+Sun Oct 13 12:52:42 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/xstrtol.c (__xstrtol): Return an error for invalid suffix.
+	Before, e.g., `split -b 1M' would be silently accepted and treated
+	like `split -b 1'.  Reported by Franc,ois.
+
+	* src/split.c (usage): Remove parameter, REASON.
+	(main): Update callers to use combination of error (0, 0, ... and
+	usage (EXIT_FAILURE).
+	(main): When a string operand cannot be converted to a number of
+	bytes or lines, include that string in the diagnostic.
+
 Sat Oct 12 00:05:11 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in (AC_REPLACE_FUNCS): Add strpbrk and strtol.
