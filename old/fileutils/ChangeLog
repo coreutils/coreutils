@@ -6,6 +6,8 @@
 	* src/copy.c (copy_internal):
 	Reported by Vin Shelton.
 
+	* src/copy.c: FIXME
+
 	* tests/mv/i-3: New test for the above fix.
 
 2001-08-03  Paul Eggert  <eggert@twinsun.com>
