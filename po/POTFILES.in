@@ -9,12 +9,10 @@ lib/error.c
 lib/file-type.c
 lib/getopt.c
 lib/human.c
-lib/long-options.c
 lib/makepath.c
 lib/obstack.c
 lib/quotearg.c
 lib/rpmatch.c
-lib/same.c
 lib/unicodeio.c
 lib/userspec.c
 lib/version-etc.c
