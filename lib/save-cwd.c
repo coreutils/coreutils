@@ -44,6 +44,18 @@
 #include "chdir-long.h"
 #include "xgetcwd.h"
 
+/* On systems without the fchdir function (WOE), pretend that open
+   always returns -1 so that save_cwd resorts to using xgetcwd.
+   Since chdir_long requires fchdir, use chdir instead.  */
+#if !HAVE_FCHDIR
+# undef open
+# define open(File, Flags) -1
+# undef fchdir
+# define fchdir(Fd) (abort (), -1)
+# undef chdir_long
+# define chdir_long(Dir) chdir (Dir)
+#endif
+
 /* Record the location of the current working directory in CWD so that
    the program may change to other directories and later use restore_cwd
    to return to the recorded location.  This function may allocate
