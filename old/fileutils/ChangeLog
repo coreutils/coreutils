@@ -1,8 +1,21 @@
 1997-08-31  Jim Meyering  <meyering@na-net.ornl.gov>
 
-	* src/rm.c: Major rewrite.  Use fchdir/chdir.
+	* m4/Makefile.am (EXTRA_DIST): Add d-ino.m4 and d-type.m4.
 
-	* m4/d-info.m4: New file.
+	* tests/rm: New directory and tests.
+	* tests/Makefile.am (SUBDIRS): Add rm.
+	* configure.in (AC_OUTPUT): Add tests/rm/Makefile.
+
+	* src/dircolors.c [!STDC_HEADERS]: Declare malloc.
+	Remove unnecessary dcl of xmalloc.
+
+	* src/rm.c: Major rewrite in progress.  Use fchdir/chdir.
+
+	* m4/d-ino.m4: New file.
+	* m4/d-type.m4: New file.
+	* acconfig.h (D_TYPE_IN_DIRENT): Define.
+	* configure.in: Move code to check for d_ino into its own file.
+	Use jm_STRUCT_DIRENT_D_TYPE and jm_STRUCT_DIRENT_D_INO.
 
 	* src/chmod.c (change_file_mode): Call describe_change with a 3-state
 	argument.
@@ -11,11 +24,8 @@
 	Before, running `chmod --verb u-r /' as non-root reported
 	  mode of / changed to 0355 (-wxr-xr-x)
 	  chmod: /: Not owner
-	FIXME: do the same for chgrp and chown
 	Reported by Philippe Schnoebelen <phs@hobbes.fing.edu.uy>
-
-	* lib/simple-hash.h: New file.
-	* lib/simple-hash.c: New file.
+	FIXME: do the same for chgrp and chown
 
 1997-07-28  Jim Meyering  <meyering@na-net.ornl.gov>
 
