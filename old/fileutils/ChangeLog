@@ -1,3 +1,8 @@
+Sun Nov 24 22:43:24 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* acinclude.m4 (AM_FUNC_GETLINE): Use am_, not su_ prefix for
+	local/cache variables.
+
 Sat Nov 23 16:11:59 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/Makefile.am (EXTRA_DIST): Add getline.c now that getline
@@ -22,6 +27,7 @@ Fri Nov 22 22:14:10 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in (AC_REPLACE_FUNCS): Don't try to replace getline this
 	way.  AM_FUNC_GETLINE does it now.
+	(AM_FUNC_GETLINE): Use it here.
 
 	* src/cp.c (copy): With -i and not -f, prompt for any type of
 	(non-directory) source file before overwriting an existing target.
