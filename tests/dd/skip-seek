@@ -27,7 +27,7 @@ my $script_name = $ENV{SCRIPT_NAME};
 my @Tests =
     (
      [
-      'sk-seek-1',
+      'sk-seek1',
       qw (bs=1 skip=1 seek=2 conv=notrunc count=3 status=noxfer of=@AUX@ < ),
       {IN=> '0123456789abcdef'},
       {AUX=> 'zyxwvutsrqponmlkji'},
@@ -36,7 +36,7 @@ my @Tests =
       {CMP=> ['zy123utsrqponmlkji', {'@AUX@'=> undef}]},
      ],
      [
-      'sk-seek-2',
+      'sk-seek2',
       qw (bs=5 skip=1 seek=1 conv=notrunc count=1 status=noxfer of=@AUX@ < ),
       {IN=> '0123456789abcdef'},
       {AUX=> 'zyxwvutsrqponmlkji'},
@@ -45,7 +45,7 @@ my @Tests =
       {CMP=> ['zyxwv56789ponmlkji', {'@AUX@'=> undef}]},
      ],
      [
-      'sk-seek-3',
+      'sk-seek3',
       qw (bs=5 skip=1 seek=1 count=1 status=noxfer of=@AUX@ < ),
       {IN=> '0123456789abcdef'},
       {AUX=> 'zyxwvutsrqponmlkji'},
