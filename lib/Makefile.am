@@ -35,7 +35,7 @@ BUILT_SOURCES = getdate.c lstat.c stat.c
 MAINTAINERCLEANFILES = $(BUILT_SOURCES)
 DISTCLEANFILES = lstat.c stat.c
 
-EXTRA_DIST = xstat.in config.charset ref-add.sed.in ref-del.sed.in
+EXTRA_DIST = xstat.in config.charset ref-add.sin ref-del.sin
 lstat.c: xstat.in
 	sed \
 	  -e '/@IGNORE@/d' \
@@ -89,8 +89,8 @@ charset.alias: config.charset
 	$(SHELL) $(srcdir)/config.charset '@host@' > $@-t
 	mv $@-t $@
 
-SUFFIXES = .sed .sed.in
-.sed.in.sed:
+SUFFIXES = .sed .sin
+.sin.sed:
 	sed -e '/^#/d' -e 's/@''PACKAGE''@/@PACKAGE@/g' $< > $@-t
 	mv $@-t $@
 
