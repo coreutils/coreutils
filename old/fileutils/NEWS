@@ -1,4 +1,6 @@
 [4.1.8]
+* mv no longer mistakenly creates links to preexisting destination files
+    that aren't moved
 [4.1.7]
 * rm: close a hole that would allow a running rm process to be subverted
 [4.1.6]
