@@ -2,6 +2,10 @@
 
 	* Version 5.0.90.
 
+	* tests/rm/fail-2eperm: Add a check for whether $NON_ROOT_USERNAME
+	can access the required version of rm.
+	* tests/rm/Makefile.am (TESTS_ENVIRONMENT): Define PACKAGE_VERSION.
+
 	* tests/cut/Test.pm (out-delim3a): New test.
 
 	* man/help2man: Update to version 1.33.
