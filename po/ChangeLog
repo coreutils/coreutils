@@ -1,3 +1,8 @@
+2005-04-06  Jim Meyering  <jim@meyering.net>
+
+	* LINGUAS: Remove rw.
+	* rw.po: Remove file -- many invalid message strings.
+
 2005-04-05  Jim Meyering  <jim@meyering.net>
 
 	* LINGUAS: Add Kinyarwanda (rw).
