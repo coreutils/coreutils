@@ -439,7 +439,7 @@ o_merid	: /* NULL */
 /* Include this file down here because bison inserts code above which
    may define-away `const'.  We want the prototype for get_date to have
    the same signature as the function definition does. */
-#include "get-date.h"
+#include "getdate.h"
 
 extern struct tm	*gmtime ();
 extern struct tm	*localtime ();
