@@ -9,6 +9,7 @@ getpagesize.h
 md5.h
 obstack.h
 printf-args.h
+printf-parse.h
 regex.c
 regex.h
 vasnprintf.h
