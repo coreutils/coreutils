@@ -23,7 +23,6 @@ ln a/foo a/bar || framework_failure=1
 echo FUBAR > b/FUBAR || framework_failure=1
 ln b/FUBAR b/bar || framework_failure=1
 chmod a-w b/bar || framework_failure=1
-echo no > no || framework_failure=1
 
 if test $framework_failure = 1; then
   echo '$0: failure in testing framework' 1>&2
@@ -32,14 +31,11 @@ fi
 
 fail=0
 
-mv --reply=no a/bar a/foo b < no 2> err > out || fail=1
+mv --reply=no a/bar a/foo b 2> err > out || fail=1
 cat <<EOF > exp
 EOF
 
-# There must be a trailing blank, and no trailing newline,
-# So remove the underscore (to expose the trailing blank) and the newline.
-cat <<\EOF |tr -d '_\012' > exp_err
-mv: overwrite `b/bar', overriding mode 0444? _
+cat <<EOF > exp_err
 EOF
 
 cmp err exp_err || fail=1
