@@ -1,6 +1,14 @@
-1999-01-24  Jim Meyering  <meyering@ascend.com>
+1999-01-30  Jim Meyering  <meyering@ascend.com>
 
 	* Version 1.22h.
+
+	* acconfig.h: Remove lots of `#undef's, now that we use the
+	3-argument forms of AC_DEFINE* macros.
+
+	* configure.in: Require autoconf 2.13.
+	Use 3-argument form of AC_DEFINE*.
+
+1999-01-24  Jim Meyering  <meyering@ascend.com>
 
 	* src/tac.c (DONT_UNLINK_WHILE_OPEN) [__MSDOS__ || _WIN32]: Define.
 
