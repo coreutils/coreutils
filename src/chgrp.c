@@ -35,6 +35,7 @@
 #include <getopt.h>
 #include "system.h"
 #include "version.h"
+#include "safe-lstat.h"
 
 #if !defined (isascii) || defined (STDC_HEADERS)
 #undef isascii
@@ -50,8 +51,6 @@ struct group *getgrnam ();
 #ifdef _POSIX_SOURCE
 #define endgrent()
 #endif
-
-int lstat ();
 
 char *group_member ();
 char *savedir ();
@@ -196,7 +195,7 @@ change_file_group (file, group)
   struct stat file_stats;
   int errors = 0;
 
-  if (lstat (file, &file_stats))
+  if (SAFE_LSTAT (file, &file_stats))
     {
       if (force_silent == 0)
 	error (0, errno, "%s", file);
