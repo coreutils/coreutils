@@ -1,5 +1,8 @@
 2000-04-04  Jim Meyering  <meyering@lucent.com>
 
+	* man/Makefile.am (man_MANS): Add uptime.1.
+	* man/uptime.x: New file.
+
 	* man/Makefile.am (man_MANS): Add factor.1.
 	* man/factor.x: New file.
 
