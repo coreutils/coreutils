@@ -12,4 +12,5 @@ TESTS_ENVIRONMENT = \
   MV=../../src/mv \
   RM=../../src/rm \
   TOUCH=../../src/touch \
+  PATH=../../src:$$PATH \
   PROG=mv
