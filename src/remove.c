@@ -888,7 +888,8 @@ remove_cwd_entries (Dirstack_state *ds, char **subdir, struct stat *subdir_sb,
 		   block of code and when DO_UNLINK fails due to EPERM.
 		   In that case, give a better diagnostic.  */
 		if (errno == ENOTDIR)
-		  error (0, saved_errno, _("cannot remove %s"), quote (f));
+		  error (0, saved_errno, _("cannot remove %s"),
+			 quote (full_filename (f)));
 		else
 		  error (0, errno, _("cannot chdir from %s to %s"),
 			 quote_n (0, full_filename (".")), quote_n (1, f));
