@@ -3,11 +3,10 @@
 use strict;
 
 use Getopt::Long;
-use Ascend::Init;
 use Digest::MD5;
 use Digest::SHA1;
 
-(my $VERSION = '$Revision: 1.1 $ ') =~ tr/[0-9].//cd;
+(my $VERSION = '$Revision: 1.2 $ ') =~ tr/[0-9].//cd;
 (my $ME = $0) =~ s|.*/||;
 
 END
