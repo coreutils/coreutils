@@ -1,3 +1,8 @@
+2004-06-21  Jim Meyering  <jim@meyering.net>
+
+	* src/mknod.c (main): Don't segfault when calculating the
+	expected number of operands for `mknod NAME'.
+
 2004-06-20  Jim Meyering  <jim@meyering.net>
 
 	* src/dd.c (input_seek_errno): Declare file-scoped variable as static.
