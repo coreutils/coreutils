@@ -13,9 +13,6 @@
 
 	Don't assume ferror sets errno.  Bug reported by Bruno Haible.
 
-	* lib/getndelim2.c, lib/linebuffer.c, lib/readutmp.c: Sync with
-	gnulib.
-
 	* src/comm.c (compare_files): Save errno after input error,
 	to report proper errno value.
 	* src/fold.c (fold_file): Likewise.
