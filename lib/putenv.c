@@ -24,6 +24,10 @@ Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 #include <config.h>
 #endif
 
+/* Define-away any (possibly conflicting) prototype of putenv.
+   Many systems omit the `const' attribute on the argument.  */
+#define putenv _sys_putenv
+
 #if defined (__GNU_LIBRARY__) || defined (HAVE_STDLIB_H)
 #include <stdlib.h>
 #endif
@@ -33,6 +37,8 @@ Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 #if defined (__GNU_LIBRARY__) || defined (HAVE_UNISTD_H)
 #include <unistd.h>
 #endif
+
+#undef putenv
 
 #if !defined (__GNU_LIBRARY__) && !defined (HAVE_STRCHR)
 #define strchr index
