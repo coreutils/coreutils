@@ -1,5 +1,8 @@
 2003-02-08  Jim Meyering  <jim@meyering.net>
 
+	* ftw.c (ftw_startup): Don't shadow outer declaration of save_err.
+	Merge inconsequential changes from libc.
+
 	* ftw.c (ftw_startup): When using FTW_CHDIR, always remember
 	the current directory, not just when DIR contains a slash.
 	Reported by Manoj Srivastava via Michael Stone as Debian bug #180228.
