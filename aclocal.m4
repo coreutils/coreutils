@@ -1,4 +1,4 @@
-# generated automatically by aclocal 1.7h -*- Autoconf -*-
+# generated automatically by aclocal 1.8 -*- Autoconf -*-
 
 # Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003
 # Free Software Foundation, Inc.
@@ -13,6 +13,7 @@
 
 #                                                        -*- Autoconf -*-
 # Copyright (C) 2002, 2003  Free Software Foundation, Inc.
+# Generated from amversion.in; do not edit by hand.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -32,14 +33,14 @@
 # ----------------------------
 # Automake X.Y traces this macro to ensure aclocal.m4 has been
 # generated from the m4 files accompanying Automake X.Y.
-AC_DEFUN([AM_AUTOMAKE_VERSION], [am__api_version="1.7h"])
+AC_DEFUN([AM_AUTOMAKE_VERSION], [am__api_version="1.8"])
 
 # AM_SET_CURRENT_AUTOMAKE_VERSION
 # -------------------------------
 # Call AM_AUTOMAKE_VERSION so it can be traced.
 # This function is AC_REQUIREd by AC_INIT_AUTOMAKE.
 AC_DEFUN([AM_SET_CURRENT_AUTOMAKE_VERSION],
-	 [AM_AUTOMAKE_VERSION([1.7h])])
+	 [AM_AUTOMAKE_VERSION([1.8])])
 
 # AM_AUX_DIR_EXPAND
 
