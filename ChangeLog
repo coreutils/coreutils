@@ -2,6 +2,12 @@
 
 	* Version 5.0.1.
 
+	* configure.ac: Remove uses of OPTIONAL_BIN_ZCRIPTS and last
+	traces of the nohup script.
+
+	* src/Makefile.am (bin_SCRIPTS): Remove use of just-removed
+	$(OPTIONAL_BIN_ZCRIPTS).
+
 	* src/Makefile.am (localedir.h): Put the `2>&1' after the redirect
 	target, not before the `>'.
 
