@@ -1,3 +1,67 @@
+2001-05-11  Paul Eggert  <eggert@twinsun.com>
+
+	dirname code cleanup.  base_name now behaves more compatibly
+	with POSIX basename when given file names that have trailing
+	slashes, and similarly for dir_name.  Add new primitives
+	base_len and dir_len.  Put the directory-name-related decls
+	into dirname.h.
+
+	* addext.c (ISSLASH, base_name): Remove; now in dirname.h.
+	* backupfile.c (base_name): Likewise.
+	* basename.c (FILESYSTEM_PREFIX_LEN, PARAMS, ISSLASH): Likewise.
+	* dirname.c (FILESYSTEM_PREFIX_LEN, ISSLASH): Likewise.
+	* makepath.c (strip_trailing_slashes): Likewise.
+	* path-concat.c (DIRECTORY_SEPARATOR, FILESYSTEM_PREFIX_LEN, ISSLASH):
+	Likewise.
+	* rename.c (strip_trailing_slashes): Likewise.
+	* same.c (base_name): Likewise.
+	* stripslash.c (ISSLASH): Likewise.
+
+	* addext.c: Include <dirname.h> after size_t is defined.
+	* backupfile.c: Likewise.
+
+	* addext.c (addext): Use base_len to trim redundant
+	trailing slashes instead of doing it ourselves.
+	But do not trim the last slash if it is not redundant.
+
+	* backupfile.c (find_backup_file_name,
+	max_backup_version): Use base_len instead of rolling it ourselves.
+	Handle the case of "" and (on DOS) "C:" correctly.
+
+	* basename.c: Do not include <stdio.h>, <assert.h>; no longer needed.
+	Include <string.h>, <dirname.h>.
+	(base_name): Allow file names ending in slashes, other than names
+	that are all slashes.  In this case, return the basename followed
+	by the slashes.  This is more general, and can be used in places
+	where the original base_name purposely had an assertion failure.
+	(base_len): New function.
+
+	* dirname.c: Include <string.h> instead of <stdlib.h>.
+	Do not include <assert.h>; no longer needed.
+	Include xalloc.h.
+	(memrchr): Remove decl.
+	(dir_name_r): Remove.
+	(dir_len): Renamed from dirlen.  All callers changed.
+	Rewrite in terms of base_name, for simplicity and consistency.
+	(dir_name): Never return NULL.  All callers changed.
+	Do not include <stdlib.h> in test program; no longer needed.
+	return 0; is fine for test program.
+
+	* dirname.h (DIRECTORY_SEPARATOR, ISSLASH, FILESYSTEM_PREFIX_LEN):
+	New macros.
+	(base_name, base_len, dir_len, strip_trailing_slashes): New decls.
+
+	* path-concat.c (path_concat): Use base_len to compute
+	base length, not strlen; this means we cannot rely on memcpy
+	to null-terminate.
+
+	* same.c (STREQ): Remove.
+	(same_name): Handle the case where the basename ends in trailing '/'.
+
+	* stripslash.c (strip_trailing_slashes): Return nonzero if
+	a slash was stripped.  Do not strip the last slash after a
+	file system prefix.
+
 2001-04-08  Jim Meyering  <meyering@lucent.com>
 
 	* getdate.y (get_date): Set tm_isdst to -1 to ensure that it is
@@ -10,7 +74,7 @@
 
 2001-03-19  Paul Eggert  <eggert@twinsun.com>
 
-	* lib/version-etc.c (version_etc_copyright): Update to 2001.
+	* version-etc.c (version_etc_copyright): Update to 2001.
 
 2001-03-16  Paul Eggert  <eggert@twinsun.com>
 
