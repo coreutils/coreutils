@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: coreutils 5.0\n"
 "Report-Msgid-Bugs-To: bug-coreutils@gnu.org\n"
-"POT-Creation-Date: 2003-09-08 08:09+0200\n"
+"POT-Creation-Date: 2003-12-20 13:52+0100\n"
 "PO-Revision-Date: 2003-04-07 08:10+0400\n"
 "Last-Translator: Oleg S. Tihonov <ost@tatnipi.ru>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -17,27 +17,27 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
 "10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
-#: lib/argmatch.c:135
+#: lib/argmatch.c:132
 #, c-format
 msgid "invalid argument %s for %s"
 msgstr "неверный аргумент %s для %s"
 
-#: lib/argmatch.c:136
+#: lib/argmatch.c:133
 #, c-format
 msgid "ambiguous argument %s for %s"
 msgstr "неоднозначный аргумент %s для %s"
 
-#: lib/argmatch.c:155
+#: lib/argmatch.c:152
 msgid "Valid arguments are:"
 msgstr "Верные аргументы:"
 
 #: lib/closeout.c:88 src/cat.c:188 src/cat.c:271 src/cat.c:322 src/cksum.c:268
-#: src/head.c:304 src/head.c:354 src/head.c:774 src/head.c:819 src/tail.c:326
-#: src/tail.c:1729 src/tr.c:1659 src/tr.c:1906 src/tr.c:2014
+#: src/head.c:304 src/head.c:354 src/head.c:774 src/head.c:819 src/od.c:1013
+#: src/tail.c:327 src/tail.c:1730 src/tr.c:1659 src/tr.c:1906 src/tr.c:2014
 msgid "write error"
 msgstr "ошибка записи"
 
-#: lib/error.c:133 lib/error.c:161
+#: lib/error.c:127
 msgid "Unknown system error"
 msgstr "Неизвестная системная ошибка"
 
@@ -89,95 +89,95 @@ msgstr "объект разделяемой памяти"
 msgid "weird file"
 msgstr "странный файл"
 
-#: lib/getopt.c:688 lib/getopt.c:700
+#: lib/getopt.c:629 lib/getopt.c:641
 #, c-format
 msgid "%s: option `%s' is ambiguous\n"
 msgstr "%s: неоднозначный ключ `%s'\n"
 
-#: lib/getopt.c:733 lib/getopt.c:737
+#: lib/getopt.c:674 lib/getopt.c:678
 #, c-format
 msgid "%s: option `--%s' doesn't allow an argument\n"
 msgstr "%s: ключ `--%s' должен использоваться без аргумента\n"
 
-#: lib/getopt.c:746 lib/getopt.c:751
+#: lib/getopt.c:687 lib/getopt.c:692
 #, c-format
 msgid "%s: option `%c%s' doesn't allow an argument\n"
 msgstr "%s: ключ `%c%s' должен использоваться без аргумента\n"
 
-#: lib/getopt.c:787 lib/getopt.c:800 lib/getopt.c:1089 lib/getopt.c:1102
+#: lib/getopt.c:728 lib/getopt.c:741 lib/getopt.c:1030 lib/getopt.c:1043
 #, c-format
 msgid "%s: option `%s' requires an argument\n"
 msgstr "%s: ключ `%s' должен использоваться с аргументом\n"
 
-#: lib/getopt.c:838 lib/getopt.c:841
+#: lib/getopt.c:779 lib/getopt.c:782
 #, c-format
 msgid "%s: unrecognized option `--%s'\n"
 msgstr "%s: ключ `--%s' не распознан\n"
 
-#: lib/getopt.c:849 lib/getopt.c:852
+#: lib/getopt.c:790 lib/getopt.c:793
 #, c-format
 msgid "%s: unrecognized option `%c%s'\n"
 msgstr "%s: ключ `%c%s' не распознан\n"
 
-#: lib/getopt.c:899 lib/getopt.c:902
+#: lib/getopt.c:840 lib/getopt.c:843
 #, c-format
 msgid "%s: illegal option -- %c\n"
 msgstr "%s: недопустимый ключ -- %c\n"
 
-#: lib/getopt.c:908 lib/getopt.c:911
+#: lib/getopt.c:849 lib/getopt.c:852
 #, c-format
 msgid "%s: invalid option -- %c\n"
 msgstr "%s: неверный ключ -- `%c'\n"
 
-#: lib/getopt.c:958 lib/getopt.c:969 lib/getopt.c:1155 lib/getopt.c:1168
+#: lib/getopt.c:899 lib/getopt.c:910 lib/getopt.c:1096 lib/getopt.c:1109
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
 msgstr "%s: ключ должен использоваться с аргументом -- %c\n"
 
-#: lib/getopt.c:1021 lib/getopt.c:1032
+#: lib/getopt.c:962 lib/getopt.c:973
 #, c-format
 msgid "%s: option `-W %s' is ambiguous\n"
 msgstr "%s: неоднозначный ключ `-W %s'\n"
 
-#: lib/getopt.c:1056 lib/getopt.c:1068
+#: lib/getopt.c:997 lib/getopt.c:1009
 #, c-format
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "%s: ключ `-W %s' должен использоваться без аргумента\n"
 
-#: lib/human.c:499
+#: lib/human.c:481
 msgid "block size"
 msgstr "размер блока"
 
-#: lib/makepath.c:112 src/df.c:515 src/remove.c:394
+#: lib/makepath.c:103 src/df.c:515 src/remove.c:395
 msgid "failed to return to initial working directory"
 msgstr "не удалось вернуться в первоначальный рабочий каталог"
 
-#: lib/makepath.c:161 src/copy.c:1322 src/mkdir.c:171
+#: lib/makepath.c:152 src/copy.c:1321 src/mkdir.c:171
 #, c-format
 msgid "cannot create directory %s"
 msgstr "невозможно создать каталог %s"
 
-#: lib/makepath.c:167 lib/makepath.c:409 src/cp.c:441 src/cp.c:463
+#: lib/makepath.c:158 lib/makepath.c:400 src/cp.c:440 src/cp.c:462
 #, c-format
 msgid "%s exists but is not a directory"
 msgstr "%s существует, но не является каталогом"
 
-#: lib/makepath.c:304 lib/makepath.c:366 lib/makepath.c:428
+#: lib/makepath.c:295 lib/makepath.c:357 lib/makepath.c:419
 #, c-format
 msgid "cannot change owner and/or group of %s"
 msgstr "невозможно изменить хозяина и/или группу %s"
 
-#: lib/makepath.c:326
+#: lib/makepath.c:317
 #, c-format
 msgid "cannot chdir to directory %s"
 msgstr "невозможно сменить каталог на %s"
 
-#: lib/makepath.c:380 lib/makepath.c:395 lib/makepath.c:434 src/install.c:475
+#: lib/makepath.c:371 lib/makepath.c:386 lib/makepath.c:425 src/install.c:475
 #, c-format
 msgid "cannot change permissions of %s"
 msgstr "невозможно изменить права доступа %s"
 
-#: lib/obstack.c:487 lib/obstack.c:490 lib/xmalloc.c:62
+#: lib/obstack.c:403 lib/obstack.c:406 lib/xmalloc.c:53
 msgid "memory exhausted"
 msgstr "память исчерпана"
 
@@ -189,58 +189,158 @@ msgstr "`"
 msgid "'"
 msgstr "'"
 
-#: lib/rpmatch.c:72
+#: lib/root-dev-ino.h:19
+#, c-format
+msgid "it is dangerous to operate recursively on %s"
+msgstr ""
+
+#: lib/root-dev-ino.h:23
+#, c-format
+msgid "it is dangerous to operate recursively on %s (same as %s)"
+msgstr ""
+
+#: lib/root-dev-ino.h:25
+msgid "use --no-preserve-root to override this failsafe"
+msgstr ""
+
+#: lib/rpmatch.c:70
 msgid "^[yY]"
 msgstr "^[yY]"
 
-#: lib/rpmatch.c:75
+#: lib/rpmatch.c:73
 msgid "^[nN]"
 msgstr "^[nN]"
 
-#: lib/unicodeio.c:151
+#: lib/unicodeio.c:147
 msgid "iconv function not usable"
 msgstr "функция iconv неприменима"
 
-#: lib/unicodeio.c:153
+#: lib/unicodeio.c:149
 msgid "iconv function not available"
 msgstr "функция iconv недоступна"
 
-#: lib/unicodeio.c:160
+#: lib/unicodeio.c:156
 msgid "character out of range"
 msgstr "знак вне допустимого диапазона"
 
-#: lib/unicodeio.c:223
+#: lib/unicodeio.c:219
 #, c-format
 msgid "cannot convert U+%04X to local character set"
 msgstr "невозможно преобразовать U+%04X к локальной кодировке"
 
-#: lib/unicodeio.c:225
+#: lib/unicodeio.c:221
 #, c-format
 msgid "cannot convert U+%04X to local character set: %s"
 msgstr "невозможно преобразовать U+%04X к локальной кодировке: %s"
 
-#: lib/userspec.c:157
+#: lib/userspec.c:148
 msgid "invalid user"
 msgstr "неверный пользователь"
 
-#: lib/userspec.c:158
+#: lib/userspec.c:149
 msgid "invalid group"
 msgstr "неверная группа"
 
-#: lib/userspec.c:160
+#: lib/userspec.c:151
 msgid "cannot get the login group of a numeric UID"
 msgstr "невозможно узнать главную группу для числового UID"
 
-#: lib/userspec.c:162
+#: lib/userspec.c:153
 msgid "cannot omit both user and group"
 msgstr "невозможно пропустить и пользователя, и группу"
 
-#: lib/version-etc.c:57
-#, c-format
+#. TRANSLATORS: %s denotes an author name.
+#: lib/version-etc.c:78
+#, fuzzy, c-format
 msgid "Written by %s.\n"
 msgstr "Автор программы -- %s.\n"
 
-#: lib/version-etc.c:63
+#. TRANSLATORS: Each %s denotes an author name.
+#: lib/version-etc.c:82
+#, fuzzy, c-format
+msgid "Written by %s and %s.\n"
+msgstr "Автор программы -- %s.\n"
+
+#. TRANSLATORS: Each %s denotes an author name.
+#: lib/version-etc.c:86
+#, fuzzy, c-format
+msgid "Written by %s, %s, and %s.\n"
+msgstr "Автор программы -- %s.\n"
+
+#. TRANSLATORS: Each %s denotes an author name.
+#. You can use line breaks, estimating that each author name occupies
+#. ca. 16 screen columns and that a screen line has ca. 80 columns.
+#: lib/version-etc.c:92
+#, fuzzy, c-format
+msgid ""
+"Written by %s, %s, %s,\n"
+"and %s.\n"
+msgstr "Автор программы -- %s.\n"
+
+#. TRANSLATORS: Each %s denotes an author name.
+#. You can use line breaks, estimating that each author name occupies
+#. ca. 16 screen columns and that a screen line has ca. 80 columns.
+#: lib/version-etc.c:98
+#, fuzzy, c-format
+msgid ""
+"Written by %s, %s, %s,\n"
+"%s, and %s.\n"
+msgstr "Автор программы -- %s.\n"
+
+#. TRANSLATORS: Each %s denotes an author name.
+#. You can use line breaks, estimating that each author name occupies
+#. ca. 16 screen columns and that a screen line has ca. 80 columns.
+#: lib/version-etc.c:104
+#, fuzzy, c-format
+msgid ""
+"Written by %s, %s, %s,\n"
+"%s, %s, and %s.\n"
+msgstr "Автор программы -- %s.\n"
+
+#. TRANSLATORS: Each %s denotes an author name.
+#. You can use line breaks, estimating that each author name occupies
+#. ca. 16 screen columns and that a screen line has ca. 80 columns.
+#: lib/version-etc.c:111
+#, fuzzy, c-format
+msgid ""
+"Written by %s, %s, %s,\n"
+"%s, %s, %s, and %s.\n"
+msgstr "Автор программы -- %s.\n"
+
+#. TRANSLATORS: Each %s denotes an author name.
+#. You can use line breaks, estimating that each author name occupies
+#. ca. 16 screen columns and that a screen line has ca. 80 columns.
+#: lib/version-etc.c:118
+#, fuzzy, c-format
+msgid ""
+"Written by %s, %s, %s,\n"
+"%s, %s, %s, %s,\n"
+"and %s.\n"
+msgstr "Автор программы -- %s.\n"
+
+#. TRANSLATORS: Each %s denotes an author name.
+#. You can use line breaks, estimating that each author name occupies
+#. ca. 16 screen columns and that a screen line has ca. 80 columns.
+#: lib/version-etc.c:126
+#, fuzzy, c-format
+msgid ""
+"Written by %s, %s, %s,\n"
+"%s, %s, %s, %s,\n"
+"%s, and %s.\n"
+msgstr "Автор программы -- %s.\n"
+
+#. TRANSLATORS: Each %s denotes an author name.
+#. You can use line breaks, estimating that each author name occupies
+#. ca. 16 screen columns and that a screen line has ca. 80 columns.
+#: lib/version-etc.c:136
+#, fuzzy, c-format
+msgid ""
+"Written by %s, %s, %s,\n"
+"%s, %s, %s, %s,\n"
+"%s, %s, and others.\n"
+msgstr "Автор программы -- %s.\n"
+
+#: lib/version-etc.c:147
 msgid ""
 "This is free software; see the source for copying conditions.  There is NO\n"
 "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
@@ -248,6 +348,11 @@ msgstr ""
 "Это свободная программа; подробности об условиях распространения\n"
 "смотрите в исходном тексте.  Мы НЕ предоставляем гарантий; даже гарантий\n"
 "КОММЕРЧЕСКОЙ ПРИГОДНОСТИ или ПРИГОДНОСТИ ДЛЯ КАКОЙ-ЛИБО ЦЕЛИ.\n"
+
+#: lib/xfts.c:60
+#, fuzzy, c-format
+msgid "invalid argument: %s"
+msgstr "неверный аргумент `%s'"
 
 #: lib/xmemcoll.c:54 src/expr.c:714
 msgid "string comparison failed"
@@ -262,25 +367,25 @@ msgstr "Чтобы обойти эту проблему, установите LC_ALL='C'."
 msgid "The strings compared were %s and %s."
 msgstr "Сравнивались строки %s %s."
 
-#: src/basename.c:49 src/cat.c:87 src/chgrp.c:122 src/chmod.c:238
-#: src/chown.c:95 src/chroot.c:40 src/cksum.c:277 src/comm.c:68 src/cp.c:157
-#: src/csplit.c:1492 src/cut.c:178 src/date.c:115 src/dd.c:283 src/df.c:723
-#: src/dircolors.c:100 src/dirname.c:41 src/du.c:170 src/echo.c:72
+#: src/basename.c:49 src/cat.c:87 src/chgrp.c:115 src/chmod.c:266
+#: src/chown.c:90 src/chroot.c:40 src/cksum.c:277 src/comm.c:68 src/cp.c:157
+#: src/csplit.c:1404 src/cut.c:177 src/date.c:115 src/dd.c:283 src/df.c:723
+#: src/dircolors.c:100 src/dirname.c:41 src/du.c:163 src/echo.c:72
 #: src/env.c:114 src/expand.c:107 src/expr.c:99 src/factor.c:69 src/fmt.c:267
 #: src/fold.c:62 src/head.c:109 src/hostid.c:40 src/hostname.c:62 src/id.c:82
-#: src/install.c:589 src/join.c:139 src/kill.c:90 src/link.c:47 src/ln.c:335
-#: src/logname.c:44 src/ls.c:3751 src/md5sum.c:120 src/mkdir.c:57
-#: src/mkfifo.c:51 src/mknod.c:51 src/mv.c:303 src/nice.c:65 src/nl.c:172
-#: src/nohup.c:52 src/od.c:282 src/paste.c:402 src/pathchk.c:136
-#: src/pinky.c:464 src/pr.c:2749 src/printenv.c:59 src/printf.c:96
-#: src/ptx.c:1868 src/pwd.c:41 src/readlink.c:63 src/rm.c:96 src/rmdir.c:142
-#: src/seq.c:77 src/setuidgid.c:46 src/shred.c:155 src/sleep.c:47
+#: src/install.c:589 src/join.c:139 src/kill.c:90 src/link.c:47 src/ln.c:341
+#: src/logname.c:44 src/ls.c:3898 src/md5sum.c:120 src/mkdir.c:57
+#: src/mkfifo.c:51 src/mknod.c:51 src/mv.c:302 src/nice.c:65 src/nl.c:172
+#: src/nohup.c:52 src/od.c:282 src/paste.c:405 src/pathchk.c:136
+#: src/pinky.c:464 src/pr.c:2748 src/printenv.c:59 src/printf.c:91
+#: src/ptx.c:1870 src/pwd.c:41 src/readlink.c:63 src/rm.c:103 src/rmdir.c:142
+#: src/seq.c:78 src/setuidgid.c:46 src/shred.c:155 src/sleep.c:48
 #: src/sort.c:270 src/split.c:96 src/stat.c:691 src/stty.c:485 src/su.c:432
-#: src/sum.c:55 src/sync.c:40 src/tac.c:122 src/tail.c:233 src/tee.c:58
+#: src/sum.c:55 src/sync.c:40 src/tac.c:122 src/tail.c:234 src/tee.c:58
 #: src/test.c:972 src/touch.c:234 src/tr.c:316 src/tsort.c:92 src/tty.c:58
-#: src/uname.c:105 src/unexpand.c:369 src/uniq.c:130 src/unlink.c:47
-#: src/uptime.c:186 src/users.c:113 src/wc.c:131 src/who.c:614 src/whoami.c:47
-#: src/yes.c:45
+#: src/uname.c:105 src/unexpand.c:372 src/uniq.c:130 src/unlink.c:47
+#: src/uptime.c:186 src/users.c:115 src/wc.c:131 src/who.c:616 src/whoami.c:47
+#: src/yes.c:42
 #, c-format
 msgid "Try `%s --help' for more information.\n"
 msgstr "Попробуйте `%s --help' для получения более подробного описания.\n"
@@ -304,25 +409,25 @@ msgstr ""
 "Если указано, удаляет также завершающий СУФФИКС.\n"
 "\n"
 
-#: src/basename.c:65 src/cat.c:123 src/chgrp.c:152 src/chmod.c:264
-#: src/chown.c:139 src/chroot.c:58 src/cksum.c:292 src/comm.c:85 src/cp.c:254
-#: src/csplit.c:1534 src/cut.c:223 src/date.c:217 src/dd.c:341 src/df.c:762
-#: src/dircolors.c:121 src/dirname.c:57 src/du.c:219 src/echo.c:104
+#: src/basename.c:65 src/cat.c:123 src/chgrp.c:163 src/chmod.c:298
+#: src/chown.c:152 src/chroot.c:58 src/cksum.c:292 src/comm.c:85 src/cp.c:254
+#: src/csplit.c:1446 src/cut.c:222 src/date.c:217 src/dd.c:341 src/df.c:762
+#: src/dircolors.c:121 src/dirname.c:57 src/du.c:214 src/echo.c:104
 #: src/env.c:133 src/expand.c:132 src/expr.c:162 src/factor.c:89
 #: src/false.c:43 src/fmt.c:297 src/fold.c:85 src/head.c:144 src/hostid.c:53
-#: src/hostname.c:75 src/id.c:103 src/install.c:644 src/join.c:180
-#: src/kill.c:120 src/link.c:59 src/ln.c:390 src/logname.c:55 src/ls.c:3885
-#: src/md5sum.c:156 src/mkdir.c:76 src/mkfifo.c:68 src/mknod.c:82 src/mv.c:357
-#: src/nice.c:79 src/nl.c:227 src/nohup.c:68 src/od.c:369 src/paste.c:426
-#: src/pathchk.c:148 src/pinky.c:491 src/pr.c:2861 src/printenv.c:72
-#: src/printf.c:145 src/pwd.c:52 src/readlink.c:80 src/rm.c:130
-#: src/rmdir.c:162 src/seq.c:103 src/setuidgid.c:66 src/shred.c:219
-#: src/sleep.c:63 src/sort.c:341 src/split.c:129 src/stat.c:762 src/stty.c:699
-#: src/su.c:453 src/sum.c:75 src/sync.c:51 src/tac.c:145 src/tail.c:303
+#: src/hostname.c:75 src/id.c:103 src/install.c:644 src/join.c:182
+#: src/kill.c:120 src/link.c:59 src/ln.c:398 src/logname.c:55 src/ls.c:4032
+#: src/md5sum.c:156 src/mkdir.c:76 src/mkfifo.c:68 src/mknod.c:82 src/mv.c:356
+#: src/nice.c:79 src/nl.c:227 src/nohup.c:68 src/od.c:369 src/paste.c:429
+#: src/pathchk.c:148 src/pinky.c:491 src/pr.c:2860 src/printenv.c:72
+#: src/printf.c:140 src/ptx.c:1917 src/pwd.c:52 src/readlink.c:80 src/rm.c:141
+#: src/rmdir.c:162 src/seq.c:104 src/setuidgid.c:66 src/shred.c:219
+#: src/sleep.c:64 src/sort.c:341 src/split.c:129 src/stat.c:762 src/stty.c:699
+#: src/su.c:453 src/sum.c:75 src/sync.c:51 src/tac.c:145 src/tail.c:304
 #: src/tee.c:71 src/test.c:1051 src/touch.c:265 src/tr.c:389 src/true.c:43
-#: src/tsort.c:104 src/tty.c:70 src/uname.c:127 src/unexpand.c:393
-#: src/uniq.c:169 src/unlink.c:58 src/uptime.c:201 src/users.c:126
-#: src/wc.c:153 src/who.c:655 src/whoami.c:59 src/yes.c:61
+#: src/tsort.c:104 src/tty.c:70 src/uname.c:127 src/unexpand.c:396
+#: src/uniq.c:169 src/unlink.c:58 src/uptime.c:201 src/users.c:128
+#: src/wc.c:153 src/who.c:657 src/whoami.c:59 src/yes.c:58
 #, c-format
 msgid ""
 "\n"
@@ -331,26 +436,22 @@ msgstr ""
 "\n"
 "Об ошибках сообщайте по адресу <%s>.\n"
 
-#: src/basename.c:114 src/chgrp.c:211 src/chmod.c:353 src/chown.c:212
-#: src/chroot.c:78 src/comm.c:265 src/csplit.c:1464 src/dirname.c:89
+#: src/basename.c:114 src/chgrp.c:246 src/chmod.c:395 src/chown.c:264
+#: src/chroot.c:78 src/comm.c:280 src/csplit.c:1376 src/dirname.c:89
 #: src/expr.c:202 src/install.c:282 src/link.c:88 src/mkdir.c:125
 #: src/mkfifo.c:114 src/mknod.c:138 src/nohup.c:101 src/pathchk.c:189
-#: src/readlink.c:128 src/rm.c:203 src/rmdir.c:207 src/seq.c:374
-#: src/setuidgid.c:98 src/sleep.c:139 src/stat.c:819 src/unlink.c:89
+#: src/readlink.c:128 src/rm.c:231 src/rmdir.c:207 src/seq.c:375
+#: src/setuidgid.c:98 src/sleep.c:140 src/stat.c:819 src/unlink.c:89
 msgid "too few arguments"
 msgstr "недостаточно аргументов"
 
 #: src/basename.c:115 src/dircolors.c:475 src/dirname.c:90 src/hostid.c:76
 #: src/hostname.c:122 src/link.c:94 src/logname.c:91 src/mknod.c:140
-#: src/readlink.c:136 src/seq.c:380 src/split.c:533 src/tr.c:1842
-#: src/uname.c:215 src/unlink.c:95 src/uptime.c:244 src/users.c:169
-#: src/who.c:803
+#: src/readlink.c:136 src/seq.c:381 src/split.c:533 src/tr.c:1842
+#: src/uname.c:215 src/unlink.c:95 src/uptime.c:244 src/users.c:171
+#: src/who.c:805
 msgid "too many arguments"
 msgstr "слишком много аргументов"
-
-#: src/cat.c:41 src/split.c:43
-msgid "Torbjorn Granlund and Richard M. Stallman"
-msgstr "Торбьёрн Гранлунд и Ричард М. Столлмен"
 
 #: src/cat.c:91
 #, c-format
@@ -416,7 +517,7 @@ msgstr ""
 msgid "cannot do ioctl on `%s'"
 msgstr "невозможно выполнить ioctl для `%s'"
 
-#: src/cat.c:666 src/dd.c:1233 src/od.c:1012 src/tee.c:181 src/yes.c:112
+#: src/cat.c:666 src/dd.c:1232 src/tee.c:181 src/yes.c:92
 msgid "standard output"
 msgstr "стандартный вывод"
 
@@ -433,25 +534,25 @@ msgstr "закрытие стандартного ввода"
 msgid "closing standard output"
 msgstr "закрытие стандартного вывода"
 
-#: src/chgrp.c:93
+#: src/chgrp.c:86
 msgid "cannot change to null group"
 msgstr "невозможно изменить группу на нулевую"
 
-#: src/chgrp.c:102
+#: src/chgrp.c:95
 #, c-format
 msgid "invalid group name %s"
 msgstr "неверное имя группы %s"
 
-#: src/chgrp.c:106
+#: src/chgrp.c:99
 msgid "group number"
 msgstr "номер группы"
 
-#: src/chgrp.c:109
+#: src/chgrp.c:102
 #, c-format
 msgid "invalid group number %s"
 msgstr "неверный номер группы %s"
 
-#: src/chgrp.c:126
+#: src/chgrp.c:119
 #, c-format
 msgid ""
 "Usage: %s [OPTION]... GROUP FILE...\n"
@@ -460,9 +561,11 @@ msgstr ""
 "Использование: %s [КЛЮЧ]... ГРУППА ФАЙЛ...\n"
 "       или:    %s [КЛЮЧ]... --reference=ОФАЙЛ ФАЙЛ...\n"
 
-#: src/chgrp.c:131
+#: src/chgrp.c:124
+#, fuzzy
 msgid ""
-"Change the group membership of each FILE to GROUP.\n"
+"Change the group of each FILE to GROUP.\n"
+"With --reference, change the group of each FILE to that of RFILE.\n"
 "\n"
 "  -c, --changes          like verbose but report only when a change is made\n"
 "      --dereference      affect the referent of each symbolic link, rather\n"
@@ -474,11 +577,12 @@ msgstr ""
 "изменение\n"
 "      --dereference      изменять не ссылку, а на что она ссылается\n"
 
-#: src/chgrp.c:138 src/chown.c:112
+#: src/chgrp.c:132 src/chown.c:108
+#, fuzzy
 msgid ""
-"  -h, --no-dereference   affect symbolic links instead of any referenced "
-"file\n"
-"                         (available only on systems that can change the\n"
+"  -h, --no-dereference   affect each symbolic link instead of any "
+"referenced\n"
+"                         file (useful only on systems that can change the\n"
 "                         ownership of a symlink)\n"
 msgstr ""
 "  -h, --no-dereference    изменяет владельца ссылки, а не владельца файла,\n"
@@ -487,13 +591,21 @@ msgstr ""
 "                           которые могут изменять владение символической "
 "ссылки)\n"
 
-#: src/chgrp.c:143
+#: src/chgrp.c:137 src/chown.c:120
+msgid ""
+"      --no-preserve-root do not treat `/' specially (the default)\n"
+"      --preserve-root    fail to operate recursively on `/'\n"
+msgstr ""
+
+#: src/chgrp.c:141
+#, fuzzy
 msgid ""
 "  -f, --silent, --quiet  suppress most error messages\n"
-"      --reference=RFILE  use RFILE's group rather than the specified\n"
+"      --reference=RFILE  use RFILE's group rather than the specifying\n"
 "                         GROUP value\n"
 "  -R, --recursive        operate on files and directories recursively\n"
 "  -v, --verbose          output a diagnostic for every file processed\n"
+"\n"
 msgstr ""
 "  -f, --silent, --quiet   подавлять сообщения об ошибках\n"
 "      --reference=RFILE   иcпользовать группу RFILE вместо GROUP\n"
@@ -501,39 +613,72 @@ msgstr ""
 "  -v, --verbose           выводить диагностические сообщения для каждого "
 "файла\n"
 
-#: src/chgrp.c:219 src/chmod.c:157 src/chmod.c:366 src/chown-core.c:235
-#: src/chown-core.c:247 src/chown.c:221 src/cp.c:300 src/touch.c:154
-#: src/touch.c:360
+#: src/chgrp.c:149 src/chown.c:132
+msgid ""
+"The following options modify how a hierarchy is traversed when the -R\n"
+"option is also specified.  If more than one is specified, only the final\n"
+"one takes effect.\n"
+"\n"
+"  -H                     if a command line argument is a symbolic link\n"
+"                         to a directory, traverse it\n"
+"  -L                     traverse every symbolic link to a directory\n"
+"                         encountered\n"
+"  -P                     do not traverse any symbolic links (default)\n"
+"\n"
+msgstr ""
+
+#: src/chgrp.c:254 src/chmod.c:408 src/chmod.c:416 src/chown.c:272
+#: src/chown.c:299 src/cp.c:300 src/rm.c:241 src/touch.c:154 src/touch.c:360
 #, c-format
 msgid "failed to get attributes of %s"
 msgstr "ошибка получения атрибутов %s"
 
-#: src/chmod.c:102
+#: src/chmod.c:112
 #, c-format
 msgid "getting new attributes of %s"
 msgstr "получаю новые атрибуты %s"
 
-#: src/chmod.c:124
+#: src/chmod.c:134
 #, c-format
 msgid "mode of %s changed to %04lo (%s)\n"
 msgstr "права доступа %s изменены на %04lo (%s)\n"
 
-#: src/chmod.c:127
+#: src/chmod.c:137
 #, c-format
 msgid "failed to change mode of %s to %04lo (%s)\n"
 msgstr "ошибка изменения прав доступа %s на %04lo (%s)\n"
 
-#: src/chmod.c:130
+#: src/chmod.c:140
 #, c-format
 msgid "mode of %s retained as %04lo (%s)\n"
 msgstr "права доступа %s оставлены как %04lo (%s)\n"
 
-#: src/chmod.c:179
+#: src/chmod.c:167 src/chown-core.c:189 src/copy.c:158 src/du.c:339
+#, c-format
+msgid "cannot access %s"
+msgstr "невозможно получить доступ к %s"
+
+#: src/chmod.c:171 src/chown-core.c:193 src/du.c:345
+#, c-format
+msgid "%s"
+msgstr ""
+
+#: src/chmod.c:175 src/chown-core.c:197 src/du.c:352
+#, c-format
+msgid "cannot read directory %s"
+msgstr "невозможно считать каталог %s"
+
+#: src/chmod.c:211
 #, c-format
 msgid "changing permissions of %s"
 msgstr "изменение прав доступа для %s"
 
-#: src/chmod.c:242
+#: src/chmod.c:245 src/chown-core.c:327 src/du.c:502
+#, fuzzy
+msgid "fts_read failed"
+msgstr "чтение неуспешно"
+
+#: src/chmod.c:270
 #, c-format
 msgid ""
 "Usage: %s [OPTION]... MODE[,MODE]... FILE...\n"
@@ -544,13 +689,23 @@ msgstr ""
 "       или:    %s [КЛЮЧ]... ВОСЬМ-РЕЖИМ ФАЙЛ...\n"
 "       или:    %s [КЛЮЧ]... --reference=ОФАЙЛ ФАЙЛ...\n"
 
-#: src/chmod.c:248
-#, fuzzy
+#: src/chmod.c:276
 msgid ""
 "Change the mode of each FILE to MODE.\n"
 "\n"
 "  -c, --changes           like verbose but report only when a change is "
 "made\n"
+msgstr ""
+
+#: src/chmod.c:281
+msgid ""
+"      --no-preserve-root  do not treat `/' specially (the default)\n"
+"      --preserve-root     fail to operate recursively on `/'\n"
+msgstr ""
+
+#: src/chmod.c:285
+#, fuzzy
+msgid ""
 "  -f, --silent, --quiet   suppress most error messages\n"
 "  -v, --verbose           output a diagnostic for every file processed\n"
 "      --reference=RFILE   use RFILE's mode instead of MODE values\n"
@@ -566,7 +721,7 @@ msgstr ""
 "      --reference=RFILE   использовать права доступа RFILE вместо MODE\n"
 "  -R, --recursive         изменять с каталогами\n"
 
-#: src/chmod.c:259
+#: src/chmod.c:293
 msgid ""
 "\n"
 "Each MODE is one or more of the letters ugoa, one of the symbols +-= and\n"
@@ -576,62 +731,62 @@ msgstr ""
 "Каждый MODE представляет собой комбинацию из одного или более символов ugoa\n"
 "вначале, и один из символов +-=, затем одна или несколько букв rwxXstugo.\n"
 
-#: src/chmod.c:321
+#: src/chmod.c:357
 #, c-format
 msgid "invalid character %s in mode string %s"
 msgstr "неверный знак %s в строке режима %s"
 
-#: src/chmod.c:362
+#: src/chmod.c:404
 #, c-format
 msgid "invalid mode string: %s"
 msgstr "неверная строка режима: %s"
 
-#: src/chown-core.c:116
+#: src/chown-core.c:117
 #, c-format
 msgid "neither symbolic link %s nor referent has been changed\n"
 msgstr "ни символьная ссылка %s, ни то но что она указывает не были изменены\n"
 
-#: src/chown-core.c:143
+#: src/chown-core.c:144
 #, c-format
 msgid "changed ownership of %s to %s\n"
 msgstr "изменен владелец %s на %s\n"
 
-#: src/chown-core.c:144
+#: src/chown-core.c:145
 #, c-format
 msgid "changed group of %s to %s\n"
 msgstr "изменена группа %s на %s\n"
 
-#: src/chown-core.c:148
+#: src/chown-core.c:149
 #, c-format
 msgid "failed to change ownership of %s to %s\n"
 msgstr "невозможно изменить владельца %s на %s\n"
 
-#: src/chown-core.c:149
+#: src/chown-core.c:150
 #, c-format
 msgid "failed to change group of %s to %s\n"
 msgstr "ошибка изменения группы %s на %s\n"
 
-#: src/chown-core.c:153
+#: src/chown-core.c:154
 #, c-format
 msgid "ownership of %s retained as %s\n"
 msgstr "владелец %s оставлен как %s\n"
 
-#: src/chown-core.c:154
+#: src/chown-core.c:155
 #, c-format
 msgid "group of %s retained as %s\n"
 msgstr "группа %s оставлена как %s\n"
 
-#: src/chown-core.c:328
+#: src/chown-core.c:270
 #, c-format
 msgid "changing ownership of %s"
 msgstr "изменение владельца %s"
 
-#: src/chown-core.c:329
+#: src/chown-core.c:271
 #, c-format
 msgid "changing group of %s"
 msgstr "изменение группы для %s"
 
-#: src/chown.c:99
+#: src/chown.c:94
 #, c-format
 msgid ""
 "Usage: %s [OPTION]... OWNER[:[GROUP]] FILE...\n"
@@ -642,9 +797,12 @@ msgstr ""
 "       или:    %s [КЛЮЧ]... :ГРУППА ФАЙЛ...\n"
 "       или:    %s [КЛЮЧ]... --reference=ОФАЙЛ ФАЙЛ...\n"
 
-#: src/chown.c:105
+#: src/chown.c:100
+#, fuzzy
 msgid ""
 "Change the owner and/or group of each FILE to OWNER and/or GROUP.\n"
+"With --reference, change the owner and group of each FILE to those of "
+"RFILE.\n"
 "\n"
 "  -c, --changes          like verbose but report only when a change is made\n"
 "      --dereference      affect the referent of each symbolic link, rather\n"
@@ -657,7 +815,7 @@ msgstr ""
 "      --dereference       изменяет владельца ссылки, а не владельца файла,\n"
 "                          на который ссылается ссылка.\n"
 
-#: src/chown.c:117
+#: src/chown.c:113
 msgid ""
 "      --from=CURRENT_OWNER:CURRENT_GROUP\n"
 "                         change the owner and/or group of each file only if\n"
@@ -676,12 +834,14 @@ msgstr ""
 "                          не обязательно.\n"
 
 #: src/chown.c:124
+#, fuzzy
 msgid ""
 "  -f, --silent, --quiet  suppress most error messages\n"
 "      --reference=RFILE  use RFILE's owner and group rather than\n"
-"                         the specified OWNER:GROUP values\n"
+"                         the specifying OWNER:GROUP values\n"
 "  -R, --recursive        operate on files and directories recursively\n"
 "  -v, --verbose          output a diagnostic for every file processed\n"
+"\n"
 msgstr ""
 "  -f, --silent, --quiet   подавлять сообщения об ошибках\n"
 "      --reference=RFILE   использовать владельцев RFILE вместо OWNER:GROUP\n"
@@ -689,7 +849,7 @@ msgstr ""
 "  -v, --verbose           выводить диагностические сообщения для каждого "
 "файла\n"
 
-#: src/chown.c:133
+#: src/chown.c:146
 msgid ""
 "\n"
 "Owner is unchanged if missing.  Group is unchanged if missing, but changed\n"
@@ -757,10 +917,6 @@ msgstr ""
 "Печатает контрольную сумму (CRC) и число байт для каждого ФАЙЛА.\n"
 "\n"
 
-#: src/comm.c:34 src/ls.c:122 src/uniq.c:39
-msgid "Richard Stallman and David MacKenzie"
-msgstr "Ричард Столлмен и Девид МакКензи"
-
 #: src/comm.c:72
 #, c-format
 msgid "Usage: %s [OPTION]... LEFT_FILE RIGHT_FILE\n"
@@ -780,254 +936,245 @@ msgstr ""
 "  -2              не показывать строки, уникальные для правого файла\n"
 "  -3              не показывать строки, встреченные в обоих файлах\n"
 
-#: src/copy.c:159 src/du.c:332
-#, c-format
-msgid "cannot access %s"
-msgstr "невозможно получить доступ к %s"
-
-#: src/copy.c:223 src/fmt.c:435 src/head.c:866 src/tail.c:1267
+#: src/copy.c:222 src/fmt.c:435 src/head.c:866 src/tail.c:1268
 #, c-format
 msgid "cannot open %s for reading"
 msgstr "невозможно открыть %s для чтения"
 
-#: src/copy.c:229 src/copy.c:283 src/copy.c:298 src/dd.c:1210 src/tail.c:1097
-#: src/tail.c:1169
+#: src/copy.c:228 src/copy.c:282 src/copy.c:297 src/dd.c:1209 src/tail.c:1098
+#: src/tail.c:1170
 #, c-format
 msgid "cannot fstat %s"
 msgstr "невозможно выполнить fstat для %s"
 
-#: src/copy.c:239
+#: src/copy.c:238
 #, c-format
 msgid "skipping file %s, as it was replaced while being copied"
 msgstr "пропускаю файл %s, так как он был заменен во время копирования"
 
-#: src/copy.c:259 src/copy.c:887 src/copy.c:1068 src/copy.c:1158 src/ln.c:291
-#: src/remove.c:726 src/remove.c:780 src/remove.c:905 src/remove.c:1012
+#: src/copy.c:258 src/copy.c:886 src/copy.c:1067 src/copy.c:1157 src/ln.c:297
+#: src/remove.c:727 src/remove.c:781 src/remove.c:902 src/remove.c:1009
 #, c-format
 msgid "cannot remove %s"
 msgstr "невозможно удалить %s"
 
-#: src/copy.c:274
+#: src/copy.c:273
 #, c-format
 msgid "cannot create regular file %s"
 msgstr "невозможно создать обычный файл %s"
 
-#: src/copy.c:325 src/dd.c:826 src/dd.c:1020
+#: src/copy.c:324 src/dd.c:825 src/dd.c:1019
 #, c-format
 msgid "reading %s"
 msgstr "чтение %s"
 
-#: src/copy.c:359 src/head.c:437
+#: src/copy.c:358 src/head.c:437
 #, c-format
 msgid "cannot lseek %s"
 msgstr "невозможно выполнить lseek для %s"
 
-#: src/copy.c:374 src/copy.c:398 src/dd.c:1064 src/dd.c:1125
+#: src/copy.c:373 src/copy.c:397 src/dd.c:1063 src/dd.c:1124
 #, c-format
 msgid "writing %s"
 msgstr "запись %s"
 
-#: src/copy.c:406 src/copy.c:412 src/head.c:874
+#: src/copy.c:405 src/copy.c:411 src/head.c:874
 #, c-format
 msgid "closing %s"
 msgstr "закрытие %s"
 
-#: src/copy.c:631
+#: src/copy.c:630
 #, c-format
 msgid "%s: overwrite %s, overriding mode %04lo? "
 msgstr "%s: переписать %s, несмотря на права доступа %04lo? "
 
-#: src/copy.c:637
+#: src/copy.c:636
 #, c-format
 msgid "%s: overwrite %s? "
 msgstr "%s: переписать %s? "
 
-#: src/copy.c:831 src/copy.c:869 src/df.c:492 src/stat.c:649
+#: src/copy.c:830 src/copy.c:868 src/df.c:492 src/stat.c:649
 #, c-format
 msgid "cannot stat %s"
 msgstr "невозможно выполнить stat для %s"
 
-#: src/copy.c:841
+#: src/copy.c:840
 #, c-format
 msgid "omitting directory %s"
 msgstr "пропуск каталога %s"
 
-#: src/copy.c:855
+#: src/copy.c:854
 #, c-format
 msgid "warning: source file %s specified more than once"
 msgstr "внимание: входной файл %s указан более одного раза"
 
-#: src/copy.c:900 src/ln.c:237
+#: src/copy.c:899 src/ln.c:241
 #, c-format
 msgid "%s and %s are the same file"
 msgstr "%s и %s - один и тот же файл"
 
-#: src/copy.c:910
+#: src/copy.c:909
 #, c-format
 msgid "cannot overwrite non-directory %s with directory %s"
 msgstr ""
 "невозможно перезаписать поверх файла %s, не являющегося каталогом, каталог %s"
 
-#: src/copy.c:927
+#: src/copy.c:926
 #, c-format
 msgid "will not overwrite just-created %s with %s"
 msgstr "не переписываю только что созданный %s %s"
 
-#: src/copy.c:938
+#: src/copy.c:937
 #, c-format
 msgid "cannot overwrite directory %s with non-directory"
 msgstr "невозможно перезаписать каталог %s файлом, не являющимся каталогом"
 
-#: src/copy.c:999
+#: src/copy.c:998
 #, c-format
 msgid "cannot overwrite directory %s"
 msgstr "невозможно перезаписать каталог %s"
 
-#: src/copy.c:1008
+#: src/copy.c:1007
 #, c-format
 msgid "cannot move directory onto non-directory: %s -> %s"
 msgstr ""
 "невозможно переименовать каталог в файл, не являющийся каталогом: %s -> %s"
 
-#: src/copy.c:1031
+#: src/copy.c:1030
 #, c-format
 msgid "backing up %s would destroy source;  %s not moved"
 msgstr "сохранение запасной копии %s уничтожит оригинал; %s не перенесен"
 
-#: src/copy.c:1032
+#: src/copy.c:1031
 #, c-format
 msgid "backing up %s would destroy source;  %s not copied"
 msgstr "сохранение запасной копии %s уничтожит оригинал; %s не скопирован"
 
-#: src/copy.c:1047 src/ln.c:273
+#: src/copy.c:1046 src/ln.c:279
 #, c-format
 msgid "cannot backup %s"
 msgstr "невозможно создать резервную копию для %s"
 
-#: src/copy.c:1083 src/ln.c:308
+#: src/copy.c:1082 src/ln.c:314
 #, c-format
 msgid " (backup: %s)"
 msgstr " (резервная копия: %s)"
 
-#: src/copy.c:1133
+#: src/copy.c:1132
 #, c-format
 msgid "cannot copy a directory, %s, into itself, %s"
 msgstr "невозможно скопировать каталог, %s, в самого себя, %s"
 
-#: src/copy.c:1140
+#: src/copy.c:1139
 #, c-format
 msgid "will not create hard link %s to directory %s"
 msgstr "жесткая ссылка %s на каталог %s не будет создана"
 
-#: src/copy.c:1166
+#: src/copy.c:1165
 #, c-format
 msgid "cannot create hard link %s to %s"
 msgstr "невозможно создать жесткую ссылку %s на %s"
 
-#: src/copy.c:1220
+#: src/copy.c:1219
 #, c-format
 msgid "cannot move %s to a subdirectory of itself, %s"
 msgstr "невозможно перенести %s в свой собственный подкаталог, %s"
 
-#: src/copy.c:1263
+#: src/copy.c:1262
 #, c-format
 msgid "cannot move %s to %s"
 msgstr "невозможно переместить %s в %s"
 
-#: src/copy.c:1275
+#: src/copy.c:1274
 #, c-format
 msgid "inter-device move failed: %s to %s; unable to remove target"
 msgstr ""
 "перемещение с устройства %s на устройство %s неуспешно: невозможно удалить "
 "целевое"
 
-#: src/copy.c:1303
+#: src/copy.c:1302
 #, c-format
 msgid "cannot copy cyclic symbolic link %s"
 msgstr "невозможно скопировать циклическую символьную ссылку %s"
 
-#: src/copy.c:1380
+#: src/copy.c:1379
 #, c-format
 msgid "%s: can make relative symbolic links only in current directory"
 msgstr ""
 "%s: возможно создавать относительные символические ссылки только в текущем "
 "каталоге"
 
-#: src/copy.c:1387
+#: src/copy.c:1386
 #, c-format
 msgid "cannot create symbolic link %s to %s"
 msgstr "невозможно создать символьную ссылку %s на %s"
 
-#: src/copy.c:1398
+#: src/copy.c:1397
 #, c-format
 msgid "cannot create link %s"
 msgstr "невозможно создать ссылку %s"
 
-#: src/copy.c:1423 src/mkfifo.c:134
+#: src/copy.c:1419 src/mkfifo.c:134
 #, c-format
 msgid "cannot create fifo %s"
 msgstr "невозможно создать очередь %s"
 
-#: src/copy.c:1437
+#: src/copy.c:1430
 #, c-format
 msgid "cannot create special file %s"
 msgstr "невозможно создать специальный файл %s"
 
-#: src/copy.c:1449 src/ls.c:2485 src/stat.c:436
+#: src/copy.c:1442 src/ls.c:2561 src/stat.c:436
 #, c-format
 msgid "cannot read symbolic link %s"
 msgstr "невозможно считать симсимвольную ссылку %s"
 
-#: src/copy.c:1474
+#: src/copy.c:1467
 #, c-format
 msgid "cannot create symbolic link %s"
 msgstr "невозможно создать символьную ссылку %s"
 
-#: src/copy.c:1490 src/copy.c:1551 src/cp.c:334
+#: src/copy.c:1483 src/copy.c:1544 src/cp.c:334
 #, c-format
 msgid "failed to preserve ownership for %s"
 msgstr "не удалось сохранить владельца %s"
 
-#: src/copy.c:1505
+#: src/copy.c:1498
 #, c-format
 msgid "%s has unknown file type"
 msgstr "тип файла %s неизвестен"
 
-#: src/copy.c:1538
+#: src/copy.c:1531
 #, c-format
 msgid "preserving times for %s"
 msgstr "сохранение временной отметки %s"
 
-#: src/copy.c:1563
+#: src/copy.c:1556
 #, fuzzy, c-format
 msgid "failed to lookup file %s"
 msgstr "не удалось сохранить временные метки для %s"
 
-#: src/copy.c:1568
+#: src/copy.c:1561
 #, c-format
 msgid "failed to preserve authorship for %s"
 msgstr "не удалось сохранить автора %s"
 
-#: src/copy.c:1587
+#: src/copy.c:1580
 #, c-format
 msgid "setting permissions for %s"
 msgstr "установка прав доступа для %s"
 
-#: src/copy.c:1609 src/ln.c:326
+#: src/copy.c:1602 src/ln.c:332
 #, c-format
 msgid "cannot un-backup %s"
 msgstr "невозможно восстановить %s из резервной копии"
 
-#: src/copy.c:1613
+#: src/copy.c:1606
 #, c-format
 msgid "%s -> %s (unbackup)\n"
 msgstr "%s -> %s (восстановление)\n"
 
-#: src/cp.c:50
-msgid "Torbjorn Granlund, David MacKenzie, and Jim Meyering"
-msgstr "Торбьёрн Гранлунд, Девид МакКензи и Джим Мееринг"
-
-#: src/cp.c:161 src/mv.c:307
+#: src/cp.c:161 src/mv.c:306
 #, c-format
 msgid ""
 "Usage: %s [OPTION]... SOURCE DEST\n"
@@ -1046,12 +1193,12 @@ msgstr ""
 "Копирует SOURCE в DEST, или несколько SOURCE в DIRECTORY.\n"
 "\n"
 
-#: src/cp.c:171 src/csplit.c:1505 src/cut.c:190 src/df.c:733 src/du.c:179
+#: src/cp.c:171 src/csplit.c:1417 src/cut.c:189 src/df.c:733 src/du.c:172
 #: src/expand.c:120 src/fmt.c:277 src/fold.c:75 src/head.c:123
-#: src/install.c:605 src/kill.c:104 src/ln.c:354 src/ls.c:3761 src/mkdir.c:66
-#: src/mkfifo.c:60 src/mknod.c:61 src/mv.c:317 src/nl.c:185 src/paste.c:416
-#: src/pr.c:2762 src/ptx.c:1880 src/shred.c:165 src/sort.c:284 src/split.c:109
-#: src/tac.c:135 src/tail.c:247 src/touch.c:243 src/unexpand.c:382
+#: src/install.c:605 src/kill.c:104 src/ln.c:360 src/ls.c:3908 src/mkdir.c:66
+#: src/mkfifo.c:60 src/mknod.c:61 src/mv.c:316 src/nl.c:185 src/paste.c:419
+#: src/pr.c:2761 src/ptx.c:1882 src/shred.c:165 src/sort.c:284 src/split.c:109
+#: src/tac.c:135 src/tail.c:248 src/touch.c:243 src/unexpand.c:385
 #: src/uniq.c:143
 msgid ""
 "Mandatory arguments to long options are mandatory for short options too.\n"
@@ -1208,7 +1355,7 @@ msgstr ""
 "окружения VERSION_CONTROL. Допустимые значения:\n"
 "\n"
 
-#: src/cp.c:242 src/install.c:638 src/ln.c:384 src/mv.c:351
+#: src/cp.c:242 src/install.c:638 src/ln.c:392 src/mv.c:350
 msgid ""
 "  none, off       never make backups (even if --backup is given)\n"
 "  numbered, t     make numbered backups\n"
@@ -1243,44 +1390,44 @@ msgstr "не удалось сохранить временные метки для %s"
 msgid "failed to preserve permissions for %s"
 msgstr "не удалось сохранить права доступа для %s"
 
-#: src/cp.c:429
+#: src/cp.c:428
 #, c-format
 msgid "cannot make directory %s"
 msgstr "невозможно создать каталог %s"
 
-#: src/cp.c:488 src/ln.c:488 src/mv.c:456 src/shred.c:1601
+#: src/cp.c:487 src/ln.c:496 src/mv.c:455 src/shred.c:1601
 msgid "missing file argument"
 msgstr "пропущен аргумент, задающий файл"
 
-#: src/cp.c:493
+#: src/cp.c:492
 msgid "missing destination file"
 msgstr "пропущен аргумент, задающий целевой файл"
 
-#: src/cp.c:518 src/ln.c:161 src/ln.c:184 src/ln.c:211 src/ln.c:297
+#: src/cp.c:517 src/ln.c:165 src/ln.c:188 src/ln.c:215 src/ln.c:303
 #, c-format
 msgid "accessing %s"
 msgstr "обращение к %s"
 
-#: src/cp.c:543
+#: src/cp.c:542
 #, fuzzy, c-format
 msgid "%s: specified destination directory does not exist"
 msgstr "%s: заданный целевой каталог не является каталогом"
 
-#: src/cp.c:545
+#: src/cp.c:544
 #, c-format
 msgid "%s: specified target is not a directory"
 msgstr "%s: указанное назначение не является каталогом"
 
-#: src/cp.c:548
+#: src/cp.c:547
 #, c-format
 msgid "copying multiple files, but last argument %s is not a directory"
 msgstr "копируются несколько файлов, но последний аргумент %s не каталог"
 
-#: src/cp.c:647
+#: src/cp.c:646
 msgid "when preserving paths, the destination must be a directory"
 msgstr "при сохранении пути последний аргумент должен быть каталогом"
 
-#: src/cp.c:874 src/install.c:217 src/ln.c:435 src/mv.c:402
+#: src/cp.c:872 src/install.c:217 src/ln.c:443 src/mv.c:401
 #, c-format
 msgid ""
 "warning: --version-control (-V) is obsolete;  support for it\n"
@@ -1290,145 +1437,146 @@ msgstr ""
 "будет удалена в одном из будущих выпусков.\n"
 "Используйте вместо него --backup=%s."
 
-#: src/cp.c:968 src/ln.c:465
+#: src/cp.c:966 src/ln.c:473
 msgid "symbolic links are not supported on this system"
 msgstr "символьные ссылки не поддерживаются на этой системе"
 
-#: src/cp.c:1004
+#: src/cp.c:1002
 msgid "cannot make both hard and symbolic links"
 msgstr "невозможно создать жесткую и символическую ссылку одновременно"
 
-#: src/cp.c:1012 src/install.c:273 src/ln.c:531 src/mv.c:480
+#: src/cp.c:1010 src/install.c:273 src/ln.c:539 src/mv.c:479
 msgid "backup type"
 msgstr "тип резервной копии"
 
-#: src/csplit.c:40
-msgid "Stuart Kemp and David MacKenzie"
-msgstr "Стюарт Кемп и Девид МакКензи"
-
-#: src/csplit.c:288 src/csplit.c:1481 src/tac-pipe.c:57 src/tee.c:220
-#: src/tr.c:1602 src/tr.c:1704 src/tr.c:1747
+#: src/csplit.c:267 src/csplit.c:1393 src/join.c:265 src/tac-pipe.c:57
+#: src/tee.c:223 src/tr.c:1602 src/tr.c:1704 src/tr.c:1747
 msgid "read error"
 msgstr "ошибка чтения"
 
-#: src/csplit.c:582
+#: src/csplit.c:517
 msgid "input disappeared"
 msgstr "ввод стал недоступен"
 
-#: src/csplit.c:704 src/csplit.c:715
+#: src/csplit.c:651 src/csplit.c:662
 #, c-format
 msgid "%s: line number out of range"
 msgstr "%s: номер строки вне допустимых пределов"
 
-#: src/csplit.c:742
+#: src/csplit.c:689
 #, c-format
 msgid "%s: `%s': line number out of range"
 msgstr "%s: `%s' номер строки вне допустимых пределов"
 
-#: src/csplit.c:745 src/csplit.c:791
-#, c-format
-msgid " on repetition %d\n"
+#: src/csplit.c:692 src/csplit.c:740
+#, fuzzy, c-format
+msgid " on repetition %s\n"
 msgstr " при повторе %d\n"
 
-#: src/csplit.c:787
+#: src/csplit.c:734
 #, c-format
 msgid "%s: `%s': match not found"
 msgstr "%s: `%s': совпадение не найдено"
 
-#: src/csplit.c:848 src/csplit.c:888 src/tac.c:261
+#: src/csplit.c:798 src/csplit.c:838 src/tac.c:261
 msgid "error in regular expression search"
 msgstr "ошибка поиска регулярного выражения"
 
-#: src/csplit.c:991
+#: src/csplit.c:941
 #, c-format
 msgid "write error for `%s'"
 msgstr "ошибка записи для `%s'"
 
-#: src/csplit.c:1063
-#, c-format
-msgid "%s: `+' or `-' expected after delimeter"
-msgstr "%s: после разделителя ожидается `+' или `-'"
-
-#: src/csplit.c:1067
-#, c-format
-msgid "%s: integer expected after `%c'"
+#: src/csplit.c:1010
+#, fuzzy, c-format
+msgid "%s: integer expected after delimiter"
 msgstr "%s: после `%c' ожидается целое число"
 
-#: src/csplit.c:1087
+#: src/csplit.c:1026
 #, c-format
 msgid "%s: `}' is required in repeat count"
 msgstr "%s: при задании числа повторов необходима `}'"
 
-#: src/csplit.c:1097
+#: src/csplit.c:1036
 #, c-format
 msgid "%s}: integer required between `{' and `}'"
 msgstr "%s: между `{' и `}' должно быть целое число"
 
-#: src/csplit.c:1124
-#, c-format
-msgid "%s: closing delimeter `%c' missing"
+#: src/csplit.c:1063
+#, fuzzy, c-format
+msgid "%s: closing delimiter `%c' missing"
 msgstr "%s: пропущен закрывающий разделитель `%c'"
 
-#: src/csplit.c:1140
+#: src/csplit.c:1079
 #, c-format
 msgid "%s: invalid regular expression: %s"
 msgstr "%s: недопустимое регулярное выражение: %s"
 
-#: src/csplit.c:1173
+#: src/csplit.c:1112
 #, c-format
 msgid "%s: invalid pattern"
 msgstr "%s: недопустимый образец"
 
-#: src/csplit.c:1176
+#: src/csplit.c:1115
 #, c-format
 msgid "%s: line number must be greater than zero"
 msgstr "%s: номер строки должен быть больше нуля"
 
-#: src/csplit.c:1182
+#: src/csplit.c:1121
 #, c-format
 msgid "line number `%s' is smaller than preceding line number, %s"
 msgstr "номер строки `%s' меньше номера предыдущей строки, %s"
 
-#: src/csplit.c:1188
+#: src/csplit.c:1127
 #, c-format
 msgid "warning: line number `%s' is the same as preceding line number"
 msgstr "предупреждение: номер строки `%s' равен предыдущему номеру строки"
 
-#: src/csplit.c:1313
+#: src/csplit.c:1180
+#, fuzzy
+msgid "invalid format width"
+msgstr "неверный формат даты %s"
+
+#: src/csplit.c:1201
+#, fuzzy
+msgid "invalid format precision"
+msgstr "неверная точность: %s"
+
+#: src/csplit.c:1222
 msgid "missing conversion specifier in suffix"
 msgstr "пропущен описатель преобразования в суффиксе"
 
-#: src/csplit.c:1319
+#: src/csplit.c:1228
 #, c-format
 msgid "invalid conversion specifier in suffix: %c"
 msgstr "неверный описатель преобразования в суффиксе: %c"
 
-#: src/csplit.c:1322
+#: src/csplit.c:1231
 #, c-format
 msgid "invalid conversion specifier in suffix: \\%.3o"
 msgstr "неверный описатель преобразования в суффиксе: \\%.3o"
 
-#: src/csplit.c:1354
-#, c-format
-msgid "missing %% conversion specification in suffix"
-msgstr "пропущено описание преобразования (%%) в суффиксе"
-
-#: src/csplit.c:1357
+#: src/csplit.c:1254
 #, c-format
 msgid "too many %% conversion specifications in suffix"
 msgstr "слишком много описаний преобразования (%%) в суффиксе"
 
-#: src/csplit.c:1441
+#: src/csplit.c:1269
+#, c-format
+msgid "missing %% conversion specification in suffix"
+msgstr "пропущено описание преобразования (%%) в суффиксе"
+
+#: src/csplit.c:1353
 #, c-format
 msgid "%s: invalid number"
 msgstr "%s: недопустимое число"
 
-#: src/csplit.c:1496
+#: src/csplit.c:1408
 #, c-format
 msgid "Usage: %s [OPTION]... FILE PATTERN...\n"
 msgstr "Использование: %s [КЛЮЧ]... ФАЙЛ ОБРАЗЕЦ...\n"
 
-#: src/csplit.c:1500
+#: src/csplit.c:1412
 msgid ""
 "Output pieces of FILE separated by PATTERN(s) to files `xx01', `xx02', ...,\n"
 "and output byte counts of each piece to standard output.\n"
@@ -1438,10 +1586,10 @@ msgstr ""
 "`xx02',...,\n"
 "и печатает число байт в каждой части на стандартный вывод.\n"
 
-#: src/csplit.c:1508
-#, c-format
+#: src/csplit.c:1420
+#, fuzzy, c-format
 msgid ""
-"  -b, --suffix-format=FORMAT use sprintf FORMAT instead of %d\n"
+"  -b, --suffix-format=FORMAT use sprintf FORMAT instead of %02d\n"
 "  -f, --prefix=PREFIX        use PREFIX instead of `xx'\n"
 "  -k, --keep-files           do not remove output files on errors\n"
 msgstr ""
@@ -1449,7 +1597,7 @@ msgstr ""
 "  -f, --prefix=ПРЕФИКС       использовать ПРЕФИКС вместо `xx'\n"
 "  -k, --keep-files           не удалять выходные файлы при ошибке\n"
 
-#: src/csplit.c:1513
+#: src/csplit.c:1425
 msgid ""
 "  -n, --digits=DIGITS        use specified number of digits instead of 2\n"
 "  -s, --quiet, --silent      do not print counts of output file sizes\n"
@@ -1459,7 +1607,7 @@ msgstr ""
 "  -s, --quiet, --silent      не печатать размеры выходных файлов\n"
 "  -z, --elide-empty-files    удалять пустые выходные файлы\n"
 
-#: src/csplit.c:1520
+#: src/csplit.c:1432
 msgid ""
 "\n"
 "Read standard input if FILE is -.  Each PATTERN may be:\n"
@@ -1468,7 +1616,7 @@ msgstr ""
 "Если ФАЙЛ задан как -, читает стандартный ввод.  ОБРАЗЕЦ задается следующим\n"
 "образом:\n"
 
-#: src/csplit.c:1524
+#: src/csplit.c:1436
 msgid ""
 "\n"
 "  INTEGER            copy up to but not including specified line number\n"
@@ -1492,19 +1640,15 @@ msgstr ""
 "последующим\n"
 "положительным целым числом.\n"
 
-#: src/cut.c:42
-msgid "David Ihnat, David MacKenzie, and Jim Meyering"
-msgstr "Девид Инат, Девид МакКензи и Джим Мееринг"
-
-#: src/cut.c:182 src/df.c:727 src/du.c:174 src/expand.c:111 src/fold.c:66
-#: src/head.c:113 src/ls.c:3755 src/nl.c:176 src/paste.c:406 src/pr.c:2753
-#: src/sort.c:274 src/sum.c:59 src/tac.c:126 src/tail.c:237 src/tee.c:62
-#: src/unexpand.c:373 src/wc.c:135
+#: src/cut.c:181 src/df.c:727 src/du.c:167 src/expand.c:111 src/fold.c:66
+#: src/head.c:113 src/ls.c:3902 src/nl.c:176 src/paste.c:409 src/pr.c:2752
+#: src/sort.c:274 src/sum.c:59 src/tac.c:126 src/tail.c:238 src/tee.c:62
+#: src/unexpand.c:376 src/wc.c:135
 #, c-format
 msgid "Usage: %s [OPTION]... [FILE]...\n"
 msgstr "Использование: %s [КЛЮЧ]... [ФАЙЛ]...\n"
 
-#: src/cut.c:186
+#: src/cut.c:185
 msgid ""
 "Print selected parts of lines from each FILE to standard output.\n"
 "\n"
@@ -1512,7 +1656,7 @@ msgstr ""
 "Печатает выбранные части строк из каждого ФАЙЛА на стандартный вывод.\n"
 "\n"
 
-#: src/cut.c:193
+#: src/cut.c:192
 msgid ""
 "  -b, --bytes=LIST        output only these bytes\n"
 "  -c, --characters=LIST   output only these characters\n"
@@ -1524,7 +1668,7 @@ msgstr ""
 "РАЗДЕЛИТЕЛЬ\n"
 "                                 вместо табуляции\n"
 
-#: src/cut.c:198
+#: src/cut.c:197
 msgid ""
 "  -f, --fields=LIST       output only these fields;  also print any line\n"
 "                            that contains no delimiter character, unless\n"
@@ -1538,7 +1682,7 @@ msgstr ""
 "                                 только не задан ключ -s\n"
 "  -n                             (игнорируется)\n"
 
-#: src/cut.c:204
+#: src/cut.c:203
 msgid ""
 "  -s, --only-delimited    do not print lines not containing delimiters\n"
 "      --output-delimiter=STRING  use STRING as the output delimiter\n"
@@ -1552,7 +1696,7 @@ msgstr ""
 "разделитель\n"
 "                                 для ввода\n"
 
-#: src/cut.c:211
+#: src/cut.c:210
 msgid ""
 "\n"
 "Use one, and only one of -b, -c or -f.  Each LIST is made up of one\n"
@@ -1578,38 +1722,38 @@ msgstr ""
 "\n"
 "Если ФАЙЛ не задан или задан как -, читает стандартный ввод.\n"
 
-#: src/cut.c:334 src/cut.c:366 src/cut.c:452
+#: src/cut.c:329 src/cut.c:361 src/cut.c:447
 msgid "invalid byte or field list"
 msgstr "неправильный список байтов или полей"
 
-#: src/cut.c:440
+#: src/cut.c:435
 #, fuzzy, c-format
 msgid "byte offset %s is too large"
 msgstr "%s слишком велик"
 
-#: src/cut.c:443
+#: src/cut.c:438
 #, fuzzy, c-format
 msgid "field number %s is too large"
 msgstr "неверное число сравниваемых байт"
 
-#: src/cut.c:763 src/cut.c:771
+#: src/cut.c:754 src/cut.c:762
 msgid "only one type of list may be specified"
 msgstr "можно задать только один тип списка"
 
-#: src/cut.c:780
+#: src/cut.c:771
 msgid "the delimiter must be a single character"
 msgstr "разделитель должен быть одним символом"
 
-#: src/cut.c:811
+#: src/cut.c:802
 msgid "you must specify a list of bytes, characters, or fields"
 msgstr "вы должны задать список байт, символов или полей"
 
-#: src/cut.c:814
+#: src/cut.c:805
 msgid "an input delimiter may be specified only when operating on fields"
 msgstr ""
 "разделитель для входных данных можно задавать только при обработке полей"
 
-#: src/cut.c:818
+#: src/cut.c:809
 msgid ""
 "suppressing non-delimited lines makes sense\n"
 "\tonly when operating on fields"
@@ -1617,11 +1761,11 @@ msgstr ""
 "запрещение вывода строк, не содержащих разделителей,\n"
 "имеет смысл только при работе с полями"
 
-#: src/cut.c:834
+#: src/cut.c:825
 msgid "missing list of fields"
 msgstr "отсутствует список полей"
 
-#: src/cut.c:836
+#: src/cut.c:827
 msgid "missing list of positions"
 msgstr "отсутствует список позиций"
 
@@ -1829,9 +1973,9 @@ msgstr ""
 "  `-'(минус)   не заполнять данное поле\n"
 "  `_'(подчерк) заполнять пробелами\n"
 
-#: src/date.c:239 src/dd.c:1184 src/dircolors.c:532 src/head.c:859
-#: src/md5sum.c:390 src/md5sum.c:732 src/od.c:958 src/od.c:1999 src/pr.c:1163
-#: src/pr.c:1370 src/pr.c:1492 src/stty.c:901 src/tac.c:482 src/tac.c:488
+#: src/date.c:239 src/dd.c:1183 src/dircolors.c:532 src/head.c:859
+#: src/md5sum.c:390 src/md5sum.c:732 src/od.c:958 src/od.c:2003 src/pr.c:1163
+#: src/pr.c:1370 src/pr.c:1492 src/stty.c:901 src/tac.c:483 src/tac.c:489
 #: src/tee.c:151 src/tr.c:2021 src/tsort.c:585 src/wc.c:210
 msgid "standard input"
 msgstr "стандартный ввод"
@@ -1885,10 +2029,6 @@ msgstr "невозможно узнать время"
 #: src/date.c:471
 msgid "cannot set date"
 msgstr "невозможно установить дату"
-
-#: src/dd.c:42
-msgid "Paul Rubin, David MacKenzie, and Stuart Kemp"
-msgstr "Пол Рубин, Девид МакКензи и Стюарт Кемп"
 
 #: src/dd.c:287 src/tty.c:62 src/uname.c:109 src/whoami.c:51
 #, c-format
@@ -2046,15 +2186,14 @@ msgstr "ключ %s=%s не распознан"
 msgid "invalid number %s"
 msgstr "неверный номер %s"
 
-#: src/dd.c:656
-msgid ""
-"only one conv in {ascii,ebcdic,ibm}, {lcase,ucase}, {block,unblock}, "
-"{unblock,sync}"
+#: src/dd.c:655
+#, fuzzy
+msgid "\tonly one conv in {ascii,ebcdic,ibm}, {lcase,ucase}, {block,unblock}"
 msgstr ""
 "только один вид преобразования вида из {ascii,ebcdic,ibm}, {lcase,ucase}, "
 "{block,unblock}, {unblock,sync}"
 
-#: src/dd.c:791
+#: src/dd.c:790
 #, c-format
 msgid ""
 "warning: working around lseek kernel bug for file (%s)\n"
@@ -2063,24 +2202,19 @@ msgstr ""
 "внимание: обходим ошибку lseek в ядре для файла (%s)\n"
 "  mt_type=0x%0lx -- см. <sys/mtio.h> для списка типов"
 
-#: src/dd.c:1181 src/dd.c:1199
+#: src/dd.c:1180 src/dd.c:1198
 #, c-format
 msgid "opening %s"
 msgstr "открытие %s"
 
-#: src/dd.c:1207
+#: src/dd.c:1206
 msgid "file offset out of range"
 msgstr "сдвиг в файле вне допустимого диапазона"
 
-#: src/dd.c:1225
+#: src/dd.c:1224
 #, c-format
 msgid "advancing past %s bytes in output file %s"
 msgstr "достигли %s байт в выходном файле %s"
-
-#: src/df.c:45
-#, fuzzy
-msgid "Torbjorn Granlund, David MacKenzie, and Paul Eggert"
-msgstr "Торбьёрн Гранлунд, Девид МакКензи, Ларри МакВой и Пол Эггерт"
 
 #: src/df.c:149
 msgid "Filesystem    Type"
@@ -2119,11 +2253,11 @@ msgstr " %4s-блоков      Исп  Доступно  Исп%%"
 msgid " Mounted on\n"
 msgstr " смонтирована на\n"
 
-#: src/df.c:448 src/pwd.c:78 src/remove.c:983
+#: src/df.c:448 src/pwd.c:78 src/remove.c:980
 msgid "cannot get current directory"
 msgstr "текущий каталог недоступен"
 
-#: src/df.c:458 src/df.c:472 src/df.c:500 src/du.c:345
+#: src/df.c:458 src/df.c:472 src/df.c:500
 #, c-format
 msgid "cannot change to directory %s"
 msgstr "невозможно сменить каталог на %s"
@@ -2188,7 +2322,7 @@ msgstr ""
 "  -x, --exclude-type=TYPE   limit listing to filesystems not of type TYPE\n"
 "  -v                    (ignored)\n"
 
-#: src/df.c:758 src/du.c:215 src/ls.c:3873
+#: src/df.c:758 src/du.c:210 src/ls.c:4020
 #, fuzzy
 msgid ""
 "\n"
@@ -2205,11 +2339,11 @@ msgstr ""
 msgid "file system type %s both selected and excluded"
 msgstr "файловая система типа %s и выбрана, и исключена"
 
-#: src/df.c:921
+#: src/df.c:920
 msgid "Warning: "
 msgstr "Осторожно: "
 
-#: src/df.c:924
+#: src/df.c:923
 #, c-format
 msgid "%scannot read table of mounted filesystems"
 msgstr "%sошибка чтения таблицы подключенных файловых систем"
@@ -2285,10 +2419,6 @@ msgid "no SHELL environment variable, and no shell type option given"
 msgstr ""
 "либо переменная окружения SHELL отсутствует, либо не задан тип интерпретатора"
 
-#: src/dirname.c:32 src/head.c:47 src/pathchk.c:53
-msgid "David MacKenzie and Jim Meyering"
-msgstr "Девид МакКензи и Джим Мееринг"
-
 #: src/dirname.c:45
 #, c-format
 msgid ""
@@ -2308,13 +2438,7 @@ msgstr ""
 "содержит косой черты, выводит `.' (то есть текущий каталог).\n"
 "\n"
 
-#: src/du.c:49
-#, fuzzy
-msgid "Torbjorn Granlund, David MacKenzie, Paul Eggert, and Jim Meyering"
-msgstr ""
-"Торбьёрн Гранлунд, Девид МакКензи, Ларри МакВой, Пол Эггерт и Джим Мееринг"
-
-#: src/du.c:175
+#: src/du.c:168
 msgid ""
 "Summarize disk usage of each FILE, recursively for directories.\n"
 "\n"
@@ -2322,7 +2446,7 @@ msgstr ""
 "Суммирует использование дискового пространства каждого FILE, с каталогами.\n"
 "\n"
 
-#: src/du.c:182
+#: src/du.c:175
 msgid ""
 "  -a, --all             write counts for all files, not just directories\n"
 "      --apparent-size   print apparent sizes, rather than disk usage; "
@@ -2347,7 +2471,7 @@ msgstr ""
 "  -c, --total           подсчитывать итог\n"
 "  -D, --dereference-args  разыменовывать символьные ссылки\n"
 
-#: src/du.c:193
+#: src/du.c:186
 msgid ""
 "  -h, --human-readable  print sizes in human readable format (e.g., 1K 234M "
 "2G)\n"
@@ -2361,9 +2485,14 @@ msgstr ""
 "  -k, --kilobytes       использовать размер блока 1024 вместо 512\n"
 "  -l, --count-links     считать каждую жесткую ссылку как отдельный файл\n"
 
-#: src/du.c:199
+#: src/du.c:192
+#, fuzzy
 msgid ""
 "  -L, --dereference     dereference all symbolic links\n"
+"  -P, --no-dereference  don't follow any symbolic links (this is the "
+"default)\n"
+"  -0, --null            end each output line with 0 byte rather than "
+"newline\n"
 "  -S, --separate-dirs   do not include size of subdirectories\n"
 "  -s, --summarize       display only a total for each argument\n"
 msgstr ""
@@ -2371,7 +2500,7 @@ msgstr ""
 "  -S, --separate-dirs   не включать размер каталогов\n"
 "  -s, --summarize       показывать только итог для каждого аргумента\n"
 
-#: src/du.c:204
+#: src/du.c:199
 msgid ""
 "  -x, --one-file-system  skip directories on different filesystems\n"
 "  -X FILE, --exclude-from=FILE  Exclude files that match any pattern in "
@@ -2392,34 +2521,30 @@ msgstr ""
 "                          чем параметр командной строки; --max-depth=0\n"
 "                          это то же самое, что и --summarize\n"
 
-#: src/du.c:337
-#, c-format
-msgid "cannot change to parent of directory %s"
-msgstr "невозможно перейти к родительскому каталогу %s"
-
-#: src/du.c:352
-#, c-format
-msgid "cannot read directory %s"
-msgstr "невозможно считать каталог %s"
-
-#: src/du.c:554 src/ls.c:2233 src/wc.c:674
+#: src/du.c:524 src/ls.c:2231 src/wc.c:674
 msgid "total"
 msgstr "итого"
 
-#: src/du.c:642
+#: src/du.c:604
+msgid ""
+"WARNING: use --si, not -H; the meaning of the -H option will soon\n"
+"change to be the same as that of --dereference-args (-D)"
+msgstr ""
+
+#: src/du.c:626
 #, c-format
 msgid "invalid maximum depth %s"
 msgstr "недопустимая максимальная глубина %s"
 
-#: src/du.c:708
+#: src/du.c:696
 msgid "cannot both summarize and show all entries"
 msgstr "невозможно одновременно подводить итог и показывать все элементы"
 
-#: src/du.c:715
+#: src/du.c:703
 msgid "warning: summarizing is the same as using --max-depth=0"
 msgstr "предупреждение: подведение итога это то же самое, что и --max-depth=0"
 
-#: src/du.c:721
+#: src/du.c:709
 #, c-format
 msgid "warning: summarizing conflicts with --max-depth=%d"
 msgstr "предупреждение: подведение итога конфликтует с --max-depth=%d"
@@ -2479,10 +2604,6 @@ msgstr ""
 "  \\r     возврат каретки\n"
 "  \\t     горизонтальная табуляция\n"
 "  \\v     вертикальная табуляция\n"
-
-#: src/env.c:92
-msgid "Richard Mlynarik and David MacKenzie"
-msgstr "Ричард Млинарик и Девид МакКензи"
 
 #: src/env.c:118
 #, c-format
@@ -2732,7 +2853,12 @@ msgstr ""
 "  Печатает простые множители для каждого заданного целого ЧИСЛА.  Если\n"
 "  аргументы не заданы, читает числа со стандартного ввода.\n"
 
-#: src/factor.c:153
+#: src/factor.c:155
+#, fuzzy, c-format
+msgid "`%s' is too large"
+msgstr "%s слишком велик"
+
+#: src/factor.c:157
 #, c-format
 msgid "`%s' is not a valid positive integer"
 msgstr "`%s' не является верным целым положительным числом"
@@ -2882,14 +3008,14 @@ msgstr ""
 "m -- 1Mb.\n"
 
 #: src/head.c:155 src/head.c:268 src/head.c:340 src/head.c:549 src/head.c:631
-#: src/head.c:703 src/head.c:768 src/head.c:796 src/tail.c:364 src/tail.c:445
-#: src/tail.c:494 src/tail.c:587 src/tail.c:715 src/tail.c:763 src/tail.c:802
-#: src/tail.c:1293 src/tail.c:1329 src/uniq.c:378
+#: src/head.c:703 src/head.c:768 src/head.c:796 src/tail.c:365 src/tail.c:446
+#: src/tail.c:495 src/tail.c:588 src/tail.c:716 src/tail.c:764 src/tail.c:803
+#: src/tail.c:1294 src/tail.c:1330 src/uniq.c:382
 #, c-format
 msgid "error reading %s"
 msgstr "ошибка чтения %s"
 
-#: src/head.c:158 src/uniq.c:383
+#: src/head.c:158 src/uniq.c:385 src/uniq.c:389
 #, c-format
 msgid "error writing %s"
 msgstr "ошибка записи %s"
@@ -2909,7 +3035,7 @@ msgstr "число байт"
 msgid "%s: cannot lseek back to original position"
 msgstr "%s: невозможно переместить указатель позиции на %s"
 
-#: src/head.c:624 src/head.c:695 src/tail.c:395
+#: src/head.c:624 src/head.c:695 src/tail.c:396
 #, c-format
 msgid "%s: cannot seek to offset %s"
 msgstr "%s: невозможно сместиться к позиции %s"
@@ -2919,24 +3045,24 @@ msgstr "%s: невозможно сместиться к позиции %s"
 msgid "cannot reposition file pointer for %s"
 msgstr "невозможно переместить указатель файла для %s"
 
-#: src/head.c:897 src/tail.c:1453
+#: src/head.c:897 src/tail.c:1454
 #, c-format
 msgid "%s: %s is so large that it is not representable"
 msgstr "%s: %s настолько велико, что его невозможно машинно представить"
 
-#: src/head.c:898 src/tail.c:1455
+#: src/head.c:898 src/tail.c:1456
 msgid "number of lines"
 msgstr "число строк"
 
-#: src/head.c:898 src/tail.c:1456
+#: src/head.c:898 src/tail.c:1457
 msgid "number of bytes"
 msgstr "число байт"
 
-#: src/head.c:905 src/tail.c:1542
+#: src/head.c:905 src/tail.c:1543
 msgid "invalid number of lines"
 msgstr "неверное число строк"
 
-#: src/head.c:906 src/tail.c:1543
+#: src/head.c:906 src/tail.c:1544
 msgid "invalid number of bytes"
 msgstr "неверный число байт"
 
@@ -2995,10 +3121,6 @@ msgstr ""
 #: src/hostname.c:117
 msgid "cannot determine hostname"
 msgstr "невозможно определить основное имя"
-
-#: src/id.c:35
-msgid "Arnold Robbins and David MacKenzie"
-msgstr "Арнольд Роббинс и Девид МакКензи"
 
 #: src/id.c:86
 #, c-format
@@ -3203,7 +3325,7 @@ msgstr ""
 "  -S, --suffix=SUFFIX установить суффикс для запасных копий как SUFFIX\n"
 "  -v, --verbose       выводить название каждого создаваемого каталога\n"
 
-#: src/install.c:631 src/ln.c:377 src/mv.c:344
+#: src/install.c:631 src/ln.c:385 src/mv.c:343
 msgid ""
 "\n"
 "The backup suffix is `~', unless set with --suffix or SIMPLE_BACKUP_SUFFIX.\n"
@@ -3272,6 +3394,7 @@ msgstr ""
 "  -2 ПОЛЕ            считать общим заданное ПОЛЕ файла 2\n"
 
 #: src/join.c:171
+#, fuzzy
 msgid ""
 "\n"
 "Unless -t CHAR is given, leading blanks separate fields and are ignored,\n"
@@ -3280,6 +3403,8 @@ msgid ""
 "each being `FILENUM.FIELD' or `0'.  Default FORMAT outputs the join field,\n"
 "the remaining fields from FILE1, the remaining fields from FILE2, all\n"
 "separated by CHAR.\n"
+"\n"
+"Important: FILE1 and FILE2 must be sorted on the join fields.\n"
 msgstr ""
 "\n"
 "Если не задан -t ЗНАК, начальные пробельные знаки разделяют поля и\n"
@@ -3289,40 +3414,40 @@ msgstr ""
 "НОМЕР.ПОЛЕ или `0'.  По умолчанию ФОРМАТ выводит общее поле, остальные\n"
 "поля из ФАЙЛА1 и остальные поля из ФАЙЛА2, разделенные ЗНАКОМ.\n"
 
-#: src/join.c:644
+#: src/join.c:642
 #, c-format
 msgid "invalid field specifier: `%s'"
 msgstr "неверная спецификация поля: `%s'"
 
-#: src/join.c:658 src/join.c:772 src/join.c:808
+#: src/join.c:656 src/join.c:769 src/join.c:805
 #, c-format
 msgid "invalid field number: `%s'"
 msgstr "неверный номер поля: `%s'"
 
-#: src/join.c:671
+#: src/join.c:669
 #, c-format
 msgid "invalid file number in field spec: `%s'"
 msgstr "неверный номер файла в спецификации поля: `%s'"
 
-#: src/join.c:792
+#: src/join.c:789
 #, c-format
 msgid "invalid field number for file 1: `%s'"
 msgstr "неверный номер поля для файла 1: `%s'"
 
-#: src/join.c:801
+#: src/join.c:798
 #, c-format
 msgid "invalid field number for file 2: `%s'"
 msgstr "неверный номер поля для файла 2: `%s'"
 
-#: src/join.c:833
+#: src/join.c:830
 msgid "too many non-option arguments"
 msgstr "слишком много не являющихся ключами аргументов"
 
-#: src/join.c:855
+#: src/join.c:852
 msgid "too few non-option arguments"
 msgstr "недостаточно не являющихся ключами аргументов"
 
-#: src/join.c:866
+#: src/join.c:863
 msgid "both files cannot be standard input"
 msgstr "оба файла не могут быть стандартным вводом"
 
@@ -3427,58 +3552,54 @@ msgstr ""
 msgid "cannot create link %s to %s"
 msgstr "невозможно создать ссылку %s на %s"
 
-#: src/ln.c:35
-msgid "Mike Parker and David MacKenzie"
-msgstr "Майк Паркер и Девид МакКензи"
-
-#: src/ln.c:168
+#: src/ln.c:172
 #, c-format
 msgid "%s: warning: making a hard link to a symbolic link is not portable"
 msgstr ""
 "%s: осторожно: создание жесткой ссылки на символьную ссылку работает\n"
 "не везде"
 
-#: src/ln.c:175
+#: src/ln.c:179
 #, c-format
 msgid "%s: hard link not allowed for directory"
 msgstr "%s: не допускается создавать жесткие ссылки на каталоги"
 
-#: src/ln.c:246
+#: src/ln.c:250
 #, c-format
 msgid "%s: cannot overwrite directory"
 msgstr "%s: невозможно перезаписать каталог"
 
-#: src/ln.c:251
+#: src/ln.c:255
 #, c-format
 msgid "%s: replace %s? "
 msgstr "%s: заменить %s? "
 
-#: src/ln.c:257
+#: src/ln.c:261
 #, c-format
 msgid "%s: File exists"
 msgstr "%s: Файл существует"
 
-#: src/ln.c:304
+#: src/ln.c:310
 #, c-format
 msgid "create symbolic link %s to %s"
 msgstr "создание символьной ссылки %s на %s"
 
-#: src/ln.c:305
+#: src/ln.c:311
 #, c-format
 msgid "create hard link %s to %s"
 msgstr "создать жесткую ссылку с %s на %s"
 
-#: src/ln.c:319
+#: src/ln.c:325
 #, c-format
 msgid "creating symbolic link %s to %s"
 msgstr "создание символьной ссылки с %s на %s"
 
-#: src/ln.c:320
+#: src/ln.c:326
 #, c-format
 msgid "creating hard link %s to %s"
 msgstr "создание жесткой ссылки с %s на %s"
 
-#: src/ln.c:339
+#: src/ln.c:345
 #, c-format
 msgid ""
 "Usage: %s [OPTION]... TARGET [LINK_NAME]\n"
@@ -3489,7 +3610,7 @@ msgstr ""
 "       или:    %s [КЛЮЧ]... ЦЕЛЬ... КАТАЛОГ\n"
 "       или:    %s [КЛЮЧ]... --target-directory=КАТАЛОГ ЦЕЛЬ\n"
 
-#: src/ln.c:345
+#: src/ln.c:351
 msgid ""
 "Create a link to the specified TARGET with optional LINK_NAME.\n"
 "If LINK_NAME is omitted, a link with the same basename as the TARGET is\n"
@@ -3506,12 +3627,17 @@ msgstr ""
 "обязан присутствовать.\n"
 "\n"
 
-#: src/ln.c:357
+#: src/ln.c:363
+#, fuzzy
 msgid ""
 "      --backup[=CONTROL]      make a backup of each existing destination "
 "file\n"
 "  -b                          like --backup but does not accept an argument\n"
-"  -d, -F, --directory         hard link directories (super-user only)\n"
+"  -d, -F, --directory         allow the superuser to attempt to hard link\n"
+"                                directories (note: will probably fail due "
+"to\n"
+"                                system restrictions, even for the "
+"superuser)\n"
 "  -f, --force                 remove existing destination files\n"
 msgstr ""
 "      --backup[=CONTROL]       создать резервную копию перед удалением\n"
@@ -3520,7 +3646,7 @@ msgstr ""
 "                                (только для суперпользователя)\n"
 "  -f, --force                  переписывать существующие файлы не спрашивая\n"
 
-#: src/ln.c:363
+#: src/ln.c:371
 msgid ""
 "  -n, --no-dereference        treat destination that is a symlink to a\n"
 "                                directory as if it were a normal file\n"
@@ -3533,7 +3659,7 @@ msgstr ""
 "  -i, --interactive            спрашивать перед тем как переписывать\n"
 "  -s, --symbolic               создавать символические ссылки\n"
 
-#: src/ln.c:369
+#: src/ln.c:377
 msgid ""
 "  -S, --suffix=SUFFIX         override the usual backup suffix\n"
 "      --target-directory=DIRECTORY  specify the DIRECTORY in which to "
@@ -3547,12 +3673,12 @@ msgstr ""
 "                                ссылки\n"
 "  -v, --verbose                пояснять что будет сделано\n"
 
-#: src/ln.c:522
+#: src/ln.c:530
 #, c-format
 msgid "%s: specified target directory is not a directory"
 msgstr "%s: заданный целевой каталог не является каталогом"
 
-#: src/ln.c:543
+#: src/ln.c:551
 msgid "when making multiple links, last argument must be a directory"
 msgstr ""
 "при создании нескольких ссылок последним аргументом должен быть каталог"
@@ -3575,76 +3701,86 @@ msgstr ""
 msgid "no login name"
 msgstr "%s: регистрационное имя отсутствует\n"
 
-#: src/ls.c:664
+#: src/ls.c:655
 msgid "%b %e  %Y"
 msgstr "%b %e  %Y"
 
-#: src/ls.c:672
+#: src/ls.c:663
 msgid "%b %e %H:%M"
 msgstr "%b %e %H:%M"
 
-#: src/ls.c:1299
+#: src/ls.c:1290
 #, c-format
 msgid "ignoring invalid value of environment variable QUOTING_STYLE: %s"
 msgstr ""
 "проигнорировано неверное значение переменной окружения QUOTING_STYLE: %s"
 
-#: src/ls.c:1326
+#: src/ls.c:1317
 #, c-format
 msgid "ignoring invalid width in environment variable COLUMNS: %s"
 msgstr "проигнорирована неверная ширина в переменной окружения COLUMNS: %s"
 
-#: src/ls.c:1357
+#: src/ls.c:1349
 #, c-format
 msgid "ignoring invalid tab size in environment variable TABSIZE: %s"
 msgstr ""
 "проигнорирован неверный размер табуляции в переменной окружения TABSIZE: %s"
 
-#: src/ls.c:1474
+#: src/ls.c:1466
 #, c-format
 msgid "invalid line width: %s"
 msgstr "неверная ширина строки: %s"
 
-#: src/ls.c:1548
+#: src/ls.c:1540
 #, c-format
 msgid "invalid tab size: %s"
 msgstr "неверный размер табуляции: %s"
 
-#: src/ls.c:1714
+#: src/ls.c:1708
 #, c-format
 msgid "invalid time style format %s"
 msgstr "неверный формат времени %s"
 
-#: src/ls.c:2046
+#: src/ls.c:2044
 #, c-format
 msgid "unrecognized prefix: %s"
 msgstr "не распознан префикс: %s"
 
-#: src/ls.c:2069
+#: src/ls.c:2067
 msgid "unparsable value for LS_COLORS environment variable"
 msgstr "не анализируемое значение в переменной окружения LS_COLORS"
 
-#: src/ls.c:2137
+#: src/ls.c:2135
 #, c-format
 msgid "cannot determine device and inode of %s"
 msgstr "невозможно определить устройство и inode для %s"
 
-#: src/ls.c:2147
+#: src/ls.c:2145
 #, c-format
 msgid "not listing already-listed directory: %s"
 msgstr "пропуск уже перечисленного каталога: %s"
 
-#: src/ls.c:2200 src/remove.c:941
+#: src/ls.c:2198 src/remove.c:938
 #, c-format
 msgid "reading directory %s"
 msgstr "чтение каталога %s"
 
-#: src/ls.c:2595
+#: src/ls.c:2678
 #, c-format
 msgid "cannot compare file names %s and %s"
 msgstr "невозможно сравнить имена файлов %s и %s"
 
-#: src/ls.c:3756
+#: src/ls.c:3020
+#, fuzzy
+msgid "User name too long"
+msgstr "%s: файл слишком велик"
+
+#: src/ls.c:3041
+#, fuzzy
+msgid "Group name too long"
+msgstr "%s: файл слишком велик"
+
+#: src/ls.c:3903
 msgid ""
 "List information about the FILEs (the current directory by default).\n"
 "Sort entries alphabetically if none of -cftuSUX nor --sort.\n"
@@ -3655,7 +3791,7 @@ msgstr ""
 "задан.\n"
 "\n"
 
-#: src/ls.c:3764
+#: src/ls.c:3911
 msgid ""
 "  -a, --all                  do not hide entries starting with .\n"
 "  -A, --almost-all           do not list implied . and ..\n"
@@ -3669,7 +3805,7 @@ msgstr ""
 "последовательности\n"
 "                             вместо неграфических символов\n"
 
-#: src/ls.c:3770
+#: src/ls.c:3917
 msgid ""
 "      --block-size=SIZE      use SIZE-byte blocks\n"
 "  -B, --ignore-backups       do not list implied entries ending with ~\n"
@@ -3686,7 +3822,7 @@ msgstr ""
 "имени,\n"
 "                              иначе сортировать по времени изменения\n"
 
-#: src/ls.c:3778
+#: src/ls.c:3925
 msgid ""
 "  -C                         list entries by columns\n"
 "      --color[=WHEN]         control whether color is used to distinguish "
@@ -3708,7 +3844,7 @@ msgstr ""
 "                               также не следовать по символьным ссылкам\n"
 "  -D, --dired                генерировать вывод для режима Emacs Dired\n"
 
-#: src/ls.c:3786
+#: src/ls.c:3933
 msgid ""
 "  -f                         do not sort, enable -aU, disable -lst\n"
 "  -F, --classify             append indicator (one of */=@|) to entries\n"
@@ -3722,7 +3858,7 @@ msgstr ""
 "                               single-column -1, verbose -l, vertical -C\n"
 "      --full-time            выводить полную дату и время\n"
 
-#: src/ls.c:3793
+#: src/ls.c:3940
 msgid ""
 "  -g                         like -l, but do not list owner\n"
 "  -G, --no-group             inhibit display of group information\n"
@@ -3749,7 +3885,7 @@ msgstr ""
 "коммандной\n"
 "                               строке, которые указывают на каталог\n"
 
-#: src/ls.c:3804
+#: src/ls.c:3951
 msgid ""
 "      --indicator-style=WORD append indicator with style WORD to entry "
 "names:\n"
@@ -3767,7 +3903,7 @@ msgstr ""
 "  -I, --ignore=PATTERN       не выводить файлы соответствующие PATTERN\n"
 "  -k, --kilobytes            то же, что и --block-size=1K\n"
 
-#: src/ls.c:3811
+#: src/ls.c:3958
 msgid ""
 "  -l                         use a long listing format\n"
 "  -L, --dereference          when showing file information for a symbolic\n"
@@ -3783,7 +3919,7 @@ msgstr ""
 "                               ссылается\n"
 "  -m                         выдавать список на всю ширину через запятую\n"
 
-#: src/ls.c:3818
+#: src/ls.c:3965
 msgid ""
 "  -n, --numeric-uid-gid      like -l, but list numeric UIDs and GIDs\n"
 "  -N, --literal              print raw entry names (don't treat e.g. "
@@ -3798,7 +3934,7 @@ msgstr ""
 "                              группе\n"
 "  -p, --file-type            добавлять отметку (одну из /=@|) к элементам\n"
 
-#: src/ls.c:3825
+#: src/ls.c:3972
 msgid ""
 "  -q, --hide-control-chars   print ? instead of non graphic characters\n"
 "      --show-control-chars   show non graphic characters as-is (default\n"
@@ -3817,7 +3953,7 @@ msgstr ""
 "      --quoting-style=WORD   использовать тип заключения в кавычки WORD:\n"
 "                               literal, shell, shell-always, c, escape\n"
 
-#: src/ls.c:3833
+#: src/ls.c:3980
 msgid ""
 "  -r, --reverse              reverse order while sorting\n"
 "  -R, --recursive            list subdirectories recursively\n"
@@ -3827,7 +3963,7 @@ msgstr ""
 "  -R, --recursive            с каталогами\n"
 "  -s, --size                 печатать размер в блоках\n"
 
-#: src/ls.c:3838
+#: src/ls.c:3985
 #, fuzzy
 msgid ""
 "  -S                         sort by file size\n"
@@ -3850,7 +3986,7 @@ msgstr ""
 "изменения:\n"
 "                             atime, access, use, ctime или status\n"
 
-#: src/ls.c:3847
+#: src/ls.c:3994
 msgid ""
 "      --time-style=STYLE     show times using style STYLE:\n"
 "                               full-iso, long-iso, iso, locale, +FORMAT\n"
@@ -3875,7 +4011,7 @@ msgstr ""
 "  -t                         сортировать по времени изменения\n"
 "  -T, --tabsize=ЧИСЛО        установить шаг табуляции равным ЧИСЛУ вместо 8\n"
 
-#: src/ls.c:3858
+#: src/ls.c:4005
 msgid ""
 "  -u                         with -lt: sort by, and show, access time\n"
 "                               with -l: show access time and sort by name\n"
@@ -3891,7 +4027,7 @@ msgstr ""
 "                              физическим расположением\n"
 "  -v                         сортировать по версии\n"
 
-#: src/ls.c:3865
+#: src/ls.c:4012
 msgid ""
 "  -w, --width=COLS           assume screen width instead of current value\n"
 "  -x                         list entries by lines instead of by columns\n"
@@ -3904,7 +4040,7 @@ msgstr ""
 "  -X                         сортировать по расширению в алфавитном порядке\n"
 "  -1                         перечислять по одному файлу на строке\n"
 
-#: src/ls.c:3877
+#: src/ls.c:4024
 msgid ""
 "\n"
 "By default, color is not used to distinguish types of files.  That is\n"
@@ -3918,10 +4054,6 @@ msgstr ""
 "--color=none. Использование ключа --color без аргумента эквивалентно\n"
 "--color=always. С --color=auto, коды цвета будут выдаваться только на\n"
 "терминал (tty).\n"
-
-#: src/md5sum.c:37
-msgid "Ulrich Drepper and Scott Miller"
-msgstr "Ульрих Дреппер и Скотт Миллер"
 
 #: src/md5sum.c:124
 #, c-format
@@ -4002,7 +4134,7 @@ msgstr "НЕУСПЕШНО"
 msgid "OK"
 msgstr "Успех"
 
-#: src/md5sum.c:494
+#: src/md5sum.c:494 src/od.c:997
 #, c-format
 msgid "%s: read error"
 msgstr "%s: ошибка чтения"
@@ -4222,11 +4354,7 @@ msgstr "неверное устройство %s %s"
 msgid "cannot set permissions of %s"
 msgstr "невозможно установить права доступа для %s"
 
-#: src/mv.c:40
-msgid "Mike Parker, David MacKenzie, and Jim Meyering"
-msgstr "Майк Паркер, Девид МакКензи и Джим Мееринг"
-
-#: src/mv.c:313
+#: src/mv.c:312
 msgid ""
 "Rename SOURCE to DEST, or move SOURCE(s) to DIRECTORY.\n"
 "\n"
@@ -4234,16 +4362,17 @@ msgstr ""
 "Переименовывает SOURCE в DEST, или переносит SOURCE(ы) в DIRECTORY.\n"
 "\n"
 
-#: src/mv.c:320
+#: src/mv.c:319
+#, fuzzy
 msgid ""
 "      --backup[=CONTROL]       make a backup of each existing destination "
 "file\n"
 "  -b                           like --backup but does not accept an "
 "argument\n"
 "  -f, --force                  do not prompt before overwriting\n"
-"                                 equivalent to --reply=yes\n"
+"                                 (equivalent to --reply=yes)\n"
 "  -i, --interactive            prompt before overwrite\n"
-"                                 equivalent to --reply=query\n"
+"                                 (equivalent to --reply=query)\n"
 msgstr ""
 "      --backup[=CONTROL]       создать резервную копию перед удалением\n"
 "  -b                           то же, что и --backup, но без аргумента\n"
@@ -4252,7 +4381,7 @@ msgstr ""
 "  -i, --interactive            спрашивать перед тем как переписывать\n"
 "                                 то же что и --reply=query\n"
 
-#: src/mv.c:328
+#: src/mv.c:327
 msgid ""
 "      --reply={yes,no,query}   specify how to handle the prompt about an\n"
 "                                 existing destination file\n"
@@ -4267,7 +4396,7 @@ msgstr ""
 "  -S, --suffix=SUFFUX          установить суффикс для запасных копий как\n"
 "                                 SUFFIX\n"
 
-#: src/mv.c:335
+#: src/mv.c:334
 msgid ""
 "      --target-directory=DIRECTORY  move all SOURCE arguments into "
 "DIRECTORY\n"
@@ -4282,12 +4411,12 @@ msgstr ""
 "                                 назначения отсутствует\n"
 "  -v, --verbose                пояснять что будет сделано\n"
 
-#: src/mv.c:464
+#: src/mv.c:463
 #, c-format
 msgid "specified target, %s is not a directory"
 msgstr "указанная цель %s не является каталогом"
 
-#: src/mv.c:472
+#: src/mv.c:471
 msgid "when moving multiple files, last argument must be a directory"
 msgstr "при переносе несколько файлов последним аргументом должен быть каталог"
 
@@ -4332,10 +4461,6 @@ msgstr "невозможно узнать приоритет"
 #: src/nice.c:195
 msgid "cannot set priority"
 msgstr "невозможно установить приоритет"
-
-#: src/nl.c:39
-msgid "Scott Bartram and David MacKenzie"
-msgstr "Скотт Бартрам и Девид МакКензи"
 
 #: src/nl.c:180
 msgid ""
@@ -4716,84 +4841,80 @@ msgstr ""
 msgid "invalid character `%c' in type string `%s'"
 msgstr "неверный знак `%c' в строке типа `%s'"
 
-#: src/od.c:1141
+#: src/od.c:1144
 msgid "cannot skip past end of combined input"
 msgstr "невозможно сместиться за предел последнего входного файла"
 
-#: src/od.c:1394
+#: src/od.c:1397
 msgid "old-style offset"
 msgstr "устаревшая запись смещения"
 
-#: src/od.c:1705
+#: src/od.c:1709
 #, c-format
 msgid "invalid output address radix `%c'; it must be one character from [doxn]"
 msgstr ""
 "неверно задано основание системы счисления `%c',\n"
 "должно быть одним из символов [doxn]"
 
-#: src/od.c:1715
+#: src/od.c:1719
 msgid "skip argument"
 msgstr "аргумент, задающий пропуск,"
 
-#: src/od.c:1723
+#: src/od.c:1727
 msgid "limit argument"
 msgstr "аргумент, задающий ограничение,"
 
-#: src/od.c:1733
+#: src/od.c:1737
 msgid "minimum string length"
 msgstr "минимальная длина строки"
 
-#: src/od.c:1738 src/od.c:1804
+#: src/od.c:1742 src/od.c:1808
 #, c-format
 msgid "%s is too large"
 msgstr "%s слишком велик"
 
-#: src/od.c:1802
+#: src/od.c:1806
 msgid "width specification"
 msgstr "задание ширины"
 
-#: src/od.c:1824
+#: src/od.c:1828
 msgid "no type may be specified when dumping strings"
 msgstr "при дампе строк нельзя задавать тип"
 
-#: src/od.c:1872
+#: src/od.c:1876
 #, c-format
 msgid "invalid second operand in compatibility mode `%s'"
 msgstr "неверный второй операнд `%s' в режиме совместимости"
 
-#: src/od.c:1893
+#: src/od.c:1897
 msgid "in compatibility mode, the last two arguments must be offsets"
 msgstr ""
 "в режиме совместимости последние два аргумента должны задавать смещение"
 
-#: src/od.c:1900
+#: src/od.c:1904
 msgid "compatibility mode supports at most three arguments"
 msgstr "в режиме совместимости можно указать только три аргумента"
 
-#: src/od.c:1921
+#: src/od.c:1925
 #, fuzzy
 msgid "skip-bytes + read-bytes is too large"
 msgstr "неверное число сравниваемых байт"
 
-#: src/od.c:1973
+#: src/od.c:1977
 #, c-format
 msgid "warning: invalid width %lu; using %d instead"
 msgstr "предупреждение: неверная ширина %lu; будет использована %d"
 
-#: src/od.c:1989
+#: src/od.c:1993
 #, c-format
 msgid "%d: fmt=\"%s\" width=%d\n"
 msgstr "%d: формам=\"%s\" ширина=%d\n"
-
-#: src/paste.c:49
-msgid "David M. Ihnat and David MacKenzie"
-msgstr "Девид М. Инат и Девид МакКензи"
 
 #: src/paste.c:206
 msgid "standard input is closed"
 msgstr "стандартный ввод закрыт"
 
-#: src/paste.c:410
+#: src/paste.c:413
 msgid ""
 "Write lines consisting of the sequentially corresponding lines from\n"
 "each FILE, separated by TABs, to standard output.\n"
@@ -4805,7 +4926,7 @@ msgstr ""
 "Если ФАЙЛ не задан или задан как -, читает стандартный ввод.\n"
 "\n"
 
-#: src/paste.c:419
+#: src/paste.c:422
 msgid ""
 "  -d, --delimiters=LIST   reuse characters from LIST instead of TABs\n"
 "  -s, --serial            paste one file at a time instead of in parallel\n"
@@ -4852,10 +4973,6 @@ msgstr "имя `%s' имеет длину %ld, что превышает предельное значение %ld"
 #, fuzzy, c-format
 msgid "path `%s' has length %lu; exceeds limit of %ld"
 msgstr "путь `%s' имеет длину %d, что превышает предельное значение %ld"
-
-#: src/pinky.c:34 src/uptime.c:38
-msgid "Joseph Arceneaux, David MacKenzie, and Kaveh Ghazi"
-msgstr "Джозеф Арсено, Девид МакКензи и Каве Гази"
 
 #: src/pinky.c:291
 msgid "Login name: "
@@ -4967,10 +5084,6 @@ msgstr ""
 "не задано имя пользователя; при использовании ключа -l нужно задать хотя бы "
 "одно"
 
-#: src/pr.c:326
-msgid "Pete TerMaat and Roland Huebner"
-msgstr "Пете ТерМаат и Роланд Хюбнер"
-
 #: src/pr.c:803
 #, c-format
 msgid "`--pages' invalid range of page numbers: `%s'"
@@ -5045,17 +5158,17 @@ msgstr "`-%c' лишние символы или неверное число в аргументе: `%s'"
 msgid "page width too narrow"
 msgstr "страница слишком узкая"
 
-#: src/pr.c:2361
+#: src/pr.c:2360
 #, c-format
 msgid "starting page number larger than total number of pages: `%d'"
 msgstr "номер начальной страницы больше общего числа страниц: `%d'"
 
-#: src/pr.c:2392
+#: src/pr.c:2391
 #, c-format
 msgid "Page %d"
 msgstr "Стр. %d"
 
-#: src/pr.c:2758
+#: src/pr.c:2757
 msgid ""
 "Paginate or columnate FILE(s) for printing.\n"
 "\n"
@@ -5063,7 +5176,7 @@ msgstr ""
 "Разбивает ФАЙЛ(ы) на страницы или колонки для печати.\n"
 "\n"
 
-#: src/pr.c:2765
+#: src/pr.c:2764
 msgid ""
 "  +FIRST_PAGE[:LAST_PAGE], --pages=FIRST_PAGE[:LAST_PAGE]\n"
 "                    begin [stop] printing with page FIRST_[LAST_]PAGE\n"
@@ -5082,7 +5195,7 @@ msgstr ""
 "                    только не указан ключ -a.  Балансировать число строк в\n"
 "                    колонке на каждой странице.\n"
 
-#: src/pr.c:2773
+#: src/pr.c:2772
 msgid ""
 "  -a, --across      print columns across rather than down, used together\n"
 "                    with -COLUMN\n"
@@ -5100,7 +5213,7 @@ msgstr ""
 "  -d,  --double-space\n"
 "                    вставлять пустую строку после каждой выходной строки\n"
 
-#: src/pr.c:2781
+#: src/pr.c:2780
 msgid ""
 "  -D, --date-format=FORMAT\n"
 "                    use FORMAT for the header date\n"
@@ -5126,7 +5239,7 @@ msgstr ""
 "если \n"
 "                    ключ -F не задан)\n"
 
-#: src/pr.c:2791
+#: src/pr.c:2790
 msgid ""
 "  -h HEADER, --header=HEADER\n"
 "                    use a centered HEADER instead of filename in page "
@@ -5150,7 +5263,7 @@ msgstr ""
 "                   выравнивать колонки, --sep-string[=СТРОКА] задает "
 "разделители\n"
 
-#: src/pr.c:2800
+#: src/pr.c:2799
 msgid ""
 "  -l PAGE_LENGTH, --length=PAGE_LENGTH\n"
 "                    set the page length to PAGE_LENGTH (66) lines\n"
@@ -5165,7 +5278,7 @@ msgstr ""
 "  -m, --merge       печатать все файлы параллельно, по одному в колонке,\n"
 "                    усекать строки, но соединять полные строки при -J\n"
 
-#: src/pr.c:2807
+#: src/pr.c:2806
 msgid ""
 "  -n[SEP[DIGITS]], --number-lines[=SEP[DIGITS]]\n"
 "                    number lines, use DIGITS (5) digits, then SEP (TAB),\n"
@@ -5184,7 +5297,7 @@ msgstr ""
 "выводимой\n"
 "                    страницы (смотри +ПЕРВАЯ_СТРАНИЦА)\n"
 
-#: src/pr.c:2815
+#: src/pr.c:2814
 msgid ""
 "  -o MARGIN, --indent=MARGIN\n"
 "                    offset each line with MARGIN (zero) spaces, do not\n"
@@ -5199,7 +5312,7 @@ msgstr ""
 "  -r, --no-file-warnings \n"
 "                    не предупреждать о невозможности открытия файла\n"
 
-#: src/pr.c:2822
+#: src/pr.c:2821
 msgid ""
 "  -s[CHAR],--separator[=CHAR]\n"
 "                    separate columns by a single character, default for "
@@ -5216,11 +5329,11 @@ msgstr ""
 "                    колонок (-ЧИСЛО |-a -ЧИСЛО|-m), если только нет ключа -"
 "w\n"
 
-#: src/pr.c:2829
+#: src/pr.c:2828
 msgid "  -SSTRING, --sep-string[=STRING]\n"
 msgstr "  -S[СТРОКА], --sep-string[=СТРОКА]\n"
 
-#: src/pr.c:2832
+#: src/pr.c:2831
 msgid ""
 "                    separate columns by STRING,\n"
 "                    without -S: Default separator <TAB> with -J and <space>\n"
@@ -5239,7 +5352,7 @@ msgstr ""
 "                    ключи для колонок\n"
 "  -t, --omit-header не выводить заголовки\n"
 
-#: src/pr.c:2838
+#: src/pr.c:2837
 msgid ""
 "  -T, --omit-pagination\n"
 "                    omit page headers and trailers, eliminate any "
@@ -5261,7 +5374,7 @@ msgstr ""
 "                    установить ШИРИНУ_СТРАНИЦЫ (72) в столбцах для \n"
 "                    вывода в несколько колонок, -s[знак] выключает (72)\n"
 
-#: src/pr.c:2848
+#: src/pr.c:2847
 msgid ""
 "  -W PAGE_WIDTH, --page-width=PAGE_WIDTH\n"
 "                    set page width to PAGE_WIDTH (72) characters always,\n"
@@ -5275,7 +5388,7 @@ msgstr ""
 "                    если только нет ключа -J; не затрагивается ключами -S "
 "или -s\n"
 
-#: src/pr.c:2856
+#: src/pr.c:2855
 msgid ""
 "\n"
 "-T implied by -l nn when nn <= 10 or <= 3 with -F. With no FILE, or when\n"
@@ -5285,10 +5398,6 @@ msgstr ""
 "-T подразумевается при заданном ключе -l нн, где нн <= 10 или <= 3, если "
 "есть\n"
 "ключ -F.  Если ФАЙЛ не задан или задан как -, читает стандартный ввод.\n"
-
-#: src/printenv.c:43
-msgid "David MacKenzie and Richard Mlynarik"
-msgstr "Девид МакКензи и Ричард Млинарик"
 
 #: src/printenv.c:63
 #, c-format
@@ -5303,14 +5412,14 @@ msgstr ""
 "Если не задана ПЕРЕМЕННАЯ среды, печатает их все.\n"
 "\n"
 
-#: src/printf.c:87
+#: src/printf.c:82
 #, c-format
 msgid ""
 "warning: %s: character(s) following character constant have been ignored"
 msgstr ""
 "предупреждение: %s: символы, следующие за символьной константой, игнорированы"
 
-#: src/printf.c:100
+#: src/printf.c:95
 #, c-format
 msgid ""
 "Usage: %s FORMAT [ARGUMENT]...\n"
@@ -5319,7 +5428,7 @@ msgstr ""
 "Использование: %s ФОРМАТ [АРГУМЕНТ]...\n"
 "       или:    %s КЛЮЧ\n"
 
-#: src/printf.c:105
+#: src/printf.c:100
 msgid ""
 "Print ARGUMENT(s) according to FORMAT.\n"
 "\n"
@@ -5327,7 +5436,7 @@ msgstr ""
 "Печатает АРГУМЕНТ(ы) в заданном ФОРМАТЕ.\n"
 "\n"
 
-#: src/printf.c:111
+#: src/printf.c:106
 #, fuzzy
 msgid ""
 "\n"
@@ -5345,7 +5454,7 @@ msgstr ""
 "  \\0ННН  знак с восьмеричным кодом ННН (от 0 до 3 цифр)\n"
 "  \\\\     обратная косая черта\n"
 
-#: src/printf.c:119
+#: src/printf.c:114
 msgid ""
 "  \\a      alert (BEL)\n"
 "  \\b      backspace\n"
@@ -5357,7 +5466,7 @@ msgstr ""
 "  \\c     подавить последующий вывод\n"
 "  \\f     перевод страницы\n"
 
-#: src/printf.c:125
+#: src/printf.c:120
 msgid ""
 "  \\n      new line\n"
 "  \\r      carriage return\n"
@@ -5369,7 +5478,7 @@ msgstr ""
 "  \\t     горизонтальная табуляция\n"
 "  \\v     вертикальная табуляция\n"
 
-#: src/printf.c:131
+#: src/printf.c:126
 msgid ""
 "  \\xNN    byte with hexadecimal value NN (1 to 2 digits)\n"
 "\n"
@@ -5380,7 +5489,7 @@ msgstr ""
 "  \\uNNNN  знак с шестнадцатиричным кодом НННН (4 цифры)\n"
 "  \\UNNNNNNNN  знак с шестнадцатиричным кодом НННННННН (8 цифр)\n"
 
-#: src/printf.c:137
+#: src/printf.c:132
 #, fuzzy
 msgid ""
 "  %%      a single %\n"
@@ -5397,56 +5506,61 @@ msgstr ""
 "diouxXfeEgGcs; АРГУМЕНТ приводится к соответствующему типу.  Обрабатываютcя\n"
 "также знаки переменной ширины.\n"
 
-#: src/printf.c:161
+#: src/printf.c:156
 #, c-format
 msgid "%s: expected a numeric value"
 msgstr "%s: ожидается числовое значение"
 
-#: src/printf.c:163
+#: src/printf.c:158
 #, c-format
 msgid "%s: value not completely converted"
 msgstr "%s: значение преобразовано не полностью"
 
-#: src/printf.c:257 src/printf.c:284
+#: src/printf.c:252 src/printf.c:279
 msgid "missing hexadecimal number in escape"
 msgstr "неверное шестнадцатиричное число в escape-последовательности"
 
-#: src/printf.c:296
+#: src/printf.c:291
 #, c-format
 msgid "invalid universal character name \\%c%0*x"
 msgstr "неверное универсальное имя знака \\%c%0*x"
 
-#: src/printf.c:476
+#: src/printf.c:471
 #, c-format
 msgid "invalid field width: %s"
 msgstr "неверная ширина поля: %s"
 
-#: src/printf.c:502
+#: src/printf.c:497
 #, c-format
 msgid "invalid precision: %s"
 msgstr "неверная точность: %s"
 
-#: src/printf.c:523
+#: src/printf.c:518
 #, c-format
 msgid "%%%c: invalid directive"
 msgstr "%%%c: неверная директива"
 
-#: src/printf.c:581
+#: src/printf.c:576
 #, c-format
 msgid "Usage: %s format [argument...]\n"
 msgstr "Использование: %s формат [аргумент...]\n"
 
-#: src/printf.c:599
+#: src/printf.c:594
 #, c-format
 msgid "warning: ignoring excess arguments, starting with `%s'"
 msgstr "предупреждение: избыточные аргументы игнорированы, начиная с `%s'"
 
-#: src/ptx.c:405
+#: src/ptx.c:38
+#, fuzzy
+msgid "F. Pinard"
+msgstr "Автор программы -- %s.\n"
+
+#: src/ptx.c:407
 #, c-format
 msgid "%s (for regexp `%s')"
 msgstr "%s (для регулярного выражения `%s')"
 
-#: src/ptx.c:1872
+#: src/ptx.c:1874
 #, c-format
 msgid ""
 "Usage: %s [OPTION]... [INPUT]...   (without -G)\n"
@@ -5455,7 +5569,7 @@ msgstr ""
 "Использование: %s [КЛЮЧ]... [ВХОД]... (без -G)\n"
 "       или:    %s -G [КЛЮЧ]... [ВХОД [ВЫХОД]]\n"
 
-#: src/ptx.c:1876
+#: src/ptx.c:1878
 msgid ""
 "Output a permuted index, including context, of the words in the input "
 "files.\n"
@@ -5465,7 +5579,7 @@ msgstr ""
 "контекст.\n"
 "\n"
 
-#: src/ptx.c:1883
+#: src/ptx.c:1885
 msgid ""
 "  -A, --auto-reference           output automatically generated references\n"
 "  -C, --copyright                display Copyright and copying conditions\n"
@@ -5481,7 +5595,7 @@ msgstr ""
 "  -F, --flag-truncation=СТРОКА   использовать СТРОКУ для пометки усечения "
 "строк\n"
 
-#: src/ptx.c:1889
+#: src/ptx.c:1891
 msgid ""
 "  -M, --macro-name=STRING        macro name to use instead of `xx'\n"
 "  -O, --format=roff              generate output as roff directives\n"
@@ -5497,7 +5611,7 @@ msgstr ""
 "  -S, --sentence-regexp=REGEXP   для конца строк или конца предложений\n"
 "  -T, --format=tex               генерировать вывод в виде директив TeX\n"
 
-#: src/ptx.c:1896
+#: src/ptx.c:1898
 msgid ""
 "  -W, --word-regexp=REGEXP       use REGEXP to match each keyword\n"
 "  -b, --break-file=FILE          word break characters in this FILE\n"
@@ -5517,7 +5631,7 @@ msgstr ""
 "  -o, --only-file=ФАЙЛ           только считать список слов из заданного "
 "ФАЙЛА\n"
 
-#: src/ptx.c:1904
+#: src/ptx.c:1906
 msgid ""
 "  -r, --references               first field of each line is a reference\n"
 "  -t, --typeset-mode               - not implemented -\n"
@@ -5529,7 +5643,7 @@ msgstr ""
 "  -t, --typeset-mode               - не реализовано -\n"
 "  -w, --width=ЧИСЛО              ширина вывода в столбцах, не считая ссылки\n"
 
-#: src/ptx.c:1911
+#: src/ptx.c:1913
 msgid ""
 "\n"
 "With no FILE or if FILE is -, read Standard Input.  `-F /' by default.\n"
@@ -5538,7 +5652,7 @@ msgstr ""
 "Если ФАЙЛ не задан или задан как -, читает стандартный ввод.\n"
 "По умолчанию предполагается `-F /'.\n"
 
-#: src/ptx.c:1992
+#: src/ptx.c:1995
 msgid ""
 "This program is free software; you can redistribute it and/or modify\n"
 "it under the terms of the GNU General Public License as published by\n"
@@ -5553,7 +5667,7 @@ msgstr ""
 "(по вашему усмотрению).\n"
 "\n"
 
-#: src/ptx.c:1999
+#: src/ptx.c:2002
 msgid ""
 "This program is distributed in the hope that it will be useful,\n"
 "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
@@ -5568,7 +5682,7 @@ msgstr ""
 "смотрите Универсальную Общественную Лицензию GNU.\n"
 "\n"
 
-#: src/ptx.c:2006
+#: src/ptx.c:2009
 msgid ""
 "You should have received a copy of the GNU General Public License\n"
 "along with this program; if not, write to the Free Software Foundation,\n"
@@ -5622,72 +5736,72 @@ msgstr ""
 "  -s, --silent            подавляет вывод большинства сообщений о ошибок\n"
 "  -v, --verbose           сообщать об ошибках\n"
 
-#: src/remove.c:386
+#: src/remove.c:387
 #, c-format
 msgid "cannot chdir from %s to .."
 msgstr "невозможно перейти из каталога %s в .."
 
-#: src/remove.c:399 src/remove.c:480
+#: src/remove.c:400 src/remove.c:481
 #, c-format
 msgid "cannot lstat `.' in %s"
 msgstr "невозможно выполнить lstat для `.' в %s"
 
-#: src/remove.c:406 src/remove.c:484
+#: src/remove.c:407 src/remove.c:485
 #, c-format
 msgid "%s changed dev/ino"
 msgstr "%s сменил dev/ino"
 
-#: src/remove.c:566 src/remove.c:711 src/remove.c:889 src/remove.c:999
+#: src/remove.c:567 src/remove.c:712 src/remove.c:890 src/remove.c:996
 #, c-format
 msgid "cannot lstat %s"
 msgstr "невозможно выполнить lstat для %s"
 
-#: src/remove.c:573 src/remove.c:733 src/remove.c:750 src/remove.c:1079
+#: src/remove.c:574 src/remove.c:734 src/remove.c:751 src/remove.c:1082
 #, c-format
 msgid "cannot remove directory %s"
 msgstr "невозможно удалить каталог %s"
 
-#: src/remove.c:602
+#: src/remove.c:603
 #, c-format
 msgid "%s: descend into write-protected directory %s? "
 msgstr "%s: спуститься в защищенный от записи каталог %s? "
 
-#: src/remove.c:603
+#: src/remove.c:604
 #, c-format
 msgid "%s: descend into directory %s? "
 msgstr "%s: спуститься в каталог %s? "
 
-#: src/remove.c:613
+#: src/remove.c:614
 #, c-format
 msgid "%s: remove write-protected %s %s? "
 msgstr "%s: удалить защищенный от записи %s %s? "
 
-#: src/remove.c:614
+#: src/remove.c:615
 #, c-format
 msgid "%s: remove %s %s? "
 msgstr "%s: удалить %s %s? "
 
-#: src/remove.c:638
+#: src/remove.c:639
 #, c-format
 msgid "removed %s\n"
 msgstr "удален %s\n"
 
-#: src/remove.c:653 src/remove.c:1074
+#: src/remove.c:654 src/remove.c:1077
 #, c-format
 msgid "removed directory: %s\n"
 msgstr "удален каталог: %s\n"
 
-#: src/remove.c:815
+#: src/remove.c:816
 #, c-format
 msgid "cannot open directory %s"
 msgstr "невозможно открыть каталог %s"
 
-#: src/remove.c:908 src/remove.c:1017
+#: src/remove.c:905 src/remove.c:1014
 #, c-format
 msgid "cannot chdir from %s to %s"
 msgstr "невозможно сменить каталог с %s на %s"
 
-#: src/remove.c:916
+#: src/remove.c:913
 #, c-format
 msgid ""
 "WARNING: Circular directory structure.\n"
@@ -5702,20 +5816,16 @@ msgstr ""
 "Следующий каталог является частью цикла:\n"
 " %s\n"
 
-#: src/remove.c:1113
+#: src/remove.c:1116
 msgid "cannot remove `.' or `..'"
 msgstr "невозможно удалить `.' или `..'"
 
-#: src/rm.c:61
-msgid "Paul Rubin, David MacKenzie, Richard Stallman, and Jim Meyering"
-msgstr "Пол Рубин, Девид МакКензи, Ричард Столлмен и Джим Мееринг"
-
-#: src/rm.c:101 src/touch.c:238
+#: src/rm.c:108 src/touch.c:238
 #, c-format
 msgid "Usage: %s [OPTION]... FILE...\n"
 msgstr "Использование: %s [КЛЮЧ]... ФАЙЛ...\n"
 
-#: src/rm.c:102
+#: src/rm.c:109
 #, fuzzy
 msgid ""
 "Remove (unlink) the FILE(s).\n"
@@ -5725,8 +5835,6 @@ msgid ""
 "                           supports `unlink' for nonempty directories)\n"
 "  -f, --force           ignore nonexistent files, never prompt\n"
 "  -i, --interactive     prompt before any removal\n"
-"  -r, -R, --recursive   remove the contents of directories recursively\n"
-"  -v, --verbose         explain what is being done\n"
 msgstr ""
 "Удаляет FILE.\n"
 "\n"
@@ -5737,7 +5845,15 @@ msgstr ""
 "  -r, -R, --recursive   рекурсивно удалить содержание каталога\n"
 "  -v, --verbose         пояснять что будет сделано\n"
 
-#: src/rm.c:115
+#: src/rm.c:118
+msgid ""
+"      --no-preserve-root do not treat `/' specially (the default)\n"
+"      --preserve-root   fail to operate recursively on `/'\n"
+"  -r, -R, --recursive   remove the contents of directories recursively\n"
+"  -v, --verbose         explain what is being done\n"
+msgstr ""
+
+#: src/rm.c:126
 #, c-format
 msgid ""
 "\n"
@@ -5754,7 +5870,7 @@ msgstr ""
 "\n"
 "  %s ./-foo\n"
 
-#: src/rm.c:124
+#: src/rm.c:135
 msgid ""
 "\n"
 "Note that if you use rm to remove a file, it is usually possible to recover\n"
@@ -5804,7 +5920,7 @@ msgstr ""
 "                  делает то же, что и `rmdir a/b/c a/b a'.\n"
 "  -v, --verbose   выводить сообщение для каждого обрабатываемого каталога\n"
 
-#: src/seq.c:81
+#: src/seq.c:82
 #, c-format
 msgid ""
 "Usage: %s [OPTION]... LAST\n"
@@ -5815,7 +5931,7 @@ msgstr ""
 "       или:    %s [КЛЮЧ]... ПЕРВЫЙ ПОСЛЕДНИЙ\n"
 "       или:    %s [КЛЮЧ]... ПЕРВЫЙ ПРИРОСТ ПОСЛЕДНИЙ\n"
 
-#: src/seq.c:86
+#: src/seq.c:87
 #, c-format
 msgid ""
 "Print numbers from FIRST to LAST, in steps of INCREMENT.\n"
@@ -5833,7 +5949,7 @@ msgstr ""
 "\\n)\n"
 "  -w, --equal-width        выравнивать по ширине, добавляя в начало нули\n"
 
-#: src/seq.c:95
+#: src/seq.c:96
 #, c-format
 msgid ""
 "\n"
@@ -5851,17 +5967,17 @@ msgstr ""
 "задавать ровно один из форматов чисел с плавающей точкой в стиле\n"
 "prinft: %e, %f или %g.\n"
 
-#: src/seq.c:118
+#: src/seq.c:119
 #, c-format
 msgid "invalid floating point argument: %s"
 msgstr "неверный аргумент с плавающей точкой: %s"
 
-#: src/seq.c:386
+#: src/seq.c:387
 #, c-format
 msgid "invalid format string: `%s'"
 msgstr "неверная строка формата: `%s'"
 
-#: src/seq.c:406
+#: src/seq.c:407
 msgid "format string may not be specified when printing equal width strings"
 msgstr "при выводе строк одинаковой ширины формат можно не указывать"
 
@@ -6101,11 +6217,7 @@ msgstr "%s: неверное число проходов"
 msgid "%s: invalid file size"
 msgstr "%s: неверный размер файла"
 
-#: src/sleep.c:33
-msgid "Jim Meyering and Paul Eggert"
-msgstr "Джим Мееринг и Пол Эггерт"
-
-#: src/sleep.c:51
+#: src/sleep.c:52
 #, c-format
 msgid ""
 "Usage: %s NUMBER[SUFFIX]...\n"
@@ -6126,18 +6238,14 @@ msgstr ""
 "может быть произвольным числом с плавающей запятой.\n"
 "\n"
 
-#: src/sleep.c:155
+#: src/sleep.c:156
 #, c-format
 msgid "invalid time interval `%s'"
 msgstr "неверный временной интервал `%s'"
 
-#: src/sleep.c:166 src/tail.c:1068
+#: src/sleep.c:167 src/tail.c:1069
 msgid "cannot read realtime clock"
 msgstr "невозможно прочитать таймер реального времени"
-
-#: src/sort.c:54
-msgid "Mike Haertel and Paul Eggert"
-msgstr "Майк Хэртел и Пол Эггерт"
 
 #: src/sort.c:278
 msgid ""
@@ -6280,7 +6388,7 @@ msgstr "невозможно создать временный файл"
 msgid "open failed"
 msgstr "операция открытия завершилась неуспехом"
 
-#: src/sort.c:485 src/sort.c:2578
+#: src/sort.c:485 src/sort.c:2580
 msgid "close failed"
 msgstr "закрытие неуспешно"
 
@@ -6309,68 +6417,68 @@ msgstr "%s: %s:%s: неправильный порядок: "
 msgid "standard error"
 msgstr "стандартная ошибка"
 
-#: src/sort.c:2090
+#: src/sort.c:2091
 #, c-format
 msgid "%s: invalid field specification `%s'"
 msgstr "%s: неверная спецификация поля `%s'"
 
-#: src/sort.c:2116
+#: src/sort.c:2118
 #, c-format
 msgid "%s: count `%.*s' too large"
 msgstr "%s: счетчик `%.*s' слишком велик"
 
-#: src/sort.c:2122
+#: src/sort.c:2124
 #, c-format
 msgid "%s: invalid count at start of `%s'"
 msgstr "%s: неверный счетчик в начале `%s'"
 
-#: src/sort.c:2364
+#: src/sort.c:2366
 msgid "invalid number after `-'"
 msgstr "неверное число после `-'"
 
-#: src/sort.c:2367 src/sort.c:2413 src/sort.c:2440
+#: src/sort.c:2369 src/sort.c:2415 src/sort.c:2442
 msgid "invalid number after `.'"
 msgstr "неверное число после `.'"
 
-#: src/sort.c:2370 src/sort.c:2449
+#: src/sort.c:2372 src/sort.c:2451
 msgid "stray character in field spec"
 msgstr "лишний знак в спецификации поля"
 
-#: src/sort.c:2404
+#: src/sort.c:2406
 msgid "invalid number at field start"
 msgstr "неверное число в начале поля"
 
-#: src/sort.c:2408 src/sort.c:2436
+#: src/sort.c:2410 src/sort.c:2438
 msgid "field number is zero"
 msgstr "нулевой номер поля"
 
-#: src/sort.c:2417
+#: src/sort.c:2419
 msgid "character offset is zero"
 msgstr "нулевой знаковый сдвиг"
 
-#: src/sort.c:2432
+#: src/sort.c:2434
 msgid "invalid number after `,'"
 msgstr "неверное число после `,'"
 
-#: src/sort.c:2459
+#: src/sort.c:2461
 #, fuzzy
 msgid "multiple output files specified"
 msgstr "задано несколько ключей -l или -t"
 
-#: src/sort.c:2475
+#: src/sort.c:2477
 msgid "empty tab"
 msgstr ""
 
-#: src/sort.c:2486
+#: src/sort.c:2488
 #, c-format
 msgid "multi-character tab `%s'"
 msgstr "многознаковая табуляция `%s'"
 
-#: src/sort.c:2491
+#: src/sort.c:2493
 msgid "incompatible tabs"
 msgstr ""
 
-#: src/sort.c:2561
+#: src/sort.c:2563
 #, c-format
 msgid "extra operand `%s' not allowed with -c"
 msgstr "дополнительный операнд `%s' недопустим с -c"
@@ -7201,10 +7309,6 @@ msgstr "используется ограниченная оболочка %s"
 msgid "warning: cannot change directory to %s"
 msgstr "предупреждение: невозможно сменить каталог на %s"
 
-#: src/sum.c:35
-msgid "Kayvan Aghaiepour and David MacKenzie"
-msgstr "Кайван Агайепур и Девид МакКензи"
-
 #: src/sum.c:63
 msgid ""
 "Print checksum and block counts for each FILE.\n"
@@ -7242,10 +7346,6 @@ msgstr ""
 "      --version  показать информацию о версии и выйти\n"
 "\n"
 
-#: src/tac.c:53
-msgid "Jay Lepreau and David MacKenzie"
-msgstr "Джей Лепре и Девид МакКензи"
-
 #: src/tac.c:130
 msgid ""
 "Write each FILE to standard output, last line first.\n"
@@ -7268,24 +7368,20 @@ msgstr ""
 "  -s, --separator=СТРОКА   использовать как разделитель СТРОКУ, а не знак `"
 "\\n'\n"
 
-#: src/tac.c:229
+#: src/tac.c:229 src/tac.c:318
 #, fuzzy, c-format
 msgid "%s: seek failed"
 msgstr "закрытие неуспешно"
 
-#: src/tac.c:452 src/tac.c:591
+#: src/tac.c:453 src/tac.c:581
 msgid "stdin: read error"
 msgstr "стандартный ввод: ошибка чтения"
 
-#: src/tac.c:638
+#: src/tac.c:628
 msgid "separator cannot be empty"
 msgstr "разделитель не может быть пустым"
 
-#: src/tail.c:49
-msgid "Paul Rubin, David MacKenzie, Ian Lance Taylor, and Jim Meyering"
-msgstr "Пол Рубин, Девид МакКензи, Ян Ланс Тейлор и Джим Мееринг"
-
-#: src/tail.c:241
+#: src/tail.c:242
 #, c-format
 msgid ""
 "Print the last %d lines of each FILE to standard output.\n"
@@ -7298,7 +7394,7 @@ msgstr ""
 "Если ФАЙЛ не задан или задан как -, читает стандартный ввод.\n"
 "\n"
 
-#: src/tail.c:250
+#: src/tail.c:251
 msgid ""
 "      --retry              keep trying to open a file even if it is\n"
 "                           inaccessible when tail starts or if it becomes\n"
@@ -7311,7 +7407,7 @@ msgstr ""
 "                             стал недоступен позднее -- полезно только с -f\n"
 "  -c, --bytes=Н            выводить последние Н байт\n"
 
-#: src/tail.c:256
+#: src/tail.c:257
 msgid ""
 "  -f, --follow[={name|descriptor}]\n"
 "                           output appended data as the file grows;\n"
@@ -7325,7 +7421,7 @@ msgstr ""
 "эквивалентны\n"
 "  -F                       эквивалент --follow=name --retry\n"
 
-#: src/tail.c:263
+#: src/tail.c:264
 #, c-format
 msgid ""
 "  -n, --lines=N            output the last N lines, instead of the last %d\n"
@@ -7345,7 +7441,7 @@ msgstr ""
 "                             переименован (такое обычно бывает при ротации \n"
 "                             системных протокольных файлов)\n"
 
-#: src/tail.c:274
+#: src/tail.c:275
 msgid ""
 "      --pid=PID            with -f, terminate after process ID, PID dies\n"
 "  -q, --quiet, --silent    never output headers giving file names\n"
@@ -7360,7 +7456,7 @@ msgstr ""
 "                           примерно каждые С секунд (по умолчанию 1)\n"
 "  -v, --verbose            всегда выводить заголовки с именами файлов\n"
 
-#: src/tail.c:283
+#: src/tail.c:284
 #, fuzzy
 msgid ""
 "\n"
@@ -7377,7 +7473,7 @@ msgstr ""
 "k -- 1024, m -- 1048576 (1 Мег).\n"
 "\n"
 
-#: src/tail.c:291
+#: src/tail.c:292
 msgid ""
 "With --follow (-f), tail defaults to following the file descriptor, which\n"
 "means that even if a tail'ed file is renamed, tail will continue to track\n"
@@ -7389,7 +7485,7 @@ msgstr ""
 "его\n"
 "концом.  "
 
-#: src/tail.c:296
+#: src/tail.c:297
 msgid ""
 "This default behavior is not desirable when you really want to\n"
 "track the actual name of the file, not the file descriptor (e.g., log\n"
@@ -7406,70 +7502,70 @@ msgstr ""
 "создан\n"
 "какой-то другой программой.\n"
 
-#: src/tail.c:334
+#: src/tail.c:335
 #, c-format
 msgid "closing %s (fd=%d)"
 msgstr "закрытие %s (fd=%d)"
 
-#: src/tail.c:399
+#: src/tail.c:400
 #, c-format
 msgid "%s: cannot seek to relative offset %s"
 msgstr "%s: невозможно переместить указатель позиции на %s"
 
-#: src/tail.c:403
+#: src/tail.c:404
 #, c-format
 msgid "%s: cannot seek to end-relative offset %s"
 msgstr "%s: невозможно переместить указатель позиции на %s относительно конца"
 
-#: src/tail.c:855
+#: src/tail.c:856
 #, c-format
 msgid "`%s' has become inaccessible"
 msgstr "`%s' стал недоступен"
 
-#: src/tail.c:872
+#: src/tail.c:873
 #, c-format
 msgid "`%s' has been replaced with an untailable file; giving up on this name"
 msgstr ""
 "`%s' был замещен файлом, для которого tail неприменим; вывод продолжается "
 "для нового файла"
 
-#: src/tail.c:893
+#: src/tail.c:894
 #, c-format
 msgid "`%s' has become accessible"
 msgstr "`%s' стал доступен"
 
-#: src/tail.c:901
+#: src/tail.c:902
 #, c-format
 msgid "`%s' has appeared;  following end of new file"
 msgstr "`%s' появился; начат вывод для нового файла"
 
-#: src/tail.c:912
+#: src/tail.c:913
 #, c-format
 msgid "`%s' has been replaced;  following end of new file"
 msgstr "`%s' был замещен; вывод продолжается для нового файла"
 
-#: src/tail.c:1037
+#: src/tail.c:1038
 #, c-format
 msgid "%s: file truncated"
 msgstr "%s: файл усечен"
 
-#: src/tail.c:1057
+#: src/tail.c:1058
 msgid "no files remaining"
 msgstr "больше нет файлов"
 
-#: src/tail.c:1297
+#: src/tail.c:1298
 #, c-format
 msgid "%s: cannot follow end of this type of file; giving up on this name"
 msgstr ""
 "%s: невозможно следить за концом файла такого типа; вывод продолжается для "
 "нового файла"
 
-#: src/tail.c:1421
+#: src/tail.c:1422
 #, c-format
 msgid "%c: invalid suffix character in obsolescent option"
 msgstr "%c: неверный суффикс в устаревшем ключе"
 
-#: src/tail.c:1470
+#: src/tail.c:1471
 #, c-format
 msgid ""
 "too many arguments;  When using tail's obsolescent option syntax (%s)\n"
@@ -7481,7 +7577,7 @@ msgstr ""
 "не может быть задано более одного файла.  Вместо старой используйте\n"
 "эквивалентную запись -n или -c."
 
-#: src/tail.c:1479
+#: src/tail.c:1480
 #, c-format
 msgid ""
 "Warning: it is not portable to use two or more file arguments with\n"
@@ -7494,55 +7590,51 @@ msgstr ""
 "или\n"
 "-c."
 
-#: src/tail.c:1488
+#: src/tail.c:1489
 #, c-format
 msgid "`%s' option is obsolete; use `%s-%c %.*s'"
 msgstr "Ключ `%s' устарел, используйте `%s-%c %.*s'"
 
-#: src/tail.c:1560
+#: src/tail.c:1561
 #, fuzzy
 msgid "the --allow-missing option is deprecated; use --retry instead"
 msgstr ""
 "Предупреждение: ключ -i будет удален в будущем выпуске; используйте\n"
 "вместо него -u"
 
-#: src/tail.c:1572
+#: src/tail.c:1573
 #, c-format
 msgid "%s: invalid maximum number of unchanged stats between opens"
 msgstr ""
 "%s: неверное максимальное число неизменявшихся параметров между открытиями"
 
-#: src/tail.c:1584
+#: src/tail.c:1585
 #, c-format
 msgid "%s: invalid maximum number of consecutive size changes"
 msgstr "%s: неверное максимальное число последовательных изменений размера"
 
-#: src/tail.c:1596
+#: src/tail.c:1597
 #, c-format
 msgid "%s: invalid PID"
 msgstr "%s: неверный PID"
 
-#: src/tail.c:1615
+#: src/tail.c:1616
 #, c-format
 msgid "%s: invalid number of seconds"
 msgstr "%s: неверное число секунд"
 
-#: src/tail.c:1634
+#: src/tail.c:1635
 msgid "warning: --retry is useful only when following by name"
 msgstr "внимание: ключ --retry полезен только при следовании по имени файла"
 
-#: src/tail.c:1638
+#: src/tail.c:1639
 msgid "warning: PID ignored; --pid=PID is useful only when following"
 msgstr ""
 "внимание: PID игнорирован; ключ --pid=PID полезен только при следовании"
 
-#: src/tail.c:1641
+#: src/tail.c:1642
 msgid "warning: --pid=PID is not supported on this system"
 msgstr "предупреждение: --pid=PID не поддерживается на этой системе"
-
-#: src/tee.c:32
-msgid "Mike Parker, Richard M. Stallman, and David MacKenzie"
-msgstr "Майк Паркер, Ричард М. Столлмен и Девид МакКензи"
 
 #: src/tee.c:63
 msgid ""
@@ -7807,10 +7899,6 @@ msgstr ""
 "как\n"
 "\"-l СТРОКА\", при этом оно принимает значение длины СТРОКИ.\n"
 
-#: src/test.c:1061
-msgid "Kevin Braunsdorf and Matthew Bradburn"
-msgstr ""
-
 #: src/test.c:1105
 msgid "missing `]'\n"
 msgstr "пропущена `]'\n"
@@ -7818,11 +7906,6 @@ msgstr "пропущена `]'\n"
 #: src/test.c:1120
 msgid "too many arguments\n"
 msgstr "слишком много аргументов\n"
-
-#: src/touch.c:40
-msgid ""
-"Paul Rubin, Arnold Robbins, Jim Kingdon, David MacKenzie, and Randy Smith"
-msgstr "Пол Рубин, Арнольд Роббинс, Джим Кингдон, Девид МакКензи и Рэнди Смит"
 
 #: src/touch.c:149 src/touch.c:165
 #, c-format
@@ -8263,7 +8346,7 @@ msgstr "невозможно узнать название системы"
 msgid "tab size contains an invalid character"
 msgstr "размер табуляции содержит недопустимый знак"
 
-#: src/unexpand.c:377
+#: src/unexpand.c:380
 msgid ""
 "Convert spaces in each FILE to tabs, writing to standard output.\n"
 "With no FILE, or when FILE is -, read standard input.\n"
@@ -8273,7 +8356,7 @@ msgstr ""
 "вывод.  Если ФАЙЛ не задан или задан как -, читает стандартный ввод.\n"
 "\n"
 
-#: src/unexpand.c:385
+#: src/unexpand.c:388
 msgid ""
 "  -a, --all        convert all whitespace, instead of just initial "
 "whitespace\n"
@@ -8291,7 +8374,7 @@ msgstr ""
 "позиций\n"
 "                       табуляции (включает -a)\n"
 
-#: src/unexpand.c:463
+#: src/unexpand.c:466
 msgid "`-LIST' option is obsolete; use `--first-only -t LIST'"
 msgstr "Ключ `-LIST' устарел, используйте `--first-only -t LIST'"
 
@@ -8352,29 +8435,29 @@ msgstr ""
 "Полем считается последовательность пробельных знаков, за которой\n"
 "следуют непробельные знаки.  Сначала пропускаются поля, потом знаки.\n"
 
-#: src/uniq.c:432 src/uniq.c:449
+#: src/uniq.c:438 src/uniq.c:455
 #, c-format
 msgid "extra operand `%s'"
 msgstr "лишний операнд `%s'"
 
-#: src/uniq.c:472 src/uniq.c:498
+#: src/uniq.c:478 src/uniq.c:504
 msgid "invalid number of fields to skip"
 msgstr "неверное число пропускаемых полей"
 
-#: src/uniq.c:507
+#: src/uniq.c:513
 msgid "invalid number of bytes to skip"
 msgstr "неверное число пропускаемых байт"
 
-#: src/uniq.c:516
+#: src/uniq.c:522
 msgid "invalid number of bytes to compare"
 msgstr "неверное число сравниваемых байт"
 
-#: src/uniq.c:530
+#: src/uniq.c:536
 #, c-format
 msgid "`-%lu' option is obsolete; use `-f %lu'"
 msgstr "Ключ `-%lu' устарел, используйте `-f %lu'"
 
-#: src/uniq.c:538
+#: src/uniq.c:544
 msgid "printing all duplicated lines and repeat counts is meaningless"
 msgstr "печать всех повторяющихся сток и числа повторений бессмысленна"
 
@@ -8438,7 +8521,7 @@ msgstr[2] "пользователей"
 msgid ",  load average: %.2f"
 msgstr ", средняя загруженность: %.2f"
 
-#: src/uptime.c:190 src/users.c:117
+#: src/uptime.c:190 src/users.c:119
 #, c-format
 msgid "Usage: %s [OPTION]... [ FILE ]\n"
 msgstr "Использование: %s [КЛЮЧ]... [ ФАЙЛ ]\n"
@@ -8458,11 +8541,7 @@ msgstr ""
 "Если ФАЙЛ не задан, используется %s.  Часто в качестве ФАЙЛА задают %s.\n"
 "\n"
 
-#: src/users.c:34
-msgid "Joseph Arceneaux and David MacKenzie"
-msgstr "Джозеф Арсено и Девид МакКензи"
-
-#: src/users.c:118
+#: src/users.c:120
 #, c-format
 msgid ""
 "Output who is currently logged in according to FILE.\n"
@@ -8473,10 +8552,6 @@ msgstr ""
 "Если ФАЙЛ не задан, используется %s.  Часто в качестве ФАЙЛА\n"
 "задают %s.\n"
 "\n"
-
-#: src/wc.c:74
-msgid "Paul Rubin and David MacKenzie"
-msgstr "Пол Рубин и Девид МакКензи"
 
 #: src/wc.c:139
 #, fuzzy
@@ -8502,10 +8577,6 @@ msgid ""
 msgstr ""
 "  -L, --max-line-length  напечатать длину наибольшей строки\n"
 "  -w, --words            напечатать число слов\n"
-
-#: src/who.c:40
-msgid "Joseph Arceneaux, David MacKenzie, and Michael Stone"
-msgstr "Джозеф Арсено, Девид МакКензи и Майкл Стоун"
 
 #: src/who.c:221
 msgid " old "
@@ -8572,12 +8643,12 @@ msgstr "КОММЕНТАРИЙ"
 msgid "EXIT"
 msgstr "ВЫХОД"
 
-#: src/who.c:618
+#: src/who.c:620
 #, c-format
 msgid "Usage: %s [OPTION]... [ FILE | ARG1 ARG2 ]\n"
 msgstr "Использование: %s [КЛЮЧ]... [ ФАЙЛ | АРГ1 АРГ2]\n"
 
-#: src/who.c:619
+#: src/who.c:621
 msgid ""
 "\n"
 "  -a, --all         same as -b -d --login -p -r -t -T -u\n"
@@ -8591,7 +8662,7 @@ msgstr ""
 "  -d, --dead        печатать мертвые процессы\n"
 "  -H, --heading     печатать строку с заголовками столбцов\n"
 
-#: src/who.c:626
+#: src/who.c:628
 #, fuzzy
 msgid ""
 "  -i, --idle        add idle time as HOURS:MINUTES, . or old\n"
@@ -8602,7 +8673,7 @@ msgstr ""
 "                    (устарело, используйте -u)\n"
 "      --login       печатать процессы входа в систему (эквивалентноSUS -l)\n"
 
-#: src/who.c:631
+#: src/who.c:633
 #, fuzzy
 msgid ""
 "      --lookup      attempt to canonicalize hostnames via DNS\n"
@@ -8615,7 +8686,7 @@ msgstr ""
 "                    стандартным вводом\n"
 "  -p, --process     печатать активные процессы, которые породил init\n"
 
-#: src/who.c:636
+#: src/who.c:638
 msgid ""
 "  -q, --count       all login names and number of users logged on\n"
 "  -r, --runlevel    print current runlevel\n"
@@ -8628,7 +8699,7 @@ msgstr ""
 "умолчанию)\n"
 "  -t, --time        печатать последнее изменение системного времени\n"
 
-#: src/who.c:642
+#: src/who.c:644
 msgid ""
 "  -T, -w, --mesg    add user's message status as +, - or ?\n"
 "  -u, --users       list users logged in\n"
@@ -8640,7 +8711,7 @@ msgstr ""
 "      --message     эквивалент -T\n"
 "      --writable    эквивалент -T\n"
 
-#: src/who.c:650
+#: src/who.c:652
 #, c-format
 msgid ""
 "\n"
@@ -8652,7 +8723,7 @@ msgstr ""
 "Если заданы АРГ1 и АРГ2, полагается использование -m: например `am i'\n"
 "и `mom likes'.\n"
 
-#: src/who.c:753
+#: src/who.c:755
 msgid "Warning: -i will be removed in a future release;   use -u instead"
 msgstr ""
 "Предупреждение: ключ -i будет удален в будущем выпуске; используйте\n"
@@ -8673,7 +8744,7 @@ msgstr ""
 msgid "%s: cannot find username for UID %u\n"
 msgstr "%s: невозможно определить имя пользователя для UID %u\n"
 
-#: src/yes.c:49
+#: src/yes.c:46
 #, c-format
 msgid ""
 "Usage: %s [STRING]...\n"
@@ -8682,7 +8753,7 @@ msgstr ""
 "Использование: %s [СТРОКА]...\n"
 "       или:    %s КЛЮЧ\n"
 
-#: src/yes.c:55
+#: src/yes.c:52
 msgid ""
 "Repeatedly output a line with all specified STRING(s), or `y'.\n"
 "\n"
@@ -8690,6 +8761,202 @@ msgstr ""
 "Непрерывно печатает заданную СТРОКУ (СТРОКИ) или, если СТРОК не задано, "
 "`y'.\n"
 "\n"
+
+#, fuzzy
+#~ msgid "Written by FIXME unknown."
+#~ msgstr "Автор программы -- %s.\n"
+
+#, fuzzy
+#~ msgid "Written by Torbjorn Granlund and Richard M. Stallman."
+#~ msgstr "Торбьёрн Гранлунд и Ричард М. Столлмен"
+
+#, fuzzy
+#~ msgid "Written by David MacKenzie and Jim Meyering."
+#~ msgstr "Девид МакКензи и Джим Мееринг"
+
+#, fuzzy
+#~ msgid "Written by David MacKenzie."
+#~ msgstr "Стюарт Кемп и Девид МакКензи"
+
+#, fuzzy
+#~ msgid "Written by Roland McGrath."
+#~ msgstr "Автор программы -- %s.\n"
+
+#, fuzzy
+#~ msgid "Written by Q. Frank Xia."
+#~ msgstr "Автор программы -- %s.\n"
+
+#, fuzzy
+#~ msgid "Written by Richard Stallman and David MacKenzie."
+#~ msgstr "Ричард Столлмен и Девид МакКензи"
+
+#, fuzzy
+#~ msgid "Written by Torbjorn Granlund, David MacKenzie, and Jim Meyering."
+#~ msgstr "Торбьёрн Гранлунд, Девид МакКензи и Джим Мееринг"
+
+#, fuzzy
+#~ msgid "Written by Stuart Kemp and David MacKenzie."
+#~ msgstr "Стюарт Кемп и Девид МакКензи"
+
+#, fuzzy
+#~ msgid "Written by David Ihnat, David MacKenzie, and Jim Meyering."
+#~ msgstr "Девид Инат, Девид МакКензи и Джим Мееринг"
+
+#, fuzzy
+#~ msgid "Written by Paul Rubin, David MacKenzie, and Stuart Kemp."
+#~ msgstr "Пол Рубин, Девид МакКензи и Стюарт Кемп"
+
+#, fuzzy
+#~ msgid "Written by Torbjorn Granlund, David MacKenzie, and Paul Eggert."
+#~ msgstr "Торбьёрн Гранлунд, Девид МакКензи, Ларри МакВой и Пол Эггерт"
+
+#, fuzzy
+#~ msgid ""
+#~ "Written by Torbjorn Granlund, David MacKenzie, Paul Eggert, and Jim "
+#~ "Meyering."
+#~ msgstr ""
+#~ "Торбьёрн Гранлунд, Девид МакКензи, Ларри МакВой, Пол Эггерт и Джим Мееринг"
+
+#, fuzzy
+#~ msgid "Written by Richard Mlynarik and David MacKenzie."
+#~ msgstr "Ричард Млинарик и Девид МакКензи"
+
+#, fuzzy
+#~ msgid "Written by Mike Parker."
+#~ msgstr "Автор программы -- %s.\n"
+
+#, fuzzy
+#~ msgid "Written by Paul Rubin."
+#~ msgstr "Автор программы -- %s.\n"
+
+#, fuzzy
+#~ msgid "Written by Jim Meyering."
+#~ msgstr "Автор программы -- %s.\n"
+
+#, fuzzy
+#~ msgid "Written by Ross Paterson."
+#~ msgstr "Автор программы -- %s.\n"
+
+#, fuzzy
+#~ msgid "Written by Arnold Robbins and David MacKenzie."
+#~ msgstr "Арнольд Роббинс и Девид МакКензи"
+
+#, fuzzy
+#~ msgid "Written by Mike Haertel."
+#~ msgstr "Автор программы -- %s.\n"
+
+#, fuzzy
+#~ msgid "Written by Paul Eggert."
+#~ msgstr "Автор программы -- %s.\n"
+
+#, fuzzy
+#~ msgid "Written by Michael Stone."
+#~ msgstr "Автор программы -- %s.\n"
+
+#, fuzzy
+#~ msgid "Written by Mike Parker and David MacKenzie."
+#~ msgstr "Майк Паркер и Девид МакКензи"
+
+#, fuzzy
+#~ msgid "Written by Ulrich Drepper and Scott Miller."
+#~ msgstr "Ульрих Дреппер и Скотт Миллер"
+
+#, fuzzy
+#~ msgid "Written by Mike Parker, David MacKenzie, and Jim Meyering."
+#~ msgstr "Майк Паркер, Девид МакКензи и Джим Мееринг"
+
+#, fuzzy
+#~ msgid "Written by Scott Bartram and David MacKenzie."
+#~ msgstr "Скотт Бартрам и Девид МакКензи"
+
+#, fuzzy
+#~ msgid "Written by David M. Ihnat and David MacKenzie."
+#~ msgstr "Девид М. Инат и Девид МакКензи"
+
+#, fuzzy
+#~ msgid "Written by Joseph Arceneaux, David MacKenzie, and Kaveh Ghazi."
+#~ msgstr "Джозеф Арсено, Девид МакКензи и Каве Гази"
+
+#, fuzzy
+#~ msgid "Written by Pete TerMaat and Roland Huebner."
+#~ msgstr "Пете ТерМаат и Роланд Хюбнер"
+
+#, fuzzy
+#~ msgid "Written by David MacKenzie and Richard Mlynarik."
+#~ msgstr "Девид МакКензи и Ричард Млинарик"
+
+#, fuzzy
+#~ msgid ""
+#~ "Written by Paul Rubin, David MacKenzie, Richard Stallman, and Jim "
+#~ "Meyering."
+#~ msgstr "Пол Рубин, Девид МакКензи, Ричард Столлмен и Джим Мееринг"
+
+#, fuzzy
+#~ msgid "Written by Colin Plumb."
+#~ msgstr "Автор программы -- %s.\n"
+
+#, fuzzy
+#~ msgid "Written by Jim Meyering and Paul Eggert."
+#~ msgstr "Джим Мееринг и Пол Эггерт"
+
+#, fuzzy
+#~ msgid "Written by Mike Haertel and Paul Eggert."
+#~ msgstr "Майк Хэртел и Пол Эггерт"
+
+#, fuzzy
+#~ msgid "Written by Michael Meskes."
+#~ msgstr "Автор программы -- %s.\n"
+
+#, fuzzy
+#~ msgid "Written by Kayvan Aghaiepour and David MacKenzie."
+#~ msgstr "Кайван Агайепур и Девид МакКензи"
+
+#, fuzzy
+#~ msgid "Written by Jay Lepreau and David MacKenzie."
+#~ msgstr "Джей Лепре и Девид МакКензи"
+
+#, fuzzy
+#~ msgid ""
+#~ "Written by Paul Rubin, David MacKenzie, Ian Lance Taylor, and Jim "
+#~ "Meyering."
+#~ msgstr "Пол Рубин, Девид МакКензи, Ян Ланс Тейлор и Джим Мееринг"
+
+#, fuzzy
+#~ msgid "Written by Mike Parker, Richard M. Stallman, and David MacKenzie."
+#~ msgstr "Майк Паркер, Ричард М. Столлмен и Девид МакКензи"
+
+#, fuzzy
+#~ msgid ""
+#~ "Written by Paul Rubin, Arnold Robbins, Jim Kingdon, David MacKenzie, and "
+#~ "Randy Smith."
+#~ msgstr ""
+#~ "Пол Рубин, Арнольд Роббинс, Джим Кингдон, Девид МакКензи и Рэнди Смит"
+
+#, fuzzy
+#~ msgid "Written by Mark Kettenis."
+#~ msgstr "Автор программы -- %s.\n"
+
+#, fuzzy
+#~ msgid "Written by Joseph Arceneaux and David MacKenzie."
+#~ msgstr "Джозеф Арсено и Девид МакКензи"
+
+#, fuzzy
+#~ msgid "Written by Paul Rubin and David MacKenzie."
+#~ msgstr "Пол Рубин и Девид МакКензи"
+
+#, fuzzy
+#~ msgid "Written by Joseph Arceneaux, David MacKenzie, and Michael Stone."
+#~ msgstr "Джозеф Арсено, Девид МакКензи и Майкл Стоун"
+
+#, fuzzy
+#~ msgid "Written by Richard Mlynarik."
+#~ msgstr "Девид МакКензи и Ричард Млинарик"
+
+#~ msgid "%s: `+' or `-' expected after delimeter"
+#~ msgstr "%s: после разделителя ожидается `+' или `-'"
+
+#~ msgid "cannot change to parent of directory %s"
+#~ msgstr "невозможно перейти к родительскому каталогу %s"
 
 #~ msgid ""
 #~ "when the starting value is larger than the limit,\n"

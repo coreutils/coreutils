@@ -103,7 +103,6 @@ EXTRA_DIST += nanosleep.m4
 EXTRA_DIST += nls.m4
 EXTRA_DIST += obstack.m4
 EXTRA_DIST += onceonly.m4
-EXTRA_DIST += open-max.m4
 EXTRA_DIST += path-concat.m4
 EXTRA_DIST += pathmax.m4
 EXTRA_DIST += perl.m4
