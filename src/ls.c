@@ -214,7 +214,8 @@ enum filetype
     normal = DT_REG,
     symbolic_link = DT_LNK,
     sock = DT_SOCK,
-    arg_directory = 100
+    arg_directory = 2 * (DT_UNKNOWN | DT_FIFO | DT_CHR | DT_DIR | DT_BLK
+			 | DT_REG | DT_LNK | DT_SOCK)
 #else
     symbolic_link,
     directory,
