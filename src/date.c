@@ -110,6 +110,9 @@ main (argc, argv)
   char *datestr = NULL;
   time_t when;
   int set_date = 0;
+  int print_date = 0;
+  char *format;
+  int n_args;
 
   program_name = argv[0];
 
@@ -121,6 +124,7 @@ main (argc, argv)
 	break;
       case 'd':
 	datestr = optarg;
+	print_date = 1;
 	break;
       case 's':
 	datestr = optarg;
@@ -142,30 +146,68 @@ main (argc, argv)
   if (show_help)
     usage (0);
 
-  if (argc - optind > 1)
-    usage (1);
+  n_args = argc - optind;
 
-  time (&when);
-
-  if (datestr)
-    when = get_date (datestr, NULL);
-
-  if (argc - optind == 1 && argv[optind][0] != '+')
+  if (set_date && print_date)
     {
-      when = posixtime (argv[optind]);
-      set_date = 1;
+      error (0, 0,
+	  "the options to print and set the time may not be used together");
+      usage (1);
+    }
+
+  if (n_args > 1)
+    {
+      error (0, 0, "too many non-option arguments");
+      usage (1);
+    }
+
+  if ((set_date || print_date) && n_args == 1 && argv[optind][0] != '+')
+    {
+      error (0, 0, "\
+when using the print or set time option, the sole\n\
+non-option argument must be a format string beginning with `+'");
+      usage (1);
+    }
+
+  if (!print_date && !set_date)
+    {
+      if (n_args == 1 && argv[optind][0] != '+')
+	{
+	  /* Prepare to set system clock to the specified date/time given in
+	     the POSIX-format.  */
+	  set_date = 1;
+	  datestr = argv[optind];
+	  when = posixtime (datestr);
+	  format = NULL;
+	}
+      else
+	{
+	  /* Prepare to print the current date/time.  */
+	  print_date = 1;
+	  datestr = "undefined";
+	  time (&when);
+	  format = (n_args == 1 ? argv[optind] + 1 : NULL);
+	}
+    }
+  else
+    {
+      /* (print_date || set_date) */
+      when = get_date (datestr, NULL);
+      format = (n_args == 1 ? argv[optind] + 1 : NULL);
     }
 
   if (when == -1)
-    error (1, 0, "invalid date");
+    error (1, 0, "invalid date `%s'", datestr);
 
-  if (set_date && stime (&when) == -1)
-    error (0, errno, "cannot set date");
+  if (set_date)
+    {
+      /* Set the system clock to the specified date, then regardless of
+	 the success of that operation, format and print that date.  */
+      if (stime (&when) == -1)
+	error (0, errno, "cannot set date");
+    }
 
-  if (argc - optind == 1 && argv[optind][0] == '+')
-    show_date (argv[optind] + 1, when);
-  else
-    show_date ((char *) NULL, when);
+  show_date (format, when);
 
   exit (0);
 }
