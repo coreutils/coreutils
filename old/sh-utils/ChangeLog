@@ -1,4 +1,11 @@
+1999-03-13  Jim Meyering  <meyering@ascend.com>
+
+	* lib/basename.c (base_name): If NAME is all slashes, return `/' (in
+	conformance with the single unix spec).  Reported by Peter Moulder.
+
 1999-03-10  Jim Meyering  <meyering@ascend.com>
+
+	* src/uptime.c: Declare getloadavg so I can build with -Werror.
 
 	* tests/stty/basic-1: Skip failing tests: parenb, -parenb, -cread.
 
