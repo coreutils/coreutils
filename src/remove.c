@@ -41,6 +41,11 @@ typedef enum {false = 0, true = 1} bool;
 #include "quote.h"
 #include "remove.h"
 
+/* Avoid shadowing warnings because these are functions declared
+   in dirname.h as well as locals used below.  */
+#define dir_name rm_dir_name
+#define dir_len rm_dir_len
+
 #define obstack_chunk_alloc malloc
 #define obstack_chunk_free free
 
