@@ -1,0 +1,23 @@
+#!/bin/sh
+
+tmp_in=dd-in.$$
+tmp_out=dd-out.$$
+
+if test "$VERBOSE" = yes; then
+  set -x
+  dd --version
+fi
+
+test_failure=0
+echo data > $tmp_in || test_failure=1
+if test $test_failure = 1; then
+  echo 'failure in testing framework'
+  exit 1
+fi
+
+dd if=$tmp_in of=$tmp_out > /dev/null 2>&1 || fail=1
+cmp $tmp_in $tmp_out || fail=1
+
+rm -f $tmp_in $tmp_out
+
+exit $fail
