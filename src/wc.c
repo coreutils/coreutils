@@ -34,11 +34,12 @@ int safe_read ();
 /* The name this program was run with. */
 char *program_name;
 
-/* Cumulative number of lines, words, and chars in all files so far. */
-static unsigned long total_lines, total_words, total_chars;
+/* Cumulative number of lines, words, and chars in all files so far.
+   max_line_length is the maximum over all files processed so far.  */
+static unsigned long total_lines, total_words, total_chars, max_line_length;
 
 /* Which counts to print. */
-static int print_lines, print_words, print_chars;
+static int print_lines, print_words, print_chars, print_linelength;
 
 /* Nonzero if we have ever read the standard input. */
 static int have_read_stdin;
@@ -58,6 +59,7 @@ static struct option const longopts[] =
   {"chars", no_argument, NULL, 'c'},
   {"lines", no_argument, NULL, 'l'},
   {"words", no_argument, NULL, 'w'},
+  {"max-line-length", no_argument, NULL, 'L'},
   {"help", no_argument, &show_help, 1},
   {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
@@ -81,6 +83,7 @@ more than one FILE is specified.  With no FILE, or when FILE is -,\n\
 read standard input.\n\
   -c, --bytes, --chars   print the byte counts\n\
   -l, --lines            print the newline counts\n\
+  -L, --max-line-length  print the length of the longest line\n\
   -w, --words            print the word counts\n\
       --help             display this help and exit\n\
       --version          output version information and exit\n\
@@ -92,7 +95,8 @@ read standard input.\n\
 
 static void
 write_counts (long unsigned int lines, long unsigned int words,
-	      long unsigned int chars, const char *file)
+	      long unsigned int chars, long unsigned int linelength,
+	      const char *file)
 {
   if (print_lines)
     printf ("%7lu", lines);
@@ -108,6 +112,12 @@ write_counts (long unsigned int lines, long unsigned int words,
 	putchar (' ');
       printf ("%7lu", chars);
     }
+  if (print_linelength)
+    {
+      if (print_lines || print_words || print_chars)
+	putchar (' ');
+      printf ("%7lu", linelength);
+    }
   if (*file)
     printf (" %s", file);
   putchar ('\n');
@@ -119,9 +129,9 @@ wc (int fd, const char *file)
   char buf[BUFFER_SIZE + 1];
   register int bytes_read;
   register int in_word = 0;
-  register unsigned long lines, words, chars;
+  register unsigned long lines, words, chars, linelength;
 
-  lines = words = chars = 0;
+  lines = words = chars = linelength = 0;
 
   /* When counting only bytes, save some line- and word-counting
      overhead.  If FD is a `regular' Unix file, using lseek is enough
@@ -133,7 +143,7 @@ wc (int fd, const char *file)
      `(dd ibs=99k skip=1 count=0; ./wc -c) < /etc/group'
      should make wc report `0' bytes.  */
 
-  if (print_chars && !print_words && !print_lines)
+  if (print_chars && !print_words && !print_lines && !print_linelength)
     {
       off_t current_pos, end_pos;
       struct stat stats;
@@ -160,7 +170,7 @@ wc (int fd, const char *file)
 	    }
 	}
     }
-  else if (!print_words)
+  else if (!print_words && !print_linelength)
     {
       /* Use a separate loop when counting only lines or lines and bytes --
 	 but not words.  */
@@ -183,6 +193,8 @@ wc (int fd, const char *file)
     }
   else
     {
+      register unsigned long linepos = 0;
+
       while ((bytes_read = safe_read (fd, buf, BUFFER_SIZE)) > 0)
 	{
 	  register char *p = buf;
@@ -197,9 +209,18 @@ wc (int fd, const char *file)
 		  /* Fall through. */
 		case '\r':
 		case '\f':
+		  if (linepos > linelength)
+		    linelength = linepos;
+		  linepos = 0;
+		  goto word_separator;
 		case '\t':
-		case '\v':
+		  linepos += 8 - (linepos % 8);
+		  goto word_separator;
 		case ' ':
+		  linepos++;
+		  /* Fall through. */
+		case '\v':
+		word_separator:
 		  if (in_word)
 		    {
 		      in_word = 0;
@@ -207,6 +228,7 @@ wc (int fd, const char *file)
 		    }
 		  break;
 		default:
+		  linepos++;
 		  in_word = 1;
 		  break;
 		}
@@ -218,14 +240,18 @@ wc (int fd, const char *file)
 	  error (0, errno, "%s", file);
 	  exit_status = 1;
 	}
+      if (linepos > linelength)
+	linelength = linepos;
       if (in_word)
 	words++;
     }
 
-  write_counts (lines, words, chars, file);
+  write_counts (lines, words, chars, linelength, file);
   total_lines += lines;
   total_words += words;
   total_chars += chars;
+  if (linelength > max_line_length)
+    max_line_length = linelength;
 }
 
 static void
@@ -266,10 +292,10 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   exit_status = 0;
-  print_lines = print_words = print_chars = 0;
-  total_lines = total_words = total_chars = 0;
+  print_lines = print_words = print_chars = print_linelength = 0;
+  total_lines = total_words = total_chars = max_line_length = 0;
 
-  while ((optc = getopt_long (argc, argv, "clw", longopts, NULL)) != -1)
+  while ((optc = getopt_long (argc, argv, "clLw", longopts, NULL)) != -1)
     switch (optc)
       {
       case 0:
@@ -287,6 +313,10 @@ main (int argc, char **argv)
 	print_words = 1;
 	break;
 
+      case 'L':
+	print_linelength = 1;
+	break;
+
       default:
 	usage (1);
       }
@@ -300,7 +330,7 @@ main (int argc, char **argv)
   if (show_help)
     usage (0);
 
-  if (print_lines + print_words + print_chars == 0)
+  if (print_lines + print_words + print_chars + print_linelength == 0)
     print_lines = print_words = print_chars = 1;
 
   nfiles = argc - optind;
@@ -316,7 +346,8 @@ main (int argc, char **argv)
 	wc_file (argv[optind]);
 
       if (nfiles > 1)
-	write_counts (total_lines, total_words, total_chars, _("total"));
+	write_counts (total_lines, total_words, total_chars, max_line_length,
+		      _("total"));
     }
 
   if (have_read_stdin && close (0))
