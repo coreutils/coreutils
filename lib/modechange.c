@@ -1,5 +1,5 @@
 /* modechange.c -- file mode manipulation
-   Copyright (C) 1989, 1990, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1989, 1990, 1997, 1998, 1999, 2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -429,7 +429,7 @@ mode_adjust (mode_t oldmode, const struct mode_change *changes)
 
 	  /* In order to change only `u', `g', or `o' permissions,
 	     or some combination thereof, clear unselected bits.
-	     This can not be done in mode_compile because the value
+	     This cannot be done in mode_compile because the value
 	     to which the `changes->affected' mask is applied depends
 	     on the old mode of each file. */
 	  value &= changes->affected;
