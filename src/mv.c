@@ -1,5 +1,5 @@
 /* mv -- move or rename files
-   Copyright (C) 86, 89, 90, 91, 1995-2004 Free Software Foundation, Inc.
+   Copyright (C) 86, 89, 90, 91, 1995-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -62,7 +62,7 @@ static bool remove_trailing_slashes;
 /* Valid arguments to the `--reply' option. */
 static char const* const reply_args[] =
 {
-  "yes", "no", "query", 0
+  "yes", "no", "query", NULL
 };
 
 /* The values that correspond to the above strings. */
