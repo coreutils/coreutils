@@ -1,3 +1,10 @@
+1999-01-30  Jim Meyering  <meyering@ascend.com>
+
+	* acconfig.h: Remove uintmax and STAT* #undefs.
+	* configure.in: Require autoconf 2.13.
+	Remove test for AFS.
+	Use 3-argument form of AC_DEFINE*.
+
 1999-01-28  Jim Meyering  <meyering@ascend.com>
 
 	* po/POTFILES.in: Add src/shred.c.
@@ -435,7 +442,8 @@
 
 1998-11-10  Jim Meyering  <meyering@ascend.com>
 
-	* configure.in (ALL_LINGUAS): Add greek (el).
+	* configure.in (ALL_LINGUAS): Add Greek (el).
+	* po/el.po: New file.
 
 1998-11-07  Jim Meyering  <meyering@ascend.com>
 
