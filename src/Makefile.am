@@ -14,8 +14,6 @@ bin_PROGRAMS = chgrp chown chmod cp dd dircolors du \
   test true tty whoami yes \
   @OPTIONAL_BIN_PROGS@ @DF_PROG@
 
-localedir = $(datadir)/locale
-
 noinst_HEADERS = \
   system.h sys2.h checksum.h copy.h cp-hash.h ls.h dircolors.h remove.h \
   chown-core.h fs.h \
@@ -25,7 +23,6 @@ EXTRA_DIST = dcgen dircolors.hin tac-pipe.c \
 CLEANFILES = $(SCRIPTS) su
 
 INCLUDES = -I.. -I$(srcdir) -I$(top_srcdir)/lib -I../lib
-DEFS = -DLOCALEDIR=\"$(localedir)\" -DSHAREDIR=\"$(datadir)\" @DEFS@
 
 # Sometimes, the expansion of @LIBINTL@ includes -lc which may
 # include modules defining variables like `optind', so libfetish.a
@@ -149,6 +146,15 @@ sha1sum_SOURCES = md5sum.c sha1sum.c
 PERL = @PERL@
 editpl = sed -e 's,@''PERL''@,$(PERL),g'
 
+localedir = $(datadir)/locale
+BUILT_SOURCES = localedir.h
+DISTCLEANFILES = localedir.h
+localedir.h: Makefile
+	@rm -f $@-t
+	echo '#define LOCALEDIR "$(localedir)"' >$@-t
+	@chmod a-w $@-t
+	cmp $@-t $@ 2>&1 > /dev/null && rm -f $@-t || { rm -f $@; mv $@-t $@; }
+
 MAINTAINERCLEANFILES = dircolors.h \
   wheel.h wheel-size.h
 
@@ -167,7 +173,7 @@ wheel.h: wheel-gen.pl Makefile.am
 	  > $@-t
 	mv $@-t $@
 
-BUILT_SOURCES = dircolors.h false.c wheel.h wheel-size.h
+BUILT_SOURCES += dircolors.h false.c wheel.h wheel-size.h
 
 # false exits nonzero even with --help or --version.
 # Tell automake to exempt it from that installcheck test.
