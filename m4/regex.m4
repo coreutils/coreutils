@@ -61,7 +61,7 @@ AC_DEFUN([jm_INCLUDED_REGEX],
 	      exit (1);
 
 	    /* The version of regex.c in e.g. GNU libc-2.2.93 didn't
-	       work with a negative `range' argument.  */
+	       work with a negative RANGE argument.  */
 	    if (re_search (&regex, "wxy", 3, 2, -2, &regs) != 1)
 	      exit (1);
 
