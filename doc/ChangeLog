@@ -1,3 +1,11 @@
+2001-06-16  Jim Meyering  <meyering@lucent.com>
+
+	* coreutils.texi: New, renamed from omni-utils.texi.
+	* omni-utils.texi: Removed, renamed to coreutils.texi.
+
+	* omni-utils.texi (ls invocation): Mention the effect of locale.
+	Reported by Keith Thompson.
+
 2001-05-24  Jim Meyering  <meyering@lucent.com>
 
 	* texinfo.tex: Update from master source.
