@@ -1,3 +1,7 @@
+2003-08-13  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.am.in: Simplify.
+
 2003-08-10  Jim Meyering  <jim@meyering.net>
 
 	* utimes.m4 (gl_FUNC_UTIMES): New file.
