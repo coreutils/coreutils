@@ -251,7 +251,7 @@ main (int argc, char **argv)
   ts_sleep.tv_nsec = ns;
 
   /* Round up to the next whole number, if necessary, so that we
-     always sleep for at least the request amount of time.  */
+     always sleep for at least the requested amount of time.  */
   ts_sleep.tv_nsec += (ts_sleep.tv_nsec < ns);
 
   /* Normalize the interval length.  nanosleep requires this.  */
