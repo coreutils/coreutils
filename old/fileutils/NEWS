@@ -1,5 +1,11 @@
 Changes in release 4.1:
 [4.0e]
+* shred --devices option renamed to -D so that -d, -i and -r can be
+  compatible with rm.
+* shred -s/--size=N option added to specify the size of the object to be
+  shredded.
+* `shred -' now shreds stdout rather than stdin.  This is incompatible with -v.
+* shred now does not need to read from its output file, so opens it O_WRONLY
 * `ls -l' uses `+' to designate each file that has a custom ACL
 * eliminate race condition that could make touch truncate a nonempty file
 * No longer use *_unlocked I/O macros on systems (like solaris5.5.1) where
