@@ -1,5 +1,8 @@
 Sat Oct 01 00:14:10 1994  Jim Meyering  (meyering@comco.com)
 
+	* lib/Makefile.in (DISTFILES): Add getline.h.
+	(SOURCES, OBJECTS): Add getline.c, getline.o.
+
 	* safe-xstat.hin: Don't include <sys/types.h> or <sys/stat.h>.
 	Otherwise, we'd lose when the includer has already included
 	<sys/stat.h> on systems that aren't protected against multiple
