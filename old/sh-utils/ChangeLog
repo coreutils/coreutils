@@ -2,6 +2,12 @@
 
 	* Version 2.0.12.
 
+	* Makefile.maint (strftime-check): New rule.
+	(local-check): Convert this target to a list.  Update uses.
+	Mark them as .PHONY.
+	(header-check): New rule.
+	(local-check): Add header-check.
+
 	* src/dirname.c: Don't include "xalloc.h", as system.h already
 	does that via sys2.h.
 	* src/expr.c: Likewise.
