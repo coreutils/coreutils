@@ -40,13 +40,21 @@ $TOUCH -m -d "$t3" a || test_failure=1
 $TOUCH -m -d "$t2" b || test_failure=1
 $TOUCH -m -d "$t1" c || test_failure=1
 
-$TOUCH -a -d "$u1" a || test_failure=1
-$TOUCH -a -d "$u2" b || test_failure=1
 $TOUCH -a -d "$u3" c || test_failure=1
+$TOUCH -a -d "$u2" b || test_failure=1
+# Make sure A has ctime at least 1 second more recent than C's.
+sleep 2
+$TOUCH -a -d "$u1" a || test_failure=1
+
+fail=0
+
+# A has ctime more recent than C.
+set `$LS -c a c`
+test "$*" = 'a c' || fail=1
 
 # Sleep so long in an attempt to avoid spurious failures
 # due to NFS caching and/or clock skew.
-sleep 5
+sleep 2
 
 # Create a link, updating c's ctime.
 ln c d || test_failure=1
@@ -56,22 +64,23 @@ if test $test_failure = 1; then
   exit 1
 fi
 
-fail=0
-
 set `$LS -u a b c`
 test "$*" = 'c b a' && : || fail=1
 
 set `$LS -t a b c`
 test "$*" = 'a b c' && : || fail=1
 
-# C has newer ctime.
+# Now, C should have ctime more recent than A.
 set `$LS -c a c`
 if test "$*" = 'c a'; then
   : ok
 else
   # In spite of documentation, (e.g., stat(2)), neither link nor chmod
   # update a file's st_ctime on SunOS4.1.4.
-  echo "failed ls ctime test -- this is expected at least for SunOS4.1.4" >&2
+  cat >&2 << \EOF
+failed ls ctime test -- this is expected at least for SunOS4.1.4
+and for tmpfs file systems on Solaris 5.5.1.
+EOF
   fail=1
 fi
 
