@@ -44,7 +44,7 @@ midnight, 1 January 1970 UCT.
 * General date syntax::            Common rules.
 * Calendar date item::             19 Dec 1994.
 * Time of day item::               9:20pm.
-* Timezone item::                  EST, DST, BST, UCT, AHST, ...
+* Timezone item::                  EST, DST, BST, UCT, HAST, ...
 * Day of week item::               Monday and others.
 * Relative item in date strings::  next tuesday, 2 years ago.
 * Pure numbers in date strings::   19931219, 1440.
@@ -272,7 +272,7 @@ militaries.
 @cindex Alaska-Hawaii Time
 @cindex Central Alaska Time
 @cindex Hawaii Standard Time
-@samp{AHST} for Alaska-Hawaii Standard, @samp{CAT} for Central Alaska,
+@samp{HAST} for Hawaii-Aleutian Standard, @samp{CAT} for Central Alaska,
 @samp{HST} for Hawaii Standard and @samp{K} for militaries.
 @item +1100
 @cindex Nome Standard Time
@@ -348,8 +348,6 @@ may be specified.
 @samp{PDT} for Pacific Daylight.
 @item +900
 @samp{YDT} for Yukon Daylight.
-@item +1000
-@samp{HDT} for Hawaii Daylight.
 @item -100
 @samp{MEST} for Middle European Summer, @samp{MESZ} for Middle European
 Summer, @samp{SST} for Swedish Summer and @samp{FST} for French Summer.
