@@ -53,6 +53,7 @@
 #include "system.h"
 #include "long-options.h"
 #include "error.h"
+#include "closeout.h"
 #include "unicodeio.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -553,6 +554,8 @@ main (int argc, char **argv)
 
   if (argc > 0)
     error (0, 0, _("warning: excess arguments have been ignored"));
+
+  close_stdout ();
 
   exit (exit_status);
 }
