@@ -2,11 +2,13 @@ Sat Jan 28 07:07:23 1995  Jim Meyering  (meyering@comco.com)
 
 	* cat.c (cat): Use memmove rather than bcopy.
 	* csplit.c (load_buffer): Use memcpy rather than bcopy.
+	(extract_regexp): Use strrchr, not rindex.
 	* fmt.c (isopen, isclose, isperiod): Use strchr, not index.
 	(flush_paragraph): Use memmove instead of bcopy.
 	* fold.c (fold_file): Use memmove instead of bcopy.
 	* od.c (decode_format_string): Use memmove instead of bcopy.
 	[EQUAL_BLOCKS]: Use memcmp, not bcmp.
+	(parse_old_offset): Use strchr, not index.
 	(dump): Use memset, not bzero.
 	* sort.c (checkfp, mergefps): Use memcpy instead of bcopy.
 	(fillbuf): Use memmove instead of bcopy.
