@@ -90,7 +90,7 @@ enum Follow_mode
 
 static char const *const follow_mode_string[] =
 {
-  "descriptor", "name", 0
+  "descriptor", "name", NULL
 };
 
 static enum Follow_mode const follow_mode_map[] =
