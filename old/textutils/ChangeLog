@@ -1,3 +1,8 @@
+1997-07-05  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/tail.c (parse_obsolescent_option): If POSIXLY_CORRECT is set, give
+	a diagnostic and fail when there are two or more non-option arguments.
+
 1997-07-04  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* tests/tac/mk-script.pl: Redirect output of cmp to /dev/null.
