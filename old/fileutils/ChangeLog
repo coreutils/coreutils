@@ -1,3 +1,12 @@
+Sat Feb 22 14:10:25 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/getdate.y
+	(tMONTH_UNIT): Increase yyRelMonth by $1, not just by 1.
+	(tDAY_UNIT): Likewise for yyRelDay.
+	(tHOUR_UNIT): Likewise for yyRelHour.
+	(tMINUTE_UNIT): Likewise for yyRelMinutes.
+	(tSEC_UNIT): Likewise for yyRelSeconds.
+
 Thu Feb 20 20:16:59 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/mktime.c: Update from libc.
