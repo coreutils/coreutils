@@ -30,6 +30,7 @@
 #include <assert.h>
 
 #include "system.h"
+#include "canonicalize.h"
 #include "dirname.h"
 #include "error.h"
 #include "fsusage.h"
@@ -530,7 +531,6 @@ show_point (const char *point, const struct stat *statp)
   struct stat disk_stats;
   struct mount_entry *me;
   struct mount_entry *matching_dummy = NULL;
-  char *needs_freeing = NULL;
 
   /* If POINT is an absolute path name, see if we can find the
      mount point without performing any extra stat calls at all.  */
@@ -551,77 +551,13 @@ show_point (const char *point, const struct stat *statp)
 	goto show_matching_dummy;
     }
 
-  /* Ideally, the following mess of #if'd code would be in a separate
-     file, and there'd be a single function call here.  FIXME, someday.  */
-
-#if HAVE_REALPATH || HAVE_RESOLVEPATH || HAVE_CANONICALIZE_FILE_NAME
   /* Calculate the real absolute path for POINT, and use that to find
      the mount point.  This avoids statting unavailable mount points,
      which can hang df.  */
   {
-    char const *abspoint = point;
-    char *resolved;
-    ssize_t resolved_len;
+    char *resolved = canonicalize_file_name (point);
+    ssize_t resolved_len = resolved ? strlen (resolved) : -1;
     struct mount_entry *best_match = NULL;
-
-# if HAVE_CANONICALIZE_FILE_NAME
-    resolved = canonicalize_file_name (abspoint);
-    resolved_len = resolved ? strlen (resolved) : -1;
-# else
-#  if HAVE_RESOLVEPATH
-    /* All known hosts with resolvepath (e.g. Solaris 7) don't turn
-       relative names into absolute ones, so prepend the working
-       directory if the path is not absolute.  */
-
-    if (*point != '/')
-      {
-	static char const *wd;
-
-	if (! wd)
-	  {
-	    struct stat pwd_stats;
-	    struct stat dot_stats;
-
-	    /* Use PWD if it is correct; this is usually cheaper than
-               xgetcwd.  */
-	    wd = getenv ("PWD");
-	    if (! (wd
-		   && stat (wd, &pwd_stats) == 0
-		   && stat (".", &dot_stats) == 0
-		   && SAME_INODE (pwd_stats, dot_stats)))
-	      wd = xgetcwd ();
-	  }
-
-	if (wd)
-	  {
-	    needs_freeing = path_concat (wd, point, NULL);
-	    if (needs_freeing)
-	      abspoint = needs_freeing;
-	  }
-      }
-#  endif
-
-#  if HAVE_RESOLVEPATH
-    {
-      size_t resolved_size = strlen (abspoint);
-      while (1)
-	{
-	  resolved_size = 2 * resolved_size + 1;
-	  resolved = xmalloc (resolved_size);
-	  resolved_len = resolvepath (abspoint, resolved, resolved_size);
-	  if (resolved_len < resolved_size)
-	    break;
-	  free (resolved);
-	}
-    }
-#  else
-    /* Use realpath only as a last resort.
-       It provides a very poor interface.  */
-    resolved = xmalloc (PATH_MAX + 1);
-    resolved = (char *) realpath (abspoint, resolved);
-    resolved_len = resolved ? strlen (resolved) : -1;
-#  endif
-# endif
 
     if (1 <= resolved_len && resolved[0] == '/')
       {
@@ -653,7 +589,6 @@ show_point (const char *point, const struct stat *statp)
 	goto show_me;
       }
   }
-#endif
 
   for (me = mount_list; me; me = me->me_next)
     {
@@ -705,16 +640,13 @@ show_point (const char *point, const struct stat *statp)
       error (0, errno, "%s", quote (point));
   }
 
-  goto free_then_return;
+  return;
 
  show_matching_dummy:
   me = matching_dummy;
  show_me:
   show_dev (me->me_devname, me->me_mountdir, me->me_type, me->me_dummy,
 	    me->me_remote);
- free_then_return:
-  if (needs_freeing)
-    free (needs_freeing);
 }
 
 /* Determine what kind of node PATH is and show the disk usage
