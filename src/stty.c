@@ -1426,7 +1426,7 @@ display_window_size (int fancy, int fd, const char *device_name)
 static int
 screen_columns (void)
 {
-#if 0
+#ifdef TIOCGWINSZ
   struct winsize win;
 
   /* With Solaris 2.[123], this ioctl fails and errno is set to
