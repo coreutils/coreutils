@@ -33,7 +33,6 @@ ls-mntd-fs.m4 \
 lstat.m4 \
 malloc.m4 \
 memcmp.m4 \
-mktime.m4 \
 perl.m4 \
 prereq.m4 \
 progtest.m4 \
