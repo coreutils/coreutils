@@ -54,7 +54,7 @@ utime_null (const char *file)
   int status = 0;
   struct stat sb;
 
-  fd = open (file, O_RDWR, 0666);
+  fd = open (file, O_RDWR);
   if (fd < 0
       || fstat (fd, &sb) < 0
       || safe_read (fd, &c, sizeof (char)) < 0
