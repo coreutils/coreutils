@@ -27,8 +27,8 @@
 #include <getopt.h>
 
 #include "system.h"
+#include "same.h"
 #include "backupfile.h"
-#include "dirname.h"
 #include "error.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -116,40 +116,6 @@ static struct option const long_options[] =
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
-
-/* Return nonzero if SOURCE and DEST point to the same name in the same
-   directory.  */
-
-static int
-same_name (const char *source, const char *dest)
-{
-  struct stat source_dir_stats;
-  struct stat dest_dir_stats;
-  char *source_dirname, *dest_dirname;
-
-  source_dirname = dir_name (source);
-  dest_dirname = dir_name (dest);
-  if (source_dirname == NULL || dest_dirname == NULL)
-    error (1, 0, _("virtual memory exhausted"));
-
-  if (stat (source_dirname, &source_dir_stats))
-    {
-      /* Shouldn't happen.  */
-      error (1, errno, "%s", source_dirname);
-    }
-
-  if (stat (dest_dirname, &dest_dir_stats))
-    {
-      /* Shouldn't happen.  */
-      error (1, errno, "%s", dest_dirname);
-    }
-
-  free (source_dirname);
-  free (dest_dirname);
-
-  return (SAME_INODE (source_dir_stats, dest_dir_stats)
-	  && STREQ (base_name (source), base_name (dest)));
-}
 
 /* Make a link DEST to the (usually) existing file SOURCE.
    Symbolic links to nonexistent files are allowed.
