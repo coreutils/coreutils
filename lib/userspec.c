@@ -40,6 +40,7 @@
 # include <unistd.h>
 #endif
 
+#include "userspec.h"
 #include "posixver.h"
 #include "xalloc.h"
 #include "xstrtol.h"
