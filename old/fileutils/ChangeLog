@@ -1,7 +1,9 @@
 2000-12-26  Jim Meyering  <meyering@lucent.com>
 
 	* tests/mkdir/perm: Disable the test if the working directory has
-	the sticky bit set.  Reported by Nelson Beebe.
+	the sticky bit set.
+	* tests/cp/cp-parents: Likewise.
+	Reported by Nelson Beebe.
 
 2000-12-25  Jim Meyering  <meyering@lucent.com>
 
@@ -12,7 +14,7 @@
 	variables: src_sb_no_link, dst_sb_no_link.
 	* src/ls.c (extract_dirs_from_files): Remove unused variable.
 	Reported by Nelson Beebe.
-	
+
 	* src/ls.c (gobble_file): Move decl of local, val, into the scope
 	where it's used.
 
