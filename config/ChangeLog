@@ -1,3 +1,7 @@
+2004-12-16  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* mdate-sh: Sync from gnulib.
+
 2004-11-23  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* config.sub, texinfo.tex: Sync from gnulib.
