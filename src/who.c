@@ -1,4 +1,4 @@
-/* GNU's who.
+/* GNU's uptime/users/who.
    Copyright (C) 92, 93, 1994 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -84,20 +84,33 @@
 #define S_IWGRP 020
 #endif
 
+#ifdef WHO
+#define COMMAND_NAME "who"
+#else
+#ifdef USERS
+#define COMMAND_NAME "users"
+#else
+ error You must define one of WHO and USERS.
+#endif /* USERS */
+#endif /* WHO */
+
 char *xmalloc ();
 void error ();
 char *ttyname ();
+char *gethostname ();
 
 static int read_utmp ();
+#ifdef WHO
 static char *idle_string ();
 static STRUCT_UTMP *search_entries ();
-static void list_entries ();
 static void print_entry ();
 static void print_heading ();
 static void scan_entries ();
+static void who_am_i ();
+#endif /* WHO */
+static void list_entries ();
 static void usage ();
 static void who ();
-static void who_am_i ();
 
 /* The name this program was run with. */
 char *program_name;
@@ -108,6 +121,7 @@ static int show_help;
 /* If non-zero, print the version on standard output and exit.  */
 static int show_version;
 
+#ifdef WHO
 /* If nonzero, display only a list of usernames and count of
    the users logged on.
    Ignored for `who am i'. */
@@ -124,17 +138,20 @@ static int include_heading;
 /* If nonzero, display a `+' for each user if mesg y, a `-' if mesg n,
    or a `?' if their tty cannot be statted. */
 static int include_mesg;
+#endif /* WHO */
 
 static struct option const longopts[] =
 {
+#ifdef WHO
   {"count", no_argument, NULL, 'q'},
-  {"help", no_argument, &show_help, 1},
   {"idle", no_argument, NULL, 'u'},
   {"heading", no_argument, NULL, 'H'},
   {"message", no_argument, NULL, 'T'},
   {"mesg", no_argument, NULL, 'T'},
-  {"version", no_argument, &show_version, 1},
   {"writable", no_argument, NULL, 'T'},
+#endif /* WHO */
+  {"help", no_argument, &show_help, 1},
+  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -144,11 +161,17 @@ main (argc, argv)
      char **argv;
 {
   int optc, longind;
+#ifdef WHO
   int my_line_only = 0;
+#endif /* WHO */
 
   program_name = argv[0];
 
+#ifdef WHO
   while ((optc = getopt_long (argc, argv, "imqsuwHT", longopts, &longind))
+#else
+  while ((optc = getopt_long (argc, argv, "", longopts, &longind))
+#endif /* WHO */
 	 != EOF)
     {
       switch (optc)
@@ -156,6 +179,7 @@ main (argc, argv)
 	case 0:
 	  break;
 
+#ifdef WHO
 	case 'm':
 	  my_line_only = 1;
 	  break;
@@ -180,15 +204,17 @@ main (argc, argv)
 	case 'T':
 	  include_mesg = 1;
 	  break;
+#endif /* WHO */
 
 	default:
+	  error (0, 0, "too many arguments");
 	  usage (1);
 	}
     }
 
   if (show_version)
     {
-      printf ("who - %s\n", version_string);
+      printf ("%s - %s\n", COMMAND_NAME, version_string);
       exit (0);
     }
 
@@ -198,22 +224,28 @@ main (argc, argv)
   switch (argc - optind)
     {
     case 0:			/* who */
+#ifdef WHO
       if (my_line_only)
 	who_am_i (UTMP_FILE);
       else
+#endif /* WHO */
 	who (UTMP_FILE);
       break;
 
     case 1:			/* who <utmp file> */
+#ifdef WHO
       if (my_line_only)
 	who_am_i (argv[optind]);
       else
+#endif /* WHO */
 	who (argv[optind]);
       break;
 
+#ifdef WHO
     case 2:			/* who <blurf> <glop> */
       who_am_i (UTMP_FILE);
       break;
+#endif /* WHO */
 
     default:			/* lose */
       usage (1);
@@ -233,10 +265,16 @@ who (filename)
   int users;
 
   users = read_utmp (filename);
+#ifdef WHO
   if (short_list)
     list_entries (users);
   else
     scan_entries (users);
+#else
+#ifdef USERS
+  list_entries (users);
+#endif /* USERS */
+#endif /* WHO */
 }
 
 /* Read the utmp file FILENAME into UTMP_CONTENTS and return the
@@ -272,6 +310,7 @@ read_utmp (filename)
   return file_stats.st_size / sizeof (STRUCT_UTMP);
 }
 
+#ifdef WHO
 /* Display a line of information about entry THIS. */
 
 static void
@@ -338,7 +377,9 @@ print_entry (this)
 
   putchar ('\n');
 }
+#endif /* WHO */
 
+#if defined (WHO) || defined (USERS)
 /* Print the username of each valid entry and the number of valid entries
    in `utmp_contents', which should have N elements. */
 
@@ -374,8 +415,15 @@ list_entries (n)
 	}
       this++;
     }
+#ifdef WHO
   printf ("\n# users=%u\n", entries);
+#else
+  putchar('\n');
+#endif /* WHO */
 }
+#endif /* defined (WHO) || defined (USERS) */
+
+#ifdef WHO
 
 static void
 print_heading ()
@@ -527,3 +575,27 @@ If ARG1 ARG2 given, -m presumed: `am i' or `mom likes' are usual.\n\
     }
   exit (status);
 }
+#endif /* WHO */
+
+#if defined (USERS)
+static void
+usage (status)
+     int status;
+{
+  if (status != 0)
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+  else
+    {
+      printf ("Usage: %s [OPTION]... [ FILE ]\n", program_name);
+      printf ("\
+\n\
+      --help        display this help and exit\n\
+      --version     output version information and exit\n\
+\n\
+If FILE not given, uses /etc/utmp.  /etc/wtmp as FILE is common.\n\
+");
+    }
+  exit (status);
+}
+#endif /* USERS */
