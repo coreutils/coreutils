@@ -806,5 +806,7 @@ main (int argc, char **argv)
   if (files_from)
     readtokens0_free (&tok);
 
+  hash_free (htab);
+
   exit (fail || G_fail ? EXIT_FAILURE : EXIT_SUCCESS);
 }
