@@ -116,7 +116,7 @@ by the Foundation.
 @cindex utilities for text handling
 
 This manual minimally documents version @value{VERSION} of the GNU text
-utilities.  
+utilities.
 
 @menu
 * Introduction::                       Caveats, overview, and authors.
@@ -1059,7 +1059,7 @@ one-line header consisting of
 @example
 ==> @var{file name} <==
 @end example
-@noindent 
+@noindent
 before the output for each @var{file}.
 
 @code{head} accepts two option formats: the new one, in which numbers
@@ -1129,7 +1129,7 @@ one-line header consisting of
 @example
 ==> @var{file name} <==
 @end example
-@noindent 
+@noindent
 before the output for each @var{file}.
 
 @cindex BSD @code{tail}
@@ -1854,7 +1854,7 @@ The input must be sorted.  If your input is not sorted, perhaps you want
 to use @code{sort -u}.
 
 If no @var{output} file is specified, @code{uniq} writes to standard
-output. 
+output.
 
 The program accepts the following options.  Also see @ref{Common options}.
 
@@ -1925,7 +1925,7 @@ standard input.  Synopsis:
 comm [@var{option}]@dots{} @var{file1} @var{file2}
 @end example
 
-The input files must be sorted before @code{comm} can be used.  
+The input files must be sorted before @code{comm} can be used.
 
 @cindex differing lines
 @cindex common lines
@@ -2565,13 +2565,13 @@ number 2, in the @cite{What's GNU?} column. It was written by Arnold
 Robbins.
 
 @menu
-* Toolbox introduction::        
-* I/O redirection::             
-* The @code{who} command::      
-* The @code{cut} command::      
-* The @code{sort} command::     
-* The @code{uniq} command::     
-* Putting the tools together::  
+* Toolbox introduction::
+* I/O redirection::
+* The @code{who} command::
+* The @code{cut} command::
+* The @code{sort} command::
+* The @code{uniq} command::
+* Putting the tools together::
 @end menu
 
 
