@@ -2,6 +2,12 @@
 
 	* Version 5.3.0.
 
+	* Makefile.maint (CVS_LIST): New macro.
+	(sc_space_tab, sc_prohibit_atoi_atof, sc_file_system,
+	sc_prohibit_jm_in_m4, sc_system_h_headers, sc_sun_os_names,
+	sc_trailing_blank, po-check): Use it instead of the
+	nonstandard "cvsu --list".
+
 	* src/tail.c (parse_obsolete_option): Bring back support
 	for obsolete option followed by non-obsolete, or by more
 	than one file.  When obsolete, conform to SUSv2 rather than
