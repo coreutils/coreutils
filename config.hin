@@ -183,10 +183,6 @@
    you don't. */
 #undef HAVE_DECL_GETCHAR_UNLOCKED
 
-/* Define to 1 if you have the declaration of `getcontext', and to 0 if you
-   don't. */
-#undef HAVE_DECL_GETCONTEXT
-
 /* Define to 1 if you have the declaration of `getcwd', and to 0 if you don't.
    */
 #undef HAVE_DECL_GETCWD
@@ -254,10 +250,6 @@
 /* Define to 1 if you have the declaration of `realloc', and to 0 if you
    don't. */
 #undef HAVE_DECL_REALLOC
-
-/* Define to 1 if you have the declaration of `sigaltstack', and to 0 if you
-   don't. */
-#undef HAVE_DECL_SIGALTSTACK
 
 /* Define to 1 if you have the declaration of `stpcpy', and to 0 if you don't.
    */
@@ -391,9 +383,6 @@
 
 /* Define if struct statfs has the f_fstypename member. */
 #undef HAVE_F_FSTYPENAME_IN_STATFS
-
-/* Define to 1 if you have the `getcontext' function. */
-#undef HAVE_GETCONTEXT
 
 /* Define to 1 if you have the `getcwd' function. */
 #undef HAVE_GETCWD
@@ -679,23 +668,14 @@
 /* Define to 1 if you have the `setreuid' function. */
 #undef HAVE_SETREUID
 
-/* Define to 1 if you have the `setrlimit' function. */
-#undef HAVE_SETRLIMIT
-
 /* Define to 1 if you have the <shadow.h> header file. */
 #undef HAVE_SHADOW_H
 
 /* Define to 1 if you have the `sig2str' function. */
 #undef HAVE_SIG2STR
 
-/* Define to 1 if you have the `sigaltstack' function. */
-#undef HAVE_SIGALTSTACK
-
 /* Define to 1 if you have the `sqrt' function. */
 #undef HAVE_SQRT
-
-/* Define to 1 if the system has the type `stack_t'. */
-#undef HAVE_STACK_T
 
 /* Define to 1 if you have the `statvfs' function. */
 #undef HAVE_STATVFS
@@ -1039,9 +1019,6 @@
 /* Define to 1 if you have the `tzset' function. */
 #undef HAVE_TZSET
 
-/* Define to 1 if you have the <ucontext.h> header file. */
-#undef HAVE_UCONTEXT_H
-
 /* Define to 1 if you have the `uname' function. */
 #undef HAVE_UNAME
 
@@ -1098,14 +1075,6 @@
 
 /* Define to 1 if you have the `wmempcpy' function. */
 #undef HAVE_WMEMPCPY
-
-/* Define to 1 if extending the stack slightly past the limit causes a
-   SIGSEGV, and an alternate stack can be established with sigaltstack, and
-   the signal handler is passed a context that specifies the run time stack.
-   This behavior is defined by POSIX 1003.1-2001 with the X/Open System
-   Interface (XSI) option and is a standardized way to implement a SEGV-based
-   stack overflow detection heuristic. */
-#undef HAVE_XSI_STACK_OVERFLOW_HEURISTIC
 
 /* Define to 1 if you have the external variable, _system_configuration with a
    member named physmem. */

@@ -171,7 +171,6 @@ libfetish_a_SOURCES = \
   basename.c \
   bumpalloc.h \
   canon-host.c \
-  c-stack.c c-stack.h \
   canonicalize.h \
   closeout.c closeout.h \
   cycle-check.c cycle-check.h \
@@ -288,27 +287,27 @@ am_libfetish_a_OBJECTS = acl.$(OBJEXT) getdate.$(OBJEXT) \
 	getopt.$(OBJEXT) getopt1.$(OBJEXT) hash.$(OBJEXT) \
 	hash-pjw.$(OBJEXT) addext.$(OBJEXT) argmatch.$(OBJEXT) \
 	backupfile.$(OBJEXT) basename.$(OBJEXT) canon-host.$(OBJEXT) \
-	c-stack.$(OBJEXT) closeout.$(OBJEXT) cycle-check.$(OBJEXT) \
-	diacrit.$(OBJEXT) dirname.$(OBJEXT) dup-safer.$(OBJEXT) \
-	exclude.$(OBJEXT) exitfail.$(OBJEXT) filemode.$(OBJEXT) \
-	file-type.$(OBJEXT) fopen-safer.$(OBJEXT) full-read.$(OBJEXT) \
-	full-write.$(OBJEXT) getstr.$(OBJEXT) gettime.$(OBJEXT) \
-	getugroups.$(OBJEXT) hard-locale.$(OBJEXT) human.$(OBJEXT) \
-	idcache.$(OBJEXT) isdir.$(OBJEXT) imaxtostr.$(OBJEXT) \
-	linebuffer.$(OBJEXT) localcharset.$(OBJEXT) \
-	long-options.$(OBJEXT) makepath.$(OBJEXT) mbswidth.$(OBJEXT) \
-	md5.$(OBJEXT) memcasecmp.$(OBJEXT) memcoll.$(OBJEXT) \
-	modechange.$(OBJEXT) offtostr.$(OBJEXT) path-concat.$(OBJEXT) \
-	physmem.$(OBJEXT) quote.$(OBJEXT) quotearg.$(OBJEXT) \
-	readtokens.$(OBJEXT) safe-read.$(OBJEXT) safe-write.$(OBJEXT) \
-	same.$(OBJEXT) save-cwd.$(OBJEXT) savedir.$(OBJEXT) \
-	settime.$(OBJEXT) sha.$(OBJEXT) stripslash.$(OBJEXT) \
-	umaxtostr.$(OBJEXT) unicodeio.$(OBJEXT) userspec.$(OBJEXT) \
-	version-etc.$(OBJEXT) xgetcwd.$(OBJEXT) xgethostname.$(OBJEXT) \
-	xmalloc.$(OBJEXT) xmemcoll.$(OBJEXT) xnanosleep.$(OBJEXT) \
-	xreadlink.$(OBJEXT) xstrdup.$(OBJEXT) xstrtod.$(OBJEXT) \
-	xstrtol.$(OBJEXT) xstrtoul.$(OBJEXT) xstrtoimax.$(OBJEXT) \
-	xstrtoumax.$(OBJEXT) yesno.$(OBJEXT)
+	closeout.$(OBJEXT) cycle-check.$(OBJEXT) diacrit.$(OBJEXT) \
+	dirname.$(OBJEXT) dup-safer.$(OBJEXT) exclude.$(OBJEXT) \
+	exitfail.$(OBJEXT) filemode.$(OBJEXT) file-type.$(OBJEXT) \
+	fopen-safer.$(OBJEXT) full-read.$(OBJEXT) full-write.$(OBJEXT) \
+	getstr.$(OBJEXT) gettime.$(OBJEXT) getugroups.$(OBJEXT) \
+	hard-locale.$(OBJEXT) human.$(OBJEXT) idcache.$(OBJEXT) \
+	isdir.$(OBJEXT) imaxtostr.$(OBJEXT) linebuffer.$(OBJEXT) \
+	localcharset.$(OBJEXT) long-options.$(OBJEXT) \
+	makepath.$(OBJEXT) mbswidth.$(OBJEXT) md5.$(OBJEXT) \
+	memcasecmp.$(OBJEXT) memcoll.$(OBJEXT) modechange.$(OBJEXT) \
+	offtostr.$(OBJEXT) path-concat.$(OBJEXT) physmem.$(OBJEXT) \
+	quote.$(OBJEXT) quotearg.$(OBJEXT) readtokens.$(OBJEXT) \
+	safe-read.$(OBJEXT) safe-write.$(OBJEXT) same.$(OBJEXT) \
+	save-cwd.$(OBJEXT) savedir.$(OBJEXT) settime.$(OBJEXT) \
+	sha.$(OBJEXT) stripslash.$(OBJEXT) umaxtostr.$(OBJEXT) \
+	unicodeio.$(OBJEXT) userspec.$(OBJEXT) version-etc.$(OBJEXT) \
+	xgetcwd.$(OBJEXT) xgethostname.$(OBJEXT) xmalloc.$(OBJEXT) \
+	xmemcoll.$(OBJEXT) xnanosleep.$(OBJEXT) xreadlink.$(OBJEXT) \
+	xstrdup.$(OBJEXT) xstrtod.$(OBJEXT) xstrtol.$(OBJEXT) \
+	xstrtoul.$(OBJEXT) xstrtoimax.$(OBJEXT) xstrtoumax.$(OBJEXT) \
+	yesno.$(OBJEXT)
 libfetish_a_OBJECTS = $(am_libfetish_a_OBJECTS)
 
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
@@ -352,16 +351,16 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	$(DEPDIR)/utime.Po ./$(DEPDIR)/acl.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/addext.Po ./$(DEPDIR)/argmatch.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/backupfile.Po ./$(DEPDIR)/basename.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/c-stack.Po ./$(DEPDIR)/canon-host.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/closeout.Po ./$(DEPDIR)/cycle-check.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/diacrit.Po ./$(DEPDIR)/dirname.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/dup-safer.Po ./$(DEPDIR)/exclude.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/exitfail.Po ./$(DEPDIR)/file-type.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/filemode.Po ./$(DEPDIR)/fopen-safer.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/full-read.Po ./$(DEPDIR)/full-write.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/getdate.Po ./$(DEPDIR)/getopt.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/getopt1.Po ./$(DEPDIR)/getstr.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/gettime.Po ./$(DEPDIR)/getugroups.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/canon-host.Po ./$(DEPDIR)/closeout.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/cycle-check.Po ./$(DEPDIR)/diacrit.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/dirname.Po ./$(DEPDIR)/dup-safer.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/exclude.Po ./$(DEPDIR)/exitfail.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/file-type.Po ./$(DEPDIR)/filemode.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/fopen-safer.Po ./$(DEPDIR)/full-read.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/full-write.Po ./$(DEPDIR)/getdate.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/getopt.Po ./$(DEPDIR)/getopt1.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/getstr.Po ./$(DEPDIR)/gettime.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/getugroups.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/hard-locale.Po ./$(DEPDIR)/hash-pjw.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/hash.Po ./$(DEPDIR)/human.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/idcache.Po ./$(DEPDIR)/imaxtostr.Po \
@@ -512,7 +511,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/argmatch.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/backupfile.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/basename.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/c-stack.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/canon-host.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/closeout.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cycle-check.Po@am__quote@
