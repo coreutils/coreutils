@@ -1,5 +1,5 @@
 /* expr -- evaluate expressions.
-   Copyright (C) 86, 1991-1997, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 86, 1991-1997, 1999, 2000, 2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -368,61 +368,6 @@ nomoreargs (void)
   return *args == 0;
 }
 
-/* The comparison operator handling functions.  */
-
-#define cmpf(name, rel)				\
-static						\
-int name (l, r) VALUE *l; VALUE *r;		\
-{						\
-  if (isstring (l) || isstring (r))		\
-    {						\
-       tostring (l);				\
-       tostring (r);				\
-       return strcmp (l->u.s, r->u.s) rel 0;	\
-    }						\
- else						\
-   return l->u.i rel r->u.i;			\
-}
- cmpf (less_than, <)
- cmpf (less_equal, <=)
- cmpf (equal, ==)
- cmpf (not_equal, !=)
- cmpf (greater_equal, >=)
- cmpf (greater_than, >)
-
-#undef cmpf
-
-/* The arithmetic operator handling functions.  */
-
-#define arithf(name, op)			\
-static intmax_t					\
-name (l, r) VALUE *l; VALUE *r;			\
-{						\
-  if (!toarith (l) || !toarith (r))		\
-    error (2, 0, _("non-numeric argument"));	\
-  return l->u.i op r->u.i;			\
-}
-
-#define arithdivf(name, op)			\
-static intmax_t					\
-name (l, r) VALUE *l; VALUE *r;			\
-{						\
-  if (!toarith (l) || !toarith (r))		\
-    error (2, 0, _("non-numeric argument"));	\
-  if (r->u.i == 0)				\
-    error (2, 0, _("division by zero"));	\
-  return l->u.i op r->u.i;			\
-}
-
- arithf (plus, +)
- arithf (minus, -)
- arithf (multiply, *)
- arithdivf (divide, /)
- arithdivf (mod, %)
-
-#undef arithf
-#undef arithdivf
-
 #ifdef EVAL_TRACE
 /* Print evaluation trace and args remaining.  */
 
@@ -649,7 +594,7 @@ eval4 (void)
 {
   VALUE *l;
   VALUE *r;
-  intmax_t (*fxn) ();
+  enum { multiply, divide, mod } fxn;
   intmax_t val;
 
 #ifdef EVAL_TRACE
@@ -668,7 +613,16 @@ eval4 (void)
 	return l;
       args++;
       r = eval5 ();
-      val = (*fxn) (l, r);
+      if (!toarith (l) || !toarith (r))
+	error (2, 0, _("non-numeric argument"));
+      if (fxn == multiply)
+	val = l->u.i * r->u.i;
+      else
+	{
+	  if (r->u.i == 0)
+	    error (2, 0, _("division by zero"));
+	  val = fxn == divide ? l->u.i / r->u.i : l->u.i % r->u.i;
+	}
       freev (l);
       freev (r);
       l = int_value (val);
@@ -682,7 +636,7 @@ eval3 (void)
 {
   VALUE *l;
   VALUE *r;
-  intmax_t (*fxn) ();
+  enum { plus, minus } fxn;
   intmax_t val;
 
 #ifdef EVAL_TRACE
@@ -699,7 +653,9 @@ eval3 (void)
 	return l;
       args++;
       r = eval4 ();
-      val = (*fxn) (l, r);
+      if (!toarith (l) || !toarith (r))
+	error (2, 0, _("non-numeric argument"));
+      val = fxn == plus ? l->u.i + r->u.i : l->u.i - r->u.i;
       freev (l);
       freev (r);
       l = int_value (val);
@@ -713,8 +669,13 @@ eval2 (void)
 {
   VALUE *l;
   VALUE *r;
-  int (*fxn) ();
+  enum
+  {
+    less_than, less_equal, equal, not_equal, greater_equal, greater_than
+  } fxn;
   int val;
+  intmax_t lval;
+  intmax_t rval;
 
 #ifdef EVAL_TRACE
   trace ("eval2");
@@ -740,7 +701,28 @@ eval2 (void)
       r = eval3 ();
       toarith (l);
       toarith (r);
-      val = (*fxn) (l, r);
+      if (isstring (l) || isstring (r))
+	{
+	  tostring (l);
+	  tostring (r);
+	  lval = strcoll (l->u.s, r->u.s);
+	  rval = 0;
+	}
+      else
+	{
+	  lval = l->u.i;
+	  rval = r->u.i;
+	}
+      switch (fxn)
+	{
+	case less_than:     val = (lval <  rval); break;
+	case less_equal:    val = (lval <= rval); break;
+	case equal:         val = (lval == rval); break;
+	case not_equal:     val = (lval != rval); break;
+	case greater_equal: val = (lval >= rval); break;
+	case greater_than:  val = (lval >  rval); break;
+	default: abort ();
+	}
       freev (l);
       freev (r);
       l = int_value (val);
