@@ -2,6 +2,6 @@
 
 AUTOMAKE_OPTIONS = 1.2 gnits
 
-TESTS = cr-1 time-1
+TESTS = rt-1 time-1
 EXTRA_DIST = $(TESTS)
 TESTS_ENVIRONMENT = LS=../../src/ls TOUCH=../../src/touch
