@@ -1774,6 +1774,8 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
+  GETTIMEOFDAY_INIT ();
+
   isaac_seed (&s);
 
   memset (&flags, 0, sizeof flags);
