@@ -27,7 +27,9 @@ SUFFIXES = .pl
 
 .pl:
 	rm -f $@ $@.tmp
-	$(editpl) $< > $@.tmp && chmod +x $@.tmp && mv $@.tmp $@
+	$(editpl) $< > $@.tmp
+	chmod +x-w $@.tmp
+	mv $@.tmp $@
 
 MAINTAINERCLEANFILES = $x-tests $(in) $(exp)
 CLEANFILES = $(out) $(err)
