@@ -1,7 +1,9 @@
 GNU coreutils NEWS                                    -*- outline -*-
-* Major changes in release 5.1.3 (2004-01-25):
+* Major changes in release 5.1.3 (2004-01-25): candidate to become stable 5.2.0
 
 ** Bug fixes
+
+  time stamps output by stat now include valid fractional seconds
 
 
 * Major changes in release 5.1.2 (2004-01-25):
