@@ -53,7 +53,7 @@ parse_long_options (argc, argv, command_name, package, version, usage)
   opterr = 0;
 
   if (argc == 2
-      && (c = getopt_long (argc, argv, "+", long_options, (int *) 0)) != EOF)
+      && (c = getopt_long (argc, argv, "+", long_options, NULL)) != -1)
     {
       switch (c)
 	{
