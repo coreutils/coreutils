@@ -1,5 +1,5 @@
 /* xgethostname.c -- return current hostname with unlimited length
-   Copyright (C) 1992, 1996, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1992, 1996, 2000, 2001, 2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -45,6 +45,9 @@ int gethostname ();
 # define INITIAL_HOSTNAME_LENGTH 34
 #endif
 
+/* Return the current hostname in malloc'd storage.
+   If malloc fails, exit.
+   Upon any other failure, return NULL.  */
 char *
 xgethostname ()
 {
@@ -67,7 +70,10 @@ xgethostname ()
       if (err >= 0 && hostname[k] == '\0')
 	break;
       else if (err < 0 && errno != ENAMETOOLONG && errno != 0)
-	error (EXIT_FAILURE, errno, "gethostname");
+	{
+	  free (hostname);
+	  return NULL;
+	}
       size *= 2;
       hostname = xrealloc (hostname, size + 1);
     }
