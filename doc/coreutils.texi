@@ -5922,29 +5922,39 @@ in C.
 @item --quoting-style=@var{word}
 @opindex --quoting-style
 @cindex quoting style
-Use style @var{word} to quote output names.  The @var{word} should
+Use style @var{word} to quote names.  The quoting-style algorithm
+takes a file name as input, and outputs a quoted version of the input
+name.  The @var{word} should
 be one of the following:
 @table @samp
 @item literal
-Output names as-is; this is the same as the @option{-N} or
+Output as-is; this is the same as the @option{-N} or
 @option{--literal} option.
 @item shell
-Quote names for the shell if they contain shell metacharacters or would
+Quote for the shell if the input contains shell metacharacters or would
 cause ambiguous output.
+The quoting is suitable for @acronym{POSIX}-compatible shells like
+@command{bash}, but it does not always work for incompatible shells
+like @command{csh}.
 @item shell-always
-Quote names for the shell, even if they would normally not require quoting.
+Quote for the shell, even if the input would normally not require
+quoting.
 @item c
-Quote names as for a C language string; this is the same as the
+Output a C character string literal, including the surrounding
+double-quote characters; this is the same as the
 @option{-Q} or @option{--quote-name} option.
 @item escape
-Quote as with @samp{c} except omit the surrounding double-quote
+Output a C character string literal, except omit the
+surrounding double-quote
 characters; this is the same as the @option{-b} or @option{--escape} option.
 @item clocale
-Quote as with @samp{c} except use quotation marks appropriate for the
-locale.
+Output a C character string literal, except use surrounding quotation
+marks appropriate for the locale.
 @item locale
 @c Use @t instead of @samp to avoid duplicate quoting in some output styles.
-Like @samp{clocale}, but quote @t{`like this'} instead of @t{"like
+Output a C character string literal, except use surrounding
+quotation marks appropriate for the locale, and quote @t{`like this'}
+instead of @t{"like
 this"} in the default C locale.  This looks nicer on many displays.
 @end table
 
@@ -10847,11 +10857,7 @@ time, 24-hour (hh:mm).  Same as @code{%H:%M}.
 @cindex epoch, seconds since
 @cindex seconds since the epoch
 @cindex beginning of time
-seconds since the epoch, i.e., 1 January 1970 00:00:00 UTC (a
-GNU extension).
-Note that this value is the number of seconds between the epoch
-and the current date as defined by the localtime system call.
-It isn't changed by the @option{--date} option.
+seconds since the epoch, i.e., 1 January 1970 00:00:00 UTC (a GNU extension).
 For examples, @xref{%s-examples}.
 @item %S
 second (00@dots{}60).  The range is [00@dots{}60], and not [00@dots{}59],
