@@ -25,9 +25,8 @@ char *xmalloc ();
 
 /* On at least Ultrix 4.3 and NextStep 3.2, getgroups (0, 0) always fails.
    On other systems, it returns the number of supplemental groups for the
-   process is returned.
-   This function handles that special case and lets the system-
-   provided function handle all others.  */
+   process.  This function handles that special case and lets the system-
+   provided function handle all others. */
 
 int
 getgroups (size_t n, GETGROUPS_T *group)
