@@ -1,6 +1,12 @@
-2003-01-07  Jim Meyering  <jim@meyering.net>
+2003-01-09  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.5.
+
+	* src/cut.c (set_fields): Make code agree with comment:
+	Don't merge abutting ranges like 4- and 2-3.  This makes no
+	difference currently, but is required to support an upcoming change.
+
+2003-01-07  Jim Meyering  <jim@meyering.net>
 
 	* src/cut.c (set_fields): Fix typo in comment.
 
