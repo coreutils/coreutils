@@ -58,10 +58,14 @@
 
 #define SWAB_ALIGN_OFFSET 2
 
+#if HAVE_INTTYPES_H
+# include <inttypes.h>
+#endif
 #include <sys/types.h>
 #include <signal.h>
 #include <getopt.h>
 
+#include "human.h"
 #include "system.h"
 #include "error.h"
 
@@ -98,7 +102,7 @@ int full_write ();
 
 static RETSIGTYPE interrupt_handler __P ((int));
 static int bit_count __P ((register unsigned int i));
-static int parse_integer __P ((char *str));
+static uintmax_t parse_integer __P ((char *str, int *));
 static void apply_translations __P ((void));
 static void copy __P ((void));
 static void copy_simple __P ((unsigned char *buf, int nread));
@@ -108,8 +112,8 @@ static void parse_conversion __P ((char *str));
 static void translate_charset __P ((const unsigned char *new_trans));
 static void quit __P ((int code));
 static void scanargs __P ((int argc, char **argv));
-static void skip __P ((int fdesc, char *file, long int records,
-		       long int blocksize, unsigned char *buf));
+static void skip __P ((int fdesc, char *file, uintmax_t records,
+		       size_t blocksize, unsigned char *buf));
 static void usage __P ((int status));
 static void write_output __P ((void));
 
@@ -129,22 +133,22 @@ static char *output_file = NULL;
 static int output_fd = 1;
 
 /* The number of bytes in which atomic reads are done. */
-static long input_blocksize = -1;
+static size_t input_blocksize = 0;
 
 /* The number of bytes in which atomic writes are done. */
-static long output_blocksize = -1;
+static size_t output_blocksize = 0;
 
 /* Conversion buffer size, in bytes.  0 prevents conversions. */
-static long conversion_blocksize = 0;
+static size_t conversion_blocksize = 0;
 
 /* Skip this many records of `input_blocksize' bytes before input. */
-static long skip_records = 0;
+static uintmax_t skip_records = 0;
 
 /* Skip this many records of `output_blocksize' bytes before output. */
-static long seek_record = 0;
+static uintmax_t seek_record = 0;
 
-/* Copy only this many records.  <0 means no limit. */
-static int max_records = -1;
+/* Copy only this many records.  The default is effectively infinity.  */
+static uintmax_t max_records = (uintmax_t) -1;
 
 /* Bit vector of conversions to apply. */
 static int conversions_mask = 0;
@@ -153,19 +157,19 @@ static int conversions_mask = 0;
 static int translation_needed = 0;
 
 /* Number of partial blocks written. */
-static unsigned w_partial = 0;
+static uintmax_t w_partial = 0;
 
 /* Number of full blocks written. */
-static unsigned w_full = 0;
+static uintmax_t w_full = 0;
 
 /* Number of partial blocks read. */
-static unsigned r_partial = 0;
+static uintmax_t r_partial = 0;
 
 /* Number of full blocks read. */
-static unsigned r_full = 0;
+static uintmax_t r_full = 0;
 
 /* Records truncated by conv=block. */
-static unsigned r_truncate = 0;
+static uintmax_t r_truncate = 0;
 
 /* Output representation of newline and space characters.
    They change if we're converting to EBCDIC.  */
@@ -321,10 +325,16 @@ static struct option const long_options[] =
 static void
 print_stats (void)
 {
-  fprintf (stderr, _("%u+%u records in\n"), r_full, r_partial);
-  fprintf (stderr, _("%u+%u records out\n"), w_full, w_partial);
+  char buf[2][LONGEST_HUMAN_READABLE + 1];
+  fprintf (stderr, _("%s+%s records in\n"),
+	   human_readable (r_full, buf[0], 1, 1, 0),
+	   human_readable (r_partial, buf[1], 1, 1, 0));
+  fprintf (stderr, _("%s+%s records out\n"),
+	   human_readable (w_full, buf[0], 1, 1, 0),
+	   human_readable (w_partial, buf[1], 1, 1, 0));
   if (r_truncate > 0)
-    fprintf (stderr, "%u %s\n", r_truncate,
+    fprintf (stderr, "%s %s\n",
+	     human_readable (r_truncate, buf[0], 1, 1, 0),
 	     (r_truncate == 1
 	      ? _("truncated record")
 	      : _("truncated records")));
@@ -409,9 +419,12 @@ main (int argc, char **argv)
       if (output_fd < 0)
 	error (1, errno, "%s", output_file);
 #ifdef HAVE_FTRUNCATE
-      if (seek_record > 0 && !(conversions_mask & C_NOTRUNC))
+      if (seek_record != 0 && !(conversions_mask & C_NOTRUNC))
 	{
-	  if (ftruncate (output_fd, seek_record * output_blocksize) < 0)
+	  off_t o = seek_record * output_blocksize;
+	  if (o / output_blocksize != seek_record)
+	    error (1, 0, _("file offset out of range"));
+	  if (ftruncate (output_fd, o) < 0)
 	    error (0, errno, "%s", output_file);
 	}
 #endif
@@ -434,10 +447,11 @@ main (int argc, char **argv)
    bytes of the data at a time in BUF, if necessary. */
 
 static void
-skip (int fdesc, char *file, long int records, long int blocksize,
+skip (int fdesc, char *file, uintmax_t records, size_t blocksize,
       unsigned char *buf)
 {
   struct stat stats;
+  off_t o;
 
   /* Use fstat instead of checking for errno == ESPIPE because
      lseek doesn't work on some special files but doesn't return an
@@ -449,18 +463,11 @@ skip (int fdesc, char *file, long int records, long int blocksize,
       quit (1);
     }
 
-  /* FIXME: why use lseek only on regular files?
-     Better: try lseek and if an error indicates it was an inappropriate
+  /* Try lseek and if an error indicates it was an inappropriate
      operation, fall back on using read.  */
-  if (S_ISREG (stats.st_mode))
-    {
-      if (lseek (fdesc, records * blocksize, SEEK_SET) < 0)
-	{
-	  error (0, errno, "%s", file);
-	  quit (1);
-	}
-    }
-  else
+  o = records * blocksize;
+  if (o / blocksize != records
+      || lseek (fdesc, o, SEEK_SET) < 0)
     {
       while (records-- > 0)
 	{
@@ -542,10 +549,10 @@ swab_buffer (unsigned char *buf, int *nread)
 static unsigned char *obuf;
 
 /* Current index into `obuf'. */
-static int oc = 0;
+static size_t oc = 0;
 
 /* Index into current line, for `conv=block' and `conv=unblock'.  */
-static int col = 0;
+static size_t col = 0;
 
 /* The main loop.  */
 
@@ -569,10 +576,10 @@ copy (void)
   else
     obuf = ibuf;
 
-  if (skip_records > 0)
+  if (skip_records != 0)
     skip (input_fd, input_file, skip_records, input_blocksize, ibuf);
 
-  if (seek_record > 0)
+  if (seek_record != 0)
     {
       /* FIXME: this loses for
 	 % ./dd if=dd seek=1 |:
@@ -589,7 +596,7 @@ copy (void)
 
   while (1)
     {
-      if (max_records >= 0 && r_partial + r_full >= max_records)
+      if (r_partial + r_full >= max_records)
 	break;
 
       /* Zero the buffer before reading, so that if we get a read error,
@@ -610,7 +617,7 @@ copy (void)
 	    {
 	      print_stats ();
 	      /* Seek past the bad block if possible. */
-	      lseek (input_fd, input_blocksize, SEEK_CUR);
+	      lseek (input_fd, (off_t) input_blocksize, SEEK_CUR);
 	      if (conversions_mask & C_SYNC)
 		/* Replace the missing input with null bytes and
 		   proceed normally.  */
@@ -688,12 +695,9 @@ copy (void)
     {
       /* If the final input line didn't end with a '\n', pad
 	 the output block to `conversion_blocksize' chars.  */
-      int pending_spaces = max (0, conversion_blocksize - col);
-      while (pending_spaces)
-	{
-	  output_char (space_character);
-	  --pending_spaces;
-	}
+      size_t i;
+      for (i = col; i < conversion_blocksize; i++)
+	output_char (space_character);
     }
 
   if ((conversions_mask & C_UNBLOCK) && col == conversion_blocksize)
@@ -702,7 +706,7 @@ copy (void)
     output_char (newline_character);
 
   /* Write out the last block. */
-  if (oc > 0)
+  if (oc != 0)
     {
       int nwritten = full_write (output_fd, obuf, oc);
       if (nwritten > 0)
@@ -759,11 +763,11 @@ copy_with_block (unsigned char *buf, int nread)
     {
       if (*buf == newline_character)
 	{
-	  int pending_spaces = max (0, conversion_blocksize - col);
-	  while (pending_spaces)
+	  if (col < conversion_blocksize)
 	    {
-	      output_char (space_character);
-	      --pending_spaces;
+	      size_t j;
+	      for (j = col; j < conversion_blocksize; j++)
+		output_char (space_character);
 	    }
 	  col = 0;
 	}
@@ -836,7 +840,7 @@ write_output (void)
 static void
 scanargs (int argc, char **argv)
 {
-  int i, n;
+  int i;
   int c;
 
   while ((c = getopt_long (argc, argv, "", long_options, NULL)) != -1)
@@ -872,24 +876,32 @@ scanargs (int argc, char **argv)
 	parse_conversion (val);
       else
 	{
-	  n = parse_integer (val);
-	  if (n < 0)
-	    error (1, 0, _("invalid number `%s'"), val);
+	  int invalid = 0;
+	  uintmax_t n = parse_integer (val, &invalid);
 
 	  if (STREQ (name, "ibs"))
 	    {
 	      input_blocksize = n;
+	      invalid |= input_blocksize != n || input_blocksize == 0;
 	      conversions_mask |= C_TWOBUFS;
 	    }
 	  else if (STREQ (name, "obs"))
 	    {
 	      output_blocksize = n;
+	      invalid |= output_blocksize != n || output_blocksize == 0;
 	      conversions_mask |= C_TWOBUFS;
 	    }
 	  else if (STREQ (name, "bs"))
-	    output_blocksize = input_blocksize = n;
+	    {
+	      output_blocksize = input_blocksize = n;
+	      invalid |= output_blocksize != n || output_blocksize == 0;
+	    }
 	  else if (STREQ (name, "cbs"))
-	    conversion_blocksize = n;
+	    {
+	      conversion_blocksize = n;
+	      invalid |= (conversion_blocksize != n 
+			  || conversion_blocksize == 0);
+	    }
 	  else if (STREQ (name, "skip"))
 	    skip_records = n;
 	  else if (STREQ (name, "seek"))
@@ -901,17 +913,20 @@ scanargs (int argc, char **argv)
 	      error (0, 0, _("unrecognized option `%s=%s'"), name, val);
 	      usage (1);
 	    }
+
+	  if (invalid)
+	    error (1, 0, _("invalid number `%s'"), val);
 	}
     }
 
   /* If bs= was given, both `input_blocksize' and `output_blocksize' will
-     have been set to non-negative values.  If either has not been set,
+     have been set to positive values.  If either has not been set,
      bs= was not given, so make sure two buffers are used. */
-  if (input_blocksize == -1 || output_blocksize == -1)
+  if (input_blocksize == 0 || output_blocksize == 0)
     conversions_mask |= C_TWOBUFS;
-  if (input_blocksize == -1)
+  if (input_blocksize == 0)
     input_blocksize = DEFAULT_BLOCKSIZE;
-  if (output_blocksize == -1)
+  if (output_blocksize == 0)
     output_blocksize = DEFAULT_BLOCKSIZE;
   if (conversion_blocksize == 0)
     conversions_mask &= ~(C_BLOCK | C_UNBLOCK);
@@ -919,48 +934,68 @@ scanargs (int argc, char **argv)
 
 /* Return the value of STR, interpreted as a non-negative decimal integer,
    optionally multiplied by various values.
-   Return -1 if STR does not represent a number in this format. */
+   Assign nonzero to *INVALID if STR does not represent a number in
+   this format. */
 
-/* FIXME: use xstrtou?l */
+/* FIXME: use xstrtou?[lq] */
 
-static int
-parse_integer (char *str)
+static uintmax_t
+parse_integer (char *str, int *invalid)
 {
-  register int n = 0;
-  register int temp;
+  register uintmax_t n = 0;
   register char *p = str;
 
   while (ISDIGIT (*p))
     {
-      n = n * 10 + *p - '0';
+      uintmax_t n10 = n * 10;
+      int digit = *p - '0';
+      if (! (n10 / 10 == n && n10 <= n10 + digit))
+	{
+	  *invalid = 1;
+	  return 0;
+	}
+      n = n10 + digit;
       p++;
     }
-loop:
-  switch (*p++)
+
+  for (;;)
     {
-    case '\0':
-      return n;
-    case 'b':
-      n *= 512;
-      goto loop;
-    case 'c':
-      goto loop;
-    case 'k':
-      n *= 1024;
-      goto loop;
-    case 'w':
-      n *= 2;
-      goto loop;
-    case 'x':
-      temp = parse_integer (p);
-      if (temp == -1)
-	return -1;
-      n *= temp;
-      break;
-    default:
-      return -1;
+      uintmax_t multiplier;
+
+      switch (*p++)
+	{
+	case '\0':
+	  return n;
+	case 'b':
+	  multiplier = 512;
+	  break;
+	case 'c':
+	  continue;
+	case 'k':
+	  multiplier = 1024;
+	  break;
+	case 'w':
+	  multiplier = 2;
+	  break;
+	case 'x':
+	  multiplier = parse_integer (p, invalid);
+	  p = "";
+	  break;
+	default:
+	  {
+	    *invalid = 1;
+	    return 0;
+	  }
+	}
+
+      if (multiplier != 0 && n * multiplier / multiplier != n)
+	{
+	  *invalid = 1;
+	  return 0;
+	}
+
+      n *= multiplier;
     }
-  return n;
 }
 
 /* Interpret one "conv=..." option. */
