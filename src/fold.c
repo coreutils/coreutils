@@ -221,12 +221,6 @@ fold_file (char *filename, int width)
       return 1;
     }
 
-  if (ferror (stdout))
-    {
-      error (0, errno, _("write error"));
-      return 1;
-    }
-
   return 0;
 }
 
