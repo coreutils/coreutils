@@ -1,3 +1,9 @@
+2001-02-03  Jim Meyering  <meyering@lucent.com>
+
+	* ls-mntd-fs.m4 (jm_LIST_MOUNTED_FILESYSTEMS): Restore prior use of
+	AS_IF, now that it works once again (mysteriously).
+	* fsusage.m4 (jm_FILE_SYSTEM_USAGE): Likewise.
+
 2001-01-30  Jim Meyering  <meyering@lucent.com>
 
 	Don't use filenames that are 8.3-equivalent to "conftest" on DOS.
