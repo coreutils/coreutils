@@ -1,3 +1,21 @@
+2002-02-23  Jim Meyering  <meyering@lucent.com>
+
+	* Version 2.0.22.
+
+2002-02-23  Paul Eggert  <eggert@twinsun.com>
+
+	* src/cat.c (simple_cat, cat, main): Used char * rather than
+	unsigned char *, to avoid some technical violations of the C
+	standard, and to avoid the need for casts.  I guess the
+	unsigned char * was probably there for improved performance
+	with ancient compilers, but the code wasn't using the
+	unsignedness any more.
+	Reported by Nelson H. F. Beebe.
+
+	(cat): int -> size_t for full_write arg.  This doesn't
+	fix any bugs since the buffer size is small, but it makes
+	the code a bit clearer.
+
 2002-02-18  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.21.
