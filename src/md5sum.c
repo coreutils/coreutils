@@ -161,9 +161,9 @@ text), and name for each FILE.\n"),
 
 #define ISWHITE(c) ((c) == ' ' || (c) == '\t')
 
-/* Split the checksum string S (of length S_LEN) from a BSD 'md5'
-   command into two parts: a hexadecimal digest, and the file name.  S
-   is modified.  */
+/* Split the checksum string S (of length S_LEN) from a BSD 'md5' or
+   'sha1' command into two parts: a hexadecimal digest, and the file
+   name.  S is modified.  */
 
 static int
 bsd_split_3 (char *s, size_t s_len, unsigned char **hex_digest, char **file_name)
@@ -172,8 +172,8 @@ bsd_split_3 (char *s, size_t s_len, unsigned char **hex_digest, char **file_name
 
   *file_name = s;
 
-  /* Find end of filename. The BSD 'md5' does not escape filenames, so
-     search backwards for the last ')'. */
+  /* Find end of filename. The BSD 'md5' and 'sha1' commands do not escape
+     filenames, so search backwards for the last ')'. */
   i = s_len - 1;
   while (i && s[i] != ')')
     i--;
@@ -208,16 +208,23 @@ split_3 (char *s, size_t s_len,
 {
   size_t i;
   int escaped_filename = 0;
+  size_t algo_name_len;
 
   i = 0;
   while (ISWHITE (s[i]))
     ++i;
 
   /* Check for BSD-style checksum line. */
-  if (algorithm == ALG_MD5 && strncmp (s + i, "MD5 (", 5) == 0)
+  algo_name_len = strlen (DIGEST_TYPE_STRING (algorithm));
+  if (strncmp (s + i, DIGEST_TYPE_STRING (algorithm), algo_name_len) == 0)
     {
-      *binary = 0;
-      return bsd_split_3 (s + i + 5, s_len - i - 5, hex_digest, file_name);
+      if (strncmp (s + i + algo_name_len, " (", 2) == 0)
+	{
+	  *binary = 0;
+	  return bsd_split_3 (s +      i + algo_name_len + 2,
+			      s_len - (i + algo_name_len + 2),
+			      hex_digest, file_name);
+	}
     }
 
   /* Ignore this line if it is too short.
