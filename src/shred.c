@@ -1,7 +1,8 @@
 /* TODO:
    x use getopt_long
    x use error, not pferror
-   - bracket strings with _(...) for gettext
+   - don't use pfstatus -- or maybe leave it in and see who complains
+   x bracket strings with _(...) for gettext
    - use consistent non-capitalizatin in error messages
  */
 
@@ -506,10 +507,11 @@ irand_mod (struct irand_state *r, word32 n)
 
 /*
  * Like perror() but fancier.  (And fmt is not allowed to be NULL)
+ * This apparent use of features specific to GNU C is actually portable;
+ * see the definitions in error.h.
  */
-#if __GNUC__ >= 2
-static void pfstatus (char const *,...) __attribute__ ((format (printf, 1, 2)));
-#endif
+static void pfstatus (char const *,...)
+     __attribute__ ((__format__ (__printf__, 1, 2)));
 
 /*
  * Maintain a status line on stdout.  This is done by using CR and
@@ -1194,8 +1196,7 @@ wipename (char *oldname, struct Options const *flags)
 		sync ();	/* Force directory out */
 	      if (origname)
 		{
-		  pfstatus (_("%s: renamed to `%s'"),
-			    origname, newname);
+		  pfstatus (_("%s: renamed to `%s'"), origname, newname);
 		  if (flags->verbose > 1)
 		    flushstatus ();
 		}
