@@ -1,6 +1,16 @@
-2005-03-10  Jim Meyering  <jim@meyering.net>
+2005-03-11  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	Prompt once again for `mv -i A B' when A and B are hard links
+	to the same file.  This fixes a bug introduced by my 2003-04-04
+	(coreutils-5.0.1) change.
+	* src/copy.c (abandon_move): New function, factored out of
+	copy_internal, now that this code is being used from two places.
+	(copy_internal): Perform the same interactive-related test for
+	whether it's alright to proceed and (usually) overwrite the
+	destination file.
+	* tests/mv/i-4: Add tests for the above.
 
 	Don't segfault for a very long date format string, e.g.,
 	ls -ld --time-style=+%99999999H .
