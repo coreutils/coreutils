@@ -38,6 +38,7 @@ size_t strftime ();
 time_t time ();
 #endif
 
+int putenv ();
 int stime ();
 
 char *xrealloc ();
@@ -55,9 +56,6 @@ static int show_help;
 
 /* If nonzero, print the version on standard output and exit.  */
 static int show_version;
-
-/* If nonzero, print or set Coordinated Universal Time.  */
-static int universal_time = 0;
 
 static struct option const long_options[] =
 {
@@ -179,7 +177,11 @@ main (argc, argv)
 	set_date = 1;
 	break;
       case 'u':
-	universal_time = 1;
+	if (putenv ("TZ=UTC0") != 0)
+	  error (1, 0, "memory exhausted");
+#if LOCALTIME_CACHE
+	tzset ();
+#endif
 	break;
       default:
 	usage (1);
@@ -307,16 +309,14 @@ show_date (format, when)
   char *out = NULL;
   size_t out_length = 0;
 
-  tm = (universal_time ? gmtime : localtime) (&when);
+  tm = localtime (&when);
 
   if (format == NULL)
     {
       /* Print the date in the default format.  Vanilla ANSI C strftime
          doesn't support %e, but POSIX requires it.  If you don't use
          a GNU strftime, make sure yours supports %e.  */
-      format = (universal_time
-		? "%a %b %e %H:%M:%S UTC %Y"
-		: "%a %b %e %H:%M:%S %Z %Y");
+      format = "%a %b %e %H:%M:%S %Z %Y";
     }
   else if (*format == '\0')
     {
