@@ -2,6 +2,36 @@
 
 	* Version 3.16n.
 
+	* lib/chown.c: Use #if, not #ifdef with HAVE_ macros.
+	* lib/closeout.c: Likewise.
+	* lib/dirname.c: Likewise.
+	* lib/euidaccess.c: Likewise.
+	* lib/fileblocks.c: Likewise.
+	* lib/filemode.c: Likewise.
+	* lib/ftruncate.c: Likewise.
+	* lib/group-member.c: Likewise.
+	* lib/isdir.c: Likewise.
+	* lib/long-options.c: Likewise.
+	* lib/mountlist.c: Likewise.
+	* lib/path-concat.c: Likewise.
+	* lib/save-cwd.c: Likewise.
+	* lib/savedir.c: Likewise.
+	* lib/strcasecmp.c: Likewise.
+	* lib/strdup.c: Likewise.
+	* lib/userspec.c: Likewise.
+	* lib/yesno.c:: Likewise.
+
+	* src/chgrp.c: Use #if, not #ifdef with HAVE_ macros.
+	Use #if !, not #ifndef with HAVE_ macros.
+	* src/chown.c: Likewise.
+	* src/copy.c: Likewise.
+	* src/dd.c: Likewise.
+	* src/dircolors.c: Likewise.
+	* src/install.c: Likewise.
+	* src/ls.c: Likewise.
+	* src/mv.c: Likewise.
+	* src/touch.c: Likewise.
+
 	* configure.in: Use jm_PREREQ.
 
 1998-03-14  Jim Meyering  <meyering@eng.ascend.com>
