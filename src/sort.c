@@ -58,10 +58,9 @@ struct rlimit { size_t rlim_cur; };
 # include <langinfo.h>
 #endif
 
-#if HAVE_PATHCONF && defined _PC_NAME_MAX
-# define NAME_MAX_IN_DIR(Dir) pathconf (Dir, _PC_NAME_MAX)
-#else
-# define NAME_MAX_IN_DIR(Dir) 255
+#ifndef SA_NOCLDSTOP
+# define sigprocmask(How, Set, Oset) /* empty */
+# define sigset_t int
 #endif
 
 #ifndef STDC_HEADERS
@@ -339,6 +338,9 @@ Set LC_ALL=C to get the traditional sort order that uses native byte values.\n\
   exit (status);
 }
 
+/* The set of signals that are caught.  */
+static sigset_t caught_signals;
+
 /* The list of temporary files. */
 static struct tempnode
 {
@@ -357,23 +359,46 @@ cleanup (void)
     unlink (node->name);
 }
 
-static FILE *
-xtmpfopen (const char *file)
-{
-  FILE *fp;
-  int fd;
+/* Create a new temporary file, returning its newly allocated name.
+   Store into *PFP a stream open for writing.  */
 
-  /*  Open temporary file exclusively, to foil a common
-      denial-of-service attack.  */
-  fd = open (file, O_WRONLY | O_CREAT | O_TRUNC | O_EXCL, 0600);
-  if (fd < 0 || (fp = fdopen (fd, "w")) == NULL)
+static char *
+create_temp_file (FILE **pfp)
+{
+  static char const slashbase[] = "/sortXXXXXX";
+  static size_t temp_dir_index;
+  sigset_t oldset;
+  int fd;
+  int saved_errno;
+  char const *temp_dir = temp_dirs[temp_dir_index];
+  size_t len = strlen (temp_dir);
+  char *file = xmalloc (len + sizeof slashbase);
+  struct tempnode *node = (struct tempnode *) xmalloc (sizeof *node);
+
+  memcpy (file, temp_dir, len);
+  memcpy (file + len, slashbase, sizeof slashbase);
+  node->name = file;
+  node->next = temphead.next;
+  if (++temp_dir_index == temp_dir_count)
+    temp_dir_index = 0;
+
+  /* Create the temporary file in a critical section, to avoid races.  */
+  sigprocmask (SIG_BLOCK, &caught_signals, &oldset);
+  fd = mkstemp (file);
+  if (0 <= fd)
+    temphead.next = node;
+  saved_errno = errno;
+  sigprocmask (SIG_SETMASK, &oldset, NULL);
+  errno = saved_errno;
+
+  if (fd < 0 || (*pfp = fdopen (fd, "w")) == NULL)
     {
       error (0, errno, "%s", file);
       cleanup ();
       exit (SORT_FAILURE);
     }
 
-  return fp;
+  return file;
 }
 
 static FILE *
@@ -451,41 +476,6 @@ add_temp_dir (char const *dir)
     }
 
   temp_dirs[temp_dir_count++] = dir;
-}
-
-/* Return a name for a temporary file. */
-
-static char *
-tempname (void)
-{
-  static unsigned long sequence_number;
-
-  unsigned long seq = sequence_number++;
-  unsigned long pid = process_id;
-  char const *temp_dir = temp_dirs[seq % temp_dir_count];
-  size_t len = strlen (temp_dir);
-  char const *slash = "/" + (len == 0 || temp_dir[len - 1] == '/');
-  char *name = xmalloc (len + 1 + sizeof "sort" - 1
-			+ sizeof pid * CHAR_BIT / 3 + 1
-			+ sizeof seq * CHAR_BIT / 3 + 1);
-  int long_file_names = NAME_MAX_IN_DIR (temp_dir) > 12;
-  struct tempnode *node;
-
-  if (long_file_names)
-    sprintf (name, "%s%ssort%lu.%.5lu", temp_dir, slash, pid, seq);
-  else
-    {
-      /* Make sure the file name is safe for an 8.3 filesystem.  */
-      sprintf (name, "%s%ss%.5d%.2d.%.3d", temp_dir, slash,
-	       (int) (pid % 100000), (int) (seq / 1000 % 100),
-	       (int) (seq % 1000));
-    }
-
-  node = (struct tempnode *) xmalloc (sizeof (struct tempnode));
-  node->name = name;
-  node->next = temphead.next;
-  temphead.next = node;
-  return name;
 }
 
 /* Search through the list of temporary files for NAME;
@@ -1817,14 +1807,14 @@ merge (char **files, int nfiles, FILE *ofp, const char *output_file)
 	{
 	  for (j = 0; j < NMERGE; ++j)
 	    fps[j] = xfopen (files[i * NMERGE + j], "r");
-	  tfp = xtmpfopen (temp = tempname ());
+	  temp = create_temp_file (&tfp);
 	  mergefps (fps, &files[i * NMERGE], NMERGE, tfp, temp);
 	  xfclose (tfp);
 	  files[t++] = temp;
 	}
       for (j = 0; j < nfiles % NMERGE; ++j)
 	fps[j] = xfopen (files[i * NMERGE + j], "r");
-      tfp = xtmpfopen (temp = tempname ());
+      temp = create_temp_file (&tfp);
       mergefps (fps, &files[i * NMERGE], nfiles % NMERGE, tfp, temp);
       xfclose (tfp);
       files[t++] = temp;
@@ -1891,7 +1881,7 @@ sort (char **files, int nfiles, FILE *ofp, const char *output_file)
 	  else
 	    {
 	      ++n_temp_files;
-	      tfp = xtmpfopen (temp_output = tempname ());
+	      temp_output = create_temp_file (&tfp);
 	    }
 
 	  do
@@ -1980,17 +1970,25 @@ parse_field_count (char const *string, size_t *val)
 static void
 sighandler (int sig)
 {
-#ifdef SA_NOCLDSTOP
-  struct sigaction sigact;
+#ifndef SA_NOCLDSTOP
+  signal (sig, SIG_IGN);
+#endif
 
-  sigact.sa_handler = SIG_DFL;
-  sigemptyset (&sigact.sa_mask);
-  sigact.sa_flags = 0;
-  sigaction (sig, &sigact, NULL);
+  cleanup ();
+
+#ifdef SA_NOCLDSTOP
+  {
+    struct sigaction sigact;
+
+    sigact.sa_handler = SIG_DFL;
+    sigemptyset (&sigact.sa_mask);
+    sigact.sa_flags = 0;
+    sigaction (sig, &sigact, NULL);
+  }
 #else
   signal (sig, SIG_DFL);
 #endif
-  cleanup ();
+
   kill (process_id, sig);
 }
 
@@ -2059,6 +2057,8 @@ main (int argc, char **argv)
   char *minus = "-", **files, *tmp;
   char const *outfile = minus;
   FILE *ofp;
+  static int const sigs[] = { SIGHUP, SIGINT, SIGPIPE, SIGTERM };
+  int nsigs = sizeof sigs / sizeof *sigs;
 #ifdef SA_NOCLDSTOP
   struct sigaction oldact, newact;
 #endif
@@ -2109,32 +2109,26 @@ main (int argc, char **argv)
   xalloc_fail_func = cleanup;
 
 #ifdef SA_NOCLDSTOP
+  sigemptyset (&caught_signals);
+  for (i = 0; i < nsigs; i++)
+    sigaddset (&caught_signals, sigs[i]);
   newact.sa_handler = sighandler;
-  sigemptyset (&newact.sa_mask);
+  newact.sa_mask = caught_signals;
   newact.sa_flags = 0;
-
-  sigaction (SIGINT, NULL, &oldact);
-  if (oldact.sa_handler != SIG_IGN)
-    sigaction (SIGINT, &newact, NULL);
-  sigaction (SIGHUP, NULL, &oldact);
-  if (oldact.sa_handler != SIG_IGN)
-    sigaction (SIGHUP, &newact, NULL);
-  sigaction (SIGPIPE, NULL, &oldact);
-  if (oldact.sa_handler != SIG_IGN)
-    sigaction (SIGPIPE, &newact, NULL);
-  sigaction (SIGTERM, NULL, &oldact);
-  if (oldact.sa_handler != SIG_IGN)
-    sigaction (SIGTERM, &newact, NULL);
-#else
-  if (signal (SIGINT, SIG_IGN) != SIG_IGN)
-    signal (SIGINT, sighandler);
-  if (signal (SIGHUP, SIG_IGN) != SIG_IGN)
-    signal (SIGHUP, sighandler);
-  if (signal (SIGPIPE, SIG_IGN) != SIG_IGN)
-    signal (SIGPIPE, sighandler);
-  if (signal (SIGTERM, SIG_IGN) != SIG_IGN)
-    signal (SIGTERM, sighandler);
 #endif
+
+  for (i = 0; i < nsigs; i++)
+    {
+      int sig = sigs[i];
+#ifdef SA_NOCLDSTOP
+      sigaction (sig, NULL, &oldact);
+      if (oldact.sa_handler != SIG_IGN)
+	sigaction (sig, &newact, NULL);
+#else
+      if (signal (sig, SIG_IGN) != SIG_IGN)
+	signal (sig, sighandler);
+#endif
+    }
 
   gkey.sword = gkey.eword = -1;
   gkey.ignore = NULL;
@@ -2466,8 +2460,7 @@ but lacks following character offset"));
 		}
 
 	      in_fp = xfopen (files[i], "r");
-	      tmp = tempname ();
-	      out_fp = xtmpfopen (tmp);
+	      tmp = create_temp_file (&out_fp);
 	      /* FIXME: maybe use copy.c(copy) here. */
 	      while ((cc = fread (buf, 1, sizeof buf, in_fp)) > 0)
 		write_bytes (buf, cc, out_fp, tmp);
