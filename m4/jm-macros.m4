@@ -223,6 +223,7 @@ AC_DEFUN(jm_MACROS,
     AC_LIBOBJ(fsusage)
     AC_LIBOBJ(mountlist)
   fi
+  AC_REQUIRE([jm_AC_DOS])
 
 ])
 
