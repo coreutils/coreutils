@@ -58,12 +58,15 @@ extern int errno;
 
 #define AUTHORS N_ ("David MacKenzie and Jim Meyering")
 
+#define NEED_PATHCONF_WRAPPER 0
 #if HAVE_PATHCONF
 # ifndef PATH_MAX
 #  define PATH_MAX_FOR(p) pathconf_wrapper ((p), _PC_PATH_MAX)
+#  define NEED_PATHCONF_WRAPPER 1
 # endif /* not PATH_MAX */
 # ifndef NAME_MAX
 #  define NAME_MAX_FOR(p) pathconf_wrapper ((p), _PC_NAME_MAX);
+#  define NEED_PATHCONF_WRAPPER 1
 # endif /* not NAME_MAX */
 
 #else
@@ -112,6 +115,7 @@ static struct option const longopts[] =
   {NULL, 0, NULL, 0}
 };
 
+#if NEED_PATHCONF_WRAPPER
 /* Distinguish between the cases when pathconf fails and when it reports there
    is no limit (the latter is the case for PATH_MAX on the Hurd).  When there
    is no limit, return LONG_MAX.  Otherwise, return pathconf's return value.  */
@@ -128,6 +132,7 @@ pathconf_wrapper (const char *filename, int param)
 
   return ret;
 }
+#endif
 
 void
 usage (int status)
