@@ -2,6 +2,11 @@
 # -*- perl -*-
 # @configure_input@
 
+my $In = '.I';
+my $Out = '.O';
+my $Exp = '.X';
+my $Err = '.E';
+
 require 5.002;
 use strict;
 use POSIX qw (assert);
@@ -43,7 +48,7 @@ sub validate
 # an existing file.  Otherwise, the element must be a string and is treated
 # just like a scalar $SPEC.  When a file is created, its name is derived
 # from the name TEST_NAME of the corresponding test and the TYPE of file.
-# E.g., the inputs for test `3a' would be named t3a.in1 and  t3a.in2, and
+# E.g., the inputs for test `3a' would be named t3a.in1 and t3a.in2, and
 # the expected output for test `7c' would be named t7c.exp.
 #
 # Also, return two lists of file names:
@@ -54,7 +59,7 @@ sub spec_to_list ($$$)
 {
   my ($spec, $test_name, $type) = @_;
 
-  assert ($type eq 'in' || $type eq 'exp');
+  assert ($type eq $In || $type eq $Exp);
 
   my @explicit_file;
   my @maint_gen_file;
@@ -63,7 +68,7 @@ sub spec_to_list ($$$)
   # If SPEC is a hash reference, return empty lists.
   if (ref $spec eq 'HASH')
     {
-      assert ($type eq 'in');
+      assert ($type eq $In);
       return {
 	EXPLICIT => \@explicit_file,
 	MAINT_GEN => \@maint_gen_file
@@ -107,12 +112,18 @@ sub spec_to_list ($$$)
   foreach $file_contents (@content_string)
     {
       my $suffix = (@content_string > 1 ? $i : '');
-      my $maint_gen_file = "t$test_name.$type$suffix";
+      my $maint_gen_file = "$test_name$type$suffix";
       push (@maint_gen_file, $maint_gen_file);
       open (F, ">$maint_gen_file") || die "$0: $maint_gen_file: $!\n";
       print F $file_contents;
       close (F) || die "$0: $maint_gen_file: $!\n";
       ++$i;
+    }
+
+  foreach $i (@explicit_file, @maint_gen_file)
+    {
+      die "$0: $i: generated test file name would be longer than 14 characters"
+	if (length ($i) > 14);
     }
 
   my %h = (
@@ -169,13 +180,13 @@ sub wrap
 	  my ($test_name, $flags, $in_spec, $exp_spec, $e_ret_code)
 	    = @$test_vector;
 
-	  push (@run, ("t$test_name.out", "t$test_name.err"));
+	  push (@run, ("$test_name$Out", "$test_name$Err"));
 
-	  my $in = spec_to_list ($in_spec, $test_name, 'in');
+	  my $in = spec_to_list ($in_spec, $test_name, $In);
 	  push (@exp, @{$in->{EXPLICIT}});
 	  push (@maint, @{$in->{MAINT_GEN}});
 
-	  my $e = spec_to_list ($exp_spec, $test_name, 'exp');
+	  my $e = spec_to_list ($exp_spec, $test_name, $Exp);
 	  push (@exp, @{$e->{EXPLICIT}});
 	  push (@maint, @{$e->{MAINT_GEN}});
 	}
@@ -215,7 +226,7 @@ foreach $test_vector (Test::test_vector ())
   my ($test_name, $flags, $in_spec, $exp_spec, $e_ret_code)
     = @$test_vector;
 
-  my $in = spec_to_list ($in_spec, $test_name, 'in');
+  my $in = spec_to_list ($in_spec, $test_name, $In);
 
   my @srcdir_rel_in_file;
   my $f;
@@ -224,12 +235,12 @@ foreach $test_vector (Test::test_vector ())
       push (@srcdir_rel_in_file, "\$srcdir/$f");
     }
 
-  my $exp = spec_to_list ($exp_spec, $test_name, 'exp');
+  my $exp = spec_to_list ($exp_spec, $test_name, $Exp);
   my @all = (@{$exp->{EXPLICIT}}, @{$exp->{MAINT_GEN}});
   assert (@all == 1);
   my $exp_name = "\$srcdir/$all[0]";
-  my $out = "t$test_name.out";
-  my $err_output = "t$test_name.err";
+  my $out = "$test_name$Out";
+  my $err_output = "$test_name$Err";
 
   my $redirect_stdin = ((@srcdir_rel_in_file == 1
 			 && defined $Test::input_via_stdin
