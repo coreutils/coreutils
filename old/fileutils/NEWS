@@ -1,4 +1,6 @@
 Changes in release 4.01:
+[4.0.39]
+* cp and mv accept --strip-trailing-slashes, not just --strip-trailing-slash
 [4.0.38]
 * ls --full-time now implies -l;  before, without -l it was a no-op
 [4.0.37]
@@ -90,7 +92,7 @@ Changes in release 4.01:
 * cp -p and mv now try to preserve uid even if you're not root, as per POSIX.2.
   This affects behavior only on hosts that let you give files away via chmod.
 * du would fail when given `.' or `..' followed by other command line arguments
-* Using cp's short-named `-P' option evokes the warning that that the
+* Using cp's short-named `-P' option evokes the warning that the
    meaning of `-P' will soon change.  Use `--parents' instead.
 * chgrp, chmod, and chown: when used with the --verbose option, might give an
   invalid diagnostic (due to clobbered errno) when failing.
