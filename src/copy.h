@@ -42,6 +42,9 @@ struct cp_options
      with regular files. */
   int interactive;
 
+  /* This process's effective user ID.  */
+  uid_t myeuid;
+
   /* If nonzero, when copying recursively, skip any subdirectories that are
      on different filesystems from the one we started on. */
   int one_file_system;
@@ -62,7 +65,7 @@ struct cp_options
   int symbolic_link;
 
   /* The bits to preserve in created files' modes. */
-  int umask_kill;
+  unsigned int umask_kill;
 
   /* If nonzero, do not copy a nondirectory that has an existing destination
      with the same or newer modification time. */
@@ -70,9 +73,6 @@ struct cp_options
 
   /* If nonzero, display the names of the files before copying them. */
   int verbose;
-
-  /* This process's effective user ID.  */
-  uid_t myeuid;
 
   /* A pointer to either lstat or stat, depending on
      whether the copy should dereference symlinks.  */

@@ -4,10 +4,14 @@
 
 #include <config.h>
 #include <stdio.h>
+#include <assert.h>
+#include <sys/types.h>
 
-#include "cp.h"
-#include "copy.h"
+#include "system.h"
+#include "error.h"
 #include "backupfile.h"
+#include "copy.h"
+#include "cp-hash.h"
 
 /* On Linux (from slackware-1.2.13 to 2.0.2?) there is no lchown function.
    To change ownership of symlinks, you must run chown with an effective
@@ -22,82 +26,6 @@
       But root probably wants to know, e.g. if NFS disallows it.  */	\
    && (errno != EPERM || x->myeuid == 0))
 
-/* Control creation of sparse files (files with holes).  */
-enum Sparse_type
-{
-  /* Never create holes in DEST.  */
-  SPARSE_NEVER,
-
-  /* This is the default.  Use a crude (and sometimes inaccurate)
-     heuristic to determine if SOURCE has holes.  If so, try to create
-     holes in DEST.  */
-  SPARSE_AUTO,
-
-  /* For every sufficiently long sequence of bytes in SOURCE, try to
-     create a corresponding hole in DEST.  There is a performance penalty
-     here because CP has to search for holes in SRC.  But if the holes are
-     big enough, that penalty can be offset by the decrease in the amount
-     of data written to disk.   */
-  SPARSE_ALWAYS
-};
-
-struct cp_options
-{
-  /* If nonzero, copy all files except (directories and, if not dereferencing
-     them, symbolic links,) as if they were regular files. */
-  int copy_as_regular;
-
-  /* If nonzero, dereference symbolic links (copy the files they point to). */
-  int dereference;
-
-  /* If nonzero, remove existing destination nondirectories. */
-  int force;
-
-  /* If nonzero, create hard links instead of copying files.
-     Create destination directories as usual. */
-  int hard_link;
-
-  /* If nonzero, query before overwriting existing destinations
-     with regular files. */
-  int interactive;
-
-  /* If nonzero, when copying recursively, skip any subdirectories that are
-     on different filesystems from the one we started on. */
-  int one_file_system;
-
-  /* If nonzero, give the copies the original files' permissions,
-     ownership, and timestamps. */
-  int preserve;
-
-  /* If nonzero, copy directories recursively and copy special files
-     as themselves rather than copying their contents. */
-  int recursive;
-
-  /* Control creation of sparse files.  */
-  enum Sparse_type sparse_mode;
-
-  /* If nonzero, create symbolic links instead of copying files.
-     Create destination directories as usual. */
-  int symbolic_link;
-
-  /* The bits to preserve in created files' modes. */
-  int umask_kill;
-
-  /* If nonzero, do not copy a nondirectory that has an existing destination
-     with the same or newer modification time. */
-  int update;
-
-  /* If nonzero, display the names of the files before copying them. */
-  int verbose;
-
-  /* This process's effective user ID.  */
-  uid_t myeuid;
-
-  /* A pointer to either lstat or stat, depending on
-     whether dereferencing of symlinks is done.  */
-  int (*xstat) ();
-};
-
 struct dir_list
 {
   struct dir_list *parent;
@@ -107,6 +35,14 @@ struct dir_list
 
 int full_write ();
 int euidaccess ();
+char *savedir ();
+char *xmalloc ();
+int yesno ();
+
+static int copy_internal __P ((const char *src_path, const char *dst_path,
+			       int new_dst, dev_t device,
+			       struct dir_list *ancestors,
+			       const struct cp_options *x));
 
 /* The invocation name of this program.  */
 extern char *program_name;
@@ -787,12 +723,20 @@ un_backup:
   return 1;
 }
 
+static int
+valid_options (const struct cp_options *co)
+{
+  /* FIXME: make sure xstat and dereference are consistent.  */
+  assert (co->xstat);
+  assert (co->sparse_mode != SPARSE_UNUSED);
+}
+
 /* Copy the file SRC_PATH to the file DST_PATH.  The files may be of
    any type.  NONEXISTENT_DST should be nonzero if the file DST_PATH
    is known not to exist (e.g., because its parent directory was just
    created);  NONEXISTENT_DST should be zero if DST_PATH might already
-   exist.  DEVICE is the device number of the parent directory, or 0
-   if the parent of this file is not known.
+   exist.  DEVICE is the device number of the parent directory of
+   DST_PATH, or 0 if the parent of this file is not known.
    OPTIONS is ... FIXME-describe
    Return 0 if successful, 1 if an error occurs. */
 
@@ -800,5 +744,6 @@ int
 copy (const char *src_path, const char *dst_path,
       int nonexistent_dst, const struct cp_options *options)
 {
-  copy_internal (src_path, dst_path, nonexistent_dst, NULL, options);
+  assert (valid_options (options));
+  copy_internal (src_path, dst_path, nonexistent_dst, 0, NULL, options);
 }
