@@ -822,6 +822,7 @@ my_strftime (s, maxsize, format, tp ut_argument)
 	       "#define strftime rpl_strftime".  */
 # ifdef strftime
 #  undef strftime
+	    size_t strftime ();
 # endif
 
 	    *u++ = '%';
