@@ -122,9 +122,9 @@ print_uptime (int n, const STRUCT_UTMP *this)
 	     the german translation is meaningless.  */
 	  tmn->tm_min, (tmn->tm_hour < 12 ? _("am") : _("pm")));
   if (updays > 0)
-    printf ("%d %s,", updays, ngettext(_("day"), _("days"), updays));
-  printf (" %2d:%02d,  %d %s", uphours, upmins, entries,
-	  ngettext (_("user"), _("users"), entries));
+    printf (ngettext("%d day", "%d days", updays), updays);
+  printf (" %2d:%02d,  ", uphours, upmins);
+  printf (ngettext ("%d user", "%d users", entries), entries);
 
 #if defined (HAVE_GETLOADAVG) || defined (C_GETLOADAVG)
   loads = getloadavg (avg, 3);
