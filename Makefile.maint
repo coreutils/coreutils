@@ -121,6 +121,7 @@ announcement: NEWS ChangeLog $(distdir).tar.gz
 	  for url in $(url_dir_list); do \
 	    echo "  $$url/$(xd-delta)"; \
 	  done; \
+	  echo; \
 	  echo "Here are the MD5 and SHA1 signatures for the .tar.gz file"; \
 	  echo; \
 	  echo "$(md5)  $(distdir).tar.gz"; \
