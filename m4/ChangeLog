@@ -1,3 +1,8 @@
+2002-04-28  Paul Eggert  <eggert@twinsun.com>
+
+	* jm-macros.m4 (jm_MACROS): Add AC_REPLACE_FUNCS(sig2str).
+	* prereq.m4 (jm_PREREQ): Add jm_PREREQ_SIG2STR.
+
 2002-04-24  Jim Meyering  <meyering@lucent.com>
 
 	* prereq.m4 (jm_PREREQ_HARD_LOCALE): New macro.
