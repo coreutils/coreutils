@@ -93,6 +93,10 @@ static unsigned int max_range_endpoint;
    to end of line. */
 static unsigned int eol_range_start;
 
+/* A nonzero, non-1 value with which to distinguish the index
+   corresponding to the lower bound of a range.  */
+#define RANGE_START_SENTINEL 2
+
 /* In byte mode, which bytes to output.
    In field mode, which DELIM-separated fields to output.
    Both bytes and fields are numbered starting with 1,
@@ -125,6 +129,9 @@ static int suppress_non_delimited;
 
 /* The delimeter character for field mode. */
 static int delim;
+
+/* Nonzero if the --output-delimiter=STRING option was specified.  */
+static int output_delimiter_specified;
 
 /* The length of output_delimiter_string.  */
 static size_t output_delimiter_length;
@@ -210,11 +217,29 @@ With no FILE, or when FILE is -, read standard input.\n\
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
+/* Return nonzero if the K'th field or byte is printable.
+   When returning nonzero, if RANGE_START is non-NULL,
+   set *RANGE_START to nonzero if K is the beginning of a range, and
+   set *RANGE_START to zero if K is not the beginning of a range.  */
+
 static int
-print_kth (unsigned int k)
+print_kth (unsigned int k, int *range_start)
 {
-  return ((0 < eol_range_start && eol_range_start <= k)
-	  || (k <= max_range_endpoint && printable_field[k]));
+  if (0 < eol_range_start && eol_range_start <= k)
+    {
+      if (range_start)
+	*range_start = (k == eol_range_start);
+      return 1;
+    }
+
+  if (k <= max_range_endpoint && printable_field[k])
+    {
+      if (range_start)
+	*range_start = (printable_field[k] == RANGE_START_SENTINEL);
+      return 1;
+    }
+
+  return 0;
 }
 
 /* Given the list of field or byte range specifications FIELDSTR, set
@@ -371,8 +396,13 @@ set_fields (const char *fieldstr)
   /* Set the array entries corresponding to integers in the ranges of RP.  */
   for (i = 0; i < n_rp; i++)
     {
-      unsigned int j;
-      for (j = rp[i].lo; j <= rp[i].hi; j++)
+      unsigned int j = rp[i].lo;
+
+      /* Mark the first position of field or range with a sentinel,
+	 but not if it's already part of another range.  */
+      if (j <= rp[i].hi && ! printable_field[j])
+	printable_field[j] = RANGE_START_SENTINEL;
+      for (++j; j <= rp[i].hi; j++)
 	{
 	  printable_field[j] = 1;
 	}
@@ -388,9 +418,13 @@ set_fields (const char *fieldstr)
 static void
 cut_bytes (FILE *stream)
 {
-  unsigned int byte_idx;	/* Number of chars in the line so far. */
+  unsigned int byte_idx;	/* Number of bytes in the line so far. */
+  /* Whether to begin printing delimiters between ranges for the current line.
+     Set after we've begun printing data corresponding to the first range.  */
+  int print_delimiter;
 
   byte_idx = 0;
+  print_delimiter = 0;
   while (1)
     {
       register int c;		/* Each character from the file. */
@@ -401,6 +435,7 @@ cut_bytes (FILE *stream)
 	{
 	  putchar ('\n');
 	  byte_idx = 0;
+	  print_delimiter = 0;
 	}
       else if (c == EOF)
 	{
@@ -410,9 +445,15 @@ cut_bytes (FILE *stream)
 	}
       else
 	{
-	  ++byte_idx;
-	  if (print_kth (byte_idx))
+	  int range_start;
+	  if (print_kth (++byte_idx, &range_start))
 	    {
+	      if (range_start && print_delimiter && output_delimiter_specified)
+		{
+		  fwrite (output_delimiter_string, sizeof (char),
+			  output_delimiter_length, stdout);
+		}
+	      print_delimiter = 1;
 	      putchar (c);
 	    }
 	}
@@ -444,7 +485,7 @@ cut_fields (FILE *stream)
      and the first field has been selected, or if non-delimited lines
      must be suppressed and the first field has *not* been selected.
      That is because a non-delimited line has exactly one field.  */
-  buffer_first_field = (suppress_non_delimited ^ !print_kth (1));
+  buffer_first_field = (suppress_non_delimited ^ !print_kth (1, NULL));
 
   while (1)
     {
@@ -483,7 +524,7 @@ cut_fields (FILE *stream)
 		}
 	      continue;
 	    }
-	  if (print_kth (1))
+	  if (print_kth (1, NULL))
 	    {
 	      /* Print the field, but not the trailing delimiter.  */
 	      fwrite (field_1_buffer, sizeof (char), n_bytes - 1, stdout);
@@ -494,7 +535,7 @@ cut_fields (FILE *stream)
 
       if (c != EOF)
 	{
-	  if (print_kth (field_idx))
+	  if (print_kth (field_idx, NULL))
 	    {
 	      if (found_any_selected_field)
 		{
@@ -648,6 +689,7 @@ main (int argc, char **argv)
 	  break;
 
 	case OUTPUT_DELIMITER_OPTION:
+	  output_delimiter_specified = 1;
 	  /* Interpret --output-delimiter='' to mean
 	     `use the NUL byte as the delimiter.'  */
 	  output_delimiter_length = (optarg[0] == '\0'
@@ -675,7 +717,8 @@ main (int argc, char **argv)
     FATAL_ERROR (_("you must specify a list of bytes, characters, or fields"));
 
   if (delim != '\0' && operating_mode != field_mode)
-    FATAL_ERROR (_("a delimiter may be specified only when operating on fields"));
+    FATAL_ERROR (_("an input delimiter may be specified only\
+ when operating on fields"));
 
   if (suppress_non_delimited && operating_mode != field_mode)
     FATAL_ERROR (_("suppressing non-delimited lines makes sense\n\
