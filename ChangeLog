@@ -1,5 +1,13 @@
 2003-07-23  Jim Meyering  <jim@meyering.net>
 
+	* src/stat.c: Don't include unistd.h or time.h; system.h already
+	does it.
+	* src/readlink.c: Don't include stdlib.h, unistd.h, or limits.h;
+	system.h already does it.
+	* src/pr.c: Don't include time.h; system.h already does it.
+	* src/pathchk.c: Don't include errno.h; system.h already does it.
+	* src/nice.c: Don't include sys/time.h; system.h already does it.
+
 	* Version 5.0.90.
 
 	* tests/rm/fail-2eperm: Add a check for whether $NON_ROOT_USERNAME
