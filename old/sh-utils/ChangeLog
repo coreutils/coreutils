@@ -12,12 +12,6 @@
 	does that via sys2.h.
 	* src/expr.c: Likewise.
 
-2002-01-20  Jim Meyering  <meyering@lucent.com>
-
-	* src/Makefile.am (check_date_against_glibc_strftime): New target
-	to help keep date's --help output in sync with the glibc documentation
-	for strftime.
-
 2002-01-19  Jim Meyering  <meyering@lucent.com>
 
 	* configure.ac: Remove code that set LIBOBJS in support of ansi2knr.
