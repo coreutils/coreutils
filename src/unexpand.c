@@ -1,5 +1,5 @@
 /* unexpand - convert spaces to tabs
-   Copyright (C) 89, 91, 1995-2002 Free Software Foundation, Inc.
+   Copyright (C) 89, 91, 1995-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -12,8 +12,8 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 /* By default, convert only maximal strings of initial blanks and tabs
    into tabs.
@@ -385,9 +385,10 @@ With no FILE, or when FILE is -, read standard input.\n\
 Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
-  -a, --all           convert all whitespace, instead of initial whitespace\n\
-  -t, --tabs=NUMBER   have tabs NUMBER characters apart instead of 8\n\
-  -t, --tabs=LIST     use comma separated list of explicit tab positions\n\
+  -a, --all        convert all whitespace, instead of just initial whitespace\n\
+      --first-only convert only leading sequences of whitespace (overrides -a)\n\
+  -t, --tabs=N     have tabs N characters apart instead of 8 (enables -a)\n\
+  -t, --tabs=LIST  use comma separated LIST of tab positions (enables -a)\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
