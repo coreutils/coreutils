@@ -1,6 +1,11 @@
-2004-09-27  Paul Eggert  <eggert@cs.ucla.edu>
+2004-09-28  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	* src/tail.c (usage): Clarify: --retry works only with --follow=name.
+	Reported by Nik A. Melchior in http://bugs.debian.org/273781.
+
+2004-09-27  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/od.c (format_address_paren): c is optional, so don't output
 	it if it's '\0'.
