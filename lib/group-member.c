@@ -31,9 +31,7 @@
 #endif
 
 #include "group-member.h"
-
-char *xmalloc ();
-char *xrealloc ();
+#include "xalloc.h"
 
 struct group_info
   {
