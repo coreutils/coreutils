@@ -358,14 +358,14 @@ toarith (VALUE *v)
     }
 }
 
-/* Return nonzero and advance if the next token matches STR exactly.
+/* Return true and advance if the next token matches STR exactly.
    STR must not be NULL.  */
 
 static bool
 nextarg (char const *str)
 {
   if (*args == NULL)
-    return 0;
+    return false;
   else
     {
       bool r = STREQ (*args, str);
