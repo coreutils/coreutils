@@ -45,10 +45,6 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
-
-/* FIXME: uncomment for release
-#define NDEBUG
-*/
 #include <assert.h>
 
 #include "system.h"
