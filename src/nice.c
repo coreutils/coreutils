@@ -1,5 +1,5 @@
 /* nice -- run a program with modified scheduling priority
-   Copyright (C) 1990-2003 Free Software Foundation, Inc.
+   Copyright (C) 1990-2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -61,7 +61,7 @@ static struct option const longopts[] =
 void
 usage (int status)
 {
-  if (status != 0)
+  if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
@@ -96,6 +96,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  initialize_exit_failure (EXIT_FAIL);
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
@@ -109,7 +110,7 @@ main (int argc, char **argv)
 	  && posix2_version () < 200112)
 	{
 	  if (xstrtol (&s[2], NULL, 10, &adjustment, "") != LONGINT_OK)
-	    error (EXIT_FAILURE, 0, _("invalid option `%s'"), s);
+	    error (EXIT_FAIL, 0, _("invalid option `%s'"), s);
 
 	  minusflag = 1;
 	  adjustment_given = 1;
@@ -122,7 +123,7 @@ main (int argc, char **argv)
 	  if (s[1] == '+')
 	    ++s;
 	  if (xstrtol (&s[1], NULL, 10, &adjustment, "") != LONGINT_OK)
-	    error (EXIT_FAILURE, 0, _("invalid option `%s'"), s);
+	    error (EXIT_FAIL, 0, _("invalid option `%s'"), s);
 
 	  minusflag = 0;
 	  adjustment_given = 1;
@@ -142,12 +143,12 @@ main (int argc, char **argv)
 	      switch (optc)
 		{
 		case '?':
-		  usage (EXIT_FAILURE);
+		  usage (EXIT_FAIL);
 
 		case 'n':
 		  if (xstrtol (optarg, NULL, 10, &adjustment, "")
 		      != LONGINT_OK)
-		    error (EXIT_FAILURE, 0, _("invalid priority `%s'"), optarg);
+		    error (EXIT_FAIL, 0, _("invalid priority `%s'"), optarg);
 
 		  minusflag = 0;
 		  adjustment_given = 1;
@@ -172,13 +173,13 @@ main (int argc, char **argv)
       if (adjustment_given)
 	{
 	  error (0, 0, _("a command must be given with an adjustment"));
-	  usage (EXIT_FAILURE);
+	  usage (EXIT_FAIL);
 	}
       /* No command given; print the priority. */
       errno = 0;
       current_priority = GET_PRIORITY ();
       if (current_priority == -1 && errno != 0)
-	error (EXIT_FAILURE, errno, _("cannot get priority"));
+	error (EXIT_FAIL, errno, _("cannot get priority"));
       printf ("%d\n", current_priority);
       exit (EXIT_SUCCESS);
     }
@@ -187,17 +188,17 @@ main (int argc, char **argv)
   errno = 0;
   current_priority = GET_PRIORITY ();
   if (current_priority == -1 && errno != 0)
-    error (EXIT_FAILURE, errno, _("cannot get priority"));
+    error (EXIT_FAIL, errno, _("cannot get priority"));
   if (setpriority (PRIO_PROCESS, 0, current_priority + adjustment))
 #else
   if (nice (adjustment) == -1)
 #endif
-    error (EXIT_FAILURE, errno, _("cannot set priority"));
+    error (EXIT_FAIL, errno, _("cannot set priority"));
 
   execvp (argv[i], &argv[i]);
 
   {
-    int exit_status = (errno == ENOENT ? 127 : 126);
+    int exit_status = (errno == ENOENT ? EXIT_ENOENT : EXIT_CANNOT_INVOKE);
     error (0, errno, "%s", argv[i]);
     exit (exit_status);
   }
