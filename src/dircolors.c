@@ -61,8 +61,8 @@ enum Shell_syntax
    variable.  */
 static struct obstack lsc_obstack;
 
-/* Nonzero if the input file was the standard input. */
-static int have_read_stdin;
+/* True if the input file was the standard input. */
+static bool have_read_stdin;
 
 /* FIXME: associate with ls_codes? */
 static const char *const slack_codes[] =
@@ -201,7 +201,7 @@ parse_line (unsigned char const *line, char **keyword, char **arg)
 static void
 append_quoted (const char *str)
 {
-  int need_backslash = 1;
+  bool need_backslash = true;
 
   while (*str != '\0')
     {
@@ -219,7 +219,7 @@ append_quoted (const char *str)
 	  /* Fall through */
 
 	default:
-	  need_backslash = 1;
+	  need_backslash = true;
 	  break;
 	}
 
@@ -231,24 +231,21 @@ append_quoted (const char *str)
 /* Read the file open on FP (with name FILENAME).  First, look for a
    `TERM name' directive where name matches the current terminal type.
    Once found, translate and accumulate the associated directives onto
-   the global obstack LSC_OBSTACK.  Give a diagnostic and return nonzero
+   the global obstack LSC_OBSTACK.  Give a diagnostic
    upon failure (unrecognized keyword is the only way to fail here).
-   Return zero otherwise.  */
+   Return true if successful.  */
 
-static int
+static bool
 dc_parse_stream (FILE *fp, const char *filename)
 {
   size_t line_number = 0;
   char *line = NULL;
   size_t line_chars_allocated = 0;
-  int state;
   char *term;
-  int err = 0;
+  bool ok = true;
 
   /* State for the parser.  */
-  enum states { ST_TERMNO, ST_TERMYES, ST_TERMSURE, ST_GLOBAL };
-
-  state = ST_GLOBAL;
+  enum { ST_TERMNO, ST_TERMYES, ST_TERMSURE, ST_GLOBAL } state = ST_GLOBAL;
 
   /* Get terminal type */
   term = getenv ("TERM");
@@ -257,9 +254,9 @@ dc_parse_stream (FILE *fp, const char *filename)
 
   while (1)
     {
-      int line_length;
+      ssize_t line_length;
       char *keywd, *arg;
-      int unrecognized;
+      bool unrecognized;
 
       ++line_number;
 
@@ -289,13 +286,13 @@ dc_parse_stream (FILE *fp, const char *filename)
       if (arg == NULL)
 	{
 	  error (0, 0, _("%s:%lu: invalid line;  missing second token"),
-		 filename, (long unsigned) line_number);
-	  err = 1;
+		 filename, (unsigned long int) line_number);
+	  ok = false;
 	  free (keywd);
 	  continue;
 	}
 
-      unrecognized = 0;
+      unrecognized = false;
       if (strcasecmp (keywd, "TERM") == 0)
 	{
 	  if (STREQ (arg, term))
@@ -348,13 +345,13 @@ dc_parse_stream (FILE *fp, const char *filename)
 		    }
 		  else
 		    {
-		      unrecognized = 1;
+		      unrecognized = true;
 		    }
 		}
 	    }
 	  else
 	    {
-	      unrecognized = 1;
+	      unrecognized = true;
 	    }
 	}
 
@@ -362,8 +359,8 @@ dc_parse_stream (FILE *fp, const char *filename)
 	{
 	  error (0, 0, _("%s:%lu: unrecognized keyword %s"),
 		 (filename ? quote (filename) : _("<internal>")),
-		 (long unsigned) line_number, keywd);
-	  err = 1;
+		 (unsigned long int) line_number, keywd);
+	  ok = false;
 	}
 
       free (keywd);
@@ -371,18 +368,18 @@ dc_parse_stream (FILE *fp, const char *filename)
 	free (arg);
     }
 
-  return err;
+  return ok;
 }
 
-static int
+static bool
 dc_parse_file (const char *filename)
 {
   FILE *fp;
-  int err;
+  bool ok;
 
   if (STREQ (filename, "-"))
     {
-      have_read_stdin = 1;
+      have_read_stdin = true;
       fp = stdin;
     }
   else
@@ -395,28 +392,28 @@ dc_parse_file (const char *filename)
       if (fp == NULL)
 	{
 	  error (0, errno, "%s", quote (filename));
-	  return 1;
+	  return false;
 	}
     }
 
-  err = dc_parse_stream (fp, filename);
+  ok = dc_parse_stream (fp, filename);
 
   if (fp != stdin && fclose (fp) == EOF)
     {
       error (0, errno, "%s", quote (filename));
-      return 1;
+      return false;
     }
 
-  return err;
+  return ok;
 }
 
 int
 main (int argc, char **argv)
 {
-  int err = 0;
+  bool ok = true;
   int optc;
   enum Shell_syntax syntax = SHELL_SYNTAX_UNKNOWN;
-  int print_database = 0;
+  bool print_database = false;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -438,7 +435,7 @@ main (int argc, char **argv)
 	break;
 
       case 'p':
-	print_database = 1;
+	print_database = true;
 	break;
 
       case_GETOPT_HELP_CHAR;
@@ -496,11 +493,11 @@ to select a shell syntax are mutually exclusive"));
 
       obstack_init (&lsc_obstack);
       if (argc == 0)
-	err = dc_parse_stream (NULL, NULL);
+	ok = dc_parse_stream (NULL, NULL);
       else
-	err = dc_parse_file (argv[0]);
+	ok = dc_parse_file (argv[0]);
 
-      if (!err)
+      if (ok)
 	{
 	  size_t len = obstack_object_size (&lsc_obstack);
 	  char *s = obstack_finish (&lsc_obstack);
@@ -527,5 +524,5 @@ to select a shell syntax are mutually exclusive"));
   if (have_read_stdin && fclose (stdin) == EOF)
     error (EXIT_FAILURE, errno, _("standard input"));
 
-  exit (err == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
+  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
