@@ -1,4 +1,4 @@
-#serial 68   -*- autoconf -*-
+#serial 69   -*- autoconf -*-
 
 m4_undefine([AC_LANG_SOURCE(C)])
 dnl The following is identical to the definition in c.m4
@@ -50,7 +50,6 @@ AC_DEFUN([jm_MACROS],
 
   AC_REQUIRE([UTILS_FUNC_DIRFD])
   AC_REQUIRE([AC_FUNC_ACL])
-  AC_REQUIRE([AC_FUNC_FTW])
   AC_REQUIRE([jm_FUNC_LCHOWN])
   AC_REQUIRE([fetish_FUNC_RMDIR_NOTEMPTY])
   AC_REQUIRE([jm_FUNC_CHOWN])
