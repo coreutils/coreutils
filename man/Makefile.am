@@ -130,6 +130,7 @@ mapped_name = `echo $*|sed 's/install/ginstall/; s/test/[/'`
 	mkdir $t;				\
 	(cd $t && $(LN_S) ../../src/$(mapped_name)$(EXEEXT) $*$(EXEEXT)); \
 	$(PERL) -- $(srcdir)/help2man		\
+	    --program-name=$*			\
 	    --include=$(srcdir)/$*.x		\
 	    --output=$@ $t/$*$(EXEEXT)
 	@chmod a-w $@
