@@ -1,3 +1,8 @@
+2000-11-03  Jim Meyering  <meyering@lucent.com>
+
+	* tests/sha1sum/sample-vec: New file.
+	* tests/sha1sum/Makefile.am (TESTS): Add sample-vec.
+
 2000-10-30  Jim Meyering  <meyering@lucent.com>
 
 	* configure, config.h.in, Makefile.in, etc.: Regenerate using the
