@@ -2,6 +2,12 @@
 
 	* Version 5.0.1.
 
+	* tests/rm/r-3: Create 500 rather than just 300 files.
+	There's a bug in Darwin6.5's readdir that shows up only with
+	338 or more files.
+	Fix a bug in this test: `cd $pwd' (not to `..'), now that $tmp
+	has two components.
+
 	* src/tail.c:
 	Change type of n_units, n_bytes, n_lines to be `uintmax_t'.
 	(dump_remainder): Move two declarations `down' into the scope
