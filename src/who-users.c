@@ -255,7 +255,7 @@ print_entry (struct utmp *this)
       ut_host[sizeof (this->ut_host)] = '\0';
 
       /* Look for an X display.  */
-      display = index (ut_host, ':');
+      display = strrchr (ut_host, ':');
       if (display)
 	*display++ = '\0';
 
