@@ -12,6 +12,7 @@ HEADERS = argmatch.h backupfile.h error.h fnmatch.h fsusage.h getopt.h \
 group-member.h long-options.h makepath.h modechange.h mountlist.h \
 obstack.h pathmax.h save-cwd.h xstrtol.h xstrtoul.h
 
+BUILT_SOURCES = posixtm.c getdate.c
 CONFIG_HEADER = ../config.h
 
 fu_SOURCES = getdate.c posixtm.c argmatch.c backupfile.c basename.c \
