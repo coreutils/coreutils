@@ -177,12 +177,12 @@ static uintmax_t tot_size = 0;
 
 static struct option const long_options[] =
 {
-  {"all", no_argument, &opt_all, 1},
+  {"all", no_argument, NULL, 'a'},
   {"block-size", required_argument, 0, CHAR_MAX + 2},
   {"bytes", no_argument, NULL, 'b'},
-  {"count-links", no_argument, &opt_count_all, 1},
+  {"count-links", no_argument, NULL, 'l'},
   {"dereference", no_argument, NULL, 'L'},
-  {"dereference-args", no_argument, &opt_dereference_arguments, 1},
+  {"dereference-args", no_argument, NULL, 'D'},
   {"exclude", required_argument, 0, CHAR_MAX + 1},
   {"exclude-from", required_argument, 0, 'X'},
   {"human-readable", no_argument, NULL, 'h'},
@@ -190,10 +190,10 @@ static struct option const long_options[] =
   {"kilobytes", no_argument, NULL, 'k'},
   {"max-depth", required_argument, NULL, CHAR_MAX + 3},
   {"megabytes", no_argument, NULL, 'm'},
-  {"one-file-system", no_argument, &opt_one_file_system, 1},
-  {"separate-dirs", no_argument, &opt_separate_dirs, 1},
+  {"one-file-system", no_argument, NULL, 'x'},
+  {"separate-dirs", no_argument, NULL, 'S'},
   {"summarize", no_argument, NULL, 's'},
-  {"total", no_argument, &opt_combined_arguments, 1},
+  {"total", no_argument, NULL, 'c'},
   {"help", no_argument, &show_help, 1},
   {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
