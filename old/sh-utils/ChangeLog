@@ -1,3 +1,10 @@
+2001-08-18  H. Peter Anvin  <hpa@transmeta.com>
+
+	* src/date.c (show_date) [--rfc-822]: Don't space-pad the day of
+	the month.
+	Set only LC_TYPE to the "C" locale.  Setting LC_ALL is overkill,
+	and would have unwanted side effects if there is an error message.
+
 2001-08-16  Jim Meyering  <meyering@lucent.com>
 
 	* src/date.c (main): When there are too many non-option arguments,
