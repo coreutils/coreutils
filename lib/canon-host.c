@@ -1,6 +1,6 @@
 /* Host name canonicalization
 
-   Copyright (C) 1995 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1999 Free Software Foundation, Inc.
 
    Written by Miles Bader <miles@gnu.ai.mit.edu>
 
@@ -46,8 +46,7 @@
 /* Returns the canonical hostname associated with HOST (allocated in a static
    buffer), or 0 if it can't be determined.  */
 char *
-canon_host (host)
-     char *host;
+canon_host (const char *host)
 {
 #ifdef HAVE_GETHOSTBYNAME
   struct hostent *he = gethostbyname (host);
