@@ -39,9 +39,7 @@
    or -2 if it is ambiguous (is a prefix of more than one element).  */
 
 int
-argmatch (arg, optlist)
-     const char *arg;
-     const char *const *optlist;
+argmatch (const char *arg, const char *const *optlist)
 {
   int i;			/* Temporary index in OPTLIST.  */
   size_t arglen;		/* Length of ARG.  */
@@ -78,15 +76,10 @@ argmatch (arg, optlist)
    PROBLEM is the return value from argmatch.  */
 
 void
-invalid_arg (kind, value, problem)
-     const char *kind;
-     const char *value;
-     int problem;
+invalid_arg (const char *kind, const char *value, int problem)
 {
-  fprintf (stderr, "%s: ", program_name);
-  if (problem == -1)
-    fprintf (stderr, "invalid");
-  else				/* Assume -2.  */
-    fprintf (stderr, "ambiguous");
-  fprintf (stderr, " %s `%s'\n", kind, value);
+  const char *fmt = (problem == -1
+		     ? "%s: invalid %s `%s'\n"
+		     : "%s: ambiguous %s `%s'\n");
+  fprintf (stderr, fmt, program_name, kind, value);
 }
