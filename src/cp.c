@@ -27,6 +27,7 @@
 #include "cp.h"
 #include "backupfile.h"
 #include "version.h"
+#include "error.h"
 
 #ifndef _POSIX_VERSION
 uid_t geteuid ();
