@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in.
 EXTRA_DIST =
-EXTRA_DIST += README Makefile.am.in
+EXTRA_DIST += Makefile.am.in
 EXTRA_DIST += acl.m4
 EXTRA_DIST += afs.m4
 EXTRA_DIST += alloca.m4
@@ -109,7 +109,7 @@ Makefile.am: Makefile.am.in
 	rm -f $@ $@t
 	(echo "## Process this file with automake to produce Makefile.in."; \
 	 echo EXTRA_DIST =;				\
-	 echo "EXTRA_DIST += README Makefile.am.in";	\
+	 echo "EXTRA_DIST += Makefile.am.in";		\
 	 ls -1 *.m4 | sed 's/^/EXTRA_DIST += /'; echo )	\
 	  >> $@t
 	sed -n '/^Makefile\.am:/,$$p' $< >> $@t
