@@ -1,5 +1,8 @@
 2001-02-17  Jim Meyering  <meyering@lucent.com>
 
+	* strtoul.c: Sync from GNU libc.  Use double quotes, not <...>
+	around included file name.
+
 	* strnlen.c (__strnlen): Merge in a change from GNU libc.
 
 	* strftime.c: Update from GNU libc (the only changes were to comments).
