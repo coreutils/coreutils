@@ -1,3 +1,14 @@
+Sun Jan 12 22:13:27 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* tests/tr-test/Test.pm: Rename tests so that the associated files
+	have names that are distinct even on filesystems on which file
+	names are case insensitive.
+	Reported by Fred Fish.
+	* tests/cut-test/Test.pm: Likewise.
+
+	* tests/tr-test/Makefile.am: Regenerated to reflect renamed tests.
+	* tests/cut-test/Makefile.am: Likewise.
+
 Wed Jan  8 16:38:24 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* Version 1.21.
