@@ -2,7 +2,7 @@
 # Set locale-related environment variables so we get consistent
 # message translations, time formats, sort orderings, etc.
 
-LANGUAGE=''; export LANGUAGE
-LC_ALL=''; export LC_ALL
-LANG=''; export LANG
-LC_COLLATE=''; export LC_COLLATE
+for i in \
+    LANG LANGUAGE LC_ALL LC_COLLATE LC_CTYPE LC_MESSAGES LC_NUMERIC LC_TIME; do
+  eval "$i=; export $i"
+done
