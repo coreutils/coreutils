@@ -373,5 +373,5 @@ main (int argc, char **argv)
 
   return (list
 	  ? list_signals (table, optind < argc ? argv + optind : NULL)
-	  : send_signals (signum, argv));
+	  : send_signals (signum, argv + optind));
 }
