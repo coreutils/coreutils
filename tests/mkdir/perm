@@ -1,0 +1,53 @@
+#!/bin/sh
+# FIXME
+
+if test "$VERBOSE" = yes; then
+  set -x
+  mkdir --version
+fi
+
+pwd=`pwd`
+tmp=perm.$$
+trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
+trap '(exit $?); exit' 1 2 13 15
+
+framework_failure=0
+mkdir $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo 'failure in testing framework'
+  (exit 1); exit
+fi
+
+fail=0
+
+# umask   -m option   resulting perm
+tests='
+    077  :            :drwx------:
+    050  :            :drwx-w-rwx:
+    050  :   -m 312   :d-wx--x-w-:
+    160  :            :drw---xrwx:
+    '
+
+old_IFS=$IFS
+IFS=':
+'
+set - $tests
+IFS=$old_IFS
+
+while :; do
+  set -x
+  case $# in 0|1|2) break;; esac
+  umask=$1 mode=$2 expected_perms=$3
+  shift; shift; shift
+  umask $umask
+  mkdir $mode d || fail=1
+
+  actual_perms=`ls -ld d | sed 's/ .*//'`
+  test "$expected_perms" = "$actual_perms" || fail=1
+  rmdir d || fail=1
+done
+
+
+(exit $fail); exit
