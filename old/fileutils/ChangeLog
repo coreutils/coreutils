@@ -1,3 +1,14 @@
+Sat Jun 22 16:57:53 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+
+	* dircolors.c: Major overhaul.  No longer read from /etc/DIR_COLORS
+	or from ~/.dircolors.  Defaults are now compiled in.  If you specify
+	a file on the command line, it is used instead of the compiled-in
+	defaults.
+	(main): New option --print (-p).
+	Detect write failure.
+	Add --bourne-shell and --c-shell aliases for --sh and --csh resp.
+
 Tue Jun 18 20:54:05 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* cp.c (copy_reg): Cast both sides of comparison to size_t
@@ -23,6 +34,8 @@ Tue Jun 18 20:54:05 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 	* ln.c (STREQ): Remove macro definition
 	* system.h (STREQ): Add it here instead.
 	* cp.c (do_copy): Use STREQ here instead of strcmp(...) == 0.
+	* ls.c (parse_ls_color): Likewise.
+	* df.c (selected_fstype, excluded_fstype, show_disk, main): Likewise.
 
 	* cp.c (do_copy): When the force and backup options have been
 	specified and the source and destination are the same name for an
