@@ -82,6 +82,7 @@ START-INFO-DIR-ENTRY
 * printf: (coreutils)printf invocation.         Format and print data.
 * ptx: (coreutils)ptx invocation.               Produce permuted indexes.
 * pwd: (coreutils)pwd invocation.               Print working directory.
+* readlink: (coreutils)readlink invocation.     Display value of a symbolic link.
 * rm: (coreutils)rm invocation.                 Remove files.
 * rmdir: (coreutils)rmdir invocation.           Remove empty directories.
 * seq: (coreutils)seq invocation.               Print numeric sequences
@@ -297,6 +298,7 @@ Special file types
 * mkdir invocation::            Make directories
 * mkfifo invocation::           Make FIFOs (named pipes)
 * mknod invocation::            Make block or character special files
+* readlink invocation::         Display value of a symbolic link
 * rmdir invocation::            Remove empty directories
 * unlink invocation::           Remove files via unlink syscall
 
@@ -6863,6 +6865,7 @@ Besides directories, other special file types include named pipes
 * mkdir invocation::            Make directories.
 * mkfifo invocation::           Make FIFOs (named pipes).
 * mknod invocation::            Make block or character special files.
+* readlink invocation::         Display value of a symbolic link.
 * rmdir invocation::            Remove empty directories.
 * unlink invocation::           Remove files via the unlink syscall
 @end menu
@@ -7209,6 +7212,74 @@ Set the mode of created files to @var{mode}, which is symbolic as in
 of departure.  @xref{File permissions}.
 
 @end table
+
+
+@node readlink invocation
+@section @command{readlink}: Display value of a symbolic link
+
+@pindex readlink
+@cindex displaying value of a symbolic link
+
+@command{readlink} may work in one of two supported modes:
+
+@table @samp
+
+@item Readlink mode
+
+@command{readlink} outputs the value of the given symbolic link.
+If @command{readlink} is invoked with an argument other than the pathname
+of a symbolic link, it exits with a non-zero exit code.
+
+@item Canonicalize mode
+
+@command{readlink} outputs the absolute name of the given file which contains
+no `.', `..' components nor any repeated path separators (`/') or symlinks.
+In any of the path components is missing or unavailable,
+it exits with a non-zero exit code.
+
+@end table
+
+@example
+readlink [@var{option}] @var{file}
+@end example
+
+By default, @command{readlink} operates in readlink mode.
+
+The program accepts the following options.  Also see @ref{Common options}.
+
+@table @samp
+
+@item -f
+@itemx --canonicalize
+@opindex -f
+@opindex --canonicalize
+Activate canonicalize mode.
+
+@item -n
+@itemx --no-newline
+@opindex -n
+@opindex --no-newline
+Do not output the trailing newline.
+
+@item -s
+@itemx -q
+@itemx --silent
+@itemx --quiet
+@opindex -s
+@opindex -q
+@opindex --silent
+@opindex --quiet
+Suppress most error messages.
+
+@item -v
+@itemx --verbose
+@opindex -v
+@opindex --verbose
+Report error messages.
+
+@end table
+
+The @command{readlink} utility first appeared in OpenBSD 2.1.
 
 
 @node rmdir invocation
