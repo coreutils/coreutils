@@ -1,5 +1,6 @@
 Changes in release 2.1
  [2.0g]
+* date now handles two-digit years with leading zeros correctly.
 * printf interprets unicode, \uNNNN \UNNNNNNNN, on systems with the
   required support;  from Bruno Haible.
 * stty's rprnt attribute now works on HPUX 10.20
