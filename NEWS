@@ -1,4 +1,6 @@
 [5.0.1]
+* tsort now fails when given an odd number of input tokens.
+  Before, it would act as if the final token appeared one additional time.
 * readlink's --canonicalize option now works on systems like Solaris that
   lack the canonicalize_file_name function but do have resolvepath.
 * split can now handle --bytes=N and --lines=N with N=2^31 or more.
