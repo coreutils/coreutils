@@ -1,3 +1,9 @@
+2004-09-03  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (dd invocation): Specify which conversion options
+	are mutually exclusive.  Give a bit more detail about ascii,
+	ebcdic, and ibm conversions.
+
 2004-08-24  Paul Eggert  <eggert@cs.ucla.edu>
 
 	POSIX-conformance fixes for "expand" and "unexpand".
