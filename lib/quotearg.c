@@ -262,20 +262,21 @@ quotearg_buffer_restyled (char *buffer, size_t buffersize,
 #endif
 	case '\b': esc = 'b'; goto c_escape;
 	case '\f': esc = 'f'; goto c_escape;
-	case '\n': esc = 'n'; goto c_escape;
-	case '\r': esc = 'r'; goto c_escape;
-	case '\t': esc = 't'; goto c_escape;
+	case '\n': esc = 'n'; goto c_and_shell_escape;
+	case '\r': esc = 'r'; goto c_and_shell_escape;
+	case '\t': esc = 't'; goto c_and_shell_escape;
 	case '\v': esc = 'v'; goto c_escape;
-	case '\\': esc = c; goto c_escape;
+	case '\\': esc = c; goto c_and_shell_escape;
 
+	c_and_shell_escape:
+	  if (quoting_style == shell_quoting_style)
+	    goto use_shell_always_quoting_style;
 	c_escape:
 	  if (backslash_escapes)
 	    {
 	      c = esc;
 	      goto store_escape;
 	    }
-	  if (quoting_style == shell_quoting_style)
-	    goto use_shell_always_quoting_style;
 	  break;
 
 	case '#': case '~':
