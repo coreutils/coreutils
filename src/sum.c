@@ -40,7 +40,7 @@ static int have_read_stdin;
 
 static struct option const longopts[] =
 {
-  {"sysv", 0, NULL, 's'},
+  {"sysv", no_argument, NULL, 's'},
   {NULL, 0, NULL, 0}
 };
 

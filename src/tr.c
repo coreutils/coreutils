@@ -313,10 +313,10 @@ static char xlate[N_CHARS];
 
 static struct option const long_options[] =
 {
-  {"complement", 0, NULL, 'c'},
-  {"delete", 0, NULL, 'd'},
-  {"squeeze-repeats", 0, NULL, 's'},
-  {"truncate-set1", 0, NULL, 't'},
+  {"complement", no_argument, NULL, 'c'},
+  {"delete", no_argument, NULL, 'd'},
+  {"squeeze-repeats", no_argument, NULL, 's'},
+  {"truncate-set1", no_argument, NULL, 't'},
   {NULL, 0, NULL, 0}
 };
 

@@ -82,9 +82,9 @@ Usage: %s [-lines] [-l lines] [-b bytes[bkm]] [-C bytes[bkm]]\n\
 
 static struct option const longopts[] =
 {
-  {"bytes", 1, NULL, 'b'},
-  {"lines", 1, NULL, 'l'},
-  {"line-bytes", 1, NULL, 'C'},
+  {"bytes", required_argument, NULL, 'b'},
+  {"lines", required_argument, NULL, 'l'},
+  {"line-bytes", required_argument, NULL, 'C'},
   {NULL, 0, NULL, 0}
 };
 

@@ -73,12 +73,12 @@ char *program_name;
 
 static struct option const longopts[] =
 {
-  {"count", 0, NULL, 'c'},
-  {"repeated", 0, NULL, 'd'},
-  {"unique", 0, NULL, 'u'},
-  {"skip-fields", 1, NULL, 'f'},
-  {"skip-chars", 1, NULL, 's'},
-  {"check-chars", 1, NULL, 'w'},
+  {"count", no_argument, NULL, 'c'},
+  {"repeated", no_argument, NULL, 'd'},
+  {"unique", no_argument, NULL, 'u'},
+  {"skip-fields", required_argument, NULL, 'f'},
+  {"skip-chars", required_argument, NULL, 's'},
+  {"check-chars", required_argument, NULL, 'w'},
   {NULL, 0, NULL, 0}
 };
 

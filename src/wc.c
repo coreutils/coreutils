@@ -49,10 +49,10 @@ static int exit_status;
 
 static struct option const longopts[] =
 {
-  {"bytes", 0, NULL, 'c'},
-  {"chars", 0, NULL, 'c'},
-  {"lines", 0, NULL, 'l'},
-  {"words", 0, NULL, 'w'},
+  {"bytes", no_argument, NULL, 'c'},
+  {"chars", no_argument, NULL, 'c'},
+  {"lines", no_argument, NULL, 'l'},
+  {"words", no_argument, NULL, 'w'},
   {NULL, 0, NULL, 0}
 };
 

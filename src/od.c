@@ -254,15 +254,15 @@ static enum size_spec fp_type_size[MAX_FP_TYPE_SIZE + 1];
 static struct option const long_options[] =
 {
   /* POSIX options.  */
-  {"skip-bytes", 1, NULL, 'j'},
-  {"address-radix", 1, NULL, 'A'},
-  {"read-bytes", 1, NULL, 'N'},
-  {"format", 1, NULL, 't'},
-  {"output-duplicates", 0, NULL, 'v'},
+  {"skip-bytes", required_argument, NULL, 'j'},
+  {"address-radix", required_argument, NULL, 'A'},
+  {"read-bytes", required_argument, NULL, 'N'},
+  {"format", required_argument, NULL, 't'},
+  {"output-duplicates", no_argument, NULL, 'v'},
 
   /* non-POSIX options.  */
-  {"strings", 2, NULL, 's'},
-  {"width", 2, NULL, 'w'},
+  {"strings", optional_argument, NULL, 's'},
+  {"width", optional_argument, NULL, 'w'},
   {NULL, 0, NULL, 0}
 };
 

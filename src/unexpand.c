@@ -107,8 +107,8 @@ char *program_name;
 
 static struct option const longopts[] =
 {
-  {"tabs", 1, NULL, 't'},
-  {"all", 0, NULL, 'a'},
+  {"tabs", required_argument, NULL, 't'},
+  {"all", no_argument, NULL, 'a'},
   {NULL, 0, NULL, 0}
 };
 

@@ -150,17 +150,17 @@ static void build_print_fmt ();
 
 static struct option const longopts[] =
 {
-  {"header-numbering", 1, NULL, 'h'},
-  {"body-numbering", 1, NULL, 'b'},
-  {"footer-numbering", 1, NULL, 'f'},
-  {"first-page", 1, NULL, 'v'},
-  {"page-increment", 1, NULL, 'i'},
-  {"no-renumber", 0, NULL, 'p'},
-  {"join-blank-lines", 1, NULL, 'l'},
-  {"number-separator", 1, NULL, 's'},
-  {"number-width", 1, NULL, 'w'},
-  {"number-format", 1, NULL, 'n'},
-  {"section-delimiter", 1, NULL, 'd'},
+  {"header-numbering", required_argument, NULL, 'h'},
+  {"body-numbering", required_argument, NULL, 'b'},
+  {"footer-numbering", required_argument, NULL, 'f'},
+  {"first-page", required_argument, NULL, 'v'},
+  {"page-increment", required_argument, NULL, 'i'},
+  {"no-renumber", no_argument, NULL, 'p'},
+  {"join-blank-lines", required_argument, NULL, 'l'},
+  {"number-separator", required_argument, NULL, 's'},
+  {"number-width", required_argument, NULL, 'w'},
+  {"number-format", required_argument, NULL, 'n'},
+  {"section-delimiter", required_argument, NULL, 'd'},
   {NULL, 0, NULL, 0}
 };
 

@@ -145,11 +145,11 @@ char *program_name;
 
 static struct option const longopts[] =
 {
-  {"bytes", 1, 0, 'b'},
-  {"characters", 1, 0, 'c'},
-  {"fields", 1, 0, 'f'},
-  {"delimiter", 1, 0, 'd'},
-  {"only-delimited", 0, 0, 's'},
+  {"bytes", required_argument, 0, 'b'},
+  {"characters", required_argument, 0, 'c'},
+  {"fields", required_argument, 0, 'f'},
+  {"delimiter", required_argument, 0, 'd'},
+  {"only-delimited", no_argument, 0, 's'},
   {0, 0, 0, 0}
 };
 

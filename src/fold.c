@@ -48,9 +48,9 @@ char *program_name;
 
 static struct option const longopts[] =
 {
-  {"bytes", 0, NULL, 'b'},
-  {"spaces", 0, NULL, 's'},
-  {"width", 1, NULL, 'w'},
+  {"bytes", no_argument, NULL, 'b'},
+  {"spaces", no_argument, NULL, 's'},
+  {"width", required_argument, NULL, 'w'},
   {NULL, 0, NULL, 0}
 };
 

@@ -84,11 +84,11 @@ static int have_read_stdin;
 
 static struct option const long_options[] =
 {
-  {"bytes", 1, NULL, 'c'},
-  {"lines", 1, NULL, 'n'},
-  {"quiet", 0, NULL, 'q'},
-  {"silent", 0, NULL, 'q'},
-  {"verbose", 0, NULL, 'v'},
+  {"bytes", required_argument, NULL, 'c'},
+  {"lines", required_argument, NULL, 'n'},
+  {"quiet", no_argument, NULL, 'q'},
+  {"silent", no_argument, NULL, 'q'},
+  {"verbose", no_argument, NULL, 'v'},
   {NULL, 0, NULL, 0}
 };
 

@@ -1198,11 +1198,11 @@ interrupt_handler ()
 
 static struct option const longopts[] =
 {
-  {"digits", 1, NULL, 'n'},
-  {"quiet", 0, NULL, 's'},
-  {"silent", 0, NULL, 's'},
-  {"keep-files", 0, NULL, 'k'},
-  {"prefix", 1, NULL, 'f'},
+  {"digits", required_argument, NULL, 'n'},
+  {"quiet", no_argument, NULL, 's'},
+  {"silent", no_argument, NULL, 's'},
+  {"keep-files", no_argument, NULL, 'k'},
+  {"prefix", required_argument, NULL, 'f'},
   {NULL, 0, NULL, 0}
 };
 

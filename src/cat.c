@@ -136,13 +136,13 @@ main (argc, argv)
 
   static struct option const long_options[] =
   {
-    {"number-nonblank", 0, NULL, 'b'},
-    {"number", 0, NULL, 'n'},
-    {"squeeze-blank", 0, NULL, 's'},
-    {"show-nonprinting", 0, NULL, 'v'},
-    {"show-ends", 0, NULL, 'E'},
-    {"show-tabs", 0, NULL, 'T'},
-    {"show-all", 0, NULL, 'A'},
+    {"number-nonblank", no_argument, NULL, 'b'},
+    {"number", no_argument, NULL, 'n'},
+    {"squeeze-blank", no_argument, NULL, 's'},
+    {"show-nonprinting", no_argument, NULL, 'v'},
+    {"show-ends", no_argument, NULL, 'E'},
+    {"show-tabs", no_argument, NULL, 'T'},
+    {"show-all", no_argument, NULL, 'A'},
     {NULL, 0, NULL, 0}
   };
 

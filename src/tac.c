@@ -103,9 +103,9 @@ static struct re_pattern_buffer compiled_separator;
 
 static struct option const longopts[] =
 {
-  {"before", 0, &separator_ends_record, 0},
-  {"regex", 0, &sentinel_length, 0},
-  {"separator", 1, NULL, 's'},
+  {"before", no_argument, &separator_ends_record, 0},
+  {"regex", no_argument, &sentinel_length, 0},
+  {"separator", required_argument, NULL, 's'},
   {NULL, 0, NULL, 0}
 };
 

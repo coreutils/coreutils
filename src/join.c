@@ -561,9 +561,9 @@ add_field_list (str)
    a character that is a short option. */
 static struct option const longopts[] =
 {
-  {"j", 1, NULL, 'j'},
-  {"j1", 1, NULL, '1'},
-  {"j2", 1, NULL, '2'},
+  {"j", required_argument, NULL, 'j'},
+  {"j1", required_argument, NULL, '1'},
+  {"j2", required_argument, NULL, '2'},
   {NULL, 0, NULL, 0}
 };
 

@@ -79,8 +79,8 @@ static char *delim_end;
 
 static struct option const longopts[] =
 {
-  {"serial", 0, 0, 's'},
-  {"delimiters", 1, 0, 'd'},
+  {"serial", no_argument, 0, 's'},
+  {"delimiters", required_argument, 0, 'd'},
   {0, 0, 0, 0}
 };
 
