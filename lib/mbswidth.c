@@ -21,11 +21,6 @@
 # include <config.h>
 #endif
 
-/* Tell GNU libc to declare wcwidth().  */
-#ifndef _XOPEN_SOURCE
-# define _XOPEN_SOURCE 500
-#endif
-
 /* Get MB_LEN_MAX.  */
 #if HAVE_LIMITS_H
 # include <limits.h>
@@ -62,10 +57,20 @@
 # define mbsinit(ps) 1
 #endif
 
-/* If wcwidth() doesn't exist, assume all printable characters have
+#ifndef HAVE_DECL_WCWIDTH
+"this configure-time declaration test was not run"
+#endif
+#if !HAVE_DECL_WCWIDTH
+int wcwidth ();
+#endif
+
+#ifndef wcwidth
+# if !HAVE_WCWIDTH
+/* wcwidth doesn't exist, so assume all printable characters have
    width 1.  */
-#if !defined wcwidth && !HAVE_WCWIDTH
-# define wcwidth(wc) ((wc) == 0 ? 0 : iswprint (wc) ? 1 : -1)
+#  define wcwidth(wc) ((wc) == 0 ? 0 : iswprint (wc) ? 1 : -1)
+# else
+# endif
 #endif
 
 /* Get ISPRINT.  */
