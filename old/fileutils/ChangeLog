@@ -1,7 +1,6 @@
-2000-12-27  Paul Eggert  <eggert@twinsun.com>
+2000-12-28  Jim Meyering  <meyering@lucent.com>
 
-	* tests/cp/cp-parents: Turn off the working directory's sticky
-	bit, so that we don't have to worry about it later.
+	* tests/cp/cp-parents: Run sticky-check from just-created directory.
 
 2000-12-28  Jim Meyering  <meyering@lucent.com>
 
@@ -9,6 +8,9 @@
 	s/tmp_dst_sb/tmp_src_sb/.
 
 2000-12-27  Paul Eggert  <eggert@twinsun.com>
+
+	* tests/sticky-check: Turn off the working directory's sticky
+	bit, so that we don't have to worry about it later.
 
 	* src/copy.c (same_file_ok): Use a single auto var for
 	tmp_dst_sb, instead of two static vars.  Likewise for
@@ -29,6 +31,7 @@
 2000-12-25  Jim Meyering  <meyering@lucent.com>
 
 	Clean-up to avoid warnings from Irix's c89.
+
 	* src/remove.c (hash_compare_active_dir_ents): Return explicit `true'
 	or `false', rather than relying on implicit int-to-enum cast.
 	* src/copy.c (same_file_ok): Remove declaration and set of unused
