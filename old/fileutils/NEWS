@@ -1,4 +1,6 @@
 Changes in release 3.14:
+ [3.13j]
+* ls --color highlights orphaned symlinks text on terminals that support it
  [3.13i]
 * ls -l honors current locale with respect to abbreviated month names (and,
   with --full-time day names) on systems with a locale-supporting strftime
