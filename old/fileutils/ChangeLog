@@ -1,3 +1,18 @@
+2001-05-12  Paul Eggert  <eggert@twinsun.com>
+
+	Clean up some of the places where the code assumed that random
+	types like 'mode_t' fit into 'int', which POSIX doesn't guarantee.
+
+	* src/ls.c (struct fileinfo.linkmode): Now st_mode.
+	(print_color_indicator, print_name_with_quoting, print_type_indicator,
+	length_of_file_name_and_frills):
+	Use mode_t, not unsigned int, to store modes.
+	(dired_dump_obstack): Do not assume size fits in 'int'.
+	(get_link_name): readlink returns ssize_t, not int.
+	(make_link_path): Store buffer size as size_t, not int.
+	(print_long_format): Use unsigned long, not unsigned, to print
+	nlink_t, uid_t, gid_t, major_t, minor_t.
+
 2001-05-13  Paul Eggert  <eggert@sic.twinsun.com>
 
 	* src/mknod.c (main): Check for NODEV device only if NODEV is defined.
