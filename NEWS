@@ -42,6 +42,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   when first encountering a directory, `rm -r' would mistakenly fail
   to remove files under that directory.
 
+  If d/x is a directory and x a file, "ln x d/" now reports an error
+  instead of incorrectly creating a link to d/x/x.
+
   ptx now diagnoses invalid values for its --width=N (-w)
   and --gap-size=N (-g) options.
 
