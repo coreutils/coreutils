@@ -2377,21 +2377,8 @@ gobble_file (const char *name, enum filetype type, int explicit_arg,
 	      /* Symbolic links to directories that are mentioned on the
 	         command line are automatically traced if not being
 	         listed as files.  */
-	      if (explicit_arg && format != long_format
-		  && S_ISDIR (linkstats.st_mode))
-		{
-		  /* Substitute the linked-to directory's name, but
-		     save the real name in `linkname' for printing.  */
-		  if (!immediate_dirs)
-		    {
-		      const char *tempname = name;
-		      name = linkpath;
-		      linkpath = files[files_index].linkname;
-		      files[files_index].linkname = (char *) tempname;
-		    }
-		  files[files_index].stat = linkstats;
-		}
-	      else
+	      if (!explicit_arg || format == long_format
+		  || !S_ISDIR (linkstats.st_mode))
 		{
 		  /* Get the linked-to file's mode for the filetype indicator
 		     in long listings.  */
