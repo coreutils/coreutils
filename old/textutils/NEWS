@@ -1,5 +1,6 @@
 Changes in release 1.23
 [1.22g]
+* pr accepts long option names (see `pr --help')
 * new program: ptx (moved to this package from being its own distribution)
 [1.22f]
 * cut accepts new --output-delimiter=STR option
