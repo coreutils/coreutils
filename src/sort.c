@@ -174,15 +174,15 @@ static char fold_toupper[UCHAR_LIM];
 
 #define MONTHS_PER_YEAR 12
 
-#ifndef ENABLE_NLS
-# define NLS_CONST const
+#if defined ENABLE_NLS && HAVE_NL_LANGINFO
+# define MONTHTAB_CONST /* empty */
 #else
-# define NLS_CONST /* empty */
+# define MONTHTAB_CONST const
 #endif
 
 /* Table mapping month names to integers.
    Alphabetic order allows binary search. */
-static NLS_CONST struct month monthtab[] =
+static MONTHTAB_CONST struct month monthtab[] =
 {
   {"APR", 4},
   {"AUG", 8},
@@ -287,7 +287,7 @@ Write sorted concatenation of all FILE(s) to standard output.\n\
       printf (_("\
 POS is F[.C][OPTS], where F is the field number and C the character position\n\
 in the field, both counted from one with -k, from zero with the obsolescent\n\
-form.  OPTS is made up of one or more of Mbdfinr, this effectively disables\n\
+form.  OPTS is made up of one or more of Mbdfinr; this effectively disables\n\
 global -Mbdfinr settings for that key.  If no key is given, use the entire\n\
 line as the key.  With no FILE, or when FILE is -, read standard input.\n\
 ")
@@ -1550,7 +1550,7 @@ mergefps (FILE **fps, register int nfps, FILE *ofp)
   /* Repeatedly output the smallest line until no input remains. */
   while (nfps)
     {
-      /* If uniqified output is turned on, output only the first of
+      /* If uniquified output is turned on, output only the first of
 	 an identical series of lines. */
       if (unique)
 	{
