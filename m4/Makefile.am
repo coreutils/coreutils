@@ -33,6 +33,7 @@ gettext.m4 \
 gettimeofday.m4 \
 glibc.m4 \
 glibc21.m4 \
+gnu-source.m4 \
 group-member.m4 \
 host-os.m4 \
 human.m4 \
