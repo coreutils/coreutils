@@ -20,20 +20,31 @@ AC_DEFUN(jm_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK,
       main ()
       {
         struct stat sbuf;
+        /* Linux will dereference the symlink and fail.
+           That is better in the sense that it means we will not
+           have to compile and use the lstat wrapper.  */
         exit (lstat ("conftest.sym/", &sbuf) ? 0 : 1);
       }
       ],
       jm_cv_func_lstat_dereferences_slashed_symlink=yes,
       jm_cv_func_lstat_dereferences_slashed_symlink=no,
-      dnl When crosscompiling, be pessimistic so we'll end up using the
+      dnl When crosscompiling, be pessimistic so we will end up using the
       dnl replacement version of lstat that checkes for trailing slashes
       dnl and calls lstat a second time when necessary.
       jm_cv_func_lstat_dereferences_slashed_symlink=no
      )
+   else
+     jm_cv_func_lstat_dereferences_slashed_symlink=no
+   fi
   ])
 
-  if test $jm_cv_func_lstat_dereferences_slashed_symlink = yes; then
+  # FIXME: convert to 0 or 1.
+  AC_DEFINE_UNQUOTED(LSTAT_FOLLOWS_SLASHED_SYMLINK, FIXME,
+    [Define if lstat dereferences a symlink specified with a trailing slash])
+
+  if test $jm_cv_func_lstat_dereferences_slashed_symlink = no; then
     AC_SUBST(LIBOBJS)
+# FIXME: append to LIBOBJS only if it's not there already.
     LIBOBJS="$LIBOBJS lstat.$ac_objext"
     AC_DEFINE_UNQUOTED(LSTAT_FOLLOWS_SLASHED_SYMLINK, 1,
       [Define if lstat dereferences a symlink specified with a trailing slash])
