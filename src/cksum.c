@@ -1,5 +1,5 @@
 /* cksum -- calculate and print POSIX.2 checksums and sizes of files
-   Copyright (C) 92, 95, 96, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 92, 1995-1998, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -216,6 +216,9 @@ cksum (char *file, int print_name)
 	  return -1;
 	}
     }
+
+  /* Read input in BINARY mode, unless it is a console device.  */
+  SET_BINARY (fileno (fp));
 
   while ((bytes_read = fread (buf, 1, BUFLEN, fp)) > 0)
     {
