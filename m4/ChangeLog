@@ -1,3 +1,27 @@
+2005-01-29  Jim Meyering  <jim@meyering.net>
+
+	Use AC_LIBSOURCES to list corresponding source (.c, .h, .y) files
+	so that automake automatically knows to distribute those files.
+	Use AC_LIBOBJ to ensure that automake automatically knows the
+	names of always-compiled source files.  Automake already knows
+	the names of conditionally compiled ones, e.g., due to preexisting
+	uses of AC_LIBOBJ and AC_REPLACE_FUNCS.
+	[This is a start.  Many still remain to be fixed...]
+
+	* acl.m4, backupfile.m4, c-strtod.m4, canon-host.m4:
+	* canonicalize.m4, cloexec.m4, closeout.m4, dirfd.m4, dirname.m4:
+	* exclude.m4, exitfail.m4, file-type.m4, filemode.m4, fpending.m4:
+	* fsusage.m4, getdate.m4, getline.m4, getpagesize.m4, getpass.m4:
+	* gettime.m4, getugroups.m4, group-member.m4, hard-locale.m4:
+	* hash.m4, human.m4, idcache.m4, long-options.m4, makepath.m4:
+	* md5.m4, memcoll.m4, modechange.m4, mountlist.m4, nanosleep.m4:
+	* path-concat.m4, pathmax.m4, physmem.m4, posixtm.m4, posixver.m4:
+	* quote.m4, quotearg.m4, readtokens.m4, readutmp.m4, safe-read.m4:
+	* safe-write.m4, same.m4, savedir.m4, setenv.m4, settime.m4:
+	* sha1.m4, sig2str.m4, strdup.m4, strftime.m4, strndup.m4:
+	* strverscmp.m4, timespec.m4, unlocked-io.m4, userspec.m4:
+	* utimecmp.m4, utimens.m4, xalloc.m4, yesno.m4:
+
 2005-01-27  Jim Meyering  <jim@meyering.net>
 
 	* hash-pjw.m4 (gl_HASH_PJW): New file/macro.

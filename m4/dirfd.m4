@@ -1,8 +1,8 @@
-#serial 9
+#serial 10
 
 dnl Find out how to get the file descriptor associated with an open DIR*.
 
-# Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
@@ -11,6 +11,8 @@ dnl From Jim Meyering
 
 AC_DEFUN([gl_FUNC_DIRFD],
 [
+  AC_LIBSOURCES([dirfd.c, dirfd.h])
+
   dnl Work around a bug of AC_EGREP_CPP in autoconf-2.57.
   AC_REQUIRE([AC_PROG_CPP])
   AC_REQUIRE([AC_PROG_EGREP])

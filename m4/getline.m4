@@ -1,6 +1,6 @@
-# getline.m4 serial 11
+# getline.m4 serial 12
 
-dnl Copyright (C) 1998, 1999, 2000, 2001, 2002, 2003 Free Software
+dnl Copyright (C) 1998, 1999, 2000, 2001, 2002, 2003, 2005 Free Software
 dnl Foundation, Inc.
 dnl
 dnl This file is free software; the Free Software Foundation
@@ -15,6 +15,8 @@ dnl have a function by that name in -linet that doesn't have anything
 dnl to do with the function we need.
 AC_DEFUN([AM_FUNC_GETLINE],
 [
+  AC_LIBSOURCES([getline.c, getline.h])
+
   dnl Persuade glibc <stdio.h> to declare getline() and getdelim().
   AC_REQUIRE([AC_GNU_SOURCE])
 

@@ -1,6 +1,6 @@
-#serial 9
+#serial 10
 
-# Copyright (C) 2000, 2001, 2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 2000, 2001, 2003, 2004, 2005 Free Software Foundation, Inc.
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
@@ -9,6 +9,8 @@ dnl From Jim Meyering
 
 AC_DEFUN([gl_TIMESPEC],
 [
+  AC_LIBSOURCES([timespec.h])
+
   dnl Prerequisites of lib/timespec.h.
   AC_REQUIRE([AC_HEADER_TIME])
   AC_CHECK_HEADERS_ONCE(sys/time.h)

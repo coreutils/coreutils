@@ -1,6 +1,6 @@
-#serial 7
+#serial 8
 
-# Copyright (C) 1999, 2000, 2001, 2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 1999, 2000, 2001, 2003, 2004, 2005 Free Software Foundation, Inc.
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
@@ -9,6 +9,8 @@ dnl Written by Jim Meyering
 
 AC_DEFUN([gl_FUNC_GROUP_MEMBER],
 [
+  AC_LIBSOURCES([group-member.c, group-member.h])
+
   dnl Persuade glibc <unistd.h> to declare group_member().
   AC_REQUIRE([AC_GNU_SOURCE])
 

@@ -1,7 +1,7 @@
-# fsusage.m4 serial 14
+# fsusage.m4 serial 15
 # Obtaining file system usage information.
 
-# Copyright (C) 1997, 1998, 2000, 2001, 2003, 2004 Free Software
+# Copyright (C) 1997, 1998, 2000, 2001, 2003, 2004, 2005 Free Software
 # Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
@@ -12,6 +12,8 @@
 
 AC_DEFUN([gl_FSUSAGE],
 [
+  AC_LIBSOURCES([fsusage.c, fsusage.h])
+
   AC_CHECK_HEADERS_ONCE(sys/param.h)
   AC_CHECK_HEADERS_ONCE(sys/vfs.h sys/fs_types.h)
   AC_CHECK_HEADERS(sys/mount.h, [], [],

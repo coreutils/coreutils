@@ -1,11 +1,14 @@
-# posixver.m4 serial 5
-dnl Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+# posixver.m4 serial 6
+dnl Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
 
 AC_DEFUN([gl_POSIXVER],
 [
+  AC_LIBSOURCES([posixver.c, posixver.h])
+  AC_LIBOBJ([posixver])
+
   AC_CHECK_HEADERS_ONCE(unistd.h)
   AC_REQUIRE([gl_DEFAULT_POSIX2_VERSION])
 ])
