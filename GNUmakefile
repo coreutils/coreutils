@@ -15,6 +15,7 @@ have-Makefile := $(shell test -f Makefile && echo yes)
 ifeq ($(have-Makefile),yes)
 
 include Makefile
+include $(srcdir)/Makefile.cfg
 include $(srcdir)/Makefile.maint
 
 else
