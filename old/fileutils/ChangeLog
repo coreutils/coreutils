@@ -1,6 +1,25 @@
-2002-04-17  Jim Meyering  <meyering@lucent.com>
+2002-04-19  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.9.
+
+	* tests/mkdir/p-2: Use better trap.
+	* tests/mkdir/p-1: Likewise.
+	* tests/mkdir/concurrent-1: Likewise.
+
+	* tests/rm/deep-1: Set $tmp the new way.
+
+	* tests/rm/ir-1: Use `rm', not $RM.  Use better trap.
+	* tests/rm/i-1: Likewise.
+	* tests/rm/f-1: Likewise.
+
+	* tests/sample-test: Use automatically-derived name for temporary
+	directory.  This is more 8.3-friendly.  Based on a suggestion from
+	Richard Dawe.
+
+	* tests/sample-test: New file.
+	* tests/Makefile.am (EXTRA_DIST): Add sample-test.
+
+2002-04-17  Jim Meyering  <meyering@lucent.com>
 
 	* src/touch.c (touch): Don't report errors for nonexistent files
 	when --no-create is in effect.  Based on a patch from TAKAI Kousuke.
