@@ -40,6 +40,10 @@ cb (const char *file, const struct stat *sb, int file_type, struct FTW *info)
 int
 main ()
 {
+  /* Require these symbols, too.  */
+  int d1 = FTW_DCH;
+  int d2 = FTW_DCHP;
+
   int err = nftw ("conftest.dir", cb, 30, FTW_PHYS | FTW_MOUNT | FTW_CHDIR);
   exit ((err == 0 && depth == 4) ? 0 : 1);
 }
