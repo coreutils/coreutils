@@ -1,5 +1,5 @@
 /* GNU's uptime.
-   Copyright (C) 1992-2001 Free Software Foundation, Inc.
+   Copyright (C) 1992-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -122,9 +122,9 @@ print_uptime (int n, const STRUCT_UTMP *this)
 	     the german translation is meaningless.  */
 	  tmn->tm_min, (tmn->tm_hour < 12 ? _("am") : _("pm")));
   if (updays > 0)
-    printf ("%d %s,", updays, (updays == 1 ? _("day") : _("days")));
+    printf ("%d %s,", updays, ngettext(_("day"), _("days"), updays));
   printf (" %2d:%02d,  %d %s", uphours, upmins, entries,
-	  (entries == 1) ? _("user") : _("users"));
+	  ngettext (_("user"), _("users"), entries));
 
 #if defined (HAVE_GETLOADAVG) || defined (C_GETLOADAVG)
   loads = getloadavg (avg, 3);
