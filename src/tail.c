@@ -49,10 +49,26 @@
 #include <assert.h>
 #include <getopt.h>
 #include <sys/types.h>
+#if HAVE_LIMITS_H
+# include <limits.h>
+#endif
 
 #include "system.h"
-#include "xstrtol.h"
+#include "xstrtoul.h"
 #include "error.h"
+
+#ifndef CHAR_BIT
+# define CHAR_BIT 8
+#endif
+
+#ifndef OFF_T_MIN
+# define OFF_T_MIN (0 < (off_t) -1 ? (off_t) 0 \
+		    : ~ (off_t) 0 << (sizeof (off_t) * CHAR_BIT - 1))
+#endif
+
+#ifndef OFF_T_MAX
+# define OFF_T_MAX (~ (off_t) 0 - OFF_T_MIN)
+#endif
 
 /* Disable assertions.  Some systems have broken assert macros.  */
 #define NDEBUG 1
@@ -837,93 +853,123 @@ tail_file (const char *filename, off_t n_units, int filenum)
   return errors;
 }
 
-int
-main (int argc, char **argv)
+static int
+parse_obsolescent_option (int argc, const char *const *argv,
+			  off_t *n_units, int *fail)
 {
-  enum header_mode header_mode = multiple_files;
-  int exit_status = 0;
-  /* If from_start, the number of items to skip before printing; otherwise,
-     the number of items at the end of the file to print.  Initially, -1
-     means the value has not been set.  */
-  off_t n_units = -1;
-  long int tmp_long;
-  int c;			/* Option character.  */
-  int n_files;
-  char **file;
+  const char *p = argv[1];
+  const char *n_string = NULL;
+  const char *n_string_end;
 
-  program_name = argv[0];
-  setlocale (LC_ALL, "");
-  bindtextdomain (PACKAGE, LOCALEDIR);
-  textdomain (PACKAGE);
+  int t_from_start;
+  int t_count_lines;
+  int t_forever;
 
-  have_read_stdin = 0;
+  /* FIXME: comment.  */
+  if (argc < 2 || argc > 3)
+    return 0;
+
+  /* If I were implementing this in Perl, the rest of this function
+     would be essentially this single statement:
+     return $p ne '-' && $p ne '-c' && $p =~ /^[+-]\d*[cl]?f?$/;  */
+
+  /* Test this:
+     if (STREQ (p, "-") || STREQ (p, "-c"))
+     but without using strcmp.  */
+  if (p[0] == '-' && (p[1] == 0 || (p[1] == 'c' && p[2] == 0)))
+    return 0;
+
+  if (*p == '+')
+    t_from_start = 1;
+  else if (*p == '-')
+    t_from_start = 0;
+  else
+    return 0;
+
+  ++p;
+  if (ISDIGIT (*p))
+    {
+      n_string = p;
+      do
+	{
+	  ++p;
+	}
+      while (ISDIGIT (*p));
+    }
+  n_string_end = p;
+
+  t_count_lines = 1;
+  if (*p == 'c')
+    {
+      t_count_lines = 0;
+      ++p;
+    }
+  else if (*p == 'l')
+    {
+      ++p;
+    }
+
+  t_forever = 0;
+  if (*p == 'f')
+    {
+      t_forever = 1;
+      ++p;
+    }
+
+  if (*p != '\0')
+    return 0;
+
+  *fail = 0;
+  if (n_string == NULL)
+    *n_units = DEFAULT_N_LINES;
+  else
+    {
+      strtol_error s_err;
+      unsigned long int tmp_ulong;
+      char *end;
+      s_err = xstrtoul (n_string, &end, 0, &tmp_ulong, NULL);
+      if (s_err == LONGINT_OK && tmp_ulong <= OFF_T_MAX)
+	*n_units = (off_t) tmp_ulong;
+      else
+	{
+	  /* Extract a NUL-terminated string for the error message.  */
+	  size_t len = n_string_end - n_string;
+	  char *n_string_tmp = xmalloc (len + 1);
+
+	  strncpy (n_string_tmp, n_string, len);
+	  n_string_tmp[len] = '\0';
+
+	  error (0, 0,
+		 _("%s, `%s' is so large that it is not representable"),
+		 count_lines ? _("number of lines") : _("number of bytes"),
+		 n_string_tmp);
+	  free (n_string_tmp);
+	  *fail = 1;
+	}
+    }
+
+  if (!*fail)
+    {
+      from_start = t_from_start;
+      count_lines = t_count_lines;
+      forever = t_forever;
+    }
+
+  return 1;
+}
+
+static void
+parse_options (int argc, char **argv,
+	       off_t *n_units, enum header_mode *header_mode)
+{
+  int c;
+
   count_lines = 1;
   forever = forever_multiple = from_start = print_headers = 0;
-
-  if (argc > 1
-      && ((argv[1][0] == '-' && ISDIGIT (argv[1][1]))
-	  || (argv[1][0] == '+' && (ISDIGIT (argv[1][1])
-				    || argv[1][1] == 0))))
-    {
-      /* Old option syntax: a dash or plus, one or more digits (zero digits
-	 are acceptable with a plus), and one or more option letters.  */
-      if (argv[1][0] == '+')
-	from_start = 1;
-      if (argv[1][1] != '\0')
-	{
-	  strtol_error s_err;
-	  char *p;
-
-	  s_err = xstrtol (++argv[1], &p, 0, &tmp_long, "cbkm");
-	  n_units = tmp_long;
-	  if (s_err == LONGINT_OVERFLOW)
-	    {
-	      STRTOL_FATAL_ERROR (argv[1], _("argument"), s_err);
-	    }
-
-	  /* If a [bckm] suffix was given then count bytes, not lines.  */
-	  if (p[-1] == 'b' || p[-1] == 'c' || p[-1] == 'k' || p[-1] == 'm')
-	    count_lines = 0;
-
-	  /* Parse any appended option letters.  */
-	  while (*p)
-	    {
-	      switch (*p)
-		{
-		case 'f':
-		  forever = 1;
-		  break;
-
-		case 'l':
-		  count_lines = 1;
-		  break;
-
-		case 'q':
-		  header_mode = never;
-		  break;
-
-		case 'v':
-		  header_mode = always;
-		  break;
-
-		default:
-		  error (0, 0, _("unrecognized option `-%c'"), *p);
-		  usage (1);
-		}
-	      ++p;
-	    }
-	}
-      /* Make the options we just parsed invisible to getopt.  */
-      argv[1] = argv[0];
-      argv++;
-      argc--;
-    }
 
   while ((c = getopt_long (argc, argv, "c:n:fqv", long_options, (int *) 0))
 	 != EOF)
     {
-      strtol_error s_err;
-
       switch (c)
 	{
 	case 0:
@@ -937,20 +983,30 @@ main (int argc, char **argv)
 	  count_lines = 1;
 	getnum:
 	  if (*optarg == '+')
-	    {
-	      from_start = 1;
-	    }
+	    from_start = 1;
+	  else if (*optarg == '-')
+	    ++optarg;
 
-	  s_err = xstrtol (optarg, NULL, 0, &tmp_long, "bkm");
-	  if (tmp_long < 0)
-	    tmp_long = -tmp_long;
-	  n_units = tmp_long;
-	  if (s_err != LONGINT_OK)
-	    {
-	      STRTOL_FATAL_ERROR (optarg, (c == 'n'
-					   ? _("number of lines")
-					   : _("number of bytes")), s_err);
-	    }
+	  {
+	    strtol_error s_err;
+	    unsigned long int tmp_ulong;
+	    s_err = xstrtoul (optarg, NULL, 0, &tmp_ulong, "bkm");
+	    if (s_err == LONGINT_INVALID)
+	      {
+		error (EXIT_FAILURE, 0, "%s: %s", optarg,
+		       (c == 'n'
+			? _("invalid number of lines")
+			: _("invalid number of bytes")));
+	      }
+	    if (s_err != LONGINT_OK || tmp_ulong > OFF_T_MAX)
+	      {
+		error (EXIT_FAILURE, 0,
+		       _("%s: %s is so large that it is not representable"),
+		       optarg,
+		       c == 'n' ? _("number of lines") : _("number of bytes"));
+	      }
+	    *n_units = (off_t) tmp_ulong;
+	  }
 	  break;
 
 	case 'f':
@@ -958,17 +1014,55 @@ main (int argc, char **argv)
 	  break;
 
 	case 'q':
-	  header_mode = never;
+	  *header_mode = never;
 	  break;
 
 	case 'v':
-	  header_mode = always;
+	  *header_mode = always;
 	  break;
 
 	default:
 	  usage (1);
 	}
     }
+}
+
+int
+main (int argc, char **argv)
+{
+  enum header_mode header_mode = multiple_files;
+  int exit_status = 0;
+  /* If from_start, the number of items to skip before printing; otherwise,
+     the number of items at the end of the file to print.  Although the type
+     is signed, the value is never negative.  */
+  off_t n_units = DEFAULT_N_LINES;
+  int n_files;
+  char **file;
+
+  program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
+
+  have_read_stdin = 0;
+
+  {
+    int found_obsolescent;
+    int fail;
+    found_obsolescent = parse_obsolescent_option (argc,
+						  (const char *const *) argv,
+						  &n_units, &fail);
+    if (found_obsolescent)
+      {
+	if (fail)
+	  exit (EXIT_FAILURE);
+	optind = 2;
+      }
+    else
+      {
+	parse_options (argc, argv, &n_units, &header_mode);
+      }
+  }
 
   if (show_version)
     {
@@ -978,9 +1072,6 @@ main (int argc, char **argv)
 
   if (show_help)
     usage (0);
-
-  if (n_units == -1)
-    n_units = DEFAULT_N_LINES;
 
   /* To start printing with item N_UNITS from the start of the file, skip
      N_UNITS - 1 items.  `tail +0' is actually meaningless, but for Unix
