@@ -32,7 +32,6 @@
 #include "error.h"
 #include "exitfail.h"
 #include "quotearg.h"
-#include "__fpending.h"
 
 #if USE_UNLOCKED_IO
 # include "unlocked-io.h"
@@ -49,7 +48,7 @@ close_stdout_set_file_name (const char *file)
 }
 
 /* Close standard output, exiting with status 'exit_failure' on failure.
-   If a program writes *anything* to stdout, that program should `fflush'
+   If a program writes *anything* to stdout, that program should close
    stdout and make sure that it succeeds before exiting.  Otherwise,
    suppose that you go to the extreme of checking the return status
    of every function that does an explicit write to stdout.  The last
@@ -57,11 +56,9 @@ close_stdout_set_file_name (const char *file)
    the fclose(stdout) could still fail (due e.g., to a disk full error)
    when it tries to write out that buffered data.  Thus, you would be
    left with an incomplete output file and the offending program would
-   exit successfully.
-
-   FIXME: note the fflush suggested above is implicit in the fclose
-   we actually do below.  Consider doing only the fflush and/or using
-   setvbuf to inhibit buffering.
+   exit successfully.  Even calling fflush is not always sufficient,
+   since some file systems (NFS and CODA) buffer written/flushed data
+   until an actual close call.
 
    Besides, it's wasteful to check the return value from every call
    that writes to stdout -- just let the internal stream state record
@@ -75,11 +72,6 @@ void
 close_stdout (void)
 {
   int e = ferror (stdout) ? 0 : -1;
-
-  /* If the stream's error bit is clear and there is nothing to flush,
-     then return right away.  */
-  if (e && __fpending (stdout) == 0)
-    return;
 
   if (fclose (stdout) != 0)
     e = errno;
