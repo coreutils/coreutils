@@ -1,5 +1,11 @@
 2000-01-31  Jim Meyering  <meyering@lucent.com>
 
+	* nanosleep.h (nanosleep): Guard declaration with
+	`#if ! HAVE_DECL_NANOSLEEP'.
+	Without this, OFS gets a redeclaration error for gnu_nanosleep, due to
+	the declaration in that vendor's sys/timers.h.
+	Reported by Christian Krackowizer.
+
 	* quotearg.c (ISASCII): Add #undef and move definition to follow
 	inclusion of wctype.h to work around solaris2.6 namespace pollution.
 	(ISPRINT): Likewise.
