@@ -1,3 +1,23 @@
+Tue Mar 30 21:36:11 1993  Jim Meyering  (meyering@comco.com)
+
+	* od.c: New option --compatible, -C.
+	(parse_old_offset): New function.
+	* od.1: Document new option.
+
+Mon Mar 29 21:27:56 1993  Jim Meyering  (meyering@comco.com)
+
+	* cut.c, expand.c, join.c, nl.c: Always call error with errno
+	(not zero) after failed fclose or non-zero ferror.
+
+Sun Mar 21 22:29:29 1993  Jim Meyering  (meyering@comco.com)
+
+	* pr.c (close_file): Reverse May 13, '92 change, but add the condition
+	that cols_ready_to_print not be decremented when printing across.
+	The command `echo |pr -2ta' didn't terminate.
+	(print_page): Rewrite conditional (that had side effects in second
+	conjunct) using nested if statements to make it clear that we do
+	indeed want those semantics.
+
 Tue Jan 19 13:35:24 1993  David J. MacKenzie  (djm@kropotkin.gnu.ai.mit.edu)
 
 	* Version 1.4.
