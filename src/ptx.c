@@ -524,9 +524,9 @@ swallow_file_in_memory (const char *file_name, BLOCK *block)
   /* As special cases, a file name which is NULL or "-" indicates standard
      input, which is already opened.  In all other cases, open the file from
      its name.  */
-
-  if (!file_name || !*file_name || strcmp (file_name, "-") == 0)
-    file_handle = fileno (stdin);
+  bool using_stdin = !file_name || !*file_name || strcmp (file_name, "-") == 0;
+  if (using_stdin)
+    file_handle = STDIN_FILENO;
   else
     if ((file_handle = open (file_name, O_RDONLY)) < 0)
       error (EXIT_FAILURE, errno, "%s", file_name);
@@ -593,8 +593,8 @@ swallow_file_in_memory (const char *file_name, BLOCK *block)
 
   /* Close the file, but only if it was not the standard input.  */
 
-  if (file_handle != fileno (stdin))
-    close (file_handle);
+  if (! using_stdin && close (file_handle) != 0)
+    error (EXIT_FAILURE, errno, "%s", file_name);
 }
 
 /* Sort and search routines.  */
