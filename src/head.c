@@ -1,5 +1,5 @@
 /* head -- output first part of file(s)
-   Copyright (C) 89, 90, 91, 95, 96, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 1995-1998, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -124,6 +124,9 @@ head_bytes (const char *filename, int fd, U_LONG_LONG bytes_to_write)
   char buffer[BUFSIZE];
   int bytes_read;
 
+  /* Need BINARY I/O for the byte counts to be accurate.  */
+  SET_BINARY2 (fd, fileno (stdout));
+
   while (bytes_to_write)
     {
       bytes_read = safe_read (fd, buffer, BUFSIZE);
@@ -149,6 +152,9 @@ head_lines (const char *filename, int fd, U_LONG_LONG lines_to_write)
   char buffer[BUFSIZE];
   int bytes_read;
   int bytes_to_write;
+
+  /* Need BINARY I/O for the byte counts to be accurate.  */
+  SET_BINARY2 (fd, fileno (stdout));
 
   while (lines_to_write)
     {
