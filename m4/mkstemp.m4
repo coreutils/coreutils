@@ -26,8 +26,10 @@ AC_DEFUN([UTILS_FUNC_MKSTEMP],
 	    for (i = 0; i < 30; i++)
 	      {
 		char template[] = "$utils_tmpdir_mkstemp/aXXXXXX";
-		if (mkstemp (template) == -1)
+		int fd = mkstemp (template);
+		if (fd == -1)
 		  exit (1);
+		close (fd);
 	      }
 	    exit (0);
 	  }
