@@ -868,6 +868,9 @@ decode_switches (int argc, char **argv)
   int i;
   long int tmp_long;
 
+  /* Record whether there is an option specifying sort type.  */
+  int sort_type_specified = 0;
+
   qmark_funny_chars = 0;
 
   /* initialize all switches to default settings */
@@ -990,7 +993,6 @@ decode_switches (int argc, char **argv)
 
 	case 'c':
 	  time_type = time_ctime;
-	  sort_type = sort_time;
 	  break;
 
 	case 'd':
@@ -1002,6 +1004,7 @@ decode_switches (int argc, char **argv)
 	  all_files = 1;
 	  really_all_files = 1;
 	  sort_type = sort_none;
+	  sort_type_specified = 1;
 	  /* disable -l */
 	  if (format == long_format)
 	    format = (isatty (STDOUT_FILENO) ? many_per_line : one_per_line);
@@ -1064,15 +1067,16 @@ decode_switches (int argc, char **argv)
 
 	case 't':
 	  sort_type = sort_time;
+	  sort_type_specified = 1;
 	  break;
 
 	case 'u':
-	  sort_type = sort_time;
 	  time_type = time_atime;
 	  break;
 
 	case 'v':
 	  sort_type = sort_version;
+	  sort_type_specified = 1;
 	  break;
 
 	case 'w':
@@ -1135,6 +1139,7 @@ decode_switches (int argc, char **argv)
 
 	case 'S':
 	  sort_type = sort_size;
+	  sort_type_specified = 1;
 	  break;
 
 	case 'T':
@@ -1147,10 +1152,12 @@ decode_switches (int argc, char **argv)
 
 	case 'U':
 	  sort_type = sort_none;
+	  sort_type_specified = 1;
 	  break;
 
 	case 'X':
 	  sort_type = sort_extension;
+	  sort_type_specified = 1;
 	  break;
 
 	case '1':
@@ -1159,6 +1166,7 @@ decode_switches (int argc, char **argv)
 
 	case 10:		/* --sort */
 	  sort_type = XARGMATCH ("--sort", optarg, sort_args, sort_types);
+	  sort_type_specified = 1;
 	  break;
 
 	case 11:		/* --time */
@@ -1229,6 +1237,20 @@ decode_switches (int argc, char **argv)
 
   dirname_quoting_options = clone_quoting_options (NULL);
   set_char_quoting (dirname_quoting_options, ':', 1);
+
+  /* If -c or -u is specified and not -l (or any other option that implies -l),
+     and no sort-type was specified, then sort by the ctime (-c) or atime (-u).
+     The behavior of ls when using either -c or -u but with neither -l nor -t
+     appears to be unspecified by POSIX.  So, with GNU ls, `-u' alone means
+     sort by atime (this is the one that's not specified by the POSIX spec),
+     -lu means show atime and sort by name, -lut means show atime and sort
+     by atime.  */
+
+  if ((time_type == time_ctime || time_type == time_atime)
+      && !sort_type_specified && format != long_format)
+    {
+      sort_type = sort_time;
+    }
 
   return optind;
 }
@@ -2884,7 +2906,10 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
   -b, --escape               print octal escapes for nongraphic characters\n\
       --block-size=SIZE      use SIZE-byte blocks\n\
   -B, --ignore-backups       do not list implied entries ending with ~\n\
-  -c                         sort by change time; with -l: show ctime\n\
+  -c                         with -lt: sort by, and show, ctime (time of last\n\
+				 modification of file status information)\n\
+                               with -l: show ctime and sort by name\n\
+                               otherwise: sort by ctime\n\
   -C                         list entries by columns\n\
       --color[=WHEN]         control whether color is used to distinguish file\n\
                                types.  WHEN may be `never', `always', or `auto'\n\
@@ -2934,7 +2959,9 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
                                specified time as sort key if --sort=time\n\
   -t                         sort by modification time\n\
   -T, --tabsize=COLS         assume tab stops at each COLS instead of 8\n\
-  -u                         sort by last access time; with -l: show atime\n\
+  -u                         with -lt: sort by, and show, access time\n\
+                               with -l: show access time and sort by name\n\
+                               otherwise: sort by access time\n\
   -U                         do not sort; list entries in directory order\n\
   -v                         sort by version\n\
   -w, --width=COLS           assume screen width instead of current value\n\
