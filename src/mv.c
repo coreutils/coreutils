@@ -365,7 +365,7 @@ main (int argc, char **argv)
   int errors;
   int make_backups = 0;
   int dest_is_dir;
-  char *version;
+  const char *version;
   struct cp_options x;
 
   program_name = argv[0];
