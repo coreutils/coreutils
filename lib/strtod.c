@@ -14,8 +14,8 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
+#if HAVE_CONFIG_H
+# include <config.h>
 #endif
 
 #include <errno.h>
@@ -26,21 +26,21 @@ extern int errno;
 #include <ctype.h>
 #include <math.h>
 
-#ifdef HAVE_FLOAT_H
-#include <float.h>
+#if HAVE_FLOAT_H
+# include <float.h>
 #else
-#define DBL_MAX 1.7976931348623159e+308
-#define DBL_MIN 2.2250738585072010e-308
+# define DBL_MAX 1.7976931348623159e+308
+# define DBL_MIN 2.2250738585072010e-308
 #endif
 
 #if STDC_HEADERS
-#include <stdlib.h>
-#include <string.h>
+# include <stdlib.h>
+# include <string.h>
 #else
-#define NULL 0
-#ifndef HUGE_VAL
-#define HUGE_VAL HUGE
-#endif
+# define NULL 0
+# ifndef HUGE_VAL
+#  define HUGE_VAL HUGE
+# endif
 #endif
 
 /* Convert NPTR to a double.  If ENDPTR is not NULL, a pointer to the
