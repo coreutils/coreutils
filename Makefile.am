@@ -2,7 +2,7 @@
 
 SUBDIRS = lib src doc man m4 po tests old
 EXTRA_DIST = Makefile.cfg Makefile.maint GNUmakefile \
-  .kludge-stamp .prev-version
+  .kludge-stamp .prev-version THANKS-to-translators THANKStt.in
 
 install-root:
 	cd src && $(MAKE) $@
@@ -29,3 +29,11 @@ rm_subst = \
 .kludge-stamp: $(srcdir)/src/Makefile.in
 	perl -pi -e '$(rm_subst)' $(srcdir)/src/Makefile.in
 	touch $@
+
+THANKS-to-translators: po/LINGUAS THANKStt.in
+	(								\
+	  cat $(srcdir)/THANKStt.in;					\
+	  for lang in `cat po/LINGUAS`; do				\
+	    echo http://www.iro.umontreal.ca/contrib/po/HTML/team-$$lang.html; \
+	  done;								\
+	) > $@-tmp && mv $@-tmp $@
