@@ -2,6 +2,9 @@
 
 	* Version 4.5.4.
 
+	* Makefile.maint (mail-gpg-sign-cookie): Make optional.
+	(announcement): Use the new variable.
+
 	* Makefile.maint: Sync with Bison, i.e.:
 	(po-check): Scan .l and .y files instead of the
 	.c and the .h files that they generate.  This fixes the bug
