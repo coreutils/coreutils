@@ -184,3 +184,14 @@ p n
 up
 p len
 q
+complete b user
+complete b user
+complete b pars
+b parse_user_spec 
+r a.b
+n
+n
+p u
+n
+p u
+n

@@ -1,3 +1,8 @@
+2000-02-27  Jim Meyering  <meyering@lucent.com>
+
+	* userspec.c (parse_user_spec): If there is no `:' but there is a `.',
+	then first look up the entire `.'-containing string as a login name.
+
 2000-02-14  Paul Eggert  <eggert@twinsun.com>
 
 	* lib/getpagesize.h (getpagesize): Port to VMS for Alpha;
