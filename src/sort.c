@@ -1324,10 +1324,17 @@ keycompare (const struct line *a, const struct line *b)
 	{
 #ifdef ENABLE_NLS
 	  if (need_locale)
-	    diff = memcoll (texta, lena, textb, lenb);
+	    {
+	      /* Ignore any length difference if the localized comparison
+		 says the strings are equal.  */
+	      comparable_lengths = 0;
+	      diff = memcoll (texta, lena, textb, lenb);
+	    }
 	  else
 #endif
-	    diff = memcmp (texta, textb, min (lena, lenb));
+	    {
+	      diff = memcmp (texta, textb, min (lena, lenb));
+	    }
 	}
 
       if (diff)
