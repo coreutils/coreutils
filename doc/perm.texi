@@ -1,81 +1,92 @@
-Each file on a GNU or Unix system has a set of @dfn{permission modes}
-that control which users are allowed to access that file, and what kind
-of access they are given to it.
+Each file has a set of @dfn{permissions} that control the kinds of
+access that users have to that file.  The permissions for a file are
+also called its @dfn{access mode}.  They can be represented either in
+symbolic form or as an octal number.
 
 @menu
-* Mode Structure::              Structure of File Permissions
-* Symbolic Modes::              Symbolic Modes
-* Numeric Modes::               Numeric Modes
+* Mode Structure::              Structure of file permissions.
+* Symbolic Modes::              Mnemonic permissions representation.
+* Numeric Modes::               Permissions as octal numbers.
 @end menu
 
-@node     Mode Structure
+@node Mode Structure
 @section Structure of File Permissions
 
-There are three kinds of permissions that a user on a GNU or Unix system
-can have for a file:
+There are three kinds of permissions that a user can have for a file:
 
 @enumerate
 @item
-permission to read the file; for directories, this means permission to
+@cindex read permission
+permission to read the file.  For directories, this means permission to
 list the contents of the directory.
 @item
-permission to write to (change) the file; for directories, this means
-permission to create files in the directory.
+@cindex write permission
+permission to write to (change) the file.  For directories, this means
+permission to create and remove files in the directory.
 @item
-permission to execute the file (run it as a program); for directories,
+@cindex execute permission
+permission to execute the file (run it as a program).  For directories,
 this means permission to access files in the directory.
 @end enumerate
 
-Which users are allowed to perform each of the above three operations on
-a given file is determined by that file's permission mode.  The
-permission mode is actually three sets of permissions, which control
-access to the file by three sets of users:
+There are three categories of users who may have different permissions
+to perform any of the above operations on a file:
 
 @enumerate
 @item
-the file's owner
+the file's owner;
 @item
-other users who are in the group that the file is in
+other users who are in the file's group;
 @item
-other users who are not in the group that the file is in
+everyone else.
 @end enumerate
 
-Files are by default owned by and in the same group as the user who
-created them, but the owner and group of a file can be changed, for
-example by using the @code{chown} and @code{chgrp} commands.
+@cindex owner, default
+@cindex group owner, default
+Files are given an owner and group when they are created.  Usually the
+owner is the current user and the group is the group of the directory
+the file is in, but this varies with the operating system, the
+filesystem the file is created on, and the way the file is created.  You
+can change the owner and group of a file by using the @code{chown} and
+@code{chgrp} commands.
 
-In addition to the three sets of three permissions listed above,
-permission modes have three special components, which affect only
-executable files (i.e., programs) and, on some systems, directories:
+In addition to the three sets of three permissions listed above, a
+file's permissions have three special components, which affect only
+executable files (programs) and, on some systems, directories:
 
 @enumerate
 @item
-set the process's effective user i.d. to that of the file upon execution
-(called the @dfn{setuid bit}); no effect on directories.
+@cindex setuid
+set the process's effective user ID to that of the file upon execution
+(called the @dfn{setuid bit}).  No effect on directories.
 @item
-set the process's effective group i.d. to that of the file upon
-execution (called the @dfn{setgid bit}); for directories on
-4.3BSD-derived systems, put files created in the directory into the same
-group as the directory, no matter what group the user who creates them
-is in.
+@cindex setgid
+set the process's effective group ID to that of the file upon execution
+(called the @dfn{setgid bit}).  For directories on some systems, put
+files created in the directory into the same group as the directory, no
+matter what group the user who creates them is in.
 @item
+@cindex sticky
+@cindex swap space, saving text image in
+@cindex text image, saving in swap space
+@cindex append-only directories
 save the program's text image on the swap device so it will load more
-quickly when run (called the @dfn{sticky bit}); for directories on
-4.3BSD-derived systems, prevent users from removing files that they do
-not own from the directory.
+quickly when run (called the @dfn{sticky bit}).  For directories on some
+systems, prevent users from removing files that they do not own in the
+directory; this is called making the directory @dfn{append-only}.
 @end enumerate
 
-@node     Symbolic Modes
+@node Symbolic Modes
 @section Symbolic Modes
 
-@dfn{Symbolic modes} represent changes to files' permission modes as
+@cindex symbolic modes
+@dfn{Symbolic modes} represent changes to files' permissions as
 operations on single-character symbols.  They allow you to modify either
-all or selected parts of files' permission modes, optionally based on
-their previous values, and perhaps on the current umask as well
-(@pxref{Umask and Modes}).
+all or selected parts of files' permissions, optionally based on
+their previous values, and perhaps on the current @code{umask} as well
+(@pxref{Umask and Protection}).
 
-The format of symbolic modes recognized is listed
-below, with the optional portions in square brackets, @samp{[@dots{}]}:
+The format of symbolic modes is:
 
 @example
 @r{[}ugoa@dots{}@r{][[}+-=@r{][}rwxXstugo@dots{}@r{]}@dots{}@r{][},@dots{}@r{]}
@@ -85,58 +96,65 @@ The following sections describe the operators and other details of
 symbolic modes.
 
 @menu
-* Elementary::                  Elementary Operations on Permissions
-* Copying::                     Copying Existing Permissions
-* Special::                     Special Permissions
-* Conditional Executability::   Conditionally Affecting Executability
-* Multiple Changes::            Making Multiple Changes
-* Umask and Modes::             The Effect of the Umask
+* Setting Permissions::          Basic operations on permissions.
+* Copying Permissions::          Copying existing permissions.
+* Changing Special Permissions:: Special permissions.
+* Conditional Executability::    Conditionally affecting executability.
+* Multiple Changes::             Making multiple changes.
+* Umask and Protection::              The effect of the umask.
 @end menu
 
-@node     Elementary
-@subsection Elementary Operations on Permissions
+@node Setting Permissions
+@subsection Setting Permissions
 
-The simplest symbolic operations on a file's permission modes are
-adding, removing, and setting the permission that certain users have to
-read, write, and execute the file.  These simple operations have the
-following format:
+The basic symbolic operations on a file's permissions are adding,
+removing, and setting the permission that certain users have to read,
+write, and execute the file.  These operations have the following
+format:
 
 @example
 @var{users} @var{operation} @var{permissions}
 @end example
 
 @noindent
-The spaces between the three parts above are shown for clarity only.
+The spaces between the three parts above are shown for readability only;
+symbolic modes can not contain spaces.
 
 The @var{users} part tells which users' access to the file is changed.
 It consists of one or more of the following letters (or it can be empty;
-@pxref{Umask and Modes}, for a description of what happens then).  When
+@pxref{Umask and Protection}, for a description of what happens then).  When
 more than one of these letters is given, the order that they are in does
 not matter.
 
 @table @code
 @item u
-to affect the permission granted to the user who owns the file;
+@cindex owner of file, permissions for
+the user who owns the file;
 @item g
-to affect the permission granted to other users who are in the group
-that the file is in;
+@cindex group, permissions for
+other users who are in the file's group;
 @item o
-to affect the permission granted to all other users.
+@cindex other permissions
+all other users;
 @item a
-to affect all users; the same as @samp{ugo}.
+all users; the same as @samp{ugo}.
 @end table
 
 The @var{operation} part tells how to change the affected users' access
-to the file, and is one of the following symbols.
+to the file, and is one of the following symbols:
 
 @table @code
 @item +
+@cindex adding permissions
 to add the @var{permissions} to whatever permissions the @var{users}
 already have for the file;
 @item -
+@cindex removing permissions
+@cindex subtracting permissions
 to remove the @var{permissions} from whatever permissions the
 @var{users} already have for the file;
 @item =
+@cindex setting permissions
 to make the @var{permissions} the only permissions that the @var{users}
 have for the file.
 @end table
@@ -150,11 +168,14 @@ at all to the file.
 
 @table @code
 @item r
-to affect the permission the @var{users} have to read the file;
+@cindex read permission, symbolic
+the permission the @var{users} have to read the file;
 @item w
-to affect the permission the @var{users} have to write to the file;
+@cindex write permission, symbolic
+the permission the @var{users} have to write to the file;
 @item x
-to affect the permission the @var{users} have to execute the file.
+@cindex execute permission, symbolic
+the permission the @var{users} have to execute the file.
 @end table
 
 For example, to give everyone permission to read and write a file,
@@ -172,84 +193,85 @@ go-w
 @end example
 
 @noindent
-Note that the above command does not affect the access that the owner of
-@file{textfile} has to it, nor does it affect whether other users can
+The above command does not affect the access that the owner of
+the file has to it, nor does it affect whether other users can
 read or execute the file.
 
-To give other users who are not in the group that a file is in no
-permission to do anything with that file, use the argument below.  Note
-that other users would still be able to remove the file, if they have
-permission to write to the directory that it is in.
+To give everyone except a file's owner no permission to do anything with
+that file, use the mode below.  Other users could still remove the file,
+if they have write permission on the directory it is in.
 
 @example
 go=
 @end example
 
 @noindent
-Another way to do the same thing is:
+Another way to specify the same thing is:
 
 @example
 og-rxw
 @end example
 
-@node     Copying
+@node Copying Permissions
 @subsection Copying Existing Permissions
 
-You can base part of a file's new permission mode
-on part of its existing permission mode.  To do this, instead of using
-@samp{r}, @samp{w}, or @samp{x} permissions (described above,
-(@pxref{Elementary}) after the operator, you use the letter @samp{u},
-@samp{g}, or @samp{o}.  For example,
+@cindex copying existing permissions
+@cindex permissions, copying existing
+You can base part of a file's permissions on part of its existing
+permissions.  To do this, instead of using @samp{r}, @samp{w}, or
+@samp{x} after the operator, you use the letter @samp{u}, @samp{g}, or
+@samp{o}.  For example, the mode
 
 @example
 o+g
 @end example
 
 @noindent
-adds the permissions that users who are in the group that a file
-is in have for it to the permissions that other users who
-are not in group the file is in have for it.  Thus, if the file
-started out as mode 664 (@samp{rw-rw-r--}), the above command would
-change it to mode 666 (@samp{rw-rw-rw-}).  If the file had started
-out as mode 741 (@samp{rwxr----x}), the above command would change it to
-mode 745 (@samp{rwxr--r-x}).  The @samp{-} and @samp{=} operations work
+@c FIXME describe the ls -l notation for showing permissions.
+adds the permissions for users who are in a file's group to the
+permissions that other users have for the file.  Thus, if the file
+started out as mode 664 (@samp{rw-rw-r--}), the above mode would change
+it to mode 666 (@samp{rw-rw-rw-}).  If the file had started out as mode
+741 (@samp{rwxr----x}), the above mode would change it to mode 745
+(@samp{rwxr--r-x}).  The @samp{-} and @samp{=} operations work
 analogously.
 
-@node     Special
-@subsection Special Permissions
+@node Changing Special Permissions
+@subsection Changing Special Permissions
 
+@cindex changing special permissions
 In addition to changing a file's read, write, and execute permissions,
-you can change the special permissions; @pxref{Mode Structure},
-for a summary of these permissions.
+you can change its special permissions.  @xref{Mode Structure}, for a
+summary of these permissions.
 
-To change a file's permission to set the user i.d. on execution, use
-@samp{u} in the @var{users} part of the symbolic mode and the letter
+To change a file's permission to set the user ID on execution, use
+@samp{u} in the @var{users} part of the symbolic mode and
 @samp{s} in the @var{permissions} part.
 
-To change a file's permission to set the group i.d. on execution, use
-@samp{g} in the @var{users} part of the symbolic mode and the letter
+To change a file's permission to set the group ID on execution, use
+@samp{g} in the @var{users} part of the symbolic mode and
 @samp{s} in the @var{permissions} part.
 
 To change a file's permission to stay permanently on the swap device,
-use @samp{o} in the @var{users} part of the symbolic mode and the letter
+use @samp{o} in the @var{users} part of the symbolic mode and
 @samp{t} in the @var{permissions} part.
 
-For example, to add set user i.d. permission to the a program,
-you can use:
+For example, to add set user ID permission to a program,
+you can use the mode:
 
 @example
 u+s
 @end example
 
-To remove both set user i.d. and set group i.d. permission from
-it, you can use:
+To remove both set user ID and set group ID permission from
+it, you can use the mode:
 
 @example
 ug-s
 @end example
 
 To cause a program to be saved on the swap device, you can use
-the command:
+the mode:
 
 @example
 o+t
@@ -257,9 +279,8 @@ o+t
 
 Remember that the special permissions only affect files that are
 executable, plus, on some systems, directories (on which they have
-different meanings; @pxref{Mode Structure} for a description of their
-effect on directories).  Note that using the @samp{a} letter in the
-@var{users} part of a symbolic mode does not cause the special
+different meanings; @pxref{Mode Structure}).  Using @samp{a}
+in the @var{users} part of a symbolic mode does not cause the special
 permissions to be affected; thus,
 
 @example
@@ -267,12 +288,12 @@ a+s
 @end example
 
 @noindent
-has @emph{no effect}.  You must type @samp{u}, @samp{g}, and @samp{o}
-explicitly to affect the special permissions.  Also note that the
+has @emph{no effect}.  You must use @samp{u}, @samp{g}, and @samp{o}
+explicitly to affect the special permissions.  Also, the
 combinations @samp{u+t}, @samp{g+t}, and @samp{o+s} have no effect.
 
 The @samp{=} operator is not very useful with special permissions; for
-example, the command:
+example, the mode:
 
 @example
 o=t
@@ -281,39 +302,40 @@ o=t
 @noindent
 does cause the file to be saved on the swap device, but it also
 removes all read, write, and execute permissions that users not in the
-group that the file is in might have had for it.
+file's group might have had for it.
 
-@node     Conditional Executability
-@subsection Conditionally Affecting Executability
+@node Conditional Executability
+@subsection Conditional Executability
 
-There is one more special type of permission:
-if you use an @samp{X} instead of @samp{x}, execute permission is
-affected only if the file already had execute permission, or else if the
-file is a directory.  It affects execute permission for directories
-@emph{even if they did not initially have any execute permissions
-set}.
+@cindex conditional executability
+There is one more special type of symbolic permission: if you use
+@samp{X} instead of @samp{x}, execute permission is affected only if the
+file already had execute permission or is a directory.  It affects
+directories' execute permission even if they did not initially have any
+execute permissions set.
 
-For example, this:
+For example, this mode:
 
 @example
-go+X
+a+X
 @end example
 
 @noindent
-gives all users permission to use files if anyone could before.
+gives all users permission to execute files (or search directories) if
+anyone could before.
 
-@node     Multiple Changes
+@node Multiple Changes
 @subsection Making Multiple Changes
 
-The format of symbolic modes is
-actually more complex than the one described above (@pxref{Elementary});
-it provides two ways to make multiple
-changes to files' permission modes.
+@cindex multiple changes to permissions
+The format of symbolic modes is actually more complex than described
+above (@pxref{Setting Permissions}).  It provides two ways to make
+multiple changes to files' permissions.
 
 The first way is to specify multiple @var{operation} and
 @var{permissions} parts after a @var{users} part in the symbolic mode.
 
-For example, the command:
+For example, the mode:
 
 @example
 og+rX-w
@@ -324,8 +346,8 @@ gives users other than the owner of the file read permission and, if
 it is a directory or if someone already had execute permission
 to it, gives them execute permission; and it also denies them write
 permission to it file.  It does not affect the permission that the
-owner of the file has for it.  The above command is equivalent to
-the two commands:
+owner of the file has for it.  The above mode is equivalent to
+the two modes:
 
 @example
 og+rX
@@ -333,7 +355,7 @@ og-w
 @end example
 
 The second way to make multiple changes is to specify more than one
-simple symbolic mode, separated by commas.  For example, the command:
+simple symbolic mode, separated by commas.  For example, the mode:
 
 @example
 a+r,go-w
@@ -348,46 +370,54 @@ u=rwx,g=rx,o=
 @end example
 
 @noindent
-sets all of the permissions for the file explicitly; note that it
-gives users who are not in the group that the file is in no
-permission at all for it.
+sets all of the non-special permissions for the file explicitly.  (It
+gives users who are not in the file's group no permission at all for
+it.)
 
-The two methods can be combined.  The command:
+The two methods can be combined.  The mode:
 
 @example
 a+r,g+x-w
 @end example
 
 @noindent
-gives all users permission to read the file, and gives users who are
-in the group that it is in permission to execute it, as well, but not
-permission to write to it.  The above command could be written in
-several different ways; another is:
+gives all users permission to read the file, and gives users who are in
+the file's group permission to execute it, as well, but not permission
+to write to it.  The above mode could be written in several different
+ways; another is:
 
 @example
 u+r,g+rx,o+r,g-w
 @end example
 
-@node     Umask and Modes
-@subsection The Effect of the Umask
+@node Umask and Protection
+@subsection The Umask and Protection
 
+@cindex umask and modes
+@cindex modes and umask
 If the @var{users} part of a symbolic mode is omitted, it defaults to
 @samp{a} (affect all users), except that any permissions that are
 @emph{set} in the system variable @code{umask} are @emph{not affected}.
 The value of @code{umask} can be set using the
 @code{umask} command.  Its default value varies from system to system.
 
-As an example, if @code{umask} has the write permission set for users
-who are not in the group that it is in, the command:
+@cindex giving away permissions
+Omitting the @var{users} part of a symbolic mode is generally not useful
+with operations other than @samp{+}.  It is useful with @samp{+} because
+it allows you to use @code{umask} as an easily customizable protection
+against giving away more permission to files than you intended to.
+
+As an example, if @code{umask} has the value 2, which removes write
+permission for users who are not in the file's group, then the mode:
 
 @example
 +w
 @end example
 
 @noindent
-adds permission to write to the file to its owner and to other users
-who are in the group that the file is in, but @emph{not} to other
-users who are not in that group.  In contrast, the command:
+adds permission to write to the file to its owner and to other users who
+are in the file's group, but @emph{not} to other users.  In contrast,
+the mode:
 
 @example
 a+w
@@ -397,20 +427,21 @@ a+w
 ignores @code{umask}, and @emph{does} give write permission for
 the file to all users.
 
-Omitting the @var{users} part of a symbolic mode is generally not useful
-with operations other than @samp{+}.  It is useful with @samp{+} because
-it allows you to use @code{umask} as an easily customizable protection
-against giving away more permission to files than you intended to.
-
-@node     Numeric Modes
+@node Numeric Modes
 @section Numeric Modes
 
-File permission modes are stored internally as 16 bit integers; as an
+@cindex numeric modes
+@cindex file permissions, numeric
+@cindex octal numbers for file modes
+File permissions are stored internally as 16 bit integers.  As an
 alternative to giving a symbolic mode, you can give an octal (base 8)
-number that corresponds to the internal representation of the new
-mode.  This number is always interpreted in octal; you do not have to
-add a leading @samp{0}, as you do in C.  Leading zeros may be omitted;
-mode 0055 is the same as mode 55.
+number that corresponds to the internal representation of the new mode.
+This number is always interpreted in octal; you do not have to add a
+leading 0, as you do in C.  Mode 0055 is the same as mode 55.
+
+A numeric mode is usually shorter than the corresponding symbolic
+mode, but it is limited in that it can not take into account a file's
+previous permissions; it can only set them absolutely.
 
 The permissions granted to the user, to other users in the file's group,
 and to other users not in the file's group are each stored as three
@@ -419,42 +450,32 @@ permissions are also each stored as one bit, and they are as a group
 represented as another octal digit.  Here is how the bits are arranged
 in the 16 bit integer, starting with the lowest valued bit:
 
-@display
+@example
 Value in  Corresponding
-Digit     Permission
+Mode      Permission
 
-          Permissions for other users who are not in the file's group:
-1         Execute
-2         Write
-4         Read
+          Other users not in the file's group:
+   1      Execute
+   2      Write
+   4      Read
 
-          Permissions for other users who are in the file's group:
-1         Execute
-2         Write
-4         Read
+          Other users in the file's group:
+  10      Execute
+  20      Write
+  40      Read
 
-          Permissions for the file's owner:
-1         Execute
-2         Write
-4         Read
+          The file's owner:
+ 100      Execute
+ 200      Write
+ 400      Read
 
           Special permissions:
-1         Save text image on swap device
-2         Set group i.d. on execution
-4         Set user i.d. on execution
-@end display
+1000      Save text image on swap device
+2000      Set group ID on execution
+4000      Set user ID on execution
+@end example
 
-Therefore, numeric mode 4755 corresponds to symbolic mode
+For example, numeric mode 4755 corresponds to symbolic mode
 @samp{u=rwxs,go=rx}, and numeric mode 664 corresponds to symbolic mode
 @samp{ug=rw,o=r}.  Numeric mode 0 corresponds to symbolic mode
-@samp{ugo=}.  The numeric mode is usually shorter than the corresponding
-symbolic mode, but it is limited in that it can not take into account a
-file's previous permissions; it can only set them absolutely.
-
-As an example, to give the owner of a file and users who are in
-its group permission to read, write, and execute it, and give other
-users no permission to do anything to it, you can use the command:
-
-@example
-770
-@end example
+@samp{ugo=}.
