@@ -1,6 +1,41 @@
-2003-11-03  Jim Meyering  <jim@meyering.net>
+2003-11-04  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.1.0.
+
+	* src/tac.c (memrchr): Remove #if-0'd function.
+	(tac_stdin_to_mem): Clean up #if-0'd code.
+
+	* src/od.c (decode_format_string): Remove unnecessary casts.
+	Use more maintainable `sizeof *var'.
+	(main): Call decode_format_string rather than decode_one_format,
+	now that `spec' may be NULL.
+
+	* src/chmod.c (AUTHORS): Add my name.
+
+	* src/split.c (next_file_name): Use `sizeof *var' rather than
+	hard-coding `sizeof size_t'.
+
+	* src/sort.c (new_key): Use xzalloc, not xcalloc (1, ...).
+
+	* src/cut.c (ADD_RANGE_PAIR): Use x2nrealloc rather than xrealloc,
+	to avoid potential overflow in pointer arithmetic.
+	(set_fields): Use not `1', but rather `sizeof *printable_field' as
+	second argument to xcalloc.
+	* src/od.c (decode_format_string, dump_strings): Use x2nrealloc
+	rather than xrealloc.
+	* src/date.c (show_date): Likewise.
+	* src/join.c (ADD_FIELD, initseq, getseq): Likewise.
+	* src/pr.c (store_char): Likewise.
+	* src/fold.c (fold_file): Likewise.
+
+	* src/copy.c (triple_hash, triple_hash_no_name): Adjust to reflect
+	type changes (unsigned int -> size_t) in hash.c.
+	* src/cp-hash.c (src_to_dest_hash): Likewise.
+	* src/du.c (entry_hash): Likewise.
+	* src/ls.c (dev_ino_hash): Likewise.
+	* src/cut.c (hash_int): Likewise.  Declare function as static.
+
+2003-11-03  Jim Meyering  <jim@meyering.net>
 
 	* tests/misc/Makefile.am (TESTS_ENVIRONMENT): Define PACKAGE_VERSION.
 	* tests/misc/fold: Fail the test immediately if we're not running
@@ -13,6 +48,7 @@
 	rather than `sizeof EXPLICIT_TYPE'.  The former is more maintainable
 	and usually shorter.
 	* src/copy.c (copy_internal): Likewise.
+	* src/join.c (initseq, add_field, make_blank): Likewise.
 	* src/od.c (main): Likewise.
 	* src/cp.c (make_path_private): Likewise.
 	* src/tsort.c (new_item, record_relation): Likewise.
