@@ -1,8 +1,21 @@
 2002-10-07  Paul Eggert  <eggert@twinsun.com>
 
-	* lib/Makefile.am (libfetish_a_SOURCES): Add imaxtostr.c, offtostr.c,
+	* Makefile.am (libfetish_a_SOURCES): Add imaxtostr.c, offtostr.c,
 	umaxtostr.c.
 	(EXTRA_DIST): Add inttostr.c.
+	* inttostr.c, inttostr.h, imaxtostr.c, offtostr.c, umaxtostr.c:
+	New files, taken from GNU tar.
+
+	* human.c, human.h: Rewrite to support locale-specific
+	notations like thousands separators.
+	Specify what includer of include.h must include beforehand.
+	(human_group_digits, human_suppress_point_zero, human_autoscale,
+	human_base_1024, human_SI, human_B): New enum values.
+	(human_readable): Rename from human_readable_inexact; put the
+	options before the sizes.  All uses changed.  The old human_readable
+	function has been removed; use inttostr.h instead.
+	(human_options): Renamed from human_block_size, with new signature
+	that allows block sizes up to UINTMAX_MAX.  All callers changed.
 
 2002-10-13  Jim Meyering  <meyering@lucent.com>
 
@@ -50,7 +63,7 @@
 
 2002-09-14  Paul Eggert  <eggert@twinsun.com>
 
-	* lib/xnanosleep (xnanosleep): Return -1 on failure, not 1,
+	* xnanosleep (xnanosleep): Return -1 on failure, not 1,
 	for consistency with nanosleep.  Check errno after nanosleep
 	returns -1.
 
@@ -82,9 +95,9 @@
 	time stamps before 1900 on 64-bit hosts).  And some invalid
 	time stamps were being accepted, e.g. September 31.
 
-	* lib/posixtm.h (posixtime): Return bool instead of time_t, so
+	* posixtm.h (posixtime): Return bool instead of time_t, so
 	that we can return (time_t) -1 successfully.
-	* lib/posixtm.c: Likewise.
+	* posixtm.c: Likewise.
 	[HAVE_STDBOOL_H]: Include <stdbool.h>.
 	(bool, false, true) [!HAVE_STDBOOL_H]: New type.
 	(t): Remove static var.
