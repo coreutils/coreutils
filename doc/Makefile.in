@@ -81,7 +81,7 @@ default: all
 .SUFFIXES:
 .SUFFIXES: .texi .texinfo .info .dvi .ps
 $(srcdir)/Makefile.in: @MAINT@ Makefile.am $(top_srcdir)/configure.in $(ACLOCAL) 
-	cd $(top_srcdir) && automake --gnu doc/Makefile
+	cd $(top_srcdir) && automake --gnits doc/Makefile
 
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status $(BUILT_SOURCES)
 	cd $(top_builddir) \
@@ -181,7 +181,7 @@ clean-info:
 distclean-info:
 
 maintainer-clean-info:
-	for i in $(INFO_DEPS); do rm `eval echo $$i*`; done
+	for i in $(INFO_DEPS); do rm -f `eval echo $$i*`; done
 tags: TAGS
 TAGS:
 

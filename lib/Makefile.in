@@ -131,7 +131,7 @@ default: all
 .SUFFIXES:
 .SUFFIXES: .c .o .y
 $(srcdir)/Makefile.in: @MAINT@ Makefile.am $(top_srcdir)/configure.in $(ACLOCAL) 
-	cd $(top_srcdir) && automake --gnu lib/Makefile
+	cd $(top_srcdir) && automake --gnits lib/Makefile
 
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status $(BUILT_SOURCES)
 	cd $(top_builddir) \
