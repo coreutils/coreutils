@@ -13,6 +13,8 @@ fi
 # Make sure we get English translations.
 . $srcdir/../lang-default
 
+PRIV_CHECK_ARG=require-non-root . $srcdir/../priv-check
+
 pwd=`pwd`
 tmp=cp-mv-if-$$
 trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
@@ -21,16 +23,6 @@ trap 'exit $?' 1 2 13 15
 framework_failure=0
 mkdir $tmp || framework_failure=1
 cd $tmp || framework_failure=1
-
-touch file || framework_failure=1
-chmod u-w file || framework_failure=1
-(echo foo >> file) >/dev/null 2>&1 && {
-  echo '********************************************'
-  echo "$0: NOTICE: This test case cannot be run as root."
-  echo '********************************************'
-  exit 77
-}
-
 
 for i in a b c d e f g h; do
   echo $i > $i || framework_failure=1
