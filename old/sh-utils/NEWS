@@ -1,4 +1,6 @@
 User visible changes in release 1.13
+* nice option handling works with 2-digit old-style-option adjustments.
+  Now, `nice -18 -- nice' now prints `18'.  Before it printed `8'.
 * New program: chroot.
 * internationalized diagnostic messages (so far, only french translations)
 * `date -d "01/01/1998 3 years" +%Y' now works properly.  It prints 2001.
