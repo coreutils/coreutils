@@ -2175,7 +2175,7 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
   -X                         sort alphabetically by entry extension\n\
   -1                         list one file per line\n\
       --help                 display this help and exit\n\
-      --version              output version information and exit"));
+      --version              output version information and exit\n"));
     }
   exit (status);
 }
