@@ -29,7 +29,7 @@
 	* src/chmod.c (change_file_mode): Perform the chmod even if the
 	file mode permission bits are the same as those that should be set.
 	Omitting the chmod call would be alright with minimal 1003.1e DS17
-	ACLs, but eventually there will be other permissions in addition to
+	ACLs, but eventually there may be other permissions in addition to
 	rwx.  E.g., add and delete for directories, and something analogous
 	to NT's take ownership permission.
 
