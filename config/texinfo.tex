@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2003-01-24.17}
+\def\texinfoversion{2003-01-27.05}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
@@ -498,7 +498,6 @@
 \let\tieaccent = \t
 \let\ubaraccent = \b
 \let\udotaccent = \d
-\let\acuteaccent = \'  % workaround aux file using ' as escape
 
 % Other special characters: @questiondown @exclamdown
 % Plain TeX defines: @AA @AE @O @OE @L (plus lowercase versions) @ss.
@@ -2955,7 +2954,7 @@ width0pt\relax} \fi
   \def\,{\realbackslash ,}%
   \def\"{\realbackslash "}%
   \def\`{\realbackslash `}%
-  \def\'{\realbackslash acuteaccent }% workaround aux file using ' as escape
+  \def\'{\realbackslash '}%
   \def\^{\realbackslash ^}%
   \def\~{\realbackslash ~}%
   \def\={\realbackslash =}%
@@ -5829,7 +5828,7 @@ width0pt\relax} \fi
     % into the usual \leavevmode...\vrule stuff for purposes of
     % printing. So we \turnoffactive for the \refx-snt, back on for the
     % printing, back off for the \refx-pg.
-    {\normalturnoffactive \otherbackslash
+    {\turnoffactive \otherbackslash
      % Only output a following space if the -snt ref is nonempty; for
      % @unnumbered and @anchor, it won't be.
      \setbox2 = \hbox{\ignorespaces \refx{#1-snt}{}}%
