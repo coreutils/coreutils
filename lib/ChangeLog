@@ -1,3 +1,8 @@
+2001-11-30  Akim Demaille  <akim@epita.fr>
+
+	* xstrdup.c: Include xalloc.h, so that xstrdup is declared
+	before being defined.
+
 2001-11-27  Paul Eggert  <eggert@twinsun.com>
 
 	* quotearg.h (quotearg_n, quotearg_n_style):
