@@ -2,6 +2,7 @@
 
 ##m4-files-begin
 EXTRA_DIST = README Makefile.am.in \
+afs.m4 \
 assert.m4 \
 check-decl.m4 \
 check-type.m4 \
