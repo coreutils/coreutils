@@ -1,5 +1,17 @@
 Wed Jan 22 20:12:31 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* configure.in: Check for perl.
+	(AC_OUTPUT): Add tests/date/Makefile.
+	* tests/date: New directory.
+
+	* m4/getgroups.m4: Move the code from configure.in into
+	this macro that resorts to looking for getgroups in -lbsd.
+	Set new shell variable, GETGROUPS_LIB (that callers should check),
+	if it is found there.
+	* configure.in: Check $GETGROUPS_LIB just after jm_FUNC_GETGROUPS.
+	(AC_CHECK_FUNCS): Remove getgroups.
+	Remove code that resorts to looking for getgroups in -lbsd.
+
 	* m4/mktime.m4 (AM_FUNC_MKTIME): Run tests for each of a few values
 	for the TZ environment variable.  Andre Novaes Cunha provided the
 	hairy TZ setting that exercized the Solaris tzset bug.
