@@ -15,17 +15,7 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-/* Options:
-   -p, --parent		Ensure that the given path(s) exist:
-			Make any missing parent directories for each argument.
-			Parent dirs default to umask modified by `u+wx'.
-			Do not consider an argument directory that already
-			exists to be an error.
-   -m, --mode=mode	Set the mode of created directories to `mode', which is
-			symbolic as in chmod and uses the umask as a point of
-			departure.
-
-   David MacKenzie <djm@ai.mit.edu>  */
+/* David MacKenzie <djm@ai.mit.edu>  */
 
 #include <config.h>
 #include <stdio.h>
@@ -71,8 +61,8 @@ usage (int status)
       printf (_("\
 Create the DIRECTORY(ies), if they do not already exist.\n\
 \n\
-  -p, --parents     no error if existing, make parent directories as needed\n\
   -m, --mode=MODE   set permission mode (as in chmod), not rwxrwxrwx - umask\n\
+  -p, --parents     no error if existing, make parent directories as needed\n\
       --verbose     print a message for each created directory\n\
       --help        display this help and exit\n\
       --version     output version information and exit\n\

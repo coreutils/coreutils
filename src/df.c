@@ -465,17 +465,17 @@ Show information about the filesystem on which each FILE resides,\n\
 or all filesystems by default.\n\
 \n\
   -a, --all             include filesystems having 0 blocks\n\
-  -h, --human-readable  print sizes in human readable format (e.g. 1K 234M 2G)\n\
+  -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n\
   -i, --inodes          list inode information instead of block usage\n\
   -k, --kilobytes       use 1024-byte blocks, not 512 despite POSIXLY_CORRECT\n\
   -m, --megabytes       use 1024K-byte blocks, not 512 despite POSIXLY_CORRECT\n\
       --no-sync         do not invoke sync before getting usage info (default)\n\
+  -P, --portability     use the POSIX output format\n\
       --sync            invoke sync before getting usage info\n\
   -t, --type=TYPE       limit listing to filesystems of type TYPE\n\
+  -T, --print-type      print filesystem type\n\  
   -x, --exclude-type=TYPE   limit listing to filesystems not of type TYPE\n\
   -v                    (ignored)\n\
-  -P, --portability     use the POSIX output format\n\
-  -T, --print-type      print filesystem type\n\
       --help            display this help and exit\n\
       --version         output version information and exit\n\
 "));

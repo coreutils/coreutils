@@ -535,8 +535,8 @@ Remove (unlink) the FILE(s).\n\
   -d, --directory       unlink directory, even if non-empty (super-user only)\n\
   -f, --force           ignore nonexistent files, never prompt\n\
   -i, --interactive     prompt before any removal\n\
-  -v, --verbose         explain what is being done\n\
   -r, -R, --recursive   remove the contents of directories recursively\n\
+  -v, --verbose         explain what is being done\n\
       --help            display this help and exit\n\
       --version         output version information and exit\n\
 "));

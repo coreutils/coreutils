@@ -329,8 +329,8 @@ Makes hard links by default, symbolic links with -s.\n\
                                  directory as if it were a normal file\n\
   -i, --interactive            prompt whether to remove destinations\n\
   -s, --symbolic               make symbolic links instead of hard links\n\
-  -v, --verbose                print name of each file before linking\n\
   -S, --suffix=SUFFIX          override the usual backup suffix\n\
+  -v, --verbose                print name of each file before linking\n\
   -V, --version-control=WORD   override the usual version control\n\
       --help                   display this help and exit\n\
       --version                output version information and exit\n\

@@ -282,8 +282,8 @@ Change the group membership of each FILE to GROUP.\n\
   -h, --no-dereference    affect symbolic links instead of any referenced file\n\
                           (available only on systems with lchown system call)\n\
   -f, --silent, --quiet   suppress most error messages\n\
-  -v, --verbose           output a diagnostic for every file processed\n\
   -R, --recursive         change files and directories recursively\n\
+  -v, --verbose           output a diagnostic for every file processed\n\
       --help              display this help and exit\n\
       --version           output version information and exit\n\
 "));

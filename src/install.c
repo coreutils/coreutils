@@ -598,13 +598,13 @@ In first two formats, copy SOURCE to DEST or multiple SOURCE(s) to\n\
 DIRECTORY, while setting permission modes and owner/group.  In third\n\
 format, make all components of the given DIRECTORY(ies).\n\
 \n\
+  -b, --backup        make backup before removal\n\
   -c                  (ignored)\n\
   -d, --directory     create [leading] directories, mandatory for 3rd format\n\
   -g, --group=GROUP   set group ownership, instead of process' current group\n\
   -m, --mode=MODE     set permission mode (as in chmod), instead of rw-r--r--\n\
   -o, --owner=OWNER   set ownership (super-user only)\n\
   -s, --strip         strip symbol tables, only for 1st and 2nd formats\n\
-  -b, --backup        make backup before removal\n\
   -S, --suffix=SUFFIX override the usual backup suffix\n\
   -V, --version-control=WORD   override the usual version control\n\
       --help          display this help and exit\n\

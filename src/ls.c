@@ -2702,52 +2702,52 @@ usage (int status)
 List information about the FILEs (the current directory by default).\n\
 Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
 \n\
-  -A, --almost-all           do not list implied . and ..\n\
   -a, --all                  do not hide entries starting with .\n\
-  -B, --ignore-backups       do not list implied entries ending with ~\n\
+  -A, --almost-all           do not list implied . and ..\n\
   -b, --escape               print octal escapes for nongraphic characters\n\
-  -C                         list entries by columns\n\
+  -B, --ignore-backups       do not list implied entries ending with ~\n\
   -c                         sort by change time; with -l: show ctime\n\
+  -C                         list entries by columns\n\
       --color[=WHEN]         control whether color is used to distinguish file\n\
                                types.  WHEN may be `never', `always', or `auto'\n\
-  -D, --dired                generate output designed for Emacs' dired mode\n\
   -d, --directory            list directory entries instead of contents\n\
-  -F, --classify             append a character for typing each entry\n\
+  -D, --dired                generate output designed for Emacs' dired mode\n\
   -f                         do not sort, enable -aU, disable -lst\n\
+  -F, --classify             append a character for typing each entry\n\
       --format=WORD          across -x, commas -m, horizontal -x, long -l,\n\
                                single-column -1, verbose -l, vertical -C\n\
       --full-time            list both full date and full time\n"));
 
       printf (_("\
-  -G, --no-group             inhibit display of group information\n\
   -g                         (ignored)\n\
-  -I, --ignore=PATTERN       do not list implied entries matching shell PATTERN\n\
+  -G, --no-group             inhibit display of group information\n\
   -i, --inode                print index number of each file\n\
+  -I, --ignore=PATTERN       do not list implied entries matching shell PATTERN\n\
   -k, --kilobytes            use 1024 blocks, not 512 despite POSIXLY_CORRECT\n\
-  -L, --dereference          list entries pointed to by symbolic links\n\
   -l                         use a long listing format\n\
+  -L, --dereference          list entries pointed to by symbolic links\n\
   -m                         fill width with a comma separated list of entries\n\
+  -n, --numeric-uid-gid      list numeric UIDs and GIDs instead of names\n\
   -N, --literal              print raw entry names (don't treat e.g. control\n\
                                characters specially)\n\
-  -n, --numeric-uid-gid      list numeric UIDs and GIDs instead of names\n\
   -o                         use long listing format without group info\n\
   -p                         append a character for typing each entry\n\
-  -Q, --quote-name           enclose entry names in double quotes\n\
   -q, --hide-control-chars   print ? instead of non graphic characters\n\
-  -R, --recursive            list subdirectories recursively\n\
+  -Q, --quote-name           enclose entry names in double quotes\n\
   -r, --reverse              reverse order while sorting\n\
-  -S                         sort by file size\n"));
+  -R, --recursive            list subdirectories recursively\n\
+  -s, --size                 print size of each file, in blocks\n"));
 
       printf (_("\
-  -s, --size                 print size of each file, in blocks\n\
+  -S                         sort by file size\n\
       --sort=WORD            ctime -c, extension -X, none -U, size -S,\n\
                              status -c, time -t, atime -u, access -u, use -u\n\
       --time=WORD            show time as WORD instead of modification time:\n\
                              atime, access, use, ctime or status\n\
-  -T, --tabsize=COLS         assume tab stops at each COLS instead of 8\n\
   -t                         sort by modification time; with -l: show mtime\n\
-  -U                         do not sort; list entries in directory order\n\
+  -T, --tabsize=COLS         assume tab stops at each COLS instead of 8\n\
   -u                         sort by last access time; with -l: show atime\n\
+  -U                         do not sort; list entries in directory order\n\
   -w, --width=COLS           assume screen width instead of current value\n\
   -x                         list entries by lines instead of by columns\n\
   -X                         sort alphabetically by entry extension\n\

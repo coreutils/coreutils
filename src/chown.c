@@ -243,8 +243,8 @@ Change the owner and/or group of each FILE to OWNER and/or GROUP.\n\
   -h, --no-dereference   affect symbolic links instead of any referenced file\n\
                          (available only on systems with lchown system call)\n\
   -f, --silent, --quiet  suppress most error messages\n\
-  -v, --verbose          explain what is being done\n\
   -R, --recursive        operate on files and directories recursively\n\
+  -v, --verbose          explain what is being done\n\
       --help             display this help and exit\n\
       --version          output version information and exit\n\
 \n\
