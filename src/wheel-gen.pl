@@ -60,8 +60,10 @@ sub is_prime ($)
   print <<EOF;
 /* The first $ws_m1 elements correspond to the incremental offsets of the
    first $wheel_size primes (@primes).  The $wheel_size(th) element is the
-   difference between that last prime and the next largest integer that is
-   not a multiple of those primes.  */
+   difference between that last prime and the next largest integer
+   that is not a multiple of those primes.  The remaining numbers
+   define the wheel.  For more information, see
+   http://www.utm.edu/research/primes/glossary/WheelFactorization.html.  */
 EOF
 
   my @increments;
