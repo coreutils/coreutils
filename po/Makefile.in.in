@@ -1,19 +1,10 @@
 # Makefile for program source directory in GNU NLS utilities package.
-# Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+# Copyright (C) 1995, 1996, 1997 by Ulrich Drepper <drepper@gnu.ai.mit.edu>
 #
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2, or (at your option)
-# any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+# This file file be copied and used freely without restrictions.  It can
+# be used in projects which are not available under the GNU Public License
+# but which still want to provide support for the GNU gettext functionality.
+# Please note that the actual code is *not* freely available.
 
 PACKAGE = @PACKAGE@
 VERSION = @VERSION@
@@ -94,9 +85,10 @@ all-no:
 $(srcdir)/$(PACKAGE).pot: $(POTFILES)
 	$(XGETTEXT) --default-domain=$(PACKAGE) --directory=$(top_srcdir) \
 	  --add-comments --keyword=_ --keyword=N_ \
-	  --files-from=$(srcdir)/POTFILES.in
-	rm -f $(srcdir)/$(PACKAGE).pot
-	mv $(PACKAGE).po $(srcdir)/$(PACKAGE).pot
+	  --files-from=$(srcdir)/POTFILES.in \
+	&& test ! -f $(PACKAGE).po \
+	   || ( rm -f $(srcdir)/$(PACKAGE).pot \
+		&& mv $(PACKAGE).po $(srcdir)/$(PACKAGE).pot )
 
 $(srcdir)/cat-id-tbl.c: stamp-cat-id; @:
 $(srcdir)/stamp-cat-id: $(PACKAGE).pot
@@ -118,10 +110,10 @@ install-exec:
 install-data: install-data-@USE_NLS@
 install-data-no: all
 install-data-yes: all
-	if test -r $(MKINSTALLDIRS); then \
+	if test -r "$(MKINSTALLDIRS)"; then \
 	  $(MKINSTALLDIRS) $(datadir); \
 	else \
-	  $(top_srcdir)/mkinstalldirs $(datadir); \
+	  $(SHELL) $(top_srcdir)/mkinstalldirs $(datadir); \
 	fi
 	@catalogs='$(CATALOGS)'; \
 	for cat in $$catalogs; do \
@@ -132,10 +124,10 @@ install-data-yes: all
 	  esac; \
 	  lang=`echo $$cat | sed 's/\$(CATOBJEXT)$$//'`; \
 	  dir=$$destdir/$$lang/LC_MESSAGES; \
-	  if test -r $(MKINSTALLDIRS); then \
+	  if test -r "$(MKINSTALLDIRS)"; then \
 	    $(MKINSTALLDIRS) $$dir; \
 	  else \
-	    $(top_srcdir)/mkinstalldirs $$dir; \
+	    $(SHELL) $(top_srcdir)/mkinstalldirs $$dir; \
 	  fi; \
 	  if test -r $$cat; then \
 	    $(INSTALL_DATA) $$cat $$dir/$(PACKAGE)$(INSTOBJEXT); \
@@ -160,10 +152,10 @@ install-data-yes: all
 	  fi; \
 	done
 	if test "$(PACKAGE)" = "gettext"; then \
-	  if test -r $(MKINSTALLDIRS); then \
+	  if test -r "$(MKINSTALLDIRS)"; then \
 	    $(MKINSTALLDIRS) $(gettextsrcdir); \
 	  else \
-	    $(top_srcdir)/mkinstalldirs $(gettextsrcdir); \
+	    $(SHELL) $(top_srcdir)/mkinstalldirs $(gettextsrcdir); \
 	  fi; \
 	  $(INSTALL_DATA) $(srcdir)/Makefile.in.in \
 			  $(gettextsrcdir)/Makefile.in.in; \
