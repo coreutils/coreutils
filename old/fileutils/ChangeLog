@@ -13,7 +13,8 @@
 2001-12-21  Jim Meyering  <meyering@lucent.com>
 
 	* src/shred.c [!HAVE_CONFIG_H]: Remove cpp block that duplicated
-	code in lib/ for compiling this program without config.h.
+	code in lib/ in order to facilitate compiling this program without
+	config.h.
 
 2001-12-19  Paul Eggert  <eggert@twinsun.com>
 
