@@ -1,6 +1,20 @@
-2002-08-29  Jim Meyering  <meyering@lucent.com>
+2002-08-31  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.5.1.
+
+	* Most files: Change `exit (0)' to `exit (EXIT_SUCCESS)',
+	`exit (1)' to `exit (EXIT_FAILURE)', and
+	`usage (1)' to `usage (EXIT_FAILURE)'.
+
+	* chgrp.c, chmod.c, chown.c, chroot.c, cp.c, date.c, dd.c, du.c,
+	* hostname.c, id.c, install.c, ln.c, mkdir.c, mkfifo.c, mknod.c,
+	* nice.c, pinky.c, printf.c, pwd.c, shred.c, sleep.c, stty.c,
+	* su.c, tac-pipe.c, tail.c, tee.c, touch.c, uname.c, uptime.c,
+	* users.c, who.c: Change `error (1, ...' to `error (EXIT_FAILURE, ...'.
+	But don't change `error (0, ...' to `error (EXIT_SUCCESS, ...', since
+	error never exits successfully.
+
+2002-08-29  Jim Meyering  <meyering@lucent.com>
 
 	* src/remove.c (remove_cwd_entries): Use closedir (not CLOSEDIR)
 	when ignoring any return value.
@@ -19,12 +33,6 @@
 	Give a diagnostic and fail if closedir fails.
 
 2002-08-26  Jim Meyering  <meyering@lucent.com>
-
-	* chgrp.c, chmod.c, chown.c, chroot.c, cp.c, date.c, dd.c, du.c,
-	* hostname.c, id.c, install.c, ln.c, mkdir.c, mkfifo.c, mknod.c,
-	* nice.c, pinky.c, printf.c, pwd.c, shred.c, sleep.c, stty.c,
-	* su.c, tac-pipe.c, tail.c, tee.c, touch.c, uname.c, uptime.c,
-	* users.c, who.c: Change `error (1, ...' to `error (EXIT_FAILURE, ...'.
 
 	* Makefile.am (THANKS-to-translators): New rule.
 	(EXTRA_DIST): Add both THANKS-to-translators and THANKStt.in.
