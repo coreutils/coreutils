@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    Contributed by Paul Eggert (eggert@twinsun.com).
 
    NOTE: The canonical source of this file is maintained with the GNU C Library.
@@ -73,21 +73,26 @@
 # define CHAR_BIT 8
 #endif
 
+/* The extra casts work around common compiler bugs.  */
+#define TYPE_SIGNED(t) (! ((t) 0 < (t) -1))
+/* The outer cast is needed to work around a bug in Cray C 5.0.3.0.
+   It is necessary at least when t == time_t.  */
+#define TYPE_MINIMUM(t) ((t) (TYPE_SIGNED (t) \
+			      ? ~ (t) 0 << (sizeof (t) * CHAR_BIT - 1) : (t) 0))
+#define TYPE_MAXIMUM(t) (~ (t) 0 - TYPE_MINIMUM (t))
+
 #ifndef INT_MIN
-# define INT_MIN (~0 << (sizeof (int) * CHAR_BIT - 1))
+# define INT_MIN TYPE_MINIMUM (int)
 #endif
 #ifndef INT_MAX
-# define INT_MAX (~0 - INT_MIN)
+# define INT_MAX TYPE_MAXIMUM (int)
 #endif
 
 #ifndef TIME_T_MIN
-/* The outer cast to time_t works around a bug in Cray C 5.0.3.0.  */
-# define TIME_T_MIN ((time_t) \
-		    (0 < (time_t) -1 ? (time_t) 0 \
-		     : ~ (time_t) 0 << (sizeof (time_t) * CHAR_BIT - 1)))
+# define TIME_T_MIN TYPE_MINIMUM (time_t)
 #endif
 #ifndef TIME_T_MAX
-# define TIME_T_MAX (~ (time_t) 0 - TIME_T_MIN)
+# define TIME_T_MAX TYPE_MAXIMUM (time_t)
 #endif
 
 #define TM_YEAR_BASE 1900
@@ -365,7 +370,15 @@ __mktime_internal (tp, convert, offset)
       double dday = 366 * dyear + mday;
       double dsec = 60 * (60 * (24 * dday + hour) + min) + sec_requested;
 
-      if (TIME_T_MAX / 3 - TIME_T_MIN / 3 < (dsec < 0 ? - dsec : dsec))
+      /* On Irix4.0.5 cc, dividing TIME_T_MIN by 3 does not produce
+	 correct results, ie., it erroneously gives a positive value
+	 of 715827882.  Setting a variable first then doing math on it
+	 seems to work.  (ghazi@caip.rutgers.edu) */
+
+      const time_t time_t_max = TIME_T_MAX;
+      const time_t time_t_min = TIME_T_MIN;
+
+      if (time_t_max / 3 - time_t_min / 3 < (dsec < 0 ? - dsec : dsec))
 	return -1;
     }
 
