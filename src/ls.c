@@ -702,18 +702,20 @@ decode_switches (int argc, char **argv)
   ignore_patterns = 0;
   quote_as_string = 0;
 
-  p = getenv ("COLUMNS");
-  if (xstrtol (p, NULL, 0, &tmp_long, NULL) == LONGINT_OK
-      && 0 < tmp_long && tmp_long <= INT_MAX)
+  line_length = 80;
+  if ((p = getenv ("COLUMNS")))
     {
-      line_length = (int) tmp_long;
-    }
-  else
-    {
-      error (0, 0,
-	     _("ignoring invalid width in enironment variable COLUMNS: %s"),
-	     p);
-      line_length = 80;
+      if (xstrtol (p, NULL, 0, &tmp_long, NULL) == LONGINT_OK
+	  && 0 < tmp_long && tmp_long <= INT_MAX)
+	{
+	  line_length = (int) tmp_long;
+	}
+      else
+	{
+	  error (0, 0,
+	       _("ignoring invalid width in enironment variable COLUMNS: %s"),
+		 p);
+	}
     }
 
 #ifdef TIOCGWINSZ
@@ -725,20 +727,20 @@ decode_switches (int argc, char **argv)
   }
 #endif
 
-  /* FIXME: reference TABSIZE iff !posix_pedantic.  */
-  p = getenv ("TABSIZE");
-
-  if (xstrtol (p, NULL, 0, &tmp_long, NULL) == LONGINT_OK
-      && 0 < tmp_long && tmp_long <= INT_MAX)
+  tabsize = 8;
+  if (!posix_pedantic && (p = getenv ("TABSIZE")))
     {
-      tabsize = (int) tmp_long;
-    }
-  else
-    {
-      error (0, 0,
+      if (xstrtol (p, NULL, 0, &tmp_long, NULL) == LONGINT_OK
+	  && 0 < tmp_long && tmp_long <= INT_MAX)
+	{
+	  tabsize = (int) tmp_long;
+	}
+      else
+	{
+	  error (0, 0,
 	     _("ignoring invalid tab size in enironment variable TABSIZE: %s"),
-	     p);
-      tabsize = 8;
+		 p);
+	}
     }
 
   while ((c = getopt_long (argc, argv,
