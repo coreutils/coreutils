@@ -1,5 +1,5 @@
 Changes in release 1.13
- [1.12o]
+ [1.12p]
 * running `make check' runs tests of nice
 * lots of configuration-related improvements
 * nice allows `+' in options like -+8 and -+13.
