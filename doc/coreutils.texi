@@ -4428,7 +4428,8 @@ With @option{-f}, output fields are separated by @var{output_delim_string}.
 The default with @option{-f} is to use the input delimiter.
 When using @option{-b} or @option{-c} to select ranges of byte or
 character offsets (as opposed to ranges of fields),
-output @var{output_delim_string} between ranges of selected bytes.
+output @var{output_delim_string} between non-overlapping
+ranges of selected bytes.
 
 
 @end table
