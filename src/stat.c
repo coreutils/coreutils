@@ -21,9 +21,6 @@
 
 #include <stdio.h>
 #include <sys/types.h>
-#ifdef HAVE_SYS_SYSMACROS_H
-# include <sys/sysmacros.h>
-#endif
 #include <pwd.h>
 #include <grp.h>
 #include <unistd.h>
@@ -79,6 +76,14 @@
 # define NAMEMAX_FORMAT "s"
 #endif
 
+#if HAVE_STRUCT_STATVFS_F_BASETYPE
+# define STATXFS_FILE_SYSTEM_TYPE_MEMBER_NAME f_basetype
+#else
+# if HAVE_STRUCT_STATFS_F_FSTYPENAME
+#  define STATXFS_FILE_SYSTEM_TYPE_MEMBER_NAME f_basetype
+# endif
+#endif
+
 #define PROGRAM_NAME "stat"
 
 #define AUTHORS "Michael Meskes"
@@ -106,17 +111,14 @@ char *program_name;
 static char *
 human_fstype (STRUCT_STATVFS const *statfsbuf)
 {
-#if HAVE_STRUCT_STATVFS_F_BASETYPE
-  return statfsbuf->f_basetype;
+#ifdef STATXFS_FILE_SYSTEM_TYPE_MEMBER_NAME
+  /* Cast away the `const' attribute.  */
+  return (char *) statfsbuf->STATXFS_FILE_SYSTEM_TYPE_MEMBER_NAME;
 #else
-# if HAVE_STRUCT_STATFS_F_FSTYPENAME
-  return statfsbuf->f_fstypename;
-# else
   char const *type;
-
   switch (statfsbuf->f_type)
     {
-#  if defined __linux__
+# if defined __linux__
     case S_MAGIC_AFFS:
       type = "affs";
       break;
@@ -204,7 +206,7 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
     case S_MAGIC_ROMFS:
       type = "romfs";
       break;
-#  elif __GNU__
+# elif __GNU__
     case FSTYPE_UFS:
       type = "ufs";
       break;
@@ -286,7 +288,7 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
     case FSTYPE_ISO9660:
       type = "iso9660";
       break;
-#  endif
+# endif
     default:
       type = NULL;
       break;
@@ -301,7 +303,6 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
     sprintf (buf, "UNKNOWN (0x%x)", statfsbuf->f_type);
     return buf;
   }
-# endif
 #endif
 }
 
