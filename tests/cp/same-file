@@ -53,14 +53,17 @@ done
 cat <<\EOF > $expected
 1 [cp: `foo' and `symlink' are the same file] foo symlink -> foo
 0 foo symlink symlink.~1~ -> foo
+1 [cp: `foo' and `symlink' are the same file] foo symlink -> foo
 0 foo symlink symlink.~1~ -> foo
 0 foo symlink symlink.~1~ -> foo
 
 1 [cp: `symlink' and `foo' are the same file] foo symlink -> foo
 1 [cp: `symlink' and `foo' are the same file] foo symlink -> foo
+1 [cp: `symlink' and `foo' are the same file] foo symlink -> foo
 0 foo -> foo foo.~1~ symlink -> foo symlink-loop symlink-loop
 0 foo -> foo foo.~1~ symlink -> foo symlink-loop symlink-loop
 
+1 [cp: `foo' and `foo' are the same file] foo
 1 [cp: `foo' and `foo' are the same file] foo
 1 [cp: `foo' and `foo' are the same file] foo
 1 [cp: `foo' and `foo' are the same file] foo
@@ -68,6 +71,7 @@ cat <<\EOF > $expected
 
 1 [cp: `sl1' and `sl2' are the same file] foo sl1 -> foo sl2 -> foo
 0 foo sl1 -> foo sl2 sl2.~1~ -> foo
+1 [cp: `sl1' and `sl2' are the same file] foo sl1 -> foo sl2 -> foo
 0 foo sl1 -> foo sl2 -> foo sl2.~1~ -> foo
 0 foo sl1 -> foo sl2 -> foo sl2.~1~ -> foo
 
