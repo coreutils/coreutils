@@ -1,6 +1,10 @@
-2003-04-09  Jim Meyering  <jim@meyering.net>
+2003-04-10  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
+
+	* man/unexpand.x: Add `SEE ALSO' reference to expand.
+	* man/expand.x: Add `SEE ALSO' reference to unexpand.
+	Suggestion from Dan Jacobson.
 
 2003-04-09  Paul Eggert  <eggert@twinsun.com>
 
