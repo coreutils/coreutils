@@ -1,5 +1,5 @@
 /* hash - hashing table processing.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    Written by Jim Meyering <meyering@ascend.com>, 1998.
 
    This program is free software; you can redistribute it and/or modify
@@ -99,5 +99,5 @@ void hash_free PARAMS ((Hash_table *));
 
 /* Insertion and deletion.  */
 bool hash_rehash PARAMS ((Hash_table *, unsigned int));
-void *hash_insert PARAMS ((Hash_table *, const void *, bool *));
+void *hash_insert PARAMS ((Hash_table *, const void *));
 void *hash_delete PARAMS ((Hash_table *, const void *));
