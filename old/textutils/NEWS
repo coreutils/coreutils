@@ -1,5 +1,6 @@
 Changes in release 1.23
 [1.22g]
+* Windows/DOS portability fixes
 * new program: tsort
 * tail has several new options: FIXME
 * md5sum can handle file names with embedded backslash characters
