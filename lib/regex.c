@@ -76,7 +76,7 @@ char *realloc ();
    This is used in most programs--a few other programs avoid this
    by defining INHIBIT_STRING_HEADER.  */
 #ifndef INHIBIT_STRING_HEADER
-#if HAVE_STRING_H || STDC_HEADERS || defined (_LIBC)
+#if defined (HAVE_STRING_H) || defined (STDC_HEADERS) || defined (_LIBC)
 #include <string.h>
 #ifndef bcmp
 #define bcmp(s1, s2, n)	memcmp ((s1), (s2), (n))
