@@ -346,7 +346,8 @@ show_point (point, statp)
 	    {
 	      error (0, errno, "%s", me->me_mountdir);
 	      exit_status = 1;
-	      me->me_dev = -2;	/* So we won't try and fail repeatedly. */
+	      /* So we won't try and fail repeatedly. */
+	      me->me_dev = (dev_t) -2;
 	    }
 	}
 
