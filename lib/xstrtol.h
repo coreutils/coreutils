@@ -32,7 +32,16 @@
 # ifndef _STRTOL_ERROR
 enum strtol_error
   {
-    LONGINT_OK, LONGINT_INVALID, LONGINT_INVALID_SUFFIX_CHAR, LONGINT_OVERFLOW
+    LONGINT_OK = 0,
+
+    /* These two values can be ORed together, to indicate that both
+       errors occurred.  */
+    LONGINT_OVERFLOW = 1,
+    LONGINT_INVALID_SUFFIX_CHAR = 2,
+
+    LONGINT_INVALID_SUFFIX_CHAR_WITH_OVERFLOW = (LONGINT_INVALID_SUFFIX_CHAR
+						 | LONGINT_OVERFLOW),
+    LONGINT_INVALID = 4
   };
 typedef enum strtol_error strtol_error;
 # endif
@@ -49,7 +58,7 @@ _DECLARE_XSTRTOL (xstrtoumax, uintmax_t)
     {									\
       switch ((Err))							\
 	{								\
-	case LONGINT_OK:						\
+	default:							\
 	  abort ();							\
 									\
 	case LONGINT_INVALID:						\
@@ -58,6 +67,7 @@ _DECLARE_XSTRTOL (xstrtoumax, uintmax_t)
 	  break;							\
 									\
 	case LONGINT_INVALID_SUFFIX_CHAR:				\
+	case LONGINT_INVALID_SUFFIX_CHAR | LONGINT_OVERFLOW:		\
 	  error ((Exit_code), 0, "invalid character following %s in `%s'", \
 		 (Argument_type_string), (Str));			\
 	  break;							\
