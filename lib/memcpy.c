@@ -2,6 +2,10 @@
    if the source overlaps with the destination.
    Return DESTADDR. */
 
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
+
 char *
 memcpy (destaddr, srcaddr, len)
      char *destaddr;
