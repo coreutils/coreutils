@@ -1,3 +1,8 @@
+2000-05-28  Jim Meyering  <meyering@lucent.com>
+
+	* jm-macros.m4: s/jm_FUNC_STRERROR_R/AC_FUNC_STRERROR_R/.
+	* strerror_r.m4: Remove file (absorbed into autoconf).
+
 2000-05-26  Jim Meyering  <meyering@lucent.com>
 
 	* uptime.m4: Use `$cross_compiling', not `$ac_cv_prog_cc_cross'.
