@@ -1,3 +1,8 @@
+2002-09-11  Jim Meyering  <meyering@lucent.com>
+
+	* xnanosleep.c, xnanosleep.h: New files, factored out of sleep.c.
+	* Makefile.am (libfetish_a_SOURCES): Add them.
+
 2002-09-04  Jim Meyering  <meyering@lucent.com>
 
 	* addext.c (addext): Add a cast to avoid gcc's warning about
