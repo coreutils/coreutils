@@ -19,14 +19,6 @@
 
 # include <stddef.h>
 
-# ifndef PARAMS
-#  if defined PROTOTYPES || (defined __STDC__ && __STDC__)
-#   define PARAMS(Args) Args
-#  else
-#   define PARAMS(Args) ()
-#  endif
-# endif
-
 # ifndef DIRECTORY_SEPARATOR
 #  define DIRECTORY_SEPARATOR '/'
 # endif
@@ -39,11 +31,11 @@
 #  define FILESYSTEM_PREFIX_LEN(Filename) 0
 # endif
 
-char *base_name PARAMS ((char const *path));
-char *dir_name PARAMS ((char const *path));
-size_t base_len PARAMS ((char const *path));
-size_t dir_len PARAMS ((char const *path));
+char *base_name (char const *path);
+char *dir_name (char const *path);
+size_t base_len (char const *path);
+size_t dir_len (char const *path);
 
-int strip_trailing_slashes PARAMS ((char *path));
+int strip_trailing_slashes (char *path);
 
 #endif /* not DIRNAME_H_ */

@@ -44,17 +44,9 @@ enum backup_type
 
 extern char const *simple_backup_suffix;
 
-# ifndef PARAMS
-#  if defined PROTOTYPES || (defined __STDC__ && __STDC__)
-#   define PARAMS(Args) Args
-#  else
-#   define PARAMS(Args) ()
-#  endif
-# endif
-
-char *find_backup_file_name PARAMS ((char const *, enum backup_type));
-enum backup_type get_version PARAMS ((char const *context, char const *arg));
-enum backup_type xget_version PARAMS ((char const *context, char const *arg));
-void addext PARAMS ((char *, char const *, int));
+char *find_backup_file_name (char const *, enum backup_type);
+enum backup_type get_version (char const *context, char const *arg);
+enum backup_type xget_version (char const *context, char const *arg);
+void addext (char *, char const *, int);
 
 #endif /* ! BACKUPFILE_H_ */
