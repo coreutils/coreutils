@@ -70,15 +70,18 @@ extern char *program_name;
    new non-directories.  */
 
 static mode_t
-new_nondir_mode (const struct cp_options *option, mode_t mode)
+get_dest_mode (const struct cp_options *option, mode_t mode)
 {
   /* In some applications (e.g., install), use precisely the
      specified mode.  */
   if (option->set_mode)
     return option->mode;
 
-  /* In others (e.g., cp, mv), apply the user's umask.  */
-  return mode & option->umask_kill;
+  /* Honor the umask for `cp', but not for `mv' or `cp -p'.  */
+  if (!option->move_mode && !option->preserve_chmod_bits)
+    mode &= option->umask_kill;
+
+  return mode;
 }
 
 /* FIXME: describe */
@@ -159,7 +162,7 @@ copy_dir (const char *src_path_in, const char *dst_path_in, int new_dst,
 
 static int
 copy_reg (const char *src_path, const char *dst_path,
-	  enum Sparse_type sparse_mode)
+	  enum Sparse_type sparse_mode, mode_t dst_mode)
 {
   char *buf;
   int buf_size;
@@ -190,10 +193,7 @@ copy_reg (const char *src_path, const char *dst_path,
       return -1;
     }
 
-  /* Create the new regular file with restrictive permissions (u=rw)
-     initially.  */
-
-  dest_desc = open (dst_path, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
+  dest_desc = open (dst_path, O_WRONLY | O_CREAT | O_TRUNC, dst_mode);
   if (dest_desc < 0)
     {
       error (0, errno, _("cannot create regular file %s"), quote (dst_path));
@@ -363,14 +363,14 @@ copy_internal (const char *src_path, const char *dst_path,
 {
   struct stat src_sb;
   struct stat dst_sb;
-  int src_mode;
-  int src_type;
+  mode_t src_mode;
+  mode_t src_type;
   char *earlier_file;
   char *dst_backup = NULL;
   int backup_succeeded = 0;
-  int fix_mode = 0;
   int rename_errno;
   int delayed_fail;
+  int copied_as_regular = 0;
 
   if (move_mode && rename_succeeded)
     *rename_succeeded = 0;
@@ -575,17 +575,13 @@ copy_internal (const char *src_path, const char *dst_path,
 	      if (S_ISDIR (dst_sb.st_mode))
 		{
 		  /* Temporarily change mode to allow overwriting. */
-		  if (euidaccess (dst_path, W_OK | X_OK) != 0)
+		  if (euidaccess (dst_path, W_OK | X_OK) != 0
+		      && chmod (dst_path, S_IRWXU))
 		    {
-		      if (chmod (dst_path, S_IRWXU))
-			{
-			  error (0, errno,
-				 _("cannot change permissions for %s"),
-				 quote (dst_path));
-			  return 1;
-			}
-		      else
-			fix_mode = 1;
+		      error (0, errno,
+			     _("cannot change permissions for %s"),
+			     quote (dst_path));
+		      return 1;
 		    }
 		}
 	      else
@@ -816,14 +812,17 @@ copy_internal (const char *src_path, const char *dst_path,
 #endif
 	       ))
     {
-      if (copy_reg (src_path, dst_path, x->sparse_mode))
+      copied_as_regular = 1;
+      /* POSIX says the permission bits of the source file must be
+	 used as the 3rd argument in the open call.  */
+      if (copy_reg (src_path, dst_path, x->sparse_mode, src_mode))
 	goto un_backup;
     }
   else
 #ifdef S_ISFIFO
   if (S_ISFIFO (src_type))
     {
-      if (mkfifo (dst_path, new_nondir_mode (x, src_mode)))
+      if (mkfifo (dst_path, get_dest_mode (x, src_mode)))
 	{
 	  error (0, errno, _("cannot create fifo %s"), quote (dst_path));
 	  goto un_backup;
@@ -837,7 +836,7 @@ copy_internal (const char *src_path, const char *dst_path,
 #endif
 	)
     {
-      if (mknod (dst_path, new_nondir_mode (x, src_mode), src_sb.st_rdev))
+      if (mknod (dst_path, get_dest_mode (x, src_mode), src_sb.st_rdev))
 	{
 	  error (0, errno, _("cannot create special file %s"),
 		 quote (dst_path));
@@ -954,39 +953,19 @@ copy_internal (const char *src_path, const char *dst_path,
 	}
     }
 
-  if (x->set_mode)
+  /* Permissions of newly-created regular files were set upon `open'
+     in copy_reg.  */
+  if (new_dst && copied_as_regular)
+    return delayed_fail;
+
+  if ((x->preserve_chmod_bits || new_dst)
+      && (x->copy_as_regular || S_ISREG (src_type) || S_ISDIR (src_type)))
     {
-      /* This is so install's -m MODE option works.  */
-      if (chmod (dst_path, x->mode))
+      if (chmod (dst_path, get_dest_mode (x, src_mode)))
 	{
 	  error (0, errno, _("setting permissions for %s"), quote (dst_path));
-	  return 1;
-	}
-    }
-  else if ((x->preserve_chmod_bits || new_dst)
-	   && (x->copy_as_regular || S_ISREG (src_type) || S_ISDIR (src_type)))
-    {
-      mode_t dst_mode = src_mode;
-
-      /* Honor the umask for `cp', but not for `mv'.  */
-      if (!x->move_mode)
-	dst_mode &= x->umask_kill;
-
-      if (chmod (dst_path, dst_mode))
-	{
-	  error (0, errno, _("preserving permissions for %s"),
-		 quote (dst_path));
-	  if (x->require_preserve)
+	  if (x->set_mode || x->require_preserve)
 	    return 1;
-	}
-    }
-  else if (fix_mode)
-    {
-      /* Reset the temporarily changed mode.  */
-      if (chmod (dst_path, dst_sb.st_mode))
-	{
-	  error (0, errno, _("restoring permissions of %s"), quote (dst_path));
-	  return 1;
 	}
     }
 
