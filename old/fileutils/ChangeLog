@@ -14,6 +14,7 @@
 	(copy_internal): Likewise.
 	(copy): Likewise.
 	Update all callers.
+	* src/copy.h (copy): Update prototype.
 	* src/cp.c (do_copy): Add unused arg in calls to copy.
 	* src/mv.c (do_move): Add &copy_into_self arg in call to copy.
 	Don't remove source directory when copy_into_self is nonzero.
