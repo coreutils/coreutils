@@ -1,6 +1,6 @@
 /* xreadlink.c -- readlink wrapper to return the link name in malloc'd storage
 
-   Copyright (C) 2001, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2003, 2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -23,6 +23,8 @@
 # include <config.h>
 #endif
 
+#include "xreadlink.h"
+
 #include <stdio.h>
 #include <errno.h>
 #ifndef errno
@@ -44,20 +46,21 @@ extern int errno;
 #endif
 
 #include "xalloc.h"
-#include "xreadlink.h"
 
 /* Call readlink to get the symbolic link value of FILENAME.
+   SIZE is a hint as to how long the link is expected to be;
+   typically it is taken from st_size.  It need not be correct.
    Return a pointer to that NUL-terminated string in malloc'd storage.
    If readlink fails, return NULL (caller may use errno to diagnose).
    If malloc fails, or if the link value is longer than SSIZE_MAX :-),
    give a diagnostic and exit.  */
 
 char *
-xreadlink (char const *filename)
+xreadlink (char const *filename, size_t size)
 {
   /* The initial buffer size for the link value.  A power of 2
      detects arithmetic overflow earlier, but is not required.  */
-  size_t buf_size = 128;
+  size_t buf_size = size + 1;
 
   while (1)
     {
@@ -80,7 +83,7 @@ xreadlink (char const *filename)
 
       free (buffer);
       buf_size *= 2;
-      if (SSIZE_MAX < buf_size || (SIZE_MAX / 2 < SSIZE_MAX && buf_size == 0))
+      if (! (0 < buf_size && buf_size <= SSIZE_MAX))
 	xalloc_die ();
     }
 }
