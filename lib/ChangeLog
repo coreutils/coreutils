@@ -1,3 +1,21 @@
+2001-01-21  Paul Eggert  <eggert@twinsun.com>
+
+	* xmemcoll.h, xmemcoll.c: New files.
+	* Makefile.am (libfetish_a_SOURCES): Add them.
+	* memcoll.c: Include errno.h, and declare errno if not defined.
+	(memcoll): Set errno to zero if there is no error.
+
+	* quotearg.c (quotearg_buffer_restyled):
+	Fix bug with quoting buffers containing NUL when backslashing escapes.
+	This bug was exposed by the other changes in this patch.
+	(quotearg_n_options): New arg ARGSIZE.
+	All callers changed.
+	(quoting_options_from_style): New function.
+	(quotearg_n_style): Use it.
+	(quotearg_n_style_mem): New function.
+
+	* quotearg.h (quotearg_n_style_mem): New function.
+
 2002-01-16  Jim Meyering  <meyering@lucent.com>
 
 	* getdate.y: Add three semicolons, each just before a closing brace.
