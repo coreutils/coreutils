@@ -1,3 +1,8 @@
+2003-02-28  Jim Meyering  <jim@meyering.net>
+
+	* fts.c (fts_children): If fchdir fails, close file descriptor
+	before returning.  From NetBSD.
+
 2003-02-27  Jim Meyering  <jim@meyering.net>
 
 	* physmem.c (physmem_total, physmem_available): Add comments.
