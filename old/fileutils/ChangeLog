@@ -1,5 +1,8 @@
 Wed Feb 26 23:46:39 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* lib/getdate.y: (tYEAR_UNIT): Increase yyRelYear by $1, not just by 1.
+	From Andreas Schwab.
+
 	* src/copy.c (copy_internal): When there is any potential for
 	ambiguity in a diagnostic, give explanatory diagnostic in addition
 	to file name.
