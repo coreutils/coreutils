@@ -11,7 +11,7 @@
 	for benefit of AUTHORS check.  Use it when acting on --version option.
 	* AUTHORS: Remove duplicate lines.  Remove bogus "chroot:"
 	in groups line.
-	
+
 	* src/system.h: Don't #define and #undef getopt around <stdlib.h>,
 	as this breaks the new regime that does "#define getopt rpl_getopt".
 	Problem reported by Albert Chin for Solaris 9 with Sun cc in:

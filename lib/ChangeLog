@@ -3,7 +3,7 @@
 	* unsetenv.c: New file, from gnulib.  Needed for new getdate.y.
 	* Makefile.am (libfetish_a_SOURCES): Remove setenv.c.
 	* xreadlink.c: Sync from gnulib.
-	
+
 2004-11-03  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (libfetish_a_SOURCES): Add setenv.c and setenv.h.
