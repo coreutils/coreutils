@@ -228,7 +228,8 @@ all_programs = \
   $(EXTRA_PROGRAMS)
 
 all_programs.list:
-	@echo $(all_programs) | tr ' ' '\n' | $(ASSORT)
+	@echo $(all_programs) | tr ' ' '\n' | sed -e 's,$(EXEEXT)$$,,' \
+	  | $(ASSORT) -u
 
 pm = progs-makefile
 pr = progs-readme
