@@ -28,16 +28,6 @@
 #include <sys/types.h>
 #include <time.h>
 
-#if HAVE_CLOCK_GETTIME && defined CLOCK_REALTIME
-# define USE_CLOCK_GETTIME 1
-#else
-# define USE_CLOCK_GETTIME 0
-#endif
-
-#if ! USE_CLOCK_GETTIME
-# include <sys/time.h>
-#endif
-
 #ifndef CHAR_BIT
 # define CHAR_BIT 8
 #endif
@@ -95,18 +85,7 @@ timespec_subtract (struct timespec *diff,
 struct timespec *
 clock_get_realtime (struct timespec *ts)
 {
-  int fail;
-#if USE_CLOCK_GETTIME
-  fail = clock_gettime (CLOCK_REALTIME, ts);
-#else
-  struct timeval tv;
-  fail = gettimeofday (&tv, NULL);
-  if (!fail)
-    {
-      ts->tv_sec = tv.tv_sec;
-      ts->tv_nsec = 1000 * tv.tv_usec;
-    }
-#endif
+  int fail = gettime (ts);
 
   if (fail)
     return NULL;
