@@ -1,6 +1,9 @@
-2000-11-16  Jim Meyering  <meyering@lucent.com>
+2000-11-17  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.9.
+
+	* GNUmakefile (.NOTPARALLEL): New target.  Prevent unwanted parallelism.
+	Suggestion from Ulrich Drepper.
 
 2000-11-16  John David Anglin  <dave@hiauly1.hia.nrc.ca>
 
