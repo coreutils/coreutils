@@ -1,15 +1,6 @@
 # -*-Makefile-*-
-# This Makefile fragment is shared between fileutils, sh-utils, textutils.
-
-maintainer-check:
-	if head ChangeLog| grep 'Version $(VERSION)' > /dev/null; then \
-	  :; \
-	else \
-	  echo "$(VERSION) not in ChangeLog; not tagging" 1>&2; \
-	  exit 1; \
-	fi
-	$(MAKE) distcheck
-	$(MAKE) my-distcheck
+# This Makefile fragment is shared between fileutils, sh-utils, textutils,
+# and Autoconf.
 
 prev_version_file ?= .prev-version
 
@@ -24,6 +15,24 @@ this-cvs-tag = $(tag-package)-$(tag-this-version)
 prev-cvs-tag = $(tag-package)-$(tag-prev-version)
 my_distdir = $(PACKAGE)-$(VERSION)
 
+# Old releases are stored here.
+# Used for diffs and xdeltas.
+release-archive-dir = ../release
+
+
+
+## --------------- ##
+## Sanity checks.  ##
+## --------------- ##
+
+changelog-check:
+	if head ChangeLog | grep 'Version $(VERSION)' >/dev/null; then \
+	  :; \
+	else \
+	  echo "$(VERSION) not in ChangeLog" 1>&2; \
+	  exit 1; \
+	fi
+
 # Verify that all source files using _() are listed in po/POTFILES.in.
 po-check:
 	if test -f po/POTFILES.in; then \
@@ -32,6 +41,48 @@ po-check:
 	  diff -u $@-1 $@-2 || exit 1; \
 	  rm -f $@-1 $@-2; \
 	fi
+
+# Check that `make alpha' will not fail at the end of the process.
+writable-files:
+	if test -d $(release-archive-dir); then :; else			\
+	  mkdir $(release-archive-dir);					\
+	fi
+	for file in $(distdir).tar.gz $(xd-delta)			\
+	            $(release-archive-dir)/$(distdir).tar.gz		\
+	            $(release-archive-dir)/$(xd-delta); do		\
+	  test -e $$file || continue;					\
+	  test -w $$file						\
+	    || { echo ERROR: $$file is not writable; fail=1; };		\
+	done;								\
+	test "$$fail" && exit 1 || :
+
+# Checks that don't require cvs.
+local-check: changelog-check po-check writable-files check-copyright
+
+
+# Sanity checks with the CVS repository.
+cvs-tag-check:
+	echo $(this-cvs-tag); \
+	if cvs -n log -h README | grep -e $(this-cvs-tag): >/dev/null; then \
+	  echo "$(this-cvs-tag) as already been used; not tagging" 1>&2; \
+	  exit 1; \
+	else :; fi
+
+cvs-diff-check:
+	if cvs diff >cvs-diffs; then			  	\
+	  rm cvs-diffs;					  	\
+	else						  	\
+	  echo "Some files are locally modified:" 1>&2;  	\
+	  cat cvs-diffs;					\
+	  exit 1;						\
+	fi
+
+cvs-check: cvs-diff-check cvs-tag-check
+
+maintainer-distcheck: changelog-check
+	$(MAKE) distcheck
+	$(MAKE) my-distcheck
+
 
 # Do not save the original name or timestamp in the .tar.gz file.
 GZIP_ENV = '--no-name --best'
@@ -42,13 +93,8 @@ AMTAR ?= $(TAR)
 # Tag before making distribution.  Also, don't make a distribution if
 # checks fail.  Also, make sure the NEWS file is up-to-date.
 # FIXME: use dist-hook/my-dist like distcheck-hook/my-distcheck.
-cvs-dist: maintainer-check
-	echo $(this-cvs-tag); \
-	if cvs -n log -h README| grep -e $(this-cvs-tag): > /dev/null; then \
-	  echo "VERSION not new; not tagging" 1>&2; \
-	  exit 1; \
-	fi; \
-	cvs update po; \
+cvs-dist: cvs-check maintainer-distcheck
+	cvs update po
 	cvs tag -c $(this-cvs-tag)
 	$(MAKE) dist
 
@@ -69,7 +115,7 @@ t=./=test
 my-distcheck: writable-files po-check
 	-rm -rf $(t)
 	mkdir $(t)
-	GZIP=$(GZIP) $(AMTAR) -C $(t) -zxf $(distdir).tar.gz
+	GZIP=$(GZIP_ENV) $(AMTAR) -C $(t) -zxf $(distdir).tar.gz
 	cd $(t)/$(distdir) \
 	  && ./configure --disable-nls \
 	  && $(MAKE) CFLAGS='-Wformat -Werror' \
@@ -105,7 +151,6 @@ rel-check:
 	echo "$(md5)  -" > $$md5_tmp; \
 	md5sum -c $$md5_tmp < $$tarz
 
-release-archive-dir = ../release
 prev-tgz = $(PACKAGE)-$(PREV_VERSION).tar.gz
 xd-delta = $(PACKAGE)-$(PREV_VERSION)-$(VERSION).xdelta
 
@@ -141,19 +186,6 @@ announcement: NEWS ChangeLog $(distdir).tar.gz
 	    | perl -ne 'm!^\+\+ (\./)?! or print,next;' \
 	      -e 'print "\n"."*"x70 ."\n"; s///; print; print "*"x70 ."\n"'; \
 	)
-
-writable-files:
-	if test -d $(release-archive-dir); then :; else			\
-	  mkdir $(release-archive-dir);					\
-	fi
-	for file in $(distdir).tar.gz $(xd-delta)			\
-	            $(release-archive-dir)/$(distdir).tar.gz		\
-	            $(release-archive-dir)/$(xd-delta); do		\
-	  test -e $$file || continue;					\
-	  test -w $$file						\
-	    || { echo ERROR: $$file is not writable; fail=1; };		\
-	done;								\
-	test "$$fail" && exit 1 || :
 
 WGET = wget
 ftp-gnu = ftp://ftp.gnu.org/gnu
@@ -215,10 +247,10 @@ check-copyright:
 	  || { echo 'out of date copyright in $<; update it' 1>&2; exit 1; }; \
 	fi
 
-alpha: writable-files po-check check-copyright
+alpha: static-check
 	$(MAKE) cvs-dist
 	$(MAKE) -s announcement > /tmp/announce-$(my_distdir)
-	ln $(distdir).tar.gz ../release
+	ln $(distdir).tar.gz $(release-archive-dir)
 	chmod a-w $(distdir).tar.gz
 	cd $(release-archive-dir) \
 	  && xdelta delta -9 $(prev-tgz) $(distdir).tar.gz $(xd-delta) || :
