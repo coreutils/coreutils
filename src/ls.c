@@ -163,57 +163,57 @@ char *xmalloc ();
 char *xrealloc ();
 void invalid_arg ();
 
-static char *make_link_path __P ((char *path, char *linkname));
-static int compare_atime __P ((struct fileinfo *file1,
-			       struct fileinfo *file2));
-static int rev_cmp_atime __P ((struct fileinfo *file2,
-			       struct fileinfo *file1));
-static int compare_ctime __P ((struct fileinfo *file1,
-			        struct fileinfo *file2));
-static int rev_cmp_ctime __P ((struct fileinfo *file2,
-			        struct fileinfo *file1));
-static int compare_mtime __P ((struct fileinfo *file1,
-			        struct fileinfo *file2));
-static int rev_cmp_mtime __P ((struct fileinfo *file2,
-			        struct fileinfo *file1));
-static int compare_size __P ((struct fileinfo *file1,
-			        struct fileinfo *file2));
-static int rev_cmp_size __P ((struct fileinfo *file2,
-			        struct fileinfo *file1));
-static int compare_name __P ((struct fileinfo *file1,
-			        struct fileinfo *file2));
-static int rev_cmp_name __P ((struct fileinfo *file2,
-			        struct fileinfo *file1));
-static int compare_extension __P ((struct fileinfo *file1,
-			        struct fileinfo *file2));
-static int rev_cmp_extension __P ((struct fileinfo *file2,
-			        struct fileinfo *file1));
+static char *make_link_path __P ((const char *path, const char *linkname));
+static int compare_atime __P ((const struct fileinfo *file1,
+			       const struct fileinfo *file2));
+static int rev_cmp_atime __P ((const struct fileinfo *file2,
+			       const struct fileinfo *file1));
+static int compare_ctime __P ((const struct fileinfo *file1,
+			       const struct fileinfo *file2));
+static int rev_cmp_ctime __P ((const struct fileinfo *file2,
+			       const struct fileinfo *file1));
+static int compare_mtime __P ((const struct fileinfo *file1,
+			       const struct fileinfo *file2));
+static int rev_cmp_mtime __P ((const struct fileinfo *file2,
+			       const struct fileinfo *file1));
+static int compare_size __P ((const struct fileinfo *file1,
+			      const struct fileinfo *file2));
+static int rev_cmp_size __P ((const struct fileinfo *file2,
+			      const struct fileinfo *file1));
+static int compare_name __P ((const struct fileinfo *file1,
+			      const struct fileinfo *file2));
+static int rev_cmp_name __P ((const struct fileinfo *file2,
+			      const struct fileinfo *file1));
+static int compare_extension __P ((const struct fileinfo *file1,
+				   const struct fileinfo *file2));
+static int rev_cmp_extension __P ((const struct fileinfo *file2,
+				   const struct fileinfo *file1));
 static int decode_switches __P ((int argc, char **argv));
-static int file_interesting __P ((register struct dirent *next));
+static int file_interesting __P ((const struct dirent *next));
 static int gobble_file __P ((const char *name, int explicit_arg,
 			     const char *dirname));
-static int is_not_dot_or_dotdot __P ((char *name));
-static void print_color_indicator __P ((char *name, unsigned int mode,
+static int is_not_dot_or_dotdot __P ((const char *name));
+static void print_color_indicator __P ((const char *name, unsigned int mode,
 					int linkok));
-static void put_indicator __P ((struct bin_str *ind));
-static int length_of_file_name_and_frills __P ((struct fileinfo *f));
-static void add_ignore_pattern __P ((char *pattern));
+static void put_indicator __P ((const struct bin_str *ind));
+static int length_of_file_name_and_frills __P ((const struct fileinfo *f));
+static void add_ignore_pattern __P ((const char *pattern));
 static void attach __P ((char *dest, const char *dirname, const char *name));
 static void clear_files __P ((void));
 static void extract_dirs_from_files __P ((const char *dirname, int recursive));
-static void get_link_name __P ((char *filename, struct fileinfo *f));
+static void get_link_name __P ((const char *filename, struct fileinfo *f));
 static void indent __P ((int from, int to));
 static void print_current_files __P ((void));
 static void print_dir __P ((const char *name, const char *realname));
-static void print_file_name_and_frills __P ((struct fileinfo *f));
+static void print_file_name_and_frills __P ((const struct fileinfo *f));
 static void print_horizontal __P ((void));
-static void print_long_format __P ((struct fileinfo *f));
+static void print_long_format __P ((const struct fileinfo *f));
 static void print_many_per_line __P ((void));
-static void print_name_with_quoting __P ((register char *p, unsigned int mode,
+static void print_name_with_quoting __P ((const char *p, unsigned int mode,
 					  int linkok));
 static void print_type_indicator __P ((unsigned int mode));
 static void print_with_commas __P ((void));
-static void queue_directory __P ((char *name, char *realname));
+static void queue_directory __P ((const char *name, const char *realname));
 static void sort_files __P ((void));
 static void parse_ls_color __P ((void));
 static void usage __P ((int status));
@@ -433,7 +433,7 @@ static int really_all_files;
 
 struct ignore_pattern
   {
-    char *pattern;
+    const char *pattern;
     struct ignore_pattern *next;
   };
 
@@ -1427,7 +1427,7 @@ parse_ls_color (void)
    real names. */
 
 static void
-queue_directory (char *name, char *realname)
+queue_directory (const char *name, const char *realname)
 {
   struct pending *new;
 
@@ -1518,7 +1518,7 @@ print_dir (const char *name, const char *realname)
    not listed.  */
 
 static void
-add_ignore_pattern (char *pattern)
+add_ignore_pattern (const char *pattern)
 {
   register struct ignore_pattern *ignore;
 
@@ -1532,7 +1532,7 @@ add_ignore_pattern (char *pattern)
 /* Return nonzero if the file in `next' should be listed. */
 
 static int
-file_interesting (register struct dirent *next)
+file_interesting (const struct dirent *next)
 {
   register struct ignore_pattern *ignore;
 
@@ -1702,7 +1702,7 @@ gobble_file (const char *name, int explicit_arg, const char *dirname)
    into the `linkname' field of `f'. */
 
 static void
-get_link_name (char *filename, struct fileinfo *f)
+get_link_name (const char *filename, struct fileinfo *f)
 {
   char *linkbuf;
   register int linksize;
@@ -1729,7 +1729,7 @@ get_link_name (char *filename, struct fileinfo *f)
    If `linkname' is zero, return zero. */
 
 static char *
-make_link_path (char *path, char *linkname)
+make_link_path (const char *path, const char *linkname)
 {
   char *linkbuf;
   int bufsiz;
@@ -1803,7 +1803,7 @@ extract_dirs_from_files (const char *dirname, int recursive)
    This is so we don't try to recurse on `././././. ...' */
 
 static int
-is_not_dot_or_dotdot (char *name)
+is_not_dot_or_dotdot (const char *name)
 {
   char *t;
 
@@ -1865,61 +1865,61 @@ sort_files (void)
 /* Comparison routines for sorting the files. */
 
 static int
-compare_ctime (struct fileinfo *file1, struct fileinfo *file2)
+compare_ctime (const struct fileinfo *file1, const struct fileinfo *file2)
 {
   return longdiff (file2->stat.st_ctime, file1->stat.st_ctime);
 }
 
 static int
-rev_cmp_ctime (struct fileinfo *file2, struct fileinfo *file1)
+rev_cmp_ctime (const struct fileinfo *file2, const struct fileinfo *file1)
 {
   return longdiff (file2->stat.st_ctime, file1->stat.st_ctime);
 }
 
 static int
-compare_mtime (struct fileinfo *file1, struct fileinfo *file2)
+compare_mtime (const struct fileinfo *file1, const struct fileinfo *file2)
 {
   return longdiff (file2->stat.st_mtime, file1->stat.st_mtime);
 }
 
 static int
-rev_cmp_mtime (struct fileinfo *file2, struct fileinfo *file1)
+rev_cmp_mtime (const struct fileinfo *file2, const struct fileinfo *file1)
 {
   return longdiff (file2->stat.st_mtime, file1->stat.st_mtime);
 }
 
 static int
-compare_atime (struct fileinfo *file1, struct fileinfo *file2)
+compare_atime (const struct fileinfo *file1, const struct fileinfo *file2)
 {
   return longdiff (file2->stat.st_atime, file1->stat.st_atime);
 }
 
 static int
-rev_cmp_atime (struct fileinfo *file2, struct fileinfo *file1)
+rev_cmp_atime (const struct fileinfo *file2, const struct fileinfo *file1)
 {
   return longdiff (file2->stat.st_atime, file1->stat.st_atime);
 }
 
 static int
-compare_size (struct fileinfo *file1, struct fileinfo *file2)
+compare_size (const struct fileinfo *file1, const struct fileinfo *file2)
 {
   return longdiff (file2->stat.st_size, file1->stat.st_size);
 }
 
 static int
-rev_cmp_size (struct fileinfo *file2, struct fileinfo *file1)
+rev_cmp_size (const struct fileinfo *file2, const struct fileinfo *file1)
 {
   return longdiff (file2->stat.st_size, file1->stat.st_size);
 }
 
 static int
-compare_name (struct fileinfo *file1, struct fileinfo *file2)
+compare_name (const struct fileinfo *file1, const struct fileinfo *file2)
 {
   return strcmp (file1->name, file2->name);
 }
 
 static int
-rev_cmp_name (struct fileinfo *file2, struct fileinfo *file1)
+rev_cmp_name (const struct fileinfo *file2, const struct fileinfo *file1)
 {
   return strcmp (file1->name, file2->name);
 }
@@ -1928,7 +1928,7 @@ rev_cmp_name (struct fileinfo *file2, struct fileinfo *file1)
    If extensions are the same, compare by filenames instead. */
 
 static int
-compare_extension (struct fileinfo *file1, struct fileinfo *file2)
+compare_extension (const struct fileinfo *file1, const struct fileinfo *file2)
 {
   register char *base1, *base2;
   register int cmp;
@@ -1948,7 +1948,7 @@ compare_extension (struct fileinfo *file1, struct fileinfo *file2)
 }
 
 static int
-rev_cmp_extension (struct fileinfo *file2, struct fileinfo *file1)
+rev_cmp_extension (const struct fileinfo *file2, const struct fileinfo *file1)
 {
   register char *base1, *base2;
   register int cmp;
@@ -2007,7 +2007,7 @@ print_current_files (void)
 }
 
 static void
-print_long_format (struct fileinfo *f)
+print_long_format (const struct fileinfo *f)
 {
   char modebuf[20];
   char timebuf[40];
@@ -2263,7 +2263,7 @@ quote_filename (register const char *p, size_t *quoted_length)
 }
 
 static void
-print_name_with_quoting (register char *p, unsigned int mode, int linkok)
+print_name_with_quoting (const char *p, unsigned int mode, int linkok)
 {
   char *quoted;
   size_t quoted_length;
@@ -2294,7 +2294,7 @@ print_name_with_quoting (register char *p, unsigned int mode, int linkok)
    as requested by switches.  */
 
 static void
-print_file_name_and_frills (struct fileinfo *f)
+print_file_name_and_frills (const struct fileinfo *f)
 {
   if (print_inode)
     printf ("%*lu ", INODE_DIGITS, (unsigned long) f->stat.st_ino);
@@ -2337,7 +2337,7 @@ print_type_indicator (unsigned int mode)
 }
 
 static void
-print_color_indicator (char *name, unsigned int mode, int linkok)
+print_color_indicator (const char *name, unsigned int mode, int linkok)
 {
   int type = C_FILE;
   struct col_ext_type *ext;	/* Color extension */
@@ -2358,7 +2358,8 @@ print_color_indicator (char *name, unsigned int mode, int linkok)
       name += len;		/* Pointer to final \0.  */
       for (ext = col_ext_list; ext != NULL; ext = ext->next)
 	if (ext->ext.len <= len
-	    && strncmp (name-ext->ext.len, ext->ext.string, ext->ext.len) == 0)
+	    && strncmp (name - ext->ext.len, ext->ext.string,
+			ext->ext.len) == 0)
 	  break;
 
       if (ext == NULL)
@@ -2368,8 +2369,8 @@ print_color_indicator (char *name, unsigned int mode, int linkok)
 
 #ifdef S_ISLNK
 	  else if (S_ISLNK (mode))
-	    type = (!linkok && color_indicator[C_ORPHAN].string) ?
-	      C_ORPHAN : C_LINK;
+	    type = ((!linkok && color_indicator[C_ORPHAN].string)
+		    ? C_ORPHAN : C_LINK);
 #endif
 
 #ifdef S_ISFIFO
@@ -2404,7 +2405,7 @@ print_color_indicator (char *name, unsigned int mode, int linkok)
 
 /* Output a color indicator (which may contain nulls).  */
 static void
-put_indicator (struct bin_str *ind)
+put_indicator (const struct bin_str *ind)
 {
   register int i;
   register char *p;
@@ -2416,7 +2417,7 @@ put_indicator (struct bin_str *ind)
 }
 
 static int
-length_of_file_name_and_frills (struct fileinfo *f)
+length_of_file_name_and_frills (const struct fileinfo *f)
 {
   register char *p = f->name;
   register unsigned char c;
