@@ -1,3 +1,12 @@
+2003-08-05  Paul Eggert  <eggert@twinsun.com>
+
+	Merge getline from gnulib.
+	* getline.h, getline.c: Merge from gnulib.
+	* getndelim2.h, getndelim2.c: New files, from gnulib.
+	* getdelim2.c, getdelim2.h: Remove.
+	* Makefile.am (libfetish_a_SOURCES): Change getdelim2.c and
+	getdelim2.h to getndelim2.c and getndelim2.h.
+
 2003-08-04  Paul Eggert  <eggert@twinsun.com>
 
 	* regex.c, regex.h: Sync with gnulib.
