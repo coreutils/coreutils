@@ -2,6 +2,8 @@
 
 	* Version 4.1.1.
 
+	* tests/mv/Makefile.am (TESTS): Remove i-3.  It's not portable.
+
 	* src/copy.c: Include xreadlink.h.
 	(copy_internal): Don't use PATH_MAX.
 	Rewrite the symlink-copying code to use xreadlink.
