@@ -253,7 +253,7 @@ wc (fd, file)
 	  --p;
 	  do
 	    {
-	      p = memchr (p + 1, '\n', bytes_read);
+	      p = memchr (p + 1, '\n', bytes_read + 1);
 	      ++lines;
 	    }
 	  while (p != buf + bytes_read);
