@@ -8,7 +8,7 @@
 #endif
 
 #ifndef __GNUC__
-# ifdef HAVE_ALLOCA_H
+# if HAVE_ALLOCA_H
 #  include <alloca.h>
 # else
 #  ifdef _AIX
@@ -177,57 +177,57 @@ off_t lseek ();
    are more efficient but not thread-safe.  That they're not thread-safe
    is fine since all these applications are single threaded.  */
 
-#ifdef HAVE_CLEARERR_UNLOCKED
+#if HAVE_CLEARERR_UNLOCKED
 # undef clearerr
 # define clearerr(S) clearerr_unlocked (S)
 #endif
 
-#ifdef HAVE_FEOF_UNLOCKED
+#if HAVE_FEOF_UNLOCKED
 # undef feof
 # define feof(S) feof_unlocked (S)
 #endif
 
-#ifdef HAVE_FERROR_UNLOCKED
+#if HAVE_FERROR_UNLOCKED
 # undef ferror
 # define ferror(S) ferror_unlocked (S)
 #endif
 
-#ifdef HAVE_FFLUSH_UNLOCKED
+#if HAVE_FFLUSH_UNLOCKED
 # undef fflush
 # define fflush(S) fflush_unlocked (S)
 #endif
 
-#ifdef HAVE_FPUTC_UNLOCKED
+#if HAVE_FPUTC_UNLOCKED
 # undef fputc
 # define fputc(C, S) fputc_unlocked (C, S)
 #endif
 
-#ifdef HAVE_FREAD_UNLOCKED
+#if HAVE_FREAD_UNLOCKED
 # undef fread
 # define fread(P, Z, N, S) fread_unlocked (P, Z, N, S)
 #endif
 
-#ifdef HAVE_FWRITE_UNLOCKED
+#if HAVE_FWRITE_UNLOCKED
 # undef fwrite
 # define fwrite(P, Z, N, S) fwrite_unlocked (P, Z, N, S)
 #endif
 
-#ifdef HAVE_GETC_UNLOCKED
+#if HAVE_GETC_UNLOCKED
 # undef getc
 # define getc(S) getc_unlocked (S)
 #endif
 
-#ifdef HAVE_GETCHAR_UNLOCKED
+#if HAVE_GETCHAR_UNLOCKED
 # undef getchar
 # define getchar(S) getchar_unlocked (S)
 #endif
 
-#ifdef HAVE_PUTC_UNLOCKED
+#if HAVE_PUTC_UNLOCKED
 # undef putc
 # define putc(C, S) putc_unlocked (C, S)
 #endif
 
-#ifdef HAVE_PUTCHAR_UNLOCKED
+#if HAVE_PUTCHAR_UNLOCKED
 # undef putchar
 # define putchar(C) putchar_unlocked (C)
 #endif
