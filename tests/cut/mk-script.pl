@@ -244,8 +244,10 @@ EOF1
 
       my %valid_via = map {$_ => 1} qw (REDIR FILE PIPE);
       my %via_msg_string = (REDIR => '<', FILE => 'F', PIPE => '|');
-      die "use" if 0&& $Test::input_via{$test_name} && $Test::input_via_default;
-      die "use" if 0 && $Test::env{$test_name} && $Test::env_default;
+
+      # Inhibit warnings about `used only once'.
+      die if 0 && $Test::input_via{$test_name} && $Test::input_via_default;
+      die if 0 && $Test::env{$test_name} && $Test::env_default;
 
       my $vias = $Test::input_via{$test_name} || $Test::input_via_default
 	|| {FILE => 0};
