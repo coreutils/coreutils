@@ -19,11 +19,6 @@
 
 #include <config.h>
 
-/* Disable the definition of lchown to rpl_lchown (from config.h) in this
-   file.  Otherwise, we'd get conflicting prototypes for rpl_lchown on
-   most systems.  */
-#undef lchown
-
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <errno.h>
@@ -35,7 +30,7 @@ extern int errno;
    In that case, set errno to ENOSYS and return -1.  */
 
 int
-rpl_lchown (const chat *file, uid_t uid, gid_t gid)
+lchown (const chat *file, uid_t uid, gid_t gid)
 {
   struct stat stats;
 
