@@ -3,6 +3,7 @@
 	* Version 5.3.0.
 
 	* src/join.c (string_to_join_field): Declare function to be `static'.
+	* src/remove.c (ds_init, ds_free): Likewise.
 
 	* Makefile.maint (sc_prohibit_jm_in_m4): New rule.
 	(syntax-check-rules): Add to the list.
