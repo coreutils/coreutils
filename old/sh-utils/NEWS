@@ -1,4 +1,7 @@
 Changes in release 1.13
+ [1.12t]
+* two patches for ISC
+* Regenerate all Makefile.in using a patched version of automake-1.1l.
  [1.12s]
 * lots of little bug fixes -- see ChangeLog
  [1.12r]
