@@ -1,6 +1,20 @@
-2000-12-15  Jim Meyering  <meyering@lucent.com>
+2000-12-16  Jim Meyering  <meyering@lucent.com>
+
+	* tests/chgrp/basic: Use group-names.
+	* tests/chgrp/deref: Likewise.
+	* tests/chgrp/recurse: Likewise.
+
+	* tests/group-names: New file.
+	* tests/Makefile.am (EXTRA_DIST): Add group-names.
+
+	* tests/chgrp/basic: Don't assume that creating a file gives it
+	group $g1.
 
 	* Version 4.0.34.
+
+	* tests/chgrp/Makefile.am (TESTS): Add recurse.
+
+2000-12-15  Jim Meyering  <meyering@lucent.com>
 
 	* src/chown-core.h [enum Dereference_symlink] (dereference): Rename
 	from change_symlinks.
