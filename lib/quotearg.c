@@ -263,6 +263,10 @@ quotearg_buffer (char *buffer, size_t buffersize,
 		goto store_escape;
 	      break;
 
+	    case ' ':
+	      if (quoting_style == c_quoting_style)
+		goto store_c;
+	      /* Fall through.  */
 	    default:
 	      if (!ISGRAPH (c))
 		{
