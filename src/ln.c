@@ -243,7 +243,7 @@ do_link (const char *source, const char *dest)
       return 1;
     }
 
-  if (lstat_status == 0 || lstat (dest, &dest_stats) == 0)
+  if (lstat_status == 0)
     {
       if (S_ISDIR (dest_stats.st_mode))
 	{
@@ -297,11 +297,6 @@ do_link (const char *source, const char *dest)
 	  error (0, errno, _("cannot remove %s"), quote (dest));
 	  return 1;
 	}
-    }
-  else if (errno != ENOENT)
-    {
-      error (0, errno, _("accessing %s"), quote (dest));
-      return 1;
     }
 
   if (verbose)
@@ -555,18 +550,17 @@ main (int argc, char **argv)
   else
     {
       struct stat source_stats;
-      const char *source;
-      char *dest;
       char *new_dest;
-
-      source = file[0];
-      dest = file[1];
+      char const *source = file[0];
+      char *dest = file[1];
+      size_t destlen = strlen (dest);
 
       /* When the destination is specified with a trailing slash and the
 	 source exists but is not a directory, convert the user's command
 	 `ln source dest/' to `ln source dest/basename(source)'.  */
 
-      if (dest[strlen (dest) - 1] == '/'
+      if (destlen != 0
+	  && dest[destlen - 1] == '/'
 	  && lstat (source, &source_stats) == 0
 	  && !S_ISDIR (source_stats.st_mode))
 	{
