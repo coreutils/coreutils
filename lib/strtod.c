@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1997 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -24,6 +24,17 @@ extern int errno;
 #endif
 
 #include <ctype.h>
+
+#if defined (STDC_HEADERS) || (!defined (isascii) && !defined (HAVE_ISASCII))
+# define IN_CTYPE_DOMAIN(c) 1
+#else
+# define IN_CTYPE_DOMAIN(c) isascii(c)
+#endif
+
+#define ISSPACE(c) (IN_CTYPE_DOMAIN (c) && isspace (c))
+#define ISDIGIT(c) (IN_CTYPE_DOMAIN (c) && isdigit (c))
+#define TOLOWER(c) (IN_CTYPE_DOMAIN (c) ? tolower(c) : (c))
+
 #include <math.h>
 
 #if HAVE_FLOAT_H
@@ -71,7 +82,7 @@ strtod (nptr, endptr)
   s = nptr;
 
   /* Eat whitespace.  */
-  while (isspace (*s))
+  while (ISSPACE (*s))
     ++s;
 
   /* Get the sign.  */
@@ -85,7 +96,7 @@ strtod (nptr, endptr)
   exponent = 0;
   for (;; ++s)
     {
-      if (isdigit (*s))
+      if (ISDIGIT (*s))
 	{
 	  got_digit = 1;
 
@@ -118,7 +129,7 @@ strtod (nptr, endptr)
   if (!got_digit)
     goto noconv;
 
-  if (tolower (*s) == 'e')
+  if (TOLOWER (*s) == 'e')
     {
       /* Get the exponent specified after the `e' or `E'.  */
       int save = errno;
