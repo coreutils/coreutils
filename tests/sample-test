@@ -27,6 +27,12 @@ fi
 
 fail=0
 
+FIXME > out || fail=1
+cat <<EOF > exp
 FIXME
+EOF
+
+cmp out exp || fail=1
+test $fail = 1 && diff out exp 2> /dev/null
 
 (exit $fail); exit
