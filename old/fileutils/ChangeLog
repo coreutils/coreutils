@@ -1,5 +1,9 @@
 1999-11-19  Jim Meyering  <meyering@ascend.com>
 
+	* lib/strstr.c (strstr): Include config.h.
+	Add a `;' between shloop label and `}'.
+	From Akim Demaille.
+
 	* Version 4.0j.
 
 1999-11-17  Jim Meyering  <meyering@ascend.com>
