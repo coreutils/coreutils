@@ -28,9 +28,6 @@
 
 #include <ctype.h>
 #include <errno.h>
-#ifndef errno
-extern int errno;
-#endif
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>

@@ -24,10 +24,6 @@
 #include "memcoll.h"
 
 #include <errno.h>
-#ifndef errno
-extern int errno;
-#endif
-
 #include <string.h>
 
 /* Compare S1 (with length S1LEN) and S2 (with length S2LEN) according

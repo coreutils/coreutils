@@ -22,11 +22,7 @@
 #include "closeout.h"
 
 #include <stdio.h>
-
 #include <errno.h>
-#ifndef errno
-extern int errno;
-#endif
 
 #include "gettext.h"
 #define _(msgid) gettext (msgid)

@@ -28,9 +28,6 @@
 #endif
 
 #include <errno.h>
-#ifndef errno
-extern int errno;
-#endif
 
 #ifdef FULL_READ
 # include "safe-read.h"

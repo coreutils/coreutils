@@ -28,9 +28,6 @@
 #include <sys/types.h>
 
 #include <errno.h>
-#ifndef errno
-extern int errno;
-#endif
 
 #if HAVE_DIRENT_H
 # include <dirent.h>

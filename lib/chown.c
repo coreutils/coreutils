@@ -36,9 +36,6 @@
 # include <sys/file.h>
 #endif
 #include <errno.h>
-#ifndef errno
-extern int errno;
-#endif
 
 /* Provide a more-closely POSIX-conforming version of chown on
    systems with one or both of the following problems:

@@ -22,9 +22,6 @@
 #endif
 
 #include <errno.h>
-#ifndef errno
-extern int errno;
-#endif
 
 #if HAVE_FCNTL_H
 # include <fcntl.h>

@@ -27,10 +27,6 @@
 
 #include <stdio.h>
 #include <errno.h>
-#ifndef errno
-extern int errno;
-#endif
-
 #include <limits.h>
 #include <sys/types.h>
 #include <stdlib.h>

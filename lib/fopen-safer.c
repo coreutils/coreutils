@@ -31,10 +31,6 @@
 #endif
 
 #include <errno.h>
-#ifndef errno
-extern int errno;
-#endif
-
 #include <stdio.h>
 #include <stdio-safer.h>
 

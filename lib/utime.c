@@ -34,9 +34,6 @@
 
 #include <unistd.h>
 #include <errno.h>
-#ifndef errno
-extern int errno;
-#endif
 
 #include "full-write.h"
 #include "safe-read.h"

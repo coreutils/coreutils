@@ -79,9 +79,6 @@ ftruncate (int fd, off_t length)
 #  else /* not F_CHSIZE nor F_FREESP nor HAVE_CHSIZE */
 
 #   include <errno.h>
-#   ifndef errno
-extern int errno;
-#   endif
 
 int
 ftruncate (int fd, off_t length)

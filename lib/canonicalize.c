@@ -50,10 +50,6 @@ void free ();
 #include "xalloc.h"
 #include "xgetcwd.h"
 
-#ifndef errno
-extern int errno;
-#endif
-
 #ifndef __set_errno
 # define __set_errno(Val) errno = (Val)
 #endif
@@ -89,7 +85,7 @@ extern int errno;
 char *
 canonicalize_file_name (const char *name)
 {
-#if HAVE_RESOLVEPATH
+# if HAVE_RESOLVEPATH
 
   char *resolved, *extra_buf = NULL;
   size_t resolved_size;
@@ -146,11 +142,11 @@ canonicalize_file_name (const char *name)
 
   return resolved;
 
-#else
+# else
 
   return canonicalize_filename_mode (name, CAN_EXISTING);
 
-#endif /* !HAVE_RESOLVEPATH */
+# endif /* !HAVE_RESOLVEPATH */
 }
 #endif /* !HAVE_CANONICALIZE_FILE_NAME */
 

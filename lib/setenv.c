@@ -21,10 +21,7 @@
 #include <alloca.h>
 
 #include <errno.h>
-#if !_LIBC
-# if !defined errno && !defined HAVE_ERRNO_DECL
-extern int errno;
-# endif
+#ifndef __set_errno
 # define __set_errno(ev) ((errno) = (ev))
 #endif
 
