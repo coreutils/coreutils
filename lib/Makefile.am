@@ -117,7 +117,7 @@ libfetish_a_SOURCES = \
   version-etc.c version-etc.h \
   xalloc.h \
   xgetcwd.c xgetcwd.h \
-  xgethostname.c \
+  xgethostname.c xgethostname.h \
   xmalloc.c \
   xmemcoll.c xmemcoll.h \
   xnanosleep.c xnanosleep.h \
