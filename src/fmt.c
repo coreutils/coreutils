@@ -188,8 +188,7 @@ static bool uniform;
 static const unsigned char *prefix;
 
 /* User-supplied maximum line width (default WIDTH).  The only output
-   lines
-   longer than this will each comprise a single word.  */
+   lines longer than this will each comprise a single word.  */
 static int max_width;
 
 /* Values derived from the option values.  */
@@ -372,7 +371,7 @@ main (register int argc, register char **argv)
 	  long int tmp_long;
 	  if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
 	      || tmp_long <= 0 || tmp_long > INT_MAX)
-	    error (EXIT_FAILURE, 0, _("invalid line number increment: `%s'"),
+	    error (EXIT_FAILURE, 0, _("invalid width: `%s'"),
 		   optarg);
 	  max_width = (int) tmp_long;
 	}
