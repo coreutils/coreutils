@@ -877,7 +877,7 @@ main (int argc, char **argv)
 
       /* stat all the given entries to make sure they get automounted,
 	 if necessary, before reading the filesystem table.  */
-      stats = xmalloc ((argc - optind) * sizeof *stats);
+      stats = xnmalloc (argc - optind, sizeof *stats);
       for (i = optind; i < argc; ++i)
 	{
 	  if (stat (argv[i], &stats[i - optind]))
