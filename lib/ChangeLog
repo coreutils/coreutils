@@ -1,3 +1,11 @@
+2003-03-06  Jim Meyering  <jim@meyering.net>
+
+	Fix a bug that causes du to dump core on 64-bit systems.
+	* ftw.c (ftw_startup): Declare `func' parameter to be of type
+	NFTW_FUNC_T, not void* which may be smaller on 64-bit systems.
+	Remove now-unnecessary cast.
+	(FTW_NAME): Cast func argument to type `NFTW_FUNC_T'.
+
 2003-03-05  Jim Meyering  <jim@meyering.net>
 
 	* physmem.c (ARRAY_SIZE): Define it.
