@@ -1,5 +1,12 @@
 2003-04-11  Jim Meyering  <jim@meyering.net>
 
+	* readutmp.c: Include <string.h> and <stdlib.h> unconditionally.
+
+	* canonicalize.c, exclude.c, getgroups.c, getusershell.c:
+	* group-member.c, idcache.c, mountlist.c, readtokens.c, readutmp.c:
+	* bumpalloc.h: Remove anachronistic casts of xmalloc, xrealloc,
+	and xcalloc return values.
+
 	* xalloc.h (PARAMS): Remove definitions and uses.
 	(XMALLOC, XCALLOC, XREALLOC): Remove unnecessary casts.
 
