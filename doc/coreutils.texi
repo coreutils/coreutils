@@ -10178,6 +10178,7 @@ A nonexistent @var{name} is not an error, so long a file with that
 name could be created under the above conditions.
 
 The program accepts the following option.  Also see @ref{Common options}.
+Options must precede operands.
 
 @table @samp
 
