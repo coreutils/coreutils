@@ -33,6 +33,11 @@
 #include "long-options.h"
 #include "error.h"
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "basename"
+
+#define AUTHORS "FIXME unknown"
+
 char *base_name ();
 void strip_trailing_slashes ();
 
@@ -93,8 +98,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "basename", GNU_PACKAGE, VERSION,
-		      "FIXME unknown", usage);
+  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
+		      AUTHORS, usage);
 
   if (argc == 1 || argc > 3)
     {

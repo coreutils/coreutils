@@ -25,6 +25,11 @@
 #include "long-options.h"
 #include "error.h"
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "hostname"
+
+#define AUTHORS "Jim Meyering"
+
 #if !defined(HAVE_SETHOSTNAME) && defined(HAVE_SYSINFO) && \
      defined (HAVE_SYS_SYSTEMINFO_H) && defined(HAVE_LIMITS_H)
 # include <sys/systeminfo.h>
@@ -82,8 +87,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "hostname", GNU_PACKAGE, VERSION,
-		      "Jim Meyering", usage);
+  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
+		      AUTHORS, usage);
 
 #ifdef HAVE_SETHOSTNAME
   if (argc == 2)

@@ -34,6 +34,11 @@
 #include "long-options.h"
 #include "error.h"
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "nice"
+
+#define AUTHORS "David MacKenzie"
+
 #ifdef NICE_PRIORITY
 # define GET_PRIORITY() nice (0)
 #else
@@ -88,8 +93,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "nice", GNU_PACKAGE, VERSION,
-		      "David MacKenzie", usage);
+  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
+		      AUTHORS, usage);
 
   for (i = 1; i < argc; /* empty */)
     {

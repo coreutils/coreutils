@@ -52,6 +52,11 @@
 #include "long-options.h"
 #include "error.h"
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "printf"
+
+#define AUTHORS "David MacKenzie"
+
 #ifndef STDC_HEADERS
 double strtod ();
 long int strtol ();
@@ -491,8 +496,8 @@ main (int argc, char **argv)
   /* Don't recognize --help or --version if POSIXLY_CORRECT is set.  */
   posixly_correct = (getenv ("POSIXLY_CORRECT") != NULL);
   if (!posixly_correct)
-    parse_long_options (argc, argv, "printf", GNU_PACKAGE, VERSION,
-			"David MacKenzie", usage);
+    parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
+			AUTHORS, usage);
 
   if (argc == 1)
     {

@@ -21,6 +21,11 @@
 #include "system.h"
 #include "long-options.h"
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "echo"
+
+#define AUTHORS "FIXME unknown"
+
 /* echo [-neE] [arg ...]
 Output the ARGs.  If -n is specified, the trailing newline is
 suppressed.  If the -e option is given, interpretation of the
@@ -114,8 +119,8 @@ main (int argc, char **argv)
 
   /* Don't recognize --help or --version if POSIXLY_CORRECT is set.  */
   if (getenv ("POSIXLY_CORRECT") == NULL)
-    parse_long_options (argc, argv, "echo", GNU_PACKAGE, VERSION,
-		      "FIXME unknown", usage);
+    parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
+		      AUTHORS, usage);
   else
     allow_options = 0;
 

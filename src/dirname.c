@@ -25,6 +25,11 @@
 #include "long-options.h"
 #include "error.h"
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "dirname"
+
+#define AUTHORS "David MacKenzie and Jim Meyering"
+
 void strip_trailing_slashes ();
 
 /* The name this program was run with. */
@@ -66,8 +71,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "dirname", GNU_PACKAGE, VERSION,
-		      "David MacKenzie and Jim Meyering", usage);
+  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
+		      AUTHORS, usage);
 
   if (argc != 2)
     {

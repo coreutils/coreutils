@@ -25,6 +25,11 @@
 #include "long-options.h"
 #include "error.h"
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "pwd"
+
+#define AUTHORS "Jim Meyering"
+
 char *xgetcwd ();
 
 /* The name this program was run with. */
@@ -60,8 +65,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "pwd", GNU_PACKAGE, VERSION,
-		      "Jim Meyering", usage);
+  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
+		      AUTHORS, usage);
 
   if (argc != 1)
     error (0, 0, _("ignoring non-option arguments"));

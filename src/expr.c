@@ -37,6 +37,11 @@
 #include "long-options.h"
 #include "error.h"
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "expr"
+
+#define AUTHORS "Mike Parker"
+
 #define NEW(type) ((type *) xmalloc (sizeof (type)))
 #define OLD(x) free ((char *) x)
 
@@ -167,8 +172,8 @@ main (int argc, char **argv)
 
   /* Recognize --help or --version only if POSIXLY_CORRECT is not set.  */
   if (!posixly_correct)
-    parse_long_options (argc, argv, "expr", GNU_PACKAGE, VERSION,
-			"Mike Parker", usage);
+    parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
+			AUTHORS, usage);
 
   if (argc == 1)
     {

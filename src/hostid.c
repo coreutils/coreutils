@@ -29,6 +29,11 @@
 #include "long-options.h"
 #include "error.h"
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "hostid"
+
+#define AUTHORS "Jim Meyering"
+
 /* The name this program was run with, for error messages. */
 char *program_name;
 
@@ -63,8 +68,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "hostid", GNU_PACKAGE, VERSION,
-		      "Jim Meyering", usage);
+  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
+		      AUTHORS, usage);
 
   if (argc > 1)
     {

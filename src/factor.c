@@ -31,6 +31,11 @@
 #include "xstrtoul.h"
 #include "readtokens.h"
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "factor"
+
+#define AUTHORS "Paul Rubin"
+
 /* Token delimiters when reading from a file.  */
 #define DELIM "\n\t "
 
@@ -174,8 +179,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "factor", GNU_PACKAGE, VERSION,
-		      "Paul Rubin", usage);
+  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
+		      AUTHORS, usage);
 
   fail = 0;
   if (argc == 1)
