@@ -1,5 +1,7 @@
 #!/bin/sh
 # Exercise chdir-long's sample main program.
+# FIXME: add traps and choose top level names so that
+# temporary directories are easier to remove.
 
 gcc -DTEST_CHDIR=1 -DHAVE_CONFIG_H -I.. -g -O -W -Wall chdir-long.c libfetish.a
 
