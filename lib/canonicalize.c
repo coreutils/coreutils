@@ -129,9 +129,6 @@ canonicalize_file_name (const char *name)
 	return NULL;
 
       extra_buf = path_concat (wd, name, NULL);
-      if (!extra_buf)
-	xalloc_die ();
-
       name = extra_buf;
       free (wd);
     }
