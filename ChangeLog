@@ -1,7 +1,10 @@
 2002-11-06  Jim Meyering  <jim@meyering.net>
 
-	* src/printf.c (print_esc): Hexadecimal \xhh escapes may have
+	* Version 4.5.4.
+
+	* src/printf.c (print_esc): A hexadecimal escape sequence has
 	at most two hex. digits, not three.  Reported by Padraig Brady.
+	* tests/misc/printf-hex: New file/test, for the above fix.
 
 2002-10-07  Paul Eggert  <eggert@twinsun.com>
 
@@ -79,8 +82,6 @@
 	what needs to be done (since that's what other programs use).
 
 2002-10-19  Jim Meyering  <jim@meyering.net>
-
-	* Version 4.5.4.
 
 	* src/pinky.c (print_heading): Align TTY and Name headings.
 	Reported by Karl Eichwalder.

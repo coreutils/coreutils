@@ -1,4 +1,20 @@
 [4.5.4]
+* printf: a hexadecimal escape sequence has at most two hex. digits, not three.
+* The following features have been added to the --block-size option
+  and similar environment variables of df, du, and ls.
+  - A leading "'" generates numbers with thousands separators.
+    For example:
+      $ ls -l --block-size="'1" file
+      -rw-rw-r--    1 eggert   src      47,483,707 Sep 24 23:40 file
+  - A size suffix without a leading integer generates a suffix in the output.
+    For example:
+      $ ls -l --block-size="K"
+      -rw-rw-r--    1 eggert   src          46371K Sep 24 23:40 file
+* ls's --block-size option now affects file sizes in all cases, not
+  just for --block-size=si and --block-size=si.  Fractional sizes
+  are now always rounded up, for consistency with df and du.
+* df now displays the block size using powers of 1000 if the requested
+  block size seems to be a multiple of a power of 1000.
 * `yes|nl -s%n' no longer evokes a segfault
 [4.5.3]
 * du --dereference-args (-D) no longer fails in certain cases
