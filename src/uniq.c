@@ -25,10 +25,24 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
+
+#if HAVE_LIMITS_H
+# include <limits.h>
+#endif
+
+#ifndef UINT_MAX
+# define UINT_MAX ((unsigned int) ~(unsigned int) 0)
+#endif
+
+#ifndef INT_MAX
+# define INT_MAX ((int) (UINT_MAX >> 1))
+#endif
+
 #include "system.h"
 #include "linebuffer.h"
 #include "version.h"
 #include "error.h"
+#include "xstrtol.h"
 
 /* Undefine, to avoid warning about redefinition on some systems.  */
 #undef min
@@ -302,11 +316,25 @@ main (int argc, char **argv)
 	  break;
 
 	case 'f':		/* Like '-#'. */
-	  skip_fields = atoi (optarg);
+	  {
+	    long int tmp_long;
+	    if (xstrtol (optarg, NULL, 10, &tmp_long, NULL) != LONGINT_OK
+		|| tmp_long <= 0 || tmp_long > INT_MAX)
+	      error (1, 0, _("invalid number of fields to skip: `%s'"),
+		     optarg);
+	    skip_fields = (int) tmp_long;
+	  }
 	  break;
 
 	case 's':		/* Like '+#'. */
-	  skip_chars = atoi (optarg);
+	  {
+	    long int tmp_long;
+	    if (xstrtol (optarg, NULL, 10, &tmp_long, NULL) != LONGINT_OK
+		|| tmp_long <= 0 || tmp_long > INT_MAX)
+	      error (1, 0, _("invalid number of bytes to skip: `%s'"),
+		     optarg);
+	    skip_chars = (int) tmp_long;
+	  }
 	  break;
 
 	case 'u':
@@ -314,7 +342,14 @@ main (int argc, char **argv)
 	  break;
 
 	case 'w':
-	  check_chars = atoi (optarg);
+	  {
+	    long int tmp_long;
+	    if (xstrtol (optarg, NULL, 10, &tmp_long, NULL) != LONGINT_OK
+		|| tmp_long <= 0 || tmp_long > INT_MAX)
+	      error (1, 0, _("invalid number of bytes to compare: `%s'"),
+		     optarg);
+	    check_chars = (int) tmp_long;
+	  }
 	  break;
 
 	default:
@@ -336,7 +371,15 @@ main (int argc, char **argv)
       /* Interpret non-option arguments with leading `+' only
 	 if we haven't seen `--'.  */
       while (optind < argc && argv[optind][0] == '+')
-	skip_chars = atoi (argv[optind++]);
+	{
+	  char *opt_str = argv[optind++];
+	  long int tmp_long;
+	  if (xstrtol (opt_str, NULL, 10, &tmp_long, NULL) != LONGINT_OK
+	      || tmp_long <= 0 || tmp_long > INT_MAX)
+	    error (1, 0, _("invalid number of bytes to compare: `%s'"),
+		   opt_str);
+	  skip_chars = (int) tmp_long;
+	}
     }
 
   if (optind < argc)
