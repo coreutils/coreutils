@@ -1,3 +1,9 @@
+1998-08-02  Jim Meyering  <meyering@ascend.com>
+
+	* lib/linebuffer.c (readline): Return zero upon error as well as upon
+	end of file.  From James Youngman.
+	Ansideclify.
+
 1998-08-01  Jim Meyering  <meyering@ascend.com>
 
 	* src/sort.c (my_setlocale): Guard definition within #ifdef ENABLE_NLS.
