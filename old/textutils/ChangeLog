@@ -1,3 +1,16 @@
+1998-08-01  Jim Meyering  <meyering@ascend.com>
+
+	* src/sort.c (my_setlocale): Guard definition within #ifdef ENABLE_NLS.
+	From Manfred Hollstein.
+
+1998-07-30  Jim Meyering  <meyering@ascend.com>
+
+	* tests/cut/Test.pm: Avoid broken pipe message for tests that fail
+	with usage errors.
+
+	* src/sort.c (usage): Add angle brackets to make `Report bugs...'
+	message consistent with all the rest.
+
 1998-07-28  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* tests/cut/Test.pm: Avoid broken pipe for 'y' and 'z' tests.
