@@ -1,4 +1,4 @@
-# This test is used from at least two separate scripts.
+# Require a controlling input `terminal'.
 
 tty -s || have_input_tty=no
 if test "$have_input_tty" = no; then
