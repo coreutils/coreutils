@@ -135,6 +135,21 @@ main (int argc, char **argv)
 #endif				/* _POSIX_SOURCE */
     }
 
+  /* Don't let us be killed if one of the output files is a pipe that
+     doesn't consume all its input.  */
+#ifdef _POSIX_SOURCE
+  {
+    struct sigaction sigact;
+
+    sigact.sa_handler = SIG_IGN;
+    sigemptyset (&sigact.sa_mask);
+    sigact.sa_flags = 0;
+    sigaction (SIGPIPE, &sigact, NULL);
+  }
+#else
+  signal (SIGPIPE, SIG_IGN);
+#endif
+
   errs = tee (argc - optind, (const char **) &argv[optind]);
   if (close (0) != 0)
     error (1, errno, _("standard input"));
