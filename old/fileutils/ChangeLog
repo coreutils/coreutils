@@ -2,6 +2,8 @@
 
 	* Version 4.0y.
 
+	* src/sys2.h (ISPRINT): Undef before defining to avoid warning.
+
 	* src/copy.c (copy_internal): Quote the file names that are displayed
 	with --verbose and --backup.
 	* src/remove.c (remove_file): Quote the file names that are displayed
