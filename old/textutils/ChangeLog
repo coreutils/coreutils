@@ -1,3 +1,9 @@
+Tue Jan 21 22:49:00 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/tail.c (main): Properly handle what the POSIX spec calls
+	the `obsolescent' usage (e.g., tail +2c).  It didn't work.
+	Reported by Karl Heuer.
+
 Sun Jan 12 22:13:27 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* tests/tr-test/Test.pm: Rename tests so that the associated files
