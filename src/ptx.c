@@ -513,7 +513,7 @@ swallow_file_in_memory (const char *file_name, BLOCK *block)
   /* As special cases, a file name which is NULL or "-" indicates standard
      input, which is already opened.  In all other cases, open the file from
      its name.  */
-  bool using_stdin = !file_name || !*file_name || strcmp (file_name, "-") == 0;
+  bool using_stdin = !file_name || !*file_name || STREQ (file_name, "-");
   if (using_stdin)
     file_handle = STDIN_FILENO;
   else
@@ -2127,7 +2127,7 @@ Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"),
       for (file_index = 0; file_index < number_input_files; file_index++)
 	{
 	  input_file_name[file_index] = argv[optind];
-	  if (!*argv[optind] || strcmp (argv[optind], "-") == 0)
+	  if (!*argv[optind] || STREQ (argv[optind], "-"))
 	    input_file_name[0] = NULL;
 	  else
 	    input_file_name[0] = argv[optind];
@@ -2142,7 +2142,7 @@ Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"),
       number_input_files = 1;
       input_file_name = xmalloc (sizeof *input_file_name);
       file_line_count = xmalloc (sizeof *file_line_count);
-      if (!*argv[optind] || strcmp (argv[optind], "-") == 0)
+      if (!*argv[optind] || STREQ (argv[optind], "-"))
 	input_file_name[0] = NULL;
       else
 	input_file_name[0] = argv[optind];
