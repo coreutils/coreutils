@@ -1,3 +1,9 @@
+Sun Dec 22 23:31:32 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in: Increment version to 1.14a.
+
+	* m4/Makefile.am (EXTRA_DIST): Add README.
+
 Fri Dec 20 19:28:37 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/who-users.c (usage): Say that UTMP_FILE is the default FILE
