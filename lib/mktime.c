@@ -28,15 +28,10 @@
 # include <config.h>
 #endif
 
-/* Some systems require that one of these symbols be defined in
-   order to declare localtime_r properly.  */
+/* Some systems need this in order to declare localtime_r properly.  */
 #ifndef __EXTENSIONS__
 # define __EXTENSIONS__ 1
 #endif
-#ifndef _REENTRANT
-# define _REENTRANT 1
-#endif
-
 
 #ifdef _LIBC
 # define HAVE_LIMITS_H 1
@@ -49,6 +44,12 @@
    then it supports leap seconds; otherwise it probably doesn't.  */
 #ifndef LEAP_SECONDS_POSSIBLE
 # define LEAP_SECONDS_POSSIBLE 1
+#endif
+
+/* Some systems require <unistd.h> to be included before <time.h>
+   for localtime_r to be declared properly.  */
+#if HAVE_UNISTD_H
+# include <unistd.h>
 #endif
 
 #include <sys/types.h>		/* Some systems define `time_t' here.  */
@@ -132,7 +133,7 @@ time_t __mktime_internal __P ((struct tm *,
 #ifdef _LIBC
 # define localtime_r __localtime_r
 #else
-# if HAVE_LOCALTIME_R == defined (localtime_r)
+# if HAVE_LOCALTIME_R == defined localtime_r
 /* Provide our own substitute for a missing or possibly broken localtime_r.  */
 static struct tm *my_mktime_localtime_r __P ((const time_t *, struct tm *));
 static struct tm *
@@ -155,10 +156,10 @@ my_mktime_localtime_r (t, tp)
     return 0;
   *tp = *l;
   return tp;
-#  endif /* ! defined (localtime_r) */
+#  endif /* ! defined localtime_r */
 }
 #  define localtime_r my_mktime_localtime_r
-# endif /* HAVE_LOCALTIME_R == defined (localtime_r) */
+# endif /* HAVE_LOCALTIME_R == defined localtime_r */
 #endif /* ! _LIBC */
 
 

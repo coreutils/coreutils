@@ -48,6 +48,12 @@
 #include <ctype.h>
 #include <sys/types.h>		/* Some systems define `time_t' here.  */
 
+/* Some systems require <unistd.h> to be included before <time.h>
+   for localtime_r to be declared properly.  */
+#if HAVE_UNISTD_H
+# include <unistd.h>
+#endif
+
 #ifdef TIME_WITH_SYS_TIME
 # include <sys/time.h>
 # include <time.h>
