@@ -2267,7 +2267,7 @@ print_white_space (void)
    then print_sep_string() is called. */
 
 static void
-print_sep_string ()
+print_sep_string (void)
 {
   char *s;
   int l = col_sep_length;
