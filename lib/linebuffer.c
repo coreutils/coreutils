@@ -41,8 +41,7 @@ initbuffer (struct linebuffer *linebuffer)
 
 /* Read an arbitrarily long line of text from STREAM into LINEBUFFER.
    Keep the newline; append a newline if it's the last line of a file
-   that ends in a non-newline character.  Do not null terminate,
-   but leave room for an extra byte after the newline.
+   that ends in a non-newline character.  Do not null terminate.
    Return LINEBUFFER, except at end of file return 0.  */
 
 struct linebuffer *
@@ -51,7 +50,7 @@ readline (struct linebuffer *linebuffer, FILE *stream)
   int c;
   char *buffer = linebuffer->buffer;
   char *p = linebuffer->buffer;
-  char *end = buffer + linebuffer->size - 1; /* Sentinel. */
+  char *end = buffer + linebuffer->size; /* Sentinel. */
 
   if (feof (stream) || ferror (stream))
     return 0;
@@ -73,7 +72,7 @@ readline (struct linebuffer *linebuffer, FILE *stream)
 	  buffer = (char *) xrealloc (buffer, linebuffer->size);
 	  p = p - linebuffer->buffer + buffer;
 	  linebuffer->buffer = buffer;
-	  end = buffer + linebuffer->size - 1;
+	  end = buffer + linebuffer->size;
 	}
       *p++ = c;
     }
