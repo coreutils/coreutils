@@ -1,3 +1,11 @@
+1999-11-12  Jim Meyering  <meyering@ascend.com>
+
+	* src/remove.c (print_nth_dir): Write one fewer byte so we don't print
+	a trailing slash.
+	(rm): Fix bugs in (and test, this time) the very-rarely-used code
+	to warn about directory cycles.
+	Reported by michael@roka.net.
+
 1999-11-11  Jim Meyering  <meyering@ascend.com>
 
 	* src/copy.c (copy_internal): Treat src and dest as the `same' in
