@@ -1,3 +1,21 @@
+2001-03-09  Jim Meyering  <meyering@lucent.com>
+
+	* tests/help-version: Ensure that /dev/full is a character device
+	(using test -c) as well as being writable, before trying to write to it.
+	Otherwise, the test could mistakenly append a newline to an existing,
+	regular, writable, /dev/full file.
+	Suggested by Ulrich Drepper.
+
+2001-03-07  Jim Meyering  <meyering@lucent.com>
+
+	* tests/stty/Makefile.am (EXTRA_DIST): Remove input-tty.
+	* tests/Makefile.am (EXTRA_DIST): Add input-tty.
+
+	* tests/stty/basic-1: Reflect change in location of input-tty.
+	* tests/stty/row-col: Likewise.
+	* tests/stty/input-tty: Move this file...
+	* tests/input-tty: ... to here.
+
 2001-02-24  Paul Eggert  <eggert@twinsun.com>
 
 	* doc/sh-utils.texi: Fix typo: '-d=1may' -> '-d 1may'.
