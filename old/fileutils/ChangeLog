@@ -1,6 +1,31 @@
-2000-11-19  Jim Meyering  <meyering@lucent.com>
+2000-11-23  Jim Meyering  <meyering@lucent.com>
+
+	* src/chmod.c (mode_changed): New function.
+	(change_file_mode): Use it to determine accurately when -c should
+	make chmod announce there's been a change.
+	Based on a patch from Michael Stone.
+	Reported by root@khms.westfalen.de.
 
 	* Version 4.0.33.
+
+	* tests/chmod/c-option: New test.
+	* tests/chmod/Makefile.am (TESTS): Add c-option
+
+	* tests/sticky-check: New file.  Factored out of tests/mkdir/parents.
+	* tests/Makefile.am (EXTRA_DIST): Add sticky-check.
+	* tests/mkdir/parents: Source sticky-check instead of open-coding it.
+
+2000-11-19  Jim Meyering  <meyering@lucent.com>
+
+	* tests/chmod/equal-x: Update to use its own directory, and better trap.
+
+2000-11-18  Paul Eggert  <eggert@twinsun.com>
+
+	* src/ls.c (BLOCK_SIZE_OPTION, COLOR_OPTION, FORMAT_OPTION,
+	INDICATOR_STYLE_OPTION, QUOTING_STYLE_OPTION,
+	SHOW_CONTROL_CHARS_OPTION, SORT_OPTION, TIME_OPTION): New enum
+	values, to ensure that option values can't collide with chars.
+	(long_options, decode_switches): Use them.
 
 2000-11-18  Paul Eggert  <eggert@twinsun.com>
 
