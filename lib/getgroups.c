@@ -20,6 +20,8 @@
 #include <config.h>
 #include <stdio.h>
 #include <sys/types.h>
+#include <errno.h>
+#include <stdlib.h>
 
 #include "xalloc.h"
 
@@ -29,10 +31,11 @@
    provided function handle all others. */
 
 int
-getgroups (size_t n, GETGROUPS_T *group)
+getgroups (int n, GETGROUPS_T *group)
 {
   int n_groups;
   GETGROUPS_T *gbuf;
+  int saved_errno;
 
 #undef getgroups
 
@@ -43,6 +46,9 @@ getgroups (size_t n, GETGROUPS_T *group)
   gbuf = NULL;
   while (1)
     {
+      /* No need to worry about address arithmetic overflow here,
+	 since the ancient systems that we're running on have low
+	 limits on the number of secondary groups.  */
       gbuf = xrealloc (gbuf, n * sizeof (GETGROUPS_T));
       n_groups = getgroups (n, gbuf);
       if (n_groups < n)
@@ -50,7 +56,9 @@ getgroups (size_t n, GETGROUPS_T *group)
       n += 10;
     }
 
+  saved_errno = errno;
   free (gbuf);
+  errno = saved_errno;
 
   return n_groups;
 }
