@@ -1,3 +1,159 @@
+2004-08-02  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* canonicalize.c (errno): Remove decl; we now assume C89 or better.
+	* chown.c (errno): Likewise.
+	* closeout.c (errno): Likewise.
+	* dup-safer.c (errno): Likewise.
+	* dup2.c (errno): Likewise.
+	* exclude.c (errno): Likewise.
+	* fopen-safer.c (errno): Likewise.
+	* ftruncate.c (errno): Likewise.
+	* full-write.c (errno): Likewise.
+	* getcwd.c (errno): Likewise.
+	* lchown.c (errno): Likewise.
+	* memcoll.c (errno): Likewise.
+	* nanosleep.c (errno): Likewise.
+	* putenv.c (errno): Likewise.
+	* rmdir.c (errno): Likewise.
+	* same.c (errno): Likewise.
+	* savedir.c (errno): Likewise.
+	* setenv.c (errno): Likewise.
+	* stat.c (errno): Likewise.
+	* utime.c (errno): Likewise.
+	* xgetcwd.c (errno): Likewise.
+	* xmemcoll.c (errno): Likewise.
+	* xreadlink.c (errno): Likewise.
+	* xstrtol.c (errno): Likewise.
+	* canonicalize.h (enum canonicalize_mode_t): Reformat comments to
+	fit in 80 columns.
+	* fileblocks.c (textutils_fileblocks_unused): Make it a typedef
+	instead of an int, to save a few bytes in the object file.
+	* getdate.y (lookup_word): Rewrite to avoid cast.
+	* getloadavg.c: Include <stdbool.h>.
+	(getloadavg_initialized): Use bool for booleans.
+	* hard-locale.c (hard_locale): Return bool, not int.
+	* hard-locale.h (hard_locale): Likewise.  Include <stdbool.h>.
+	* hash.c (hash_string): Rewrite to avoid cast.
+	* human.h: Use Autoconf-suggested pattern for inttypes and stdint.
+	* strtiomax.c: Likewise.
+	* xstrtol.h: Likewise.
+	* nanosleep.c: Include stdbool.h.
+	(rpl_nanosleep): Usee bool for booleans.
+	* quotearg.c: Include stdbool.h.
+	(quotearg_buffer_restyled): Use bool for booleans.
+	* readtokens.c (readtoken): Rewrite to avoid casts.
+	* same.c (same_name): Return bool, not int.
+	* same.h (same_name): Likewise.  Include <stdbool.h>.
+	* version-etc.c (version_etc_va): Use size_t for sizes.
+	* xnanosleep.c: Include limits.h, stdbool.h.
+	(CHAR_BIT): Remove.
+	(timespec_subtract, xnanosleep): Use bool for booleans.
+	* xstrtoimax.c: Just include xstrtol.h rather than rolling our
+	own include pattern.
+	* xstrtoumax.c: Likewise.
+	* xstrtol.c (__xstrtol): Rewrite to avoid casts.
+	* yesno.c: Include yesno.h first.
+	(yesno): Return bool, not int.
+	* yesno.h (yesno): Likewise.  Include <stdbool.h>.
+	
+	* xstrtod.h (xstrtod): Return bool, not int.  Invert the
+	sense of the boolean.  All uses changed.
+	* xstrtod.c (xstrtod): Likewise.
+	* nanosleep.c: Include stdbool.h.  Use bool for booleans.
+
+	* xgethostname.c: Don't include <sys/types.h> or "exit.h";
+	no longer needed.
+	(errno): Remove decl; we now assume C89 or better.
+	Include unistd.h if available, for gethostname.
+	(ENAMETOOLONG): Define to 0, not 9999, to avoid colliding with
+	existing errno values if any.
+	(gethostname): Remove decl, since unistd.h declares it (or doesn't,
+	in which case it's an older system and it should just work).
+	(xgethostname): Don't assume host name length is less than INT_MAX.
+	Exit if malloc fails, just as the comment says.
+
+	* save-cwd.c: Include <stdbool.h>.
+	(errno): Remove decl; we now assume C89 or better.
+	(save_cwd): Use bool for booleans.
+	(save_cwd, restore_cwd): Return -1 on failure, not 1, since we set
+	errno on failure.
+
+	* readutmp.h (UT_USER): Parenthesize properly.
+	(UT_USER_SIZE): New constant.
+	(read_utmp): Don't assume that the number of users is less than
+	INT_MAX.
+	* readutmp.c (read_utmp): Likewise.
+	Check for integer overflow in size calculations.
+	Return -1 (not 1) on failure, since we set errno in that case.
+
+	* posixtm.c (posix_time_parse): Don't assume that the length of
+	the string being parsed is <= UINT_MAX.
+
+	* mountlist.h (read_file_system_list): Accept bool flag, not int.
+	* mountlist.c (read_file_system_list): Likewise.
+	* mountlist.h: Include <stdbool.h>.
+	* mountlist.c (errno): Remove decl; we now assume C89 or better.
+	(xatoi): Remove; replaced by strtoul.  Hence device numbers can now
+	go up to ULONG_MAX.
+
+	* isdir.c: Remove; no longer needed.
+	* Makefile.am (libfetish_a_SOURCES): Remove isdir.c.
+
+	* fts_.h: Add an FSF copyright notice, since our changes are becoming
+	nontrivial.
+	* fts.c: Likewise.
+	* fts_.h: Include stddef.h, for ptrdiff_t.
+	(FTS.fts_nitems): Now size_t, not int, for hosts that allow more
+	than INT_MAX entries in a directory.
+	(FTS_ROOTPARENTLEVEL): Parenthesize properly.
+	(FTSENT.fts_level): Now ptrdiff_t, not int, to allow recursing more
+	than INT_MAX levels deep on 64-bit hosts.
+	(FTSENT.fts_namelen): Now size_t, not u_short, to support hosts like
+	the Hurd that don't have arbitrary limits on directory entry lengths.
+	(FTSENT.fts_statp): Now an array, not a pointer, so that we don't
+	have to play unportable games with pointer arithmetic.  Keep it array
+	for the benefit of user code that assumes it is a pointer.
+	* fts.c: Include stdint.h if available, as Autoconf suggests.
+	(ALIGNBYTES, ALIGN): Remove; no longer needed now that fts_statp
+	is an array.
+	(fts_alloc, fts_palloc, fts_sort, fts_load, fts_build):
+	Use size_t for sizes.
+	(fts_stat, fts_safe_changedir, fts_debug, fts_read, fts_build,
+	fts_palloc):
+	Use bool when appropriate.
+	(SIZE_MAX, TYPE_SIGNED): New macros.
+	(fts_read): Use u_short for instructions.
+	(fts_build): Use ptrdiff_t for levels.  Don't assume file name lengths
+	fit into int.  Don't assume nlink_t is signed.
+	(find_matching_ancestor): Don't assume dev, ino fit in int.
+	(fts_stat): Use function prototype; required for bool arg.
+	(fts_sort): Detect integer overflow in size calculations.
+	(fts_alloc): Simplify allocation code, now that fts_statp is an array
+	and not a pointer.
+
+	* fsusage.h: Include <stdbool.h>.
+	(struct fs_usage): Use uintmax_t for block sizes, so that they're
+	not limited to INT_MAX.
+	Use bool for booleans.
+	* fsusage.c: Use Autoconf-suggested pattern for inttypes and stdint.
+	Include unistd.h, for lseek.
+
+	* fnmatch.c: Include <stdbool.h>.
+	(errno): Remove decl; we now assume C89 or better.
+	* fnmatch_loop.c (EXT, FCT): Use bool when appropriate.
+	(FCT): Use size_t, not unsigned int, for sizes.
+	(EXT): Use size_t, not int, for sizes.
+
+	* stripslash.c (strip_trailing_slashes): Now returns bool.
+	* dirname.h (strip_trailing_slashes): Likewise.
+	Include <stdbool.h>.
+	* dirname.c (dir_name): Use bool when appropriate.
+
+	* argmatch.h (argmatch, __xargmatch_internal, argmatch_invalid):
+	Use ptrdiff_t, not int, when counting arguments, to allow more
+	than INT_MAX arguments.
+	* argmatch.c: Likewise.  Use bool when appropriate.
+
 2004-08-01  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* safe-read.c (errno): Remove decl; we now assume C89 or better.
@@ -36,7 +192,7 @@
 	performance on m68k-linux.  Reported by Andreas Schwab in
 	<http://lists.gnu.org/archive/html/bug-coreutils/2004-07/msg00104.html>.
 	* memrchr.c (UNALIGNED_P): Likewise.
-	
+
 2004-07-28  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* userspec.c: Include <stdbool.h>, "inttostr.h".
