@@ -2,6 +2,8 @@
 
 	* src/pathchk.c (PATH_MAX_FOR): Use pathconf via wrapper.
 	(NAME_MAX_FOR): Likewise.
+	Guard the above pathconf-using definitions with `#if HAVE_PATHCONF'
+	rather than with `#ifdef _POSIX_VERSION'.
 	(pathconf_wrapper): New function.
 	(validate_path): Declare length variables to be `long', not `int'.
 	Adjust corresponding printf-style specs to use %ld.
