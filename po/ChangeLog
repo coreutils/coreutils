@@ -1,3 +1,7 @@
+2004-03-02  Jim Meyering  <jim@meyering.net>
+
+	* LINGUAS: Add Afrikaans (af)
+
 2004-01-13  Jim Meyering  <jim@meyering.net>
 
 	* POTFILES.in: Replace src/sys2.h with src/system.h.
