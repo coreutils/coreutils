@@ -1,6 +1,11 @@
-2000-12-02  Jim Meyering  <meyering@lucent.com>
+2000-12-03  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.0.34.
+
+	* Makefile.maint (alpha): Use rsync rather than scp, so the destination
+	file is created only after the successful completion of the copy.
+
+2000-12-02  Jim Meyering  <meyering@lucent.com>
 
 	* tests/ls/Makefile.am (TESTS): Add follow-slink.
 	* tests/ls/follow-slink: New file.
