@@ -6,7 +6,7 @@ User visible changes in release 1.13
 * internationalized diagnostic messages (so far, only french translations)
 * `date -d "01/01/1998 3 years" +%Y' now works properly.  It prints 2001.
 * expr's match operator has been corrected to use basic regular expressions
-* New programs: chroot, factor, seq.
+* New programs: chroot, factor, seq, uptime.
 * date accepts new option: --rfc-822 (-R)
 * date accepts new format, %z, for RFC-822 style numeric timezone (-0500)
 * date: fix bugs in the handling of date -u +'%s %Z'.
