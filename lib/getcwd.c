@@ -36,6 +36,10 @@ extern int errno;
    prototype for rpl_getcwd.  */
 #undef getcwd
 
+#if !HAVE_DECL_GETCWD
+extern char *getcwd (char *, size_t);
+#endif
+
 /* Guess high, because that makes the test below more conservative.
    But this is a kludge, because we should really use
    pathconf (".", _PC_NAME_MAX).  But it's probably not worth the cost.  */
