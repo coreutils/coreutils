@@ -1,3 +1,9 @@
+2003-06-09  Jim Meyering  <jim@meyering.net>
+
+	* tzset.m4 (gl_FUNC_TZSET_CLOBBER): Also define gmtime.
+	* gettimeofday.m4 (AC_FUNC_GETTIMEOFDAY_CLOBBER): Likewise.
+	Suggestion from Paul Eggert.
+
 2003-06-08  Jim Meyering  <jim@meyering.net>
 
 	* tzset.m4 (gl_FUNC_TZSET_CLOBBER): New file/macro.
