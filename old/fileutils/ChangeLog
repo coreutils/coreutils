@@ -1,3 +1,24 @@
+1999-04-20  Jim Meyering  <meyering@ascend.com>
+
+	* tests/Makefile.am (EXTRA_DIST): s/posix-warn/env-warn/.
+	(check-local): Also test and warn if CDPATH is set.
+
+1999-04-20  Paul Eggert  <eggert@twinsun.com>
+
+	* configure.in (AC_CANONICAL_HOST): Add; needed for new AC_LFS's
+	cross-compilation.
+	* config.guess: New file (from autoconf).
+	* config.sub: New file (from autoconf).
+
+	* src/shred.c <config.h>: Include first, since it can do
+	things like #define const, and this must be done before
+	including any system headers.
+
+	* lib/xstrtoumax.c (my_strtoumax): Fix typo in computing
+	whether overflow occurred.  Improve overflow-detection to use
+	only one conditional branch total, rather than 2N+1
+	conditional branches for an N-digit number.
+
 1999-04-18  Jim Meyering  <meyering@ascend.com>
 
 	* configure.in (AC_CHECK_FUNCS): Remove strtoull, strtoumax, and
