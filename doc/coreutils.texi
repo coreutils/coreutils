@@ -9989,6 +9989,11 @@ Ignore carriage return.  May be negated.
 @cindex return, translating to newline
 Translate carriage return to newline.  May be negated.
 
+@item iutf8
+@opindex iutf8
+@cindex input encoding, UTF-8
+Assume input characters are UTF-8 encoded.  May be negated.
+
 @item ixon
 @opindex ixon
 @kindex C-s/C-q flow control
