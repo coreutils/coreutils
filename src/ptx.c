@@ -1,5 +1,5 @@
 /* Permuted index for GNU, with keywords in their context.
-   Copyright © 1990, 1991, 1993, 1998 Free Software Foundation, Inc.
+   Copyright © 1990, 1991, 1993, 1998, 1999 Free Software Foundation, Inc.
    François Pinard <pinard@iro.umontreal.ca>, 1988.
 
    This program is free software; you can redistribute it and/or modify
@@ -1944,6 +1944,11 @@ static char const* const format_args[] =
   "roff", "tex", 0
 };
 
+static enum Format const format_vals[] =
+{
+  ROFF_FORMAT, TEX_FORMAT
+};
+
 int
 main (int argc, char *const argv[])
 {
@@ -2059,19 +2064,8 @@ Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"),
 	  break;
 
 	case 10:
-	  switch (argmatch (optarg, format_args))
-	    {
-	    default:
-	      usage (EXIT_FAILURE);
-
-	    case 0:
-	      output_format = ROFF_FORMAT;
-	      break;
-
-	    case 1:
-	      output_format = TEX_FORMAT;
-	      break;
-	    }
+	  XARGMATCH (&output_format, "--format", optarg,
+		     format_args, format_vals, usage (1));
 	}
     }
 
