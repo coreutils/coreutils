@@ -1,13 +1,13 @@
-#serial 2
+#serial 3
 
 dnl From Bruno Haible.
 
 AC_DEFUN(jm_ICONV,
 [
   dnl Some systems have iconv in libc, some have it in libiconv (OSF/1 and
-  dnl those with the standalone portable libiconv installed).
+  dnl those with the standalone portable GNU libiconv installed).
   AC_CACHE_CHECK(for iconv, jm_cv_func_iconv, [
-    jm_cv_func_iconv="no, consider installing libiconv"
+    jm_cv_func_iconv="no, consider installing GNU libiconv"
     jm_cv_lib_iconv=no
     AC_TRY_LINK([#include <stdlib.h>
 #include <iconv.h>],
