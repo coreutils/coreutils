@@ -1,3 +1,15 @@
+Mon Mar 20 21:44:40 1995  Jim Meyering  (meyering@comco.com)
+
+	* df.c (usage): Add ellipsis after `[OPTION]'.  Use FILE,
+	not deprecated PATH in text of help message.  From Karl Berry.
+
+Fri Mar 10 21:13:23 1995  Jim Meyering  (meyering@comco.com)
+
+	* src/*.c: Update Copyright dates.
+
+	* src/Makefile.in (uninstall): Handle case in which LIBPROGS is empty.
+	Reported by Peter Smidt <smidt@cd.chalmers.se>.
+
 Thu Feb 23 22:29:11 1995  Jim Meyering  (meyering@comco.com)
 
 	* du.c (save_cwd) [!HAVE_FCHDIR]: Always initialize cwd->desc.
