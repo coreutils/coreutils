@@ -43,7 +43,7 @@ AC_DEFUN(jm_LIB_CHECK,
   AC_SEARCH_LIBS(getspnam, [shadow sec])
 
   # Requirements for su.c.
-  AC_CHECK_MEMBERS(struct passwd.sp_pwdp)
+  AC_CHECK_MEMBERS((struct passwd.sp_pwdp))
   AC_CHECK_FUNCS(getspnam)
   AC_CHECK_HEADERS(shadow.h)
 
