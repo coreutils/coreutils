@@ -12,8 +12,8 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 /* Written by Jim Meyering, meyering@cs.utexas.edu.  */
 
@@ -712,7 +712,8 @@ append_range (struct Spec_list *list, unsigned int first, unsigned int last)
    a valid string, print an error message and return non-zero.  */
 
 static int
-append_char_class (struct Spec_list *list, const unsigned char *char_class_str, size_t len)
+append_char_class (struct Spec_list *list,
+		   const unsigned char *char_class_str, size_t len)
 {
   enum Char_class char_class;
   struct List_element *new;
@@ -742,7 +743,8 @@ append_char_class (struct Spec_list *list, const unsigned char *char_class_str, 
    is a non-negative repeat count.  */
 
 static void
-append_repeated_char (struct Spec_list *list, unsigned int the_char, size_t repeat_count)
+append_repeated_char (struct Spec_list *list, unsigned int the_char,
+		      size_t repeat_count)
 {
   struct List_element *new;
 
@@ -763,7 +765,8 @@ append_repeated_char (struct Spec_list *list, unsigned int the_char, size_t repe
    If LEN is not 1, issue an error message and return non-zero.  */
 
 static int
-append_equiv_class (struct Spec_list *list, const unsigned char *equiv_class_str, size_t len)
+append_equiv_class (struct Spec_list *list,
+		    const unsigned char *equiv_class_str, size_t len)
 {
   struct List_element *new;
 
@@ -771,7 +774,8 @@ append_equiv_class (struct Spec_list *list, const unsigned char *equiv_class_str
     {
       char *tmp = make_printable_str (equiv_class_str, len);
 
-      error (0, 0, _("%s: equivalence class operand must be a single character"),
+      error (0, 0,
+	     _("%s: equivalence class operand must be a single character"),
 	     tmp);
       free (tmp);
       return 1;
@@ -813,7 +817,8 @@ substr (const unsigned char *p, size_t first_idx, size_t last_idx)
    zero bytes.  */
 
 static int
-find_closing_delim (const unsigned char *p, size_t start_idx, size_t p_len, unsigned int pre_bracket_char, size_t *result_idx)
+find_closing_delim (const unsigned char *p, size_t start_idx, size_t p_len,
+		    unsigned int pre_bracket_char, size_t *result_idx)
 {
   size_t i;
 
@@ -879,7 +884,9 @@ non_neg_strtol (const unsigned char *s, size_t len, size_t *val)
    and return -2.  */
 
 static int
-find_bracketed_repeat (const unsigned char *p, size_t start_idx, size_t p_len, unsigned int *char_to_repeat, size_t *repeat_count, size_t *closing_bracket_idx)
+find_bracketed_repeat (const unsigned char *p, size_t start_idx, size_t p_len,
+		       unsigned int *char_to_repeat, size_t *repeat_count,
+		       size_t *closing_bracket_idx)
 {
   size_t i;
 
@@ -934,7 +941,8 @@ find_bracketed_repeat (const unsigned char *p, size_t start_idx, size_t p_len, u
       - c Any other character is interpreted as itself.  */
 
 static int
-build_spec_list (const unsigned char *unescaped_string, size_t len, struct Spec_list *result)
+build_spec_list (const unsigned char *unescaped_string, size_t len,
+		 struct Spec_list *result)
 {
   const unsigned char *p;
   size_t i;
@@ -1433,7 +1441,8 @@ appear in\n\tstring2 are `upper' and `lower'"));
 
       if (s2->n_indefinite_repeats > 1)
 	{
-	  error (1, 0, _("only one [c*] repeat construct may appear in string2"));
+	  error (1, 0,
+		 _("only one [c*] repeat construct may appear in string2"));
 	}
 
       if (translating)
@@ -1765,7 +1774,8 @@ without squeezing repeats"));
     }
 
   if (squeeze_repeats && non_option_args == 0)
-    error (1, 0, _("at least one string must be given when squeezing repeats"));
+    error (1, 0,
+	   _("at least one string must be given when squeezing repeats"));
 
   spec_init (s1);
   if (parse_str ((unsigned char *) argv[optind], s1))
