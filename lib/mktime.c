@@ -1,5 +1,6 @@
 /* Copyright (C) 1993, 1994 Free Software Foundation, Inc.
-   Contributed by Noel Cragg (noel@cs.oberlin.edu).
+   Contributed by Noel Cragg (noel@cs.oberlin.edu), with fixes
+   by Michael E. Calwas (calwas@ttd.teradyne.com).
 
 This file is part of the GNU C Library.
 
@@ -226,12 +227,12 @@ _mktime_internal (timeptr, producer)
   while (me->foo < x) \
     { \
       me->bar--; \
-      me->foo = (y - (x - me->foo)); \
+      me->foo = (y - (x - me->foo) + 1); \
     } \
   while (me->foo > y) \
     { \
+      me->foo = (x + (me->foo - y) - 1); \
       me->bar++; \
-      me->foo = (x + (me->foo - y)); \
     }
   
   normalize (tm_sec, 0, 59, tm_min);
@@ -240,8 +241,14 @@ _mktime_internal (timeptr, producer)
   
   /* Do the month first, so day range can be found. */
   normalize (tm_mon, 0, 11, tm_year);
+
+  /* Since the day range modifies the month, we should be careful how
+     we reference the array of month lengths -- it is possible that
+     the month will go negative, hence the %... */
   normalize (tm_mday, 1,
-	     __mon_lengths[__isleap (me->tm_year)][me->tm_mon],
+	     __mon_lengths[__isleap (me->tm_year)][((me->tm_mon < 0)
+					            ? (12 + (me->tm_mon % 12))
+					            : (me->tm_mon % 12)) ],
 	     tm_mon);
 
   /* Do the month again, because the day may have pushed it out of range. */
@@ -249,7 +256,9 @@ _mktime_internal (timeptr, producer)
 
   /* Do the day again, because the month may have changed the range. */
   normalize (tm_mday, 1,
-	     __mon_lengths[__isleap (me->tm_year)][me->tm_mon],
+	     __mon_lengths[__isleap (me->tm_year)][((me->tm_mon < 0)
+					            ? (12 + (me->tm_mon % 12))
+					            : (me->tm_mon % 12)) ],
 	     tm_mon);
   
 #ifdef DEBUG

@@ -1,3 +1,7 @@
+Fri Jul 15 00:23:17 1994  Jim Meyering  (meyering@comco.com)
+
+	system.h: Remove unneeded decls of atof and atol.
+
 Fri Jul 08 01:09:23 1994  Jim Meyering  (meyering@comco.com)
 
 	stty.c (main): Initialize max_col (used by wrapf) before calling
