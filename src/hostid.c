@@ -45,7 +45,7 @@ usage (int status)
 	     program_name);
   else
     {
-      printf (_("Usage: %s [-v]\n"), program_name);
+      printf (_("Usage: %s\n"), program_name);
       printf (_("\
 Print the numeric identifier (in hexadecimal) for the current host.\n\
 \n\
