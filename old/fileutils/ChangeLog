@@ -1,5 +1,8 @@
 1997-09-13  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/rm.c: (PARAMS): Define.
+	(rm): Guard prototype in forward dcl with PARAMS.
+
 	* lib/strverscmp.h [HAVE_CONFIG_H]: Include config.h.
 	(PARAMS): Define.
 	Guard prototype with PARAMS.
