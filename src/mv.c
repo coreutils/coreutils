@@ -148,6 +148,7 @@ cp_option_init (struct cp_options *x)
   x->update = 0;
   x->verbose = 0;
   x->xstat = lstat;
+  x->dest_info = NULL;
 }
 
 /* If PATH is an existing directory, return nonzero, else 0.  */
@@ -505,7 +506,7 @@ main (int argc, char **argv)
        The problem it is used to detect can arise only if there are
        two or more files to move.  */
     if (last_file_idx)
-      dest_info_init ();
+      dest_info_init (&x);
 
     for (i = 0; i <= last_file_idx; ++i)
       errors |= movefile (file[i], target_directory, dest_is_dir, &x);
