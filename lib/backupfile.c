@@ -111,8 +111,8 @@ char *malloc ();
    to numbered) backup file name. */
 const char *simple_backup_suffix = "~";
 
-static int max_backup_version PARAMS ((const char *, const char *));
-static int version_number PARAMS ((const char *, const char *, size_t));
+static int max_backup_version (const char *, const char *);
+static int version_number (const char *, const char *, size_t);
 
 /* Return the name of the new backup file for file FILE,
    allocated with malloc.  Return 0 if out of memory.
