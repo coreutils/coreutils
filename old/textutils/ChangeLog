@@ -1,6 +1,28 @@
-2001-09-16  Jim Meyering  <meyering@lucent.com>
+2001-09-19  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.15.
+
+	* src/od.c (open_next_file): Use SETVBUF, not setbuf.
+	(skip): Revert part of last change: use lseek, not fseek.
+
+	When --read-bytes=N (-N N) is used, disable input buffering in
+	the standard I/O library.  Otherwise, od would read more input
+	than requested.  This could have caused problems when reading
+	from pipes, character devices, or open file descriptors inherited
+	from a parent process.
+
+	* src/od.c (open_next_file): New function, factored out of...
+	(skip): Adapt to use open_next_file.
+	(read_char): Likewise.
+	(read_block): Likewise.
+	(main): Likewise.
+	(dump): Fix an off-by-one error that could have made od fail to
+	report a read error when reading from a named file (not stdin).
+	(check_and_close): Account for the fact that in_stream may now be NULL.
+	(usage): Correct descriptions of -j and -N options.
+	Patch by Ian Bruce.
+
+2001-09-16  Jim Meyering  <meyering@lucent.com>
 
 	* Makefile.am (AUTOMAKE_OPTIONS): Require automake-1.5.
 
