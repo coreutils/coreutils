@@ -382,7 +382,7 @@ binary_operator (bool l_is_l)
     advance (0);
   op = pos + 1;
 
-  if ((op < argc - 2) && (strcmp (argv[op + 1], "-l") == 0))
+  if ((op < argc - 2) && STREQ (argv[op + 1], "-l"))
     {
       r_is_l = 1;
       advance (0);
@@ -583,14 +583,14 @@ binary_operator (bool l_is_l)
 
   if (argv[op][0] == '=' && !argv[op][1])
     {
-      value = (strcmp (argv[pos], argv[pos + 2]) == 0);
+      value = STREQ (argv[pos], argv[pos + 2]);
       pos += 3;
       return (TRUE == value);
     }
 
-  if (strcmp (argv[op], "!=") == 0)
+  if (STREQ (argv[op], "!="))
     {
-      value = (strcmp (argv[pos], argv[pos + 2]) != 0);
+      value = !STREQ (argv[pos], argv[pos + 2]);
       pos += 3;
       return (TRUE == value);
     }
@@ -789,7 +789,7 @@ and (void)
   int value;
 
   value = term ();
-  while ((pos < argc) && strcmp (argv[pos], "-a") == 0)
+  while ((pos < argc) && STREQ (argv[pos], "-a"))
     {
       advance (0);
       value = TRUTH_AND (value, and ());
@@ -809,7 +809,7 @@ or (void)
 
   value = and ();
 
-  while ((pos < argc) && strcmp (argv[pos], "-o") == 0)
+  while ((pos < argc) && STREQ (argv[pos], "-o"))
     {
       advance (0);
       value = TRUTH_OR (value, or ());
@@ -1097,7 +1097,7 @@ main (int margc, char **margv)
 	 allows "[ --help" and "[ --version" to have the usual GNU
 	 behavior, but it requires "test --help" and "test --version"
 	 to exit silently with status 1.  */
-      if (margc < 2 || strcmp (margv[margc - 1], "]") != 0)
+      if (margc < 2 || !STREQ (margv[margc - 1], "]"))
 	{
 	  parse_long_options (margc, margv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 			      usage, AUTHORS, (char const *) NULL);
