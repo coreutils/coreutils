@@ -55,6 +55,7 @@
 #include "error.h"
 #include "exclude.h"
 #include "human.h"
+#include "quote.h"
 #include "save-cwd.h"
 #include "savedir.h"
 #include "xstrtol.h"
@@ -471,7 +472,7 @@ pop_dir (struct saved_cwd *cwd, const char *curr_dir_name)
   else if (chdir ("..") < 0)
     {
       error (1, errno, _("cannot change to `..' from directory %s"),
-	     curr_dir_name);
+	     quote (curr_dir_name));
     }
 }
 
@@ -494,7 +495,7 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
        ? stat (ent, &stat_buf)
        : (*xstat) (ent, &stat_buf)) < 0)
     {
-      error (0, errno, "%s", path->text);
+      error (0, errno, "%s", quote (path->text));
       exit_status = 1;
       return 0;
     }
@@ -543,7 +544,8 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
 
       if (chdir (ent) < 0)
 	{
-	  error (0, errno, _("cannot change to directory %s"), path->text);
+	  error (0, errno, _("cannot change to directory %s"),
+		 quote (path->text));
 	  if (cwd)
 	    free_cwd (cwd);
 	  exit_status = 1;
@@ -553,7 +555,7 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
       name_space = savedir (".", stat_buf.st_size);
       if (name_space == NULL)
 	{
-	  error (0, errno, "%s", path->text);
+	  error (0, errno, "%s", quote (path->text));
 	  pop_dir (cwd, path->text);
 	  exit_status = 1;
 	  return 0;
@@ -693,7 +695,7 @@ main (int argc, char **argv)
 	case MAX_DEPTH_OPTION:		/* --max-depth=N */
 	  if (xstrtol (optarg, NULL, 0, &tmp_long, NULL) != LONGINT_OK
 	      || tmp_long < 0 || tmp_long > INT_MAX)
-	    error (1, 0, _("invalid maximum depth `%s'"), optarg);
+	    error (1, 0, _("invalid maximum depth %s"), quote (optarg));
 
 	  max_depth_specified = 1;
 	  max_depth = (int) tmp_long;
@@ -729,7 +731,7 @@ main (int argc, char **argv)
 
 	case 'X':
 	  if (add_exclude_file (add_exclude, exclude, optarg, '\n') != 0)
-	    error (1, errno, "%s", optarg);
+	    error (1, errno, "%s", quote (optarg));
 	  break;
 
 	case EXCLUDE_OPTION:
