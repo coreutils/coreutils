@@ -1,3 +1,7 @@
+[5.0.1]
+* `kill -t' now prints signal descriptions (not `?') on Tru64.
+* mv now removes `a' in this example on all systems: touch a; ln a b; mv a b
+
 [5.0]
 * false --help now exits nonzero
 
