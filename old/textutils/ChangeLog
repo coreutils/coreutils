@@ -1,3 +1,18 @@
+Tue Apr  9 22:43:57 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* uniq.c: Add new option --ignore-case (-i).
+	Include memcasecmp.h.
+	(different): Compare with memcasecmp if ignoring case.
+	(main): Handle 'i'.
+
+	* join.c (memcasecmp): Remove static definition of function.
+	Include memcasecmp.h instead.
+
+	* memcasecmp.c: New file.
+	* memcasecmp.h: New file.
+	* lib/Makefile.am (tu_SOURCES): Add memcasecmp.c.
+	(noinst_HEADERS): Add memcasecmp.h.
+
 Thu Apr  4 17:05:33 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* tr.c: The following commands all failed unnecessarily.
