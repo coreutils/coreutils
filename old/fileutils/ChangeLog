@@ -11,6 +11,7 @@
 
 	* configure.in: Convert the .o suffix on files in LIBOBJS to $U.o so
 	those files will be built via the ANSI2KNR-filtering rules if necessary.
+	Reported by Kaveh Ghazi.
 
 1998-01-02  Jim Meyering  <meyering@na-net.ornl.gov>
 
