@@ -2,6 +2,9 @@
 
 	* Version 5.3.0.
 
+	* src/install.c (usage): Avoid usage that runs afoul of Docbook
+	translation.  Problem reported by Eric S. Raymond.
+
 	Restore dd's noctty flag, reverting the change of 2004-04-08.
 	POSIX does not allow "dd" to use O_NOCTTY by default.
 	* NEWS: Add noctty flag to dd.
