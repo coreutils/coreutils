@@ -530,8 +530,10 @@ main (int argc, char **argv)
     error (1, 0, _("user %s does not exist"), new_user);
   endpwent ();
 
-  /* make sure pw->pw_shell is non-zero */
-  if (pw->pw_shell == 0 || pw->pw_shell[0] == 0)
+  /* Make sure pw->pw_shell is non-NULL.  It may be NULL when NEW_USER
+     is a username that is retrieved via NIS (YP), but that doesn't have
+     a default shell listed.  */
+  if (pw->pw_shell == NULL || pw->pw_shell[0] == '\0')
     pw->pw_shell = (char *) DEFAULT_SHELL;
 
   /* Make a copy of the password information and point pw at the local
