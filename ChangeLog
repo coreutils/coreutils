@@ -2,8 +2,9 @@
 
 	* Version 5.3.1.
 
-	* src/kill.c (usage): Mention that some shells provide a
+	* src/echo.c (usage): Mention that some shells provide a
 	built-in function by the same name.
+	* src/kill.c (usage): Likewise
 	* src/printf.c (usage): Likewise.
 	* src/pwd.c (usage): Likewise.
 	* src/stat.c (usage): Likewise.
