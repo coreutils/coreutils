@@ -1,3 +1,16 @@
+1999-08-04  Jim Meyering  <meyering@ascend.com>
+
+	* configure.in: Remove getline-testing code.  Now it's in m4/.
+
+1999-08-01  Paul Eggert  <eggert@twinsun.com>
+
+	* configure.in (AC_SYS_LARGEFILE): Renamed from AC_LFS.
+
+1999-07-30  Jim Meyering  <meyering@ascend.com>
+
+	* src/ls.c (usage): Explain about default wrt --hide-control-chars and
+	--show-control-chars.  Reported by Germano Leichsenring.
+
 1999-07-28  Jim Meyering  <meyering@ascend.com>
 
 	* configure.in (ALL_LINGUAS): Add Brazilian Portuguese (pt_BR).
