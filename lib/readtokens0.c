@@ -60,7 +60,7 @@ save_token (struct Tokens *t)
 /* Read NUL-separated tokens from stream IN into T until EOF or error.
    The final NUL is optional.  Always append a NULL pointer to the
    resulting list of token pointers, but that pointer isn't counted
-   via t->n_tok.  */
+   via t->n_tok.  Return true if successful.  */
 bool
 readtokens0 (FILE *in, struct Tokens *t)
 {
@@ -94,5 +94,5 @@ readtokens0 (FILE *in, struct Tokens *t)
 
   t->tok = obstack_finish (&t->o_tok);
   t->tok_len = obstack_finish (&t->o_tok_len);
-  return ferror (in);
+  return ! ferror (in);
 }
