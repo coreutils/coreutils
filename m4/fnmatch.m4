@@ -79,14 +79,6 @@ AC_DEFINE(fnmatch, rpl_fnmatch,
 ])# _AC_LIBOBJ_FNMATCH
 
 
-# Additional prerequisites of lib/fnmatch.c, not part of _AC_LIBOBJ_FNMATCH.
-AC_DEFUN([gl_PREREQ_FNMATCH_EXTRA],
-[
-  AC_REQUIRE([AC_HEADER_STDC])
-  AC_CHECK_HEADERS_ONCE(string.h strings.h)
-])
-
-
 AC_DEFUN([gl_FUNC_FNMATCH_POSIX],
 [
   FNMATCH_H=
@@ -94,7 +86,6 @@ AC_DEFUN([gl_FUNC_FNMATCH_POSIX],
                       [rm -f lib/fnmatch.h],
                       [_AC_LIBOBJ_FNMATCH])
   if test $ac_cv_func_fnmatch_posix != yes; then
-    gl_PREREQ_FNMATCH_EXTRA
     dnl We must choose a different name for our function, since on ELF systems
     dnl a broken fnmatch() in libc.so would override our fnmatch() if it is
     dnl compiled into a shared library.
@@ -115,7 +106,6 @@ AC_DEFUN([gl_FUNC_FNMATCH_GNU],
                       [rm -f lib/fnmatch.h],
                       [_AC_LIBOBJ_FNMATCH])
   if test $ac_cv_func_fnmatch_gnu != yes; then
-    gl_PREREQ_FNMATCH_EXTRA
     dnl We must choose a different name for our function, since on ELF systems
     dnl a broken fnmatch() in libc.so would override our fnmatch() if it is
     dnl compiled into a shared library.
