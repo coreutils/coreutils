@@ -12,5 +12,6 @@ printf-args.h
 printf-parse.h
 regex.c
 regex.h
+stdbool_.h
 vasnprintf.h
 vasprintf.h
