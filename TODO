@@ -144,6 +144,7 @@ Changes expected to go in, post-5.2.1:
 
   du and wc: add an option, --from0-file, to make them read NUL-delimited
     file name arguments from a file.
+    [I now have a patch doing this for du]
 
   dd patch from Olivier Delhomme
 
