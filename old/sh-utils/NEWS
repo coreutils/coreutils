@@ -1,6 +1,8 @@
 Changes in release 2.1
- [2.0k]
+ [2.0.11]
+* setting the date now works properly, even when using -u
 * `date -f - < /dev/null' no longer dumps core
+* some DOS/Windows portability changes
  [2.0j]
 * `date -d DATE' now parses certain relative DATEs correctly
  [2.0i]
