@@ -559,7 +559,7 @@ print_ascii (size_t n_bytes, const char *block,
 	  s = " \\0";
 	  break;
 
-	case '\007':
+	case '\a':
 	  s = " \\a";
 	  break;
 
@@ -1539,7 +1539,7 @@ dump_strings (void)
 	{
 	  switch (c)
 	    {
-	    case '\007':
+	    case '\a':
 	      fputs ("\\a", stdout);
 	      break;
 
