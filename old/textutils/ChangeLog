@@ -1,5 +1,7 @@
 1998-06-29  Jim Meyering  <meyering@ascend.com>
 
+	* Version 1.22f.
+
 	* src/wc.c: Update calls to human_readable -- now there's one fewer arg.
 
 	* lib/Makefile.am (libtu_a_SOURCES): Add argmatch.c.
@@ -22,8 +24,6 @@
 	`make maintainer-clean; ./configure; make check' works.
 
 1998-05-25  Jim Meyering  <meyering@ascend.com>
-
-	* Version 1.22f.
 
 	* configure.in (_GNU_SOURCE): AC_DEFINE it here.
 	* acconfig.h (_GNU_SOURCE): Remove definition from @TOP@ section.
