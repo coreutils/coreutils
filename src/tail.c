@@ -71,8 +71,8 @@
 #define DEFAULT_NUMBER 10
 
 /* Size of atomic reads. */
-#ifndef BUFSIZE
-#define BUFSIZE (512 * 8)
+#ifndef BUFSIZ
+#define BUFSIZ (512 * 8)
 #endif
 
 /* Number of bytes per item we are printing.
@@ -541,7 +541,7 @@ tail_lines (filename, fd, number)
 }
 
 /* Print the last NUMBER lines from the end of file FD.
-   Go backward through the file, reading `BUFSIZE' bytes at a time (except
+   Go backward through the file, reading `BUFSIZ' bytes at a time (except
    probably the first), until we hit the start of the file or have
    read NUMBER newlines.
    POS starts out as the length of the file (the offset of the last
@@ -555,7 +555,7 @@ file_lines (filename, fd, number, pos)
      long number;
      long pos;
 {
-  char buffer[BUFSIZE];
+  char buffer[BUFSIZ];
   int bytes_read;
   int i;			/* Index into `buffer' for scanning. */
 
@@ -563,11 +563,11 @@ file_lines (filename, fd, number, pos)
     return 0;
 
   /* Set `bytes_read' to the size of the last, probably partial, buffer;
-     0 < `bytes_read' <= `BUFSIZE'. */
-  bytes_read = pos % BUFSIZE;
+     0 < `bytes_read' <= `BUFSIZ'. */
+  bytes_read = pos % BUFSIZ;
   if (bytes_read == 0)
-    bytes_read = BUFSIZE;
-  /* Make `pos' a multiple of `BUFSIZE' (0 if the file is short), so that all
+    bytes_read = BUFSIZ;
+  /* Make `pos' a multiple of `BUFSIZ' (0 if the file is short), so that all
      reads will be on block boundaries, which might increase efficiency. */
   pos -= bytes_read;
   lseek (fd, pos, SEEK_SET);
@@ -604,10 +604,10 @@ file_lines (filename, fd, number, pos)
 	  lseek (fd, 0L, SEEK_SET);
 	  return 0;
 	}
-      pos -= BUFSIZE;
+      pos -= BUFSIZ;
       lseek (fd, pos, SEEK_SET);
     }
-  while ((bytes_read = safe_read (fd, buffer, BUFSIZE)) > 0);
+  while ((bytes_read = safe_read (fd, buffer, BUFSIZ)) > 0);
   if (bytes_read == -1)
     {
       error (0, errno, "%s", filename);
@@ -630,7 +630,7 @@ pipe_lines (filename, fd, number)
   struct linebuffer
   {
     int nbytes, nlines;
-    char buffer[BUFSIZE];
+    char buffer[BUFSIZ];
     struct linebuffer *next;
   };
   typedef struct linebuffer LBUFFER;
@@ -645,7 +645,7 @@ pipe_lines (filename, fd, number)
   tmp = (LBUFFER *) xmalloc (sizeof (LBUFFER));
 
   /* Input is always read into a fresh buffer. */
-  while ((tmp->nbytes = safe_read (fd, tmp->buffer, BUFSIZE)) > 0)
+  while ((tmp->nbytes = safe_read (fd, tmp->buffer, BUFSIZ)) > 0)
     {
       tmp->nlines = 0;
       tmp->next = NULL;
@@ -659,7 +659,7 @@ pipe_lines (filename, fd, number)
       /* If there is enough room in the last buffer read, just append the new
          one to it.  This is because when reading from a pipe, `nbytes' can
          often be very small. */
-      if (tmp->nbytes + last->nbytes < BUFSIZE)
+      if (tmp->nbytes + last->nbytes < BUFSIZ)
 	{
 	  bcopy (tmp->buffer, &last->buffer[last->nbytes], tmp->nbytes);
 	  last->nbytes += tmp->nbytes;
@@ -752,7 +752,7 @@ pipe_bytes (filename, fd, number)
   struct charbuffer
   {
     int nbytes;
-    char buffer[BUFSIZE];
+    char buffer[BUFSIZ];
     struct charbuffer *next;
   };
   typedef struct charbuffer CBUFFER;
@@ -767,7 +767,7 @@ pipe_bytes (filename, fd, number)
   tmp = (CBUFFER *) xmalloc (sizeof (CBUFFER));
 
   /* Input is always read into a fresh buffer. */
-  while ((tmp->nbytes = safe_read (fd, tmp->buffer, BUFSIZE)) > 0)
+  while ((tmp->nbytes = safe_read (fd, tmp->buffer, BUFSIZ)) > 0)
     {
       tmp->next = NULL;
 
@@ -775,7 +775,7 @@ pipe_bytes (filename, fd, number)
       /* If there is enough room in the last buffer read, just append the new
          one to it.  This is because when reading from a pipe, `nbytes' can
          often be very small. */
-      if (tmp->nbytes + last->nbytes < BUFSIZE)
+      if (tmp->nbytes + last->nbytes < BUFSIZ)
 	{
 	  bcopy (tmp->buffer, &last->buffer[last->nbytes], tmp->nbytes);
 	  last->nbytes += tmp->nbytes;
@@ -846,10 +846,10 @@ start_bytes (filename, fd, number)
      int fd;
      long number;
 {
-  char buffer[BUFSIZE];
+  char buffer[BUFSIZ];
   int bytes_read = 0;
 
-  while (number > 0 && (bytes_read = safe_read (fd, buffer, BUFSIZE)) > 0)
+  while (number > 0 && (bytes_read = safe_read (fd, buffer, BUFSIZ)) > 0)
     number -= bytes_read;
   if (bytes_read == -1)
     {
@@ -871,11 +871,11 @@ start_lines (filename, fd, number)
      int fd;
      long number;
 {
-  char buffer[BUFSIZE];
+  char buffer[BUFSIZ];
   int bytes_read = 0;
   int bytes_to_skip = 0;
 
-  while (number && (bytes_read = safe_read (fd, buffer, BUFSIZE)) > 0)
+  while (number && (bytes_read = safe_read (fd, buffer, BUFSIZ)) > 0)
     {
       bytes_to_skip = 0;
       while (bytes_to_skip < bytes_read)
@@ -901,13 +901,13 @@ dump_remainder (filename, fd)
      char *filename;
      int fd;
 {
-  char buffer[BUFSIZE];
+  char buffer[BUFSIZ];
   int bytes_read;
   long total;
 
   total = 0;
 output:
-  while ((bytes_read = safe_read (fd, buffer, BUFSIZE)) > 0)
+  while ((bytes_read = safe_read (fd, buffer, BUFSIZ)) > 0)
     {
       XWRITE (1, buffer, bytes_read);
       total += bytes_read;
