@@ -65,7 +65,10 @@
 #include "system.h"
 #include "error.h"
 
-#define equal(p, q) (strcmp ((p),(q)) == 0)
+#ifndef SIGINFO
+# define SIGINFO SIGUSR1
+#endif
+
 #define max(a, b) ((a) > (b) ? (a) : (b))
 #define output_char(c) \
   do { \
@@ -103,7 +106,6 @@ static void copy_simple __P ((unsigned char *buf, int nread));
 static void copy_with_block __P ((unsigned char *buf, int nread));
 static void copy_with_unblock __P ((unsigned char *buf, int nread));
 static void parse_conversion __P ((char *str));
-static void print_stats __P ((void));
 static void translate_charset __P ((const unsigned char *new_trans));
 static void quit __P ((int code));
 static void scanargs __P ((int argc, char **argv));
@@ -317,12 +319,48 @@ static struct option const long_options[] =
   {0, 0, 0, 0}
 };
 
-int
-main (int argc, char **argv)
+static void
+print_stats (void)
+{
+  fprintf (stderr, _("%u+%u records in\n"), r_full, r_partial);
+  fprintf (stderr, _("%u+%u records out\n"), w_full, w_partial);
+  if (r_truncate > 0)
+    fprintf (stderr, "%u %s\n", r_truncate,
+	     (r_truncate == 1
+	      ? _("truncated record")
+	      : _("truncated records")));
+}
+
+static RETSIGTYPE
+siginfo_handler (int sig)
+{
+  print_stats ();
+}
+
+/* Encapsulate portability mess of establishing signal handlers.  */
+
+static void
+handle_sig (int sig_num, RETSIGTYPE (*sig_handler) (int sig))
 {
 #ifdef _POSIX_VERSION
   struct sigaction sigact;
-#endif /* _POSIX_VERSION */
+  sigaction (sig_num, NULL, &sigact);
+  if (sigact.sa_handler != SIG_IGN)
+    {
+      sigact.sa_handler = sig_handler;
+      sigemptyset (&sigact.sa_mask);
+      sigact.sa_flags = 0;
+      sigaction (sig_num, &sigact, NULL);
+    }
+#else
+  if (signal (sig_num, SIG_IGN) != SIG_IGN)
+    signal (sig_num, sig_handler);
+#endif
+}
+
+int
+main (int argc, char **argv)
+{
   int i;
 
   program_name = argv[0];
@@ -380,31 +418,15 @@ main (int argc, char **argv)
 #endif
     }
   else
-    output_file = _("standard output");
+    {
+      output_file = _("standard output");
+    }
 
-#ifdef _POSIX_VERSION
-  sigaction (SIGINT, NULL, &sigact);
-  if (sigact.sa_handler != SIG_IGN)
-    {
-      sigact.sa_handler = interrupt_handler;
-      sigemptyset (&sigact.sa_mask);
-      sigact.sa_flags = 0;
-      sigaction (SIGINT, &sigact, NULL);
-    }
-  sigaction (SIGPIPE, NULL, &sigact);
-  if (sigact.sa_handler != SIG_IGN)
-    {
-      sigact.sa_handler = interrupt_handler;
-      sigemptyset (&sigact.sa_mask);
-      sigact.sa_flags = 0;
-      sigaction (SIGPIPE, &sigact, NULL);
-    }
-#else				/* !_POSIX_VERSION */
-  if (signal (SIGINT, SIG_IGN) != SIG_IGN)
-    signal (SIGINT, interrupt_handler);
-  if (signal (SIGPIPE, SIG_IGN) != SIG_IGN)
-    signal (SIGPIPE, interrupt_handler);
-#endif				/* !_POSIX_VERSION */
+  handle_sig (SIGINT, interrupt_handler);
+  handle_sig (SIGQUIT, interrupt_handler);
+  handle_sig (SIGPIPE, interrupt_handler);
+  handle_sig (SIGINFO, siginfo_handler);
+
   copy ();
 }
 
@@ -843,11 +865,11 @@ scanargs (int argc, char **argv)
 	}
       *val++ = '\0';
 
-      if (equal (name, "if"))
+      if (STREQ (name, "if"))
 	input_file = val;
-      else if (equal (name, "of"))
+      else if (STREQ (name, "of"))
 	output_file = val;
-      else if (equal (name, "conv"))
+      else if (STREQ (name, "conv"))
 	parse_conversion (val);
       else
 	{
@@ -855,25 +877,25 @@ scanargs (int argc, char **argv)
 	  if (n < 0)
 	    error (1, 0, _("invalid number `%s'"), val);
 
-	  if (equal (name, "ibs"))
+	  if (STREQ (name, "ibs"))
 	    {
 	      input_blocksize = n;
 	      conversions_mask |= C_TWOBUFS;
 	    }
-	  else if (equal (name, "obs"))
+	  else if (STREQ (name, "obs"))
 	    {
 	      output_blocksize = n;
 	      conversions_mask |= C_TWOBUFS;
 	    }
-	  else if (equal (name, "bs"))
+	  else if (STREQ (name, "bs"))
 	    output_blocksize = input_blocksize = n;
-	  else if (equal (name, "cbs"))
+	  else if (STREQ (name, "cbs"))
 	    conversion_blocksize = n;
-	  else if (equal (name, "skip"))
+	  else if (STREQ (name, "skip"))
 	    skip_records = n;
-	  else if (equal (name, "seek"))
+	  else if (STREQ (name, "seek"))
 	    seek_record = n;
-	  else if (equal (name, "count"))
+	  else if (STREQ (name, "count"))
 	    max_records = n;
 	  else
 	    {
@@ -956,7 +978,7 @@ parse_conversion (char *str)
       if (new != NULL)
 	*new++ = '\0';
       for (i = 0; conversions[i].convname != NULL; i++)
-	if (equal (conversions[i].convname, str))
+	if (STREQ (conversions[i].convname, str))
 	  {
 	    conversions_mask |= conversions[i].conversion;
 	    break;
@@ -1040,18 +1062,6 @@ bit_count (register unsigned int i)
   for (set_bits = 0; i != 0; set_bits++)
     i &= i - 1;
   return set_bits;
-}
-
-static void
-print_stats (void)
-{
-  fprintf (stderr, _("%u+%u records in\n"), r_full, r_partial);
-  fprintf (stderr, _("%u+%u records out\n"), w_full, w_partial);
-  if (r_truncate > 0)
-    fprintf (stderr, "%u %s\n", r_truncate,
-	     (r_truncate == 1
-	      ? _("truncated record")
-	      : _("truncated records")));
 }
 
 static void
