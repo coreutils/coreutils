@@ -1,6 +1,21 @@
-Sat Nov 11 15:46:02 1995  Jim Meyering  (meyering@comco.com)
+	* csplit.c (cleanup): Don't exit.
+	(interrupt_handler): Rewrite to reset default signal handler
+	then repost caught signal.
+	(xmalloc, xrealloc, read_input, write_to_file, handle_line_error,
+	process_line_count, process_regexp, create_output_file,
+	close_output_file): Call cleanup_fatal, not cleanup.
+	Add const attribute to lots of parameters.
+	(cleanup_fatal): Renamed from cleanup.  Call cleanup, then exit.
+	Update callers.
 
-	* Version 1.13c.
+	* tac.c: (cleanup): Don't exit.
+	(cleanup_fatal): New function.  Call cleanup, then exit.
+	(sighandler): New function.
+	(cleanup_fatal): Renamed from cleanup.  Call cleanup, then exit.
+	Update callers.
+	(tac_stdin): Set up sighandler as signal handler, not `cleanup'.
+
+Sat Nov 11 15:46:02 1995  Jim Meyering  (meyering@comco.com)
 
 	* od.c (skip): Cast fseek's offset argument to `long'.
 	Erik Bennett <bennett@cvo.oneworld.com> reported that this is
