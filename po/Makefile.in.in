@@ -103,15 +103,15 @@ $(PACKAGE).pot: $(POTFILES)
 
 cat-id-tbl.c: stamp-cat-id
 stamp-cat-id: $(PACKAGE).pot
-	rm -f cat-id-tbl.tmp.c
+	rm -f cat-id-tbl.tmp
 	sed -f ../intl/po2tbl.sed $(srcdir)/$(PACKAGE).pot \
-		| sed -e "s/@PACKAGE NAME@/$(PACKAGE)/" > cat-id-tbl.tmp.c
-	if cmp -s cat-id-tbl.tmp.c $(srcdir)/cat-id-tbl.c; then \
-	  rm cat-id-tbl.tmp.c; \
+		| sed -e "s/@PACKAGE NAME@/$(PACKAGE)/" > cat-id-tbl.tmp
+	if cmp -s cat-id-tbl.tmp $(srcdir)/cat-id-tbl.c; then \
+	  rm cat-id-tbl.tmp; \
 	else \
 	  echo cat-id-tbl.c changed; \
 	  rm -f $(srcdir)/cat-id-tbl.c; \
-	  mv cat-id-tbl.tmp.c $(srcdir)/cat-id-tbl.c; \
+	  mv cat-id-tbl.tmp $(srcdir)/cat-id-tbl.c; \
 	fi
 	cd $(srcdir) && rm -f stamp-cat-id && echo timestamp > stamp-cat-id
 
@@ -171,7 +171,7 @@ cat-id-tbl.o: ../intl/libgettext.h
 TAGS ID:
 
 mostlyclean:
-	rm -f core core.* *.pox $(PACKAGE).po *.old.po cat-id-tbl.tmp.c
+	rm -f core core.* *.pox $(PACKAGE).po *.old.po cat-id-tbl.tmp
 	rm -fr *.o
 
 clean: mostlyclean
