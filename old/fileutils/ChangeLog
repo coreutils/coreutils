@@ -1,5 +1,12 @@
 2000-08-24  Jim Meyering  <meyering@lucent.com>
 
+	Put back the kluge.  It's necessary after all.
+	* src/dd.c (buggy_lseek_support): New function.
+	(skip): Use it.
+	Frank Adler reported that although _llseek returns 0, lseek
+	erroneously returns an offset suggesting the operation succeeded
+	even though it fails.
+
 	* install-sh: Double quote as needed, to protect against arguments
 	containing spaces or shell metacharacters.  Reported by Bruno Haible.
 
