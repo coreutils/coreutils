@@ -1,5 +1,8 @@
 1999-10-31  Jim Meyering  <meyering@ascend.com>
 
+	* Makefile.maint (my-distcheck): Remove $(DEPDIR) to work around
+	automake bug.
+
 	* doc/fileutils.texi: Document new --backup[=METHOD] option for
 	cp, mv, ln, and install.
 
