@@ -99,12 +99,6 @@ static struct obstack dir_stack;
    element pushed onto the dir stack may contain slashes.  */
 static struct obstack len_stack;
 
-static inline bool
-is_power_of_two (unsigned int i)
-{
-  return (i & (i - 1)) == 0;
-}
-
 static inline unsigned int
 current_depth (void)
 {
@@ -577,6 +571,44 @@ remove_file (struct File_spec *fs, const struct rm_options *x)
   return RM_OK;
 }
 
+static inline bool
+is_power_of_two (unsigned int i)
+{
+  return (i & (i - 1)) == 0;
+}
+
+static void
+cycle_check (struct stat const *sb)
+{
+#ifdef ENABLE_CYCLE_CHECK
+  /* If there is a directory cycle, detect it (lazily) and die.  */
+  static struct dev_ino dir_cycle_detect_dev_ino;
+  static unsigned int chdir_counter;
+
+  /* If the current directory ever happens to be the same
+     as the one we last recorded for the cycle detection,
+     then it's obviously part of a cycle.  */
+  if (chdir_counter && SAME_INODE (*sb, dir_cycle_detect_dev_ino))
+    {
+      error (0, 0, _("\
+WARNING: Circular directory structure.\n\
+This almost certainly means that you have a corrupted file system.\n\
+NOTIFY YOUR SYSTEM MANAGER.\n\
+The following directory is part of the cycle:\n  %s\n"),
+	     quote (full_filename (".")));
+      exit (EXIT_FAILURE);
+    }
+
+  /* If the number of `descending' chdir calls is a power of two,
+     record the dev/ino of the current directory.  */
+  if (is_power_of_two (++chdir_counter))
+    {
+      dir_cycle_detect_dev_ino.st_dev = sb->st_dev;
+      dir_cycle_detect_dev_ino.st_ino = sb->st_ino;
+    }
+#endif
+}
+
 /* If not in recursive mode, print an error message and return RM_ERROR.
    Otherwise, query the user if appropriate, then try to recursively
    remove the directory specified by FS.  Return RM_OK if it is removed,
@@ -654,44 +686,7 @@ remove_dir (struct File_spec *fs, int need_save_cwd,
 	       quote (full_filename (dir_name)));
       }
 
-#ifdef ENABLE_CYCLE_CHECK
-    {
-      /* If there is a directory cycle, detect it (lazily) and inform the user.
-	 In interactive mode, the user gets to choose whether to continue
-	 removing any additional command line arguments.  */
-      static struct dev_ino dir_cycle_detect_dev_ino;
-      static unsigned int chdir_counter;
-
-      /* If the current directory ever happens to be the same
-	 as the one we last recorded for the cycle detection,
-	 then it's obviously part of a cycle.  */
-      if (chdir_counter && SAME_INODE (sb, dir_cycle_detect_dev_ino))
-	{
-	  error (0, 0, _("\
-WARNING: Circular directory structure.\n\
-This almost certainly means that you have a corrupted file system.\n\
-NOTIFY YOUR SYSTEM MANAGER.\n\
-The following directory is part of the cycle:\n  %s\n"),
-		 quote (full_filename (dir_name)));
-
-	  if (x->interactive)
-	    {
-	      error (0, 0, _("continue? "));
-	      if (yesno ())
-		return RM_ERROR;
-	    }
-	  exit (EXIT_FAILURE);
-	}
-
-      /* If the number of `descending' chdir calls is a power of two,
-	 record the dev/ino of the current directory.  */
-      if (is_power_of_two (++chdir_counter))
-	{
-	  dir_cycle_detect_dev_ino.st_dev = sb.st_dev;
-	  dir_cycle_detect_dev_ino.st_ino = sb.st_ino;
-	}
-    }
-#endif
+    cycle_check (&sb);
 
     tmp_cwd_dev_ino.st_dev = sb.st_dev;
     tmp_cwd_dev_ino.st_ino = sb.st_ino;
