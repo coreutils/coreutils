@@ -1,3 +1,10 @@
+Tue Oct 15 23:25:31 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/tr.c (get_next): Rewrite to treat lower/upper mapping as a
+	special case.
+	(main): Write separate loops to initialize mapping for lower->upper
+	and upper->lower conversion.
+
 Sun Oct 13 12:52:42 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/xstrtol.c (__xstrtol): Return an error for invalid suffix.
