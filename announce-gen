@@ -6,7 +6,7 @@ use Getopt::Long;
 use Digest::MD5;
 use Digest::SHA1;
 
-(my $VERSION = '$Revision: 1.21 $ ') =~ tr/[0-9].//cd;
+(my $VERSION = '$Revision: 1.22 $ ') =~ tr/[0-9].//cd;
 (my $ME = $0) =~ s|.*/||;
 
 my %valid_release_types = map {$_ => 1} qw (alpha beta major);
@@ -366,7 +366,7 @@ EOF
   print_locations ("xdelta-style diffs", @url_dir_list, %size,
 		   $xd);
   print_locations ("GPG detached signatures", @url_dir_list, %size,
-		   "$tgz.asc", "$tbz.asc");
+		   "$tgz.sig", "$tbz.sig");
 
   print_signatures ($tgz, $tbz, $xd);
 
