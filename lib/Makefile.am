@@ -98,7 +98,7 @@ BUILT_SOURCES = getdate.c lstat.c stat.c unlocked-io.h
 MAINTAINERCLEANFILES = $(BUILT_SOURCES)
 DISTCLEANFILES = lstat.c stat.c unlocked-io.h
 
-EXTRA_DIST = xstat.in config.charset ref-add.sin ref-del.sin unlocked-io.hin
+EXTRA_DIST = xstat.in config.charset ref-add.sin ref-del.sin gen-uio
 lstat.c: xstat.in
 	sed \
 	  -e '/@IGNORE@/d' \
@@ -173,20 +173,6 @@ io_functions = \
   clearerr feof ferror fflush fgets fputc fputs \
   fread fwrite getc getchar putc putchar
 
-a_z=abcdefghijklmnopqrstuvwxyz
-A_Z=ABCDEFGHIJKLMNOPQRSTUVWXYZ
-
-unlocked-io.h: $(srcdir)/unlocked-io.hin Makefile.am
-	tmp=t$$$$;							\
-	for f in $(io_functions); do					\
-	  u=`echo $$f|tr $(a_z) $(A_Z)`;				\
-	  echo "#  if HAVE_$${u}_UNLOCKED"		;		\
-	  echo "#   undef $$f"				;		\
-	  echo "#   define $$f(S) $${f}_unlocked (S)"	;		\
-	  echo '#  endif'				;		\
-	done > $$tmp;							\
-	sed '/^@replace_this@$$/r '$$tmp $(srcdir)/unlocked-io.hin	\
-	  | sed '/^@replace_this@$$/d'					\
-	  > $@t;							\
-	rm -f $$tmp;							\
+unlocked-io.h: $(srcdir)/gen-uio Makefile.am
+	srcdir=$(srcdir) $(srcdir)/gen-uio $(io_functions) > $@t
 	mv $@t $@
