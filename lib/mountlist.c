@@ -42,6 +42,19 @@ char *xrealloc ();
 char *xstrdup ();
 void error ();
 
+#include <errno.h>
+#ifndef errno
+extern int errno;
+#endif
+
+#ifdef HAVE_FCNTL_H
+# include <fcntl.h>
+#endif
+
+#ifdef HAVE_UNISTD_H
+# include <unistd.h>
+#endif
+
 #if HAVE_SYS_PARAM_H
 # include <sys/param.h>
 #endif
@@ -518,6 +531,29 @@ read_filesystem_list (need_fs_type, all_fs)
     char *table = MNTTAB;
     FILE *fp;
     int ret;
+    int lockfd = -1;
+
+# if defined F_RDLCK && defined F_SETLKW
+    /* MNTTAB_LOCK is a macro name of our own invention; it's not present in
+       e.g. Solaris 2.6.  If the SVR4 folks ever define a macro
+       for this file name, we should use their macro name instead.
+       (Why not just lock MNTTAB directly?  We don't know.)  */
+#  ifndef MNTTAB_LOCK
+#   define MNTTAB_LOCK "/etc/.mnttab.lock"
+#  endif
+    lockfd = open (MNTTAB_LOCK, O_RDONLY);
+    if (0 <= lockfd)
+      {
+	struct flock flock;
+	flock.l_type = F_RDLCK;
+	flock.l_whence = SEEK_SET;
+	flock.l_start = 0;
+	flock.l_len = 0;
+	while (fcntl (lockfd, F_SETLKW, &flock) == -1)
+	  if (errno != EINTR)
+	    return NULL;
+      }
+# endif
 
     fp = fopen (table, "r");
     if (fp == NULL)
@@ -543,7 +579,9 @@ read_filesystem_list (need_fs_type, all_fs)
 
     if (ret > 0)
       return NULL;
-   if (fclose (fp) == EOF)
+    if (fclose (fp) == EOF)
+      return NULL;
+    if (0 <= lockfd && close (lockfd) != 0)
       return NULL;
   }
 #endif /* MOUNTED_GETMNTENT2.  */
