@@ -314,7 +314,7 @@ static const struct option long_options[] =
   {"width", required_argument, NULL, 'w'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {0, 0, 0, 0},
+  {NULL, 0, NULL, 0},
 };
 
 int
