@@ -131,7 +131,6 @@ struct bin_str
   };
 
 #ifndef STDC_HEADERS
-char *ctime ();
 time_t time ();
 void free ();
 #endif
@@ -2047,6 +2046,7 @@ print_long_format (const struct fileinfo *f)
   char bigbuf[7 * 20 + 10 + 24 + 9 + 1];
   char *p;
   time_t when;
+  const char *fmt;
 
 #ifdef HAVE_ST_DM_MODE
   mode_string (f->stat.st_dm_mode, modebuf);
@@ -2069,12 +2069,10 @@ print_long_format (const struct fileinfo *f)
       break;
     }
 
-  /* Use strftime rather than ctime, because the former can produce
-     locale-dependent names for the weekday (%a) and month (%b).  */
-  strftime (timebuf, TIMEBUF_SIZE, "%a %b %d %H:%M:%S %Y", localtime (&when));
-
   if (full_time)
-    timebuf[24] = '\0';
+    {
+      fmt = "%a %b %d %H:%M:%S %Y";
+    }
   else
     {
       if (current_time > when + 6L * 30L * 24L * 60L * 60L	/* Old. */
@@ -2086,10 +2084,17 @@ print_long_format (const struct fileinfo *f)
 	     Allow a 1 hour slop factor for what is considered "the future",
 	     to allow for NFS server/client clock disagreement.
 	     Show the year instead of the time of day.  */
-	  strcpy (timebuf + 11, timebuf + 19);
+	  fmt = "%b %e  %Y";
 	}
-      timebuf[16] = 0;
+      else
+	{
+	  fmt = "%b %e %H:%M";
+	}
     }
+
+  /* Use strftime rather than ctime, because the former can produce
+     locale-dependent names for the weekday (%a) and month (%b).  */
+  strftime (timebuf, TIMEBUF_SIZE, fmt, localtime (&when));
 
   p = bigbuf;
 
@@ -2134,8 +2139,7 @@ print_long_format (const struct fileinfo *f)
     sprintf (p, "%8lu ", (unsigned long) f->stat.st_size);
   p += strlen (p);
 
-  sprintf (p, "%s ", full_time ? timebuf : timebuf + 4);
-  p += strlen (p);
+  p = stpcpy (stpcpy (p, timebuf), " ");
 
   DIRED_INDENT ();
   FPUTS (bigbuf, stdout, p - bigbuf);
