@@ -174,8 +174,14 @@ do_link (const char *source, const char *dest)
     {
       if (stat (source, &source_stats) != 0)
 	{
-	  error (0, errno, "%s", source);
-	  return 1;
+	  /* This still could be a legitimate request:
+	     if SOURCE is a dangling symlink.  */
+	  if (errno != ENOENT
+	      || lstat (source, &source_stats) != 0)
+	    {
+	      error (0, errno, "%s", source);
+	      return 1;
+	    }
 	}
       if (!hard_dir_link && S_ISDIR (source_stats.st_mode))
 	{
