@@ -1,4 +1,10 @@
 User-visible changes in release 3.10:
+* `ln -i no-such-file existing-file' gives a diagnostic and fails.
+  Before, if you responded `yes' to the prompt it would both remove
+  `existing-file' and fail to make a link.
+* du no longer requires read access to all of the directory components
+  of the current working directory on systems with fchdir.
+* touch -d 'date' is no longer off by one hour.
 * New program: sync.
 * Fix bug in cp that made the commands `ln -s . s; cp -rd s r' incorrectly
   create `r' as a symlink instead of as a regular file.

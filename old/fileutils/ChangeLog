@@ -1,3 +1,82 @@
+Sat Oct 01 21:23:27 1994  Jim Meyering  (meyering@comco.com)
+
+	* src/*.c: Remove CONFIG_BROKETS conditional.
+
+	* {*/,}Makefile.in: Revamp to look much like those in sh-utils.
+	* acconfig.h (HAVE_FTRUNCATE): Remove it.
+	(ino_t, D_INO_IN_DIRENT): Add these.
+
+	* configure.in: Convert for autoconf-2.0.
+	* backupfile.c: Likewise.
+	* savedir.c: Likewise.
+
+	* mkdir.c, rmdir.c: Split the two functions from old mkdir.c into
+	separate files.
+
+	* chgrp.c [_POSIX_VERSION]: Test this instead of _POSIX_SOURCE.
+
+	* ls.c: Don't use SIZEOF_INT because it would require configure
+	to run a program -- then cross compilers would lose.  Instead,
+	compare INT_MAX to 64k-1 since all we need to know is whether
+	an int is 2 bytes or larger.
+
+	* rm.c [D_INO]: Use D_INO_IN_DIRENT rather than _POSIX_SOURCE in the
+	test for how to define this macro.
+
+	* system.h: Use HAVE_SYS_PARAM_H (not _POSIX_SOURCE) in test
+	for whether to include <sys/param.h>.
+	Likewise for <utime.h>.
+	Update for DIRENT->HAVE_DIRENT_H etc. autoconf-2.0 changes.
+	Ditto for VOID_CLOSEDIR->CLOSEDIR_VOID.
+
+	* xgetcwd.c [!_POSIX_VERSION && !HAVE_GETCWD]: Remove
+	!defined (_POSIX_VERSION) conjunct.  From Kaveh Ghazi.
+
+Mon Sep 26 17:47:17 1994  David J. MacKenzie  (djm@churchy.gnu.ai.mit.edu)
+
+	* lib/*.c: Remove CONFIG_BROKETS conditional.
+	* lib/Makefile.in src/Makefile.in: Don't define it.
+
+Sun Sep 25 12:20:52 1994  Jim Meyering  (meyering@comco.com)
+
+	* ln.c (do_link): Give a diagnostic when trying to make a hard
+	link to a nonexistent source file.  Before, running the command
+	`ln -i no-such-file existing-file' and responding `yes' to the
+	prompt would both remove `existing-file' and fail to make a link.
+	Karl Berry reported the problem.
+
+Sat Sep 10 04:34:34 1994  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* src/rm.c (remove_dir): Pass pathname to eaccess_stat.
+
+Fri Sep  2 13:54:13 1994  Michael I Bushnell  <mib@geech.gnu.ai.mit.edu>
+
+	* lib/Makefile.in (safe-lstat.c, safe-lstat.h, safe-stat.c,
+	safe-stat.h): Use $(srcdir) to find source files.
+	(.c.o): Use -I. to get safe-lstat.h and safe-stat.h from the
+	build directory.
+	* src/Makefile.in (incl): Add -I../lib to get lib/safe-lstat.h and
+	lib/safe-stat.h from the build directory.
+
+Sat Aug 27 16:33:04 1994  Jim Meyering  (meyering@comco.com)
+
+	* ln.c (main): Accept new option --no-dereference (-n).
+	(do_link): If the destination command line argument is a symlink
+	to a directory and --no-dereference is given, use that as the
+	destination instead of the file in the directory.
+	* ln.1: Document this.
+
+	* system.h [BROKEN_STAT_MACROS]: Remove unnecessary #ifdef's.
+	From Francois Pinard.
+
+	* isdir.c, makepath.c, rename.c [STAT_MACRO_BROKEN]: Remove
+	spurious #ifdef's.
+
+Thu Aug 25 00:12:20 1994  Jim Meyering  (meyering@comco.com)
+
+	* dd.c (copy): Clean up and fix off-by-one error when freeing
+	the input buffer.
+
 Thu Aug 18 11:41:16 1994  Jim Meyering  (meyering@comco.com)
 
 	* du.c (du_files) [HAVE_FCHDIR]: Use open (".", ...) and fchdir
