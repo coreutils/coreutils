@@ -1,3 +1,11 @@
+2000-01-10  Jim Meyering  <meyering@lucent.com>
+
+	* Version 2.0c.
+
+	* Makefile.maint (announcement): Include URLs for xdelta files.
+
+	* lib/Makefile.am (noinst_HEADERS): Add nanosleep.h.
+
 2000-01-08  Jim Meyering  <meyering@ascend.com>
 
 	* Version 2.0b.
