@@ -116,6 +116,7 @@ libfetish_a_SOURCES = \
   utimens.c utimens.h \
   version-etc.c version-etc.h \
   xalloc.h \
+  xfts.c xfts.h \
   xgetcwd.c xgetcwd.h \
   xgethostname.c xgethostname.h \
   xmalloc.c \
