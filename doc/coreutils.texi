@@ -10849,7 +10849,7 @@ are printed unchanged.  The directives are described below.
 
 @menu
 * Time directives::             %[HIklMprsSTXzZ]
-* Date directives::             %[aAbBcdDhjmUwWxyY]
+* Date directives::             %[aAbBcCdDhjmUwWxyY]
 * Literal directives::          %[%nt]
 * Padding::                     Pad with zeroes, spaces (%_), or nothing (%-).
 * Setting the time::            Changing the system clock.
