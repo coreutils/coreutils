@@ -101,10 +101,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   "tail -f" no longer mishandles pipes and fifos.  With no operands,
   tail now ignores -f if standard input is a pipe, as POSIX requires.
-  When conforming to POSIX 1003.2-1992, tail now handles some obscure
-  cases more correctly, e.g., "tail +cl file" now reads the file "+cl"
-  rather than reporting an error, and "tail - file" no longer reads
-  standard input.
+  When conforming to POSIX 1003.2-1992, tail now supports the SUSv2 b
+  modifier (e.g., "tail -10b file") and it handles some obscure cases
+  more correctly, e.g., "tail +cl" now reads the file "+cl" rather
+  than reporting an error, "tail -c file" no longer reports an error,
+  and "tail - file" no longer reads standard input.
 
   tee now exits when it gets a SIGPIPE signal, as POSIX requires.
   To get tee's old behavior, use the shell command "(trap '' PIPE; tee)".
