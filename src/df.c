@@ -188,10 +188,10 @@ excluded_fstype (const char *fstype)
 /* Like human_readable, except return "-" if the argument is -1.  */
 static char *
 df_readable (uintmax_t n, char *buf,
-	     int from_block_size, int output_block_size)
+	     int from_block_size, int t_output_block_size)
 {
   return (n == -1 ? "-"
-	  : human_readable (n, buf, from_block_size, output_block_size));
+	  : human_readable (n, buf, from_block_size, t_output_block_size));
 }
 
 /* Display a space listing for the disk device with absolute path DISK.
