@@ -1,5 +1,17 @@
 Sun Dec 11 17:24:09 1994  Jim Meyering  (meyering@comco.com)
 
+	* sort.c (main): Fix interpretation of field offsets when specified
+	via -k option.  They were being interpreted as zero-indexed.  POSIX
+	says they are 1-based indices.  From Rik Faith <faith@cs.unc.edu>.
+	(keycompare): Don't ignore characters at the end of words when
+	otherwise they would compare equal.  From Rik Faith.
+
+	* tail.c (<most functions>): Change the type of n_units/n_lines/n_bytes
+	to off_t because n_bytes is used as the option to fseek and off_t may
+	be long long (e.g. on BSD4.4).  The only place where a 32-bit limit is
+	imposed is in the string-to-integer converstion of xstrtol.
+	(main): Use xstrtol instead of manual string to integer conversion.
+
 	* csplit.c (get_format_width, get_format_prec): Use ISDIGIT instead of
 	comparisons against '0' and '9'.
 
