@@ -48,11 +48,6 @@ tac -r -s '.\|
 #include "system.h"
 #include "error.h"
 
-#ifndef STDC_HEADERS
-char *malloc ();
-char *realloc ();
-#endif
-
 #ifndef DEFAULT_TMPDIR
 # define DEFAULT_TMPDIR "/tmp"
 #endif
