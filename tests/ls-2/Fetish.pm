@@ -8,7 +8,7 @@ use FileHandle;
 use File::Compare qw(compare);
 
 @ISA = qw(Exporter);
-($VERSION = '$Revision: 1.2 $ ') =~ tr/[0-9].//cd;
+($VERSION = '$Revision: 1.3 $ ') =~ tr/[0-9].//cd;
 @EXPORT = qw (run_tests);
 
 my @Types = qw (IN OUT ERR EXIT);
@@ -147,6 +147,8 @@ sub run_tests ($$$$$)
 
 	  if ($type eq 'EXIT')
 	    {
+	      die "$program_name: $test_name: invalid EXIT code\n"
+		if $val !~ /^\d+$/;
 	      # FIXME: make sure $data is numeric
 	      $expect->{EXIT} = $val;
 	      next;
@@ -201,7 +203,7 @@ sub run_tests ($$$$$)
 
       # Allow ERR to be omitted -- in that case, expect no error output.
       my $eo;
-      foreach $eo (qw (ERR OUT))
+      foreach $eo (qw (OUT ERR))
 	{
 	  if (!exists $expect->{$eo})
 	    {
@@ -215,10 +217,11 @@ sub run_tests ($$$$$)
       # in OUT or ERR spec?
 
       warn "$test_name...\n" if $verbose;
-      my $t_out = "$test_name-out";
-      my $t_err = "$test_name-err";
-      push @junk_files, $t_out, $t_err;
-      my @cmd = ($prog, @args, "> $t_out", "2> $t_err");
+      my %tmp;
+      $tmp{OUT} = "$test_name-out";
+      $tmp{ERR} = "$test_name-err";
+      push @junk_files, $tmp{OUT}, $tmp{ERR};
+      my @cmd = ($prog, @args, "> $tmp{OUT}", "2> $tmp{ERR}");
       my $cmd_str = join ' ', @cmd;
       warn "Running command: `$cmd_str'\n" if $verbose;
       my $rc = 0xffff & system $cmd_str;
@@ -238,19 +241,15 @@ sub run_tests ($$$$$)
 	  next;
 	}
 
-      if (compare ($expect->{OUT}, $t_out))
+      foreach $eo (qw (OUT ERR))
 	{
-	  warn "$program_name: stdout mismatch, comparing"
-	    . " $expect->{OUT} and $t_out\n";
-	  $fail = 1;
-	  next;
-	}
-      if (compare ($expect->{ERR}, $t_err))
-	{
-	  warn "$program_name: stderr mismatch, comparing"
-	    . " $expect->{ERR} and $t_err\n";
-	  $fail = 1;
-	  next;
+	  my $eo_lower = lc $eo;
+	  if (compare ($expect->{$eo}, $tmp{$eo}))
+	    {
+	      warn "$program_name: test $test_name: std$eo_lower mismatch,"
+		. " comparing $expect->{$eo} and $tmp{$eo}\n";
+	      $fail = 1;
+	    }
 	}
     }
 
