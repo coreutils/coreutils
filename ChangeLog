@@ -2,6 +2,9 @@
 
 	* Version 4.5.2.
 
+	* tests/rm/i-no-r: New file/test, for the above fix.
+	* tests/rm/Makefile.am (TESTS): Add i-no-r.
+
 	* tests/tail-2/big-4gb: New file/test, for the fix of 2002-09-27.
 	* tests/tail-2/Makefile.am (TESTS): Add big-4gb.
 
