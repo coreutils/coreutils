@@ -30,7 +30,7 @@ extern int errno;
    In that case, set errno to ENOSYS and return -1.  */
 
 int
-lchown (const chat *file, uid_t uid, gid_t gid)
+lchown (const char *file, uid_t uid, gid_t gid)
 {
   struct stat stats;
 
