@@ -36,7 +36,7 @@
 
    RM is careful to avoid forming full file names whenever possible.
    A full file name is formed only when it is about to be used -- e.g.
-   in a diagnostic or in an interactive mode prompt.
+   in a diagnostic or in an interactive-mode prompt.
 
    RM minimizes the number of lstat system calls it makes.  On systems
    that have valid d_type data in directory entries, RM makes only one
