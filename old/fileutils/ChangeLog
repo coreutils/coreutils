@@ -1,3 +1,7 @@
+Sun Aug 18 09:52:39 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (ALL_LINGUAS): Add Dutch (nl).
+
 Fri Aug 16 21:59:24 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/chgrp.c (parse_group): Don't abort when given a group number
