@@ -1,3 +1,7 @@
+2001-05-13  Jim Meyering  <meyering@lucent.com>
+
+	* jm-macros.m4 (major_t, minor_t): Define to unsigned int if undefined.
+
 2000-11-26  Paul Eggert  <eggert@twinsun.com>
 
 	* jm-macros.m4 (jm_MACROS): Do not check for fseeko; no longer used.
