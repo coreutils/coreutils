@@ -1,10 +1,14 @@
-#serial 13
+#serial 14
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
 AC_DEFUN(jm_MACROS,
 [
   AC_PREREQ(2.14a)
+
+  # Kludge to work around bug in latest cvs automake.
+  # FIXME: remove this directive once the bug is fixed.
+  AC_CONFIG_AUX_DIR(.)
 
   GNU_PACKAGE="GNU $PACKAGE"
   AC_DEFINE_UNQUOTED(GNU_PACKAGE, "$GNU_PACKAGE",
@@ -16,7 +20,7 @@ AC_DEFUN(jm_MACROS,
   AC_SUBST(MAN)
   AC_SUBST(DF_PROG)
 
-  dnl This macro actually runs replacement code.  See isc-posix.m4.
+  # This macro actually runs replacement code.  See isc-posix.m4.
   AC_REQUIRE([AC_ISC_POSIX])dnl
 
   AC_CHECK_HEADERS( \
