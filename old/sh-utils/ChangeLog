@@ -1,5 +1,17 @@
 	* Version 2.0.12.
 
+2001-06-21  Paul Eggert  <eggert@twinsun.com>
+
+	* src/expr.c: Code cleanup to avoid tricky macros and
+	old-style function declarations.
+
+	(cmpf, less_than, less_equal, equal, not_equal, greater_equal,
+	greater_than, arithf, arithdivf, plus, minus, multiply, divide, mod):
+	Remove.
+
+	(eval4, eval3, eval2): Rewrite to avoid the need for the above macros
+	and functions.
+
 2001-08-18  Jim Meyering  <meyering@lucent.com>
 
 	* src/test.c (binary_operator): Move declarations of lt,rt `down'
