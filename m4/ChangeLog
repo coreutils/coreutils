@@ -1,3 +1,8 @@
+2004-06-25  Jim Meyering  <jim@meyering.net>
+
+	* afs.m4 (gl_AFS): Use AC_ARG_WITH instead of ancient, hard-coded
+	AC_MSG_CHECKING/AC_MSG_RESULT etc.  From Tim Waugh.
+
 2004-06-15  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* getcwd-path-max.m4 (GL_FUNC_GETCWD_PATH_MAX): Fix typo: getcwd
