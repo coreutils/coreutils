@@ -1,5 +1,7 @@
 Thu May 30 00:07:48 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* Version 1.16.
+
 	* tail.c (main): Interpret the old-style +VALUE and -VALUE options
 	like -c VALUE and -c +VALUE (resp) when VALUE has one of the [bkm]
 	suffix multipliers.  This makes the code consistent with --help
