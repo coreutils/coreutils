@@ -21,7 +21,11 @@
 # include <config.h>
 #endif
 
-#include "obstack.h"
+#ifdef _LIBC
+# include <obstack.h>
+#else
+# include "obstack.h"
+#endif
 
 /* NOTE BEFORE MODIFYING THIS FILE: This version number must be
    incremented whenever callers compiled using an old obstack.h can no
@@ -282,6 +286,9 @@ _obstack_newchunk (struct obstack *h, int length)
   /* The new chunk certainly contains no empty object yet.  */
   h->maybe_empty_object = 0;
 }
+# ifdef _LIBC
+libc_hidden_def (_obstack_newchunk)
+# endif
 
 /* Return nonzero if object OBJ has been allocated from obstack H.
    This is here for debugging.
@@ -314,41 +321,6 @@ _obstack_allocated_p (struct obstack *h, void *obj)
 
 # undef obstack_free
 
-/* This function has two names with identical definitions.
-   This is the first one, called from non-ANSI code.  */
-
-void
-_obstack_free (struct obstack *h, void *obj)
-{
-  register struct _obstack_chunk *lp;	/* below addr of any objects in this chunk */
-  register struct _obstack_chunk *plp;	/* point to previous chunk if any */
-
-  lp = h->chunk;
-  /* We use >= because there cannot be an object at the beginning of a chunk.
-     But there can be an empty object at that address
-     at the end of another chunk.  */
-  while (lp != 0 && ((void *) lp >= obj || (void *) (lp)->limit < obj))
-    {
-      plp = lp->prev;
-      CALL_FREEFUN (h, lp);
-      lp = plp;
-      /* If we switch chunks, we can't tell whether the new current
-	 chunk contains an empty object, so assume that it may.  */
-      h->maybe_empty_object = 1;
-    }
-  if (lp)
-    {
-      h->object_base = h->next_free = (char *) (obj);
-      h->chunk_limit = lp->limit;
-      h->chunk = lp;
-    }
-  else if (obj != 0)
-    /* obj is not in any of the chunks! */
-    abort ();
-}
-
-/* This function is used from ANSI code.  */
-
 void
 obstack_free (struct obstack *h, void *obj)
 {
@@ -378,6 +350,12 @@ obstack_free (struct obstack *h, void *obj)
     /* obj is not in any of the chunks! */
     abort ();
 }
+
+# ifdef _LIBC
+/* Older versions of libc used a function _obstack_free intended to be
+   called by non-GCC compilers.  */
+strong_alias (obstack_free, _obstack_free)
+# endif
 
 int
 _obstack_memory_used (struct obstack *h)
@@ -400,9 +378,8 @@ _obstack_memory_used (struct obstack *h)
 # endif
 # define _(msgid) gettext (msgid)
 
-# if defined _LIBC && defined USE_IN_LIBIO
+# ifdef _LIBC
 #  include <libio/iolibio.h>
-#  define fputs(s, f) _IO_fputs (s, f)
 # endif
 
 # ifndef __attribute__
