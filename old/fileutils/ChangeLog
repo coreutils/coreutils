@@ -1,5 +1,8 @@
 1998-07-25  Jim Meyering  <meyering@ascend.com>
 
+	* tests/cp/same-file: Remove `diff' I'd put in for debugging.
+	Exit with the status from cmp.
+
 	* Version 3.16s.
 
 	* tests/cp/same-file: Skip three more unportable tests.
