@@ -22,6 +22,26 @@
 # it to be somewhere else in PATH if not installed yet.
 PATH=@bindir@:$PATH
 
+usage="Usage: $0 [OPTION]... [USERNAME]...
+
+  --help      display this help and exit
+  --version   output version information and exit
+
+Same as id -Gn.  If no USERNAME, use current process."
+
+case $# in
+  1 )
+    case "z${1}" in 
+      z--help )
+	 echo "$usage"; exit 0 ;;
+      z--version )
+	 echo "groups - @VERSION@"; exit 0 ;;
+      * ) ;;
+    esac
+    ;;
+  * ) ;;
+esac
+
 if [ $# -eq 0 ]; then
   id -Gn
 else

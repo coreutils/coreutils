@@ -151,7 +151,7 @@ main (argc, argv, envp)
 
   if (show_version)
     {
-      printf ("%s\n", version_string);
+      printf ("env - %s\n", version_string);
       exit (0);
     }
 

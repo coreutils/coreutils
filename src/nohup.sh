@@ -22,10 +22,34 @@
 # it to be somewhere else in PATH if not installed yet.
 PATH=@bindir@:$PATH
 
+usage="Usage: $0 COMMAND [ARG]...
+  or:  $0 OPTION"
+
+usage_try="
+Try \`$0 --help' for more information."
+
+usage_help="
+  --help      display this help and exit
+  --version   output version information and exit"
+
 if [ $# -eq 0 ]; then
-  echo "Usage: nohup command [arg...]" 2>&1
+  echo >&2 "$usage"
+  echo >&2 "$usage_try"
   exit 1
 fi
+
+case $# in
+  1 )
+    case "z${1}" in 
+      z--help )
+	 echo "$usage"; echo "$usage_help"; exit 0 ;;
+      z--version )
+	 echo "nohup - @VERSION@"; exit 0 ;;
+      * ) ;;
+    esac
+    ;;
+  * ) ;;
+esac
 
 trap "" 1
 oldmask=`umask`; umask 077

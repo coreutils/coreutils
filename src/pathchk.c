@@ -152,7 +152,7 @@ main (argc, argv)
 
   if (show_version)
     {
-      printf ("%s\n", version_string);
+      printf ("pathchk - %s\n", version_string);
       exit (0);
     }
 
