@@ -1,3 +1,11 @@
+2003-09-04  Paul Eggert  <eggert@twinsun.com>
+
+	* src/seq.c (step): Default to 1.
+	(print_numbers): Allow the output to be empty.
+	(main): The default step is 1, even if LAST < FIRST;
+	as per documentation.
+	* tests/seq/basic (onearg-2): Output should be empty.
+
 2003-09-05  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.91.
@@ -8,7 +16,7 @@
 	* configure.ac (AM_INIT_AUTOMAKE): Specify automake-1.7.6.
 
 	Make seq's --width (-w) option work properly even when the
-	endpoint requiring the largest width is negative and smaller than
+	endpoint requiring the larger width is negative and smaller than
 	the other endpoint.
 	* src/seq.c (get_width_format): Include `-' in the set of bytes
 	allowed in a `simple' number (no decimal point, no exponent).
