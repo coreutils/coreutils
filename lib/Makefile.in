@@ -78,12 +78,13 @@ libfu.a: $(OBJECTS)
 # is the only way to reliably do a parallel make.
 getdate.c: getdate.y
 	@echo expect 9 shift/reduce conflicts
-	-bison -o getdate.c $(srcdir)/getdate.y || yacc $(srcdir)/getdate.y
+	-bison -o getdate.c $(srcdir)/getdate.y || $(YACC) $(srcdir)/getdate.y
 	test ! -f y.tab.c || mv y.tab.c getdate.c
 
 # Make the rename atomic, in case sed is interrupted and later rerun.
 posixtm.c: posixtm.y
-	-bison -o posixtm.tab.c $(srcdir)/posixtm.y || yacc $(srcdir)/posixtm.y
+	-bison -o posixtm.tab.c $(srcdir)/posixtm.y \
+	    || $(YACC) $(srcdir)/posixtm.y
 	test ! -f y.tab.c || mv y.tab.c posixtm.tab.c
 	sed -e 's/yy/zz/g' posixtm.tab.c > tposixtm.c
 	mv tposixtm.c posixtm.c

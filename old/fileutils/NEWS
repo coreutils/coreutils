@@ -1,4 +1,5 @@
 Major changes in release 3.5:
+* adds support for DEC Alpha under OSF/1
 * configuring with gcc uses CFLAGS='-g -O' by default
 * all programs accept --help and --version options
 * long-named options must be introduced with `--'; `+' is no longer

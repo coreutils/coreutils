@@ -16,7 +16,8 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
 /* Usage: df [-aikP] [-t fstype] [-x fstype] [--all] [--inodes]
-   [--type fstype] [--exclude-type fstype] [--kilobytes] [--portability] [path...]
+   [--type fstype] [--exclude-type fstype] [--kilobytes] [--portability]
+   [path...]
 
    Options:
    -a, --all		List all filesystems, even zero-size ones.
@@ -24,7 +25,7 @@
    -k, --kilobytes	Print sizes in 1K blocks instead of 512-byte blocks.
    -P, --portability	Use the POSIX output format (one line per filesystem).
    -t, --type fstype	Limit the listing to filesystems of type `fstype'.
-   -x, --exclude-type fstype
+   -x, --exclude-type=fstype
 			Limit the listing to filesystems not of type `fstype'.
 			Multiple -t and/or -x options can be given.
 			By default, all filesystem types are listed.
@@ -65,6 +66,10 @@ static int inode_format;
 /* If nonzero, show even filesystems with zero size or
    uninteresting types. */
 static int show_all_fs;
+
+/* If nonzero, output data for each filesystem corresponding to a
+   command line argument -- even if it's a dummy (automounter) entry.  */
+static int show_listed_fs;
 
 /* If nonzero, use 1K blocks instead of 512-byte blocks. */
 static int kilobyte_blocks;
@@ -136,6 +141,7 @@ main (argc, argv)
   fs_exclude_list = NULL;
   inode_format = 0;
   show_all_fs = 0;
+  show_listed_fs = 0;
   kilobyte_blocks = getenv ("POSIXLY_CORRECT") == 0;
   posix_format = 0;
   exit_status = 0;
@@ -180,9 +186,6 @@ main (argc, argv)
 
   if (optind != argc)
     {
-      /* Display explicitly requested empty filesystems. */
-      show_all_fs = 1;
-
       /* stat all the given entries to make sure they get automounted,
 	 if necessary, before reading the filesystem table.  */
       stats = (struct stat *)
@@ -209,9 +212,14 @@ main (argc, argv)
   if (optind == argc)
     show_all_entries ();
   else
-    for (i = optind; i < argc; ++i)
-      if (argv[i])
-	show_entry (argv[i], &stats[i - optind]);
+    {
+      /* Display explicitly requested empty filesystems. */
+      show_listed_fs = 1;
+
+      for (i = optind; i < argc; ++i)
+	if (argv[i])
+	  show_entry (argv[i], &stats[i - optind]);
+    }
 
   exit (exit_status);
 }
@@ -351,7 +359,7 @@ show_dev (disk, mount_point, fstype)
 
   if (fsu.fsu_blocks == 0)
     {
-      if (show_all_fs == 0)
+      if (!show_all_fs && !show_listed_fs)
 	return;
       blocks_used = fsu.fsu_bavail = blocks_percent_used = 0;
     }

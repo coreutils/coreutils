@@ -1,3 +1,44 @@
+Tue Apr 13 09:18:18 1993  Jim Meyering (meyering@comco.com)
+
+	* configure.in: Find a parser generator.
+	* Makefile.in [MDEFINES]: Add YACC to the list of variables passed to
+	sub-makes.
+	* lib/Makefile.in (posixtm.c, getdate.c): Try first to build with
+	`bison -o' -- for parallel makes.  If that fails, use $(YACC).
+
+	* posixtm.y [HAVE_MEMCPY && !HAVE_BCOPY]: Define bcopy in terms
+	of memcpy for old versions of bison that generate parsers that
+	use bcopy.
+
+	* configure.in: Add tests for memcpy and bcopy.
+
+Mon Apr 12 23:02:14 1993  Jim Meyering (meyering@comco.com)
+
+	* configure.in (mounted, space): Add filesystem checks for DEC Alpha
+	running OSF/1 to complement new code in mountlist.c and fsusage.c.
+
+	* lib/mountlist.c (read_filesystem_list) [MOUNTED_GETFSSTAT]: Add code
+	to do it the OSF/1 way on a DEC alpha.
+	From Brian Fox (bfox@tinker.crseo.ucsb.edu).
+
+	* lib/fsusage.c (get_fs_usage) [STATFS_OSF1]: Add code to call OSF/1's
+	variant of statfs.  From Brian Fox (bfox@tinker.crseo.ucsb.edu).
+
+Sun Apr 11 20:29:31 1993  Jim Meyering (meyering@comco.com)
+
+	* df.c (main, show_dev): Don't list dummy (automounter) filesystems
+	unless they're explicitly listed on the command line or if the -a
+	option is given.
+
+Fri Apr  9 11:40:48 1993  Jim Meyering (meyering@comco.com)
+
+	* src/Makefile.in [.c.o]: Put CFLAGS after include directives.
+
+Wed Apr  7 23:54:48 1993  Jim Meyering (meyering@comco.com)
+
+	* eaccess.c: Undefine NGROUPS_MAX before redefining it.
+	From ghazi@caip.rutgers.edu (Kaveh R. Ghazi).
+
 Mon Apr  5 20:14:17 1993  Jim Meyering  (meyering@comco.com)
 
 	* Version 3.4.5.

@@ -20,6 +20,10 @@
 
 int statfs ();
 
+#if defined (STATFS_OSF1)	/* DEC Alpha running OSF/1 */
+#  include <sys/mount.h>
+#endif
+
 #if defined(STAT_STATFS2_BSIZE) && !defined(_IBMR2) /* 4.3BSD, SunOS 4, HP-UX, AIX PS/2.  */
 #include <sys/vfs.h>
 #endif
@@ -80,6 +84,14 @@ get_fs_usage (path, disk, fsp)
      char *path, *disk;
      struct fs_usage *fsp;
 {
+#if defined (STATFS_OSF1)
+  struct statfs fsd;
+
+  if (statfs (path, &fsd, sizeof (struct statfs)) != 0)
+    return (-1);
+#define convert_blocks(b) adjust_blocks ((b),fsd.f_fsize, 512)
+#endif /* STATFS_OSF1 */
+
 #ifdef STAT_STATFS2_FS_DATA	/* Ultrix.  */
   struct fs_data fsd;
 
