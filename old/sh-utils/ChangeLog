@@ -1,5 +1,9 @@
 1999-08-29  Jim Meyering  <meyering@ascend.com>
 
+	* tests/nice: Use `nice' instead of $nice.
+	* tests/Makefile.am (TESTS_ENVIRONMENT): Prepend ../src to PATH so
+	the above works.
+
 	* src/env.c (main): Call exit explicitly to avoid warning from gcc.
 	* src/nice.c (main): Likewise.
 	Include "xstrtol.h".
