@@ -1,5 +1,7 @@
 /* xalloc.h -- malloc with out-of-memory checking
-   Copyright (C) 1990-1998, 1999, 2000, 2003 Free Software Foundation, Inc.
+
+   Copyright (C) 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 2003,
+   1999, 2000, 2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -17,6 +19,8 @@
 
 #ifndef XALLOC_H_
 # define XALLOC_H_
+
+# include <stddef.h>
 
 # ifndef __attribute__
 #  if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 8) || __STRICT_ANSI__
@@ -53,10 +57,10 @@ void *xcalloc (size_t n, size_t s);
 void *xrealloc (void *p, size_t n);
 char *xstrdup (const char *str);
 
-# define XMALLOC(Type, N_items) (xmalloc (sizeof (Type) * (N_items)))
-# define XCALLOC(Type, N_items) (xcalloc (sizeof (Type), (N_items)))
-# define XREALLOC(Ptr, Type, N_items) (xrealloc ((Ptr), \
-                                       sizeof (Type) * (N_items)))
+# define XMALLOC(Type, N_items) xmalloc (sizeof (Type) * (N_items))
+# define XCALLOC(Type, N_items) xcalloc (sizeof (Type), (N_items))
+# define XREALLOC(Ptr, Type, N_items) xrealloc ((Ptr), \
+					        sizeof (Type) * (N_items))
 
 /* Declare and alloc memory for VAR of type TYPE. */
 # define NEW(Type, Var)  Type *(Var) = XMALLOC (Type, 1)
