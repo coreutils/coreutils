@@ -1,6 +1,19 @@
-2003-08-07  Jim Meyering  <jim@meyering.net>
+2003-08-09  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.91.
+
+	* tests/misc/split-fail: Reflect that `split -a 0' is now accepted.
+
+2003-08-07  Paul Eggert  <eggert@twinsun.com>
+
+        * doc/coreutils.texi (split invocation):
+	Add -d or --numeric-suffixes option to 'split'.
+        From a suggestion by Jesse Kornblum.
+	* src/split.c (suffix_alphabet): New var.
+        (longopts, usage, next_file_name, main): Support -d.
+        (next_file_name, main): Allow -a0, as POSIX requires.
+        (next_file_name): Don't assume ASCII-like encoding;
+	'a' through 'z' are not contiguous in EBCDIC.
 
 2003-08-05  Paul Eggert  <eggert@twinsun.com>
 

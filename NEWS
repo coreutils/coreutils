@@ -5,6 +5,12 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   date accepts a new option --rfc-2822, an alias for --rfc-822.
 
+  split accepts a new option -d or --numeric-suffixes.
+
+** Bug fixes
+
+  `split -a0' works once again.
+
 
 * Major changes in release 5.0.90:
 
@@ -47,6 +53,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   and with status 3 if an error occurred.  POSIX requires this.
 
   expr now reports trouble if string comparison fails due to a collation error.
+
+  split now generates suffixes properly on EBCDIC hosts.
+
+  split -a0 now works, as POSIX requires.
 
   `sort --version' and `sort --help' fail, as they should
   when their output is redirected to /dev/full.
