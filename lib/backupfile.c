@@ -58,10 +58,8 @@
 # define CLOSEDIR(d) closedir (d)
 #endif
 
-#if STDC_HEADERS
+#if HAVE_STDLIB_H
 # include <stdlib.h>
-#else
-char *malloc ();
 #endif
 
 #ifndef HAVE_DECL_GETENV
@@ -69,6 +67,13 @@ char *malloc ();
 #endif
 #if !HAVE_DECL_GETENV
 char *getenv ();
+#endif
+
+#ifndef HAVE_DECL_MALLOC
+"this configure-time declaration test was not run"
+#endif
+#if !HAVE_DECL_MALLOC
+char *malloc ();
 #endif
 
 char *base_name PARAMS ((char const *));
