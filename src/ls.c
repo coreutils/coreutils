@@ -2268,14 +2268,16 @@ print_name_with_quoting (register char *p, unsigned int mode, int linkok)
     free (quoted);
 
   if (print_with_color)
-    if (color_indicator[C_END].string != NULL)
-      put_indicator (&color_indicator[C_END]);
-    else
-      {
-	put_indicator (&color_indicator[C_LEFT]);
-	put_indicator (&color_indicator[C_NORM]);
-	put_indicator (&color_indicator[C_RIGHT]);
-      }
+    {
+      if (color_indicator[C_END].string != NULL)
+	put_indicator (&color_indicator[C_END]);
+      else
+	{
+	  put_indicator (&color_indicator[C_LEFT]);
+	  put_indicator (&color_indicator[C_NORM]);
+	  put_indicator (&color_indicator[C_RIGHT]);
+	}
+    }
 }
 
 /* Print the file name of `f' with appropriate quoting.
