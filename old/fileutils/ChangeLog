@@ -23,6 +23,9 @@
 	* src/mv.c (cp_option_init): Initialize to DEREF_NEVER, not `0'.
 	* src/install.c (cp_option_init): Initialize to DEREF_ALWAYS, not `1'.
 
+	* tests/cp/Makefile.am (TESTS): Add cp-HL.
+	* tests/cp/cp-HL: New test.
+
 	* src/du.c (print_totals): Rename global from opt_combined_arguments.
 
 2000-08-17  Paul Eggert  <eggert@twinsun.com>
