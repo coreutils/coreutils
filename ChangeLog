@@ -2,7 +2,9 @@
 
 	* Version 5.3.1.
 
-	* src/stty.c: Remove unnecessary parentheses in #if directives.
+	* src/head.c (elide_tail_bytes_pipe): Correct wording in diagnostic.
+
+	* src/stty.c: Remove unnecessary parentheses in all #if directives.
 
 2005-01-29  Eric Blake  <ebb9@byu.net>  (tiny change)
 
