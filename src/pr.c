@@ -1658,7 +1658,7 @@ static void
 init_header (char *filename, int desc)
 {
   char *buf;
-  char initbuf[MAX (256, INT_STRLEN_BOUND (long int) + 1)];
+  char initbuf[MAX (256, INT_BUFSIZE_BOUND (long int))];
   struct stat st;
   struct tm *tm;
 
