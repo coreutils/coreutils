@@ -1,5 +1,8 @@
 2000-12-25  Jim Meyering  <meyering@lucent.com>
 
+	* src/remove.c (hash_compare_active_dir_ents): Return explicit `true'
+	or `false', rather than relying on implicit int-to-enum cast.
+
 	* src/ls.c (extract_dirs_from_files): Remove unused variable.
 	Reported by Nelson Beebe.
 	(gobble_file): Move decl of local, val, into the scope where it's used.
