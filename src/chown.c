@@ -148,12 +148,17 @@ as symbolic.\n\
 int
 main (int argc, char **argv)
 {
-  uid_t uid = (uid_t) -1;	/* New uid; -1 if not to be changed. */
-  gid_t gid = (uid_t) -1;	/* New gid; -1 if not to be changed. */
-  uid_t old_uid = (uid_t) -1;	/* Old uid; -1 if unrestricted. */
-  gid_t old_gid = (uid_t) -1;	/* Old gid; -1 if unrestricted. */
+  uid_t uid = -1;	/* Specified uid; -1 if not to be changed. */
+  gid_t gid = -1;	/* Specified gid; -1 if not to be changed. */
+
+  /* Change the owner (group) of a file only if it has this uid (gid).
+     -1 means there's no restriction.  */
+  uid_t required_uid = -1;
+  gid_t required_gid = -1;
+
   /* Bit flags that control how fts works.  */
   int bit_flags = FTS_PHYSICAL;
+
   struct Chown_option chopt;
   int fail = 0;
   int optc;
@@ -177,18 +182,15 @@ main (int argc, char **argv)
 	  break;
 
 	case 'H': /* Traverse command-line symlinks-to-directories.  */
-	  bit_flags |= FTS_COMFOLLOW;
+	  bit_flags = FTS_COMFOLLOW;
 	  break;
 
 	case 'L': /* Traverse all symlinks-to-directories.  */
-	  bit_flags &= ~FTS_PHYSICAL;
-	  bit_flags |= FTS_LOGICAL;
+	  bit_flags = FTS_LOGICAL;
 	  break;
 
 	case 'P': /* Traverse no symlinks-to-directories.  */
-	  bit_flags |= FTS_PHYSICAL;
-	  bit_flags &= ~FTS_LOGICAL;
-	  bit_flags &= ~FTS_COMFOLLOW;
+	  bit_flags = FTS_PHYSICAL;
 	  break;
 
 	case 'h': /* --no-dereference: affect symlinks */
@@ -208,7 +210,7 @@ main (int argc, char **argv)
 	  {
 	    char *u_dummy, *g_dummy;
 	    const char *e = parse_user_spec (optarg,
-					     &old_uid, &old_gid,
+					     &required_uid, &required_gid,
 					     &u_dummy, &g_dummy);
 	    if (e)
 	      error (EXIT_FAILURE, 0, "%s: %s", quote (optarg), e);
@@ -272,7 +274,7 @@ main (int argc, char **argv)
 
   fail = chown_files (argv + optind, bit_flags,
 		      uid, gid,
-		      old_uid, old_gid, &chopt);
+		      required_uid, required_gid, &chopt);
 
   chopt_free (&chopt);
 
