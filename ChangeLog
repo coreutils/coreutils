@@ -1,6 +1,10 @@
-2003-01-19  Jim Meyering  <jim@meyering.net>
+2003-01-20  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.5.
+
+	* Makefile.maint (mail_gpg_sign_cookie): Remove now-unused definition.
+
+2003-01-19  Jim Meyering  <jim@meyering.net>
 
 	* src/readlink.c: Include "canonicalize.h".
 
