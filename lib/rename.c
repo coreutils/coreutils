@@ -1,4 +1,4 @@
-/* rename.c -- BSD compatible directory function for System V
+/* BSD compatible rename and directory rename function for System V.
    Copyright (C) 1988, 1990 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -15,8 +15,8 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
+#if HAVE_CONFIG_H
+# include <config.h>
 #endif
 
 #include <sys/types.h>
@@ -26,12 +26,12 @@
 extern int errno;
 #endif
 
-#ifdef STAT_MACROS_BROKEN
-#undef S_ISDIR
-#endif /* STAT_MACROS_BROKEN.  */
+#if STAT_MACROS_BROKEN
+# undef S_ISDIR
+#endif
 
 #if !defined(S_ISDIR) && defined(S_IFDIR)
-#define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
+# define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
 #endif
 
 /* Rename file FROM to file TO.
@@ -67,6 +67,12 @@ rename (from, to)
         return -1;
     }
 
+#ifdef MVDIR
+
+/* If MVDIR is defined, it should be the full filename of a setuid root
+   program able to link and unlink directories.  If MVDIR is not defined,
+   then the capability of renaming directories may be missing.  */
+
   if (S_ISDIR (from_stats.st_mode))
     {
       /* Need a setuid root process to link and unlink directories. */
@@ -90,6 +96,9 @@ rename (from, to)
 	}
     }
   else
+
+#endif /* MVDIR */
+
     {
       if (link (from, to))
 	return -1;
