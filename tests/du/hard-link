@@ -30,10 +30,11 @@ fi
 
 fail=0
 
-du -a --exclude=sub dir | sed 's/^[0-9][0-9]*	//' > out || fail=1
+du -a --exclude=sub dir \
+  | sed 's/^[0-9][0-9]*	//' > out || fail=1
 echo === >> out
-du  --count-links -a --exclude=sub dir | sed 's/^[0-9][0-9]*	//' >> out \
-  || fail=1
+du -a --exclude=sub --count-links dir \
+  | sed 's/^[0-9][0-9]*	//' >> out || fail=1
 cat <<\EOF > exp
 dir/f1
 dir
