@@ -22,6 +22,11 @@
 # include <config.h>
 #endif
 
+/* Some systems need this in order to declare localtime_r properly.  */
+#ifndef _REENTRANT
+# define _REENTRANT 1
+#endif
+
 #ifdef _LIBC
 # define HAVE_LIMITS_H 1
 # define HAVE_MBLEN 1
