@@ -1,3 +1,7 @@
+2004-05-21  Jim Meyering  <jim@meyering.net>
+
+	* free.m4: Update from gnulib (fix reversed test).
+
 2004-05-03  Jim Meyering  <jim@meyering.net>
 
 	Temporary work-around for the problem reported here:
