@@ -1360,7 +1360,7 @@ init_header (char *filename, int desc)
   int chars_per_middle, chars_free, lhs_blanks, rhs_blanks;
   char *f = filename;
   char *no_middle = "";
-  char *header_text, *t_buf;
+  char *header_text;
   struct tm *tmptr;
   struct stat st;
   char *datim = "- Date/Time --";
@@ -1376,18 +1376,16 @@ init_header (char *filename, int desc)
     sprintf (header, "%s", " ");	/* blank line header */
   else
     {
+#define T_BUF_FMT "%y-%m-%d %H:%M"	/* date/time short format */
+#define T_BUF_SIZE 15
+      char t_buf[T_BUF_SIZE];
+
       /* If parallel files or standard input, use current time. */
       if (desc < 0 || !strcmp (filename, "-") || fstat (desc, &st))
 	st.st_mtime = time (NULL);
 
-      {
-	size_t t_buf_size = 15;
-	const char *fmt = "%y-%m-%d %H:%M";	/* date/time short format */
-
-	t_buf = (char *) xmalloc (t_buf_size);
-	tmptr = localtime (&st.st_mtime);
-	strftime (t_buf, t_buf_size, fmt, tmptr);
-      }
+      tmptr = localtime (&st.st_mtime);
+      strftime (t_buf, T_BUF_SIZE, T_BUF_FMT, tmptr);
 
       chars_per_middle = chars_per_line - CHARS_FOR_DATE_AND_PAGE;
       if (chars_per_middle < 3)
