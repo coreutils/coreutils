@@ -30,6 +30,10 @@
 
 #define AUTHORS "Jim Meyering"
 
+#if HAVE_SETHOSTNAME && !defined sethostname
+int sethostname ();
+#endif
+
 #if !defined(HAVE_SETHOSTNAME) && defined(HAVE_SYSINFO) && \
      defined (HAVE_SYS_SYSTEMINFO_H) && defined(HAVE_LIMITS_H)
 # include <sys/systeminfo.h>
