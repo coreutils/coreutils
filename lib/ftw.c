@@ -406,11 +406,20 @@ process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
 		  /* Remember the object.  */
 		  && (result = add_object (data, &st)) == 0))
 	    {
-	      result = ftw_dir (data, &st);
+	      /* When processing a directory as part of a depth-first traversal,
+		 invoke the users callback function with type=FTW_DPRE
+		 just before processing any entry in that directory.
+		 And if the callback sets ftw.skip, then don't process
+		 any entries of the directory.  */
+	      if ((data->flags & FTW_DEPTH)
+		  && (result = (*data->func) (data->dirbuf, &st, FTW_DPRE,
+					      &data->ftw)) == 0
+		  && ! data->ftw.skip)
+		result = ftw_dir (data, &st);
 
 	      if (result == 0 && (data->flags & FTW_CHDIR))
 		{
-		  /* Change back to current directory.  */
+		  /* Change back to parent directory.  */
 		  int done = 0;
 		  if (dir->stream != NULL)
 		    if (__fchdir (dirfd (dir->stream)) == 0)
