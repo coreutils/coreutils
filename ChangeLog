@@ -2,6 +2,14 @@
 
 	* Version 4.5.8.
 
+	* src/split.c (bytes_split): Remove unnecessary `else' after break.
+	(lines_split): Likewise.  and correct misleading indentation.
+
+	* src/split.c: Include "full-read.h".
+	(bytes_split, lines_split, line_bytes_split): Use full_read,
+	not safe_read.   The way split was using the latter, a short read
+	could cause split to terminate before EOF.
+
 	* tests/misc/tty-eof: Test all programs that can read stdin,
 	requiring no arguments and that write to standard output.
 
