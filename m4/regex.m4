@@ -30,10 +30,10 @@ AC_DEFUN(jm_INCLUDED_REGEX,
 	    const char *s;
 	    struct re_registers regs;
 	    re_set_syntax (RE_SYNTAX_POSIX_EGREP);
-	    /* These two brackets, `[[' and the one in the comment below serve
+	    /* These two brackets, '[[' and the one in the comment below serve
 	       to quote the brackets (unbalanced) in the following line.  */
 	    s = re_compile_pattern ("a[[:]:]]b\n", 9, &regex);
-	    /* This bracket `]' helps quote the unbalanced expression above.  */
+	    /* This bracket ']' helps quote the unbalanced expression above.  */
 	    /* This should fail with _Invalid character class name_ error.  */
 	    if (!s)
 	      exit (1);
