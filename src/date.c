@@ -27,6 +27,7 @@
 #include "getline.h"
 #include "error.h"
 #include "getdate.h"
+#include "posixtm.h"
 
 #ifndef STDC_HEADERS
 size_t strftime ();
@@ -37,7 +38,6 @@ int putenv ();
 int stime ();
 
 char *xstrdup ();
-time_t posixtime ();
 
 static void show_date PARAMS ((const char *format, time_t when));
 static void usage PARAMS ((int status));
@@ -307,7 +307,8 @@ argument must be a format string beginning with `+'."),
 		 given in the POSIX-format.  */
 	      set_date = 1;
 	      datestr = argv[optind];
-	      when = posixtime (datestr);
+	      when = posixtime (datestr,
+				PDS_TRAILING_YEAR | PDS_CENTURY | PDS_SECONDS);
 	      format = NULL;
 	    }
 	  else
