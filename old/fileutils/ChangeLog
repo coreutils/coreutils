@@ -2,6 +2,8 @@
 
 	* Version 4.1.1.
 
+	* man/Makefile.am (common_dep): s/configure.in/configure.ac/.
+
 	* configure.ac: Renamed from configure.in.
 
 	* INSTALL, mkinstalldirs: Update to autoconf 2.50 version.
