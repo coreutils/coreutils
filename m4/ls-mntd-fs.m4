@@ -61,6 +61,9 @@ if test $ac_cv_func_getmntent = yes; then
     AC_MSG_CHECKING([for one-argument getmntent function])
     AC_CACHE_VAL(fu_cv_sys_mounted_getmntent1,
 		 [AC_TRY_COMPILE([
+/* SunOS 4.1.x /usr/include/mntent.h needs this for FILE */
+#include <stdio.h>
+
 #include <mntent.h>
 #if !defined MOUNTED
 # if defined _PATH_MOUNTED	/* GNU libc  */
