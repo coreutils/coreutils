@@ -2,7 +2,10 @@
 
 	* Version 2.0.21.
 
-	* configure.ac (ALL_LINGUAS): Add the bokmål dialect of Norwegian (nb).
+	* Makefile.am (AUTOMAKE_OPTIONS): Require automake-1.5d.
+
+	* configure.ac (AM_INIT_AUTOMAKE): Use zero-arg form of this macro.
+	(ALL_LINGUAS): Add the bokmål dialect of Norwegian (nb).
 
 2002-01-27  Jim Meyering  <meyering@lucent.com>
 
