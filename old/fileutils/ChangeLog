@@ -1,3 +1,6 @@
+	* backupfile.c (max_backup_version): Declare file_name_length to
+	be of type size_t.  This avoid a warning from gcc -Wall.
+
 	* chmod.c chown.c cp.c dd.c df.c du.c install.c ln.c ls.c
 	mkdir.c mkfifo.c mknod.c mv.c mvdir.c rm.c rmdir.c sync.c
 	touch.c (main): Initialize for internationalized message support:
