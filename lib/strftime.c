@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2000, 2001 Free Software Foundation, Inc.
 
    NOTE: The canonical source of this file is maintained with the GNU C Library.
    Bugs can be reported to bug-glibc@prep.ai.mit.edu.
@@ -1068,7 +1068,7 @@ my_strftime (s, maxsize, format, tp ut_argument)
 	  goto underlying_strftime;
 #endif
 
-	case L_('R'):		/* GNU extension.  */
+	case L_('R'):		/* ISO C99 extension.  */
 	  subfmt = L_("%H:%M");
 	  goto subformat;
 
@@ -1161,8 +1161,8 @@ my_strftime (s, maxsize, format, tp ut_argument)
 	  DO_NUMBER (2, (tp->tm_yday - tp->tm_wday + 7) / 7);
 
 	case L_('V'):
-	case L_('g'):		/* GNU extension.  */
-	case L_('G'):		/* GNU extension.  */
+	case L_('g'):		/* ISO C99 extension.  */
+	case L_('G'):		/* ISO C99 extension.  */
 	  if (modifier == L_('E'))
 	    goto bad_format;
 	  {
@@ -1286,7 +1286,7 @@ my_strftime (s, maxsize, format, tp ut_argument)
 #endif
 	  break;
 
-	case L_('z'):		/* GNU extension.  */
+	case L_('z'):		/* ISO C99 extension.  */
 	  if (tp->tm_isdst < 0)
 	    break;
 
