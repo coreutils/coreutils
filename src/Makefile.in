@@ -280,6 +280,11 @@ all_programs = \
   $(EXTRA_PROGRAMS)
 
 
+# Sort in traditional ASCII order, regardless of the current locale;
+# otherwise we may get into trouble with distinct strings that the
+# current locale considers to be equal.
+ASSORT = LC_ALL=C sort
+
 pm = progs-makefile
 pr = progs-readme
 
@@ -1587,7 +1592,7 @@ check: check-README check-misc
 check-README:
 	rm -rf $(pr) $(pm)
 	echo $(all_programs) \
-	  | tr -s ' ' '\n' | sort -u > $(pm)
+	  | tr -s ' ' '\n' | $(ASSORT) -u > $(pm) && \
 	sed -n '/^The programs .* are:/,/^[a-zA-Z]/p' $(top_srcdir)/README \
 	  | sed -n '/^   */s///p' | tr -s ' ' '\n' > $(pr)
 	diff $(pm) $(pr) && rm -rf $(pr) $(pm)
@@ -1619,7 +1624,7 @@ check-misc:
 	      prog=`echo $$i|sed 's/\.c$$//'`;		\
 	      echo "$$prog: $$a";			\
 	    fi;						\
-	  done | sort -u ) > $@-t
+	  done | $(ASSORT) -u ) > $@-t
 	chmod a-w $@-t
 	mv $@-t $@
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
