@@ -572,8 +572,8 @@ main (int argc, char **argv)
 
   if (argc <= 1)
     {
-      fprintf (stderr, _("Usage: %s format [argument...]\n"), program_name);
-      exit (EXIT_FAILURE);
+      error (0, 0, _("missing operand"));
+      usage (EXIT_FAILURE);
     }
 
   format = argv[1];
