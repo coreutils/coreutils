@@ -13,7 +13,6 @@ esac
 exec $PERL -w -- - <<\EOF
 
 # Ensure that cat exits upon a single EOF (^D) from a tty.
-# FIXME: do something like `stty eof ^D'.
 use strict;
 
 (my $ME = $0) =~ s|.*/||;
