@@ -26,7 +26,8 @@ export PATH
 
 fail=0
 
-# Ensure these exit successfully, even though stdout is closed.
+# Ensure these exit successfully, even though stdout is closed,
+# because they generate no output.
 touch a
 cp a b >&- || fail=1
 test -f b || fail=1
@@ -41,7 +42,8 @@ sleep 0 >&- || fail=1
 $pwd/../../src/true >&- || fail=1
 $pwd/../../src/printf '' >&- || fail=1
 
-# Ensure these fail, because stdout is closed.
+# Ensure these fail, because stdout is closed and they *do*
+# generate output.
 $pwd/../../src/printf 'foo' >&- 2>/dev/null && fail=1
 cp --verbose a b >&- 2>/dev/null && fail=1
 
