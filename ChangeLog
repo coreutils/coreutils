@@ -1,6 +1,12 @@
-2005-01-04  Jim Meyering  <jim@meyering.net>
+2005-01-05  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	* src/du.c (process_file): Evaluate exclusion rules against
+	the entire file name, not just the last component.
+	Reported by Robert Lindgren.
+
+2005-01-04  Jim Meyering  <jim@meyering.net>
 
 	* man/shred.x: Change one-line summary to reflect that shred does
 	not remove files by default.  Suggestion from Helen Faulkner in
