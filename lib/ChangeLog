@@ -1,3 +1,11 @@
+2002-04-28  Paul Eggert  <eggert@twinsun.com>
+
+	* sig2str.h (SIGNUM_BOUND): Do not use WTERMSIG, to avoid
+	depending on <sys/wait.h> and WTERMSIG.  Default to 64 instead
+	of 127, since 64 is the largest conceivable number for ancient
+	nonstandard hosts.
+	* sig2str.c: Do not include <sys/wait.h>; no longer needed.
+
 2002-04-28  Jim Meyering  <meyering@lucent.com>
 
 	* sig2str.c (WTERMSIG): Remove definition (unused).
