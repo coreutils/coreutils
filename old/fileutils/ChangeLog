@@ -2,6 +2,12 @@
 
 	* Version 4.1-b1.
 
+	* lib/Makefile.am (lstat.c): Add rule to generate this from xstat.in.
+	(stat.c): Likewise.
+	* lib/stat.c: Remove file.
+	* lib/lstat.c: Remove file.
+	* lib/xstat.in (xstat@): New file.
+
 	* lib/quotearg.c (quotearg_buffer): Use `7' as the mask, not `3'.
 	From Bruno Haible.
 	* tests/ls-2/tests: Add a test for this.
