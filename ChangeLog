@@ -2,6 +2,11 @@
 
 	* Version 5.2.1.
 
+2004-03-02  Dmitry V. Levin  <ldv@altlinux.org>
+
+	* src/nohup.c: Include "cloexec.h".
+	(main): Set the copy of stderr to close on exec.
+
 2004-03-01  Paul Eggert  <eggert@twinsun.com>
 
 	* configure.ac: Include <signal.h> when checking for strsignal,
