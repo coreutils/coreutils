@@ -1,3 +1,16 @@
+Sun Dec 11 17:24:09 1994  Jim Meyering  (meyering@comco.com)
+
+	* csplit.c (get_format_width, get_format_prec): Use ISDIGIT instead of
+	comparisons against '0' and '9'.
+
+	* tr.c [!ULONGMAX]: Define it.
+	[!LONGMAX]: Define in terms of ULONGMAX instead of as a 32-bit constant.
+
+	* full-write.c: Declare (or not) errno based on definedness or
+	errno, not STDC_HEADERS.
+	* safe-read.c: Likewise.
+	* xwrite.c: Likewise.
+
 Thu Nov 17 06:37:33 1994  Jim Meyering  (meyering@comco.com)
 
         * tail.c (dump_remainder): Flush standard output just before
