@@ -217,9 +217,7 @@ touch (char *file)
    Return 0 if successful, -1 if not. */
 
 static int
-utime_now (file, filesize)
-     char *file;
-     off_t filesize;
+utime_now (const char *file, off_t filesize)
 {
   int fd;
   char c;
