@@ -10,7 +10,7 @@ require 5.002;
 use strict;
 use POSIX qw (assert);
 
-(my $program_name = $0) =~ s|.*/||;
+(my $ME = $0) =~ s|.*/||;
 
 BEGIN { push @INC, '.' if '.' ne '.'; }
 use Test;
@@ -20,6 +20,9 @@ my $srcdir = shift;
 sub validate
 {
   my %seen;
+  my %seen_8dot3;
+
+  my $bad_test_name;
   my $test_vector;
   foreach $test_vector (Test::test_vector ())
     {
@@ -34,7 +37,22 @@ sub validate
       die "$0: duplicate test name \`$test_name'\n"
 	if (defined $seen{$test_name});
       $seen{$test_name} = 1;
+
+      if (0)
+	{
+	  my $t8 = lc substr $test_name, 0, 8;
+	  if ($seen_8dot3{$t8})
+	    {
+	      warn "$ME: 8.3 test name conflict: "
+		. "$test_name, $seen_8dot3{$t8}\n";
+	      $bad_test_name = 1;
+	    }
+	  $seen_8dot3{$t8} = $test_name;
+	}
     }
+
+  $bad_test_name
+    and exit 1;
 }
 
 # Given a spec for the input file(s) or expected output file of a single
@@ -216,7 +234,7 @@ sub wrap
 
   print <<EOF1;
 #! /bin/sh
-# This script was generated automatically by $program_name.
+# This script was generated automatically by $ME.
 case \$# in
   0\) xx='$xx';;
   *\) xx="\$1";;
@@ -283,7 +301,7 @@ EOF1
 
 	  my $env = $Test::env{$test_name} || $Test::env_default || [''];
 	  @$env == 1
-	    or die "$program_name: unexpected environment: @$env\n";
+	    or die "$ME: unexpected environment: @$env\n";
 	  $env = $env->[0];
 	  my $env_prefix = ($env ? "$env " : '');
 
