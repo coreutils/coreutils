@@ -2,6 +2,9 @@
 
 	* Version 2.0.9.
 
+	* doc/textutils.texi: Change GNU to @sc{gnu} in many places.
+	Update to use the Free Documentation Licence.
+
 	* configure, config.h.in, Makefile.in, etc.: Regenerate using the
 	very latest version (in CVS) of autoconf.
 
