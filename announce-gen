@@ -6,7 +6,7 @@ use Getopt::Long;
 use Digest::MD5;
 use Digest::SHA1;
 
-(my $VERSION = '$Revision: 1.17 $ ') =~ tr/[0-9].//cd;
+(my $VERSION = '$Revision: 1.18 $ ') =~ tr/[0-9].//cd;
 (my $ME = $0) =~ s|.*/||;
 
 my %valid_release_types = map {$_ => 1} qw (alpha beta major);
@@ -70,6 +70,47 @@ OPTIONS:
 EOF
     }
   exit $exit_code;
+}
+
+sub print_news_deltas ($$$)
+{
+  my ($news_file, $prev_version, $curr_version) = @_;
+
+  print "\n$news_file\n\n";
+
+  # Print all lines from $news_file, starting with the first one
+  # that mentions $curr_version up to but not including
+  # the first occurrence of $prev_version.
+  my $in_items;
+
+  open NEWS, '<', $news_file
+    or die "$ME: $news_file: cannot open for reading: $!\n";
+  while (defined (my $line = <NEWS>))
+    {
+      if ( ! $in_items)
+	{
+	  # Match lines like this one:
+	  # * Major changes in release 5.0.1:
+	  # but not any other line that starts with a space, *, or -.
+	  $line =~ /^(\* Major changes.*|[^ *-].*)\Q$curr_version\E/o
+	    or next;
+	  $in_items = 1;
+	  print $line;
+	}
+      else
+	{
+	  # Be careful that this regexp cannot match version numbers
+	  # in NEWS items -- they might well say `introduced in 4.5.5',
+	  # and we don't want that to match.
+	  $line =~ /^(\* Major changes.*|[^ *-].*)\Q$prev_version\E/o
+	    and last;
+	  print $line;
+	}
+    }
+  close NEWS;
+
+  $in_items
+    or die "$ME: $news_file: no matching lines for `$curr_version'\n";
 }
 
 sub print_changelog_deltas ($$)
@@ -174,8 +215,8 @@ sub print_changelog_deltas ($$)
      'previous-version=s' => \$prev_version,
      'current-version=s' => \$curr_version,
      'release-archive-directory=s' => \$release_archive_dir,
-     'url-directory=s@' => \@url_dir_list,
-     'news=s@' => \$news_file,
+     'url-directory=s' => \@url_dir_list,
+     'news=s' => \@news_file,
 
      help => sub { usage 0 },
      version => sub { print "$ME version $VERSION\n"; exit },
@@ -275,7 +316,7 @@ EOF
 
   foreach my $meth (qw (md5 sha1))
     {
-      foreach my $f (($tgz, $tbz, $xd))
+      foreach my $f ($tgz, $tbz, $xd)
 	{
 	  open IN, '<', $f
 	    or die "$ME: $f: cannot open for reading: $!\n";
@@ -293,46 +334,29 @@ EOF
     or die "$ME: $tmp: while writing: $!\n";
   chmod 0400, $tmp;  # ignore failure
 
-  if ($news_file)
-    {
-      print "\nNEWS\n\n";
-
-      # Print all lines from $news_file, starting with the first one
-      # that mentions $curr_version up to but not including
-      # the first occurrence of $prev_version.
-      my $in_items;
-      open NEWS, '<', $news_file
-	or die "$ME: $news_file: cannot open for reading: $!\n";
-      while (defined (my $line = <NEWS>))
-	{
-	  if ( ! $in_items)
-	    {
-	      # Match lines like this one:
-	      # * Major changes in release 5.0.1:
-	      # but not any other line that starts with a space, *, or -.
-	      $line =~ /^(\* Major changes.*|[^ *-].*)\Q$curr_version\E/o
-		or next;
-	      $in_items = 1;
-	      print $line;
-	    }
-	  else
-	    {
-	      # Be careful that this regexp cannot match version numbers
-	      # in NEWS items -- they might well say `introduced in 4.5.5',
-	      # and we don't want that to match.
-	      $line =~ /^(\* Major changes.*|[^ *-].*)\Q$prev_version\E/o
-		and last;
-	      print $line;
-	    }
-	}
-      close NEWS;
-
-      $in_items
-	or die "$ME: $news_file: no matching lines for `$curr_version'\n";
-    }
+  print_news_deltas ($_, $prev_version, $curr_version) foreach @news_file;
 
   $release_type eq 'major'
     or print_changelog_deltas ($package_name, $prev_version);
 
   exit 0;
 }
+
+
+
+### Setup "GNU" style for perl-mode and cperl-mode.
+## Local Variables:
+## perl-indent-level: 2
+## perl-continued-statement-offset: 2
+## perl-continued-brace-offset: 0
+## perl-brace-offset: 0
+## perl-brace-imaginary-offset: 0
+## perl-label-offset: -2
+## cperl-indent-level: 2
+## cperl-brace-offset: 0
+## cperl-continued-brace-offset: 0
+## cperl-label-offset: -2
+## cperl-extra-newline-before-brace: t
+## cperl-merge-trailing-else: nil
+## cperl-continued-statement-offset: 2
+## End:
