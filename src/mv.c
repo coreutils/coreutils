@@ -136,7 +136,7 @@ cp_option_init (struct cp_options *x)
      when using chmod.  The creation mask is set to be liberal, so
      that created directories can be written, even if it would not
      have been allowed with the mask this process was started with.  */
-  x->umask_kill = 0777777 ^ umask (0);
+  x->umask_kill = ~ umask (0);
 
   x->update = 0;
   x->verbose = 0;
