@@ -392,7 +392,7 @@ fillbuf (buf, fp)
 {
   int cc;
 
-  bcopy (buf->buf + buf->used - buf->left, buf->buf, buf->left);
+  memmove (buf->buf, buf->buf + buf->used - buf->left, buf->left);
   buf->used = buf->left;
 
   while (!feof (fp) && (buf->used == 0 || !memchr (buf->buf, '\n', buf->used)))
@@ -989,7 +989,7 @@ checkfp (fp)
 	      alloc *= 2;
 	    temp.text = xrealloc (temp.text, alloc);
 	  }
-	bcopy (prev_line->text, temp.text, prev_line->length + 1);
+	memcpy (temp.text, prev_line->text, prev_line->length + 1);
 	temp.length = prev_line->length;
 	temp.keybeg = temp.text + (prev_line->keybeg - prev_line->text);
 	temp.keylim = temp.text + (prev_line->keylim - prev_line->text);
@@ -1081,7 +1081,7 @@ mergefps (fps, nfps, ofp)
   /* Repeatedly output the smallest line until no input remains. */
   while (nfps)
     {
-      /* If uniqified output is turned out, output only the first of
+      /* If uniqified output is turned on, output only the first of
 	 an identical series of lines. */
       if (unique)
 	{
@@ -1100,7 +1100,7 @@ mergefps (fps, nfps, ofp)
 		  saved.text = xrealloc (saved.text, savealloc);
 		}
 	      saved.length = lines[ord[0]].lines[cur[ord[0]]].length;
-	      bcopy (lines[ord[0]].lines[cur[ord[0]]].text, saved.text,
+	      memcpy (saved.text, lines[ord[0]].lines[cur[ord[0]]].text,
 		     saved.length + 1);
 	      if (lines[ord[0]].lines[cur[ord[0]]].keybeg != NULL)
 		{
