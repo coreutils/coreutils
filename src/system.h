@@ -1,5 +1,5 @@
 /* system-dependent definitions for fileutils, textutils, and sh-utils packages.
-   Copyright (C) 89, 91, 92, 93, 94, 96, 97, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1989, 1991-1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -174,10 +174,15 @@
 
 #include "pathmax.h"
 
-#ifdef TM_IN_SYS_TIME
+#if TIME_WITH_SYS_TIME
 # include <sys/time.h>
-#else
 # include <time.h>
+#else
+# if HAVE_SYS_TIME_H
+#  include <sys/time.h>
+# else
+#  include <time.h>
+# endif
 #endif
 
 /* Since major is a function on SVR4, we can't use `ifndef major'.  */
