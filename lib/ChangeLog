@@ -1,5 +1,10 @@
 2003-07-12  Jim Meyering  <jim@meyering.net>
 
+	* Makefile.am (BUILT_SOURCES): Use `BUILT_SOURCES += $(STDBOOL_H)'
+	rather than `all-local: $(STDBOOL_H)'.  The latter didn't force
+	creation of stdbool.h before most other targets.
+	Likewise for $(ALLOCA_H).
+
 	Don't emit diagnostics.  Let callers do that.
 	* save-cwd.c: Don't include "error.h".
 	(save_cwd): Don't call error.  Ensure that errno is valid
