@@ -15,21 +15,7 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-/* Options:
-   -a, --time={atime,access,use}	Change access time only.
-   -c, --no-create		Do not create files that do not exist.
-   -d, --date=TIME		Specify time and date in various formats.
-   -f				Ignored.
-   -m, --time={mtime,modify}	Change modification time only.
-   -r, --reference=FILE		Use the time and date of reference file FILE.
-   -t TIME			Specify time and date in the form
-				`MMDDhhmm[[CC]YY][.ss]'.
-
-   If no options are given, -am is the default, using the current time.
-   The -r, -t, and -d options are mutually exclusive.  If a file does not
-   exist, create it unless -c is given.
-
-   Written by Paul Rubin, Arnold Robbins, Jim Kingdon, David MacKenzie,
+/* Written by Paul Rubin, Arnold Robbins, Jim Kingdon, David MacKenzie,
    and Randy Smith. */
 
 #include <config.h>
