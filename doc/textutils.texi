@@ -2190,8 +2190,10 @@ check that no pair of consecutive lines compares equal.
 @cindex sort field
 The recommended, @sc{POSIX}, option for specifying a sort field.  The field
 consists of the part of the line between @var{pos1} and @var{pos2} (or the
-end of the line, if @var{pos2} is omitted), inclusive.  Fields and
-character positions are numbered starting with 1.  See below.
+end of the line, if @var{pos2} is omitted), @emph{inclusive}.
+Fields and character positions are numbered starting with 1.
+So to sort on the second field, you'd use @samp{-k 2,2}
+See below for more examples.
 
 @item -z
 @opindex -z
