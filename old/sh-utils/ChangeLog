@@ -1,5 +1,8 @@
 2001-03-09  Jim Meyering  <meyering@lucent.com>
 
+	* Makefile.maint (my_distdir): Define new variable, and use this
+	in place of most old uses of $(distdir).
+
 	* src/date.c (usage): Describe %C.
 	* doc/sh-utils.texi (Date directives): Likewise.
 

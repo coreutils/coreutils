@@ -1,3 +1,14 @@
+2001-03-09  Jim Meyering  <meyering@lucent.com>
+
+	* Makefile.maint (my_distdir): Define new variable, and use this
+	in place of most old uses of $(distdir).
+
+	* tests/help-version: Ensure that /dev/full is a character device
+	(using test -c) as well as being writable, before trying to write to it.
+	Otherwise, the test could mistakenly append a newline to an existing,
+	regular, writable, /dev/full file.
+	Suggested by Ulrich Drepper.
+
 2001-03-08  Jim Meyering  <meyering@lucent.com>
 
 	* tests/sha1sum/sample-vec: Insert the `--text' argument for each test.
