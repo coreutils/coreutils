@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1994, 1997, 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994, 1997, 1998, 2000, 2003 Free Software Foundation, Inc.
 
    NOTE: The canonical source of this file is maintained with the GNU C
    Library.  Bugs can be reported to bug-glibc@prep.ai.mit.edu.
@@ -26,6 +26,12 @@
 /* Include errno.h *after* sys/types.h to work around header problems
    on AIX 3.2.5.  */
 #include <errno.h>
+#if !_LIBC
+# if !defined errno
+extern int errno;
+# endif
+# define __set_errno(ev) ((errno) = (ev))
+#endif
 
 /* Don't include stdlib.h because some (e.g., Solaris 2.7) declare putenv
    with a non-const argument.  That would conflict with the declaration of
@@ -54,12 +60,60 @@ void free ();
 extern char **environ;
 #endif
 
+#if _LIBC
+/* This lock protects against simultaneous modifications of `environ'.  */
+# include <bits/libc-lock.h>
+__libc_lock_define_initialized (static, envlock)
+# define LOCK	__libc_lock_lock (envlock)
+# define UNLOCK	__libc_lock_unlock (envlock)
+#else
+# define LOCK
+# define UNLOCK
+#endif
+
 #ifndef NULL
 # define NULL 0
 #endif
 
+static int
+unsetenv (const char *name)
+{
+  size_t len;
+  char **ep;
 
-/* Put STRING, which is of the form "NAME=VALUE", in the environment.  */
+  if (name == NULL || *name == '\0' || strchr (name, '=') != NULL)
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
+
+  len = strlen (name);
+
+  LOCK;
+
+  ep = environ;
+  while (*ep != NULL)
+    if (!strncmp (*ep, name, len) && (*ep)[len] == '=')
+      {
+	/* Found it.  Remove this pointer by moving later ones back.  */
+	char **dp = ep;
+
+	do
+	  dp[0] = dp[1];
+	while (*dp++);
+	/* Continue the loop in case NAME appears again.  */
+      }
+    else
+      ++ep;
+
+  UNLOCK;
+
+  return 0;
+}
+
+
+/* Put STRING, which is of the form "NAME=VALUE", in the environment.
+   If STRING contains no `=', then remove STRING from the environment.  */
 int
 rpl_putenv (const char *string)
 {
@@ -70,18 +124,7 @@ rpl_putenv (const char *string)
   if (name_end == NULL)
     {
       /* Remove the variable from the environment.  */
-      size = strlen (string);
-      for (ep = environ; *ep != NULL; ++ep)
-	if (!strncmp (*ep, string, size) && (*ep)[size] == '=')
-	  {
-	    while (ep[1] != NULL)
-	      {
-		ep[0] = ep[1];
-		++ep;
-	      }
-	    *ep = NULL;
-	    return 0;
-	  }
+      return unsetenv (string);
     }
 
   size = 0;
