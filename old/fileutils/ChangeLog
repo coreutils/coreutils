@@ -2,6 +2,8 @@
 
 	* Version 4.0r.
 
+	* src/cp.c [LSTAT_FOLLOWS_SLASHED_SYMLINK] (lstat): Define to rpl_lstat.
+
 2000-04-27  Jim Meyering  <meyering@lucent.com>
 
 	Clean up.
