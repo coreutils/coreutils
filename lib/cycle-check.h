@@ -10,11 +10,7 @@
 	#include <sys/types.h>
 	#include <sys/stat.h>
 
-	#if HAVE_STDBOOL_H
-	# include <stdbool.h>
-	#else
-	typedef enum {false = 0, true = 1} bool;
-	#endif
+	#include <stdbool.h>
 
    so that the proper identifiers are all declared.  */
 
