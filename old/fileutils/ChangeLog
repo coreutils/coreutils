@@ -1,5 +1,7 @@
 2000-01-06  Jim Meyering  <meyering@ascend.com>
 
+	* man/help2man: Import version 1.020.
+
 	* lib/strftime.c: Sync with the GNU C Library.
 
 2000-01-06  Paul Eggert  <eggert@set.twinsun.com>
