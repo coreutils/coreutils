@@ -3,7 +3,9 @@
 # Enable extensions on systems that normally disable them,
 # typically due to standards-conformance issues.
 AC_DEFUN([gl_USE_SYSTEM_EXTENSIONS], [
+  AC_REQUIRE([AC_AIX])
   AC_REQUIRE([AC_GNU_SOURCE])
+  AC_REQUIRE([AC_MINIX])
   AH_VERBATIM([__EXTENSIONS__],
 [/* Enable extensions on Solaris.  */
 #ifndef __EXTENSIONS__
