@@ -46,7 +46,7 @@ midnight, 1 January 1970 UCT.
 * General date syntax::            Common rules.
 * Calendar date item::             19 Dec 1994.
 * Time of day item::               9:20pm.
-* Timezone item::                  EST, DST, BST, UCT, HAST, ...
+* Time zone item::                 EST, DST, BST, UTC, ...
 * Day of week item::               Monday and others.
 * Relative item in date strings::  next tuesday, 2 years ago.
 * Pure numbers in date strings::   19931219, 1440.
@@ -205,159 +205,139 @@ indicates the first half of the day, @samp{pm} indicates the second
 half of the day.  In this notation, 12 is the predecessor of 1:
 midnight is @samp{12am} while noon is @samp{12pm}.
 
-@cindex timezone correction
-@cindex minutes, timezone correction by
-The time may alternatively be followed by a timezone correction,
+@cindex time zone correction
+@cindex minutes, time zone correction by
+The time may alternatively be followed by a time zone correction,
 expressed as @samp{@var{s}@var{hh}@var{mm}}, where @var{s} is @samp{+}
 or @samp{-}, @var{hh} is a number of zone hours and @var{mm} is a number
-of zone minutes.  When a timezone correction is given this way, it
-forces interpretation of the time in UTC, overriding any previous
-specification for the timezone or the local timezone.  The @var{minute}
-part of the time of the day may not be elided when a timezone correction
-is used.  This is the only way to specify a timezone correction by
+of zone minutes.  When a time zone correction is given this way, it
+forces interpretation of the time relative to
+Coordinated Universal Time (UTC), overriding any previous
+specification for the time zone or the local time zone.  The @var{minute}
+part of the time of the day may not be elided when a time zone correction
+is used.  This is the only way to specify a time zone correction by
 fractional parts of an hour.
 
-Either @samp{am}/@samp{pm} or a timezone correction may be specified,
+Either @samp{am}/@samp{pm} or a time zone correction may be specified,
 but not both.
 
 
-@node Timezone item
-@section Timezone item
+@node Time zone item
+@section Time zone item
 
-@cindex timezone item
+@cindex time zone item
 
-A @dfn{timezone item} specifies an international timezone, indicated by
-a small set of letters.  Any included period is ignored.  Military
-timezone designations use a single letter.  Currently, only integral
-zone hours may be represented in a timezone item.  See the previous
-section for a finer control over the timezone correction.
+A @dfn{time zone item} specifies an international time zone, indicated by
+a small set of letters.  They are supported for backward compatibility reasons,
+but they are not recommended because they are ambiguous in practice:
+for example, the abbreviation @samp{EST} has different meanings in
+Australia and the United States.  Any included period is ignored.  Military
+time zone designations use a single letter.  Currently, only integral
+zone hours may be represented in a time zone item.  See the previous
+section for a finer control over the time zone correction.
 
-Here are many non-daylight-savings-time timezones, indexed by the zone
+Here are many non-daylight-saving-time time zones, indexed by the zone
 hour value.
 
 @table @asis
-@item +000
-@cindex Greenwich Mean Time
-@cindex Universal Coordinated Time
-@cindex Western European Time
-@samp{GMT} for Greenwich Mean, @samp{UT} or @samp{UTC} for Universal
-(Coordinated), @samp{WET} for Western European and @samp{Z} for
-militaries.
-@item +100
-@cindex West African Time
-@samp{WAT} for West Africa and
-@samp{A} for militaries.
-@item +200
-@cindex Azores Time
-@samp{AT} for Azores and @samp{B} for militaries.
-@item +300
-@samp{C} for militaries.
-@item +400
-@cindex Atlantic Standard Time
-@samp{AST} for Atlantic Standard and @samp{D} for militaries.
-@item +500
-@cindex Eastern Standard Time
-@samp{E} for militaries and @samp{EST} for Eastern Standard.
-@item +600
-@cindex Central Standard Time
-@samp{CST} for Central Standard and @samp{F} for militaries.
-@item +700
-@cindex Mountain Standard Time
-@samp{G} for militaries and @samp{MST} for Mountain Standard.
-@item +800
-@cindex Pacific Standard Time
-@samp{H} for militaries and @samp{PST} for Pacific Standard.
-@item +900
-@cindex Yukon Standard Time
-@samp{I} for militaries and @samp{YST} for Yukon Standard.
-@item +1000
-@cindex Alaska-Hawaii Time
-@cindex Central Alaska Time
-@cindex Hawaii Standard Time
-@samp{HAST} for Hawaii-Aleutian Standard, @samp{CAT} for Central Alaska,
-@samp{HST} for Hawaii Standard and @samp{K} for militaries.
-@item +1100
-@cindex Nome Standard Time
-@samp{L} for militaries and @samp{NT} for Nome.
-@item +1200
-@cindex International Date Line West
-@samp{IDLW} for International Date Line West and @samp{M} for
-militaries.
-@item -100
-@cindex Central European Time
-@cindex Middle European Time
-@cindex Middle European Winter Time
-@cindex French Winter Time
-@cindex Swedish Winter Time
-@samp{CET} for Central European, @samp{FWT} for French Winter,
-@samp{MET} for Middle European, @samp{MEWT} for Middle European
-Winter, @samp{N} for militaries and @samp{SWT} for Swedish Winter.
-@item -200
-@cindex Eastern European Time
-@cindex USSR Zone
-@samp{EET} for Eastern European, USSR Zone 1 and @samp{O} for militaries.
-@item -300
-@cindex Baghdad Time
-@samp{BT} for Baghdad, USSR Zone 2 and @samp{P} for militaries.
-@item -400
-@samp{Q} for militaries and @samp{ZP4} for USSR Zone 3.
-@item -500
-@samp{R} for militaries and @samp{ZP5} for USSR Zone 4.
-@item -600
-@samp{S} for militaries and @samp{ZP6} for USSR Zone 5.
-@item -700
-@cindex West Australian Standard Time
-@samp{T} for militaries and @samp{WAST} for West Australian Standard.
-@item -800
-@cindex China Coast Time
-@samp{CCT} for China Coast, USSR Zone 7 and @samp{U} for militaries.
-@item -900
-@cindex Japan Standard Time
-@samp{JST} for Japan Standard, USSR Zone 8 and @samp{V} for militaries.
-@item -1000
-@cindex East Australian Standard Time
-@cindex Guam Standard Time
-@samp{EAST} for East Australian Standard, @samp{GST} for Guam
-Standard, USSR Zone 9 and @samp{W} for militaries.
+@item -1200
+@samp{Y} for militaries.
 @item -1100
 @samp{X} for militaries.
-@item -1200
-@cindex International Date Line East
-@cindex New Zealand Standard Time
-@samp{IDLE} for International Date Line East, @samp{NZST} for
-New Zealand Standard, @samp{NZT} for New Zealand and @samp{Y} for
-militaries.
+@item -1000
+@samp{W} for militaries.
+@item -0900
+@samp{V} for militaries.
+@item -0800
+@samp{PST} for Pacific Standard, and
+@samp{U} for militaries.
+@item -0700
+@samp{MST} for Mountain Standard, and
+@samp{T} for militaries.
+@item -0600
+@samp{CST} for Central Standard, and
+@samp{S} for militaries.
+@item -0500
+@samp{EST} for Eastern Standard, and
+@samp{R} for militaries.
+@item -0400
+@samp{AST} for Atlantic Standard, and
+@samp{Q} for militaries.
+@item -0300
+@samp{P} for militaries.
+@item -0200
+@samp{O} for militaries.
+@item -0100
+@samp{N} for militaries.
+@item +0000
+@cindex Greenwich Mean Time
+@cindex Coordinated Universal Time
+@cindex Universal Coordinated Time
+@cindex Universal Time (Coordinated)
+@samp{GMT} for Greenwich Mean,
+@samp{UT} for Universal,
+@samp{UTC} for Coordinated Universal,
+@samp{WET} for Western European, and
+@samp{Z} for ISO 8601 and militaries.
+@item +0100
+@samp{A} for militaries,
+@samp{CET} for Central European,
+@samp{MET} for Midden Europesche Tijd (Dutch), and
+@samp{MEZ} for Mittel-Europ@"aische Zeit (German).
+@item +0200
+@samp{B} for militaries, and
+@samp{EET} for Eastern European.
+@item +0300
+@samp{C} for militaries.
+@item +0400
+@samp{D} for militaries.
+@item +0500
+@samp{E} for militaries.
+@item +0600
+@samp{F} for militaries.
+@item +0700
+@samp{G} for militaries.
+@item +0800
+@samp{H} for militaries.
+@item +0900
+@samp{I} for militaries, and
+@samp{JST} for Japan Standard.
+@item +1000
+@samp{GST} for Guam Standard, and
+@samp{K} for militaries.
+@item +1100
+@samp{L} for militaries.
+@item +1200
+@samp{M} for militaries, and
+@samp{NZST} for New Zealand Standard.
 @end table
 
-@cindex daylight savings time
-Here are many DST timezones, indexed by the zone hour value.  Also, by
-following a non-DST timezone by the string @samp{DST} in a separate word
-(that is, separated by some whitespace), the corresponding DST timezone
+@cindex daylight-saving time
+Here are many daylight-saving time (DST) time zones,
+indexed by the zone hour value.  Also, by
+following a non-DST time zone by the string @samp{DST} in a separate word
+(that is, separated by some whitespace), the corresponding DST time zone
 may be specified.
 
 @table @asis
-@item 0
-@samp{BST} for British Summer.
-@item +400
-@samp{ADT} for Atlantic Daylight.
-@item +500
-@samp{EDT} for Eastern Daylight.
-@item +600
-@samp{CDT} for Central Daylight.
-@item +700
-@samp{MDT} for Mountain Daylight.
-@item +800
+@item -0700
 @samp{PDT} for Pacific Daylight.
-@item +900
-@samp{YDT} for Yukon Daylight.
-@item -100
-@samp{MEST} for Middle European Summer, @samp{MESZ} for Middle European
-Summer, @samp{SST} for Swedish Summer and @samp{FST} for French Summer.
-@item -700
-@samp{WADT} for West Australian Daylight.
-@item -1000
-@samp{EADT} for Eastern Australian Daylight.
-@item -1200
+@item -0600
+@samp{MDT} for Mountain Daylight.
+@item -0500
+@samp{CDT} for Central Daylight.
+@item -0400
+@samp{EDT} for Eastern Daylight.
+@item -0300
+@samp{ADT} for Atlantic Daylight.
+@item +0100
+@samp{BST} for British Summer, and
+@samp{WEST} for Western European Summer.
+@item +0200
+@samp{CEST} for Central European Summer,
+@samp{MEST} for Midden Europesche S. Tijd (Dutch), and
+@samp{MESZ} for Mittel-Europ@"aische Sommerzeit (German).
+@item +1300
 @samp{NZDT} for New Zealand Daylight.
 @end table
 
