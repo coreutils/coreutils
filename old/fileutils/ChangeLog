@@ -2,6 +2,8 @@
 
 	* Version 4.1.9.
 
+	* tests/cp/*: Clean up.
+
 	* tests/sample-test: Use a temporary directory named
 	`basename $0`.tmp/$$.  Create with mkdir -p.
 
