@@ -21,12 +21,10 @@ cd $tmp || framework_failure=1
 mkdir a a/a || framework_failure=1
 > b || framework_failure=1
 
-cat <<EOF > $test.E || framework_failure=1
-removing all entries of directory \`a'
-removing all entries of directory \`a/a'
-removing the directory itself: \`a/a'
-removing the directory itself: \`a'
-removing \`b'
+cat <<\EOF > $test.E || framework_failure=1
+removed directory: `a/a'
+removed directory: `a'
+removed `b'
 EOF
 
 if test $framework_failure = 1; then
