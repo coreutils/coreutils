@@ -140,7 +140,6 @@ cp_option_init (struct cp_options *x)
 
   x->update = 0;
   x->verbose = 0;
-  x->xstat = lstat;
   x->dest_info = NULL;
   x->src_info = NULL;
 }
