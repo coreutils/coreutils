@@ -12,7 +12,17 @@ priv_check_temp=priv-check.$$
 touch $priv_check_temp || framework_failure=1
 chmod a-w $priv_check_temp || framework_failure=1
 
-(echo foo >> $priv_check_temp) >/dev/null 2>&1 || {
+(echo foo >> $priv_check_temp) >/dev/null 2>&1
+overwrite_status=$?
+give_msg=no
+case $1:$overwrite_status in
+  require-root:0) ;;
+  require-root:*) give_msg=yes ;;
+  require-non-root:0) give_msg=yes ;;
+  require-non-root:*) ;;
+esac
+
+test $give_msg = yes && {
   cat <<EOF
 ***************************
 NOTICE:
