@@ -2,6 +2,7 @@
 
 	* coreutils.texi (du invocation): Document --apparent-size.
 	Adjust documentation of --bytes (-b).
+	(stat invocation): Describe %B.
 
 2003-02-07  Richard Dawe  <rich@phekda.freeserve.co.uk>
 
