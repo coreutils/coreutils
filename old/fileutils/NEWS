@@ -6,9 +6,13 @@ User-visible changes in release 3.13:
 * `ls -c' does what it's supposed to
 * all programs include program name in --version output
 * `ls --quote-name' works
-* fix bug in the way mv determined whether src and dest are the same file
+* mv properly determines whether src and dest are the same file
+  Before, it could (though with very low probability) fail to do the move,
+  reporting that distinct source and destination are the same file.
 * du --dereference (-L) works with directory symlinks
 * du works on SunOS 4 systems even when accounting is enabled
+* many programs that convert strings to integers now use strtol or strtoul
+  and detect overflow
 User-visible changes in release 3.12:
 * None.
 User-visible changes in release 3.11:
