@@ -1,5 +1,21 @@
 2001-08-18  Jim Meyering  <meyering@lucent.com>
 
+	* Version 2.0.11.
+
+2001-06-20  Paul Eggert  <eggert@twinsun.com>
+
+	Modify 'expr' so that it uses intmax_t, not int, to calculate
+	the value of integer expressions.
+
+	* src/expr.c (struct valinfo.i): Now intmax_t, not int.
+	(docolon, int_value, str_value, isstring, nextarg, toarith,
+	freev, tostring, trace): Remove unnecessary forward decls.
+	(int_value, printv, tostring, toarith, arithf, arithdivf, docolon,
+	eval6, eval4, eval3): Do integer arithmetic using intmax_t, not int.
+	(docolon): Don't assume size_t fits in int.
+
+2001-08-18  Jim Meyering  <meyering@lucent.com>
+
 	Revert part of last change and solve the problem a better way.
 	* src/date.c (show_date) [--rfc-822]: Set LC_ALL=C just before
 	calling strftime and restore it just afterwards.
