@@ -1,3 +1,8 @@
+Tue Nov 26 23:05:14 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/sort.c (fraccompare): Add explicit `int' in `register' dcls,
+	to avoid new warning from gcc.
+
 Sun Nov 24 21:02:15 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* tests/sort-test/Makefile.am (t): Add names of those 5 tests.

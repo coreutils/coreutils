@@ -1301,6 +1301,23 @@ else
   esac
 fi
 test -s t18d.err || rm -f t18d.err
+$xx -nb -k1.1,1.2 $srcdir/t18e.in > t18e.out 2> t18e.err
+code=$?
+if test $code != 0 ; then
+  $echo Test 18e failed: ../../src/sort return code $code differs from expected value 0 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp t18e.out $srcdir/t18e.exp
+  case $? in
+    0) if test "$VERBOSE" ; then $echo passed 18e; fi ;; # equal files
+    1) $echo Test 18e failed: files t18e.out and $srcdir/t18e.exp differ 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo Test 18e may have failed. 1>&2;
+       $echo The command "cmp t18e.out $srcdir/t18e.exp" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s t18e.err || rm -f t18e.err
 if test $errors = 0 ; then
   $echo Passed all tests. 1>&2
 else
