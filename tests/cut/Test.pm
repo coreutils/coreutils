@@ -2,27 +2,26 @@ package Test;
 require 5.002;
 use strict;
 
-my $nl = "\n";
-@Test::t = (
+my @tv = (
 # test flags		input		expected output	expected return code
 #
-['1', '-d: -f1,3-',	"a:b:c$nl",		"a:c\n",		0],
+['1', '-d: -f1,3-',	"a:b:c\n",		"a:c\n",		0],
 ['2', '-d: -f1,3-',	"a:b:c\n",		"a:c\n",		0],
-['3', '-d: -f2-',	"a:b:c$nl",		"b:c\n",		0],
-['4', '-d: -f4',	"a:b:c$nl",		"\n",			0],
+['3', '-d: -f2-',	"a:b:c\n",		"b:c\n",		0],
+['4', '-d: -f4',	"a:b:c\n",		"\n",			0],
 ['5', '-d: -f4',	"",			"",			0],
-['6', '-c4',		"123$nl",		"\n",			0],
+['6', '-c4',		"123\n",		"\n",			0],
 ['7', '-c4',		"123",			"\n",			0],
 ['8', '-c4',		"123\n1",		"\n\n",			0],
 ['9', '-c4',		"",			"",			0],
-['a', '-s -d: -f3-',	"a:b:c$nl",		"c\n",			0],
-['b', '-s -d: -f2,3',	"a:b:c$nl",		"b:c\n",		0],
-['c', '-s -d: -f1,3',	"a:b:c$nl",		"a:c\n",		0],
+['a', '-s -d: -f3-',	"a:b:c\n",		"c\n",			0],
+['b', '-s -d: -f2,3',	"a:b:c\n",		"b:c\n",		0],
+['c', '-s -d: -f1,3',	"a:b:c\n",		"a:c\n",		0],
 # Trailing colon should not be output
-['d', '-s -d: -f1,3',	"a:b:c:$nl",		"a:c\n",		0],
-['e', '-s -d: -f3-',	"a:b:c:$nl",		"c:\n",			0],
-['f', '-s -d: -f3-4',	"a:b:c:$nl",		"c:\n",			0],
-['g', '-s -d: -f3,4',	"a:b:c:$nl",		"c:\n",			0],
+['d', '-s -d: -f1,3',	"a:b:c:\n",		"a:c\n",		0],
+['e', '-s -d: -f3-',	"a:b:c:\n",		"c:\n",			0],
+['f', '-s -d: -f3-4',	"a:b:c:\n",		"c:\n",			0],
+['g', '-s -d: -f3,4',	"a:b:c:\n",		"c:\n",			0],
 # Make sure -s suppresses non-delimited lines
 ['h', '-s -d: -f2,3',	"abc\n",		"",			0],
 #
@@ -58,5 +57,10 @@ my $nl = "\n";
 # Missing byte list
 ['D', '-b',		":\n",			"",			1],
 );
+
+sub test_vector
+{
+  return @tv;
+}
 
 1;

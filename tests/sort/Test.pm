@@ -3,7 +3,7 @@ package Test;
 require 5.002;
 use strict;
 
-@Test::t = (
+my @tv = (
 #test   options   input   expected-output   expected-return-code
 #
 ["01a", '', "A\nB\nC\n", "A\nB\nC\n", 0],
@@ -150,5 +150,10 @@ use strict;
 ["18e", '-nb -k1.1,1.2', " 901\n100\n", "100\n 901\n", 0],
 
 );
+
+sub test_vector
+{
+  return @tv;
+}
 
 1;

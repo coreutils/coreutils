@@ -4,7 +4,7 @@ use strict;
 
 $Test::input_via_stdin = 1;
 
-@Test::t = (
+my @tv = (
 # test flags  1 or 2 strings   input    expected output    expected return code
 #
 ['1',         q|'abcd' '[]*]'|,   'abcd',   ']]]]',              0],
@@ -96,5 +96,10 @@ $Test::input_via_stdin = 1;
 ['R5', '-dc ' . q|'[:lower:]'|,		'', '', 0],
 ['R6', '-dc ' . q|'[:upper:]'|,		'', '', 0],
 );
+
+sub test_vector
+{
+  return @tv;
+}
 
 1;

@@ -2,7 +2,7 @@ package Test;
 require 5.002;
 use strict;
 
-@Test::t = (
+my @tv = (
 # test name
 #     flags       file-1 file-2    expected output   expected return code
 #
@@ -90,8 +90,12 @@ use strict;
  "a .\nb .\nc .\nd G\ne .\n", 0],
 
 # From David Dyck
-['9a', '',
- [" a 1\n b 2\n", " a Y\n b Z\n"], "a 1 Y\nb 2 Z\n", 0],
+['9a', '', [" a 1\n b 2\n", " a Y\n b Z\n"], "a 1 Y\nb 2 Z\n", 0],
 );
+
+sub test_vector
+{
+  return @tv;
+}
 
 1;
