@@ -1,3 +1,12 @@
+Wed Jul 31 23:39:23 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/ln.c [LINK_TYPE]: Remove macro.  NLS messages aren't
+	extracted from macros.  Reported by Santiago Vila.
+	(link_type_string): New global variable to be used instead of
+	LINK_TYPE.
+	(main): Set it here.
+	(do_link): Use it (instead of macro) here.
+
 Tue Jul 30 23:24:18 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in (AC_CHECK_HEADERS): Add sys/fs/s5param.h.
