@@ -1,12 +1,25 @@
 2001-11-23  Jim Meyering  <meyering@lucent.com>
 
+	* src/shred.c (usage): Use `output', not `print' in description of
+	the --version option, so this message is consistent with all the rest.
+
+	* chgrp.c, chmod.c, chown.c, cp.c, dd.c, df.c, dircolors.c (usage):
+	* du.c, install.c, ln.c, ls.c, rm.c, rmdir.c, shred.c, touch.c (usage):
+	Split --help output into smaller pieces.
+	Use fputs, not printf.
+
+	* cp-hash.c, du.c, remove.c:
+	Use opaque type, Hash_table, not `struct hash_table'.
+
+2001-11-23  Jim Meyering  <meyering@lucent.com>
+
+	* Version 4.1.2.
+
 	* src/cp-hash.c: Use opaque type, Hash_table, not `struct hash_table'.
 	* src/du.c: Likewise.
 	* src/remove.c: Likewise.
 
 2001-11-22  Jim Meyering  <meyering@lucent.com>
-
-	* Version 4.1.2.
 
 	Don't fail for commands like this: cp a a d/
 	This change in behavior was introduced in 4.1.1, as part of the
