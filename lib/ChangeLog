@@ -1,3 +1,9 @@
+2002-07-09  Jim Meyering  <meyering@lucent.com>
+
+	* mountlist.h (ME_DUMMY): Don't count entries of type `auto' as dummy
+	ones.  At least on GNU/Linux systems, `auto' means something else.
+	From Michael Stone.
+
 2002-07-01  Jim Meyering  <meyering@lucent.com>
 
 	* c-stack.c: Include sys/time.h.
