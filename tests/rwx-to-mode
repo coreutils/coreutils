@@ -1,0 +1,12 @@
+#!/bin/sh
+# Convert an ls-style permission string, like drwxr----x and -rw-r-x-wx
+# to the equivalent chmod --mode (-m) argument, (=,u=rwx,g=r,o=x and
+# =,u=rw,g=rx,o=wx).
+
+# FIXME: handle special bits, too.
+
+rwx=$1
+u=`echo $rwx|sed 's/^.\(...\).*/\1/;s/-//g'`
+g=`echo $rwx|sed 's/^....\(...\).*/\1/;s/-//g'`
+o=`echo $rwx|sed 's/^.......\(...\).*/\1/;s/-//g'`
+echo "=,u=$u,g=$g,o=$o"
