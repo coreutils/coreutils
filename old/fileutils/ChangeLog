@@ -1,3 +1,10 @@
+1998-06-21  Jim Meyering  <meyering@ascend.com>
+
+	* Version 3.16q.
+
+	* aclocal.m4: Regenerate with fixed gettext.m4 installed.
+	See README-alpha for details.
+
 1998-06-02  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* src/automake-wrap: Quote `&' in sed replacement text.
