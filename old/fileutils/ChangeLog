@@ -1,10 +1,14 @@
-1999-10-30  Jim Meyering  <meyering@ascend.com>
+1999-10-31  Jim Meyering  <meyering@ascend.com>
+
+	* doc/fileutils.texi: Document new --backup[=METHOD] option for
+	cp, mv, ln, and install.
 
 	* src/ln.c: Convert --backup to take an optional argument.
 	Deprecate --version-control (-V) in comments.
 	(usage): Remove mention of --version-control.
 	(main): Make -V warn then fall through into --backup case.
 	[--backup case]: Handle optional arg.
+	* src/install.c: Likewise.
 
 1999-10-24  Jim Meyering  <meyering@ascend.com>
 
