@@ -84,7 +84,7 @@ a_url_dir = $(alpha_subdir)
 b_url_dir = $(alpha_subdir)
 
 a_real_dir = /fs/share/ftp/$(alpha_subdir)
-b_real_dir = /home/ftp/$(alpha_subdir)
+b_real_dir = fetish-ftp
 
 url_dir_list = $(foreach x,a b,ftp://$($(x)_host)/$($(x)_url_dir))
 
