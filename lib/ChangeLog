@@ -1,3 +1,10 @@
+2004-07-29  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* memchr.c (UNALIGNED_P): Use sizeof, not alignof, for better
+	performance on m68k-linux.  Reported by Andreas Schwab in
+	<http://lists.gnu.org/archive/html/bug-coreutils/2004-07/msg00104.html>.
+	* memrchr.c (UNALIGNED_P): Likewise.
+	
 2004-07-28  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* userspec.c: Include <stdbool.h>, "inttostr.h".
