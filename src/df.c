@@ -210,7 +210,8 @@ excluded_fstype (const char *fstype)
 }
 
 /* Like human_readable_inexact, except return "-" if the argument is -1,
-   and return the negative of N if NEGATIVE is 1.  */
+   and if NEGATIVE is 1 then N represents a negative number, expressed
+   in two's complement.  */
 static char const *
 df_readable (int negative, uintmax_t n, char *buf,
 	     int from_block_size, int t_output_block_size,
@@ -356,29 +357,37 @@ show_dev (const char *disk, const char *mount_point, const char *fstype,
 			      buf[2], input_units, output_units,
 			      posix_format ? human_ceiling : human_floor));
 
-  if (used != -1 && available != -1)
+  if (used == -1 || available == -1)
+    ;
+  else if (!negate_used
+	   && used <= TYPE_MAXIMUM (uintmax_t) / 100
+	   && used + available != 0
+	   && (used + available < used) == negate_available)
     {
-      /* The following floating-point calculations can suffer from
-	 minor rounding errors, but making them precise requires
+      uintmax_t u100 = used * 100;
+      uintmax_t nonroot_total = used + available;
+      pct = u100 / nonroot_total + (u100 % nonroot_total != 0);
+    }
+  else
+    {
+      /* The calculation cannot be done easily with integer
+	 arithmetic.  Fall back on floating point.  This can suffer
+	 from minor rounding errors, but doing it exactly requires
 	 multiple precision arithmetic, and it's not worth the
 	 aggravation.  */
-
-      double u = used;
-      double a = available;
-      double nonroot_total = ((negate_used ? - u : u)
-			      + (negate_available ? - a : a));
+      double u = negate_used ? - (double) - used : used;
+      double a = negate_available ? - (double) - available : available;
+      double nonroot_total = u + a;
       if (nonroot_total)
 	{
+	  double ipct;
 	  pct = u * 100 / nonroot_total;
+	  ipct = (long) pct;
 
-	  if (posix_format)
-	    {
-	      /* Like `pct = ceil (pct);', but avoid ceil so that
-		 the math library needn't be linked.  */
-	      double ipct = (long) pct;
-	      if (ipct - 1 < pct && pct <= ipct + 1)
-		pct = ipct + (ipct < pct);
-	    }
+	  /* Like `pct = ceil (dpct);', but avoid ceil so that
+	     the math library needn't be linked.  */
+	  if (ipct - 1 < pct && pct <= ipct + 1)
+	    pct = ipct + (ipct < pct);
 	}
     }
 
