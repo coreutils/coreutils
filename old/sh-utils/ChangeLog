@@ -1,5 +1,7 @@
 1999-02-07  Jim Meyering  <meyering@ascend.com>
 
+	* Version 1.16f.
+
 	* Makefile.maint (my-distcheck): Don't depend on dist, now that this
 	is hooked up to the distcheck rule.
 	* Makefile.am (distcheck-hook): New target and rule -- link to shared
@@ -183,8 +185,6 @@
 	Reported by Donni Erpel.
 
 1998-07-12  Jim Meyering  <meyering@ascend.com>
-
-	* Version 1.16f.
 
 	* tests/test: New directory and tests.
 	* tests/Makefile.am (SUBDIRS): Add test.
