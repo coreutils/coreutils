@@ -1,5 +1,6 @@
 Changes in release 2.1
 [2.0.12]
+* sort has improved performance when using very little main memory
 * sort has improved memory management
 * sort is no longer susceptible to certain denial of service attacks
 * sort no longer suffers from a race condition whereby an interrupt received
