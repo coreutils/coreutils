@@ -23,12 +23,8 @@ if test $test_failure = 1; then
   exit 1
 fi
 
-cat <<EOF > $tmp/$test.Iy
-y
-EOF
-cat <<EOF > $tmp/$test.In
-n
-EOF
+echo y > $tmp/$test.Iy
+echo n > $tmp/$test.In
 
 fail=0
 $RM -i $tmp/a < $tmp/$test.In > /dev/null 2>&1 || fail=1
