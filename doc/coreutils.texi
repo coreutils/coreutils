@@ -10955,7 +10955,7 @@ the number of a signal, and specifes the signal to be sent.  The
 default signal to send if none is specified is @samp{TERM}.  The
 symbolic signal name can be given in canonical form or prefixed by
 @samp{SIG}.  The case of the letters is ignored.  The following signal
-names and numbers are supported on all POSIX compliant systems:
+names and numbers are supported on all @sc{posix} compliant systems:
 
 @table @asis
 @item 1
@@ -10975,7 +10975,7 @@ names and numbers are supported on all POSIX compliant systems:
 @end table
 
 Other supported signal names have system-dependent corresponding
-numbers.  All POSIX compliant systems support the signal names
+numbers.  All @sc{posix} compliant systems support the signal names
 @samp{FPE}, @samp{ILL}, @samp{BUS}, @samp{CHLD}, @samp{CONT},
 @samp{PIPE}, @samp{SEGV}, @samp{STOP}, @samp{TSTP}, @samp{TTIN},
 @samp{TTOU}, @samp{USR1}, @samp{USR2}, @samp{POLL}, @samp{PROF},
