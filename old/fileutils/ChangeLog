@@ -1,5 +1,7 @@
 2002-04-14  Jim Meyering  <meyering@lucent.com>
 
+	* Version 4.1.9.
+
 	* src/stat.c (statfs_secure): Define.
 	(print_stat): Remove another #ifdef.
 	(do_statfs): Likewise.
@@ -37,8 +39,6 @@
 	Declare most functions to be `static'.
 
 2002-04-12  Jim Meyering  <meyering@lucent.com>
-
-	* Version 4.1.9.
 
 	* src/Makefile.am (LDADD): List ../lib/libfetish.a both before
 	and after @LIBINTL@.  Thanks to Paul Eggert for the fix and to
