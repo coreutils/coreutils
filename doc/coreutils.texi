@@ -8011,13 +8011,6 @@ Without it, @command{stat} acts on any symbolic link argument directly.
 @cindex terse output
 Print the information in terse form, suitable for parsing by other programs.
 
-@item -s
-@itemx --secure
-@opindex -s
-@opindex --secure
-@cindex security output
-Display security context on SE Linux.
-
 @item -c
 @itemx --format
 @opindex -c
