@@ -27,6 +27,7 @@ typedef enum strtol_error strtol_error;
 		  type *val, const char *valid_suffixes));
 _DECLARE_XSTRTOL (xstrtol, long int)
 _DECLARE_XSTRTOL (xstrtoul, unsigned long int)
+_DECLARE_XSTRTOL (xstrtoimax, intmax_t)
 _DECLARE_XSTRTOL (xstrtoumax, uintmax_t)
 
 # define _STRTOL_ERROR(Exit_code, Str, Argument_type_string, Err)	\
