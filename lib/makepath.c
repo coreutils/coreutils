@@ -99,7 +99,6 @@ extern int errno;
 
 #define WX_USR (S_IWUSR | S_IXUSR)
 
-/* Include this before libintl.h so we get our definition of PARAMS. */
 #include "makepath.h"
 
 #include "gettext.h"
