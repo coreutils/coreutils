@@ -60,6 +60,10 @@ struct valinfo
 };
 typedef struct valinfo VALUE;
 
+/* Non-zero if the POSIXLY_CORRECT environment variable is set.
+   The unary operator `quote' is disabled when this variable is zero.  */
+static int posixly_correct;
+
 /* The arguments given to the program, minus the program name.  */
 static char **args;
 
@@ -134,6 +138,8 @@ separates increasing precedence groups.  EXPRESSION may be:\n\
   substr STRING POS LENGTH   substring of STRING, POS counted from 1\n\
   index STRING CHARS         index in STRING where any CHARS is found, or 0\n\
   length STRING              length of STRING\n\
+  quote TOKEN                interpret TOKEN as a string, even if it is a\n\
+                               keyword like `match' or an operator like `/'\n\
 \n\
   ( EXPRESSION )             value of EXPRESSION\n\
 "));
@@ -159,8 +165,10 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  /* Don't recognize --help or --version if POSIXLY_CORRECT is set.  */
-  if (getenv ("POSIXLY_CORRECT") == NULL)
+  posixly_correct = (getenv ("POSIXLY_CORRECT") != NULL);
+
+  /* Recognize --help or --version only if POSIXLY_CORRECT is not set.  */
+  if (!posixly_correct)
     parse_long_options (argc, argv, "expr", GNU_PACKAGE, VERSION, usage);
 
   if (argc == 1)
@@ -494,7 +502,7 @@ eval7 (void)
   return str_value (*args++);
 }
 
-/* Handle match, substr, index, and length keywords.  */
+/* Handle match, substr, index, length, and quote keywords.  */
 
 static VALUE *
 eval6 (void)
@@ -508,7 +516,14 @@ eval6 (void)
 #ifdef EVAL_TRACE
   trace ("eval6");
 #endif
-  if (nextarg ("length"))
+  if (!posixly_correct && nextarg ("quote"))
+    {
+      args++;
+      if (nomoreargs ())
+	error (2, 0, _("syntax error"));
+      return str_value (*args++);
+    }
+  else if (nextarg ("length"))
     {
       args++;
       r = eval6 ();
