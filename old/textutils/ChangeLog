@@ -1,5 +1,9 @@
 Sun Oct  6 08:02:28 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* acinclude.m4 (AC_HEADER_SYS_TIME_H, AM_FUNC_MKTIME,
+	AM_FUNC_ERROR_AT_LINE, AM_FUNC_OBSTACK): Remove definitions.
+	They're included in automake-1.1f.
+
 	* configure.in (AM_FUNC_ERROR_AT_LINE): Use it instead of
 	open-coding it.
 
