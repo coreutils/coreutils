@@ -1441,7 +1441,7 @@ expression @var{bre}.
 @opindex --section-delimiter
 @cindex section delimiters of pages
 Set the section delimiter characters to @var{cd}; default is
-@samp{\:}. If only @var{c} is given, the second remains @samp{:}.
+@samp{\:}.  If only @var{c} is given, the second remains @samp{:}.
 (Remember to protect @samp{\} or other metacharacters from shell
 expansion with quotes or extra backslashes.)
 
@@ -3182,7 +3182,7 @@ has two problems.  First, it is ineffective if @env{LC_ALL} is also set.
 Second, it has undefined behavior if @env{LC_CTYPE} (or @env{LANG}, if
 @env{LC_CTYPE} is unset) is set to an incompatible value.  For example,
 you get undefined behavior if @env{LC_CTYPE} is @code{ja_JP.PCK} but
-@env{LC_COLLATE} is @code{en_US.UTF-8}. }
+@env{LC_COLLATE} is @code{en_US.UTF-8}.}
 
 @sc{gnu} @command{sort} (as specified for all @sc{gnu} utilities) has no
 limit on input line length or restrictions on bytes allowed within lines.
@@ -6938,7 +6938,7 @@ gives directories that it creates the default attributes.)
 @opindex --group
 @cindex group ownership of installed files, setting
 Set the group ownership of installed files or directories to
-@var{group}. The default is the process' current group.  @var{group}
+@var{group}.  The default is the process's current group.  @var{group}
 may be either a group name or a numeric group id.
 
 @item -m @var{mode}
@@ -6960,7 +6960,7 @@ and execute for the owner, and read and execute for group and other.
 @cindex appropriate privileges
 @vindex root @r{as default owner}
 If @command{install} has appropriate privileges (is run as root), set the
-ownership of installed files or directories to @var{owner}. The default
+ownership of installed files or directories to @var{owner}.  The default
 is @code{root}.  @var{owner} may be either a user name or a numeric user
 ID.
 
@@ -9270,18 +9270,20 @@ digits) specifying a character to print.
 
 @kindex \uhhhh
 @kindex \Uhhhhhhhh
+@cindex Unicode
+@cindex ISO/IEC 10646
+@vindex LC_CTYPE
 @command{printf} interprets two character syntaxes introduced in ISO C 99:
-@samp{\u} for 16-bit Unicode characters, specified as 4 hex digits
-@var{hhhh}, and @samp{\U} for 32-bit Unicode characters, specified as 8 hex
-digits @var{hhhhhhhh}. @command{printf} outputs the Unicode characters
-according to the LC_CTYPE part of the current locale, i.e., depending
-on the values of the environment variables @env{LC_ALL}, @env{LC_CTYPE},
-@env{LANG}.
+@samp{\u} for 16-bit Unicode (ISO/IEC 10646) characters, specified as
+four hexadecimal digits @var{hhhh}, and @samp{\U} for 32-bit Unicode
+characters, specified as eight hexadecimal digits @var{hhhhhhhh}.
+@command{printf} outputs the Unicode characters
+according to the @env{LC_CTYPE} locale.
 
 The processing of @samp{\u} and @samp{\U} requires a full-featured
 @code{iconv} facility.  It is activated on systems with glibc 2.2 (or newer),
-or when @code{libiconv} is installed prior to this package.  Otherwise the
-use of @samp{\u} and @samp{\U} will give an error message.
+or when @code{libiconv} is installed prior to this package.  Otherwise
+@samp{\u} and @samp{\U} will print as-is.
 
 The only options are a lone @option{--help} or
 @option{--version}.  @xref{Common options}.
@@ -9296,7 +9298,7 @@ $ /usr/local/bin/printf '\u20AC 14.95'
 
 @noindent
 will be output correctly in all locales supporting the Euro symbol
-(ISO-8859-15, UTF-8, and others). Similarly, a Chinese string
+(ISO-8859-15, UTF-8, and others).  Similarly, a Chinese string
 
 @example
 $ /usr/local/bin/printf '\u4e2d\u6587'
@@ -11451,9 +11453,9 @@ week number of year with Sunday as first day of week (00@dots{}53).
 Days in a new year preceding the first Sunday are in week zero.
 @item %V
 week number of year with Monday as first day of the week as a decimal
-(01@dots{}53). If the week containing January 1 has four or more days in
+(01@dots{}53).  If the week containing January 1 has four or more days in
 the new year, then it is considered week 1; otherwise, it is week 53 of
-the previous year, and the next week is week 1. (See the @acronym{ISO} 8601
+the previous year, and the next week is week 1.  (See the @acronym{ISO} 8601
 standard.)
 @item %w
 day of week (0@dots{}6) with 0 corresponding to Sunday
@@ -12353,7 +12355,7 @@ the exit status of @var{command} otherwise
 
 @command{su} allows one user to temporarily become another user.  It runs a
 command (often an interactive shell) with the real and effective user
-id, group id, and supplemental groups of a given @var{user}. Synopsis:
+id, group id, and supplemental groups of a given @var{user}.  Synopsis:
 
 @example
 su [@var{option}]@dots{} [@var{user} [@var{arg}]@dots{}]
@@ -13019,7 +13021,7 @@ water pipeline.
 With the Unix shell, it's very easy to set up data pipelines:
 
 @smallexample
-program_to_create_data | filter1 | .... | filterN > final.pretty.data
+program_to_create_data | filter1 | ... | filterN > final.pretty.data
 @end smallexample
 
 We start out by creating the raw data; each filter applies some successive
@@ -13467,7 +13469,7 @@ This book showed how to write and use software tools.  It was written in
 1976, using a preprocessor for FORTRAN named @command{ratfor} (RATional
 FORtran).  At the time, C was not as ubiquitous as it is now; FORTRAN
 was.  The last chapter presented a @command{ratfor} to FORTRAN
-processor, written in @command{ratfor}. @command{ratfor} looks an awful
+processor, written in @command{ratfor}.  @command{ratfor} looks an awful
 lot like C; if you know C, you won't have any problem following the
 code.
 
