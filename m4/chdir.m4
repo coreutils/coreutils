@@ -1,6 +1,6 @@
 #serial 1
 
-# From Jim Meyering.
+# Written by Jim Meyering.
 # Use Gnulib's robust replacement chdir function.
 # It can handle arbitrarily long directory names, which means
 # that when it is given the name of an existing directory, it
