@@ -233,20 +233,22 @@ static size_t quote_name (FILE *out, const char *name,
 static char *make_link_path (const char *path, const char *linkname);
 static int decode_switches (int argc, char **argv);
 static bool file_ignored (char const *name);
-static uintmax_t gobble_file (const char *name, enum filetype type,
-			      bool explicit_arg, const char *dirname);
+static uintmax_t gobble_file (char const *name, enum filetype type,
+			      bool command_line_arg, char const *dirname);
 static void print_color_indicator (const char *name, mode_t mode, int linkok);
 static void put_indicator (const struct bin_str *ind);
 static void add_ignore_pattern (const char *pattern);
 static void attach (char *dest, const char *dirname, const char *name);
 static void clear_files (void);
-static void extract_dirs_from_files (const char *dirname,
-				     bool ignore_dot_and_dot_dot);
-static void get_link_name (const char *filename, struct fileinfo *f);
+static void extract_dirs_from_files (char const *dirname,
+				     bool command_line_arg);
+static void get_link_name (char const *filename, struct fileinfo *f,
+			   bool command_line_arg);
 static void indent (size_t from, size_t to);
 static size_t calculate_columns (bool by_columns);
 static void print_current_files (void);
-static void print_dir (const char *name, const char *realname);
+static void print_dir (char const *name, char const *realname,
+		       bool command_line_arg);
 static void print_file_name_and_frills (const struct fileinfo *f);
 static void print_horizontal (void);
 static int format_user_width (uid_t u);
@@ -259,7 +261,8 @@ static void print_name_with_quoting (const char *p, mode_t mode,
 static void prep_non_filename_text (void);
 static void print_type_indicator (mode_t mode);
 static void print_with_commas (void);
-static void queue_directory (const char *name, const char *realname);
+static void queue_directory (char const *name, char const *realname,
+			     bool command_line_arg);
 static void sort_files (void);
 static void parse_ls_color (void);
 void usage (int status);
@@ -319,6 +322,7 @@ struct pending
        were told to list, `realname' will contain the name of the symbolic
        link, otherwise zero.  */
     char *realname;
+    bool command_line_arg;
     struct pending *next;
   };
 
@@ -1114,7 +1118,7 @@ main (int argc, char **argv)
 
   exit_status = EXIT_SUCCESS;
   print_dir_name = true;
-  pending_dirs = 0;
+  pending_dirs = NULL;
 
   i = decode_switches (argc, argv);
 
@@ -1219,7 +1223,7 @@ main (int argc, char **argv)
       if (immediate_dirs)
 	gobble_file (".", directory, true, "");
       else
-	queue_directory (".", 0);
+	queue_directory (".", NULL, true);
     }
   else
     do
@@ -1230,7 +1234,7 @@ main (int argc, char **argv)
     {
       sort_files ();
       if (!immediate_dirs)
-	extract_dirs_from_files ("", false);
+	extract_dirs_from_files (NULL, true);
       /* `files_index' might be zero now.  */
     }
 
@@ -1270,7 +1274,8 @@ main (int argc, char **argv)
 	    }
 	}
 
-      print_dir (thispend->name, thispend->realname);
+      print_dir (thispend->name, thispend->realname,
+		 thispend->command_line_arg);
 
       free_pending_ent (thispend);
       print_dir_name = true;
@@ -2191,33 +2196,57 @@ parse_ls_color (void)
     color_symlink_as_referent = true;
 }
 
+/* Set the exit status to report a failure.  If SERIOUS, it is a
+   serious failure; otherwise, it is merely a minor problem.  */
+
+static void
+set_exit_status (bool serious)
+{
+  if (serious)
+    exit_status = LS_FAILURE;
+  else if (exit_status == EXIT_SUCCESS)
+    exit_status = LS_MINOR_PROBLEM;
+}
+
+/* Assuming a failure is serious if SERIOUS, use the printf-style
+   MESSAGE to report the failure to access a file named FILE.  Assume
+   errno is set appropriately for the failure.  */
+
+static void
+file_failure (bool serious, char const *message, char const *file)
+{
+  error (0, errno, message, quotearg_colon (file));
+  set_exit_status (serious);
+}
+
 /* Request that the directory named NAME have its contents listed later.
    If REALNAME is nonzero, it will be used instead of NAME when the
    directory name is printed.  This allows symbolic links to directories
    to be treated as regular directories but still be listed under their
    real names.  NAME == NULL is used to insert a marker entry for the
    directory named in REALNAME.
-   If F is non-NULL, we use its dev/ino information to save
-   a call to stat -- when doing a recursive (-R) traversal.  */
+   If NAME is non-NULL, we use its dev/ino information to save
+   a call to stat -- when doing a recursive (-R) traversal.
+   COMMAND_LINE_ARG means this directory was mentioned on the command line.  */
 
 static void
-queue_directory (const char *name, const char *realname)
+queue_directory (char const *name, char const *realname, bool command_line_arg)
 {
-  struct pending *new;
-
-  new = xmalloc (sizeof *new);
+  struct pending *new = xmalloc (sizeof *new);
   new->realname = realname ? xstrdup (realname) : NULL;
   new->name = name ? xstrdup (name) : NULL;
+  new->command_line_arg = command_line_arg;
   new->next = pending_dirs;
   pending_dirs = new;
 }
 
-/* Read directory `name', and list the files in it.
-   If `realname' is nonzero, print its name instead of `name';
-   this is used for symbolic links to directories.  */
+/* Read directory NAME, and list the files in it.
+   If REALNAME is nonzero, print its name instead of NAME;
+   this is used for symbolic links to directories.
+   COMMAND_LINE_ARG means this directory was mentioned on the command line.  */
 
 static void
-print_dir (const char *name, const char *realname)
+print_dir (char const *name, char const *realname, bool command_line_arg)
 {
   register DIR *dirp;
   register struct dirent *next;
@@ -2228,8 +2257,7 @@ print_dir (const char *name, const char *realname)
   dirp = opendir (name);
   if (!dirp)
     {
-      error (0, errno, "%s", quotearg_colon (name));
-      exit_status = LS_FAILURE;
+      file_failure (command_line_arg, "%s", name);
       return;
     }
 
@@ -2243,9 +2271,8 @@ print_dir (const char *name, const char *realname)
 	   ? fstat (fd, &dir_stat)
 	   : stat (name, &dir_stat)) < 0)
 	{
-	  error (0, errno, _("cannot determine device and inode of %s"),
-		 quotearg_colon (name));
-	  exit_status = LS_FAILURE;
+	  file_failure (command_line_arg,
+			_("cannot determine device and inode of %s"), name);
 	  return;
 	}
 
@@ -2291,26 +2318,19 @@ print_dir (const char *name, const char *realname)
 	      total_blocks += gobble_file (next->d_name, type, false, name);
 	    }
 	}
-      else if (errno == EOVERFLOW)
+      else if (errno != 0)
 	{
-	  error (0, errno, _("reading directory %s"), quotearg_colon (name));
-	  if (exit_status == EXIT_SUCCESS)
-	    exit_status = LS_MINOR_PROBLEM;
+	  file_failure (command_line_arg, _("reading directory %s"), name);
+	  if (errno != EOVERFLOW)
+	    break;
 	}
       else
 	break;
     }
 
-  if (errno)
-    {
-      error (0, errno, _("reading directory %s"), quotearg_colon (name));
-      exit_status = LS_FAILURE;
-    }
-
   if (CLOSEDIR (dirp) != 0)
     {
-      error (0, errno, _("reading directory %s"), quotearg_colon (name));
-      exit_status = LS_FAILURE;
+      file_failure (command_line_arg, _("closing directory %s"), name);
       /* Don't return; print whatever we got.  */
     }
 
@@ -2321,7 +2341,7 @@ print_dir (const char *name, const char *realname)
      contents listed rather than being mentioned here as files.  */
 
   if (recursive)
-    extract_dirs_from_files (name, true);
+    extract_dirs_from_files (name, command_line_arg);
 
   if (recursive | print_dir_name)
     {
@@ -2438,8 +2458,8 @@ clear_files (void)
    Return the number of blocks that the file occupies.  */
 
 static uintmax_t
-gobble_file (const char *name, enum filetype type, bool explicit_arg,
-	     const char *dirname)
+gobble_file (char const *name, enum filetype type, bool command_line_arg,
+	     char const *dirname)
 {
   register uintmax_t blocks;
   register char *path;
@@ -2456,7 +2476,7 @@ gobble_file (const char *name, enum filetype type, bool explicit_arg,
   f->linkmode = 0;
   f->linkok = false;
 
-  if (explicit_arg
+  if (command_line_arg
       || format_needs_stat
       || (format_needs_type
 	  && (type == unknown
@@ -2498,7 +2518,7 @@ gobble_file (const char *name, enum filetype type, bool explicit_arg,
 
 	case DEREF_COMMAND_LINE_ARGUMENTS:
 	case DEREF_COMMAND_LINE_SYMLINK_TO_DIR:
-	  if (explicit_arg)
+	  if (command_line_arg)
 	    {
 	      bool need_lstat;
 	      err = stat (path, &f->stat);
@@ -2525,9 +2545,7 @@ gobble_file (const char *name, enum filetype type, bool explicit_arg,
 
       if (err < 0)
 	{
-	  error (0, errno, "%s", quotearg_colon (path));
-	  if (exit_status == EXIT_SUCCESS)
-	    exit_status = LS_MINOR_PROBLEM;
+	  file_failure (command_line_arg, "%s", path);
 	  return 0;
 	}
 
@@ -2547,7 +2565,7 @@ gobble_file (const char *name, enum filetype type, bool explicit_arg,
 	  char *linkpath;
 	  struct stat linkstats;
 
-	  get_link_name (path, f);
+	  get_link_name (path, f, command_line_arg);
 	  linkpath = make_link_path (path, f->linkname);
 
 	  /* Avoid following symbolic links when possible, ie, when
@@ -2561,7 +2579,7 @@ gobble_file (const char *name, enum filetype type, bool explicit_arg,
 	      /* Symbolic links to directories that are mentioned on the
 	         command line are automatically traced if not being
 	         listed as files.  */
-	      if (!explicit_arg || format == long_format
+	      if (!command_line_arg || format == long_format
 		  || !S_ISDIR (linkstats.st_mode))
 		{
 		  /* Get the linked-to file's mode for the filetype indicator
@@ -2578,7 +2596,7 @@ gobble_file (const char *name, enum filetype type, bool explicit_arg,
 	f->filetype = symbolic_link;
       else if (S_ISDIR (f->stat.st_mode))
 	{
-	  if (explicit_arg & !immediate_dirs)
+	  if (command_line_arg & !immediate_dirs)
 	    f->filetype = arg_directory;
 	  else
 	    f->filetype = directory;
@@ -2672,20 +2690,17 @@ gobble_file (const char *name, enum filetype type, bool explicit_arg,
 
 #ifdef S_ISLNK
 
-/* Put the name of the file that `filename' is a symbolic link to
-   into the `linkname' field of `f'.  */
+/* Put the name of the file that FILENAME is a symbolic link to
+   into the LINKNAME field of `f'.  COMMAND_LINE_ARG indicates whether
+   FILENAME is a command-line argument.  */
 
 static void
-get_link_name (const char *filename, struct fileinfo *f)
+get_link_name (char const *filename, struct fileinfo *f, bool command_line_arg)
 {
   f->linkname = xreadlink (filename, f->stat.st_size);
   if (f->linkname == NULL)
-    {
-      error (0, errno, _("cannot read symbolic link %s"),
-	     quotearg_colon (filename));
-      if (exit_status == EXIT_SUCCESS)
-	exit_status = LS_MINOR_PROBLEM;
-    }
+    file_failure (command_line_arg, _("cannot read symbolic link %s"),
+		  filename);
 }
 
 /* If `linkname' is a relative path and `path' contains one or more
@@ -2729,25 +2744,27 @@ basename_is_dot_or_dotdot (const char *name)
   return DOT_OR_DOTDOT (base);
 }
 
-/* Remove any entries from `files' that are for directories,
+/* Remove any entries from FILES that are for directories,
    and queue them to be listed as directories instead.
-   `dirname' is the prefix to prepend to each dirname
-   to make it correct relative to ls's working dir.
-   If IGNORE_DOT_AND_DOT_DOT don't treat `.' and `..' as dirs.
+   DIRNAME is the prefix to prepend to each dirname
+   to make it correct relative to ls's working dir;
+   if it is null, no prefix is needed and "." and ".." should not be ignored.
+   If COMMAND_LINE_ARG is true, this directory was mentioned at the top level,
    This is desirable when processing directories recursively.  */
 
 static void
-extract_dirs_from_files (const char *dirname, bool ignore_dot_and_dot_dot)
+extract_dirs_from_files (char const *dirname, bool command_line_arg)
 {
   register size_t i;
   register size_t j;
+  bool ignore_dot_and_dot_dot = (dirname != NULL);
 
-  if (*dirname && LOOP_DETECT)
+  if (dirname && LOOP_DETECT)
     {
       /* Insert a marker entry first.  When we dequeue this marker entry,
 	 we'll know that DIRNAME has been processed and may be removed
 	 from the set of active directories.  */
-      queue_directory (NULL, dirname);
+      queue_directory (NULL, dirname, false);
     }
 
   /* Queue the directories last one first, because queueing reverses the
@@ -2757,14 +2774,15 @@ extract_dirs_from_files (const char *dirname, bool ignore_dot_and_dot_dot)
 	&& (!ignore_dot_and_dot_dot
 	    || !basename_is_dot_or_dotdot (files[i].name)))
       {
-	if (files[i].name[0] == '/' || dirname[0] == 0)
+	if (!dirname || files[i].name[0] == '/')
 	  {
-	    queue_directory (files[i].name, files[i].linkname);
+	    queue_directory (files[i].name, files[i].linkname,
+			     command_line_arg);
 	  }
 	else
 	  {
 	    char *path = path_concat (dirname, files[i].name, NULL);
-	    queue_directory (path, files[i].linkname);
+	    queue_directory (path, files[i].linkname, command_line_arg);
 	    free (path);
 	  }
 	if (files[i].filetype == arg_directory)
@@ -2801,8 +2819,7 @@ xstrcoll (char const *a, char const *b)
     {
       error (0, errno, _("cannot compare file names %s and %s"),
 	     quote_n (0, a), quote_n (1, b));
-      if (exit_status == EXIT_SUCCESS)
-	exit_status = LS_MINOR_PROBLEM;
+      set_exit_status (false);
       longjmp (failed_strcoll, 1);
     }
   return diff;
