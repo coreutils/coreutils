@@ -1,3 +1,29 @@
+Mon Feb 27 08:05:25 1995  Jim Meyering  (meyering@comco.com)
+
+	* system.h: Separate errno declaration from STDC_HEADERS.
+	Remove bcopy, bzero, strchr, strrchr definitions.
+
+	* stty.c (main, set_window_size): Use memset instead of bzero.
+	* su.c (correct_password): Likewise.
+
+	* seq.c Remove \n's from error format strings.
+	(main): Let `seq 1 1' work.
+	Invoke usage always with 1 when failing.
+
+Sat Feb 11 08:27:12 1995  Jim Meyering  (meyering@comco.com)
+
+	* src/Makefile.in (install): Fix rules for su to avoid relying on
+	just-built `id' executable.  That would lose when cross-compiling and
+	on systems like GNU in which a user may have several effective IDs.
+	(SOURCES, OBJECTS, PROGS): Add seq.
+
+        * configure.in (AC_REPLACE_FUNCS): Add memcmp, memcpy, and memset.
+        (AC_CHECK_FUNCS): Add strchr and strrchr.
+        * lib/Makefile.in (SOURCES): Add memcmp.c, memcpy.c, and memset.c.
+
+	* system.h: Remove index/rindex and bcmp/bcopy/bzero references.
+	Separate errno declaration from STDC_HEADERS.
+
 Thu Jan 26 23:38:04 1995  Jim Meyering  (meyering@comco.com)
 
 	* getdate.y (ToSeconds): Properly convert 12am and 12pm.
