@@ -147,6 +147,7 @@ specifies Coordinated Universal Time.  Interpreted sequences are:\n\
   %%b   locale's abbreviated month name (Jan..Dec)\n\
   %%B   locale's full month name, variable length (January..December)\n\
   %%c   locale's date and time (Sat Nov 04 12:02:33 EST 1989)\n\
+  %%C   century (year divided by 100 and truncated to an integer) [00-99]\n\
   %%d   day of month (01..31)\n\
   %%D   date (mm/dd/yy)\n\
   %%e   day of month, blank padded ( 1..31)\n\
