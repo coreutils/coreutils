@@ -248,13 +248,6 @@ extern int errno;
 #include "safe-stat.h"
 #include "safe-lstat.h"
 
-#ifndef S_ISLNK
-#define lstat stat
-#undef SAFE_LSTAT
-#define SAFE_LSTAT SAFE_STAT
-#define safe_lstat safe_stat
-#endif
-
 #ifndef RETSIGTYPE
 #define RETSIGTYPE void
 #endif
