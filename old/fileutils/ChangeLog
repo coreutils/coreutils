@@ -1,5 +1,10 @@
 1997-12-31  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/df.c (show_dev): Move declarations and computation of
+	blocks_used etc. and blocks_percent_used and
+	inodes_used etc. and inodes_percent_used into respective branches
+	of the `if (inode_format)' statement where they're actually used.
+
 	* lib/exclude.h: Define and use PARAMS, not __EXCLUDE_P.
 	* lib/exclude.c: Use PARAMS, not __EXCLUDE_P.
 
