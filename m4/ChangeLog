@@ -1,3 +1,10 @@
+2004-02-29  Paul Eggert  <eggert@twinsun.com>
+
+	* clock_time.m4 (gl_CLOCK_TIME): Require AC_GNU_SOURCE.
+	* getdate.m4 (gl_GETDATE): Remove time-related stuff.
+	Require AM_STDBOOL_H and gl_TIMESPEC instead.
+	Require gl_CLOCK_TIME.
+
 2004-03-07  Paul Eggert  <eggert@twinsun.com>
 
 	* Makefile.am.in (Makefile.am):
