@@ -2,6 +2,9 @@
 
 	* Version 5.0.90.
 
+	* tests/rm/fail-eperm: Don't create temporary directory --
+	we don't use it.
+
 	* tests/shred/remove: Don't open-code test for UID != 0.
 	Use priv-check's require-non-root instead.
 	Update to use newer framework.
