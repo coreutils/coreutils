@@ -2,6 +2,19 @@
 
 	* Version 4.5.3.
 
+	* src/paste.c (paste_parallel): Declare local, `delims_saved', to be
+	of type size_t, since that's the way it's used and avoids a warning.
+
+	* src/csplit.c (struct cstring) [len]: Declare to be unsigned int,
+	since that's how it's always used and avoids a new warning from gcc.
+	(read_input): Adapt to new safe_read ABI.
+
+	* src/cut.c (cut_fields): Add a temporary size_t variable, n_bytes,
+	to avoid warnings.
+
+	* src/pinky.c (print_long_entry): fread returns size_t.
+	Declare local `bytes' accordingly, to avoid warning.
+
 	tail -c +N would perform an extra read after encountering EOF
 	[this change is analogous (bytes vs. lines) to the one of 2002-01-27]
 	* src/tail.c (start_bytes): Detect EOF, inform caller.
