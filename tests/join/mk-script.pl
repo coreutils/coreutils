@@ -117,13 +117,38 @@ sub spec_to_list ($$$)
 
   my $xx = $ARGV[0];
 
-  if ($xx eq '--list-generated')
+  if ($xx eq '--list')
     {
       validate ();
       # FIXME !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      # Output two lists of files:
+      # Output three lists of files:
+      # EXPLICIT -- file names specified in Test.pm
       # MAINT_GEN -- maintainer-generated files
       # RUN_GEN -- files created when running the tests
+      my $test_vector;
+      my @exp;
+      my @maint;
+      my @run;
+      foreach $test_vector (@Test::t)
+	{
+	  my ($test_name, $flags, $in_spec, $exp_spec, $e_ret_code)
+	    = @{$test_vector};
+
+	  push (@run, ("t$test_name.out", "t$test_name.err"));
+
+	  my $in = spec_to_list ($in_spec, $test_name, 'in');
+	  push (@exp, @{$in->{EXPLICIT}});
+	  push (@maint, @{$in->{MAINT_GEN}});
+
+	  my $e = spec_to_list ($exp_spec, $test_name, 'exp');
+	  push (@exp, @{$e->{EXPLICIT}});
+	  push (@maint, @{$e->{MAINT_GEN}});
+	}
+
+      print 'explicit: ', join (' ', @exp), "\n";
+      print 'maint-gen: ', join (' ', @maint), "\n";
+      print 'run-gen: ', join (' ', @run), "\n";
+
       exit 0;
     }
 
