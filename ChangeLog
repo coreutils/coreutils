@@ -1,3 +1,19 @@
+2004-03-07  Jim Meyering  <jim@meyering.net>
+
+	* NEWS: du accepts a new option --from0-file=FILE, where FILE
+	contains a list of NUL-separated file names.
+
+	* src/du.c: Include "readtokens.h".
+	(usage): Describe the new option, and adjust the `Usage':
+	with this option, no FILE may be specified on the command line.
+	(main): Handle the new option.
+
+	* tests/du/files0-from: New tests, for the above.
+	* tests/du/Makefile.am (TESTS): Add files0-from.
+
+	* src/factor.c (do_stdin): Reflect changes in use of readtoken.
+	* src/tsort.c (tsort): Likewise.
+
 2004-02-29  Paul Eggert  <eggert@twinsun.com>
 
 	* NEWS: Add support for a new notation @N to get_date to represent
