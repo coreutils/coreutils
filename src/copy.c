@@ -507,11 +507,23 @@ copy_internal (const char *src_path, const char *dst_path,
 		return (move_mode ? 1 : 0);
 	    }
 
-	  /* In move_mode, DEST may not be an existing directory.  */
-	  if (move_mode && S_ISDIR (dst_sb.st_mode))
+	  if (move_mode)
 	    {
-	      error (0, 0, _("%s: cannot overwrite directory"), dst_path);
-	      return 1;
+	      /* In move_mode, DEST may not be an existing directory.  */
+	      if (S_ISDIR (dst_sb.st_mode))
+		{
+		  error (0, 0, _("%s: cannot overwrite directory"), dst_path);
+		  return 1;
+		}
+
+	      /* Don't allow user to move a directory onto a non-directory.  */
+	      if (S_ISDIR (src_sb.st_mode) && !S_ISDIR (dst_sb.st_mode))
+		{
+		  error (0, 0,
+		       _("cannot move directory onto non-directory: %s -> %s"),
+			 src_path, dst_path);
+		  return 1;
+		}
 	    }
 
 	  if (x->backup_type != none && !S_ISDIR (dst_sb.st_mode))
