@@ -66,6 +66,7 @@ CATOBJEXT = @CATOBJEXT@
 CC = @CC@
 CPP = @CPP@
 DATADIRNAME = @DATADIRNAME@
+DF_PROG = @DF_PROG@
 GENCAT = @GENCAT@
 GETCONF = @GETCONF@
 GMOFILES = @GMOFILES@
@@ -82,16 +83,17 @@ LIBOBJS = @LIBOBJS@
 MAKEINFO = @MAKEINFO@
 MKINSTALLDIRS = @MKINSTALLDIRS@
 MSGFMT = @MSGFMT@
+MVDIR_PROG = @MVDIR_PROG@
 PACKAGE = @PACKAGE@
 PERL = @PERL@
 POFILES = @POFILES@
 POSUB = @POSUB@
-POW_LIBM = @POW_LIBM@
 RANLIB = @RANLIB@
 U = @U@
 USE_INCLUDED_LIBINTL = @USE_INCLUDED_LIBINTL@
 USE_NLS = @USE_NLS@
 VERSION = @VERSION@
+YACC = @YACC@
 l = @l@
 
 
@@ -147,6 +149,7 @@ utime.m4 \
 utimes.m4 \
 xstrtoumax.m4
 
+subdir = m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../config.h
 CONFIG_CLEAN_FILES = 
@@ -171,8 +174,6 @@ TAGS:
 
 
 distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
-
-subdir = m4
 
 distdir: $(DISTFILES)
 	here=`cd $(top_builddir) && pwd`; \

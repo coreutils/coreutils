@@ -108,6 +108,7 @@ TESTS_ENVIRONMENT = \
 
 
 TESTS = tests
+subdir = tests/ls-2
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../config.h
 CONFIG_CLEAN_FILES = 
@@ -132,8 +133,6 @@ TAGS:
 
 
 distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
-
-subdir = tests/ls-2
 
 distdir: $(DISTFILES)
 	here=`cd $(top_builddir) && pwd`; \

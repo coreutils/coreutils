@@ -127,6 +127,7 @@ version-etc.h xalloc.h xstrtol.h
 BUILT_SOURCES = getdate.c lstat.c stat.c
 
 EXTRA_DIST = xstat.in
+subdir = lib
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../config.h
 CONFIG_CLEAN_FILES = 
@@ -138,6 +139,7 @@ CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 ANSI2KNR = ../src/ansi2knr
+libfu_a_AR = $(AR) cru
 am_libfu_a_OBJECTS =  getdate$U.o posixtm$U.o getopt$U.o getopt1$U.o \
 addext$U.o argmatch$U.o backupfile$U.o basename$U.o closeout$U.o \
 dirname$U.o exclude$U.o filemode$U.o full-write$U.o human$U.o \
@@ -148,8 +150,8 @@ xmalloc$U.o xstrdup$U.o xstrtol$U.o xstrtoul$U.o xstrtoumax$U.o \
 yesno$U.o
 libfu_a_OBJECTS =  $(am_libfu_a_OBJECTS)
 AR = ar
-CFLAGS = @CFLAGS@
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+CFLAGS = @CFLAGS@
 CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 DIST_SOURCES =  $(libfu_a_SOURCES)
@@ -158,11 +160,11 @@ HEADERS =  $(noinst_HEADERS)
 DIST_COMMON =  $(noinst_HEADERS) Makefile.am Makefile.in TODO alloca.c \
 chown.c dup2.c error.c error.h euidaccess.c fileblocks.c fnmatch.c \
 fsusage.c ftruncate.c getdate.c getgroups.c getline.c group-member.c \
-lchown.c lstat.c malloc.c memcmp.c memcpy.c memset.c mkdir.c mktime.c \
+lchown.c malloc.c memcmp.c memcpy.c memset.c mkdir.c mktime.c \
 mountlist.c obstack.c obstack.h realloc.c regex.c rename.c rmdir.c \
-rpmatch.c stat.c stpcpy.c strcasecmp.c strdup.c strftime.c \
-strncasecmp.c strndup.c strstr.c strtol.c strtoul.c strtoull.c \
-strtoumax.c strverscmp.c utime.c
+rpmatch.c stpcpy.c strcasecmp.c strdup.c strftime.c strncasecmp.c \
+strndup.c strstr.c strtol.c strtoul.c strtoull.c strtoumax.c \
+strverscmp.c utime.c
 
 
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -235,49 +237,13 @@ clean-kr:
 distclean-kr:
 
 maintainer-clean-kr:
-getdate$U.o:
-posixtm$U.o:
-getopt$U.o:
-getopt1$U.o:
-addext$U.o:
-argmatch$U.o:
-backupfile$U.o:
-basename$U.o:
-closeout$U.o:
-dirname$U.o:
-exclude$U.o:
-filemode$U.o:
-full-write$U.o:
-human$U.o:
-idcache$U.o:
-isdir$U.o:
-long-options$U.o:
-makepath$U.o:
-modechange$U.o:
-hash$U.o:
-path-concat$U.o:
-quotearg$U.o:
-safe-read$U.o:
-save-cwd$U.o:
-savedir$U.o:
-stripslash$U.o:
-userspec$U.o:
-version-etc$U.o:
-xgetcwd$U.o:
-xmalloc$U.o:
-xstrdup$U.o:
-xstrtol$U.o:
-xstrtoul$U.o:
-xstrtoumax$U.o:
-yesno$U.o:
 
 libfu.a: $(libfu_a_OBJECTS) $(libfu_a_DEPENDENCIES)
 	-rm -f libfu.a
-	$(AR) cru libfu.a $(libfu_a_OBJECTS) $(libfu_a_LIBADD)
+	$(libfu_a_AR) libfu.a $(libfu_a_OBJECTS) $(libfu_a_LIBADD)
 	$(RANLIB) libfu.a
-getdate.o:
-lstat.o:
-stat.o:
+.c.o:
+	$(COMPILE) -c $<
 addext_.c: addext.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/addext.c; then echo $(srcdir)/addext.c; else echo addext.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > addext_.c
 alloca_.c: alloca.c $(ANSI2KNR)
@@ -482,8 +448,6 @@ maintainer-clean-tags:
 
 distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
 
-subdir = lib
-
 distdir: $(DISTFILES)
 	here=`cd $(top_builddir) && pwd`; \
 	top_distdir=`cd $(top_distdir) && pwd`; \
@@ -516,8 +480,8 @@ distclean-depend:
 maintainer-clean-depend:
 
 %.o: %.c
-	@echo '$(COMPILE) -c $<'; \
-	$(COMPILE) -Wp,-MD,.deps/$(*D)/$(*F).pp -c $<
+	@echo '$(COMPILE) -c -o $@ $<'; \
+	$(COMPILE) -Wp,-MD,.deps/$(*D)/$(*F).pp -c -o $@ $<
 	@-cp .deps/$(*D)/$(*F).pp .deps/$(*D)/$(*F).P; \
 	tr ' ' '\012' < .deps/$(*D)/$(*F).pp \
 	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
@@ -525,8 +489,8 @@ maintainer-clean-depend:
 	rm .deps/$(*D)/$(*F).pp
 
 %.lo: %.c
-	@echo '$(LTCOMPILE) -c $<'; \
-	$(LTCOMPILE) -Wp,-MD,.deps/$(*D)/$(*F).pp -c $<
+	@echo '$(LTCOMPILE) -c -o $@ $<'; \
+	$(LTCOMPILE) -Wp,-MD,.deps/$(*D)/$(*F).pp -c -o $@ $<
 	@-sed -e 's/^\([^:]*\)\.o[ 	]*:/\1.lo \1.o :/' \
 	  < .deps/$(*D)/$(*F).pp > .deps/$(*D)/$(*F).P; \
 	tr ' ' '\012' < .deps/$(*D)/$(*F).pp \

@@ -109,6 +109,7 @@ EXTRA_DIST = perm.texi getdate.texi
 # and those names all map to one 14-byte name (<package>.info-) on some crufty
 # old systems.
 MAKEINFO = makeinfo --no-split
+subdir = doc
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../config.h
 CONFIG_CLEAN_FILES = 
@@ -235,8 +236,9 @@ uninstall-info:
 	@if $(SHELL) -c 'install-info --version | sed 1q | fgrep -s -v -i debian' >/dev/null 2>&1; then \
 	  list='$(INFO_DEPS)'; \
 	  for file in $$list; do \
-	    echo " install-info --info-dir=$(DESTDIR)$(infodir) --remove $$file"; \
-	    install-info --info-dir=$(DESTDIR)$(infodir) --remove $$file; \
+	    d=$(srcdir); \
+	    echo " install-info --info-dir=$(DESTDIR)$(infodir) --remove $$d/$$file"; \
+	    install-info --info-dir=$(DESTDIR)$(infodir) --remove $$d/$$file; \
 	  done; \
 	else :; fi
 	@$(NORMAL_UNINSTALL)
@@ -283,8 +285,6 @@ TAGS:
 
 
 distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
-
-subdir = doc
 
 distdir: $(DISTFILES)
 	here=`cd $(top_builddir) && pwd`; \

@@ -107,6 +107,7 @@ TESTS_ENVIRONMENT = \
   MKDIR=../../src/mkdir \
   RM=../../src/rm
 
+subdir = tests/install
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../config.h
 CONFIG_CLEAN_FILES = 
@@ -131,8 +132,6 @@ TAGS:
 
 
 distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
-
-subdir = tests/install
 
 distdir: $(DISTFILES)
 	here=`cd $(top_builddir) && pwd`; \

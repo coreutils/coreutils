@@ -102,6 +102,7 @@ AUTOMAKE_OPTIONS = 1.1 gnits
 TESTS = p-1 p-2
 EXTRA_DIST = $(TESTS)
 TESTS_ENVIRONMENT = MKDIR=../../src/mkdir
+subdir = tests/mkdir
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../config.h
 CONFIG_CLEAN_FILES = 
@@ -126,8 +127,6 @@ TAGS:
 
 
 distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
-
-subdir = tests/mkdir
 
 distdir: $(DISTFILES)
 	here=`cd $(top_builddir) && pwd`; \
