@@ -114,7 +114,7 @@ makepath.h modechange.h mountlist.h hash.h path-concat.h pathmax.h \
 posixtm.h quotearg.h regex.h safe-read.h save-cwd.h savedir.h strverscmp.h \
 xalloc.h xstrtol.h xstrtoul.h
 
-BUILT_SOURCES = getdate.c lstat.c stat.c strcasecmp.c strncasecmp.c
+BUILT_SOURCES = getdate.c lstat.c stat.c
 
 EXTRA_DIST = xstat.in strcasecmp.cin
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
@@ -168,12 +168,11 @@ DEP_FILES =  .deps/addext.P .deps/alloca.P .deps/argmatch.P \
 .deps/path-concat.P .deps/posixtm.P .deps/quotearg.P .deps/realloc.P \
 .deps/regex.P .deps/rename.P .deps/rmdir.P .deps/rpmatch.P \
 .deps/safe-read.P .deps/save-cwd.P .deps/savedir.P .deps/stat \
-.deps/stat.P .deps/stpcpy.P .deps/strcasecmp .deps/strcasecmp.P \
-.deps/strdup.P .deps/strftime.P .deps/stripslash.P .deps/strncasecmp \
-.deps/strncasecmp.P .deps/strndup.P .deps/strstr.P .deps/strtol.P \
-.deps/strtoul.P .deps/strverscmp.P .deps/userspec.P .deps/utime.P \
-.deps/xgetcwd.P .deps/xmalloc.P .deps/xstrdup.P .deps/xstrtol.P \
-.deps/xstrtoul.P .deps/yesno.P
+.deps/stat.P .deps/stpcpy.P .deps/strcasecmp.P .deps/strdup.P \
+.deps/strftime.P .deps/stripslash.P .deps/strncasecmp.P .deps/strndup.P \
+.deps/strstr.P .deps/strtol.P .deps/strtoul.P .deps/strverscmp.P \
+.deps/userspec.P .deps/utime.P .deps/xgetcwd.P .deps/xmalloc.P \
+.deps/xstrdup.P .deps/xstrtol.P .deps/xstrtoul.P .deps/yesno.P
 SOURCES = $(libfu_a_SOURCES)
 OBJECTS = $(libfu_a_OBJECTS)
 
@@ -525,22 +524,6 @@ lstat.c: xstat.in
 
 stat.c: xstat.in
 	sed -e '/@IGNORE@/d' -e 's/@xstat@/stat/g' $(srcdir)/xstat.in > $@-t
-	mv $@-t $@
-
-strcasecmp.c: strcasecmp.cin
-	sed \
-	    -e '/@IGNORE@/d' \
-	    -e 's/@xstrcasecmp@/strcasecmp/g' \
-	    -e 's/{{.*}}//g' \
-	  $(srcdir)/strcasecmp.cin > $@-t
-	mv $@-t $@
-
-strncasecmp.c: strcasecmp.cin
-	sed \
-	    -e '/@IGNORE@/d' \
-	    -e 's/@xstrcasecmp@/strncasecmp/g' \
-	    -e 's/{{\(.*\)}}/\1/g' \
-	  $(srcdir)/strcasecmp.cin > $@-t
 	mv $@-t $@
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
