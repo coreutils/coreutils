@@ -207,18 +207,22 @@ aix)
   ;;
 
 tru64)
-   # The Tru64 AIX compiler uses -MD to generate dependencies as a side
+   # The Tru64 compiler uses -MD to generate dependencies as a side
    # effect.  `cc -MD -o foo.o ...' puts the dependencies into `foo.o.d'.
-   # At least on Alpha/Redhat 6.1, Compaq CCC V6.2-504 seems to put 
+   # At least on Alpha/Redhat 6.1, Compaq CCC V6.2-504 seems to put
    # dependencies in `foo.d' instead, so we check for that too.
    # Subdirectories are respected.
+   dir=`echo "$object" | sed -e 's|/[^/]*$|/|'`
+   test "x$dir" = "x$object" && dir=
+   base=`echo "$object" | sed -e 's|^.*/||' -e 's/\.o$//' -e 's/\.lo$//'`
 
-   base=`echo "$object" | sed -e 's/\.o$/.d/' -e 's/\.lo$/.d/'`
-   tmpdepfile1="$base.o.d"
-   tmpdepfile2="$base.d"
    if test "$libtool" = yes; then
+      tmpdepfile1="$dir.libs/$base.lo.d"
+      tmpdepfile2="$dir.libs/$base.d"
       "$@" -Wc,-MD
    else
+      tmpdepfile1="$dir$base.o.d"
+      tmpdepfile2="$dir$base.d"
       "$@" -MD
    fi
 
@@ -252,32 +256,9 @@ dashmstdout)
   # Important note: in order to support this mode, a compiler *must*
   # always write the proprocessed file to stdout, regardless of -o,
   # because we must use -o when running libtool.
+  "$@" || exit $?
   test -z "$dashmflag" && dashmflag=-M
-  ( IFS=" "
-    case " $* " in
-    *" --mode=compile "*) # this is libtool, let us make it quiet
-      for arg
-      do # cycle over the arguments
-        case "$arg" in
-	"--mode=compile")
-	  # insert --quiet before "--mode=compile"
-	  set fnord "$@" --quiet
-	  shift # fnord
-	  ;;
-	esac
-	set fnord "$@" "$arg"
-	shift # fnord
-	shift # "$arg"
-      done
-      ;;
-    esac
-    "$@" $dashmflag | sed 's:^[^:]*\:[ 	]*:'"$object"'\: :' > "$tmpdepfile"
-  ) &
-  proc=$!
-  "$@"
-  stat=$?
-  wait "$proc"
-  if test "$stat" != 0; then exit $stat; fi
+  "$@" $dashmflag | sed 's:^[^:]*\:[ 	]*:'"$object"'\: :' > "$tmpdepfile"
   rm -f "$depfile"
   cat < "$tmpdepfile" > "$depfile"
   tr ' ' '
@@ -295,36 +276,31 @@ dashXmstdout)
   ;;
 
 makedepend)
+  "$@" || exit $?
   # X makedepend
-  (
-    shift
-    cleared=no
-    for arg in "$@"; do
-      case $cleared in no)
-        set ""; shift
-	cleared=yes
-      esac
-      case "$arg" in
-        -D*|-I*)
-	  set fnord "$@" "$arg"; shift;;
-	-*)
-	  ;;
-	*)
-	  set fnord "$@" "$arg"; shift;;
-      esac
-    done
-    obj_suffix="`echo $object | sed 's/^.*\././'`"
-    touch "$tmpdepfile"
-    ${MAKEDEPEND-makedepend} 2>/dev/null -o"$obj_suffix" -f"$tmpdepfile" "$@"
-  ) &
-  proc=$!
-  "$@"
-  stat=$?
-  wait "$proc"
-  if test "$stat" != 0; then exit $stat; fi
+  shift
+  cleared=no
+  for arg in "$@"; do
+    case $cleared in
+    no)
+      set ""; shift
+      cleared=yes ;;
+    esac
+    case "$arg" in
+    -D*|-I*)
+      set fnord "$@" "$arg"; shift ;;
+    -*)
+      ;;
+    *)
+      set fnord "$@" "$arg"; shift ;;
+    esac
+  done
+  obj_suffix="`echo $object | sed 's/^.*\././'`"
+  touch "$tmpdepfile"
+  ${MAKEDEPEND-makedepend} -o"$obj_suffix" -f"$tmpdepfile" "$@"
   rm -f "$depfile"
   cat < "$tmpdepfile" > "$depfile"
-  tail +3 "$tmpdepfile" | tr ' ' '
+  sed '1,2d' "$tmpdepfile" | tr ' ' '
 ' | \
 ## Some versions of the HPUX 10.20 sed can't process this invocation
 ## correctly.  Breaking it into two sed invocations is a workaround.
@@ -336,33 +312,10 @@ cpp)
   # Important note: in order to support this mode, a compiler *must*
   # always write the proprocessed file to stdout, regardless of -o,
   # because we must use -o when running libtool.
-  ( IFS=" "
-    case " $* " in
-    *" --mode=compile "*)
-      for arg
-      do # cycle over the arguments
-        case $arg in
-	"--mode=compile")
-	  # insert --quiet before "--mode=compile"
-	  set fnord "$@" --quiet
-	  shift # fnord
-	  ;;
-	esac
-	set fnord "$@" "$arg"
-	shift # fnord
-	shift # "$arg"
-      done
-      ;;
-    esac
-    "$@" -E |
+  "$@" || exit $?
+  "$@" -E |
     sed -n '/^# [0-9][0-9]* "\([^"]*\)".*/ s:: \1 \\:p' |
     sed '$ s: \\$::' > "$tmpdepfile"
-  ) &
-  proc=$!
-  "$@"
-  stat=$?
-  wait "$proc"
-  if test "$stat" != 0; then exit $stat; fi
   rm -f "$depfile"
   echo "$object : \\" > "$depfile"
   cat < "$tmpdepfile" >> "$depfile"
@@ -374,47 +327,25 @@ msvisualcpp)
   # Important note: in order to support this mode, a compiler *must*
   # always write the proprocessed file to stdout, regardless of -o,
   # because we must use -o when running libtool.
-  ( IFS=" "
-    case " $* " in
-    *" --mode=compile "*)
-      for arg
-      do # cycle over the arguments
-        case $arg in
-	"--mode=compile")
-	  # insert --quiet before "--mode=compile"
-	  set fnord "$@" --quiet
-	  shift # fnord
-	  ;;
-	esac
-	set fnord "$@" "$arg"
-	shift # fnord
-	shift # "$arg"
-      done
-      ;;
-    esac
-    for arg
-    do
-      case "$arg" in
-      "-Gm"|"/Gm"|"-Gi"|"/Gi"|"-ZI"|"/ZI")
+  "$@" || exit $?
+  IFS=" "
+  for arg
+  do
+    case "$arg" in
+    "-Gm"|"/Gm"|"-Gi"|"/Gi"|"-ZI"|"/ZI")
 	set fnord "$@"
 	shift
 	shift
 	;;
-      *)
+    *)
 	set fnord "$@" "$arg"
 	shift
 	shift
 	;;
-      esac
-    done
-    "$@" -E |
-    sed -n '/^#line [0-9][0-9]* "\([^"]*\)"/ s::echo "`cygpath -u \\"\1\\"`":p' | sort | uniq > "$tmpdepfile"
-  ) &
-  proc=$!
-  "$@"
-  stat=$?
-  wait "$proc"
-  if test "$stat" != 0; then exit $stat; fi
+    esac
+  done
+  "$@" -E |
+  sed -n '/^#line [0-9][0-9]* "\([^"]*\)"/ s::echo "`cygpath -u \\"\1\\"`":p' | sort | uniq > "$tmpdepfile"
   rm -f "$depfile"
   echo "$object : \\" > "$depfile"
   . "$tmpdepfile" | sed 's% %\\ %g' | sed -n '/^\(.*\)$/ s::	\1 \\:p' >> "$depfile"
