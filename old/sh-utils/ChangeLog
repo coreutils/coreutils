@@ -1,3 +1,12 @@
+Tue Feb 18 21:18:04 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* tests/date/Test.pm: Add tests for %U, %V, and %W and for a bug
+	fixed on 1996-03-05.
+
+	* tests/Makefile.am (SUBDIRS): Add factor.
+	* tests/factor: New directory.
+	* configure.in (AC_OUTPUT): Add tests/factor/Makefile.
+
 Tue Feb  4 22:03:13 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/stty.c: Bracket inclusion of termios.h with #if HAVE_TERMIOS_H.
