@@ -42,7 +42,7 @@ AC_DEFUN(jm_SYS_OFF_T_PRINTF_FORMAT,
    # Die if none of the above worked.
    # FIXME: If this failure become a problem that we can't work around,
    # an alternative would be to arrange not to build od.
-   if test $jm_cv_sys_off_t_printf_format = undef; then
+   if test "$jm_cv_sys_off_t_printf_format" = undef; then
      AC_MSG_ERROR(dnl
        [couldn't find a printf format that works with the type, off_t])
    fi
