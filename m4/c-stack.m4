@@ -22,6 +22,7 @@
 AC_DEFUN([AC_SYS_XSI_STACK_OVERFLOW_HEURISTIC],
   [# for STACK_DIRECTION
    AC_REQUIRE([AC_FUNC_ALLOCA])
+   AC_CHECK_FUNCS(setrlimit)
 
    AC_CACHE_CHECK([for working C stack overflow detection],
      ac_cv_sys_xsi_stack_overflow_heuristic,
@@ -30,6 +31,11 @@ AC_DEFUN([AC_SYS_XSI_STACK_OVERFLOW_HEURISTIC],
 	 #include <unistd.h>
 	 #include <signal.h>
 	 #include <ucontext.h>
+	 #if HAVE_SETRLIMIT
+	 # include <sys/types.h>
+	 # include <sys/time.h>
+	 # include <sys/resource.h>
+	 #endif
 
 	 static union
 	 {
@@ -102,6 +108,16 @@ AC_DEFUN([AC_SYS_XSI_STACK_OVERFLOW_HEURISTIC],
 	 int
 	 main (void)
 	 {
+	   #if HAVE_SETRLIMIT && defined RLIMIT_STACK
+	   /* Before starting the endless recursion, try to be friendly
+	      to the user's machine.  On some Linux 2.2.x systems, there
+	      is no stack limit for user processes at all.  We don't want
+	      to kill such systems.  */
+	   struct rlimit rl;
+	   rl.rlim_cur = rl.rlim_max = 0x100000; /* 1 MB */
+	   setrlimit (RLIMIT_STACK, &rl);
+	   #endif
+
 	   c_stack_action ();
 	   return recurse ("\1");
 	 }
