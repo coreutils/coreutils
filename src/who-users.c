@@ -648,7 +648,7 @@ usage (int status)
   -s                (ignored)\n\
   -T, -w, --mesg    add user's message status as +, - or ?\n\
       --message     same as -T\n\
-      --writeable   same as -T\n\
+      --writable    same as -T\n\
       --help        display this help and exit\n\
       --version     output version information and exit\n\
 \n\
