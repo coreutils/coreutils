@@ -32,6 +32,16 @@ framework_failure=0
 mkdir $tmp || framework_failure=1
 cd $tmp
 
+touch file || framework_failure=1
+chmod u-w file || framework_failure=1
+(echo foo >> file) >/dev/null 2>&1 && {
+  echo '********************************************'
+  echo "$0: NOTICE: This test case cannot be run as root."
+  echo '********************************************'
+  exit 77
+}
+
+
 for i in a b c d e f g h; do
   echo $i > $i || framework_failure=1
 done
