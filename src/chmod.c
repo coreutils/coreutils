@@ -133,7 +133,12 @@ change_file_mode (const char *file, const struct mode_change *changes,
     {
       if (verbose)
 	describe_change (file, newmode, 1);
-      if (chmod (file, (int) newmode))
+      if (chmod (file, (int) newmode) == 0)
+	{
+	  if (changes_only)
+	    describe_change (file, newmode, 1);
+	}
+      else
 	{
 	  if (force_silent == 0)
 	    error (0, errno, "%s", file);
@@ -285,7 +290,6 @@ main (int argc, char **argv)
 	  recurse = 1;
 	  break;
 	case 'c':
-	  verbose = 1;
 	  changes_only = 1;
 	  break;
 	case 'f':
