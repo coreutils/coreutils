@@ -13,11 +13,8 @@
 2003-06-04  Paul Eggert  <eggert@twinsun.com>
 
 	Merge human.c etc. from gnulib.
-	* m4/human.m4: New file, from gnulib.
-	* m4/prereq.m4 (jm_PREREQ): Use gl_HUMAN, not jm_PREREQ_HUMAN.
-	(jm_prereq_HUMAN): Remove.
-	* lib/exclude.c, lib/human.c, lib/human.h: Merge from gnulib.
-	* lib/cycle-check.c, lib/cycle-check.h, src/system.h:
+	* exclude.c, human.c, human.h: Merge from gnulib.
+	* cycle-check.c, cycle-check.h, src/system.h:
 	Include <stdbool.h> unconditionally.
 
 2003-06-02  Jim Meyering  <jim@meyering.net>
