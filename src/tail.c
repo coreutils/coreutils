@@ -253,10 +253,14 @@ With no FILE, or when FILE is -, read standard input.\n\
                              -f, --follow, and --follow=descriptor are\n\
                              equivalent\n\
   -n, --lines=N            output the last N lines, instead of the last %d\n\
-      --max-unchanged-stats=N see the texinfo documentation\n\
-                             (the default is %d)\n\
-      --max-consecutive-size-changes=N see the texinfo documentation\n\
-                             (the default is %d)\n\
+      --max-consecutive-size-changes=N\n\
+                           with --follow=name, reopen a FILE which has not\n\
+			     changed size after N (default N=%d) iterations\n\
+			     to see if it has been unlinked or renamed\n\
+      --max-unchanged-stats=N\n\
+                           with --follow=name, reopen a FILE after N (default\n\
+                             N=%d) consecutive size changes to see if it has\n\
+                             been unlinked or renamed\n\
       --pid=PID            with -f, terminate after process ID, PID dies\n\
   -q, --quiet, --silent    never output headers giving file names\n\
   -s, --sleep-interval=S   with -f, sleep S seconds between iterations\n\
