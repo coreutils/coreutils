@@ -20,7 +20,7 @@
 enum backup_type
 {
   /* Never make backups. */
-  none = 1,
+  none,
 
   /* Make simple backups of every file. */
   simple,
@@ -33,18 +33,23 @@ enum backup_type
   numbered
 };
 
-extern enum backup_type backup_type;
+#define VALID_BACKUP_TYPE(Type)		\
+  ((Type) == none			\
+   || (Type) == simple			\
+   || (Type) == numbered_existing	\
+   || (Type) == numbered)
+
 extern char const *simple_backup_suffix;
 
-#ifndef __BACKUPFILE_P
-# if defined __STDC__ || __GNUC__
-#  define __BACKUPFILE_P(args) args
+#ifndef PARAMS
+# if defined PROTOTYPES || (defined __STDC__ && __STDC__)
+#  define PARAMS(Args) Args
 # else
-#  define __BACKUPFILE_P(args) ()
+#  define PARAMS(Args) ()
 # endif
 #endif
 
-char *base_name __BACKUPFILE_P ((char const *));
-char *find_backup_file_name __BACKUPFILE_P ((char const *));
-enum backup_type get_version __BACKUPFILE_P ((char const *));
-void addext __BACKUPFILE_P ((char *, char const *, int));
+char *base_name PARAMS ((char const *));
+char *find_backup_file_name PARAMS ((char const *, enum backup_type));
+enum backup_type get_version PARAMS ((char const *));
+void addext PARAMS ((char *, char const *, int));
