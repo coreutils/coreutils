@@ -1,3 +1,8 @@
+2002-02-15  Paul Eggert  <eggert@twinsun.com>
+
+	* posixver.c, posixver.h: New files.
+	* Makefile.am (libfetish_a_SOURCES): Add them.
+
 2002-02-02  Paul Eggert  <eggert@twinsun.com>
 	    Bruno Haible  <bruno@clisp.org>
 
