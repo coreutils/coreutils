@@ -1,3 +1,13 @@
+2001-12-13  Jim Meyering  <meyering@lucent.com>
+
+	* Version 2.0.19.
+
+2001-12-12  Bruno Haible  <bruno@clisp.org>
+            Paul Eggert  <eggert@twinsun.com>
+
+	* src/wc.c (wc): Use ISSPACE and iswspace in addition to hard-coding
+	the ASCII space character.
+
 2001-12-08  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.19.
@@ -5901,7 +5911,7 @@ Sat Sep 23 15:43:46 1995  Jim Meyering  (meyering@comco.com)
 	* Makefile.in (DISTFILES): Add README.alpha.
 
 	* lib/Makfile.in (GETOPT, MEMCHR, REGEX): New variables.
-	(OBJECTS): Use them instead of hardcoding object file names.
+	(OBJECTS): Use them instead of hard-coding object file names.
 	Suggested by Ulrich Drepper.
 
 	* md5sum.c (md5_check): Distinguish between open/read failure
