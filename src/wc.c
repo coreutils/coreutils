@@ -19,12 +19,16 @@
    and David MacKenzie, djm@gnu.ai.mit.edu. */
 
 #include <config.h>
+#if HAVE_INTTYPES_H
+# include <inttypes.h>
+#endif
 
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
 #include "error.h"
+#include "human.h"
 
 /* Size of atomic reads. */
 #define BUFFER_SIZE (16 * 1024)
@@ -36,7 +40,10 @@ char *program_name;
 
 /* Cumulative number of lines, words, and chars in all files so far.
    max_line_length is the maximum over all files processed so far.  */
-static unsigned long total_lines, total_words, total_chars, max_line_length;
+static uintmax_t total_lines;
+static uintmax_t total_words;
+static uintmax_t total_chars;
+static uintmax_t max_line_length;
 
 /* Which counts to print. */
 static int print_lines, print_words, print_chars, print_linelength;
@@ -94,29 +101,33 @@ read standard input.\n\
 }
 
 static void
-write_counts (long unsigned int lines, long unsigned int words,
-	      long unsigned int chars, long unsigned int linelength,
+write_counts (uintmax_t lines,
+	      uintmax_t words,
+	      uintmax_t chars,
+	      uintmax_t linelength,
 	      const char *file)
 {
+  char buf[LONGEST_HUMAN_READABLE + 1];
+  char const *space = "";
+
   if (print_lines)
-    printf ("%7lu", lines);
+    {
+      printf ("%7s", human_readable (lines, buf, 1, 1, 0));
+      space = " ";
+    }
   if (print_words)
     {
-      if (print_lines)
-	putchar (' ');
-      printf ("%7lu", words);
+      printf ("%s%7s", space, human_readable (words, buf, 1, 1, 0));
+      space = " ";
     }
   if (print_chars)
     {
-      if (print_lines || print_words)
-	putchar (' ');
-      printf ("%7lu", chars);
+      printf ("%s%7s", space, human_readable (chars, buf, 1, 1, 0));
+      space = " ";
     }
   if (print_linelength)
     {
-      if (print_lines || print_words || print_chars)
-	putchar (' ');
-      printf ("%7lu", linelength);
+      printf ("%s%7s", space, human_readable (linelength, buf, 1, 1, 0));
     }
   if (*file)
     printf (" %s", file);
