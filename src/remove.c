@@ -36,6 +36,7 @@
 #include "quote.h"
 #include "remove.h"
 #include "root-dev-ino.h"
+#include "yesno.h"
 
 /* Avoid shadowing warnings because these are functions declared
    in dirname.h as well as locals used below.  */
@@ -111,8 +112,6 @@ struct AD_ent
     struct saved_cwd saved_cwd;
   } u;
 };
-
-int yesno ();
 
 extern char *program_name;
 
@@ -211,7 +210,7 @@ static inline char *
 top_dir (Dirstack_state const *ds)
 {
   int n_lengths = obstack_object_size (&ds->len_stack) / sizeof (size_t);
-  size_t *length = (size_t *) obstack_base (&ds->len_stack);
+  size_t *length = obstack_base (&ds->len_stack);
   size_t top_len = length[n_lengths - 1];
   char const *p = obstack_next_free (&ds->dir_stack) - top_len;
   char *q = xmalloc (top_len);
@@ -224,7 +223,7 @@ static inline void
 pop_dir (Dirstack_state *ds)
 {
   int n_lengths = obstack_object_size (&ds->len_stack) / sizeof (size_t);
-  size_t *length = (size_t *) obstack_base (&ds->len_stack);
+  size_t *length = obstack_base (&ds->len_stack);
   size_t top_len;
 
   assert (n_lengths > 0);
@@ -284,7 +283,7 @@ full_filename_ (Dirstack_state const *ds, const char *filename)
   static size_t n_allocated = 0;
 
   int dir_len = obstack_object_size (&ds->dir_stack);
-  char *dir_name = (char *) obstack_base (&ds->dir_stack);
+  char *dir_name = obstack_base (&ds->dir_stack);
   size_t n_bytes_needed;
   size_t filename_len;
 
