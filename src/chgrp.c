@@ -23,6 +23,18 @@
 #include <grp.h>
 #include <getopt.h>
 
+#if HAVE_LIMITS_H
+# include <limits.h>
+#endif
+
+#ifndef UINT_MAX
+# define UINT_MAX ((unsigned int) ~(unsigned int) 0)
+#endif
+
+#ifndef INT_MAX
+# define INT_MAX ((int) (UINT_MAX >> 1))
+#endif
+
 #include "system.h"
 #include "version.h"
 #include "xstrtoul.h"
