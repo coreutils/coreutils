@@ -4,6 +4,7 @@
 
 	* tests/sum/sysv: Export LC_ALL=C, to avoid failure when
 	run in a UTF locale.  Report and suggested fix by Bruno Haible.
+	* tests/fmt/basic: Likewise.
 
 2002-11-17  Jim Meyering  <jim@meyering.net>
 
