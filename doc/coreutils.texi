@@ -4009,8 +4009,8 @@ Print a line for each unpairable line in file @var{file-number}
 @end table
 
 In addition, when @sc{gnu} @code{join} is invoked with exactly one argument,
-options @samp{--help} and @samp{--version} are recognized.  @xref{Common
-options}.
+the @option{--help} and @option{--version} options are recognized.
+@xref{Common options}.
 
 
 @node Operating on characters
