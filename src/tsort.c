@@ -1,5 +1,5 @@
 /* tsort - topological sort.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -126,14 +126,14 @@ search_item (struct item *root, const char *str)
 {
   struct item *p, *q, *r, *s, *t;
   int a;
-  
+
   assert (root);
 
   /* Make sure the tree is not empty, since that is what the algorithm
      below expects.  */
   if (root->right == NULL)
     return (root->right = new_item (str));
-  
+
   /* A1. Initialize.  */
   t = root;
   s = p = root->right;
@@ -189,7 +189,7 @@ search_item (struct item *root, const char *str)
 		  p = p->right;
 		}
 	    }
-	      
+
 	  /* A7. Balancing act.  */
 	  if (s->balance == 0 || s->balance == -a)
 	    {
@@ -232,7 +232,7 @@ search_item (struct item *root, const char *str)
 		  s->right = p->left;
 		  p->left = s;
 		}
-		  
+
 	      s->balance = 0;
 	      r->balance = 0;
 	      if (p->balance == a)
@@ -257,10 +257,10 @@ search_item (struct item *root, const char *str)
 	  t = p;
 	  s = q;
 	}
-      
+
       p = q;
     }
-  
+
   /* NOTREACHED */
 }
 
@@ -296,7 +296,7 @@ scan_zeros (struct item *k)
 	head = k;
       else
 	r->qlink = k;
-      
+
       r = k;
     }
 }
@@ -314,7 +314,7 @@ detect_loop (struct item *k)
 	  fprintf (stderr, "%s: %s\n", program_name, k->str);
 	  k = k->top->suc;
 	}
-      
+
       exit (EXIT_FAILURE);
     }
 }
@@ -417,7 +417,7 @@ getstr (char **lineptr, int *n, FILE *stream)
       if (ISSPACE (c))
 	/* Return the string.  */
 	break;
-      
+
       *read_pos++ = c;
       nchars_avail--;
     }
@@ -471,13 +471,13 @@ sort (const char *file)
 	  record_relation (j, k);
 	  k = NULL;
 	}
-      
+
       j = k;
     }
 
   /* T1. Initialize (N <- n).  */
   walk_tree (root, count_items);
-  
+
   /* T4. Scan for zeros.  */
   walk_tree (root, scan_zeros);
 
@@ -529,14 +529,14 @@ int
 main (int argc, char **argv)
 {
   int opt;
-  
+
   program_name = argv[0];
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
   parse_long_options (argc, argv, "tsort", GNU_PACKAGE, VERSION, usage);
-  
+
   while ((opt = getopt_long (argc, argv, "", long_options, NULL)) != -1)
     switch (opt)
       {
@@ -545,7 +545,7 @@ main (int argc, char **argv)
       default:
 	usage (EXIT_FAILURE);
       }
-  
+
   have_read_stdin = 0;
 
   if (optind + 1 < argc)
