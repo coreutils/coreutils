@@ -1703,7 +1703,7 @@ struct speed_map
   unsigned long int value;	/* Numeric value. */
 };
 
-struct speed_map speeds[] =
+static struct speed_map speeds[] =
 {
   {"0", B0, 0},
   {"50", B50, 50},
