@@ -1,3 +1,10 @@
+2003-05-04  Jim Meyering  <jim@meyering.net>
+
+	This avoids a core dump on systems without GNU putenv,
+	when running `env -u SOME_ALREADY_UNSET_VARIABLE'.
+	* putenv.c (unsetenv): New static function, from libc.
+	(rpl_putenv): Use it.
+
 2003-05-02  Jim Meyering  <jim@meyering.net>
 
 	* canonicalize.c (canonicalize_file_name) [!HAVE_RESOLVEPATH]:
