@@ -16,7 +16,7 @@ $CP --force --backup --version-control=simple --suffix=$suffix $tmp $tmp \
 
 test -f $tmp || fail=1
 test -f $tmp_backup || fail=1
-cmp $tmp $tmp_backup > /dev/null
+cmp $tmp $tmp_backup > /dev/null || fail=1
 
 rm -f $temp_files
 
