@@ -1,5 +1,5 @@
 /* hostname - set or print the name of current host system
-   Copyright (C) 1994-1997, 1999-2002 Free Software Foundation, Inc.
+   Copyright (C) 1994-1997, 1999-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-/* Jim Meyering <meyering@comco.com> */
+/* Written by Jim Meyering.  */
 
 #include <config.h>
 #include <stdio.h>
@@ -110,7 +110,7 @@ main (int argc, char **argv)
 	   _("cannot set hostname; this system lacks the functionality"));
 #endif
 
-  if (argc == 1)
+  if (argc <= 1)
     {
       hostname = xgethostname ();
       if (hostname == NULL)
