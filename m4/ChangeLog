@@ -1,3 +1,8 @@
+2001-03-01  Jim Meyering  <meyering@lucent.com>
+
+	* dos.m4 (jm_AC_DOS): Remove extra backslashes, now that
+	AH_VERBATIM really does output its argument verbatim.
+
 2001-02-18  Paul Eggert  <eggert@twinsun.com>
 
 	* jm-macros.m4 (jm_CHECK_ALL_HEADERS): Check for sys/resource.h.
