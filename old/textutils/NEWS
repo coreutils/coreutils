@@ -1,4 +1,7 @@
 Changes in release 2.1
+[2.0.17]
+* sum -s produces the proper 16-bit checksum for large files
+    (this fixes a bug that was introduced in 2.0f)
 [2.0.16]
 * tail -F no longer segfaults
 [2.0.15]
