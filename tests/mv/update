@@ -41,6 +41,11 @@ mv --update new old || fail=1
 test -f new && fail=1
 case "`cat old`" in new) ;; *) fail=1 ;; esac
 
+# Restore initial conditions.
+echo old > old || fail=1
+touch -d yesterday old || fail=1
+echo new > new || fail=1
+
 # This will actually perform the copy.
 cp --update new old || fail=1
 case "`cat old`" in new) ;; *) fail=1 ;; esac
