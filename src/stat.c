@@ -48,6 +48,7 @@
 #include "closeout.h"
 #include "error.h"
 #include "filemode.h"
+#include "file-type.h"
 #include "fs.h"
 #include "getopt.h"
 #include "quote.h"
@@ -94,39 +95,6 @@ static struct option const long_options[] = {
 };
 
 char *program_name;
-
-static void
-print_human_type (mode_t mode)
-{
-  char const *type;
-  switch (mode & S_IFMT)
-    {
-    case S_IFDIR:
-      type = "Directory";
-      break;
-    case S_IFCHR:
-      type = "Character Device";
-      break;
-    case S_IFBLK:
-      type = "Block Device";
-      break;
-    case S_IFREG:
-      type = "Regular File";
-      break;
-    case S_IFLNK:
-      type = "Symbolic Link";
-      break;
-    case S_IFSOCK:
-      type = "Socket";
-      break;
-    case S_IFIFO:
-      type = "Fifo File";
-      break;
-    default:
-      type = "Unknown";
-    }
-  fputs (type, stdout);
-}
 
 /* Return the type of the specified file system.
    Some systems have statfvs.f_basetype[FSTYPSZ]. (AIX, HP-UX, and Solaris)
@@ -334,19 +302,20 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
 #endif
 }
 
-static void
-print_human_access (struct stat const *statbuf)
+static char *
+human_access (struct stat const *statbuf)
 {
-  char modebuf[11];
+  static char modebuf[11];
   mode_string (statbuf->st_mode, modebuf);
   modebuf[10] = 0;
-  fputs (modebuf, stdout);
+  return modebuf;
 }
 
-static void
-print_human_time (time_t const *t)
+static char *
+human_time (time_t const *t)
 {
-  char str[80];
+  static char str[80];
+  char *s;
 
 #if 0  /* %c is too locale-dependent.  */
   if (strftime (str, 40, "%c", localtime (t)) > 0)
@@ -354,9 +323,11 @@ print_human_time (time_t const *t)
   if (nstrftime (str, sizeof str, "%Y-%m-%d %H:%M:%S.%N %z",
 		 localtime (t), 0, 0) > 0)
 #endif
-    fputs (str, stdout);
+    s = str;
   else
-    printf ("Cannot calculate human readable time, sorry");
+    s = _("Cannot calculate human readable time, sorry");
+
+  return s;
 }
 
 /* print statfs info */
@@ -484,14 +455,16 @@ print_stat (char *pformat, char m, char const *filename, void const *data)
       printf (pformat, statbuf->st_mode & 07777);
       break;
     case 'A':
-      print_human_access (statbuf);
+      strcat (pformat, "s");
+      printf (pformat, human_access (statbuf));
       break;
     case 'f':
       strcat (pformat, "x");
       printf (pformat, statbuf->st_mode);
       break;
     case 'F':
-      print_human_type (statbuf->st_mode);
+      strcat (pformat, "s");
+      printf (pformat, file_type (statbuf));
       break;
     case 'h':
       strcat (pformat, "d");
@@ -538,21 +511,24 @@ print_stat (char *pformat, char m, char const *filename, void const *data)
       printf (pformat, (int) statbuf->st_blksize);
       break;
     case 'x':
-      print_human_time (&(statbuf->st_atime));
+      strcat (pformat, "s");
+      printf (pformat, human_time (&(statbuf->st_atime)));
       break;
     case 'X':
       strcat (pformat, "d");
       printf (pformat, (int) statbuf->st_atime);
       break;
     case 'y':
-      print_human_time (&(statbuf->st_mtime));
+      strcat (pformat, "s");
+      printf (pformat, human_time (&(statbuf->st_mtime)));
       break;
     case 'Y':
       strcat (pformat, "d");
       printf (pformat, (int) statbuf->st_mtime);
       break;
     case 'z':
-      print_human_time (&(statbuf->st_ctime));
+      strcat (pformat, "s");
+      printf (pformat, human_time (&(statbuf->st_ctime)));
       break;
     case 'Z':
       strcat (pformat, "d");
