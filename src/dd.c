@@ -365,7 +365,7 @@ Each CONV symbol may be:\n\
       fputs (_("\
   ascii     from EBCDIC to ASCII\n\
   ebcdic    from ASCII to EBCDIC\n\
-  ibm       from ASCII to alternated EBCDIC\n\
+  ibm       from ASCII to alternate EBCDIC\n\
   block     pad newline-terminated records with spaces to cbs-size\n\
   unblock   replace trailing spaces in cbs-size records with newline\n\
   lcase     change upper case to lower case\n\
@@ -424,16 +424,12 @@ translate_charset (char const *new_trans)
   translation_needed = true;
 }
 
-/* Return the number of 1 bits in `i'. */
+/* Return true if I has more than one bit set.  I must be nonnegative.  */
 
-static int
-bit_count (register int i)
+static inline bool
+multiple_bits_set (int i)
 {
-  register int set_bits;
-
-  for (set_bits = 0; i != 0; set_bits++)
-    i &= i - 1;
-  return set_bits;
+  return (i & (i - 1)) != 0;
 }
 
 static void
@@ -725,7 +721,13 @@ scanargs (int argc, char **argv)
   if (input_flags & (O_DSYNC | O_SYNC))
     input_flags |= O_RSYNC;
 
-  if ((conversions_mask & (C_EXCL | C_NOCREAT)) == (C_EXCL | C_NOCREAT))
+  if (multiple_bits_set (conversions_mask & (C_ASCII | C_EBCDIC | C_IBM)))
+    error (EXIT_FAILURE, 0, _("cannot combine any two of {ascii,ebcdic,ibm}"));
+  if (multiple_bits_set (conversions_mask & (C_BLOCK | C_UNBLOCK)))
+    error (EXIT_FAILURE, 0, _("cannot combine block and unblock"));
+  if (multiple_bits_set (conversions_mask & (C_LCASE | C_UCASE)))
+    error (EXIT_FAILURE, 0, _("cannot combine lcase and ucase"));
+  if (multiple_bits_set (conversions_mask & (C_EXCL | C_NOCREAT)))
     error (EXIT_FAILURE, 0, _("cannot combine excl and nocreat"));
 }
 
@@ -735,16 +737,6 @@ static void
 apply_translations (void)
 {
   int i;
-
-#define MX(a) (bit_count (conversions_mask & (a)))
-  if ((MX (C_ASCII | C_EBCDIC | C_IBM) > 1)
-      || (MX (C_BLOCK | C_UNBLOCK) > 1)
-      || (MX (C_LCASE | C_UCASE) > 1))
-    {
-      error (EXIT_FAILURE, 0, _("\
-	only one conv in {ascii,ebcdic,ibm}, {lcase,ucase}, {block,unblock}"));
-    }
-#undef MX
 
   if (conversions_mask & C_ASCII)
     translate_charset (ebcdic_to_ascii);
