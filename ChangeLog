@@ -2,6 +2,8 @@
 
 	* Version 5.1.0.
 
+	* Use autoconf-2.59.  Regenerate dependent files.
+
 	* tests/du/hard-link: Minor tweak: use mkdir -p.
 
 	Fix read-from-free'd-buffer error detected by valgrind.
