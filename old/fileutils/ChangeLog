@@ -1,5 +1,7 @@
 2000-01-09  Jim Meyering  <meyering@lucent.com>
 
+	* Version 4.0n.
+
 	* src/ln.c (do_link): Produce the same sort of one-line output for
 	`--backup --verbose' as cp, mv, install.  Before this, the backup
 	file name wasn't printed at all.
