@@ -2337,6 +2337,7 @@ Print only duplicate lines.
 Print all duplicate lines and only duplicate lines.
 This option is useful mainly in conjunction with other options e.g.,
 to ignore case or to compare only selected fields.
+This is a GNU extension.
 @c FIXME: give an example showing *how* it's useful
 
 @item -u
