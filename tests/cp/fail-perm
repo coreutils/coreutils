@@ -16,7 +16,7 @@ framework_failure=0
 mkdir -p $tmp || framework_failure=1
 cd $tmp || framework_failure=1
 
-mkdir D || framework_failure=1
+mkdir D D/D || framework_failure=1
 touch D/a || framework_failure=1
 chmod 0 D/a || framework_failure=1
 chmod 500 D || framework_failure=1
@@ -36,6 +36,20 @@ cp -pR D DD > /dev/null 2>&1 && fail=1
 set X `ls -ld DD`
 shift
 test "$1" = dr-x------ || fail=1
+
+chmod 0 D
+ln -s D/D symlink
+touch F
+cat > exp <<\EOF
+cp: accessing `symlink': Permission denied
+EOF
+
+cp F symlink 2> out && fail=1
+cmp out exp || { (diff -c out exp) 2> /dev/null; fail=1; }
+
+cp --target-directory=symlink F 2> out && fail=1
+cmp out exp || { (diff -c out exp) 2> /dev/null; fail=1; }
+
 chmod 700 D
 
 (exit $fail); exit $fail
