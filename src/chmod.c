@@ -1,5 +1,5 @@
 /* chmod -- change permission modes of files
-   Copyright (C) 89, 90, 91, 1995-2000 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 1995-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -246,20 +246,22 @@ Usage: %s [OPTION]... MODE[,MODE]... FILE...\n\
   or:  %s [OPTION]... --reference=RFILE FILE...\n\
 "),
 	      program_name, program_name, program_name);
-      printf (_("\
+      fputs (_("\
 Change the mode of each FILE to MODE.\n\
 \n\
   -c, --changes           like verbose but report only when a change is made\n\
   -f, --silent, --quiet   suppress most error messages\n\
   -v, --verbose           output a diagnostic for every file processed\n\
       --reference=RFILE   use RFILE's mode instead of MODE values\n\
+"), stdout);
+      fputs (_("\
   -R, --recursive         change files and directories recursively\n\
       --help              display this help and exit\n\
       --version           output version information and exit\n\
 \n\
 Each MODE is one or more of the letters ugoa, one of the symbols +-= and\n\
 one or more of the letters rwxXstugo.\n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
     }
   exit (status);

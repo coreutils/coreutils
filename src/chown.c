@@ -102,34 +102,42 @@ Usage: %s [OPTION]... OWNER[:[GROUP]] FILE...\n\
   or:  %s [OPTION]... --reference=RFILE FILE...\n\
 "),
 	      program_name, program_name, program_name);
-      printf (_("\
+      fputs (_("\
 Change the owner and/or group of each FILE to OWNER and/or GROUP.\n\
 \n\
   -c, --changes          like verbose but report only when a change is made\n\
       --dereference      affect the referent of each symbolic link, rather\n\
                          than the symbolic link itself\n\
+"), stdout);
+      fputs (_("\
   -h, --no-dereference   affect symbolic links instead of any referenced file\n\
                          (available only on systems that can change the\n\
                          ownership of a symlink)\n\
+"), stdout);
+      fputs (_("\
       --from=CURRENT_OWNER:CURRENT_GROUP\n\
                          change the owner and/or group of each file only if\n\
                          its current owner and/or group match those specified\n\
                          here.  Either may be omitted, in which case a match\n\
                          is not required for the omitted attribute.\n\
+"), stdout);
+      fputs (_("\
   -f, --silent, --quiet  suppress most error messages\n\
       --reference=RFILE  use RFILE's owner and group rather than\n\
                          the specified OWNER:GROUP values\n\
   -R, --recursive        operate on files and directories recursively\n\
+"), stdout);
+      fputs (_("\
   -v, --verbose          output a diagnostic for every file processed\n\
       --help             display this help and exit\n\
       --version          output version information and exit\n\
 \n\
-"));
-      printf (_("\
+"), stdout);
+      fputs (_("\
 Owner is unchanged if missing.  Group is unchanged if missing, but changed\n\
 to login group if implied by a `:'.  OWNER and GROUP may be numeric as well\n\
 as symbolic.\n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
     }
   exit (status);

@@ -165,78 +165,90 @@ Usage: %s [OPTION]... SOURCE DEST\n\
   or:  %s [OPTION]... --target-directory=DIRECTORY SOURCE...\n\
 "),
 	      program_name, program_name, program_name);
-      printf (_("\
+      fputs (_("\
 Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
 \n\
   -a, --archive                same as -dpR\n\
       --backup[=CONTROL]       make a backup of each existing destination file\n\
   -b                           like --backup but does not accept an argument\n\
   -d                           same as --no-dereference --preserve=link\n\
+"), stdout);
+      fputs (_("\
       --no-dereference         never follow symbolic links\n\
   -f, --force                  if an existing destination file cannot be\n\
                                  opened, remove it and try again\n\
   -i, --interactive            prompt before overwrite\n\
   -H                           follow command-line symbolic links\n\
-"));
-      printf (_("\
+"), stdout);
+      fputs (_("\
   -l, --link                   link files instead of copying\n\
   -L, --dereference            always follow symbolic links\n\
   -p                           same as --preserve=mode,ownership,timestamps\n\
       --preserve[=ATTR_LIST]   preserve the specified attributes (default:\n\
                                  mode,ownership,timestamps), if possible\n\
                                  additional attributes: links, all\n\
+"), stdout);
+      fputs (_("\
       --no-preserve=ATTR_LIST  don't preserve the specified attributes\n\
       --parents                append source path to DIRECTORY\n\
   -P                           same as `--no-dereference'\n\
+"), stdout);
+      fputs (_("\
   -r                           copy recursively, non-directories as files\n\
                                  WARNING: use -R instead when you might copy\n\
                                  special files like FIFOs or /dev/zero\n\
       --remove-destination     remove each existing destination file before\n\
                                  attempting to open it (contrast with --force)\n\
-"));
-      printf (_("\
+"), stdout);
+      fputs (_("\
       --sparse=WHEN            control creation of sparse files\n\
   -R, --recursive              copy directories recursively\n\
       --reply={yes,no,query}   specify how to handle the prompt about an\n\
                                  existing destination file\n\
       --strip-trailing-slashes remove any trailing slashes from each SOURCE\n\
                                  argument\n\
+"), stdout);
+      fputs (_("\
   -s, --symbolic-link          make symbolic links instead of copying\n\
   -S, --suffix=SUFFIX          override the usual backup suffix\n\
       --target-directory=DIRECTORY  move all SOURCE arguments into DIRECTORY\n\
   -u, --update                 copy only when the SOURCE file is newer\n\
                                  than the destination file or when the\n\
                                  destination file is missing\n\
-"));
-      printf (_("\
+"), stdout);
+      fputs (_("\
   -v, --verbose                explain what is being done\n\
   -x, --one-file-system        stay on this file system\n\
       --help                   display this help and exit\n\
       --version                output version information and exit\n\
 \n\
+"), stdout);
+      fputs (_("\
 By default, sparse SOURCE files are detected by a crude heuristic and the\n\
 corresponding DEST file is made sparse as well.  That is the behavior\n\
 selected by --sparse=auto.  Specify --sparse=always to create a sparse DEST\n\
 file whenever the SOURCE file contains a long enough sequence of zero bytes.\n\
 Use --sparse=never to inhibit creation of sparse files.\n\
 \n\
-"));
-      printf (_("\
+"), stdout);
+      fputs (_("\
 The backup suffix is `~', unless set with --suffix or SIMPLE_BACKUP_SUFFIX.\n\
 The version control method may be selected via the --backup option or through\n\
 the VERSION_CONTROL environment variable.  Here are the values:\n\
 \n\
+"), stdout);
+      fputs (_("\
   none, off       never make backups (even if --backup is given)\n\
   numbered, t     make numbered backups\n\
   existing, nil   numbered if numbered backups exist, simple otherwise\n\
   simple, never   always make simple backups\n\
-"));
-      printf (_("\
+"), stdout);
+      fputs (_("\
 \n\
 As a special case, cp makes a backup of SOURCE when the force and backup\n\
 options are given and SOURCE and DEST are the same name for an existing,\n\
 regular file.\n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
     }
   exit (status);

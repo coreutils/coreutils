@@ -228,7 +228,7 @@ usage (int status)
       printf (_("Usage: %s [OPTION]... FILE...\n"), program_name);
       printf (_("  or:  %s [-acm] MMDDhhmm[YY] FILE... (obsolescent)\n"),
 	      program_name);
-      printf (_("\
+      fputs (_("\
 Update the access and modification times of each FILE to the current time.\n\
 \n\
   -a                     change only the access time\n\
@@ -236,16 +236,22 @@ Update the access and modification times of each FILE to the current time.\n\
   -d, --date=STRING      parse STRING and use it instead of current time\n\
   -f                     (ignored)\n\
   -m                     change only the modification time\n\
+"), stdout);
+      fputs (_("\
   -r, --reference=FILE   use this file's times instead of current time\n\
   -t STAMP               use [[CC]YY]MMDDhhmm[.ss] instead of current time\n\
   --time=WORD            set time given by WORD: access atime use (same as -a)\n\
                            modify mtime (same as -m)\n\
+"), stdout);
+      fputs (_("\
       --help             display this help and exit\n\
       --version          output version information and exit\n\
+"), stdout);
+      fputs (_("\
 \n\
 Note that the three time-date formats recognized for the -d and -t options\n\
 and for the obsolescent argument are all different.\n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
     }
   exit (status);

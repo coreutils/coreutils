@@ -1,5 +1,5 @@
 /* dircolors - output commands to set the LS_COLOR environment variable
-   Copyright (C) 1994, 1995, 1997, 1998, 1999, 2000 H. Peter Anvin
+   Copyright (C) 1994, 1995, 1997, 1998, 1999, 2000, 2001 H. Peter Anvin
    Copyright (C) 1996-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -102,20 +102,22 @@ usage (int status)
   else
     {
       printf (_("Usage: %s [OPTION]... [FILE]\n"), program_name);
-      printf (_("\
+      fputs (_("\
 Output commands to set the LS_COLORS environment variable.\n\
 \n\
 Determine format of output:\n\
   -b, --sh, --bourne-shell    output Bourne shell code to set LS_COLORS\n\
   -c, --csh, --c-shell        output C shell code to set LS_COLORS\n\
   -p, --print-database        output defaults\n\
+"), stdout);
+      fputs (_("\
       --help                  display this help and exit\n\
       --version               output version information and exit\n\
 \n\
 If FILE is specified, read it to determine which colors to use for which\n\
 file types and extensions.  Otherwise, a precompiled database is used.\n\
 For details on the format of these files, run `dircolors --print-database'.\n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
     }
 

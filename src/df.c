@@ -752,7 +752,7 @@ usage (int status)
   else
     {
       printf (_("Usage: %s [OPTION]... [FILE]...\n"), program_name);
-      printf (_("\
+      fputs (_("\
 Show information about the filesystem on which each FILE resides,\n\
 or all filesystems by default.\n\
 \n\
@@ -760,20 +760,26 @@ or all filesystems by default.\n\
       --block-size=SIZE use SIZE-byte blocks\n\
   -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n\
   -H, --si              likewise, but use powers of 1000 not 1024\n\
+"), stdout);
+      fputs (_("\
   -i, --inodes          list inode information instead of block usage\n\
   -k, --kilobytes       like --block-size=1024\n\
   -l, --local           limit listing to local filesystems\n\
   -m, --megabytes       like --block-size=1048576\n\
       --no-sync         do not invoke sync before getting usage info (default)\n\
+"), stdout);
+      fputs (_("\
   -P, --portability     use the POSIX output format\n\
       --sync            invoke sync before getting usage info\n\
   -t, --type=TYPE       limit listing to filesystems of type TYPE\n\
   -T, --print-type      print filesystem type\n\
   -x, --exclude-type=TYPE   limit listing to filesystems not of type TYPE\n\
   -v                    (ignored)\n\
+"), stdout);
+      fputs (_("\
       --help            display this help and exit\n\
       --version         output version information and exit\n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
     }
   exit (status);

@@ -471,6 +471,8 @@ for even very expensive hardware probing to recover the data.\n\
   -f, --force    change permissions to allow writing if necessary\n\
   -n, --iterations=N  Overwrite N times instead of the default (%d)\n\
   -s, --size=N   shred this many bytes (suffixes like k, M, G accepted)\n\
+"), DEFAULT_PASSES);
+      fputs (_("\
   -u, --remove   truncate and remove file after overwriting\n\
   -v, --verbose  show progress\n\
   -x, --exact    do not round file sizes up to the next full block\n\
@@ -479,17 +481,23 @@ for even very expensive hardware probing to recover the data.\n\
       --help     display this help and exit\n\
       --version  print version information and exit\n\
 \n\
+"), stdout);
+      fputs (_("\
 Delete FILE(s) if --remove (-u) is specified.  The default is not to remove\n\
 the files because it is common to operate on device files like /dev/hda,\n\
 and those files usually should not be removed.  When operating on regular\n\
 files, most people use the --remove option.\n\
 \n\
+"), stdout);
+      fputs (_("\
 CAUTION: Note that shred relies on a very important assumption:\n\
 that the filesystem overwrites data in place.  This is the traditional\n\
 way to do things, but many modern filesystem designs do not satisfy this\n\
 assumption.  The following are examples of filesystems on which shred is\n\
 not effective:\n\
 \n\
+"), stdout);
+      fputs (_("\
 * log-structured or journaled filesystems, such as those supplied with\n\
   AIX and Solaris (and JFS, ReiserFS, XFS, etc.)\n\
 \n\
@@ -498,6 +506,8 @@ not effective:\n\
 \n\
 * filesystems that make snapshots, such as Network Appliance's NFS server\n\
 \n\
+"), stdout);
+      fputs (_("\
 * filesystems that cache in temporary locations, such as NFS\n\
   version 3 clients\n\
 \n\
@@ -506,7 +516,7 @@ not effective:\n\
 In addition, file system backups and remote mirrors may contain copies\n\
 of the file that cannot be removed, and that will allow a shredded file\n\
 to be recovered later.\n\
-"), DEFAULT_PASSES);
+"), stdout);
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
     }
   exit (status);

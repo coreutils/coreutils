@@ -342,7 +342,7 @@ Usage: %s [OPTION]... TARGET [LINK_NAME]\n\
   or:  %s [OPTION]... --target-directory=DIRECTORY TARGET...\n\
 "),
 	      program_name, program_name, program_name);
-      printf (_("\
+      fputs (_("\
 Create a link to the specified TARGET with optional LINK_NAME.\n\
 If LINK_NAME is omitted, a link with the same basename as the TARGET is\n\
 created in the current directory.  When using the second form with more\n\
@@ -350,32 +350,40 @@ than one TARGET, the last argument must be a directory;  create links\n\
 in DIRECTORY to each TARGET.  Create hard links by default, symbolic\n\
 links with --symbolic.  When creating hard links, each TARGET must exist.\n\
 \n\
+"), stdout);
+      fputs (_("\
       --backup[=CONTROL]      make a backup of each existing destination file\n\
   -b                          like --backup but does not accept an argument\n\
   -d, -F, --directory         hard link directories (super-user only)\n\
   -f, --force                 remove existing destination files\n\
+"), stdout);
+      fputs (_("\
   -n, --no-dereference        treat destination that is a symlink to a\n\
                                 directory as if it were a normal file\n\
   -i, --interactive           prompt whether to remove destinations\n\
   -s, --symbolic              make symbolic links instead of hard links\n\
   -S, --suffix=SUFFIX         override the usual backup suffix\n\
+"), stdout);
+      fputs (_("\
       --target-directory=DIRECTORY  specify the DIRECTORY in which to create\n\
                                 the links\n\
   -v, --verbose               print name of each file before linking\n\
       --help                  display this help and exit\n\
       --version               output version information and exit\n\
 \n\
-"));
-      printf (_("\
+"), stdout);
+      fputs (_("\
 The backup suffix is `~', unless set with --suffix or SIMPLE_BACKUP_SUFFIX.\n\
 The version control method may be selected via the --backup option or through\n\
 the VERSION_CONTROL environment variable.  Here are the values:\n\
 \n\
+"), stdout);
+      fputs (_("\
   none, off       never make backups (even if --backup is given)\n\
   numbered, t     make numbered backups\n\
   existing, nil   numbered if numbered backups exist, simple otherwise\n\
   simple, never   always make simple backups\n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
     }
   exit (status);

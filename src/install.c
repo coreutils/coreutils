@@ -604,40 +604,50 @@ Usage: %s [OPTION]... SOURCE DEST           (1st format)\n\
   or:  %s -d [OPTION]... DIRECTORY...       (3rd format)\n\
 "),
 	      program_name, program_name, program_name);
-      printf (_("\
+      fputs (_("\
 In the first two formats, copy SOURCE to DEST or multiple SOURCE(s) to\n\
 the existing DIRECTORY, while setting permission modes and owner/group.\n\
 In the third format, create all components of the given DIRECTORY(ies).\n\
 \n\
+"), stdout);
+      fputs (_("\
       --backup[=CONTROL] make a backup of each existing destination file\n\
   -b                  like --backup but does not accept an argument\n\
   -c                  (ignored)\n\
   -d, --directory     treat all arguments as directory names; create all\n\
                         components of the specified directories\n\
+"), stdout);
+      fputs (_("\
   -D                  create all leading components of DEST except the last,\n\
                         then copy SOURCE to DEST;  useful in the 1st format\n\
   -g, --group=GROUP   set group ownership, instead of process' current group\n\
   -m, --mode=MODE     set permission mode (as in chmod), instead of rwxr-xr-x\n\
   -o, --owner=OWNER   set ownership (super-user only)\n\
+"), stdout);
+      fputs (_("\
   -p, --preserve-timestamps   apply access/modification times of SOURCE files\n\
                         to corresponding destination files\n\
   -s, --strip         strip symbol tables, only for 1st and 2nd formats\n\
   -S, --suffix=SUFFIX override the usual backup suffix\n\
+"), stdout);
+      fputs (_("\
   -v, --verbose       print the name of each directory as it is created\n\
       --help          display this help and exit\n\
       --version       output version information and exit\n\
 \n\
-"));
-      printf (_("\
+"), stdout);
+      fputs (_("\
 The backup suffix is `~', unless set with --suffix or SIMPLE_BACKUP_SUFFIX.\n\
 The version control method may be selected via the --backup option or through\n\
 the VERSION_CONTROL environment variable.  Here are the values:\n\
 \n\
+"), stdout);
+      fputs (_("\
   none, off       never make backups (even if --backup is given)\n\
   numbered, t     make numbered backups\n\
   existing, nil   numbered if numbered backups exist, simple otherwise\n\
   simple, never   always make simple backups\n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
     }
   exit (status);

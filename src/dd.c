@@ -289,7 +289,7 @@ usage (int status)
   else
     {
       printf (_("Usage: %s [OPTION]...\n"), program_name);
-      printf (_("\
+      fputs (_("\
 Copy a file, converting and formatting according to the options.\n\
 \n\
   bs=BYTES        force ibs=BYTES and obs=BYTES\n\
@@ -297,6 +297,8 @@ Copy a file, converting and formatting according to the options.\n\
   conv=KEYWORDS   convert the file as per the comma separated keyword list\n\
   count=BLOCKS    copy only BLOCKS input blocks\n\
   ibs=BYTES       read BYTES bytes at a time\n\
+"), stdout);
+      fputs (_("\
   if=FILE         read from FILE instead of stdin\n\
   obs=BYTES       write BYTES bytes at a time\n\
   of=FILE         write to FILE instead of stdout\n\
@@ -304,25 +306,31 @@ Copy a file, converting and formatting according to the options.\n\
   skip=BLOCKS     skip BLOCKS ibs-sized blocks at start of input\n\
       --help      display this help and exit\n\
       --version   output version information and exit\n\
+"), stdout);
+      fputs (_("\
 \n\
 BLOCKS and BYTES may be followed by the following multiplicative suffixes:\n\
 xM M, c 1, w 2, b 512, kD 1000, k 1024, MD 1,000,000, M 1,048,576,\n\
 GD 1,000,000,000, G 1,073,741,824, and so on for T, P, E, Z, Y.\n\
 Each KEYWORD may be:\n\
 \n\
+"), stdout);
+      fputs (_("\
   ascii     from EBCDIC to ASCII\n\
   ebcdic    from ASCII to EBCDIC\n\
   ibm       from ASCII to alternated EBCDIC\n\
   block     pad newline-terminated records with spaces to cbs-size\n\
   unblock   replace trailing spaces in cbs-size records with newline\n\
   lcase     change upper case to lower case\n\
+"), stdout);
+      fputs (_("\
   notrunc   do not truncate the output file\n\
   ucase     change lower case to upper case\n\
   swab      swap every pair of input bytes\n\
   noerror   continue after read errors\n\
   sync      pad every input block with NULs to ibs-size; when used\n\
               with block or unblock, pad with spaces rather than NULs\n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
     }
   exit (status);

@@ -1,5 +1,5 @@
 /* rmdir -- remove directories
-   Copyright (C) 90, 91, 1995-2000 Free Software Foundation, Inc.
+   Copyright (C) 90, 91, 1995-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -142,7 +142,7 @@ usage (int status)
   else
     {
       printf (_("Usage: %s [OPTION]... DIRECTORY...\n"), program_name);
-      printf (_("\
+      fputs (_("\
 Remove the DIRECTORY(ies), if they are empty.\n\
 \n\
       --ignore-fail-on-non-empty\n\
@@ -151,10 +151,12 @@ Remove the DIRECTORY(ies), if they are empty.\n\
   -p, --parents   remove DIRECTORY, then try to remove each directory\n\
                   component of that path name.  E.g., `rmdir -p a/b/c' is\n\
                   similar to `rmdir a/b/c a/b a'.\n\
+"), stdout);
+      fputs (_("\
   -v, --verbose   output a diagnostic for every directory processed\n\
       --help      display this help and exit\n\
       --version   output version information and exit\n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
     }
   exit (status);

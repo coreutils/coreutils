@@ -187,7 +187,7 @@ usage (int status)
   else
     {
       printf (_("Usage: %s [OPTION]... [FILE]...\n"), program_name);
-      printf (_("\
+      fputs (_("\
 Summarize disk usage of each FILE, recursively for directories.\n\
 \n\
   -a, --all             write counts for all files, not just directories\n\
@@ -195,14 +195,20 @@ Summarize disk usage of each FILE, recursively for directories.\n\
   -b, --bytes           print size in bytes\n\
   -c, --total           produce a grand total\n\
   -D, --dereference-args  dereference PATHs when symbolic link\n\
+"), stdout);
+      fputs (_("\
   -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n\
   -H, --si              likewise, but use powers of 1000 not 1024\n\
   -k, --kilobytes       like --block-size=1024\n\
   -l, --count-links     count sizes many times if hard linked\n\
+"), stdout);
+      fputs (_("\
   -L, --dereference     dereference all symbolic links\n\
   -m, --megabytes       like --block-size=1048576\n\
   -S, --separate-dirs   do not include size of subdirectories\n\
   -s, --summarize       display only a total for each argument\n\
+"), stdout);
+      fputs (_("\
   -x, --one-file-system  skip directories on different filesystems\n\
   -X FILE, --exclude-from=FILE  Exclude files that match any pattern in FILE.\n\
       --exclude=PAT     Exclude files that match PAT.\n\
@@ -210,9 +216,11 @@ Summarize disk usage of each FILE, recursively for directories.\n\
                           only if it is N or fewer levels below the command\n\
                           line argument;  --max-depth=0 is the same as\n\
                           --summarize\n\
+"), stdout);
+      fputs (_("\
       --help            display this help and exit\n\
       --version         output version information and exit\n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
     }
   exit (status);

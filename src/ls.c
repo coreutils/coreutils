@@ -3561,64 +3561,78 @@ usage (int status)
   else
     {
       printf (_("Usage: %s [OPTION]... [FILE]...\n"), program_name);
-      printf (_("\
+      fputs (_("\
 List information about the FILEs (the current directory by default).\n\
 Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
 \n\
   -a, --all                  do not hide entries starting with .\n\
   -A, --almost-all           do not list implied . and ..\n\
   -b, --escape               print octal escapes for nongraphic characters\n\
+"), stdout);
+      fputs (_("\
       --block-size=SIZE      use SIZE-byte blocks\n\
   -B, --ignore-backups       do not list implied entries ending with ~\n\
   -c                         with -lt: sort by, and show, ctime (time of last\n\
                                modification of file status information)\n\
                                with -l: show ctime and sort by name\n\
                                otherwise: sort by ctime\n\
+"), stdout);
+      fputs (_("\
   -C                         list entries by columns\n\
       --color[=WHEN]         control whether color is used to distinguish file\n\
                                types.  WHEN may be `never', `always', or `auto'\n\
   -d, --directory            list directory entries instead of contents\n\
   -D, --dired                generate output designed for Emacs' dired mode\n\
+"), stdout);
+      fputs (_("\
   -f                         do not sort, enable -aU, disable -lst\n\
   -F, --classify             append indicator (one of */=@|) to entries\n\
       --format=WORD          across -x, commas -m, horizontal -x, long -l,\n\
                                single-column -1, verbose -l, vertical -C\n\
-      --full-time            like -l --time-style=full-iso\n"));
-
-      printf (_("\
+      --full-time            like -l --time-style=full-iso\n\
+"), stdout);
+      fputs (_("\
   -g                         like -l, but do not list owner\n\
   -G, --no-group             inhibit display of group information\n\
   -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n\
       --si                   likewise, but use powers of 1000 not 1024\n\
   -H, --dereference-command-line  follow symbolic links on the command line\n\
+"), stdout);
+      fputs (_("\
       --indicator-style=WORD append indicator with style WORD to entry names:\n\
                                none (default), classify (-F), file-type (-p)\n\
   -i, --inode                print index number of each file\n\
   -I, --ignore=PATTERN       do not list implied entries matching shell PATTERN\n\
   -k, --kilobytes            like --block-size=1024\n\
+"), stdout);
+      fputs (_("\
   -l                         use a long listing format\n\
   -L, --dereference          when showing file information for a symbolic\n\
                                link, show information for the file the link\n\
                                references rather than for the link itself\n\
-  -m                         fill width with a comma separated list of entries\n"));
-
-      printf (_("\
+  -m                         fill width with a comma separated list of entries\n\
+"), stdout);
+      fputs (_("\
   -n, --numeric-uid-gid      like -l, but list numeric UIDs and GIDs\n\
   -N, --literal              print raw entry names (don't treat e.g. control\n\
                                characters specially)\n\
   -o                         like -l, but do not list group information\n\
   -p, --file-type            append indicator (one of /=@|) to entries\n\
+"), stdout);
+      fputs (_("\
   -q, --hide-control-chars   print ? instead of non graphic characters\n\
       --show-control-chars   show non graphic characters as-is (default\n\
                              unless program is `ls' and output is a terminal)\n\
   -Q, --quote-name           enclose entry names in double quotes\n\
       --quoting-style=WORD   use quoting style WORD for entry names:\n\
                                literal, locale, shell, shell-always, c, escape\n\
+"), stdout);
+      fputs (_("\
   -r, --reverse              reverse order while sorting\n\
   -R, --recursive            list subdirectories recursively\n\
-  -s, --size                 print size of each file, in blocks\n"));
-
-      printf (_("\
+  -s, --size                 print size of each file, in blocks\n\
+"), stdout);
+      fputs (_("\
   -S                         sort by file size\n\
       --sort=WORD            extension -X, none -U, size -S, time -t,\n\
                                version -v\n\
@@ -3626,28 +3640,36 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
       --time=WORD            show time as WORD instead of modification time:\n\
                                atime, access, use, ctime or status; use\n\
                                specified time as sort key if --sort=time\n\
+"), stdout);
+      fputs (_("\
       --time-style=WORD      show times using style WORD:\n\
                                full-iso, iso, locale, posix-iso\n\
   -t                         sort by modification time\n\
   -T, --tabsize=COLS         assume tab stops at each COLS instead of 8\n\
+"), stdout);
+      fputs (_("\
   -u                         with -lt: sort by, and show, access time\n\
                                with -l: show access time and sort by name\n\
                                otherwise: sort by access time\n\
   -U                         do not sort; list entries in directory order\n\
   -v                         sort by version\n\
+"), stdout);
+      fputs (_("\
   -w, --width=COLS           assume screen width instead of current value\n\
   -x                         list entries by lines instead of by columns\n\
   -X                         sort alphabetically by entry extension\n\
   -1                         list one file per line\n\
       --help                 display this help and exit\n\
       --version              output version information and exit\n\
+"), stdout);
+      fputs (_("\
 \n\
 By default, color is not used to distinguish types of files.  That is\n\
 equivalent to using --color=none.  Using the --color option without the\n\
 optional WHEN argument is equivalent to using --color=always.  With\n\
 --color=auto, color codes are output only if standard output is connected\n\
 to a terminal (tty).\n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
     }
   exit (status);

@@ -84,7 +84,7 @@ usage (int status)
   else
     {
       printf (_("Usage: %s [OPTION]... FILE...\n"), program_name);
-      printf (_("\
+      fputs (_("\
 Remove (unlink) the FILE(s).\n\
 \n\
   -d, --directory       unlink FILE, even if it is a non-empty directory\n\
@@ -92,21 +92,27 @@ Remove (unlink) the FILE(s).\n\
   -f, --force           ignore nonexistent files, never prompt\n\
   -i, --interactive     prompt before any removal\n\
   -r, -R, --recursive   remove the contents of directories recursively\n\
+"), stdout);
+      fputs (_("\
   -v, --verbose         explain what is being done\n\
       --help            display this help and exit\n\
       --version         output version information and exit\n\
 \n\
+"), stdout);
+      printf (_("\
 To remove a file whose name starts with a `-', for example `-foo',\n\
 use one of these commands:\n\
   %s -- -foo\n\
 \n\
   %s ./-foo\n\
+"),
+	      program_name, program_name);
+      fputs (_("\
 \n\
 Note that if you use rm to remove a file, it is usually possible to recover\n\
 the contents of that file.  If you want more assurance that the contents are\n\
 truly unrecoverable, consider using shred.\n\
-"),
-	      program_name, program_name);
+"), stdout);
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
     }
   exit (status);
