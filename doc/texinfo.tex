@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{1999-02-21.16}%
+\def\texinfoversion{1999-03-15.17}%
 %
 % Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99
 % Free Software Foundation, Inc.
@@ -99,6 +99,7 @@
 \ifx\putwordAppendix\undefined  \gdef\putwordAppendix{Appendix}\fi
 \ifx\putwordChapter\undefined   \gdef\putwordChapter{Chapter}\fi
 \ifx\putwordfile\undefined      \gdef\putwordfile{file}\fi
+\ifx\putwordin\undefined        \gdef\putwordin{in}\fi
 \ifx\putwordIndexIsEmpty\undefined     \gdef\putwordIndexIsEmpty{(Index is empty)}\fi
 \ifx\putwordIndexNonexistent\undefined \gdef\putwordIndexNonexistent{(Index is nonexistent)}\fi
 \ifx\putwordInfo\undefined      \gdef\putwordInfo{Info}\fi
@@ -4917,7 +4918,7 @@ width0pt\relax} \fi
   % is a loss.  Therefore, we give the text of the node name again, so it
   % is as if TeX is seeing it for the first time.
   \ifdim \wd1 > 0pt
-    \putwordsection{} ``\printednodename'' in \cite{\printedmanual}%
+    \putwordsection{} ``\printednodename'' \putwordin{} \cite{\printedmanual}%
   \else
     % _ (for example) has to be the character _ for the purposes of the
     % control sequence corresponding to the node, but it has to expand
@@ -5287,16 +5288,19 @@ width0pt\relax} \fi
   % \epsfbox itself resets \epsf?size at each figure.
   \setbox0 = \hbox{\ignorespaces #2}\ifdim\wd0 > 0pt \epsfxsize=#2\relax \fi
   \setbox0 = \hbox{\ignorespaces #3}\ifdim\wd0 > 0pt \epsfysize=#3\relax \fi
-  % If the image is by itself, center it.
-  \ifvmode
-    \nobreak\medskip
-    \nobreak
-    \centerline{\epsfbox{#1.eps}}%
-    \bigbreak
-  \else
-    % In the middle of a paragraph, no extra space.
-    \epsfbox{#1.eps}%
-  \fi
+  \begingroup
+    \catcode`\^^M = 5 % in case we're inside an example
+    % If the image is by itself, center it.
+    \ifvmode
+      \nobreak\medskip
+      \nobreak
+      \centerline{\epsfbox{#1.eps}}%
+      \bigbreak
+    \else
+      % In the middle of a paragraph, no extra space.
+      \epsfbox{#1.eps}%
+    \fi
+  \endgroup
 }
 
 
