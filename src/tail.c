@@ -36,6 +36,7 @@
 #include "argmatch.h"
 #include "error.h"
 #include "human.h"
+#include "posixver.h"
 #include "safe-read.h"
 #include "xstrtol.h"
 
@@ -285,17 +286,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 If the first character of N (the number of bytes or lines) is a `+',\n\
 print beginning with the Nth item from the start of each file, otherwise,\n\
 print the last N items in the file.  N may have a multiplier suffix:\n\
-b for 512, k for 1024, m for 1048576 (1 Meg).  \
-"), stdout);
-     fputs (_("\
-A first OPTION of -VALUE\n\
-is treated like -n VALUE unless VALUE has one of the [bkm] suffix\n\
-multipliers, in which case it is treated like -c VALUE.\n\
-"), stdout);
-     if (POSIX2_VERSION < 200112)
-       fputs (_("\
-A first option of +VALUE is treated like -+VALUE, but this usage is obsolete\n\
-and support for it will be withdrawn.\n\
+b for 512, k for 1024, m for 1048576 (1 Meg).\n\
 \n\
 "), stdout);
      fputs (_("\
@@ -309,7 +300,6 @@ track the actual name of the file, not the file descriptor (e.g., log\n\
 rotation).  Use --follow=name in that case.  That causes tail to track the\n\
 named file by reopening it periodically to see if it has been removed and\n\
 recreated by some other program.\n\
-\n\
 "), stdout);
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
@@ -1288,6 +1278,7 @@ parse_obsolescent_option (int argc, const char *const *argv,
   const char *p = argv[1];
   const char *n_string = NULL;
   const char *n_string_end;
+  bool obsolete_usage;
 
   int t_from_start;
   int t_count_lines;
@@ -1299,9 +1290,13 @@ parse_obsolescent_option (int argc, const char *const *argv,
   if (argc < 2)
     return 0;
 
-  /* If P starts with `+', `-N' (where N is a digit), or `-l',
-     then it is obsolescent.  Return zero otherwise.  */
-  if (! (p[0] == '+' || (p[0] == '-' && (p[1] == 'l' || ISDIGIT (p[1])))))
+  obsolete_usage = (posix2_version () < 200112);
+
+  /* If P starts with `+' and the POSIX version predates 1003.1-2001,
+     or if P starts with `-N' (where N is a digit), or `-l', then it
+     is obsolescent.  Return zero otherwise.  */
+  if (! ((p[0] == '+' && obsolete_usage)
+	 || (p[0] == '-' && (p[1] == 'l' || ISDIGIT (p[1])))))
     return 0;
 
   if (*p == '+')
@@ -1393,13 +1388,11 @@ parse_obsolescent_option (int argc, const char *const *argv,
 
   if (!*fail)
     {
-      bool posix_pedantic = (getenv ("POSIXLY_CORRECT") != NULL);
-
       if (argc > 3)
 	{
 	  /* When POSIXLY_CORRECT is set, enforce the `at most one
 	     file argument' requirement.  */
-	  if (posix_pedantic)
+	  if (getenv ("POSIXLY_CORRECT"))
 	    {
 	      error (0, 0, _("\
 too many arguments;  When using tail's obsolescent option syntax (%s)\n\
@@ -1417,10 +1410,13 @@ option instead."), argv[1]);
 #endif
 	}
 
-      if (OBSOLETE_OPTION_WARNINGS && ! posix_pedantic)
-	error (0, 0,
-	       _("warning: `tail %s' is obsolete; use -n or -c instead"),
-	       argv[1]);
+      if (! obsolete_usage)
+	{
+	  error (0, 0, _("`%s' option is obsolete; use `%s-%c %.*s'"),
+		 argv[1], t_forever ? " -f" : "", t_count_lines ? 'n' : 'c',
+		 (int) (n_string_end - n_string), n_string);
+	  usage (EXIT_FAILURE);
+	}
 
       /* Set globals.  */
       from_start = t_from_start;
@@ -1606,10 +1602,9 @@ main (int argc, char **argv)
   {
     int fail;
 
-    if (POSIX2_VERSION < 200112
-	&& parse_obsolescent_option (argc,
-				     (const char *const *) argv,
-				     &n_units, &fail))
+    if (parse_obsolescent_option (argc,
+				  (const char *const *) argv,
+				  &n_units, &fail))
       {
 	if (fail)
 	  exit (EXIT_FAILURE);
