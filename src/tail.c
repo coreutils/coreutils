@@ -1299,11 +1299,9 @@ parse_obsolescent_option (int argc, const char *const *argv,
   if (argc < 2)
     return 0;
 
-  /* If P starts with `+' and the POSIX version predates 1003.1-2001,
-     or P starts with `-N' (where N is a digit) or `-l',
+  /* If P starts with `+', `-N' (where N is a digit), or `-l',
      then it is obsolescent.  Return zero otherwise.  */
-  if (! ((POSIX2_VERSION < 200112 && p[0] == '+')
-	 || (p[0] == '-' && (p[1] == 'l' || ISDIGIT (p[1])))))
+  if (! (p[0] == '+' || (p[0] == '-' && (p[1] == 'l' || ISDIGIT (p[1])))))
     return 0;
 
   if (*p == '+')
@@ -1419,7 +1417,7 @@ option instead."), argv[1]);
 #endif
 	}
 
-      if (! posix_pedantic)
+      if (OBSOLETE_OPTION_WARNINGS && ! posix_pedantic)
 	error (0, 0,
 	       _("warning: `tail %s' is obsolete; use -n or -c instead"),
 	       argv[1]);
@@ -1606,12 +1604,12 @@ main (int argc, char **argv)
   have_read_stdin = 0;
 
   {
-    int found_obsolescent;
     int fail;
-    found_obsolescent = parse_obsolescent_option (argc,
-						  (const char *const *) argv,
-						  &n_units, &fail);
-    if (found_obsolescent)
+
+    if (POSIX2_VERSION < 200112
+	&& parse_obsolescent_option (argc,
+				     (const char *const *) argv,
+				     &n_units, &fail))
       {
 	if (fail)
 	  exit (EXIT_FAILURE);
