@@ -1,5 +1,5 @@
-#ifndef _xstrtol_h_
-# define _xstrtol_h_ 1
+#ifndef XSTRTOL_H_
+# define XSTRTOL_H_ 1
 
 # if STRING_TO_UNSIGNED
 #  define __xstrtol xstrtoul
@@ -63,4 +63,4 @@ strtol_error
 # define STRTOL_FAIL_WARN(Str, Argument_type_string, Err)		\
   _STRTOL_ERROR (0, Str, Argument_type_string, Err)
 
-#endif /* _xstrtol_h_ */
+#endif /* not XSTRTOL_H_ */
