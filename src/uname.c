@@ -1,5 +1,7 @@
 /* uname -- print system information
-   Copyright (C) 1989-2000 Free Software Foundation, Inc.
+
+   Copyright 1989, 1992, 1993, 1996, 1997, 1999, 2000, 2001 Free
+   Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -15,18 +17,7 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-/* Option		Example
-
-   -s, --sysname	SunOS
-   -n, --nodename	rocky8
-   -r, --release	4.0
-   -v, --version
-   -m, --machine	sun
-   -a, --all		SunOS rocky8 4.0  sun
-
-   The default behavior is equivalent to `-s'.
-
-   David MacKenzie <djm@gnu.ai.mit.edu> */
+/* Written by David MacKenzie <djm@gnu.ai.mit.edu> */
 
 #include <config.h>
 #include <stdio.h>
@@ -47,41 +38,47 @@
 
 #define AUTHORS "David MacKenzie"
 
-static void print_element PARAMS ((unsigned int mask, char *element));
-
 /* Values that are bitwise or'd into `toprint'. */
-/* Operating system name. */
-#define PRINT_SYSNAME 1
+/* Kernel name. */
+#define PRINT_KERNEL_NAME 1
 
 /* Node name on a communications network. */
 #define PRINT_NODENAME 2
 
-/* Operating system release. */
-#define PRINT_RELEASE 4
+/* Kernel release. */
+#define PRINT_KERNEL_RELEASE 4
 
-/* Operating system version. */
-#define PRINT_VERSION 8
+/* Kernel version. */
+#define PRINT_KERNEL_VERSION 8
 
 /* Machine hardware name. */
 #define PRINT_MACHINE 16
 
- /* Host processor type. */
+/* Processor type. */
 #define PRINT_PROCESSOR 32
 
-/* Mask indicating which elements of the name to print. */
-static unsigned char toprint;
+/* Hardware platform.  */
+#define PRINT_HARDWARE_PLATFORM 64
+
+/* Operating system.  */
+#define PRINT_OPERATING_SYSTEM 128
 
 /* The name this program was run with, for error messages. */
 char *program_name;
 
 static struct option const long_options[] =
 {
-  {"machine", no_argument, NULL, 'm'},
-  {"nodename", no_argument, NULL, 'n'},
-  {"release", no_argument, NULL, 'r'},
-  {"sysname", no_argument, NULL, 's'},
-  {"processor", no_argument, NULL, 'p'},
   {"all", no_argument, NULL, 'a'},
+  {"kernel-name", no_argument, NULL, 's'},
+  {"sysname", no_argument, NULL, 's'},	/* Obsolescent.  */
+  {"nodename", no_argument, NULL, 'n'},
+  {"kernel-release", no_argument, NULL, 'r'},
+  {"release", no_argument, NULL, 'r'},  /* Obsolescent.  */
+  {"kernel-version", no_argument, NULL, 'v'},
+  {"machine", no_argument, NULL, 'm'},
+  {"processor", no_argument, NULL, 'p'},
+  {"hardware-platform", no_argument, NULL, 'i'},
+  {"operating-system", no_argument, NULL, 'o'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
@@ -99,26 +96,41 @@ usage (int status)
       printf (_("\
 Print certain system information.  With no OPTION, same as -s.\n\
 \n\
-  -a, --all        print all information\n\
-  -m, --machine    print the machine (hardware) type\n\
-  -n, --nodename   print the machine's network node hostname\n\
-  -r, --release    print the operating system release\n\
-  -s, --sysname    print the operating system name\n\
-  -p, --processor  print the host processor type\n\
-  -v               print the operating system version\n\
-      --help       display this help and exit\n\
-      --version    output version information and exit\n"));
+  -a, --all                print all information, in the following order:\n\
+  -s, --kernel-name        print the kernel name\n\
+  -n, --nodename           print the network node hostname\n\
+  -r, --kernel-release     print the kernel release\n\
+  -v, --kernel-version     print the kernel version\n\
+  -m, --machine            print the machine hardware name\n\
+  -p, --processor          print the processor type\n\
+  -i, --hardware-platform  print the hardware platform\n\
+  -o, --operating-system   print the operating system\n\
+      --help               display this help and exit\n\
+      --version            output version information and exit\n"));
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
     }
   exit (status);
 }
 
+/* Print ELEMENT, preceded by a space if something has already been
+   printed.  */
+
+static void
+print_element (char const *element)
+{
+  static int printed;
+  if (printed++)
+    putchar (' ');
+  fputs (element, stdout);
+}
+
 int
 main (int argc, char **argv)
 {
-  struct utsname name;
   int c;
-  char processor[256];
+
+  /* Mask indicating which elements to print. */
+  unsigned toprint = 0;
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -127,17 +139,19 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  toprint = 0;
-
-  while ((c = getopt_long (argc, argv, "snrvpma", long_options, NULL)) != -1)
+  while ((c = getopt_long (argc, argv, "asnrvmpio", long_options, NULL)) != -1)
     {
       switch (c)
 	{
 	case 0:
 	  break;
 
+	case 'a':
+	  toprint = -1;
+	  break;
+
 	case 's':
-	  toprint |= PRINT_SYSNAME;
+	  toprint |= PRINT_KERNEL_NAME;
 	  break;
 
 	case 'n':
@@ -145,11 +159,11 @@ main (int argc, char **argv)
 	  break;
 
 	case 'r':
-	  toprint |= PRINT_RELEASE;
+	  toprint |= PRINT_KERNEL_RELEASE;
 	  break;
 
 	case 'v':
-	  toprint |= PRINT_VERSION;
+	  toprint |= PRINT_KERNEL_VERSION;
 	  break;
 
 	case 'm':
@@ -160,9 +174,12 @@ main (int argc, char **argv)
 	  toprint |= PRINT_PROCESSOR;
 	  break;
 
-	case 'a':
-	  toprint = (PRINT_SYSNAME | PRINT_NODENAME | PRINT_RELEASE |
-		     PRINT_PROCESSOR | PRINT_VERSION | PRINT_MACHINE);
+	case 'i':
+	  toprint |= PRINT_HARDWARE_PLATFORM;
+	  break;
+
+	case 'o':
+	  toprint |= PRINT_OPERATING_SYSTEM;
 	  break;
 
 	case_GETOPT_HELP_CHAR;
@@ -178,38 +195,56 @@ main (int argc, char **argv)
     usage (1);
 
   if (toprint == 0)
-    toprint = PRINT_SYSNAME;
+    toprint = PRINT_KERNEL_NAME;
 
-  if (uname (&name) == -1)
-    error (1, errno, _("cannot get system name"));
+  if (toprint
+       & (PRINT_KERNEL_NAME | PRINT_NODENAME | PRINT_KERNEL_RELEASE
+	  | PRINT_KERNEL_VERSION | PRINT_MACHINE))
+    {
+      struct utsname name;
 
+      if (uname (&name) == -1)
+	error (1, errno, _("cannot get system name"));
+
+      if (toprint & PRINT_KERNEL_NAME)
+	print_element (name.sysname);
+      if (toprint & PRINT_NODENAME)
+	print_element (name.nodename);
+      if (toprint & PRINT_KERNEL_RELEASE)
+	print_element (name.release);
+      if (toprint & PRINT_KERNEL_VERSION)
+	print_element (name.version);
+      if (toprint & PRINT_MACHINE)
+	print_element (name.machine);
+    }
+
+  if (toprint & PRINT_PROCESSOR)
+    {
+      char const *element = "unknown";
 #if defined (HAVE_SYSINFO) && defined (SI_ARCHITECTURE)
-  if (sysinfo (SI_ARCHITECTURE, processor, sizeof (processor)) == -1)
-    error (1, errno, _("cannot get processor type"));
-#else
-  strcpy (processor, "unknown");
+      char processor[257];
+      if (0 <= sysinfo (SI_ARCHITECTURE, processor, sizeof processor))
+	element = processor;
 #endif
+      print_element (element);
+    }
 
-  print_element (PRINT_SYSNAME, name.sysname);
-  print_element (PRINT_NODENAME, name.nodename);
-  print_element (PRINT_RELEASE, name.release);
-  print_element (PRINT_VERSION, name.version);
-  print_element (PRINT_MACHINE, name.machine);
-  print_element (PRINT_PROCESSOR, processor);
+  if (toprint & PRINT_HARDWARE_PLATFORM)
+    {
+      char const *element = "unknown";
+#if defined (HAVE_SYSINFO) && defined (SI_PLATFORM)
+      char hardware_platform[257];
+      if (0 <= sysinfo (SI_PLATFORM,
+			hardware_platform, sizeof hardware_platform))
+	element = hardware_platform;
+#endif
+      print_element (element);
+    }
+
+  if (toprint & PRINT_OPERATING_SYSTEM)
+    print_element (HOST_OPERATING_SYSTEM);
+
+  putchar ('\n');
 
   exit (0);
-}
-
-/* If the name element set in MASK is selected for printing in `toprint',
-   print ELEMENT; then print a space unless it is the last element to
-   be printed, in which case print a newline. */
-
-static void
-print_element (unsigned int mask, char *element)
-{
-  if (toprint & mask)
-    {
-      toprint &= ~mask;
-      printf ("%s%c", element, toprint ? ' ' : '\n');
-    }
 }
