@@ -1047,6 +1047,10 @@ mergefps (fps, nfps, ofp)
 				   output. */
   register int i, j, t;
 
+#ifdef lint  /* Suppress `used before initialized' warning.  */
+  savealloc = 0;
+#endif
+
   /* Allocate space for a saved line if necessary. */
   if (unique)
     {
