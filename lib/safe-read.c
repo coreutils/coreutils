@@ -38,7 +38,7 @@ extern int errno;
    for an error.  */
 
 ssize_t
-safe_read (int desc, char *ptr, size_t len)
+safe_read (int desc, void *ptr, size_t len)
 {
   ssize_t n_chars;
 
