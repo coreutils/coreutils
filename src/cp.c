@@ -529,9 +529,9 @@ do_copy (int argc, char **argv)
 	  strip_trailing_slashes (tmp_source);
 	  source_base = basename (tmp_source);
 
-	  new_dest = (char *) alloca (strlen (dest) + 1 +
-				      strlen (source_base) + 1);
-	  stpcpy (stpcpy (stpcpy (new_dest, dest), "/"), source_base);
+	  new_dest = (char *) alloca (strlen (dest)
+				      + strlen (source_base) + 1);
+	  stpcpy (stpcpy (new_dest, dest), source_base);
 	}
       else
 	{
