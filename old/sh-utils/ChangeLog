@@ -1,3 +1,10 @@
+1998-05-03  Jim Meyering  <meyering@ascend.com>
+
+	* po/: Update from gettext-0.10.35.
+	* intl/: Likewise.
+	* configure.in: Remove use of AC_LINK_FILES.
+	(AC_OUTPUT): Remove po/Makefile-generating sed command.
+
 1998-05-02  Jim Meyering  <meyering@ascend.com>
 
 	* src/seq.c (check_format): Use ISDIGIT, not isdigit.
