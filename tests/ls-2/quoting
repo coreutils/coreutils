@@ -14,8 +14,8 @@ my @Tests =
     (
      # test-name options input expected-output
      #
-     ['q-',        $q_bell, {OUT => "q\a\n"}],
-     ['q-N', '-N', $q_bell, {OUT => "q\a\n"}],
+     ['q-',        $q_bell, {OUT => "q\a\n"}, {EXIT => 0}],
+     ['q-N', '-N', $q_bell, {OUT => "q\a\n"}, {ERR => ''}],
      ['q-q', '-q', $q_bell, {OUT => "q?\n"}],
      ['q-Q', '-Q', $q_bell, {OUT => "\"q\\a\"\n"}],
 
