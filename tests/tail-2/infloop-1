@@ -1,14 +1,14 @@
 #!/bin/sh
 # This test would fail with tail from pre-1.22i textutils.
 
-tmp=tail-inf1.$$
-pwd=`pwd`
-trap "cd $pwd; rm -rf $tmp" 0 1 2 3 15
-
 if test "$VERBOSE" = yes; then
   set -x
   tail --version
 fi
+
+tmp=tail-inf1.$$
+pwd=`pwd`
+trap "cd $pwd; rm -rf $tmp" 0 1 2 3 15
 
 test_failure=0
 mkdir $tmp || test_failure=1
