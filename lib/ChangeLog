@@ -1,6 +1,7 @@
 2004-05-21  Jim Meyering  <jim@meyering.net>
 
-	* alloca.c, alloca_.h, localcharset.c, regex.c: Update from gnulib.
+	* alloca.c, alloca_.h, fnmatch.c: Update from gnulib.
+	* localcharset.c, regex.c: Likewise.
 
 2004-05-20  Jim Meyering  <jim@meyering.net>
 
