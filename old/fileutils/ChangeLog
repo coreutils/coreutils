@@ -1,5 +1,10 @@
 Thu Nov 28 13:10:22 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/df.c (find_mount_point): Use strip_trailing_slashes and dirname
+	instead of open-coding them.  When given FILE containing no slashes,
+	chdir to the directory containing it (the current directory) rather
+	than to `..'.
+
 	Tue Nov  5 14:51:56 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* src/df.c (find_mount_point): Use save_cwd/restore_cwd.
