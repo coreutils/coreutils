@@ -1,6 +1,7 @@
 2004-09-08  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/test.c (usage): Document "test" (with no args) and "[ ]".
+	Document that -h and -L don't dereference.
 
 	* NEWS: Document that "tr xy -z" now works as per POSIX.
 	Sort the descriptions.
