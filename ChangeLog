@@ -1,5 +1,13 @@
 2004-09-06  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* src/touch.c (main): Fix POSIX-conformance bug: "touch --
+	MMDDhhmm file" must be treated like "touch MMDDhhmm file" when
+	conforming to pre-2001 POSIX.
+	* NEWS: Document this.
+	* tests/touch/obsolescent: Test for this bug.  Also, set
+	_POSIX2_VERSION=199209 and POSIXLY_CORRECT=1 so that it's
+	a better test for obsolescent features.
+
 	* src/sort.c (main): Emulate Solaris 8 and 9 "sort -y", so that
 	"sort -y abc" is like "sort abc" whereas "sort -y 100" is like
 	plain "sort".
