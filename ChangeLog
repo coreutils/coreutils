@@ -1,3 +1,12 @@
+2003-08-11  Jim Meyering  <jim@meyering.net>
+
+	fold -s -wN would infloop for N < 8 with TABs in the input.
+	E.g., this would not terminate: printf 'a\tb' | fold -w2 -s
+	* src/fold.c (fold_file): Move contents of `else'-block
+	out of conditional so it's used also for --spaces (-s).
+	* tests/misc/fold: Test for the above fix.
+	* tests/misc/Makefile.am (TESTS): Add fold.
+
 2003-08-10  Jim Meyering  <jim@meyering.net>
 
 	* src/nice.c [!NICE_PRIORITY]: Include <sys/resource.h> after
