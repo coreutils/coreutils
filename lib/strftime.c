@@ -987,8 +987,8 @@ my_strftime (s, maxsize, format, tp extra_args LOCALE_PARAM)
 	     jump to one of these two labels.  */
 
 	do_number_spacepad:
-	  /* Force `_' flag unless overwritten by `0' flag.  */
-	  if (pad != L_('0'))
+	  /* Force `_' flag unless overridden by `0' or `-' flag.  */
+	  if (pad != L_('0') && pad != L_('-'))
 	    pad = L_('_');
 
 	do_number:
