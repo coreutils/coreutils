@@ -1,3 +1,9 @@
+2002-07-30  Paul Eggert  <eggert@twinsun.com>
+
+	* src/chroot.c (main): Exit with status 126 or 127 when execvp or
+	execv fails, for consistency with POSIX commands like env and nice.
+	* src/su.c (run_shell): Likewise.
+
 2002-07-29  Paul Eggert  <eggert@twinsun.com>
 
 	* src/nohup.sh: Change behavior to conform to POSIX 1003.1-2001:
