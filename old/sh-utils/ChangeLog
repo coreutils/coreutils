@@ -1,3 +1,14 @@
+2000-07-23  Jim Meyering  <meyering@lucent.com>
+
+	* src/sys2.h [!HAVE_DECL_GETPWUID]: Declare getpwuid.
+	[!HAVE_DECL_GETGRGID]: Declare getgrgid.
+	[!HAVE_DECL_GETUID]: Declare getuid.
+
+2000-07-19  Jim Meyering  <meyering@lucent.com>
+
+	* src/date.c (batch_convert): Free `initial_TZ' only if it was set.
+	Reported by Michael Hohn.
+
 2000-07-17  Jim Meyering  <meyering@lucent.com>
 
 	* src/stty.c (visible): Don't mark `<undef>' for translation.
