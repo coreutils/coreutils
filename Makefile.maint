@@ -156,21 +156,24 @@ writable-files:
 WGET = wget
 ftp-gnu = ftp://ftp.gnu.org/gnu
 
+# Use mv, if you don't have move-if-change.
+move-if-change = move-if-change
+
 automake_repo=:pserver:anoncvs@anoncvs.cygnus.com:/cvs/automake
 .PHONY: wget-update
 wget-update:
 	$(WGET) $(ftp-gnu)/texinfo/texinfo.tex -O $(srcdir)/doc/texinfo.tex
 	for f in config.guess config.sub; do				\
 	  $(WGET) $(ftp-gnu)/config/$$f -O $(srcdir)/$$f.t		\
-	    && mv $$f.t $$f;						\
+	    && $(move-if-change) $$f.t $$f;				\
 	done
 	f=ansi2knr.c;							\
 	  $(WGET) ftp://ftp.cs.wisc.edu/ghost/$$f -O $(srcdir)/src/$$f.f \
-	    && mv $$f.t $$f
+	    && $(move-if-change) $$f.t $$f
 	for f in depcomp missing; do					\
 	  echo checking out $$f...;					\
 	  cvs -d $(automake_repo) co -p automake/lib/$$f > t$$$$	\
-	    && mv t$$$$ $$f;						\
+	    && $(move-if-change) t$$$$ $$f;				\
 	done
 
 define emit-rsync-commands
