@@ -213,17 +213,17 @@ $(DEPDIR)/localcharset$U.Po $(DEPDIR)/long-options$U.Po \
 $(DEPDIR)/lstat.Po $(DEPDIR)/makepath$U.Po $(DEPDIR)/malloc.Po \
 $(DEPDIR)/mbswidth$U.Po $(DEPDIR)/md5$U.Po $(DEPDIR)/memcasecmp$U.Po \
 $(DEPDIR)/memchr.Po $(DEPDIR)/memcmp.Po $(DEPDIR)/memcoll$U.Po \
-$(DEPDIR)/memcpy.Po $(DEPDIR)/memmove.Po $(DEPDIR)/memset.Po \
-$(DEPDIR)/mktime.Po $(DEPDIR)/modechange$U.Po $(DEPDIR)/mountlist.Po \
-$(DEPDIR)/nanosleep.Po $(DEPDIR)/obstack.Po $(DEPDIR)/path-concat$U.Po \
-$(DEPDIR)/posixtm$U.Po $(DEPDIR)/putenv.Po $(DEPDIR)/quote$U.Po \
-$(DEPDIR)/quotearg$U.Po $(DEPDIR)/readtokens$U.Po $(DEPDIR)/readutmp.Po \
-$(DEPDIR)/realloc.Po $(DEPDIR)/regex.Po $(DEPDIR)/rmdir.Po \
-$(DEPDIR)/rpmatch.Po $(DEPDIR)/safe-read$U.Po $(DEPDIR)/same$U.Po \
-$(DEPDIR)/save-cwd$U.Po $(DEPDIR)/savedir$U.Po $(DEPDIR)/sha$U.Po \
-$(DEPDIR)/stat.Po $(DEPDIR)/stime.Po $(DEPDIR)/stpcpy.Po \
-$(DEPDIR)/strcasecmp.Po $(DEPDIR)/strcspn.Po $(DEPDIR)/strdup.Po \
-$(DEPDIR)/strftime.Po $(DEPDIR)/stripslash$U.Po \
+$(DEPDIR)/memcpy.Po $(DEPDIR)/memmove.Po $(DEPDIR)/memrchr.Po \
+$(DEPDIR)/memset.Po $(DEPDIR)/mktime.Po $(DEPDIR)/modechange$U.Po \
+$(DEPDIR)/mountlist.Po $(DEPDIR)/nanosleep.Po $(DEPDIR)/obstack.Po \
+$(DEPDIR)/path-concat$U.Po $(DEPDIR)/posixtm$U.Po $(DEPDIR)/putenv.Po \
+$(DEPDIR)/quote$U.Po $(DEPDIR)/quotearg$U.Po $(DEPDIR)/readtokens$U.Po \
+$(DEPDIR)/readutmp.Po $(DEPDIR)/realloc.Po $(DEPDIR)/regex.Po \
+$(DEPDIR)/rmdir.Po $(DEPDIR)/rpmatch.Po $(DEPDIR)/safe-read$U.Po \
+$(DEPDIR)/same$U.Po $(DEPDIR)/save-cwd$U.Po $(DEPDIR)/savedir$U.Po \
+$(DEPDIR)/sha$U.Po $(DEPDIR)/stat.Po $(DEPDIR)/stime.Po \
+$(DEPDIR)/stpcpy.Po $(DEPDIR)/strcasecmp.Po $(DEPDIR)/strcspn.Po \
+$(DEPDIR)/strdup.Po $(DEPDIR)/strftime.Po $(DEPDIR)/stripslash$U.Po \
 $(DEPDIR)/strncasecmp.Po $(DEPDIR)/strndup.Po $(DEPDIR)/strnlen.Po \
 $(DEPDIR)/strpbrk.Po $(DEPDIR)/strstr.Po $(DEPDIR)/strtod.Po \
 $(DEPDIR)/strtol.Po $(DEPDIR)/strtoul.Po $(DEPDIR)/strtoull.Po \
@@ -238,9 +238,9 @@ Makefile.in TODO __fpending.c alloca.c atexit.c chown.c dup2.c error.c \
 error.h euidaccess.c fileblocks.c fnmatch.c fsusage.c ftruncate.c \
 getdate.c getgroups.c gethostname.c getline.c getloadavg.c getpass.c \
 getusershell.c group-member.c lchown.c malloc.c memchr.c memcmp.c \
-memcpy.c memmove.c memset.c mktime.c mountlist.c nanosleep.c obstack.c \
-obstack.h putenv.c readutmp.c realloc.c regex.c rmdir.c rpmatch.c \
-stime.c stpcpy.c strcasecmp.c strcspn.c strdup.c strftime.c \
+memcpy.c memmove.c memrchr.c memset.c mktime.c mountlist.c nanosleep.c \
+obstack.c obstack.h putenv.c readutmp.c realloc.c regex.c rmdir.c \
+rpmatch.c stime.c stpcpy.c strcasecmp.c strcspn.c strdup.c strftime.c \
 strncasecmp.c strndup.c strnlen.c strpbrk.c strstr.c strtod.c strtol.c \
 strtoul.c strtoull.c strtoumax.c strverscmp.c utime.c
 
@@ -408,6 +408,8 @@ memcpy_.c: memcpy.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/memcpy.c; then echo $(srcdir)/memcpy.c; else echo memcpy.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > memcpy_.c
 memmove_.c: memmove.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/memmove.c; then echo $(srcdir)/memmove.c; else echo memmove.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > memmove_.c
+memrchr_.c: memrchr.c $(ANSI2KNR)
+	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/memrchr.c; then echo $(srcdir)/memrchr.c; else echo memrchr.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > memrchr_.c
 memset_.c: memset.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/memset.c; then echo $(srcdir)/memset.c; else echo memset.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > memset_.c
 mktime_.c: mktime.c $(ANSI2KNR)
@@ -525,17 +527,17 @@ getopt1_.o getpass_.o getstr_.o getugroups_.o getusershell_.o \
 group-member_.o hard-locale_.o hash_.o human_.o idcache_.o isdir_.o \
 lchown_.o linebuffer_.o localcharset_.o long-options_.o lstat_.o \
 makepath_.o malloc_.o mbswidth_.o md5_.o memcasecmp_.o memchr_.o \
-memcmp_.o memcoll_.o memcpy_.o memmove_.o memset_.o mktime_.o \
-modechange_.o mountlist_.o nanosleep_.o obstack_.o path-concat_.o \
-posixtm_.o putenv_.o quote_.o quotearg_.o readtokens_.o readutmp_.o \
-realloc_.o regex_.o rmdir_.o rpmatch_.o safe-read_.o same_.o \
-save-cwd_.o savedir_.o sha_.o stat_.o stime_.o stpcpy_.o strcasecmp_.o \
-strcspn_.o strdup_.o strftime_.o stripslash_.o strncasecmp_.o \
-strndup_.o strnlen_.o strpbrk_.o strstr_.o strtod_.o strtol_.o \
-strtoul_.o strtoull_.o strtoumax_.o strverscmp_.o unicodeio_.o \
-userspec_.o utime_.o version-etc_.o xgetcwd_.o xgethostname_.o \
-xmalloc_.o xstrdup_.o xstrtod_.o xstrtol_.o xstrtoul_.o xstrtoumax_.o \
-yesno_.o : $(ANSI2KNR)
+memcmp_.o memcoll_.o memcpy_.o memmove_.o memrchr_.o memset_.o \
+mktime_.o modechange_.o mountlist_.o nanosleep_.o obstack_.o \
+path-concat_.o posixtm_.o putenv_.o quote_.o quotearg_.o readtokens_.o \
+readutmp_.o realloc_.o regex_.o rmdir_.o rpmatch_.o safe-read_.o \
+same_.o save-cwd_.o savedir_.o sha_.o stat_.o stime_.o stpcpy_.o \
+strcasecmp_.o strcspn_.o strdup_.o strftime_.o stripslash_.o \
+strncasecmp_.o strndup_.o strnlen_.o strpbrk_.o strstr_.o strtod_.o \
+strtol_.o strtoul_.o strtoull_.o strtoumax_.o strverscmp_.o \
+unicodeio_.o userspec_.o utime_.o version-etc_.o xgetcwd_.o \
+xgethostname_.o xmalloc_.o xstrdup_.o xstrtod_.o xstrtol_.o xstrtoul_.o \
+xstrtoumax_.o yesno_.o : $(ANSI2KNR)
 .y.c:
 	$(YACC) $(AM_YFLAGS) $(YFLAGS) $< && mv y.tab.c $*.c
 	if test -f y.tab.h; then \
@@ -630,6 +632,7 @@ maintainer-clean-tags:
 @AMDEP@include $(DEPDIR)/memcoll$U.Po
 @AMDEP@include $(DEPDIR)/memcpy.Po
 @AMDEP@include $(DEPDIR)/memmove.Po
+@AMDEP@include $(DEPDIR)/memrchr.Po
 @AMDEP@include $(DEPDIR)/memset.Po
 @AMDEP@include $(DEPDIR)/mktime.Po
 @AMDEP@include $(DEPDIR)/modechange$U.Po
