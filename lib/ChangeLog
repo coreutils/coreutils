@@ -1,5 +1,7 @@
 2002-11-28  Jim Meyering  <jim@meyering.net>
 
+	* mktime.c: Merge from gnulib/libc, for a slightly uglier solution.
+
 	Merge some more, in preparation for merge back into libc.
 	* error.c (_): Define only if not already defined.
 	Move definition to follow all #include directives.
