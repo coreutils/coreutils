@@ -481,8 +481,6 @@ strncoll (char *s1, char *s2, int len)
 {
   register int diff;
 
-  assert (len == min (strlen (s1), strlen (s2)));
-
   if (need_locale)
     {
       /* Emulate a strncoll function, by forcing strcoll to compare
