@@ -8,6 +8,8 @@
 
 # serial 2
 
+AC_PREREQ(2.13)               dnl Minimum Autoconf version required.
+
 AC_DEFUN(AM_LC_MESSAGES,
   [if test $ac_cv_header_locale_h = yes; then
     AC_CACHE_CHECK([for LC_MESSAGES], am_cv_val_LC_MESSAGES,

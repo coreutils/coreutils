@@ -8,6 +8,8 @@
 
 # serial 106
 
+AC_PREREQ(2.13)               dnl Minimum Autoconf version required.
+
 AC_DEFUN(AM_WITH_NLS,
   [AC_MSG_CHECKING([whether NLS is requested])
     dnl Default is enabled NLS
