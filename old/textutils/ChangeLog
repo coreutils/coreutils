@@ -9,6 +9,12 @@ Thu Jul  4 07:24:54 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 	(split_3): Rewrite to handle file names with embedded newlines.
 	Miles Bader and Jim Blandy suggested this new encoding scheme.
 
+	* src/md5sum.c (md5_file): Replace obsolete comment with a description
+	of the function.
+	(md5_check): Don't use "s"-adding trick to form the plural of
+	`checksum.'  That doesn't work well with translation.
+	Suggestions from Ulrich Drepper.
+
 Wed Jul  3 23:21:09 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/md5sum.c (split_3): Correct test for 35-byte line to accomodate
