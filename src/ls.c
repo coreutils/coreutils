@@ -65,6 +65,7 @@
 #endif
 
 #include <stdio.h>
+#include <assert.h>
 #include <grp.h>
 #include <pwd.h>
 #include <getopt.h>
@@ -461,7 +462,8 @@ static struct bin_str color_indicator[] =
     { LEN_STR_PAIR ("01;33") },		/* cd: Char device: bright yellow */
     { 0, NULL },			/* mi: Missing file: undefined */
     { 0, NULL },			/* or: Orphanned symlink: undefined */
-    { LEN_STR_PAIR ("01;32") }		/* ex: Executable: bright green */
+    { LEN_STR_PAIR ("01;32") },		/* ex: Executable: bright green */
+    { LEN_STR_PAIR ("01;35") }		/* do: Door: bright magenta */
   };
 
 /* FIXME: comment  */
@@ -739,6 +741,9 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+
+#define N_ENTRIES(Array) (sizeof Array / sizeof *(Array))
+  assert (N_ENTRIES (color_indicator) + 1 == N_ENTRIES (indicator_name));
 
   exit_status = 0;
   dir_defaulted = 1;
