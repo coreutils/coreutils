@@ -44,6 +44,12 @@
 # define UCHAR_MAX ((unsigned char) -1)
 #endif
 
+#if HAVE_C_BACKSLASH_A
+# define ALERT_CHAR '\a'
+#else
+# define ALERT_CHAR '\7'
+#endif
+
 #if HAVE_STDLIB_H
 # include <stdlib.h>
 #endif
@@ -266,9 +272,7 @@ quotearg_buffer_restyled (char *buffer, size_t buffersize,
 	    }
 	  break;
 
-#if HAVE_C_BACKSLASH_A
-	case '\a': esc = 'a'; goto c_escape;
-#endif
+	case ALERT_CHAR: esc = 'a'; goto c_escape;
 	case '\b': esc = 'b'; goto c_escape;
 	case '\f': esc = 'f'; goto c_escape;
 	case '\n': esc = 'n'; goto c_and_shell_escape;
