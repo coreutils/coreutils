@@ -2,6 +2,26 @@
 
 	* README: Update from gnulib.
 
+2002-11-20  Paul Eggert  <eggert@twinsun.com>
+
+	Merge argmatch cleanups from Bison.  Assume C89.
+
+	* argmatch.c: Include config.h here, not in argmatch.h.
+	Include stdlib.h, for EXIT_FAILURE.
+	Always include <string.h>, since we assume C89.
+	(EXIT_FAILURE): Remove pre-C89 bug workaround.
+	* argmatch.h: Do not include <config.h> or <sys/types.h>.
+	Include <stddef.h> instead, since it's all we need for size_t.
+	(PARAMS): Remove.  All uses removed.
+	(ARRAY_CARDINALITY): Do not bother to #undef.
+	(ARRAY_CARDINALITY, ARGMATCH, ARGCASEMATCH, invalid_arg,
+	ARGMATCH_VALID, XARGMATCH, XARGCASEMATCH):
+	Remove unnecessary parentheses.
+	(ARGMATCH_VALID, XARGMATCH, XARGCASEMATCH):
+	Insert necessary parentheses.
+	(ARGMATCH_CONSTRAINT, ARGMATCH_VERIFY): New macros.
+	(ARGMATCH_ASSERT): Use ARGMATCH_CONSTRAINT.
+
 2002-11-19  Jim Meyering  <jim@meyering.net>
 
 	Be careful not to clobber errno.
