@@ -1,5 +1,7 @@
 2000-05-06  Jim Meyering  <meyering@lucent.com>
 
+	* jm-macros.m4: AC_REPLACE_FUNCS(atexit).
+
 	* rmdir-errno.m4 (fetish_FUNC_RMDIR_NOTEMPTY): New macro and file.
 	* jm-macros.m4: Require fetish_FUNC_RMDIR_NOTEMPTY.
 
