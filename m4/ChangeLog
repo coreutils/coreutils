@@ -1,3 +1,8 @@
+2005-03-28  Eric Blake  <ebb9@byu.net>  (tiny change)
+
+	* getcwd-path-max.m4: Return success on systems such as Cygwin
+	where no absolute path name can be longer than PATH_MAX.
+
 2005-03-21  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* canonicalize.m4 (AC_FUNC_CANONICALIZE_FILE_NAME): Add stat-macros.h
