@@ -1,5 +1,10 @@
 2005-01-19  Jim Meyering  <jim@meyering.net>
 
+	* chdir-long.c (chdir_long): Rewrite to remove limitation on
+	component length.  This included changing the parameter to be
+	of type `char *' rather than `char const *'.
+	* chdir-long.h (chdir_long): Update prototype.
+
 	* openat.c (fdopendir, fstatat): New functions.
 	* openat.h: Include headers required for use of DIR and struct stat.
 	[AT_SYMLINK_NOFOLLOW]: Define.
