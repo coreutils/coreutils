@@ -1808,9 +1808,8 @@ there is no corresponding loss of precision.  Converting each string to
 @code{double} before comparison would limit precision to about 16 digits
 on most systems.
 
-Note that neither a leading @samp{+} nor exponential notation is
-recognized.  To compare such strings numerically, use the @samp{-g}
-option.
+Neither a leading @samp{+} nor exponential notation is recognized.
+To compare such strings numerically, use the @samp{-g} option.
 
 @item -r
 @opindex -r
