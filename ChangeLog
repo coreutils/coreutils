@@ -2,6 +2,8 @@
 
 	* Version 4.5.5.
 
+	* Makefile.cfg: Remove rules related to generating m4/jm-glibc-io.m4.
+
 	* src/chmod.c, src/copy.c, src/copy.h, src/cp-hash.h, src/csplit.c:
 	* src/date.c, src/expr.c, src/fmt.c, src/id.c, src/install.c:
 	* src/ls.c, src/od.c, src/pathchk.c, src/pr.c, src/remove.c:
