@@ -35,6 +35,7 @@
 #include "obstack.h"
 #include "quote.h"
 #include "remove.h"
+#include "root-dev-ino.h"
 
 /* Avoid shadowing warnings because these are functions declared
    in dirname.h as well as locals used below.  */
@@ -889,10 +890,6 @@ remove_cwd_entries (Dirstack_state *ds, char **subdir, struct stat *subdir_sb,
 	      error (EXIT_FAILURE, errno, _("cannot lstat %s"),
 		     quote (full_filename (f)));
 
-	    /* FIXME: here (if F is a command line argument) is at least one
-	       place in which we'll have to compare the dev/ino against those
-	       of `/', in implementing fail-to-remove-root-dir semantics.  */
-
 	    if (chdir (f))
 	      {
 		/* It is much more common that we reach this point for an
@@ -1018,6 +1015,12 @@ remove_dir (Dirstack_state *ds, char const *dir, struct saved_cwd **cwd_state,
 		 quote_n (0, full_filename (".")), quote_n (1, dir));
 	}
       return RM_ERROR;
+    }
+
+  if (ROOT_DEV_INO_CHECK (x->root_dev_ino, &dir_sb))
+    {
+      ROOT_DEV_INO_WARN (full_filename (dir));
+      return 1;
     }
 
   AD_push (ds, dir, &dir_sb);
