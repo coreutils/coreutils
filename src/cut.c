@@ -29,7 +29,7 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
-#include "getstr.h"
+#include "getdelim2.h"
 #include "closeout.h"
 #include "error.h"
 
@@ -493,8 +493,8 @@ cut_fields (FILE *stream)
 	  int len;
 	  size_t n_bytes;
 
-	  len = getstr (&field_1_buffer, &field_1_bufsize, stream,
-			delim, '\n', 0);
+	  len = getdelim2 (&field_1_buffer, &field_1_bufsize, stream,
+			   delim, '\n', 0);
 	  if (len < 0)
 	    {
 	      if (ferror (stream) || feof (stream))
