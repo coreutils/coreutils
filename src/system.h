@@ -285,15 +285,16 @@ char *getenv ();
 #define RETSIGTYPE void
 #endif
 
-#ifdef __GNUC__
-# undef alloca
-#else
+#ifndef __GNUC__
 # ifdef HAVE_ALLOCA_H
 #  include <alloca.h>
 # else
-#  ifndef _AIX
-/* AIX alloca decl has to be the first thing in the file, bletch! */
+#  ifdef _AIX
+ #pragma alloca
+#  else
+#   ifndef alloca
 char *alloca ();
+#   endif
 #  endif
 # endif
 #endif
