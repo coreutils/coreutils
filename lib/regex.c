@@ -227,7 +227,7 @@ init_syntax_once ()
 #include <alloca.h>
 #else /* not __GNUC__ or HAVE_ALLOCA_H */
 #ifndef _AIX /* Already did AIX, up at the top.  */
-char *alloca ();
+void *alloca ();
 #endif /* not _AIX */
 #endif /* not HAVE_ALLOCA_H */ 
 #endif /* not __GNUC__ */
