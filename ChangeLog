@@ -2,6 +2,9 @@
 
 	* Version 4.5.5.
 
+	* GNUmakefile (TAR_OPTIONS): Set and export, in order to make
+	tar archive easier to reproduce.
+
 	Rewrite to perform directory traversal using nftw.
 
 	* src/du.c: Include "dirname.h", "ftw.h", and "quotearg.h".
