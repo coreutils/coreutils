@@ -406,7 +406,7 @@ interrupt_handler (int sig)
   signal (sig, SIG_DFL);
 #endif
   cleanup ();
-  kill (getpid (), sig);
+  raise (sig);
 }
 
 static RETSIGTYPE
