@@ -1,6 +1,10 @@
-2004-03-10  Jim Meyering  <jim@meyering.net>
+2004-03-11  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.2.1.
+
+	* Use automake-1.8.3.  Regenerate dependent files.
+
+2004-03-10  Jim Meyering  <jim@meyering.net>
 
 	* tests/du/deref-args: Also convert sizes in the 70-79 kB range,
 	so that this test works with SELinux-enable systems.
