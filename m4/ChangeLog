@@ -1,3 +1,11 @@
+2000-07-10  Paul Eggert  <eggert@twinsun.com>
+
+	From a suggestion by Bruno Haible.
+	* mbstate_t.m4 (AC_MBSTATE_T):
+	Renamed from AC_MBSTATE_T_OBJECT.  All uses changed.
+	Change from a two-part test, which defines both HAVE_MBSTATE_T_OBJECT
+	and mbstate_t, to a single-part test that simply defines mbstate_t.
+
 2000-07-10  Jim Meyering  <meyering@lucent.com>
 
 	* strerror_r.m4: Mirror the correction made in autoconf.
