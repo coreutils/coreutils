@@ -34,7 +34,7 @@
 
 2002-11-09  Jim Meyering  <jim@meyering.net>
 
-	ls --color: restore terminal state (color) upon signal.
+	ls --color: restore terminal text color upon signal.
 	* src/ls.c: Include "full-write.h" and <signal.h>.
 	(restore_default_color, restore_default_color_handler): New functions.
 	(sigtstp_handler, put_indicator_direct): New functions.
