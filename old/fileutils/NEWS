@@ -1,4 +1,10 @@
 Changes in release 4.1:
+[4.0p]
+* various tools: quote multibyte characters correctly in diagnostics
+* mv: portability fix for alpha
+* dd: portability fix
+* unified lib/: now that directory and most of the configuration framework
+  is common between fileutils, textutils, and sh-utils
 [4.0o]
 * Include lib/nanosleep.h.
 [4.0n]
