@@ -1,4 +1,7 @@
 Changes in release 3.17:
+[3.16o]
+* df once again displays negative numbers when that's what's returned
+  by get_fs_usage
 [3.16n]
 * `mv dir dir' once again does *not* remove dir/
 * ls accepts new options:
