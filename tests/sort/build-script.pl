@@ -48,7 +48,7 @@ foreach $test_vector (@Test::t)
     close (EXP);
     my $err_output = "t$test_name.err";
 
-    my $cmd = "\$xx $flags $in > $out 2> $err_output";
+    my $cmd = "\$xx $flags \$srcdir/$in > $out 2> $err_output";
     $exp_name = "\$srcdir/$exp_name";
     print <<EOF ;
 $cmd
