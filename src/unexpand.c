@@ -76,6 +76,7 @@ static int tab_size;
    after `tab_list' is exhausted, the rest of the line is printed
    unchanged.  The first column is column 0. */
 static int *tab_list;
+static size_t n_tabs_allocated;
 
 /* The index of the first invalid element of `tab_list',
    where the next element can be added. */
@@ -121,8 +122,8 @@ add_tabstop (int tabval)
 {
   if (tabval == -1)
     return;
-  if (first_free_tab % TABLIST_BLOCK == 0)
-    tab_list = xrealloc (tab_list, first_free_tab + TABLIST_BLOCK);
+  if (first_free_tab == n_tabs_allocated)
+    tab_list = x2nrealloc (tab_list, &n_tabs_allocated, sizeof *tab_list);
   tab_list[first_free_tab++] = tabval;
 }
 
