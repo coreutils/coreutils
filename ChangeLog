@@ -1,11 +1,14 @@
 2004-06-09  Jim Meyering  <jim@meyering.net>
 
+	* Version 5.3.0.
+
+	* src/chown-core.c (change_file_owner): Change names of parameters
+	old_uid and old_gid to required_uid and required_gid respectively.
+
 	* src/chmod.c (mode_changed): Return false, not 0, now that the
 	function returns `bool'.
 
 2004-06-08  Paul Eggert  <eggert@cs.ucla.edu>
-
-	* Version 5.3.0.
 
 	Adjust chmod and chown to be similar if -c or -v are given.  In
 	particular, a no-op chown is no longer reported as a change; this
