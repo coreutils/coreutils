@@ -1,5 +1,5 @@
 /* tail -- output the last part of file(s)
-   Copyright (C) 89, 90, 91, 95, 96, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 1995-1998, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -838,6 +838,10 @@ tail_bytes (const char *pretty_filename, int fd, off_t n_bytes)
 {
   struct stat stats;
 
+  /* We need binary input, since `tail' relies on `lseek' and byte counts,
+     while binary output will preserve the style (Unix/DOS) of text file.  */
+  SET_BINARY2 (fd, STDOUT_FILENO);
+
   /* FIXME: resolve this like in dd.c.  */
   /* Use fstat instead of checking for errno == ESPIPE because
      lseek doesn't work on some special files but doesn't return an
@@ -914,6 +918,10 @@ tail_lines (const char *pretty_filename, int fd, long int n_lines)
 {
   struct stat stats;
   off_t length;
+
+  /* We need binary input, since `tail' relies on `lseek' and byte counts,
+     while binary output will preserve the style (Unix/DOS) of text file.  */
+  SET_BINARY2 (fd, STDOUT_FILENO);
 
   if (fstat (fd, &stats))
     {
