@@ -1,6 +1,7 @@
-AUTOMAKE_OPTIONS = 1.1 gnits
+## Process this file with automake to produce Makefile.in -*-Makefile-*-.
+AUTOMAKE_OPTIONS = 1.2 gnits
 
-TESTS = mv-special-1
+TESTS = mv-special-1 into-self
 EXTRA_DIST = $(TESTS) setup
 TESTS_ENVIRONMENT = \
   DF=../../src/df \
