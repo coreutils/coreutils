@@ -30,6 +30,7 @@
 #include "error.h"
 #include "getdate.h"
 #include "getline.h"
+#include "inttostr.h"
 #include "posixtm.h"
 #include "posixver.h"
 #include "quote.h"
@@ -42,7 +43,7 @@
 
 int putenv ();
 
-static void show_date (const char *format, struct timespec when);
+static int show_date (const char *format, struct timespec when);
 
 enum Time_spec
 {
@@ -270,7 +271,7 @@ batch_convert (const char *input_filename, const char *format)
 	}
       else
 	{
-	  show_date (format, when);
+	  status |= show_date (format, when);
 	}
     }
 
@@ -470,7 +471,7 @@ argument must be a format string beginning with `+'."),
 	    }
 	}
 
-      show_date (format, when);
+      status |= show_date (format, when);
     }
 
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
@@ -478,9 +479,10 @@ argument must be a format string beginning with `+'."),
 
 /* Display the date and/or time in WHEN according to the format specified
    in FORMAT, followed by a newline.  If FORMAT is NULL, use the
-   standard output format (ctime style but with a timezone inserted). */
+   standard output format (ctime style but with a timezone inserted).
+   Return zero if successful.  */
 
-static void
+static int
 show_date (const char *format, struct timespec when)
 {
   struct tm *tm;
@@ -494,8 +496,6 @@ show_date (const char *format, struct timespec when)
     "%Y-%m-%dT%H:%M%z",
     "%Y-%m-%dT%H:%M:%S%z"
   };
-
-  tm = localtime (&when.tv_sec);
 
   if (format == NULL)
     {
@@ -519,7 +519,19 @@ show_date (const char *format, struct timespec when)
   else if (*format == '\0')
     {
       printf ("\n");
-      return;
+      return 0;
+    }
+
+  tm = localtime (&when.tv_sec);
+  if (! tm)
+    {
+      char buf[INT_BUFSIZE_BOUND (intmax_t)];
+      error (0, 0, _("time %s is out of range"),
+	     (TYPE_SIGNED (time_t)
+	      ? imaxtostr (when.tv_sec, buf)
+	      : umaxtostr (when.tv_sec, buf)));
+      puts (buf);
+      return 1;
     }
 
   while (1)
@@ -548,4 +560,5 @@ show_date (const char *format, struct timespec when)
 
   printf ("%s\n", out);
   free (out);
+  return 0;
 }
