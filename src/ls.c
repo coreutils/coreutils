@@ -2456,9 +2456,6 @@ print_long_format (const struct fileinfo *f)
 
   p += strlen (p);
 
-  /* Use strftime rather than ctime, because the former can produce
-     locale-dependent names for the weekday (%a) and month (%b).  */
-
   if ((when_local = localtime (&when)))
     {
       while (! (s = strftime (p, buf + bufsize - p - 1, fmt, when_local)))
