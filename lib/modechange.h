@@ -1,5 +1,5 @@
 /* modechange.h -- definitions for file mode manipulation
-   Copyright (C) 1989, 1990 Free Software Foundation, Inc.
+   Copyright (C) 1989, 1990, 1997 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -39,10 +39,12 @@ struct mode_change
 #define MODE_MASK_EQUALS 1
 #define MODE_MASK_PLUS 2
 #define MODE_MASK_MINUS 4
+#define MODE_MASK_ALL (MODE_MASK_EQUALS | MODE_MASK_PLUS | MODE_MASK_MINUS)
 
 /* Error return values for mode_compile. */
 #define MODE_INVALID (struct mode_change *) 0
 #define MODE_MEMORY_EXHAUSTED (struct mode_change *) 1
+#define MODE_BAD_REFERENCE (struct mode_change *) 2
 
 #ifndef __P
 # if defined (__GNUC__) || (defined (__STDC__) && __STDC__)
@@ -53,5 +55,6 @@ struct mode_change
 #endif
 
 struct mode_change *mode_compile __P ((const char *, unsigned));
+struct mode_change *mode_create_from_ref __P ((const char *));
 unsigned short mode_adjust __P ((unsigned, const struct mode_change *));
 void mode_free __P ((struct mode_change *));
