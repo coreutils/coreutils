@@ -34,12 +34,15 @@
 
 #define AUTHORS "Jim Meyering"
 
-/* This exit status indicates that `nohup' itself failed.  */
-#define NOHUP_FAILURE 127
+/* Exit statuses.  */
+enum
+  {
+    /* `nohup' found the specified command but failed to invoke it.  */
+    NOHUP_FOUND_BUT_CANNOT_INVOKE = 126,
 
-/* This exit status indicates that `nohup' found the specified command
-   but failed to invoke it.  */
-#define NOHUP_FOUND_BUT_CANNOT_INVOKE 126
+    /* `nohup' itself failed, or did not find the specified command.  */
+    NOHUP_FAILURE = 127
+  };
 
 char *program_name;
 
