@@ -1,3 +1,30 @@
+2003-09-02  Paul Eggert  <eggert@twinsun.com>
+
+	* NEWS: sort -t '\0' now uses a NUL tab.
+	sort option order no longer matters, unless POSIX requires it.
+	* doc/coreutils.texi (sort invocation): -d now overrides -i.
+	"whitespace" -> "blanks"; "whitespace" isn't correct.
+	-t '\0' now specifies a NUL tab.
+	* src/sort.c (usage): Say "blanks" instead of "whitespace",
+	Similar fixes for many comments.
+	(TAB_DEFAULT): New constant, so that we can support NUL as
+	the field separator.
+	(tab): Now int, not char.  Initialize to TAB_DEFAULT.
+	(specify_sort_size): If multiple sizes are specified, use the largest.
+	(begfield, limfield): Support NUL tab char.
+	(set_ordering): Do not let -i override -d.
+	(main): Report an error if incompatible -o or -t options are given.
+	Report an error for "-t ''".  Allow "-t '\0'" to specify a NUL tab.
+
+2003-09-05  Jim Meyering  <jim@meyering.net>
+
+	* tests/sort/Test.pm [o2, nul-tab]: New tests for the above.
+
+2003-09-03  Andreas Schwab  <schwab@suse.de>
+
+	* src/tail.c (pipe_lines): Don't truncate return value from safe_read.
+	* src/head.c (elide_tail_lines_pipe): Likewise.
+
 2003-09-03  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.91.
@@ -30,10 +57,12 @@
 	When source and destination arguments refer to the same file, reside
 	on a partition (e.g. VFAT) on which distinct names may refer to the
 	same directory entry (often due to variations in case), and when the
-	link count for the file is 1, mv no longer unlinks the file.
-	FIXME: this is a band-aid fix.  If the file happens to have a link
-	count of 2 or greater, mv will still unlink it.  Although that is
-	not possible on VFAT, it is possible on other offending file systems.
+	link count for the file is 1, mv no longer unlinks the file.  Instead,
+	it gives the expected diagnostic that the source and destination are
+	the same.  WARNING: this is an incomplete fix.  If the file happens
+	to have a link count of 2 or greater, mv will still unlink it.
+	Although that is not possible on VFAT, it is possible on other file
+	system types, e.g., ntfs, hpfs, and umsdos.
 	* src/copy.c (same_file_ok): Invoke same_name (which might still
 	return false for names that refer to the same directory entry)
 	only if the link count is 2 or more.
