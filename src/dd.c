@@ -755,7 +755,7 @@ buggy_lseek_support (int fdesc)
    nonzero.  */
 
 static void
-skip (int fdesc, char *file, uintmax_t records, size_t blocksize,
+skip (int fdesc, char const *file, uintmax_t records, size_t blocksize,
       unsigned char *buf)
 {
   off_t o;
@@ -791,10 +791,10 @@ skip (int fdesc, char *file, uintmax_t records, size_t blocksize,
 /* Copy NREAD bytes of BUF, with no conversions.  */
 
 static void
-copy_simple (unsigned char *buf, int nread)
+copy_simple (unsigned char const *buf, int nread)
 {
   int nfree;			/* Number of unused bytes in `obuf'.  */
-  unsigned char *start = buf; /* First uncopied char in BUF.  */
+  const unsigned char *start = buf; /* First uncopied char in BUF.  */
 
   do
     {
@@ -818,7 +818,7 @@ copy_simple (unsigned char *buf, int nread)
    replacing the newline with trailing spaces).  */
 
 static void
-copy_with_block (unsigned char *buf, size_t nread)
+copy_with_block (unsigned char const *buf, size_t nread)
 {
   size_t i;
 
@@ -850,7 +850,7 @@ copy_with_block (unsigned char *buf, size_t nread)
    with a newline).  */
 
 static void
-copy_with_unblock (unsigned char *buf, size_t nread)
+copy_with_unblock (unsigned char const *buf, size_t nread)
 {
   size_t i;
   unsigned char c;
@@ -944,8 +944,8 @@ dd_copy (void)
 	 0+0 records out
 	 */
 
-	 skip (STDOUT_FILENO, output_file, seek_record, output_blocksize,
-	       obuf);
+      skip (STDOUT_FILENO, output_file, seek_record, output_blocksize,
+	    obuf);
     }
 
   if (max_records == 0)
