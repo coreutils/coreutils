@@ -6254,7 +6254,7 @@ intermediate record counts,
 and when @command{dd} completes, it outputs the final pair.
 
 @example
-$ dd if=/dev/zero of=/dev/null count 10M & pid=$!
+$ dd if=/dev/zero of=/dev/null count=10M & pid=$!
 $ kill -USR1 $pid; sleep 99
 5403604+0 records in
 5403604+0 records out
