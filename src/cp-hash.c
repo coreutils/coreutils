@@ -75,6 +75,14 @@ src_to_dest_compare (void const *x, void const *y)
   return SAME_INODE (*a, *b) ? true : false;
 }
 
+static void
+src_to_dest_free (void *x)
+{
+  struct Src_to_dest *a = x;
+  free ((char *) (a->name));
+  free (x);
+}
+
 /* Add PATH to the list of files that we have created.
    Return 1 if we can't stat PATH, otherwise 0.  */
 
@@ -104,7 +112,7 @@ remember_copied (const char *name, ino_t ino, dev_t dev)
   struct Src_to_dest *ent_from_table;
 
   ent = (struct Src_to_dest *) xmalloc (sizeof *ent);
-  ent->name = name;
+  ent->name = xstrdup (name);
   ent->st_ino = ino;
   ent->st_dev = dev;
 
@@ -134,7 +142,8 @@ hash_init (void)
 {
   src_to_dest = hash_initialize (INITIAL_TABLE_SIZE, NULL,
 				 src_to_dest_hash,
-				 src_to_dest_compare, free);
+				 src_to_dest_compare,
+				 src_to_dest_free);
   if (src_to_dest == NULL)
     xalloc_die ();
 }
