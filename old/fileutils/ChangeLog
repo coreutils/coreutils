@@ -1,5 +1,7 @@
 2000-09-09  Jim Meyering  <meyering@lucent.com>
 
+	* Version 4.0z.
+
 	* tests/cp/special-bits: New file.
 	* tests/cp/Makefile.am (TESTS): Add special-bits.
 	(TESTS_ENVIRONMENT): Propagate $MAKE into environment, for special-bits.
