@@ -27,6 +27,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   ls no longer segfaults on systems for which SIZE_MAX != (size_t) -1
 
+  echo now conforms to POSIX better.  It supports the \0ooo syntax for
+  octal escapes, and \c now terminates printing immediately.  If
+  POSIXLY_CORRECT is set and the first argument is not "-n", echo now
+  outputs all option-like arguments instead of treating them as options.
+
 ** New features
 
   For efficiency, `sort -m' no longer copies input to a temporary file
@@ -85,6 +90,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   `date' has a new option --iso-8601=ns that outputs
   nanosecond-resolution time stamps.
+
+  echo -e '\xHH' now outputs a byte whose hexadecimal value is HH,
+  for compatibility with bash.
 
 
 * Major changes in release 5.2.1 (2004-03-12) [stable]
