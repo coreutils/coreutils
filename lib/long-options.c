@@ -26,6 +26,13 @@
 #include "closeout.h"
 #include "long-options.h"
 
+#if ENABLE_NLS
+# include <libintl.h>
+# define _(Text) gettext (Text)
+#else
+# define _(Text) Text
+#endif
+
 static struct option const long_options[] =
 {
   {"help", no_argument, 0, 'h'},
@@ -37,8 +44,12 @@ static struct option const long_options[] =
    Be careful not to gobble up `--'.  */
 
 void
-parse_long_options (int argc, char **argv, const char *command_name,
-		    const char *package, const char *version,
+parse_long_options (int argc,
+		    char **argv,
+		    const char *command_name,
+		    const char *package,
+		    const char *version,
+		    const char *authors,
 		    void (*usage_func)())
 {
   int c;
@@ -59,6 +70,7 @@ parse_long_options (int argc, char **argv, const char *command_name,
 
 	case 'v':
 	  printf ("%s (%s) %s\n", command_name, package, version);
+	  printf (_("Written by %s.\n"), authors);
 	  close_stdout (); /* FIXME: output failure exit status
 			      should be settable via an arg.  */
 	  exit (0);
