@@ -1,3 +1,55 @@
+Sat May 13 07:47:44 1995  Jim Meyering  (meyering@comco.com)
+
+	* lib/Makefile.in: Remove safe-l?stat.[ch]in and related rules.
+
+	* argmatch.c (argmatch): Include sys/types.h and declare length
+	argument with type size_t.
+
+	* backupfile.c: Remove unnecessary definitions for r?index.
+	Update definitions for ISDIGIT.
+
+	* basename.c (basename): Make argument const.
+
+	* euidaccess.c (eaccess_stat): Make statp and path arguments const.
+	(euidaccess): Make statp argument const.  Use stat, not safe_stat.
+
+	* fsusage.c (statfs): Use stat, not safe_stat.
+	* isdir.c (isdir): Likewise.
+	* mkdir.c (mkdir): Likewise.
+	* rename.c (rename): Likewise.
+	* rmdir.c (rmdir): Likewise.
+
+	* userspec.c (parse_user_spec): Use strchr, not index.
+	[!HAVE_STRING_H]: Define strchr in terms of index, not the
+	other way around.
+
+	* makepath.c: (make_path): Use stat, not SAFE_STAT.
+	Use strchr, not index.  Adjust defines accordingly.
+
+	* makepath.h: Undef __P before defining.
+	Guard definition with simpler `#if __STDC__'.
+
+	* chgrp.c: Use stat (lstat), not safe_stat (safe_lstat).
+	* chmod.c: Likewise.
+	* chown.c: Likewise.
+	* cp-hash.c: Likewise.
+	* cp.c: Likewise.
+	* df.c: Likewise.
+	* du.c: Likewise.
+	* install.c: Likewise.
+	* ln.c: Likewise.
+	* ls.c: Likewise.
+	* mv.c: Likewise.
+	* mvdir.c: Likewise.
+	* rm.c: Likewise.
+	* touch.c: Likewise.
+
+Fri May 12 21:21:23 1995  Jim Meyering  (meyering@comco.com)
+
+	* mv.c (movefile): Remove a single trailing slash from destdir
+	before concatenating with `/' and filename for `ok to overwrite...'
+	message.  Reported by Franc,ois Pinard.
+
 Mon May  1 23:03:30 1995  Jim Meyering  (meyering@comco.com)
 
 	* ls.c (quote_filename): Never return NULL when quoting filenames
@@ -5,6 +57,10 @@ Mon May  1 23:03:30 1995  Jim Meyering  (meyering@comco.com)
 	at least one C-quotable character.  Reported by David J. MacKenzie.
 
 Mon Mar 20 21:44:40 1995  Jim Meyering  (meyering@comco.com)
+
+	* rename.c (rename): Compare src and dest inode numbers rather
+	than src inode and dest dev when determining whether they refer
+	to the same file.  From marc@math.cornell.edu (Marc Parmet).
 
 	* df.c (usage): Add ellipsis after `[OPTION]'.  Use FILE,
 	not deprecated PATH in text of help message.  From Karl Berry.
