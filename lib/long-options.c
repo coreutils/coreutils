@@ -1,5 +1,5 @@
 /* Utility to accept --help and --version options as unobtrusively as possible.
-   Copyright (C) 1993, 1994, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1993, 1994, 1998-2000, 2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -29,13 +29,6 @@
 
 #include "long-options.h"
 #include "version-etc.h"
-
-#if ENABLE_NLS
-# include <libintl.h>
-# define _(Text) gettext (Text)
-#else
-# define _(Text) Text
-#endif
 
 static struct option const long_options[] =
 {

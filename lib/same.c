@@ -1,5 +1,5 @@
 /* Determine whether two file names refer to the same file.
-   Copyright (C) 1997-2000 Free Software Foundation, Inc.
+   Copyright (C) 1997-2000, 2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -46,13 +46,6 @@ extern int errno;
 #include "dirname.h"
 #include "error.h"
 #include "xalloc.h"
-
-#if ENABLE_NLS
-# include <libintl.h>
-# define _(Text) gettext (Text)
-#else
-# define _(Text) Text
-#endif
 
 #ifndef HAVE_DECL_FREE
 "this configure-time declaration test was not run"
