@@ -2,6 +2,9 @@
 
 	* Version 3.16j.
 
+	* lib/Makefile.in: Regenerated with patched automake-1.2d.
+	See README-alpha.
+
 	* src/chgrp.c: Use a single enumerated type, Verbosity, instead of
 	the two booleans, verbose and changes_only.  This fixes a bug whereby
 	--change had the same effect as --verbose.
