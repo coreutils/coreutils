@@ -414,10 +414,13 @@ same_file (const char *file_1, const char *file_2)
 
 
 /* Recursively remove all of the entries in the current directory.
-   Return an indication of the success of the operation.  */
+   Return an indication of the success of the operation.
+   CWD_DEV_INO must store the device and inode numbers of the
+   current working directory.  */
 
 static enum RM_status
-remove_cwd_entries (const struct rm_options *x)
+remove_cwd_entries (const struct rm_options *x,
+		    struct dev_ino const *cwd_dev_ino)
 {
   /* NOTE: this is static.  */
   static DIR *dirp = NULL;
@@ -530,7 +533,7 @@ remove_cwd_entries (const struct rm_options *x)
 	  /* CAUTION: after this call to rm, DP may not be valid --
 	     it may have been freed due to a close in a recursive call
 	     (through rm and remove_dir) to this function.  */
-	  tmp_status = rm (&fs, 0, x);
+	  tmp_status = rm (&fs, 0, x, cwd_dev_ino);
 
 	  /* Update status.  */
 	  if (tmp_status > status)
@@ -645,12 +648,14 @@ remove_file (struct File_spec *fs, const struct rm_options *x)
    FIXME: describe need_save_cwd parameter.  */
 
 static enum RM_status
-remove_dir (struct File_spec *fs, int need_save_cwd, const struct rm_options *x)
+remove_dir (struct File_spec *fs, int need_save_cwd,
+	    struct rm_options const *x, struct dev_ino const *cwd_dev_ino)
 {
   enum RM_status status;
   struct saved_cwd cwd;
   char *dir_name = fs->filename;
   const char *fmt = NULL;
+  struct dev_ino tmp_cwd_dev_ino;
 
   if (!x->recursive)
     {
@@ -719,6 +724,9 @@ was replaced with either another directory or a link to another directory."),
 	       (unsigned long)(sb.st_dev),
 	       (unsigned long)(sb.st_ino));
       }
+
+    tmp_cwd_dev_ino.st_dev = sb.st_dev;
+    tmp_cwd_dev_ino.st_ino = sb.st_ino;
   }
 
   push_dir (dir_name);
@@ -728,7 +736,7 @@ was replaced with either another directory or a link to another directory."),
      remove_cwd_entries may close the directory.  */
   ASSIGN_STRDUPA (dir_name, dir_name);
 
-  status = remove_cwd_entries (x);
+  status = remove_cwd_entries (x, &tmp_cwd_dev_ino);
 
   pop_dir ();
 
@@ -742,11 +750,34 @@ was replaced with either another directory or a link to another directory."),
 	}
       free_cwd (&cwd);
     }
-  else if (chdir ("..") < 0)
+  else
     {
-      error (0, errno, _("cannot change back to directory %s via `..'"),
-	     quote (full_filename (dir_name)));
-      return RM_ERROR;
+      struct stat sb;
+      if (chdir ("..") < 0)
+	{
+	  error (0, errno, _("cannot change back to directory %s via `..'"),
+		 quote (full_filename (dir_name)));
+	  return RM_ERROR;
+	}
+
+      if (lstat (".", &sb))
+	error (EXIT_FAILURE, errno,
+	       _("cannot lstat `.' in %s"), quote (full_filename (".")));
+
+      if (!SAME_INODE (sb, *cwd_dev_ino))
+	{
+	  error (EXIT_FAILURE, 0,
+	       _("ERROR: the directory %s initially had device/inode\n\
+numbers %lu/%lu, but now (after changing into at least one subdirectory\n\
+and changing back via `..'), the numbers for `.' are %lu/%lu.\n\
+That means that while rm was running, a partially-removed subdirectory\n\
+was moved to a different position in the file system hierarchy."),
+		 quote (full_filename (".")),
+		 (unsigned long)(cwd_dev_ino->st_dev),
+		 (unsigned long)(cwd_dev_ino->st_ino),
+		 (unsigned long)(sb.st_dev),
+		 (unsigned long)(sb.st_ino));
+	}
     }
 
   if (x->interactive)
@@ -798,7 +829,8 @@ was replaced with either another directory or a link to another directory."),
    name (and hence must specify a file in the current directory).  */
 
 enum RM_status
-rm (struct File_spec *fs, int user_specified_name, const struct rm_options *x)
+rm (struct File_spec *fs, int user_specified_name,
+    struct rm_options const *x, struct dev_ino const *cwd_dev_ino)
 {
   mode_t filetype_mode;
 
@@ -884,7 +916,7 @@ The following two directories have the same inode number:\n"));
       if (need_save_cwd)
 	need_save_cwd = (strchr (fs->filename, '/') != NULL);
 
-      status = remove_dir (fs, need_save_cwd, x);
+      status = remove_dir (fs, need_save_cwd, x, cwd_dev_ino);
 
 #ifdef ENABLE_CYCLE_CHECK
       {
