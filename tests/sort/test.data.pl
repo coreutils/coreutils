@@ -15,9 +15,16 @@
 ("3b", '-k1,1', "B\nA\n", "A\nB\n",  0);
 ("3c", '-k1 -k2', "A b\nA a\n", "A a\nA b\n",  0);
 # FIXME: fail with a diagnostic when -k specifies field == 0
-("3d", '-k0', "", "",  1);
+("3d", '-k0', "", "",  2);
 # FIXME: fail with a diagnostic when -k specifies character == 0
-("3e", '-k1.0', "", "",  1);
+("3e", '-k1.0', "", "",  2);
+("3f", '-k1.1,-k0', "", "",  2);
+# This is ok.
+("3g", '-k1.1,1.0', "", "",  0);
+# This is equivalent to 3f.
+("3h", '-k1.1,1', "", "",  0);
+# This too, is equivalent to 3f.
+("3i", '-k1,1', "", "",  0);
 #
 ("4a", '-nc', "2\n11\n", "",  0);
 ("4b", '-n', "11\n2\n", "2\n11\n", 0);
@@ -45,9 +52,9 @@
 ("7d", '+1 -3', "y k b\nz k a\n", "z k a\ny k b\n", 0);
 #
 # FIXME: report an error for `.' but missing char spec
-("8a", '-k 2.,3', "", "", 1);
+("8a", '-k 2.,3', "", "", 2);
 # FIXME: report an error for `,' but missing POS2
-("8b", '-k 2,', "", "", 1);
+("8b", '-k 2,', "", "", 2);
 #
 # Test new -g option.
 ("9a", '-g', "1e2\n2e1\n", "2e1\n1e2\n", 0);
