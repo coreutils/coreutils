@@ -1,6 +1,11 @@
-2002-09-21  Jim Meyering  <meyering@lucent.com>
+2002-09-22  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.5.2.
+
+	* tests/fmt/Makefile.am (TESTS): Add long-line.
+	* tests/fmt/long-line: New file/test, for the above fix.
+
+2002-09-21  Jim Meyering  <meyering@lucent.com>
 
 	* src/od.c: No longer include deprecated <values.h>.
 	It was required solely for now-removed reference to BITSPERBYTE.
