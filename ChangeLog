@@ -1,14 +1,25 @@
 2003-02-20  Jim Meyering  <jim@meyering.net>
 
+	* Use automake-1.7.3.  Regenerate dependent files.
+
+	* src/stat.c (print_stat): New format: %B (to print ST_NBLOCKSIZE).
+	This makes %b (number of ST_NBLOCKSIZE-byte blocks) more useful.
+	(usage) [%B]: Describe it.
+	[%b]: Refer to %B.
+
+	* Version 4.5.8.
+
+	* src/du.c (process_file): Reorganize the code to use only
+	one array and to make -S
+	Patch by Bruno Haible.
+
+	* tests/du/basic: New test.
+
 	* tests/envvar-check: Add checks for the following:
 	BLOCK_SIZE, DU_BLOCK_SIZE, DF_BLOCK_SIZE, LS_BLOCK_SIZE.
 
 	* tests/Makefile.am: Rename phony target envvar-check to evar-check
 	so as not to conflict with the distributed file by the same name.
-
-	* src/du.c (process_file): Reorganize the code to use only
-	one array and to make -S
-	Patch by Bruno Haible.
 
 	* src/du.c (process_file): Set info->skip before any possible return.
 
@@ -16,8 +27,6 @@
 	* src/du.c (process_file): Return for `file_type == FTW_DPRE'
 	_before_ recording the dev/ino of a directory.
 	Reported by Bruno Haible.
-
-	* Version 4.5.8.
 
 	Now, df always displays the device file name corresponding to the
 	listed mount point under `Filesystem'.  Before, for an unmounted
