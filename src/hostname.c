@@ -68,7 +68,7 @@ Print the hostname of the current system.\n\
   --version   output version information and exit\n\
 ")
              , program_name, program_name);
-      puts (_("\nReport bugs to bug-gnu-utils@gnu.ai.mit.edu"));
+      puts (_("\nReport bugs to bug-sh-utils@gnu.ai.mit.edu"));
     }
   exit (status);
 }

@@ -91,7 +91,7 @@ Remove the DIRECTORY(ies), if they are empty.\n\
       --help      display this help and exit\n\
       --version   output version information and exit\n\
 "));
-      puts (_("\nReport bugs to bug-gnu-utils@gnu.ai.mit.edu"));
+      puts (_("\nReport bugs to bug-fileutils@gnu.ai.mit.edu"));
     }
   exit (status);
 }

@@ -91,7 +91,7 @@ Without -E, the following sequences are recognized and interpolated:\n\
   \\t     horizontal tab\n\
   \\v     vertical tab\n\
 "));
-      puts (_("\nReport bugs to bug-gnu-utils@gnu.ai.mit.edu"));
+      puts (_("\nReport bugs to bug-sh-utils@gnu.ai.mit.edu"));
     }
   exit (status);
 }

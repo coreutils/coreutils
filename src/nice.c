@@ -199,7 +199,7 @@ by default.  Range goes from -20 (highest priority) to 19 (lowest).\n\
   -n, --adjustment=ADJUST   same as -ADJUST\n\
       --help                display this help and exit\n\
       --version             output version information and exit\n"));
-      puts (_("\nReport bugs to bug-gnu-utils@gnu.ai.mit.edu"));
+      puts (_("\nReport bugs to bug-sh-utils@gnu.ai.mit.edu"));
     }
   exit (status);
 }
