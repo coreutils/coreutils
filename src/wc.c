@@ -126,7 +126,7 @@ Usage: %s [OPTION]... [FILE]...\n\
 "),
 	      program_name);
       printf (_("\
-Print line, word, and byte counts for each FILE, and a total line if\n\
+Print newline, word, and byte counts for each FILE, and a total line if\n\
 more than one FILE is specified.  With no FILE, or when FILE is -,\n\
 read standard input.\n\
   -c, --bytes            print the byte counts\n\
