@@ -1,0 +1,22 @@
+#!/bin/sh
+# verify that mkdir honors special bits in MODE
+
+if test "$VERBOSE" = yes; then
+  set -x
+  $mkdir --version
+fi
+
+tmp=mkdir-sp-$$
+trap 'status=$?; rm -rf $tmp && exit $status' 0
+trap 'exit $?' 1 2 13 15
+
+mkdir -m2755 $tmp || fail=1
+
+test -d $tmp || fail=1
+set -- `ls -ld $tmp`
+case "$1" in
+  drwxr-sr-x) ;;
+  *) fail=1 ;;
+esac
+
+exit $fail
