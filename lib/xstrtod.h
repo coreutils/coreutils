@@ -10,6 +10,6 @@
 #endif  /* Not __P.  */
 
 int
-  xstrtod (const char *str, const char **ptr, double *result);
+  xstrtod __P ((const char *str, const char **ptr, double *result));
 
 #endif /* XSTRTOD_H */
