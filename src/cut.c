@@ -266,14 +266,8 @@ is_range_start_index (size_t i)
 static bool
 print_kth (size_t k, bool *range_start)
 {
-  if (0 < eol_range_start && eol_range_start <= k)
-    {
-      if (range_start)
-	*range_start = (k == eol_range_start);
-      return true;
-    }
-
-  if (k <= max_range_endpoint && is_printable_field (k))
+  if ((0 < eol_range_start && eol_range_start <= k)
+      || (k <= max_range_endpoint && is_printable_field (k)))
     {
       if (range_start)
 	*range_start = is_range_start_index (k);
@@ -473,25 +467,35 @@ set_fields (const char *fieldstr)
 
   if (output_delimiter_specified)
     {
-      /* Record the range-start indices.  */
-      for (i = 0; i < n_rp; i++)
+      /* Record the range-start indices, i.e., record each start
+	 index that is not part of any other (lo..hi] range.  */
+      for (i = 0; i <= n_rp; i++)
 	{
 	  size_t j;
-	  for (j = rp[i].lo; j <= rp[i].hi; j++)
+	  size_t rsi = (i < n_rp ? rp[i].lo : eol_range_start);
+
+	  for (j = 0; j < n_rp; j++)
 	    {
-	      if (0 < j && is_printable_field (j)
-		  && !is_printable_field (j - 1))
+	      if (rp[j].lo < rsi && rsi <= rp[j].hi)
 		{
-		  /* Record the fact that `j' is a range-start index.  */
-		  void *ent_from_table = hash_insert (range_start_ht,
-						      (void*) j);
-		  if (ent_from_table == NULL)
-		    {
-		      /* Insertion failed due to lack of memory.  */
-		      xalloc_die ();
-		    }
-		  assert ((size_t) ent_from_table == j);
+		  rsi = 0;
+		  break;
 		}
+	    }
+
+	  if (eol_range_start && eol_range_start < rsi)
+	    rsi = 0;
+
+	  if (rsi)
+	    {
+	      /* Record the fact that `rsi' is a range-start index.  */
+	      void *ent_from_table = hash_insert (range_start_ht, (void*) rsi);
+	      if (ent_from_table == NULL)
+		{
+		  /* Insertion failed due to lack of memory.  */
+		  xalloc_die ();
+		}
+	      assert ((size_t) ent_from_table == rsi);
 	    }
 	}
     }
