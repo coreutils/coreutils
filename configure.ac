@@ -225,10 +225,12 @@ if test $jm_cv_sys_tiocgwinsz_needs_termios_h = no && \
 fi
 
 # For src/kill.c.
-AC_CHECK_DECLS([strtoimax])
 AC_CHECK_DECLS([strsignal, sys_siglist, _sys_siglist, __sys_siglist], , ,
   [AC_INCLUDES_DEFAULT
 #include <signal.h>])
+
+# For src/kill.c and src/printf.c.
+AC_CHECK_DECLS([strtoimax, strtoumax])
 
 gl_LIB_CHECK
 
