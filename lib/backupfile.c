@@ -45,10 +45,10 @@
 #include <strings.h>
 #endif
 
-#if defined(DIRENT) || defined(_POSIX_VERSION)
+#ifdef DIRENT
 #include <dirent.h>
 #define NLENGTH(direct) (strlen((direct)->d_name))
-#else /* not (DIRENT or _POSIX_VERSION) */
+#else /* not DIRENT */
 #define dirent direct
 #define NLENGTH(direct) ((direct)->d_namlen)
 #ifdef SYSNDIR
@@ -60,7 +60,7 @@
 #ifdef NDIR
 #include <ndir.h>
 #endif /* NDIR */
-#endif /* DIRENT or _POSIX_VERSION */
+#endif /* DIRENT */
 
 #ifdef VOID_CLOSEDIR
 /* Fake a return value. */
