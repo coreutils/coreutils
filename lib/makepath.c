@@ -59,17 +59,17 @@ char *alloca ();
 #include <errno.h>
 #endif
 
-#ifndef STDC_HEADERS
+#ifndef errno
 extern int errno;
 #endif
 
-#if defined(STDC_HEADERS) || defined(HAVE_STRING_H)
-#include <string.h>
-#ifndef index
-#define index strchr
-#endif
+#ifdef HAVE_STRING_H
+# include <string.h>
 #else
-#include <strings.h>
+# include <strings.h>
+# ifndef strchr
+#  define strchr index
+# endif
 #endif
 
 #ifdef __MSDOS__
@@ -99,7 +99,7 @@ void error ();
    Return 0 if ARGPATH exists as a directory with the proper
    ownership and permissions when done, otherwise 1.  */
 
-#if defined (__GNUC__) || (defined (__STDC__) && __STDC__)
+#if __STDC__
 int
 make_path (const char *argpath,
 	   int mode,
@@ -131,7 +131,7 @@ make_path (argpath, mode, parent_mode, owner, group, preserve_existing,
   dirpath = (char *) alloca (strlen (argpath) + 1);
   strcpy (dirpath, argpath);
 
-  if (SAFE_STAT (dirpath, &stats))
+  if (stat (dirpath, &stats))
     {
       char *slash;
       int tmp_mode;		/* Initial perms for leading dirs.  */
@@ -162,10 +162,10 @@ make_path (argpath, mode, parent_mode, owner, group, preserve_existing,
       slash = dirpath;
       while (*slash == '/')
 	slash++;
-      while ((slash = index (slash, '/')))
+      while ((slash = strchr (slash, '/')))
 	{
 	  *slash = '\0';
-	  if (SAFE_STAT (dirpath, &stats))
+	  if (stat (dirpath, &stats))
 	    {
 	      if (mkdir (dirpath, tmp_mode))
 		{
@@ -219,7 +219,7 @@ make_path (argpath, mode, parent_mode, owner, group, preserve_existing,
       /* The path could end in "/." or contain "/..", so test
 	 if we really have to create the directory.  */
 
-      if (SAFE_STAT (dirpath, &stats) && mkdir (dirpath, mode))
+      if (stat (dirpath, &stats) && mkdir (dirpath, mode))
 	{
 	  error (0, errno, "cannot create directory `%s'", dirpath);
 	  umask (oldmask);
