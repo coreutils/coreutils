@@ -1,4 +1,4 @@
-#serial 1
+#serial 2
 
 dnl From Paul Eggert.
 
@@ -40,6 +40,7 @@ AC_DEFUN([UTILS_HOST_OS],
        hpux*)		os='HP-UX';;
        hiux*)		os='HI-UX';;
        gnu*)		os='GNU';;
+       freebsd*-gnu*)	os='GNU/FreeBSD';;
        freebsd*)	os='FreeBSD';;
        dgux*)		os='DG/UX';;
        bsdi*)		os='BSD/OS';;
