@@ -39,7 +39,7 @@ AC_DEFUN(jm_FUNC_NANOSLEEP,
 	 jm_cv_func_nanosleep_works=yes,
 	 jm_cv_func_nanosleep_works=no,
 	 dnl When crosscompiling, assume the worst.
-	 jm_cv_func_nanosleep_works=yes)
+	 jm_cv_func_nanosleep_works=no)
   ])
   if test $jm_cv_func_nanosleep_works = no; then
     AC_SUBST(LIBOBJS)
