@@ -213,7 +213,7 @@ selected_fstype (const char *fstype)
   if (fs_select_list == NULL || fstype == NULL)
     return 1;
   for (fsp = fs_select_list; fsp; fsp = fsp->fs_next)
-    if (!strcmp (fstype, fsp->fs_name))
+    if (STREQ (fstype, fsp->fs_name))
       return 1;
   return 0;
 }
@@ -229,7 +229,7 @@ excluded_fstype (const char *fstype)
   if (fs_exclude_list == NULL || fstype == NULL)
     return 0;
   for (fsp = fs_exclude_list; fsp; fsp = fsp->fs_next)
-    if (!strcmp (fstype, fsp->fs_name))
+    if (STREQ (fstype, fsp->fs_name))
       return 1;
   return 0;
 }
@@ -353,7 +353,7 @@ show_disk (const char *disk)
   struct mount_entry *me;
 
   for (me = mount_list; me; me = me->me_next)
-    if (!strcmp (disk, me->me_devname))
+    if (STREQ (disk, me->me_devname))
       {
 	show_dev (me->me_devname, me->me_mountdir, me->me_type);
 	return;
@@ -595,7 +595,7 @@ with the portable output format"));
 	struct fs_type_list *j;
 	for (j = fs_exclude_list; j; j = j->fs_next)
 	  {
-	    if (strcmp (i->fs_name, j->fs_name) == 0)
+	    if (STREQ (i->fs_name, j->fs_name))
 	      {
 		error (0, 0,
 		       _("file system type `%s' both selected and excluded"),
