@@ -1,5 +1,7 @@
 Fri Oct 11 22:51:50 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/Makefile.am (uptime_LDADD): Add @UPTIME_LIBS@.
+
 	* acinclude.m4 (AM_FUNC_GETLOADAVG): Like AC_FUNC_GETLOADAVG, but
 	with the following changes:
 	- include $top_srcdir/lib/getloadavg.c, not src/getloadavg.c.
