@@ -5,24 +5,36 @@ if test "$VERBOSE" = yes; then
   cp --version
 fi
 
+pwd=`pwd`
+tmp=`echo "$0"|sed 's,.*/,,'`.tmp
+trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
+trap '(exit $?); exit' 1 2 13 15
+
+framework_failure=0
+mkdir -p $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo '$0: failure in testing framework' 1>&2
+  (exit 1); exit
+fi
+
 suffix=.b
-tmp=b1.$$
-tmp_backup="$tmp$suffix"
-temp_files="$tmp $tmp_backup"
+file=b1.$$
+file_backup="$file$suffix"
+temp_files="$file $file_backup"
 rm -f $temp_files
 
 fail=0
-echo test > $tmp || fail=1
+echo test > $file || fail=1
 
 # Specify both version control and suffix so the environment variables
 # (possibly set by the user running these tests) aren't used.
-cp --force --backup=simple --suffix=$suffix $tmp $tmp \
+cp --force --backup=simple --suffix=$suffix $file $file \
   || fail=1
 
-test -f $tmp || fail=1
-test -f $tmp_backup || fail=1
-cmp $tmp $tmp_backup > /dev/null || fail=1
+test -f $file || fail=1
+test -f $file_backup || fail=1
+cmp $file $file_backup > /dev/null || fail=1
 
-rm -f $temp_files
-
-exit $fail
+(exit $fail); exit
