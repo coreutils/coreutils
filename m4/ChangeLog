@@ -1,3 +1,7 @@
+2003-10-06  Jim Meyering  <jim@meyering.net>
+
+	* ftw.m4: Remove now-unused file.
+
 2003-10-05  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4 (jm_MACROS): Don't require AC_FUNC_FTW.
