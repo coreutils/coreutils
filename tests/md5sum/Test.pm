@@ -3,8 +3,6 @@ package Test;
 require 5.002;
 use strict;
 
-$Test::input_via_stdin = 1;
-
 sub test_vector
 {
   my @tvec =
@@ -33,6 +31,7 @@ sub test_vector
     {
       my ($test_name, $flags, $in, $exp, $ret) = @$t;
       push (@tv, [$test_name, $flags, $in, "$exp  -\n", $ret]);
+      $Test::input_via{$test_name} = {REDIR => 0, PIPE => 0};
     }
 
   return @tv;
