@@ -1,4 +1,4 @@
 [NAME]
-wc \- print the number of bytes, words, and lines in files
+wc \- print the number of newlines, words, and bytes in files
 [DESCRIPTION]
 .\" Add any additional description here
