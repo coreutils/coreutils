@@ -1,5 +1,7 @@
 2003-02-12  Jim Meyering  <jim@meyering.net>
 
+	* regex.m4 (jm_PREREQ_REGEX): Require ACX_C_RESTRICT.
+
 	* restrict.m4 (ACX_C_RESTRICT): Minor syntactic changes:
 	Split long lines, use AC_COMPILE_IFELSE, indent, use `case'
 	instead of nested `if's, remove unnecessary quotes.
