@@ -1,5 +1,5 @@
 /* sync - update the super block
-   Copyright (C) 1994-2002 Free Software Foundation, Inc.
+   Copyright (C) 1994-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -66,7 +66,7 @@ main (int argc, char **argv)
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE, VERSION,
 		      AUTHORS, usage);
 
-  if (argc != 1)
+  if (1 < argc)
     error (0, 0, _("ignoring all arguments"));
 
   sync ();
