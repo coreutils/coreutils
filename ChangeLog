@@ -1,6 +1,11 @@
-2003-07-25  Jim Meyering  <jim@meyering.net>
+2003-07-26  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.90.
+
+	* src/ls.c (sort_files): Make `func' volatile, so it can't be
+	clobbered by a `longjmp' into this function.
+
+2003-07-25  Jim Meyering  <jim@meyering.net>
 
 	* src/pathchk.c (validate_path): Use %ld format (not %d) for size_t
 	value.
