@@ -75,8 +75,8 @@ Create the DIRECTORY(ies), if they do not already exist.\n\
 int
 main (int argc, char **argv)
 {
-  unsigned int newmode;
-  unsigned int parent_mode;
+  mode_t newmode;
+  mode_t parent_mode;
   const char *symbolic_mode = NULL;
   const char *verbose_fmt_string = NULL;
   int errors = 0;
@@ -117,8 +117,8 @@ main (int argc, char **argv)
       usage (1);
     }
 
-  newmode = 0777 & ~umask (0);
-  parent_mode = newmode | 0300;	/* u+wx */
+  newmode = (S_IRWXU | S_IRWXG | S_IRWXO) & ~ umask (0);
+  parent_mode = S_IWUSR | S_IXUSR | newmode;
   if (symbolic_mode)
     {
       struct mode_change *change = mode_compile (symbolic_mode, 0);
