@@ -1,3 +1,7 @@
+2004-01-10  Jim Meyering  <jim@meyering.net>
+
+	* version-etc.c (version_etc_copyright): Update copyright date.
+
 2003-12-20  Jim Meyering  <jim@meyering.net>
 
 	* fts.c [!_LIBC]: Undefine, then define-away __P.
