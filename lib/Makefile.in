@@ -80,11 +80,11 @@ clean:
 mostlyclean: clean
 
 distclean: clean
-	rm -f Makefile *.tab.c getdate.c *posixtm.c \
+	rm -f Makefile *.tab.c tposixtm.c \
 	  safe-stat.c safe-stat.h safe-lstat.c safe-lstat.h
 
 realclean: distclean
-	rm -f TAGS
+	rm -f TAGS getdate.c posixtm.c
 
 distdir = ../`cat ../distname`/$(subdir)
 dist: $(DISTFILES)
