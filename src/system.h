@@ -177,7 +177,7 @@ typedef enum {false = 0, true = 1} bool;
 #  define setmode _setmode
 #  define fileno(_fp) _fileno (_fp)
 # endif /* not DJGPP */
-# define SET_MODE(_f, _m) set_mode (_f, _m)
+# define SET_MODE(_f, _m) setmode (_f, _m)
 # define SET_BINARY(_f) do {if (!isatty(_f)) setmode (_f, O_BINARY);} while (0)
 # define SET_BINARY2(_f1, _f2)		\
   do {					\
