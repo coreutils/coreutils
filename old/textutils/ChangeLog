@@ -1,5 +1,17 @@
 Thu May 30 00:07:48 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* po/Makefile.in.in (stamp-cat-id): Avoid using temp filename
+	longer than 14 characters.
+	(mostlyclean): Likewise.
+	From Karl Heuer.
+
+	* po/Makefile.in.in ($(PACKAGE).pot): Depend on POTFILES only
+	when using maintainer mode.  Reported by Karl Heuer.
+
+	* po/Makefile.in.in (.po.mo): Reenable dependency and rule.
+	It is required when using native NLS, e.g. on Solaris.
+	From Marcus Daniels.
+
 	* src/od.c (decode_one_format): Use %lu (not %d) printf format
 	corresponding to unsigned long, SIZE.
 
