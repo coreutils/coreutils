@@ -186,7 +186,9 @@ $x-tests: @MAINT@mk-script Test.pm
 
 .pl:
 	rm -f $@ $@.tmp
-	$(editpl) $< > $@.tmp && chmod +x $@.tmp && mv $@.tmp $@
+	$(editpl) $< > $@.tmp
+	chmod +x-w $@.tmp
+	mv $@.tmp $@
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
