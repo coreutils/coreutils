@@ -48,7 +48,11 @@ usage (status)
 	     program_name);
   else
     {
-      printf ("Usage: %s [OPTION]... PATH\n", program_name);
+      printf ("\
+Usage: %s PATH\n\
+  or:  %s OPTION\n\
+",
+	      program_name, program_name);
       printf ("\
 \n\
   --help      display this help and exit\n\

@@ -1,4 +1,10 @@
 User visible changes in release 1.9.3
+* `stty -a -g' gets a diagnostic
+* `stty {-a|-g} any-other-argument' gets a diagnostic
+* stty no longer ignores some of its arguments
+* basename and dirname no longer treat `--' specially
+* `basename -- file.c .c' generates a usage error.  Before, it output `file'.
+* `basename file-dist -dist' outputs `file'.  Before it output `file-dist'.
 * stty defaults `swtch' to undefined for Solaris so `susp' (^Z) will work.
   Before, with the default settings ^Z did nothing.
 * stty no longer gives an error message when it finds a spurious difference

@@ -452,7 +452,11 @@ usage (status)
 	     program_name);
   else
     {
-      printf ("Usage: %s [OPTION]... [SETTING]...\n", program_name);
+      printf ("\
+Usage: %s [SETTING]...\n\
+  or:  %s OPTION\n\
+",
+	      program_name, program_name);
       printf ("\
 \n\
   -a, --all       print all current settings in human-readable form\n\

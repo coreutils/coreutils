@@ -1,3 +1,39 @@
+Sun Feb 13 13:34:25 1994  Jim Meyering  (meyering@comco.com)
+
+	* basename.1, dirname.1, stty.1: Reflect usage changes.
+	* basename.c, dirname.c, stty.c (usage): Ditto.
+
+	* long-options.h (parse_long_options): Invoke usage function
+	argument with explicit dereference as per GNU coding standards.
+
+	* basename.c dirname.c: Use parse_long_options instead of the
+	conventional getopt_long paradigm.  Before, the commands
+	`basename file-dist -dist' and `basename -- file.c .c' produced
+	incorrect results.  Now, even `basename -file-dist -dist' works
+	and the command `basename -- file.c .c' fails for the right
+	reason: the `--' is not a special (to getopt) token for these 
+	commands.  It is interpreted as the filename, so there are too
+	many arguments to basename.  Rick Sladkey <jrs@world.std.com>
+	reported the problem with basename.
+
+	* stty.c (set_window_size): When stty fails to get the window size
+	(as happens on telnet sessions to Solaris systems), initialize all
+	fields of the winsize struct.  Before, it was using the uninitialized
+	pixel fields of the struct in the ioctl to set window size parameters.
+	From Rick Sladkey.
+
+	* stty.c (main): Use parse_long_options to handle --help and --version.
+	(main): In the remaining getopt_long loop, don't jump out of the
+	loop from the `default' branch of the switch statement.  Doing that
+	left optind in an inconsistent when there were non-option arguments
+	preceding `reversed' arguments (e.g. stty echo -echoe) and the
+	preceding non-option arguments were ignored.  Rick Sladkey reported
+	that stty was ignoring arguments.
+
+	* stty.c (main): Fail with a diagnostic when both -g and -a are given.
+	(main): Fail with a diagnostic when either -g or -a is used with
+	arguments for setting modes.
+
 Fri Feb 11 19:39:37 1994  Jim Meyering  (meyering@comco.com)
 
 	* stty.c (get_win_size): Don't use an ANSI-style function
