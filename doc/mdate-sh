@@ -79,12 +79,11 @@ case $3 in
 	 Dec) nummonthtod=12;;
        esac
        # For the first six month of the year the time notation can also
-       # be used for file modified in the last year.
+       # be used for files modified in the last year.
        if (expr $nummonth \> $nummonthtod) > /dev/null;
        then
 	 year=`expr $year - 1`
-       fi
-       ;;
+       fi;;
   *) year=$3;;
 esac
 
