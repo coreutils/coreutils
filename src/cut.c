@@ -181,7 +181,7 @@ static struct option const longopts[] =
   {"fields", required_argument, 0, 'f'},
   {"delimiter", required_argument, 0, 'd'},
   {"only-delimited", no_argument, 0, 's'},
-  {"output-delimiter", required_argument, 0, 14},
+  {"output-delimiter", required_argument, 0, CHAR_MAX + 1},
   {"help", no_argument, &show_help, 1},
   {"version", no_argument, &show_version, 1},
   {0, 0, 0, 0}
@@ -739,7 +739,7 @@ main (int argc, char **argv)
 	  delim_specified = 1;
 	  break;
 
-	case 14:
+	case CHAR_MAX + 1:
 	  /* Interpret --output-delimiter='' to mean
 	     `use the NUL byte as the delimiter.'  */
 	  output_delimiter_length = (optarg[0] == '\0'
