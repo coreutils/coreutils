@@ -63,6 +63,23 @@
 #if !defined(S_ISNWK) && defined(S_IFNWK) /* HP/UX */
 #define S_ISNWK(m) (((m) & S_IFMT) == S_IFNWK)
 #endif
+
+#ifndef S_IEXEC
+#define S_IEXEC S_IXUSR
+#endif
+
+#ifdef S_IEXEC
+#ifndef S_IXUSR
+#define S_IXUSR S_IEXEC
+#endif
+#ifndef S_IXGRP
+#define S_IXGRP (S_IEXEC >> 3)
+#endif
+#ifndef S_IXOTH
+#define S_IXOTH (S_IEXEC >> 6)
+#endif
+#endif /* S_IEXEC */
+
 #if !defined(HAVE_MKFIFO)
 #define mkfifo(path, mode) (mknod ((path), (mode) | S_IFIFO, 0))
 #endif
