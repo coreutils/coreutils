@@ -2,12 +2,15 @@
 
 	* Version 5.3.1.
 
+	* NEWS: Document stat -f -c %S, plus changes to default formats.
 	* doc/coreutils.texi (stat invocation): Normalize terminology,
 	capitalization, and sort order to match --help output.  Mention %c
-	for file systems.  Say that %s is the "Fundamental block size",
-	since that is what POSIX says; problem reported by Jeroen van
-	Wolffelaar.
+	for file systems.  Add new -f -c format %S, and document %s versus %S;
+	problem reported by Jeroen van Wolffelaar.
 	* src/stat.c (usage): Likewise.
+	(STATFS_FRSIZE): New macro.
+	(print_statfs): Use it, for stat -f -c %S.
+	(do_statfs): Change default formats to output %S.
 
 2005-02-03  Paul Eggert  <eggert@cs.ucla.edu>
 
