@@ -1,3 +1,10 @@
+2002-07-15  Jim Meyering  <meyering@lucent.com>
+
+	FreeBSD support for uname and uptime.
+	* jm-macros.m4 (jm_MACROS): Check for the sysctl function.
+	(jm_CHECK_ALL_HEADERS): Check for sys/sysctl.h.
+	Suggestion from Bruno Haible.
+
 2002-06-11  Paul Eggert  <eggert@twinsun.com>
 
 	* fnmatch.m4 (_AC_LIBOBJ_FNMATCH): Check for btowc.
