@@ -40,21 +40,12 @@
 #endif
 
 #include <stdio.h>
-#include <ctype.h>
 #include <sys/types.h>
 #include <regex.h>
 
 #include "system.h"
 #include "version.h"
 #include "long-options.h"
-
-#if defined (STDC_HEADERS) || (!defined (isascii) && !defined (HAVE_ISASCII))
-#define ISASCII(c) 1
-#else
-#define ISASCII(c) isascii(c)
-#endif
-
-#define ISDIGIT(c) (ISASCII (c) && isdigit (c))
 
 #define NEW(type) ((type *) xmalloc (sizeof (type)))
 #define OLD(x) free ((char *) x)

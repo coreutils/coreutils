@@ -55,22 +55,12 @@
 #endif
 
 #include <stdio.h>
-#include <ctype.h>
 #include <sys/types.h>
 #include <getopt.h>
 
 #include "system.h"
 #include "version.h"
 #include "long-options.h"
-
-#if defined (STDC_HEADERS) || (!defined (isascii) && !defined (HAVE_ISASCII))
-#define ISASCII(c) 1
-#else
-#define ISASCII(c) isascii(c)
-#endif
-
-#define ISDIGIT(c) (ISASCII (c) && isdigit (c))
-#define ISXDIGIT(c) (ISASCII (c) && isxdigit (c))
 
 #ifndef STDC_HEADERS
 double strtod ();
@@ -192,7 +182,7 @@ print_formatted (format, argc, argv)
   int save_argc = argc;		/* Preserve original value.  */
   char *f;			/* Pointer into `format'.  */
   char *direc_start;		/* Start of % directive.  */
-  int direc_length;		/* Length of % directive.  */
+  size_t direc_length;		/* Length of % directive.  */
   int field_width;		/* Arg to first '*', or -1 if none.  */
   int precision;		/* Arg to second '*', or -1 if none.  */
 
@@ -396,7 +386,7 @@ print_esc_string (str)
 static void
 print_direc (start, length, field_width, precision, argument)
      char *start;
-     int length;
+     size_t length;
      int field_width;
      int precision;
      char *argument;
