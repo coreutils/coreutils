@@ -2,6 +2,9 @@
 
 	* Version 4.0q.
 
+	* src/sys2.h: Guard declaration of strtoull also with
+	`&& HAVE_UNSIGNED_LONG_LONG'.
+
 	* src/sys2.h: Use `#if !HAVE_DECL...' instead of `#ifndef HAVE_DECL...'
 	now that autoconf always defines the HAVE_DECL_ symbols.
 
