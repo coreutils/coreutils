@@ -21,60 +21,23 @@
 # include <config.h>
 #endif
 
-#ifndef __GNUC__
-# ifdef HAVE_ALLOCA_H
-#  include <alloca.h>
-# else
-#  ifdef _AIX
- #  pragma alloca
-#  else
-#   ifdef _WIN32
-#    include <malloc.h>
-#    include <io.h>
-#   else
-#    ifndef alloca
-char *alloca ();
-#    endif
-#   endif
-#  endif
-# endif
-#endif
-
 #if HAVE_STRING_H
 # include <string.h>
 #endif
 
 /* Compare S1 (with length S1LEN) and S2 (with length S2LEN) according
-   to the LC_COLLATE locale.  S1 and S2 do not overlap, but may be
+   to the LC_COLLATE locale.  S1 and S2 do not overlap, and are not
    adjacent.  Temporarily modify the bytes after S1 and S2, but
    restore their original contents before returning.  */
 int
 memcoll (char *s1, size_t s1len, char *s2, size_t s2len)
 {
   int diff;
-  char n1;
-  char n2;
+  char n1 = s1[s1len];
+  char n2 = s2[s2len];
 
-  /* We will temporarily set the bytes after S1 and S2 to zero, so if
-     S1 and S2 are adjacent, compare to a temporary copy of the
-     earlier, to avoid temporarily stomping on the later.  */
-
-  if (s1 + s1len == s2)
-    {
-      char *s2copy = alloca (s2len + 1);
-      memcpy (s2copy, s2, s2len);
-      s2 = s2copy;
-    }
-
-  if (s2 + s2len == s1)
-    {
-      char *s1copy = alloca (s1len + 1);
-      memcpy (s1copy, s1, s1len);
-      s1 = s1copy;
-    }
-
-  n1 = s1[s1len];  s1[s1len++] = '\0';
-  n2 = s2[s2len];  s2[s2len++] = '\0';
+  s1[s1len++] = '\0';
+  s2[s2len++] = '\0';
 
   while (! (diff = strcoll (s1, s2)))
     {
