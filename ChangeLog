@@ -1,6 +1,9 @@
-2004-04-14  Jim Meyering  <jim@meyering.net>
+2004-04-17  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	* Makefile.maint (sc_prohibit_jm_in_m4): New rule.
+	(syntax-check-rules): Add to the list.
 
 2004-04-13  Paul Eggert  <eggert@twinsun.com>
 
