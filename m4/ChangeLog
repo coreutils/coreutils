@@ -1,3 +1,12 @@
+1998-08-02  Jim Meyering  <meyering@ascend.com>
+
+	* st_mtim.m4: Use hack to avoid having to put #undef HAVE_ST_MTIM
+	in acconfig.h manually.
+
+1998-07-31  Paul Eggert  <eggert@twinsun.com>
+
+	* st_mtim.m4: New file.
+
 1998-07-28  Jim Meyering  <meyering@ascend.com>
 
 	* utimes.m4: Undef stat.
