@@ -259,7 +259,8 @@ time_string (const STRUCT_UTMP *utmp_ent)
    will need tweaking if any of the localization stuff is done, or for 64 bit
    pids, etc. */
 static void
-print_line (const char *user, const char state, const char *line,
+print_line (int userlen, const char *user, const char state,
+	    int linelen, const char *line,
 	    const char *time_str, const char *idle, const char *pid,
 	    const char *comment, const char *exitstr)
 {
@@ -289,18 +290,18 @@ print_line (const char *user, const char state, const char *line,
     *x_exitstr = '\0';
 
   err = asprintf (&buf,
-		  "%-8s"
+		  "%-8.*s"
 		  "%s"
-		  " %-12s"
+		  " %-12.*s"
 		  " %-*s"
 		  "%s"
 		  "%s"
 		  " %-8s"
 		  "%s"
 		  ,
-		  user ? user : "   .",
+		  userlen, user ? user : "   .",
 		  include_mesg ? mesg : "",
-		  line,
+		  linelen, line,
 		  time_format_width,
 		  time_str,
 		  x_idle,
@@ -432,7 +433,8 @@ print_user (const STRUCT_UTMP *utmp_ent, time_t boottime)
     }
 #endif
 
-  print_line (UT_USER (utmp_ent), mesg, utmp_ent->ut_line,
+  print_line (sizeof UT_USER (utmp_ent), UT_USER (utmp_ent), mesg,
+	      sizeof utmp_ent->ut_line, utmp_ent->ut_line,
 	      time_string (utmp_ent), idlestr, pidstr,
 	      hoststr ? hoststr : "", "");
 }
@@ -440,7 +442,8 @@ print_user (const STRUCT_UTMP *utmp_ent, time_t boottime)
 static void
 print_boottime (const STRUCT_UTMP *utmp_ent)
 {
-  print_line ("", ' ', "system boot", time_string (utmp_ent), "", "", "", "");
+  print_line (-1, "", ' ', -1, "system boot",
+	      time_string (utmp_ent), "", "", "", "");
 }
 
 static char *
@@ -471,7 +474,7 @@ print_deadprocs (const STRUCT_UTMP *utmp_ent)
 
   /* FIXME: add idle time? */
 
-  print_line ("", ' ', utmp_ent->ut_line,
+  print_line (-1, "", ' ', sizeof utmp_ent->ut_line, utmp_ent->ut_line,
 	      time_string (utmp_ent), "", pidstr, comment, exitstr);
   free (comment);
 }
@@ -484,7 +487,7 @@ print_login (const STRUCT_UTMP *utmp_ent)
 
   /* FIXME: add idle time? */
 
-  print_line ("LOGIN", ' ', utmp_ent->ut_line,
+  print_line (-1, "LOGIN", ' ', sizeof utmp_ent->ut_line, utmp_ent->ut_line,
 	      time_string (utmp_ent), "", pidstr, comment, "");
   free (comment);
 }
@@ -495,7 +498,7 @@ print_initspawn (const STRUCT_UTMP *utmp_ent)
   char *comment = make_id_equals_comment (utmp_ent);
   PIDSTR_DECL_AND_INIT (pidstr, utmp_ent);
 
-  print_line ("", ' ', utmp_ent->ut_line,
+  print_line (-1, "", ' ', sizeof utmp_ent->ut_line, utmp_ent->ut_line,
 	      time_string (utmp_ent), "", pidstr, comment, "");
   free (comment);
 }
@@ -504,7 +507,7 @@ static void
 print_clockchange (const STRUCT_UTMP *utmp_ent)
 {
   /* FIXME: handle NEW_TIME & OLD_TIME both */
-  print_line ("", ' ', _("clock change"),
+  print_line (-1, "", ' ', -1, _("clock change"),
 	      time_string (utmp_ent), "", "", "", "");
 }
 
@@ -523,7 +526,7 @@ print_runlevel (const STRUCT_UTMP *utmp_ent)
     comment = xmalloc (strlen (_("last=")) + 2);
   sprintf (comment, "%s%c", _("last="), (last == 'N') ? 'S' : last);
 
-  print_line ("", ' ', runlevline, time_string (utmp_ent),
+  print_line (-1, "", ' ', -1, runlevline, time_string (utmp_ent),
 	      "", "", comment, "");
 
   return;
@@ -558,8 +561,8 @@ list_entries_who (int n, const STRUCT_UTMP *utmp_buf)
 static void
 print_heading (void)
 {
-  print_line (_("NAME"), ' ', _("LINE"), _("TIME"), _("IDLE"), _("PID"),
-	      _("COMMENT"), _("EXIT"));
+  print_line (-1, _("NAME"), ' ', -1, _("LINE"), _("TIME"), _("IDLE"),
+	      _("PID"), _("COMMENT"), _("EXIT"));
 }
 
 /* Display UTMP_BUF, which should have N entries. */
