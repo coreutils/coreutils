@@ -737,7 +737,6 @@ main (int argc, char **argv)
     {
       FILE *istream;
       size_t i;
-      bool valid = true;
 
       /* When using --files0-from=F, you may not specify any files
 	 on the command-line.  */
@@ -757,23 +756,6 @@ main (int argc, char **argv)
 	error (EXIT_FAILURE, 0, _("cannot read file names from %s"),
 	       quote (files_from));
 
-      /* Fail if any name has length zero.  */
-      for (i = 0; i < tok.n_tok; i++)
-	{
-	  if (tok.tok_len[i] == 0)
-	    {
-	      /* Using the standard `filename:line-number:' prefix here is
-		 not totally appropriate, since NUL is the separator, not NL,
-		 but it might be better than nothing.  */
-	      error (0, 0, _("%s:%lu: invalid zero-length file name"),
-		     quotearg_colon (files_from), (unsigned long) i + 1);
-	      valid = false;
-	    }
-	}
-
-      if (! valid)
-	exit (EXIT_FAILURE);
-
       files = tok.tok;
     }
   else
@@ -784,7 +766,36 @@ main (int argc, char **argv)
   /* Initialize the hash structure for inode numbers.  */
   hash_init ();
 
-  fail = du_files (files, bit_flags);
+  /* Report and filter out any empty file names before invoking fts.
+     This works around a glitch in fts, which fails immediately
+     (without looking at the other file names) when given an empty
+     file name.  */
+  {
+    size_t i = 0;
+    size_t j;
+
+    for (j = 0; (files[i] = files[j]); j++)
+      if (files[i][0])
+	i++;
+      else
+	{
+	  if (files_from)
+	    {
+	      /* Using the standard `filename:line-number:' prefix here is
+		 not totally appropriate, since NUL is the separator, not NL,
+		 but it might be better than nothing.  */
+	      unsigned long int file_number = j + 1;
+	      error (0, 0, "%s:%lu: %s", quotearg_colon (files_from),
+		     file_number, _("invalid zero-length file name"));
+	    }
+	  else
+	    error (0, 0, "%s", _("invalid zero-length file name"));
+	}
+
+    fail = (i != j);
+  }
+
+  fail |= du_files (files, bit_flags);
 
   /* This isn't really necessary, but it does ensure we
      exercise this function.  */
