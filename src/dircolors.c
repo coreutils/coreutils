@@ -365,8 +365,8 @@ dc_parse_stream (FILE *fp, const char *filename)
 
       if (unrecognized && (state == ST_TERMSURE || state == ST_TERMYES))
 	{
-	  error (0, 0, _("%s:%lu: unrecognized keyword `%s'"),
-		 (filename ? filename : _("<internal>")),
+	  error (0, 0, _("%s:%lu: unrecognized keyword %s"),
+		 (filename ? quote (filename) : _("<internal>")),
 		 (long unsigned) line_number, keywd);
 	  err = 1;
 	}
@@ -399,7 +399,7 @@ dc_parse_file (const char *filename)
       fp = fopen (filename, "r");
       if (fp == NULL)
 	{
-	  error (0, errno, "%s", filename);
+	  error (0, errno, "%s", quote (filename));
 	  return 1;
 	}
     }
@@ -408,7 +408,7 @@ dc_parse_file (const char *filename)
 
   if (fp != stdin && fclose (fp) == EOF)
     {
-      error (0, errno, "%s", filename);
+      error (0, errno, "%s", quote (filename));
       return 1;
     }
 
