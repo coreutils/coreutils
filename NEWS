@@ -1,3 +1,4 @@
+[4.5.7]
 [4.5.6]
 * du no longer segfaults on Solaris systems (fixed heap-corrupting bug in ftw.c)
 * du --exclude=FILE works once again (this was broken by the rewrite for 4.5.5)
