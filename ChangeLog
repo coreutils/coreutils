@@ -2,6 +2,9 @@
 
 	* Version 5.0.1.
 
+	* src/df.c (find_mount_point): Don't let free clobber errno upon
+	failed chdir.
+
 	* src/sys2.h: Remove alloca-related block.
 	* src/system.h: Include <alloca.h> here, instead.
 
