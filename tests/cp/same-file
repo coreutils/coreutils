@@ -79,8 +79,8 @@ done
 cat <<\EOF > $expected
 1 [cp: `foo' and `symlink' are the same file] (foo symlink -> foo)
 1 -d [cp: `foo' and `symlink' are the same file] (foo symlink -> foo)
-1 -f [cp: `foo' and `symlink' are the same file] (foo symlink -> foo)
-1 -df [cp: `foo' and `symlink' are the same file] (foo symlink -> foo)
+0 -f (foo symlink)
+0 -df (foo symlink)
 0 -b (foo symlink symlink.~1~ -> foo)
 0 -bd (foo symlink symlink.~1~ -> foo)
 0 -bf (foo symlink symlink.~1~ -> foo)
@@ -88,7 +88,7 @@ cat <<\EOF > $expected
 0 -l (foo symlink -> foo)
 0 -dl (foo symlink -> foo)
 0 -fl (foo symlink -> foo)
-0 -dfl (foo symlink -> foo)
+0 -dfl (foo symlink)
 0 -bl (foo symlink -> foo)
 0 -bdl (foo symlink symlink.~1~ -> foo)
 0 -bfl (foo symlink -> foo)
@@ -96,8 +96,8 @@ cat <<\EOF > $expected
 
 1 [cp: `symlink' and `foo' are the same file] (foo symlink -> foo)
 1 -d [cp: `symlink' and `foo' are the same file] (foo symlink -> foo)
-1 -f [cp: `symlink' and `foo' are the same file] (foo symlink -> foo)
-1 -df [cp: `symlink' and `foo' are the same file] (foo symlink -> foo)
+1 -f [cp: `symlink' and `foo' are the same file] (symlink -> foo) symlink-loop symlink-loop
+0 -df (foo -> foo symlink -> foo) symlink-loop symlink-loop
 1 -b [cp: `symlink' and `foo' are the same file] (foo symlink -> foo)
 0 -bd (foo -> foo foo.~1~ symlink -> foo) symlink-loop symlink-loop
 1 -bf [cp: `symlink' and `foo' are the same file] (foo symlink -> foo)
@@ -105,16 +105,16 @@ cat <<\EOF > $expected
 0 -l (foo symlink -> foo)
 0 -dl (foo symlink -> foo)
 0 -fl (foo symlink -> foo)
-0 -dfl (foo symlink -> foo)
+0 -dfl (foo -> foo symlink -> foo) symlink-loop symlink-loop
 0 -bl (foo symlink -> foo)
 0 -bdl (foo symlink -> foo)
 0 -bfl (foo symlink -> foo)
-0 -bdfl (foo symlink -> foo)
+0 -bdfl (foo -> foo foo.~1~ symlink -> foo) symlink-loop symlink-loop
 
 1 [cp: `foo' and `foo' are the same file] (foo)
 1 -d [cp: `foo' and `foo' are the same file] (foo)
-1 -f [cp: `foo' and `foo' are the same file] (foo)
-1 -df [cp: `foo' and `foo' are the same file] (foo)
+1 -f [cp: `foo' and `foo' are the same file] () symlink-loop symlink-loop
+1 -df [cp: `foo' and `foo' are the same file] () symlink-loop symlink-loop
 1 -b [cp: `foo' and `foo' are the same file] (foo)
 1 -bd [cp: `foo' and `foo' are the same file] (foo)
 0 -bf (foo foo.~1~)
@@ -130,8 +130,8 @@ cat <<\EOF > $expected
 
 1 [cp: `sl1' and `sl2' are the same file] (foo sl1 -> foo sl2 -> foo)
 1 -d [cp: `sl1' and `sl2' are the same file] (foo sl1 -> foo sl2 -> foo)
-1 -f [cp: `sl1' and `sl2' are the same file] (foo sl1 -> foo sl2 -> foo)
-1 -df [cp: `sl1' and `sl2' are the same file] (foo sl1 -> foo sl2 -> foo)
+0 -f (foo sl1 -> foo sl2)
+0 -df (foo sl1 -> foo sl2 -> foo)
 0 -b (foo sl1 -> foo sl2 sl2.~1~ -> foo)
 0 -bd (foo sl1 -> foo sl2 -> foo sl2.~1~ -> foo)
 0 -bf (foo sl1 -> foo sl2 sl2.~1~ -> foo)
@@ -145,8 +145,8 @@ cat <<\EOF > $expected
 
 1 [cp: `foo' and `hardlink' are the same file] (foo hardlink)
 1 -d [cp: `foo' and `hardlink' are the same file] (foo hardlink)
-1 -f [cp: `foo' and `hardlink' are the same file] (foo hardlink)
-1 -df [cp: `foo' and `hardlink' are the same file] (foo hardlink)
+0 -f (foo hardlink)
+0 -df (foo hardlink)
 0 -b (foo hardlink hardlink.~1~)
 0 -bd (foo hardlink hardlink.~1~)
 0 -bf (foo hardlink hardlink.~1~)
