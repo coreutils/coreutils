@@ -116,6 +116,9 @@ int safe_read ();
 /* The name this program was run with.  */
 char *program_name;
 
+/* The number of seconds to sleep between accesses.  */
+static unsigned int sleep_interval = 1;
+
 /* Nonzero if we have ever read standard input.  */
 static int have_read_stdin;
 
@@ -132,6 +135,7 @@ static struct option const long_options[] =
   {"lines", required_argument, NULL, 'n'},
   {"quiet", no_argument, NULL, 'q'},
   {"silent", no_argument, NULL, 'q'},
+  {"sleep-interval", required_argument, NULL, 's'},
   {"verbose", no_argument, NULL, 'v'},
   {"help", no_argument, &show_help, 1},
   {"version", no_argument, &show_version, 1},
@@ -159,6 +163,7 @@ With no FILE, or when FILE is -, read standard input.\n\
   -f, --follow             output appended data as the file grows\n\
   -n, --lines=N            output the last N lines, instead of last 10\n\
   -q, --quiet, --silent    never output headers giving file names\n\
+  -s, --sleep-interval=S   with -f, sleep S seconds between iterations\n\
   -v, --verbose            always output headers giving file names\n\
       --help               display this help and exit\n\
       --version            output version information and exit\n\
@@ -549,7 +554,7 @@ output:
   if (forever)
     {
       fflush (stdout);
-      sleep (1);
+      sleep (sleep_interval);
       goto output;
     }
   else
@@ -621,7 +626,7 @@ tail_forever (char **names, int nfiles)
 
       /* If none of the files changed size, sleep.  */
       if (! changed)
-	sleep (1);
+	sleep (sleep_interval);
     }
 }
 
@@ -871,14 +876,7 @@ parse_obsolescent_option (int argc, const char *const *argv,
   if (argc < 2)
     return 0;
 
-  /* If I were implementing this in Perl, the rest of this function
-     would be essentially this single statement:
-     return $p ne '-' && $p ne '-c' && $p =~ /^[+-]\d*[cl]?f?$/;  */
-
-  /* Test this:
-     if (STREQ (p, "-") || STREQ (p, "-c"))
-     but without using strcmp.  */
-  if (p[0] == '-' && (p[1] == 0 || (p[1] == 'c' && p[2] == 0)))
+  if ( ! (p[0] == '+' || (p[0] == '-' && ISDIGIT (p[1])))
     return 0;
 
   if (*p == '+')
@@ -1010,7 +1008,7 @@ parse_options (int argc, char **argv,
   count_lines = 1;
   forever = forever_multiple = from_start = print_headers = 0;
 
-  while ((c = getopt_long (argc, argv, "c:n:fqv", long_options, NULL)) != -1)
+  while ((c = getopt_long (argc, argv, "c:n:fqs:v", long_options, NULL)) != -1)
     {
       switch (c)
 	{
@@ -1053,6 +1051,20 @@ parse_options (int argc, char **argv,
 
 	case 'q':
 	  *header_mode = never;
+	  break;
+
+	case 's':
+	  {
+	    strtol_error s_err;
+	    unsigned long int tmp_ulong;
+	    s_err = xstrtoul (optarg, NULL, 0, &tmp_ulong, "");
+	    if (s_err != LONGINT_OK || tmp_ulong > UINT_MAX)
+	      {
+		error (EXIT_FAILURE, 0,
+		       _("%s: invalid number of seconds"), optarg);
+	      }
+	    sleep_interval = tmp_ulong;
+	  }
 	  break;
 
 	case 'v':
