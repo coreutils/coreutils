@@ -1,5 +1,5 @@
 /* echo.c, taken from Bash.
-   Copyright (C) 87, 89, 91, 92, 93, 1994 Free Software Foundation, Inc.
+   Copyright (C) 87, 89, 91, 92, 93, 94, 1995 Free Software Foundation, Inc.
 
 This file is part of GNU Bash, the Bourne Again SHell.
 

@@ -1,5 +1,5 @@
 /* factor -- print factors of n.  lose if n > 2^32.
-   Copyright (C) 1986 Free Software Foundation, Inc.
+   Copyright (C) 86, 1995 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
