@@ -1,4 +1,4 @@
-#serial 10
+#serial 11
 
 dnl By default, many hosts won't let programs access large files;
 dnl one must use special compiler options to get large-file access to work.
@@ -107,14 +107,6 @@ AC_DEFUN(AC_SYS_LARGEFILE,
 [	hpux10.[2-9][0-9]* | hpux1[1-9]* | hpux[2-9][0-9]*)]
 	  ac_cv_sys_file_offset_bits=64 ;;
 	esac])
-     AC_SYS_LARGEFILE_MACRO_VALUE(_GNU_SOURCE,
-       ac_cv_sys_gnu_source,
-       [Define to make ftello visible on some hosts (e.g. glibc 2.1.3).],
-       [AC_TRY_COMPILE([#include <stdio.h>], [return !ftello;], ,
-	  [AC_TRY_COMPILE([#define _GNU_SOURCE 1
-#include <stdio.h>],
-	     [return !ftello;],
-	     ac_cv_sys_gnu_source=1)])])
      AC_SYS_LARGEFILE_MACRO_VALUE(_LARGEFILE_SOURCE,
        ac_cv_sys_largefile_source,
        [Define to make ftello visible on some hosts (e.g. HP-UX 10.20).],
@@ -130,5 +122,13 @@ AC_DEFUN(AC_SYS_LARGEFILE,
 [	aix4.[2-9]* | aix4.1[0-9]* | aix[5-9].* | aix[1-9][0-9]*)]
 	  ac_cv_sys_large_files=1 ;;
 	esac])
+     AC_SYS_LARGEFILE_MACRO_VALUE(_XOPEN_SOURCE,
+       ac_cv_sys_xopen_source,
+       [Define to make ftello visible on some hosts (e.g. glibc 2.1.3).],
+       [AC_TRY_COMPILE([#include <stdio.h>], [return !ftello;], ,
+	  [AC_TRY_COMPILE([#define _XOPEN_SOURCE 500
+#include <stdio.h>],
+	     [return !ftello;],
+	     ac_cv_sys_xopen_source=500)])])
    fi
   ])
