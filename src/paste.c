@@ -58,11 +58,13 @@ static void usage ();
 /* Indicates that no delimiter should be added in the current position. */
 #define EMPTY_DELIM '\0'
 
+static FILE dummy_closed;
 /* Element marking a file that has reached EOF and been closed. */
-#define	CLOSED ((FILE *) -1)
+#define	CLOSED (&dummy_closed)
 
+static FILE dummy_endlist;
 /* Element marking end of list of open files. */
-#define ENDLIST ((FILE *) -2)
+#define ENDLIST (&dummy_endlist)
 
 /* Name this program was run with. */
 char *program_name;
