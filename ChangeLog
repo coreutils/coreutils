@@ -2,6 +2,15 @@
 
 	* Version 4.5.5.
 
+	* src/chmod.c, src/copy.c, src/copy.h, src/cp-hash.h, src/csplit.c:
+	* src/date.c, src/expr.c, src/fmt.c, src/id.c, src/install.c:
+	* src/ls.c, src/od.c, src/pathchk.c, src/pr.c, src/remove.c:
+	* src/shred.c, src/sort.c, src/stat.c, src/stty.c, src/sum.c:
+	* src/tee.c, src/test.c: Remove all uses of `PARAMS'.
+
+	* src/remove.c (PARAMS): Remove definition.
+	* src/sys2.h: Likewise.
+
 	* src/ls.c, src/stat.c, src/date.c: Remove declaration of nstrftime.
 	Include strftime.h instead.
 
