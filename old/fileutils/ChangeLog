@@ -1,3 +1,8 @@
+1999-11-23  Jim Meyering  <meyering@ascend.com>
+
+	* doc/getdate.texi (Calendar date item): Correction regarding 0..68/
+	69-99 split for 1900 vs 2000.  From Peter Moulder.
+
 1999-11-22  Jim Meyering  <meyering@ascend.com>
 
 	* lib/Makefile.am (DISTCLEANFILES): Add lstat.c and stat.c.
