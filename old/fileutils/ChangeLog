@@ -1,3 +1,35 @@
+1997-12-25  Jim Meyering  <meyering@na-net.ornl.gov>
+
+
+1997-12-20  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* configure.in: Move jm_CHECK_DECLS down so that it follows the
+	checks for the headers it requires.
+
+	* doc/fileutils.texi (mknod invocation): Fix description of file
+	type mnemonics.
+
+	* src/sys2.h: Declare stpcpy only if not defined as macro.
+
+	* src/du.c (S_ISLNK): Define this instead of S_ISDIR.
+
+	* src/dd.c (skip): Compare lseek return value with -1 to allow it
+	to be negative as signed value.
+
+	* lib/savedir.c: Declare stpcpy only if not defined as macro.
+	* lib/mountlist.c: Likewise.
+	* lib/path-concat.c: Include <string.h> if available.
+
+	* src/copy.c (copy_internal): Use S_ISLNK only if defined.
+
+	* src/install.c (get_ids): Don't cast GID_T_MAX to long, it might
+	overflow.
+
+1997-12-22  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in: AC_DEFINE _GNU_SOURCE.
+	* acconfig.h: Add _GNU_SOURCE.
+
 1997-12-21  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/copy.h: Use PARAMS, not __P.
