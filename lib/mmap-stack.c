@@ -36,7 +36,11 @@
 #include "mmap-stack.h"
 
 #ifndef MAP_ANONYMOUS
-# define MAP_ANONYMOUS 0
+# ifdef MAP_ANON
+#  define MAP_ANONYMOUS MAP_ANON
+# else
+#  define MAP_ANONYMOUS 0
+# endif
 #endif
 
 /* Set up context, *CTX, so that it may be used via makecontext,
@@ -46,7 +50,7 @@ static int
 get_context (ucontext_t *ctx, size_t size)
 {
   void *stack;
-  int fd = 0;
+  int fd = -1;  /* This must be -1 in order for Solaris' MAP_ANON to work.  */
 
   if (getcontext (ctx))
     return 1;
