@@ -1,3 +1,16 @@
+	* cat.c, comm.c, join.c, sort.c, uniq.c: Undefine min/max before
+	defining to avoid redefinition warning on systems.
+
+	* csplit.c (read_input): Rename paramater MAX to MAX_N_BYTES.
+	This avoids potential conflict with max macro from some system's
+	header files when using bad pre-ANSI compilers.
+
+	* uniq.c (usage): Fix typo.  From Steve McConnel
+	<steve@acadcomp.sil.org>
+
+	* md5sum.c [uint32]: When testing for 32-bit arithmetic type,
+	also check `unsigned long', as a concession to systems with
+	int's smaller than 32 bits.
 
 	* configure.in (AC_REPLACE_FUNCS): Remove memcmp (again!) since
 	AC_FUNC_MEMCMP already handles it.  This avoids warnings from
