@@ -2,6 +2,11 @@
 
 	* Version 4.5.4.
 
+	* announce-gen: New script to begin replacing the commands
+	associated with the rule here...
+	* Makefile.maint (announcement): Invoke announce-gen.
+	* Makefile.am (EXTRA_DIST): Add announce-gen.
+
 	* tests/cp/preserve-2: New file/test, for latest fix.
 	* tests/cp/Makefile.am (TESTS): Add preserve-2.
 
