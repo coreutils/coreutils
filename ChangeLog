@@ -1,3 +1,23 @@
+2004-08-19  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* NEWS: "chown : file", "chown '' file", and "chgrp '' file" now
+	succeed without changing the uid and gid, like FreeBSD.
+	* src/chgrp.c (parse_group): Return gid_t rather than storing it
+	through a pointer.  Treat "chgrp '' file" as a no-op change,
+	as FreeBSD does.
+	(main): Set chopt.group_name to NULL if the group is the empty
+	string.
+	* src/chown-core.c (describe_change): Describe changes to -1:-1
+	without using "to OWNERSHIP" phrase.
+	* src/chown.c (usage): "chown '' file" is now allowed.
+	(main): Do not set user name to the empty string if the group
+	name is null.
+	* tests/chgrp/basic: Test "chgrp '' file".
+	* tests/chown/Makefile.am (TESTS): Add separator.
+	* tests/chown/separator: New file, partly taken from
+	Dmitry V. Levin's suggestion in
+	<http://lists.gnu.org/archive/html/bug-coreutils/2004-08/msg00102.html>
+
 2004-08-11  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* tests/install/basic-1: Test for the -d regression.

@@ -1,3 +1,13 @@
+2004-08-19  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (chown invocation): Fix synopsis:
+	group must always be preceded by separator.
+	"chown : file" and "chown '' file" don't change the owner or group.
+	Update the explanation of what happens to the set-user-ID or
+	set-group-ID bits, e.g., they sometimes are not cleared if they
+	denote mandatory locking.  Change "find"-oriented examples to use
+	chown -h.
+
 2004-08-18  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (printf invocation): Clarify how "printf" is

@@ -1,3 +1,19 @@
+2004-08-18  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* userspec.c: Don't use <alloca.h>, so that we don't use alloca on
+	strings on unbounded length.  alloca's performance benefits aren't
+	that important here.
+	(V_STRDUP): Remove.
+	(parse_with_separator): New function, with most of the internals
+	of the old parse_user_spec.  Allow user to omit both user and group,
+	for compatibility with FreeBSD.
+	Clone only the user name, not the entire spec.
+	Do not set *uid, *gid unless entirely successful.
+	Avoid memory leak in some failing cases.
+	Fix regression for USER.GROUP reported by Dmitry V. Levin in
+	<http://lists.gnu.org/archive/html/bug-coreutils/2004-08/msg00102.html>
+	(parse_user_spec): Rewrite to use parse_with_separator.
+
 2004-08-11  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* fts.c (O_DIRECTORY): Define to 0 if the system doesn't define.
@@ -67,7 +83,7 @@
 	Merge with gnulib and deal with some minor cleanups resulting.
 
 	* .cppi-disable: Change fnmatch.h to fnmatch_.h.
-	* .cvs-ignore: Add fnmatch.h, poll.h, stdbool.h, sysexit.h.
+	* .cvsignore: Add fnmatch.h, poll.h, stdbool.h, sysexit.h.
 	Remove safe-lstat.c, safe-lstat.h, safe-stat.c, safe-stat.h.
 
 	* backupfile.h, closeout.h, full-write.h, mbswidth.h, xalloc.h:
