@@ -147,14 +147,29 @@ print_uptime (int n)
   register int entries = 0;
   time_t boot_time = 0;
   time_t time_now;
-  time_t uptime;
+  time_t uptime = 0;
   int updays;
   int uphours;
   int upmins;
   struct tm *tmn;
   double avg[3];
   int loads;
+#ifdef HAVE_PROC_UPTIME
+  FILE *fp;
+  double upsecs;
 
+  fp = fopen ("/proc/uptime", "r");
+  if (fp != NULL)
+    {
+      char buf[BUFSIZ];
+      int res;
+      fgets(buf, BUFSIZ, fp);
+      res = sscanf (buf, "%lf", &upsecs);
+      if (res == 1)
+	uptime = (time_t) upsecs;
+      fclose (fp);
+    }
+#endif /* HAVE_PROC_UPTIME */
   /* Loop through all the utmp entries we just read and count up the valid
      ones, also in the process possibly gleaning boottime. */
   while (n--)
@@ -170,15 +185,23 @@ print_uptime (int n)
       /* If BOOT_MSG is defined, we can get boottime from utmp.  This avoids
 	 possibly needing special privs to read /dev/kmem. */
 #ifdef BOOT_MSG
-      if (!strcmp (this->ut_line, BOOT_MSG))
-	boot_time = UT_TIME_MEMBER (this);
+# if HAVE_PROC_UPTIME
+      if (uptime == 0)
+# endif /* HAVE_PROC_UPTIME */
+	if (!strcmp (this->ut_line, BOOT_MSG))
+	  boot_time = UT_TIME_MEMBER (this);
 #endif /* BOOT_MSG */
       ++this;
   }
-  if (boot_time == 0)
-    error (1, 0, _("couldn't get boot time"));
   time_now = time (0);
-  uptime = time_now - boot_time;
+#if defined HAVE_PROC_UPTIME
+  if (uptime == 0)
+#endif
+    {
+      if (boot_time == 0)
+	error (1, errno, _("couldn't get boot time"));
+      uptime = time_now - boot_time;
+    }
   updays = uptime / 86400;
   uphours = (uptime - (updays * 86400)) / 3600;
   upmins = (uptime - (updays * 86400) - (uphours * 3600)) / 60;
