@@ -32,10 +32,10 @@
 
 char *
 basename (name)
-     char *name;
+     const char *name;
 {
   char *base;
 
   base = strrchr (name, '/');
-  return base ? base + 1 : name;
+  return base ? base + 1 : (char *) name;
 }
