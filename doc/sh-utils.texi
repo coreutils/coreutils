@@ -2038,6 +2038,14 @@ After the login time, print the number of hours and minutes that the
 user has been idle.  @samp{.} means the user was active in last minute.
 @samp{old} means the user was idle for more than 24 hours.
 
+@item -l
+@itemx --lookup
+@opindex -l
+@opindex --lookup
+Attempt to canonicalize hostnames found in utmp through a DNS lookup.  This
+is not the default because it can cause significant delays on systems with
+automatic dial-up internet access.
+
 @item -H
 @itemx --heading
 @opindex -H
