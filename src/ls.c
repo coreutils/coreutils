@@ -112,7 +112,7 @@ struct fileinfo
     unsigned int linkmode;
 
     /* For symbolic link and color printing, 1 if linked-to file
-       exits, otherwise 0.  */
+       exists, otherwise 0.  */
     int linkok;
 
     enum filetype filetype;
@@ -1594,6 +1594,7 @@ gobble_file (const char *name, int explicit_arg, const char *dirname)
 
   files[files_index].linkname = 0;
   files[files_index].linkmode = 0;
+  files[files_index].linkok = 0;
 
   if (explicit_arg || format_needs_stat)
     {
@@ -1659,9 +1660,12 @@ gobble_file (const char *name, int explicit_arg, const char *dirname)
 		  files[files_index].stat = linkstats;
 		}
 	      else
-		/* Get the linked-to file's mode for the filetype indicator
-		   in long listings.  */
-		files[files_index].linkmode = linkstats.st_mode;
+		{
+		  /* Get the linked-to file's mode for the filetype indicator
+		     in long listings.  */
+		  files[files_index].linkmode = linkstats.st_mode;
+		  files[files_index].linkok = 1;
+		}
 	    }
 	  if (linkpath)
 	    free (linkpath);
