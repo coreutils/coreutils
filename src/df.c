@@ -15,28 +15,14 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
-/* Usage: df [-aikPT] [-t fstype] [-x fstype] [--all] [--inodes] [--print-type]
-   [--type fstype] [--exclude-type fstype] [--kilobytes] [--portability]
-   [file...]
-
-   Options:
-   -a, --all		List all filesystems, even zero-size ones.
-   -i, --inodes		List inode usage information instead of block usage.
-   -k, --kilobytes	Print sizes in 1K blocks instead of 512-byte blocks.
-   -P, --portability	Use the POSIX output format (one line per filesystem).
-   -T, --print-type	Print filesystem type.
-   -t, --type fstype	Limit the listing to filesystems of type `fstype'.
-   -x, --exclude-type=fstype
-			Limit the listing to filesystems not of type `fstype'.
-			Multiple -t and/or -x options can be given.
-			By default, all filesystem types are listed.
-
-   Written by David MacKenzie <djm@gnu.ai.mit.edu> */
+/* Written by David MacKenzie <djm@gnu.ai.mit.edu>.
+   --human-readable and --megabyte options added by lm@sgi.com.  */
 
 #include <config.h>
 #include <stdio.h>
 #include <sys/types.h>
 #include <getopt.h>
+#include <assert.h>
 
 #include "mountlist.h"
 #include "fsusage.h"
@@ -59,6 +45,12 @@ static void show_disk __P ((char *disk));
 static void show_point __P ((char *point, struct stat *statp));
 static void usage __P ((int status));
 
+/* The maximum length of a human-readable string.  Be pessimistic
+   and assume `int' is 64-bits wide.  Converting 2^63 - 1 gives the
+   14-character string, 8796093022208G.  The number being converted
+   is the number of 1024-byte blocks, so we divide by 1024 * 1024.  */
+#define LONGEST_HUMAN_READABLE_1K_BYTE_BLOCKS 14
+
 /* Name this program was run with. */
 char *program_name;
 
@@ -73,8 +65,14 @@ static int show_all_fs;
    command line argument -- even if it's a dummy (automounter) entry.  */
 static int show_listed_fs;
 
+/* If nonzero, use variable sized printouts instead of 512-byte blocks. */
+static int human_blocks;
+
 /* If nonzero, use 1K blocks instead of 512-byte blocks. */
 static int kilobyte_blocks;
+
+/* If nonzero, use 1M blocks instead of 512-byte blocks. */
+static int megabyte_blocks;
 
 /* If nonzero, use the POSIX output format.  */
 static int posix_format;
@@ -132,7 +130,9 @@ static struct option const long_options[] =
 {
   {"all", no_argument, &show_all_fs, 1},
   {"inodes", no_argument, &inode_format, 1},
-  {"kilobytes", no_argument, &kilobyte_blocks, 1},
+  {"human", no_argument, 0, 'h'},
+  {"kilobytes", no_argument, 0, 'k'},
+  {"megabytes", no_argument, 0, 'm'},
   {"portability", no_argument, &posix_format, 1},
   {"print-type", no_argument, &print_type, 1},
   {"sync", no_argument, 0, 129},
@@ -156,12 +156,22 @@ main (int argc, char **argv)
   inode_format = 0;
   show_all_fs = 0;
   show_listed_fs = 0;
-  kilobyte_blocks = getenv ("POSIXLY_CORRECT") == 0;
+
+  if (getenv ("POSIXLY_CORRECT"))
+    kilobyte_blocks = 0;
+  else
+    {
+      kilobyte_blocks = 1;
+      if ((bs = getenv ("BLOCKSIZE"))
+	  && strncmp (bs, "HUMAN", sizeof ("HUMAN") - 1) == 0)
+	human_blocks = 1;
+    }
+
   print_type = 0;
   posix_format = 0;
   exit_status = 0;
 
-  while ((i = getopt_long (argc, argv, "aikPTt:vx:", long_options, (int *) 0))
+  while ((i = getopt_long (argc, argv, "aihkmPTt:vx:", long_options, NULL))
 	 != EOF)
     {
       switch (i)
@@ -174,8 +184,20 @@ main (int argc, char **argv)
 	case 'i':
 	  inode_format = 1;
 	  break;
-	case 'k':
+	case 'h':
+	  human_blocks = 1;
 	  kilobyte_blocks = 1;
+	  megabyte_blocks = 0;
+	  break;
+	case 'k':
+	  human_blocks = 0;
+	  kilobyte_blocks = 1;
+	  megabyte_blocks = 0;
+	  break;
+	case 'm':
+	  human_blocks = 0;
+	  kilobyte_blocks = 0;
+	  megabyte_blocks = 1;
 	  break;
 	case 'T':
 	  print_type = 1;
@@ -281,7 +303,7 @@ main (int argc, char **argv)
 
   exit (exit_status);
 }
-
+
 static void
 print_header (void)
 {
@@ -295,11 +317,16 @@ print_header (void)
   if (inode_format)
     printf ("   Inodes   IUsed   IFree  %%IUsed");
   else
-    printf (" %s  Used Available Capacity",
+    if (megabyte_blocks)
+      printf (" MB-blocks    Used Available Capacity");
+    else if (human_blocks)
+      printf ("    Size  Used  Avail  Capacity");
+    else
+      printf (" %s  Used Available Capacity",
 	    kilobyte_blocks ? "1024-blocks" : " 512-blocks");
   printf (" Mounted on\n");
 }
-
+
 /* Show all mounted filesystems, except perhaps those that are of
    an unselected type or are empty. */
 
@@ -380,7 +407,57 @@ show_point (char *point, struct stat *statp)
   error (0, 0, _("cannot find mount point for %s"), point);
   exit_status = 1;
 }
-
+
+/* Convert N_1K_BYTE_BLOCKS to a more readable string than %d would.
+   Most people visually process strings of 3-4 digits effectively,
+   but longer strings of digits are more prone to misinterpretation.
+   Hence, converting to an abbreviated form usually improves readability.
+   Use a suffix indicating multiples of 1024 (M) and 1024*1024 (G).
+   For example, 8500 would be converted to 8.3M, 133456345 to 127G,
+   and so on.  Numbers smaller than 1024 get the `K' suffix.  */
+
+static char *
+human_readable_1k_blocks (int n_1k_byte_blocks, char *buf, int buf_len)
+{
+  const char *suffix;
+  double amt;
+  char *p;
+
+  assert (buf_len > LONGEST_HUMAN_READABLE_1K_BYTE_BLOCKS);
+
+  p = buf;
+  amt = n_1k_byte_blocks;
+
+  if (amt >= 1024 * 1024)
+    {
+      amt /= (1024 * 1024);
+      suffix = "G";
+    }
+  else if (amt >= 1024)
+    {
+      amt /= 1024;
+      suffix = "M";
+    }
+  else
+    {
+      suffix = "K";
+    }
+
+  if (amt >= 10)
+    {
+      sprintf (p, "%4.0f%s", amt, suffix);
+    }
+  else if (amt == 0)
+    {
+      strcpy (p, "0");
+    }
+  else
+    {
+      sprintf (p, "%4.1f%s", amt, suffix);
+    }
+  return (p);
+}
+
 /* Display a space listing for the disk device with absolute path DISK.
    If MOUNT_POINT is non-NULL, it is the path of the root of the
    filesystem on DISK.
@@ -412,7 +489,13 @@ show_dev (char *disk, char *mount_point, char *fstype)
       return;
     }
 
-  if (kilobyte_blocks)
+  if (megabyte_blocks)
+    {
+      fsu.fsu_blocks /= 2*1024;
+      fsu.fsu_bfree /= 2*1024;
+      fsu.fsu_bavail /= 2*1024;
+    }
+  else if (kilobyte_blocks)
     {
       fsu.fsu_blocks /= 2;
       fsu.fsu_bfree /= 2;
@@ -453,15 +536,38 @@ show_dev (char *disk, char *mount_point, char *fstype)
   if (inode_format)
     printf (" %7ld %7ld %7ld %5ld%%",
 	    fsu.fsu_files, inodes_used, fsu.fsu_ffree, inodes_percent_used);
+  else if (human_blocks)
+    {
+      char buf[3][LONGEST_HUMAN_READABLE_1K_BYTE_BLOCKS + 1];
+      printf (" %4s %4s  %5s  %5ld%% ",
+	      human_readable_1k_blocks (fsu.fsu_blocks, buf[0],
+				    LONGEST_HUMAN_READABLE_1K_BYTE_BLOCKS + 1),
+	      human_readable_1k_blocks (blocks_used, buf[1],
+				    LONGEST_HUMAN_READABLE_1K_BYTE_BLOCKS + 1),
+	      human_readable_1k_blocks (fsu.fsu_bavail, buf[2],
+				    LONGEST_HUMAN_READABLE_1K_BYTE_BLOCKS + 1),
+	      blocks_percent_used);
+    }
   else
     printf (" %7ld %7ld  %7ld  %5ld%% ",
 	    fsu.fsu_blocks, blocks_used, fsu.fsu_bavail, blocks_percent_used);
 
   if (mount_point)
-    printf ("  %s", mount_point);
+    {
+#ifdef HIDE_AUTOMOUNT_PREFIX
+      /* Don't print the first directory name in MOUNT_POINT if it's an
+	 artifact of an automounter.  This is a bit too aggressive to be
+	 the default.  */
+      if (strncmp ("/auto/", mount_point, 6) == 0)
+	mount_point += 5;
+      else if (strncmp ("/tmp_mnt/", mount_point, 9) == 0)
+	mount_point += 8;
+#endif
+      printf ("  %s", mount_point);
+    }
   putchar ('\n');
 }
-
+
 /* Add FSTYPE to the list of filesystem types to display. */
 
 static void
@@ -503,7 +609,6 @@ selected_fstype (char *fstype)
       return 1;
   return 0;
 }
-
 
 /* If FSTYPE is a type of filesystem that should be omitted,
    return nonzero, else zero. */
@@ -534,18 +639,23 @@ usage (int status)
 Show information about the filesystem on which each FILE resides,\n\
 or all filesystems by default.\n\
 \n\
-  -a, --all                 include filesystems having 0 blocks\n\
-  -i, --inodes              list inode information instead of block usage\n\
-  -k, --kilobytes           use 1024 blocks, not 512 despite POSIXLY_CORRECT\n\
-      --sync                invoke sync before getting usage info (default)\n\
-      --no-sync             do not invoke sync before getting usage info\n\
-  -t, --type=TYPE           limit listing to filesystems of type TYPE\n\
+  -a, --all             include filesystems having 0 blocks\n\
+  -h, --human           print sizes in human readable format (e.g. 1K 234M 2G)\n\
+  -i, --inodes          list inode information instead of block usage\n\
+  -k, --kilobytes       use 1024-byte blocks, not 512 despite POSIXLY_CORRECT\n\
+  -m, --megabytes       use 1024K-byte blocks, not 512 despite POSIXLY_CORRECT\n\
+      --sync            invoke sync before getting usage info (default)\n\
+      --no-sync         do not invoke sync before getting usage info\n\
+  -t, --type=TYPE       limit listing to filesystems of type TYPE\n\
   -x, --exclude-type=TYPE   limit listing to filesystems not of type TYPE\n\
-  -v                        (ignored)\n\
-  -P, --portability         use the POSIX output format\n\
-  -T, --print-type          print filesystem type\n\
-      --help                display this help and exit\n\
-      --version             output version information and exit\n"));
+  -v                    (ignored)\n\
+  -P, --portability     use the POSIX output format\n\
+FIXME: this should override or conflict with --human and --megabytes\n\
+FIXME-bug: currently, even with --portability, blocksize is 1024 bytes\n\
+FIXME-bug: make sure that's allowed by POSIX.\n\
+  -T, --print-type      print filesystem type\n\
+      --help            display this help and exit\n\
+      --version         output version information and exit\n"));
     }
   exit (status);
 }
