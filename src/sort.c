@@ -2049,7 +2049,7 @@ main (int argc, char **argv)
 
 #endif /* NLS */
 
-  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
+  parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE, VERSION,
 		      AUTHORS, usage);
 
   have_read_stdin = 0;
