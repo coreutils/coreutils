@@ -98,6 +98,11 @@ my @tv = (
 ['ross-5', '-dc ' . q|'[:lower:]'|,		'', '', 0],
 ['ross-6', '-dc ' . q|'[:upper:]'|,		'', '', 0],
 
+# Ensure that these fail.
+# Prior to 2.0.20, each would evoke a failed assertion.
+['empty-eq', q|'[==]' x|,		'', '', 1],
+['empty-cc', q|'[::]' x|,		'', '', 1],
+
 );
 
 sub test_vector
