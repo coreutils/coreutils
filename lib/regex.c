@@ -52,8 +52,8 @@
 /* For platform which support the ISO C amendement 1 functionality we
    support user defined character classes.  */
 #if defined _LIBC || (defined HAVE_WCTYPE_H && defined HAVE_WCHAR_H)
-# include <wctype.h>
 # include <wchar.h>
+# include <wctype.h>
 #endif
 
 /* This is for other GNU distributions with internationalized messages.  */
@@ -194,6 +194,7 @@ init_syntax_once ()
    Defining isascii to 1 should let any compiler worth its salt
    eliminate the && through constant folding."  */
 
+#undef ISASCII
 #if defined STDC_HEADERS || (!defined isascii && !defined HAVE_ISASCII)
 # define ISASCII(c) 1
 #else
@@ -211,6 +212,7 @@ init_syntax_once ()
 # define ISGRAPH(c) (ISASCII (c) && isprint (c) && !isspace (c))
 #endif
 
+#undef ISPRINT
 #define ISPRINT(c) (ISASCII (c) && isprint (c))
 #define ISDIGIT(c) (ISASCII (c) && isdigit (c))
 #define ISALNUM(c) (ISASCII (c) && isalnum (c))
