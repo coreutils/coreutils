@@ -55,8 +55,6 @@ int full_write ();
 int euidaccess ();
 int yesno ();
 
-int lstat ();
-
 static int copy_internal PARAMS ((const char *src_path, const char *dst_path,
 				  int new_dst, dev_t device,
 				  struct dir_list *ancestors,
