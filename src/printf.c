@@ -68,7 +68,7 @@ char *xmalloc ();
 /* The value to return to the calling program.  */
 static int exit_status;
 
-/* FIXME */
+/* Non-zero if the POSIXLY_CORRECT environment variable is set.  */
 static int posixly_correct;
 
 /* FIXME */
