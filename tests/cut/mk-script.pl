@@ -24,7 +24,7 @@ sub validate
     {
       my ($test_name, $flags, $in_spec, $expected, $e_ret_code, $rest) =
 	@$test_vector;
-      die "wrong number of elements in test $test_name\n"
+      die "$0: wrong number of elements in test $test_name\n"
 	if (!defined $e_ret_code || defined $rest);
       assert (!ref $test_name);
       assert (!ref $flags);
