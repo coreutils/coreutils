@@ -29,15 +29,11 @@
 # endif
 #endif
 
-#include <sys/types.h>
-#include <regex.h>
-
 #if ENABLE_NLS
+# include <sys/types.h>
+# include <regex.h>
 # include <libintl.h>
 # define _(Text) gettext (Text)
-#else
-# define _(Text) Text
-#endif
 
 static int
 try (const char *response, const char *pattern, const int match, const int nomatch, const char **lastp, regex_t *re)
@@ -60,11 +56,13 @@ try (const char *response, const char *pattern, const int match, const int nomat
   /* See if the regular expression matches RESPONSE.  */
   return regexec (re, response, 0, NULL, 0) == 0 ? match : nomatch;
 }
+#endif
 
 
 int
 rpmatch (const char *response)
 {
+#if ENABLE_NLS
   /* Match against one of the response patterns, compiling the pattern
      first if necessary.  */
 
@@ -77,4 +75,9 @@ rpmatch (const char *response)
 			 &yesexpr, &yesre))
 	  ? result
 	  : try (response, _("^[nN]"), 0, -1, &noexpr, &nore));
+#else
+  /* Test against "^[yY]" and "^[nN]", hardcoded to avoid requiring regex */
+  return (*response == 'y' || *response == 'Y' ? 1
+	  : *response == 'n' || *response == 'N' ? 0 : -1);
+#endif
 }
