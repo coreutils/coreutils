@@ -1,5 +1,20 @@
 2004-07-28  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* src/cat.c (exit_status): Remove.  Now done by passing a boolean
+	'ok' flag around.
+	(simple_cat, cat): Return true if successful.  All callers changed.
+	(simple_cat, cat, main): Use bool for booleans.
+	(simple_cat): Use size_t for sizes.
+	(cat, main): Use the same names for parameters that we use for
+	long options, to avoid confusion.  This inverts the sense of the
+	show_tabs (formerly output_tabs) and number_nonblank
+	(formerly numbers_at_empty_lines) variables.
+	(main): Don't mess up (due to integer overflow) if we are given
+	INT_MAX - INT_MIN + 1 options.
+	[O_BINARY]: Don't invoke isatty unless the other options require it.
+	(main): When deciding whether to use simple_cat, don't worry
+	about binary option; it's irrelevant.
+	
 	* src/dcgen: Remove comments, trailing white space, and empty
 	lines from the output strings, to save space.
 	Use a narrower type like 'unsigned char' for line lengths, if
