@@ -3,7 +3,7 @@
 	* Version 4.5.4.
 
 	* src/du.c (lstat) [! LSTAT_FOLLOWS_SLASHED_SYMLINK]:
-	Define to rpl_lstat, so that even on systems like Solaris 5.8,
+	Define to rpl_lstat, so that even on systems like Solaris 2.8,
 	du honors (per POSIX) the trailing slash on an argument referring
 	to a symlink-to-directory.
 
