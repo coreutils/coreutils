@@ -1,7 +1,7 @@
 Sun Aug 18 09:52:39 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in (jm_MAINTAINER_MODE, fp_C_PROTOTYPES): Rename with
-	AM_ prefixes for latest automake/aclocal.
+	AM_ prefix for latest automake/aclocal.
 
 	* lib/Makefile.am (noinst_HEADERS): Add path-concat.h.
 	(fu_SOURCES): Add path-concat.c.
