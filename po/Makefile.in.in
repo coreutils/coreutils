@@ -30,7 +30,7 @@ exec_prefix = @exec_prefix@
 datadir = $(prefix)/@DATADIRNAME@
 localedir = $(datadir)/locale
 gnulocaledir = $(prefix)/share/locale
-gettextsrcdir = $(prefix)/share/gettext
+gettextsrcdir = $(prefix)/share/gettext/po
 subdir = po
 
 INSTALL = @INSTALL@
@@ -87,14 +87,15 @@ INSTOBJEXT = @INSTOBJEXT@
 
 all: all-@USE_NLS@
 
-all-yes all-gettext: cat-id-tbl.c $(CATALOGS) @MAINT@$(GMOFILES)
+all-yes: cat-id-tbl.c $(CATALOGS)
 all-no:
 
-$(PACKAGE).pot: @MAINT@$(POTFILES)
+$(PACKAGE).pot: $(POTFILES)
 	$(XGETTEXT) --default-domain=$(PACKAGE) --directory=$(top_srcdir) \
 	  --add-comments --keyword=_ --keyword=N_ \
 	  --files-from=$(srcdir)/POTFILES.in
-	if cmp -s $(PACKAGE).po $(srcdir)/$(PACKAGE).pot; then \
+	if [ ! -s $(PACKAGE).po ] \
+	  || cmp -s $(PACKAGE).po $(srcdir)/$(PACKAGE).pot; then \
 	  rm -f $(PACKAGE).po; \
 	else \
 	  rm -f $(srcdir)/$(PACKAGE).pot \
@@ -115,8 +116,6 @@ stamp-cat-id: $(PACKAGE).pot
 	fi
 	cd $(srcdir) && rm -f stamp-cat-id && echo timestamp > stamp-cat-id
 
-
-installcheck:
 
 install: install-exec install-data
 install-exec:
@@ -142,16 +141,19 @@ install-data: all
 	    if test -r $(srcdir)/$$cat.m ; then \
 	      $(INSTALL_DATA) $(srcdir)/$$cat.m \
 		$$dir/$(PACKAGE)$(INSTOBJEXT).m; \
+	    else \
+	      true; \
 	    fi; \
 	  fi; \
 	done
+	if test "$(PACKAGE)" = "gettext"; then \
+	  $(top_srcdir)/mkinstalldirs $(gettextsrcdir); \
+	  cd $(srcdir) && \
+	    $(INSTALL_DATA) Makefile.in.in $(gettextsrcdir)/Makefile.in.in; \
+	fi
 
-# This installation goal is only used in GNU gettext.  Packages which
-# only use the library should use install instead.
-install-src: install
-	$(top_srcdir)/mkinstalldirs $(gettextsrcdir)
-	cd $(srcdir) && \
-	  $(INSTALL_DATA) Makefile.in.in $(gettextsrcdir)/po-Makefile.in.in
+# Define this as empty until I found a useful application.
+installcheck:
 
 uninstall:
 	catalogs='$(CATALOGS)'; \
@@ -168,9 +170,7 @@ check: all
 
 cat-id-tbl.o: ../intl/libgettext.h
 
-TAGS ID:
-
-tags info dvi:
+dvi info tags TAGS ID:
 
 mostlyclean:
 	rm -f core core.* *.pox $(PACKAGE).po *.old.po cat-id-tbl.tmp
@@ -185,9 +185,8 @@ maintainer-clean: distclean
 	@echo "This command is intended for maintainers to use;"
 	@echo "it deletes files that may require special tools to rebuild."
 
-.PHONY: distdir
 distdir = ../$(PACKAGE)-$(VERSION)/$(subdir)
-distdir dist-gettext: update-po $(DISTFILES)
+dist distdir: update-po $(DISTFILES)
 	for file in $(DISTFILES); do \
 	  ln $(srcdir)/$$file $(distdir) 2> /dev/null \
 	    || cp -p $(srcdir)/$$file $(distdir); \
