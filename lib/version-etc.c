@@ -15,6 +15,8 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
+/* Written by Jim Meyering. */
+
 #if HAVE_CONFIG_H
 # include <config.h>
 #endif
@@ -28,19 +30,41 @@
 #else
 # define _(Text) Text
 #endif
+#define N_(Text) Text
 
+/* Default copyright goes to the FSF. */
+
+char* version_etc_copyright =
+  N_("Copyright (C) 1999 Free Software Foundation, Inc.");
+
+
+/* Display the --version information the standard way.
+
+   If COMMAND_NAME is NULL, the PACKAGE is asumed to be the name of
+   the program.  The formats are therefore:
+
+   PACKAGE VERSION
+
+   or
+
+   COMMAND_NAME (PACKAGE) VERSION.  */
 void
 version_etc (FILE *stream,
 	     const char *command_name, const char *package,
 	     const char *version, const char *authors)
 {
-  fprintf (stream, "%s (%s) %s\n", command_name, package, version);
+  if (command_name)
+    fprintf (stream, "%s (%s) %s\n", command_name, package, version);
+  else
+    fprintf (stream, "%s %s\n", package, version);
   fprintf (stream, _("Written by %s.\n"), authors);
+  putc ('\n', stream);
+
+  fputs (_(version_etc_copyright), stream);
+  putc ('\n', stream);
+
   fputs (_("\
-\n\
-Copyright (C) 1999 Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
-warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
-"
-	   ), stream);
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"),
+	 stream);
 }
