@@ -161,7 +161,13 @@ GNU CC}.
 
 This manual is based on the Unix man pages in the distribution, which
 were originally written by David MacKenzie and updated by Jim Meyering.
-Francois Pinard did the initial conversion to Texinfo format.  Karl
+@ifinfo
+Franc,ois
+@end ifinfo
+@tex
+Fran\c cois
+@end tex
+Pinard did the initial conversion to Texinfo format.  Karl
 Berry did the indexing, some reorganization, and editing of the results.
 Richard Stallman contributed his usual invaluable insights to the
 overall process.
