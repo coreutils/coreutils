@@ -1,6 +1,7 @@
 Sat May  4 20:54:32 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* system.h [IN_CTYPE_DOMAIN]: Rename from ISASCII.
+	* backupfile.c [IN_CTYPE_DOMAIN]: Rename from ISASCII.
 
 Wed May  1 00:20:00 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
