@@ -64,15 +64,18 @@
 #  define mbrtowc(pwc, s, n, ps) (mbrtowc) (pwc, s, n, 0)
 # endif
 #else
-# define mbrtowc(pwc, s, n, ps) 1
+# define mbrtowc(pwc, s, n, ps) ((*(pwc) = *(s)) != 0)
 # define mbsinit(ps) 1
+# define iswprint(wc) ISPRINT ((unsigned char) (wc))
 #endif
 
-#if HAVE_WCTYPE_H
-# include <wctype.h>
-#endif
-#if !defined iswprint && !HAVE_ISWPRINT
-# define iswprint(wc) 1
+#ifndef iswprint
+# if HAVE_WCTYPE_H
+#  include <wctype.h>
+# endif
+# if !defined iswprint && !HAVE_ISWPRINT
+#  define iswprint(wc) 1
+# endif
 #endif
 
 #define INT_BITS (sizeof (int) * CHAR_BIT)
