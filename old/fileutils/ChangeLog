@@ -1,6 +1,11 @@
-1998-02-21  Jim Meyering  <meyering@eng.ascend.com>
+1998-02-22  Jim Meyering  <meyering@eng.ascend.com>
 
 	* Version 3.16m.
+
+	* ChangeLog-1997: New file.
+	* Makefile.am (EXTRA_DIST): Add ChangeLog-1997.
+
+1998-02-21  Jim Meyering  <meyering@eng.ascend.com>
 
 	* configure.in (AC_OUTPUT): Add tests/mv/Makefile.
 	* tests/Makefile.am (SUBDIRS): Add mv.
