@@ -28,9 +28,9 @@ fi
 
 fail=0
 
-cp -al a/* a/b && fail=1
+cp -al a/* a/b 2>/dev/null && fail=1
 
-# the files a/b/b and a/b/c must remain files
+# The files a/b/b and a/b/c must remain as files.
 # In 4.0.35, they were overwritten with directories.
 test -f a/b/b || fail=1
 test -f a/b/c || fail=1
