@@ -66,8 +66,9 @@ char *realloc ();
 
 char *mktemp ();
 
-int full_write ();
 int safe_read ();
+char *xmalloc ();
+char *xrealloc ();
 
 /* The name this program was run with. */
 char *program_name;
@@ -103,9 +104,6 @@ static unsigned G_buffer_size;
 /* The compiled regular expression representing `separator'. */
 static struct re_pattern_buffer compiled_separator;
 
-/* The name of a temporary file containing a copy of pipe input. */
-static char *tempfile;
-
 /* If nonzero, display usage information and exit.  */
 static int show_help;
 
@@ -121,6 +119,31 @@ static struct option const longopts[] =
   {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
+
+/* Read LEN bytes at PTR from descriptor DESC, retrying if interrupted.
+   Return the actual number of bytes read, zero for EOF, or negative
+   for an error.  */
+
+int
+safe_read (int desc, char *ptr, int len)
+{
+  int n_chars;
+
+  if (len <= 0)
+    return len;
+
+#ifdef EINTR
+  do
+    {
+      n_chars = read (desc, ptr, len);
+    }
+  while (n_chars < 0 && errno == EINTR);
+#else
+  n_chars = read (desc, ptr, len);
+#endif
+
+  return n_chars;
+}
 
 static void
 usage (int status)
@@ -149,76 +172,6 @@ With no FILE, or when FILE is -, read standard input.\n\
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
-static void
-cleanup (void)
-{
-  unlink (tempfile);
-}
-
-static void
-cleanup_fatal (void)
-{
-  cleanup ();
-  exit (EXIT_FAILURE);
-}
-
-static RETSIGTYPE
-sighandler (int sig)
-{
-#ifdef SA_INTERRUPT
-  struct sigaction sigact;
-
-  sigact.sa_handler = SIG_DFL;
-  sigemptyset (&sigact.sa_mask);
-  sigact.sa_flags = 0;
-  sigaction (sig, &sigact, NULL);
-#else				/* !SA_INTERRUPT */
-  signal (sig, SIG_DFL);
-#endif				/* SA_INTERRUPT */
-  cleanup ();
-  kill (getpid (), sig);
-}
-
-/* Allocate N bytes of memory dynamically, with error checking.  */
-
-static char *
-xmalloc (unsigned int n)
-{
-  char *p;
-
-  p = malloc (n);
-  if (p == 0)
-    {
-      error (0, 0, _("virtual memory exhausted"));
-      cleanup_fatal ();
-    }
-  return p;
-}
-
-/* Change the size of memory area P to N bytes, with error checking. */
-
-static char *
-xrealloc (char *p, unsigned int n)
-{
-  p = realloc (p, n);
-  if (p == 0)
-    {
-      error (0, 0, _("virtual memory exhausted"));
-      cleanup_fatal ();
-    }
-  return p;
-}
-
-static void
-xwrite (int desc, const char *buffer, int size)
-{
-  if (full_write (desc, buffer, size) < 0)
-    {
-      error (0, errno, _("write error"));
-      cleanup_fatal ();
-    }
-}
-
 /* Print the characters from START to PAST_END - 1.
    If START is NULL, just flush the buffer. */
 
@@ -232,7 +185,7 @@ output (const char *start, const char *past_end)
 
   if (start == 0)
     {
-      xwrite (STDOUT_FILENO, buffer, bytes_in_buffer);
+      fwrite (buffer, 1, bytes_in_buffer, stdout);
       bytes_in_buffer = 0;
       return;
     }
@@ -243,7 +196,7 @@ output (const char *start, const char *past_end)
       memcpy (buffer + bytes_in_buffer, start, bytes_available);
       bytes_to_add -= bytes_available;
       start += bytes_available;
-      xwrite (STDOUT_FILENO, buffer, WRITESIZE);
+      fwrite (buffer, 1, WRITESIZE, stdout);
       bytes_in_buffer = 0;
       bytes_available = WRITESIZE;
     }
@@ -256,16 +209,22 @@ output (const char *start, const char *past_end)
    Return 0 if ok, 1 if an error occurs. */
 
 static int
-tac (int fd, const char *file)
+tac_stream (FILE *in, const char *file)
 {
   /* Pointer to the location in `G_buffer' where the search for
      the next separator will begin. */
   char *match_start;
+
   /* Pointer to one past the rightmost character in `G_buffer' that
      has not been printed yet. */
   char *past_end;
-  unsigned saved_record_size;	/* Length of the record growing in `G_buffer'. */
-  off_t file_pos;		/* Offset in the file of the next read. */
+
+  /* Length of the record growing in `G_buffer'. */
+  unsigned saved_record_size;
+
+  /* Offset in the file of the next read. */
+  off_t file_pos;
+
   /* Nonzero if `output' has not been called yet for any file.
      Only used when the separator is attached to the preceding record. */
   int first_time = 1;
@@ -275,7 +234,7 @@ tac (int fd, const char *file)
   struct re_registers regs;
 
   /* Find the size of the input file. */
-  file_pos = lseek (fd, (off_t) 0, SEEK_END);
+  file_pos = lseek (fileno (in), (off_t) 0, SEEK_END);
   if (file_pos < 1)
     return 0;			/* It's an empty file. */
 
@@ -291,8 +250,8 @@ tac (int fd, const char *file)
   /* `file_pos' now points to the start of the last (probably partial) block
      in the input file. */
 
-  lseek (fd, file_pos, SEEK_SET);
-  if (safe_read (fd, G_buffer, saved_record_size) != saved_record_size)
+  lseek (fileno (in), file_pos, SEEK_SET);
+  if (safe_read (fileno (in), G_buffer, saved_record_size) != saved_record_size)
     {
       error (0, errno, "%s", file);
       return 1;
@@ -321,8 +280,8 @@ tac (int fd, const char *file)
 	    match_start = G_buffer - 1;
 	  else if (ret == -2)
 	    {
-	      error (0, 0, _("error in regular expression search"));
-	      cleanup_fatal ();
+	      error (EXIT_FAILURE, 0,
+		     _("error in regular expression search"));
 	    }
 	  else
 	    {
@@ -377,7 +336,7 @@ tac (int fd, const char *file)
 	      read_size = file_pos;
 	      file_pos = 0;
 	    }
-	  lseek (fd, file_pos, SEEK_SET);
+	  lseek (fileno (in), file_pos, SEEK_SET);
 
 	  /* Shift the pending record data right to make room for the new.
 	     The source and destination regions probably overlap.  */
@@ -389,7 +348,7 @@ tac (int fd, const char *file)
 	  else
 	    match_start = past_end;
 
-	  if (safe_read (fd, G_buffer, read_size) != read_size)
+	  if (safe_read (fileno (in), G_buffer, read_size) != read_size)
 	    {
 	      error (0, errno, "%s", file);
 	      return 1;
@@ -425,16 +384,17 @@ tac (int fd, const char *file)
 static int
 tac_file (const char *file)
 {
-  int fd, errors;
+  int errors;
+  FILE *in;
 
-  fd = open (file, O_RDONLY);
-  if (fd == -1)
+  in = fopen (file, "r");
+  if (in == NULL)
     {
       error (0, errno, "%s", file);
       return 1;
     }
-  errors = tac (fd, file);
-  if (close (fd) < 0)
+  errors = tac_stream (in, file);
+  if (ferror (in) || fclose (in) == EOF)
     {
       error (0, errno, "%s", file);
       return 1;
@@ -442,15 +402,17 @@ tac_file (const char *file)
   return errors;
 }
 
-/* Make a copy of the standard input in `tempfile'. */
+/* Make a copy of the standard input in `FIXME'. */
 
 static void
-save_stdin (void)
+save_stdin (FILE **g_tmp, char **g_tempfile)
 {
   static char *template = NULL;
   static char *tempdir;
-  int fd;
+  static char *tempfile;
+  FILE *tmp;
   int bytes_read;
+  int fd;
 
   if (template == NULL)
     {
@@ -463,43 +425,39 @@ save_stdin (void)
   tempfile = mktemp (template);
 
   fd = creat (tempfile, 0600);
-  if (fd == -1)
-    {
-      error (0, errno, "%s", tempfile);
-      cleanup_fatal ();
-    }
+  if (fd == -1 || (tmp = fdopen (fd, "rw")) == NULL)
+    error (EXIT_FAILURE, errno, "%s", tempfile);
+  tmp = fdopen (fd, "rw");
+  if (tmp == NULL)
+    error (EXIT_FAILURE, errno, "%s", tempfile);
+  unlink (tempfile);
+
   while ((bytes_read = safe_read (0, G_buffer, read_size)) > 0)
-    if (full_write (fd, G_buffer, bytes_read) < 0)
-      {
-	error (0, errno, "%s", tempfile);
-	cleanup_fatal ();
-      }
-  if (close (fd) < 0)
-    {
-      error (0, errno, "%s", tempfile);
-      cleanup_fatal ();
-    }
+    fwrite (G_buffer, 1, bytes_read, tmp);
+
+  if (ferror (tmp) || fflush (tmp) == EOF)
+    error (EXIT_FAILURE, errno, "%s", tempfile);
+
+  if (fseek (tmp, (long int) 0, SEEK_SET))
+    error (EXIT_FAILURE, errno, "%s", tempfile);
+
   if (bytes_read == -1)
-    {
-      error (0, errno, _("read error"));
-      cleanup_fatal ();
-    }
+    error (EXIT_FAILURE, errno, _("read error"));
+
+  *g_tmp = tmp;
+  *g_tempfile = tempfile;
 }
 
 /* Print the standard input in reverse, saving it to temporary
-   file `tempfile' first if it is a pipe.
+   file first if it is a pipe.
    Return 0 if ok, 1 if an error occurs. */
 
 static int
 tac_stdin (void)
 {
   /* Previous values of signal handlers. */
-  RETSIGTYPE (*sigint) (), (*sighup) (), (*sigpipe) (), (*sigterm) ();
   int errors;
   struct stat stats;
-#ifdef SA_INTERRUPT
-    struct sigaction oldact, newact;
-#endif				/* SA_INTERRUPT */
 
   /* No tempfile is needed for "tac < file".
      Use fstat instead of checking for errno == ESPIPE because
@@ -510,74 +468,113 @@ tac_stdin (void)
       error (0, errno, _("standard input"));
       return 1;
     }
+
   if (S_ISREG (stats.st_mode))
-    return tac (0, _("standard input"));
-
-#ifdef SA_INTERRUPT
-  newact.sa_handler = sighandler;
-  sigemptyset (&newact.sa_mask);
-  newact.sa_flags = 0;
-
-  sigaction (SIGINT, NULL, &oldact);
-  sigint = oldact.sa_handler;
-  if (sigint != SIG_IGN)
-    sigaction (SIGINT, &newact, NULL);
-
-  sigaction (SIGHUP, NULL, &oldact);
-  sighup = oldact.sa_handler;
-  if (sighup != SIG_IGN)
-    sigaction (SIGHUP, &newact, NULL);
-
-  sigaction (SIGPIPE, NULL, &oldact);
-  sigpipe = oldact.sa_handler;
-  if (sigpipe != SIG_IGN)
-    sigaction (SIGPIPE, &newact, NULL);
-
-  sigaction (SIGTERM, NULL, &oldact);
-  sigterm = oldact.sa_handler;
-  if (sigterm != SIG_IGN)
-    sigaction (SIGTERM, &newact, NULL);
-#else				/* !SA_INTERRUPT */
-  sigint = signal (SIGINT, SIG_IGN);
-  if (sigint != SIG_IGN)
-    signal (SIGINT, sighandler);
-
-  sighup = signal (SIGHUP, SIG_IGN);
-  if (sighup != SIG_IGN)
-    signal (SIGHUP, sighandler);
-
-  sigpipe = signal (SIGPIPE, SIG_IGN);
-  if (sigpipe != SIG_IGN)
-    signal (SIGPIPE, sighandler);
-
-  sigterm = signal (SIGTERM, SIG_IGN);
-  if (sigterm != SIG_IGN)
-    signal (SIGTERM, sighandler);
-#endif				/* SA_INTERRUPT */
-
-  save_stdin ();
-
-  errors = tac_file (tempfile);
-
-  unlink (tempfile);
-
-#ifdef SA_INTERRUPT
-  newact.sa_handler = sigint;
-  sigaction (SIGINT, &newact, NULL);
-  newact.sa_handler = sighup;
-  sigaction (SIGHUP, &newact, NULL);
-  newact.sa_handler = sigterm;
-  sigaction (SIGTERM, &newact, NULL);
-  newact.sa_handler = sigpipe;
-  sigaction (SIGPIPE, &newact, NULL);
-#else				/* !SA_INTERRUPT */
-  signal (SIGINT, sigint);
-  signal (SIGHUP, sighup);
-  signal (SIGTERM, sigterm);
-  signal (SIGPIPE, sigpipe);
-#endif				/* SA_INTERRUPT */
+    {
+      errors = tac_stream (stdin, _("standard input"));
+    }
+  else
+    {
+      FILE *tmp_stream;
+      char *tmp_file;
+      save_stdin (&tmp_stream, &tmp_file);
+      errors = tac_stream (tmp_stream, tmp_file);
+    }
 
   return errors;
+}
+
+/* BUF_END_PLUS_ONE points one byte past the end of the buffer
+   to be searched.  */
+
+static void *
+memrchr (const char *buf_start, const char *buf_end_plus_one, int c)
+{
+  const char *p = buf_end_plus_one;
+  while (buf_start <= --p)
+    {
+      if (*(const unsigned char *) p == c)
+	return (void *) p;
+    }
+  return NULL;
+}
+
+static int
+tac_mem (const char *buf, size_t n_bytes, FILE *out)
+{
+  if (n_bytes == 0)
+    return 0;
+
+  {
+    const char *nl = memrchr (buf, buf + n_bytes, '\n');
+    const char *bol = (nl == NULL ? buf : nl + 1);
+
+    /* If the last line of the input file has no terminating newline,
+       treat it as a special case.  */
+    if (bol < buf + n_bytes)
+      {
+	/* Print out the line from bol to end of input.  */
+	fwrite (bol, 1, (buf + n_bytes) - bol, out);
+
+	/* Add a newline here.  Otherwise, the first and second lines
+	   of output would appear to have been joined.  */
+	fputc ('\n', out);
+      }
+
+    while ((nl = memrchr (buf, bol - 1, '\n')) != NULL)
+      {
+	/* Output the line (which includes a trailing newline)
+	   from NL+1 to BOL-1.  */
+	fwrite (nl + 1, 1, bol - 1 - (nl + 1), out);
+
+	bol = nl + 1;
+      }
+
+    /* If there's anything left, output the last line: BUF .. BOL-1.
+       When the first byte of the input is a newline, there is nothing
+       left to do here.  */
+    if (buf < bol)
+      fwrite (buf, 1, bol - buf, out);
+  }
+}
+
+static int
+tac_stdin_to_mem (void)
+{
+  char *buf = NULL;
+  size_t bufsiz = 8 * BUFSIZ;
+  size_t delta = 8 * BUFSIZ;
+  size_t n_bytes = 0;
+
+  while (1)
+    {
+      int bytes_read;
+      if (buf == NULL)
+	buf = (char *) malloc (bufsiz);
+      else
+	buf = (char *) realloc (buf, bufsiz);
+
+      if (buf == NULL)
+	{
+	  /* Free the buffer and fall back on the code that relies on a
+	     temporary file.  */
+	  free (buf);
+	  /* FIXME */
+	  abort ();
+	}
+      bytes_read = safe_read (STDIN_FILENO, buf + n_bytes, bufsiz - n_bytes);
+      if (bytes_read == 0)
+	break;
+      n_bytes += bytes_read;
+      if (bytes_read < 0)
+	error (1, errno, _("read error"));
+
+      bufsiz += delta;
+    }
+
+  tac_mem (buf, n_bytes, stdout);
+
+  return 0;
 }
 
 int
@@ -660,7 +657,7 @@ main (int argc, char **argv)
   if (optind == argc)
     {
       have_read_stdin = 1;
-      errors = tac_stdin ();
+      errors = tac_stdin_to_mem ();
     }
   else
     for (; optind < argc; ++optind)
@@ -668,7 +665,7 @@ main (int argc, char **argv)
 	if (strcmp (argv[optind], "-") == 0)
 	  {
 	    have_read_stdin = 1;
-	    errors |= tac_stdin ();
+	    errors |= tac_stdin_to_mem ();
 	  }
 	else
 	  errors |= tac_file (argv[optind]);
@@ -679,7 +676,7 @@ main (int argc, char **argv)
 
   if (have_read_stdin && close (0) < 0)
     error (EXIT_FAILURE, errno, "-");
-  if (close (1) < 0)
+  if (ferror (stdout) || fclose (stdout) == EOF)
     error (EXIT_FAILURE, errno, _("write error"));
   exit (errors == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
