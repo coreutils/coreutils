@@ -21,7 +21,7 @@ export LANG
 $xx 9 -ne 9  > ne-1.O 2> ne-1.E
 code=$?
 if test $code != 1; then
-  $echo "Test ne-1 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test ne-1 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp ne-1.O $srcdir/ne-1.X > /dev/null 2>&1
@@ -39,7 +39,7 @@ test -s ne-1.E || rm -f ne-1.E
 $xx 0 -ne 0  > ne-2.O 2> ne-2.E
 code=$?
 if test $code != 1; then
-  $echo "Test ne-2 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test ne-2 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp ne-2.O $srcdir/ne-2.X > /dev/null 2>&1
@@ -57,7 +57,7 @@ test -s ne-2.E || rm -f ne-2.E
 $xx 0 -ne 00  > ne-3.O 2> ne-3.E
 code=$?
 if test $code != 1; then
-  $echo "Test ne-3 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test ne-3 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp ne-3.O $srcdir/ne-3.X > /dev/null 2>&1
@@ -75,7 +75,7 @@ test -s ne-3.E || rm -f ne-3.E
 $xx 8 -ne 9  > ne-4.O 2> ne-4.E
 code=$?
 if test $code != 0; then
-  $echo "Test ne-4 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test ne-4 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp ne-4.O $srcdir/ne-4.X > /dev/null 2>&1
@@ -93,7 +93,7 @@ test -s ne-4.E || rm -f ne-4.E
 $xx 1 -ne 0  > ne-5.O 2> ne-5.E
 code=$?
 if test $code != 0; then
-  $echo "Test ne-5 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test ne-5 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp ne-5.O $srcdir/ne-5.X > /dev/null 2>&1
@@ -111,7 +111,7 @@ test -s ne-5.E || rm -f ne-5.E
 $xx 5 -le 5  > le-1.O 2> le-1.E
 code=$?
 if test $code != 0; then
-  $echo "Test le-1 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test le-1 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp le-1.O $srcdir/le-1.X > /dev/null 2>&1
@@ -129,7 +129,7 @@ test -s le-1.E || rm -f le-1.E
 $xx 5 -le 4  > le-2.O 2> le-2.E
 code=$?
 if test $code != 1; then
-  $echo "Test le-2 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test le-2 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp le-2.O $srcdir/le-2.X > /dev/null 2>&1
@@ -147,7 +147,7 @@ test -s le-2.E || rm -f le-2.E
 $xx 4 -le 5  > le-3.O 2> le-3.E
 code=$?
 if test $code != 0; then
-  $echo "Test le-3 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test le-3 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp le-3.O $srcdir/le-3.X > /dev/null 2>&1
@@ -165,7 +165,7 @@ test -s le-3.E || rm -f le-3.E
 $xx -1 -le -2  > le-4.O 2> le-4.E
 code=$?
 if test $code != 1; then
-  $echo "Test le-4 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test le-4 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp le-4.O $srcdir/le-4.X > /dev/null 2>&1
@@ -183,7 +183,7 @@ test -s le-4.E || rm -f le-4.E
 $xx 5 -ge 5  > ge-1.O 2> ge-1.E
 code=$?
 if test $code != 0; then
-  $echo "Test ge-1 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test ge-1 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp ge-1.O $srcdir/ge-1.X > /dev/null 2>&1
@@ -201,7 +201,7 @@ test -s ge-1.E || rm -f ge-1.E
 $xx 5 -ge 4  > ge-2.O 2> ge-2.E
 code=$?
 if test $code != 0; then
-  $echo "Test ge-2 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test ge-2 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp ge-2.O $srcdir/ge-2.X > /dev/null 2>&1
@@ -219,7 +219,7 @@ test -s ge-2.E || rm -f ge-2.E
 $xx 4 -ge 5  > ge-3.O 2> ge-3.E
 code=$?
 if test $code != 1; then
-  $echo "Test ge-3 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test ge-3 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp ge-3.O $srcdir/ge-3.X > /dev/null 2>&1
@@ -237,7 +237,7 @@ test -s ge-3.E || rm -f ge-3.E
 $xx -1 -ge -2  > ge-4.O 2> ge-4.E
 code=$?
 if test $code != 0; then
-  $echo "Test ge-4 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test ge-4 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp ge-4.O $srcdir/ge-4.X > /dev/null 2>&1
@@ -255,7 +255,7 @@ test -s ge-4.E || rm -f ge-4.E
 $xx ! -z ''  > N-1b.O 2> N-1b.E
 code=$?
 if test $code != 1; then
-  $echo "Test N-1b failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test N-1b failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-1b.O $srcdir/N-1b.X > /dev/null 2>&1
@@ -273,7 +273,7 @@ test -s N-1b.E || rm -f N-1b.E
 $xx '(' -z '' ')'  > P-1b.O 2> P-1b.E
 code=$?
 if test $code != 0; then
-  $echo "Test P-1b failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test P-1b failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-1b.O $srcdir/P-1b.X > /dev/null 2>&1
@@ -291,7 +291,7 @@ test -s P-1b.E || rm -f P-1b.E
 $xx ! '(' -z '' ')'  > NP-1b.O 2> NP-1b.E
 code=$?
 if test $code != 1; then
-  $echo "Test NP-1b failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NP-1b failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-1b.O $srcdir/NP-1b.X > /dev/null 2>&1
@@ -309,7 +309,7 @@ test -s NP-1b.E || rm -f NP-1b.E
 $xx ! ! '(' -z '' ')'  > NNP-1b.O 2> NNP-1b.E
 code=$?
 if test $code != 0; then
-  $echo "Test NNP-1b failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NNP-1b failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-1b.O $srcdir/NNP-1b.X > /dev/null 2>&1
@@ -327,7 +327,7 @@ test -s NNP-1b.E || rm -f NNP-1b.E
 $xx ! any-string  > N-1c.O 2> N-1c.E
 code=$?
 if test $code != 1; then
-  $echo "Test N-1c failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test N-1c failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-1c.O $srcdir/N-1c.X > /dev/null 2>&1
@@ -345,7 +345,7 @@ test -s N-1c.E || rm -f N-1c.E
 $xx '(' any-string ')'  > P-1c.O 2> P-1c.E
 code=$?
 if test $code != 0; then
-  $echo "Test P-1c failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test P-1c failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-1c.O $srcdir/P-1c.X > /dev/null 2>&1
@@ -363,7 +363,7 @@ test -s P-1c.E || rm -f P-1c.E
 $xx ! '(' any-string ')'  > NP-1c.O 2> NP-1c.E
 code=$?
 if test $code != 1; then
-  $echo "Test NP-1c failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NP-1c failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-1c.O $srcdir/NP-1c.X > /dev/null 2>&1
@@ -381,7 +381,7 @@ test -s NP-1c.E || rm -f NP-1c.E
 $xx ! ! '(' any-string ')'  > NNP-1c.O 2> NNP-1c.E
 code=$?
 if test $code != 0; then
-  $echo "Test NNP-1c failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NNP-1c failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-1c.O $srcdir/NNP-1c.X > /dev/null 2>&1
@@ -399,7 +399,7 @@ test -s NNP-1c.E || rm -f NNP-1c.E
 $xx ! -n any-string  > N-1d.O 2> N-1d.E
 code=$?
 if test $code != 1; then
-  $echo "Test N-1d failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test N-1d failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-1d.O $srcdir/N-1d.X > /dev/null 2>&1
@@ -417,7 +417,7 @@ test -s N-1d.E || rm -f N-1d.E
 $xx '(' -n any-string ')'  > P-1d.O 2> P-1d.E
 code=$?
 if test $code != 0; then
-  $echo "Test P-1d failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test P-1d failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-1d.O $srcdir/P-1d.X > /dev/null 2>&1
@@ -435,7 +435,7 @@ test -s P-1d.E || rm -f P-1d.E
 $xx ! '(' -n any-string ')'  > NP-1d.O 2> NP-1d.E
 code=$?
 if test $code != 1; then
-  $echo "Test NP-1d failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NP-1d failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-1d.O $srcdir/NP-1d.X > /dev/null 2>&1
@@ -453,7 +453,7 @@ test -s NP-1d.E || rm -f NP-1d.E
 $xx ! ! '(' -n any-string ')'  > NNP-1d.O 2> NNP-1d.E
 code=$?
 if test $code != 0; then
-  $echo "Test NNP-1d failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NNP-1d failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-1d.O $srcdir/NNP-1d.X > /dev/null 2>&1
@@ -471,7 +471,7 @@ test -s NNP-1d.E || rm -f NNP-1d.E
 $xx ! ''  > N-1e.O 2> N-1e.E
 code=$?
 if test $code != 0; then
-  $echo "Test N-1e failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test N-1e failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-1e.O $srcdir/N-1e.X > /dev/null 2>&1
@@ -489,7 +489,7 @@ test -s N-1e.E || rm -f N-1e.E
 $xx '(' '' ')'  > P-1e.O 2> P-1e.E
 code=$?
 if test $code != 1; then
-  $echo "Test P-1e failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test P-1e failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-1e.O $srcdir/P-1e.X > /dev/null 2>&1
@@ -507,7 +507,7 @@ test -s P-1e.E || rm -f P-1e.E
 $xx ! '(' '' ')'  > NP-1e.O 2> NP-1e.E
 code=$?
 if test $code != 0; then
-  $echo "Test NP-1e failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NP-1e failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-1e.O $srcdir/NP-1e.X > /dev/null 2>&1
@@ -525,7 +525,7 @@ test -s NP-1e.E || rm -f NP-1e.E
 $xx ! ! '(' '' ')'  > NNP-1e.O 2> NNP-1e.E
 code=$?
 if test $code != 1; then
-  $echo "Test NNP-1e failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NNP-1e failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-1e.O $srcdir/NNP-1e.X > /dev/null 2>&1
@@ -543,7 +543,7 @@ test -s NNP-1e.E || rm -f NNP-1e.E
 $xx ! -  > N-1f.O 2> N-1f.E
 code=$?
 if test $code != 1; then
-  $echo "Test N-1f failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test N-1f failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-1f.O $srcdir/N-1f.X > /dev/null 2>&1
@@ -561,7 +561,7 @@ test -s N-1f.E || rm -f N-1f.E
 $xx '(' - ')'  > P-1f.O 2> P-1f.E
 code=$?
 if test $code != 0; then
-  $echo "Test P-1f failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test P-1f failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-1f.O $srcdir/P-1f.X > /dev/null 2>&1
@@ -579,7 +579,7 @@ test -s P-1f.E || rm -f P-1f.E
 $xx ! '(' - ')'  > NP-1f.O 2> NP-1f.E
 code=$?
 if test $code != 1; then
-  $echo "Test NP-1f failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NP-1f failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-1f.O $srcdir/NP-1f.X > /dev/null 2>&1
@@ -597,7 +597,7 @@ test -s NP-1f.E || rm -f NP-1f.E
 $xx ! ! '(' - ')'  > NNP-1f.O 2> NNP-1f.E
 code=$?
 if test $code != 0; then
-  $echo "Test NNP-1f failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NNP-1f failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-1f.O $srcdir/NNP-1f.X > /dev/null 2>&1
@@ -615,7 +615,7 @@ test -s NNP-1f.E || rm -f NNP-1f.E
 $xx ! --  > N-1g.O 2> N-1g.E
 code=$?
 if test $code != 1; then
-  $echo "Test N-1g failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test N-1g failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-1g.O $srcdir/N-1g.X > /dev/null 2>&1
@@ -633,7 +633,7 @@ test -s N-1g.E || rm -f N-1g.E
 $xx '(' -- ')'  > P-1g.O 2> P-1g.E
 code=$?
 if test $code != 0; then
-  $echo "Test P-1g failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test P-1g failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-1g.O $srcdir/P-1g.X > /dev/null 2>&1
@@ -651,7 +651,7 @@ test -s P-1g.E || rm -f P-1g.E
 $xx ! '(' -- ')'  > NP-1g.O 2> NP-1g.E
 code=$?
 if test $code != 1; then
-  $echo "Test NP-1g failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NP-1g failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-1g.O $srcdir/NP-1g.X > /dev/null 2>&1
@@ -669,7 +669,7 @@ test -s NP-1g.E || rm -f NP-1g.E
 $xx ! ! '(' -- ')'  > NNP-1g.O 2> NNP-1g.E
 code=$?
 if test $code != 0; then
-  $echo "Test NNP-1g failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NNP-1g failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-1g.O $srcdir/NNP-1g.X > /dev/null 2>&1
@@ -687,7 +687,7 @@ test -s NNP-1g.E || rm -f NNP-1g.E
 $xx ! -0  > N-1h.O 2> N-1h.E
 code=$?
 if test $code != 1; then
-  $echo "Test N-1h failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test N-1h failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-1h.O $srcdir/N-1h.X > /dev/null 2>&1
@@ -705,7 +705,7 @@ test -s N-1h.E || rm -f N-1h.E
 $xx '(' -0 ')'  > P-1h.O 2> P-1h.E
 code=$?
 if test $code != 0; then
-  $echo "Test P-1h failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test P-1h failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-1h.O $srcdir/P-1h.X > /dev/null 2>&1
@@ -723,7 +723,7 @@ test -s P-1h.E || rm -f P-1h.E
 $xx ! '(' -0 ')'  > NP-1h.O 2> NP-1h.E
 code=$?
 if test $code != 1; then
-  $echo "Test NP-1h failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NP-1h failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-1h.O $srcdir/NP-1h.X > /dev/null 2>&1
@@ -741,7 +741,7 @@ test -s NP-1h.E || rm -f NP-1h.E
 $xx ! ! '(' -0 ')'  > NNP-1h.O 2> NNP-1h.E
 code=$?
 if test $code != 0; then
-  $echo "Test NNP-1h failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NNP-1h failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-1h.O $srcdir/NNP-1h.X > /dev/null 2>&1
@@ -759,7 +759,7 @@ test -s NNP-1h.E || rm -f NNP-1h.E
 $xx ! -f  > N-1i.O 2> N-1i.E
 code=$?
 if test $code != 1; then
-  $echo "Test N-1i failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test N-1i failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-1i.O $srcdir/N-1i.X > /dev/null 2>&1
@@ -777,7 +777,7 @@ test -s N-1i.E || rm -f N-1i.E
 $xx '(' -f ')'  > P-1i.O 2> P-1i.E
 code=$?
 if test $code != 0; then
-  $echo "Test P-1i failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test P-1i failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-1i.O $srcdir/P-1i.X > /dev/null 2>&1
@@ -795,7 +795,7 @@ test -s P-1i.E || rm -f P-1i.E
 $xx ! '(' -f ')'  > NP-1i.O 2> NP-1i.E
 code=$?
 if test $code != 1; then
-  $echo "Test NP-1i failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NP-1i failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-1i.O $srcdir/NP-1i.X > /dev/null 2>&1
@@ -813,7 +813,7 @@ test -s NP-1i.E || rm -f NP-1i.E
 $xx ! ! '(' -f ')'  > NNP-1i.O 2> NNP-1i.E
 code=$?
 if test $code != 0; then
-  $echo "Test NNP-1i failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NNP-1i failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-1i.O $srcdir/NNP-1i.X > /dev/null 2>&1
@@ -831,7 +831,7 @@ test -s NNP-1i.E || rm -f NNP-1i.E
 $xx ! --help  > N-1j.O 2> N-1j.E
 code=$?
 if test $code != 1; then
-  $echo "Test N-1j failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test N-1j failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-1j.O $srcdir/N-1j.X > /dev/null 2>&1
@@ -849,7 +849,7 @@ test -s N-1j.E || rm -f N-1j.E
 $xx '(' --help ')'  > P-1j.O 2> P-1j.E
 code=$?
 if test $code != 0; then
-  $echo "Test P-1j failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test P-1j failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-1j.O $srcdir/P-1j.X > /dev/null 2>&1
@@ -867,7 +867,7 @@ test -s P-1j.E || rm -f P-1j.E
 $xx ! '(' --help ')'  > NP-1j.O 2> NP-1j.E
 code=$?
 if test $code != 1; then
-  $echo "Test NP-1j failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NP-1j failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-1j.O $srcdir/NP-1j.X > /dev/null 2>&1
@@ -885,7 +885,7 @@ test -s NP-1j.E || rm -f NP-1j.E
 $xx ! ! '(' --help ')'  > NNP-1j.O 2> NNP-1j.E
 code=$?
 if test $code != 0; then
-  $echo "Test NNP-1j failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NNP-1j failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-1j.O $srcdir/NNP-1j.X > /dev/null 2>&1
@@ -903,7 +903,7 @@ test -s NNP-1j.E || rm -f NNP-1j.E
 $xx ! --version  > N-1k.O 2> N-1k.E
 code=$?
 if test $code != 1; then
-  $echo "Test N-1k failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test N-1k failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-1k.O $srcdir/N-1k.X > /dev/null 2>&1
@@ -921,7 +921,7 @@ test -s N-1k.E || rm -f N-1k.E
 $xx '(' --version ')'  > P-1k.O 2> P-1k.E
 code=$?
 if test $code != 0; then
-  $echo "Test P-1k failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test P-1k failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-1k.O $srcdir/P-1k.X > /dev/null 2>&1
@@ -939,7 +939,7 @@ test -s P-1k.E || rm -f P-1k.E
 $xx ! '(' --version ')'  > NP-1k.O 2> NP-1k.E
 code=$?
 if test $code != 1; then
-  $echo "Test NP-1k failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NP-1k failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-1k.O $srcdir/NP-1k.X > /dev/null 2>&1
@@ -957,7 +957,7 @@ test -s NP-1k.E || rm -f NP-1k.E
 $xx ! ! '(' --version ')'  > NNP-1k.O 2> NNP-1k.E
 code=$?
 if test $code != 0; then
-  $echo "Test NNP-1k failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NNP-1k failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-1k.O $srcdir/NNP-1k.X > /dev/null 2>&1
@@ -975,7 +975,7 @@ test -s NNP-1k.E || rm -f NNP-1k.E
 $xx ! t = t  > N-streq-1.O 2> N-streq-1.E
 code=$?
 if test $code != 1; then
-  $echo "Test N-streq-1 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test N-streq-1 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-streq-1.O $srcdir/N-streq-1.X > /dev/null 2>&1
@@ -993,7 +993,7 @@ test -s N-streq-1.E || rm -f N-streq-1.E
 $xx '(' t = t ')'  > P-streq-1.O 2> P-streq-1.E
 code=$?
 if test $code != 0; then
-  $echo "Test P-streq-1 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test P-streq-1 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-streq-1.O $srcdir/P-streq-1.X > /dev/null 2>&1
@@ -1011,7 +1011,7 @@ test -s P-streq-1.E || rm -f P-streq-1.E
 $xx ! '(' t = t ')'  > NP-streq-1.O 2> NP-streq-1.E
 code=$?
 if test $code != 1; then
-  $echo "Test NP-streq-1 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NP-streq-1 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-streq-1.O $srcdir/NP-streq-1.X > /dev/null 2>&1
@@ -1029,7 +1029,7 @@ test -s NP-streq-1.E || rm -f NP-streq-1.E
 $xx ! ! '(' t = t ')'  > NNP-streq-1.O 2> NNP-streq-1.E
 code=$?
 if test $code != 0; then
-  $echo "Test NNP-streq-1 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NNP-streq-1 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-streq-1.O $srcdir/NNP-streq-1.X > /dev/null 2>&1
@@ -1047,7 +1047,7 @@ test -s NNP-streq-1.E || rm -f NNP-streq-1.E
 $xx ! t = f  > N-streq-2.O 2> N-streq-2.E
 code=$?
 if test $code != 0; then
-  $echo "Test N-streq-2 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test N-streq-2 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-streq-2.O $srcdir/N-streq-2.X > /dev/null 2>&1
@@ -1065,7 +1065,7 @@ test -s N-streq-2.E || rm -f N-streq-2.E
 $xx '(' t = f ')'  > P-streq-2.O 2> P-streq-2.E
 code=$?
 if test $code != 1; then
-  $echo "Test P-streq-2 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test P-streq-2 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-streq-2.O $srcdir/P-streq-2.X > /dev/null 2>&1
@@ -1083,7 +1083,7 @@ test -s P-streq-2.E || rm -f P-streq-2.E
 $xx ! '(' t = f ')'  > NP-streq-2.O 2> NP-streq-2.E
 code=$?
 if test $code != 0; then
-  $echo "Test NP-streq-2 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NP-streq-2 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-streq-2.O $srcdir/NP-streq-2.X > /dev/null 2>&1
@@ -1101,7 +1101,7 @@ test -s NP-streq-2.E || rm -f NP-streq-2.E
 $xx ! ! '(' t = f ')'  > NNP-streq-2.O 2> NNP-streq-2.E
 code=$?
 if test $code != 1; then
-  $echo "Test NNP-streq-2 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NNP-streq-2 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-streq-2.O $srcdir/NNP-streq-2.X > /dev/null 2>&1
@@ -1119,7 +1119,7 @@ test -s NNP-streq-2.E || rm -f NNP-streq-2.E
 $xx ! ! = !  > N-streq-3.O 2> N-streq-3.E
 code=$?
 if test $code != 1; then
-  $echo "Test N-streq-3 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test N-streq-3 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-streq-3.O $srcdir/N-streq-3.X > /dev/null 2>&1
@@ -1137,7 +1137,7 @@ test -s N-streq-3.E || rm -f N-streq-3.E
 $xx '(' ! = ! ')'  > P-streq-3.O 2> P-streq-3.E
 code=$?
 if test $code != 0; then
-  $echo "Test P-streq-3 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test P-streq-3 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-streq-3.O $srcdir/P-streq-3.X > /dev/null 2>&1
@@ -1155,7 +1155,7 @@ test -s P-streq-3.E || rm -f P-streq-3.E
 $xx ! '(' ! = ! ')'  > NP-streq-3.O 2> NP-streq-3.E
 code=$?
 if test $code != 1; then
-  $echo "Test NP-streq-3 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NP-streq-3 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-streq-3.O $srcdir/NP-streq-3.X > /dev/null 2>&1
@@ -1173,7 +1173,7 @@ test -s NP-streq-3.E || rm -f NP-streq-3.E
 $xx ! ! '(' ! = ! ')'  > NNP-streq-3.O 2> NNP-streq-3.E
 code=$?
 if test $code != 0; then
-  $echo "Test NNP-streq-3 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NNP-streq-3 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-streq-3.O $srcdir/NNP-streq-3.X > /dev/null 2>&1
@@ -1191,7 +1191,7 @@ test -s NNP-streq-3.E || rm -f NNP-streq-3.E
 $xx ! = = =  > N-streq-4.O 2> N-streq-4.E
 code=$?
 if test $code != 1; then
-  $echo "Test N-streq-4 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test N-streq-4 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-streq-4.O $srcdir/N-streq-4.X > /dev/null 2>&1
@@ -1209,7 +1209,7 @@ test -s N-streq-4.E || rm -f N-streq-4.E
 $xx '(' = = = ')'  > P-streq-4.O 2> P-streq-4.E
 code=$?
 if test $code != 0; then
-  $echo "Test P-streq-4 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test P-streq-4 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-streq-4.O $srcdir/P-streq-4.X > /dev/null 2>&1
@@ -1227,7 +1227,7 @@ test -s P-streq-4.E || rm -f P-streq-4.E
 $xx ! '(' = = = ')'  > NP-streq-4.O 2> NP-streq-4.E
 code=$?
 if test $code != 1; then
-  $echo "Test NP-streq-4 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NP-streq-4 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-streq-4.O $srcdir/NP-streq-4.X > /dev/null 2>&1
@@ -1245,7 +1245,7 @@ test -s NP-streq-4.E || rm -f NP-streq-4.E
 $xx ! ! '(' = = = ')'  > NNP-streq-4.O 2> NNP-streq-4.E
 code=$?
 if test $code != 0; then
-  $echo "Test NNP-streq-4 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NNP-streq-4 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-streq-4.O $srcdir/NNP-streq-4.X > /dev/null 2>&1
@@ -1263,7 +1263,7 @@ test -s NNP-streq-4.E || rm -f NNP-streq-4.E
 $xx ! '(' = '('  > N-streq-5.O 2> N-streq-5.E
 code=$?
 if test $code != 1; then
-  $echo "Test N-streq-5 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test N-streq-5 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-streq-5.O $srcdir/N-streq-5.X > /dev/null 2>&1
@@ -1281,7 +1281,7 @@ test -s N-streq-5.E || rm -f N-streq-5.E
 $xx '(' '(' = '(' ')'  > P-streq-5.O 2> P-streq-5.E
 code=$?
 if test $code != 0; then
-  $echo "Test P-streq-5 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test P-streq-5 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-streq-5.O $srcdir/P-streq-5.X > /dev/null 2>&1
@@ -1299,7 +1299,7 @@ test -s P-streq-5.E || rm -f P-streq-5.E
 $xx ! '(' '(' = '(' ')'  > NP-streq-5.O 2> NP-streq-5.E
 code=$?
 if test $code != 1; then
-  $echo "Test NP-streq-5 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NP-streq-5 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-streq-5.O $srcdir/NP-streq-5.X > /dev/null 2>&1
@@ -1317,7 +1317,7 @@ test -s NP-streq-5.E || rm -f NP-streq-5.E
 $xx ! ! '(' '(' = '(' ')'  > NNP-streq-5.O 2> NNP-streq-5.E
 code=$?
 if test $code != 0; then
-  $echo "Test NNP-streq-5 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NNP-streq-5 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-streq-5.O $srcdir/NNP-streq-5.X > /dev/null 2>&1
@@ -1335,7 +1335,7 @@ test -s NNP-streq-5.E || rm -f NNP-streq-5.E
 $xx ! '(' = ')'  > N-streq-6.O 2> N-streq-6.E
 code=$?
 if test $code != 0; then
-  $echo "Test N-streq-6 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test N-streq-6 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-streq-6.O $srcdir/N-streq-6.X > /dev/null 2>&1
@@ -1353,7 +1353,7 @@ test -s N-streq-6.E || rm -f N-streq-6.E
 $xx ! t != t  > N-strne-1.O 2> N-strne-1.E
 code=$?
 if test $code != 0; then
-  $echo "Test N-strne-1 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test N-strne-1 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-strne-1.O $srcdir/N-strne-1.X > /dev/null 2>&1
@@ -1371,7 +1371,7 @@ test -s N-strne-1.E || rm -f N-strne-1.E
 $xx '(' t != t ')'  > P-strne-1.O 2> P-strne-1.E
 code=$?
 if test $code != 1; then
-  $echo "Test P-strne-1 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test P-strne-1 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-strne-1.O $srcdir/P-strne-1.X > /dev/null 2>&1
@@ -1389,7 +1389,7 @@ test -s P-strne-1.E || rm -f P-strne-1.E
 $xx ! '(' t != t ')'  > NP-strne-1.O 2> NP-strne-1.E
 code=$?
 if test $code != 0; then
-  $echo "Test NP-strne-1 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NP-strne-1 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-strne-1.O $srcdir/NP-strne-1.X > /dev/null 2>&1
@@ -1407,7 +1407,7 @@ test -s NP-strne-1.E || rm -f NP-strne-1.E
 $xx ! ! '(' t != t ')'  > NNP-strne-1.O 2> NNP-strne-1.E
 code=$?
 if test $code != 1; then
-  $echo "Test NNP-strne-1 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NNP-strne-1 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-strne-1.O $srcdir/NNP-strne-1.X > /dev/null 2>&1
@@ -1425,7 +1425,7 @@ test -s NNP-strne-1.E || rm -f NNP-strne-1.E
 $xx ! t != f  > N-strne-2.O 2> N-strne-2.E
 code=$?
 if test $code != 1; then
-  $echo "Test N-strne-2 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test N-strne-2 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-strne-2.O $srcdir/N-strne-2.X > /dev/null 2>&1
@@ -1443,7 +1443,7 @@ test -s N-strne-2.E || rm -f N-strne-2.E
 $xx '(' t != f ')'  > P-strne-2.O 2> P-strne-2.E
 code=$?
 if test $code != 0; then
-  $echo "Test P-strne-2 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test P-strne-2 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-strne-2.O $srcdir/P-strne-2.X > /dev/null 2>&1
@@ -1461,7 +1461,7 @@ test -s P-strne-2.E || rm -f P-strne-2.E
 $xx ! '(' t != f ')'  > NP-strne-2.O 2> NP-strne-2.E
 code=$?
 if test $code != 1; then
-  $echo "Test NP-strne-2 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NP-strne-2 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-strne-2.O $srcdir/NP-strne-2.X > /dev/null 2>&1
@@ -1479,7 +1479,7 @@ test -s NP-strne-2.E || rm -f NP-strne-2.E
 $xx ! ! '(' t != f ')'  > NNP-strne-2.O 2> NNP-strne-2.E
 code=$?
 if test $code != 0; then
-  $echo "Test NNP-strne-2 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NNP-strne-2 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-strne-2.O $srcdir/NNP-strne-2.X > /dev/null 2>&1
@@ -1497,7 +1497,7 @@ test -s NNP-strne-2.E || rm -f NNP-strne-2.E
 $xx ! ! != !  > N-strne-3.O 2> N-strne-3.E
 code=$?
 if test $code != 0; then
-  $echo "Test N-strne-3 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test N-strne-3 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-strne-3.O $srcdir/N-strne-3.X > /dev/null 2>&1
@@ -1515,7 +1515,7 @@ test -s N-strne-3.E || rm -f N-strne-3.E
 $xx '(' ! != ! ')'  > P-strne-3.O 2> P-strne-3.E
 code=$?
 if test $code != 1; then
-  $echo "Test P-strne-3 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test P-strne-3 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-strne-3.O $srcdir/P-strne-3.X > /dev/null 2>&1
@@ -1533,7 +1533,7 @@ test -s P-strne-3.E || rm -f P-strne-3.E
 $xx ! '(' ! != ! ')'  > NP-strne-3.O 2> NP-strne-3.E
 code=$?
 if test $code != 0; then
-  $echo "Test NP-strne-3 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NP-strne-3 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-strne-3.O $srcdir/NP-strne-3.X > /dev/null 2>&1
@@ -1551,7 +1551,7 @@ test -s NP-strne-3.E || rm -f NP-strne-3.E
 $xx ! ! '(' ! != ! ')'  > NNP-strne-3.O 2> NNP-strne-3.E
 code=$?
 if test $code != 1; then
-  $echo "Test NNP-strne-3 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NNP-strne-3 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-strne-3.O $srcdir/NNP-strne-3.X > /dev/null 2>&1
@@ -1569,7 +1569,7 @@ test -s NNP-strne-3.E || rm -f NNP-strne-3.E
 $xx ! = != =  > N-strne-4.O 2> N-strne-4.E
 code=$?
 if test $code != 0; then
-  $echo "Test N-strne-4 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test N-strne-4 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-strne-4.O $srcdir/N-strne-4.X > /dev/null 2>&1
@@ -1587,7 +1587,7 @@ test -s N-strne-4.E || rm -f N-strne-4.E
 $xx '(' = != = ')'  > P-strne-4.O 2> P-strne-4.E
 code=$?
 if test $code != 1; then
-  $echo "Test P-strne-4 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test P-strne-4 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-strne-4.O $srcdir/P-strne-4.X > /dev/null 2>&1
@@ -1605,7 +1605,7 @@ test -s P-strne-4.E || rm -f P-strne-4.E
 $xx ! '(' = != = ')'  > NP-strne-4.O 2> NP-strne-4.E
 code=$?
 if test $code != 0; then
-  $echo "Test NP-strne-4 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NP-strne-4 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-strne-4.O $srcdir/NP-strne-4.X > /dev/null 2>&1
@@ -1623,7 +1623,7 @@ test -s NP-strne-4.E || rm -f NP-strne-4.E
 $xx ! ! '(' = != = ')'  > NNP-strne-4.O 2> NNP-strne-4.E
 code=$?
 if test $code != 1; then
-  $echo "Test NNP-strne-4 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NNP-strne-4 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-strne-4.O $srcdir/NNP-strne-4.X > /dev/null 2>&1
@@ -1641,7 +1641,7 @@ test -s NNP-strne-4.E || rm -f NNP-strne-4.E
 $xx ! '(' != '('  > N-strne-5.O 2> N-strne-5.E
 code=$?
 if test $code != 0; then
-  $echo "Test N-strne-5 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test N-strne-5 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-strne-5.O $srcdir/N-strne-5.X > /dev/null 2>&1
@@ -1659,7 +1659,7 @@ test -s N-strne-5.E || rm -f N-strne-5.E
 $xx '(' '(' != '(' ')'  > P-strne-5.O 2> P-strne-5.E
 code=$?
 if test $code != 1; then
-  $echo "Test P-strne-5 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test P-strne-5 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-strne-5.O $srcdir/P-strne-5.X > /dev/null 2>&1
@@ -1677,7 +1677,7 @@ test -s P-strne-5.E || rm -f P-strne-5.E
 $xx ! '(' '(' != '(' ')'  > NP-strne-5.O 2> NP-strne-5.E
 code=$?
 if test $code != 0; then
-  $echo "Test NP-strne-5 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NP-strne-5 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-strne-5.O $srcdir/NP-strne-5.X > /dev/null 2>&1
@@ -1695,7 +1695,7 @@ test -s NP-strne-5.E || rm -f NP-strne-5.E
 $xx ! ! '(' '(' != '(' ')'  > NNP-strne-5.O 2> NNP-strne-5.E
 code=$?
 if test $code != 1; then
-  $echo "Test NNP-strne-5 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NNP-strne-5 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-strne-5.O $srcdir/NNP-strne-5.X > /dev/null 2>&1
@@ -1713,7 +1713,7 @@ test -s NNP-strne-5.E || rm -f NNP-strne-5.E
 $xx ! '(' != ')'  > N-strne-6.O 2> N-strne-6.E
 code=$?
 if test $code != 1; then
-  $echo "Test N-strne-6 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test N-strne-6 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-strne-6.O $srcdir/N-strne-6.X > /dev/null 2>&1
@@ -1731,7 +1731,7 @@ test -s N-strne-6.E || rm -f N-strne-6.E
 $xx ! t -a t  > N-and-1.O 2> N-and-1.E
 code=$?
 if test $code != 1; then
-  $echo "Test N-and-1 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test N-and-1 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-and-1.O $srcdir/N-and-1.X > /dev/null 2>&1
@@ -1749,7 +1749,7 @@ test -s N-and-1.E || rm -f N-and-1.E
 $xx '(' t -a t ')'  > P-and-1.O 2> P-and-1.E
 code=$?
 if test $code != 0; then
-  $echo "Test P-and-1 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test P-and-1 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-and-1.O $srcdir/P-and-1.X > /dev/null 2>&1
@@ -1767,7 +1767,7 @@ test -s P-and-1.E || rm -f P-and-1.E
 $xx ! '(' t -a t ')'  > NP-and-1.O 2> NP-and-1.E
 code=$?
 if test $code != 1; then
-  $echo "Test NP-and-1 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NP-and-1 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-and-1.O $srcdir/NP-and-1.X > /dev/null 2>&1
@@ -1785,7 +1785,7 @@ test -s NP-and-1.E || rm -f NP-and-1.E
 $xx ! ! '(' t -a t ')'  > NNP-and-1.O 2> NNP-and-1.E
 code=$?
 if test $code != 0; then
-  $echo "Test NNP-and-1 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NNP-and-1 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-and-1.O $srcdir/NNP-and-1.X > /dev/null 2>&1
@@ -1803,7 +1803,7 @@ test -s NNP-and-1.E || rm -f NNP-and-1.E
 $xx ! '' -a t  > N-and-2.O 2> N-and-2.E
 code=$?
 if test $code != 0; then
-  $echo "Test N-and-2 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test N-and-2 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-and-2.O $srcdir/N-and-2.X > /dev/null 2>&1
@@ -1821,7 +1821,7 @@ test -s N-and-2.E || rm -f N-and-2.E
 $xx '(' '' -a t ')'  > P-and-2.O 2> P-and-2.E
 code=$?
 if test $code != 1; then
-  $echo "Test P-and-2 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test P-and-2 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-and-2.O $srcdir/P-and-2.X > /dev/null 2>&1
@@ -1839,7 +1839,7 @@ test -s P-and-2.E || rm -f P-and-2.E
 $xx ! '(' '' -a t ')'  > NP-and-2.O 2> NP-and-2.E
 code=$?
 if test $code != 0; then
-  $echo "Test NP-and-2 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NP-and-2 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-and-2.O $srcdir/NP-and-2.X > /dev/null 2>&1
@@ -1857,7 +1857,7 @@ test -s NP-and-2.E || rm -f NP-and-2.E
 $xx ! ! '(' '' -a t ')'  > NNP-and-2.O 2> NNP-and-2.E
 code=$?
 if test $code != 1; then
-  $echo "Test NNP-and-2 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NNP-and-2 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-and-2.O $srcdir/NNP-and-2.X > /dev/null 2>&1
@@ -1875,7 +1875,7 @@ test -s NNP-and-2.E || rm -f NNP-and-2.E
 $xx ! t -a ''  > N-and-3.O 2> N-and-3.E
 code=$?
 if test $code != 0; then
-  $echo "Test N-and-3 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test N-and-3 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-and-3.O $srcdir/N-and-3.X > /dev/null 2>&1
@@ -1893,7 +1893,7 @@ test -s N-and-3.E || rm -f N-and-3.E
 $xx '(' t -a '' ')'  > P-and-3.O 2> P-and-3.E
 code=$?
 if test $code != 1; then
-  $echo "Test P-and-3 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test P-and-3 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-and-3.O $srcdir/P-and-3.X > /dev/null 2>&1
@@ -1911,7 +1911,7 @@ test -s P-and-3.E || rm -f P-and-3.E
 $xx ! '(' t -a '' ')'  > NP-and-3.O 2> NP-and-3.E
 code=$?
 if test $code != 0; then
-  $echo "Test NP-and-3 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NP-and-3 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-and-3.O $srcdir/NP-and-3.X > /dev/null 2>&1
@@ -1929,7 +1929,7 @@ test -s NP-and-3.E || rm -f NP-and-3.E
 $xx ! ! '(' t -a '' ')'  > NNP-and-3.O 2> NNP-and-3.E
 code=$?
 if test $code != 1; then
-  $echo "Test NNP-and-3 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NNP-and-3 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-and-3.O $srcdir/NNP-and-3.X > /dev/null 2>&1
@@ -1947,7 +1947,7 @@ test -s NNP-and-3.E || rm -f NNP-and-3.E
 $xx ! '' -a ''  > N-and-4.O 2> N-and-4.E
 code=$?
 if test $code != 0; then
-  $echo "Test N-and-4 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test N-and-4 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-and-4.O $srcdir/N-and-4.X > /dev/null 2>&1
@@ -1965,7 +1965,7 @@ test -s N-and-4.E || rm -f N-and-4.E
 $xx '(' '' -a '' ')'  > P-and-4.O 2> P-and-4.E
 code=$?
 if test $code != 1; then
-  $echo "Test P-and-4 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test P-and-4 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-and-4.O $srcdir/P-and-4.X > /dev/null 2>&1
@@ -1983,7 +1983,7 @@ test -s P-and-4.E || rm -f P-and-4.E
 $xx ! '(' '' -a '' ')'  > NP-and-4.O 2> NP-and-4.E
 code=$?
 if test $code != 0; then
-  $echo "Test NP-and-4 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NP-and-4 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-and-4.O $srcdir/NP-and-4.X > /dev/null 2>&1
@@ -2001,7 +2001,7 @@ test -s NP-and-4.E || rm -f NP-and-4.E
 $xx ! ! '(' '' -a '' ')'  > NNP-and-4.O 2> NNP-and-4.E
 code=$?
 if test $code != 1; then
-  $echo "Test NNP-and-4 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NNP-and-4 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-and-4.O $srcdir/NNP-and-4.X > /dev/null 2>&1
@@ -2019,7 +2019,7 @@ test -s NNP-and-4.E || rm -f NNP-and-4.E
 $xx ! t -o t  > N-or-1.O 2> N-or-1.E
 code=$?
 if test $code != 1; then
-  $echo "Test N-or-1 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test N-or-1 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-or-1.O $srcdir/N-or-1.X > /dev/null 2>&1
@@ -2037,7 +2037,7 @@ test -s N-or-1.E || rm -f N-or-1.E
 $xx '(' t -o t ')'  > P-or-1.O 2> P-or-1.E
 code=$?
 if test $code != 0; then
-  $echo "Test P-or-1 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test P-or-1 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-or-1.O $srcdir/P-or-1.X > /dev/null 2>&1
@@ -2055,7 +2055,7 @@ test -s P-or-1.E || rm -f P-or-1.E
 $xx ! '(' t -o t ')'  > NP-or-1.O 2> NP-or-1.E
 code=$?
 if test $code != 1; then
-  $echo "Test NP-or-1 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NP-or-1 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-or-1.O $srcdir/NP-or-1.X > /dev/null 2>&1
@@ -2073,7 +2073,7 @@ test -s NP-or-1.E || rm -f NP-or-1.E
 $xx ! ! '(' t -o t ')'  > NNP-or-1.O 2> NNP-or-1.E
 code=$?
 if test $code != 0; then
-  $echo "Test NNP-or-1 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NNP-or-1 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-or-1.O $srcdir/NNP-or-1.X > /dev/null 2>&1
@@ -2091,7 +2091,7 @@ test -s NNP-or-1.E || rm -f NNP-or-1.E
 $xx ! '' -o t  > N-or-2.O 2> N-or-2.E
 code=$?
 if test $code != 1; then
-  $echo "Test N-or-2 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test N-or-2 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-or-2.O $srcdir/N-or-2.X > /dev/null 2>&1
@@ -2109,7 +2109,7 @@ test -s N-or-2.E || rm -f N-or-2.E
 $xx '(' '' -o t ')'  > P-or-2.O 2> P-or-2.E
 code=$?
 if test $code != 0; then
-  $echo "Test P-or-2 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test P-or-2 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-or-2.O $srcdir/P-or-2.X > /dev/null 2>&1
@@ -2127,7 +2127,7 @@ test -s P-or-2.E || rm -f P-or-2.E
 $xx ! '(' '' -o t ')'  > NP-or-2.O 2> NP-or-2.E
 code=$?
 if test $code != 1; then
-  $echo "Test NP-or-2 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NP-or-2 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-or-2.O $srcdir/NP-or-2.X > /dev/null 2>&1
@@ -2145,7 +2145,7 @@ test -s NP-or-2.E || rm -f NP-or-2.E
 $xx ! ! '(' '' -o t ')'  > NNP-or-2.O 2> NNP-or-2.E
 code=$?
 if test $code != 0; then
-  $echo "Test NNP-or-2 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NNP-or-2 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-or-2.O $srcdir/NNP-or-2.X > /dev/null 2>&1
@@ -2163,7 +2163,7 @@ test -s NNP-or-2.E || rm -f NNP-or-2.E
 $xx ! t -o ''  > N-or-3.O 2> N-or-3.E
 code=$?
 if test $code != 1; then
-  $echo "Test N-or-3 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test N-or-3 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-or-3.O $srcdir/N-or-3.X > /dev/null 2>&1
@@ -2181,7 +2181,7 @@ test -s N-or-3.E || rm -f N-or-3.E
 $xx '(' t -o '' ')'  > P-or-3.O 2> P-or-3.E
 code=$?
 if test $code != 0; then
-  $echo "Test P-or-3 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test P-or-3 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-or-3.O $srcdir/P-or-3.X > /dev/null 2>&1
@@ -2199,7 +2199,7 @@ test -s P-or-3.E || rm -f P-or-3.E
 $xx ! '(' t -o '' ')'  > NP-or-3.O 2> NP-or-3.E
 code=$?
 if test $code != 1; then
-  $echo "Test NP-or-3 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NP-or-3 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-or-3.O $srcdir/NP-or-3.X > /dev/null 2>&1
@@ -2217,7 +2217,7 @@ test -s NP-or-3.E || rm -f NP-or-3.E
 $xx ! ! '(' t -o '' ')'  > NNP-or-3.O 2> NNP-or-3.E
 code=$?
 if test $code != 0; then
-  $echo "Test NNP-or-3 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NNP-or-3 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-or-3.O $srcdir/NNP-or-3.X > /dev/null 2>&1
@@ -2235,7 +2235,7 @@ test -s NNP-or-3.E || rm -f NNP-or-3.E
 $xx ! '' -o ''  > N-or-4.O 2> N-or-4.E
 code=$?
 if test $code != 0; then
-  $echo "Test N-or-4 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test N-or-4 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-or-4.O $srcdir/N-or-4.X > /dev/null 2>&1
@@ -2253,7 +2253,7 @@ test -s N-or-4.E || rm -f N-or-4.E
 $xx '(' '' -o '' ')'  > P-or-4.O 2> P-or-4.E
 code=$?
 if test $code != 1; then
-  $echo "Test P-or-4 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test P-or-4 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-or-4.O $srcdir/P-or-4.X > /dev/null 2>&1
@@ -2271,7 +2271,7 @@ test -s P-or-4.E || rm -f P-or-4.E
 $xx ! '(' '' -o '' ')'  > NP-or-4.O 2> NP-or-4.E
 code=$?
 if test $code != 0; then
-  $echo "Test NP-or-4 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NP-or-4 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-or-4.O $srcdir/NP-or-4.X > /dev/null 2>&1
@@ -2289,7 +2289,7 @@ test -s NP-or-4.E || rm -f NP-or-4.E
 $xx ! ! '(' '' -o '' ')'  > NNP-or-4.O 2> NNP-or-4.E
 code=$?
 if test $code != 1; then
-  $echo "Test NNP-or-4 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NNP-or-4 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-or-4.O $srcdir/NNP-or-4.X > /dev/null 2>&1
@@ -2307,7 +2307,7 @@ test -s NNP-or-4.E || rm -f NNP-or-4.E
 $xx ! 9 -eq 9  > N-eq-1.O 2> N-eq-1.E
 code=$?
 if test $code != 1; then
-  $echo "Test N-eq-1 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test N-eq-1 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-eq-1.O $srcdir/N-eq-1.X > /dev/null 2>&1
@@ -2325,7 +2325,7 @@ test -s N-eq-1.E || rm -f N-eq-1.E
 $xx '(' 9 -eq 9 ')'  > P-eq-1.O 2> P-eq-1.E
 code=$?
 if test $code != 0; then
-  $echo "Test P-eq-1 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test P-eq-1 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-eq-1.O $srcdir/P-eq-1.X > /dev/null 2>&1
@@ -2343,7 +2343,7 @@ test -s P-eq-1.E || rm -f P-eq-1.E
 $xx ! '(' 9 -eq 9 ')'  > NP-eq-1.O 2> NP-eq-1.E
 code=$?
 if test $code != 1; then
-  $echo "Test NP-eq-1 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NP-eq-1 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-eq-1.O $srcdir/NP-eq-1.X > /dev/null 2>&1
@@ -2361,7 +2361,7 @@ test -s NP-eq-1.E || rm -f NP-eq-1.E
 $xx ! ! '(' 9 -eq 9 ')'  > NNP-eq-1.O 2> NNP-eq-1.E
 code=$?
 if test $code != 0; then
-  $echo "Test NNP-eq-1 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NNP-eq-1 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-eq-1.O $srcdir/NNP-eq-1.X > /dev/null 2>&1
@@ -2379,7 +2379,7 @@ test -s NNP-eq-1.E || rm -f NNP-eq-1.E
 $xx ! 0 -eq 0  > N-eq-2.O 2> N-eq-2.E
 code=$?
 if test $code != 1; then
-  $echo "Test N-eq-2 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test N-eq-2 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-eq-2.O $srcdir/N-eq-2.X > /dev/null 2>&1
@@ -2397,7 +2397,7 @@ test -s N-eq-2.E || rm -f N-eq-2.E
 $xx '(' 0 -eq 0 ')'  > P-eq-2.O 2> P-eq-2.E
 code=$?
 if test $code != 0; then
-  $echo "Test P-eq-2 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test P-eq-2 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-eq-2.O $srcdir/P-eq-2.X > /dev/null 2>&1
@@ -2415,7 +2415,7 @@ test -s P-eq-2.E || rm -f P-eq-2.E
 $xx ! '(' 0 -eq 0 ')'  > NP-eq-2.O 2> NP-eq-2.E
 code=$?
 if test $code != 1; then
-  $echo "Test NP-eq-2 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NP-eq-2 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-eq-2.O $srcdir/NP-eq-2.X > /dev/null 2>&1
@@ -2433,7 +2433,7 @@ test -s NP-eq-2.E || rm -f NP-eq-2.E
 $xx ! ! '(' 0 -eq 0 ')'  > NNP-eq-2.O 2> NNP-eq-2.E
 code=$?
 if test $code != 0; then
-  $echo "Test NNP-eq-2 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NNP-eq-2 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-eq-2.O $srcdir/NNP-eq-2.X > /dev/null 2>&1
@@ -2451,7 +2451,7 @@ test -s NNP-eq-2.E || rm -f NNP-eq-2.E
 $xx ! 0 -eq 00  > N-eq-3.O 2> N-eq-3.E
 code=$?
 if test $code != 1; then
-  $echo "Test N-eq-3 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test N-eq-3 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-eq-3.O $srcdir/N-eq-3.X > /dev/null 2>&1
@@ -2469,7 +2469,7 @@ test -s N-eq-3.E || rm -f N-eq-3.E
 $xx '(' 0 -eq 00 ')'  > P-eq-3.O 2> P-eq-3.E
 code=$?
 if test $code != 0; then
-  $echo "Test P-eq-3 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test P-eq-3 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-eq-3.O $srcdir/P-eq-3.X > /dev/null 2>&1
@@ -2487,7 +2487,7 @@ test -s P-eq-3.E || rm -f P-eq-3.E
 $xx ! '(' 0 -eq 00 ')'  > NP-eq-3.O 2> NP-eq-3.E
 code=$?
 if test $code != 1; then
-  $echo "Test NP-eq-3 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NP-eq-3 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-eq-3.O $srcdir/NP-eq-3.X > /dev/null 2>&1
@@ -2505,7 +2505,7 @@ test -s NP-eq-3.E || rm -f NP-eq-3.E
 $xx ! ! '(' 0 -eq 00 ')'  > NNP-eq-3.O 2> NNP-eq-3.E
 code=$?
 if test $code != 0; then
-  $echo "Test NNP-eq-3 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NNP-eq-3 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-eq-3.O $srcdir/NNP-eq-3.X > /dev/null 2>&1
@@ -2523,7 +2523,7 @@ test -s NNP-eq-3.E || rm -f NNP-eq-3.E
 $xx ! 8 -eq 9  > N-eq-4.O 2> N-eq-4.E
 code=$?
 if test $code != 0; then
-  $echo "Test N-eq-4 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test N-eq-4 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-eq-4.O $srcdir/N-eq-4.X > /dev/null 2>&1
@@ -2541,7 +2541,7 @@ test -s N-eq-4.E || rm -f N-eq-4.E
 $xx '(' 8 -eq 9 ')'  > P-eq-4.O 2> P-eq-4.E
 code=$?
 if test $code != 1; then
-  $echo "Test P-eq-4 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test P-eq-4 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-eq-4.O $srcdir/P-eq-4.X > /dev/null 2>&1
@@ -2559,7 +2559,7 @@ test -s P-eq-4.E || rm -f P-eq-4.E
 $xx ! '(' 8 -eq 9 ')'  > NP-eq-4.O 2> NP-eq-4.E
 code=$?
 if test $code != 0; then
-  $echo "Test NP-eq-4 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NP-eq-4 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-eq-4.O $srcdir/NP-eq-4.X > /dev/null 2>&1
@@ -2577,7 +2577,7 @@ test -s NP-eq-4.E || rm -f NP-eq-4.E
 $xx ! ! '(' 8 -eq 9 ')'  > NNP-eq-4.O 2> NNP-eq-4.E
 code=$?
 if test $code != 1; then
-  $echo "Test NNP-eq-4 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NNP-eq-4 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-eq-4.O $srcdir/NNP-eq-4.X > /dev/null 2>&1
@@ -2595,7 +2595,7 @@ test -s NNP-eq-4.E || rm -f NNP-eq-4.E
 $xx ! 1 -eq 0  > N-eq-5.O 2> N-eq-5.E
 code=$?
 if test $code != 0; then
-  $echo "Test N-eq-5 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test N-eq-5 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-eq-5.O $srcdir/N-eq-5.X > /dev/null 2>&1
@@ -2613,7 +2613,7 @@ test -s N-eq-5.E || rm -f N-eq-5.E
 $xx '(' 1 -eq 0 ')'  > P-eq-5.O 2> P-eq-5.E
 code=$?
 if test $code != 1; then
-  $echo "Test P-eq-5 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test P-eq-5 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-eq-5.O $srcdir/P-eq-5.X > /dev/null 2>&1
@@ -2631,7 +2631,7 @@ test -s P-eq-5.E || rm -f P-eq-5.E
 $xx ! '(' 1 -eq 0 ')'  > NP-eq-5.O 2> NP-eq-5.E
 code=$?
 if test $code != 0; then
-  $echo "Test NP-eq-5 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NP-eq-5 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-eq-5.O $srcdir/NP-eq-5.X > /dev/null 2>&1
@@ -2649,7 +2649,7 @@ test -s NP-eq-5.E || rm -f NP-eq-5.E
 $xx ! ! '(' 1 -eq 0 ')'  > NNP-eq-5.O 2> NNP-eq-5.E
 code=$?
 if test $code != 1; then
-  $echo "Test NNP-eq-5 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NNP-eq-5 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-eq-5.O $srcdir/NNP-eq-5.X > /dev/null 2>&1
@@ -2667,7 +2667,7 @@ test -s NNP-eq-5.E || rm -f NNP-eq-5.E
 $xx ! 5 -gt 5  > N-gt-1.O 2> N-gt-1.E
 code=$?
 if test $code != 0; then
-  $echo "Test N-gt-1 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test N-gt-1 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-gt-1.O $srcdir/N-gt-1.X > /dev/null 2>&1
@@ -2685,7 +2685,7 @@ test -s N-gt-1.E || rm -f N-gt-1.E
 $xx '(' 5 -gt 5 ')'  > P-gt-1.O 2> P-gt-1.E
 code=$?
 if test $code != 1; then
-  $echo "Test P-gt-1 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test P-gt-1 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-gt-1.O $srcdir/P-gt-1.X > /dev/null 2>&1
@@ -2703,7 +2703,7 @@ test -s P-gt-1.E || rm -f P-gt-1.E
 $xx ! '(' 5 -gt 5 ')'  > NP-gt-1.O 2> NP-gt-1.E
 code=$?
 if test $code != 0; then
-  $echo "Test NP-gt-1 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NP-gt-1 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-gt-1.O $srcdir/NP-gt-1.X > /dev/null 2>&1
@@ -2721,7 +2721,7 @@ test -s NP-gt-1.E || rm -f NP-gt-1.E
 $xx ! ! '(' 5 -gt 5 ')'  > NNP-gt-1.O 2> NNP-gt-1.E
 code=$?
 if test $code != 1; then
-  $echo "Test NNP-gt-1 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NNP-gt-1 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-gt-1.O $srcdir/NNP-gt-1.X > /dev/null 2>&1
@@ -2739,7 +2739,7 @@ test -s NNP-gt-1.E || rm -f NNP-gt-1.E
 $xx ! 5 -gt 4  > N-gt-2.O 2> N-gt-2.E
 code=$?
 if test $code != 1; then
-  $echo "Test N-gt-2 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test N-gt-2 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-gt-2.O $srcdir/N-gt-2.X > /dev/null 2>&1
@@ -2757,7 +2757,7 @@ test -s N-gt-2.E || rm -f N-gt-2.E
 $xx '(' 5 -gt 4 ')'  > P-gt-2.O 2> P-gt-2.E
 code=$?
 if test $code != 0; then
-  $echo "Test P-gt-2 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test P-gt-2 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-gt-2.O $srcdir/P-gt-2.X > /dev/null 2>&1
@@ -2775,7 +2775,7 @@ test -s P-gt-2.E || rm -f P-gt-2.E
 $xx ! '(' 5 -gt 4 ')'  > NP-gt-2.O 2> NP-gt-2.E
 code=$?
 if test $code != 1; then
-  $echo "Test NP-gt-2 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NP-gt-2 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-gt-2.O $srcdir/NP-gt-2.X > /dev/null 2>&1
@@ -2793,7 +2793,7 @@ test -s NP-gt-2.E || rm -f NP-gt-2.E
 $xx ! ! '(' 5 -gt 4 ')'  > NNP-gt-2.O 2> NNP-gt-2.E
 code=$?
 if test $code != 0; then
-  $echo "Test NNP-gt-2 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NNP-gt-2 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-gt-2.O $srcdir/NNP-gt-2.X > /dev/null 2>&1
@@ -2811,7 +2811,7 @@ test -s NNP-gt-2.E || rm -f NNP-gt-2.E
 $xx ! 4 -gt 5  > N-gt-3.O 2> N-gt-3.E
 code=$?
 if test $code != 0; then
-  $echo "Test N-gt-3 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test N-gt-3 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-gt-3.O $srcdir/N-gt-3.X > /dev/null 2>&1
@@ -2829,7 +2829,7 @@ test -s N-gt-3.E || rm -f N-gt-3.E
 $xx '(' 4 -gt 5 ')'  > P-gt-3.O 2> P-gt-3.E
 code=$?
 if test $code != 1; then
-  $echo "Test P-gt-3 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test P-gt-3 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-gt-3.O $srcdir/P-gt-3.X > /dev/null 2>&1
@@ -2847,7 +2847,7 @@ test -s P-gt-3.E || rm -f P-gt-3.E
 $xx ! '(' 4 -gt 5 ')'  > NP-gt-3.O 2> NP-gt-3.E
 code=$?
 if test $code != 0; then
-  $echo "Test NP-gt-3 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NP-gt-3 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-gt-3.O $srcdir/NP-gt-3.X > /dev/null 2>&1
@@ -2865,7 +2865,7 @@ test -s NP-gt-3.E || rm -f NP-gt-3.E
 $xx ! ! '(' 4 -gt 5 ')'  > NNP-gt-3.O 2> NNP-gt-3.E
 code=$?
 if test $code != 1; then
-  $echo "Test NNP-gt-3 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NNP-gt-3 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-gt-3.O $srcdir/NNP-gt-3.X > /dev/null 2>&1
@@ -2883,7 +2883,7 @@ test -s NNP-gt-3.E || rm -f NNP-gt-3.E
 $xx ! -1 -gt -2  > N-gt-4.O 2> N-gt-4.E
 code=$?
 if test $code != 1; then
-  $echo "Test N-gt-4 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test N-gt-4 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-gt-4.O $srcdir/N-gt-4.X > /dev/null 2>&1
@@ -2901,7 +2901,7 @@ test -s N-gt-4.E || rm -f N-gt-4.E
 $xx '(' -1 -gt -2 ')'  > P-gt-4.O 2> P-gt-4.E
 code=$?
 if test $code != 0; then
-  $echo "Test P-gt-4 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test P-gt-4 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-gt-4.O $srcdir/P-gt-4.X > /dev/null 2>&1
@@ -2919,7 +2919,7 @@ test -s P-gt-4.E || rm -f P-gt-4.E
 $xx ! '(' -1 -gt -2 ')'  > NP-gt-4.O 2> NP-gt-4.E
 code=$?
 if test $code != 1; then
-  $echo "Test NP-gt-4 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NP-gt-4 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-gt-4.O $srcdir/NP-gt-4.X > /dev/null 2>&1
@@ -2937,7 +2937,7 @@ test -s NP-gt-4.E || rm -f NP-gt-4.E
 $xx ! ! '(' -1 -gt -2 ')'  > NNP-gt-4.O 2> NNP-gt-4.E
 code=$?
 if test $code != 0; then
-  $echo "Test NNP-gt-4 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NNP-gt-4 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-gt-4.O $srcdir/NNP-gt-4.X > /dev/null 2>&1
@@ -2955,7 +2955,7 @@ test -s NNP-gt-4.E || rm -f NNP-gt-4.E
 $xx ! 5 -lt 5  > N-lt-1.O 2> N-lt-1.E
 code=$?
 if test $code != 0; then
-  $echo "Test N-lt-1 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test N-lt-1 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-lt-1.O $srcdir/N-lt-1.X > /dev/null 2>&1
@@ -2973,7 +2973,7 @@ test -s N-lt-1.E || rm -f N-lt-1.E
 $xx '(' 5 -lt 5 ')'  > P-lt-1.O 2> P-lt-1.E
 code=$?
 if test $code != 1; then
-  $echo "Test P-lt-1 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test P-lt-1 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-lt-1.O $srcdir/P-lt-1.X > /dev/null 2>&1
@@ -2991,7 +2991,7 @@ test -s P-lt-1.E || rm -f P-lt-1.E
 $xx ! '(' 5 -lt 5 ')'  > NP-lt-1.O 2> NP-lt-1.E
 code=$?
 if test $code != 0; then
-  $echo "Test NP-lt-1 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NP-lt-1 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-lt-1.O $srcdir/NP-lt-1.X > /dev/null 2>&1
@@ -3009,7 +3009,7 @@ test -s NP-lt-1.E || rm -f NP-lt-1.E
 $xx ! ! '(' 5 -lt 5 ')'  > NNP-lt-1.O 2> NNP-lt-1.E
 code=$?
 if test $code != 1; then
-  $echo "Test NNP-lt-1 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NNP-lt-1 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-lt-1.O $srcdir/NNP-lt-1.X > /dev/null 2>&1
@@ -3027,7 +3027,7 @@ test -s NNP-lt-1.E || rm -f NNP-lt-1.E
 $xx ! 5 -lt 4  > N-lt-2.O 2> N-lt-2.E
 code=$?
 if test $code != 0; then
-  $echo "Test N-lt-2 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test N-lt-2 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-lt-2.O $srcdir/N-lt-2.X > /dev/null 2>&1
@@ -3045,7 +3045,7 @@ test -s N-lt-2.E || rm -f N-lt-2.E
 $xx '(' 5 -lt 4 ')'  > P-lt-2.O 2> P-lt-2.E
 code=$?
 if test $code != 1; then
-  $echo "Test P-lt-2 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test P-lt-2 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-lt-2.O $srcdir/P-lt-2.X > /dev/null 2>&1
@@ -3063,7 +3063,7 @@ test -s P-lt-2.E || rm -f P-lt-2.E
 $xx ! '(' 5 -lt 4 ')'  > NP-lt-2.O 2> NP-lt-2.E
 code=$?
 if test $code != 0; then
-  $echo "Test NP-lt-2 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NP-lt-2 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-lt-2.O $srcdir/NP-lt-2.X > /dev/null 2>&1
@@ -3081,7 +3081,7 @@ test -s NP-lt-2.E || rm -f NP-lt-2.E
 $xx ! ! '(' 5 -lt 4 ')'  > NNP-lt-2.O 2> NNP-lt-2.E
 code=$?
 if test $code != 1; then
-  $echo "Test NNP-lt-2 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NNP-lt-2 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-lt-2.O $srcdir/NNP-lt-2.X > /dev/null 2>&1
@@ -3099,7 +3099,7 @@ test -s NNP-lt-2.E || rm -f NNP-lt-2.E
 $xx ! 4 -lt 5  > N-lt-3.O 2> N-lt-3.E
 code=$?
 if test $code != 1; then
-  $echo "Test N-lt-3 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test N-lt-3 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-lt-3.O $srcdir/N-lt-3.X > /dev/null 2>&1
@@ -3117,7 +3117,7 @@ test -s N-lt-3.E || rm -f N-lt-3.E
 $xx '(' 4 -lt 5 ')'  > P-lt-3.O 2> P-lt-3.E
 code=$?
 if test $code != 0; then
-  $echo "Test P-lt-3 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test P-lt-3 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-lt-3.O $srcdir/P-lt-3.X > /dev/null 2>&1
@@ -3135,7 +3135,7 @@ test -s P-lt-3.E || rm -f P-lt-3.E
 $xx ! '(' 4 -lt 5 ')'  > NP-lt-3.O 2> NP-lt-3.E
 code=$?
 if test $code != 1; then
-  $echo "Test NP-lt-3 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NP-lt-3 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-lt-3.O $srcdir/NP-lt-3.X > /dev/null 2>&1
@@ -3153,7 +3153,7 @@ test -s NP-lt-3.E || rm -f NP-lt-3.E
 $xx ! ! '(' 4 -lt 5 ')'  > NNP-lt-3.O 2> NNP-lt-3.E
 code=$?
 if test $code != 0; then
-  $echo "Test NNP-lt-3 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NNP-lt-3 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-lt-3.O $srcdir/NNP-lt-3.X > /dev/null 2>&1
@@ -3171,7 +3171,7 @@ test -s NNP-lt-3.E || rm -f NNP-lt-3.E
 $xx ! -1 -lt -2  > N-lt-4.O 2> N-lt-4.E
 code=$?
 if test $code != 0; then
-  $echo "Test N-lt-4 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test N-lt-4 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-lt-4.O $srcdir/N-lt-4.X > /dev/null 2>&1
@@ -3189,7 +3189,7 @@ test -s N-lt-4.E || rm -f N-lt-4.E
 $xx '(' -1 -lt -2 ')'  > P-lt-4.O 2> P-lt-4.E
 code=$?
 if test $code != 1; then
-  $echo "Test P-lt-4 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test P-lt-4 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-lt-4.O $srcdir/P-lt-4.X > /dev/null 2>&1
@@ -3207,7 +3207,7 @@ test -s P-lt-4.E || rm -f P-lt-4.E
 $xx ! '(' -1 -lt -2 ')'  > NP-lt-4.O 2> NP-lt-4.E
 code=$?
 if test $code != 0; then
-  $echo "Test NP-lt-4 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NP-lt-4 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-lt-4.O $srcdir/NP-lt-4.X > /dev/null 2>&1
@@ -3225,7 +3225,7 @@ test -s NP-lt-4.E || rm -f NP-lt-4.E
 $xx ! ! '(' -1 -lt -2 ')'  > NNP-lt-4.O 2> NNP-lt-4.E
 code=$?
 if test $code != 1; then
-  $echo "Test NNP-lt-4 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NNP-lt-4 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-lt-4.O $srcdir/NNP-lt-4.X > /dev/null 2>&1
@@ -3243,7 +3243,7 @@ test -s NNP-lt-4.E || rm -f NNP-lt-4.E
 $xx ! -t  > N-t1.O 2> N-t1.E
 code=$?
 if test $code != 1; then
-  $echo "Test N-t1 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test N-t1 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-t1.O $srcdir/N-t1.X > /dev/null 2>&1
@@ -3261,7 +3261,7 @@ test -s N-t1.E || rm -f N-t1.E
 $xx '(' -t ')'  > P-t1.O 2> P-t1.E
 code=$?
 if test $code != 0; then
-  $echo "Test P-t1 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test P-t1 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-t1.O $srcdir/P-t1.X > /dev/null 2>&1
@@ -3279,7 +3279,7 @@ test -s P-t1.E || rm -f P-t1.E
 $xx ! '(' -t ')'  > NP-t1.O 2> NP-t1.E
 code=$?
 if test $code != 1; then
-  $echo "Test NP-t1 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NP-t1 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-t1.O $srcdir/NP-t1.X > /dev/null 2>&1
@@ -3297,7 +3297,7 @@ test -s NP-t1.E || rm -f NP-t1.E
 $xx ! ! '(' -t ')'  > NNP-t1.O 2> NNP-t1.E
 code=$?
 if test $code != 0; then
-  $echo "Test NNP-t1 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NNP-t1 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-t1.O $srcdir/NNP-t1.X > /dev/null 2>&1
@@ -3315,7 +3315,7 @@ test -s NNP-t1.E || rm -f NNP-t1.E
 $xx ! -t 1  > N-t2.O 2> N-t2.E
 code=$?
 if test $code != 0; then
-  $echo "Test N-t2 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test N-t2 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-t2.O $srcdir/N-t2.X > /dev/null 2>&1
@@ -3333,7 +3333,7 @@ test -s N-t2.E || rm -f N-t2.E
 $xx '(' -t 1 ')'  > P-t2.O 2> P-t2.E
 code=$?
 if test $code != 1; then
-  $echo "Test P-t2 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test P-t2 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp P-t2.O $srcdir/P-t2.X > /dev/null 2>&1
@@ -3351,7 +3351,7 @@ test -s P-t2.E || rm -f P-t2.E
 $xx ! '(' -t 1 ')'  > NP-t2.O 2> NP-t2.E
 code=$?
 if test $code != 0; then
-  $echo "Test NP-t2 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test NP-t2 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NP-t2.O $srcdir/NP-t2.X > /dev/null 2>&1
@@ -3369,7 +3369,7 @@ test -s NP-t2.E || rm -f NP-t2.E
 $xx ! ! '(' -t 1 ')'  > NNP-t2.O 2> NNP-t2.E
 code=$?
 if test $code != 1; then
-  $echo "Test NNP-t2 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test NNP-t2 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp NNP-t2.O $srcdir/NNP-t2.X > /dev/null 2>&1
@@ -3387,7 +3387,7 @@ test -s NNP-t2.E || rm -f NNP-t2.E
 $xx ! '(' '' ')'  > N-paren-1.O 2> N-paren-1.E
 code=$?
 if test $code != 0; then
-  $echo "Test N-paren-1 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test N-paren-1 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-paren-1.O $srcdir/N-paren-1.X > /dev/null 2>&1
@@ -3405,7 +3405,7 @@ test -s N-paren-1.E || rm -f N-paren-1.E
 $xx ! '(' '(' ')'  > N-paren-2.O 2> N-paren-2.E
 code=$?
 if test $code != 1; then
-  $echo "Test N-paren-2 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test N-paren-2 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-paren-2.O $srcdir/N-paren-2.X > /dev/null 2>&1
@@ -3423,7 +3423,7 @@ test -s N-paren-2.E || rm -f N-paren-2.E
 $xx ! '(' ')' ')'  > N-paren-3.O 2> N-paren-3.E
 code=$?
 if test $code != 1; then
-  $echo "Test N-paren-3 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test N-paren-3 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-paren-3.O $srcdir/N-paren-3.X > /dev/null 2>&1
@@ -3441,7 +3441,7 @@ test -s N-paren-3.E || rm -f N-paren-3.E
 $xx ! '(' ! ')'  > N-paren-4.O 2> N-paren-4.E
 code=$?
 if test $code != 1; then
-  $echo "Test N-paren-4 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test N-paren-4 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-paren-4.O $srcdir/N-paren-4.X > /dev/null 2>&1
@@ -3459,7 +3459,7 @@ test -s N-paren-4.E || rm -f N-paren-4.E
 $xx ! '(' -a ')'  > N-paren-5.O 2> N-paren-5.E
 code=$?
 if test $code != 1; then
-  $echo "Test N-paren-5 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test N-paren-5 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp N-paren-5.O $srcdir/N-paren-5.X > /dev/null 2>&1
@@ -3477,7 +3477,7 @@ test -s N-paren-5.E || rm -f N-paren-5.E
 $xx   > 1a.O 2> 1a.E
 code=$?
 if test $code != 1; then
-  $echo "Test 1a failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test 1a failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 1a.O $srcdir/1a.X > /dev/null 2>&1
@@ -3495,7 +3495,7 @@ test -s 1a.E || rm -f 1a.E
 $xx -z ''  > 1b.O 2> 1b.E
 code=$?
 if test $code != 0; then
-  $echo "Test 1b failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test 1b failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 1b.O $srcdir/1b.X > /dev/null 2>&1
@@ -3513,7 +3513,7 @@ test -s 1b.E || rm -f 1b.E
 $xx any-string  > 1c.O 2> 1c.E
 code=$?
 if test $code != 0; then
-  $echo "Test 1c failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test 1c failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 1c.O $srcdir/1c.X > /dev/null 2>&1
@@ -3531,7 +3531,7 @@ test -s 1c.E || rm -f 1c.E
 $xx -n any-string  > 1d.O 2> 1d.E
 code=$?
 if test $code != 0; then
-  $echo "Test 1d failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test 1d failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 1d.O $srcdir/1d.X > /dev/null 2>&1
@@ -3549,7 +3549,7 @@ test -s 1d.E || rm -f 1d.E
 $xx ''  > 1e.O 2> 1e.E
 code=$?
 if test $code != 1; then
-  $echo "Test 1e failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test 1e failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 1e.O $srcdir/1e.X > /dev/null 2>&1
@@ -3567,7 +3567,7 @@ test -s 1e.E || rm -f 1e.E
 $xx -  > 1f.O 2> 1f.E
 code=$?
 if test $code != 0; then
-  $echo "Test 1f failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test 1f failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 1f.O $srcdir/1f.X > /dev/null 2>&1
@@ -3585,7 +3585,7 @@ test -s 1f.E || rm -f 1f.E
 $xx --  > 1g.O 2> 1g.E
 code=$?
 if test $code != 0; then
-  $echo "Test 1g failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test 1g failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 1g.O $srcdir/1g.X > /dev/null 2>&1
@@ -3603,7 +3603,7 @@ test -s 1g.E || rm -f 1g.E
 $xx -0  > 1h.O 2> 1h.E
 code=$?
 if test $code != 0; then
-  $echo "Test 1h failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test 1h failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 1h.O $srcdir/1h.X > /dev/null 2>&1
@@ -3621,7 +3621,7 @@ test -s 1h.E || rm -f 1h.E
 $xx -f  > 1i.O 2> 1i.E
 code=$?
 if test $code != 0; then
-  $echo "Test 1i failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test 1i failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 1i.O $srcdir/1i.X > /dev/null 2>&1
@@ -3639,7 +3639,7 @@ test -s 1i.E || rm -f 1i.E
 $xx --help  > 1j.O 2> 1j.E
 code=$?
 if test $code != 0; then
-  $echo "Test 1j failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test 1j failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 1j.O $srcdir/1j.X > /dev/null 2>&1
@@ -3657,7 +3657,7 @@ test -s 1j.E || rm -f 1j.E
 $xx --version  > 1k.O 2> 1k.E
 code=$?
 if test $code != 0; then
-  $echo "Test 1k failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test 1k failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 1k.O $srcdir/1k.X > /dev/null 2>&1
@@ -3675,7 +3675,7 @@ test -s 1k.E || rm -f 1k.E
 $xx t = t  > streq-1.O 2> streq-1.E
 code=$?
 if test $code != 0; then
-  $echo "Test streq-1 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test streq-1 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp streq-1.O $srcdir/streq-1.X > /dev/null 2>&1
@@ -3693,7 +3693,7 @@ test -s streq-1.E || rm -f streq-1.E
 $xx t = f  > streq-2.O 2> streq-2.E
 code=$?
 if test $code != 1; then
-  $echo "Test streq-2 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test streq-2 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp streq-2.O $srcdir/streq-2.X > /dev/null 2>&1
@@ -3711,7 +3711,7 @@ test -s streq-2.E || rm -f streq-2.E
 $xx ! = !  > streq-3.O 2> streq-3.E
 code=$?
 if test $code != 0; then
-  $echo "Test streq-3 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test streq-3 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp streq-3.O $srcdir/streq-3.X > /dev/null 2>&1
@@ -3729,7 +3729,7 @@ test -s streq-3.E || rm -f streq-3.E
 $xx = = =  > streq-4.O 2> streq-4.E
 code=$?
 if test $code != 0; then
-  $echo "Test streq-4 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test streq-4 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp streq-4.O $srcdir/streq-4.X > /dev/null 2>&1
@@ -3747,7 +3747,7 @@ test -s streq-4.E || rm -f streq-4.E
 $xx '(' = '('  > streq-5.O 2> streq-5.E
 code=$?
 if test $code != 0; then
-  $echo "Test streq-5 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test streq-5 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp streq-5.O $srcdir/streq-5.X > /dev/null 2>&1
@@ -3765,7 +3765,7 @@ test -s streq-5.E || rm -f streq-5.E
 $xx '(' = ')'  > streq-6.O 2> streq-6.E
 code=$?
 if test $code != 1; then
-  $echo "Test streq-6 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test streq-6 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp streq-6.O $srcdir/streq-6.X > /dev/null 2>&1
@@ -3783,7 +3783,7 @@ test -s streq-6.E || rm -f streq-6.E
 $xx t != t  > strne-1.O 2> strne-1.E
 code=$?
 if test $code != 1; then
-  $echo "Test strne-1 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test strne-1 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp strne-1.O $srcdir/strne-1.X > /dev/null 2>&1
@@ -3801,7 +3801,7 @@ test -s strne-1.E || rm -f strne-1.E
 $xx t != f  > strne-2.O 2> strne-2.E
 code=$?
 if test $code != 0; then
-  $echo "Test strne-2 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test strne-2 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp strne-2.O $srcdir/strne-2.X > /dev/null 2>&1
@@ -3819,7 +3819,7 @@ test -s strne-2.E || rm -f strne-2.E
 $xx ! != !  > strne-3.O 2> strne-3.E
 code=$?
 if test $code != 1; then
-  $echo "Test strne-3 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test strne-3 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp strne-3.O $srcdir/strne-3.X > /dev/null 2>&1
@@ -3837,7 +3837,7 @@ test -s strne-3.E || rm -f strne-3.E
 $xx = != =  > strne-4.O 2> strne-4.E
 code=$?
 if test $code != 1; then
-  $echo "Test strne-4 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test strne-4 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp strne-4.O $srcdir/strne-4.X > /dev/null 2>&1
@@ -3855,7 +3855,7 @@ test -s strne-4.E || rm -f strne-4.E
 $xx '(' != '('  > strne-5.O 2> strne-5.E
 code=$?
 if test $code != 1; then
-  $echo "Test strne-5 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test strne-5 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp strne-5.O $srcdir/strne-5.X > /dev/null 2>&1
@@ -3873,7 +3873,7 @@ test -s strne-5.E || rm -f strne-5.E
 $xx '(' != ')'  > strne-6.O 2> strne-6.E
 code=$?
 if test $code != 0; then
-  $echo "Test strne-6 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test strne-6 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp strne-6.O $srcdir/strne-6.X > /dev/null 2>&1
@@ -3891,7 +3891,7 @@ test -s strne-6.E || rm -f strne-6.E
 $xx t -a t  > and-1.O 2> and-1.E
 code=$?
 if test $code != 0; then
-  $echo "Test and-1 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test and-1 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp and-1.O $srcdir/and-1.X > /dev/null 2>&1
@@ -3909,7 +3909,7 @@ test -s and-1.E || rm -f and-1.E
 $xx '' -a t  > and-2.O 2> and-2.E
 code=$?
 if test $code != 1; then
-  $echo "Test and-2 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test and-2 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp and-2.O $srcdir/and-2.X > /dev/null 2>&1
@@ -3927,7 +3927,7 @@ test -s and-2.E || rm -f and-2.E
 $xx t -a ''  > and-3.O 2> and-3.E
 code=$?
 if test $code != 1; then
-  $echo "Test and-3 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test and-3 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp and-3.O $srcdir/and-3.X > /dev/null 2>&1
@@ -3945,7 +3945,7 @@ test -s and-3.E || rm -f and-3.E
 $xx '' -a ''  > and-4.O 2> and-4.E
 code=$?
 if test $code != 1; then
-  $echo "Test and-4 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test and-4 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp and-4.O $srcdir/and-4.X > /dev/null 2>&1
@@ -3963,7 +3963,7 @@ test -s and-4.E || rm -f and-4.E
 $xx t -o t  > or-1.O 2> or-1.E
 code=$?
 if test $code != 0; then
-  $echo "Test or-1 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test or-1 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp or-1.O $srcdir/or-1.X > /dev/null 2>&1
@@ -3981,7 +3981,7 @@ test -s or-1.E || rm -f or-1.E
 $xx '' -o t  > or-2.O 2> or-2.E
 code=$?
 if test $code != 0; then
-  $echo "Test or-2 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test or-2 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp or-2.O $srcdir/or-2.X > /dev/null 2>&1
@@ -3999,7 +3999,7 @@ test -s or-2.E || rm -f or-2.E
 $xx t -o ''  > or-3.O 2> or-3.E
 code=$?
 if test $code != 0; then
-  $echo "Test or-3 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test or-3 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp or-3.O $srcdir/or-3.X > /dev/null 2>&1
@@ -4017,7 +4017,7 @@ test -s or-3.E || rm -f or-3.E
 $xx '' -o ''  > or-4.O 2> or-4.E
 code=$?
 if test $code != 1; then
-  $echo "Test or-4 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test or-4 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp or-4.O $srcdir/or-4.X > /dev/null 2>&1
@@ -4035,7 +4035,7 @@ test -s or-4.E || rm -f or-4.E
 $xx 9 -eq 9  > eq-1.O 2> eq-1.E
 code=$?
 if test $code != 0; then
-  $echo "Test eq-1 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test eq-1 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp eq-1.O $srcdir/eq-1.X > /dev/null 2>&1
@@ -4053,7 +4053,7 @@ test -s eq-1.E || rm -f eq-1.E
 $xx 0 -eq 0  > eq-2.O 2> eq-2.E
 code=$?
 if test $code != 0; then
-  $echo "Test eq-2 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test eq-2 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp eq-2.O $srcdir/eq-2.X > /dev/null 2>&1
@@ -4071,7 +4071,7 @@ test -s eq-2.E || rm -f eq-2.E
 $xx 0 -eq 00  > eq-3.O 2> eq-3.E
 code=$?
 if test $code != 0; then
-  $echo "Test eq-3 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test eq-3 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp eq-3.O $srcdir/eq-3.X > /dev/null 2>&1
@@ -4089,7 +4089,7 @@ test -s eq-3.E || rm -f eq-3.E
 $xx 8 -eq 9  > eq-4.O 2> eq-4.E
 code=$?
 if test $code != 1; then
-  $echo "Test eq-4 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test eq-4 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp eq-4.O $srcdir/eq-4.X > /dev/null 2>&1
@@ -4107,7 +4107,7 @@ test -s eq-4.E || rm -f eq-4.E
 $xx 1 -eq 0  > eq-5.O 2> eq-5.E
 code=$?
 if test $code != 1; then
-  $echo "Test eq-5 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test eq-5 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp eq-5.O $srcdir/eq-5.X > /dev/null 2>&1
@@ -4125,7 +4125,7 @@ test -s eq-5.E || rm -f eq-5.E
 $xx 5 -gt 5  > gt-1.O 2> gt-1.E
 code=$?
 if test $code != 1; then
-  $echo "Test gt-1 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test gt-1 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp gt-1.O $srcdir/gt-1.X > /dev/null 2>&1
@@ -4143,7 +4143,7 @@ test -s gt-1.E || rm -f gt-1.E
 $xx 5 -gt 4  > gt-2.O 2> gt-2.E
 code=$?
 if test $code != 0; then
-  $echo "Test gt-2 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test gt-2 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp gt-2.O $srcdir/gt-2.X > /dev/null 2>&1
@@ -4161,7 +4161,7 @@ test -s gt-2.E || rm -f gt-2.E
 $xx 4 -gt 5  > gt-3.O 2> gt-3.E
 code=$?
 if test $code != 1; then
-  $echo "Test gt-3 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test gt-3 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp gt-3.O $srcdir/gt-3.X > /dev/null 2>&1
@@ -4179,7 +4179,7 @@ test -s gt-3.E || rm -f gt-3.E
 $xx -1 -gt -2  > gt-4.O 2> gt-4.E
 code=$?
 if test $code != 0; then
-  $echo "Test gt-4 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test gt-4 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp gt-4.O $srcdir/gt-4.X > /dev/null 2>&1
@@ -4197,7 +4197,7 @@ test -s gt-4.E || rm -f gt-4.E
 $xx 5 -lt 5  > lt-1.O 2> lt-1.E
 code=$?
 if test $code != 1; then
-  $echo "Test lt-1 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test lt-1 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp lt-1.O $srcdir/lt-1.X > /dev/null 2>&1
@@ -4215,7 +4215,7 @@ test -s lt-1.E || rm -f lt-1.E
 $xx 5 -lt 4  > lt-2.O 2> lt-2.E
 code=$?
 if test $code != 1; then
-  $echo "Test lt-2 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test lt-2 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp lt-2.O $srcdir/lt-2.X > /dev/null 2>&1
@@ -4233,7 +4233,7 @@ test -s lt-2.E || rm -f lt-2.E
 $xx 4 -lt 5  > lt-3.O 2> lt-3.E
 code=$?
 if test $code != 0; then
-  $echo "Test lt-3 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test lt-3 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp lt-3.O $srcdir/lt-3.X > /dev/null 2>&1
@@ -4251,7 +4251,7 @@ test -s lt-3.E || rm -f lt-3.E
 $xx -1 -lt -2  > lt-4.O 2> lt-4.E
 code=$?
 if test $code != 1; then
-  $echo "Test lt-4 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test lt-4 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp lt-4.O $srcdir/lt-4.X > /dev/null 2>&1
@@ -4269,7 +4269,7 @@ test -s lt-4.E || rm -f lt-4.E
 $xx 0x0 -eq 00  > inv-1.O 2> inv-1.E
 code=$?
 if test $code != 2; then
-  $echo "Test inv-1 failed: ../../src/test return code $code differs from expected value 2" 1>&2
+  $echo "Test inv-1 failed: $xx return code $code differs from expected value 2" 1>&2
   errors=`expr $errors + 1`
 else
   cmp inv-1.O $srcdir/inv-1.X > /dev/null 2>&1
@@ -4287,7 +4287,7 @@ test -s inv-1.E || rm -f inv-1.E
 $xx -t  > t1.O 2> t1.E
 code=$?
 if test $code != 0; then
-  $echo "Test t1 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test t1 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp t1.O $srcdir/t1.X > /dev/null 2>&1
@@ -4305,7 +4305,7 @@ test -s t1.E || rm -f t1.E
 $xx -t 1  > t2.O 2> t2.E
 code=$?
 if test $code != 1; then
-  $echo "Test t2 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test t2 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp t2.O $srcdir/t2.X > /dev/null 2>&1
@@ -4323,7 +4323,7 @@ test -s t2.E || rm -f t2.E
 $xx '(' '' ')'  > paren-1.O 2> paren-1.E
 code=$?
 if test $code != 1; then
-  $echo "Test paren-1 failed: ../../src/test return code $code differs from expected value 1" 1>&2
+  $echo "Test paren-1 failed: $xx return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp paren-1.O $srcdir/paren-1.X > /dev/null 2>&1
@@ -4341,7 +4341,7 @@ test -s paren-1.E || rm -f paren-1.E
 $xx '(' '(' ')'  > paren-2.O 2> paren-2.E
 code=$?
 if test $code != 0; then
-  $echo "Test paren-2 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test paren-2 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp paren-2.O $srcdir/paren-2.X > /dev/null 2>&1
@@ -4359,7 +4359,7 @@ test -s paren-2.E || rm -f paren-2.E
 $xx '(' ')' ')'  > paren-3.O 2> paren-3.E
 code=$?
 if test $code != 0; then
-  $echo "Test paren-3 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test paren-3 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp paren-3.O $srcdir/paren-3.X > /dev/null 2>&1
@@ -4377,7 +4377,7 @@ test -s paren-3.E || rm -f paren-3.E
 $xx '(' ! ')'  > paren-4.O 2> paren-4.E
 code=$?
 if test $code != 0; then
-  $echo "Test paren-4 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test paren-4 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp paren-4.O $srcdir/paren-4.X > /dev/null 2>&1
@@ -4395,7 +4395,7 @@ test -s paren-4.E || rm -f paren-4.E
 $xx '(' -a ')'  > paren-5.O 2> paren-5.E
 code=$?
 if test $code != 0; then
-  $echo "Test paren-5 failed: ../../src/test return code $code differs from expected value 0" 1>&2
+  $echo "Test paren-5 failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp paren-5.O $srcdir/paren-5.X > /dev/null 2>&1

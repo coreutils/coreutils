@@ -21,7 +21,7 @@ export LANG
 LANG=C TZ=UTC0 $xx -d '1997-01-19 08:17:48 +0' +'%% %a %A %b %B'  > 1.O 2> 1.E
 code=$?
 if test $code != 0; then
-  $echo "Test 1(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test 1(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 1.O $srcdir/1.X > /dev/null 2>&1
@@ -39,7 +39,7 @@ test -s 1.E || rm -f 1.E
 LANG=C TZ=UTC0 $xx -d '1997-01-19 08:17:48 +0' +'%d_%D_%e_%h_%H'  > 3.O 2> 3.E
 code=$?
 if test $code != 0; then
-  $echo "Test 3(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test 3(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 3.O $srcdir/3.X > /dev/null 2>&1
@@ -57,7 +57,7 @@ test -s 3.E || rm -f 3.E
 LANG=C TZ=UTC0 $xx -d '1997-01-19 08:17:48 +0' +'%I_%j_%k_%l_%m'  > 4.O 2> 4.E
 code=$?
 if test $code != 0; then
-  $echo "Test 4(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test 4(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 4.O $srcdir/4.X > /dev/null 2>&1
@@ -75,7 +75,7 @@ test -s 4.E || rm -f 4.E
 LANG=C TZ=UTC0 $xx -d '1997-01-19 08:17:48 +0' +'%M_%n_%p_%r'  > 5.O 2> 5.E
 code=$?
 if test $code != 0; then
-  $echo "Test 5(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test 5(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 5.O $srcdir/5.X > /dev/null 2>&1
@@ -93,7 +93,7 @@ test -s 5.E || rm -f 5.E
 LANG=C TZ=UTC0 $xx -d '1997-01-19 08:17:48 +0' +'%s_%S_%t_%T'  > 6.O 2> 6.E
 code=$?
 if test $code != 0; then
-  $echo "Test 6(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test 6(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 6.O $srcdir/6.X > /dev/null 2>&1
@@ -111,7 +111,7 @@ test -s 6.E || rm -f 6.E
 LANG=C TZ=UTC0 $xx -d '1997-01-19 08:17:48 +0' +'%U_%V_%w_%W'  > 7.O 2> 7.E
 code=$?
 if test $code != 0; then
-  $echo "Test 7(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test 7(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 7.O $srcdir/7.X > /dev/null 2>&1
@@ -129,7 +129,7 @@ test -s 7.E || rm -f 7.E
 LANG=C TZ=UTC0 $xx -d '1997-01-19 08:17:48 +0' +'%x_%X_%y_%Y'  > 8.O 2> 8.E
 code=$?
 if test $code != 0; then
-  $echo "Test 8(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test 8(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 8.O $srcdir/8.X > /dev/null 2>&1
@@ -147,7 +147,7 @@ test -s 8.E || rm -f 8.E
 LANG=C TZ=UTC0 $xx -d '1997-01-19 08:17:48 +0' +'%z'  > 9.O 2> 9.E
 code=$?
 if test $code != 0; then
-  $echo "Test 9(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test 9(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 9.O $srcdir/9.X > /dev/null 2>&1
@@ -165,7 +165,7 @@ test -s 9.E || rm -f 9.E
 LANG=C TZ=UTC0 $xx --date '02/29/1996 1 year' +%Y-%m-%d  > leap-1.O 2> leap-1.E
 code=$?
 if test $code != 0; then
-  $echo "Test leap-1(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test leap-1(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp leap-1.O $srcdir/leap-1.X > /dev/null 2>&1
@@ -183,7 +183,7 @@ test -s leap-1.E || rm -f leap-1.E
 LANG=C TZ=UTC0 $xx --date '1995-1-1' +%U  > U95-1.O 2> U95-1.E
 code=$?
 if test $code != 0; then
-  $echo "Test U95-1(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test U95-1(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp U95-1.O $srcdir/U95-1.X > /dev/null 2>&1
@@ -201,7 +201,7 @@ test -s U95-1.E || rm -f U95-1.E
 LANG=C TZ=UTC0 $xx --date '1995-1-7' +%U  > U95-2.O 2> U95-2.E
 code=$?
 if test $code != 0; then
-  $echo "Test U95-2(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test U95-2(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp U95-2.O $srcdir/U95-2.X > /dev/null 2>&1
@@ -219,7 +219,7 @@ test -s U95-2.E || rm -f U95-2.E
 LANG=C TZ=UTC0 $xx --date '1995-1-8' +%U  > U95-3.O 2> U95-3.E
 code=$?
 if test $code != 0; then
-  $echo "Test U95-3(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test U95-3(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp U95-3.O $srcdir/U95-3.X > /dev/null 2>&1
@@ -237,7 +237,7 @@ test -s U95-3.E || rm -f U95-3.E
 LANG=C TZ=UTC0 $xx --date '1992-1-1' +%U  > U92-1.O 2> U92-1.E
 code=$?
 if test $code != 0; then
-  $echo "Test U92-1(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test U92-1(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp U92-1.O $srcdir/U92-1.X > /dev/null 2>&1
@@ -255,7 +255,7 @@ test -s U92-1.E || rm -f U92-1.E
 LANG=C TZ=UTC0 $xx --date '1992-1-4' +%U  > U92-2.O 2> U92-2.E
 code=$?
 if test $code != 0; then
-  $echo "Test U92-2(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test U92-2(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp U92-2.O $srcdir/U92-2.X > /dev/null 2>&1
@@ -273,7 +273,7 @@ test -s U92-2.E || rm -f U92-2.E
 LANG=C TZ=UTC0 $xx --date '1992-1-5' +%U  > U92-3.O 2> U92-3.E
 code=$?
 if test $code != 0; then
-  $echo "Test U92-3(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test U92-3(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp U92-3.O $srcdir/U92-3.X > /dev/null 2>&1
@@ -291,7 +291,7 @@ test -s U92-3.E || rm -f U92-3.E
 LANG=C TZ=UTC0 $xx --date '1992-1-1' +%V  > V92-1.O 2> V92-1.E
 code=$?
 if test $code != 0; then
-  $echo "Test V92-1(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test V92-1(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp V92-1.O $srcdir/V92-1.X > /dev/null 2>&1
@@ -309,7 +309,7 @@ test -s V92-1.E || rm -f V92-1.E
 LANG=C TZ=UTC0 $xx --date '1992-1-5' +%V  > V92-2.O 2> V92-2.E
 code=$?
 if test $code != 0; then
-  $echo "Test V92-2(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test V92-2(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp V92-2.O $srcdir/V92-2.X > /dev/null 2>&1
@@ -327,7 +327,7 @@ test -s V92-2.E || rm -f V92-2.E
 LANG=C TZ=UTC0 $xx --date '1992-1-6' +%V  > V92-3.O 2> V92-3.E
 code=$?
 if test $code != 0; then
-  $echo "Test V92-3(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test V92-3(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp V92-3.O $srcdir/V92-3.X > /dev/null 2>&1
@@ -345,7 +345,7 @@ test -s V92-3.E || rm -f V92-3.E
 LANG=C TZ=UTC0 $xx --date '1992-1-1' +%W  > W92-1.O 2> W92-1.E
 code=$?
 if test $code != 0; then
-  $echo "Test W92-1(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test W92-1(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp W92-1.O $srcdir/W92-1.X > /dev/null 2>&1
@@ -363,7 +363,7 @@ test -s W92-1.E || rm -f W92-1.E
 LANG=C TZ=UTC0 $xx --date '1992-1-5' +%W  > W92-2.O 2> W92-2.E
 code=$?
 if test $code != 0; then
-  $echo "Test W92-2(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test W92-2(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp W92-2.O $srcdir/W92-2.X > /dev/null 2>&1
@@ -381,7 +381,7 @@ test -s W92-2.E || rm -f W92-2.E
 LANG=C TZ=UTC0 $xx --date '1992-1-6' +%W  > W92-3.O 2> W92-3.E
 code=$?
 if test $code != 0; then
-  $echo "Test W92-3(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test W92-3(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp W92-3.O $srcdir/W92-3.X > /dev/null 2>&1
@@ -399,7 +399,7 @@ test -s W92-3.E || rm -f W92-3.E
 LANG=C TZ=UTC0 $xx --date '1998-1-1 3 years' +%Y  > millen-1.O 2> millen-1.E
 code=$?
 if test $code != 0; then
-  $echo "Test millen-1(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test millen-1(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp millen-1.O $srcdir/millen-1.X > /dev/null 2>&1
@@ -417,7 +417,7 @@ test -s millen-1.E || rm -f millen-1.E
 LANG=C TZ=UTC0 $xx -d '1997-01-19 08:17:48 +0 now' '+%Y-%m-%d %T'  > rel-0.O 2> rel-0.E
 code=$?
 if test $code != 0; then
-  $echo "Test rel-0(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test rel-0(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp rel-0.O $srcdir/rel-0.X > /dev/null 2>&1
@@ -435,7 +435,7 @@ test -s rel-0.E || rm -f rel-0.E
 LANG=C TZ=UTC0 $xx -d '1997-01-19 08:17:48 +0 yesterday' '+%Y-%m-%d %T'  > rel-1a.O 2> rel-1a.E
 code=$?
 if test $code != 0; then
-  $echo "Test rel-1a(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test rel-1a(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp rel-1a.O $srcdir/rel-1a.X > /dev/null 2>&1
@@ -453,7 +453,7 @@ test -s rel-1a.E || rm -f rel-1a.E
 LANG=C TZ=UTC0 $xx -d '1997-01-19 08:17:48 +0 tomorrow' '+%Y-%m-%d %T'  > rel-1b.O 2> rel-1b.E
 code=$?
 if test $code != 0; then
-  $echo "Test rel-1b(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test rel-1b(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp rel-1b.O $srcdir/rel-1b.X > /dev/null 2>&1
@@ -471,7 +471,7 @@ test -s rel-1b.E || rm -f rel-1b.E
 LANG=C TZ=UTC0 $xx -d '1997-01-19 08:17:48 +0 6 years ago' '+%Y-%m-%d %T'  > rel-2a.O 2> rel-2a.E
 code=$?
 if test $code != 0; then
-  $echo "Test rel-2a(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test rel-2a(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp rel-2a.O $srcdir/rel-2a.X > /dev/null 2>&1
@@ -489,7 +489,7 @@ test -s rel-2a.E || rm -f rel-2a.E
 LANG=C TZ=UTC0 $xx -d '1997-01-19 08:17:48 +0 7 months ago' '+%Y-%m-%d %T'  > rel-2b.O 2> rel-2b.E
 code=$?
 if test $code != 0; then
-  $echo "Test rel-2b(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test rel-2b(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp rel-2b.O $srcdir/rel-2b.X > /dev/null 2>&1
@@ -507,7 +507,7 @@ test -s rel-2b.E || rm -f rel-2b.E
 LANG=C TZ=UTC0 $xx -d '1997-01-19 08:17:48 +0 8 weeks ago' '+%Y-%m-%d %T'  > rel-2c.O 2> rel-2c.E
 code=$?
 if test $code != 0; then
-  $echo "Test rel-2c(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test rel-2c(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp rel-2c.O $srcdir/rel-2c.X > /dev/null 2>&1
@@ -525,7 +525,7 @@ test -s rel-2c.E || rm -f rel-2c.E
 LANG=C TZ=UTC0 $xx -d '1997-01-19 08:17:48 +0 1 day ago' '+%Y-%m-%d %T'  > rel-2d.O 2> rel-2d.E
 code=$?
 if test $code != 0; then
-  $echo "Test rel-2d(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test rel-2d(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp rel-2d.O $srcdir/rel-2d.X > /dev/null 2>&1
@@ -543,7 +543,7 @@ test -s rel-2d.E || rm -f rel-2d.E
 LANG=C TZ=UTC0 $xx -d '1997-01-19 08:17:48 +0 2 hours ago' '+%Y-%m-%d %T'  > rel-2e.O 2> rel-2e.E
 code=$?
 if test $code != 0; then
-  $echo "Test rel-2e(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test rel-2e(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp rel-2e.O $srcdir/rel-2e.X > /dev/null 2>&1
@@ -561,7 +561,7 @@ test -s rel-2e.E || rm -f rel-2e.E
 LANG=C TZ=UTC0 $xx -d '1997-01-19 08:17:48 +0 3 minutes ago' '+%Y-%m-%d %T'  > rel-2f.O 2> rel-2f.E
 code=$?
 if test $code != 0; then
-  $echo "Test rel-2f(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test rel-2f(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp rel-2f.O $srcdir/rel-2f.X > /dev/null 2>&1
@@ -579,7 +579,7 @@ test -s rel-2f.E || rm -f rel-2f.E
 LANG=C TZ=UTC0 $xx -d '1997-01-19 08:17:48 +0 4 seconds ago' '+%Y-%m-%d %T'  > rel-2g.O 2> rel-2g.E
 code=$?
 if test $code != 0; then
-  $echo "Test rel-2g(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test rel-2g(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp rel-2g.O $srcdir/rel-2g.X > /dev/null 2>&1
@@ -597,7 +597,7 @@ test -s rel-2g.E || rm -f rel-2g.E
 LANG=C TZ=UTC0 $xx -d '1997-01-19 08:17:48 +0 4 seconds ago' '+%Y-%m-%d %T'  > rel-3a.O 2> rel-3a.E
 code=$?
 if test $code != 0; then
-  $echo "Test rel-3a(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test rel-3a(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp rel-3a.O $srcdir/rel-3a.X > /dev/null 2>&1
@@ -615,7 +615,7 @@ test -s rel-3a.E || rm -f rel-3a.E
 LANG=C TZ=UTC0 $xx -d '1997-01-19 08:17:48 +0 next second' '+%Y-%m-%d %T'  > next-s.O 2> next-s.E
 code=$?
 if test $code != 0; then
-  $echo "Test next-s(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test next-s(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp next-s.O $srcdir/next-s.X > /dev/null 2>&1
@@ -633,7 +633,7 @@ test -s next-s.E || rm -f next-s.E
 LANG=C TZ=UTC0 $xx -d '1997-01-19 08:17:48 +0 next minute' '+%Y-%m-%d %T'  > next-m.O 2> next-m.E
 code=$?
 if test $code != 0; then
-  $echo "Test next-m(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test next-m(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp next-m.O $srcdir/next-m.X > /dev/null 2>&1
@@ -651,7 +651,7 @@ test -s next-m.E || rm -f next-m.E
 LANG=C TZ=UTC0 $xx -d '1997-01-19 08:17:48 +0 next hour'   '+%Y-%m-%d %T'  > next-h.O 2> next-h.E
 code=$?
 if test $code != 0; then
-  $echo "Test next-h(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test next-h(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp next-h.O $srcdir/next-h.X > /dev/null 2>&1
@@ -669,7 +669,7 @@ test -s next-h.E || rm -f next-h.E
 LANG=C TZ=UTC0 $xx -d '1997-01-19 08:17:48 +0 next day'    '+%Y-%m-%d %T'  > next-d.O 2> next-d.E
 code=$?
 if test $code != 0; then
-  $echo "Test next-d(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test next-d(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp next-d.O $srcdir/next-d.X > /dev/null 2>&1
@@ -687,7 +687,7 @@ test -s next-d.E || rm -f next-d.E
 LANG=C TZ=UTC0 $xx -d '1997-01-19 08:17:48 +0 next week'   '+%Y-%m-%d %T'  > next-w.O 2> next-w.E
 code=$?
 if test $code != 0; then
-  $echo "Test next-w(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test next-w(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp next-w.O $srcdir/next-w.X > /dev/null 2>&1
@@ -705,7 +705,7 @@ test -s next-w.E || rm -f next-w.E
 LANG=C TZ=UTC0 $xx -d '1997-01-19 08:17:48 +0 next month' '+%Y-%m-%d %T'  > next-mo.O 2> next-mo.E
 code=$?
 if test $code != 0; then
-  $echo "Test next-mo(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test next-mo(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp next-mo.O $srcdir/next-mo.X > /dev/null 2>&1
@@ -723,7 +723,7 @@ test -s next-mo.E || rm -f next-mo.E
 LANG=C TZ=UTC0 $xx -d '1997-01-19 08:17:48 +0 next year'   '+%Y-%m-%d %T'  > next-y.O 2> next-y.E
 code=$?
 if test $code != 0; then
-  $echo "Test next-y(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test next-y(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp next-y.O $srcdir/next-y.X > /dev/null 2>&1
@@ -741,7 +741,7 @@ test -s next-y.E || rm -f next-y.E
 TZ=UTC+4 $xx -u -d '08/01/97 6:00' '+%D,%H:%M'  > utc-0.O 2> utc-0.E
 code=$?
 if test $code != 0; then
-  $echo "Test utc-0(TZ=UTC+4) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test utc-0(TZ=UTC+4) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp utc-0.O $srcdir/utc-0.X > /dev/null 2>&1
@@ -759,7 +759,7 @@ test -s utc-0.E || rm -f utc-0.E
 LANG=C TZ=UTC0 $xx -u -d '08/01/97 6:00 UTC +4 hours' '+%D,%H:%M'  > utc-0a.O 2> utc-0a.E
 code=$?
 if test $code != 0; then
-  $echo "Test utc-0a(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test utc-0a(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp utc-0a.O $srcdir/utc-0a.X > /dev/null 2>&1
@@ -777,7 +777,7 @@ test -s utc-0a.E || rm -f utc-0a.E
 TZ=UTC+1 $xx -u --file=- '+%Y-%m-%d %T' < $srcdir/utc-1.I > utc-1.O 2> utc-1.E
 code=$?
 if test $code != 0; then
-  $echo "Test utc-1(TZ=UTC+1) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test utc-1(TZ=UTC+1) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp utc-1.O $srcdir/utc-1.X > /dev/null 2>&1
@@ -795,7 +795,7 @@ test -s utc-1.E || rm -f utc-1.E
 LANG=C TZ=UTC0 $xx -u --file=- '+%Y-%m-%d %T' < $srcdir/utc-1a.I > utc-1a.O 2> utc-1a.E
 code=$?
 if test $code != 0; then
-  $echo "Test utc-1a(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test utc-1a(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp utc-1a.O $srcdir/utc-1a.X > /dev/null 2>&1
@@ -813,7 +813,7 @@ test -s utc-1a.E || rm -f utc-1a.E
 TZ=UTC+2 $xx -d '1970-01-01 00:00:01' +%s  > date2sec-0.O 2> date2sec-0.E
 code=$?
 if test $code != 0; then
-  $echo "Test date2sec-0(TZ=UTC+2) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test date2sec-0(TZ=UTC+2) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp date2sec-0.O $srcdir/date2sec-0.X > /dev/null 2>&1
@@ -831,7 +831,7 @@ test -s date2sec-0.E || rm -f date2sec-0.E
 LANG=C TZ=UTC0 $xx -d '1970-01-01 00:00:01 UTC +2 hours' +%s  > date2sec-0a.O 2> date2sec-0a.E
 code=$?
 if test $code != 0; then
-  $echo "Test date2sec-0a(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test date2sec-0a(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp date2sec-0a.O $srcdir/date2sec-0a.X > /dev/null 2>&1
@@ -849,7 +849,7 @@ test -s date2sec-0a.E || rm -f date2sec-0a.E
 LANG=C TZ=UTC0 $xx -d 2000-01-01 +%s  > date2sec-1.O 2> date2sec-1.E
 code=$?
 if test $code != 0; then
-  $echo "Test date2sec-1(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test date2sec-1(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp date2sec-1.O $srcdir/date2sec-1.X > /dev/null 2>&1
@@ -867,7 +867,7 @@ test -s date2sec-1.E || rm -f date2sec-1.E
 LANG=C TZ=UTC0 $xx -d '1970-01-01 UTC 946684800 sec' +'%Y-%m-%d %T %z'  > sec2date-0.O 2> sec2date-0.E
 code=$?
 if test $code != 0; then
-  $echo "Test sec2date-0(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test sec2date-0(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp sec2date-0.O $srcdir/sec2date-0.X > /dev/null 2>&1
@@ -885,7 +885,7 @@ test -s sec2date-0.E || rm -f sec2date-0.E
 LANG=C TZ=UTC0 $xx -d '1997-01-19 08:17:48 this minute' '+%Y-%m-%d %T'  > this-m.O 2> this-m.E
 code=$?
 if test $code != 0; then
-  $echo "Test this-m(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test this-m(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp this-m.O $srcdir/this-m.X > /dev/null 2>&1
@@ -903,7 +903,7 @@ test -s this-m.E || rm -f this-m.E
 LANG=C TZ=UTC0 $xx -d '1997-01-19 08:17:48 this hour' '+%Y-%m-%d %T'  > this-h.O 2> this-h.E
 code=$?
 if test $code != 0; then
-  $echo "Test this-h(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test this-h(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp this-h.O $srcdir/this-h.X > /dev/null 2>&1
@@ -921,7 +921,7 @@ test -s this-h.E || rm -f this-h.E
 LANG=C TZ=UTC0 $xx -d '1997-01-19 08:17:48 this week' '+%Y-%m-%d %T'  > this-w.O 2> this-w.E
 code=$?
 if test $code != 0; then
-  $echo "Test this-w(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test this-w(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp this-w.O $srcdir/this-w.X > /dev/null 2>&1
@@ -939,7 +939,7 @@ test -s this-w.E || rm -f this-w.E
 LANG=C TZ=UTC0 $xx -d '1997-01-19 08:17:48 this month' '+%Y-%m-%d %T'  > this-mo.O 2> this-mo.E
 code=$?
 if test $code != 0; then
-  $echo "Test this-mo(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test this-mo(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp this-mo.O $srcdir/this-mo.X > /dev/null 2>&1
@@ -957,7 +957,7 @@ test -s this-mo.E || rm -f this-mo.E
 LANG=C TZ=UTC0 $xx -d '1997-01-19 08:17:48 this year' '+%Y-%m-%d %T'  > this-y.O 2> this-y.E
 code=$?
 if test $code != 0; then
-  $echo "Test this-y(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test this-y(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp this-y.O $srcdir/this-y.X > /dev/null 2>&1
@@ -975,7 +975,7 @@ test -s this-y.E || rm -f this-y.E
 LANG=C TZ=UTC0 $xx -d 'Nov 10 1996' '+%Y-%m-%d %T'  > risks-1.O 2> risks-1.E
 code=$?
 if test $code != 0; then
-  $echo "Test risks-1(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test risks-1(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp risks-1.O $srcdir/risks-1.X > /dev/null 2>&1
@@ -993,7 +993,7 @@ test -s risks-1.E || rm -f risks-1.E
 LANG=C $xx -u -d '1996-11-10 0:00:00 +0' '+%Y-%m-%d %T'  > regress-1.O 2> regress-1.E
 code=$?
 if test $code != 0; then
-  $echo "Test regress-1(LANG=C) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test regress-1(LANG=C) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp regress-1.O $srcdir/regress-1.X > /dev/null 2>&1
@@ -1011,7 +1011,7 @@ test -s regress-1.E || rm -f regress-1.E
 LANG=C TZ=UTC0 $xx -d 000909 '+%Y-%m-%d %T'  > datevtime-1.O 2> datevtime-1.E
 code=$?
 if test $code != 0; then
-  $echo "Test datevtime-1(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test datevtime-1(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp datevtime-1.O $srcdir/datevtime-1.X > /dev/null 2>&1
@@ -1029,7 +1029,7 @@ test -s datevtime-1.E || rm -f datevtime-1.E
 LC_ALL=de_DE TZ=UTC0 $xx -R -d '1997-01-19 08:17:48 +0'  > rfc822-1.O 2> rfc822-1.E
 code=$?
 if test $code != 0; then
-  $echo "Test rfc822-1(LC_ALL=de_DE TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test rfc822-1(LC_ALL=de_DE TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp rfc822-1.O $srcdir/rfc822-1.X > /dev/null 2>&1
@@ -1047,7 +1047,7 @@ test -s rfc822-1.E || rm -f rfc822-1.E
 LANG=C TZ=UTC0 $xx --utc -d '1970-01-01 00:00:00 UTC +961062237 sec' '+%Y-%m-%d %T'  > relative-1.O 2> relative-1.E
 code=$?
 if test $code != 0; then
-  $echo "Test relative-1(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test relative-1(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp relative-1.O $srcdir/relative-1.X > /dev/null 2>&1
@@ -1065,7 +1065,7 @@ test -s relative-1.E || rm -f relative-1.E
 TZ=UTC+1 $xx --utc -d '1970-01-01 UTC +961062237 sec' '+%Y-%m-%d %T'  > relative-2.O 2> relative-2.E
 code=$?
 if test $code != 0; then
-  $echo "Test relative-2(TZ=UTC+1) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test relative-2(TZ=UTC+1) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp relative-2.O $srcdir/relative-2.X > /dev/null 2>&1
@@ -1083,7 +1083,7 @@ test -s relative-2.E || rm -f relative-2.E
 LANG=C TZ=UTC0 $xx -d '1999-06-01' +%3004Y  > wide-fmt.O 2> wide-fmt.E
 code=$?
 if test $code != 0; then
-  $echo "Test wide-fmt(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test wide-fmt(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp wide-fmt.O $srcdir/wide-fmt.X > /dev/null 2>&1
@@ -1101,7 +1101,7 @@ test -s wide-fmt.E || rm -f wide-fmt.E
 LANG=C TZ=UTC0 $xx --iso -d May-23-2003  > moname-d-y.O 2> moname-d-y.E
 code=$?
 if test $code != 0; then
-  $echo "Test moname-d-y(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test moname-d-y(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp moname-d-y.O $srcdir/moname-d-y.X > /dev/null 2>&1
