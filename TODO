@@ -103,8 +103,6 @@ unexpand: [http://www.opengroup.org/onlinepubs/007908799/xcu/unexpand.html]
 Let GNU su use the `wheel' group if appropriate.
   (there are a couple patches, already)
 
-cut: when stdin is a tty, one has to hit EOF *twice* to get it to stop
-
 look at sort patches from http://www.math.cas.cz/~kasal/sw/gnu/coreutils/
 
 sort: Investigate better sorting algorithms; see Knuth vol. 3.
