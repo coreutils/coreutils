@@ -1,5 +1,5 @@
 /* fsusage.c -- return space usage of mounted filesystems
-   Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1992, 1996 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -90,8 +90,9 @@ adjust_blocks (blocks, fromsize, tosize)
    the filesystem on which PATH resides.
    DISK is the device on which PATH is mounted, for space-getting
    methods that need to know it.
-   Return 0 if successful, -1 if not. */
-
+   Return 0 if successful, -1 if not.  When returning -1, ensure that
+   ERRNO is either a system error value, or zero if DISK is NULL
+   on a system that requires a non-NULL value.  */
 int
 get_fs_usage (path, disk, fsp)
      const char *path;
@@ -132,6 +133,12 @@ get_fs_usage (path, disk, fsp)
 
   struct filsys fsd;
   int fd;
+
+  if (! disk)
+    {
+      errno = 0;
+      return -1;
+    }
 
   fd = open (disk, O_RDONLY);
   if (fd < 0)
