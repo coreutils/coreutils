@@ -135,6 +135,7 @@ check-local: check-x-vs-1
 # corresponding .1 file in the definition of $(dist_man_MANS) above.
 .PHONY: check-x-vs-1
 check-x-vs-1:
+	PATH=../src:$$PATH; export PATH;				\
 	t=ls-files.$$$$;						\
 	(cd $(srcdir) && ls -1 *.x) | sed 's/\.x$$//' | sort > $$t;	\
 	echo $(dist_man_MANS) | fmt -w1 | sed 's/\.1$$//' | sort -u	\
