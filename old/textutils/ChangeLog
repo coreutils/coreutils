@@ -1,3 +1,10 @@
+Wed Jan 29 20:54:24 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* tests/cut-test/mk-script.pl: Allow each test to be run any or all
+	of three different ways.  Program input may be specified via a file
+	or files listed on the command line, via input redirection (if there's
+	only one file), or via a pipe.
+
 Tue Jan 28 20:54:06 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* tests/cut-test/mk-script.pl: Remove `t' prefix on all generated
