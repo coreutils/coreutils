@@ -1,5 +1,7 @@
 2000-01-16  Jim Meyering  <meyering@lucent.com>
 
+	* tests/ls-2/tests: Adapt to work with recently updated quotearg.c.
+
 	Sync with the version from emacs-20.5.
 	* lib/alloca.c
 	(<string.h>): Include if HAVE_STRING_H.
