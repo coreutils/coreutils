@@ -141,7 +141,7 @@ print_header (void)
     printf ("       ");
 
   if (inode_format)
-    printf ("    Inodes   IUsed   IFree  %%IUsed");
+    printf ("    Inodes   IUsed   IFree  %%IUsed ");
   else
     if (output_units == 1024 * 1024)
       printf (" MB-blocks    Used Available Capacity");
