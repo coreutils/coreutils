@@ -493,25 +493,11 @@ static CHAR_T const month_name[][10] =
 # define ns 0
 #endif
 
-#if !defined _LIBC && HAVE_TZNAME && HAVE_TZSET
-  /* Solaris 2.5 tzset sometimes modifies the storage returned by localtime.
-     Work around this bug by copying *tp before it might be munged.  */
-  size_t _strftime_copytm __P ((char *, size_t, const char *,
-			        const struct tm * extra_args_spec_iso));
-  size_t
-  my_strftime (s, maxsize, format, tp extra_args)
-      CHAR_T *s;
-      size_t maxsize;
-      const CHAR_T *format;
-      const struct tm *tp;
-      extra_args_spec
-  {
-    struct tm tmcopy;
-    tmcopy = *tp;
-    return _strftime_copytm (s, maxsize, format, &tmcopy extra_args);
-  }
-# undef my_strftime
-# define my_strftime _strftime_copytm
+#if ! HAVE_RUN_TZSET_TEST
+/* Solaris 2.5.x and 2.6 tzset sometimes modify the storage returned
+   by localtime.  On such systems, we must use the tzset and localtime
+   wrappers to work around the bug.  */
+"you must run the autoconf test for a working tzset function"
 #endif
 
 
