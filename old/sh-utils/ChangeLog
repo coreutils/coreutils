@@ -1,3 +1,11 @@
+Sat Apr 20 22:22:01 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* chroot.c (usage): Improve help message.
+	Enclose message strings in _().
+	* seq.c (usage): Improve help message.
+	* factor.c (usage): Likewise.
+	From Karl Berry.
+
 Fri Apr 19 23:48:53 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* Makefile.am (cvs-dist): New rule.  Based on the one from
