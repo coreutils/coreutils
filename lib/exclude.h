@@ -18,17 +18,17 @@
 
 /* Written by Paul Eggert <eggert@twinsun.com>  */
 
-#ifndef __EXCLUDE_P
-# if defined __STDC__ || __GNUC__
-#  define __EXCLUDE_P(args) args
+#ifndef PARAMS
+# if defined PROTOTYPES || (defined __STDC__ && __STDC__)
+#  define PARAMS(Args) Args
 # else
-#  define __EXCLUDE_P(args) ()
+#  define PARAMS(Args) ()
 # endif
 #endif
 
 struct exclude;
 
-struct exclude *new_exclude __EXCLUDE_P ((void));
-void add_exclude __EXCLUDE_P ((struct exclude *, char const *));
-int add_exclude_file __EXCLUDE_P ((struct exclude *, char const *, char));
-int excluded_filename __EXCLUDE_P ((struct exclude const *, char const *));
+struct exclude *new_exclude PARAMS ((void));
+void add_exclude PARAMS ((struct exclude *, char const *));
+int add_exclude_file PARAMS ((struct exclude *, char const *, char));
+int excluded_filename PARAMS ((struct exclude const *, char const *));
