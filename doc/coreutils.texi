@@ -7192,6 +7192,9 @@ for a character special file
 
 When making a block or character special file, the major and minor
 device numbers must be given after the file type.
+If a major or minor device number begins with @samp{0x} or @samp{0X},
+it is interpreted as hexadecimal; otherwise, if it begins with @samp{0},
+as octal; otherwise, as decimal.
 
 The program accepts the following option.  Also see @ref{Common options}.
 
