@@ -43,9 +43,6 @@ static bool no_newline;
 /* If true, report error messages.  */
 static bool verbose;
 
-/* If not -1, use this method to canonicalize.  */
-int can_mode = -1;
-
 static struct option const longopts[] =
 {
   {"canonicalize", no_argument, 0, 'f'},
@@ -93,17 +90,18 @@ usage (int status)
   exit (status);
 }
 
-static char *
-canonicalize_fname (const char *fname)
-{
-  return canonicalize_filename_mode (fname, can_mode);
-}
-
 int
 main (int argc, char *const argv[])
 {
+  /* If not -1, use this method to canonicalize.  */
+  int can_mode = -1;
+
+  /* File name to canonicalize.  */
   const char *fname;
+
+  /* Result of canonicalize.  */
   char *value;
+
   int optc;
 
   initialize_main (&argc, &argv);
@@ -161,7 +159,7 @@ main (int argc, char *const argv[])
     }
 
   value = (can_mode != -1
-	   ? canonicalize_fname (fname)
+	   ? canonicalize_filename_mode (fname, can_mode)
 	   : xreadlink (fname, 1024));
   if (value)
     {
