@@ -1,3 +1,11 @@
+2003-03-17  Jim Meyering  <jim@meyering.net>
+
+	* dirfd.m4 (UTILS_FUNC_DIRFD): Test the cache variable,
+	not one that is guaranteed to be `no'.  Use `no_such_member'
+	to indicate that condition, rather than `-1'.
+	Change the name of the cache variable to have the gl_ prefix.
+	Prompted by a patch from Richard Dawe.
+
 2003-03-14  Jim Meyering  <jim@meyering.net>
 
 	* prereq.m4 (jm_PREREQ): Also forbid the gl_[A-Z] prefix.
