@@ -1,5 +1,20 @@
 2002-06-21  Jim Meyering  <meyering@lucent.com>
 
+	* src/stat.c: Include sys/statvfs.h.
+	[!HAVE_SYS_STATVFS_H && !HAVE_SYS_VFS_H]: Include sys/param.h
+	and sys/mount.h, to get decl of struct statfs on NetBSD 1.5.2.
+	(NAMEMAX_FORMAT, STRUCT_STATVFS): Define.
+	(HAVE_STRUCT_STATXFS_F_TYPE, SB_F_NAMEMAX): Define.
+	Remove `static' attribute from decl of program_name.
+	(human_fstype): Use f_basetype or f_fstypename if available.
+	(print_human_time): Use nstrftime and an ISO format string, in
+	place of strftime with `%c'.  The latter is too locale-dependent.
+	(print_statfs): Deal with lots of portability issues: some fields
+	are available only with statfs, others only with statvfs, and
+	some are available in both, but with different types.
+	(do_statfs) [DEFAULT_FORMAT_TERSE]: Factor out.
+	[DEFAULT_FORMAT_VERBOSE]: Likewise.
+
 	* Version 4.1.9.
 
 	* src/copy.c: Change all `preserving ...' diagnostics to
