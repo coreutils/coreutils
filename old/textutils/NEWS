@@ -20,10 +20,10 @@ Changes in release 1.23
 * pr: For compatibility (also more POSIX compliant): Include default
   separator `TAB' when merging lines of full length.
 * When POSIXLY_CORRECT is not set, tail -N now accepts more than one file
-  argument (but warns that it's not portable), to be consistent with the
-  way head -N works.  If POSIXLY_CORRECT is set, using two or more file
-  arguments with the obsolescent form (-N) evokes an error.  To avoid the
-  warning or failure, use the POSIX -n N option or the GNU --lines=N option.
+  argument, to be consistent with the way head -N works.  If POSIXLY_CORRECT
+  is set, using two or more file arguments with the obsolescent form (-N)
+  evokes an error.  To avoid the warning or failure, use the POSIX -n N option
+  or the GNU --lines=N option.
 
 Changes in release 1.22
 [1.21a]
