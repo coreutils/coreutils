@@ -308,7 +308,8 @@ print_group_list (const char *username)
     GETGROUPS_T *groups;
     register int i;
 
-    if (xgetgroups (username, pwd ? pwd->pw_gid : -1, &n_groups, &groups))
+    if (xgetgroups (username, (pwd ? pwd->pw_gid : (gid_t) -1),
+		    &n_groups, &groups))
       {
 	++problems;
 	return;
@@ -373,7 +374,8 @@ print_full_info (const char *username)
     GETGROUPS_T *groups;
     register int i;
 
-    if (xgetgroups (username, pwd ? pwd->pw_gid : -1, &n_groups, &groups))
+    if (xgetgroups (username, (pwd ? pwd->pw_gid : (gid_t) -1),
+		    &n_groups, &groups))
       {
 	++problems;
 	return;
