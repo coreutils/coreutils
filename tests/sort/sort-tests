@@ -1361,8 +1361,25 @@ else
   esac
 fi
 test -s 19b.E || rm -f 19b.E
+$xx  $srcdir/20a.I > 20a.O 2> 20a.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test 20a failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp 20a.O $srcdir/20a.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed 20a"; fi ;;
+    1) $echo "Test 20a failed: files 20a.O and $srcdir/20a.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test 20a may have failed." 1>&2;
+       $echo The command "cmp 20a.O $srcdir/20a.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s 20a.E || rm -f 20a.E
 if test $errors = 0 ; then
-  $echo Passed all 79 tests. 1>&2
+  $echo Passed all 80 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi
