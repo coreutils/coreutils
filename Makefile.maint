@@ -30,9 +30,7 @@ PREV_VERSION := $(shell cat $(prev_version_file))
 
 tag-package = $(shell echo "$(PACKAGE)" | tr '[:lower:]' '[:upper:]')
 tag-this-version = $(subst .,_,$(VERSION))
-tag-prev-version = $(subst .,_,$(PREV_VERSION))
 this-cvs-tag = $(tag-package)-$(tag-this-version)
-prev-cvs-tag = $(tag-package)-$(tag-prev-version)
 my_distdir = $(PACKAGE)-$(VERSION)
 
 # Old releases are stored here.
