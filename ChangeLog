@@ -2,6 +2,10 @@
 
 	* Version 5.0.1.
 
+	* chown.c, cp.c, du.c, ln.c, mkfifo.c, ptx.c, spline.c, stty.c:
+	* tail.c, test.c, unexpand.c: Remove (or replace-with-TAB(s) to
+	retain alignment) each sequence of spaces before a TAB character.
+
 	* src/ls.c: Include <stdlib.h> unconditionally.
 
 	* Makefile.maint (xalloc-check): Rename from header-check.
