@@ -251,7 +251,7 @@ batch_convert (const char *input_filename, const char *format)
   free (initial_TZ);
 
   if (fclose (in_stream) == EOF)
-    error (2, errno, input_filename);
+    error (2, errno, "`%s'", input_filename);
 
   if (line != NULL)
     free (line);
