@@ -47,6 +47,7 @@ main ()
                [ac_cv_func_ftw_working=yes],
                [ac_cv_func_ftw_working=no],
                [ac_cv_func_ftw_working=no])])
+  rm -rf conftest.dir
   if test $ac_cv_func_ftw_working = no; then
     AC_LIBOBJ([ftw])
     AC_CONFIG_LINKS([$ac_config_libobj_dir/ftw.h:$ac_config_libobj_dir/ftw_.h])
