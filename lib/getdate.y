@@ -31,26 +31,6 @@
 #undef static
 #endif
 
-/* The following block of alloca-related preprocessor directives is here
-   solely to allow compilation by non GNU-C compilers of the C parser
-   produced from this file by old versions of bison.  Newer versions of
-   bison include a block similar to this one in bison.simple.  */
-
-#ifdef __GNUC__
-#undef alloca
-#define alloca __builtin_alloca
-#else
-#ifdef HAVE_ALLOCA_H
-#include <alloca.h>
-#else
-#ifdef _AIX /* for Bison */
- #pragma alloca
-#else
-void *alloca ();
-#endif
-#endif
-#endif
-
 #include <stdio.h>
 #include <ctype.h>
 
@@ -967,6 +947,7 @@ get_date(p, now)
 #if	defined(TEST)
 
 /* ARGSUSED */
+int
 main(ac, av)
     int		ac;
     char	*av[];

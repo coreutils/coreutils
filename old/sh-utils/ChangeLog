@@ -1,3 +1,13 @@
+Mon Apr 18 19:54:24 1994  Jim Meyering  (meyering@comco.com)
+
+	* documentation: Change uses of `pathname' and `path' as per
+	GNU standards.
+
+	* long-options.c (parse-long-options): Take a new argument,
+	command_name, for use in --version output.
+	* basename.c, dirname.c, echo.c, expr.c, printf.c, stty.c, test.c,
+	yes.c (main): Update callers.
+
 Wed Mar 30 08:53:21 1994  Jim Meyering  (meyering@comco.com)
 
 	* configure.in: Use AC_SET_MAKE.

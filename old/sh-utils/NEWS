@@ -1,5 +1,7 @@
 User visible changes in release 2.0
 * Configure properly determines options for stty on SCO ODT 3.0 systems.
+* `date -d' works better.  Before, `date -d '4apr94'' produced
+  `Sun Apr  3 23:00:00 CDT 1994'.
 User visible changes in release 1.9.4
 * Repair stty option handling.
 User visible changes in release 1.9.3
