@@ -158,7 +158,9 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "expr", PACKAGE_VERSION, usage);
+  /* Don't recognize --help or --version if POSIXLY_CORRECT is set.  */
+  if (getenv ("POSIXLY_CORRECT") == NULL)
+    parse_long_options (argc, argv, "expr", PACKAGE_VERSION, usage);
 
   if (argc == 1)
     {
@@ -425,7 +427,7 @@ docolon (VALUE *sv, VALUE *pv)
   re_buffer.allocated = 2 * len;
   re_buffer.buffer = (unsigned char *) xmalloc (re_buffer.allocated);
   re_buffer.translate = 0;
-  re_syntax_options = RE_SYNTAX_POSIX_MINIMAL_BASIC;
+  re_syntax_options = RE_SYNTAX_POSIX_BASIC;
   errmsg = re_compile_pattern (pv->u.s, len, &re_buffer);
   if (errmsg)
     error (2, 0, "%s", errmsg);
