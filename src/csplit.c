@@ -21,6 +21,11 @@
 #include <config.h>
 
 #include <stdio.h>
+
+/* Disable assertions.  Some systems have broken assert macros.  */
+#define NDEBUG 1
+
+#include <assert.h>
 #include <getopt.h>
 #include <sys/types.h>
 #include <signal.h>
@@ -825,10 +830,11 @@ process_line_count (const struct control *p, int repetition)
 
   linenum = get_first_line_in_buffer ();
 
-  /* Check for requesting a line that has already been written out.
-     If this ever happens, it's due to a bug in csplit. */
-  if (linenum >= last_line_to_save)
-    abort ();
+  /* Initially, I wanted to assert linenum < last_line_to_save, but that
+     condition is false for the valid command: echo | csplit - 1 '{*}'.
+     So, relax it just a little.  */
+  assert ((linenum == 1 && last_line_to_save == 1)
+	  || linenum < last_line_to_save);
 
   while (linenum++ < last_line_to_save)
     {
@@ -1218,6 +1224,7 @@ parse_patterns (int argc, int start, char **argv)
   int i;			/* Index into ARGV. */
   struct control *p;		/* New control record created. */
   unsigned long val;
+  static unsigned long last_val = 0;
 
   for (i = start; i < argc; i++)
     {
@@ -1229,9 +1236,24 @@ parse_patterns (int argc, int start, char **argv)
 	{
 	  p = new_control_record ();
 	  p->argnum = i;
+
 	  if (xstrtoul (argv[i], NULL, 10, &val, NULL) != LONGINT_OK
 	      || val > INT_MAX)
 	    error (1, 0, _("%s: invalid pattern"), argv[i]);
+	  if (val == 0)
+	    error (1, 0, _("%s: line number must be greater than zero"),
+		   argv[i]);
+	  if (val < last_val)
+	    error (1, 0,
+	     _("line number `%s' is smaller than preceding line number, %lu"),
+		   argv[i], last_val);
+
+	  if (val == last_val)
+	    error (0, 0,
+	   _("warning: line number `%s' is the same as preceding line number"),
+		   argv[i]);
+	  last_val = val;
+
 	  p->lines_required = (int) val;
 	}
 
