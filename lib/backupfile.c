@@ -26,14 +26,8 @@
 #include <ctype.h>
 #include <sys/types.h>
 #include "backupfile.h"
-#if defined(STDC_HEADERS) || defined(HAVE_STRING_H)
+#ifdef HAVE_STRING_H
 #include <string.h>
-#ifndef index
-#define index strchr
-#endif
-#ifndef rindex
-#define rindex strrchr
-#endif
 #else
 #include <strings.h>
 #endif
@@ -68,12 +62,13 @@
 char *malloc ();
 #endif
 
-#if !defined (isascii) || defined (STDC_HEADERS)
-#undef isascii
-#define isascii(c) 1
+#if defined (STDC_HEADERS) || (!defined (isascii) && !defined (HAVE_ISASCII))
+#define ISASCII(c) 1
+#else
+#define ISASCII(c) isascii(c)
 #endif
 
-#define ISDIGIT(c) (isascii ((unsigned char ) c) \
+#define ISDIGIT(c) (ISASCII ((unsigned char) (c)) \
 		    && isdigit ((unsigned char) (c)))
 
 #if defined (HAVE_UNISTD_H)
