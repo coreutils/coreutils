@@ -64,7 +64,7 @@ enum Ternary
   };
 typedef enum Ternary Ternary;
 
-/* The prompt function may be called twice a given directory.
+/* The prompt function may be called twice for a given directory.
    The first time, we ask whether to descend into it, and the
    second time, we ask whether to remove it.  */
 enum Prompt_action
