@@ -1,9 +1,9 @@
 1998-07-25  Jim Meyering  <meyering@ascend.com>
 
+	* Version 3.16s.
+
 	* src/copy.c (SAME_INODE): Remove definition.
 	* src/sys2.h (SAME_INODE): Define it here instead.
-
-	* Version 3.16s.
 
 	* src/remove.c (same_file): New function.
 	(remove_dir): Use it to give a better diagnostic when rmdir fails
@@ -24,8 +24,8 @@
 
 	* lib/utime.c: New file.
 	* src/touch.c (utime_now): Moved into m4/utimes.m4.
-	(touch) [!HAVE_UTIME_NULL]: Remove #ifdef and use of utime_now
-	in if-block.
+	(touch) [!HAVE_UTIME_NULL]: Remove #ifdef and the use of utime_now
+	in the if-block.
 
 	* configure.in (jm_FUNC_UTIME): Use this, not AC_FUNC_UTIME.
 
