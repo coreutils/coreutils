@@ -34,8 +34,17 @@ chown (file, gid, uid)
 {
   if (gid == (gid_t) -1 || uid == (uid_t) -1)
     {
-      /* Stat file to get id(s) that will remain unchanged.  */
-      FIXME
+      struct stat file_stats;
+
+      /* Stat file to get id(s) that should remain unchanged.  */
+      if (stat (file, &file_stats))
+	return 1;
+
+      if (gid == (gid_t) -1)
+	gid = file_stats.st_gid;
+
+      if (uid == (uid_t) -1)
+	uid = file_stats.st_uid;
     }
 
 #undef chown
