@@ -184,7 +184,7 @@ static void
 xputenv (const char *val)
 {
   if (putenv (val))
-    error (1, 0, _("virtual memory exhausted"));
+    xalloc_die ();
 }
 
 /* Return a newly-allocated string whose contents concatenate
