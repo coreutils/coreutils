@@ -518,7 +518,7 @@ enum Dereference_symlink
   {
     DEREF_UNDEFINED = 1,
     DEREF_NEVER,
-    DEREF_COMMAND_LINE_SYMLINK_TO_DIR,	/* -H */
+    DEREF_COMMAND_LINE_ARGUMENTS,	/* -H */
     DEREF_ALWAYS			/* -L */
   };
 
@@ -722,7 +722,7 @@ static struct option const long_options[] =
   {"classify", no_argument, 0, 'F'},
   {"file-type", no_argument, 0, 'p'},
   {"si", no_argument, 0, SI_OPTION},
-  {"dereference-command-line-symlink-to-dir", no_argument, 0, 'H'},
+  {"dereference-command-line", no_argument, 0, 'H'},
   {"ignore", required_argument, 0, 'I'},
   {"indicator-style", required_argument, 0, INDICATOR_STYLE_OPTION},
   {"dereference", no_argument, 0, 'L'},
@@ -1100,7 +1100,7 @@ main (int argc, char **argv)
 		    || indicator_style == classify
 		    || format == long_format)
 		   ? DEREF_NEVER
-		   : DEREF_COMMAND_LINE_SYMLINK_TO_DIR);
+		   : DEREF_COMMAND_LINE_ARGUMENTS);
 
   /* When using -R, initialize a data structure we'll use to
      detect any directory cycles.  */
@@ -1513,7 +1513,7 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 'H':
-	  dereference = DEREF_COMMAND_LINE_SYMLINK_TO_DIR;
+	  dereference = DEREF_COMMAND_LINE_ARGUMENTS;
 	  break;
 
 	case 'I':
@@ -2353,21 +2353,16 @@ gobble_file (const char *name, enum filetype type, int explicit_arg,
 	  err = stat (path, &files[files_index].stat);
 	  break;
 
-	case DEREF_COMMAND_LINE_SYMLINK_TO_DIR:
+	case DEREF_COMMAND_LINE_ARGUMENTS:
 	  if (explicit_arg)
 	    {
-	      int need_lstat;
 	      err = stat (path, &files[files_index].stat);
-	      /* If stat failed because of ENOENT (maybe indicating a
-		 dangling symlink), or if it succeeded and PATH refers
-		 to a non-directory (hence PATH may be a symlink to a
-		 non-directory and we may not dereference it), fall
-		 through so that we call lstat instead.  */
-	      need_lstat = (err < 0
-			    ? errno == ENOENT
-			    : ! S_ISDIR (files[files_index].stat.st_mode));
-	      if (!need_lstat)
+	      if (! (err < 0 && errno == ENOENT))
 		break;
+
+	      /* stat failed because of ENOENT, maybe indicating a
+		 dangling symlink.  Fall through so that we call lstat
+		 instead.  */
 	    }
 
 	  /* fall through. */
@@ -3768,9 +3763,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -G, --no-group             inhibit display of group information\n\
   -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n\
       --si                   likewise, but use powers of 1000 not 1024\n\
-  -H, --dereference-command-line-symlink-to-dir\n\
-                             follow each command line symbolic link\n\
-                               that points to a directory\n\
+  -H, --dereference-command-line  follow symbolic links on the command line\n\
 "), stdout);
       fputs (_("\
       --indicator-style=WORD append indicator with style WORD to entry names:\n\
