@@ -1,3 +1,9 @@
+2003-07-23  Jim Meyering  <jim@meyering.net>
+
+	* src/dircolors.c: Include xstrndup.h.
+	(xstrndup): Remove function, now that it's been factored out into
+	it's own file.
+
 2003-07-22  Paul Eggert  <eggert@twinsun.com>
 
 	* src/wc.c (wc): Fix typo in computation of file from file_x,
