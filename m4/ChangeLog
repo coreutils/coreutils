@@ -1,3 +1,7 @@
+2003-01-29  Jim Meyering  <jim@meyering.net>
+
+	* regex.m4: Detect broken re_search in e.g. glibc-2.2.93.
+
 2003-01-23  Jim Meyering  <jim@meyering.net>
 
 	* dirfd.m4 (UTILS_FUNC_DIRFD): Correct typo: s/-1/no/ that kept this
