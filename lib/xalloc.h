@@ -1,6 +1,7 @@
 /* xalloc.h -- malloc with out-of-memory checking
 
-   Copyright (C) 1990-2000, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,
+   1999, 2000, 2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -53,9 +54,8 @@ void *xrealloc (void *p, size_t n);
 char *xstrdup (const char *str);
 
 # define XMALLOC(Type, N_items) xmalloc (sizeof (Type) * (N_items))
-# define XCALLOC(Type, N_items) xcalloc (sizeof (Type), (N_items))
-# define XREALLOC(Ptr, Type, N_items) xrealloc ((Ptr), \
-					        sizeof (Type) * (N_items))
+# define XCALLOC(Type, N_items) xcalloc (sizeof (Type), N_items)
+# define XREALLOC(Ptr, Type, N_items) xrealloc (Ptr, sizeof (Type) * (N_items))
 
 /* Declare and alloc memory for VAR of type TYPE. */
 # define NEW(Type, Var)  Type *(Var) = XMALLOC (Type, 1)
@@ -69,7 +69,7 @@ char *xstrdup (const char *str);
 
 /* Return a pointer to a malloc'ed copy of the array SRC of NUM elements. */
 # define CCLONE(Src, Num) \
-  (memcpy (xmalloc (sizeof (*Src) * (Num)), (Src), sizeof (*Src) * (Num)))
+  (memcpy (xmalloc (sizeof *(Src) * (Num)), Src, sizeof *(Src) * (Num)))
 
 /* Return a malloc'ed copy of SRC. */
 # define CLONE(Src) CCLONE (Src, 1)
