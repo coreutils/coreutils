@@ -1,4 +1,8 @@
 User-visible changes in release 3.10:
+* mkdir -p now ignores arguments that are existing directories.  Before,
+  (contrary to POSIX spec) it would attempt to change ownership and/or
+  protections of existing directories.  And it would fail when such a
+  directory was owned by another user.
 * Fix bug in cp that made the commands `mkdir dir; touch foo; cp -P foo dir'
   incorrectly change the permissions on directory, dir.
 * df accepts a new option, --sync, that may ensure it reports more up to
