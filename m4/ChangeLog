@@ -1,3 +1,7 @@
+2004-05-29  Jim Meyering  <jim@meyering.net>
+
+	* calloc.m4 (AC_FUNC_CALLOC, _AC_FUNC_CALLOC_IF): New file/macros.
+
 2004-05-21  Jim Meyering  <jim@meyering.net>
 
 	* free.m4: Update from gnulib (fix reversed test).
