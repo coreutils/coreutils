@@ -1,4 +1,4 @@
-#serial 8
+#serial 9
 
 dnl From Jim Meyering.
 dnl
@@ -237,12 +237,6 @@ if test -z "$ac_list_mounted_fs"; then
   # Can't build mountlist.c or anything that needs its functions
 fi
 
-dnl FIXME: this should use AS_IF instead:
-dnl AS_IF([test $ac_list_mounted_fs = found], [$1], [$2])
-if test $ac_list_mounted_fs = found; then
-$1
-else
-$2
-fi
+AS_IF([test $ac_list_mounted_fs = found], [$1], [$2])
 
   ])
