@@ -1,6 +1,24 @@
-2004-03-11  Jim Meyering  <jim@meyering.net>
+2004-03-12  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.2.1.
+
+	Sometimes, when source and destination partition are different,
+	mv mistakenly fails to preserve a hard link.  Reported by IIDA Yosiaki.
+
+	* src/copy.c: When moving a set of N hard-linked files between
+	partitions, via two or more command line arguments where the
+	command line argument containing the Nth link contains no other
+	link to that same file, mv would mistakenly copy the file, rather
+	than hard-linking it to the other(s).  That happens because when the
+	final link is processed, its link count has been reduced to 1 since
+	the other links have been `copied' to the destination partition
+	and the source links have been removed.
+	(copy_internal): When in move mode, use the source dev/inode
+	pair to look up destination name even when st_nlink == 1.
+	* src/cp-hash.c (src_to_dest_lookup): New function.
+	* src/cp-hash.h (src_to_dest_lookup): Add prototype.
+
+2004-03-11  Jim Meyering  <jim@meyering.net>
 
 	* Use automake-1.8.3.  Regenerate dependent files.
 
