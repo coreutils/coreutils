@@ -99,5 +99,7 @@ if test "x$ac_save_LIBS" = x; then
 else
   GETLOADAVG_LIBS=`echo "$LIBS" | sed "s!$ac_save_LIBS!!"`
 fi
+LIBS=$ac_save_LIBS
+
 AC_SUBST(GETLOADAVG_LIBS)dnl
 ])# AC_FUNC_GETLOADAVG
