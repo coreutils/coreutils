@@ -1,6 +1,6 @@
 2000-01-06  Jim Meyering  <meyering@ascend.com>
 
-	* tests/tail-2/Makefile.am (TESTS): Remove fflush.  It didn't
+	* tests/tail-2/Makefile.am (TESTS): Remove fflush test.  It didn't
 	test the losing behavior, and left a stray tail process to boot.
 
 2000-01-01  Jim Meyering  <meyering@ascend.com>
