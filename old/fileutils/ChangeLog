@@ -1,6 +1,21 @@
 1999-12-04  Jim Meyering  <meyering@ascend.com>
 
-	* Version 4.0k.
+	* tests/mv/into-self-2: Adapt to reflect this change in behavior.
+	Make sure the VERSION_CONTROL envvar is not set.
+	Run diff if comparison fails.
+
+	* src/copy.c (copy_internal): In move mode, if the rename attempt
+	fails, then unlink any existing destination file.  This makes a
+	cross-device `mv' more consistent with the intra-device behavior.
+	This change is required by POSIX to make a cross-device move act with
+	semantics similar to those of the rename syscall.  For example now
+	`mv' can move a file onto a symlink to itself when that symlink
+	is on a separate partition.  With fileutils-4.0j, it would fail with
+	a diagnostic saying they were the same file.
+	Reported by Bruno Haible.
+
+	* tests/mv/to-symlink: New file.  Adds test for the above.
+	* tests/mv/Makefile.am (TESTS): Add to-symlink.
 
 	* tests/cp/cp-mv-backup (trap): Be careful to close $actual before
 	removing the containing directory.  Otherwise, on some systems rmdir
@@ -26,18 +41,6 @@
 	* src/touch.c (touch): Record errno upon failed errno and use that
 	saved value if a subsequent fstat, stat or utime call fails.
 	Reported by Wichert Akkerman via Michael Stone.
-
-1999-11-29  Jim Meyering  <meyering@ascend.com>
-
-	* tests/mv/into-self-2: Adapt to reflect this change in behavior.
-	Make sure the VERSION_CONTROL envvar is not set.
-	Run diff if comparison fails.
-
-	* src/copy.c (copy_internal): Be consistent with intra-device behavior
-	and *do* allow `mv' to move a file onto a symlink to itself when that
-	symlink is on a separate partition.  With fileutils-4.0j, it would
-	fail with a diagnostic saying they were the same file.
-	Reported by Bruno Haible.
 
 1999-11-27  Jim Meyering  <meyering@ascend.com>
 
