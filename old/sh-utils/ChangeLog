@@ -2,6 +2,9 @@
 
 	* Version 2.0.12.
 
+	* src/date.c (usage): Describe %F, %g, %G, %P, and %R.
+	Tweak the description of %p.
+
 	* tests/stty/basic-1: Use `tail -n +2', rather than `tail +2'.
 
 2002-02-02  Bruno Haible  <bruno@clisp.org>
