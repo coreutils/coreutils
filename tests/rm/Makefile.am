@@ -2,6 +2,7 @@
 AUTOMAKE_OPTIONS = 1.1 gnits
 
 TESTS = \
+  dir-no-w \
   fail-2eperm \
   cycle i-no-r fail-eperm \
   dangling-symlink rm1 rm2 rm3 rm4 rm5 \
