@@ -1,8 +1,5 @@
 #! /bin/bash
 
-# Fix valgrind script to exec "$@", not some var.
-# Fix valgrind sources to know about syscall 252, for exit_group
-
 # Convert Makefile.am files:
 #  find tests -name Makefile.am | xargs grep -wl PATH|xargs perl -pi -e \
 #    's,src(\$\(PATH_SEPARATOR\)\$\$PATH),src/vg$1,'
@@ -10,7 +7,7 @@
 # Create src/vg:
 
 coreutils=$(echo 'spy:;@echo $(all_programs)' | (cd src; make -f Makefile -f - spy | tr -s '\n ' '  '))
-mkdir src/vg
+mkdir -p src/vg
 pwd=`pwd`
 srcdir=$pwd/src
 path='export PATH='$srcdir':${PATH#*:}'
