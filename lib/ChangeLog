@@ -1,3 +1,8 @@
+2003-05-30  Jim Meyering  <jim@meyering.net>
+
+	* addext.c: Update from gnulib.
+	* mktime.c: Likewise.
+
 2003-05-29  Jim Meyering  <jim@meyering.net>
 
 	Make the %r format directive honor any locale setting.
