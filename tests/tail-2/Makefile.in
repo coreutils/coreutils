@@ -156,7 +156,7 @@ TESTS_ENVIRONMENT = \
   PROG=tail
 
 
-TESTS = proc-ksyms start-middle assert assert-2
+TESTS = big-4gb proc-ksyms start-middle assert assert-2
 subdir = tests/tail-2
 mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h

@@ -701,8 +701,6 @@ localcharset_.c: localcharset.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/localcharset.c; then echo $(srcdir)/localcharset.c; else echo localcharset.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > localcharset_.c || rm -f localcharset_.c
 long-options_.c: long-options.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/long-options.c; then echo $(srcdir)/long-options.c; else echo long-options.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > long-options_.c || rm -f long-options_.c
-lstat_.c: lib/lstat.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/lib/lstat.c; then echo $(srcdir)/lib/lstat.c; else echo lib/lstat.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > lstat_.c || rm -f lstat_.c
 makepath_.c: makepath.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/makepath.c; then echo $(srcdir)/makepath.c; else echo makepath.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > makepath_.c || rm -f makepath_.c
 malloc_.c: lib/malloc.c $(ANSI2KNR)
@@ -783,8 +781,6 @@ sha_.c: sha.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/sha.c; then echo $(srcdir)/sha.c; else echo sha.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > sha_.c || rm -f sha_.c
 sig2str_.c: lib/sig2str.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/lib/sig2str.c; then echo $(srcdir)/lib/sig2str.c; else echo lib/sig2str.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > sig2str_.c || rm -f sig2str_.c
-stat_.c: lib/stat.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/lib/stat.c; then echo $(srcdir)/lib/stat.c; else echo lib/stat.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > stat_.c || rm -f stat_.c
 stpcpy_.c: lib/stpcpy.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/lib/stpcpy.c; then echo $(srcdir)/lib/stpcpy.c; else echo lib/stpcpy.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > stpcpy_.c || rm -f stpcpy_.c
 strcasecmp_.c: lib/strcasecmp.c $(ANSI2KNR)
@@ -876,33 +872,33 @@ gettimeofday_.$(OBJEXT) getugroups_.$(OBJEXT) getusershell_.$(OBJEXT) \
 group-member_.$(OBJEXT) hard-locale_.$(OBJEXT) hash_.$(OBJEXT) \
 hash-pjw_.$(OBJEXT) human_.$(OBJEXT) idcache_.$(OBJEXT) \
 isdir_.$(OBJEXT) lchown_.$(OBJEXT) linebuffer_.$(OBJEXT) \
-localcharset_.$(OBJEXT) long-options_.$(OBJEXT) lstat_.$(OBJEXT) \
-makepath_.$(OBJEXT) malloc_.$(OBJEXT) mbswidth_.$(OBJEXT) \
-md5_.$(OBJEXT) memcasecmp_.$(OBJEXT) memchr_.$(OBJEXT) \
-memcmp_.$(OBJEXT) memcoll_.$(OBJEXT) memcpy_.$(OBJEXT) \
-memmove_.$(OBJEXT) memrchr_.$(OBJEXT) memset_.$(OBJEXT) \
-mkdir_.$(OBJEXT) mkstemp_.$(OBJEXT) mktime_.$(OBJEXT) \
-modechange_.$(OBJEXT) mountlist_.$(OBJEXT) nanosleep_.$(OBJEXT) \
-obstack_.$(OBJEXT) path-concat_.$(OBJEXT) physmem_.$(OBJEXT) \
-posixtm_.$(OBJEXT) posixver_.$(OBJEXT) putenv_.$(OBJEXT) \
-quote_.$(OBJEXT) quotearg_.$(OBJEXT) readtokens_.$(OBJEXT) \
-readutmp_.$(OBJEXT) realloc_.$(OBJEXT) regex_.$(OBJEXT) \
-rename_.$(OBJEXT) rmdir_.$(OBJEXT) rpmatch_.$(OBJEXT) \
-safe-read_.$(OBJEXT) same_.$(OBJEXT) save-cwd_.$(OBJEXT) \
-savedir_.$(OBJEXT) settime_.$(OBJEXT) sha_.$(OBJEXT) sig2str_.$(OBJEXT) \
-stat_.$(OBJEXT) stpcpy_.$(OBJEXT) strcasecmp_.$(OBJEXT) \
-strcspn_.$(OBJEXT) strdup_.$(OBJEXT) strftime_.$(OBJEXT) \
-stripslash_.$(OBJEXT) strncasecmp_.$(OBJEXT) strndup_.$(OBJEXT) \
-strnlen_.$(OBJEXT) strpbrk_.$(OBJEXT) strstr_.$(OBJEXT) \
-strtod_.$(OBJEXT) strtoimax_.$(OBJEXT) strtol_.$(OBJEXT) \
-strtoll_.$(OBJEXT) strtoul_.$(OBJEXT) strtoull_.$(OBJEXT) \
-strtoumax_.$(OBJEXT) strverscmp_.$(OBJEXT) tempname_.$(OBJEXT) \
-unicodeio_.$(OBJEXT) userspec_.$(OBJEXT) utime_.$(OBJEXT) \
-version-etc_.$(OBJEXT) xgetcwd_.$(OBJEXT) xgethostname_.$(OBJEXT) \
-xmalloc_.$(OBJEXT) xmemcoll_.$(OBJEXT) xnanosleep_.$(OBJEXT) \
-xreadlink_.$(OBJEXT) xstrdup_.$(OBJEXT) xstrtod_.$(OBJEXT) \
-xstrtoimax_.$(OBJEXT) xstrtol_.$(OBJEXT) xstrtoul_.$(OBJEXT) \
-xstrtoumax_.$(OBJEXT) yesno_.$(OBJEXT) : $(ANSI2KNR)
+localcharset_.$(OBJEXT) long-options_.$(OBJEXT) makepath_.$(OBJEXT) \
+malloc_.$(OBJEXT) mbswidth_.$(OBJEXT) md5_.$(OBJEXT) \
+memcasecmp_.$(OBJEXT) memchr_.$(OBJEXT) memcmp_.$(OBJEXT) \
+memcoll_.$(OBJEXT) memcpy_.$(OBJEXT) memmove_.$(OBJEXT) \
+memrchr_.$(OBJEXT) memset_.$(OBJEXT) mkdir_.$(OBJEXT) \
+mkstemp_.$(OBJEXT) mktime_.$(OBJEXT) modechange_.$(OBJEXT) \
+mountlist_.$(OBJEXT) nanosleep_.$(OBJEXT) obstack_.$(OBJEXT) \
+path-concat_.$(OBJEXT) physmem_.$(OBJEXT) posixtm_.$(OBJEXT) \
+posixver_.$(OBJEXT) putenv_.$(OBJEXT) quote_.$(OBJEXT) \
+quotearg_.$(OBJEXT) readtokens_.$(OBJEXT) readutmp_.$(OBJEXT) \
+realloc_.$(OBJEXT) regex_.$(OBJEXT) rename_.$(OBJEXT) rmdir_.$(OBJEXT) \
+rpmatch_.$(OBJEXT) safe-read_.$(OBJEXT) same_.$(OBJEXT) \
+save-cwd_.$(OBJEXT) savedir_.$(OBJEXT) settime_.$(OBJEXT) \
+sha_.$(OBJEXT) sig2str_.$(OBJEXT) stpcpy_.$(OBJEXT) \
+strcasecmp_.$(OBJEXT) strcspn_.$(OBJEXT) strdup_.$(OBJEXT) \
+strftime_.$(OBJEXT) stripslash_.$(OBJEXT) strncasecmp_.$(OBJEXT) \
+strndup_.$(OBJEXT) strnlen_.$(OBJEXT) strpbrk_.$(OBJEXT) \
+strstr_.$(OBJEXT) strtod_.$(OBJEXT) strtoimax_.$(OBJEXT) \
+strtol_.$(OBJEXT) strtoll_.$(OBJEXT) strtoul_.$(OBJEXT) \
+strtoull_.$(OBJEXT) strtoumax_.$(OBJEXT) strverscmp_.$(OBJEXT) \
+tempname_.$(OBJEXT) unicodeio_.$(OBJEXT) userspec_.$(OBJEXT) \
+utime_.$(OBJEXT) version-etc_.$(OBJEXT) xgetcwd_.$(OBJEXT) \
+xgethostname_.$(OBJEXT) xmalloc_.$(OBJEXT) xmemcoll_.$(OBJEXT) \
+xnanosleep_.$(OBJEXT) xreadlink_.$(OBJEXT) xstrdup_.$(OBJEXT) \
+xstrtod_.$(OBJEXT) xstrtoimax_.$(OBJEXT) xstrtol_.$(OBJEXT) \
+xstrtoul_.$(OBJEXT) xstrtoumax_.$(OBJEXT) yesno_.$(OBJEXT) : \
+$(ANSI2KNR)
 
 .y.c:
 	$(YACCCOMPILE) `test -f '$<' || echo '$(srcdir)/'`$<
