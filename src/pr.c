@@ -326,11 +326,6 @@
 
 #define AUTHORS "Pete TerMaat", "Roland Huebner"
 
-#ifndef TRUE
-# define TRUE	1
-# define FALSE	0
-#endif
-
 /* Used with start_position in the struct COLUMN described below.
    If start_position == ANYWHERE, we aren't truncating columns and
    can begin printing a column anywhere.  Otherwise we must pad to
@@ -375,6 +370,11 @@
 
    numbered		True means precede this column with a line number. */
 
+/* FIXME: There are many unchecked integer overflows in this file,
+   that will cause this command to misbehave given large inputs or
+   options.  Many of the "int" values below should be "size_t" or
+   something else like that.  */
+
 struct COLUMN;
 struct COLUMN
   {
@@ -391,17 +391,17 @@ struct COLUMN
     status;			/* Status of the file pointer. */
 
     /* Func to print lines in this col. */
-    int (*print_func) (struct COLUMN *);
+    bool (*print_func) (struct COLUMN *);
 
     /* Func to print/store chars in this col. */
-    void (*char_func) (int);
+    void (*char_func) (char);
 
     int current_line;		/* Index of current place in line_vector. */
     int lines_stored;		/* Number of lines stored in buff. */
     int lines_to_print;		/* No. lines stored or space left on page. */
     int start_position;		/* Horizontal position of first char. */
-    int numbered;
-    int full_page_printed;	/* True means printed without a FF found. */
+    bool numbered;
+    bool full_page_printed;	/* True means printed without a FF found. */
 
     /* p->full_page_printed  controls a special case of "FF set by hand":
        True means a full page has been printed without FF found. To avoid an
@@ -413,12 +413,12 @@ typedef struct COLUMN COLUMN;
 
 #define NULLCOL (COLUMN *)0
 
-static int char_to_clump (int c);
-static int read_line (COLUMN *p);
-static int print_page (void);
-static int print_stored (COLUMN *p);
-static int open_file (char *name, COLUMN *p);
-static int skip_to_page (int page);
+static int char_to_clump (char c);
+static bool read_line (COLUMN *p);
+static bool print_page (void);
+static bool print_stored (COLUMN *p);
+static bool open_file (char *name, COLUMN *p);
+static bool skip_to_page (int page);
 static void print_header (void);
 static void pad_across_to (int position);
 static void add_line_number (COLUMN *p);
@@ -428,16 +428,16 @@ void usage (int status);
 static void print_files (int number_of_files, char **av);
 static void init_parameters (int number_of_files);
 static void init_header (char *filename, int desc);
-static int init_fps (int number_of_files, char **av);
+static bool init_fps (int number_of_files, char **av);
 static void init_funcs (void);
 static void init_store_cols (void);
 static void store_columns (void);
 static void balance (int total_stored);
-static void store_char (int c);
+static void store_char (char c);
 static void pad_down (int lines);
 static void read_rest_of_line (COLUMN *p);
 static void skip_read (COLUMN *p, int column_number);
-static void print_char (int c);
+static void print_char (char c);
 static void cleanup (void);
 static void first_last_page (char *pages);
 static void print_sep_string (void);
@@ -477,57 +477,57 @@ static int *line_vector;
 static int *end_vector;
 
 /* (-m) True means we're printing multiple files in parallel. */
-static int parallel_files = FALSE;
+static bool parallel_files = false;
 
 /* (-m) True means a line starts with some empty columns (some files
    already CLOSED or ON_HOLD) which we have to align. */
-static int align_empty_cols;
+static bool align_empty_cols;
 
 /* (-m) True means we have not yet found any printable column in a line.
-   align_empty_cols = TRUE  has to be maintained. */
-static int empty_line;
+   align_empty_cols = true  has to be maintained. */
+static bool empty_line;
 
 /* (-m) False means printable column output precedes a form feed found.
    Column alignment is done only once. No additional action with that form
    feed.
    True means we found only a form feed in a column. Maybe we have to do
    some column alignment with that form feed. */
-static int FF_only;
+static bool FF_only;
 
 /* (-[0-9]+) True means we're given an option explicitly specifying
    number of columns.  Used to detect when this option is used with -m
    and when translating old options to new/long options. */
-static int explicit_columns = FALSE;
+static bool explicit_columns = false;
 
 /* (-t|-T) False means we aren't printing headers and footers. */
-static int extremities = TRUE;
+static bool extremities = true;
 
 /* (-t) True means we retain all FF set by hand in input files.
    False is set with -T option. */
-static int keep_FF = FALSE;
-static int print_a_FF = FALSE;
+static bool keep_FF = false;
+static bool print_a_FF = false;
 
 /* True means we need to print a header as soon as we know we've got input
    to print after it. */
-static int print_a_header;
+static bool print_a_header;
 
 /* (-f) True means use formfeeds instead of newlines to separate pages. */
-static int use_form_feed = FALSE;
+static bool use_form_feed = false;
 
 /* True means we have read the standard input. */
-static int have_read_stdin = FALSE;
+static bool have_read_stdin = false;
 
 /* True means the -a flag has been given. */
-static int print_across_flag = FALSE;
+static bool print_across_flag = false;
 
 /* True means we're printing one file in multiple (>1) downward columns. */
-static int storing_columns = TRUE;
+static bool storing_columns = true;
 
 /* (-b) True means balance columns on the last page as Sys V does. */
-/* That's no longer an independent option. With storing_columns = TRUE
-   balance_columns = TRUE is used too (s. function init_parameters).
+/* That's no longer an independent option. With storing_columns = true
+   balance_columns = true is used too (s. function init_parameters).
    We get a consistent formulation with "FF set by hand" in input files. */
-static int balance_columns = FALSE;
+static bool balance_columns = false;
 
 /* (-l) Number of lines on a page, including header and footer lines. */
 static int lines_per_page = 66;
@@ -543,18 +543,18 @@ static int lines_per_footer = 5;
 static int chars_per_line = 72;
 
 /* (-w|W) True means we truncate lines longer than chars_per_column. */
-static int truncate_lines = FALSE;
+static bool truncate_lines = false;
 
 /* (-J) True means we join lines without any line truncation. -J
    dominates -w option. */
-static int join_lines = FALSE;
+static bool join_lines = false;
 
 /* Number of characters in a column.  Based on col_sep_length and
    page width. */
 static int chars_per_column;
 
 /* (-e) True means convert tabs to spaces on input. */
-static int untabify_input = FALSE;
+static bool untabify_input = false;
 
 /* (-e) The input tab character. */
 static char input_tab_char = '\t';
@@ -564,7 +564,7 @@ static char input_tab_char = '\t';
 static int chars_per_input_tab = 8;
 
 /* (-i) True means convert spaces to tabs on output. */
-static int tabify_output = FALSE;
+static bool tabify_output = false;
 
 /* (-i) The output tab character. */
 static char output_tab_char = '\t';
@@ -592,9 +592,9 @@ static int output_position;
    Important for converting tabs to spaces on input. */
 static int input_position;
 
-/* Count number of failed opens so we can exit with nonzero
-   status if there were any.  */
-static int failed_opens = 0;
+/* True if there were any failed opens so we can exit with nonzero
+   status.  */
+static bool failed_opens = false;
 
 /* The number of spaces taken up if we print a tab character with width
    c_ from position h_. */
@@ -638,7 +638,7 @@ static int line_number;
 static int power_10;
 
 /* (-n) True means lines should be preceded by numbers. */
-static int numbered_lines = FALSE;
+static bool numbered_lines = false;
 
 /* (-n) Character which follows each line number. */
 static char number_separator = '\t';
@@ -650,7 +650,7 @@ static int line_count = 1;
 /* (-n) True means counting of skipped lines starts with 1st line of
    input file. False means -N option is used in addition, counting of
    skipped lines not required. */
-static int skip_count = TRUE;
+static bool skip_count = true;
 
 /* (-N) Counting starts with start_line_number = NUMBER at 1st line of
    first page printed, usually not 1st page of input file. */
@@ -669,25 +669,25 @@ static char *number_buff;
 
 /* (-v) True means unprintable characters are printed as escape sequences.
    control-g becomes \007. */
-static int use_esc_sequence = FALSE;
+static bool use_esc_sequence = false;
 
 /* (-c) True means unprintable characters are printed as control prefixes.
    control-g becomes ^G. */
-static int use_cntrl_prefix = FALSE;
+static bool use_cntrl_prefix = false;
 
 /* (-d) True means output is double spaced. */
-static int double_space = FALSE;
+static bool double_space = false;
 
 /* Number of files opened initially in init_files.  Should be 1
    unless we're printing multiple files in parallel. */
 static int total_files = 0;
 
 /* (-r) True means don't complain if we can't open a file. */
-static int ignore_failed_opens = FALSE;
+static bool ignore_failed_opens = false;
 
 /* (-S) True means we separate columns with a specified string.
    -S option does not affect line truncation nor column alignment. */
-static int use_col_separator = FALSE;
+static bool use_col_separator = false;
 
 /* String used to separate columns if the -S option has been specified.
    Default without -S but together with one of the column options
@@ -707,7 +707,7 @@ static int padding_not_printed;
 
 /* True means we should pad the end of the page.  Remains false until we
    know we have a page to print. */
-static int pad_vertically;
+static bool pad_vertically;
 
 /* (-h) String of characters used in place of the filename in the header. */
 static char *custom_header;
@@ -722,13 +722,13 @@ static char const *file_text;
 /* Output columns available, not counting the date and file name.  */
 static int header_width_available;
 
-static int *clump_buff;
+static char *clump_buff;
 
 /* True means we read the line no. lines_per_body in skip_read
    called by skip_to_page. That variable controls the coincidence of a
    "FF set by hand" and "full_page_printed", see above the definition of
    structure COLUMN. */
-static int last_line = FALSE;
+static bool last_line = false;
 
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
@@ -815,7 +815,7 @@ first_last_page (char *pages)
 	|| tmp_long < 1 || tmp_long > INT_MAX)
       error (EXIT_FAILURE, 0, _("`--pages' invalid starting page number: `%s'"),
 	     pages);
-    first_page_number = (int) tmp_long;
+    first_page_number = tmp_long;
   }
 
   if (str1 == NULL)
@@ -827,7 +827,7 @@ first_last_page (char *pages)
 	|| tmp_long <= 0 || tmp_long > INT_MAX)
       error (EXIT_FAILURE, 0, _("`--pages' invalid ending page number: `%s'"),
 	     str1 + 1);
-    last_page_number = (int) tmp_long;
+    last_page_number = tmp_long;
   }
 
   if (first_page_number > last_page_number)
@@ -851,9 +851,9 @@ main (int argc, char **argv)
   int c;
   int accum = 0;
   int n_files;
-  int old_options = FALSE;
-  int old_w = FALSE;
-  int old_s = FALSE;
+  bool old_options = false;
+  bool old_w = false;
+  bool old_s = false;
   char **file_names;
   char const *short_options = (posix2_version () < 200112
 			       ? COMMON_SHORT_OPTIONS "S::"
@@ -879,7 +879,7 @@ main (int argc, char **argv)
 	{
 	  accum = accum * 10 + c - '0';
 	  columns = accum;
-	  explicit_columns = TRUE;
+	  explicit_columns = true;
 	  continue;
 	}
 
@@ -922,22 +922,22 @@ main (int argc, char **argv)
 		       _("`--columns=COLUMN' invalid number of columns: `%s'"),
 		       optarg);
 	      }
-	    columns = (int) tmp_long;
+	    columns = tmp_long;
 	    break;
 	  }
 
 	case 'a':
-	  print_across_flag = TRUE;
-	  storing_columns = FALSE;
+	  print_across_flag = true;
+	  storing_columns = false;
 	  break;
 	case 'b':
-	  balance_columns = TRUE;
+	  balance_columns = true;
 	  break;
 	case 'c':
-	  use_cntrl_prefix = TRUE;
+	  use_cntrl_prefix = true;
 	  break;
 	case 'd':
-	  double_space = TRUE;
+	  double_space = true;
 	  break;
 	case 'D':
 	  date_format = optarg;
@@ -947,11 +947,11 @@ main (int argc, char **argv)
 	    getoptarg (optarg, 'e', &input_tab_char,
 		       &chars_per_input_tab);
 	  /* Could check tab width > 0. */
-	  untabify_input = TRUE;
+	  untabify_input = true;
 	  break;
 	case 'f':
 	case 'F':
-	  use_form_feed = TRUE;
+	  use_form_feed = true;
 	  break;
 	case 'h':
 	  custom_header = optarg;
@@ -961,10 +961,10 @@ main (int argc, char **argv)
 	    getoptarg (optarg, 'i', &output_tab_char,
 		       &chars_per_output_tab);
 	  /* Could check tab width > 0. */
-	  tabify_output = TRUE;
+	  tabify_output = true;
 	  break;
 	case 'J':
-	  join_lines = TRUE;
+	  join_lines = true;
 	  break;
 	case 'l':
 	  {
@@ -976,21 +976,21 @@ main (int argc, char **argv)
 		       _("`-l PAGE_LENGTH' invalid number of lines: `%s'"),
 		       optarg);
 	      }
-	    lines_per_page = (int) tmp_long;
+	    lines_per_page = tmp_long;
 	    break;
 	  }
 	case 'm':
-	  parallel_files = TRUE;
-	  storing_columns = FALSE;
+	  parallel_files = true;
+	  storing_columns = false;
 	  break;
 	case 'n':
-	  numbered_lines = TRUE;
+	  numbered_lines = true;
 	  if (optarg)
 	    getoptarg (optarg, 'n', &number_separator,
 		       &chars_per_number);
 	  break;
 	case 'N':
-	  skip_count = FALSE;
+	  skip_count = false;
 	  {
 	    long int tmp_long;
 	    if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
@@ -1000,7 +1000,7 @@ main (int argc, char **argv)
 		       _("`-N NUMBER' invalid starting line number: `%s'"),
 		       optarg);
 	      }
-	    start_line_num = (int) tmp_long;
+	    start_line_num = tmp_long;
 	    break;
 	  }
 	case 'o':
@@ -1010,60 +1010,61 @@ main (int argc, char **argv)
 		|| tmp_long < 0 || tmp_long > INT_MAX)
 	      error (EXIT_FAILURE, 0,
 		     _("`-o MARGIN' invalid line offset: `%s'"), optarg);
-	    chars_per_margin = (int) tmp_long;
+	    chars_per_margin = tmp_long;
 	    break;
 	  }
 	case 'r':
-	  ignore_failed_opens = TRUE;
+	  ignore_failed_opens = true;
 	  break;
 	case 's':
-	  old_options = TRUE;
-	  old_s = TRUE;
+	  old_options = true;
+	  old_s = true;
 	  if (!use_col_separator && optarg)
 	    separator_string (optarg);
 	  break;
 	case 'S':
-	  old_s = FALSE;
+	  old_s = false;
 	  /* Reset an additional input of -s, -S dominates -s */
 	  col_sep_string = "";
 	  col_sep_length = 0;
-	  use_col_separator = TRUE;
+	  use_col_separator = true;
 	  if (optarg)
 	    separator_string (optarg);
 	  break;
 	case 't':
-	  extremities = FALSE;
-	  keep_FF = TRUE;
+	  extremities = false;
+	  keep_FF = true;
 	  break;
 	case 'T':
-	  extremities = FALSE;
-	  keep_FF = FALSE;
+	  extremities = false;
+	  keep_FF = false;
 	  break;
 	case 'v':
-	  use_esc_sequence = TRUE;
+	  use_esc_sequence = true;
 	  break;
 	case 'w':
-	  old_options = TRUE;
-	  old_w = TRUE;
+	  old_options = true;
+	  old_w = true;
 	  {
 	    long int tmp_long;
 	    if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
 	        || tmp_long <= 0 || tmp_long > INT_MAX)
 	      error (EXIT_FAILURE, 0,
 	         _("`-w PAGE_WIDTH' invalid number of characters: `%s'"), optarg);
-	    if (!truncate_lines)  chars_per_line = (int) tmp_long;
+	    if (!truncate_lines)
+	      chars_per_line = tmp_long;
 	    break;
 	  }
 	case 'W':
-	  old_w = FALSE;			/* dominates -w */
-	  truncate_lines = TRUE;
+	  old_w = false;			/* dominates -w */
+	  truncate_lines = true;
 	  {
 	    long int tmp_long;
 	    if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
 		|| tmp_long <= 0 || tmp_long > INT_MAX)
 	      error (EXIT_FAILURE, 0,
 		 _("`-W PAGE_WIDTH' invalid number of characters: `%s'"), optarg);
-	    chars_per_line = (int) tmp_long;
+	    chars_per_line = tmp_long;
 	    break;
 	  }
 	case_GETOPT_HELP_CHAR;
@@ -1083,11 +1084,11 @@ main (int argc, char **argv)
   if (first_page_number == 0)
     first_page_number = 1;
 
-  if (parallel_files && explicit_columns)
+  if (parallel_files & explicit_columns)
     error (EXIT_FAILURE, 0,
 	 _("Cannot specify number of columns when printing in parallel."));
 
-  if (parallel_files && print_across_flag)
+  if (parallel_files & print_across_flag)
     error (EXIT_FAILURE, 0,
        _("Cannot specify both printing across and printing in parallel."));
 
@@ -1099,39 +1100,39 @@ main (int argc, char **argv)
     {
       if (old_w)
         {
-          if (parallel_files || explicit_columns)
+          if (parallel_files | explicit_columns)
 	    {
 	      /* activate -W */
-	      truncate_lines = TRUE;
+	      truncate_lines = true;
 	      if (old_s)
 	        /* adapt HP-UX and SunOS: -s = no separator;
 	           activate -S */
-	        use_col_separator = TRUE;
+	        use_col_separator = true;
 	    }
 	  else
 	    /* old -w sets width with columns only
 	       activate -J */
-	    join_lines = TRUE;
+	    join_lines = true;
 	}
       else if (!use_col_separator)
         {
 	  /* No -S option read */
-          if (old_s && (parallel_files || explicit_columns))
+          if (old_s & (parallel_files | explicit_columns))
 	    {
 	      if (!truncate_lines)
 		{
 		  /* old -s (without -w and -W) annuls column alignment,
 		  uses fields, activate -J */
-		  join_lines = TRUE;
+		  join_lines = true;
 		  if (col_sep_length > 0)
 		    /* activate -S */
-		    use_col_separator = TRUE;
+		    use_col_separator = true;
 		}
 	      else
 		/* with -W */
 		/* adapt HP-UX and SunOS: -s = no separator;
 		   activate -S */
-		use_col_separator = TRUE;
+		use_col_separator = true;
 	    }
 	}
     }
@@ -1162,7 +1163,7 @@ main (int argc, char **argv)
 
   if (have_read_stdin && fclose (stdin) == EOF)
     error (EXIT_FAILURE, errno, _("standard input"));
-  if (failed_opens > 0)
+  if (failed_opens)
     exit (EXIT_FAILURE);
   exit (EXIT_SUCCESS);
 }
@@ -1189,7 +1190,7 @@ getoptarg (char *arg, char switch_char, char *character, int *number)
 		 switch_char, arg);
 	  usage (EXIT_FAILURE);
 	}
-      *number = (int) tmp_long;
+      *number = tmp_long;
     }
 }
 
@@ -1209,10 +1210,10 @@ init_parameters (int number_of_files)
   lines_per_body = lines_per_page - lines_per_header - lines_per_footer;
   if (lines_per_body <= 0)
     {
-      extremities = FALSE;
-      keep_FF = TRUE;
+      extremities = false;
+      keep_FF = true;
     }
-  if (extremities == FALSE)
+  if (extremities == false)
     lines_per_body = lines_per_page;
 
   if (double_space)
@@ -1221,7 +1222,7 @@ init_parameters (int number_of_files)
   /* If input is stdin, cannot print parallel files.  BSD dumps core
      on this. */
   if (number_of_files == 0)
-    parallel_files = FALSE;
+    parallel_files = false;
 
   if (parallel_files)
     columns = number_of_files;
@@ -1229,7 +1230,7 @@ init_parameters (int number_of_files)
   /* One file, multi columns down: -b option is set to get a consistent
      formulation with "FF set by hand" in input files. */
   if (storing_columns)
-    balance_columns = TRUE;
+    balance_columns = true;
 
   /* Tabification is assumed for multiple columns. */
   if (columns > 1)
@@ -1243,23 +1244,23 @@ init_parameters (int number_of_files)
 	    col_sep_string = column_separator;
 
 	  col_sep_length = 1;
-	  use_col_separator = TRUE;
+	  use_col_separator = true;
 	}
       /* It's rather pointless to define a TAB separator with column
          alignment */
       else if (!join_lines && *col_sep_string == '\t')
         col_sep_string = column_separator;
 
-      truncate_lines = TRUE;
-      untabify_input = TRUE;
-      tabify_output = TRUE;
+      truncate_lines = true;
+      untabify_input = true;
+      tabify_output = true;
     }
   else
-    storing_columns = FALSE;
+    storing_columns = false;
 
   /* -J dominates -w in any case */
   if (join_lines)
-    truncate_lines = FALSE;
+    truncate_lines = false;
 
   if (numbered_lines)
     {
@@ -1312,8 +1313,7 @@ init_parameters (int number_of_files)
      to expand a tab which is not an input_tab-char. */
   if (clump_buff != NULL)
     free (clump_buff);
-  clump_buff = xmalloc ((chars_per_input_tab > 8
-				? chars_per_input_tab : 8) * sizeof (int));
+  clump_buff = xmalloc (MAX (8, chars_per_input_tab));
 }
 
 /* Open the necessary files,
@@ -1321,13 +1321,13 @@ init_parameters (int number_of_files)
 
    With multiple files, each column p has a different p->fp.
    With single files, each column p has the same p->fp.
-   Return 1 if (number_of_files > 0) and no files can be opened,
-   0 otherwise.
+   Return false if (number_of_files > 0) and no files can be opened,
+   true otherwise.
 
    With each column/file p, p->full_page_printed is initialized,
    see also open_file.  */
 
-static int
+static bool
 init_fps (int number_of_files, char **av)
 {
   int i, files_left;
@@ -1346,14 +1346,14 @@ init_fps (int number_of_files, char **av)
       files_left = number_of_files;
       for (p = column_vector; files_left--; ++p, ++av)
 	{
-	  if (open_file (*av, p) == 0)
+	  if (! open_file (*av, p))
 	    {
 	      --p;
 	      --columns;
 	    }
 	}
       if (columns == 0)
-	return 1;
+	return false;
       init_header ("", -1);
     }
   else
@@ -1361,8 +1361,8 @@ init_fps (int number_of_files, char **av)
       p = column_vector;
       if (number_of_files > 0)
 	{
-	  if (open_file (*av, p) == 0)
-	    return 1;
+	  if (! open_file (*av, p))
+	    return false;
 	  init_header (*av, fileno (p->fp));
 	  p->lines_stored = 0;
 	}
@@ -1370,9 +1370,9 @@ init_fps (int number_of_files, char **av)
 	{
 	  p->name = _("standard input");
 	  p->fp = stdin;
-	  have_read_stdin = TRUE;
+	  have_read_stdin = true;
 	  p->status = OPEN;
-	  p->full_page_printed = FALSE;
+	  p->full_page_printed = false;
 	  ++total_files;
 	  init_header ("", -1);
 	  p->lines_stored = 0;
@@ -1385,12 +1385,12 @@ init_fps (int number_of_files, char **av)
 	  p->name = firstname;
 	  p->fp = firstfp;
 	  p->status = OPEN;
-	  p->full_page_printed = FALSE;
+	  p->full_page_printed = false;
 	  p->lines_stored = 0;
 	}
     }
   files_ready_to_read = total_files;
-  return 0;
+  return true;
 }
 
 /* Determine print_func and char_func, the functions
@@ -1414,7 +1414,7 @@ init_funcs (void)
       /* When numbering lines of parallel files, we enlarge the
          first column to accomodate the number.  Looks better than
          the Sys V approach. */
-      if (parallel_files && numbered_lines)
+      if (parallel_files & numbered_lines)
 	h_next = h + chars_per_column + number_width;
       else
 	h_next = h + chars_per_column;
@@ -1465,7 +1465,7 @@ init_funcs (void)
 
      Doesn't need to be stored unless we intend to balance
      columns on the last page. */
-  if (storing_columns && balance_columns)
+  if (storing_columns & balance_columns)
     {
       p->char_func = store_char;
       p->print_func = print_stored;
@@ -1480,19 +1480,19 @@ init_funcs (void)
   p->start_position = h;
 }
 
-/* Open a file.  Return nonzero if successful, zero if failed.
+/* Open a file.  Return true if successful.
 
    With each file p, p->full_page_printed is initialized,
    see also init_fps. */
 
-static int
+static bool
 open_file (char *name, COLUMN *p)
 {
   if (STREQ (name, "-"))
     {
       p->name = _("standard input");
       p->fp = stdin;
-      have_read_stdin = 1;
+      have_read_stdin = true;
     }
   else
     {
@@ -1501,15 +1501,15 @@ open_file (char *name, COLUMN *p)
     }
   if (p->fp == NULL)
     {
-      ++failed_opens;
+      failed_opens = true;
       if (!ignore_failed_opens)
 	error (0, errno, "%s", name);
-      return 0;
+      return false;
     }
   p->status = OPEN;
-  p->full_page_printed = FALSE;
+  p->full_page_printed = false;
   ++total_files;
-  return 1;
+  return true;
 }
 
 /* Close the file in P.
@@ -1616,7 +1616,7 @@ static void
 print_files (int number_of_files, char **av)
 {
   init_parameters (number_of_files);
-  if (init_fps (number_of_files, av))
+  if (! init_fps (number_of_files, av))
     return;
   if (storing_columns)
     init_store_cols ();
@@ -1646,7 +1646,7 @@ static void
 init_header (char *filename, int desc)
 {
   char *buf;
-  char initbuf[MAX (256, INT_STRLEN_BOUND (long) + 1)];
+  char initbuf[MAX (256, INT_STRLEN_BOUND (long int) + 1)];
   struct stat st;
   struct tm *tm;
 
@@ -1659,7 +1659,7 @@ init_header (char *filename, int desc)
   buf = initbuf;
   tm = localtime (&st.st_mtime);
   if (! tm)
-    sprintf (buf, "%ld", (long) st.st_mtime);
+    sprintf (buf, "%ld", (long int) st.st_mtime);
   else
     {
       size_t bufsize = sizeof initbuf;
@@ -1764,7 +1764,7 @@ align_column (COLUMN *p)
    reset the status of all files -- any files which where on hold because
    of formfeeds are now put back into the lineup. */
 
-static int
+static bool
 print_page (void)
 {
   int j;
@@ -1773,24 +1773,24 @@ print_page (void)
 
   /* Used as an accumulator (with | operator) of successive values of
      pad_vertically.  The trick is to set pad_vertically
-     to zero before each run through the inner loop, then after that
+     to false before each run through the inner loop, then after that
      loop, it tells us whether a line was actually printed (whether a
      newline needs to be output -- or two for double spacing).  But those
      values have to be accumulated (in pv) so we can invoke pad_down
      properly after the outer loop completes. */
-  int pv;
+  bool pv;
 
   init_page ();
 
   if (cols_ready_to_print () == 0)
-    return FALSE;
+    return false;
 
   if (extremities)
-    print_a_header = TRUE;
+    print_a_header = true;
 
   /* Don't pad unless we know a page was printed. */
-  pad_vertically = FALSE;
-  pv = FALSE;
+  pad_vertically = false;
+  pv = false;
 
   lines_left_on_page = lines_per_body;
   if (double_space)
@@ -1801,16 +1801,16 @@ print_page (void)
       output_position = 0;
       spaces_not_printed = 0;
       separators_not_printed = 0;
-      pad_vertically = FALSE;
-      align_empty_cols = FALSE;
-      empty_line = TRUE;
+      pad_vertically = false;
+      align_empty_cols = false;
+      empty_line = true;
 
       for (j = 1, p = column_vector; j <= columns; ++j, ++p)
 	{
 	  input_position = 0;
 	  if (p->lines_to_print > 0 || p->status == FF_FOUND)
 	    {
-	      FF_only = FALSE;
+	      FF_only = false;
 	      padding_not_printed = p->start_position;
 	      if (!(p->print_func) (p))
 		read_rest_of_line (p);
@@ -1827,7 +1827,7 @@ print_page (void)
 	      if (parallel_files && p->status != OPEN)
 		{
 		  if (empty_line)
-		    align_empty_cols = TRUE;
+		    align_empty_cols = true;
 		  else if (p->status == CLOSED ||
 			   (p->status == ON_HOLD && FF_only))
 		    align_column (p);
@@ -1837,7 +1837,7 @@ print_page (void)
 	    {
 	      /* File status ON_HOLD or CLOSED */
 	      if (empty_line)
-		align_empty_cols = TRUE;
+		align_empty_cols = true;
 	      else
 		align_column (p);
 	    }
@@ -1856,7 +1856,7 @@ print_page (void)
       if (cols_ready_to_print () <= 0 && !extremities)
 	break;
 
-      if (double_space && pv)
+      if (double_space & pv)
 	{
 	  putchar ('\n');
 	  --lines_left_on_page;
@@ -1866,24 +1866,24 @@ print_page (void)
   if (lines_left_on_page == 0)
     for (j = 1, p = column_vector; j <= columns; ++j, ++p)
       if (p->status == OPEN)
-	p->full_page_printed = TRUE;
+	p->full_page_printed = true;
 
   pad_vertically = pv;
 
-  if (pad_vertically && extremities)
+  if (pad_vertically & extremities)
     pad_down (lines_left_on_page + lines_per_footer);
-  else if (keep_FF && print_a_FF)
+  else if (keep_FF & print_a_FF)
     {
       putchar ('\f');
-      print_a_FF = FALSE;
+      print_a_FF = false;
     }
 
   if (last_page_number && page_number > last_page_number)
-    return FALSE;		/* Stop printing with LAST_PAGE */
+    return false;		/* Stop printing with LAST_PAGE */
 
   reset_status ();		/* Change ON_HOLD to OPEN. */
 
-  return TRUE;			/* More pages to go. */
+  return true;			/* More pages to go. */
 }
 
 /* Allocate space for storing columns.
@@ -2009,14 +2009,14 @@ balance (int total_stored)
 /* Store a character in the buffer. */
 
 static void
-store_char (int c)
+store_char (char c)
 {
   if (buff_current >= buff_allocated)
     {
       /* May be too generous. */
       buff = x2nrealloc (buff, &buff_allocated, sizeof *buff);
     }
-  buff[buff_current++] = (char) c;
+  buff[buff_current++] = c;
 }
 
 static void
@@ -2038,7 +2038,7 @@ add_line_number (COLUMN *p)
   line_number++;
   s = number_buff;
   for (i = chars_per_number; i > 0; i--)
-    (p->char_func) ((int) *s++);
+    (p->char_func) (*s++);
 
   if (columns > 1)
     {
@@ -2049,23 +2049,23 @@ add_line_number (COLUMN *p)
         {
           i = number_width - chars_per_number;
           while (i-- > 0)
-	    (p->char_func) ((int) ' ');
+	    (p->char_func) (' ');
         }
       else
-        (p->char_func) ((int) number_separator);
+        (p->char_func) (number_separator);
     }
   else
     /* To comply with POSIX, we avoid any expansion of default TAB
        separator with a single column output. No column_width requirement
        has to be considered. */
     {
-      (p->char_func) ((int) number_separator);
+      (p->char_func) (number_separator);
       if (number_separator == '\t')
         output_position = POS_AFTER_TAB (chars_per_output_tab,
 			  output_position);
     }
 
-  if (truncate_lines && !parallel_files)
+  if (truncate_lines & !parallel_files)
     input_position += number_width;
 }
 
@@ -2123,7 +2123,7 @@ read_rest_of_line (COLUMN *p)
 	  if ((c = getc (f)) != '\n')
 	    ungetc (c, f);
 	  if (keep_FF)
-	    print_a_FF = TRUE;
+	    print_a_FF = true;
 	  hold_file (p);
 	  break;
 	}
@@ -2149,7 +2149,8 @@ skip_read (COLUMN *p, int column_number)
 {
   register int c;
   FILE *f = p->fp;
-  int i, single_ff = FALSE;
+  int i;
+  bool single_ff = false;
   COLUMN *q;
 
   /* Read 1st character in a line or any character succeeding a FF */
@@ -2159,17 +2160,17 @@ skip_read (COLUMN *p, int column_number)
     if ((c = getc (f)) == '\n')
       c = getc (f);
 
-  p->full_page_printed = FALSE;
+  p->full_page_printed = false;
 
   /* 1st character a FF means a single FF without any printable
      characters. Don't count it as a line with -n option. */
   if (c == '\f')
-    single_ff = TRUE;
+    single_ff = true;
 
   /* Preparing for a FF-coincidence: Maybe we finish that page
      without a FF found */
   if (last_line)
-    p->full_page_printed = TRUE;
+    p->full_page_printed = true;
 
   while (c != '\n')
     {
@@ -2181,9 +2182,9 @@ skip_read (COLUMN *p, int column_number)
 	    {
 	      if (!parallel_files)
 		for (q = column_vector, i = columns; i; ++q, --i)
-		  q->full_page_printed = FALSE;
+		  q->full_page_printed = false;
 	      else
-		p->full_page_printed = FALSE;
+		p->full_page_printed = false;
 	    }
 
 	  if ((c = getc (f)) != '\n')
@@ -2283,7 +2284,7 @@ print_sep_string ()
    characters. */
 
 static void
-print_clump (COLUMN *p, int n, int *clump)
+print_clump (COLUMN *p, int n, char *clump)
 {
   while (n--)
     (p->char_func) (*clump++);
@@ -2299,7 +2300,7 @@ print_clump (COLUMN *p, int n, int *clump)
    required number of tabs and spaces. */
 
 static void
-print_char (int c)
+print_char (char c)
 {
   if (tabify_output)
     {
@@ -2312,7 +2313,7 @@ print_char (int c)
 	print_white_space ();
 
       /* Nonprintables are assumed to have width 0, except '\b'. */
-      if (!ISPRINT (c))
+      if (!ISPRINT (to_uchar (c)))
 	{
 	  if (c == '\b')
 	    --output_position;
@@ -2326,7 +2327,7 @@ print_char (int c)
 /* Skip to page PAGE before printing.
    PAGE may be larger than total number of pages. */
 
-static int
+static bool
 skip_to_page (int page)
 {
   int n, i, j;
@@ -2340,7 +2341,7 @@ skip_to_page (int page)
 	    if (p->status == OPEN)
 	      skip_read (p, j);
 	}
-      last_line = TRUE;
+      last_line = true;
       for (j = 1, p = column_vector; j <= columns; ++j, ++p)
 	if (p->status == OPEN)
 	  skip_read (p, j);
@@ -2351,7 +2352,7 @@ skip_to_page (int page)
 	    p->status = ON_HOLD;
 
       reset_status ();
-      last_line = FALSE;
+      last_line = false;
 
       if (files_ready_to_read < 1)
         {
@@ -2398,7 +2399,7 @@ print_header (void)
   printf ("%s%*s%s%*s%s\n\n\n",
 	  date_text, lhs_spaces, " ", file_text, rhs_spaces, " ", page_text);
 
-  print_a_header = FALSE;
+  print_a_header = false;
   output_position = 0;
 }
 
@@ -2408,7 +2409,7 @@ print_header (void)
    (We may hit EOF, \n, or \f)
 
    Once we know we have a line,
-   set pad_vertically = TRUE, meaning it's safe
+   set pad_vertically = true, meaning it's safe
    to pad down at the end of the page, since we do have a page.
    print a header if needed.
    pad across to padding_not_printed if needed.
@@ -2420,10 +2421,10 @@ print_header (void)
    Enter a loop and keep printing until an end of line condition
    exists, or until we exceed chars_per_column.
 
-   Return FALSE if we exceed chars_per_column before reading
-   an end of line character, TRUE otherwise. */
+   Return false if we exceed chars_per_column before reading
+   an end of line character, true otherwise. */
 
-static int
+static bool
 read_line (COLUMN *p)
 {
   int c;
@@ -2440,26 +2441,26 @@ read_line (COLUMN *p)
   if (c == '\f' && p->full_page_printed)
     if ((c = getc (p->fp)) == '\n')
       c = getc (p->fp);
-  p->full_page_printed = FALSE;
+  p->full_page_printed = false;
 
   switch (c)
     {
     case '\f':
       if ((c = getc (p->fp)) != '\n')
 	ungetc (c, p->fp);
-      FF_only = TRUE;
-      if (print_a_header && !storing_columns)
+      FF_only = true;
+      if (print_a_header & !storing_columns)
 	{
-	  pad_vertically = TRUE;
+	  pad_vertically = true;
 	  print_header ();
 	}
       else if (keep_FF)
-	print_a_FF = TRUE;
+	print_a_FF = true;
       hold_file (p);
-      return TRUE;
+      return true;
     case EOF:
       close_file (p);
-      return TRUE;
+      return true;
     case '\n':
       break;
     default:
@@ -2469,17 +2470,17 @@ read_line (COLUMN *p)
   if (truncate_lines && input_position > chars_per_column)
     {
       input_position = last_input_position;
-      return FALSE;
+      return false;
     }
 
   if (p->char_func != store_char)
     {
-      pad_vertically = TRUE;
+      pad_vertically = true;
 
-      if (print_a_header && !storing_columns)
+      if (print_a_header & !storing_columns)
 	print_header ();
 
-      if (parallel_files && align_empty_cols)
+      if (parallel_files & align_empty_cols)
 	{
 	  /* We have to align empty columns at the beginning of a line. */
 	  k = separators_not_printed;
@@ -2494,7 +2495,7 @@ read_line (COLUMN *p)
 	    spaces_not_printed = chars_per_column;
 	  else
 	    spaces_not_printed = 0;
-	  align_empty_cols = FALSE;
+	  align_empty_cols = false;
 	}
 
       if (padding_not_printed - col_sep_length > 0)
@@ -2510,9 +2511,9 @@ read_line (COLUMN *p)
   if (p->numbered)
     add_line_number (p);
 
-  empty_line = FALSE;
+  empty_line = false;
   if (c == '\n')
-    return TRUE;
+    return true;
 
   print_clump (p, chars, clump_buff);
 
@@ -2523,17 +2524,17 @@ read_line (COLUMN *p)
       switch (c)
 	{
 	case '\n':
-	  return TRUE;
+	  return true;
 	case '\f':
 	  if ((c = getc (p->fp)) != '\n')
 	    ungetc (c, p->fp);
 	  if (keep_FF)
-	    print_a_FF = TRUE;
+	    print_a_FF = true;
 	  hold_file (p);
-	  return TRUE;
+	  return true;
 	case EOF:
 	  close_file (p);
-	  return TRUE;
+	  return true;
 	}
 
       last_input_position = input_position;
@@ -2541,7 +2542,7 @@ read_line (COLUMN *p)
       if (truncate_lines && input_position > chars_per_column)
 	{
 	  input_position = last_input_position;
-	  return FALSE;
+	  return false;
 	}
 
       print_clump (p, chars, clump_buff);
@@ -2553,16 +2554,16 @@ read_line (COLUMN *p)
    If this function has been called, we know we have "something to
    print". But it remains to be seen whether we have a real text page
    or an empty page (a single form feed) with/without a header only.
-   Therefore first we set pad_vertically to TRUE and print a header
+   Therefore first we set pad_vertically to true and print a header
    if necessary.
    If FF_FOUND and we are using -t|-T option we omit any newline by
-   setting pad_vertically to FALSE (see print_page).
+   setting pad_vertically to false (see print_page).
    Otherwise we pad across if necessary, print separators if necessary
    and text of COLUMN *p.
 
-   Return TRUE, meaning there is no need to call read_rest_of_line. */
+   Return true, meaning there is no need to call read_rest_of_line. */
 
-static int
+static bool
 print_stored (COLUMN *p)
 {
   COLUMN *q;
@@ -2583,7 +2584,7 @@ print_stored (COLUMN *p)
      */
   register char *last = &buff[line_vector[line + 1]];
 
-  pad_vertically = TRUE;
+  pad_vertically = true;
 
   if (print_a_header)
     print_header ();
@@ -2595,8 +2596,8 @@ print_stored (COLUMN *p)
       if (column_vector->lines_to_print <= 0)
 	{
 	  if (!extremities)
-	    pad_vertically = FALSE;
-	  return TRUE;		/* print a header only */
+	    pad_vertically = false;
+	  return true;		/* print a header only */
 	}
     }
 
@@ -2619,7 +2620,7 @@ print_stored (COLUMN *p)
 	output_position -= col_sep_length;
     }
 
-  return TRUE;
+  return true;
 }
 
 /* Convert a character to the proper format and return the number of
@@ -2635,9 +2636,10 @@ print_stored (COLUMN *p)
    number of characters is 1.) */
 
 static int
-char_to_clump (int c)
+char_to_clump (char c)
 {
-  register int *s = clump_buff;
+  unsigned char uc = c;
+  register char *s = clump_buff;
   register int i;
   char esc_buff[4];
   int width;
@@ -2664,20 +2666,20 @@ char_to_clump (int c)
 	}
 
     }
-  else if (!ISPRINT (c))
+  else if (!ISPRINT (uc))
     {
       if (use_esc_sequence)
 	{
 	  width = 4;
 	  chars = 4;
 	  *s++ = '\\';
-	  sprintf (esc_buff, "%03o", c);
+	  sprintf (esc_buff, "%03o", uc);
 	  for (i = 0; i <= 2; ++i)
-	    *s++ = (int) esc_buff[i];
+	    *s++ = esc_buff[i];
 	}
       else if (use_cntrl_prefix)
 	{
-	  if (c < 0200)
+	  if (uc < 0200)
 	    {
 	      width = 2;
 	      chars = 2;
@@ -2689,9 +2691,9 @@ char_to_clump (int c)
 	      width = 4;
 	      chars = 4;
 	      *s++ = '\\';
-	      sprintf (esc_buff, "%03o", c);
+	      sprintf (esc_buff, "%03o", uc);
 	      for (i = 0; i <= 2; ++i)
-		*s++ = (int) esc_buff[i];
+		*s++ = esc_buff[i];
 	    }
 	}
       else if (c == '\b')
