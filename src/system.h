@@ -249,7 +249,9 @@ initialize_exit_failure (int status)
 # define SET_MODE(_f, _m) (void)0
 # define SET_BINARY(f) (void)0
 # define SET_BINARY2(f1,f2) (void)0
-# define O_BINARY 0
+# ifndef O_BINARY
+#  define O_BINARY 0
+# endif
 # define O_TEXT 0
 #endif /* O_BINARY */
 
