@@ -1,4 +1,4 @@
-#serial 40   -*- autoconf -*-
+#serial 41   -*- autoconf -*-
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
@@ -161,8 +161,6 @@ AC_DEFUN([jm_MACROS],
   AC_FUNC_OBSTACK
 
   AC_FUNC_STRTOD
-  AC_SUBST(POW_LIBM)
-  test $am_cv_func_strtod_needs_libm = yes && POW_LIBM=-lm
 
   # See if linking `seq' requires -lm.
   # It does on nearly every system.  The single exception (so far) is
