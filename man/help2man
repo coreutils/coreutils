@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 
 # Generate a short man page from --help and --version output.
-# Copyright © 1997, 98, 99 Free Software Foundation, Inc.
+# Copyright © 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,11 +27,11 @@ use Text::Tabs qw(expand);
 use POSIX qw(strftime setlocale LC_TIME);
 
 my $this_program = 'help2man';
-my $this_version = '1.020';
+my $this_version = '1.022';
 my $version_info = <<EOT;
-$this_program $this_version
+GNU $this_program $this_version
 
-Copyright (C) 1997, 98, 99 Free Software Foundation, Inc.
+Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
@@ -53,6 +53,8 @@ Usage: $this_program [OPTION]... EXECUTABLE
      --version           print version number, then exit
 
 EXECUTABLE should accept `--help' and `--version' options.
+
+Report bugs to <bug-help2man\@gnu.org>.
 EOT
 
 my $section = 1;
@@ -480,7 +482,7 @@ for (@pre, (grep ! /^($filter)$/o, @include), @post)
     {
 	my $quote = /\W/ ? '"' : '';
 	print ".SH $quote$_$quote\n";
-	
+
 	for ($include{$_})
 	{
 	    # Replace leading dot an backslash tokens.
