@@ -1,10 +1,13 @@
 1999-04-30  Jim Meyering  <meyering@ascend.com>
 
+	* src/touch.c (usage): Mention --no-create.
+	Only do the fstat if we need to.
+	On directories, resort to doing a stat, when necessary.
+
 	* src/copy.c (copy_internal): Move the one-file-system test so that
 	it follows the `if (new_dst || !S_ISDIR (dst_sb.st_mode))' block.
 	Prior to this change, `cp --one-file-system' would traverse a file-
-	system boundary if the destination directory existed.
-	From thospel@mail.dma.be.
+	system boundary if the destination directory existed.  From Ton Hospel.
 
 1999-04-26  Jim Meyering  <meyering@ascend.com>
 
