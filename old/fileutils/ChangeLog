@@ -1,6 +1,53 @@
-1998-05-09  Jim Meyering  <meyering@ascend.com>
+1998-05-10  Jim Meyering  <meyering@ascend.com>
 
 	* Version 3.16o.
+
+	* src/mv.c (do_move): Remove lots of code that was duplicated in
+	copy.c (copy), now that copy() has better support for mv.  This fixes
+	a bug with cross-filesystem `mv -i' whereby you could get two prompts
+	for the same destination file and eventually remove the destination
+	file even though one of the responses was negative.
+	Reported by Dirk Lattermann.
+
+	* src/copy.h: Better support for mv:
+	[struct cp_options] (move_mode): New member.
+	* src/copy.c (copy_internal): Use new move_mode member.
+	Add parameter.
+	(copy): Add parameter.
+
+	* tests/cp/Makefile.am (TESTS): Add backup-is-src.
+	* tests/mv/Makefile.am (TESTS): Likewise.
+
+	* lib/userspec.c: Don't declare strdup if it's defined as a macro.
+	Reported by Lorne Baker.
+
+	* src/Makefile.am (ginstall_SOURCES): Add copy.c and cp-hash.c.
+
+	* src/mv.c (cp_option_init): Initialize new members.
+	* src/cp.c (cp_option_init): Likewise.
+	(main): Set new preserve_* options.
+
+1998-05-09  Jim Meyering  <meyering@ascend.com>
+
+	* src/copy.h: Support for install:
+	[struct cp_options] (failed_unlink_is_fatal): New member.
+	(preserve_owner_and_group): New member.
+	(preserve_chmod_bits): New member.
+	(preserve_timestamps): New member.
+	(preserve): Remove member.
+	(set_mode): New member.
+	(mode): New member.
+	* src/copy.c (new_nondir_mode): New function.  Use where appropriate.
+	Use more-specific preserve_* members in place of removed `preserve'.
+	(copy_internal): Honor failed_unlink_is_fatal.
+
+	* src/install.c (main): Rewrite argv-handling to be clearer.
+	(copy_file): Rewrite to use copy.c (copy).
+	(change_attributes): Get rid of now-(with chown wrapper)-unnecessary
+	`no_need_to_chown' parameter.  Fix caller.
+	(install_file_in_file): Remove now-unnecessary `to_created' parameter.
+	(cp_option_init): New function.
+	Update several functions to take new parameter specifying copy options.
 
 	* tests/install: New subdir, with one basic test.
 	* tests/Makefile.am (SUBDIRS): Add install.
@@ -9,8 +56,6 @@
 	* src/dd.c: Include safe-read.h.
 	Don't declare safe_read.
 	* src/touch.c: Likewise.
-
-	* configure.in (AM_FUNC_MKTIME): Use this instead of jm_FUNC_MKTIME.
 
 	* configure.in (jm_TYPE_SSIZE_T): Use it.
 	* acconfig.h (ssize_t): Add undef.
