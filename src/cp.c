@@ -67,6 +67,15 @@ enum
 int stat ();
 int lstat ();
 
+/* Arrange to make lstat calls go through the wrapper function
+   on systems with an lstat function that does not dereference symlinks
+   that are specified with a trailing slash.  */
+#if ! LSTAT_FOLLOWS_SLASHED_SYMLINK
+int rpl_lstat PARAMS((const char *, struct stat *));
+# undef lstat
+# define lstat rpl_lstat
+#endif
+
 void strip_trailing_slashes ();
 
 /* Initial number of entries in each hash table entry's table of inodes.  */
