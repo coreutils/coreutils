@@ -1,5 +1,7 @@
 2004-09-08  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* src/test.c (usage): Document "test" (with no args) and "[ ]".
+
 	* NEWS: Document that "tr xy -z" now works as per POSIX.
 	Sort the descriptions.
 	* src/tr.c (main): Don't reorder options.
