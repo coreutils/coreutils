@@ -1,5 +1,7 @@
 1997-08-31  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* acconfig.h (lstat): Add #undef.
+
 	* m4/Makefile.am (EXTRA_DIST): Add lstat.m4.
 
 	* m4/lstat.m4: New file.
