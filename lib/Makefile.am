@@ -72,7 +72,6 @@ libfetish_a_SOURCES = \
   sha.c sha.h \
   stdio-safer.h \
   stripslash.c \
-  strtoxmax.c \
   strverscmp.h \
   unicodeio.c unicodeio.h \
   unistd-safer.h \
