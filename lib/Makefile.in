@@ -10,7 +10,6 @@
 # even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 # PARTICULAR PURPOSE.
 
-
 SHELL = @SHELL@
 
 srcdir = @srcdir@
@@ -91,19 +90,20 @@ VERSION = @VERSION@
 YACC = @YACC@
 l = @l@
 
+
 AUTOMAKE_OPTIONS = ../src/ansi2knr
 
 noinst_LIBRARIES = libfu.a
 
 INCLUDES = -I.. -I$(srcdir) -I../intl
 
-libfu_a_SOURCES = getdate.y posixtm.c getopt.c getopt1.c addext.c argmatch.c backupfile.c basename.c closeout.c dirname.c exclude.c filemode.c full-write.c human.c idcache.c isdir.c long-options.c makepath.c modechange.c hash.c path-concat.c quotearg.c safe-read.c save-cwd.c savedir.c stripslash.c userspec.c xgetcwd.c xmalloc.c xstrdup.c xstrtol.c xstrtoul.c yesno.c
+libfu_a_SOURCES = getdate.y posixtm.c getopt.c getopt1.c addext.c argmatch.c backupfile.c basename.c closeout.c dirname.c exclude.c filemode.c full-write.c human.c idcache.c isdir.c long-options.c makepath.c modechange.c hash.c path-concat.c quotearg.c safe-read.c save-cwd.c savedir.c stripslash.c userspec.c version-etc.c xgetcwd.c xmalloc.c xstrdup.c xstrtol.c xstrtoul.c yesno.c
 
 
 libfu_a_LIBADD = @LIBOBJS@ @ALLOCA@
 libfu_a_DEPENDENCIES = $(libfu_a_LIBADD)
 
-noinst_HEADERS = argmatch.h backupfile.h closeout.h dirname.h error.h exclude.h filemode.h fnmatch.h fsusage.h getdate.h getline.h getopt.h group-member.h human.h lchown.h long-options.h makepath.h modechange.h mountlist.h hash.h path-concat.h pathmax.h posixtm.h quotearg.h regex.h safe-read.h save-cwd.h savedir.h strverscmp.h xalloc.h xstrtol.h xstrtoul.h
+noinst_HEADERS = argmatch.h backupfile.h closeout.h dirname.h error.h exclude.h filemode.h fnmatch.h fsusage.h getdate.h getline.h getopt.h group-member.h human.h lchown.h long-options.h makepath.h modechange.h mountlist.h hash.h path-concat.h pathmax.h posixtm.h quotearg.h regex.h safe-read.h save-cwd.h savedir.h strverscmp.h version-etc.h xalloc.h xstrtol.h xstrtoul.h
 
 
 BUILT_SOURCES = getdate.c lstat.c stat.c
@@ -125,13 +125,13 @@ addext$U.o argmatch$U.o backupfile$U.o basename$U.o closeout$U.o \
 dirname$U.o exclude$U.o filemode$U.o full-write$U.o human$U.o \
 idcache$U.o isdir$U.o long-options$U.o makepath$U.o modechange$U.o \
 hash$U.o path-concat$U.o quotearg$U.o safe-read$U.o save-cwd$U.o \
-savedir$U.o stripslash$U.o userspec$U.o xgetcwd$U.o xmalloc$U.o \
-xstrdup$U.o xstrtol$U.o xstrtoul$U.o yesno$U.o
+savedir$U.o stripslash$U.o userspec$U.o version-etc$U.o xgetcwd$U.o \
+xmalloc$U.o xstrdup$U.o xstrtol$U.o xstrtoul$U.o yesno$U.o
 AR = ar
 CFLAGS = @CFLAGS@
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
-LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(LDFLAGS) -o $@
+LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 HEADERS =  $(noinst_HEADERS)
 
 DIST_COMMON =  Makefile.am Makefile.in TODO alloca.c chown.c error.c \
@@ -163,8 +163,8 @@ DEP_FILES =  .deps/addext.P .deps/alloca.P .deps/argmatch.P \
 .deps/stpcpy.P .deps/strcasecmp.P .deps/strdup.P .deps/strftime.P \
 .deps/stripslash.P .deps/strncasecmp.P .deps/strndup.P .deps/strstr.P \
 .deps/strtol.P .deps/strtoul.P .deps/strverscmp.P .deps/userspec.P \
-.deps/utime.P .deps/xgetcwd.P .deps/xmalloc.P .deps/xstrdup.P \
-.deps/xstrtol.P .deps/xstrtoul.P .deps/yesno.P
+.deps/utime.P .deps/version-etc.P .deps/xgetcwd.P .deps/xmalloc.P \
+.deps/xstrdup.P .deps/xstrtol.P .deps/xstrtoul.P .deps/yesno.P
 SOURCES = $(libfu_a_SOURCES)
 OBJECTS = $(libfu_a_OBJECTS)
 
@@ -353,6 +353,8 @@ userspec_.c: userspec.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/userspec.c; then echo $(srcdir)/userspec.c; else echo userspec.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > userspec_.c
 utime_.c: utime.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/utime.c; then echo $(srcdir)/utime.c; else echo utime.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > utime_.c
+version-etc_.c: version-etc.c $(ANSI2KNR)
+	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/version-etc.c; then echo $(srcdir)/version-etc.c; else echo version-etc.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > version-etc_.c
 xgetcwd_.c: xgetcwd.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/xgetcwd.c; then echo $(srcdir)/xgetcwd.c; else echo xgetcwd.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > xgetcwd_.c
 xmalloc_.c: xmalloc.c $(ANSI2KNR)
@@ -375,8 +377,9 @@ modechange_.o mountlist_.o obstack_.o path-concat_.o posixtm_.o \
 quotearg_.o realloc_.o regex_.o rename_.o rmdir_.o rpmatch_.o \
 safe-read_.o save-cwd_.o savedir_.o stat_.o stpcpy_.o strcasecmp_.o \
 strdup_.o strftime_.o stripslash_.o strncasecmp_.o strndup_.o strstr_.o \
-strtol_.o strtoul_.o strverscmp_.o userspec_.o utime_.o xgetcwd_.o \
-xmalloc_.o xstrdup_.o xstrtol_.o xstrtoul_.o yesno_.o : $(ANSI2KNR)
+strtol_.o strtoul_.o strverscmp_.o userspec_.o utime_.o version-etc_.o \
+xgetcwd_.o xmalloc_.o xstrdup_.o xstrtol_.o xstrtoul_.o yesno_.o : \
+$(ANSI2KNR)
 .y.c:
 	$(YACC) $(AM_YFLAGS) $(YFLAGS) $< && mv y.tab.c $*.c
 	if test -f y.tab.h; then \
@@ -501,7 +504,7 @@ distclean-generic:
 	-rm -f config.cache config.log stamp-h stamp-h[0-9]*
 
 maintainer-clean-generic:
-	-test -z "getdatehgetdatec$(BUILT_SOURCES)" || rm -f getdateh getdatec $(BUILT_SOURCES)
+	-test -z "getdate.hgetdate.c$(BUILT_SOURCES)" || rm -f getdate.h getdate.c $(BUILT_SOURCES)
 mostlyclean-am:  mostlyclean-noinstLIBRARIES mostlyclean-compile \
 		mostlyclean-kr mostlyclean-tags mostlyclean-depend \
 		mostlyclean-generic
