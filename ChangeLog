@@ -1,6 +1,63 @@
-2004-04-20  Jim Meyering  <jim@meyering.net>
+2004-04-21  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+2004-04-18  Paul Eggert  <eggert@twinsun.com>
+
+	Signal-handling cleanup for coreutils.  Here are the highlights:
+
+	 - csplit sometimes failed to remove files when interrupted.
+	 - csplit didn't clean up if two signals arrived nearly simultaneously.
+	 - install -s would infloop on System V if SIGCHLD was ignored.
+	 - ls could incorrectly restore color if multiple signals
+	   arrived nearly simultaneously.
+
+	* src/csplit.c (sigprocmask, sigset_t) [!defined SA_NOCLDSTOP]:
+	Define.
+	(filename_space, prefix, suffix, digits, files_created, remove_files):
+	Now volatile.
+	(caught_signals): New var.
+	(cleanup): Block signals while deleting all files.
+	(cleanup_fatal, handle_line_error, regexp_error):
+	Mark with ATTRIBUTE_NORETURN.
+	(create_output_file, close_output_file, interrupt_handler):
+	Block signals while changing the number of output files,
+	to fix some race conditions.
+	(delete_all_files): Do nothing if remove_files is zero.
+	Clear files_created.
+	(main): Don't mess with signals until after argument processing
+	is done.
+
+	* src/csplit.c (main): Rewrite signal-catching code to make it
+	similar to other coreutils programs.  When processing signals,
+	block all signals that we catch, but do not block signals that we
+	don't catch.  Avoid problems with unsigned int warnings.
+	* src/ls.c (main): Likewise.
+	* src/sort.c (main): Likewise.
+
+	* src/csplit.c (interrupt_handler):
+	Use void, not (obsolete) RETSIGTYPE.
+	* src/shred.c (sigill_handler, isaac_seed_machdep): Likewise.
+
+	* src/csplit.c (interrupt_handler) [defined SA_NOCLDSTOP]:
+	Use simpler "signal (sig, SIG_DFL)" rather than sigaction equivalent.
+	* src/ls.c (sighandler) [defined SA_NOCLDSTOP]: Likewise.
+	* src/sort.c (sighandler) [defined SA_NOCLDSTOP]: Likewise.
+	* src/nohup.c (main) [!defined _POSIX_SOURCE]: Likewise, except
+	for SIG_IGN.
+	* src/tee.c (main) [!defined _POSIX_SOURCE]: Likewise.
+
+	* src/install.c: Include <signal.h>.
+	(main) [defined SIGCHLD]: Set SIGCHLD handler to the default, if -s is
+	given, since System V fork+wait does not work if SIGCHLD is ignored.
+
+	* src/ls.c (sighandler) [!defined SA_NOCLDSTOP]: Reset signal
+	handler to self, not to SIG_IGN, since SIGTSTP can be received
+	more than once.
+	(main): Use SA_RESTART, as that is simpler than checking for EINTR
+	failures all over the place.
+
+2004-04-20  Jim Meyering  <jim@meyering.net>
 
 	* src/remove.c (is_empty_dir): Clarify comment.
 
