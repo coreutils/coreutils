@@ -1,3 +1,10 @@
+1999-01-25  Jim Meyering  <meyering@ascend.com>
+
+	* src/shred.c (isaac_seed): Guard clock_gettime with test of
+	HAVE_CLOCK_GETTIME, not CLOCK_REALTIME.
+	(wipename): Rename local dirfd to dir_fd to avoid shadowing the
+	function declared in Linux's dirent.h.
+
 1999-01-24  Jim Meyering  <meyering@ascend.com>
 
 	* src/ansi2knr.c: Exit nonzero upon failed write to stdout.
