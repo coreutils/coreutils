@@ -123,6 +123,7 @@ print_human_fstype (struct statfs const *statfsbuf)
       break;
     case S_MAGIC_MINIX:
       type = "minix";
+      break;
     case S_MAGIC_MINIX_30:
       type = "minix (30 char.)";
       break;
