@@ -30,6 +30,12 @@
 # include <limits.h>
 #endif
 
+#if HAVE_STRING_H
+# include <string.h>
+#else
+# include <strings.h>
+#endif
+
 #ifndef CHAR_BIT
 # define CHAR_BIT 8
 #endif
