@@ -8,7 +8,9 @@ use FileHandle;
 use File::Compare qw(compare);
 
 @ISA = qw(Exporter);
-$VERSION = '0.5';
+$VERSION = '$Revision: 1.11 $'; #'
+$VERSION =~ s/\$Revision:\s+//;
+$VERSION =~ s/\s+\$$//;
 @EXPORT = qw (run_tests);
 
 my @Types = qw (IN OUT ERR EXIT);
