@@ -1,4 +1,24 @@
+1999-05-07  Jim Meyering  <meyering@ascend.com>
+
+	* tests/touch/dir-1: New test.
+	* tests/touch/Makefile.am (TESTS_ENVIRONMENT): Remove individual
+	upper-case program names.  Add a definition of PATH.
+	(TESTS): Add dir-1.
+
+	* src/mkdir.c (main): Use better wording in diagnostic: `cannot
+	create directory' rather than `cannot make directory'.  The former
+	also matches the one in makepath.c.
+
+	* src/dd.c: (apply_translations): Use TOUPPER and TOLOWER,
+	not toupper and tolower.
+
 1999-05-05  Jim Meyering  <meyering@ascend.com>
+
+	* lib/makepath.c (make_dir): When reporting a mkdir failure and the
+	target cannot be `stat'ed, use the errno from the failed mkdir call,
+	not the one from the stat call.  Before this change, running
+	`mkdir -p /no-dir/no-dir' as an unprivileged user would wrongly
+	elicit `No such file or directory' instead of `Permission denied'.
 
 	* lib/strtol.c (TYPE_SIGNED, TYPE_MAXIMUM, TYPE_MINIMUM): Define.
 	(ULONG_LONG_MAX, LONG_LONG_MAX, LONG_LONG_MIN): Define if not defined.
@@ -29,9 +49,9 @@
 
 1999-04-30  Jim Meyering  <meyering@ascend.com>
 
-	* src/touch.c (usage): Mention --no-create.
-	Only do the fstat if we need to.
-	On directories, resort to doing a stat, but only when necessary.
+	* src/touch.c (touch): Only do the fstat if we need to.
+	Resort to calling stat for directories, but only when necessary.
+	(usage): Mention --no-create.
 
 	* src/copy.c (copy_internal): Move the one-file-system test so that
 	it follows the `if (new_dst || !S_ISDIR (dst_sb.st_mode))' block.
