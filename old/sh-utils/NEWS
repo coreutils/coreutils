@@ -1,5 +1,11 @@
 Changes in release 2.1
  [2.0.12]
+* New 'uname' options -i or --hardware-platform, and -o or --operating-system.
+   'uname -a' now outputs -i and -o information at the end.
+   New uname option --kernel-version is an alias for -v.
+   Uname option --release has been renamed to --kernel-release,
+   and --sysname has been renamed to --kernel-name;
+   the old options will work for a while, but are no longer documented.
 * 'expr' now uses the LC_COLLATE locale for string comparison, as per POSIX.
 * 'expr' now requires '+' rather than 'quote' to quote tokens;
     this removes an incompatibility with POSIX.
