@@ -69,63 +69,66 @@
 #define _POSIX_VDISABLE ((unsigned char) 0)
 #endif
 
-#define	Control(c) ((c) & 0x1f)
+#define Control(c) ((c) & 0x1f)
 /* Canonical values for control characters. */
 #ifndef CINTR
-#define	CINTR Control ('c')
+#define CINTR Control ('c')
 #endif
 #ifndef CQUIT
-#define	CQUIT 28
+#define CQUIT 28
 #endif
 #ifndef CERASE
-#define	CERASE 127
+#define CERASE 127
 #endif
 #ifndef CKILL
-#define	CKILL Control ('u')
+#define CKILL Control ('u')
 #endif
 #ifndef CEOF
-#define	CEOF Control ('d')
+#define CEOF Control ('d')
 #endif
 #ifndef CEOL
-#define	CEOL _POSIX_VDISABLE
+#define CEOL _POSIX_VDISABLE
 #endif
 #ifndef CSTART
-#define	CSTART Control ('q')
+#define CSTART Control ('q')
 #endif
 #ifndef CSTOP
-#define	CSTOP Control ('s')
+#define CSTOP Control ('s')
 #endif
 #ifndef CSUSP
-#define	CSUSP Control ('z')
+#define CSUSP Control ('z')
 #endif
 #if defined(VEOL2) && !defined(CEOL2)
-#define	CEOL2 _POSIX_VDISABLE
+#define CEOL2 _POSIX_VDISABLE
 #endif
 #if defined(VSWTCH) && !defined(CSWTCH)
-#define	CSWTCH _POSIX_VDISABLE
+#define CSWTCH _POSIX_VDISABLE
 #endif
 
 /* SunOS 5.3 loses (^Z doesn't work) if `swtch' is the same as `susp'.
    So the default is to disable `swtch.'  */
 #if defined (__sparc__) && defined (__svr4__)
 #undef CSWTCH
-#define	CSWTCH _POSIX_VDISABLE
+#define CSWTCH _POSIX_VDISABLE
 #endif
 
+#if defined(VWERSE) && !defined (VWERASE)	/* AIX-3.2.5 */
+#define VWERASE VWERSE
+#endif
 #if defined(VDSUSP) && !defined (CDSUSP)
-#define	CDSUSP Control ('y')
+#define CDSUSP Control ('y')
 #endif
 #if !defined(VREPRINT) && defined(VRPRNT)	/* Irix 4.0.5 */
 #define VREPRINT VRPRNT
 #endif
 #if defined(VREPRINT) && !defined(CRPRNT)
-#define	CRPRNT Control ('r')
+#define CRPRNT Control ('r')
 #endif
 #if defined(VWERASE) && !defined(CWERASE)
-#define	CWERASE Control ('w')
+#define CWERASE Control ('w')
 #endif
 #if defined(VLNEXT) && !defined(CLNEXT)
-#define	CLNEXT Control ('v')
+#define CLNEXT Control ('v')
 #endif
 #if defined(VDISCARD) && !defined(VFLUSHO)
 #define VFLUSHO VDISCARD
@@ -589,11 +592,11 @@ Combination settings:\n\
   cbreak        same as -icanon\n\
   -cbreak       same as icanon\n\
   cooked        same as brkint ignpar istrip icrnl ixon opost isig\n\
-		icanon, eof and eol characters to their default values\n\
+                icanon, eof and eol characters to their default values\n\
   -cooked       same as raw\n\
   crt           same as echoe echoctl echoke\n\
   dec           same as echoe echoctl echoke -ixany intr ^c erase 0177\n\
-		kill ^u\n\
+                kill ^u\n\
 * [-]decctlq    same as [-]ixany\n\
   ek            erase and kill characters to their default values\n\
   evenp         same as parenb -parodd cs7\n\
@@ -609,15 +612,15 @@ Combination settings:\n\
   pass8         same as -parenb -istrip cs8\n\
   -pass8        same as parenb istrip cs7\n\
   raw           same as -ignbrk -brkint -ignpar -parmrk -inpck -istrip\n\
-		-inlcr -igncr -icrnl  -ixon  -ixoff  -iuclc  -ixany\n\
-		-imaxbel -opost -isig -icanon -xcase min 1 time 0\n\
+                -inlcr -igncr -icrnl  -ixon  -ixoff  -iuclc  -ixany\n\
+                -imaxbel -opost -isig -icanon -xcase min 1 time 0\n\
   -raw          same as cooked\n\
   sane          same as cread -ignbrk brkint -inlcr -igncr icrnl\n\
-		-ixoff -iucl -ixany imaxbel opost -olcuc -ocrnl onlcr\n\
-		-onocr -onlret -ofill -ofdel nl0 cr0 tab0 bs0 vt0 ff0\n\
-		isig icanon iexten echo echoe echok -echonl -noflsh\n\
-		-xcase -tostop -echoprt echoctl echoke, all special\n\
-		characters to their default values.\n\
+                -ixoff -iucl -ixany imaxbel opost -olcuc -ocrnl onlcr\n\
+                -onocr -onlret -ofill -ofdel nl0 cr0 tab0 bs0 vt0 ff0\n\
+                isig icanon iexten echo echoe echok -echonl -noflsh\n\
+                -xcase -tostop -echoprt echoctl echoke, all special\n\
+                characters to their default values.\n\
 ");
       printf ("\
 \n\
