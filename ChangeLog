@@ -1,6 +1,13 @@
-2003-01-09  Jim Meyering  <jim@meyering.net>
+2003-01-11  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.5.
+
+2002-12-01  Dmitry V. Levin  <ldv@altlinux.org>
+
+	* src/df.c: Include "canonicalize.h".
+	Use canonicalize_file_name unconditionally.
+
+2003-01-09  Jim Meyering  <jim@meyering.net>
 
 	* README: Add readlink.
 
