@@ -394,11 +394,12 @@ static int block_size_size;
    horizontal for just names, many per line, sorted horizontally.
    with_commas for just names, many per line, separated by commas.
 
-   -l, -1, -C, -x and -m control this parameter.  */
+   -l (and other options that imply -l), -1, -C, -x and -m control
+   this parameter.  */
 
 enum format
   {
-    long_format,		/* -l */
+    long_format,		/* -l and other options that imply -l */
     one_per_line,		/* -1 */
     many_per_line,		/* -C */
     horizontal,			/* -x */
@@ -448,7 +449,7 @@ static int sort_reverse;
 
 static int print_owner = 1;
 
-/* Nonzero means to display group information.  -o turns this off.  */
+/* Nonzero means to display group information.  -G and -o turn this off.  */
 
 static int print_group = 1;
 
@@ -3310,7 +3311,7 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
       --full-time            list both full date and full time\n"));
 
       printf (_("\
-  -g                         use the long listing format and omit owner info\n\
+  -g                         -like -l, but do not list owner\n\
   -G, --no-group             inhibit display of group information\n\
   -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n\
       --si                   likewise, but use powers of 1000 not 1024\n\
@@ -3326,11 +3327,10 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
   -m                         fill width with a comma separated list of entries\n"));
 
       printf (_("\
-      --numeric-uid-gid      list numeric UIDs and GIDs instead of names\n\
-  -n                         equivalent to `-l --numeric-uid-gid'\n\
+  -n, --numeric-uid-gid      like -l, but list numeric UIDs and GIDs\n\
   -N, --literal              print raw entry names (don't treat e.g. control\n\
                                characters specially)\n\
-  -o                         use the long listing format and omit group info\n\
+  -o                         like -l, but do not list group information\n\
   -p, --file-type            append indicator (one of /=@|) to entries\n\
   -q, --hide-control-chars   print ? instead of non graphic characters\n\
       --show-control-chars   show non graphic characters as-is (default\n\
