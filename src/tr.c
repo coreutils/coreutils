@@ -2024,7 +2024,7 @@ construct in string1 must be aligned with a corresponding construct\n\
 	}
     }
 
-  if (close (0) != 0)
+  if (close (STDIN_FILENO) != 0)
     error (EXIT_FAILURE, errno, _("standard input"));
 
   exit (EXIT_SUCCESS);

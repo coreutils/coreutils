@@ -1654,7 +1654,7 @@ main (int argc, char **argv)
       tail_forever (F, n_files);
     }
 
-  if (have_read_stdin && close (0) < 0)
+  if (have_read_stdin && close (STDIN_FILENO) < 0)
     error (EXIT_FAILURE, errno, "-");
   exit (exit_status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

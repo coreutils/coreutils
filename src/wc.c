@@ -589,7 +589,7 @@ main (int argc, char **argv)
 		      max_line_length, _("total"));
     }
 
-  if (have_read_stdin && close (0))
+  if (have_read_stdin && close (STDIN_FILENO) != 0)
     error (EXIT_FAILURE, errno, "-");
 
   exit (exit_status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);

@@ -1,5 +1,5 @@
 /* tee - read from standard input and write to standard output and files.
-   Copyright (C) 85,1990-2001 Free Software Foundation, Inc.
+   Copyright (C) 85,1990-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -147,7 +147,7 @@ main (int argc, char **argv)
      POSIX requires that it work when given no arguments.  */
 
   errs = tee (argc - optind, (const char **) &argv[optind]);
-  if (close (0) != 0)
+  if (close (STDIN_FILENO) != 0)
     error (1, errno, _("standard input"));
 
   exit (errs);
