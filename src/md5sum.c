@@ -30,7 +30,6 @@
 
 #include <getopt.h>
 #include <stdio.h>
-#include <values.h>
 #include <sys/types.h>
 
 #if defined (HAVE_LIMITS_H) || defined (_LIBC)
@@ -49,7 +48,7 @@
 #endif
 
 /* For performance reasons we use low-level I/O whenever possible.  */
-#if defined UNIX || defined unix
+#if UNIX || __UNIX__ || unix || __unix__ || _POSIX_VERSION
 # define FILETYPE int
 # define STDINFILE STDIN_FILENO
 # define OPEN open
@@ -74,6 +73,7 @@
 # define CLOSE(f) fclose (f)
 #endif
 
+#undef __P
 #if defined __STDC__ && __STDC__
 # define __P(args) args
 #else
