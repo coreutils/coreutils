@@ -174,5 +174,5 @@ io_functions = \
   fread fwrite getc getchar putc putchar
 
 unlocked-io.h: $(srcdir)/gen-uio Makefile.am
-	srcdir=$(srcdir) $(srcdir)/gen-uio $(io_functions) > $@t
+	srcdir=$(srcdir) $(SHELL) $(srcdir)/gen-uio $(io_functions) > $@t
 	mv $@t $@
