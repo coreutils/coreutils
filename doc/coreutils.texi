@@ -501,7 +501,7 @@ as if all the options appear before any operands.  For example,
 @env{POSIXLY_CORRECT} environment variable is set, options must appear
 before operands, unless otherwise specified for a particular command.
 
-Some of these programs recognize the @samp{--help} and @samp{--version}
+Some of these programs recognize the @option{--help} and @option{--version}
 options only when one of them is the sole command line argument.
 
 @table @samp
@@ -569,8 +569,8 @@ then the value of the @env{VERSION_CONTROL}
 environment variable is used.  And if @env{VERSION_CONTROL} is not set,
 the default backup type is @samp{existing}.
 
-Note that the short form of this option, @samp{-b} does not accept any
-argument.  Using @samp{-b} is equivalent to using @samp{--backup=existing}.
+Note that the short form of this option, @option{-b} does not accept any
+argument.  Using @option{-b} is equivalent to using @option{--backup=existing}.
 
 @vindex version-control @r{Emacs variable}
 This option corresponds to the Emacs variable @samp{version-control};
@@ -609,7 +609,7 @@ confused with @samp{none}.
 @opindex --suffix
 @cindex backup suffix
 @vindex SIMPLE_BACKUP_SUFFIX
-Append @var{suffix} to each backup file made with @samp{-b}.  If this
+Append @var{suffix} to each backup file made with @option{-b}.  If this
 option is not specified, the value of the @env{SIMPLE_BACKUP_SUFFIX}
 environment variable is used.  And if @env{SIMPLE_BACKUP_SUFFIX} is not
 set, the default is @samp{~}, just as in Emacs.
@@ -728,12 +728,12 @@ or @math{10^24 = 1,000,000,000,000,000,000,000,000}.
 @opindex --si
 
 Block size defaults can be overridden by an explicit
-@samp{--block-size=@var{size}} option.  The @samp{-k} or
-@samp{--kilobytes} option is equivalent to @samp{--block-size=1k}, which
+@option{--block-size=@var{size}} option.  The @option{-k} or
+@option{--kilobytes} option is equivalent to @option{--block-size=1k}, which
 is the default unless the @env{POSIXLY_CORRECT} environment variable is
-set.  The @samp{-h} or @samp{--human-readable} option is equivalent to
-@samp{--block-size=human-readable}.  The @samp{--si} option is
-equivalent to @samp{--block-size=si}.
+set.  The @option{-h} or @option{--human-readable} option is equivalent to
+@option{--block-size=human-readable}.  The @option{--si} option is
+equivalent to @option{--block-size=si}.
 
 @node Target directory
 @section Target directory
@@ -855,7 +855,7 @@ The program accepts the following options.  Also see @ref{Common options}.
 @itemx --show-all
 @opindex -A
 @opindex --show-all
-Equivalent to @samp{-vET}.
+Equivalent to @option{-vET}.
 
 @item -B
 @itemx --binary
@@ -873,7 +873,7 @@ cases the original file contents aren't important (e.g., when lines are
 numbered by @code{cat}, or when line endings should be marked).  This is
 so these options work as DOS/Windows users would expect; for example,
 DOS-style text files have their lines end with the CR-LF pair of
-characters, which won't be processed as an empty line by @samp{-b} unless
+characters, which won't be processed as an empty line by @option{-b} unless
 the file is read in text mode.
 
 @item -b
@@ -886,7 +886,7 @@ text mode.
 
 @item -e
 @opindex -e
-Equivalent to @samp{-vE}.
+Equivalent to @option{-vE}.
 
 @item -E
 @itemx --show-ends
@@ -914,7 +914,7 @@ files in text mode.
 
 @item -t
 @opindex -t
-Equivalent to @samp{-vT}.
+Equivalent to @option{-vT}.
 
 @item -T
 @itemx --show-tabs
@@ -1073,13 +1073,13 @@ expansion with quotes or extra backslashes.)
 @itemx --footer-numbering=@var{style}
 @opindex -f
 @opindex --footer-numbering
-Analogous to @samp{--body-numbering}.
+Analogous to @option{--body-numbering}.
 
 @item -h @var{style}
 @itemx --header-numbering=@var{style}
 @opindex -h
 @opindex --header-numbering
-Analogous to @samp{--body-numbering}.
+Analogous to @option{--body-numbering}.
 
 @item -i @var{number}
 @itemx --page-increment=@var{number}
@@ -1209,7 +1209,7 @@ by 1024, and @samp{m} by 1048576.
 @opindex -N
 @opindex --read-bytes
 Output at most @var{bytes} bytes of the input.  Prefixes and suffixes on
-@code{bytes} are interpreted as for the @samp{-j} option.
+@code{bytes} are interpreted as for the @option{-j} option.
 
 @item -s [@var{n}]
 @itemx --strings[=@var{n}]
@@ -1317,44 +1317,44 @@ options accumulate.
 
 @item -a
 @opindex -a
-Output as named characters.  Equivalent to @samp{-ta}.
+Output as named characters.  Equivalent to @option{-ta}.
 
 @item -b
 @opindex -b
-Output as octal bytes.  Equivalent to @samp{-toC}.
+Output as octal bytes.  Equivalent to @option{-toC}.
 
 @item -c
 @opindex -c
 Output as @sc{ascii} characters or backslash escapes.  Equivalent to
-@samp{-tc}.
+@option{-tc}.
 
 @item -d
 @opindex -d
-Output as unsigned decimal shorts.  Equivalent to @samp{-tu2}.
+Output as unsigned decimal shorts.  Equivalent to @option{-tu2}.
 
 @item -f
 @opindex -f
-Output as floats.  Equivalent to @samp{-tfF}.
+Output as floats.  Equivalent to @option{-tfF}.
 
 @item -h
 @opindex -h
-Output as hexadecimal shorts.  Equivalent to @samp{-tx2}.
+Output as hexadecimal shorts.  Equivalent to @option{-tx2}.
 
 @item -i
 @opindex -i
-Output as decimal shorts.  Equivalent to @samp{-td2}.
+Output as decimal shorts.  Equivalent to @option{-td2}.
 
 @item -l
 @opindex -l
-Output as decimal longs.  Equivalent to @samp{-td4}.
+Output as decimal longs.  Equivalent to @option{-td4}.
 
 @item -o
 @opindex -o
-Output as octal shorts.  Equivalent to @samp{-to2}.
+Output as octal shorts.  Equivalent to @option{-to2}.
 
 @item -x
 @opindex -x
-Output as hexadecimal shorts.  Equivalent to @samp{-tx2}.
+Output as hexadecimal shorts.  Equivalent to @option{-tx2}.
 
 @item -C
 @itemx --traditional
@@ -1513,11 +1513,12 @@ pr [@var{option}]@dots{} [@var{file}]@dots{}
 @vindex LC_MESSAGES
 By default, a 5-line header is printed at each page: two blank lines;
 a line with the date, the filename, and the page count; and two more
-blank lines.  A footer of five blank lines is also printed.  With the @samp{-F}
+blank lines.  A footer of five blank lines is also printed.
+With the @option{-F}
 option, a 3-line header is printed: the leading two blank lines are
 omitted; no footer is used.  The default @var{page_length} in both cases is 66
-lines.  The default number of text lines changes from 56 (without @samp{-F})
-to 63 (with @samp{-F}).  The text line of the header takes the form
+lines.  The default number of text lines changes from 56 (without @option{-F})
+to 63 (with @option{-F}).  The text line of the header takes the form
 @samp{@var{date} @var{string} @var{page}}, with spaces inserted around
 @var{string} so that the line takes up the full @var{page_width}.  Here,
 @var{date} is the date (see the @option{-D} or @option{--date-format}
@@ -1532,8 +1533,9 @@ feeds produce empty pages.
 
 Columns are of equal width, separated by an optional string (default
 is @samp{space}).  For multicolumn output, lines will always be truncated to
-@var{page_width} (default 72), unless you use the @samp{-J} option.  For single
-column output no line truncation occurs by default.  Use @samp{-W} option to
+@var{page_width} (default 72), unless you use the @option{-J} option.
+For single
+column output no line truncation occurs by default.  Use @option{-W} option to
 truncate lines in that case.
 
 The following changes were made in version 1.22i and apply to later
@@ -1545,24 +1547,24 @@ versions of @command{pr}:
 @itemize @bullet
 
 @item
-Some small @var{letter options} (@samp{-s}, @samp{-w}) have been
+Some small @var{letter options} (@option{-s}, @option{-w}) have been
 redefined for better @sc{posix} compliance.  The output of some further
 cases has been adapted to other Unix systems.  These changes are not
 compatible with earlier versions of the program.
 
 @item
-Some @var{new capital letter} options (@samp{-J}, @samp{-S}, @samp{-W})
+Some @var{new capital letter} options (@option{-J}, @option{-S}, @option{-W})
 have been introduced to turn off unexpected interferences of small letter
-options.  The @samp{-N} option and the second argument @var{last_page}
+options.  The @option{-N} option and the second argument @var{last_page}
 of @samp{+FIRST_PAGE} offer more flexibility.  The detailed handling of
-form feeds set in the input files requires the @samp{-T} option.
+form feeds set in the input files requires the @option{-T} option.
 
 @item
 Capital letter options override small letter ones.
 
 @item
-Some of the option-arguments (compare @samp{-s}, @samp{-S}, @samp{-e},
-@samp{-i}, @samp{-n}) cannot be specified as separate arguments from the
+Some of the option-arguments (compare @option{-s}, @option{-S}, @option{-e},
+@option{-i}, @option{-n}) cannot be specified as separate arguments from the
 preceding option letter (already stated in the @sc{posix} specification).
 @end itemize
 
@@ -1579,7 +1581,7 @@ Missing @samp{:@var{last_page}} implies end of file.  While estimating
 the number of skipped pages each form feed in the input file results
 in a new page.  Page counting with and without @samp{+@var{first_page}}
 is identical.  By default, counting starts with the first page of input
-file (not first page printed).  Line numbering may be altered by @samp{-N}
+file (not first page printed).  Line numbering may be altered by @option{-N}
 option.
 
 @item -@var{column}
@@ -1588,16 +1590,16 @@ option.
 @opindex --columns
 @cindex down columns
 With each single @var{file}, produce @var{column} columns of output
-(default is 1) and print columns down, unless @samp{-a} is used.  The
+(default is 1) and print columns down, unless @option{-a} is used.  The
 column width is automatically decreased as @var{column} increases; unless
-you use the @samp{-W/-w} option to increase @var{page_width} as well.
+you use the @option{-W/-w} option to increase @var{page_width} as well.
 This option might well cause some lines to be truncated.  The number of
-lines in the columns on each page are balanced.  The options @samp{-e}
-and @samp{-i} are on for multiple text-column output.  Together with
-@samp{-J} option column alignment and line truncation is turned off.
-Lines of full length are joined in a free field format and @samp{-S}
-option may set field separators.  @samp{-@var{column}} may not be used
-with @samp{-m} option.
+lines in the columns on each page are balanced.  The options @option{-e}
+and @option{-i} are on for multiple text-column output.  Together with
+@option{-J} option column alignment and line truncation is turned off.
+Lines of full length are joined in a free field format and @option{-S}
+option may set field separators.  @option{-@var{column}} may not be used
+with @option{-m} option.
 
 @item -a
 @itemx --across
@@ -1605,7 +1607,7 @@ with @samp{-m} option.
 @opindex --across
 @cindex across columns
 With each single @var{file}, print columns across rather than down.  The
-@samp{-@var{column}} option must be given with @var{column} greater than one.
+@option{-@var{column}} option must be given with @var{column} greater than one.
 If a line is too long to fit in a column, it is truncated.
 
 @item -c
@@ -1632,7 +1634,7 @@ for the the command @samp{date +@var{format}}; @xref{date invocation, ,
 ,sh-utils,GNU shell utilities}.  Except for directives, which start with
 @samp{%}, characters in @var{format} are printed unchanged.  You can use
 this option to specify an arbitrary string in place of the header date,
-e.g., @samp{--date-format="Monday morning"}.
+e.g., @option{--date-format="Monday morning"}.
 
 @vindex POSIXLY_CORRECT
 @vindex LC_TIME
@@ -1685,12 +1687,12 @@ is 8).
 @opindex -J
 @opindex --join-lines
 Merge lines of full length.  Used together with the column options
-@samp{-@var{column}}, @samp{-a -@var{column}} or @samp{-m}.  Turns off
-@samp{-W/-w} line truncation;
-no column alignment used; may be used with @samp{-S[@var{string}]}.
-@samp{-J} has been introduced (together with @samp{-W} and @samp{-S})
-to disentangle the old (@sc{posix}-compliant) options @samp{-w} and
-@samp{-s} along with the three column options.
+@option{-@var{column}}, @option{-a -@var{column}} or @option{-m}.  Turns off
+@option{-W/-w} line truncation;
+no column alignment used; may be used with @option{-S[@var{string}]}.
+@option{-J} has been introduced (together with @option{-W} and @option{-S})
+to disentangle the old (@sc{posix}-compliant) options @option{-w} and
+@option{-s} along with the three column options.
 
 
 @item -l @var{page_length}
@@ -1699,17 +1701,17 @@ to disentangle the old (@sc{posix}-compliant) options @samp{-w} and
 @opindex --length
 Set the page length to @var{page_length} (default 66) lines, including
 the lines of the header [and the footer].  If @var{page_length} is less
-than or equal to 10 (or <= 3 with @samp{-F}), the header and footer are
+than or equal to 10 (or <= 3 with @option{-F}), the header and footer are
 omitted, and all form feeds set in input files are eliminated, as if
-the @samp{-T} option had been given.
+the @option{-T} option had been given.
 
 @item -m
 @itemx --merge
 @opindex -m
 @opindex --merge
 Merge and print all @var{file}s in parallel, one in each column.  If a
-line is too long to fit in a column, it is truncated, unless the @samp{-J}
-option is used.  @samp{-S[@var{string}]} may be used.  Empty pages in
+line is too long to fit in a column, it is truncated, unless the @option{-J}
+option is used.  @option{-S[@var{string}]} may be used.  Empty pages in
 some @var{file}s (form feeds set) produce empty columns, still marked
 by @var{string}.  The result is a continuous line numbering and column
 marking throughout the whole merged file.  Completely empty merged pages
@@ -1724,17 +1726,17 @@ the middle blank part.
 @opindex --number-lines
 Provide @var{digits} digit line numbering (default for @var{digits} is
 5).  With multicolumn output the number occupies the first @var{digits}
-column positions of each text column or only each line of @samp{-m}
+column positions of each text column or only each line of @option{-m}
 output.  With single column output the number precedes each line just as
-@samp{-m} does.  Default counting of the line numbers starts with the
+@option{-m} does.  Default counting of the line numbers starts with the
 first line of the input file (not the first line printed, compare the
-@samp{--page} option and @samp{-N} option).
+@option{--page} option and @option{-N} option).
 Optional argument @var{number-separator} is the character appended to
 the line number to separate it from the text followed.  The default
 separator is the TAB character.  In a strict sense a TAB is always
 printed with single column output only.  The @var{TAB}-width varies
 with the @var{TAB}-position, e.g. with the left @var{margin} specified
-by @samp{-o} option.  With multicolumn output priority is given to
+by @option{-o} option.  With multicolumn output priority is given to
 @samp{equal width of output columns} (a @sc{posix} specification).
 The @var{TAB}-width is fixed to the value of the first column and does
 not change with different values of left @var{margin}.  That means a
@@ -1757,8 +1759,8 @@ first page printed (in most cases not the first line of the input file).
 @cindex left margin
 Indent each line with a margin @var{margin} spaces wide (default is zero).
 The total page width is the size of the margin plus the @var{page_width}
-set with the @samp{-W/-w} option.  A limited overflow may occur with
-numbered single column output (compare @samp{-n} option).
+set with the @option{-W/-w} option.  A limited overflow may occur with
+numbered single column output (compare @option{-n} option).
 
 @item -r
 @itemx --no-file-warnings
@@ -1772,29 +1774,29 @@ opened.  (The exit status will still be nonzero, however.)
 @opindex -s
 @opindex --separator
 Separate columns by a single character @var{char}.  The default for
-@var{char} is the TAB character without @samp{-w} and @samp{no
-character} with @samp{-w}.  Without @samp{-s} the default separator
-@samp{space} is set.  @samp{-s[char]} turns off line truncation of all
-three column options (@samp{-COLUMN}|@samp{-a -COLUMN}|@samp{-m}) unless
-@samp{-w} is set.  This is a @sc{posix}-compliant formulation.
+@var{char} is the TAB character without @option{-w} and @samp{no
+character} with @option{-w}.  Without @option{-s} the default separator
+@samp{space} is set.  @option{-s[char]} turns off line truncation of all
+three column options (@option{-COLUMN}|@option{-a -COLUMN}|@option{-m}) unless
+@option{-w} is set.  This is a @sc{posix}-compliant formulation.
 
 
 @item -S[@var{string}]
 @itemx --sep-string[=@var{string}]
 @opindex -S
 @opindex --sep-string
-Use @var{string} to separate output columns.  The @samp{-S} option doesn't
-affect the @samp{-W/-w} option, unlike the @samp{-s} option which does.  It
+Use @var{string} to separate output columns.  The @option{-S} option doesn't
+affect the @option{-W/-w} option, unlike the @option{-s} option which does.  It
 does not affect line truncation or column alignment.
-Without @samp{-S}, and with @samp{-J}, @code{pr} uses the default output
+Without @option{-S}, and with @option{-J}, @code{pr} uses the default output
 separator, TAB.
-Without @samp{-S} or @samp{-J}, @code{pr} uses a @samp{space}
-(same as @samp{-S" "}).
-Using @samp{-S} with no @var{string} is equivalent to @samp{-S""}.
+Without @option{-S} or @option{-J}, @code{pr} uses a @samp{space}
+(same as @option{-S" "}).
+Using @option{-S} with no @var{string} is equivalent to @option{-S""}.
 Note that for some of @code{pr}'s options the single-letter option
 character must be followed immediately by any corresponding argument;
 there may not be any intervening white space.
-@samp{-S/-s} is one of them.  Don't use @samp{-S "STRING"}.
+@option{-S/-s} is one of them.  Don't use @option{-S "STRING"}.
 @sc{posix} requires this.
 
 @item -t
@@ -1804,10 +1806,10 @@ there may not be any intervening white space.
 Do not print the usual header [and footer] on each page, and do not fill
 out the bottom of pages (with blank lines or a form feed).  No page
 structure is produced, but form feeds set in the input files are retained.
-The predefined pagination is not changed.  @samp{-t} or @samp{-T} may be
-useful together with other options; e.g.: @samp{-t -e4}, expand TAB characters
+The predefined pagination is not changed.  @option{-t} or @option{-T} may be
+useful together with other options; e.g.: @option{-t -e4}, expand TAB characters
 in the input file to 4 spaces but don't make any other changes.  Use of
-@samp{-t} overrides @samp{-h}.
+@option{-t} overrides @option{-h}.
 
 @item -T
 @itemx --omit-pagination
@@ -1827,7 +1829,7 @@ Print nonprinting characters in octal backslash notation.
 @opindex -w
 @opindex --width
 Set page width to @var{page_width} characters for multiple text-column
-output only (default for @var{page_width} is 72).  @samp{-s[CHAR]} turns
+output only (default for @var{page_width} is 72).  @option{-s[CHAR]} turns
 off the default page width and any line truncation and column alignment.
 Lines of full length are merged, regardless of the column options
 set.  No @var{page_width} setting is possible with single column output.
@@ -1838,14 +1840,14 @@ A @sc{posix}-compliant formulation.
 @opindex -W
 @opindex --page_width
 Set the page width to @var{page_width} characters.  That's valid with and
-without a column option.  Text lines are truncated, unless @samp{-J}
+without a column option.  Text lines are truncated, unless @option{-J}
 is used.  Together with one of the three column options
-(@samp{-@var{column}}, @samp{-a -@var{column}} or @samp{-m}) column
-alignment is always used.  The separator options @samp{-S} or @samp{-s}
-don't affect the @samp{-W} option.  Default is 72 characters.  Without
-@samp{-W @var{page_width}} and without any of the column options NO line
+(@option{-@var{column}}, @option{-a -@var{column}} or @option{-m}) column
+alignment is always used.  The separator options @option{-S} or @option{-s}
+don't affect the @option{-W} option.  Default is 72 characters.  Without
+@option{-W @var{page_width}} and without any of the column options NO line
 truncation is used (defined to keep downward compatibility and to meet
-most frequent tasks).  That's equivalent to @samp{-W 72 -J}.  The header
+most frequent tasks).  That's equivalent to @option{-W 72 -J}.  The header
 line is never truncated.
 
 @end table
@@ -1858,7 +1860,7 @@ line is never truncated.
 @cindex wrapping long input lines
 @cindex folding long input lines
 
-@code{fold} writes each @var{file} (@samp{-} means standard input), or
+@code{fold} writes each @var{file} (@option{-} means standard input), or
 standard input if none are given, to standard output, breaking long
 lines.  Synopsis:
 
@@ -1927,7 +1929,7 @@ These commands output pieces of the input.
 
 @code{head} prints the first part (10 lines by default) of each
 @var{file}; it reads from standard input if no files are given or
-when given a @var{file} of @samp{-}.  Synopses:
+when given a @var{file} of @option{-}.  Synopses:
 
 @example
 head [@var{option}]@dots{} [@var{file}]@dots{}
@@ -1943,8 +1945,8 @@ one-line header consisting of
 before the output for each @var{file}.
 
 @code{head} accepts two option formats: the new one, in which numbers
-are arguments to the options (@samp{-q -n 1}), and the old one, in which
-the number precedes any option letters (@samp{-1q}).
+are arguments to the options (@option{-q -n 1}), and the old one, in which
+the number precedes any option letters (@option{-1q}).
 
 The program accepts the following options.  Also see @ref{Common options}.
 
@@ -2014,7 +2016,7 @@ before the output for each @var{file}.
 
 @cindex BSD @code{tail}
 @sc{gnu} @code{tail} can output any amount of data (some other versions of
-@code{tail} cannot).  It also has no @samp{-r} option (print in
+@code{tail} cannot).  It also has no @option{-r} option (print in
 reverse), since reversing a file is really a different job from printing
 the end of a file; BSD @code{tail} (which is the one with @code{-r}) can
 only reverse files that are at most as large as its buffer, which is
@@ -2022,8 +2024,8 @@ typically 32k.  A more reliable and versatile way to reverse files is
 the @sc{gnu} @code{tac} command.
 
 @code{tail} accepts two option formats: the new one, in which numbers
-are arguments to the options (@samp{-n 1}), and the obsolescent one, in
-which the number precedes any option letters (@samp{-1} or @samp{+1}).
+are arguments to the options (@option{-n 1}), and the obsolescent one, in
+which the number precedes any option letters (@option{-1} or @samp{+1}).
 Warning: support for the @samp{+1} form will be withdrawn, as future
 versions of @sc{posix} will not allow it.
 
@@ -2046,7 +2048,7 @@ or other option letters (@samp{cfqv}).
 
 Warning: the @samp{+@var{count}} usage is obsolescent.  Future versions
 of @sc{posix} will require that support for it be withdrawn.  Use
-@samp{-n +@var{count}} instead.
+@option{-n +@var{count}} instead.
 
 @item -c @var{bytes}
 @itemx --bytes=@var{bytes}
@@ -2074,10 +2076,10 @@ There are two ways to specify how you'd like to track files with this option,
 but that difference is noticeable only when a followed file is removed or
 renamed.
 If you'd like to continue to track the end of a growing file even after
-it has been unlinked, use @samp{--follow=descriptor}.  This is the default
+it has been unlinked, use @option{--follow=descriptor}.  This is the default
 behavior, but it is not useful if you're tracking a log file that may be
 rotated (removed or renamed, then reopened).  In that case, use
-@samp{--follow=name} to track the named file by reopening it periodically
+@option{--follow=name} to track the named file by reopening it periodically
 to see if it has been removed and recreated by some other program.
 
 No matter which method you use, if the tracked file is determined to have
@@ -2087,7 +2089,7 @@ and resumes tracking the end of the file from the newly-determined endpoint.
 When a file is removed, @code{tail}'s behavior depends on whether it is
 following the name or the descriptor.  When following by name, tail can
 detect that a file has been removed and gives a message to that effect,
-and if @samp{--retry} has been specified it will continue checking
+and if @option{--retry} has been specified it will continue checking
 periodically to see if the file reappears.
 When following a descriptor, tail does not detect that the file has
 been unlinked or renamed and issues no message;  even though the file
@@ -2095,7 +2097,7 @@ may no longer be accessible via its original name, it may still be
 growing.
 
 The option values @samp{descriptor} and @samp{name} may be specified only
-with the long form of the option, not with @samp{-f}.
+with the long form of the option, not with @option{-f}.
 
 @itemx --retry
 @opindex --retry
@@ -2128,7 +2130,7 @@ If you specify a @var{pid} that is not in use or that does not correspond
 to the process that is writing to the tailed files, then @code{tail}
 may terminate long before any @var{file}s stop growing or it may not
 terminate until long after the real writer has terminated.
-Note that @samp{--pid} cannot be supported on some systems; @code{tail}
+Note that @option{--pid} cannot be supported on some systems; @code{tail}
 will print a warning if this is the case.
 
 @itemx --max-unchanged-stats=@var{n}
@@ -2218,7 +2220,7 @@ Put into each output file as many complete lines of @var{input} as
 possible without exceeding @var{bytes} bytes.  For lines longer than
 @var{bytes} bytes, put @var{bytes} bytes into each output file until
 less than @var{bytes} bytes of the line are left, then continue
-normally.  @var{bytes} has the same format as for the @samp{--bytes}
+normally.  @var{bytes} has the same format as for the @option{--bytes}
 option.
 
 @itemx --verbose
@@ -2318,7 +2320,7 @@ binary integer argument to readable form; thus, only @samp{d}, @samp{i},
 entire @var{suffix} is given (with the current output file number) to
 @code{sprintf(3)} to form the file name suffixes for each of the
 individual output files in turn.  If this option is used, the
-@samp{--digits} option is ignored.
+@option{--digits} option is ignored.
 
 @item -n @var{digits}
 @itemx --digits=@var{digits}
@@ -2472,7 +2474,7 @@ sum [@var{option}]@dots{} [@var{file}]@dots{}
 @code{sum} prints the checksum for each @var{file} followed by the
 number of blocks in the file (rounded up).  If more than one @var{file}
 is given, file names are also printed (by default).  (With the
-@samp{--sysv} option, corresponding file names are printed when there is
+@option{--sysv} option, corresponding file names are printed when there is
 at least one file argument.)
 
 By default, @sc{gnu} @code{sum} computes checksums using an algorithm
@@ -2487,7 +2489,7 @@ The program accepts the following options.  Also see @ref{Common options}.
 @opindex -r
 @cindex BSD @code{sum}
 Use the default (BSD compatible) algorithm.  This option is included for
-compatibility with the System V @code{sum}.  Unless @samp{-s} was also
+compatibility with the System V @code{sum}.  Unless @option{-s} was also
 given, it has no effect.
 
 @item -s
@@ -2532,7 +2534,7 @@ The CRC algorithm is specified by the @sc{posix.2} standard.  It is not
 compatible with the BSD or System V @code{sum} algorithms (see the
 previous section); it is more robust.
 
-The only options are @samp{--help} and @samp{--version}.  @xref{Common
+The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
 
 
@@ -2594,7 +2596,7 @@ By default, for each valid line, one line is written to standard
 output indicating whether the named file passed the test.
 After all checks have been performed, if there were any failures,
 a warning is issued to standard error.
-Use the @samp{--status} option to inhibit that output.
+Use the @option{--status} option to inhibit that output.
 If any listed file cannot be opened or read, if any valid line has
 an MD5 checksum inconsistent with the associated file, or if no valid
 line is found, @code{md5sum} exits with nonzero status.  Otherwise,
@@ -2618,7 +2620,7 @@ indicating there was a failure.
 @opindex --text
 @cindex text input files
 Treat all input files as text files.  This is the reverse of
-@samp{--binary}.
+@option{--binary}.
 
 @item -w
 @itemx --warn
@@ -2883,7 +2885,7 @@ If @option{-c} is not also specified, @option{-o} may appear after an
 input file even if @env{POSIXLY_CORRECT} is set, e.g., @samp{sort F -o
 F}.  Warning: this usage is obsolescent.  Future versions of @sc{posix}
 will require that support for it be withdrawn.  Portable scripts should
-specify @samp{-o @var{output-file}} before any input files.
+specify @option{-o @var{output-file}} before any input files.
 
 @item -S @var{size}
 @itemx --buffer-size=@var{size}
@@ -2917,7 +2919,7 @@ That is, given the input line @w{@samp{ foo bar}}, @code{sort} breaks it
 into fields @w{@samp{ foo}} and @w{@samp{ bar}}.  The field separator is
 not considered to be part of either the field preceding or the field
 following.  But note that sort fields that extend to the end of the line,
-as @samp{-k 2}, or sort fields consisting of a range, as @samp{-k 2,3},
+as @option{-k 2}, or sort fields consisting of a range, as @option{-k 2,3},
 retain the field separators present between the endpoints of the range.
 
 @item -T @var{tempdir}
@@ -2952,7 +2954,7 @@ Specify a sort field that consists of the part of the line between
 @var{pos1} and @var{pos2} (or the end of the line, if @var{pos2} is
 omitted), @emph{inclusive}.  Fields and character positions are numbered
 starting with 1.  So to sort on the second field, you'd use
-@samp{--key=2,2} (@samp{-k 2,2}).  See below for more examples.
+@option{--key=2,2} (@option{-k 2,2}).  See below for more examples.
 
 @item -z
 @itemx --zero-terminated
@@ -2980,34 +2982,34 @@ Warning: the @samp{+@var{pos1}} usage is obsolescent.  Future versions of
 
 Historical (BSD and System V) implementations of @code{sort} have
 differed in their interpretation of some options, particularly
-@samp{-b}, @samp{-f}, and @samp{-n}.  @sc{gnu} sort follows the @sc{posix}
+@option{-b}, @option{-f}, and @option{-n}.  @sc{gnu} sort follows the @sc{posix}
 behavior, which is usually (but not always!) like the System V behavior.
-According to @sc{posix}, @samp{-n} no longer implies @samp{-b}.  For
-consistency, @samp{-M} has been changed in the same way.  This may
+According to @sc{posix}, @option{-n} no longer implies @option{-b}.  For
+consistency, @option{-M} has been changed in the same way.  This may
 affect the meaning of character positions in field specifications in
-obscure cases.  The only fix is to add an explicit @samp{-b}.
+obscure cases.  The only fix is to add an explicit @option{-b}.
 
-A position in a sort field specified with the @samp{-k} or @samp{+}
+A position in a sort field specified with the @option{-k} or @samp{+}
 option has the form @samp{@var{f}.@var{c}}, where @var{f} is the number
 of the field to use and @var{c} is the number of the first character
 from the beginning of the field (for @samp{+@var{pos}}) or from the end
-of the previous field (for @samp{-@var{pos}}).  If the @samp{.@var{c}}
+of the previous field (for @option{-@var{pos}}).  If the @samp{.@var{c}}
 is omitted, it is taken to be the first character in the field.  If the
-@samp{-b} option was specified, the @samp{.@var{c}} part of a field
+@option{-b} option was specified, the @samp{.@var{c}} part of a field
 specification is counted from the first nonblank character of the field
 (for @samp{+@var{pos}}) or from the first nonblank character following
-the previous field (for @samp{-@var{pos}}).
+the previous field (for @option{-@var{pos}}).
 
 A sort key option may also have any of the option letters @samp{Mbdfinr}
 appended to it, in which case the global ordering options are not used
-for that particular field.  The @samp{-b} option may be independently
+for that particular field.  The @option{-b} option may be independently
 attached to either or both of the @samp{+@var{pos}} and
-@samp{-@var{pos}} parts of a field specification, and if it is inherited
+@option{-@var{pos}} parts of a field specification, and if it is inherited
 from the global options it will be attached to both.
 Keys may span multiple fields.
 
 Here are some examples to illustrate various combinations of options.
-In them, the @sc{posix} @samp{-k} option is used to specify sort keys rather
+In them, the @sc{posix} @option{-k} option is used to specify sort keys rather
 than the obsolescent @samp{+@var{pos1}-@var{pos2}} syntax.
 
 @itemize @bullet
@@ -3037,7 +3039,7 @@ Use @samp{:} as the field delimiter.
 sort -t : -k 2,2n -k 5.3,5.4
 @end example
 
-Note that if you had written @samp{-k 2} instead of @samp{-k 2,2}
+Note that if you had written @option{-k 2} instead of @option{-k 2,2}
 @command{sort} would have used all characters beginning in the second field
 and extending to the end of the line as the primary @emph{numeric}
 key.  For the large majority of applications, treating keys spanning
@@ -3045,7 +3047,7 @@ more than one field as numeric will not do what you expect.
 
 Also note that the @samp{n} modifier was applied to the field-end
 specifier for the first key.  It would have been equivalent to
-specify @samp{-k 2n,2} or @samp{-k 2n,2n}.  All modifiers except
+specify @option{-k 2n,2} or @option{-k 2n,2n}.  All modifiers except
 @samp{b} apply to the associated @emph{field}, regardless of whether
 the modifier character is attached to the field-start and/or the
 field-end part of the key specifier.
@@ -3059,7 +3061,7 @@ on the numeric user ID in field three.
 sort -t : -k 5b,5 -k 3,3n /etc/passwd
 @end example
 
-An alternative is to use the global numeric modifier @samp{-n}.
+An alternative is to use the global numeric modifier @option{-n}.
 
 @example
 sort -t : -n -k 5b,5 -k 3,3 /etc/passwd
@@ -3072,7 +3074,7 @@ Generate a tags file in case-insensitive sorted order.
 find src -type f -print0 | sort -t / -z -f | xargs -0 etags --append
 @end smallexample
 
-The use of @samp{-print0}, @samp{-z}, and @samp{-0} in this case means
+The use of @option{-print0}, @option{-z}, and @option{-0} in this case means
 that pathnames that contain Line Feed characters will not get broken up
 by the sort operation.
 
@@ -3084,7 +3086,7 @@ for the first key,
 sort -t : -n -k 5b,5b -k 3,3 /etc/passwd
 @end example
 
-or by using the global @samp{-b} modifier instead of @samp{-n}
+or by using the global @option{-b} modifier instead of @option{-n}
 and an explicit @samp{n} with the second key specifier.
 
 @example
@@ -3153,8 +3155,8 @@ Skip @var{n} characters before checking for uniqueness.  If you use both
 the field and character skipping options, fields are skipped over first.
 
 Warning: the @samp{+@var{n}} usage is obsolescent.  Future versions of
-@sc{posix} will require that support for it be withdrawn.  Use @samp{-s
-@var{n}} instead.
+@sc{posix} will require that support for it be withdrawn.  Use
+@option{-s @var{n}} instead.
 
 @item -c
 @itemx --count
@@ -3262,7 +3264,7 @@ Columns are separated by a single TAB character.
 @opindex -1
 @opindex -2
 @opindex -3
-The options @samp{-1}, @samp{-2}, and @samp{-3} suppress printing of
+The options @option{-1}, @option{-2}, and @option{-3} suppress printing of
 the corresponding columns.  Also see @ref{Common options}.
 
 Unlike some other comparison utilities, @code{comm} has an exit
@@ -3318,7 +3320,7 @@ encountered to standard error.
 Note that for a given partial ordering, generally there is no unique
 total ordering.
 
-The only options are @samp{--help} and @samp{--version}.  @xref{Common
+The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
 
 
@@ -3335,10 +3337,10 @@ ptx [@var{option} @dots{}] [@var{file} @dots{}]
 ptx -G [@var{option} @dots{}] [@var{input} [@var{output}]]
 @end example
 
-The @samp{-G} (or its equivalent: @samp{--traditional}) option disables
+The @option{-G} (or its equivalent: @option{--traditional}) option disables
 all @sc{gnu} extensions and reverts to traditional mode, thus introducing some
 limitations and changing several of the program's default option values.
-When @samp{-G} is not specified, @sc{gnu} extensions are always enabled.
+When @option{-G} is not specified, @sc{gnu} extensions are always enabled.
 @sc{gnu} extensions to @code{ptx} are documented wherever appropriate in this
 document.  For the full list, see @xref{Compatibility in ptx}.
 
@@ -3439,13 +3441,13 @@ Fold lower case letters to upper case for sorting.
 @item -b @var{file}
 @item --break-file=@var{file}
 
-This option provides an alternative (to @samp{-W}) method of describing
+This option provides an alternative (to @option{-W}) method of describing
 which characters make up words.  It introduces the name of a
 file which contains a list of characters which can@emph{not} be part of
 one word; this file is called the @dfn{Break file}.  Any character which
 is not part of the Break file is a word constituent.  If both options
-@samp{-b} and @samp{-W} are specified, then @samp{-W} has precedence and
-@samp{-b} is ignored.
+@option{-b} and @option{-W} are specified, then @option{-W} has precedence and
+@option{-b} is ignored.
 
 When @sc{gnu} extensions are enabled, the only way to avoid newline as a
 break character is to write all the break characters in the file with no
@@ -3460,7 +3462,7 @@ The file associated with this option contains a list of words which will
 never be taken as keywords in concordance output.  It is called the
 @dfn{Ignore file}.  The file contains exactly one word in each line; the
 end of line separation of words is not subject to the value of the
-@samp{-S} option.
+@option{-S} option.
 
 There is a default Ignore file used by @code{ptx} when this option is
 not specified, usually found in @file{/usr/local/lib/eign} if this has
@@ -3474,7 +3476,7 @@ The file associated with this option contains a list of words which will
 be retained in concordance output; any word not mentioned in this file
 is ignored.  The file is called the @dfn{Only file}.  The file contains
 exactly one word in each line; the end of line separation of words is
-not subject to the value of the @samp{-S} option.
+not subject to the value of the @option{-S} option.
 
 There is no default for the Only file.  When both an Only file and an
 Ignore file are specified, a word is considered a keyword only
@@ -3487,12 +3489,12 @@ On each input line, the leading sequence of non-white space characters will be
 taken to be a reference that has the purpose of identifying this input
 line in the resulting permuted index.  For more information about reference
 production, see @xref{Output formatting in ptx}.
-Using this option changes the default value for option @samp{-S}.
+Using this option changes the default value for option @option{-S}.
 
 Using this option, the program does not try very hard to remove
 references from contexts in output, but it succeeds in doing so
 @emph{when} the context ends exactly at the newline.  If option
-@samp{-r} is used with @samp{-S} default value, or when @sc{gnu} extensions
+@option{-r} is used with @option{-S} default value, or when @sc{gnu} extensions
 are disabled, this condition is always met and references are completely
 excluded from the output contexts.
 
@@ -3503,7 +3505,7 @@ This option selects which regular expression will describe the end of a
 line or the end of a sentence.  In fact, this regular expression is not
 the only distinction between end of lines or end of sentences, and input
 line boundaries have no special significance outside this option.  By
-default, when @sc{gnu} extensions are enabled and if @samp{-r} option is not
+default, when @sc{gnu} extensions are enabled and if @option{-r} option is not
 used, end of sentences are used.  In this case, this @var{regex} is
 imported from @sc{gnu} Emacs:
 
@@ -3511,7 +3513,7 @@ imported from @sc{gnu} Emacs:
 [.?!][]\"')@}]*\\($\\|\t\\|  \\)[ \t\n]*
 @end example
 
-Whenever @sc{gnu} extensions are disabled or if @samp{-r} option is used, end
+Whenever @sc{gnu} extensions are disabled or if @option{-r} option is used, end
 of lines are used; in this case, the default @var{regexp} is just:
 
 @example
@@ -3521,7 +3523,7 @@ of lines are used; in this case, the default @var{regexp} is just:
 Using an empty @var{regexp} is equivalent to completely disabling end of
 line or end of sentence recognition.  In this case, the whole file is
 considered to be a single big line or sentence.  The user might want to
-disallow all truncation flag generation as well, through option @samp{-F
+disallow all truncation flag generation as well, through option @option{-F
 ""}.  @xref{Regexps, , Syntax of Regular Expressions, emacs, The GNU Emacs
 Manual}.
 
@@ -3562,15 +3564,15 @@ the corresponding characters by @code{ptx} itself.
 @node Output formatting in ptx
 @subsection Output formatting
 
-Output format is mainly controlled by the @samp{-O} and @samp{-T} options
-described in the table below.  When neither @samp{-O} nor @samp{-T} are
+Output format is mainly controlled by the @option{-O} and @option{-T} options
+described in the table below.  When neither @option{-O} nor @option{-T} are
 selected, and if @sc{gnu} extensions are enabled, the program chooses an
 output format suitable for a dumb terminal.  Each keyword occurrence is
 output to the center of one line, surrounded by its left and right
 contexts.  Each field is properly justified, so the concordance output
 can be readily observed.  As a special feature, if automatic
-references are selected by option @samp{-A} and are output before the
-left context, that is, if option @samp{-R} is @emph{not} selected, then
+references are selected by option @option{-A} and are output before the
+left context, that is, if option @option{-R} is @emph{not} selected, then
 a colon is added after the reference; this nicely interfaces with @sc{gnu}
 Emacs @code{next-error} processing.  In this default output format, each
 white space character, like newline and tab, is merely changed to
@@ -3594,7 +3596,7 @@ output line.
 
 Select the maximum output width of each final line.  If references are
 used, they are included or excluded from the maximum output width
-depending on the value of option @samp{-R}.  If this option is not
+depending on the value of option @option{-R}.  If this option is not
 selected, that is, when references are output before the left context,
 the maximum output width takes into account the maximum length of all
 references.  If this option is selected, that is, when references are
@@ -3608,21 +3610,21 @@ them.
 Select automatic references.  Each input line will have an automatic
 reference made up of the file name and the line ordinal, with a single
 colon between them.  However, the file name will be empty when standard
-input is being read.  If both @samp{-A} and @samp{-r} are selected, then
+input is being read.  If both @option{-A} and @option{-r} are selected, then
 the input reference is still read and skipped, but the automatic
 reference is used at output time, overriding the input reference.
 
 @item -R
 @itemx --right-side-refs
 
-In the default output format, when option @samp{-R} is not used, any
-references produced by the effect of options @samp{-r} or @samp{-A} are
+In the default output format, when option @option{-R} is not used, any
+references produced by the effect of options @option{-r} or @option{-A} are
 placed to the far right of output lines, after the right context.  With
-default output format, when the @samp{-R} option is specified, references
+default output format, when the @option{-R} option is specified, references
 are rather placed at the beginning of each output line, before the left
-context.  For any other output format, option @samp{-R} is
-ignored, with one exception:  with @samp{-R} the width of references
-is @emph{not} taken into account in total output width given by @samp{-w}.
+context.  For any other output format, option @option{-R} is
+ignored, with one exception:  with @option{-R} the width of references
+is @emph{not} taken into account in total output width given by @option{-w}.
 
 This option is automatically selected whenever @sc{gnu} extensions are
 disabled.
@@ -3633,15 +3635,15 @@ disabled.
 This option will request that any truncation in the output be reported
 using the string @var{string}.  Most output fields theoretically extend
 towards the beginning or the end of the current line, or current
-sentence, as selected with option @samp{-S}.  But there is a maximum
-allowed output line width, changeable through option @samp{-w}, which is
+sentence, as selected with option @option{-S}.  But there is a maximum
+allowed output line width, changeable through option @option{-w}, which is
 further divided into space for various output fields.  When a field has
 to be truncated because it cannot extend beyond the beginning or the end of
 the current line to fit in, then a truncation occurs.  By default,
-the string used is a single slash, as in @samp{-F /}.
+the string used is a single slash, as in @option{-F /}.
 
-@var{string} may have more than one character, as in @samp{-F ...}.
-Also, in the particular case when @var{string} is empty (@samp{-F ""}),
+@var{string} may have more than one character, as in @option{-F ...}.
+Also, in the particular case when @var{string} is empty (@option{-F ""}),
 truncation flagging is disabled, and no truncation marks are appended in
 this case.
 
@@ -3667,7 +3669,7 @@ processing.  Each output line will look like:
 
 so it will be possible to write a @samp{.xx} roff macro to take care of
 the output typesetting.  This is the default output format when @sc{gnu}
-extensions are disabled.  Option @samp{-M} can be used to change
+extensions are disabled.  Option @option{-M} can be used to change
 @samp{xx} to another macro name.
 
 In this output format, each non-graphical character, like newline and
@@ -3688,9 +3690,9 @@ line will look like:
 @noindent
 so it will be possible to write a @code{\xx} definition to take care of
 the output typesetting.  Note that when references are not being
-produced, that is, neither option @samp{-A} nor option @samp{-r} is
+produced, that is, neither option @option{-A} nor option @option{-r} is
 selected, the last parameter of each @code{\xx} call is inhibited.
-Option @samp{-M} can be used to change @samp{xx} to another macro
+Option @option{-M} can be used to change @samp{xx} to another macro
 name.
 
 In this output format, some special characters, like @kbd{$}, @kbd{%},
@@ -3715,9 +3717,9 @@ processing for @TeX{}.
 
 This version of @code{ptx} contains a few features which do not exist in
 System V @code{ptx}.  These extra features are suppressed by using the
-@samp{-G} command line option, unless overridden by other command line
+@option{-G} command line option, unless overridden by other command line
 options.  Some @sc{gnu} extensions cannot be recovered by overriding, so the
-simple rule is to avoid @samp{-G} if you care about @sc{gnu} extensions.
+simple rule is to avoid @option{-G} if you care about @sc{gnu} extensions.
 Here are the differences between this program and System V @code{ptx}.
 
 @itemize @bullet
@@ -3733,24 +3735,24 @@ Having output parameters not introduced by options is a dangerous
 practice which @sc{gnu} avoids as far as possible.  So, for using @code{ptx}
 portably between @sc{gnu} and System V, you should always use it with a
 single input file, and always expect the result on standard output.  You
-might also want to automatically configure in a @samp{-G} option to
+might also want to automatically configure in a @option{-G} option to
 @code{ptx} calls in products using @code{ptx}, if the configurator finds
-that the installed @code{ptx} accepts @samp{-G}.
+that the installed @code{ptx} accepts @option{-G}.
 
 @item
-The only options available in System V @code{ptx} are options @samp{-b},
-@samp{-f}, @samp{-g}, @samp{-i}, @samp{-o}, @samp{-r}, @samp{-t} and
-@samp{-w}.  All other options are @sc{gnu} extensions and are not repeated in
+The only options available in System V @code{ptx} are options @option{-b},
+@option{-f}, @option{-g}, @option{-i}, @option{-o}, @option{-r}, @option{-t} and
+@option{-w}.  All other options are @sc{gnu} extensions and are not repeated in
 this enumeration.  Moreover, some options have a slightly different
 meaning when @sc{gnu} extensions are enabled, as explained below.
 
 @item
 By default, concordance output is not formatted for @code{troff} or
 @code{nroff}.  It is rather formatted for a dumb terminal.  @code{troff}
-or @code{nroff} output may still be selected through option @samp{-O}.
+or @code{nroff} output may still be selected through option @option{-O}.
 
 @item
-Unless @samp{-R} option is used, the maximum reference width is
+Unless @option{-R} option is used, the maximum reference width is
 subtracted from the total output line width.  With @sc{gnu} extensions
 disabled, width of references is not taken into account in the output
 line width computations.
@@ -3811,7 +3813,7 @@ In the table which follows, the @var{byte-list}, @var{character-list},
 and @var{field-list} are one or more numbers or ranges (two numbers
 separated by a dash) separated by commas.  Bytes, characters, and
 fields are numbered starting at 1.  Incomplete ranges may be
-given: @samp{-@var{m}} means @samp{1-@var{m}}; @samp{@var{n}-} means
+given: @option{-@var{m}} means @samp{1-@var{m}}; @samp{@var{n}-} means
 @samp{@var{n}} through end of line or last field.
 
 The program accepts the following options.  Also see @ref{Common
@@ -3831,7 +3833,7 @@ backspaces are treated like any other character; they take up 1 byte.
 @opindex -c
 @opindex --characters
 Print only characters in positions listed in @var{character-list}.
-The same as @samp{-b} for now, but internationalization will change
+The same as @option{-b} for now, but internationalization will change
 that.  Tabs and backspaces are treated like any other character; they
 take up 1 character.
 
@@ -3842,13 +3844,13 @@ take up 1 character.
 Print only the fields listed in @var{field-list}.  Fields are
 separated by a TAB character by default.
 Also print any line that contains no delimiter character, unless
-the @samp{--only-delimited} (@samp{-s}) option is specified
+the @option{--only-delimited} (@option{-s}) option is specified
 
 @item -d @var{input_delim_byte}
 @itemx --delimiter=@var{input_delim_byte}
 @opindex -d
 @opindex --delimiter
-For @samp{-f}, fields are separated in the input by the first character
+For @option{-f}, fields are separated in the input by the first character
 in @var{input_delim_byte} (default is TAB).
 
 @item -n
@@ -3859,12 +3861,12 @@ Do not split multi-byte characters (no-op for now).
 @itemx --only-delimited
 @opindex -s
 @opindex --only-delimited
-For @samp{-f}, do not print lines that do not contain the field separator
+For @option{-f}, do not print lines that do not contain the field separator
 character.  Normally, any line without a field separator is printed verbatim.
 
 @itemx --output-delimiter=@var{output_delim_string}
 @opindex --output-delimiter
-For @samp{-f}, output fields are separated by @var{output_delim_string}.
+For @option{-f}, output fields are separated by @var{output_delim_string}.
 The default is to use the input delimiter.
 
 
@@ -3928,9 +3930,9 @@ Either @var{file1} or @var{file2} (but not both) can be @samp{-},
 meaning standard input.  @var{file1} and @var{file2} should be already
 sorted in increasing textual order on the join fields, using the
 collating sequence specified by the @env{LC_COLLATE} locale.  Unless
-the @samp{-t} option is given, the input should be sorted ignoring blanks at
+the @option{-t} option is given, the input should be sorted ignoring blanks at
 the start of the join field, as in @code{sort -b}.  If the
-@samp{--ignore-case} option is given, lines should be sorted without
+@option{--ignore-case} option is given, lines should be sorted without
 regard to the case of characters in the join field, as in @code{sort -f}.
 
 The defaults are: the join field is the first field in each line;
@@ -3974,7 +3976,7 @@ Join on field @var{field} (a positive integer) of file 1.
 Join on field @var{field} (a positive integer) of file 2.
 
 @item -j @var{field}
-Equivalent to @samp{-1 @var{field} -2 @var{field}}.
+Equivalent to @option{-1 @var{field} -2 @var{field}}.
 
 @item -o @var{field-list}@dots{}
 Construct each output line according to the format in @var{field-list}.
@@ -3986,7 +3988,7 @@ A field specification of @samp{0} denotes the join field.
 In most cases, the functionality of the @samp{0} field spec
 may be reproduced using the explicit @var{m.n} that corresponds
 to the join field.  However, when printing unpairable lines
-(using either of the @samp{-a} or @samp{-v} options), there is no way
+(using either of the @option{-a} or @option{-v} options), there is no way
 to specify the join field using @var{m.n} in @var{field-list}
 if there are unpairable lines in both files.
 To give @code{join} that functionality, @sc{posix} invented the @samp{0}
@@ -3994,8 +3996,8 @@ field specification notation.
 
 The elements in @var{field-list}
 are separated by commas or blanks.  Multiple @var{field-list}
-arguments can be given after a single @samp{-o} option; the values
-of all lists given with @samp{-o} are concatenated together.
+arguments can be given after a single @option{-o} option; the values
+of all lists given with @option{-o} are concatenated together.
 All output lines -- including those printed because of any -a or -v
 option -- are subject to the specified @var{field-list}.
 
@@ -4055,7 +4057,7 @@ delete characters, then squeeze repeated characters from the result.
 The @var{set1} and (if given) @var{set2} arguments define ordered
 sets of characters, referred to below as @var{set1} and @var{set2}.  These
 sets are the characters of the input that @code{tr} operates on.
-The @samp{--complement} (@samp{-c}) option replaces @var{set1} with its
+The @option{--complement} (@option{-c}) option replaces @var{set1} with its
 complement (all of the characters that are not in @var{set1}).
 
 @menu
@@ -4148,8 +4150,8 @@ octal, otherwise in decimal.
 The notation @samp{[:@var{class}:]} expands to all of the characters in
 the (predefined) class @var{class}.  The characters expand in no
 particular order, except for the @code{upper} and @code{lower} classes,
-which expand in ascending order.  When the @samp{--delete} (@samp{-d})
-and @samp{--squeeze-repeats} (@samp{-s}) options are both given, any
+which expand in ascending order.  When the @option{--delete} (@option{-d})
+and @option{--squeeze-repeats} (@option{-s}) options are both given, any
 character class can be used in @var{set2}.  Otherwise, only the
 character classes @code{lower} and @code{upper} are accepted in
 @var{set2}, and then only if the corresponding character class
@@ -4217,7 +4219,7 @@ which is of no particular use.
 @cindex translating characters
 
 @code{tr} performs translation when @var{set1} and @var{set2} are
-both given and the @samp{--delete} (@samp{-d}) option is not given.
+both given and the @option{--delete} (@option{-d}) option is not given.
 @code{tr} translates each character of its input that is in @var{set1}
 to the corresponding character in @var{set2}.  Characters not in
 @var{set1} are passed through unchanged.  When a character appears more
@@ -4253,7 +4255,7 @@ the last character of @var{set2} as many times as necessary.  System V
 @code{tr} truncates @var{set1} to the length of @var{set2}.
 
 By default, @sc{gnu} @code{tr} handles this case like BSD @code{tr}.  When
-the @samp{--truncate-set1} (@samp{-t}) option is given, @sc{gnu} @code{tr}
+the @option{--truncate-set1} (@option{-t}) option is given, @sc{gnu} @code{tr}
 handles this case like the System V @code{tr} instead.  This option is
 ignored for operations other than translation.
 
@@ -4284,18 +4286,18 @@ tr -cs '[:alnum:]' '[\n*]'
 @cindex squeezing repeat characters
 @cindex deleting characters
 
-When given just the @samp{--delete} (@samp{-d}) option, @code{tr}
+When given just the @option{--delete} (@option{-d}) option, @code{tr}
 removes any input characters that are in @var{set1}.
 
-When given just the @samp{--squeeze-repeats} (@samp{-s}) option,
+When given just the @option{--squeeze-repeats} (@option{-s}) option,
 @code{tr} replaces each input sequence of a repeated character that
 is in @var{set1} with a single occurrence of that character.
 
-When given both @samp{--delete} and @samp{--squeeze-repeats}, @code{tr}
+When given both @option{--delete} and @option{--squeeze-repeats}, @code{tr}
 first performs any deletions using @var{set1}, then squeezes repeats
 from any remaining characters using @var{set2}.
 
-The @samp{--squeeze-repeats} option may also be used when translating,
+The @option{--squeeze-repeats} option may also be used when translating,
 in which case @code{tr} first performs translation, then squeezes
 repeats from any remaining characters using @var{set2}.
 
@@ -4333,7 +4335,7 @@ separated by a newline.  The bourne shell script below works first
 by converting each sequence of punctuation and blank characters to a
 single newline.  That puts each ``word'' on a line by itself.
 Next it maps all uppercase characters to lower case, and finally it
-runs @code{uniq} with the @samp{-d} option to print out only the words
+runs @code{uniq} with the @option{-d} option to print out only the words
 that were adjacent duplicates.
 
 @example
@@ -4355,7 +4357,7 @@ tr -d axM
 However, when @samp{-} is one of those characters, it can be tricky because
 @samp{-} has special meanings.  Performing the same task as above but also
 removing all @samp{-} characters, we might try @code{tr -d -axM}, but
-that would fail because @code{tr} would try to interpret @samp{-a} as
+that would fail because @code{tr} would try to interpret @option{-a} as
 a command-line option.  Alternatively, we could try putting the hyphen
 inside the string, @code{tr -d a-xM}, but that wouldn't work either because
 it would make @code{tr} interpret @code{a-x} as the range of characters
@@ -4391,7 +4393,7 @@ following warning and error messages, for strict compliance with
 @enumerate
 
 @item
-When the @samp{--delete} option is given but @samp{--squeeze-repeats}
+When the @option{--delete} option is given but @option{--squeeze-repeats}
 is not, and @var{set2} is given, @sc{gnu} @code{tr} by default prints
 a usage message and exits, because @var{set2} would not be used.
 The @sc{posix} specification says that @var{set2} must be ignored in
@@ -4429,7 +4431,7 @@ expand [@var{option}]@dots{} [@var{file}]@dots{}
 
 By default, @code{expand} converts all tabs to spaces.  It preserves
 backspace characters in the output; they decrement the column count for
-tab calculations.  The default action is equivalent to @samp{-8} (set
+tab calculations.  The default action is equivalent to @option{-8} (set
 tabs every 8 columns).
 
 The program accepts the following options.  Also see @ref{Common options}.
@@ -4447,7 +4449,7 @@ If only one tab stop is given, set the tabs @var{tab1} spaces apart
 (default is 8).  Otherwise, set the tabs at columns @var{tab1},
 @var{tab2}, @dots{} (numbered from 0), and replace any tabs beyond the
 last tabstop given with single spaces.  If the tabstops are specified
-with the @samp{-t} or @samp{--tabs} option, they can be separated by
+with the @option{-t} or @option{--tabs} option, they can be separated by
 blanks as well as by commas.
 
 @item -i
@@ -4496,8 +4498,8 @@ If only one tab stop is given, set the tabs @var{tab1} spaces apart
 instead of the default 8.  Otherwise, set the tabs at columns
 @var{tab1}, @var{tab2}, @dots{} (numbered from 0), and leave spaces and
 tabs beyond the tabstops given unchanged.  If the tabstops are specified
-with the @samp{-t} or @samp{--tabs} option, they can be separated by
-blanks as well as by commas.  This option implies the @samp{-a} option.
+with the @option{-t} or @option{--tabs} option, they can be separated by
+blanks as well as by commas.  This option implies the @option{-a} option.
 
 @item -a
 @itemx --all
@@ -4664,7 +4666,7 @@ default, only file names are shown.
 @opindex -D
 @opindex --dired
 @cindex dired Emacs mode support
-With the long listing (@samp{-l}) format, print an additional line after
+With the long listing (@option{-l}) format, print an additional line after
 the main output:
 
 @example
@@ -4714,7 +4716,7 @@ provide this option for compatibility.)
 @cindex human-readable output
 Append a size letter such as @samp{M} for megabytes to each size.
 Powers of 1024 are used, not 1000; @samp{M} stands for 1,048,576 bytes.
-Use the @samp{--si} option if you prefer powers of 1000.
+Use the @option{--si} option if you prefer powers of 1000.
 
 @item -i
 @itemx --inode
@@ -4786,7 +4788,7 @@ display numeric UIDs and GIDs instead of the owner and group names.
 @item -o
 @opindex -o
 Produce long format directory listings, but don't display group information.
-It is equivalent to using @samp{--format=long} with @samp{--no-group} .
+It is equivalent to using @option{--format=long} with @option{--no-group} .
 
 @item -s
 @itemx --size
@@ -4814,7 +4816,7 @@ it also affects the HP-UX @code{ls} program.
 Append a size letter such as @samp{M} for megabytes to each size.  (SI
 is the International System of Units, which defines these letters as
 prefixes.)  Powers of 1000 are used, not 1024; @samp{M} stands for
-1,000,000 bytes.  Use the @samp{-h} or @samp{--human-readable} option if
+1,000,000 bytes.  Use the @option{-h} or @option{--human-readable} option if
 you prefer powers of 1024.
 
 @end table
@@ -4839,10 +4841,10 @@ order).
 @opindex ctime@r{, printing or sorting by}
 @opindex status time@r{, printing or sorting by}
 @opindex use time@r{, printing or sorting files by}
-If the long listing format (e.g., @samp{-l}, @samp{-o}) is being used,
+If the long listing format (e.g., @option{-l}, @option{-o}) is being used,
 print the status change time (the @samp{ctime} in the inode) instead of
 the modification time.
-When explicitly sorting by time (@samp{--sort=time} or @samp{-t})
+When explicitly sorting by time (@option{--sort=time} or @option{-t})
 or when not using a long listing format,
 sort according to the status change time.
 
@@ -4850,10 +4852,10 @@ sort according to the status change time.
 @opindex -f
 @cindex unsorted directory listing
 @cindex directory order, listing by
-Primarily, like @samp{-U}---do not sort; list the files in whatever
-order they are stored in the directory.  But also enable @samp{-a} (list
-all files) and disable @samp{-l}, @samp{--color}, and @samp{-s} (if they
-were specified before the @samp{-f}).
+Primarily, like @option{-U}---do not sort; list the files in whatever
+order they are stored in the directory.  But also enable @option{-a} (list
+all files) and disable @option{-l}, @option{--color}, and @option{-s} (if they
+were specified before the @option{-f}).
 
 @item -r
 @itemx --reverse
@@ -4885,9 +4887,9 @@ Sort by modification time (the @samp{mtime} in the inode), newest first.
 @opindex use time@r{, printing or sorting files by}
 @opindex atime@r{, printing or sorting files by}
 @opindex access time@r{, printing or sorting files by}
-If the long listing format (e.g., @samp{--format=long}) is being used,
+If the long listing format (e.g., @option{--format=long}) is being used,
 print the last access time (the @samp{atime} in the inode).
-When explicitly sorting by time (@samp{--sort=time} or @samp{-t})
+When explicitly sorting by time (@option{--sort=time} or @option{-t})
 or when not using a long listing format, sort according to the access time.
 
 @item -U
@@ -4897,7 +4899,7 @@ or when not using a long listing format, sort according to the access time.
 @opindex none@r{, sorting option for @code{ls}}
 Do not sort; list the files in whatever order they are
 stored in the directory.  (Do not do any of the other unrelated things
-that @samp{-f} does.)  This is especially useful when listing very large
+that @option{-f} does.)  This is especially useful when listing very large
 directories, since not doing any sorting can be noticeably faster.
 
 @item -v
@@ -4995,8 +4997,8 @@ may be omitted, or one of:
 @vindex always @r{color option}
 - Always use color.
 @end itemize
-Specifying @samp{--color} and no @var{when} is equivalent to
-@samp{--color=always}.
+Specifying @option{--color} and no @var{when} is equivalent to
+@option{--color=always}.
 Piping a colorized listing through a pager like @code{more} or
 @code{less} usually produces unreadable results.  However, using
 @code{more -f} does seem to work.
@@ -5024,11 +5026,11 @@ Do not append any character indicator; this is the default.
 @item file-type
 Append @samp{/} for directories, @samp{@@} for symbolic links, @samp{|}
 for FIFOs, @samp{=} for sockets, and nothing for regular files.  This is
-the same as the @samp{-p} or @samp{--file-type} option.
+the same as the @option{-p} or @option{--file-type} option.
 @item classify
 Append @samp{*} for executable regular files, otherwise behave as for
-@samp{file-type}.  This is the same as the @samp{-F} or
-@samp{--classify} option.
+@samp{file-type}.  This is the same as the @option{-F} or
+@option{--classify} option.
 @end table
 
 @item -k
@@ -5053,7 +5055,7 @@ separated by @samp{, } (a comma and a space).
 @opindex --indicator-style
 @cindex file type, marking
 Append a character to each file name indicating the file type. This is
-like @samp{-F}, except that executables are not marked.
+like @option{-F}, except that executables are not marked.
 
 @item -x @var{format}
 @itemx --format=across
@@ -5202,10 +5204,10 @@ cause ambiguous output.
 Quote names for the shell, even if they would normally not require quoting.
 @item c
 Quote names as for a C language string; this is the same as the
-@samp{-Q} or @samp{--quote-name} option.
+@option{-Q} or @option{--quote-name} option.
 @item escape
 Quote as with @samp{c} except omit the surrounding double-quote
-characters; this is the same as the @samp{-b} or @samp{--escape} option.
+characters; this is the same as the @option{-b} or @option{--escape} option.
 @item clocale
 Quote as with @samp{c} except use quotation marks appropriate for the
 locale.
@@ -5215,7 +5217,7 @@ Like @samp{clocale}, but quote @t{`like this'} instead of @t{"like
 this"} in the default C locale.  This looks nicer on many displays.
 @end table
 
-You can specify the default value of the @samp{--quoting-style} option
+You can specify the default value of the @option{--quoting-style} option
 with the environment variable @env{QUOTING_STYLE}.  If that environment
 variable is not set, the default value is @samp{literal}, but this
 default may change to @samp{shell} in a future version of this package.
@@ -5362,7 +5364,7 @@ second.  It is an error if the last argument is not a directory and more
 than two non-option arguments are given.
 
 Generally, files are written just as they are read.  For exceptions,
-see the @samp{--sparse} option below.
+see the @option{--sparse} option below.
 
 By default, @command{cp} does not copy directories.  However, the
 @option{-R}, @option{-a}, and @option{-r} options cause @command{cp} to
@@ -5378,7 +5380,7 @@ options is specified, the last one silently overrides the others.
 @cindex self-backups
 @cindex backups, making only
 @code{cp} generally refuses to copy a file onto itself, with the
-following exception: if @samp{--force --backup} is specified with
+following exception: if @option{--force --backup} is specified with
 @var{source} and @var{dest} identical, and referring to a regular file,
 @code{cp} will make a backup file, either regular or numbered, as
 specified in the usual ways (@pxref{Backup options}).  This is useful when
@@ -5395,7 +5397,7 @@ Preserve as much as possible of the structure and attributes of the
 original files in the copy (but do not attempt to preserve internal
 directory structure;  i.e., @samp{ls -U} may list the entries in a copied
 directory in a different order).
-Equivalent to @samp{-dpR}.
+Equivalent to @option{-dpR}.
 
 @item -b
 @itemx @w{@kbd{--backup}[=@var{method}]}
@@ -5434,12 +5436,12 @@ copies.
 @opindex -f
 @opindex --force
 When copying without this option and an existing destination file cannot
-be opened for writing, the copy fails.  However, with @samp{--force}),
+be opened for writing, the copy fails.  However, with @option{--force}),
 when a destination file cannot be opened, @code{cp} then unlinks it and
 tries to open it again.  Contrast this behavior with that enabled by
-@samp{--link} and @samp{--symbolic-link}, whereby the destination file
+@option{--link} and @option{--symbolic-link}, whereby the destination file
 is never opened but rather is unlinked unconditionally.  Also see the
-description of @samp{--remove-destination}.
+description of @option{--remove-destination}.
 
 @item -H
 @opindex -H
@@ -5512,7 +5514,7 @@ found in the @file{/dev} directory.  In most cases, @code{cp -r}
 will hang indefinitely trying to read from FIFOs and special files
 like @file{/dev/console}, and it will fill up your destination disk
 if you use it to copy @file{/dev/zero}.
-Use the @samp{--recursive} (@samp{-R}) option instead if you want
+Use the @option{--recursive} (@option{-R}) option instead if you want
 to copy special files, preserving their special nature
 rather than reading from them to copy their contents.
 
@@ -5521,7 +5523,7 @@ rather than reading from them to copy their contents.
 @opindex -R
 @opindex --recursive
 Copy directories recursively, preserving non-directories (contrast with
-@samp{-r} just above).
+@option{-r} just above).
 
 @item --remove-destination
 @opindex --remove-destination
@@ -5577,7 +5579,7 @@ results in an error message on systems that do not support symbolic links.
 @itemx --suffix=@var{suffix}
 @opindex -S
 @opindex --suffix
-Append @var{suffix} to each backup file made with @samp{-b}.
+Append @var{suffix} to each backup file made with @option{-b}.
 @xref{Backup options}.
 
 @itemx @w{@kbd{--target-directory}=@var{directory}}
@@ -5597,7 +5599,7 @@ Print the name of each file before copying it.
 @itemx --version-control=@var{method}
 @opindex -V
 @opindex --version-control
-Change the type of backups made with @samp{-b}.  The @var{method}
+Change the type of backups made with @option{-b}.  The @var{method}
 argument can be @samp{none} (or @samp{off}), @samp{numbered} (or
 @samp{t}), @samp{existing} (or @samp{nil}), or @samp{never} (or
 @samp{simple}).  @xref{Backup options}.
@@ -5880,7 +5882,7 @@ Strip the symbol tables from installed binary executables.
 @itemx --suffix=@var{suffix}
 @opindex -S
 @opindex --suffix
-Append @var{suffix} to each backup file made with @samp{-b}.
+Append @var{suffix} to each backup file made with @option{-b}.
 @xref{Backup options}.
 
 @itemx @w{@kbd{--target-directory}=@var{directory}}
@@ -5900,7 +5902,7 @@ Print the name of each file before copying it.
 @itemx --version-control=@var{method}
 @opindex -V
 @opindex --version-control
-Change the type of backups made with @samp{-b}.  The @var{method}
+Change the type of backups made with @option{-b}.  The @var{method}
 argument can be @samp{none} (or @samp{off}), @samp{numbered} (or
 @samp{t}), @samp{existing} (or @samp{nil}), or @samp{never} (or
 @samp{simple}).  @xref{Backup options}.
@@ -5942,7 +5944,7 @@ original partition.
 
 @cindex prompting, and @code{mv}
 If a destination file exists but is normally unwritable, standard input
-is a terminal, and the @samp{-f} or @samp{--force} option is not given,
+is a terminal, and the @option{-f} or @option{--force} option is not given,
 @code{mv} prompts the user for whether to replace the file.  (You might
 own the file, or have write permission on its directory.)  If the
 response does not begin with @samp{y} or @samp{Y}, the file is skipped.
@@ -6005,7 +6007,7 @@ Remove any trailing slashes from each @var{source} argument.
 @itemx --suffix=@var{suffix}
 @opindex -S
 @opindex --suffix
-Append @var{suffix} to each backup file made with @samp{-b}.
+Append @var{suffix} to each backup file made with @option{-b}.
 @xref{Backup options}.
 
 @itemx @w{@kbd{--target-directory}=@var{directory}}
@@ -6019,7 +6021,7 @@ Specify the destination @var{directory}.
 @itemx --version-control=@var{method}
 @opindex -V
 @opindex --version-control
-Change the type of backups made with @samp{-b}.  The @var{method}
+Change the type of backups made with @option{-b}.  The @var{method}
 argument can be @samp{none} (or @samp{off}), @samp{numbered} (or
 @samp{t}), @samp{existing} (or @samp{nil}), or @samp{never} (or
 @samp{simple}).  @xref{Backup options}.
@@ -6041,9 +6043,9 @@ rm [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
 @cindex prompting, and @code{rm}
-If a file is unwritable, standard input is a terminal, and the @samp{-f}
-or @samp{--force} option is not given, or the @samp{-i} or
-@samp{--interactive} option @emph{is} given, @code{rm} prompts the user
+If a file is unwritable, standard input is a terminal, and the @option{-f}
+or @option{--force} option is not given, or the @option{-i} or
+@option{--interactive} option @emph{is} given, @code{rm} prompts the user
 for whether to remove the file.  If the response does not begin with
 @samp{y} or @samp{Y}, the file is skipped.
 
@@ -6070,7 +6072,7 @@ filesystem after doing this.
 @opindex -f
 @opindex --force
 Ignore nonexistent files and never prompt the user.
-Ignore any previous @samp{--interactive} (@samp{-i}) option.
+Ignore any previous @option{--interactive} (@option{-i}) option.
 
 @item -i
 @itemx --interactive
@@ -6078,7 +6080,7 @@ Ignore any previous @samp{--interactive} (@samp{-i}) option.
 @opindex --interactive
 Prompt whether to remove each file.  If the response does not begin
 with @samp{y} or @samp{Y}, the file is skipped.
-Ignore any previous @samp{--force} (@samp{-f}) option.
+Ignore any previous @option{--force} (@option{-f}) option.
 
 @item -r
 @itemx -R
@@ -6280,9 +6282,9 @@ shred does not increase the size of the file.
 Normally, the last pass that @code{shred} writes is made up of
 random data.  If this would be conspicuous on your hard drive (for
 example, because it looks like encrypted data), or you just think
-it's tidier, the @samp{--zero} option adds an additional overwrite pass with
+it's tidier, the @option{--zero} option adds an additional overwrite pass with
 all zero bits.  This is in addition to the number of passes specified
-by the @samp{--iterations} option.
+by the @option{--iterations} option.
 
 @item -
 @opindex -
@@ -6369,7 +6371,7 @@ Besides directories, other special file types include named pipes
 
 @cindex filesystems and hard links
 @code{ln} makes links between files.  By default, it makes hard links;
-with the @samp{-s} option, it makes symbolic (or @dfn{soft}) links.
+with the @option{-s} option, it makes symbolic (or @dfn{soft}) links.
 Synopses:
 
 @example
@@ -6382,7 +6384,7 @@ ln [@var{option}]@dots{} @var{target}@dots{} @var{directory}
 @item If the last argument names an existing directory, @code{ln} creates a
 link to each @var{target} file in that directory, using the
 @var{target}s' names.  (But see the description of the
-@samp{--no-dereference} option below.)
+@option{--no-dereference} option below.)
 
 @item If two filenames are given, @code{ln} creates a link from the
 second to the first.
@@ -6391,8 +6393,8 @@ second to the first.
 file in the current directory.
 
 @item It is an error if the last argument is not a directory and more
-than two files are given.  Without @samp{-f} or @samp{-i} (see below),
-@code{ln} will not remove an existing file.  Use the @samp{--backup}
+than two files are given.  Without @option{-f} or @option{-i} (see below),
+@code{ln} will not remove an existing file.  Use the @option{--backup}
 option to make @code{ln} rename existing files.
 
 @end itemize
@@ -6483,7 +6485,7 @@ an error message on systems that do not support symbolic links.
 @itemx --suffix=@var{suffix}
 @opindex -S
 @opindex --suffix
-Append @var{suffix} to each backup file made with @samp{-b}.
+Append @var{suffix} to each backup file made with @option{-b}.
 @xref{Backup options}.
 
 @itemx @w{@kbd{--target-directory}=@var{directory}}
@@ -6503,7 +6505,7 @@ Print the name of each file before linking it.
 @itemx --version-control=@var{method}
 @opindex -V
 @opindex --version-control
-Change the type of backups made with @samp{-b}.  The @var{method}
+Change the type of backups made with @option{-b}.  The @var{method}
 argument can be @samp{none} (or @samp{off}), @samp{numbered} (or
 @samp{t}), @samp{existing} (or @samp{nil}), or @samp{never} (or
 @samp{simple}).  @xref{Backup options}.
@@ -6569,7 +6571,7 @@ Ignore arguments corresponding to existing directories.
 @opindex -v
 @opindex --verbose
 Print a message for each created directory.  This is most useful with
-@samp{--parents}.
+@option{--parents}.
 @end table
 
 
@@ -6709,7 +6711,7 @@ the directory is non-empty.
 Remove @var{directory}, then try to remove each component of @var{directory}.
 So, for example, @samp{rmdir -p a/b/c} is similar to @samp{rmdir a/b/c a/b a}.
 As such, it fails if any of those directories turns out not to be empty.
-Use the @samp{--ignore-fail-on-non-empty} option to make it so such
+Use the @option{--ignore-fail-on-non-empty} option to make it so such
 a failure does not evoke a diagnostic and does not cause @code{rmdir} to
 exit unsuccessfully.
 
@@ -6878,7 +6880,7 @@ On systems that do not provide the @code{lchown} system call,
 @code{chown} fails when a file specified on the command line
 is a symbolic link.
 By default, no diagnostic is issued for symbolic links encountered
-during a recursive traversal, but see @samp{--verbose}.
+during a recursive traversal, but see @option{--verbose}.
 
 @item --reference=@var{ref_file}
 @opindex --reference
@@ -6893,7 +6895,7 @@ refers to.
 @opindex --verbose
 Output a diagnostic for every file processed.
 If a symbolic link is encountered during a recursive traversal
-on a system without the @code{lchown} system call, and @samp{--no-dereference}
+on a system without the @code{lchown} system call, and @option{--no-dereference}
 is in effect, then issue a diagnostic saying neither the symbolic link nor
 its referent is being changed.
 
@@ -6963,7 +6965,7 @@ On systems that do not provide the @code{lchown} system call,
 @code{chgrp} fails when a file specified on the command line
 is a symbolic link.
 By default, no diagnostic is issued for symbolic links encountered
-during a recursive traversal, but see @samp{--verbose}.
+during a recursive traversal, but see @option{--verbose}.
 
 @item --reference=@var{ref_file}
 @opindex --reference
@@ -6977,7 +6979,7 @@ group of the symbolic link, but rather that of the file it refers to.
 @opindex --verbose
 Output a diagnostic for every file processed.
 If a symbolic link is encountered during a recursive traversal
-on a system without the @code{lchown} system call, and @samp{--no-dereference}
+on a system without the @code{lchown} system call, and @option{--no-dereference}
 is in effect, then issue a diagnostic saying neither the symbolic link nor
 its referent is being changed.
 
@@ -7076,9 +7078,9 @@ specified files.  Synopsis:
 touch [@var{option}]@dots{} @var{file}@dots{}
 @end example
 
-If the first @var{file} would be a valid argument to the @samp{-t}
-option and no timestamp is given with any of the @samp{-d}, @samp{-r},
-or @samp{-t} options and the @samp{--} argument is not given, that
+If the first @var{file} would be a valid argument to the @option{-t}
+option and no timestamp is given with any of the @option{-d}, @option{-r},
+or @option{-t} options and the @samp{--} argument is not given, that
 argument is interpreted as the time for the other files instead of
 as a file name.  Warning: this usage is obsolescent, and future versions
 of @sc{posix} will require that support for it be withdrawn.  Use
@@ -7241,7 +7243,7 @@ only included if this option is specified.
 @cindex human-readable output
 Append a size letter such as @samp{M} for megabytes to each size.
 Powers of 1024 are used, not 1000; @samp{M} stands for 1,048,576 bytes.
-Use the @samp{-H} or @samp{--si} option if you prefer powers of 1000.
+Use the @option{-H} or @option{--si} option if you prefer powers of 1000.
 
 @item -H
 @itemx --si
@@ -7251,7 +7253,7 @@ Use the @samp{-H} or @samp{--si} option if you prefer powers of 1000.
 Append a size letter such as @samp{M} for megabytes to each size.  (SI
 is the International System of Units, which defines these letters as
 prefixes.)  Powers of 1000 are used, not 1024; @samp{M} stands for
-1,000,000 bytes.  Use the @samp{-h} or @samp{--human-readable} option if
+1,000,000 bytes.  Use the @option{-h} or @option{--human-readable} option if
 you prefer powers of 1024.
 
 @item -i
@@ -7334,7 +7336,7 @@ there are many or very busy filesystems.
 @opindex --type
 @cindex filesystem types, limiting output to certain
 Limit the listing to filesystems of type @var{fstype}.  Multiple
-filesystem types can be specified by giving multiple @samp{-t} options.
+filesystem types can be specified by giving multiple @option{-t} options.
 By default, nothing is omitted.
 
 @item -T
@@ -7343,7 +7345,7 @@ By default, nothing is omitted.
 @opindex --print-type
 @cindex filesystem types, printing
 Print each filesystem's type.  The types printed here are the same ones
-you can include or exclude with @samp{-t} and @samp{-x}.  The particular
+you can include or exclude with @option{-t} and @option{-x}.  The particular
 types printed are whatever is supported by the system.  Here are some of
 the common names (this list is certainly not exhaustive):
 
@@ -7388,7 +7390,7 @@ An MS-DOS filesystem, usually on a diskette.
 @opindex --exclude-type
 Limit the listing to filesystems not of type @var{fstype}.
 Multiple filesystem types can be eliminated by giving multiple
-@samp{-x} options.  By default, no filesystem types are omitted.
+@option{-x} options.  By default, no filesystem types are omitted.
 
 @item -v
 Ignored; for compatibility with System V versions of @code{df}.
@@ -7455,7 +7457,7 @@ are often symbolic links.
 @cindex human-readable output
 Append a size letter such as @samp{M} for megabytes to each size.
 Powers of 1024 are used, not 1000; @samp{M} stands for 1,048,576 bytes.
-Use the @samp{-H} or @samp{--si} option if you prefer powers of 1000.
+Use the @option{-H} or @option{--si} option if you prefer powers of 1000.
 
 @item -H
 @itemx --si
@@ -7465,7 +7467,7 @@ Use the @samp{-H} or @samp{--si} option if you prefer powers of 1000.
 Append a size letter such as @samp{M} for megabytes to each size.  (SI
 is the International System of Units, which defines these letters as
 prefixes.)  Powers of 1000 are used, not 1024; @samp{M} stands for
-1,000,000 bytes.  Use the @samp{-h} or @samp{--human-readable} option if
+1,000,000 bytes.  Use the @option{-h} or @option{--human-readable} option if
 you prefer powers of 1024.
 
 @item -k
@@ -7539,7 +7541,7 @@ end in @samp{.o}.
 @opindex -X @var{FILE}
 @opindex --exclude-from=@var{FILE}
 @cindex excluding files from @code{du}
-Like @samp{--exclude}, except take the patterns to exclude from @var{FILE},
+Like @option{--exclude}, except take the patterns to exclude from @var{FILE},
 one per line.  If @var{FILE} is @samp{-}, take the patterns from standard
 input.
 
@@ -7573,8 +7575,8 @@ reads and writes.  This improves performance, but if the computer
 crashes, data may be lost or the filesystem corrupted as a
 result. @code{sync} ensures everything in memory is written to disk.
 
-Any arguments are ignored, except for a lone @samp{--help} or
-@samp{--version} (@pxref{Common options}).
+Any arguments are ignored, except for a lone @option{--help} or
+@option{--version} (@pxref{Common options}).
 
 @node Printing text
 @chapter Printing text
@@ -7692,8 +7694,8 @@ use of @samp{\u} and @samp{\U} will give an error message.
 An additional escape, @samp{\c}, causes @code{printf} to produce no
 further output.
 
-The only options are a lone @samp{--help} or
-@samp{--version}.  @xref{Common options}.
+The only options are a lone @option{--help} or
+@option{--version}.  @xref{Common options}.
 
 The Unicode character syntaxes are useful for writing strings in a locale
 independent way. For example, a string containing the Euro currency symbol
@@ -7743,7 +7745,7 @@ $ recode BIG5..JAVA < sample.txt \
 followed by a newline, forever until it is killed.  If no arguments are
 given, it prints @samp{y} followed by a newline forever until killed.
 
-The only options are a lone @samp{--help} or @samp{--version}.
+The only options are a lone @option{--help} or @option{--version}.
 @xref{Common options}.
 
 
@@ -7779,10 +7781,10 @@ pipeline.
 @dfn{failure}.  It can be used as a place holder in shell scripts
 where an unsuccessful command is needed.
 
-By default, @code{false} honors the @samp{--help} and @samp{--version}
+By default, @code{false} honors the @option{--help} and @option{--version}
 options.  However, that is contrary to @sc{posix}, so when the environment
 variable @env{POSIXLY_CORRECT} is set, @code{false} ignores @emph{all}
-command line arguments, including @samp{--help} and @samp{--version}.
+command line arguments, including @option{--help} and @option{--version}.
 
 This version of @code{false} is implemented as a C program, and is thus
 more secure and faster than a shell script implementation, and may safely
@@ -7806,10 +7808,10 @@ In most modern shells, @code{true} is a built-in command, so when
 you use @samp{true} in a script, you're probably using the built-in
 command, not the one documented here.
 
-By default, @code{true} honors the @samp{--help} and @samp{--version}
+By default, @code{true} honors the @option{--help} and @option{--version}
 options.  However, that is contrary to @sc{posix}, so when the environment
 variable @env{POSIXLY_CORRECT} is set, @code{true} ignores @emph{all}
-command line arguments, including @samp{--help} and @samp{--version}.
+command line arguments, including @option{--help} and @option{--version}.
 
 This version of @code{true} is implemented as a C program, and is thus
 more secure and faster than a shell script implementation, and may safely
@@ -7836,8 +7838,8 @@ Because most shells have a built-in command by the same name, using the
 unadorned command name in a script or interactively may get you
 different functionality than that described here.
 
-Besides the options below, @code{test} accepts a lone @samp{--help} or
-@samp{--version}.  @xref{Common options}.  A single non-option argument
+Besides the options below, @code{test} accepts a lone @option{--help} or
+@option{--version}.  @xref{Common options}.  A single non-option argument
 is also allowed: @code{test} returns true if the argument is not null.
 
 @menu
@@ -8428,7 +8430,7 @@ If @var{suffix} is specified and is identical to the end of @var{name},
 it is removed from @var{name} as well.  @code{basename} prints the
 result on standard output.
 
-The only options are @samp{--help} and @samp{--version}.  @xref{Common
+The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
 
 
@@ -8450,7 +8452,7 @@ dirname @var{name}
 If @var{name} is a single component, @code{dirname} prints @samp{.}
 (meaning the current directory).
 
-The only options are @samp{--help} and @samp{--version}.  @xref{Common
+The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
 
 
@@ -8544,8 +8546,8 @@ Because most shells have a built-in command by the same name, using the
 unadorned command name in a script or interactively may get you
 different functionality than that described here.
 
-The only options are a lone @samp{--help} or
-@samp{--version}.  @xref{Common options}.
+The only options are a lone @option{--help} or
+@option{--version}.  @xref{Common options}.
 
 
 @node stty invocation
@@ -8569,7 +8571,7 @@ discipline number (on systems that support it), and line settings
 that have been changed from the values set by @samp{stty sane}.
 By default, mode reading and setting are performed on the tty line
 connected to standard input, although this can be modified by the
-@samp{--file} option.
+@option{--file} option.
 
 @code{stty} accepts many non-option arguments that change aspects of
 the terminal line operation, as described below.
@@ -9211,7 +9213,7 @@ If no @var{variable}s are specified, @code{printenv} prints the value of
 every environment variable.  Otherwise, it prints the value of each
 @var{variable} that is set, and nothing for those that are not set.
 
-The only options are a lone @samp{--help} or @samp{--version}.
+The only options are a lone @option{--help} or @option{--version}.
 @xref{Common options}.
 
 @cindex exit status of @code{printenv}
@@ -9360,7 +9362,7 @@ Print only the user id.
 @file{/etc/utmp} entry for the calling process, @code{logname} prints
 an error message and exits with a status of 1.
 
-The only options are @samp{--help} and @samp{--version}.  @xref{Common
+The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
 
 
@@ -9374,7 +9376,7 @@ options}.
 @code{whoami} prints the user name associated with the current
 effective user id.  It is equivalent to the command @samp{id -un}.
 
-The only options are @samp{--help} and @samp{--version}.  @xref{Common
+The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
 
 
@@ -9396,7 +9398,7 @@ groups [@var{username}]@dots{}
 
 The group lists are equivalent to the output of the command @samp{id -Gn}.
 
-The only options are @samp{--help} and @samp{--version}.  @xref{Common
+The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
 
 
@@ -9424,7 +9426,7 @@ With no @var{file} argument, @code{users} extracts its information from
 the file @file{/etc/utmp}.  If a file argument is given, @code{users}
 uses that file instead.  A common choice is @file{/etc/wtmp}.
 
-The only options are @samp{--help} and @samp{--version}.  @xref{Common
+The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
 
 
@@ -9616,7 +9618,7 @@ seconds since the epoch, i.e., 1 January 1970 00:00:00 UTC (a
 GNU extension).
 Note that this value is the number of seconds between the epoch
 and the current date as defined by the localtime system call.
-It isn't changed by the @samp{--date} option.
+It isn't changed by the @option{--date} option.
 @item %S
 second (00@dots{}60)
 @item %T
@@ -9626,12 +9628,12 @@ locale's time representation (%H:%M:%S)
 @item %z
 RFC-822 style numeric time zone (e.g., -0600 or +0100), or nothing if no
 time zone is determinable.  This value reflects the @emph{current} time
-zone.  It isn't changed by the @samp{--date} option.
+zone.  It isn't changed by the @option{--date} option.
 @item %Z
 time zone (e.g., EDT), or nothing if no time zone is
 determinable.
 Note that this value reflects the @emph{current} time zone.
-It isn't changed by the @samp{--date} option.
+It isn't changed by the @option{--date} option.
 @end table
 
 
@@ -9753,8 +9755,8 @@ date +%_d/%_m -d "Feb 1"
 If given an argument that does not start with @samp{+}, @code{date} sets
 the system clock to the time and date specified by that argument (as
 described below).  You must have appropriate privileges to set the
-system clock.  The @samp{--date} and @samp{--set} options may not be
-used with such an argument.  The @samp{--universal} option may be used
+system clock.  The @option{--date} and @option{--set} options may not be
+used with such an argument.  The @option{--universal} option may be used
 with such an argument to indicate that the specified time and date are
 relative to Coordinated Universal Time rather than to the local time
 zone.
@@ -9779,7 +9781,7 @@ last two digits of year (optional)
 second (optional)
 @end table
 
-The @samp{--set} option also sets the system clock; see the next section.
+The @option{--set} option also sets the system clock; see the next section.
 
 
 @node Options for date
@@ -9812,7 +9814,7 @@ format.  It can contain month names, time zones, @samp{am} and @samp{pm},
 @itemx --file=@var{datefile}
 @opindex -f
 @opindex --file
-Parse each line in @var{datefile} as with @samp{-d} and display the
+Parse each line in @var{datefile} as with @option{-d} and display the
 resulting time and date.  If @var{datefile} is @samp{-}, use standard
 input.  This is useful when you have many dates to process, because the
 system overhead of starting up the @code{date} executable many times can
@@ -9861,7 +9863,7 @@ time of @var{file}, instead of the current time and date.
 @itemx --set=@var{datestr}
 @opindex -s
 @opindex --set
-Set the time and date to @var{datestr}.  See @samp{-d} above.
+Set the time and date to @var{datestr}.  See @option{-d} above.
 
 @item -u
 @itemx --utc
@@ -9887,7 +9889,7 @@ historical reasons.
 
 @cindex examples of @code{date}
 
-Here are a few examples.  Also see the documentation for the @samp{-d}
+Here are a few examples.  Also see the documentation for the @option{-d}
 option in the previous section.
 
 @itemize @bullet
@@ -9952,7 +9954,7 @@ Mon, 25 Mar 1996 23:34:17 -0600
 
 @item
 To convert a date string to the number of seconds since the epoch
-(which is 1970-01-01 00:00:00 UTC), use the @samp{--date} option with
+(which is 1970-01-01 00:00:00 UTC), use the @option{--date} option with
 the @samp{%s} format.  That can be useful in sorting and/or graphing
 and/or comparing data by date.  The following command outputs the
 number of the seconds since the epoch for the time two minutes after the
@@ -10104,7 +10106,7 @@ name. Synopsis:
 hostname [@var{name}]
 @end example
 
-The only options are @samp{--help} and @samp{--version}.  @xref{Common
+The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
 
 
@@ -10116,7 +10118,7 @@ options}.
 
 @code{hostid} prints the numeric identifier of the current host
 in hexadecimal.  This command accepts no arguments.
-The only options are @samp{--help} and @samp{--version}.
+The only options are @option{--help} and @option{--version}.
 @xref{Common options}.
 
 For example, here's what it prints on one system I use:
@@ -10172,9 +10174,9 @@ directory structure, i.e., @file{/}.  @code{chroot} changes the root to
 the directory @var{newroot} (which must exist) and then runs
 @var{command} with optional @var{args}.  If @var{command} is not
 specified, the default is the value of the @env{SHELL} environment
-variable or @code{/bin/sh} if not set, invoked with the @samp{-i} option.
+variable or @code{/bin/sh} if not set, invoked with the @option{-i} option.
 
-The only options are @samp{--help} and @samp{--version}.  @xref{Common
+The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
 
 Here are a few tips to help avoid common problems in using chroot.
@@ -10337,7 +10339,7 @@ file already existed.
 background; you must do that explicitly, by ending the command line
 with an @samp{&}.
 
-The only options are @samp{--help} and @samp{--version}.  @xref{Common
+The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
 
 
@@ -10381,9 +10383,9 @@ By default, the shell is not a login shell.
 Any additional @var{arg}s are passed as additional arguments to the
 shell.
 
-@cindex @samp{-su}
+@cindex @option{-su}
 GNU @code{su} does not treat @file{/bin/sh} or any other shells specially
-(e.g., by setting @code{argv[0]} to @samp{-su}, passing @code{-c} only
+(e.g., by setting @code{argv[0]} to @option{-su}, passing @code{-c} only
 to certain shells, etc.).
 
 @findex syslog
@@ -10457,7 +10459,7 @@ overridden by @code{--login} and @code{--shell}.
 @opindex --shell
 Run @var{shell} instead of the shell from @var{user}'s passwd entry,
 unless the user running @code{su} is not the superuser and @var{user}'s
-shell is restricted (see @samp{-m} just above).
+shell is restricted (see @option{-m} just above).
 
 @end table
 
@@ -10534,7 +10536,7 @@ Historical implementations of @code{sleep} have required that
 @var{number} be an integer.  However, GNU @code{sleep} accepts
 arbitrary floating point numbers.
 
-The only options are @samp{--help} and @samp{--version}.  @xref{Common
+The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
 
 
@@ -10566,7 +10568,7 @@ factor @var{option}
 If no @var{number} is specified on the command line, @code{factor} reads
 numbers from standard input, delimited by newlines, tabs, or spaces.
 
-The only options are @samp{--help} and @samp{--version}.  @xref{Common
+The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
 
 The algorithm it uses is not very sophisticated, so for some inputs
@@ -10627,7 +10629,7 @@ The output always terminates with a newline.
 @item -w
 @itemx --equal-width
 Print all numbers with the same width, by padding with leading zeroes.
-(To have other kinds of padding, use @samp{--format}).
+(To have other kinds of padding, use @option{--format}).
 
 @end table
 
