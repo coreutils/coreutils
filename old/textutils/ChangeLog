@@ -1,3 +1,13 @@
+1999-01-16  Jim Meyering  <meyering@ascend.com>
+
+	* lib/argmatch.h (XARGMATCH): Define to return a value once again.
+	(XARGCASEMATCH): Likewise.
+
+	* lib/argmatch.c (ARGMATCH_DIE): Provide default.
+	(__xargmatch_internal): New function.
+	s/rogram_name/program_name.
+	From Akim Demaille.
+
 1999-01-14  Jim Meyering  <meyering@ascend.com>
 
 	* tests/md5sum/basic-1: Use `f', not `x' as temp. file name to avoid
@@ -10,7 +20,7 @@
 1999-01-14  Akim Demaille  <demaille@inf.enst.fr>
 
 	* acconfig.h: Add a @BOTTOM@ section.
-	(@BOTTOM@): Define ARGMATCH_EXIT_FAILURE.  Declare usage ().
+	(@BOTTOM@): Define ARGMATCH_DIE.  Declare usage ().
 	* src/*.c: Don't prototype usage as static.
 
 1999-01-10  Jim Meyering  <meyering@ascend.com>
