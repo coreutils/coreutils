@@ -2,6 +2,7 @@
 
 	* jm-macros.m4 (jm_MACROS): Invoke gl_MEMCOLL.
 	* memcoll.m4: New file, from gnulib.
+	Based on a patch from Andreas Schwab.
 
 2003-07-14  Jim Meyering  <jim@meyering.net>
 
