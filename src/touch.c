@@ -31,6 +31,7 @@
 #include "posixver.h"
 #include "quote.h"
 #include "safe-read.h"
+#include "utimens.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "touch"
@@ -72,7 +73,7 @@ static int posix_date;
 static int amtime_now;
 
 /* New time to use when setting time. */
-static time_t newtime;
+static struct timespec newtime;
 
 /* File to use for -r. */
 static char *ref_file;
@@ -173,7 +174,7 @@ touch (const char *file)
     }
   else
     {
-      struct utimbuf utb;
+      struct timespec timespec[2];
 
       /* There's currently no interface to set file timestamps with
 	 better than 1-second resolution, so discard any fractional
@@ -181,19 +182,27 @@ touch (const char *file)
 
       if (use_ref)
 	{
-	  utb.actime = ref_stats.st_atime;
-	  utb.modtime = ref_stats.st_mtime;
+	  timespec[0].tv_sec = ref_stats.st_atime;
+	  timespec[0].tv_nsec = TIMESPEC_NS (ref_stats.st_atim);
+	  timespec[1].tv_sec = ref_stats.st_mtime;
+	  timespec[1].tv_nsec = TIMESPEC_NS (ref_stats.st_mtim);
 	}
       else
-	utb.actime = utb.modtime = newtime;
+	timespec[0] = timespec[1] = newtime;
 
       if (!(change_times & CH_ATIME))
-	utb.actime = sbuf.st_atime;
+	{
+	  timespec[0].tv_sec = sbuf.st_atime;
+	  timespec[0].tv_nsec = TIMESPEC_NS (sbuf.st_atim);
+	}
 
       if (!(change_times & CH_MTIME))
-	utb.modtime = sbuf.st_mtime;
+	{
+	  timespec[1].tv_sec = sbuf.st_mtime;
+	  timespec[1].tv_nsec = TIMESPEC_NS (sbuf.st_mtim);
+	}
 
-      status = utime (file, &utb);
+      status = utimens (file, timespec);
     }
 
   if (status)
@@ -292,8 +301,9 @@ main (int argc, char **argv)
 
 	case 'd':
 	  flexible_date++;
-	  newtime = get_date (optarg, NULL);
-	  if (newtime == (time_t) -1)
+	  newtime.tv_sec = get_date (optarg, NULL);
+	  newtime.tv_nsec = 0; /* FIXME: get_date should set this.  */
+	  if (newtime.tv_sec == (time_t) -1)
 	    error (EXIT_FAILURE, 0, _("invalid date format %s"), quote (optarg));
 	  date_set++;
 	  break;
@@ -312,9 +322,10 @@ main (int argc, char **argv)
 
 	case 't':
 	  posix_date++;
-	  if (! posixtime (&newtime, optarg,
+	  if (! posixtime (&newtime.tv_sec, optarg,
 			   PDS_LEADING_YEAR | PDS_CENTURY | PDS_SECONDS))
 	    error (EXIT_FAILURE, 0, _("invalid date format %s"), quote (optarg));
+	  newtime.tv_nsec = 0;
 	  date_set++;
 	  break;
 
@@ -355,11 +366,12 @@ main (int argc, char **argv)
   if (!date_set && 2 <= argc - optind && !STREQ (argv[optind - 1], "--")
       && posix2_version () < 200112)
     {
-      if (posixtime (&newtime, argv[optind], PDS_TRAILING_YEAR))
+      if (posixtime (&newtime.tv_sec, argv[optind], PDS_TRAILING_YEAR))
 	{
+	  newtime.tv_nsec = 0;
 	  if (! getenv ("POSIXLY_CORRECT"))
 	    {
-	      struct tm const *tm = localtime (&newtime);
+	      struct tm const *tm = localtime (&newtime.tv_sec);
 	      error (0, 0,
 		     _("warning: `touch %s' is obsolete; use\
  `touch -t %04d%02d%02d%02d%02d.%02d'"),
@@ -377,7 +389,20 @@ main (int argc, char **argv)
       if ((change_times & (CH_ATIME | CH_MTIME)) == (CH_ATIME | CH_MTIME))
 	amtime_now = 1;
       else
-	time (&newtime);
+	{
+	  /* Get time of day, but only to microsecond resolution,
+	     since 'utimes' currently supports only microsecond
+	     resolution at best.  It would be cleaner here to invoke
+	     gettime, but then we would have to link in more shared
+	     libraries on platforms like Solaris, and we'd rather not
+	     have 'touch' depend on libraries that it doesn't
+	     need.  */
+	  struct timeval timeval;
+	  if (gettimeofday (&timeval, NULL) != 0)
+	    error (EXIT_FAILURE, errno, _("cannot get time of day"));
+	  newtime.tv_sec = timeval.tv_sec;
+	  newtime.tv_nsec = timeval.tv_usec * 1000;
+	}
     }
 
   if (optind == argc)
