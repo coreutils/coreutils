@@ -1,5 +1,7 @@
 1999-12-04  Jim Meyering  <meyering@ascend.com>
 
+	* Version 4.0k.
+
 	* tests/mv/into-self-2: Adapt to reflect this change in behavior.
 	Make sure the VERSION_CONTROL envvar is not set.
 	Run diff if comparison fails.
