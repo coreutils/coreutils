@@ -33,6 +33,7 @@
 #include "modechange.h"
 #include <sys/stat.h>
 #include "xstrtol.h"
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
 
@@ -220,12 +221,10 @@ mode_compile (const char *mode_string, unsigned int masked_ops)
       /* `affected_bits' modified by umask. */
       mode_t affected_masked;
       /* Operators to actually use umask on. */
-      unsigned ops_to_mask = 0;
+      unsigned int ops_to_mask = 0;
 
-      int who_specified_p;
+      bool who_specified_p;
 
-      affected_bits = 0;
-      ops_to_mask = 0;
       /* Turn on all the bits in `affected_bits' for each group given. */
       for (++mode_string;; ++mode_string)
 	switch (*mode_string)
@@ -250,10 +249,10 @@ mode_compile (const char *mode_string, unsigned int masked_ops)
       /* If none specified, affect all bits, except perhaps those
 	 set in the umask. */
       if (affected_bits)
-	who_specified_p = 1;
+	who_specified_p = true;
       else
 	{
-	  who_specified_p = 0;
+	  who_specified_p = false;
 	  affected_bits = CHMOD_MODE_BITS;
 	  ops_to_mask = masked_ops;
 	}
