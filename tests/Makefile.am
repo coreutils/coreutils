@@ -7,7 +7,8 @@ all_programs =								\
 
 TESTS = help-version
 TESTS_ENVIRONMENT = \
-  all_programs="`$(all_programs)`"
+  all_programs="`$(all_programs)`" \
+  PATH="`pwd`/../src$(PATH_SEPARATOR)$$PATH"
 
 EXTRA_DIST = \
   $(TESTS) .env-warn Fetish.pm Makefile.am.in README envvar-check \
