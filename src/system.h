@@ -287,7 +287,6 @@ char *getenv ();
 
 #ifdef __GNUC__
 # undef alloca
-# define alloca __builtin_alloca
 #else
 # ifdef HAVE_ALLOCA_H
 #  include <alloca.h>
