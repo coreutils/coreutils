@@ -180,18 +180,18 @@ am_libfetish_a_OBJECTS = acl.$(OBJEXT) getdate.$(OBJEXT) \
 	makepath.$(OBJEXT) mbswidth.$(OBJEXT) md5.$(OBJEXT) \
 	memcasecmp.$(OBJEXT) memcoll.$(OBJEXT) modechange.$(OBJEXT) \
 	offtostr.$(OBJEXT) path-concat.$(OBJEXT) physmem.$(OBJEXT) \
-	quote.$(OBJEXT) quotearg.$(OBJEXT) readtokens.$(OBJEXT) \
-	root-dev-ino.$(OBJEXT) safe-read.$(OBJEXT) \
-	safe-write.$(OBJEXT) same.$(OBJEXT) save-cwd.$(OBJEXT) \
-	savedir.$(OBJEXT) settime.$(OBJEXT) sha1.$(OBJEXT) \
-	stripslash.$(OBJEXT) time_r.$(OBJEXT) umaxtostr.$(OBJEXT) \
-	unicodeio.$(OBJEXT) userspec.$(OBJEXT) utimens.$(OBJEXT) \
-	version-etc.$(OBJEXT) xfts.$(OBJEXT) xgetcwd.$(OBJEXT) \
-	xgethostname.$(OBJEXT) xmalloc.$(OBJEXT) xmemcoll.$(OBJEXT) \
-	xnanosleep.$(OBJEXT) xreadlink.$(OBJEXT) xstrdup.$(OBJEXT) \
-	xstrndup.$(OBJEXT) xstrtod.$(OBJEXT) xstrtoimax.$(OBJEXT) \
-	xstrtol.$(OBJEXT) xstrtoul.$(OBJEXT) xstrtoumax.$(OBJEXT) \
-	yesno.$(OBJEXT)
+	quote.$(OBJEXT) quotearg.$(OBJEXT) readtokens0.$(OBJEXT) \
+	readtokens.$(OBJEXT) root-dev-ino.$(OBJEXT) \
+	safe-read.$(OBJEXT) safe-write.$(OBJEXT) same.$(OBJEXT) \
+	save-cwd.$(OBJEXT) savedir.$(OBJEXT) settime.$(OBJEXT) \
+	sha1.$(OBJEXT) stripslash.$(OBJEXT) time_r.$(OBJEXT) \
+	umaxtostr.$(OBJEXT) unicodeio.$(OBJEXT) userspec.$(OBJEXT) \
+	utimens.$(OBJEXT) version-etc.$(OBJEXT) xfts.$(OBJEXT) \
+	xgetcwd.$(OBJEXT) xgethostname.$(OBJEXT) xmalloc.$(OBJEXT) \
+	xmemcoll.$(OBJEXT) xnanosleep.$(OBJEXT) xreadlink.$(OBJEXT) \
+	xstrdup.$(OBJEXT) xstrndup.$(OBJEXT) xstrtod.$(OBJEXT) \
+	xstrtoimax.$(OBJEXT) xstrtol.$(OBJEXT) xstrtoul.$(OBJEXT) \
+	xstrtoumax.$(OBJEXT) yesno.$(OBJEXT)
 libfetish_a_OBJECTS = $(am_libfetish_a_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
@@ -261,6 +261,7 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/physmem.Po ./$(DEPDIR)/posixtm.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/posixver.Po ./$(DEPDIR)/quote.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/quotearg.Po ./$(DEPDIR)/readtokens.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/readtokens0.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/root-dev-ino.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/safe-read.Po ./$(DEPDIR)/safe-write.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/same.Po ./$(DEPDIR)/save-cwd.Po \
@@ -470,6 +471,7 @@ libfetish_a_SOURCES = \
   physmem.c physmem.h \
   quote.c quote.h \
   quotearg.c quotearg.h \
+  readtokens0.c readtokens0.h \
   readtokens.c readtokens.h \
   readutmp.h \
   regex.h \
@@ -706,6 +708,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/quote.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/quotearg.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/readtokens.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/readtokens0.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/root-dev-ino.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/safe-read.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/safe-write.Po@am__quote@

@@ -3,6 +3,8 @@
 # Convert Makefile.am files:
 #  find tests -name Makefile.am | xargs grep -wl PATH|xargs perl -pi -e \
 #    's,src(\$\(PATH_SEPARATOR\)\$\$PATH),src/vg$1,'
+# To restore:
+# find tests -name Makefile.am|xargs grep -wl PATH|xargs perl -pi -e 's,src/vg,src,'
 #
 # Create this symlink for suppressions:
 # ln -s $PWD/.vg-suppressions /tmp/cu-vg
