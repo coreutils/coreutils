@@ -81,6 +81,7 @@
 #include "path-concat.h"
 #include "cp-hash.h"
 #include "copy.h"
+#include "dirname.h"
 
 #if HAVE_SYS_WAIT_H
 # include <sys/wait.h>
@@ -127,7 +128,6 @@ gid_t getgid ();
 #endif
 
 char *base_name ();
-char *dirname ();
 int full_write ();
 int isdir ();
 enum backup_type get_version ();
@@ -411,7 +411,7 @@ install_file_to_path (const char *from, const char *to,
   char *dest_dir;
   int fail;
 
-  dest_dir = dirname (to);
+  dest_dir = dir_name (to);
 
   /* check to make sure this is a path (not install a b ) */
   if (!STREQ (dest_dir, ".")

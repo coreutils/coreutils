@@ -30,6 +30,7 @@
 #include "backupfile.h"
 #include "closeout.h"
 #include "error.h"
+#include "dirname.h"
 
 int link ();			/* Some systems don't declare this anywhere. */
 
@@ -58,7 +59,6 @@ int symlink ();
     while (0)
 
 char *base_name ();
-char *dirname ();
 enum backup_type get_version ();
 int isdir ();
 int yesno ();
@@ -131,8 +131,8 @@ same_name (const char *source, const char *dest)
   struct stat dest_dir_stats;
   char *source_dirname, *dest_dirname;
 
-  source_dirname = dirname (source);
-  dest_dirname = dirname (dest);
+  source_dirname = dir_name (source);
+  dest_dirname = dir_name (dest);
   if (source_dirname == NULL || dest_dirname == NULL)
     error (1, 0, _("virtual memory exhausted"));
 

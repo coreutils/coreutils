@@ -35,6 +35,7 @@
 #include "cp-hash.h"
 #include "copy.h"
 #include "error.h"
+#include "dirname.h"
 
 #ifndef _POSIX_VERSION
 uid_t geteuid ();
@@ -54,7 +55,6 @@ int stat ();
 int lstat ();
 
 char *base_name ();
-char *dirname ();
 enum backup_type get_version ();
 void strip_trailing_slashes ();
 char *xstrdup ();
@@ -308,7 +308,7 @@ make_path_private (const char *const_dirpath, int src_offset, int mode,
 
   src = dirpath + src_offset;
 
-  tmp_dst_dirname = dirname (dirpath);
+  tmp_dst_dirname = dir_name (dirpath);
   dst_dirname = (char *) alloca (strlen (tmp_dst_dirname) + 1);
   strcpy (dst_dirname, tmp_dst_dirname);
   free (tmp_dst_dirname);
@@ -444,7 +444,7 @@ do_copy (int argc, char **argv, const struct cp_options *x)
 	  char *arg;
 	  char *ap;
 	  char *dst_path;
-	  int parent_exists = 1; /* True if dirname (dst_path) exists. */
+	  int parent_exists = 1; /* True if dir_name (dst_path) exists. */
 	  struct dir_attr *attr_list;
 	  char *arg_in_concat = NULL;
 
@@ -460,7 +460,7 @@ do_copy (int argc, char **argv, const struct cp_options *x)
 		error (1, 0, _("virtual memory exhausted"));
 
 	      /* For --parents, we have to make sure that the directory
-	         dirname (dst_path) exists.  We may have to create a few
+	         dir_name (dst_path) exists.  We may have to create a few
 	         leading directories. */
 	      parent_exists = !make_path_private (dst_path,
 						  arg_in_concat - dst_path,

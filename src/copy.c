@@ -33,6 +33,7 @@
 #include "copy.h"
 #include "cp-hash.h"
 #include "path-concat.h"
+#include "dirname.h"
 
 #define DO_CHOWN(Chown, File, New_uid, New_gid)				\
   (Chown ((File), (x->myeuid == 0 ? (New_uid) : x->myeuid), (New_gid))	\
@@ -51,7 +52,6 @@ struct dir_list
 int full_write ();
 int euidaccess ();
 int yesno ();
-char *dirname ();
 
 static int copy_internal PARAMS ((const char *src_path, const char *dst_path,
 				  int new_dst, dev_t device,
@@ -700,7 +700,7 @@ copy_internal (const char *src_path, const char *dst_path,
 	  char *dst_parent;
 	  int in_current_dir;
 
-	  dst_parent = dirname (dst_path);
+	  dst_parent = dir_name (dst_path);
 	  if (dst_parent == NULL)
 	    error (1, 0, _("virtual memory exhausted"));
 

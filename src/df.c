@@ -35,8 +35,8 @@
 #include "closeout.h"
 #include "error.h"
 #include "human.h"
+#include "dirname.h"
 
-char *dirname ();
 void strip_trailing_slashes ();
 char *xstrdup ();
 char *xgetcwd ();
@@ -411,7 +411,7 @@ find_mount_point (const char *file, const struct stat *file_stat)
       char *dir;
 
       strip_trailing_slashes (tmp);
-      dir = dirname (tmp);
+      dir = dir_name (tmp);
       free (tmp);
       rv = chdir (dir);
       free (dir);
