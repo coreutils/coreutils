@@ -2,6 +2,9 @@
 
 	* Version 2.0g.
 
+	* doc/sh-utils.texi (chroot invocation): Include a couple tips and
+	a simple example.
+
 	* doc/getdate.texi (Calendar date item): Fix typos.
 	From Per Cederqvist.
 
