@@ -1,3 +1,9 @@
+1997-07-05  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/su.c: Redefine/undef getusershell around inclusion of <unistd.h>
+	(via system.h) so Cray's int-returning prototype doesn't conflict
+	with our char*-returning one.  Reported by Johan Danielsson.
+
 1997-07-04  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* tests/Makefile.am.in (Makefile.am): Clean up and enable rule to
