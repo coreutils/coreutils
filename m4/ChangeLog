@@ -1,3 +1,7 @@
+2004-06-07  Jim Meyering  <jim@meyering.net>
+
+	* jm-macros.m4 (gl_MACROS): Check for the directio function.
+
 2004-06-01  Jim Meyering  <jim@meyering.net>
 
 	* stdbool.m4: Update from gnulib.
