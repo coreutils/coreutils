@@ -169,10 +169,16 @@ int
 main (int argc, char **argv)
 {
   gid_t gid;
+
   /* Bit flags that control how fts works.  */
   int bit_flags = FTS_PHYSICAL;
+
+  /* 1 if --dereference, 0 if --no-dereference, -1 if neither has been
+     specified.  */
+  int dereference = -1;
+
   struct Chown_option chopt;
-  int fail = 0;
+  int fail;
   int optc;
 
   initialize_main (&argc, &argv);
@@ -194,7 +200,7 @@ main (int argc, char **argv)
 	  break;
 
 	case 'H': /* Traverse command-line symlinks-to-directories.  */
-	  bit_flags = FTS_COMFOLLOW;
+	  bit_flags = FTS_COMFOLLOW | FTS_PHYSICAL;
 	  break;
 
 	case 'L': /* Traverse all symlinks-to-directories.  */
@@ -206,12 +212,12 @@ main (int argc, char **argv)
 	  break;
 
 	case 'h': /* --no-dereference: affect symlinks */
-	  chopt.affect_symlink_referent = false;
+	  dereference = 0;
 	  break;
 
 	case DEREFERENCE_OPTION: /* --dereference: affect the referent
 				    of each symlink */
-	  chopt.affect_symlink_referent = true;
+	  dereference = 1;
 	  break;
 
 	case REFERENCE_FILE_OPTION:
@@ -241,6 +247,28 @@ main (int argc, char **argv)
 	}
     }
 
+  if (chopt.recurse)
+    {
+      if (bit_flags == FTS_PHYSICAL)
+	{
+	  if (dereference == 1)
+	    error (EXIT_FAILURE, 0,
+		   _("-R --dereference requires either -H or -L"));
+	  chopt.affect_symlink_referent = false;
+	}
+      else
+	{
+	  if (dereference == 0)
+	    error (EXIT_FAILURE, 0, _("-R -h requires -P"));
+	  chopt.affect_symlink_referent = true;
+	}
+    }
+  else
+    {
+      bit_flags = FTS_PHYSICAL;
+      chopt.affect_symlink_referent = (dereference != 0);
+    }
+
   if (argc - optind + (reference_file ? 1 : 0) <= 1)
     {
       error (0, 0, _("too few arguments"));
@@ -254,8 +282,8 @@ main (int argc, char **argv)
 	error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
 	       quote (reference_file));
 
-      chopt.group_name = gid_to_name (ref_stats.st_gid);
       gid = ref_stats.st_gid;
+      chopt.group_name = gid_to_name (ref_stats.st_gid);
     }
   else
     {
