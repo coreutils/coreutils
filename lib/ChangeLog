@@ -1,5 +1,9 @@
 2000-11-09  Paul Eggert  <eggert@twinsun.com>
 
+	* lib/unicodeio.c (ENOTSUP): Define to EINVAL if not defined.
+
+2000-11-09  Paul Eggert  <eggert@twinsun.com>
+
 	* lib/unicodeio.c (MB_LEN_MAX): Make sure it's at least 6,
 	to avoid buggy C libraries.
 
