@@ -1,3 +1,11 @@
+1999-02-13  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* src/install.c (main): Set x.backup_type only if backups are requested.
+	(cp_option_init): Initialize backup_type.
+	(backup_type): Remove unused variable.
+
+	* doc/fileutils.texi: Fix use of @item vs @itemx.
+
 1999-02-08  Jim Meyering  <meyering@ascend.com>
 
 	* src/dircolors.c (slack_codes): Add "DOOR".
