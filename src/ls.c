@@ -108,6 +108,7 @@ int wcwidth ();
 #include "hash.h"
 #include "human.h"
 #include "filemode.h"
+#include "inttostr.h"
 #include "ls.h"
 #include "mbswidth.h"
 #include "obstack.h"
@@ -469,9 +470,14 @@ static int numeric_ids;
 
 static int print_block_size;
 
-/* If positive, the units to use when printing sizes;
-   if negative, the human-readable base.  */
-static int output_block_size;
+/* Human-readable options for output.  */
+static int human_output_opts;
+
+/* The units to use when printing sizes other than file sizes.  */
+static uintmax_t output_block_size;
+
+/* Likewise, but for file sizes.  */
+static uintmax_t file_output_block_size = 1;
 
 /* Precede each line of long output (per file) with a string like `m,n:'
    where M is the number of characters after the `:' and before the
@@ -1237,7 +1243,13 @@ decode_switches (int argc, char **argv)
       }
   }
 
-  human_block_size (getenv ("LS_BLOCK_SIZE"), 0, &output_block_size);
+  {
+    char const *ls_block_size = getenv ("LS_BLOCK_SIZE");
+    human_output_opts = human_options (ls_block_size, false,
+				       &output_block_size);
+    if (ls_block_size || getenv ("BLOCK_SIZE"))
+      file_output_block_size = output_block_size;
+  }
 
   line_length = 80;
   {
@@ -1335,7 +1347,8 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 'h':
-	  output_block_size = -1024;
+	  human_output_opts = human_autoscale | human_SI | human_base_1024;
+	  file_output_block_size = output_block_size = 1;
 	  break;
 
 	case 'i':
@@ -1343,7 +1356,8 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 'k':
-	  output_block_size = 1024;
+	  human_output_opts = 0;
+	  file_output_block_size = output_block_size = 1024;
 	  break;
 
 	case 'l':
@@ -1559,11 +1573,13 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case BLOCK_SIZE_OPTION:
-	  human_block_size (optarg, 1, &output_block_size);
+	  human_output_opts = human_options (optarg, true, &output_block_size);
+	  file_output_block_size = output_block_size;
 	  break;
 
 	case SI_OPTION:
-	  output_block_size = -1000;
+	  human_output_opts = human_autoscale | human_SI;
+	  file_output_block_size = output_block_size = 1;
 	  break;
 
 	case_GETOPT_HELP_CHAR;
@@ -2145,8 +2161,8 @@ print_dir (const char *name, const char *realname)
       p = _("total");
       DIRED_FPUTS (p, stdout, strlen (p));
       DIRED_PUTCHAR (' ');
-      p = human_readable_inexact (total_blocks, buf, ST_NBLOCKSIZE,
-				  output_block_size, human_ceiling);
+      p = human_readable (total_blocks, buf, human_output_opts,
+			  ST_NBLOCKSIZE, output_block_size);
       DIRED_FPUTS (p, stdout, strlen (p));
       DIRED_PUTCHAR ('\n');
     }
@@ -2332,9 +2348,8 @@ gobble_file (const char *name, enum filetype type, int explicit_arg,
       blocks = ST_NBLOCKS (files[files_index].stat);
       {
 	char buf[LONGEST_HUMAN_READABLE + 1];
-	int len = strlen (human_readable_inexact (blocks, buf, ST_NBLOCKSIZE,
-						  output_block_size,
-						  human_ceiling));
+	int len = strlen (human_readable (blocks, buf, human_output_opts,
+					  ST_NBLOCKSIZE, output_block_size));
 	if (block_size_size < len)
 	  block_size_size = len < 7 ? len : 7;
       }
@@ -2841,8 +2856,7 @@ print_long_format (const struct fileinfo *f)
   if (print_inode)
     {
       char hbuf[LONGEST_HUMAN_READABLE + 1];
-      sprintf (p, "%*s ", INODE_DIGITS,
-	       human_readable ((uintmax_t) f->stat.st_ino, hbuf, 1, 1));
+      sprintf (p, "%*s ", INODE_DIGITS, umaxtostr (f->stat.st_ino, hbuf));
       p += strlen (p);
     }
 
@@ -2850,9 +2864,8 @@ print_long_format (const struct fileinfo *f)
     {
       char hbuf[LONGEST_HUMAN_READABLE + 1];
       sprintf (p, "%*s ", block_size_size,
-	       human_readable_inexact ((uintmax_t) ST_NBLOCKS (f->stat), hbuf,
-				       ST_NBLOCKSIZE, output_block_size,
-				       human_ceiling));
+	       human_readable (ST_NBLOCKS (f->stat), hbuf, human_output_opts,
+			       ST_NBLOCKSIZE, output_block_size));
       p += strlen (p);
     }
 
@@ -2892,8 +2905,8 @@ print_long_format (const struct fileinfo *f)
       size += (f->stat.st_size < 0) * ((uintmax_t) OFF_T_MAX - OFF_T_MIN + 1);
 
       sprintf (p, "%8s ",
-	       human_readable (size, hbuf, 1,
-			       output_block_size < 0 ? output_block_size : 1));
+	       human_readable (size, hbuf, human_output_opts,
+			       1, file_output_block_size));
     }
 
   p += strlen (p);
@@ -2951,19 +2964,11 @@ print_long_format (const struct fileinfo *f)
     {
       /* The time cannot be represented as a local time;
 	 print it as a huge integer number of seconds.  */
-      char hbuf[LONGEST_HUMAN_READABLE + 1];
-      int width = long_time_expected_width ();
-
-      if (when < 0)
-	{
-	  const char *num = human_readable (- (uintmax_t) when, hbuf, 1, 1);
-	  int sign_width = width - strlen (num);
-	  sprintf (p, "%*s%s ", sign_width < 0 ? 0 : sign_width, "-", num);
-	}
-      else
-	sprintf (p, "%*s ", width,
-		 human_readable ((uintmax_t) when, hbuf, 1, 1));
-
+      char hbuf[INT_BUFSIZE_BOUND (intmax_t)];
+      sprintf (p, "%*s ", long_time_expected_width (),
+	       (TYPE_SIGNED (time_t)
+		? imaxtostr (when, hbuf)
+		: umaxtostr (when, hbuf)));
       p += strlen (p);
     }
 
@@ -3183,17 +3188,15 @@ prep_non_filename_text (void)
 static void
 print_file_name_and_frills (const struct fileinfo *f)
 {
-  char buf[LONGEST_HUMAN_READABLE + 1];
+  char buf[MAX (LONGEST_HUMAN_READABLE + 1, INT_BUFSIZE_BOUND (uintmax_t))];
 
   if (print_inode)
-    printf ("%*s ", INODE_DIGITS,
-	    human_readable ((uintmax_t) f->stat.st_ino, buf, 1, 1));
+    printf ("%*s ", INODE_DIGITS, umaxtostr (f->stat.st_ino, buf));
 
   if (print_block_size)
     printf ("%*s ", block_size_size,
-	    human_readable_inexact ((uintmax_t) ST_NBLOCKS (f->stat), buf,
-				    ST_NBLOCKSIZE, output_block_size,
-				    human_ceiling));
+	    human_readable (ST_NBLOCKS (f->stat), buf, human_output_opts,
+			    ST_NBLOCKSIZE, output_block_size));
 
   print_name_with_quoting (f->name, FILE_OR_LINK_MODE (f), f->linkok, NULL);
 
