@@ -59,8 +59,7 @@
 # define __P(args) ()
 #endif
 
-#if _LIBC
-/* GNU C Library has a correct tolower() function.  */
+#if _LIBC || STDC_HEADERS
 # define TOLOWER(c) tolower (c)
 #else
 # define TOLOWER(c) (ISUPPER (c) ? tolower (c) : (c))
@@ -299,8 +298,6 @@ md5_check (checkfile_name)
 	    {
 	      fp = fopen (filename, OPENOPTS);
 	      if (fp == NULL)
-		/* The text of this sometimes message completes the
-		   message given above.  */
 		error (EXIT_FAILURE, errno, "%s", filename);
 	    }
 
