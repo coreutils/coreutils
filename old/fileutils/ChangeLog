@@ -1,3 +1,36 @@
+1997-10-23  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/system.h [!HAVE_DECLARATION_FREE]: Declare free.
+	[!HAVE_DECLARATION_MALLOC]: Declare malloc.
+	[!HAVE_DECLARATION_REALLOC]: Declare realloc.
+	[!HAVE_DECLARATION_STPCPY]: Declare stpcpy.
+	[!HAVE_DECLARATION_STRSTR]: Declare strstr.
+	* src/copy.c: Remove stpcpy decl.
+	* src/cp.c: Likewise.
+	* src/install.c: Likewise.
+	* src/ln.c: Likewise.
+	* src/ls.c: Likewise.
+	* src/dircolors.c: Remove free and malloc decls.
+	* src/ls.c: Likewise.
+	* src/rm.c: Likewise.
+	On some systems, strstr and stpcpy are macros, so declaring them
+	unconditionally gets syntax errors.
+	Reported by Mark M. Kettenis.
+
+	* configure.in: Use jm_CHECK_DECLS.
+	* m4/Makefile.am (EXTRA_DIST): Add decl.m4 and do-decl.m4.
+
+1997-10-22  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* m4/decl.m4: New file.
+	* m4/do-decl.m4: New file.  New macro, jm_CHECK_DECLS.
+
+1997-10-18  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/rm.c (remove_cwd_entries): Entries in table of processed dir
+	entries are not malloc'd, so don't have hash cleanup free them.
+	Rewind dirp upon NULL readdir, required for at least SunOS.
+
 1997-10-13  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in (AC_CHECK_HEADERS): Add termios.h.
