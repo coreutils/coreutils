@@ -1,6 +1,9 @@
 2000-09-22  Jim Meyering  <meyering@lucent.com>
 
-	* src/install.c (cp_option_init):
+	* src/install.c (cp_option_init): Once again make it so install always
+	unlinks an existing destination before trying to open it for writing.
+	Otherwise, installing onto a running shared library would make the
+	running program malfunction.
 	Reported by Dan Pascu via Michael Stone.
 
 	* src/mv.c (do_move): Moving a directory specified with a trailing
