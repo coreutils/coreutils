@@ -1,3 +1,14 @@
+1999-05-05  Jim Meyering  <meyering@ascend.com>
+
+	* src/date.c (show_date): Change an automatic aggregate initializer
+	to be a static one.  For SunOS4's cc.  From Kaveh Ghazi.
+
+1999-05-03  Jim Meyering  <meyering@ascend.com>
+
+	* configure.in: Remove duplicate use of jm_FUNC_GNU_STRFTIME.
+	Kaveh Ghazi reported that strftime.o was listed twice in the command
+	to build libsu.a.
+
 1999-05-02  Jim Meyering  <meyering@ascend.com>
 
 	* Version 1.16h.
