@@ -117,7 +117,7 @@ am__include = @am__include@
 am__quote = @am__quote@
 install_sh = @install_sh@
 
-EXTRA_DIST = lib-ld.m4 lib-link.m4 lib-prefix.m4  \
+EXTRA_DIST = \
   README jm-glibc-io.m4 jm-glibc-io.m4n Makefile.am.in \
 afs.m4 \
 assert.m4 \
@@ -158,6 +158,9 @@ jm-winsz2.m4 \
 lchown.m4 \
 lcmessage.m4 \
 lib-check.m4 \
+lib-ld.m4 \
+lib-link.m4 \
+lib-prefix.m4 \
 link-follow.m4 \
 longlong.m4 \
 ls-mntd-fs.m4 \

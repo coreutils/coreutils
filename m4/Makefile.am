@@ -42,6 +42,9 @@ jm-winsz2.m4 \
 lchown.m4 \
 lcmessage.m4 \
 lib-check.m4 \
+lib-ld.m4 \
+lib-link.m4 \
+lib-prefix.m4 \
 link-follow.m4 \
 longlong.m4 \
 ls-mntd-fs.m4 \
