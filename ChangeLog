@@ -2,6 +2,8 @@
 
 	* Version 4.5.4.
 
+	* Makefile.maint (automake_repo): Use anoncvs@subversions.gnu.org.
+
 	* tests/misc/Makefile.am (TESTS): Add printf-hex.
 
 	* tests/misc/printf: Be careful to test the code in this package,
