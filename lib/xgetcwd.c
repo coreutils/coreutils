@@ -59,7 +59,7 @@ xgetcwd ()
 
   while (1)
     {
-      char *ret;
+      char *cwd;
       buf = (char *) xrealloc (buf, buf_size);
 
       cwd = getcwd (buf, buf_size);
