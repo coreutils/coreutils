@@ -1,5 +1,8 @@
 2000-08-26  Jim Meyering  <meyering@lucent.com>
 
+	* closeout.c: Include "__fpending.h".
+	(close_stdout_status): Return right away if there's nothing to flush.
+
 	* Makefile.am (noinst_HEADERS): Add __fpending.h.
 	* __fpending.c: New file.
 	* __fpending.h: New file.
