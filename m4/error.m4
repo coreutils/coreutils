@@ -1,4 +1,4 @@
-strerror_r
+#serial 1
 
 dnl These are the prerequisite macros for GNU's error.c file.
 AC_DEFUN(jm_PREREQ_ERROR,
