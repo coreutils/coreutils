@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2003-10-07.17}
+\def\texinfoversion{2003-10-09.06}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
@@ -254,7 +254,7 @@
                    % the page break happens to be in the middle of an example.
     \shipout\vbox{%
       % Do this early so pdf references go to the beginning of the page.
-      \ifpdfmakepagedest \pdfmkdest{\the\pageno}\fi
+      \ifpdfmakepagedest \pdfdest name{\the\pageno} xyz\fi
       %
       \ifcropmarks \vbox to \outervsize\bgroup
         \hsize = \outerhsize
@@ -1091,7 +1091,13 @@ where each line of input produces a line of output.}
     \ifnum\pdftexversion < 14 \else
       \pdfrefximage \pdflastximage
     \fi}
-  \def\pdfmkdest#1{{\normalturnoffactive \pdfdest name{#1} xyz}}
+  \def\pdfmkdest#1{{%
+    % We have to set dummies so commands such as @code in a section title
+    % aren't expanded.
+    \atdummies
+    \normalturnoffactive
+    \pdfdest name{#1} xyz%
+  }}
   \def\pdfmkpgn#1{#1}
   \let\linkcolor = \Blue  % was Cyan, but that seems light?
   \def\endlink{\Black\pdfendlink}
@@ -1334,7 +1340,7 @@ where each line of input produces a line of output.}
 \font\textsy=cmsy10 scaled \mainmagstep
 
 % A few fonts for @defun, etc.
-\setfont\defbf\bfshape{10}{\magstep1} %was 1314
+\setfont\defbf\bfshape{10}{\magstep1}
 \setfont\deftt\ttshape{10}{\magstep1}
 \def\df{\let\tentt=\deftt \let\tenbf = \defbf \bf}
 
@@ -3199,7 +3205,7 @@ width0pt\relax} \fi
   \temp
 }
 
-%  Take care of unwanted page breaks:
+% Take care of unwanted page breaks:
 %
 % If a skip is the last thing on the list now, preserve it
 % by backing up by \lastskip, doing the \write, then inserting
@@ -3718,7 +3724,10 @@ width0pt\relax} \fi
 \outer\def\chapter{\parsearg\chapteryyy}
 \def\chapteryyy#1{\numhead0{#1}} % normally numhead0 calls chapterzzz
 \def\chapterzzz#1{%
-  \secno=0 \subsecno=0 \subsubsecno=0  \advance\chapno by 1
+  % section resetting is \global in case the chapter is in a group, such
+  % as an @include file.
+  \global\secno=0 \global\subsecno=0 \global\subsubsecno=0
+    \global\advance\chapno by 1
   \message{\putwordChapter\space \the\chapno}%
   %
   % Write the actual heading.
@@ -3733,7 +3742,8 @@ width0pt\relax} \fi
 \outer\def\appendix{\parsearg\appendixyyy}
 \def\appendixyyy#1{\apphead0{#1}} % normally apphead0 calls appendixzzz
 \def\appendixzzz#1{%
-  \secno=0 \subsecno=0 \subsubsecno=0  \advance\appendixno by 1
+  \global\secno=0 \global\subsecno=0 \global\subsubsecno=0
+    \global\advance\appendixno by 1
   \def\appendixnum{\putwordAppendix\space \appendixletter}%
   \message{\appendixnum}%
   \chapmacro{#1}{Yappendix}{\appendixletter}%
@@ -3752,7 +3762,8 @@ width0pt\relax} \fi
 \outer\def\unnumbered{\parsearg\unnumberedyyy}
 \def\unnumberedyyy#1{\unnmhead0{#1}} % normally unnmhead0 calls unnumberedzzz
 \def\unnumberedzzz#1{%
-  \secno=0 \subsecno=0 \subsubsecno=0  \advance\unnumberedno by 1
+  \global\secno=0 \global\subsecno=0 \global\subsubsecno=0
+    \global\advance\unnumberedno by 1
   %
   % This used to be simply \message{#1}, but TeX fully expands the
   % argument to \message.  Therefore, if #1 contained @-commands, TeX
@@ -3778,7 +3789,7 @@ width0pt\relax} \fi
 \outer\def\numberedsec{\parsearg\secyyy}
 \def\secyyy#1{\numhead1{#1}} % normally calls seczzz
 \def\seczzz#1{%
-  \subsecno=0 \subsubsecno=0  \advance\secno by 1
+  \global\subsecno=0 \global\subsubsecno=0  \global\advance\secno by 1
   \sectionheading{#1}{sec}{Ynumbered}{\the\chapno.\the\secno}%
 }
 
@@ -3786,14 +3797,14 @@ width0pt\relax} \fi
 \outer\def\appendixsec{\parsearg\appendixsecyyy}
 \def\appendixsecyyy#1{\apphead1{#1}} % normally calls appendixsectionzzz
 \def\appendixsectionzzz#1{%
-  \subsecno=0 \subsubsecno=0  \advance\secno by 1
+  \global\subsecno=0 \global\subsubsecno=0  \global\advance\secno by 1
   \sectionheading{#1}{sec}{Yappendix}{\appendixletter.\the\secno}%
 }
 
 \outer\def\unnumberedsec{\parsearg\unnumberedsecyyy}
 \def\unnumberedsecyyy#1{\unnmhead1{#1}} % normally calls unnumberedseczzz
 \def\unnumberedseczzz#1{%
-  \subsecno=0 \subsubsecno=0  \advance\secno by 1
+  \global\subsecno=0 \global\subsubsecno=0  \global\advance\secno by 1
   \sectionheading{#1}{sec}{Ynothing}{\the\unnumberedno.\the\secno}%
 }
 
@@ -3801,14 +3812,14 @@ width0pt\relax} \fi
 \outer\def\numberedsubsec{\parsearg\numberedsubsecyyy}
 \def\numberedsubsecyyy#1{\numhead2{#1}} % normally calls numberedsubseczzz
 \def\numberedsubseczzz#1{%
-  \subsubsecno=0  \advance\subsecno by 1
+  \global\subsubsecno=0  \global\advance\subsecno by 1
   \sectionheading{#1}{subsec}{Ynumbered}{\the\chapno.\the\secno.\the\subsecno}%
 }
 
 \outer\def\appendixsubsec{\parsearg\appendixsubsecyyy}
 \def\appendixsubsecyyy#1{\apphead2{#1}} % normally calls appendixsubseczzz
 \def\appendixsubseczzz#1{%
-  \subsubsecno=0  \advance\subsecno by 1
+  \global\subsubsecno=0  \global\advance\subsecno by 1
   \sectionheading{#1}{subsec}{Yappendix}%
                  {\appendixletter.\the\secno.\the\subsecno}%
 }
@@ -3816,7 +3827,7 @@ width0pt\relax} \fi
 \outer\def\unnumberedsubsec{\parsearg\unnumberedsubsecyyy}
 \def\unnumberedsubsecyyy#1{\unnmhead2{#1}} %normally calls unnumberedsubseczzz
 \def\unnumberedsubseczzz#1{%
-  \subsubsecno=0  \advance\subsecno by 1
+  \global\subsubsecno=0  \global\advance\subsecno by 1
   \sectionheading{#1}{subsec}{Ynothing}%
                  {\the\unnumberedno.\the\secno.\the\subsecno}%
 }
@@ -3825,7 +3836,7 @@ width0pt\relax} \fi
 \outer\def\numberedsubsubsec{\parsearg\numberedsubsubsecyyy}
 \def\numberedsubsubsecyyy#1{\numhead3{#1}} % normally numberedsubsubseczzz
 \def\numberedsubsubseczzz#1{%
-  \advance\subsubsecno by 1
+  \global\advance\subsubsecno by 1
   \sectionheading{#1}{subsubsec}{Ynumbered}%
                  {\the\chapno.\the\secno.\the\subsecno.\the\subsubsecno}%
 }
@@ -3833,7 +3844,7 @@ width0pt\relax} \fi
 \outer\def\appendixsubsubsec{\parsearg\appendixsubsubsecyyy}
 \def\appendixsubsubsecyyy#1{\apphead3{#1}} % normally appendixsubsubseczzz
 \def\appendixsubsubseczzz#1{%
-  \advance\subsubsecno by 1
+  \global\advance\subsubsecno by 1
   \sectionheading{#1}{subsubsec}{Yappendix}%
                  {\appendixletter.\the\secno.\the\subsecno.\the\subsubsecno}%
 }
@@ -3841,7 +3852,7 @@ width0pt\relax} \fi
 \outer\def\unnumberedsubsubsec{\parsearg\unnumberedsubsubsecyyy}
 \def\unnumberedsubsubsecyyy#1{\unnmhead3{#1}} %normally unnumberedsubsubseczzz
 \def\unnumberedsubsubseczzz#1{%
-  \advance\subsubsecno by 1
+  \global\advance\subsubsecno by 1
   \sectionheading{#1}{subsubsec}{Ynothing}%
                  {\the\unnumberedno.\the\secno.\the\subsecno.\the\subsubsecno}%
 }
@@ -3966,9 +3977,8 @@ width0pt\relax} \fi
     \chapfonts \rm
     %
     % Have to define \thissection before calling \donoderef, because the
-    % xref code eventually uses it, as \Ytitle.  On the other hand, it
-    % has to be called after \pchapsepmacro, or the headline will change
-    % too soon.
+    % xref code eventually uses it.  On the other hand, it has to be called
+    % after \pchapsepmacro, or the headline will change too soon.
     \gdef\thissection{#1}%
     \gdef\thischaptername{#1}%
     %
@@ -5842,7 +5852,7 @@ width0pt\relax} \fi
 % 
 \def\donoderef#1{%
   \ifx\lastnode\empty\else
-    \expandafter\expandafter\expandafter\setref{\lastnode}{#1}%
+    \setref{\lastnode}{#1}%
     \global\let\lastnode=\empty
   \fi
 }
@@ -5860,24 +5870,27 @@ width0pt\relax} \fi
 % NAME-pg (the page number), and NAME-snt (section number and type).
 % Called from \foonoderef.
 % 
-% We have to set dummies so commands such as @code in a section title
-% aren't expanded.  It would be nicer not to expand the titles in the
-% first place, but that is hard to do.
+% We take care not to expand the title.
 %
-% Likewise, use \turnoffactive so that punctuation chars such as underscore
+% Use \turnoffactive so that punctuation chars such as underscore
 % and backslash work in node names.
 %
-\def\setref#1#2{{%
-  \atdummies
+\def\setref#1#2{%
   \pdfmkdest{#1}%
-  %
   \iflinks
-    \turnoffactive
-    \dosetq{#1-title}{Ytitle}%
-    \dosetq{#1-pg}{Ypagenumber}%
-    \dosetq{#1-snt}{#2}%
+    {%
+      \turnoffactive
+      \edef\writexrdef##1##2{%
+	\write\auxfile{@xrdef{#1-% #1 of \setref, expanded by the \edef
+	  ##1}{##2}}% these are parameters of \writexrdef
+      }
+      \toks0 = \expandafter{\thissection}
+      \immediate \writexrdef{title}{\the\toks0 }%
+      \immediate \writexrdef{snt}{\csname #2\endcsname}% \Ynumbered etc.
+      \writexrdef{pg}{\folio}% will be written later, during \shipout
+    }%
   \fi
-}}
+}
 
 % @xref, @pxref, and @ref generate cross-references.  For \xrefX, #1 is
 % the node name, #2 the name of the Info cross-reference, #3 the printed
@@ -5970,21 +5983,8 @@ width0pt\relax} \fi
 %
 \def\xrefprintnodename#1{[#1]}
 
-% \dosetq is called from \setref to do the actual \write (\iflinks).
+% Things referred to by \setref.
 %
-\def\dosetq#1#2{%
-  \edef\next{\write\auxfile{\internalsetq{#1}{#2}}}%
-  \next
-}
-
-% \internalsetq{foo}{page} expands into
-%   CHARACTERS @xrdef{foo}{...expansion of \page...}
-\def\internalsetq#1#2{@xrdef{#1}{\csname #2\endcsname}}
-
-% Things to be expanded by \internalsetq.
-%
-\def\Ypagenumber{\noexpand\folio}
-\def\Ytitle{\thissection}
 \def\Ynothing{}
 \def\Yomitfromtoc{}
 \def\Ynumbered{%
@@ -6734,3 +6734,7 @@ should work if nowhere else does.}
 @c time-stamp-format: "%:y-%02m-%02d.%02H"
 @c time-stamp-end: "}"
 @c End:
+
+@ignore
+   arch-tag: e1b36e32-c96e-4135-a41a-0b2efa2ea115
+@end ignore
