@@ -14,6 +14,7 @@ AC_DEFUN(jm_MACROS,
   AC_SUBST(OPTIONAL_BIN_PROGS)
   AC_SUBST(OPTIONAL_BIN_ZCRIPTS)
   AC_SUBST(MAN)
+  AC_SUBST(DF_PROG)
 
   dnl This macro actually runs replacement code.  See isc-posix.m4.
   AC_REQUIRE([AC_ISC_POSIX])dnl
