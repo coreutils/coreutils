@@ -32,6 +32,7 @@ AM_CPPFLAGS = -I.. -I$(srcdir) -I$(top_srcdir)/lib -I../lib
 # replacement functions defined in libfetish.a.
 LDADD = ../lib/libfetish.a $(LIBINTL) ../lib/libfetish.a
 
+# for clock_gettime
 dir_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
 ls_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
 shred_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
@@ -40,8 +41,9 @@ vdir_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
 ## If necessary, add -lm to resolve use of pow in lib/strtod.c.
 sort_LDADD = $(LDADD) $(POW_LIB)
 
-# for clock_gettime
+# for get_date and gettime
 date_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
+touch_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
 
 # For sqrt
 factor_LDADD = $(LDADD) $(SQRT_LIBM)
