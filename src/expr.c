@@ -71,7 +71,6 @@ static char **args;
 char *program_name;
 
 char *xstrdup ();
-char *xmalloc ();
 
 static VALUE *docolon __P ((VALUE *sv, VALUE *pv));
 static VALUE *eval __P ((void));

@@ -102,8 +102,6 @@ extern uid_t geteuid ();
 # define test_exit(val) test_error_return = val, longjmp (test_exit_buf, 1)
 #endif /* !TEST_STANDALONE */
 
-char *xrealloc ();
-
 static int pos;		/* The offset of the current argument in ARGV. */
 static int argc;	/* The number of arguments present in ARGV. */
 static char **argv;	/* The argument list. */

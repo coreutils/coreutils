@@ -63,8 +63,6 @@ unsigned long int strtoul ();
 		     (c) >= 'A' && (c) <= 'F' ? (c) - 'A' + 10 : (c) - '0')
 #define octtobin(c) ((c) - '0')
 
-char *xmalloc ();
-
 /* The value to return to the calling program.  */
 static int exit_status;
 

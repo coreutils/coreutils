@@ -36,8 +36,6 @@ time_t time ();
 int putenv ();
 int stime ();
 
-char *xrealloc ();
-char *xmalloc ();
 char *xstrdup ();
 time_t posixtime ();
 

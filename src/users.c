@@ -24,8 +24,6 @@
 #include "error.h"
 #include "readutmp.h"
 
-char *xmalloc ();
-
 /* The name this program was run with. */
 char *program_name;
 

@@ -147,8 +147,6 @@ void endusershell ();
 void setusershell ();
 
 char *base_name ();
-char *xmalloc ();
-char *xrealloc ();
 char *xstrdup ();
 
 extern char **environ;

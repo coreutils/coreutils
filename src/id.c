@@ -1,5 +1,5 @@
 /* id -- print real and effective UIDs and GIDs
-   Copyright (C) 1989-1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1989-1995, 1996, 1997 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -42,7 +42,6 @@ gid_t getegid ();
 # include <sys/param.h>
 #endif /* not _POSIX_VERSION */
 
-char *xmalloc ();
 int getugroups ();
 
 static void print_user __P ((int uid));

@@ -26,7 +26,6 @@
 #include "system.h"
 #include "error.h"
 
-char *xmalloc ();
 int full_write ();
 
 static int tee __P ((int nfiles, const char **files));

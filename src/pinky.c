@@ -35,7 +35,6 @@
 
 int gethostname ();
 char *ttyname ();
-char *xmalloc ();
 
 /* The name this program was run with. */
 const char *program_name;
