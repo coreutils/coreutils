@@ -77,14 +77,14 @@ static void
 usage (int status)
 {
   if (status != 0)
-    (void) fprintf (stderr, _("Try `%s --help' for more information.\n"),
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 		    program_name);
   else
     {
-      (void) printf (_("\
+      printf (_("\
 Usage: %s [OPTION]... [FIRST [INCREMENT]] LAST\n\
 "), program_name);
-      (void) printf (_("\
+      printf (_("\
 Print numbers from FIRST (default 1) to LAST, moving by STEP (default 1).\n\
 \n\
   -f, --format FORMAT      use printf(3) style FORMAT (default: %%g)\n\
@@ -158,7 +158,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      (void) printf ("seq - %s\n", PACKAGE_VERSION);
+      printf ("seq - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 
@@ -324,14 +324,14 @@ get_width_format ()
       max_val = first + step * floor ((last - first) / step);
     }
 
-  (void) sprintf (buffer, "%g", rint (max_val));
+  sprintf (buffer, "%g", rint (max_val));
   if (buffer[strspn (buffer, "0123456789")] != '\0')
     return "%g";
   width1 = strlen (buffer);
 
   if (min_val < 0.0)
     {
-      (void) sprintf (buffer, "%g", rint (min_val));
+      sprintf (buffer, "%g", rint (min_val));
       if (buffer[strspn (buffer, "-0123456789")] != '\0')
 	return "%g";
       width2 = strlen (buffer);
@@ -340,7 +340,7 @@ get_width_format ()
     }
   full_width = width1;
 
-  (void) sprintf (buffer, "%g", 1.0 + modf (min_val, &temp));
+  sprintf (buffer, "%g", 1.0 + modf (min_val, &temp));
   width1 = strlen (buffer);
   if (width1 == 1)
     width1 = 0;
@@ -352,7 +352,7 @@ get_width_format ()
       width1 -= 2;
     }
 
-  (void) sprintf (buffer, "%g", 1.0 + modf (step, &temp));
+  sprintf (buffer, "%g", 1.0 + modf (step, &temp));
   width2 = strlen (buffer);
   if (width2 == 1)
     width2 = 0;
@@ -366,9 +366,9 @@ get_width_format ()
   frac_width = width1 > width2 ? width1 : width2;
 
   if (frac_width)
-    (void) sprintf (buffer, "%%0%d.%df", full_width + 1 + frac_width, frac_width);
+    sprintf (buffer, "%%0%d.%df", full_width + 1 + frac_width, frac_width);
   else
-    (void) sprintf (buffer, "%%0%dg", full_width);
+    sprintf (buffer, "%%0%dg", full_width);
 
   return buffer;
 }
