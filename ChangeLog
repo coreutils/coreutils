@@ -2,6 +2,9 @@
 
 	* Version 5.0.1.
 
+	* src/nohup.c (NOHUP_FAILURE, NOHUP_FOUND_BUT_CANNOT_INVOKE): Define.
+	(main): Use them.
+
 	* Makefile.maint (syntax-check): Move each individual check into
 	its own target.
 	(syntax-check-rules): This is the list of syntax-check targets.
