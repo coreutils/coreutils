@@ -507,8 +507,13 @@ do_copy (int argc, char **argv)
 	  && STREQ (source, dest)
 	  && !new_dst && S_ISREG (sb.st_mode))
 	{
-	  backup_type = none;
 	  new_dest = find_backup_file_name (dest);
+	  /* Set backup_type to `none' so that the normal backup
+	     mechanism is not used when performing the actual copy.
+	     backup_type must be set to `none' only *after* the above
+	     call to find_backup_file_name -- that function uses
+	     backup_type to determine the suffix it applies.  */
+	  backup_type = none;
 	  if (new_dest == NULL)
 	    error (1, 0, _("virtual memory exhausted"));
 	}
