@@ -15,11 +15,11 @@ fi
 # FIXME: find writable directories on other partitions
 # and run the test in those directories, too.
 
-dirs=.
+: ${TOUCH_DIR_LIST=.}
 
 framework_failure=0
 
-for d in $dirs; do
+for d in $TOUCH_DIR_LIST; do
   rm -rf $d/a $d/b
   : > $d/a || framework_failure=1
   : > $d/b || framework_failure=1
