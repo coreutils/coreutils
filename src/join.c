@@ -34,7 +34,6 @@
 
 char *xmalloc ();
 char *xrealloc ();
-static void usage ();
 
 /* Undefine, to avoid warning about redefinition on some systems.  */
 #undef min
