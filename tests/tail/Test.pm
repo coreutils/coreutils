@@ -78,6 +78,10 @@ my @tv = (
 
 sub test_vector
 {
+  # With _POSIX2_VERSION=199209, `tail -c' succeeds, but err-6 expects
+  # a failure, so set _POSIX2_VERSION to ensure it fails.
+  $Test::env{'err-6'} = ['_POSIX2_VERSION=200112'];
+
   my $t;
   foreach $t (@tv)
     {
