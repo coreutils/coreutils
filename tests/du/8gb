@@ -29,7 +29,7 @@ fi
 # NTFS requires 128K before a hole appears in a sparse file.
 dd bs=1 seek=128K of=t < /dev/null 2> /dev/null
 set x `du -sk t`
-if test "$2" = 64; then
+if test "$2" = 128; then
   echo "$0: skipping this test, since this file system doesn't support" 1>&2
   echo "$0: sparse files and this test requires a file with an apparent" 1>&2
   echo "$0: size of 8GB" 1>&2
