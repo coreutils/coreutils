@@ -314,11 +314,13 @@ strdup __argz_count __argz_stringify __argz_next])
    dnl be included in po/Makefile.
    test -d po || mkdir po
    if test "x$srcdir" != "x."; then
+     changequote(, )dnl
      if test "x`echo $srcdir | sed -e 's@^[A-z]:@@' -e 's@/.*@@'`" = "x"; then
        posrcprefix="$srcdir/"
      else
        posrcprefix="../$srcdir/"
      fi
+     changequote([, ])dnl
    else
      posrcprefix="../"
    fi
