@@ -1,4 +1,6 @@
 Changes in release 3.13:
+* ls allows 0 as argument to --tabsize (-T) option.  Using --tabsize=0
+  inhibits the use of TAB characters for separating columns.
 * you can create a backup of FILE with cp --force --backup FILE FILE.  Before,
   that command failed saying that ``FILE' and `FILE' are the same file'.
 * uses automake-generated Makefile templates

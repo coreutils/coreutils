@@ -1,7 +1,13 @@
 Mon Jun 24 22:39:02 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* ls.c (decode_switches): Allow 0 as argument to --tabsize (-T) option.
+	Interpret as a directive to use no TAB characters to separate columns.
+	(indent): Handle TABSIZE == 0.
+
 	* dircolors.c (dc_parse_stream): Remove spurious newline in
 	error message.
+	(dc_parse_stream): Give `unrecognized keyword' for misspelled
+	`TERM' keyword as well as for others.
 
 Sun Jun 23 12:58:32 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
@@ -42,7 +48,8 @@ Tue Jun 18 20:54:05 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* ln.c (do_link): Refine last change so we don't disallow commands
 	like `ln --force A B' when A and B are hard links to the same file.
-	See comments in the source.  Reported by Erik Naggum <erik@naggum.no>.
+	See comments in the source.  Reported by Erik Naggum <erik@naggum.no>
+	and Andreas Schwab.
 
 	* ls.c (decode_switches): Correct typo in error messages:
 	enironment -> environment.  From Santiago Vila Doncel
