@@ -134,16 +134,6 @@ sc_error_exit_success:
 	  { echo '$(ME): found error (EXIT_SUCCESS' 1>&2;		\
 	    exit 1; } || :
 
-# FIXME: merge this with sc_system_h_headers below.
-# xalloc.h is included via system.h, so should not be included
-# directly by any file in src/.
-sc_xalloc_h_in_src:
-	@if test -f $(srcdir)/src/sys2.h; then				\
-	  if grep 'xalloc\.h' $(srcdir)/src/*.c; then			\
-	    exit 1;							\
-	  fi;								\
-	fi
-
 # FIXME: warn about definitions of EXIT_FAILURE, EXIT_SUCCESS, STREQ
 
 # Each nonempty line must start with a year number, or a TAB.
@@ -178,11 +168,13 @@ h_re := $(shell echo '$(header_regexp)'|tr -d ' ')
 # Get list of candidates with this:
 # grep -h include src/sys*.h|sed 's/.*include //'|sort -
 sc_system_h_headers:
-	@( cvsu --list ) > /dev/null 2>&1 || : &&			\
-	grep -E '^# *include ["<]($(h_re))\.h[">]'			\
-	    $$(cvsu --list src | grep -Ev 'sys(2|tem)\.h$$')		\
-	  && { echo '$(ME): the above are already included via system.h'\
-		1>&2; exit 1; } || :
+	@if test -f $(srcdir)/src/sys2.h; then				\
+	  ( cvsu --list ) > /dev/null 2>&1 || : &&			\
+	  grep -E '^# *include ["<]($(h_re))\.h[">]'			\
+	      $$(cvsu --list src | grep -Ev 'sys(2|tem)\.h$$')		\
+	    && { echo '$(ME): the above are already included via system.h'\
+		  1>&2; exit 1; } || :; \
+	fi
 
 sc_sun_os_names:
 	@( cvsu --list ) > /dev/null 2>&1 || : && \
