@@ -167,3 +167,7 @@ Changes expected to go in, post-5.2.1:
   ------------------------
   ls --color: Ed Avis' patch to suppress escape sequences for
     non-highlighted files
+
+  getpwnam from Bruce Korb
+
+  pb (progress bar) from Miika Pekkarinen
