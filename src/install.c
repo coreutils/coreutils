@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
+#include <signal.h>
 #include <pwd.h>
 #include <grp.h>
 
@@ -227,6 +228,10 @@ main (int argc, char **argv)
 	  break;
 	case 's':
 	  strip_files = 1;
+#ifdef SIGCHLD
+	  /* System V fork+wait does not work if SIGCHLD is ignored.  */
+	  signal (SIGCHLD, SIG_DFL);
+#endif
 	  break;
 	case 'd':
 	  dir_arg = 1;
