@@ -1,5 +1,8 @@
 Thu May 30 00:07:48 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/od.c (decode_one_format): Use %lu (not %d) printf format
+	corresponding to unsigned long, SIZE.
+
 	* Version 1.15.
 
 	* intl/Makefile.in (installcheck): New target.
