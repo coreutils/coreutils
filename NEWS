@@ -4,7 +4,7 @@
   special file command line argument, df would display that argument.  E.g.,
   `df /dev/hda' would list `/dev/hda' as the `Filesystem', rather than say
   /dev/hda3 (the device on which `/' is mounted), as it does now.
-* du can now process arbitrarily deep hierarchies (subject to virtual memory).
+* du can now process much deeper hierarchies (subject to virtual memory).
   Before, it would segfault on hierarchies deeper than 20,000-30,000 levels.
 * test now works properly when invoked from a set user ID or set group ID
   context and when testing access to files subject to alternate protection
