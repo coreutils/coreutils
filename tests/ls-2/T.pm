@@ -8,7 +8,7 @@ use FileHandle;
 use File::Compare qw(compare);
 
 @ISA = qw(Exporter);
-($VERSION = '$Revision: 1.12 $ ') =~ tr/[0-9].//cd;
+($VERSION = '$Revision: 1.13 $ ') =~ tr/[0-9].//cd;
 @EXPORT = qw (run_tests);
 
 my @Types = qw (IN OUT ERR EXIT);
@@ -206,7 +206,7 @@ sub run_tests ($$$$$)
 
       # FIXME: Require at least one of OUT_DATA, OUT_FILE.  Why?
 
-      warn "$test_name...\n";
+      warn "$test_name...\n" if $verbose;
       my $t_out = "$test_name-out";
       my $t_err = "$test_name-err";
       push (@junk_files, $t_out, $t_err);
