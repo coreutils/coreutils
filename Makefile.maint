@@ -18,6 +18,12 @@ tag-prev-version = $(subst .,_,$(prev-version))
 this-cvs-tag = $(tag-package)-$(tag-this-version)
 prev-cvs-tag = $(tag-package)-$(tag-prev-version)
 
+# Verify that all source files using _() are listed in po/POTFILES.in.
+po-check:
+	grep -E -v '^(#|$$)' po/POTFILES.in | sort > $@-1
+	grep -E -l '\b_\(' lib/*.c src/*.c | sort > $@-2
+	diff -u $@-1 $@-2
+	rm -f $@-1 $@-2
 
 # Tag before making distribution.  Also, don't make a distribution if
 # checks fail.  Also, make sure the NEWS file is up-to-date.
@@ -108,6 +114,7 @@ announcement: NEWS ChangeLog $(distdir).tar.gz
 	)
 
 alpha:
+	$(MAKE) po-check
 	$(MAKE) cvs-dist
 	$(MAKE) -s announcement > /tmp/announce-$(distdir)
 	ln $(distdir).tar.gz ../release
