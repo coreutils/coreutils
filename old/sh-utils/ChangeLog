@@ -1,3 +1,22 @@
+1997-07-12  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/who.c: Rename lots of `this' locals.
+	Make some parameters `const'.
+	(who): Update read_utmp caller.
+	(search_entries): Take additional param: utmp_buf.
+	Update read_utmp caller.
+	(who_am_i): Update read_utmp caller.
+
+	* src/users.c (users): Update read_utmp caller.
+	* src/uptime.c (uptime): Update read_utmp caller.
+
+	* lib/readutmp.h (PARAMS): Update prototype.
+	(utmp_contents): Remove dcl.
+
+	* lib/readutmp.c (read_utmp): Take new params: count and buffer.
+	Return boolean indicating failure.
+	Now, caller must give diagnostic upon.
+
 1997-07-12  Kaveh R. Ghazi  <ghazi@caip.rutgers.edu>
 
 	* lib/readutmp.c, lib/readutmp.h: New files implementing shared
