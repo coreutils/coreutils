@@ -788,13 +788,18 @@ main (int argc, char *argv[])
 	case 'c':
 	  format = optarg;
 	  break;
+
 	case 'l': /* deprecated */
+	  error (0, 0, _("Warning: `-l' is deprecated; use `-L' instead"));
+	  /* fall through */
 	case 'L':
 	  follow_links = 1;
 	  break;
+
 	case 'f':
 	  fs = 1;
 	  break;
+
 	case 't':
 	  terse = 1;
 	  break;
