@@ -857,8 +857,7 @@ This almost certainly means that you have a corrupted file system.\n\
 NOTIFY YOUR SYSTEM MANAGER.\n\
 The following two directories have the same inode number:\n"));
 	  print_nth_dir (stderr, old_ent->depth);
-	  fputc ('\n', stderr);
-	  fprintf (stderr, "%s\n", full_filename (fs->filename));
+	  fprintf (stderr, "\n%s\n", full_filename (fs->filename));
 	  fflush (stderr);
 
 	  if (x->interactive)
