@@ -1,5 +1,5 @@
 /* group-member.c -- determine whether group id is in calling user's group list
-   Copyright (C) 1994 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1997 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -44,15 +44,14 @@ struct group_info
 #ifdef HAVE_GETGROUPS
 
 static void
-free_group_info (g)
-     struct group_info *g;
+free_group_info (struct group_info *g)
 {
   free (g->group);
   free (g);
 }
 
 static struct group_info *
-get_group_info ()
+get_group_info (void)
 {
   int n_groups;
   int n_group_slots;
@@ -96,8 +95,7 @@ get_group_info ()
    either of the current or effective group IDs.  */
 
 int
-group_member (gid)
-     gid_t gid;
+group_member (gid_t gid)
 {
 #ifndef HAVE_GETGROUPS
   return ((gid == getgid ()) || (gid == getegid ()));
