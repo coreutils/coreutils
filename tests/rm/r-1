@@ -11,15 +11,18 @@ if test "$VERBOSE" = yes; then
   rm --version
 fi
 
+pwd=`pwd`
 tmp=$TMPDIR/t-rm.$$
+trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
+trap 'exit $?' 1 2 13 15
 
 test_failure=0
 
-mkdir $tmp || test_failure=1
-mkdir $tmp/a $tmp/a/a || test_failure=1
-> $tmp/b || test_failure=1
+mkdir $tmp || framework_failure=1
+mkdir $tmp/a $tmp/a/a || framework_failure=1
+> $tmp/b || framework_failure=1
 
-cat <<EOF > $tmp/$test.E || test_failure=1
+cat <<EOF > $tmp/$test.E || framework_failure=1
 removing all entries of directory $tmp/a
 removing all entries of directory $tmp/a/a
 removing the directory itself: $tmp/a/a
@@ -27,7 +30,7 @@ removing the directory itself: $tmp/a
 removing $tmp/b
 EOF
 
-if test $test_failure = 1; then
+if test $framework_failure = 1; then
   echo 'failure in testing framework'
   exit 1
 fi
@@ -51,4 +54,5 @@ cmp $tmp/$test.E $tmp/$test.O || fail=1
 
 rm -rf $tmp
 
+(exit $fail)
 exit $fail
