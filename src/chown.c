@@ -138,10 +138,10 @@ as symbolic.\n\
 int
 main (int argc, char **argv)
 {
-  uid_t user = (uid_t) -1;	/* New uid; -1 if not to be changed. */
-  gid_t group = (uid_t) -1;	/* New gid; -1 if not to be changed. */
-  uid_t old_user = (uid_t) -1;	/* Old uid; -1 if unrestricted. */
-  gid_t old_group = (uid_t) -1;	/* Old gid; -1 if unrestricted. */
+  uid_t uid = (uid_t) -1;	/* New uid; -1 if not to be changed. */
+  gid_t gid = (uid_t) -1;	/* New gid; -1 if not to be changed. */
+  uid_t old_uid = (uid_t) -1;	/* Old uid; -1 if unrestricted. */
+  gid_t old_gid = (uid_t) -1;	/* Old gid; -1 if unrestricted. */
   struct Chown_option chopt;
 
   int errors = 0;
@@ -172,7 +172,7 @@ main (int argc, char **argv)
 	  {
 	    char *u_dummy, *g_dummy;
 	    const char *e = parse_user_spec (argv[optind],
-					     &old_user, &old_group,
+					     &old_uid, &old_gid,
 					     &u_dummy, &g_dummy);
 	    if (e)
 	      error (1, 0, "%s: %s", quote (argv[optind]), e);
@@ -213,17 +213,19 @@ main (int argc, char **argv)
       if (stat (reference_file, &ref_stats))
 	error (1, errno, _("getting attributes of %s"), quote (reference_file));
 
-      user = ref_stats.st_uid;
+      uid = ref_stats.st_uid;
+      gid = ref_stats.st_gid;
       chopt.user_name = uid_to_name (ref_stats.st_uid);
-      group = ref_stats.st_gid;
       chopt.group_name = gid_to_name (ref_stats.st_gid);
     }
   else
     {
-      const char *e = parse_user_spec (argv[optind], &user, &group,
+      const char *e = parse_user_spec (argv[optind], &uid, &gid,
 				       &chopt.user_name, &chopt.group_name);
       if (e)
         error (1, 0, "%s: %s", argv[optind], e);
+
+      /* FIXME: set it to the empty string?  */
       if (chopt.user_name == NULL)
         chopt.user_name = "";
 
@@ -233,8 +235,8 @@ main (int argc, char **argv)
   for (; optind < argc; ++optind)
     {
       strip_trailing_slashes (argv[optind]);
-      errors |= change_file_owner (1, argv[optind], user, group,
-				   old_user, old_group, &chopt);
+      errors |= change_file_owner (1, argv[optind], uid, gid,
+				   old_uid, old_gid, &chopt);
     }
 
   chopt_free (&chopt);
