@@ -3,7 +3,6 @@ noinst_LIBRARIES = fu
 
 EXTRA_DIST = group-member.c
 
-INCLUDES = -I.. -I$(srcdir)
 INCLUDES = -I.. -I$(srcdir) -I../intl
 
 fu_SOURCES = getdate.y posixtm.y getopt.c getopt1.c \
