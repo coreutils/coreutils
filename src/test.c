@@ -39,8 +39,8 @@
 # include "filecntl.h"
 #else /* TEST_STANDALONE */
 # include "system.h"
-# include "group-member.h"
 # include "error.h"
+# include "euidaccess.h"
 # if !defined (S_IXUGO)
 #  define S_IXUGO 0111
 # endif /* S_IXUGO */
@@ -135,43 +135,43 @@ test_syntax_error (char const *format, char const *arg)
   test_exit (SHELL_BOOLEAN (FALSE));
 }
 
-/* Do the same thing access(2) does, but use the effective uid and gid,
-   and don't make the mistake of telling root that any file is executable.
-   But this loses when the containing filesystem is mounted e.g. read-only.  */
+#if HAVE_SETREUID && HAVE_SETREGID
+/* Do the same thing access(2) does, but use the effective uid and gid.  */
+
 static int
-eaccess (char *path, int mode)
+eaccess (char const *file, int mode)
 {
-  struct stat st;
-  static uid_t euid = -1;
+  static int have_ids;
+  static uid_t uid, euid;
+  static gid_t gid, egid;
+  int result;
 
-  if (stat (path, &st) < 0)
-    return (-1);
-
-  if (euid == (uid_t) -1)
-    euid = geteuid ();
-
-  if (euid == 0)
+  if (have_ids == 0)
     {
-      /* Root can read or write any file. */
-      if (mode != X_OK)
-	return (0);
-
-      /* Root can execute any file that has any one of the execute
-	 bits set. */
-      if (st.st_mode & S_IXUGO)
-	return (0);
+      have_ids = 1;
+      uid = getuid ();
+      gid = getgid ();
+      euid = geteuid ();
+      egid = getegid ();
     }
 
-  if (st.st_uid == euid)        /* owner */
-    mode <<= 6;
-  else if (group_member (st.st_gid))
-    mode <<= 3;
+  if (uid != euid)
+    setreuid (euid, uid);
+  if (gid != egid)
+    setregid (egid, gid);
 
-  if (st.st_mode & mode)
-    return (0);
+  result = access (file, mode);
 
-  return (-1);
+  if (uid != euid)
+    setreuid (euid, uid);
+  if (gid != egid)
+    setregid (egid, gid);
+
+  return result;
 }
+#else
+# define eaccess(F, M) euidaccess (F, M)
+#endif
 
 /* Increment our position in the argument list.  Check that we're not
    past the end of the argument list.  This check is supressed if the
