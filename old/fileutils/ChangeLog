@@ -18,6 +18,7 @@
 	* configure.in (AM_WITH_REGEX): Remove.  Now the replacement
 	macro, jm_WITH_REGEX, is bundled with the rest in jm_MACROS.
 	* acconfig.h (WITH_REGEX): Remove undef.
+	* lib/Makefile.am (noinst_HEADERS): Add regex.h.
 	* lib/rpmatch.c: Change guard on <regex.h> inclusion to use new
 	symbol `! HAVE_LIBC_REGEX' defined in m4/regex.m4.
 	* lib/rx.c: Remove file.
