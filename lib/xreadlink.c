@@ -39,7 +39,7 @@
 
 /* Call readlink to get the symbolic link value of FILENAME.
    Return a pointer to that NUL-terminated string in malloc'd storage.
-   If readlink fails, return NULL (use errno to diagnose).
+   If readlink fails, return NULL (caller may use errno to diagnose).
    If realloc fails, or if the link value is longer than SIZE_MAX :-),
    give a diagnostic and exit.  */
 
