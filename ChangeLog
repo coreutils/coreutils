@@ -11,7 +11,7 @@
 	* Makefile.maint (po-check): Use cvsu, so that a temporary source
 	file in lib/ or src/ doesn't induce an unwarranted failure.
 	Add a kludge to filter out the sole generated source file that
-	also has translatable messages: false.c.
+	also has translatable messages: src/false.c.
 
 2003-09-06  Jim Meyering  <jim@meyering.net>
 
