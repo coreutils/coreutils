@@ -1,5 +1,7 @@
 Changes in release 1.23
 [1.22f]
+* cut accepts new --output-delimiter=STR option
+* `sort -o no-such-file no-such-file' now fails, as it should
 * fix pr bug: pr -td didn't double space
 * fix tac bug when using -b, -r, and -s SEPARATOR
 * fix sort bug whereby using key-local `d' option would cause following
