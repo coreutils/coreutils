@@ -11,6 +11,19 @@ $PERL -e 1 > /dev/null 2>&1 || {
   exit 77
 }
 
+# Ensure that we don't run an older version of fold.
+# Prior to 5.0.91, some of the tests below would cause fold to infloop,
+# and since `make check' might be run even after a build failure, it'd
+# expose just such an older version.
+ver=`fold --version|sed 1q`
+case $ver in
+  *" $PACKAGE_VERSION") ;;
+  *) echo 1>&2 \
+   "$0: found unexpected version of fold, \`$ver'"
+     "(expected $PACKAGE_VERSION)"
+  exit 1;;
+esac
+
 exec $PERL -w -I$srcdir/.. -MFetish -- - <<\EOF
 #/
 require 5.003;
