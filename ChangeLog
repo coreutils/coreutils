@@ -1,6 +1,11 @@
-2003-12-19  Jim Meyering  <jim@meyering.net>
+2003-12-20  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.1.0.
+
+	* src/dd.c (apply_translations): Don't prohibit conv=unblock,sync.
+	Reported by Volker Paul.
+
+2003-12-19  Jim Meyering  <jim@meyering.net>
 
 	* tests/misc/nohup: Double quote back-ticked expression,
 	in case it ends up having an unexpected value.

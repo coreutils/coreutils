@@ -53,6 +53,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   ls --width=N (with -x or -C) no longer allocates more space
   (potentially much more) than necessary for a given directory.
 
+  dd `unblock' and `sync' may now be combined (e.g., dd conv=unblock,sync)
+
 * Major changes in release 5.0.91 (2003-09-08):
 
 ** New features
