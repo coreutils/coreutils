@@ -99,7 +99,7 @@ extern char *program_name;
 
 static int
 __argmatch_internal (const char *arg, const char *const *arglist,
-		     const char *vallist, size_t valsize, 
+		     const char *vallist, size_t valsize,
 		     int sensitive)
 {
   int i;			/* Temporary index in ARGLIST.  */
@@ -124,7 +124,7 @@ __argmatch_internal (const char *arg, const char *const *arglist,
 	  else
 	    /* Second nonexact match found.  */
 	    if (vallist == NULL
-		|| memcmp (vallist + valsize * matchind, 
+		|| memcmp (vallist + valsize * matchind,
 			   vallist + valsize * i, valsize))
 	      /* There is a real ambiguity, or we could not
                  desambiguise. */
@@ -218,12 +218,12 @@ argmatch_valid (const char *const *arglist,
    VALIST, and VALSIZE are the same as in valid_args */
 int
 __xargmatch_internal (const char *kind, const char *arg,
-		      const char *const *arglist, 
+		      const char *const *arglist,
 		      const char *vallist, size_t valsize,
 		      int sensitive)
 {
   int i;
-  
+
   i = __argmatch_internal (arg, arglist, vallist, valsize, sensitive);
   if (i >= 0)
     {
@@ -248,7 +248,7 @@ argmatch_to_argument (char * value,
 		      const char *vallist, size_t valsize)
 {
   int i;
-  
+
   for (i = 0 ; arglist [i] ; i++)
     if (!memcmp (value, vallist + valsize * i, valsize))
       return arglist [i];
@@ -283,18 +283,18 @@ enum backup_type
    values */
 static const char *const backup_args[] =
 {
-  "no", "none", "off", 
-  "simple", "never", 
-  "existing", "nil", 
-  "numbered", "t", 
+  "no", "none", "off",
+  "simple", "never",
+  "existing", "nil",
+  "numbered", "t",
   0
 };
 
 static const enum backup_type backup_vals[] =
 {
-  none, none, none, 
-  simple, simple, 
-  numbered_existing, numbered_existing, 
+  none, none, none,
+  simple, simple,
+  numbered_existing, numbered_existing,
   numbered, numbered
 };
 
@@ -313,14 +313,14 @@ main (int argc, const char *const * argv)
     }
 
   if ((cp = getenv ("VERSION_CONTROL")))
-    backup_type = XARGCASEMATCH ("$VERSION_CONTROL", cp, 
+    backup_type = XARGCASEMATCH ("$VERSION_CONTROL", cp,
 				 backup_args, backup_vals);
 
   if (argc == 2)
-    backup_type = XARGCASEMATCH (program_name, argv [1], 
+    backup_type = XARGCASEMATCH (program_name, argv [1],
 				 backup_args, backup_vals);
 
-  printf ("The version control is `%s'\n", 
+  printf ("The version control is `%s'\n",
 	  ARGMATCH_TO_ARGUMENT (backup_type, backup_args, backup_vals));
 
   return 0;

@@ -1,4 +1,4 @@
-/* argmatch.c -- find a match for a string in an array
+/* argmatch.h -- definitions and prototypes for argmatch.c
    Copyright (C) 1990, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -40,11 +40,11 @@
    false ambiguities (i.e., different matches of ARG but corresponding
    to the same values in VALLIST).  */
 
-int argmatch 
-	PARAMS ((const char *arg, const char *const *arglist, 
+int argmatch
+	PARAMS ((const char *arg, const char *const *arglist,
 		 const char *vallist, size_t valsize));
-int argcasematch 
-	PARAMS ((const char *arg, const char *const *arglist, 
+int argcasematch
+	PARAMS ((const char *arg, const char *const *arglist,
 		 const char *vallist, size_t valsize));
 
 # define ARGMATCH(ARG,ARGLIST,VALLIST) \
@@ -57,7 +57,7 @@ int argcasematch
 
 /* Report on stderr why argmatch failed.  Report correct values. */
 
-void argmatch_invalid 
+void argmatch_invalid
 	PARAMS ((const char *kind, const char *value, int problem));
 
 /* Left for compatibility with the old name invalid_arg */
@@ -70,7 +70,7 @@ void argmatch_invalid
 /* Report on stderr the list of possible arguments.  */
 
 void argmatch_valid
-	PARAMS ((const char *const *arglist, 
+	PARAMS ((const char *const *arglist,
 		 const char *vallist, size_t valsize));
 
 # define ARGMATCH_VALID(ARGLIST,VALLIST) \
@@ -80,8 +80,8 @@ void argmatch_valid
 /* Returns matches, or, upon error, report explanatory message and
    exit.  */
 
-int __xargmatch_internal 
-	PARAMS ((const char *kind, 
+int __xargmatch_internal
+	PARAMS ((const char *kind,
 		 const char *arg, const char *const *arglist,
 		 const char *vallist, size_t valsize,
 		 int sensitive));
