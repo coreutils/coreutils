@@ -2150,7 +2150,7 @@ This option is meaningful only when following by name.
 Output the last @var{n} lines.
 
 @item -q
-@itemx -quiet
+@itemx --quiet
 @itemx --silent
 @opindex -q
 @opindex --quiet
