@@ -1,4 +1,4 @@
-#serial 1
+#serial 2
 
 # Test for the GNU C Library, version 2.1 or newer.
 # From Bruno Haible.
@@ -20,7 +20,7 @@ AC_DEFUN(jm_GLIBC21,
 	ac_cv_gnu_library_2_1=no)
       ]
     )
-    AC_DEFINE_UNQUOTED(GLIBC21, $ac_cv_gnu_library_2_1,
-                       [we use GNU C Library 2.1 or newer])
+    AC_SUBST(GLIBC21)
+    GLIBC21="$ac_cv_gnu_library_2_1"
   ]
 )
