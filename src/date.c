@@ -1,6 +1,5 @@
 /* date - print or set the system date and time
-   Copyright (C) 89, 90, 91, 92, 93, 94, 95, 96, 1997
-   Free Software Foundation, Inc.
+   Copyright (C) 1989-1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -24,6 +23,7 @@
 #include <sys/types.h>
 
 #include "system.h"
+#include "closeout.h"
 #include "getline.h"
 #include "error.h"
 #include "getdate.h"
@@ -357,8 +357,7 @@ argument must be a format string beginning with `+'."),
       show_date (format, when);
     }
 
-  if (fclose (stdout) == EOF)
-    error (2, errno, _("write error"));
+  close_stdout_status (2);
 
   exit (status);
 }

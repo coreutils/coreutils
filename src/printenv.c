@@ -1,5 +1,5 @@
 /* printenv -- print all or part of environment
-   Copyright (C) 89,90,91,92,93,94,95,96,1997 Free Software Foundation, Inc.
+   Copyright (C) 89,90,91,92,93,94,95,96,1997, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@
 #include <getopt.h>
 
 #include "system.h"
+#include "closeout.h"
 #include "error.h"
 
 /* The name this program was run with. */
@@ -136,8 +137,7 @@ main (int argc, char **argv)
       exit_status = (matches != argc - optind);
     }
 
-  if (ferror (stdout) || fclose (stdout) == EOF)
-    error (2, errno, _("standard output"));
+  close_stdout_status (2);
 
   exit (exit_status);
 }

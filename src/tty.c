@@ -1,5 +1,5 @@
 /* tty -- print the path of the terminal connected to standard input
-   Copyright (C) 90,91,92,93,94,95,96,1997 Free Software Foundation, Inc.
+   Copyright (C) 1990-1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@
 #include <sys/types.h>
 
 #include "system.h"
+#include "closeout.h"
 #include "error.h"
 
 static void usage PARAMS ((int status));
@@ -102,8 +103,7 @@ main (int argc, char **argv)
       else
 	puts (_("not a tty"));
 
-      if (ferror (stdout) || fclose (stdout) == EOF)
-	error (3, errno, _("standard output"));
+      close_stdout_status (3);
     }
 
   exit (isatty (0) ? 0 : 1);
