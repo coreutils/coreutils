@@ -1,5 +1,5 @@
 /* mkfifo -- make fifo's (named pipes)
-   Copyright (C) 90, 91, 1995-2002 Free Software Foundation, Inc.
+   Copyright (C) 90, 91, 1995-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -136,15 +136,15 @@ main (int argc, char **argv)
 	 ensures the file mode permission bits are still set as desired.  */
 
       if (fail == 0 && specified_mode)
- 	{
- 	  fail = chmod (argv[optind], newmode);
+	{
+	  fail = chmod (argv[optind], newmode);
 	  if (fail)
 	    error (0, errno, _("cannot set permissions of fifo %s"),
 		   quote (argv[optind]));
- 	}
+	}
 
       if (fail)
- 	errors = 1;
+	errors = 1;
     }
 
   exit (errors);

@@ -827,7 +827,7 @@ main (int argc, char **argv)
 	  if (k < argc - 1)
 	    noargs = 0;
 	  break;
-    	}
+	}
 
       /* Handle "--file device" */
       len = strlen (argv[k]);
@@ -836,7 +836,7 @@ main (int argc, char **argv)
 	  argv[k] = NULL;
 	  argv[k + 1] = NULL;
 	  continue;
-    	}
+	}
 
       /* Handle "--all" and "--save".  */
       if (len >= 3
