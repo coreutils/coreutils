@@ -20,7 +20,7 @@ AC_DEFUN(jm_FUNC_GETGROUPS,
     }
 	      ],
 	     jm_cv_func_working_getgroups=yes,
-             jm_cv_func_working_getgroups=no,
+	     jm_cv_func_working_getgroups=no,
 	     dnl When crosscompiling, assume getgroups is broken.
 	     jm_cv_func_working_getgroups=no)
   ])
