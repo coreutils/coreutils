@@ -88,6 +88,8 @@ VERSION = @VERSION@
 YACC = @YACC@
 l = @l@
 
+AUTOMAKE_OPTIONS = ../src/ansi2knr
+
 noinst_LIBRARIES = libfu.a
 
 EXTRA_DIST = chown.c getgroups.c getline.c lstat.c malloc.c mktime.c \
@@ -121,11 +123,13 @@ DEFS = @DEFS@ -I. -I$(srcdir) -I..
 CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
-libfu_a_OBJECTS =  getdate.o posixtm.o getopt.o getopt1.o addext.o \
-argmatch.o backupfile.o basename.o dirname.o filemode.o full-write.o \
-idcache.o isdir.o long-options.o makepath.o modechange.o hash.o \
-path-concat.o safe-read.o save-cwd.o savedir.o stripslash.o userspec.o \
-xgetcwd.o xmalloc.o xstrdup.o xstrtol.o xstrtoul.o yesno.o
+ANSI2KNR = ../src/ansi2knr
+libfu_a_OBJECTS =  getdate$U.o posixtm$U.o getopt$U.o getopt1$U.o \
+addext$U.o argmatch$U.o backupfile$U.o basename$U.o dirname$U.o \
+filemode$U.o full-write$U.o idcache$U.o isdir$U.o long-options$U.o \
+makepath$U.o modechange$U.o hash$U.o path-concat$U.o safe-read$U.o \
+save-cwd$U.o savedir$U.o stripslash$U.o userspec$U.o xgetcwd$U.o \
+xmalloc$U.o xstrdup$U.o xstrtol$U.o xstrtoul$U.o yesno$U.o
 AR = ar
 YLWRAP = $(srcdir)/ylwrap
 CFLAGS = @CFLAGS@
@@ -199,6 +203,18 @@ distclean-compile:
 	-rm -f *.tab.c
 
 maintainer-clean-compile:
+../src/ansi2knr: ../src/ansi2knr.o
+	cd ../src && $(MAKE) ansi2knr
+
+
+mostlyclean-kr:
+	-rm -f *_.c
+
+clean-kr:
+
+distclean-kr:
+
+maintainer-clean-kr:
 
 libfu.a: $(libfu_a_OBJECTS) $(libfu_a_DEPENDENCIES)
 	-rm -f libfu.a
@@ -208,6 +224,70 @@ libfu.a: $(libfu_a_OBJECTS) $(libfu_a_DEPENDENCIES)
 	$(SHELL) $(YLWRAP) "$(YACC)" $< y.tab.c $*.c y.tab.h $*.h -- $(YACCFLAGS)
 .y.h:
 	$(SHELL) $(YLWRAP) "$(YACC)" $< y.tab.c $*.c y.tab.h $*.h -- $(YACCFLAGS)
+addext_.c: addext.c $(ANSI2KNR)
+	$(ANSI2KNR) `if test -f $(srcdir)/addext.c; then echo $(srcdir)/addext.c; else echo addext.c; fi` addext_.c
+argmatch_.c: argmatch.c $(ANSI2KNR)
+	$(ANSI2KNR) `if test -f $(srcdir)/argmatch.c; then echo $(srcdir)/argmatch.c; else echo argmatch.c; fi` argmatch_.c
+backupfile_.c: backupfile.c $(ANSI2KNR)
+	$(ANSI2KNR) `if test -f $(srcdir)/backupfile.c; then echo $(srcdir)/backupfile.c; else echo backupfile.c; fi` backupfile_.c
+basename_.c: basename.c $(ANSI2KNR)
+	$(ANSI2KNR) `if test -f $(srcdir)/basename.c; then echo $(srcdir)/basename.c; else echo basename.c; fi` basename_.c
+dirname_.c: dirname.c $(ANSI2KNR)
+	$(ANSI2KNR) `if test -f $(srcdir)/dirname.c; then echo $(srcdir)/dirname.c; else echo dirname.c; fi` dirname_.c
+filemode_.c: filemode.c $(ANSI2KNR)
+	$(ANSI2KNR) `if test -f $(srcdir)/filemode.c; then echo $(srcdir)/filemode.c; else echo filemode.c; fi` filemode_.c
+full-write_.c: full-write.c $(ANSI2KNR)
+	$(ANSI2KNR) `if test -f $(srcdir)/full-write.c; then echo $(srcdir)/full-write.c; else echo full-write.c; fi` full-write_.c
+getdate_.c: getdate.c $(ANSI2KNR)
+	$(ANSI2KNR) `if test -f $(srcdir)/getdate.c; then echo $(srcdir)/getdate.c; else echo getdate.c; fi` getdate_.c
+getopt_.c: getopt.c $(ANSI2KNR)
+	$(ANSI2KNR) `if test -f $(srcdir)/getopt.c; then echo $(srcdir)/getopt.c; else echo getopt.c; fi` getopt_.c
+getopt1_.c: getopt1.c $(ANSI2KNR)
+	$(ANSI2KNR) `if test -f $(srcdir)/getopt1.c; then echo $(srcdir)/getopt1.c; else echo getopt1.c; fi` getopt1_.c
+hash_.c: hash.c $(ANSI2KNR)
+	$(ANSI2KNR) `if test -f $(srcdir)/hash.c; then echo $(srcdir)/hash.c; else echo hash.c; fi` hash_.c
+idcache_.c: idcache.c $(ANSI2KNR)
+	$(ANSI2KNR) `if test -f $(srcdir)/idcache.c; then echo $(srcdir)/idcache.c; else echo idcache.c; fi` idcache_.c
+isdir_.c: isdir.c $(ANSI2KNR)
+	$(ANSI2KNR) `if test -f $(srcdir)/isdir.c; then echo $(srcdir)/isdir.c; else echo isdir.c; fi` isdir_.c
+long-options_.c: long-options.c $(ANSI2KNR)
+	$(ANSI2KNR) `if test -f $(srcdir)/long-options.c; then echo $(srcdir)/long-options.c; else echo long-options.c; fi` long-options_.c
+makepath_.c: makepath.c $(ANSI2KNR)
+	$(ANSI2KNR) `if test -f $(srcdir)/makepath.c; then echo $(srcdir)/makepath.c; else echo makepath.c; fi` makepath_.c
+modechange_.c: modechange.c $(ANSI2KNR)
+	$(ANSI2KNR) `if test -f $(srcdir)/modechange.c; then echo $(srcdir)/modechange.c; else echo modechange.c; fi` modechange_.c
+path-concat_.c: path-concat.c $(ANSI2KNR)
+	$(ANSI2KNR) `if test -f $(srcdir)/path-concat.c; then echo $(srcdir)/path-concat.c; else echo path-concat.c; fi` path-concat_.c
+posixtm_.c: posixtm.c $(ANSI2KNR)
+	$(ANSI2KNR) `if test -f $(srcdir)/posixtm.c; then echo $(srcdir)/posixtm.c; else echo posixtm.c; fi` posixtm_.c
+safe-read_.c: safe-read.c $(ANSI2KNR)
+	$(ANSI2KNR) `if test -f $(srcdir)/safe-read.c; then echo $(srcdir)/safe-read.c; else echo safe-read.c; fi` safe-read_.c
+save-cwd_.c: save-cwd.c $(ANSI2KNR)
+	$(ANSI2KNR) `if test -f $(srcdir)/save-cwd.c; then echo $(srcdir)/save-cwd.c; else echo save-cwd.c; fi` save-cwd_.c
+savedir_.c: savedir.c $(ANSI2KNR)
+	$(ANSI2KNR) `if test -f $(srcdir)/savedir.c; then echo $(srcdir)/savedir.c; else echo savedir.c; fi` savedir_.c
+stripslash_.c: stripslash.c $(ANSI2KNR)
+	$(ANSI2KNR) `if test -f $(srcdir)/stripslash.c; then echo $(srcdir)/stripslash.c; else echo stripslash.c; fi` stripslash_.c
+userspec_.c: userspec.c $(ANSI2KNR)
+	$(ANSI2KNR) `if test -f $(srcdir)/userspec.c; then echo $(srcdir)/userspec.c; else echo userspec.c; fi` userspec_.c
+xgetcwd_.c: xgetcwd.c $(ANSI2KNR)
+	$(ANSI2KNR) `if test -f $(srcdir)/xgetcwd.c; then echo $(srcdir)/xgetcwd.c; else echo xgetcwd.c; fi` xgetcwd_.c
+xmalloc_.c: xmalloc.c $(ANSI2KNR)
+	$(ANSI2KNR) `if test -f $(srcdir)/xmalloc.c; then echo $(srcdir)/xmalloc.c; else echo xmalloc.c; fi` xmalloc_.c
+xstrdup_.c: xstrdup.c $(ANSI2KNR)
+	$(ANSI2KNR) `if test -f $(srcdir)/xstrdup.c; then echo $(srcdir)/xstrdup.c; else echo xstrdup.c; fi` xstrdup_.c
+xstrtol_.c: xstrtol.c $(ANSI2KNR)
+	$(ANSI2KNR) `if test -f $(srcdir)/xstrtol.c; then echo $(srcdir)/xstrtol.c; else echo xstrtol.c; fi` xstrtol_.c
+xstrtoul_.c: xstrtoul.c $(ANSI2KNR)
+	$(ANSI2KNR) `if test -f $(srcdir)/xstrtoul.c; then echo $(srcdir)/xstrtoul.c; else echo xstrtoul.c; fi` xstrtoul_.c
+yesno_.c: yesno.c $(ANSI2KNR)
+	$(ANSI2KNR) `if test -f $(srcdir)/yesno.c; then echo $(srcdir)/yesno.c; else echo yesno.c; fi` yesno_.c
+addext_.o argmatch_.o backupfile_.o basename_.o dirname_.o filemode_.o \
+full-write_.o getdate_.o getopt_.o getopt1_.o hash_.o idcache_.o \
+isdir_.o long-options_.o makepath_.o modechange_.o path-concat_.o \
+posixtm_.o safe-read_.o save-cwd_.o savedir_.o stripslash_.o \
+userspec_.o xgetcwd_.o xmalloc_.o xstrdup_.o xstrtol_.o xstrtoul_.o \
+yesno_.o : $(ANSI2KNR)
 
 tags: TAGS
 
@@ -309,31 +389,33 @@ maintainer-clean-generic:
 	-test -z "$(MAINTAINERCLEANFILES)" || rm -f $(MAINTAINERCLEANFILES)
 	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 mostlyclean:  mostlyclean-noinstLIBRARIES mostlyclean-compile \
-		mostlyclean-tags mostlyclean-depend mostlyclean-generic
+		mostlyclean-kr mostlyclean-tags mostlyclean-depend \
+		mostlyclean-generic
 
-clean:  clean-noinstLIBRARIES clean-compile clean-tags clean-depend \
-		clean-generic mostlyclean
+clean:  clean-noinstLIBRARIES clean-compile clean-kr clean-tags \
+		clean-depend clean-generic mostlyclean
 
-distclean:  distclean-noinstLIBRARIES distclean-compile distclean-tags \
-		distclean-depend distclean-generic clean
+distclean:  distclean-noinstLIBRARIES distclean-compile distclean-kr \
+		distclean-tags distclean-depend distclean-generic clean
 	-rm -f config.status
 
 maintainer-clean:  maintainer-clean-noinstLIBRARIES \
-		maintainer-clean-compile maintainer-clean-tags \
-		maintainer-clean-depend maintainer-clean-generic \
-		distclean
+		maintainer-clean-compile maintainer-clean-kr \
+		maintainer-clean-tags maintainer-clean-depend \
+		maintainer-clean-generic distclean
 	@echo "This command is intended for maintainers to use;"
 	@echo "it deletes files that may require special tools to rebuild."
 
 .PHONY: default mostlyclean-noinstLIBRARIES distclean-noinstLIBRARIES \
 clean-noinstLIBRARIES maintainer-clean-noinstLIBRARIES \
 mostlyclean-compile distclean-compile clean-compile \
-maintainer-clean-compile tags mostlyclean-tags distclean-tags \
-clean-tags maintainer-clean-tags distdir mostlyclean-depend \
-distclean-depend clean-depend maintainer-clean-depend info dvi \
-installcheck install-exec install-data install uninstall all \
-installdirs mostlyclean-generic distclean-generic clean-generic \
-maintainer-clean-generic clean mostlyclean distclean maintainer-clean
+maintainer-clean-compile mostlyclean-kr distclean-kr clean-kr \
+maintainer-clean-kr tags mostlyclean-tags distclean-tags clean-tags \
+maintainer-clean-tags distdir mostlyclean-depend distclean-depend \
+clean-depend maintainer-clean-depend info dvi installcheck install-exec \
+install-data install uninstall all installdirs mostlyclean-generic \
+distclean-generic clean-generic maintainer-clean-generic clean \
+mostlyclean distclean maintainer-clean
 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
