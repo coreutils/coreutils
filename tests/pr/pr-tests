@@ -3228,13 +3228,13 @@ if test $code != 0 ; then
   $echo "Test 10md failed: ../../src/pr return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 10md.O $srcdir/w35jml17f-lm-lo
+  cmp 10md.O $srcdir/w35jml17f-lmlo
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 10md"; fi ;;
-    1) $echo "Test 10md failed: files 10md.O and $srcdir/w35jml17f-lm-lo differ" 1>&2;
+    1) $echo "Test 10md failed: files 10md.O and $srcdir/w35jml17f-lmlo differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 10md may have failed." 1>&2;
-       $echo The command "cmp 10md.O $srcdir/w35jml17f-lm-lo" failed. 1>&2 ;
+       $echo The command "cmp 10md.O $srcdir/w35jml17f-lmlo" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
@@ -3245,13 +3245,13 @@ if test $code != 0 ; then
   $echo "Test 10me failed: ../../src/pr return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 10me.O $srcdir/njml17f-lm-lm-lo
+  cmp 10me.O $srcdir/njml17f-lmlmlo
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 10me"; fi ;;
-    1) $echo "Test 10me failed: files 10me.O and $srcdir/njml17f-lm-lm-lo differ" 1>&2;
+    1) $echo "Test 10me failed: files 10me.O and $srcdir/njml17f-lmlmlo differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 10me may have failed." 1>&2;
-       $echo The command "cmp 10me.O $srcdir/njml17f-lm-lm-lo" failed. 1>&2 ;
+       $echo The command "cmp 10me.O $srcdir/njml17f-lmlmlo" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
@@ -3262,13 +3262,13 @@ if test $code != 0 ; then
   $echo "Test 10mf failed: ../../src/pr return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 10mf.O $srcdir/njml17f-lm-lo-lm
+  cmp 10mf.O $srcdir/njml17f-lmlolm
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 10mf"; fi ;;
-    1) $echo "Test 10mf failed: files 10mf.O and $srcdir/njml17f-lm-lo-lm differ" 1>&2;
+    1) $echo "Test 10mf failed: files 10mf.O and $srcdir/njml17f-lmlolm differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 10mf may have failed." 1>&2;
-       $echo The command "cmp 10mf.O $srcdir/njml17f-lm-lo-lm" failed. 1>&2 ;
+       $echo The command "cmp 10mf.O $srcdir/njml17f-lmlolm" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
@@ -3483,13 +3483,13 @@ if test $code != 0 ; then
   $echo "Test 11g failed: ../../src/pr return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 11g.O $srcdir/nsml13-t-t-FF-FF
+  cmp 11g.O $srcdir/nsml13-t-tFFFF
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 11g"; fi ;;
-    1) $echo "Test 11g failed: files 11g.O and $srcdir/nsml13-t-t-FF-FF differ" 1>&2;
+    1) $echo "Test 11g failed: files 11g.O and $srcdir/nsml13-t-tFFFF differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 11g may have failed." 1>&2;
-       $echo The command "cmp 11g.O $srcdir/nsml13-t-t-FF-FF" failed. 1>&2 ;
+       $echo The command "cmp 11g.O $srcdir/nsml13-t-tFFFF" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
@@ -3500,13 +3500,13 @@ if test $code != 0 ; then
   $echo "Test 11h failed: ../../src/pr return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 11h.O $srcdir/nsml17-t-t-FF-FF
+  cmp 11h.O $srcdir/nsml17-t-tFFFF
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 11h"; fi ;;
-    1) $echo "Test 11h failed: files 11h.O and $srcdir/nsml17-t-t-FF-FF differ" 1>&2;
+    1) $echo "Test 11h failed: files 11h.O and $srcdir/nsml17-t-tFFFF differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 11h may have failed." 1>&2;
-       $echo The command "cmp 11h.O $srcdir/nsml17-t-t-FF-FF" failed. 1>&2 ;
+       $echo The command "cmp 11h.O $srcdir/nsml17-t-tFFFF" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
@@ -3653,13 +3653,13 @@ if test $code != 0 ; then
   $echo "Test 12mc failed: ../../src/pr return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 12mc.O $srcdir/o3msnl17f-bl-tn
+  cmp 12mc.O $srcdir/o3msnl17fbltn
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 12mc"; fi ;;
-    1) $echo "Test 12mc failed: files 12mc.O and $srcdir/o3msnl17f-bl-tn differ" 1>&2;
+    1) $echo "Test 12mc failed: files 12mc.O and $srcdir/o3msnl17fbltn differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 12mc may have failed." 1>&2;
-       $echo The command "cmp 12mc.O $srcdir/o3msnl17f-bl-tn" failed. 1>&2 ;
+       $echo The command "cmp 12mc.O $srcdir/o3msnl17fbltn" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
