@@ -15,7 +15,7 @@ libfetish_a_SOURCES = \
   makepath.c mbswidth.c md5.c memcasecmp.c memcoll.c modechange.c \
   path-concat.c \
   quote.c quotearg.c readtokens.c safe-read.c same.c save-cwd.c \
-  savedir.c stripslash.c unicodeio.c userspec.c version-etc.c xgetcwd.c \
+  savedir.c sha.c stripslash.c unicodeio.c userspec.c version-etc.c xgetcwd.c \
   xgethostname.c xmalloc.c xstrdup.c xstrtod.c xstrtol.c xstrtoul.c \
   xstrtoumax.c yesno.c
 
@@ -30,7 +30,7 @@ noinst_HEADERS = \
   linebuffer.h long-options.h mbswidth.h md5.h memcasecmp.h memcoll.h \
   makepath.h mbswidth.h modechange.h mountlist.h nanosleep.h obstack.h \
   path-concat.h pathmax.h posixtm.h quote.h quotearg.h readtokens.h \
-  readutmp.h regex.h safe-read.h same.h save-cwd.h savedir.h \
+  readutmp.h regex.h safe-read.h same.h save-cwd.h savedir.h sha.h \
   strverscmp.h unicodeio.h version-etc.h xalloc.h xstrtod.h xstrtol.h
 
 BUILT_SOURCES = getdate.c lstat.c stat.c
