@@ -1,5 +1,7 @@
 Sun May 21 07:20:55 1995  Jim Meyering  (meyering@comco.com)
 
+	* Makefile.in (.PHONY): TAGS is not a phony target.  From Franc,ois.
+
 	* All Makefile.in (install-exec, install-exec): New targets.
 	From Karl Berry.
 
