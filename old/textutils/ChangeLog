@@ -2,6 +2,9 @@ Thu May 30 00:07:48 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* Version 1.15.
 
+	* intl/Makefile.in (installcheck): New target.
+	* po/Makefile.in.in (installcheck): New target.
+
 	* od.c (decode_one_format): Take another parameter.
 	Give a specific diagnostic for invalid format spec here rather
 	than an overly general one from caller's caller.
