@@ -39,6 +39,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   cut's --output-delimiter=D option works with abutting byte ranges.
 
+  dircolors's documentation now recommends that shell scripts eval
+  "`dircolors`" rather than `dircolors`, to avoid shell expansion pitfalls.
+
   du no longer segfaults when a subdirectory of an operand
   directory is removed while du is traversing that subdirectory.
   Since the bug was in the underlying fts.c module, it also affected
