@@ -1,3 +1,11 @@
+2001-01-02  Volker Borchert  <bt@teknon.de>
+
+	Work around a broken rename system call, e.g. on SunOS 4.1.1_U1,
+	that fails when the source path has a trailing slash.
+	* src/copy.h [RENAME_TRAILING_SLASH_BUG]: Use the rename wrapper.
+	* tests/mv/trailing-slash: Test whether the workaround works.
+	* tests/m4/Makefile.am (TESTS): Add trailing-slash.
+
 2001-01-03  Alexandre Duret-Lutz  <duret_g@epita.fr>
 
 	* po/Makefile.in.in (update-po): Merge po-files in temporary files

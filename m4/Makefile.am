@@ -52,6 +52,7 @@ putenv.m4 \
 readdir.m4 \
 realloc.m4 \
 regex.m4 \
+rename.m4 \
 rmdir-errno.m4 \
 search-libs.m4 \
 st_dm_mode.m4 \

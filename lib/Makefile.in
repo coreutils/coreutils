@@ -222,12 +222,12 @@ $(DEPDIR)/mountlist.Po $(DEPDIR)/nanosleep.Po $(DEPDIR)/obstack.Po \
 $(DEPDIR)/path-concat$U.Po $(DEPDIR)/physmem$U.Po \
 $(DEPDIR)/posixtm$U.Po $(DEPDIR)/putenv.Po $(DEPDIR)/quote$U.Po \
 $(DEPDIR)/quotearg$U.Po $(DEPDIR)/readtokens$U.Po $(DEPDIR)/readutmp.Po \
-$(DEPDIR)/realloc.Po $(DEPDIR)/regex.Po $(DEPDIR)/rmdir.Po \
-$(DEPDIR)/rpmatch.Po $(DEPDIR)/safe-read$U.Po $(DEPDIR)/same$U.Po \
-$(DEPDIR)/save-cwd$U.Po $(DEPDIR)/savedir$U.Po $(DEPDIR)/sha$U.Po \
-$(DEPDIR)/stat.Po $(DEPDIR)/stime.Po $(DEPDIR)/stpcpy.Po \
-$(DEPDIR)/strcasecmp.Po $(DEPDIR)/strcspn.Po $(DEPDIR)/strdup.Po \
-$(DEPDIR)/strftime.Po $(DEPDIR)/stripslash$U.Po \
+$(DEPDIR)/realloc.Po $(DEPDIR)/regex.Po $(DEPDIR)/rename.Po \
+$(DEPDIR)/rmdir.Po $(DEPDIR)/rpmatch.Po $(DEPDIR)/safe-read$U.Po \
+$(DEPDIR)/same$U.Po $(DEPDIR)/save-cwd$U.Po $(DEPDIR)/savedir$U.Po \
+$(DEPDIR)/sha$U.Po $(DEPDIR)/stat.Po $(DEPDIR)/stime.Po \
+$(DEPDIR)/stpcpy.Po $(DEPDIR)/strcasecmp.Po $(DEPDIR)/strcspn.Po \
+$(DEPDIR)/strdup.Po $(DEPDIR)/strftime.Po $(DEPDIR)/stripslash$U.Po \
 $(DEPDIR)/strncasecmp.Po $(DEPDIR)/strndup.Po $(DEPDIR)/strnlen.Po \
 $(DEPDIR)/strpbrk.Po $(DEPDIR)/strstr.Po $(DEPDIR)/strtod.Po \
 $(DEPDIR)/strtol.Po $(DEPDIR)/strtoul.Po $(DEPDIR)/strtoull.Po \
@@ -243,10 +243,10 @@ error.h euidaccess.c fileblocks.c fnmatch.c fsusage.c ftruncate.c \
 getdate.c getgroups.c gethostname.c getline.c getloadavg.c getpass.c \
 getusershell.c group-member.c lchown.c malloc.c memchr.c memcmp.c \
 memcpy.c memmove.c memrchr.c memset.c mktime.c mountlist.c nanosleep.c \
-obstack.c obstack.h putenv.c readutmp.c realloc.c regex.c rmdir.c \
-rpmatch.c stime.c stpcpy.c strcasecmp.c strcspn.c strdup.c strftime.c \
-strncasecmp.c strndup.c strnlen.c strpbrk.c strstr.c strtod.c strtol.c \
-strtoul.c strtoull.c strtoumax.c strverscmp.c utime.c
+obstack.c obstack.h putenv.c readutmp.c realloc.c regex.c rename.c \
+rmdir.c rpmatch.c stime.c stpcpy.c strcasecmp.c strcspn.c strdup.c \
+strftime.c strncasecmp.c strndup.c strnlen.c strpbrk.c strstr.c \
+strtod.c strtol.c strtoul.c strtoull.c strtoumax.c strverscmp.c utime.c
 
 
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -446,6 +446,8 @@ realloc_.c: realloc.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/realloc.c; then echo $(srcdir)/realloc.c; else echo realloc.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > realloc_.c
 regex_.c: regex.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/regex.c; then echo $(srcdir)/regex.c; else echo regex.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > regex_.c
+rename_.c: rename.c $(ANSI2KNR)
+	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/rename.c; then echo $(srcdir)/rename.c; else echo rename.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > rename_.c
 rmdir_.c: rmdir.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/rmdir.c; then echo $(srcdir)/rmdir.c; else echo rmdir.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > rmdir_.c
 rpmatch_.c: rpmatch.c $(ANSI2KNR)
@@ -536,11 +538,11 @@ makepath_.o malloc_.o mbswidth_.o md5_.o memcasecmp_.o memchr_.o \
 memcmp_.o memcoll_.o memcpy_.o memmove_.o memrchr_.o memset_.o \
 mktime_.o modechange_.o mountlist_.o nanosleep_.o obstack_.o \
 path-concat_.o physmem_.o posixtm_.o putenv_.o quote_.o quotearg_.o \
-readtokens_.o readutmp_.o realloc_.o regex_.o rmdir_.o rpmatch_.o \
-safe-read_.o same_.o save-cwd_.o savedir_.o sha_.o stat_.o stime_.o \
-stpcpy_.o strcasecmp_.o strcspn_.o strdup_.o strftime_.o stripslash_.o \
-strncasecmp_.o strndup_.o strnlen_.o strpbrk_.o strstr_.o strtod_.o \
-strtol_.o strtoul_.o strtoull_.o strtoumax_.o strverscmp_.o \
+readtokens_.o readutmp_.o realloc_.o regex_.o rename_.o rmdir_.o \
+rpmatch_.o safe-read_.o same_.o save-cwd_.o savedir_.o sha_.o stat_.o \
+stime_.o stpcpy_.o strcasecmp_.o strcspn_.o strdup_.o strftime_.o \
+stripslash_.o strncasecmp_.o strndup_.o strnlen_.o strpbrk_.o strstr_.o \
+strtod_.o strtol_.o strtoul_.o strtoull_.o strtoumax_.o strverscmp_.o \
 unicodeio_.o userspec_.o utime_.o version-etc_.o xgetcwd_.o \
 xgethostname_.o xmalloc_.o xstrdup_.o xstrtod_.o xstrtol_.o xstrtoul_.o \
 xstrtoumax_.o yesno_.o : $(ANSI2KNR)
@@ -660,6 +662,7 @@ maintainer-clean-tags:
 @AMDEP@include $(DEPDIR)/readutmp.Po
 @AMDEP@include $(DEPDIR)/realloc.Po
 @AMDEP@include $(DEPDIR)/regex.Po
+@AMDEP@include $(DEPDIR)/rename.Po
 @AMDEP@include $(DEPDIR)/rmdir.Po
 @AMDEP@include $(DEPDIR)/rpmatch.Po
 @AMDEP@include $(DEPDIR)/safe-read$U.Po
