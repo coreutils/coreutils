@@ -4,6 +4,7 @@
 
 	* sha1.c: File renamed from sha.c.
 	* sha1.h: File renamed from sha.h.
+	Use SHA1_H, not _SHA_H in #ifndef condition.
 
 	* sha.c: Add FSF Copyright.
 	* sha.h: Correct stale references to MD5 and `16 bytes'.
