@@ -212,6 +212,7 @@ major and minor device numbers may not be specified for fifo files"));
       break;
 
     default:
+      error (0, 0, "invalid device type %s", quote (argv[optind + 1]));
       usage (1);
     }
 
