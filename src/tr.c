@@ -362,11 +362,11 @@ themselves.  Here are the special writings:\n\
   [:cntrl:]       all control characters\n\
   [:digit:]       all digits\n\
   [:graph:]       all printable characters, not including space\n\
-  [:lower:]       all lowercase letters\n\
+  [:lower:]       all lower case letters\n\
   [:print:]       all printable characters, including space\n\
   [:punct:]       all punctuation characters\n\
   [:space:]       all horizontal or vertical whitespace\n\
-  [:upper:]       all uppercase letters\n\
+  [:upper:]       all upper case letters\n\
   [:xdigit:]      all hexadecimal digits\n\
   [=CHAR=]        all characters which are equivalent to CHAR\n\
 ");
