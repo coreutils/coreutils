@@ -503,7 +503,7 @@ static table const relative_time_table[] =
   { "TODAY",	tMINUTE_UNIT,	 0 },
   { "NOW",	tMINUTE_UNIT,	 0 },
   { "LAST",	tUNUMBER,	-1 },
-  { "THIS",	tMINUTE_UNIT,	 0 },
+  { "THIS",	tUNUMBER,	 0 },
   { "NEXT",	tUNUMBER,	 1 },
   { "FIRST",	tUNUMBER,	 1 },
 /*{ "SECOND",	tUNUMBER,	 2 }, */
