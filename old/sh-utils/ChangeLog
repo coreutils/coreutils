@@ -1,5 +1,7 @@
 Fri Apr 12 22:03:13 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
+	* configure.in (LINGUAS): Add de.
+
 	* date.c (usage): Describe %e and %z.  Reported by Karl Berry.
 
 	* who-users.c: Mark translatable strings in new code.
