@@ -1,3 +1,10 @@
+2004-03-15  Jim Meyering  <jim@meyering.net>
+
+	`date --date="21:04 +0100" +%S' would print the seconds value
+	from the current time, rather than `00'.
+	* getdate.y: For a date string like `10:23 +0100',
+	set the number of seconds to zero.  Reported by Marc Haber.
+
 2004-03-04  Jim Meyering  <jim@meyering.net>
 
 	* cloexec.c (set_cloexec_flag) [ ! (F_GETFD && F_SETFD)]:
