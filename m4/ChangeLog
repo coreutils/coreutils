@@ -1,3 +1,8 @@
+2002-09-16  Jim Meyering  <meyering@lucent.com>
+
+	* error.m4 (jm_PREREQ_ERROR): Check for libintl.h.
+	Reported by Akim Demaille.
+
 2002-09-13  Jim Meyering  <meyering@lucent.com>
 
 	* jm-macros.m4 (jm_MACROS): Require autoconf-2.54.
