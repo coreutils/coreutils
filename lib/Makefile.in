@@ -194,9 +194,9 @@ libfetish_a_SOURCES = \
   ftw_.h \
   full-read.c full-read.h \
   full-write.c full-write.h \
+  getdelim2.c getdelim2.h \
   getline.h \
   getpagesize.h \
-  getstr.c getstr.h \
   gettime.c \
   gettext.h \
   getugroups.c \
@@ -296,7 +296,7 @@ am_libfetish_a_OBJECTS = acl.$(OBJEXT) getdate.$(OBJEXT) \
 	dirname.$(OBJEXT) dup-safer.$(OBJEXT) exclude.$(OBJEXT) \
 	exitfail.$(OBJEXT) filemode.$(OBJEXT) file-type.$(OBJEXT) \
 	fopen-safer.$(OBJEXT) full-read.$(OBJEXT) full-write.$(OBJEXT) \
-	getstr.$(OBJEXT) gettime.$(OBJEXT) getugroups.$(OBJEXT) \
+	getdelim2.$(OBJEXT) gettime.$(OBJEXT) getugroups.$(OBJEXT) \
 	hard-locale.$(OBJEXT) human.$(OBJEXT) idcache.$(OBJEXT) \
 	isdir.$(OBJEXT) imaxtostr.$(OBJEXT) linebuffer.$(OBJEXT) \
 	localcharset.$(OBJEXT) long-options.$(OBJEXT) \
@@ -363,8 +363,8 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/exitfail.Po ./$(DEPDIR)/file-type.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/filemode.Po ./$(DEPDIR)/fopen-safer.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/full-read.Po ./$(DEPDIR)/full-write.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/getdate.Po ./$(DEPDIR)/getopt.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/getopt1.Po ./$(DEPDIR)/getstr.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/getdate.Po ./$(DEPDIR)/getdelim2.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/getopt.Po ./$(DEPDIR)/getopt1.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/gettime.Po ./$(DEPDIR)/getugroups.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/hard-locale.Po ./$(DEPDIR)/hash-pjw.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/hash.Po ./$(DEPDIR)/human.Po \
@@ -531,9 +531,9 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/full-read.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/full-write.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/getdate.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/getdelim2.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/getopt.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/getopt1.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/getstr.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gettime.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/getugroups.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hard-locale.Po@am__quote@

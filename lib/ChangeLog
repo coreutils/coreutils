@@ -1,5 +1,7 @@
 2003-06-18  Jim Meyering  <jim@meyering.net>
 
+	* Makefile.am (libfetish_a_SOURCES): Add getdelim2.c and getdelim2.h.
+
 	* getline.c (getdelim2): Move this function into its own file.
 	* getdelim2.c: Extracted from getline.c.
 
