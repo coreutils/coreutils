@@ -51,6 +51,10 @@ char *malloc ();
 char *realloc ();
 #endif
 
+#ifndef DEFAULT_TMPDIR
+#define DEFAULT_TMPDIR "/tmp"
+#endif
+
 /* The number of bytes per atomic read. */
 #define INITIAL_READSIZE 8192
 
@@ -363,7 +367,7 @@ save_stdin ()
     {
       tempdir = getenv ("TMPDIR");
       if (tempdir == NULL)
-	tempdir = "/tmp";
+	tempdir = DEFAULT_TMPDIR;
       template = xmalloc (strlen (tempdir) + 11);
     }
   sprintf (template, "%s/tacXXXXXX", tempdir);
