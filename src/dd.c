@@ -36,6 +36,11 @@
 #include "long-options.h"
 #include "safe-read.h"
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "dd"
+
+#define AUTHORS "Paul Rubin, David MacKenzie, and Stuart Kemp"
+
 #ifndef SIGINFO
 # define SIGINFO SIGUSR1
 #endif
@@ -265,11 +270,6 @@ static unsigned char const ebcdic_to_ascii[] =
   0131, 0132, 0364, 0365, 0366, 0367, 0370, 0371,
   060, 061, 062, 063, 064, 065, 066, 067,
   070, 071, 0372, 0373, 0374, 0375, 0376, 0377
-};
-
-static struct option const long_options[] =
-{
-  {0, 0, 0, 0}
 };
 
 void
@@ -584,19 +584,6 @@ static void
 scanargs (int argc, char **argv)
 {
   int i;
-  int c;
-
-  while ((c = getopt_long (argc, argv, "", long_options, NULL)) != -1)
-    {
-      switch (c)
-	{
-	case 0:
-	  break;
-
-	default:
-	  usage (1);
-	}
-    }
 
   for (i = optind; i < argc; i++)
     {
@@ -1104,8 +1091,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "dd", GNU_PACKAGE, VERSION,
-		      "Paul Rubin, David MacKenzie, and Stuart Kemp", usage);
+  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
+		      AUTHORS, usage);
 
   /* Initialize translation table to identity translation. */
   for (i = 0; i < 256; i++)
