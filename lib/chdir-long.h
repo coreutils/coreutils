@@ -17,4 +17,19 @@
 
 /* Written by Jim Meyering.  */
 
+#include <unistd.h>
+#include <limits.h>
+
+#ifndef PATH_MAX
+# ifdef	MAXPATHLEN
+#  define PATH_MAX MAXPATHLEN
+# endif
+#endif
+
+/* On systems without PATH_MAX, presume that chdir accepts
+   arbitrarily long directory names.  */
+#ifndef PATH_MAX
+# define chdir_long(Dir) chdir (Dir)
+#else
 int chdir_long (char const *dir);
+#endif
