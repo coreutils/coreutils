@@ -1,12 +1,12 @@
-#serial 3
+#serial 4
 
 dnl From Paul Eggert.
 
 # Define HOST_OPERATING_SYSTEM to a name for the host operating system.
-AC_DEFUN([UTILS_HOST_OS],
+AC_DEFUN([gl_HOST_OS],
 [
   AC_CACHE_CHECK([host operating system],
-    utils_cv_host_operating_system,
+    gl_cv_host_operating_system,
 
     [[case $host_os in
 
@@ -67,8 +67,8 @@ AC_DEFUN([UTILS_HOST_OS],
        *)
 	 os=$host_os;;
      esac
-     utils_cv_host_operating_system=$os]])
+     gl_cv_host_operating_system=$os]])
   AC_DEFINE_UNQUOTED(HOST_OPERATING_SYSTEM,
-    "$utils_cv_host_operating_system",
+    "$gl_cv_host_operating_system",
     [The host operating system.])
 ])
