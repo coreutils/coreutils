@@ -1594,7 +1594,7 @@ squeeze_filter (unsigned char *buf, size_t size, Filter reader)
 {
   unsigned int char_to_squeeze = NOT_A_CHAR;
   size_t i = 0;
-  ssize_t nr = 0;
+  size_t nr = 0;
 
   for (;;)
     {
@@ -1604,10 +1604,9 @@ squeeze_filter (unsigned char *buf, size_t size, Filter reader)
 	{
 	  if (reader == NULL)
 	    {
-	      ssize_t signed_nr = safe_read (0, (char *) buf, size);
-	      if (signed_nr < 0)
+	      nr = safe_read (0, (char *) buf, size);
+	      if (nr == SAFE_READ_ERROR)
 		error (EXIT_FAILURE, errno, _("read error"));
-	      nr = signed_nr;
 	    }
 	  else
 	    {
@@ -1706,9 +1705,9 @@ read_and_delete (unsigned char *buf, size_t size, Filter not_used)
   do
     {
       size_t i;
-      ssize_t nr = safe_read (0, (char *) buf, size);
+      size_t nr = safe_read (0, (char *) buf, size);
 
-      if (nr < 0)
+      if (nr == SAFE_READ_ERROR)
 	error (EXIT_FAILURE, errno, _("read error"));
       if (nr == 0)
 	{
@@ -1741,7 +1740,7 @@ read_and_delete (unsigned char *buf, size_t size, Filter not_used)
 static size_t
 read_and_xlate (unsigned char *buf, size_t size, Filter not_used)
 {
-  ssize_t chars_read = 0;
+  size_t chars_read = 0;
   static int hit_eof = 0;
   size_t i;
 
@@ -1751,7 +1750,7 @@ read_and_xlate (unsigned char *buf, size_t size, Filter not_used)
     return 0;
 
   chars_read = safe_read (0, (char *) buf, size);
-  if (chars_read < 0)
+  if (chars_read == SAFE_READ_ERROR)
     error (EXIT_FAILURE, errno, _("read error"));
   if (chars_read == 0)
     {
