@@ -84,6 +84,7 @@
 #endif
 
 #include <errno.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -457,7 +458,7 @@
 
 # ifdef NeXT
 static processor_set_t default_set;
-static int getloadavg_initialized;
+static bool getloadavg_initialized;
 # endif /* NeXT */
 
 # ifdef UMAX
@@ -472,8 +473,8 @@ static struct dg_sys_info_load_info load_info;	/* what-a-mouthful! */
 # if !defined (HAVE_LIBKSTAT) && defined (LOAD_AVE_TYPE)
 /* File descriptor open to /dev/kmem or VMS load ave driver.  */
 static int channel;
-/* Nonzero iff channel is valid.  */
-static int getloadavg_initialized;
+/* True iff channel is valid.  */
+static bool getloadavg_initialized;
 /* Offset in kmem to seek to read load average, or 0 means invalid.  */
 static long offset;
 
@@ -648,7 +649,7 @@ getloadavg (double loadavg[], int nelem)
 
   host_t host;
   struct processor_set_basic_info info;
-  unsigned info_count;
+  unsigned int info_count;
 
   /* We only know how to get the 1-minute average for this system,
      so even if the caller asks for more than 1, we only return 1.  */
@@ -656,7 +657,7 @@ getloadavg (double loadavg[], int nelem)
   if (!getloadavg_initialized)
     {
       if (processor_set_default (host_self (), &default_set) == KERN_SUCCESS)
-	getloadavg_initialized = 1;
+	getloadavg_initialized = true;
     }
 
   if (getloadavg_initialized)
@@ -665,7 +666,7 @@ getloadavg (double loadavg[], int nelem)
       if (processor_set_info (default_set, PROCESSOR_SET_BASIC_INFO, &host,
 			      (processor_set_info_t) &info, &info_count)
 	  != KERN_SUCCESS)
-	getloadavg_initialized = 0;
+	getloadavg_initialized = false;
       else
 	{
 	  if (nelem > 0)
@@ -826,7 +827,7 @@ getloadavg (double loadavg[], int nelem)
   /* VMS specific code -- read from the Load Ave driver.  */
 
   LOAD_AVE_TYPE load_ave[3];
-  static int getloadavg_initialized = 0;
+  static bool getloadavg_initialized;
 #  ifdef eunice
   struct
   {
@@ -846,7 +847,7 @@ getloadavg (double loadavg[], int nelem)
       $DESCRIPTOR (descriptor, "LAV0:");
 #  endif
       if (sys$assign (&descriptor, &channel, 0, 0) & 1)
-	getloadavg_initialized = 1;
+	getloadavg_initialized = true;
     }
 
   /* Read the load average vector.  */
@@ -855,7 +856,7 @@ getloadavg (double loadavg[], int nelem)
 		     load_ave, 12, 0, 0, 0, 0) & 1))
     {
       sys$dassgn (channel);
-      getloadavg_initialized = 0;
+      getloadavg_initialized = false;
     }
 
   if (!getloadavg_initialized)
@@ -908,7 +909,7 @@ getloadavg (double loadavg[], int nelem)
 
       ldav_off = sysmp (MP_KERNADDR, MPKA_AVENRUN);
       if (ldav_off != -1)
-	offset = (long) ldav_off & 0x7fffffff;
+	offset = (long int) ldav_off & 0x7fffffff;
 #  endif /* sgi */
     }
 
@@ -922,7 +923,7 @@ getloadavg (double loadavg[], int nelem)
 	  /* Set the channel to close on exec, so it does not
 	     litter any child's descriptor table.  */
 	  set_cloexec_flag (channel, true);
-	  getloadavg_initialized = 1;
+	  getloadavg_initialized = true;
 	}
 #  else /* SUNOS_5 */
       /* We pass 0 for the kernel, corefile, and swapfile names
@@ -933,7 +934,7 @@ getloadavg (double loadavg[], int nelem)
 	  /* nlist the currently running kernel.  */
 	  kvm_nlist (kd, nl);
 	  offset = nl[0].n_value;
-	  getloadavg_initialized = 1;
+	  getloadavg_initialized = true;
 	}
 #  endif /* SUNOS_5 */
     }
@@ -948,14 +949,14 @@ getloadavg (double loadavg[], int nelem)
 	  != sizeof (load_ave))
 	{
 	  close (channel);
-	  getloadavg_initialized = 0;
+	  getloadavg_initialized = false;
 	}
 #  else  /* SUNOS_5 */
       if (kvm_read (kd, offset, (char *) load_ave, sizeof (load_ave))
 	  != sizeof (load_ave))
 	{
 	  kvm_close (kd);
-	  getloadavg_initialized = 0;
+	  getloadavg_initialized = false;
 	}
 #  endif /* SUNOS_5 */
     }
