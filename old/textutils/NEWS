@@ -1,5 +1,6 @@
 Changes in release 2.1
 [2.0.11]
+* sort accepts new -S SIZE option, to specify main-memory usage.
 [2.0.10]
 * od is faster and more portable than it was in 2.0.9
 * tail avoids an uninitialized memory reference
