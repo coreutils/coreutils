@@ -1,0 +1,75 @@
+#!/bin/sh
+# make sure chgrp handles symlinks properly
+
+if test "$VERBOSE" = yes; then
+  set -x
+  chgrp --version
+fi
+
+pwd=`pwd`
+tmp=slink.$$
+trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
+trap '(exit $?); exit' 1 2 13 15
+
+framework_failure=0
+mkdir $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo 'failure in testing framework' 1>&2
+  (exit 1); exit
+fi
+
+groups=`id -nG 2>/dev/null`
+case "$groups" in
+  *' '*) ;;
+  *) cat <<EOF 1>&2
+$0: this test requires that you be a member of more than one group,
+but running \`id -nG' either failed or found just one.
+EOF
+     (exit 77); exit
+     ;;
+esac
+
+set _ $groups; shift
+g1=$1
+g2=$2
+
+fail=0
+
+touch f
+ln -s f symlink
+
+chgrp $g2 symlink 2> /dev/null
+set _ `ls -l symlink`
+g=$5
+test "$g" = $g2 || {
+  cat <<EOF 1>&2
+$0: skipping this test; your system doesn't support changing
+the owner or group of a symbolic link.
+EOF
+  (exit 77); exit
+}
+
+(
+  chgrp -c $g1 f
+  chgrp $g2 symlink 2> /dev/null
+  # This should not change the group of f.
+  chgrp -c $g2 symlink 2> /dev/null
+  chgrp -c $g2 f
+
+  # This *should* change the group of f.
+  # Though note that the diagnostic is misleading in that
+  # it says the `group of `symlink'' has been changed.
+  chgrp --dereference -c $g1 symlink
+) 2>&1 | sed "s/ $g1$/ G1/;s/ $g2$/ G2/" > actual
+
+cat <<\EOF > expected
+group of `f' changed to G2
+group of `symlink' changed to G1
+EOF
+
+cmp expected actual \
+  || { diff -u expected actual 1>&2; fail=1; }
+
+(exit $fail); exit
