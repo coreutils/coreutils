@@ -22,17 +22,17 @@
 #endif
 
 #ifdef __GNUC__
-#define alloca __builtin_alloca
+# define alloca __builtin_alloca
 #else
-#ifdef HAVE_ALLOCA_H
-#include <alloca.h>
-#else
-#ifdef _AIX
+# ifdef HAVE_ALLOCA_H
+#  include <alloca.h>
+# else
+#  ifdef _AIX
  #pragma alloca
-#else
+#  else
 char *alloca ();
-#endif
-#endif
+#  endif
+# endif
 #endif
 
 #include <stdio.h>
@@ -40,21 +40,21 @@ char *alloca ();
 #include <pwd.h>
 #include <grp.h>
 
-#if defined(STDC_HEADERS) || defined(HAVE_STRING_H)
-#include <string.h>
-#ifndef index
-#define index strchr
-#endif
+#ifdef HAVE_STRING_H
+# include <string.h>
 #else
-#include <strings.h>
+# include <strings.h>
+# ifndef strchr
+#  define strchr index
+# endif
 #endif
 
 #ifdef STDC_HEADERS
-#include <stdlib.h>
+# include <stdlib.h>
 #endif
 
 #ifdef HAVE_UNISTD_H
-#include <unistd.h>
+# include <unistd.h>
 #endif
 
 #ifndef _POSIX_VERSION
@@ -131,9 +131,9 @@ parse_user_spec (spec_arg, uid, gid, username_arg, groupname_arg)
   V_STRDUP (spec, spec_arg);
 
   /* Find the separator if there is one.  */
-  separator = index (spec, ':');
+  separator = strchr (spec, ':');
   if (separator == NULL)
-    separator = index (spec, '.');
+    separator = strchr (spec, '.');
 
   /* Replace separator with a NUL.  */
   if (separator != NULL)
