@@ -1,5 +1,5 @@
 /* vsprintf with automatic memory allocation.
-   Copyright (C) 1999, 2002-2004 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2002-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -294,9 +294,10 @@ VASNPRINTF (CHAR_T *resultbuf, size_t *lengthp, const CHAR_T *format, va_list ar
 
 			  do
 			    {
-			      if (SIZE_MAX / 10 <= width)
+			      size_t w_tmp = width * 10 + (*digitp++ - '0');
+			      if (SIZE_MAX / 10 <= width || w_tmp < width)
 				goto out_of_memory;
-			      width = width * 10 + (*digitp++ - '0');
+			      width = w_tmp;
 			    }
 			  while (digitp != dp->width_end);
 			}
