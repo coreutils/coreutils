@@ -1,5 +1,5 @@
 /* pr -- convert text files for printing.
-   Copyright (C) 88, 91, 1995-2001 Free Software Foundation, Inc.
+   Copyright (C) 88, 91, 1995-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -76,16 +76,16 @@
    (`interference' means `setting a _separator_ with -s switches off the
    column sturctur and the default - not generally - page_width,
    acts on -w option')
-       options:       text form  / separator:     equivalent new capital
-       -w l   -s[x]                               letter options:
+       options:       text form  / separator:     equivalent new options:
+       -w l   -s[x]
     --------------------------------------------------------------------
     1.  --     --     columns    / space          --
                       trunc. to page_width = 72
-    2.  --    -s[:]   full lines / TAB[:]         -J    -S["<TAB>"|:]
+    2.  --    -s[:]   full lines / TAB[:]         -J  --sep-string[="<TAB>"|:]
                       no truncation
     3.  -w l   --     columns    / space          -W l
                       trunc. to page_width = l
-    4.  -w l  -s[:]   columns    / no sep.[:]     -W l  -S[:]
+    4.  -w l  -s[:]   columns    / no sep.[:]     -W l  --sep-string[=:]
                       trunc. to page_width = l
     --------------------------------------------------------------------
 
@@ -173,10 +173,10 @@
 		width. (Default is 8)
 
    -J, --join-lines	Merge lines of full length, turns off -W/-w
-		line truncation, no column alignment, -S[STRING] sets
-		separators, works with all column options
+		line truncation, no column alignment, --sep-string[=STRING]
+		sets separators, works with all column options
 		(-COLUMN | -a -COLUMN | -m).
-		-J has been introduced (together with -W and -S) to
+		-J has been introduced (together with -W and --sep-string) to
 		disentangle the old (POSIX compliant) options -w, -s
 		along with the 3 column options.
 
@@ -251,18 +251,19 @@
 		compliant formulation. The source code translates -s into
 		the new options -S and -J, also -W if required.
 
-   -S[STRING], --sep-string[=STRING]
+   -S STRING, --sep-string[=STRING]
 		Separate columns by any string STRING. The -S option
 		doesn't react upon the -W/-w option (unlike -s option
 		does). It defines a separator nothing else.
 		Without -S: Default separator TAB is used with -J and
 		`space' otherwise (same as -S" ").
-		With -S only: No separator is used, same as -S"".
+		With -S "": No separator is used.
 		Quotes should be used with blanks and some shell active
 		characters.
-		Don't use -S "STRING". Some of the options don't allow the
-		option letter to be separated from its argument. -S/-s is
-		one of them. That's POSIX compliant.
+		-S is problematic because in its obsolete form you
+		cannot use -S "STRING", but in its standard form you
+		must use -S "STRING" if STRING is empty.  Use
+		--sep-string to avoid the ambiguity.
 
    -t, --omit-header	Do not print headers or footers but retain form
 		feeds set in the input files.
@@ -733,9 +734,13 @@ static int last_line = FALSE;
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
-  PAGES_OPTION = CHAR_MAX + 1,
-  COLUMNS_OPTION
+  COLUMNS_OPTION = CHAR_MAX + 1,
+  PAGES_OPTION,
+  SEP_STRING_OPTION
 };
+
+static char const short_options[] =
+"-0123456789abcdD:e::fFh:i::Jl:mn::N:o:rs::S" OPTARG_POSIX "tTvw:W:";
 
 static struct option const long_options[] =
 {
@@ -757,7 +762,7 @@ static struct option const long_options[] =
   {"indent", required_argument, NULL, 'o'},
   {"no-file-warnings", no_argument, NULL, 'r'},
   {"separator", optional_argument, NULL, 's'},
-  {"sep-string", optional_argument, NULL, 'S'},
+  {"sep-string", optional_argument, NULL, SEP_STRING_OPTION},
   {"omit-header", no_argument, NULL, 't'},
   {"omit-pagination", no_argument, NULL, 'T'},
   {"show-nonprinting", no_argument, NULL, 'v'},
@@ -831,7 +836,7 @@ first_last_page (char *pages)
 	_("`--pages' starting page number is larger than ending page number"));
 }
 
-/* Estimate length of col_sep_string with option -S[STRING] */
+/* Estimate length of col_sep_string with option -S.  */
 
 static void
 separator_string (const char *optarg_S)
@@ -851,6 +856,7 @@ main (int argc, char **argv)
   int old_w = FALSE;
   int old_s = FALSE;
   char **file_names;
+  bool posix_pedantic = (getenv ("POSIXLY_CORRECT") != NULL);
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -864,9 +870,7 @@ main (int argc, char **argv)
 		? (char **) xmalloc ((argc - 1) * sizeof (char *))
 		: NULL);
 
-  while ((c = getopt_long (argc, argv,
-			   "-0123456789abcdD:e::fFh:i::Jl:mn::N:o:rs::S::tTvw:W:",
-			   long_options, NULL))
+  while ((c = getopt_long (argc, argv, short_options, long_options, NULL))
 	 != -1)
     {
       if (ISDIGIT (c))
@@ -1019,6 +1023,12 @@ main (int argc, char **argv)
 	    separator_string (optarg);
 	  break;
 	case 'S':
+	  if (POSIX2_VERSION < 200112 && OBSOLETE_OPTION_WARNINGS
+	      && ! optarg && ! posix_pedantic)
+	    error (0, 0,
+		   _("warning: `pr -S' is obsolete; use `pr --sep-string'"));
+	  /* Fall through.  */
+	case SEP_STRING_OPTION:
 	  old_s = FALSE;
 	  /* Reset an additional input of -s, -S dominates -s */
 	  col_sep_string = "";
@@ -1071,7 +1081,7 @@ main (int argc, char **argv)
     }
 
   if (! date_format)
-    date_format = (getenv ("POSIXLY_CORRECT")
+    date_format = (posix_pedantic
 		   ? dcgettext (NULL, "%b %e %H:%M %Y", LC_TIME)
 		   : "%Y-%m-%d %H:%M");
 
@@ -2792,7 +2802,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -i[CHAR[WIDTH]], --output-tabs[=CHAR[WIDTH]]\n\
                     replace spaces with CHARs (TABs) to tab WIDTH (8)\n\
   -J, --join-lines  merge full lines, turns off -W line truncation, no column\n\
-                    alignment, -S[STRING] sets separators\n\
+                    alignment, --sep-string[=STRING] sets separators\n\
 "), stdout);
       fputs (_("\
   -l PAGE_LENGTH, --length=PAGE_LENGTH\n\
@@ -2823,10 +2833,17 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                     -s[CHAR] turns off line truncation of all 3 column\n\
                     options (-COLUMN|-a -COLUMN|-m) except -w is set\n\
 "), stdout);
-      fputs (_("\
+      if (POSIX2_VERSION < 200112)
+	fputs (_("\
   -S[STRING], --sep-string[=STRING]\n\
-                    separate columns by an optional STRING, don't use\n\
-                    -S \"STRING\", -S only: No separator used (same as -S\"\"),\n\
+                    (`-S' with empty STRING is obsolete; use `--sep-string'.)\n\
+"), stdout);
+      else
+	fputs (_("\
+  -S STRING, --sep-string[=STRING]\n\
+"), stdout);
+      fputs (_("\
+                    separate columns by STRING,\n\
                     without -S: Default separator <TAB> with -J and <space>\n\
                     otherwise (same as -S\" \"), no effect on column options\n\
   -t, --omit-header omit page headers and trailers\n\
