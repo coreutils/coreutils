@@ -160,7 +160,7 @@ AC_DEFUN(AM_WITH_NLS,
       # Clean out junk possibly left behind by a previous configuration.
       rm -f intl/libintl.h
     fi
-    AC_LINK_FILES($nls_cv_header_libgt, $nls_cv_header_intl)
+    AC_CONFIG_LINKS($nls_cv_header_intl:$nls_cv_header_libgt)
     AC_OUTPUT_COMMANDS(
      [case "$CONFIG_FILES" in *po/Makefile.in*)
         sed -e "/POTFILES =/r po/POTFILES" po/Makefile.in > po/Makefile
@@ -305,7 +305,7 @@ strdup __argz_count __argz_stringify __argz_next])
    test -d po || mkdir po
    changequote(, )dnl
    case "$srcdir" in
-   .) 
+   .)
      posrcprefix="../" ;;
    /* | [A-Za-z]:*)
      posrcprefix="$srcdir/" ;;
