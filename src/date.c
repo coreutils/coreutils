@@ -34,7 +34,6 @@
 #include "posixver.h"
 #include "quote.h"
 #include "strftime.h"
-#include "timespec.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "date"
