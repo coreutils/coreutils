@@ -93,12 +93,6 @@
 # define iswprint(wc) 1
 #endif
 
-/* Some systems, like BeOS, have multibyte encodings but lack mbstate_t.  */
-#if HAVE_MBRTOWC && defined mbstate_t
-# define mbrtowc(pwc, s, n, ps) (mbrtowc) (pwc, s, n, 0)
-# define mbsinit(ps) 1
-#endif
-
 #ifndef HAVE_DECL_WCWIDTH
 "this configure-time declaration test was not run"
 #endif
