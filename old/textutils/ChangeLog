@@ -1,3 +1,29 @@
+2001-04-12  Paul Eggert  <eggert@twinsun.com>
+
+	* src/sort.c (RLIMIT_AS): Do not define; just use conditional
+	code, since RLIMIT_RSS is similar (and is not standardized).
+	(default_sort_size): Don't allocate more than the RSS limit,
+	if this host has such a limit.
+
+2001-03-20  Paul Eggert  <eggert@twinsun.com>
+
+	* NEWS, doc/textutils.texi: sort now accepts long options and
+        checks POSIX option syntax.
+
+	* doc/textutils.texi: Document --, -, sort long options, and
+	sort -o after files.
+
+	* src/sort.c: Include <getopt.h>.
+	(usage, main): Add support for long options, and check option
+	syntax as POSIX requires, though (as usual for GNU apps)
+	options can follow file names unless POSIXLY_CORRECT is set.
+	Many diagnostic revamped.
+	(long_options): New constant.
+	(badfieldspec): New arg MSGID.  Mark as noreturn.
+	(parse_field_count): New arg MSGID; if null, just return null on error.
+	(new_key): Renamed from key_init.  All callers changed.  Now allocates
+	the new key.
+
 2001-03-18  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.13.
