@@ -519,7 +519,7 @@ foreach $t (@Tests)
     $h->{OUT} = lc $h->{OUT} . "  f\n";
 
     # Insert the `--text' argument for each test.
-    #splice @$t, 1, 0, '--text';
+    splice @$t, 1, 0, '--text';
   }
 
 my $save_temps = $ENV{DEBUG};
