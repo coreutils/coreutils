@@ -1,3 +1,9 @@
+2004-12-04  Jim Meyering  <jim@meyering.net>
+
+	* Version 5.3.0.
+
+	* NEWS: Mention cut's new --complement option.
+
 2004-10-01  Paolo Bonzini  <bonzini@gnu.org>
 
 	* cut.c (complement, COMPLEMENT_OPTION): New.
@@ -13,8 +19,6 @@
 	(main): Handle --complement.
 
 2004-12-03  Paul Eggert  <eggert@cs.ucla.edu>
-
-	* Version 5.3.0.
 
 	* src/tail.c (tail_file): Set errnum to -1 if the initial "tail"
 	failed.  This works around an assertion failure reported by
