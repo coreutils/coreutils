@@ -1,5 +1,14 @@
 2003-10-02  Jim Meyering  <jim@meyering.net>
 
+	* Version 5.0.92.
+
+	* src/du.c: Include "fts_.h", not ftw.h.
+	(opt_dereference_arguments, arg_length, suffix_length): Remove globals.
+	(IS_FTW_DIR_TYPE): Remove definition.
+	(IS_DIR_TYPE): Define.
+	(is_symlink_to_dir): Remove now-unnecessary function.
+	(process_file, du_files): Rewrite to use fts.
+
 	* tests/du/inaccessible-cwd: Ensure that even when run from an
 	inaccessible directory, du can still operate on accessible
 	directories elsewhere.
@@ -7,18 +16,12 @@
 	* tests/rm/deep-1: Ensure that du can process a hierarchy
 	of depth 400 while using no more than 50KB of stack space.
 
-2003-10-01  Jim Meyering  <jim@meyering.net>
-
-	* src/du.c (is_symlink_to_dir): Remove now-unnecessary function.
-
 2003-10-01  Akim Demaille  <akim@epita.fr>
-
-	* Version 5.0.92.
 
 	* announce-gen (print_news_deltas): New function, extracted from main.
 	(main): Make `news_file' an array.
 	Use '...=s' => \@var for --news and --url-directory specs.
-	Before there were a couple of problems.
+	Before there were a couple of portability problems.
 
 2003-09-30  Jim Meyering  <jim@meyering.net>
 
