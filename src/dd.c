@@ -55,16 +55,6 @@
 
 #include <config.h>
 #include <stdio.h>
-#include <ctype.h>
-
-#if !defined (isascii) || defined (STDC_HEADERS)
-#undef isascii
-#define isascii(c) 1
-#endif
-
-#define ISLOWER(c) (isascii (c) && islower (c))
-#define ISUPPER(c) (isascii (c) && isupper (c))
-#define ISDIGIT(c) (isascii (c) && isdigit (c))
 
 #define SWAB_ALIGN_OFFSET 2
 
@@ -844,7 +834,7 @@ scanargs (argc, argv)
       char *name, *val;
 
       name = argv[i];
-      val = index (name, '=');
+      val = strchr (name, '=');
       if (val == NULL)
 	{
 	  error (0, 0, "unrecognized option `%s'", name);
@@ -961,7 +951,7 @@ parse_conversion (str)
 
   do
     {
-      new = index (str, ',');
+      new = strchr (str, ',');
       if (new != NULL)
 	*new++ = '\0';
       for (i = 0; conversions[i].convname != NULL; i++)
