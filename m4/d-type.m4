@@ -5,7 +5,7 @@ dnl
 dnl Check whether struct dirent has a member named d_type.
 dnl
 
-AC_DEFUN(jm_STRUCT_DIRENT_D_TYPE,
+AC_DEFUN(jm_CHECK_TYPE_STRUCT_DIRENT_D_TYPE,
   [AC_REQUIRE([AC_HEADER_DIRENT])dnl
    AC_CACHE_CHECK([for d_type member in directory struct],
 		  jm_cv_struct_dirent_d_type,
