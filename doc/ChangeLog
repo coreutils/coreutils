@@ -1,3 +1,8 @@
+2001-08-24  Herbert Xu  <herbert@gondor.apana.org.au>
+
+	* coreutils.texi (cut invocation): Document how cut treats lines
+	with no separators.
+
 2001-06-19  Paul Eggert  <eggert@twinsun.com>
 
 	* coreutils.texi: expr now uses LC_COLLATE for string comparison,
