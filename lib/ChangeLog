@@ -1,3 +1,7 @@
+2004-04-20  Jim Meyering  <jim@meyering.net>
+
+	* getndelim2.c (getndelim2): Upon realloc failure, don't leak memory.
+
 2004-04-18  Jim Meyering  <jim@meyering.net>
 
 	* readutmp.c (read_utmp) [UTMP_NAME_FUNCTION]: Upon realloc failure,
