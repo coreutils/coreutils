@@ -34,6 +34,7 @@ if test $framework_failure = 1; then
   exit 1
 fi
 
+echo sleeping for $SLEEP_SECONDS seconds...
 sleep $SLEEP_SECONDS
 for d in $TOUCH_DIR_LIST; do
   touch $d/a || fail=1
@@ -41,6 +42,7 @@ for d in $TOUCH_DIR_LIST; do
   test "$*" = "x $d/a $d/b" || fail=1
 done
 
+echo sleeping for $SLEEP_SECONDS seconds...
 sleep $SLEEP_SECONDS
 for d in $TOUCH_DIR_LIST; do
   touch $d/b

@@ -16,6 +16,7 @@ rm -rf $t1 $t2
 : > $t1
 
 # Make sure $t2 is two seconds newer than $t1.
+echo sleeping for $SLEEP_SECONDS seconds...
 sleep $SLEEP_SECONDS
 : > $t2
 fail=0
