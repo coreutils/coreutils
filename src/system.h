@@ -337,7 +337,11 @@ initialize_exit_failure (int status)
 #endif
 
 #ifndef ST_NBLOCKSIZE
-# define ST_NBLOCKSIZE 512
+# ifdef S_BLKSIZE
+#  define ST_NBLOCKSIZE S_BLKSIZE
+# else
+#  define ST_NBLOCKSIZE 512
+# endif
 #endif
 
 /* Redirection and wildcarding when done by the utility itself.
