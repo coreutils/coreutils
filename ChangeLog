@@ -1,6 +1,10 @@
-2004-04-19  Jim Meyering  <jim@meyering.net>
+2004-04-20  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	* src/cut.c (cut_fields): Free buffer upon getndelim2 failure.
+
+2004-04-19  Jim Meyering  <jim@meyering.net>
 
 	* src/shred.c (isaac_seed_start) [AVOID_USED_UNINITIALIZED_WARNINGS]:
 	Initialize a buffer to avoid warnings from tools like valgrind.
