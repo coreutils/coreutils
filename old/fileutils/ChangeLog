@@ -1,5 +1,7 @@
 Fri Dec 27 17:29:02 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* Makefile.am (aclocal.m4): No longer depend on acinclude.m4.
+
 	* configure.in: AC_REQUIRE version 2.12 of autoconf.
 
 Sun Dec 22 23:29:10 1996  Jim Meyering  <meyering@na-net.ornl.gov>
