@@ -37,21 +37,13 @@ extern int errno;
    with a non-const argument.  That would conflict with the declaration of
    rpl_putenv below (due to the #define putenv rpl_putenv from config.h).  */
 
-char *malloc ();
+void *malloc ();
 void free ();
 
-#if defined (__GNU_LIBRARY__) || defined (HAVE_STRING_H)
-# include <string.h>
-#endif
+#include <string.h>
+
 #if defined (__GNU_LIBRARY__) || defined (HAVE_UNISTD_H)
 # include <unistd.h>
-#endif
-
-#if !defined (__GNU_LIBRARY__) && !defined (HAVE_STRCHR)
-# define strchr index
-#endif
-#if !defined (__GNU_LIBRARY__) && !defined (HAVE_MEMCPY)
-# define memcpy(d,s,n) bcopy ((s), (d), (n))
 #endif
 
 #if HAVE_GNU_LD
@@ -69,10 +61,6 @@ __libc_lock_define_initialized (static, envlock)
 #else
 # define LOCK
 # define UNLOCK
-#endif
-
-#ifndef NULL
-# define NULL 0
 #endif
 
 static int
