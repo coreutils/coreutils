@@ -244,9 +244,9 @@ show_dev (const char *disk, const char *mount_point, const char *fstype)
 	}
 
       printf (" %7s %7s %7s %5.0f%%",
-	      human_readable (fsu.fsu_files, buf[0], 1, 1, 0),
-	      human_readable (inodes_used, buf[1], 1, 1, 0),
-	      human_readable (fsu.fsu_ffree, buf[2], 1, 1, 0),
+	      human_readable (fsu.fsu_files, buf[0], 1, 1, human_readable_base),
+	      human_readable (inodes_used, buf[1], 1, 1, human_readable_base),
+	      human_readable (fsu.fsu_ffree, buf[2], 1, 1, human_readable_base),
 	      inodes_percent_used);
     }
   else
