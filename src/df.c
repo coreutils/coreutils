@@ -148,16 +148,11 @@ static void
 print_header (void)
 {
   char buf[MAX (LONGEST_HUMAN_READABLE + 1, INT_BUFSIZE_BOUND (uintmax_t))];
-  char const *type_header = _("   Type");
 
-  printf (_("Filesystem "));
-
-  /* Print the `Type' header if required (--print-type, -T),
-     or an equivalent number of spaces.  */
   if (print_type)
-    fputs (type_header, stdout);
+    fputs (_("Filesystem    Type"), stdout);
   else
-    printf ("%-*s", strlen (type_header), "");
+    fputs (_("Filesystem        "), stdout);
 
   if (inode_format)
     printf (_("    Inodes   IUsed   IFree IUse%%"));
