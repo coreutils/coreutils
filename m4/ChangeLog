@@ -1,3 +1,7 @@
+2003-07-14  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.am.in: Correct comment on first line.
+
 2003-07-12  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4 (OPTIONAL_BIN_ZCRIPTS): Remove unused variable.
