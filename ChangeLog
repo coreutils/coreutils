@@ -1,6 +1,14 @@
-2004-05-09  Jim Meyering  <jim@meyering.net>
+2004-05-10  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	Remove these generated files from CVS.
+	* tests/cut/cut-tests, tests/date/date-tests, tests/join/join-tests:
+	* tests/ls/ls-tests, tests/pr/pr-tests, tests/tac/tac-tests:
+	* tests/tail/tail-tests, tests/test/test-tests, tests/tr/range-tests:
+	* tests/tr/tr-tests, tests/wc/wc-tests:
+
+2004-05-09  Jim Meyering  <jim@meyering.net>
 
 	* src/tr.c (unquote): Use xcalloc rather than xmalloc and
 	a loop initializing the just-allocated memory to zero.
