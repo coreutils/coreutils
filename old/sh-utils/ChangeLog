@@ -1,3 +1,13 @@
+2002-07-02  Jim Meyering  <meyering@lucent.com>
+
+	* src/Makefile.am (.sh): Also substitute @PACKAGE_BUGREPORT@.
+	* src/groups.sh (usage): Use @PACKAGE_BUGREPORT@, rather than
+	hard-coding a deprecated address.
+	* src/nohup.sh (usage_help): Likewise.
+
+	* src/date.c (usage): Mention that the expansions of %p and %P are
+	empty in many locales.  From matthew arnison.
+
 2002-06-22  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.13.
