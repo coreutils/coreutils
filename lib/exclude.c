@@ -33,15 +33,8 @@ extern int errno;
 #endif
 #include <stddef.h>
 #include <stdio.h>
-#if HAVE_STDLIB_H
-# include <stdlib.h>
-#endif
-#if HAVE_STRING_H
-# include <string.h>
-#endif
-#if HAVE_STRINGS_H
-# include <strings.h>
-#endif
+#include <stdlib.h>
+#include <string.h>
 #if HAVE_INTTYPES_H
 # include <inttypes.h>
 #else
