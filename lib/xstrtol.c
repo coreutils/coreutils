@@ -18,11 +18,11 @@
 /* Written by Jim Meyering. */
 
 #if HAVE_CONFIG_H
-#include <config.h>
+# include <config.h>
 #endif
 
 #if STDC_HEADERS
-#include <stdlib.h>
+# include <stdlib.h>
 #endif
 
 #if HAVE_STRING_H
@@ -146,8 +146,8 @@ __xstrtol (s, ptr, base, val, valid_suffixes)
 
 #ifdef TESTING_XSTRTO
 
-#include <stdio.h>
-#include "error.h"
+# include <stdio.h>
+# include "error.h"
 
 char *program_name;
 
@@ -175,4 +175,5 @@ main (int argc, char** argv)
     }
   exit (0);
 }
+
 #endif /* TESTING_XSTRTO */
