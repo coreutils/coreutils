@@ -51,7 +51,7 @@ for args in 'foo symlink' 'symlink foo' 'foo foo' 'sl1 sl2' 'foo hardlink'; do
     case "$args" in *sl2*) ln -s foo sl2;; esac
     (
       (
-	echo 1>&2 $CP $options $args
+	# echo 1>&2 $CP $options $args
 	$CP $options $args 2>.err
 	echo $? $options
 
