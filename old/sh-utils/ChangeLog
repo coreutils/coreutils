@@ -2,6 +2,7 @@ Mon Oct 21 16:49:08 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/getloadavg.c [__linux__]: Don't bother with a.out/nlist/kernel
 	defines or includes -- Linux systems simply read /proc/loadavg.
+	From Ulrich Drepper.
 
 	* lib/Makefile.am (EXTRA_DIST): Remove group-member.c.
 
