@@ -37,9 +37,9 @@ int symlink ();
 #endif
 
 #ifdef S_ISLNK
-# define SYMBOLIC_SPACE_STRING symbolic_link ? _("symbolic ") : ""
+# define LINK_TYPE symbolic_link ? _("symbolic link") : _("hard link")
 #else
-# define SYMBOLIC_SPACE_STRING ""
+# define LINK_TYPE ""
 #endif
 
 /* Construct a string NEW_DEST by concatenating DEST, a slash, and
@@ -289,7 +289,7 @@ do_link (const char *source, const char *dest)
     }
 
   if (verbose)
-    printf (_("create %slink %s to %s\n"), SYMBOLIC_SPACE_STRING,
+    printf (_("create %s %s to %s\n"), LINK_TYPE,
 	    dest, source);
 
   if ((*linkfunc) (source, dest) == 0)
@@ -297,8 +297,8 @@ do_link (const char *source, const char *dest)
       return 0;
     }
 
-  error (0, errno, _("cannot %slink `%s' to `%s'"), SYMBOLIC_SPACE_STRING,
-	 source, dest);
+  error (0, errno, _("cannot create %s `%s' to `%s'"), LINK_TYPE,
+	 dest, source);
 
   if (dest_backup)
     {
