@@ -92,6 +92,7 @@ libfetish_a_SOURCES = \
   xgethostname.c \
   xmalloc.c \
   xmemcoll.c xmemcoll.h \
+  xnanosleep.c xnanosleep.h \
   xreadlink.c xreadlink.h \
   xstrdup.c \
   xstrtod.c xstrtod.h \
