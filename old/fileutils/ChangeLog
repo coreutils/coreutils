@@ -1,3 +1,9 @@
+Sun Jul  7 22:40:08 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* aclocal.m4 (AM_SYS_POSIX_TERMIOS): New macro, derived from test
+	in configure.in.
+	(AM_HEADER_TIOCGWINSZ_NEEDS_SYS_IOCTL): Likewise.
+
 Sat Jul  6 12:46:27 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/cp-aux.c (usage): Factor out backup-related text into
