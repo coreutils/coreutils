@@ -18,4 +18,4 @@ AC_DEFUN(jm_FUNC_FNMATCH,
     LIBOBJS="$LIBOBJS fnmatch.o"
     AC_DEFINE_UNQUOTED(fnmatch, rpl_fnmatch)
   fi
-]
+])
