@@ -101,7 +101,7 @@ int eolchar = '\n';
 struct line
 {
   char *text;			/* Text of the line. */
-  int length;			/* Length not including final newline. */
+  int length;			/* Length including final newline. */
   char *keybeg;			/* Start of first key. */
   char *keylim;			/* Limit of first key. */
 };
@@ -197,11 +197,11 @@ static MONTHTAB_CONST struct month monthtab[] =
 
 /* Initial buffer size for in core sorting.  Will not grow unless a
    line longer than this is seen. */
-static int sortalloc = 512 * 1024;
+static int sortalloc = 512 * 1024 + 1;
 
 /* Initial buffer size for in core merge buffers.  Bear in mind that
    up to NMERGE * mergealloc bytes may be allocated for merge buffers. */
-static int mergealloc = 16 * 1024;
+static int mergealloc = 16 * 1024 + 1;
 
 /* Guess of average line length. */
 static int linelength = 30;
@@ -467,16 +467,40 @@ struct_month_cmp (const void *m1, const void *m2)
 }
 
 /* Compare S1 (with length S1LEN) and S2 (with length S2LEN) according
-   to the LC_COLLATE locale.  */
+   to the LC_COLLATE locale.  S1 and S2 do not overlap, but may be
+   adjacent.  Temporarily modify the bytes after S1 and S2, but
+   restore their original contents before returning.  */
 static int
 memcoll (char *s1, int s1len, char *s2, int s2len)
 {
   register int diff;
-  char n1 = s1[s1len];
-  char n2 = s2[s2len];
+  char n1;
+  char n2;
 
-  s1[s1len] = 0;
-  s2[s2len] = 0;
+  /* We will temporarily set the bytes after S1 and S2 to zero, so if
+     S1 and S2 are adjacent, compare to a temporary copy of the
+     earlier, to avoid temporarily stomping on the later.  */
+
+  if (s1 + s1len == s2)
+    {
+      char *s2copy = alloca (s2len + 1);
+      memcpy (s2copy, s2, s2len);
+      diff = memcoll (s1, s1len, s2copy, s2len);
+      alloca (0);
+      return diff;
+    }
+
+  if (s2 + s2len == s1)
+    {
+      char *s1copy = alloca (s1len + 1);
+      memcpy (s1copy, s1, s1len);
+      diff = memcoll (s1copy, s1len, s2, s2len);
+      alloca (0);
+      return diff;
+    }
+
+  n1 = s1[s1len];  s1[s1len] = 0;
+  n2 = s2[s2len];  s2[s2len] = 0;
 
   while (! (diff = strcoll (s1, s2)))
     {
@@ -562,8 +586,9 @@ initbuf (struct buffer *buf, int alloc)
 
 /* Fill BUF reading from FP, moving buf->left bytes from the end
    of buf->buf to the beginning first.  If EOF is reached and the
-   file wasn't terminated by a newline, supply one.  Return a count
-   of bytes buffered. */
+   file wasn't terminated by a newline, supply one.  Always leave
+   at least one unused byte at the end.  Return a count of bytes
+   buffered. */
 
 static int
 fillbuf (struct buffer *buf, FILE *fp)
@@ -576,12 +601,12 @@ fillbuf (struct buffer *buf, FILE *fp)
   while (!feof (fp) && (buf->used == 0
 			|| !memchr (buf->buf, eolchar, buf->used)))
     {
-      if (buf->used == buf->alloc)
+      if (buf->used == buf->alloc - 1)
 	{
-	  buf->alloc *= 2;
+	  buf->alloc = buf->alloc * 2 - 1;
 	  buf->buf = xrealloc (buf->buf, buf->alloc);
 	}
-      cc = fread (buf->buf + buf->used, 1, buf->alloc - buf->used, fp);
+      cc = fread (buf->buf + buf->used, 1, buf->alloc - 1 - buf->used, fp);
       if (ferror (fp))
 	{
 	  error (0, errno, _("read error"));
@@ -593,9 +618,9 @@ fillbuf (struct buffer *buf, FILE *fp)
 
   if (feof (fp) && buf->used && buf->buf[buf->used - 1] != eolchar)
     {
-      if (buf->used == buf->alloc)
+      if (buf->used == buf->alloc - 1)
 	{
-	  buf->alloc *= 2;
+	  buf->alloc = buf->alloc * 2 - 1;
 	  buf->buf = xrealloc (buf->buf, buf->alloc);
 	}
       buf->buf[buf->used++] = eolchar;
@@ -766,8 +791,7 @@ trim_trailing_blanks (const char *a_start, char **a_end)
     --(*a_end);
 }
 
-/* Find the lines in BUF, storing pointers and lengths in LINES.
-   Also replace newlines in BUF with NULs. */
+/* Find the lines in BUF, storing pointers and lengths in LINES.  */
 
 static void
 findlines (struct buffer *buf, struct lines *lines)
@@ -780,11 +804,6 @@ findlines (struct buffer *buf, struct lines *lines)
   while (beg < lim && (ptr = memchr (beg, eolchar, lim - beg))
 	 && lines->used < lines->limit)
     {
-      /* There are various places in the code that rely on a NUL
-	 being at the end of in-core lines; NULs inside the lines
-	 will not cause trouble, though. */
-      *ptr = '\0';
-
       if (lines->used == lines->alloc)
 	{
 	  lines->alloc *= 2;
@@ -793,6 +812,7 @@ findlines (struct buffer *buf, struct lines *lines)
 		      lines->alloc * sizeof (struct line));
 	}
 
+      ptr++;
       lines->lines[lines->used].text = beg;
       lines->lines[lines->used].length = ptr - beg;
 
@@ -828,7 +848,7 @@ findlines (struct buffer *buf, struct lines *lines)
 	}
 
       ++lines->used;
-      beg = ptr + 1;
+      beg = ptr;
     }
 
   buf->left = lim - beg;
@@ -1168,36 +1188,25 @@ keycompare (const struct line *a, const struct line *b)
 	}
 
       /* Actually compare the fields. */
-      if (key->numeric)
+      if (key->numeric | key->general_numeric)
 	{
-	  if (*lima || *limb)
-	    {
-	      char savea = *lima, saveb = *limb;
+	  char savea, saveb;
 
-	      *lima = *limb = '\0';
-	      diff = numcompare (texta, textb);
-	      *lima = savea, *limb = saveb;
-	    }
-	  else
-	    diff = numcompare (texta, textb);
+	  /* If the fields are adjacent, adjust the end of the earlier
+	     field back by 1 byte, since we temporarily modify the
+	     byte after the field during comparison.  This can't
+	     change a numeric comparison, since the byte is a newline.
+	     If the earlier field is empty, adjust its start as well.  */
+	  if (lima == textb)
+	    texta -= texta == lima--;
+	  if (limb == texta)
+	    textb -= textb == limb--;
 
-	  if (diff)
-	    return key->reverse ? -diff : diff;
-	  continue;
-	}
-      else if (key->general_numeric)
-	{
-	  if (*lima || *limb)
-	    {
-	      char savea = *lima, saveb = *limb;
-
-	      *lima = *limb = '\0';
-	      diff = general_numcompare (texta, textb);
-	      *lima = savea, *limb = saveb;
-	    }
-	  else
-	    diff = general_numcompare (texta, textb);
-
+	  savea = *lima, saveb = *limb;
+	  *lima = *limb = '\0';
+	  diff = ((key->numeric ? numcompare : general_numcompare)
+		  (texta, textb));
+	  *lima = savea, *limb = saveb;
 	  if (diff)
 	    return key->reverse ? -diff : diff;
 	  continue;
@@ -1352,7 +1361,7 @@ keycompare (const struct line *a, const struct line *b)
 static int
 compare (register const struct line *a, register const struct line *b)
 {
-  int diff, tmpa, tmpb, mini;
+  int diff, tmpa, tmpb;
 
   /* First try to compare on the specified keys (if any).
      The only two cases with no key at all are unadorned sort,
@@ -1369,27 +1378,21 @@ compare (register const struct line *a, register const struct line *b)
   /* If the keys all compare equal (or no keys were specified)
      fall through to the default byte-by-byte comparison. */
   tmpa = a->length, tmpb = b->length;
-  mini = min (tmpa, tmpb);
-  if (mini == 0)
-    diff = tmpa - tmpb;
-  else
-    {
-      char *ap = a->text, *bp = b->text;
 
 #ifdef ENABLE_NLS
-      if (need_locale)  /* want absolutely correct sorting */
-	{
-	  diff = memcoll (ap, tmpa, bp, tmpb);
-	  return reverse ? -diff : diff;
-	}
+  if (need_locale)  /* want absolutely correct sorting */
+    {
+      diff = memcoll (a->text, tmpa, b->text, tmpb);
+      return reverse ? -diff : diff;
+    }
 #endif
-      diff = UCHAR (*ap) - UCHAR (*bp);
+
+  diff = UCHAR (a->text[0]) - UCHAR (b->text[0]);
+  if (diff == 0)
+    {
+      diff = memcmp (a->text, b->text, min (tmpa, tmpb));
       if (diff == 0)
-	{
-	  diff = memcmp (ap, bp, mini);
-	  if (diff == 0)
-	    diff = tmpa - tmpb;
-	}
+	diff = tmpa - tmpb;
     }
 
   return reverse ? -diff : diff;
@@ -1460,7 +1463,7 @@ checkfp (FILE *fp, const char *file_name)
 	  temp.text = xrealloc (temp.text, alloc);
 	}
       assert (prev_line->length + 1 <= alloc);
-      memcpy (temp.text, prev_line->text, prev_line->length + 1);
+      memcpy (temp.text, prev_line->text, prev_line->length);
       temp.length = prev_line->length;
       temp.keybeg = temp.text + (prev_line->keybeg - prev_line->text);
       temp.keylim = temp.text + (prev_line->keylim - prev_line->text);
@@ -1489,7 +1492,6 @@ finish:
       fprintf (stderr, _("%s: %s:%d: disorder: "), program_name, file_name,
 	       disorder_line_number);
       write_bytes (disorder_line->text, disorder_line->length, stderr);
-      putc (eolchar, stderr);
     }
 
   free (buf.buf);
@@ -1570,7 +1572,6 @@ mergefps (FILE **fps, register int nfps, FILE *ofp)
 	  if (savedflag && compare (&saved, &lines[ord[0]].lines[cur[ord[0]]]))
 	    {
 	      write_bytes (saved.text, saved.length, ofp);
-	      putc (eolchar, ofp);
 	      savedflag = 0;
 	    }
 	  if (!savedflag)
@@ -1583,7 +1584,7 @@ mergefps (FILE **fps, register int nfps, FILE *ofp)
 		}
 	      saved.length = lines[ord[0]].lines[cur[ord[0]]].length;
 	      memcpy (saved.text, lines[ord[0]].lines[cur[ord[0]]].text,
-		      saved.length + 1);
+		      saved.length);
 	      if (lines[ord[0]].lines[cur[ord[0]]].keybeg != NULL)
 		{
 		  saved.keybeg = saved.text +
@@ -1600,11 +1601,8 @@ mergefps (FILE **fps, register int nfps, FILE *ofp)
 	    }
 	}
       else
-	{
-	  write_bytes (lines[ord[0]].lines[cur[ord[0]]].text,
-		       lines[ord[0]].lines[cur[ord[0]]].length, ofp);
-	  putc (eolchar, ofp);
-	}
+	write_bytes (lines[ord[0]].lines[cur[ord[0]]].text,
+		     lines[ord[0]].lines[cur[ord[0]]].length, ofp);
 
       /* Check if we need to read more lines into core. */
       if (++cur[ord[0]] == lines[ord[0]].used)
@@ -1658,7 +1656,6 @@ mergefps (FILE **fps, register int nfps, FILE *ofp)
   if (unique && savedflag)
     {
       write_bytes (saved.text, saved.length, ofp);
-      putc (eolchar, ofp);
       free (saved.text);
     }
 }
@@ -1814,10 +1811,7 @@ sort (char **files, int nfiles, FILE *ofp)
 	  for (i = 0; i < lines.used; ++i)
 	    if (!unique || i == 0
 		|| compare (&lines.lines[i], &lines.lines[i - 1]))
-	      {
-		write_bytes (lines.lines[i].text, lines.lines[i].length, tfp);
-		putc (eolchar, tfp);
-	      }
+	      write_bytes (lines.lines[i].text, lines.lines[i].length, tfp);
 	  if (tfp != ofp)
 	    xfclose (tfp);
 	}
