@@ -1,5 +1,10 @@
 2000-07-23  Jim Meyering  <meyering@lucent.com>
 
+	* src/su.c: Include <sys/param.h> if HAVE_SYS_PARAM_H is defined,
+	rather than if _POSIX_VERSION is defined.  Remove declarations of
+	getpwuid, getgrgid, and getuid, now that they're in sys2.h.
+	Prompted by a report from John David Anglin.
+
 	* src/sys2.h [!HAVE_DECL_GETPWUID]: Declare getpwuid.
 	[!HAVE_DECL_GETGRGID]: Declare getgrgid.
 	[!HAVE_DECL_GETUID]: Declare getuid.
