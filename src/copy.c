@@ -34,13 +34,6 @@
 #include "cp-hash.h"
 #include "path-concat.h"
 
-/* On Linux (from slackware-1.2.13 to 2.0.2?) there is no lchown function.
-   To change ownership of symlinks, you must run chown with an effective
-   UID of 0.  */
-#ifdef __linux__
-# define ROOT_CHOWN_AFFECTS_SYMLINKS
-#endif
-
 #define DO_CHOWN(Chown, File, New_uid, New_gid)				\
   (Chown ((File), (x->myeuid == 0 ? (New_uid) : x->myeuid), (New_gid))	\
    /* If non-root uses -p, it's ok if we can't preserve ownership.	\
@@ -762,26 +755,10 @@ copy_internal (const char *src_path, const char *dst_path,
 	      goto un_backup;
 	    }
 # else
-#  ifdef ROOT_CHOWN_AFFECTS_SYMLINKS
-	  if (x->myeuid == 0)
-	    {
-	      if (DO_CHOWN (chown, dst_path, src_sb.st_uid, src_sb.st_gid))
-		{
-		  error (0, errno, _("preserving ownership for %s"), dst_path);
-		  goto un_backup;
-		}
-	    }
-	  else
-	    {
-	      /* FIXME: maybe give a diagnostic: you must be root
-		 to preserve ownership and group of symlinks.  */
-	    }
-#  else
 	  /* Can't preserve ownership of symlinks.
 	     FIXME: maybe give a warning or even error for symlinks
 	     in directories with the sticky bit set -- there, not
 	     preserving owner/group is a potential security problem.  */
-#  endif
 # endif
 	}
 
