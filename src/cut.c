@@ -165,16 +165,16 @@ enum
 
 static struct option const longopts[] =
 {
-  {"bytes", required_argument, 0, 'b'},
-  {"characters", required_argument, 0, 'c'},
-  {"fields", required_argument, 0, 'f'},
-  {"delimiter", required_argument, 0, 'd'},
-  {"only-delimited", no_argument, 0, 's'},
-  {"output-delimiter", required_argument, 0, OUTPUT_DELIMITER_OPTION},
-  {"complement", no_argument, 0, COMPLEMENT_OPTION},
+  {"bytes", required_argument, NULL, 'b'},
+  {"characters", required_argument, NULL, 'c'},
+  {"fields", required_argument, NULL, 'f'},
+  {"delimiter", required_argument, NULL, 'd'},
+  {"only-delimited", no_argument, NULL, 's'},
+  {"output-delimiter", required_argument, NULL, OUTPUT_DELIMITER_OPTION},
+  {"complement", no_argument, NULL, COMPLEMENT_OPTION},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {0, 0, 0, 0}
+  {NULL, 0, NULL, 0}
 };
 
 void
