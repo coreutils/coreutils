@@ -10405,8 +10405,13 @@ user has been idle.  @samp{.} means the user was active in last minute.
 @samp{old} means the user was idle for more than 24 hours.
 
 @item -l
-@itemx --lookup
+@itemx --login
 @opindex -l
+@opindex --login
+List only the entries that correspond to processes via which the
+system is waiting for a user to login.  The user name is always @samp{LOGIN}.
+
+@itemx --lookup
 @opindex --lookup
 Attempt to canonicalize hostnames found in utmp through a DNS lookup.  This
 is not the default because it can cause significant delays on systems with
