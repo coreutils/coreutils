@@ -1,5 +1,31 @@
 2004-01-14  Paul Eggert  <eggert@twinsun.com>
 
+	Merge from gnulib.
+
+	* fnmatch_loop.c (ALLOCA_LIMIT): Remove macro, which collided
+	with like-named macro in fnmatch.c.
+	(EXT): Use an internal constant instead.
+
+	Merge fnmatch patches from glibc.
+	* fnmatch.c (mbsinit): Remove define.
+	Add libc_hidden_ver (__fnmatch, fnmatch).
+	* fnmatch_loop.c (FCT): Cast to int32_t and UCHAR when appropriate.
+	Adjust to renaming of collseq_table_lookup to __collseq_table_lookup.
+
+2003-11-24  Paul Eggert  <eggert@twinsun.com>
+
+	Merge from gnulib.
+
+	* alloca.c: Remove dependency on xalloc module.
+	(xalloc_die): Remove.
+	(memory_full) [!defined emacs]: New macro.
+	[!defined emacs]: Don't include xalloc.h.
+	(alloca): Invoke memory_full, not xalloc_die, if malloc fails or
+	address arithmetic overflows.  Change datatypes a bit to avoid
+	unnecessary casts.
+
+2004-01-14  Paul Eggert  <eggert@twinsun.com>
+
 	* posixver.c: Include posixver.h.
 
 2004-01-12  Jim Meyering  <jim@meyering.net>
