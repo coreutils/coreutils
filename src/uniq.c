@@ -28,6 +28,7 @@
 #include "argmatch.h"
 #include "linebuffer.h"
 #include "error.h"
+#include "posixver.h"
 #include "xstrtol.h"
 #include "memcasecmp.h"
 
@@ -107,12 +108,6 @@ static enum delimit_method const delimit_method_map[] =
 /* Select whether/how to delimit groups of duplicate lines.  */
 static enum delimit_method delimit_groups;
 
-static char const shortopts[] = "-cdDf:is:uw:"
-#if POSIX2_VERSION < 200112
-"0123456789"
-#endif
-;
-
 static struct option const longopts[] =
 {
   {"count", no_argument, NULL, 'c'},
@@ -163,11 +158,6 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
      fputs (_("\
   -w, --check-chars=N   compare no more than N characters in lines\n\
-"), stdout);
-     if (POSIX2_VERSION < 200112)
-       fputs (_("\
-  -N                    (obsolete) same as -f N\n\
-  +N                    (obsolete) same as -s N\n\
 "), stdout);
      fputs (HELP_OPTION_DESCRIPTION, stdout);
      fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -421,12 +411,14 @@ main (int argc, char **argv)
 
   for (;;)
     {
-      /* If obsolete, parse an operand with leading "+" as a file
-         after "--" was seen; or if pedantic and a file was seen.  */
+      /* Parse an operand with leading "+" as a file after "--" was
+         seen; or if pedantic and a file was seen; or if not
+         obsolete.  */
 
       if (optc == -1
 	  || (posixly_correct && nfiles != 0)
-	  || ((optc = getopt_long (argc, argv, shortopts, longopts, NULL))
+	  || ((optc = getopt_long (argc, argv,
+				   "-0123456789Dcdf:is:uw:", longopts, NULL))
 	      == -1))
 	{
 	  if (optind == argc)
@@ -443,17 +435,11 @@ main (int argc, char **argv)
 	case 1:
 	  {
 	    unsigned long int size;
-	    if (POSIX2_VERSION < 200112
-		&& optarg[0] == '+'
+	    if (optarg[0] == '+'
+		&& posix2_version () < 200112
 		&& xstrtoul (optarg, NULL, 10, &size, "") == LONGINT_OK
 		&& size <= SIZE_MAX)
-	      {
-		if (OBSOLETE_OPTION_WARNINGS && ! posixly_correct)
-		  error (0, 0,
-			 _("warning: `uniq %s' is obsolete; use `uniq -s %s' instead"),
-			 optarg, optarg + 1);
-		skip_chars = size;
-	      }
+	      skip_chars = size;
 	    else if (nfiles == 2)
 	      {
 		error (0, 0, _("extra operand `%s'"), optarg);
@@ -464,7 +450,6 @@ main (int argc, char **argv)
 	  }
 	  break;
 
-#if POSIX2_VERSION < 200112
 	case '0':
 	case '1':
 	case '2':
@@ -484,7 +469,6 @@ main (int argc, char **argv)
 	    obsolete_skip_fields = true;
 	  }
 	  break;
-#endif
 
 	case 'c':
 	  countmode = count_occurrences;
@@ -536,9 +520,12 @@ main (int argc, char **argv)
 	}
     }
 
-  if (OBSOLETE_OPTION_WARNINGS && obsolete_skip_fields)
-    error (0, 0, _("warning: `uniq -%lu' is obsolete; use `uniq -f %lu'"),
-	   (unsigned long) skip_fields, (unsigned long) skip_fields);
+  if (obsolete_skip_fields && 200112 <= posix2_version ())
+    {
+      error (0, 0, _("`-%lu' option is obsolete; use `-f %lu'"),
+	     (unsigned long) skip_fields, (unsigned long) skip_fields);
+      usage (EXIT_FAILURE);
+    }
 
   if (countmode == count_occurrences && mode == output_all_repeated)
     {
