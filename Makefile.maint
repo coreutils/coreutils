@@ -43,11 +43,14 @@ my-distcheck:
 	-rm -rf $(t)
 	mkdir $(t)
 	GZIP=$(GZIP) $(AMTAR) -C $(t) -zxf $(distdir).tar.gz
+# Removing $(DEPDIR) like this is a gross kludge to work around a bug
+# in automake.  Remove that line once it's fixed.
 	cd $(t)/$(distdir) \
 	  && ./configure --disable-nls \
 	  && $(MAKE) CFLAGS='-Wformat -Werror' \
 	  && $(MAKE) dvi \
 	  && $(MAKE) check \
+	  && rm -rf $(DEPDIR) \
 	  && $(MAKE) distclean
 	cd $(t) && mv $(distdir) $(distdir).old \
 	  && $(AMTAR) -zxf ../$(distdir).tar.gz
