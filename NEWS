@@ -17,7 +17,6 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   du -D now dereferences all symlinks specified on the command line,
   not just the ones that reference directories
-  FIXME: confirm this, and add a test
 
   du now accepts -P (--no-dereference), for compatibility with du
   of NetBSD and for consistency with e.g., chown and chgrp

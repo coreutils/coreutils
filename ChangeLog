@@ -2,6 +2,10 @@
 
 	* Version 5.1.0.
 
+	* tests/du/deref-args: Ensure that du -D now dereferences all
+	symlinks specified on the command line, not just those that
+	reference directories.
+
 	* basename.c, cat.c, chroot.c, cksum.c, comm.c, cp.c, csplit.c, cut.c:
 	* dd.c, df.c, dirname.c, du.c, echo.c, env.c, expr.c, factor.c, head.c:
 	* hostid.c, hostname.c, id.c, link.c, ln.c, logname.c, ls.c, md5sum.c:
