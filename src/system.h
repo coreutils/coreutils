@@ -369,21 +369,28 @@ initialize_exit_failure (int status)
 # include <stdint.h>
 #endif
 
-#if !defined PRIdMAX || PRI_MACROS_BROKEN
+#if ULONG_MAX < ULLONG_MAX
+# define LONGEST_MODIFIER "ll"
+#else
+# define LONGEST_MODIFIER "l"
+#endif
+#if PRI_MACROS_BROKEN
 # undef PRIdMAX
-# define PRIdMAX (sizeof (uintmax_t) == sizeof (long int) ? "ld" : "lld")
-#endif
-#if !defined PRIoMAX || PRI_MACROS_BROKEN
 # undef PRIoMAX
-# define PRIoMAX (sizeof (uintmax_t) == sizeof (long int) ? "lo" : "llo")
-#endif
-#if !defined PRIuMAX || PRI_MACROS_BROKEN
 # undef PRIuMAX
-# define PRIuMAX (sizeof (uintmax_t) == sizeof (long int) ? "lu" : "llu")
-#endif
-#if !defined PRIxMAX || PRI_MACROS_BROKEN
 # undef PRIxMAX
-# define PRIxMAX (sizeof (uintmax_t) == sizeof (long int) ? "lx" : "llx")
+#endif
+#ifndef PRIdMAX
+# define PRIdMAX LONGEST_MODIFIER "d"
+#endif
+#ifndef PRIoMAX
+# define PRIoMAX LONGEST_MODIFIER "o"
+#endif
+#ifndef PRIuMAX
+# define PRIuMAX LONGEST_MODIFIER "u"
+#endif
+#ifndef PRIxMAX
+# define PRIxMAX LONGEST_MODIFIER "x"
 #endif
 
 #include <ctype.h>
@@ -681,6 +688,14 @@ enum
 
 #ifndef INT_MIN
 # define INT_MIN TYPE_MINIMUM (int)
+#endif
+
+#ifndef INTMAX_MAX
+# define INTMAX_MAX TYPE_MAXIMUM (intmax_t)
+#endif
+
+#ifndef INTMAX_MIN
+# define INTMAX_MIN TYPE_MINIMUM (intmax_t)
 #endif
 
 #ifndef UINT_MAX
