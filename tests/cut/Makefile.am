@@ -13,7 +13,9 @@ nul-idelim.I nul-idelim.X nul-odelim.I nul-odelim.X multichar-od.I \
 multichar-od.X 8bit-delim.I 8bit-delim.X out-delim1.I out-delim1.X \
 out-delim2.I out-delim2.X out-delim3.I out-delim3.X out-delim3a.I \
 out-delim3a.X out-delim4.I out-delim4.X out-delim5.I out-delim5.X \
-out-delim6.I out-delim6.X
+out-delim6.I out-delim6.X od-abut.I od-abut.X od-overlap.I od-overlap.X \
+od-overlap2.I od-overlap2.X od-overlap3.I od-overlap3.X od-overlap4.I \
+od-overlap4.X od-overlap5.I od-overlap5.X
 run_gen = 1.O 1.E 2.O 2.E 3.O 3.E 4.O 4.E 5.O 5.E 6.O 6.E 7.O 7.E 8.O 8.E 9.O \
 9.E a.O a.E b.O b.E c.O c.E d.O d.E e.O e.E f.O f.E g.O g.E h.O h.E i.O i.E \
 j.O j.E k.O k.E l.O l.E m.O m.E n.O n.E o.O o.E p.O p.E q.O q.E r.O r.E s.O \
@@ -24,7 +26,9 @@ nul-idelim.O nul-idelim.E nul-odelim.O nul-odelim.E multichar-od.O \
 multichar-od.E 8bit-delim.O 8bit-delim.E out-delim1.O out-delim1.E \
 out-delim2.O out-delim2.E out-delim3.O out-delim3.E out-delim3a.O \
 out-delim3a.E out-delim4.O out-delim4.E out-delim5.O out-delim5.E \
-out-delim6.O out-delim6.E
+out-delim6.O out-delim6.E od-abut.O od-abut.E od-overlap.O od-overlap.E \
+od-overlap2.O od-overlap2.E od-overlap3.O od-overlap3.E od-overlap4.O \
+od-overlap4.E od-overlap5.O od-overlap5.E
 ##test-files-end
 
 EXTRA_DIST = Test.pm $x-tests $(explicit) $(maint_gen)
