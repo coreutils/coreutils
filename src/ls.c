@@ -73,13 +73,17 @@
 #include "error.h"
 #include "human.h"
 #include "filemode.h"
-#include "long-options.h"
 #include "ls.h"
 #include "obstack.h"
 #include "path-concat.h"
 #include "quotearg.h"
 #include "strverscmp.h"
+#include "version-etc.h"
 #include "xstrtol.h"
+
+#define PROGRAM_NAME (ls_mode == LS_LS ? "ls" \
+		      : (ls_mode == LS_MULTI_COL \
+			 ? "dir" : "vdir"))
 
 #define obstack_chunk_alloc malloc
 #define obstack_chunk_free free
@@ -569,6 +573,8 @@ static struct option const long_options[] =
   {"time", required_argument, 0, 11},
   {"color", optional_argument, 0, 13},
   {"block-size", required_argument, 0, 17},
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
 
@@ -717,13 +723,6 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
-
-#define PROGRAM_NAME (ls_mode == LS_LS ? "ls" \
-		      : (ls_mode == LS_MULTI_COL \
-			 ? "dir" : "vdir"))
-
-  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      "Richard Stallman and David MacKenzie", usage);
 
   exit_status = 0;
   dir_defaulted = 1;
@@ -1174,6 +1173,11 @@ decode_switches (int argc, char **argv)
 	case 17:
 	  human_block_size (optarg, 1, &output_block_size);
 	  break;
+
+	case_GETOPT_HELP_CHAR;
+
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME,
+				  "Richard Stallman and David MacKenzie");
 
 	default:
 	  usage (EXIT_FAILURE);
