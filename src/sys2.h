@@ -85,11 +85,11 @@ char *alloca ();
    host does not conform to Posix.  */
 #define ISDIGIT(c) ((unsigned) (c) - '0' <= 9)
 
-#ifndef __P
+#ifndef PARAMS
 # if PROTOTYPES
-#  define __P(Args) Args
+#  define PARAMS(Args) Args
 # else
-#  define __P(Args) ()
+#  define PARAMS(Args) ()
 # endif
 #endif
 
