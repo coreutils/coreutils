@@ -2,6 +2,14 @@
 
 	* Version 4.5.8.
 
+	* src/cp.c: Include "mmap-stack.h".
+	(main): Invoke `run' through a macro that (when possible) runs it
+	with a large, mmap'd stack.
+
+	* src/cp.c (run): New function, preparing for the above.
+	Exit from this function, not from main
+	(main): Call run.
+
 	* src/du.c: New option: --apparent-size.
 	(enum) [APPARENT_SIZE_OPTION]: New member.
 	(long_options): Add it.
@@ -98,11 +106,6 @@
 	Test for the bug fixed today in cksum, md5sum, and sha1sum.
 	* tests/misc/cat-tty-eof: Generalize, clean-up, and test for
 	cat, cksum, md5sum, and sha1sum all in the same loop.
-
-2003-02-17  Jim Meyering  <jim@meyering.net>
-
-	* src/cp.c (run): New function, preparing for ...
-	(main): Call it.
 
 2003-02-14  Jim Meyering  <jim@meyering.net>
 
