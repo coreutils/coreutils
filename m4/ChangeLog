@@ -1,3 +1,8 @@
+2002-07-28  Jim Meyering  <meyering@lucent.com>
+
+	* jm-macros.m4: Don't require jm_FUNC_READDIR.
+	* readdir.m4 (jm_FUNC_READDIR): Remove file/macro.  No longer needed.
+
 2002-07-27  Jim Meyering  <meyering@lucent.com>
 
 	* prereq.m4 (jm_PREREQ_READUTMP): Don't check just
