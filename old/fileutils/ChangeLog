@@ -1,11 +1,23 @@
+Wed Apr  3 06:12:23 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* cp.c (copy_reg): Use `ST_NBLOCKS (sb) * 512', not `sb.st_blocks *
+	DEV_BSIZE.'  From H.J. Lu (hjl@lucon.org).
+
+	* mvdir.c: Include save-cwd.h.
+	(fullpath): Rewrite to use save_cwd, xgetcwd, and restore_cwd
+	rather than explicit chdir/getcwd calls.
+
 Mon Apr  1 23:50:29 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* cp.c: Include assert.h (disabled).
 	(path_concat): New function.
-	(do_copy): Use it instead of open-coding its functionality
-	in two places.  This has the additional benefit of avoiding
-	forming destination names like `D//file' when cp is used
-	like this: mkdir D; touch file D/file; cp -i file D/
+	(do_copy): Use path_concat instead of open-coding part of its
+	functionality in two places.  This has the additional benefit
+	of avoiding forming destination names like `D//file' when the
+	destination directory D includes a trailing slash -- as would
+	happen when cp is used like this:
+	mkdir D; touch file D/file; cp -i file D/
+	Reported by François Pinard.
 
 Sun Mar 31 11:18:09 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
