@@ -1,5 +1,5 @@
-/* factor -- print factors of n.
-   Copyright (C) 86, 1995-2000 Free Software Foundation, Inc.
+/* factor -- print prime factors of n.
+   Copyright (C) 86, 1995-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -97,7 +97,7 @@ Usage: %s [NUMBER]...\n\
 "),
 	      program_name, program_name);
       printf (_("\
-Print factors of each NUMBER; read standard input with no arguments.\n\
+Print the prime factors of each NUMBER.\n\
 \n\
   --help      display this help and exit\n\
   --version   output version information and exit\n\
