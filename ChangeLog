@@ -2,6 +2,8 @@
 
 	* Version 5.1.0.
 
+	* tests/Makefile.am (root-hint): Tweak wording.
+
 	* src/du.c: Accept new option (-0, --null) that makes it so each
 	output line is NUL-terminated rather than newline-terminated.
 
