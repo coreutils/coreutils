@@ -1044,8 +1044,26 @@ else
   esac
 fi
 test -s datevtime-1.E || rm -f datevtime-1.E
+LC_ALL=de_DE $xx -R -d '1997-01-19 08:17:48 +0'  > rfc822-1.O 2> rfc822-1.E
+code=$?
+if test $code != 0; then
+  $echo "Test rfc822-1(LC_ALL=de_DE) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp rfc822-1.O $srcdir/rfc822-1.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE"; then $echo "passed rfc822-1(LC_ALL=de_DE)"; fi;;
+    1) $echo "Test rfc822-1(LC_ALL=de_DE) failed: files rfc822-1.O and $srcdir/rfc822-1.X differ" 1>&2
+       (diff -c rfc822-1.O $srcdir/rfc822-1.X) 2> /dev/null
+       errors=`expr $errors + 1`;;
+    2) $echo "Test rfc822-1(LC_ALL=de_DE) may have failed." 1>&2
+       $echo The command "cmp rfc822-1.O $srcdir/rfc822-1.X" failed. 1>&2
+       errors=`expr $errors + 1`;;
+  esac
+fi
+test -s rfc822-1.E || rm -f rfc822-1.E
 if test $errors = 0; then
-  $echo Passed all 57 tests. 1>&2
+  $echo Passed all 58 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi
