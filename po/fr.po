@@ -4,9 +4,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: GNU coreutils 4.5.10\n"
-"POT-Creation-Date: 2003-03-18 20:11+0100\n"
-"PO-Revision-Date: 2003-03-14 08:00-0500\n"
+"Project-Id-Version: GNU coreutils 4.5.11\n"
+"POT-Creation-Date: 2003-03-27 10:07+0100\n"
+"PO-Revision-Date: 2003-03-27 08:00-0500\n"
 "Last-Translator: Michel Robitaille <robitail@IRO.UMontreal.CA>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -147,7 +147,7 @@ msgstr "taille de bloc"
 
 #: lib/makepath.c:124 src/df.c:497 src/remove.c:402
 msgid "failed to return to initial working directory"
-msgstr "échec de retour au répertoire initiale de travail"
+msgstr "échec de retour au répertoire initial de travail"
 
 #: lib/makepath.c:173 src/copy.c:1288 src/mkdir.c:170
 #, c-format
@@ -273,7 +273,7 @@ msgstr "Les chaînes comparées étaient %s et %s."
 #: src/od.c:283 src/paste.c:399 src/pathchk.c:142 src/pinky.c:465
 #: src/pr.c:2750 src/printenv.c:59 src/printf.c:96 src/ptx.c:1855 src/pwd.c:42
 #: src/readlink.c:65 src/rm.c:95 src/rmdir.c:142 src/seq.c:78 src/shred.c:156
-#: src/sleep.c:48 src/sort.c:272 src/split.c:92 src/stat.c:679 src/stty.c:494
+#: src/sleep.c:48 src/sort.c:272 src/split.c:92 src/stat.c:680 src/stty.c:494
 #: src/su.c:433 src/sum.c:56 src/sync.c:40 src/tac.c:123 src/tail.c:230
 #: src/tee.c:59 src/test.c:975 src/touch.c:240 src/tr.c:323 src/tsort.c:93
 #: src/tty.c:58 src/uname.c:106 src/unexpand.c:371 src/uniq.c:135
@@ -315,7 +315,7 @@ msgstr ""
 #: src/pinky.c:492 src/pr.c:2862 src/printenv.c:72 src/printf.c:144
 #: src/pwd.c:53 src/readlink.c:82 src/rm.c:127 src/rmdir.c:162 src/seq.c:104
 #: src/shred.c:220 src/sleep.c:64 src/sort.c:343 src/split.c:124
-#: src/stat.c:750 src/stty.c:708 src/su.c:454 src/sum.c:76 src/sync.c:51
+#: src/stat.c:751 src/stty.c:708 src/su.c:454 src/sum.c:76 src/sync.c:51
 #: src/tac.c:146 src/tail.c:300 src/tee.c:72 src/test.c:1057 src/touch.c:271
 #: src/tr.c:396 src/true.c:45 src/tsort.c:105 src/tty.c:70 src/uname.c:128
 #: src/unexpand.c:395 src/uniq.c:174 src/unlink.c:58 src/uptime.c:202
@@ -332,7 +332,7 @@ msgstr ""
 #: src/chroot.c:78 src/csplit.c:1464 src/dirname.c:89 src/expr.c:178
 #: src/install.c:284 src/link.c:87 src/mkdir.c:124 src/mkfifo.c:113
 #: src/mknod.c:137 src/pathchk.c:194 src/readlink.c:101 src/readlink.c:133
-#: src/rm.c:199 src/rmdir.c:206 src/seq.c:411 src/sleep.c:139 src/stat.c:801
+#: src/rm.c:199 src/rmdir.c:206 src/seq.c:411 src/sleep.c:139 src/stat.c:802
 #: src/unlink.c:88
 msgid "too few arguments"
 msgstr "Trop peu de arguments."
@@ -851,7 +851,7 @@ msgstr "%s: écraser %s, en outrepassant le mode %04lo? "
 msgid "%s: overwrite %s? "
 msgstr "%s: écraser %s?"
 
-#: src/copy.c:810 src/copy.c:848 src/stat.c:637
+#: src/copy.c:810 src/copy.c:848 src/stat.c:638
 #, c-format
 msgid "cannot stat %s"
 msgstr "ne peut évaluer %s"
@@ -982,7 +982,7 @@ msgstr "ne peut créer le fifo %s"
 msgid "cannot create special file %s"
 msgstr "ne peut créer le fichier spécial %s"
 
-#: src/copy.c:1415 src/ls.c:2493 src/stat.c:425
+#: src/copy.c:1415 src/ls.c:2493 src/stat.c:426
 #, c-format
 msgid "cannot read symbolic link %s"
 msgstr "ne peut lire le lien symbolique %s"
@@ -2088,27 +2088,27 @@ msgstr "Sys. de fich.     "
 #: src/df.c:158
 #, c-format
 msgid "    Inodes   IUsed   IFree IUse%%"
-msgstr "    Inodes   IUtil.  ILibr.IUti%%"
+msgstr "    Inodes   IUtil.  ILib. %%IUti."
 
 #: src/df.c:162
 #, c-format
 msgid "    Size  Used Avail Use%%"
-msgstr "    Tail. Util.Disp. Uti%%"
+msgstr "    Tail. Occ. Disp. %%Occ."
 
 #: src/df.c:164
 #, c-format
 msgid "     Size   Used  Avail Use%%"
-msgstr "     Tail.  Util. Disp. Uti%%"
+msgstr "     Tail.  Occ.  Disp. %%Occ."
 
 #: src/df.c:167
 #, c-format
 msgid " %4s-blocks      Used Available Capacity"
-msgstr " %4s-blocs    Utilisé la capacité disponible"
+msgstr " %4s-blocs    Occupé Disponible Capacité"
 
 #: src/df.c:198
 #, c-format
 msgid " %4s-blocks      Used Available Use%%"
-msgstr " %4s-blocs    Utilisé de la capacité disponible%%"
+msgstr " %4s-blocs       Occupé Disponible Capacité"
 
 #: src/df.c:202
 msgid " Mounted on\n"
@@ -2183,14 +2183,14 @@ msgid ""
 msgstr ""
 "\n"
 "TAILLE peut être (ou peut être un entier suivi par) un de ceux qui suivent:\n"
-"kB 1000, K 1024, MB 1,000,000, M 1,048,576, et ainsi de suite pour G, T, P, "
+"kB 1000, K 1024, MB 1000*1000, M 1024*1024, et ainsi de suite pour G, T, P, "
 "E, Z, Y.\n"
 "\n"
 
 #: src/df.c:859
 #, c-format
 msgid "file system type %s both selected and excluded"
-msgstr "Le système de fichier %s est à la fois sélectionné et exclu."
+msgstr "Le système de fichiers %s est à la fois sélectionné et exclu."
 
 #: src/df.c:903
 msgid "Warning: "
@@ -2421,18 +2421,18 @@ msgstr "profondeur maximum invalide %s"
 
 #: src/du.c:707
 msgid "cannot both summarize and show all entries"
-msgstr "Ne peut à la fois produire un sommaire et afficher toutes les entrées."
+msgstr "Ne peut afficher à la fois un résumé et toutes les entrées."
 
 #: src/du.c:714
 msgid "warning: summarizing is the same as using --max-depth=0"
 msgstr ""
-"AVERTISSEMENT: le sommaire est identique si l'option --max-dept=0 est "
-"utilisée"
+"AVERTISSEMENT: le résumé est identique si l'option --max-dept=0 est utilisée"
 
 #: src/du.c:720
 #, c-format
 msgid "warning: summarizing conflicts with --max-depth=%d"
-msgstr "AVERTISSEMENT: conflit d'options pour le sommaire avec --max-depth=%d"
+msgstr ""
+"AVERTISSEMENT: conflit de l''option -s pour le résumé avec --max-depth=%d"
 
 #: src/echo.c:77
 #, c-format
@@ -5376,32 +5376,27 @@ msgstr "Nombre hexadécimal manquant dans l'échappement."
 msgid "invalid universal character name \\%c%0*x"
 msgstr "nom de caractère universel invalide \\%c%0*x"
 
-#: src/printf.c:298
-#, c-format
-msgid "\\%c: invalid escape"
-msgstr "\\%c: échappement invalide"
-
-#: src/printf.c:465
+#: src/printf.c:472
 #, c-format
 msgid "invalid field width: %s"
 msgstr "largeur de champ invalide: %s"
 
-#: src/printf.c:491
+#: src/printf.c:498
 #, c-format
 msgid "invalid precision: %s"
 msgstr "précision invalide: %s"
 
-#: src/printf.c:512
+#: src/printf.c:519
 #, c-format
 msgid "%%%c: invalid directive"
 msgstr "%%%c: directive invalide"
 
-#: src/printf.c:569
+#: src/printf.c:576
 #, c-format
 msgid "Usage: %s format [argument...]\n"
 msgstr "Usage: %s format [argument...]\n"
 
-#: src/printf.c:587
+#: src/printf.c:594
 #, c-format
 msgid "warning: ignoring excess arguments, starting with `%s'"
 msgstr "AVERTISSEMENT:  arguments superflus ignorés, débutant avec « %s »"
@@ -6412,22 +6407,22 @@ msgstr "option « -%d » est obsolète; utiliser « -l %d »"
 msgid "invalid number"
 msgstr "Nombre invalide."
 
-#: src/stat.c:325
+#: src/stat.c:326
 msgid "*** invalid date/time ***"
 msgstr "*** date/heure invalide ***"
 
-#: src/stat.c:607
+#: src/stat.c:608
 #, c-format
 msgid "cannot read file system information for %s"
 msgstr "ne peut lire les informations du système de fichier pour %s"
 
-#: src/stat.c:683
+#: src/stat.c:684
 #, c-format
 msgid "Usage: %s [OPTION] FILE...\n"
 msgstr "Usage: %s [OPTION] FICHIER...\n"
 
 # src/stat.c:300 MRO
-#: src/stat.c:684
+#: src/stat.c:685
 msgid ""
 "Display file or filesystem status.\n"
 "\n"
@@ -6444,7 +6439,7 @@ msgstr ""
 "  -L, --deference            suivre les liens\n"
 "  -t, --terse                afficher l'information en format terse\n"
 
-#: src/stat.c:695
+#: src/stat.c:696
 msgid ""
 "\n"
 "The valid format sequences for files (without --filesystem):\n"
@@ -6462,7 +6457,7 @@ msgstr ""
 "  %B   la taille en octets de chaque bloc rapporté par `%b'\n"
 "  %b   nombre de blocs alloués (voir %B)\n"
 
-#: src/stat.c:703
+#: src/stat.c:704
 msgid ""
 "  %D   Device number in hex\n"
 "  %d   Device number in decimal\n"
@@ -6478,7 +6473,7 @@ msgstr ""
 "  %G   nom de groupe du propriétaire\n"
 "  %g   identificateur de groupe du propriétaire\n"
 
-#: src/stat.c:711
+#: src/stat.c:712
 msgid ""
 "  %h   Number of hard links\n"
 "  %i   Inode number\n"
@@ -6498,7 +6493,7 @@ msgstr ""
 "  %T - type mineur de périphérique en hexadécimal\n"
 "  %t - type majeur de périphérique en hexadécimal\n"
 
-#: src/stat.c:721
+#: src/stat.c:722
 msgid ""
 "  %U   User name of owner\n"
 "  %u   User ID of owner\n"
@@ -6520,7 +6515,7 @@ msgstr ""
 "  %z - date du dernier changement\n"
 "\n"
 
-#: src/stat.c:733
+#: src/stat.c:734
 msgid ""
 "Valid format sequences for file systems:\n"
 "\n"
@@ -6538,7 +6533,7 @@ msgstr ""
 "  %d - noeuds de fichiers libres dans le système de fichiers\n"
 "  %f - blocs libres dans le système de fichiers\n"
 
-#: src/stat.c:742
+#: src/stat.c:743
 msgid ""
 "  %i   File System id in hex\n"
 "  %l   Maximum length of filenames\n"
@@ -8662,6 +8657,9 @@ msgid ""
 msgstr ""
 "Afficher à répétition une ligne de caractères telle que spécifiée\n"
 "par CHAÎNE ou par « y ».\n"
+
+#~ msgid "\\%c: invalid escape"
+#~ msgstr "\\%c: échappement invalide"
 
 #~ msgid "program error"
 #~ msgstr "erreur du programme"
