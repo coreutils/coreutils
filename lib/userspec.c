@@ -51,6 +51,7 @@
 # include <unistd.h>
 #endif
 
+#include "posixver.h"
 #include "xalloc.h"
 #include "xstrtol.h"
 
@@ -179,7 +180,7 @@ parse_user_spec (const char *spec_arg, uid_t *uid, gid_t *gid,
   separator = strchr (spec, ':');
 
   /* If there is no colon, then see if there's a `.'.  */
-  if (separator == NULL)
+  if (separator == NULL && posix2_version () < 200112)
     {
       dot = strchr (spec, '.');
       /* If there's no colon but there is a `.', then first look up the
