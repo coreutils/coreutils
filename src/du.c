@@ -773,23 +773,31 @@ main (int argc, char **argv)
     size_t i = 0;
     size_t j;
 
-    for (j = 0; (files[i] = files[j]); j++)
-      if (files[i][0])
-	i++;
-      else
-	{
-	  if (files_from)
-	    {
-	      /* Using the standard `filename:line-number:' prefix here is
-		 not totally appropriate, since NUL is the separator, not NL,
-		 but it might be better than nothing.  */
-	      unsigned long int file_number = j + 1;
-	      error (0, 0, "%s:%lu: %s", quotearg_colon (files_from),
-		     file_number, _("invalid zero-length file name"));
-	    }
-	  else
-	    error (0, 0, "%s", _("invalid zero-length file name"));
-	}
+    for (j = 0; ; j++)
+      {
+	if (i != j)
+	  files[i] = files[j];
+
+	if ( ! files[i])
+	  break;
+
+	if (files[i][0])
+	  i++;
+	else
+	  {
+	    if (files_from)
+	      {
+		/* Using the standard `filename:line-number:' prefix here is
+		   not totally appropriate, since NUL is the separator, not NL,
+		   but it might be better than nothing.  */
+		unsigned long int file_number = j + 1;
+		error (0, 0, "%s:%lu: %s", quotearg_colon (files_from),
+		       file_number, _("invalid zero-length file name"));
+	      }
+	    else
+	      error (0, 0, "%s", _("invalid zero-length file name"));
+	  }
+      }
 
     fail = (i != j);
   }
