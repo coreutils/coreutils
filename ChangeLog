@@ -1,6 +1,13 @@
-2004-02-15  Jim Meyering  <jim@meyering.net>
+2004-02-17  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.2.0.
+
+	* src/sort.c (usage) [-u]: Add punctuation so that the description in
+	the help2man-generated (line-joined) man page is more readable.
+	Reported by Tim Waugh.
+	[-T]: Add a semicolon, for the same reason.
+
+2004-02-15  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (dist-hook): Qualify target with $(srcdir)/ prefix.
 
