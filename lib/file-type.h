@@ -1,11 +1,31 @@
-#if HAVE_CONFIG_H
-# include <config.h>
-#endif
+/* Return a string describing the type of a file.
 
-#include <sys/types.h>
-#include <sys/stat.h>
+   Copyright (C) 1993, 1994, 2001, 2002 Free Software Foundation, Inc.
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2, or (at your option)
+   any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+
+/* Written by Paul Eggert and Jim Meyering.  */
+
+/* Include <sys/types.h> and <sys/stat.h> before including this
+   file.  */
 
 char const *file_type (struct stat const *);
+
+#ifndef S_IFMT
+# define S_IFMT 0170000
+#endif
 
 #if STAT_MACROS_BROKEN
 # undef S_ISBLK
@@ -14,90 +34,122 @@ char const *file_type (struct stat const *);
 # undef S_ISDOOR
 # undef S_ISFIFO
 # undef S_ISLNK
+# undef S_ISNAM
 # undef S_ISMPB
 # undef S_ISMPC
 # undef S_ISNWK
 # undef S_ISREG
 # undef S_ISSOCK
-#endif /* STAT_MACROS_BROKEN.  */
-
-#ifndef S_IFMT
-# define S_IFMT 0170000
-#endif
-#if !defined(S_ISBLK) && defined(S_IFBLK)
-# define S_ISBLK(m) (((m) & S_IFMT) == S_IFBLK)
-#endif
-#if !defined(S_ISCHR) && defined(S_IFCHR)
-# define S_ISCHR(m) (((m) & S_IFMT) == S_IFCHR)
-#endif
-#if !defined(S_ISDIR) && defined(S_IFDIR)
-# define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
-#endif
-#if !defined(S_ISREG) && defined(S_IFREG)
-# define S_ISREG(m) (((m) & S_IFMT) == S_IFREG)
-#endif
-#if !defined(S_ISFIFO) && defined(S_IFIFO)
-# define S_ISFIFO(m) (((m) & S_IFMT) == S_IFIFO)
-#endif
-#if !defined(S_ISLNK) && defined(S_IFLNK)
-# define S_ISLNK(m) (((m) & S_IFMT) == S_IFLNK)
-#endif
-#if !defined(S_ISSOCK) && defined(S_IFSOCK)
-# define S_ISSOCK(m) (((m) & S_IFMT) == S_IFSOCK)
-#endif
-#if !defined(S_ISMPB) && defined(S_IFMPB) /* V7 */
-# define S_ISMPB(m) (((m) & S_IFMT) == S_IFMPB)
-# define S_ISMPC(m) (((m) & S_IFMT) == S_IFMPC)
-#endif
-#if !defined(S_ISNWK) && defined(S_IFNWK) /* HP/UX */
-# define S_ISNWK(m) (((m) & S_IFMT) == S_IFNWK)
-#endif
-#if !defined(S_ISDOOR) && defined(S_IFDOOR) /* Solaris 2.5 and up */
-# define S_ISDOOR(m) (((m) & S_IFMT) == S_IFDOOR)
 #endif
 
-/* If any of the following S_* macros are undefined, define them here
-   so each use doesn't have to be guarded with e.g., #ifdef S_ISLNK.  */
-#ifndef S_ISREG
-# define S_ISREG(Mode) 0
-#endif
 
-#ifndef S_ISDIR
-# define S_ISDIR(Mode) 0
-#endif
-
-#ifndef S_ISLNK
-# define S_ISLNK(Mode) 0
-#endif
-
-#ifndef S_ISFIFO
-# define S_ISFIFO(Mode) 0
-#endif
-
-#ifndef S_ISSOCK
-# define S_ISSOCK(Mode) 0
+#ifndef S_ISBLK
+# ifdef S_IFBLK
+#  define S_ISBLK(m) (((m) & S_IFMT) == S_IFBLK)
+# else
+#  define S_ISBLK(m) 0
+# endif
 #endif
 
 #ifndef S_ISCHR
-# define S_ISCHR(Mode) 0
+# ifdef S_IFCHR
+#  define S_ISCHR(m) (((m) & S_IFMT) == S_IFCHR)
+# else
+#  define S_ISCHR(m) 0
+# endif
 #endif
 
-#ifndef S_ISBLK
-# define S_ISBLK(Mode) 0
+#ifndef S_ISDIR
+# ifdef S_IFDIR
+#  define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
+# else
+#  define S_ISDIR(m) 0
+# endif
 #endif
 
-#ifndef S_ISDOOR
-# define S_ISDOOR(Mode) 0
+#ifndef S_ISDOOR /* Solaris 2.5 and up */
+# ifdef S_IFDOOR
+#  define S_ISDOOR(m) (((m) & S_IFMT) == S_IFDOOR)
+# else
+#  define S_ISDOOR(m) 0
+# endif
 #endif
+
+#ifndef S_ISFIFO
+# ifdef S_IFIFO
+#  define S_ISFIFO(m) (((m) & S_IFMT) == S_IFIFO)
+# else
+#  define S_ISFIFO(m) 0
+# endif
+#endif
+
+#ifndef S_ISLNK
+# ifdef S_IFLNK
+#  define S_ISLNK(m) (((m) & S_IFMT) == S_IFLNK)
+# else
+#  define S_ISLNK(m) 0
+# endif
+#endif
+
+#ifndef S_ISMPB /* V7 */
+# ifdef S_IFMPB
+#  define S_ISMPB(m) (((m) & S_IFMT) == S_IFMPB)
+#  define S_ISMPC(m) (((m) & S_IFMT) == S_IFMPC)
+# else
+#  define S_ISMPB(m) 0
+#  define S_ISMPC(m) 0
+# endif
+#endif
+
+#ifndef S_ISNAM /* Xenix */
+# ifdef S_IFNAM
+#  define S_ISNAM(m) (((m) & S_IFMT) == S_IFNAM)
+# else
+#  define S_ISNAM(m) 0
+# endif
+#endif
+
+#ifndef S_ISNWK /* HP/UX */
+# ifdef S_IFNWK
+#  define S_ISNWK(m) (((m) & S_IFMT) == S_IFNWK)
+# else
+#  define S_ISNWK(m) 0
+# endif
+#endif
+
+#ifndef S_ISREG
+# ifdef S_IFREG
+#  define S_ISREG(m) (((m) & S_IFMT) == S_IFREG)
+# else
+#  define S_ISREG(m) 0
+# endif
+#endif
+
+#ifndef S_ISSOCK
+# ifdef S_IFSOCK
+#  define S_ISSOCK(m) (((m) & S_IFMT) == S_IFSOCK)
+# else
+#  define S_ISSOCK(m) 0
+# endif
+#endif
+
 
 #ifndef S_TYPEISSEM
-# define S_TYPEISSEM(Stat_buf_p) 0
+# ifdef S_INSEM
+#  define S_TYPEISSEM(p) (S_ISNAM ((p)->st_mode) && (p)->st_rdev == S_INSEM)
+# else
+#  define S_TYPEISSEM(p) 0
+# endif
 #endif
 
 #ifndef S_TYPEISSHM
-# define S_TYPEISSHM(Stat_buf_p) 0
+# ifdef S_INSHD
+#  define S_TYPEISSHM(p) (S_ISNAM ((p)->st_mode) && (p)->st_rdev == S_INSHD)
+# else
+#  define S_TYPEISSHM(p) 0
+# endif
 #endif
 
 #ifndef S_TYPEISMQ
-# define S_TYPEISMQ(Stat_buf_p) 0
+# define S_TYPEISMQ(p) 0
 #endif

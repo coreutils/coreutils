@@ -1,5 +1,6 @@
-/* return a string describing the type of a file
-   Copyright (C) 2002 Free Software Foundation, Inc.
+/* Return a string describing the type of a file.
+
+   Copyright (C) 1993, 1994, 2001, 2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -15,21 +16,24 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-/* Extracted from diffutils/src/diff.c.  */
+/* Written by Paul Eggert.  */
 
+#if HAVE_CONFIG_H
+# include <config.h>
+#endif
+
+#include <sys/types.h>
+#include <sys/stat.h>
 #include "file-type.h"
 
-#if ENABLE_NLS
-# include <libintl.h>
-# define _(text) gettext (text)
-#else
-# define _(text) text
-#endif
+#include <gettext.h>
+#define _(text) gettext (text)
 
 char const *
 file_type (struct stat const *st)
 {
-  /* See POSIX 1003.1-2001 for these formats.
+  /* See POSIX 1003.1-2001 XCU Table 4-8 lines 17093-17107 for some of
+     these formats.
 
      To keep diagnostics grammatical in English, the returned string
      must start with a consonant.  */
