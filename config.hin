@@ -90,7 +90,8 @@
 /* Define to 1 if you have `alloca', as a function or macro. */
 #undef HAVE_ALLOCA
 
-/* Define to 1 if you have the <alloca.h> header file. */
+/* Define to 1 if you have <alloca.h> and it should be used (not on Ultrix).
+   */
 #undef HAVE_ALLOCA_H
 
 /* Define to 1 if you have the <arpa/inet.h> header file. */
@@ -107,9 +108,6 @@
 
 /* Define to 1 if you have the `btowc' function. */
 #undef HAVE_BTOWC
-
-/* Define to 1 if you have the `bzero' function. */
-#undef HAVE_BZERO
 
 /* Define to 1 if you have the `chroot' function. */
 #undef HAVE_CHROOT
