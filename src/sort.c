@@ -30,6 +30,8 @@
 #include "system.h"
 #include "long-options.h"
 #include "error.h"
+#include "hard-locale.h"
+#include "memcoll.h"
 #include "xalloc.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -82,8 +84,12 @@ char *xstrdup ();
 static char decimal_point;
 static int th_sep; /* if CHAR_MAX + 1, then there is no thousands separator */
 
-/* This is "C" locale, need another? */
-static int need_locale = 0;
+/* Nonzero if the corresponding locales are hard.  */
+static int hard_LC_COLLATE;
+static int hard_LC_CTYPE;
+# if HAVE_NL_LANGINFO
+static int hard_LC_TIME;
+# endif
 
 # define IS_THOUSANDS_SEP(x) ((x) == th_sep)
 
@@ -468,67 +474,6 @@ struct_month_cmp (const void *m1, const void *m2)
 		 ((const struct month *) m2)->name);
 }
 
-/* Compare S1 (with length S1LEN) and S2 (with length S2LEN) according
-   to the LC_COLLATE locale.  S1 and S2 do not overlap, but may be
-   adjacent.  Temporarily modify the bytes after S1 and S2, but
-   restore their original contents before returning.  */
-static int
-memcoll (char *s1, int s1len, char *s2, int s2len)
-{
-  register int diff;
-  char n1;
-  char n2;
-
-  /* We will temporarily set the bytes after S1 and S2 to zero, so if
-     S1 and S2 are adjacent, compare to a temporary copy of the
-     earlier, to avoid temporarily stomping on the later.  */
-
-  if (s1 + s1len == s2)
-    {
-      char *s2copy = alloca (s2len + 1);
-      memcpy (s2copy, s2, s2len);
-      diff = memcoll (s1, s1len, s2copy, s2len);
-      alloca (0);
-      return diff;
-    }
-
-  if (s2 + s2len == s1)
-    {
-      char *s1copy = alloca (s1len + 1);
-      memcpy (s1copy, s1, s1len);
-      diff = memcoll (s1copy, s1len, s2, s2len);
-      alloca (0);
-      return diff;
-    }
-
-  n1 = s1[s1len];  s1[s1len] = 0;
-  n2 = s2[s2len];  s2[s2len] = 0;
-
-  while (! (diff = strcoll (s1, s2)))
-    {
-      /* strcoll found no difference, but perhaps it was fooled by NUL
-	 characters in the data.  Work around this problem by advancing
-	 past the NUL chars.  */
-      int size1 = strlen (s1) + 1;
-      int size2 = strlen (s2) + 1;
-      s1 += size1;
-      s2 += size2;
-      s1len -= size1;
-      s2len -= size2;
-
-      if (s1len <= 0 || s2len <= 0)
-	{
-	  diff = s1len - s2len;
-	  break;
-	}
-    }
-
-  s1[s1len] = n1;
-  s2[s2len] = n2;
-
-  return diff;
-}
-
 #endif /* NLS */
 
 /* Initialize the character class tables. */
@@ -554,7 +499,7 @@ inittables (void)
 
 #if defined ENABLE_NLS && HAVE_NL_LANGINFO
   /* If we're not in the "C" locale, read different names for months.  */
-  if (need_locale)
+  if (hard_LC_TIME)
     {
       for (i = 0; i < MONTHS_PER_YEAR; i++)
 	{
@@ -1237,7 +1182,7 @@ keycompare (const struct line *a, const struct line *b)
 
       /* Sorting like this may become slow, so in a simple locale the user
          can select a faster sort that is similar to ascii sort  */
-      else if (need_locale)
+      else if (hard_LC_COLLATE | hard_LC_CTYPE)
 	{
 	  if (ignore || translate)
 	    {
@@ -1267,9 +1212,6 @@ keycompare (const struct line *a, const struct line *b)
 		}
 
 	      diff = memcoll (copy_a, new_len_a, copy_b, new_len_b);
-
-	      /* Free copy_a and copy_b.  */
-	      alloca (0);
 	    }
 	  else
 	    {
@@ -1347,7 +1289,7 @@ keycompare (const struct line *a, const struct line *b)
       else
 	{
 #ifdef ENABLE_NLS
-	  if (need_locale)
+	  if (hard_LC_COLLATE)
 	    {
 	      /* Ignore any length difference if the localized comparison
 		 says the strings are equal.  */
@@ -1384,10 +1326,11 @@ compare (register const struct line *a, register const struct line *b)
   if (keyhead.next)
     {
       diff = keycompare (a, b);
-      if (diff != 0)
-	return diff;
-      if (unique || stable)
-	return 0;
+      if (diff != 0 || unique || stable)
+	{
+	  alloca (0);
+	  return diff;
+	}
     }
 
   /* If the keys all compare equal (or no keys were specified)
@@ -1395,9 +1338,10 @@ compare (register const struct line *a, register const struct line *b)
   tmpa = a->length, tmpb = b->length;
 
 #ifdef ENABLE_NLS
-  if (need_locale)  /* want absolutely correct sorting */
+  if (hard_LC_COLLATE)
     {
       diff = memcoll (a->text, tmpa, b->text, tmpb);
+      alloca (0);
       return reverse ? -diff : diff;
     }
 #endif
@@ -1941,20 +1885,6 @@ key_init (struct keyfield *key)
   key->eword = -1;
 }
 
-/* strdup and return the result of setlocale, but guard against a NULL
-   return value.  If setlocale returns NULL, strdup FAIL_VAL instead.  */
-
-#if defined ENABLE_NLS && ( !defined __GLIBC__ || __GLIBC__ < 2 )
-static inline char *
-my_setlocale (const char *locale, const char *fail_val)
-{
-  char *s = setlocale (LC_ALL, locale);
-  if (s == NULL)
-    s = (char *) fail_val;
-  return xstrdup (s);
-}
-#endif
-
 int
 main (int argc, char **argv)
 {
@@ -1969,32 +1899,16 @@ main (int argc, char **argv)
 #endif				/* SA_INTERRUPT */
 
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
 
 #ifdef ENABLE_NLS
 
-  /* Determine whether the current locale is C or POSIX.  */
-# if defined __GLIBC__ && __GLIBC__ >= 2
-  s = setlocale (LC_ALL, "");
-  if (s != NULL && !STREQ (s, "C") && !STREQ (s, "POSIX"))
-    /* The current locale is neither C nor POSIX.  We'll need to do
-       more work.  */
-    need_locale = 1;
-# else
-  {
-    char *c_locale_string = my_setlocale ("C", "");
-    char *posix_locale_string = my_setlocale ("POSIX", "");
-    char *current_locale_string = setlocale (LC_ALL, "");
-
-    if (current_locale_string != NULL
-	&& !STREQ (current_locale_string, c_locale_string)
-	&& !STREQ (current_locale_string, posix_locale_string))
-	/* The current locale is neither C nor POSIX.
-	   We'll need to do more work.  */
-	need_locale = 1;
-
-    free (c_locale_string);
-    free (posix_locale_string);
-  }
+  hard_LC_COLLATE = hard_locale (LC_COLLATE);
+  hard_LC_CTYPE = hard_locale (LC_CTYPE);
+# if HAVE_NL_LANGINFO
+  hard_LC_TIME = hard_locale (LC_TIME);
 # endif
 
   /* Let's get locale's representation of the decimal point */
@@ -2015,9 +1929,6 @@ main (int argc, char **argv)
   }
 
 #endif /* NLS */
-
-  bindtextdomain (PACKAGE, LOCALEDIR);
-  textdomain (PACKAGE);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 		      AUTHORS, usage);
