@@ -2,6 +2,8 @@
 
 	* Version 5.0.91.
 
+	* src/ln.c (do_link): Use SAME_INODE rather than open-coding it.
+
 	When source and destination arguments refer to the same file, reside
 	on a partition (e.g. VFAT) on which distinct names may refer to the
 	same directory entry (often due to variations in case), and when the
@@ -11,6 +13,7 @@
 	* src/copy.c (same_file_ok): Invoke same_name (which might still
 	return false for names that refer to the same directory entry)
 	only if the link count is 2 or more.
+	* tests/mv/vfat: Disabled test to demonstrate the above problem.
 
 2003-08-27  Jim Meyering  <jim@meyering.net>
 
