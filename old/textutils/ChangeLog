@@ -4,6 +4,7 @@ Tue Oct 15 23:25:31 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 	special case.
 	(main): Write separate loops to initialize mapping for lower->upper
 	and upper->lower conversion.
+	Reported by Arne Henrik Juul.
 
 Sun Oct 13 12:52:42 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
