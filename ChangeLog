@@ -1,3 +1,13 @@
+2003-10-17  Andreas Schwab  <schwab@suse.de>
+
+	* tests/mk-script: Get $srcdir from first parameter instead of
+	hardcoding it.
+	(main): Update usage.
+
+	* tests/Makefile.am.in ($(srcdir)/$x-tests): Pass $(srcdir) as
+	first argument of mk-script.
+	($(srcdir)/Makefile.am): Likewise.  Prepend $(srcdir) to target.
+
 2003-10-18  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.1.0.
