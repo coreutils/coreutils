@@ -254,16 +254,20 @@ With no FILE, or when FILE is -, read standard input.\n\
                              equivalent\n\
   -n, --lines=N            output the last N lines, instead of the last %d\n\
       --max-consecutive-size-changes=N\n\
-                           with --follow=name, reopen a FILE which has not\n\
-			     changed size after N (default N=%d) iterations\n\
-			     to see if it has been unlinked or renamed\n\
+                           with --follow=name, reopen a FILE after N\n\
+                             (default %d) consecutive size changes to see if\n\
+                             it has been unlinked or renamed\n\
+                             (this is the unusual case where a log file\n\
+                             continues to be written to after rotation)\n\
       --max-unchanged-stats=N\n\
-                           with --follow=name, reopen a FILE after N (default\n\
-                             N=%d) consecutive size changes to see if it has\n\
-                             been unlinked or renamed\n\
+                           with --follow=name, reopen a FILE which has not\n\
+                             changed size after N (default %d) iterations\n\
+                             to see if it has been unlinked or renamed\n\
+                             (this is the usual case of rotated log files)\n
       --pid=PID            with -f, terminate after process ID, PID dies\n\
   -q, --quiet, --silent    never output headers giving file names\n\
-  -s, --sleep-interval=S   with -f, sleep S seconds between iterations\n\
+  -s, --sleep-interval=S   with -f, each iteration lasts approximately S\n\
+                             (default 1) seconds\n\
   -v, --verbose            always output headers giving file names\n\
       --help               display this help and exit\n\
       --version            output version information and exit\n\
