@@ -56,6 +56,10 @@ null_AM_MAKEFLAGS = \
   AUTOHEADER=false \
   MAKEINFO=false
 
+# Detect format-string/arg-list mismatches that would normally be obscured
+# by the use of _().  The --disable-nls effectively defines away that macro,
+# and building with CFLAGS='-Wformat -Werror' causes any format warning to be
+# treated as a failure.
 t=./=test
 my-distcheck: writable-files po-check
 	-rm -rf $(t)
