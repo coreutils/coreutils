@@ -1,3 +1,14 @@
+2000-01-29  Jim Meyering  <meyering@lucent.com>
+
+	* src/seq.c: Back out most of the 2000-01-21 and 01-22 changes.
+	[Instead, merely give examples showing how to accomplish the same
+	task with fewer limitations using existing tools. ]
+	Suggestion from Bruno Haible.
+	(valid_format): Rename from check_format.
+	* tests/seq/basic: Remove associated tests and add two equal-width ones.
+
+	* tests/stty/row-col-1: Set COLUMNS envvar, just to be safe.
+
 2000-01-28  Jim Meyering  <meyering@lucent.com>
 
 	* src/stty.c (wrapf): Emit a newline only if 0 < current_col.
@@ -36,8 +47,6 @@
 	(DO_printf): New macro.
 	(main): Use it.
 	Topologically sort the functions and remove fwd declarations.
-
-	* tests/seq/basic: Add new tests for the new functionality.
 
 2000-01-21  Bruno Haible  <haible@linuix.math.u-bordeaux.fr>
 
