@@ -1,5 +1,16 @@
 Fri Dec 20 19:28:37 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* configure.in (AC_OUTPUT): Add m4/Makefile.
+
+	* lib/Makefile.am (EXTRA_DIST): Add getgroups.c.
+
+	* Makefile.am (SUBDIRS): Add m4.
+	(aclocal-files): Add rules that rely on (GNU) make's include
+	directive that computes dependencies for aclocal.m4.
+	(aclocal.m4): Override automake-generated rule.
+
+	* m4/Makefile.am: New file.
+
 	* lib/strftime.c: Update from GNU libc.
 
 	* m4/getline.m4: New file, extracted from acinclude.m4.
