@@ -401,12 +401,19 @@ check_file (const char *infile, const char *outfile)
   free (lb2.buffer);
 }
 
+enum Skip_field_option_type
+  {
+    SFO_NONE,
+    SFO_OBSOLETE,
+    SFO_NEW
+  };
+
 int
 main (int argc, char **argv)
 {
   int optc = 0;
   bool posixly_correct = (getenv ("POSIXLY_CORRECT") != NULL);
-  bool obsolete_skip_fields = false;
+  enum Skip_field_option_type skip_field_option_type = SFO_NONE;
   int nfiles = 0;
   char const *file[2];
 
@@ -481,11 +488,14 @@ main (int argc, char **argv)
 	case '9':
 	  {
 	    size_t s = skip_fields;
+	    if (skip_field_option_type == SFO_NEW)
+	      s = 0;
+
 	    skip_fields = s * 10 + optc - '0';
 	    if (SIZE_MAX / 10 < s || skip_fields < s)
 	      error (EXIT_FAILURE, 0, "%s",
 		     _("invalid number of fields to skip"));
-	    obsolete_skip_fields = true;
+	    skip_field_option_type = SFO_OBSOLETE;
 	  }
 	  break;
 
@@ -509,6 +519,7 @@ main (int argc, char **argv)
 	  break;
 
 	case 'f':		/* Like '-#'. */
+	  skip_field_option_type = SFO_NEW;
 	  skip_fields = size_opt (optarg,
 				  N_("invalid number of fields to skip"));
 	  break;
@@ -540,7 +551,7 @@ main (int argc, char **argv)
 	}
     }
 
-  if (obsolete_skip_fields && 200112 <= posix2_version ())
+  if (skip_fields == SFO_OBSOLETE && 200112 <= posix2_version ())
     {
       error (0, 0, _("`-%lu' option is obsolete; use `-f %lu'"),
 	     (unsigned long int) skip_fields, (unsigned long int) skip_fields);
