@@ -191,13 +191,9 @@ my_index (str, chr)
    If not using GCC, it is ok not to declare it.  */
 #ifdef __GNUC__
 #ifndef __STDC__
-#ifdef IN_GCC
-#include "gstddef.h"
-#else /* not IN_GCC */
 /* Motorola Delta 68k R3V7 comes with GCC but not stddef.h.
    Enable Emacs to compile on it.  */
 #include <stddef.h>
-#endif /* not IN_GCC */
 extern size_t strlen (const char *);
 #endif /* not __STDC__ */
 #endif /* __GNUC__ */

@@ -1,3 +1,7 @@
+User visible changes in release 2.0
+* Configure properly determines options for stty on SCO ODT 3.0 systems.
+User visible changes in release 1.9.4
+* Repair stty option handling.
 User visible changes in release 1.9.3
 * `stty -a -g' gets a diagnostic
 * `stty {-a|-g} any-other-argument' gets a diagnostic
