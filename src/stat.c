@@ -49,6 +49,7 @@
 #include "file-type.h"
 #include "fs.h"
 #include "getopt.h"
+#include "inttostr.h"
 #include "quote.h"
 #include "quotearg.h"
 #include "strftime.h"
@@ -328,13 +329,15 @@ human_access (struct stat const *statbuf)
 static char *
 human_time (time_t t, int t_ns)
 {
-  static char str[80];
-  struct tm *tm = localtime (&t);
+  static char str[MAX (INT_BUFSIZE_BOUND (intmax_t),
+		       (INT_STRLEN_BOUND (int) /* YYYY */
+			+ 1 /* because YYYY might equal INT_MAX + 1900 */
+			+ sizeof "-MM-DD HH:MM:SS.NNNNNNNNN +ZZZZ"))];
+  struct tm const *tm = localtime (t);
   if (tm == NULL)
-    {
-      G_fail = 1;
-      return (char *) _("*** invalid date/time ***");
-    }
+    return (TYPE_SIGNED (time_t)
+	    ? imaxtostr (t, str)
+	    : umaxtostr (t, str));
   nstrftime (str, sizeof str, "%Y-%m-%d %H:%M:%S.%N %z", tm, 0, t_ns);
   return str;
 }
