@@ -11000,7 +11000,7 @@ For very long lists of numbers, use xargs to avoid
 system limitations on the length of an argument list:
 
 @example
-$ seq -f %1.f 1000000 | xargs printf %x'\n' |tail -3
+$ seq -f %1.f 1000000 | xargs printf %x'\n' | tail -n 3
 f423e
 f423f
 f4240
