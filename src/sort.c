@@ -19,7 +19,7 @@
    The author may be reached (Email) at the address mike@gnu.ai.mit.edu,
    or (US mail) as Mike Haertel c/o Free Software Foundation.
 
-   Ørn E. Hansen added NLS support in 1997.  */
+   Ã˜rn E. Hansen added NLS support in 1997.  */
 
 #include <config.h>
 
@@ -395,13 +395,14 @@ cleanup (void)
     unlink (node->name);
 }
 
-/* Report MESSAGE for FILE, then clean up and exit.  */
+/* Report MESSAGE for FILE, then clean up and exit.
+   If FILE is null, it represents standard output.  */
 
 static void die (char const *, char const *) ATTRIBUTE_NORETURN;
 static void
 die (char const *message, char const *file)
 {
-  error (0, errno, "%s: %s", message, file);
+  error (0, errno, "%s: %s", message, file ? file : _("standard output"));
   exit (SORT_FAILURE);
 }
 
@@ -443,20 +444,22 @@ create_temp_file (FILE **pfp)
   return file;
 }
 
+/* Return a stream for FILE, opened with mode HOW.  A null FILE means
+   standard output; HOW should be "w".  When opening for input, "-"
+   means standard input.  To avoid confusion, do not return file
+   descriptors 0, 1, or 2.  */
+
 static FILE *
 xfopen (const char *file, const char *how)
 {
   FILE *fp;
 
-  if (STREQ (file, "-"))
+  if (!file)
+    fp = stdout;
+  else if (STREQ (file, "-") && *how == 'r')
     {
-      if (*how == 'r')
-	{
-	  have_read_stdin = true;
-	  fp = stdin;
-	}
-      else
-	fp = stdout;
+      have_read_stdin = true;
+      fp = stdin;
     }
   else
     {
@@ -1611,8 +1614,9 @@ check (char const *file_name)
 
 /* Merge lines from FILES onto OFP.  NFILES cannot be greater than
    NMERGE.  Close input and output files before returning.
-   OUTPUT_FILE gives the name of the output file; if OFP is NULL, the
-   output file has not been opened yet.  */
+   OUTPUT_FILE gives the name of the output file.  If it is NULL,
+   the output file is standard output.  If OFP is NULL, the output
+   file has not been opened yet (or written to, if standard output).  */
 
 static void
 mergefps (char **files, register int nfiles,
@@ -1904,15 +1908,15 @@ first_same_file (char * const *files, int nfiles, char const *outfile)
     {
       bool standard_input = STREQ (files[i], "-");
 
-      if (STREQ (outfile, files[i]) && ! standard_input)
+      if (outfile && STREQ (outfile, files[i]) && ! standard_input)
 	return i;
 
       if (! got_outstat)
 	{
 	  got_outstat = true;
-	  if ((STREQ (outfile, "-")
-	       ? fstat (STDOUT_FILENO, &outstat)
-	       : stat (outfile, &outstat))
+	  if ((outfile
+	       ? stat (outfile, &outstat)
+	       : fstat (STDOUT_FILENO, &outstat))
 	      != 0)
 	    return nfiles;
 	}
@@ -1930,7 +1934,7 @@ first_same_file (char * const *files, int nfiles, char const *outfile)
 
 /* Merge NFILES FILES onto OUTPUT_FILE.  However, merge at most
    MAX_MERGE input files directly onto OUTPUT_FILE.  MAX_MERGE cannot
-   exceed NMERGE.  */
+   exceed NMERGE.  A null OUTPUT_FILE stands for standard output.  */
 
 static void
 merge (char **files, int nfiles, int max_merge, char const *output_file)
@@ -2201,7 +2205,7 @@ main (int argc, char **argv)
 			       ? COMMON_SHORT_OPTIONS "y::"
 			       : COMMON_SHORT_OPTIONS "y:");
   char *minus = "-", **files;
-  char const *outfile = minus;
+  char const *outfile = NULL;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -2421,7 +2425,7 @@ main (int argc, char **argv)
 	  break;
 
 	case 'o':
-	  if (outfile != minus && !STREQ (outfile, optarg))
+	  if (outfile && !STREQ (outfile, optarg))
 	    error (SORT_FAILURE, 0, _("multiple output files specified"));
 	  outfile = optarg;
 	  break;
