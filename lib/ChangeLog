@@ -1,3 +1,8 @@
+2000-04-18  Jim Meyering  <meyering@lucent.com>
+
+	* getpagesize.h [!getpagesize && HAVE_OS_H && B_PAGE_SIZE]: Define
+	getpagesize.  For BeOS.  Based on a patch from Bruno Haible.
+
 2000-04-17  Jim Meyering  <meyering@lucent.com>
 
 	* strftime.c (my_strftime) [strftime]: Declare strftime here, since
