@@ -1,6 +1,10 @@
-2003-04-15  Jim Meyering  <jim@meyering.net>
+2003-04-17  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
+
+	* src/stty.c: Remove uses of PROTOTYPE macro.
+
+2003-04-15  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.maint: Remove (or replace-with-TAB(s) to retain alignment)
 	each sequence of spaces before a TAB character.
