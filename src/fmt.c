@@ -631,7 +631,7 @@ get_line (FILE *f, register int c)
 	  *wptr++ = c;
 	  c = getc (f);
 	}
-      while (c != EOF && !isspace (c));
+      while (c != EOF && !ISSPACE (c));
       in_column += word_limit->length = wptr - word_limit->text;
       check_punctuation (word_limit);
 
@@ -715,7 +715,7 @@ check_punctuation (register WORD *w)
   start = w->text;
   finish = start + (w->length - 1);
   w->paren = isopen (*start);
-  w->punct = ispunct (*finish);
+  w->punct = ISPUNCT (*finish);
   while (isclose (*finish) && finish > start)
     finish--;
   w->period = isperiod (*finish);
