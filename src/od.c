@@ -64,8 +64,6 @@ typedef double LONG_DOUBLE;
 # define BITSPERBYTE 8
 #endif
 
-#define STREQ(a,b) (strcmp((a), (b)) == 0)
-
 #ifndef MAX
 # define MAX(a, b) ((a) > (b) ? (a) : (b))
 #endif
