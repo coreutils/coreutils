@@ -426,10 +426,11 @@ process_file (const char *file, const struct stat *sb, int file_type,
 	  assert ((size_t) info->level == prev_level - 1);
 	  size_to_propagate_to_parent = size_including_subdirs
 	    = size + sum[prev_level];
-	  if (opt_separate_dirs)
-	    size_to_propagate_to_parent = 0;
 	}
     }
+
+  if (opt_separate_dirs)
+    size_to_propagate_to_parent = 0;
 
   prev_level = info->level;
   first_call = 0;
