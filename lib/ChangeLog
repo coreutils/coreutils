@@ -1,3 +1,8 @@
+2003-06-09  Jim Meyering  <jim@meyering.net>
+
+	* gettimeofday.c: Also undefine gmtime.
+	(rpl_gmtime): New function.  Suggestion from Paul Eggert.
+
 2003-06-08  Jim Meyering  <jim@meyering.net>
 
 	* getline.h: Update from gnulib.
