@@ -24,7 +24,7 @@
 #include "dirfd.h"
 
 int
-dirfd (DIR const *dir_p)
+dirfd (DIR *dir_p)
 {
   return DIR_TO_FD;
 }
