@@ -243,22 +243,23 @@ With more than one FILE, precede each with a header giving the file name.\n\
 With no FILE, or when FILE is -, read standard input.\n\
 \n\
       --retry              keep trying to open a file even if it is\n\
-                             inaccessible when tail starts or if it becomes\n\
-                             inaccessible later -- useful only with -f\n\
+                           inaccessible when tail starts or if it becomes\n\
+                           inaccessible later -- useful only with -f\n\
   -c, --bytes=N            output the last N bytes\n\
-  -f, --follow[={name|descriptor}] output appended data as the file grows;\n\
-                             -f, --follow, and --follow=descriptor are\n\
-                             equivalent\n\
+  -f, --follow[={name|descriptor}]\n\
+                           output appended data as the file grows;\n\
+                           -f, --follow, and --follow=descriptor are\n\
+                           equivalent\n\
   -n, --lines=N            output the last N lines, instead of the last %d\n\
       --max-unchanged-stats=N\n\
                            with --follow=name, reopen a FILE which has not\n\
-                             changed size after N (default %d) iterations\n\
-                             to see if it has been unlinked or renamed\n\
-                             (this is the usual case of rotated log files)\n\
+                           changed size after N (default %d) iterations\n\
+                           to see if it has been unlinked or renamed\n\
+                           (this is the usual case of rotated log files)\n\
       --pid=PID            with -f, terminate after process ID, PID dies\n\
   -q, --quiet, --silent    never output headers giving file names\n\
   -s, --sleep-interval=S   with -f, each iteration lasts approximately S\n\
-                             (default 1) seconds\n\
+                           (default 1) seconds\n\
   -v, --verbose            always output headers giving file names\n\
       --help               display this help and exit\n\
       --version            output version information and exit\n\
