@@ -171,4 +171,7 @@ copy PARAMS ((const char *src_path, const char *dst_path,
 	      int nonexistent_dst, const struct cp_options *options,
 	      int *copy_into_self, int *rename_succeeded));
 
+void
+dest_info_init PARAMS ((void));
+
 #endif
