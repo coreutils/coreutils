@@ -181,15 +181,16 @@ charset.alias: config.charset
 	$(SHELL) $(srcdir)/config.charset '@host@' > t-$@
 	mv t-$@ $@
 
+EXTRA_DIST += stdbool.hin
+MOSTLYCLEANFILES += stdbool.h stdbool.ht
 # Create stdbool.h on systems that lack a working one.
 all-local $(lib_OBJECTS): $(STDBOOL_H)
 stdbool.h: stdbool.hin
 	sed -e 's/@''HAVE__BOOL''@/$(HAVE__BOOL)/g' $(srcdir)/stdbool.hin > $@t
 	mv $@t $@
-MOSTLYCLEANFILES += stdbool.h
-EXTRA_DIST += stdbool.hin
 
 EXTRA_DIST += alloca_.h
+MOSTLYCLEANFILES += alloca.h alloca.ht
 # Create an <alloca.h> when the system
 # doesn't have one that works with the given compiler.
 all-local $(lib_OBJECTS): $(ALLOCA_H)
