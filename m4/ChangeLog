@@ -1,3 +1,9 @@
+2000-03-30  Paul Eggert  <eggert@twinsun.com>
+
+	* jm-macros.m4 (jm_CHECK_ALL_TYPES): Include <sys/stat.h>
+	before checking struct stat.st_blksize, so that
+	HAVE_STRUCT_STAT_ST_BLKSIZE is defined correctly.
+
 2000-03-10  Jim Meyering  <meyering@lucent.com>
 
 	* lib-check.m4: Look for getspnam in -lgen, too.
