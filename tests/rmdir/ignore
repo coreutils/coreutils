@@ -1,0 +1,26 @@
+#!/bin/sh
+# make sure rmdir's --ignore-fail-on-non-empty option works
+
+if test "$VERBOSE" = yes; then
+  set -x
+  rmdir --version
+fi
+
+tmp=rmdir.$$
+trap "rm -rf $tmp" 0 1 2 3 15
+
+
+test_failure=0
+mkdir -p $tmp/a/b $tmp/x || test_failure=1
+
+if test $test_failure = 1; then
+  echo "$0: failure in testing framework" 1>&2
+  exit 1
+fi
+
+fail=0
+rmdir -p --ignore-fail-on-non-empty $tmp/a/b || fail=1
+test -d $tmp/x || fail=1
+test -d $tmp/b && fail=1
+
+exit $fail
