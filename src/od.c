@@ -55,6 +55,9 @@ typedef double LONG_DOUBLE;
 #ifndef ULONG_MAX
 # define ULONG_MAX ((unsigned long) ~(unsigned long) 0)
 #endif
+#ifndef LONG_MAX
+# define LONG_MAX ((long int) (ULONG_MAX >> 1))
+#endif
 
 #if HAVE_VALUES_H
 # include <values.h>
