@@ -1,5 +1,5 @@
 # Makefile for GNU file utilities documentation.
-# Copyright (C) 1994 Free Software Foundation, Inc.
+# Copyright (C) 1994, 1995 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -30,8 +30,8 @@ infodir = $(prefix)/info
 
 .SUFFIXES:
 
-DISTFILES = Makefile.in fileutils.texi texinfo.tex fileutils.info \
-perm.texi version.texi getdate.texi
+DISTFILES = Makefile.in texinfo.tex fileutils.texi fileutils.info \
+version.texi perm.texi getdate.texi
 
 all: fileutils.info
 
@@ -50,7 +50,7 @@ fileutils.info: fileutils.texi version.texi
 
 dvi: fileutils.dvi
 
-fileutils.dvi: fileutils.texi version.texi
+fileutils.dvi: fileutils.texi version.texi texinfo.tex
 	$(TEXI2DVI) $(srcdir)/fileutils.texi
 
 installdirs:
@@ -77,7 +77,9 @@ clean: mostlyclean
 distclean: clean
 	rm -f Makefile
 
-realclean: distclean
+maintainer-clean: distclean
+	@echo "This command is intended for use by maintainers;"
+	@echo "it deletes files that may require special tools to rebuild."
 	rm -f fileutils.info version.texi
 
 distdir = ../`cat ../distname`/$(subdir)
@@ -90,6 +92,9 @@ dist: $(DISTFILES)
 subdir = doc
 Makefile: ../config.status Makefile.in
 	cd .. && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= ./config.status
+
+.PHONY: all check clean dist distclean dvi info install \
+installdirs maintainer-clean mostlyclean texclean uninstall
 
 # Tell versions [3.59,3.63) of GNU make not to export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
