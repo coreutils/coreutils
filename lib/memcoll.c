@@ -1,5 +1,5 @@
 /* Locale-specific memory comparison.
-   Copyright 1999 Free Software Foundation, Inc.
+   Copyright 1999, 2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -21,6 +21,11 @@
 # include <config.h>
 #endif
 
+#include <errno.h>
+#ifndef errno
+extern int errno;
+#endif
+
 #include <sys/types.h>
 
 #if HAVE_STRING_H
@@ -30,7 +35,8 @@
 /* Compare S1 (with length S1LEN) and S2 (with length S2LEN) according
    to the LC_COLLATE locale.  S1 and S2 do not overlap, and are not
    adjacent.  Temporarily modify the bytes after S1 and S2, but
-   restore their original contents before returning.  */
+   restore their original contents before returning.  Set errno to an
+   error number if there is an error, and to zero otherwise.  */
 int
 memcoll (char *s1, size_t s1len, char *s2, size_t s2len)
 {
@@ -41,7 +47,7 @@ memcoll (char *s1, size_t s1len, char *s2, size_t s2len)
   s1[s1len++] = '\0';
   s2[s2len++] = '\0';
 
-  while (! (diff = strcoll (s1, s2)))
+  while (! (errno = 0, (diff = strcoll (s1, s2)) || errno))
     {
       /* strcoll found no difference, but perhaps it was fooled by NUL
 	 characters in the data.  Work around this problem by advancing
