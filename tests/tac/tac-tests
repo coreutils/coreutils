@@ -732,6 +732,57 @@ else
   esac
 fi
 test -s opt-r.E || rm -f opt-r.E
+$xx -r -s '\._+' $srcdir/opt-r2.I > opt-r2.O 2> opt-r2.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test opt-r2(F) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp opt-r2.O $srcdir/opt-r2.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed opt-r2(F)"; fi ;;
+    1) $echo "Test opt-r2(F) failed: files opt-r2.O and $srcdir/opt-r2.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test opt-r2(F) may have failed." 1>&2;
+       $echo The command "cmp opt-r2.O $srcdir/opt-r2.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s opt-r2.E || rm -f opt-r2.E
+cat $srcdir/opt-r2.I | $xx -r -s '\._+' > opt-r2.O 2> opt-r2.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test opt-r2(|) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp opt-r2.O $srcdir/opt-r2.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed opt-r2(|)"; fi ;;
+    1) $echo "Test opt-r2(|) failed: files opt-r2.O and $srcdir/opt-r2.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test opt-r2(|) may have failed." 1>&2;
+       $echo The command "cmp opt-r2.O $srcdir/opt-r2.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s opt-r2.E || rm -f opt-r2.E
+$xx -r -s '\._+' < $srcdir/opt-r2.I > opt-r2.O 2> opt-r2.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test opt-r2(<) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp opt-r2.O $srcdir/opt-r2.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed opt-r2(<)"; fi ;;
+    1) $echo "Test opt-r2(<) failed: files opt-r2.O and $srcdir/opt-r2.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test opt-r2(<) may have failed." 1>&2;
+       $echo The command "cmp opt-r2.O $srcdir/opt-r2.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s opt-r2.E || rm -f opt-r2.E
 $xx -b -r -s '\._+' $srcdir/opt-br.I > opt-br.O 2> opt-br.E
 code=$?
 if test $code != 0 ; then
@@ -783,8 +834,59 @@ else
   esac
 fi
 test -s opt-br.E || rm -f opt-br.E
+$xx -b -r -s '\._+' $srcdir/opt-br2.I > opt-br2.O 2> opt-br2.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test opt-br2(F) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp opt-br2.O $srcdir/opt-br2.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed opt-br2(F)"; fi ;;
+    1) $echo "Test opt-br2(F) failed: files opt-br2.O and $srcdir/opt-br2.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test opt-br2(F) may have failed." 1>&2;
+       $echo The command "cmp opt-br2.O $srcdir/opt-br2.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s opt-br2.E || rm -f opt-br2.E
+cat $srcdir/opt-br2.I | $xx -b -r -s '\._+' > opt-br2.O 2> opt-br2.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test opt-br2(|) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp opt-br2.O $srcdir/opt-br2.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed opt-br2(|)"; fi ;;
+    1) $echo "Test opt-br2(|) failed: files opt-br2.O and $srcdir/opt-br2.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test opt-br2(|) may have failed." 1>&2;
+       $echo The command "cmp opt-br2.O $srcdir/opt-br2.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s opt-br2.E || rm -f opt-br2.E
+$xx -b -r -s '\._+' < $srcdir/opt-br2.I > opt-br2.O 2> opt-br2.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test opt-br2(<) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp opt-br2.O $srcdir/opt-br2.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed opt-br2(<)"; fi ;;
+    1) $echo "Test opt-br2(<) failed: files opt-br2.O and $srcdir/opt-br2.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test opt-br2(<) may have failed." 1>&2;
+       $echo The command "cmp opt-br2.O $srcdir/opt-br2.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s opt-br2.E || rm -f opt-br2.E
 if test $errors = 0 ; then
-  $echo Passed all 45 tests. 1>&2
+  $echo Passed all 51 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi
