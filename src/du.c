@@ -100,7 +100,9 @@ typedef struct
 } *string, stringstruct;
 
 char *savedir ();
+#ifndef HAVE_FCHDIR
 char *xgetcwd ();
+#endif
 char *xmalloc ();
 char *xrealloc ();
 void error ();
@@ -322,14 +324,24 @@ static void
 du_files (files)
      char **files;
 {
+#ifdef HAVE_FCHDIR
+  int wd_desc;
+#else
   char *wd;
+#endif
   ino_t initial_ino;		/* Initial directory's inode. */
   dev_t initial_dev;		/* Initial directory's device. */
   int i;			/* Index in FILES. */
 
+#ifdef HAVE_FCHDIR
+  wd_desc = open (".", O_RDONLY);
+  if (wd_desc < 0)
+    error (1, errno, "cannot open current directory");
+#else
   wd = xgetcwd ();
   if (wd == NULL)
     error (1, errno, "cannot get current directory");
+#endif
 
   /* Remember the inode and device number of the current directory.  */
   if (SAFE_STAT (".", &stat_buf))
@@ -367,8 +379,13 @@ du_files (files)
       if (SAFE_STAT (".", &stat_buf))
 	error (1, errno, ".");
       if ((stat_buf.st_ino != initial_ino || stat_buf.st_dev != initial_dev)
+#ifdef HAVE_FCHDIR
+	  && fchdir (wd_desc) < 0)
+	error (1, errno, "cannot return to original directory");
+#else
 	  && chdir (wd) < 0)
 	error (1, errno, "cannot change to directory %s", wd);
+#endif
     }
 
   if (opt_combined_arguments)
@@ -378,7 +395,9 @@ du_files (files)
       fflush (stdout);
     }
 
+#ifndef HAVE_FCHDIR
   free (wd);
+#endif
 }
 
 /* Print (if appropriate) and return the size
