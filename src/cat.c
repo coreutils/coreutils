@@ -1,5 +1,5 @@
 /* cat -- concatenate files and print on the standard output.
-   Copyright (C) 88, 90, 91, 1995-2003 Free Software Foundation, Inc.
+   Copyright (C) 88, 90, 91, 1995-2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -77,13 +77,13 @@ static char *line_num_end = line_buf + LINE_COUNTER_BUF_LEN - 3;
 /* Preserves the `cat' function's local `newlines' between invocations.  */
 static int newlines2 = 0;
 
-/* Count of non-fatal error conditions.  */
+/* Nonzero if a non-fatal error has occurred.  */
 static int exit_status = 0;
 
 void
 usage (int status)
 {
-  if (status != 0)
+  if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
@@ -122,7 +122,7 @@ With no FILE, or when FILE is -, read standard input.\n\
 #endif
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
-  exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
+  exit (status);
 }
 
 /* Compute the next line number.  */
