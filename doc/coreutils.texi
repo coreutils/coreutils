@@ -7762,9 +7762,7 @@ of a symbolic link, it produces no output and exits with a nonzero exit code.
 
 @command{readlink} outputs the absolute name of the given file which contains
 no @file{.}, @file{..} components nor any repeated separators
-(@file{/}) nor symbolic links.
-If the file is missing or unavailable,
-it produces no output and exits with a nonzero exit code.
+(@file{/}) or symbolic links.
 
 @end table
 
@@ -7783,6 +7781,24 @@ The program accepts the following options.  Also see @ref{Common options}.
 @opindex -f
 @opindex --canonicalize
 Activate canonicalize mode.
+If any path component except the last one is missing or unavailable,
+@command{readlink} produces no output and exits with a nonzero exit code.
+
+@item -e
+@itemx --canonicalize-existing
+@opindex -e
+@opindex --canonicalize-existing
+Activate canonicalize mode.
+If any path component is missing or unavailable, @command{readlink} produces
+no output and exits with a nonzero exit code.
+
+@item -m
+@itemx --canonicalize-missing
+@opindex -m
+@opindex --canonicalize-missing
+Activate canonicalize mode.
+If any path component is missing or unavailable, @command{readlink} treats it
+as a directory.
 
 @item -n
 @itemx --no-newline
