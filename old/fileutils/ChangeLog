@@ -2,6 +2,15 @@
 
 	* Version 4.1.10.
 
+	* tests/rm/fail-eperm: Don't expect `ARGV_0=$0 exec ...' to work.
+	It doesn't work with /bin/sh of Solaris5.6.
+	Use an explicit `export ARGV_0' instead.
+	[comparing actual and expected output]: Don't match the entire line,
+	but rather just the `rm: cannot remove `$dir/$f':' part.
+
+	* tests/rm/dangling-symlink: Use input-tty rather than
+	testing for /dev/stdin.
+
 	* tests/Makefile.am (EXTRA_DIST): Add input-tty.
 	* tests/input-tty: New file.
 
