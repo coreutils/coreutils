@@ -314,7 +314,6 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
-#include <time.h>
 #include "system.h"
 #include "closeout.h"
 #include "error.h"
