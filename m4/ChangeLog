@@ -1,3 +1,8 @@
+2000-03-04  Jim Meyering  <meyering@lucent.com>
+
+	* jm-macros.m4 (jm_CHECK_ALL_TYPES): Require AC_C_VOLATILE,
+	for lib/localcharset.c.
+
 2000-03-03  Jim Meyering  <meyering@lucent.com>
 
 	* regex.m4: Make sure re_compile_pattern accepts patterns like `{1'.
