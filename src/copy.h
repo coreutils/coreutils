@@ -195,9 +195,9 @@ int rpl_rename (const char *, const char *);
 # endif
 
 int
-copy PARAMS ((const char *src_path, const char *dst_path,
-	      int nonexistent_dst, const struct cp_options *options,
-	      int *copy_into_self, int *rename_succeeded));
+copy (const char *src_path, const char *dst_path,
+      int nonexistent_dst, const struct cp_options *options,
+      int *copy_into_self, int *rename_succeeded);
 
 void
 dest_info_init (struct cp_options *);
