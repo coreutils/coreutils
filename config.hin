@@ -65,8 +65,7 @@
    this is either `int' or `gid_t'. */
 #undef GETGROUPS_T
 
-/* Define to 1 if the `getloadavg' function needs to be run setuid or setgid.
-   */
+/* Define if the `getloadavg' function needs to be run setuid or setgid. */
 #undef GETLOADAVG_PRIVILEGED
 
 /* Define if gettimeofday clobbers localtime's static buffer. */
@@ -100,14 +99,14 @@
 /* Define to 1 if you have the `atexit' function. */
 #undef HAVE_ATEXIT
 
-/* Define to 1 if you have the `bcopy' function. */
-#undef HAVE_BCOPY
-
 /* Define to 1 if you have the <bp-sym.h> header file. */
 #undef HAVE_BP_SYM_H
 
 /* Define to 1 if you have the `btowc' function. */
 #undef HAVE_BTOWC
+
+/* Define to 1 if your system has a working `chown' function. */
+#undef HAVE_CHOWN
 
 /* Define to 1 if you have the `chroot' function. */
 #undef HAVE_CHROOT
@@ -120,9 +119,6 @@
 
 /* Define to 1 if you have the `clock_settime' function. */
 #undef HAVE_CLOCK_SETTIME
-
-/* Define if backslash-a works in C strings. */
-#undef HAVE_C_BACKSLASH_A
 
 /* FIXME */
 #undef HAVE_C_LINE
@@ -340,6 +336,9 @@
 /* Define to 1 if you have the `dup2' function. */
 #undef HAVE_DUP2
 
+/* Define to 1 if you have the <dustat.h> header file. */
+#undef HAVE_DUSTAT_H
+
 /* Define to 1 if you have the `endgrent' function. */
 #undef HAVE_ENDGRENT
 
@@ -378,9 +377,6 @@
 
 /* Define to 1 if you have the `fs_stat_dev' function. */
 #undef HAVE_FS_STAT_DEV
-
-/* Define to 1 if you have the `ftime' function. */
-#undef HAVE_FTIME
 
 /* Define to 1 if you have the `ftruncate' function. */
 #undef HAVE_FTRUNCATE
@@ -524,12 +520,11 @@
 /* Define to 1 if you support file names longer than 14 characters. */
 #undef HAVE_LONG_FILE_NAMES
 
-/* Define if you have the long long type. */
+/* Define if you have the 'long long' type. */
 #undef HAVE_LONG_LONG
 
-/* Define if lstat has the bug that it succeeds when given the zero-length
-   file name argument. The lstat from SunOS4.1.4 and the Hurd as of
-   1998-11-01) do this. */
+/* Define to 1 if `lstat' has the bug that it succeeds when given the
+   zero-length file name argument. */
 #undef HAVE_LSTAT_EMPTY_STRING_BUG
 
 /* Define to 1 if you have the <machine/hal_sysinfo.h> header file. */
@@ -562,9 +557,6 @@
 
 /* Define to 1 if you have the `memchr' function. */
 #undef HAVE_MEMCHR
-
-/* Define to 1 if you have the `memcmp' function. */
-#undef HAVE_MEMCMP
 
 /* Define to 1 if you have the `memcpy' function. */
 #undef HAVE_MEMCPY
@@ -650,6 +642,9 @@
 /* Define to 1 if you have the `raise' function. */
 #undef HAVE_RAISE
 
+/* Define to 1 if you have the `readlink' function. */
+#undef HAVE_READLINK
+
 /* Define to 1 if your system has a GNU libc compatible `realloc' function,
    and to 0 otherwise. */
 #undef HAVE_REALLOC
@@ -699,9 +694,8 @@
 /* Define to 1 if you have the `statvfs' function. */
 #undef HAVE_STATVFS
 
-/* Define if stat has the bug that it succeeds when given the zero-length file
-   name argument. The stat from SunOS4.1.4 and the Hurd as of 1998-11-01) do
-   this. */
+/* Define to 1 if `stat' has the bug that it succeeds when given the
+   zero-length file name argument. */
 #undef HAVE_STAT_EMPTY_STRING_BUG
 
 /* Define to 1 if stdbool.h conforms to C99. */
@@ -855,6 +849,9 @@
    have utime.h but don't declare the struct anywhere. */
 #undef HAVE_STRUCT_UTIMBUF
 
+/* Define to 1 if `ut_exit' is member of `struct utmpx'. */
+#undef HAVE_STRUCT_UTMPX_UT_EXIT
+
 /* Define to 1 if `ut_exit.e_exit' is member of `struct utmpx'. */
 #undef HAVE_STRUCT_UTMPX_UT_EXIT_E_EXIT
 
@@ -881,6 +878,9 @@
 
 /* Define to 1 if `ut_user' is member of `struct utmpx'. */
 #undef HAVE_STRUCT_UTMPX_UT_USER
+
+/* Define to 1 if `ut_exit' is member of `struct utmp'. */
+#undef HAVE_STRUCT_UTMP_UT_EXIT
 
 /* Define to 1 if `ut_exit.e_exit' is member of `struct utmp'. */
 #undef HAVE_STRUCT_UTMP_UT_EXIT_E_EXIT
@@ -1055,11 +1055,8 @@
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
 
-/* Define if you have the unsigned long long type. */
+/* Define if you have the 'unsigned long long' type. */
 #undef HAVE_UNSIGNED_LONG_LONG
-
-/* Define to 1 if you have the `utime' function. */
-#undef HAVE_UTIME
 
 /* Define if utimes accepts a null argument */
 #undef HAVE_UTIMES_NULL
@@ -1105,6 +1102,9 @@
 
 /* Define to 1 if you have the `wcrtomb' function. */
 #undef HAVE_WCRTOMB
+
+/* Define to 1 if you have the `wcslen' function. */
+#undef HAVE_WCSLEN
 
 /* Define to 1 if you have the <wctype.h> header file. */
 #undef HAVE_WCTYPE_H
@@ -1473,6 +1473,9 @@
 /* Define to rpl_realloc if the replacement function should be used. */
 #undef realloc
 
+/* Define to rpl_rename if the replacement function should be used. */
+#undef rename
+
 /* Define to equivalent of C99 restrict keyword, or to nothing if this is not
    supported. Do not define if restrict is supported directly. */
 #undef restrict
@@ -1486,6 +1489,12 @@
 /* Define as a signed type of the same size as size_t. */
 #undef ssize_t
 
+/* Define to rpl_strnlen if the replacement function should be used. */
+#undef strnlen
+
+/* Define to rpl_strtod if the replacement function should be used. */
+#undef strtod
+
 /* Define to rpl_tzset if the wrapper function should be used. */
 #undef tzset
 
@@ -1495,6 +1504,9 @@
 /* Define to unsigned long or unsigned long long if <stdint.h> and
    <inttypes.h> don't define. */
 #undef uintmax_t
+
+/* Define to rpl_utime if the replacement function should be used. */
+#undef utime
 
 /* Define to empty if the keyword `volatile' does not work. Warning: valid
    code using `volatile' can become incorrect without. Disable with care. */
