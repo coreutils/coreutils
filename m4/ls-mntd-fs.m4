@@ -1,9 +1,27 @@
-#serial 16
+#serial 17
+# How to list mounted file systems.
+
+# Copyright (C) 1998, 1999, 2000, 2001, 2002, 2003, 2004 Free Software
+# Foundation, Inc.
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software Foundation,
+# Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 dnl From Jim Meyering.
 dnl
 dnl This is not pretty.  I've just taken the autoconf code and wrapped
-dnl it in an AC_DEFUN.
+dnl it in an AC_DEFUN and made some other fixes.
 dnl
 
 # gl_LIST_MOUNTED_FILE_SYSTEMS([ACTION-IF-FOUND[, ACTION-IF-NOT-FOUND]])
@@ -16,7 +34,13 @@ AC_CHECK_HEADERS_ONCE(sys/param.h)
 # NGROUPS (as the array dimension for a struct member) without a definition.
 AC_CHECK_HEADERS(sys/ucred.h, [], [], [#include <grp.h>])
 
-AC_CHECK_HEADERS(mntent.h sys/mount.h sys/fs_types.h)
+AC_CHECK_HEADERS(sys/mount.h, [], [],
+  [AC_INCLUDES_DEFAULT
+   [#if HAVE_SYS_PARAM_H
+     #include <sys/param.h>
+    #endif]])
+
+AC_CHECK_HEADERS(mntent.h sys/fs_types.h)
     getfsstat_includes="\
 $ac_includes_default
 #if HAVE_SYS_PARAM_H
