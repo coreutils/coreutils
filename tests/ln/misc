@@ -44,6 +44,14 @@ ln -s ../$f $d || fail=1
 test -f $d/$f || fail=1
 rm -rf $d $f
 
+# See whether a trailing slash is followed too far.
+touch $f || framework_failure=1
+rm -rf $d || framework_failure=1
+mkdir $d $d/$f || framework_failure=1
+ln $f $d/ 2> /dev/null && fail=1
+ln -s $f $d/ 2> /dev/null && fail=1
+rm -rf $d $f
+
 # Make sure we get a failure with existing dest without -f option
 touch $t || framework_failure=1
 # FIXME: don't ignore the error message but rather test
