@@ -213,6 +213,9 @@ show_dev (const char *disk, const char *mount_point, const char *fstype)
       return;
     }
 
+  if (fsu.fsu_blocks == 0 && !show_all_fs && !show_listed_fs)
+    return;
+
   if (! disk)
     disk = "-";			/* unknown */
 
@@ -258,8 +261,6 @@ show_dev (const char *disk, const char *mount_point, const char *fstype)
 
       if (fsu.fsu_blocks == 0)
 	{
-	  if (!show_all_fs && !show_listed_fs)
-	    return;
 	  blocks_used = 0;
 	  fsu.fsu_bavail = 0;
 	  blocks_percent_used = 0;
