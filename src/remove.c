@@ -889,6 +889,10 @@ remove_cwd_entries (Dirstack_state *ds, char **subdir, struct stat *subdir_sb,
 	      error (EXIT_FAILURE, errno, _("cannot lstat %s"),
 		     quote (full_filename (f)));
 
+	    /* FIXME: here (if F is a command line argument) is at least one
+	       place in which we'll have to compare the dev/ino against those
+	       of `/', in implementing fail-to-remove-root-dir semantics.  */
+
 	    if (chdir (f))
 	      {
 		/* It is much more common that we reach this point for an
