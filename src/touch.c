@@ -369,7 +369,8 @@ main (int argc, char **argv)
 	    {
 	      struct tm const *tm = localtime (&newtime);
 	      error (0, 0,
-		     _("warning: `touch %s' is obsolete; use `touch -t %04d%02d%02d%02d%02d.%02d'"),
+		     _("warning: `touch %s' is obsolete; use\
+ `touch -t %04d%02d%02d%02d%02d.%02d'"),
 		     argv[optind],
 		     tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday,
 		     tm->tm_hour, tm->tm_min, tm->tm_sec);
