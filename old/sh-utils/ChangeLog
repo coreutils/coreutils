@@ -1,3 +1,16 @@
+Sat Sep 17 15:48:10 1994  Jim Meyering  (meyering@comco.com)
+
+	* su.c: Test !HAVE_ENDGRENT and !HAVE_ENDPWENT rather than
+	_POSIX_SOURCE to determine whether endgrent and endpwent should
+	be defined away.
+	* configure.in (): Add endgrent and endpwent.
+
+	* who.c: Test HAVE_SYS_PARAM_H rather than _POSIX_SOURCE
+	to determine whether <sys/param.h> should be included.
+
+	* date.c (main): Rewrite command-line argument handling code
+	to give diagnostics for inconsistent options.
+
 Thu Sep 15 19:10:51 1994  Jim Meyering  (meyering@comco.com)
 
 	* stty.c [VWERSE && !VWERASE]: Define VWERASE for AIX-3.2.5.
