@@ -3,8 +3,8 @@
 	Prior to this change, rm required read access to the current
 	directory on most systems (ones with the fchdir function).
 
-	* save-cwd.c (save_cwd) [HAVE_FCHDIR]: Don't fail just
-	because opening `.' fails.  Resort to using xgetcwd.
+	* save-cwd.c (save_cwd) [HAVE_FCHDIR]: If opening `.' read-only
+	fails, try write-only, and finally, resort to using xgetcwd.
 
 2004-05-07  Jim Meyering  <jim@meyering.net>
 
