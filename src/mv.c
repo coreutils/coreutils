@@ -464,12 +464,8 @@ main (int argc, char **argv)
   file = argv + optind;
 
   target_directory_specified = (target_directory != NULL);
-  if (target_directory == NULL)
-    {
-      /* Be careful below.  When n_files is 0, this value will be
-	 argv[0], `--', or an option string.  */
-      target_directory = file[n_files - 1];
-    }
+  if (target_directory == NULL && n_files != 0)
+    target_directory = file[n_files - 1];
 
   dest_is_dir = (n_files > 0 && isdir (target_directory));
 
