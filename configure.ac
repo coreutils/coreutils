@@ -172,31 +172,8 @@ if test -z "$have_ut_host"; then
   fi
 fi
 
-AC_DEFUN(jm_BOOT_TIME,
-[
- AC_CACHE_CHECK([whether we can get the system boot time],
-		su_cv_have_boot_time,
-  [
-   AC_REQUIRE([jm_PREREQ_READUTMP])
-   if test $ac_cv_header_utmp_h = yes || test $ac_cv_header_utmpx_h = yes; then
-    AC_EGREP_CPP(yes,
-      [#ifdef HAVE_UTMPX_H
-#include <utmpx.h>
-#else
-#include <utmp.h>
-#endif
-#ifdef BOOT_TIME
-yes
-#endif
-      ], su_cv_have_boot_time=yes, su_cv_have_boot_time=no)
-   else
-     su_cv_have_boot_time=no
-   fi
-  ])
-  test "$su_cv_have_boot_time" = yes &&
-    OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS uptime"
-])
-jm_BOOT_TIME
+GNULIB_BOOT_TIME(
+  [OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS uptime" MAN="$MAN uptime.1"])
 
 AM_SYS_POSIX_TERMIOS
 jm_HEADER_TIOCGWINSZ_NEEDS_SYS_IOCTL
