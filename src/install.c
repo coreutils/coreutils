@@ -88,7 +88,6 @@ struct group *getgrnam ();
 #ifndef _POSIX_VERSION
 uid_t getuid ();
 gid_t getgid ();
-int wait ();
 #endif
 
 #ifndef HAVE_ENDGRENT
