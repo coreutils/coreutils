@@ -237,6 +237,11 @@ if test -z "$ac_list_mounted_fs"; then
   # Can't build mountlist.c or anything that needs its functions
 fi
 
-AS_IF([test $ac_list_mounted_fs = found], [$1], [$2])[]dnl
+dnl FIXME: this should use AS_IF.
+if test $ac_list_mounted_fs = found; then
+$1
+else
+$2
+fi
 
   ])
