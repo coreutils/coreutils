@@ -1,6 +1,22 @@
-2004-12-08  Paul Eggert  <eggert@cs.ucla.edu>
+2004-12-09  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	* ls now exits with status 1 on minor problems, 2 if serious trouble.
+	* NEWS: Document this.
+	* src/ls.c (LS_MINOR_PROBLEM, LS_FAILURE): New constants.
+	All uses of EXIT_FAILURE replaced with LS_FAILURE, unless
+	specified below.
+	(main): Initialize exit failure to LS_FAILURE.
+	(print_dir, gobble_file, get_link_name, xstrcoll):
+	Set exit status to LS_MINOR_PROBLEM if the failure is minor.
+	(print_dir): Do not give up on entire directory merely because readdir
+	returns EOVERFLOW.
+	(usage): Explain exit status.
+	* tests/help-version: ls and variants now exit with status 2
+	on serious trouble.
+
+2004-12-08  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: Document new UTC+HH:MM date syntax, and put date changes
 	together.
