@@ -74,10 +74,6 @@
 # define D_INO(dp) 1
 #endif
 
-#ifndef HAVE_MEMPCPY
-# define mempcpy(D, S, N) ((void *) ((char *) memcpy (D, S, N) + (N)))
-#endif
-
 #if !defined (S_ISLNK)
 # define S_ISLNK(Mode) 0
 #endif
