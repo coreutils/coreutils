@@ -1,3 +1,8 @@
+Mon Dec 26 18:31:08 1994  Jim Meyering  (meyering@comco.com)
+
+	* test.c (term): Running `./test \( a -o b' got a seg fault.
+	From from Klaus.Reichl@aut.alcatel.at.
+
 Mon Dec 19 22:05:12 1994  Jim Meyering  (meyering@comco.com)
 
 	* src/*.c: Include "error.h" rather than simply declaring
@@ -27,6 +32,7 @@ Sun Dec  4 14:53:12 1994  Jim Meyering  (meyering@comco.com)
 	* env.c (main): Likewise.
 	* pathchk.c (validate_path): Likewise.
 	* printf.c (print_formatted, print_esc): Likewise.
+	* test.c [member]: Likewise.
 	* who.c (extract_trimmed_name): Likewise.
 	* system.h [!HAVE_STRING_H]: Define strchr to index and strrchr to
 	rindex instead of the other way around.
