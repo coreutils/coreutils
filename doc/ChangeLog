@@ -1,3 +1,8 @@
+2004-12-11  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (join invocation): Mention that blank separators
+	in the -o option need to be quoted.  Problem reported by Phil Clayton.
+
 2004-12-10  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (id invocation): -G also prints main group.
