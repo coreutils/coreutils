@@ -1,4 +1,16 @@
-Tue Nov 14 23:10:54 1995  Jim Meyering  (meyering@comco.com)
+
+	* mkdep-Makefile (.deps/empty.P): Depend on BUILT-HEADERS.
+
+	* aclocal.m4 (jm_PROG_C_MKDEP): Rename from jm_PROG_MKDEP.
+	* src/Makefile.in (C_MKDEP): Rename from MKDEP.
+	* lib/Makefile.in (C_MKDEP): Likewise.
+	* mkdep-Makefile (C_MKDEP): Likewise.
+	Add comments.
+
+	* csplit.c [__P]: Don't define it here.
+	* pr.c [__P]: Don't define it here.
+	* fmt.c [__P]: Don't define it here.
+	* system.h [__P]: Define it here.
 
 	* aclocal.m4 (jm_AUTODEPS): Rename from jm_WITH_AUTODEPS.
   	Revamp, with suggestions from Franc,ois Pinard.
@@ -9,6 +21,8 @@ Tue Nov 14 23:10:54 1995  Jim Meyering  (meyering@comco.com)
 	* lib/Makefile.in (MKDEP): Likewise.
 	* mkdep-Makefile: Use MKDEP, not DEP_CC.
 	(DEP_CFLAGS): Remove it.
+
+Tue Nov 14 23:10:54 1995  Jim Meyering  (meyering@comco.com)
 
 	* sort.c: Add support for sorting numbers in scientific notation.
  	Include xstrtod.h.
