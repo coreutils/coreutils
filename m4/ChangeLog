@@ -1,5 +1,12 @@
 2001-01-20  Jim Meyering  <meyering@lucent.com>
 
+	Be sure that headers are checked before used in code compiled
+	for the type checks.
+	* jm-macros.m4 (jm_MACROS): Remove all header checks.
+	In place of that, invoke jm_CHECK_ALL_TYPES.
+	(jm_CHECK_ALL_HEADERS): New functions with the above checks.
+	(jm_CHECK_ALL_TYPES): Require jm_CHECK_ALL_HEADERS.
+
 	The configure-time check for stdbool.h was missing.
 	* prereq.m4 (jm_PREREQ): Add jm_PREREQ_HASH.
 	(jm_PREREQ_HASH): New function.
