@@ -1,6 +1,8 @@
 Tue Jan  7 22:50:13 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/getopt.c: New (more POSIX compliant) version from GNU libc.
+	[_]: Define to gettext also if ENABLE_NLS is defined.
+	This is temporary.
 
 Thu Jan  2 21:17:50 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
