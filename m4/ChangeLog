@@ -1,3 +1,15 @@
+2001-09-28  Paul Eggert  <eggert@twinsun.com>
+
+	Fix bug reported by Petter Reinholdtsen for HP-UX 10.20, which
+	#defines strtoimax.  Also treat the other strto* functions
+	like strtoimax.
+
+	* m4/xstrtoimax.m4 (jm_AC_PREREQ_XSTRTOIMAX):
+	Check for strtoul and strtoumax,
+	as those declarations are made even in the signed case.
+	* m4/xstrtoumax.m4 (jm_AC_PREREQ_XSTRTOUMAX):
+	Likewise, for strtol and strtoimax.
+
 2001-09-24  Jim Meyering  <meyering@lucent.com>
 
 	* gettext.m4: Use the version from gettext-0.10.40, not CVS.
