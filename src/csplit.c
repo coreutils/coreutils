@@ -1446,7 +1446,7 @@ Usage: %s [OPTION]... FILE PATTERN...\n\
 "),
 	      program_name);
       fputs (_("\
-Output pieces of FILE separated by PATTERN(s) to files `xx01', `xx02', ...,\n\
+Output pieces of FILE separated by PATTERN(s) to files `xx00', `xx01', ...,\n\
 and output byte counts of each piece to standard output.\n\
 \n\
 "), stdout);
