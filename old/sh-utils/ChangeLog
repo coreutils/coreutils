@@ -1,3 +1,8 @@
+1998-09-27  Jim Meyering  <meyering@ascend.com>
+
+	* src/seq.c (main): Decrement optind when we find an `option' that
+	looks like -N.  Reported by Clark Morgan.
+
 1998-09-26  Jim Meyering  <meyering@ascend.com>
 
 	* lib/xstrtol.c (__xstrtol) [STRING_TO_UNSIGNED]: Return
