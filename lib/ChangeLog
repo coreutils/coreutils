@@ -1,3 +1,7 @@
+2001-02-07  Jim Meyering  <meyering@lucent.com>
+
+	* regex.c: Update from libc.
+
 2001-01-30  Bruno Haible  <haible@clisp.cons.org>
 
 	* config.charset: Update for FreeBSD 4.2.
