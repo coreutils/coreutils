@@ -2144,16 +2144,26 @@ time, 12-hour (hh:mm:ss [AP]M)
 @cindex seconds since the epoch
 @cindex beginning of time
 seconds since the epoch, i.e., 1 January 1970 00:00:00 UTC (a
-GNU extension)
+GNU extension).
+Note that this value is the number of seconds between the epoch
+and the current date as defined by the localtime system call.
+It isn't changed by the @samp{--date} option.
 @item %S
 second (00@dots{}61)
 @item %T
 time, 24-hour (hh:mm:ss)
 @item %X
 locale's time representation (%H:%M:%S)
+@item %z
+RFC-822 style numeric time zone (e.g., -0600 or +0100), or nothing
+if no time zone is determinable.
+Note that this value reflects the @emph{current} time zone.
+It isn't changed by the @samp{--date} option.
 @item %Z
-timezone (e.g., EDT), or nothing if no timezone is
-determinable
+time zone (e.g., EDT), or nothing if no timezone is
+determinable.
+Note that this value reflects the @emph{current} time zone.
+It isn't changed by the @samp{--date} option.
 @end table
 
 
@@ -2320,15 +2330,6 @@ current time and date.  @var{datestr} can be in almost any common
 format.  It can contain month names, timezones, @samp{am} and @samp{pm},
 @samp{yesterday}, @samp{ago}, @samp{next}, etc.  @xref{Date input formats}.
 
-@item -r @var{file}
-@itemx --reference=@var{file}
-@opindex -r
-@opindex --reference
-Display the time and date as obtained from a reference @var{file},
-instead of the current time and date.  Each file has a few timestamps
-associated with it.  In this context, the time and date of the last
-modification are used.
-
 @item -f @var{datefile}
 @itemx --file=@var{datefile}
 @opindex -f
@@ -2338,6 +2339,22 @@ resulting time and date.  If @var{datefile} is @samp{-}, use standard
 input.  This is useful when you have many dates to process, because the
 system overhead of starting up the @code{date} executable many times can
 be considerable.
+
+@itemx --rfc-822
+@opindex -R
+@opindex --rfc-822
+Display the time and date using the RFC-822-specified
+format, @samp{%a, %_d %b %Y %H:%M:%S %z}.
+If @samp{--utc} is also specified, use @samp{GMT} in place of @samp{%z}.
+
+@item -r @var{file}
+@itemx --reference=@var{file}
+@opindex -r
+@opindex --reference
+Display the time and date as obtained from a reference @var{file},
+instead of the current time and date.  Each file has a few timestamps
+associated with it.  In this context, the time and date of the last
+modification are used.
 
 @item -s @var{datestr}
 @itemx --set=@var{datestr}
@@ -2417,6 +2434,14 @@ date +%m%d%H%M%Y.%S
 To set the system clock forward by two minutes:
 @example
 date --set='+2 minutes'
+@end example
+
+@item
+To print the date in the format specified by RFC-822,
+use @samp{date --rfc}.  I just did and saw this:
+
+@example
+Mon, 25 Mar 1996 23:34:17 -0600
 @end example
 
 @end itemize
