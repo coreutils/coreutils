@@ -242,9 +242,6 @@ static size_t temp_dir_count;
 /* Number of allocated slots in temp_dirs.  */
 static size_t temp_dir_alloc;
 
-/* Our process ID.  */
-static pid_t process_id;
-
 /* Flag to reverse the order of all comparisons. */
 static int reverse;
 
@@ -2096,7 +2093,7 @@ sighandler (int sig)
   signal (sig, SIG_DFL);
 #endif
 
-  kill (process_id, sig);
+  raise (sig);
 }
 
 /* Set the ordering options for KEY specified in S.
@@ -2172,13 +2169,12 @@ main (int argc, char **argv)
   char *minus = "-", **files;
   char const *outfile = minus;
   static int const sigs[] = { SIGHUP, SIGINT, SIGPIPE, SIGTERM };
-  int nsigs = sizeof sigs / sizeof *sigs;
+  unsigned nsigs = sizeof sigs / sizeof *sigs;
 #ifdef SA_NOCLDSTOP
   struct sigaction oldact, newact;
 #endif
 
   program_name = argv[0];
-  process_id = getpid ();
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
