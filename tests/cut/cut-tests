@@ -2109,8 +2109,212 @@ else
   esac
 fi
 test -s empty-f2.E || rm -f empty-f2.E
+$xx -d: -f2,3 --out=_ $srcdir/o-delim.I > o-delim.O 2> o-delim.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test o-delim(F) failed: ../../src/cut return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp o-delim.O $srcdir/o-delim.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed o-delim(F)"; fi ;;
+    1) $echo "Test o-delim(F) failed: files o-delim.O and $srcdir/o-delim.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test o-delim(F) may have failed." 1>&2;
+       $echo The command "cmp o-delim.O $srcdir/o-delim.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s o-delim.E || rm -f o-delim.E
+cat $srcdir/o-delim.I | $xx -d: -f2,3 --out=_ > o-delim.O 2> o-delim.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test o-delim(|) failed: ../../src/cut return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp o-delim.O $srcdir/o-delim.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed o-delim(|)"; fi ;;
+    1) $echo "Test o-delim(|) failed: files o-delim.O and $srcdir/o-delim.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test o-delim(|) may have failed." 1>&2;
+       $echo The command "cmp o-delim.O $srcdir/o-delim.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s o-delim.E || rm -f o-delim.E
+$xx -d: -f2,3 --out=_ < $srcdir/o-delim.I > o-delim.O 2> o-delim.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test o-delim(<) failed: ../../src/cut return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp o-delim.O $srcdir/o-delim.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed o-delim(<)"; fi ;;
+    1) $echo "Test o-delim(<) failed: files o-delim.O and $srcdir/o-delim.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test o-delim(<) may have failed." 1>&2;
+       $echo The command "cmp o-delim.O $srcdir/o-delim.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s o-delim.E || rm -f o-delim.E
+$xx -d '' -f2,3 --out=_ $srcdir/nul-idelim.I > nul-idelim.O 2> nul-idelim.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test nul-idelim(F) failed: ../../src/cut return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp nul-idelim.O $srcdir/nul-idelim.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed nul-idelim(F)"; fi ;;
+    1) $echo "Test nul-idelim(F) failed: files nul-idelim.O and $srcdir/nul-idelim.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test nul-idelim(F) may have failed." 1>&2;
+       $echo The command "cmp nul-idelim.O $srcdir/nul-idelim.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s nul-idelim.E || rm -f nul-idelim.E
+cat $srcdir/nul-idelim.I | $xx -d '' -f2,3 --out=_ > nul-idelim.O 2> nul-idelim.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test nul-idelim(|) failed: ../../src/cut return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp nul-idelim.O $srcdir/nul-idelim.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed nul-idelim(|)"; fi ;;
+    1) $echo "Test nul-idelim(|) failed: files nul-idelim.O and $srcdir/nul-idelim.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test nul-idelim(|) may have failed." 1>&2;
+       $echo The command "cmp nul-idelim.O $srcdir/nul-idelim.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s nul-idelim.E || rm -f nul-idelim.E
+$xx -d '' -f2,3 --out=_ < $srcdir/nul-idelim.I > nul-idelim.O 2> nul-idelim.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test nul-idelim(<) failed: ../../src/cut return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp nul-idelim.O $srcdir/nul-idelim.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed nul-idelim(<)"; fi ;;
+    1) $echo "Test nul-idelim(<) failed: files nul-idelim.O and $srcdir/nul-idelim.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test nul-idelim(<) may have failed." 1>&2;
+       $echo The command "cmp nul-idelim.O $srcdir/nul-idelim.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s nul-idelim.E || rm -f nul-idelim.E
+$xx -d: -f2,3 --out= $srcdir/nul-odelim.I > nul-odelim.O 2> nul-odelim.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test nul-odelim(F) failed: ../../src/cut return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp nul-odelim.O $srcdir/nul-odelim.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed nul-odelim(F)"; fi ;;
+    1) $echo "Test nul-odelim(F) failed: files nul-odelim.O and $srcdir/nul-odelim.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test nul-odelim(F) may have failed." 1>&2;
+       $echo The command "cmp nul-odelim.O $srcdir/nul-odelim.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s nul-odelim.E || rm -f nul-odelim.E
+cat $srcdir/nul-odelim.I | $xx -d: -f2,3 --out= > nul-odelim.O 2> nul-odelim.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test nul-odelim(|) failed: ../../src/cut return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp nul-odelim.O $srcdir/nul-odelim.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed nul-odelim(|)"; fi ;;
+    1) $echo "Test nul-odelim(|) failed: files nul-odelim.O and $srcdir/nul-odelim.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test nul-odelim(|) may have failed." 1>&2;
+       $echo The command "cmp nul-odelim.O $srcdir/nul-odelim.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s nul-odelim.E || rm -f nul-odelim.E
+$xx -d: -f2,3 --out= < $srcdir/nul-odelim.I > nul-odelim.O 2> nul-odelim.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test nul-odelim(<) failed: ../../src/cut return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp nul-odelim.O $srcdir/nul-odelim.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed nul-odelim(<)"; fi ;;
+    1) $echo "Test nul-odelim(<) failed: files nul-odelim.O and $srcdir/nul-odelim.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test nul-odelim(<) may have failed." 1>&2;
+       $echo The command "cmp nul-odelim.O $srcdir/nul-odelim.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s nul-odelim.E || rm -f nul-odelim.E
+$xx -d: -f2,3 --out=_._ $srcdir/multichar-od.I > multichar-od.O 2> multichar-od.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test multichar-od(F) failed: ../../src/cut return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp multichar-od.O $srcdir/multichar-od.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed multichar-od(F)"; fi ;;
+    1) $echo "Test multichar-od(F) failed: files multichar-od.O and $srcdir/multichar-od.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test multichar-od(F) may have failed." 1>&2;
+       $echo The command "cmp multichar-od.O $srcdir/multichar-od.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s multichar-od.E || rm -f multichar-od.E
+cat $srcdir/multichar-od.I | $xx -d: -f2,3 --out=_._ > multichar-od.O 2> multichar-od.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test multichar-od(|) failed: ../../src/cut return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp multichar-od.O $srcdir/multichar-od.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed multichar-od(|)"; fi ;;
+    1) $echo "Test multichar-od(|) failed: files multichar-od.O and $srcdir/multichar-od.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test multichar-od(|) may have failed." 1>&2;
+       $echo The command "cmp multichar-od.O $srcdir/multichar-od.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s multichar-od.E || rm -f multichar-od.E
+$xx -d: -f2,3 --out=_._ < $srcdir/multichar-od.I > multichar-od.O 2> multichar-od.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test multichar-od(<) failed: ../../src/cut return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp multichar-od.O $srcdir/multichar-od.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed multichar-od(<)"; fi ;;
+    1) $echo "Test multichar-od(<) failed: files multichar-od.O and $srcdir/multichar-od.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test multichar-od(<) may have failed." 1>&2;
+       $echo The command "cmp multichar-od.O $srcdir/multichar-od.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s multichar-od.E || rm -f multichar-od.E
 if test $errors = 0 ; then
-  $echo Passed all 123 tests. 1>&2
+  $echo Passed all 135 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi

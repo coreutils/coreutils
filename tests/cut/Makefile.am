@@ -8,13 +8,17 @@ maint_gen = 1.I 1.X 2.I 2.X 3.I 3.X 4.I 4.X 5.I 5.X 6.I 6.X 7.I 7.X 8.I 8.X \
 i.X j.I j.X k.I k.X l.I l.X m.I m.X n.I n.X o.I o.X p.I p.X q.I q.X r.I r.X \
 s.I s.X t.I t.X u.I u.X v.I v.X w.I w.X x.I x.X y.I y.X z.I z.X empty-fl.I \
 empty-fl.X missing-fl.I missing-fl.X empty-bl.I empty-bl.X missing-bl.I \
-missing-bl.X empty-f1.I empty-f1.X empty-f2.I empty-f2.X
+missing-bl.X empty-f1.I empty-f1.X empty-f2.I empty-f2.X o-delim.I o-delim.X \
+nul-idelim.I nul-idelim.X nul-odelim.I nul-odelim.X multichar-od.I \
+multichar-od.X
 run_gen = 1.O 1.E 2.O 2.E 3.O 3.E 4.O 4.E 5.O 5.E 6.O 6.E 7.O 7.E 8.O 8.E 9.O \
 9.E a.O a.E b.O b.E c.O c.E d.O d.E e.O e.E f.O f.E g.O g.E h.O h.E i.O i.E \
 j.O j.E k.O k.E l.O l.E m.O m.E n.O n.E o.O o.E p.O p.E q.O q.E r.O r.E s.O \
 s.E t.O t.E u.O u.E v.O v.E w.O w.E x.O x.E y.O y.E z.O z.E empty-fl.O \
 empty-fl.E missing-fl.O missing-fl.E empty-bl.O empty-bl.E missing-bl.O \
-missing-bl.E empty-f1.O empty-f1.E empty-f2.O empty-f2.E
+missing-bl.E empty-f1.O empty-f1.E empty-f2.O empty-f2.E o-delim.O o-delim.E \
+nul-idelim.O nul-idelim.E nul-odelim.O nul-odelim.E multichar-od.O \
+multichar-od.E
 ##test-files-end
 
 EXTRA_DIST = Test.pm $x-tests $(explicit) $(maint_gen)
