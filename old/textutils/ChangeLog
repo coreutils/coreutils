@@ -1,3 +1,12 @@
+1999-11-04  Paul Eggert  <eggert@twinsun.com>
+
+	* src/sort.c (SORTALLOC): New macro.
+	(sortalloc, mergealloc, LINEALLOC): Use it.
+	(sortalloc, mergealloc, linelength): Now const.
+	(sortalloc): Increase from 0.5 to 8 MB.
+	(mergealloc): Increase from 16 to 256 kB.
+	(LINEALLOC): Increase from 0.25 to 4 MB.
+
 1999-11-03  Paul Eggert  <eggert@twinsun.com>
 
 	* NEWS, doc/textutils.texi:
