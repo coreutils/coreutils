@@ -1,6 +1,36 @@
+1999-12-19  Jim Meyering  <meyering@ascend.com>
+
+	* src/ls.c [! LSTAT_FOLLOWS_SLASHED_SYMLINK]: Use lstat wrapper.
+	[Notice the new configure-time test in m4/lstat-slash.m4. ]
+	(main): Back out change from 1999-02-19 that made ls remove
+	trailing slashes from command line arguments to accommodate early
+	versions of Linux.  Now, `ls symlink-to-dir/' acts like
+	`ls symlink-to-dir/.' thus following the symbolic link, as POSIX says
+	it should.  Suggestion from Bruno Haible and Andreas Schwab.
+
+	Make sure ls does the right thing with symlinks and trailing slashes.
+	* tests/ls/Makefile.am (TESTS): Add symlink-slash.
+	* tests/ls/symlink-slash: New test, for above-fixed bug.
+
+1999-12-18  Jim Meyering  <meyering@ascend.com>
+
+	* src/shred.c (wipename): When repeatedly renaming a file, making the
+	name shorter and shorter, skip to the next shorter length length if a
+	rename fails (e.g. due to permission denied).  Otherwise, this loop
+	would iterate for so long that shred would appear to be stuck in an
+	infinite loop for any but the shortest file names.
+	Reported by Joe Orton.
+
+	* configure.in (AC_OUTPUT): Add tests/shred/Makefile.
+	* tests/Makefile.am (SUBDIRS): Add shred.
+	* tests/shred: New directory
+	* tests/shred/remove: New file.  Tests for the above-fixed bug.
+
+1999-12-15  Jim Meyering  <meyering@ascend.com>
+
 1999-12-13  Jim Meyering  <meyering@ascend.com>
 
-	* lib/makepath.c (make_path): Consistently use error to output
+	* lib/makepath.c (make_path): Consistently use `error' to output
 	the verbose, `created directory ...' messages.
 	Reported by Bernhard Rosenkraenzer.
 
@@ -224,7 +254,7 @@
 	* tests/ln/misc: Use --b=simple, not the now-deprecated `-V simple'.
 	* tests/ln/backup-1: Likewise.
 
-	* configure.in (AC_OUTPUT): Add tests/dd/Makefile.
+	* configure.in (AC_OUTPUT): Add tests/rmdir/Makefile.
 	* tests/Makefile.am (SUBDIRS): Add rmdir.
 	* tests/rmdir: New directory
 	* tests/rmdir/ignore: New file.
