@@ -145,8 +145,8 @@ main (int argc, char **argv)
   signal (SIGPIPE, SIG_IGN);
 #endif
 
-  /* FIXME: warn if tee is given no file arguments.
-     In that case it's just a slow imitation of `cat.'  */
+  /* Do *not* warn if tee is given no file arguments.
+     POSIX requires that it work when given no arguments.  */
 
   errs = tee (argc - optind, (const char **) &argv[optind]);
   if (close (0) != 0)
