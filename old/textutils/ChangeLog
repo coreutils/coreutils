@@ -1,3 +1,10 @@
+1999-03-29  Jim Meyering  <meyering@ascend.com>
+
+	* configure.in (GNU_PACKAGE): Remove related code -- now it's in
+	the catch-all for shared autoconf code, m4/jm-macros.m4.
+	(jm_CHECK_ALL_TYPES): Remove explicit AC_TYPE_* macros and use
+	this instead.
+
 1999-03-26  Jim Meyering  <meyering@ascend.com>
 
 	* lib/Makefile.am (libfu_a_SOURCES): Add version-etc.c.
