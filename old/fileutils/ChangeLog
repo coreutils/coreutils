@@ -2,6 +2,10 @@
 
 	* Version 4.1.1.
 
+	* tests/mv/childproof: New test, for the above fix.
+	Based on a report from Dan Jacobson.
+	* tests/mv/Makefile.am (TESTS): Add childproof.
+
 	* Makefile.am (SUBDIRS): When using newer gettext (in which
 	intl/libintl.h is created by rules intl/Makefile)
 	`intl' must precede `lib'.
