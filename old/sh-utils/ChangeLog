@@ -1,5 +1,9 @@
 Wed Oct  9 00:26:55 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* tests/: Renamed checks/ directory.
+	* Makefile.am (SUBDIRS): Rename checks to tests.
+	* configure.in (AC_OUTPUT): Rename checks to tests.
+
 	* configure.in (/proc/uptime check): Guard the read of /proc/uptime
 	with an existence test to avoid a messy configure-time warning on
 	systems that lack that special file. Reported by Kaveh R. Ghazi.
