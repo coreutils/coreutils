@@ -1,5 +1,5 @@
 /* BUMP_ALLOC macro - increase table allocation by one element.
-   Copyright (C) 1990, 1991, 1993, 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1990, 1991, 1993, 1998, 2000, 2003 Free Software Foundation, Inc.
    François Pinard <pinard@iro.umontreal.ca>, 1990.
 
    This program is free software; you can redistribute it and/or modify
@@ -54,9 +54,9 @@
       if (((Count) & (~(~0 << (Exponent)))) == 0)			\
 	{								\
 	  if ((Count) == 0)						\
-	    (Table) = (Type *) xmalloc ((1 << (Exponent)) * (Size));	\
+	    (Table) = xmalloc ((1 << (Exponent)) * (Size));		\
 	  else								\
-	    (Table) = (Type *)						\
+	    (Table) =							\
 	      xrealloc ((Table), ((Count) + (1 << (Exponent))) * (Size)); \
 	}								\
     }									\
