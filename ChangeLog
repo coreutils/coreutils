@@ -1,3 +1,15 @@
+2004-03-22  Jim Meyering  <jim@meyering.net>
+
+	* tests/du/files0-from (nul-1, nul-2): Adjust expected diagnostics
+	to match corrected output.
+
+	* src/du.c: Include "readtokens0.h" rather than "readtokens.h".
+	(main): Use readtoken0 functions rather than readtokens.
+	Don't use errno when diagnosing readtokens0 failure.
+	Fix off-by-one error in the token number reported in a diagnostic.
+	(du_files): Return bool, rather than int.
+	(main): Call readtokens0_free.
+
 2004-03-21  Jim Meyering  <jim@meyering.net>
 
 	* src/remove.c (ds_free): Plug a small leak.
