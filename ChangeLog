@@ -2,6 +2,9 @@
 
 	* Version 0.1.0.
 
+	* src/Makefile.am (check-README): New target/rule.
+	(check): Depend on it.
+
 	* configure.ac (AC_CONFIG_FILES): Add old/Makefile and old/*/Makefile.
 
 2002-08-03  Jim Meyering  <meyering@lucent.com>
