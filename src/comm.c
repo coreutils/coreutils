@@ -56,60 +56,76 @@ static struct option const long_options[] =
   {0, 0, 0, 0}
 };
 
-static int compare_files ();
-static void writeline ();
-static void usage ();
 
-void
-main (argc, argv)
-     int argc;
-     char *argv[];
+
+static void
+usage (status)
+     int status;
 {
-  int c;
-
-  program_name = argv[0];
-
-  only_file_1 = 1;
-  only_file_2 = 1;
-  both = 1;
-
-  while ((c = getopt_long (argc, argv, "123", long_options, (int *) 0)) != EOF)
-    switch (c)
-      {
-      case 0:
-	break;
-
-      case '1':
-	only_file_1 = 0;
-	break;
-
-      case '2':
-	only_file_2 = 0;
-	break;
-
-      case '3':
-	both = 0;
-	break;
-
-      default:
-	usage (1);
-      }
-
-  if (show_version)
+  if (status != 0)
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+  else
     {
-      printf ("comm - %s\n", version_string);
-      exit (0);
+      printf ("\
+Usage: %s [OPTION]... LEFT_FILE RIGHT_FILE\n\
+",
+	      program_name);
+      printf ("\
+Compare sorted files LEFT_FILE and RIGHT_FILE line by line.\n\
+\n\
+  -1              suppress lines unique to left file\n\
+  -2              suppress lines unique to right file\n\
+  -3              suppress lines unique to both files\n\
+      --help      display this help and exit\n\
+      --version   output version information and exit\n\
+");
+    }
+  exit (status);
+}
+
+/* Output the line in linebuffer LINE to stream STREAM
+   provided the switches say it should be output.
+   CLASS is 1 for a line found only in file 1,
+   2 for a line only in file 2, 3 for a line in both. */
+
+static void
+writeline (line, stream, class)
+     struct linebuffer *line;
+     FILE *stream;
+     int class;
+{
+  switch (class)
+    {
+    case 1:
+      if (!only_file_1)
+	return;
+      break;
+
+    case 2:
+      if (!only_file_2)
+	return;
+      /* Skip the tab stop for case 1, if we are printing case 1.  */
+      if (only_file_1)
+	putc ('\t', stream);
+      break;
+
+    case 3:
+      if (!both)
+	return;
+      /* Skip the tab stop for case 1, if we are printing case 1.  */
+      if (only_file_1)
+	putc ('\t', stream);
+      /* Skip the tab stop for case 2, if we are printing case 2.  */
+      if (only_file_2)
+	putc ('\t', stream);
+      break;
     }
 
-  if (show_help)
-    usage (0);
-
-  if (optind + 2 != argc)
-    usage (1);
-
-  exit (compare_files (argv + optind));
+  fwrite (line->buffer, sizeof (char), line->length, stream);
+  putc ('\n', stream);
 }
-
+
 /* Compare INFILES[0] and INFILES[1].
    If either is "-", use the standard input for that file.
    Assume that each input file is sorted;
@@ -201,70 +217,52 @@ compare_files (infiles)
   return ret;
 }
 
-/* Output the line in linebuffer LINE to stream STREAM
-   provided the switches say it should be output.
-   CLASS is 1 for a line found only in file 1,
-   2 for a line only in file 2, 3 for a line in both. */
-
-static void
-writeline (line, stream, class)
-     struct linebuffer *line;
-     FILE *stream;
-     int class;
+void
+main (argc, argv)
+     int argc;
+     char *argv[];
 {
-  switch (class)
+  int c;
+
+  program_name = argv[0];
+
+  only_file_1 = 1;
+  only_file_2 = 1;
+  both = 1;
+
+  while ((c = getopt_long (argc, argv, "123", long_options, (int *) 0)) != EOF)
+    switch (c)
+      {
+      case 0:
+	break;
+
+      case '1':
+	only_file_1 = 0;
+	break;
+
+      case '2':
+	only_file_2 = 0;
+	break;
+
+      case '3':
+	both = 0;
+	break;
+
+      default:
+	usage (1);
+      }
+
+  if (show_version)
     {
-    case 1:
-      if (!only_file_1)
-	return;
-      break;
-
-    case 2:
-      if (!only_file_2)
-	return;
-      /* Skip the tab stop for case 1, if we are printing case 1.  */
-      if (only_file_1)
-	putc ('\t', stream);
-      break;
-
-    case 3:
-      if (!both)
-	return;
-      /* Skip the tab stop for case 1, if we are printing case 1.  */
-      if (only_file_1)
-	putc ('\t', stream);
-      /* Skip the tab stop for case 2, if we are printing case 2.  */
-      if (only_file_2)
-	putc ('\t', stream);
-      break;
+      printf ("comm - %s\n", version_string);
+      exit (0);
     }
 
-  fwrite (line->buffer, sizeof (char), line->length, stream);
-  putc ('\n', stream);
-}
-
-static void
-usage (status)
-     int status;
-{
-  if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
-	     program_name);
-  else
-    {
-      printf ("\
-Usage: %s [OPTION]... LEFT_FILE RIGHT_FILE\n\
-",
-	      program_name);
-      printf ("\
-Compare sorted files LEFT_FILE and RIGHT_FILE line by line.\n\
-\n\
-  -1              suppress lines unique to left file\n\
-  -2              suppress lines unique to right file\n\
-  -3              suppress lines unique to both files\n\
-      --help      display this help and exit\n\
-      --version   output version information and exit\n\
-");
-    }
-  exit (status);
+  if (show_help)
+    usage (0);
+
+  if (optind + 2 != argc)
+    usage (1);
+
+  exit (compare_files (argv + optind));
 }
