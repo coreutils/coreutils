@@ -1,6 +1,11 @@
-1998-06-26  Jim Meyering  <meyering@ascend.com>
+1998-06-27  Jim Meyering  <meyering@ascend.com>
 
 	* Version 3.16q.
+
+	* tests/cp/same-file: New file.
+	* tests/cp/Makefile.am (TESTS): Add it.
+
+1998-06-26  Jim Meyering  <meyering@ascend.com>
 
 	* src/remove.c (remove_file): Remove `non-directory' part of
 	`removing non-directory FILE' verbose message.
