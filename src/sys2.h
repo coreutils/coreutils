@@ -143,16 +143,6 @@ char *getenv ();
 #include "xalloc.h"
 
 #ifndef HAVE_MEMPCPY
-# if defined (__GNUC__)
-/* Use an inline function with GNU C so we don't get the warning that
-   `value computed is not used'.  */
-static __inline__ void*
-mempcpy (void *d, const void *s, size_t n)
-{
-  return (char *) memcpy (d, s, n) + n;
-}
-# else
 /* Be CAREFUL that there are no side effects in N.  */
-#  define mempcpy(D, S, N) ((void *) ((char *) memcpy (D, S, N) + (N)))
-# endif
+# define mempcpy(D, S, N) ((void *) ((char *) memcpy (D, S, N) + (N)))
 #endif
