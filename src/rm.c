@@ -543,6 +543,7 @@ remove_cwd_entries (void)
 	  error (0, errno, "%s", full_filename ("."));
 	  status = RM_ERROR;
 	}
+      dirp = NULL;
     }
 
   do
@@ -561,6 +562,10 @@ remove_cwd_entries (void)
 
       while ((dp = readdir (dirp)) != NULL)
 	{
+	  char *entry_name;
+	  struct File_spec fs;
+	  enum RM_status tmp_status;
+
 	  /* Skip this entry if it's `.' or `..'.  */
 	  if (DOT_OR_DOTDOT (dp->d_name))
 	    continue;
@@ -570,16 +575,21 @@ remove_cwd_entries (void)
 	  if (ht && hash_find_item (ht, (dp)->d_name))
 	    continue;
 
-	  {
-	    struct File_spec fs;
-	    enum RM_status tmp_status;
-	    fspec_init_dp (&fs, dp);
-	    tmp_status = rm (&fs, 0);
-	    /* Update status.  */
-	    if (tmp_status > status)
-	      status = tmp_status;
-	    assert (VALID_STATUS (status));
-	  }
+	  fspec_init_dp (&fs, dp);
+
+	  /* Save a copy of the name of this entry, in case we have
+	     to add it to the set of unremoved entries below.  */
+	  ASSIGN_STRDUPA (entry_name, dp->d_name);
+
+	  /* CAUTION: after this call to rm, DP may not be valid --
+	     it may have been freed due to a close in a recursive call
+	     (through rm and remove_dir) to this function.  */
+	  tmp_status = rm (&fs, 0);
+
+	  /* Update status.  */
+	  if (tmp_status > status)
+	    status = tmp_status;
+	  assert (VALID_STATUS (status));
 
 	  /* If this entry was not removed (due either to an error or to
 	     an interactive `no' response), record it in the hash table so
@@ -587,7 +597,6 @@ remove_cwd_entries (void)
 	  if (status != RM_OK)
 	    {
 	      void *old_item;
-	      char *p;
 	      int fail;
 
 	      if (ht == NULL)
@@ -598,9 +607,7 @@ remove_cwd_entries (void)
 		  if (ht == NULL)
 		    error (1, 0, _("Memory exhausted"));
 		}
-	      p = xmalloc (NLENGTH (dp) + 1);
-	      memcpy (p, (dp)->d_name, NLENGTH (dp) + 1);
-	      fail = hash_insert_item (ht, p, &old_item);
+	      fail = hash_insert_item (ht, entry_name, &old_item);
 	      assert (old_item == NULL);
 	      if (fail)
 		error (1, 0, _("Memory exhausted"));
@@ -621,7 +628,6 @@ remove_cwd_entries (void)
 
   if (ht)
     {
-      hash_free_items (ht);
       hash_free_table (ht);
       free (ht);
     }
