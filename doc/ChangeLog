@@ -1,3 +1,8 @@
+2001-06-19  Paul Eggert  <eggert@twinsun.com>
+
+	* coreutils.texi: expr now uses LC_COLLATE for string comparison,
+	as per POSIX.
+
 2001-08-25  Jim Meyering  <meyering@lucent.com>
 
 	* coreutils.texi: Use @option, rather than @samp everywhere.
