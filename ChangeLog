@@ -1,3 +1,8 @@
+2004-05-29  Jim Meyering  <jim@meyering.net>
+
+	* src/remove.c (push_dir): Merge declaration and adjacent assignment
+	into a single statement.
+
 2004-05-28  Jim Meyering  <jim@meyering.net>
 
 	* src/remove.c (AD_mark_helper): Eliminate unnecessary comparison.
