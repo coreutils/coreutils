@@ -1,6 +1,12 @@
-2005-03-09  Paul Eggert  <eggert@cs.ucla.edu>
+2005-03-10  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/pr.c (init_header): Use slightly clearer INT_BUFSIZE_BOUND
+	in place of equivalent INT_STRLEN_BOUND + 1.
+	* src/expr.c (tostring, printv): Likewise.
+
+2005-03-09  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/system.h: Include intprops.h.
 	(TYPE_SIGNED, TYPE_MINIMUM, TYPE_MAXIMUM, INT_STRLEN_BOUND): Remove;
