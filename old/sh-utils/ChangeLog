@@ -2,6 +2,8 @@
 
 	* Version 2.0.12.
 
+	* tests/stty/basic-1: Use `tail -n +2', rather than `tail +2'.
+
 2002-02-02  Bruno Haible  <bruno@clisp.org>
 
 	* printf.c (print_esc): Call print_unicode_char with exit_on_error =
