@@ -1,3 +1,14 @@
+Sun Apr  6 14:29:14 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/printf.c: Reorder functions to obviate forward decls.
+	Change most char* dcls to const char*.
+	(STRTOX): New macro to eliminate code duplication.
+	(xstrtod, xstrtol, xstrtoul): Remove functions.
+	Use the STRTOX instead.
+
+	* src/printf.c: (STRTOX): Interpret arguments like 'a and "a
+	as POSIX requires.  Derived from a patch by Dennis Henriksen.
+
 Sun Mar 23 15:20:17 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in (ALL_LINGUAS): Add polish (pl).
