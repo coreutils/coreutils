@@ -1,6 +1,6 @@
 /* shred.c - overwrite files and devices to make it harder to recover data
 
-   Copyright (C) 1999-2002 Free Software Foundation, Inc.
+   Copyright (C) 1999-2003 Free Software Foundation, Inc.
    Copyright (C) 1997, 1998, 1999 Colin Plumb.
 
    This program is free software; you can redistribute it and/or modify
@@ -114,17 +114,6 @@ char *xstrdup (char const *);
 
 #ifndef O_NOCTTY
 # define O_NOCTTY 0  /* This is a very optional frill */
-#endif
-
-/* Some systems don't support some file types.  */
-#ifndef S_ISFIFO
-# define S_ISFIFO(mode) 0
-#endif
-#ifndef S_ISLNK
-# define S_ISLNK(mode) 0
-#endif
-#ifndef S_ISSOCK
-# define S_ISSOCK(mode) 0
 #endif
 
 #define DEFAULT_PASSES 25	/* Default */
