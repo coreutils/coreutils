@@ -1,3 +1,7 @@
+2004-12-23  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* getdate.m4 (gl_GETDATE): Remove AC_FUNC_ALLOCA.
+
 2004-12-21  Jim Meyering  <jim@meyering.net>
 
 	* mkstemp.m4 (gl_FUNC_MKSTEMP): Remove temporary directory right
