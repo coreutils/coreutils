@@ -145,7 +145,7 @@ static bool input_seekable;
 
 /* Error number corresponding to initial attempt to lseek input.
    If ESPIPE, do not issue any more diagnostics about it.  */
-int input_seek_errno;
+static int input_seek_errno;
 
 /* File offset of the input, in bytes, along with a flag recording
    whether it overflowed.  The offset is valid only if the input is
