@@ -186,7 +186,7 @@ do_move (const char *source, const char *dest, const struct cp_options *x)
 
   if (!fail)
     {
-      const char *dir_to_remove;
+      char const *dir_to_remove;
       if (copy_into_self)
 	{
 	  /* In general, when copy returns with copy_into_self set, SOURCE is
@@ -239,39 +239,15 @@ do_move (const char *source, const char *dest, const struct cp_options *x)
       if (dir_to_remove != NULL)
 	{
 	  struct rm_options rm_options;
-	  struct File_spec fs;
 	  enum RM_status status;
-	  static int first_rm = 1;
-	  static struct dev_ino cwd_dev_ino;
-
-	  if (first_rm)
-	    {
-	      struct stat cwd_sb;
-	      if (lstat (".", &cwd_sb))
-		error (EXIT_FAILURE, errno, _("cannot lstat `.'"));
-
-	      first_rm = 0;
-	      cwd_dev_ino.st_dev = cwd_sb.st_dev;
-	      cwd_dev_ino.st_ino = cwd_sb.st_ino;
-	    }
 
 	  rm_option_init (&rm_options);
 	  rm_options.verbose = x->verbose;
 
-	  remove_init ();
-
-	  fspec_init_file (&fs, dir_to_remove);
-
-	  /* Remove any trailing slashes.  This is necessary if we
-	     took the else branch of movefile.  */
-	  strip_trailing_slashes (fs.filename);
-
-	  status = rm (&fs, 1, &rm_options, &cwd_dev_ino);
+	  status = rm (1, &dir_to_remove, &rm_options);
 	  assert (VALID_STATUS (status));
 	  if (status == RM_ERROR)
 	    fail = 1;
-
-	  remove_fini ();
 
 	  if (fail)
 	    error (0, errno, _("cannot remove %s"), quote (dir_to_remove));
