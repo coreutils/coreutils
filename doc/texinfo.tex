@@ -1,5 +1,5 @@
 %% TeX macros to handle Texinfo files.
-%% $Id: texinfo.tex,v 1.15 1997/07/14 18:15:50 meyering Exp $
+%% $Id: texinfo.tex,v 1.16 1997/12/25 18:00:21 meyering Exp $
 
 %  Copyright (C) 1985, 86, 88, 90, 91, 92, 93,
 %                94, 95, 96, 97 Free Software Foundation, Inc.
@@ -36,7 +36,7 @@
 
 % This automatically updates the version number based on RCS.
 \def\deftexinfoversion$#1: #2 ${\def\texinfoversion{#2}}
-\deftexinfoversion$Revision: 1.15 $
+\deftexinfoversion$Revision: 1.16 $
 \message{Loading texinfo package [Version \texinfoversion]:}
 
 % If in a .fmt file, print the version number
@@ -441,14 +441,11 @@
 % @. is an end-of-sentence period.
 \def\.{.\spacefactor=3000 }
 
-% @enddots{} is an end-of-sentence ellipsis.
-\gdef\enddots{$\mathinner{\ldotp\ldotp\ldotp\ldotp}$\spacefactor=3000}
-
 % @! is an end-of-sentence bang.
-\gdef\!{!\spacefactor=3000 }
+\def\!{!\spacefactor=3000 }
 
 % @? is an end-of-sentence query.
-\gdef\?{?\spacefactor=3000 }
+\def\?{?\spacefactor=3000 }
 
 % @w prevents a word break.  Without the \leavevmode, @w at the
 % beginning of a paragraph, when TeX is still in vertical mode, would
@@ -573,9 +570,27 @@ where each line of input produces a line of output.}
 
 \let\br = \par
 
-% @dots{}  output some dots
+% @dots{} output an ellipsis using the current font.
+% We do .5em per period so that it has the same spacing in a typewriter
+% font as three actual period characters.
+%
+\def\dots{\hbox to 1.5em{%
+  \hskip 0pt plus 0.25fil minus 0.25fil
+  .\hss.\hss.%
+  \hskip 0pt plus 0.5fil minus 0.5fil
+}}
 
-\def\dots{$\ldots$}
+% @enddots{} is an end-of-sentence ellipsis.
+% 
+\def\enddots{%
+  \hbox to 2em{%
+    \hskip 0pt plus 0.25fil minus 0.25fil
+    .\hss.\hss.\hss.%
+    \hskip 0pt plus 0.5fil minus 0.5fil
+  }%
+  \spacefactor=3000
+}
+
 
 % @page    forces the start of a new page
 
@@ -1236,7 +1251,7 @@ where each line of input produces a line of output.}
   \let\tensf=\titlesf \let\teni=\titlei \let\tensy=\titlesy
   \let\tenttsl=\titlettsl
   \resetmathfonts \setleading{25pt}}
-\def\titlefont#1{{\titlefonts #1}}
+\def\titlefont#1{{\titlefonts\rm #1}}
 \def\chapfonts{%
   \let\tenrm=\chaprm \let\tenit=\chapit \let\tensl=\chapsl
   \let\tenbf=\chapbf \let\tentt=\chaptt \let\smallcaps=\chapsc
@@ -1402,14 +1417,12 @@ where each line of input produces a line of output.}
 \else{\tclose{\kbdfont\look}}\fi
 \else{\tclose{\kbdfont\look}}\fi}
 
-% @url, @email.  Quotes do not seem necessary.
-\let\url=\code % perhaps include a hypertex \special eventually
-% rms does not like the angle brackets --karl, 17may97.
-%\def\email#1{$\langle${\tt #1}$\rangle$}
-\let\email=\code
+% @url.  Quotes do not seem necessary, so use \code.
+\let\url=\code
 
 % @uref (abbreviation for `urlref') takes an optional second argument
 % specifying the text to display.  First (mandatory) arg is the url.
+% Perhaps eventually put in a hypertex \special here.
 % 
 \def\uref#1{\urefxxx #1,,\finish}
 \def\urefxxx#1,#2,#3\finish{%
@@ -1420,6 +1433,11 @@ where each line of input produces a line of output.}
     \code{#1}%
   \fi
 }
+
+% rms does not like the angle brackets --karl, 17may97.
+% So now @email is just like @uref.
+%\def\email#1{$\langle${\tt #1}$\rangle$}
+\let\email=\uref
 
 % Check if we are currently using a typewriter font.  Since all the
 % Computer Modern typewriter fonts have zero interword stretch (and
@@ -4614,7 +4632,7 @@ width0pt\relax} \fi
 % Check for and read epsf.tex up front.  If we read it only at @image
 % time, we might be inside a group, and then its definitions would get
 % undone and the next image would fail.
-\openin 1 = xepsf.tex
+\openin 1 = epsf.tex
 \ifeof 1 \else
   \closein 1
   \def\epsfannounce{\toks0 = }% do not bother showing banner
