@@ -1422,7 +1422,7 @@ print_long_format (f)
   time_t when;
 
   mode_string (f->stat.st_mode, modebuf);
-  modebuf[10] = 0;
+  modebuf[10] = '\0';
 
   switch (time_type)
     {
