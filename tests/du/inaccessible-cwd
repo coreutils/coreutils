@@ -1,6 +1,8 @@
 #!/bin/sh
 # Ensure that even when run from an inaccessible directory, du can still
 # operate on accessible directories elsewhere.
+# Before the switch to an fts-based implementation in coreutils 5.0.92,
+# this test would fail.
 
 if test "$VERBOSE" = yes; then
   set -x
