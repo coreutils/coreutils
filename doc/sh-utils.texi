@@ -2198,9 +2198,9 @@ common format.  It can contain month names, timezones, @samp{am} and
 @opindex -u
 @opindex --utc
 @opindex --universal
-@cindex universal coordinated time
+@cindex coordinated universal time
 @cindex Greenwich Mean Time
-Print or set the time and date in Universal Coordinated Time instead of
+Print or set the time and date in Coordinated Universal Time instead of
 in local (wall clock) time.
 
 @end table
