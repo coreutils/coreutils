@@ -12,7 +12,7 @@ use FileHandle;
 use File::Compare qw(compare);
 
 @ISA = qw(Exporter);
-($VERSION = '$Revision: 1.12 $ ') =~ tr/[0-9].//cd;
+($VERSION = '$Revision: 1.13 $ ') =~ tr/[0-9].//cd;
 @EXPORT = qw (run_tests);
 
 my $debug = $ENV{DEBUG};
@@ -35,7 +35,7 @@ defined $ENV{DJDIR}
 # {filename => 'contents'} filename and contents
 # {filename => undef}      filename only -- $(srcdir)/filename must exist
 #
-# FIXME: If there is more than one input file, the you can't specify REDIRECT.
+# FIXME: If there is more than one input file, then you can't specify `REDIR'.
 # PIPE is still ok.
 #
 # I/O spec: a hash ref with the following properties
