@@ -109,19 +109,24 @@ main (int argc, char **argv)
       char const *file = "nohup.out";
       int flags = O_CREAT | O_WRONLY | O_APPEND;
       mode_t mode = S_IRUSR | S_IWUSR;
-      int saved_errno;
 
       fd = open (file, flags, mode);
       if (fd == -1)
 	{
-	  saved_errno = errno;
-	  in_home = path_concat (getenv ("HOME"), file, NULL);
-	  fd = open (in_home, flags, mode);
+	  int saved_errno = errno;
+	  char const *home = getenv ("HOME");
+	  if (home)
+	    {
+	      in_home = path_concat (home, file, NULL);
+	      fd = open (in_home, flags, mode);
+	    }
 	  if (fd == -1)
 	    {
 	      int saved_errno2 = errno;
 	      error (0, saved_errno, _("failed to open %s"), quote (file));
-	      error (0, saved_errno2, _("failed to open %s"), quote (in_home));
+	      if (in_home)
+		error (0, saved_errno2, _("failed to open %s"),
+		       quote (in_home));
 	      exit (NOHUP_FAILURE);
 	    }
 	  file = in_home;
