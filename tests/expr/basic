@@ -45,6 +45,12 @@ my @Tests =
      # This erroneously succeeded and output `3' before 2.0.12.
      ['fail-a', '3 + -', {ERR => "$prog: non-numeric argument\n"},
       {EXIT => 3}],
+
+     ['fail-b', '9 9', {ERR => "$prog: syntax error\n"},
+      {EXIT => 2}],
+     ['fail-c', {ERR => "$prog: too few arguments\n"
+		 . "Try `$prog --help' for more information.\n"},
+      {EXIT => 2}],
     );
 
 # Append a newline to end of each expected `OUT' string.
