@@ -1,6 +1,10 @@
+2000-04-17  Bruno Haible  <haible@clisp.cons.org>
+
+	* src/system.h [__BEOS__]: Ignore O_BINARY and O_TEXT.
+
 2000-04-16  Jim Meyering  <meyering@lucent.com>
 
-	* src/tail.c: Remove option: --max-consecutive-size-changes=N.
+	* src/tail.c: Prepare to remove option: --max-consecutive-size-changes.
 	Doesn't seem useful.
 	(usage): Remove description.
 	* doc/textutils.texi (tail invocation): Remove description.
