@@ -1,4 +1,4 @@
-#serial 8
+#serial 9
 
 dnl This macro is intended to be used solely in this file.
 dnl These are the prerequisite macros for GNU's strftime.c replacement.
@@ -36,8 +36,7 @@ AC_DEFUN(jm_FUNC_GNU_STRFTIME,
  AC_CHECK_HEADERS(sys/time.h)
  AC_CACHE_CHECK([for working GNU strftime], jm_cv_func_working_gnu_strftime,
   [AC_TRY_RUN(
-changequote(<<, >>)dnl
-<< /* Ulrich Drepper provided parts of the test program.  */
+[ /* Ulrich Drepper provided parts of the test program.  */
 #if STDC_HEADERS
 # include <stdlib.h>
 #endif
@@ -134,9 +133,7 @@ main ()
   CMP ("%z", "+0000");		/* GNU */
 
   exit (n_fail ? 1 : 0);
-}
-	      >>,
-changequote([, ])dnl
+}],
 	     jm_cv_func_working_gnu_strftime=yes,
              jm_cv_func_working_gnu_strftime=no,
 	     dnl When crosscompiling, assume strftime is missing or broken.
