@@ -14,9 +14,6 @@ if test -z "$other_partition_tmpdir"; then
   exit 77
 fi
 
-=''; export LANGUAGE
-=''; export LANG
-
 pwd=`pwd`
 dir=p-perm-$$
 trap "cd $pwd; rm -rf $dir $other_partition_tmpdir" 0 1 2 3 15
