@@ -1,0 +1,9 @@
+These files are used by a program called aclocal (part of the GNU automake
+package).  aclocal uses these files to create aclocal.m4 which is in turn
+used by autoconf to create the configure script at the the top level in
+this distribution.
+
+Some of these files are copies of the ones in the automake-1.1l
+distribution.  Others are specific to this package.
+Eventually, I expect that aclocal will evolve so that this directory
+can contain only the .m4 files specific to this package.
