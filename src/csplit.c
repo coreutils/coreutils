@@ -247,7 +247,7 @@ interrupt_handler (int sig)
   signal (sig, SIG_DFL);
 #endif
   cleanup ();
-  kill (getpid (), sig);
+  raise (sig);
 }
 
 /* Keep track of NUM chars of a partial line in buffer START.
