@@ -1,6 +1,11 @@
-1998-10-04  Jim Meyering  <meyering@ascend.com>
+1998-10-22  Jim Meyering  <meyering@ascend.com>
 
 	* Version 1.22g.
+
+	* src/fold.c (usage): Add mention of --version and --help.
+	Reported by Matej Vela <mvela@public.srce.hr>.
+
+1998-10-04  Jim Meyering  <meyering@ascend.com>
 
 	* lib/fnmatch.h: New file. (unused)
 	* lib/fnmatch.c: New file. (unused)
