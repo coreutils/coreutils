@@ -60,6 +60,7 @@ host_triplet = @host@
 AMTAR = @AMTAR@
 AWK = @AWK@
 BUILD_INCLUDED_LIBINTL = @BUILD_INCLUDED_LIBINTL@
+CATALOGS = @CATALOGS@
 CATOBJEXT = @CATOBJEXT@
 CC = @CC@
 CPP = @CPP@
@@ -71,6 +72,7 @@ FESETROUND_LIBM = @FESETROUND_LIBM@
 GENCAT = @GENCAT@
 GETLOADAVG_LIBS = @GETLOADAVG_LIBS@
 GLIBC21 = @GLIBC21@
+GMOFILES = @GMOFILES@
 GMSGFMT = @GMSGFMT@
 GNU_PACKAGE = @GNU_PACKAGE@
 HELP2MAN = @HELP2MAN@
@@ -88,12 +90,14 @@ LIB_CRYPT = @LIB_CRYPT@
 LIB_NANOSLEEP = @LIB_NANOSLEEP@
 MAN = @MAN@
 MKINSTALLDIRS = @MKINSTALLDIRS@
+MSGFMT = @MSGFMT@
 NEED_SETGID = @NEED_SETGID@
 OBJEXT = @OBJEXT@
 OPTIONAL_BIN_PROGS = @OPTIONAL_BIN_PROGS@
 OPTIONAL_BIN_ZCRIPTS = @OPTIONAL_BIN_ZCRIPTS@
 PACKAGE = @PACKAGE@
 PERL = @PERL@
+POFILES = @POFILES@
 POSUB = @POSUB@
 POW_LIBM = @POW_LIBM@
 RANLIB = @RANLIB@
@@ -128,7 +132,7 @@ DIST_COMMON = Makefile.am Makefile.in
 all: all-am
 
 .SUFFIXES:
-$(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
+$(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.ac $(ACLOCAL_M4)
 	cd $(top_srcdir) && \
 	  $(AUTOMAKE) --gnu  tests/tail-2/Makefile
 Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
