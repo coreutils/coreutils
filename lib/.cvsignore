@@ -5,3 +5,4 @@ safe-stat.h
 safe-stat.c
 safe-lstat.c
 safe-lstat.h
+getdate.tab.c
