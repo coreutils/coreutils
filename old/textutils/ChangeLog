@@ -1,3 +1,13 @@
+Mon Jun 12 23:07:59 1995  Jim Meyering  (meyering@comco.com)
+
+	* tr.c (non_neg_strtol): Don't compare signed and unsigned.
+	[struct Spec_list] (indefinite_repeat_element): New member.
+	Use size_t rather than int or unsigned long where reasonable.
+	(get_spec_status): Make interface cleaner.
+	(get_s1_spec_status): New function.
+	(get_s2_spec_status): New function.
+	(validate): Use new functions instead of get_spec_status.
+
 Sun Jun 11 00:39:50 1995  Jim Meyering  (meyering@comco.com)
 
 	* md5sum.c: New file.  From Ulrich Drepper.
