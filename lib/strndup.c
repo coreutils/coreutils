@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
 
 NOTE: The canonical source of this file is maintained with the GNU C Library.
 Bugs can be reported to bug-glibc@prep.ai.mit.edu.
@@ -42,8 +42,6 @@ strndup (s, n)
   if (new == NULL)
     return NULL;
 
-  memcpy (new, s, n);
   new[n] = '\0';
-
-  return new;
+  return memcpy (new, s, n);
 }
