@@ -158,3 +158,8 @@ Changes expected to go in, post-5.2.0:
 
   Re-add a separate test for du's stack space usage (like the one removed
   from tests/rm/deep-1).
+
+  Pending copyright papers:
+  ------------------------
+  ls --color: Ed Avis' patch to suppress escape sequences for
+    non-highlighted files
