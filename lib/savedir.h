@@ -9,7 +9,6 @@
 #  endif
 # endif
 
-char *
-savedir PARAMS ((const char *dir, off_t name_size));
+char *savedir PARAMS ((const char *dir));
 
 #endif
