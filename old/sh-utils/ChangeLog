@@ -1,5 +1,9 @@
 Sat Dec  7 12:52:00 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* lib/getloadavg.c [__SVR4]: Define SVR4.
+	Remove duplicate `|| defined(SVR4)' disjunct guarding the
+	#define KERNEL_FILE "/unix" definiton.
+
 	* configure.in (jm_HEADER_TIOCGWINSZ_NEEDS_SYS_IOCTL): Use this variant
 	of the AM_ prefixed macro.
 	(check for TIOCGWINSZ in sys/pty): In essence, require
