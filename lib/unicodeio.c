@@ -190,7 +190,7 @@ unicode_to_mb (unsigned int code,
          )
 	return failure (code, NULL, callback_arg);
 
-      /* Avoid glibc-2.1 bug and Solaris 2.7 bug.  */
+      /* Avoid glibc-2.1 bug and Solaris 5.7 bug.  */
 # if defined _LIBICONV_VERSION \
     || !((__GLIBC__ - 0 == 2 && __GLIBC_MINOR__ - 0 <= 1) || defined __sun)
 
