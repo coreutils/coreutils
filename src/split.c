@@ -92,6 +92,7 @@ Usage: %s [OPTION] [INPUT [PREFIX]]\n\
 Output fixed-size pieces of INPUT to PREFIXaa, PREFIXab, ...; default\n\
 PREFIX is `x'.  With no INPUT, or when INPUT is -, read standard input.\n\
 \n\
+Mandatory arguments to long options are mandatory for short options too.\n\
   -b, --bytes=SIZE        put SIZE bytes per output file\n\
   -C, --line-bytes=SIZE   put at most SIZE bytes of lines per output file\n\
   -l, --lines=NUMBER      put NUMBER lines per output file\n\

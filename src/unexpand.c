@@ -1,5 +1,5 @@
 /* unexpand - convert spaces to tabs
-   Copyright (C) 89, 91, 1995-2000 Free Software Foundation, Inc.
+   Copyright (C) 89, 91, 1995-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -380,6 +380,7 @@ Usage: %s [OPTION]... [FILE]...\n\
 Convert spaces in each FILE to tabs, writing to standard output.\n\
 With no FILE, or when FILE is -, read standard input.\n\
 \n\
+Mandatory arguments to long options are mandatory for short options too.\n\
   -a, --all           convert all whitespace, instead of initial whitespace\n\
   -t, --tabs=NUMBER   have tabs NUMBER characters apart instead of 8\n\
   -t, --tabs=LIST     use comma separated list of explicit tab positions\n\

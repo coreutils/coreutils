@@ -2749,6 +2749,7 @@ Usage: %s [OPTION]... [FILE]...\n\
       printf (_("\
 Paginate or columnate FILE(s) for printing.\n\
 \n\
+Mandatory arguments to long options are mandatory for short options too.\n\
   +FIRST_PAGE[:LAST_PAGE], --pages=FIRST_PAGE[:LAST_PAGE]\n\
                     begin [stop] printing with page FIRST_[LAST_]PAGE\n\
   -COLUMN, --columns=COLUMN\n\

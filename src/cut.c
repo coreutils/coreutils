@@ -1,5 +1,5 @@
 /* cut - remove parts of lines of files
-   Copyright (C) 1984, 1997, 1998, 1999, 2000 by David M. Ihnat
+   Copyright (C) 1984, 1997, 1998, 1999, 2000, 2001 by David M. Ihnat
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -171,6 +171,7 @@ Usage: %s [OPTION]... [FILE]...\n\
       printf (_("\
 Print selected parts of lines from each FILE to standard output.\n\
 \n\
+Mandatory arguments to long options are mandatory for short options too.\n\
   -b, --bytes=LIST        output only these bytes\n\
   -c, --characters=LIST   output only these characters\n\
   -d, --delimiter=DELIM   use DELIM instead of TAB for field delimiter\n\

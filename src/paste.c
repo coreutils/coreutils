@@ -1,5 +1,5 @@
 /* paste - merge lines of files
-   Copyright (C) 1984, 1997, 1998, 1999, 2000 by David M. Ihnat
+   Copyright (C) 1984, 1997, 1998, 1999, 2000, 2001 by David M. Ihnat
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -409,6 +409,7 @@ Write lines consisting of the sequentially corresponding lines from\n\
 each FILE, separated by TABs, to standard output.\n\
 With no FILE, or when FILE is -, read standard input.\n\
 \n\
+Mandatory arguments to long options are mandatory for short options too.\n\
   -d, --delimiters=LIST   reuse characters from LIST instead of TABs\n\
   -s, --serial            paste one file at a time instead of in parallel\n\
       --help              display this help and exit\n\

@@ -90,6 +90,7 @@ Print first 10 lines of each FILE to standard output.\n\
 With more than one FILE, precede each with a header giving the file name.\n\
 With no FILE, or when FILE is -, read standard input.\n\
 \n\
+Mandatory arguments to long options are mandatory for short options too.\n\
   -c, --bytes=SIZE         print first SIZE bytes\n\
   -n, --lines=NUMBER       print first NUMBER lines instead of first 10\n\
   -q, --quiet, --silent    never print headers giving file names\n\

@@ -242,6 +242,7 @@ Print the last %d lines of each FILE to standard output.\n\
 With more than one FILE, precede each with a header giving the file name.\n\
 With no FILE, or when FILE is -, read standard input.\n\
 \n\
+Mandatory arguments to long options are mandatory for short options too.\n\
       --retry              keep trying to open a file even if it is\n\
                            inaccessible when tail starts or if it becomes\n\
                            inaccessible later -- useful only with -f\n\

@@ -1,5 +1,5 @@
 /* fold -- wrap each input line to fit in specified width.
-   Copyright (C) 91, 1995-2000 Free Software Foundation, Inc.
+   Copyright (C) 91, 1995-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -71,6 +71,7 @@ Usage: %s [OPTION]... [FILE]...\n\
 Wrap input lines in each FILE (standard input by default), writing to\n\
 standard output.\n\
 \n\
+Mandatory arguments to long options are mandatory for short options too.\n\
   -b, --bytes         count bytes rather than columns\n\
   -s, --spaces        break at spaces\n\
   -w, --width=WIDTH   use WIDTH columns instead of 80\n\

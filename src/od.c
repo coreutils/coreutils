@@ -282,6 +282,7 @@ of FILE to standard output.  With more than one FILE argument,\n\
 concatenate them in the listed order to form the input.\n\
 With no FILE, or when FILE is -, read standard input.\n\
 \n\
+Mandatory arguments to long options are mandatory for short options too.\n\
   -A, --address-radix=RADIX   decide how file offsets are printed\n\
   -j, --skip-bytes=BYTES      skip BYTES input bytes first\n\
   -N, --read-bytes=BYTES      limit dump to BYTES input bytes\n\

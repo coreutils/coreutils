@@ -291,6 +291,7 @@ Write sorted concatenation of all FILE(s) to standard output.\n\
 \n\
 Ordering options:\n\
 \n\
+Mandatory arguments to long options are mandatory for short options too.\n\
   -b, --ignore-leading-blanks ignore leading blanks\n\
   -d, --dictionary-order      consider only blanks and alphanumeric characters\n\
   -f, --ignore-case           fold lower case to upper case characters\n\

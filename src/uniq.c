@@ -138,6 +138,7 @@ Usage: %s [OPTION]... [INPUT [OUTPUT]]\n\
 Discard all but one of successive identical lines from INPUT (or\n\
 standard input), writing to OUTPUT (or standard output).\n\
 \n\
+Mandatory arguments to long options are mandatory for short options too.\n\
   -c, --count           prefix lines by the number of occurrences\n\
   -d, --repeated        only print duplicate lines\n\
   -D, --all-repeated[=delimit-method] print all duplicate lines\n\

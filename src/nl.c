@@ -1,5 +1,5 @@
 /* nl -- number lines of files
-   Copyright (C) 89, 92, 1995-2000 Free Software Foundation, Inc.
+   Copyright (C) 89, 92, 1995-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -181,6 +181,7 @@ Usage: %s [OPTION]... [FILE]...\n\
 Write each FILE to standard output, with line numbers added.\n\
 With no FILE, or when FILE is -, read standard input.\n\
 \n\
+Mandatory arguments to long options are mandatory for short options too.\n\
   -b, --body-numbering=STYLE      use STYLE for numbering body lines\n\
   -d, --section-delimiter=CC      use CC for separating logical pages\n\
   -f, --footer-numbering=STYLE    use STYLE for numbering footer lines\n\
