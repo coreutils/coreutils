@@ -1,3 +1,9 @@
+2001-01-01  Alexandre Duret-Lutz  <duret_g@epita.fr>
+
+	* libintl.m4 (AM_GNU_GETTEXT): Define MKINSTALLDIRS by
+	expanding the value of $ac_aux_dir, as in AM_MISSING_HAS_RUN,
+	so `make install' also works in VPATH builds.
+
 2001-01-01  Jim Meyering  <meyering@lucent.com>
 
 	* prereq.m4 (jm_PREREQ_READUTMP): Include utmp.h (if available), even
