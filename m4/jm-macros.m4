@@ -1,14 +1,14 @@
-#serial 8
+#serial 9
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
 AC_DEFUN(jm_MACROS,
 [
-  AC_PREREQ(2.13)               dnl Minimum Autoconf version required.
+  AC_PREREQ(2.14a)
 
   GNU_PACKAGE="GNU $PACKAGE"
   AC_DEFINE_UNQUOTED(GNU_PACKAGE, "$GNU_PACKAGE",
-    [The concatenation of the strings \`GNU ', and PACKAGE.])
+    [The concatenation of the strings `GNU ', and PACKAGE.])
   AC_SUBST(GNU_PACKAGE)
 
   dnl This macro actually runs replacement code.  See isc-posix.m4.
@@ -77,7 +77,7 @@ AC_DEFUN(jm_CHECK_ALL_TYPES,
   AC_TYPE_SIZE_T
   AC_TYPE_UID_T
   AC_CHECK_TYPE(ino_t, unsigned long)
-  AC_CHECK_TYPE(ssize_t, int)
+  AC_TYPE_SSIZE_T,
   AC_REQUIRE([jm_AC_TYPE_UINTMAX_T])
   AC_REQUIRE([jm_AC_TYPE_UNSIGNED_LONG_LONG])
 ])
