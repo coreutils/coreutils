@@ -87,7 +87,8 @@ usage (int status)
       printf (_("\
 Remove (unlink) the FILE(s).\n\
 \n\
-  -d, --directory       unlink directory, even if non-empty (super-user only)\n\
+  -d, --directory       unlink FILE, even if it is a non-empty directory\n\
+                          (super-user only)\n\
   -f, --force           ignore nonexistent files, never prompt\n\
   -i, --interactive     prompt before any removal\n\
   -r, -R, --recursive   remove the contents of directories recursively\n\
