@@ -6,6 +6,7 @@ Thu Dec  7 19:55:03 1995  Jim Meyering  (meyering@comco.com)
 
 	* aclocal.m4 (ud_WITH_REGEX): New macro.
 	* configure.in: Use it.
+	* rx.c, rx.h: New files.
 	* lib/Makefile.in (REGEX): Set to @REGEXOBJ@, not regex.o.
 	(SOURCES, DISTFILES): Add rx.c, rx.h.
 	* acconfig.h (WITH_REGEX): Add it.
