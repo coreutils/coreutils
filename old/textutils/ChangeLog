@@ -5,7 +5,7 @@ Wed Dec  4 21:03:18 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 	(main) [POSIXLY_CORRECT]: Give a more specific diagnostic for the
 	identity mappings [:upper:] to [:upper:] and [:lower:] to [:lower:].
 	(class_ok): Update table to reflect that tr now allows these
-	identity mappings.
+	identity mappings.  Suggestion from Risto Kankkunen.
 
 Thu Nov 28 00:31:18 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
