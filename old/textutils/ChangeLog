@@ -1,3 +1,15 @@
+2000-06-24  Jim Meyering  <meyering@lucent.com>
+
+	* tests/sum/basic-1: New file.
+	* tests/sum/Makefile.am: New file.
+	* configure.in (AC_OUTPUT): Add tests/md5sum/Makefile.
+	* tests/Makefile.am (SUBDIRS): Add sum.
+
+2000-06-22  Bruno Haible  <haible@clisp.cons.org>
+
+	* src/sum.c (sysv_sum_file): Avoid overflowing 32-bit accumulator
+	on files larger than 256 MB.
+
 2000-06-22  Bruno Haible  <haible@clisp.cons.org>
 
 	* src/cat.c (main): Correct a comment.
