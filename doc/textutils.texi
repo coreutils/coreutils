@@ -1754,6 +1754,18 @@ letters, digits and blanks when sorting.
 Fold lowercase characters into the equivalent uppercase characters when
 sorting so that, for example, @samp{b} and @samp{B} sort as equal.
 
+@item -g
+@opindex -g
+@cindex general numeric sort
+Sort numerically, but use strtod(3) to arrive at the numeric values.
+This allows floating point numbers to be specified in scientific notation,
+like @code{1.0e-34} and @code{10e100}.  Use this option only if there
+is no alternative;  it is much slower than @samp{-n} and numbers with
+too many significant digits will be compared as if they had been
+truncated.  In addition, numbers outside the range of representable
+double precision floating point numbers are treated as if they were zeroes.
+@c FIXME: Someday there will be an option to warn about underflow and overflow.
+
 @item -i
 @opindex -i
 @cindex unprintable characters, ignoring
@@ -2225,9 +2237,22 @@ Equivalent to @samp{-1 @var{field} -2 @var{field}}.
 
 @item -o @var{field-list}@dots{}
 Construct each output line according to the format in @var{field-list}.
-Each element in @var{field-list} consists of a file number (either 1 or
-2), a period, and a field number (a positive integer).  The elements in
-the list are separated by commas or blanks.  Multiple @var{field-list}
+Each element in @var{field-list} is either the single character @samp{0} or
+has the form @var{m.n} where the file number, @var{m}, is @samp{1} or
+@samp{2} and @var{n} is a positive field number.
+
+A field specification of @samp{0} denotes the join field.
+In most cases, the functionality of the @samp{0} field spec
+may be reproduced using the explicit @var{m.n} that corresponds
+to the join field.  However, when printing unpairable lines
+(using either of the @samp{-a} or @samp{-v} options), there is no way
+to specify the join field using @var{m.n} in @var{field-list}
+if there are unpairable lines in both files.
+To give @code{join} that functionality, POSIX invented the @samp{0}
+field specification notation.
+
+The elements in @var{field-list}
+are separated by commas or blanks.  Multiple @var{field-list}
 arguments can be given after a single @samp{-o} option; the values
 of all lists given with @samp{-o} are concatenated together.
 All output lines -- including those printed because of any -a or -v
@@ -2238,7 +2263,7 @@ Use character @var{char} as the input and output field separator.
 
 @item -v @var{file-number}
 Print a line for each unpairable line in file @var{file-number}
-(either 1 or 2), instead of the normal output.
+(either @samp{1} or @samp{2}), instead of the normal output.
 
 @end table
 
