@@ -58,11 +58,10 @@ my @Tests =
      ['R-dot', '--ignore="[a-ce-zA-Z]*" -R .',  {OUT => ".:\nd\n\n\./d:\n"},
       $mkdir, $rmdir],
 
-     # FIXME: change the trailing `/' to be a `@'.
-     ['slink-dir', '-Fd d', {OUT => "d/\n"}, $slink_d, $unlink_d],
-
-     # FIXME: uncomment the following once ls has been fixed
-     # ['slink-dir2', '-F d', {OUT => "d\@/\n"}, $slink_d, $unlink_d],
+     ['slink-dir-F',     '-F d', {OUT => "d@\n"}, $slink_d, $unlink_d],
+     ['slink-dir-dF',   '-dF d', {OUT => "d@\n"}, $slink_d, $unlink_d],
+     ['slink-dir-dFH', '-dFH d', {OUT => "d/\n"}, $slink_d, $unlink_d],
+     ['slink-dir-dFL', '-dFL d', {OUT => "d/\n"}, $slink_d, $unlink_d],
 
      # From Stéphane Chazelas.
      ['no-a-isdir-b', 'no-dir d',
