@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -105,6 +105,13 @@
 
 #if ! (HAVE___SECURE_GETENV || _LIBC)
 # define __secure_getenv getenv
+
+# ifndef HAVE_DECL_GETENV
+"this configure-time declaration test was not run"
+# endif
+# if !HAVE_DECL_GETENV
+char *getenv ();
+# endif
 #endif
 
 /* Use the widest available unsigned type if uint64_t is not
