@@ -1,6 +1,10 @@
-1998-03-14  Jim Meyering  <meyering@eng.ascend.com>
+1998-03-15  Jim Meyering  <meyering@eng.ascend.com>
 
 	* Version 3.16n.
+
+	* configure.in: Use jm_PREREQ_ERROR.
+
+1998-03-14  Jim Meyering  <meyering@eng.ascend.com>
 
 	Revert most `getdate.h -> get-date.h' changes of 1998-02-20.
 	With automake-1.2f, that hack is no longer needed.
