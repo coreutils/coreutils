@@ -52,6 +52,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   seq's default step is 1, even if LAST < FIRST.
 
+  paste no longer mistakenly outputs 0xff bytes for a nonempty input file
+  without a trailing newline.
+
 
 * Major changes in release 5.0.90:
 
