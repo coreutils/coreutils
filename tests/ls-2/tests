@@ -22,6 +22,11 @@ use strict;
 my $mkdir = {PRE => sub {mkdir 'd',0755 or die "d: $!\n"}};
 my $rmdir = {POST => sub {rmdir 'd' or die "d: $!\n"}};
 
+my $mkdir2 = {PRE => sub {mkdir 'd',0755 or die "d: $!\n";
+			  mkdir 'd/e',0755 or die "d/e: $!\n" }};
+my $rmdir2 = {POST => sub {rmdir 'd/e' or die "d/e: $!\n";
+			   rmdir 'd' or die "d: $!\n" }};
+
 my $slink_d = {PRE => sub {symlink '/', 'd' or die "d: $!\n"}};
 my $unlink_d = {POST => sub {unlink 'd' or die "d: $!\n"}};
 
@@ -58,6 +63,14 @@ my @Tests =
 
      # FIXME: uncomment the following once ls has been fixed
      # ['slink-dir2', '-F d', {OUT => "d\@/\n"}, $slink_d, $unlink_d],
+
+     # From Stéphane Chazelas.
+     ['no-a-isdir-b', 'no-dir d',
+	 {OUT => "d:\n"},
+	 {ERR => "ls: no-dir: No such file or directory\n"},
+	 $mkdir, $rmdir, {EXIT => 1}],
+
+     ['recursive-2', '-R d', {OUT => "d:\ne\n\nd/e:\n"}, $mkdir2, $rmdir2],
     );
 
 my $save_temps = $ENV{SAVE_TEMPS};
