@@ -1,6 +1,10 @@
-2004-10-29  Jim Meyering  <jim@meyering.net>
+2004-10-29  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	* NEWS: Document getdate changes.
+
+2004-10-29  Jim Meyering  <jim@meyering.net>
 
 	* src/tac.c (tac_file): Remove temporary prototype and move this
 	function `down' so that it precedes definition of tac_nonseekable.
