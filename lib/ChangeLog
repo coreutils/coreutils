@@ -1,3 +1,8 @@
+2001-09-03  Paul Eggert  <eggert@twinsun.com>
+
+	* xgetcwd.c (xgetcwd): Use HAVE_GETCWD_NULL, not (defined
+	__GLIBC__ && __GLIBC__ >= 2), to decide whether to use getcwd (NULL, 0).
+
 2001-09-02  Jim Meyering  <meyering@lucent.com>
 
 	* error.c: Update from GNU libc.
