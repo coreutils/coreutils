@@ -119,7 +119,7 @@ static int hard_LC_TIME;
 enum blanktype { bl_start, bl_end, bl_both };
 
 /* The character marking end of line. Default to \n. */
-int eolchar = '\n';
+static int eolchar = '\n';
 
 /* Lines are held in core as counted strings. */
 struct line
@@ -860,7 +860,7 @@ limfield (const struct line *line, const struct keyfield *key)
 
 /* FIXME */
 
-void
+static void
 trim_trailing_blanks (const char *a_start, char **a_end)
 {
   while (*a_end > a_start && blanks[UCHAR (*(*a_end - 1))])
