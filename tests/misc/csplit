@@ -1,0 +1,39 @@
+#!/bin/sh
+# csplit could get a failed assertion prior to 2.0.17
+
+if test "$VERBOSE" = yes; then
+  set -x
+  csplit --version
+fi
+
+. $srcdir/../lang-default
+
+pwd=`pwd`
+tmp=csplit.$$
+trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
+trap '(exit $?); exit' 1 2 13 15
+
+framework_failure=0
+mkdir $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo '$0: failure in testing framework' 1>&2
+  (exit 1); exit
+fi
+
+fail=0
+
+(echo a; echo; echo) > in
+csplit in '/^$/' 2 > out || fail=1
+
+cat <<EOF > exp
+2
+0
+2
+EOF
+
+cmp out exp || fail=1
+test $fail = 1 && diff out exp 2> /dev/null
+
+(exit $fail); exit
