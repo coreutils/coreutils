@@ -1,6 +1,15 @@
-2002-06-25  Jim Meyering  <meyering@lucent.com>
+2002-06-29  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.10.
+
+	* src/remove.c (AD_mark_current_as_unremovable): Replace dead
+	code with an assertion.
+
+2002-06-26  Paul Eggert  <eggert@twinsun.com>
+
+	* src/ls-test: Use grep, not egrep.
+
+2002-06-25  Jim Meyering  <meyering@lucent.com>
 
 	* src/remove.c (prompt): Add a comment to help translators work
 	around the problem of making the translations of the adjective
