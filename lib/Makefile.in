@@ -90,7 +90,7 @@ libfu.a: $(OBJECTS)
 # Since this directory contains two parsers, we have to be careful to avoid
 # running two $(YACC)s during parallel makes.  See below.
 getdate.c: getdate.y
-	@echo expect 9 shift/reduce conflicts
+	@echo expect 10 shift/reduce conflicts
 	$(YACC) $(srcdir)/getdate.y
 	mv y.tab.c getdate.c
 

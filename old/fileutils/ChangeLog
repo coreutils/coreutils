@@ -7,6 +7,40 @@ Mon Jan 10 01:20:38 1994  Jim Meyering  (meyering@comco.com)
 
 	* man/Makefile.in (manprefix): Use binprefix as the default.
 
+Thu Dec 30 23:11:10 1993  Jim Meyering  (meyering@comco.com)
+
+	* The following changes are necessary to avoid spurious failures
+	when a read or write system call is interrupted (e.g. by SIGTSTP).
+	A POSIX implementation of those system calls may either return
+	-1 and set errno to EINTR or return a positive value indicating
+	that a partial read or write has completed successfully.  On Linux
+	0.99.14, interrupted read and write system calls return -1/EINTR.
+	Thanks to Bruno Haible <haible@ma2s2.mathematik.uni-karlsruhe.de>
+	for pointing this out.
+
+	* full-write.c, safe-read.c: New files.
+
+	* cp.c (copy_reg): Use full_write instead of write.  Handle
+	errno == EINTR (instead of failing) after read system call.
+	* dd.c (skip): Handle errno == EINTR (instead of failing) after
+	read system call.
+	(copy): Use safe_read instead of read.
+	* install.c (copy_file): Use safe_read and full_write instead of
+	read and write system calls.
+	* mv.c (copy_reg): Ditto.
+	* touch.c (utime_now): Ditto.
+
+Tue Dec 28 15:49:32 1993  Jim Meyering  (meyering@comco.com)
+
+	* install.sh: New file.
+	Makefile.in [DISTFILES]: Add it.
+
+Sat Dec 18 01:12:24 1993  Jim Meyering  (meyering@comco.com)
+
+	* configure.in (AC_OUTPUT): Put `touch stamp-config' in second arg
+	so it goes in config.status.  This eliminates unnecessary second run
+	of configure.
+
 Thu Nov 18 00:03:24 1993  Jim Meyering  (meyering@comco.com)
 
 	* configure.in [STAT_STATFS2_FSIZE]: Fix test (that had obsolete
@@ -49,7 +83,7 @@ Sat Oct 16 00:25:42 1993  Jim Meyering  (meyering@comco.com)
 	* chmod.c (change_file_mode): Reapply Oct 6 change for symlinks.
 	Somehow it got removed from working sources.
 
-        * lib/Makefile.in [OBJECTS]: Change dependency to ../config.h so
+	* lib/Makefile.in [OBJECTS]: Change dependency to ../config.h so
 	it works when building in a subdirectory.  From Rick Sladkey
 	(jrs@world.std.com).
 
@@ -59,19 +93,19 @@ Wed Oct 13 19:43:47 1993  Jim Meyering  (meyering@comco.com)
 	that we use PATH_MAX + 1 rather than sizeof(char*) as size of
 	buffer in readlink call.  This was causing spurious errors.
 
-        * cp.c (copy), mv.c (do_move), rm.c (remove_file, remove_dir):
-        Cast to `unsigned int' stat->st_mode printf arguments corresponding
-        to %o formats to avoid warnings.
+	* cp.c (copy), mv.c (do_move), rm.c (remove_file, remove_dir):
+	Cast to `unsigned int' stat->st_mode printf arguments corresponding
+	to %o formats to avoid warnings.
 
-        * lib/Makefile.in [DEFS]: Remove -DMVDIR.  Add -DCONFIG_BROKETS.
-        (rename.o): Add a specific rule.  Use -DMVDIR=... here instead.
+	* lib/Makefile.in [DEFS]: Remove -DMVDIR.  Add -DCONFIG_BROKETS.
+	(rename.o): Add a specific rule.  Use -DMVDIR=... here instead.
 
-        * src/Makefile.in [DEFS]: Add -DCONFIG_BROKETS.
-        (distclean): Don't delete dir.c and vdir.c; they aren't
-        created anymore.
+	* src/Makefile.in [DEFS]: Add -DCONFIG_BROKETS.
+	(distclean): Don't delete dir.c and vdir.c; they aren't
+	created anymore.
 
-        * lib/Makefile.in: Make all .o files depend on $(srcdir)/../config.h.
-        * src/Makefile.in: Ditto.
+	* lib/Makefile.in: Make all .o files depend on $(srcdir)/../config.h.
+	* src/Makefile.in: Ditto.
 
 Sun Oct 10 13:38:54 1993  Jim Meyering  (meyering@comco.com)
 
