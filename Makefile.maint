@@ -165,7 +165,7 @@ wget-update:
 	done
 	for f in depcomp missing; do \
 	  echo checking out $$f...; \
-	  cvs -d $(automake_repo) co -p automake/$$f > t$$$$ \
+	  cvs -d $(automake_repo) co -p automake/lib/$$f > t$$$$ \
 	    && mv t$$$$ $$f; \
 	done
 
