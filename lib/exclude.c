@@ -118,20 +118,20 @@ free_exclude (struct exclude *ex)
 static int
 fnmatch_no_wildcards (char const *pattern, char const *f, int options)
 {
-  if (! (options & FNM_CASEFOLD))
-    return ((options & FNM_LEADING_DIR)
+  if (! (options & FNM_LEADING_DIR))
+    return ((options & FNM_CASEFOLD)
 	    ? strcasecmp (pattern, f)
 	    : strcmp (pattern, f));
   else
     {
       size_t patlen = strlen (pattern);
-      int r = ((options & FNM_LEADING_DIR)
+      int r = ((options & FNM_CASEFOLD)
 		? strncasecmp (pattern, f, patlen)
 		: strncmp (pattern, f, patlen));
       if (! r)
 	{
 	  r = f[patlen];
-	  if (r == '/' && (options & FNM_LEADING_DIR))
+	  if (r == '/')
 	    r = 0;
 	}
       return r;
