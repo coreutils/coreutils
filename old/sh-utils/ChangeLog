@@ -1,3 +1,8 @@
+Wed Nov 11 18:19:10 1992  Jim Meyering  (meyering@hal.gnu.ai.mit.edu)
+
+	* stty.c (set_mode): Parenthesize expressions with bit operations
+	to correctly set/reset modes bits.
+
 Wed Oct 28 14:16:48 1992  David J. MacKenzie  (djm@goldman.gnu.ai.mit.edu)
 
 	* Version 1.8.
