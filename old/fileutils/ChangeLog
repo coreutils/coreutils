@@ -1,5 +1,13 @@
 Tue Jun 18 20:54:05 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* ln.c (do_link): Refine last change so we don't disallow commands
+	like `ln --force A B' when A and B are hard links to the same file.
+	See comments in the source.  Reported by Erik Naggum <erik@naggum.no>.
+
+	* ls.c (decode_switches): Correct typo in error message:
+	enironment -> environment.  From Santiago Vila Doncel
+	<sanvila@unex.es>.
+
 	* aclocal.m4: Update from gettext-0.10.20.
 	* ABOUT-NLS: Likewise.
 	* intl/*: Likewise.
