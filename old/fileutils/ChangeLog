@@ -2,6 +2,9 @@
 
 	* Version 3.16s.
 
+	* tests/cp/same-file: Skip three more unportable tests.
+	These failed on SunOS4.1.4.
+
 	* src/copy.c (SAME_INODE): Remove definition.
 	* src/sys2.h (SAME_INODE): Define it here instead.
 
