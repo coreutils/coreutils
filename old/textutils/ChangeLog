@@ -1,3 +1,9 @@
+Fri Oct 29 13:58:50 1993  Jim Meyering  (meyering@comco.com)
+
+	* csplit.c [INT_MAX]: Make sure it's defined.
+	[not HAVE_LIMITS_H]: Don't include limits.h.
+	From Kaveh R. Ghazi (ghazi@noc.rutgers.edu).
+
 Wed Oct 27 01:13:52 1993  Jim Meyering  (meyering@comco.com)
 
 	* Version 1.8.1.

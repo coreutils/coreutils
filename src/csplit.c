@@ -33,7 +33,9 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include <signal.h>
+#ifdef HAVE_LIMITS_H
 #include <limits.h>
+#endif /* HAVE_LIMITS_H */
 #include "regex.h"
 #include "system.h"
 #include "version.h"
@@ -48,6 +50,10 @@ char *realloc ();
 #ifndef MAX
 #define MAX(a,b) (((a) > (b)) ? (a) : (b))
 #endif
+
+#ifndef INT_MAX
+#define INT_MAX (~(1 << (sizeof (int) * 8 - 1)))
+#endif /* INT_MAX */
 
 void error ();
 

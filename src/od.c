@@ -215,7 +215,7 @@ static unsigned long int flag_dump_strings;
 /* Non-zero if we should recognize the pre-POSIX non-option arguments
    that specified at most one file and optional arguments specifying
    offset and pseudo-start address.  */
-static int backward_compatibility;
+static int traditional;
 
 /* Non-zero if an old-style `pseudo-address' was specified.  */
 static long int flag_pseudo_start;
@@ -298,8 +298,8 @@ static struct option const long_options[] =
   {"output-duplicates", no_argument, NULL, 'v'},
 
   /* non-POSIX options.  */
-  {"backward-compatible", no_argument, NULL, 'B'},
   {"strings", optional_argument, NULL, 's'},
+  {"traditional", no_argument, NULL, 'B'},
   {"width", optional_argument, NULL, 'w'},
   {"help", no_argument, &show_help, 1},
   {"version", no_argument, &show_version, 1},
@@ -1732,7 +1732,7 @@ main (argc, argv)
   address_pad_len = 7;
   flag_dump_strings = 0;
 
-  while ((c = getopt_long (argc, argv, "abBcdfhilos::xw::A:j:N:t:v",
+  while ((c = getopt_long (argc, argv, "abcdfhilos::xw::A:j:N:t:v",
 			   long_options, (int *) 0))
 	 != EOF)
     {
@@ -1810,7 +1810,7 @@ main (argc, argv)
 	  break;
 
 	case 'B':
-	  backward_compatibility = 1;
+	  traditional = 1;
 	  break;
 
 	  /* The next several cases map the old, pre-POSIX format
@@ -1880,7 +1880,7 @@ main (argc, argv)
 	od [file] [[+]offset[.][b] [[+]label[.][b]]]
      The offset and pseudo_start have the same syntax.  */
 
-  if (backward_compatibility)
+  if (traditional)
     {
       long int offset;
 

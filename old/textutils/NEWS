@@ -1,7 +1,7 @@
 Major changes in release 1.9:
 * sort accepts and ignores -y[string] options for compatibilty with Solaris.
 * cat -v /dev/null works on more systems
-* od's --compatible (-C) flag renamed to --backward-compatible (-B)
+* od's --compatible (-C) flag renamed to --traditional (no short option)
 * --help and --version exit successfully
 * --help gives a one-line description of each option and shows the
   correspondence between short and long-named options.
