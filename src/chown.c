@@ -34,27 +34,17 @@
 #include <getopt.h>
 
 #include "system.h"
+#include "chown-core.h"
 #include "error.h"
+#include "fts_.h"
 #include "lchown.h"
 #include "quote.h"
-#include "chown-core.h"
+#include "userspec.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "chown"
 
-#define WRITTEN_BY _("Written by David MacKenzie.")
-
-#ifndef _POSIX_VERSION
-struct passwd *getpwnam ();
-struct group *getgrnam ();
-struct group *getgrgid ();
-#endif
-
-#if ! HAVE_ENDPWENT
-# define endpwent() ((void) 0)
-#endif
-
-char *parse_user_spec ();
+#define WRITTEN_BY _("Written by David MacKenzie and Jim Meyering.")
 
 /* The name the program was run with. */
 char *program_name;
@@ -67,9 +57,9 @@ static char *reference_file;
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
-  REFERENCE_FILE_OPTION = CHAR_MAX + 1,
+  FROM_OPTION = CHAR_MAX + 1,
   DEREFERENCE_OPTION,
-  FROM_OPTION
+  REFERENCE_FILE_OPTION
 };
 
 static struct option const long_options[] =
@@ -104,14 +94,15 @@ Usage: %s [OPTION]... OWNER[:[GROUP]] FILE...\n\
 	      program_name, program_name, program_name);
       fputs (_("\
 Change the owner and/or group of each FILE to OWNER and/or GROUP.\n\
+With --reference, change the owner and group of each FILE to those of RFILE.\n\
 \n\
   -c, --changes          like verbose but report only when a change is made\n\
       --dereference      affect the referent of each symbolic link, rather\n\
                          than the symbolic link itself\n\
 "), stdout);
       fputs (_("\
-  -h, --no-dereference   affect symbolic links instead of any referenced file\n\
-                         (available only on systems that can change the\n\
+  -h, --no-dereference   affect each symbolic link instead of any referenced\n\
+                         file (useful only on systems that can change the\n\
                          ownership of a symlink)\n\
 "), stdout);
       fputs (_("\
@@ -124,9 +115,22 @@ Change the owner and/or group of each FILE to OWNER and/or GROUP.\n\
       fputs (_("\
   -f, --silent, --quiet  suppress most error messages\n\
       --reference=RFILE  use RFILE's owner and group rather than\n\
-                         the specified OWNER:GROUP values\n\
+                         the specifying OWNER:GROUP values\n\
   -R, --recursive        operate on files and directories recursively\n\
   -v, --verbose          output a diagnostic for every file processed\n\
+\n\
+"), stdout);
+      fputs (_("\
+The following options modify how a hierarchy is traversed when the -R\n\
+option is also specified.  If more than one is specified, only the final\n\
+one takes effect.\n\
+\n\
+  -H                     if a command line argument is a symbolic link\n\
+                         to a directory, traverse it\n\
+  -L                     traverse every symbolic link to a directory\n\
+                         encountered\n\
+  -P                     do not traverse any symbolic links (default)\n\
+\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -148,9 +152,10 @@ main (int argc, char **argv)
   gid_t gid = (uid_t) -1;	/* New gid; -1 if not to be changed. */
   uid_t old_uid = (uid_t) -1;	/* Old uid; -1 if unrestricted. */
   gid_t old_gid = (uid_t) -1;	/* Old gid; -1 if unrestricted. */
+  /* Bit flags that control how fts works.  */
+  int bit_flags = FTS_PHYSICAL;
   struct Chown_option chopt;
-
-  int errors = 0;
+  int fail = 0;
   int optc;
 
   initialize_main (&argc, &argv);
@@ -163,18 +168,42 @@ main (int argc, char **argv)
 
   chopt_init (&chopt);
 
-  while ((optc = getopt_long (argc, argv, "Rcfhv", long_options, NULL)) != -1)
+  while ((optc = getopt_long (argc, argv, "HLPRcfhv", long_options, NULL))
+	 != -1)
     {
       switch (optc)
 	{
 	case 0:
 	  break;
+
+	case 'H': /* Traverse command-line symlinks-to-directories.  */
+	  bit_flags |= FTS_COMFOLLOW;
+	  break;
+
+	case 'L': /* Traverse all symlinks-to-directories.  */
+	  bit_flags &= ~FTS_PHYSICAL;
+	  bit_flags |= FTS_LOGICAL;
+	  break;
+
+	case 'P': /* Traverse no symlinks-to-directories.  */
+	  bit_flags |= FTS_PHYSICAL;
+	  bit_flags &= ~FTS_LOGICAL;
+	  bit_flags &= ~FTS_COMFOLLOW;
+	  break;
+
+	case 'h': /* --no-dereference: affect symlinks */
+	  chopt.affect_symlink_referent = false;
+	  break;
+
+	case DEREFERENCE_OPTION: /* --dereference: affect the referent
+				    of each symlink */
+	  chopt.affect_symlink_referent = true;
+	  break;
+
 	case REFERENCE_FILE_OPTION:
 	  reference_file = optarg;
 	  break;
-	case DEREFERENCE_OPTION:
-	  chopt.dereference = DEREF_ALWAYS;
-	  break;
+
 	case FROM_OPTION:
 	  {
 	    char *u_dummy, *g_dummy;
@@ -185,21 +214,23 @@ main (int argc, char **argv)
 	      error (EXIT_FAILURE, 0, "%s: %s", quote (optarg), e);
 	    break;
 	  }
+
 	case 'R':
-	  chopt.recurse = 1;
+	  chopt.recurse = true;
 	  break;
+
 	case 'c':
 	  chopt.verbosity = V_changes_only;
 	  break;
+
 	case 'f':
-	  chopt.force_silent = 1;
+	  chopt.force_silent = true;
 	  break;
-	case 'h':
-	  chopt.dereference = DEREF_NEVER;
-	  break;
+
 	case 'v':
 	  chopt.verbosity = V_high;
 	  break;
+
 	case_GETOPT_HELP_CHAR;
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, WRITTEN_BY);
 	default:
@@ -216,7 +247,6 @@ main (int argc, char **argv)
   if (reference_file)
     {
       struct stat ref_stats;
-
       if (stat (reference_file, &ref_stats))
 	error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
 	       quote (reference_file));
@@ -240,11 +270,11 @@ main (int argc, char **argv)
       optind++;
     }
 
-  for (; optind < argc; ++optind)
-    errors |= change_file_owner (1, argv[optind], uid, gid,
-				 old_uid, old_gid, &chopt);
+  fail = chown_files (argv + optind, bit_flags,
+		      uid, gid,
+		      old_uid, old_gid, &chopt);
 
   chopt_free (&chopt);
 
-  exit (errors);
+  exit (fail ? EXIT_FAILURE : EXIT_SUCCESS);
 }
