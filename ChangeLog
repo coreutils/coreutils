@@ -1,6 +1,11 @@
-2003-04-06  Jim Meyering  <jim@meyering.net>
+2003-04-07  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
+
+	* src/stat.c: Add #include directives for Ultrix 4.4.
+	Based on a suggested change from Bert Deknuydt.
+
+2003-04-06  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.maint (makefile-check): New rule.
 	(local-check): Add it.
