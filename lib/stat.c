@@ -1,8 +1,10 @@
 /* Work around the bug in some systems whereby stat/lstat succeeds when
-   given the zero-length file name argument.  The stat/lstat from SunOS4.1.4
+   given the zero-length file name argument.  The stat/lstat from SunOS 4.1.4
    has this bug.  Also work around a deficiency in Solaris systems (up to at
-   least Solaris5.9) regarding the semantics of `lstat ("symlink/", sbuf).'
-   Copyright (C) 1997-2003 Free Software Foundation, Inc.
+   least Solaris 9) regarding the semantics of `lstat ("symlink/", sbuf).'
+
+   Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003 Free
+   Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -102,7 +104,7 @@ slash_aware_lstat (const char *file, struct stat *sbuf)
    Otherwise, return the result of calling the real stat/lstat.
 
    This works around the bug in some systems whereby stat/lstat succeeds when
-   given the zero-length file name argument.  The stat/lstat from SunOS4.1.4
+   given the zero-length file name argument.  The stat/lstat from SunOS 4.1.4
    has this bug.  */
 
 /* This function also provides a version of lstat with consistent semantics

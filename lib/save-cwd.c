@@ -62,7 +62,7 @@ extern int errno;
    support for fchdir, and getcwd is not robust or as efficient.
    So, we prefer to use the open/fchdir approach, but fall back on
    getcwd if necessary.  Some systems lack fchdir altogether: OS/2,
-   Cygwin (as of March 2003), SCO Xenix.  At least SunOS4 and Irix 5.3
+   Cygwin (as of March 2003), SCO Xenix.  At least SunOS 4 and Irix 5.3
    provide the function, yet it doesn't work for partitions on which
    auditing is enabled.  */
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2001-2002 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2001, 2002, 2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the
@@ -61,7 +61,7 @@ utime_null (const char *file)
       || safe_read (fd, &c, sizeof c) == SAFE_READ_ERROR
       || lseek (fd, (off_t) 0, SEEK_SET) < 0
       || full_write (fd, &c, sizeof c) != sizeof c
-      /* Maybe do this -- it's necessary on SunOS4.1.3 with some combination
+      /* Maybe do this -- it's necessary on SunOS 4.1.3 with some combination
 	 of patches, but that system doesn't use this code: it has utimes.
 	 || fsync (fd) < 0
       */

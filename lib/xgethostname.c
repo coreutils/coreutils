@@ -57,7 +57,7 @@ xgethostname ()
 
   size = INITIAL_HOSTNAME_LENGTH;
   /* Use size + 1 here rather than size to work around the bug
-     in SunOS5.5's gethostname whereby it NUL-terminates HOSTNAME
+     in SunOS 5.5's gethostname whereby it NUL-terminates HOSTNAME
      even when the name is longer than the supplied buffer.  */
   hostname = xmalloc (size + 1);
   while (1)

@@ -1,7 +1,9 @@
 /* Work around the bug in some systems whereby lstat succeeds when
-   given the zero-length file name argument.  The lstat from SunOS4.1.4
+   given the zero-length file name argument.  The lstat from SunOS 4.1.4
    has this bug.
-   Copyright (C) 1997-2002 Free Software Foundation, Inc.
+
+   Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003 Free
+   Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
