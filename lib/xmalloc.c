@@ -46,13 +46,6 @@ void free ();
 # define EXIT_FAILURE 1
 #endif
 
-/* Prototypes for functions defined here.  */
-#if defined (__STDC__) && __STDC__
-void *xmalloc (size_t n);
-void *xcalloc (size_t n, size_t s);
-void *xrealloc (void *p, size_t n);
-#endif
-
 #ifndef HAVE_DONE_WORKING_MALLOC_CHECK
 you must run the autoconf test for a properly working malloc -- see malloc.m4
 #endif
@@ -65,17 +58,12 @@ you must run the autoconf test for a properly working realloc -- see realloc.m4
    The caller may set it to some other value.  */
 int xalloc_exit_failure = EXIT_FAILURE;
 
-/* FIXME: describe */
-char *const xalloc_msg_memory_exhausted = N_("Memory exhausted");
-
-/* FIXME: describe */
+/* If non NULL, call this function when memory is exhausted. */
 void (*xalloc_fail_func) () = 0;
 
-#if __STDC__ && (HAVE_VPRINTF || HAVE_DOPRNT)
-void error (int, int, const char *, ...);
-#else
-void error ();
-#endif
+/* If XALLOC_FAIL_FUNC is NULL, or does return, display this message
+   before exiting when memory is exhausted.  Goes through gettext. */
+char *const xalloc_msg_memory_exhausted = N_("Memory exhausted");
 
 static void
 xalloc_fail (void)
@@ -111,8 +99,6 @@ xrealloc (void *p, size_t n)
   return p;
 }
 
-#ifdef NOT_USED
-
 /* Allocate memory for N elements of S bytes, with error checking.  */
 
 void *
@@ -125,5 +111,3 @@ xcalloc (size_t n, size_t s)
     xalloc_fail ();
   return p;
 }
-
-#endif /* NOT_USED */
