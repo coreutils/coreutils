@@ -186,6 +186,28 @@ GNU coreutils NEWS                                    -*- outline -*-
   The usual `--' operand is now supported by chroot, hostid, hostname,
   pwd, sync, and yes.
 
+  `od' now conforms to POSIX better, and is more compatible with BSD:
+
+    The older syntax "od [-abcdfilosx]... [FILE] [[+]OFFSET[.][b]]" now works
+    even without --traditional.  This is a change in behavior if there
+    are one or two operands and the last one begins with +, or if
+    there are two operands and the latter one begins with a digit.
+    For example, "od foo 10" and "od +10" now treat the last operand as
+    an offset, not as a file name.
+
+    -h is no longer documented, and may be withdrawn in future versions.
+    Use -x or -t x2 instead.
+
+    -i is now equivalent to -t dI (not -t d2), and
+    -l is now equivalent to -t dL (not -t d4).
+
+    -s is now equivalent to -t d2.  The old "-s[NUM]" or "-s NUM"
+    option has been renamed to "-S NUM".
+
+    The default output format is now -t oS, not -t o2, i.e., short int
+    rather than two-byte int.  This makes a difference only on hosts like
+    Cray systems where the C short int type requires more than two bytes.
+
   The stat option --filesystem has been renamed to --file-system, for
   consistency with POSIX "file system" and with cp and du --one-file-system.
 
