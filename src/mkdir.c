@@ -26,6 +26,7 @@
 #include "error.h"
 #include "makepath.h"
 #include "modechange.h"
+#include "quote.h"
 
 #ifndef S_IRWXUGO
 # define S_IRWXUGO (S_IRWXU | S_IRWXG | S_IRWXO)
@@ -107,7 +108,7 @@ main (int argc, char **argv)
 	  symbolic_mode = optarg;
 	  break;
 	case 'v': /* --verbose  */
-	  verbose_fmt_string = _("created directory `%s'");
+	  verbose_fmt_string = _("created directory %s");
 	  break;
 	case_GETOPT_HELP_CHAR;
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
@@ -128,7 +129,7 @@ main (int argc, char **argv)
     {
       struct mode_change *change = mode_compile (symbolic_mode, 0);
       if (change == MODE_INVALID)
-	error (1, 0, _("invalid mode `%s'"), symbolic_mode);
+	error (1, 0, _("invalid mode %s"), quote (symbolic_mode));
       else if (change == MODE_MEMORY_EXHAUSTED)
 	error (1, 0, _("virtual memory exhausted"));
       newmode = mode_adjust (newmode, change);
@@ -146,9 +147,10 @@ main (int argc, char **argv)
 	{
 	  fail = mkdir (argv[optind], newmode);
 	  if (fail)
-	    error (0, errno, _("cannot create directory `%s'"), argv[optind]);
+	    error (0, errno, _("cannot create directory %s"),
+		   quote (argv[optind]));
 	  else if (verbose_fmt_string)
-	    error (0, 0, verbose_fmt_string, argv[optind]);
+	    error (0, 0, verbose_fmt_string, quote (argv[optind]));
 
 	  /* mkdir(2) is required to honor only the file permission bits.
 	     In particular, it needn't do anything about `special' bits,
@@ -157,8 +159,8 @@ main (int argc, char **argv)
 	    {
 	      fail = chmod (argv[optind], newmode);
 	      if (fail)
-		error (0, errno, _("cannot set permissions of directory `%s'"),
-		       argv[optind]);
+		error (0, errno, _("cannot set permissions of directory %s"),
+		       quote (argv[optind]));
 	    }
 	}
 
