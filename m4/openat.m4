@@ -21,6 +21,7 @@
 
 AC_DEFUN([gl_FUNC_OPENAT],
 [
+  AC_LIBSOURCES([openat.c, openat.h])
   AC_REQUIRE([gl_USE_SYSTEM_EXTENSIONS])
   AC_REPLACE_FUNCS(openat)
   case $ac_cv_func_openat in
@@ -34,5 +35,5 @@ AC_DEFUN([gl_FUNC_OPENAT],
 
 AC_DEFUN([gl_PREREQ_OPENAT],
 [
-  gl_SAVE_CWD
+  AC_REQUIRE([gl_SAVE_CWD])
 ])
