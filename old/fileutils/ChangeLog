@@ -1,5 +1,7 @@
 2000-12-26  Jim Meyering  <meyering@lucent.com>
 
+	* Version 4.0.35.
+
 	* tests/mkdir/perm: Disable the test if the working directory has
 	the sticky bit set.
 	* tests/cp/cp-parents: Likewise.
