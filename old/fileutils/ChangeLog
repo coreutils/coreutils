@@ -1,3 +1,190 @@
+1999-04-18  Paul Eggert  <eggert@twinsun.com>
+
+	Fix shred to do the right thing with off_t longer than long.
+	Merge large-integer parsing code with similar code in dd.c,
+	and put the resulting in lib/xstrtoumax.c so that other programs
+	can use it.  Instead of adding a new lib/xstrtoumax.h I thought
+	it cleaner to put all the xstroto* declarations into a single
+	header, which for now is lib/xstrtol.h for lack of a better place.
+	(Mayby lib/xstdlib.h would be better?  :-)
+
+	I thought of several other problems with shredding regular files;
+	shredding devices is much more reliable.  So I changed the defaults
+	to be more suitable for shredding devices; this should help encourage
+	users to do the right thing.
+
+	pfstatus isn't portable to environments with varying width
+	fonts, or with internationalized environments where the byte
+	count of the message is not the same as its print width.
+	Rather than deal with this, I just simplified it to not do
+	tricks with carriage-returns and spaces.  (I'm also worried
+	that vprintf may not return the right value on some hosts; I
+	vaguelly recall this being a problem.)  As a result, -v and -
+	no longer conflict.
+
+	When removing a special file, try to truncate it first, but don't
+	worry if this reports an error.
+
+	Try to find the size of a non-regular file by seeking to its end.
+
+	Various porting fixes, mostly because of a port to SunOS 4.1.4 cc.
+
+	Some other minor bug fixes.
+
+	* lib/xstrtoul.h: Remove this file.
+	* lib/xstrtoumax.c: New file.
+
+	* configure.in (AC_CHECK_FUNCS): Add strtoull, strtoumax, strtouq.
+
+	* lib/xstrtoul.c (STRING_TO_UNSIGNED): Remove.
+	(__strtol, __strtol_t, __xstrtol): New macros.
+
+	* lib/xstrtol.c (__strtol, __strtol_t, __xstrtol):
+	New macros to specify the
+	underlying function, its returned type, and our function.  Default to
+	values suitable for xstrtol.
+
+	Include <ctype.h>, since we use its macros.
+
+	(ULONG_MAX, LONG_MAX, ISBLANK): Remove: no longer needed.
+	(ISSPACE): New macro.
+
+	(bkm_scale, bkm_scale_by_power, __xstrtol, main): __unsigned long int
+	-> __strtol_t.
+
+	(__xstrtol): Depend on whether __strtol_t is an unsigned type, not on
+	whether STRING_TO_UNSIGNED is defined.  Skip isspace chars, not
+	isblank chars, to match strtol.  When returning
+	LONGINT_INVALID_SUFFIX_CHAR, store the value that we computed into
+	*val.
+
+	* lib/xstrtol.h (__xstrtol, __strtol, __unsigned): Remove macro decls.
+	<inttypes.h>: Include if HAVE_INTTYPES_H.
+	(_DECLARE_XSTRTOL): New macro.
+	(xstrtol, xstrtoul, xstrtoumax): Declare all three functions, so that
+	we need only one include file, not three.
+	(_STRTOL_ERROR): Do not undef, as this is no longer needed.
+	Reword overflow message so that it's independent of type.
+
+	* lib/Makefile.am (libfu_a_SOURCES): Add xstrtoumax.c.
+	(noinst_HEADERS): Remove xstrtoul.h.
+
+	* lib/xmalloc.c (xalloc_fail):
+	Pass xalloc_msg_memory_exhausted through gettext.
+
+	* lib/getdate.y:
+	<stdlib.h>: Include if HAVE_STDLIB_H, since bison 1.27 invokes "free".
+	(LookupWord, yylex): Don't pass negative char to ctype macros.
+
+	* doc/fileutils.texi:
+	Explain why shredding devices is more reliable, and why the
+	default options are more suitable for devices.
+
+	Remove withdrawn options -b or --no-contents, -c or --freed-contents,
+	-C or --all-contents, -k or --no-links, -l or --ordinary-links, -L or
+	--all-links.
+
+	Add -R or --remove, -s or --size.
+
+	-v can no longer be doubled.
+
+	`file system' --> `filesystem' uniformly.
+
+	* src/chgrp.c: Include xstrtol.h, not obsolete file xstrtoul.h.
+
+	* src/shred.c: Include xstrtol.h, not obsolete file xstrtoul.h.
+	"human.h", "xalloc.h": Include.
+	(attribute): Remove; no longer needed.
+	(xstrdup): New decl.
+	(STDOUT_FILENO): New macro.
+	(O_NOCTTY): Make sure it's always defined, even if HAVE_CONFIG_H.
+
+	The following changes have effect only if !HAVE_CONFIG_H.
+	<ctype.h>: New include.
+	(RETSIGTYPE): Remove bogus semicolon at end.
+	(STDOUT_FILENO, uintmax_t, human_readable, LONGEST_HUMAN_READABLE):
+	New macros.
+	(xstrtoumax): Renamed from xstrtoul, with corresponding type changes.
+	Handle suffixes like the real routine does.
+	(error): Remove bogus assignment of errno to errnum.
+	(xmalloc, xstrdup): New functions.
+
+	(O_NOCTTY): Define even if !HAVE_CONFIG_H.
+	(S_ISFIFO, S_ISSOCK): New macros, if not already defined.
+	(OUTPUT_BLOCK_SIZE): New macro.
+	(struct Options.verbose): Now a boolean, since we no longer have two
+	levels of verbosity.
+	(long_opts, usage, main): Remove -D or --device option.  Invert -p or
+	--preserve option, and rename it to -R or --remove.
+	(usage): Describe G suffix.
+	(usage): "-" no longer conflicts with -v.
+	(UCHAR_MAX): Indent `#error' so that SunOS 4.1.4 cc doesn't reject it.
+	(ind): Portability fixes: return word32, not unsigned; multiply by
+	sizeof (word32) instead of shifting left by 2.
+	(isaac_refill, isaac_mix): Comment out size of array parameter, as
+	ansi2knr mishandles this.
+	(status_visible, status_pos, pfstatus, flushstatus): Remove, since
+	pfstatus isn't portable to users with varying width fonts, or
+	internationalized messages, and vfprintf is problematic.  All callers
+	of pfstatus changed to use error instead; this removes incompatibility
+	of -v with -.  All calls to flushstatus removed.
+	(dopass, do_wipefd): Do not translate non-English msgs with gettext.
+
+	(dopass): Cast lseek constant arguments to (off_t) for benefit
+	of pre-ANSI compilers; fix one lseek call whose args were interchanged.
+	Remove unnecessary casts to (off_t).  Do not check for EIO
+	when determining file size; this was just my earlier wild guess.
+	Use human_readable to print off_t, instead of casting to unsigned long
+	(which doesn't work in Solaris 2.6, where off_t is longer than long).
+	Output human-readable sizes, instead of always using "K".
+	Check for offset overflow (it happened to me in SunOS 4.1.4).
+	(do_wipefd): Do not insist on regular files, but do check for special
+	files that cannot possibly be shredded.
+	Use xmalloc instead of malloc + check.
+	Do not inspect st_size for non-regular files.
+	Try to find the size of a non-regular file by seeking to its end.
+	Do not assume that a regular file of size-0 has unknown size.
+	Check for regular files with negative sizes,
+	and for overflow after rounding to next block.
+	Always try to truncate, even for special files, but do not report an
+	error if truncation fails on a special file.
+
+	(dopass, wipefile): Do not return 1 for special files; the caller
+	doesn't care any more.
+
+	(wipefd): Remove unnecessary (and nonportable) check for
+	whether the file descriptor is read-only.  Remove
+	no-longer-needed check for `-v -'.
+
+	(incname): Return 1 for carry bit, like the documentation says.
+
+	(wipename, wipefile): Accept new argument, specifying the
+	quoted file name.  All callers changed.
+
+	(wipename): Use xstrdup instead of strdup+error check.
+
+	(wipefile): Check for ENOTDIR when opening /dev/fd/NNN. Check for
+	errors in NNN more carefully. Restore errno after the check.
+	Check for errors when closing the file descriptor.
+	Use more consistent wording when unable to remove a file.
+
+	(main): Do not remove files by default.
+	Use xstrtoumax instead of xstrtoul uniformly, since xstrtoul won't
+	exist if !HAVE_CONFIG_H.
+	In diagnostics, quote invalid operands to -n and -s options.
+	Allow T, P, E, Z, and Y suffixes in -s operand.
+	flags.verbose is now a boolean, not a counter.
+	Use STDOUT_FILENO instead of 1, for clarity.
+
+	* lib/human.c:
+	Include xstrtol.h, not xstrtoul.h, since xstrtol.h now defines all the
+	xstrto... functions.
+
+	* src/dd.c: Include xstrtol.h.
+	(parse_integer): Migrate most of the work into the new xstrtoumax fn.
+
+	* lib/xstrtoumax.c: New file.
+
 1999-04-18  Jim Meyering  <meyering@ascend.com>
 
 	* src/dd.c (main): Open the output file with *read* access
