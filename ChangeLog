@@ -2,9 +2,16 @@
 
 	* Version 5.0.1.
 
+	* src/chown-core.c (change_file_owner): Do not restore any special
+	permission bits (e.g., set-user-ID, set-group-ID) that are reset
+	by chown(2) on some systems.  Suggestion and insistence :-) from
+	Michael Stone.
+
+	* src/remove.c: Remove `#pragma alloca'
+
 	* tests/input-tty: Also check `test -t 1'.
-	This is necessary on linux-2.4.21, otherwise, the test
-	stty/basic-1 would hang when run in the background.
+	This is necessary on linux-2.4.21.  Otherwise, the stty/basic-1
+	test would block when run in the background.
 
 2003-07-11  Jim Meyering  <jim@meyering.net>
 
