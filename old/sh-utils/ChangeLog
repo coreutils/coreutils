@@ -1,6 +1,23 @@
+2000-01-23  Jim Meyering  <meyering@lucent.com>
+
+	* configure.in (OPTIONAL_BIN_PROGS, OPTIONAL_BIN_ZCRIPTS, MAN):
+	AC_SUBST these not here, but rather in m4/, so that the now-shared
+	lib/Makefile.am are all the same.
+	(AC_CHECK_FUNCS): Remove check for utmpname, since it's already
+	in m4/prereq.m4.
+	Remove many function checks (moved to m4/.)
+
+	* configure.in (SEQ_LIBM): Remove AC_SUBST of a constant.
+	* src/Makefile.am (seq_LDADD): Add -lm rather than constant $(SEQ_LIBM).
+
 2000-01-22  Jim Meyering  <meyering@lucent.com>
 
+	* src/sys2.h [! HAVE_DECL_STRTOUL]: Declare strtoul.
+	[! HAVE_DECL_STRTOULL]: Declare strtoull.
+	Required for some AIX systems.  Reported by Christian Krackowizer.
+
 	* configure.in (ALL_LINGUAS): Add Slovenian (sl).
+	(AC_CHECK_HEADERS): Move these checks into m4/.
 
 	* src/seq.c (enum Format_type): Declare.
 	(format_type): New global to take place of intconv.
