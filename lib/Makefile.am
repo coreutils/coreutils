@@ -29,6 +29,7 @@ version-etc.h xalloc.h xstrtol.h
 
 BUILT_SOURCES = getdate.c lstat.c stat.c
 MAINTAINERCLEANFILES = $(BUILT_SOURCES)
+DISTCLEANFILES = lstat.c stat.c
 
 EXTRA_DIST = xstat.in
 lstat.c: xstat.in
