@@ -122,12 +122,12 @@ static int term PARAMS ((void));
 static int and PARAMS ((void));
 static int or PARAMS ((void));
 
-static void test_syntax_error PARAMS ((char *format, char *arg))
+static void test_syntax_error PARAMS ((char const *format, char const *arg))
      ATTRIBUTE_NORETURN;
 static void beyond PARAMS ((void)) ATTRIBUTE_NORETURN;
 
 static void
-test_syntax_error (char *format, char *arg)
+test_syntax_error (char const *format, char const *arg)
 {
   fprintf (stderr, "%s: ", argv[0]);
   fprintf (stderr, format, arg);
