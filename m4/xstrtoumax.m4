@@ -7,6 +7,7 @@ AC_DEFUN(jm_AC_PREREQ_XSTRTOUMAX,
   AC_REQUIRE([jm_AC_TYPE_UINTMAX_T])
   AC_REQUIRE([jm_AC_HEADER_INTTYPES_H])
   AC_REQUIRE([jm_AC_TYPE_UNSIGNED_LONG_LONG])
+  AC_CHECK_DECLS([strtoul, strtoull])
   AC_CHECK_HEADERS(stdlib.h)
 
   AC_CACHE_CHECK([whether <inttypes.h> defines strtoumax as a macro],
