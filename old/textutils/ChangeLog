@@ -1,3 +1,16 @@
+1999-07-30  Jim Meyering  <meyering@ascend.com>
+
+	* Version 1.22o.
+
+	* src/tail.c: New option: --pid=PID.
+	Include signal.h for kill prototype.
+	(pid): New global.
+	(long_options): Add `pid'.
+	(usage): Describe it.
+	(tail_forever): Implement it.
+	(parse_options): Handle the new option and required arg.
+	Suggestion and pseudo-code from Karl Heuer.
+
 1999-07-27  Jim Meyering  <meyering@ascend.com>
 
 	* lib/linebuffer.c: Include <sys/types.h> now that linebuffer.h uses
