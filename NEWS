@@ -1,4 +1,8 @@
 [4.5.5]
+* du has been rewritten to use a variant of ftw.c from GNU libc
+* du now counts the space associated with a directory's directory entry,
+  even if it cannot list or chdir into that subdirectory.
+* du -S now includes the st_size of each entry corresponding to a subdirectory
 * rm on FreeBSD can once again remove directories from NFS-mounted file systems
 * ls has a new option --dereference-command-line-symlink-to-dir, which
   corresponds to the new default behavior when none of -d, -l -F, -H, -L
