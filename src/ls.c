@@ -572,11 +572,11 @@ static size_t dired_pos;
 #define DIRED_PUTCHAR(c) do {putchar ((c)); ++dired_pos;} while (0)
 
 /* Write S to STREAM and increment DIRED_POS by S_LEN.  */
-#define FPUTS(s, stream, s_len) \
+#define DIRED_FPUTS(s, stream, s_len) \
     do {fputs ((s), (stream)); dired_pos += s_len;} while (0)
 
-/* Like FPUTS, but for use when S is a literal string.  */
-#define FPUTS_LITERAL(s, stream) \
+/* Like DIRED_FPUTS, but for use when S is a literal string.  */
+#define DIRED_FPUTS_LITERAL(s, stream) \
     do {fputs ((s), (stream)); dired_pos += sizeof((s)) - 1;} while (0)
 
 #define DIRED_INDENT()							\
@@ -584,7 +584,7 @@ static size_t dired_pos;
       {									\
 	/* FIXME: remove the `&& format == long_format' clause.  */	\
 	if (dired && format == long_format)				\
-	  FPUTS_LITERAL ("  ", stdout);					\
+	  DIRED_FPUTS_LITERAL ("  ", stdout);				\
       }									\
     while (0)
 
@@ -1598,7 +1598,7 @@ print_dir (const char *name, const char *realname)
       dired_pos += quote_name (stdout, realname ? realname : name,
 			       dirname_quoting_options);
       PUSH_CURRENT_DIRED_POS (&subdired_obstack);
-      FPUTS_LITERAL (":\n", stdout);
+      DIRED_FPUTS_LITERAL (":\n", stdout);
     }
 
   if (format == long_format || print_block_size)
@@ -1608,11 +1608,11 @@ print_dir (const char *name, const char *realname)
 
       DIRED_INDENT ();
       p = _("total");
-      FPUTS (p, stdout, strlen (p));
+      DIRED_FPUTS (p, stdout, strlen (p));
       DIRED_PUTCHAR (' ');
       p = human_readable (total_blocks, buf, ST_NBLOCKSIZE, output_units,
 			  human_readable_base);
-      FPUTS (p, stdout, strlen (p));
+      DIRED_FPUTS (p, stdout, strlen (p));
       DIRED_PUTCHAR ('\n');
     }
 
@@ -2305,7 +2305,7 @@ print_long_format (const struct fileinfo *f)
       p += s;
       *p++ = ' ';
 
-      /* NUL-terminate the string -- fputs (via FPUTS) requires it.  */
+      /* NUL-terminate the string -- fputs (via DIRED_FPUTS) requires it.  */
       *p = '\0';
     }
   else
@@ -2329,7 +2329,7 @@ print_long_format (const struct fileinfo *f)
     }
 
   DIRED_INDENT ();
-  FPUTS (buf, stdout, p - buf);
+  DIRED_FPUTS (buf, stdout, p - buf);
   print_name_with_quoting (f->name, f->stat.st_mode, f->linkok,
 			   &dired_obstack);
 
@@ -2337,7 +2337,7 @@ print_long_format (const struct fileinfo *f)
     {
       if (f->linkname)
 	{
-	  FPUTS_LITERAL (" -> ", stdout);
+	  DIRED_FPUTS_LITERAL (" -> ", stdout);
 	  print_name_with_quoting (f->linkname, f->linkmode, f->linkok - 1,
 				   NULL);
 	  if (indicator_style != none)
