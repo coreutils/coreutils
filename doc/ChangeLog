@@ -1,3 +1,7 @@
+2004-02-25  Paul Eggert  <eggert@twinsun.com>
+
+	* coreutils.texi (Block size): Document new envvar BLOCKSIZE.
+
 2004-03-24  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (check-texinfo): Add a check to ensure future
