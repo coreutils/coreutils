@@ -76,6 +76,8 @@ save_cwd (struct saved_cwd *cwd)
 #if HAVE_FCHDIR
       cwd->desc = open (".", O_RDONLY | O_DIRECTORY);
       if (cwd->desc < 0)
+	cwd->desc = open (".", O_WRONLY | O_DIRECTORY);
+      if (cwd->desc < 0)
 	{
 	  cwd->name = xgetcwd ();
 	  return cwd->name == NULL;
