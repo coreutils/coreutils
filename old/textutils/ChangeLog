@@ -1,3 +1,31 @@
+Sat Mar  9 13:30:12 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* cat.c cksum.c comm.c csplit.c cut.c expand.c fmt.c
+	fold.c head.c join.c md5sum.c nl.c od.c paste.c pr.c sort.c
+	split.c sum.c tac.c tail.c tr.c unexpand.c uniq.c wc.c (main):
+	Initialize for internationalized message support: call setlocale,
+	bindtextdomain, and textdomain.
+	* system.h: Add definitions and includes for NLS.
+	* Makefile.am (SUBDIRS): Add @INTLSUB@ and @POSUB@.
+	* src/Makefile.am (datadir): Define.
+	(localedir): Define.
+	(DEFS): Add LOCALEDIR definition.
+	(LDADD): Add @INTLLIBS@.
+	* aclocal.m4: Add NLS-related macro definitions from
+	gettext distribution.
+	* acconfig.h (ENABLE_NLS, HAVE_CATGETS, HAVE_GETTEXT, HAVE_LC_MESSAGES,
+	HAVE_STPCPY): New macros.
+	* configure.in (PACKAGE): Define with AC_DEFINE_UNQUOTED.
+	(VERSION): Likewise.
+	(ALL_LINGUAS): Define.
+	(AC_CHECK_HEADERS): Add float.h.
+	(ud_GNU_GETTEXT): Use it.
+	Link an nls file.
+	(AC_OUTPUT): Reflect addition of two new directories, intl and po.
+	Create po/Makefile.
+
+  	From François Pinard.
+
 Wed Feb 28 20:32:48 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* src/Makefile.am: Adapt for automake-0.30.
