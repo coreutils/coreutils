@@ -1,3 +1,8 @@
+2000-12-02  Jim Meyering  <meyering@lucent.com>
+
+	* tests/dd/Makefile.am (TESTS): Add skip-seek2
+	* tests/dd/skip-seek2: New file.
+
 2000-12-01  Paul Eggert  <eggert@twinsun.com>
 
 	* src/dd.c (skip, dd_copy): Use ssize_t to store result of
