@@ -83,7 +83,7 @@ double
 physmem_total ()
 {
 #if defined _SC_PHYS_PAGES && defined _SC_PAGESIZE
-  {
+  { /* This works on linux-gnu, solaris2 and cygwin.  */
     double pages = sysconf (_SC_PHYS_PAGES);
     double pagesize = sysconf (_SC_PAGESIZE);
     if (0 <= pages && 0 <= pagesize)
@@ -187,7 +187,7 @@ double
 physmem_available ()
 {
 #if defined _SC_AVPHYS_PAGES && defined _SC_PAGESIZE
-  {
+  { /* This works on linux-gnu, solaris2 and cygwin.  */
     double pages = sysconf (_SC_AVPHYS_PAGES);
     double pagesize = sysconf (_SC_PAGESIZE);
     if (0 <= pages && 0 <= pagesize)
