@@ -1,3 +1,14 @@
+2000-03-17  Jim Meyering  <meyering@lucent.com>
+
+	* unicodeio.c (<string.h>): Include only #if HAVE_STRING_H.
+	Otherwise, include <strings.h>
+
+2000-03-17  Bruno Haible  <haible@clisp.cons.org>
+
+	* unicodeio.c (utf8_wctomb): New function.
+	(print_unicode_char): Pass the Unicode character to iconv in UTF-8
+	format instead of in UCS-4 with platform dependent endianness.
+
 2000-03-07  Paul Eggert  <eggert@twinsun.com>
 
 	* lib/savedir.c (savedir): Work even if directory size is
