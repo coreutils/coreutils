@@ -382,8 +382,6 @@ localcharset_.c: localcharset.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/localcharset.c; then echo $(srcdir)/localcharset.c; else echo localcharset.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > localcharset_.c
 long-options_.c: long-options.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/long-options.c; then echo $(srcdir)/long-options.c; else echo long-options.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > long-options_.c
-lstat_.c: lstat.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/lstat.c; then echo $(srcdir)/lstat.c; else echo lstat.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > lstat_.c
 makepath_.c: makepath.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/makepath.c; then echo $(srcdir)/makepath.c; else echo makepath.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > makepath_.c
 malloc_.c: malloc.c $(ANSI2KNR)
@@ -446,8 +444,6 @@ save-cwd_.c: save-cwd.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/save-cwd.c; then echo $(srcdir)/save-cwd.c; else echo save-cwd.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > save-cwd_.c
 savedir_.c: savedir.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/savedir.c; then echo $(srcdir)/savedir.c; else echo savedir.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > savedir_.c
-stat_.c: stat.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/stat.c; then echo $(srcdir)/stat.c; else echo stat.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > stat_.c
 stime_.c: stime.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/stime.c; then echo $(srcdir)/stime.c; else echo stime.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > stime_.c
 stpcpy_.c: stpcpy.c $(ANSI2KNR)
@@ -517,13 +513,13 @@ fsusage_.o ftruncate_.o full-write_.o getdate_.o getgroups_.o \
 gethostname_.o getline_.o getloadavg_.o getopt_.o getopt1_.o getpass_.o \
 getstr_.o getugroups_.o getusershell_.o group-member_.o hard-locale_.o \
 hash_.o human_.o idcache_.o isdir_.o lchown_.o linebuffer_.o \
-localcharset_.o long-options_.o lstat_.o makepath_.o malloc_.o \
-mbswidth_.o md5_.o memcasecmp_.o memchr_.o memcmp_.o memcoll_.o \
-memcpy_.o memmove_.o memset_.o mktime_.o modechange_.o mountlist_.o \
-nanosleep_.o obstack_.o path-concat_.o posixtm_.o putenv_.o quote_.o \
-quotearg_.o readtokens_.o readutmp_.o realloc_.o regex_.o rmdir_.o \
-rpmatch_.o safe-read_.o same_.o save-cwd_.o savedir_.o stat_.o stime_.o \
-stpcpy_.o strcasecmp_.o strcspn_.o strdup_.o strftime_.o stripslash_.o \
+localcharset_.o long-options_.o makepath_.o malloc_.o mbswidth_.o \
+md5_.o memcasecmp_.o memchr_.o memcmp_.o memcoll_.o memcpy_.o \
+memmove_.o memset_.o mktime_.o modechange_.o mountlist_.o nanosleep_.o \
+obstack_.o path-concat_.o posixtm_.o putenv_.o quote_.o quotearg_.o \
+readtokens_.o readutmp_.o realloc_.o regex_.o rmdir_.o rpmatch_.o \
+safe-read_.o same_.o save-cwd_.o savedir_.o stime_.o stpcpy_.o \
+strcasecmp_.o strcspn_.o strdup_.o strftime_.o stripslash_.o \
 strncasecmp_.o strndup_.o strnlen_.o strpbrk_.o strstr_.o strtod_.o \
 strtol_.o strtoul_.o strtoull_.o strtoumax_.o strverscmp_.o \
 unicodeio_.o userspec_.o utime_.o version-etc_.o xgetcwd_.o \
