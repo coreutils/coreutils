@@ -1,7 +1,7 @@
 1997-12-14  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* check-decl.m4: s/DECLARATION_/DECL_/g.
-	Add memchr.
+	Add lseek and memchr.
 
 	* decl.m4: s/HAVE_DECLARATION_/HAVE_DECL_/g.
      	T.E.Dickey <dickey@clark.net> said that some older preprocessors
