@@ -224,7 +224,7 @@ my @tv = (
 # -w/W PAGE_WIDTH [-J] options
 ['10wa', '-W 72 -J -l17 -f', [\'tFFt-ll'], [\'W72Jl17f-ll'], 0],
 ['10wb', '-w 72 -J -l17 -f', [\'tFFt-ll'], [\'W72Jl17f-ll'], 0],
-['10wc', '-W 72 -l17 -f', [\'tFFt-ll'], [\'W72l17f-ll'], 0],
+['10wc', '-W 72 -l17 -f', [\'tFFt-ll'], [\'W-72l17f-ll'], 0],
 ['10wd', '-w 72 -l17 -f', [\'tFFt-ll'], [\'w72l17f-ll'], 0],
 ['10we', '-W 28 -l17 -f', [\'tFFt-ll'], [\'W28l17f-ll'], 0],
 ['10wf', '-W 27 -l17 -f', [\'tFFt-ll'], [\'W27l17f-ll'], 0],
@@ -302,11 +302,11 @@ my @tv = (
 #
 # new long-options -W/-S/-J disentangle those options (see also No.`10*')
 # columns, truncated = 72   /  no separator :
-['14g', '-2 -S -f', [\'t_notab'], [\'2Sf-t_notab'], 0],
+['14g', '-2 -S -f', [\'t_notab'], [\'2-Sf-t_notab'], 0],
 # full lines, no truncation /  separator = TAB :  (Input: -S"<TAB>")
 ['14h', '-2 -S"	" -J -f', [\'t_notab'], [\'2sf-t_notab'], 0],
 # columns, truncated = 72   /  separator `:' :
-['14i', '-2 -S: -f', [\'t_notab'], [\'2S_f-t_notab'], 0],
+['14i', '-2 -S: -f', [\'t_notab'], [\'2-S_f-t_notab'], 0],
 # full lines, no truncation /  separator = `:' :
 ['14j', '-2 -S: -J -f', [\'t_notab'], [\'2s_f-t_notab'], 0],
 # columns, truncated = 60   /  separator = space:
