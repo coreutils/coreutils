@@ -1,5 +1,5 @@
 /* dd -- convert a file while copying it.
-   Copyright (C) 85, 90, 91, 1995-2001 Free Software Foundation, Inc.
+   Copyright (C) 85, 90, 91, 1995-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -89,10 +89,10 @@
 char *program_name;
 
 /* The name of the input file, or NULL for the standard input. */
-static char *input_file = NULL;
+static char const *input_file = NULL;
 
 /* The name of the output file, or NULL for the standard output. */
-static char *output_file = NULL;
+static char const *output_file = NULL;
 
 /* The number of bytes in which atomic reads are done. */
 static size_t input_blocksize = 0;
@@ -793,7 +793,8 @@ skip_via_lseek (char const *filename, int fdesc, off_t offset, int whence)
    nonzero.  */
 
 static void
-skip (int fdesc, char *file, uintmax_t records, size_t blocksize, char *buf)
+skip (int fdesc, char const *file, uintmax_t records, size_t blocksize,
+      char *buf)
 {
   off_t offset = records * blocksize;
 
