@@ -88,7 +88,7 @@ char *strdup ();
    otherwise return 0. */
 
 static int
-isnumber (str)
+is_number (str)
      const char *str;
 {
   for (; *str; str++)
@@ -156,7 +156,7 @@ parse_user_spec (spec_arg, uid, gid, username_arg, groupname_arg)
       if (pwd == NULL)
 	{
 
-	  if (!isnumber (u))
+	  if (!is_number (u))
 	    error_msg = "invalid user";
 	  else
 	    {
@@ -202,7 +202,7 @@ parse_user_spec (spec_arg, uid, gid, username_arg, groupname_arg)
       grp = getgrnam (g);
       if (grp == NULL)
 	{
-	  if (!isnumber (g))
+	  if (!is_number (g))
 	    error_msg = "invalid group";
 	  else
 	    *gid = atoi (g);
