@@ -1609,19 +1609,25 @@ one on the line with the filename, the file is noted as having
 failed the test.  Otherwise, the file passes the test.
 By default, for each valid line, one line is written to standard
 output indicating whether the named file passed the test.
+After all checks have been performed, if there were any failures,
+a warning is issued to standard error.
 Use the @samp{--status} option to inhibit that output.
 If any listed file cannot be opened or read, if any valid line has
-a MD5 checksum inconsistent with the associated file, or if no valid
-line is found, exit with a non-zero status.  Otherwise, exit successfully.
+an MD5 checksum inconsistent with the associated file, or if no valid
+line is found, @code{md5sum} exits with non-zero status.  Otherwise,
+it exits successfully.
 
 @itemx --status
 @opindex --status
 @cindex verifying MD5 checksums
-When verifying checksums, don't generate any output.
+This option is useful only when verifying checksums.
+When verifying checksums, don't generate the default one-line-per-file
+diagnostic and don't output the warning summarizing any failures.
+Failures to open or read a file still evoke individual diagnostics to
+standard error.
 If all listed files are readable and are consistent with the associated
 MD5 checksums, exit successfully.  Otherwise exit with a status code
-indicating there was a failure.  Failures to open or read a file still
-evoke diagnostics to standard error.
+indicating there was a failure.
 
 @itemx --string=@var{string}
 @opindex --string
