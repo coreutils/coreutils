@@ -1,3 +1,7 @@
+2004-06-06  Jim Meyering  <jim@meyering.net>
+
+	* getdate.y: Update from gnulib.
+
 2004-05-25  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* xreadlink.c: Include xreadlink.h first, to catch .h file
