@@ -14,10 +14,27 @@ trap "status=$?; $STTY `cat $saved_state`; exit $status" 0 1 2 3 15
 $STTY `cat $saved_state` || exit 1
 
 # Build a list of all boolean options stty accepts on this system.
-options=`stty -a|tail +2|tr ';' '\012'|sed 's/ =.*//;s/^ //'|tr -s ' -' '\012'`
+options=`stty -a|tail +2|tr ';' '\012'|sed '/ = /d;s/^ //'|tr -s ' -' '\012'`
 
+# Take them one at a time, with and without the leading `-'.
 for opt in $options; do
-  echo $opt
+  $STTY $opt || exit 1
+  case $opt in
+    # The following list of reversible options was generated with
+    # grep -w REV stty.c|grep '{"'|sed 's/....//;s/".*//'|fmt \
+    #   |tr ' ' '|'|sed 's/$/) ;;/'
+    parenb|parodd|hupcl|hup|cstopb|cread|clocal|crtscts|ignbrk|brkint|ignpar) ;;
+    parmrk|inpck|istrip|inlcr|igncr|icrnl|ixon|ixoff|tandem|iuclc|ixany) ;;
+    imaxbel|opost|olcuc|ocrnl|onlcr|onocr|onlret|ofill|ofdel|isig|icanon) ;;
+    iexten|echo|echoe|crterase|echok|echonl|noflsh|xcase|tostop|echoprt) ;;
+    prterase|echoctl|ctlecho|echoke|crtkill|evenp|parity|oddp|nl|cooked|raw) ;;
+    pass8|litout|cbreak|decctlq|tabs|lcase|LCASE) ;;
+    *) # Skip options that aren't reversible.
+       continue;;
+  esac
+  $STTY -$opt || exit 1
 done
+
+# grep -w REV stty.c|grep '{"'|sed 's/....//;s/".*//'
 
 exit 0
