@@ -932,7 +932,7 @@ decode_format_string (s)
 						   * sizeof (struct tspec)));
 	}
 
-      bcopy ((char *) &tspec, (char *) &spec[n_specs], sizeof (struct tspec));
+      memcpy ((char *) &spec[n_specs], (char *) &tspec, sizeof (struct tspec));
       ++n_specs;
     }
 
@@ -1101,7 +1101,7 @@ write_block (current_offset, n_bytes, prev_block, curr_block)
   static int first = 1;
   static int prev_pair_equal = 0;
 
-#define EQUAL_BLOCKS(b1, b2) (bcmp ((b1), (b2), bytes_per_block) == 0)
+#define EQUAL_BLOCKS(b1, b2) (memcmp ((b1), (b2), bytes_per_block) == 0)
 
   if (abbreviate_duplicate_blocks
       && !first && n_bytes == bytes_per_block
@@ -1438,7 +1438,7 @@ dump ()
 	 is at least as large as n_bytes_read.  */
       bytes_to_write = l_c_m * (int) ((n_bytes_read + l_c_m - 1) / l_c_m);
 
-      bzero (block[idx] + n_bytes_read, bytes_to_write - n_bytes_read);
+      memset (block[idx] + n_bytes_read, 0, bytes_to_write - n_bytes_read);
       write_block (current_offset, bytes_to_write,
 		   block[!idx], block[idx]);
       current_offset += n_bytes_read;
