@@ -812,7 +812,7 @@ main (int argc, char **argv)
 
 	  if (nfiles > 1)
 	    {
-	      error (0, 0, "too many non-option arguments");
+	      error (0, 0, _("too many non-option arguments"));
 	      usage (1);
 	    }
 	  names[nfiles++] = optarg;
@@ -830,7 +830,7 @@ main (int argc, char **argv)
 
   if (nfiles != 2)
     {
-      error (0, 0, "too few non-option arguments");
+      error (0, 0, _("too few non-option arguments"));
       usage (1);
     }
 

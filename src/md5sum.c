@@ -337,7 +337,7 @@ md5_check (const char *checkfile_name, int binary)
 
   if (ferror (checkfile_stream))
     {
-      error (0, 0, "%s: read error", checkfile_name);
+      error (0, 0, _("%s: read error"), checkfile_name);
       return 1;
     }
 
