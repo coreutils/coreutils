@@ -1,7 +1,8 @@
 2003-06-12  Jim Meyering  <jim@meyering.net>
 
-	* coreutils.texi (wc invocation): Tweak wording: wc prints them in
-	the order `line, word, byte'.  Suggestion from Keith M. Briggs.
+	* coreutils.texi (wc invocation): Tweak wording: wc prints counts in
+	the order `newline, word, byte'.  Suggestion from Keith M. Briggs.
+	Also change `lines' to `newlines'.
 
 2003-05-14  Jim Meyering  <jim@meyering.net>
 
