@@ -248,10 +248,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   --time=WORD            set time given by WORD: access atime use (same as -a)\n\
                            modify mtime (same as -m)\n\
 "), stdout);
-      fputs (_("\
-      --help             display this help and exit\n\
-      --version          output version information and exit\n\
-"), stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
 Note that the three time-date formats recognized for the -d and -t options\n\

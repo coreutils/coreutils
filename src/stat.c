@@ -304,10 +304,8 @@ Display file or filesystem status.\n\
   -f, --filesystem	display filesystem status instead of file status\n\
   -t, --terse		print the information in terse form\n\
 "), stdout);
-      fputs (_("\
-      --help            display this help and exit\n\
-      --version         output version information and exit\n\
-"), stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
     }
   exit (status);

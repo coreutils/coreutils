@@ -634,10 +634,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -S, --suffix=SUFFIX override the usual backup suffix\n\
   -v, --verbose       print the name of each directory as it is created\n\
 "), stdout);
-      fputs (_("\
-      --help          display this help and exit\n\
-      --version       output version information and exit\n\
-"), stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
 The backup suffix is `~', unless set with --suffix or SIMPLE_BACKUP_SUFFIX.\n\

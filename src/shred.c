@@ -483,10 +483,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -z, --zero     add a final overwrite with zeros to hide shredding\n\
   -              shred standard output\n\
 "), stdout);
-      fputs (_("\
-      --help     display this help and exit\n\
-      --version  output version information and exit\n\
-"), stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
 Delete FILE(s) if --remove (-u) is specified.  The default is not to remove\n\

@@ -305,10 +305,8 @@ Copy a file, converting and formatting according to the options.\n\
   seek=BLOCKS     skip BLOCKS obs-sized blocks at start of output\n\
   skip=BLOCKS     skip BLOCKS ibs-sized blocks at start of input\n\
 "), stdout);
-      fputs (_("\
-      --help      display this help and exit\n\
-      --version   output version information and exit\n\
-"), stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
 BLOCKS and BYTES may be followed by the following multiplicative suffixes:\n\

@@ -222,10 +222,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                           line argument;  --max-depth=0 is the same as\n\
                           --summarize\n\
 "), stdout);
-      fputs (_("\
-      --help            display this help and exit\n\
-      --version         output version information and exit\n\
-"), stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
     }
   exit (status);

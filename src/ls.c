@@ -3667,10 +3667,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -X                         sort alphabetically by entry extension\n\
   -1                         list one file per line\n\
 "), stdout);
-      fputs (_("\
-      --help                 display this help and exit\n\
-      --version              output version information and exit\n\
-"), stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
 By default, color is not used to distinguish types of files.  That is\n\

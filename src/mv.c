@@ -362,12 +362,10 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                                  destination file is missing\n\
   -v, --verbose                explain what is being done\n\
 "), stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
-      --help                   display this help and exit\n\
-      --version                output version information and exit\n\
 \n\
-"), stdout);
-      fputs (_("\
 The backup suffix is `~', unless set with --suffix or SIMPLE_BACKUP_SUFFIX.\n\
 The version control method may be selected via the --backup option or through\n\
 the VERSION_CONTROL environment variable.  Here are the values:\n\

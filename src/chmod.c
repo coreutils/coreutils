@@ -255,10 +255,8 @@ Change the mode of each FILE to MODE.\n\
       --reference=RFILE   use RFILE's mode instead of MODE values\n\
   -R, --recursive         change files and directories recursively\n\
 "), stdout);
-      fputs (_("\
-      --help              display this help and exit\n\
-      --version           output version information and exit\n\
-"), stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
 Each MODE is one or more of the letters ugoa, one of the symbols +-= and\n\

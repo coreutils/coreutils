@@ -94,10 +94,8 @@ Remove (unlink) the FILE(s).\n\
   -r, -R, --recursive   remove the contents of directories recursively\n\
   -v, --verbose         explain what is being done\n\
 "), stdout);
-      fputs (_("\
-      --help            display this help and exit\n\
-      --version         output version information and exit\n\
-"), stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
       printf (_("\
 \n\
 To remove a file whose name starts with a `-', for example `-foo',\n\

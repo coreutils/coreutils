@@ -225,10 +225,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -v, --verbose                explain what is being done\n\
   -x, --one-file-system        stay on this file system\n\
 "), stdout);
-      fputs (_("\
-      --help                   display this help and exit\n\
-      --version                output version information and exit\n\
-"), stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
 By default, sparse SOURCE files are detected by a crude heuristic and the\n\

@@ -71,10 +71,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -p, --parents     no error if existing, make parent directories as needed\n\
   -v, --verbose     print a message for each created directory\n\
 "), stdout);
-      fputs (_("\
-      --help        display this help and exit\n\
-      --version     output version information and exit\n\
-"), stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
     }
   exit (status);

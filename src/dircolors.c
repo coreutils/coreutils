@@ -110,10 +110,8 @@ Determine format of output:\n\
   -c, --csh, --c-shell        output C shell code to set LS_COLORS\n\
   -p, --print-database        output defaults\n\
 "), stdout);
-      fputs (_("\
-      --help                  display this help and exit\n\
-      --version               output version information and exit\n\
-"), stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
 If FILE is specified, read it to determine which colors to use for which\n\

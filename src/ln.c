@@ -372,10 +372,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                                 the links\n\
   -v, --verbose               print name of each file before linking\n\
 "), stdout);
-      fputs (_("\
-      --help                  display this help and exit\n\
-      --version               output version information and exit\n\
-"), stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
 The backup suffix is `~', unless set with --suffix or SIMPLE_BACKUP_SUFFIX.\n\

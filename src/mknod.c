@@ -73,10 +73,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (_("\
   -m, --mode=MODE   set permission mode (as in chmod), not a=rw - umask\n\
 "), stdout);
-      fputs (_("\
-      --help        display this help and exit\n\
-      --version     output version information and exit\n\
-"), stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
 MAJOR MINOR are forbidden for TYPE p, mandatory otherwise.  TYPE may be:\n\

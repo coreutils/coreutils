@@ -155,10 +155,8 @@ Remove the DIRECTORY(ies), if they are empty.\n\
                   similar to `rmdir a/b/c a/b a'.\n\
   -v, --verbose   output a diagnostic for every directory processed\n\
 "), stdout);
-      fputs (_("\
-      --help      display this help and exit\n\
-      --version   output version information and exit\n\
-"), stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
     }
   exit (status);

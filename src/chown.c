@@ -128,10 +128,8 @@ Change the owner and/or group of each FILE to OWNER and/or GROUP.\n\
   -R, --recursive        operate on files and directories recursively\n\
   -v, --verbose          output a diagnostic for every file processed\n\
 "), stdout);
-      fputs (_("\
-      --help             display this help and exit\n\
-      --version          output version information and exit\n\
-"), stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
 Owner is unchanged if missing.  Group is unchanged if missing, but changed\n\

@@ -781,10 +781,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -x, --exclude-type=TYPE   limit listing to filesystems not of type TYPE\n\
   -v                    (ignored)\n\
 "), stdout);
-      fputs (_("\
-      --help            display this help and exit\n\
-      --version         output version information and exit\n\
-"), stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
     }
   exit (status);
