@@ -1,3 +1,19 @@
+2004-02-10  Jim Meyering  <jim@meyering.net>
+
+	* Version 5.2.0.
+
+	* config/install-sh: Make this script executable.
+	* Makefile.am (dist-hook): New target, to ensure that config/install-sh
+	is executable.  Otherwise, on systems that lack a suitable install
+	binary, `make install' would fail, because of the way this script
+	is invoked (without `$SHELL ' prefix).
+	Reported by Bob Proulx.
+
+2004-02-09  Jim Meyering  <jim@meyering.net>
+
+	* src/comm.c (usage): Tell what comm does when there are no options.
+	Wording from Dan Jacobson.
+
 2004-02-08  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.1.3.
