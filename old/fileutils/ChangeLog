@@ -1,3 +1,12 @@
+Mon Apr  1 23:50:29 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* cp.c: Include assert.h (disabled).
+	(path_concat): New function.
+	(do_copy): Use it instead of open-coding its functionality
+	in two places.  This has the additional benefit of avoiding
+	forming destination names like `D//file' when cp is used
+	like this: mkdir D; touch file D/file; cp -i file D/
+
 Sun Mar 31 11:18:09 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* ls.c (quote_filename): Use ISGRAPH and ISPRINT in place of
