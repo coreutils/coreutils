@@ -1,17 +1,33 @@
+Sat May 22 02:13:12 1993  Jim Meyering  (meyering@comco.com)
+
+	* Version 1.6.
+
+Fri May 21 22:57:53 1993  Jim Meyering  (meyering@comco.com)
+
+	* pr.c (cols_ready_to_print): New function.  It replaces a global
+	variable by the same name and computes on the fly the value that
+	was supposed to be maintained through that variable.  This should
+	put to rest the `pr -2a' bug.
+	(main): Don't let getopt_long reorder arguments so we can
+	distinguish between `pr -1 -2' and `pr -12'.  Rework handling of
+	-n and +n options.
+
+	* fold.c: Declare xmalloc.
+
 Wed May 19 19:12:18 1993  Karl Berry  (karl@owl.hq.ileaf.com)
 
-        * sort.c (main): fflush before exit, so a closed stdout doesn't lose.
+	* sort.c (main): fflush before exit, so a closed stdout doesn't lose.
 
 Tue May 18 23:49:26 1993  Jim Meyering (meyering@comco.com)
 
 	* mkinstalldirs: New file.
-	* Makefile.in (installdirs): Use it.
+	* Makefile.in (installdirs): Use it to create installation directories.
 
-Fri May 14 23:45:52 1993  Jim Meyering (meyering@comco.com)
+Fri May 14 23:45:52 1993  Jim Meyering  (meyering@comco.com)
 
 	* all source: With --version, print version and exit immediately.
 
-Thu May 13 01:03:16 1993  Jim Meyering (meyering@comco.com)
+Thu May 13 01:03:16 1993  Jim Meyering  (meyering@comco.com)
 
 	* Makefile.in (installdirs): New rules for creating installation
 	directories. (install): depend on it.
