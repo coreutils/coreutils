@@ -1,5 +1,5 @@
 /* Error handler for noninteractive utilities
-   Copyright (C) 1990-1998, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1990-1998, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.  Its master source is NOT part of
    the C library, however.  The master source lives in /gd/gnu/lib.
 
@@ -25,9 +25,14 @@
 #endif
 
 #include <stdio.h>
-#if HAVE_LIBINTL_H
+
+#ifdef _LIBC
 # include <libintl.h>
+#else
+# include "gettext.h"
 #endif
+#define _(msgid) gettext (msgid)
+
 #ifdef _LIBC
 # include <wchar.h>
 # define mbsrtowcs __mbsrtowcs
@@ -55,10 +60,6 @@ void exit ();
 
 #include "error.h"
 #include "unlocked-io.h"
-
-#ifndef _
-# define _(String) String
-#endif
 
 /* If NULL, error will flush stdout, then print on stderr the program
    name, a colon and a space.  Otherwise, error will call this
