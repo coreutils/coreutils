@@ -1,3 +1,20 @@
+2001-03-09  Jim Meyering  <meyering@lucent.com>
+
+	* src/Makefile.am (Makefile): Don't depend on $(BUILT_SOURCES).
+	Reported by Akim Demaille.
+
+	* tests/help-version: Ensure that /dev/full is a character device
+	(using test -c) as well as being writable, before trying to write to it.
+	Otherwise, the test could mistakenly append a newline to an existing,
+	regular, writable, /dev/full file.
+	Suggested by Ulrich Drepper.
+
+2001-03-06  Jim Meyering  <meyering@lucent.com>
+
+	* src/dd.c (S_TYPEISSHM): Rename parameter to reflect its type.
+	(main): Pass a `struct stat *', not stat.st_mode to S_TYPEISSHM.
+	Patch by Alain Magloire.
+
 2001-03-04  Jim Meyering  <meyering@lucent.com>
 
 	* src/dd.c (output_char): Reformat so each statement is on a
