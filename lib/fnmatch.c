@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright 1991, 1992, 1993, 1996, 1997, 2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -61,7 +61,9 @@ fnmatch (const char *pattern, const char *string, int flags)
   register char c;
 
 /* Note that this evaluates C many times.  */
-# define FOLD(c) ((flags & FNM_CASEFOLD) && ISUPPER (c) ? tolower (c) : (c))
+# define FOLD(c) ((flags & FNM_CASEFOLD) && ISUPPER ((unsigned char) (c)) \
+                  ? tolower ((unsigned char) (c)) \
+                  : (c))
 
   while ((c = *p++) != '\0')
     {
@@ -99,13 +101,10 @@ fnmatch (const char *pattern, const char *string, int flags)
 
 	  for (c = *p++; c == '?' || c == '*'; c = *p++)
 	    {
-	      if ((flags & FNM_FILE_NAME) && *n == '/')
-		/* A slash does not match a wildcard under FNM_FILE_NAME.  */
-		return FNM_NOMATCH;
-	      else if (c == '?')
+	      if (c == '?')
 		{
 		  /* A ? needs to match one character.  */
-		  if (*n == '\0')
+		  if (*n == '\0' || (*n == '/' && (flags & FNM_FILE_NAME)))
 		    /* There isn't another character; no match.  */
 		    return FNM_NOMATCH;
 		  else
@@ -117,7 +116,13 @@ fnmatch (const char *pattern, const char *string, int flags)
 	    }
 
 	  if (c == '\0')
-	    return 0;
+	    {
+	      if ((flags & (FNM_FILE_NAME | FNM_LEADING_DIR)) == FNM_FILE_NAME)
+		for (; *n != '\0'; n++)
+		  if (*n == '/')
+		    return FNM_NOMATCH;
+	      return 0;
+	    }
 
 	  {
 	    char c1 = (!(flags & FNM_NOESCAPE) && c == '\\') ? *p : c;
@@ -126,6 +131,8 @@ fnmatch (const char *pattern, const char *string, int flags)
 	      if ((c == '[' || FOLD (*n) == c1) &&
 		  fnmatch (p, n, flags & ~FNM_PERIOD) == 0)
 		return 0;
+	      else if (*n == '/' && (flags & FNM_FILE_NAME))
+		break;
 	    return FNM_NOMATCH;
 	  }
 
