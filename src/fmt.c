@@ -281,7 +281,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
   -c, --crown-margin        preserve indentation of first two lines\n\
-  -p, --prefix=STRING       combine only lines having STRING as prefix\n\
+  -p, --prefix=STRING       reformat only lines beginning with STRING,\n\
+                              reattaching the prefix to reformatted lines\n\
   -s, --split-only          split long lines, but do not refill\n\
 "),
 	     stdout);
