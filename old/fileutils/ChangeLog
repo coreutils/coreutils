@@ -1,5 +1,8 @@
 2001-02-03  Jim Meyering  <meyering@lucent.com>
 
+	* src/ln.c (main): Change type of index variable to `unsigned int'
+	to avoid a warning.
+
 	* config.guess: Update from master repository.
 
 	* Makefile.maint (a_host): Use fencepost.
