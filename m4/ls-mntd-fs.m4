@@ -103,10 +103,6 @@ if test $ac_cv_func_getmntent = yes; then
     fi
   fi
 
-  if test -z "$ac_list_mounted_fs"; then
-    AC_MSG_ERROR([could not determine how to read list of mounted filesystems])
-  fi
-
 fi
 
 if test -z "$ac_list_mounted_fs"; then
