@@ -1,6 +1,10 @@
-2002-08-04  Jim Meyering  <meyering@lucent.com>
+2002-08-05  Jim Meyering  <meyering@lucent.com>
 
 	* Version 0.1.0.
+
+	* tests/misc/Makefile.am (TESTS): Add nice and pathchk1.
+
+2002-08-04  Jim Meyering  <meyering@lucent.com>
 
 	* src/Makefile.am (check-README): New target/rule.
 	(check): Depend on it.
