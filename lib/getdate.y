@@ -28,6 +28,10 @@
 #include <stdio.h>
 #include <ctype.h>
 
+#if HAVE_STDLIB_H
+# include <stdlib.h> /* for `free'; used by Bison 1.27 */
+#endif
+
 #if defined (STDC_HEADERS) || (!defined (isascii) && !defined (HAVE_ISASCII))
 # define IN_CTYPE_DOMAIN(c) 1
 #else
@@ -706,7 +710,7 @@ LookupWord (buff)
 
   /* Make it lowercase. */
   for (p = buff; *p; p++)
-    if (ISUPPER (*p))
+    if (ISUPPER ((unsigned char) *p))
       *p = tolower (*p);
 
   if (strcmp (buff, "am") == 0 || strcmp (buff, "a.m.") == 0)
@@ -787,7 +791,7 @@ LookupWord (buff)
       }
 
   /* Military timezones. */
-  if (buff[1] == '\0' && ISALPHA (*buff))
+  if (buff[1] == '\0' && ISALPHA ((unsigned char) *buff))
     {
       for (tp = MilitaryTable; tp->name; tp++)
 	if (strcmp (buff, tp->name) == 0)
@@ -818,7 +822,7 @@ LookupWord (buff)
 static int
 yylex ()
 {
-  register char c;
+  register unsigned char c;
   register char *p;
   char buff[20];
   int Count;
@@ -826,7 +830,7 @@ yylex ()
 
   for (;;)
     {
-      while (ISSPACE (*yyInput))
+      while (ISSPACE ((unsigned char) *yyInput))
 	yyInput++;
 
       if (ISDIGIT (c = *yyInput) || c == '-' || c == '+')
