@@ -116,6 +116,9 @@ struct utimbuf
 #else
 # include <strings.h>
 #endif
+#if ! HAVE_DECL_MEMRCHR
+void *memrchr (const void *, int, size_t);
+#endif
 
 #include <errno.h>
 #ifndef errno
