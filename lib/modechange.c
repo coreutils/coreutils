@@ -194,18 +194,18 @@ mode_compile (const char *mode_string, unsigned int masked_ops)
 	       && S_IRGRP == RGRP && S_IWGRP == WGRP && S_IXGRP == XGRP
 	       && S_IROTH == ROTH && S_IWOTH == WOTH && S_IXOTH == XOTH)
 	      ? octal_value
-	      : ((octal_value & SUID ? S_ISUID : 0)
-		 | (octal_value & SGID ? S_ISGID : 0)
-		 | (octal_value & SVTX ? S_ISVTX : 0)
-		 | (octal_value & RUSR ? S_IRUSR : 0)
-		 | (octal_value & WUSR ? S_IWUSR : 0)
-		 | (octal_value & XUSR ? S_IXUSR : 0)
-		 | (octal_value & RGRP ? S_IRGRP : 0)
-		 | (octal_value & WGRP ? S_IWGRP : 0)
-		 | (octal_value & XGRP ? S_IXGRP : 0)
-		 | (octal_value & ROTH ? S_IROTH : 0)
-		 | (octal_value & WOTH ? S_IWOTH : 0)
-		 | (octal_value & XOTH ? S_IXOTH : 0)));
+	      : (mode_t) ((octal_value & SUID ? S_ISUID : 0)
+			  | (octal_value & SGID ? S_ISGID : 0)
+			  | (octal_value & SVTX ? S_ISVTX : 0)
+			  | (octal_value & RUSR ? S_IRUSR : 0)
+			  | (octal_value & WUSR ? S_IWUSR : 0)
+			  | (octal_value & XUSR ? S_IXUSR : 0)
+			  | (octal_value & RGRP ? S_IRGRP : 0)
+			  | (octal_value & WGRP ? S_IWGRP : 0)
+			  | (octal_value & XGRP ? S_IXGRP : 0)
+			  | (octal_value & ROTH ? S_IROTH : 0)
+			  | (octal_value & WOTH ? S_IWOTH : 0)
+			  | (octal_value & XOTH ? S_IXOTH : 0)));
 
       p = make_node_op_equals (mode);
       if (p == NULL)
