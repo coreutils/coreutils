@@ -31,6 +31,7 @@
 
 #include "system.h"
 #include "error.h"
+#include "safe-read.h"
 
 #define N_CHARS (UCHAR_MAX + 1)
 
@@ -204,8 +205,6 @@ struct E_string
 /* Return nonzero if the Ith character of escaped string ES matches C
    and is not escaped itself.  */
 #define ES_MATCH(ES, I, C) ((ES)->s[(I)] == (C) && !(ES)->escaped[(I)])
-
-int safe_read ();
 
 /* The name by which this program was run.  */
 char *program_name;

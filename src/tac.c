@@ -1,5 +1,5 @@
 /* tac - concatenate and print files in reverse
-   Copyright (C) 88, 89, 90, 91, 95, 96, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 88,89,90,91,95,96,97, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -49,6 +49,7 @@ tac -r -s '.\|
 #endif
 
 #include "error.h"
+#include "safe-read.h"
 
 #ifndef DEFAULT_TMPDIR
 # define DEFAULT_TMPDIR "/tmp"
@@ -61,7 +62,6 @@ tac -r -s '.\|
 #define WRITESIZE 8192
 
 char *mktemp ();
-int safe_read ();
 
 /* The name this program was run with. */
 char *program_name;
@@ -112,31 +112,6 @@ static struct option const longopts[] =
   {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
-
-/* Read LEN bytes at PTR from descriptor DESC, retrying if interrupted.
-   Return the actual number of bytes read, zero for EOF, or negative
-   for an error.  */
-
-int
-safe_read (int desc, char *ptr, int len)
-{
-  int n_chars;
-
-  if (len <= 0)
-    return len;
-
-#ifdef EINTR
-  do
-    {
-      n_chars = read (desc, ptr, len);
-    }
-  while (n_chars < 0 && errno == EINTR);
-#else
-  n_chars = read (desc, ptr, len);
-#endif
-
-  return n_chars;
-}
 
 static void
 usage (int status)
@@ -492,44 +467,52 @@ memrchr (const char *buf_start, const char *buf_end_plus_one, int c)
   return NULL;
 }
 
+/* FIXME: describe */
+
 static int
 tac_mem (const char *buf, size_t n_bytes, FILE *out)
 {
+  const char *nl;
+  const char *bol;
+
   if (n_bytes == 0)
     return 0;
 
-  {
-    const char *nl = memrchr (buf, buf + n_bytes, '\n');
-    const char *bol = (nl == NULL ? buf : nl + 1);
+  nl = memrchr (buf, buf + n_bytes, '\n');
+  bol = (nl == NULL ? buf : nl + 1);
 
-    /* If the last line of the input file has no terminating newline,
-       treat it as a special case.  */
-    if (bol < buf + n_bytes)
-      {
-	/* Print out the line from bol to end of input.  */
-	fwrite (bol, 1, (buf + n_bytes) - bol, out);
+  /* If the last line of the input file has no terminating newline,
+     treat it as a special case.  */
+  if (bol < buf + n_bytes)
+    {
+      /* Print out the line from bol to end of input.  */
+      fwrite (bol, 1, (buf + n_bytes) - bol, out);
 
-	/* Add a newline here.  Otherwise, the first and second lines
-	   of output would appear to have been joined.  */
-	fputc ('\n', out);
-      }
+      /* Add a newline here.  Otherwise, the first and second lines
+	 of output would appear to have been joined.  */
+      fputc ('\n', out);
+    }
 
-    while ((nl = memrchr (buf, bol - 1, '\n')) != NULL)
-      {
-	/* Output the line (which includes a trailing newline)
-	   from NL+1 to BOL-1.  */
-	fwrite (nl + 1, 1, bol - (nl + 1), out);
+  while ((nl = memrchr (buf, bol - 1, '\n')) != NULL)
+    {
+      /* Output the line (which includes a trailing newline)
+	 from NL+1 to BOL-1.  */
+      fwrite (nl + 1, 1, bol - (nl + 1), out);
 
-	bol = nl + 1;
-      }
+      bol = nl + 1;
+    }
 
-    /* If there's anything left, output the last line: BUF .. BOL-1.
-       When the first byte of the input is a newline, there is nothing
-       left to do here.  */
-    if (buf < bol)
-      fwrite (buf, 1, bol - buf, out);
-  }
+  /* If there's anything left, output the last line: BUF .. BOL-1.
+     When the first byte of the input is a newline, there is nothing
+     left to do here.  */
+  if (buf < bol)
+    fwrite (buf, 1, bol - buf, out);
+
+  /* FIXME: this is work in progress.... */
+  return ferror (out);
 }
+
+/* FIXME: describe */
 
 static int
 tac_stdin_to_mem (void)

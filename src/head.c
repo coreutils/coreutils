@@ -1,5 +1,5 @@
 /* head -- output first part of file(s)
-   Copyright (C) 89, 90, 91, 95, 96, 1997 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 95, 96, 1997, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -32,6 +32,7 @@
 #include "system.h"
 #include "error.h"
 #include "xstrtoul.h"
+#include "safe-read.h"
 
 /* FIXME: someday, make this really *be* `long long'.  */
 typedef long int U_LONG_LONG;
@@ -50,8 +51,6 @@ enum header_mode
 {
   multiple_files, always, never
 };
-
-int safe_read ();
 
 /* The name this program was run with. */
 char *program_name;

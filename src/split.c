@@ -30,9 +30,9 @@
 #include "system.h"
 #include "error.h"
 #include "xstrtol.h"
+#include "safe-read.h"
 
 int full_write ();
-int safe_read ();
 
 /* The name this program was run with. */
 char *program_name;

@@ -41,6 +41,7 @@
 #include "error.h"
 #include "xstrtoul.h"
 #include "xalloc.h"
+#include "safe-read.h"
 
 #ifdef STDC_HEADERS
 # include <stdlib.h>
@@ -125,8 +126,6 @@ struct buffer_record
   struct line *curr_line;	/* The line start record currently in use. */
   struct buffer_record *next;
 };
-
-int safe_read ();
 
 static void close_output_file PARAMS ((void));
 static void create_output_file PARAMS ((void));
