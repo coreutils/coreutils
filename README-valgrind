@@ -6,19 +6,19 @@
 
 # Create src/vg:
 
-coreutils=$(echo 'spy:;@echo $(all_programs)'| make -f Makefile -f - spy)
+coreutils=$(echo 'spy:;@echo $(all_programs)' | (cd src; make -f Makefile -f - spy | tr -s '\n ' '  '))
 mkdir src/vg
-cat <<EOF > src/vg/gen
-n=9
 pwd=`pwd`
 up=`dirname $pwd`
 path='export PATH='$up':${PATH#*:}'
 pre='#!/bin/sh\n'"$path"'\n'
-vg='exec /p/bin/valgrind --quiet --num-callers='$n
+n=9
+vg='exec /usr/bin/valgrind --quiet --num-callers='$n
+cat <<EOF > src/vg/gen
 for i in $coreutils; do
-  printf "$pre$vg $i"' "$@"\n' > $i
-  chmod a+x $i
+  printf "$pre$vg \$i"' "\$@"\n' > \$i
+  chmod a+x \$i
 done
 EOF
 cd src/vg
-./gen
+. ./gen
