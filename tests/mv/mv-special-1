@@ -36,7 +36,7 @@ if test $framework_failure = 1; then
   # exit 77 here to indicate that we couldn't run the test.
   # At least running on SunOS 4.1.4, using a directory NFS mounted
   # from an OpenBSD system, the above mknod fails.
-  exit 77
+  (exit 77); exit
 fi
 
 fail=0
