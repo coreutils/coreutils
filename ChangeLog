@@ -2,6 +2,12 @@
 
 	* Version 5.0.92.
 
+	* src/sys2.h (case_GETOPT_VERSION_CHAR): Rename parameter, Authors,
+	to Written_by.
+	* nearly all src/*.c files (WRITTEN_BY): Rename from AUTHORS.
+	Begin each WRITTEN_BY string with `Written by ' and end it with `.'.
+	Mark each WRITTEN_BY string as translatable.
+
 	* basename.c, cat.c, chroot.c, cksum.c, comm.c, cp.c, csplit.c, cut.c:
 	* dd.c, df.c, dirname.c, du.c, echo.c, env.c, expr.c, factor.c, head.c:
 	* hostid.c, hostname.c, id.c, link.c, ln.c, logname.c, ls.c, md5sum.c:
@@ -10,6 +16,8 @@
 	* split.c, stty.c, sum.c, sync.c, tac.c, tail.c, tee.c, test.c:
 	* touch.c, tsort.c, uniq.c, unlink.c, uptime.c, users.c, wc.c:
 	* who.c, whoami.c, yes.c: Revert yesterday's changes.
+	Instead, a subsequent change will embed `Written by ' in
+	each string along with the author names.
 
 	* src/true.c: Revert yesterday's changes.
 	* src/sys2.h: Likewise.
