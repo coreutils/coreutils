@@ -1,5 +1,5 @@
 /* Emulate getpagesize on systems that lack it.
-   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@
 # endif
 #endif
 
-#ifndef getpagesize
+#if !defined getpagesize && HAVE_SYS_PARAM_H
 # include <sys/param.h>
 # ifdef EXEC_PAGESIZE
 #  define getpagesize() EXEC_PAGESIZE

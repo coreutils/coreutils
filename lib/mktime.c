@@ -495,7 +495,6 @@ not_equal_tm (const struct tm *a, const struct tm *b)
 	  | (a->tm_mday ^ b->tm_mday)
 	  | (a->tm_mon ^ b->tm_mon)
 	  | (a->tm_year ^ b->tm_year)
-	  | (a->tm_mday ^ b->tm_mday)
 	  | (a->tm_yday ^ b->tm_yday)
 	  | (a->tm_isdst ^ b->tm_isdst));
 }

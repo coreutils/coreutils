@@ -51,11 +51,12 @@ arguments to the various programs.  The C interface (via the
 * General date syntax::            Common rules.
 * Calendar date items::            19 Dec 1994.
 * Time of day items::              9:20pm.
-* Time zone items::                @sc{est}, @sc{pdt}, @sc{gmt}, ...
+* Time zone items::                @sc{est}, @sc{pdt}, @sc{gmt}.
 * Day of week items::              Monday and others.
 * Relative items in date strings:: next tuesday, 2 years ago.
 * Pure numbers in date strings::   19931219, 1440.
 * Seconds since the Epoch::        @@1078100502.
+* Specifying time zone rules::     TZ="America/New_York", TZ="UTC0".
 * Authors of get_date::            Bellovin, Eggert, Salz, Berets, et al.
 @end menu
 
@@ -74,7 +75,7 @@ many flavors of items:
 
 @itemize @bullet
 @item calendar date items
-@item time of the day items
+@item time of day items
 @item time zone items
 @item day of the week items
 @item relative items
@@ -108,7 +109,8 @@ abbreviations like @samp{AM}, @samp{DST}, @samp{EST}, @samp{first},
 
 @cindex language, in dates
 @cindex time zone item
-The output of @command{date} is not always acceptable as a date string,
+The output of the @command{date} command
+is not always acceptable as a date string,
 not only because of the language problem, but also because there is no
 standard meaning for time zone items like @samp{IST}.  When using
 @command{date} to generate a date string intended to be parsed later,
@@ -225,7 +227,7 @@ day.  Here are some examples, all of which represent the same time:
 20:02-0500      # In @sc{est} (U.S. Eastern Standard Time).
 @end example
 
-More generally, the time of the day may be given as
+More generally, the time of day may be given as
 @samp{@var{hour}:@var{minute}:@var{second}}, where @var{hour} is
 a number between 0 and 23, @var{minute} is a number between 0 and
 59, and @var{second} is a number between 0 and 59 possibly followed by
@@ -257,7 +259,7 @@ of zone minutes.  When a time zone correction is given this way, it
 forces interpretation of the time relative to
 Coordinated Universal Time (@sc{utc}), overriding any previous
 specification for the time zone or the local time zone.  The @var{minute}
-part of the time of the day may not be elided when a time zone correction
+part of the time of day may not be elided when a time zone correction
 is used.  This is the best way to specify a time zone correction by
 fractional parts of an hour.
 
@@ -284,6 +286,10 @@ are ambiguous; for example, @samp{EST} has a different meaning in
 Australia than in the United States.  Instead, it's better to use
 unambiguous numeric time zone corrections like @samp{-0500}, as
 described in the previous section.
+
+If neither a time zone item nor a time zone correction is supplied,
+time stamps are interpreted using the rules of the default time zone
+(@pxref{Specifying time zone rules}).
 
 
 @node Day of week items
@@ -372,7 +378,7 @@ the meaning of a zero-valued time displacement, but is preferred in
 date strings like @samp{this thursday}.
 
 When a relative item causes the resulting date to cross a boundary
-where the clocks were adjusted, typically for daylight-saving time,
+where the clocks were adjusted, typically for daylight saving time,
 the resulting date and time are adjusted accordingly.
 
 The fuzz in units can cause problems with relative items.  For
@@ -413,7 +419,7 @@ calendar date.
 If the decimal number is of the form @var{hh}@var{mm} and no other time
 of day item appears before it in the date string, then @var{hh} is read
 as the hour of the day and @var{mm} as the minute of the hour, for the
-specified time of the day.  @var{mm} can also be omitted.
+specified time of day.  @var{mm} can also be omitted.
 
 If both a calendar date and a time of day appear to the left of a number
 in the date string, but no relative item, then the number overrides the
@@ -427,7 +433,8 @@ If you precede a number with @samp{@@}, it represents an internal time
 stamp as a count of seconds.  The number can contain an internal
 decimal point (either @samp{.} or @samp{,}); any excess precision not
 supported by the internal representation is truncated toward minus
-infinity.
+infinity.  Such a number cannot be combined with any other date
+item, as it specifies a complete time stamp.
 
 @cindex beginning of time, for @acronym{POSIX}
 @cindex epoch, for @acronym{POSIX}
@@ -451,6 +458,57 @@ For example, on most systems @samp{@@915148799} represents 1998-12-31
 23:59:59 @sc{utc}, @samp{@@915148800} represents 1999-01-01 00:00:00
 @sc{utc}, and there is no way to represent the intervening leap second
 1998-12-31 23:59:60 @sc{utc}.
+
+@node Specifying time zone rules
+@section Specifying time zone rules
+
+@vindex TZ
+Normally, dates are interpreted using the rules of the current time
+zone, which in turn are specified by the @env{TZ} environment
+variable, or by a system default if @env{TZ} is not set.  To specify a
+different set of default time zone rules that apply just to one date,
+start the date with a string of the form @samp{TZ="@var{rule}"}.  The
+two quote characters (@samp{"}) must be present in the date, and any
+quotes or backslashes within @var{rule} must be escaped by a
+backslash.
+
+For example, with the @acronym{GNU} @command{date} command you can
+answer the question ``What time is it in New York when a Paris clock
+shows 6:30am on October 31, 2004?'' by using a date beginning with
+@samp{TZ="Europe/Paris"} as shown in the following shell transcript:
+
+@example
+$ export TZ="America/New_York"
+$ date --date='TZ="Europe/Paris" 2004-10-31 06:30'
+Sun Oct 31 01:30:00 EDT 2004
+@end example
+
+In this example, the @option{--date} operand begins with its own
+@env{TZ} setting, so the rest of that operand is processed according
+to @samp{Europe/Paris} rules, treating the string @samp{2004-10-31
+06:30} as if it were in Paris.  However, since the output of the
+@command{date} command is processed according to the overall time zone
+rules, it uses New York time.  (Paris was normally six hours ahead of
+New York in 2004, but this example refers to a brief Halloween period
+when the gap was five hours.)
+
+A @env{TZ} value is a rule that typically names a location in the
+@uref{http://www.twinsun.com/tz/tz-link.htm, @samp{tz} database}.
+A recent catalog of location names appears in the
+@uref{http://twiki.org/cgi-bin/xtra/tzdate, TWiki Date and Time
+Gateway}.  A few non-@acronym{GNU} hosts require a colon before a
+location name in a @env{TZ} setting, e.g.,
+@samp{TZ=":America/New_York"}.
+
+The @samp{tz} database includes a wide variety of locations ranging
+from @samp{Arctic/Longyearbyen} to @samp{Antarctica/South_Pole}, but
+if you are at sea and have your own private time zone, or if you are
+using a non-@acronym{GNU} host that does not support the @samp{tz}
+database, you may need to use a @acronym{POSIX} rule instead.  Simple
+@acronym{POSIX} rules like @samp{UTC0} specify a time zone without
+daylight saving time; other rules can specify simple daylight saving
+regimes.  @xref{TZ Variable,, Specifying the Time Zone with @code{TZ},
+libc, The GNU C Library}.
 
 @node Authors of get_date
 @section Authors of @code{get_date}

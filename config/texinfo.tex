@@ -2314,15 +2314,26 @@ where each line of input produces a line of output.}
 % @table, @ftable, @vtable.
 \envdef\table{%
   \let\itemindex\gobble
-  \tablex
+  \tablecheck{table}%
 }
 \envdef\ftable{%
   \def\itemindex ##1{\doind {fn}{\code{##1}}}%
-  \tablex
+  \tablecheck{ftable}%
 }
 \envdef\vtable{%
   \def\itemindex ##1{\doind {vr}{\code{##1}}}%
-  \tablex
+  \tablecheck{vtable}%
+}
+\def\tablecheck#1{%
+  \ifnum \the\catcode`\^^M=\active
+    \endgroup
+    \errmessage{This command won't work in this context; perhaps the problem is
+      that we are \inenvironment\thisenv}%
+    \def\next{\doignore{#1}}%
+  \else
+    \let\next\tablex
+  \fi
+  \next
 }
 \def\tablex#1{%
   \def\itemindicate{#1}%
