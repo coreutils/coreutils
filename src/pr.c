@@ -2445,15 +2445,11 @@ print_header (void)
 static int
 read_line (COLUMN *p)
 {
-  register int c, chars;
+  int c;
+  int chars IF_LINT (= 0);
   int last_input_position;
   int j, k;
   COLUMN *q;
-
-/* Suppress `used before initialized' warning. */
-#ifdef lint
-  chars = 0;
-#endif
 
   /* read 1st character in each line or any character succeeding a FF: */
   c = getc (p->fp);
