@@ -36,6 +36,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   cut's --output-delimiter=D option works with abutting byte ranges.
 
+  du no longer segfaults when a subdirectory of an operand
+  directory is removed while du is traversing that subdirectory.
+
   echo now conforms to POSIX better.  It supports the \0ooo syntax for
   octal escapes, and \c now terminates printing immediately.  If
   POSIXLY_CORRECT is set and the first argument is not "-n", echo now
