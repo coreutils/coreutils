@@ -343,7 +343,7 @@ nextarg (char *str)
     return 0;
   else
     {
-      int r = strcmp (*args, str) == 0;
+      int r = strcoll (*args, str) == 0;
       args += r;
       return r;
     }
