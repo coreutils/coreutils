@@ -1,0 +1,44 @@
+#!/bin/sh
+# make sure touch gives reasonable diagnostics
+
+if test "$VERBOSE" = yes; then
+  set -x
+  touch --version
+fi
+
+. $srcdir/../envvar-check
+. $srcdir/../lang-default
+PRIV_CHECK_ARG=require-non-root . $srcdir/../priv-check
+
+pwd=`pwd`
+tmp=fail-diag.$$
+trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
+trap '(exit $?); exit' 1 2 13 15
+
+framework_failure=0
+mkdir $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo 'failure in testing framework' 1>&2
+  (exit 1); exit
+fi
+
+fail=0
+
+# Before fileutils-4.1, we'd get the following misleading
+# diagnostic instead of `Permission denied'.
+# touch: creating `/': Is a directory
+touch / > out 2>&1 && fail=1
+
+touch /no/such-dir >> out 2>&1 && fail=1
+
+cat > exp <<\EOF
+touch: setting times of `/': Permission denied
+touch: creating `/no/such-dir': No such file or directory
+EOF
+
+cmp out exp || fail=1
+test $fail = 1 && diff out exp 2> /dev/null
+
+(exit $fail); exit
