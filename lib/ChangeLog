@@ -1,3 +1,12 @@
+2004-12-05  Jim Meyering  <jim@meyering.net>
+
+	* __fpending.c: Include <stdlib.h>.
+	(__fpending): Abort if PENDING_OUTPUT_N_BYTES is negative.
+	This ensures that if there is an error in the definition of the
+	PENDING_OUTPUT_N_BYTES expression, we'll find about it right away;
+	this value is used only in the rare event that close_stdout's
+	fclose fails with EBADF.
+
 2004-12-02  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* openat.c: Include "openat.h" before other include files.
