@@ -1,3 +1,8 @@
+2000-04-29  Jim Meyering  <meyering@lucent.com>
+
+	* path-concat.c: Declare strdup only if it's not defined.
+	* canon-host.c: Likewise.
+
 2000-04-28  Jim Meyering  <meyering@lucent.com>
 
 	* rpmatch.c [HAVE_LIMITS_H]: Include limits.h before regex.h to avoid
