@@ -1,5 +1,5 @@
 /* xnanosleep.c -- a more convenient interface to nanosleep
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -28,7 +28,12 @@
 #include <sys/types.h>
 #include <time.h>
 
-#define USE_CLOCK_GETTIME (defined CLOCK_REALTIME && HAVE_CLOCK_GETTIME)
+#if HAVE_CLOCK_GETTIME && defined CLOCK_REALTIME
+# define USE_CLOCK_GETTIME 1
+#else
+# define USE_CLOCK_GETTIME 0
+#endif
+
 #if ! USE_CLOCK_GETTIME
 # include <sys/time.h>
 #endif
