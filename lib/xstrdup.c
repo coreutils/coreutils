@@ -32,7 +32,6 @@ char *xstrdup (char *string);
 char *xmalloc ();
 #endif
 
-
 /* Return a newly allocated copy of STRING.  */
 
 char *
