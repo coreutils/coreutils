@@ -784,100 +784,71 @@ buggy_lseek_support (int fdesc)
 	  && (S_ISCHR (stats.st_mode)));
 }
 
-/* Throw away RECORDS blocks of BLOCKSIZE bytes on file descriptor FDESC,
-   which is open with read permission for FILE.  Store up to BLOCKSIZE
-   bytes of the data at a time in BUF, if necessary.  RECORDS must be
-   nonzero.  */
+enum Unit
+{
+  U_BYTES,
+  U_BLOCKS
+};
+typedef enum Unit Unit;
+
+/* Discard N bytes or blocks (determined by UNITS) of the data on file
+   descriptor FDESC, which is open with read permission for FILE.
+   Store up to BLOCKSIZE bytes of the data at a time in BUF, if necessary.
+   RECORDS must be nonzero.  */
 
 static void
-skip (int fdesc, char const *file, uintmax_t records, size_t blocksize,
+skip (int fdesc, char const *file, uintmax_t n, Unit units, size_t blocksize,
       unsigned char *buf)
 {
-  off_t o;
+  off_t o = (units == U_BYTES ? n : n * blocksize);
 
   /* Try lseek and if an error indicates it was an inappropriate
      operation, fall back on using read.  Some broken versions of
      lseek may return zero, so count that as an error too as a valid
      zero return is not possible here.  */
-  o = records * blocksize;
-  if (o / blocksize != records
-      || buggy_lseek_support (fdesc)
-      || lseek (fdesc, o, SEEK_CUR) <= 0)
-    {
-      while (records-- > 0)
-	{
-	  int nread;
 
-	  nread = safe_read (fdesc, buf, blocksize);
-	  if (nread < 0)
-	    {
-	      error (0, errno, _("reading %s"), quote (file));
-	      quit (1);
-	    }
-	  /* POSIX doesn't say what to do when dd detects it has been
-	     asked to skip past EOF, so I assume it's non-fatal.
-	     FIXME: maybe give a warning.  */
-	  if (nread == 0)
-	    break;
-	}
-    }
-}
+  if ((units == U_BYTES || o / blocksize == n)
+      && !buggy_lseek_support (fdesc)
+      && lseek (fdesc, o, SEEK_CUR) > 0)
+    return;
 
-/* Throw away BYTES on file descriptor FDESC,
-   which is open with read permission for FILE.
-   Store up to BYTES of the data (one BLOCKSIZE at a time) in BUF,
-   if necessary. */
-
-static void
-bskip (int fdesc, char *file, uintmax_t bytes, size_t blocksize,
-       unsigned char *buf)
-{
-  struct stat stats;
-
-  /* Use fstat instead of checking for errno == ESPIPE because
-     lseek doesn't work on some special files but doesn't return an
-     error, either. */
-  /* FIXME: can this really happen?  What system?  */
-  if (fstat (fdesc, &stats))
-    {
-      error (0, errno, "%s", file);
-      quit (1);
-    }
-
-  /* Try lseek and if an error indicates it was an inappropriate
-     operation, fall back on using read.  */
-  if (lseek (fdesc, bytes, SEEK_SET) == -1)
+  do
     {
       int nread;
 
-      while ((bytes-=blocksize) >= 0)
+      /* Decrement N according to UNITS: if we're counting bytes, then
+	 decrement N by BLOCKSIZE (the last read may be smaller than BLOCKSIZE),
+	 otherwise, simply decrement N by 1.  */
+      if (units == U_BYTES)
 	{
-	  nread = safe_read (fdesc, buf, blocksize);
-	  if (nread < 0)
+	  if (n < blocksize)
 	    {
-	      error (0, errno, "%s", file);
-	      quit (1);
+	      n = 0;
+	      blocksize = n;
 	    }
-	  /* POSIX doesn't say what to do when dd detects it has been
-	     asked to skip past EOF, so I assume it's non-fatal.
-	     FIXME: maybe give a warning.  */
-	  if (nread == 0)
-	    break;
-	}
-
-      /* sop up any residue .. */
-      if (bytes < 0)
-	{
-	  bytes += blocksize;
-
-	  nread = safe_read (fdesc, buf, bytes);
-	  if (nread < 0)
+	  else
 	    {
-	      error (0, errno, "%s", file);
-	      quit (1);
+	      n -= blocksize;
 	    }
 	}
+      else
+	{
+	  --n;
+	}
+
+      nread = safe_read (fdesc, buf, blocksize);
+      if (nread < 0)
+	{
+	  error (0, errno, _("reading %s"), quote (file));
+	  quit (1);
+	}
+      /* POSIX doesn't say what to do when dd detects it has been
+	 asked to skip past EOF, so I assume it's non-fatal.
+	 FIXME: maybe give a warning.  */
+      if (nread == 0)
+	break;
     }
+  while (n > 0);
 }
 
 /* Copy NREAD bytes of BUF, with no conversions.  */
@@ -1025,10 +996,12 @@ dd_copy (void)
     }
 
   if (skip_records != 0)
-    skip (STDIN_FILENO, input_file, skip_records, input_blocksize, ibuf);
+    skip (STDIN_FILENO, input_file, skip_records, U_BLOCKS,
+	  input_blocksize, ibuf);
 
   if (skip_bytes != 0)
-    bskip (STDIN_FILENO, input_file, skip_bytes, input_blocksize, ibuf);
+    skip (STDIN_FILENO, input_file, skip_bytes, U_BYTES,
+	  input_blocksize, ibuf);
 
   if (seek_record != 0)
     {
@@ -1039,12 +1012,13 @@ dd_copy (void)
 	 0+0 records out
 	 */
 
-      skip (STDOUT_FILENO, output_file, seek_record, output_blocksize,
-	    obuf);
+      skip (STDOUT_FILENO, output_file, seek_record, U_BLOCKS,
+	    output_blocksize, obuf);
     }
 
   if (seek_bytes != 0)
-    bskip (STDOUT_FILENO, output_file, seek_bytes, output_blocksize, obuf);
+    skip (STDOUT_FILENO, output_file, seek_bytes, U_BYTES,
+	  output_blocksize, obuf);
 
   if (max_records == 0)
     quit (exit_status);
