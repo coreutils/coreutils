@@ -575,12 +575,6 @@
 /* Define to 1 if you have the `listmntent' function. */
 #undef HAVE_LISTMNTENT
 
-/* Define to 1 if you have the `localeconv' function. */
-#undef HAVE_LOCALECONV
-
-/* Define to 1 if you have the <locale.h> header file. */
-#undef HAVE_LOCALE_H
-
 /* Define if you have the 'long double' type. */
 #undef HAVE_LONG_DOUBLE
 
