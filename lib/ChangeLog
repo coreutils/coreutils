@@ -1,3 +1,8 @@
+2000-05-29  Jim Meyering  <meyering@lucent.com>
+
+	* mountlist.c (read_filesystem_list) [MOUNTED_VMOUNT]: Ignore mounts
+	with the `ignore' attribute.  Based on a patch from Mark D. Roth.
+
 2000-05-22  Jim Meyering  <meyering@lucent.com>
 
 	* makepath.c: Remove old, now-unnecessary `#ifdef __MSDOS__' block.
