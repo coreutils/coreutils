@@ -29,5 +29,5 @@
 char *
 xstrdup (const char *string)
 {
-  return strcpy (xmalloc (strlen (string) + 1), string);
+  return xclone (string, strlen (string) + 1);
 }
