@@ -2,6 +2,8 @@
 
 	* Version 5.3.0.
 
+	* src/shred.c (incname): Decrement `len' only once per loop iteration.
+
 	chgrp and chown now dereference symlinks by default, per POSIX.
 	Reported by Michal Politowski as http://bugs.debian.org/249177.
 
