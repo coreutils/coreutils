@@ -7,6 +7,14 @@
 #  include <config.h>
 # endif
 
-int strverscmp (const char*, const char*);
+# ifndef PARAMS
+#  if defined (__GNUC__) || __STDC__
+#   define PARAMS(args) args
+#  else
+#   define PARAMS(args) ()
+#  endif
+# endif
+
+int strverscmp PARAMS ((const char*, const char*));
 
 #endif /* not STRVERSCMP_H_ */
