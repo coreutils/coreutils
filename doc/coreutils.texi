@@ -8818,16 +8818,16 @@ file is the number of bytes reported by @code{wc -c} on regular files,
 or more generally, @code{ls -l --block-size=1} or @code{stat --format=%s}.
 For example, a file containing the word @samp{zoo} with no newline would,
 of course, have an apparent size of 3.  Such a small file may require
-anywhere from zero to 16 or more kilobytes of disk space, depending on
+anywhere from 0 to 16 KiB or more of disk space, depending on
 the type and configuration of the file system on which the file resides.
 However, a sparse file created with this command:
 
 @example
-: | dd bs=1 seek=`echo '2^31'|bc` of=big
+dd bs=1 seek=2GiB if=/dev/null of=big
 @end example
 
 @noindent
-has an apparent size of 2 gigabytes, yet on most modern
+has an apparent size of 2 GiB, yet on most modern
 systems, it actually uses almost no disk space.
 
 @item -b
