@@ -543,6 +543,12 @@ copy_internal (const char *src_path, const char *dst_path,
 		  else
 		    dst_backup = NULL;
 		}
+	      else
+		{
+		  /* rename succeeded */
+		  if (x->verbose)
+		    printf (_("%s -> %s (backup)\n"), dst_path, dst_backup);
+		}
 	      new_dst = 1;
 	    }
 	  else if (x->force)
@@ -913,6 +919,11 @@ un_backup:
     {
       if (rename (dst_backup, dst_path))
 	error (0, errno, _("cannot un-backup `%s'"), dst_path);
+      else
+	{
+	  if (x->verbose)
+	    printf (_("%s -> %s (unbackup)\n"), dst_backup, dst_path);
+	}
     }
   return 1;
 }
