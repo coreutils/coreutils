@@ -1,4 +1,4 @@
-#serial 16
+#serial 17
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
@@ -128,8 +128,16 @@ AC_DEFUN(jm_MACROS,
   # used by sleep and shred
   # Solaris 2.5.1 needs -lposix4 to get the clock_gettime function.
   # Solaris 7 prefers the library name -lrt to the obsolescent name -lposix4.
-  AC_SEARCH_LIBS(clock_gettime, [rt posix4])
-  AC_CHECK_FUNCS(clock_gettime)
+
+  # Save and restore LIBS so e.g., -lrt, isn't added to it.  Otherwise, *all*
+  # programs in the package would end up linked with that potentially-shared
+  # library, inducing unnecessary run-time overhead.
+  fetish_saved_libs=$LIBS
+    AC_SEARCH_LIBS(clock_gettime, [rt posix4],
+		   [LIB_CLOCK_GETTIME=$ac_cv_search_clock_gettime])
+    AC_SUBST(LIB_CLOCK_GETTIME)
+    AC_CHECK_FUNCS(clock_gettime)
+  LIBS=$fetish_saved_libs
   AC_CHECK_FUNCS(gettimeofday)
 
   AC_REQUIRE([AC_FUNC_CLOSEDIR_VOID])
