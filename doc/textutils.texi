@@ -2112,9 +2112,9 @@ check that no pair of consecutive lines compares equal.
 @opindex -k
 @cindex sort field
 The recommended, @sc{POSIX}, option for specifying a sort field.  The field
-consists of the line between @var{pos1} and @var{pos2} (or the end of
-the line, if @var{pos2} is omitted), inclusive.  Fields and character
-positions are numbered starting with 1.  See below.
+consists of the part of the line between @var{pos1} and @var{pos2} (or the
+end of the line, if @var{pos2} is omitted), inclusive.  Fields and
+character positions are numbered starting with 1.  See below.
 
 @item -z
 @opindex -z
@@ -2509,7 +2509,7 @@ convention more than once per program invocation.
 @node General options in ptx
 @subsection General options
 
-@table @code
+@table @samp
 
 @item -C
 @itemx --copyright
@@ -2546,7 +2546,7 @@ expression for a keyword allows foreign or diacriticized letters.
 Keyword sorting, however, is still crude; it obeys the underlying
 character set ordering quite blindly.
 
-@table @code
+@table @samp
 
 @item -f
 @itemx --ignore-case
@@ -2558,18 +2558,18 @@ Fold lower case letters to upper case for sorting.
 @node Input processing in ptx
 @subsection Word selection and input processing
 
-@table @code
+@table @samp
 
 @item -b @var{file}
 @item --break-file=@var{file}
 
-This option is an alternative way to option @code{-W} for describing
+This option is an alternative way to option @samp{-W} for describing
 which characters make up words.  This option introduces the name of a
 file which contains a list of characters which can@emph{not} be part of
 one word, this file is called the @dfn{Break file}.  Any character which
 is not part of the Break file is a word constituent.  If both options
-@code{-b} and @code{-W} are specified, then @code{-W} has precedence and
-@code{-b} is ignored.
+@samp{-b} and @samp{-W} are specified, then @samp{-W} has precedence and
+@samp{-b} is ignored.
 
 When GNU extensions are enabled, the only way to avoid newline as a
 break character is to write all the break characters in the file with no
@@ -2584,7 +2584,7 @@ The file associated with this option contains a list of words which will
 never be taken as keywords in concordance output.  It is called the
 @dfn{Ignore file}.  The file contains exactly one word in each line; the
 end of line separation of words is not subject to the value of the
-@code{-S} option.
+@samp{-S} option.
 
 There is a default Ignore file used by @code{ptx} when this option is
 not specified, usually found in @file{/usr/local/lib/eign} if this has
@@ -2598,7 +2598,7 @@ The file associated with this option contains a list of words which will
 be retained in concordance output, any word not mentioned in this file
 is ignored.  The file is called the @dfn{Only file}.  The file contains
 exactly one word in each line; the end of line separation of words is
-not subject to the value of the @code{-S} option.
+not subject to the value of the @samp{-S} option.
 
 There is no default for the Only file.  In the case there are both an
 Only file and an Ignore file, a word will be subject to be a keyword
@@ -2611,12 +2611,12 @@ On each input line, the leading sequence of non white characters will be
 taken to be a reference that has the purpose of identifying this input
 line on the produced permuted index.  For more information about reference
 production, see @xref{Output formatting in ptx}.
-Using this option changes the default value for option @code{-S}.
+Using this option changes the default value for option @samp{-S}.
 
 Using this option, the program does not try very hard to remove
 references from contexts in output, but it succeeds in doing so
 @emph{when} the context ends exactly at the newline.  If option
-@code{-r} is used with @code{-S} default value, or when GNU extensions
+@samp{-r} is used with @samp{-S} default value, or when GNU extensions
 are disabled, this condition is always met and references are completely
 excluded from the output contexts.
 
@@ -2628,25 +2628,25 @@ line or the end of a sentence.  In fact, there is other distinction
 between end of lines or end of sentences than the effect of this regular
 expression, and input line boundaries have no special significance
 outside this option.  By default, when GNU extensions are enabled and if
-@code{-r} option is not used, end of sentences are used.  In this
+@samp{-r} option is not used, end of sentences are used.  In this
 case, the precise @var{regex} is imported from GNU emacs:
 
 @example
 [.?!][]\"')@}]*\\($\\|\t\\|  \\)[ \t\n]*
 @end example
 
-Whenever GNU extensions are disabled or if @code{-r} option is used, end
+Whenever GNU extensions are disabled or if @samp{-r} option is used, end
 of lines are used; in this case, the default @var{regexp} is just:
 
 @example
 \n
 @end example
 
-Using an empty REGEXP is equivalent to completely disabling end of line or end
-of sentence recognition.  In this case, the whole file is considered to
-be a single big line or sentence.  The user might want to disallow all
-truncation flag generation as well, through option @code{-F ""}.
-@xref{Regexps, , Syntax of Regular Expressions, emacs, The GNU Emacs
+Using an empty @var{regexp} is equivalent to completely disabling end of
+line or end of sentence recognition.  In this case, the whole file is
+considered to be a single big line or sentence.  The user might want to
+disallow all truncation flag generation as well, through option @samp{-F
+""}.  @xref{Regexps, , Syntax of Regular Expressions, emacs, The GNU Emacs
 Manual}.
 
 When the keywords happen to be near the beginning of the input line or
@@ -2668,11 +2668,11 @@ the corresponding characters by @code{ptx} itself.
 
 This option selects which regular expression will describe each keyword.
 By default, if GNU extensions are enabled, a word is a sequence of
-letters; the @var{regexp} used is @code{\w+}.  When GNU extensions are
+letters; the @var{regexp} used is @samp{\w+}.  When GNU extensions are
 disabled, a word is by default anything which ends with a space, a tab
-or a newline; the @var{regexp} used is @code{[^ \t\n]+}.
+or a newline; the @var{regexp} used is @samp{[^ \t\n]+}.
 
-An empty REGEXP is equivalent to not using this option, letting the
+An empty @var{regexp} is equivalent to not using this option, letting the
 default dive in.  @xref{Regexps, , Syntax of Regular Expressions, emacs,
 The GNU Emacs Manual}.
 
@@ -2686,15 +2686,15 @@ the corresponding characters by @code{ptx} itself.
 @node Output formatting in ptx
 @subsection Output formatting
 
-Output format is mainly controlled by @code{-O} and @code{-T} options,
-described in the table below.  When neither @code{-O} nor @code{-T} is
+Output format is mainly controlled by @samp{-O} and @samp{-T} options,
+described in the table below.  When neither @samp{-O} nor @samp{-T} is
 selected, and if GNU extensions are enabled, the program choose an
 output format suited for a dumb terminal.  Each keyword occurrence is
 output to the center of one line, surrounded by its left and right
 contexts.  Each field is properly justified, so the concordance output
 could readily be observed.  As a special feature, if automatic
-references are selected by option @code{-A} and are output before the
-left context, that is, if option @code{-R} is @emph{not} selected, then
+references are selected by option @samp{-A} and are output before the
+left context, that is, if option @samp{-R} is @emph{not} selected, then
 a colon is added after the reference; this nicely interfaces with GNU
 Emacs @code{next-error} processing.  In this default output format, each
 white space character, like newline and tab, is merely changed to
@@ -2705,7 +2705,7 @@ characters is transmitted verbatim.
 
 Output format is further controlled by the following options.
 
-@table @code
+@table @samp
 
 @item -g @var{number}
 @itemx --gap-size=@var{number}
@@ -2718,7 +2718,7 @@ line.
 
 Select the output maximum width of each final line.  If references are
 used, they are included or excluded from the output maximum width
-depending on the value of option @code{-R}.  If this option is not
+depending on the value of option @samp{-R}.  If this option is not
 selected, that is, when references are output before the left context,
 the output maximum width takes into account the maximum length of all
 references.  If this options is selected, that is, when references are
@@ -2732,22 +2732,22 @@ them.
 Select automatic references.  Each input line will have an automatic
 reference made up of the file name and the line ordinal, with a single
 colon between them.  However, the file name will be empty when standard
-input is being read.  If both @code{-A} and @code{-r} are selected, then
+input is being read.  If both @samp{-A} and @samp{-r} are selected, then
 the input reference is still read and skipped, but the automatic
 reference is used at output time, overriding the input reference.
 
 @item -R
 @itemx --right-side-refs
 
-In default output format, when option @code{-R} is not used, any
-reference produced by the effect of options @code{-r} or @code{-A} are
+In default output format, when option @samp{-R} is not used, any
+reference produced by the effect of options @samp{-r} or @samp{-A} are
 given to the far right of output lines, after the right context.  In
-default output format, when option @code{-R} is specified, references
+default output format, when option @samp{-R} is specified, references
 are rather given to the beginning of each output line, before the left
-context.  For any other output format, option @code{-R} is almost
+context.  For any other output format, option @samp{-R} is almost
 ignored, except for the fact that the width of references is @emph{not}
-taken into account in total output width given by @code{-w} whenever
-@code{-R} is selected.
+taken into account in total output width given by @samp{-w} whenever
+@samp{-R} is selected.
 
 This option is automatically selected whenever GNU extensions are
 disabled.
@@ -2758,15 +2758,15 @@ disabled.
 This option will request that any truncation in the output be reported
 using the string @var{string}.  Most output fields theoretically extend
 towards the beginning or the end of the current line, or current
-sentence, as selected with option @code{-S}.  But there is a maximum
-allowed output line width, changeable through option @code{-w}, which is
+sentence, as selected with option @samp{-S}.  But there is a maximum
+allowed output line width, changeable through option @samp{-w}, which is
 further divided into space for various output fields.  When a field has
 to be truncated because cannot extend until the beginning or the end of
 the current line to fit in the, then a truncation occurs.  By default,
-the string used is a single slash, as in @code{-F /}.
+the string used is a single slash, as in @samp{-F /}.
 
-@var{string} may have more than one character, as in @code{-F ...}.
-Also, in the particular case @var{string} is empty (@code{-F ""}),
+@var{string} may have more than one character, as in @samp{-F ...}.
+Also, in the particular case @var{string} is empty (@samp{-F ""}),
 truncation flagging is disabled, and no truncation marks are appended in
 this case.
 
@@ -2811,9 +2811,9 @@ line will look like:
 @end example
 
 @noindent
-so it will be possible to write write a @code{\xx} definition to take
-care of the output typesetting.  Note that when references are not being
-produced, that is, neither option @code{-A} nor option @code{-r} is
+so it will be possible to write a @code{\xx} definition to take care of
+the output typesetting.  Note that when references are not being
+produced, that is, neither option @samp{-A} nor option @samp{-r} is
 selected, the last parameter of each @code{\xx} call is inhibited.
 Option @samp{-M} might be used to change @samp{xx} to another macro
 name.
@@ -2872,10 +2872,10 @@ meaning when GNU extensions are enabled, as explained below.
 @item
 By default, concordance output is not formatted for @code{troff} or
 @code{nroff}.  It is rather formatted for a dumb terminal.  @code{troff}
-or @code{nroff} output may still be selected through option @code{-O}.
+or @code{nroff} output may still be selected through option @samp{-O}.
 
 @item
-Unless @code{-R} option is used, the maximum reference width is
+Unless @samp{-R} option is used, the maximum reference width is
 subtracted from the total output line width.  With GNU extensions
 disabled, width of references is not taken into account in the output
 line width computations.
