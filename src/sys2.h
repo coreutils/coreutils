@@ -350,3 +350,10 @@ char *base_name PARAMS ((char const *));
 #ifndef PID_T_MAX
 # define PID_T_MAX TYPE_MAXIMUM (pid_t)
 #endif
+
+/* Use this to suppress gcc's `...may be used before initialized' warnings. */
+#ifdef lint
+# define IF_LINT(Code) Code
+#else
+# define IF_LINT(Code) /* empty */
+#endif
