@@ -276,7 +276,7 @@ check_format (const char *fmt)
   fmt += strspn (fmt, "-+#0");
   if (ISDIGIT (*fmt))
     {
-      fmt += strspn (fmt, "012345789");
+      fmt += strspn (fmt, "0123456789");
 
       if (*fmt == '.')
 	fmt += strspn (++fmt, "0123456789");
