@@ -199,6 +199,7 @@ main (argc, argv)
   char **string = NULL;
   char n_strings = 0;
   size_t i;
+  size_t err = 0;
 
   /* Setting values of global variables.  */
   program_name = argv[0];
@@ -243,23 +244,23 @@ main (argc, argv)
 	do_version = 1;
 	break;
       default:
-	usage (1);
+	usage (EXIT_FAILURE);
       }
 
   if (do_version)
     {
       printf ("md5sum - %s\n", version_string);
-      exit (0);
+      exit (EXIT_SUCCESS);
     }
 
   if (do_help)
-    usage (0);
+    usage (EXIT_SUCCESS);
 
   if (n_strings > 0 && do_check != 0)
     {
       error (0, 0,
 	     _("the --string and --check options are mutually exclusive"));
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
   if (n_strings > 0)
@@ -268,7 +269,7 @@ main (argc, argv)
       if (optind < argc)
 	{
 	  error (0, 0, _("no files may be specified when using --string"));
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	}
       for (i = 0; i < n_strings; ++i)
 	{
@@ -304,15 +305,23 @@ main (argc, argv)
 
 	      fp = fopen (argv[optind], OPENOPTS);
 	      if (fp == NULL)
-		error (1, errno, _("while opening input file `%s'"),
-		       argv[optind]);
+		error (EXIT_FAILURE, errno, "%s", argv[optind]);
 	    }
 
-	  md5_stream (fp, md5buffer);
+	  err |= md5_stream (fp, md5buffer);
+	  if (err)
+	    {
+	      error (0, errno, argv[optind]);
+	      fclose (fp);
+	      continue;
+	    }
 
-	  if (fp != stdin)
-	    if (fclose (fp) == EOF)
-	      error (1, errno, argv[optind]);
+	  if (fp != stdin && fclose (fp) == EOF)
+	    {
+	      err = 1;
+	      error (0, errno, argv[optind]);
+	      continue;
+	    }
 
 	  for (cnt = 0; cnt < 16; ++cnt)
 	    printf ("%02x", md5buffer[cnt]);
@@ -334,7 +343,7 @@ main (argc, argv)
 	{
 	  error (0, 0,
 		 _("only one argument may be specified when using --check"));
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	}
 
       if (optind == argc || strcmp (argv[optind], "-") == 0)
@@ -348,9 +357,10 @@ main (argc, argv)
 	  checkfile_stream = fopen (checkfile_name, "r");
 	  if (checkfile_stream == NULL)
 	    if (quiet)
-	      exit (1);
+	      exit (EXIT_FAILURE);
 	    else
-	      error (1, errno, _("check file: %s"), checkfile_name);
+	      error (EXIT_FAILURE, errno,
+		     _("check file: %s"), checkfile_name);
 	}
 
       do
@@ -405,7 +415,7 @@ main (argc, argv)
 		  if (fp == NULL)
 		    /* The text of this sometimes message completes the
 		       message given above.  */
-		    error (1, errno, quiet ? "%s: " : "", filename);
+		    error (EXIT_FAILURE, errno, quiet ? "%s: " : "", filename);
 		}
 
 	      ++n_tests;
@@ -413,7 +423,7 @@ main (argc, argv)
 
 	      if (fp != stdin)
 		if (fclose (fp) == EOF)
-		  error (1, errno, filename);
+		  error (EXIT_FAILURE, errno, filename);
 
 	      /* Compare generated binary number with text representation
 		 in check file.  Ignore case of hex digits.  */
@@ -432,7 +442,7 @@ main (argc, argv)
       while (!feof (checkfile_stream));
 
       if (fclose (checkfile_stream) == EOF)
-	error (1, errno, checkfile_name);
+	error (EXIT_FAILURE, errno, checkfile_name);
 
       if (!quiet)
 	printf (n_tests == 1 ? (n_tests_failed ? _("Test failed\n")
@@ -444,7 +454,7 @@ main (argc, argv)
     }
 
   if (fclose (stdout) == EOF)
-    error (1, errno, "write error");
+    error (EXIT_FAILURE, errno, "write error");
 
-  exit (0);
+  exit (err == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
