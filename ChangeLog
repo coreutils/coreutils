@@ -2,6 +2,11 @@
 
 	* Version 5.3.1.
 
+	* src/stat.c (human_fstype): Add case/definition for S_MAGIC_XFS
+	so that file systems of type `xfs' are recognized as such.
+	* src/fs.h: Regenerate.
+	Reported by Bernd Eckenfels.
+
 	* src/nice.c (NZERO) [NZERO == 0]: Undefine and define to 20,
 	to work around the invalid definition from Darwin 7.7.0.
 	Test failure reported by Sébastien Maret.
