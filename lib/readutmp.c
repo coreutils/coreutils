@@ -1,5 +1,5 @@
 /* GNU's read utmp module.
-   Copyright (C) 1992-2001, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1992-2001, 2003, 2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -74,10 +74,16 @@ read_utmp (const char *filename, int *n_entries, STRUCT_UTMP **utmp_buf)
   n_read = 0;
   while ((u = GET_UTMP_ENT ()) != NULL)
     {
+      STRUCT_UTMP *p;
       ++n_read;
-      utmp = (STRUCT_UTMP *) realloc (utmp, n_read * sizeof (STRUCT_UTMP));
-      if (utmp == NULL)
-	return 1;
+      p = (STRUCT_UTMP *) realloc (utmp, n_read * sizeof (STRUCT_UTMP));
+      if (p == NULL)
+	{
+	  free (utmp);
+	  END_UTMP_ENT ();
+	  return 1;
+	}
+      utmp = p;
       utmp[n_read - 1] = *u;
     }
 
