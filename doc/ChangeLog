@@ -1,3 +1,9 @@
+2003-04-04  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.am (constants.texi): Rename target (thus enabling it),
+	now that fileutils, textutils, and sh-utils have been merged.
+	(MAINTAINERCLEANFILES): Define.
+
 2003-04-02  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (false invocation): Note that false exits
