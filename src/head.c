@@ -555,8 +555,9 @@ elide_tail_lines_pipe (const char *filename, int fd, uintmax_t n_elide)
       goto free_lbuffers;
     }
 
-  /* Count the incomplete line on files that don't end with a newline.  */
-  if (last->buffer[last->nbytes - 1] != '\n')
+  /* If we read any bytes at all, count the incomplete line
+     on files that don't end with a newline.  */
+  if (last->nbytes && last->buffer[last->nbytes - 1] != '\n')
     {
       ++last->nlines;
       ++total_lines;
