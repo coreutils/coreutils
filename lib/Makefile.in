@@ -797,16 +797,23 @@ stat.c: xstat.in
 # which is shared with other installed packages. We use a list of referencing
 # packages so that "make uninstall" will remove the file if and only if it
 # is not used by another installed package.
+# On systems with glibc-2.1 or newer, the file is redundant, therefore we
+# avoid installing it.
 
 all-local: charset.alias ref-add.sed ref-del.sed
 install-exec-local: all-local
 	$(mkinstalldirs) $(DESTDIR)$(libdir)
-	test -f $(charset_alias) \
-	  && orig=$(charset_alias) \
-	  || orig=charset.alias; \
-	sed -f ref-add.sed $$orig > $(charset_tmp)
-	$(INSTALL_DATA) $(charset_tmp) $(charset_alias)
-	rm -f $(charset_tmp)
+	if test -f $(charset_alias); then \
+	  sed -f ref-add.sed $(charset_alias) > $(charset_tmp) ; \
+	  $(INSTALL_DATA) $(charset_tmp) $(charset_alias) ; \
+	  rm -f $(charset_tmp) ; \
+	else \
+	  if test @GLIBC21@ = no; then \
+	    sed -f ref-add.sed charset.alias > $(charset_tmp) ; \
+	    $(INSTALL_DATA) $(charset_tmp) $(charset_alias) ; \
+	    rm -f $(charset_tmp) ; \
+	  fi ; \
+	fi
 
 uninstall-local: all-local
 	if test -f $(charset_alias); then \
