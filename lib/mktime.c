@@ -29,8 +29,8 @@
 #endif
 
 /* Some systems need this in order to declare localtime_r properly.  */
-#ifndef _REENTRANT
-# define _REENTRANT 1
+#ifndef __EXTENSIONS__
+# define __EXTENSIONS__ 1
 #endif
 
 #ifdef _LIBC
@@ -270,14 +270,14 @@ __mktime_internal (tp, convert, offset)
      struct tm *(*convert) __P ((const time_t *, struct tm *));
      time_t *offset;
 {
-  time_t t, dt, t0;
+  time_t t, dt, t0, t1, t2;
   struct tm tm;
 
   /* The maximum number of probes (calls to CONVERT) should be enough
      to handle any combinations of time zone rule changes, solar time,
-     and leap seconds.  POSIX.1 prohibits leap seconds, but some hosts
-     have them anyway.  */
-  int remaining_probes = 4;
+     leap seconds, and oscillations around a spring-forward gap.
+     POSIX.1 prohibits leap seconds, but some hosts have them anyway.  */
+  int remaining_probes = 6;
 
   /* Time requested.  Copy it in case CONVERT modifies *TP; this can
      occur if TP is localtime's returned value and CONVERT is localtime.  */
@@ -323,15 +323,27 @@ __mktime_internal (tp, convert, offset)
   tm.tm_yday = tm.tm_hour = tm.tm_min = tm.tm_sec = 0;
   t0 = ydhms_tm_diff (year, yday, hour, min, sec, &tm);
 
-  for (t = t0 + *offset;
+  for (t = t1 = t2 = t0 + *offset;
        (dt = ydhms_tm_diff (year, yday, hour, min, sec,
 			    ranged_convert (convert, &t, &tm)));
-       t += dt)
-    if (--remaining_probes == 0)
+       t1 = t2, t2 = t, t += dt)
+    if (t == t1 && t != t2
+	&& (isdst < 0 || tm.tm_isdst < 0
+	    || (isdst != 0) != (tm.tm_isdst != 0)))
+      /* We can't possibly find a match, as we are oscillating
+	 between two values.  The requested time probably falls
+	 within a spring-forward gap of size DT.  Follow the common
+	 practice in this case, which is to return a time that is DT
+	 away from the requested time, preferring a time whose
+	 tm_isdst differs from the requested value.  In practice,
+	 this is more useful than returning -1.  */
+      break;
+    else if (--remaining_probes == 0)
       return -1;
 
-  /* Check whether tm.tm_isdst has the requested value, if any.  */
-  if (0 <= isdst && 0 <= tm.tm_isdst)
+  /* If we have a match, check whether tm.tm_isdst has the requested
+     value, if any.  */
+  if (dt == 0 && 0 <= isdst && 0 <= tm.tm_isdst)
     {
       int dst_diff = (isdst != 0) - (tm.tm_isdst != 0);
       if (dst_diff)
