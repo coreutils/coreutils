@@ -2,7 +2,7 @@
 
 	* src/ln.c (do_link): Form destination file name (when DEST is a
 	directory) before checking whether SOURCE and DEST are the same file.
-	See tests/ln/sf-1.  Reported by Veksler Michael.
+	See tests/ln/sf-1.  Reported by Michael Veksler.
 
 	* tests/ln: New directory and test.
 	* tests/Makefile.am (SUBDIRS): Add ln.
