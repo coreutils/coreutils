@@ -1070,10 +1070,9 @@ decode_switches (int argc, char **argv)
 	      i = color_always;
 	    }
 
-	  if (i == color_if_tty)
-	    print_with_color = isatty (STDOUT_FILENO);
-	  else
-	    print_with_color = (i == color_always);
+	  print_with_color = (i == color_always
+			      || (i == color_if_tty
+				  && isatty (STDOUT_FILENO)));
 
 	  if (print_with_color)
 	    {
