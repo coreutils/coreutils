@@ -3,10 +3,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
+  chmod can now process hierarchies of virtually unlimited depth
+  chmod accepts new options: --preserve-root, --no-preserve-root
+
   chown and chgrp can now process hierarchies of virtually unlimited depth
   chown and chgrp now accept POSIX-mandated -L, -H, and -P options
-
-  chmod accepts new options: --preserve-root, --no-preserve-root
 
   du can now process hierarchies of virtually unlimited depth.
   Before, du was limited by the user's stack size and it would get a
