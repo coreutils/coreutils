@@ -28,10 +28,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 # include <config.h>
 #endif
 
-#include <string.h>
+#if defined _LIBC || defined HAVE_STRING_H
+# include <string.h>
+#endif
 #include <sys/types.h>
 
 typedef unsigned chartype;
+
+#undef strstr
 
 char *
 strstr (const char *phaystack, const char *pneedle)
@@ -105,7 +109,7 @@ jin:	  a = *++haystack;
 	      }
 	    while (*rhaystack == a);
 
-	  needle = rneedle;		   /* took the register-poor aproach */
+	  needle = rneedle;		   /* took the register-poor approach */
 
 	  if (a == '\0')
 	    break;
