@@ -154,7 +154,7 @@ cp_option_init (struct cp_options *x)
   x->recursive = false;
   x->sparse_mode = SPARSE_AUTO;
   x->symbolic_link = false;
-  x->backup_type = none;
+  x->backup_type = no_backups;
 
   /* Create destination files initially writable so we can run strip on them.
      Although GNU strip works fine on read-only files, some others
@@ -320,7 +320,7 @@ main (int argc, char **argv)
   x.backup_type = (make_backups
 		   ? xget_version (_("backup type"),
 				   version_control_string)
-		   : none);
+		   : no_backups);
 
   n_files = argc - optind;
   file = argv + optind;
