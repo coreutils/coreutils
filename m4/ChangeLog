@@ -1,3 +1,7 @@
+2002-04-30  Jim Meyering  <meyering@lucent.com>
+
+	* prereq.m4 (jm_PREREQ): Add jm_PREREQ_STAT.
+
 2002-04-29  Paul Eggert  <eggert@twinsun.com>
 
 	* prereq.m4 (jm_PREREQ_HARD_LOCALE): Check for stdlib.h.
