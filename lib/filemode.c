@@ -28,15 +28,6 @@
 #define S_IEXEC S_IXUSR
 #endif
 
-#if 0 /* This is unreliable, since GCC 2.5 always has S_ISREG in its
-	 fixed headers but it does not always have mode_t.
-	 It seems safer not to try to use mode_t ever.  */
-#if !defined(S_ISREG) || defined(NO_MODE_T)
-/* Doesn't have POSIX.1 stat stuff or doesn't have mode_t.  */
-#define mode_t unsigned short
-#endif
-#endif
-
 #ifdef STAT_MACROS_BROKEN
 #undef S_ISBLK
 #undef S_ISCHR
