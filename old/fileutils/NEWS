@@ -1,4 +1,6 @@
 User-visible changes in release 3.13:
+* rename touch long option name --file to --reference.
+  `touch --file' will continue to work a little longer.
 * df fails if the same file system type is both selected and excluded.
 * df works around SunOS statfs brokenness wrt filesystems larger than 2GB
 * df better handles inconsistent mtab entries
