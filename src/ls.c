@@ -368,13 +368,10 @@ static int print_with_color;
 
 enum color_type
   {
-    color_no,			/* 0: default or --color=no */
-    color_yes,			/* 1: --color=yes */
+    color_never,		/* 0: default or --color=never */
+    color_always,		/* 1: --color=always */
     color_if_tty		/* 2: --color=tty */
   };
-
-/* Note that color_no and color_yes equals boolean values; they will
-   be assigned to print_with_color which is a boolean variable.  */
 
 enum indicator_no
   {
@@ -607,12 +604,16 @@ static char const *const color_args[] =
   {
     /* Note: "no" is a prefix of "none" so we don't include it.  */
     /* force and none are for compatibility with another color-ls version */
-    "yes", "force", "none", "tty", "if-tty", 0
+    "always", "yes", "force",
+    "never", "none",
+    "auto", "tty", "if-tty", 0
   };
 
 static enum color_type const color_types[] =
   {
-    color_yes, color_yes, color_no, color_if_tty, color_if_tty
+    color_always, color_always, color_always,
+    color_never, color_never,
+    color_if_tty, color_if_tty, color_if_tty
   };
 
 
@@ -882,7 +883,7 @@ decode_switches (int argc, char **argv)
 	  if (format == long_format)
 	    format = (isatty (1) ? many_per_line : one_per_line);
 	  print_block_size = 0;	/* disable -s */
-	  print_with_color = 0;	/* disable ---color */
+	  print_with_color = 0;	/* disable --color */
 	  break;
 
 	case 'g':
@@ -1063,12 +1064,16 @@ decode_switches (int argc, char **argv)
 	      i = color_types[i];
 	    }
 	  else
-	    i = color_yes;	/* Only --color -> --color=yes */
+	    {
+	      /* Using --color with no argument is equivalent to using
+		 --color=always.  */
+	      i = color_always;
+	    }
 
 	  if (i == color_if_tty)
-	    print_with_color = isatty (1);
+	    print_with_color = isatty (STDOUT_FILENO);
 	  else
-	    print_with_color = i;
+	    print_with_color = (i == color_always);
 
 	  if (print_with_color)
 	    {
@@ -2337,7 +2342,7 @@ print_color_indicator (char *name, unsigned int mode, int linkok)
 {
   int type = C_FILE;
   struct col_ext_type *ext;	/* Color extension */
-  int len;			/* Length of name */
+  size_t len;			/* Length of name */
 
   /* Is this a nonexistent file?  If so, linkok == -1.  */
 
@@ -2686,9 +2691,9 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
   -b, --escape               print octal escapes for nongraphic characters\n\
   -C                         list entries by columns\n\
   -c                         sort by change time; with -l: show ctime\n\
-      --color[=WORD]         colorize entries according to WORD\n\
-                             yes, no, or tty (if output is terminal)\n\
-  -D, --dired                generate output well suited to Emacs' dired mode\n\
+      --color[=WHEN]         control whether color is used to distinguish file\n\
+                               types.  WHEN may be `never', `always', or `auto'\n\
+  -D, --dired                generate output designed for Emacs' dired mode\n\
   -d, --directory            list directory entries instead of contents\n\
   -F, --classify             append a character for typing each entry\n\
   -f                         do not sort, enable -aU, disable -lst\n\
@@ -2730,7 +2735,15 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
   -X                         sort alphabetically by entry extension\n\
   -1                         list one file per line\n\
       --help                 display this help and exit\n\
-      --version              output version information and exit\n"));
+      --version              output version information and exit\n\
+\n\
+By default, color is not used to distinguish types of files.  That is\n\
+equivalent to using --color=none.  Using the --color option without the
+optional WHEN argument is equivalent to using --color=always.  With\n\
+--color=auto, color codes are output only if standard output is connected\n\
+to a terminal (tty).\n\
+"
+		));
     }
   exit (status);
 }
