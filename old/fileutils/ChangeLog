@@ -93,6 +93,8 @@
 	do this.  Now, you must use `cp --remove-destination' to get this
 	behavior.  Now, `cp -f' and `mv -f' work as required by POSIX.
 	[unlink_dest_after_failed_open]: Add member.
+	Paul Eggert reported that `cp -f' removes an existing destination
+	file unconditionally, and that is contrary to POSIX.
 
 	* src/copy.c (same_file_ok): New function, extracted from copy_internal,
 	and rewritten.
