@@ -38,9 +38,6 @@
 #include "error.h"
 #include "xstrtod.h"
 
-/* FIXME: remove this */
-#undef ENABLE_NLS
-
 #ifdef ENABLE_NLS
 /* FIXME: this may need some heading.... applies to Debian linux for
    reading the structure of _NL_ITEM... to get abreviated month names */
@@ -119,15 +116,10 @@ static int nls_month_found = 1;
    locale character map, otherwise ensure normal behavior.  */
 #ifdef ENABLE_NLS
 
-/* Keys have limited length */
-/* FIXME: unused  */
-# define NLS_KEY_LIMIT 30
-
 /* 12 months in a year */
 # define NLS_NUM_MONTHS 12
 
-/* FIXME: avoid arbitrary limits  */
-/* Maximum number of groups.  */
+/* Maximum number of elements, to allocate per allocation unit  */
 # define NLS_MAX_GROUPS 8
 
 /* A string with one character, to enforce char collation */
@@ -543,9 +535,7 @@ nls_sort_month_comp (struct month *m1, struct month *m2)
 }
 
 /* Do collation on strings S1 and S2, but for at most L characters.
-   we use the fact, that we KNOW that L is the min of the two lengths
-   and we make use of the fact that collation on chars has already
-   been done and is stored in NLS_MAP.  FIXME: this comment is out of date.  */
+   we use the fact, that we KNOW that L is the min of the two lengths */
 static int
 strncoll (unsigned char *s1, unsigned char *s2, int l)
 {
@@ -970,16 +960,17 @@ fraccompare (register const char *a, register const char *b)
   if (*a == decimal_point || *b == decimal_point)
     {
       if (*a == *b)
-	do
-	  {
-	    ++a, ++b;
-	  }
-	while (*a == *b && ISDIGIT (*a));
+	do {
+	  ++a;
+	  ++b;
+	} while (*a == *b && ISDIGIT (*a));
       if (ISDIGIT (*a) && ISDIGIT (*b))
 	return (*a) - (*b);
       s = b;
-      if (*a == decimal_point || (ISDIGIT (*a) && *b != decimal_point))
-	s = a, n = 1;
+      if (*a == decimal_point || (ISDIGIT (*a) && *b != decimal_point)) {
+	s = a;
+	n = 1;
+      }
       if (*s == decimal_point)
 	++s;
       while (*s == NUMERIC_ZERO)
@@ -1121,17 +1112,32 @@ nls_set_fraction (register unsigned char ch)
    where the grouping rule is 3;3... we take a look at group 1, and find
    out that |{1234}| > larger of the two first grouping rules, then
    the seperator has to be a decimal point...
+
+Changes:
+
+14/10/1997... ÖEH
+   Change the table of groups to be able to handle arbitrary
+   number of groups.  This is done by starting to allocate a minimum
+   buffer of NLS_MAX_GRUPS size.  If this turns out to be insufficient
+   to realloc space for new buffer in steps of NLS_MAX_GROUPS.  The
+   memory allocated and size, are statically allocated so they will
+   remain the same through every call.
+
    */
 
-/* FIXME: can these parameters be const?  */
-/* FIXME: describe: no meaningful return value --
-   updates global, nls_fraction_found  */
-static int
-look_for_fraction (unsigned char *s, unsigned char *e)
+static void
+look_for_fraction (unsigned const char *s, unsigned const char *e)
 {
   /* I don't think it's reasonable to think of more than 6 groups */
-  register unsigned char *p = s, n = 0;
-  unsigned short groups[NLS_MAX_GROUPS];
+  register unsigned const char *p = s;
+  register unsigned short n = 0;
+  static unsigned short max_groups = 0;
+  static unsigned short *groups = NULL;
+
+  if (groups == NULL) {
+    max_groups = NLS_MAX_GROUPS;
+    groups = (short *)xmalloc(sizeof(short) * max_groups);
+  }
 
   /* skip blanks and signs */
   while (blanks[*s] || *s == NEGATIVE_SIGN)
@@ -1143,9 +1149,12 @@ look_for_fraction (unsigned char *s, unsigned char *e)
          n = number of seperators so far */
       if (*p == decimal_point || *p == th_sep || *p == FLOATING_POINT)
 	{
-	  if (++n >= NLS_MAX_GROUPS)
-	    return;		/* WOW! BIG Number... */
-	  groups[n] = (short) (p - s), s = p + 1;
+	  if (++n >= max_groups) {  /* WOW! BIG Number... enlarge table */
+	    max_groups += NLS_MAX_GROUPS;
+	    groups = (short *)xrealloc((char *)groups, sizeof(short) * max_groups);
+	  }
+	  groups[n] = (short) (p - s);
+	  s = p + 1;
 	}
       else if (!ISDIGIT (*p))
 	break;
@@ -1155,7 +1164,7 @@ look_for_fraction (unsigned char *s, unsigned char *e)
   groups[++n] = (short) (p - s);
   /* n = groups in the number */
   if (n <= 1)
-    return 0;			/* Only one group of numbers... not enough */
+    return;			/* Only one group of numbers... not enough */
   p = nls_grouping;
   /* p = address of group rules
      s = address of next character after seperator */
@@ -1164,28 +1173,25 @@ look_for_fraction (unsigned char *s, unsigned char *e)
     {
       /* a legal trailing group, iff groups[n] == first rule */
       if (groups[n] != (short) *p)
-	return nls_set_fraction (*s);
-      if (n == 2)
-	{			/* Only two groups */
-	  if (groups[n - 1] > max (p[0], p[1]))
-	    return nls_set_fraction (*s);
-	  return 0;
-	}
-      /* if the seperators are the same, it's a thousands */
-      if (*s != *(s - groups[n]))
-	return nls_set_fraction (*s);
-      /* s[0] = thousands seperator */
-      /* FIXME: clean up  */
-      if (*s == FLOATING_COMMA)
-	return nls_set_fraction (FLOATING_POINT);
-      return nls_fraction_found = 1;
+	nls_set_fraction (*s);
+      else {
+	if (n == 2)
+	  {			/* Only two groups */
+	    if (groups[n - 1] > max (p[0], p[1]))
+	      return nls_set_fraction (*s);
+	    return;
+	  }
+	/* if the seperators are the same, it's a thousands */
+	if (*s != *(s - groups[n]))
+	  nls_set_fraction (*s);
+	/* s[0] = thousands seperator */
+	else if (*s == FLOATING_COMMA)
+	  nls_set_fraction (FLOATING_POINT);
+      }
+      nls_fraction_found = 1;
     }
-  else
-    {
-      /* no grouping allowed here, last seperator IS decimal point */
-      return nls_set_fraction (*s);
-    }
-  return 0;
+  else /* no grouping allowed here, last seperator IS decimal point */
+      nls_set_fraction (*s);
 }
 
 static int
@@ -2377,7 +2383,7 @@ int
 main (int argc, char **argv)
 {
   struct keyfield *key = NULL, gkey;
-  char *s;
+  char *s, *c_locale_string, *posix_locale_string;
   int i, t, t2;
   int checkonly = 0, mergeonly = 0, nfiles = 0;
   char *minus = "-", *outfile = minus, **files, *tmp;
@@ -2390,9 +2396,18 @@ main (int argc, char **argv)
 
 #ifdef ENABLE_NLS
 
+  /* Drepper pointed out that not all systems return a sane
+     string with setlocale() call.  So we need to know what this
+     system identifies as "C" and "POSIX" locales.               */
+  c_locale_string     = strdup(setlocale(LC_ALL, "C"));
+  posix_locale_string = strdup(setlocale(LC_ALL, "POSIX"));
   s = setlocale(LC_ALL, "");
-  if (strcmp(s, "C") && strcmp(s, "POSIX"))
+  if (strcmp(s, c_locale_string) && strcmp(s, posix_locale_string))
     need_locale = 1;  /* Neither C nor POSIX, we need to initialize it */
+
+  /* These two have served their purpose, clean up */
+  free(c_locale_string);
+  free(posix_locale_string);
 
   /* Let's get locale's representation of the decimal point */
   decimal_point = *( localeconv() )->decimal_point;
