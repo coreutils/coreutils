@@ -1,4 +1,4 @@
-#serial 4
+#serial 5
 
 dnl From Jim Meyering
 
@@ -8,7 +8,7 @@ dnl Some systems have utime.h but don't declare the struct anywhere.
 
 AC_DEFUN([jm_CHECK_TYPE_STRUCT_UTIMBUF],
 [
-  AC_CHECK_HEADERS(utime.h)
+  AC_CHECK_HEADERS_ONCE(sys/time.h utime.h)
   AC_REQUIRE([AC_HEADER_TIME])
   AC_CACHE_CHECK([for struct utimbuf], fu_cv_sys_struct_utimbuf,
     [AC_TRY_COMPILE(
@@ -34,7 +34,7 @@ AC_DEFUN([jm_CHECK_TYPE_STRUCT_UTIMBUF],
 
   if test $fu_cv_sys_struct_utimbuf = yes; then
     AC_DEFINE(HAVE_STRUCT_UTIMBUF, 1,
-[Define if struct utimbuf is declared -- usually in <utime.h>.
-   Some systems have utime.h but don't declare the struct anywhere. ])
+      [Define if struct utimbuf is declared -- usually in <utime.h>.
+       Some systems have utime.h but don't declare the struct anywhere. ])
   fi
 ])

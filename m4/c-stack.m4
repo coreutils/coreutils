@@ -148,6 +148,13 @@ AC_DEFUN([jm_PREREQ_C_STACK],
    AC_CHECK_DECLS([getcontext], , , [#include <ucontext.h>])
    AC_CHECK_DECLS([sigaltstack], , , [#include <signal.h>])
 
-   AC_CHECK_HEADERS(sys/resource.h ucontext.h unistd.h)
+   AC_CHECK_HEADERS_ONCE(sys/time.h unistd.h)
+   AC_CHECK_HEADERS(sys/resource.h ucontext.h)
 
    AC_CHECK_TYPES([stack_t], , , [#include <signal.h>])])
+
+AC_DEFUN([gl_C_STACK],
+[
+  dnl Prerequisites of lib/c-stack.c.
+  jm_PREREQ_C_STACK
+])

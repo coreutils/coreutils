@@ -1,4 +1,4 @@
-#serial 17
+#serial 19
 
 dnl Initially derived from code in GNU grep.
 dnl Mostly written by Jim Meyering.

@@ -1,4 +1,4 @@
-# vasnprintf.m4 serial 1
+# vasnprintf.m4 serial 2
 dnl Copyright (C) 2002-2003 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
@@ -50,10 +50,7 @@ AC_DEFUN([gl_PREREQ_VASNPRINTF],
   AC_REQUIRE([gt_TYPE_LONGDOUBLE])
   AC_REQUIRE([gt_TYPE_WCHAR_T])
   AC_REQUIRE([gt_TYPE_WINT_T])
-  AC_CHECK_FUNCS(snprintf)
-
-  # Solaris 2.5.1 needs -lw to get the wcslen function.
-  AC_SEARCH_LIBS(wcslen, [w])
+  AC_CHECK_FUNCS(snprintf wcslen)
 ])
 
 # Prerequisites of lib/asnprintf.c.

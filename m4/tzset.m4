@@ -52,13 +52,7 @@ main ()
     [Define to 1 if you have run the test for working tzset.])
 
   if test $gl_cv_func_tzset_clobber = yes; then
-    # Caution: the following few lines should be the same
-    # as those in gettimeofday.m4.
-    AC_LIBOBJ(gettimeofday)
-    AC_DEFINE(gmtime, rpl_gmtime,
-      [Define to rpl_gmtime if the replacement function should be used.])
-    AC_DEFINE(localtime, rpl_localtime,
-      [Define to rpl_localtime if the replacement function should be used.])
+    gl_GETTIMEOFDAY_REPLACE_LOCALTIME
 
     AC_DEFINE(tzset, rpl_tzset,
       [Define to rpl_tzset if the wrapper function should be used.])

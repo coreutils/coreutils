@@ -19,5 +19,8 @@
 # Written by Paul Eggert.
 
 AC_DEFUN([AC_FUNC_ACL],
-  [AC_CHECK_HEADERS(sys/acl.h)
-   AC_CHECK_FUNCS(acl)])
+[
+  dnl Prerequisites of lib/acl.c.
+  AC_CHECK_HEADERS(sys/acl.h)
+  AC_CHECK_FUNCS(acl)
+])

@@ -1,4 +1,4 @@
-#serial 19
+#serial 18
 
 dnl This is just a wrapper function to encapsulate this kludge.
 dnl Putting it in a separate file like this helps share it between
@@ -52,7 +52,6 @@ AC_DEFUN([jm_CHECK_DECLS],
 '
 
   AC_CHECK_DECLS([
-    euidaccess,
     free,
     getenv,
     geteuid,

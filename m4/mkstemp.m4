@@ -1,4 +1,4 @@
-#serial 1
+#serial 3
 
 # On some hosts (e.g., HP-UX 10.20, SunOS 4.1.4, Solaris 2.5.1), mkstemp has a
 # silly limit that it can create no more than 26 files from a given template.
@@ -42,5 +42,24 @@ AC_DEFUN([UTILS_FUNC_MKSTEMP],
     AC_LIBOBJ(tempname)
     AC_DEFINE(mkstemp, rpl_mkstemp,
       [Define to rpl_mkstemp if the replacement function should be used.])
+    gl_PREREQ_MKSTEMP
+    jm_PREREQ_TEMPNAME
   fi
+])
+
+# Prerequisites of lib/mkstemp.c.
+AC_DEFUN([gl_PREREQ_MKSTEMP],
+[
+])
+
+# Prerequisites of lib/tempname.c.
+AC_DEFUN([jm_PREREQ_TEMPNAME],
+[
+  AC_REQUIRE([AC_HEADER_STDC])
+  AC_REQUIRE([AC_HEADER_STAT])
+  AC_CHECK_HEADERS_ONCE(fcntl.h sys/time.h unistd.h)
+  AC_CHECK_HEADERS(stdint.h)
+  AC_CHECK_FUNCS(__secure_getenv gettimeofday)
+  AC_CHECK_DECLS_ONCE(getenv)
+  AC_REQUIRE([jm_AC_TYPE_UINTMAX_T])
 ])

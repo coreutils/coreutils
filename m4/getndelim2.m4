@@ -8,6 +8,7 @@ dnl the same distribution terms as the rest of that program.
 
 AC_DEFUN([gl_GETNDELIM2],
 [
+  AC_LIBOBJ(getndelim2)
   gl_PREREQ_GETNDELIM2
 ])
 

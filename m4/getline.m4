@@ -56,6 +56,7 @@ AC_DEFUN([AM_FUNC_GETLINE],
     AC_DEFINE([getline], [gnu_getline],
       [Define to a replacement function name for getline().])
     AC_LIBOBJ(getline)
+    AC_LIBOBJ(getndelim2)
     gl_PREREQ_GETLINE
     gl_PREREQ_GETNDELIM2
   fi

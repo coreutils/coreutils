@@ -1,4 +1,4 @@
-#serial 3
+#serial 5
 
 dnl From Volker Borchert.
 dnl Determine whether rename works for source paths with a trailing slash.
@@ -33,8 +33,18 @@ AC_DEFUN([vb_FUNC_RENAME],
   ])
   if test $vb_cv_func_rename_trailing_slash_bug = yes; then
     AC_LIBOBJ(rename)
+    AC_DEFINE(rename, rpl_rename,
+      [Define to rpl_rename if the replacement function should be used.])
     AC_DEFINE(RENAME_TRAILING_SLASH_BUG, 1,
-[Define if rename does not work for source paths with a trailing slash,
-   like the one from SunOS 4.1.1_U1.])
+      [Define if rename does not work for source paths with a trailing slash,
+       like the one from SunOS 4.1.1_U1.])
+    gl_PREREQ_RENAME
   fi
+])
+
+# Prerequisites of lib/rename.c.
+AC_DEFUN([gl_PREREQ_RENAME],
+[
+  AC_CHECK_HEADERS_ONCE(stdlib.h string.h)
+  AC_CHECK_DECLS_ONCE(free)
 ])

@@ -1,4 +1,4 @@
-#serial 34
+#serial 35
 
 dnl We use jm_ for non Autoconf macros.
 m4_pattern_forbid([^jm_[ABCDEFGHIJKLMNOPQRSTUVXYZ]])dnl
@@ -9,31 +9,116 @@ m4_pattern_forbid([^gl_[ABCDEFGHIJKLMNOPQRSTUVXYZ]])dnl
 
 AC_DEFUN([jm_PREREQ],
 [
-  AC_REQUIRE([jm_PREREQ_ADDEXT])
-
   # We don't yet use c-stack.c.
-  # AC_REQUIRE([jm_PREREQ_C_STACK])
+  # AC_REQUIRE([gl_C_STACK])
 
-  AC_REQUIRE([jm_PREREQ_CANON_HOST])
-  AC_REQUIRE([jm_PREREQ_DIRNAME])
-  AC_REQUIRE([jm_PREREQ_ERROR])
-  AC_REQUIRE([jm_PREREQ_EXCLUDE])
-  AC_REQUIRE([jm_PREREQ_GETPAGESIZE])
-  AC_REQUIRE([jm_PREREQ_HARD_LOCALE])
-  AC_REQUIRE([jm_PREREQ_HASH])
+  AC_REQUIRE([AM_FUNC_GETLINE])
+  AC_REQUIRE([AM_STDBOOL_H])
+  AC_REQUIRE([UTILS_FUNC_MKDIR_TRAILING_SLASH])
+  AC_REQUIRE([UTILS_FUNC_MKSTEMP])
+  AC_REQUIRE([gl_BACKUPFILE])
+  AC_REQUIRE([gl_CANON_HOST])
+  AC_REQUIRE([gl_CLOSEOUT])
+  AC_REQUIRE([gl_DIRNAME])
+  AC_REQUIRE([gl_ERROR])
+  AC_REQUIRE([gl_EXCLUDE])
+  AC_REQUIRE([gl_EXITFAIL])
+  AC_REQUIRE([gl_FILEBLOCKS])
+  AC_REQUIRE([gl_FILEMODE])
+  AC_REQUIRE([gl_FILE_TYPE])
+  AC_REQUIRE([gl_FSUSAGE])
+  AC_REQUIRE([gl_FUNC_ALLOCA])
+  AC_REQUIRE([gl_FUNC_ATEXIT])
+  AC_REQUIRE([gl_FUNC_DUP2])
+  AC_REQUIRE([gl_FUNC_EUIDACCESS])
+  AC_REQUIRE([gl_FUNC_FNMATCH_GNU])
+  AC_REQUIRE([gl_FUNC_GETHOSTNAME])
+  AC_REQUIRE([gl_FUNC_GETLOADAVG])
+  AC_REQUIRE([gl_FUNC_GETPASS])
+  AC_REQUIRE([gl_FUNC_GETUSERSHELL])
+  AC_REQUIRE([gl_FUNC_MEMCHR])
+  AC_REQUIRE([gl_FUNC_MEMCPY])
+  AC_REQUIRE([gl_FUNC_MEMMOVE])
+  AC_REQUIRE([gl_FUNC_MEMRCHR])
+  AC_REQUIRE([gl_FUNC_MEMSET])
+  AC_REQUIRE([gl_FUNC_MKTIME])
+  AC_REQUIRE([gl_FUNC_READLINK])
+  AC_REQUIRE([gl_FUNC_RMDIR])
+  AC_REQUIRE([gl_FUNC_RPMATCH])
+  AC_REQUIRE([gl_FUNC_SIG2STR])
+  AC_REQUIRE([gl_FUNC_STPCPY])
+  AC_REQUIRE([gl_FUNC_STRCSPN])
+  AC_REQUIRE([gl_FUNC_STRDUP])
+  AC_REQUIRE([gl_FUNC_STRNDUP])
+  AC_REQUIRE([gl_FUNC_STRNLEN])
+  AC_REQUIRE([gl_FUNC_STRPBRK])
+  AC_REQUIRE([gl_FUNC_STRSTR])
+  AC_REQUIRE([gl_FUNC_STRTOD])
+  AC_REQUIRE([gl_FUNC_STRTOIMAX])
+  AC_REQUIRE([gl_FUNC_STRTOLL])
+  AC_REQUIRE([gl_FUNC_STRTOL])
+  AC_REQUIRE([gl_FUNC_STRTOULL])
+  AC_REQUIRE([gl_FUNC_STRTOUL])
+  AC_REQUIRE([gl_FUNC_STRTOUMAX])
+  AC_REQUIRE([gl_FUNC_STRVERSCMP])
+  AC_REQUIRE([gl_FUNC_VASNPRINTF])
+  AC_REQUIRE([gl_FUNC_VASPRINTF])
+  AC_REQUIRE([gl_GETDATE])
+  AC_REQUIRE([gl_GETNDELIM2])
+  AC_REQUIRE([gl_GETOPT])
+  AC_REQUIRE([gl_GETPAGESIZE])
+  AC_REQUIRE([gl_HARD_LOCALE])
+  AC_REQUIRE([gl_HASH])
   AC_REQUIRE([gl_HUMAN])
-  AC_REQUIRE([jm_PREREQ_MBSWIDTH])
-  AC_REQUIRE([jm_PREREQ_MEMCHR])
-  AC_REQUIRE([jm_PREREQ_PHYSMEM])
-  AC_REQUIRE([jm_PREREQ_POSIXVER])
-  AC_REQUIRE([jm_PREREQ_QUOTEARG])
-  AC_REQUIRE([jm_PREREQ_READUTMP])
-  AC_REQUIRE([jm_PREREQ_STAT])
-  AC_REQUIRE([jm_PREREQ_STRNLEN])
-  AC_REQUIRE([jm_PREREQ_TEMPNAME]) # called by mkstemp
+  AC_REQUIRE([gl_MBSWIDTH])
+  AC_REQUIRE([gl_MEMCOLL])
+  AC_REQUIRE([gl_MODECHANGE])
+  AC_REQUIRE([gl_MOUNTLIST])
+  AC_REQUIRE([gl_OBSTACK])
+  AC_REQUIRE([gl_PATHMAX])
+  AC_REQUIRE([gl_PATH_CONCAT])
+  AC_REQUIRE([gl_PHYSMEM])
+  AC_REQUIRE([gl_POSIXTM])
+  AC_REQUIRE([gl_POSIXVER])
+  AC_REQUIRE([gl_QUOTEARG])
+  AC_REQUIRE([gl_QUOTE])
+  AC_REQUIRE([gl_READUTMP])
+  AC_REQUIRE([gl_REGEX])
+  AC_REQUIRE([gl_SAFE_READ])
+  AC_REQUIRE([gl_SAFE_WRITE])
+  AC_REQUIRE([gl_SAME])
+  AC_REQUIRE([gl_SAVEDIR])
+  AC_REQUIRE([gl_SAVE_CWD])
+  AC_REQUIRE([gl_SETTIME])
+  AC_REQUIRE([gl_SHA])
+  AC_REQUIRE([gl_STDIO_SAFER])
+  AC_REQUIRE([gl_STRCASE])
+  AC_REQUIRE([gl_TIMESPEC])
+  AC_REQUIRE([gl_UNICODEIO])
+  AC_REQUIRE([gl_UNISTD_SAFER])
+  AC_REQUIRE([gl_USERSPEC])
   AC_REQUIRE([gl_UTIMENS])
-  AC_REQUIRE([jm_PREREQ_XGETCWD])
-  AC_REQUIRE([jm_PREREQ_XREADLINK])
+  AC_REQUIRE([gl_XALLOC])
+  AC_REQUIRE([gl_XGETCWD])
+  AC_REQUIRE([gl_XREADLINK])
+  AC_REQUIRE([gl_XSTRTOD])
+  AC_REQUIRE([gl_XSTRTOL])
+  AC_REQUIRE([gl_YESNO])
+  AC_REQUIRE([jm_FUNC_GLIBC_UNLOCKED_IO])
+  AC_REQUIRE([jm_FUNC_GNU_STRFTIME])
+  AC_REQUIRE([jm_FUNC_LSTAT])
+  AC_REQUIRE([jm_FUNC_MALLOC])
+  AC_REQUIRE([jm_FUNC_MEMCMP])
+  AC_REQUIRE([jm_FUNC_NANOSLEEP])
+  AC_REQUIRE([jm_FUNC_PUTENV])
+  AC_REQUIRE([jm_FUNC_REALLOC])
+  AC_REQUIRE([jm_FUNC_STAT])
+  AC_REQUIRE([jm_FUNC_UTIME])
+  AC_REQUIRE([jm_PREREQ_ADDEXT])
+  AC_REQUIRE([jm_PREREQ_STAT])
+  AC_REQUIRE([jm_XSTRTOIMAX])
+  AC_REQUIRE([jm_XSTRTOUMAX])
+  AC_REQUIRE([vb_FUNC_RENAME])
 ])
 
 AC_DEFUN([jm_PREREQ_ADDEXT],
@@ -42,147 +127,6 @@ AC_DEFUN([jm_PREREQ_ADDEXT],
   AC_REQUIRE([AC_SYS_LONG_FILE_NAMES])
   AC_CHECK_FUNCS(pathconf)
   AC_CHECK_HEADERS(limits.h string.h unistd.h)
-])
-
-AC_DEFUN([jm_PREREQ_CANON_HOST],
-[
-  dnl Add any libraries as early as possible.
-  dnl In particular, inet_ntoa needs -lnsl at least on Solaris5.5.1,
-  dnl so we have to add -lnsl to LIBS before checking for that function.
-  AC_SEARCH_LIBS(gethostbyname, [inet nsl])
-
-  dnl These come from -lnsl on Solaris5.5.1.
-  AC_CHECK_FUNCS(gethostbyname gethostbyaddr inet_ntoa)
-
-  AC_CHECK_HEADERS(unistd.h string.h netdb.h sys/socket.h \
-                   netinet/in.h arpa/inet.h)
-])
-
-AC_DEFUN([jm_PREREQ_DIRNAME],
-[
-  AC_REQUIRE([AC_HEADER_STDC])
-  AC_CHECK_HEADERS(string.h)
-])
-
-AC_DEFUN([jm_PREREQ_EXCLUDE],
-[
-  AC_REQUIRE([AC_FUNC_FNMATCH_GNU])
-  AC_REQUIRE([AC_HEADER_STDBOOL])
-])
-
-AC_DEFUN([jm_PREREQ_GETPAGESIZE],
-[
-  AC_CHECK_FUNCS(getpagesize)
-  AC_CHECK_HEADERS(OS.h unistd.h)
-])
-
-AC_DEFUN([jm_PREREQ_HARD_LOCALE],
-[
-  AC_CHECK_HEADERS(locale.h stdlib.h string.h)
-  AC_CHECK_FUNCS(setlocale)
-  AC_REQUIRE([AM_C_PROTOTYPES])
-])
-
-AC_DEFUN([jm_PREREQ_HASH],
-[
-  AC_CHECK_HEADERS(stdlib.h)
-  AC_REQUIRE([AC_HEADER_STDBOOL])
-  AC_REQUIRE([jm_CHECK_DECLS])
-])
-
-AC_DEFUN([jm_PREREQ_MEMCHR],
-[
-  AC_CHECK_HEADERS(limits.h stdlib.h bp-sym.h)
-])
-
-# Check for the external symbol, _system_configuration,
-# a struct with member `physmem'.
-AC_DEFUN([gl_SYS__SYSTEM_CONFIGURATION],
-  [AC_CACHE_CHECK(for external symbol _system_configuration,
-		  gl_cv_var__system_configuration,
-    [AC_LINK_IFELSE([AC_LANG_PROGRAM(
-		      [[#include <sys/systemcfg.h>
-		      ]],
-		      [double x = _system_configuration.physmem;])],
-      [gl_cv_var__system_configuration=yes],
-      [gl_cv_var__system_configuration=no])])
-
-    if test $gl_cv_var__system_configuration = yes; then
-      AC_DEFINE(HAVE__SYSTEM_CONFIGURATION, 1,
-		[Define to 1 if you have the external variable,
-		_system_configuration with a member named physmem.])
-    fi
-  ]
-)
-
-AC_DEFUN([jm_PREREQ_PHYSMEM],
-[
-  AC_CHECK_HEADERS([unistd.h sys/pstat.h sys/sysmp.h sys/sysinfo.h \
-    machine/hal_sysinfo.h sys/table.h sys/param.h sys/sysctl.h \
-    sys/systemcfg.h],,, [AC_INCLUDES_DEFAULT])
-  AC_CHECK_FUNCS(pstat_getstatic pstat_getdynamic sysmp getsysinfo sysctl table)
-
-  AC_REQUIRE([gl_SYS__SYSTEM_CONFIGURATION])
-])
-
-AC_DEFUN([jm_PREREQ_POSIXVER],
-[
-  AC_CHECK_HEADERS(unistd.h)
-  AC_CHECK_DECLS([getenv])
-])
-
-AC_DEFUN([jm_PREREQ_QUOTEARG],
-[
-  AC_CHECK_FUNCS(isascii iswprint)
-  AC_REQUIRE([jm_FUNC_MBRTOWC])
-  AC_REQUIRE([jm_FUNC_MEMCMP])
-  AC_CHECK_HEADERS(limits.h stddef.h stdlib.h string.h wchar.h wctype.h)
-  AC_REQUIRE([AC_HEADER_STDC])
-  AC_REQUIRE([AC_C_BACKSLASH_A])
-  AC_REQUIRE([AC_TYPE_MBSTATE_T])
-  AC_REQUIRE([AM_C_PROTOTYPES])
-])
-
-AC_DEFUN([jm_PREREQ_READUTMP],
-[
-  AC_REQUIRE([AC_HEADER_STDC])
-  AC_CHECK_HEADERS(string.h utmp.h utmpx.h sys/param.h)
-  AC_CHECK_FUNCS(utmpname)
-  AC_CHECK_FUNCS(utmpxname)
-  AC_REQUIRE([AM_C_PROTOTYPES])
-
-  if test $ac_cv_header_utmp_h = yes || test $ac_cv_header_utmpx_h = yes; then
-    utmp_includes="\
-$ac_includes_default
-#ifdef HAVE_UTMPX_H
-# include <utmpx.h>
-#endif
-#ifdef HAVE_UTMP_H
-# include <utmp.h>
-#endif
-"
-    AC_CHECK_MEMBERS([struct utmpx.ut_user],,,[$utmp_includes])
-    AC_CHECK_MEMBERS([struct utmp.ut_user],,,[$utmp_includes])
-    AC_CHECK_MEMBERS([struct utmpx.ut_name],,,[$utmp_includes])
-    AC_CHECK_MEMBERS([struct utmp.ut_name],,,[$utmp_includes])
-    AC_CHECK_MEMBERS([struct utmpx.ut_type],,,[$utmp_includes])
-    AC_CHECK_MEMBERS([struct utmp.ut_type],,,[$utmp_includes])
-    AC_CHECK_MEMBERS([struct utmpx.ut_pid],,,[$utmp_includes])
-    AC_CHECK_MEMBERS([struct utmp.ut_pid],,,[$utmp_includes])
-    AC_CHECK_MEMBERS([struct utmpx.ut_id],,,[$utmp_includes])
-    AC_CHECK_MEMBERS([struct utmp.ut_id],,,[$utmp_includes])
-
-    AC_CHECK_MEMBERS([struct utmpx.ut_exit.ut_exit],,,[$utmp_includes])
-    AC_CHECK_MEMBERS([struct utmp.ut_exit.ut_exit],,,[$utmp_includes])
-    AC_CHECK_MEMBERS([struct utmpx.ut_exit.e_exit],,,[$utmp_includes])
-    AC_CHECK_MEMBERS([struct utmp.ut_exit.e_exit],,,[$utmp_includes])
-
-    AC_CHECK_MEMBERS([struct utmpx.ut_exit.ut_termination],,,[$utmp_includes])
-    AC_CHECK_MEMBERS([struct utmp.ut_exit.ut_termination],,,[$utmp_includes])
-    AC_CHECK_MEMBERS([struct utmpx.ut_exit.e_termination],,,[$utmp_includes])
-    AC_CHECK_MEMBERS([struct utmp.ut_exit.e_termination],,,[$utmp_includes])
-    AC_LIBOBJ(readutmp)
-  fi
 ])
 
 AC_DEFUN([jm_PREREQ_STAT],
@@ -229,42 +173,4 @@ $ac_includes_default
   AC_CHECK_MEMBERS([struct statvfs.f_namemax],,,[$statxfs_includes])
   AC_CHECK_MEMBERS([struct statfs.f_namelen],,,[$statxfs_includes])
   AC_CHECK_MEMBERS([struct statvfs.f_namelen],,,[$statxfs_includes])
-])
-
-AC_DEFUN([jm_PREREQ_STRNLEN],
-[
-  AC_REQUIRE([AC_FUNC_STRNLEN])
-  AC_REQUIRE([AC_HEADER_STDC])
-  AC_CHECK_HEADERS(memory.h)
-  AC_CHECK_DECLS([memchr])
-
-  # This is necessary because automake-1.6.1 doesn't understand
-  # that the above use of AC_FUNC_STRNLEN means we may have to use
-  # lib/strnlen.c.
-  test $ac_cv_func_strnlen_working = yes \
-    && AC_LIBOBJ(strnlen)
-])
-
-AC_DEFUN([jm_PREREQ_TEMPNAME],
-[
-  AC_REQUIRE([AC_HEADER_STDC])
-  AC_REQUIRE([AC_HEADER_STAT])
-  AC_CHECK_HEADERS(fcntl.h sys/time.h stdint.h unistd.h)
-  AC_CHECK_FUNCS(__secure_getenv gettimeofday)
-  AC_CHECK_DECLS([getenv])
-  AC_REQUIRE([jm_AC_TYPE_UINTMAX_T])
-])
-
-AC_DEFUN([jm_PREREQ_XGETCWD],
-[
-  AC_REQUIRE([AC_C_PROTOTYPES])
-  AC_CHECK_HEADERS(limits.h stdlib.h sys/param.h unistd.h)
-  AC_CHECK_FUNCS(getcwd)
-  AC_REQUIRE([AC_FUNC_GETCWD_NULL])
-])
-
-AC_DEFUN([jm_PREREQ_XREADLINK],
-[
-  AC_REQUIRE([AC_C_PROTOTYPES])
-  AC_CHECK_HEADERS(limits.h stdlib.h sys/types.h unistd.h)
 ])

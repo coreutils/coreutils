@@ -1,4 +1,4 @@
-#serial 2
+#serial 3
 
 dnl From Paul Eggert.
 
@@ -30,6 +30,7 @@ AC_DEFUN([UTILS_HOST_OS],
        openbsd*)	os='OpenBSD';;
        nsk*)		os='NonStop Kernel';;
        nonstopux*)	os='NonStop-UX';;
+       netbsd*-gnu*)	os='GNU/NetBSD';;
        netbsd*)		os='NetBSD';;
        msdosdjgpp*)	os='DJGPP';;
        mpeix*)		os='MPE/iX';;

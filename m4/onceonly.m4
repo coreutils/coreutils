@@ -1,5 +1,5 @@
-# onceonly.m4 serial 2
-dnl Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+# onceonly_2_57.m4 serial 3
+dnl Copyright (C) 2002-2003 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
 dnl Public License, this file may be distributed as part of a program
@@ -21,21 +21,35 @@ dnl inside an AC_DEFUNed function, the gl_CHECK_HEADERS macro call expands to
 dnl empty, and the check will be inserted before the body of the AC_DEFUNed
 dnl function.
 
-dnl Taken from Autoconf 2.50; can be removed once we assume 2.50 or later.
-define([m4_quote], [[$*]])
+dnl This is like onceonly.m4, except that it uses diversions to named sections
+dnl DEFAULTS and INIT_PREPARE in order to check all requested headers at once,
+dnl thus reducing the size of 'configure'. Works with autoconf-2.57. The
+dnl size reduction is ca. 9%.
+
+dnl Autoconf version 2.57 or newer is recommended.
+AC_PREREQ(2.54)
 
 # AC_CHECK_HEADERS_ONCE(HEADER1 HEADER2 ...) is a once-only variant of
 # AC_CHECK_HEADERS(HEADER1 HEADER2 ...).
 AC_DEFUN([AC_CHECK_HEADERS_ONCE], [
   :
   AC_FOREACH([gl_HEADER_NAME], [$1], [
-    AC_DEFUN([gl_CHECK_HEADER_]m4_quote(translit(defn([gl_HEADER_NAME]),
-						 [-./], [___])), [
-      AC_CHECK_HEADERS(gl_HEADER_NAME)
+    AC_DEFUN([gl_CHECK_HEADER_]m4_quote(translit(gl_HEADER_NAME,
+                                                 [./-], [___])), [
+      m4_divert_text([INIT_PREPARE],
+        [gl_header_list="$gl_header_list gl_HEADER_NAME"])
+      gl_HEADERS_EXPANSION
+      AH_TEMPLATE(AS_TR_CPP([HAVE_]m4_defn([gl_HEADER_NAME])),
+        [Define to 1 if you have the <]m4_defn([gl_HEADER_NAME])[> header file.])
     ])
     AC_REQUIRE([gl_CHECK_HEADER_]m4_quote(translit(gl_HEADER_NAME,
-						   [-./], [___])))
+                                                   [./-], [___])))
   ])
+])
+m4_define([gl_HEADERS_EXPANSION], [
+  m4_divert_text([DEFAULTS], [gl_header_list=])
+  AC_CHECK_HEADERS([$gl_header_list])
+  m4_define([gl_HEADERS_EXPANSION], [])
 ])
 
 # AC_CHECK_FUNCS_ONCE(FUNC1 FUNC2 ...) is a once-only variant of
@@ -43,11 +57,20 @@ AC_DEFUN([AC_CHECK_HEADERS_ONCE], [
 AC_DEFUN([AC_CHECK_FUNCS_ONCE], [
   :
   AC_FOREACH([gl_FUNC_NAME], [$1], [
-    AC_DEFUN([gl_CHECK_FUNC_]defn([gl_FUNC_NAME]), [
-      AC_CHECK_FUNCS(defn([gl_FUNC_NAME]))
+    AC_DEFUN([gl_CHECK_FUNC_]m4_defn([gl_FUNC_NAME]), [
+      m4_divert_text([INIT_PREPARE],
+        [gl_func_list="$gl_func_list gl_FUNC_NAME"])
+      gl_FUNCS_EXPANSION
+      AH_TEMPLATE(AS_TR_CPP([HAVE_]m4_defn([gl_FUNC_NAME])),
+        [Define to 1 if you have the `]m4_defn([gl_FUNC_NAME])[' function.])
     ])
-    AC_REQUIRE([gl_CHECK_FUNC_]defn([gl_FUNC_NAME]))
+    AC_REQUIRE([gl_CHECK_FUNC_]m4_defn([gl_FUNC_NAME]))
   ])
+])
+m4_define([gl_FUNCS_EXPANSION], [
+  m4_divert_text([DEFAULTS], [gl_func_list=])
+  AC_CHECK_FUNCS([$gl_func_list])
+  m4_define([gl_FUNCS_EXPANSION], [])
 ])
 
 # AC_CHECK_DECLS_ONCE(DECL1 DECL2 ...) is a once-only variant of
@@ -55,9 +78,9 @@ AC_DEFUN([AC_CHECK_FUNCS_ONCE], [
 AC_DEFUN([AC_CHECK_DECLS_ONCE], [
   :
   AC_FOREACH([gl_DECL_NAME], [$1], [
-    AC_DEFUN([gl_CHECK_DECL_]defn([gl_DECL_NAME]), [
-      AC_CHECK_DECLS(defn([gl_DECL_NAME]))
+    AC_DEFUN([gl_CHECK_DECL_]m4_defn([gl_DECL_NAME]), [
+      AC_CHECK_DECLS(m4_defn([gl_DECL_NAME]))
     ])
-    AC_REQUIRE([gl_CHECK_DECL_]defn([gl_DECL_NAME]))
+    AC_REQUIRE([gl_CHECK_DECL_]m4_defn([gl_DECL_NAME]))
   ])
 ])

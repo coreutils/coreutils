@@ -1,4 +1,4 @@
-#serial 8
+#serial 9
 
 dnl From Jim Meyering.
 dnl Check for the nanosleep function.
@@ -18,6 +18,7 @@ AC_DEFUN([jm_FUNC_NANOSLEEP],
   jm_cv_func_nanosleep_works,
   [
    AC_REQUIRE([AC_HEADER_TIME])
+   AC_CHECK_HEADERS_ONCE(sys/time.h)
    AC_TRY_RUN([
 #   if TIME_WITH_SYS_TIME
 #    include <sys/time.h>
@@ -48,7 +49,14 @@ AC_DEFUN([jm_FUNC_NANOSLEEP],
     AC_LIBOBJ(nanosleep)
     AC_DEFINE(nanosleep, rpl_nanosleep,
       [Define to rpl_nanosleep if the replacement function should be used.])
+    gl_PREREQ_NANOSLEEP
   fi
 
  LIBS=$nanosleep_save_libs
+])
+
+# Prerequisites of lib/nanosleep.c.
+AC_DEFUN([gl_PREREQ_NANOSLEEP],
+[
+  AC_CHECK_HEADERS_ONCE(unistd.h)
 ])

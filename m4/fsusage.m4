@@ -1,6 +1,17 @@
-#serial 9
+#serial 11
 
 # From fileutils/configure.in
+
+AC_DEFUN([gl_FSUSAGE],
+[
+  AC_CHECK_HEADERS_ONCE(sys/param.h)
+  AC_CHECK_HEADERS(sys/mount.h sys/vfs.h sys/fs_types.h)
+  jm_FILE_SYSTEM_USAGE([gl_cv_fs_space=yes], [gl_cv_fs_space=no])
+  if test $gl_cv_fs_space = yes; then
+    AC_LIBOBJ(fsusage)
+    gl_PREREQ_FSUSAGE_EXTRA
+  fi
+])
 
 # Try to determine how a program can obtain filesystem usage information.
 # If successful, define the appropriate symbol (see fsusage.c) and
@@ -195,4 +206,41 @@ fi
 
 AS_IF([test $ac_fsusage_space = yes], [$1], [$2])
 
+])
+
+
+# Check for SunOS statfs brokenness wrt partitions 2GB and larger.
+# If <sys/vfs.h> exists and struct statfs has a member named f_spare,
+# enable the work-around code in fsusage.c.
+AC_DEFUN([jm_STATFS_TRUNCATES],
+[
+  AC_MSG_CHECKING([for statfs that truncates block counts])
+  AC_CACHE_VAL(fu_cv_sys_truncating_statfs,
+  [AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
+#if !defined(sun) && !defined(__sun)
+choke -- this is a workaround for a Sun-specific problem
+#endif
+#include <sys/types.h>
+#include <sys/vfs.h>]],
+    [[struct statfs t; long c = *(t.f_spare);]])],
+    [fu_cv_sys_truncating_statfs=yes],
+    [fu_cv_sys_truncating_statfs=no])])
+  if test $fu_cv_sys_truncating_statfs = yes; then
+    AC_DEFINE(STATFS_TRUNCATES_BLOCK_COUNTS, 1,
+      [Define if the block counts reported by statfs may be truncated to 2GB
+       and the correct values may be stored in the f_spare array.
+       (SunOS 4.1.2, 4.1.3, and 4.1.3_U1 are reported to have this problem.
+       SunOS 4.1.1 seems not to be affected.)])
+  fi
+  AC_MSG_RESULT($fu_cv_sys_truncating_statfs)
+])
+
+
+# Prerequisites of lib/fsusage.c not done by jm_FILE_SYSTEM_USAGE.
+AC_DEFUN([gl_PREREQ_FSUSAGE_EXTRA],
+[
+  AC_REQUIRE([jm_AC_TYPE_UINTMAX_T])
+  AC_CHECK_HEADERS_ONCE(fcntl.h)
+  AC_CHECK_HEADERS(dustat.h sys/fs/s5param.h sys/filsys.h sys/statfs.h sys/statvfs.h)
+  jm_STATFS_TRUNCATES
 ])

@@ -19,7 +19,8 @@
 # Written by Paul Eggert.
 
 AC_DEFUN([AC_FUNC_GETCWD_NULL],
-  [AC_CHECK_HEADERS(stdlib.h unistd.h)
+  [
+   AC_CHECK_HEADERS_ONCE(stdlib.h unistd.h)
    AC_CACHE_CHECK([whether getcwd (NULL, 0) allocates memory for result],
      [ac_cv_func_getcwd_null],
      [AC_TRY_RUN(
