@@ -30,10 +30,17 @@ options=`stty -a|tail +2|tr ';' '\012'|sed '/ = /d;s/^ //'|tr -s ' -' '\012'`
 
 # Take them one at a time, with and without the leading `-'.
 for opt in $options; do
+  # `stty parenb' and `stty -parenb' fail with this message
+  # stty: standard input: unable to perform all requested operations
+  # on Linux 2.2.0-pre4 kernels, so skip those tests.
+  test $opt = parenb && continue
   stty $opt || fail=1
+
+  # Likewise, `stty -cread' would fail, so skip that, too.
+  test $opt = cread && continue
   rev=`eval echo "\\\$REV_$opt"`
   if test -n "$rev"; then
-    stty -$opt || fail=1
+    stty -$opt || { fail=1; echo -$opt; }
   fi
 done
 
