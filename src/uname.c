@@ -136,9 +136,10 @@ Print certain system information.  With no OPTION, same as -s.\n\
 static void
 print_element (char const *element)
 {
-  static int printed;
-  if (printed++)
+  static bool printed;
+  if (printed)
     putchar (' ');
+  printed = true;
   fputs (element, stdout);
 }
 
@@ -149,7 +150,7 @@ main (int argc, char **argv)
   static char const unknown[] = "unknown";
 
   /* Mask indicating which elements to print. */
-  unsigned toprint = 0;
+  unsigned int toprint = 0;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
