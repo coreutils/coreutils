@@ -11,6 +11,8 @@ rm -f $temp_files
 fail=0
 echo test > $tmp || fail=1
 
+# Specify both version control and suffix so the environment variables
+# (possibly set by the user running these tests) aren't used.
 $CP --force --backup --version-control=simple --suffix=$suffix $tmp $tmp \
   || fail=1
 
