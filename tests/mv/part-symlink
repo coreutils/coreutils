@@ -64,21 +64,24 @@ for copy in cp mv; do
       rm -f $other_partition_tmpdir/rem_sl || fail=1
       mkdir dir || fail=1
       cd dir || fail=1
-      case "$args" in *loc_reg*) reg=reg ;; esac
-      case "$args" in *rem_reg*) reg=$other_partition_tmpdir/reg ;; esac
+      case "$args" in *loc_reg*) reg=reg; reg_abs="`pwd`/$reg" ;; esac
+      case "$args" in *rem_reg*) reg=$other_partition_tmpdir/reg
+                                   reg_abs=$reg ;; esac
       case "$args" in *loc_sl*) slink=slink ;; esac
       case "$args" in *rem_sl*) slink=$other_partition_tmpdir/slink ;; esac
 
       echo $contents > $reg || fail=1
-      ln -nsf $reg $slink || fail=1
-      args=`echo $args|sed "s,..._reg,$reg,"`
-      args=`echo $args|sed "s,..._sl,$slink,"`
+      ln -nsf $reg_abs $slink || fail=1
+      actual_args=$args
+      actual_args=`echo $actual_args|sed "s,..._reg,$reg,"`
+      actual_args=`echo $actual_args|sed "s,..._sl,$slink,"`
 
       (
 	(
 	  # echo 1>&2 cp $options $args
-	  $copy $options $args 2>.err
-	  echo $? $copy $options $args
+	  $copy $options $actual_args 2>.err
+	  copy_status=$?
+	  echo $copy_status $copy $options $args
 
 	  # Normalize the program name in the error output,
 	  # and put brackets around the output.
@@ -93,14 +96,28 @@ for copy in cp mv; do
 		  -e '/^total /d' \
 		  -e 's/^...............................................//'`"
 	  echo "($ls) ($ls2)"
+
+	  # If the command failed, then it must not have changed the files.
+	  if test $copy_status != 0; then
+	    for f in $actual_args; do
+	      case "`cat $f`" in
+		"$contents") ;;
+		*) echo $copy FAILED;;
+	      esac
+	    done
+	  fi
+
 	  if test $copy = cp; then
 	    # Make sure the original is unchanged and that
 	    # the destination is a copy.
-	    for f in $args; do
+	    for f in $actual_args; do
 	      if test -f $f; then
+		if test $copy_status != 0; then
+		  test
+		fi
 		case "`cat $f`" in
 		  "$contents") ;;
-		  *) echo cp FAILED;;
+		  *) echo $copy FAILED;;
 		esac
 	      else
 		echo symlink-loop
