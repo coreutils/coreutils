@@ -2,6 +2,9 @@
 
 	* Version 4.0.36.
 
+	* config.sub: Update from master repository.
+	* config.guess: Likewise.
+
 2001-01-02  Volker Borchert  <bt@teknon.de>
 
 	Work around a broken rename system call, e.g. on SunOS 4.1.1_U1,
