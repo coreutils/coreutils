@@ -1,3 +1,23 @@
+Tue Oct 17 22:48:00 1995  Jim Meyering  (meyering@comco.com)
+
+	* cat.c: Protoize.  Reorder functions to obviate forward dcls.
+	Remove forward dcls.
+	* expand.c: Likewise.
+	* fold.c: Likewise.
+	* head.c: Likewise.
+	* od.c: Likewise.
+	* sort.c: Likewise.
+	* tail.c: Likewise.
+
+	* src/Makefile.in (OBJECTS): Reflect that all of the above
+	now use prototypes.
+
+	* head.c: Add `const' attribute to dcls of lots of formals.
+
+	* sort.c: Add `const' attribute to dcls of lots of formals.
+	Move struct dcls to precede dcls of file-scope variables.
+	(monthtab, keyhead): Separate variable dcls from type dcls.
+
 Fri Oct 13 20:38:39 1995  Jim Meyering  (meyering@comco.com)
 
 	* join.c (add_field_list): Allow SPACE and TAB as well as `,' as
@@ -68,7 +88,8 @@ Sun Sep 24 08:36:47 1995  Jim Meyering  (meyering@comco.com)
 	* cksum.c: Protoize.
 	* cut.c: Protoize.
 
-	* Makefile.in (OBJECTS): Reflect that cksum.c and cut.c use prototypes.
+	* src/Makefile.in (OBJECTS): Reflect that cksum.c and cut.c use
+	prototypes.
 	(cksum): Depend on cksum$O.
 	(cut): Depend on cut$O.
 
