@@ -937,8 +937,6 @@ copy_internal (const char *src_path, const char *dst_path,
 	  int in_current_dir;
 
 	  dst_parent = dir_name (dst_path);
-	  if (dst_parent == NULL)
-	    xalloc_die ();
 
 	  in_current_dir = (STREQ (".", dst_parent)
 			    /* If either stat call fails, it's ok not to report
