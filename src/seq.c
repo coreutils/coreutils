@@ -1,5 +1,5 @@
 /* seq - print sequence of numbers to standard output.
-   Copyright (C) 1994-1999 Free Software Foundation, Inc.
+   Copyright (C) 1994-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@
 
 #include "system.h"
 #include "error.h"
+#include "xstrtol.h"
 #include "xstrtod.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -32,8 +33,8 @@
 
 #define AUTHORS "Ulrich Drepper"
 
-static double scan_double_arg PARAMS ((const char *arg));
-static int check_format PARAMS ((const char *format_string));
+static double scan_arg PARAMS ((const char *arg));
+static int check_format PARAMS ((const char *format_string, int *intconv));
 static char *get_width_format PARAMS ((void));
 static int print_numbers PARAMS ((const char *format_str));
 
@@ -43,8 +44,8 @@ static int equal_width;
 /* The printf(3) format used for output.  */
 static char *format_str;
 
-/* The starting number.  */
-static double first;
+/* If nonzero, format_str prints an integer. If zero, it prints a double.  */
+static int intconv;
 
 /* The name that this program was run with.  */
 char *program_name;
@@ -60,6 +61,9 @@ static char *terminator = "\n";
 /* The representation of the decimal point in the current locale.
    Always "." if the localeconv function is not supported.  */
 static char *decimal_point = ".";
+
+/* The starting number.  */
+static double first;
 
 /* The increment.  */
 static double step;
@@ -103,7 +107,8 @@ If FIRST or INCREMENT is omitted, it defaults to 1.\n\
 FIRST, INCREMENT, and LAST are interpreted as floating point values.\n\
 INCREMENT should be positive if FIRST is smaller than LAST, and negative\n\
 otherwise.  When given, the FORMAT argument must contain exactly one of\n\
-the printf-style, floating point output formats %%e, %%f, or %%g.\n\
+the printf-style, floating point output formats %%e, %%f, %%g, or\n\
+integer output formats %%d, %%u, %%o, %%x, %%X.\n\
 "));
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
     }
@@ -116,6 +121,7 @@ main (int argc, char **argv)
   int errs;
   int optc;
   int step_is_set;
+  int format_ok;
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -184,24 +190,30 @@ main (int argc, char **argv)
 	}
     }
 
+  /* Set intconv before calling scan_arg.  */
+  if (format_str != NULL)
+    format_ok = check_format (format_str, &intconv);
+  else
+    format_ok = 1, intconv = 0;
+
   if (optind >= argc)
     {
       error (0, 0, _("too few arguments"));
       usage (1);
       /* NOTREACHED */
     }
-  last = scan_double_arg (argv[optind++]);
+  last = scan_arg (argv[optind++]);
 
   if (optind < argc)
     {
       first = last;
-      last = scan_double_arg (argv[optind++]);
+      last = scan_arg (argv[optind++]);
 
       if (optind < argc)
 	{
 	  step = last;
 	  step_is_set = 1;
-	  last = scan_double_arg (argv[optind++]);
+	  last = scan_arg (argv[optind++]);
 
 	  if (optind < argc)
 	    {
@@ -225,7 +237,7 @@ format string may not be specified when printing equal width strings"));
 
   if (format_str != NULL)
     {
-      if (!check_format (format_str))
+      if (!format_ok)
 	{
 	  error (0, 0, _("invalid format string: `%s'"), format_str);
 	  usage (1);
@@ -263,13 +275,48 @@ scan_double_arg (const char *arg)
   return ret_val;
 }
 
-/* Check whether the format string is valid for a single double
-   argument.
-   Return 0 if not, 1 if correct.  */
+/* Read an int value from the command line.
+   Return if the string is correct else signal error.  */
 
 static int
-check_format (const char *fmt)
+scan_int_arg (const char *arg)
 {
+  long int ret_val;
+
+  if (xstrtol (arg, NULL, 10, &ret_val, "") != LONGINT_OK
+      || ret_val < INT_MIN || ret_val > INT_MAX)
+    {
+      error (0, 0, _("invalid integer argument: %s"), arg);
+      usage (1);
+      /* NOTREACHED */
+    }
+
+  return ret_val;
+}
+
+/* Read a double value from the command line.
+   Return if the string is correct else signal error.  */
+
+static double
+scan_arg (const char *arg)
+{
+  if (intconv)
+    return (double) scan_int_arg (arg);
+  else
+    return scan_double_arg (arg);
+}
+
+/* Check whether the format string is valid for a single double
+   argument or a single int argument.
+   Return 0 if not, 1 if correct.
+   Also returns in *INTCONV one if the conversion specifier is valid
+   for a single int argument, otherwise zero.  */
+
+static int
+check_format (const char *fmt, int *intconv)
+{
+  *intconv = 0;
+
   while (*fmt != '\0')
     {
       if (*fmt == '%')
@@ -293,7 +340,9 @@ check_format (const char *fmt)
 	fmt += strspn (++fmt, "0123456789");
     }
 
-  if (*fmt != 'e' && *fmt != 'f' && *fmt != 'g')
+  if (*fmt == 'd' || *fmt == 'u' || *fmt == 'o' || *fmt == 'x' || *fmt == 'X')
+    *intconv = 1;
+  else if (!(*fmt == 'e' || *fmt == 'f' || *fmt == 'g'))
     return 0;
 
   fmt++;
@@ -424,7 +473,11 @@ the increment must be negative"));
 	  /* NOTREACHED */
 	}
 
-      printf (fmt, first);
+      if (intconv)
+	printf (fmt, (int) first);
+      else
+	printf (fmt, first);
+
       for (i = 1; /* empty */; i++)
 	{
 	  double x = first + i * step;
@@ -433,7 +486,11 @@ the increment must be negative"));
 	    break;
 
 	  fputs (separator, stdout);
-	  printf (fmt, x);
+
+	  if (intconv)
+	    printf (fmt, (int) x);
+	  else
+	    printf (fmt, x);
 	}
     }
   else
@@ -449,7 +506,11 @@ the increment must be positive"));
 	  /* NOTREACHED */
 	}
 
-      printf (fmt, first);
+      if (intconv)
+	printf (fmt, (int) first);
+      else
+	printf (fmt, first);
+
       for (i = 1; /* empty */; i++)
 	{
 	  double x = first + i * step;
@@ -458,7 +519,11 @@ the increment must be positive"));
 	    break;
 
 	  fputs (separator, stdout);
-	  printf (format_str, x);
+
+	  if (intconv)
+	    printf (fmt, (int) x);
+	  else
+	    printf (fmt, x);
 	}
     }
   fputs (terminator, stdout);
