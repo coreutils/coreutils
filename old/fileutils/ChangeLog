@@ -1,7 +1,18 @@
+2001-01-01  Paul Eggert  <eggert@twinsun.com>
+
+	* doc/fileutils.texi, NEWS:
+	ls -l now reports the year for files even slightly in the future, as
+	POSIX requires.  This helps warn users about clock skew problems.
+
+	* src/ls.c (print_long_format):
+	Report the year for files even slightly in the future.
+	Avoid overflow problems near Y2038 on 32-bit hosts.
+	To calculate "six months", take half the average Gregorian
+	year, not 180 days.
+
 2001-01-01  Jim Meyering  <meyering@lucent.com>
 
 	* tests/chmod/Makefile.am (TESTS): Add setgid.
-
 	* tests/chmod/setgid: Test for this change.
 	Based on a report from Paul Eggert.
 
