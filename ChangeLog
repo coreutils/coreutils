@@ -1,6 +1,11 @@
-2003-09-08  Jim Meyering  <jim@meyering.net>
+2003-09-09  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.92.
+
+	* src/copy.c: Alphabetize includes.
+	Remove duplicate inclusion of "same.h".
+
+2003-09-08  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.maint (GZIP_ENV): Remove --rsyncable.
 	Didn't give enough of a benefit, mainly because it's not yet
