@@ -30,8 +30,9 @@ ls /dev/stdin >/dev/null 2>&1 \
 
 rm dangle < /dev/stdin &
 pid=$!
-
 # The buggy rm (fileutils-4.1.9) would hang here, waiting for input.
+
+# Give the working rm a chance to remove the file.
 sleep 1
 
 # The file must no longer exist.
