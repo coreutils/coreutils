@@ -552,7 +552,16 @@ copy (void)
     skip (input_fd, input_file, skip_records, input_blocksize, ibuf);
 
   if (seek_record > 0)
-    skip (output_fd, output_file, seek_record, output_blocksize, obuf);
+    {
+      /* FIXME: this loses for
+	 % ./dd if=dd seek=1 |:
+	 ./dd: a1 standard output: Bad file number
+	 0+0 records in
+	 0+0 records out
+	 */
+
+	 skip (output_fd, output_file, seek_record, output_blocksize, obuf);
+    }
 
   if (max_records == 0)
     quit (exit_status);
