@@ -1,4 +1,7 @@
 Sat Jan 18 09:32:26 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/Makefile.am (noinst_HEADERS): Add getdate.h.
+
 	1997-01-06  Paul Eggert  <eggert@twinsun.com>
 
 	* getdate.y: Rewrite to use mktime.
