@@ -12,6 +12,8 @@
 	of files with names of maximum length.  Now they can do that.
 	Thank the people who have provided access to their systems
 	for portability testing.
+	Warn about and describe autoconf/automake version requirements.
+	Use a better URL for the GNU Coding Standards.
 
 	* man/rm.x: Refer to shred.
 	Remove the example showing how to remove `-foo', since that is now
