@@ -506,7 +506,7 @@ do_copy (int argc, char **argv)
 
       /* When the force and backup options have been specified and
 	 the source and destination are the same name for an existing
-	 regular file, convert the user's command, e.g.
+	 regular file, convert the user's command, e.g.,
 	 `cp --force --backup foo foo' to `cp --force foo fooSUFFIX'
 	 where SUFFIX is determined by any version control options used.  */
 
