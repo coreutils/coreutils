@@ -664,7 +664,7 @@ main (argc, argv)
   if ((fp1 == stdin || fp2 == stdin) && fclose (stdin) == EOF)
     error (1, errno, "-");
   if (ferror (stdout) || fclose (stdout) == EOF)
-    error (1, 0, "write error");
+    error (1, errno, "write error");
 
   exit (0);
 }

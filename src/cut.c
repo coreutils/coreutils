@@ -233,7 +233,7 @@ main (argc, argv)
       exit_status = 1;
     }
   if (ferror (stdout) || fclose (stdout) == EOF)
-    error (1, 0, "write error");
+    error (1, errno, "write error");
 
   exit (exit_status);
 }
