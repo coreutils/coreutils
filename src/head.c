@@ -1,5 +1,5 @@
 /* head -- output first part of file(s)
-   Copyright (C) 89, 90, 91, 1995-2000 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 1995-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -120,13 +120,16 @@ head_bytes (const char *filename, int fd, uintmax_t bytes_to_write)
 {
   char buffer[BUFSIZE];
   int bytes_read;
+  size_t bytes_to_read = BUFSIZE;
 
   /* Need BINARY I/O for the byte counts to be accurate.  */
   SET_BINARY2 (fd, fileno (stdout));
 
   while (bytes_to_write)
     {
-      bytes_read = safe_read (fd, buffer, BUFSIZE);
+      if (bytes_to_write < bytes_to_read)
+	bytes_to_read = bytes_to_write;
+      bytes_read = safe_read (fd, buffer, bytes_to_read);
       if (bytes_read < 0)
 	{
 	  error (0, errno, "%s", filename);
@@ -134,8 +137,6 @@ head_bytes (const char *filename, int fd, uintmax_t bytes_to_write)
 	}
       if (bytes_read == 0)
 	break;
-      if (bytes_read > bytes_to_write)
-	bytes_read = bytes_to_write;
       if (fwrite (buffer, 1, bytes_read, stdout) == 0)
 	error (EXIT_FAILURE, errno, _("write error"));
       bytes_to_write -= bytes_read;
