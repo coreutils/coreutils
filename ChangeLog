@@ -1,6 +1,10 @@
-2003-04-11  Jim Meyering  <jim@meyering.net>
+2003-04-12  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
+
+	* tests/misc/readlink: New file.  Test the --canonicalize option.
+
+2003-04-11  Jim Meyering  <jim@meyering.net>
 
 	* src/chown.c, src/cp.c, src/dircolors.hin, src/du.c, src/ln.c:
 	* src/mkfifo.c, src/ptx.c, src/spline.c, src/stty.c, src/tail.c:
