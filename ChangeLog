@@ -2,6 +2,12 @@
 
 	* Version 4.5.11.
 
+	* Makefile.maint (prev_version_file): Don't use ?= for this particular
+	assignment, since it causes trouble with old versions of GNU make
+	(e.g. 3.76.1).  The other uses of `?=' are inoffensive.  Details here.
+	http://mail.gnu.org/archive/html/bug-coreutils/2003-03/msg00028.html
+	Patch from Alexandre Duret-Lutz.
+
 	* Use patched automake-1.7.3.  Regenerate Makefile.in files in
 	subdirectories so that each includes a definition of ACLOCAL_M4.
 
