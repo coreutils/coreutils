@@ -53,18 +53,6 @@
 # define optopt __GETOPT_PREFIX##optopt
 #endif
 
-/* The elements of the ARGV arguments to getopt aren't really const,
-   because we permute them.  For glibc, __getopt_argv_const is const
-   so that prototypes pretend the elements are const, to be compatible
-   with Posix.  However, drop this pretense for standalone
-   applications, since it's not needed there and it's safer not to lie
-   to compilers.  */
-#ifdef __GETOPT_PREFIX
-# define __getopt_argv_const /* empty */
-#else
-# define __getopt_argv_const const
-#endif
-
 /* If __GNU_LIBRARY__ is not already defined, either we are being used
    standalone, or this is the first header included in the source file.
    If we are being used with glibc, we need to include <features.h>, but
@@ -186,16 +174,15 @@ struct option
    arguments to the option '\0'.  This behavior is specific to the GNU
    `getopt'.  */
 
-extern int getopt (int ___argc, char *__getopt_argv_const *___argv,
-		   const char *__shortopts)
+extern int getopt (int ___argc, char *const *___argv, const char *__shortopts)
        __THROW;
 
 #ifndef __need_getopt
-extern int getopt_long (int ___argc, char *__getopt_argv_const *___argv,
+extern int getopt_long (int ___argc, char **___argv,
 			const char *__shortopts,
 		        const struct option *__longopts, int *__longind)
        __THROW;
-extern int getopt_long_only (int ___argc, char *__getopt_argv_const *___argv,
+extern int getopt_long_only (int ___argc, char **___argv,
 			     const char *__shortopts,
 		             const struct option *__longopts, int *__longind)
        __THROW;
