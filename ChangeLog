@@ -2,6 +2,10 @@
 
 	* Version 5.0.1.
 
+	The S_MAGIC_... names shouldn't be maintained in two places (prior
+	to this change, one would have to keep stat.c and fs.h in sync).
+	This change makes it so those names and the corresponding
+	hexadecimal constants all reside in stat.c.  fs.h is now generated.
 	* src/Makefile.am (fs.h): New rule to generate fs.h from stat.c.
 	(BUILT_SOURCES): Add fs.h, now that it's generated.
 	(EXTRA_DIST): Add extract-magic.
