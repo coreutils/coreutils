@@ -241,7 +241,7 @@ print_esc (const char *escstart, bool octal_0)
   int esc_value = 0;		/* Value of \nnn escape. */
   int esc_length;		/* Length of \nnn escape. */
 
-  if (!posixly_correct && *p == 'x')
+  if (*p == 'x')
     {
       /* A hexadecimal \xhh escape sequence must have 1 or 2 hex. digits.  */
       for (esc_length = 0, ++p;
@@ -265,7 +265,7 @@ print_esc (const char *escstart, bool octal_0)
     }
   else if (*p && strchr ("\"\\abcfnrtv", *p))
     print_esc_char (*p++);
-  else if (!posixly_correct && (*p == 'u' || *p == 'U'))
+  else if (*p == 'u' || *p == 'U')
     {
       char esc_char = *p;
       unsigned int uni_value;
@@ -557,11 +557,10 @@ main (int argc, char **argv)
 
   exit_status = 0;
 
-  /* Don't recognize --help or --version if POSIXLY_CORRECT is set.  */
   posixly_correct = (getenv ("POSIXLY_CORRECT") != NULL);
-  if (!posixly_correct)
-    parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-			usage, AUTHORS, (char const *) NULL);
+
+  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
+		      usage, AUTHORS, (char const *) NULL);
 
   /* The above handles --help and --version.
      Since there is no other invocation of getopt, handle `--' here.  */
