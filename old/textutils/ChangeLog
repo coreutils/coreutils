@@ -1,3 +1,11 @@
+1999-05-12  Jim Meyering  <meyering@ascend.com>
+
+	* tests/Makefile.am (envvar-check): Renamed from check-local.
+	(check): Depend on envvar-check so the envvar check is performed
+	before all other tests.  Reported by Volker Borchert.
+	* tests/.env-warn: Use `%%' place-holder that Makefile.am rule expects,
+	so CDPATH is mentioned in the message.  Reported by Volker Borchert.
+
 1999-05-11  Jim Meyering  <meyering@ascend.com>
 
 	* src/sort.c (usage): Split the --help message into two pieces so that
