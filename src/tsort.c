@@ -29,8 +29,8 @@
 #include <assert.h>
 #include <getopt.h>
 
-#include "long-options.h"
 #include "system.h"
+#include "long-options.h"
 #include "error.h"
 #include "readtokens.h"
 
@@ -456,7 +456,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "tsort", GNU_PACKAGE, VERSION, usage);
+  parse_long_options (argc, argv, "tsort", GNU_PACKAGE, VERSION,
+		      "Mark Kettenis", usage);
 
   while ((opt = getopt_long (argc, argv, "", long_options, NULL)) != -1)
     switch (opt)
