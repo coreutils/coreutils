@@ -85,7 +85,7 @@ default: all
 .SUFFIXES:
 .SUFFIXES: .pl
 $(srcdir)/Makefile.in: @MAINT@ Makefile.am $(top_srcdir)/configure.in $(ACLOCAL) 
-	cd $(top_srcdir) && automake --gnu tests/tr-test/Makefile
+	cd $(top_srcdir) && automake --gnits tests/tr-test/Makefile
 
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status $(BUILT_SOURCES)
 	cd $(top_builddir) \
