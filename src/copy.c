@@ -489,7 +489,7 @@ same_file_ok (const char *src_path, const struct stat *src_sb,
     return 1;
 
   /* If neither is a symlink, then it's ok as long as they aren't
-     links to the same file.  */
+     hard links to the same file.  */
   if (!S_ISLNK (src_sb_link->st_mode) && !S_ISLNK (dst_sb_link->st_mode))
     {
       if (!SAME_INODE (*src_sb_link, *dst_sb_link))
