@@ -1,5 +1,5 @@
 /* tr -- a filter to translate characters
-   Copyright (C) 91, 1995-2003 Free Software Foundation, Inc.
+   Copyright (C) 91, 1995-2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -312,7 +312,7 @@ static struct option const long_options[] =
 void
 usage (int status)
 {
-  if (status != 0)
+  if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
@@ -388,7 +388,7 @@ translation or deletion.\n\
 "), stdout);
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
-  exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
+  exit (status);
 }
 
 /* Return nonzero if the character C is a member of the
@@ -1822,7 +1822,7 @@ main (int argc, char **argv)
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
-	  usage (2);
+	  usage (EXIT_FAILURE);
 	  break;
 	}
     }
@@ -1840,7 +1840,7 @@ main (int argc, char **argv)
   if (non_option_args > 2)
     {
       error (0, 0, _("too many arguments"));
-      usage (2);
+      usage (EXIT_FAILURE);
     }
 
   if (!delete && !squeeze_repeats && non_option_args != 2)
