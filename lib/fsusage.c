@@ -183,8 +183,11 @@ get_fs_usage (path, disk, fsp)
   /* Empirically, the block counts on most SVR3 and SVR3-derived
      systems seem to always be in terms of 512-byte blocks,
      no matter what value f_bsize has.  */
-# if _AIX
+# if _AIX || defined(_CRAY)
 #  define CONVERT_BLOCKS(b) adjust_blocks ((b), fsd.f_bsize, 512)
+#  ifdef _CRAY
+#   define f_bavail f_bfree
+#  endif
 # else
 #  define CONVERT_BLOCKS(b) (b)
 #  ifndef _SEQUENT_		/* _SEQUENT_ is DYNIX/ptx.  */
