@@ -16,6 +16,26 @@
 #include <malloc.h>
 #include <ctype.h>
 
+#if HAVE_INTTYPES_H
+# include <inttypes.h>
+#endif
+
+#if ! defined PRIdMAX
+# if HAVE_LONG_LONG
+#  define PRIdMAX "lld"
+# else
+#  define PRIdMAX "ld"
+# endif
+#endif
+
+#if ! defined PRIuMAX
+# if HAVE_LONG_LONG
+#  define PRIuMAX "llu"
+# else
+#  define PRIuMAX "lu"
+# endif
+#endif
+
 #include "system.h"
 
 #include "closeout.h"
@@ -329,7 +349,7 @@ print_statfs (char *pformat, char m, char const *filename,
       break;
 
     case 'l':
-      strcat (pformat, "llu");
+      strcat (pformat, PRIuMAX);
       printf (pformat, (uintmax_t) (statfsbuf->f_namelen));
       break;
     case 't':
@@ -341,15 +361,15 @@ print_statfs (char *pformat, char m, char const *filename,
       print_human_fstype (statfsbuf);
       break;
     case 'b':
-      strcat (pformat, "lld");
+      strcat (pformat, PRIdMAX);
       printf (pformat, (intmax_t) (statfsbuf->f_blocks));
       break;
     case 'f':
-      strcat (pformat, "lld");
+      strcat (pformat, PRIdMAX);
       printf (pformat, (intmax_t) (statfsbuf->f_bfree));
       break;
     case 'a':
-      strcat (pformat, "lld");
+      strcat (pformat, PRIdMAX);
       printf (pformat, (intmax_t) (statfsbuf->f_bavail));
       break;
     case 's':
@@ -357,11 +377,11 @@ print_statfs (char *pformat, char m, char const *filename,
       printf (pformat, (long int) (statfsbuf->f_bsize));
       break;
     case 'c':
-      strcat (pformat, "lld");
+      strcat (pformat, PRIdMAX);
       printf (pformat, (intmax_t) (statfsbuf->f_files));
       break;
     case 'd':
-      strcat (pformat, "lld");
+      strcat (pformat, PRIdMAX);
       printf (pformat, (intmax_t) (statfsbuf->f_ffree));
       break;
 #ifdef FLASK_LINUX
@@ -502,8 +522,8 @@ print_stat (char *pformat, char m, char const *filename,
       printf (pformat, minor (statbuf->st_rdev));
       break;
     case 's':
-      strcat (pformat, "llu");
-      printf (pformat, (unsigned long long) statbuf->st_size);
+      strcat (pformat, PRIuMAX);
+      printf (pformat, (uintmax_t) (statbuf->st_size));
       break;
     case 'b':
       strcat (pformat, "u");
