@@ -74,6 +74,7 @@ syntax-check-rules = \
   sc_cast_of_alloca_return_value \
   sc_changelog \
   sc_error_exit_success \
+  sc_prohibit_atoi_atof \
   sc_space_tab \
   sc_sun_os_names \
   sc_system_h_headers \
@@ -123,6 +124,13 @@ sc_space_tab:
 	  grep '[ ]	'						\
 	     $$(cvsu --list | grep -vEf .x-$@ ) &&			\
 	  { echo '$(ME): found SPACE-TAB sequence; remove the SPACE'	\
+		1>&2; exit 1; } || :
+
+sc_prohibit_atoi_atof:
+	@( cvsu --list ) > /dev/null 2>&1 || : &&			\
+	  grep '\<ato[fil]\>'						\
+	     $$(cvsu --list | grep -vEf .x-$@ ) &&			\
+	  { echo '$(ME): do not use atof, atoi, or atol'		\
 		1>&2; exit 1; } || :
 
 # Using EXIT_SUCCESS as the first argument to error is misleading,
