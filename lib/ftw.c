@@ -22,6 +22,20 @@
 # include <config.h>
 #endif
 
+#if __GNUC__
+# define alloca __builtin_alloca
+#else
+# if HAVE_ALLOCA_H
+#  include <alloca.h>
+# else
+#  ifdef _AIX
+ #  pragma alloca
+#  else
+char *alloca ();
+#  endif
+# endif
+#endif
+
 #if defined _LIBC
 # include <dirent.h>
 # define NAMLEN(dirent) _D_EXACT_NAMLEN(dirent)
@@ -78,8 +92,6 @@ char *stpcpy ();
 # define __closedir closedir
 # undef __fchdir
 # define __fchdir fchdir
-# undef __getcwd
-# define __getcwd getcwd
 # undef __opendir
 # define __opendir opendir
 # undef __readdir64
@@ -100,6 +112,12 @@ char *stpcpy ();
 # define dirent64 dirent
 # undef MAX
 # define MAX(a, b) ((a) > (b) ? (a) : (b))
+#endif
+
+#ifndef _LIBC
+# undef __getcwd
+# define __getcwd(P, N) xgetcwd ()
+extern char *xgetcwd (void);
 #endif
 
 #ifndef __set_errno
