@@ -4920,6 +4920,13 @@ default, only file names are shown.
 
 @table @samp
 
+@item --author
+@opindex --author
+@cindex hurd, author, printing
+List each file's author when producing long format directory listings.
+In GNU/Hurd, file authors can differ from their owners, but in other
+operating systems the two are the same.
+
 @item -D
 @itemx --dired
 @opindex -D
