@@ -467,6 +467,15 @@ static size_t dired_pos;
 #define FPUTS_LITERAL(s, stream) \
     do {fputs ((s), (stream)); dired_pos += sizeof((s)) - 1;} while (0)
 
+#define DIRED_INDENT()							\
+    do									\
+      {									\
+	/* FIXME: remove the `&& format == long_format' clause.  */	\
+	if (dired && format == long_format)				\
+	  FPUTS_LITERAL ("  ", stdout);					\
+      }									\
+    while (0)
+
 /* With --dired, store pairs of beginning and ending indices of filenames.  */
 static struct obstack dired_obstack;
 
@@ -964,9 +973,7 @@ print_dir (name, realname)
     {
       const char *dir;
 
-      /* FIXME: remove the `&& format == long_format' clause.  */
-      if (dired && format == long_format)
-	FPUTS_LITERAL ("  ", stdout);
+      DIRED_INDENT ();
       dir = (realname ? realname : name);
       PUSH_CURRENT_DIRED_POS (&subdired_obstack);
       FPUTS (dir, stdout, strlen (dir));
@@ -977,6 +984,8 @@ print_dir (name, realname)
   if (format == long_format || print_block_size)
     {
       char buf[6 + 20 + 1 + 1];
+
+      DIRED_INDENT ();
       sprintf (buf, "total %u\n", total_blocks);
       FPUTS (buf, stdout, strlen (buf));
     }
@@ -1602,9 +1611,7 @@ print_long_format (f)
   sprintf (p, "%s ", full_time ? timebuf : timebuf + 4);
   p += strlen (p);
 
-  if (dired)
-    FPUTS_LITERAL ("  ", stdout);
-
+  DIRED_INDENT ();
   FPUTS (bigbuf, stdout, p - bigbuf);
   PUSH_CURRENT_DIRED_POS (&dired_obstack);
   print_name_with_quoting (f->name);
