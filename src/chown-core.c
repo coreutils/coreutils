@@ -1,5 +1,5 @@
 /* chown-core.c -- core functions for changing ownership.
-   Copyright (C) 2000, 2002, 2003, 2004 Free Software Foundation.
+   Copyright (C) 2000, 2002, 2003, 2004, 2005 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ enum RCH_status
     RC_inode_changed,
 
     /* open, fstat, fchown, or close failed */
-    RC_error,
+    RC_error
   };
 
 extern void
