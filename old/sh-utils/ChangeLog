@@ -1,3 +1,13 @@
+Thu Mar 28 00:06:28 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* man/Makefile.am (man_MANS): Add chroot.1.
+	* src/Makefile.am (EXTRA_PROGRAMS): Add chroot.
+
+Sun Dec 24 10:55:34 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* configure.in: Check for chroot a la uname.
+	* src/chroot.c, man/chroot.1: New files.
+
 Sun Mar 24 11:44:35 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* su.c: Protoize and reorder functions to obviate forward decls.
