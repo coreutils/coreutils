@@ -1,4 +1,22 @@
-#serial 59   -*- autoconf -*-
+#serial 60   -*- autoconf -*-
+
+m4_undefine([AC_LANG_SOURCE(C)])
+dnl The following is identical to the definition in c.m4
+dnl from the autoconf cvs repository on 2003-03-07.
+dnl FIXME: remove this code once we upgrade to autoconf-2.58.
+
+# We can't use '#line $LINENO "configure"' here, since
+# Sun c89 (Sun WorkShop 6 update 2 C 5.3 Patch 111679-08 2002/05/09)
+# rejects $LINENO greater than 32767, and some configure scripts
+# are longer than 32767 lines.
+m4_define([AC_LANG_SOURCE(C)],
+[/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+$1])
+
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
