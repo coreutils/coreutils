@@ -70,8 +70,7 @@ struct dir_attr
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
-  NO_DEREFERENCE_OPTION = CHAR_MAX + 1,
-  NO_PRESERVE_ATTRIBUTES_OPTION,
+  NO_PRESERVE_ATTRIBUTES_OPTION = CHAR_MAX + 1,
   PARENTS_OPTION,
   PRESERVE_ATTRIBUTES_OPTION,
   REPLY_OPTION,
@@ -130,7 +129,7 @@ static struct option const long_opts[] =
   {"force", no_argument, NULL, 'f'},
   {"interactive", no_argument, NULL, 'i'},
   {"link", no_argument, NULL, 'l'},
-  {"no-dereference", no_argument, NULL, NO_DEREFERENCE_OPTION},
+  {"no-dereference", no_argument, NULL, 'P'},
   {"no-preserve", required_argument, NULL, NO_PRESERVE_ATTRIBUTES_OPTION},
   {"one-file-system", no_argument, NULL, 'x'},
   {"parents", no_argument, NULL, PARENTS_OPTION},
@@ -188,8 +187,7 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
                                  additional attributes: links, all\n\
       --no-preserve=ATTR_LIST  don't preserve the specified attributes\n\
       --parents                append source path to DIRECTORY\n\
-  -P                           same as `--parents' for now; soon to change to\n\
-                                 `--no-dereference' to conform to POSIX\n\
+  -P                           same as `--no-dereference'\n\
   -r                           copy recursively, non-directories as files\n\
                                  WARNING: use -R instead when you might copy\n\
                                  special files like FIFOs or /dev/zero\n\
@@ -814,7 +812,6 @@ main (int argc, char **argv)
   char *version_control_string = NULL;
   struct cp_options x;
   char *target_directory = NULL;
-  int used_P_option = 0;
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -891,7 +888,7 @@ main (int argc, char **argv)
 	  x.dereference = DEREF_ALWAYS;
 	  break;
 
-	case NO_DEREFERENCE_OPTION:
+	case 'P':
 	  x.dereference = DEREF_NEVER;
 	  break;
 
@@ -918,9 +915,6 @@ main (int argc, char **argv)
 	  x.require_preserve = 1;
 	  break;
 
-	case 'P':
-	  used_P_option = 1;
-	  /* fall through */
 	case PARENTS_OPTION:
 	  flag_path = 1;
 	  break;
@@ -990,14 +984,6 @@ main (int argc, char **argv)
     {
       error (0, 0, _("cannot make both hard and symbolic links"));
       usage (1);
-    }
-
-  if (used_P_option)
-    {
-      error (0, 0,
-	     _("\
-Warning: the meaning of `-P' will change in the future to conform to POSIX.\n\
-Use `--parents' for the old meaning, and `--no-dereference' for the new one."));
     }
 
   if (backup_suffix_string)
