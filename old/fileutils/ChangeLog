@@ -1,5 +1,10 @@
 Sat Nov 23 16:11:59 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* lib/Makefile.am (EXTRA_DIST): Add getline.c now that getline
+	isn't mentioned in AC_REPLACE_FUNCS.
+
+	* lib/Makefile.am (EXTRA_DIST):
+
 	* chgrp.c (usage): Alphabetize option descriptions the way
 	sort -f would.
 	* chown.c (usage): Likewise.
@@ -11,6 +16,7 @@ Sat Nov 23 16:11:59 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 	* mkdir.c (usage): Likewise.
 	* mv.c (usage): Likewise.
 	* rm.c (usage): Likewise.
+	From Karl Berry.
 
 Fri Nov 22 22:14:10 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
