@@ -2,6 +2,10 @@
 
 	* Version 4.5.2.
 
+	* src/remove.c (remove_entry) [ROOT_CAN_UNLINK_DIRS]: With `rm -i DIR',
+	don't recurse into directory, DIR.  Prompted by a report from
+	Leonardo Milano.
+
 	* tests/rm/i-no-r: New file/test, for the above fix.
 	* tests/rm/Makefile.am (TESTS): Add i-no-r.
 
