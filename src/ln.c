@@ -164,6 +164,13 @@ do_link (const char *source, const char *dest)
 	  return 1;
 	}
 
+      if (S_ISLNK (source_stats.st_mode))
+	{
+	  error (0, 0, _("%s: warning: making a hard link to a symbolic link\
+ is not portable"),
+		 source);
+	}
+
       if (!hard_dir_link && S_ISDIR (source_stats.st_mode))
 	{
 	  error (0, 0, _("%s: hard link not allowed for directory"), source);
