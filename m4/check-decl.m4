@@ -1,4 +1,4 @@
-#serial 4
+#serial 5
 
 dnl This is just a wrapper function to encapsulate this kludge.
 dnl Putting it in a separate file like this helps share it between
@@ -24,15 +24,22 @@ AC_DEFUN(jm_CHECK_DECLS,
 # include <unistd.h>
 #endif
 '
+
   if test x = y; then
     dnl This code is deliberately never run via ./configure.
     dnl FIXME: this is a gross hack to make autoheader put entries
     dnl for each of these symbols in the config.h.in.
     dnl Otherwise, I'd have to update acconfig.h every time I change
     dnl this list of functions.
-    AC_CHECK_FUNCS(DECL_FREE DECL_LSEEK DECL_MALLOC DECL_MEMCHR DECL_REALLOC \
-		   DECL_STPCPY DECL_STRSTR)
+    AC_DEFINE(HAVE_DECL_FREE, 1, [Define if this function is declared.])
+    AC_DEFINE(HAVE_DECL_LSEEK, 1, [Define if this function is declared.])
+    AC_DEFINE(HAVE_DECL_MALLOC, 1, [Define if this function is declared.])
+    AC_DEFINE(HAVE_DECL_MEMCHR, 1, [Define if this function is declared.])
+    AC_DEFINE(HAVE_DECL_REALLOC, 1, [Define if this function is declared.])
+    AC_DEFINE(HAVE_DECL_STPCPY, 1, [Define if this function is declared.])
+    AC_DEFINE(HAVE_DECL_STRSTR, 1, [Define if this function is declared.])
   fi
+
   jm_CHECK_DECLARATIONS($headers, free lseek malloc \
                         memchr realloc stpcpy strstr)
 ])
