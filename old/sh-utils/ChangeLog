@@ -1,6 +1,10 @@
-2002-03-25  Jim Meyering  <meyering@lucent.com>
+2002-04-12  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.12.
+
+	* src/Makefile.am (LDADD): List ../lib/libfetish.a both before
+	and after @LIBINTL@.  Thanks to Paul Eggert for the fix and to
+	Bruno Haible for diagnosing the problem.
 
 2002-02-26  Paul Eggert  <eggert@twinsun.com>
 
