@@ -117,7 +117,7 @@ posix_time_parse (const char *s, unsigned int syntax_bits)
   const char *dot = NULL;
   int pair[6];
   int *p;
-  int i;
+  unsigned int i;
 
   size_t s_len = strlen (s);
   size_t len = (((syntax_bits & PDS_SECONDS) && (dot = strchr (s, '.')))
