@@ -2,6 +2,14 @@
 
 	* getpass.c: New file, from Bruno Haible.  Required for BeOS.
 
+2000-06-19  Paul Eggert  <eggert@twinsun.com>
+
+	* quotearg.c: Include <wctype.h> after <wchar.h>, for Solaris 2.5.
+	(mbrtowc, mbstate_t): Define substitutes if
+	HAVE_MBRTOWC && HAVE_WCHAR_H && !HAVE_MBSTATE_T_OBJECT.
+	(iswprint): Define to 1 if !defined iswprint && !HAVE_ISWPRINT,
+	not if ! (HAVE_MBRTOWC && HAVE_WCHAR_H).
+
 2000-06-17  Bruno Haible  <haible@clisp.cons.org>
 
 	* xgetcwd.c (xgetcwd): If the required pathname length is smaller
@@ -46,19 +54,19 @@
 
 2000-06-15  Paul Eggert  <eggert@twinsun.com>
 
-	* lib/human.c (adjust_value): New function.
+	* human.c (adjust_value): New function.
 	(human_readable_inexact): Apply rounding style even when
 	printing approximate values.
 
 2000-06-14  Paul Eggert  <eggert@twinsun.com>
 
-	* lib/human.c (human_readable_inexact): Allow an input block
+	* human.c (human_readable_inexact): Allow an input block
 	size that is not a multiple of the output block size, and vice versa.
 	Reported by Piergiorgio Sartor.
 
 2000-06-14  Paul Eggert  <eggert@twinsun.com>
 
-	* lib/getdate.y (get_date): Apply relative times after time
+	* getdate.y (get_date): Apply relative times after time
 	zone indicator, not before.  Reported by Todd A. Jacobs.
 
 2000-06-13  Jim Meyering  <meyering@lucent.com>
