@@ -1,5 +1,10 @@
 2002-09-29  Jim Meyering  <meyering@lucent.com>
 
+	* src/cat.c (simple_cat): Use a temporary to avoid bogus warnings.
+	(cat): Declare insize and outsize to be of type size_t, not int.
+	Rearrange pointer/integer expressions to avoid bogus warnings.
+	(main): Declare insize and outsize to be of type size_t, not int.
+
 	* Version 4.5.2.
 
 	* src/tail.c (parse_options): Give a sensible diagnostic for
