@@ -1,3 +1,7 @@
+2003-11-06  Jim Meyering  <jim@meyering.net>
+
+	* free.c: New file, from gnulib.
+
 2003-10-31  Paul Eggert  <eggert@twinsun.com>
 
 	* mountlist.h (struct mount_entry.me_type_malloced): New member.
