@@ -1,5 +1,9 @@
 2005-03-21  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* onceonly.m4: Remove.
+	* onceonly_2_57.m4: Add.
+	This change shrinks "configure" by over 300 kB.
+
 	Another change imported from gnulib.
 	* memcasecmp.m4 (gl_MEMCASECMP): Renamed from gl_FUNC_MEMCASECMP.
 	All uses changed.  Require AC_HEADER_STDC instead of invoking it.
