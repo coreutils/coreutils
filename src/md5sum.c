@@ -104,7 +104,6 @@ usage (int status)
       printf (_("\
 Usage: %s [OPTION] [FILE]...\n\
   or:  %s [OPTION] --check [FILE]\n\
-  or:  %s [OPTION] --string=STRING ...\n\
 Print or check MD5 checksums.\n\
 With no FILE, or when FILE is -, read standard input.\n\
 \n\
@@ -116,7 +115,6 @@ The following two options are useful only when verifying checksums:\n\
       --status            don't output anything, status code shows success\n\
   -w, --warn              warn about improperly formated MD5 checksum lines\n\
 \n\
-      --string=STRING     compute checksum for STRING\n\
       --help              display this help and exit\n\
       --version           output version information and exit\n\
 \n\
