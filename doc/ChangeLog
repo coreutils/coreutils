@@ -1,3 +1,16 @@
+2004-10-11  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (Special built-in utilities): New node.
+	(printf invocation): builtin -> built-in, for consistency
+	with POSIX terminology.
+	(test invocation, pwd invocation):
+	Use specific rather than generic language to warn about
+	built-in commands.
+	(chroot invocation, env invocation, nice invocation, nohup invocation):
+	Warn that command must not be a special built-in.
+	(env invocation): Warn about environment variables with unusual
+	spellings, or duplicates.
+
 2004-09-26  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (ls invocation): Document "ls --hide".
