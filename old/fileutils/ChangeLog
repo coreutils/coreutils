@@ -1,3 +1,23 @@
+Thu May 23 07:50:38 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* ls.c (usage): Make --literal (-N) description clearer.
+
+	* acconfig.h (MOUNTED_LISTMNTENT): Add it.
+	* fsusage [_CRAY]: Don't include sys/filsys.h because although
+	Unicos-9 has it, it's not needed and would cause other problems
+	because it requires inclusion of other, non-standard headers.
+	* mountlist.c (read_filesystem_list) [MOUNTED_LISTMNTENT]: New
+	function.
+	From Johan Danielsson (joda@pdc.kth.se).
+
+	* configure.in (AC_CHECK_FUNCS): Add listmntent for Unicos-9.
+	Define MOUNTED_LISTMNTENT #ifdef _CRAY and HAVE_GETMNTENT.
+	With an initial patch from Johan Danielsson.
+
+Wed May 22 18:58:01 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (LINGUAS): Add sv.
+
 Tue May 21 07:06:30 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/euidaccess.c (euidaccess) [!S_IROTH]: Define.
