@@ -41,58 +41,58 @@
 #include <time.h>
 #include <getopt.h>
 #ifdef HAVE_SYS_PARAM_H
-#include <sys/param.h>
+# include <sys/param.h>
 #endif
 
 #include "system.h"
 #include "error.h"
 
 #if !defined (UTMP_FILE) && defined (_PATH_UTMP)
-#define UTMP_FILE _PATH_UTMP
+# define UTMP_FILE _PATH_UTMP
 #endif
 
 #if !defined (WTMP_FILE) && defined (_PATH_WTMP)
-#define WTMP_FILE _PATH_WTMP
+# define WTMP_FILE _PATH_WTMP
 #endif
 
 #ifdef UTMPX_FILE /* Solaris, SysVr4 */
-#undef UTMP_FILE
-#define UTMP_FILE UTMPX_FILE
+# undef UTMP_FILE
+# define UTMP_FILE UTMPX_FILE
 #endif
 
 #ifdef WTMPX_FILE /* Solaris, SysVr4 */
-#undef WTMP_FILE
-#define WTMP_FILE WTMPX_FILE
+# undef WTMP_FILE
+# define WTMP_FILE WTMPX_FILE
 #endif
 
 #ifndef UTMP_FILE
-#define UTMP_FILE "/etc/utmp"
+# define UTMP_FILE "/etc/utmp"
 #endif
 
 #ifndef WTMP_FILE
-#define WTMP_FILE "/etc/wtmp"
+# define WTMP_FILE "/etc/wtmp"
 #endif
 
 #ifndef MAXHOSTNAMELEN
-#define MAXHOSTNAMELEN 64
+# define MAXHOSTNAMELEN 64
 #endif
 
 #ifndef S_IWGRP
-#define S_IWGRP 020
+# define S_IWGRP 020
 #endif
 
 #ifdef WHO
-#define COMMAND_NAME "who"
+# define COMMAND_NAME "who"
 #else
-#ifdef USERS
-#define COMMAND_NAME "users"
-#else
-#ifdef UPTIME
-#define COMMAND_NAME "uptime"
-#else
+# ifdef USERS
+#  define COMMAND_NAME "users"
+# else
+#  ifdef UPTIME
+#   define COMMAND_NAME "uptime"
+#  else
  error You must define one of WHO, UPTIME or USERS.
-#endif /* UPTIME */
-#endif /* USERS */
+#  endif /* UPTIME */
+# endif /* USERS */
 #endif /* WHO */
 
 int gethostname ();
@@ -159,7 +159,7 @@ print_uptime (int n)
   struct tm *tmn;
   double avg[3];
   int loads;
-#ifdef HAVE_PROC_UPTIME
+# ifdef HAVE_PROC_UPTIME
   FILE *fp;
   double upsecs;
 
@@ -174,34 +174,34 @@ print_uptime (int n)
 	uptime = (time_t) upsecs;
       fclose (fp);
     }
-#endif /* HAVE_PROC_UPTIME */
+# endif /* HAVE_PROC_UPTIME */
   /* Loop through all the utmp entries we just read and count up the valid
      ones, also in the process possibly gleaning boottime. */
   while (n--)
     {
       if (this->ut_name[0]
-#ifdef USER_PROCESS
+# ifdef USER_PROCESS
 	  && this->ut_type == USER_PROCESS
-#endif
+# endif
 	  )
 	{
 	  ++entries;
 	}
       /* If BOOT_MSG is defined, we can get boottime from utmp.  This avoids
 	 possibly needing special privs to read /dev/kmem. */
-#ifdef BOOT_MSG
-# if HAVE_PROC_UPTIME
+# ifdef BOOT_MSG
+#  if HAVE_PROC_UPTIME
       if (uptime == 0)
-# endif /* HAVE_PROC_UPTIME */
+#  endif /* HAVE_PROC_UPTIME */
 	if (!strcmp (this->ut_line, BOOT_MSG))
 	  boot_time = UT_TIME_MEMBER (this);
-#endif /* BOOT_MSG */
+# endif /* BOOT_MSG */
       ++this;
   }
   time_now = time (0);
-#if defined HAVE_PROC_UPTIME
+# if defined HAVE_PROC_UPTIME
   if (uptime == 0)
-#endif
+# endif
     {
       if (boot_time == 0)
 	error (1, errno, _("couldn't get boot time"));
@@ -219,11 +219,11 @@ print_uptime (int n)
   printf (" %2d:%02d,  %d %s", uphours, upmins, entries,
 	  (entries == 1) ? _("user") : _("users"));
 
-#if defined (HAVE_GETLOADAVG) || defined (C_GETLOADAVG)
+# if defined (HAVE_GETLOADAVG) || defined (C_GETLOADAVG)
   loads = getloadavg (avg, 3);
-#else
+# else
   loads = -1;
-#endif
+# endif
 
   if (loads == -1)
     putchar ('\n');
@@ -303,8 +303,8 @@ print_entry (STRUCT_UTMP *this)
   time_t last_change;
   char mesg;
 
-#define DEV_DIR_WITH_TRAILING_SLASH "/dev/"
-#define DEV_DIR_LEN (sizeof (DEV_DIR_WITH_TRAILING_SLASH) - 1)
+# define DEV_DIR_WITH_TRAILING_SLASH "/dev/"
+# define DEV_DIR_LEN (sizeof (DEV_DIR_WITH_TRAILING_SLASH) - 1)
 
   char line[sizeof (this->ut_line) + DEV_DIR_LEN + 1];
   time_t tm;
@@ -356,7 +356,7 @@ print_entry (STRUCT_UTMP *this)
       else
 	printf ("   .  ");
     }
-#ifdef HAVE_UT_HOST
+# ifdef HAVE_UT_HOST
   if (this->ut_host[0])
     {
       extern char *canon_host ();
@@ -383,7 +383,7 @@ print_entry (STRUCT_UTMP *this)
       else
 	printf (" (%s)", host);
     }
-#endif
+# endif
 
   putchar ('\n');
 }
@@ -401,9 +401,9 @@ list_entries_who (int n)
   while (n--)
     {
       if (this->ut_name[0]
-#ifdef USER_PROCESS
+# ifdef USER_PROCESS
 	  && this->ut_type == USER_PROCESS
-#endif
+# endif
 	 )
 	{
 	  char *trimmed_name;
@@ -444,9 +444,9 @@ list_entries_users (int n)
   for (i = 0; i < n; i++)
     {
       if (this->ut_name[0]
-#ifdef USER_PROCESS
+# ifdef USER_PROCESS
 	  && this->ut_type == USER_PROCESS
-#endif
+# endif
 	 )
 	{
 	  char *trimmed_name;
@@ -504,9 +504,9 @@ scan_entries (int n)
   while (n--)
     {
       if (this->ut_name[0]
-#ifdef USER_PROCESS
+# ifdef USER_PROCESS
 	  && this->ut_type == USER_PROCESS
-#endif
+# endif
 	 )
 	print_entry (this);
       this++;
@@ -563,13 +563,13 @@ who (char *filename)
   else
     scan_entries (users);
 #else
-#ifdef USERS
+# ifdef USERS
   list_entries_users (users);
-#else
-#ifdef UPTIME
+# else
+#  ifdef UPTIME
   print_uptime (users);
-#endif /* UPTIME */
-#endif /* USERS */
+#  endif /* UPTIME */
+# endif /* USERS */
 #endif /* WHO */
 }
 
@@ -588,9 +588,9 @@ search_entries (int n, char *line)
   while (n--)
     {
       if (this->ut_name[0]
-#ifdef USER_PROCESS
+# ifdef USER_PROCESS
 	  && this->ut_type == USER_PROCESS
-#endif
+# endif
 	  && !strncmp (line, this->ut_line, sizeof (this->ut_line)))
 	return this;
       this++;
