@@ -1,5 +1,5 @@
 /* GNU's uptime.
-   Copyright (C) 92, 93, 94, 95, 96, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 92, 93, 94, 95, 96, 1997, 1998, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -63,9 +63,14 @@ print_uptime (int n, const STRUCT_UTMP *this)
       char buf[BUFSIZ];
       int res;
       fgets (buf, BUFSIZ, fp);
+
+      /* The following sscanf must use the C locale.  */
+      setlocale (LC_NUMERIC, "C");
       res = sscanf (buf, "%lf", &upsecs);
+      setlocale (LC_NUMERIC, "");
       if (res == 1)
 	uptime = (time_t) upsecs;
+
       fclose (fp);
     }
 #endif /* HAVE_PROC_UPTIME */
