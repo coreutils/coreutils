@@ -17,13 +17,10 @@ sub validate
     {
       my ($test_name, $flags, $in_spec, $expected, $e_ret_code, $rest) =
 	@$test_vector;
-      if (!defined $e_ret_code || defined $rest)
-	{
-	  die "wrong number of elements in test $test_name\n";
-	}
+      die "wrong number of elements in test $test_name\n"
+	if (!defined $e_ret_code || defined $rest);
       assert (!ref $test_name);
       assert (!ref $flags);
-      assert (!ref $expected);
       assert (!ref $e_ret_code);
 
       die "$0: $.: duplicate test name \`$test_name'\n"
@@ -75,7 +72,9 @@ sub spec_to_list ($$$)
 	  # file.
 	  if (ref $file_spec)
 	    {
-	      assert (ref $file_spec eq 'SCALAR');
+	      my $r = ref $file_spec;
+	      die "bad test: $test_name is $r\n"
+		if ref $file_spec ne 'SCALAR';
 	      my $existing_file = $$file_spec;
 	      # FIXME: make sure $existing_file exists somewhere.
 	      push (@explicit_file, $existing_file);
@@ -169,6 +168,11 @@ sub wrap
 	  push (@maint, @{$e->{MAINT_GEN}});
 	}
 
+      # The list of explicitly mentioned files may contain duplicates.
+      # Eliminated any duplicates.
+      my %e = map {$_ => 1} @exp;
+      @exp = sort keys %e;
+
       my $len = 77;
       print join (" \\\n", wrap ($len, 'explicit =', @exp)), "\n";
       print join (" \\\n", wrap ($len, 'maint_gen =', @maint)), "\n";
@@ -219,7 +223,9 @@ foreach $test_vector (Test::test_vector ())
 			 && defined $Test::input_via_stdin
 			 && $Test::input_via_stdin)
 			? '< ' : '');
-  my $cmd = "\$xx $flags $redirect_stdin" . join (' ', @srcdir_rel_in_file)
+  my $z = $Test::common_option_prefix if defined $Test::common_option_prefix;
+  $z ||= '';
+  my $cmd = "\$xx $z$flags $redirect_stdin" . join (' ', @srcdir_rel_in_file)
     . " > $out 2> $err_output";
   print <<EOF;
 $cmd
@@ -241,9 +247,10 @@ fi
 test -s $err_output || rm -f $err_output
 EOF
   }
+my $n_tests = Test::test_vector ();
 print <<EOF2 ;
 if test \$errors = 0 ; then
-  \$echo Passed all tests. 1>&2
+  \$echo Passed all $n_tests tests. 1>&2
 else
   \$echo Failed \$errors tests. 1>&2
 fi
