@@ -1254,7 +1254,8 @@ copy_reg (const char *src_path, const char *dst_path)
 #ifdef HAVE_ST_BLOCKS
   if (flag_sparse == SPARSE_AUTO && S_ISREG (sb.st_mode))
     {
-      /* Find out whether the file contains any sparse blocks. */
+      /* Use a heuristic to determine whether SRC_PATH contains any
+	 sparse blocks. */
 
       if (fstat (source_desc, &sb))
 	{
@@ -1266,7 +1267,8 @@ copy_reg (const char *src_path, const char *dst_path)
       /* If the file has fewer blocks than would normally
 	 be needed for a file of its size, then
 	 at least one of the blocks in the file is a hole. */
-      if (S_ISREG (sb.st_mode) && sb.st_size / 512 > ST_NBLOCKS (sb))
+      if (S_ISREG (sb.st_mode)
+	  && (size_t) (sb.st_size / 512) > (size_t) ST_NBLOCKS (sb))
 	make_holes = 1;
     }
 #endif
