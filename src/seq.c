@@ -212,7 +212,7 @@ main (argc, argv)
   /* NOTREACHED */
 }
 
-/* Read an double value from the command line.
+/* Read a double value from the command line.
    Return if the string is correct else signal error.  */
 
 static double
@@ -222,6 +222,7 @@ scan_double_arg (arg)
   char *end_ptr;
   double ret_val;
 
+  /* FIXME: use xstrtod?  At least set and check errno.  */
   ret_val = strtod (arg, &end_ptr);
   if (end_ptr == arg || *end_ptr != '\0')
     {
@@ -288,6 +289,8 @@ check_format (format_string)
 static char *
 get_width_format ()
 {
+  /* FIXME: why is this static?  */
+  /* FIXME: Are you sure this is guaranteed to be large enough?  */
   static char buffer[256];
   int full_width;
   int frac_width;
@@ -298,6 +301,7 @@ get_width_format ()
 
   if (from > last)
     {
+      /* FIXME: don't use floor!! */
       min_val = from - step * floor ((from - last) / step);
       max_val = from;
     }
@@ -314,6 +318,7 @@ get_width_format ()
 
   if (min_val < 0.0)
     {
+      /* FIXME: don't use rint!! */
       (void) sprintf (buffer, "%g", rint (min_val));
       if (buffer[strspn (buffer, "-0123456789")] != '\0')
 	return "%g";
@@ -323,6 +328,7 @@ get_width_format ()
     }
   full_width = width1;
 
+  /* FIXME: don't use modf!! */
   (void) sprintf (buffer, "%g", 1.0 + modf (min_val, &temp));
   width1 = strlen (buffer);
   if (width1 == 1)
@@ -335,6 +341,7 @@ get_width_format ()
       width1 -= 2;
     }
 
+  /* FIXME: don't use modf!! */
   (void) sprintf (buffer, "%g", 1.0 + modf (step, &temp));
   width2 = strlen (buffer);
   if (width2 == 1)
