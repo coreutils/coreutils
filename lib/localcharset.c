@@ -1,6 +1,6 @@
 /* Determine a canonical name for the current locale's character encoding.
 
-   Copyright (C) 2000-2003 Free Software Foundation, Inc.
+   Copyright (C) 2000-2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -72,8 +72,8 @@
 # define relocate(pathname) (pathname)
 #endif
 
-#if defined _WIN32 || defined __WIN32__ || defined __EMX__ || defined __DJGPP__
-  /* Win32, OS/2, DOS */
+#if defined _WIN32 || defined __WIN32__ || defined __CYGWIN__ || defined __EMX__ || defined __DJGPP__
+  /* Win32, Cygwin, OS/2, DOS */
 # define ISSLASH(C) ((C) == '/' || (C) == '\\')
 #endif
 
@@ -140,15 +140,17 @@ get_charset_aliases ()
       else
 	{
 	  /* Parse the file's contents.  */
-	  int c;
-	  char buf1[50+1];
-	  char buf2[50+1];
 	  char *res_ptr = NULL;
 	  size_t res_size = 0;
-	  size_t l1, l2;
 
 	  for (;;)
 	    {
+	      int c;
+	      char buf1[50+1];
+	      char buf2[50+1];
+	      size_t l1, l2;
+	      char *old_res_ptr;
+
 	      c = getc (fp);
 	      if (c == EOF)
 		break;
@@ -169,6 +171,7 @@ get_charset_aliases ()
 		break;
 	      l1 = strlen (buf1);
 	      l2 = strlen (buf2);
+	      old_res_ptr = res_ptr;
 	      if (res_size == 0)
 		{
 		  res_size = l1 + 1 + l2 + 1;
@@ -183,6 +186,8 @@ get_charset_aliases ()
 		{
 		  /* Out of memory. */
 		  res_size = 0;
+		  if (old_res_ptr != NULL)
+		    free (old_res_ptr);
 		  break;
 		}
 	      strcpy (res_ptr + res_size - (l2 + 1) - (l1 + 1), buf1);
