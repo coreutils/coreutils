@@ -1,3 +1,17 @@
+Wed Nov 29 21:50:53 1995  Jim Meyering  (meyering@comco.com)
+
+	* sort.c (begfield): Replace loop with equivalent if-else.
+	(limfield): Fix bug that made field specs like -k1.5 return a
+	pointer into LINE beyond the first field.
+	Don't try to trim trailing blanks here; it's not
+	possible because we don't know where the field begins.
+	Replace loop with equivalent if-else.
+	(trim_trailing_blanks): New function.
+	(findlines): Call it.
+	(keycompare): Likewise.
+	(main): Don't decrement T2 corresponding to `x' in field
+	specs like -ku.v,w.x.
+
 Sun Nov 26 15:50:23 1995  Jim Meyering  (meyering@comco.com)
 
 	* csplit.c [!UINT_MAX]: Define.
