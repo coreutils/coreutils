@@ -36,8 +36,4 @@ AC_DEFUN([UTILS_FUNC_MKDIR_TRAILING_SLASH],
 ])
 
 # Prerequisites of lib/mkdir.c.
-AC_DEFUN([gl_PREREQ_MKDIR],
-[
-  AC_CHECK_HEADERS_ONCE(stdlib.h string.h)
-  AC_CHECK_DECLS_ONCE(free)
-])
+AC_DEFUN([gl_PREREQ_MKDIR], [:])
