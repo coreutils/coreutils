@@ -1,3 +1,10 @@
+2003-10-17  Jim Meyering  <jim@meyering.net>
+
+	* error.h: Update from gnulib.
+	* getpass.c: Likewise.
+	* fnmatch.c: Likewise.
+	* fnmatch_loop.c: Likewise.
+
 2003-10-16  Jim Meyering  <jim@meyering.net>
 
 	* xmalloc.c: Include <string.h>, for declarations of memset and memcpy.
