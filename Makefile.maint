@@ -1,5 +1,5 @@
 # -*-Makefile-*-
-# This Makefile fragment is shared between fileutils, sh-utils, textutils,
+# This Makefile fragment is shared between the coreutils,
 # CPPI, Bison, and Autoconf.
 
 ## Copyright (C) 2001-2003 Free Software Foundation, Inc.
@@ -80,6 +80,10 @@ syntax-check:
 	    $$(find -type f -name '*.[chly]') &&			\
 	  { echo '$(ME): found error (EXIT_SUCCESS' 1>&2;		\
 	    exit 1; } || :
+#	@grep -E '#  *include <(limits|std(def|arg|bool))\.h>'		\
+#	    $$(find -type f -name '*.[chly]') &&			\
+#	  { echo '$(ME): found conditional include' 1>&2;		\
+#	    exit 1; } || :
 
 #	grep -E '^#  *include <(string|stdlib)\.h>'			\
 #	    $(srcdir)/{lib,src}/*.[chy] &&				\
