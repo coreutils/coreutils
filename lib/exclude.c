@@ -24,20 +24,14 @@
 # include <config.h>
 #endif
 
-#if HAVE_STDBOOL_H
-# include <stdbool.h>
-#else
-typedef enum {false = 0, true = 1} bool;
-#endif
+#include <stdbool.h>
 
 #include <errno.h>
 #ifndef errno
 extern int errno;
 #endif
+#include <stddef.h>
 #include <stdio.h>
-#if HAVE_SYS_TYPES_H
-# include <sys/types.h>
-#endif
 #if HAVE_STDLIB_H
 # include <stdlib.h>
 #endif
@@ -107,8 +101,7 @@ new_exclude (void)
   struct exclude *ex = xmalloc (sizeof *ex);
   ex->exclude_count = 0;
   ex->exclude_alloc = (1 << 6); /* This must be a power of 2.  */
-  ex->exclude = xmalloc (ex->exclude_alloc
-					    * sizeof ex->exclude[0]);
+  ex->exclude = xmalloc (ex->exclude_alloc * sizeof ex->exclude[0]);
   return ex;
 }
 
