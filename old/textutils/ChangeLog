@@ -1,6 +1,19 @@
-1998-06-29  Jim Meyering  <meyering@ascend.com>
+1998-07-04  Jim Meyering  <meyering@ascend.com>
 
 	* Version 1.22f.
+
+	* configure.in (AM_WITH_REGEX): Remove.  Now the replacement
+	macro, jm_WITH_REGEX, is bundled with the rest in jm_MACROS.
+	* acconfig.h (WITH_REGEX): Remove undef.
+	* src/csplit.c: Remove #ifdef around <regex.h> inclusion.
+	* src/nl.c: Likewise.
+	* src/tac.c: Likewise.
+	* src/csplit.c (extract_regexp): Remove #if !WITH_REGEX...#endif block.
+	* lib/Makefile.am (noinst_HEADERS): Remove rx.h.
+	* lib/rx.c: Remove file.
+	* lib/rx.h: Remove file.
+
+1998-06-29  Jim Meyering  <meyering@ascend.com>
 
 	* src/wc.c: Update calls to human_readable -- now there's one fewer arg.
 
