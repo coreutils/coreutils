@@ -96,7 +96,10 @@ readtoken (FILE *stream,
       saved_delim = delim;
       memset (isdelim, 0, sizeof isdelim);
       for (j = 0; j < n_delim; j++)
-	isdelim[(unsigned char) delim[j]] = 1;
+	{
+	  unsigned char ch = delim[j];
+	  isdelim[ch] = 1;
+	}
     }
 
   /* FIXME: don't fool with this caching.  Use strchr instead.  */
