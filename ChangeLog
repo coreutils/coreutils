@@ -2,6 +2,8 @@
 
 	* Version 4.5.5.
 
+	* tests/shred/exact: Also test for just fixed bug with --zero.
+
 	* src/shred.c (long_opts): --zero does not require an argument.
 	Patch by Michael Stone.  Reported by Roland Turner as Debian bug 172019.
 
