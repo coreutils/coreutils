@@ -1,6 +1,7 @@
 #!/p/bin/perl5.000 -w
 
 $tr = '../tr +io 5';
+$tr = './tr';
 $tr = 'tr';
 $test = 0;
 $| = 1;
