@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.0 from Makefile.am
+# Makefile.in generated automatically by automake 1.1c from Makefile.am
 
 # Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -51,7 +51,7 @@ INCLUDES = -I.. -I$(srcdir)
 fu_SOURCES = getdate.c getline.c posixtm.c argmatch.c backupfile.c \
 dirname.c fileblocks.c filemode.c \
 full-write.c getversion.c idcache.c \
-isdir.c long-options.c makepath.c modechange.c \
+isdir.c long-options.c makepath.c modechange.c path-concat.c \
 safe-read.c save-cwd.c savedir.c stripslash.c userspec.c xgetcwd.c \
 xmalloc.c xstrdup.c xstrtol.c xstrtoul.c yesno.c
 
@@ -59,36 +59,34 @@ fu_LIBADD = @LIBOBJS@ @ALLOCA@
 
 noinst_HEADERS = argmatch.h backupfile.h error.h fnmatch.h fsusage.h \
 getline.h getopt.h group-member.h long-options.h makepath.h modechange.h \
-mountlist.h obstack.h pathmax.h save-cwd.h xstrtol.h xstrtoul.h
+mountlist.h obstack.h path-concat.h pathmax.h save-cwd.h xstrtol.h xstrtoul.h
 
 BUILT_SOURCES = getdate.c posixtm.c
 mkinstalldirs = $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../config.h
+CONFIG_CLEAN_FILES = 
 LIBRARIES = $(noinst_LIBRARIES)
 
 noinst_LIBFILES = libfu.a
 
-CC = @CC@
-LEX = @LEX@
-YACC = @YACC@
-
 DEFS = @DEFS@ -I. -I$(srcdir) -I..
 CPPFLAGS = @CPPFLAGS@
-CFLAGS = @CFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
-
-COMPILE = $(CC) -c $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
-LINK = $(CC) $(LDFLAGS) -o $@
+fu_DEPENDENCIES =  @LIBOBJS@ @ALLOCA@
 fu_OBJECTS = getdate.o getline.o posixtm.o argmatch.o backupfile.o \
 dirname.o fileblocks.o filemode.o full-write.o getversion.o idcache.o \
-isdir.o long-options.o makepath.o modechange.o safe-read.o save-cwd.o \
-savedir.o stripslash.o userspec.o xgetcwd.o xmalloc.o xstrdup.o \
-xstrtol.o xstrtoul.o yesno.o
+isdir.o long-options.o makepath.o modechange.o path-concat.o \
+safe-read.o save-cwd.o savedir.o stripslash.o userspec.o xgetcwd.o \
+xmalloc.o xstrdup.o xstrtol.o xstrtoul.o yesno.o
 EXTRA_fu_SOURCES =
 LIBFILES =  libfu.a
 AR = ar
 RANLIB = @RANLIB@
+CC = @CC@
+CFLAGS = @CFLAGS@
+COMPILE = $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
+LINK = $(CC) $(LDFLAGS) -o $@
 HEADERS = $(noinst_HEADERS)
 
 DIST_COMMON = Makefile.am Makefile.in
@@ -114,13 +112,13 @@ $(srcdir)/.deps/getopt1.P $(srcdir)/.deps/getversion.P \
 $(srcdir)/.deps/idcache.P $(srcdir)/.deps/isdir.P \
 $(srcdir)/.deps/long-options.P $(srcdir)/.deps/makepath.P \
 $(srcdir)/.deps/modechange.P $(srcdir)/.deps/mountlist.P \
-$(srcdir)/.deps/obstack.P $(srcdir)/.deps/posixtm.P \
-$(srcdir)/.deps/safe-read.P $(srcdir)/.deps/save-cwd.P \
-$(srcdir)/.deps/savedir.P $(srcdir)/.deps/stripslash.P \
-$(srcdir)/.deps/userspec.P $(srcdir)/.deps/xgetcwd.P \
-$(srcdir)/.deps/xmalloc.P $(srcdir)/.deps/xstrdup.P \
-$(srcdir)/.deps/xstrtol.P $(srcdir)/.deps/xstrtoul.P \
-$(srcdir)/.deps/yesno.P
+$(srcdir)/.deps/obstack.P $(srcdir)/.deps/path-concat.P \
+$(srcdir)/.deps/posixtm.P $(srcdir)/.deps/safe-read.P \
+$(srcdir)/.deps/save-cwd.P $(srcdir)/.deps/savedir.P \
+$(srcdir)/.deps/stripslash.P $(srcdir)/.deps/userspec.P \
+$(srcdir)/.deps/xgetcwd.P $(srcdir)/.deps/xmalloc.P \
+$(srcdir)/.deps/xstrdup.P $(srcdir)/.deps/xstrtol.P \
+$(srcdir)/.deps/xstrtoul.P $(srcdir)/.deps/yesno.P
 SOURCES = $(fu_SOURCES)
 OBJECTS = $(fu_OBJECTS)
 
@@ -136,14 +134,14 @@ Makefile: $(top_builddir)/config.status Makefile.in
 mostlyclean-noinstLIBRARIES:
 
 clean-noinstLIBRARIES:
-	rm -f $(noinst_LIBFILES)
+	test -z "$(noinst_LIBFILES)" || rm -f $(noinst_LIBFILES)
 
 distclean-noinstLIBRARIES:
 
 maintainer-clean-noinstLIBRARIES:
 
 .c.o:
-	$(COMPILE) $<
+	$(COMPILE) -c $<
 
 mostlyclean-compile:
 	rm -f *.o core
@@ -156,7 +154,7 @@ distclean-compile:
 maintainer-clean-compile:
 $(fu_OBJECTS): ../config.h
 
-libfu.a: $(fu_OBJECTS) $(fu_LIBADD)
+libfu.a: $(fu_OBJECTS) $(fu_DEPENDENCIES)
 	rm -f libfu.a
 	$(AR) cru libfu.a $(fu_OBJECTS) $(fu_LIBADD)
 	$(RANLIB) libfu.a
@@ -174,22 +172,19 @@ mostlyclean-tags:
 clean-tags:
 
 distclean-tags:
-	rm -f TAGS ID
 
 maintainer-clean-tags:
+	rm -f TAGS ID
+
+distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
 
 subdir = lib
-distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
 distdir: $(DEP_DISTFILES)
 	@for file in `cd $(srcdir) && echo $(DISTFILES)`; do \
 	  test -f $(distdir)/$$file \
 	  || ln $(srcdir)/$$file $(distdir)/$$file 2> /dev/null \
 	  || cp -p $(srcdir)/$$file $(distdir)/$$file; \
 	done
-
-# This fragment is probably only useful for maintainers.  It relies on
-# GNU make and gcc.  It is only included in the generated Makefile.in
-# if `automake' is not passed the `--include-deps' flag.
 
 MKDEP = gcc -MM $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 
@@ -211,8 +206,6 @@ $(srcdir)/.deps/%.P: $(srcdir)/%.c
 	else					\
 	  mv $@-tmp $@;				\
 	fi
-
-# End of maintainer-only section
 info:
 
 dvi:
@@ -242,6 +235,7 @@ mostlyclean-generic:
 
 clean-generic:
 	test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
+	test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 
 distclean-generic:
 	rm -f Makefile $(DISTCLEANFILES)

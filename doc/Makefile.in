@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.0 from Makefile.am
+# Makefile.in generated automatically by automake 1.1c from Makefile.am
 
 # Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -45,15 +45,17 @@ info_TEXINFOS = fileutils.texi
 EXTRA_DIST = perm.texi getdate.texi texinfo.tex
 mkinstalldirs = $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../config.h
+CONFIG_CLEAN_FILES = 
 
 MAKEINFO = makeinfo
 TEXI2DVI = texi2dvi
-INFOS = fileutils.info*
+INFOS = fileutils.info fileutils.info-[0-9] fileutils.info-[0-9][0-9]
 INFO_DEPS = fileutils.info
 DVIS = fileutils.dvi
 TEXINFOS = fileutils.texi
 
-DIST_COMMON = Makefile.am Makefile.in mdate-sh stamp-vti version.texi
+DIST_COMMON = Makefile.am Makefile.in mdate-sh stamp-vti texinfo.tex \
+version.texi
 
 
 PACKAGE = @PACKAGE@
@@ -99,20 +101,24 @@ maintainer-clean-vti:
 	@MAINT@rm -f stamp-vti version.texi
 
 fileutils.info: fileutils.texi version.texi
+fileutils.dvi: fileutils.texi version.texi
 
 
 .texi.info:
-	$(MAKEINFO) -I$(srcdir) $< -o $(srcdir)/$@
+	cd $(srcdir) \
+	  && $(MAKEINFO) `echo $< | sed 's,.*/,,'`
 
 .texi.dvi:
 	TEXINPUTS=$(srcdir):$$TEXINPUTS $(TEXI2DVI) $<
 
 install-info: $(INFO_DEPS)
 	$(mkinstalldirs) $(infodir)
-	for file in $(INFO_DEPS); do		\
-	  for ifile in `cd $(srcdir) && echo $$file*`; do \
-	    $(INSTALL_DATA) $(srcdir)/$$ifile $(infodir)/$$ifile; \
-	  done;					\
+	for file in $(INFO_DEPS); do \
+	  for ifile in `cd $(srcdir) && echo $$file $$file-[0-9] $$file-[0-9][0-9]`; do \
+	    if test -f $(srcdir)/$$ifile; then \
+	      $(INSTALL_DATA) $(srcdir)/$$ifile $(infodir)/$$ifile; \
+	    else : ; fi; \
+	  done; \
 	done
 
 uninstall-info:
@@ -136,8 +142,9 @@ tags: TAGS
 TAGS:
 
 
-subdir = doc
 distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
+
+subdir = doc
 distdir: $(DEP_DISTFILES)
 	@for file in `cd $(srcdir) && echo $(DISTFILES)`; do \
 	  test -f $(distdir)/$$file \
@@ -174,6 +181,7 @@ mostlyclean-generic:
 
 clean-generic:
 	test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
+	test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 
 distclean-generic:
 	rm -f Makefile $(DISTCLEANFILES)
