@@ -436,6 +436,9 @@
 /* Define to 1 if you have the `getspnam' function. */
 #undef HAVE_GETSPNAM
 
+/* Define to 1 if you have the `getsysinfo' function. */
+#undef HAVE_GETSYSINFO
+
 /* Define if the GNU gettext() function is already present or preinstalled. */
 #undef HAVE_GETTEXT
 
@@ -531,6 +534,9 @@
    file name argument. The lstat from SunOS4.1.4 and the Hurd as of
    1998-11-01) do this. */
 #undef HAVE_LSTAT_EMPTY_STRING_BUG
+
+/* Define to 1 if you have the <machine/hal_sysinfo.h> header file. */
+#undef HAVE_MACHINE_HAL_SYSINFO_H
 
 /* Define to 1 if you have the <mach/mach.h> header file. */
 #undef HAVE_MACH_MACH_H
@@ -930,6 +936,9 @@
 /* Define to 1 if you have the <syslog.h> header file. */
 #undef HAVE_SYSLOG_H
 
+/* Define to 1 if you have the `sysmp' function. */
+#undef HAVE_SYSMP
+
 /* Define to 1 if you have the <sys/acl.h> header file. */
 #undef HAVE_SYS_ACL_H
 
@@ -989,14 +998,23 @@
 /* Define to 1 if you have the <sys/sysctl.h> header file. */
 #undef HAVE_SYS_SYSCTL_H
 
+/* Define to 1 if you have the <sys/sysinfo.h> header file. */
+#undef HAVE_SYS_SYSINFO_H
+
 /* Define to 1 if you have the <sys/sysmacros.h> header file. */
 #undef HAVE_SYS_SYSMACROS_H
 
 /* Define to 1 if you have the <sys/sysmp.h> header file. */
 #undef HAVE_SYS_SYSMP_H
 
+/* Define to 1 if you have the <sys/systemcfg.h> header file. */
+#undef HAVE_SYS_SYSTEMCFG_H
+
 /* Define to 1 if you have the <sys/systeminfo.h> header file. */
 #undef HAVE_SYS_SYSTEMINFO_H
+
+/* Define to 1 if you have the <sys/table.h> header file. */
+#undef HAVE_SYS_TABLE_H
 
 /* Define to 1 if you have the <sys/timeb.h> header file. */
 #undef HAVE_SYS_TIMEB_H
@@ -1015,6 +1033,9 @@
 
 /* Define to 1 if you have the <sys/wait.h> header file. */
 #undef HAVE_SYS_WAIT_H
+
+/* Define to 1 if you have the `table' function. */
+#undef HAVE_TABLE
 
 /* Define to 1 if you have the <termios.h> header file. */
 #undef HAVE_TERMIOS_H
@@ -1103,6 +1124,10 @@
    Interface (XSI) option and is a standardized way to implement a SEGV-based
    stack overflow detection heuristic. */
 #undef HAVE_XSI_STACK_OVERFLOW_HEURISTIC
+
+/* Define to 1 if you have the external variable, _system_configuration with a
+   member named physmem. */
+#undef HAVE__SYSTEM_CONFIGURATION
 
 /* Define to 1 if you have the `__fpending' function. */
 #undef HAVE___FPENDING
