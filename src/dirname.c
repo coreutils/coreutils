@@ -69,7 +69,8 @@ main (int argc, char **argv)
 
   if (argc != 2)
     {
-      error (0, 0, _("too %s arguments"), argc < 2 ? _("few") : _("many"));
+      error (0, 0, argc < 2 ? _("too few arguments")
+	     : _("too many arguments"));
       usage (1);
     }
 
