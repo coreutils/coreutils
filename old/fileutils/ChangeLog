@@ -1,3 +1,50 @@
+1999-08-29  Jim Meyering  <meyering@ascend.com>
+
+	* src/dircolors.hin: Add .rpm, .png, and .fli.
+	From Andres Soolo.
+
+1999-08-28  Paul Eggert  <eggert@twinsun.com>
+
+	* getdate.y: Add copyright notice.
+
+	(number): Handle `Nov 11 1996' example; see Risks Digest 20.55
+	http://catless.ncl.ac.uk/Risks/20.55.html#subj18
+	(1999-08-27)
+
+	(<stdio.h>): Include only if testing.
+	(ISUPPER): Remove.
+	(ISLOWER, PC): New macros.
+	(<string.h>): Include if HAVE_STRING_H, not USG.
+	(bcopy): Remove.
+	(yymaxdepth, ..., yycheck): Don't bother to redefine, since we assume
+	bison.
+	(EPOCH_YEAR): Renamed from EPOCH.
+	(table): Renamed from TABLE.
+	(meridian): Now an anonymous enum.
+	(struct parser_control): New type.
+	(YYLEX_PARAM, YYPARSE_PARAM, YYSTYPE): New macros.
+	(yyInput, ..., yyRelYear): Migrated into struct parser_control.
+	(%pure_parser): Added, so that the parser is pure.
+	(%union): Removed; the type is now just plain int.
+	All %type directives removed.
+	(tLOCAL_ZONE): New %token.
+	(month_day_table): Renamed from MonthDayTable.
+	(gmtime, localtime, mktime, time): Declare only if not defined.
+	(meridian_table): New table.
+	(dst_table): New table.
+	(units_table): renamed from UnitsTable.
+	(relative_time_table): Renamed from OtherTable.
+	(time_zone_table): Renamed from TimezoneTable.  Modernized data.
+	(military_table): Renamed from MilitaryTable.
+	(to_hour): Renamed from ToHour.
+	(to_year): Renamed from ToYear.
+	(lookup_zone): New function.
+	(LookupWord): Renamed from lookup_word.
+	Use lookup_zone for time zones.
+	(yylex): Now reentrant.  All callers changed.
+	(get_date): Add support for local time zone abbreviations.
+	Make it reentrant.
+
 1999-08-22  Jim Meyering  <meyering@ascend.com>
 
 	* src/sys2.h (IF_LINT): Define new macro.
