@@ -921,7 +921,8 @@ the year and month the standard was adopted.  Two values are currently
 supported for @env{_POSIX2_VERSION}: @samp{199209} stands for
 @acronym{POSIX} 1003.2-1992, and @samp{200112} stands for @acronym{POSIX}
 1003.1-2001.  For example, if you are running older software that
-assumes an older version of @acronym{POSIX} and uses @samp{sort +1}, you
+assumes an older version of @acronym{POSIX} and uses @samp{sort +1},
+@samp{head -1}, or @samp{tail +1}, you
 can work around the compatibility problems by setting
 @samp{_POSIX2_VERSION=199209} in your environment.
 
@@ -7514,8 +7515,10 @@ is omitted, only the group of the files is changed; in this case,
 
 @end table
 
-You may use @samp{.} in place of the @samp{:} separator.  This is a
-@sc{gnu} extension for compatibility with older scripts.
+Some older scripts may still use @samp{.} in place of the @samp{:} separator.
+@acronym{POSIX} 1003.1-2001 (@pxref{Standards conformance}) does not allow that,
+but you may be able to work around the compatibility problems by setting
+@samp{_POSIX2_VERSION=199209} in your environment.
 New scripts should avoid the use of @samp{.} because @sc{gnu} @command{chown}
 may fail if @var{owner} contains @samp{.} characters.
 
