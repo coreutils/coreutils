@@ -41,6 +41,7 @@
 // int openat (int fildes, const char *path, int oflag, /* mode_t mode */...);
 
 /* Replacement for Solaris' openat function.
+   <http://www.google.com/search?q=openat+site:docs.sun.com>
    Simulate it by doing save_cwd/fchdir/open/restore_cwd.
    If either the fchdir or the restore_cwd fails, then exit nonzero.  */
 int
