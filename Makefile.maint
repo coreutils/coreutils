@@ -151,7 +151,7 @@ sc_file_system:
 
 # Each nonempty line must start with a year number, or a TAB.
 sc_changelog:
-	@grep '^[^12	]' $$(find . -name ChangeLog -maxdepth 2) &&	\
+	@grep '^[^12	]' $$(find . -maxdepth 2 -name ChangeLog) &&	\
 	  { echo '$(ME): found unexpected prefix in a ChangeLog' 1>&2;	\
 	    exit 1; } || :
 
