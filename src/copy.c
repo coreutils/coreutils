@@ -508,7 +508,7 @@ same_file_ok (const char *src_path, const struct stat *src_sb,
      partition.  */
   if (x->unlink_dest_before_opening
       && S_ISLNK (dst_sb_link->st_mode))
-    return src_sb_link->st_dev == src_sb_link->st_dev;
+    return dst_sb_link->st_dev == src_sb_link->st_dev;
 
   if (x->xstat == lstat)
     {
