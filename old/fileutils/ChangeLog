@@ -1,3 +1,27 @@
+1999-03-15  Jim Meyering  <meyering@ascend.com>
+
+	Revamp to allow fine-tuning to control when and by how
+	much the table grows and shrinks.
+	* lib/hash.c (next_prime): Don't assert.
+	(hash_reset_tuning): New function.
+	(check_tuning): New function.
+	(hash_initialize): Accept and use new tuning parameter.
+	(hash_rehash): Rewrite, updating for tuning.
+	(hash_insert): Honor tuning semantics.
+	(hash_delete): Likewise.
+	From François Pinard.
+
+	* lib/hash.h (struct hash_tuning): Define.
+	(struct hash_table) [tuning]: Add member.
+	(hash_initialize): Add `tuning' parameter.
+
+	* lib/hash.c (hash_insert): Remove last parameter and change semantics.
+	* lib/hash.h (hash_insert): Update prototype.
+
+	* lib/hash.c (hash_insert): Don't increment n_entries unconditionally --
+	otherwise, we'd do so even when the insertion failed.
+	From François Pinard.
+
 1999-03-07  Jim Meyering  <meyering@ascend.com>
 
 	* lib/xmalloc.c (xalloc_fail): Use "%s" format so the message doesn't
