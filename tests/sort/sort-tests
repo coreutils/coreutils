@@ -2016,8 +2016,44 @@ else
   esac
 fi
 test -s use-nl.E || rm -f use-nl.E
+_POSIX2_VERSION=199209 $xx -o x -o y $srcdir/o2.I > o2.O 2> o2.E
+code=$?
+if test $code != 2; then
+  $echo "Test o2(_POSIX2_VERSION=199209) failed: $xx return code $code differs from expected value 2" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp o2.O $srcdir/o2.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE"; then $echo "passed o2(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test o2(_POSIX2_VERSION=199209) failed: files o2.O and $srcdir/o2.X differ" 1>&2
+       (diff -c o2.O $srcdir/o2.X) 2> /dev/null
+       errors=`expr $errors + 1`;;
+    2) $echo "Test o2(_POSIX2_VERSION=199209) may have failed." 1>&2
+       $echo The command "cmp o2.O $srcdir/o2.X" failed. 1>&2
+       errors=`expr $errors + 1`;;
+  esac
+fi
+test -s o2.E || rm -f o2.E
+_POSIX2_VERSION=199209 $xx -k2,2 -t '\0' $srcdir/nul-tab.I > nul-tab.O 2> nul-tab.E
+code=$?
+if test $code != 0; then
+  $echo "Test nul-tab(_POSIX2_VERSION=199209) failed: $xx return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp nul-tab.O $srcdir/nul-tab.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE"; then $echo "passed nul-tab(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test nul-tab(_POSIX2_VERSION=199209) failed: files nul-tab.O and $srcdir/nul-tab.X differ" 1>&2
+       (diff -c nul-tab.O $srcdir/nul-tab.X) 2> /dev/null
+       errors=`expr $errors + 1`;;
+    2) $echo "Test nul-tab(_POSIX2_VERSION=199209) may have failed." 1>&2
+       $echo The command "cmp nul-tab.O $srcdir/nul-tab.X" failed. 1>&2
+       errors=`expr $errors + 1`;;
+  esac
+fi
+test -s nul-tab.E || rm -f nul-tab.E
 if test $errors = 0; then
-  $echo Passed all 111 tests. 1>&2
+  $echo Passed all 113 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi
