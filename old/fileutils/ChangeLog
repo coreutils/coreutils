@@ -30,6 +30,10 @@
 
 2000-09-19  Jim Meyering  <meyering@lucent.com>
 
+	* doc/fileutils.texi (cp invocation): Describe how --force works.
+	Update description of -P (soon to change meaning to conform w/POSIX).
+	Describe --remove-destination.
+
 	* src/cp.c (main): When used with --force, each of the --link and
 	--symbolic-link options now implies --remove-destination.
 	Reported by Miles Bader via Mike Stone.
