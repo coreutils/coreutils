@@ -1559,12 +1559,16 @@ options}.
 @cindex message-digest, 128-bit
 
 @code{md5sum} computes a 128-bit checksum (or @dfn{fingerprint} or
-@dfn{message-digest} for each given @var{file}, or standard input if
-none are given or for a @var{file} of @samp{-}.  It can also check if the
-checksum has changed. Synopsis:
+@dfn{message-digest}) for each specified @var{file}.
+If a @var{file} is specified as @samp{-} or if no files are given
+@code{md5sum} computes the checksum for the standard input.
+@code{md5sum} can also determine whether
+a file's checksum has changed. Synopsis:
 
 @example
 md5sum [@var{option}]@dots{} [@var{file}]@dots{}
+md5sum [@var{option}]@dots{} --check [@var{file}]
+md5sum [@var{option}]@dots{} --string=@var{string}@dots{}
 @end example
 
 For each @var{file}, @samp{md5sum} outputs the MD5 checksum, a flag
@@ -1584,9 +1588,14 @@ but other systems have different internal and external character
 representations, notably to mark end-of-line.
 
 @item -c
-@itemx --check=@var{file}
-@var{file} is taken as the output of a former run of @samp{md5sum}: each
-line consists of an MD5 checksum, a binary/text flag, and a filename.
+@itemx --check
+Read filenames and checksum information from the single @var{file}
+(or from stdin if no @var{file} was specified) and report whether
+each named file and the corresponding checksum data are consistent.
+The input to this mode of @code{md5sum} is usually the output of
+a prior, checksum-generating run of @samp{md5sum}.
+Each recognized line of input consists of an MD5 checksum, a binary/text
+flag, and then a filename.
 The file will be opened (with each possible relative path) and the its
 message-digest computed.  If this computed message digest is not the
 same as that given in the line, the file will be marked as failed.
