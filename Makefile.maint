@@ -56,11 +56,13 @@ export LC_ALL = C
 # Checks that don't require cvs.
 # Run `changelog-check' last, as previous test may reveal problems requiring
 # new ChangeLog entries.
-local-check = \
+local-checks-available = \
   po-check copyright-check writable-files m4-check author_mark_check \
   changelog-check strftime-check syntax-check makefile_path_separator_check \
   makefile-check
-.PHONY: $(local-check)
+.PHONY: $(local-checks-available)
+
+local-check = $(filter-out $(local-checks-to-skip), $(local-checks-available))
 
 # Make sure C source files in src/ don't include xalloc.h directly,
 # since they all already include it via sys2.h.
