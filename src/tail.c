@@ -1382,8 +1382,8 @@ parse_options (int argc, char **argv,
 
 	  {
 	    strtol_error s_err;
-	    unsigned long int tmp_ulong;
-	    s_err = xstrtoul (optarg, NULL, 10, &tmp_ulong, "bkm");
+	    uintmax_t n;
+	    s_err = xstrtoumax (optarg, NULL, 10, &n, "bkm");
 	    if (s_err == LONGINT_INVALID)
 	      {
 		error (EXIT_FAILURE, 0, "%s: %s", optarg,
@@ -1391,14 +1391,16 @@ parse_options (int argc, char **argv,
 			? _("invalid number of lines")
 			: _("invalid number of bytes")));
 	      }
-	    if (s_err != LONGINT_OK || tmp_ulong > OFF_T_MAX)
-	      {
-		error (EXIT_FAILURE, 0,
-		       _("%s: %s is so large that it is not representable"),
-		       optarg,
-		       c == 'n' ? _("number of lines") : _("number of bytes"));
-	      }
-	    *n_units = (off_t) tmp_ulong;
+
+	    if (s_err != LONGINT_OK)
+	      error (EXIT_FAILURE, 0,
+		     _("%s: is so large that it is not representable"), optarg);
+
+	    if (OFF_T_MAX < n)
+	      error (EXIT_FAILURE, 0,
+		     _("%s is larger than the maximum file size on this system"),
+		     optarg);
+	    *n_units = (off_t) n;
 	  }
 	  break;
 
