@@ -1,5 +1,5 @@
 /* sleep - delay for a specified amount of time.
-   Copyright (C) 84, 1991-1997, 1999-2000 Free Software Foundation, Inc.
+   Copyright (C) 84, 1991-1997, 1999-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -76,10 +76,10 @@ Pause for NUMBER seconds.  SUFFIX may be `s' for seconds (the default),\n\
 that require NUMBER be an integer, here NUMBER may be an arbitrary floating\n\
 point number.\n\
 \n\
-      --help      display this help and exit\n\
-      --version   output version information and exit\n\
 "),
 	      program_name, program_name);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
     }
   exit (status);

@@ -1,5 +1,5 @@
 /* print the hexadecimal identifier for the current host
-   Copyright (C) 1997, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2000, 2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -50,11 +50,10 @@ Usage: %s\n\
   or:  %s OPTION\n\
 Print the numeric identifier (in hexadecimal) for the current host.\n\
 \n\
-      --help       display this help and exit\n\
-      --version    output version information and exit\n\
-\n\
 "),
 	      program_name, program_name);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
     }
   exit (status);

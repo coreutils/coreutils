@@ -1,5 +1,5 @@
 /* GNU's users.
-   Copyright (C) 1992-2000 Free Software Foundation, Inc.
+   Copyright (C) 1992-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -120,9 +120,10 @@ usage (int status)
 Output who is currently logged in according to FILE.\n\
 If FILE is not specified, use %s.  %s as FILE is common.\n\
 \n\
-      --help        display this help and exit\n\
-      --version     output version information and exit\n"),
+"),
 	      UTMP_FILE, WTMP_FILE);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
     }
   exit (status);

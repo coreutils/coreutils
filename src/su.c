@@ -431,7 +431,7 @@ usage (int status)
   else
     {
       printf (_("Usage: %s [OPTION]... [-] [USER [ARG]...]\n"), program_name);
-      printf (_("\
+      fputs (_("\
 Change the effective user id and group id to that of USER.\n\
 \n\
   -, -l, --login               make the shell a login shell\n\
@@ -440,11 +440,13 @@ Change the effective user id and group id to that of USER.\n\
   -m, --preserve-environment   do not reset environment variables\n\
   -p                           same as -m\n\
   -s, --shell=SHELL            run SHELL if /etc/shells allows it\n\
-      --help                   display this help and exit\n\
-      --version                output version information and exit\n\
+"), stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      fputs (_("\
 \n\
 A mere - implies -l.   If USER not given, assume root.\n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
       close_stdout ();
     }

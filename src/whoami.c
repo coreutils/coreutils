@@ -1,5 +1,5 @@
 /* whoami -- print effective userid
-   Copyright (C) 89,90, 1991-1997, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 89,90, 1991-1997, 1999, 2000, 2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -50,12 +50,13 @@ usage (int status)
   else
     {
       printf (_("Usage: %s [OPTION]...\n"), program_name);
-      printf (_("\
+      fputs (_("\
 Print the user name associated with the current effective user id.\n\
 Same as id -un.\n\
 \n\
-      --help      display this help and exit\n\
-      --version   output version information and exit\n"));
+"), stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
     }
   exit (status);

@@ -49,13 +49,13 @@ Usage: %s NAME\n\
   or:  %s OPTION\n\
 "),
 	      program_name, program_name);
-      printf (_("\
+      fputs (_("\
 Print NAME with its trailing /component removed; if NAME contains no /'s,\n\
 output `.' (meaning the current directory).\n\
 \n\
-      --help      display this help and exit\n\
-      --version   output version information and exit\n\
-"));
+"), stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
     }
   exit (status);

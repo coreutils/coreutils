@@ -995,25 +995,31 @@ Usage: %s EXPRESSION\n\
   or:  %s OPTION\n\
 "),
 	      program_name, program_name);
-      printf (_("\
+      fputs (_("\
 Exit with the status determined by EXPRESSION.\n\
 \n\
-      --help      display this help and exit\n\
-      --version   output version information and exit\n\
+"), stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      fputs (_("\
 \n\
 EXPRESSION is true or false and sets exit status.  It is one of:\n\
-"));
-      printf (_("\
+"), stdout);
+      fputs (_("\
 \n\
   ( EXPRESSION )               EXPRESSION is true\n\
   ! EXPRESSION                 EXPRESSION is false\n\
   EXPRESSION1 -a EXPRESSION2   both EXPRESSION1 and EXPRESSION2 are true\n\
   EXPRESSION1 -o EXPRESSION2   either EXPRESSION1 or EXPRESSION2 is true\n\
+"), stdout);
+      fputs (_("\
 \n\
   [-n] STRING          the length of STRING is nonzero\n\
   -z STRING            the length of STRING is zero\n\
   STRING1 = STRING2    the strings are equal\n\
   STRING1 != STRING2   the strings are not equal\n\
+"), stdout);
+      fputs (_("\
 \n\
   INTEGER1 -eq INTEGER2   INTEGER1 is equal to INTEGER2\n\
   INTEGER1 -ge INTEGER2   INTEGER1 is greater than or equal to INTEGER2\n\
@@ -1021,38 +1027,46 @@ EXPRESSION is true or false and sets exit status.  It is one of:\n\
   INTEGER1 -le INTEGER2   INTEGER1 is less than or equal to INTEGER2\n\
   INTEGER1 -lt INTEGER2   INTEGER1 is less than INTEGER2\n\
   INTEGER1 -ne INTEGER2   INTEGER1 is not equal to INTEGER2\n\
-"));
-      printf (_("\
+"), stdout);
+      fputs (_("\
 \n\
   FILE1 -ef FILE2   FILE1 and FILE2 have the same device and inode numbers\n\
   FILE1 -nt FILE2   FILE1 is newer (modification date) than FILE2\n\
   FILE1 -ot FILE2   FILE1 is older than FILE2\n\
+"), stdout);
+      fputs (_("\
 \n\
   -b FILE     FILE exists and is block special\n\
   -c FILE     FILE exists and is character special\n\
   -d FILE     FILE exists and is a directory\n\
   -e FILE     FILE exists\n\
+"), stdout);
+      fputs (_("\
   -f FILE     FILE exists and is a regular file\n\
   -g FILE     FILE exists and is set-group-ID\n\
   -h FILE     FILE exists and is a symbolic link (same as -L)\n\
   -G FILE     FILE exists and is owned by the effective group ID\n\
   -k FILE     FILE exists and has its sticky bit set\n\
+"), stdout);
+      fputs (_("\
   -L FILE     FILE exists and is a symbolic link (same as -h)\n\
   -O FILE     FILE exists and is owned by the effective user ID\n\
   -p FILE     FILE exists and is a named pipe\n\
   -r FILE     FILE exists and is readable\n\
   -s FILE     FILE exists and has a size greater than zero\n\
+"), stdout);
+      fputs (_("\
   -S FILE     FILE exists and is a socket\n\
   -t [FD]     file descriptor FD (stdout by default) is opened on a terminal\n\
   -u FILE     FILE exists and its set-user-ID bit is set\n\
   -w FILE     FILE exists and is writable\n\
   -x FILE     FILE exists and is executable\n\
-"));
-      printf (_("\
+"), stdout);
+      fputs (_("\
 \n\
 Beware that parentheses need to be escaped (e.g., by backslashes) for shells.\n\
 INTEGER may also be -l STRING, which evaluates to the length of STRING.\n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
     }
   exit (status);

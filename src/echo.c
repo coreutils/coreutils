@@ -1,5 +1,5 @@
 /* echo.c, derived from code echo.c in Bash.
-   Copyright (C) 87,89, 1991-1997, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 87,89, 1991-1997, 1999, 2000, 2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -75,15 +75,17 @@ usage (int status)
   else
     {
       printf (_("Usage: %s [OPTION]... [STRING]...\n"), program_name);
-      printf (_("\
+      fputs (_("\
 Echo the STRING(s) to standard output.\n\
 \n\
   -n              do not output the trailing newline\n\
   -e              enable interpretation of the backslash-escaped characters\n\
                     listed below\n\
   -E              disable interpretation of those sequences in STRINGs\n\
-      --help      display this help and exit (should be alone)\n\
-      --version   output version information and exit (should be alone)\n\
+"), stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      fputs (_("\
 \n\
 Without -E, the following sequences are recognized and interpolated:\n\
 \n\
@@ -91,13 +93,15 @@ Without -E, the following sequences are recognized and interpolated:\n\
   \\\\     backslash\n\
   \\a     alert (BEL)\n\
   \\b     backspace\n\
+"), stdout);
+      fputs (_("\
   \\c     suppress trailing newline\n\
   \\f     form feed\n\
   \\n     new line\n\
   \\r     carriage return\n\
   \\t     horizontal tab\n\
   \\v     vertical tab\n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
     }
   exit (status);

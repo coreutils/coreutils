@@ -1,5 +1,5 @@
 /* seq - print sequence of numbers to standard output.
-   Copyright (C) 1994-2000 Free Software Foundation, Inc.
+   Copyright (C) 1994-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -84,21 +84,23 @@ Usage: %s [OPTION]... LAST\n\
   or:  %s [OPTION]... FIRST LAST\n\
   or:  %s [OPTION]... FIRST INCREMENT LAST\n\
 "), program_name, program_name, program_name);
-      printf (_("\
+      fputs (_("\
 Print numbers from FIRST to LAST, in steps of INCREMENT.\n\
 \n\
-  -f, --format FORMAT      use printf(3) style FORMAT (default: %%g)\n\
+  -f, --format FORMAT      use printf(3) style FORMAT (default: %g)\n\
   -s, --separator STRING   use STRING to separate numbers (default: \\n)\n\
   -w, --equal-width        equalize width by padding with leading zeroes\n\
-      --help               display this help and exit\n\
-      --version            output version information and exit\n\
+"), stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      fputs (_("\
 \n\
 If FIRST or INCREMENT is omitted, it defaults to 1.\n\
 FIRST, INCREMENT, and LAST are interpreted as floating point values.\n\
 INCREMENT should be positive if FIRST is smaller than LAST, and negative\n\
 otherwise.  When given, the FORMAT argument must contain exactly one of\n\
-the printf-style, floating point output formats %%e, %%f, %%g\n\
-"));
+the printf-style, floating point output formats %e, %f, %g\n\
+"), stdout);
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
     }
   exit (status);

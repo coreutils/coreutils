@@ -76,15 +76,17 @@ Usage: %s [NUMBER]...\n\
   or:  %s OPTION\n\
 "),
 	      program_name, program_name);
-      printf (_("\
+      fputs (_("\
 Print the prime factors of each NUMBER.\n\
 \n\
-      --help      display this help and exit\n\
-      --version   output version information and exit\n\
+"), stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      fputs (_("\
 \n\
   Print the prime factors of all specified integer NUMBERs.  If no arguments\n\
   are specified on the command line, they are read from standard input.\n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
     }
   exit (status);

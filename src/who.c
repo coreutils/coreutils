@@ -551,30 +551,40 @@ usage (int status)
   else
     {
       printf (_("Usage: %s [OPTION]... [ FILE | ARG1 ARG2 ]\n"), program_name);
-      printf (_("\
+      fputs (_("\
 \n\
   -a, --all         same as -b -d --login -p -r -t -T -u\n\
   -b, --boot        time of last system boot\n\
   -d, --dead        print dead processes\n\
   -H, --heading     print line of column headings\n\
+"), stdout);
+      fputs (_("\
   -i, --idle        add idle time as HOURS:MINUTES, . or old\n\
                     (deprecated, use -u)\n\
       --login       print system login processes\n\
                     (equivalent to SUS -l)\n\
+"), stdout);
+      fputs (_("\
   -l, --lookup      attempt to canonicalize hostnames via DNS\n\
                     (-l is deprecated, use --lookup)\n\
   -m                only hostname and user associated with stdin\n\
   -p, --process     print active processes spawned by init\n\
+"), stdout);
+      fputs (_("\
   -q, --count       all login names and number of users logged on\n\
   -r, --runlevel    print current runlevel\n\
   -s, --short       print only name, line, and time (default)\n\
   -t, --time        print last system clock change\n\
+"), stdout);
+      fputs (_("\
   -T, -w, --mesg    add user's message status as +, - or ?\n\
   -u, --users       lists users logged in\n\
       --message     same as -T\n\
       --writable    same as -T\n\
-      --help        display this help and exit\n\
-      --version     output version information and exit\n\
+"), stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      printf (_("\
 \n\
 If FILE is not specified, use %s.  %s as FILE is common.\n\
 If ARG1 ARG2 given, -m presumed: `am i' or `mom likes' are usual.\n\

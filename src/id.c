@@ -1,5 +1,5 @@
 /* id -- print real and effective UIDs and GIDs
-   Copyright (C) 1989-2000 Free Software Foundation, Inc.
+   Copyright (C) 1989-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -85,7 +85,7 @@ usage (int status)
   else
     {
       printf (_("Usage: %s [OPTION]... [USERNAME]\n"), program_name);
-      printf (_("\
+      fputs (_("\
 Print information for USERNAME, or the current user.\n\
 \n\
   -a              ignore, for compatibility with other versions\n\
@@ -94,11 +94,13 @@ Print information for USERNAME, or the current user.\n\
   -n, --name      print a name instead of a number, for -ugG\n\
   -r, --real      print the real ID instead of the effective ID, with -ugG\n\
   -u, --user      print only the effective user ID\n\
-      --help      display this help and exit\n\
-      --version   output version information and exit\n\
+"), stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      fputs (_("\
 \n\
 Without any OPTION, print some useful set of identified information.\n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
     }
   exit (status);

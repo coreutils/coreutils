@@ -93,20 +93,23 @@ usage (int status)
   else
     {
       printf (_("Usage: %s [OPTION]...\n"), program_name);
-      printf (_("\
+      fputs (_("\
 Print certain system information.  With no OPTION, same as -s.\n\
 \n\
   -a, --all                print all information, in the following order:\n\
   -s, --kernel-name        print the kernel name\n\
   -n, --nodename           print the network node hostname\n\
   -r, --kernel-release     print the kernel release\n\
+"), stdout);
+      fputs (_("\
   -v, --kernel-version     print the kernel version\n\
   -m, --machine            print the machine hardware name\n\
   -p, --processor          print the processor type\n\
   -i, --hardware-platform  print the hardware platform\n\
   -o, --operating-system   print the operating system\n\
-      --help               display this help and exit\n\
-      --version            output version information and exit\n"));
+"), stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
     }
   exit (status);

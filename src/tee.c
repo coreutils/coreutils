@@ -61,14 +61,14 @@ usage (int status)
   else
     {
       printf (_("Usage: %s [OPTION]... [FILE]...\n"), program_name);
-      printf (_("\
+      fputs (_("\
 Copy standard input to each FILE, and also to standard output.\n\
 \n\
   -a, --append              append to the given FILEs, do not overwrite\n\
   -i, --ignore-interrupts   ignore interrupt signals\n\
-      --help                display this help and exit\n\
-      --version             output version information and exit\n\
-"));
+"), stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
     }
   exit (status);

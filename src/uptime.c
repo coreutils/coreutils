@@ -1,5 +1,5 @@
 /* GNU's uptime.
-   Copyright (C) 1992-2000 Free Software Foundation, Inc.
+   Copyright (C) 1992-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -178,9 +178,10 @@ the number of users on the system, and the average number of jobs\n\
 in the run queue over the last 1, 5 and 15 minutes.\n\
 If FILE is not specified, use %s.  %s as FILE is common.\n\
 \n\
-      --help        display this help and exit\n\
-      --version     output version information and exit\n"),
+"),
 	      UTMP_FILE, WTMP_FILE);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
     }
   exit (status);

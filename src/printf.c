@@ -99,35 +99,45 @@ Usage: %s FORMAT [ARGUMENT]...\n\
   or:  %s OPTION\n\
 "),
 	      program_name, program_name);
-      printf (_("\
+      fputs (_("\
 Print ARGUMENT(s) according to FORMAT.\n\
 \n\
-      --help      display this help and exit\n\
-      --version   output version information and exit\n\
+"), stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      fputs (_("\
 \n\
 FORMAT controls the output as in C printf.  Interpreted sequences are:\n\
 \n\
   \\\"      double quote\n\
   \\0NNN   character with octal value NNN (0 to 3 digits)\n\
   \\\\      backslash\n\
+"), stdout);
+      fputs (_("\
   \\a      alert (BEL)\n\
   \\b      backspace\n\
   \\c      produce no further output\n\
   \\f      form feed\n\
+"), stdout);
+      fputs (_("\
   \\n      new line\n\
   \\r      carriage return\n\
   \\t      horizontal tab\n\
   \\v      vertical tab\n\
+"), stdout);
+      fputs (_("\
   \\xNNN   byte with hexadecimal value NNN (1 to 3 digits)\n\
 \n\
   \\uNNNN  character with hexadecimal value NNNN (4 digits)\n\
   \\UNNNNNNNN  character with hexadecimal value NNNNNNNN (8 digits)\n\
-  %%%%      a single %%\n\
-  %%b      ARGUMENT as a string with `\\' escapes interpreted\n\
+"), stdout);
+      fputs (_("\
+  %%      a single %\n\
+  %b      ARGUMENT as a string with `\\' escapes interpreted\n\
 \n\
 and all C format specifications ending with one of diouxXfeEgGcs, with\n\
 ARGUMENTs converted to proper type first.  Variable widths are handled.\n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
     }
   exit (status);

@@ -1,5 +1,5 @@
 /* env - run a program in a modified environment
-   Copyright (C) 1986, 1991-2000 Free Software Foundation, Inc.
+   Copyright (C) 1986, 1991-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -119,16 +119,18 @@ usage (int status)
       printf (_("\
 Usage: %s [OPTION]... [-] [NAME=VALUE]... [COMMAND [ARG]...]\n"),
 	      program_name);
-      printf (_("\
+      fputs (_("\
 Set each NAME to VALUE in the environment and run COMMAND.\n\
 \n\
   -i, --ignore-environment   start with an empty environment\n\
   -u, --unset=NAME           remove variable from the environment\n\
-      --help                 display this help and exit\n\
-      --version              output version information and exit\n\
+"), stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      fputs (_("\
 \n\
 A mere - implies -i.  If no COMMAND, print the resulting environment.\n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
     }
   exit (status);

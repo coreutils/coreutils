@@ -1,5 +1,5 @@
 /* tty -- print the path of the terminal connected to standard input
-   Copyright (C) 1990-2000 Free Software Foundation, Inc.
+   Copyright (C) 1990-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -60,13 +60,13 @@ usage (int status)
   else
     {
       printf (_("Usage: %s [OPTION]...\n"), program_name);
-      printf (_("\
+      fputs (_("\
 Print the file name of the terminal connected to standard input.\n\
 \n\
   -s, --silent, --quiet   print nothing, only return an exit status\n\
-      --help              display this help and exit\n\
-      --version           output version information and exit\n\
-"));
+"), stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
     }
   exit (status);

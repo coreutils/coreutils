@@ -138,13 +138,13 @@ usage (int status)
   else
     {
       printf (_("Usage: %s [OPTION]... NAME...\n"), program_name);
-      printf (_("\
+      fputs (_("\
 Diagnose unportable constructs in NAME.\n\
 \n\
   -p, --portability   check for all POSIX systems, not only this one\n\
-      --help          display this help and exit\n\
-      --version       output version information and exit\n\
-"));
+"), stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
     }
   exit (status);

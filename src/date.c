@@ -120,7 +120,7 @@ Usage: %s [OPTION]... [+FORMAT]\n\
   or:  %s [-u|--utc|--universal] [MMDDhhmm[[CC]YY][.ss]]\n\
 "),
 	      program_name, program_name);
-      printf (_("\
+      fputs (_("\
 Display the current time in the given FORMAT, or set the system date.\n\
 \n\
   -d, --date=STRING         display time described by STRING, not `now'\n\
@@ -129,61 +129,81 @@ Display the current time in the given FORMAT, or set the system date.\n\
                             TIMESPEC=`date' (or missing) for date only,\n\
                             `hours', `minutes', or `seconds' for date and\n\
                             time to the indicated precision.\n\
+"), stdout);
+      fputs (_("\
   -r, --reference=FILE      display the last modification time of FILE\n\
   -R, --rfc-822             output RFC-822 compliant date string\n\
   -s, --set=STRING          set time described by STRING\n\
   -u, --utc, --universal    print or set Coordinated Universal Time\n\
-      --help                display this help and exit\n\
-      --version             output version information and exit\n\
-"));
-      printf (_("\
+"), stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      fputs (_("\
 \n\
 FORMAT controls the output.  The only valid option for the second form\n\
 specifies Coordinated Universal Time.  Interpreted sequences are:\n\
 \n\
-  %%%%   a literal %%\n\
-  %%a   locale's abbreviated weekday name (Sun..Sat)\n\
-  %%A   locale's full weekday name, variable length (Sunday..Saturday)\n\
-  %%b   locale's abbreviated month name (Jan..Dec)\n\
-  %%B   locale's full month name, variable length (January..December)\n\
-  %%c   locale's date and time (Sat Nov 04 12:02:33 EST 1989)\n\
-  %%C   century (year divided by 100 and truncated to an integer) [00-99]\n\
-  %%d   day of month (01..31)\n\
-  %%D   date (mm/dd/yy)\n\
-  %%e   day of month, blank padded ( 1..31)\n\
-  %%h   same as %%b\n\
-  %%H   hour (00..23)\n\
-  %%I   hour (01..12)\n\
-  %%j   day of year (001..366)\n\
-  %%k   hour ( 0..23)\n\
-  %%l   hour ( 1..12)\n\
-  %%m   month (01..12)\n\
-  %%M   minute (00..59)\n\
-  %%n   a newline\n\
-  %%p   locale's AM or PM\n\
-  %%r   time, 12-hour (hh:mm:ss [AP]M)\n\
-  %%s   seconds since `00:00:00 1970-01-01 UTC' (a GNU extension)\n\
-  %%S   second (00..60)\n\
-  %%t   a horizontal tab\n\
-  %%T   time, 24-hour (hh:mm:ss)\n\
-  %%u   day of week (1..7);  1 represents Monday\n\
-  %%U   week number of year with Sunday as first day of week (00..53)\n\
-  %%V   week number of year with Monday as first day of week (01..53)\n\
-  %%w   day of week (0..6);  0 represents Sunday\n\
-  %%W   week number of year with Monday as first day of week (00..53)\n\
-  %%x   locale's date representation (mm/dd/yy)\n\
-  %%X   locale's time representation (%%H:%%M:%%S)\n\
-  %%y   last two digits of year (00..99)\n\
-  %%Y   year (1970...)\n\
-  %%z   RFC-822 style numeric timezone (-0500) (a nonstandard extension)\n\
-  %%Z   time zone (e.g., EDT), or nothing if no time zone is determinable\n\
+  %%   a literal %\n\
+  %a   locale's abbreviated weekday name (Sun..Sat)\n\
+"), stdout);
+      fputs (_("\
+  %A   locale's full weekday name, variable length (Sunday..Saturday)\n\
+  %b   locale's abbreviated month name (Jan..Dec)\n\
+  %B   locale's full month name, variable length (January..December)\n\
+  %c   locale's date and time (Sat Nov 04 12:02:33 EST 1989)\n\
+"), stdout);
+      fputs (_("\
+  %C   century (year divided by 100 and truncated to an integer) [00-99]\n\
+  %d   day of month (01..31)\n\
+  %D   date (mm/dd/yy)\n\
+  %e   day of month, blank padded ( 1..31)\n\
+"), stdout);
+      fputs (_("\
+  %h   same as %b\n\
+  %H   hour (00..23)\n\
+  %I   hour (01..12)\n\
+  %j   day of year (001..366)\n\
+"), stdout);
+      fputs (_("\
+  %k   hour ( 0..23)\n\
+  %l   hour ( 1..12)\n\
+  %m   month (01..12)\n\
+  %M   minute (00..59)\n\
+"), stdout);
+      fputs (_("\
+  %n   a newline\n\
+  %p   locale's AM or PM\n\
+  %r   time, 12-hour (hh:mm:ss [AP]M)\n\
+  %s   seconds since `00:00:00 1970-01-01 UTC' (a GNU extension)\n\
+"), stdout);
+      fputs (_("\
+  %S   second (00..60)\n\
+  %t   a horizontal tab\n\
+  %T   time, 24-hour (hh:mm:ss)\n\
+  %u   day of week (1..7);  1 represents Monday\n\
+"), stdout);
+      fputs (_("\
+  %U   week number of year with Sunday as first day of week (00..53)\n\
+  %V   week number of year with Monday as first day of week (01..53)\n\
+  %w   day of week (0..6);  0 represents Sunday\n\
+  %W   week number of year with Monday as first day of week (00..53)\n\
+"), stdout);
+      fputs (_("\
+  %x   locale's date representation (mm/dd/yy)\n\
+  %X   locale's time representation (%H:%M:%S)\n\
+  %y   last two digits of year (00..99)\n\
+  %Y   year (1970...)\n\
+"), stdout);
+      fputs (_("\
+  %z   RFC-822 style numeric timezone (-0500) (a nonstandard extension)\n\
+  %Z   time zone (e.g., EDT), or nothing if no time zone is determinable\n\
 \n\
 By default, date pads numeric fields with zeroes.  GNU date recognizes\n\
-the following modifiers between `%%' and a numeric directive.\n\
+the following modifiers between `%' and a numeric directive.\n\
 \n\
   `-' (hyphen) do not pad the field\n\
   `_' (underscore) pad the field with spaces\n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
     }
   exit (status);

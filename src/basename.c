@@ -56,13 +56,13 @@ Usage: %s NAME [SUFFIX]\n\
   or:  %s OPTION\n\
 "),
 	      program_name, program_name);
-      printf (_("\
+      fputs (_("\
 Print NAME with any leading directory components removed.\n\
 If specified, also remove a trailing SUFFIX.\n\
 \n\
-      --help      display this help and exit\n\
-      --version   output version information and exit\n\
-"));
+"), stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
     }
   exit (status);

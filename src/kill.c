@@ -327,7 +327,7 @@ Usage: %s [-s SIGSPEC | -n SIGNUM | -SIGSPEC] PID ...\n\
   or:  %s -l [SIGSPEC] ...\n\
 "),
 	      program_name, program_name);
-      printf (_("\
+      fputs (_("\
 Send the signal named by SIGSPEC or SIGNUM to processes named by PID.\n\
 \n\
   -s, --" OPT_SIGSPEC_LONG " SIGSPEC     name or number of signal to be sent\n\
@@ -336,14 +336,14 @@ Send the signal named by SIGSPEC or SIGNUM to processes named by PID.\n\
   -l, --list                list the signal names\n\
   -L, --long-list           list the signal names with their numbers\n\
 \n\
-      --help                display this help and exit\n\
-      --version             output version information and exit\n\
-"));
-      printf (_("\
+"), stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      fputs (_("\
 \n\
 kill returns true if at least one signal was successfully sent, or\n\
 false if an error occurs or an invalid option is encountered.\n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
     }
   exit (status);

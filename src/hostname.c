@@ -1,5 +1,5 @@
 /* hostname - set or print the name of current host system
-   Copyright (C) 1994-1997, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1994-1997, 1999, 2000, 2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -69,10 +69,10 @@ Usage: %s [NAME]\n\
   or:  %s OPTION\n\
 Print or set the hostname of the current system.\n\
 \n\
-      --help      display this help and exit\n\
-      --version   output version information and exit\n\
-")
-             , program_name, program_name);
+"),
+             program_name, program_name);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
     }
   exit (status);
