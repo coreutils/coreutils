@@ -1,3 +1,11 @@
+Wed Apr  3 07:08:57 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* src/Makefile.am (INCLUDES): Add -I$(srcdir) to get system.h
+	when srcdir != builddir.  From Kaveh Ghazi.
+
+	* lib/getugroups.c: Include stdio.h before grp.h.  Because
+	<grp.h> on alpha OSF1 V2.0 uses "FILE *".  From Kaveh Ghazi.
+
 Sun Mar 31 16:26:06 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* configure.in: Simplify checking for math library.
