@@ -740,7 +740,7 @@ static struct option const long_options[] =
   {"full-time", no_argument, 0, FULL_TIME_OPTION},
   {"human-readable", no_argument, 0, 'h'},
   {"inode", no_argument, 0, 'i'},
-  {"kilobytes", no_argument, 0, 'k'},
+  {"kilobytes", no_argument, 0, 'k'}, /* long form is obsolescent */
   {"numeric-uid-gid", no_argument, 0, 'n'},
   {"no-group", no_argument, 0, 'G'},
   {"hide-control-chars", no_argument, 0, 'q'},
@@ -3610,7 +3610,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                                none (default), classify (-F), file-type (-p)\n\
   -i, --inode                print index number of each file\n\
   -I, --ignore=PATTERN       do not list implied entries matching shell PATTERN\n\
-  -k, --kilobytes            like --block-size=1024\n\
+  -k                         like --block-size=1K\n\
 "), stdout);
       fputs (_("\
   -l                         use a long listing format\n\
@@ -3669,6 +3669,10 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      fputs (_("\n\
+SIZE may be (or may be an integer optionally followed by) one of following:\n\
+kB 1000, K 1024, MB 1,000,000, M 1,048,576, and so on for G, T, P, E, Z, Y.\n\
+"), stdout);
       fputs (_("\
 \n\
 By default, color is not used to distinguish types of files.  That is\n\
