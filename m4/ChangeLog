@@ -1,3 +1,7 @@
+1999-04-06  Jim Meyering  <meyering@ascend.com>
+
+	* strftime.m4: Remove test for %f.
+
 1999-03-29  Jim Meyering  <meyering@ascend.com>
 
 	* jm-macros.m4 (jm_CHECK_ALL_TYPES): New macro, contains the
