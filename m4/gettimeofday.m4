@@ -9,7 +9,7 @@ dnl
 dnl If it does, then arrange to use gettimeofday only via the wrapper
 dnl function that works around the problem.
 
-AC_DEFUN(AC_FUNC_GETTIMEOFDAY_CLOBBER,
+AC_DEFUN([AC_FUNC_GETTIMEOFDAY_CLOBBER],
 [
  AC_REQUIRE([AC_HEADER_TIME])
  AC_CHECK_HEADERS(string.h stdlib.h)
@@ -52,8 +52,8 @@ main ()
   exit (0);
 }
 	  ],
-	 jm_cv_func_gettimeofday_clobber=yes,
 	 jm_cv_func_gettimeofday_clobber=no,
+	 jm_cv_func_gettimeofday_clobber=yes,
 	 dnl When crosscompiling, assume it is broken.
 	 jm_cv_func_gettimeofday_clobber=yes)
   ])
@@ -61,5 +61,8 @@ main ()
     AC_LIBOBJ(gettimeofday)
     AC_DEFINE_UNQUOTED(gettimeofday, rpl_gettimeofday,
       [Define to rpl_gettimeofday if the replacement function should be used.])
+    jm_gtod_init_rhs='GTOD_init ()'
+    AC_DEFINE(GETTIMEOFDAY_CLOBBERS_LOCALTIME_BUFFER, 1,
+      [Define if gettimeofday clobbers localtime's static buffer.])
   fi
 ])
