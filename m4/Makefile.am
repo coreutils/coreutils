@@ -49,7 +49,8 @@ uintmax_t.m4 \
 uptime.m4 \
 utimbuf.m4 \
 utime.m4 \
-utimes.m4
+utimes.m4 \
+xstrtoumax.m4
 ##m4-files-end
 
 Makefile.am: Makefile.am.in

@@ -85,7 +85,6 @@ POFILES = @POFILES@
 POSUB = @POSUB@
 POW_LIBM = @POW_LIBM@
 RANLIB = @RANLIB@
-TAR = @TAR@
 U = @U@
 USE_INCLUDED_LIBINTL = @USE_INCLUDED_LIBINTL@
 USE_NLS = @USE_NLS@
@@ -141,7 +140,8 @@ uintmax_t.m4 \
 uptime.m4 \
 utimbuf.m4 \
 utime.m4 \
-utimes.m4
+utimes.m4 \
+xstrtoumax.m4
 
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../config.h
@@ -186,6 +186,7 @@ distdir: $(DISTFILES)
 	    || cp -p $$d/$$file $(distdir)/$$file || :; \
 	  fi; \
 	done
+
 info-am:
 info: info-am
 dvi-am:
