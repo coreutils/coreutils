@@ -1,3 +1,12 @@
+Thu Aug  1 22:38:38 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (AC_REPLACE_GNU_GETOPT): No longer use it.
+	It isn't necessary because the cpp-time checks of getopt.c and
+	getopt1.c are at least as good.
+	* lib/Makefile.am (EXTRA_DIST): Remove getopt.c and getopt1.c.
+	(su_SOURCES): Add getopt.c and getopt1.c
+	This reverts much of the April 23 change.
+
 Sat Jul 27 17:22:14 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/system.h (bindtextdomain) [!ENABLE_NLS]: Undefine to avoid
