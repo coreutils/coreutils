@@ -1386,7 +1386,7 @@ get_s2_spec_stats (struct Spec_list *s2, size_t len_s1)
 static void
 spec_init (struct Spec_list *spec_list)
 {
-  struct Spec_list *new = xmalloc (sizeof *new);
+  struct List_element *new = xmalloc (sizeof *new);
   spec_list->head = spec_list->tail = new;
   spec_list->head->next = NULL;
 }
