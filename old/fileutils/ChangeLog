@@ -1,5 +1,8 @@
 Wed Jul  3 17:41:15 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/dircolors.c: Include sys/types.h before system.h.
+	From Jim Blandy (jimb@cyclic.com).
+
 	* src/chgrp.c [!MAXUID]: Define after inclusion of system.h to avoid
 	warning about redefinition on SunOS4, Solaris2.4 and SGI-irix5.3.
 	From Kaveh Ghazi.
