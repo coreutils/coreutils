@@ -128,10 +128,9 @@ FORMAT controls the output as in C printf.  Interpreted sequences are:\n\
   \\v      vertical tab\n\
 "), stdout);
       fputs (_("\
-  \\xNN    byte with hexadecimal value NN (1 to 2 digits)\n\
-\n\
-  \\uNNNN  character with hexadecimal value NNNN (4 digits)\n\
-  \\UNNNNNNNN  character with hexadecimal value NNNNNNNN (8 digits)\n\
+  \\xHH    byte with hexadecimal value HH (1 to 2 digits)\n\
+  \\uHHHH  Unicode (ISO/IEC 10646) character with hex value HHHH (4 digits)\n\
+  \\UHHHHHHHH  Unicode character with hex value HHHHHHHH (8 digits)\n\
 "), stdout);
       fputs (_("\
   %%      a single %\n\
