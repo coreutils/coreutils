@@ -29,7 +29,7 @@ fail=0
 # Set times back by 30 minutes.
 touch --ref f --date='-30 min' f || fail=1
 
-TZ=utc command ls -og --time-style=+%Y-%m-%dT%H:%M:%S f > out.1 || fail
+TZ=UTC0 command ls -og --time-style=+%Y-%m-%dT%H:%M:%S f > out.1 || fail
 sed 's/ f$//;s/.* //' out.1 > out
 
 cat <<\EOF > exp || fail=1
