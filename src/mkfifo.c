@@ -76,7 +76,7 @@ main (int argc, char **argv)
 {
   unsigned short newmode;
   struct mode_change *change;
-  char *symbolic_mode;
+  const char *symbolic_mode;
   int errors = 0;
   int optc;
 

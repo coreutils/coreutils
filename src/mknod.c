@@ -86,7 +86,7 @@ main (int argc, char **argv)
 {
   unsigned short newmode;
   struct mode_change *change;
-  char *symbolic_mode;
+  const char *symbolic_mode;
   int optc;
   int i_major, i_minor;
   long int tmp_major, tmp_minor;
