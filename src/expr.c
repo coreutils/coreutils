@@ -346,12 +346,12 @@ int name (l, r) VALUE *l; VALUE *r;		\
  else						\
    return l->u.i rel r->u.i;			\
 }
-cmpf (less_than, <)
-cmpf (less_equal, <=)
-cmpf (equal, ==)
-cmpf (not_equal, !=)
-cmpf (greater_equal, >=)
-cmpf (greater_than, >)
+ cmpf (less_than, <)
+ cmpf (less_equal, <=)
+ cmpf (equal, ==)
+ cmpf (not_equal, !=)
+ cmpf (greater_equal, >=)
+ cmpf (greater_than, >)
 
 #undef cmpf
 
@@ -376,11 +376,11 @@ int name (l, r) VALUE *l; VALUE *r;		\
   return l->u.i op r->u.i;			\
 }
 
-arithf (plus, +)
-arithf (minus, -)
-arithf (multiply, *)
-arithdivf (divide, /)
-arithdivf (mod, %)
+ arithf (plus, +)
+ arithf (minus, -)
+ arithf (multiply, *)
+ arithdivf (divide, /)
+ arithdivf (mod, %)
 
 #undef arithf
 #undef arithdivf
