@@ -656,22 +656,25 @@ simple_strtoul (const char *s, const char **p, long unsigned int *val)
   return 0;
 }
 
-/* If S points to a single valid POSIX-style od format string, put a
-   description of that format in *TSPEC, make *NEXT point at the character
-   following the just-decoded format (if *NEXT is non-NULL), and return
-   zero.  If S is not valid, don't modify *NEXT or *TSPEC and return
-   nonzero.  For example, if S were "d4afL" *NEXT would be set to "afL"
-   and *TSPEC would be
+/* If S points to a single valid POSIX-style od format string, put
+   a description of that format in *TSPEC, make *NEXT point at the
+   character following the just-decoded format (if *NEXT is non-NULL),
+   and return zero.  If S is not valid, don't modify *NEXT or *TSPEC,
+   give a diagnostic, and return nonzero.  For example, if S were
+   "d4afL" *NEXT would be set to "afL" and *TSPEC would be
      {
        fmt = SIGNED_DECIMAL;
        size = INT or LONG; (whichever integral_type_size[4] resolves to)
        print_function = print_int; (assuming size == INT)
        fmt_string = "%011d%c";
       }
+   S_ORIG is solely for reporting errors.  It should be the full format
+   string argument.
    */
 
 static int
-decode_one_format (const char *s, const char **next, struct tspec *tspec)
+decode_one_format (const char *s_orig, const char *s, const char **next,
+		   struct tspec *tspec)
 {
   enum size_spec size_spec;
   unsigned long int size;
@@ -716,14 +719,24 @@ decode_one_format (const char *s, const char **next, struct tspec *tspec)
 
 	default:
 	  if (simple_strtoul (s, &p, &size) != 0)
-	    return 1;
+	    {
+	      /* The integer at P in S would overflow an unsigned long.
+		 A digit string that long is sufficiently odd looking
+		 that the following diagnostic is sufficient.  */
+	      error (0, 0, _("invalid type string `%s'"), s_orig);
+	      return 1;
+	    }
 	  if (p == s)
 	    size = sizeof (int);
 	  else
 	    {
 	      if (size > MAX_INTEGRAL_TYPE_SIZE
 		  || integral_type_size[size] == NO_SIZE)
-		return 1;
+		{
+		  error (0, 0, _("invalid type string `%s';\n\
+this system doesn't provide a %d-byte integral type"), s_orig, size);
+		  return 1;
+		}
 	      s = p;
 	    }
 	  break;
@@ -819,14 +832,24 @@ decode_one_format (const char *s, const char **next, struct tspec *tspec)
 
 	default:
 	  if (simple_strtoul (s, &p, &size) != 0)
-	    return 1;
+	    {
+	      /* The integer at P in S would overflow an unsigned long.
+		 A digit string that long is sufficiently odd looking
+		 that the following diagnostic is sufficient.  */
+	      error (0, 0, _("invalid type string `%s'"), s_orig);
+	      return 1;
+	    }
 	  if (p == s)
 	    size = sizeof (double);
 	  else
 	    {
 	      if (size > MAX_FP_TYPE_SIZE
 		  || fp_type_size[size] == NO_SIZE)
-		return 1;
+		{
+		  error (0, 0, _("invalid type string `%s';\n\
+this system doesn't provide a %d-byte floating point type"), s_orig, size);
+		  return 1;
+		}
 	      s = p;
 	    }
 	  break;
@@ -884,6 +907,8 @@ decode_one_format (const char *s, const char **next, struct tspec *tspec)
       break;
 
     default:
+      error (0, 0, _("invalid character `%c' in type string `%s'"),
+	     *s, s_orig);
       return 1;
     }
 
@@ -905,6 +930,7 @@ decode_one_format (const char *s, const char **next, struct tspec *tspec)
 static int
 decode_format_string (const char *s)
 {
+  const char *s_orig = s;
   assert (s != NULL);
 
   while (*s != '\0')
@@ -912,7 +938,7 @@ decode_format_string (const char *s)
       struct tspec tspec;
       const char *next;
 
-      if (decode_one_format (s, &next, &tspec))
+      if (decode_one_format (s_orig, s, &next, &tspec))
 	return 1;
 
       assert (s != next);
@@ -925,7 +951,8 @@ decode_format_string (const char *s)
 						   * sizeof (struct tspec)));
 	}
 
-      memcpy ((char *) &spec[n_specs], (char *) &tspec, sizeof (struct tspec));
+      memcpy ((char *) &spec[n_specs], (char *) &tspec,
+	      sizeof (struct tspec));
       ++n_specs;
     }
 
@@ -1581,6 +1608,7 @@ main (int argc, char **argv)
   unsigned int address_pad_len;
   unsigned long int desired_width;
   int width_specified = 0;
+  int n_failed_decodes = 0;
   int err;
 
   /* The old-style `pseudo starting address' to be printed in parentheses
@@ -1706,7 +1734,7 @@ the maximum\nrepresentable value of type off_t"), optarg);
 
 	case 't':
 	  if (decode_format_string (optarg))
-	    error (EXIT_FAILURE, 0, _("invalid type string `%s'"), optarg);
+	    ++n_failed_decodes;
 	  break;
 
 	case 'v':
@@ -1725,9 +1753,8 @@ the maximum\nrepresentable value of type off_t"), optarg);
 #define CASE_OLD_ARG(old_char,new_string)		\
 	case old_char:					\
 	  {						\
-	    int tmp;					\
-	    tmp = decode_format_string (new_string);	\
-	    assert (tmp == 0);				\
+	    if (decode_format_string (new_string))	\
+	      ++n_failed_decodes;			\
 	  }						\
 	  break
 
@@ -1763,6 +1790,9 @@ the maximum\nrepresentable value of type off_t"), optarg);
 	  break;
 	}
     }
+
+  if (n_failed_decodes > 0)
+    exit (EXIT_FAILURE);
 
   if (show_version)
     {
@@ -1841,14 +1871,14 @@ the maximum\nrepresentable value of type off_t"), optarg);
 	  else
 	    {
 	      error (0, 0,
-	      _("in compatibility mode the last 2 arguments must be offsets"));
+	    _("in compatibility mode the last 2 arguments must be offsets"));
 	      usage (1);
 	    }
 	}
       else
 	{
 	  error (0, 0,
-	     _("in compatibility mode there may be no more than 3 arguments"));
+	   _("in compatibility mode there may be no more than 3 arguments"));
 	  usage (1);
 	}
 
@@ -1879,9 +1909,13 @@ the maximum\nrepresentable value of type off_t"), optarg);
 
   if (n_specs == 0)
     {
-      int d_err = decode_one_format ("o2", NULL, &(spec[0]));
+      if (decode_one_format ("o2", "o2", NULL, &(spec[0])))
+	{
+	  /* This happens on Cray systems that don't have a 2-byte
+	     integral type.  */
+	  exit (EXIT_FAILURE);
+	}
 
-      assert (d_err == 0);
       n_specs = 1;
     }
 
