@@ -162,6 +162,7 @@ make_dir (const char *dir, const char *dirpath, mode_t mode, int *created_dir_p)
   if (!created_dir)
     {
       struct stat stats;
+      int saved_errno = errno;
 
       /* The mkdir and stat calls below may appear to be reversed.
 	 They are not.  It is important to call mkdir first and then to
@@ -173,7 +174,7 @@ make_dir (const char *dir, const char *dirpath, mode_t mode, int *created_dir_p)
 
       if (stat (dir, &stats))
 	{
-	  error (0, errno, _("cannot create directory `%s'"), dirpath);
+	  error (0, saved_errno, _("cannot create directory `%s'"), dirpath);
 	  fail = 1;
 	}
       else if (!S_ISDIR (stats.st_mode))
