@@ -42,8 +42,8 @@
 #include <sys/types.h>
 #include "system.h"
 #include "closeout.h"
-
 #include "error.h"
+#include "posixver.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "unexpand"
@@ -103,12 +103,6 @@ enum
 {
   CONVERT_FIRST_ONLY_OPTION = CHAR_MAX + 1
 };
-
-static char const shortopts[] = "at:"
-#if POSIX2_VERSION < 200112
-",0123456789"
-#endif
-;
 
 static struct option const longopts[] =
 {
@@ -397,12 +391,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
      fputs (HELP_OPTION_DESCRIPTION, stdout);
      fputs (VERSION_OPTION_DESCRIPTION, stdout);
-     if (POSIX2_VERSION < 200112)
-       fputs (_("\
-\n\
-(obsolete) Instead of -t NUMBER or -t LIST, -NUMBER or -LIST may be used.\n\
-"), stdout);
-      puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
+     puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
@@ -432,14 +421,15 @@ main (int argc, char **argv)
   tab_list = NULL;
   first_free_tab = 0;
 
-  while ((c = getopt_long (argc, argv, shortopts, longopts, NULL)) != -1)
+  while ((c = getopt_long (argc, argv, ",0123456789at:", longopts, NULL))
+	 != -1)
     {
       switch (c)
 	{
 	case 0:
 	  break;
 
-	default:
+	case '?':
 	  usage (1);
 	case 'a':
 	  convert_entire_line = 1;
@@ -451,38 +441,28 @@ main (int argc, char **argv)
 	case CONVERT_FIRST_ONLY_OPTION:
 	  convert_first_only = 1;
 	  break;
-	case_GETOPT_HELP_CHAR;
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
-
-#if POSIX2_VERSION < 200112
 	case ',':
 	  add_tabstop (tabval);
 	  tabval = -1;
 	  obsolete_tablist = true;
 	  break;
-	case '0':
-	case '1':
-	case '2':
-	case '3':
-	case '4':
-	case '5':
-	case '6':
-	case '7':
-	case '8':
-	case '9':
+	case_GETOPT_HELP_CHAR;
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+	default:
 	  if (tabval == -1)
 	    tabval = 0;
 	  tabval = tabval * 10 + c - '0';
 	  obsolete_tablist = true;
 	  break;
-#endif
 	}
     }
 
-  if (OBSOLETE_OPTION_WARNINGS && obsolete_tablist)
-    error (0, 0,
-	   _("warning: `unexpand -TABLIST' is obsolete; use\
-  `unexpand --first-only -t TABLIST'"));
+  if (obsolete_tablist && 200112 <= posix2_version ())
+    {
+      error (0, 0,
+	     _("`-LIST' option is obsolete; use `--first-only -t LIST'"));
+      usage (EXIT_FAILURE);
+    }
 
   if (convert_first_only)
     convert_entire_line = 0;
