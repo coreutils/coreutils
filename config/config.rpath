@@ -2,7 +2,7 @@
 # Output a system dependent set of variables, describing how to set the
 # run time search path of shared libraries in an executable.
 #
-#   Copyright 1996-2002 Free Software Foundation, Inc.
+#   Copyright 1996-2003 Free Software Foundation, Inc.
 #   Taken from GNU libtool, 2001
 #   Originally by Gordon Matzigkeit <gord@gnu.ai.mit.edu>, 1996
 #
@@ -34,42 +34,56 @@
 #
 # The set of defined variables is at the end of this script.
 
+# Known limitations:
+# - On IRIX 6.5 with CC="cc", the run time search patch must not be longer
+#   than 256 bytes, otherwise the compiler driver will dump core. The only
+#   known workaround is to choose shorter directory names for the build
+#   directory and/or the installation directory.
+
 # All known linkers require a `.a' archive for static linking (except M$VC,
 # which needs '.lib').
 libext=a
-shlibext=
+shrext=.so
 
 host="$1"
 host_cpu=`echo "$host" | sed 's/^\([^-]*\)-\([^-]*\)-\(.*\)$/\1/'`
 host_vendor=`echo "$host" | sed 's/^\([^-]*\)-\([^-]*\)-\(.*\)$/\2/'`
 host_os=`echo "$host" | sed 's/^\([^-]*\)-\([^-]*\)-\(.*\)$/\3/'`
 
+# Code taken from libtool.m4's AC_LIBTOOL_PROG_COMPILER_PIC.
+
 wl=
 if test "$GCC" = yes; then
   wl='-Wl,'
 else
   case "$host_os" in
-    aix3* | aix4* | aix5*)
+    aix*)
       wl='-Wl,'
+      ;;
+    mingw* | pw32* | os2*)
       ;;
     hpux9* | hpux10* | hpux11*)
       wl='-Wl,'
       ;;
-    irix5* | irix6*)
+    irix5* | irix6* | nonstopux*)
       wl='-Wl,'
       ;;
+    newsos6)
+      ;;
     linux*)
-      echo '__INTEL_COMPILER' > conftest.$ac_ext
-      if $CC -E conftest.$ac_ext >/dev/null | grep __INTEL_COMPILER >/dev/null
-      then
-        :
-      else
-        # Intel icc
-        wl='-Qoption,ld,'
-      fi
+      case $CC in
+        icc|ecc)
+          wl='-Wl,'
+          ;;
+        ccc)
+          wl='-Wl,'
+          ;;
+      esac
       ;;
     osf3* | osf4* | osf5*)
       wl='-Wl,'
+      ;;
+    sco3.2v5*)
       ;;
     solaris*)
       wl='-Wl,'
@@ -78,14 +92,16 @@ else
       wl='-Qoption ld '
       ;;
     sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
-      if test "x$host_vendor" = xsni; then
-        wl='-LD'
-      else
-        wl='-Wl,'
-      fi
+      wl='-Wl,'
+      ;;
+    sysv4*MP*)
+      ;;
+    uts4*)
       ;;
   esac
 fi
+
+# Code taken from libtool.m4's AC_LIBTOOL_PROG_LD_SHLIBS.
 
 hardcode_libdir_flag_spec=
 hardcode_libdir_separator=
@@ -110,8 +126,10 @@ ld_shlibs=yes
 if test "$with_gnu_ld" = yes; then
   case "$host_os" in
     aix3* | aix4* | aix5*)
-      # On AIX, the GNU linker is very broken
-      ld_shlibs=no
+      # On AIX/PPC, the GNU linker is very broken
+      if test "$host_cpu" != ia64; then
+        ld_shlibs=no
+      fi
       ;;
     amigaos*)
       hardcode_libdir_flag_spec='-L$libdir'
@@ -135,6 +153,13 @@ if test "$with_gnu_ld" = yes; then
       # hardcode_libdir_flag_spec is actually meaningless, as there is
       # no search path for DLLs.
       hardcode_libdir_flag_spec='-L$libdir'
+      if $LD --help 2>&1 | grep 'auto-import' > /dev/null; then
+        :
+      else
+        ld_shlibs=no
+      fi
+      ;;
+    netbsd*)
       ;;
     solaris* | sysv5*)
       if $LD -v 2>&1 | egrep 'BFD 2\.8' > /dev/null; then
@@ -157,6 +182,8 @@ if test "$with_gnu_ld" = yes; then
       ;;
   esac
   if test "$ld_shlibs" = yes; then
+    # Unlike libtool, we use -rpath here, not --rpath, since the documented
+    # option of GNU ld is called -rpath, not --rpath.
     hardcode_libdir_flag_spec='${wl}-rpath ${wl}$libdir'
   fi
 else
@@ -209,13 +236,27 @@ else
           fi
         esac
       fi
+      # Begin _LT_AC_SYS_LIBPATH_AIX.
+      echo 'int main () { return 0; }' > conftest.c
+      ${CC} ${LDFLAGS} conftest.c -o conftest
+      aix_libpath=`dump -H conftest 2>/dev/null | sed -n -e '/Import File Strings/,/^$/ { /^0/ { s/^0  *\(.*\)$/\1/; p; }
+}'`
+      if test -z "$aix_libpath"; then
+        aix_libpath=`dump -HX64 conftest 2>/dev/null | sed -n -e '/Import File Strings/,/^$/ { /^0/ { s/^0  *\(.*\)$/\1/; p; }
+}'`
+      fi
+      if test -z "$aix_libpath"; then
+        aix_libpath="/usr/lib:/lib"
+      fi
+      rm -f conftest.c conftest
+      # End _LT_AC_SYS_LIBPATH_AIX.
       if test "$aix_use_runtimelinking" = yes; then
-        hardcode_libdir_flag_spec='${wl}-blibpath:$libdir:/usr/lib:/lib'
+        hardcode_libdir_flag_spec='${wl}-blibpath:$libdir:'"$aix_libpath"
       else
         if test "$host_cpu" = ia64; then
           hardcode_libdir_flag_spec='${wl}-R $libdir:/usr/lib:/lib'
         else
-          hardcode_libdir_flag_spec='${wl}-bnolibpath ${wl}-blibpath:$libdir:/usr/lib:/lib'
+          hardcode_libdir_flag_spec='${wl}-blibpath:$libdir:'"$aix_libpath"
         fi
       fi
       ;;
@@ -224,6 +265,8 @@ else
       hardcode_minus_L=yes
       # see comment about different semantics on the GNU ld section
       ld_shlibs=no
+      ;;
+    bsdi4*)
       ;;
     cygwin* | mingw* | pw32*)
       # When not using gcc, we currently assume that we are using
@@ -234,7 +277,12 @@ else
       libext=lib
       ;;
     darwin* | rhapsody*)
-      hardcode_direct=yes
+      if $CC -v 2>&1 | grep 'Apple' >/dev/null ; then
+        hardcode_direct=no
+      fi
+      ;;
+    dgux*)
+      hardcode_libdir_flag_spec='-L$libdir'
       ;;
     freebsd1*)
       ld_shlibs=no
@@ -251,14 +299,41 @@ else
       hardcode_libdir_flag_spec='-R$libdir'
       hardcode_direct=yes
       ;;
-    hpux9* | hpux10* | hpux11*)
+    hpux9*)
       hardcode_libdir_flag_spec='${wl}+b ${wl}$libdir'
       hardcode_libdir_separator=:
       hardcode_direct=yes
-      hardcode_minus_L=yes # Not in the search PATH, but as the default
-                           # location of the library.
+      # hardcode_minus_L: Not really in the search PATH,
+      # but as the default location of the library.
+      hardcode_minus_L=yes
       ;;
-    irix5* | irix6*)
+    hpux10* | hpux11*)
+      if test "$with_gnu_ld" = no; then
+        case "$host_cpu" in
+          hppa*64*)
+            hardcode_libdir_flag_spec='${wl}+b ${wl}$libdir'
+            hardcode_libdir_separator=:
+            hardcode_direct=no
+            ;;
+          ia64*)
+            hardcode_libdir_flag_spec='-L$libdir'
+            hardcode_direct=no
+            # hardcode_minus_L: Not really in the search PATH,
+            # but as the default location of the library.
+            hardcode_minus_L=yes
+            ;;
+          *)
+            hardcode_libdir_flag_spec='${wl}+b ${wl}$libdir'
+            hardcode_libdir_separator=:
+            hardcode_direct=yes
+            # hardcode_minus_L: Not really in the search PATH,
+            # but as the default location of the library.
+            hardcode_minus_L=yes
+            ;;
+        esac
+      fi
+      ;;
+    irix5* | irix6* | nonstopux*)
       hardcode_libdir_flag_spec='${wl}-rpath ${wl}$libdir'
       hardcode_libdir_separator=:
       ;;
@@ -314,22 +389,19 @@ else
       hardcode_minus_L=yes
       ;;
     sysv4)
-      if test "x$host_vendor" = xsno; then
-        hardcode_direct=yes # is this really true???
-      else
-        hardcode_direct=no # Motorola manual says yes, but my tests say they lie
-      fi
+      case $host_vendor in
+        sni)
+          hardcode_direct=yes # is this really true???
+          ;;
+        siemens)
+          hardcode_direct=no
+          ;;
+        motorola)
+          hardcode_direct=no #Motorola manual says yes, but my tests say they lie
+          ;;
+      esac
       ;;
     sysv4.3*)
-      ;;
-    sysv5*)
-      hardcode_libdir_flag_spec=
-      ;;
-    uts4*)
-      hardcode_libdir_flag_spec='-L$libdir'
-      ;;
-    dgux*)
-      hardcode_libdir_flag_spec='-L$libdir'
       ;;
     sysv4*MP*)
       if test -d /usr/nec; then
@@ -340,7 +412,13 @@ else
       hardcode_direct=yes
       hardcode_minus_L=no
       ;;
-    sysv5uw7* | unixware7*)
+    sysv5OpenUNIX8* | sysv5UnixWare7* |  sysv5uw[78]* | unixware7*)
+      ;;
+    sysv5*)
+      hardcode_libdir_flag_spec=
+      ;;
+    uts4*)
+      hardcode_libdir_flag_spec='-L$libdir'
       ;;
     *)
       ld_shlibs=no
@@ -349,134 +427,97 @@ else
 fi
 
 # Check dynamic linker characteristics
+# Code taken from libtool.m4's AC_LIBTOOL_SYS_DYNAMIC_LINKER.
 libname_spec='lib$name'
-sys_lib_dlsearch_path_spec="/lib /usr/lib"
-sys_lib_search_path_spec="/lib /usr/lib /usr/local/lib"
 case "$host_os" in
   aix3*)
-    shlibext=so
     ;;
   aix4* | aix5*)
-    shlibext=so
     ;;
   amigaos*)
-    shlibext=ixlibrary
     ;;
   beos*)
-    shlibext=so
     ;;
   bsdi4*)
-    shlibext=so
-    sys_lib_search_path_spec="/shlib /usr/lib /usr/X11/lib /usr/contrib/lib /lib /usr/local/lib"
-    sys_lib_dlsearch_path_spec="/shlib /usr/lib /usr/local/lib"
     ;;
   cygwin* | mingw* | pw32*)
-    case $GCC,$host_os in
-      yes,cygwin*)
-        shlibext=dll.a
-        ;;
-      yes,mingw*)
-        shlibext=dll
-        sys_lib_search_path_spec=`$CC -print-search-dirs | grep "^libraries:" | sed -e "s/^libraries://" -e "s/;/ /g"`
-        ;;
-      yes,pw32*)
-        shlibext=dll
-        ;;
-      *)
-        shlibext=dll
-        ;;
-    esac
+    shrext=.dll
     ;;
   darwin* | rhapsody*)
-    shlibext=dylib
+    shrext=.dylib
+    ;;
+  dgux*)
     ;;
   freebsd1*)
     ;;
   freebsd*)
-    shlibext=so
     ;;
   gnu*)
-    shlibext=so
     ;;
   hpux9* | hpux10* | hpux11*)
-    shlibext=sl
+    case "$host_cpu" in
+      ia64*)
+        shrext=.so
+        ;;
+      hppa*64*)
+        shrext=.sl
+        ;;
+      *)
+        shrext=.sl
+        ;;
+    esac
     ;;
-  irix5* | irix6*)
-    shlibext=so
+  irix5* | irix6* | nonstopux*)
     case "$host_os" in
-      irix5*)
+      irix5* | nonstopux*)
         libsuff= shlibsuff=
         ;;
       *)
         case $LD in
-          *-32|*"-32 ") libsuff= shlibsuff= ;;
-          *-n32|*"-n32 ") libsuff=32 shlibsuff=N32 ;;
-          *-64|*"-64 ") libsuff=64 shlibsuff=64 ;;
+          *-32|*"-32 "|*-melf32bsmip|*"-melf32bsmip ") libsuff= shlibsuff= ;;
+          *-n32|*"-n32 "|*-melf32bmipn32|*"-melf32bmipn32 ") libsuff=32 shlibsuff=N32 ;;
+          *-64|*"-64 "|*-melf64bmip|*"-melf64bmip ") libsuff=64 shlibsuff=64 ;;
           *) libsuff= shlibsuff= ;;
         esac
         ;;
     esac
-    sys_lib_search_path_spec="/usr/lib${libsuff} /lib${libsuff} /usr/local/lib${libsuff}"
-    sys_lib_dlsearch_path_spec="/usr/lib${libsuff} /lib${libsuff}"
     ;;
-  linux-gnuoldld* | linux-gnuaout* | linux-gnucoff*)
+  linux*oldld* | linux*aout* | linux*coff*)
     ;;
-  linux-gnu*)
-    shlibext=so
+  linux*)
     ;;
   netbsd*)
-    shlibext=so
     ;;
   newsos6)
-    shlibext=so
+    ;;
+  nto-qnx)
     ;;
   openbsd*)
-    shlibext=so
     ;;
   os2*)
     libname_spec='$name'
-    shlibext=dll
+    shrext=.dll
     ;;
   osf3* | osf4* | osf5*)
-    shlibext=so
-    sys_lib_search_path_spec="/usr/shlib /usr/ccs/lib /usr/lib/cmplrs/cc /usr/lib /usr/local/lib /var/shlib"
-    sys_lib_dlsearch_path_spec="$sys_lib_search_path_spec"
     ;;
   sco3.2v5*)
-    shlibext=so
     ;;
   solaris*)
-    shlibext=so
     ;;
   sunos4*)
-    shlibext=so
     ;;
   sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
-    shlibext=so
-    case "$host_vendor" in
-      motorola)
-        sys_lib_search_path_spec='/lib /usr/lib /usr/ccs/lib'
-        ;;
-    esac
-    ;;
-  uts4*)
-    shlibext=so
-    ;;
-  dgux*)
-    shlibext=so
     ;;
   sysv4*MP*)
-    if test -d /usr/nec; then
-      shlibext=so
-    fi
+    ;;
+  uts4*)
     ;;
 esac
 
 sed_quote_subst='s/\(["`$\\]\)/\\\1/g'
 escaped_wl=`echo "X$wl" | sed -e 's/^X//' -e "$sed_quote_subst"`
+shlibext=`echo "$shrext" | sed -e 's,^\.,,'`
 escaped_hardcode_libdir_flag_spec=`echo "X$hardcode_libdir_flag_spec" | sed -e 's/^X//' -e "$sed_quote_subst"`
-escaped_sys_lib_search_path_spec=`echo "X$sys_lib_search_path_spec" | sed -e 's/^X//' -e "$sed_quote_subst"`
-escaped_sys_lib_dlsearch_path_spec=`echo "X$sys_lib_dlsearch_path_spec" | sed -e 's/^X//' -e "$sed_quote_subst"`
 
 sed -e 's/^\([a-zA-Z0-9_]*\)=/acl_cv_\1=/' <<EOF
 
@@ -503,11 +544,5 @@ hardcode_direct="$hardcode_direct"
 # Set to yes if using the -LDIR flag during linking hardcodes DIR into the
 # resulting binary.
 hardcode_minus_L="$hardcode_minus_L"
-
-# Compile-time system search path for libraries
-sys_lib_search_path_spec="$escaped_sys_lib_search_path_spec"
-
-# Run-time system search path for libraries
-sys_lib_dlsearch_path_spec="$escaped_sys_lib_dlsearch_path_spec"
 
 EOF

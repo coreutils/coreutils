@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2003-07-28.08}
+\def\texinfoversion{2003-08-11.14}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
@@ -257,9 +257,6 @@
     \normalturnoffactive  % \ in index entries must not stay \, e.g., if
                    % the page break happens to be in the middle of an example.
     \shipout\vbox{%
-      % Do this early so pdf references go to the beginning of the page.
-      \ifpdfmakepagedest \pdfmkdest{\the\pageno} \fi
-      %
       \ifcropmarks \vbox to \outervsize\bgroup
         \hsize = \outerhsize
         \vskip-\topandbottommargin
@@ -278,6 +275,9 @@
           \ifodd\pageno\hskip\bindingoffset\fi
           \vbox\bgroup
       \fi
+      %
+      % Do this early so pdf references go to the beginning of the page.
+      \ifpdfmakepagedest \pdfmkdest{\the\pageno}\fi
       %
       \unvbox\headlinebox
       \pagebody{#1}%
@@ -1104,32 +1104,34 @@ where each line of input produces a line of output.}
       \edef\mylbrace{\iftrue \string{\else}\fi}\let\{=\mylbrace
       \edef\myrbrace{\iffalse{\else\string}\fi}\let\}=\myrbrace
       %
-      \def\chapentry ##1##2##3{}
-      \def\secentry ##1##2##3##4{\advancenumber{chap##2}}
-      \def\subsecentry ##1##2##3##4##5{\advancenumber{sec##2.##3}}
-      \def\subsubsecentry ##1##2##3##4##5##6{\advancenumber{subsec##2.##3.##4}}
-      \let\appendixentry = \chapentry
-      \let\unnumbchapentry = \chapentry
-      \let\unnumbsecentry = \secentry
-      \let\unnumbsubsecentry = \subsecentry
-      \let\unnumbsubsubsecentry = \subsubsecentry
+      % Read toc first time in order to get the counts of subentries for
+      % \pdfoutline.
+      \def\chapentry##1##2##3{}
+      \def\secentry##1##2##3##4{\advancenumber{chap##2}}
+      \def\subsecentry##1##2##3##4##5{\advancenumber{sec##2.##3}}
+      \def\subsubsecentry##1##2##3##4##5##6{\advancenumber{subsec##2.##3.##4}}
+      % use \def rather than \let here because we redefine \chapentry et
+      % al. a second time, below.
+      \def\appendixentry{\chapentry}
+      \def\unnumbchapentry{\chapentry}
+      \def\unnumbsecentry{\secentry}
+      \def\unnumbsubsecentry{\subsecentry}
+      \def\unnumbsubsubsecentry{\subsubsecentry}
       \input \jobname.toc
-      \def\chapentry ##1##2##3{%
+      %
+      % Read toc second time, this time actually producing the outlines.
+      % The `-' means take the \expnumber as the absolute number of
+      % subentries, which we calculated on our first read of the .toc above.
+      \def\chapentry##1##2##3{%
         \pdfoutline goto name{\pdfmkpgn{##3}}count-\expnumber{chap##2}{##1}}
-      \def\secentry ##1##2##3##4{%
-        \pdfoutline goto name{\pdfmkpgn{##4}}count-\expnumber{sec##2.##3}{##1}}
-      \def\subsecentry ##1##2##3##4##5{%
+      \def\secentry##1##2##3##4{%
+        \pdfoutline goto name{\pdfmkpgn{##1}}count-\expnumber{sec##2.##3}{##1}}
+      \def\subsecentry##1##2##3##4##5{%
         \pdfoutline goto name{\pdfmkpgn{##5}}count-\expnumber{subsec##2.##3.##4}{##1}}
-      \def\subsubsecentry ##1##2##3##4##5##6{%
+      \def\subsubsecentry##1##2##3##4##5##6{%
         \pdfoutline goto name{\pdfmkpgn{##6}}{##1}}
-      \let\appendixentry = \chapentry
-      \let\unnumbchapentry = \chapentry
-      \let\unnumbsecentry = \secentry
-      \let\unnumbsubsecentry = \subsecentry
-      \let\unnumbsubsubsecentry = \subsubsecentry
       %
       % Make special characters normal for writing to the pdf file.
-      %
       \indexnofonts
       \let\tt=\relax
       \turnoffactive
@@ -2575,7 +2577,7 @@ width0pt\relax} \fi
 % Ignore text until a line `@end #1', keeping track of nested conditionals.
 %
 % A count to remember the depth of nesting.
-\newcount\doignorecount  \doignorecount = 0
+\newcount\doignorecount
 
 \def\doignore#1{\begingroup
   % Don't complain about control sequences we have declared \outer.
@@ -2623,7 +2625,7 @@ width0pt\relax} \fi
   \else					% Found a nested condition, ...
     \advance\doignorecount by 1
     \let\next\doignoretextyyy		% ..., look for another.
-    % If we're here, #1 ends with \ifinfo (for example).
+    % If we're here, #1 ends with ^^M\ifinfo (for example).
   \fi
   \next #1% the token \ST@P is present just after this macro.
 }
@@ -3915,7 +3917,7 @@ width0pt\relax} \fi
 \global\let\pagealignmacro=\chappager
 \global\def\HEADINGSon{\HEADINGSsingle}}
 
-\def\CHAPPAGodd{
+\def\CHAPPAGodd{%
 \global\let\contentsalignmacro = \chapoddpage
 \global\let\pchapsepmacro=\chapoddpage
 \global\let\pagealignmacro=\chapoddpage
@@ -3923,7 +3925,7 @@ width0pt\relax} \fi
 
 \CHAPPAGon
 
-\def\CHAPFplain{
+\def\CHAPFplain{%
 \global\let\chapmacro=\chfplain
 \global\let\unnumbchapmacro=\unnchfplain
 \global\let\centerchapmacro=\centerchfplain}
@@ -3977,7 +3979,7 @@ width0pt\relax} \fi
                        \hfill {\rm #1}\hfill}}\bigskip \par\nobreak
 }
 
-\def\CHAPFopen{
+\def\CHAPFopen{%
 \global\let\chapmacro=\chfopen
 \global\let\unnumbchapmacro=\unnchfopen
 \global\let\centerchapmacro=\centerchfopen}
@@ -5809,7 +5811,7 @@ width0pt\relax} \fi
          goto file{\the\filename.pdf} name{#1}%
      \else
        \startlink attr{/Border [0 0 0]}%
-         goto name{#1}%
+         goto name{\pdfmkpgn{#1}}%
      \fi
     }%
     \linkcolor
