@@ -319,7 +319,7 @@ static void add_ignore_pattern PARAMS ((const char *pattern));
 static void attach PARAMS ((char *dest, const char *dirname, const char *name));
 static void clear_files PARAMS ((void));
 static void extract_dirs_from_files PARAMS ((const char *dirname,
-					     int recursive));
+					     int ignore_dot_and_dot_dot));
 static void get_link_name PARAMS ((const char *filename, struct fileinfo *f));
 static void indent PARAMS ((int from, int to));
 static void init_column_info PARAMS ((void));
@@ -632,7 +632,7 @@ static enum Dereference_symlink dereference;
 /* Nonzero means when a directory is found, display info on its
    contents.  -R  */
 
-static int trace_dirs;  /* FIXME: rename this to `recursive'. */
+static int recursive;
 
 /* Nonzero means when an argument is a directory name, display info
    on it itself.  -d  */
@@ -909,7 +909,7 @@ dev_ino_pop (void)
 {
   struct dev_ino di;
   assert (sizeof di <= obstack_object_size (&dev_ino_obstack));
-  obstack_blank (&dev_ino_obstack, -(sizeof di));
+  obstack_blank (&dev_ino_obstack, -(int) (sizeof di));
   di = *(struct dev_ino*) obstack_next_free (&dev_ino_obstack);
   return di;
 }
@@ -1064,7 +1064,7 @@ main (int argc, char **argv)
 
   /* When using -R, initialize a data structure we'll use to
      detect any directory cycles.  */
-  if (trace_dirs)
+  if (recursive)
     {
       active_dir_set = hash_initialize (INITIAL_TABLE_SIZE, NULL,
 					dev_ino_hash,
@@ -1079,7 +1079,7 @@ main (int argc, char **argv)
   format_needs_stat = sort_type == sort_time || sort_type == sort_size
     || format == long_format
     || dereference == DEREF_ALWAYS
-    || trace_dirs || print_block_size || print_inode;
+    || recursive || print_block_size || print_inode;
   format_needs_type = (format_needs_stat == 0
 		       && (print_with_color || indicator_style != none));
 
@@ -1240,7 +1240,7 @@ decode_switches (int argc, char **argv)
   indicator_style = none;
   print_inode = 0;
   dereference = DEREF_UNDEFINED;
-  trace_dirs = 0;
+  recursive = 0;
   immediate_dirs = 0;
   all_files = 0;
   really_all_files = 0;
@@ -1480,7 +1480,7 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 'R':
-	  trace_dirs = 1;
+	  recursive = 1;
 	  break;
 
 	case 'S':
@@ -2093,10 +2093,10 @@ print_dir (const char *name, const char *realname)
   /* If any member files are subdirectories, perhaps they should have their
      contents listed rather than being mentioned here as files.  */
 
-  if (trace_dirs)
+  if (recursive)
     extract_dirs_from_files (name, 1);
 
-  if (trace_dirs || print_dir_name)
+  if (recursive || print_dir_name)
     {
       DIRED_INDENT ();
       PUSH_CURRENT_DIRED_POS (&subdired_obstack);
@@ -2386,11 +2386,11 @@ basename_is_dot_or_dotdot (const char *name)
    and queue them to be listed as directories instead.
    `dirname' is the prefix to prepend to each dirname
    to make it correct relative to ls's working dir.
-   `recursive' is nonzero if we should not treat `.' and `..' as dirs.
+   If IGNORE_DOT_AND_DOT_DOT is nonzero don't treat `.' and `..' as dirs.
    This is desirable when processing directories recursively.  */
 
 static void
-extract_dirs_from_files (const char *dirname, int recursive)
+extract_dirs_from_files (const char *dirname, int ignore_dot_and_dot_dot)
 {
   register int i, j;
 
@@ -2406,7 +2406,8 @@ extract_dirs_from_files (const char *dirname, int recursive)
      order.  */
   for (i = files_index - 1; i >= 0; i--)
     if ((files[i].filetype == directory || files[i].filetype == arg_directory)
-	&& (!recursive || !basename_is_dot_or_dotdot (files[i].name)))
+	&& (!ignore_dot_and_dot_dot
+	    || !basename_is_dot_or_dotdot (files[i].name)))
       {
 	if (files[i].name[0] == '/' || dirname[0] == 0)
 	  {
