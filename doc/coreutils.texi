@@ -1952,10 +1952,11 @@ e.g., @option{--date-format="Monday morning"}.
 
 @vindex POSIXLY_CORRECT
 @vindex LC_TIME
-If the @env{POSIXLY_CORRECT} environment variable is not set, the date
+Normally the date
 format defaults to @samp{%Y-%m-%d %H:%M} (for example, @samp{2001-12-04
-23:59}); otherwise, the format depends on the @env{LC_TIME} locale
-category, with the default being @samp{%b %e %H:%M %Y} (for example,
+23:59}); but if the @env{POSIXLY_CORRECT} environment variable is set
+and the @env{LC_TIME} locale category specifies the @acronym{POSIX}
+locale, the default is @samp{%b %e %H:%M %Y} (for example,
 @samp{Dec@ @ 4 23:59 2001}.
 
 @item -e[@var{in-tabchar}[@var{in-tabwidth}]]
@@ -7768,12 +7769,9 @@ On some systems @code{unlink} can be used to delete the name of a
 directory.  On others, it can be used that way only by a privileged user.
 In the GNU system @code{unlink} can never delete the name of a directory.
 
-@vindex POSIXLY_CORRECT
-By default, @command{unlink} honors the @option{--help} and @option{--version}
-options.  That makes it a little harder to remove files named
-@option{--help} and @option{--version}, so when the environment variable
-@env{POSIXLY_CORRECT} is set, @command{unlink} treats such a command line
-arguments not as an option, but as an operand.
+The @command{unlink} command honors the @option{--help} and
+@option{--version} options.  To remove a file whose name begins with
+@samp{-}, prefix the name with @samp{./}, e.g., @samp{unlink ./--help}.
 
 @exitstatus
 
