@@ -40,6 +40,8 @@
 
 #define AUTHORS N_ ("Torbjorn Granlund and Richard M. Stallman")
 
+#define DEFAULT_SUFFIX_LENGTH 2
+
 /* The name this program was run with. */
 char *program_name;
 
@@ -48,13 +50,13 @@ static char const *outbase;
 
 /* Name of output files.  */
 static char *outfile;
- 
+
 /* Pointer to the end of the prefix in OUTFILE.
    Suffixes are inserted here.  */
 static char *outfile_mid;
 
 /* Length of OUTFILE's suffix.  */
-static size_t suffix_length = 2;
+static size_t suffix_length = DEFAULT_SUFFIX_LENGTH;
 
 /* Name of input file.  May be "-".  */
 static char *infile;
@@ -107,12 +109,12 @@ PREFIX is `x'.  With no INPUT, or when INPUT is -, read standard input.\n\
       fputs (_("\
 Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
-      fputs (_("\
-  -a, --suffix-length=N   use suffixes of length N (default 2)\n\
+      fprintf (stdout, _("\
+  -a, --suffix-length=N   use suffixes of length N (default %d)\n\
   -b, --bytes=SIZE        put SIZE bytes per output file\n\
   -C, --line-bytes=SIZE   put at most SIZE bytes of lines per output file\n\
   -l, --lines=NUMBER      put NUMBER lines per output file\n\
-"), stdout);
+"), DEFAULT_SUFFIX_LENGTH);
       if (POSIX2_VERSION < 200112)
 	fputs (_("\
   -NUMBER                 (obsolete) same as -l NUMBER\n\
