@@ -37,7 +37,7 @@ n
 EOF
 
 # Remove all but one of a, b, c -- I doubt that this test can portably
-# determine which one was removed based on order or dir entries.
+# determine which one was removed based on order of dir entries.
 # This is a good argument for switching to a dejagnu-style test suite.
 fail=0
 $RM --verbose -i -r $tmp < $test.I > /dev/null 2>&1 || fail=1
