@@ -47,7 +47,7 @@ Print the numeric identifier (in hexadecimal) for the current host.\n\
       --version    output version information and exit\n\
 \n\
 "));
-      puts (_("\nReport bugs to <sh-utils-bugs@gnu.ai.mit.edu>."));
+      puts (_("\nReport bugs to <sh-utils-bugs@gnu.org>."));
     }
   exit (status);
 }

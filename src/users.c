@@ -123,7 +123,7 @@ If FILE is not specified, use %s.  %s as FILE is common.\n\
       --help        display this help and exit\n\
       --version     output version information and exit\n"),
 	      UTMP_FILE, WTMP_FILE);
-      puts (_("\nReport bugs to <sh-utils-bugs@gnu.ai.mit.edu>."));
+      puts (_("\nReport bugs to <sh-utils-bugs@gnu.org>."));
     }
   exit (status);
 }

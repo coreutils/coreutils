@@ -102,7 +102,7 @@ INCREMENT should be positive if FIRST is smaller than LAST, and negative\n\
 otherwise.  When given, the FORMAT argument must contain exactly one of\n\
 the printf-style, floating point output formats %%e, %%f, or %%g.\n\
 "));
-      puts (_("\nReport bugs to <sh-utils-bugs@gnu.ai.mit.edu>."));
+      puts (_("\nReport bugs to <sh-utils-bugs@gnu.org>."));
     }
   exit (status);
 }

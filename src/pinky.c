@@ -426,7 +426,7 @@ usage (int status)
 \n\
 The utmp file will be %s.\n\
 "), UTMP_FILE);
-      puts (_("\nReport bugs to <sh-utils-bugs@gnu.ai.mit.edu>."));
+      puts (_("\nReport bugs to <sh-utils-bugs@gnu.org>."));
     }
   exit (status);
 }

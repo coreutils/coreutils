@@ -374,7 +374,7 @@ usage (int status)
 If FILE is not specified, use %s.  %s as FILE is common.\n\
 If ARG1 ARG2 given, -m presumed: `am i' or `mom likes' are usual.\n\
 "), UTMP_FILE, WTMP_FILE);
-      puts (_("\nReport bugs to <sh-utils-bugs@gnu.ai.mit.edu>."));
+      puts (_("\nReport bugs to <sh-utils-bugs@gnu.org>."));
     }
   exit (status);
 }
