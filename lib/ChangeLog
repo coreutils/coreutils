@@ -1,3 +1,7 @@
+2004-01-29  Jim Meyering  <jim@meyering.net>
+
+	* mountlist.c [HAVE_SYS_UCRED_H]: Include grp.h before sys/ucred.h.
+
 2004-01-21  Paul Eggert  <eggert@twinsun.com>
 
 	* argmatch.c (ARGMATCH_DIE) [! defined ARGMATCH_DIE]:
