@@ -992,6 +992,7 @@ Usage: %s EXPRESSION\n\
 ",
 	      program_name, program_name);
       printf ("\
+Exit with the status determined by EXPRESSION.\n\
 \n\
   --help      display this help and exit\n\
   --version   output version information and exit\n\

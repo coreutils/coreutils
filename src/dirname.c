@@ -41,11 +41,13 @@ usage (status)
   else
     {
       printf ("\
-Usage: %s PATH\n\
+Usage: %s NAME\n\
   or:  %s OPTION\n\
 ",
 	      program_name, program_name);
       printf ("\
+Print NAME with its trailing /component removed; if NAME contains no /'s,\n\
+output `.' (meaning the current directory).\n\
 \n\
   --help      display this help and exit\n\
   --version   output version information and exit\n\

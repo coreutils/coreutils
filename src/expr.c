@@ -109,7 +109,7 @@ Usage: %s EXPRESSION\n\
 \n\
 ");
       printf ("\
-EXPRESSION value is written on standard output.  A white line\n\
+Print the value of EXPRESSION to standard output.  A blank line below\n\
 separates increasing precedence groups.  EXPRESSION may be:\n\
 \n\
   ARG1 | ARG2       ARG1 if it is neither null nor 0, otherwise ARG2\n\
@@ -141,7 +141,7 @@ separates increasing precedence groups.  EXPRESSION may be:\n\
 ");
       printf ("\
 \n\
-Beware that some operators need to be escaped by backslashes for shells.\n\
+Beware that many operators need to be escaped or quoted for shells.\n\
 Comparisons are arithmetic if both ARGs are numbers, else lexicographical.\n\
 Pattern matches return the string matched between \\( and \\) or null; if\n\
 \\( and \\) are not used, they return the number of characters matched or 0.\n\

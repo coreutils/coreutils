@@ -54,12 +54,11 @@ usage (status)
     {
       printf ("Usage: %s [OPTION]...\n", program_name);
       printf ("\
+Print the user name associated with the current effective user id.\n\
+Same as id -un.\n\
 \n\
   --help      display this help and exit\n\
-  --version   output version information and exit\n\
-\n\
-Same as id -un.\n\
-");
+  --version   output version information and exit\n");
     }
   exit (status);
 }

@@ -544,12 +544,11 @@ usage (status)
     {
       printf ("Usage: %s [OPTION]... [ FILE ]\n", program_name);
       printf ("\
+Output who is currently logged in according to FILE.\n\
+If FILE not given, uses /etc/utmp.  /etc/wtmp as FILE is common.\n\
 \n\
       --help        display this help and exit\n\
-      --version     output version information and exit\n\
-\n\
-If FILE not given, uses /etc/utmp.  /etc/wtmp as FILE is common.\n\
-");
+      --version     output version information and exit\n");
     }
   exit (status);
 }

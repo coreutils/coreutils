@@ -67,6 +67,7 @@ usage (status)
     {
       printf ("Usage: %s [OPTION]... [FILE]...\n", program_name);
       printf ("\
+Copy standard input to each FILE, and also to standard output.\n\
 \n\
   -a, --append              append to the given FILEs, do not overwrite\n\
   -i, --ignore-interrupts   ignore interrupt signals\n\

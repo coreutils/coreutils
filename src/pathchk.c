@@ -364,8 +364,9 @@ usage (status)
 	     program_name);
   else
     {
-      printf ("Usage: %s [OPTION]... PATH...\n", program_name);
+      printf ("Usage: %s [OPTION]... NAME...\n", program_name);
       printf ("\
+Diagnose unportable constructs in NAME.\n\
 \n\
   -p, --portability   check for all POSIX systems, not only this one\n\
       --help          display this help and exit\n\

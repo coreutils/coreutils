@@ -74,6 +74,7 @@ usage (status)
     {
       printf ("Usage: %s [OPTION]... [STRING]...\n", program_name);
       printf ("\
+Echo the STRING(s) to standard output.\n\
 \n\
   -n              do not output the trailing newline\n\
   -e              (unused)\n\

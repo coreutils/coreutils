@@ -52,11 +52,13 @@ usage (status)
   else
     {
       printf ("\
-Usage: %s PATH [SUFFIX]\n\
+Usage: %s NAME [SUFFIX]\n\
   or:  %s OPTION\n\
 ",
 	      program_name, program_name);
       printf ("\
+Print NAME with any leading directory components removed.\n\
+If specified, also remove a trailing SUFFIX.\n\
 \n\
   --help      display this help and exit\n\
   --version   output version information and exit\n\

@@ -38,12 +38,10 @@ usage (status)
     {
       printf ("Usage: %s [OPTION]... [STRING]...\n", program_name);
       printf ("\
+Repeatedly output a line with all specified STRING(s), or `y'.\n\
 \n\
   --help      display this help and exit\n\
-  --version   output version information and exit\n\
-\n\
-Without any STRING, assume `y'.\n\
-");
+  --version   output version information and exit\n");
     }
   exit (status);
 }

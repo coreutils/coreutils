@@ -333,6 +333,7 @@ Usage: %s [OPTION]... [+FORMAT]\n\
 ",
 	      program_name, program_name);
       printf ("\
+Display the current time in the given FORMAT, or set the system date.\n\
 \n\
   -d, --date=STRING        display time described by STRING, not `now'\n\
   -f, --file=DATEFILE      like --date once for each line of DATEFILE\n\

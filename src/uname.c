@@ -184,6 +184,7 @@ usage (status)
     {
       printf ("Usage: %s [OPTION]...\n", program_name);
       printf ("\
+Print certain system information.  With no OPTION, same as -s.\n\
 \n\
   -a, --all        print all information\n\
   -m, --machine    print the machine (hardware) type\n\
@@ -192,10 +193,7 @@ usage (status)
   -s, --sysname    print the operating system name\n\
   -v               print the operating system version\n\
       --help       display this help and exit\n\
-      --version    output version information and exit\n\
-\n\
-Without any OPTION, assume -s.\n\
-");
+      --version    output version information and exit\n");
     }
   exit (status);
 }

@@ -28,7 +28,8 @@ usage="Usage: $0 COMMAND [ARG]...
 usage_try="
 Try \`$0 --help' for more information."
 
-usage_help="
+usage_help="Run COMMAND, ignoring hangup signals.
+
   --help      display this help and exit
   --version   output version information and exit"
 

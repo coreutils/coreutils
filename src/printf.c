@@ -96,6 +96,7 @@ Usage: %s FORMAT [ARGUMENT]...\n\
 ",
 	      program_name, program_name);
       printf ("\
+Print ARGUMENT(s) according to FORMAT.\n\
 \n\
   --help      display this help and exit\n\
   --version   output version information and exit\n\

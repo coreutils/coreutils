@@ -42,6 +42,7 @@ usage (status)
     {
       printf ("Usage: %s [OPTION]\n", program_name);
       printf ("\
+Print the full filename of the current working directory.\n\
 \n\
   --help      display this help and exit\n\
   --version   output version information and exit\n\

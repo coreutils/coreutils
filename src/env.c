@@ -193,6 +193,7 @@ usage (status)
       printf ("Usage: %s [OPTION]... [-] [NAME=VALUE]... [COMMAND [ARG]...]\n",
 	      program_name);
       printf ("\
+Set each NAME to VALUE in the environment and run COMMAND.\n\
 \n\
   -u, --unset=NAME           remove variable from the environment\n\
   -i, --ignore-environment   start with an empty environment\n\

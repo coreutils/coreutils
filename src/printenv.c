@@ -65,12 +65,10 @@ usage (status)
     {
       printf ("Usage: %s [OPTION]... [VARIABLE]...\n", program_name);
       printf ("\
+If no environment VARIABLE specified, print them all.\n\
 \n\
   --help      display this help and exit\n\
-  --version   output version information and exit\n\
-\n\
-If no VARIABLE, print them all.\n\
-");
+  --version   output version information and exit\n");
     }
   exit (status);
 }

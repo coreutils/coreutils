@@ -575,8 +575,9 @@ usage (status)
     {
       printf ("Usage: %s [OPTION]... [-] [USER [ARG]...]\n", program_name);
       printf ("\
+Change the effective user id and group id to that of USER.\n\
 \n\
-  -l, --login                  make the shell a login shell\n\
+  -, -l, --login               make the shell a login shell\n\
   -c, --commmand=COMMAND       pass a single COMMAND to the shell with -c\n\
   -f, --fast                   pass -f to the shell (for csh or tcsh)\n\
   -m, --preserve-environment   do not reset environment variables\n\

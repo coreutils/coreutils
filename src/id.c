@@ -361,6 +361,7 @@ usage (status)
     {
       printf ("Usage: %s [OPTION]... [USERNAME]\n", program_name);
       printf ("\
+Print information for USERNAME, or the current user.\n\
 \n\
   -g, --group     print only the group ID\n\
   -G, --groups    print only the supplementary groups\n\

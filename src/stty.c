@@ -466,6 +466,7 @@ Usage: %s [SETTING]...\n\
 ",
 	      program_name, program_name);
       printf ("\
+Print or change terminal characteristics.\n\
 \n\
   -a, --all       print all current settings in human-readable form\n\
   -g, --save      print all current settings in a stty-readable form\n\

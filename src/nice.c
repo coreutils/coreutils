@@ -191,15 +191,14 @@ usage (status)
     {
       printf ("Usage: %s [OPTION]... [COMMAND [ARG]...]\n", program_name);
       printf ("\
+Run COMMAND with an adjusted scheduling priority.\n\
+With no COMMAND, print the current scheduling priority.  ADJUST is 10\n\
+by default.  Range goes from -20 (highest priority) to 19 (lowest).\n\
 \n\
   -ADJUST                   increment priority by ADJUST first\n\
   -n, --adjustment=ADJUST   same as -ADJUST\n\
       --help                display this help and exit\n\
-      --version             output version information and exit\n\
-\n\
-With no COMMAND, print the current scheduling priority.  ADJUST is 10\n\
-by default.  Range goes from -20 (highest priority) to 19 (lowest).\n\
-");
+      --version             output version information and exit\n");
     }
   exit (status);
 }

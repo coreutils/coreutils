@@ -53,12 +53,11 @@ usage (status)
     {
       printf ("Usage: %s [OPTION]... NUMBER[SUFFIX]\n", program_name);
       printf ("\
+Pause for NUMBER seconds.\n\
+SUFFIX may be s to keep seconds, m for minutes, h for hours or d for days.\n\
 \n\
   --help      display this help and exit\n\
-  --version   output version information and exit\n\
-\n\
-SUFFIX may be s for seconds, m for minutes, h for hours or d for days.\n\
-");
+  --version   output version information and exit\n");
     }
   exit (status);
 }

@@ -50,6 +50,7 @@ usage (status)
     {
       printf ("Usage: %s [OPTION]...\n", program_name);
       printf ("\
+Print the name of the current user.\n\
 \n\
   --help      display this help and exit\n\
   --version   output version information and exit\n\

@@ -119,6 +119,7 @@ usage (status)
     {
       printf ("Usage: %s [OPTION]...\n", program_name);
       printf ("\
+Print the file name of the terminal connected to standard input.\n\
 \n\
   -s, --silent, --quiet   print nothing, only return an exit status\n\
       --help              display this help and exit\n\

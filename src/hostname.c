@@ -64,6 +64,7 @@ usage (status)
       printf ("\
 Usage: %s [NAME]\n\
   or:  %s OPTION\n\
+Print the hostname of the current system.\n\
 \n\
   --help      display this help and exit\n\
   --version   output version information and exit\n\
