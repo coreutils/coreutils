@@ -5,7 +5,7 @@
  */
 
 /*
- * sterilize.c - by Colin Plumb.
+ * shred.c - by Colin Plumb.
  *
  * Do a secure overwrite of given files or devices, so that not even
  * very expensive hardware probing can recover the data.
@@ -53,25 +53,12 @@
  * - Security: Is there any risk to the race
  *   between overwriting and unlinking a file?  Will it do anything
  *   drastically bad if told to attack a named pipes or a sockets?
- *
- * - Portability: It's currently only tested on Linux.  Do we need autoconf
- *   for anything?  fdatasync()?  fsync() is always a legal replacement.
- *   I'd prefer to do it in one source file if possible.
  */
 
 
 #include <config.h>
 #include <getopt.h>
-#include <sys/stat.h>		/* For struct stat */
-#include <sys/time.h>		/* For struct timeval */
-#include <stdio.h>
 #include <stdarg.h>		/* Used by pferror */
-#include <stdlib.h>		/* For free() */
-#include <unistd.h>		/* for open(), close(), write(), fstat() */
-#include <fcntl.h>		/* for open(), close(), O_RDWR */
-#include <string.h>		/* For strlen(), memcpy(), memset(), etc. */
-#include <limits.h>		/* For UINT_MAX, etc. */
-#include <errno.h>		/* For errno */
 
 #include "system.h"
 #include "xstrtoul.h"
@@ -136,8 +123,8 @@ Delete a file securely, first overwriting it to hide its contents.\n\
   -p, --preserve do not delete file after overwriting\n\
   -v, --verbose  indicate progress (-vv to leave progress on screen)\n\
   -x, --exact    do not round file sizes up to the next full block\n\
-  -z, --zero     add a final overwrite with zeros to hide sterilization\n\
-  -              sterilize standard input (but don't delete it);\n\
+  -z, --zero     add a final overwrite with zeros to hide shredding\n\
+  -              shred standard input (but don't delete it);\n\
                    this will fail unless you use <>file, a safety feature\n\
       --help     display this help and exit\n\
       --version  print version information and exit\n\
@@ -1377,7 +1364,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("sterilize (%s) %s\n", GNU_PACKAGE, VERSION);
+      printf ("shred (%s) %s\n", GNU_PACKAGE, VERSION);
       close_stdout ();
       exit (0);
     }
