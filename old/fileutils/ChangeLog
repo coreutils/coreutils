@@ -259,8 +259,14 @@ Mon Apr 29 22:07:41 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* POTFILES.in: Add chgrp.c.  From François Pinard.
 	Add dircolors.c.
+	* dircolors.c: New file.  Written by H. Peter Anvin.
 
 Sun Apr 28 16:32:38 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* ls.c: Apply color ls changes by Peter Anvin <Peter.Anvin@linux.org>
+	and Dennis Flaherty <dennisf@denix.elk.miles.com> based on original
+	patches by Greg Lee <lee@uhunix.uhcc.hawaii.edu>.  And on top of all
+	that, a few changes from Ulrich Drepper.
 
 	* ls.c (parse_ls_color): Use strcpy to initialize 3-character array.
 	Automatic aggregate initialization isn't portable.
