@@ -1,7 +1,7 @@
 2000-07-02  Jim Meyering  <meyering@lucent.com>
 
 	* chown.m4: Replace each use of AC_SUBST(LIBOBJS)/LIBOBJS=... with
-	AC_LIBOBJ([function_name]).
+	AC_LIBOBJ(function_name).
 	* chown.m4: Likewise.
 	* fnmatch.m4: Likewise.
 	* ftruncate.m4: Likewise.
