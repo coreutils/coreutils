@@ -21,6 +21,7 @@
 	* src/du.c (pop_dir): New function.
 	(count_entry): Factor out common code (pop_dir), and call the new
 	function instead.
+	Move declaration of global, `stat_buf' into this function.
 	(du_files): Don't stat `.' or call save_cwd, since count_entry
 	never returns with a changed working directory.
 
