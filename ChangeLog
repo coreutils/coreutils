@@ -1,5 +1,7 @@
 2003-10-15  Jim Meyering  <jim@meyering.net>
 
+	* tests/chgrp/recurse: Update tests accordingly.
+
 	chown and chgrp now accept POSIX-mandated -H, -L, -P options and
 	use fts to perform a directory traversal when -R is specified.
 	Before, they used explicit recursion, and as such were limited by
