@@ -2,6 +2,8 @@
 
 	* Version 5.0.1.
 
+	* src/setuidgid.c: New program, solely for testing (not installed).
+
 	* src/chown-core.c (change_file_owner): Don't leak file descriptors
 	when dereferencing symlinks.
 
