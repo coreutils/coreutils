@@ -1,6 +1,10 @@
-2005-03-28  Jim Meyering  <jim@meyering.net>
+2005-03-29  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/uname.c: Indent cpp directives.
+
+2005-03-28  Jim Meyering  <jim@meyering.net>
 
 	* src/seq.c (get_width_format) [HAVE_RINT && HAVE_MODF && HAVE_FLOOR]:
 	Add `void' to make this an ANSI-style function declaration.
