@@ -1,4 +1,4 @@
-#serial 7
+#serial 8
 # Check for several getcwd bugs with long paths.
 # If so, arrange to compile the wrapper function.
 
@@ -6,7 +6,7 @@
 # I've heard that this is due to a Linux kernel bug, and that it has
 # been fixed between 2.4.21-pre3 and 2.4.21-pre4.  */
 
-# Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
@@ -98,11 +98,15 @@ main (void)
       char *c = NULL;
 
       cwd_len += DIR_NAME_SIZE;
-      /* If mkdir or chdir fails, be pessimistic and consider that
-	 as a failure, too.  */
+      /* If mkdir or chdir fails, it could be that this system cannot create
+	 any file with an absolute name longer than PATH_MAX, such as cygwin.
+	 If so, leave fail as 0, because the current working directory can't
+	 be too long for getcwd if it can't even be created.  For other
+	 errors, be pessimistic and consider that as a failure, too.  */
       if (mkdir (DIR_NAME, S_IRWXU) < 0 || chdir (DIR_NAME) < 0)
 	{
-	  fail = 2;
+	  if (! (errno == ERANGE || is_ENAMETOOLONG (errno)))
+	    fail = 2;
 	  break;
 	}
 
