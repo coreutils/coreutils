@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{1999-04-22.19}%
+\def\texinfoversion{1999-04-25.15}%
 %
 % Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99
 % Free Software Foundation, Inc.
@@ -3186,8 +3186,12 @@ width0pt\relax} \fi
 \newcount\subsubsecno  \subsubsecno=0
 
 % This counter is funny since it counts through charcodes of letters A, B, ...
+% The \the is necessary, despite appearances, because \appendixletter is
+% expanded while writing the .toc file.  \char\appendixno is not
+% expandable, thus it is written literally, thus all appendixes come out
+% with the same letter (or @) in the toc without it.
 \newcount\appendixno  \appendixno = `\@
-\def\appendixletter{\char\appendixno}
+\def\appendixletter{\char\the\appendixno}
 
 % Each @chapter defines this as the name of the chapter.
 % page headings and footings can use it.  @section does likewise.
