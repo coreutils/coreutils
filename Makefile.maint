@@ -37,7 +37,8 @@ my-distcheck: dist
 	  && $(MAKE) dvi \
 	  && $(MAKE) check \
 	  && $(MAKE) distclean
-	cd $(t) && $(TAR) --diff -z -f ../$(distdir).tar.gz
+	cd $(t) && $(TAR) -zxf ../$(distdir).tar.gz
+	diff -ur $(t) $(t)/$(distdir)
 	-rm -rf $(t)
 	@echo "========================"; \
 	echo "$(distdir).tar.gz is ready for distribution"; \
@@ -75,6 +76,6 @@ announcement: NEWS ChangeLog $(distdir).tar.gz
 	    | grep -v '^\['; \
 	  echo; \
 	  echo ChangeLog entries:; \
-	  sed -n "/$v $(THIS_VERSION_REGEXP)/,/$v $(PREV_VERSION_REGEXP)/p" \
-	    ChangeLog | grep -v '\* $v'; \
+	  sed -n "1,/$v $(PREV_VERSION_REGEXP)/p" \
+	    ChangeLog; \
 	)
