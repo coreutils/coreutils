@@ -20,10 +20,6 @@
 	* tests/ls/dired: Ensure that ls produces English messages.
 	Patch by Alexey Vyskubov, forwarded by Michael Stone.
 
-2002-10-08  Jim Meyering  <meyering@lucent.com>
-
-	* FIXME: add test case for ln bugfix below
-
 2002-10-08  Dmitry V. Levin  <ldv@altlinux.org>
 
  	* src/ln.c (main): Fix target_directory parsing when n_files == 1.
