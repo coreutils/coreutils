@@ -2,6 +2,8 @@
 
 	* Version 5.3.0.
 
+	* configure.ac: Depend on automake-1.8.3.
+
 	* src/join.c (add_file_name): Declare function to be `static'.
 	(string_to_join_field): Likewise.
 	* src/remove.c (ds_init, ds_free): Likewise.
