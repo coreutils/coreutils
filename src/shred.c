@@ -482,6 +482,25 @@ Delete FILE(s) if --remove (-u) is specified.  The default is not to remove\n\
 the files because it is common to operate on device files like /dev/hda,\n\
 and those files usually should not be removed.  When operating on regular\n\
 files, most people use the --remove option.\n\
+\n\
+CAUTION: Note that shred relies on a very important assumption:\n\
+that the filesystem overwrites data in place.  This is the traditional\n\
+way to do things, but many modern filesystem designs do not satisfy this\n\
+assumption.  The following are examples of filesystems on which shred is\n\
+not effective:\n\
+\n\
+* Log-structured or journaled filesystems, such as those supplied with\n\
+  AIX and Solaris (and JFS, ReiserFS, XFS, etc.).\n\
+\n\
+* Filesystems that write redundant data and carry on even if some writes\n\
+  fail, such as RAID-based filesystems.\n\
+\n\
+* Filesystems that make snapshots, such as Network Appliance's NFS server.\n\
+\n\
+* Filesystems that cache in temporary locations, such as NFS\n\
+  version 3 clients.\n\
+\n\
+* Compressed filesystems.\n\
 "), DEFAULT_PASSES);
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
     }
