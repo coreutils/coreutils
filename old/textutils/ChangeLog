@@ -1,6 +1,17 @@
-2001-11-25  Jim Meyering  <meyering@lucent.com>
+2001-11-27  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.18.
+
+	* src/system.h (SET_MODE) [O_BINARY]: Call setmode, not set_mode.
+	From Matthew Smith.
+
+2001-11-26  Jim Meyering  <meyering@lucent.com>
+
+	* src/cat.c (cat): Don't test whether the full_write return value
+	(of type size_t) is less than 0.  Reported by Nelson H. F. Beebe,
+	as a warning from Irix 6.5's C compiler.
+
+2001-11-25  Jim Meyering  <meyering@lucent.com>
 
 	* src/cksum.c (usage): Indent --help and --version strings to
 	start in the 7th column.
