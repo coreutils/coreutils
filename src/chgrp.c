@@ -27,9 +27,12 @@
 #include "closeout.h"
 #include "error.h"
 #include "group-member.h"
-#include "long-options.h"
 #include "savedir.h"
+#include "version-etc.h"
 #include "xstrtoul.h"
+
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "chgrp"
 
 /* MAXUID may come from limits.h *or* sys/params.h (via system.h) above. */
 #ifndef MAXUID
@@ -107,6 +110,8 @@ static struct option const long_options[] =
   {"quiet", no_argument, 0, 'f'},
   {"reference", required_argument, 0, CHAR_MAX + 1},
   {"verbose", no_argument, 0, 'v'},
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
   {0, 0, 0, 0}
 };
 
@@ -328,9 +333,6 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "chgrp", GNU_PACKAGE, VERSION,
-		      "David MacKenzie", usage);
-
   recurse = force_silent = 0;
 
   while ((optc = getopt_long (argc, argv, "Rcfhv", long_options, NULL)) != -1)
@@ -357,6 +359,8 @@ main (int argc, char **argv)
 	case 'v':
 	  verbosity = V_high;
 	  break;
+	case_GETOPT_HELP_CHAR;
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, "David MacKenzie");
 	default:
 	  usage (1);
 	}
