@@ -1,7 +1,7 @@
 #! /bin/sh
 # depcomp - compile a program generating dependencies as side-effects
 
-scriptversion=2004-04-25.14
+scriptversion=2004-05-31.23
 
 # Copyright (C) 1999, 2000, 2003, 2004 Free Software Foundation, Inc.
 
@@ -288,9 +288,12 @@ tru64)
 
    if test "$libtool" = yes; then
       # Dependencies are output in .lo.d with libtool 1.4.
-      # They are output in .o.d with libtool 1.5.
+      # With libtool 1.5 they are output both in $dir.libs/$base.o.d
+      # and in $dir.libs/$base.o.d and $dir$base.o.d.  We process the
+      # latter, because the former will be cleaned when $dir.libs is
+      # erased.
       tmpdepfile1="$dir.libs/$base.lo.d"
-      tmpdepfile2="$dir.libs/$base.o.d"
+      tmpdepfile2="$dir$base.o.d"
       tmpdepfile3="$dir.libs/$base.d"
       "$@" -Wc,-MD
    else
