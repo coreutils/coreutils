@@ -170,7 +170,7 @@ fstypename.m4 \
 fsusage.m4 \
 ftruncate.m4 \
 ftw.m4 \
-getcwd-robust.m4 \
+getcwd-path-max.m4 \
 getcwd.m4 \
 getgroups.m4 \
 getline.m4 \
