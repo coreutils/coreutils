@@ -2,6 +2,11 @@
 
 	* Version 5.3.0.
 
+	Backslash-escape `-'s in email addresses, so that they are
+	rendered properly in UTF-locales.
+	* man/help2man (escape_hyphens): New function.
+	(main): Call it on email addresses.
+
 	* src/sort.c (zaptemp): Mark new diagnostic for translation.
 
 	* tests/misc/close-stdout: New file.  Test today's closeout.c change.
