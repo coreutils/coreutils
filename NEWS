@@ -14,6 +14,12 @@ GNU coreutils NEWS                                    -*- outline -*-
     The `|' and `&' operators now use short-circuit evaluation, e.g.,
     `expr 1 \| 1 / 0' no longer reports a division by zero.
 
+** New features
+
+  `chown user.group file' now has its traditional meaning even when
+  conforming to POSIX 1003.1-2001, so long as no user has a name
+  containing `.' that happens to equal `user.group'.
+
 
 * Major changes in release 5.2.0 (2004-02-19) [stable]
 
