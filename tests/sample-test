@@ -12,7 +12,7 @@ fi
 # FIXME: PRIV_CHECK_ARG=require-non-root . $srcdir/../priv-check
 
 pwd=`pwd`
-tmp=FIXME.$$
+tmp=`echo "$0"|sed 's,.*/,,'`.tmp
 trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
 trap '(exit $?); exit' 1 2 13 15
 
