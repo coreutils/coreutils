@@ -59,13 +59,12 @@
 # define TOLOWER(c) (ISUPPER (c) ? tolower (c) : (c))
 #endif
 
-/* The string with which to replace NEWLINE characters in filenames.
-   This is required to make it so md5sum --check can parse the output
-   of `md5sum FILENAME' for FILENAME contain NL characters.  */
-#define NEWLINE_REPLACEMENT_STRING "<\"NL'\\>"
-
-#define NEWLINE_REPLACEMENT_STRING_LENGTH \
-    (sizeof (NEWLINE_REPLACEMENT_STRING) - 1)
+/* The minimum length of a valid digest line in a file produced
+   by `md5sum FILE' and read by `md5sum --check'.  This length does
+   not include any newline character at the end of a line.  */
+#define MIN_DIGEST_LINE_LENGTH (32 /* message digest length */ \
+				+ 2 /* blank and binary indicator */ \
+				+ 1 /* minimum filename length */ )
 
 /* Nonzero if any of the files read were the standard input. */
 static int have_read_stdin;
@@ -133,6 +132,7 @@ static int
 split_3 (char *s, size_t s_len, char **u, int *binary, char **w)
 {
   size_t i;
+  int filename_has_newline = 0;
 
 #define ISWHITE(c) ((c) == ' ' || (c) == '\t')
 
@@ -140,45 +140,82 @@ split_3 (char *s, size_t s_len, char **u, int *binary, char **w)
   while (ISWHITE (s[i]))
     ++i;
 
-  /* The line must have at least 35 more characters to contain correct
-     message digest information.  */
-  if (s_len - i >= 32 + 2 + 1)
+  /* The line must have at least 35 (36 if the first is a backslash)
+     more characters to contain correct message digest information.
+     Ignore this line if it is too short.  */
+  if (!(s_len - i >= MIN_DIGEST_LINE_LENGTH
+	|| (s[i] == '\\' && s_len - i >= 1 + MIN_DIGEST_LINE_LENGTH)))
+    return 1
+
+  if (s[i] == '\\')
     {
-      char *p;
-      *u = &s[i];
-
-      /* The first field has to be the 32-character hexadecimal
-	 representation of the message digest.  If it is not followed
-	 immediately by a white space it's an error.  */
-      i += 32;
-      if (!ISWHITE (s[i]))
-	return 1;
-
-      s[i++] = '\0';
-
-      if (s[i] != ' ' && s[i] != '*')
-	return 1;
-      *binary = (s[i++] == '*');
-
-      /* All characters between the type indicator and end of line are
-	 significant -- that includes leading and trailing white space.  */
-      *w = &s[i];
-
-      /* Translate each NEWLINE_REPLACEMENT_STRING in the file name
-	 to a NEWLINE.  */
-      p = &s[i];
-      while ((p = strstr (p, NEWLINE_REPLACEMENT_STRING)))
-	{
-	  size_t len;
-
-	  *p++ = '\n';
-	  len = s_len - (p - s) - (NEWLINE_REPLACEMENT_STRING_LENGTH - 1) + 1;
-	  memmove (p, p + NEWLINE_REPLACEMENT_STRING_LENGTH - 1, len);
-	  s_len -= NEWLINE_REPLACEMENT_STRING_LENGTH - 1;
-	}
-      return 0;
+      ++i;
+      filename_has_newline = 1;
     }
-  return 1;
+  *u = &s[i];
+
+  /* The first field has to be the 32-character hexadecimal
+     representation of the message digest.  If it is not followed
+     immediately by a white space it's an error.  */
+  i += 32;
+  if (!ISWHITE (s[i]))
+    return 1;
+
+  s[i++] = '\0';
+
+  if (s[i] != ' ' && s[i] != '*')
+    return 1;
+  *binary = (s[i++] == '*');
+
+  /* All characters between the type indicator and end of line are
+     significant -- that includes leading and trailing white space.  */
+  *w = &s[i];
+
+  if (filename_has_newline)
+    {
+      /* Translate each `\n' string in the file name to a NEWLINE,
+	 and each `\\' string to a backslash.  */
+
+      char *dst = &s[i];
+
+      while (i < s_len)
+	{
+	  switch (s[i])
+	    {
+	    case '\\':
+	      if (i == s_len - 1)
+		{
+		  /* A valid line does not end with a backslash.  */
+		  return 1;
+		}
+	      ++i;
+	      switch (s[i++])
+		{
+		case 'n':
+		  *dst++ = '\n';
+		  break;
+		case '\\':
+		  *dst++ = '\\';
+		  break;
+		default:
+		  /* Only `\' or `n' may follow a backslash.  */
+		  return 1;
+		}
+	      break;
+
+	    case '\0':
+	      /* The file name may not contain a NUL.  */
+	      return 1;
+	      break;
+
+	    default:
+	      *dst++ = s[i++];
+	      break;
+	    }
+	}
+      *dst = '\0';
+    }
+  return 0;
 }
 
 static int
@@ -522,7 +559,6 @@ main (int argc, char **argv)
 
       for (; optind < argc; ++optind)
 	{
-	  size_t i;
 	  int fail;
 	  char *file = argv[optind];
 
@@ -530,7 +566,12 @@ main (int argc, char **argv)
 	  err |= fail;
 	  if (!fail)
 	    {
-	      size_t filename_len;
+	      size_t i;
+
+	      /* Output a leading backslash if the file name contains
+		 a newline.  */
+	      if (strchr (file, '\n'))
+		putchar ('\\');
 
 	      for (i = 0; i < 16; ++i)
 		printf ("%02x", md5buffer[i]);
@@ -541,16 +582,24 @@ main (int argc, char **argv)
 	      else
 		putchar (' ');
 
-	      /* Translate each NEWLINE byte to the string,
-		 NEWLINE_REPLACEMENT_STRING.  But first record
-		 the length of the filename, FILE.  */
-	      filename_len = strlen (file);
-	      for (i = 0; i < filename_len; ++i)
+	      /* Translate each NEWLINE byte to the string, "\\n",
+		 and each backslash to "\\\\".  */
+	      for (i = 0; i < strlen (file); ++i)
 		{
-		  if (file[i] == '\n')
-		    fputs (NEWLINE_REPLACEMENT_STRING, stdout);
-		  else
-		    putchar (file[i]);
+		  switch (file[i])
+		    {
+		    case '\n':
+		      fputs ("\\n", stdout);
+		      break;
+
+		    case '\\':
+		      fputs ("\\\\", stdout);
+		      break;
+
+		    default:
+		      putchar (file[i]);
+		      break;
+		    }
 		}
 	      putchar ('\n');
 	    }
