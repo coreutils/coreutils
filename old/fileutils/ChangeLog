@@ -1,3 +1,19 @@
+1998-09-26  Jim Meyering  <meyering@ascend.com>
+
+	* src/copy.c (copy_internal): Don't preserve hard-linked directories
+	to avoid damaging the destination filesystem when copying from a
+	Netapp snapshot directory.  With code from Kjetil Torgrim Hollstein
+	and Paul Eggert.
+
+1998-09-24  Jim Meyering  <meyering@ascend.com>
+
+	* man/Makefile.maint ($(man_MANS)): Correct typo: s/-tmp/-t/.
+	From Akim Demaille.
+
+1998-09-21  Jim Meyering  <meyering@ascend.com>
+
+	* man/Makefile.maint ($(man_MANS)): Remove `echo'.
+
 1998-09-20  Jim Meyering  <meyering@ascend.com>
 
 	* Version 3.16y.
