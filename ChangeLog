@@ -2,10 +2,18 @@
 
 	* Version 4.5.4.
 
+	* src/ls.c (restore_default_color_handler, sigtstp_handler):
+	Remove functions.
+	(sighandler): New function, based on the one in sort.c.
+	(main): Use sigaction, if possible; otherwise signal.
+	Handle these signals:
+	SIGHUP, SIGINT, SIGPIPE, SIGQUIT, SIGTERM, SIGTSTP.
+	Don't register our handler if the signal is already being ignored.
+
 	* src/dd.c (interrupt_handler): Use raise, rather than kill+getpid.
 	* src/csplit.c (interrupt_handler): Likewise.
 	* src/sort.c (sighandler): Likewise.
-	(main): Declare `nsigs' to be unsigned, not int.
+	(main): Declare `i' and `nsigs' to be unsigned, not int.
 
 2002-11-09  Jim Meyering  <jim@meyering.net>
 
