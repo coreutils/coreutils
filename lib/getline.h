@@ -1,4 +1,4 @@
-/*  Copyright (C) 1995, 1997, 1999 Free Software Foundation, Inc.
+/*  Copyright (C) 1995, 1997, 1999, 2000-2002 Free Software Foundation, Inc.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 #ifndef GETLINE_H_
 # define GETLINE_H_ 1
 
+# include <stddef.h>
 # include <stdio.h>
 
 # ifndef PARAMS
@@ -27,12 +28,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 #  endif
 # endif
 
+/* glibc2 has these functions declared in <stdio.h>.  Avoid redeclarations.  */
 # if __GLIBC__ < 2
+
 int
 getline PARAMS ((char **_lineptr, size_t *_n, FILE *_stream));
 
 int
 getdelim PARAMS ((char **_lineptr, size_t *_n, int _delimiter, FILE *_stream));
+
 # endif
 
 #endif /* not GETLINE_H_ */
