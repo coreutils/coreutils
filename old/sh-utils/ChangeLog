@@ -1,5 +1,13 @@
 Sat Oct  5 11:38:23 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* configure.in: Use AM_SANITY_CHECK_CC.
+
+	* configure.in: Use AM_FUNC_ERROR_AT_LINE.
+	* lib/Makefile.am (EXTRA_DIST): Put error.c here.
+	(su_SOURCES): Remove error.c
+	Suggested by Ulrich Drepper.
+
+	* configure.in (GNU_PACKAGE): AC_SUBST it for the src/*.sh scripts.
 	* src/Makefile.am (.sh): Substitute for @GNU_PACKAGE@ and @VERSION@
 	in the four installed scripts.
 	* src/*.sh: Update --version output to conform to the coding standard.
