@@ -31,6 +31,7 @@
 
 #include "error.h"
 #include "linebuffer.h"
+#include "quote.h"
 #include "xstrtol.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -465,6 +466,7 @@ main (int argc, char **argv)
 {
   int c, exit_status = 0;
   size_t len;
+  int fail = 0;
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -485,15 +487,27 @@ main (int argc, char **argv)
 
 	case 'h':
 	  if (build_type_arg (&header_type, &header_regex) != TRUE)
-	    usage (2);
+	    {
+	      error (0, 0, _("invalid header numbering style: %s"),
+		     quote (optarg));
+	      fail = 1;
+	    }
 	  break;
 	case 'b':
 	  if (build_type_arg (&body_type, &body_regex) != TRUE)
-	    usage (2);
+	    {
+	      error (0, 0, _("invalid body numbering style: %s"),
+		     quote (optarg));
+	      fail = 1;
+	    }
 	  break;
 	case 'f':
 	  if (build_type_arg (&footer_type, &footer_regex) != TRUE)
-	    usage (2);
+	    {
+	      error (0, 0, _("invalid footer numbering style: %s"),
+		     quote (optarg));
+	      fail = 1;
+	    }
 	  break;
 	case 'v':
 	  {
@@ -501,9 +515,15 @@ main (int argc, char **argv)
 	    if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
 		/* Allow it to be negative.  */
 		|| tmp_long > INT_MAX)
-	      error (EXIT_FAILURE, 0, _("invalid starting line number: `%s'"),
-		     optarg);
-	    starting_line_number = (int) tmp_long;
+	      {
+		error (0, 0, _("invalid starting line number: %s"),
+		       quote (optarg));
+		fail = 1;
+	      }
+	    else
+	      {
+		starting_line_number = (int) tmp_long;
+	      }
 	  }
 	  break;
 	case 'i':
@@ -511,9 +531,15 @@ main (int argc, char **argv)
 	    long int tmp_long;
 	    if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
 		|| tmp_long <= 0 || tmp_long > INT_MAX)
-	      error (EXIT_FAILURE, 0, _("invalid line number increment: `%s'"),
-		     optarg);
-	    page_incr = (int) tmp_long;
+	      {
+		error (0, 0, _("invalid line number increment: %s"),
+		       quote (optarg));
+		fail = 1;
+	      }
+	    else
+	      {
+		page_incr = (int) tmp_long;
+	      }
 	  }
 	  break;
 	case 'p':
@@ -524,9 +550,15 @@ main (int argc, char **argv)
 	    long int tmp_long;
 	    if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
 		|| tmp_long <= 0 || tmp_long > INT_MAX)
-	      error (EXIT_FAILURE, 0, _("invalid number of blank lines: `%s'"),
-		     optarg);
-	    blank_join = (int) tmp_long;
+	      {
+		error (0, 0, _("invalid number of blank lines: %s"),
+		       quote (optarg));
+		fail = 1;
+	      }
+	    else
+	      {
+		blank_join = (int) tmp_long;
+	      }
 	  }
 	  break;
 	case 's':
@@ -537,38 +569,29 @@ main (int argc, char **argv)
 	    long int tmp_long;
 	    if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
 		|| tmp_long <= 0 || tmp_long > INT_MAX)
-	      error (EXIT_FAILURE, 0,
-		     _("invalid line number field width: `%s'"),
-		     optarg);
-	    lineno_width = (int) tmp_long;
+	      {
+		error (0, 0, _("invalid line number field width: %s"),
+		       quote (optarg));
+		fail = 1;
+	      }
+	    else
+	      {
+		lineno_width = (int) tmp_long;
+	      }
 	  }
 	  break;
 	case 'n':
-	  switch (*optarg)
+	  if (STREQ (optarg, "ln"))
+	    lineno_format = FORMAT_LEFT;
+	  else if (STREQ (optarg, "rn"))
+	    lineno_format = FORMAT_RIGHT_NOLZ;
+	  else if (STREQ (optarg, "rz"))
+	    lineno_format = FORMAT_RIGHT_LZ;
+	  else
 	    {
-	    case 'l':
-	      if (optarg[1] == 'n')
-		lineno_format = FORMAT_LEFT;
-	      else
-		usage (2);
-	      break;
-	    case 'r':
-	      switch (optarg[1])
-		{
-		case 'n':
-		  lineno_format = FORMAT_RIGHT_NOLZ;
-		  break;
-		case 'z':
-		  lineno_format = FORMAT_RIGHT_LZ;
-		  break;
-		default:
-		  usage (2);
-		  break;
-		}
-	      break;
-	    default:
-	      usage (2);
-	      break;
+	      error (0, 0, _("invalid line numbering format: %s"),
+		     quote (optarg));
+	      fail = 1;
 	    }
 	  break;
 	case 'd':
@@ -577,10 +600,13 @@ main (int argc, char **argv)
 	case_GETOPT_HELP_CHAR;
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 	default:
-	  usage (2);
+	  fail = 1;
 	  break;
 	}
     }
+
+  if (fail)
+    usage (2);
 
   /* Initialize the section delimiters.  */
   len = strlen (section_del);
