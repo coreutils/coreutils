@@ -1653,8 +1653,13 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @item +@var{first_page}[:@var{last_page}]
 @itemx --pages=@var{first_page}[:@var{last_page}]
-@opindex +@var{first_page}[:@var{last_page}]
-@opindex --pages
+@c The two following @opindex lines evoke warnings because they contain `:'
+@c The `info' spec does not permit that.  If we use those lines, we end
+@c up with truncated index entries that don't work.
+@c @opindex +@var{first_page}[:@var{last_page}]
+@c @opindex --pages=@var{first_page}[:@var{last_page}]
+@opindex +@var{page_range}
+@opindex --pages=@var{page_range}
 Begin printing with page @var{first_page} and stop with @var{last_page}.
 Missing @samp{:@var{last_page}} implies end of file.  While estimating
 the number of skipped pages each form feed in the input file results
