@@ -1,11 +1,12 @@
 User visible changes in release 1.13
+* `date -d "01/01/1998 3 years" +%Y' now works properly.  It prints 2001.
 * expr's match operator has been corrected to use basic regular expressions
 * New programs: factor, seq.
 * date accepts new option --rfc-822 (-R) and new %z format.
 * date: fix bugs in the handling of date -u +'%s %Z'.
 * date accepts new option --reference=FILE (-r FILE) analogous to the
   like-named touch option.
-* date can now format dates up to 2037
+* date can now format dates up to and including ones in the year 2037
 User visible changes in release 1.12
 * None.
 User visible changes in release 1.11
