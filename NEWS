@@ -1,3 +1,4 @@
+[5.0]
 [4.5.12]
 * printf no longer treats \x specially when POSIXLY_CORRECT is set
 * printf avoids buffer overrun with format ending in a backslash and
@@ -352,6 +353,9 @@ point at which the packages merged to form the coreutils:
   there is any time remaining
 * who once again prints whatever host information it has, even without --lookup
 
+========================================================================
+For older NEWS entries for the fileutils, textutils, and sh-utils
+packages, see ./old/*/NEWS.
 
   This package began as the union of the following:
   textutils-2.1, fileutils-4.1.11, sh-utils-2.0.15.
