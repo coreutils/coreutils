@@ -2,6 +2,9 @@
 
 	* Version 2.0.22.
 
+	* Upgrade to cvs automake -- required to work with 2.53b.
+	* configure.ac: Require automake-1.6a.
+
 	* Upgrade to gettext-0.11.3.
 	* Upgrade to autoconf-2.53b.
 
