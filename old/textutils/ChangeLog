@@ -1,6 +1,22 @@
+2000-05-27  Jim Meyering  <meyering@lucent.com>
+
+	* src/tail.c: Arrange to call close_stdout upon exit.
+	Don't close stdout explicitly.
+	(usage): Add missing backslash at end of line.
+	(write_header): Remove now-unused COMMENT parameter.
+	Update all callers.
+
+2000-05-24  Jim Meyering  <meyering@lucent.com>
+
+	* src/head.c (head_file): Use STDIN_FILENO in place of `0'.
+	(main): Likewise.
+
 2000-05-20  Jim Meyering  <meyering@lucent.com>
 
-	* src/cat.c: FIXME
+	* src/cat.c: Arrange to call close_stdout upon exit.
+	Don't close stdout explicitly.  Replace uses of global constant,
+	output_desc, with uses of STDOUT_FILENO.
+
 	* src/tail.c: FIXME
 
 	Arrange to call close_stdout upon exit.  Don't close stdout explicitly.
@@ -28,7 +44,6 @@
 	* src/unexpand.c: Likewise.
 	* src/uniq.c: Likewise.
 	* src/wc.c:: Likewise.
-
 
 2000-05-13  Jim Meyering  <meyering@lucent.com>
 
