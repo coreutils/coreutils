@@ -22,6 +22,14 @@ enum Sparse_type
   SPARSE_ALWAYS
 };
 
+/* This type is used to help mv (via copy.c) distinguish these cases.  */
+enum Interactive
+{
+  I_OFF = 1,
+  I_ON,
+  I_UNSPECIFIED
+};
+
 enum Dereference_symlink
 {
   DEREF_UNDEFINED = 1,
@@ -69,9 +77,10 @@ struct cp_options
      Create destination directories as usual. */
   int hard_link;
 
-  /* If nonzero, query before overwriting existing destinations
-     with regular files. */
-  int interactive;
+  /* This value is used to determine whether to prompt before removing
+     each existing destination file.  It works differently depending on
+     whether move_mode is set.  See code/comments in copy.c.  */
+  enum Interactive interactive;
 
   /* If nonzero, rather than copying, first attempt to use rename.
      If that fails, then resort to copying.  */
@@ -128,6 +137,9 @@ struct cp_options
   /* A pointer to either lstat or stat, depending on
      whether the copy should dereference symlinks.  */
   int (*xstat) ();
+
+  /* If nonzero, stdin is a tty.  */
+  int stdin_tty;
 };
 
 int stat ();
