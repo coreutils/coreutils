@@ -1,4 +1,5 @@
 Changes in release 4.1:
+[4.0m]
 [4.0l]
 * ls -l honors a trailing slash on a symlink argument, per POSIX.
 * shred no longer appears to infloop when asked to remove files in
