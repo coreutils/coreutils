@@ -815,6 +815,10 @@ main (int argc, char **argv)
     error (1, errno, _("both files cannot be standard input"));
   join (fp1, fp2);
 
+  if (fp1 != stdin && fclose (fp1) == EOF)
+    error (1, errno, "%s", names[0]);
+  if (fp2 != stdin && fclose (fp2) == EOF)
+    error (1, errno, "%s", names[1]);
   if ((fp1 == stdin || fp2 == stdin) && fclose (stdin) == EOF)
     error (1, errno, "-");
   if (ferror (stdout) || fclose (stdout) == EOF)
