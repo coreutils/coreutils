@@ -1687,6 +1687,15 @@ main (int argc, char **argv)
       static char *dummy_stdin = "-";
       n_files = 1;
       file = &dummy_stdin;
+
+      /* POSIX says that -f is ignored if no file operand is specified
+	 and standard input is a pipe.  */
+      if (forever)
+	{
+	  struct stat stats;
+	  if (fstat (STDIN_FILENO, &stats) == 0 && S_ISFIFO (stats.st_mode))
+	    forever = false;
+	}
     }
 
   {
