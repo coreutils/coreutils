@@ -30,6 +30,7 @@
 #include "system.h"
 #include "dirname.h"
 #include "error.h"
+#include "getpagesize.h"
 #include "full-read.h"
 #include "full-write.h"
 #include "inttostr.h"
@@ -373,6 +374,7 @@ main (int argc, char **argv)
     } split_type = type_undef;
   size_t in_blk_size;		/* optimal block size of input file device */
   char *buf;			/* file i/o buffer */
+  size_t page_size = getpagesize ();
   uintmax_t n_units;
   int c;
   int digits_optind = 0;
@@ -555,7 +557,7 @@ main (int argc, char **argv)
     error (EXIT_FAILURE, errno, "%s", infile);
   in_blk_size = ST_BLKSIZE (stat_buf);
 
-  buf = xmalloc (in_blk_size + 1);
+  buf = ptr_align (xmalloc (in_blk_size + 1 + page_size - 1), page_size);
 
   switch (split_type)
     {
