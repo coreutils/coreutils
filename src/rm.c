@@ -382,8 +382,8 @@ full_filename (const char *filename)
   if (n_bytes_needed > n_allocated)
     {
       /* This code requires that realloc accept NULL as the first arg.
-         This function cannot use xrealloc.  Otherwise, out-of-memory
-	 errors involving a file name to be expanded here wouldn't ever
+         This function must not use xrealloc.  Otherwise, an out-of-memory
+	 error involving a file name to be expanded here wouldn't ever
 	 be issued.  Use realloc and fall back on using a static buffer
 	 if memory allocation fails.  */
       buf = realloc (buf, n_bytes_needed);
