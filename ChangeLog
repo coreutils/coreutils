@@ -2,6 +2,9 @@
 
 	* Version 4.5.7.
 
+	* tests/du/restore-wd: New test for just-fixed bug in ftw.c.
+	* tests/du/Makefile.am (TESTS): Add restore-wd.
+
 	* src/rm.c: Correct now-invalid comment about cycle-detection.
 
 2003-02-06  Jim Meyering  <jim@meyering.net>
