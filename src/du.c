@@ -504,7 +504,7 @@ count_entry (ent, top, last_dev)
 	 a symlink, remember the current directory so we can return to it
 	 later.  In other cases, chdir ("..") works fine.  */
       through_symlink = (xstat == safe_stat
-			 && safe_lstat (ent, &e_buf)
+			 && safe_lstat (ent, &e_buf) == 0
 			 && S_ISLNK (e_buf.st_mode));
       if (through_symlink)
 	save_cwd (&cwd);
