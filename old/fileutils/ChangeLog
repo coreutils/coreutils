@@ -2,6 +2,11 @@
 
 	* Version 4.1.1.
 
+	* src/copy.h (struct cp_options): Rename members:
+	s/preserve_owner_and_group/preserve_ownership/, and
+	s/preserve_chmod_bits/preserve_mode/.
+	* src/copy.c, src/cp.c, src/install.c, src/mv.c: Update all uses.
+
 	* man/chown.x: Fix typo: s/Sh/SH/ before OPTIONS.
 	Reported by Eric S. Raymond.
 
