@@ -192,8 +192,7 @@ head_file (const char *filename, uintmax_t n_units, int count_lines)
       filename = _("standard input");
       if (print_headers)
 	write_header (filename);
-      /* FIXME: use STDIN_FILENO, not `0' */
-      return head (filename, 0, n_units, count_lines);
+      return head (filename, STDIN_FILENO, n_units, count_lines);
     }
   else
     {
@@ -385,7 +384,7 @@ main (int argc, char **argv)
   for (; optind < argc; ++optind)
     exit_status |= head_file (argv[optind], n_units, count_lines);
 
-  if (have_read_stdin && close (0) < 0)
+  if (have_read_stdin && close (STDIN_FILENO) < 0)
     error (EXIT_FAILURE, errno, "-");
 
   exit (exit_status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
