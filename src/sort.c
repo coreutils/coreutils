@@ -1773,7 +1773,12 @@ main (int argc, char **argv)
 	  if (digits[UCHAR (*s)] || (*s == '.' && digits[UCHAR (s[1])]))
 	    {
 	      if (!key)
-		usage (SORT_FAILURE);
+		{
+		  /* Provoke with `sort -9'.  */
+		  error (0, 0, _("when using the old-style +POS and -POS \
+key specifiers,\nthe +POS specifier must come first"));
+		  usage (SORT_FAILURE);
+		}
 	      for (t = 0; digits[UCHAR (*s)]; ++s)
 		t = t * 10 + *s - '0';
 	      t2 = 0;
