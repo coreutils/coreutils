@@ -13,7 +13,7 @@ libfetish_a_SOURCES = \
   full-write.c getopt.c getopt1.c getstr.c getugroups.c hard-locale.c hash.c \
   human.c idcache.c isdir.c linebuffer.c localcharset.c long-options.c \
   makepath.c mbswidth.c md5.c memcasecmp.c memcoll.c modechange.c \
-  path-concat.c \
+  path-concat.c physmem.c \
   quote.c quotearg.c readtokens.c safe-read.c same.c save-cwd.c \
   savedir.c sha.c stripslash.c unicodeio.c userspec.c version-etc.c xgetcwd.c \
   xgethostname.c xmalloc.c xstrdup.c xstrtod.c xstrtol.c xstrtoul.c \
@@ -29,7 +29,8 @@ noinst_HEADERS = \
   getstr.h getpagesize.h group-member.h hard-locale.h hash.h human.h lchown.h \
   linebuffer.h long-options.h mbswidth.h md5.h memcasecmp.h memcoll.h \
   makepath.h mbswidth.h modechange.h mountlist.h nanosleep.h obstack.h \
-  path-concat.h pathmax.h posixtm.h quote.h quotearg.h readtokens.h \
+  path-concat.h pathmax.h physmem.h posixtm.h \
+  quote.h quotearg.h readtokens.h \
   readutmp.h regex.h safe-read.h same.h save-cwd.h savedir.h sha.h \
   strverscmp.h unicodeio.h version-etc.h xalloc.h xstrtod.h xstrtol.h
 
