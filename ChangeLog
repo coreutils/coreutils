@@ -1,3 +1,42 @@
+2003-08-02  Paul Eggert  <eggert@twinsun.com>
+
+	* src/sort.c: Minor code cleanups, mostly to use more accurate
+	types and to remove unnecessary casts.
+	(min, max): Remove.  All uses changed to MIN and MAX.
+	(hard_lc_collate, hard_LC_TIME, struct buffer.eof, struct
+	keyfield.skipsblanks, struct keyfield.skipeblanks, struct
+	keyfield.numeric, struct keyfield.general_numeric, struct
+	keyfield.month, struct keyfield.reverse, reverse, unique,
+	have_read_stdin): Now bool, not int.  All uses changed.
+	(eolchar): Now char, not int.
+	(struct keyfield.ignore): Now bool const *, not int *.
+	(struct keyfield.translate): Now char const *, not char *.
+	(struct month.name): Likewise.
+	(blanks, nonprinting, nondictionary): Now bool[], not int[].
+	(cleanup, inittables, keycompare, check, mergefps, first_same_file,
+	check, sort, main): Use const * pointers when possible.
+	(month_cmp): Rewrite to avoid casts.
+	(inittables): Initialize tables unconditionally, to avoid branches.
+	(fillbuf): Return bool, not int.  All uses changed.
+	(fillbuf, keycompare, new_key, main):
+	Use SIZE_MAX rather than (size_t) -1.
+	(trailing_blanks): Renamed from trim_trailing_blanks.
+	Return the number of blanks to trim.  All uses changed.
+	(getmonth): Use trailing_blanks rather than open code.
+	(keycompare): Do not cast char * to unsigned char *; not needed.
+	CMP_WITH_IGNORE converts args to UCHAR, so no need to convert it
+	ourselves.
+	(compare, main): Use | rather than || to avoid jumps.
+	Replace "diff = NONZERO (alen)" with "diff = 1", since alen must
+	be nonzero there.
+	(check, first_same_file, sort, main):
+	Use bool instead of int local vars when possible.
+	(check): Merge the old 'checkfp' and 'check' into a single function,
+	that returns a boolean (true if the file was ordered).
+	All uses changed.
+	(main): Use int instead of unsigned for iterating through nsigs.
+	Rename local var "posix_pedantic" to "posixly_correct".
+
 2003-08-02  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.91.
