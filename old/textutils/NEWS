@@ -3,6 +3,8 @@ Changes in release 2.1
 * tsort now works more like the traditional UNIX tsort.  Before it would
   exit when it found a loop.  Now it continues and outputs all items.
 * unexpand no longer infloops on certain sequences of white space
+* unified lib/: now that directory and most of the configuration framework
+  is common between fileutils, textutils, and sh-utils
 [2.0c]
 * include lib/nanosleep.h.
 [2.0b]
