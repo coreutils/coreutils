@@ -147,24 +147,24 @@ FORMAT controls the output.  The only valid option for the second form\n\
 specifies Coordinated Universal Time.  Interpreted sequences are:\n\
 \n\
   %%   a literal %\n\
-  %a   locale's abbreviated weekday name (Sun..Sat)\n\
+  %a   locale's abbreviated weekday name (e.g., Sun)\n\
 "), stdout);
       fputs (_("\
-  %A   locale's full weekday name, variable length (Sunday..Saturday)\n\
-  %b   locale's abbreviated month name (Jan..Dec)\n\
-  %B   locale's full month name, variable length (January..December)\n\
-  %c   locale's date and time (Sat Nov 04 12:02:33 EST 1989)\n\
+  %A   locale's full weekday name (e.g., Sunday)\n\
+  %b   locale's abbreviated month name (e.g., Jan)\n\
+  %B   locale's full month name (e.g., January)\n\
+  %c   locale's date and time (e.g., Thu Mar  3 23:05:25 2005)\n\
 "), stdout);
       fputs (_("\
-  %C   century (year divided by 100 and truncated to an integer) [00-99]\n\
-  %d   day of month (01..31)\n\
-  %D   date (mm/dd/yy)\n\
-  %e   day of month, blank padded ( 1..31)\n\
+  %C   century; like %Y, except omit last two digits (e.g., 21)\n\
+  %d   day of month (e.g, 01)\n\
+  %D   date; same as %m/%d/%y\n\
+  %e   day of month, space padded; same as %_d\n\
 "), stdout);
       fputs (_("\
-  %F   same as %Y-%m-%d\n\
-  %g   the 2-digit year corresponding to the %V week number\n\
-  %G   the 4-digit year corresponding to the %V week number\n\
+  %F   full date; same as %Y-%m-%d\n\
+  %g   the last two digits of the year corresponding to the %V week number\n\
+  %G   the year corresponding to the %V week number\n\
 "), stdout);
       fputs (_("\
   %h   same as %b\n\
@@ -181,39 +181,49 @@ specifies Coordinated Universal Time.  Interpreted sequences are:\n\
       fputs (_("\
   %n   a newline\n\
   %N   nanoseconds (000000000..999999999)\n\
-  %p   locale's upper case AM or PM indicator (blank in many locales)\n\
-  %P   locale's lower case am or pm indicator (blank in many locales)\n\
-  %r   time, 12-hour (hh:mm:ss [AP]M)\n\
-  %R   time, 24-hour (hh:mm)\n\
-  %s   seconds since `00:00:00 1970-01-01 UTC' (a GNU extension)\n\
+  %p   locale's equivalent of either AM or PM; blank if not known\n\
+  %P   like %p, but lower case\n\
+  %r   locale's 12-hour clock time (e.g., 11:11:04 PM)\n\
+  %R   24-hour hour and minute; same as %H:%M\n\
+  %s   seconds since 1970-01-01 00:00:00 UTC\n\
 "), stdout);
       fputs (_("\
-  %S   second (00..60); the 60 is necessary to accommodate a leap second\n\
-  %t   a horizontal tab\n\
-  %T   time, 24-hour (hh:mm:ss)\n\
-  %u   day of week (1..7);  1 represents Monday\n\
+  %S   second (00..60)\n\
+  %t   a tab\n\
+  %T   time; same as %H:%M:%S\n\
+  %u   day of week (1..7); 1 is Monday\n\
 "), stdout);
       fputs (_("\
   %U   week number of year with Sunday as first day of week (00..53)\n\
   %V   week number of year with Monday as first day of week (01..53)\n\
-  %w   day of week (0..6);  0 represents Sunday\n\
+  %w   day of week (0..6); 0 is Sunday\n\
   %W   week number of year with Monday as first day of week (00..53)\n\
 "), stdout);
       fputs (_("\
-  %x   locale's date representation (mm/dd/yy)\n\
-  %X   locale's time representation (%H:%M:%S)\n\
+  %x   locale's date representation (e.g., 12/31/99)\n\
+  %X   locale's time representation (e.g., 23:13:48)\n\
   %y   last two digits of year (00..99)\n\
-  %Y   year (1970...)\n\
+  %Y   year\n\
 "), stdout);
       fputs (_("\
-  %z   RFC-2822 style numeric timezone (-0500) (a nonstandard extension)\n\
-  %Z   time zone (e.g., EDT), or nothing if no time zone is determinable\n\
+  %z   numeric timezone (e.g., -0400)\n\
+  %Z   alphabetic time zone abbreviation (e.g., EDT)\n\
 \n\
-By default, date pads numeric fields with zeroes.  GNU date recognizes\n\
-the following modifiers between `%' and a numeric directive.\n\
+By default, date pads numeric fields with zeroes.\n\
+The following optional flags may follow `%':\n\
 \n\
-  `-' (hyphen) do not pad the field\n\
-  `_' (underscore) pad the field with spaces\n\
+  - (hyphen) do not pad the field\n\
+  _ (underscore) pad with spaces\n\
+  0 (zero) pad with zeros\n\
+  ^ use upper case if possible\n\
+  # use opposite case if possible\n\
+"), stdout);
+      fputs (_("\
+\n\
+After any flags comes an optional field width, as a decimal number;\n\
+then an optional modifier, which is either\n\
+E to use the locale's alternate representations if available, or\n\
+O to use the locale's alternate numeric symbols if available.\n\
 "), stdout);
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
