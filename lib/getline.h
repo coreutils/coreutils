@@ -14,8 +14,8 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-#ifndef _getline_h_
-# define _getline_h_ 1
+#ifndef GETLINE_H_
+# define GETLINE_H_ 1
 
 # include <stdio.h>
 
@@ -33,4 +33,4 @@ getline PARAMS ((char **_lineptr, size_t *_n, FILE *_stream));
 int
 getdelim PARAMS ((char **_lineptr, size_t *_n, int _delimiter, FILE *_stream));
 
-#endif
+#endif /* not GETLINE_H_ */
