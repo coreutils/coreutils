@@ -2,6 +2,12 @@
 
 	* Version 2.0.12.
 
+	* man/pwd.x: Add note to help people understand that this documentation
+	may not refer to the (shell built-in) command they're running.
+	* man/echo.x: Likewise.
+	* man/printf.x: Likewise.
+	From Michael Stone.
+
 	* Makefile.am (AUTOMAKE_OPTIONS): Require automake-1.5.
 
 	* man/Makefile.am: Revamp this file, as for fileutils.
