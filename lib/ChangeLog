@@ -19,6 +19,12 @@
 
 2000-10-21  Jim Meyering  <meyering@lucent.com>
 
+	* dirname.c (dir_name_r): New function, factored out of dir_name.
+	(dir_name): Use dir_name_r.
+	* dirname.h (dir_name_r): Declare it.
+
+2000-10-21  Jim Meyering  <meyering@lucent.com>
+
 	* dirname.c (memrchr): Declare if necessary.
 	(dir_name): Remove the restriction that there be no
 	trailing slashes.  Now, this code skips past them, effectively
