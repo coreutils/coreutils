@@ -225,6 +225,9 @@ rel-check:
 prev-tgz = $(PACKAGE)-$(PREV_VERSION).tar.gz
 xd-delta = $(PACKAGE)-$(PREV_VERSION)-$(VERSION).xdelta
 
+news-r1 = /^[^ ].*$(THIS_VERSION_REGEXP)[]:]/
+news-r2 = /^[^ ].*$(PREV_VERSION_REGEXP)[]:]/
+
 rel-files = $(xd-delta) $(distdir).tar.bz2 $(distdir).tar.gz
 announcement: NEWS ChangeLog $(rel-files)
 	@( \
@@ -253,7 +256,7 @@ announcement: NEWS ChangeLog $(rel-files)
 	  echo "$(xdelta-sha1)  $(xd-delta)"; \
 	  echo; \
 	  echo NEWS:; \
-	  sed -n "/$(THIS_VERSION_REGEXP)[]:]/,/$(PREV_VERSION_REGEXP)[]:]/p" NEWS \
+	  sed -n "$(news-r1),(news-r2)p" NEWS \
 	    | grep -v '^\['; \
 	  echo; \
 	  echo ChangeLog entries:; \
