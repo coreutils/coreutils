@@ -11,4 +11,5 @@ safe-lstat.h
 safe-stat.c
 safe-stat.h
 stat.c
+stdbool_.h
 unlocked-io.h
