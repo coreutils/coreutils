@@ -1,3 +1,8 @@
+2000-07-05  Paul Eggert  <eggert@twinsun.com>
+	and Bruno Haible  <haible@clisp.cons.org>
+
+	* quotearg.c (mbrtowc): Declare returned type, since BeOS doesn't.
+
 2000-07-05  Bruno Haible  <haible@clisp.cons.org>
 
 	* quotearg.c (struct quoting_options): Simplify quote_these_too
