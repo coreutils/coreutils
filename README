@@ -19,8 +19,13 @@ See the file NEWS for a list of major changes in the current release.
 
 See the file INSTALL for compilation and installation instructions.
 
-These programs are intended to be POSIX.2 compliant (with BSD and other
-extensions), like the rest of the GNU system.
+These programs are intended to conform to POSIX (with BSD and other
+extensions), like the rest of the GNU system.  By default they conform
+to older POSIX (1003.2-1992), and therefore support obsolete usages
+like "head -10" and "chown owner.group file".  This default is
+overridden at build-time by the value of <unistd.h>'s _POSIX2_VERSION
+macro, and this in turn can be overridden at runtime as described in
+the documentation under "Standards conformance".
 
 The ls, dir, and vdir commands are all separate executables instead of
 one program that checks argv[0] because people often rename these
