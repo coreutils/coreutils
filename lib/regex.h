@@ -523,11 +523,11 @@ extern int re_exec _RE_ARGS ((const char *));
 #   define __restrict
 #  endif
 # endif
+#endif
 /* For now unconditionally define __restrict_arr to expand to nothing.
    Ideally we would have a test for the compiler which allows defining
    it to restrict.  */
-# define __restrict_arr
-#endif
+#define __restrict_arr
 
 /* POSIX compatibility.  */
 extern int regcomp _RE_ARGS ((regex_t *__restrict __preg,
