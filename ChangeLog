@@ -22,6 +22,8 @@
 	temporary file twice, and the second time this happens the file
 	might already have been created by some other process.
 
+	(zaptemp): Warn if a temporary file is not removed.
+
 	(create_temp_file): Use offsetof for clarity.
 	(die): Move it up earlier, to clean up the code a bit.
 
