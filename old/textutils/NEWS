@@ -1,4 +1,6 @@
 Changes in release 1.23
+[1.22m]
+* fix dates on config files so builders don't need autoconf/automake
 [1.22l]
 * sort no longer autodetects the locale of numbers and months,
    as that conflicts with POSIX.2
