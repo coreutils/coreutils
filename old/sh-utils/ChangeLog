@@ -1,3 +1,18 @@
+2000-05-11  Jim Meyering  <meyering@lucent.com>
+
+	* src/date.c (usage): Don't call close_stdout_status directly,
+	since that didn't cover --version output.
+	(main): Instead, call close_stdout_set_status and arrange to
+	call close_stdout via atexit.
+	* src/printenv.c: Likewise.
+	* src/tty.c: Likewise.
+
+	* src/true.c (usage): Don't call close_stdout directly, since that
+	didn't cover --version output.
+	(main):  Arrange to call close_stdout via atexit, instead.
+	* src/yes.c: Likewise.
+	* src/sleep.c: Likewise.
+
 2000-05-09  Jim Meyering  <meyering@lucent.com>
 
 	* src/sys2.h (case_GETOPT_VERSION_CHAR): Don't call close_stdout.
