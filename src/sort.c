@@ -960,7 +960,8 @@ compare (a, b)
 }
 
 /* Check that the lines read from the given FP come in order.  Return
-   1 if they do and 0 if there is a disorder. */
+   1 if they do and 0 if there is a disorder.
+   FIXME: return number of first out-of-order line if not sorted.  */
 
 static int
 checkfp (fp)
@@ -968,11 +969,9 @@ checkfp (fp)
 {
   struct buffer buf;		/* Input buffer. */
   struct lines lines;		/* Lines scanned from the buffer. */
-  struct line *prev_line;	/* Pointer to previous line. */
   struct line temp;		/* Copy of previous line. */
   int cc;			/* Character count. */
-  int cmp;			/* Result of calling compare. */
-  int alloc, i, success = 1;
+  int alloc, sorted = 1;
 
   initbuf (&buf, mergealloc);
   initlines (&lines, mergealloc / linelength + 1,
@@ -981,57 +980,62 @@ checkfp (fp)
   temp.text = xmalloc (alloc);
 
   cc = fillbuf (&buf, fp);
+  if (cc == 0)
+    goto finish;
+
   findlines (&buf, &lines);
 
-  if (cc)
-    do
-      {
-	/* Compare each line in the buffer with its successor. */
-	for (i = 0; i < lines.used - 1; ++i)
-	  {
-	    cmp = compare (&lines.lines[i], &lines.lines[i + 1]);
-	    if ((unique && cmp >= 0) || (cmp > 0))
-	      {
-		success = 0;
-		goto finish;
-	      }
-	  }
+  while (1)
+    {
+      struct line *prev_line;	/* Pointer to previous line. */
+      int cmp;			/* Result of calling compare. */
+      int i;
 
-	/* Save the last line of the buffer and refill the buffer. */
-	prev_line = lines.lines + lines.used - 1;
-	if (prev_line->length > alloc)
-	  {
-	    while (prev_line->length + 1 > alloc)
-	      alloc *= 2;
-	    temp.text = xrealloc (temp.text, alloc);
-	  }
-	memcpy (temp.text, prev_line->text, prev_line->length + 1);
-	temp.length = prev_line->length;
-	temp.keybeg = temp.text + (prev_line->keybeg - prev_line->text);
-	temp.keylim = temp.text + (prev_line->keylim - prev_line->text);
+      /* Compare each line in the buffer with its successor. */
+      for (i = 0; i < lines.used - 1; ++i)
+	{
+	  cmp = compare (&lines.lines[i], &lines.lines[i + 1]);
+	  if ((unique && cmp >= 0) || (cmp > 0))
+	    {
+	      sorted = 0;
+	      goto finish;
+	    }
+	}
 
-	cc = fillbuf (&buf, fp);
-	if (cc)
-	  {
-	    findlines (&buf, &lines);
-	    /* Make sure the line saved from the old buffer contents is
-	       less than or equal to the first line of the new buffer. */
-	    cmp = compare (&temp, &lines.lines[0]);
-	    if ((unique && cmp >= 0) || (cmp > 0))
-	      {
-		success = 0;
-		break;
-	      }
-	  }
-      }
-    while (cc);
+      /* Save the last line of the buffer and refill the buffer. */
+      prev_line = lines.lines + (lines.used - 1);
+      if (prev_line->length > alloc)
+	{
+	  while (prev_line->length + 1 > alloc)
+	    alloc *= 2;
+	  temp.text = xrealloc (temp.text, alloc);
+	}
+      memcpy (temp.text, prev_line->text, prev_line->length + 1);
+      temp.length = prev_line->length;
+      temp.keybeg = temp.text + (prev_line->keybeg - prev_line->text);
+      temp.keylim = temp.text + (prev_line->keylim - prev_line->text);
+
+      cc = fillbuf (&buf, fp);
+      if (cc == 0)
+        break;
+
+      findlines (&buf, &lines);
+      /* Make sure the line saved from the old buffer contents is
+	 less than or equal to the first line of the new buffer. */
+      cmp = compare (&temp, &lines.lines[0]);
+      if ((unique && cmp >= 0) || (cmp > 0))
+	{
+	  sorted = 0;
+	  break;
+	}
+    }
 
 finish:
   xfclose (fp);
   free (buf.buf);
   free ((char *) lines.lines);
   free (temp.text);
-  return success;
+  return sorted;
 }
 
 /* Merge lines from FPS onto OFP.  NFPS cannot be greater than NMERGE.
