@@ -23,6 +23,9 @@ ACLOCAL_AMFLAGS = -I m4
 check-root:
 	cd tests && $(MAKE) $@
 
+dist-hook:
+	test -x config/install-sh
+
 distcheck-hook:
 	$(MAKE) my-distcheck
 
