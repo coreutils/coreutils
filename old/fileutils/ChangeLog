@@ -6,9 +6,9 @@
 	Reported by Michael Stone.
 	* tests/mv/into-self-2: Add a test for this fix.
 
-	* lib/makepath.c (make_path): Fix long-latent bug (note others
-	just like it were fixed in 1998-01-02).
-	A user (FIXME, who?) reported that using `install -d -g foo 1/2`
+	* lib/makepath.c (make_path): Fix long-latent bug: s/&&/||/ (others
+	just like that also dated back to 1992 were fixed in 1998-01-02).
+	Richard Braakman reported that using `install -d -g foo 1/2`
 	only sets the group on the intermediate directory, not the final
 	component.  From Michael Stone.
 
