@@ -1,6 +1,11 @@
-2003-07-28  Jim Meyering  <jim@meyering.net>
+2003-07-29  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.90.
+
+	* tests/Makefile.am (all_programs): Makefile is in ../src, not
+	$(srcdir)/../src.
+
+2003-07-28  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.maint (GZIP_ENV): Try Debian/gzip's new --rsyncable option.
 
