@@ -78,11 +78,11 @@ test "$a_inode" = "$b_inode" || fail=1
 
 # Ensure that --no-preserve=mode works
 rm -rf a b c d
-touch a; chmod 400 a
-umask 777
+touch a; chmod 731 a
+umask 077
 cp -a --no-preserve=mode a b
 set _ `ls -l b`; shift; mode=$1
-test "$mode" = "----------" || fail=1
+test "$mode" = "-rwx------" || fail=1
 umask 022
 # --------------------------------------
 
