@@ -6,7 +6,7 @@
 case "$PERL" in
   *'missing perl')
   echo 1>&2 "$0: configure didn't find a usable version of Perl," \
-    " so can't run this test"
+    "so can't run this test"
   exit 77
   ;;
 esac
