@@ -1,4 +1,6 @@
 Changes in release 2.1
+[2.0c]
+* include lib/nanosleep.h.
 [2.0b]
 * portability tweaks for error.c vs. systems with deficient strerror_r
 [2.0a]
