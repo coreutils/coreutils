@@ -40,7 +40,7 @@ transform = @program_transform_name@
 
 AUTOMAKE_OPTIONS = 1.0
 
-EXTRA_DIST = build-script.pl test.data.pl
+EXTRA_DIST = build-script.pl Trtest.pm
 noinst_SCRIPTS = tr-tests
 
 PERL = @PERL@
@@ -50,8 +50,8 @@ TESTS = tr-tests
 
 SUFFIXES = .pl
 
-MAINTAINERCLEANFILES = tr-tests t*.in t*.exp t*.err
-CLEANFILES = t*.out
+MAINTAINERCLEANFILES = tr-tests t*.in t*.exp
+CLEANFILES = t*.out t*.err
 mkinstalldirs = $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../config.h
 CONFIG_CLEAN_FILES = 
@@ -166,8 +166,8 @@ mostlyclean-generic distclean-generic clean-generic \
 maintainer-clean-generic clean mostlyclean distclean maintainer-clean
 
 
-tr-tests: build-script test.data.pl
-	./build-script test.data.pl > $@.n
+tr-tests: build-script Trtest.pm
+	./build-script Trtest.pm > $@.n
 	mv $@.n $@
 	chmod 755 $@
 
