@@ -275,14 +275,14 @@ typedef struct COLUMN COLUMN;
 #define NULLCOL (COLUMN *)0
 
 static int char_to_clump __P ((int c));
-static int read_line __P ((COLUMN * p));
+static int read_line __P ((COLUMN *p));
 static int print_page __P ((void));
-static int print_stored __P ((COLUMN * p));
-static int open_file __P ((char *name, COLUMN * p));
+static int print_stored __P ((COLUMN *p));
+static int open_file __P ((char *name, COLUMN *p));
 static int skip_to_page __P ((int page));
 static void print_header __P ((void));
 static void pad_across_to __P ((int position));
-static void number __P ((COLUMN * p));
+static void number __P ((COLUMN *p));
 static void getoptarg __P ((char *arg, char switch_char, char *character, int *number));
 static void usage __P ((int status));
 static void print_files __P ((int number_of_files, char **av));
@@ -293,8 +293,8 @@ static void store_columns __P ((void));
 static void balance __P ((int total_stored));
 static void store_char __P ((int c));
 static void pad_down __P ((int lines));
-static void read_rest_of_line __P ((COLUMN * p));
-static void skip_read __P ((COLUMN * p, int column_number));
+static void read_rest_of_line __P ((COLUMN *p));
+static void skip_read __P ((COLUMN *p, int column_number));
 static void print_char __P ((int c));
 static void cleanup __P ((void));
 static void first_last_page __P ((char *pages));
@@ -777,8 +777,11 @@ main (int argc, char **argv)
 	    long int tmp_long;
 	    if (xstrtol (optarg, NULL, 10, &tmp_long, NULL) != LONGINT_OK
 		|| tmp_long <= 0 || tmp_long > INT_MAX)
-	      error (EXIT_FAILURE, 0,
-		  _("`-l PAGE_LENGTH' invalid number of lines: `%s'"), optarg);
+	      {
+		error (EXIT_FAILURE, 0,
+		       _("`-l PAGE_LENGTH' invalid number of lines: `%s'"),
+		       optarg);
+	      }
 	    lines_per_page = (int) tmp_long;
 	    break;
 	  }
@@ -798,8 +801,11 @@ main (int argc, char **argv)
 	    long int tmp_long;
 	    if (xstrtol (optarg, NULL, 10, &tmp_long, NULL) != LONGINT_OK
 		|| tmp_long > INT_MAX)
-	      error (EXIT_FAILURE, 0,
-	      _("`-N NUMBER' invalid starting line number: `%s'"), optarg);
+	      {
+		error (EXIT_FAILURE, 0,
+		       _("`-N NUMBER' invalid starting line number: `%s'"),
+		       optarg);
+	      }
 	    start_line_num = (int) tmp_long;
 	    break;
 	  }
@@ -1189,7 +1195,7 @@ init_funcs (void)
    see also init_fps. */
 
 static int
-open_file (char *name, COLUMN * p)
+open_file (char *name, COLUMN *p)
 {
   if (!strcmp (name, "-"))
     {
@@ -1221,7 +1227,7 @@ open_file (char *name, COLUMN * p)
    the status of all columns in the column list to reflect the close. */
 
 static void
-close_file (COLUMN * p)
+close_file (COLUMN *p)
 {
   COLUMN *q;
   int i;
@@ -1260,7 +1266,7 @@ close_file (COLUMN * p)
    status of all columns in the column list. */
 
 static void
-hold_file (COLUMN * p)
+hold_file (COLUMN *p)
 {
   COLUMN *q;
   int i;
@@ -1385,7 +1391,7 @@ init_header (char *filename, int desc)
 
       chars_per_middle = chars_per_line - CHARS_FOR_DATE_AND_PAGE;
       if (chars_per_middle < 3)
-        {
+	{
 	  header_text = no_middle;	/* Nothing free for a heading */
 	  lhs_blanks = 1;
 	  rhs_blanks = 1;
@@ -1469,7 +1475,7 @@ init_page (void)
    when printing multiple files in parallel. */
 
 static void
-align_column (COLUMN * p)
+align_column (COLUMN *p)
 {
   padding_not_printed = p->start_position;
   if (padding_not_printed - col_sep_length > 0)
@@ -1748,7 +1754,7 @@ store_char (int c)
 }
 
 static void
-number (COLUMN * p)
+number (COLUMN *p)
 {
   int i;
   char *s;
@@ -1813,7 +1819,7 @@ pad_down (int lines)
    to print or store its characters. */
 
 static void
-read_rest_of_line (COLUMN * p)
+read_rest_of_line (COLUMN *p)
 {
   register int c;
   FILE *f = p->fp;
@@ -1847,7 +1853,7 @@ read_rest_of_line (COLUMN * p)
    printed relative to 1st line of input file (start_line_num). */
 
 static void
-skip_read (COLUMN * p, int column_number)
+skip_read (COLUMN *p, int column_number)
 {
   register int c;
   FILE *f = p->fp;
@@ -1960,7 +1966,7 @@ print_sep_string ()
    characters. */
 
 static void
-print_clump (COLUMN * p, int n, int *clump)
+print_clump (COLUMN *p, int n, int *clump)
 {
   while (n--)
     (p->char_func) (*clump++);
@@ -2077,7 +2083,7 @@ print_header (void)
    an end of line character, TRUE otherwise. */
 
 static int
-read_line (COLUMN * p)
+read_line (COLUMN *p)
 {
   register int c, chars;
   int last_input_position;
@@ -2220,7 +2226,7 @@ read_line (COLUMN * p)
    Return TRUE, meaning there is no need to call read_rest_of_line. */
 
 static int
-print_stored (COLUMN * p)
+print_stored (COLUMN *p)
 {
   COLUMN *q;
   int i;
