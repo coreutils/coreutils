@@ -1,3 +1,10 @@
+2003-02-07  Jim Meyering  <jim@meyering.net>
+
+	Merge inconsequential changes from libc.
+	* ftw.c: Include limits.h earlier.
+	Move PATH_MAX definition `down' a little; add comment.
+	Rename local, saved_errno to save_err.
+
 2003-02-06  Jim Meyering  <jim@meyering.net>
 
 	Support for pruning.
