@@ -1,3 +1,8 @@
+1999-11-20  Jim Meyering  <meyering@ascend.com>
+
+	* src/chgrp.c: Declare lstat;  needed on e.g. SunOS4.
+	Reported by Tom Tromey.
+
 1999-11-19  Jim Meyering  <meyering@ascend.com>
 
 	* lib/strstr.c (strstr): Include config.h.
