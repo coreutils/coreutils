@@ -1,10 +1,11 @@
-#serial 4
+#serial 5
 
 dnl From Jim Meyering.
 dnl Provide lchown on systems that lack it.
 
 AC_DEFUN([gl_FUNC_LCHOWN],
 [
+  AC_LIBSOURCES([lchown.c, lchown.h])
   AC_REQUIRE([AC_TYPE_UID_T])
   AC_REPLACE_FUNCS(lchown)
   if test $ac_cv_func_lchown = no; then
