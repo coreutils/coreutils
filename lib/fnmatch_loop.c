@@ -18,14 +18,14 @@
 /* Match STRING against the filename pattern PATTERN, returning zero if
    it matches, nonzero if not.  */
 static int EXT (INT opt, const CHAR *pattern, const CHAR *string,
-		const CHAR *string_end, int no_leading_period, int flags)
+		const CHAR *string_end, bool no_leading_period, int flags)
      internal_function;
 static const CHAR *END (const CHAR *patternp) internal_function;
 
 static int
 internal_function
 FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
-     int no_leading_period, int flags)
+     bool no_leading_period, int flags)
 {
   register const CHAR *p = pattern, *n = string;
   register UCHAR c;
@@ -41,7 +41,7 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 
   while ((c = *p++) != L('\0'))
     {
-      int new_no_leading_period = 0;
+      bool new_no_leading_period = false;
       c = FOLD (c);
 
       switch (c)
@@ -161,9 +161,9 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 		{
 		  int flags2 = ((flags & FNM_FILE_NAME)
 				? flags : (flags & ~FNM_PERIOD));
-		  int no_leading_period2 = no_leading_period;
+		  bool no_leading_period2 = no_leading_period;
 
-		  for (--p; n < endp; ++n, no_leading_period2 = 0)
+		  for (--p; n < endp; ++n, no_leading_period2 = false)
 		    if (FCT (p, n, string_end, no_leading_period2, flags2)
 			== 0)
 		      return 0;
@@ -186,7 +186,7 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 		  if (c == L('\\') && !(flags & FNM_NOESCAPE))
 		    c = *p;
 		  c = FOLD (c);
-		  for (--p; n < endp; ++n, no_leading_period2 = 0)
+		  for (--p; n < endp; ++n, no_leading_period2 = false)
 		    if (FOLD ((UCHAR) *n) == c
 			&& (FCT (p, n, string_end, no_leading_period2, flags2)
 			    == 0))
@@ -200,7 +200,7 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 	case L('['):
 	  {
 	    /* Nonzero if the sense of the character class is inverted.  */
-	    register int not;
+	    register bool not;
 	    CHAR cold;
 	    UCHAR fn;
 
@@ -410,10 +410,10 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 		  return FNM_NOMATCH;
 		else
 		  {
-		    int is_range = 0;
+		    bool is_range = false;
 
 #ifdef _LIBC
-		    int is_seqval = 0;
+		    bool is_seqval = false;
 
 		    if (c == L('[') && *p == L('.'))
 		      {
@@ -460,7 +460,7 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 			    const int32_t *symb_table;
 # ifdef WIDE_CHAR_VERSION
 			    char str[c1];
-			    unsigned int strcnt;
+			    size_t strcnt;
 # else
 #  define str (startp + 1)
 # endif
@@ -550,7 +550,7 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 				  }
 
 				/* Get the collation sequence value.  */
-				is_seqval = 1;
+				is_seqval = true;
 # ifdef WIDE_CHAR_VERSION
 				cold = wextra[1 + wextra[idx]];
 # else
@@ -629,7 +629,7 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 			lcollseq = is_seqval ? cold : collseq[(UCHAR) cold];
 # endif
 
-			is_seqval = 0;
+			is_seqval = false;
 			if (cend == L('[') && *p == L('.'))
 			  {
 			    uint32_t nrules =
@@ -668,7 +668,7 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 				const int32_t *symb_table;
 # ifdef WIDE_CHAR_VERSION
 				char str[c1];
-				unsigned int strcnt;
+				size_t strcnt;
 # else
 #  define str (startp + 1)
 # endif
@@ -738,7 +738,7 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 				    wextra = (int32_t *) &extra[idx + 4];
 # endif
 				    /* Get the collation sequence value.  */
-				    is_seqval = 1;
+				    is_seqval = true;
 # ifdef WIDE_CHAR_VERSION
 				    cend = wextra[1 + wextra[idx]];
 # else
@@ -929,7 +929,7 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 	      if (n == string_end || c != (UCHAR) *n)
 		return FNM_NOMATCH;
 
-	      new_no_leading_period = 1;
+	      new_no_leading_period = true;
 	      break;
 	    }
 	  /* FALLTHROUGH */
@@ -996,10 +996,10 @@ END (const CHAR *pattern)
 static int
 internal_function
 EXT (INT opt, const CHAR *pattern, const CHAR *string, const CHAR *string_end,
-     int no_leading_period, int flags)
+     bool no_leading_period, int flags)
 {
   const CHAR *startp;
-  int level;
+  ptrdiff_t level;
   struct patternlist
   {
     struct patternlist *next;
@@ -1100,7 +1100,7 @@ EXT (INT opt, const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 		&& (FCT (p, rs, string_end,
 			 rs == string
 			 ? no_leading_period
-			 : rs[-1] == '/' && NO_LEADING_PERIOD (flags) ? 1 : 0,
+			 : rs[-1] == '/' && NO_LEADING_PERIOD (flags),
 			 flags & FNM_FILE_NAME
 			 ? flags : flags & ~FNM_PERIOD) == 0
 		    /* This didn't work.  Try the whole pattern.  */
@@ -1108,8 +1108,7 @@ EXT (INT opt, const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 			&& FCT (pattern - 1, rs, string_end,
 				rs == string
 				? no_leading_period
-				: (rs[-1] == '/' && NO_LEADING_PERIOD (flags)
-				   ? 1 : 0),
+				: rs[-1] == '/' && NO_LEADING_PERIOD (flags),
 				flags & FNM_FILE_NAME
 				? flags : flags & ~FNM_PERIOD) == 0)))
 	      /* It worked.  Signal success.  */
@@ -1156,7 +1155,7 @@ EXT (INT opt, const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 	      && (FCT (p, rs, string_end,
 		       rs == string
 		       ? no_leading_period
-		       : rs[-1] == '/' && NO_LEADING_PERIOD (flags) ? 1 : 0,
+		       : rs[-1] == '/' && NO_LEADING_PERIOD (flags),
 		       flags & FNM_FILE_NAME ? flags : flags & ~FNM_PERIOD)
 		  == 0))
 	    /* This is successful.  */
