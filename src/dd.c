@@ -932,7 +932,7 @@ copy_with_unblock (unsigned char *buf, int nread)
 /* The main loop.  */
 
 static int
-copy (void)
+dd_copy (void)
 {
   unsigned char *ibuf, *bufstart; /* Input buffer. */
   int nread;			/* Bytes read in the current block. */
@@ -1174,7 +1174,7 @@ main (int argc, char **argv)
   install_handler (SIGPIPE, interrupt_handler);
   install_handler (SIGINFO, siginfo_handler);
 
-  exit_status = copy ();
+  exit_status = dd_copy ();
 
   quit (exit_status);
 }
