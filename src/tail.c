@@ -1073,7 +1073,6 @@ static int
 tail_lines (const char *pretty_filename, int fd, long int n_lines)
 {
   struct stat stats;
-  off_t length;
 
   /* We need binary input, since `tail' relies on `lseek' and byte counts,
      while binary output will preserve the style (Unix/DOS) of text file.  */
@@ -1093,6 +1092,8 @@ tail_lines (const char *pretty_filename, int fd, long int n_lines)
     }
   else
     {
+      off_t length;
+
       /* Use file_lines only if FD refers to a regular file with
          its file pointer positioned at beginning of file.  */
       /* FIXME: this first lseek conjunct is a kludge.
@@ -1132,7 +1133,6 @@ static int
 tail_file (struct File_spec *f, off_t n_units)
 {
   int fd, errors;
-  struct stat stats;
 
   int is_stdin = (STREQ (f->name, "-"));
 
@@ -1168,6 +1168,8 @@ tail_file (struct File_spec *f, off_t n_units)
       errors = tail (pretty_name (f), fd, n_units);
       if (forever)
 	{
+	  struct stat stats;
+
 	  f->errnum = 0;
 	  /* FIXME: duplicate code */
 	  if (fstat (fd, &stats) < 0)
