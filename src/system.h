@@ -148,6 +148,25 @@ extern int errno;
 # define EXIT_SUCCESS 0
 #endif
 
+/* Exit statuses for programs like 'env' that exec other programs.
+   EXIT_FAILURE might not be 1, so use EXIT_FAIL in such programs.  */
+enum
+{
+  EXIT_FAIL = 1,
+  EXIT_CANNOT_INVOKE = 126,
+  EXIT_ENOENT = 127
+};
+
+#include "exitfail.h"
+
+/* Set exit_failure to STATUS if that's not the default already.  */
+static inline void
+initialize_exit_failure (int status)
+{
+  if (status != EXIT_FAILURE)
+    exit_failure = status;
+}
+
 #if HAVE_FCNTL_H
 # include <fcntl.h>
 #else
