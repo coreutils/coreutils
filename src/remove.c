@@ -485,7 +485,7 @@ AD_push (Dirstack_state *ds, char const *dir,
 	   _("cannot lstat `.' in %s"), quote (full_filename (".")));
 
   if ( ! SAME_INODE (sb, *dir_sb_from_parent))
-    error (EXIT_FAILURE, errno,
+    error (EXIT_FAILURE, 0,
 	   _("%s changed dev/ino"), quote (full_filename (".")));
 
   /* Extend the stack.  */
