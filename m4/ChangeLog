@@ -1,3 +1,10 @@
+2003-02-15  Jim Meyering  <jim@meyering.net>
+
+	Add Irix6 support to physmem.c.
+	* prereq.m4 (jm_PREREQ_PHYSMEM): Also check for sys/sysget.h
+	and sys/sysinfo.h.
+	Also check for sysget.
+
 2003-02-12  Jim Meyering  <jim@meyering.net>
 
 	* restrict.m4 (ACX_C_RESTRICT): Remove #ifndef -- so now this
