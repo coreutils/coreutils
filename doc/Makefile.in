@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.1m from Makefile.am
+# Makefile.in generated automatically by automake 1.1o from Makefile.am
 
 # Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -42,22 +42,51 @@ INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 transform = @program_transform_name@
-ANSI2KNR = @ANSI2KNR@
+
+NORMAL_INSTALL = true
+PRE_INSTALL = true
+POST_INSTALL = true
+NORMAL_UNINSTALL = true
+PRE_UNINSTALL = true
+POST_UNINSTALL = true
+ACLOCAL = @ACLOCAL@
+AUTOCONF = @AUTOCONF@
+AUTOHEADER = @AUTOHEADER@
+AUTOMAKE = @AUTOMAKE@
+CATALOGS = @CATALOGS@
+CATOBJEXT = @CATOBJEXT@
 CC = @CC@
+CPP = @CPP@
+DATADIRNAME = @DATADIRNAME@
 DF_PROG = @DF_PROG@
-INSTALL_SCRIPT = @INSTALL_SCRIPT@
+GENCAT = @GENCAT@
+GMOFILES = @GMOFILES@
+GMSGFMT = @GMSGFMT@
+GT_NO = @GT_NO@
+GT_YES = @GT_YES@
+INSTOBJEXT = @INSTOBJEXT@
+INTLDEPS = @INTLDEPS@
+INTLLIBS = @INTLLIBS@
+INTLOBJS = @INTLOBJS@
 LIBOBJS = @LIBOBJS@
 LN = @LN@
 MAINT = @MAINT@
+MKINSTALLDIRS = @MKINSTALLDIRS@
+MSGFMT = @MSGFMT@
 MV = @MV@
 MVDIR_PROG = @MVDIR_PROG@
 PACKAGE = @PACKAGE@
 PERL = @PERL@
+POFILES = @POFILES@
+POSUB = @POSUB@
 RANLIB = @RANLIB@
 RM = @RM@
 U = @U@
+USE_INCLUDED_LIBINTL = @USE_INCLUDED_LIBINTL@
+USE_NLS = @USE_NLS@
 VERSION = @VERSION@
 YACC = @YACC@
+l = @l@
 
 info_TEXINFOS = fileutils.texi
 
@@ -74,6 +103,7 @@ mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../config.h
 CONFIG_CLEAN_FILES = 
 TEXI2DVI = texi2dvi
+TEXINFO_TEX = $(srcdir)/texinfo.tex
 INFO_DEPS = fileutils.info
 DVIS = fileutils.dvi
 TEXINFOS = fileutils.texi
@@ -88,7 +118,7 @@ GZIP = --best
 default: all
 
 .SUFFIXES:
-.SUFFIXES: .texi .texinfo .info .dvi .ps
+.SUFFIXES: .dvi .info .ps .texi .texinfo
 $(srcdir)/Makefile.in: @MAINT@ Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
 	cd $(top_srcdir) && $(AUTOMAKE) --gnu doc/Makefile
 
@@ -101,13 +131,14 @@ version.texi: @MAINT@stamp-vti
 	cp $(srcdir)/stamp-vti $(srcdir)/version.texi
 
 stamp-vti: fileutils.texi $(top_srcdir)/configure.in
-	echo "@set UPDATED `cd $(srcdir) \
+	@echo "@set UPDATED `cd $(srcdir) \
 	  && $(SHELL) ./mdate-sh fileutils.texi`" > vti.tmp
-	echo "@set EDITION $(VERSION)" >> vti.tmp
-	echo "@set VERSION $(VERSION)" >> vti.tmp
-	cmp -s vti.tmp $(srcdir)/stamp-vti \
-	  || cp vti.tmp $(srcdir)/stamp-vti
-	rm -f vti.tmp
+	@echo "@set EDITION $(VERSION)" >> vti.tmp
+	@echo "@set VERSION $(VERSION)" >> vti.tmp
+	@cmp -s vti.tmp $(srcdir)/stamp-vti \
+	  || (echo "Updating $(srcdir)/stamp-vti"; \
+	      cp vti.tmp $(srcdir)/stamp-vti)
+	@rm -f vti.tmp
 
 mostlyclean-vti:
 	rm -f vti.tmp
@@ -126,6 +157,7 @@ fileutils.dvi: fileutils.texi version.texi
 DVIPS = dvips
 
 .texi.info:
+	@cd $(srcdir) && rm -f $@ $@-[0-9] $@-[0-9][0-9]
 	cd $(srcdir) \
 	  && $(MAKEINFO) `echo $< | sed 's,.*/,,'`
 
@@ -134,34 +166,39 @@ DVIPS = dvips
 	  MAKEINFO='$(MAKEINFO) -I $(srcdir)' $(TEXI2DVI) $<
 
 .texi:
+	@cd $(srcdir) && rm -f $@ $@-[0-9] $@-[0-9][0-9]
 	cd $(srcdir) \
 	  && $(MAKEINFO) `echo $< | sed 's,.*/,,'`
 
 .texinfo.info:
+	@cd $(srcdir) && rm -f $@ $@-[0-9] $@-[0-9][0-9]
 	cd $(srcdir) \
 	  && $(MAKEINFO) `echo $< | sed 's,.*/,,'`
 
 .texinfo:
+	@cd $(srcdir) && rm -f $@ $@-[0-9] $@-[0-9][0-9]
 	cd $(srcdir) \
 	  && $(MAKEINFO) `echo $< | sed 's,.*/,,'`
 
 .texinfo.dvi:
-	TEXINPUTS=$(srcdir):$$TEXINPUTS $(TEXI2DVI) $<
+	TEXINPUTS=$(srcdir):$$TEXINPUTS \
+	  MAKEINFO='$(MAKEINFO) -I $(srcdir)' $(TEXI2DVI) $<
 .dvi.ps:
 	$(DVIPS) $< -o $@
 
 install-info-am: $(INFO_DEPS)
-	$(NORMAL_INSTALL)
+	@$(NORMAL_INSTALL)
 	$(mkinstalldirs) $(infodir)
 	@for file in $(INFO_DEPS); do \
-	  for ifile in `cd $(srcdir) && echo $$file $$file-[0-9] $$file-[0-9][0-9]`; do \
-	    if test -f $(srcdir)/$$ifile; then \
-	      echo " $(INSTALL_DATA) $(srcdir)/$$ifile $(infodir)/$$ifile"; \
-	      $(INSTALL_DATA) $(srcdir)/$$ifile $(infodir)/$$ifile; \
+	  d=$(srcdir); \
+	  for ifile in `cd $$d && echo $$file $$file-[0-9] $$file-[0-9][0-9]`; do \
+	    if test -f $$d/$$ifile; then \
+	      echo " $(INSTALL_DATA) $$d/$$ifile $(infodir)/$$ifile"; \
+	      $(INSTALL_DATA) $$d/$$ifile $(infodir)/$$ifile; \
 	    else : ; fi; \
 	  done; \
 	done
-	$(POST_INSTALL)
+	@$(POST_INSTALL)
 	@if $(SHELL) -c 'install-info --version' >/dev/null 2>&1; then \
 	  for file in $(INFO_DEPS); do \
 	    echo " install-info --info-dir=$(infodir) $(infodir)/$$file";\
@@ -170,12 +207,16 @@ install-info-am: $(INFO_DEPS)
 	else : ; fi
 
 uninstall-info:
+	$(PRE_UNINSTALL)
 	if $(SHELL) -c 'install-info --version' >/dev/null 2>&1; then \
 	  ii=yes; \
 	else ii=; fi; \
 	for file in $(INFO_DEPS); do \
-	  (cd $(infodir) && rm -f $$file $$file-[0-9] $$file-[0-9][0-9]); \
 	  test -z $ii || install-info --info-dir=$(infodir) --remove $$file; \
+	done
+	$(NORMAL_UNINSTALL)
+	for file in $(INFO_DEPS); do \
+	  (cd $(infodir) && rm -f $$file $$file-[0-9] $$file-[0-9][0-9]); \
 	done
 
 dist-info: $(INFO_DEPS)
@@ -188,18 +229,18 @@ dist-info: $(INFO_DEPS)
 	  done; \
 	done
 
-mostlyclean-info:
+mostlyclean-aminfo:
 	rm -f fileutils.aux fileutils.cp fileutils.cps fileutils.dvi \
 	  fileutils.fn fileutils.fns fileutils.ky fileutils.log \
 	  fileutils.pg fileutils.toc fileutils.tp fileutils.tps \
 	  fileutils.vr fileutils.vrs fileutils.op fileutils.tr \
 	  fileutils.cv
 
-clean-info:
+clean-aminfo:
 
-distclean-info:
+distclean-aminfo:
 
-maintainer-clean-info:
+maintainer-clean-aminfo:
 	for i in $(INFO_DEPS); do rm -f `eval echo $$i*`; done
 tags: TAGS
 TAGS:
@@ -209,30 +250,33 @@ distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
 
 subdir = doc
 distdir: $(DISTFILES)
+	here=`cd $(top_builddir) && pwd`; top_distdir=`cd $$top_distdir && pwd` \
+	  && cd $(top_srcdir) \
+	  && $(AUTOMAKE) --include-deps --build-dir=$$here --srcdir-name=$(top_srcdir) --output-dir=$$top_distdir --gnu doc/Makefile
 	@for file in $(DISTFILES); do \
 	  d=$(srcdir); \
 	  test -f $(distdir)/$$file \
 	  || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
 	  || cp -p $$d/$$file $(distdir)/$$file; \
 	done
-	$(MAKE) distdir="$(distdir)" dist-info
+	$(MAKE) top_distdir="$(distdir)" distdir="$(distdir)" dist-info
 info: $(INFO_DEPS)
 dvi: $(DVIS)
 check: all
 	$(MAKE)
 installcheck:
 install-exec: 
-	$(NORMAL_INSTALL)
+	@$(NORMAL_INSTALL)
 
 install-data: install-info-am
-	$(NORMAL_INSTALL)
+	@$(NORMAL_INSTALL)
 
 install: install-exec install-data all
 	@:
 
 uninstall: uninstall-info
 
-all: $(INFO_DEPS) Makefile
+all: Makefile $(INFO_DEPS)
 
 install-strip:
 	$(MAKE) INSTALL_PROGRAM='$(INSTALL_PROGRAM) -s' install
@@ -267,9 +311,9 @@ maintainer-clean:  maintainer-clean-vti maintainer-clean-info \
 	@echo "it deletes files that may require special tools to rebuild."
 
 .PHONY: default mostlyclean-vti distclean-vti clean-vti \
-maintainer-clean-vti install-info-am uninstall-info mostlyclean-info \
-distclean-info clean-info maintainer-clean-info tags distdir info dvi \
-installcheck install-exec install-data install uninstall all \
+maintainer-clean-vti install-info-am uninstall-info mostlyclean-aminfo \
+distclean-aminfo clean-aminfo maintainer-clean-aminfo tags distdir info \
+dvi installcheck install-exec install-data install uninstall all \
 installdirs mostlyclean-generic distclean-generic clean-generic \
 maintainer-clean-generic clean mostlyclean distclean maintainer-clean
 

@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.1m from Makefile.am
+# Makefile.in generated automatically by automake 1.1o from Makefile.am
 
 # Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -42,22 +42,52 @@ INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 transform = @program_transform_name@
-ANSI2KNR = @ANSI2KNR@
+
+NORMAL_INSTALL = true
+PRE_INSTALL = true
+POST_INSTALL = true
+NORMAL_UNINSTALL = true
+PRE_UNINSTALL = true
+POST_UNINSTALL = true
+ACLOCAL = @ACLOCAL@
+AUTOCONF = @AUTOCONF@
+AUTOHEADER = @AUTOHEADER@
+AUTOMAKE = @AUTOMAKE@
+CATALOGS = @CATALOGS@
+CATOBJEXT = @CATOBJEXT@
 CC = @CC@
+CPP = @CPP@
+DATADIRNAME = @DATADIRNAME@
 DF_PROG = @DF_PROG@
-INSTALL_SCRIPT = @INSTALL_SCRIPT@
+GENCAT = @GENCAT@
+GMOFILES = @GMOFILES@
+GMSGFMT = @GMSGFMT@
+GT_NO = @GT_NO@
+GT_YES = @GT_YES@
+INSTOBJEXT = @INSTOBJEXT@
+INTLDEPS = @INTLDEPS@
+INTLLIBS = @INTLLIBS@
+INTLOBJS = @INTLOBJS@
 LIBOBJS = @LIBOBJS@
 LN = @LN@
 MAINT = @MAINT@
+MAKEINFO = @MAKEINFO@
+MKINSTALLDIRS = @MKINSTALLDIRS@
+MSGFMT = @MSGFMT@
 MV = @MV@
 MVDIR_PROG = @MVDIR_PROG@
 PACKAGE = @PACKAGE@
 PERL = @PERL@
+POFILES = @POFILES@
+POSUB = @POSUB@
 RANLIB = @RANLIB@
 RM = @RM@
 U = @U@
+USE_INCLUDED_LIBINTL = @USE_INCLUDED_LIBINTL@
+USE_NLS = @USE_NLS@
 VERSION = @VERSION@
 YACC = @YACC@
+l = @l@
 
 noinst_LIBRARIES = libfu.a
 
@@ -97,19 +127,19 @@ isdir.o long-options.o makepath.o modechange.o path-concat.o \
 safe-read.o save-cwd.o savedir.o stripslash.o userspec.o xgetcwd.o \
 xmalloc.o xstrdup.o xstrtol.o xstrtoul.o yesno.o
 AR = ar
-INTERLOCK = $(srcdir)/interlock
 YLWRAP = $(srcdir)/ylwrap
 CFLAGS = @CFLAGS@
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 LINK = $(CC) $(LDFLAGS) -o $@
 HEADERS =  $(noinst_HEADERS)
 
-DIST_COMMON =  Makefile.am Makefile.in alloca.c basename.c error.c \
-error.h euidaccess.c fileblocks.c fnmatch.c fsusage.c ftruncate.c \
-getdate.c group-member.c interlock memcmp.c memcpy.c memset.c mkdir.c \
-mountlist.c obstack.c obstack.h posixtm.c regex.c regex.h rename.c \
-rmdir.c rpmatch.c rx.c rx.h stpcpy.c strcasecmp.c strdup.c strndup.c \
-strstr.c strtol.c strtoul.c ylwrap
+DIST_COMMON =  Makefile.am Makefile.in alloca.c basename.c chown.c \
+error.c error.h euidaccess.c fileblocks.c fnmatch.c fsusage.c \
+ftruncate.c getdate.c getgroups.c getline.c group-member.c memcmp.c \
+memcpy.c memset.c mkdir.c mktime.c mountlist.c obstack.c obstack.h \
+posixtm.c regex.c regex.h rename.c rmdir.c rpmatch.c rx.c rx.h stpcpy.c \
+strcasecmp.c strdup.c strftime.c strndup.c strstr.c strtol.c strtoul.c \
+ylwrap
 
 
 DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
@@ -117,26 +147,27 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 TAR = tar
 GZIP = --best
 DEP_FILES =  .deps/alloca.P .deps/argmatch.P .deps/backupfile.P \
-.deps/basename.P .deps/dirname.P .deps/error.P .deps/euidaccess.P \
-.deps/fileblocks.P .deps/filemode.P .deps/fnmatch.P .deps/fsusage.P \
-.deps/ftruncate.P .deps/full-write.P .deps/getdate.P .deps/getopt.P \
-.deps/getopt1.P .deps/getversion.P .deps/group-member.P .deps/idcache.P \
-.deps/isdir.P .deps/long-options.P .deps/makepath.P .deps/memcmp.P \
-.deps/memcpy.P .deps/memset.P .deps/mkdir.P .deps/modechange.P \
+.deps/basename.P .deps/chown.P .deps/dirname.P .deps/error.P \
+.deps/euidaccess.P .deps/fileblocks.P .deps/filemode.P .deps/fnmatch.P \
+.deps/fsusage.P .deps/ftruncate.P .deps/full-write.P .deps/getdate.P \
+.deps/getgroups.P .deps/getline.P .deps/getopt.P .deps/getopt1.P \
+.deps/getversion.P .deps/group-member.P .deps/idcache.P .deps/isdir.P \
+.deps/long-options.P .deps/makepath.P .deps/memcmp.P .deps/memcpy.P \
+.deps/memset.P .deps/mkdir.P .deps/mktime.P .deps/modechange.P \
 .deps/mountlist.P .deps/obstack.P .deps/path-concat.P .deps/posixtm.P \
 .deps/regex.P .deps/rename.P .deps/rmdir.P .deps/rpmatch.P .deps/rx.P \
 .deps/safe-read.P .deps/save-cwd.P .deps/savedir.P .deps/stpcpy.P \
-.deps/strcasecmp.P .deps/strdup.P .deps/stripslash.P .deps/strndup.P \
-.deps/strstr.P .deps/strtol.P .deps/strtoul.P .deps/userspec.P \
-.deps/xgetcwd.P .deps/xmalloc.P .deps/xstrdup.P .deps/xstrtol.P \
-.deps/xstrtoul.P .deps/yesno.P
+.deps/strcasecmp.P .deps/strdup.P .deps/strftime.P .deps/stripslash.P \
+.deps/strndup.P .deps/strstr.P .deps/strtol.P .deps/strtoul.P \
+.deps/userspec.P .deps/xgetcwd.P .deps/xmalloc.P .deps/xstrdup.P \
+.deps/xstrtol.P .deps/xstrtoul.P .deps/yesno.P
 SOURCES = $(libfu_a_SOURCES)
 OBJECTS = $(libfu_a_OBJECTS)
 
 default: all
 
 .SUFFIXES:
-.SUFFIXES: .c .o .y
+.SUFFIXES: .c .h .o .y
 $(srcdir)/Makefile.in: @MAINT@ Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
 	cd $(top_srcdir) && $(AUTOMAKE) --gnu lib/Makefile
 
@@ -166,14 +197,15 @@ distclean-compile:
 	rm -f *.tab.c
 
 maintainer-clean-compile:
-$(libfu_a_OBJECTS): ../config.h
 
 libfu.a: $(libfu_a_OBJECTS) $(libfu_a_DEPENDENCIES)
 	rm -f libfu.a
 	$(AR) cru libfu.a $(libfu_a_OBJECTS) $(libfu_a_LIBADD)
 	$(RANLIB) libfu.a
 .y.c:
-	$(SHELL) $(INTERLOCK) =yacclockdir $(YLWRAP) "$(YACC)" y.tab.c $*.c y.tab.h $*.h -- $(YFLAGS) $<
+	$(SHELL) $(YLWRAP) "$(YACC)" $< y.tab.c $*.c y.tab.h $*.h -- $(YFLAGS)
+.y.h:
+	$(SHELL) $(YLWRAP) "$(YACC)" $< y.tab.c $*.h y.tab.h $*.h -- $(YFLAGS)
 
 tags: TAGS
 
@@ -183,11 +215,8 @@ ID: $(HEADERS) $(SOURCES)
 TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES)
 	tags=; \
 	here=`pwd`; \
-	list="$(SUBDIRS)"; for subdir in $$list; do \
-	  test -f $$subdir/TAGS && tags="$$tags -i $$here/$$subdir/TAGS"; \
-	done; \
 	test -z "$(ETAGS_ARGS)$(SOURCES)$(HEADERS)$$tags" \
-	  || cd $(srcdir) && etags $(ETAGS_ARGS) $$tags  $(SOURCES) $(HEADERS) -o $$here/TAGS
+	  || (cd $(srcdir) && etags $(ETAGS_ARGS) $$tags  $(SOURCES) $(HEADERS) -o $$here/TAGS)
 
 mostlyclean-tags:
 
@@ -202,6 +231,9 @@ distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
 
 subdir = lib
 distdir: $(DISTFILES)
+	here=`cd $(top_builddir) && pwd`; top_distdir=`cd $$top_distdir && pwd` \
+	  && cd $(top_srcdir) \
+	  && $(AUTOMAKE) --include-deps --build-dir=$$here --srcdir-name=$(top_srcdir) --output-dir=$$top_distdir --gnu lib/Makefile
 	@for file in $(DISTFILES); do \
 	  d=$(srcdir); \
 	  test -f $(distdir)/$$file \
@@ -232,24 +264,24 @@ maintainer-clean-depend:
 	@echo "Computing dependencies for $<..."
 	@o='o';				\
 	test -n "$o" && o='$$o';	\
-	$(MKDEP) $< | sed "s/^\(.*\)\.o:/\1.$$o \1.l$$o:/" > $@
+	$(MKDEP) $< | sed "s,^\(.*\)\.o:,\1.$$o \1.l$$o $@:," > $@
 info:
 dvi:
 check: all
 	$(MAKE)
 installcheck:
 install-exec: 
-	$(NORMAL_INSTALL)
+	@$(NORMAL_INSTALL)
 
 install-data: 
-	$(NORMAL_INSTALL)
+	@$(NORMAL_INSTALL)
 
 install: install-exec install-data all
 	@:
 
 uninstall: 
 
-all: $(LIBRARIES) $(BUILT_SOURCES) $(HEADERS) Makefile
+all: Makefile $(LIBRARIES) $(BUILT_SOURCES) $(HEADERS)
 
 install-strip:
 	$(MAKE) INSTALL_PROGRAM='$(INSTALL_PROGRAM) -s' install
