@@ -183,11 +183,7 @@ sometimes difficult to infer. @xref{Bugs, , , gcc, GNU CC}.
 @cindex Stallman, Richard
 This manual is based on the Unix man pages in the distribution, which
 were originally written by David MacKenzie and updated by Jim Meyering.
-@c If the following space before `@value' is removed, makeinfo
-@c fails to substitute the value for Francois.  Instead, it reports
-@c `F{No Value For "rancois"}...'.  This is a bug in makeinfo.
-@c So please don't remove that leading space for now.
- @value{Francois} Pinard did the initial conversion to Texinfo format.
+@value{Francois} Pinard did the initial conversion to Texinfo format.
 Karl Berry did the indexing, some reorganization, and editing of the results.
 Richard Stallman contributed his usual invaluable insights to the
 overall process.
