@@ -430,39 +430,44 @@ copy_internal (const char *src_path, const char *dst_path,
 	}
       else
 	{
+	  int same;
+
 	  /* The destination file exists already.  */
 
-	  if (x->backup_type == none)
-	    {
-	      int same;
-
-	      same = (src_sb.st_ino == dst_sb.st_ino
-		      && src_sb.st_dev == dst_sb.st_dev);
+	  same = (src_sb.st_ino == dst_sb.st_ino
+		  && src_sb.st_dev == dst_sb.st_dev);
 
 #ifdef S_ISLNK
-	      /* If we're preserving symlinks (--no-dereference) and either
-		 file is a symlink, use stat (not xstat) to see if they refer
-		 to the same file.  */
-	      if (!same && !x->dereference
-		  && (S_ISLNK (dst_sb.st_mode) || S_ISLNK (src_sb.st_mode)))
+	  /* If we're preserving symlinks (--no-dereference) and either
+	     file is a symlink, use stat (not xstat) to see if they refer
+	     to the same file.  */
+	  if (!same
+	      /* If we're making a backup, we'll detect the problem case in
+		 copy_reg because SRC_PATH will no longer exist.  Allowing
+		 the test to be deferred lets cp do some useful things.  */
+	      && x->backup_type == none
+	      && !x->dereference
+	      && (S_ISLNK (dst_sb.st_mode) || S_ISLNK (src_sb.st_mode)))
+	    {
+	      struct stat dst2_sb;
+	      struct stat src2_sb;
+	      if (stat (dst_path, &dst2_sb) == 0
+		  && stat (src_path, &src2_sb) == 0
+		  && src2_sb.st_ino == dst2_sb.st_ino
+		  && src2_sb.st_dev == dst2_sb.st_dev)
 		{
-		  struct stat dst2_sb;
-		  struct stat src2_sb;
-		  if (stat (dst_path, &dst2_sb) == 0
-		      && stat (src_path, &src2_sb) == 0
-		      && src2_sb.st_ino == dst2_sb.st_ino
-		      && src2_sb.st_dev == dst2_sb.st_dev)
-		    {
-		      same = 1;
-		    }
+		  same = 1;
 		}
+	    }
 #endif
 
-	      if (same)
-		{
-		  if (x->hard_link)
-		    return 0;
+	  if (same)
+	    {
+	      if (x->hard_link)
+		return 0;
 
+	      if (x->backup_type == none)
+		{
 		  error (0, 0, _("`%s' and `%s' are the same file"),
 			 src_path, dst_path);
 		  return 1;
