@@ -1,6 +1,10 @@
 2004-09-22  Jim Meyering  <jim@meyering.net>
 
-	* backupfile.c: Remove trailing blank.
+	* getopt.c: Remove extraneous spaces before TAB.
+	* getopt_.h: Likewise.
+
+	* backupfile.c: Remove trailing blanks.
+	* euidaccess.c: Likewise.
 
 2004-09-13  Paul Eggert  <eggert@cs.ucla.edu>
 
