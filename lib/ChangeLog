@@ -1,5 +1,11 @@
 2003-06-18  Jim Meyering  <jim@meyering.net>
 
+	* xalloc.h: Include <stddef.h>.
+	Remove unnecessary parentheses.
+	Use `1990-2000' notation in Copyright line until Emacs'
+	copyright-update function learns how to handle a comma-separated
+	list of years that spans a line boundary.
+
 	* Makefile.am (libfetish_a_SOURCES): Add getdelim2.c and getdelim2.h.
 
 	* getline.c (getdelim2): Move this function into its own file.
