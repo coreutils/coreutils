@@ -1,3 +1,7 @@
+Thu Jan  2 21:16:16 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/Makefile.am (EXTRA_DIST): Add getgroups.c.
+
 Wed Jan  1 17:30:26 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/getgroups.c: New file.
