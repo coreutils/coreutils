@@ -498,10 +498,7 @@ static void
 add_temp_dir (char const *dir)
 {
   if (temp_dir_count == temp_dir_alloc)
-    {
-      temp_dir_alloc = temp_dir_alloc ? temp_dir_alloc * 2 : 16;
-      temp_dirs = xrealloc (temp_dirs, sizeof (temp_dirs) * temp_dir_alloc);
-    }
+    temp_dirs = x2nrealloc (temp_dirs, &temp_dir_alloc, sizeof *temp_dirs);
 
   temp_dirs[temp_dir_count++] = dir;
 }
@@ -1053,10 +1050,7 @@ fillbuf (struct buffer *buf, register FILE *fp, char const *file)
 
       /* The current input line is too long to fit in the buffer.
 	 Double the buffer size and try again.  */
-      if (2 * buf->alloc < buf->alloc)
-	xalloc_die ();
-      buf->alloc *= 2;
-      buf->buf = xrealloc (buf->buf, buf->alloc);
+      buf->buf = x2nrealloc (buf->buf, &buf->alloc, sizeof *(buf->buf));
     }
 }
 
@@ -2060,7 +2054,7 @@ sort (char * const *files, int nfiles, char const *output_file)
     {
       int i = n_temp_files;
       struct tempnode *node;
-      char **tempfiles = xmalloc (n_temp_files * sizeof (char *));
+      char **tempfiles = xnmalloc (n_temp_files, sizeof *tempfiles);
       for (node = temphead; i > 0; node = node->next)
 	tempfiles[--i] = node->name;
       merge (tempfiles, n_temp_files, NMERGE, output_file);
@@ -2313,7 +2307,7 @@ main (int argc, char **argv)
   gkey.numeric = gkey.general_numeric = gkey.month = gkey.reverse = false;
   gkey.skipsblanks = gkey.skipeblanks = false;
 
-  files = xmalloc (sizeof (char *) * argc);
+  files = xnmalloc (argc, sizeof *files);
 
   for (;;)
     {
