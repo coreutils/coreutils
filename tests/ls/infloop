@@ -39,6 +39,6 @@ sub
 loop/sub/sub:
 EOF
 
-cmp out bad && fail=1
+cmp out bad 2>/dev/null && fail=1
 
 (exit $fail); exit
