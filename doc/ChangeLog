@@ -1,3 +1,13 @@
+2004-08-10  Paul Eggert  <eggert@cs.ucla.edu>
+
+	POSIX-conformance fixes for "-" used as an operand.
+	* coreutils.texi (Common options): Clarify that "-" means
+	stdin/stdout only when it is an operand, not when it is an
+	option-argument.
+	(shred invocation): "shred -- -" is equivalent to "shred -",
+	not to "shred ./-".
+	(tee invocation): "tee -" means to copy (again) to stdout.
+
 2004-07-25  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (nice invocation): Document the "nice value", and
