@@ -789,7 +789,7 @@ dosync (int fd, char const *qname)
   err = errno;
   if (err != EINVAL)
     {
-      error (0, err, "%s: fdatasync", qname);
+      error (0, err, _("%s: fdatasync failed"), qname);
       errno = err;
       return -1;
     }
@@ -800,7 +800,7 @@ dosync (int fd, char const *qname)
   err = errno;
   if (err != EINVAL)
     {
-      error (0, err, "%s: fsync", qname);
+      error (0, err, _("%s: fsync failed"), qname);
       errno = err;
       return -1;
     }
@@ -924,7 +924,7 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
 			  write_error = true;
 			  continue;
 			}
-		      error (0, errno, "%s: lseek", qname);
+		      error (0, errno, _("%s: lseek failed"), qname);
 		    }
 		  return -1;
 		}
@@ -1226,7 +1226,7 @@ do_wipefd (int fd, char const *qname, struct isaac_state *s,
 
   if (fstat (fd, &st))
     {
-      error (0, errno, "%s: fstat", qname);
+      error (0, errno, _("%s: fstat failed"), qname);
       return false;
     }
 
@@ -1335,7 +1335,7 @@ wipefd (int fd, char const *qname, struct isaac_state *s,
 
   if (fd_flags < 0)
     {
-      error (0, errno, "%s: fcntl", qname);
+      error (0, errno, _("%s: fcntl failed"), qname);
       return false;
     }
   if (fd_flags & O_APPEND)
@@ -1463,7 +1463,7 @@ wipename (char *oldname, char const *qoldname, struct Options const *flags)
     }
   if (unlink (oldname) != 0)
     {
-      error (0, errno, "%s: remove", qoldname);
+      error (0, errno, _("%s: failed to remove"), qoldname);
       ok = false;
     }
   else if (flags->verbose)
@@ -1474,7 +1474,7 @@ wipename (char *oldname, char const *qoldname, struct Options const *flags)
 	ok = false;
       if (close (dir_fd) != 0)
 	{
-	  error (0, errno, "%s: close", qdir);
+	  error (0, errno, _("%s: failed to close"), qdir);
 	  ok = false;
 	}
     }
@@ -1532,14 +1532,14 @@ wipefile (char *name, char const *qname,
     }
   if (fd < 0)
     {
-      error (0, errno, "%s", qname);
+      error (0, errno, _("%s: failed to open for writing"), qname);
       return false;
     }
 
   ok = do_wipefd (fd, qname, s, flags);
   if (close (fd) != 0)
     {
-      error (0, errno, "%s: close", qname);
+      error (0, errno, _("%s: failed to close"), qname);
       ok = false;
     }
   if (ok && flags->remove_file)
