@@ -20,10 +20,6 @@
 #if ! defined MODECHANGE_H_
 # define MODECHANGE_H_
 
-# if HAVE_CONFIG_H
-#  include <config.h>
-# endif
-
 # include <sys/types.h>
 
 /* Affect the execute bits only if at least one execute bit is set already,
@@ -55,17 +51,9 @@ struct mode_change
 # define MODE_MEMORY_EXHAUSTED (struct mode_change *) 1
 # define MODE_BAD_REFERENCE (struct mode_change *) 2
 
-# ifndef PARAMS
-#  if defined PROTOTYPES || (defined __STDC__ && __STDC__)
-#   define PARAMS(Args) Args
-#  else
-#   define PARAMS(Args) ()
-#  endif
-# endif
-
-struct mode_change *mode_compile PARAMS ((const char *, unsigned));
-struct mode_change *mode_create_from_ref PARAMS ((const char *));
-mode_t mode_adjust PARAMS ((mode_t, const struct mode_change *));
-void mode_free PARAMS ((struct mode_change *));
+struct mode_change *mode_compile (const char *, unsigned);
+struct mode_change *mode_create_from_ref (const char *);
+mode_t mode_adjust (mode_t, const struct mode_change *);
+void mode_free (struct mode_change *);
 
 #endif
