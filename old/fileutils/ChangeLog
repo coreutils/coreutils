@@ -1,4 +1,4 @@
-Tue Jul  1 06:42:17 1997  /  <meyering@na-net.ornl.gov>
+Tue Jul  1 06:42:17 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/makepath.c (make_path): Reorder stat-then-mkdir-if-missing
 	calls so that mkdir is called first.  Before make_path would first
