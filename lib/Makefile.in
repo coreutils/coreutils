@@ -1,6 +1,6 @@
 # Makefile.in generated automatically by automake 1.4a from Makefile.am
 
-# Copyright (C) 1994, 1995-8, 1999 Free Software Foundation, Inc.
+# Copyright (C) 1994, 1995-9, 2000 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
@@ -151,9 +151,13 @@ BUILT_SOURCES = getdate.c lstat.c stat.c
 MAINTAINERCLEANFILES = $(BUILT_SOURCES)
 DISTCLEANFILES = lstat.c stat.c
 
-EXTRA_DIST = xstat.in config.charset
+EXTRA_DIST = xstat.in config.charset ref-add.sed.in ref-del.sed.in
 
-CLEANFILES = charset.alias
+charset_alias = $(DESTDIR)$(libdir)/charset.alias
+
+SUFFIXES = .sed .sed.in
+
+CLEANFILES = charset.alias ref-add.sed ref-del.sed
 subdir = lib
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../config.h
@@ -185,20 +189,6 @@ LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 DIST_SOURCES =  $(libfetish_a_SOURCES)
 HEADERS =  $(noinst_HEADERS)
 
-DIST_COMMON =  $(noinst_HEADERS) ChangeLog Makefile.am Makefile.in TODO \
-alloca.c chown.c dup2.c error.c error.h euidaccess.c fileblocks.c \
-fnmatch.c fsusage.c ftruncate.c getdate.c getgroups.c gethostname.c \
-getline.c getloadavg.c getusershell.c group-member.c lchown.c malloc.c \
-memchr.c memcmp.c memcpy.c memmove.c memset.c mkdir.c mktime.c \
-mountlist.c nanosleep.c obstack.c obstack.h putenv.c realloc.c regex.c \
-rmdir.c rpmatch.c stime.c stpcpy.c strcasecmp.c strcspn.c strdup.c \
-strftime.c strncasecmp.c strndup.c strpbrk.c strstr.c strtod.c strtol.c \
-strtoul.c strtoull.c strtoumax.c strverscmp.c utime.c
-
-
-DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-
-GZIP_ENV = --best
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 DEP_FILES =  @AMDEP@ $(DEPDIR)/addext$U.Po $(DEPDIR)/alloca.Po \
 $(DEPDIR)/argmatch$U.Po $(DEPDIR)/backupfile$U.Po \
@@ -237,16 +227,30 @@ $(DEPDIR)/xgetcwd$U.Po $(DEPDIR)/xgethostname$U.Po \
 $(DEPDIR)/xmalloc$U.Po $(DEPDIR)/xstrdup$U.Po $(DEPDIR)/xstrtod$U.Po \
 $(DEPDIR)/xstrtol$U.Po $(DEPDIR)/xstrtoul$U.Po \
 $(DEPDIR)/xstrtoumax$U.Po $(DEPDIR)/yesno$U.Po
+DIST_COMMON =  $(noinst_HEADERS) ChangeLog Makefile.am Makefile.in TODO \
+alloca.c chown.c depcomp dup2.c error.c error.h euidaccess.c \
+fileblocks.c fnmatch.c fsusage.c ftruncate.c getdate.c getgroups.c \
+gethostname.c getline.c getloadavg.c getusershell.c group-member.c \
+lchown.c malloc.c memchr.c memcmp.c memcpy.c memmove.c memset.c mkdir.c \
+mktime.c mountlist.c nanosleep.c obstack.c obstack.h putenv.c realloc.c \
+regex.c rmdir.c rpmatch.c stime.c stpcpy.c strcasecmp.c strcspn.c \
+strdup.c strftime.c strncasecmp.c strndup.c strpbrk.c strstr.c strtod.c \
+strtol.c strtoul.c strtoull.c strtoumax.c strverscmp.c utime.c
+
+
+DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+
+GZIP_ENV = --best
 SOURCES = $(libfetish_a_SOURCES)
 OBJECTS = $(am_libfetish_a_OBJECTS)
 
 all: all-redirect
 .SUFFIXES:
-.SUFFIXES: .c .o .y
+.SUFFIXES: .c .o .sed .sed.in .y
 $(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
 	cd $(top_srcdir) && $(AUTOMAKE) --gnits lib/Makefile
 
-Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status $(BUILT_SOURCES)
+Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) \
 	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
 
@@ -526,7 +530,7 @@ ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	  done | \
 	  $(AWK) '    { files[$$0] = 1; } \
 	       END { for (i in files) print i; }'`; \
-	mkid -f$$here/ID $$unique $(LISP)
+	mkid -fID $$unique $(LISP)
 
 TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
 		$(TAGS_FILES) $(LISP)
@@ -549,19 +553,6 @@ distclean-tags:
 	-rm -f TAGS ID
 
 maintainer-clean-tags:
-
-distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
-
-distdir: $(DISTFILES)
-	@for file in $(DISTFILES); do \
-	  d=$(srcdir); \
-	  if test -d $$d/$$file; then \
-	    cp -pR $$d/$$file $(distdir); \
-	  else \
-	    test -f $(distdir)/$$file \
-	    || cp -p $$d/$$file $(distdir)/$$file || :; \
-	  fi; \
-	done
 
 @AMDEP@include $(DEPDIR)/addext$U.Po
 @AMDEP@include $(DEPDIR)/alloca.Po
@@ -680,8 +671,23 @@ maintainer-clean-depend:
 @AMDEP@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
 @AMDEP@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(COMPILE) -c -o $@ $<
+	$(COMPILE) -c -o $@ `test -f $< || echo '$(srcdir)/'`$<
 
+
+distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
+
+distdir: $(DISTFILES)
+	@for file in $(DISTFILES); do \
+	  d=$(srcdir); \
+	  if test -d $$d/$$file; then \
+	    cp -pR $$d/$$file $(distdir) \
+	    || exit 1; \
+	  else \
+	    test -f $(distdir)/$$file \
+	    || cp -p $$d/$$file $(distdir)/$$file \
+	    || exit 1; \
+	  fi; \
+	done
 info-am:
 info: info-am
 dvi-am:
@@ -752,14 +758,14 @@ clean-noinstLIBRARIES maintainer-clean-noinstLIBRARIES \
 mostlyclean-compile distclean-compile clean-compile \
 maintainer-clean-compile mostlyclean-kr distclean-kr clean-kr \
 maintainer-clean-kr tags mostlyclean-tags distclean-tags clean-tags \
-maintainer-clean-tags distdir mostlyclean-depend distclean-depend \
-clean-depend maintainer-clean-depend info-am info dvi-am dvi check \
-check-am installcheck-am installcheck install-exec-local \
-install-exec-am install-exec install-data-am install-data install-am \
-install uninstall-local uninstall-am uninstall all-local all-redirect \
-all-am all install-strip installdirs mostlyclean-generic \
-distclean-generic clean-generic maintainer-clean-generic clean \
-mostlyclean distclean maintainer-clean
+maintainer-clean-tags mostlyclean-depend distclean-depend clean-depend \
+maintainer-clean-depend distdir info-am info dvi-am dvi check check-am \
+installcheck-am installcheck install-exec-local install-exec-am \
+install-exec install-data-am install-data install-am install \
+uninstall-local uninstall-am uninstall all-local all-redirect all-am \
+all install-strip installdirs mostlyclean-generic distclean-generic \
+clean-generic maintainer-clean-generic clean mostlyclean distclean \
+maintainer-clean
 
 lstat.c: xstat.in
 	sed \
@@ -779,20 +785,38 @@ stat.c: xstat.in
 	  $(srcdir)/xstat.in > $@-t
 	mv $@-t $@
 
-# What a mess needed in order to install a simple file in $(libdir)!
+# The following is needed in order to install a simple file in $(libdir)
+# which is shared with other installed packages. We use a list of referencing
+# packages so that "make uninstall" will remove the file if and only if it
+# is not used by another installed package.
 
-all-local: charset.alias
-
+all-local: charset.alias ref-add.sed ref-del.sed
 install-exec-local: all-local
 	$(mkinstalldirs) $(DESTDIR)$(libdir)
-	$(INSTALL_DATA) charset.alias $(libdir)/charset.alias
+	test -f $(charset_alias) \
+	  && orig=$(charset_alias) \
+	  || orig=charset.alias; \
+	sed -f ref-add.sed $$orig > $(charset_alias)-t
+	$(INSTALL_DATA) $(charset_alias)-t $(charset_alias)
+	rm -f $(charset_alias)-t
 
-# Probably not a good idea. Other packages need $(libdir)/charset.alias too.
-uninstall-local:
-	-rm -f $(libdir)/charset.alias
+uninstall-local: all-local
+	if test -f $(charset_alias); then \
+	  sed -f ref-del.sed $(charset_alias) > $(charset_alias)-t; \
+	  if grep '^# Packages using this file: $$' $(charset_alias)-t \
+	      > /dev/null; then \
+	    rm -f $(charset_alias); \
+	  else \
+	    $(INSTALL_DATA) $(charset_alias)-t $(charset_alias); \
+	  fi; \
+	  rm -f $(charset_alias)-t; \
+	fi
 
 charset.alias: config.charset
 	$(SHELL) $(srcdir)/config.charset '@host@' > $@-t
+	mv $@-t $@
+.sed.in.sed:
+	sed -e '/^#/d' -e 's/@''PACKAGE''@/@PACKAGE@/g' $< > $@-t
 	mv $@-t $@
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

@@ -1,3 +1,21 @@
+2000-03-24  Jim Meyering  <meyering@lucent.com>
+
+	* Makefile.am (EXTRA_DIST): Add ref-add.sed.in and ref-del.sed.in.
+	(charset_alias): Define.
+	(install-exec-local): Factor out common code.
+	(uninstall-local): Split lines longer than 80.
+	(ref-add.sed, ref-del.sed): Remove rules... (do the following instead)
+	(SUFFIXES): Define.
+	(.sed.in.sed): New rule.  Don't redirect directly to $@.
+	(CLEANFILES): Add ref-add.sed and ref-del.sed.
+
+2000-03-19  Bruno Haible  <haible@clisp.cons.org>
+
+	* config.charset: Output a line containing "Packages using this file".
+	* ref-add.sed.in, ref-del.sed.in: New files.
+	* Makefile.am (install-exec-local, uninstall-local, ref-add.sed,
+	ref-del.sed): New rules.
+
 2000-03-17  Jim Meyering  <meyering@lucent.com>
 
 	* unicodeio.c (<string.h>): Include only #if HAVE_STRING_H.
