@@ -53,6 +53,7 @@ libfetish_a_SOURCES = \
   human.c human.h \
   idcache.c \
   isdir.c \
+  imaxtostr.c \
   lchown.h \
   linebuffer.c linebuffer.h \
   localcharset.c \
@@ -64,6 +65,7 @@ libfetish_a_SOURCES = \
   memcoll.c memcoll.h \
   modechange.c modechange.h \
   mountlist.h \
+  offtostr.c \
   path-concat.c path-concat.h \
   pathmax.h \
   physmem.c physmem.h \
@@ -83,6 +85,7 @@ libfetish_a_SOURCES = \
   stripslash.c \
   strverscmp.h \
   timespec.h \
+  umaxtostr.c \
   unicodeio.c unicodeio.h \
   unistd-safer.h \
   userspec.c \
@@ -111,7 +114,7 @@ MAINTAINERCLEANFILES = $(BUILT_SOURCES)
 DISTCLEANFILES = lstat.c stat.c unlocked-io.h
 
 EXTRA_DIST = xstat.in config.charset ref-add.sin ref-del.sin gen-uio \
-  fnmatch_loop.c
+  fnmatch_loop.c inttostr.c
 
 lstat.c: xstat.in
 	sed \
