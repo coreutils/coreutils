@@ -1,5 +1,21 @@
+2001-08-25  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.15.
+
+2001-08-25  Paul Eggert  <eggert@twinsun.com>
+
+	* src/uniq.c (main): Fix a typo in the previous patch: missing
+	a bounds check for examples like `uniq a b c'.
+
+	* uniq.c (main): Fix some more incompatibilities with POSIX.2,
+	(e.g. `uniq +3 --' did not work) by invoking getopt_long with
+	leading '-', resembling what was done to 'sort' on 2001-03-20.
+	Recognize an +N option only if it is an integer in range, and
+	(if POSIXLY_CORRECT) only if a file name argument has not been seen;
+	otherwise silently treat it as a file name.
+
+	If the user specifies too many operands, output the first one
+	in the error message, as a diagnostic aid.
 
 2001-08-24  Paul Eggert  <eggert@twinsun.com>
 
