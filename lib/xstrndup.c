@@ -22,8 +22,7 @@
 # include "config.h"
 #endif
 
-#include <stddef.h>
-
+#include "xstrndup.h"
 #include "xalloc.h"
 
 char *strndup (char const *, size_t);
