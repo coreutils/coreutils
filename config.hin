@@ -682,6 +682,9 @@
 /* Define to 1 if libc includes obstacks. */
 #undef HAVE_OBSTACK
 
+/* Define to 1 if you have the `openat' function. */
+#undef HAVE_OPENAT
+
 /* Define to 1 if you have the <OS.h> header file. */
 #undef HAVE_OS_H
 
@@ -1490,6 +1493,9 @@
    #define below would cause a syntax error. */
 #undef _UINT32_T
 
+/* Define to rpl_ if the chdir replacement function should be used. */
+#undef __CHDIR_PREFIX
+
 /* Enable extensions on Solaris.  */
 #ifndef __EXTENSIONS__
 # undef __EXTENSIONS__
@@ -1501,6 +1507,9 @@
 /* Define to rpl_ if the getopt replacement functions and variables should be
    used. */
 #undef __GETOPT_PREFIX
+
+/* Define to rpl_ if the openat replacement function should be used. */
+#undef __OPENAT_PREFIX
 
 /* Define like PROTOTYPES; this can be used by system headers. */
 #undef __PROTOTYPES
