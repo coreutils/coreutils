@@ -1,0 +1,35 @@
+#!/bin/sh
+# Do dereference a symlink arg if its name is written with a trailing slash.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  ls --version
+fi
+
+tmp=t-ls.$$
+
+framework_failure=0
+mkdir $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+
+mkdir dir || framework_failure=1
+ln -s dir symlink || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo 'failure in testing framework'
+  exit 1
+fi
+
+LANGUAGE=C; export LANGUAGE
+LANG=C; export LANG
+
+fail=0
+set `ls -l symlink/`
+
+# Prior to fileutils-4.0k, the following would have output `... symlink -> dir'.
+test "$*" = 'total 0' && : || fail=1
+
+cd ..
+rm -rf $tmp
+
+exit $fail
