@@ -1,3 +1,8 @@
+2001-04-14  Paul Eggert  <eggert@twinsun.com>
+
+	* src/sort.c (default_sort_size): Leave a 1/16 margin for RSS.
+	Suggestion from Solar Designer.
+
 2001-04-14  Jim Meyering  <meyering@lucent.com>
 
 	* src/wc.c (usage): Tweak --help output: s/line,/newline,/
