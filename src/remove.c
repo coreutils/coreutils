@@ -513,10 +513,7 @@ is_empty_dir (char const *dir)
 {
   DIR *dirp = opendir (dir);
   if (dirp == NULL)
-    {
-      closedir (dirp);
-      return false;
-    }
+    return false;
 
   while (1)
     {
