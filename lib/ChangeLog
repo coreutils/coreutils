@@ -1,5 +1,17 @@
 2004-08-11  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* fts.c (O_DIRECTORY): Define to 0 if the system doesn't define.
+
+	* settime.c (settime): Recode to avoid warning with Sun Forte C 6U2.
+
+	* obstack.c: Include <inttypes.h> and <stdint.h> if available.
+	(union fooround): Use uintmax_t, not long int.
+	The rest is a merge from libc:
+	[defined _LIBC]: Include <shlib-compat.h>.
+	(_obstack) [defined _LIBC]: Remove after 2.3.4.
+
+	* xgethostname.c: Do not include error.h.  (merge from gnulib).
+
 	* fnmatch.c (WIDE_CHAR_SUPPORT): Don't set to 1 if missing
 	wmemchr or wmemcpy.  Problem reported by Robert Dahlem
 	for Reliant Unix 5.43.
