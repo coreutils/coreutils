@@ -1,3 +1,24 @@
+2002-07-03  Jim Meyering  <meyering@lucent.com>
+
+	* src/stat.c (usage): Rename --link/-l to --dereference/-L.
+	Describe --secure.
+	Describe --format.
+	(main): Support -L.  Deprecate -l.
+
+2002-07-02  Jim Meyering  <meyering@lucent.com>
+
+	* src/chgrp.c, src/chmod.c, src/chown.c, src/cp.c, src/dd.c (usage):
+	Use the PACKAGE_BUGREPORT e-mail address, rather than hard-coding it.
+	* src/df.c, src/dircolors.c, src/du.c, src/install.c: Likewise.
+	* src/link.c, src/ln.c, src/ls.c, src/mkdir.c, src/mkfifo.c: Likewise.
+	* src/mknod.c, src/mv.c, src/rm.c, src/rmdir.c, src/shred.c: Likewise.
+	* src/stat.c, src/sync.c, src/touch.c, src/unlink.c: Likewise.
+
+2002-07-01  Jim Meyering  <meyering@lucent.com>
+
+	* tests/touch/fail-diag: Handle yet another different diagnostic.
+	Report from Volker Borchert.
+
 2002-06-29  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.10.
