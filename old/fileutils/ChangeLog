@@ -1,6 +1,19 @@
-2001-10-05  Jim Meyering  <meyering@lucent.com>
+2001-10-06  Jim Meyering  <meyering@lucent.com>
+
+	* src/mv.c (do_move): Reflect that hash_init now takes no arguments.
+	* src/install.c (main): Likewise.
+	* src/cp.c (main): Likewise.
+
+	* src/copy.c (record_dest): Avoid a small leak.
+	(copy_internal): Call remember_copied only for if the source file
+	has 1 < st_nlink, or if it's a directory.
+	Now that EARLIER_FILE is set conditionally, initialize it to NULL.
 
 	* Version 4.1.1.
+
+	* tests/mv/childproof: Redirect stderr on one test.
+
+2001-10-05  Jim Meyering  <meyering@lucent.com>
 
 	* src/copy.c: Include hash-pjw.h and remove definition of hash_pjw.
 	* src/remove.c: Likewise.
