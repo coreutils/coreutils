@@ -2,6 +2,9 @@
 
 	* Version 5.0.91.
 
+	* src/nice.c [!NICE_PRIORITY]: Include <time.h> before <sys/resource.h>
+	to avoid compilation error on Ultrix. Reported by Christian Krackowizer.
+
 	* src/cut.c (cut_fields): Don't read again after encountering an
 	initial EOF.  E.g., `cut -f2' would do so.
 	* tests/misc/tty-eof: Add a test for the above fix.
