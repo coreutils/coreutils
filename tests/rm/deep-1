@@ -45,7 +45,6 @@ test -d $deep || fail=1
 ( ulimit -s 50; du -s $tmp > /dev/null ) || fail=1
 
 rm -r $tmp || fail=1
-echo done
 
 # Make sure all of $tmp was deleted.
 test -d $tmp && fail=1
