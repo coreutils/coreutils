@@ -34,6 +34,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   nice now works on Darwin 7.7.0 in spite of its invalid definition of NZERO.
 
+  sleep no longer fails when resumed after being suspended on linux-2.6.8.1,
+  in spite of that kernel's buggy nanosleep implementation.
+
 ** New features
 
   stat -f -c %S outputs the fundamental block size (used for block counts).
