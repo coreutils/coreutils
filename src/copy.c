@@ -595,7 +595,7 @@ copy_internal (const char *src_path, const char *dst_path,
 	 directories).  */
       if (S_ISDIR (src_type))
 	{
-	  error (0, 0, _("%s: won't create hard link `%s' to directory `%s'"),
+	  error (0, 0, _("won't create hard link `%s' to directory `%s'"),
 		 dst_path, earlier_file);
 	  goto un_backup;
 	}
