@@ -65,6 +65,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   are no longer safe, as `sort' might start writing F before `cat' is
   done reading it.  This problem cannot occur unless `-m' is used.
 
+  When outside the default POSIX locale, the 'who' and 'pinky'
+  commands now output time stamps like "2004-06-21 13:09" instead of
+  the traditional "Jun 21 13:09".
+
   pwd now works even when run from a working directory whose name
   is longer than PATH_MAX.
 
