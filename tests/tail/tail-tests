@@ -417,8 +417,59 @@ else
   esac
 fi
 test -s tstdin-2.err || rm -f tstdin-2.err
+$xx -n 10 < $srcdir/tn-1.in > tn-1.out 2> tn-1.err
+code=$?
+if test $code != 0 ; then
+  $echo Test n-1 failed: ../../src/tail return code $code differs from expected value 0 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp tn-1.out $srcdir/tn-1.exp
+  case $? in
+    0) if test "$VERBOSE" ; then $echo passed n-1; fi ;; # equal files
+    1) $echo Test n-1 failed: files tn-1.out and $srcdir/tn-1.exp differ 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo Test n-1 may have failed. 1>&2;
+       $echo The command "cmp tn-1.out $srcdir/tn-1.exp" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s tn-1.err || rm -f tn-1.err
+$xx -n -10 < $srcdir/tn-2.in > tn-2.out 2> tn-2.err
+code=$?
+if test $code != 0 ; then
+  $echo Test n-2 failed: ../../src/tail return code $code differs from expected value 0 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp tn-2.out $srcdir/tn-2.exp
+  case $? in
+    0) if test "$VERBOSE" ; then $echo passed n-2; fi ;; # equal files
+    1) $echo Test n-2 failed: files tn-2.out and $srcdir/tn-2.exp differ 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo Test n-2 may have failed. 1>&2;
+       $echo The command "cmp tn-2.out $srcdir/tn-2.exp" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s tn-2.err || rm -f tn-2.err
+$xx -n +10 < $srcdir/tn-3.in > tn-3.out 2> tn-3.err
+code=$?
+if test $code != 0 ; then
+  $echo Test n-3 failed: ../../src/tail return code $code differs from expected value 0 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp tn-3.out $srcdir/tn-3.exp
+  case $? in
+    0) if test "$VERBOSE" ; then $echo passed n-3; fi ;; # equal files
+    1) $echo Test n-3 failed: files tn-3.out and $srcdir/tn-3.exp differ 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo Test n-3 may have failed. 1>&2;
+       $echo The command "cmp tn-3.out $srcdir/tn-3.exp" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s tn-3.err || rm -f tn-3.err
 if test $errors = 0 ; then
-  $echo Passed all 24 tests. 1>&2
+  $echo Passed all 27 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi
