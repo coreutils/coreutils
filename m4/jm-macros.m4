@@ -1,4 +1,4 @@
-#serial 65   -*- autoconf -*-
+#serial 66   -*- autoconf -*-
 
 m4_undefine([AC_LANG_SOURCE(C)])
 dnl The following is identical to the definition in c.m4
@@ -66,6 +66,7 @@ AC_DEFUN([jm_MACROS],
   AC_REQUIRE([AC_FUNC_STRERROR_R])
   AC_REQUIRE([jm_FUNC_NANOSLEEP])
   AC_REQUIRE([jm_FUNC_MEMCMP])
+  AC_REQUIRE([gl_MEMCOLL])
   AC_REQUIRE([jm_FUNC_GLIBC_UNLOCKED_IO])
   AC_REQUIRE([AC_FUNC_FNMATCH_GNU])
   AC_REQUIRE([jm_FUNC_GROUP_MEMBER])
