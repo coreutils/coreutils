@@ -1,3 +1,7 @@
+2001-11-09  Jim Meyering  <meyering@lucent.com>
+
+	* afs.m4 (jm_AFS): Quote the body.  Patch by Akim Demaille.
+
 2001-11-04  Jim Meyering  <meyering@lucent.com>
 
 	* fpending.m4: Remove unused cruft that saved, set, and restored $DEFS.
