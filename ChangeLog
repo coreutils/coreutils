@@ -3,6 +3,8 @@
 	* Version 5.3.0.
 
 	* tests/misc/pwd: New test, for fix of 2004-04-19.
+	* tests/misc/Makefile.am (TESTS): Add pwd.
+	(BUILD_SRC_DIR): Define BUILD_SRC_DIR.
 
 	* src/copy.c: Remove declaration of euidaccess.
 	Instead, include "euidaccess.h".
