@@ -1,6 +1,24 @@
-2001-08-25  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.15.
+
+2001-08-24  Paul Eggert  <eggert@twinsun.com>
+
+	Remove arbitrary restrictions on sizes, fixing a bug reported
+	by Geoff Whale.
+
+	* src/uniq.c (skip_fields, skip_chars, check_chars): Now size_t,
+	not int.
+	(size_opt): New function.  Do not arbitrarily reject size zero.
+	Change the wording of the error message slightly, for convenience.
+	(find_field): Use size_t, not int, to compute sizes.
+	(different, main): check_chars==0 is no longer a special case, as
+	it defaults to SIZE_MAX.
+	(main): Check for overflow with args like -234234234234234.
+	Use 'size_opt' to convert optional arguments to sizes.
+
+2001-08-25  Jim Meyering  <meyering@lucent.com>
+
+	* tests/uniq/Test.pm: Add new test, #54, for the just-fixed bug.
 
 2001-08-24  Paul Eggert  <eggert@twinsun.com>
 
