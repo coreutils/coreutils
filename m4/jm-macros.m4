@@ -1,4 +1,4 @@
-#serial 5
+#serial 6
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
@@ -9,7 +9,8 @@ AC_DEFUN(jm_MACROS,
   dnl This macro actually runs replacement code.  See isc-posix.m4.
   AC_REQUIRE([AC_ISC_POSIX])dnl
 
-  AC_REQUIRE([jm_WITH_REGEX])
+  jm_WITH_REGEX([lib/regex.c])
+
   AC_REQUIRE([jm_ASSERT])
   AC_REQUIRE([jm_AC_HEADER_INTTYPES_H])
   AC_REQUIRE([jm_AC_TYPE_UINTMAX_T])
