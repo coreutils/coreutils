@@ -70,10 +70,10 @@ for args in 'foo symlink' 'symlink foo' 'foo foo' 'sl1 sl2' 'foo hardlink'; do
 	# and put brackets around the output.
 	test -s _err && echo "[`sed 's/^[^:][^:]*:/cp:/' _err`]"
 	# Strip off all but the file names.
-	ls="`ls -lG --ignore=_err . \
+	ls="`ls -lgG --ignore=_err . \
 	    | sed \
 	        -e '/^total /d' \
-		-e 's/^...............................................//'`"
+		-e 's/^......................................//'`"
 	echo "($ls)"
 	# Make sure the original is unchanged and that
 	# the destination is a copy.
