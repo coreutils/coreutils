@@ -9,4 +9,4 @@ TESTS_ENVIRONMENT = \
   PATH=`pwd`/../../src:$$PATH \
   PROG=tail
 
-TESTS = assert
+TESTS = assert assert-2
