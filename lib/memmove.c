@@ -5,7 +5,8 @@
 
 void
 memmove (dest, source, length)
-     char *dest, *source;
+     char *dest;
+     const char *source;
      unsigned length;
 {
   if (source < dest)
