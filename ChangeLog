@@ -2,6 +2,9 @@
 
 	* Version 5.0.91.
 
+	* man/Makefile.am (.x.1): Ensure that generated PROGRAM.1 files
+	are read-only.
+
 	* src/tail.c (tail_lines): Fix a potential (but very hard to exercise)
 	race condition bug.  The bug would be triggered when tailing a file
 	with file pointer not at beginning of file, and where the file was
