@@ -1,3 +1,13 @@
+2001-09-28  Paul Eggert  <eggert@twinsun.com>
+
+	Fix bug reported by Petter Reinholdtsen for HP-UX 10.20, which
+	#defines strtoimax.  Also treat the other strto* functions
+	like strtoimax.
+
+	* xstrtol.c (strtol): Do not declare if HAVE_DECL_STRTOL.
+	(strtoul): Do not declare if HAVE_DECL_STRTOUL.
+	(strtoimax, strtoumax): Do not declare if already defined as a macro.
+
 2001-09-26  Jim Meyering  <meyering@lucent.com>
 
 	Most macros in unlocked-io.h had the wrong number of arguments.
