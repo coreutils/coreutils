@@ -1,6 +1,7 @@
 Changes in release 3.17:
 [3.16s]
-* touch works around system-specific bugs so it now affects existing,
+* df accept a new option --local (-l)
+* touch works around a system-specific bug so it now affects existing,
   zero-length files on certain systems
 * chown now works even on certain SVR3 systems where it used to fail
 [3.16r]
