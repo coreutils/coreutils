@@ -1,3 +1,10 @@
+1999-07-04  Paul Eggert  <eggert@twinsun.com>
+
+	* lib/xstrtol.c (__strtol): Remove decl; it doesn't work if __strtol
+	expands to a macro, which occurs in HP-UX 10.20 with strtoumax.
+	(strtol, strtoul): New decls (for pre-ANSI hosts), to replace
+	the above decl.
+
 1999-05-27  Volker Borchert  <bt@teknon.de>
 
 	* tests/Makefile.am: Qualify .env-warn with $(srcdir)/ prefix.
