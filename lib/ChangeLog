@@ -1,5 +1,7 @@
 2003-01-20  Jim Meyering  <jim@meyering.net>
 
+	* ftw_.h: Rename from ftw.h.
+
 	* obstack.h (obstack_object_size): Declare temporary, __o, to be const.
 	(obstack_room): Likewise.
 	(obstack_empty_p): Likewise.
