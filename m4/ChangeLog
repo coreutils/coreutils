@@ -1,3 +1,11 @@
+2001-03-16  Jim Meyering  <meyering@lucent.com>
+
+	* error.m4 (jm_PREREQ_ERROR): Invoke AC_FUNC_STRERROR_R.
+	Suggestion from Akim Demaille.
+
+	* prereq.m4 (jm_PREREQ): Add jm_PREREQ_TEMPNAME.
+	(jm_PREREQ_TEMPNAME): New function.
+
 2001-02-25  Paul Eggert  <eggert@twinsun.com>
 
 	* jm-macros.m4 (jm_MACROS): Use mkstemp replacement if the system
