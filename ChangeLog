@@ -2,6 +2,9 @@
 
 	* Version 4.5.10.
 
+	* tests/Makefile.am (check-root): Remove touch/fifo.
+	It doesn't appear to have to be run as root.
+
 	* tests/rm/fail-2eperm: Rather than simply using the first non-root
 	user name, make sure that the selected user name has a usable shell.
 	Reported by Paul Jarc.
