@@ -6,8 +6,10 @@ use Getopt::Long;
 use Digest::MD5;
 use Digest::SHA1;
 
-(my $VERSION = '$Revision: 1.9 $ ') =~ tr/[0-9].//cd;
+(my $VERSION = '$Revision: 1.10 $ ') =~ tr/[0-9].//cd;
 (my $ME = $0) =~ s|.*/||;
+
+my %valid_release_types = map {$_ => 1} qw (alpha beta major);
 
 END
 {
@@ -53,6 +55,7 @@ OPTIONS:
 
   FIXME: describe the following
 
+   --release-type=TYPE
    --package-name=PACKAGE_NAME
    --previous-version=VER
    --current-version=VER
@@ -69,6 +72,7 @@ EOF
 }
 
 {
+  my $release_type;
   my $package_name;
   my $prev_version;
   my $curr_version;
@@ -78,6 +82,7 @@ EOF
 
   GetOptions
     (
+     'release-type=s' => \$release_type,
      'package-name=s' => \$package_name,
      'previous-version=s' => \$prev_version,
      'current-version=s' => \$curr_version,
@@ -91,16 +96,21 @@ EOF
 
   my $fail = 0;
   # Ensure that sure each required option is specified.
+  $release_type
+    or (warn "$ME: release type not specified\n"), $fail = 1;
   $package_name
-    or (warn "$ME: missing package name\n"), $fail = 1;
+    or (warn "$ME: package name not specified\n"), $fail = 1;
   $prev_version
-    or (warn "$ME: missing previous version string\n"), $fail = 1;
+    or (warn "$ME: previous version string not specified\n"), $fail = 1;
   $curr_version
-    or (warn "$ME: missing current version string\n"), $fail = 1;
+    or (warn "$ME: current version string not specified\n"), $fail = 1;
   $release_archive_dir
-    or (warn "$ME: missing release directory name\n"), $fail = 1;
+    or (warn "$ME: release directory name not specified\n"), $fail = 1;
   @url_dir_list
-    or (warn "$ME: missing URL directory name(s)\n"), $fail = 1;
+    or (warn "$ME: URL directory name(s) not specified\n"), $fail = 1;
+
+  exists $valid_release_types{$release_type}
+    or (warn "$ME: `$release_type': invalid release type\n"), $fail = 1;
 
   @ARGV
     and (warn "$ME: too many arguments\n"), $fail = 1;
