@@ -1,5 +1,9 @@
 Sat May 24 09:20:12 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/rmdir.c: New options: --ignore-fail-on-non-empty and --verbose.
+	(remove_parents): Implement new options.
+	(main): Likewise.
+
 	* lib/mountlist.c (read_filesystem_list): Show automount-related
 	duplicate filesystems only when --all specified.  With suggestions
 	from Stuart Kemp.  Also indent cpp directives.
