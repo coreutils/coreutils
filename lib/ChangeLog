@@ -1,3 +1,25 @@
+2003-06-05  Jim Meyering  <jim@meyering.net>
+
+	From gnulib.
+	* mktime.c: Assume freestanding C89 or better.
+	(HAVE_LIMITS_H): Remove.  Assume it's 1.
+	(__P): Remove; not used.
+	(CHAR_BIT, INT_MIN, INT_MAX): Remove; <limits.h> defines them.
+	(mktime, not_equal_tm, print_tm, check_result,
+	main): Use prototypes.  Use const * where appropriate.
+	(main): Fix typo in testing code that uncovered by above changes.
+	(Local Variables): Remove -DHAVE_LIMITS_H from compile-command.
+
+2003-06-04  Paul Eggert  <eggert@twinsun.com>
+
+	Merge human.c etc. from gnulib.
+	* m4/human.m4: New file, from gnulib.
+	* m4/prereq.m4 (jm_PREREQ): Use gl_HUMAN, not jm_PREREQ_HUMAN.
+	(jm_prereq_HUMAN): Remove.
+	* lib/exclude.c, lib/human.c, lib/human.h: Merge from gnulib.
+	* lib/cycle-check.c, lib/cycle-check.h, src/system.h:
+	Include <stdbool.h> unconditionally.
+
 2003-06-02  Jim Meyering  <jim@meyering.net>
 
 	* stdbool.hin: New file.  From gnulib.
