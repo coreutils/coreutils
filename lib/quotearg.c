@@ -63,6 +63,11 @@
 #endif
 
 #if HAVE_WCHAR_H
+
+/* BSD/OS 4.1 wchar.h requires FILE and struct tm to be declared.  */
+# include <stdio.h>
+# include <time.h>
+
 # include <wchar.h>
 #endif
 
