@@ -428,7 +428,9 @@ humblock (char const *spec, uintmax_t *block_size, int *options)
   int i;
   int opts = 0;
 
-  if (! spec && ! (spec = getenv ("BLOCK_SIZE")))
+  if (! spec
+      && ! (spec = getenv ("BLOCK_SIZE"))
+      && ! (spec = getenv ("BLOCKSIZE")))
     *block_size = default_block_size ();
   else
     {
