@@ -1,4 +1,27 @@
+Sun Nov 24 11:02:29 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/system.h [!defined STDIN_FILENO]: Define it.
+	[!defined STDOUT_FILENO]: Define it.
+	[!defined STDERR_FILENO]: Define it.
+
+	* src/stty.c (get_win_size): Take a FILENO parameter rather than
+	trying to get a size from both stdin and stdout.
+	Update callers.
+	Use STDIN_FILENO and STDOUT_FILENO instead of literal 0, 1.
+
+	========== From Karl Heuer =========
+	* src/stty.c: Big patch from Karl Heuer.  FIXME: fill in details
+
+	* acconfig.h (GWINSZ_IN_SYS_PTY): Add #undef.
+	(TERMIOS_NEEDS_XOPEN_SOURCE): Add #undef.
+
+	* configure.in (whether termios.h needs _XOPEN_SOURCE): New test.
+	(whether TIOCGWINSZ is defined in sys/pty.h): New test.
+
 Sat Nov 23 16:15:37 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/Makefile.am (EXTRA_DIST): Add getline.c now that getline
+	isn't mentioned in AC_REPLACE_FUNCS.
 
 	* env.c (usage): Alphabetize option descriptions the way sort -f would.
 	* test.c (usage): Likewise.
