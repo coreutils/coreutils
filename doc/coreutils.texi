@@ -4485,32 +4485,32 @@ options}.
 @itemx --bytes=@var{byte-list}
 @opindex -b
 @opindex --bytes
-Print only the bytes in positions listed in @var{byte-list}.  Tabs and
-backspaces are treated like any other character; they take up 1 byte.
-If an output delimiter is specified, (see the description of
-@option{--output-delimiter}), then output that string between
-ranges of selected bytes.
+Select for printing only the bytes in positions listed in
+@var{byte-list}.  Tabs and backspaces are treated like any other
+character; they take up 1 byte.  If an output delimiter is specified,
+(see the description of @option{--output-delimiter}), then output that
+string between ranges of selected bytes.
 
 @item -c @var{character-list}
 @itemx --characters=@var{character-list}
 @opindex -c
 @opindex --characters
-Print only characters in positions listed in @var{character-list}.
-The same as @option{-b} for now, but internationalization will change
-that.  Tabs and backspaces are treated like any other character; they
-take up 1 character.
-If an output delimiter is specified, (see the description of
-@option{--output-delimiter}), then output that string between
-ranges of selected bytes.
+Select for printing only the characters in positions listed in
+@var{character-list}.  The same as @option{-b} for now, but
+internationalization will change that.  Tabs and backspaces are
+treated like any other character; they take up 1 character.  If an
+output delimiter is specified, (see the description of
+@option{--output-delimiter}), then output that string between ranges
+of selected bytes.
 
 @item -f @var{field-list}
 @itemx --fields=@var{field-list}
 @opindex -f
 @opindex --fields
-Print only the fields listed in @var{field-list}.  Fields are
-separated by a TAB character by default.
-Also print any line that contains no delimiter character, unless
-the @option{--only-delimited} (@option{-s}) option is specified
+Select for printing only the fields listed in @var{field-list}.
+Fields are separated by a TAB character by default.  Also print any
+line that contains no delimiter character, unless the
+@option{--only-delimited} (@option{-s}) option is specified
 
 @item -d @var{input_delim_byte}
 @itemx --delimiter=@var{input_delim_byte}
@@ -4530,7 +4530,7 @@ Do not split multi-byte characters (no-op for now).
 For @option{-f}, do not print lines that do not contain the field separator
 character.  Normally, any line without a field separator is printed verbatim.
 
-@itemx --output-delimiter=@var{output_delim_string}
+@item --output-delimiter=@var{output_delim_string}
 @opindex --output-delimiter
 With @option{-f}, output fields are separated by @var{output_delim_string}.
 The default with @option{-f} is to use the input delimiter.
@@ -4539,6 +4539,14 @@ character offsets (as opposed to ranges of fields),
 output @var{output_delim_string} between non-overlapping
 ranges of selected bytes.
 
+@item --complement
+@opindex --complement
+This option is a GNU extension.
+Select for printing the complement of the bytes, characters or fields
+selected with the @option{-b}, @option{-c} or @option{-f} options.
+In other words, do @emph{not} print the bytes, characters or fields
+specified via those options.  This option is useful when you have
+many fields and want to print all but a few of them.
 
 @end table
 
