@@ -66,7 +66,8 @@ src_to_dest_hash (void const *x, unsigned int table_size)
   return (uintmax_t) p->st_ino % table_size;
 }
 
-/* Compare two Src_to_dest entries.  Return true if their keys are judged `equal'.  */
+/* Compare two Src_to_dest entries.
+   Return true if their keys are judged `equal'.  */
 static bool
 src_to_dest_compare (void const *x, void const *y)
 {
