@@ -1,6 +1,10 @@
-2004-12-19  Paul Eggert  <eggert@cs.ucla.edu>
+2004-12-20  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	* src/split.c (usage): Mention default size.  Suggested by Dan Jacobson.
+
+2004-12-19  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: Mention that one should eval "`dircolors`" rather than
 	`dircolors`.
