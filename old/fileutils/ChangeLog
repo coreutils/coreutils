@@ -1,5 +1,11 @@
 1998-08-29  Jim Meyering  <meyering@ascend.com>
 
+	* tests/Fetish.pm: New file -- moved from ls-2/.
+	* configure.in (AC_OUTPUT): Add tests/dircolors/Makefile.
+	* tests/Makefile.am (SUBDIRS): Add dircolors.
+	(EXTRA_DIST): Add Fetish.pm.
+	* tests/dircolors: New directory
+
 	* src/ls.c (print_dir_name): Remove global variable.
 	(print_dir): When trace_dirs is set, always print the directory
 	name header.
