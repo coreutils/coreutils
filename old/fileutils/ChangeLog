@@ -1,5 +1,12 @@
 1998-10-03  Jim Meyering  <meyering@ascend.com>
 
+	* man/Makefile.maint ($(man_MANS)): Don't depend on actual executables.
+	Instead, depend on corresponding source file and on configure.in.
+	Based on suggestion and code from Akim Demaille.
+	Factor out irregular men into Makefile.summ.
+
+	* man/Makefile.am (EXTRA_DIST): Add Makefile.summ.
+
 	* man/Makefile.summ: New file.
 	* man/Makefile.maint: Include it.
 
