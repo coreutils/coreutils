@@ -226,10 +226,10 @@ __mktime_internal (tp, convert, offset)
 	       [mon_remainder + 12 * negative_mon_remainder])
 	      + mday - 1);
 
+  int sec_requested = sec;
 #if LEAP_SECONDS_POSSIBLE
   /* Handle out-of-range seconds specially,
      since ydhms_tm_diff assumes every minute has 60 seconds.  */
-  int sec_requested = sec;
   if (sec < 0)
     sec = 0;
   if (59 < sec)
