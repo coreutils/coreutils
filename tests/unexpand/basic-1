@@ -51,6 +51,10 @@ my @Tests =
      ['infloop-3', '-t', '2,3', {IN=> "x \t\t \n"}, {OUT=>"x\t\t\t \n"}],
      ['infloop-4', '-t', '1,2', {IN=> " \t\t   \n"}, {OUT=>"\t\t\t   \n"}],
      ['c-1', '-t', '1,2', {IN=> "x\t\t .\n"}, {OUT=>"x\t\t .\n"}],
+
+     # This test failed in 2.0e and earlier.  From Jie Xu.
+     ['tabs-1', qw(   -t 4), {IN=> "    a   b   c\n"}, {OUT=>"\ta   b   c\n"}],
+     ['tabs-2', qw(-a -t 4), {IN=> "    a   b   c\n"}, {OUT=>"\ta\tb\tc\n"}],
     );
 
 my $save_temps = $ENV{DEBUG};
