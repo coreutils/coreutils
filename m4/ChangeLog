@@ -1,3 +1,7 @@
+1999-04-20  Paul Eggert  <eggert@twinsun.com>
+
+	* m4/lfs.m4: Port to AIX and HP-UX.  Support cross-compilation.
+
 1999-04-18  Jim Meyering  <meyering@ascend.com>
 
 	* xstrtoumax.m4 (jm_AC_PREREQ_XSTRTOUMAX): New file/macro.
