@@ -605,8 +605,9 @@ ftw_dir (struct ftw_data *data, struct FTW_STAT *st)
       __set_errno (save_err);
     }
 
-  /* Prepare the return, revert the `struct FTW' information.  */
-  data->dirbuf[data->ftw.base - 1] = '\0';
+  /* Prepare the return, revert the `struct FTW' information.
+     If ftw.base is 1, be careful to preserve the `/'.  */
+  data->dirbuf[data->ftw.base == 1 ? 1 : data->ftw.base - 1] = '\0';
   --data->ftw.level;
   data->ftw.base = previous_base;
 
