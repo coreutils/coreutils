@@ -1,0 +1,34 @@
+#!/bin/sh
+# When reading a specified number of lines, ensure that the output
+# file pointer is positioned just after those lines.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  head --version
+fi
+
+pwd=`pwd`
+tmp=head-pos.$$
+trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
+trap '(exit $?); exit' 1 2 13 15
+
+framework_failure=0
+mkdir $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+(echo a; echo b) > in || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo '$0: failure in testing framework' 1>&2
+  (exit 1); exit
+fi
+
+fail=0
+(head -n 1 >/dev/null; cat) < in > out || fail=1
+cat <<EOF > exp
+b
+EOF
+
+cmp out exp || fail=1
+test $fail = 1 && diff out exp 2> /dev/null
+
+(exit $fail); exit
