@@ -1,3 +1,32 @@
+Thu Nov 17 06:37:33 1994  Jim Meyering  (meyering@comco.com)
+
+        * tail.c (dump_remainder): Flush standard output just before
+        sleeping so that `tail -f' will output partial lines sooner.
+        This applies only when following the end of a single file.
+        From Leonard N. Zubkoff <lnz@dandelion.com>.
+
+        * tail.c (file_lines, pipe_lines, pipe_bytes, start_bytes,
+        start_lines, dump_remainder): Use STDOUT_FILENO instead of `1' in
+        XWRITE calls.
+        * tac.c (output): Use STDOUT_FILENO instead of `1' in xwrite call.
+        * system.h (STDIN_FILENO, STDOUT_FILENO, STDERR_FILENO): Define if
+        not already defined.
+
+Wed Nov 16 07:01:38 1994  Jim Meyering  (meyering@comco.com)
+
+        * tr.c: Include <getopt.h> instead of "getopt.h".
+
+        * sort.c (tempname): Merge two very similar sprintf stmts into one.
+
+        * tail.c: Use BUFSIZ instead of BUFSIZE.
+
+        * cut.c: Declare DELIM to be `int' rather than unsigned char.
+
+        * fmt.c: Use index, not strchr -- per GNU Standards.
+        Reported by Kaveh Ghazi.
+        Always include <config.h>.
+        (main): Include program name in --version output.
+
 Sun Nov 06 00:17:21 1994  Jim Meyering  (meyering@comco.com)
 
 	* Version 1.11.
