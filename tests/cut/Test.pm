@@ -2,6 +2,8 @@ package Test;
 require 5.002;
 use strict;
 
+$Test::input_via_default = {REDIR => 0, FILE => 0, PIPE => 0};
+
 my @tv = (
 # test flags		input		expected output	expected return code
 #
