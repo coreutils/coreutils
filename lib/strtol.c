@@ -1,5 +1,4 @@
-/* Copyright (C) 1991, 1992, 1994, 1995 Free Software Foundation, Inc.
-
+/* Copyright (C) 1991, 92, 94, 95, 96 Free Software Foundation, Inc.
 
 NOTE: The canonical source of this file is maintained with the GNU C Library.
 Bugs can be reported to bug-glibc@prep.ai.mit.edu.
@@ -16,7 +15,8 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
-Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+USA.  */
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
@@ -57,18 +57,41 @@ extern int errno;
 # define UNSIGNED 0
 # define INT LONG int
 #else
-# define strtol strtoul
 # define INT unsigned LONG int
+#endif
+
+/* Determine the name.  */
+#if UNSIGNED
+# ifdef USE_WIDE_CHAR
+#  ifdef QUAD
+#   define strtol wcstouq
+#  else
+#   define strtol wcstoul
+#  endif
+# else
+#  ifdef QUAD
+#   define strtol strtouq
+#  else
+#   define strtol strtoul
+#  endif
+# endif
+#else
+# ifdef USE_WIDE_CHAR
+#  ifdef QUAD
+#   define strtol wcstoq
+#  else
+#   define strtol wcstol
+#  endif
+# else
+#  ifdef QUAD
+#   define strtol strtoq
+#  endif
+# endif
 #endif
 
 /* If QUAD is defined, we are defining `strtoq' or `strtouq',
    operating on `long long int's.  */
 #ifdef QUAD
-# if UNSIGNED
-#  define strtoul strtouq
-# else
-#  define strtol strtoq
-# endif
 # define LONG long long
 # undef LONG_MIN
 # define LONG_MIN LONG_LONG_MIN
@@ -84,13 +107,41 @@ extern int errno;
 # endif
 #else
 # define LONG long
+
+#ifndef ULONG_MAX
+# define ULONG_MAX ((unsigned long) ~(unsigned long) 0)
+#endif
+#ifndef LONG_MAX
+# define LONG_MAX ((long int) (ULONG_MAX >> 1))
+#endif
+#endif
+
+#ifdef USE_WIDE_CHAR
+# include <wchar.h>
+# include <wctype.h>
+# define L_(ch) L##ch
+# define UCHAR_TYPE wint_t
+# define STRING_TYPE wchar_t
+# define ISSPACE(ch) iswspace (ch)
+# define ISALPHA(ch) iswalpha (ch)
+# define TOUPPER(ch) towupper (ch)
+#else
+# define L_(ch) ch
+# define UCHAR_TYPE unsigned char
+# define STRING_TYPE char
+# define ISSPACE(ch) isspace (ch)
+# define ISALPHA(ch) isalpha (ch)
+# define TOUPPER(ch) toupper (ch)
 #endif
 
 #ifdef __STDC__
 # define INTERNAL(x) INTERNAL1(x)
 # define INTERNAL1(x) __##x##_internal
+# define WEAKNAME(x) WEAKNAME1(x)
+# define WEAKNAME1(x) __##x
 #else
 # define INTERNAL(x) __/**/x/**/_internal
+# define WEAKNAME(x) __/**/x
 #endif
 
 #ifdef USE_NUMBER_GROUPING
@@ -108,8 +159,8 @@ extern int errno;
 
 INT
 INTERNAL (strtol) (nptr, endptr, base, group)
-     const char *nptr;
-     char **endptr;
+     const STRING_TYPE *nptr;
+     STRING_TYPE **endptr;
      int base;
      int group;
 {
@@ -117,9 +168,9 @@ INTERNAL (strtol) (nptr, endptr, base, group)
   register unsigned LONG int cutoff;
   register unsigned int cutlim;
   register unsigned LONG int i;
-  register const char *s;
-  register unsigned char c;
-  const char *save, *end;
+  register const STRING_TYPE *s;
+  register UCHAR_TYPE c;
+  const STRING_TYPE *save, *end;
   int overflow;
 
 #ifdef USE_NUMBER_GROUPING
@@ -151,21 +202,21 @@ INTERNAL (strtol) (nptr, endptr, base, group)
   if (base < 0 || base == 1 || base > 36)
     base = 10;
 
-  s = nptr;
+  save = s = nptr;
 
   /* Skip white space.  */
-  while (isspace (*s))
+  while (ISSPACE (*s))
     ++s;
-  if (*s == '\0')
+  if (*s == L_('\0'))
     goto noconv;
 
   /* Check for a sign.  */
-  if (*s == '-')
+  if (*s == L_('-'))
     {
       negative = 1;
       ++s;
     }
-  else if (*s == '+')
+  else if (*s == L_('+'))
     {
       negative = 0;
       ++s;
@@ -173,14 +224,14 @@ INTERNAL (strtol) (nptr, endptr, base, group)
   else
     negative = 0;
 
-  if (base == 16 && s[0] == '0' && toupper (s[1]) == 'X')
+  if (base == 16 && s[0] == L_('0') && TOUPPER (s[1]) == L_('X'))
     s += 2;
 
   /* If BASE is zero, figure it out ourselves.  */
   if (base == 0)
-    if (*s == '0')
+    if (*s == L_('0'))
       {
-	if (toupper (s[1]) == 'X')
+	if (TOUPPER (s[1]) == L_('X'))
 	  {
 	    s += 2;
 	    base = 16;
@@ -199,9 +250,9 @@ INTERNAL (strtol) (nptr, endptr, base, group)
     {
       /* Find the end of the digit string and check its grouping.  */
       end = s;
-      for (c = *end; c != '\0'; c = *++end)
-	if (c != thousands && !isdigit (c) &&
-	    (!isalpha (c) || toupper (c) - 'A' + 10 >= base))
+      for (c = *end; c != L_('\0'); c = *++end)
+	if (c != thousands && (c < L_('0') || c > L_('9'))
+	    && (!ISALPHA (c) || TOUPPER (c) - L_('A') + 10 >= base))
 	  break;
       if (*s == thousands)
 	end = s;
@@ -217,14 +268,14 @@ INTERNAL (strtol) (nptr, endptr, base, group)
 
   overflow = 0;
   i = 0;
-  for (c = *s; c != '\0'; c = *++s)
+  for (c = *s; c != L_('\0'); c = *++s)
     {
       if (s == end)
 	break;
-      if (isdigit (c))
-	c -= '0';
-      else if (isalpha (c))
-	c = toupper (c) - 'A' + 10;
+      if (c >= L_('0') && c <= L_('9'))
+	c -= L_('0');
+      else if (ISALPHA (c))
+	c = TOUPPER (c) - L_('A') + 10;
       else
 	break;
       if (c >= base)
@@ -246,13 +297,15 @@ INTERNAL (strtol) (nptr, endptr, base, group)
   /* Store in ENDPTR the address of one character
      past the last character we converted.  */
   if (endptr != NULL)
-    *endptr = (char *) s;
+    *endptr = (STRING_TYPE *) s;
 
 #if !UNSIGNED
   /* Check for a value that is within the range of
      `unsigned LONG int', but outside the range of `LONG int'.  */
-  if (i > (negative ?
-	   -(unsigned LONG int) LONG_MIN : (unsigned LONG int) LONG_MAX))
+  if (overflow == 0
+      && i > (negative
+	      ? -((unsigned LONG int) (LONG_MIN + 1)) + 1
+	      : (unsigned LONG int) LONG_MAX))
     overflow = 1;
 #endif
 
@@ -270,23 +323,40 @@ INTERNAL (strtol) (nptr, endptr, base, group)
   return (negative ? -i : i);
 
 noconv:
-  /* There was no number to convert.  */
+  /* We must handle a special case here: the base is 0 or 16 and the
+     first two characters and '0' and 'x', but the rest are no
+     hexadecimal digits.  This is no error case.  We return 0 and
+     ENDPTR points to the `x`.  */
   if (endptr != NULL)
-    *endptr = (char *) nptr;
+    if (save - nptr >= 2 && TOUPPER (save[-1]) == L_('X')
+	&& save[-2] == L_('0'))
+      *endptr = (STRING_TYPE *) &save[-1];
+    else
+      /*  There was no number to convert.  */
+      *endptr = (STRING_TYPE *) nptr;
+
   return 0L;
 }
 
 /* External user entry point.  */
 
+/* Prototype.  */
+INT WEAKNAME (strtol) __P ((const STRING_TYPE *nptr, STRING_TYPE **endptr,
+			    int base));
+
+
 INT
-strtol (nptr, endptr, base)
-     const char *nptr;
-     char **endptr;
+WEAKNAME (strtol) (nptr, endptr, base)
+     const STRING_TYPE *nptr;
+     STRING_TYPE **endptr;
      int base;
 {
   return INTERNAL (strtol) (nptr, endptr, base, 0);
 }
 
-#ifdef weak_symbol
-weak_symbol (strtol)
+#ifdef weak_alias
+/* We need this indirection when `strtol' is defined as a macro
+   for one of the other names.  */
+#define weak1(x, y) weak_alias (x, y)
+weak1 (WEAKNAME (strtol), strtol)
 #endif
