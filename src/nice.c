@@ -91,7 +91,7 @@ main (argc, argv)
       /* Make sure s[1..] is a valid negative integer.
 	 Test/convert `s+1' rather than `s+2' so we reject options
 	 like `---5' as unrecognized.  */
-      if (s[0] == '-' && s[1] == '-' && isinteger (s + 1))
+      if (s && s[0] == '-' && s[1] == '-' && isinteger (s + 1))
 	{
 	  adjustment = atoi (s + 1);
 	  adjustment_given = 1;
