@@ -8,7 +8,7 @@
 	Add new --time-style option.
 	Change --full-time to be equivalent to --time-style=full-iso.
 
-	* NEWS, doc/fileutils.texi: Describe this change.
+	* NEWS, doc/omni-utils.texi: Describe this change.
 
 	* src/ls.c: Include "hard-locale.h".
 	(nstrftime): New decl.
