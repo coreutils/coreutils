@@ -1,3 +1,19 @@
+1999-03-06  Jim Meyering  <meyering@ascend.com>
+
+	* src/ptx.c (swallow_file_in_memory): Use a `%s' format in error call,
+	in case the argument string contains a `%'.
+	(main): Likewise.
+	* src/fmt.c (main): Likewise.
+	* src/sort.c (main): Likewise.
+
+	1999-02-13  Eli Zaretskii  <eliz@is.elta.co.il>
+
+	* src/sys2.h [__DJGPP__]: Include <io.h> and <sys/exceptn.h>.
+
+	* src/ptx.c (swallow_file_in_memory): Slurp up the whole file at
+	once on MSDOS as well, but we have to relax the test for whether
+	reading it succeeded.
+
 1999-03-03  Jim Meyering  <meyering@ascend.com>
 
 	* src/cat.c: Include long-options.h
