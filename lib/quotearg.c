@@ -443,6 +443,8 @@ quotearg_buffer_restyled (char *buffer, size_t buffersize,
 		do
 		  {
 		    wchar_t w;
+		    /* Be careful not to let mbrtowc change errno.  */
+		    int saved_errno = errno;
 		    size_t bytes = mbrtowc (&w, &arg[i + m],
 					    argsize - (i + m), &mbstate);
 		    if (bytes == 0)
@@ -450,6 +452,8 @@ quotearg_buffer_restyled (char *buffer, size_t buffersize,
 		    else if (bytes == (size_t) -1)
 		      {
 			printable = 0;
+			/* Restore previous errno value.  */
+			errno = saved_errno;
 			break;
 		      }
 		    else if (bytes == (size_t) -2)
