@@ -22,9 +22,6 @@
 
 #define SWAB_ALIGN_OFFSET 2
 
-#if HAVE_INTTYPES_H
-# include <inttypes.h>
-#endif
 #include <sys/types.h>
 #include <signal.h>
 #include <getopt.h>
