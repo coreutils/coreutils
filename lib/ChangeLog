@@ -1,8 +1,22 @@
 2001-08-30  Paul Eggert  <eggert@twinsun.com>
 
+	* full-write.h: New file.
+	* Makefile.am (libfetish_a_SOURCES): Add full-write.h.
+	* full-write.c: Correct credits, as cccp.c no longer
+	exists and anyway it was so heavily changed from the old cccp
+	code as to be unrecognizable.  Include full-write.h.
+	(full_write) Return size_t, with short writes meaning failure.
+	All callers changed.  This fixes a bug with large buffers
+	on 64-bit hosts.
+	* utime.c: Include full-write.h.
+
+2001-08-30  Paul Eggert  <eggert@twinsun.com>
+
 	Merge 'exclude' changes from tar 1.13.22.
 	This fixes one or two unlikely storage allocation overflow bugs,
 	but doesn't change user-visible behavior otherwise.
+
+2001-08-30  Paul Eggert  <eggert@twinsun.com>
 
 	* exclude.c (bool): Declare, perhaps by including stdbool.h.
 	(<sys/types.h>): Include only if HAVE_SYS_TYPES_H.
@@ -34,7 +48,9 @@
 	(excluded_filename): No longer requires options arg, as the options
 	are determined by add_exclude.  Now returns bool, not int.
 
-	* lib/alloca.c (alloca): Arg is of type size_t, not unsigned.
+2001-08-30  Paul Eggert  <eggert@twinsun.com>
+
+	* alloca.c (alloca): Arg is of type size_t, not unsigned.
 
 2001-08-27  Jim Meyering  <meyering@lucent.com>
 
