@@ -1,3 +1,8 @@
+2001-09-16  Jim Meyering  <meyering@lucent.com>
+
+	* coreutils.texi (mv invocation): Describe new option:
+	--reply={yes,no,query}.  Fix a few typos.
+
 2001-09-15  Paul Eggert  <eggert@twinsun.com>
 
 	* coreutils.texi (uniq invocation): The input need not
