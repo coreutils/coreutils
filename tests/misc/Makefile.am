@@ -7,10 +7,12 @@ TESTS_ENVIRONMENT = \
   srcdir=$(srcdir) \
   PACKAGE_VERSION=$(PACKAGE_VERSION) \
   PERL="$(PERL)" \
+  BUILD_SRC_DIR="`pwd`/../../src" \
   PATH="`pwd`/../../src$(PATH_SEPARATOR)$$PATH" \
   PROG=$$tst
 
 TESTS = \
+  pwd \
   date-sec \
   paste-no-nl \
   stat-fmt \
