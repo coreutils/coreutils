@@ -1,3 +1,8 @@
+2001-08-30  Paul Eggert  <eggert@twinsun.com>
+
+	* prereq.m4 (jm_PREREQ): Add jm_PREREQ_EXCLUDE.
+	(jm_PREREQ_EXCLUDE): New macro.
+
 2001-08-26  Jim Meyering  <meyering@lucent.com>
 
 	* jm-macros.m4: Require jm_AC_PREREQ_XSTRTOIMAX.
