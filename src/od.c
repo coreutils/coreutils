@@ -94,43 +94,43 @@ char *xrealloc ();
 void error ();
 
 enum size_spec
-{
-  NO_SIZE,
-  CHAR,
-  SHORT,
-  INT,
-  LONG,
-  FP_SINGLE,
-  FP_DOUBLE,
-  FP_LONG_DOUBLE
-};
+  {
+    NO_SIZE,
+    CHAR,
+    SHORT,
+    INT,
+    LONG,
+    FP_SINGLE,
+    FP_DOUBLE,
+    FP_LONG_DOUBLE
+  };
 
 enum output_format
-{
-  SIGNED_DECIMAL,
-  UNSIGNED_DECIMAL,
-  OCTAL,
-  HEXADECIMAL,
-  FLOATING_POINT,
-  NAMED_CHARACTER,
-  CHARACTER
-};
+  {
+    SIGNED_DECIMAL,
+    UNSIGNED_DECIMAL,
+    OCTAL,
+    HEXADECIMAL,
+    FLOATING_POINT,
+    NAMED_CHARACTER,
+    CHARACTER
+  };
 
 enum strtoul_error
-{
-  UINT_OK, UINT_INVALID, UINT_INVALID_SUFFIX_CHAR, UINT_OVERFLOW
-};
+  {
+    UINT_OK, UINT_INVALID, UINT_INVALID_SUFFIX_CHAR, UINT_OVERFLOW
+  };
 typedef enum strtoul_error strtoul_error;
 
 /* Each output format specification (from POSIX `-t spec' or from
    old-style options) is represented by one of these structures.  */
 struct tspec
-{
-  enum output_format fmt;
-  enum size_spec size;
-  void (*print_function) ();
-  char *fmt_string;
-};
+  {
+    enum output_format fmt;
+    enum size_spec size;
+    void (*print_function) ();
+    char *fmt_string;
+  };
 
 /* Convert the number of 8-bit bytes of a binary representation to
    the number of characters (digits + sign if the type is signed)
@@ -1721,7 +1721,7 @@ main (argc, argv)
     }
 #endif
 
-  err |= (flag_dump_strings ? dump_strings () : dump ()); 
+  err |= (flag_dump_strings ? dump_strings () : dump ());
 
   if (have_read_stdin && fclose (stdin) == EOF)
     error (2, errno, "standard input");
