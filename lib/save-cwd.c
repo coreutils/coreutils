@@ -41,6 +41,7 @@
 # define O_DIRECTORY 0
 #endif
 
+#include "chdir.h"
 #include "save-cwd.h"
 #include "xgetcwd.h"
 
