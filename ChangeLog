@@ -1,3 +1,13 @@
+2004-05-30  Jim Meyering  <jim@meyering.net>
+
+	Work around HPUX /bin/cc compiler bug.
+	* src/tr.c (card_of_complement): Use cleaner `sizeof in_set'
+	rather than `N_CHARS * sizeof(in_set[0])'.  Using HPUX's /bin/cc
+	(aC++/ANSI C B3910B A.05.55 [Dec 04 2003]) on an ia64-hp-hpux11.22
+	system, those two expressions are not the same (256 vs. 1024).
+	The effect of this problem was that `tr -c x y' would fail:
+	tr: when not truncating set1, string2 must be non-empty
+
 2004-05-29  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/shred.c (dosync): Ignore EBADF errors, as IRIX 6.5
