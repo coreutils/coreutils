@@ -30,8 +30,7 @@
 /* In general, we can't use the builtin `basename' function if available,
    since it has different meanings in different environments.
    In some environments the builtin `basename' modifies its argument.
-   If NAME is all slashes, be sure to return `/'.
-   FIXME: what if NAME is the empty string?  */
+   If NAME is all slashes, be sure to return `/'.  */
 
 char *
 base_name (char const *name)
