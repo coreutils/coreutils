@@ -1,3 +1,10 @@
+2000-12-22  Jim Meyering  <meyering@lucent.com>
+
+	* Version 4.0.34.
+
+	* src/shred.c (isaac_seed_machdep) [_ARCH_PPC]: Disable the code
+	that would use the PPC mfspr `asm' code.  Suggestion from Michael Stone.
+
 2000-12-19  Jim Meyering  <meyering@lucent.com>
 
 	* doc/fileutils.texi: Use `ref_file' in place of `file' to make
@@ -15,8 +22,6 @@
 	(uid_to_name): Use it.
 	(gid_to_name): Use it.
 	Rename locals, user/group, to uid/gid.
-
-	* Version 4.0.34.
 
 	* src/chown-core.h (enum Change_status): Start with 1.
 
