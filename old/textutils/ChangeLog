@@ -1,3 +1,15 @@
+Thu Dec 19 23:28:41 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* tests/join-test/mk-script.pl: Rewrite to be more general -- so
+	it can be used for join, cut, sort, tr, and soon, pr test suites.
+	* tests/tr-test/mk-script.pl: Symlink through CVS repo to join's
+	mk-script.pl.
+	* tests/sort-test/mk-script.pl: Likewise.
+	* tests/cut-test/mk-script.pl: Likewise.
+
+	* tests/tr-test/Test.pm: Adapted for new mk-script.pl.
+	* tests/join-test/Test.pm: Likewise.
+
 Tue Dec 17 16:48:51 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* tests/join-test/Makefile.am (.pl): Make generated file read-only so
