@@ -1,5 +1,8 @@
 1998-10-03  Jim Meyering  <meyering@ascend.com>
 
+	* man/Makefile.summ: New file.
+	* man/Makefile.maint: Include it.
+
 	* tests/Fetish.pm: Make `VERBOSE' be a little more verbose.
 
 	* tests/mv/Makefile.am (TESTS): Add i-1.
