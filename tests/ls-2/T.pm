@@ -13,14 +13,23 @@ $VERSION = '0.5';
 
 my @Types = qw (IN OUT ERR EXIT);
 my %Types = map {$_ => 1} @Types;
+my %Zero_one_type = map {$_ => 1} qw (OUT ERR EXIT);
 
 my $count = 1;
 
-sub _create_file ($$$)
+sub _create_file ($$$$)
 {
-  my ($program_name, $test_name, $data) = @_;
+  my ($program_name, $test_name, $file_name, $data) = @_;
   my $file = "$test_name-$$.$count";
-  ++$count;
+  if (defined $file_name)
+    {
+      $file = $file_name;
+    }
+  else
+    {
+      $file = "$test_name-$$.$count";
+      ++$count;
+    }
 
   # The test spec gave a string.
   # Write it to a temp file and return tempfile name.
@@ -92,11 +101,14 @@ sub run_tests ($$$$$)
 	      if $n != 1;
 	  my ($type, $val) = each %$io_spec;
 	  die "$program_name: $test_name: invalid key `$type' in test spec\n"
-	      if ! $Types{$type};
+	    if ! $Types{$type};
+
+	  # Make sure there's no more than one of OUT, ERR, EXIT.
+	  die "$program_name: $test_name: more than one $type spec\n"
+	    if $Zero_one_type{$type} and $seen_type{$type}++;
 
 	  if ($type eq 'EXIT')
 	    {
-	      # FIXME: make sure there's only one of these
 	      # FIXME: make sure $data is numeric
 	      $exit_status = $val;
 	      next;
@@ -120,6 +132,11 @@ sub run_tests ($$$$$)
 	    {
 	      die "$program_name: $test_name: invalid RHS in $type-spec\n"
 	    }
+
+	  my $is_junk_file = (! defined $filename);
+	  my $file = _create_file ($program_name, $test_name, $filename, $data);
+	  push @junk_files, $file
+	    if $is_junk_file;
 
 	  if ($type =~ /_FILE$/ || $type =~ /_DATA$/)
 	    {
