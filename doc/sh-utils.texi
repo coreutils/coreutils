@@ -1280,7 +1280,7 @@ Translate carriage return to newline.  May be negated.
 @opindex ixon
 @kindex C-s/C-q flow control
 @cindex XON/XOFF flow control
-Enable XON/XOFF flow control (that is, @key{CTRL-s}/@key{CTRL-Q}).  May
+Enable XON/XOFF flow control (that is, @kbd{CTRL-S}/@kbd{CTRL-Q}).  May
 be negated.
 
 @item ixoff
@@ -1602,7 +1602,7 @@ For GNU stty, giving a value of @code{^-} or @code{undef} disables that
 special character.  (This is incompatible with Ultrix @code{stty},
 which uses  a value of @samp{u} to disable a special character.  GNU
 @code{stty} treats a value @samp{u} like any other, namely to set that
-special character to @key{u}.)
+special character to @key{U}.)
 
 @table @samp
 
