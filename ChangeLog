@@ -1,5 +1,7 @@
 2002-10-14  Jim Meyering  <meyering@lucent.com>
 
+	* Version 4.5.4.
+
 	* tests/misc/split-l: New test, to make sure `split --lines=N' works.
 	* tests/misc/Makefile.am (TESTS): Add split-l.
 
