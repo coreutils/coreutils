@@ -1,6 +1,18 @@
-2004-10-20  Paul Eggert  <eggert@cs.ucla.edu>
+2004-10-21  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	* tests/mv/leak-fd: New file.
+	* tests/mv/Makefile.am (TESTS): Add it.
+	* tests/rm/dot-rel: New file.
+	* tests/rm/Makefile.am (TESTS): Add it.
+
+	Correct my patch of 2004-10-18.
+	* src/remove.c (rm): Destroy the saved_cwd here (via cwd_state),
+	if necessary, not in remove_dir.  Otherwise, removing multiple
+	`.'-relative nonempty directories no longer worked.
+
+2004-10-20  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/fmt.c (usage): Improve description of --prefix.
 	Problem reported by Edward Welbourne.
@@ -11,7 +23,7 @@
 
 2004-10-18  Jim Meyering  <jim@meyering.net>
 
-	Plug a leak that would cause rm or a cross-device mv to fail when
+	Plug a leak that would cause a cross-device mv to fail when
 	operating on too many command-line-specified nonempty directories.
 	* src/remove.c (remove_dir): Destroy the `struct saved_cwd' on the
 	top of the stack before returning.  This usually closes the file
