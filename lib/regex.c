@@ -3,7 +3,7 @@
    (Implements POSIX draft P10003.2/D11.2, except for
    internationalization features.)
 
-   Copyright (C) 1993 Free Software Foundation, Inc.
+   Copyright (C) 1993, 1994 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -3180,7 +3180,11 @@ re_search_2 (bufp, string1, size1, string2, size2, startpos, range, regs, stop)
 
       val = re_match_2_internal (bufp, string1, size1, string2, size2,
 				 startpos, regs, stop);
+#ifndef REGEX_MALLOC
+#ifdef C_ALLOCA
       alloca (0);
+#endif
+#endif
 
       if (val >= 0)
 	return startpos;

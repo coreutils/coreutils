@@ -1,3 +1,51 @@
+Fri May  6 05:44:24 1994  Jim Meyering  (meyering@comco.com)
+
+	* tail.c (tail_forever): Don't print headers when asked not to.
+	From Karsten Thygesen <karthy@kom.auc.dk>.
+
+	* wc.c (wc): Optimize for the case when only bytes are being counted
+	and the input is not a regular file.  From Jeff Moore <jbm@mordor.com>.
+
+Sun Apr 24 10:54:08 1994  Jim Meyering  (meyering@comco.com)
+
+	* configure.in [AC_SIZEOF_TYPE]: Update for autoconf-1.9.
+	* memchr.c: Test SIZEOF_LONG instead of LONG_64_BITS.
+
+Mon Apr 11 17:55:52 1994  Jim Meyering  (meyering@comco.com)
+
+	* csplit.c (struct control): Add new field, repeat_forever.
+	Remove now-unneeded definition of INT_MAX.
+	(process_regexp): Test repeat_forever instead of comparing `repeat'
+	to INT_MAX.
+	(split_file): Don't even reference `repeat' count if repeat_forever
+	is set.
+	(new_control_record): Initialize repeat_forever field.
+	(parse_repeat_count): Set it instead of setting repeat count to
+	INT_MAX.
+	(process_line_count): Abort for internal error instead of calling
+	handle_line_error.
+
+	* long-options.c (parse_long_options): Take a new argument indicating
+	the utility name (e.g. "join", not "gjoin") for version output.
+	Print both the utility and the package names, e.g. `join - GNU
+	textutils-1.9.1' instead of just the package name.
+
+	* join.c (main): Call parse_long_options with program name arg.
+	* sort.c (main): Ditto.
+
+	* All source except sort.c and join.c (main): Change --version output
+	to include utility name as well as package name and version info.
+
+Wed Mar 30 08:53:21 1994  Jim Meyering  (meyering@comco.com)
+
+	* configure.in: Use AC_SET_MAKE.
+	* Makefile.in: Edit MAKE assignments into @SET_MAKE@.
+
+Mon Mar 28 09:55:05 1994  Jim Meyering  (meyering@comco.com)
+
+	* tr.c (main): In addition to the --help usage pointer, give an
+	explicit error message for too many arguments.
+
 Fri Mar 25 18:11:19 1994  Jim Meyering  (meyering@comco.com)
 
 	* configure.in: Use AC_VERBOSE, AC_CHECKING, and AC_WARN instead
@@ -16,14 +64,13 @@ Fri Mar 25 18:11:19 1994  Jim Meyering  (meyering@comco.com)
 	* csplit.c: Change long option name from --suffix to --suffix-format.
 
 	* od.c (skip): Correct a comment.
-	(main): Don't output anything if the sole input file doesn't exist.
-	Reported by Bauke Jan Douma <bjd@dds.hacktic.nl>.
-	(dump) [lint]: Initialize a variable to suppress `used before
+	(main): Don't output anything to stdout if the sole input file
+	doesn't exist.  Reported by Bauke Jan Douma <bjd@dds.hacktic.nl>.
+
+	* od.c (dump) [lint]: Initialize a variable to suppress `used before
 	initialized' warning.
 	(main) [lint]: Ditto.
-
-	* paste.c (paste_parallel) [lint]: Initialize a variable to suppress
-	`used before initialized' warning.
+	* paste.c (paste_parallel) [lint]: Ditto.
 
 Fri Jan 28 11:02:21 1994  Jim Meyering  (meyering@comco.com)
 
