@@ -1,7 +1,7 @@
 2005-01-14  Jim Meyering  <jim@meyering.net>
 
 	* utimes.m4: Work around tests/touch/empty-file failure on a system
-	(sparc64, Linux-2.4.28, glibc-2.3.3) that didn't honor utime's
+	(sparc64, Linux-2.4.28, glibc-2.3.3) that didn't honor utimes'
 	NULL-means-set-to-current-time semantics.
 	Remove temporary file immediately, rather than waiting
 	for configure's at-exit trap code to do it.
