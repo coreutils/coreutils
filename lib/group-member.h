@@ -1,7 +1,7 @@
-#ifndef _group_member_h_
-# define _group_member_h_ 1
+#ifndef GROUP_MEMBER_H
+# define GROUP_MEMBER_H 1
 
 int
   group_member ();
 
-#endif /* _group_member_h_ */
+#endif /* GROUP_MEMBER_H */
