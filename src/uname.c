@@ -29,6 +29,21 @@
 # include <sys/systeminfo.h>
 #endif
 
+#if HAVE_SYSCTL && HAVE_SYS_SYSCTL_H
+# include <sys/param.h> /* needed for OpenBSD 3.0 */
+# include <sys/sysctl.h>
+# ifdef HW_MODEL
+#  ifdef HW_MACHINE_ARCH
+/* E.g., FreeBSD 4.5, NetBSD 1.5.2 */
+#   define UNAME_HARDWARE_PLATFORM HW_MODEL
+#   define UNAME_PROCESSOR HW_MACHINE_ARCH
+#  else
+/* E.g., OpenBSD 3.0 */
+#   define UNAME_PROCESSOR HW_MODEL
+#  endif
+# endif
+#endif
+
 #include "system.h"
 #include "error.h"
 #include "closeout.h"
@@ -131,6 +146,7 @@ int
 main (int argc, char **argv)
 {
   int c;
+  static char const unknown[] = "unknown";
 
   /* Mask indicating which elements to print. */
   unsigned toprint = 0;
@@ -223,23 +239,45 @@ main (int argc, char **argv)
 
   if (toprint & PRINT_PROCESSOR)
     {
-      char const *element = "unknown";
-#if HAVE_SYSINFO && defined SI_ARCHITECTURE
+      char const *element = unknown;
       char processor[257];
+#if defined (HAVE_SYSINFO) && defined (SI_ARCHITECTURE)
       if (0 <= sysinfo (SI_ARCHITECTURE, processor, sizeof processor))
 	element = processor;
+#endif
+#ifdef UNAME_PROCESSOR
+      if (element == unknown)
+	{
+	  size_t s = sizeof processor;
+	  int mib[2];
+	  mib[0] = CTL_HW;
+	  mib[1] = UNAME_PROCESSOR;
+	  if (sysctl (mib, 2, processor, &s, 0, 0) == 0)
+	    element = processor;
+	}
 #endif
       print_element (element);
     }
 
   if (toprint & PRINT_HARDWARE_PLATFORM)
     {
-      char const *element = "unknown";
-#if HAVE_SYSINFO && defined SI_PLATFORM
+      char const *element = unknown;
       char hardware_platform[257];
+#if defined (HAVE_SYSINFO) && defined (SI_PLATFORM)
       if (0 <= sysinfo (SI_PLATFORM,
 			hardware_platform, sizeof hardware_platform))
 	element = hardware_platform;
+#endif
+#ifdef UNAME_HARDWARE_PLATFORM
+      if (element == unknown)
+	{
+	  size_t s = sizeof hardware_platform;
+	  int mib[2];
+	  mib[0] = CTL_HW;
+	  mib[1] = UNAME_HARDWARE_PLATFORM;
+	  if (sysctl (mib, 2, hardware_platform, &s, 0, 0) == 0)
+	    element = hardware_platform;
+	}
 #endif
       print_element (element);
     }
