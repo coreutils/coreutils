@@ -1,3 +1,9 @@
+2000-03-03  Jim Meyering  <meyering@lucent.com>
+
+	Make it so stty's rprnt attribute works on HPUX 10.20.
+	* src/stty.c [CREPRINT && !CRPRNT] (CRPRNT): Define.
+	(control_info): Recognize HPUX's CREPRINT.
+
 2000-03-02  Jim Meyering  <meyering@lucent.com>
 
 	* doc/sh-utils.texi (printf invocation): Describe new unicode syntax.
