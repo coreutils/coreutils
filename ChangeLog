@@ -2,6 +2,8 @@
 
 	* Version 5.0.92.
 
+	* tests/du/trailing-slash: Adjust for slightly different output.
+
 	* src/du.c: Include "fts_.h", not ftw.h.
 	(opt_dereference_arguments, arg_length, suffix_length): Remove globals.
 	(IS_FTW_DIR_TYPE): Remove definition.
