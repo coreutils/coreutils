@@ -1087,7 +1087,6 @@ keycompare (const struct line *a, const struct line *b)
   register char *lima = a->keylim;
   register char *limb = b->keylim;
 
-  int hard_collate = hard_LC_COLLATE;
   int diff, lena, lenb;
 
   for (;;)
@@ -1127,7 +1126,7 @@ keycompare (const struct line *a, const struct line *b)
 #ifdef ENABLE_NLS
       /* Sorting like this may become slow, so in a simple locale the user
          can select a faster sort that is similar to ascii sort  */
-      else if (hard_collate)
+      else if (hard_LC_COLLATE)
 	{
 	  if (ignore || translate)
 	    {
