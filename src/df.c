@@ -612,7 +612,7 @@ main (int argc, char **argv)
   posix_format = 0;
   exit_status = 0;
 
-  while ((i = getopt_long (argc, argv, "aihkmPTt:vx:", long_options, NULL))
+  while ((i = getopt_long (argc, argv, "aiF:hkmPTt:vx:", long_options, NULL))
 	 != EOF)
     {
       switch (i)
@@ -652,9 +652,13 @@ main (int argc, char **argv)
 	case 130:
 	  require_sync = 0;
 	  break;
+
+	case 'F':
+	  /* Accept -F as a synonym for -t for compatibility with Solaris.  */
 	case 't':
 	  add_fs_type (optarg);
 	  break;
+
 	case 'v':		/* For SysV compatibility. */
 	  /* ignore */
 	  break;
