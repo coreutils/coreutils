@@ -175,35 +175,36 @@ following matrix shows the current state of GNU internationalization,
 as of May 1996.  The matrix shows, in regard of each package, for which
 languages PO files have been submitted to translation coordination.
 
-                       cs de en es fi fr ja ko no pl pt sl sv
-                     .----------------------------------------.
-     bash            |                []                      |  1
-     bison           |                                        |  0
-     clisp           |    [] []       []                      |  3
-     cpio            |                []                      |  1
-     diffutils       |                []                   [] |  2
-     enscript        |    []       [] []                []    |  4
-     fileutils       |    []          []             []    [] |  4
-     findutils       |    []          []                      |  2
-     flex            |                []                      |  1
-     gettext         |    []          []    [] [] []    [] [] |  8
-     glibc           |    []    []          []                |  3
-     grep            |          []    []    []          []    |  4
-     hello           |    []          []    []       [] []    |  5
-     m4              |    []          [] []                [] |  4
-     make            |                                        |  0
-     mkid            |    []          []                      |  2
-     music           |                []                      |  1
-     ptx             |    []          []                   [] |  3
-     recode          |    []    []    []                [] [] |  5
-     sh-utils        |    []          []                      |  2
-     sharutils       |    []          []                   [] |  3
-     tar             |    []          []    [] []    [] [] [] |  7
-     textutils       |    []          []    []                |  3
-     wdiff           | [] []          []                   [] |  4
-                     `----------------------------------------'
-                       cs de en es fi fr ja ko no pl pt sl sv
-                        1 16  1  3  1 21  1  6  3  1  3  6  9
+                       cs de en es fi fr ja ko nl no pl pt sl sv
+                     .-------------------------------------------.
+     bash            |                []                         |  1
+     bison           |                []                         |  1
+     clisp           |    [] []       []                         |  3
+     cpio            |                []                         |  1
+     diffutils       |                []             []       [] |  3
+     enscript        |    []       [] []                   []    |  4
+     fileutils       |    []          []                []    [] |  4
+     findutils       |    []          []                         |  2
+     flex            |                []                         |  1
+     gcal            |    []                                     |  1
+     gettext         |    []          []    [] [] [] []    [] [] |  9
+     glibc           |    []    []          []                   |  3
+     grep            |          []    []    []       []    [] [] |  6
+     hello           |    []          []    []       [] [] []    |  6
+     m4              |    []          [] []                   [] |  4
+     make            |                                           |  0
+     mkid            |    []          []                         |  2
+     music           |                []                         |  1
+     ptx             |    []          []                      [] |  3
+     recode          |    []    []    []                   [] [] |  5
+     sh-utils        |    []          []                         |  2
+     sharutils       |    []          []       []             [] |  4
+     tar             |    []          []    []    []    [] [] [] |  7
+     textutils       |    []          []    [] []                |  4
+     wdiff           | [] []          []                      [] |  4
+                     `-------------------------------------------'
+                       cs de en es fi fr ja ko nl no pl pt sl sv
+                        1 17  1  3  1 22  1  6  3  3  4  3  6 10   81
 
    Some counters in the preceding matrix are higher than the number of
 visible blocks let us expect.  This is because a few extra PO files are
