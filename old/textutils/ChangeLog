@@ -2,6 +2,9 @@
 
 	* Version 2.0.17.
 
+	* tests/sum/sysv: New test for the fix below.
+	* tests/sum/Makefile.am (TESTS): Add sysv.
+
 2001-10-27  Paul Eggert  <eggert@twinsun.com>
 
 	* src/sum.c: Include human.h.
