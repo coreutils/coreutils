@@ -64,9 +64,18 @@
 #include "modechange.h"
 #include "makepath.h"
 #include "error.h"
+#include "xstrtol.h"
 
 #if HAVE_SYS_WAIT_H
-#include <sys/wait.h>
+# include <sys/wait.h>
+#endif
+
+#if HAVE_VALUES_H
+# include <values.h>
+#endif
+
+#ifndef BITSPERBYTE
+# define BITSPERBYTE 8
 #endif
 
 struct passwd *getpwnam ();
@@ -91,6 +100,14 @@ int wait ();
 
 /* Number of bytes of a file to copy at a time. */
 #define READ_SIZE (32 * 1024)
+
+#ifndef UID_T_MAX
+# define UID_T_MAX ((uid_t)(~((uid_t)1 << (sizeof (uid_t) * BITSPERBYTE - 1))))
+#endif
+
+#ifndef GID_T_MAX
+# define GID_T_MAX ((gid_t)(~((gid_t)1 << (sizeof (gid_t) * BITSPERBYTE - 1))))
+#endif
 
 char *basename ();
 char *stpcpy ();
@@ -511,20 +528,6 @@ strip (char *path)
     }
 }
 
-/* Return nonzero if STR is an ASCII representation of a nonzero
-   decimal integer, zero if not. */
-
-static int
-is_number (char *str)
-{
-  if (*str == 0)
-    return 0;
-  for (; *str; str++)
-    if (!ISDIGIT (*str))
-      return 0;
-  return 1;
-}
-
 /* Initialize the user and group ownership of the files to install. */
 
 static void
@@ -538,11 +541,11 @@ get_ids (void)
       pw = getpwnam (owner_name);
       if (pw == NULL)
 	{
-	  if (!is_number (owner_name))
+	  long int tmp_long;
+	  if (xstrtol (owner_name, NULL, 0, &tmp_long, NULL) != LONGINT_OK
+	      || tmp_long < 0 || tmp_long > UID_T_MAX)
 	    error (1, 0, _("invalid user `%s'"), owner_name);
-	  /* FIXME: atoi won't warn about overflow.  Use xstrtoul.  */
-	  /* FIXME: eliminate is_number altogether!  */
-	  owner_id = atoi (owner_name);
+	  owner_id = (uid_t) tmp_long;
 	}
       else
 	owner_id = pw->pw_uid;
@@ -556,10 +559,11 @@ get_ids (void)
       gr = getgrnam (group_name);
       if (gr == NULL)
 	{
-	  if (!is_number (group_name))
+	  long int tmp_long;
+	  if (xstrtol (group_name, NULL, 0, &tmp_long, NULL) != LONGINT_OK
+	      || tmp_long < 0 || tmp_long > (long) GID_T_MAX)
 	    error (1, 0, _("invalid group `%s'"), group_name);
-	  /* FIXME: atoi won't warn about overflow.  Use xstrtoul.  */
-	  group_id = atoi (group_name);
+	  group_id = (gid_t) tmp_long;
 	}
       else
 	group_id = gr->gr_gid;
