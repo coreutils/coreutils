@@ -2,6 +2,10 @@
 
 	* Version 4.1.9.
 
+	Avoid warnings from gcc.
+	* src/dd.c: Declare input_file and output_file to be `const'.
+	(skip): Declare `file' parameter to be `const', too.
+
 	Remove hash table, active_dir_map, used to detect directory cycles.
 	Instead, detect them lazily with just O(1) memory.
 	Suggestion from Andi Kleen.
