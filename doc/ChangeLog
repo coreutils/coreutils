@@ -1,6 +1,10 @@
+2004-12-04  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (cut invocation): Say when --complement is useful.
+
 2004-10-01  Paolo Bonzini  <bonzini@gnu.org>
 
-	* coreutils.texi (cut): Document --complement and
+	* coreutils.texi (cut invocation): Document --complement and
 	adjust the documentation of -b, -c, -f.
 
 2004-11-27  Paul Eggert  <eggert@cs.ucla.edu>
