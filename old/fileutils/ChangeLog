@@ -1,3 +1,18 @@
+1999-04-01  Jim Meyering  <meyering@ascend.com>
+
+	* configure.in (AC_CHECK_FUNCS): Add acl.
+	(AC_CHECK_HEADERS): Add sys/acl.h.
+	* src/ls.c [HAVE_SYS_ACL_H]: Include sys/acl.h.
+	(struct fileinfo): New member `have_acl'.
+	(gobble_file): Initialize it.
+	(print_long_format): Use it.
+	Mostly from Alen Muzinic.
+
+	* src/touch.c (open_maybe_create): New function.
+	(touch): Rewrite not to use `creat' and to eliminate a race
+	condition that could make touch truncate a nonempty file.
+	Report and suggestions from Andrew Tridgell.
+
 1999-03-31  Jim Meyering  <meyering@ascend.com>
 
 	* src/du.c: Remove prototypes and tsort function definitions.
