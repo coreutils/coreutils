@@ -17,26 +17,26 @@ AC_DEFUN([gl_FUNC_MKSTEMP],
       [
         mkdir conftest.mkstemp
         ( cd conftest.mkstemp
-	AC_TRY_RUN([
-#         include <stdlib.h>
-	  int main ()
-	  {
-	    int i;
-	    for (i = 0; i < 70; i++)
-	      {
-		char template[] = "coXXXXXX.tmp";
-		int fd = mkstemp (template);
-		if (fd == -1)
-		  exit (1);
-		close (fd);
-	      }
-	    exit (0);
-	  }
-	  ],
-	gl_cv_func_mkstemp_limitations=no,
-	gl_cv_func_mkstemp_limitations=yes,
-	gl_cv_func_mkstemp_limitations=yes
-	)
+	  AC_TRY_RUN([
+#           include <stdlib.h>
+	    int main ()
+	    {
+	      int i;
+	      for (i = 0; i < 70; i++)
+		{
+		  char template[] = "coXXXXXX.tmp";
+		  int fd = mkstemp (template);
+		  if (fd == -1)
+		    exit (1);
+		  close (fd);
+		}
+	      exit (0);
+	    }
+	    ],
+	  gl_cv_func_mkstemp_limitations=no,
+	  gl_cv_func_mkstemp_limitations=yes,
+	  gl_cv_func_mkstemp_limitations=yes
+	  )
 	)
       ]
     )
