@@ -68,8 +68,12 @@ char *xmalloc ();
 /* The value to return to the calling program.  */
 static int exit_status;
 
+/* FIXME */
+static int posixly_correct;
+
+/* FIXME */
 static char *const cfcc_msg =
-  N_("%s: character(s) following character constant");
+ N_("warning: %s: character(s) following character constant have been ignored");
 
 /* The name this program was run with. */
 char *program_name;
@@ -147,11 +151,12 @@ FUNC_NAME (const char *s)						 \
   if (*s == '\"' || *s == '\'')						 \
     {									 \
       val = *(unsigned char *) ++s;					 \
-      if (*++s != 0)							 \
-	{								 \
-	  error (0, 0, _(cfcc_msg), s);					 \
-	  exit_status = 1;						 \
-	}								 \
+      /* If POSIXLY_CORRECT is not set, then give a warning that there	 \
+	 are characters following the character constant and that GNU	 \
+	 printf is ignoring those characters.  If POSIXLY_CORRECT *is*	 \
+	 set, then don't give the warning.  */				 \
+      if (*++s != 0 && !posixly_correct)				 \
+	error (0, 0, _(cfcc_msg), s);					 \
     }									 \
   else									 \
     {									 \
@@ -483,7 +488,8 @@ main (int argc, char **argv)
   exit_status = 0;
 
   /* Don't recognize --help or --version if POSIXLY_CORRECT is set.  */
-  if (getenv ("POSIXLY_CORRECT") == NULL)
+  posixly_correct = (getenv ("POSIXLY_CORRECT") != NULL);
+  if (!posixly_correct)
     parse_long_options (argc, argv, "printf", GNU_PACKAGE, VERSION, usage);
 
   if (argc == 1)
