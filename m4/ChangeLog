@@ -1,3 +1,7 @@
+2000-11-04  Jim Meyering  <meyering@lucent.com>
+
+	* regex.m4: Use the `m4_' prefix on `syscmd' and `m4_sysval'.
+
 2000-10-29  Jim Meyering  <meyering@lucent.com>
 
 	* fsusage.m4: s/AC_SHELL_IFELSE/AS_IFELSE/ to match autoconf renaming.
