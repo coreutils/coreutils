@@ -78,6 +78,7 @@ my @tv = (
 ['out-delim2', '-c1-3,2,5- --output-d=:', "abcdefg\n", "abc:efg\n",	0],
 # Partial overlap: index `2' is not at the start of a range.
 ['out-delim3', '-c1-3,2-4,6 --output-d=:', "abcdefg\n", "abcd:f\n",	0],
+['out-delim3a', '-c1-3,2-4,6- --output-d=:', "abcdefg\n", "abcd:fg\n",	0],
 # Ensure that the following two commands produce the same output.
 # Before an off-by-one fix, the output from the former would not contain a `:'.
 ['out-delim4', '-c4-,2-3 --output-d=:', "abcdefg\n", "bc:defg\n",	0],
