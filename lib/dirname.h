@@ -1,4 +1,4 @@
-/*  Copyright (C) 1998 Free Software Foundation, Inc.
+/*  Copyright (C) 1998, 2001 Free Software Foundation, Inc.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -25,7 +25,23 @@
 #  endif
 # endif
 
-char *
-dir_name PARAMS ((const char *path));
+# ifndef DIRECTORY_SEPARATOR
+#  define DIRECTORY_SEPARATOR '/'
+# endif
+
+# ifndef ISSLASH
+#  define ISSLASH(C) ((C) == DIRECTORY_SEPARATOR)
+# endif
+
+# ifndef FILESYSTEM_PREFIX_LEN
+#  define FILESYSTEM_PREFIX_LEN(Filename) 0
+# endif
+
+char *base_name PARAMS ((char const *path));
+char *dir_name PARAMS ((char const *path));
+size_t base_len PARAMS ((char const *path));
+size_t dir_len PARAMS ((char const *path));
+
+int strip_trailing_slashes PARAMS ((char *path));
 
 #endif /* not DIRNAME_H_ */
