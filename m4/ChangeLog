@@ -1,3 +1,8 @@
+1999-11-06  Jim Meyering  <meyering@ascend.com>
+
+	* link-follow.m4 (jm_AC_FUNC_LINK_FOLLOWS_SYMLINK): New file/macro.
+	* jm-macros.m4 (jm_MACROS): Use it here.
+
 1999-11-05  Jim Meyering  <meyering@ascend.com>
 
 	* jm-macros.m4 (jm_CHECK_ALL_TYPES): Move some tests from configure.in
