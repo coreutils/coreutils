@@ -1,4 +1,5 @@
 Changes in release 1.22
+[1.21a]
 * Fix a bug in tail when invoked with an argument like `+NUMBERc'
 * Add test suite for tail
 
