@@ -149,19 +149,19 @@ static struct option const long_options[] =
 static void
 print_header (void)
 {
-  printf ("Filesystem ");
+  printf (_("Filesystem "));
 
   if (print_type)
-    printf ("   Type");
+    printf (_("   Type"));
   else
     printf ("       ");
 
   if (inode_format)
-    printf ("    Inodes   IUsed   IFree IUse%%");
+    printf (_("    Inodes   IUsed   IFree IUse%%"));
   else if (output_block_size < 0)
-    printf ("    Size  Used Avail Use%%");
+    printf (_("    Size  Used Avail Use%%"));
   else if (posix_format)
-    printf (" %4d-blocks      Used Available Capacity", output_block_size);
+    printf (_(" %4d-blocks      Used Available Capacity"), output_block_size);
   else
     {
       char buf[LONGEST_HUMAN_READABLE + 1];
@@ -172,10 +172,10 @@ print_header (void)
       if (3 <= plen && strncmp (p + plen - 3, ".0", 2) == 0)
 	strcpy (p + plen - 3, p + plen - 1);
 
-      printf (" %4s-blocks      Used Available Use%%", p);
+      printf (_(" %4s-blocks      Used Available Use%%"), p);
     }
 
-  printf (" Mounted on\n");
+  printf (_(" Mounted on\n"));
 }
 
 /* If FSTYPE is a type of filesystem that should be listed,
