@@ -317,13 +317,13 @@ int inhibit_group;
 
 static int numeric_ids;
 
-/* Nonzero means mention the size in 512 byte blocks of each file.  -s  */
+/* Nonzero means mention the size in blocks of each file.  -s  */
 
 static int print_block_size;
 
-/* The units to count blocks in. */
-
-static int output_units;
+/* If positive, the units to use when printing sizes;
+   if negative, the human-readable base.  */
+static int output_block_size;
 
 /* Precede each line of long output (per file) with a string like `m,n:'
    where M is the number of characters after the `:' and before the
@@ -408,10 +408,6 @@ struct col_ext_type *col_ext_list = NULL;
 
 /* Buffer for color sequences */
 static char *color_buf;
-
-/* base used for human style output */
-
-static int human_readable_base;
 
 /* Nonzero means mention the inode number of each file.  -i  */
 
@@ -532,6 +528,7 @@ static struct option const long_options[] =
   {"help", no_argument, &show_help, 1},
   {"version", no_argument, &show_version, 1},
   {"color", optional_argument, 0, 13},
+  {"block-size", required_argument, 0, 17},
   {NULL, 0, NULL, 0}
 };
 
@@ -843,7 +840,6 @@ decode_switches (int argc, char **argv)
   sort_reverse = 0;
   numeric_ids = 0;
   print_block_size = 0;
-  output_units = getenv ("POSIXLY_CORRECT") ? 512 : 1024;
   indicator_style = none;
   print_inode = 0;
   trace_links = 0;
@@ -857,11 +853,7 @@ decode_switches (int argc, char **argv)
       && 0 <= (i = argmatch (p, quoting_style_args)))
     set_quoting_style (NULL, (enum quoting_style) i);
 
-  if ((p = getenv ("BLOCKSIZE"))
-      && strncmp (p, "HUMAN", sizeof ("HUMAN") - 1) == 0)
-    human_readable_base = 1024;
-  else if (p && STREQ (p, "SI"))
-    human_readable_base = 1000;
+  human_block_size (getenv ("LS_BLOCK_SIZE"), 0, &output_block_size);
 
   line_length = 80;
   if ((p = getenv ("COLUMNS")) && *p)
@@ -950,11 +942,11 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 'h':
-	  human_readable_base = 1024;
+	  output_block_size = -1024;
 	  break;
 
 	case 'H':
-	  human_readable_base = 1000;
+	  output_block_size = -1000;
 	  break;
 
 	case 'i':
@@ -962,7 +954,7 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 'k':
-	  output_units = 1024;
+	  output_block_size = 1024;
 	  break;
 
 	case 'l':
@@ -1178,13 +1170,14 @@ decode_switches (int argc, char **argv)
 	  qmark_funny_chars = 0;
 	  break;
 
+	case 17:
+	  human_block_size (optarg, 1, &output_block_size);
+	  break;
+
 	default:
 	  usage (EXIT_FAILURE);
 	}
     }
-
-  if (human_readable_base)
-    output_units = 1;
 
   filename_quoting_options = clone_quoting_options (NULL);
   if (indicator_style != none)
@@ -1610,8 +1603,7 @@ print_dir (const char *name, const char *realname)
       p = _("total");
       DIRED_FPUTS (p, stdout, strlen (p));
       DIRED_PUTCHAR (' ');
-      p = human_readable (total_blocks, buf, ST_NBLOCKSIZE, output_units,
-			  human_readable_base);
+      p = human_readable (total_blocks, buf, ST_NBLOCKSIZE, output_block_size);
       DIRED_FPUTS (p, stdout, strlen (p));
       DIRED_PUTCHAR ('\n');
     }
@@ -1802,7 +1794,7 @@ gobble_file (const char *name, int explicit_arg, const char *dirname)
       {
 	char buf[LONGEST_HUMAN_READABLE + 1];
 	int len = strlen (human_readable (blocks, buf, ST_NBLOCKSIZE,
-					  output_units, human_readable_base));
+					  output_block_size));
 	if (block_size_size < len)
 	  block_size_size = len < 7 ? len : 7;
       }
@@ -2240,7 +2232,7 @@ print_long_format (const struct fileinfo *f)
     {
       char hbuf[LONGEST_HUMAN_READABLE + 1];
       sprintf (p, "%*s ", INODE_DIGITS,
-	       human_readable ((uintmax_t) f->stat.st_ino, hbuf, 1, 1, 0));
+	       human_readable ((uintmax_t) f->stat.st_ino, hbuf, 1, 1));
       p += strlen (p);
     }
 
@@ -2249,8 +2241,7 @@ print_long_format (const struct fileinfo *f)
       char hbuf[LONGEST_HUMAN_READABLE + 1];
       sprintf (p, "%*s ", block_size_size,
 	       human_readable ((uintmax_t) ST_NBLOCKS (f->stat), hbuf,
-			       ST_NBLOCKSIZE, output_units,
-			       human_readable_base));
+			       ST_NBLOCKSIZE, output_block_size));
       p += strlen (p);
     }
 
@@ -2283,8 +2274,8 @@ print_long_format (const struct fileinfo *f)
     {
       char hbuf[LONGEST_HUMAN_READABLE + 1];
       sprintf (p, "%8s ",
-	       human_readable ((uintmax_t) f->stat.st_size,
-			       hbuf, 1, 1, human_readable_base));
+	       human_readable ((uintmax_t) f->stat.st_size, hbuf, 1,
+			       output_block_size < 0 ? output_block_size : 1));
     }
 
   p += strlen (p);
@@ -2317,13 +2308,13 @@ print_long_format (const struct fileinfo *f)
 
       if (when < 0)
 	{
-	  const char *num = human_readable (- (uintmax_t) when, hbuf, 1, 1, 0);
+	  const char *num = human_readable (- (uintmax_t) when, hbuf, 1, 1);
 	  int sign_width = width - strlen (num);
 	  sprintf (p, "%*s%s ", sign_width < 0 ? 0 : sign_width, "-", num);
 	}
       else
 	sprintf (p, "%*s ", width,
-		 human_readable ((uintmax_t) when, hbuf, 1, 1, 0));
+		 human_readable ((uintmax_t) when, hbuf, 1, 1));
 
       p += strlen (p);
     }
@@ -2422,12 +2413,12 @@ print_file_name_and_frills (const struct fileinfo *f)
 
   if (print_inode)
     printf ("%*s ", INODE_DIGITS,
-	    human_readable ((uintmax_t) f->stat.st_ino, buf, 1, 1, 0));
+	    human_readable ((uintmax_t) f->stat.st_ino, buf, 1, 1));
 
   if (print_block_size)
     printf ("%*s ", block_size_size,
 	    human_readable ((uintmax_t) ST_NBLOCKS (f->stat), buf,
-			    ST_NBLOCKSIZE, output_units, human_readable_base));
+			    ST_NBLOCKSIZE, output_block_size));
 
   print_name_with_quoting (f->name, f->stat.st_mode, f->linkok, NULL);
 
@@ -2868,6 +2859,7 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
   -a, --all                  do not hide entries starting with .\n\
   -A, --almost-all           do not list implied . and ..\n\
   -b, --escape               print octal escapes for nongraphic characters\n\
+      --block-size=SIZE      use SIZE-byte blocks\n\
   -B, --ignore-backups       do not list implied entries ending with ~\n\
   -c                         sort by change time; with -l: show ctime\n\
   -C                         list entries by columns\n\
@@ -2890,7 +2882,7 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
                                none (default), classify (-F), file-type (-p)\n\
   -i, --inode                print index number of each file\n\
   -I, --ignore=PATTERN       do not list implied entries matching shell PATTERN\n\
-  -k, --kilobytes            use 1024 byte blocks\n\
+  -k, --kilobytes            like --block-size=1024\n\
   -l                         use a long listing format\n\
   -L, --dereference          list entries pointed to by symbolic links\n\
   -m                         fill width with a comma separated list of entries\n\

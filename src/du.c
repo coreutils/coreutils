@@ -26,9 +26,9 @@
 		arguments have been processed.  This can be used to find
 		out the disk usage of a directory, with some files excluded.
    -h		Print sizes in human readable format (1k 234M 2G, etc).
-   -k		Print sizes in kilobytes instead of 512 byte blocks
-		(the default required by POSIX).
-   -m		Print sizes in megabytes instead of 512 byte blocks
+   -H		Similar, but use powers of 1000 not 1024.
+   -k		Print sizes in kilobytes.
+   -m		Print sizes in megabytes.
    -b		Print sizes in bytes.
    -S		Count the size of each directory separately, not including
 		the sizes of subdirectories.
@@ -143,11 +143,9 @@ static int opt_dereference_arguments = 0;
    is at level 0, so `du --max-depth=0' is equivalent to `du -s'.  */
 static int max_depth = INT_MAX;
 
-/* base used for human style output */
-static int human_readable_base;
-
-/* The units to count in. */
-static int output_units;
+/* If positive, the units to use when printing sizes;
+   if negative, the human-readable base.  */
+static int output_block_size;
 
 /* Accumulated path for file or directory being processed.  */
 static String *path;
@@ -180,6 +178,7 @@ static uintmax_t tot_size = 0;
 static struct option const long_options[] =
 {
   {"all", no_argument, &opt_all, 1},
+  {"block-size", required_argument, 0, 129},
   {"bytes", no_argument, NULL, 'b'},
   {"count-links", no_argument, &opt_count_all, 1},
   {"dereference", no_argument, NULL, 'L'},
@@ -217,15 +216,16 @@ usage (int status, char *reason)
 Summarize disk usage of each FILE, recursively for directories.\n\
 \n\
   -a, --all             write counts for all files, not just directories\n\
+      --block-size=SIZE use SIZE-byte blocks\n\
   -b, --bytes           print size in bytes\n\
   -c, --total           produce a grand total\n\
   -D, --dereference-args  dereference PATHs when symbolic link\n\
   -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n\
   -H, --si              likewise, but use powers of 1000 not 1024\n\
-  -k, --kilobytes       use 1024-byte blocks\n\
+  -k, --kilobytes       like --block-size=1024\n\
   -l, --count-links     count sizes many times if hard linked\n\
   -L, --dereference     dereference all symbolic links\n\
-  -m, --megabytes       use 1048576-byte blocks\n\
+  -m, --megabytes       like --block-size=1048576\n\
   -S, --separate-dirs   do not include size of subdirectories\n\
   -s, --summarize       display only a total for each argument\n\
   -x, --one-file-system  skip directories on different filesystems\n\
@@ -249,7 +249,6 @@ main (int argc, char **argv)
 {
   int c;
   char *cwd_only[2];
-  char *bs;
   int max_depth_specified = 0;
 
   /* If nonzero, display only a total for each argument. */
@@ -266,21 +265,7 @@ main (int argc, char **argv)
   exclude = new_exclude ();
   xstat = lstat;
 
-  if (getenv ("POSIXLY_CORRECT"))
-    output_units = 512;
-  else if ((bs = getenv ("BLOCKSIZE"))
-	   && strncmp (bs, "HUMAN", sizeof ("HUMAN") - 1) == 0)
-    {
-      human_readable_base = 1024;
-      output_units = 1;
-    }
-  else if (bs && STREQ (bs, "SI"))
-    {
-      human_readable_base = 1000;
-      output_units = 1;
-    }
-  else
-    output_units = 1024;
+  human_block_size (getenv ("DU_BLOCK_SIZE"), 0, &output_block_size);
 
   while ((c = getopt_long (argc, argv, "abchHklmsxDLSX:", long_options, NULL))
 	 != -1)
@@ -296,8 +281,7 @@ main (int argc, char **argv)
 	  break;
 
 	case 'b':
-	  human_readable_base = 0;
-	  output_units = 1;
+	  output_block_size = 1;
 	  break;
 
 	case 'c':
@@ -305,18 +289,15 @@ main (int argc, char **argv)
 	  break;
 
 	case 'h':
-	  human_readable_base = 1024;
-	  output_units = 1;
+	  output_block_size = -1024;
 	  break;
 
 	case 'H':
-	  human_readable_base = 1000;
-	  output_units = 1;
+	  output_block_size = -1000;
 	  break;
 
 	case 'k':
-	  human_readable_base = 0;
-	  output_units = 1024;
+	  output_block_size = 1024;
 	  break;
 
 	case 13:		/* --max-depth=N */
@@ -329,8 +310,7 @@ main (int argc, char **argv)
  	  break;
 
 	case 'm':
-	  human_readable_base = 0;
-	  output_units = 1024 * 1024;
+	  output_block_size = 1024 * 1024;
 	  break;
 
 	case 'l':
@@ -364,6 +344,10 @@ main (int argc, char **argv)
 
 	case 128:
 	  add_exclude (exclude, optarg);
+	  break;
+
+	case 129:
+	  human_block_size (optarg, 1, &output_block_size);
 	  break;
 
 	default:
@@ -413,8 +397,8 @@ main (int argc, char **argv)
 }
 
 /* Print N_BLOCKS followed by STRING on a line.  NBLOCKS is the number of
-   ST_NBLOCKSIZE-byte blocks; convert it to OUTPUT_UNITS units before
-   printing.  If HUMAN_READABLE_BASE is nonzero, use a human readable
+   ST_NBLOCKSIZE-byte blocks; convert it to OUTPUT_BLOCK_SIZE units before
+   printing.  If OUTPUT_BLOCK_SIZE is negative, use a human readable
    notation instead.  */
 
 static void
@@ -422,8 +406,7 @@ print_size (uintmax_t n_blocks, const char *string)
 {
   char buf[LONGEST_HUMAN_READABLE + 1];
   printf ("%s\t%s\n",
-	  human_readable (n_blocks, buf, ST_NBLOCKSIZE, output_units,
-			  human_readable_base),
+	  human_readable (n_blocks, buf, ST_NBLOCKSIZE, output_block_size),
 	  string);
   FFLUSH (stdout);
 }
@@ -490,7 +473,7 @@ du_files (char **files)
   free_cwd (&cwd);
 }
 
-/* Print (if appropriate) the size (in units determined by `output_units')
+/* Print (if appropriate) the size (in units determined by `output_block_size')
    of file or directory ENT. Return the size of ENT in units of 512-byte
    blocks.  TOP is one for external calls, zero for recursive calls.
    LAST_DEV is the device that the parent directory of ENT is on.
