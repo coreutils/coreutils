@@ -2,6 +2,10 @@
 
 	* Version 4.0.32.
 
+	* tests/mkdir/perm (tests): Use `empty' (instead of just blanks) to
+	indicate no `-m' option.  Using just blanks wasn't portable to
+	Solaris2.5.1's /bin/sh.
+
 	* tests/mkdir/perm: Don't put a newline in IFS;  that's not portable to
 	NetBSD's /bin/sh.  Instead, filter newlines and leading/trailing blanks
 	out of `tests' before the `set -'.
