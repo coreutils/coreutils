@@ -78,3 +78,17 @@ canon_host (const char *host)
 #endif /* HAVE_GETHOSTBYNAME */
   return 0;
 }
+
+#ifdef TEST_CANON_HOST
+int
+main (int argc, char **argv)
+{
+  int i;
+  for (i = 1; i < argc; i++)
+    {
+      char *s = canon_host (argv[i]);
+      printf ("%s: %s\n", argv[i], (s ? s : "<undef>"));
+    }
+  exit (0);
+}
+#endif /* TEST_CANON_HOST */
