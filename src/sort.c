@@ -38,12 +38,17 @@
 #include "error.h"
 #include "xstrtod.h"
 
-#undef ENABLE_NLS
 #ifdef ENABLE_NLS
 /* FIXME: this may need some heading.... applies to Debian linux for
    reading the structure of _NL_ITEM... to get abbreviated month names */
 # include <langinfo.h>
+
+# if !defined (_NL_ITEM)
+#  define _NL_ITEM(Category, Index) (Index)
+# endif
 #endif   /* NLS */
+
+
 
 #ifdef HAVE_LIMITS_H
 # include <limits.h>
@@ -328,7 +333,7 @@ for that key.  If no key given, use the entire line as key.  With no\n\
 FILE, or when FILE is -, read standard input.\n\
 ")
 	      , DEFAULT_TMPDIR);
-      puts (_("\nReport bugs to textutils-bugs@gnu.ai.mit.edu"));
+      puts (_("\nReport bugs to textutils-bugs@gnu.org"));
     }
   /* Don't use EXIT_FAILURE here in case it is defined to be 1.
      POSIX requires that sort return 1 IFF invoked with -c and
