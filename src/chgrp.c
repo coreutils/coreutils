@@ -97,15 +97,23 @@ static const char *groupname;
    This file must exist.  */
 static char *reference_file;
 
+/* For long options that have no equivalent short option, use a
+   non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
+enum
+{
+  REFERENCE_FILE_OPTION = CHAR_MAX + 1,
+  DEREFERENCE_OPTION
+};
+
 static struct option const long_options[] =
 {
   {"recursive", no_argument, 0, 'R'},
   {"changes", no_argument, 0, 'c'},
-  {"dereference", no_argument, 0, CHAR_MAX + 2},
+  {"dereference", no_argument, 0, DEREFERENCE_OPTION},
   {"no-dereference", no_argument, 0, 'h'},
   {"quiet", no_argument, 0, 'f'},
   {"silent", no_argument, 0, 'f'},
-  {"reference", required_argument, 0, CHAR_MAX + 1},
+  {"reference", required_argument, 0, REFERENCE_FILE_OPTION},
   {"verbose", no_argument, 0, 'v'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
@@ -367,10 +375,10 @@ main (int argc, char **argv)
 	{
 	case 0:
 	  break;
-	case CHAR_MAX + 1:
+	case REFERENCE_FILE_OPTION:
 	  reference_file = optarg;
 	  break;
-	case CHAR_MAX + 2:
+	case DEREFERENCE_OPTION:
 	  change_symlinks = 0;
 	  break;
 	case 'R':
