@@ -1,12 +1,18 @@
 2000-12-09  Jim Meyering  <meyering@lucent.com>
 
+	* Version 4.0.34.
+
+	* configure.in (AC_OUTPUT): Add tests/chgrp/Makefile.
+	* tests/Makefile.am (SUBDIRS): Add chgrp.
+	* tests/chgrp: New directory.
+	* tests/chgrp/basic: New test.
+	* tests/chgrp/Makefile.am: New file.
+
 	* src/chown.c (change_file_owner): Restore special file permission
 	bits, since calling chown resets them on some systems.
 	Reported by Matt Perry.
 
 2000-12-08  Andreas Schwab  <schwab@suse.de>
-
-	* Version 4.0.34.
 
 	* tests/mv/mv-special-1: Don't make the success of the test depend
 	on the order in which directory entries are processed.
