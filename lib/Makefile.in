@@ -41,6 +41,7 @@ POST_UNINSTALL = :
 host_triplet = @host@
 ACLOCAL = @ACLOCAL@
 ALLOCA = @ALLOCA@
+ALLOCA_H = @ALLOCA_H@
 AMDEP_FALSE = @AMDEP_FALSE@
 AMDEP_TRUE = @AMDEP_TRUE@
 AMTAR = @AMTAR@
@@ -265,11 +266,11 @@ libfetish_a_DEPENDENCIES = $(libfetish_a_LIBADD)
 
 BUILT_SOURCES = getdate.c
 MAINTAINERCLEANFILES = $(BUILT_SOURCES)
-MOSTLYCLEANFILES = stdbool.h
+MOSTLYCLEANFILES = stdbool.h stdbool.ht alloca.h alloca.ht
 
 EXTRA_DIST = config.charset ref-add.sin ref-del.sin \
   fnmatch_loop.c inttostr.c inttostr.h\
-stdbool.hin
+stdbool.hin alloca_.h
 
 charset_alias = $(DESTDIR)$(libdir)/charset.alias
 charset_tmp = $(DESTDIR)$(libdir)/charset.tmp
@@ -849,12 +850,17 @@ uninstall-local: all-local
 charset.alias: config.charset
 	$(SHELL) $(srcdir)/config.charset '@host@' > t-$@
 	mv t-$@ $@
-
 # Create stdbool.h on systems that lack a working one.
 all-local $(lib_OBJECTS): $(STDBOOL_H)
 stdbool.h: stdbool.hin
-	sed -e 's/@''HAVE__BOOL''@/$(HAVE__BOOL)/g' $(srcdir)/stdbool.hin > t-$@
-	mv t-$@ $@
+	sed -e 's/@''HAVE__BOOL''@/$(HAVE__BOOL)/g' $(srcdir)/stdbool.hin > $@t
+	mv $@t $@
+# Create an <alloca.h> when the system
+# doesn't have one that works with the given compiler.
+all-local $(lib_OBJECTS): $(ALLOCA_H)
+alloca.h: alloca_.h
+	cp $(srcdir)/alloca_.h $@t
+	mv $@t $@
 .sin.sed:
 	sed -e '/^#/d' -e 's/@''PACKAGE''@/$(PACKAGE)/g' $< > t-$@
 	mv t-$@ $@
