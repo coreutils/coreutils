@@ -1,5 +1,5 @@
 /* error.c -- error handler for noninteractive utilities
-   Copyright (C) 1990, 91, 92, 93, 94 Free Software Foundation, Inc.
+   Copyright (C) 1990, 91, 92, 93, 94, 95 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -42,6 +42,9 @@
 #else
 void exit ();
 #endif
+
+/* This variable is incremented each time `error' is called.  */
+unsigned int error_message_count;
 
 /* If NULL, error will flush stdout, then print on stderr the program
    name, a colon and a space.  Otherwise, error will call this
@@ -111,6 +114,8 @@ error (status, errnum, message, va_alist)
 #else
   fprintf (stderr, message, a1, a2, a3, a4, a5, a6, a7, a8);
 #endif
+
+  ++error_message_count;
 
   if (errnum)
     fprintf (stderr, ": %s", strerror (errnum));

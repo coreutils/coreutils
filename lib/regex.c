@@ -3,7 +3,7 @@
    (Implements POSIX draft P10003.2/D11.2, except for
    internationalization features.)
 
-   Copyright (C) 1993, 1994 Free Software Foundation, Inc.
+   Copyright (C) 1993, 1994, 1995 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -33,9 +33,8 @@
 /* We need this for `regex.h', and perhaps for the Emacs include files.  */
 #include <sys/types.h>
 
-/* This is for other GNU distributions with internationalized messages.
-   The GNU C Library itself does not yet support such messages.  */
-#if HAVE_LIBINTL_H
+/* This is for other GNU distributions with internationalized messages.  */
+#if HAVE_LIBINTL_H || defined (_LIBC)
 # include <libintl.h>
 #else
 # define gettext(msgid) (msgid)
@@ -56,7 +55,7 @@
    even if config.h says that we can.  */
 #undef REL_ALLOC
 
-#ifdef STDC_HEADERS
+#if defined (STDC_HEADERS) || defined (_LIBC)
 #include <stdlib.h>
 #else
 char *malloc ();
@@ -66,7 +65,7 @@ char *realloc ();
 /* We used to test for `BSTRING' here, but only GCC and Emacs define
    `BSTRING', as far as I know, and neither of them use this code.  */
 #ifndef INHIBIT_STRING_HEADER
-#if HAVE_STRING_H || STDC_HEADERS
+#if HAVE_STRING_H || STDC_HEADERS || defined (_LIBC)
 #include <string.h>
 #ifndef bcmp
 #define bcmp(s1, s2, n)	memcmp ((s1), (s2), (n))
@@ -244,7 +243,7 @@ char *alloca ();
    destination)
 
 /* No need to do anything to free, after alloca.  */
-#define REGEX_FREE(arg) while (0)
+#define REGEX_FREE(arg) ((void)0) /* Do nothing!  But inhibit gcc warning.  */
 
 #endif /* not REGEX_MALLOC */
 
@@ -1011,7 +1010,8 @@ typedef struct
 #define FAIL_STACK_FULL()      (fail_stack.avail == fail_stack.size)
 
 
-/* Initialize `fail_stack'.  Do `return -2' if the alloc fails.  */
+/* Define macros to initialize and free the failure stack.
+   Do `return -2' if the alloc fails.  */
 
 #ifdef MATCH_MAY_ALLOCATE
 #define INIT_FAIL_STACK()						\
@@ -1025,11 +1025,15 @@ typedef struct
     fail_stack.size = INIT_FAILURE_ALLOC;				\
     fail_stack.avail = 0;						\
   } while (0)
+
+#define RESET_FAIL_STACK()  REGEX_FREE_STACK (fail_stack.stack)
 #else
 #define INIT_FAIL_STACK()						\
   do {									\
     fail_stack.avail = 0;						\
   } while (0)
+
+#define RESET_FAIL_STACK()
 #endif
 
 
@@ -3082,7 +3086,7 @@ re_compile_fastmap (bufp)
             {
               if (!PUSH_PATTERN_OP (p + j, fail_stack))
 		{
-		  REGEX_FREE_STACK (fail_stack.stack);
+		  RESET_FAIL_STACK ();
 		  return -2;
 		}
             }
@@ -3143,7 +3147,7 @@ re_compile_fastmap (bufp)
   bufp->can_be_null |= path_can_be_null;
 
  done:
-  REGEX_FREE_STACK (fail_stack.stack);
+  RESET_FAIL_STACK ();
   return 0;
 } /* re_compile_fastmap */
 
@@ -3413,7 +3417,7 @@ static boolean alt_match_null_string_p (),
     FREE_VAR (reg_info_dummy);						\
   } while (0)
 #else
-#define FREE_VARIABLES() /* Do nothing!  */
+#define FREE_VARIABLES() ((void)0) /* Do nothing!  But inhibit gcc warning.  */
 #endif /* not MATCH_MAY_ALLOCATE */
 
 /* These values must meet several constraints.  They must not be valid

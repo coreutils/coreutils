@@ -38,4 +38,7 @@ void error (int, int, const char *, ...) \
 void error ();
 #endif
 
+/* This variable is incremented each time `error' is called.  */
+extern unsigned int error_message_count;
+
 #endif /* _error_h_ */
