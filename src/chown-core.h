@@ -61,12 +61,21 @@ struct Chown_option
 };
 
 void
-chopt_init (struct Chown_option *chopt);
+chopt_init (struct Chown_option *);
+
+void
+chopt_free (struct Chown_option *);
+
+char *
+gid_to_name (gid_t);
+
+char *
+uid_to_name (uid_t);
 
 int
-change_file_owner PARAMS ((int cmdline_arg, const char *file,
-			   uid_t user, gid_t group,
-			   uid_t old_user, gid_t old_group,
-			   struct Chown_option const *chopt));
+change_file_owner PARAMS ((int, const char *,
+			   uid_t, gid_t,
+			   uid_t, gid_t,
+			   struct Chown_option const *));
 
 #endif /* CHOWN_CORE_H */
