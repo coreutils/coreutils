@@ -6,8 +6,6 @@
 	jm_FUNC_GROUP_MEMBER, jm_FUNC_GETGROUPS, AC_FUNC_VPRINTF, and
 	AC_FUNC_ALLOCA.  They're now in m4/.
 
-	* tests/ls-2/tests: Adapt to work with recently updated quotearg.c.
-
 	Sync with the version from emacs-20.5.
 	* lib/alloca.c
 	(<string.h>): Include if HAVE_STRING_H.
