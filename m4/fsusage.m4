@@ -13,7 +13,7 @@ AC_DEFUN([gl_FSUSAGE],
   fi
 ])
 
-# Try to determine how a program can obtain filesystem usage information.
+# Try to determine how a program can obtain file system usage information.
 # If successful, define the appropriate symbol (see fsusage.c) and
 # execute ACTION-IF-FOUND.  Otherwise, execute ACTION-IF-NOT-FOUND.
 #
@@ -22,7 +22,7 @@ AC_DEFUN([gl_FSUSAGE],
 AC_DEFUN([gl_FILE_SYSTEM_USAGE],
 [
 
-echo "checking how to get filesystem space usage..."
+echo "checking how to get file system space usage..."
 ac_fsusage_space=no
 
 # Perform only the link test since it seems there are no variants of the
@@ -199,7 +199,7 @@ if test $ac_fsusage_space = no; then
   AC_TRY_CPP([#include <sys/filsys.h>
     ],
     AC_DEFINE(STAT_READ_FILSYS, 1,
-      [Define if there is no specific function for reading filesystems usage
+      [Define if there is no specific function for reading file systems usage
        information and you have the <sys/filsys.h> header file.  (SVR2)])
     ac_fsusage_space=yes)
 fi
