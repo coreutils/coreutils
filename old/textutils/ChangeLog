@@ -1,5 +1,7 @@
 Tue Jan 21 22:49:00 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* Version 1.22.
+
 	* src/tail.c (main): Properly handle what the POSIX spec calls
 	the `obsolescent' usage (e.g., tail +2c).  It didn't work.
 	Reported by Karl Heuer.
