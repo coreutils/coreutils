@@ -1,3 +1,9 @@
+Tue Mar 30 17:42:11 1993  david d `zoo' zuhn  (zoo at cirdan.cygnus.com)
+
+	* ls.c: Add -G,--no-group option to inhibit display of group
+	infomation.
+	* ls.1: Document it.
+
 Mon Mar 29 22:22:40 1993  Jim Meyering  (meyering@comco.com)
 
 	* system.h [ST_NBLOCKS]:  Check also for __hpux.  From Henrik B}kman

@@ -239,6 +239,10 @@ static enum sort_type sort_type;
 
 static int sort_reverse;
 
+/* Nonzero means to NOT display group information.  -G  */
+
+int inhibit_group;
+
 /* Nonzero means print the user and group id's as numbers rather
    than as names.  -n  */
 
@@ -433,6 +437,7 @@ static struct option const long_options[] =
   {"inode", no_argument, 0, 'i'},
   {"kilobytes", no_argument, 0, 'k'},
   {"numeric-uid-gid", no_argument, 0, 'n'},
+  {"no-group", no_argument, 0, 'G'},
   {"hide-control-chars", no_argument, 0, 'q'},
   {"reverse", no_argument, 0, 'r'},
   {"size", no_argument, 0, 's'},
@@ -558,7 +563,7 @@ decode_switches (argc, argv)
   p = getenv ("TABSIZE");
   tabsize = p ? atoi (p) : 8;
 
-  while ((c = getopt_long (argc, argv, "abcdfgiklmnpqrstuw:xABCFI:LNQRST:UX1",
+  while ((c = getopt_long (argc, argv, "abcdfgiklmnpqrstuw:xABCFGI:LNQRST:UX1",
 			   long_options, (int *) 0)) != EOF)
     {
       switch (c)
@@ -661,6 +666,10 @@ decode_switches (argc, argv)
 	  indicator_style = all;
 	  break;
 	  
+	case 'G':		/* inhibit display of group info */
+	  inhibit_group = 1;
+	  break;
+	  
 	case 'I':
 	  add_ignore_pattern (optarg);
 	  break;
@@ -705,7 +714,7 @@ decode_switches (argc, argv)
 	case '1':
 	  format = one_per_line;
 	  break;
-	  
+
 	case 10:		/* +sort */
 	  i = argmatch (optarg, sort_args);
 	  if (i < 0)
@@ -1413,10 +1422,13 @@ print_long_format (f)
   else
     printf ("%-8.8s ", getuser (f->stat.st_uid));
 
-  if (numeric_users)
-    printf ("%-8u ", (unsigned int) f->stat.st_gid);
-  else
-    printf ("%-8.8s ", getgroup (f->stat.st_gid));
+  if (!inhibit_group)
+    {
+      if (numeric_users)
+	printf ("%-8u ", (unsigned int) f->stat.st_gid);
+      else
+	printf ("%-8.8s ", getgroup (f->stat.st_gid));
+    }
 
   if (S_ISCHR (f->stat.st_mode) || S_ISBLK (f->stat.st_mode))
     printf ("%3u, %3u ", major (f->stat.st_rdev),
@@ -1821,7 +1833,7 @@ static void
 usage ()
 {
   fprintf (stderr, "\
-Usage: %s [-abcdgiklmnpqrstuxABCFLNQRSUX1] [-w cols] [-T cols] [-I pattern]\n\
+Usage: %s [-abcdgiklmnpqrstuxABCFGLNQRSUX1] [-w cols] [-T cols] [-I pattern]\n\
        [--all] [--escape] [--directory] [--inode] [--kilobytes] [--literal]\n\
        [--numeric-uid-gid] [--hide-control-chars] [--reverse] [--size]\n\
        [--width=cols] [--tabsize=cols] [--almost-all] [--ignore-backups]\n",
@@ -1830,6 +1842,6 @@ Usage: %s [-abcdgiklmnpqrstuxABCFLNQRSUX1] [-w cols] [-T cols] [-I pattern]\n\
        [--classify] [--file-type] [--ignore=pattern] [--dereference]\n\
        [--quote-name] [--recursive] [--sort={none,time,size,extension}]\n\
        [--format={long,verbose,commas,across,vertical,single-column}]\n\
-       [--time={atime,access,use,ctime,status}] [path...]\n");
+       [--time={atime,access,use,ctime,status}] [--no-group] [path...]\n");
   exit (1);
 }
