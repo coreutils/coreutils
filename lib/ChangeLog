@@ -2,6 +2,7 @@
 
 	* stdbool_.h: Renamed from stdbool.hin.
 	* Makefile.am: Reflect renaming: stdbool.hin -> stdbool_.h.
+	* stdbool.hin: Remove file.
 
 2003-07-28  Paul Eggert  <eggert@twinsun.com>
 
