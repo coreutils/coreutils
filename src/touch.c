@@ -1,5 +1,5 @@
 /* touch -- change modification and access times of files
-   Copyright (C) 87, 1989-1991, 1995-2001 Free Software Foundation, Inc.
+   Copyright (C) 87, 1989-1991, 1995-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -226,8 +226,9 @@ usage (int status)
   else
     {
       printf (_("Usage: %s [OPTION]... FILE...\n"), program_name);
-      printf (_("  or:  %s [-acm] MMDDhhmm[YY] FILE... (obsolescent)\n"),
-	      program_name);
+      if (POSIX2_VERSION < 200112)
+	printf (_("  or:  %s [-acm] MMDDhhmm[YY] FILE... (obsolete)\n"),
+		program_name);
       fputs (_("\
 Update the access and modification times of each FILE to the current time.\n\
 \n\
@@ -252,8 +253,11 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
-Note that the three time-date formats recognized for the -d and -t options\n\
-and for the obsolescent argument are all different.\n\
+Note that the -d and -t options accept different time-date formats.\n\
+"), stdout);
+      if (POSIX2_VERSION < 200112)
+	fputs (_("\
+Also, the obsolete time-date format differs from both other formats.\n\
 "), stdout);
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
     }
@@ -352,9 +356,10 @@ main (int argc, char **argv)
       date_set++;
     }
 
-  /* The obsolescent `MMDDhhmm[YY]' form is valid IFF there are
+  /* The obsolete `MMDDhhmm[YY]' form is valid IFF there are
      two or more non-option arguments.  */
-  if (!date_set && 2 <= argc - optind && !STREQ (argv[optind - 1], "--"))
+  if (POSIX2_VERSION < 200112
+      && !date_set && 2 <= argc - optind && !STREQ (argv[optind - 1], "--"))
     {
       newtime = posixtime (argv[optind], PDS_TRAILING_YEAR);
       if (newtime != (time_t) -1)
