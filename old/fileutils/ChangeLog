@@ -2,6 +2,23 @@
 
 	* Version 4.1.9.
 
+2002-05-19  Paul Eggert  <eggert@twinsun.com>
+
+	Add support for new ls option --author, for GNU/Hurd.
+	Derived from a suggestion by Alfred M. Szmidt.
+
+	* doc/coreutils.texi (ls invocation), NEWS: Document this.
+	* m4/jm-macros.m4 (jm_CHECK_ALL_TYPES): Check for st_author.
+	* src/ls.c (st_author) [! HAVE_STRUCT_STAT_ST_AUTHOR]: New macro.
+	(print_author): New var.
+	(AUTHOR_OPTION): New enum val.
+	(long_options, decode_switches, print_long_format, usage):
+	Support --author.
+	(format_user): New function.
+	(print_long_format): Use it.  Make print buffer a bit bigger.
+
+2002-06-15  Jim Meyering  <meyering@lucent.com>
+
 	* tests/sample-test (trap): Make sure the temporary hierarchy is
 	writable before removing it.
 
