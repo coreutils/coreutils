@@ -1,3 +1,19 @@
+1999-04-17  Jim Meyering  <meyering@ascend.com>
+
+	* tests/seq: New directory and tests.
+	* tests/Makefile.am (SUBDIRS): Add seq.
+	* configure.in (AC_OUTPUT): Add tests/seq/Makefile.
+
+1999-04-17  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* configure.in: Check for localeconv.
+
+	* src/seq.c (decimal_point): New variable.
+	(main): Set it to locale's decimal point.  Fix recognition of
+	negative number as argument.
+	(get_width_format): Correctly handle a negative min_val or step
+	when computing fraction width.  Use decimal_point.
+
 1999-04-08  Jim Meyering  <meyering@ascend.com>
 
 	1999-03-25  James R. Van Zandt  <jrv@vanzandt.mv.com>
