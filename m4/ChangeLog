@@ -1,5 +1,8 @@
 2002-06-22  Jim Meyering  <meyering@lucent.com>
 
+	* c-stack.m4: New file, from diffutils-2.8.2.
+	* prereq.m4 (jm_PREREQ): Add jm_PREREQ_C_STACK.
+
 	* jm-macros.m4 (jm_CHECK_ALL_TYPES): Don't require AC__GNU_SOURCE,
 	now that configure.ac uses AC_GNU_SOURCE.
 	(jm_MACROS): Rename: jm_FUNC_FNMATCH to AC_FUNC_FNMATCH_GNU.
