@@ -777,6 +777,7 @@ begfield (const struct line *line, const struct keyfield *key)
   register char *ptr = line->text, *lim = ptr + line->length - 1;
   register size_t sword = key->sword;
   register size_t schar = key->schar;
+  register size_t remaining_bytes;
 
   if (tab)
     while (ptr < lim && sword--)
@@ -799,7 +800,9 @@ begfield (const struct line *line, const struct keyfield *key)
     while (ptr < lim && blanks[UCHAR (*ptr)])
       ++ptr;
 
-  if (ptr + schar <= lim)
+  /* Advance PTR by SCHAR (if possible), but no further than LIM.  */
+  remaining_bytes = lim - ptr;
+  if (schar < remaining_bytes)
     ptr += schar;
   else
     ptr = lim;
@@ -815,6 +818,7 @@ limfield (const struct line *line, const struct keyfield *key)
 {
   register char *ptr = line->text, *lim = ptr + line->length - 1;
   register size_t eword = key->eword, echar = key->echar;
+  register size_t remaining_bytes;
 
   /* Note: from the POSIX spec:
      The leading field separator itself is included in
@@ -902,7 +906,8 @@ limfield (const struct line *line, const struct keyfield *key)
       ++ptr;
 
   /* Advance PTR by ECHAR (if possible), but no further than LIM.  */
-  if (ptr + echar < lim)
+  remaining_bytes = lim - ptr;
+  if (echar < remaining_bytes)
     ptr += echar;
   else
     ptr = lim;
