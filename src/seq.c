@@ -161,7 +161,7 @@ main (argc, argv)
   if (optind >= argc)
     {
       error (0, 0, "too few arguments");
-      usage (2);
+      usage (1);
       /* NOTREACHED */
     }
   last = scan_double_arg (argv[optind++]);
@@ -179,15 +179,22 @@ main (argc, argv)
 
 	  if (optind < argc)
 	    {
-	      usage (2);
+	      usage (1);
 	      /* NOTREACHED */
 	    }
 	}
     }
 
+  if (format_str != NULL && equal_width)
+    {
+      error (0, 0,
+       "format string may not be specified when printing equal width strings");
+      usage (1);
+    }
+
   if (!step_is_set)
     {
-      step = from < last ? 1.0 : -1.0;
+      step = from <= last ? 1.0 : -1.0;
     }
 
   if (format_str != NULL)
@@ -195,7 +202,7 @@ main (argc, argv)
       if (!check_format (format_str))
 	{
 	  error (0, 0, "invalid format string: `%s'", format_str);
-	  usage (4);
+	  usage (1);
 	}
     }
   else
@@ -226,8 +233,8 @@ scan_double_arg (arg)
   ret_val = strtod (arg, &end_ptr);
   if (end_ptr == arg || *end_ptr != '\0')
     {
-      error (0, 0, "invalid float argument: %s\n", arg);
-      usage (2);
+      error (0, 0, "invalid float argument: %s", arg);
+      usage (1);
       /* NOTREACHED */
     }
 
@@ -383,8 +390,8 @@ print_numbers (format_str)
     {
       if (step >= 0)
 	{
-	  error (0, 0, "invalid increment: %g\n", step);
-	  usage (2);
+	  error (0, 0, "invalid increment: %g", step);
+	  usage (1);
 	  /* NOTREACHED */
 	}
 
@@ -404,8 +411,8 @@ print_numbers (format_str)
     {
       if (step <= 0)
 	{
-	  error (0, 0, "invalid increment: %g\n", step);
-	  usage (2);
+	  error (0, 0, "invalid increment: %g", step);
+	  usage (1);
 	  /* NOTREACHED */
 	}
 
