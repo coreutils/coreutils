@@ -2,6 +2,10 @@
 
 	* Version 2.0.15.
 
+	* src/fmt.c (bool): Remove typedef, now that it's in system.h.
+	(TRUE): Define to `true', not 1.
+	(FALSE): Define to `false', not 0.
+
 2001-08-30  Paul Eggert  <eggert@twinsun.com>
 
 	* src/cat.c: Include full-write.h.
