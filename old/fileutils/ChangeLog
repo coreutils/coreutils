@@ -2,6 +2,8 @@
 
 	* Version 4.1.1.
 
+	* src/shred.c (isaac_seed_machdep): Handle SIGSEGV, too.  Ick.
+
 	* tests/mv/Makefile.am (TESTS): Remove i-3.  It's not portable.
 
 	* src/copy.c: Include xreadlink.h.
