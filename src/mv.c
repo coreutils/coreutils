@@ -96,9 +96,8 @@ static void
 rm_option_init (struct rm_options *x)
 {
   x->unlink_dirs = 0;
-
   x->ignore_missing_files = 0;
-
+  x->root_dev_ino = NULL;
   x->recursive = 1;
 
   /* Should we prompt for removal, too?  No.  Prompting for the `move'
