@@ -117,7 +117,7 @@ char *xstrdup PARAMS ((char const *));
 # include <sys/time.h>	/* For struct timeval */
 # include <sys/stat.h>	/* For struct stat */
 
-# define GNU_PACKAGE "standalone"
+# define PACKAGE "standalone"
 # define VERSION "2.0" /* Kind of arbitrary... */
 
 # if __GNUC__ < 2 || __GNUC__ == 2 && __GNUC_MINOR__ < 5 || __STRICT_ANSI__
