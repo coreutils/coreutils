@@ -1,3 +1,12 @@
+Thu Jul 25 23:06:35 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/md5sum.c (md5_check): Remove parameter, BINARY.
+	Rename local TYPE_FLAG to BINARY, so md5_file uses the binary mode
+	from the input stream rather than the one from the command line.
+	(main): Fail with a diagnostic if --binary or --text is specified
+	when verifying checksums.
+	Reported by Eli Zaretskii <eliz@is.elta.co.il>.
+
 Sun Jul 21 11:58:48 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in: Add check for error_at_line so systems with
