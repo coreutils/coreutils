@@ -1,5 +1,11 @@
 1998-09-07  Jim Meyering  <meyering@ascend.com>
 
+	* Version 3.16w.
+
+	* tests/touch/empty-file: Upon failure, suggest how to rerun the test
+	with longer delay, in case NFS clock skew was the cause of the failure.
+	Reported by Kaveh Ghazi.
+
 	* tests/ls-2/quoting: Add tests.
 	* tests/Fetish.pm (run_tests): Add simple PRE/POST hooks.
 	(_create_file): Don't include $$ in temp file name.
@@ -12,8 +18,6 @@
 	date string argument to -t option.
 	(main): Update to use rewritten posixtime function.
 	Reported by Andries Brouwer.
-
-	* Version 3.16w.
 
 	* lib/Makefile.am (libfu_a_SOURCES): Change posixtm.y to posixtm.c.
 	(noinst_HEADERS): Add posixtm.h.
