@@ -1,5 +1,5 @@
 /* tr -- a filter to translate characters
-   Copyright (C) 91, 1995-1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 91, 1995-1998, 1999, 2000, 2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -328,7 +328,7 @@ usage (int status)
 Usage: %s [OPTION]... SET1 [SET2]\n\
 "),
 	      program_name);
-      printf (_("\
+      fputs (_("\
 Translate, squeeze, and/or delete characters from standard input,\n\
 writing to standard output.\n\
 \n\
@@ -338,8 +338,8 @@ writing to standard output.\n\
   -t, --truncate-set1     first truncate SET1 to length of SET2\n\
       --help              display this help and exit\n\
       --version           output version information and exit\n\
-"));
-      printf (_("\
+"), stdout);
+      fputs (_("\
 \n\
 SETs are specified as strings of characters.  Most represent themselves.\n\
 Interpreted sequences are:\n\
@@ -352,6 +352,8 @@ Interpreted sequences are:\n\
   \\n              new line\n\
   \\r              return\n\
   \\t              horizontal tab\n\
+"), stdout);
+     fputs (_("\
   \\v              vertical tab\n\
   CHAR1-CHAR2     all characters from CHAR1 to CHAR2 in ascending order\n\
   [CHAR*]         in SET2, copies of CHAR until length of SET1\n\
@@ -361,6 +363,8 @@ Interpreted sequences are:\n\
   [:blank:]       all horizontal whitespace\n\
   [:cntrl:]       all control characters\n\
   [:digit:]       all digits\n\
+"), stdout);
+     fputs (_("\
   [:graph:]       all printable characters, not including space\n\
   [:lower:]       all lower case letters\n\
   [:print:]       all printable characters, including space\n\
@@ -369,18 +373,20 @@ Interpreted sequences are:\n\
   [:upper:]       all upper case letters\n\
   [:xdigit:]      all hexadecimal digits\n\
   [=CHAR=]        all characters which are equivalent to CHAR\n\
-"));
-      printf (_("\
+"), stdout);
+     fputs (_("\
 \n\
 Translation occurs if -d is not given and both SET1 and SET2 appear.\n\
 -t may be used only when translating.  SET2 is extended to length of\n\
 SET1 by repeating its last character as necessary.  Excess characters\n\
 of SET2 are ignored.  Only [:lower:] and [:upper:] are guaranteed to\n\
+"), stdout);
+     fputs (_("\
 expand in ascending order; used in SET2 while translating, they may\n\
 only be used in pairs to specify case conversion.  -s uses SET1 if not\n\
 translating nor deleting; else squeezing uses SET2 and occurs after\n\
 translation or deletion.\n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
