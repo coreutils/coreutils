@@ -27,22 +27,10 @@
 #include <fnmatch.h>
 #include <ctype.h>
 
-
-/* Comment out all this code if we are using the GNU C Library, and are not
-   actually compiling the library itself.  This code is part of the GNU C
-   Library, but also included in many other GNU distributions.  Compiling
-   and linking in this code is a waste when using the GNU C library
-   (especially if it is a shared library).  Rather than having every GNU
-   program understand `configure --with-gnu-libc' and omit the object files,
-   it is simpler to just do this in the source for each such file.  */
-
-#if defined _LIBC || !defined __GNU_LIBRARY__
-
-
 # if defined STDC_HEADERS || !defined isascii
 #  define IN_CTYPE_DOMAIN(c) 1
 # else
-#  define IN_CTYPE_DOMAIN(c) isascii(c)
+#  define IN_CTYPE_DOMAIN(c) isascii (c)
 # endif
 
 # define ISUPPER(c) (IN_CTYPE_DOMAIN (c) && isupper (c))
@@ -240,5 +228,3 @@ fnmatch (const char *pattern, const char *string, int flags)
 
 # undef FOLD
 }
-
-#endif	/* _LIBC or not __GNU_LIBRARY__.  */

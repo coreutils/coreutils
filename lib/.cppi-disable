@@ -8,3 +8,4 @@ obstack.h
 regex.h
 regex.c
 getpagesize.h
+fnmatch.c
