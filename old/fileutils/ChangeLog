@@ -1,3 +1,7 @@
+Sun May 25 09:11:17 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/du.c [AIX]: Remove unused #pragma alloca.
+
 Sat May 24 09:20:12 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/rmdir.c: New options: --ignore-fail-on-non-empty and --verbose.
