@@ -1,5 +1,5 @@
 /* mountlist.c -- return a list of mounted filesystems
-   Copyright (C) 1991, 1992, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1992, 1997-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -725,7 +725,17 @@ read_filesystem_list (int need_fs_type)
     for (thisent = entries; thisent < entries + bufsize;
 	 thisent += vmp->vmt_length)
       {
+	char *options, *ignore;
 	vmp = (struct vmount *) thisent;
+
+	options = thisent + vmp->vmt_data[VMT_ARGS].vmt_off;
+	ignore = strstr (options, "ignore");
+	if (ignore
+	    && (ignore == options || ignore[-1] == ',')
+	    && (ignore[sizeof "ignore" - 1] == ','
+		|| ignore[sizeof "ignore" - 1] == '\0'))
+	  continue;
+
 	me = (struct mount_entry *) xmalloc (sizeof (struct mount_entry));
 	if (vmp->vmt_flags & MNT_REMOTE)
 	  {
