@@ -1,6 +1,13 @@
-2004-11-30  Paul Eggert  <eggert@cs.ucla.edu>
+2004-12-01  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	* src/ls.c (sort_files): Minor cleanup.  Remove an unnecessary
+	'volatile' on a local variable.  Rewrite to avoid unnecessary
+	double-assignment to 'func' in the usual case where strcoll does
+	not fail.
+
+2004-11-30  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/pinky.c (gethostname): Remove decl.
 	(scan_entries): Use IS_USER_PROCESS instead of by-hand code.
