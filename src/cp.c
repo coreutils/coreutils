@@ -32,8 +32,9 @@
 #include "backupfile.h"
 #include "copy.h"
 #include "cp-hash.h"
-#include "error.h"
 #include "dirname.h"
+#include "error.h"
+#include "mmap-stack.h"
 #include "path-concat.h"
 #include "quote.h"
 
@@ -1066,5 +1067,6 @@ main (int argc, char **argv)
   if (x.unlink_dest_after_failed_open && (x.hard_link || x.symbolic_link))
     x.unlink_dest_before_opening = 1;
 
-  run (argc - optind, argv + optind, target_directory, &x);
+  RUN_WITH_BIG_STACK_4 (run, argc - optind, argv + optind,
+			target_directory, &x);
 }
