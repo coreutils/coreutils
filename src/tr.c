@@ -393,7 +393,7 @@ only be used in pairs to specify case conversion.  \
 translating nor deleting; else squeezing uses SET2 and occurs after\n\
 translation or deletion.\n\
 "), stdout);
-      puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
+      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

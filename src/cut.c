@@ -205,7 +205,7 @@ range, or many ranges separated by commas.  Each range is one of:\n\
 \n\
 With no FILE, or when FILE is -, read standard input.\n\
 "), stdout);
-      puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
+      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

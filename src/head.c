@@ -112,7 +112,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 \n\
 SIZE may have a multiplier suffix: b for 512, k for 1K, m for 1 Meg.\n\
 "), stdout);
-      puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
+      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

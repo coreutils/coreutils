@@ -121,7 +121,7 @@ With no FILE, or when FILE is -, read standard input.\n\
   -B, --binary             use binary writes to the console device.\n\n\
 "), stdout);
 #endif
-      puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
+      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

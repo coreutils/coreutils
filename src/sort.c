@@ -343,7 +343,7 @@ The locale specified by the environment affects sort order.\n\
 Set LC_ALL=C to get the traditional sort order that uses\n\
 native byte values.\n\
 "), stdout );
-      puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
+      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
   /* Don't use EXIT_FAILURE here in case it is defined to be 1.
      POSIX requires that sort return 1 IFF invoked with -c and

@@ -154,7 +154,7 @@ should be a former output of this program.  The default mode is to print\n\
 a line with checksum, a character indicating type (`*' for binary, ` ' for\n\
 text), and name for each FILE.\n"),
 	      (algorithm == ALG_MD5 ? "RFC 1321" : "FIPS-180-1"));
-      puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
+      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
 
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
