@@ -37,6 +37,7 @@
 #include "long-options.h"
 #include "error.h"
 #include "xstrtod.h"
+#include "xalloc.h"
 
 #ifdef ENABLE_NLS
 # include <langinfo.h>
@@ -345,48 +346,6 @@ cleanup (void)
 
   for (node = temphead.next; node; node = node->next)
     unlink (node->name);
-}
-
-/* Allocate N bytes of memory dynamically, with error checking.  */
-
-static char *
-xmalloc (unsigned int n)
-{
-  char *p;
-
-  p = malloc (n);
-  if (p == 0)
-    {
-      error (0, 0, _("virtual memory exhausted"));
-      cleanup ();
-      exit (SORT_FAILURE);
-    }
-  return p;
-}
-
-/* Change the size of an allocated block of memory P to N bytes,
-   with error checking.
-   If P is NULL, run xmalloc.
-   If N is 0, run free and return NULL.  */
-
-static char *
-xrealloc (char *p, unsigned int n)
-{
-  if (p == 0)
-    return xmalloc (n);
-  if (n == 0)
-    {
-      free (p);
-      return 0;
-    }
-  p = realloc (p, n);
-  if (p == 0)
-    {
-      error (0, 0, _("virtual memory exhausted"));
-      cleanup ();
-      exit (SORT_FAILURE);
-    }
-  return p;
 }
 
 static FILE *
@@ -2553,6 +2512,10 @@ main (int argc, char **argv)
   temp_file_prefix = getenv ("TMPDIR");
   if (temp_file_prefix == NULL)
     temp_file_prefix = DEFAULT_TMPDIR;
+
+  /* Change the way xmalloc and xrealloc fail.  */
+  xmalloc_exit_failure = SORT_FAILURE;
+  xalloc_fail_func = cleanup;
 
 #ifdef SA_INTERRUPT
   newact.sa_handler = sighandler;
