@@ -238,11 +238,7 @@ init_syntax_once ()
 #include <alloca.h>
 #else /* not __GNUC__ or HAVE_ALLOCA_H */
 #ifndef _AIX /* Already did AIX, up at the top.  */
-#if defined (__STDC__) && __STDC__
-void *alloca ();
-#else
 char *alloca ();
-#endif
 #endif /* not _AIX */
 #endif /* not HAVE_ALLOCA_H */ 
 #endif /* not __GNUC__ */
@@ -264,7 +260,8 @@ char *alloca ();
 
 /* Define how to allocate the failure stack.  */
 
-#ifdef REL_ALLOC
+#if defined (REL_ALLOC) && defined (REGEX_MALLOC)
+
 #define REGEX_ALLOCATE_STACK(size)				\
   r_alloc (&failure_stack_ptr, (size))
 #define REGEX_REALLOCATE_STACK(source, osize, nsize)		\
@@ -272,7 +269,7 @@ char *alloca ();
 #define REGEX_FREE_STACK(ptr)					\
   r_alloc_free (&failure_stack_ptr)
 
-#else /* not REL_ALLOC */
+#else /* not using relocating allocator */
 
 #ifdef REGEX_MALLOC
 
@@ -290,7 +287,7 @@ char *alloca ();
 #define REGEX_FREE_STACK(arg)
 
 #endif /* not REGEX_MALLOC */
-#endif /* not REL_ALLOC */
+#endif /* not using relocating allocator */
 
 
 /* True if `size1' is non-NULL and PTR is pointing anywhere inside
@@ -1156,29 +1153,30 @@ typedef struct
     /* Push the info, starting with the registers.  */			\
     DEBUG_PRINT1 ("\n");						\
 									\
-    for (this_reg = lowest_active_reg; this_reg <= highest_active_reg;	\
-         this_reg++)							\
-      {									\
-	DEBUG_PRINT2 ("  Pushing reg: %d\n", this_reg);			\
-        DEBUG_STATEMENT (num_regs_pushed++);				\
+    if (!RE_NO_POSIX_BACKTRACKING & bufp->syntax)			\
+      for (this_reg = lowest_active_reg; this_reg <= highest_active_reg; \
+	   this_reg++)							\
+	{								\
+	  DEBUG_PRINT2 ("  Pushing reg: %d\n", this_reg);		\
+	  DEBUG_STATEMENT (num_regs_pushed++);				\
 									\
-	DEBUG_PRINT2 ("    start: 0x%x\n", regstart[this_reg]);		\
-        PUSH_FAILURE_POINTER (regstart[this_reg]);			\
-                                                                        \
-	DEBUG_PRINT2 ("    end: 0x%x\n", regend[this_reg]);		\
-        PUSH_FAILURE_POINTER (regend[this_reg]);			\
+	  DEBUG_PRINT2 ("    start: 0x%x\n", regstart[this_reg]);	\
+	  PUSH_FAILURE_POINTER (regstart[this_reg]);			\
 									\
-	DEBUG_PRINT2 ("    info: 0x%x\n      ", reg_info[this_reg]);	\
-        DEBUG_PRINT2 (" match_null=%d",					\
-                      REG_MATCH_NULL_STRING_P (reg_info[this_reg]));	\
-        DEBUG_PRINT2 (" active=%d", IS_ACTIVE (reg_info[this_reg]));	\
-        DEBUG_PRINT2 (" matched_something=%d",				\
-                      MATCHED_SOMETHING (reg_info[this_reg]));		\
-        DEBUG_PRINT2 (" ever_matched=%d",				\
-                      EVER_MATCHED_SOMETHING (reg_info[this_reg]));	\
-	DEBUG_PRINT1 ("\n");						\
-        PUSH_FAILURE_ELT (reg_info[this_reg].word);			\
-      }									\
+	  DEBUG_PRINT2 ("    end: 0x%x\n", regend[this_reg]);		\
+	  PUSH_FAILURE_POINTER (regend[this_reg]);			\
+									\
+	  DEBUG_PRINT2 ("    info: 0x%x\n      ", reg_info[this_reg]);	\
+	  DEBUG_PRINT2 (" match_null=%d",				\
+			REG_MATCH_NULL_STRING_P (reg_info[this_reg]));	\
+	  DEBUG_PRINT2 (" active=%d", IS_ACTIVE (reg_info[this_reg]));	\
+	  DEBUG_PRINT2 (" matched_something=%d",			\
+			MATCHED_SOMETHING (reg_info[this_reg]));	\
+	  DEBUG_PRINT2 (" ever_matched=%d",				\
+			EVER_MATCHED_SOMETHING (reg_info[this_reg]));	\
+	  DEBUG_PRINT1 ("\n");						\
+	  PUSH_FAILURE_ELT (reg_info[this_reg].word);			\
+	}								\
 									\
     DEBUG_PRINT2 ("  Pushing  low active reg: %d\n", lowest_active_reg);\
     PUSH_FAILURE_INT (lowest_active_reg);				\
@@ -1215,9 +1213,11 @@ typedef struct
 #define MAX_FAILURE_ITEMS ((num_regs - 1) * NUM_REG_ITEMS + NUM_NONREG_ITEMS)
 
 /* We actually push this many items.  */
-#define NUM_FAILURE_ITEMS						\
-  ((highest_active_reg - lowest_active_reg + 1) * NUM_REG_ITEMS 	\
-    + NUM_NONREG_ITEMS)
+#define NUM_FAILURE_ITEMS				\
+  (((RE_NO_POSIX_BACKTRACKING & bufp->syntax		\
+     ? 0 : highest_active_reg - lowest_active_reg + 1)	\
+    * NUM_REG_ITEMS)					\
+   + NUM_NONREG_ITEMS)
 
 /* How many items can still be added to the stack without overflowing it.  */
 #define REMAINING_AVAIL_SLOTS ((fail_stack).size - (fail_stack).avail)
@@ -1275,19 +1275,20 @@ typedef struct
   low_reg = (unsigned) POP_FAILURE_INT ();				\
   DEBUG_PRINT2 ("  Popping  low active reg: %d\n", low_reg);		\
 									\
-  for (this_reg = high_reg; this_reg >= low_reg; this_reg--)		\
-    {									\
-      DEBUG_PRINT2 ("    Popping reg: %d\n", this_reg);			\
+  if (!RE_NO_POSIX_BACKTRACKING & bufp->syntax)				\
+    for (this_reg = high_reg; this_reg >= low_reg; this_reg--)		\
+      {									\
+	DEBUG_PRINT2 ("    Popping reg: %d\n", this_reg);		\
 									\
-      reg_info[this_reg].word = POP_FAILURE_ELT ();			\
-      DEBUG_PRINT2 ("      info: 0x%x\n", reg_info[this_reg]);		\
+	reg_info[this_reg].word = POP_FAILURE_ELT ();			\
+	DEBUG_PRINT2 ("      info: 0x%x\n", reg_info[this_reg]);	\
 									\
-      regend[this_reg] = (const char *) POP_FAILURE_POINTER ();		\
-      DEBUG_PRINT2 ("      end: 0x%x\n", regend[this_reg]);		\
+	regend[this_reg] = (const char *) POP_FAILURE_POINTER ();	\
+	DEBUG_PRINT2 ("      end: 0x%x\n", regend[this_reg]);		\
 									\
-      regstart[this_reg] = (const char *) POP_FAILURE_POINTER ();	\
-      DEBUG_PRINT2 ("      start: 0x%x\n", regstart[this_reg]);		\
-    }									\
+	regstart[this_reg] = (const char *) POP_FAILURE_POINTER ();	\
+	DEBUG_PRINT2 ("      start: 0x%x\n", regstart[this_reg]);	\
+      }									\
 									\
   set_regs_matched_done = 0;						\
   DEBUG_STATEMENT (nfailure_points_popped++);				\
@@ -2895,9 +2896,7 @@ re_compile_fastmap (bufp)
 
   /* This holds the pointer to the failure stack, when
      it is allocated relocatably.  */
-#ifdef REL_ALLOC
   fail_stack_elt_t *failure_stack_ptr;
-#endif
 
   /* Assume that each path through the pattern can be null until
      proven otherwise.  We set this false at the bottom of switch
@@ -3037,7 +3036,7 @@ re_compile_fastmap (bufp)
 	case at_dot:
 	case after_dot:
           continue;
-#endif /* not emacs */
+#endif /* emacs */
 
 
         case no_op:
@@ -3275,6 +3274,17 @@ re_search_2 (bufp, string1, size1, string2, size2, startpos, range, regs, stop)
       else
 	range = 1;
     }
+
+#ifdef emacs
+  /* In a forward search for something that starts with \=.
+     don't keep searching past point.  */
+  if (bufp->used > 0 && (re_opcode_t) bufp->buffer[0] == at_dot && range > 0)
+    {
+      range = PT - startpos;
+      if (range <= 0)
+	return -1;
+    }
+#endif /* emacs */
 
   /* Update the fastmap now if not correct already.  */
   if (fastmap && !bufp->fastmap_accurate)
@@ -3548,9 +3558,7 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
 
   /* This holds the pointer to the failure stack, when
      it is allocated relocatably.  */
-#ifdef REL_ALLOC
   fail_stack_elt_t *failure_stack_ptr;
-#endif
 
   /* We fill all the registers internally, independent of what we
      return, for use in backreferences.  The number here includes
@@ -4681,13 +4689,6 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
           if (PTR_CHAR_POS ((unsigned char *) d) <= point)
   	    goto fail;
   	  break;
-#if 0 /* not emacs19 */
-	case at_dot:
-          DEBUG_PRINT1 ("EXECUTING at_dot.\n");
-	  if (PTR_CHAR_POS ((unsigned char *) d) + 1 != point)
-	    goto fail;
-	  break;
-#endif /* not emacs19 */
 
 	case syntaxspec:
           DEBUG_PRINT2 ("EXECUTING syntaxspec %d.\n", mcnt);
