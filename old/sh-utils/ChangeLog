@@ -1,3 +1,8 @@
+Sun Jan 26 12:51:05 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/who-users.c (usage): Fix typo (--writeable -> --writable)
+	in help output.  From Galen Hazelwood.
+
 Sat Jan 25 21:01:13 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/factor.c (print_factors): Reflect changes to xstrtoul interface.
