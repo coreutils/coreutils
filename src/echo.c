@@ -1,5 +1,5 @@
 /* echo.c, derived from code echo.c in Bash.
-   Copyright (C) 87,89, 1991-1997, 1999-2004 Free Software Foundation, Inc.
+   Copyright (C) 87,89, 1991-1997, 1999-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -62,6 +62,7 @@ usage (int status)
   else
     {
       printf (_("Usage: %s [OPTION]... [STRING]...\n"), program_name);
+      printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
       fputs (_("\
 Echo the STRING(s) to standard output.\n\
 \n\
