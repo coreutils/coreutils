@@ -1,3 +1,7 @@
+Tue Jul  2 21:51:40 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (ALL_LINGUAS): Add dutch (nl).
+
 Mon Jul  1 23:50:19 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/md5sum.c [NEWLINE_REPLACEMENT_STRING]: Define.
