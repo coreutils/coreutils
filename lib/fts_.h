@@ -69,8 +69,18 @@ typedef struct {
 # define FTS_NAMEONLY	0x0100		/* (private) child names only */
 # define FTS_STOP	0x0200		/* (private) unrecoverable error */
 	int fts_options;		/* fts_open options, global flags */
-	/* Data structure in which to store the fingerprint
-	   of each directory we've encountered.  */
+
+	/* This data structure records the directories between a starting
+	   point and the current directory.  I.e., a directory is recorded
+	   here IFF we have visited it once, but we have not yet completed
+	   processing of all its entries.  Every time we visit a new directory,
+	   we add that directory to this set.  When we finish with a directory
+	   (usually by visiting it a second time), we remove it from this
+	   set.  Each entry in this data structure is a device/inode pair.
+	   This data structure is used to detect directory cycles efficiently
+	   and promptly even when the depth of a hierarchy is in the tens
+	   of thousands.  Lazy checking, as done by GNU rm via cycle-check.c,
+	   wouldn't be appropriate for du.  */
 	void *fts_dir_signatures;
 } FTS;
 
