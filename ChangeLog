@@ -1,6 +1,15 @@
-2003-07-12  Jim Meyering  <jim@meyering.net>
+2003-07-13  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
+
+	* Makefile.maint (syntax-check): Move each individual check into
+	its own target.
+	(syntax-check-rules): This is the list of syntax-check targets.
+	(sc_unmarked_diagnostics, sc_cast_of_argument_to_free):
+	(sc_cast_of_x_alloc_return_value, sc_space_tab):
+	(sc_error_exit_success, sc_xalloc_h_in_src):  New targets.
+
+2003-07-12  Jim Meyering  <jim@meyering.net>
 
 	* configure.ac: Remove uses of OPTIONAL_BIN_ZCRIPTS and last
 	traces of the nohup script.
