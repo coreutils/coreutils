@@ -1,13 +1,12 @@
-#serial 6
+#serial 7
 
 AC_DEFUN([gl_AFS],
   [
-    AC_MSG_CHECKING(for AFS)
-    if test -d /afs; then
+    AC_ARG_WITH(afs,
+                AC_HELP_STRING([--with-afs],
+                               [support for the Andrew File System [[default=no]]]),
+    test "$withval" = no || with_afs=yes, with_afs=no)
+    if test "$with_afs" = yes; then
       AC_DEFINE(AFS, 1, [Define if you have the Andrew File System.])
-      ac_result=yes
-    else
-      ac_result=no
     fi
-    AC_MSG_RESULT($ac_result)
   ])
