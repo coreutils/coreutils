@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2003-01-27.08}
+\def\texinfoversion{2003-01-31.17}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
@@ -558,6 +558,16 @@
 % therefore, no glue is inserted, and the space between the headline and
 % the text is small, which looks bad.
 %
+% Another complication is that the group might be very large.  This can
+% cause the glue on the previous page to be unduly stretched, because it
+% does not have much material.  In this case, it's better to add an
+% explicit \vfill so that the extra space is at the bottom.  The
+% threshold for doing this is if the group is more than \vfilllimit
+% percent of a page (\vfilllimit can be changed inside of @tex).
+% 
+\newbox\groupbox
+\def\vfilllimit{0.7}
+%
 \def\group{\begingroup
   \ifnum\catcode13=\active \else
     \errhelp = \groupinvalidhelp
@@ -571,10 +581,22 @@
   % above.  But it's pretty close.
   \def\Egroup{%
     \egroup           % End the \vtop.
+    % \dimen0 is the vertical size of the group's box.
+    \dimen0 = \ht\groupbox  \advance\dimen0 by \dp\groupbox
+    % \dimen2 is how much space is left on the page (more or less).
+    \dimen2 = \pageheight   \advance\dimen2 by -\pagetotal
+    % if the group doesn't fit on the current page, and it's a big big
+    % group, force a page break.
+    \ifdim \dimen0 > \dimen2
+      \ifdim \pagetotal < \vfilllimit\pageheight
+        \page
+      \fi
+    \fi
+    \copy\groupbox
     \endgroup         % End the \group.
   }%
   %
-  \vtop\bgroup
+  \setbox\groupbox = \vtop\bgroup
     % We have to put a strut on the last line in case the @group is in
     % the midst of an example, rather than completely enclosing it.
     % Otherwise, the interline space between the last line of the group
@@ -3202,27 +3224,23 @@ width0pt\relax} \fi
         \def\rawbackslashxx{\indexbackslash}% \indexbackslash isn't defined now
         % so it will be output as is; and it will print as backslash.
         %
-        \def\thirdarg{#3}%
-        %
-        % If third arg is present, precede it with space in sort key.
-        \ifx\thirdarg\emptymacro
-          \let\subentry = \empty
-        \else
-          \def\subentry{ #3}%
-        \fi
-        %
-        % First process the index entry with all font commands turned
-        % off to get the string to sort by.
-        {\indexnofonts \xdef\indexsorttmp{#2\subentry}}%
-        %
-        % Now the real index entry with the fonts.
+        % The main index entry text.
         \toks0 = {#2}%
         %
-        % If the third (subentry) arg is present, add it to the index
-        % line to write.
+        % If third arg is present, precede it with space in sort key.
+        \def\thirdarg{#3}%
         \ifx\thirdarg\emptymacro \else
-          \toks0 = \expandafter{\the\toks0{#3}}%
+           % If the third (subentry) arg is present, add it to the index
+           % line to write.
+          \toks0 = \expandafter{\the\toks0 \space #3}%
         \fi
+        %
+        % Process the index entry with all font commands turned off, to
+        % get the string to sort by.
+        {\indexnofonts
+         \edef\temp{\the\toks0}% need full expansion
+         \xdef\indexsorttmp{\temp}%
+        }%
         %
         % Set up the complete index entry, with both the sort key and
         % the original text, including any font commands.  We write
@@ -3254,11 +3272,10 @@ width0pt\relax} \fi
         \iflinks
           \ifvmode
             \skip0 = \lastskip
-            \ifdim\lastskip = 0pt \else \nobreak\vskip-\lastskip \fi
+            \ifdim\lastskip = 0pt \else \nobreak\vskip-\skip0 \fi
           \fi
           %
           \temp % do the write
-          %
           %
           \ifvmode \ifdim\skip0 = 0pt \else \nobreak\vskip\skip0 \fi \fi
         \fi
@@ -4094,7 +4111,7 @@ width0pt\relax} \fi
   }%
   % Add extra space after the heading -- either a line space or a
   % paragraph space, whichever is more.  (Some people like to set
-  % \parskip to large values for some reason.)
+  % \parskip to large values for some reason.)  Don't allow stretch, though.
   \nobreak
   \ifdim\parskip>\normalbaselineskip
     \kern\parskip
@@ -4167,7 +4184,7 @@ width0pt\relax} \fi
       \advance\hsize by -\contentsrightmargin % Don't use the full line length.
       %
       % Roman numerals for page numbers.
-      \ifnum \pageno>0 \pageno = \lastnegativepageno \fi
+      \ifnum \pageno>0 \global\pageno = \lastnegativepageno \fi
 }
 
 
@@ -4184,7 +4201,7 @@ width0pt\relax} \fi
      \pdfmakeoutlines
    \endgroup
    \lastnegativepageno = \pageno
-   \pageno = \savepageno
+   \global\pageno = \savepageno
 }
 
 % And just the chapters.
@@ -4216,7 +4233,7 @@ width0pt\relax} \fi
      \contentsalignmacro % in case @setchapternewpage odd is in effect
    \endgroup
    \lastnegativepageno = \pageno
-   \pageno = \savepageno
+   \global\pageno = \savepageno
 }
 \let\shortcontents = \summarycontents
 
@@ -5003,8 +5020,11 @@ width0pt\relax} \fi
   % If there are two @def commands in a row, we'll have a \nobreak,
   % which is there to keep the function description together with its
   % header.  But if there's nothing but headers, we want to allow a
-  % break after all.
-  \ifnum\lastpenalty=10000 \penalty0 \fi
+  % break after all.  Check for penalty 10002 (inserted by
+  % \defargscommonending) instead of 10000, since the sectioning
+  % commands insert a \penalty10000, and we don't want to allow a break
+  % between a section heading and a defun.
+  \ifnum\lastpenalty=10002 \penalty0 \fi
   \medbreak
   %
   % Define the \E... end token that this defining construct specifies
@@ -5162,9 +5182,18 @@ width0pt\relax} \fi
 
 % Define @defun.
 
-% First, define the processing that is wanted for arguments of \defun
-% Use this to expand the args and terminate the paragraph they make up
+% This is called to end the arguments processing for all the @def... commands.
+%
+\def\defargscommonending{%
+  \interlinepenalty = 10000
+  \advance\rightskip by 0pt plus 1fil
+  \endgraf
+  \nobreak\vskip -\parskip
+  \penalty 10002  % signal to \parsebodycommon.
+}
 
+% This expands the args and terminates the paragraph they comprise.
+% 
 \def\defunargs#1{\functionparens \sl
 % Expand, preventing hyphenation at `-' chars.
 % Note that groups don't affect changes in \hyphenchar.
@@ -5173,9 +5202,7 @@ width0pt\relax} \fi
 #1%
 {\tensl\hyphenchar\font=45}%
 \ifnum\parencount=0 \else \errmessage{Unbalanced parentheses in @def}\fi%
-\interlinepenalty=10000
-\advance\rightskip by 0pt plus 1fil
-\endgraf\nobreak\vskip -\parskip\nobreak
+  \defargscommonending
 }
 
 \def\deftypefunargs #1{%
@@ -5184,9 +5211,7 @@ width0pt\relax} \fi
 % Use \boldbraxnoamp, not \functionparens, so that & is not special.
 \boldbraxnoamp
 \tclose{#1}% avoid \code because of side effects on active chars
-\interlinepenalty=10000
-\advance\rightskip by 0pt plus 1fil
-\endgraf\nobreak\vskip -\parskip\nobreak
+  \defargscommonending
 }
 
 % Do complete processing of one @defun or @defunx line already parsed.
@@ -5271,9 +5296,11 @@ width0pt\relax} \fi
 \defopparsebody\Edefop\defopx\defopheader\defoptype}
 %
 \def\defopheader#1#2#3{%
-\dosubind {fn}{\code{#2}}{\putwordon\ #1}% Make entry in function index
-\begingroup\defname {#2}{\defoptype\ \putwordon\ #1}%
-\defunargs {#3}\endgroup %
+  \dosubind{fn}{\code{#2}}{\putwordon\ \code{#1}}% function index entry
+  \begingroup
+    \defname{#2}{\defoptype\ \putwordon\ #1}%
+    \defunargs{#3}%
+  \endgroup
 }
 
 % @deftypeop CATEGORY CLASS TYPE OPERATION ARG...
@@ -5340,9 +5367,11 @@ width0pt\relax} \fi
 \defopvarparsebody\Edefcv\defcvx\defcvarheader\defcvtype}
 
 \def\defcvarheader #1#2#3{%
-\dosubind {vr}{\code{#2}}{\putwordof\ #1}% Make entry in var index
-\begingroup\defname {#2}{\defcvtype\ \putwordof\ #1}%
-\defvarargs {#3}\endgroup %
+  \dosubind{vr}{\code{#2}}{\putwordof\ \code{#1}}% variable index entry
+  \begingroup
+    \defname{#2}{\defcvtype\ \putwordof\ #1}%
+    \defvarargs{#3}%
+  \endgroup
 }
 
 % @defivar CLASS VARNAME == @defcv {Instance Variable} CLASS VARNAME
@@ -5350,7 +5379,7 @@ width0pt\relax} \fi
 \def\defivar{\defvrparsebody\Edefivar\defivarx\defivarheader}
 %
 \def\defivarheader#1#2#3{%
-  \dosubind {vr}{\code{#2}}{\putwordof\ #1}% entry in var index
+  \dosubind{vr}{\code{#2}}{\putwordof\ \code{#1}}% entry in var index
   \begingroup
     \defname{#2}{\putwordInstanceVariableof\ #1}%
     \defvarargs{#3}%
@@ -5362,8 +5391,8 @@ width0pt\relax} \fi
 % This is actually simple: just print them in roman.
 % This must expand the args and terminate the paragraph they make up
 \def\defvarargs #1{\normalparens #1%
-\interlinepenalty=10000
-\endgraf\nobreak\vskip -\parskip\nobreak}
+  \defargscommonending
+}
 
 % @defvr Counter foo-count
 
@@ -5399,8 +5428,7 @@ width0pt\relax} \fi
 \def\deftypevarheader #1#2{%
 \dovarind#2 \relax% Make entry in variables index
 \begingroup\defname {\defheaderxcond#1\relax$.$#2}{\putwordDeftypevar}%
-\interlinepenalty=10000
-\endgraf\nobreak\vskip -\parskip\nobreak
+  \defargscommonending
 \endgroup}
 \def\dovarind#1 #2\relax{\doind{vr}{\code{#1}}}
 
@@ -5410,8 +5438,7 @@ width0pt\relax} \fi
 
 \def\deftypevrheader #1#2#3{\dovarind#3 \relax%
 \begingroup\defname {\defheaderxcond#2\relax$.$#3}{#1}
-\interlinepenalty=10000
-\endgraf\nobreak\vskip -\parskip\nobreak
+  \defargscommonending
 \endgroup}
 
 % Now define @deftp
