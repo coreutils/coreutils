@@ -79,15 +79,16 @@ int euidaccess ();
 int full_write ();
 
 static int do_copy __P ((int argc, char **argv));
-static int copy __P ((char *src_path, char *dst_path, int new_dst,
+static int copy __P ((const char *src_path, const char *dst_path, int new_dst,
 		      dev_t device, struct dir_list *ancestors));
-static int copy_dir __P ((char *src_path_in, char *dst_path_in, int new_dst,
-			  struct stat *src_sb, struct dir_list *ancestors));
-static int make_path_private __P ((char *const_dirpath, int src_offset,
-				   int mode, char *verbose_fmt_string,
+static int copy_dir __P ((const char *src_path_in, const char *dst_path_in,
+			  int new_dst, const struct stat *src_sb,
+			  struct dir_list *ancestors));
+static int make_path_private __P ((const char *const_dirpath, int src_offset,
+				   int mode, const char *verbose_fmt_string,
 				   struct dir_attr **attr_list, int *new_dst));
-static int copy_reg __P ((char *src_path, char *dst_path));
-static int re_protect __P ((char *const_dst_path, int src_offset,
+static int copy_reg __P ((const char *src_path, const char *dst_path));
+static int re_protect __P ((const char *const_dst_path, int src_offset,
 			    struct dir_attr *attr_list));
 
 /* Initial number of entries in each hash table entry's table of inodes.  */
@@ -463,7 +464,7 @@ do_copy (int argc, char **argv)
 
 	      ap = basename (arg);
 	      /* For `cp -R source/.. dest', don't copy into `dest/..'. */
-	      dst_path = (strcmp (ap, "..") == 0
+	      dst_path = (STREQ (ap, "..")
 			  ? xstrdup (dest)
 			  : path_concat (dest, ap));
 	    }
@@ -498,7 +499,8 @@ do_copy (int argc, char **argv)
       struct stat source_stats;
 
       if (flag_path)
-	usage (2, _("when preserving paths, last argument must be a directory"));
+	usage (2,
+	       _("when preserving paths, last argument must be a directory"));
 
       source = argv[optind];
 
@@ -548,7 +550,7 @@ do_copy (int argc, char **argv)
     }
   else
     usage (2,
-	   _("when copying multiple files, last argument must be a directory"));
+	 _("when copying multiple files, last argument must be a directory"));
 }
 
 /* Copy the file SRC_PATH to the file DST_PATH.  The files may be of
@@ -561,7 +563,7 @@ do_copy (int argc, char **argv)
    Return 0 if successful, 1 if an error occurs. */
 
 static int
-copy (char *src_path, char *dst_path, int new_dst, dev_t device,
+copy (const char *src_path, const char *dst_path, int new_dst, dev_t device,
       struct dir_list *ancestors)
 {
   struct stat src_sb;
@@ -633,7 +635,7 @@ copy (char *src_path, char *dst_path, int new_dst, dev_t device,
 	      if (S_ISDIR (dst_sb.st_mode))
 		{
 		  error (0, 0,
-			 _("%s: cannot overwrite directory with non-directory"),
+		       _("%s: cannot overwrite directory with non-directory"),
 			 dst_path);
 		  return 1;
 		}
@@ -669,7 +671,7 @@ copy (char *src_path, char *dst_path, int new_dst, dev_t device,
 		 destroy the source file.  Before, running the commands
 		 cd /tmp; rm -f a a~; : > a; echo A > a~; cp -b -V simple a~ a
 		 would leave two zero-length files: a and a~.  */
-	      if (strcmp (tmp_backup, src_path) == 0)
+	      if (STREQ (tmp_backup, src_path))
 		{
 		  error (0, 0,
 		   _("backing up `%s' would destroy source;  `%s' not copied"),
@@ -807,7 +809,8 @@ copy (char *src_path, char *dst_path, int new_dst, dev_t device,
       else
 	{
 	  error (0, 0,
-		 _("%s: can only make relative symbolic links in current directory"), dst_path);
+	   _("%s: can make relative symbolic links only in current directory"),
+		 dst_path);
 	  goto un_backup;
 	}
     }
@@ -963,8 +966,8 @@ un_backup:
    permissions when done, otherwise 1. */
 
 static int
-make_path_private (char *const_dirpath, int src_offset, int mode,
-		   char *verbose_fmt_string, struct dir_attr **attr_list,
+make_path_private (const char *const_dirpath, int src_offset, int mode,
+		   const char *verbose_fmt_string, struct dir_attr **attr_list,
 		   int *new_dst)
 {
   struct stat stats;
@@ -1079,7 +1082,8 @@ make_path_private (char *const_dirpath, int src_offset, int mode,
    when done, otherwise 1. */
 
 static int
-re_protect (char *const_dst_path, int src_offset, struct dir_attr *attr_list)
+re_protect (const char *const_dst_path, int src_offset,
+	    struct dir_attr *attr_list)
 {
   struct dir_attr *p;
   char *dst_path;		/* A copy of CONST_DST_PATH we can change. */
@@ -1149,8 +1153,8 @@ re_protect (char *const_dst_path, int src_offset, struct dir_attr *attr_list)
    Return 0 if successful, -1 if an error occurs. */
 
 static int
-copy_dir (char *src_path_in, char *dst_path_in, int new_dst,
-	  struct stat *src_sb, struct dir_list *ancestors)
+copy_dir (const char *src_path_in, const char *dst_path_in, int new_dst,
+	  const struct stat *src_sb, struct dir_list *ancestors)
 {
   char *name_space;
   char *namep;
@@ -1203,7 +1207,7 @@ copy_dir (char *src_path_in, char *dst_path_in, int new_dst,
    Return 0 if successful, -1 if an error occurred. */
 
 static int
-copy_reg (char *src_path, char *dst_path)
+copy_reg (const char *src_path, const char *dst_path)
 {
   char *buf;
   int buf_size;
