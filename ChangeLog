@@ -1,6 +1,11 @@
-2003-10-15  Jim Meyering  <jim@meyering.net>
+2003-10-16  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.1.0.
+
+	* src/tail.c (start_bytes): Rename local, remainder, to avoid
+	gcc's warning about shadowing a global.
+
+2003-10-15  Jim Meyering  <jim@meyering.net>
 
 	chown and chgrp now accept POSIX-mandated -H, -L, -P options and
 	use fts to perform a directory traversal when -R is specified.
