@@ -1,3 +1,13 @@
+2004-08-04  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/system.h (PRIdMAX, PRIoMAX, PRIuMAX, PRIxMAX):
+	Define to a concatenation of string literals, not to an expression;
+	needed for concatenation contexts.
+	(INTMAX_MAX, INTMAX_MIN): New macros.
+
+	* src/stat.c (print_stat): Don't assume st_ino / st_dev fits in
+	unsigned long; this isn't true for st_ino on Solaris 9.
+
 2004-08-03  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/uname.c: Do not depend on HAVE_SYSCTL when deciding
