@@ -65,7 +65,7 @@ test -f c/f || fail=1
 test -f c/g || fail=1
 
 touch a/f b/f b/g
-mv a/f b/f b/g c
+mv a/f b/f b/g c 2> /dev/null && fail=1
 test -f a/f && fail=1  # a/f should have been moved
 test -f b/f || fail=1  # b/f should remain
 test -f b/g && fail=1  # b/g should have been moved
