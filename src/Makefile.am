@@ -326,9 +326,11 @@ sc_tight_scope: $(all_programs)
 	    | grep -Ev -f $$t &&					\
 	  { echo 'the above functions should have static scope' 1>&2;	\
 	    exit 1; } || : ;						\
-	printf '^program_name$$\n' > $$t;				\
+	( printf '^program_name$$\n';					\
+	  sed -n 's/^extern int \([^ ][^ ]*\);$$/^\1$$/p'		\
+	    $(noinst_HEADERS) ) > $$t;					\
 	nm -e *.$(OBJEXT)						\
-	    | sed -n 's/.* B //p'					\
+	    | sed -n 's/.* [BD] //p'					\
 	    | grep -Ev -f $$t &&					\
 	  { echo 'the above variables should have static scope' 1>&2;	\
 	    exit 1; } || :
