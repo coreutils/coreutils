@@ -4518,8 +4518,26 @@ else
   esac
 fi
 test -s narrow-1.E || rm -f narrow-1.E
+_POSIX2_VERSION=199209 $xx --date-format="-- Date/Time --" -h x -W3 -t2 $srcdir/col-last.I > col-last.O 2> col-last.E
+code=$?
+if test $code != 0; then
+  $echo "Test col-last(_POSIX2_VERSION=199209) failed: ../../src/pr return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp col-last.O $srcdir/col-last.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE"; then $echo "passed col-last(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test col-last(_POSIX2_VERSION=199209) failed: files col-last.O and $srcdir/col-last.X differ" 1>&2
+       (diff -c col-last.O $srcdir/col-last.X) 2> /dev/null
+       errors=`expr $errors + 1`;;
+    2) $echo "Test col-last(_POSIX2_VERSION=199209) may have failed." 1>&2
+       $echo The command "cmp col-last.O $srcdir/col-last.X" failed. 1>&2
+       errors=`expr $errors + 1`;;
+  esac
+fi
+test -s col-last.E || rm -f col-last.E
 if test $errors = 0; then
-  $echo Passed all 250 tests. 1>&2
+  $echo Passed all 251 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi

@@ -172,7 +172,7 @@ tta3-0FF tta3-FF ttb3-0FF ttb3-FF w72l17f-ll
 
 maint_gen = i-opt-a.I i-opt-a.X i-opt-b.I i-opt-b.X ncut-a.I ncut-a.X \
 ncut-b.I ncut-b.X margin-0.I margin-0.X dbl-sp-a.I dbl-sp-a.X dbl-sp-b.I \
-dbl-sp-b.X narrow-1.I narrow-1.X
+dbl-sp-b.X narrow-1.I narrow-1.X col-last.I col-last.X
 
 run_gen = 1a.O 1a.E 1b.O 1b.E 1c.O 1c.E 1d.O 1d.E 1e.O 1e.E 1f.O 1f.E 1g.O \
 1g.E 1h.O 1h.E 1i.O 1i.E 1j.O 1j.E 1k.O 1k.E 1l.O 1l.E 2a.O 2a.E 2b.O 2b.E \
@@ -214,7 +214,7 @@ run_gen = 1a.O 1a.E 1b.O 1b.E 1c.O 1c.E 1d.O 1d.E 1e.O 1e.E 1f.O 1f.E 1g.O \
 14d.E 14e.O 14e.E 14f.O 14f.E 14g.O 14g.E 14h.O 14h.E 14i.O 14i.E 14j.O 14j.E \
 14k.O 14k.E 14l.O 14l.E 14m.O 14m.E i-opt-a.O i-opt-a.E i-opt-b.O i-opt-b.E \
 ncut-a.O ncut-a.E ncut-b.O ncut-b.E margin-0.O margin-0.E dbl-sp-a.O \
-dbl-sp-a.E dbl-sp-b.O dbl-sp-b.E narrow-1.O narrow-1.E
+dbl-sp-a.E dbl-sp-b.O dbl-sp-b.E narrow-1.O narrow-1.E col-last.O col-last.E
 
 
 EXTRA_DIST = Test.pm $x-tests $(explicit) $(maint_gen)
