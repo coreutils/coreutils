@@ -56,7 +56,7 @@
 #include <stdio.h>
 #include <ctype.h>
 
-#ifndef isascii
+#if !defined (isascii) || defined (STDC_HEADERS)
 #define isascii(c) 1
 #endif
 
@@ -66,7 +66,9 @@
 
 #include <sys/types.h>
 #include <signal.h>
+#include <getopt.h>
 #include "system.h"
+#include "version.h"
 
 #define equal(p, q) (strcmp ((p),(q)) == 0)
 #define max(a, b) ((a) > (b) ? (a) : (b))
@@ -305,6 +307,16 @@ static unsigned char const ebcdic_to_ascii[] =
   070, 071, 0372, 0373, 0374, 0375, 0376, 0377
 };
 
+static int flag_help;
+static int flag_version;
+
+static struct option const long_options[] =
+{
+  {"help", no_argument, &flag_help, 1},
+  {"version", no_argument, &flag_version, 1},
+  {0, 0, 0, 0}
+};
+
 void
 main (argc, argv)
      int argc;
@@ -323,6 +335,13 @@ main (argc, argv)
 
   /* Decode arguments. */
   scanargs (argc, argv);
+
+  if (flag_version)
+    fprintf (stderr, "%s", version_string);
+
+  if (flag_help)
+    usage ("", NULL, NULL);
+
   apply_translations ();
 
   if (input_file != NULL)
@@ -774,8 +793,22 @@ scanargs (argc, argv)
      char **argv;
 {
   int i, n;
+  int c;
 
-  for (i = 1; i < argc; i++)
+  while ((c = getopt_long (argc, argv, "", long_options, (int *) 0)) != EOF)
+    {
+      switch (c)
+	{
+	case 0:
+	  break;
+
+	default:
+	  usage ("", NULL, NULL);
+
+	}
+    }
+
+  for (i = optind; i < argc; i++)
     {
       char *name, *val;
 
