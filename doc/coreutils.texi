@@ -4670,8 +4670,17 @@ delete characters, then squeeze repeated characters from the result.
 The @var{set1} and (if given) @var{set2} arguments define ordered
 sets of characters, referred to below as @var{set1} and @var{set2}.  These
 sets are the characters of the input that @command{tr} operates on.
-The @option{--complement} (@option{-c}) option replaces @var{set1} with its
+The @option{--complement} (@option{-c}, @option{-C}) option replaces
+@var{set1} with its
 complement (all of the characters that are not in @var{set1}).
+
+Currently @command{tr} fully supports only single-byte characters.
+Eventually it will support multibyte characters; when it does, the
+@option{-C} option will cause it to complement the set of characters,
+whereas @option{-c} will cause it to complement the set of values.
+This distinction will matter only when some values are not characters,
+and this is possible only in locales using multibyte encodings when
+the input contains encoding errors.
 
 @exitstatus
 
