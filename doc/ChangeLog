@@ -1,7 +1,16 @@
+2003-05-13  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (true invocation): Mention that it is possible to
+	make true --help or true --version (in non-POSIX mode) exit nonzero.
+	Suggestion from Paul Eggert.
+
 2003-05-10  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (Exit status): Remove `uniq' from the list.
 	It uses standard exit codes.
+	(More details about version sort): Note that strverscmp, and hence
+	`ls -v', does not use LC_COLLATE.  Reported by From: Andrey Borzenkov.
+
 
 2003-04-21  Jim Meyering  <jim@meyering.net>
 
