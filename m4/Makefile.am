@@ -50,6 +50,7 @@ mbrtowc.m4 \
 mbstate_t.m4 \
 mbswidth.m4 \
 memcmp.m4 \
+mkdir-slash.m4 \
 nanosleep.m4 \
 perl.m4 \
 prereq.m4 \
