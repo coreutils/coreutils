@@ -85,8 +85,8 @@ char *xstrdup ();
 
 #ifdef ENABLE_NLS
 
-static unsigned char decimal_point;
-static unsigned char th_sep;
+static char decimal_point;
+static int th_sep; /* if CHAR_MAX + 1, then there is no thousands separator */
 static char *nls_grouping;
 
 /* This is "C" locale, need another? */
@@ -98,9 +98,12 @@ static int nls_fraction_found = 1;
 /* Look for month notations in text? */
 static int nls_month_found = 1;
 
+# define IS_THOUSANDS_SEP(x) ((x) == th_sep)
+
 #else
 
 # define decimal_point FLOATING_POINT
+# define IS_THOUSANDS_SEP(x) 0
 
 #endif
 
@@ -926,143 +929,55 @@ findlines (struct buffer *buf, struct lines *lines)
      find first character different in a and b.
      if both are digits, return the difference *a - *b.
      if *a is a digit
-       skip past zeroes
+       skip past zeros
        if digit return 1, else 0
      if *b is a digit
-       skip past zeroes
+       skip past zeros
        if digit return -1, else 0
    if *a is a decimal_point
-     skip past decimal_point and zeroes
+     skip past decimal_point and zeros
      if digit return 1, else 0
    if *b is a decimal_point
-     skip past decimal_point and zeroes
+     skip past decimal_point and zeros
      if digit return -1, else 0
-   return 0
-
-   The above implementation duplicates code, and thus there is room
-   for improvement:
-      the difference in code of a and b, is solved by using a
-      reference to s, assigned to either a or b. and using diff
-      to denote return value.
-      the difference in either that start being a digit or
-      the decimal point, is solved by testing if either is
-      a decimal point, or if the other is a digit...
-
-   if *a or *b is a decimal_point
-      skip all chars where *a == *b
-      if *a and *b are digits
-        return *a - *b
-      if *a is a digit or *a is a decimal_point
-	s is a
-	diff is 1
-      else
-	s is b
-	diff is -1
-      skip decimal_point in s
-      skip zeroes in s
-      if *s is a digit
-        return diff
-    return 0 */
-
-#define USE_NEW_FRAC_COMPARE
-#ifdef USE_NEW_FRAC_COMPARE
+   return 0 */
 
 static int
 fraccompare (register const char *a, register const char *b)
 {
-# ifdef ENABLE_NLS
+#ifdef ENABLE_NLS
   nls_fraction_found = 1;
-# endif
-
-  if (*a == decimal_point || *b == decimal_point)
-    {
-      register const char *s;
-      int diff;
-
-      while (*a == *b)
-	{
-	  ++a;
-	  ++b;
-	  if (!ISDIGIT (*a))
-	    break;
-	}
-
-      if (ISDIGIT (*a) && ISDIGIT (*b))
-	return (*a) - (*b);
-
-      if (*a == decimal_point || (ISDIGIT (*a) && *b != decimal_point))
-	{
-	  s = a;
-	  diff = 1;
-	}
-      else
-	{
-	  s = b;
-	  diff = -1;
-	}
-      if (*s == decimal_point)
-	++s;
-      while (*s == NUMERIC_ZERO)
-	++s;
-      if (ISDIGIT (*s))
-	return diff;
-    }
-  return 0;
-}
-
-#else
-static int
-fraccompare (register const char *a, register const char *b)
-{
-  register int tmpa = *a;
-  register int tmpb = *b;
-
-  if (tmpa == decimal_point && tmpb == decimal_point)
-    {
-      do
-	tmpa = *++a, tmpb = *++b;
-      while (tmpa == tmpb && ISDIGIT (tmpa));
-      if (ISDIGIT (tmpa) && ISDIGIT (tmpb))
-	return tmpa - tmpb;
-      if (ISDIGIT (tmpa))
-	{
-	  while (tmpa == NUMERIC_ZERO)
-	    tmpa = *++a;
-	  if (ISDIGIT (tmpa))
-	    return 1;
-	  return 0;
-	}
-      if (ISDIGIT (tmpb))
-	{
-	  while (tmpb == NUMERIC_ZERO)
-	    tmpb = *++b;
-	  if (ISDIGIT (tmpb))
-	    return -1;
-	  return 0;
-	}
-      return 0;
-    }
-  else if (tmpa == decimal_point)
-    {
-      do
-	tmpa = *++a;
-      while (tmpa == NUMERIC_ZERO);
-      if (ISDIGIT (tmpa))
-	return 1;
-      return 0;
-    }
-  else if (tmpb == decimal_point)
-    {
-      do
-	tmpb = *++b;
-      while (tmpb == NUMERIC_ZERO);
-      if (ISDIGIT (tmpb))
-	return -1;
-      return 0;
-    }
-  return 0;
-}
 #endif
+
+  if (*a == decimal_point && *b == decimal_point)
+    {
+      while (*++a == *++b)
+	if (! ISDIGIT (*a))
+	  return 0;
+      if (ISDIGIT (*a) && ISDIGIT (*b))
+	return *a - *b;
+      if (ISDIGIT (*a))
+	goto a_trailing_nonzero;
+      if (ISDIGIT (*b))
+	goto b_trailing_nonzero;
+      return 0;
+    }
+  else if (*a++ == decimal_point)
+    {
+    a_trailing_nonzero:
+      while (*a == NUMERIC_ZERO)
+	a++;
+      return ISDIGIT (*a);
+    }
+  else if (*b++ == decimal_point)
+    {
+    b_trailing_nonzero:
+      while (*b == NUMERIC_ZERO)
+	b++;
+      return - ISDIGIT (*b);
+    }
+  return 0;
+}
 
 /* Compare strings A and B as numbers without explicitly converting them to
    machine numbers.  Comparatively slow for short strings, but asymptotically
@@ -1076,7 +991,7 @@ fraccompare (register const char *a, register const char *b)
 
 /* Decide the kind of fraction the program will use */
 static void
-nls_set_fraction (register unsigned char ch)
+nls_set_fraction (char ch)
 {
   if (!nls_fraction_found && ch != decimal_point)
     {
@@ -1093,7 +1008,7 @@ nls_set_fraction (register unsigned char ch)
       else if (ch != decimal_point)
 	{				/* Alien    */
 	  decimal_point = ch;
-	  th_sep = '\0';
+	  th_sep = CHAR_MAX + 1;
 	}
     }
   nls_fraction_found = 1;
@@ -1220,125 +1135,26 @@ look_for_fraction (const char *s, const char *e)
       nls_set_fraction (*s);
     }
 }
+#endif
 
-static int
-numcompare (register const char *a, register const char *b)
-{
-  int ret_code = 1;		/* normal return status, see later in code */
-  int diff = 0;			/* difference between two digits           */
-
-  while (blanks[UCHAR (*a)])
-    ++a;
-  while (blanks[UCHAR (*b)])
-    ++b;
-
-  /* next character in a,b is non-blank */
-  if ((*a == NEGATION_SIGN || *b == NEGATION_SIGN) && *a != *b)
-    {
-      /* a < 0, or b < 0, but not both */
-      if (*a == NEGATION_SIGN)
-	ret_code = -1, ++a;	/* a looks < b */
-      else if (*b == NEGATION_SIGN)
-	ret_code = 1, ++b;	/* b looks < a */
-      /* bypass zeroes, decimal points, and thousand sep in a & b */
-      while (*a == NUMERIC_ZERO || (th_sep && *a == th_sep)
-	     || *a == decimal_point)
-	++a;
-
-      while (*b == NUMERIC_ZERO || (th_sep && *b == th_sep)
-	     || *b == decimal_point)
-	++b;
-
-      if (ISDIGIT (*a) || ISDIGIT (*b))
-	/* here, either a or b or both are digits
-	   if a and b are digits, the signed one is the lesser.
-	   if a is a digit, and not b.. it means b==0, and if b==0
-	   than either is signed if b is signed then -0 < a
-	   or if a is signed then -a < 0.  The ret_code is already set
-	   to mark that the signed number is the lesser, so we just
-	   return that number here.                                    */
-	return ret_code;
-
-      /* *a and *b are neither digits, they are equal -0 == +0 */
-      return 0;
-    }
-  else
-    {
-      /* either both numbers are signed, or both are not-signed */
-      if (*a == NEGATION_SIGN)
-	{
-	  ++a;
-	  ++b;
-	  ret_code = -1;
-	}
-      /* if both are signed, then remember -100 < -10 (ret_code reversed!) */
-
-      /* Skip any leading zeroes */
-      while (*a == NUMERIC_ZERO)
-	++a;
-      while (*b == NUMERIC_ZERO)
-	++b;
-
-    continue_thousands:
-
-      /* skip all equal digits */
-      while (ISDIGIT (*a) && ISDIGIT (*b) && *a == *b)
-	a++, b++;
-
-      /* Here, we have either different digits, or possible fractions
-         or thousand separators. */
-
-      if (ISDIGIT (*a) && ISDIGIT (*b))
-	{
-	  if (diff == 0)
-	    diff = ((*a) - (*b));	/* simple, isn't it? not quite */
-	  a++, b++;
-	  goto continue_thousands;
-	}
-
-      /* now, here either may be a fraction, or a thousand separator...
-         or both.                                                        */
-      /* We've decided what are decimal_points, and what are thousands sep */
-      if ((th_sep != 0) && (*a == th_sep || *b == th_sep))
-	{
-	  if (*a == th_sep)
-	    ++a;
-	  if (*b == th_sep)
-	    ++b;
-	  goto continue_thousands;	/* Ugly, but better than a while(1) */
-	}
-
-      if (ISDIGIT (*a))
-	return ret_code;	/* a has more digits than b */
-      if (ISDIGIT (*b))
-	return ret_code * -1;	/* b has more digits than a */
-
-      /* now, we should have the fractions solved */
-      if ((diff == 0) && (*a == decimal_point || *b == decimal_point))
-	return ret_code * fraccompare (a, b);
-
-      return ret_code * diff;	/* fall through here, and diff decides */
-    }
-}
-#else
 static int
 numcompare (register const char *a, register const char *b)
 {
   register int tmpa, tmpb, loga, logb, tmp;
 
-  tmpa = UCHAR (*a);
-  tmpb = UCHAR (*b);
+  tmpa = *a;
+  tmpb = *b;
 
-  while (blanks[tmpa])
-    tmpa = UCHAR (*++a);
-  while (blanks[tmpb])
-    tmpb = UCHAR (*++b);
+  while (blanks[UCHAR (tmpa)])
+    tmpa = *++a;
+  while (blanks[UCHAR (tmpb)])
+    tmpb = *++b;
 
   if (tmpa == NEGATION_SIGN)
     {
       do
-	tmpa = UCHAR (*++a);
-      while (tmpa == NUMERIC_ZERO);
+	tmpa = *++a;
+      while (tmpa == NUMERIC_ZERO || IS_THOUSANDS_SEP (tmpa));
       if (tmpb != NEGATION_SIGN)
 	{
 	  if (tmpa == decimal_point)
@@ -1347,8 +1163,8 @@ numcompare (register const char *a, register const char *b)
 	    while (tmpa == NUMERIC_ZERO);
 	  if (ISDIGIT (tmpa))
 	    return -1;
-	  while (tmpb == NUMERIC_ZERO)
-	    tmpb = UCHAR (*++b);
+	  while (tmpb == NUMERIC_ZERO || IS_THOUSANDS_SEP (tmpb))
+	    tmpb = *++b;
 	  if (tmpb == decimal_point)
 	    do
 	      tmpb = *++b;
@@ -1358,52 +1174,59 @@ numcompare (register const char *a, register const char *b)
 	  return 0;
 	}
       do
-	tmpb = UCHAR (*++b);
-      while (tmpb == NUMERIC_ZERO);
+	tmpb = *++b;
+      while (tmpb == NUMERIC_ZERO || IS_THOUSANDS_SEP (tmpb));
 
       while (tmpa == tmpb && ISDIGIT (tmpa))
-	tmpa = UCHAR (*++a), tmpb = UCHAR (*++b);
+	{
+	  do
+	    tmpa = *++a;
+	  while (IS_THOUSANDS_SEP (tmpa));
+	  do
+	    tmpb = *++b;
+	  while (IS_THOUSANDS_SEP (tmpb));
+	}
 
       if ((tmpa == decimal_point && !ISDIGIT (tmpb))
 	  || (tmpb == decimal_point && !ISDIGIT (tmpa)))
 	return -fraccompare (a, b);
 
-      if (ISDIGIT (tmpa))
-	for (loga = 1; ISDIGIT (UCHAR (*++a)); ++loga)
-	  ;
-      else
-	loga = 0;
+      tmp = tmpb - tmpa;
 
-      if (ISDIGIT (tmpb))
-	for (logb = 1; ISDIGIT (UCHAR (*++b)); ++logb)
-	  ;
-      else
-	logb = 0;
+      for (loga = 0; ISDIGIT (tmpa); ++loga)
+	do
+	  tmpa = *++a;
+	while (IS_THOUSANDS_SEP (tmpa));
 
-      if ((tmp = logb - loga) != 0)
-	return tmp;
+      for (logb = 0; ISDIGIT (tmpb); ++logb)
+	do
+	  tmpb = *++b;
+	while (IS_THOUSANDS_SEP (tmpb));
+
+      if (logb - loga != 0)
+	return logb - loga;
 
       if (!loga)
 	return 0;
 
-      return tmpb - tmpa;
+      return tmp;
     }
   else if (tmpb == NEGATION_SIGN)
     {
       do
-	tmpb = UCHAR (*++b);
-      while (tmpb == NUMERIC_ZERO);
+	tmpb = *++b;
+      while (tmpb == NUMERIC_ZERO || IS_THOUSANDS_SEP (tmpb));
       if (tmpb == decimal_point)
 	do
 	  tmpb = *++b;
 	while (tmpb == NUMERIC_ZERO);
       if (ISDIGIT (tmpb))
 	return 1;
-      while (tmpa == NUMERIC_ZERO)
-	tmpa = UCHAR (*++a);
+      while (tmpa == NUMERIC_ZERO || IS_THOUSANDS_SEP (tmpa))
+	tmpa = *++a;
       if (tmpa == decimal_point)
 	do
-	  tmpa = UCHAR (*++a);
+	  tmpa = *++a;
 	while (tmpa == NUMERIC_ZERO);
       if (ISDIGIT (tmpa))
 	return 1;
@@ -1411,40 +1234,46 @@ numcompare (register const char *a, register const char *b)
     }
   else
     {
-      while (tmpa == NUMERIC_ZERO)
-	tmpa = UCHAR (*++a);
-      while (tmpb == NUMERIC_ZERO)
-	tmpb = UCHAR (*++b);
+      while (tmpa == NUMERIC_ZERO || IS_THOUSANDS_SEP (tmpa))
+	tmpa = *++a;
+      while (tmpb == NUMERIC_ZERO || IS_THOUSANDS_SEP (tmpb))
+	tmpb = *++b;
 
       while (tmpa == tmpb && ISDIGIT (tmpa))
-	tmpa = UCHAR (*++a), tmpb = UCHAR (*++b);
+	{
+	  do
+	    tmpa = *++a;
+	  while (IS_THOUSANDS_SEP (tmpa));
+	  do
+	    tmpb = *++b;
+	  while (IS_THOUSANDS_SEP (tmpb));
+	}
 
       if ((tmpa == decimal_point && !ISDIGIT (tmpb))
 	  || (tmpb == decimal_point && !ISDIGIT (tmpa)))
 	return fraccompare (a, b);
 
-      if (ISDIGIT (tmpa))
-	for (loga = 1; ISDIGIT (UCHAR (*++a)); ++loga)
-	  ;
-      else
-	loga = 0;
+      tmp = tmpa - tmpb;
 
-      if (ISDIGIT (tmpb))
-	for (logb = 1; ISDIGIT (UCHAR (*++b)); ++logb)
-	  ;
-      else
-	logb = 0;
+      for (loga = 0; ISDIGIT (tmpa); ++loga)
+	do
+	  tmpa = *++a;
+	while (IS_THOUSANDS_SEP (tmpa));
 
-      if ((tmp = loga - logb) != 0)
-	return tmp;
+      for (logb = 0; ISDIGIT (tmpb); ++logb)
+	do
+	  tmpb = *++b;
+	while (IS_THOUSANDS_SEP (tmpb));
+
+      if (loga - logb != 0)
+	return loga - logb;
 
       if (!loga)
 	return 0;
 
-      return tmpa - tmpb;
+      return tmp;
     }
 }
-#endif
 
 static int
 general_numcompare (const char *sa, const char *sb)
@@ -2514,17 +2343,22 @@ main (int argc, char **argv)
   {
     struct lconv *lconvp = localeconv ();
 
+    /* If the locale doesn't define a decimal point, or if the decimal
+       point is multibyte, use the US notation.  We don't support
+       multibyte decimal points yet.  */
     decimal_point = *lconvp->decimal_point;
-    th_sep        = *lconvp->thousands_sep;
+    if (! decimal_point || lconvp->decimal_point[1])
+      decimal_point = FLOATING_POINT;
+    else
+      nls_fraction_found = 0;  /* Figure out which decimal point to use  */
+
+    /* We don't support multibyte thousands separators yet.  */
+    th_sep = *lconvp->thousands_sep;
+    if (! th_sep || lconvp->thousands_sep[1])
+      th_sep = CHAR_MAX + 1;
+
     nls_grouping  =  (char *) (lconvp->grouping);
   }
-
-  /* if locale doesn't define a decimal point, we'll use the
-     US notation.                                            */
-  if (decimal_point == '\0')
-    decimal_point = FLOATING_POINT;
-  else
-    nls_fraction_found = 0;  /* Figure out which decimal point to use  */
 
   nls_month_found = 0;  /* Figure out which month notation to use */
 
