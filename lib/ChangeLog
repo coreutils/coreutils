@@ -1,3 +1,12 @@
+2000-04-05  Jim Meyering  <meyering@lucent.com>
+
+	Portability tweaks required for ultrix4.3.
+	* readutmp.h [HAVE_UTMPX_H && !HAVE_DECL_GETUTENT]: Declare getutent.
+	* readutmp.c: Include sys/types.h before sys/stat.h.
+	* canon-host.c: Declare strdup.
+	* path-concat.c: Likewise.
+	From John David Anglin.
+
 2000-04-04  Jim Meyering  <meyering@lucent.com>
 
 	Be more DOS 8.3-friendly.
