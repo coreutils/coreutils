@@ -1,4 +1,6 @@
 [4.1.10]
+* rm once again gives a reasonable diagnostic when failing to remove a file
+    owned by someone else in a sticky directory [introduced in 4.1.9]
 * df now rounds all quantities up, as per POSIX.
 * New ls time style: long-iso, which generates YYYY-MM-DD HH:MM.
 * Any time style can be preceded by "posix-"; this causes "ls" to
