@@ -1,3 +1,15 @@
+2002-05-27  Jim Meyering  <meyering@lucent.com>
+
+	Fix a problem seen only on nonconforming systems whereby ls.c's
+	use of localtime, and then of gettimeofday would cause trouble:
+	the localtime call used to initialize rpl_gettimeofday's save
+	mechanism would clobber ls's current local time information so
+	that in any long listing the first file would always be listed
+	with date 1970-01-01.  Analysis by Volker Borchert.
+
+	* gettimeofday.c (localtime): Undefine.
+	(rpl_localtime): New function.
+
 2002-05-22  Jim Meyering  <meyering@lucent.com>
 
 	* Makefile.am (libfetish_a_SOURCES): Add file-type.c and file-type.h.
