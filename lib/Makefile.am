@@ -36,7 +36,7 @@ libfetish_a_SOURCES = \
   exclude.c exclude.h \
   filemode.c filemode.h \
   file-type.c file-type.h \
-  fnmatch.h \
+  fnmatch_.h \
   fopen-safer.c \
   fsusage.h \
   full-write.c full-write.h \
@@ -107,7 +107,9 @@ BUILT_SOURCES = getdate.c lstat.c stat.c unlocked-io.h
 MAINTAINERCLEANFILES = $(BUILT_SOURCES)
 DISTCLEANFILES = lstat.c stat.c unlocked-io.h
 
-EXTRA_DIST = xstat.in config.charset ref-add.sin ref-del.sin gen-uio
+EXTRA_DIST = xstat.in config.charset ref-add.sin ref-del.sin gen-uio \
+  fnmatch_loop.c
+
 lstat.c: xstat.in
 	sed \
 	  -e '/@IGNORE@/d' \
