@@ -62,19 +62,19 @@ USA.  */
 #endif
 
 #ifndef __P
-# if defined (__GNUC__) || (defined (__STDC__) && __STDC__)
-#  define __P(args) args
-# else
-#  define __P(args) ()
-# endif  /* GCC.  */
+#if defined (__GNUC__) || (defined (__STDC__) && __STDC__)
+#define __P(args) args
+#else
+#define __P(args) ()
+#endif  /* GCC.  */
 #endif  /* Not __P.  */
 
 #ifndef PTR
-# ifdef __STDC__
-#  define PTR void *
-# else
-#  define PTR char *
-# endif
+#ifdef __STDC__
+#define PTR void *
+#else
+#define PTR char *
+#endif
 #endif
 
 static unsigned int week __P((const struct tm *const, int, int));
@@ -96,9 +96,9 @@ static unsigned int week __P((const struct tm *const, int, int));
 #define	cpy(n, s)	add((n), memcpy((PTR) p, (PTR) (s), (n)))
 
 #ifdef _LIBC
-# define	fmt(n, args)	add((n), if (sprintf args != (n)) return 0)
+#define	fmt(n, args)	add((n), if (sprintf args != (n)) return 0)
 #else
-# define	fmt(n, args)	add((n), sprintf args; if (strlen (p) != (n)) return 0)
+#define	fmt(n, args)	add((n), sprintf args; if (strlen (p) != (n)) return 0)
 #endif
 
 
@@ -307,8 +307,8 @@ strftime (s, maxsize, format, tp)
 
 #define DO_NUMBER(digits, value) \
 	  maxdigits = digits; number_value = value; goto do_number
-#define DO_NUMBER_NOPAD(digits, value) \
-	  maxdigits = digits; number_value = value; goto do_number_nopad
+#define DO_NUMBER_SPACEPAD(digits, value) \
+	  maxdigits = digits; number_value = value; goto do_number_spacepad
 
 	case 'C':
 	  DO_NUMBER (2, (1900 + tp->tm_year) / 100);
@@ -327,14 +327,14 @@ strftime (s, maxsize, format, tp)
 	  DO_NUMBER (2, tp->tm_mday);
 
 	case 'e':		/* GNU extension: %d, but blank-padded.  */
-	  DO_NUMBER_NOPAD (2, tp->tm_mday);
+	  DO_NUMBER_SPACEPAD (2, tp->tm_mday);
 
 	  /* All numeric formats set MAXDIGITS and NUMBER_VALUE and then
 	     jump to one of these two labels.  */
 
-	do_number_nopad:
-	  /* Force `-' flag.  */
-	  pad = pad_none;
+	do_number_spacepad:
+	  /* Force `_' flag.  */
+	  pad = pad_space;
 
 	do_number:
 	  {
@@ -360,6 +360,9 @@ strftime (s, maxsize, format, tp)
 	    add (maxdigits, sprintf (p, number_fmt, number_value);
 		 printed = strlen (p));
 #endif
+	    /* Back up if fewer than MAXDIGITS chars written for pad_none.  */
+	    p -= maxdigits - printed;
+	    i -= maxdigits - printed;
 
 	    break;
 	  }
@@ -372,10 +375,10 @@ strftime (s, maxsize, format, tp)
 	  DO_NUMBER (2, hour12);
 
 	case 'k':		/* GNU extension.  */
-	  DO_NUMBER_NOPAD (2, tp->tm_hour);
+	  DO_NUMBER_SPACEPAD (2, tp->tm_hour);
 
 	case 'l':		/* GNU extension.  */
-	  DO_NUMBER_NOPAD (2, hour12);
+	  DO_NUMBER_SPACEPAD (2, hour12);
 
 	case 'j':
 	  DO_NUMBER (3, 1 + tp->tm_yday);
