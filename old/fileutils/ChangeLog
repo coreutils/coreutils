@@ -2,6 +2,11 @@
 
 	* Version 4.0f.
 
+	* configure.in (AC_OUTPUT): Add tests/dd/Makefile.
+	* tests/Makefile.am (SUBDIRS): Add dd.
+	* tests/dd: New directory
+	* tests/dd/misc: New file.
+
 	`ls --color' would segfault
 	* src/ls.c: Include assert.h.
 	(color_indicator[]): Add an entry for the type, `door.'
