@@ -2,6 +2,12 @@
 
 	* Version 2.0a.
 
+1999-10-26  Marc Boucher  <marc@mbsi.ca>
+
+	* src/tail.c (main): Flush stdout before switching to unbuffered mode
+	and calling tail_forever.  Required only on Solaris2.7 -- on other
+	systems, using setvbuf to switch to unbufferd mode does the flush.
+
 1999-11-22  Jim Meyering  <meyering@ascend.com>
 
 	* lib/Makefile.am (DISTCLEANFILES): Put $(BUILT_SOURCES) here rather
