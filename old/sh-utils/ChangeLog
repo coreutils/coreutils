@@ -1,4 +1,48 @@
+Fri Oct 07 19:42:35 1994  Jim Meyering  (meyering@comco.com)
+
+	* doc/Makefile.in (sh-utils.dvi): Depend on version.texi.
+	* version.texi: Use RELEASEDATE, not RELEASE_DATE.
+	* sh-utils.texi: Likewise.
+
+	* configure.in: Test for crypt in -lcrypt for NetBSD.
+	Reported by Greg Hudson (ghudson@mit.edu).
+
+Thu Oct 06 21:14:07 1994  Jim Meyering  (meyering@comco.com)
+
+	* src/Makefile.in (link_command): Remove $(CFLAGS).  Becuase
+	the default value usually includes -g, Linux users were getting
+	statically linked executables.  With this removal they'll get
+	much smaller, dynamically linked ones by default.
+
+	* lib/Makefile.in (safe-lstat.o): Depend on safe-stat.h, too.
+
+Sun Oct 02 16:15:32 1994  Jim Meyering  (meyering@comco.com)
+
+	* src/Makefile.in: Don't use binprefix.  Use autoconf-2's
+	@program_transform_name@ instead.
+	* man/Makefile.in: Likewise for manprefix.
+
+	* safe-xstat.hin [!S_ISLNK]: Include safe-stat.h and define
+	SAFE_LSTAT and safe_lstat to their symlink-ignorant counterparts.
+	* lib/Makefile.in (extract_lstat, extract_stat): Add sed rules to
+	extract the new cpp directives into safe-lstat.h, but not into
+	safe-stat.h.
+
 Sat Oct 01 00:14:10 1994  Jim Meyering  (meyering@comco.com)
+
+	* system.h: Remove conditional definition of mode_t.
+	configure takes care of this now.
+
+	* configure.in: Add -l$lib (not $lib) to LIBS when checking
+	for syslog.  From Kaveh Ghazi.
+
+	* date.c (batch_convert): Use K&R style function definition.
+	From Kaveh Ghazi.
+
+	* date.c (main): When reading dates from a file with a +FORMAT-style
+	user-specified format, don't print the leading `+'.  Franc,ois Pinard
+	noticed this problem.
+	Make an error message clearer.  From Franc,ois.
 
 	* lib/Makefile.in (DISTFILES): Add getline.h.
 	(SOURCES, OBJECTS): Add getline.c, getline.o.

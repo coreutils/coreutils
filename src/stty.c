@@ -126,6 +126,15 @@
 #if defined(VFLUSH) && !defined(VFLUSHO)	/* Ultrix 4.2 */
 #define VFLUSHO VFLUSH
 #endif
+#if defined(CTLECH) && !defined(ECHOCTL)	/* Ultrix 4.3 */
+#define ECHOCTL CTLECH
+#endif
+#if defined(TCTLECH) && !defined(ECHOCTL)	/* Ultrix 4.2 */
+#define ECHOCTL TCTLECH
+#endif
+#if defined(CRTKIL) && !defined(ECHOKE)		/* Ultrix 4.2 and 4.3 */
+#define ECHOKE CRTKIL
+#endif
 #if defined(VFLUSHO) && !defined(CFLUSHO)
 #define CFLUSHO Control ('o')
 #endif
@@ -905,8 +914,16 @@ main (argc, argv)
 	  new_mode.c_cflag &= (~CIBAUD);
 	  if (speed_was_set || memcmp (&mode, &new_mode, sizeof (mode)) != 0)
 #endif
+	    {
+	    int i;
 	    error (1, 0,
 	      "standard input: unable to perform all requested operations");
+	    printf ("new_mode: mode\n");
+	    for (i=0; i<sizeof(new_mode); i++)
+	      printf ("0x%02x: 0x%02x\n",
+		      *(((unsigned char *) &new_mode) + i),
+		      *(((unsigned char *) &mode) + i));
+	    }
 	}
     }
 
