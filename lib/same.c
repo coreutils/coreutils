@@ -36,6 +36,12 @@
 extern int errno;
 #endif
 
+#if HAVE_STRING_H
+# include <string.h>
+#else
+# include <strings.h>
+#endif
+
 #include "same.h"
 #include "dirname.h"
 #include "error.h"
