@@ -12,7 +12,7 @@ Sat Mar  9 13:30:12 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 	Initialize for internationalized message support: call setlocale,
 	bindtextdomain, and textdomain.
 	* system.h: Add definitions and includes for NLS.
-	* Makefile.am (SUBDIRS): Add @INTLSUB@ and @POSUB@.
+	* Makefile.am (SUBDIRS): Add intl and po.
 	* src/Makefile.am (datadir): Define.
 	(localedir): Define.
 	(DEFS): Add LOCALEDIR definition.
