@@ -2,6 +2,8 @@
 
 	* Version 5.1.2.
 
+	* Makefile.maint (header_regexp): Add exitfail.
+
 	* man/Makefile.am (EXTRA_DIST): Add help2man.
 	Reported by Nelson H. F. Beebe.
 
