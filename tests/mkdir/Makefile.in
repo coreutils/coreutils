@@ -118,7 +118,7 @@ l = @l@
 
 AUTOMAKE_OPTIONS = 1.1 gnits
 
-TESTS = p-1 p-2 special-1 perm parents
+TESTS = p-1 p-2 special-1 perm parents t-slash
 EXTRA_DIST = $(TESTS)
 TESTS_ENVIRONMENT = \
   srcdir=$(srcdir) \
