@@ -41,7 +41,7 @@ usage (int status)
     {
       printf (_("Usage: %s [-v]\n"), program_name);
       printf (_("\
-Print the identifier for the current host.\n\
+Print the numeric identifier (in hexadecimal) for the current host.\n\
 \n\
       --help       display this help and exit\n\
       --version    output version information and exit\n\
