@@ -6,7 +6,8 @@
 	../configure.in, including a change from Gordon Matzigkeit to allow
 	cross-compiling for the Hurd.
 
-	* glibc.m4: New file.  From Gordon Matzigkeit.
+	* glibc.m4: New file/macro to test for the GNU C Library
+	versions 1 and 2.  From Gordon Matzigkeit.
 	Indent.
 
 1998-09-21  Jim Meyering  <meyering@ascend.com>
