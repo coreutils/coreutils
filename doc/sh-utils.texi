@@ -23,9 +23,64 @@
 @ifinfo
 @format
 START-INFO-DIR-ENTRY
-* Shell utilities: (sh-utils).	basename date dirname echo env expr false
-			groups hostname id logname pathchk printenv printf
-		        pwd sleep su tee test true tty users who whoami yes
+* Shell utilities: (sh-utils).
+                        GNU set of shell utilities.
+* basename invocation: (sh-utils)basename invocation.
+                        Strip directory and suffix from a filename.
+* date invocation: (sh-utils)date invocation.
+                        Print or set system date and time.
+* dirname invocation: (sh-utils)dirname invocation.
+                        Strip non-directory suffix from file name.
+* echo invocation: (sh-utils)echo invocation.
+                        Print a line of text.
+* env invocation: (sh-utils)env invocation.
+                        Modify the environment.
+* expr invocation: (sh-utils)expr invocation.
+                        Evaluate expressions.
+* false invocation: (sh-utils)false invocation.
+                        Do nothing, unsuccessfully.
+* groups invocation: (sh-utils)groups invocation.
+                        Print group names a user is in.
+* hostname invocation: (sh-utils)hostname invocation.
+                        Print or set system name.
+* id invocation: (sh-utils)id invocation.
+                        Print real and effective uid and gid.
+* logname invocation: (sh-utils)logname invocation.
+                        Print current login name.
+* nice invocation: (sh-utils)nice invocation.
+                        Modify the scheduling priority.
+* pathchk invocation: (sh-utils)pathchk invocation.
+                        Check file name portability.
+* printenv invocation: (sh-utils)printenv invocation.
+                        Print all or part of the environment.
+* printf invocation: (sh-utils)printf invocation.
+                        Format and print data.
+* pwd invocation: (sh-utils)pwd invocation.
+                        Print working directory.
+* sleep invocation: (sh-utils)sleep invocation.
+                        Delay for a specified time.
+* stty invocation: (sh-utils)stty invocation.
+                        Print or change terminal characteristics.
+* su invocation: (sh-utils)su invocation.
+                        Modify the user and group id.
+* tee invocation: (sh-utils)tee invocation.
+                        Redirect output to multiple files.
+* test invocation: (sh-utils)test invocation.
+                        Check file types and compare values.
+* true invocation: (sh-utils)true invocation.
+                        Do nothing, successfully.
+* tty invocation: (sh-utils)tty invocation.
+                        Print or change terminal characteristics.
+* uname invocation: (sh-utils)uname invocation.
+                        Print system information.
+* users invocation: (sh-utils)users invocation.
+                        Print login names of users currently logged in.
+* who invocation: (sh-utils)who invocation.
+                        Print who is currently logged in.
+* whoami invocation: (sh-utils)whoami invocation.
+                        Print effective user id.
+* yes invocation: (sh-utils)yes invocation.
+                        Print a string until interrupted.
 END-INFO-DIR-ENTRY
 @end format
 @end ifinfo
@@ -173,18 +228,21 @@ echo [ @var{option} ]@dots{} [ @var{string} ]@dots{}
 @code{echo} writes each given @var{string} to standard output, with a
 space between each and a newline after the last one.
 
-The program accepts the following options. Also @pxref{Common options}.
+The program accepts the following options.  Also see @ref{Common
+options}.
 
 @table @samp
 @item -n
+@opindex -n
 Do not output the trailing newline.
 
 @item -e
+@opindex -e
 @cindex backslash escapes
 Enable interpretation of the following backslash-escaped characters in
 each @var{string}:
 
-@table @code
+@table @samp
 @item \a
 alert (bell)
 @item \b
@@ -242,7 +300,7 @@ An additional escape, @samp{\c}, causes @code{printf} to produce no
 further output.
 
 The only options are a lone @samp{--help} or
-@samp{--version}. @xref{Common options}).
+@samp{--version}.  @xref{Common options}).
 
 
 @node yes invocation
@@ -256,7 +314,7 @@ followed by a newline, forever until it is killed.  If no arguments are
 given, it prints @samp{y} followed by a newline forever until killed.
 
 The only options are a lone @samp{--help} or
-@samp{--version}. @xref{Common options}).
+@samp{--version}.  @xref{Common options}).
 
 
 @node Conditions
@@ -334,7 +392,7 @@ unadorned command name in a script or interactively may get you
 different functionality than that described here.
 
 Besides the options below, @code{test} accepts a lone @samp{--help} or
-@samp{--version}. @xref{Common options}).  A single non-option argument
+@samp{--version}.  @xref{Common options}).  A single non-option argument
 is also allowed: @code{test} returns true if the argument is not null.
 
 @menu
@@ -724,7 +782,7 @@ numbers; an error occurs if this cannot be done.
 
 String operators.  These have lowest precedence.
 
-@table @code
+@table @samp
 
 @item @var{string} : @var{regex}
 @cindex pattern matching
@@ -828,7 +886,7 @@ it's described here.
 @cindex read from stdin and write to stdout and files
 
 The @code{tee} command copies standard input to standard output and also
-to any files given as arguments. This is useful when you want not only
+to any files given as arguments.  This is useful when you not only want
 to send some data down a pipe, but also to save a copy.
 
 Synopsis:
@@ -841,7 +899,8 @@ If a file being written to does not already exist, it is created.  If a
 file being written to already exists, the data it previously contained
 is overwritten unless the @code{-a} option is used.
 
-The program accepts the following options.  Also @pxref{Common options}.
+The program accepts the following options.  Also see @ref{Common
+options}.
 
 @table @samp
 @item -a
@@ -897,7 +956,7 @@ from @var{name}.  If @var{suffix} is specified and is identical
 to the end of @var{name}, it is removed from @var{name} as well.
 @code{basename} prints the result on standard output.
 
-The only options are @samp{--help} and @samp{--version}. @xref{Common
+The only options are @samp{--help} and @samp{--version}.  @xref{Common
 options}).
 
 
@@ -919,7 +978,7 @@ dirname @var{name}
 of @var{name}.  If @var{name} is a single component,
 @code{dirname} prints @samp{.} (meaning the current directory).
 
-The only options are @samp{--help} and @samp{--version}. @xref{Common
+The only options are @samp{--help} and @samp{--version}.  @xref{Common
 options}).
 
 
@@ -952,7 +1011,8 @@ existing directory name, is larger than its filesystem's maximum
 length for a file name component.
 @end enumerate
 
-The program accepts the following option. Also @pxref{Common options}.
+The program accepts the following option.  Also see @ref{Common
+options}.
 
 @table @samp
 
@@ -1014,7 +1074,7 @@ unadorned command name in a script or interactively may get you
 different functionality than that described here.
 
 The only options are a lone @samp{--help} or
-@samp{--version}. @xref{Common options}).
+@samp{--version}.  @xref{Common options}).
 
 
 @node stty invocation
@@ -1041,7 +1101,8 @@ stty [ @var{setting} ]@dots{}
 stty [ @var{option} ]
 @end example
 
-The program accepts the following options.  Also @pxref{Common options}.
+The program accepts the following options.  Also see @ref{Common
+options}.
 
 @table @samp
 @item -a
@@ -1089,7 +1150,7 @@ try it and see.
 @cindex control settings
 Control settings:
 
-@table @code
+@table @samp
 @item parenb
 @opindex parenb
 @cindex two-way parity
@@ -1135,7 +1196,7 @@ Disable modem control signals.  May be negated.
 @opindex crtscts
 @cindex hardware flow control
 @cindex flow control, hardware
-Enable RTS/CTS handshaking.  Non-POSIX.  May be negated.
+Enable @code{RTS}/@code{CTS} handshaking.  Non-POSIX.  May be negated.
 @end table
 
 
@@ -1144,7 +1205,7 @@ Enable RTS/CTS handshaking.  Non-POSIX.  May be negated.
 
 @cindex input settings
 
-@table @code
+@table @samp
 @item ignbrk
 @opindex ignbrk
 @cindex breaks, ignoring
@@ -1192,8 +1253,8 @@ Translate carriage return to newline.  May be negated.
 @item ixon
 @opindex ixon
 @kindex C-s/C-q flow control
-@cindex XON/XOFF flow control
-Enable XON/XOFF flow control.  May be negated.
+@cindex @code{XON}/@code{XOFF} flow control
+Enable @code{XON}/@code{XOFF} flow control.  May be negated.
 
 @item ixoff
 @itemx tandem
@@ -1230,7 +1291,7 @@ when the input buffer is full.  Non-POSIX.  May be negated.
 @cindex output settings
 These arguments specify output-related operations.
 
-@table @code
+@table @samp
 @item opost
 @opindex opost
 Postprocess output.  May be negated.
@@ -1314,7 +1375,7 @@ Form feed delay style.  Non-POSIX.
 
 @cindex local settings
 
-@table @code
+@table @samp
 @item isig
 @opindex isig
 Enable @code{interrupt}, @code{quit}, and @code{suspend} special
@@ -1402,7 +1463,7 @@ May be negated.
 @cindex combination settings
 Combination settings:
 
-@table @code
+@table @samp
 @item evenp
 @opindex evenp
 @itemx parity
@@ -1509,7 +1570,7 @@ notation (@samp{^@var{c}}), or as an integer which may start with
 any other digit to indicate decimal.  Giving a value of @code{^-} or
 @code{undef} disables that special character.
 
-@table @code
+@table @samp
 @item intr
 @opindex intr
 Send an interrupt signal.
@@ -1578,7 +1639,7 @@ character.  Non-POSIX.
 
 @cindex special settings
 
-@table @code
+@table @samp
 @item min @var{n}
 @opindex min
 Set the minimum number of characters that will satisfy a read until
@@ -1653,7 +1714,7 @@ environment.  Otherwise, it prints the value of each @var{variable} that
 is set, and nothing for those that are not set.
 
 The only options are a lone @samp{--help} or
-@samp{--version}. @xref{Common options}).
+@samp{--version}.  @xref{Common options}).
 
 @cindex exit status of @code{printenv}
 Exit status:
@@ -1681,7 +1742,8 @@ Synopsis:
 tty [ @var{option} ]@dots{}
 @end example
 
-The program accepts the following option.  Also @pxref{Common options}.
+The program accepts the following option.  Also see @ref{Common
+options}.
 
 @table @samp
 
@@ -1749,8 +1811,8 @@ the real group ID, and supplemental group IDs.
 Each of these numeric values is preceded by an identifying string and
 followed by the corresponding user or group name in parentheses.
 
-The options cause @code{id} to print only part of the above information.
-Also @pxref{Common options}.
+The options cause @code{id} to print only part of the above
+information.  Also see @ref{Common options}.
 
 @table @samp
 @item -g
@@ -1804,7 +1866,7 @@ Print only the user ID.
 @file{/etc/utmp} entry for the calling process, @code{logname} prints
 an error message and exits with a status of 1.
 
-The only options are @samp{--help} and @samp{--version}. @xref{Common
+The only options are @samp{--help} and @samp{--version}.  @xref{Common
 options}).
 
 
@@ -1818,7 +1880,7 @@ options}).
 @code{whoami} prints the user name associated with the current
 effective user id.  It is equivalent to the command @samp{id -un}.
 
-The only options are @samp{--help} and @samp{--version}. @xref{Common
+The only options are @samp{--help} and @samp{--version}.  @xref{Common
 options}).
 
 
@@ -1842,7 +1904,7 @@ groups [ @var{username} ]@dots{}
 
 The group lists are equivalent to the output of the command @samp{id -Gn}.
 
-The only options are @samp{--help} and @samp{--version}. @xref{Common
+The only options are @samp{--help} and @samp{--version}.  @xref{Common
 options}).
 
 
@@ -1872,7 +1934,7 @@ With no @var{file} argument, @code{users} extracts its information from
 the file @file{/etc/utmp}.  If a file argument is given, @code{users}
 uses that file instead.  A common choice is @file{/etc/wtmp}.
 
-The only options are @samp{--help} and @samp{--version}. @xref{Common
+The only options are @samp{--help} and @samp{--version}.  @xref{Common
 options}).
 
 
@@ -1910,7 +1972,8 @@ for the user running it (determined from its standard input), preceded
 by the hostname.  Traditionally, the two arguments given are @samp{am
 i}, as in @samp{who am i}.
 
-The program accepts the following options.  Also @pxref{Common options}.
+The program accepts the following options.  Also see @ref{Common
+options}.
 
 @table @samp
 @item -m
@@ -1999,7 +2062,7 @@ Synopsis:
 
 @example
 date [ @var{option} ]@dots{} [ +@var{format} ] @c
-date [ @var{option} ] [@var{MMDDhhmm}[[@var{CC}]@var{YY}][.@var{ss}] ]
+[@var{MMDDhhmm}[[@var{CC}]@var{YY}][.@var{ss}] ]
 @end example
 
 @findex strftime @r{and @code{date}}
@@ -2179,7 +2242,8 @@ You must have appropriate privileges to set the system clock.
 @cindex @code{date} options
 @cindex options for @code{date}
 
-The program accepts the following options. Also @pxref{Common options}.
+The program accepts the following options.  Also see @ref{Common
+options}.
 
 @table @samp
 
@@ -2191,7 +2255,7 @@ The program accepts the following options. Also @pxref{Common options}.
 @cindex date strings, parsing
 @cindex arbitrary date strings, parsing
 Display the time and date specified in @var{datestr} instead of the
-current time and date. @var{datestr} can be in almost any common format.
+current time and date.  @var{datestr} can be in almost any common format.
 
 @item -s @var{datestr}
 @itemx --set=@var{datestr}
@@ -2295,7 +2359,8 @@ Synopsis:
 uname [ @var{option} ]@dots{}
 @end example
 
-The program accepts the following options.  Also @pxref{Common options}.
+The program accepts the following options.  Also see @ref{Common
+options}.
 
 @table @samp
 @item -m
@@ -2365,7 +2430,7 @@ Synopsis:
 hostname [ @var{name} ]
 @end example
 
-The only options are @samp{--help} and @samp{--version}. @xref{Common
+The only options are @samp{--help} and @samp{--version}.  @xref{Common
 options}).
 
 
@@ -2411,6 +2476,7 @@ the environment variable @var{variable} to value @var{value}.
 @var{value} may be empty (@samp{@var{variable}=}).  Setting a variable
 to an empty value is different from unsetting it.
 
+@vindex PATH
 The first remaining argument specifies the program name to invoke; it is
 searched for according to the @code{PATH} environment variable.  Any
 remaining arguments are passed as arguments to that program.
@@ -2421,7 +2487,8 @@ If no command name is specified following the environment
 specifications, the resulting environment is printed.  This is like
 specifying a command name of @code{printenv}.
 
-The program accepts the following options. Also @pxref{Common options}.
+The program accepts the following options.  Also see @ref{Common
+options}.
 
 @table @samp
 
@@ -2471,7 +2538,8 @@ Because most shells have a built-in command by the same name, using the
 unadorned command name in a script or interactively may get you
 different functionality than that described here.
 
-The program accepts the following option. Also @pxref{Common options}.
+The program accepts the following option.  Also see @ref{Common
+options}.
 
 @table @samp
 @item -n @var{adjustment}
@@ -2502,12 +2570,13 @@ Synopsis:
 nohup @var{command} [ @var{arg} ]@dots{}
 @end example
 
-Also, the scheduling priority is increased by 5. If standard output is a
+Also, the scheduling priority is increased by 5.  If standard output is a
 tty, it and standard error are redirected so that they are appended to
 the file @file{nohup.out}; if that cannot be written to, they are
 appended to the file @file{$HOME/nohup.out}.  If that cannot be written
 to, the command is not run.
 
+@flindex nohup.out
 If @code{nohup} creates either @file{nohup.out} or
 @file{$HOME/nohup.out}, it creates it with no ``group'' or ``other''
 access permissions.  It does not change the permissions if the output
@@ -2517,7 +2586,7 @@ file already existed.
 background; you must do that explicitly, by ending the command line
 with an @samp{&}.
 
-The only options are @samp{--help} and @samp{--version}. @xref{Common
+The only options are @samp{--help} and @samp{--version}.  @xref{Common
 options}).
 
 
@@ -2580,7 +2649,8 @@ This program does not support a ``wheel group'' that restricts who
 can @code{su} to super-user accounts, because that can help fascist
 system administrators hold unwarranted power over other users.
 
-The program accepts the following options.  Also @pxref{Common options}.
+The program accepts the following options.  Also see @ref{Common
+options}.
 
 @table @samp
 @item -c @var{command}
@@ -2682,7 +2752,7 @@ sleep [ @var{number}[smhd] ]@dots{}
 Each argument is a number followed by an optional unit; the default
 is seconds.  The units are:
 
-@table @code
+@table @samp
 @item s
 seconds
 @item m
@@ -2693,7 +2763,7 @@ hours
 days
 @end table
 
-The only options are @samp{--help} and @samp{--version}. @xref{Common
+The only options are @samp{--help} and @samp{--version}.  @xref{Common
 options}).
 
 
