@@ -1,5 +1,9 @@
 2003-03-07  Jim Meyering  <jim@meyering.net>
 
+	* Makefile.am (libfetish_a_SOURCES): Remove mmap-stack.h.
+
+	* mmap-stack.c, mmap-stack.h: Remove files.
+
 	* getcwd.c: #undef getcwd only after *all* included header files.
 	Declare getcwd unconditionally.  The problem was that same.h
 	included config.h, and that defined getcwd to rpl_getcwd a second

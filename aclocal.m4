@@ -866,7 +866,25 @@ WARNING: You don't seem to have perl5.003 or newer installed, or you lack
 ] )
 ])
 
-#serial 59   -*- autoconf -*-
+#serial 60   -*- autoconf -*-
+
+m4_undefine([AC_LANG_SOURCE(C)])
+dnl The following is identical to the definition in c.m4
+dnl from the autoconf cvs repository on 2003-03-07.
+dnl FIXME: remove this code once we upgrade to autoconf-2.58.
+
+# We can't use '#line $LINENO "configure"' here, since
+# Sun c89 (Sun WorkShop 6 update 2 C 5.3 Patch 111679-08 2002/05/09)
+# rejects $LINENO greater than 32767, and some configure scripts
+# are longer than 32767 lines.
+m4_define([AC_LANG_SOURCE(C)],
+[/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+$1])
+
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
@@ -929,7 +947,6 @@ AC_DEFUN([jm_MACROS],
   AC_REQUIRE([jm_FUNC_GNU_STRFTIME])
   AC_REQUIRE([jm_FUNC_MKTIME])
   AC_REQUIRE([jm_FUNC_FPENDING])
-  AC_REQUIRE([AC_SYS_MMAP_STACK])
 
   # This is for od and stat, and any other program that
   # uses the PRI.MAX macros from inttypes.h.
@@ -3435,37 +3452,6 @@ AC_DEFUN([jm_FUNC_FPENDING],
   fi
 ])
 
-#serial 1
-# Arrange to define HAVE_MMAP_STACK and to compile mmap-stack.c
-# if there is sufficient support.
-# From Jim Meyering
-
-AC_DEFUN([AC_SYS_MMAP_STACK],
-[
-  # prerequisites
-  AC_REQUIRE([AC_FUNC_MMAP])
-  AC_CHECK_HEADERS_ONCE(sys/mman.h ucontext.h stdarg.h)
-  AC_CHECK_FUNCS_ONCE(getcontext makecontext setcontext)
-
-  # For now, require tmpfile. FIXME: if there's a system with working mmap
-  # and *context functions yet that lacks tmpfile, we can provide a replacement.
-  AC_CHECK_FUNCS_ONCE(tmpfile)
-
-  ac_i=$ac_cv_func_tmpfile
-  ac_i=$ac_i:$ac_cv_func_getcontext
-  ac_i=$ac_i:$ac_cv_func_makecontext
-  ac_i=$ac_i:$ac_cv_func_setcontext
-  ac_i=$ac_i:$ac_cv_func_mmap_fixed_mapped
-
-  if test $ac_i = yes:yes:yes:yes:yes; then
-    AC_LIBOBJ(mmap-stack)
-    AC_DEFINE(HAVE_MMAP_STACK, 1,
-      [Define to 1 if there is sufficient support (mmap, getcontext,
-       makecontext, setcontext) for running a process with mmap'd
-       memory for its stack.])
-  fi
-])
-
 # inttypes-pri.m4 serial 1001 (based on gettext-0.11.4's `serial 1')
 dnl Copyright (C) 1997-2002 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
@@ -3844,7 +3830,7 @@ AC_DEFUN([UTILS_SYS_OPEN_MAX],
     [the maximum number of simultaneously open files per process])
 ])
 
-#serial 1
+#serial 2
 # Check whether getcwd has the bug that it succeeds for a working directory
 # longer than PATH_MAX, yet returns a truncated directory name.
 # If so, arrange to compile the wrapper function.
@@ -3860,6 +3846,7 @@ AC_DEFUN([GL_FUNC_GETCWD_PATH_MAX],
   AC_CACHE_CHECK([whether getcwd properly handles paths longer than PATH_MAX],
                  gl_cv_func_getcwd_vs_path_max,
   [
+  AC_CHECK_DECLS([getcwd])
   # Arrange for deletion of the temporary directory this test creates.
   ac_clean_files="$ac_clean_files confdir3"
   AC_RUN_IFELSE([AC_LANG_SOURCE([[

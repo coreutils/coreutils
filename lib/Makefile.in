@@ -214,7 +214,6 @@ libfetish_a_SOURCES = \
   md5.c md5.h \
   memcasecmp.c memcasecmp.h \
   memcoll.c memcoll.h \
-  mmap-stack.h \
   modechange.c modechange.h \
   mountlist.h \
   offtostr.c \
@@ -337,25 +336,25 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	$(DEPDIR)/memcpy.Po $(DEPDIR)/memmove.Po \
 @AMDEP_TRUE@	$(DEPDIR)/memrchr.Po $(DEPDIR)/memset.Po \
 @AMDEP_TRUE@	$(DEPDIR)/mkdir.Po $(DEPDIR)/mkstemp.Po \
-@AMDEP_TRUE@	$(DEPDIR)/mktime.Po $(DEPDIR)/mmap-stack.Po \
-@AMDEP_TRUE@	$(DEPDIR)/mountlist.Po $(DEPDIR)/nanosleep.Po \
-@AMDEP_TRUE@	$(DEPDIR)/obstack.Po $(DEPDIR)/putenv.Po \
-@AMDEP_TRUE@	$(DEPDIR)/raise.Po $(DEPDIR)/readutmp.Po \
-@AMDEP_TRUE@	$(DEPDIR)/realloc.Po $(DEPDIR)/regex.Po \
-@AMDEP_TRUE@	$(DEPDIR)/rename.Po $(DEPDIR)/rmdir.Po \
-@AMDEP_TRUE@	$(DEPDIR)/rpmatch.Po $(DEPDIR)/sig2str.Po \
-@AMDEP_TRUE@	$(DEPDIR)/stat.Po $(DEPDIR)/stpcpy.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strcasecmp.Po $(DEPDIR)/strcspn.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strdup.Po $(DEPDIR)/strncasecmp.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strndup.Po $(DEPDIR)/strnlen.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strpbrk.Po $(DEPDIR)/strstr.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strtod.Po $(DEPDIR)/strtoimax.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strtol.Po $(DEPDIR)/strtoll.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strtoul.Po $(DEPDIR)/strtoull.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strtoumax.Po $(DEPDIR)/strverscmp.Po \
-@AMDEP_TRUE@	$(DEPDIR)/tempname.Po $(DEPDIR)/tsearch.Po \
-@AMDEP_TRUE@	$(DEPDIR)/utime.Po ./$(DEPDIR)/acl$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/addext$U.Po ./$(DEPDIR)/argmatch$U.Po \
+@AMDEP_TRUE@	$(DEPDIR)/mktime.Po $(DEPDIR)/mountlist.Po \
+@AMDEP_TRUE@	$(DEPDIR)/nanosleep.Po $(DEPDIR)/obstack.Po \
+@AMDEP_TRUE@	$(DEPDIR)/putenv.Po $(DEPDIR)/raise.Po \
+@AMDEP_TRUE@	$(DEPDIR)/readutmp.Po $(DEPDIR)/realloc.Po \
+@AMDEP_TRUE@	$(DEPDIR)/regex.Po $(DEPDIR)/rename.Po \
+@AMDEP_TRUE@	$(DEPDIR)/rmdir.Po $(DEPDIR)/rpmatch.Po \
+@AMDEP_TRUE@	$(DEPDIR)/sig2str.Po $(DEPDIR)/stat.Po \
+@AMDEP_TRUE@	$(DEPDIR)/stpcpy.Po $(DEPDIR)/strcasecmp.Po \
+@AMDEP_TRUE@	$(DEPDIR)/strcspn.Po $(DEPDIR)/strdup.Po \
+@AMDEP_TRUE@	$(DEPDIR)/strncasecmp.Po $(DEPDIR)/strndup.Po \
+@AMDEP_TRUE@	$(DEPDIR)/strnlen.Po $(DEPDIR)/strpbrk.Po \
+@AMDEP_TRUE@	$(DEPDIR)/strstr.Po $(DEPDIR)/strtod.Po \
+@AMDEP_TRUE@	$(DEPDIR)/strtoimax.Po $(DEPDIR)/strtol.Po \
+@AMDEP_TRUE@	$(DEPDIR)/strtoll.Po $(DEPDIR)/strtoul.Po \
+@AMDEP_TRUE@	$(DEPDIR)/strtoull.Po $(DEPDIR)/strtoumax.Po \
+@AMDEP_TRUE@	$(DEPDIR)/strverscmp.Po $(DEPDIR)/tempname.Po \
+@AMDEP_TRUE@	$(DEPDIR)/tsearch.Po $(DEPDIR)/utime.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/acl$U.Po ./$(DEPDIR)/addext$U.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/argmatch$U.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/backupfile$U.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/basename$U.Po ./$(DEPDIR)/c-stack$U.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/canon-host$U.Po \
@@ -421,13 +420,12 @@ DIST_COMMON = README ChangeLog Makefile.am Makefile.in TODO \
 	gethostname.c getline.c getloadavg.c getpass.c gettimeofday.c \
 	getusershell.c group-member.c lchown.c lstat.c malloc.c \
 	memchr.c memcmp.c memcpy.c memmove.c memrchr.c memset.c mkdir.c \
-	mkstemp.c mktime.c mmap-stack.c mountlist.c nanosleep.c \
-	obstack.c obstack.h putenv.c raise.c readutmp.c realloc.c \
-	regex.c rename.c rmdir.c rpmatch.c sig2str.c stat.c stpcpy.c \
-	strcasecmp.c strcspn.c strdup.c strncasecmp.c strndup.c \
-	strnlen.c strpbrk.c strstr.c strtod.c strtoimax.c strtol.c \
-	strtoll.c strtoul.c strtoull.c strtoumax.c strverscmp.c \
-	tempname.c tsearch.c utime.c
+	mkstemp.c mktime.c mountlist.c nanosleep.c obstack.c obstack.h \
+	putenv.c raise.c readutmp.c realloc.c regex.c rename.c rmdir.c \
+	rpmatch.c sig2str.c stat.c stpcpy.c strcasecmp.c strcspn.c \
+	strdup.c strncasecmp.c strndup.c strnlen.c strpbrk.c strstr.c \
+	strtod.c strtoimax.c strtol.c strtoll.c strtoul.c strtoull.c \
+	strtoumax.c strverscmp.c tempname.c tsearch.c utime.c
 SOURCES = $(libfetish_a_SOURCES)
 
 all: $(BUILT_SOURCES)
@@ -498,7 +496,6 @@ mostlyclean-kr:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/mkdir.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/mkstemp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/mktime.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/mmap-stack.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/mountlist.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/nanosleep.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/obstack.Po@am__quote@
@@ -782,8 +779,6 @@ mkstemp_.c: mkstemp.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/mkstemp.c; then echo $(srcdir)/mkstemp.c; else echo mkstemp.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
 mktime_.c: mktime.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/mktime.c; then echo $(srcdir)/mktime.c; else echo mktime.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-mmap-stack_.c: mmap-stack.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/mmap-stack.c; then echo $(srcdir)/mmap-stack.c; else echo mmap-stack.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
 modechange_.c: modechange.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/modechange.c; then echo $(srcdir)/modechange.c; else echo modechange.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
 mountlist_.c: mountlist.c $(ANSI2KNR)
@@ -945,13 +940,12 @@ md5_.$(OBJEXT) memcasecmp_.$(OBJEXT) memchr_.$(OBJEXT) \
 memcmp_.$(OBJEXT) memcoll_.$(OBJEXT) memcpy_.$(OBJEXT) \
 memmove_.$(OBJEXT) memrchr_.$(OBJEXT) memset_.$(OBJEXT) \
 mkdir_.$(OBJEXT) mkstemp_.$(OBJEXT) mktime_.$(OBJEXT) \
-mmap-stack_.$(OBJEXT) modechange_.$(OBJEXT) mountlist_.$(OBJEXT) \
-nanosleep_.$(OBJEXT) obstack_.$(OBJEXT) offtostr_.$(OBJEXT) \
-path-concat_.$(OBJEXT) physmem_.$(OBJEXT) posixtm_.$(OBJEXT) \
-posixver_.$(OBJEXT) putenv_.$(OBJEXT) quote_.$(OBJEXT) \
-quotearg_.$(OBJEXT) raise_.$(OBJEXT) readtokens_.$(OBJEXT) \
-readutmp_.$(OBJEXT) realloc_.$(OBJEXT) regex_.$(OBJEXT) \
-rename_.$(OBJEXT) rmdir_.$(OBJEXT) rpmatch_.$(OBJEXT) \
+modechange_.$(OBJEXT) mountlist_.$(OBJEXT) nanosleep_.$(OBJEXT) \
+obstack_.$(OBJEXT) offtostr_.$(OBJEXT) path-concat_.$(OBJEXT) \
+physmem_.$(OBJEXT) posixtm_.$(OBJEXT) posixver_.$(OBJEXT) \
+putenv_.$(OBJEXT) quote_.$(OBJEXT) quotearg_.$(OBJEXT) raise_.$(OBJEXT) \
+readtokens_.$(OBJEXT) readutmp_.$(OBJEXT) realloc_.$(OBJEXT) \
+regex_.$(OBJEXT) rename_.$(OBJEXT) rmdir_.$(OBJEXT) rpmatch_.$(OBJEXT) \
 safe-read_.$(OBJEXT) safe-write_.$(OBJEXT) same_.$(OBJEXT) \
 save-cwd_.$(OBJEXT) savedir_.$(OBJEXT) settime_.$(OBJEXT) \
 sha_.$(OBJEXT) sig2str_.$(OBJEXT) stat_.$(OBJEXT) stpcpy_.$(OBJEXT) \

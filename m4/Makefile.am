@@ -58,7 +58,6 @@ mbswidth.m4 \
 memcmp.m4 \
 mkdir-slash.m4 \
 mkstemp.m4 \
-mmap-stack.m4 \
 nanosleep.m4 \
 onceonly.m4 \
 open-max.m4 \
