@@ -15,6 +15,34 @@ my @Types = qw (IN OUT ERR EXIT);
 my %Types = map {$_ => 1} @Types;
 my %Zero_one_type = map {$_ => 1} qw (OUT ERR EXIT);
 
+# A file spec: a scalar or a reference to a single-keyed hash
+# ================
+# 'contents'               contents only (file name is derived from test name)
+# {filename => 'contents'} filename and contents
+# {filename => undef}      filename only -- $(srcdir)/filename must exist
+#                            (FIXME: note to self: get $srcdir from ENV)
+#
+# FIXME: If there is more than one input file, the you can't specify REDIRECT.
+# PIPE is still ok.
+#
+# I/O spec: a hash ref with the following properties
+# ================
+# - one key/value pair
+# - the key must be one of these strings: IN, OUT, ERR, EXIT
+# - the value must be a file spec
+# {OUT => 'data'}    put data in a temp file and compare it to stdout from cmd
+# {OUT => {'filename'=>undef}} compare contents of existing filename to
+#           stdout from cmd
+# Ditto for `ERR', but compare with stderr
+# {EXIT => N} expect exit status of cmd to be N
+#
+# There may be many input file specs.  File names from the input specs
+# are concatenated in order on the command line.
+# There may be at most one of the OUT-, ERR-, and EXIT-keyed specs.
+# If the OUT-(or ERR)-keyed hash ref is omitted, then expect no output
+#   on stdout (or stderr).
+# If the EXIT-keyed one is omitted, then expect the exit status to be zero.
+
 my $Global_count = 1;
 
 sub _create_file ($$$$$)
