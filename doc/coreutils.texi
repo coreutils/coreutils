@@ -6394,6 +6394,10 @@ or @option{--force} option is not given, or the @option{-i} or
 for whether to remove the file.  If the response does not begin with
 @samp{y} or @samp{Y}, the file is skipped.
 
+@emph{Warning}: If you use @command{rm} to remove a file, it is usually
+possible to recover the contents of that file.  If you want more assurance
+that the contents are truly unrecoverable, consider using @command{shred}.
+
 The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
