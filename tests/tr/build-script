@@ -1,12 +1,16 @@
-#!/p/bin/perl
+#!/p/bin/perl5.000 -w
 
 $tr = '../tr +io 5';
 $tr = 'tr';
 $test = 0;
-$failures = 0;
 $| = 1;
 
 print ":\nerrors=0\n";
+$expected = '';
+$s1 = '';
+$input = '';
+$flags = '';
+$s1 = '';
 
 while (<>)
   {
@@ -14,7 +18,7 @@ while (<>)
 
     $test++;
     chop;
-    $prog = '($input,$flags,$s1,$s2,$expected,$e_ret_code) = ' . $_ . ';';
+    $prog = '($test_name, $input,$flags,$s1,$s2,$expected,$e_ret_code) = ' . $_ . ';';
     eval $prog;
     $in = "t$test.in"; 
     $exp_name = 't' . $test . '.expected'; 
