@@ -2,6 +2,9 @@
 
 	* Version 5.0.1.
 
+	* Makefile.maint (%.asc): Remove target first, so gpg doesn't
+	prompt us about it.
+
 	* announce-gen (print_changelog_deltas): Relax tests for matching
 	version-number line in NEWS.
 
