@@ -1,7 +1,11 @@
 2001-11-19  Jim Meyering  <meyering@lucent.com>
 
-	* mkstemp.m4: Close each descriptor immediately so the test
-	doesn't mistakenly hit the max-open-files limit.
+	* mkstemp.m4 (UTILS_FUNC_MKSTEMP): Don't bother with a temporary
+	directory.  Use "conftestXXXXXX" as the template.
+	Suggestion from Paul Eggert.
+
+	* mkstemp.m4 (UTILS_FUNC_MKSTEMP): Close each descriptor immediately
+	so the test doesn't mistakenly hit the max-open-files limit.
 
 2001-11-18  Jim Meyering  <meyering@lucent.com>
 
