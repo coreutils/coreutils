@@ -1,5 +1,10 @@
 2001-02-17  Jim Meyering  <meyering@lucent.com>
 
+	* ls-mntd-fs.m4 (jm_LIST_MOUNTED_FILESYSTEMS): Don't check for
+	getmntent via AC_CHECK_FUNCS, since that would get a `no' and disrupt
+	further attempts by AC_FUNC_GETMNTENT to check with e.g., -lgen on
+	UnixWare 7.1.1.
+
 	* mbrtowc.m4 (jm_FUNC_MBRTOWC): Adapt to use AC_CACHE_CHECK etc.,
 	rather than AC_CACHE_VAL.
 
