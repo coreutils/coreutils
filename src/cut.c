@@ -20,42 +20,7 @@
 /* POSIX changes, bug fixes, long-named options, and cleanup
    by David MacKenzie <djm@gnu.ai.mit.edu>.
 
-   Rewrite cut_fields and cut_bytes -- Jim Meyering.
-
-   Options:
-   --bytes=byte-list
-   -b byte-list			Print only the bytes in positions listed
-				in BYTE-LIST.
-				Tabs and backspaces are treated like any
-				other character; they take up 1 byte.
-
-   --characters=character-list
-   -c character-list		Print only characters in positions listed
-				in CHARACTER-LIST.
-				The same as -b for now, but
-				internationalization will change that.
-				Tabs and backspaces are treated like any
-				other character; they take up 1 character.
-
-   --fields=field-list
-   -f field-list		Print only the fields listed in FIELD-LIST.
-				Fields are separated by a TAB by default.
-
-   --delimiter=delim
-   -d delim			For -f, fields are separated by the first
-				character in DELIM instead of TAB.
-
-   -n				Do not split multibyte chars (no-op for now).
-
-   --only-delimited
-   -s				For -f, do not print lines that do not contain
-				the field separator character.
-
-   The BYTE-LIST, CHARACTER-LIST, and FIELD-LIST are one or more numbers
-   or ranges separated by commas.  The first byte, character, and field
-   are numbered 1.
-
-   A FILE of `-' means standard input. */
+   Rewrite cut_fields and cut_bytes -- Jim Meyering.  */
 
 #include <config.h>
 
