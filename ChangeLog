@@ -1,6 +1,41 @@
-2004-04-03  Dmitry V. Levin  <ldv@altlinux.org>
+2004-07-06  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	printf cleanup, to avoid undefined behavior, to add support for
+	formats that Bash supports, and to support wide integers like
+	Bash does.
+
+	* NEWS: Document this.
+	* src/printf.c (UNSPECIFIED): Remove.  All uses now replaced by
+	booleans, so that we don't reserve any values for precision or
+	width (like Bash).
+	(STRTOX): Use prototype, not K&R-style definition.
+	(vstrtoimax): Renamed from xstrtol (to avoid confusion with xstrtol
+	in ../lib), with type change to intmax_t.
+	All uses changed.
+	(vstrtoumax): Renamed from xstrtoul, with type change to uintmax_t.
+	All uses changed.
+	(vstrtod): Renamed from xstrtod.  All uses changed.
+	(print_direc): Use boolean arg instead of special value to indicate
+	a missing precision or width.  LENGTH no longer includes
+	length modifiers or conversion character.  New arg CONVERSION
+	now specifies conversion character.
+	Use intmax_t-width formatting for integers (like Bash).
+	Add support for C99 %a, %A, %F (like Bash).
+	Add support for field width with %c (POSIX requires this).
+	Add a FIXME for lack of support for field width and precision
+	for %b.
+	Add support for '\'', '0' flags.
+	Check for invalid combinations of flags, field width, precision,
+	and conversion, to prevent use of undefined behavior.
+	Allow multiple length modifiers, for formats like "%lld" (like Bash).
+	Add support for C99 'j', 't', 'z' length modifiers (like Bash).
+	In error message, output entire invalid conversion specification,
+	instead of merely outputting % followed by the conversion char.
+	* tests/misc/printf: Add tests for the above.
+
+2004-04-03  Dmitry V. Levin  <ldv@altlinux.org>
 
 	Change "readlink -f" to be more compatible with prior implementations.
 	Add more canonicalize options, -e and -m.
