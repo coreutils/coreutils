@@ -2,7 +2,6 @@ package Test;
 require 5.002;
 use strict;
 
-my $nl = "\n";
 @Test::t = (
 # test name
 #     flags       file-1 file-2    expected output   expected return code
