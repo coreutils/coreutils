@@ -113,16 +113,24 @@ announcement: NEWS ChangeLog $(distdir).tar.gz
 	      -e 'print "\n"."*"x70 ."\n"; s///; print; print "*"x70 ."\n"'; \
 	)
 
+release-archive-dir = ../release
+prev-tgz = $(PACKAGE)-$(PREV_VERSION).tar.gz
+xd-delta = $(PACKAGE)-$(PREV_VERSION)-$(VERSION).xdelta
+
 alpha:
 	$(MAKE) po-check
 	$(MAKE) cvs-dist
 	$(MAKE) -s announcement > /tmp/announce-$(distdir)
 	ln $(distdir).tar.gz ../release
 	chmod a-w $(distdir).tar.gz
+	cd $(release-archive-dir) \
+	  && xdelta delta -9 $(prev-tgz) $(distdir).tar.gz $(xd-delta) || :
+	ln $(release-archive-dir)/$(xd-delta) .
+	chmod a-w $(release-archive-dir)/$(xd-delta)
 	@echo =====================================
 	@for url in $(real_dir_list); do \
 	  echo "ncftp -u $$url/"; \
 	done
-	@echo '#   put $(distdir).tar.gz'
+	@echo '#   mput $(xd-delta) $(distdir).tar.gz'
 	@echo '# send the /tmp/announcement e-mail'
 	@echo =====================================
