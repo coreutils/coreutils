@@ -25,6 +25,10 @@
 #include "version.h"
 #include "long-options.h"
 #include "error.h"
+#include "readtokens.h"
+
+/* FIXME */
+#define DELIM "\n\t "
 
 /* The name this program was run with. */
 char *program_name;
@@ -101,22 +105,29 @@ print_factors (n)
 
   n_factors = factor (n, 64, factors);
   for (i=0; i<n_factors; i++)
-    printf ("\t%lu\n", factors[i]);
+    printf ("     %lu\n", factors[i]);
+  putchar ('\n');
 }
 
 static void
 do_stdin ()
 {
-  char buf[1000];
+  token_buffer tokenbuffer;
+
+  init_tokenbuffer (&tokenbuffer);
 
   for (;;)
     {
-      /* FIXME: Use getline.  */
-      if (fgets (buf, sizeof buf, stdin) == 0)
-	exit (0);
+      long int token_length;
+
+      token_length = readtoken (stdin, DELIM, sizeof (DELIM) - 1,
+				&tokenbuffer);
+      if (token_length < 0)
+	break;
       /* FIXME: Use strtoul.  */
-      print_factors ((unsigned long) atoi (buf));
+      print_factors ((unsigned long) atoi (tokenbuffer.buffer));
     }
+  free (tokenbuffer.buffer);
 }
 
 void
