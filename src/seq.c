@@ -24,6 +24,7 @@
 
 #include "system.h"
 #include "error.h"
+#include "xstrtod.h"
 
 static double scan_double_arg __P ((const char *arg));
 static int check_format __P ((const char *format_string));
@@ -232,14 +233,11 @@ format string may not be specified when printing equal width strings"));
 static double
 scan_double_arg (const char *arg)
 {
-  char *end_ptr;
   double ret_val;
 
-  /* FIXME: use xstrtod?  At least set and check errno.  */
-  ret_val = strtod (arg, &end_ptr);
-  if (end_ptr == arg || *end_ptr != '\0')
+  if (xstrtod (arg, NULL, &ret_val))
     {
-      error (0, 0, _("invalid float argument: %s"), arg);
+      error (0, 0, _("invalid floating point argument: %s"), arg);
       usage (1);
       /* NOTREACHED */
     }
