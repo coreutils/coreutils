@@ -31,6 +31,9 @@ my @Tests =
      ['wide-2', '-2147483647',	{IN=> "a\n"}, {OUT=>"a\n"}],
      ['bad-suffix', '-72x',	{IN=> ''},
       {ERR => "fmt: invalid width option: `-72x'\n"}, {EXIT => 1}],
+     ['no-file', 'no-such-file',
+      {ERR => "fmt: cannot open `no-such-file' for reading:"
+       . " No such file or directory\n"}, {EXIT => 1}],
     );
 
 my $save_temps = $ENV{DEBUG};
