@@ -12,6 +12,7 @@ TESTS_ENVIRONMENT = \
   PROG=$$tst
 
 TESTS = \
+  tac-continue \
   close-stdout \
   pwd \
   date-sec \
