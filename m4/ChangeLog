@@ -1,5 +1,7 @@
 2003-12-20  Jim Meyering  <jim@meyering.net>
 
+	* open-max.m4 (UTILS_SYS_OPEN_MAX): Remove file.  No longer used.
+
 	* lib-check.m4 (jm_LIB_CHECK): Do not set LIB_CRYPT to the
 	value, $ac_cv_search_crypt, if it's "none required".
 
