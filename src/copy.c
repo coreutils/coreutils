@@ -77,7 +77,7 @@ copy_dir (const char *src_path_in, const char *dst_path_in, int new_dst,
   int ret = 0;
 
   errno = 0;
-  name_space = savedir (src_path_in, src_sb->st_size);
+  name_space = savedir (src_path_in, (unsigned int) src_sb->st_size);
   if (name_space == 0)
     {
       if (errno)
@@ -132,7 +132,7 @@ copy_reg (const char *src_path, const char *dst_path,
   char *cp;
   int *ip;
   int return_val = 0;
-  long n_read_total = 0;
+  off_t n_read_total = 0;
   int last_write_made_hole = 0;
   int make_holes = (sparse_mode == SPARSE_ALWAYS);
 
@@ -182,7 +182,7 @@ copy_reg (const char *src_path, const char *dst_path,
 	 be needed for a file of its size, then
 	 at least one of the blocks in the file is a hole. */
       if (S_ISREG (sb.st_mode)
-	  && (size_t) (sb.st_size / 512) > (size_t) ST_NBLOCKS (sb))
+	  && sb.st_size / ST_NBLOCKSIZE > ST_NBLOCKS (sb))
 	make_holes = 1;
     }
 #endif
