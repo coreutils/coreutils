@@ -102,11 +102,13 @@ int wait ();
 #define READ_SIZE (32 * 1024)
 
 #ifndef UID_T_MAX
-# define UID_T_MAX ((uid_t)(~((uid_t)1 << (sizeof (uid_t) * BITSPERBYTE - 1))))
+# define UID_T_MAX ((uid_t)(~((unsigned long)1 << ((sizeof (uid_t) \
+						    * BITSPERBYTE - 1)))))
 #endif
 
 #ifndef GID_T_MAX
-# define GID_T_MAX ((gid_t)(~((gid_t)1 << (sizeof (gid_t) * BITSPERBYTE - 1))))
+# define GID_T_MAX ((gid_t)(~((unsigned long)1 << ((sizeof (gid_t) \
+						    * BITSPERBYTE - 1)))))
 #endif
 
 char *basename ();
