@@ -63,7 +63,9 @@ EXEC 01;32
 .Z   01;31
 .gz  01;31
 .deb 01;31
+.rpm 01;31
 .jpg 01;35 # image formats
+.png 01;35
 .gif 01;35
 .bmp 01;35
 .ppm 01;35
@@ -73,5 +75,6 @@ EXEC 01;32
 .tif 01;35
 .mpg 01;37
 .avi 01;37
+.fli 01;37
 .gl 01;37
 .dl 01;37
