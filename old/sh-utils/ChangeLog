@@ -1,3 +1,8 @@
+1997-07-04  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* Makefile.am (aclocal-files): Look in source directory, not build dir.
+	From Andreas Schwab.
+
 1997-07-03  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* tests/date/Test.pm (test_vector): Remove bogus TZ=GMT environment

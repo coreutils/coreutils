@@ -1,3 +1,8 @@
+1997-07-04  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* Makefile.am (aclocal-files): Look in source directory, not build dir.
+	From Andreas Schwab.
+
 Sun Jun 15 06:36:41 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/pr.c (init_header) [T_BUF_FMT]: Output the 4-digit year (not the
