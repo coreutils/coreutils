@@ -1,3 +1,9 @@
+2000-10-18  Jim Meyering  <meyering@lucent.com>
+
+	* tests/mv/part-symlink: Make sure the programs use C-locale formats
+	and translations.  Bruno Haible reported that this test would fail
+	when using other locales, because ls printed a translation of `total'.
+
 2000-10-16  Jim Meyering  <meyering@lucent.com>
 
 	* src/ls.c (print_long_format): Wrap date format strings in _(...)
