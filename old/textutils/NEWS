@@ -1,5 +1,7 @@
 Changes in release 1.20
  Changes in test release 1.19p
+* md5sum's --string option is being deprecated and is no longer documented.
+  It is still accepted, but will be removed altogether in 1.21.
 * tr '[:lower:]' '[:upper:]' no longer fails when LC_CTYPE is set to
   iso_8859_1 on Solaris -- or any other character set with differing
   numbers of uppercase and lowercase characters

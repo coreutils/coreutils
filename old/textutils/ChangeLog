@@ -133,7 +133,12 @@ Thu Sep 26 21:02:54 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/md5sum.c (usage): Remove references in --help output to
 	the now-deprecated --string option.  Support for it will be
-	removed soon.
+	removed soon.  Using this option can provoke a memory access
+	violation on some systems because of (unavoidable in an efficient
+	implementation) alignment assumptions made by functions in md5.c.
+	md5sum.c could leave the option in and accomodate the alignment
+	restriction, but this option was intended solely for testing, and
+	the tests are now all file-oriented, so it's not necessary.
 
 	* tests/md5sum-test/md5-rfc: Rewrite to avoid use of --string option.
 
