@@ -1,3 +1,8 @@
+2003-02-03  Jim Meyering  <jim@meyering.net>
+
+	* c-stack.m4: Include <unistd.h>.  On some systems,
+	it is required for the definition of _SC_PAGESIZE.
+
 2003-02-02  Jim Meyering  <jim@meyering.net>
 
 	* onceonly.m4: New file.  From gnulib.
