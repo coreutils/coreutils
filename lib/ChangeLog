@@ -1,5 +1,9 @@
 2000-12-07  Jim Meyering  <meyering@lucent.com>
 
+	* stripslash.c (ISSLASH): Define.
+	(strip_trailing_slashes): Use ISSLASH rather than comparing against `/'.
+	From Prashant TR.
+
 	* dirname.c (FILESYSTEM_PREFIX_LEN): Define.
 	(dir_name_r): Declare this function as static.
 	[BACKSLASH_IS_PATH_SEPARATOR]: Fix a bug that'd
