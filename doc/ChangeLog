@@ -1,3 +1,8 @@
+2003-07-29  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (tail invocation): Restore two end-of-sentence words
+	that were mistakenly removed on 2002-09-13.  Reported by Paul Worrall.
+
 2003-07-28  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (dd invocation): Explain that a SIGUSR1 signal
