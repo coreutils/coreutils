@@ -398,6 +398,12 @@ process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
 			if (__chdir ("..") < 0)
 			  result = -1;
 		    }
+
+		  if (result < 0)
+		    {
+		      result = (*data->func) (data->dirbuf, NULL, FTW_DCHP,
+				&data->ftw);
+		    }
 		}
 	    }
 	}
@@ -463,6 +469,10 @@ ftw_dir (struct ftw_data *data, struct STAT *st)
 	  if (data->actdir-- == 0)
 	    data->actdir = data->maxdir - 1;
 	  data->dirstreams[data->actdir] = NULL;
+
+	  /* We cannot change to the directory.
+	     Signal this with a special flag.  */
+	  result = (*data->func) (data->dirbuf, st, FTW_DCH, &data->ftw);
 
 	  return result;
 	}
