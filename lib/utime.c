@@ -27,6 +27,11 @@
 # include <utime.h>
 #endif
 
+#if !HAVE_UTIMES_NULL
+# include <sys/stat.h>
+# include <fcntl.h>
+#endif
+
 #include "full-write.h"
 #include "safe-read.h"
 
@@ -53,11 +58,11 @@ utime_null (const char *file)
   int fd;
   char c;
   int status = 0;
-  struct stat sb;
+  struct stat st;
 
   fd = open (file, O_RDWR);
   if (fd < 0
-      || fstat (fd, &sb) < 0
+      || fstat (fd, &st) < 0
       || safe_read (fd, &c, sizeof c) == SAFE_READ_ERROR
       || lseek (fd, (off_t) 0, SEEK_SET) < 0
       || full_write (fd, &c, sizeof c) != sizeof c
