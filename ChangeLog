@@ -2,6 +2,8 @@
 
 	* Version 5.0.1.
 
+	* src/head.c (usage): Document new feature: --bytes=-N and --lines=-N.
+
 	* tests/du/slink: Skip this test if `.' is on an XFS file system.
 
 	* tests/du/fd-leak: New file.  Test for the bug in du that
