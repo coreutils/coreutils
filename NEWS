@@ -4,6 +4,12 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Changes for better compliance with POSIX
 
+  nohup changes:
+
+    nohup now ignores the umask when creating nohup.out.
+
+    nohup now closes stderr if it is a terminal and stdout is closed.
+
   pathchk changes:
 
     It now rejects the empty name in the normal case.  That is,
