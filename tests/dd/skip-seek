@@ -21,7 +21,7 @@ use strict;
 
 # Turn off localisation of executable's ouput.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
-my $out = 'out-j';
+my $out = 'out';
 my $script_name = $ENV{SCRIPT_NAME};
 
 my @Tests =
