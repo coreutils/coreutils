@@ -1,0 +1,51 @@
+#!/bin/sh
+# Make sure that the copying code used in an inter-partition
+# move unlinks a destination symlink before opening it.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  mv --version
+fi
+
+. $srcdir/setup
+
+if test -z "$other_partition_tmpdir"; then
+  exit 77
+fi
+
+rem_file="$other_partition_tmpdir/file"
+rem_symlink="$other_partition_tmpdir/symlink"
+file=to-sym-$$
+
+fail=0
+
+trap 'rm -fr $file $other_partition_tmpdir; exit $fail' \
+  0 1 2 3 15
+
+framework_failure=0
+rm -f $file || framework_failure=1
+echo local > $file || framework_failure=1
+echo remote > $rem_file || framework_failure=1
+ln -s $rem_file $rem_symlink || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo 'failure in testing framework'
+  exit 1
+fi
+
+unset VERSION_CONTROL
+
+if test "${VERSION_CONTROL+set}" = set; then
+  echo '$0: the VERSION_CONTROL envvar is set --' \
+    ' unset it and rerun this test' >&2
+  exit 1
+fi
+
+# This mv command should succeed, unlinking the symlink
+# before copying.
+mv $file $rem_symlink || fail=1
+
+# Make sure $rem_file is unmodified.
+test `cat $rem_file` = remote || fail=1
+
+exit $fail
