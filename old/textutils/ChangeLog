@@ -1,3 +1,62 @@
+1999-05-09  Jim Meyering  <meyering@ascend.com>
+
+	* tests/sort/Test.pm (neg-nls): New test.
+
+1999-05-08  Jim Meyering  <meyering@ascend.com>
+
+	* src/system.h (CHAR_BIT, TYPE_SIGNED, TYPE_MINIMUM, TYPE_MAXIMUM,
+	and all the *_MIN and *_MAX symbols): Remove definitions.
+	* src/sys2.h: Put the definitions here instead (this file is shared
+	between all three *utils packages, while system.h is not).
+
+1999-05-06  Paul Eggert  <eggert@twinsun.com>
+
+	* src/sort.c (fraccompare, numcompare): Merge the NLS and
+	non-NLS versions into a single function.
+
+	(decimal_point): Now char, since we no longer convert to unsigned
+	char.
+	(th_sep): Now int, since we use a value out of char range to denote
+	the absence of a thousands separator.
+	(IS_THOUSANDS_SEP): New macro.
+	(USE_NEW_FRAC_COMPARE): Remove.
+	(nls_set_fraction): Arg is now char, not unsigned char.
+	Set th_sep to CHAR_MAX + 1 if there is no thousands separator.
+	(numcompare): Don't convert to unsigned char unless necessary.
+	(main): Turn off decimal points and thousand separators if they
+	are multibyte characters, as we don't support that yet.
+
+1999-05-06  Paul Eggert  <eggert@twinsun.com>
+
+	* src/system.h (CHAR_MIN, CHAR_MAX): New macros.
+	(SCHAR_MIN, SCHAR_MAX): Don't assume that char is signed.
+
+1999-05-06  Paul Eggert  <eggert@twinsun.com>
+
+	* src/sort.c (numcompare): Handle comparison of two negative
+	numbers correctly in the ENABLE_NLS case.
+
+1999-05-04  Jim Meyering  <meyering@ascend.com>
+
+	* src/pr.c (usage): Break the usage message into 3 pieces instead of
+	only 2.  The strings had grown to be longer than 2048, which evokes
+	errors when compiling with Irix4's cc.  Reported by Kaveh Ghazi.
+
+	* src/tsort.c (search_item): Use `1' instead of `+1'.  The latter
+	elicits a syntax error from SunOS4's cc.  From Kaveh Ghazi.
+
+1999-05-03  Jim Meyering  <meyering@ascend.com>
+
+	* src/ptx.c <ctype.h>: Don't include.
+	[!STDC_HEADERS]: Remove definitions of ctype macros.
+	Convert e.g., isspace to ISSPACE to use definitions from sys2.h.
+	Reported by Kaveh Ghazi.
+
+	* src/sys2.h (TOLOWER): Define.
+	(TOUPPER): Define.
+	* src/join.c (TOLOWER): Remove definition.
+	* src/md5sum.c: (TOLOWER): Remove definition.
+
 1999-04-30  Jim Meyering  <meyering@ascend.com>
 
 	* src/sort.c (usage): Document the differences between the
