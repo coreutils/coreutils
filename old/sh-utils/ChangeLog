@@ -1,5 +1,7 @@
 2000-05-07  Jim Meyering  <meyering@lucent.com>
 
+	* Version 2.0h.
+
 	* src/basename.c: Include "closeout.h".
 	(main): Call atexit with close_stdout.
 	* src/chroot.c: Likewise.

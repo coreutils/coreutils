@@ -1,5 +1,6 @@
 Changes in release 2.1
  [2.0h]
+* all programs fail when printing --help or --version output to a full device
 * printf exits nonzero upon write failure
 * yes now detects and terminates upon write failure
 * date --rfc-822 now always emits day and month names from the `C' locale
