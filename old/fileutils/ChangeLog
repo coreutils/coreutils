@@ -1,3 +1,7 @@
+2000-01-30  Jim Meyering  <meyering@lucent.com>
+
+	* Version 4.0p.
+
 2000-01-24  Jim Meyering  <meyering@lucent.com>
 
 	* src/ln.c (usage): Describe behavior when LINK_NAME is omitted.
