@@ -300,8 +300,8 @@ human_readable (uintmax_t n, char *buf, int opts,
 	  {
 	    do
 	      {
-		unsigned r10 = (amt % base) * 10 + tenths;
-		unsigned r2 = (r10 % base) * 2 + (rounding >> 1);
+		unsigned int r10 = (amt % base) * 10 + tenths;
+		unsigned int r2 = (r10 % base) * 2 + (rounding >> 1);
 		amt /= base;
 		tenths = r10 / base;
 		rounding = (r2 < base

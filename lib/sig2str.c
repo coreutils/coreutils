@@ -1,6 +1,6 @@
 /* sig2str.c -- convert between signal names and numbers
 
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -253,7 +253,7 @@ static struct numname { int num; char const name[8]; } numname_table[] =
    POSIX says that only '0' through '9' are digits.  Prefer ISDIGIT to
    ISDIGIT_LOCALE unless it's important to use the locale's definition
    of `digit' even when the host does not conform to POSIX.  */
-#define ISDIGIT(c) ((unsigned) (c) - '0' <= 9)
+#define ISDIGIT(c) ((unsigned int) (c) - '0' <= 9)
 
 /* Convert the signal name SIGNAME to a signal number.  Return the
    signal number if successful, -1 otherwise.  */
@@ -270,7 +270,7 @@ str2signum (char const *signame)
     }
   else
     {
-      unsigned i;
+      unsigned int i;
       for (i = 0; i < NUMNAME_ENTRIES; i++)
 	if (strcmp (numname_table[i].name, signame) == 0)
 	  return numname_table[i].num;
@@ -315,7 +315,7 @@ str2sig (char const *signame, int *signum)
 int
 sig2str (int signum, char *signame)
 {
-  unsigned i;
+  unsigned int i;
   for (i = 0; i < NUMNAME_ENTRIES; i++)
     if (numname_table[i].num == signum)
       {
