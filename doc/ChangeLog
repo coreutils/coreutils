@@ -1,16 +1,6 @@
 2004-10-01  Paolo Bonzini  <bonzini@gnu.org>
 
-	* cut.c (complement, COMPLEMENT_OPTION): New.
-	(longopts): Add --complement.
-	(usage): Change text for -b, -c, -f to use "select"
-	instead of "print".  Add text for --complement.
-	(mark_range_start): Extracted from set_fields.
-	(print_kth): Support --complement.
-	(compare_ranges): New function.
-	(set_fields): Rewrite the part that populates range_start_ht,
-	merging it with the part that populates printable_field.
-	(main): Handle --complement.
-	* doc/coreutils.texi (cut): Document --complement and
+	* coreutils.texi (cut): Document --complement and
 	adjust the documentation of -b, -c, -f.
 
 2004-11-27  Paul Eggert  <eggert@cs.ucla.edu>
