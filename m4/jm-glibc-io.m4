@@ -1,4 +1,4 @@
-#serial 2
+#serial 3
 
 dnl From Jim Meyering.
 dnl
@@ -16,10 +16,10 @@ AC_DEFUN(jm_FUNC_GLIBC_UNLOCKED_IO,
       # Otherwise, we'd get the Solaris5.5.1 functions that are not
       # declared, and that have been removed from Solaris5.6.  The resulting
       # 5.5.1 binaries would not run on 5.6 due to shared library differences.
-      jm_CHECK_DECLARATIONS([#include <stdio.h>
-			    ], $jm_io_func,
-			    jm_declared=yes,
-			    jm_declared=no)
+      AC_CHECK_DECLS(($jm_io_func),
+		     jm_declared=yes,
+		     jm_declared=no,
+		     [#include <stdio.h>])
       if test $jm_declared = yes; then
         AC_CHECK_FUNCS($jm_io_func)
       fi
