@@ -7,12 +7,12 @@ $| = 1;
 
 print <<EOF;
 #! /bin/sh
-# run-test generated automatically by automake 1.0 from Makefile.am
+# run-test generated automatically by build-script from test.data.pl
 case \$# in
   0) xx='$xx';;
   *) xx="\$1";;
 esac
-echo=:
+echo=echo
 \$echo testing with $xx=\$xx
 errors=0
 EOF
@@ -73,6 +73,6 @@ if test \$errors = 0 ; then
 else
   \$echo Failed \$errors tests. 1>&2
 fi
-test \$errors = 0 && $errors=1
+test \$errors = 0 || $errors=1
 exit \$errors
 EOF2
