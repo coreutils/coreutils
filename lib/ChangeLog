@@ -1,3 +1,10 @@
+2003-06-17  Jim Meyering  <jim@meyering.net>
+
+	Merge in changes from gnulib.
+	* hash.c: Include <stdbool.h> unconditionally.
+	Include <limits.h>.
+	(CHAR_BIT): Don't define.
+
 2003-06-09  John David Anglin  <dave.anglin@nrc-cnrc.gc.ca>
 
 	* acl.c: Include <sys/types.h> before <sys/stat.h>.
