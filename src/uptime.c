@@ -1,5 +1,5 @@
 /* GNU's uptime.
-   Copyright (C) 1992-1999 Free Software Foundation, Inc.
+   Copyright (C) 1992-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -79,7 +79,7 @@ print_uptime (int n, const STRUCT_UTMP *this)
      ones, also in the process possibly gleaning boottime. */
   while (n--)
     {
-      if (this->ut_name[0]
+      if (UT_USER (this) [0]
 #ifdef USER_PROCESS
 	  && this->ut_type == USER_PROCESS
 #endif
