@@ -6,6 +6,9 @@ Thu Oct  5 21:49:34 1995  Jim Meyering  (meyering@comco.com)
 	* system.h [!HAVE_UTIME_H]: Don't declare struct utimbuf here.
 	[!HAVE_STRUCT_UTIMBUF]: Declare struct utimbuf here instead.
 
+	* chgrp.c: Include limits.h.
+	[!INT_MAX]: Define it.
+
 	* df.c (show_point): Cast -2 to dev_t before assignment.
 	* mountlist.c (read_filesystem_list): Cast -1 to dev_t before
 	assignment.
