@@ -1,3 +1,6 @@
+2000-07-14  Jim Meyering  <meyering@lucent.com>
+
+
 2000-07-10  Paul Eggert  <eggert@twinsun.com>
 
 	From a suggestion by Bruno Haible.
@@ -5,6 +8,7 @@
 	Renamed from AC_MBSTATE_T_OBJECT.  All uses changed.
 	Change from a two-part test, which defines both HAVE_MBSTATE_T_OBJECT
 	and mbstate_t, to a single-part test that simply defines mbstate_t.
+	* prereq.m4 (jm_PREREQ_QUOTEARG): s/AC_MBSTATE_T_OBJECT/AC_MBSTATE_T/.
 
 2000-07-10  Jim Meyering  <meyering@lucent.com>
 
