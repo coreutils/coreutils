@@ -13,6 +13,7 @@ memmove (dest, source, length)
      const char *source;
      unsigned length;
 {
+  char *d0 = dest;
   if (source < dest)
     /* Moving from low mem to hi mem; start at end.  */
     for (source += length, dest += length; length; --length)
@@ -22,7 +23,6 @@ memmove (dest, source, length)
       /* Moving from hi mem to low mem; start at beginning.  */
       for (; length; --length)
 	*dest++ = *source++;
-      --dest;
     }
-  return (void *) dest;
+  return (void *) d0;
 }
