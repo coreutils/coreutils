@@ -1,3 +1,17 @@
+Sat Oct  5 08:07:03 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* acinclude.m4 (AC_HEADER_SYS_TIME_H): New macro.
+	(AM_FUNC_MKTIME): Require AC_HEADER_SYS_TIME_H so that configure's
+	checking... messages don't get nested.
+
+	* configure.in (GNU_PACKAGE): New variable.
+	(PACKAGE_VERSION): Remove it.
+
+	* acconfig.h (GNU_PACKAGE): New variable.
+	(PACKAGE_VERSION): Remove now-unused variable.
+
+	* src/*.c: Update --version output to conform to the coding standard.
+
 Wed Oct  2 21:44:36 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/dircolors.c (usage): Deprecate --print-data-base even though
