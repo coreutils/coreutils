@@ -30,6 +30,7 @@
 #include <assert.h>
 #include <limits.h>
 
+#include "memrchr.h"
 #include "openat.h"
 
 #ifndef O_DIRECTORY
