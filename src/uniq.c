@@ -228,7 +228,7 @@ different (char *old, char *new, size_t oldlen, size_t newlen)
       /* FIXME: This should invoke strcoll somehow.  */
       return oldlen != newlen || memcasecmp (old, new, oldlen);
     }
-  else if (HAVE_SETLOCALE && hard_LC_COLLATE)
+  else if (hard_LC_COLLATE)
     return xmemcoll (old, oldlen, new, newlen) != 0;
   else
     return oldlen != newlen || memcmp (old, new, oldlen);
