@@ -174,7 +174,7 @@ sc_sun_os_names:
 	@( cvsu --list ) > /dev/null 2>&1 || : && \
 	grep -Ei \
 	    'solaris[^[:alnum:]]*2\.(7|8|9|[1-9][0-9])|sunos[^[:alnum:]][6-9]' \
-	  $$(cvsu --list | grep -vE 'config-log|ChangeLog|config\.guess') && \
+	  $$(cvsu --list | grep -vE 'ChangeLog|config\.guess') && \
 	  { echo '$(ME): found misuse of Sun OS version numbers' 1>&2;	\
 	    exit 1; } || :
 
@@ -206,15 +206,6 @@ changelog-check:
 	else \
 	  echo "$(VERSION) not in ChangeLog" 1>&2; \
 	  exit 1; \
-	fi
-
-cvs-diff-check:
-	if $(CVS) diff >cvs-diffs; then				\
-	  rm cvs-diffs;						\
-	else							\
-	  echo "Some files are locally modified:" 1>&2;		\
-	  cat cvs-diffs;					\
-	  exit 1;						\
 	fi
 
 m4-check:
