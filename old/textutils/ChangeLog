@@ -1,5 +1,8 @@
 1999-03-07  Jim Meyering  <meyering@ascend.com>
 
+	* tests/md5sum/newline-1: Test for the actual feature.
+	With help from Eli Zaretskii.
+
 	* lib/long-options.c (parse_long_options): Add the `...NO warranty...'
 	message.
 
