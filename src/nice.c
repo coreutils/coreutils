@@ -62,8 +62,29 @@ static int show_version;
 static struct option const longopts[] =
 {
   {"adjustment", required_argument, NULL, 'n'},
-  {"help", no_argument, &show_help, 1},
-  {"version", no_argument, &show_version, 1},
+  {"help", no_argument, &show_help, 250},
+  {"version", no_argument, &show_version, 250},
+  {"0", no_argument, NULL, 1},
+  {"1", no_argument, NULL, 2},
+  {"2", no_argument, NULL, 3},
+  {"3", no_argument, NULL, 4},
+  {"4", no_argument, NULL, 5},
+  {"5", no_argument, NULL, 6},
+  {"6", no_argument, NULL, 7},
+  {"7", no_argument, NULL, 8},
+  {"8", no_argument, NULL, 9},
+  {"9", no_argument, NULL, 10},
+  {"10", no_argument, NULL, 11},
+  {"11", no_argument, NULL, 12},
+  {"12", no_argument, NULL, 13},
+  {"13", no_argument, NULL, 14},
+  {"14", no_argument, NULL, 15},
+  {"15", no_argument, NULL, 16},
+  {"16", no_argument, NULL, 17},
+  {"17", no_argument, NULL, 18},
+  {"18", no_argument, NULL, 19},
+  {"19", no_argument, NULL, 20},
+  {"20", no_argument, NULL, 21},
   {NULL, 0, NULL, 0}
 };
 
@@ -83,22 +104,6 @@ main (argc, argv)
   while ((optc = getopt_long (argc, argv, "+0123456789-n:", longopts,
 			      (int *) 0)) != EOF)
     {
-      char *s;
-
-      /* Determine whether this is an option like `--5'.
-	 If so, treat it like `-n -5'.  */
-      s = argv[optind];
-      /* Make sure s[1..] is a valid negative integer.
-	 Test/convert `s+1' rather than `s+2' so we reject options
-	 like `---5' as unrecognized.  */
-      if (s && s[0] == '-' && s[1] == '-' && isinteger (s + 1))
-	{
-	  adjustment = atoi (s + 1);
-	  adjustment_given = 1;
-	  ++optind;
-	  continue;
-	}
-
       switch (optc)
 	{
 	case '?':
@@ -119,8 +124,19 @@ main (argc, argv)
 	  break;
 
 	default:
-	  adjustment = adjustment * 10 + optc - '0';
-	  adjustment_given = 1;
+	  if (optc <= 21)
+	    {
+	      minusflag = 1;
+	      adjustment = optc - 1;
+	      adjustment_given = 1;
+	    }
+	  else
+	    {
+	      /* FIXME: make sure that this gets a warning if we've
+		 already seen a negative long option.  */
+	      adjustment = adjustment * 10 + optc - '0';
+	      adjustment_given = 1;
+	    }
 	}
     }
 
