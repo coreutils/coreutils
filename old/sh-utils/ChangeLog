@@ -1,5 +1,8 @@
 Tue May 27 06:08:06 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/basename.c: Use base_name, not basename.
+	* src/su.c: Use base_name, not basename.
+
 	* configure.in: Don't replace basename.  Now it's always required.
 
 	* lib/Makefile.am (libsu_a_SOURCES): Add basename.c.
