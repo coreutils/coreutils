@@ -17,17 +17,7 @@
 #if ! defined NANOSLEEP_H
 # define NANOSLEEP_H
 
-# if HAVE_CONFIG_H
-#  include <config.h>
-# endif
-
-# ifndef PARAMS
-#  if defined PROTOTYPES || (defined __STDC__ && __STDC__)
-#   define PARAMS(Args) Args
-#  else
-#   define PARAMS(Args) ()
-#  endif
-# endif
+/* You must include config.h before including this file.  */
 
 # include <sys/types.h>
 # if TIME_WITH_SYS_TIME
@@ -51,9 +41,9 @@ struct timespec
 # endif
 
 # if ! HAVE_DECL_NANOSLEEP
-int
-nanosleep PARAMS ((const struct timespec *requested_delay,
-		   struct timespec *remaining_delay));
+/* Don't specify a prototype here.  Some systems (e.g., OSF) declare
+   nanosleep with a conflicting one (const-less first parameter).  */
+int nanosleep ();
 # endif
 
 #endif
