@@ -1,5 +1,5 @@
 /* touch -- change modification and access times of files
-   Copyright (C) 87, 1989-1991, 1995-1999 Free Software Foundation, Inc.
+   Copyright (C) 87, 1989-1991, 1995-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -43,6 +43,14 @@ time_t time ();
 /* Bitmasks for `change_times'. */
 #define CH_ATIME 1
 #define CH_MTIME 2
+
+#if !defined O_NDELAY
+# define O_NDELAY 0
+#endif
+
+#if !defined O_NONBLOCK
+# define O_NONBLOCK O_NDELAY
+#endif
 
 /* The name by which this program was run. */
 char *program_name;
@@ -123,7 +131,7 @@ touch (const char *file)
   if (! no_create)
     {
       /* Try to open FILE, creating it if necessary.  */
-      fd = open (file, O_WRONLY | O_CREAT,
+      fd = open (file, O_WRONLY | O_CREAT | O_NONBLOCK,
 		 S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
       if (fd == -1)
 	open_errno = errno;
