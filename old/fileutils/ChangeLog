@@ -1,3 +1,55 @@
+1998-01-21  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/install.c: Declare new global, backup_type.
+	(main): Initialize backup_type unconditionally.
+	(copy_file): Call find_backup_file_name with new backup_type, argument.
+	* src/ln.c: Declare new global, backup_type.
+	(main): Initialize backup_type unconditionally.
+	(do_link): Call find_backup_file_name with new backup_type, argument.
+
+	* src/copy.h: (VALID_SPARSE_MODE): Define.
+	[struct cp_options] (backup_type): New member.
+
+	* src/cp.c [NDEBUG]: Comment out definition.
+	(do_copy): Use x->backup_type, not the global.
+
+	* src/remove.c: New file.  Contains guts of old rm.c.
+	(remove_init): New function.
+	(remove_fini): New function.
+	(rm): Take third argument, specifying options.
+	* src/remove.h: New file.  Associated dcls.
+	* src/rm.c: Remove and minimally librarify guts for use in mv.c.
+	(main): Pass options (`&x') to rm.
+	Call remove_init and remove_fini instead of open-coding them.
+
+	* src/mv.c (rm_option_init): New function.
+	(cp_option_init): New function.
+	(copy_reg): Remove now-unused function.
+	(do_move): Set up for and use `copy.c (copy)' in place of copy_reg.
+	Set up for and use `remove.c (rm)' in place of unlink.
+
+1998-01-20  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/backupfile.c: Use ANSI function definitions.
+	Remove global declaration of backup_type.
+	(simple_backup_suffix): Default to `~', not `.orig'.
+	Use PARAMS, not __BACKUPFILE_P.
+	(find_backup_file_name): Add parameter, backup_type.
+	* lib/backupfile.h: Remove extern declaration of backup_type.
+	Use PARAMS, not __BACKUPFILE_P.
+	(VALID_BACKUP_TYPE): Define.
+	(find_backup_file_name): Adjust prototype.
+
+1998-01-13  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* src/df.c (print_header): Fix inode format header to line it up
+        with the rest of the output.
+
+1998-01-13  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/stat.c: Set errno to ENOENT, not EINVAL.  This is consistent
+	with most other implementations.
+
 1998-01-12  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/fileblocks.c: Include sys/param.h only #if HAVE_SYS_PARAM_H.
