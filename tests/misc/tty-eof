@@ -15,7 +15,7 @@ exec $PERL -w -- - <<\EOF
 
 # Ensure that cat exits upon a single EOF (^D) from a tty.
 # Do the same for all programs that can read stdin,
-# requiring no arguments and that write to standard output.
+# require no arguments and that write to standard output.
 use strict;
 
 (my $ME = $ENV{ARGV_0}) =~ s|.*/||;
