@@ -1,6 +1,6 @@
 # Check whether free (NULL) is supposed to work.
 
-# Copyright (C) 2003 Free Software Foundation, Inc.
+# Copyright (C) 2003, 2004 Free Software Foundation, Inc.
 
 # This file is free software, distributed under the terms of the GNU
 # General Public License.  As a special exception to the GNU General
@@ -35,7 +35,7 @@ AC_DEFUN([gl_FUNC_FREE],
        [gl_cv_func_free=yes],
        [gl_cv_func_free=no])])
 
-  if test $gl_cv_func_free = yes; then
+  if test $gl_cv_func_free = no; then
     AC_LIBOBJ(free)
     AC_DEFINE(free, rpl_free,
       [Define to rpl_free if the replacement function should be used.])
