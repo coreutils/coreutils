@@ -28,7 +28,7 @@ GZIP_ENV = '--no-name --best'
 
 CVS = cvs
 
-CVS_LIST = cvsu --find --types='^.C'
+CVS_LIST = cvsu --find --types=AFGM
 
 ifeq ($(origin prev_version_file), undefined)
   prev_version_file = .prev-version
