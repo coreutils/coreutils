@@ -24,13 +24,29 @@ makepath.h modechange.h mountlist.h hash.h path-concat.h pathmax.h \
 posixtm.h quotearg.h regex.h safe-read.h save-cwd.h savedir.h strverscmp.h \
 xalloc.h xstrtol.h xstrtoul.h
 
-BUILT_SOURCES = getdate.c lstat.c stat.c
+BUILT_SOURCES = getdate.c lstat.c stat.c strcasecmp.c strncasecmp.c
 
-EXTRA_DIST = xstat.in
+EXTRA_DIST = xstat.in strcasecmp.cin
 lstat.c: xstat.in
 	sed -e '/@IGNORE@/d' -e 's/@xstat@/lstat/g' $(srcdir)/xstat.in > $@-t
 	mv $@-t $@
 
 stat.c: xstat.in
 	sed -e '/@IGNORE@/d' -e 's/@xstat@/stat/g' $(srcdir)/xstat.in > $@-t
+	mv $@-t $@
+
+strcasecmp.c: strcasecmp.cin
+	sed \
+	    -e '/@IGNORE@/d' \
+	    -e 's/@xstrcasecmp@/strcasecmp/g' \
+	    -e 's/{{.*}}//g' \
+	  $(srcdir)/strcasecmp.cin > $@-t
+	mv $@-t $@
+
+strncasecmp.c: strcasecmp.cin
+	sed \
+	    -e '/@IGNORE@/d' \
+	    -e 's/@xstrcasecmp@/strncasecmp/g' \
+	    -e 's/{{\(.*\)}}/\1/g' \
+	  $(srcdir)/strcasecmp.cin > $@-t
 	mv $@-t $@
