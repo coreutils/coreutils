@@ -1,5 +1,8 @@
 2000-07-09  Jim Meyering  <meyering@lucent.com>
 
+	* jm-macros.m4 (jm_MACROS): Add a test to see if -lm is required
+	to link seq.  If so, set SEQ_LIBM to -lm.  From Bruno Haible.
+
 	* gnu-source.m4 (AC__GNU_SOURCE): New file/macro.
 	* jm-macros.m4 (jm_CHECK_ALL_TYPES): Require it.
 
