@@ -1,3 +1,15 @@
+2001-02-17  Jim Meyering  <meyering@lucent.com>
+
+	* mbrtowc.m4 (jm_FUNC_MBRTOWC): Adapt to use AC_CACHE_CHECK etc.,
+	rather than AC_CACHE_VAL.
+
+2001-02-17  Paul Eggert  <eggert@twinsun.com>
+
+	* m4/mbrtowc.m4: New file, defining jm_FUNC_MBRTOWC.
+	* m4/mbswidth.m4 (jm_PREREQ_MBSWIDTH):
+	Use jm_FUNC_MBRTOWC, not AC_CHECK_FUNCS(mbrtowc).
+	* m4/prereq.m4 (jm_PREREQ_QUOTEARG): Likewise.
+
 2001-02-07  Jim Meyering  <meyering@lucent.com>
 
 	* regex.m4 (jm_INCLUDED_REGEX): Add a test for the latest bug.
