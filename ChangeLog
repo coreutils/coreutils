@@ -1,6 +1,11 @@
-2005-01-22  Jim Meyering  <jim@meyering.net>
+2005-01-24  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/cp.c (usage): Merge the descriptions of --no-dereference and -P.
+	Suggestion from Johan Boule.
+
+2005-01-22  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.maint (v_etc_file): The version string has moved to
 	version-etc-fsf.c, search that new file, not version-etc.c.
