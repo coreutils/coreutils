@@ -6,7 +6,7 @@ use Getopt::Long;
 use Digest::MD5;
 use Digest::SHA1;
 
-(my $VERSION = '$Revision: 1.20 $ ') =~ tr/[0-9].//cd;
+(my $VERSION = '$Revision: 1.21 $ ') =~ tr/[0-9].//cd;
 (my $ME = $0) =~ s|.*/||;
 
 my %valid_release_types = map {$_ => 1} qw (alpha beta major);
@@ -71,6 +71,97 @@ EOF
     }
   exit $exit_code;
 }
+
+
+=item C<%size> = C<sizes (@file)>
+
+Compute the sizes of the C<@file> and return them as a hash.  Return
+C<undef> if one of the computation failed.
+
+=cut
+
+sub sizes (@)
+{
+  my (@file) = @_;
+
+  my $fail = 0;
+  my %res;
+  foreach my $f (@file)
+    {
+      my $cmd = "du --human $f";
+      my $t = `$cmd`;
+      # FIXME-someday: give a better diagnostic, a la $PROCESS_STATUS
+      $@
+	and (warn "$ME: command failed: `$cmd'\n"), $fail = 1;
+      chomp $t;
+      $t =~ s/^([\d.]+[MkK]).*/${1}B/;
+      $res{$f} = $t;
+    }
+  return $fail ? undef : %res;
+}
+
+=item C<print_locations ($title, \@url, \%size, @file)
+
+Print a section C<$title> dedicated to the list of <@file>, which
+sizes are stored in C<%size>, and which are available from the C<@url>.
+
+=cut
+
+sub print_locations ($\@\%@)
+{
+  my ($title, $url, $size, @file) = @_;
+  print "Here are the $title:\n";
+  foreach my $url (@{$url})
+    {
+      for my $file (@file)
+	{
+	  print "  $url/$file";
+	  print "   (", $$size{$file}, ")"
+	    if exists $$size{$file};
+	  print "\n";
+	}
+    }
+  print "\n";
+}
+
+=item C<print_signatures (@file)
+
+Print the MD5 and SHA1 signature section for each C<@file>.
+
+=cut
+
+sub print_signatures (@)
+{
+  my (@file) = @_;
+
+  print "Here are the MD5 and SHA1 signatures:\n";
+  print "\n";
+
+  foreach my $meth (qw (md5 sha1))
+    {
+      foreach my $f (@file)
+	{
+	  open IN, '<', $f
+	    or die "$ME: $f: cannot open for reading: $!\n";
+	  binmode IN;
+	  my $dig =
+	    ($meth eq 'md5'
+	     ? Digest::MD5->new->addfile(*IN)->hexdigest
+	     : Digest::SHA1->new->addfile(*IN)->hexdigest);
+	  close IN;
+	  print "$dig  $f\n";
+	}
+    }
+
+
+}
+
+=item C<print_news_deltas ($news_file, $prev_version, $curr_version)
+
+Print the section of the NEWS file C<$news_file> addressing changes
+between versions C<$prev_version> and C<$curr_version>.
+
+=cut
 
 sub print_news_deltas ($$$)
 {
@@ -200,6 +291,10 @@ sub print_changelog_deltas ($$)
 }
 
 {
+  # Neutralize the locale, so that, for instance, "du" does not
+  # issue "1,2" instead of "1.2", what confuses our regexps.
+  $ENV{LC_ALL} = "C";
+
   my $release_type;
   my $package_name;
   my $prev_version;
@@ -210,13 +305,13 @@ sub print_changelog_deltas ($$)
 
   GetOptions
     (
-     'release-type=s' => \$release_type,
-     'package-name=s' => \$package_name,
+     'release-type=s'     => \$release_type,
+     'package-name=s'     => \$package_name,
      'previous-version=s' => \$prev_version,
-     'current-version=s' => \$curr_version,
+     'current-version=s'  => \$curr_version,
      'release-archive-directory=s' => \$release_archive_dir,
-     'url-directory=s' => \@url_dir_list,
-     'news=s' => \@news_file,
+     'url-directory=s'    => \@url_dir_list,
+     'news=s'             => \@news_file,
 
      help => sub { usage 0 },
      version => sub { print "$ME version $VERSION\n"; exit },
@@ -250,22 +345,9 @@ sub print_changelog_deltas ($$)
   my $tbz = "$my_distdir.tar.bz2";
   my $xd = "$package_name-$prev_version-$curr_version.xdelta";
 
-  my %size;
-
-  foreach my $f ($tgz, $tbz, $xd)
-    {
-      my $cmd = "du --human $f";
-      my $t = `$cmd`;
-      # FIXME-someday: give a better diagnostic, a la $PROCESS_STATUS
-      $@
-	and (warn "$ME: command failed: `$cmd'\n"), $fail = 1;
-      chomp $t;
-      $t =~ s/^([\d.]+[MkK]).*/${1}B/;
-      $size{$f} = $t;
-    }
-
-  $fail
-    and exit 1;
+  my %size = sizes ($tgz, $tbz, $xd);
+  %size
+    or exit 1;
 
   # The markup is escaped as <\# so that when this script is sent by
   # mail (or part of a diff), Gnus is not triggered.
@@ -279,60 +361,14 @@ FIXME: put comments here
 
 EOF
 
-  print "Here are the compressed sources:\n";
-  foreach my $url (@url_dir_list)
-    {
-      print "  $url/$tgz   ($size{$tgz})\n";
-      print "  $url/$tbz  ($size{$tbz})\n";
-    }
+  print_locations ("compressed sources", @url_dir_list, %size,
+		   $tgz, $tbz);
+  print_locations ("xdelta-style diffs", @url_dir_list, %size,
+		   $xd);
+  print_locations ("GPG detached signatures", @url_dir_list, %size,
+		   "$tgz.asc", "$tbz.asc");
 
-  print "\nAnd here are xdelta-style diffs:\n";
-  foreach my $url (@url_dir_list)
-    {
-      print "  $url/$xd   ($size{$xd})\n";
-    }
-
-  print "\nHere are GPG detached signatures:\n";
-  foreach my $url (@url_dir_list)
-    {
-      print "  $url/$tgz.sig\n";
-      print "  $url/$tbz.sig\n";
-    }
-
-  # FIXME: clean up upon interrupt or die
-  my $tmpdir = $ENV{TMPDIR} || '/tmp';
-  my $tmp = "$tmpdir/$ME-$$";
-  unlink $tmp;  # ignore failure
-
-  print "\nHere are the MD5 and SHA1 signatures:\n";
-  print "\n";
-  # The markup is escaped as <\# so that when this script is sent by
-  # mail (or part of a diff), Gnus is not triggered.
-  print "<\#part type=text/plain filename=\"$tmp\" disposition=inline>\n"
-    . "<\#/part>\n";
-
-  open OUT, '>', $tmp
-    or die "$ME: $tmp: cannot open for writing: $!\n";
-
-  foreach my $meth (qw (md5 sha1))
-    {
-      foreach my $f ($tgz, $tbz, $xd)
-	{
-	  open IN, '<', $f
-	    or die "$ME: $f: cannot open for reading: $!\n";
-	  binmode IN;
-	  my $dig =
-	    ($meth eq 'md5'
-	     ? Digest::MD5->new->addfile(*IN)->hexdigest
-	     : Digest::SHA1->new->addfile(*IN)->hexdigest);
-	  close IN;
-	  print OUT "$dig  $f\n";
-	}
-    }
-
-  close OUT
-    or die "$ME: $tmp: while writing: $!\n";
-  chmod 0400, $tmp;  # ignore failure
+  print_signatures ($tgz, $tbz, $xd);
 
   print_news_deltas ($_, $prev_version, $curr_version)
     foreach @news_file;
