@@ -584,7 +584,7 @@ usage (int status)
       printf (_("\
 Usage: %s [OPTION]... SOURCE DEST           (1st format)\n\
   or:  %s [OPTION]... SOURCE... DIRECTORY   (2nd format)\n\
-  or:  %s -d [OPTION]... DIRECTORY...       (3nd format)\n\
+  or:  %s -d [OPTION]... DIRECTORY...       (3rd format)\n\
 "),
 	      program_name, program_name, program_name);
       printf (_("\
