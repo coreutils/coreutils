@@ -1,5 +1,5 @@
-/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
-   Based on strlen implemention by Torbjorn Granlund (tege@sics.se),
+/* Copyright (C) 1991, 1993, 1997 Free Software Foundation, Inc.
+   Based on strlen implementation by Torbjorn Granlund (tege@sics.se),
    with help from Dan Sahlin (dan@sics.se) and
    commentary by Jim Blandy (jimb@ai.mit.edu);
    adaptation to memchr suggested by Dick Karpinski (dick@cca.ucsf.edu),
