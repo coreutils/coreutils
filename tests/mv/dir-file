@@ -13,7 +13,7 @@ trap "cd $pwd; rm -rf $tmp" 0 1 2 3 15
 framework_failure=0
 mkdir $tmp || framework_failure=1
 cd $tmp
-mkdir dir dir/file || framework_failure=1
+mkdir -p dir/file || framework_failure=1
 > file || framework_failure=1
 
 if test $framework_failure = 1; then
@@ -21,6 +21,7 @@ if test $framework_failure = 1; then
   exit 1
 fi
 
+# These should both fail, but until fileutils-4.0q only the second one did.
 mv dir file && fail=1
 mv file dir && fail=1
 
