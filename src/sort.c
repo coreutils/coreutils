@@ -38,6 +38,7 @@
 #include "error.h"
 #include "xstrtod.h"
 
+#undef ENABLE_NLS
 #ifdef ENABLE_NLS
 /* FIXME: this may need some heading.... applies to Debian linux for
    reading the structure of _NL_ITEM... to get abreviated month names */
@@ -56,6 +57,8 @@ char *malloc ();
 char *realloc ();
 void free ();
 #endif
+
+char *xstrdup ();
 
 /* Undefine, to avoid warning about redefinition on some systems.  */
 #undef min
@@ -2379,11 +2382,23 @@ key_init (struct keyfield *key)
   key->eword = -1;
 }
 
+/* strdup and return the result of setlocale, but guard against a NULL
+   return value.  If setlocale returns NULL, strdup FAIL_VAL instead.  */
+
+static inline char *
+my_setlocale (const char *locale, const char *fail_val)
+{
+  char *s = setlocale (LC_ALL, locale);
+  if (s == NULL)
+    s = (char *) fail_val;
+  return xstrdup (s);
+}
+
 int
 main (int argc, char **argv)
 {
   struct keyfield *key = NULL, gkey;
-  char *s, *c_locale_string, *posix_locale_string;
+  char *s;
   int i, t, t2;
   int checkonly = 0, mergeonly = 0, nfiles = 0;
   char *minus = "-", *outfile = minus, **files, *tmp;
@@ -2396,18 +2411,24 @@ main (int argc, char **argv)
 
 #ifdef ENABLE_NLS
 
-  /* Drepper pointed out that not all systems return a sane
-     string with setlocale() call.  So we need to know what this
-     system identifies as "C" and "POSIX" locales.               */
-  c_locale_string     = strdup(setlocale(LC_ALL, "C"));
-  posix_locale_string = strdup(setlocale(LC_ALL, "POSIX"));
-  s = setlocale(LC_ALL, "");
-  if (strcmp(s, c_locale_string) && strcmp(s, posix_locale_string))
-    need_locale = 1;  /* Neither C nor POSIX, we need to initialize it */
+  /* Determine whether the current locale is C or POSIX.  */
+  {
+    char *c_locale_string = my_setlocale ("C", "");
+    char *posix_locale_string = my_setlocale ("POSIX", "");
+    char *current_locale_string = my_setlocale ("", "FAILED");
 
-  /* These two have served their purpose, clean up */
-  free(c_locale_string);
-  free(posix_locale_string);
+    if (!STREQ (current_locale_string, c_locale_string)
+	&& !STREQ (current_locale_string, posix_locale_string))
+      {
+	/* The current locale is neither C nor POSIX.
+	   We'll need to do more work.  */
+	need_locale = 1;
+      }
+
+    free (c_locale_string);
+    free (posix_locale_string);
+    free (current_locale_string);
+  }
 
   /* Let's get locale's representation of the decimal point */
   decimal_point = *( localeconv() )->decimal_point;
