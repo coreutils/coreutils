@@ -2532,7 +2532,7 @@ AC_DEFUN([AC_FUNC_GETCWD_NULL],
 	       [Define if getcwd (NULL, 0) allocates memory for result.])
    fi])
 
-#serial 5
+#serial 6
 
 dnl Find out how to get the file descriptor associated with an open DIR*.
 dnl From Jim Meyering
@@ -2565,12 +2565,12 @@ AC_DEFUN([UTILS_FUNC_DIRFD],
 
   AC_CACHE_CHECK([whether dirfd is a macro],
     jm_cv_func_dirfd_macro,
-    AC_EGREP_CPP([dirent_header_defines_dirfd], [$dirfd_headers
+    [AC_EGREP_CPP([dirent_header_defines_dirfd], [$dirfd_headers
 #ifdef dirfd
  dirent_header_defines_dirfd
 #endif],
-      jm_cv_func_dirfd_macro=yes,
-      jm_cv_func_dirfd_macro=no))
+       jm_cv_func_dirfd_macro=yes,
+       jm_cv_func_dirfd_macro=no)])
 
   # Use the replacement only if we have no function, macro,
   # or declaration with that name.
