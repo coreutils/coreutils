@@ -37,6 +37,6 @@ EOF
 
 cmp out2 exp || fail=1
 
-$RM -f $temp_files out out2 exp
+$RM -f out out2 exp a a~
 
 exit $fail
