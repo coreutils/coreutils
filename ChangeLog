@@ -1,6 +1,10 @@
-2005-01-03  Paul Eggert  <eggert@cs.ucla.edu>
+2005-01-04  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	* tests/Makefile.am (check-root): Update.
+
+2005-01-03  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/system.h: Undo previous change; we now use Autoconf.
 
