@@ -1,3 +1,17 @@
+2004-06-21  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Fix bug: GNU 'ls' didn't count columns correctly if user or group
+	names contained multibyte characters where the column count
+	differed from the byte count.  This patch also corrects
+	some comments.
+
+	* src/ls.c (format_user_or_group): New function, which counts
+	columns correctly.
+	(format_user, format_group): Use it.
+	(format_user_or_group_width): New function, which counts columns
+	correctly.
+	(format_user_width, format_group_width): Use it.
+
 2004-06-21  Jim Meyering  <jim@meyering.net>
 
 	* tests/priv-check: Quote "$PATH" in PATH=$PATH.
