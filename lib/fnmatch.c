@@ -1,29 +1,37 @@
 /* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 
-NOTE: The canonical source of this file is maintained with the GNU C Library.
-Bugs can be reported to bug-glibc@prep.ai.mit.edu.
+   NOTE: The canonical source of this file is maintained with the GNU C
+   Library.  Bugs can be reported to bug-glibc@prep.ai.mit.edu.
 
-This program is free software; you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by the
-Free Software Foundation; either version 2, or (at your option) any
-later version.
+   This program is free software; you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the
+   Free Software Foundation; either version 2, or (at your option) any
+   later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software Foundation,
-Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
+#if HAVE_CONFIG_H
+# include <config.h>
 #endif
 
 #include <errno.h>
 #include <fnmatch.h>
 #include <ctype.h>
+
+#if defined (STDC_HEADERS) || !defined (isascii)
+# define ISASCII(c) 1
+#else
+# define ISASCII(c) isascii(c)
+#endif
+
+#define ISUPPER(c) (ISASCII (c) && isupper (c))
 
 
 /* Comment out all this code if we are using the GNU C Library, and are not
@@ -37,9 +45,9 @@ Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 #if defined (_LIBC) || !defined (__GNU_LIBRARY__)
 
 
-#ifndef errno
+# ifndef errno
 extern int errno;
-#endif
+# endif
 
 /* Match STRING against the filename pattern PATTERN, returning zero if
    it matches, nonzero if not.  */
@@ -53,7 +61,7 @@ fnmatch (pattern, string, flags)
   register char c;
 
 /* Note that this evalutes C many times.  */
-#define FOLD(c)	((flags & FNM_CASEFOLD) && isupper (c) ? tolower (c) : (c))
+# define FOLD(c)	((flags & FNM_CASEFOLD) && ISUPPER (c) ? tolower (c) : (c))
 
   while ((c = *p++) != '\0')
     {
@@ -197,6 +205,8 @@ fnmatch (pattern, string, flags)
     return 0;
 
   return FNM_NOMATCH;
+
+# undef FOLD
 }
 
 #endif	/* _LIBC or not __GNU_LIBRARY__.  */
