@@ -42,8 +42,6 @@ int str2sig (char const *, int *);
 # define SIGNUM_BOUND (_sys_nsig - 1)
 #elif defined NSIG
 # define SIGNUM_BOUND (NSIG - 1)
-#elif defined WTERMSIG
-# define SIGNUM_BOUND WTERMSIG (~ 0)
 #else
-# define SIGNUM_BOUND 127
+# define SIGNUM_BOUND 64
 #endif
