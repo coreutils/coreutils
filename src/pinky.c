@@ -469,7 +469,7 @@ usage (int status)
       printf (_("Usage: %s [OPTION]... [USER]...\n"), program_name);
       printf (_("\
 \n\
-  -l              do long format output (you must specify at least one USER)\n\
+  -l              produce long format output for the specified USERs\n\
   -b              omit the user's home directory and shell in long format\n\
   -h              omit the user's project file in long format\n\
   -p              omit the user's plan file in long format\n\
@@ -494,6 +494,7 @@ int
 main (int argc, char **argv)
 {
   int optc, longind;
+  int n_users;
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -560,6 +561,15 @@ main (int argc, char **argv)
 	default:
 	  usage (1);
 	}
+    }
+
+  n_users = argc - optind;
+
+  if (do_short_format == 0 && n_users == 0)
+    {
+      error (0, 0, _("no username specified; at least one must be\
+ specified when using -l"));
+      usage (1);
     }
 
   if (do_short_format)
