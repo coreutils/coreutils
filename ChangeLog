@@ -4,6 +4,7 @@
 
 	* src/who.c (print_user): Change type of local to size_t
 	to avoid warnings about `comparison between signed and unsigned'.
+	* src/ptx.c (generate_all_output): Likewise.
 
 	* src/dd.c (main, skip): Add casts to avoid warnings about
 	`comparison between signed and unsigned'.
