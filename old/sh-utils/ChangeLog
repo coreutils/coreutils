@@ -1,3 +1,19 @@
+Thu Jan 16 20:58:40 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* m4/getloadavg.m4 (AM_FUNC_GETLOADAVG): Check for pstat_getdynamic.
+	* configure.in (AC_CHECK_FUNCS): Don't check for pstat_getdynamic here.
+
+Tue Jan 14 22:45:36 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (AC_CHECK_FUNCS): Add pstat_getdynamic.
+	Alphabetize functions.
+
+	* lib/getloadavg.c [hpux && HAVE_PSTAT_GETDYNAMIC]: Use HPUX's
+	pstat_getdynamic function so we don't need any special privileges
+	to determine load averages.  Patch from Kaveh Ghazi, based on a
+	sample implementation from Richard J. Rauenzahn.
+	Indent cpp-directives to reflect nesting.
+
 Wed Jan  8 16:38:24 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* Version 1.15.
