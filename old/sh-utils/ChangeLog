@@ -10,6 +10,10 @@
 
 2002-05-07  Paul Eggert  <eggert@twinsun.com>
 
+	Add support for BSD-style sysctl to get the strings needed for
+	uname -p and uname -i.  Unfortunately the different BSDs vary,
+	but I've surveyed FreeBSD, NetBSD, and OpenBSD.
+
 	* src/uname.c (UNAME_HARDWARE_PLATFORM, UNAME_PROCESSOR): New macros.
 	(main): Use them, along with sysctl, to support uname -i and uname -p
 	on BSD hosts.
