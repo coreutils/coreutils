@@ -107,6 +107,10 @@ Summary:
 #ifndef __OBSTACK_H__
 #define __OBSTACK_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* We use subtraction of (char *) 0 instead of casting to int
    because on word-addressable machines a simple cast to int
    may ignore the byte-within-word field of the pointer.  */
@@ -303,13 +307,14 @@ extern int obstack_exit_failure;
 
 #define obstack_specify_allocation_with_arg(h, size, alignment, chunkfun, freefun, arg) \
   _obstack_begin_1 ((h), (size), (alignment), \
-		    (void *(*) (long)) (chunkfun), (void (*) (void *)) (freefun), (arg))
+		    (void *(*) (void *, long)) (chunkfun), \
+		    (void (*) (void *, void *)) (freefun), (arg))
 
 #define obstack_chunkfun(h, newchunkfun) \
-  ((h) -> chunkfun = (struct _obstack_chunk *(*)(long)) (newchunkfun))
+  ((h) -> chunkfun = (struct _obstack_chunk *(*)(void *, long)) (newchunkfun))
 
 #define obstack_freefun(h, newfreefun) \
-  ((h) -> freefun = (void (*)(void *)) (newfreefun))
+  ((h) -> freefun = (void (*)(void *, struct _obstack_chunk *)) (newfreefun))
 
 #else
 
@@ -577,5 +582,9 @@ __extension__								\
 #endif
 
 #endif /* not __GNUC__ or not __STDC__ */
+
+#ifdef __cplusplus
+}	/* C++ */
+#endif
 
 #endif /* not __OBSTACK_H__ */
