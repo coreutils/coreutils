@@ -1,5 +1,18 @@
 1998-08-29  Jim Meyering  <meyering@ascend.com>
 
+	* Version 3.16v.
+
+	* src/du.c (long_options): Use corresponding short-option character
+	in place of `1', and `NULL' in place of pointer in initialization.
+	* src/cp.c (long_opts): Likewise.
+	* src/ln.c (long_options): Likewise.
+	* src/mkdir.c (longopts): Likewise.
+	* src/rmdir.c (longopts): Likewise.
+	* src/chown.c: Replace 12 and 13 with CHAR_MAX + 1 and CHAR_MAX + 2
+	respectively.
+	* src/chmod.c (long_options): Replace 12 with CHAR_MAX + 1.
+	* src/chgrp.c (long_options): Replace 12 with CHAR_MAX + 1.
+
 	* tests/Fetish.pm: New file -- moved from ls-2/.
 	* configure.in (AC_OUTPUT): Add tests/dircolors/Makefile.
 	* tests/Makefile.am (SUBDIRS): Add dircolors.
@@ -14,6 +27,15 @@
 
 	* src/dircolors.c (dc_parse_stream): Don't segfault when a line
 	contains only one token.  Reported by Olav Morkrid.
+
+1998-08-24  Paul Eggert  <eggert@twinsun.com>
+
+	* src/system.h (CHAR_MIN, CHAR_MAX):
+	Renamed from SCHAR_MIN, SCHAR_MAX, since these
+	macros apply to char, not signed char.
+
+	* src/df.c, src/du.c, src/touch.c (long_options, main):
+	Don't assume ASCII.
 
 1998-08-16  Jim Meyering  <meyering@ascend.com>
 
