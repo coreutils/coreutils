@@ -808,7 +808,6 @@ scanargs (argc, argv)
 
 	default:
 	  usage ();
-
 	}
     }
 
