@@ -143,7 +143,7 @@ max_backup_version (file, dir)
   struct dirent *dp;
   int highest_version;
   int this_version;
-  int file_name_length;
+  size_t file_name_length;
 
   dirp = opendir (dir);
   if (!dirp)
