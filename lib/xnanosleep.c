@@ -33,8 +33,6 @@
 #include <time.h>
 
 #include "timespec.h"
-#include "gethrxtime.h"
-#include "xtime.h"
 
 /* The extra casts work around common compiler bugs.  */
 #define TYPE_SIGNED(t) (! ((t) 0 < (t) -1))
@@ -46,19 +44,6 @@
 
 #ifndef TIME_T_MAX
 # define TIME_T_MAX TYPE_MAXIMUM (time_t)
-#endif
-
-/* POSIX.1-2001 requires that when a process is suspended, then
-   resumed, nanosleep (A, B) returns -1, sets errno to EINTR, and sets
-   *B to the time remaining at the point of resumption.  However, some
-   versions of the Linux kernel incorrectly return the time remaining
-   at the point of suspension.  Work around this bug on GNU/Linux
-   hosts by computing the remaining time here after nanosleep returns,
-   rather than by relying on nanosleep's computation.  */
-#ifdef __linux__
-enum { NANOSLEEP_BUG_WORKAROUND = true };
-#else
-enum { NANOSLEEP_BUG_WORKAROUND = false };
 #endif
 
 /* Sleep until the time (call it WAKE_UP_TIME) specified as
@@ -76,18 +61,8 @@ xnanosleep (double seconds)
   bool overflow = false;
   double ns;
   struct timespec ts_sleep;
-  xtime_t stop = 0;
 
   assert (0 <= seconds);
-
-  if (NANOSLEEP_BUG_WORKAROUND)
-    {
-      xtime_t now = gethrxtime ();
-      double increment = XTIME_PRECISION * seconds;
-      xtime_t incr = increment;
-      stop = now + incr + (incr < increment);
-      overflow = (stop < now);
-    }
 
   /* Separate whole seconds from nanoseconds.
      Be careful to detect any overflow.  */
@@ -134,19 +109,6 @@ xnanosleep (double seconds)
 	break;
       if (errno != EINTR && errno != 0)
 	return -1;
-
-      if (NANOSLEEP_BUG_WORKAROUND)
-	{
-	  xtime_t now = gethrxtime ();
-	  if (stop <= now)
-	    break;
-	  else
-	    {
-	      xtime_t remaining = stop - now;
-	      ts_sleep.tv_sec = xtime_nonnegative_sec (remaining);
-	      ts_sleep.tv_nsec = xtime_nonnegative_nsec (remaining);
-	    }
-	}
     }
 
   return 0;
