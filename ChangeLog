@@ -2,6 +2,66 @@
 
 	* Version 5.3.0.
 
+	Use more-consistent rules among cp, ln, and mv when dealing with
+	last operands that are (or look like) directories.
+
+	* src/cp.c (target_directory_operand): New, nearly-common function,
+	It reports an error if the destination appears to be a directory
+	(e.g., because it has a trailing slash) but is not.
+	* src/ln.c, src/mv.c: Likewise.
+	* src/cp.c (do_copy): Use it.
+	* src/ln.c (main): Likewise.
+	* src/mv.c (main): Likewise.
+
+	* src/cp.c (do_copy): Don't assume argc is positive.
+	Don't bother to lstat dest, since copy() will do that for us.
+	Use "const" to avoid the need for cast.
+
+	* src/cp.c (do_copy): Don't output a usage message because of file
+	problems (e.g., an operand is not a directory).  Use it only for
+	syntax.  Standardize on "target %s is not a directory" for the
+	diagnostic.
+	* src/ln.c (main): Likewise.
+	* src/mv.c (main): Likewise.
+
+	* src/cp.c (do_copy): Remove test for trailing slash, since
+	target_directory_operand now does this.
+	* src/ln.c (main): Likewise.
+	* src/mv.c (movefile): Likewise.
+
+	* src/cp.c (main): Reject multiple target directories.
+	Check whether a specified target is a directory when parsing the
+	options, using stat.  This gives more-accurate diagnostics.
+	* src/ln.c (main): Likewise.
+
+	* src/ln.c (isdir): Remove decl; no longer needed.
+	* src/mv.c (isdir, lstat): Likewise.
+
+	* src/ln.c (do_link): New arg dest_is_dir.  All uses changed.
+	Don't check the destination ourself; rely on dest_is_dir.
+	This way we can avoid lstatting the destination in the
+	usual case, and in the worst case we lstat 1, not 3 times.
+	Don't bother to unlink unless link failed; this saves a syscall.
+	Remove unnecessary backup_succeeded flag;
+	it was identical to "dest_backup != NULL".
+
+	* src/ln.c (main): Use int to count to argc, not unsigned int.
+	This handles negative operand counts.
+	* src/mv.c (main): Likewise.
+
+	* src/mv.c (do_move): Don't call hash_init; expect the caller to
+	do it, for consistency with cp.c and ln.c.  All callers changed.
+	(movefile): dest_is_dir parameter is now bool, not int.
+	(main): Standardize on "missing destination file operand after %s"
+	for the diagnostic, for consistency with cp.c.
+
+	* tests/ln/misc: See whether a trailing slash is followed too far.
+	* tests/mv/diag: Don't assume "mv --target=nonexistentdir"
+	will complain about the arg count.
+	Adjust to new (briefer) diagnostics.
+
+2004-06-27  Paul Eggert  <eggert@cs.ucla.edu>
+
 	Fix a bug: formerly, if d/x was a directory and x a file, "ln x
 	d/" incorrectly created a link d/x/x.  It also saves some system
 	calls.
