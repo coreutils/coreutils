@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{1999-01-20}%
+\def\texinfoversion{1999-01-24}%
 %
 % Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99
 % Free Software Foundation, Inc.
@@ -92,19 +92,45 @@
 \newlinechar = `^^J
 
 % Set up fixed words for English if not already set.
-\ifx\putwordAppendix\undefined \gdef\putwordAppendix{Appendix}\fi
-\ifx\putwordChapter\undefined  \gdef\putwordChapter{Chapter}\fi
-\ifx\putwordfile\undefined     \gdef\putwordfile{file}\fi
-\ifx\putwordInfo\undefined     \gdef\putwordInfo{Info}\fi
-\ifx\putwordMethodon\undefined \gdef\putwordMethodon{Method on}\fi
-\ifx\putwordon\undefined       \gdef\putwordon{on}\fi
-\ifx\putwordpage\undefined     \gdef\putwordpage{page}\fi
-\ifx\putwordsection\undefined  \gdef\putwordsection{section}\fi
-\ifx\putwordSection\undefined  \gdef\putwordSection{Section}\fi
-\ifx\putwordsee\undefined      \gdef\putwordsee{see}\fi
-\ifx\putwordSee\undefined      \gdef\putwordSee{See}\fi
-\ifx\putwordShortContents\undefined  \gdef\putwordShortContents{Short Contents}\fi
-\ifx\putwordTableofContents\undefined\gdef\putwordTableofContents{Table of Contents}\fi
+\ifx\putwordAppendix\undefined	\gdef\putwordAppendix{Appendix}\fi
+\ifx\putwordChapter\undefined   \gdef\putwordChapter{Chapter}\fi
+\ifx\putwordfile\undefined      \gdef\putwordfile{file}\fi
+\ifx\putwordIndexIsEmpty\undefined     \gdef\putwordIndexIsEmpty{(Index is empty)}\fi
+\ifx\putwordIndexNonexistent\undefined \gdef\putwordIndexNonexistent{(Index is nonexistent)}\fi
+\ifx\putwordInfo\undefined      \gdef\putwordInfo{Info}\fi
+\ifx\putwordMethodon\undefined  \gdef\putwordMethodon{Method on}\fi
+\ifx\putwordNoTitle\undefined	\gdef\putwordNoTitle{No Title}\fi
+\ifx\putwordOf\undefined        \gdef\putwordOf{of}\fi
+\ifx\putwordon\undefined        \gdef\putwordon{on}\fi
+\ifx\putwordpage\undefined      \gdef\putwordpage{page}\fi
+\ifx\putwordsection\undefined   \gdef\putwordsection{section}\fi
+\ifx\putwordSection\undefined   \gdef\putwordSection{Section}\fi
+\ifx\putwordsee\undefined       \gdef\putwordsee{see}\fi
+\ifx\putwordSee\undefined       \gdef\putwordSee{See}\fi
+\ifx\putwordShortTOC\undefined	\gdef\putwordShortTOC{Short Contents}\fi
+\ifx\putwordTOC\undefined	\gdef\putwordTOC{Table of Contents}\fi
+%
+\ifx\putwordMJan\undefined \gdef\putwordMJan{January}\fi
+\ifx\putwordMFeb\undefined \gdef\putwordMFeb{February}\fi
+\ifx\putwordMMar\undefined \gdef\putwordMMar{March}\fi
+\ifx\putwordMApr\undefined \gdef\putwordMApr{April}\fi
+\ifx\putwordMMai\undefined \gdef\putwordMMai{May}\fi
+\ifx\putwordMJun\undefined \gdef\putwordMJun{June}\fi
+\ifx\putwordMJul\undefined \gdef\putwordMJul{July}\fi
+\ifx\putwordMAug\undefined \gdef\putwordMAug{August}\fi
+\ifx\putwordMSep\undefined \gdef\putwordMSep{September}\fi
+\ifx\putwordMOct\undefined \gdef\putwordMOct{October}\fi
+\ifx\putwordMNov\undefined \gdef\putwordMNov{November}\fi
+\ifx\putwordMDec\undefined \gdef\putwordMDec{December}\fi
+%
+\ifx\putwordDefmac\undefined	\gdef\putwordDefmac{Macro}\fi
+\ifx\putwordDefspec\undefined	\gdef\putwordDefspec{Special Form}\fi
+\ifx\putwordDefivar\undefined	\gdef\putwordDefivar{Instance Variable}\fi
+\ifx\putwordDefvar\undefined	\gdef\putwordDefvar{Variable}\fi
+\ifx\putwordDefopt\undefined	\gdef\putwordDefopt{User Option}\fi
+\ifx\putwordDeftypevar\undefined	\gdef\putwordDeftypevar{Variable}\fi
+\ifx\putwordDeffunc\undefined	\gdef\putwordDeffunc{Function}\fi
+\ifx\putwordDeftypefun\undefined	\gdef\putwordDeftypefun{Function}\fi
 
 % Ignore a token.
 %
@@ -844,7 +870,7 @@ where each line of input produces a line of output.}
   % We need to warn folks that they may have trouble with TeX 3.0.
   % This uses \immediate\write16 rather than \message to get newlines.
     \immediate\write16{}
-    \immediate\write16{***WARNING*** for users of Unix TeX 3.0!}
+    \immediate\write16{WARNING: for users of Unix TeX 3.0!}
     \immediate\write16{This manual trips a bug in TeX version 3.0 (tex hangs).}
     \immediate\write16{If you are running another version of TeX, relax.}
     \immediate\write16{If you are running Unix TeX 3.0, kill this TeX process.}
@@ -1749,22 +1775,18 @@ where each line of input produces a line of output.}
 
 % Subroutines used in generating headings
 % Produces Day Month Year style of output.
-\def\today{\number\day\space
-\ifcase\month\or
-January\or February\or March\or April\or May\or June\or
-July\or August\or September\or October\or November\or December\fi
-\space\number\year}
+\def\today{%
+  \number\day\space
+  \ifcase\month
+  \or\putwordMJan\or\putwordMFeb\or\putwordMMar\or\putwordMApr
+  \or\putwordMMay\or\putwordMJun\or\putwordMJul\or\putwordMAug
+  \or\putwordMSep\or\putwordMOct\or\putwordMNov\or\putwordMDec
+  \fi
+  \space\number\year}
 
-% Use this if you want the Month Day, Year style of output.
-%\def\today{\ifcase\month\or
-%January\or February\or March\or April\or May\or June\or
-%July\or August\or September\or October\or November\or December\fi
-%\space\number\day, \number\year}
-
-% @settitle line...  specifies the title of the document, for headings
-% It generates no output of its own
-
-\def\thistitle{No Title}
+% @settitle line...  specifies the title of the document, for headings.
+% It generates no output of its own.
+\def\thistitle{\putwordNoTitle}
 \def\settitle{\parsearg\settitlezzz}
 \def\settitlezzz #1{\gdef\thistitle{#1}}
 
@@ -2679,7 +2701,7 @@ width0pt\relax} \fi
     % and it loses the chapter title and the aux file entries for the
     % index.  The easiest way to prevent this problem is to make sure
     % there is some text.
-    (Index is nonexistent)
+    \putwordIndexNonexistent
   \else
     %
     % If the index file exists but is empty, then \openin leaves \ifeof
@@ -2687,7 +2709,7 @@ width0pt\relax} \fi
     % it can discover if there is anything in it.
     \read 1 to \temp
     \ifeof 1
-      (Index is empty)
+      \putwordIndexIsEmpty
     \else
       % Index files are almost Texinfo source, but we use \ as the escape
       % character.  It would be better to use @, but that's too big a change
@@ -3483,7 +3505,7 @@ width0pt\relax} \fi
 
 % Normal (long) toc.
 \def\contents{%
-   \startcontents{\putwordTableofContents}%
+   \startcontents{\putwordTOC}%
      \openin 1 \jobname.toc
      \ifeof 1 \else
        \closein 1
@@ -3498,7 +3520,7 @@ width0pt\relax} \fi
 
 % And just the chapters.
 \def\summarycontents{%
-   \startcontents{\putwordShortContents}%
+   \startcontents{\putwordShortTOC}%
       %
       \let\chapentry = \shortchapentry
       \let\unnumbchapentry = \shortunnumberedentry
@@ -3520,7 +3542,7 @@ width0pt\relax} \fi
         \input \jobname.toc
       \fi
      \vfill \eject
-     \contentalignmacro % in case @setchapternewpage odd is in effect
+     \contentsalignmacro % in case @setchapternewpage odd is in effect
    \endgroup
    \lastnegativepageno = \pageno
    \pageno = \savepageno
@@ -4246,7 +4268,7 @@ width0pt\relax} \fi
 \def\defun{\defparsebody\Edefun\defunx\defunheader}
 
 \def\defunheader #1#2{\doind {fn}{\code{#1}}% Make entry in function index
-\begingroup\defname {#1}{Function}%
+\begingroup\defname {#1}{\putwordDeffunc}%
 \defunargs {#2}\endgroup %
 \catcode 61=\other % Turn off change made in \defparsebody
 }
@@ -4260,7 +4282,7 @@ width0pt\relax} \fi
 % #1 is the data type, #2 the name, #3 the args.
 \def\deftypefunheaderx #1#2 #3\relax{%
 \doind {fn}{\code{#2}}% Make entry in function index
-\begingroup\defname {\defheaderxcond#1\relax$$$#2}{Function}%
+\begingroup\defname {\defheaderxcond#1\relax$$$#2}{\putwordDeftypefun}%
 \deftypefunargs {#3}\endgroup %
 \catcode 61=\other % Turn off change made in \defparsebody
 }
@@ -4291,7 +4313,7 @@ width0pt\relax} \fi
 \def\defmac{\defparsebody\Edefmac\defmacx\defmacheader}
 
 \def\defmacheader #1#2{\doind {fn}{\code{#1}}% Make entry in function index
-\begingroup\defname {#1}{Macro}%
+\begingroup\defname {#1}{\putwordDefmac}%
 \defunargs {#2}\endgroup %
 \catcode 61=\other % Turn off change made in \defparsebody
 }
@@ -4301,7 +4323,7 @@ width0pt\relax} \fi
 \def\defspec{\defparsebody\Edefspec\defspecx\defspecheader}
 
 \def\defspecheader #1#2{\doind {fn}{\code{#1}}% Make entry in function index
-\begingroup\defname {#1}{Special Form}%
+\begingroup\defname {#1}{\putwordDefspec}%
 \defunargs {#2}\endgroup %
 \catcode 61=\other % Turn off change made in \defparsebody
 }
@@ -4326,7 +4348,7 @@ width0pt\relax} \fi
 
 \def\defopheader #1#2#3{%
 \dosubind {fn}{\code{#2}}{\putwordon\ #1}% Make entry in function index
-\begingroup\defname {#2}{\defoptype{} on #1}%
+\begingroup\defname {#2}{\defoptype{}\putwordon\ #1}%
 \defunargs {#3}\endgroup %
 }
 
@@ -4364,7 +4386,7 @@ width0pt\relax} \fi
 
 \def\defcvarheader #1#2#3{%
 \dosubind {vr}{\code{#2}}{of #1}% Make entry in var index
-\begingroup\defname {#2}{\defcvtype{} of #1}%
+\begingroup\defname {#2}{\defcvtype{}\putwordOf\ #1}%
 \defvarargs {#3}\endgroup %
 }
 
@@ -4374,7 +4396,7 @@ width0pt\relax} \fi
 
 \def\defivarheader #1#2#3{%
 \dosubind {vr}{\code{#2}}{of #1}% Make entry in var index
-\begingroup\defname {#2}{Instance Variable of #1}%
+\begingroup\defname {#2}{\putwordDefivar\putwordOf\ #1}%
 \defvarargs {#3}\endgroup %
 }
 
@@ -4407,7 +4429,7 @@ width0pt\relax} \fi
 \def\defvar{\defvarparsebody\Edefvar\defvarx\defvarheader}
 
 \def\defvarheader #1#2{\doind {vr}{\code{#1}}% Make entry in var index
-\begingroup\defname {#1}{Variable}%
+\begingroup\defname {#1}{\putwordDefvar}%
 \defvarargs {#2}\endgroup %
 }
 
@@ -4416,7 +4438,7 @@ width0pt\relax} \fi
 \def\defopt{\defvarparsebody\Edefopt\defoptx\defoptheader}
 
 \def\defoptheader #1#2{\doind {vr}{\code{#1}}% Make entry in var index
-\begingroup\defname {#1}{User Option}%
+\begingroup\defname {#1}{\putwordDefopt}%
 \defvarargs {#2}\endgroup %
 }
 
@@ -4428,7 +4450,7 @@ width0pt\relax} \fi
 % is actually part of the data type, which should not be put into the index.
 \def\deftypevarheader #1#2{%
 \dovarind#2 \relax% Make entry in variables index
-\begingroup\defname {\defheaderxcond#1\relax$$$#2}{Variable}%
+\begingroup\defname {\defheaderxcond#1\relax$$$#2}{\putwordDeftypevar}%
 \interlinepenalty=10000
 \endgraf\nobreak\vskip -\parskip\nobreak
 \endgroup}
