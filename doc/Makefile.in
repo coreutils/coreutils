@@ -123,9 +123,9 @@ uninstall-info:
 	done
 
 mostlyclean-info:
-	rm -f fileutils.aux fileutils.cp fileutils.cps fileutils.dvi
-	rm -f fileutils.fn fileutils.fns fileutils.ky fileutils.log
-	rm -f fileutils.pg fileutils.toc fileutils.tp fileutils.vr fileutils.op
+	rm -f fileutils.aux fileutils.cp fileutils.cps fileutils.dvi \
+	  fileutils.fn fileutils.fns fileutils.ky fileutils.log \
+	  fileutils.pg fileutils.toc fileutils.tp fileutils.vr fileutils.op
 
 clean-info:
 
@@ -168,6 +168,7 @@ installcheck:
 install-data: install-info
 
 install: install-data
+	:
 
 uninstall: uninstall-info
 
