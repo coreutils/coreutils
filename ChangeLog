@@ -60,10 +60,11 @@
 	(main): Standardize on "missing destination file operand after %s"
 	for the diagnostic, for consistency with cp.c.
 
-	* tests/ln/misc: See whether a trailing slash is followed too far.
 	* tests/mv/diag: Don't assume "mv --target=nonexistentdir"
 	will complain about the arg count.
 	Adjust to new (briefer) diagnostics.
+	* tests/cp/fail-perm: Add a test to verify that we get the new
+	diagnostic when failing to copy through a symlink-to-inaccessible-dir.
 
 2004-06-27  Paul Eggert  <eggert@cs.ucla.edu>
 
