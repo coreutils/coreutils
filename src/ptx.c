@@ -128,10 +128,6 @@ WORD_TABLE;
 /* For each character, provide its folded equivalent.  */
 static unsigned char folded_chars[CHAR_SET_SIZE];
 
-/* For each character, indicate if it is part of a word.  */
-static char syntax_table[CHAR_SET_SIZE];
-static char *re_syntax_table = syntax_table;
-
 /* Compiled regex for end of context.  */
 static struct re_pattern_buffer *context_regex;
 
@@ -435,11 +431,6 @@ static void
 initialize_regex (void)
 {
   int character;		/* character value */
-
-  /* Initialize the regex syntax table.  */
-
-  for (character = 0; character < CHAR_SET_SIZE; character++)
-    syntax_table[character] = ISALPHA (character) ? Sword : 0;
 
   /* Initialize the case folding table.  */
 
