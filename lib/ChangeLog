@@ -3,6 +3,7 @@
 	Update from gnulib.
 	* putenv.c: Include <stddef.h> rather than <sys/types.h>,
 	as we merely need size_t.
+	* realloc.c: Likewise.
 	* quote.c: Don't include <stddef.h> or <sys/types.h>; not needed.
 	* modechange.c: Include <stddef.h>.
 	(NULL): Don't define, since <stddef.h> does that.
