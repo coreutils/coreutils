@@ -1,6 +1,6 @@
 #! /bin/sh
 # ylwrap - wrapper for lex/yacc invocations.
-# Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+# Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
 # Written by Tom Tromey <tromey@cygnus.com>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -29,12 +29,17 @@
 # The program to run.
 prog="$1"
 shift
+# Make any relative path in $prog absolute.
+case "$prog" in
+ /* | [A-Za-z]:\\*) ;;
+ */*) prog="`pwd`/$prog" ;;
+esac
 
 # The input.
 input="$1"
 shift
 case "$input" in
- /*)
+ /* | [A-Za-z]:\\*)
     # Absolute path; do nothing.
     ;;
  *)
@@ -45,9 +50,17 @@ case "$input" in
     ;;
 esac
 
+# We don't want to use the absolute path if the input in the current
+# directory like when making a tar ball.
+input_base=`echo $input | sed -e 's|.*/||'`
+if test -f $input_base && cmp $input_base $input >/dev/null 2>&1; then
+  input=$input_base
+fi
+
 pairlist=
 while test "$#" -ne 0; do
    if test "$1" = "--"; then
+      shift
       break
    fi
    pairlist="$pairlist $1"
@@ -61,6 +74,15 @@ trap "cd `pwd`; rm -rf $dirname > /dev/null 2>&1" 1 2 3 15
 mkdir $dirname || exit 1
 
 cd $dirname
+case "$input" in
+ /* | [A-Za-z]:\\*)
+    # Absolute path; do nothing.
+    ;;
+ *)
+    # Make a symbolic link, hard link or hardcopy.
+    ln -s ../"$input" . > /dev/null 2>&1 || ln ../"$input" . > /dev/null 2>&1 || cp ../"$input" .
+    ;;
+esac
 $prog ${1+"$@"} "$input"
 status=$?
 
@@ -73,7 +95,7 @@ if test $status -eq 0; then
          # If $2 is an absolute path name, then just use that,
          # otherwise prepend `../'.
          case "$2" in
-	   /*) target="$2";;
+	   /* | [A-Za-z]:\\*) target="$2";;
 	   *) target="../$2";;
 	 esac
 	 mv "$1" "$target" || status=$?
