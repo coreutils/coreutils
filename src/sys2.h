@@ -265,6 +265,9 @@ char *base_name PARAMS ((char const *));
     usage (EXIT_SUCCESS);			\
     break;
 
+#include "closeout.h"
+#include "version-etc.h"
+
 #define case_GETOPT_VERSION_CHAR(Program_name, Authors)			\
   case GETOPT_VERSION_CHAR:						\
     version_etc (stdout, Program_name, GNU_PACKAGE, VERSION, Authors);	\
