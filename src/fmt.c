@@ -1,5 +1,5 @@
 /* GNU fmt -- simple text formatter.
-   Copyright (C) 1994-2002 Free Software Foundation, Inc.
+   Copyright (C) 1994-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -134,10 +134,10 @@ struct Word
     const char *text;		/* the text of the word */
     int length;			/* length of this word */
     int space;			/* the size of the following space */
-    bool paren:1;		/* starts with open paren */
-    bool period:1;		/* ends in [.?!])* */
-    bool punct:1;		/* ends in punctuation */
-    bool final:1;		/* end of sentence */
+    unsigned int paren:1;	/* starts with open paren */
+    unsigned int period:1;	/* ends in [.?!])* */
+    unsigned int punct:1;	/* ends in punctuation */
+    unsigned int final:1;	/* end of sentence */
 
     /* The remaining fields are computed during the optimization.  */
 
