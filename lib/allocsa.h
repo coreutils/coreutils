@@ -94,14 +94,14 @@ enum
 #ifdef HAVE_LONG_LONG
   sa_alignment_longlong = sa_alignof (long long),
 #endif
-#ifdef HAVE_LONG_DOUBLE 
+#ifdef HAVE_LONG_DOUBLE
   sa_alignment_longdouble = sa_alignof (long double),
 #endif
   sa_alignment_max = ((sa_alignment_long - 1) | (sa_alignment_double - 1)
 #ifdef HAVE_LONG_LONG
 		      | (sa_alignment_longlong - 1)
 #endif
-#ifdef HAVE_LONG_DOUBLE 
+#ifdef HAVE_LONG_DOUBLE
 		      | (sa_alignment_longdouble - 1)
 #endif
 		     ) + 1,
