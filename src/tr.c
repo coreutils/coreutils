@@ -1,5 +1,5 @@
 /* tr -- a filter to translate characters
-   Copyright (C) 91, 95, 96, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 91, 95, 96, 1997, 1998, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -1899,6 +1899,11 @@ without squeezing repeats"));
     s2 = NULL;
 
   validate (s1, s2);
+
+  /* Use binary I/O, since `tr' is sometimes used to transliterate
+     non-printable characters, or characters which are stripped away
+     by text-mode reads (like CR and ^Z).  */
+  SET_BINARY2 (STDIN_FILENO, STDOUT_FILENO);
 
   if (squeeze_repeats && non_option_args == 1)
     {
