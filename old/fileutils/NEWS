@@ -1,5 +1,6 @@
 Changes in release 4.1:
 [4.0j]
+* touch no longer infloops on dangling symlinks
 * cp's --version-control option is deprecated.  Use the new optional argument
   to --backup (--backup[=CONTROL]) instead.  The old option still works, but
   now evokes a warning.
