@@ -4,7 +4,8 @@
 
 	* src/remove.c (prompt): Fix test for write-protectedness to also
 	check errno == EACCES.  Otherwise, `rm dangling-symlink' would
-	mistakenly prompt.
+	mistakenly prompt.  Reported by Mike Castle.
+
 	* tests/rm/Makefile.am (TESTS): Add dangling-symlink.
 	* tests/rm/dangling-symlink: New file/test, for the above fix.
 
