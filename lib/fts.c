@@ -1,6 +1,6 @@
 /* Traverse a file hierarchy.
 
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -67,6 +67,7 @@ static char sccsid[] = "@(#)fts.c	8.6 (Berkeley) 8/14/94";
 #include <errno.h>
 #include "dirfd.h"
 #include "fts_.h"
+#include "intprops.h"
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -166,9 +167,6 @@ static int      fts_safe_changedir __P((FTS *, FTSENT *, int, const char *))
 #ifndef O_DIRECTORY
 # define O_DIRECTORY 0
 #endif
-
-/* The extra casts work around common compiler bugs.  */
-#define TYPE_SIGNED(t) (! ((t) 0 < (t) -1))
 
 #define ISDOT(a)	(a[0] == '.' && (!a[1] || (a[1] == '.' && !a[2])))
 
