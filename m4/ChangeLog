@@ -1,3 +1,10 @@
+2001-09-20  Jim Meyering  <meyering@lucent.com>
+
+	* xstrtoimax.m4 (jm_AC_PREREQ_XSTRTOIMAX): Check for declaration of
+	strtoumax.
+	* xstrtoumax.m4 (jm_AC_PREREQ_XSTRTOUMAX): Check for declaration of
+	strtoumax.
+
 2001-09-17  Jim Meyering  <meyering@lucent.com>
 
 	* chown.m4, fstypename.m4, getgroups.m4, gettimeofday.m4,
