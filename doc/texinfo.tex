@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{1999-03-26.17}%
+\def\texinfoversion{1999-03-31.13}%
 %
 % Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99
 % Free Software Foundation, Inc.
@@ -4399,7 +4399,7 @@ width0pt\relax} \fi
 %
 \def\defopheader #1#2#3{%
 \dosubind {fn}{\code{#2}}{\putwordon\ #1}% Make entry in function index
-\begingroup\defname {#2}{\defoptype{}\putwordon\ #1}%
+\begingroup\defname {#2}{\defoptype\ \putwordon\ #1}%
 \defunargs {#3}\endgroup %
 }
 
