@@ -1,3 +1,8 @@
+2001-11-03  Jim Meyering  <meyering@lucent.com>
+
+	* hash.c (hash_clear): Fix a bug that could lead to an infloop or
+	e.g., a fault due to an attempt to free a NULL pointer.
+
 2001-11-01  Jim Meyering  <meyering@lucent.com>
 
 	* dirfd.c, dirfd.h: New files.
