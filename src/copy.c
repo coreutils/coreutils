@@ -520,7 +520,7 @@ copy_internal (const char *src_path, const char *dst_path,
 		{
 		  error (0, 0,
 		       _("cannot move directory onto non-directory: %s -> %s"),
-			 src_path, dst_path);
+			 quote_n (0, src_path), quote_n (0, dst_path));
 		  return 1;
 		}
 	    }
@@ -611,10 +611,9 @@ copy_internal (const char *src_path, const char *dst_path,
      sure we'll create a directory. */
   if (x->verbose && !S_ISDIR (src_type))
     {
-      /* FIXME: do we really want to add quotes here?  */
-      printf ("%s -> %s", src_path, dst_path);
+      printf ("%s -> %s", quote_n (0, src_path), quote_n (1, dst_path));
       if (backup_succeeded)
-	printf (_(" (backup: %s)"), dst_backup);
+	printf (_(" (backup: %s)"), quote (dst_backup));
       putchar ('\n');
     }
 
@@ -648,7 +647,7 @@ copy_internal (const char *src_path, const char *dst_path,
       if (rename (src_path, dst_path) == 0)
 	{
 	  if (x->verbose && S_ISDIR (src_type))
-	    printf ("%s -> %s\n", src_path, dst_path);
+	    printf ("%s -> %s\n", quote_n (0, src_path), quote_n (1, dst_path));
 	  if (rename_succeeded)
 	    *rename_succeeded = 1;
 	  return 0;
@@ -741,7 +740,7 @@ copy_internal (const char *src_path, const char *dst_path,
 	    goto un_backup;
 
 	  if (x->verbose)
-	    printf ("%s -> %s\n", src_path, dst_path);
+	    printf ("%s -> %s\n", quote_n (0, src_path), quote_n (1, dst_path));
 	}
 
       /* Are we crossing a file system boundary?  */
@@ -1001,7 +1000,8 @@ un_backup:
       else
 	{
 	  if (x->verbose)
-	    printf (_("%s -> %s (unbackup)\n"), dst_backup, dst_path);
+	    printf (_("%s -> %s (unbackup)\n"),
+		    quote_n (0, dst_backup), quote_n (1, dst_path));
 	}
     }
   return 1;
