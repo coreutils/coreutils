@@ -25,6 +25,7 @@
 	version of su.
 	(all_local): New target.  Dependend on su.  Required now that su is
 	no longer in bin_PROGRAMS.
+	(uninstall-local): Remove su only if it comes from the GNU sh-utils.
 
 	* src/su.c: Redefine/undef getusershell around inclusion of <unistd.h>
 	(via system.h) so Cray's int-returning prototype doesn't conflict
