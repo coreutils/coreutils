@@ -3175,13 +3175,13 @@ $ factor `echo '2^64-1'|bc`
 @code{seq} prints a sequence of numbers to standard output.  Synopses:
 
 @example
-seq [@var{option}]@dots{} [@var{first} [@var{step}]] @var{last}@dots{}
+seq [@var{option}]@dots{} [@var{first} [@var{increment}]] @var{last}@dots{}
 @end example
 
 @code{seq} prints the numbers from @var{first} to @var{last} by
-@var{step}.  By default, @var{first} and @var{step} are both 1, and each
-number is printed on its own line.  All numbers can be reals, not just
-integers.
+@var{increment}.  By default, @var{first} and @var{increment} are both 1,
+and each number is printed on its own line.  All numbers can be reals,
+not just integers.
 
 The program accepts the following options.  Also see @ref{Common options}.
 
@@ -3268,6 +3268,35 @@ $ (echo obase=16; seq -f %1.f 4294967295 4294967296)|bc
 FFFFFFFF
 100000000
 @end example
+
+Be careful when using @code{seq} with a fractional @var{increment},
+otherwise you may see surprising results.  Most people would expect to
+see @code{0.3} printed as the last number in this example:
+
+@example
+$ seq -s' ' 0 .1 .3
+0 0.1 0.2
+@end example
+
+But doesn't happen on most systems because @code{seq} is implemented using
+binary floating point arithmetic (via the C @code{double} type) -- which
+means some decimal numbers like @code{.1} cannot be represented exactly.
+That in turn means some nonintuitive conditions like @code{.1 * 3 > .3}
+will end up being true.
+
+To work around that in the above example, use a slightly larger number as
+the @var{last} value:
+
+@example
+$ seq -s' ' 0 .1 .31
+0 0.1 0.2 0.3
+@end example
+
+In general, when using an @var{increment} with a fractional part, where
+(@var{last} - @var{first}) / @var{increment} is (mathematically) a whole
+number, specify a slightly larger (or smaller, if @var{increment} is negative)
+value for @var{last} to ensure that @var{last} is the final value printed
+by seq.
 
 @node Index
 @unnumbered Index
