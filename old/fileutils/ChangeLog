@@ -8,7 +8,7 @@
 	(copy_internal): Likewise.
 	Based on changes from Marty Leisner.
 
-	* lib/lchown.c: Declare chown manually.
+	* lib/lchown.c: Declare chown.
 
 1999-01-30  Jim Meyering  <meyering@ascend.com>
 
