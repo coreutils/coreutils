@@ -1,6 +1,23 @@
-2002-02-12  Jim Meyering  <meyering@lucent.com>
+2002-02-16  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.12.
+
+2002-02-15  Paul Eggert  <eggert@twinsun.com>
+
+	Add support for _POSIX2_VERSION, which lets you pick which POSIX
+	version you want the utilities to conform to.  Remove warnings about
+	failure to conform to a future POSIX version.
+
+	* src/date.c (ISO_8601_OPTION): Remove; no longer needed.
+	All uses changed to back to the corresponding short options.
+	(short_options): Remove; no longer needed.
+	(COMMON_SHORT_OPTIONS): New macro.
+
+	* src/date.c (usage): Document only the intersection of the
+	old and new behaviors, to encourage portability.
+	(main): Parse options using POSIX 1003.1-2001 rules if
+	conforming to that standard.  Do not warn of obsolete options.
+	* src/nice.c (usage, main): Likewise.
 
 2002-02-11  Paul Eggert  <eggert@twinsun.com>
 
