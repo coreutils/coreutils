@@ -2,6 +2,16 @@ Changes in release 4.1:
 [4.1-b2]
 * concurrent `mkdir -p' processes no longer fail when creating the
   same hierarchy
+* argmatch.c has been fixed so that the unambiguous usage `ls --color=n'
+  no longer evokes an error.
+* now, specifying an improper argument for an option that accepts enumerated
+  values evokes diagnostics like this:
+    $ src/touch --time=x file
+    src/touch: invalid argument `x' for `--time'
+    Valid arguments are:
+      - `atime', `access', `use'
+      - `mtime', `modify'
+    Try `src/touch --help' for more information.
 [4.1-b1]
 * ls --quoting-style=c prints correct octal escapes for certain nonprinting
   characters in file names.
