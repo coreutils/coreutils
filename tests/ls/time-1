@@ -1,0 +1,32 @@
+#!/bin/sh
+
+: ${LS=ls}
+test=time-1
+
+if test "$VERBOSE" = yes; then
+  set -x
+  $LS --version
+fi
+
+tmp=t-ls.$$
+
+test_failure=0
+mkdir $tmp || test_failure=1
+cd $tmp || test_failure=1
+: > a || test_failure=1
+: > b || test_failure=1
+cat b || test_failure=1
+
+if test $test_failure = 1; then
+  echo 'failure in testing framework'
+  exit 1
+fi
+
+fail=0
+$LS -u a b > out || fail=1
+    cat out
+
+cd ..
+rm -rf $tmp
+
+exit $fail
