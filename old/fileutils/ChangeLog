@@ -2,6 +2,9 @@
 
 	* Version 3.16r.
 
+	* src/remove.c (remove_dir): Use fprintf (not error) to avoid
+	newline in prompt.
+
 1998-06-30  Paul Eggert  <eggert@shade.twinsun.com>
 
 	* lib/mountlist.c: (read_filesystem_list):
