@@ -1,5 +1,7 @@
 2003-06-02  Jim Meyering  <jim@meyering.net>
 
+	* Version 5.0.1.
+
 	* src/system.h: Always include <string.h>, since we assume C89.
 	Include <limits.h> without checking for HAVE_LIMITS_H.
 
@@ -7,8 +9,6 @@
 	(STREQ, S_IXUGO): Remove redundant (in system.h) definitions.
 
 2003-06-01  Jim Meyering  <jim@meyering.net>
-
-	* Version 5.0.1.
 
 	Avoid a race condition in `tail -f' described by Ken Raeburn in
 	http://mail.gnu.org/archive/html/bug-textutils/2003-05/msg00007.html
