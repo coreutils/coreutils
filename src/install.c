@@ -69,8 +69,8 @@
 #include <sys/wait.h>
 #endif
 
-struct passwd *getpwnam (const char *);
-struct group *getgrnam (const char *);
+struct passwd *getpwnam ();
+struct group *getgrnam ();
 
 #ifndef _POSIX_VERSION
 uid_t getuid ();
