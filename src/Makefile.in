@@ -241,9 +241,7 @@ am__DEPENDENCIES_2 = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
 date_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
 dd_SOURCES = dd.c
 dd_OBJECTS = dd.$(OBJEXT)
-dd_LDADD = $(LDADD)
-dd_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+dd_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
 df_SOURCES = df.c
 df_OBJECTS = df.$(OBJEXT)
 df_LDADD = $(LDADD)
@@ -474,7 +472,8 @@ sha1sum_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
 	../lib/libfetish.a
 shred_SOURCES = shred.c
 shred_OBJECTS = shred.$(OBJEXT)
-shred_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
+shred_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
 sleep_SOURCES = sleep.c
 sleep_OBJECTS = sleep.$(OBJEXT)
 am__DEPENDENCIES_3 = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1) \
@@ -744,6 +743,7 @@ LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
 LIB_CLOCK_GETTIME = @LIB_CLOCK_GETTIME@
 LIB_CRYPT = @LIB_CRYPT@
+LIB_FDATASYNC = @LIB_FDATASYNC@
 LIB_NANOSLEEP = @LIB_NANOSLEEP@
 LN_S = @LN_S@
 LTLIBICONV = @LTLIBICONV@
@@ -834,10 +834,11 @@ AM_CPPFLAGS = -I.. -I$(srcdir) -I$(top_srcdir)/lib -I../lib
 # replacement functions defined in libfetish.a.
 LDADD = ../lib/libfetish.a $(LIBINTL) ../lib/libfetish.a
 
-# for clock_gettime
+# for clock_gettime and fdatasync
+dd_LDADD = $(LDADD) $(LIB_FDATASYNC)
 dir_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
 ls_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
-shred_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
+shred_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME) $(LIB_FDATASYNC)
 vdir_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
 sort_LDADD = $(LDADD) $(POW_LIB)
 
