@@ -58,17 +58,23 @@
 # include <string.h>
 #endif
 
-#if HAVE_WCTYPE_H
-# include <wctype.h>
-#endif
-
 #if HAVE_MBRTOWC && HAVE_WCHAR_H
 # include <wchar.h>
+# if !HAVE_MBSTATE_T_OBJECT
+#  define mbrtowc(pwc, s, n, ps) (mbrtowc) (pwc, s, n, 0)
+#  define mbstate_t int
+# endif
 #else
-# define iswprint(wc) 1
 # define mbrtowc(pwc, s, n, ps) 1
 # define mbsinit(ps) 1
 # define mbstate_t int
+#endif
+
+#if HAVE_WCTYPE_H
+# include <wctype.h>
+#endif
+#if !defined iswprint && !HAVE_ISWPRINT
+# define iswprint(wc) 1
 #endif
 
 #define INT_BITS (sizeof (int) * CHAR_BIT)
