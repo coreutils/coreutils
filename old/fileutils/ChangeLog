@@ -1,12 +1,12 @@
 2000-11-27  Jim Meyering  <meyering@lucent.com>
 
+	* Version 4.0.33.
+
 	* tests/Fetish.pm (_compare_files): New function.
 	(_process_file_spec): Likewise.
 	(_at_replace): Likewise.
 	(run_tests): Support new keywords, AUX and CMP and associated
 	syntax and semantics.
-
-	* Version 4.0.33.
 
 	* config.sub: Likewise.
 	* config.guess: Likewise.
