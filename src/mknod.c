@@ -56,6 +56,34 @@ static struct option const longopts[] =
   {NULL, 0, NULL, 0}
 };
 
+static int
+my_strtol (str, ptr, base, result)
+     const char *str;
+     const char **ptr;
+     int base;
+     long int *result;
+{
+  long int val;
+  char *terminator;
+  int return_code;
+
+  return_code = 0;
+
+  errno = 0;
+  val = strtol (str, &terminator, base);
+
+  if (terminator == str
+      || (ptr == NULL && *terminator != '\0')
+      || errno == ERANGE)
+    return_code = 1;
+
+  if (ptr != NULL)
+    *ptr = terminator;
+
+  *result = val;
+  return return_code;
+}
+
 void
 main (argc, argv)
      int argc;
@@ -65,6 +93,9 @@ main (argc, argv)
   struct mode_change *change;
   char *symbolic_mode;
   int optc;
+  int i_major, i_minor;
+  long int tmp_major, tmp_minor;
+  char *s;
 
   program_name = argv[0];
   symbolic_mode = NULL;
@@ -132,8 +163,19 @@ when creating block special files, major and minor device\n\
 numbers must be specified");
 	  usage (1);
 	}
-      if (mknod (argv[optind], newmode | S_IFBLK,
-		 makedev (atoi (argv[optind + 2]), atoi (argv[optind + 3]))))
+
+      s = argv[optind + 2];
+      if (my_strtol (s, NULL, 0, &tmp_major))
+	error (1, 0, "invalid major device number `%s'", s);
+
+      s = argv[optind + 3];
+      if (my_strtol (s, NULL, 0, &tmp_minor))
+	error (1, 0, "invalid minor device number `%s'", s);
+      
+      i_major = (int) tmp_major;
+      i_minor = (int) tmp_minor;
+
+      if (mknod (argv[optind], newmode | S_IFBLK, makedev (i_major, i_minor)))
 	error (1, errno, "%s", argv[optind]);
 #endif
       break;
@@ -150,8 +192,19 @@ when creating character special files, major and minor device\n\
 numbers must be specified");
 	  usage (1);
 	}
-      if (mknod (argv[optind], newmode | S_IFCHR,
-		 makedev (atoi (argv[optind + 2]), atoi (argv[optind + 3]))))
+
+      s = argv[optind + 2];
+      if (my_strtol (s, NULL, 0, &tmp_major))
+	error (1, 0, "invalid major device number `%s'", s);
+
+      s = argv[optind + 3];
+      if (my_strtol (s, NULL, 0, &tmp_minor))
+	error (1, 0, "invalid minor device number `%s'", s);
+      
+      i_major = (int) tmp_major;
+      i_minor = (int) tmp_minor;
+
+      if (mknod (argv[optind], newmode | S_IFCHR, makedev (i_major, i_minor)))
 	error (1, errno, "%s", argv[optind]);
 #endif
       break;
