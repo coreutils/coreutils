@@ -1,3 +1,11 @@
+2002-07-27  Jim Meyering  <meyering@lucent.com>
+
+	* readutmp.h: If we have both utmpx.h and utmp.h, and there exists
+	the utmp.ut_exit member, but not the utmpx.ut_exit member, then
+	undefine HAVE_UTMPX_H.  For AIX 4.3.3.  Doing all this in cpp is
+	a big kludge; someday we'll put the brains in an autoconf macro.
+	(UT_EXIT_E_TERMINATION, UT_EXIT_E_EXIT): Define.
+
 2002-07-20  Jim Meyering  <meyering@lucent.com>
 
 	* xmalloc.c: Adjust to work with new autoconf macros, AC_FUNC_MALLOC

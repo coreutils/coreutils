@@ -2,6 +2,10 @@
 
 	* Version 2.0.13.
 
+	* src/who.c (UT_EXIT_E_TERMINATION, UT_EXIT_E_EXIT): Remove definitions.
+	Now they're defined in readutmp.h.
+	(print_deadprocs): Remove obsolete FIXME comment.
+
 2002-07-07  Paul Eggert  <eggert@twinsun.com>
 
 	* src/nohup.sh: Port to POSIX 1003.1-2001 "nice", which
