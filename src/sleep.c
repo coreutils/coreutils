@@ -90,7 +90,6 @@ sighandler (int sig)
 #else
   signal (sig, SIG_DFL);
 #endif
-  printf ("in handler\n");
 
   suspended = 1;
   kill (getpid (), sig);
