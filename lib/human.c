@@ -1,5 +1,7 @@
 /* human.c -- print human readable file size
-   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+
+   Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001 Free Software
+   Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -66,15 +68,33 @@ char *getenv ();
 static const char suffixes[] =
 {
   0,	/* not used */
-  'k',	/* kilo */
-  'M',	/* Mega */
-  'G',	/* Giga */
-  'T',	/* Tera */
-  'P',	/* Peta */
-  'E',	/* Exa */
-  'Z',	/* Zetta */
-  'Y'	/* Yotta */
+  'K',	/* kibi ('k' for kilo is a special case) */
+  'M',	/* mega or mebi */
+  'G',	/* giga or gibi */
+  'T',	/* tera or tebi */
+  'P',	/* peta or pebi */
+  'E',	/* exa or exbi */
+  'Z',	/* zetta or 2**70 */
+  'Y'	/* yotta or 2**80 */
 };
+
+/* Generate into P[-1] (and possibly P[-2]) the proper suffix for
+   POWER and BASE.  Return the address of the generated suffix.  */
+static char *
+generate_suffix_backwards (char *p, int power, int base)
+{
+  char letter = suffixes[power];
+
+  if (base == 1000)
+    {
+      *--p = 'B';
+      if (power == 1)
+	letter = 'k';
+    }
+
+  *--p = letter;
+  return p;
+}
 
 /* If INEXACT_STYLE is not human_round_to_even, and if easily
    possible, adjust VALUE according to the style.  */
@@ -113,7 +133,7 @@ human_readable (uintmax_t n, char *buf,
    Use INEXACT_STYLE to determine whether to take the ceiling or floor
    of any result that cannot be expressed exactly.
 
-   If OUTPUT_BLOCK_SIZE is negative, use a format like "127k" if
+   If OUTPUT_BLOCK_SIZE is negative, use a format like "127K" if
    possible, using powers of -OUTPUT_BLOCK_SIZE; otherwise, use
    ordinary decimal format.  Normally -OUTPUT_BLOCK_SIZE is either
    1000 or 1024; it must be at least 2.  Most people visually process
@@ -121,9 +141,10 @@ human_readable (uintmax_t n, char *buf,
    more prone to misinterpretation.  Hence, converting to an
    abbreviated form usually improves readability.  Use a suffix
    indicating which power is being used.  For example, assuming
-   -OUTPUT_BLOCK_SIZE is 1024, 8500 would be converted to 8.3k,
+   -OUTPUT_BLOCK_SIZE is 1024, 8500 would be converted to 8.3K,
    133456345 to 127M, 56990456345 to 53G, and so on.  Numbers smaller
-   than -OUTPUT_BLOCK_SIZE aren't modified.  */
+   than -OUTPUT_BLOCK_SIZE aren't modified.  If -OUTPUT_BLOCK_SIZE is
+   1024, append a "B" after any size letter.  */
 
 char *
 human_readable_inexact (uintmax_t n, char *buf,
@@ -193,6 +214,8 @@ human_readable_inexact (uintmax_t n, char *buf,
 	  sprintf (buf, "%.0f", adjust_value (inexact_style, damt));
 	else
 	  {
+	    char suffix[3];
+	    char const *psuffix;
 	    double e = 1;
 	    power = 0;
 
@@ -205,12 +228,13 @@ human_readable_inexact (uintmax_t n, char *buf,
 
 	    damt /= e;
 
-	    sprintf (buf, "%.1f%c", adjust_value (inexact_style, damt),
-		     suffixes[power]);
-	    if (4 < strlen (buf))
-	      sprintf (buf, "%.0f%c",
-		       adjust_value (inexact_style, damt * 10) / 10,
-		       suffixes[power]);
+	    suffix[2] = '\0';
+	    psuffix = generate_suffix_backwards (suffix + 2, power, base);
+	    sprintf (buf, "%.1f%s",
+		     adjust_value (inexact_style, damt), psuffix);
+	    if (4 + (base == 1000) < strlen (buf))
+	      sprintf (buf, "%.0f%s",
+		       adjust_value (inexact_style, damt * 10) / 10, psuffix);
 	  }
 
 	return buf;
@@ -236,7 +260,7 @@ human_readable_inexact (uintmax_t n, char *buf,
 	}
       while (base <= amt && power < sizeof suffixes - 1);
 
-      *--p = suffixes[power];
+      p = generate_suffix_backwards (p, power, base);
 
       if (amt < 10)
 	{
