@@ -294,6 +294,23 @@ xrealloc (char *p, unsigned int n)
 }
 
 static FILE *
+xtmpfopen (const char *file)
+{
+  FILE *fp;
+  int fd;
+
+  fd = open (file, O_WRONLY | O_CREAT | O_TRUNC, 0600);
+  if (fd < 0 || (fp = fdopen (fd, "w")) == NULL)
+    {
+      error (0, errno, "%s", file);
+      cleanup ();
+      exit (2);
+    }
+
+  return fp;
+}
+
+static FILE *
 xfopen (const char *file, const char *how)
 {
   FILE *fp;
@@ -304,9 +321,7 @@ xfopen (const char *file, const char *how)
     }
   else
     {
-      int fd;
-      fd = open (file, O_WRONLY | O_CREAT | O_TRUNC, 0600);
-      if (fd < 0 || (fp = fdopen (fd, how)) == NULL)
+      if ((fp = fopen (file, how)) == NULL)
 	{
 	  error (0, errno, "%s", file);
 	  cleanup ();
@@ -1307,7 +1322,7 @@ merge (char **files, int nfiles, FILE *ofp)
 	{
 	  for (j = 0; j < NMERGE; ++j)
 	    fps[j] = xfopen (files[i * NMERGE + j], "r");
-	  tfp = xfopen (temp = tempname (), "w");
+	  tfp = xtmpfopen (temp = tempname ());
 	  mergefps (fps, NMERGE, tfp);
 	  xfclose (tfp);
 	  for (j = 0; j < NMERGE; ++j)
@@ -1316,7 +1331,7 @@ merge (char **files, int nfiles, FILE *ofp)
 	}
       for (j = 0; j < nfiles % NMERGE; ++j)
 	fps[j] = xfopen (files[i * NMERGE + j], "r");
-      tfp = xfopen (temp = tempname (), "w");
+      tfp = xtmpfopen (temp = tempname ());
       mergefps (fps, nfiles % NMERGE, tfp);
       xfclose (tfp);
       for (j = 0; j < nfiles % NMERGE; ++j)
@@ -1371,7 +1386,7 @@ sort (char **files, int nfiles, FILE *ofp)
 	  else
 	    {
 	      ++n_temp_files;
-	      tfp = xfopen (tempname (), "w");
+	      tfp = xtmpfopen (tempname ());
 	    }
 	  for (i = 0; i < lines.used; ++i)
 	    if (!unique || i == 0
@@ -1828,7 +1843,7 @@ main (int argc, char **argv)
 
 	      fp = xfopen (files[i], "r");
 	      tmp = tempname ();
-	      ofp = xfopen (tmp, "w");
+	      ofp = xtmpfopen (tmp);
 	      while ((cc = fread (buf, 1, sizeof buf, fp)) > 0)
 		xfwrite (buf, 1, cc, ofp);
 	      if (ferror (fp))
@@ -1842,7 +1857,7 @@ main (int argc, char **argv)
 	      files[i] = tmp;
 	    }
 	}
-      ofp = xfopen (outfile, "w");
+      ofp = xtmpfopen (outfile);
     }
   else
     ofp = stdout;
