@@ -1,14 +1,14 @@
 # input flags  1 or 2 strings      expected output   expected return code
 #
-('1', "abcd",   '',    'abcd','[]*]',   "]]]]",              0);
-('2', "abc",    '',    'abc','[%*]xyz',  "xyz",              0);
-('3', "abc",    '',    '','[.*]',        "abc",              0);
+('1', 'abcd',   '',    'abcd','[]*]',   ']]]]',              0);
+('2', 'abc',    '',    'abc','[%*]xyz',  'xyz',              0);
+('3', 'abc',    '',    '','[.*]',        'abc',              0);
 # Test --truncate-set1 behavior when string1 is longer than string2
-('4', "abcde", '-t',   'abcd','xy',     "xycde",            0);
+('4', 'abcde', '-t',   'abcd','xy',     'xycde',            0);
 # Test bsd behavior (the default) when string1 is longer than string2
-('5', "abcde", '',      'abcd','xy',     "xyyye",            0);
+('5', 'abcde', '',      'abcd','xy',     'xyyye',            0);
 # Do it the posix way
-('6', "abcde", '',      'abcd','x[y*]',  "xyyye",            0);
+('6', 'abcde', '',      'abcd','x[y*]',  'xyyye',            0);
 #
 ('7', 'abcdefghijklmnop', '-s', 'a-p','%[.*]$', '%.$',       0);
 ('8', 'abcdefghijklmnop', '-s', 'a-p','[.*]$', '.$',         0);
@@ -54,16 +54,16 @@
 	   '-ds', '\350','\345', "\300\301\377\345", 0);
 ('x', 'abcdefghijklmnop', '-s', 'abcdefghijklmn','[:*016]', ':op', 0);
 ('y', 'abc $code', '-d', 'a-z','', ' $', 0);
-("z", "a.b.c \$\$\$\$code\\", '-ds', 'a-z','$.', ". \$\\", 0);
+('z', 'a.b.c $$$$code\\', '-ds', 'a-z','$.', '. $\\', 0);
 # Make sure that a-a is accepted, even though POSIX 1001.2 says it is illegal.
-("A", "abc",    '',  'a-a','z',         "zbc",               0);
+('A', 'abc',    '',  'a-a','z',         'zbc',               0);
 #
-("B", "",       '',  'a',"''",          "",                  1);
-("C", "abcxyzABCXYZ", '', '[:lower:]', '[:upper:]', "ABCXYZABCXYZ", 0);
-("D", "abcxyzABCXYZ", '', '[:upper:]', '[:lower:]', "abcxyzabcxyz", 0);
+('B', '',       '',  'a',"''",          '',                  1);
+('C', "abcxyzABCXYZ", '', '[:lower:]', '[:upper:]', 'ABCXYZABCXYZ', 0);
+('D', 'abcxyzABCXYZ', '', '[:upper:]', '[:lower:]', 'abcxyzabcxyz', 0);
 #
-("E", "a=c", '', 'a[=*2][=c=]', 'xyyz', "xyz", 0);
-("F", ":1239", '', '[:*3][:digit:]', 'a-m', "cefgm", 0);
-("G", "abc", '', 'a[b*512]c', '1[x*]2', "1x2", 0);
-("H", "abc", '', 'a[b*513]c', '1[x*]2', "1x2", 0);
-("I", "abc-z", '', 'a\-z', 'A-Z', "AbcBC", 0);
+('E', 'a=c', '', 'a[=*2][=c=]', 'xyyz', 'xyz', 0);
+('F', ':1239', '', '[:*3][:digit:]', 'a-m', 'cefgm', 0);
+('G', 'abc', '', 'a[b*512]c', '1[x*]2', '1x2', 0);
+('H', 'abc', '', 'a[b*513]c', '1[x*]2', '1x2', 0);
+('I', 'abc-z', '', 'a\-z', 'A-Z', 'AbcBC', 0);
