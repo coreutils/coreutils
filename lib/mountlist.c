@@ -138,7 +138,7 @@ xatoi (cp)
 }
 #endif /* MOUNTED_GETMNTENT1.  */
 
-#if defined (MOUNTED_GETMNTINFO) && !defined (__NetBSD__)
+#if defined (MOUNTED_GETMNTINFO) && !defined (__NetBSD__) && !defined (__OpenBSD__)
 static char *
 fstype_to_string (t)
      short t;
@@ -356,7 +356,7 @@ read_filesystem_list (need_fs_type, all_fs)
 	me = (struct mount_entry *) xmalloc (sizeof (struct mount_entry));
 	me->me_devname = xstrdup (fsp->f_mntfromname);
 	me->me_mountdir = xstrdup (fsp->f_mntonname);
-# ifdef __NetBSD__
+# if defined (__NetBSD__) || defined (__OpenBSD__)
 	me->me_type = xstrdup (fsp->f_fstypename);
 # else
 	me->me_type = fstype_to_string (fsp->f_type);
