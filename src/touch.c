@@ -106,7 +106,7 @@ static int const time_masks[] =
    Return 0 if successful, 1 if an error occurs. */
 
 static int
-touch (char *file)
+touch (const char *file)
 {
   int status;
   struct stat sbuf;
