@@ -341,7 +341,7 @@ strftime (s, maxsize, format, tp)
 	    /* Format the number according to the PAD flag.  */
 
 	    register char *nf = &number_fmt[1];
-	    int printed;
+	    int printed = maxdigits;
 
 	    switch (pad)
 	      {
