@@ -1,7 +1,7 @@
 /* backupfile.c -- make Emacs style backup file names
 
    Copyright (C) 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,
-   1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
+   1999, 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -124,7 +124,7 @@ find_backup_file_name (const char *file, enum backup_type backup_type)
 	  size_t dirlen = dir_len (file);
 
 	  memcpy (s, file, dirlen);
-	  if (dirlen == FILESYSTEM_PREFIX_LEN (file))
+	  if (dirlen == FILE_SYSTEM_PREFIX_LEN (file))
 	    s[dirlen++] = '.';
 	  s[dirlen] = '\0';
 	  highest_backup = max_backup_version (base_name (file), s);

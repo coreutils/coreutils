@@ -1,5 +1,7 @@
 /* dirname.c -- return all but the last element in a path
-   Copyright (C) 1990, 1998, 2000, 2001, 2003 Free Software Foundation, Inc.
+
+   Copyright (C) 1990, 1998, 2000, 2001, 2003, 2004 Free Software
+   Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -30,7 +32,7 @@
 size_t
 dir_len (char const *path)
 {
-  size_t prefix_length = FILESYSTEM_PREFIX_LEN (path);
+  size_t prefix_length = FILE_SYSTEM_PREFIX_LEN (path);
   size_t length;
 
   /* Strip the basename and any redundant slashes before it.  */
@@ -51,7 +53,7 @@ char *
 dir_name (char const *path)
 {
   size_t length = dir_len (path);
-  int append_dot = (length == FILESYSTEM_PREFIX_LEN (path));
+  int append_dot = (length == FILE_SYSTEM_PREFIX_LEN (path));
   char *newpath = xmalloc (length + append_dot + 1);
   memcpy (newpath, path, length);
   if (append_dot)
