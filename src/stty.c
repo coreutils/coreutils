@@ -490,19 +490,19 @@ usage (int status)
   else
     {
       printf (_("\
-Usage: %s [-F device] [--file=device] [SETTING]...\n\
-  or:  %s [-F device] [--file=device] [-a|--all]\n\
-  or:  %s [-F device] [--file=device] [-g|--save]\n\
+Usage: %s [-F DEVICE] [--file=DEVICE] [SETTING]...\n\
+  or:  %s [-F DEVICE] [--file=DEVICE] [-a|--all]\n\
+  or:  %s [-F DEVICE] [--file=DEVICE] [-g|--save]\n\
 "),
 	      program_name, program_name, program_name);
       printf (_("\
 Print or change terminal characteristics.\n\
 \n\
-  -a, --all       print all current settings in human-readable form\n\
-  -g, --save      print all current settings in a stty-readable form\n\
-  -F, --file      open and use the specified device instead of stdin\n\
-      --help      display this help and exit\n\
-      --version   output version information and exit\n\
+  -a, --all          print all current settings in human-readable form\n\
+  -g, --save         print all current settings in a stty-readable form\n\
+  -F, --file=DEVICE  open and use the specified DEVICE instead of stdin\n\
+      --help         display this help and exit\n\
+      --version      output version information and exit\n\
 \n\
 Optional - before SETTING indicates negation.  An * marks non-POSIX\n\
 settings.  The underlying system defines which settings are available.\n\
