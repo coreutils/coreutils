@@ -39,6 +39,7 @@
 #include "human.h"
 #include "mountlist.h"
 #include "path-concat.h"
+#include "quote.h"
 #include "save-cwd.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -275,7 +276,7 @@ show_dev (const char *disk, const char *mount_point, const char *fstype,
 
   if (get_fs_usage (stat_file, disk, &fsu))
     {
-      error (0, errno, "%s", stat_file);
+      error (0, errno, "%s", quote (stat_file));
       exit_status = 1;
       return;
     }
@@ -627,7 +628,7 @@ show_point (const char *point, const struct stat *statp)
 	    me->me_dev = disk_stats.st_dev;
 	  else
 	    {
-	      error (0, errno, "%s", me->me_mountdir);
+	      error (0, errno, "%s", quote (me->me_mountdir));
 	      exit_status = 1;
 	      /* So we won't try and fail repeatedly. */
 	      me->me_dev = (dev_t) -2;
@@ -666,7 +667,7 @@ show_point (const char *point, const struct stat *statp)
 	free (mp);
       }
     else
-      error (0, errno, "%s", point);
+      error (0, errno, "%s", quote (point));
   }
 
   goto free_then_return;
@@ -872,8 +873,8 @@ main (int argc, char **argv)
 	    if (STREQ (fs_incl->fs_name, fs_excl->fs_name))
 	      {
 		error (0, 0,
-		       _("file system type `%s' both selected and excluded"),
-		       fs_incl->fs_name);
+		       _("file system type %s both selected and excluded"),
+		       quote (fs_incl->fs_name));
 		match = 1;
 		break;
 	      }
@@ -894,7 +895,7 @@ main (int argc, char **argv)
       {
 	if (stat (argv[i], &stats[i - optind]))
 	  {
-	    error (0, errno, "%s", argv[i]);
+	    error (0, errno, "%s", quote (argv[i]));
 	    exit_status = 1;
 	    argv[i] = NULL;
 	  }
