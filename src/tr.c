@@ -494,7 +494,7 @@ unquote (const unsigned char *s, struct E_string *es)
 	      c = '\\';
 	      break;
 	    case 'a':
-	      c = '\007';
+	      c = '\a';
 	      break;
 	    case 'b':
 	      c = '\b';
@@ -643,7 +643,7 @@ make_printable_str (const unsigned char *s, size_t len)
 	case '\\':
 	  tmp = "\\";
 	  break;
-	case '\007':
+	case '\a':
 	  tmp = "\\a";
 	  break;
 	case '\b':
