@@ -10,4 +10,4 @@ case "$PERL" in
   ;;
 esac
 
-exec $PERL -w -I$srcdir -MFetish -- $srcdir/simple
+exec $PERL -w -I$srcdir/.. -MFetish -- $srcdir/simple
