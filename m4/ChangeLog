@@ -1,3 +1,8 @@
+2003-01-23  Jim Meyering  <jim@meyering.net>
+
+	* dirfd.m4: Correct typo: s/-1/no/ that kept this from working
+	on at least Irix and OSF1/Tru64.
+
 2003-01-16  Jim Meyering  <jim@meyering.net>
 
 	* regex.m4: The `regex' struct is both input and output.
