@@ -38,6 +38,9 @@
 #ifndef errno
 extern int errno;
 #endif
+#ifndef ENOTSUP
+# define ENOTSUP EINVAL
+#endif
 
 #if HAVE_LIMITS_H
 # include <limits.h>
