@@ -1,5 +1,8 @@
 Wed Jul 26 22:54:48 1995  Jim Meyering  (meyering@comco.com)
 
+	* man/Makefile.in (install, uninstall): Strip off `.1', not just `1'
+	before applying $(transform) to manual name.  From Karl Berry.
+
 	* md5sum.c (have_read_stdin): New global variable.
 	(md5_file, md5_check): Set it.
 	(main): Use it.
