@@ -1,3 +1,17 @@
+Tue Jun 13 21:20:10 1995  Jim Meyering  (meyering@comco.com)
+
+	* tr.c [NDEBUG]: Define it to disable assertions.  Some systems
+	have a broken <assert.h> header.
+	(is_char_class_member): Set a variable in each branch of switch
+	stmt and return that value after the switch (rather than returning
+	directly from every branch).
+	(unquote): More int->size_t changes.
+	(build_spec_list): More int->size_t changes.
+	Be very careful about comparison now that variables are unsigned:
+	Use i + 2 < len rather than i < len - 2.  The latter didn't work
+	for len < 2.  Caught early thanks to a thorough regression test
+	suite.
+
 Mon Jun 12 23:07:59 1995  Jim Meyering  (meyering@comco.com)
 
 	* sort.c (xfclose): Don't try to flush stdin, only stdout.
