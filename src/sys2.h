@@ -357,3 +357,9 @@ char *base_name PARAMS ((char const *));
 #else
 # define IF_LINT(Code) /* empty */
 #endif
+
+#if __GNUC__
+# define ATTRIBUTE_NORETURN __attribute__ ((__noreturn__))
+#else
+# define ATTRIBUTE_NORETURN /* empty */
+#endif
