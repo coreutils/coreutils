@@ -1,3 +1,20 @@
+2005-03-08  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (date invocation): Use an example that makes it
+	clear tha the default date use space-padded day of month.
+	Replace "directive" with "conversion specifier" to be consistent
+	with POSIX.  All uses changed.
+	Fix menu RHS to match actual directive lists.
+	(Time conversion specifiers): Renamed from Time directives.
+	Use @samp consistently, sometimes instead of @code.
+	Consistently ention which specifiers are GNU extensions.
+	Give more examples (in some cases, instead of ranges).
+	Say why %F is preferred for dates.
+	(Date conversion specifiers): Renamed from Date directives.
+	Likewise for other changes.
+	(Padding and other flags): Correct the description.
+	Document #.  Give an example for %9B.
+
 2005-02-23  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi: Adjust to match current strftime.c.
