@@ -1,5 +1,12 @@
 1999-11-27  Jim Meyering  <meyering@ascend.com>
 
+	* tests/mv/setup: Don't set/use DF or MKDIR.  Use df and mkdir instead.
+	* tests/mv/mv-special-1: Likewise for these: LS MV MKDIR MKNOD RM TOUCH
+	* tests/mv/backup-is-src: Likewise for RM and MV.
+	* tests/mv/hard-link-1: Likewise.
+	* tests/mv/into-self: Likewise.
+	* tests/mv/into-self-3: Likewise.
+
 	Add test for 1999-05-23 change to src/copy.c (copy_internal).
 	* tests/mv/partition-perm: New file.
 	* tests/mv/Makefile.am (TESTS): Add partition-perm.
