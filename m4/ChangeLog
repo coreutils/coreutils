@@ -1,3 +1,8 @@
+2004-11-13  Jim Meyering  <jim@meyering.net>
+
+	* jm-macros.m4: Do require gl_FUNC_FPENDING.
+	* fpending.m4: Restore file.
+
 2004-11-11  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* getopt.m4: Sync from gnulib.
