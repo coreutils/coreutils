@@ -9,7 +9,7 @@
 	Set TZ after get_date call and before show_date call.
 	Reported by Matthew Braun.
 	* tests/date/Test.pm: Add new tests for this bug.
-	Add new examples from documentation.
+	Add tests based on new examples in documentation.
 
 	* stpcpy.c: New file.
 	* configure.in (AC_REPLACE_FUNCS): Add stpcpy.c
