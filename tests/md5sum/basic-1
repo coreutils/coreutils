@@ -40,19 +40,19 @@ my @Tests =
 				{OUT=>"f: OK\n"}],
      ['check-2', '--check', '--status', {IN=>{'f.md5' => "$degenerate  f\n"}},
 				{AUX=> {f=> 'foo'}}, {EXIT=> 1}],
-     ['check-bsd', '--check', {IN=> {'f.md5' => "MD5 (f) = $degenerate\n"}},
-				{AUX=> {f=> ''}}, {OUT=>"f: OK\n"}],
-     ['check-bsd2', '--check', '--status',
-				{IN=> {'f.md5' => "MD5 (f) = $degenerate\n"}},
-				{AUX=> {f=> 'bar'}}, {EXIT=> 1}],
      # The sha1sum and md5sum drivers share a lot of code.
      # Ensure that md5sum does *not* share the part that makes
      # sha1sum accept BSD format.
-     ['check-bsd3', '--check', {IN=> {'f.sha1' => "SHA1 (f) = $degenerate\n"}},
+     ['check-bsd', '--check', {IN=> {'f.sha1' => "SHA1 (f) = $degenerate\n"}},
 				{AUX=> {f=> ''}},
 				{ERR=>"md5sum: f.sha1: no properly formatted "
 				       . "MD5 checksum lines found\n"},
 				{EXIT=> 1}],
+     ['check-bsd2', '--check', {IN=> {'f.md5' => "MD5 (f) = $degenerate\n"}},
+				{AUX=> {f=> ''}}, {OUT=>"f: OK\n"}],
+     ['check-bsd3', '--check', '--status',
+				{IN=> {'f.md5' => "MD5 (f) = $degenerate\n"}},
+				{AUX=> {f=> 'bar'}}, {EXIT=> 1}],
     );
 
 # Insert the `--text' argument for each test.
