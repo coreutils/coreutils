@@ -21,7 +21,7 @@
 # include <config.h>
 #endif
 
-#if !defined (HAVE_ST_BLOCKS) && !defined(_POSIX_VERSION)
+#if !HAVE_ST_BLOCKS && !defined _POSIX_SOURCE && defined BSIZE
 # include <sys/types.h>
 # include <sys/param.h>
 
@@ -30,12 +30,7 @@
 # endif
 
 # ifndef NINDIR
-/* Some SysV's, like Irix, seem to lack these.  Hope they're correct. */
-/* Size of a indirect block, in bytes. */
-#  ifndef BSIZE
-#   define BSIZE 1024
-#  endif
-
+/* Some SysV's, like Irix, seem to lack this.  Hope it's correct. */
 /* Number of inode pointers per indirect block. */
 #  define NINDIR (BSIZE/sizeof(daddr_t))
 # endif /* !NINDIR */
@@ -45,12 +40,12 @@
 
 /* Return the number of 512-byte blocks in a file of SIZE bytes. */
 
-long
+off_t
 st_blocks (size)
-     long size;
+     off_t size;
 {
-  long datablks = (size + 512 - 1) / 512;
-  long indrblks = 0;
+  off_t datablks = size / 512 + (size % 512 != 0);
+  off_t indrblks = 0;
 
   if (datablks > NDIR)
     {
