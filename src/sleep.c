@@ -1,5 +1,5 @@
 /* sleep - delay for a specified amount of time.
-   Copyright (C) 84, 1991-1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 84, 1991-1997, 1999-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -60,9 +60,10 @@ usage (int status)
       printf (_("\
 Usage: %s NUMBER[SUFFIX]...\n\
   or:  %s OPTION\n\
-Pause for NUMBER seconds.\n\
-SUFFIX may be s for seconds (the default), m for minutes,\n\
-h for hours or d for days.\n\
+Pause for NUMBER seconds.  SUFFIX may be `s' for seconds (the default),\n\
+`m' for minutes, `h' for hours or `d' for days.  Unlike most implementations\n\
+that require NUMBER be an integer, here NUMBER may be an arbitrary floating\n\
+point number.\n\
 \n\
   --help      display this help and exit\n\
   --version   output version information and exit\n\
