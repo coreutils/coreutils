@@ -1,5 +1,14 @@
 1999-04-04  Jim Meyering  <meyering@ascend.com>
 
+	* src/shred.c: Don't include string.h.
+	[!HAVE_CONFIG_H]: Include string.h here.
+	[!HAVE_CONFIG_H]: Hard-code RETSIGTYPE to `int'.
+	(sigill_handler): Change return type and type of local `oldhandler' to
+	RETSIGTYPE.
+	(isaac_seed_machdep): Change and type of local `oldhandler' to
+	RETSIGTYPE.
+	From Colin Plumb.
+
 	* Version 4.0e
 
 	* tests/cp/same-file: Change the sed command used to extract the
