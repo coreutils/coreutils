@@ -1334,7 +1334,7 @@ decode_switches (int argc, char **argv)
     struct winsize ws;
 
     if (ioctl (STDOUT_FILENO, TIOCGWINSZ, &ws) != -1
-	&& 0 < ws.ws_col && ws.ws_col <= SIZE_MAX)
+	&& 0 < ws.ws_col /* && ws.ws_col <= SIZE_MAX */ )
       line_length = ws.ws_col;
   }
 #endif
