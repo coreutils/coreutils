@@ -2,7 +2,29 @@
 
 	* Version 5.3.0.
 
-	* NEWS: Document the following change.
+	* NEWS: Document the following changes.
+
+	* src/sort.c: Avoid O(N**2) behavior when there are many temporary
+	files.
+	(temptail): New variable, so that we can easily append to list.
+	(create_temp_file): Create new files at end of list, so that
+	searching the list has O(N*NMERGE) behavior instead of O(N**2).
+	(zaptemp): Update temptail if needed.
+	(mergefps, merge): Accept new arg that counts temp files, and keep it
+	up to date as we create and remove temporaries.  This is for
+	efficiency, so that we don't call zaptemp so often.
+	All callers changed.
+	(sort): Don't create array in reverse order, since the list of
+	temporaries is now in the correct order.
+
+	(zaptemp): Protect against race condition: if 'sort' is
+	interrupted in the middle of zaptemp, it might unlink the
+	temporary file twice, and the second time this happens the file
+	might already have been created by some other process.
+
+	(create_temp_file): Use offsetof for clarity.
+	(die): Move it up earlier, to clean up the code a bit.
+
 	* src/pr.c (strtoumax): Declare if not declared.
 	(skip_to_page, first_page_number, last_page_number, page_number,
 	first_last_page, print_header):
