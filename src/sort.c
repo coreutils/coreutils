@@ -361,6 +361,17 @@ cleanup (void)
     unlink (node->name);
 }
 
+/* Report an error for STRING, clean up, and exit.  */
+
+static void die PARAMS ((char const *)) ATTRIBUTE_NORETURN;
+static void
+die (char const *string)
+{
+  error (0, errno, "%s", string);
+  cleanup ();
+  exit (SORT_FAILURE);
+}
+
 /* Create a new temporary file, returning its newly allocated name.
    Store into *PFP a stream open for writing.  */
 
@@ -394,11 +405,7 @@ create_temp_file (FILE **pfp)
   errno = saved_errno;
 
   if (fd < 0 || (*pfp = fdopen (fd, "w")) == NULL)
-    {
-      error (0, errno, "%s", file);
-      cleanup ();
-      exit (SORT_FAILURE);
-    }
+    die (file);
 
   return file;
 }
@@ -416,11 +423,7 @@ xfopen (const char *file, const char *how)
   else
     {
       if ((fp = fopen_safer (file, how)) == NULL)
-	{
-	  error (0, errno, "%s", file);
-	  cleanup ();
-	  exit (SORT_FAILURE);
-	}
+	die (file);
     }
 
   return fp;
@@ -440,11 +443,7 @@ xfclose (FILE *fp, char const *file)
   else
     {
       if (fclose (fp) != 0)
-	{
-	  error (0, errno, "%s", file);
-	  cleanup ();
-	  exit (SORT_FAILURE);
-	}
+	die (file);
     }
 }
 
@@ -452,11 +451,7 @@ static void
 write_bytes (const char *buf, size_t n_bytes, FILE *fp, const char *output_file)
 {
   if (fwrite (buf, 1, n_bytes, fp) != n_bytes)
-    {
-      error (0, errno, _("%s: write error"), output_file);
-      cleanup ();
-      exit (SORT_FAILURE);
-    }
+    die (output_file);
 }
 
 /* Append DIR to the array of temporary directory names.  */
@@ -663,11 +658,7 @@ sort_buffer_size (FILE *const *fps, int nfps,
 	   : strcmp (files[i], "-") == 0 ? fstat (STDIN_FILENO, &st)
 	   : stat (files[i], &st))
 	  != 0)
-	{
-	  error (0, errno, "%s", files[i]);
-	  cleanup ();
-	  exit (SORT_FAILURE);
-	}
+	die (files[i]);
 
       file_size = S_ISREG (st.st_mode) ? st.st_size : INPUT_FILE_SIZE_GUESS;
 
@@ -917,11 +908,7 @@ fillbuf (struct buffer *buf, register FILE *fp, char const *file)
 	  if (bytes_read != readsize)
 	    {
 	      if (ferror (fp))
-		{
-		  error (0, errno, "%s", file);
-		  cleanup ();
-		  exit (SORT_FAILURE);
-		}
+		die (file);
 	      if (feof (fp))
 		{
 		  buf->eof = 1;
@@ -2450,11 +2437,7 @@ but lacks following character offset"));
 		  if ((STREQ (files[i], "-")
 		       ? fstat (STDIN_FILENO, &instat)
 		       : stat (files[i], &instat)) != 0)
-		    {
-		      error (0, errno, "%s", files[i]);
-		      cleanup ();
-		      exit (SORT_FAILURE);
-		    }
+		    die (files[i]);
 		  if (S_ISREG (instat.st_mode) && !SAME_INODE (instat, outstat))
 		    {
 		      /* We know the files are distinct.  */
@@ -2468,11 +2451,7 @@ but lacks following character offset"));
 	      while ((cc = fread (buf, 1, sizeof buf, in_fp)) > 0)
 		write_bytes (buf, cc, out_fp, tmp);
 	      if (ferror (in_fp))
-		{
-		  error (0, errno, "%s", files[i]);
-		  cleanup ();
-		  exit (SORT_FAILURE);
-		}
+		die (files[i]);
 	      xfclose (out_fp, tmp);
 	      xfclose (in_fp, files[i]);
 	      files[i] = tmp;
@@ -2492,11 +2471,7 @@ but lacks following character offset"));
 	      if (STREQ (files[i], "-"))
 		continue;
 	      if (stat (files[i], &sb))
-		{
-		  error (0, errno, "%s", files[i]);
-		  cleanup ();
-		  exit (SORT_FAILURE);
-		}
+		die (files[i]);
 	    }
 
 	  ofp = xfopen (outfile, "w");
@@ -2511,13 +2486,13 @@ but lacks following character offset"));
     merge (files, nfiles, ofp, outfile);
   else
     sort (files, nfiles, ofp, outfile);
-  cleanup ();
 
   if (fclose (ofp) != 0)
-    error (SORT_FAILURE, errno, _("%s: write error"), outfile);
+    die (outfile);
 
   if (have_read_stdin && fclose (stdin) == EOF)
-    error (SORT_FAILURE, errno, "-");
+    die ("-");
 
+  cleanup ();
   exit (EXIT_SUCCESS);
 }
