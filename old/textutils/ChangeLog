@@ -2,6 +2,9 @@
 
 	* Version 2.0.15.
 
+	* src/Makefile.am ($(PROGRAMS)): Depend only on ../lib/libfetish.a,
+	not on $(LDADD), since the former may contain `-lintl'.
+
 	* Makefile.am (SUBDIRS): When using newer gettext (in which
 	intl/libintl.h is created by rules intl/Makefile)
 	`intl' must precede `lib'.
