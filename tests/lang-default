@@ -1,0 +1,7 @@
+#!/bin/sh
+# Set locale-related environment variables so we get consistent
+# message translations, time formats, sort orderings, etc.
+
+LANGUAGE=''; export LANGUAGE
+LC_ALL=''; export LC_ALL
+LANG=''; export LANG
