@@ -670,7 +670,7 @@ fts_children(sp, instr)
 		return (sp->fts_child = fts_build(sp, instr));
 
 	if ((fd = open(".", O_RDONLY, 0)) < 0)
-		return (NULL);
+		return (sp->fts_child = NULL);
 	sp->fts_child = fts_build(sp, instr);
 	if (fchdir(fd)) {
 		(void)close(fd);
