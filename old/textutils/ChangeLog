@@ -1,6 +1,17 @@
-2001-11-11  Jim Meyering  <meyering@lucent.com>
+2001-11-13  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.17.
+
+	* tests/tail-2/Makefile.am (TESTS): Add proc-ksyms and start-middle.
+	* tests/tail-2/start-middle: New test, for the bug fixed on 1995-07-24.
+
+	`tail /proc/ksyms' would segfault on Linux.
+	* src/tail.c (tail_lines): Use status of lseek (...SEEK_END) call
+	in deciding whether to call file_lines or pipe_lines.
+	From Herbert Xu.
+	* tests/tail-2/proc-ksyms: New test, for the above fix.
+
+2001-11-11  Jim Meyering  <meyering@lucent.com>
 
 	* src/od.c (struct tspec): Declare function pointer with prototype.
 
@@ -2651,7 +2662,7 @@
 
 	* src/tail.c (recheck): Factor out a block of duplicated code.
 	Set f->size to 0 upon encountering a new file so we read it from
-	the beginning rather than from then end of the first line or
+	the beginning rather than from the end of the first line or
 	block.  Otherwise, after a log rotation, tail would omit the first
 	line or block of the new file.  Reported by Ed Avis.
 
