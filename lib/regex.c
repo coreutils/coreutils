@@ -2,7 +2,7 @@
    version 0.12.
    (Implements POSIX draft P1003.2/D11.2, except for some of the
    internationalization features.)
-   Copyright (C) 1993, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
+   Copyright (C) 1993, 94, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -253,6 +253,12 @@ init_syntax_once ()
 #define ISSPACE(c) (ISASCII (c) && isspace (c))
 #define ISUPPER(c) (ISASCII (c) && isupper (c))
 #define ISXDIGIT(c) (ISASCII (c) && isxdigit (c))
+
+#ifdef _tolower
+# define TOLOWER(c) _tolower(c)
+#else
+# define TOLOWER(c) tolower(c)
+#endif
 
 #ifndef NULL
 # define NULL (void *)0
@@ -5628,7 +5634,7 @@ regcomp (preg, pattern, cflags)
 
       /* Map uppercase characters to corresponding lowercase ones.  */
       for (i = 0; i < CHAR_SET_SIZE; i++)
-        preg->translate[i] = ISUPPER (i) ? tolower (i) : i;
+        preg->translate[i] = ISUPPER (i) ? TOLOWER (i) : i;
     }
   else
     preg->translate = NULL;
