@@ -1049,7 +1049,7 @@ dd_copy (void)
 }
 
 /* This is gross, but necessary, because of the way close_stdout
-   works and because dd.c closes STDOUT_FILENO directly.  */
+   works and because this program closes STDOUT_FILENO directly.  */
 static void (*closeout_func) (void) = close_stdout;
 
 static void
