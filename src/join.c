@@ -224,6 +224,7 @@ freeline (line)
 {
   free ((char *) line->fields);
   free (line->beg);
+  line->beg = NULL;
 }
 
 static void
@@ -261,6 +262,10 @@ static void
 delseq (seq)
      struct seq *seq;
 {
+  int i;
+  for (i = 0; i < seq->count; i++)
+    if (seq->lines[i].beg)
+      freeline (&seq->lines[i]);
   free ((char *) seq->lines);
 }
 
@@ -330,24 +335,6 @@ prfield (n, line)
     fputs (empty_filler, stdout);
 }
 
-/* Print LINE, with its fields separated by `tab'. */
-
-static void
-prline (line)
-     struct line *line;
-{
-  int i;
-
-  for (i = 0; i < line->nfields; ++i)
-    {
-      prfield (i, line);
-      if (i == line->nfields - 1)
-	putchar ('\n');
-      else
-	putchar (tab ? tab : ' ');
-    }
-}
-
 /* Print the join of LINE1 and LINE2. */
 
 static void
@@ -371,6 +358,13 @@ prjoin (line1, line2)
     {
       int i;
 
+      if (line1 == &blank1 || line1 == &blank2)
+	{
+	  struct line *t;
+	  t = line1;
+	  line1 = line2;
+	  line2 = t;
+	}
       prfield (join_field_1, line1);
       for (i = 0; i < join_field_1 && i < line1->nfields; ++i)
 	{
@@ -420,7 +414,7 @@ join (fp1, fp2)
       if (diff < 0)
 	{
 	  if (print_unpairables_1)
-	    prline (&seq1.lines[0]);
+	    prjoin (&seq1.lines[0], &blank1);
 	  freeline (&seq1.lines[0]);
 	  seq1.count = 0;
 	  getseq (fp1, &seq1);
@@ -429,7 +423,7 @@ join (fp1, fp2)
       if (diff > 0)
 	{
 	  if (print_unpairables_2)
-	    prline (&seq2.lines[0]);
+	    prjoin (&blank2, &seq2.lines[0]);
 	  freeline (&seq2.lines[0]);
 	  seq2.count = 0;
 	  getseq (fp2, &seq2);
@@ -490,22 +484,22 @@ join (fp1, fp2)
 
   if (print_unpairables_1 && seq1.count)
     {
-      prline (&seq1.lines[0]);
+      prjoin (&seq1.lines[0], &blank1);
       freeline (&seq1.lines[0]);
       while (get_line (fp1, &line))
 	{
-	  prline (&line);
+	  prjoin (&line, &blank1);
 	  freeline (&line);
 	}
     }
 
   if (print_unpairables_2 && seq2.count)
     {
-      prline (&seq2.lines[0]);
+      prjoin (&blank2, &seq2.lines[0]);
       freeline (&seq2.lines[0]);
       while (get_line (fp2, &line))
 	{
-	  prline (&line);
+	  prjoin (&blank2, &line);
 	  freeline (&line);
 	}
     }
