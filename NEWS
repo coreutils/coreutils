@@ -2,6 +2,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Major changes in release 5.3.0 (2004-03-17) [unstable]
 
+** Bug fixes
+
+  ptx now diagnoses invalid values for its --width=N (-w)
+  and --gap-size=N (-g) options.
+
 ** New features
 
    'df', 'du', and 'ls' now take the default block size from the
@@ -23,8 +28,6 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   `date' has a new option --iso-8601=ns that outputs
   nanosecond-resolution time stamps.
-
-** Bug fixes
 
 
 * Major changes in release 5.2.1 (2004-03-12) [stable]
