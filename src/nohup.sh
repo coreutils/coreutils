@@ -1,6 +1,6 @@
 #!/bin/sh
 # nohup -- run a command immume to hangups, with output to a non-tty
-# Copyright (C) 1991, 1997 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1997, 1999 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,10 +17,6 @@
 # Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 # Written by David MacKenzie <djm@gnu.ai.mit.edu>.
-
-# Make sure we get GNU nice, if possible; also allow
-# it to be somewhere else in PATH if not installed yet.
-PATH=@bindir@:$PATH
 
 usage="Usage: $0 COMMAND [ARG]...
   or:  $0 OPTION"
@@ -54,6 +50,21 @@ case $# in
   * ) ;;
 esac
 
+# Make sure we get GNU nice, if possible; also allow
+# it to be somewhere else in PATH if not installed yet.
+# But do not modify PATH itself.
+IFS="${IFS=	 }"; save_ifs="$IFS"; IFS=":"
+nicepath="@bindir@:$PATH"
+niceprog="nice"
+for nicedir in $nicepath; do
+  test -z "$nicedir" && nicedir="."
+  if test -x "$nicedir/nice"; then
+    niceprog="$nicedir/nice"
+    break
+  fi
+done
+IFS="$save_ifs"
+
 trap "" 1
 oldmask=`umask`; umask 077
 # Only redirect the output if the user didn't already do it.
@@ -62,14 +73,14 @@ if [ -t 1 ]; then
   if cat /dev/null >> nohup.out; then
     echo "nohup: appending output to \`nohup.out'" 2>&1
     umask $oldmask
-    exec nice -5 -- "$@" >> nohup.out 2>&1
+    exec "$niceprog" -5 -- "$@" >> nohup.out 2>&1
   else
     cat /dev/null >> $HOME/nohup.out
     echo "nohup: appending output to \`$HOME/nohup.out'" 2>&1
     umask $oldmask
-    exec nice -5 -- "$@" >> $HOME/nohup.out 2>&1
+    exec "$niceprog" -5 -- "$@" >> $HOME/nohup.out 2>&1
   fi
 else
   umask $oldmask
-  exec nice -5 -- "$@"
+  exec "$niceprog" -5 -- "$@"
 fi
