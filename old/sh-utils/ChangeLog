@@ -1,3 +1,9 @@
+Thu Apr  4 20:14:02 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* aclocal.m4 (fp_PROG_CC_STDC): Change -Xc -D_POSIX_C_SOURCE to
+	`-Xc -D__EXTENSIONS__' because of problems with Solaris header
+	files.  Suggested by Kaveh Ghazi.
+
 Wed Apr  3 07:08:57 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* src/Makefile.am (INCLUDES): Add -I$(srcdir) to get system.h
