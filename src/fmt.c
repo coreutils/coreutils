@@ -325,13 +325,16 @@ main (register int argc, register char **argv)
 
   if (argc > 1 && argv[1][0] == '-' && ISDIGIT (argv[1][1]))
     {
+      const char *s = argv[1] + 1;
       max_width = 0;
       /* Old option syntax; a dash followed by one or more digits.
          Move past the number. */
-      for (++argv[1]; ISDIGIT (*argv[1]); ++argv[1])
+      for (; ISDIGIT (*s); ++s)
 	{
-	  /* FIXME: use strtol to detect overflow.  */
-	  max_width = max_width * 10 + *argv[1] - '0';
+	  int old_max = max_width;
+	  max_width = max_width * 10 + *s - '0';
+	  if (INT_MAX / 10 < old_max || max_width < old_max)
+	    error (EXIT_FAILURE, 0, _("invalid width option: `%s'"), argv[1]);
 	}
       /* Make the options we just parsed invisible to getopt. */
       argv[1] = argv[0];
