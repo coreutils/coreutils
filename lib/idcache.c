@@ -135,7 +135,9 @@ getuidbyname (user)
 
 /* Use the same struct as for userids.  */
 static struct userid *group_alist;
+#ifdef NOT_USED
 static struct userid *nogroup_alist;
+#endif
 
 /* Translate GID to a group name or a stringified number,
    with cache.  */
