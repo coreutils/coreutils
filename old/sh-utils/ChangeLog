@@ -2,6 +2,13 @@
 
 	* Version 2.0.12.
 
+	* src/stty.c (usage): Prefix each line with a space, so that
+	help2man produces a better stty.1 man page.
+	From Colin Watson, via Michael Stone.  http://bugs.debian.org/95816
+
+	* src/test.c (usage): Describe -h option.
+	From Colin Watson, via Michael Stone.  http://bugs.debian.org/99272
+
 	* man/pwd.x: Add note to help people understand that this documentation
 	may not refer to the (shell built-in) command they're running.
 	* man/echo.x: Likewise.
