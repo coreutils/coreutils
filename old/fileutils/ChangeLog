@@ -1,3 +1,20 @@
+Sat Apr 20 22:48:59 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* ls.c: Include xstrtol.h.
+	(decode_switches): Use xstrtol, not atoi.
+	Detect and ignore invalid value for COLUMNS environment variable.
+	In error about invalid TABSIZE, don't reference optarg!
+	[!POSIXLY_CORRECT]: Don't consider TABSIZE environment variable.
+
+	* install.c: Include xstrtol.h.
+	[HAVE_VALUES_H]: Include <values.h>.
+	[!BITSPERBYTE]: Define.
+	[!UID_T_MAX]: Define.
+	[!GID_T_MAX]: Define.
+	(get_ids): Use xstrtol, not atoi.
+	(is_number): Remove now-unused function.
+	* configure.in (AC_CHECK_HEADERS): Add values.h.
+
 Fri Apr 19 00:06:02 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* Makefile.am (cvs-dist): New rule.  Based on the one from
