@@ -1,6 +1,12 @@
-2005-04-01  Jim Meyering  <jim@meyering.net>
+2005-04-03  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/pr.c (main): Fix off-by-one error.
+	pr -$(perl -e 'print "0"x63 . 1') would write one byte beyond the
+	end of a malloc'd buffer.
+
+2005-04-01  Jim Meyering  <jim@meyering.net>
 
 	* src/pr.c (main): Free column_count_string when done with it.
 
