@@ -1,3 +1,44 @@
+Wed Jul 26 22:54:48 1995  Jim Meyering  (meyering@comco.com)
+
+	* md5sum.c (have_read_stdin): New global variable.
+	(md5_file, md5_check): Set it.
+	(main): Use it.
+
+	* md5sum.c [OPENOPTS]: Depend explicitly on BINARY.
+	(md5_file): Take a new parameter, MD5_RESULT, and no longer
+	generate output.
+	(md5_check): Invoke md5_file instead of calling fopen directly.
+	When giving a diagnostic for a line with invalid format, also report
+	the line number.
+	(main): Generate output after a successful md5_file call.
+	[in many places]: Upon detection of an error, rather than exiting
+	immediately, issue a diagnostic, note that an error occurred and
+	exit later.
+
+Mon Jul 24 21:48:26 1995  Jim Meyering  (meyering@comco.com)
+
+	* tail.c (tail_bytes) [from_start]: For regular files, seek
+	relative to the initial input file pointer position, not
+	necessarily from the beginning of the file.
+	[!from_start]: Don't back up past the initial position of the
+	input file pointer.
+	(tail_lines): Call file_lines only if FD refers to a regular file
+	with its file pointer positioned at beginning of file.  Otherwise,
+	call pipe_lines.  This is a kludge.  Once there's a decent test
+	suite, fix this properly.
+	Before, (echo 1; echo 2) > k; sh -c 'read x; tail' < k
+	would output both lines of the input file even though the first had
+	already been read.  Reported by John Roll (john@panic.harvard.edu).
+
+	* md5sum.c [_LIBC || STDC_HEADERS] (TOLOWER): Define to tolower.
+
+	* csplit.c (main): When too few arguments are given, don't just
+	issue the usage message; also report why.
+
+Sat Jul 22 00:16:01 1995  Jim Meyering  (meyering@comco.com)
+
+	* md5sum.c (md5_check): New function -- extracted from main.
+
 Fri Jul 21 01:21:49 1995  Jim Meyering  (meyering@comco.com)
 
 	* md5sum.c (md5_file): New function -- extracted from main.
