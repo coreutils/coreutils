@@ -10,6 +10,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 - md5sum --check now accepts the output of the BSD md5sum program, e.g.,
   MD5 (f) = d41d8cd98f00b204e9800998ecf8427e
 - date -d DATE can now parse a DATE string like May-23-2003
+- chown: `.' is no longer recognized as a separator in the OWNER:GROUP
+  specifier on POSIX 1003.1-2001 systems.  If chown *was not* compiled
+  on such a system, then it still accepts `.', by default.  If chown
+  was compiled on a POSIX 1003.1-2001 system, then you may enable the
+  old behavior by setting _POSIX2_VERSION=199209 in your environment.
 
 ** Bug fixes
 - chown --dereference no longer leaks a file descriptor per symlink processed
