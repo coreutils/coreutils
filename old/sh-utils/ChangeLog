@@ -1,3 +1,15 @@
+2000-01-11  Jim Meyering  <meyering@lucent.com>
+
+	Sync lib/ directories of sh-utils, and textutils.
+
+	* lib/Makefile.am (libfetish_a_SOURCES): Add diacrit.c, hard-locale.c,
+	linebuffer.c, md5.c, memcasecmp.c, memcoll.c, obstack.c, safe-read.c
+	(noinst_HEADERS): Add bumpalloc.h, diacrit.h, hard-locale.h,
+	linebuffer.h, md5.h, memcasecmp.h, memcoll.h, obstack.h, safe-read.h.
+
+	* lib/Makefile.am: s/su/fetish/
+	* src/Makefile.am: s/libsu/libfetish/
+
 2000-01-10  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0d.

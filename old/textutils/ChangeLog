@@ -1,3 +1,16 @@
+2000-01-11  Jim Meyering  <meyering@lucent.com>
+
+	Sync lib/ directories of sh-utils, and textutils.
+
+	* lib/Makefile.am (libfetish_a_SOURCES): Add getdate.y, posixtm.c,
+	basename.c, canon-host.c, readutmp.c, stripslash.c, xgetcwd.c,
+	xgethostname.c.
+	(noinst_HEADERS): Add getdate.h, group-member.h, posixtm.h,
+	pathmax.h, readutmp.h
+
+	* lib/Makefile.am: s/tu/fetish/
+	* src/Makefile.am: s/libtu/libfetish/
+
 2000-01-10  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0c.
