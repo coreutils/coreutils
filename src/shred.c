@@ -110,7 +110,6 @@
 #include "inttostr.h"
 #include "quotearg.h"		/* For quotearg_colon */
 #include "quote.h"		/* For quotearg_colon */
-#include "xalloc.h"
 
 #ifndef O_NOCTTY
 # define O_NOCTTY 0  /* This is a very optional frill */
