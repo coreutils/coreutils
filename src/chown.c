@@ -48,6 +48,10 @@ struct group *getgrgid ();
 # define endpwent() ((void) 0)
 #endif
 
+#ifdef HAVE_LCHOWN
+# define chown(PATH, OWNER, GROUP) lchown(PATH, OWNER, GROUP)
+#endif
+
 char *savedir ();
 char *parse_user_spec ();
 void strip_trailing_slashes ();
