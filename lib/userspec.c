@@ -28,6 +28,8 @@
 #endif
 #endif
 
+/* FIXME: include alloca junk.  */
+
 #include <stdio.h>
 #include <sys/types.h>
 #include <pwd.h>
@@ -61,6 +63,18 @@ struct group *getgrgid ();
 #define endgrent()
 #endif
 
+/* Perform the equivalent of the statement `dest = strdup (src);',
+   but obtaining storage via alloca instead of from the heap.  */
+
+#define V_STRDUP(dest, src)						\
+  do									\
+    {									\
+      int _len = strlen ((src));					\
+      (dest) = (char *) alloca (_len + 1);				\
+      strcpy (dest, src);						\
+    }									\
+  while (0)
+
 #define isdigit(c) ((c) >= '0' && (c) <= '9')
 
 char *strdup ();
@@ -91,23 +105,26 @@ isnumber (str)
    Return NULL if successful, a static error message string if not.  */
 
 const char *
-parse_user_spec (spec_arg, uid, gid, username, groupname)
+parse_user_spec (spec_arg, uid, gid, username_arg, groupname_arg)
      const char *spec_arg;
      uid_t *uid;
      gid_t *gid;
-     char **username, **groupname;
+     char **username_arg, **groupname_arg;
 {
   static const char *tired = "virtual memory exhausted";
   const char *error_msg;
   char *spec;			/* A copy we can write on.  */
-  int spec_len;
   struct passwd *pwd;
   struct group *grp;
+  int spec_len;
   char *g, *u, *separator;
+  char *groupname;
 
   error_msg = NULL;
-  *username = *groupname = NULL;
+  *username_arg = *groupname_arg = NULL;
+  groupname = NULL;
 
+  /* FIXME: use this instead: V_STRDUP (spec, spec_arg); */
   spec_len = strlen (spec_arg);
   spec = (char *) alloca (strlen (spec_arg) + 1);
   strcpy (spec, spec_arg);
@@ -166,25 +183,16 @@ parse_user_spec (spec_arg, uid, gid, username, groupname)
 		     zero byte.  */
 		  char uint_buf[21];
 		  sprintf (uint_buf, "%u", (unsigned) (pwd->pw_gid));
-		  *groupname = strdup (uint_buf);
+		  V_STRDUP (groupname, uint_buf);
 		}
 	      else
 		{
-		  *groupname = strdup (grp->gr_name);
+		  V_STRDUP (groupname, grp->gr_name);
 		}
-	      if (*groupname == NULL)
-		error_msg = tired;
 	      endgrent ();
 	    }
 	}
       endpwent ();
-
-      if (error_msg == NULL)
-	{
-	  *username = strdup (u);
-	  if (*username == NULL)
-	    error_msg = tired;
-	}
     }
 
   if (g != NULL && error_msg == NULL)
@@ -203,24 +211,30 @@ parse_user_spec (spec_arg, uid, gid, username, groupname)
       endgrent ();		/* Save a file descriptor.  */
 
       if (error_msg == NULL)
-	{
-	  *groupname = strdup (g);
-	  if (*groupname == NULL)
-	    error_msg = tired;
-	}
+	V_STRDUP (groupname, g);
     }
 
-  if (error_msg)
+  if (error_msg == NULL)
     {
-      if (*groupname != NULL)
+      if (u != NULL)
 	{
-	  free (*groupname);
-	  *groupname = NULL;
+	  *username_arg = strdup (u);
+	  if (*username_arg == NULL)
+	    error_msg = tired;
 	}
-      if (*username != NULL)
+
+      if (groupname != NULL && error_msg == NULL)
 	{
-	  free (*username);
-	  *username = NULL;
+	  *groupname_arg = strdup (groupname);
+	  if (*groupname_arg == NULL)
+	    {
+	      if (*username_arg != NULL)
+		{
+		  free (*username_arg);
+		  *username_arg = NULL;
+		}
+	      error_msg = tired;
+	    }
 	}
     }
 
