@@ -1,3 +1,8 @@
+2004-08-10  Dmitry V. Levin  <ldv@altlinux.org>
+
+	* src/install.c (change_timestamps): Fix int->bool conversion
+	bugs introduced on 2004-07-29.
+
 2004-08-09  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/shred.c (wipename): Work even if the directory is writeable
