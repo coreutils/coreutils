@@ -1,3 +1,8 @@
+2000-06-25  Jim Meyering  <meyering@lucent.com>
+
+	* mbstate_t.m4: Include stdio.h before wchar.h to work around
+	Linux header bug when _XOPEN_SOURCE is defined to 500.
+
 2000-06-24  Jim Meyering  <meyering@lucent.com>
 
 	* strerror_r.m4: Revive this file -- to try out an experimental
