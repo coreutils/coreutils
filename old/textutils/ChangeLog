@@ -1,3 +1,7 @@
+1999-04-19  Jim Meyering  <meyering@ascend.com>
+
+	* Makefile.maint (b_host): Remove /pub suffix.
+
 1999-04-18  Jim Meyering  <meyering@ascend.com>
 
 	* Version 1.22j.
