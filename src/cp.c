@@ -1,5 +1,5 @@
 /* cp.c  -- file copying (main routines)
-   Copyright (C) 89, 90, 91, 1995-2002 Free Software Foundation.
+   Copyright (C) 89, 90, 91, 1995-2003 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -490,7 +490,7 @@ do_copy (int n_files, char **file, const char *target_directory,
 
   if (n_files <= 0)
     {
-      error (0, 0, _("missing file arguments"));
+      error (0, 0, _("missing file argument"));
       usage (EXIT_FAILURE);
     }
   if (n_files == 1 && !target_directory)
