@@ -3707,7 +3707,7 @@ In this output format, some special characters, like @kbd{$}, @kbd{%},
 backslash.  Curly brackets @kbd{@{}, @kbd{@}} are protected with a
 backslash and a pair of dollar signs (to force mathematical mode).  The
 backslash itself produces the sequence @code{\backslash@{@}}.
-Circumflex and tilde diacritics produce the sequence @code{^\@{ @}} and
+Circumflex and tilde diacritical marks produce the sequence @code{^\@{ @}} and
 @code{~\@{ @}} respectively.  Other diacriticized characters of the
 underlying character set produce an appropriate @TeX{} sequence as far
 as possible.  The other non-graphical characters, like newline and tab,
@@ -5968,7 +5968,7 @@ it removes the originals.  If the copy fails, then the part that was
 copied to the destination partition is removed.  If you were to copy
 three directories from one partition to another and the copy of the first
 directory succeeded, but the second didn't, the first would be left on
-the destination partion and the second and third would be left on the
+the destination partition and the second and third would be left on the
 original partition.
 
 @cindex prompting, and @code{mv}
@@ -6001,7 +6001,7 @@ Make a backup of each file that would otherwise be overwritten or removed.
 @opindex -f
 @opindex --force
 @cindex prompts, omitting
-Do not prompt the user before removing an unwritable destination file.
+Do not prompt the user before removing a destination file.
 
 @item -i
 @itemx --interactive
@@ -6012,12 +6012,21 @@ Prompt whether to overwrite each existing destination file, regardless
 of its permissions.  If the response does not begin with @samp{y} or
 @samp{Y}, the file is skipped.
 
+@itemx @w{@kbd{--reply}[=@var{how}]}
+@opindex --reply
+@cindex interactivity
+Specifying @option{--reply=yes} is equivalent to using @option{--force}.
+Specify @option{--reply=no} to make @code{mv} act as if @samp{no} were
+given as a response to every prompt about a destination file.
+Specify @option{--reply=query} to make @code{mv} prompt the user
+about each existing destination file.
+
 @item -u
 @itemx --update
 @opindex -u
 @opindex --update
 @cindex newer files, moving only
-Do not move a nondirectory that has an existing destination with the
+Do not move a non-directory that has an existing destination with the
 same or newer modification time.
 
 @item -v
