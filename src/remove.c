@@ -539,6 +539,23 @@ is_empty_dir (char const *dir)
   return saved_errno == 0 ? true : false;
 }
 
+/* Return true if FILE is not a symbolic link and it is not writable.
+   Also return true if FILE cannot be lstat'ed.  Otherwise, return false.
+   If lstat succeeds, set *BUF_P to BUF.
+   This is to avoid calling euidaccess when FILE is a symlink.  */
+static bool
+write_protected_non_symlink (char const *file,
+			     struct stat **buf_p,
+			     struct stat *buf)
+{
+  if (lstat (file, buf) != 0)
+    return false;
+  *buf_p = buf;
+  if (S_ISLNK (buf->st_mode))
+    return false;
+  return euidaccess (file, W_OK) == -1 && errno == EACCES;
+}
+
 /* Prompt whether to remove FILENAME, if required via a combination of
    the options specified by X and/or file attributes.  If the file may
    be removed, return RM_OK.  If the user declines to remove the file,
@@ -558,23 +575,30 @@ prompt (Dirstack_state const *ds, char const *filename,
 	Ternary *is_dir, Ternary *is_empty)
 {
   int write_protected = 0;
+  struct stat *sbuf = NULL;
+  struct stat buf;
+
   *is_empty = T_UNKNOWN;
   *is_dir = T_UNKNOWN;
 
   if ((!x->ignore_missing_files && (x->interactive || x->stdin_tty)
-       && (write_protected = (euidaccess (filename, W_OK) && errno == EACCES)))
+       && (write_protected = write_protected_non_symlink (filename,
+							  &sbuf, &buf)))
       || x->interactive)
     {
-      struct stat sbuf;
-      if (lstat (filename, &sbuf))
+      if (sbuf == NULL)
 	{
-	  /* lstat failed.  This happens e.g., with `rm '''.  */
-	  error (0, errno, _("cannot lstat %s"),
-		 quote (full_filename (filename)));
-	  return RM_ERROR;
+	  sbuf = &buf;
+	  if (lstat (filename, sbuf))
+	    {
+	      /* lstat failed.  This happens e.g., with `rm '''.  */
+	      error (0, errno, _("cannot lstat %s"),
+		     quote (full_filename (filename)));
+	      return RM_ERROR;
+	    }
 	}
 
-      if (S_ISDIR (sbuf.st_mode) && !x->recursive)
+      if (S_ISDIR (sbuf->st_mode) && !x->recursive)
 	{
 	  error (0, EISDIR, _("cannot remove directory %s"),
 		 quote (full_filename (filename)));
@@ -582,7 +606,7 @@ prompt (Dirstack_state const *ds, char const *filename,
 	}
 
       /* Using permissions doesn't make sense for symlinks.  */
-      if (S_ISLNK (sbuf.st_mode))
+      if (S_ISLNK (sbuf->st_mode))
 	{
 	  if ( ! x->interactive)
 	    return RM_OK;
@@ -593,12 +617,12 @@ prompt (Dirstack_state const *ds, char const *filename,
       {
 	char const *quoted_name = quote (full_filename (filename));
 
-	*is_dir = (S_ISDIR (sbuf.st_mode) ? T_YES : T_NO);
+	*is_dir = (S_ISDIR (sbuf->st_mode) ? T_YES : T_NO);
 
 	/* FIXME: use a variant of error (instead of fprintf) that doesn't
 	   append a newline.  Then we won't have to declare program_name in
 	   this file.  */
-	if (S_ISDIR (sbuf.st_mode)
+	if (S_ISDIR (sbuf->st_mode)
 	    && x->recursive
 	    && mode == PA_DESCEND_INTO_DIR
 	    && ((*is_empty = (is_empty_dir (filename) ? T_YES : T_NO))
@@ -618,7 +642,7 @@ prompt (Dirstack_state const *ds, char const *filename,
 		     (write_protected
 		      ? _("%s: remove write-protected %s %s? ")
 		      : _("%s: remove %s %s? ")),
-		     program_name, file_type (&sbuf), quoted_name);
+		     program_name, file_type (sbuf), quoted_name);
 	  }
 
 	if (!yesno ())
