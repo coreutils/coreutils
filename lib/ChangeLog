@@ -1,5 +1,10 @@
 2002-11-28  Jim Meyering  <jim@meyering.net>
 
+	Merge some more, in preparation for merge back into libc.
+	* error.c (_): Define only if not already defined.
+	Move definition to follow all #include directives.
+	Include unlocked-io.h only if !_LIBC.
+
 	Merge in changes from libc.
 	* error.c [_LIBC]: Include <libio/libioP.h>.
 	[USE_IN_LIBIO]: Include <libio/iolibio.h>
