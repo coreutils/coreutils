@@ -39,12 +39,6 @@
 # define ENABLE_HARD_LINK_TO_SYMLINK_WARNING 0
 #endif
 
-int link ();			/* Some systems don't declare this anywhere. */
-
-#ifdef S_ISLNK
-int symlink ();
-#endif
-
 /* In being careful not even to try to make hard links to directories,
    we have to know whether link(2) follows symlinks.  If it does, then
    we have to *stat* the `source' to see if the resulting link would be
