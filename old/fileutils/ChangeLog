@@ -2,6 +2,13 @@
 
 	* Version 3.16y.
 
+	* man/Makefile.am (transform): Define.
+	(man_MANS): Include ginstall.1, not install.1, to match the name
+	of the executable in ../src.
+	* man/ginstall.x: New file.
+	* man/install.x: Remove file.
+	* man/Makefile.maint (ginstall-summary): Renamed from install-summary.
+
 	* man/Makefile.am (EXTRA_DIST): Add Makefile.maint and GNUmakefile.
 	Reported by Akim Demaille.
 
