@@ -1,3 +1,7 @@
+Wed Oct 27 01:13:52 1993  Jim Meyering  (meyering@comco.com)
+
+	* Version 1.8.1.
+
 Mon Oct 25 20:16:33 1993  Jim Meyering  (meyering@comco.com)
 
 	* sort.c: Accept but ignore -y0 for compatibility with Solaris 2.
@@ -16,8 +20,8 @@ Sun Oct 24 00:31:02 1993  Jim Meyering  (meyering@comco.com)
 	* tail.c: Don't include <signal.h>.  It hasn't been necessary
 	since the Dec 12, 1992 change.
 
-	* join.c (main): Accept `-v 1' again.  First adding --version
-	long option had broken it, though -v1 still worked.  Call
+	* join.c (main): Accept `-v 1' again.  Adding the --version
+	long option had broken it, although -v1 still worked.  Call
 	parse_long_options instead of adding "help" and "version"
 	to join's longopt strct.
 	* Makefile.in [SOURCES, OBJECTS, DISTFILES]: Add long-options.c
