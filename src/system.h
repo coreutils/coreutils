@@ -127,9 +127,6 @@ extern int errno;
 #ifndef ENOSYS
 # define ENOSYS (-1)
 #endif
-#ifndef ENOTSUP
-# define ENOTSUP (-1)
-#endif
 #ifndef EISDIR
 # define EISDIR (-1)
 #endif
