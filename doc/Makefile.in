@@ -37,7 +37,7 @@ INSTALL_SCRIPT = @INSTALL_SCRIPT@
 transform = @program_transform_name@
 
 TEXINFOS = fileutils.texi
-DIST_OTHER = mdate-sh perm.texi getdate.texi
+DIST_OTHER = perm.texi getdate.texi
 
 MAKEINFO = makeinfo
 TEXI2DVI = texi2dvi
