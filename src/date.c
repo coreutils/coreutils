@@ -46,7 +46,7 @@ time_t get_date ();
 time_t posixtime ();
 
 static void show_date __P ((const char *format, time_t when));
-static void usage __P (int status));
+static void usage __P ((int status));
 
 /* The name this program was run with, for error messages. */
 char *program_name;
