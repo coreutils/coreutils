@@ -175,7 +175,7 @@ print_entry (const STRUCT_UTMP *utmp_ent)
 	printf ("   .  ");
     }
 #if HAVE_UT_HOST
-  if (utmp_ent->ut_host[0] && do_lookup)
+  if (utmp_ent->ut_host[0])
     {
       char ut_host[sizeof (utmp_ent->ut_host) + 1];
       char *host = 0, *display = 0;
@@ -189,9 +189,12 @@ print_entry (const STRUCT_UTMP *utmp_ent)
       if (display)
 	*display++ = '\0';
 
-      if (*ut_host)
-	/* See if we can canonicalize it.  */
-	host = canon_host (ut_host);
+      if (*ut_host && do_lookup)
+	{
+	  /* See if we can canonicalize it.  */
+	  host = canon_host (ut_host);
+	}
+
       if (! host)
 	host = ut_host;
 
