@@ -59,8 +59,6 @@ resolve RH report on cp -a forwarded by Tim Waugh
 
 Martin Michlmayr's patch to provide ls with `--sort directory' option
 
-Remove uses of PROTOTYPES
-
 tail: don't use xlseek; it *exits*.
   Instead, maybe use a macro and return nonzero.
 
