@@ -544,13 +544,13 @@ read_filesystem_list (int need_fs_type)
     int numsys, counter, bufsize;
     struct statfs *stats;
 
-    numsys = getfsstat ((struct statfs *)0, 0L, MNT_WAIT);
+    numsys = getfsstat ((struct statfs *)0, 0L, MNT_NOWAIT);
     if (numsys < 0)
       return (NULL);
 
     bufsize = (1 + numsys) * sizeof (struct statfs);
     stats = xmalloc (bufsize);
-    numsys = getfsstat (stats, bufsize, MNT_WAIT);
+    numsys = getfsstat (stats, bufsize, MNT_NOWAIT);
 
     if (numsys < 0)
       {
