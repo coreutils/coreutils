@@ -1,3 +1,12 @@
+2001-12-10  Jim Meyering  <meyering@lucent.com>
+
+	* linebuffer.c: Remove explicit declarations of xmalloc and xrealloc,
+	Instead, include "xalloc.h".
+	(initbuffer): Don't cast xmalloc return value to char*.
+	(readline): Reword comment.
+	Don't cast xrealloc return value to char*
+	Return NULL, not 0.
+
 2001-12-09  Jim Meyering  <meyering@lucent.com>
 
 	* modechange.c (mode_compile): Add cast to avoid pedantic warning about
