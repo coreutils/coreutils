@@ -1,5 +1,5 @@
 GNU coreutils NEWS                                    -*- outline -*-
-* Major changes in release 5.1.0:
+* Major changes in release 5.1.0 (2003-12-08):
 
 ** New features
 
@@ -53,7 +53,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   ls --width=N (with -x or -C) no longer allocates more space
   (potentially much more) than necessary for a given directory.
 
-* Major changes in release 5.0.91:
+* Major changes in release 5.0.91 (2003-09-08):
 
 ** New features
 
@@ -120,7 +120,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   tail's long-undocumented --allow-missing option now elicits a warning
 
 
-* Major changes in release 5.0.90:
+* Major changes in release 5.0.90 (2003-07-29):
 
 ** New features
 
@@ -177,7 +177,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   byte offsets are specified.
 
 
-* Major changes in release 5.0.1:
+* Major changes in release 5.0.1 (2003-07-15):
 
 ** New programs
 - new program: `[' (much like `test')
@@ -243,7 +243,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   Before `rm -rf DIR' would fail to remove all files in DIR
   if there were more than 338.
 
-* Major changes in release 5.0:
+* Major changes in release 5.0 (2003-04-02):
 - false --help now exits nonzero
 
 [4.5.12]
