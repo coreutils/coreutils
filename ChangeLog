@@ -1,3 +1,10 @@
+2004-07-25  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/pathchk.c: Include euidaccess.h.
+	(dir_ok): Use euidaccess, not access.
+	* src/test.c (R_OK, W_OK, X_OK, FOK): Remove; system.h defines them.
+	(eaccess): Remove.  All users changed to use euidaccess instead.
+
 2004-07-24  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/uptime.c (print_uptime) [defined BOOT_MSG]:
@@ -14,7 +21,7 @@
 	--max-consecutive-size-changes options.  Fix another related bug:
 	"tail" got confused if stdin, stdout, or stderr were closed.
 	Also, use output buffering even with "tail -f".
-	
+
 	* NEWS: Document this, plus yesterday's patch.
 	* doc/coreutils.texi (tail invocation): "size has remained the same"
 	-> "file has not changed", which is more accurate for fifos.
@@ -45,7 +52,7 @@
 	files.
 	(tail_forever, main): Redo fflush strategy to work even when input
 	is nonblocking.  Don't use unbuffered output; just flush when needed.
-	
+
 2004-07-22  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/tail.c (main): Ignore -f if no file operand is specified
@@ -56,7 +63,7 @@
 	* tests/tail/Test.pm: Reinstate f-1 test, since we now pass.
 	Add a new commented-out f-2 test, which we still fail.
 	(test_vector): All f-* tests are special cases, not just f-1.
-	
+
 2004-07-12  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/uptime.c: Include c-strtod.h.
@@ -70,7 +77,7 @@
 	Now returns long double.  All uses changed.
 	(print_direc): Use "L" length modifier when printing floating point
 	numbers, since we're now printing long double.
-	
+
 2004-07-06  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.

@@ -1,3 +1,30 @@
+2004-07-25  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* euidaccess.c [!defined LIBC]: Included group-member.h, stat-macros.h.
+	(S_IXUSR, S_IXGRP, S_IXOTH, S_IROTH, S_IWOTH, S_IXOTH):
+	Remove; now done by stat-macros.h.
+	(NGROUPS_MAX, group_member): Remove; now down by group-member.h.
+	No need to include <limits.h>.
+	(errno): Remove decl; we now assume C89 or better.
+	(access, getuid, getgid, geteuid, getegid, stat) [defined _LIBC]:
+	New macros.
+	(uid, gid, have_ids): Remove these static variables.
+	They weren't accurate for programs that also invoked setreuid etc.
+	(euidaccess) [defined EFF_ONLY_OK || defined ACC_SELF ||
+	HAVE_DECL_EACCSS]: Use builtin substitutes.
+	[defined _LIBC]: Ignore __libc_enable_secure; it's not a
+	correct optimization for programs run as root that later
+	invoke setreuid.
+	[no builtin substitutes && HAVE_DECL_SETREGID &&
+	PREFER_NONREENTRANT_EUIDACCESS]:
+	Use setreuid+setregid to get the correct answer.
+	[no builtin substitutes && ! (HAVE_DECL_SETREGID &&
+	PREFER_NONREENTRANT_EUIDACCESS)]:
+	Don't assume that the stat macros have their historical values,
+	as POSIX doesn't require this.
+	[defined TEST]: Include <stdlib.h>; don't include errno.h
+	twice; include <error.h> rather than "error.h".
+
 2004-07-23  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Makefile.am (libfetish_a_SOURCES): Add fcntl-safer.h,
@@ -21,7 +48,7 @@
 	Don't assume that buffer will be properly terminated by 'read'.
 	Use c_strtod instead of setlocale.
 	(main) [defined TEST]: Return int, not void.
-	
+
 2004-07-11  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Makefile.am (libfetish_a_SOURCES): Add c-strtold.c.

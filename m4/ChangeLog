@@ -1,3 +1,13 @@
+2004-07-25  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* euidaccess.m4 (gl_FUNC_NONREENTRANT_EUIDACCESS): New macro.
+	(gl_FUNC_EUIDACCESS): Use AC_CHECK_DECLS_ONCE, not AC_CHECK_DECLS.
+	(gl_PREREQ_EUIDACCESS): Check for eaccess and setregid decls.
+	Require AC_HEADER_STAT.
+
+	* prereq.m4 (gl_PREREQ): Invoke gl_FUNC_NONREENTRANT_EUIDACCESS,
+	not gl_FUNC_EUIDACCESS.
+
 2004-07-23  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* prereq.m4 (gl_PREREQ): Add gl_FCNTL_SAFER.
