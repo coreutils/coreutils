@@ -54,15 +54,6 @@ enum header_mode
 
 int safe_read ();
 
-static int head ();
-static int head_bytes ();
-static int head_file ();
-static int head_lines ();
-static long atou ();
-static void parse_unit ();
-static void usage ();
-static void write_header ();
-
 /* The name this program was run with. */
 char *program_name;
 
@@ -86,6 +77,192 @@ static struct option const long_options[] =
   {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
+
+static void
+usage (status)
+     int status;
+{
+  if (status != 0)
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
+	     program_name);
+  else
+    {
+      printf (_("\
+Usage: %s [OPTION]... [FILE]...\n\
+"),
+	      program_name);
+      printf (_("\
+Print first 10 lines of each FILE to standard output.\n\
+With more than one FILE, precede each with a header giving the file name.\n\
+With no FILE, or when FILE is -, read standard input.\n\
+\n\
+  -c, --bytes=SIZE         print first SIZE bytes\n\
+  -n, --lines=NUMBER   print first NUMBER lines instead of first 10\n\
+  -q, --quiet, --silent    never print headers giving file names\n\
+  -v, --verbose            always print headers giving file names\n\
+      --help               display this help and exit\n\
+      --version            output version information and exit\n\
+\n\
+SIZE may have a multiplier suffix: b for 512, k for 1K, m for 1 Meg.\n\
+If -VALUE is used as first OPTION, read -c VALUE when one of\n\
+multipliers bkm follows concatenated, else read -n VALUE.\n\
+"));
+    }
+  exit (status);
+}
+
+/* Convert STR, a string of ASCII digits, into an unsigned integer.
+   Return -1 if STR does not represent a valid unsigned integer. */
+
+static long
+atou (str)
+     char *str;
+{
+  int value;
+
+  for (value = 0; ISDIGIT (*str); ++str)
+    value = value * 10 + *str - '0';
+  return *str ? -1 : value;
+}
+
+static void
+parse_unit (str)
+     char *str;
+{
+  int arglen = strlen (str);
+
+  if (arglen == 0)
+    return;
+
+  switch (str[arglen - 1])
+    {
+    case 'b':
+      unit_size = 512;
+      str[arglen - 1] = '\0';
+      break;
+    case 'k':
+      unit_size = 1024;
+      str[arglen - 1] = '\0';
+      break;
+    case 'm':
+      unit_size = 1048576;
+      str[arglen - 1] = '\0';
+      break;
+    }
+}
+
+static void
+write_header (filename)
+     char *filename;
+{
+  static int first_file = 1;
+
+  printf ("%s==> %s <==\n", (first_file ? "" : "\n"), filename);
+  first_file = 0;
+}
+
+static int
+head_bytes (filename, fd, bytes_to_write)
+     char *filename;
+     int fd;
+     long bytes_to_write;
+{
+  char buffer[BUFSIZE];
+  int bytes_read;
+
+  while (bytes_to_write)
+    {
+      bytes_read = safe_read (fd, buffer, BUFSIZE);
+      if (bytes_read < 0)
+	{
+	  error (0, errno, "%s", filename);
+	  return 1;
+	}
+      if (bytes_read == 0)
+	break;
+      if (bytes_read > bytes_to_write)
+	bytes_read = bytes_to_write;
+      if (fwrite (buffer, 1, bytes_read, stdout) == 0)
+	error (1, errno, _("write error"));
+      bytes_to_write -= bytes_read;
+    }
+  return 0;
+}
+
+static int
+head_lines (filename, fd, lines_to_write)
+     char *filename;
+     int fd;
+     long lines_to_write;
+{
+  char buffer[BUFSIZE];
+  int bytes_read;
+  int bytes_to_write;
+
+  while (lines_to_write)
+    {
+      bytes_read = safe_read (fd, buffer, BUFSIZE);
+      if (bytes_read < 0)
+	{
+	  error (0, errno, "%s", filename);
+	  return 1;
+	}
+      if (bytes_read == 0)
+	break;
+      bytes_to_write = 0;
+      while (bytes_to_write < bytes_read)
+	if (buffer[bytes_to_write++] == '\n' && --lines_to_write == 0)
+	  break;
+      if (fwrite (buffer, 1, bytes_to_write, stdout) == 0)
+	error (1, errno, _("write error"));
+    }
+  return 0;
+}
+
+static int
+head (filename, fd, number)
+     char *filename;
+     int fd;
+     long number;
+{
+  if (unit_size)
+    return head_bytes (filename, fd, number);
+  else
+    return head_lines (filename, fd, number);
+}
+
+static int
+head_file (filename, number)
+     char *filename;
+     long number;
+{
+  int fd;
+
+  if (!strcmp (filename, "-"))
+    {
+      have_read_stdin = 1;
+      filename = _("standard input");
+      if (print_headers)
+	write_header (filename);
+      return head (filename, 0, number);
+    }
+  else
+    {
+      fd = open (filename, O_RDONLY);
+      if (fd >= 0)
+	{
+	  int errors;
+
+	  if (print_headers)
+	    write_header (filename);
+	  errors = head (filename, fd, number);
+	  if (close (fd) == 0)
+	    return errors;
+	}
+      error (0, errno, "%s", filename);
+      return 1;
+    }
+}
 
 void
 main (argc, argv)
@@ -217,190 +394,4 @@ main (argc, argv)
     error (1, errno, _("write error"));
 
   exit (exit_status);
-}
-
-static int
-head_file (filename, number)
-     char *filename;
-     long number;
-{
-  int fd;
-
-  if (!strcmp (filename, "-"))
-    {
-      have_read_stdin = 1;
-      filename = _("standard input");
-      if (print_headers)
-	write_header (filename);
-      return head (filename, 0, number);
-    }
-  else
-    {
-      fd = open (filename, O_RDONLY);
-      if (fd >= 0)
-	{
-	  int errors;
-
-	  if (print_headers)
-	    write_header (filename);
-	  errors = head (filename, fd, number);
-	  if (close (fd) == 0)
-	    return errors;
-	}
-      error (0, errno, "%s", filename);
-      return 1;
-    }
-}
-
-static void
-write_header (filename)
-     char *filename;
-{
-  static int first_file = 1;
-
-  printf ("%s==> %s <==\n", (first_file ? "" : "\n"), filename);
-  first_file = 0;
-}
-
-static int
-head (filename, fd, number)
-     char *filename;
-     int fd;
-     long number;
-{
-  if (unit_size)
-    return head_bytes (filename, fd, number);
-  else
-    return head_lines (filename, fd, number);
-}
-
-static int
-head_bytes (filename, fd, bytes_to_write)
-     char *filename;
-     int fd;
-     long bytes_to_write;
-{
-  char buffer[BUFSIZE];
-  int bytes_read;
-
-  while (bytes_to_write)
-    {
-      bytes_read = safe_read (fd, buffer, BUFSIZE);
-      if (bytes_read < 0)
-	{
-	  error (0, errno, "%s", filename);
-	  return 1;
-	}
-      if (bytes_read == 0)
-	break;
-      if (bytes_read > bytes_to_write)
-	bytes_read = bytes_to_write;
-      if (fwrite (buffer, 1, bytes_read, stdout) == 0)
-	error (1, errno, _("write error"));
-      bytes_to_write -= bytes_read;
-    }
-  return 0;
-}
-
-static int
-head_lines (filename, fd, lines_to_write)
-     char *filename;
-     int fd;
-     long lines_to_write;
-{
-  char buffer[BUFSIZE];
-  int bytes_read;
-  int bytes_to_write;
-
-  while (lines_to_write)
-    {
-      bytes_read = safe_read (fd, buffer, BUFSIZE);
-      if (bytes_read < 0)
-	{
-	  error (0, errno, "%s", filename);
-	  return 1;
-	}
-      if (bytes_read == 0)
-	break;
-      bytes_to_write = 0;
-      while (bytes_to_write < bytes_read)
-	if (buffer[bytes_to_write++] == '\n' && --lines_to_write == 0)
-	  break;
-      if (fwrite (buffer, 1, bytes_to_write, stdout) == 0)
-	error (1, errno, _("write error"));
-    }
-  return 0;
-}
-
-static void
-parse_unit (str)
-     char *str;
-{
-  int arglen = strlen (str);
-
-  if (arglen == 0)
-    return;
-
-  switch (str[arglen - 1])
-    {
-    case 'b':
-      unit_size = 512;
-      str[arglen - 1] = '\0';
-      break;
-    case 'k':
-      unit_size = 1024;
-      str[arglen - 1] = '\0';
-      break;
-    case 'm':
-      unit_size = 1048576;
-      str[arglen - 1] = '\0';
-      break;
-    }
-}
-
-/* Convert STR, a string of ASCII digits, into an unsigned integer.
-   Return -1 if STR does not represent a valid unsigned integer. */
-
-static long
-atou (str)
-     char *str;
-{
-  int value;
-
-  for (value = 0; ISDIGIT (*str); ++str)
-    value = value * 10 + *str - '0';
-  return *str ? -1 : value;
-}
-
-static void
-usage (status)
-     int status;
-{
-  if (status != 0)
-    fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
-  else
-    {
-      printf (_("\
-Usage: %s [OPTION]... [FILE]...\n\
-"),
-	      program_name);
-      printf (_("\
-Print first 10 lines of each FILE to standard output.\n\
-With more than one FILE, precede each with a header giving the file name.\n\
-With no FILE, or when FILE is -, read standard input.\n\
-\n\
-  -c, --bytes=SIZE         print first SIZE bytes\n\
-  -n, --lines=NUMBER   print first NUMBER lines instead of first 10\n\
-  -q, --quiet, --silent    never print headers giving file names\n\
-  -v, --verbose            always print headers giving file names\n\
-      --help               display this help and exit\n\
-      --version            output version information and exit\n\
-\n\
-SIZE may have a multiplier suffix: b for 512, k for 1K, m for 1 Meg.\n\
-If -VALUE is used as first OPTION, read -c VALUE when one of\n\
-multipliers bkm follows concatenated, else read -n VALUE.\n\
-"));
-    }
-  exit (status);
 }
