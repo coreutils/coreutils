@@ -1,3 +1,9 @@
+2003-07-17  Paul Eggert  <eggert@twinsun.com>
+
+	* coreutils.texi (expr invocation): Exit status is 2 if the
+	expression is syntactically invalid, 3 if there is some other error.
+	This change is for conformance to POSIX.
+
 2003-07-14  Paul Eggert  <eggert@twinsun.com>
 
 	* doc/coreutils.texi (uname invocation): Explain the POSIX
