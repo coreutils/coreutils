@@ -1,3 +1,10 @@
+Sun Dec  6 23:17:09 1992  Jim Meyering  (meyering@comco.com)
+
+	* date.c: Remove unused definition of isdigit.
+	* expr.c (toarith): Change single use of isdigit to ISDIGIT.
+	* printf.c (print_formatted, print_esc): Define ISXDIGIT and
+	ISXDIGIT and use them instead of isdigit and isxdigit.
+
 Wed Dec  2 12:49:11 1992  Jim Meyering  (meyering@comco.com)
 
 	* env.c, id.c, nice.c, pathchk.c, stty.c, su.c, tee.c, tty.c,
