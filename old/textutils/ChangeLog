@@ -1,5 +1,9 @@
 1999-08-22  Jim Meyering  <meyering@ascend.com>
 
+	* tests/tsort/Makefile.am: Rewrite to use Fetish.pm-based framework.
+	* tests/tsort/basic-1: New file.
+	* tests/tsort/Test.pm: Remove.
+
 	* man/help2man: Escape backslashes so tr's manual comes out right.
 	Reported by Andreas Schwab.
 
