@@ -119,7 +119,7 @@ static int yyerror ();
 
 #if	!defined(lint) && !defined(SABER)
 static char RCS[] =
-	"$Header: /w/src/cvsroot/shellutils/lib/getdate.y,v 1.5 1993/09/08 18:23:16 meyering Exp $";
+	"$Header: str2date.y,v 2.1 90/09/06 08:15:06 cronan Exp $";
 #endif	/* !defined(lint) && !defined(SABER) */
 
 
