@@ -1,4 +1,7 @@
 User-visible changes in release 3.13:
+* ln --verbose output is less prone to misinterpretation
+* ls -o works like -lG;  for compatibility with other versions of ls
+* cp has a new option to control creation of sparse files
 * rm -rf '' behaves properly on SunOS 4 systems
 * touch: rename long option name, --file, to --reference.
   `touch --file' will continue to work a little longer.
