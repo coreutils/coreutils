@@ -2205,7 +2205,6 @@ quote_filename (register const char *p, size_t *quoted_length)
 	    case '\t':
 	    case '\f':
 	    case ' ':
-	    case '"':
 	      found_quotable = 1;
 	      break;
 
