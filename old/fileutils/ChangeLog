@@ -1,6 +1,11 @@
-2002-07-19  Jim Meyering  <meyering@lucent.com>
+2002-07-20  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.10.
+
+	* Upgrade to gettext-0.11.3.
+	* Upgrade to autoconf-2.53b.
+
+2002-07-19  Jim Meyering  <meyering@lucent.com>
 
 	* src/dircolors.hin: Add .wav.
 
