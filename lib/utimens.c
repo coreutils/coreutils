@@ -47,17 +47,17 @@ utimens (char const *file, struct timespec const timespec[2])
   /* There's currently no interface to set file timestamps with
      nanosecond resolution, so do the best we can, discarding any
      fractional part of the timestamp.  */
-#if HAVE_UTIME
-  struct utimbuf utimbuf;
-  utimbuf.actime = timespec[0].tv_sec;
-  utimbuf.modtime = timespec[1].tv_sec;
-  return utime (file, &utimbuf);
-#else
+#if HAVE_WORKING_UTIMES
   struct timeval timeval[2];
   timeval[0].tv_sec = timespec[0].tv_sec;
   timeval[0].tv_usec = timespec[0].tv_nsec / 1000;
   timeval[1].tv_sec = timespec[1].tv_sec;
   timeval[1].tv_usec = timespec[1].tv_nsec / 1000;
   return utimes (file, timeval);
+#else
+  struct utimbuf utimbuf;
+  utimbuf.actime = timespec[0].tv_sec;
+  utimbuf.modtime = timespec[1].tv_sec;
+  return utime (file, &utimbuf);
 #endif
 }
