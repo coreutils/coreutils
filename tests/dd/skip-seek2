@@ -1,0 +1,40 @@
+#!/bin/sh
+# show how to skip an amount that is smaller than the nominal block size.
+# There's a more realistic example in the documentation.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  dd --version
+fi
+
+pwd=`pwd`
+tmp=skip-seek.$$
+trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
+trap '(exit $?); exit' 1 2 13 15
+
+framework_failure=0
+mkdir $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo 'failure in testing framework'
+  (exit 1); exit
+fi
+
+fail=0
+
+echo LA:3456789abcdef > in || fail=1
+(dd bs=1 skip=3 count=0 && dd bs=5) < in > out 2> /dev/null || fail=1
+case `cat out` in
+  3456789abcdef) ;;
+  *) fail=1 ;;
+esac
+
+echo LA:3456789abcdef > in || fail=1
+(dd bs=1 skip=3 count=0 && dd bs=5 count=2) < in > out 2> /dev/null || fail=1
+case `cat out` in
+  3456789abc) ;;
+  *) fail=1 ;;
+esac
+
+(exit $fail); exit
