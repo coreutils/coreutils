@@ -504,10 +504,10 @@ process_file (FTS *fts, FTSENT *ent)
    If the fts_open call fails, exit nonzero.
    Otherwise, return nonzero upon error.  */
 
-static int
+static bool
 du_files (char **files, int bit_flags)
 {
-  int fail = 0;
+  bool fail = false;
 
   FTS *fts = xfts_open (files, bit_flags, NULL);
 
@@ -522,7 +522,7 @@ du_files (char **files, int bit_flags)
 	    {
 	      /* FIXME: try to give a better message  */
 	      error (0, errno, _("fts_read failed"));
-	      fail = 1;
+	      fail = true;
 	    }
 	  break;
 	}
@@ -555,8 +555,9 @@ main (int argc, char **argv)
   char *cwd_only[2];
   int max_depth_specified = 0;
   char **files;
-  int fail;
+  bool fail;
   char *files_from = NULL;
+  struct Tokens tok;
 
   /* Bit flags that control how fts works.  */
   int bit_flags = FTS_PHYSICAL | FTS_TIGHT_CYCLE_CHECK;
@@ -580,7 +581,7 @@ main (int argc, char **argv)
   human_output_opts = human_options (getenv ("DU_BLOCK_SIZE"), false,
 				     &output_block_size);
 
-  fail = 0;
+  fail = false;
   while ((c = getopt_long (argc, argv, DEBUG_OPT "0abchHklmsxB:DLPSX:",
 			   long_options, NULL)) != -1)
     {
@@ -648,7 +649,7 @@ main (int argc, char **argv)
 	    {
 	      error (0, 0, _("invalid maximum depth %s"),
 		     quote (optarg));
-	      fail = 1;
+	      fail = true;
 	    }
 	  break;
 
@@ -694,7 +695,7 @@ main (int argc, char **argv)
 				EXCLUDE_WILDCARDS, '\n'))
 	    {
 	      error (0, errno, "%s", quotearg_colon (optarg));
-	      fail = 1;
+	      fail = true;
 	    }
 	  break;
 
@@ -711,7 +712,7 @@ main (int argc, char **argv)
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
-	  fail = 1;
+	  fail = true;
 	}
     }
 
@@ -747,7 +748,6 @@ main (int argc, char **argv)
       size_t i;
       bool valid = true;
       bool read_fail;
-      struct Tokens tok;
 
       /* When using --files0-from=F, you may not specify any files
 	 on the command-line.  */
@@ -799,6 +799,12 @@ main (int argc, char **argv)
   /* Initialize the hash structure for inode numbers.  */
   hash_init ();
 
-  exit (du_files (files, bit_flags) || G_fail
-	? EXIT_FAILURE : EXIT_SUCCESS);
+  fail = du_files (files, bit_flags);
+
+  /* This isn't really necessary, but it does ensure we
+     exercise this function.  */
+  if (files_from)
+    readtokens0_free (&tok);
+
+  exit (fail || G_fail ? EXIT_FAILURE : EXIT_SUCCESS);
 }
