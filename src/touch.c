@@ -366,7 +366,7 @@ main (int argc, char **argv)
       date_set++;
     }
 
-  if (!date_set && optind < argc && strcmp (argv[optind - 1], "--"))
+  if (!date_set && optind < argc && !STREQ (argv[optind - 1], "--"))
     {
       newtime = posixtime (argv[optind]);
       if (newtime != (time_t) -1)

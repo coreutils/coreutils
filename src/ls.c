@@ -860,7 +860,7 @@ decode_switches (int argc, char **argv)
   if ((p = getenv ("BLOCKSIZE"))
       && strncmp (p, "HUMAN", sizeof ("HUMAN") - 1) == 0)
     human_readable_base = 1024;
-  else if (p && strcmp (p, "SI") == 0)
+  else if (p && STREQ (p, "SI"))
     human_readable_base = 1000;
 
   line_length = 80;

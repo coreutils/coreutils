@@ -583,7 +583,7 @@ main (int argc, char **argv)
 	  human_readable_base = 1024;
 	  output_units = 1;
 	}
-      else if (bs && strcmp (bs, "SI") == 0)
+      else if (bs && STREQ (bs, "SI"))
 	{
 	  human_readable_base = 1000;
 	  output_units = 1;

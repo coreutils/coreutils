@@ -1,5 +1,5 @@
 /* dircolors - output commands to set the LS_COLOR environment variable
-   Copyright (C) 1994, 1995, 1997 H. Peter Anvin
+   Copyright (C) 1994, 1995, 1997, 1998 H. Peter Anvin
    Copyright (C) 96, 97, 1998 Free Software Foundation, Inc.
 
 This program is free software; you can redistribute it and/or modify
@@ -295,7 +295,7 @@ dc_parse_stream (FILE *fp, const char *filename)
       unrecognized = 0;
       if (strcasecmp (keywd, "TERM") == 0)
 	{
-	  if (strcmp (arg, term) == 0)
+	  if (STREQ (arg, term))
 	    state = ST_TERMSURE;
 	  else if (state != ST_TERMSURE)
 	    state = ST_TERMNO;
@@ -376,7 +376,7 @@ dc_parse_file (const char *filename)
   FILE *fp;
   int err;
 
-  if (strcmp (filename, "-") == 0)
+  if (STREQ (filename, "-"))
     {
       have_read_stdin = 1;
       fp = stdin;

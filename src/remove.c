@@ -206,7 +206,7 @@ hash_pjw (const void *x, unsigned int tablesize)
 static bool
 hash_compare_strings (void const *x, void const *y)
 {
-  return strcmp (x, y) == 0;
+  return STREQ (x, y);
 }
 
 static inline void
