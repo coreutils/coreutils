@@ -312,7 +312,8 @@ tac_stream (FILE *in, const char *file)
 
 	      read_size *= 2;
 	      G_buffer_size = read_size * 2 + sentinel_length + 2;
-	      newbuffer = xrealloc (G_buffer - offset, G_buffer_size) + offset;
+	      newbuffer = xrealloc (G_buffer - offset, G_buffer_size);
+	      newbuffer += offset;
 	      /* Adjust the pointers for the new buffer location.  */
 	      match_start += newbuffer - G_buffer;
 	      past_end += newbuffer - G_buffer;
