@@ -2,6 +2,10 @@
 
 	* Version 4.5.4.
 
+	* src/ls.c (sighandler): Handle SIGTSTP specially.
+	Based on suggestions from Solar Designer and Dmitry V. Levin.
+	Add comments.
+
 	* Makefile.cfg (cvs_files): Define.  From autoconf.
 	(local_updates): Likewise.
 
