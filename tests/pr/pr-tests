@@ -18,7 +18,7 @@ export LC_ALL
 LANG=C
 export LANG
 
-$xx --test -h x $srcdir/0Ft > 1a.O 2> 1a.E
+$xx --date-format="-- Date/Time --" -h x $srcdir/0Ft > 1a.O 2> 1a.E
 code=$?
 if test $code != 0; then
   $echo "Test 1a failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -36,7 +36,7 @@ else
   esac
 fi
 test -s 1a.E || rm -f 1a.E
-$xx --test -h x $srcdir/0Fnt > 1b.O 2> 1b.E
+$xx --date-format="-- Date/Time --" -h x $srcdir/0Fnt > 1b.O 2> 1b.E
 code=$?
 if test $code != 0; then
   $echo "Test 1b failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -54,7 +54,7 @@ else
   esac
 fi
 test -s 1b.E || rm -f 1b.E
-$xx --test -h x +3 $srcdir/0Ft > 1c.O 2> 1c.E
+$xx --date-format="-- Date/Time --" -h x +3 $srcdir/0Ft > 1c.O 2> 1c.E
 code=$?
 if test $code != 0; then
   $echo "Test 1c failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -72,7 +72,7 @@ else
   esac
 fi
 test -s 1c.E || rm -f 1c.E
-$xx --test -h x +3 -f $srcdir/0Ft > 1d.O 2> 1d.E
+$xx --date-format="-- Date/Time --" -h x +3 -f $srcdir/0Ft > 1d.O 2> 1d.E
 code=$?
 if test $code != 0; then
   $echo "Test 1d failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -90,7 +90,7 @@ else
   esac
 fi
 test -s 1d.E || rm -f 1d.E
-$xx --test -h x -a -3 $srcdir/0Ft > 1e.O 2> 1e.E
+$xx --date-format="-- Date/Time --" -h x -a -3 $srcdir/0Ft > 1e.O 2> 1e.E
 code=$?
 if test $code != 0; then
   $echo "Test 1e failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -108,7 +108,7 @@ else
   esac
 fi
 test -s 1e.E || rm -f 1e.E
-$xx --test -h x -a -3 -f $srcdir/0Ft > 1f.O 2> 1f.E
+$xx --date-format="-- Date/Time --" -h x -a -3 -f $srcdir/0Ft > 1f.O 2> 1f.E
 code=$?
 if test $code != 0; then
   $echo "Test 1f failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -126,7 +126,7 @@ else
   esac
 fi
 test -s 1f.E || rm -f 1f.E
-$xx --test -h x -a -3 -f $srcdir/0Fnt > 1g.O 2> 1g.E
+$xx --date-format="-- Date/Time --" -h x -a -3 -f $srcdir/0Fnt > 1g.O 2> 1g.E
 code=$?
 if test $code != 0; then
   $echo "Test 1g failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -144,7 +144,7 @@ else
   esac
 fi
 test -s 1g.E || rm -f 1g.E
-$xx --test -h x +3 -a -3 -f $srcdir/0Ft > 1h.O 2> 1h.E
+$xx --date-format="-- Date/Time --" -h x +3 -a -3 -f $srcdir/0Ft > 1h.O 2> 1h.E
 code=$?
 if test $code != 0; then
   $echo "Test 1h failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -162,7 +162,7 @@ else
   esac
 fi
 test -s 1h.E || rm -f 1h.E
-$xx --test -h x -b -3 $srcdir/0Ft > 1i.O 2> 1i.E
+$xx --date-format="-- Date/Time --" -h x -b -3 $srcdir/0Ft > 1i.O 2> 1i.E
 code=$?
 if test $code != 0; then
   $echo "Test 1i failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -180,7 +180,7 @@ else
   esac
 fi
 test -s 1i.E || rm -f 1i.E
-$xx --test -h x -b -3 -f $srcdir/0Ft > 1j.O 2> 1j.E
+$xx --date-format="-- Date/Time --" -h x -b -3 -f $srcdir/0Ft > 1j.O 2> 1j.E
 code=$?
 if test $code != 0; then
   $echo "Test 1j failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -198,7 +198,7 @@ else
   esac
 fi
 test -s 1j.E || rm -f 1j.E
-$xx --test -h x -b -3 -f $srcdir/0Fnt > 1k.O 2> 1k.E
+$xx --date-format="-- Date/Time --" -h x -b -3 -f $srcdir/0Fnt > 1k.O 2> 1k.E
 code=$?
 if test $code != 0; then
   $echo "Test 1k failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -216,7 +216,7 @@ else
   esac
 fi
 test -s 1k.E || rm -f 1k.E
-$xx --test -h x +3 -b -3 -f $srcdir/0Ft > 1l.O 2> 1l.E
+$xx --date-format="-- Date/Time --" -h x +3 -b -3 -f $srcdir/0Ft > 1l.O 2> 1l.E
 code=$?
 if test $code != 0; then
   $echo "Test 1l failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -234,7 +234,7 @@ else
   esac
 fi
 test -s 1l.E || rm -f 1l.E
-$xx --test -h x $srcdir/0FFt > 2a.O 2> 2a.E
+$xx --date-format="-- Date/Time --" -h x $srcdir/0FFt > 2a.O 2> 2a.E
 code=$?
 if test $code != 0; then
   $echo "Test 2a failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -252,7 +252,7 @@ else
   esac
 fi
 test -s 2a.E || rm -f 2a.E
-$xx --test -h x $srcdir/0FnFnt > 2b.O 2> 2b.E
+$xx --date-format="-- Date/Time --" -h x $srcdir/0FnFnt > 2b.O 2> 2b.E
 code=$?
 if test $code != 0; then
   $echo "Test 2b failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -270,7 +270,7 @@ else
   esac
 fi
 test -s 2b.E || rm -f 2b.E
-$xx --test -h x -a -3 -f $srcdir/0FFt > 2c.O 2> 2c.E
+$xx --date-format="-- Date/Time --" -h x -a -3 -f $srcdir/0FFt > 2c.O 2> 2c.E
 code=$?
 if test $code != 0; then
   $echo "Test 2c failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -288,7 +288,7 @@ else
   esac
 fi
 test -s 2c.E || rm -f 2c.E
-$xx --test -h x -a -3 -f $srcdir/0FFnt > 2d.O 2> 2d.E
+$xx --date-format="-- Date/Time --" -h x -a -3 -f $srcdir/0FFnt > 2d.O 2> 2d.E
 code=$?
 if test $code != 0; then
   $echo "Test 2d failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -306,7 +306,7 @@ else
   esac
 fi
 test -s 2d.E || rm -f 2d.E
-$xx --test -h x -b -3 -f $srcdir/0FFt > 2e.O 2> 2e.E
+$xx --date-format="-- Date/Time --" -h x -b -3 -f $srcdir/0FFt > 2e.O 2> 2e.E
 code=$?
 if test $code != 0; then
   $echo "Test 2e failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -324,7 +324,7 @@ else
   esac
 fi
 test -s 2e.E || rm -f 2e.E
-$xx --test -h x -b -3 -f $srcdir/0FFnt > 2f.O 2> 2f.E
+$xx --date-format="-- Date/Time --" -h x -b -3 -f $srcdir/0FFnt > 2f.O 2> 2f.E
 code=$?
 if test $code != 0; then
   $echo "Test 2f failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -342,7 +342,7 @@ else
   esac
 fi
 test -s 2f.E || rm -f 2f.E
-$xx --test -h x -b -3 -f $srcdir/0FnFt > 2g.O 2> 2g.E
+$xx --date-format="-- Date/Time --" -h x -b -3 -f $srcdir/0FnFt > 2g.O 2> 2g.E
 code=$?
 if test $code != 0; then
   $echo "Test 2g failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -360,7 +360,7 @@ else
   esac
 fi
 test -s 2g.E || rm -f 2g.E
-$xx --test -h x -b -3 -f $srcdir/0FnFnt > 2h.O 2> 2h.E
+$xx --date-format="-- Date/Time --" -h x -b -3 -f $srcdir/0FnFnt > 2h.O 2> 2h.E
 code=$?
 if test $code != 0; then
   $echo "Test 2h failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -378,7 +378,7 @@ else
   esac
 fi
 test -s 2h.E || rm -f 2h.E
-$xx --test -h x +3 -b -3 -f $srcdir/0FFt > 2i.O 2> 2i.E
+$xx --date-format="-- Date/Time --" -h x +3 -b -3 -f $srcdir/0FFt > 2i.O 2> 2i.E
 code=$?
 if test $code != 0; then
   $echo "Test 2i failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -396,7 +396,7 @@ else
   esac
 fi
 test -s 2i.E || rm -f 2i.E
-$xx --test -h x +3 -b -3 -f $srcdir/0FFnt > 2j.O 2> 2j.E
+$xx --date-format="-- Date/Time --" -h x +3 -b -3 -f $srcdir/0FFnt > 2j.O 2> 2j.E
 code=$?
 if test $code != 0; then
   $echo "Test 2j failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -414,7 +414,7 @@ else
   esac
 fi
 test -s 2j.E || rm -f 2j.E
-$xx --test -h x $srcdir/FFn > 3a.O 2> 3a.E
+$xx --date-format="-- Date/Time --" -h x $srcdir/FFn > 3a.O 2> 3a.E
 code=$?
 if test $code != 0; then
   $echo "Test 3a failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -432,7 +432,7 @@ else
   esac
 fi
 test -s 3a.E || rm -f 3a.E
-$xx --test -h x $srcdir/FnFn > 3b.O 2> 3b.E
+$xx --date-format="-- Date/Time --" -h x $srcdir/FnFn > 3b.O 2> 3b.E
 code=$?
 if test $code != 0; then
   $echo "Test 3b failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -450,7 +450,7 @@ else
   esac
 fi
 test -s 3b.E || rm -f 3b.E
-$xx --test -h x +3 $srcdir/FFn > 3c.O 2> 3c.E
+$xx --date-format="-- Date/Time --" -h x +3 $srcdir/FFn > 3c.O 2> 3c.E
 code=$?
 if test $code != 0; then
   $echo "Test 3c failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -468,7 +468,7 @@ else
   esac
 fi
 test -s 3c.E || rm -f 3c.E
-$xx --test -h x +3 -f $srcdir/FFn > 3d.O 2> 3d.E
+$xx --date-format="-- Date/Time --" -h x +3 -f $srcdir/FFn > 3d.O 2> 3d.E
 code=$?
 if test $code != 0; then
   $echo "Test 3d failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -486,7 +486,7 @@ else
   esac
 fi
 test -s 3d.E || rm -f 3d.E
-$xx --test -h x -a -3 -f $srcdir/FFn > 3e.O 2> 3e.E
+$xx --date-format="-- Date/Time --" -h x -a -3 -f $srcdir/FFn > 3e.O 2> 3e.E
 code=$?
 if test $code != 0; then
   $echo "Test 3e failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -504,7 +504,7 @@ else
   esac
 fi
 test -s 3e.E || rm -f 3e.E
-$xx --test -h x -a -3 -f $srcdir/FFtn > 3f.O 2> 3f.E
+$xx --date-format="-- Date/Time --" -h x -a -3 -f $srcdir/FFtn > 3f.O 2> 3f.E
 code=$?
 if test $code != 0; then
   $echo "Test 3f failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -522,7 +522,7 @@ else
   esac
 fi
 test -s 3f.E || rm -f 3f.E
-$xx --test -h x -b -3 -f $srcdir/FFn > 3g.O 2> 3g.E
+$xx --date-format="-- Date/Time --" -h x -b -3 -f $srcdir/FFn > 3g.O 2> 3g.E
 code=$?
 if test $code != 0; then
   $echo "Test 3g failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -540,7 +540,7 @@ else
   esac
 fi
 test -s 3g.E || rm -f 3g.E
-$xx --test -h x -b -3 -f $srcdir/FFtn > 3h.O 2> 3h.E
+$xx --date-format="-- Date/Time --" -h x -b -3 -f $srcdir/FFtn > 3h.O 2> 3h.E
 code=$?
 if test $code != 0; then
   $echo "Test 3h failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -558,7 +558,7 @@ else
   esac
 fi
 test -s 3h.E || rm -f 3h.E
-$xx --test -h x -b -3 -f $srcdir/FnFn > 3i.O 2> 3i.E
+$xx --date-format="-- Date/Time --" -h x -b -3 -f $srcdir/FnFn > 3i.O 2> 3i.E
 code=$?
 if test $code != 0; then
   $echo "Test 3i failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -576,7 +576,7 @@ else
   esac
 fi
 test -s 3i.E || rm -f 3i.E
-$xx --test -h x -b -3 -f $srcdir/tFFn > 3j.O 2> 3j.E
+$xx --date-format="-- Date/Time --" -h x -b -3 -f $srcdir/tFFn > 3j.O 2> 3j.E
 code=$?
 if test $code != 0; then
   $echo "Test 3j failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -594,7 +594,7 @@ else
   esac
 fi
 test -s 3j.E || rm -f 3j.E
-$xx --test -h x -b -3 -f $srcdir/tFnFt > 3k.O 2> 3k.E
+$xx --date-format="-- Date/Time --" -h x -b -3 -f $srcdir/tFnFt > 3k.O 2> 3k.E
 code=$?
 if test $code != 0; then
   $echo "Test 3k failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -612,7 +612,7 @@ else
   esac
 fi
 test -s 3k.E || rm -f 3k.E
-$xx --test -h x +3 -b -3 -f $srcdir/FFn > 3l.O 2> 3l.E
+$xx --date-format="-- Date/Time --" -h x +3 -b -3 -f $srcdir/FFn > 3l.O 2> 3l.E
 code=$?
 if test $code != 0; then
   $echo "Test 3l failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -630,7 +630,7 @@ else
   esac
 fi
 test -s 3l.E || rm -f 3l.E
-$xx --test -h x +3 -b -3 -f $srcdir/FFtn > 3m.O 2> 3m.E
+$xx --date-format="-- Date/Time --" -h x +3 -b -3 -f $srcdir/FFtn > 3m.O 2> 3m.E
 code=$?
 if test $code != 0; then
   $echo "Test 3m failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -648,7 +648,7 @@ else
   esac
 fi
 test -s 3m.E || rm -f 3m.E
-$xx --test -h x -l 24 $srcdir/FFn > 3la.O 2> 3la.E
+$xx --date-format="-- Date/Time --" -h x -l 24 $srcdir/FFn > 3la.O 2> 3la.E
 code=$?
 if test $code != 0; then
   $echo "Test 3la failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -666,7 +666,7 @@ else
   esac
 fi
 test -s 3la.E || rm -f 3la.E
-$xx --test -h x -l 24 $srcdir/FFtn > 3lb.O 2> 3lb.E
+$xx --date-format="-- Date/Time --" -h x -l 24 $srcdir/FFtn > 3lb.O 2> 3lb.E
 code=$?
 if test $code != 0; then
   $echo "Test 3lb failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -684,7 +684,7 @@ else
   esac
 fi
 test -s 3lb.E || rm -f 3lb.E
-$xx --test -h x -l 24 $srcdir/FnFn > 3lc.O 2> 3lc.E
+$xx --date-format="-- Date/Time --" -h x -l 24 $srcdir/FnFn > 3lc.O 2> 3lc.E
 code=$?
 if test $code != 0; then
   $echo "Test 3lc failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -702,7 +702,7 @@ else
   esac
 fi
 test -s 3lc.E || rm -f 3lc.E
-$xx --test -h x -l 24 $srcdir/tFFn > 3ld.O 2> 3ld.E
+$xx --date-format="-- Date/Time --" -h x -l 24 $srcdir/tFFn > 3ld.O 2> 3ld.E
 code=$?
 if test $code != 0; then
   $echo "Test 3ld failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -720,7 +720,7 @@ else
   esac
 fi
 test -s 3ld.E || rm -f 3ld.E
-$xx --test -h x -l 24 $srcdir/tFnFt > 3le.O 2> 3le.E
+$xx --date-format="-- Date/Time --" -h x -l 24 $srcdir/tFnFt > 3le.O 2> 3le.E
 code=$?
 if test $code != 0; then
   $echo "Test 3le failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -738,7 +738,7 @@ else
   esac
 fi
 test -s 3le.E || rm -f 3le.E
-$xx --test -h x -l 24 $srcdir/tFFt > 3lf.O 2> 3lf.E
+$xx --date-format="-- Date/Time --" -h x -l 24 $srcdir/tFFt > 3lf.O 2> 3lf.E
 code=$?
 if test $code != 0; then
   $echo "Test 3lf failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -756,7 +756,7 @@ else
   esac
 fi
 test -s 3lf.E || rm -f 3lf.E
-$xx --test -h x -a -2 -l 17 $srcdir/FFn > 3aa.O 2> 3aa.E
+$xx --date-format="-- Date/Time --" -h x -a -2 -l 17 $srcdir/FFn > 3aa.O 2> 3aa.E
 code=$?
 if test $code != 0; then
   $echo "Test 3aa failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -774,7 +774,7 @@ else
   esac
 fi
 test -s 3aa.E || rm -f 3aa.E
-$xx --test -h x -a -2 -l 17 $srcdir/FFtn > 3ab.O 2> 3ab.E
+$xx --date-format="-- Date/Time --" -h x -a -2 -l 17 $srcdir/FFtn > 3ab.O 2> 3ab.E
 code=$?
 if test $code != 0; then
   $echo "Test 3ab failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -792,7 +792,7 @@ else
   esac
 fi
 test -s 3ab.E || rm -f 3ab.E
-$xx --test -h x -a -2 -l 17 $srcdir/FnFn > 3ac.O 2> 3ac.E
+$xx --date-format="-- Date/Time --" -h x -a -2 -l 17 $srcdir/FnFn > 3ac.O 2> 3ac.E
 code=$?
 if test $code != 0; then
   $echo "Test 3ac failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -810,7 +810,7 @@ else
   esac
 fi
 test -s 3ac.E || rm -f 3ac.E
-$xx --test -h x -a -2 -l 17 $srcdir/tFFn > 3ad.O 2> 3ad.E
+$xx --date-format="-- Date/Time --" -h x -a -2 -l 17 $srcdir/tFFn > 3ad.O 2> 3ad.E
 code=$?
 if test $code != 0; then
   $echo "Test 3ad failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -828,7 +828,7 @@ else
   esac
 fi
 test -s 3ad.E || rm -f 3ad.E
-$xx --test -h x -a -2 -l 17 $srcdir/tFnFt > 3ae.O 2> 3ae.E
+$xx --date-format="-- Date/Time --" -h x -a -2 -l 17 $srcdir/tFnFt > 3ae.O 2> 3ae.E
 code=$?
 if test $code != 0; then
   $echo "Test 3ae failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -846,7 +846,7 @@ else
   esac
 fi
 test -s 3ae.E || rm -f 3ae.E
-$xx --test -h x -a -2 -l 17 $srcdir/tFFt > 3af.O 2> 3af.E
+$xx --date-format="-- Date/Time --" -h x -a -2 -l 17 $srcdir/tFFt > 3af.O 2> 3af.E
 code=$?
 if test $code != 0; then
   $echo "Test 3af failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -864,7 +864,7 @@ else
   esac
 fi
 test -s 3af.E || rm -f 3af.E
-$xx --test -h x -a -2 -l 15 $srcdir/FFn > 3ag.O 2> 3ag.E
+$xx --date-format="-- Date/Time --" -h x -a -2 -l 15 $srcdir/FFn > 3ag.O 2> 3ag.E
 code=$?
 if test $code != 0; then
   $echo "Test 3ag failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -882,7 +882,7 @@ else
   esac
 fi
 test -s 3ag.E || rm -f 3ag.E
-$xx --test -h x -a -2 -l 15 $srcdir/FFtn > 3ah.O 2> 3ah.E
+$xx --date-format="-- Date/Time --" -h x -a -2 -l 15 $srcdir/FFtn > 3ah.O 2> 3ah.E
 code=$?
 if test $code != 0; then
   $echo "Test 3ah failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -900,7 +900,7 @@ else
   esac
 fi
 test -s 3ah.E || rm -f 3ah.E
-$xx --test -h x -a -2 -l 15 $srcdir/FnFn > 3ai.O 2> 3ai.E
+$xx --date-format="-- Date/Time --" -h x -a -2 -l 15 $srcdir/FnFn > 3ai.O 2> 3ai.E
 code=$?
 if test $code != 0; then
   $echo "Test 3ai failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -918,7 +918,7 @@ else
   esac
 fi
 test -s 3ai.E || rm -f 3ai.E
-$xx --test -h x -a -2 -l 15 $srcdir/tFFn > 3aj.O 2> 3aj.E
+$xx --date-format="-- Date/Time --" -h x -a -2 -l 15 $srcdir/tFFn > 3aj.O 2> 3aj.E
 code=$?
 if test $code != 0; then
   $echo "Test 3aj failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -936,7 +936,7 @@ else
   esac
 fi
 test -s 3aj.E || rm -f 3aj.E
-$xx --test -h x -a -2 -l 15 $srcdir/tFnFt > 3ak.O 2> 3ak.E
+$xx --date-format="-- Date/Time --" -h x -a -2 -l 15 $srcdir/tFnFt > 3ak.O 2> 3ak.E
 code=$?
 if test $code != 0; then
   $echo "Test 3ak failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -954,7 +954,7 @@ else
   esac
 fi
 test -s 3ak.E || rm -f 3ak.E
-$xx --test -h x -b -2 -l 17 $srcdir/FFn > 3ba.O 2> 3ba.E
+$xx --date-format="-- Date/Time --" -h x -b -2 -l 17 $srcdir/FFn > 3ba.O 2> 3ba.E
 code=$?
 if test $code != 0; then
   $echo "Test 3ba failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -972,7 +972,7 @@ else
   esac
 fi
 test -s 3ba.E || rm -f 3ba.E
-$xx --test -h x -b -2 -l 17 $srcdir/FFtn > 3bb.O 2> 3bb.E
+$xx --date-format="-- Date/Time --" -h x -b -2 -l 17 $srcdir/FFtn > 3bb.O 2> 3bb.E
 code=$?
 if test $code != 0; then
   $echo "Test 3bb failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -990,7 +990,7 @@ else
   esac
 fi
 test -s 3bb.E || rm -f 3bb.E
-$xx --test -h x -b -2 -l 17 $srcdir/FnFn > 3bc.O 2> 3bc.E
+$xx --date-format="-- Date/Time --" -h x -b -2 -l 17 $srcdir/FnFn > 3bc.O 2> 3bc.E
 code=$?
 if test $code != 0; then
   $echo "Test 3bc failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1008,7 +1008,7 @@ else
   esac
 fi
 test -s 3bc.E || rm -f 3bc.E
-$xx --test -h x -b -2 -l 17 $srcdir/tFFn > 3bd.O 2> 3bd.E
+$xx --date-format="-- Date/Time --" -h x -b -2 -l 17 $srcdir/tFFn > 3bd.O 2> 3bd.E
 code=$?
 if test $code != 0; then
   $echo "Test 3bd failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1026,7 +1026,7 @@ else
   esac
 fi
 test -s 3bd.E || rm -f 3bd.E
-$xx --test -h x -b -2 -l 17 $srcdir/tFnFt > 3be.O 2> 3be.E
+$xx --date-format="-- Date/Time --" -h x -b -2 -l 17 $srcdir/tFnFt > 3be.O 2> 3be.E
 code=$?
 if test $code != 0; then
   $echo "Test 3be failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1044,7 +1044,7 @@ else
   esac
 fi
 test -s 3be.E || rm -f 3be.E
-$xx --test -h x -b -2 -l 17 $srcdir/tFFt > 3bf.O 2> 3bf.E
+$xx --date-format="-- Date/Time --" -h x -b -2 -l 17 $srcdir/tFFt > 3bf.O 2> 3bf.E
 code=$?
 if test $code != 0; then
   $echo "Test 3bf failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1062,7 +1062,7 @@ else
   esac
 fi
 test -s 3bf.E || rm -f 3bf.E
-$xx --test -h x -b -2 -l 15 $srcdir/FFn > 3bg.O 2> 3bg.E
+$xx --date-format="-- Date/Time --" -h x -b -2 -l 15 $srcdir/FFn > 3bg.O 2> 3bg.E
 code=$?
 if test $code != 0; then
   $echo "Test 3bg failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1080,7 +1080,7 @@ else
   esac
 fi
 test -s 3bg.E || rm -f 3bg.E
-$xx --test -h x -b -2 -l 15 $srcdir/FFtn > 3bh.O 2> 3bh.E
+$xx --date-format="-- Date/Time --" -h x -b -2 -l 15 $srcdir/FFtn > 3bh.O 2> 3bh.E
 code=$?
 if test $code != 0; then
   $echo "Test 3bh failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1098,7 +1098,7 @@ else
   esac
 fi
 test -s 3bh.E || rm -f 3bh.E
-$xx --test -h x -b -2 -l 15 $srcdir/FnFn > 3bi.O 2> 3bi.E
+$xx --date-format="-- Date/Time --" -h x -b -2 -l 15 $srcdir/FnFn > 3bi.O 2> 3bi.E
 code=$?
 if test $code != 0; then
   $echo "Test 3bi failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1116,7 +1116,7 @@ else
   esac
 fi
 test -s 3bi.E || rm -f 3bi.E
-$xx --test -h x -b -2 -l 15 $srcdir/tFFn > 3bj.O 2> 3bj.E
+$xx --date-format="-- Date/Time --" -h x -b -2 -l 15 $srcdir/tFFn > 3bj.O 2> 3bj.E
 code=$?
 if test $code != 0; then
   $echo "Test 3bj failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1134,7 +1134,7 @@ else
   esac
 fi
 test -s 3bj.E || rm -f 3bj.E
-$xx --test -h x -b -2 -l 15 $srcdir/tFnFt > 3bk.O 2> 3bk.E
+$xx --date-format="-- Date/Time --" -h x -b -2 -l 15 $srcdir/tFnFt > 3bk.O 2> 3bk.E
 code=$?
 if test $code != 0; then
   $echo "Test 3bk failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1152,7 +1152,7 @@ else
   esac
 fi
 test -s 3bk.E || rm -f 3bk.E
-$xx --test -h x +4 -l 24 $srcdir/FFn > 3Pa.O 2> 3Pa.E
+$xx --date-format="-- Date/Time --" -h x +4 -l 24 $srcdir/FFn > 3Pa.O 2> 3Pa.E
 code=$?
 if test $code != 0; then
   $echo "Test 3Pa failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1170,7 +1170,7 @@ else
   esac
 fi
 test -s 3Pa.E || rm -f 3Pa.E
-$xx --test -h x +4 -l 24 $srcdir/FFtn > 3Pb.O 2> 3Pb.E
+$xx --date-format="-- Date/Time --" -h x +4 -l 24 $srcdir/FFtn > 3Pb.O 2> 3Pb.E
 code=$?
 if test $code != 0; then
   $echo "Test 3Pb failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1188,7 +1188,7 @@ else
   esac
 fi
 test -s 3Pb.E || rm -f 3Pb.E
-$xx --test -h x +4 -l 24 $srcdir/FnFn > 3Pc.O 2> 3Pc.E
+$xx --date-format="-- Date/Time --" -h x +4 -l 24 $srcdir/FnFn > 3Pc.O 2> 3Pc.E
 code=$?
 if test $code != 0; then
   $echo "Test 3Pc failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1206,7 +1206,7 @@ else
   esac
 fi
 test -s 3Pc.E || rm -f 3Pc.E
-$xx --test -h x +4 -l 24 $srcdir/tFFn > 3Pd.O 2> 3Pd.E
+$xx --date-format="-- Date/Time --" -h x +4 -l 24 $srcdir/tFFn > 3Pd.O 2> 3Pd.E
 code=$?
 if test $code != 0; then
   $echo "Test 3Pd failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1224,7 +1224,7 @@ else
   esac
 fi
 test -s 3Pd.E || rm -f 3Pd.E
-$xx --test -h x +4 -l 24 $srcdir/tFnFt > 3Pe.O 2> 3Pe.E
+$xx --date-format="-- Date/Time --" -h x +4 -l 24 $srcdir/tFnFt > 3Pe.O 2> 3Pe.E
 code=$?
 if test $code != 0; then
   $echo "Test 3Pe failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1242,7 +1242,7 @@ else
   esac
 fi
 test -s 3Pe.E || rm -f 3Pe.E
-$xx --test -h x +4 -l 24 $srcdir/tFFt > 3Pf.O 2> 3Pf.E
+$xx --date-format="-- Date/Time --" -h x +4 -l 24 $srcdir/tFFt > 3Pf.O 2> 3Pf.E
 code=$?
 if test $code != 0; then
   $echo "Test 3Pf failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1260,7 +1260,7 @@ else
   esac
 fi
 test -s 3Pf.E || rm -f 3Pf.E
-$xx --test -h x +4:7 -l 24 $srcdir/tFFt > 3Pg.O 2> 3Pg.E
+$xx --date-format="-- Date/Time --" -h x +4:7 -l 24 $srcdir/tFFt > 3Pg.O 2> 3Pg.E
 code=$?
 if test $code != 0; then
   $echo "Test 3Pg failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1278,7 +1278,7 @@ else
   esac
 fi
 test -s 3Pg.E || rm -f 3Pg.E
-$xx --test -h x +3 -a -2 -l 17 $srcdir/FFn > 3Paa.O 2> 3Paa.E
+$xx --date-format="-- Date/Time --" -h x +3 -a -2 -l 17 $srcdir/FFn > 3Paa.O 2> 3Paa.E
 code=$?
 if test $code != 0; then
   $echo "Test 3Paa failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1296,7 +1296,7 @@ else
   esac
 fi
 test -s 3Paa.E || rm -f 3Paa.E
-$xx --test -h x +3 -a -2 -l 17 $srcdir/FFtn > 3Pab.O 2> 3Pab.E
+$xx --date-format="-- Date/Time --" -h x +3 -a -2 -l 17 $srcdir/FFtn > 3Pab.O 2> 3Pab.E
 code=$?
 if test $code != 0; then
   $echo "Test 3Pab failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1314,7 +1314,7 @@ else
   esac
 fi
 test -s 3Pab.E || rm -f 3Pab.E
-$xx --test -h x +3 -a -2 -l 17 $srcdir/FnFn > 3Pac.O 2> 3Pac.E
+$xx --date-format="-- Date/Time --" -h x +3 -a -2 -l 17 $srcdir/FnFn > 3Pac.O 2> 3Pac.E
 code=$?
 if test $code != 0; then
   $echo "Test 3Pac failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1332,7 +1332,7 @@ else
   esac
 fi
 test -s 3Pac.E || rm -f 3Pac.E
-$xx --test -h x +3 -a -2 -l 17 $srcdir/tFFn > 3Pad.O 2> 3Pad.E
+$xx --date-format="-- Date/Time --" -h x +3 -a -2 -l 17 $srcdir/tFFn > 3Pad.O 2> 3Pad.E
 code=$?
 if test $code != 0; then
   $echo "Test 3Pad failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1350,7 +1350,7 @@ else
   esac
 fi
 test -s 3Pad.E || rm -f 3Pad.E
-$xx --test -h x +3 -a -2 -l 17 $srcdir/tFnFt > 3Pae.O 2> 3Pae.E
+$xx --date-format="-- Date/Time --" -h x +3 -a -2 -l 17 $srcdir/tFnFt > 3Pae.O 2> 3Pae.E
 code=$?
 if test $code != 0; then
   $echo "Test 3Pae failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1368,7 +1368,7 @@ else
   esac
 fi
 test -s 3Pae.E || rm -f 3Pae.E
-$xx --test -h x +3 -a -2 -l 17 $srcdir/tFFt > 3Paf.O 2> 3Paf.E
+$xx --date-format="-- Date/Time --" -h x +3 -a -2 -l 17 $srcdir/tFFt > 3Paf.O 2> 3Paf.E
 code=$?
 if test $code != 0; then
   $echo "Test 3Paf failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1386,7 +1386,7 @@ else
   esac
 fi
 test -s 3Paf.E || rm -f 3Paf.E
-$xx --test -h x +3 -b -2 -l 17 $srcdir/FFn > 3Pba.O 2> 3Pba.E
+$xx --date-format="-- Date/Time --" -h x +3 -b -2 -l 17 $srcdir/FFn > 3Pba.O 2> 3Pba.E
 code=$?
 if test $code != 0; then
   $echo "Test 3Pba failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1404,7 +1404,7 @@ else
   esac
 fi
 test -s 3Pba.E || rm -f 3Pba.E
-$xx --test -h x +3 -b -2 -l 17 $srcdir/FFtn > 3Pbb.O 2> 3Pbb.E
+$xx --date-format="-- Date/Time --" -h x +3 -b -2 -l 17 $srcdir/FFtn > 3Pbb.O 2> 3Pbb.E
 code=$?
 if test $code != 0; then
   $echo "Test 3Pbb failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1422,7 +1422,7 @@ else
   esac
 fi
 test -s 3Pbb.E || rm -f 3Pbb.E
-$xx --test -h x +3 -b -2 -l 17 $srcdir/FnFn > 3Pbc.O 2> 3Pbc.E
+$xx --date-format="-- Date/Time --" -h x +3 -b -2 -l 17 $srcdir/FnFn > 3Pbc.O 2> 3Pbc.E
 code=$?
 if test $code != 0; then
   $echo "Test 3Pbc failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1440,7 +1440,7 @@ else
   esac
 fi
 test -s 3Pbc.E || rm -f 3Pbc.E
-$xx --test -h x +3 -b -2 -l 17 $srcdir/tFFn > 3Pbd.O 2> 3Pbd.E
+$xx --date-format="-- Date/Time --" -h x +3 -b -2 -l 17 $srcdir/tFFn > 3Pbd.O 2> 3Pbd.E
 code=$?
 if test $code != 0; then
   $echo "Test 3Pbd failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1458,7 +1458,7 @@ else
   esac
 fi
 test -s 3Pbd.E || rm -f 3Pbd.E
-$xx --test -h x +3 -b -2 -l 17 $srcdir/tFnFt > 3Pbe.O 2> 3Pbe.E
+$xx --date-format="-- Date/Time --" -h x +3 -b -2 -l 17 $srcdir/tFnFt > 3Pbe.O 2> 3Pbe.E
 code=$?
 if test $code != 0; then
   $echo "Test 3Pbe failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1476,7 +1476,7 @@ else
   esac
 fi
 test -s 3Pbe.E || rm -f 3Pbe.E
-$xx --test -h x +3 -b -2 -l 17 $srcdir/tFFt > 3Pbf.O 2> 3Pbf.E
+$xx --date-format="-- Date/Time --" -h x +3 -b -2 -l 17 $srcdir/tFFt > 3Pbf.O 2> 3Pbf.E
 code=$?
 if test $code != 0; then
   $echo "Test 3Pbf failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1494,7 +1494,7 @@ else
   esac
 fi
 test -s 3Pbf.E || rm -f 3Pbf.E
-$xx --test -h x -l 24 $srcdir/tn > 4a.O 2> 4a.E
+$xx --date-format="-- Date/Time --" -h x -l 24 $srcdir/tn > 4a.O 2> 4a.E
 code=$?
 if test $code != 0; then
   $echo "Test 4a failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1512,7 +1512,7 @@ else
   esac
 fi
 test -s 4a.E || rm -f 4a.E
-$xx --test -h x -l 17 -f $srcdir/tn > 4b.O 2> 4b.E
+$xx --date-format="-- Date/Time --" -h x -l 17 -f $srcdir/tn > 4b.O 2> 4b.E
 code=$?
 if test $code != 0; then
   $echo "Test 4b failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1530,7 +1530,7 @@ else
   esac
 fi
 test -s 4b.E || rm -f 4b.E
-$xx --test -h x +3 -l 24 $srcdir/tn > 4c.O 2> 4c.E
+$xx --date-format="-- Date/Time --" -h x +3 -l 24 $srcdir/tn > 4c.O 2> 4c.E
 code=$?
 if test $code != 0; then
   $echo "Test 4c failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1548,7 +1548,7 @@ else
   esac
 fi
 test -s 4c.E || rm -f 4c.E
-$xx --test -h x +3 -l 17 -f $srcdir/tn > 4d.O 2> 4d.E
+$xx --date-format="-- Date/Time --" -h x +3 -l 17 -f $srcdir/tn > 4d.O 2> 4d.E
 code=$?
 if test $code != 0; then
   $echo "Test 4d failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1566,7 +1566,7 @@ else
   esac
 fi
 test -s 4d.E || rm -f 4d.E
-$xx --test -h x +3:5 -l 17 -f $srcdir/tn > 4e.O 2> 4e.E
+$xx --date-format="-- Date/Time --" -h x +3:5 -l 17 -f $srcdir/tn > 4e.O 2> 4e.E
 code=$?
 if test $code != 0; then
   $echo "Test 4e failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1584,7 +1584,7 @@ else
   esac
 fi
 test -s 4e.E || rm -f 4e.E
-$xx --test -h x -a -3 -l 15 $srcdir/tn > 4f.O 2> 4f.E
+$xx --date-format="-- Date/Time --" -h x -a -3 -l 15 $srcdir/tn > 4f.O 2> 4f.E
 code=$?
 if test $code != 0; then
   $echo "Test 4f failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1602,7 +1602,7 @@ else
   esac
 fi
 test -s 4f.E || rm -f 4f.E
-$xx --test -h x -a -3 -l 8 -f $srcdir/tn > 4g.O 2> 4g.E
+$xx --date-format="-- Date/Time --" -h x -a -3 -l 8 -f $srcdir/tn > 4g.O 2> 4g.E
 code=$?
 if test $code != 0; then
   $echo "Test 4g failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1620,7 +1620,7 @@ else
   esac
 fi
 test -s 4g.E || rm -f 4g.E
-$xx --test -h x +3 -a -3 -l 15 $srcdir/tn > 4h.O 2> 4h.E
+$xx --date-format="-- Date/Time --" -h x +3 -a -3 -l 15 $srcdir/tn > 4h.O 2> 4h.E
 code=$?
 if test $code != 0; then
   $echo "Test 4h failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1638,7 +1638,7 @@ else
   esac
 fi
 test -s 4h.E || rm -f 4h.E
-$xx --test -h x +3 -a -3 -l 8 -f $srcdir/tn > 4i.O 2> 4i.E
+$xx --date-format="-- Date/Time --" -h x +3 -a -3 -l 8 -f $srcdir/tn > 4i.O 2> 4i.E
 code=$?
 if test $code != 0; then
   $echo "Test 4i failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1656,7 +1656,7 @@ else
   esac
 fi
 test -s 4i.E || rm -f 4i.E
-$xx --test -h x -b -3 -l 15 $srcdir/tn > 4j.O 2> 4j.E
+$xx --date-format="-- Date/Time --" -h x -b -3 -l 15 $srcdir/tn > 4j.O 2> 4j.E
 code=$?
 if test $code != 0; then
   $echo "Test 4j failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1674,7 +1674,7 @@ else
   esac
 fi
 test -s 4j.E || rm -f 4j.E
-$xx --test -h x -b -3 -l 8 -f $srcdir/tn > 4k.O 2> 4k.E
+$xx --date-format="-- Date/Time --" -h x -b -3 -l 8 -f $srcdir/tn > 4k.O 2> 4k.E
 code=$?
 if test $code != 0; then
   $echo "Test 4k failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1692,7 +1692,7 @@ else
   esac
 fi
 test -s 4k.E || rm -f 4k.E
-$xx --test -h x +3 -b -3 -l 15 $srcdir/tn > 4l.O 2> 4l.E
+$xx --date-format="-- Date/Time --" -h x +3 -b -3 -l 15 $srcdir/tn > 4l.O 2> 4l.E
 code=$?
 if test $code != 0; then
   $echo "Test 4l failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1710,7 +1710,7 @@ else
   esac
 fi
 test -s 4l.E || rm -f 4l.E
-$xx --test -h x +3 -b -3 -l 8 -f $srcdir/tn > 4m.O 2> 4m.E
+$xx --date-format="-- Date/Time --" -h x +3 -b -3 -l 8 -f $srcdir/tn > 4m.O 2> 4m.E
 code=$?
 if test $code != 0; then
   $echo "Test 4m failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1728,7 +1728,7 @@ else
   esac
 fi
 test -s 4m.E || rm -f 4m.E
-$xx --test -h x -m -l 24 $srcdir/tn $srcdir/tn > 5a.O 2> 5a.E
+$xx --date-format="-- Date/Time --" -h x -m -l 24 $srcdir/tn $srcdir/tn > 5a.O 2> 5a.E
 code=$?
 if test $code != 0; then
   $echo "Test 5a failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1746,7 +1746,7 @@ else
   esac
 fi
 test -s 5a.E || rm -f 5a.E
-$xx --test -h x -m -l 17 -f $srcdir/tn $srcdir/tn > 5b.O 2> 5b.E
+$xx --date-format="-- Date/Time --" -h x -m -l 17 -f $srcdir/tn $srcdir/tn > 5b.O 2> 5b.E
 code=$?
 if test $code != 0; then
   $echo "Test 5b failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1764,7 +1764,7 @@ else
   esac
 fi
 test -s 5b.E || rm -f 5b.E
-$xx --test -h x +3 -m -l 24 $srcdir/tn $srcdir/tn > 5c.O 2> 5c.E
+$xx --date-format="-- Date/Time --" -h x +3 -m -l 24 $srcdir/tn $srcdir/tn > 5c.O 2> 5c.E
 code=$?
 if test $code != 0; then
   $echo "Test 5c failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1782,7 +1782,7 @@ else
   esac
 fi
 test -s 5c.E || rm -f 5c.E
-$xx --test -h x +3 -m -l 17 -f $srcdir/tn $srcdir/tn > 5d.O 2> 5d.E
+$xx --date-format="-- Date/Time --" -h x +3 -m -l 17 -f $srcdir/tn $srcdir/tn > 5d.O 2> 5d.E
 code=$?
 if test $code != 0; then
   $echo "Test 5d failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1800,7 +1800,7 @@ else
   esac
 fi
 test -s 5d.E || rm -f 5d.E
-$xx --test -h x -m -l 17 -f $srcdir/0Ft $srcdir/0Ft > 5e.O 2> 5e.E
+$xx --date-format="-- Date/Time --" -h x -m -l 17 -f $srcdir/0Ft $srcdir/0Ft > 5e.O 2> 5e.E
 code=$?
 if test $code != 0; then
   $echo "Test 5e failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1818,7 +1818,7 @@ else
   esac
 fi
 test -s 5e.E || rm -f 5e.E
-$xx --test -h x -m -l 17 -f $srcdir/0Ft $srcdir/0Fnt > 5f.O 2> 5f.E
+$xx --date-format="-- Date/Time --" -h x -m -l 17 -f $srcdir/0Ft $srcdir/0Fnt > 5f.O 2> 5f.E
 code=$?
 if test $code != 0; then
   $echo "Test 5f failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1836,7 +1836,7 @@ else
   esac
 fi
 test -s 5f.E || rm -f 5f.E
-$xx --test -h x -m -l 17 -f $srcdir/tn $srcdir/0Ft > 5g.O 2> 5g.E
+$xx --date-format="-- Date/Time --" -h x -m -l 17 -f $srcdir/tn $srcdir/0Ft > 5g.O 2> 5g.E
 code=$?
 if test $code != 0; then
   $echo "Test 5g failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1854,7 +1854,7 @@ else
   esac
 fi
 test -s 5g.E || rm -f 5g.E
-$xx --test -h x -m -l 24 $srcdir/tFFn $srcdir/tFnFt > 5ma.O 2> 5ma.E
+$xx --date-format="-- Date/Time --" -h x -m -l 24 $srcdir/tFFn $srcdir/tFnFt > 5ma.O 2> 5ma.E
 code=$?
 if test $code != 0; then
   $echo "Test 5ma failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1872,7 +1872,7 @@ else
   esac
 fi
 test -s 5ma.E || rm -f 5ma.E
-$xx --test -h x -m -l 24 $srcdir/tFFn $srcdir/FFn > 5mb.O 2> 5mb.E
+$xx --date-format="-- Date/Time --" -h x -m -l 24 $srcdir/tFFn $srcdir/FFn > 5mb.O 2> 5mb.E
 code=$?
 if test $code != 0; then
   $echo "Test 5mb failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1890,7 +1890,7 @@ else
   esac
 fi
 test -s 5mb.E || rm -f 5mb.E
-$xx --test -h x -m -l 24 $srcdir/tn $srcdir/FFn > 5mc.O 2> 5mc.E
+$xx --date-format="-- Date/Time --" -h x -m -l 24 $srcdir/tn $srcdir/FFn > 5mc.O 2> 5mc.E
 code=$?
 if test $code != 0; then
   $echo "Test 5mc failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1908,7 +1908,7 @@ else
   esac
 fi
 test -s 5mc.E || rm -f 5mc.E
-$xx --test -h x -m -l 20 $srcdir/FFn $srcdir/tn > 5md.O 2> 5md.E
+$xx --date-format="-- Date/Time --" -h x -m -l 20 $srcdir/FFn $srcdir/tn > 5md.O 2> 5md.E
 code=$?
 if test $code != 0; then
   $echo "Test 5md failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1926,7 +1926,7 @@ else
   esac
 fi
 test -s 5md.E || rm -f 5md.E
-$xx --test -h x +3 -m -l 24 $srcdir/FFn $srcdir/FnFn > 5Pma.O 2> 5Pma.E
+$xx --date-format="-- Date/Time --" -h x +3 -m -l 24 $srcdir/FFn $srcdir/FnFn > 5Pma.O 2> 5Pma.E
 code=$?
 if test $code != 0; then
   $echo "Test 5Pma failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1944,7 +1944,7 @@ else
   esac
 fi
 test -s 5Pma.E || rm -f 5Pma.E
-$xx --test -h x +3 -m -l 24 $srcdir/tFFn $srcdir/FFn > 5Pmb.O 2> 5Pmb.E
+$xx --date-format="-- Date/Time --" -h x +3 -m -l 24 $srcdir/tFFn $srcdir/FFn > 5Pmb.O 2> 5Pmb.E
 code=$?
 if test $code != 0; then
   $echo "Test 5Pmb failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1962,7 +1962,7 @@ else
   esac
 fi
 test -s 5Pmb.E || rm -f 5Pmb.E
-$xx --test -h x +3 -m -l 24 $srcdir/tn $srcdir/FFn > 5Pmc.O 2> 5Pmc.E
+$xx --date-format="-- Date/Time --" -h x +3 -m -l 24 $srcdir/tn $srcdir/FFn > 5Pmc.O 2> 5Pmc.E
 code=$?
 if test $code != 0; then
   $echo "Test 5Pmc failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1980,7 +1980,7 @@ else
   esac
 fi
 test -s 5Pmc.E || rm -f 5Pmc.E
-$xx --test -h x -t -l 24 $srcdir/tn > 6a.O 2> 6a.E
+$xx --date-format="-- Date/Time --" -h x -t -l 24 $srcdir/tn > 6a.O 2> 6a.E
 code=$?
 if test $code != 0; then
   $echo "Test 6a failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -1998,7 +1998,7 @@ else
   esac
 fi
 test -s 6a.E || rm -f 6a.E
-$xx --test -h x -t -l 17 -f $srcdir/tn > 6b.O 2> 6b.E
+$xx --date-format="-- Date/Time --" -h x -t -l 17 -f $srcdir/tn > 6b.O 2> 6b.E
 code=$?
 if test $code != 0; then
   $echo "Test 6b failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2016,7 +2016,7 @@ else
   esac
 fi
 test -s 6b.E || rm -f 6b.E
-$xx --test -h x -t -l 17 -f $srcdir/tFFt-bl > 6c.O 2> 6c.E
+$xx --date-format="-- Date/Time --" -h x -t -l 17 -f $srcdir/tFFt-bl > 6c.O 2> 6c.E
 code=$?
 if test $code != 0; then
   $echo "Test 6c failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2034,7 +2034,7 @@ else
   esac
 fi
 test -s 6c.E || rm -f 6c.E
-$xx --test -h x -t -l 24 $srcdir/0FnFnt > 6d.O 2> 6d.E
+$xx --date-format="-- Date/Time --" -h x -t -l 24 $srcdir/0FnFnt > 6d.O 2> 6d.E
 code=$?
 if test $code != 0; then
   $echo "Test 6d failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2052,7 +2052,7 @@ else
   esac
 fi
 test -s 6d.E || rm -f 6d.E
-$xx --test -h x -t -l 24 $srcdir/FFn > 6e.O 2> 6e.E
+$xx --date-format="-- Date/Time --" -h x -t -l 24 $srcdir/FFn > 6e.O 2> 6e.E
 code=$?
 if test $code != 0; then
   $echo "Test 6e failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2070,7 +2070,7 @@ else
   esac
 fi
 test -s 6e.E || rm -f 6e.E
-$xx --test -h x -t -l 24 $srcdir/FnFn > 6f.O 2> 6f.E
+$xx --date-format="-- Date/Time --" -h x -t -l 24 $srcdir/FnFn > 6f.O 2> 6f.E
 code=$?
 if test $code != 0; then
   $echo "Test 6f failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2088,7 +2088,7 @@ else
   esac
 fi
 test -s 6f.E || rm -f 6f.E
-$xx --test -h x -t -l 17 -f $srcdir/FFn > 6g.O 2> 6g.E
+$xx --date-format="-- Date/Time --" -h x -t -l 17 -f $srcdir/FFn > 6g.O 2> 6g.E
 code=$?
 if test $code != 0; then
   $echo "Test 6g failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2106,7 +2106,7 @@ else
   esac
 fi
 test -s 6g.E || rm -f 6g.E
-$xx --test -h x -t -a -3 $srcdir/0FnFnt > 6aa.O 2> 6aa.E
+$xx --date-format="-- Date/Time --" -h x -t -a -3 $srcdir/0FnFnt > 6aa.O 2> 6aa.E
 code=$?
 if test $code != 0; then
   $echo "Test 6aa failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2124,7 +2124,7 @@ else
   esac
 fi
 test -s 6aa.E || rm -f 6aa.E
-$xx --test -h x -t -a -3 $srcdir/FFn > 6ab.O 2> 6ab.E
+$xx --date-format="-- Date/Time --" -h x -t -a -3 $srcdir/FFn > 6ab.O 2> 6ab.E
 code=$?
 if test $code != 0; then
   $echo "Test 6ab failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2142,7 +2142,7 @@ else
   esac
 fi
 test -s 6ab.E || rm -f 6ab.E
-$xx --test -h x -t -a -3 -l 24 $srcdir/FnFn > 6ac.O 2> 6ac.E
+$xx --date-format="-- Date/Time --" -h x -t -a -3 -l 24 $srcdir/FnFn > 6ac.O 2> 6ac.E
 code=$?
 if test $code != 0; then
   $echo "Test 6ac failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2160,7 +2160,7 @@ else
   esac
 fi
 test -s 6ac.E || rm -f 6ac.E
-$xx --test -h x -t -b -3 $srcdir/0FnFnt > 6ba.O 2> 6ba.E
+$xx --date-format="-- Date/Time --" -h x -t -b -3 $srcdir/0FnFnt > 6ba.O 2> 6ba.E
 code=$?
 if test $code != 0; then
   $echo "Test 6ba failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2178,7 +2178,7 @@ else
   esac
 fi
 test -s 6ba.E || rm -f 6ba.E
-$xx --test -h x -t -b -3 $srcdir/FFn > 6bb.O 2> 6bb.E
+$xx --date-format="-- Date/Time --" -h x -t -b -3 $srcdir/FFn > 6bb.O 2> 6bb.E
 code=$?
 if test $code != 0; then
   $echo "Test 6bb failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2196,7 +2196,7 @@ else
   esac
 fi
 test -s 6bb.E || rm -f 6bb.E
-$xx --test -h x -t -b -3 -l 24 $srcdir/FnFn > 6bc.O 2> 6bc.E
+$xx --date-format="-- Date/Time --" -h x -t -b -3 -l 24 $srcdir/FnFn > 6bc.O 2> 6bc.E
 code=$?
 if test $code != 0; then
   $echo "Test 6bc failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2214,7 +2214,7 @@ else
   esac
 fi
 test -s 6bc.E || rm -f 6bc.E
-$xx --test -h x -T -l 24 $srcdir/tn > 7a.O 2> 7a.E
+$xx --date-format="-- Date/Time --" -h x -T -l 24 $srcdir/tn > 7a.O 2> 7a.E
 code=$?
 if test $code != 0; then
   $echo "Test 7a failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2232,7 +2232,7 @@ else
   esac
 fi
 test -s 7a.E || rm -f 7a.E
-$xx --test -h x -T -l 17 -f $srcdir/tn > 7b.O 2> 7b.E
+$xx --date-format="-- Date/Time --" -h x -T -l 17 -f $srcdir/tn > 7b.O 2> 7b.E
 code=$?
 if test $code != 0; then
   $echo "Test 7b failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2250,7 +2250,7 @@ else
   esac
 fi
 test -s 7b.E || rm -f 7b.E
-$xx --test -h x -T -l 17 -f $srcdir/tFFt-bl > 7c.O 2> 7c.E
+$xx --date-format="-- Date/Time --" -h x -T -l 17 -f $srcdir/tFFt-bl > 7c.O 2> 7c.E
 code=$?
 if test $code != 0; then
   $echo "Test 7c failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2268,7 +2268,7 @@ else
   esac
 fi
 test -s 7c.E || rm -f 7c.E
-$xx --test -h x -T -l 24 $srcdir/0FnFnt > 7d.O 2> 7d.E
+$xx --date-format="-- Date/Time --" -h x -T -l 24 $srcdir/0FnFnt > 7d.O 2> 7d.E
 code=$?
 if test $code != 0; then
   $echo "Test 7d failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2286,7 +2286,7 @@ else
   esac
 fi
 test -s 7d.E || rm -f 7d.E
-$xx --test -h x -T -l 24 $srcdir/FFn > 7e.O 2> 7e.E
+$xx --date-format="-- Date/Time --" -h x -T -l 24 $srcdir/FFn > 7e.O 2> 7e.E
 code=$?
 if test $code != 0; then
   $echo "Test 7e failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2304,7 +2304,7 @@ else
   esac
 fi
 test -s 7e.E || rm -f 7e.E
-$xx --test -h x -T -l 24 $srcdir/FnFn > 7f.O 2> 7f.E
+$xx --date-format="-- Date/Time --" -h x -T -l 24 $srcdir/FnFn > 7f.O 2> 7f.E
 code=$?
 if test $code != 0; then
   $echo "Test 7f failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2322,7 +2322,7 @@ else
   esac
 fi
 test -s 7f.E || rm -f 7f.E
-$xx --test -h x -T -l 17 -f $srcdir/FFn > 7g.O 2> 7g.E
+$xx --date-format="-- Date/Time --" -h x -T -l 17 -f $srcdir/FFn > 7g.O 2> 7g.E
 code=$?
 if test $code != 0; then
   $echo "Test 7g failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2340,7 +2340,7 @@ else
   esac
 fi
 test -s 7g.E || rm -f 7g.E
-$xx --test -h x -T -a -3 $srcdir/0FnFnt > 7aa.O 2> 7aa.E
+$xx --date-format="-- Date/Time --" -h x -T -a -3 $srcdir/0FnFnt > 7aa.O 2> 7aa.E
 code=$?
 if test $code != 0; then
   $echo "Test 7aa failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2358,7 +2358,7 @@ else
   esac
 fi
 test -s 7aa.E || rm -f 7aa.E
-$xx --test -h x -T -a -3 $srcdir/FFn > 7ab.O 2> 7ab.E
+$xx --date-format="-- Date/Time --" -h x -T -a -3 $srcdir/FFn > 7ab.O 2> 7ab.E
 code=$?
 if test $code != 0; then
   $echo "Test 7ab failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2376,7 +2376,7 @@ else
   esac
 fi
 test -s 7ab.E || rm -f 7ab.E
-$xx --test -h x -T -a -3 -l 24 $srcdir/FnFn > 7ac.O 2> 7ac.E
+$xx --date-format="-- Date/Time --" -h x -T -a -3 -l 24 $srcdir/FnFn > 7ac.O 2> 7ac.E
 code=$?
 if test $code != 0; then
   $echo "Test 7ac failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2394,7 +2394,7 @@ else
   esac
 fi
 test -s 7ac.E || rm -f 7ac.E
-$xx --test -h x -T -b -3 $srcdir/0FnFnt > 7ba.O 2> 7ba.E
+$xx --date-format="-- Date/Time --" -h x -T -b -3 $srcdir/0FnFnt > 7ba.O 2> 7ba.E
 code=$?
 if test $code != 0; then
   $echo "Test 7ba failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2412,7 +2412,7 @@ else
   esac
 fi
 test -s 7ba.E || rm -f 7ba.E
-$xx --test -h x -T -b -3 $srcdir/FFn > 7bb.O 2> 7bb.E
+$xx --date-format="-- Date/Time --" -h x -T -b -3 $srcdir/FFn > 7bb.O 2> 7bb.E
 code=$?
 if test $code != 0; then
   $echo "Test 7bb failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2430,7 +2430,7 @@ else
   esac
 fi
 test -s 7bb.E || rm -f 7bb.E
-$xx --test -h x -T -b -3 -l 24 $srcdir/FnFn > 7bc.O 2> 7bc.E
+$xx --date-format="-- Date/Time --" -h x -T -b -3 -l 24 $srcdir/FnFn > 7bc.O 2> 7bc.E
 code=$?
 if test $code != 0; then
   $echo "Test 7bc failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2448,7 +2448,7 @@ else
   esac
 fi
 test -s 7bc.E || rm -f 7bc.E
-$xx --test -h x -n.3 -l 17 -f $srcdir/tFFt-bl > 9a.O 2> 9a.E
+$xx --date-format="-- Date/Time --" -h x -n.3 -l 17 -f $srcdir/tFFt-bl > 9a.O 2> 9a.E
 code=$?
 if test $code != 0; then
   $echo "Test 9a failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2466,7 +2466,7 @@ else
   esac
 fi
 test -s 9a.E || rm -f 9a.E
-$xx --test -h x -n.3 -N 15 -l 17 -f $srcdir/tFFt-bl > 9b.O 2> 9b.E
+$xx --date-format="-- Date/Time --" -h x -n.3 -N 15 -l 17 -f $srcdir/tFFt-bl > 9b.O 2> 9b.E
 code=$?
 if test $code != 0; then
   $echo "Test 9b failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2484,7 +2484,7 @@ else
   esac
 fi
 test -s 9b.E || rm -f 9b.E
-$xx --test -h x -n.3 +2 -l 17 -f $srcdir/tFFt-bl > 9Pa.O 2> 9Pa.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +2 -l 17 -f $srcdir/tFFt-bl > 9Pa.O 2> 9Pa.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Pa failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2502,7 +2502,7 @@ else
   esac
 fi
 test -s 9Pa.E || rm -f 9Pa.E
-$xx --test -h x -n.3 +3 -l 17 -f $srcdir/tFFt-bl > 9Pb.O 2> 9Pb.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +3 -l 17 -f $srcdir/tFFt-bl > 9Pb.O 2> 9Pb.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Pb failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2520,7 +2520,7 @@ else
   esac
 fi
 test -s 9Pb.E || rm -f 9Pb.E
-$xx --test -h x -n.3 -N 1 +3 -l 17 -f $srcdir/tFFt-bl > 9Pc.O 2> 9Pc.E
+$xx --date-format="-- Date/Time --" -h x -n.3 -N 1 +3 -l 17 -f $srcdir/tFFt-bl > 9Pc.O 2> 9Pc.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Pc failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2538,7 +2538,7 @@ else
   esac
 fi
 test -s 9Pc.E || rm -f 9Pc.E
-$xx --test -h x -n.3 +2 -l 17 -f $srcdir/0FFt > 9Pe.O 2> 9Pe.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +2 -l 17 -f $srcdir/0FFt > 9Pe.O 2> 9Pe.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Pe failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2556,7 +2556,7 @@ else
   esac
 fi
 test -s 9Pe.E || rm -f 9Pe.E
-$xx --test -h x -n.3 +2 -l 17 -f $srcdir/0FFnt > 9Pf.O 2> 9Pf.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +2 -l 17 -f $srcdir/0FFnt > 9Pf.O 2> 9Pf.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Pf failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2574,7 +2574,7 @@ else
   esac
 fi
 test -s 9Pf.E || rm -f 9Pf.E
-$xx --test -h x -n.3 +2 -l 17 -f $srcdir/0FnFt > 9Pg.O 2> 9Pg.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +2 -l 17 -f $srcdir/0FnFt > 9Pg.O 2> 9Pg.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Pg failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2592,7 +2592,7 @@ else
   esac
 fi
 test -s 9Pg.E || rm -f 9Pg.E
-$xx --test -h x -n.3 +2 -l 17 -f $srcdir/0FnFnt > 9Ph.O 2> 9Ph.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +2 -l 17 -f $srcdir/0FnFnt > 9Ph.O 2> 9Ph.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Ph failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2610,7 +2610,7 @@ else
   esac
 fi
 test -s 9Ph.E || rm -f 9Ph.E
-$xx --test -h x -n.3 +2:5 -l 17 -f $srcdir/0FFt > 9Pi.O 2> 9Pi.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +2:5 -l 17 -f $srcdir/0FFt > 9Pi.O 2> 9Pi.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Pi failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2628,7 +2628,7 @@ else
   esac
 fi
 test -s 9Pi.E || rm -f 9Pi.E
-$xx --test -h x -n.3 +3 -l 17 -f $srcdir/0FFt > 9Pj.O 2> 9Pj.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +3 -l 17 -f $srcdir/0FFt > 9Pj.O 2> 9Pj.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Pj failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2646,7 +2646,7 @@ else
   esac
 fi
 test -s 9Pj.E || rm -f 9Pj.E
-$xx --test -h x -n.3 +3 -l 17 -f $srcdir/0FFnt > 9Pk.O 2> 9Pk.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +3 -l 17 -f $srcdir/0FFnt > 9Pk.O 2> 9Pk.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Pk failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2664,7 +2664,7 @@ else
   esac
 fi
 test -s 9Pk.E || rm -f 9Pk.E
-$xx --test -h x -n.3 +3 -l 17 -f $srcdir/0FnFt > 9Pl.O 2> 9Pl.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +3 -l 17 -f $srcdir/0FnFt > 9Pl.O 2> 9Pl.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Pl failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2682,7 +2682,7 @@ else
   esac
 fi
 test -s 9Pl.E || rm -f 9Pl.E
-$xx --test -h x -n.3 +3 -l 17 -f $srcdir/0FnFnt > 9Pm.O 2> 9Pm.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +3 -l 17 -f $srcdir/0FnFnt > 9Pm.O 2> 9Pm.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Pm failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2700,7 +2700,7 @@ else
   esac
 fi
 test -s 9Pm.E || rm -f 9Pm.E
-$xx --test -h x -n.3 +7 -l 24 $srcdir/FFn > 9Pn.O 2> 9Pn.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +7 -l 24 $srcdir/FFn > 9Pn.O 2> 9Pn.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Pn failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2718,7 +2718,7 @@ else
   esac
 fi
 test -s 9Pn.E || rm -f 9Pn.E
-$xx --test -h x -n.3 +7 -l 24 $srcdir/FFtn > 9Po.O 2> 9Po.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +7 -l 24 $srcdir/FFtn > 9Po.O 2> 9Po.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Po failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2736,7 +2736,7 @@ else
   esac
 fi
 test -s 9Po.E || rm -f 9Po.E
-$xx --test -h x -n.3 +7 -l 24 $srcdir/FnFn > 9Pp.O 2> 9Pp.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +7 -l 24 $srcdir/FnFn > 9Pp.O 2> 9Pp.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Pp failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2754,7 +2754,7 @@ else
   esac
 fi
 test -s 9Pp.E || rm -f 9Pp.E
-$xx --test -h x -n.3 +3:7 -l 24 $srcdir/FnFn > 9Pq.O 2> 9Pq.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +3:7 -l 24 $srcdir/FnFn > 9Pq.O 2> 9Pq.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Pq failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2772,7 +2772,7 @@ else
   esac
 fi
 test -s 9Pq.E || rm -f 9Pq.E
-$xx --test -h x -n.3 +8 -l 20 $srcdir/tFFn > 9Pr.O 2> 9Pr.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +8 -l 20 $srcdir/tFFn > 9Pr.O 2> 9Pr.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Pr failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2790,7 +2790,7 @@ else
   esac
 fi
 test -s 9Pr.E || rm -f 9Pr.E
-$xx --test -h x -n.3 +8 -l 20 $srcdir/tFnFt > 9Ps.O 2> 9Ps.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +8 -l 20 $srcdir/tFnFt > 9Ps.O 2> 9Ps.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Ps failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2808,7 +2808,7 @@ else
   esac
 fi
 test -s 9Ps.E || rm -f 9Ps.E
-$xx --test -h x -n.3 +8 -l 20 $srcdir/tFFt > 9Pt.O 2> 9Pt.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +8 -l 20 $srcdir/tFFt > 9Pt.O 2> 9Pt.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Pt failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2826,7 +2826,7 @@ else
   esac
 fi
 test -s 9Pt.E || rm -f 9Pt.E
-$xx --test -h x -n.3 +5 -a -3 -l 6 -f $srcdir/0FFt > 9Paa.O 2> 9Paa.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +5 -a -3 -l 6 -f $srcdir/0FFt > 9Paa.O 2> 9Paa.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Paa failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2844,7 +2844,7 @@ else
   esac
 fi
 test -s 9Paa.E || rm -f 9Paa.E
-$xx --test -h x -n.3 +5 -a -3 -l 6 -f $srcdir/0FFnt > 9Pab.O 2> 9Pab.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +5 -a -3 -l 6 -f $srcdir/0FFnt > 9Pab.O 2> 9Pab.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Pab failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2862,7 +2862,7 @@ else
   esac
 fi
 test -s 9Pab.E || rm -f 9Pab.E
-$xx --test -h x -n.3 +5 -a -3 -l 6 -f $srcdir/0FnFt > 9Pac.O 2> 9Pac.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +5 -a -3 -l 6 -f $srcdir/0FnFt > 9Pac.O 2> 9Pac.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Pac failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2880,7 +2880,7 @@ else
   esac
 fi
 test -s 9Pac.E || rm -f 9Pac.E
-$xx --test -h x -n.3 +5 -a -3 -l 6 -f $srcdir/0FnFnt > 9Pad.O 2> 9Pad.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +5 -a -3 -l 6 -f $srcdir/0FnFnt > 9Pad.O 2> 9Pad.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Pad failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2898,7 +2898,7 @@ else
   esac
 fi
 test -s 9Pad.E || rm -f 9Pad.E
-$xx --test -h x -n.3 +6 -a -2 -l 17 $srcdir/FFn > 9Pae.O 2> 9Pae.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +6 -a -2 -l 17 $srcdir/FFn > 9Pae.O 2> 9Pae.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Pae failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2916,7 +2916,7 @@ else
   esac
 fi
 test -s 9Pae.E || rm -f 9Pae.E
-$xx --test -h x -n.3 +6 -a -2 -l 17 $srcdir/FFtn > 9Paf.O 2> 9Paf.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +6 -a -2 -l 17 $srcdir/FFtn > 9Paf.O 2> 9Paf.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Paf failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2934,7 +2934,7 @@ else
   esac
 fi
 test -s 9Paf.E || rm -f 9Paf.E
-$xx --test -h x -n.3 +6 -a -2 -l 17 $srcdir/FnFn > 9Pag.O 2> 9Pag.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +6 -a -2 -l 17 $srcdir/FnFn > 9Pag.O 2> 9Pag.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Pag failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2952,7 +2952,7 @@ else
   esac
 fi
 test -s 9Pag.E || rm -f 9Pag.E
-$xx --test -h x -n.3 +6 -a -2 -l 17 $srcdir/tFFn > 9Pah.O 2> 9Pah.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +6 -a -2 -l 17 $srcdir/tFFn > 9Pah.O 2> 9Pah.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Pah failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2970,7 +2970,7 @@ else
   esac
 fi
 test -s 9Pah.E || rm -f 9Pah.E
-$xx --test -h x -n.3 +6 -a -2 -l 17 $srcdir/tFnFt > 9Pai.O 2> 9Pai.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +6 -a -2 -l 17 $srcdir/tFnFt > 9Pai.O 2> 9Pai.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Pai failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -2988,7 +2988,7 @@ else
   esac
 fi
 test -s 9Pai.E || rm -f 9Pai.E
-$xx --test -h x -n.3 +6 -a -2 -l 17 $srcdir/tFFt > 9Paj.O 2> 9Paj.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +6 -a -2 -l 17 $srcdir/tFFt > 9Paj.O 2> 9Paj.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Paj failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3006,7 +3006,7 @@ else
   esac
 fi
 test -s 9Paj.E || rm -f 9Paj.E
-$xx --test -h x -n.3 +4:8 -a -2 -l 17 $srcdir/tFFt > 9Pak.O 2> 9Pak.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +4:8 -a -2 -l 17 $srcdir/tFFt > 9Pak.O 2> 9Pak.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Pak failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3024,7 +3024,7 @@ else
   esac
 fi
 test -s 9Pak.E || rm -f 9Pak.E
-$xx --test -h x -n.3 +4 -b -2 -l 10 -f $srcdir/0FFt > 9Pba.O 2> 9Pba.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +4 -b -2 -l 10 -f $srcdir/0FFt > 9Pba.O 2> 9Pba.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Pba failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3042,7 +3042,7 @@ else
   esac
 fi
 test -s 9Pba.E || rm -f 9Pba.E
-$xx --test -h x -n.3 +4 -b -2 -l 10 -f $srcdir/0FFnt > 9Pbb.O 2> 9Pbb.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +4 -b -2 -l 10 -f $srcdir/0FFnt > 9Pbb.O 2> 9Pbb.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Pbb failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3060,7 +3060,7 @@ else
   esac
 fi
 test -s 9Pbb.E || rm -f 9Pbb.E
-$xx --test -h x -n.3 +4 -b -2 -l 10 -f $srcdir/0FnFt > 9Pbc.O 2> 9Pbc.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +4 -b -2 -l 10 -f $srcdir/0FnFt > 9Pbc.O 2> 9Pbc.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Pbc failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3078,7 +3078,7 @@ else
   esac
 fi
 test -s 9Pbc.E || rm -f 9Pbc.E
-$xx --test -h x -n.3 +4 -b -2 -l 10 -f $srcdir/0FnFnt > 9Pbd.O 2> 9Pbd.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +4 -b -2 -l 10 -f $srcdir/0FnFnt > 9Pbd.O 2> 9Pbd.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Pbd failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3096,7 +3096,7 @@ else
   esac
 fi
 test -s 9Pbd.E || rm -f 9Pbd.E
-$xx --test -h x -n.3 +6 -b -3 -l 6 -f $srcdir/FFn > 9Pbe.O 2> 9Pbe.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +6 -b -3 -l 6 -f $srcdir/FFn > 9Pbe.O 2> 9Pbe.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Pbe failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3114,7 +3114,7 @@ else
   esac
 fi
 test -s 9Pbe.E || rm -f 9Pbe.E
-$xx --test -h x -n.3 +6 -b -3 -l 6 -f $srcdir/FFtn > 9Pbf.O 2> 9Pbf.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +6 -b -3 -l 6 -f $srcdir/FFtn > 9Pbf.O 2> 9Pbf.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Pbf failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3132,7 +3132,7 @@ else
   esac
 fi
 test -s 9Pbf.E || rm -f 9Pbf.E
-$xx --test -h x -n.3 +6 -b -3 -l 6 -f $srcdir/FnFn > 9Pbg.O 2> 9Pbg.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +6 -b -3 -l 6 -f $srcdir/FnFn > 9Pbg.O 2> 9Pbg.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Pbg failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3150,7 +3150,7 @@ else
   esac
 fi
 test -s 9Pbg.E || rm -f 9Pbg.E
-$xx --test -h x -n.3 +6 -b -3 -l 6 -f $srcdir/tFFn > 9Pbh.O 2> 9Pbh.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +6 -b -3 -l 6 -f $srcdir/tFFn > 9Pbh.O 2> 9Pbh.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Pbh failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3168,7 +3168,7 @@ else
   esac
 fi
 test -s 9Pbh.E || rm -f 9Pbh.E
-$xx --test -h x -n.3 +6 -b -3 -l 6 -f $srcdir/tFnFt > 9Pbi.O 2> 9Pbi.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +6 -b -3 -l 6 -f $srcdir/tFnFt > 9Pbi.O 2> 9Pbi.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Pbi failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3186,7 +3186,7 @@ else
   esac
 fi
 test -s 9Pbi.E || rm -f 9Pbi.E
-$xx --test -h x -n.3 +6 -b -3 -l 6 -f $srcdir/tFFt > 9Pbj.O 2> 9Pbj.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +6 -b -3 -l 6 -f $srcdir/tFFt > 9Pbj.O 2> 9Pbj.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Pbj failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3204,7 +3204,7 @@ else
   esac
 fi
 test -s 9Pbj.E || rm -f 9Pbj.E
-$xx --test -h x -n.3 +5:8 -b -3 -l 10 -f $srcdir/FnFn > 9Pbk.O 2> 9Pbk.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +5:8 -b -3 -l 10 -f $srcdir/FnFn > 9Pbk.O 2> 9Pbk.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Pbk failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3222,7 +3222,7 @@ else
   esac
 fi
 test -s 9Pbk.E || rm -f 9Pbk.E
-$xx --test -h x -n.3 +3 -m -l 13 -f $srcdir/tFFt-bl $srcdir/FnFn > 9Pma.O 2> 9Pma.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +3 -m -l 13 -f $srcdir/tFFt-bl $srcdir/FnFn > 9Pma.O 2> 9Pma.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Pma failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3240,7 +3240,7 @@ else
   esac
 fi
 test -s 9Pma.E || rm -f 9Pma.E
-$xx --test -h x -n.3 +3 -m -l 17 -f $srcdir/tFFt-bl $srcdir/tn > 9Pmb.O 2> 9Pmb.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +3 -m -l 17 -f $srcdir/tFFt-bl $srcdir/tn > 9Pmb.O 2> 9Pmb.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Pmb failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3258,7 +3258,7 @@ else
   esac
 fi
 test -s 9Pmb.E || rm -f 9Pmb.E
-$xx --test -h x -n.3 +3 -m -l 17 -f $srcdir/tn $srcdir/tFFt-bl > 9Pmc.O 2> 9Pmc.E
+$xx --date-format="-- Date/Time --" -h x -n.3 +3 -m -l 17 -f $srcdir/tn $srcdir/tFFt-bl > 9Pmc.O 2> 9Pmc.E
 code=$?
 if test $code != 0; then
   $echo "Test 9Pmc failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3276,7 +3276,7 @@ else
   esac
 fi
 test -s 9Pmc.E || rm -f 9Pmc.E
-$xx --test -h x -W 72 -J -l17 -f $srcdir/tFFt-ll > 10wa.O 2> 10wa.E
+$xx --date-format="-- Date/Time --" -h x -W 72 -J -l17 -f $srcdir/tFFt-ll > 10wa.O 2> 10wa.E
 code=$?
 if test $code != 0; then
   $echo "Test 10wa failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3294,7 +3294,7 @@ else
   esac
 fi
 test -s 10wa.E || rm -f 10wa.E
-$xx --test -h x -w 72 -J -l17 -f $srcdir/tFFt-ll > 10wb.O 2> 10wb.E
+$xx --date-format="-- Date/Time --" -h x -w 72 -J -l17 -f $srcdir/tFFt-ll > 10wb.O 2> 10wb.E
 code=$?
 if test $code != 0; then
   $echo "Test 10wb failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3312,7 +3312,7 @@ else
   esac
 fi
 test -s 10wb.E || rm -f 10wb.E
-$xx --test -h x -W 72 -l17 -f $srcdir/tFFt-ll > 10wc.O 2> 10wc.E
+$xx --date-format="-- Date/Time --" -h x -W 72 -l17 -f $srcdir/tFFt-ll > 10wc.O 2> 10wc.E
 code=$?
 if test $code != 0; then
   $echo "Test 10wc failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3330,7 +3330,7 @@ else
   esac
 fi
 test -s 10wc.E || rm -f 10wc.E
-$xx --test -h x -w 72 -l17 -f $srcdir/tFFt-ll > 10wd.O 2> 10wd.E
+$xx --date-format="-- Date/Time --" -h x -w 72 -l17 -f $srcdir/tFFt-ll > 10wd.O 2> 10wd.E
 code=$?
 if test $code != 0; then
   $echo "Test 10wd failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3348,7 +3348,7 @@ else
   esac
 fi
 test -s 10wd.E || rm -f 10wd.E
-$xx --test -h x -W 28 -l17 -f $srcdir/tFFt-ll > 10we.O 2> 10we.E
+$xx --date-format="-- Date/Time --" -h x -W 28 -l17 -f $srcdir/tFFt-ll > 10we.O 2> 10we.E
 code=$?
 if test $code != 0; then
   $echo "Test 10we failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3366,7 +3366,7 @@ else
   esac
 fi
 test -s 10we.E || rm -f 10we.E
-$xx --test -h x -W 27 -l17 -f $srcdir/tFFt-ll > 10wf.O 2> 10wf.E
+$xx --date-format="-- Date/Time --" -h x -W 27 -l17 -f $srcdir/tFFt-ll > 10wf.O 2> 10wf.E
 code=$?
 if test $code != 0; then
   $echo "Test 10wf failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3384,7 +3384,7 @@ else
   esac
 fi
 test -s 10wf.E || rm -f 10wf.E
-$xx --test -h x -W 26 -l17 -f $srcdir/tFFt-ll > 10wg.O 2> 10wg.E
+$xx --date-format="-- Date/Time --" -h x -W 26 -l17 -f $srcdir/tFFt-ll > 10wg.O 2> 10wg.E
 code=$?
 if test $code != 0; then
   $echo "Test 10wg failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3402,7 +3402,7 @@ else
   esac
 fi
 test -s 10wg.E || rm -f 10wg.E
-$xx --test -h x -W 20 -l17 -f $srcdir/tFFt-ll > 10wh.O 2> 10wh.E
+$xx --date-format="-- Date/Time --" -h x -W 20 -l17 -f $srcdir/tFFt-ll > 10wh.O 2> 10wh.E
 code=$?
 if test $code != 0; then
   $echo "Test 10wh failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3420,7 +3420,7 @@ else
   esac
 fi
 test -s 10wh.E || rm -f 10wh.E
-$xx --test -h x -m -l 17 -f $srcdir/tFFt-lm $srcdir/loli > 10ma.O 2> 10ma.E
+$xx --date-format="-- Date/Time --" -h x -m -l 17 -f $srcdir/tFFt-lm $srcdir/loli > 10ma.O 2> 10ma.E
 code=$?
 if test $code != 0; then
   $echo "Test 10ma failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3438,7 +3438,7 @@ else
   esac
 fi
 test -s 10ma.E || rm -f 10ma.E
-$xx --test -h x -W 35 -m -l 17 -f $srcdir/tFFt-lm $srcdir/loli > 10mb.O 2> 10mb.E
+$xx --date-format="-- Date/Time --" -h x -W 35 -m -l 17 -f $srcdir/tFFt-lm $srcdir/loli > 10mb.O 2> 10mb.E
 code=$?
 if test $code != 0; then
   $echo "Test 10mb failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3456,7 +3456,7 @@ else
   esac
 fi
 test -s 10mb.E || rm -f 10mb.E
-$xx --test -h x -w 35 -m -l 17 -f $srcdir/tFFt-lm $srcdir/loli > 10mc.O 2> 10mc.E
+$xx --date-format="-- Date/Time --" -h x -w 35 -m -l 17 -f $srcdir/tFFt-lm $srcdir/loli > 10mc.O 2> 10mc.E
 code=$?
 if test $code != 0; then
   $echo "Test 10mc failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3474,7 +3474,7 @@ else
   esac
 fi
 test -s 10mc.E || rm -f 10mc.E
-$xx --test -h x -J -m -l 17 -f $srcdir/tFFt-lm $srcdir/loli > 10md.O 2> 10md.E
+$xx --date-format="-- Date/Time --" -h x -J -m -l 17 -f $srcdir/tFFt-lm $srcdir/loli > 10md.O 2> 10md.E
 code=$?
 if test $code != 0; then
   $echo "Test 10md failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3492,7 +3492,7 @@ else
   esac
 fi
 test -s 10md.E || rm -f 10md.E
-$xx --test -h x -W 35 -J -m -l 17 -f $srcdir/tFFt-lm $srcdir/loli > 10me.O 2> 10me.E
+$xx --date-format="-- Date/Time --" -h x -W 35 -J -m -l 17 -f $srcdir/tFFt-lm $srcdir/loli > 10me.O 2> 10me.E
 code=$?
 if test $code != 0; then
   $echo "Test 10me failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3510,7 +3510,7 @@ else
   esac
 fi
 test -s 10me.E || rm -f 10me.E
-$xx --test -h x -w 35 -J -m -l 17 -f $srcdir/tFFt-lm $srcdir/loli > 10mf.O 2> 10mf.E
+$xx --date-format="-- Date/Time --" -h x -w 35 -J -m -l 17 -f $srcdir/tFFt-lm $srcdir/loli > 10mf.O 2> 10mf.E
 code=$?
 if test $code != 0; then
   $echo "Test 10mf failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3528,7 +3528,7 @@ else
   esac
 fi
 test -s 10mf.E || rm -f 10mf.E
-$xx --test -h x -n.3 -J -m -l 17 -f $srcdir/tFFt-lm $srcdir/tFFt-lm $srcdir/loli > 10mg.O 2> 10mg.E
+$xx --date-format="-- Date/Time --" -h x -n.3 -J -m -l 17 -f $srcdir/tFFt-lm $srcdir/tFFt-lm $srcdir/loli > 10mg.O 2> 10mg.E
 code=$?
 if test $code != 0; then
   $echo "Test 10mg failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3546,7 +3546,7 @@ else
   esac
 fi
 test -s 10mg.E || rm -f 10mg.E
-$xx --test -h x -n.3 -J -m -l 17 -f $srcdir/tFFt-lm $srcdir/loli $srcdir/tFFt-lm > 10mh.O 2> 10mh.E
+$xx --date-format="-- Date/Time --" -h x -n.3 -J -m -l 17 -f $srcdir/tFFt-lm $srcdir/loli $srcdir/tFFt-lm > 10mh.O 2> 10mh.E
 code=$?
 if test $code != 0; then
   $echo "Test 10mh failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3564,7 +3564,7 @@ else
   esac
 fi
 test -s 10mh.E || rm -f 10mh.E
-$xx --test -h x -a -3 -l 17 -f $srcdir/tFFt-lm > 10aa.O 2> 10aa.E
+$xx --date-format="-- Date/Time --" -h x -a -3 -l 17 -f $srcdir/tFFt-lm > 10aa.O 2> 10aa.E
 code=$?
 if test $code != 0; then
   $echo "Test 10aa failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3582,7 +3582,7 @@ else
   esac
 fi
 test -s 10aa.E || rm -f 10aa.E
-$xx --test -h x -W 35 -a -3 -l 17 -f $srcdir/tFFt-lm > 10ab.O 2> 10ab.E
+$xx --date-format="-- Date/Time --" -h x -W 35 -a -3 -l 17 -f $srcdir/tFFt-lm > 10ab.O 2> 10ab.E
 code=$?
 if test $code != 0; then
   $echo "Test 10ab failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3600,7 +3600,7 @@ else
   esac
 fi
 test -s 10ab.E || rm -f 10ab.E
-$xx --test -h x -J -a -3 -l 17 -f $srcdir/tFFt-lm > 10ac.O 2> 10ac.E
+$xx --date-format="-- Date/Time --" -h x -J -a -3 -l 17 -f $srcdir/tFFt-lm > 10ac.O 2> 10ac.E
 code=$?
 if test $code != 0; then
   $echo "Test 10ac failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3618,7 +3618,7 @@ else
   esac
 fi
 test -s 10ac.E || rm -f 10ac.E
-$xx --test -h x -W 35 -J -a -3 -l 17 -f $srcdir/tFFt-lm > 10ad.O 2> 10ad.E
+$xx --date-format="-- Date/Time --" -h x -W 35 -J -a -3 -l 17 -f $srcdir/tFFt-lm > 10ad.O 2> 10ad.E
 code=$?
 if test $code != 0; then
   $echo "Test 10ad failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3636,7 +3636,7 @@ else
   esac
 fi
 test -s 10ad.E || rm -f 10ad.E
-$xx --test -h x -b -3 -l 17 -f $srcdir/tFFt-lm > 10ba.O 2> 10ba.E
+$xx --date-format="-- Date/Time --" -h x -b -3 -l 17 -f $srcdir/tFFt-lm > 10ba.O 2> 10ba.E
 code=$?
 if test $code != 0; then
   $echo "Test 10ba failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3654,7 +3654,7 @@ else
   esac
 fi
 test -s 10ba.E || rm -f 10ba.E
-$xx --test -h x -W 35 -b -3 -l 17 -f $srcdir/tFFt-lm > 10bb.O 2> 10bb.E
+$xx --date-format="-- Date/Time --" -h x -W 35 -b -3 -l 17 -f $srcdir/tFFt-lm > 10bb.O 2> 10bb.E
 code=$?
 if test $code != 0; then
   $echo "Test 10bb failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3672,7 +3672,7 @@ else
   esac
 fi
 test -s 10bb.E || rm -f 10bb.E
-$xx --test -h x -J -b -3 -l 17 -f $srcdir/tFFt-lm > 10bc.O 2> 10bc.E
+$xx --date-format="-- Date/Time --" -h x -J -b -3 -l 17 -f $srcdir/tFFt-lm > 10bc.O 2> 10bc.E
 code=$?
 if test $code != 0; then
   $echo "Test 10bc failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3690,7 +3690,7 @@ else
   esac
 fi
 test -s 10bc.E || rm -f 10bc.E
-$xx --test -h x -W 35 -J -b -3 -l 17 -f $srcdir/tFFt-lm > 10bd.O 2> 10bd.E
+$xx --date-format="-- Date/Time --" -h x -W 35 -J -b -3 -l 17 -f $srcdir/tFFt-lm > 10bd.O 2> 10bd.E
 code=$?
 if test $code != 0; then
   $echo "Test 10bd failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3708,7 +3708,7 @@ else
   esac
 fi
 test -s 10bd.E || rm -f 10bd.E
-$xx --test -h x -n.3 -S:--: -m -l 13 -f $srcdir/tFFt-bl $srcdir/FnFn > 11sa.O 2> 11sa.E
+$xx --date-format="-- Date/Time --" -h x -n.3 -S:--: -m -l 13 -f $srcdir/tFFt-bl $srcdir/FnFn > 11sa.O 2> 11sa.E
 code=$?
 if test $code != 0; then
   $echo "Test 11sa failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3726,7 +3726,7 @@ else
   esac
 fi
 test -s 11sa.E || rm -f 11sa.E
-$xx --test -h x -n.3 -S:--: -m -l 17 -f $srcdir/tFFt-bl $srcdir/FnFn > 11sb.O 2> 11sb.E
+$xx --date-format="-- Date/Time --" -h x -n.3 -S:--: -m -l 17 -f $srcdir/tFFt-bl $srcdir/FnFn > 11sb.O 2> 11sb.E
 code=$?
 if test $code != 0; then
   $echo "Test 11sb failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3744,7 +3744,7 @@ else
   esac
 fi
 test -s 11sb.E || rm -f 11sb.E
-$xx --test -h x -n.3 -S:--: -m -l 13 -f $srcdir/tn $srcdir/tn $srcdir/FnFn > 11se.O 2> 11se.E
+$xx --date-format="-- Date/Time --" -h x -n.3 -S:--: -m -l 13 -f $srcdir/tn $srcdir/tn $srcdir/FnFn > 11se.O 2> 11se.E
 code=$?
 if test $code != 0; then
   $echo "Test 11se failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3762,7 +3762,7 @@ else
   esac
 fi
 test -s 11se.E || rm -f 11se.E
-$xx --test -h x -n.3 -S:--: -m -l 17 -f $srcdir/tn $srcdir/tn $srcdir/FnFn > 11sf.O 2> 11sf.E
+$xx --date-format="-- Date/Time --" -h x -n.3 -S:--: -m -l 17 -f $srcdir/tn $srcdir/tn $srcdir/FnFn > 11sf.O 2> 11sf.E
 code=$?
 if test $code != 0; then
   $echo "Test 11sf failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3780,7 +3780,7 @@ else
   esac
 fi
 test -s 11sf.E || rm -f 11sf.E
-$xx --test -h x -n.3 -S:--: -m -l 13 -f $srcdir/tn $srcdir/tn $srcdir/FnFn $srcdir/FnFn > 11sg.O 2> 11sg.E
+$xx --date-format="-- Date/Time --" -h x -n.3 -S:--: -m -l 13 -f $srcdir/tn $srcdir/tn $srcdir/FnFn $srcdir/FnFn > 11sg.O 2> 11sg.E
 code=$?
 if test $code != 0; then
   $echo "Test 11sg failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3798,7 +3798,7 @@ else
   esac
 fi
 test -s 11sg.E || rm -f 11sg.E
-$xx --test -h x -n.3 -S:--: -m -l 17 -f $srcdir/tn $srcdir/tn $srcdir/FnFn $srcdir/FnFn > 11sh.O 2> 11sh.E
+$xx --date-format="-- Date/Time --" -h x -n.3 -S:--: -m -l 17 -f $srcdir/tn $srcdir/tn $srcdir/FnFn $srcdir/FnFn > 11sh.O 2> 11sh.E
 code=$?
 if test $code != 0; then
   $echo "Test 11sh failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3816,7 +3816,7 @@ else
   esac
 fi
 test -s 11sh.E || rm -f 11sh.E
-$xx --test -h x -o3 -a -3 -l17 -f $srcdir/tn > 12aa.O 2> 12aa.E
+$xx --date-format="-- Date/Time --" -h x -o3 -a -3 -l17 -f $srcdir/tn > 12aa.O 2> 12aa.E
 code=$?
 if test $code != 0; then
   $echo "Test 12aa failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3834,7 +3834,7 @@ else
   esac
 fi
 test -s 12aa.E || rm -f 12aa.E
-$xx --test -h x -o3 -a -3 -S:--: -l17 -f $srcdir/tn > 12ab.O 2> 12ab.E
+$xx --date-format="-- Date/Time --" -h x -o3 -a -3 -S:--: -l17 -f $srcdir/tn > 12ab.O 2> 12ab.E
 code=$?
 if test $code != 0; then
   $echo "Test 12ab failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3852,7 +3852,7 @@ else
   esac
 fi
 test -s 12ab.E || rm -f 12ab.E
-$xx --test -h x -o3 -a -3 -S:--: -n. -l17 -f $srcdir/tn > 12ac.O 2> 12ac.E
+$xx --date-format="-- Date/Time --" -h x -o3 -a -3 -S:--: -n. -l17 -f $srcdir/tn > 12ac.O 2> 12ac.E
 code=$?
 if test $code != 0; then
   $echo "Test 12ac failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3870,7 +3870,7 @@ else
   esac
 fi
 test -s 12ac.E || rm -f 12ac.E
-$xx --test -h x -o3 -b -3 -l17 -f $srcdir/tn > 12ba.O 2> 12ba.E
+$xx --date-format="-- Date/Time --" -h x -o3 -b -3 -l17 -f $srcdir/tn > 12ba.O 2> 12ba.E
 code=$?
 if test $code != 0; then
   $echo "Test 12ba failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3888,7 +3888,7 @@ else
   esac
 fi
 test -s 12ba.E || rm -f 12ba.E
-$xx --test -h x -o3 -b -3 -S:--: -l17 -f $srcdir/tn > 12bb.O 2> 12bb.E
+$xx --date-format="-- Date/Time --" -h x -o3 -b -3 -S:--: -l17 -f $srcdir/tn > 12bb.O 2> 12bb.E
 code=$?
 if test $code != 0; then
   $echo "Test 12bb failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3906,7 +3906,7 @@ else
   esac
 fi
 test -s 12bb.E || rm -f 12bb.E
-$xx --test -h x -o3 -b -3 -S:--: -n. -l17 -f $srcdir/tn > 12bc.O 2> 12bc.E
+$xx --date-format="-- Date/Time --" -h x -o3 -b -3 -S:--: -n. -l17 -f $srcdir/tn > 12bc.O 2> 12bc.E
 code=$?
 if test $code != 0; then
   $echo "Test 12bc failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3924,7 +3924,7 @@ else
   esac
 fi
 test -s 12bc.E || rm -f 12bc.E
-$xx --test -h x -o3 -m -l17 -f $srcdir/tFFt-bl $srcdir/tn > 12ma.O 2> 12ma.E
+$xx --date-format="-- Date/Time --" -h x -o3 -m -l17 -f $srcdir/tFFt-bl $srcdir/tn > 12ma.O 2> 12ma.E
 code=$?
 if test $code != 0; then
   $echo "Test 12ma failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3942,7 +3942,7 @@ else
   esac
 fi
 test -s 12ma.E || rm -f 12ma.E
-$xx --test -h x -o3 -m -S:--: -l17 -f $srcdir/tFFt-bl $srcdir/tn > 12mb.O 2> 12mb.E
+$xx --date-format="-- Date/Time --" -h x -o3 -m -S:--: -l17 -f $srcdir/tFFt-bl $srcdir/tn > 12mb.O 2> 12mb.E
 code=$?
 if test $code != 0; then
   $echo "Test 12mb failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3960,7 +3960,7 @@ else
   esac
 fi
 test -s 12mb.E || rm -f 12mb.E
-$xx --test -h x -o3 -m -S:--: -n. -l17 -f $srcdir/tFFt-bl $srcdir/tn > 12mc.O 2> 12mc.E
+$xx --date-format="-- Date/Time --" -h x -o3 -m -S:--: -n. -l17 -f $srcdir/tFFt-bl $srcdir/tn > 12mc.O 2> 12mc.E
 code=$?
 if test $code != 0; then
   $echo "Test 12mc failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3978,7 +3978,7 @@ else
   esac
 fi
 test -s 12mc.E || rm -f 12mc.E
-$xx --test -h x -o3 -J -m -l17 -f $srcdir/tFFt-lm $srcdir/loli > 12md.O 2> 12md.E
+$xx --date-format="-- Date/Time --" -h x -o3 -J -m -l17 -f $srcdir/tFFt-lm $srcdir/loli > 12md.O 2> 12md.E
 code=$?
 if test $code != 0; then
   $echo "Test 12md failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -3996,7 +3996,7 @@ else
   esac
 fi
 test -s 12md.E || rm -f 12md.E
-$xx --test -h x -t -n -e8 $srcdir/t_tab > 13a.O 2> 13a.E
+$xx --date-format="-- Date/Time --" -h x -t -n -e8 $srcdir/t_tab > 13a.O 2> 13a.E
 code=$?
 if test $code != 0; then
   $echo "Test 13a failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -4014,7 +4014,7 @@ else
   esac
 fi
 test -s 13a.E || rm -f 13a.E
-$xx --test -h x -t -n -e8 -o3 $srcdir/t_tab > 13b.O 2> 13b.E
+$xx --date-format="-- Date/Time --" -h x -t -n -e8 -o3 $srcdir/t_tab > 13b.O 2> 13b.E
 code=$?
 if test $code != 0; then
   $echo "Test 13b failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -4032,7 +4032,7 @@ else
   esac
 fi
 test -s 13b.E || rm -f 13b.E
-$xx --test -h x -t -n -2 -e8 $srcdir/t_tab > 13ba.O 2> 13ba.E
+$xx --date-format="-- Date/Time --" -h x -t -n -2 -e8 $srcdir/t_tab > 13ba.O 2> 13ba.E
 code=$?
 if test $code != 0; then
   $echo "Test 13ba failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -4050,7 +4050,7 @@ else
   esac
 fi
 test -s 13ba.E || rm -f 13ba.E
-$xx --test -h x -t -n: -2 -e8 $srcdir/t_tab > 13bb.O 2> 13bb.E
+$xx --date-format="-- Date/Time --" -h x -t -n: -2 -e8 $srcdir/t_tab > 13bb.O 2> 13bb.E
 code=$?
 if test $code != 0; then
   $echo "Test 13bb failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -4068,7 +4068,7 @@ else
   esac
 fi
 test -s 13bb.E || rm -f 13bb.E
-$xx --test -h x -t -n: -2 -e8 -S---- $srcdir/t_tab > 13bc.O 2> 13bc.E
+$xx --date-format="-- Date/Time --" -h x -t -n: -2 -e8 -S---- $srcdir/t_tab > 13bc.O 2> 13bc.E
 code=$?
 if test $code != 0; then
   $echo "Test 13bc failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -4086,7 +4086,7 @@ else
   esac
 fi
 test -s 13bc.E || rm -f 13bc.E
-$xx --test -h x -t -n -2 -e8 -o3 $srcdir/t_tab > 13bd.O 2> 13bd.E
+$xx --date-format="-- Date/Time --" -h x -t -n -2 -e8 -o3 $srcdir/t_tab > 13bd.O 2> 13bd.E
 code=$?
 if test $code != 0; then
   $echo "Test 13bd failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -4104,7 +4104,7 @@ else
   esac
 fi
 test -s 13bd.E || rm -f 13bd.E
-$xx --test -h x -t -n -2 -e5 -o3 $srcdir/t_tab > 13be.O 2> 13be.E
+$xx --date-format="-- Date/Time --" -h x -t -n -2 -e5 -o3 $srcdir/t_tab > 13be.O 2> 13be.E
 code=$?
 if test $code != 0; then
   $echo "Test 13be failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -4122,7 +4122,7 @@ else
   esac
 fi
 test -s 13be.E || rm -f 13be.E
-$xx --test -h x -t -n -2 -e:8 $srcdir/t_tab_ > 13bf.O 2> 13bf.E
+$xx --date-format="-- Date/Time --" -h x -t -n -2 -e:8 $srcdir/t_tab_ > 13bf.O 2> 13bf.E
 code=$?
 if test $code != 0; then
   $echo "Test 13bf failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -4140,7 +4140,7 @@ else
   esac
 fi
 test -s 13bf.E || rm -f 13bf.E
-$xx --test -h x -2 -f $srcdir/t_notab > 14a.O 2> 14a.E
+$xx --date-format="-- Date/Time --" -h x -2 -f $srcdir/t_notab > 14a.O 2> 14a.E
 code=$?
 if test $code != 0; then
   $echo "Test 14a failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -4158,7 +4158,7 @@ else
   esac
 fi
 test -s 14a.E || rm -f 14a.E
-$xx --test -h x -2 -s -f $srcdir/t_notab > 14b.O 2> 14b.E
+$xx --date-format="-- Date/Time --" -h x -2 -s -f $srcdir/t_notab > 14b.O 2> 14b.E
 code=$?
 if test $code != 0; then
   $echo "Test 14b failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -4176,7 +4176,7 @@ else
   esac
 fi
 test -s 14b.E || rm -f 14b.E
-$xx --test -h x -2 -s: -f $srcdir/t_notab > 14c.O 2> 14c.E
+$xx --date-format="-- Date/Time --" -h x -2 -s: -f $srcdir/t_notab > 14c.O 2> 14c.E
 code=$?
 if test $code != 0; then
   $echo "Test 14c failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -4194,7 +4194,7 @@ else
   esac
 fi
 test -s 14c.E || rm -f 14c.E
-$xx --test -h x -2 -w60 -f $srcdir/t_notab > 14d.O 2> 14d.E
+$xx --date-format="-- Date/Time --" -h x -2 -w60 -f $srcdir/t_notab > 14d.O 2> 14d.E
 code=$?
 if test $code != 0; then
   $echo "Test 14d failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -4212,7 +4212,7 @@ else
   esac
 fi
 test -s 14d.E || rm -f 14d.E
-$xx --test -h x -2 -s -w60 -f $srcdir/t_notab > 14e.O 2> 14e.E
+$xx --date-format="-- Date/Time --" -h x -2 -s -w60 -f $srcdir/t_notab > 14e.O 2> 14e.E
 code=$?
 if test $code != 0; then
   $echo "Test 14e failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -4230,7 +4230,7 @@ else
   esac
 fi
 test -s 14e.E || rm -f 14e.E
-$xx --test -h x -2 -s: -w60 -f $srcdir/t_notab > 14f.O 2> 14f.E
+$xx --date-format="-- Date/Time --" -h x -2 -s: -w60 -f $srcdir/t_notab > 14f.O 2> 14f.E
 code=$?
 if test $code != 0; then
   $echo "Test 14f failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -4248,7 +4248,7 @@ else
   esac
 fi
 test -s 14f.E || rm -f 14f.E
-$xx --test -h x -2 -S -f $srcdir/t_notab > 14g.O 2> 14g.E
+$xx --date-format="-- Date/Time --" -h x -2 -S -f $srcdir/t_notab > 14g.O 2> 14g.E
 code=$?
 if test $code != 0; then
   $echo "Test 14g failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -4266,7 +4266,7 @@ else
   esac
 fi
 test -s 14g.E || rm -f 14g.E
-$xx --test -h x -2 -S"	" -J -f $srcdir/t_notab > 14h.O 2> 14h.E
+$xx --date-format="-- Date/Time --" -h x -2 -S"	" -J -f $srcdir/t_notab > 14h.O 2> 14h.E
 code=$?
 if test $code != 0; then
   $echo "Test 14h failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -4284,7 +4284,7 @@ else
   esac
 fi
 test -s 14h.E || rm -f 14h.E
-$xx --test -h x -2 -S: -f $srcdir/t_notab > 14i.O 2> 14i.E
+$xx --date-format="-- Date/Time --" -h x -2 -S: -f $srcdir/t_notab > 14i.O 2> 14i.E
 code=$?
 if test $code != 0; then
   $echo "Test 14i failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -4302,7 +4302,7 @@ else
   esac
 fi
 test -s 14i.E || rm -f 14i.E
-$xx --test -h x -2 -S: -J -f $srcdir/t_notab > 14j.O 2> 14j.E
+$xx --date-format="-- Date/Time --" -h x -2 -S: -J -f $srcdir/t_notab > 14j.O 2> 14j.E
 code=$?
 if test $code != 0; then
   $echo "Test 14j failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -4320,7 +4320,7 @@ else
   esac
 fi
 test -s 14j.E || rm -f 14j.E
-$xx --test -h x -2 -W60 -f $srcdir/t_notab > 14k.O 2> 14k.E
+$xx --date-format="-- Date/Time --" -h x -2 -W60 -f $srcdir/t_notab > 14k.O 2> 14k.E
 code=$?
 if test $code != 0; then
   $echo "Test 14k failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -4338,7 +4338,7 @@ else
   esac
 fi
 test -s 14k.E || rm -f 14k.E
-$xx --test -h x -2 -S -W60 -f $srcdir/t_notab > 14l.O 2> 14l.E
+$xx --date-format="-- Date/Time --" -h x -2 -S -W60 -f $srcdir/t_notab > 14l.O 2> 14l.E
 code=$?
 if test $code != 0; then
   $echo "Test 14l failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -4356,7 +4356,7 @@ else
   esac
 fi
 test -s 14l.E || rm -f 14l.E
-$xx --test -h x -2 -S: -W60 -f $srcdir/t_notab > 14m.O 2> 14m.E
+$xx --date-format="-- Date/Time --" -h x -2 -S: -W60 -f $srcdir/t_notab > 14m.O 2> 14m.E
 code=$?
 if test $code != 0; then
   $echo "Test 14m failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -4374,7 +4374,7 @@ else
   esac
 fi
 test -s 14m.E || rm -f 14m.E
-$xx --test -h x -tn -i5 -h "" $srcdir/i-opt-a.I > i-opt-a.O 2> i-opt-a.E
+$xx --date-format="-- Date/Time --" -h x -tn -i5 -h "" $srcdir/i-opt-a.I > i-opt-a.O 2> i-opt-a.E
 code=$?
 if test $code != 0; then
   $echo "Test i-opt-a failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -4392,7 +4392,7 @@ else
   esac
 fi
 test -s i-opt-a.E || rm -f i-opt-a.E
-$xx --test -h x -tn -i5 -o9 -h "" $srcdir/i-opt-b.I > i-opt-b.O 2> i-opt-b.E
+$xx --date-format="-- Date/Time --" -h x -tn -i5 -o9 -h "" $srcdir/i-opt-b.I > i-opt-b.O 2> i-opt-b.E
 code=$?
 if test $code != 0; then
   $echo "Test i-opt-b failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -4410,7 +4410,7 @@ else
   esac
 fi
 test -s i-opt-b.E || rm -f i-opt-b.E
-$xx --test -h x -tn2 -N98 $srcdir/ncut-a.I > ncut-a.O 2> ncut-a.E
+$xx --date-format="-- Date/Time --" -h x -tn2 -N98 $srcdir/ncut-a.I > ncut-a.O 2> ncut-a.E
 code=$?
 if test $code != 0; then
   $echo "Test ncut-a failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -4428,7 +4428,7 @@ else
   esac
 fi
 test -s ncut-a.E || rm -f ncut-a.E
-$xx --test -h x -tn:2 -N98 $srcdir/ncut-b.I > ncut-b.O 2> ncut-b.E
+$xx --date-format="-- Date/Time --" -h x -tn:2 -N98 $srcdir/ncut-b.I > ncut-b.O 2> ncut-b.E
 code=$?
 if test $code != 0; then
   $echo "Test ncut-b failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -4446,7 +4446,7 @@ else
   esac
 fi
 test -s ncut-b.E || rm -f ncut-b.E
-$xx --test -h x -o 0 $srcdir/margin-0.I > margin-0.O 2> margin-0.E
+$xx --date-format="-- Date/Time --" -h x -o 0 $srcdir/margin-0.I > margin-0.O 2> margin-0.E
 code=$?
 if test $code != 0; then
   $echo "Test margin-0 failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -4464,7 +4464,7 @@ else
   esac
 fi
 test -s margin-0.E || rm -f margin-0.E
-$xx --test -h x -d -l 14 -h "" $srcdir/dbl-sp-a.I > dbl-sp-a.O 2> dbl-sp-a.E
+$xx --date-format="-- Date/Time --" -h x -d -l 14 -h "" $srcdir/dbl-sp-a.I > dbl-sp-a.O 2> dbl-sp-a.E
 code=$?
 if test $code != 0; then
   $echo "Test dbl-sp-a failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -4482,7 +4482,7 @@ else
   esac
 fi
 test -s dbl-sp-a.E || rm -f dbl-sp-a.E
-$xx --test -h x -d -t $srcdir/dbl-sp-b.I > dbl-sp-b.O 2> dbl-sp-b.E
+$xx --date-format="-- Date/Time --" -h x -d -t $srcdir/dbl-sp-b.I > dbl-sp-b.O 2> dbl-sp-b.E
 code=$?
 if test $code != 0; then
   $echo "Test dbl-sp-b failed: ../../src/pr return code $code differs from expected value 0" 1>&2
@@ -4500,7 +4500,7 @@ else
   esac
 fi
 test -s dbl-sp-b.E || rm -f dbl-sp-b.E
-$xx --test -h x -W1 -t $srcdir/narrow-1.I > narrow-1.O 2> narrow-1.E
+$xx --date-format="-- Date/Time --" -h x -W1 -t $srcdir/narrow-1.I > narrow-1.O 2> narrow-1.E
 code=$?
 if test $code != 0; then
   $echo "Test narrow-1 failed: ../../src/pr return code $code differs from expected value 0" 1>&2

@@ -1,4 +1,4 @@
--- Date/Time --                        x                       Page    3
+-- Date/Time --                         x                         Page 3
 
 
   1.15 xyzxyzxyz XYZXYZXYZ abcabcab
@@ -15,11 +15,11 @@
  12.6                                       12345678
  13.27 no truncation before FF; (r_l-test):
  14.
--- Date/Time --                        x                       Page    4
+-- Date/Time --                         x                         Page 4
 
 
 
--- Date/Time --                        x                       Page    5
+-- Date/Time --                         x                         Page 5
 
 
  15.29 xyzxyzxyz XYZXYZXYZ abcabcab
@@ -36,15 +36,15 @@
  26.40 DEFGHI 123456789
  27.41 yzxyzxyz XYZXYZXYZ abcabcab 
  28.42 456789 123456789 abcdefghi ABCDEDFHI
--- Date/Time --                        x                       Page    6
+-- Date/Time --                         x                         Page 6
 
 
 
--- Date/Time --                        x                       Page    7
+-- Date/Time --                         x                         Page 7
 
 
 
--- Date/Time --                        x                       Page    8
+-- Date/Time --                         x                         Page 8
 
 
  29.43 xyzxyzxyz XYZXYZXYZ abcabcab
@@ -61,7 +61,7 @@
  40.
  41.55 yzxyzxyz XYZXYZXYZ abcabcab 
  42.56 456789 123456789 abcdefghi ABCDEDFHI
--- Date/Time --                        x                       Page    9
+-- Date/Time --                         x                         Page 9
 
 
  43. 
@@ -78,7 +78,7 @@
  54.8                                       12345678
  55.9                                       12345678
  56.70  456789 123456789 abcdefghi ABCDEDFHI
--- Date/Time --                        x                       Page   10
+-- Date/Time --                        x                         Page 10
 
 
  57.1                                       12345678

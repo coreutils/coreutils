@@ -1,6 +1,6 @@
 
 
--- Date/Time --                        x                       Page    1
+-- Date/Time --                         x                         Page 1
 
 
 1   FF-Test: FF's in Text	    1	Test-INPUT: "Without FF set by
@@ -20,7 +20,7 @@
 
 
 
--- Date/Time --                        x                       Page    2
+-- Date/Time --                         x                         Page 2
 
 
 1				    1	with -f e.g.   :  -l 8 -f
@@ -40,7 +40,7 @@
 
 
 
--- Date/Time --                        x                       Page    3
+-- Date/Time --                         x                         Page 3
 
 
 				    1
@@ -60,7 +60,7 @@
 
 
 
--- Date/Time --                        x                       Page    4
+-- Date/Time --                         x                         Page 4
 
 
 15 xyzxyzxyz XYZXYZXYZ abcabcab	    1
@@ -80,7 +80,7 @@
 
 
 
--- Date/Time --                        x                       Page    5
+-- Date/Time --                         x                         Page 5
 
 
 5				    41 yzxyzxyz XYZXYZXYZ abcabcab
@@ -100,7 +100,7 @@
 
 
 
--- Date/Time --                        x                       Page    6
+-- Date/Time --                         x                         Page 6
 
 
 				    1
@@ -120,7 +120,7 @@
 
 
 
--- Date/Time --                        x                       Page    7
+-- Date/Time --                         x                         Page 7
 
 
 29 xyzxyzxyz XYZXYZXYZ abcabcab	    1
@@ -140,7 +140,7 @@
 
 
 
--- Date/Time --                        x                       Page    8
+-- Date/Time --                         x                         Page 8
 
 
 9 3456789 abcdefghi		    
@@ -160,7 +160,7 @@
 
 
 
--- Date/Time --                        x                       Page    9
+-- Date/Time --                         x                         Page 9
 
 
 
@@ -180,7 +180,7 @@
 
 
 
--- Date/Time --                        x                       Page   10
+-- Date/Time --                        x                         Page 10
 
 
 
@@ -200,7 +200,7 @@
 
 
 
--- Date/Time --                        x                       Page   11
+-- Date/Time --                        x                         Page 11
 
 
 43 xyzxyzxyz XYZXYZXYZ abcabcab	    
@@ -220,7 +220,7 @@
 
 
 
--- Date/Time --                        x                       Page   12
+-- Date/Time --                        x                         Page 12
 
 
 3				    
@@ -240,7 +240,7 @@
 
 
 
--- Date/Time --                        x                       Page   13
+-- Date/Time --                        x                         Page 13
 
 
 57 xyzxyzxyz XYZXYZXYZ abcabcab	    

@@ -1,4 +1,4 @@
--- Date/Time --   Page    1
+-- Date/Time --  x   Page 1
 
 
 1<<<  -Test: FF's in Text  
@@ -15,11 +15,11 @@
 2<<<  >>>
 3<<<  truncation before FF;
 14<<<  123456789 123456789 
--- Date/Time --   Page    2
+-- Date/Time --  x   Page 2
 
 
 
--- Date/Time --   Page    3
+-- Date/Time --  x   Page 3
 
 
 15<<<  xyzxyzxyz XYZXYZXYZ 
@@ -36,11 +36,11 @@
 6<<<  >>>
 27<<<  truncation before FF
 28<<<  trunc
--- Date/Time --   Page    4
+-- Date/Time --  x   Page 4
 
 
 
--- Date/Time --   Page    5
+-- Date/Time --  x   Page 5
 
 
 29<<<xyzxyzxyz XYZXYZXYZ ab
@@ -57,15 +57,15 @@
 40<<<  123456789  >>>
 41<<<  XYZXYZXYZ abcabcab  
 42<<<  123456789 abcdefghi 
--- Date/Time --   Page    6
+-- Date/Time --  x   Page 6
 
 
 
--- Date/Time --   Page    7
+-- Date/Time --  x   Page 7
 
 
 
--- Date/Time --   Page    8
+-- Date/Time --  x   Page 8
 
 
 43<<<  xyzxyzxyz XYZXYZXYZ 
@@ -82,7 +82,7 @@
 4<<<  >>>
 55<<<  XYZXYZXYZ abcabcab  
 56<<<  123456789 abcdefghi 
--- Date/Time --   Page    9
+-- Date/Time --  x   Page 9
 
 
 57<<<  xyzxyzxyz XYZXYZXYZ 

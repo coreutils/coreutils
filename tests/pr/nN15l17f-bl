@@ -1,4 +1,4 @@
--- Date/Time --                        x                       Page    1
+-- Date/Time --                         x                         Page 1
 
 
  15.1   FF-Test: FF's in Text                      V
@@ -15,11 +15,11 @@
  26.          
  27.
  28.14 456789 123456789 123456789 123456789
--- Date/Time --                        x                       Page    2
+-- Date/Time --                         x                         Page 2
 
 
 
--- Date/Time --                        x                       Page    3
+-- Date/Time --                         x                         Page 3
 
 
  29.15 xyzxyzxyz XYZXYZXYZ abcabcab
@@ -36,11 +36,11 @@
  40.6                                       12345678
  41.27 no truncation before FF; (r_l-test):
  42.
--- Date/Time --                        x                       Page    4
+-- Date/Time --                         x                         Page 4
 
 
 
--- Date/Time --                        x                       Page    5
+-- Date/Time --                         x                         Page 5
 
 
  43.29 xyzxyzxyz XYZXYZXYZ abcabcab
@@ -57,15 +57,15 @@
  54.40 DEFGHI 123456789
  55.41 yzxyzxyz XYZXYZXYZ abcabcab 
  56.42 456789 123456789 abcdefghi ABCDEDFHI
--- Date/Time --                        x                       Page    6
+-- Date/Time --                         x                         Page 6
 
 
 
--- Date/Time --                        x                       Page    7
+-- Date/Time --                         x                         Page 7
 
 
 
--- Date/Time --                        x                       Page    8
+-- Date/Time --                         x                         Page 8
 
 
  57.43 xyzxyzxyz XYZXYZXYZ abcabcab
@@ -82,7 +82,7 @@
  68.
  69.55 yzxyzxyz XYZXYZXYZ abcabcab 
  70.56 456789 123456789 abcdefghi ABCDEDFHI
--- Date/Time --                        x                       Page    9
+-- Date/Time --                         x                         Page 9
 
 
  71. 
@@ -99,7 +99,7 @@
  82.8                                       12345678
  83.9                                       12345678
  84.70  456789 123456789 abcdefghi ABCDEDFHI
--- Date/Time --                        x                       Page   10
+-- Date/Time --                        x                         Page 10
 
 
  85.1                                       12345678

@@ -1,4 +1,4 @@
--- Date/Time --                        x                       Page    3
+-- Date/Time --                         x                         Page 3
 
 
  29.29 xyzxyzxyz XYZXYZXYZ abcabcab   15 xyzxyzxyz XYZXYZXYZ abcabcab
@@ -15,7 +15,7 @@
  40.40 DEFGHI 123456789		      6
  41.41 yzxyzxyz XYZXYZXYZ abcabcab    27 no truncation before FF; (r_l-
  42.42 456789 123456789 abcdefghi ABC 
--- Date/Time --                        x                       Page    4
+-- Date/Time --                         x                         Page 4
 
 
  43.43 xyzxyzxyz XYZXYZXYZ abcabcab   
@@ -32,7 +32,7 @@
  54.4				      
  55.55 yzxyzxyz XYZXYZXYZ abcabcab    
  56.56 456789 123456789 abcdefghi ABC 
--- Date/Time --                        x                       Page    5
+-- Date/Time --                         x                         Page 5
 
 
  57.57 xyzxyzxyz XYZXYZXYZ abcabcab   29 xyzxyzxyz XYZXYZXYZ abcabcab
@@ -49,15 +49,15 @@
  68.				      40 DEFGHI 123456789
  69.				      41 yzxyzxyz XYZXYZXYZ abcabcab
  70.				      42 456789 123456789 abcdefghi ABC
--- Date/Time --                        x                       Page    6
+-- Date/Time --                         x                         Page 6
 
 
 
--- Date/Time --                        x                       Page    7
+-- Date/Time --                         x                         Page 7
 
 
 
--- Date/Time --                        x                       Page    8
+-- Date/Time --                         x                         Page 8
 
 
  71.				      43 xyzxyzxyz XYZXYZXYZ abcabcab
@@ -74,7 +74,7 @@
  82.				      
  83.				      55 yzxyzxyz XYZXYZXYZ abcabcab
  84.				      56 456789 123456789 abcdefghi ABC
--- Date/Time --                        x                       Page    9
+-- Date/Time --                         x                         Page 9
 
 
  85.				      
@@ -91,7 +91,7 @@
  96.				      8
  97.				      9
  98.				      70  456789 123456789 abcdefghi AB
--- Date/Time --                        x                       Page   10
+-- Date/Time --                        x                         Page 10
 
 
  99.				      1

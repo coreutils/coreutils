@@ -1,4 +1,4 @@
-   -- Date/Time --                        x                       Page    1
+   -- Date/Time --                         x                         Page 1
 
 
    1   Test-INPUT: "Withou 15 xyzxyzxyz XYZXYZXYZ  29 xyzxyzxyz XYZXYZXYZ
@@ -15,7 +15,7 @@
    2			   6			   40 DEFGHI 123456789
    3 line truncation befor 27 no truncation before 41 yzxyzxyz XYZXYZXYZ a
    14 456789 123456789 123 28 no trunc		   42 456789 123456789 abc
-   -- Date/Time --                        x                       Page    2
+   -- Date/Time --                         x                         Page 2
 
 
    43 xyzxyzxyz XYZXYZXYZ  50			   57 xyzxyzxyz XYZXYZXYZ

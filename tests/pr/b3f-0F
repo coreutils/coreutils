@@ -1,8 +1,8 @@
--- Date/Time --                        x                       Page    1
+-- Date/Time --                         x                         Page 1
 
 
 
--- Date/Time --                        x                       Page    2
+-- Date/Time --                         x                         Page 2
 
 
 1   FF-Test: FF's at St 6   FF-Arangements: Emp 1
@@ -10,11 +10,11 @@
 3   ------------------- 8   \f\ftext; \f\f\ntex 3 line truncation befor
 4 3456789 123456789 123 9 3456789 123456789 123 14 456789 123456789 123
 5   3 Columns downwards 10  zzzzzzzzzzzzzzzzzzz
--- Date/Time --                        x                       Page    3
+-- Date/Time --                         x                         Page 3
 
 
 
--- Date/Time --                        x                       Page    4
+-- Date/Time --                         x                         Page 4
 
 
 15 xyzxyzxyz XYZXYZXYZ	20 DEFGHI 123		5
@@ -22,7 +22,7 @@
 7			2			27 no truncation before
 8			3			28 no trunc
 9 3456789 ab		4
--- Date/Time --                        x                       Page    5
+-- Date/Time --                         x                         Page 5
 
 
 29 xyzxyzxyz XYZXYZXYZ	1			3

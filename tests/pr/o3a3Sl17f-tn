@@ -1,4 +1,4 @@
-   -- Date/Time --                        x                       Page    1
+   -- Date/Time --                         x                         Page 1
 
 
    1   Test-INPUT: "With:--:2	Options -b -3 [+2:--:3	 Options -a -3 [+2
@@ -15,7 +15,7 @@
    4			:--:5			 :--:6
    7			:--:8			 :--:9 3456789 abcdefghi
    40 DEFGHI 123456789	:--:41 yzxyzxyz XYZXYZXYZ:--:42 456789 123456789 a
-   -- Date/Time --                        x                       Page    2
+   -- Date/Time --                         x                         Page 2
 
 
    43 xyzxyzxyz XYZXYZXY:--:44 456789 123456789 x:--:5

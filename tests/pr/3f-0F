@@ -1,8 +1,8 @@
--- Date/Time --                        x                       Page    3
+-- Date/Time --                         x                         Page 3
 
 
 
--- Date/Time --                        x                       Page    4
+-- Date/Time --                         x                         Page 4
 
 
 15 xyzxyzxyz XYZXYZXYZ abcabcab
@@ -19,7 +19,7 @@
 6                                       12345678
 27 no truncation before FF; (r_l-test):
 28 no trunc
--- Date/Time --                        x                       Page    5
+-- Date/Time --                         x                         Page 5
 
 
 29 xyzxyzxyz XYZXYZXYZ abcabcab

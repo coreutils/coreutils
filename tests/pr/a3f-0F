@@ -1,8 +1,8 @@
--- Date/Time --                        x                       Page    1
+-- Date/Time --                         x                         Page 1
 
 
 
--- Date/Time --                        x                       Page    2
+-- Date/Time --                         x                         Page 2
 
 
 1   FF-Test: FF's at St 2   Options -b -3 / -a	3   -------------------
@@ -10,11 +10,11 @@
 7   \ftext; \f\ntext;	8   \f\ftext; \f\f\ntex 9 3456789 123456789 123
 10  zzzzzzzzzzzzzzzzzzz 1			2
 3 line truncation befor 14 456789 123456789 123
--- Date/Time --                        x                       Page    3
+-- Date/Time --                         x                         Page 3
 
 
 
--- Date/Time --                        x                       Page    4
+-- Date/Time --                         x                         Page 4
 
 
 15 xyzxyzxyz XYZXYZXYZ	16 456789 123456789 xyz 7
@@ -22,7 +22,7 @@
 1			2			3
 4			5			6
 27 no truncation before 28 no trunc
--- Date/Time --                        x                       Page    5
+-- Date/Time --                         x                         Page 5
 
 
 29 xyzxyzxyz XYZXYZXYZ	30 456789 123456789 xyz 1

@@ -1,4 +1,4 @@
--- Date/Time --                        x                       Page    1
+-- Date/Time --                         x                         Page 1
 
 
   1.1	Test-INPUT: "Wit:--:1	Test-INPUT: "Wit:--:1	FF-Test: FF's in
@@ -15,7 +15,7 @@
  12.2			:--:2			:--:2
  13.3 line truncation be:--:3 line truncation be:--:3 line truncation be
  14.14 456789 123456789 :--:14 456789 123456789 :--:14 456789 123456789
--- Date/Time --                        x                       Page    2
+-- Date/Time --                         x                         Page 2
 
 
  15.15 xyzxyzxyz XYZXYZX:--:15 xyzxyzxyz XYZXYZX:--:
@@ -32,7 +32,7 @@
  26.6			:--:6			:--:
  27.27 no truncation bef:--:27 no truncation bef:--:
  28.28 no trunc		:--:28 no trunc		:--:
--- Date/Time --                        x                       Page    3
+-- Date/Time --                         x                         Page 3
 
 
  29.29 xyzxyzxyz XYZXYZX:--:29 xyzxyzxyz XYZXYZX:--:15 xyzxyzxyz XYZXYZX
@@ -49,7 +49,7 @@
  40.40 DEFGHI 123456789 :--:40 DEFGHI 123456789 :--:6
  41.41 yzxyzxyz XYZXYZXY:--:41 yzxyzxyz XYZXYZXY:--:27 no truncation bef
  42.42 456789 123456789 :--:42 456789 123456789 :--:28 no trunc
--- Date/Time --                        x                       Page    4
+-- Date/Time --                         x                         Page 4
 
 
  43.43 xyzxyzxyz XYZXYZX:--:43 xyzxyzxyz XYZXYZX:--:
@@ -66,7 +66,7 @@
  54.4			:--:4			:--:
  55.55 yzxyzxyz XYZXYZXY:--:55 yzxyzxyz XYZXYZXY:--:
  56.56 456789 123456789 :--:56 456789 123456789 :--:
--- Date/Time --                        x                       Page    5
+-- Date/Time --                         x                         Page 5
 
 
  57.57 xyzxyzxyz XYZXYZX:--:57 xyzxyzxyz XYZXYZX:--:29 xyzxyzxyz XYZXYZX
@@ -83,15 +83,15 @@
  68.			:--:			:--:40 DEFGHI 123456789
  69.			:--:			:--:41 yzxyzxyz XYZXYZXY
  70.			:--:			:--:42 456789 123456789
--- Date/Time --                        x                       Page    6
+-- Date/Time --                         x                         Page 6
 
 
 
--- Date/Time --                        x                       Page    7
+-- Date/Time --                         x                         Page 7
 
 
 
--- Date/Time --                        x                       Page    8
+-- Date/Time --                         x                         Page 8
 
 
  71.			:--:			:--:43 xyzxyzxyz XYZXYZX
@@ -108,7 +108,7 @@
  82.			:--:			:--:4
  83.			:--:			:--:55 yzxyzxyz XYZXYZXY
  84.			:--:			:--:56 456789 123456789
--- Date/Time --                        x                       Page    9
+-- Date/Time --                         x                         Page 9
 
 
  85.			:--:			:--:57 xyzxyzxyz XYZXYZX

@@ -1,4 +1,4 @@
--- Date/Time --     x     Page    1
+-- Date/Time --      x       Page 1
 
 
 1<<<  -Test: FF's 1:::	Test-INPUT:
@@ -15,7 +15,7 @@
 2<<<  >>>	  2:::	:::
 3<<<  truncation  3:::	line trunca
 14<<<  123456789  14:::	 89 1234567
--- Date/Time --     x     Page    2
+-- Date/Time --      x       Page 2
 
 
 		  15:::	 xyzxyzxyz
@@ -32,7 +32,7 @@
 		  6:::	12345678  :
 		  27:::	 no truncat
 		  28:::	 89 1234567
--- Date/Time --     x     Page    3
+-- Date/Time --      x       Page 3
 
 
 15<<<  xyzxyzxyz  29:::	 xyzxyzxyz
@@ -49,7 +49,7 @@
 6<<<  >>>	  40:::	 DEFGHI 123
 27<<<  truncation 41:::	 yzxyzxyz X
 28<<<  trunc	  42:::	 89 1234567
--- Date/Time --     x     Page    4
+-- Date/Time --      x       Page 4
 
 
 		  43:::	 xyzxyzxyz
@@ -66,7 +66,7 @@
 		  4:::	12345678  :
 		  55:::	 yzxyzxyz X
 		  56:::	 89 1234567
--- Date/Time --     x     Page    5
+-- Date/Time --      x       Page 5
 
 
 29<<<xyzxyzxyz XY 57:::	 xyzxyzxyz
@@ -83,15 +83,15 @@
 40<<<  123456789  
 41<<<  XYZXYZXYZ  
 42<<<  123456789
--- Date/Time --     x     Page    6
+-- Date/Time --      x       Page 6
 
 
 
--- Date/Time --     x     Page    7
+-- Date/Time --      x       Page 7
 
 
 
--- Date/Time --     x     Page    8
+-- Date/Time --      x       Page 8
 
 
 43<<<  xyzxyzxyz  
@@ -108,7 +108,7 @@
 4<<<  >>>	  
 55<<<  XYZXYZXYZ  
 56<<<  123456789
--- Date/Time --     x     Page    9
+-- Date/Time --      x       Page 9
 
 
 57<<<  xyzxyzxyz  

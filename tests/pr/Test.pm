@@ -333,7 +333,7 @@ my @tv = (
 ['margin-0', '-o 0', '', '', 0],
 
 # BUG fixed: that leading space on 3rd line of output should not be there
-['dbl-sp-a', '-d -l 14 -h ""', "1\n2\n", "\n\n\n\n\n1\n\n2\n\n\n\n\n\n\n", 0],
+['dbl-sp-a', '-d -l 14 -h ""', "1\n2\n", "\n\n-- Date/Time --                                                   Page 1\n\n\n1\n\n2\n\n\n\n\n\n\n", 0],
 # This test failed with 1.22e and earlier.
 ['dbl-sp-b', '-d -t', "1\n2\n", "1\n\n2\n\n", 0],
 
@@ -345,7 +345,7 @@ my @tv = (
 
 sub test_vector
 {
-  my $common_option_prefix = '--test -h x';
+  my $common_option_prefix = '--date-format="-- Date/Time --" -h x';
 
   my @new_tv;
   my $t;

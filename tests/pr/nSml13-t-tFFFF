@@ -1,4 +1,4 @@
--- Date/Time --                        x                       Page    1
+-- Date/Time --                         x                         Page 1
 
 
   1.1	Test-INPUT:--:1	  Test-INPUT:--:1   FF-Test: F:--:1   FF-Test: F
@@ -11,7 +11,7 @@
   8.8	3 Columns :--:8	  3 Columns :--:8   \f\f\n; \f:--:8   \f\f\n; \f
   9.9	With colum:--:9	  With colum:--:9	      :--:9
  10.10	without -f:--:10  without -f:--:10  zzzzzzzzzz:--:10  zzzzzzzzzz
--- Date/Time --                        x                       Page    2
+-- Date/Time --                         x                         Page 2
 
 
  11.1	with -f e.:--:1	  with -f e.:--:1	      :--:1
@@ -24,7 +24,7 @@
  18.8		  :--:8		    :--:	      :--:
  19.9 3456789 ab  :--:9 3456789 ab  :--:	      :--:
  20.20 DEFGHI 123 :--:20 DEFGHI 123 :--:	      :--:
--- Date/Time --                        x                       Page    3
+-- Date/Time --                         x                         Page 3
 
 
  21.1		  :--:1		    :--:	      :--:
@@ -37,7 +37,7 @@
  28.28 no trunc	  :--:28 no trunc   :--:	      :--:
  29.29 xyzxyzxyz X:--:29 xyzxyzxyz X:--:	      :--:
  30.30 456789 1234:--:30 456789 1234:--:	      :--:
--- Date/Time --                        x                       Page    4
+-- Date/Time --                         x                         Page 4
 
 
  31.1		  :--:1		    :--:15 xyzxyzxyz X:--:15 xyzxyzxyz X
@@ -50,7 +50,7 @@
  38.8		  :--:8		    :--:2	      :--:2
  39.9 3456789 abcd:--:9 3456789 abcd:--:3	      :--:3
  40.40 DEFGHI 1234:--:40 DEFGHI 1234:--:4	      :--:4
--- Date/Time --                        x                       Page    5
+-- Date/Time --                         x                         Page 5
 
 
  41.41 yzxyzxyz XY:--:41 yzxyzxyz XY:--:5	      :--:5
@@ -63,7 +63,7 @@
  48.8		  :--:8		    :--:	      :--:
  49.9		  :--:9		    :--:	      :--:
  50.50		  :--:50	    :--:	      :--:
--- Date/Time --                        x                       Page    6
+-- Date/Time --                         x                         Page 6
 
 
  51.1		  :--:1		    :--:	      :--:
@@ -76,7 +76,7 @@
  58.58 456789 1234:--:58 456789 1234:--:	      :--:
  59.9		  :--:9		    :--:	      :--:
  60.60 DEFGHI 1234:--:60 DEFGHI 1234:--:	      :--:
--- Date/Time --                        x                       Page    7
+-- Date/Time --                         x                         Page 7
 
 
  61.1		  :--:1		    :--:29 xyzxyzxyz X:--:29 xyzxyzxyz X
@@ -89,22 +89,22 @@
  68.		  :--:		    :--:6	      :--:6
  69.		  :--:		    :--:7	      :--:7
  70.		  :--:		    :--:8	      :--:8
--- Date/Time --                        x                       Page    8
+-- Date/Time --                         x                         Page 8
 
 
  71.		  :--:		    :--:9 3456789 abcd:--:9 3456789 abcd
  72.		  :--:		    :--:40 DEFGHI 1234:--:40 DEFGHI 1234
  73.		  :--:		    :--:41 yzxyzxyz XY:--:41 yzxyzxyz XY
  74.		  :--:		    :--:42 456789 1234:--:42 456789 1234
--- Date/Time --                        x                       Page    9
+-- Date/Time --                         x                         Page 9
 
 
 
--- Date/Time --                        x                       Page   10
+-- Date/Time --                        x                         Page 10
 
 
 
--- Date/Time --                        x                       Page   11
+-- Date/Time --                        x                         Page 11
 
 
  75.		  :--:		    :--:43 xyzxyzxyz X:--:43 xyzxyzxyz X
@@ -117,14 +117,14 @@
  82.		  :--:		    :--:50	      :--:50
  83.		  :--:		    :--:1	      :--:1
  84.		  :--:		    :--:2	      :--:2
--- Date/Time --                        x                       Page   12
+-- Date/Time --                        x                         Page 12
 
 
  85.		  :--:		    :--:3	      :--:3
  86.		  :--:		    :--:4	      :--:4
  87.		  :--:		    :--:55 yzxyzxyz XY:--:55 yzxyzxyz XY
  88.		  :--:		    :--:56 456789 1234:--:56 456789 1234
--- Date/Time --                        x                       Page   13
+-- Date/Time --                        x                         Page 13
 
 
  89.		  :--:		    :--:57 xyzxyzxyz X:--:57 xyzxyzxyz X
