@@ -634,18 +634,7 @@ enum
 # define MIN(a,b) (((a) < (b)) ? (a) : (b))
 #endif
 
-/* The extra casts work around common compiler bugs.  */
-#define TYPE_SIGNED(t) (! ((t) 0 < (t) -1))
-/* The outer cast is needed to work around a bug in Cray C 5.0.3.0.
-   It is necessary at least when t == time_t.  */
-#define TYPE_MINIMUM(t) ((t) (TYPE_SIGNED (t) \
-			      ? ~ (t) 0 << (sizeof (t) * CHAR_BIT - 1) : (t) 0))
-#define TYPE_MAXIMUM(t) ((t) (~ (t) 0 - TYPE_MINIMUM (t)))
-
-/* Upper bound on the string length of an integer converted to string.
-   302 / 1000 is ceil (log10 (2.0)).  Subtract 1 for the sign bit;
-   add 1 for integer division truncation; add 1 more for a minus sign.  */
-#define INT_STRLEN_BOUND(t) ((sizeof (t) * CHAR_BIT - 1) * 302 / 1000 + 2)
+#include "intprops.h"
 
 #ifndef CHAR_MIN
 # define CHAR_MIN TYPE_MINIMUM (char)
