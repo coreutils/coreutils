@@ -1,3 +1,36 @@
+Thu Nov  9 23:27:05 1995  Jim Meyering  (meyering@comco.com)
+
+	* src/*.c: Protoize.
+
+	* ls.c (enum filetype): Move dcl to precede prototypes.
+	(struct fileinfo): Likewise.
+	Add const attribute to some parameters.
+
+	* rm.c (struct pathstack): Move dcl to precede prototypes.
+
+	* dd.c (translate_charset): Make parameter `const'.
+
+	* ln.c (main): Move to the end.
+	Remove most fwd dcls.
+	* chmod.c: Likewise.
+	* chown.c: Likewise.
+	* chgrp.c: Likewise.
+	* mkdir.c: Likewise.
+	* mkfifo.c: Likewise.
+	* mknod.c: Likewise.
+	* mvdir.c: Likewise.
+	* touch.c: Likewise.
+
+	* mv.c: Rearrange functions to obviate forward dcls.
+	Remove forward dcls.
+
+	* cp.c: Protect prototyped forward dcls with __P.
+	* dd.c: Likewise.
+	* df.c: Likewise.
+	* du.c: Likewise.
+	* install.c: Likewise.
+	* ls.c: Likewise.
+
 Wed Nov  1 23:11:05 1995  Jim Meyering  (meyering@comco.com)
 
 	* cp.c (copy): Use euidaccess instead of euidaccess_stat.
