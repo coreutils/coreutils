@@ -40,6 +40,9 @@ sub is_prime ($)
 }
 
 {
+  @ARGV == 1
+    or die "$program_name: missing argument\n";
+
   my $wheel_size = $ARGV[0];
 
   my @primes = (2);
