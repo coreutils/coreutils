@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2002-12-26.16}
+\def\texinfoversion{2003-01-08.14}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
@@ -2393,50 +2393,101 @@ width0pt\relax} \fi
 % and so want to turn off most commands, in case they are used
 % incorrectly.
 %
+% We use \empty instead of \relax for the @def... commands, so that \end
+% doesn't throw an error.  For instance:
+% @ignore
+% @deffn ...
+% @end deffn
+% @end ignore
+% 
+% The @end deffn is going to get expanded, because we're trying to allow
+% nested conditionals.  But we don't want to expand the actual @deffn,
+% since it might be syntactically correct and intended to be ignored.
+% Since \end checks for \relax, using \empty does not cause an error.
+% 
 \def\ignoremorecommands{%
   \let\defcodeindex = \relax
-  \let\defcv = \relax
-  \let\deffn = \relax
-  \let\deffnx = \relax
+  \let\defcv = \empty
+  \let\defcvx = \empty
+  \let\Edefcv = \empty
+  \let\deffn = \empty
+  \let\deffnx = \empty
+  \let\Edeffn = \empty
   \let\defindex = \relax
-  \let\defivar = \relax
-  \let\defmac = \relax
-  \let\defmethod = \relax
-  \let\defop = \relax
-  \let\defopt = \relax
-  \let\defspec = \relax
-  \let\deftp = \relax
-  \let\deftypefn = \relax
-  \let\deftypefun = \relax
-  \let\deftypeivar = \relax
-  \let\deftypeop = \relax
-  \let\deftypevar = \relax
-  \let\deftypevr = \relax
-  \let\defun = \relax
-  \let\defvar = \relax
-  \let\defvr = \relax
-  \let\ref = \relax
-  \let\xref = \relax
-  \let\printindex = \relax
-  \let\pxref = \relax
-  \let\settitle = \relax
-  \let\setchapternewpage = \relax
-  \let\setchapterstyle = \relax
-  \let\everyheading = \relax
-  \let\evenheading = \relax
-  \let\oddheading = \relax
-  \let\everyfooting = \relax
+  \let\defivar = \empty
+  \let\defivarx = \empty
+  \let\Edefivar = \empty
+  \let\defmac = \empty
+  \let\defmacx = \empty
+  \let\Edefmac = \empty
+  \let\defmethod = \empty
+  \let\defmethodx = \empty
+  \let\Edefmethod = \empty
+  \let\defop = \empty
+  \let\defopx = \empty
+  \let\Edefop = \empty
+  \let\defopt = \empty
+  \let\defoptx = \empty
+  \let\Edefopt = \empty
+  \let\defspec = \empty
+  \let\defspecx = \empty
+  \let\Edefspec = \empty
+  \let\deftp = \empty
+  \let\deftpx = \empty
+  \let\Edeftp = \empty
+  \let\deftypefn = \empty
+  \let\deftypefnx = \empty
+  \let\Edeftypefn = \empty
+  \let\deftypefun = \empty
+  \let\deftypefunx = \empty
+  \let\Edeftypefun = \empty
+  \let\deftypeivar = \empty
+  \let\deftypeivarx = \empty
+  \let\Edeftypeivar = \empty
+  \let\deftypemethod = \empty
+  \let\deftypemethodx = \empty
+  \let\Edeftypemethod = \empty
+  \let\deftypeop = \empty
+  \let\deftypeopx = \empty
+  \let\Edeftypeop = \empty
+  \let\deftypevar = \empty
+  \let\deftypevarx = \empty
+  \let\Edeftypevar = \empty
+  \let\deftypevr = \empty
+  \let\deftypevrx = \empty
+  \let\Edeftypevr = \empty
+  \let\defun = \empty
+  \let\defunx = \empty
+  \let\Edefun = \empty
+  \let\defvar = \empty
+  \let\defvarx = \empty
+  \let\Edefvar = \empty
+  \let\defvr = \empty
+  \let\defvrx = \empty
+  \let\Edefvr = \empty
+  \let\clear = \relax
+  \let\down = \relax
   \let\evenfooting = \relax
-  \let\oddfooting = \relax
+  \let\evenheading = \relax
+  \let\everyfooting = \relax
+  \let\everyheading = \relax
   \let\headings = \relax
   \let\include = \relax
-  \let\lowersections = \relax
-  \let\down = \relax
-  \let\raisesections = \relax
-  \let\up = \relax
-  \let\set = \relax
-  \let\clear = \relax
   \let\item = \relax
+  \let\lowersections = \relax
+  \let\oddfooting = \relax
+  \let\oddheading = \relax
+  \let\printindex = \relax
+  \let\pxref = \relax
+  \let\raisesections = \relax
+  \let\ref = \relax
+  \let\set = \relax
+  \let\setchapternewpage = \relax
+  \let\setchapterstyle = \relax
+  \let\settitle = \relax
+  \let\up = \relax
+  \let\verbatiminclude = \relax
+  \let\xref = \relax
 }
 
 % Ignore @ignore, @ifhtml, @ifinfo, and the like.
@@ -2535,7 +2586,7 @@ width0pt\relax} \fi
   % command, so that nested ignore constructs work.  Thus, we put the
   % text into a \vbox and then do nothing with the result.  To minimize
   % the chance of memory overflow, we follow the approach outlined on
-  % page 401 of the TeXbook: make the current font be a dummy font.
+  % page 401 of the TeXbook.
   %
   \setbox0 = \vbox\bgroup
     % Don't complain about control sequences we have declared \outer.
@@ -2556,8 +2607,8 @@ width0pt\relax} \fi
     %
     % Set the current font to be \nullfont, a TeX primitive, and define
     % all the font commands to also use \nullfont.  We don't use
-    % dummy.tfm, as suggested in the TeXbook, because not all sites
-    % might have that installed.  Therefore, math mode will still
+    % dummy.tfm, as suggested in the TeXbook, because some sites
+    % might not have that installed.  Therefore, math mode will still
     % produce output, but that should be an extremely small amount of
     % stuff compared to the main input.
     %
@@ -6406,7 +6457,7 @@ should work if nowhere else does.}
 \catcode`\_=\active
 \def_{\ifusingtt\normalunderscore\_}
 % Subroutine for the previous macro.
-\def\_{\leavevmode \kern.06em \vbox{\hrule width.3em height.1ex}}
+\def\_{\leavevmode \kern.07em \vbox{\hrule width.3em height.1ex}\kern .07em }
 
 \catcode`\|=\active
 \def|{{\tt\char124}}
