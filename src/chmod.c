@@ -104,6 +104,8 @@ main (argc, argv)
 
       switch (c)
 	{
+	case 0:
+	  break;
 	case 'r':
 	case 'w':
 	case 'x':

@@ -141,6 +141,9 @@ main (argc, argv)
     {
       switch (c)
 	{
+	case 0:
+	  break;
+
 	case 'a':
 	  change_times |= CH_ATIME;
 	  break;

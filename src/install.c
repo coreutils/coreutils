@@ -172,6 +172,8 @@ main (argc, argv)
     {
       switch (optc)
 	{
+	case 0:
+	  break;
 	case 'c':
 	  break;
 	case 's':

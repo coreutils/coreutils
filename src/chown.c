@@ -119,6 +119,8 @@ main (argc, argv)
     {
       switch (optc)
 	{
+	case 0:
+	  break;
 	case 'R':
 	  recurse = 1;
 	  break;

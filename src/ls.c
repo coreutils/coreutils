@@ -585,6 +585,9 @@ decode_switches (argc, argv)
     {
       switch (c)
 	{
+	case 0:
+	  break;
+
 	case 'a':
 	  all_files = 1;
 	  really_all_files = 1;

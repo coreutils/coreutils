@@ -71,6 +71,8 @@ main (argc, argv)
     {
       switch (optc)
 	{
+	case 0:
+	  break;
 	case 'm':
 	  symbolic_mode = optarg;
 	  break;
