@@ -103,9 +103,9 @@ static int have_ids = 0;
 
 int
 eaccess_stat (statp, mode, path)
-     struct stat *statp;
+     const struct stat *statp;
      int mode;
-     char *path;
+     const char *path;
 {
   int granted;
 
@@ -158,7 +158,7 @@ eaccess_stat (statp, mode, path)
 
 int
 euidaccess (path, mode)
-     char *path;
+     const char *path;
      int mode;
 {
   struct stat stats;
@@ -177,7 +177,7 @@ euidaccess (path, mode)
       return access (path, mode);
     }
 
-  if (safe_stat (path, &stats))
+  if (stat (path, &stats))
     return -1;
 
   return eaccess_stat (&stats, mode, path);
