@@ -1,0 +1,5 @@
+AUTOMAKE_OPTIONS = 1.2 gnits
+
+TESTS = sf-1
+EXTRA_DIST = $(TESTS)
+TESTS_ENVIRONMENT = LN=../../src/ln

@@ -1,0 +1,40 @@
+#!/bin/sh
+
+: ${LN=ln}
+test=sf-1
+
+if test "$VERBOSE" = yes; then
+  set -x
+  $LN --version
+fi
+
+tmp=t-ln.$$
+
+# We're going to LN from a subdir.  Prepend ../ if $LN is not an
+# absolute file name.
+case $LN in
+  /*) ;;
+  *) LN=../$LN
+esac
+
+test_failure=0
+mkdir $tmp || test_failure=1
+cd $tmp || test_failure=1
+echo foo > a || test_failure=1
+$LN -s . b || test_failure=1
+
+if test $test_failure = 1; then
+  echo 'failure in testing framework'
+  exit 1
+fi
+
+$LN -sf a b > err 2>&1 && fail=1
+case `cat err` in
+  *'are the same file') ;;
+  *) fail=1 ;;
+esac
+
+cd ..
+rm -rf $tmp
+
+exit $fail
