@@ -2,6 +2,10 @@
 
 	* Version 5.1.3.
 
+	* tests/rm/deep-1 (deep): Remove progress-style diagnostics,
+	since this test doesn't take long enough to merit them.
+	Run du on $tmp (the containing dir), not $deep, the full path to leaf.
+
 	* Makefile.maint (signatures): Remove definition.
 	Now, automake's gnupload handles this.
 	(%.sig: %): Remove now-unused rule.
