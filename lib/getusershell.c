@@ -35,7 +35,7 @@ char *realloc ();
 static int readname ();
 
 /* List of shells to use if the shells file is missing. */
-static char *default_shells[] =
+static char const* const default_shells[] =
 {
   "/bin/sh", "/bin/csh", "/usr/bin/sh", "/usr/bin/csh", NULL
 };

@@ -1,5 +1,5 @@
 %{
-/* $Revision: 2.1 $
+/* $Revision: 1.1.1.1 $
 **
 **  Originally written by Steven M. Bellovin <smb@research.att.com> while
 **  at the University of North Carolina at Chapel Hill.  Later tweaked by
@@ -94,7 +94,7 @@ extern struct tm	*localtime();
 
 #if	!defined(lint) && !defined(SABER)
 static char RCS[] =
-	"$Header: str2date.y,v 2.1 90/09/06 08:15:06 cronan Exp $";
+	"$Header: /w/src/cvsroot/shellutils/lib/getdate.y,v 1.1.1.1 1992/11/01 05:44:32 meyering Exp $";
 #endif	/* !defined(lint) && !defined(SABER) */
 
 
@@ -366,7 +366,7 @@ o_merid	: /* NULL */ {
 %%
 
 /* Month and day table. */
-static TABLE	MonthDayTable[] = {
+static TABLE const MonthDayTable[] = {
     { "january",	tMONTH,  1 },
     { "february",	tMONTH,  2 },
     { "march",		tMONTH,  3 },
@@ -395,7 +395,7 @@ static TABLE	MonthDayTable[] = {
 };
 
 /* Time units table. */
-static TABLE	UnitsTable[] = {
+static TABLE const UnitsTable[] = {
     { "year",		tMONTH_UNIT,	12 },
     { "month",		tMONTH_UNIT,	1 },
     { "fortnight",	tMINUTE_UNIT,	14 * 24 * 60 },
@@ -410,7 +410,7 @@ static TABLE	UnitsTable[] = {
 };
 
 /* Assorted relative-time words. */
-static TABLE	OtherTable[] = {
+static TABLE const OtherTable[] = {
     { "tomorrow",	tMINUTE_UNIT,	1 * 24 * 60 },
     { "yesterday",	tMINUTE_UNIT,	-1 * 24 * 60 },
     { "today",		tMINUTE_UNIT,	0 },
@@ -436,7 +436,7 @@ static TABLE	OtherTable[] = {
 
 /* The timezone table. */
 /* Some of these are commented out because a time_t can't store a float. */
-static TABLE	TimezoneTable[] = {
+static TABLE const TimezoneTable[] = {
     { "gmt",	tZONE,     HOUR( 0) },	/* Greenwich Mean */
     { "ut",	tZONE,     HOUR( 0) },	/* Universal (Coordinated) */
     { "utc",	tZONE,     HOUR( 0) },
@@ -520,7 +520,7 @@ static TABLE	TimezoneTable[] = {
 };
 
 /* Military timezone table. */
-static TABLE	MilitaryTable[] = {
+static TABLE const MilitaryTable[] = {
     { "a",	tZONE,	HOUR(  1) },
     { "b",	tZONE,	HOUR(  2) },
     { "c",	tZONE,	HOUR(  3) },
@@ -553,7 +553,7 @@ static TABLE	MilitaryTable[] = {
 
 
 /* ARGSUSED */
-int
+static int
 yyerror(s)
     char	*s;
 {
@@ -599,7 +599,7 @@ Convert(Month, Day, Year, Hours, Minutes, Seconds, Meridian, DSTmode)
     MERIDIAN	Meridian;
     DSTMODE	DSTmode;
 {
-    static int	DaysInMonth[12] = {
+    static int DaysInMonth[12] = {
 	31, 0, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
     };
     time_t	tod;
@@ -693,7 +693,7 @@ LookupWord(buff)
 {
     register char	*p;
     register char	*q;
-    register TABLE	*tp;
+    register const TABLE	*tp;
     int			i;
     int			abbrev;
 
@@ -794,7 +794,7 @@ LookupWord(buff)
 }
 
 
-int
+static int
 yylex()
 {
     register char	c;

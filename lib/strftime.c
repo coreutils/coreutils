@@ -94,12 +94,12 @@ enum padding
   none, blank, zero
 };
 
-static char *days[] =
+static char const* const days[] =
 {
   "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
 };
 
-static char *months[] =
+static char const * const months[] =
 {
   "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
