@@ -31,7 +31,6 @@
 #include "error.h"
 #include "hard-locale.h"
 #include "inttostr.h"
-#include "long-options.h"
 #include "physmem.h"
 #include "posixver.h"
 #include "quote.h"
