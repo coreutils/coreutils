@@ -30,14 +30,6 @@
 
 # include <sys/types.h>
 
-/* Accessor macro for the member named ut_user or ut_name.  */
-# if HAVE_STRUCT_UTMPX_UT_USER || HAVE_STRUCT_UTMP_UT_USER
-#  define UT_USER(Utmp) Utmp->ut_user
-# endif
-# if HAVE_STRUCT_UTMPX_UT_NAME || HAVE_STRUCT_UTMP_UT_NAME
-#  define UT_USER(Utmp) Utmp->ut_name
-# endif
-
 # ifdef HAVE_UTMPX_H
 #  include <utmpx.h>
 #  define UTMP_STRUCT_NAME utmpx
@@ -54,6 +46,29 @@
 #  define GET_UTMP_ENT getutent
 #  define END_UTMP_ENT endutent
 #  define UTMP_NAME_FUNCTION utmpname
+# endif
+
+/* Accessor macro for the member named ut_user or ut_name.  */
+# ifdef HAVE_UTMPX_H
+
+#  if HAVE_STRUCT_UTMPX_UT_USER
+#   define UT_USER(Utmp) Utmp->ut_user
+#  endif
+#  if HAVE_STRUCT_UTMPX_UT_NAME
+#   undef UT_USER
+#   define UT_USER(Utmp) Utmp->ut_name
+#  endif
+
+# else
+
+#  if HAVE_STRUCT_UTMP_UT_USER
+#   define UT_USER(Utmp) Utmp->ut_user
+#  endif
+#  if HAVE_STRUCT_UTMP_UT_NAME
+#   undef UT_USER
+#   define UT_USER(Utmp) Utmp->ut_name
+#  endif
+
 # endif
 
 typedef struct UTMP_STRUCT_NAME STRUCT_UTMP;
