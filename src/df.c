@@ -518,6 +518,8 @@ usage (status)
     {
       printf ("Usage: %s [OPTION]... [FILE]...\n", program_name);
       printf ("\
+Show information about the filesystem on which each FILE resides,\n\
+or all filesystems by default.\n\
 \n\
   -a, --all                 include filesystems having 0 blocks\n\
   -i, --inodes              list inode information instead of block usage\n\
@@ -530,9 +532,7 @@ usage (status)
   -P, --portability         use the POSIX output format\n\
   -T, --print-type          print filesystem type\n\
       --help                display this help and exit\n\
-      --version             output version information and exit\n\
-\n\
-If no FILEs are given, list all currently mounted filesystems.\n");
+      --version             output version information and exit\n");
     }
   exit (status);
 }

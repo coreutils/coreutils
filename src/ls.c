@@ -2556,8 +2556,10 @@ usage (status)
 	     program_name);
   else
     {
-      printf ("Usage: %s [OPTION]... [PATH]...\n", program_name);
+      printf ("Usage: %s [OPTION]... [FILE]...\n", program_name);
       printf ("\
+List information about the FILEs (the current directory by default).\n\
+Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
 \n\
   -A, --almost-all           do not list implied . and ..\n\
   -a, --all                  do not hide entries starting with .\n\
@@ -2609,9 +2611,7 @@ usage (status)
   -7, --7bit                 allow only 7-bit ASCII characters to be printed\n\
   -8, --8bit                 allow 8-bit ISO 8859 characters to be printed\n\
       --help                 display this help and exit\n\
-      --version              output version information and exit\n\
-\n\
-Sort entries alphabetically if none of -cftuSUX nor --sort.\n");
+      --version              output version information and exit");
     }
   exit (status);
 }

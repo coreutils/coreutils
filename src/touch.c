@@ -378,6 +378,7 @@ usage (status)
     {
       printf ("Usage: %s [OPTION]... FILE...\n", program_name);
       printf ("\
+Update the access and modification times of each FILE to the current time.\n\
 \n\
   -a                     change only the access time\n\
   -c                     do not create any files\n\

@@ -473,6 +473,7 @@ Usage: %s [OPTION]... SOURCE DEST\n\
 ",
 	      program_name, program_name);
       printf ("\
+Rename SOURCE to DEST, or move SOURCE(s) to DIRECTORY.\n\
 \n\
   -b, --backup                 make backup before removal\n\
   -f, --force                  remove existing destinations, never prompt\n\

@@ -302,6 +302,7 @@ Usage: %s [OPTION]... OWNER[.[GROUP]] FILE...\n\
 ",
 	      program_name, program_name);
       printf ("\
+Change the owner and/or group of each FILE to OWNER and/or GROUP.\n\
 \n\
   -c, --changes           be verbose whenever change occurs\n\
   -f, --silent, --quiet   suppress most error messages\n\

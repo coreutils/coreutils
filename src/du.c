@@ -267,8 +267,9 @@ usage (status, reason)
 	     program_name);
   else
     {
-      printf ("Usage: %s [OPTION]... [PATH]...\n", program_name);
+      printf ("Usage: %s [OPTION]... [FILE]...\n", program_name);
       printf ("\
+Summarize disk usage of each FILE, recursively for directories.\n\
 \n\
   -a, --all                write counts for all files, not just directories\n\
   -b, --bytes              print size in bytes\n\

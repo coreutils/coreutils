@@ -148,9 +148,10 @@ usage (status)
     {
       printf ("Usage: %s [OPTION] DIRECTORY...\n", program_name);
       printf ("\
+Create the DIRECTORY(ies), if they do not already exist.\n\
 \n\
   -p, --parents     no error if existing, make parent directories as needed\n\
-  -m, --mode=MODE   set permission mode (as in chmod), not 0777 - umask\n\
+  -m, --mode=MODE   set permission mode (as in chmod), not rwxrwxrwx - umask\n\
       --help        display this help and exit\n\
       --version     output version information and exit\n");
     }

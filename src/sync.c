@@ -40,6 +40,7 @@ usage (status)
     {
       printf ("Usage: %s [OPTION]\n", program_name);
       printf ("\
+Force changed blocks to disk, update the super block.\n\
 \n\
   --help      display this help and exit\n\
   --version   output version information and exit\n\

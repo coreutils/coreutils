@@ -312,6 +312,7 @@ usage (status)
     {
       printf ("Usage: %s [OPTION]... GROUP FILE...\n", program_name);
       printf ("\
+Change the group membership of each FILE to GROUP.\n\
 \n\
   -c, --changes           like verbose but report only when a change is made\n\
   -f, --silent, --quiet   suppress most error messages\n\

@@ -1092,6 +1092,7 @@ usage (status)
     {
       printf ("Usage: %s [OPTION]...\n", program_name);
       printf ("\
+Copy a file, converting and formatting according to the options.\n\
 \n\
   bs=BYTES        force ibs=BYTES and obs=BYTES\n\
   cbs=BYTES       convert BYTES bytes at a time\n\

@@ -148,6 +148,7 @@ usage (status)
     {
       printf ("Usage: %s [OPTION]... DIRECTORY...\n", program_name);
       printf ("\
+Remove the DIRECTORY(ies), if they are empty.\n\
 \n\
   -p, --parents   remove explicit parent directories if being emptied\n\
       --help      display this help and exit\n\

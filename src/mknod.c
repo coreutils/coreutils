@@ -240,8 +240,9 @@ usage (status)
 	     program_name);
   else
     {
-      printf ("Usage: %s [OPTION]... PATH TYPE [MAJOR MINOR]\n", program_name);
+      printf ("Usage: %s [OPTION]... NAME TYPE [MAJOR MINOR]\n", program_name);
       printf ("\
+Create the special file NAME of the given TYPE.\n\
 \n\
   -m, --mode=MODE   set permission mode (as in chmod), not 0666 - umask\n\
       --help        display this help and exit\n\

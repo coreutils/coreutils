@@ -538,15 +538,18 @@ usage (status)
       printf ("\
 Usage: %s [OPTION]... SOURCE DEST           (1st format)\n\
   or:  %s [OPTION]... SOURCE... DIRECTORY   (2nd format)\n\
-  or:  %s [OPTION]... DIRECTORY...          (3nd format)\n\
+  or:  %s -d [OPTION]... DIRECTORY...       (3nd format)\n\
 ",
 	      program_name, program_name, program_name);
       printf ("\
+In first two formats, copy SOURCE to DEST or multiple SOURCE(s) to\n\
+DIRECTORY, while setting permission modes and owner/group.  In third\n\
+format, make all components of the given DIRECTORY(ies).\n\
 \n\
   -c                  (ignored)\n\
   -d, --directory     create [leading] directories, mandatory for 3rd format\n\
   -g, --group=GROUP   set group ownership, instead of process' current group\n\
-  -m, --mode=MODE     set permission mode (as in chmod), instead of 0755\n\
+  -m, --mode=MODE     set permission mode (as in chmod), instead of rw-r--r--\n\
   -o, --owner=OWNER   set ownership (super-user only)\n\
   -s, --strip         strip symbol tables, only for 1st and 2nd formats\n\
       --help          display this help and exit\n\

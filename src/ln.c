@@ -409,6 +409,8 @@ Usage: %s [OPTION]... SOURCE [DEST]\n\
 ",
 	      program_name, program_name);
       printf ("\
+Link SOURCE to DEST (. by default), or multiple SOURCE(s) to DIRECTORY.\n\
+Makes hard links by default, symbolic links with -s.\n\
 \n\
   -b, --backup                 make backups for removed files\n\
   -d, -F, --directory          hard link directories (super-user only)\n\
@@ -416,7 +418,7 @@ Usage: %s [OPTION]... SOURCE [DEST]\n\
   -n, --no-dereference         with --force, remove destination that is a\n\
                                  symlink to a directory\n\
   -i, --interactive            prompt whether to remove destinations\n\
-  -s, --symbolic               make symbolic links, instead of hard links\n\
+  -s, --symbolic               make symbolic links instead of hard links\n\
   -v, --verbose                print name of each file before linking\n\
   -S, --suffix=SUFFIX          override the usual backup suffix\n\
   -V, --version-control=WORD   override the usual version control\n\

@@ -528,8 +528,9 @@ usage (status)
 	     program_name);
   else
     {
-      printf ("Usage: %s [OPTION]... PATH...\n", program_name);
+      printf ("Usage: %s [OPTION]... FILE...\n", program_name);
       printf ("\
+Remove (unlink) the FILE(s).\n\
 \n\
   -d, --directory       unlink directory, even if non-empty (super-user only)\n\
   -f, --force           ignore nonexistent files, never prompt\n\
