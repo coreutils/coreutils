@@ -1,8 +1,7 @@
 2002-02-27  Paul Eggert  <eggert@twinsun.com>
 
 	* coreutils.texi (Time directives): Add %N for nanoseconds.
-	This documents the recent change to 'ls'.  But for this to
-	be accurate we also have to update 'date', as follows:
+	This documents the recent change to 'ls'.
 
 2002-02-28  Jim Meyering  <meyering@lucent.com>
 
