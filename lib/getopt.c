@@ -490,6 +490,10 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
       for (nameend = nextchar; *nameend && *nameend != '='; nameend++)
 	/* Do nothing.  */ ;
 
+#ifdef lint
+      indfound = 0;  /* Avoid spurious compiler warning.  */
+#endif
+
       /* Test all long options for either exact match
 	 or abbreviated matches.  */
       for (p = longopts, option_index = 0; p->name; p++, option_index++)
@@ -510,13 +514,8 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 		indfound = option_index;
 	      }
 	    else
-	      {
-		/* Second or later nonexact match found.  */
-		ambig = 1;
-#ifdef lint
-		indfound = 0;
-#define
-	      }
+	      /* Second or later nonexact match found.  */
+	      ambig = 1;
 	  }
 
       if (ambig && !exact)
