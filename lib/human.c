@@ -450,8 +450,6 @@ humblock (char const *spec, uintmax_t *block_size, int *options)
 				       "eEgGkKmMpPtTyYzZ0");
 	  if (e != LONGINT_OK)
 	    return e;
-	  if (*ptr)
-	    return LONGINT_INVALID_SUFFIX_CHAR;
 	  for (; ! ('0' <= *spec && *spec <= '9'); spec++)
 	    if (spec == ptr)
 	      {
