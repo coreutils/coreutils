@@ -85,23 +85,10 @@
 #endif /* USERS */
 #endif /* WHO */
 
-char *xmalloc ();
 void error ();
-char *ttyname ();
 int gethostname ();
-
-static int read_utmp ();
-#ifdef WHO
-static const char *idle_string ();
-static STRUCT_UTMP *search_entries ();
-static void print_entry ();
-static void print_heading ();
-static void scan_entries ();
-static void who_am_i ();
-#endif /* WHO */
-static void list_entries ();
-static void usage ();
-static void who ();
+char *ttyname ();
+char *xmalloc ();
 
 /* The name this program was run with. */
 char *program_name;
@@ -145,6 +132,427 @@ static struct option const longopts[] =
   {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
+
+static STRUCT_UTMP *utmp_contents;
+
+#if defined (WHO) || defined (USERS)
+
+/* Copy UT->ut_name into storage obtained from malloc.  Then remove any
+   trailing spaces from the copy, NUL terminate it, and return the copy.  */
+
+static char *
+extract_trimmed_name (const STRUCT_UTMP *ut)
+{
+  char *p, *trimmed_name;
+
+  trimmed_name = xmalloc (sizeof (ut->ut_name) + 1);
+  strncpy (trimmed_name, ut->ut_name, sizeof (ut->ut_name));
+  /* Append a trailing space character.  Some systems pad names shorter than
+     the maximum with spaces, others pad with NULs.  Remove any spaces.  */
+  trimmed_name[sizeof (ut->ut_name)] = ' ';
+  p = index (trimmed_name, ' ');
+  if (p != NULL)
+    *p = '\0';
+  return trimmed_name;
+}
+
+#endif /* WHO || USERS */
+
+#if WHO
+
+/* Return a string representing the time between WHEN and the time
+   that this function is first run. */
+
+static const char *
+idle_string (when)
+     time_t when;
+{
+  static time_t now = 0;
+  static char idle[10];
+  time_t seconds_idle;
+
+  if (now == 0)
+    time (&now);
+
+  seconds_idle = now - when;
+  if (seconds_idle < 60)	/* One minute. */
+    return "  .  ";
+  if (seconds_idle < (24 * 60 * 60)) /* One day. */
+    {
+      sprintf (idle, "%02d:%02d",
+	       (int) (seconds_idle / (60 * 60)),
+	       (int) ((seconds_idle % (60 * 60)) / 60));
+      return (const char *) idle;
+    }
+  return " old ";
+}
+
+/* Display a line of information about entry THIS. */
+
+static void
+print_entry (this)
+     STRUCT_UTMP *this;
+{
+  struct stat stats;
+  time_t last_change;
+  char mesg;
+
+#define DEV_DIR_WITH_TRAILING_SLASH "/dev/"
+#define DEV_DIR_LEN (sizeof (DEV_DIR_WITH_TRAILING_SLASH) - 1)
+
+  char line[sizeof (this->ut_line) + DEV_DIR_LEN + 1];
+
+  /* Copy ut_line into LINE, prepending `/dev/' if ut_line is not
+     already an absolute pathname.  Some system may put the full,
+     absolute pathname in ut_line.  */
+  if (this->ut_line[0] == '/')
+    {
+      strncpy (line, this->ut_line, sizeof (this->ut_line));
+      line[sizeof (this->ut_line)] = '\0';
+    }
+  else
+    {
+      strcpy (line, DEV_DIR_WITH_TRAILING_SLASH);
+      strncpy (line + DEV_DIR_LEN, this->ut_line, sizeof (this->ut_line));
+      line[DEV_DIR_LEN + sizeof (this->ut_line)] = '\0';
+    }
+
+  if (SAFE_STAT (line, &stats) == 0)
+    {
+      mesg = (stats.st_mode & S_IWGRP) ? '+' : '-';
+      last_change = stats.st_atime;
+    }
+  else
+    {
+      mesg = '?';
+      last_change = 0;
+    }
+  
+  printf ("%-8.*s", (int) sizeof (this->ut_name), this->ut_name);
+  if (include_mesg)
+    printf ("  %c  ", mesg);
+  printf (" %-8.*s", (int) sizeof (this->ut_line), this->ut_line);
+
+#ifdef HAVE_UTMPX_H
+  printf (" %-12.12s", ctime (&this->ut_tv.tv_sec) + 4);
+#else
+  printf (" %-12.12s", ctime (&this->ut_time) + 4);
+#endif
+
+  if (include_idle)
+    {
+      if (last_change)
+	printf (" %s", idle_string (last_change));
+      else
+	printf ("   .  ");
+    }
+#ifdef HAVE_UT_HOST
+  if (this->ut_host[0])
+    printf (" (%-.*s)", (int) sizeof (this->ut_host), this->ut_host);
+#endif
+
+  putchar ('\n');
+}
+
+/* Print the username of each valid entry and the number of valid entries
+   in `utmp_contents', which should have N elements. */
+
+static void
+list_entries_who (n)
+     int n;
+{
+  register STRUCT_UTMP *this = utmp_contents;
+  int entries;
+
+  entries = 0;
+  while (n--)
+    {
+      if (this->ut_name[0]
+#ifdef USER_PROCESS
+	  && this->ut_type == USER_PROCESS
+#endif
+	 )
+	{
+	  char *trimmed_name;
+
+	  trimmed_name = extract_trimmed_name (this);
+
+	  printf ("%s ", trimmed_name);
+	  free (trimmed_name);
+	  entries++;
+	}
+      this++;
+    }
+  printf ("\n# users=%u\n", entries);
+}
+
+#endif /* WHO */
+
+#ifdef USERS
+
+static int
+userid_compare (const void *v_a, const void *v_b)
+{
+  char **a = (char **) v_a;
+  char **b = (char **) v_b;
+  return strcmp (*a, *b);
+}
+
+static void
+list_entries_users (n)
+     int n;
+{
+  register STRUCT_UTMP *this = utmp_contents;
+  char **u;
+  int i;
+  int n_entries;
+
+  n_entries = 0;
+  u = (char **) xmalloc (n * sizeof (u[0]));
+  for (i=0; i<n; i++)
+    {
+      if (this->ut_name[0]
+#ifdef USER_PROCESS
+	  && this->ut_type == USER_PROCESS
+#endif
+	 )
+	{
+	  char *trimmed_name;
+
+	  trimmed_name = extract_trimmed_name (this);
+
+	  u[n_entries] = trimmed_name;
+	  ++n_entries;
+	}
+      this++;
+    }
+
+  qsort (u, n_entries, sizeof (u[0]), userid_compare);
+
+  for (i=0; i<n_entries; i++)
+    {
+      int c;
+      fputs (u[i], stdout);
+      c = (i < n_entries-1 ? ' ' : '\n');
+      putchar (c);
+    }
+
+  for (i=0; i<n_entries; i++)
+    free (u[i]);
+  free (u);
+}
+
+#endif /* USERS */
+
+#ifdef WHO
+
+static void
+print_heading ()
+{
+  printf ("%-8s ", "USER");
+  if (include_mesg)
+    printf ("MESG ");
+  printf ("%-8s ", "LINE");
+  printf ("LOGIN-TIME   ");
+  if (include_idle)
+    printf ("IDLE  ");
+  printf ("FROM\n");
+}
+
+/* Display `utmp_contents', which should have N entries. */
+
+static void
+scan_entries (n)
+     int n;
+{
+  register STRUCT_UTMP *this = utmp_contents;
+
+  if (include_heading)
+    print_heading ();
+
+  while (n--)
+    {
+      if (this->ut_name[0]
+#ifdef USER_PROCESS
+	  && this->ut_type == USER_PROCESS
+#endif
+	 )
+	print_entry (this);
+      this++;
+    }
+}
+
+#endif /* WHO */
+
+/* Read the utmp file FILENAME into UTMP_CONTENTS and return the
+   number of entries it contains. */
+
+static int
+read_utmp (filename)
+     char *filename;
+{
+  FILE *utmp;
+  struct stat file_stats;
+  int n_read;
+  size_t size;
+
+  utmp = fopen (filename, "r");
+  if (utmp == NULL)
+    error (1, errno, "%s", filename);
+
+  fstat (fileno (utmp), &file_stats);
+  size = file_stats.st_size;
+  if (size > 0)
+    utmp_contents = (STRUCT_UTMP *) xmalloc (size);
+  else
+    {
+      fclose (utmp);
+      return 0;
+    }
+
+  /* Use < instead of != in case the utmp just grew.  */
+  n_read = fread (utmp_contents, 1, size, utmp);
+  if (ferror (utmp) || fclose (utmp) == EOF
+      || n_read < size)
+    error (1, errno, "%s", filename);
+
+  return size / sizeof (STRUCT_UTMP);
+}
+
+/* Display a list of who is on the system, according to utmp file FILENAME. */
+
+static void
+who (filename)
+     char *filename;
+{
+  int users;
+
+  users = read_utmp (filename);
+#ifdef WHO
+  if (short_list)
+    list_entries_who (users);
+  else
+    scan_entries (users);
+#else
+#ifdef USERS
+  list_entries_users (users);
+#endif /* USERS */
+#endif /* WHO */
+}
+
+#ifdef WHO
+
+/* Search `utmp_contents', which should have N entries, for
+   an entry with a `ut_line' field identical to LINE.
+   Return the first matching entry found, or NULL if there
+   is no matching entry. */
+
+static STRUCT_UTMP *
+search_entries (n, line)
+     int n;
+     char *line;
+{
+  register STRUCT_UTMP *this = utmp_contents;
+
+  while (n--)
+    {
+      if (this->ut_name[0]
+#ifdef USER_PROCESS
+	  && this->ut_type == USER_PROCESS
+#endif
+	  && !strncmp (line, this->ut_line, sizeof (this->ut_line)))
+	return this;
+      this++;
+    }
+  return NULL;
+}
+
+/* Display the entry in utmp file FILENAME for this tty on standard input,
+   or nothing if there is no entry for it. */
+
+static void
+who_am_i (filename)
+     char *filename;
+{
+  register STRUCT_UTMP *utmp_entry;
+  char hostname[MAXHOSTNAMELEN + 1];
+  char *tty;
+
+  if (gethostname (hostname, MAXHOSTNAMELEN + 1))
+    *hostname = 0;
+
+  if (include_heading)
+    {
+      printf ("%*s ", (int) strlen (hostname), " ");
+      print_heading ();
+    }
+
+  tty = ttyname (0);
+  if (tty == NULL)
+    return;
+  tty += 5;			/* Remove "/dev/".  */
+  
+  utmp_entry = search_entries (read_utmp (filename), tty);
+  if (utmp_entry == NULL)
+    return;
+
+  printf ("%s!", hostname);
+  print_entry (utmp_entry);
+}
+
+static void
+usage (status)
+     int status;
+{
+  if (status != 0)
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+  else
+    {
+      printf ("Usage: %s [OPTION]... [ FILE | ARG1 ARG2 ]\n", program_name);
+      printf ("\
+\n\
+  -H, --heading     print line of column headings\n\
+  -T, -w, --mesg    add user's message status as +, - or ?\n\
+  -i, -u, --idle    add user idle time as HOURS:MINUTES, . or old\n\
+  -m                only hostname and user associated with stdin\n\
+  -q, --count       all login names and number of users logged on\n\
+  -s                (ignored)\n\
+      --help        display this help and exit\n\
+      --message     same as -T\n\
+      --version     output version information and exit\n\
+      --writeable   same as -T\n\
+\n\
+If FILE not given, uses /etc/utmp.  /etc/wtmp as FILE is common.\n\
+If ARG1 ARG2 given, -m presumed: `am i' or `mom likes' are usual.\n\
+");
+    }
+  exit (status);
+}
+#endif /* WHO */
+
+#ifdef USERS
+static void
+usage (status)
+     int status;
+{
+  if (status != 0)
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+  else
+    {
+      printf ("Usage: %s [OPTION]... [ FILE ]\n", program_name);
+      printf ("\
+\n\
+      --help        display this help and exit\n\
+      --version     output version information and exit\n\
+\n\
+If FILE not given, uses /etc/utmp.  /etc/wtmp as FILE is common.\n\
+");
+    }
+  exit (status);
+}
+#endif /* USERS */
 
 void
 main (argc, argv)
@@ -244,351 +652,3 @@ main (argc, argv)
 
   exit (0);
 }
-
-static STRUCT_UTMP *utmp_contents;
-
-/* Display a list of who is on the system, according to utmp file FILENAME. */
-
-static void
-who (filename)
-     char *filename;
-{
-  int users;
-
-  users = read_utmp (filename);
-#ifdef WHO
-  if (short_list)
-    list_entries (users);
-  else
-    scan_entries (users);
-#else
-#ifdef USERS
-  list_entries (users);
-#endif /* USERS */
-#endif /* WHO */
-}
-
-/* Read the utmp file FILENAME into UTMP_CONTENTS and return the
-   number of entries it contains. */
-
-static int
-read_utmp (filename)
-     char *filename;
-{
-  FILE *utmp;
-  struct stat file_stats;
-  int n_read;
-  size_t size;
-
-  utmp = fopen (filename, "r");
-  if (utmp == NULL)
-    error (1, errno, "%s", filename);
-
-  fstat (fileno (utmp), &file_stats);
-  size = file_stats.st_size;
-  if (size > 0)
-    utmp_contents = (STRUCT_UTMP *) xmalloc (size);
-  else
-    {
-      fclose (utmp);
-      return 0;
-    }
-
-  /* Use < instead of != in case the utmp just grew.  */
-  n_read = fread (utmp_contents, 1, size, utmp);
-  if (ferror (utmp) || fclose (utmp) == EOF
-      || n_read < size)
-    error (1, errno, "%s", filename);
-
-  return size / sizeof (STRUCT_UTMP);
-}
-
-#ifdef WHO
-/* Display a line of information about entry THIS. */
-
-static void
-print_entry (this)
-     STRUCT_UTMP *this;
-{
-  struct stat stats;
-  time_t last_change;
-  char mesg;
-
-#define DEV_DIR_WITH_TRAILING_SLASH "/dev/"
-#define DEV_DIR_LEN (sizeof (DEV_DIR_WITH_TRAILING_SLASH) - 1)
-
-  char line[sizeof (this->ut_line) + DEV_DIR_LEN + 1];
-
-  /* Copy ut_line into LINE, prepending `/dev/' if ut_line is not
-     already an absolute pathname.  Some system may put the full,
-     absolute pathname in ut_line.  */
-  if (this->ut_line[0] == '/')
-    {
-      strncpy (line, this->ut_line, sizeof (this->ut_line));
-      line[sizeof (this->ut_line)] = '\0';
-    }
-  else
-    {
-      strcpy(line, DEV_DIR_WITH_TRAILING_SLASH);
-      strncpy (line + DEV_DIR_LEN, this->ut_line, sizeof (this->ut_line));
-      line[DEV_DIR_LEN + sizeof (this->ut_line)] = '\0';
-    }
-
-  if (SAFE_STAT (line, &stats) == 0)
-    {
-      mesg = (stats.st_mode & S_IWGRP) ? '+' : '-';
-      last_change = stats.st_atime;
-    }
-  else
-    {
-      mesg = '?';
-      last_change = 0;
-    }
-  
-  printf ("%-8.*s", (int) sizeof (this->ut_name), this->ut_name);
-  if (include_mesg)
-    printf ("  %c  ", mesg);
-  printf (" %-8.*s", (int) sizeof (this->ut_line), this->ut_line);
-
-#ifdef HAVE_UTMPX_H
-  printf (" %-12.12s", ctime (&this->ut_tv.tv_sec) + 4);
-#else
-  printf (" %-12.12s", ctime (&this->ut_time) + 4);
-#endif
-
-  if (include_idle)
-    {
-      if (last_change)
-	printf (" %s", idle_string (last_change));
-      else
-	printf ("   .  ");
-    }
-#ifdef HAVE_UT_HOST
-  if (this->ut_host[0])
-    printf (" (%-.*s)", (int) sizeof (this->ut_host), this->ut_host);
-#endif
-
-  putchar ('\n');
-}
-#endif /* WHO */
-
-#if defined (WHO) || defined (USERS)
-/* Print the username of each valid entry and the number of valid entries
-   in `utmp_contents', which should have N elements. */
-
-static void
-list_entries (n)
-     int n;
-{
-  register STRUCT_UTMP *this = utmp_contents;
-  register int entries = 0;
-
-  while (n--)
-    {
-      if (this->ut_name[0]
-#ifdef USER_PROCESS
-	  && this->ut_type == USER_PROCESS
-#endif
-	 )
-	{
-	  char trimmed_name[sizeof (this->ut_name) + 1];
-	  int i;
-
-	  strncpy (trimmed_name, this->ut_name, sizeof (this->ut_name));
-	  trimmed_name[sizeof (this->ut_name)] = ' ';
-	  for (i = 0; i <= sizeof (this->ut_name); i++)
-	    {
-	      if (trimmed_name[i] == ' ')
-		break;
-	    }
-	  trimmed_name[i] = '\0';
-
-	  printf ("%s ", trimmed_name);
-	  entries++;
-	}
-      this++;
-    }
-#ifdef WHO
-  printf ("\n# users=%u\n", entries);
-#else
-  putchar('\n');
-#endif /* WHO */
-}
-#endif /* defined (WHO) || defined (USERS) */
-
-#ifdef WHO
-
-static void
-print_heading ()
-{
-  printf ("%-8s ", "USER");
-  if (include_mesg)
-    printf ("MESG ");
-  printf ("%-8s ", "LINE");
-  printf ("LOGIN-TIME   ");
-  if (include_idle)
-    printf ("IDLE  ");
-  printf ("FROM\n");
-}
-
-/* Display `utmp_contents', which should have N entries. */
-
-static void
-scan_entries (n)
-     int n;
-{
-  register STRUCT_UTMP *this = utmp_contents;
-
-  if (include_heading)
-    print_heading ();
-
-  while (n--)
-    {
-      if (this->ut_name[0]
-#ifdef USER_PROCESS
-	  && this->ut_type == USER_PROCESS
-#endif
-	 )
-	print_entry (this);
-      this++;
-    }
-}
-
-/* Search `utmp_contents', which should have N entries, for
-   an entry with a `ut_line' field identical to LINE.
-   Return the first matching entry found, or NULL if there
-   is no matching entry. */
-
-static STRUCT_UTMP *
-search_entries (n, line)
-     int n;
-     char *line;
-{
-  register STRUCT_UTMP *this = utmp_contents;
-
-  while (n--)
-    {
-      if (this->ut_name[0]
-#ifdef USER_PROCESS
-	  && this->ut_type == USER_PROCESS
-#endif
-	  && !strncmp (line, this->ut_line, sizeof (this->ut_line)))
-	return this;
-      this++;
-    }
-  return NULL;
-}
-
-/* Display the entry in utmp file FILENAME for this tty on standard input,
-   or nothing if there is no entry for it. */
-
-static void
-who_am_i (filename)
-     char *filename;
-{
-  register STRUCT_UTMP *utmp_entry;
-  char hostname[MAXHOSTNAMELEN + 1];
-  char *tty;
-
-  if (gethostname (hostname, MAXHOSTNAMELEN + 1))
-    *hostname = 0;
-
-  if (include_heading)
-    {
-      printf ("%*s ", (int) strlen (hostname), " ");
-      print_heading ();
-    }
-
-  tty = ttyname (0);
-  if (tty == NULL)
-    return;
-  tty += 5;			/* Remove "/dev/".  */
-  
-  utmp_entry = search_entries (read_utmp (filename), tty);
-  if (utmp_entry == NULL)
-    return;
-
-  printf ("%s!", hostname);
-  print_entry (utmp_entry);
-}
-
-/* Return a string representing the time between WHEN and the time
-   that this function is first run. */
-
-static const char *
-idle_string (when)
-     time_t when;
-{
-  static time_t now = 0;
-  static char idle[10];
-  time_t seconds_idle;
-
-  if (now == 0)
-    time (&now);
-
-  seconds_idle = now - when;
-  if (seconds_idle < 60)	/* One minute. */
-    return "  .  ";
-  if (seconds_idle < (24 * 60 * 60)) /* One day. */
-    {
-      sprintf (idle, "%02d:%02d",
-	       (int) (seconds_idle / (60 * 60)),
-	       (int) ((seconds_idle % (60 * 60)) / 60));
-      return (const char *) idle;
-    }
-  return " old ";
-}
-
-static void
-usage (status)
-     int status;
-{
-  if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
-	     program_name);
-  else
-    {
-      printf ("Usage: %s [OPTION]... [ FILE | ARG1 ARG2 ]\n", program_name);
-      printf ("\
-\n\
-  -H, --heading     print line of column headings\n\
-  -T, -w, --mesg    add user's message status as +, - or ?\n\
-  -i, -u, --idle    add user idle time as HOURS:MINUTES, . or old\n\
-  -m                only hostname and user associated with stdin\n\
-  -q, --count       all login names and number of users logged on\n\
-  -s                (ignored)\n\
-      --help        display this help and exit\n\
-      --message     same as -T\n\
-      --version     output version information and exit\n\
-      --writeable   same as -T\n\
-\n\
-If FILE not given, uses /etc/utmp.  /etc/wtmp as FILE is common.\n\
-If ARG1 ARG2 given, -m presumed: `am i' or `mom likes' are usual.\n\
-");
-    }
-  exit (status);
-}
-#endif /* WHO */
-
-#if defined (USERS)
-static void
-usage (status)
-     int status;
-{
-  if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
-	     program_name);
-  else
-    {
-      printf ("Usage: %s [OPTION]... [ FILE ]\n", program_name);
-      printf ("\
-\n\
-      --help        display this help and exit\n\
-      --version     output version information and exit\n\
-\n\
-If FILE not given, uses /etc/utmp.  /etc/wtmp as FILE is common.\n\
-");
-    }
-  exit (status);
-}
-#endif /* USERS */
