@@ -1630,7 +1630,7 @@ gobble_file (const char *name, int explicit_arg, const char *dirname)
 
 #ifdef S_ISLNK
       if (S_ISLNK (files[files_index].stat.st_mode)
-	  && (explicit_arg || format == long_format))
+	  && (explicit_arg || format == long_format || print_with_color))
 	{
 	  char *linkpath;
 	  struct stat linkstats;
@@ -1642,9 +1642,12 @@ gobble_file (const char *name, int explicit_arg, const char *dirname)
 	     they won't be traced and when no indicator is needed. */
 	  if (linkpath
 	      && ((explicit_arg && format != long_format)
-		  || indicator_style != none)
+		  || indicator_style != none
+		  || print_with_color)
 	      && stat (linkpath, &linkstats) == 0)
 	    {
+	      files[files_index].linkok = 1;
+
 	      /* Symbolic links to directories that are mentioned on the
 	         command line are automatically traced if not being
 	         listed as files.  */
