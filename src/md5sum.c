@@ -87,6 +87,8 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
 #ifdef __GNUC__
 # define INLINE __inline
+#else
+# define INLINE /* empty */
 #endif
 
 #if UINT_MAX == UINT_MAX_32_BITS
