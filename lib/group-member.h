@@ -19,6 +19,8 @@
 #ifndef GROUP_MEMBER_H_
 # define GROUP_MEMBER_H_ 1
 
+# include <sys/types.h>
+
 int group_member (gid_t);
 
 #endif /* GROUP_MEMBER_H_ */

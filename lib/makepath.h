@@ -19,6 +19,8 @@
 
 /* Written by David MacKenzie <djm@gnu.ai.mit.edu> and Jim Meyering.  */
 
+#include <sys/types.h>
+
 int make_path (const char *_argpath,
 	       int _mode,
 	       int _parent_mode,
