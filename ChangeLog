@@ -1,6 +1,16 @@
-2004-12-01  Paul Eggert  <eggert@cs.ucla.edu>
+2004-12-02  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	With using --color and with LS_COLORS saying not to color
+	executables, don't stat every file.
+	* src/ls.c (is_colored): New function.
+	(gobble_file): Use it.
+	(main): Use it here, in place of too-strict tests against NULL:
+	if either ORPHAN or MISSING was set to 0 from LS_COLORS, the
+	old test would fail.
+
+2004-12-01  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/comm.c (compare_files): Assume setlocale exists.
 	* src/join.c (keycmp): Likewise.
