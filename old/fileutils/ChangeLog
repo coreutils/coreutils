@@ -1,3 +1,26 @@
+2001-05-11  Paul Eggert  <eggert@twinsun.com>
+
+	Add new --time-style option.
+	Change --full-time to be equivalent to --time-style=full-iso.
+
+	* NEWS, doc/fileutils.texi: Describe this change.
+
+	* src/ls.c: Include "hard-locale.h".
+	(nstrftime): New decl.
+	(enum time_style): New enum.
+	(time_style_args, time_style_types): New constants.
+	(full_time): Remove.
+	(long_time_format): Initialize to POSIX defaults.
+	(TIME_STYLE_OPTION): New constant.
+	(long_options, decode_switches, usage): Add --time-style support.
+	(long_time_expected_width): Use nstrftime, not strftime.
+	(print_long_format): Likewise.
+	Increase initial size to match new full-iso time style.
+
+	* tests/ls/time-1: Unset QUOTING_STYLE and TIME_STYLE.  Set TZ.
+	Adjust to change in full-time format.
+	Fix typo in failure messages (-a and -m were interchanged).
+
 2001-05-20  Jim Meyering  <meyering@lucent.com>
 
 	* doc/Makefile.am (EXTRA_DIST): Add constants.texi and doclicense.texi.
