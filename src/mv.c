@@ -489,8 +489,8 @@ Usage: %s [OPTION]... SOURCE DEST\n\
   -i, --interactive            prompt before overwrite\n\
   -u, --update                 move only older or brand new files\n\
   -v, --verbose                explain what is being done\n\
-  -S, --suffix SUFFIX          override the usual backup suffix\n\
-  -V, --version-control WORD   override the usual version control\n\
+  -S, --suffix=SUFFIX          override the usual backup suffix\n\
+  -V, --version-control=WORD   override the usual version control\n\
       --help                   display this help and exit\n\
       --version                output version information and exit\n\
 \n\

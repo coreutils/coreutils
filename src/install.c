@@ -555,9 +555,9 @@ Usage: %s [OPTION]... SOURCE DEST           (1st format)\n\
 \n\
   -c                  (ignored)\n\
   -d, --directory     create [leading] directories, mandatory for 3rd format\n\
-  -g, --group GROUP   set group ownership, instead of process' current group\n\
-  -m, --mode MODE     set permission mode (as in chmod), instead of 0755\n\
-  -o, --owner OWNER   set ownership (super-user only)\n\
+  -g, --group=GROUP   set group ownership, instead of process' current group\n\
+  -m, --mode=MODE     set permission mode (as in chmod), instead of 0755\n\
+  -o, --owner=OWNER   set ownership (super-user only)\n\
   -s, --strip         strip symbol tables, only for 1st and 2nd formats\n\
       --help          display this help and exit\n\
       --version       output version information and exit\n");

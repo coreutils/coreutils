@@ -162,7 +162,7 @@ parse_user_spec (name, uid, gid, username, groupname)
 	      *groupname = malloc (15);
 	      if (*groupname == NULL)
 		return tired;
-	      sprintf (*groupname, "%u", pwd->pw_gid);
+	      sprintf (*groupname, "%u", (unsigned) (pwd->pw_gid));
 	    }
 	  else
 	    {

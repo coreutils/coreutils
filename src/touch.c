@@ -389,13 +389,13 @@ usage (status)
 \n\
   -a                     change only the access time\n\
   -c                     do not create any files\n\
-  -d, --date STRING      parse STRING and use it instead of current time\n\
+  -d, --date=STRING      parse STRING and use it instead of current time\n\
   -f                     (ignored)\n\
   -m                     change only the modification time\n\
-  -r, --file REFERENCE   use this file's times instead of current time\n\
+  -r, --file=REFERENCE   use this file's times instead of current time\n\
   -t STAMP               use MMDDhhmm[[CC]YY][.ss] instead of current time\n\
       --help             display this help and exit\n\
-      --time WORD        access -a, atime -a, mtime -m, modify -m, use -a\n\
+      --time=WORD        access -a, atime -a, mtime -m, modify -m, use -a\n\
       --version          output version information and exit\n\
 \n\
 STAMP may be used without -t if none of -drt, nor --, are used.\n");

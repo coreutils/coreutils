@@ -488,8 +488,8 @@ usage (status)
   -a, --all                 include filesystems having 0 blocks\n\
   -i, --inodes              list inode information instead of block usage\n\
   -k, --kilobytes           use 1024 blocks, not 512 despite POSIXLY_CORRECT\n\
-  -t, --type TYPE           limit the listing to TYPE filesystems type\n\
-  -x, --exclude-type TYPE   limit the listing to not TYPE filesystems type\n\
+  -t, --type=TYPE           limit the listing to TYPE filesystems type\n\
+  -x, --exclude-type=TYPE   limit the listing to not TYPE filesystems type\n\
   -v                        (ignored)\n\
   -P, --portability         use the POSIX output format\n\
       --help                display this help and exit\n\

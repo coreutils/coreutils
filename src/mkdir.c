@@ -154,7 +154,7 @@ usage (status)
       printf ("\
 \n\
   -p, --parents     no error if existing, make parent directories as needed\n\
-  -m, --mode MODE   set permission mode (as in chmod), not 0777 - umask\n\
+  -m, --mode=MODE   set permission mode (as in chmod), not 0777 - umask\n\
       --help        display this help and exit\n\
       --version     output version information and exit\n");
     }

@@ -371,8 +371,8 @@ Usage: %s [OPTION]... SOURCE [DEST]\n\
   -i, --interactive            prompt whether to remove destinations\n\
   -s, --symbolic               make symbolic links, instead of hard links\n\
   -v, --verbose                print name of each file before linking\n\
-  -S, --suffix SUFFIX          override the usual backup suffix\n\
-  -V, --version-control WORD   override the usual version control\n\
+  -S, --suffix=SUFFIX          override the usual backup suffix\n\
+  -V, --version-control=WORD   override the usual version control\n\
       --help                   display this help and exit\n\
       --version                output version information and exit\n\
 \n\

@@ -1905,36 +1905,34 @@ usage (status)
   -s, --size                 print block size of each file\n\
   -t                         sort by modification time; with -l: show mtime\n\
   -u                         sort by last access time; with -l: show atime\n\
-  -w, --width COLS           assume screen width instead of current value\n\
+  -w, --width=COLS           assume screen width instead of current value\n\
   -x                         list entries by lines instead of by columns\n\
   -A, --almost-all           do not list implied . and ..\n");
-
       printf ("\
   -B, --ignore-backups       do not list implied entries ending with ~\n\
   -C                         list entries by columns\n\
   -F, --classify             append a character for typing each entry\n\
   -G, --no-group             inhibit display of group information\n\
-  -I, --ignore PATTERN       do not list implied entries matching shell PATTERN\n\
+  -I, --ignore=PATTERN       do not list implied entries matching shell PATTERN\n\
   -L, --dereference          list entries pointed to by symbolic links\n\
   -N, --literal              do not quote entry names\n\
   -Q, --quote-name           enclose entry names in double quotes\n\
   -R, --recursive            list subdirectories recursively\n\
   -S                         sort by file size\n\
-  -T, --tabsize COLS         assume tab stops at each COLS instead of 8\n\
+  -T, --tabsize=COLS         assume tab stops at each COLS instead of 8\n\
   -U                         do not sort; list entries in directory order\n\
   -X                         sort alphabetically by entry extension\n\
   -1                         list one file per line\n\
       --full-time            list both full date and full time\n\
       --help                 display this help and exit\n\
-      --format WORD          across -x, commas -m, horizontal -x, long -l,\n\
+      --format=WORD          across -x, commas -m, horizontal -x, long -l,\n\
                                single-column -1, verbose -l, vertical -C\n\
-      --sort WORD            ctime -c, extension -X, none -U, size -S,\n\
+      --sort=WORD            ctime -c, extension -X, none -U, size -S,\n\
                                status -c, time -t\n\
-      --time WORD            atime -u, access -u, use -u\n\
+      --time=WORD            atime -u, access -u, use -u\n\
       --version              output version information and exit\n\
 \n\
 Sort entries alphabetically if none of -cftuSUX nor --sort.\n");
-
     }
   exit (status);
 }

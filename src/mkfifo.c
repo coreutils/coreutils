@@ -141,7 +141,7 @@ usage (status)
       printf ("Usage: %s [OPTION] PATH...\n", program_name);
       printf ("\
 \n\
-  -m, --mode MODE   set permission mode (as in chmod), not 0666 - umask\n\
+  -m, --mode=MODE   set permission mode (as in chmod), not 0666 - umask\n\
       --help        display this help and exit\n\
       --version     output version information and exit\n");
     }
