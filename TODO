@@ -1,5 +1,4 @@
 Fix README
-fix AUTHORS
 
 restore djgpp, eventually
 
@@ -23,3 +22,5 @@ for i in f s t; do
     msgmerge -o k ../../$xu/po/$j.po $j.po && mv k $j.po
   done
 done
+
+i=t j=zh_TW msgmerge -o k ../../$xu/po/$j.po $j.po && mv k $j.po
