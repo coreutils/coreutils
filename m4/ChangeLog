@@ -1,8 +1,8 @@
 2002-09-09  Jim Meyering  <meyering@lucent.com>
 
 	* getloadavg.m4: Remove file -- now it's part of autoconf-2.53c.
-	* jm-macros.m4: Tell the new AC_FUNC_GETLOADAVG where to find
-	getloadavg.c: AC_CONFIG_LIBOBJ_DIR(lib).
+	* jm-macros.m4: Use AC_CONFIG_LIBOBJ_DIR(lib) to tell the new
+	AC_FUNC_GETLOADAVG where to find getloadavg.c.
 
 2002-09-03  Jim Meyering  <meyering@lucent.com>
 
