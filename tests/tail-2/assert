@@ -31,7 +31,7 @@ tail_pid=$!
 # Arrange for the tail process to die after 12 seconds.
 (sleep 12; kill $tail_pid) &
 rm -f foo
-# echo sleep 7...
+echo sleeping for 7 seconds...
 sleep 7
 echo $ok > f
 mv f foo
