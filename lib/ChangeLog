@@ -1,3 +1,9 @@
+2004-11-15  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* human.h (LONGEST_HUMAN_READABLE): Add 1 for space before unit.
+	(human_space_before_unit): New constant.
+	* human.c (human_readable): Support it.
+
 2004-11-14  Jim Meyering  <jim@meyering.net>
 
 	* closeout.c (close_stdout): Don't fail just because stdout was
