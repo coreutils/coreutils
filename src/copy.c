@@ -172,9 +172,6 @@ copy_dir (const char *src_path_in, const char *dst_path_in, int new_dst,
       char *src_path = path_concat (src_path_in, namep, NULL);
       char *dst_path = path_concat (dst_path_in, namep, NULL);
 
-      if (dst_path == NULL || src_path == NULL)
-	xalloc_die ();
-
       ret |= copy_internal (src_path, dst_path, new_dst, src_sb->st_dev,
 			    ancestors, &non_command_line_options, 0,
 			    &local_copy_into_self, NULL);
