@@ -989,7 +989,8 @@ build_spec_list (unescaped_string, len, result)
 	      if (closing_delim_idx >= 0)
 		{
 		  int parse_failed;
-		  unsigned char *opnd_str = substr (p, i + 2, closing_delim_idx - 1);
+		  unsigned char *opnd_str = substr (p, i + 2,
+						    closing_delim_idx - 1);
 		  if (p[i + 1] == ':')
 		    parse_failed = append_char_class (result, opnd_str,
 				     (closing_delim_idx - 1) - (i + 2) + 1);
@@ -1008,7 +1009,7 @@ build_spec_list (unescaped_string, len, result)
 	      /* Else fall through.  This could be [:*] or [=*].  */
 	    default:
 	      /* Determine whether this is a bracketed repeat range
-		 matching the RE \[.\*(dec_or_oct_number)?\].  */
+	         matching the RE \[.\*(dec_or_oct_number)?\].  */
 	      closing_bracket_idx = find_bracketed_repeat (p, i + 1,
 				       len, &char_to_repeat, &repeat_count);
 	      if (closing_bracket_idx >= 0)
@@ -1154,9 +1155,9 @@ get_next (s, class)
 
     case RE_EQUIV_CLASS:
       /* FIXME: this assumes that each character is alone in its own
-	 equivalence class (which appears to be correct for my
-	 LC_COLLATE.  But I don't know of any function that allows
-	 one to determine a character's equivalence class.  */
+         equivalence class (which appears to be correct for my
+         LC_COLLATE.  But I don't know of any function that allows
+         one to determine a character's equivalence class.  */
 
       return_val = p->u.equiv_code;
       s->state = NEW_ELEMENT;
@@ -1393,7 +1394,7 @@ string2_extend (s1, s2)
 
     case RE_EQUIV_CLASS:
       /* This shouldn't happen, because validate exits with an error
-	 if it finds an equiv class in string2 when translating.  */
+         if it finds an equiv class in string2 when translating.  */
       abort ();
       break;
 
@@ -1436,7 +1437,8 @@ validate (s1, s2)
   if (complement && s1->has_upper_or_lower)
     {
       error (1, 0,
-	     "character classes may not be used when translating and complementing");
+	     "character classes may not be used when translating \
+and complementing");
     }
 
   if (s2)
@@ -1445,8 +1447,8 @@ validate (s1, s2)
       if (s2->has_restricted_char_class)
 	{
 	  error (1, 0,
-		 "when translating, the only character classes that may appear in\n\
-\tstring2 are `upper' and `lower'");
+		 "when translating, the only character classes that may \
+appear in\n\tstring2 are `upper' and `lower'");
 	}
 
       if (s2->n_indefinite_repeats > 1)
@@ -1459,7 +1461,8 @@ validate (s1, s2)
 	  if (s2->has_equiv_class)
 	    {
 	      error (1, 0,
-		     "[=c=] expressions may not appear in string2 when translating");
+		     "[=c=] expressions may not appear in string2 \
+when translating");
 	    }
 
 	  if (s1->length > s2->length)
@@ -1478,14 +1481,16 @@ validate (s1, s2)
 
 	  if (complement && s2->has_upper_or_lower)
 	    error (1, 0,
-		   "character classes may not be used when translating and complementing");
+		   "character classes may not be used when translating \
+and complementing");
 	}
       else
 	/* Not translating.  */
 	{
 	  if (s2->n_indefinite_repeats > 0)
 	    error (1, 0,
-		   "the [c*] construct may appear in string2 only when translating");
+		   "the [c*] construct may appear in string2 only \
+when translating");
 	}
     }
 }
@@ -1560,13 +1565,13 @@ squeeze_filter (buf, size, reader)
 	      out_len = i - begin + 1;
 
 	      /* But since we stepped by 2 in the loop above,
-		 out_len may be one too large.  */
+	         out_len may be one too large.  */
 	      if (i > 0 && buf[i - 1] == char_to_squeeze)
 		--out_len;
 
 	      /* Advance i to the index of first character to be
-		 considered when looking for a char different from
-		 char_to_squeeze.  */
+	         considered when looking for a char different from
+	         char_to_squeeze.  */
 	      ++i;
 	    }
 	  if (out_len > 0
@@ -1766,7 +1771,10 @@ main (argc, argv)
      by omission.  If you want to make tr do a slow imitation
      of `cat' use `tr a a'.  */
   if (non_option_args > 2)
-    usage (2);
+    {
+      error (0, 0, "too many arguments");
+      usage (2);
+    }
 
   if (!delete && !squeeze_repeats && non_option_args != 2)
     error (1, 0, "two strings must be given when translating");
@@ -1786,7 +1794,8 @@ deleting and squeezing repeats");
 	--non_option_args;
       else
 	error (1, 0,
-	       "only one string may be given when deleting without squeezing repeats");
+	       "only one string may be given when deleting \
+without squeezing repeats");
     }
 
   spec_init (s1);
@@ -1848,7 +1857,7 @@ deleting and squeezing repeats");
 		  if (ch == -1)
 		    {
 		      /* This will happen when tr is invoked like e.g.
-			 tr -cs A-Za-z0-9 '\012'.  */
+		         tr -cs A-Za-z0-9 '\012'.  */
 		      break;
 		    }
 		  xlate[i] = ch;

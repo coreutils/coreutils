@@ -33,7 +33,9 @@ Fri Jan 28 11:02:21 1994  Jim Meyering  (meyering@comco.com)
 Wed Jan 18 16:14:00 1994  Jim Meyering  (meyering@comco.com)
 
 	* unexpand.c (unexpand): Don't segfault when given a name of a
-	nonexistent file.  From Bauke Jan Douma <bjd@dds.hacktic.nl>.
+	nonexistent file.
+	* expand.c (expand): Ditto.
+	Both from Bauke Jan Douma <bjd@dds.hacktic.nl>.
 
 Thu Jan 13 17:27:38 1994  Jim Meyering  (meyering@comco.com)
 
