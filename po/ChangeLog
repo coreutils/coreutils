@@ -1,3 +1,7 @@
+2003-11-09  Jim Meyering  <jim@meyering.net>
+
+	* POTFILES.in: Add lib/root-dev-ino.h.
+
 2003-10-17  Jim Meyering  <jim@meyering.net>
 
 	* POTFILES.in: Add lib/xfts.c.
