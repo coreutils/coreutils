@@ -7,6 +7,6 @@ TESTS_ENVIRONMENT = \
   srcdir=$(srcdir) \
   PERL="@PERL@" \
   PATH=../../src:$$PATH \
-  PROG='md5sum --text'
+  PROG=md5sum
 
 TESTS = basic-1 newline-1
