@@ -1,4 +1,4 @@
-#serial 3
+#serial 4
 
 dnl These are the prerequisite macros for files in the lib/
 dnl directories of the fileutils, sh-utils, and textutils packages.
@@ -33,7 +33,7 @@ AC_DEFUN(jm_PREREQ_QUOTEARG,
   AC_CHECK_HEADERS(limits.h stdlib.h string.h wchar.h)
   AC_HEADER_STDC
   AC_C_BACKSLASH_A
-  AM_C_PROTOTYPES
+  AC_C_PROTOTYPES
 ])
 
 AC_DEFUN(jm_PREREQ_READUTMP,
