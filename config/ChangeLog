@@ -1,0 +1,4 @@
+2002-02-17  Jim Meyering  <meyering@lucent.com>
+
+	* config.guess (main): Don't use `head -1'; it's no longer portable.
+        Use `sed 1q' instead.
