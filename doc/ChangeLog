@@ -1,7 +1,9 @@
 2004-07-02  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (check-texinfo): Disallow `filename' in .texi files.
-	(check-texinfo): Fail if a @footnote directive follows non-punctuation.
+	Spell it like `file name' instead, to be consistent.
+	Fail if a @footnote directive follows non-punctuation.
+	Fail upon use of @url.  Use @uref instead.
 
 2004-06-30  Paul Eggert  <eggert@cs.ucla.edu>
 
