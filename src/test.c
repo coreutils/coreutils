@@ -907,6 +907,7 @@ EXPRESSION is true or false and sets exit status.  It is one of:\n\
 "), stdout);
       fputs (_("\
 \n\
+Except for -h and -L, all FILE-related tests dereference symbolic links.\n\
 Beware that parentheses need to be escaped (e.g., by backslashes) for shells.\n\
 INTEGER may also be -l STRING, which evaluates to the length of STRING.\n\
 "), stdout);
