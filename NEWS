@@ -9,6 +9,12 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
+  cp -pu and mv -u (when copying) now don't bother to update the
+  destination if the resulting time stamp would be no newer than the
+  preexisting time stamp.  This saves work in the common case when
+  copying or moving multiple times to the same destination in a file
+  system with a coarse time stamp resolution.
+
   dd has new conversions for the conv= option:
 
     nocreat   do not create the output file
