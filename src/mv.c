@@ -177,7 +177,7 @@ do_move (const char *source, const char *dest, const struct cp_options *x)
       first = 0;
 
       /* Allocate space for remembering copied and created files.  */
-      hash_init (INITIAL_HASH_MODULE, INITIAL_ENTRY_TAB_SIZE);
+      hash_init ();
     }
 
   fail = copy (source, dest, 0, x, &copy_into_self, &rename_succeeded);
