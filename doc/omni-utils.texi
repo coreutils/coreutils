@@ -4527,6 +4527,8 @@ within each section, options are listed alphabetically (ignoring case).
 The division of options into the subsections is not absolute, since some
 options affect more than one aspect of @code{ls}'s operation.
 
+Also see @ref{Common options}.
+
 @menu
 * Which files are listed::
 * What information is listed::
@@ -4649,6 +4651,10 @@ Finally, output a line of the form:
 @end example
 where @var{word} is the quoting style (@pxref{Formatting the file names}).
 
+@item -g
+@opindex -g
+Produce long format directory listings, but don't display owner information.
+
 @item -G
 @itemx --no-group
 @opindex -G
@@ -4745,15 +4751,18 @@ whether an alternate access method applies to the file.  When that
 character is a space, there is no alternate access method.  When it
 is a printing character (e.g., @samp{+}), then there is such a method.
 
-@item -g
-@opindex -g
-Produce long format directory listings, omitting owner information.
+@item -n
+@itemx --numeric-uid-gid
+@opindex -n
+@opindex --numeric-uid-gid
+@cindex numeric uid and gid
+Produce long format directory listings, but
+display numeric UIDs and GIDs instead of the owner and group names.
 
 @item -o
 @opindex -o
 Produce long format directory listings, but don't display group information.
 It is equivalent to using @samp{--format=long} with @samp{--no-group} .
-This option is provided for compatibility with other versions of @code{ls}.
 
 @item -s
 @itemx --size
@@ -5018,13 +5027,6 @@ size (@pxref{Block size}).
 @opindex commas@r{, outputting between files}
 List files horizontally, with as many as will fit on each line,
 separated by @samp{, } (a comma and a space).
-
-@item -n
-@itemx --numeric-uid-gid
-@opindex -n
-@opindex --numeric-uid-gid
-@cindex numeric uid and gid
-List the numeric UID and GID instead of the names.
 
 @item -p
 @itemx --file-type
