@@ -1919,7 +1919,7 @@ it must be one character from [doxn]"),
     {
       end_offset = n_bytes_to_skip + max_bytes_to_format;
       if (end_offset < n_bytes_to_skip)
-	error (EXIT_FAILURE, 0, "skip-bytes + read-bytes is too large");
+	error (EXIT_FAILURE, 0, _("skip-bytes + read-bytes is too large"));
     }
 
   if (n_specs == 0)
