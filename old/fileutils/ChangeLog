@@ -1,5 +1,14 @@
 2000-09-25  Jim Meyering  <meyering@lucent.com>
 
+	* tests/cp/same-file: Don't use `diff -u'.  It's not portable.
+	Reported by Christian Krackowizer.
+	* tests/cp/same-file: Run `diff -c' only if cmp finds a difference.
+	* tests/mv/part-symlink: Likewise.  And clean up.
+
+	`shred --exact file1 file2' wouldn't touch `file1'
+	* src/shred.c (long_opts): --exact doesn't take an argument.
+	Reported by Alan Iwi.
+
 	* Makefile.maint (PREV_VERSION): Get the value from a file, rather
 	than trying to derive it from the current version number.
 	This is much more robust.
