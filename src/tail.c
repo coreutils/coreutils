@@ -922,7 +922,12 @@ tail_forever (struct File_spec *f, int nfiles)
 
 	  /* Once the writer is dead, read the files once more to
 	     avoid a race condition.  */
-	  writer_is_dead = (kill (pid, 0) != 0);
+	  writer_is_dead = (pid != 0
+			    && kill (pid, 0) != 0
+			    /* Handle the case in which you cannot send a
+			       signal to the writer, so kill fails and sets
+			       errno to EPERM.  */
+			    && errno != EPERM);
 	}
     }
 }
@@ -1426,6 +1431,10 @@ parse_options (int argc, char **argv,
 
   if (reopen_inaccessible_files && follow_mode != Follow_name)
     error (0, 0, _("warning: --retry is useful only when following by name"));
+
+  if (pid && !forever)
+    error (0, 0,
+	   _("warning: PID ignored; --pid=PID is useful only when following"));
 }
 
 int
