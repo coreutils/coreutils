@@ -3,7 +3,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
-  nohup now sets the close-on-exec flag for it's copy of the stderr file
+  nohup now sets the close-on-exec flag for its copy of the stderr file
   descriptor.  This avoids some nohup-induced hangs.  For example, before
   this change, if you ran `ssh localhost', then `nohup sleep 600 </dev/null &',
   and then exited that remote shell, the ssh session would hang until the
