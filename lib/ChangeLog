@@ -1,5 +1,39 @@
 2001-08-30  Paul Eggert  <eggert@twinsun.com>
 
+	Merge 'exclude' changes from tar 1.13.22.
+	This fixes one or two unlikely storage allocation overflow bugs,
+	but doesn't change user-visible behavior otherwise.
+
+	* exclude.c (bool): Declare, perhaps by including stdbool.h.
+	(<sys/types.h>): Include only if HAVE_SYS_TYPES_H.
+	(<stdlib.h>, <string.h>, <strings.h>, <inttypes.h>, <stdint.h>):
+	Include	if available.
+	(<xalloc.h>): Include
+	(SIZE_MAX): Define if <stdint.h> or <inttypes.h> doesn't.
+	(verify): New macro.  Use it to verify that EXCLUDE macros do not
+	collide with FNM macros.
+	(struct patopts): New struct.
+	(struct exclude): Use it, as exclude patterns now come with options.
+	(new_exclude): Support above changes.
+	(new_exclude, add_exclude_file):
+	Initial size must now be a power of two to simplify overflow checking.
+	(free_exclude, fnmatch_no_wildcards): New function.
+	(excluded_filename): No longer requires options arg, as the options
+	are determined by add_exclude.  Now returns bool, not int.
+	(excluded_filename, add_exclude):
+	Add support for the fancy new exclusion options.
+	(add_exclude, add_exclude_file): Now takes int options arg.
+	Check for arithmetic overflow when computing sizes.
+	(add_exclude_file): xrealloc might modify errno, so don't
+	realloc until after errno might be used.
+
+	* exclude.h (EXCLUDE_ANCHORED, EXCLUDE_INCLUDE,EXCLUDE_WILDCARDS):
+	New macros.
+	(free_exclude): New decl.
+	(add_exclude, add_exclude_file): Now takes int options arg.
+	(excluded_filename): No longer requires options arg, as the options
+	are determined by add_exclude.  Now returns bool, not int.
+
 	* lib/alloca.c (alloca): Arg is of type size_t, not unsigned.
 
 2001-08-27  Jim Meyering  <meyering@lucent.com>
