@@ -83,3 +83,10 @@
 ("11b", '-t: -k1,1b -k2,2', "a :b\na\t:a\n", "a\t:a\na :b\n", 0);
 ("11c", '-t: -k2,2b -k3,3', "z:a\t:a\na :b\n", "z:a\t:a\na :b\n", 0);
 ("11d", '-t: -k2,2b -k3,3', "z:a :b\na\t:a\n", "a\t:a\nz:a :b\n", 0);
+#
+# Exercise bug re comparing `-' and integers.
+("12a", '-n -t: +1', "a:1\nb:-\n", "b:-\na:1\n", 0);
+("12b", '-n -t: +1', "b:-\na:1\n", "b:-\na:1\n", 0);
+# Try some other (e.g. `X') invalid character.
+("12c", '-n -t: +1', "a:1\nb:X\n", "b:X\na:1\n", 0);
+("12d", '-n -t: +1', "b:X\na:1\n", "b:X\na:1\n", 0);
