@@ -1,5 +1,7 @@
 2000-03-10  Jim Meyering  <meyering@lucent.com>
 
+	* tests/mv/mv-special-1: Make the message more like that in the
+	similar touch and shred tests.
 	* tests/touch/fifo: Accommodate SunOS-NFS-mounting-OpenBSD mkfifo
 	bug and `exit 77' if the fifo cannot be created.
 	Report and suggestion from Volker Borchert.
