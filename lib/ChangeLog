@@ -3,6 +3,28 @@
 	* userspec.c (parse_user_spec): If there is no `:' but there is a `.',
 	then first look up the entire `.'-containing string as a login name.
 
+2000-02-18  Paul Eggert  <eggert@twinsun.com>
+
+	* lib/getdate.y: Handle two-digit years with leading zeros correctly.
+	(textint): New typedef.
+	(parser_control): Member year changed from int to textint.
+	All uses changed.
+	(YYSTYPE): Removed; replaced by %union with int and textint members.
+	(tDAY, tDAY_UNIT, tDAYZONE, tHOUR_UNIT, tID, tLOCAL_ZONE, tMERIDIAN,
+	tMINUTE_UNIT, tMONTH, tMONTH_UNIT tSEC_UNIT, tSNUMBER, tUNUMBER,
+	tYEAR_UNIT, tZONE, o_merid): Now of type <intval>.
+	(tSNUMBER, tUNUMBER): Now of type <textintval>.
+	(date, number, to_year): Use width of number in digits, not its value,
+	to determine whether it's a 2-digit year, or a 2-digit time.
+	(yylex): Store number of digits of numeric tokens.
+	Reported by John Kendall.
+
+	(parser_control): Changed from struct parser_control to typedef (for
+	consistency).  All uses changed.
+
+	(tID): Removed; not used.
+	(yylex): Return '?' for unknown identifiers, rather than (unused) tID.
+
 2000-02-14  Paul Eggert  <eggert@twinsun.com>
 
 	* lib/getpagesize.h (getpagesize): Port to VMS for Alpha;
