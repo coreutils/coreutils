@@ -176,7 +176,7 @@ fold_file (filename, width)
   FILE *istream;
   register int c;
   int column = 0;		/* Screen column where next char will go. */
-  int offset_out = 0;		/* Index in `line_out' for next char. */
+  size_t offset_out = 0;	/* Index in `line_out' for next char. */
   static char *line_out = NULL;
   static size_t allocated_out = 0;
 
@@ -238,7 +238,7 @@ fold_file (filename, width)
 		  /* Move the remainder to the beginning of the next line.
 		     The areas being copied here might overlap. */
 		  memmove (line_out, line_out + logical_end,
-			 offset_out - logical_end);
+			   offset_out - logical_end);
 		  offset_out -= logical_end;
 		  for (column = i = 0; i < offset_out; i++)
 		    column = adjust_column (column, line_out[i]);
