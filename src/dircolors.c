@@ -341,7 +341,7 @@ setenv LS_COLORS \':");
   state = ST_GLOBAL;
 
   /* FIXME: use getline */
-  while (fgets (line, STRINGLEN, fp) != NULL )
+  while (fgets (line, STRINGLEN, fp) != NULL)
     {
       parse_line (&keywd, &arg, line);
       if (*keywd != '\0')
@@ -371,12 +371,12 @@ setenv LS_COLORS \':");
 		      put_seq (keywd, '=');
 		      put_seq (arg, ':');
 		    }
-		  else if (strcasecmp(keywd, "OPTIONS") == 0)
+		  else if (strcasecmp (keywd, "OPTIONS") == 0)
 		    {
 		      strcat (useropts, " ");
 		      strcat (useropts, arg);
 		    }
-		  else if (strcasecmp(keywd, "COLOR") == 0)
+		  else if (strcasecmp (keywd, "COLOR") == 0)
 		    {
 		      switch (arg[0])
 			{
@@ -461,7 +461,7 @@ setenv LS_COLORS \':");
 		  while (*p != '\0' && *p != ':')
 		    *q++ = *p++;
 		  /* Make sure it ends in slash.  */
-		  if (*(q-1) != '/' )
+		  if (*(q - 1) != '/' )
 		    *q++ = '/';
 
 		  strcpy (q, "ls");
