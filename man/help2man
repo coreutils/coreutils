@@ -26,7 +26,7 @@ use strict;
 use Getopt::Long;
 use POSIX 'strftime';
 
-my $RCS_Id = '$Id: help2man,v 1.1 1998/09/09 13:47:43 meyering Exp $';
+my $RCS_Id = '$Id: help2man,v 1.2 1998/10/03 19:15:41 meyering Exp $';
 my $this_program = 'help2man';
 my $this_version = '0.0';
 
@@ -129,7 +129,9 @@ if ($include or $opt_include)
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
 # Grab help and version paragraphs from executable
-my @help = split /\n\n+/, `$ARGV[0] --manhelp 2>/dev/null`;
+# Invoke program with `--manhelp' only if --name=STRING not specified.
+my @help = split /\n\n+/, `$ARGV[0] --manhelp 2>/dev/null`
+  if !defined $opt_name;
 my @version = split /\n\n+/, `$ARGV[0] --version 2>/dev/null`
     or die "$this_program: can't get `--version' info from $ARGV[0]\n";
 
