@@ -3,7 +3,7 @@
 	* Version 4.1-b1.
 
 	* lib/rpmatch.c (rpmatch) [!ENABLE_NLS]: Hard-code tests to use
-	`^[yY]' and `^[nN]'.  From Karl Heuer.
+	`^[yY]' and `^[nN]' (avoiding regex).  From Karl Heuer.
 
 	* lib/*.c: Ansideclify.
 
