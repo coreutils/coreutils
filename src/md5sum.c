@@ -278,7 +278,7 @@ md5_file (const char *filename, int binary, unsigned char *md5_result)
 }
 
 static int
-md5_check (const char *checkfile_name, int binary)
+md5_check (const char *checkfile_name)
 {
   FILE *checkfile_stream;
   int n_properly_formated_lines = 0;
@@ -311,7 +311,7 @@ md5_check (const char *checkfile_name, int binary)
   do
     {
       char *filename;
-      int type_flag;
+      int binary;
       char *md5num;
       int err;
       int line_length;
@@ -330,7 +330,7 @@ md5_check (const char *checkfile_name, int binary)
       if (line[line_length - 1] == '\n')
 	line[--line_length] = '\0';
 
-      err = split_3 (line, line_length, &md5num, &type_flag, &filename);
+      err = split_3 (line, line_length, &md5num, &binary, &filename);
       if (err || !hex_digits (md5num))
 	{
 	  if (warn)
@@ -450,6 +450,7 @@ main (int argc, char **argv)
   size_t n_strings = 0;
   size_t i;
   size_t err = 0;
+  int file_type_specified = 0;
 
   /* Text is default of the Plumb/Lankester format.  */
   int binary = 0;
@@ -479,6 +480,7 @@ main (int argc, char **argv)
 	}
 	break;
       case 'b':
+	file_type_specified = 1;
 	binary = 1;
 	break;
       case 'c':
@@ -489,6 +491,7 @@ main (int argc, char **argv)
 	warn = 0;
 	break;
       case 't':
+	file_type_specified = 1;
 	binary = 0;
 	break;
       case 'w':
@@ -503,6 +506,13 @@ main (int argc, char **argv)
     {
       printf ("md5sum - %s\n", PACKAGE_VERSION);
       exit (EXIT_SUCCESS);
+    }
+
+  if (file_type_specified && do_check)
+    {
+      error (0, 0, _("the --binary and --text options are meaningless when \
+verifying checksums"));
+      usage (EXIT_FAILURE);
     }
 
   if (n_strings > 0 && do_check)
@@ -553,7 +563,7 @@ main (int argc, char **argv)
 	  usage (EXIT_FAILURE);
 	}
 
-      err = md5_check ((optind == argc) ? "-" : argv[optind], binary);
+      err = md5_check ((optind == argc) ? "-" : argv[optind]);
     }
   else
     {
