@@ -55,7 +55,7 @@ aclocal-files: configure.in m4/Makefile.am
 	echo >> $@-tmp
 	mv $@-tmp $@
 
-include aclocal-files
+-include aclocal-files
 
 # Override default rule to use --acdir option
 $(srcdir)/aclocal.m4: configure.in $(acfiles)
