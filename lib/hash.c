@@ -723,7 +723,7 @@ hash_find_entry (Hash_table *table, const void *entry,
   if (bucket->data == NULL)
     return NULL;
 
-  /* Check if then entry is found as the bucket head.  */
+  /* See if the entry is the first in the bucket.  */
   if ((*table->comparator) (entry, bucket->data))
     {
       void *data = bucket->data;
@@ -854,6 +854,7 @@ hash_rehash (Hash_table *table, unsigned candidate)
   table->bucket_limit = new_table->bucket_limit;
   table->n_buckets = new_table->n_buckets;
   table->n_buckets_used = new_table->n_buckets_used;
+  table->free_entry_list = new_table->free_entry_list;
   /* table->n_entries already holds its value.  */
 #if USE_OBSTACK
   table->entry_stack = new_table->entry_stack;
@@ -943,7 +944,8 @@ hash_delete (Hash_table *table, const void *entry)
   void *data;
   struct hash_entry *bucket;
 
-  if (data = hash_find_entry (table, entry, &bucket, true), !data)
+  data = hash_find_entry (table, entry, &bucket, true);
+  if (!data)
     return NULL;
 
   table->n_entries--;
