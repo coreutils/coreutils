@@ -377,6 +377,7 @@ process_file (FTS *fts, FTSENT *ent)
      via a hard link, then don't let it contribute to the sums.  */
   if (skip
       || (!opt_count_all
+	  && ! S_ISDIR (sb->st_mode)
 	  && 1 < sb->st_nlink
 	  && hash_ins (sb->st_ino, sb->st_dev)))
     {
@@ -517,12 +518,6 @@ du_files (char **files, int bit_flags)
 	      break;
 	    }
 	  FTS_CROSS_CHECK (fts);
-
-	  /* This is a space optimization.  If we aren't printing totals,
-	     then it's ok to clear the duplicate-detection tables after
-	     each command line hierarchy has been processed.  */
-	  if (ent->fts_level == 0 && ent->fts_info == FTS_D && !print_grand_total)
-	    hash_clear (htab);
 
 	  process_file (fts, ent);
 	}
