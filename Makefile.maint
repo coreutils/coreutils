@@ -147,6 +147,7 @@ header_regexp = \
   |ctype\
   |dirent\
   |errno\
+  |exitfail\
   |fcntl\
   |inttypes\
   |limits\
