@@ -1,4 +1,5 @@
 [4.5.1]
+* du and ls now report sizes of symbolic links (before they'd always report 0)
 * uniq now obeys the LC_COLLATE locale, as per POSIX 1003.1-2001 TC1.
 
   This package is the union of the following:
