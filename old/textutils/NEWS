@@ -1,6 +1,6 @@
 Changes in release 2.1
 [2.0.8]
-* new program: shasum
+* new program: sha1sum
 * wc accepts new -m option: count (potentially multi-byte) characters
 * wc's `--chars' option is now equivalent to -m, not --bytes as it used to be
 * `cat -n' works properly when processing 2^31 or more lines
