@@ -37,6 +37,10 @@
 #include "mempcpy.h"
 #include "openat.h"
 
+#ifndef O_DIRECTORY
+# define O_DIRECTORY 0
+#endif
+
 #ifndef MIN
 # define MIN(a, b) ((a) < (b) ? (a) : (b))
 #endif
@@ -70,6 +74,20 @@ struct cd_buf
   char *avail;
   int fd;
 };
+
+/* Like memchr, but return the number of bytes from MEM
+   to the first occurrence of C thereafter.  Search only
+   LEN bytes.  Return LEN if C is not found.  */
+static inline size_t
+memchrcspn (char const *mem, int c, size_t len)
+{
+  char const *found = memchr (mem, c, len);
+  if (!found)
+    return len;
+
+  len = found - mem;
+  return len;
+}
 
 static void
 cdb_init (struct cd_buf *cdb)
@@ -247,9 +265,8 @@ rpl_chdir (char const *dir)
 	    break;
 	  }
 
-	/* FIXME: if performance of strcspn is an issue,
-	   use a little wrapper around memchr.  */
-	len = strcspn (start, "/");
+	len = memchrcspn (start, '/', dir_end - start);
+	assert (len == strcspn (start, "/"));
 	d = start + len;
 	if (cdb_append (&cdb, start, len) != 0)
 	  goto Fail;
