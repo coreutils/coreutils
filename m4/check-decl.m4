@@ -1,4 +1,4 @@
-#serial 1
+#serial 2
 
 dnl This is just a wrapper function to encapsulate this kludge.
 dnl Putting it in a separate file like this helps share it between
