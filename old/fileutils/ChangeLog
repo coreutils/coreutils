@@ -4,8 +4,6 @@
 	Add a `;' between shloop label and `}'.
 	From Akim Demaille.
 
-	* Version 4.0j.
-
 1999-11-17  Jim Meyering  <meyering@ascend.com>
 
 	* src/mkdir.c (S_IRWXUGO): Define if necessary.
