@@ -1,5 +1,11 @@
 Sat Feb  1 07:21:43 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* tests/pr-test/w35jml17f-lmlo: Rename file from w35jml17f-lm-lo to
+	avoid exceeding 14-character limit.
+
+	* tests/pr-test/mk-script.pl (spec_to_list): Warn about all filenames
+	that exceed max-length before dying.
+
 	* src/pr.c (init_parameters): For compatibility: use default
 	separator `TAB' with full length lines.  From Roland Huebner.
 
