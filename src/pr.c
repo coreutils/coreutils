@@ -472,7 +472,7 @@ static int page_number;
 
    When printing files across (-a flag), ...
    1    foo     2       moo     3       goo
-   4    hoo     3       too     6       zoo
+   4    hoo     5       too     6       zoo
 
    Otherwise, line numbering is as follows:
    1    foo     3       goo     5       too
