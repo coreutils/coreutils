@@ -268,7 +268,7 @@ main (argc, argv)
 	  break;
 
 	default:
-	  usage ((char *) 0, 2);
+	  usage (2, (char *) 0);
 	}
     }
 
@@ -279,10 +279,10 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage (NULL, 0);
+    usage (0, NULL);
 
   if (flag_hard_link && flag_symbolic_link)
-    usage ("cannot make both hard and symbolic links", 2);
+    usage (2, "cannot make both hard and symbolic links");
 
   if (make_backups)
     backup_type = get_version (version);
@@ -321,9 +321,9 @@ do_copy (argc, argv)
   int ret = 0;
 
   if (optind >= argc)
-    usage ("missing file arguments", 2);
+    usage (2, "missing file arguments");
   if (optind >= argc - 1)
-    usage ("missing file argument", 2);
+    usage (2, "missing file argument");
 
   dest = argv[argc - 1];
 
@@ -427,7 +427,7 @@ do_copy (argc, argv)
       struct stat source_stats;
 
       if (flag_path)
-	usage ("when preserving paths, last argument must be a directory", 2);
+	usage (2, "when preserving paths, last argument must be a directory");
 
       source = argv[optind];
 
@@ -459,8 +459,8 @@ do_copy (argc, argv)
       return copy (source, new_dest, new_dst, 0, (struct dir_list *) 0);
     }
   else
-    usage ("when copying multiple files, last argument must be a directory",
-	   2);
+    usage (2,
+	   "when copying multiple files, last argument must be a directory");
 }
 
 /* Copy the file SRC_PATH to the file DST_PATH.  The files may be of

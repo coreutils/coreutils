@@ -353,14 +353,17 @@ static void
 usage (status)
      int status;
 {
-  fprintf (status == 0 ? stdout : stderr, "\
+  if (status != 0)
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+  else
+    {
+      printf ("\
 Usage: %s [OPTION]... SOURCE [DEST]\n\
   or:  %s [OPTION]... SOURCE... DIRECTORY\n\
 ",
-	   program_name, program_name);
-
-  if (status == 0)
-    printf ("\
+	      program_name, program_name);
+      printf ("\
 \n\
   -b, --backup                 make backups for removed files\n\
   -d, -F, --directory          hard link directories (super-user only)\n\
@@ -378,11 +381,7 @@ version control may be set with VERSION_CONTROL, values are:\n\
 \n\
   t, numbered     make numbered backups\n\
   nil, existing   numbered if numbered backups exist, simple otherwise\n\
-  never, simple   always make simple backups  \n");
-
-  else
-    fprintf (stderr, "Try `%s --help' for more information.\n",
-	     program_name);
-
+  never, simple   always make simple backups\n");
+    }
   exit (status);
 }

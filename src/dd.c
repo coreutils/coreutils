@@ -1073,13 +1073,13 @@ static void
 usage (status)
      int status;
 {
-  fprintf (status == 0 ? stdout : stderr, "\
-Usage: %s [OPTION]...\n\
-",
-	   program_name);
-
-  if (status == 0)
-    printf ("\
+  if (status != 0)
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+  else
+    {
+      printf ("Usage: %s [OPTION]...\n", program_name);
+      printf ("\
 \n\
   bs=BYTES        force ibs=BYTES and obs=BYTES\n\
   cbs=BYTES       convert BYTES bytes at a time\n\
@@ -1107,10 +1107,6 @@ by w for x2, by b for x512, by k for x1024.  Each KEYWORD may be:\n\
   swab      swap every pair of input bytes\n\
   noerror   continue after read errors\n\
   sync      pad every input block with NULs to ibs-size\n");
-
-  else
-    fprintf (stderr, "Try `%s --help' for more information.\n",
-	     program_name);
-
+    }
   exit (status);
 }

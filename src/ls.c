@@ -1880,13 +1880,12 @@ static void
 usage (status)
      int status;
 {
-  fprintf (status == 0 ? stdout : stderr, "\
-Usage: %s [OPTION]... [PATH]...\n\
-",
-	   program_name);
-
-  if (status == 0)
+  if (status != 0)
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+  else
     {
+      printf ("Usage: %s [OPTION]... [PATH]...\n", program_name);
       printf ("\
 \n\
   -a, --all                  do not hide entries starting with .\n\
@@ -1937,9 +1936,5 @@ Usage: %s [OPTION]... [PATH]...\n\
 Sort entries alphabetically if none of -cftuSUX nor --sort.\n");
 
     }
-  else
-    fprintf (stderr, "Try `%s --help' for more information.\n",
-	     program_name);
-
   exit (status);
 }

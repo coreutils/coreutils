@@ -1,3 +1,13 @@
+Mon Oct 18 00:13:40 1993  Jim Meyering  (meyering@comco.com)
+
+	* src/*.c (usage): Now the usage message is simply
+	"Try `%s --help' for more information.  From Francois Pinard.
+
+	* src/Makefile.in [LIBPROGS]: Depend on ../lib/libfu.a and version.o.
+
+	* src/*.c (usage): Remove blank line before "Try `%s --help..."
+	in usage message.
+
 Sun Oct 17 00:19:58 1993  Jim Meyering  (meyering@comco.com)
 
 	* fileblocks.c [!NINDIR]: Define BSIZE only if it's not already

@@ -477,13 +477,13 @@ static void
 usage (status)
      int status;
 {
-  fprintf (status == 0 ? stdout : stderr, "\
-Usage: %s [OPTION] [PATH]...\n\
-",
-	   program_name);
-
-  if (status == 0)
-    printf ("\
+  if (status != 0)
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+  else
+    {
+      printf ("Usage: %s [OPTION] [PATH]...\n", program_name);
+      printf ("\
 \n\
   -a, --all                 include filesystems having 0 blocks\n\
   -i, --inodes              list inode information instead of block usage\n\
@@ -496,10 +496,6 @@ Usage: %s [OPTION] [PATH]...\n\
       --version             output version information and exit\n\
 \n\
 If no PATHs are given, list all currently mounted filesystems.\n");
-
-  else
-    fprintf (stderr, "Try `%s --help' for more information.\n",
-	     program_name);
-
+    }
   exit (status);
 }

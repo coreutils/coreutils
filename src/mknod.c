@@ -168,13 +168,13 @@ static void
 usage (status)
      int status;
 {
-  fprintf (status == 0 ? stdout : stderr, "\
-Usage: %s [OPTION]... PATH TYPE [MAJOR MINOR]\n\
-",
-	   program_name);
-
-  if (status == 0)
-    printf ("\
+  if (status != 0)
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+  else
+    {
+      printf ("Usage: %s [OPTION]... PATH TYPE [MAJOR MINOR]\n", program_name);
+      printf ("\
 \n\
   -m, --mode MODE   set permission mode (as in chmod), not 0666 - umask\n\
       --help        display this help and exit\n\
@@ -185,10 +185,6 @@ MAJOR MINOR are forbidden for TYPE p, mandatory otherwise.  TYPE may be:\n\
   b      create a block (buffered) special file\n\
   c, u   create a character (unbuffered) special file   \n\
   p      create a FIFO\n");
-
-  else
-    fprintf (stderr, "Try `%s --help' for more information.\n",
-	     program_name);
-
+    }
   exit (status);
 }

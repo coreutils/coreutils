@@ -191,21 +191,21 @@ static struct option const long_options[] =
 };
 
 static void
-usage (reason, status)
-     char *reason;
+usage (status, reason)
      int status;
+     char *reason;
 {
   if (reason != NULL)
     fprintf (status == 0 ? stdout : stderr, "%s: %s\n",
 	     program_name, reason);
 
-  fprintf (status == 0 ? stdout : stderr, "\
-Usage: %s [OPTION]... [PATH]...\n\
-",
-	   program_name);
-
-  if (status == 0)
-    printf ("\
+  if (status != 0)
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+  else
+    {
+      printf ("Usage: %s [OPTION]... [PATH]...\n", program_name);
+      printf ("\
 \n\
   -a, --all                write counts for all files, not just directories\n\
   -b, --bytes              print size in bytes\n\
@@ -219,11 +219,7 @@ Usage: %s [OPTION]... [PATH]...\n\
   -S, --separate-dirs      do not include size of subdirectories\n\
       --help               display this help and exit\n\
       --version            output version information and exit\n");
-
-  else
-    fprintf (stderr, "Try `%s --help' for more information.\n",
-	     program_name);
-
+    }
   exit (status);
 }
 
@@ -287,7 +283,7 @@ main (argc, argv)
 	  break;
 
 	default:
-	  usage ((char *) 0, 2);
+	  usage (2, (char *) 0);
 	}
     }
 
@@ -298,10 +294,10 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage (NULL, 0);
+    usage (0, NULL);
 
   if (opt_all && opt_summarize_only)
-    usage ("cannot both summarize and show all entries", 2);
+    usage (2, "cannot both summarize and show all entries");
 
   /* Initialize the hash structure for inode numbers.  */
   hash_init (INITIAL_HASH_MODULE, INITIAL_ENTRY_TAB_SIZE);

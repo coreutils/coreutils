@@ -316,14 +316,17 @@ static void
 usage (status)
      int status;
 {
-  fprintf (status == 0 ? stdout : stderr, "\
+  if (status != 0)
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+  else
+    {
+      printf ("\
 Usage: %s [OPTION]... MODE[,MODE]... FILE...\n\
   or:  %s [OPTION]... OCTAL_MODE FILE...\n\
 ",
-	   program_name, program_name);
-
-  if (status == 0)
-    printf ("\
+	      program_name, program_name);
+      printf ("\
 \n\
   -c, --changes           like verbose but report only when a change is made\n\
   -f, --silent, --quiet   suppress most error messages\n\
@@ -334,10 +337,6 @@ Usage: %s [OPTION]... MODE[,MODE]... FILE...\n\
 \n\
 Each MODE is one or more of the letters ugoa, one of the symbols +-= and\n\
 one or more of the letters rwxXstugo.\n");
-
-  else
-    fprintf (stderr, "Try `%s --help' for more information.\n",
-	     program_name);
-
+    }
   exit (status);
 }

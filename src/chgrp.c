@@ -307,13 +307,13 @@ static void
 usage (status)
      int status;
 {
-  fprintf (status == 0 ? stdout : stderr, "\
-Usage: %s [OPTION]... GROUP FILE...\n\
-",
-	   program_name);
-
-  if (status == 0)
-    printf ("\
+  if (status != 0)
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+  else
+    {
+      printf ("Usage: %s [OPTION]... GROUP FILE...\n", program_name);
+      printf ("\
 \n\
   -c, --changes           like verbose but report only when a change is made\n\
   -f, --silent, --quiet   suppress most error messages\n\
@@ -321,10 +321,6 @@ Usage: %s [OPTION]... GROUP FILE...\n\
   -R, --recursive         change files and directories recursively\n\
       --help              display this help and exit\n\
       --version           output version information and exit\n");
-
-  else
-    fprintf (stderr, "Try `%s --help' for more information.\n",
-	     program_name);
-
+    }
   exit (status);
 }

@@ -145,23 +145,19 @@ static void
 usage (status)
      int status;
 {
-  fprintf (status == 0 ? stdout : stderr, "\
-Usage: %s [OPTION] DIRECTORY...\n\
-",
-	   program_name);
-
-  if (status == 0)
-    printf ("\
+  if (status != 0)
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+  else
+    {
+      printf ("Usage: %s [OPTION] DIRECTORY...\n", program_name);
+      printf ("\
 \n\
   -p, --parents     no error if existing, make parent directories as needed\n\
   -m, --mode MODE   set permission mode (as in chmod), not 0777 - umask\n\
       --help        display this help and exit\n\
       --version     output version information and exit\n");
-
-  else
-    fprintf (stderr, "Try `%s --help' for more information.\n",
-	     program_name);
-
+    }
   exit (status);
 }
 

@@ -379,13 +379,13 @@ static void
 usage (status)
      int status;
 {
-  fprintf (status == 0 ? stdout : stderr, "\
-Usage: %s [OPTION]... FILE...\n\
-",
-	   program_name);
-
-  if (status == 0)
-    printf ("\
+  if (status != 0)
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+  else
+    {
+      printf ("Usage: %s [OPTION]... FILE...\n", program_name);
+      printf ("\
 \n\
   -a                     change only the access time\n\
   -c                     do not create any files\n\
@@ -399,10 +399,6 @@ Usage: %s [OPTION]... FILE...\n\
       --version          output version information and exit\n\
 \n\
 STAMP may be used without -t if none of -drt, nor --, are used.\n");
-
-  else
-    fprintf (stderr, "Try `%s --help' for more information.\n",
-	     program_name);
-
+    }
   exit (status);
 }

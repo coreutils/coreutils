@@ -295,14 +295,17 @@ static void
 usage (status)
      int status;
 {
-  fprintf (status == 0 ? stdout : stderr, "\
+  if (status != 0)
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+  else
+    {
+      printf ("\
 Usage: %s [OPTION]... OWNER[.[GROUP]] FILE...\n\
   or:  %s [OPTION]... .[GROUP] FILE...\n\
 ",
-	   program_name, program_name);
-
-  if (status == 0)
-    printf ("\
+	      program_name, program_name);
+      printf ("\
 \n\
   -c, --changes           be verbose whenever change occurs\n\
   -f, --silent, --quiet   suppress most error messages\n\
@@ -313,10 +316,6 @@ Usage: %s [OPTION]... OWNER[.[GROUP]] FILE...\n\
 \n\
 Owner is unchanged if missing.  Group is unchanged if missing, but changed\n\
 to login group if implied by a period.  A colon may replace the period.\n");
-
-  else
-    fprintf (stderr, "Try `%s --help' for more information.\n",
-	     program_name);
-
+    }
   exit (status);
 }

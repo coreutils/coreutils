@@ -530,13 +530,13 @@ static void
 usage (status)
      int status;
 {
-  fprintf (status == 0 ? stdout : stderr, "\
-Usage: %s [OPTION]... PATH...\n\
-",
-	   program_name);
-
-  if (status == 0)
-    printf ("\
+  if (status != 0)
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+  else
+    {
+      printf ("Usage: %s [OPTION]... PATH...\n", program_name);
+      printf ("\
 \n\
   -d, --directory       unlink directory, even if non-empty (super-user only)\n\
   -f, --force           ignore nonexistent files, never prompt\n\
@@ -545,10 +545,6 @@ Usage: %s [OPTION]... PATH...\n\
   -r, -R, --recursive   remove the contents of directories recursively\n\
       --help            display this help and exit\n\
       --version         output version information and exit\n");
-
-  else
-    fprintf (stderr, "Try `%s --help' for more information.\n",
-	     program_name);
-
+    }
   exit (status);
 }

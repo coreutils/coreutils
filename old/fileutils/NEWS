@@ -1,6 +1,10 @@
 Major changes in release 3.9:
-* --help gives one-line description of each option and shows correspondence
-  between short and long-named options.
+* --help gives a one-line description of each option and shows the
+  correspondence between short and long-named options.
+* work around systems with BROKEN_STAT_MACROS
+* work around problem where $(srcdir)/config.h was used instead of
+  ../config.h -- this happened only when building in a subdirectory
+  and when config.h remained in $(srcdir) from a previous ./configure.
 * GNU chmod treats symlinks the same way other vendor's versions do.
   Now symlinks listed on the command line are processed (they were
   ignored before); the permissions of the dereferenced files are
