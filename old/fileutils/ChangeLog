@@ -1,3 +1,31 @@
+Wed Oct 18 23:09:55 1995  Jim Meyering  (meyering@comco.com)
+
+	* configure.in (AC_CHECK_HEADERS): Add sys/wait.h and sys/ioctl.h.
+	(AC_CHECK_FUNCS): Add endpwent.
+
+	* fileblocks.c: Use _POSIX_VERSION, not _POSIX_SOURCE.
+
+	* userspec.c [endgrent]: Test !HAVE_ENDGRENT rather than _POSIX_SOURCE.
+	[endpwent]: Test !HAVE_ENDPWENT rather than _POSIX_SOURCE.
+
+	* chgrp.c [endgrent]: Test !HAVE_ENDGRENT rather than _POSIX_SOURCE.
+
+	* chown.c [endpwent]: Test !HAVE_ENDPWENT rather than _POSIX_SOURCE.
+	[endgrent]: Remove unused definition.
+
+	* df.c (main): Fail if the same file system type was both selected
+	and excluded.  Reported by Paul Close pdc@lunch.engr.sgi.com.
+
+	* rm.c (duplicate_entry): Always return 0 if !D_INO_IN_DIRENT,
+	rather than if _POSIX_SOURCE.
+
+	* install.c: Use HAVE_SYS_WAIT_H, not _POSIX_VERSION in conditional
+	inclusion of sys/wait.h.
+	[endgrent]: Test !HAVE_ENDGRENT rather than _POSIX_SOURCE.
+	[endpwent]: Test !HAVE_ENDPWENT rather than _POSIX_SOURCE.
+
+	* ls.c Use HAVE_SYS_IOCTL_H, rather than !_POSIX_SOURCE || _AIX.
+
 Thu Oct  5 21:49:34 1995  Jim Meyering  (meyering@comco.com)
 
 	* configure.in (HAVE_STRUCT_UTIMBUF): Add new test.  Testing for
