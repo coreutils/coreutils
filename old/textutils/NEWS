@@ -1,4 +1,6 @@
 Changes in release 1.23
+[1.22c]
+[1.22b]
 * od supports a new trailing `z' character in a type specification:
     $ od -tx1z .
     0000000 be ef c6 0f fd f9 d7 e0 ec cb f3 c6 00 db e8 00  >................<
