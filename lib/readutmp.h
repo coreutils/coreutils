@@ -1,7 +1,7 @@
 /* Declarations for GNU's read utmp module.
 
    Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,
-   2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+   2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -167,6 +167,12 @@ enum { UT_USER_SIZE = sizeof UT_USER ((STRUCT_UTMP *) 0) };
 #  define WTMP_FILE "/etc/wtmp"
 # endif
 
+# if HAVE_STRUCT_XTMP_UT_PID
+#  define UT_PID(U) ((U)->ut_pid)
+# else
+#  define UT_PID(U) 0
+# endif
+
 # if HAVE_STRUCT_UTMP_UT_TYPE || HAVE_STRUCT_UTMPX_UT_TYPE
 #  define UT_TYPE_EQ(U, V) ((U)->ut_type == (V))
 #  define UT_TYPE_NOT_DEFINED 0
@@ -192,7 +198,14 @@ enum { UT_USER_SIZE = sizeof UT_USER ((STRUCT_UTMP *) 0) };
     && (UT_TYPE_USER_PROCESS (U)				\
         || (UT_TYPE_NOT_DEFINED && UT_TIME_MEMBER (U) != 0)))
 
+/* Options for read_utmp.  */
+enum
+  {
+    READ_UTMP_CHECK_PIDS = 1
+  };
+
 char *extract_trimmed_name (const STRUCT_UTMP *ut);
-int read_utmp (const char *filename, size_t *n_entries, STRUCT_UTMP **utmp_buf);
+int read_utmp (const char *filename, size_t *n_entries, STRUCT_UTMP **utmp_buf,
+	       int options);
 
 #endif /* __READUTMP_H__ */
