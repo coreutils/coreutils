@@ -1,4 +1,4 @@
-#serial 38
+#serial 39
 
 dnl We use jm_ for non Autoconf macros.
 m4_pattern_forbid([^jm_[ABCDEFGHIJKLMNOPQRSTUVXYZ]])dnl
@@ -106,6 +106,7 @@ AC_DEFUN([jm_PREREQ],
   AC_REQUIRE([gl_UNICODEIO])
   AC_REQUIRE([gl_UNISTD_SAFER])
   AC_REQUIRE([gl_USERSPEC])
+  AC_REQUIRE([gl_UTIMECMP])
   AC_REQUIRE([gl_UTIMENS])
   AC_REQUIRE([gl_XALLOC])
   AC_REQUIRE([gl_XGETCWD])
