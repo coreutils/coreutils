@@ -61,7 +61,7 @@ getopt.h group-member.h long-options.h makepath.h modechange.h mountlist.h \
 obstack.h pathmax.h save-cwd.h xstrtol.h xstrtoul.h
 
 BUILT_SOURCES = getdate.c posixtm.c
-mkinstalldirs = $(top_srcdir)/mkinstalldirs
+mkinstalldirs = /mkinstalldirs
 CONFIG_HEADER = ../config.h
 LIBRARIES = $(noinst_LIBRARIES)
 
@@ -102,13 +102,31 @@ DEP_DISTFILES = $(DIST_COMMON) $(SOURCES) $(BUILT_SOURCES) $(HEADERS) \
 	$(TEXINFOS) $(INFO_DEPS) $(MANS) $(EXTRA_DIST) $(DATA)
 
 TAR = tar
+DEP_FILES = $(srcdir)/.deps/alloca.P $(srcdir)/.deps/argmatch.P \
+$(srcdir)/.deps/backupfile.P $(srcdir)/.deps/basename.P \
+$(srcdir)/.deps/dirname.P $(srcdir)/.deps/error.P \
+$(srcdir)/.deps/fileblocks.P $(srcdir)/.deps/filemode.P \
+$(srcdir)/.deps/fnmatch.P $(srcdir)/.deps/fsusage.P \
+$(srcdir)/.deps/ftruncate.P $(srcdir)/.deps/full-write.P \
+$(srcdir)/.deps/getdate.P $(srcdir)/.deps/getopt.P \
+$(srcdir)/.deps/getopt1.P $(srcdir)/.deps/getversion.P \
+$(srcdir)/.deps/group-member.P $(srcdir)/.deps/idcache.P \
+$(srcdir)/.deps/isdir.P $(srcdir)/.deps/long-options.P \
+$(srcdir)/.deps/makepath.P $(srcdir)/.deps/modechange.P \
+$(srcdir)/.deps/mountlist.P $(srcdir)/.deps/obstack.P \
+$(srcdir)/.deps/posixtm.P $(srcdir)/.deps/safe-read.P \
+$(srcdir)/.deps/save-cwd.P $(srcdir)/.deps/savedir.P \
+$(srcdir)/.deps/stripslash.P $(srcdir)/.deps/userspec.P \
+$(srcdir)/.deps/xgetcwd.P $(srcdir)/.deps/xmalloc.P \
+$(srcdir)/.deps/xstrdup.P $(srcdir)/.deps/xstrtol.P \
+$(srcdir)/.deps/xstrtoul.P $(srcdir)/.deps/yesno.P
 SOURCES = $(fu_SOURCES)
 OBJECTS = $(fu_OBJECTS)
 
 default: all
 
 
-$(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in
+$(srcdir)/Makefile.in: @MAINT@Makefile.am $(top_srcdir)/configure.in
 	cd $(top_srcdir) && automake $(subdir)/Makefile
 
 Makefile: $(top_builddir)/config.status Makefile.in
@@ -167,43 +185,33 @@ distdir: $(DEP_DISTFILES)
 	  || ln $(srcdir)/$$file $(distdir)/$$file 2> /dev/null \
 	  || cp -p $(srcdir)/$$file $(distdir)/$$file; \
 	done
-alloca.o: alloca.c
-argmatch.o: argmatch.c
-backupfile.o: backupfile.c backupfile.h
-basename.o: basename.c
-dirname.o: dirname.c
-error.o: error.c
-fileblocks.o: fileblocks.c
-filemode.o: filemode.c
-fnmatch.o: fnmatch.c
-fsusage.o: fsusage.c fsusage.h
-ftruncate.o: ftruncate.c
-full-write.o: full-write.c
-getdate.o: getdate.c
-getopt.o: getopt.c
-getopt1.o: getopt1.c getopt.h
-getversion.o: getversion.c backupfile.h
-group-member.o: group-member.c group-member.h
-idcache.o: idcache.c
-isdir.o: isdir.c
-long-options.o: long-options.c long-options.h
-makepath.o: makepath.c makepath.h
-modechange.o: modechange.c modechange.h
-mountlist.o: mountlist.c mountlist.h
-obstack.o: obstack.c obstack.h
-posixtm.o: posixtm.c
-safe-read.o: safe-read.c
-save-cwd.o: save-cwd.c ../config.h save-cwd.h error.h
-savedir.o: savedir.c
-stripslash.o: stripslash.c
-userspec.o: userspec.c
-xgetcwd.o: xgetcwd.c pathmax.h
-xmalloc.o: xmalloc.c
-xstrdup.o: xstrdup.c
-xstrtol.o: xstrtol.c xstrtol.h
-xstrtoul.o: xstrtoul.c xstrtol.c xstrtol.h
-yesno.o: yesno.c
 
+# This fragment is probably only useful for maintainers.  It relies on
+# GNU make and gcc.  It is only included in the generated Makefile.in
+# if `automake' is not passed the `--include-deps' flag.
+
+MKDEP = gcc -MM $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
+
+-include $(srcdir)/.deps/.P
+$(srcdir)/.deps/.P: $(BUILT_SOURCES)
+	cd $(srcdir) && test -d .deps || mkdir .deps
+	echo > $@
+
+-include $(DEP_FILES)
+$(DEP_FILES): $(srcdir)/.deps/.P
+
+$(srcdir)/.deps/%.P: $(srcdir)/%.c
+	@echo "mkdeps $< > $@"
+	@re=`echo 's,^$(srcdir)//*,,g;s, $(srcdir)//*, ,g' | sed 's,\.,\\\\.,g'`; \
+	  $(MKDEP) $< | sed "$$re" > $@-tmp
+	@if test -n "$o"; then			\
+	  sed 's/\.o:/$$o:/' $@-tmp > $@;	\
+	  rm $@-tmp;				\
+	else					\
+	  mv $@-tmp $@;				\
+	fi
+
+# End of maintainer-only section
 info:
 
 dvi:
@@ -269,7 +277,7 @@ maintainer-clean-generic clean mostlyclean distclean maintainer-clean
 
 # Since this directory contains two parsers, we have to be careful to avoid
 # running two $(YACC)s during parallel makes.  See below.
-getdate.c: getdate.y
+getdate.c: @MAINT@getdate.y
 	@echo expect 10 shift/reduce conflicts
 	$(YACC) $(srcdir)/getdate.y
 	mv y.tab.c getdate.c
@@ -278,7 +286,7 @@ getdate.c: getdate.y
 # The artificial dependency on getdate.c keeps the two parsers from being
 # built in parallel.  Enforcing this little bit of sequentiality lets
 # everyone (even those without bison) still run mostly parallel builds.
-posixtm.c: posixtm.y getdate.c
+posixtm.c: @MAINT@posixtm.y getdate.c
 	$(YACC) $(srcdir)/posixtm.y
 	mv y.tab.c posixtm.tab.c
 	sed -e 's/yy/zz/g' posixtm.tab.c > tposixtm.c

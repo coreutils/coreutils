@@ -65,13 +65,13 @@ TAR = tar
 default: all
 
 
-$(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in
+$(srcdir)/Makefile.in: @MAINT@Makefile.am $(top_srcdir)/configure.in
 	cd $(top_srcdir) && automake $(subdir)/Makefile
 
 Makefile: $(top_builddir)/config.status Makefile.in
 	cd $(top_builddir) && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= ./config.status
 
-version.texi: stamp-vti
+version.texi: @MAINT@stamp-vti
 
 stamp-vti: fileutils.texi $(top_srcdir)/configure.in
 	echo "@set UPDATED `cd $(srcdir) \
@@ -93,7 +93,7 @@ clean-vti:
 distclean-vti:
 
 maintainer-clean-vti:
-	rm -f stamp-vti version.texi
+	@MAINT@rm -f stamp-vti version.texi
 
 fileutils.info: fileutils.texi version.texi
 
