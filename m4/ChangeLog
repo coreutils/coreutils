@@ -1,3 +1,8 @@
+2000-05-01  Jim Meyering  <meyering@lucent.com>
+
+	* ls-mntd-fs.m4 (jm_LIST_MOUNTED_FILESYSTEMS): Add BeOS support.
+	Based on a patch from Bruno Haible.
+
 2000-04-18  Jim Meyering  <meyering@lucent.com>
 
 	* prereq.m4 (jm_PREREQ_GETPAGESIZE): New macro.
