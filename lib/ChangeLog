@@ -1,3 +1,7 @@
+2000-09-06  Jim Meyering  <meyering@lucent.com>
+
+	* getopt.c (_getopt_internal): Update from glibc.
+
 2000-08-30  Jim Meyering  <meyering@lucent.com>
 
 	* strftime.c: Merge in changes from GNU libc.
