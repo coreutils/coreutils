@@ -410,7 +410,7 @@ Numeric operations
 
 File permissions
 
-* Mode Structure::               Structure of File Permissions 
+* Mode Structure::               Structure of File Permissions
 * Symbolic Modes::               Mnemonic permissions representation
 * Numeric Modes::                Permissions as octal numbers
 
@@ -2976,7 +2976,7 @@ Warning: the @samp{+@var{pos1}} usage is obsolescent.  Future versions of
 @sc{posix} will require that support for it be withdrawn.  Use
 @option{--key} (@option{-k}) instead.
 
-@end table 
+@end table
 
 Historical (BSD and System V) implementations of @code{sort} have
 differed in their interpretation of some options, particularly
@@ -7728,7 +7728,7 @@ By default, @code{true} honors the @samp{--help} and @samp{--version}
 options.  However, that is contrary to @sc{POSIX}, so when the environment
 variable @env{POSIXLY_CORRECT} is set, @code{true} ignores @emph{all}
 command line arguments, including @samp{--help} and @samp{--version}.
- 
+
 This version of @code{true} is implemented as a C program, and is thus
 more secure and faster than a shell script implementation, and may safely
 be used as a dummy shell for the purpose of disabling accounts.
