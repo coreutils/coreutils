@@ -1,3 +1,4 @@
+# -*-perl-*-
 #test   options   input   expected-output   expected-return-code
 #
 ("1a", '', "A\nB\nC\n", "A\nB\nC\n", 0);
@@ -37,3 +38,13 @@
 ("6d", '-k 2,2', "A B A\nA A Z\n", "A A Z\nA B A\n", 0);
 ("6e", '-k 2,2', "A B Z\nA A A\n", "A A A\nA B Z\n", 0);
 ("6f", '-k 2,2', "A B A\nA A Z\n", "A A Z\nA B A\n", 0);
+#
+("7a", '-k 2,3', "9 a b\n7 a a\n", "7 a a\n9 a b\n", 0);
+("7b", '-k 2,3', "a a b\nz a a\n", "z a a\na a b\n", 0);
+("7c", '-k 2,3', "y k b\nz k a\n", "z k a\ny k b\n", 0);
+("7d", '+1 -3', "y k b\nz k a\n", "z k a\ny k b\n", 0);
+#
+# FIXME: report an error for `.' but missing char spec
+("8a", '-k 2.,3', "", "", 1);
+# FIXME: report an error for `,' but missing POS2
+("8b", '-k 2,', "", "", 1);
