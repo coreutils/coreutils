@@ -131,7 +131,10 @@ seq_args=10
 sleep_args=0
 su_args=--version
 test_args=foo
-# skip chroot, stty, tty, false
+
+# This is necessary in the unusual event that there is
+# no valid entry in /etc/mtab.
+df_args=/
 
 sleep 10m &
 kill_args=$!
