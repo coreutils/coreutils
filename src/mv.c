@@ -472,6 +472,12 @@ main (int argc, char **argv)
 
   dest_is_dir = (n_files > 0 && isdir (target_directory));
 
+  if (n_files == 0 || (n_files == 1 && !target_directory_specified))
+    {
+      error (0, 0, "%s", _("missing file argument"));
+      usage (1);
+    }
+
   if (target_directory_specified)
     {
       if (!dest_is_dir)
@@ -480,29 +486,12 @@ main (int argc, char **argv)
 		 target_directory);
 	  usage (1);
 	}
-
-      if (n_files == 0)
-	{
-	  error (0, 0, "%s", _("missing file argument"));
-	  usage (1);
-	}
     }
-  else
+  else if (n_files > 2 && !dest_is_dir)
     {
-      if (n_files < 2)
-	{
-	  error (0, 0, "%s", (n_files == 0
-			      ? _("missing file arguments")
-			      : _("missing file argument")));
-	  usage (1);
-	}
-
-      if (n_files > 2 && !dest_is_dir)
-	{
-	  error (0, 0,
-	   _("when moving multiple files, last argument must be a directory"));
-	  usage (1);
-	}
+      error (0, 0,
+	    _("when moving multiple files, last argument must be a directory"));
+      usage (1);
     }
 
   if (backup_suffix_string)
