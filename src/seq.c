@@ -17,13 +17,12 @@
 
 /* Ulrich Drepper */
 
-#include <ctype.h>
 #include <getopt.h>
 #include <math.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
+#include "system.h"
+#include "error.h"
 #include "version.h"
 
 static double scan_double_arg ();
@@ -161,6 +160,7 @@ main (argc, argv)
 
   if (optind >= argc)
     {
+      /* FIXME Give reason for failure.  */
       usage (2);
       /* NOTREACHED */
     }
@@ -194,7 +194,7 @@ main (argc, argv)
     {
       if (!check_format (format_str))
 	{
-	  fprintf (stderr, "illegal format string\n");
+	  error (0, 0, "invalid format string: `%s'", format_str);
 	  usage (4);
 	}
     }
@@ -225,7 +225,7 @@ scan_double_arg (arg)
   ret_val = strtod (arg, &end_ptr);
   if (end_ptr == arg || *end_ptr != '\0')
     {
-      fprintf (stderr, "illegal float argument: %s\n", arg);
+      error (0, 0, "invalid float argument: %s\n", arg);
       usage (2);
       /* NOTREACHED */
     }
@@ -366,7 +366,7 @@ print_numbers (format_str)
     {
       if (step >= 0)
 	{
-	  (void) fprintf (stderr, "illegal increment: %g\n", step);
+	  error (0, 0, "invalid increment: %g\n", step);
 	  usage (2);
 	  /* NOTREACHED */
 	}
@@ -386,7 +386,7 @@ print_numbers (format_str)
     {
       if (step <= 0)
 	{
-	  (void) fprintf (stderr, "illegal increment: %g\n", step);
+	  error (0, 0, "invalid increment: %g\n", step);
 	  usage (2);
 	  /* NOTREACHED */
 	}
