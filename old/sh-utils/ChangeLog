@@ -1,7 +1,8 @@
 Fri Nov 22 20:33:26 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/printf.c (main): Warn if excess arguments are ignored.
-	E.g., printf foo bar now ignores the single non-format argument, bar.
+	E.g., printf foo bar now warns that it is ignoring the single
+	non-format argument, bar.
 
 Wed Nov 20 20:37:54 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
