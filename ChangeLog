@@ -1,3 +1,7 @@
+2002-09-26  Jim Meyering  <meyering@lucent.com>
+
+	* src/install.c (get_ids): Use strtoul, not strtol.  Remove some casts.
+
 2002-09-25  Jim Meyering  <meyering@lucent.com>
 
 	* src/test.c (eaccess): Change type of local `euid' from int to uid_t
