@@ -82,7 +82,7 @@ usage (int status)
   else
     {
       (void) printf (_("\
-Usage: %s [OPTION]... [START [INCREMENT]] LIMIT\n\
+Usage: %s [OPTION]... [FIRST [INCREMENT]] LAST\n\
 "), program_name);
       (void) printf (_("\
 Print numbers from FIRST (default 1) to LAST, moving by STEP (default 1).\n\
@@ -93,8 +93,8 @@ Print numbers from FIRST (default 1) to LAST, moving by STEP (default 1).\n\
       --help               display this help and exit\n\
       --version            output version information and exit\n\
 \n\
-START, INCREMENT, and LIMIT are interpreted as floating point values.\n\
-INCREMENT should be positive if START is smaller than LIMIT, and negative\n\
+FIRST, INCREMENT, and LAST are interpreted as floating point values.\n\
+INCREMENT should be positive if FIRST is smaller than LAST, and negative\n\
 otherwise.  When given, the FORMAT argument must contain exactly one of\n\
 the printf-style, floating point output formats %%e, %%f, or %%g.\n\
 "));
