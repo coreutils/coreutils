@@ -1,5 +1,5 @@
 /* install - copy files and set attributes
-   Copyright (C) 89, 90, 91, 1995-2001 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 1995-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -529,7 +529,7 @@ strip (const char *path)
   switch (pid)
     {
     case -1:
-      error (1, errno, _("cannot fork"));
+      error (1, errno, _("fork system call failed"));
       break;
     case 0:			/* Child. */
       execlp ("strip", "strip", path, NULL);
