@@ -1,3 +1,8 @@
+2004-03-14  Jim Meyering  <jim@meyering.net>
+
+	* announce-gen (print_changelog_deltas): Use `.sig' suffix for
+	signature files, not `.asc'.  Reported by angico@yahoo.com.
+
 2004-03-13  Jim Meyering  <jim@meyering.net>
 
 	* src/cp.c (do_copy): Tweak wording in a diagnostic.
