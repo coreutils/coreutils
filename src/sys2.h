@@ -3,14 +3,6 @@
    more time, I'll merge the remaining things in system.h and everything
    in this file will go back there. */
 
-#ifndef UID_T_MAX
-# define UID_T_MAX TYPE_MAXIMUM (uid_t)
-#endif
-
-#ifndef GID_T_MAX
-# define GID_T_MAX TYPE_MAXIMUM (gid_t)
-#endif
-
 #ifndef RETSIGTYPE
 # define RETSIGTYPE void
 #endif
@@ -289,4 +281,68 @@ char *base_name PARAMS ((char const *));
 
 #ifndef MIN
 # define MIN(a,b) (((a) < (b)) ? (a) : (b))
+#endif
+
+#ifndef CHAR_BIT
+# define CHAR_BIT 8
+#endif
+
+/* The extra casts work around common compiler bugs.  */
+#define TYPE_SIGNED(t) (! ((t) 0 < (t) -1))
+/* The outer cast is needed to work around a bug in Cray C 5.0.3.0.
+   It is necessary at least when t == time_t.  */
+#define TYPE_MINIMUM(t) ((t) (TYPE_SIGNED (t) \
+			      ? ~ (t) 0 << (sizeof (t) * CHAR_BIT - 1) : (t) 0))
+#define TYPE_MAXIMUM(t) ((t) (~ (t) 0 - TYPE_MINIMUM (t)))
+
+#ifndef CHAR_MIN
+# define CHAR_MIN TYPE_MINIMUM (char)
+#endif
+
+#ifndef CHAR_MAX
+# define CHAR_MAX TYPE_MAXIMUM (char)
+#endif
+
+#ifndef SCHAR_MIN
+# define SCHAR_MIN (-1 - SCHAR_MAX)
+#endif
+
+#ifndef SCHAR_MAX
+# define SCHAR_MAX (CHAR_MAX == UCHAR_MAX ? CHAR_MAX / 2 : CHAR_MAX)
+#endif
+
+#ifndef UCHAR_MAX
+# define UCHAR_MAX TYPE_MAXIMUM (unsigned char)
+#endif
+
+#ifndef SHRT_MIN
+# define SHRT_MIN TYPE_MINIMUM (short int)
+#endif
+
+#ifndef SHRT_MAX
+# define SHRT_MAX TYPE_MAXIMUM (short int)
+#endif
+
+#ifndef INT_MAX
+# define INT_MAX TYPE_MAXIMUM (int)
+#endif
+
+#ifndef UINT_MAX
+# define UINT_MAX TYPE_MAXIMUM (unsigned int)
+#endif
+
+#ifndef LONG_MAX
+# define LONG_MAX TYPE_MAXIMUM (long)
+#endif
+
+#ifndef ULONG_MAX
+# define ULONG_MAX TYPE_MAXIMUM (unsigned long)
+#endif
+
+#ifndef UID_T_MAX
+# define UID_T_MAX TYPE_MAXIMUM (uid_t)
+#endif
+
+#ifndef GID_T_MAX
+# define GID_T_MAX TYPE_MAXIMUM (gid_t)
 #endif
