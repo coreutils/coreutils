@@ -98,8 +98,8 @@
 
 enum RM_status
 {
-  /* FIXME: describe and explain ordering: `ok' increasing in seriousness. */
-  RM_OK = 2,
+  /* These must be listed in order of increasing seriousness. */
+  RM_OK,
   RM_USER_DECLINED,
   RM_ERROR
 };
@@ -170,7 +170,11 @@ static int show_help;
 /* If nonzero, print the version on standard output and exit.  */
 static int show_version;
 
-/* FIXME: describe */
+/* The name of the directory (starting with and relative to a command
+   line argument) being processed.  When a subdirectory is entered, a new
+   component is appended (pushed).  When RM chdir's out of a directory,
+   the top component is removed (popped).  This is used to form a full
+   file name when necessary.  */
 static struct obstack dir_stack;
 
 /* Stack of lengths of directory names (including trailing slash)
@@ -179,7 +183,7 @@ static struct obstack dir_stack;
    element pushed onto the dir stack may contain slashes.  */
 static struct obstack len_stack;
 
-/* Set of `active' directories from the current command-line parameter
+/* Set of `active' directories from the current command-line argument
    to the level in the hierarchy at which files are being removed.
    A directory is added to the active set when RM begins removing it
    (or its entries), and it is removed from the set just after RM has
@@ -647,11 +651,11 @@ remove_file (struct File_spec *fs)
     {
       if (!S_ISLNK (fspec_filetype_mode (fs)))
 	{
-	  error (0, 0,
-		 (S_ISDIR (fspec_filetype_mode (fs))
-		  ? _("remove write-protected directory `%s'? ")
-		  : _("remove write-protected file `%s'? ")),
-		 full_filename (pathname));
+	  fprintf (stderr,
+		   (S_ISDIR (fspec_filetype_mode (fs))
+		    ? _("%s: remove write-protected directory `%s'? ")
+		    : _("%s: remove write-protected file `%s'? ")),
+		   program_name, full_filename (pathname));
 	  if (!yesno ())
 	    return RM_USER_DECLINED;
 
@@ -661,11 +665,11 @@ remove_file (struct File_spec *fs)
 
   if (!asked && interactive)
     {
-      error (0, 0,
-	     (S_ISDIR (fspec_filetype_mode (fs))
-	      ? _("remove directory `%s'? ")
-	      : _("remove `%s'? ")),
-	     full_filename (pathname));
+      fprintf (stderr,
+	       (S_ISDIR (fspec_filetype_mode (fs))
+		? _("%s: remove directory `%s'? ")
+		: _("%s: remove `%s'? ")),
+	       program_name, full_filename (pathname));
       if (!yesno ())
 	return RM_USER_DECLINED;
     }
@@ -704,16 +708,16 @@ remove_dir (struct File_spec *fs, int need_save_cwd)
   if (!ignore_missing_files && (interactive || stdin_tty)
       && euidaccess (dir_name, W_OK))
     {
-      fmt = _("directory `%s' is write protected; descend into it anyway? ");
+      fmt = _("%s: directory `%s' is write protected; descend into it anyway? ");
     }
   else if (interactive)
     {
-      fmt = _("descend into directory `%s'? ");
+      fmt = _("%s: descend into directory `%s'? ");
     }
 
   if (fmt)
     {
-      error (0, 0, fmt, full_filename (dir_name));
+      fprintf (stderr, fmt, program_name, full_filename (dir_name));
       if (!yesno ())
 	return RM_USER_DECLINED;
     }
