@@ -43,16 +43,16 @@ getgroups (int n, GETGROUPS_T *group)
     return getgroups (n, group);
 
   n = 20;
-  gbuf = NULL;
   while (1)
     {
       /* No need to worry about address arithmetic overflow here,
 	 since the ancient systems that we're running on have low
 	 limits on the number of secondary groups.  */
-      gbuf = xrealloc (gbuf, n * sizeof (GETGROUPS_T));
+      gbuf = xmalloc (gbuf, n * sizeof *gbuf);
       n_groups = getgroups (n, gbuf);
       if (n_groups < n)
 	break;
+      free (gbuf);
       n += 10;
     }
 
