@@ -207,19 +207,18 @@ human_readable (uintmax_t n, char *buf, int opts,
     opts & (human_round_to_nearest | human_floor | human_ceiling);
   unsigned int base = opts & human_base_1024 ? 1024 : 1000;
   uintmax_t amt;
-  int tenths = 0;
+  int tenths;
   int exponent = -1;
   int exponent_max = sizeof power_letter - 1;
   char *p;
   char *psuffix;
   char const *integerlim;
-  int use_fp;
 
   /* 0 means adjusted N == AMT.TENTHS;
      1 means AMT.TENTHS < adjusted N < AMT.TENTHS + 0.05;
      2 means adjusted N == AMT.TENTHS + 0.05;
      3 means AMT.TENTHS + 0.05 < adjusted N < AMT.TENTHS + 0.1.  */
-  int rounding = 0;
+  int rounding;
 
   char const *decimal_point = ".";
   size_t decimal_pointlen = 1;
@@ -241,164 +240,172 @@ human_readable (uintmax_t n, char *buf, int opts,
   psuffix = buf + LONGEST_HUMAN_READABLE - HUMAN_READABLE_SUFFIX_LENGTH_MAX;
   p = psuffix;
 
-  /* Adjust AMT out of FROM_BLOCK_SIZE units and into TO_BLOCK_SIZE units.  */
-
+  /* Adjust AMT out of FROM_BLOCK_SIZE units and into TO_BLOCK_SIZE
+     units.  If this can be done exactly with integer arithmetic, do
+     not use floating point operations.  */
   if (to_block_size <= from_block_size)
     {
-      uintmax_t multiplier;
-      use_fp = (from_block_size % to_block_size != 0
-		|| (multiplier = from_block_size / to_block_size,
-		    (amt = n * multiplier) / multiplier != n));
+      if (from_block_size % to_block_size == 0)
+	{
+	  uintmax_t multiplier = from_block_size / to_block_size;
+	  amt = n * multiplier;
+	  if (amt / multiplier == n)
+	    {
+	      tenths = 0;
+	      rounding = 0;
+	      goto use_integer_arithmetic;
+	    }
+	}
     }
-  else
+  else if (from_block_size != 0 && to_block_size % from_block_size == 0)
     {
-      use_fp = (from_block_size == 0
-		|| to_block_size % from_block_size != 0);
-      if (! use_fp)
-	{
-	  uintmax_t divisor = to_block_size / from_block_size;
-	  uintmax_t r10 = (n % divisor) * 10;
-	  uintmax_t r2 = (r10 % divisor) * 2;
-	  amt = n / divisor;
-	  tenths = r10 / divisor;
-	  rounding = r2 < divisor ? 0 < r2 : 2 + (divisor < r2);
-	}
+      uintmax_t divisor = to_block_size / from_block_size;
+      uintmax_t r10 = (n % divisor) * 10;
+      uintmax_t r2 = (r10 % divisor) * 2;
+      amt = n / divisor;
+      tenths = r10 / divisor;
+      rounding = r2 < divisor ? 0 < r2 : 2 + (divisor < r2);
+      goto use_integer_arithmetic;
     }
 
-  if (use_fp)
-    {
-      /* Either the result cannot be computed easily using uintmax_t,
-	 or from_block_size is zero.  Fall back on floating point.
-	 FIXME: This can yield answers that are slightly off.  */
+  {
+    /* Either the result cannot be computed easily using uintmax_t,
+       or from_block_size is zero.  Fall back on floating point.
+       FIXME: This can yield answers that are slightly off.  */
 
-      long double dto_block_size = to_block_size;
-      long double damt = n * (from_block_size / dto_block_size);
-      size_t buflen;
-      size_t nonintegerlen;
+    long double dto_block_size = to_block_size;
+    long double damt = n * (from_block_size / dto_block_size);
+    size_t buflen;
+    size_t nonintegerlen;
 
-      if (! (opts & human_autoscale))
-	{
-	  sprintf (buf, "%.0Lf", adjust_value (inexact_style, damt));
-	  buflen = strlen (buf);
-	  nonintegerlen = 0;
-	}
-      else
-	{
-	  long double e = 1;
-	  exponent = 0;
+    if (! (opts & human_autoscale))
+      {
+	sprintf (buf, "%.0Lf", adjust_value (inexact_style, damt));
+	buflen = strlen (buf);
+	nonintegerlen = 0;
+      }
+    else
+      {
+	long double e = 1;
+	exponent = 0;
 
-	  do
-	    {
-	      e *= base;
-	      exponent++;
-	    }
-	  while (e * base <= damt && exponent < exponent_max);
+	do
+	  {
+	    e *= base;
+	    exponent++;
+	  }
+	while (e * base <= damt && exponent < exponent_max);
 
-	  damt /= e;
+	damt /= e;
 
-	  sprintf (buf, "%.1Lf", adjust_value (inexact_style, damt));
-	  buflen = strlen (buf);
-	  nonintegerlen = decimal_pointlen + 1;
+	sprintf (buf, "%.1Lf", adjust_value (inexact_style, damt));
+	buflen = strlen (buf);
+	nonintegerlen = decimal_pointlen + 1;
 
-	  if (1 + nonintegerlen + ! (opts & human_base_1024) < buflen
-	      || ((opts & human_suppress_point_zero)
-		  && buf[buflen - 1] == '0'))
-	    {
-	      sprintf (buf, "%.0Lf",
-		       adjust_value (inexact_style, damt * 10) / 10);
-	      buflen = strlen (buf);
-	      nonintegerlen = 0;
-	    }
-	}
+	if (1 + nonintegerlen + ! (opts & human_base_1024) < buflen
+	    || ((opts & human_suppress_point_zero)
+		&& buf[buflen - 1] == '0'))
+	  {
+	    sprintf (buf, "%.0Lf",
+		     adjust_value (inexact_style, damt * 10) / 10);
+	    buflen = strlen (buf);
+	    nonintegerlen = 0;
+	  }
+      }
 
-      p = psuffix - buflen;
-      memmove (p, buf, buflen);
-      integerlim = p + buflen - nonintegerlen;
-    }
-  else
-    {
-      /* Use power of BASE notation if requested and if adjusted AMT
-	 is large enough.  */
+    p = psuffix - buflen;
+    memmove (p, buf, buflen);
+    integerlim = p + buflen - nonintegerlen;
+  }
+  goto do_grouping;
 
-      if (opts & human_autoscale)
-	{
-	  exponent = 0;
+ use_integer_arithmetic:
+  {
+    /* The computation can be done exactly, with integer arithmetic.
 
-	  if (base <= amt)
-	    {
-	      do
-		{
-		  unsigned r10 = (amt % base) * 10 + tenths;
-		  unsigned r2 = (r10 % base) * 2 + (rounding >> 1);
-		  amt /= base;
-		  tenths = r10 / base;
-		  rounding = (r2 < base
-			      ? (r2 + rounding) != 0
-			      : 2 + (base < r2 + rounding));
-		  exponent++;
-		}
-	      while (base <= amt && exponent < exponent_max);
+       Use power of BASE notation if requested and if adjusted AMT is
+       large enough.  */
 
-	      if (amt < 10)
-		{
-		  if (inexact_style == human_round_to_nearest
-		      ? 2 < rounding + (tenths & 1)
-		      : inexact_style == human_ceiling && 0 < rounding)
-		    {
-		      tenths++;
-		      rounding = 0;
+    if (opts & human_autoscale)
+      {
+	exponent = 0;
 
-		      if (tenths == 10)
-			{
-			  amt++;
-			  tenths = 0;
-			}
-		    }
+	if (base <= amt)
+	  {
+	    do
+	      {
+		unsigned r10 = (amt % base) * 10 + tenths;
+		unsigned r2 = (r10 % base) * 2 + (rounding >> 1);
+		amt /= base;
+		tenths = r10 / base;
+		rounding = (r2 < base
+			    ? (r2 + rounding) != 0
+			    : 2 + (base < r2 + rounding));
+		exponent++;
+	      }
+	    while (base <= amt && exponent < exponent_max);
 
-		  if (amt < 10
-		      && (tenths || ! (opts & human_suppress_point_zero)))
-		    {
-		      *--p = '0' + tenths;
-		      p -= decimal_pointlen;
-		      memcpy (p, decimal_point, decimal_pointlen);
-		      tenths = rounding = 0;
-		    }
-		}
-	    }
-	}
+	    if (amt < 10)
+	      {
+		if (inexact_style == human_round_to_nearest
+		    ? 2 < rounding + (tenths & 1)
+		    : inexact_style == human_ceiling && 0 < rounding)
+		  {
+		    tenths++;
+		    rounding = 0;
 
-      if (inexact_style == human_ceiling
-	  ? 0 < tenths + rounding
-	  : inexact_style == human_round_to_nearest
-	  ? 5 < tenths + (2 < rounding + (amt & 1))
-	  : /* inexact_style == human_floor */ 0)
-	{
-	  amt++;
+		    if (tenths == 10)
+		      {
+			amt++;
+			tenths = 0;
+		      }
+		  }
 
-	  if ((opts & human_autoscale)
-	      && amt == base && exponent < exponent_max)
-	    {
-	      exponent++;
-	      if (! (opts & human_suppress_point_zero))
-		{
-		  *--p = '0';
-		  p -= decimal_pointlen;
-		  memcpy (p, decimal_point, decimal_pointlen);
-		}
-	      amt = 1;
-	    }
-	}
+		if (amt < 10
+		    && (tenths || ! (opts & human_suppress_point_zero)))
+		  {
+		    *--p = '0' + tenths;
+		    p -= decimal_pointlen;
+		    memcpy (p, decimal_point, decimal_pointlen);
+		    tenths = rounding = 0;
+		  }
+	      }
+	  }
+      }
 
-      integerlim = p;
+    if (inexact_style == human_ceiling
+	? 0 < tenths + rounding
+	: inexact_style == human_round_to_nearest
+	? 5 < tenths + (2 < rounding + (amt & 1))
+	: /* inexact_style == human_floor */ 0)
+      {
+	amt++;
 
-      do
-	{
-	  int digit = amt % 10;
-	  *--p = digit + '0';
-	}
-      while ((amt /= 10) != 0);
-    }
+	if ((opts & human_autoscale)
+	    && amt == base && exponent < exponent_max)
+	  {
+	    exponent++;
+	    if (! (opts & human_suppress_point_zero))
+	      {
+		*--p = '0';
+		p -= decimal_pointlen;
+		memcpy (p, decimal_point, decimal_pointlen);
+	      }
+	    amt = 1;
+	  }
+      }
 
+    integerlim = p;
+
+    do
+      {
+	int digit = amt % 10;
+	*--p = digit + '0';
+      }
+    while ((amt /= 10) != 0);
+  }
+
+ do_grouping:
   if (opts & human_group_digits)
     p = group_number (p, integerlim - p, grouping, thousands_sep);
 
