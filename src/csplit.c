@@ -51,10 +51,6 @@ char *realloc ();
 #define MAX(a,b) (((a) > (b)) ? (a) : (b))
 #endif
 
-#ifndef INT_MAX
-#define INT_MAX (~(1 << (sizeof (int) * 8 - 1)))
-#endif /* INT_MAX */
-
 void error ();
 int safe_read ();
 
@@ -88,6 +84,7 @@ struct control
   int offset;			/* Offset from regexp to split at. */
   int lines_required;		/* Number of lines required. */
   int repeat;			/* Repeat count. */
+  int repeat_forever;		/* Non-zero if `*' used as a repeat count. */
   int argnum;			/* ARGV index. */
   boolean ignore;		/* If true, produce no output (for regexp). */
 };
@@ -823,7 +820,7 @@ process_line_count (p, repetition)
   /* Check for requesting a line that has already been written out.
      If this ever happens, it's due to a bug in csplit. */
   if (linenum >= last_line_to_save)
-    handle_line_error (p, repetition);
+    abort ();
 
   while (linenum++ < last_line_to_save)
     {
@@ -891,7 +888,7 @@ process_regexp (p, repetition)
 	  line = find_line (++current_line);
 	  if (line == NULL)
 	    {
-	      if (p->repeat == INT_MAX)
+	      if (p->repeat_forever)
 		{
 		  if (!ignore)
 		    {
@@ -931,7 +928,7 @@ process_regexp (p, repetition)
 	  line = find_line (++current_line);
 	  if (line == NULL)
 	    {
-	      if (p->repeat == INT_MAX)
+	      if (p->repeat_forever)
 		{
 		  if (!ignore)
 		    {
@@ -980,12 +977,14 @@ split_file ()
     {
       if (controls[i].regexpr)
 	{
-	  for (j = 0; j <= controls[i].repeat; j++)
+	  for (j = 0; (controls[i].repeat_forever
+		       || j <= controls[i].repeat); j++)
 	    process_regexp (&controls[i], j);
 	}
       else
 	{
-	  for (j = 0; j <= controls[i].repeat; j++)
+	  for (j = 0; (controls[i].repeat_forever
+		       || j <= controls[i].repeat); j++)
 	    process_line_count (&controls[i], j);
 	}
     }
@@ -1116,6 +1115,7 @@ new_control_record ()
   p = &controls[control_used++];
   p->regexpr = NULL;
   p->repeat = 0;
+  p->repeat_forever = 0;
   p->lines_required = 0;
   p->offset = 0;
   return p;
@@ -1187,7 +1187,7 @@ parse_repeat_count (argnum, p, str)
   *end = '\0';
 
   if (str+1 == end-1 && *(str+1) == '*')
-    p->repeat = INT_MAX;
+    p->repeat_forever = 1;
   else
     if (!string_to_number (&p->repeat, str +  1))
       error (1, 0, "%s}: integer required between `{' and `}'",
