@@ -4,6 +4,7 @@
 	* tests/help-version: ...here
 	* tests/Makefile.am (TESTS): Set to help-version.
 	(TESTS_ENVIRONMENT): Define.
+	(EXTRA_DIST): Add $(TESTS).
 	* src/Makefile.am (EXTRA_DIST): Remove help-version.
 	(TESTS): Remove definition.
 	(TESTS_ENVIRONMENT): Remove definition.
