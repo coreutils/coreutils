@@ -1,4 +1,4 @@
-#serial 7
+#serial 8
 
 dnl This macro is intended to be used solely in this file.
 dnl These are the prerequisite macros for GNU's strftime.c replacement.
@@ -19,12 +19,7 @@ AC_DEFUN(_jm_STRFTIME_PREREQS,
                  [AC_DEFINE(HAVE_TM_GMTOFF, 1,
                             [Define if struct tm has the tm_gmtoff member.])],
                  ,
-                 dnl FIXME: having to put the closing square bracket on the
-                 dnl FIXME: next line is a gross kludge to work around an
-                 dnl FIXME: infelicity in how the new autoconf works.
-                 dnl FIXME: This should be fixed pretty soon.
-                 [#include <time.h>
-                 ])
+                 [#include <time.h>])
 ])
 
 dnl Determine if the strftime function has all the features of the GNU one.
