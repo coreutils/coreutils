@@ -8,6 +8,13 @@ Mon Feb 12 23:26:05 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 	* src/who.c (print_entry): If possible, canonicalize the host hame.
 	From Miles Bader (miles@gnu.ai.mit.edu).
 
+	Update for automake-0.29.
+	* Makefile.am (CONFIG_HEADER): Don't define.  Automake now does it.
+	* src/Makefile.am: Likewise.
+	* lib/Makefile.am: Likewise.
+	* doc/Makefile.am (info_TEXINFOS): Renamed from TEXINFOS.
+	* man/Makefile.am (man_MANS): Renamed from MANS.
+
 Wed Jan 31 23:40:50 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* lib/strftime.c (add_num_tz): New function.
