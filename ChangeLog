@@ -1,6 +1,5 @@
 2003-09-07  Jim Meyering  <jim@meyering.net>
 
-
 	* Version 5.0.91.
 
 	* Makefile.maint (po-check): Use cvsu, so that a temporary source
