@@ -1,0 +1,27 @@
+# -*- sh -*-
+# Source this file at the beginning of a test that works
+# only when run as root or as non-root.
+
+case $1 in
+  require-root) who='as root';;
+  require-non-root) who='by an unprivileged user';;
+  *) echo "Usage: $0 require-root|require-non-root" 1>&2; exit 1;;
+esac
+
+root_check_temp=root-check.$$
+touch $root_check_temp || framework_failure=1
+chmod a-w $root_check_temp || framework_failure=1
+
+(echo foo >> $root_check_temp) >/dev/null 2>&1 || {
+  cat <<EOF
+***************************
+NOTICE:
+$0: This test is being skipped, since it works only
+when run $who.
+***************************
+EOF
+  rm -f $root_check_temp
+  (exit 77); exit
+}
+
+rm -f $root_check_temp
