@@ -89,7 +89,7 @@ static int exit_status = 0;
 static struct option const long_opts[] =
 {
   {"archive", no_argument, NULL, 'a'},
-  {"backup", no_argument, NULL, 'b'},
+  {"backup", optional_argument, NULL, 'b'},
   {"force", no_argument, NULL, 'f'},
   {"sparse", required_argument, NULL, CHAR_MAX + 1},
   {"interactive", no_argument, NULL, 'i'},
@@ -104,7 +104,7 @@ static struct option const long_opts[] =
   {"symbolic-link", no_argument, NULL, 's'},
   {"update", no_argument, NULL, 'u'},
   {"verbose", no_argument, NULL, 'v'},
-  {"version-control", required_argument, NULL, 'V'},
+  {"version-control", required_argument, NULL, 'V'}, /* Deprecated. FIXME. */
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
@@ -127,7 +127,7 @@ Usage: %s [OPTION]... SOURCE DEST\n\
 Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
 \n\
   -a, --archive                same as -dpR\n\
-  -b, --backup                 make backup before removal\n\
+  -b, --backup[=CONTROL]       make backup before removal\n\
   -d, --no-dereference         preserve links\n\
   -f, --force                  remove existing destinations, never prompt\n\
   -i, --interactive            prompt before overwrite\n\
@@ -143,7 +143,6 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
                                  than the destination file or when the\n\
                                  destination file is missing\n\
   -v, --verbose                explain what is being done\n\
-  -V, --version-control=WORD   override the usual version control\n\
   -x, --one-file-system        stay on this file system\n\
       --help                   display this help and exit\n\
       --version                output version information and exit\n\
@@ -156,8 +155,8 @@ Use --sparse=never to inhibit creation of sparse files.\n\
 \n\
 "));
       printf (_("\
-The backup suffix is ~, unless set with SIMPLE_BACKUP_SUFFIX.  The\n\
-version control may be set with VERSION_CONTROL, values are:\n\
+The backup suffix is ~, unless set with --suffix or SIMPLE_BACKUP_SUFFIX.\n\
+The version control may be set with --backup or VERSION_CONTROL, values are:\n\
 \n\
   none, off       never make backups (even if --backup is given)\n\
   numbered, t     make numbered backups\n\
@@ -627,7 +626,8 @@ main (int argc, char **argv)
 {
   int c;
   int make_backups = 0;
-  char *version;
+  char *backup_suffix_string;
+  char *version_control_string = NULL;
   struct cp_options x;
 
   program_name = argv[0];
@@ -638,11 +638,8 @@ main (int argc, char **argv)
   cp_option_init (&x);
 
   /* FIXME: consider not calling getenv for SIMPLE_BACKUP_SUFFIX unless
-     we'll actually use simple_backup_suffix.  */
-  version = getenv ("SIMPLE_BACKUP_SUFFIX");
-  if (version)
-    simple_backup_suffix = version;
-  version = NULL;
+     we'll actually use backup_suffix_string.  */
+  backup_suffix_string = getenv ("SIMPLE_BACKUP_SUFFIX");
 
   while ((c = getopt_long (argc, argv, "abdfilprsuvxPRS:V:", long_opts, NULL))
 	 != -1)
@@ -667,8 +664,14 @@ main (int argc, char **argv)
 	  x.copy_as_regular = 0;
 	  break;
 
+	case 'V':  /* FIXME: this is deprecated.  Remove it in 2001.  */
+	  error (0, 0, _("obsolete option name replaced by --backup"));
+	  /* Fall through.  */
+
 	case 'b':
 	  make_backups = 1;
+	  if (optarg)
+	    version_control_string = optarg;
 	  break;
 
 	case 'd':
@@ -731,11 +734,8 @@ main (int argc, char **argv)
 	  break;
 
 	case 'S':
-	  simple_backup_suffix = optarg;
-	  break;
-
-	case 'V':
-	  version = optarg;
+	  make_backups = 1;
+	  backup_suffix_string = optarg;
 	  break;
 
 	case_GETOPT_HELP_CHAR;
@@ -753,8 +753,12 @@ main (int argc, char **argv)
       usage (1);
     }
 
+  if (backup_suffix_string)
+    simple_backup_suffix = xstrdup (backup_suffix_string);
+
   x.backup_type = (make_backups
-		   ? xget_version (_("--version-control"), version)
+		   ? xget_version (_("--version-control"),
+				   version_control_string)
 		   : none);
 
   if (x.preserve_chmod_bits == 1)
