@@ -71,6 +71,8 @@ enum Verbosity
   V_off
 };
 
+int lstat ();
+
 static int change_dir_group PARAMS ((const char *dir, gid_t group,
 				     const struct stat *statp));
 
