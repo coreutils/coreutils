@@ -1,6 +1,6 @@
 #!/bin/sh
 # mdate-sh - get modification time of a file and pretty-print it
-# Copyright (C) 1995 Software Foundation, Inc.
+# Copyright (C) 1995, 1996 Software Foundation, Inc.
 # Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, June 1995
 #
 # This program is free software; you can redistribute it and/or modify
