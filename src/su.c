@@ -75,7 +75,15 @@
 #include <sys/types.h>
 #include <pwd.h>
 #include <grp.h>
+
+/* Hide any system prototype for getusershell.
+   This is necessary because some Cray systems have a conflicting
+   prototype (returning `int') in <unistd.h>.  */
+#define getusershell _getusershell_sys_proto_
+
 #include "system.h"
+
+#undef getusershell
 
 #if HAVE_SYSLOG_H && HAVE_SYSLOG
 # include <syslog.h>
