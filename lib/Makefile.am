@@ -59,7 +59,7 @@ libfetish_a_SOURCES = \
   file-type.c file-type.h \
   fopen-safer.c \
   fsusage.h \
-  ftw_.h \
+  fts.c fts_.h \
   full-read.c full-read.h \
   full-write.c full-write.h \
   getline.h \
