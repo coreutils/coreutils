@@ -1,3 +1,8 @@
+2004-06-02  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (cut invocation): Clarify what --output-delimiter=STR
+	does with byte/character ranges.
+
 2004-06-01  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (tr invocation): Mention -C.
