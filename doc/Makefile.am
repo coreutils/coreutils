@@ -13,6 +13,21 @@ EXTRA_DIST = perm.texi getdate.texi constants.texi doclicense.texi
 # old systems.
 MAKEINFO = makeinfo --no-split
 
+# Remove `DISABLED_' when fileutils, textutils, and sh-utils have
+# all been merged into one package.
+DISABLED_constants.texi: $(top_srcdir)/src/tail.c
+	LC_ALL=C \
+	sed -n -e 's/^#define \(DEFAULT_MAX[_A-Z]*\) \(.*\)/@set \1 \2/p' \
+	  $(top_srcdir)/src/tail.c > t-$@
+	mv t-$@ $@
+
+# Uncomment this when fileutils, textutils, and sh-utils have
+# all been merged into one package.
+# MAINTAINERCLEANFILES = constants.texi
+
+$(DVIS): $(EXTRA_DIST)
+$(INFO_DEPS): $(EXTRA_DIST)
+
 # List words/regexps here that should not appear in the texinfo documentation.
 check-texinfo:
 	grep timezone $(srcdir)/*.texi && exit 1 || :
