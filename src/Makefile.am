@@ -16,7 +16,7 @@ bin_PROGRAMS = [ chgrp chown chmod cp dd dircolors du \
 noinst_PROGRAMS = setuidgid
 
 noinst_HEADERS = \
-  system.h sys2.h checksum.h copy.h cp-hash.h ls.h dircolors.h remove.h \
+  system.h checksum.h copy.h cp-hash.h ls.h dircolors.h remove.h \
   chown-core.h fs.h \
   wheel.h wheel-size.h
 EXTRA_DIST = dcgen dircolors.hin tac-pipe.c \
