@@ -25,6 +25,7 @@
 
 #include "system.h"
 #include "error.h"
+#include "lchown.h"
 #include "group-member.h"
 #include "savedir.h"
 #include "xstrtol.h"
@@ -50,14 +51,9 @@ struct group *getgrnam ();
 # define endgrent() ((void) 0)
 #endif
 
-#if HAVE_LCHOWN
-# define LCHOWN(FILE, OWNER, GROUP) lchown (FILE, OWNER, GROUP)
-#else
-# define LCHOWN(FILE, OWNER, GROUP) 1
-#endif
-
 enum Change_status
 {
+  CH_NOT_APPLIED,
   CH_SUCCEEDED,
   CH_FAILED,
   CH_NO_CHANGE_REQUESTED
@@ -83,7 +79,7 @@ char *program_name;
 
 /* If nonzero, and the systems has support for it, change the ownership
    of symbolic links rather than any files they point to.  */
-static int change_symlinks;
+static int change_symlinks = 1;
 
 /* If nonzero, change the ownership of directories recursively. */
 static int recurse;
@@ -105,9 +101,10 @@ static struct option const long_options[] =
 {
   {"recursive", no_argument, 0, 'R'},
   {"changes", no_argument, 0, 'c'},
+  {"dereference", no_argument, 0, CHAR_MAX + 2},
   {"no-dereference", no_argument, 0, 'h'},
-  {"silent", no_argument, 0, 'f'},
   {"quiet", no_argument, 0, 'f'},
+  {"silent", no_argument, 0, 'f'},
   {"reference", required_argument, 0, CHAR_MAX + 1},
   {"verbose", no_argument, 0, 'v'},
   {GETOPT_HELP_OPTION_DECL},
@@ -122,6 +119,14 @@ static void
 describe_change (const char *file, enum Change_status changed)
 {
   const char *fmt;
+
+  if (changed == CH_NOT_APPLIED)
+    {
+      printf (_("neither symbolic link %s nor referent has been changed\n"),
+	      file);
+      return;
+    }
+
   switch (changed)
     {
     case CH_SUCCEEDED:
@@ -178,7 +183,7 @@ parse_group (const char *name, gid_t *g)
    Return 0 if successful, 1 if errors occurred. */
 
 static int
-change_file_group (const char *file, gid_t group)
+change_file_group (int cmdline_arg, const char *file, gid_t group)
 {
   struct stat file_stats;
   int errors = 0;
@@ -193,14 +198,31 @@ change_file_group (const char *file, gid_t group)
   if (group != file_stats.st_gid)
     {
       int fail;
+      int symlink_changed = 1;
 
-      if (change_symlinks)
-	fail = LCHOWN (file, (uid_t) -1, group);
+      if (S_ISLNK (file_stats.st_mode) && change_symlinks)
+	{
+	  fail = lchown (file, (uid_t) -1, group);
+
+	  /* Ignore the failure if it's due to lack of support (ENOSYS)
+	     and this is not a command line argument.  */
+	  if (!cmdline_arg && fail && errno == ENOSYS)
+	    {
+	      fail = 0;
+	      symlink_changed = 0;
+	    }
+	}
       else
-	fail = chown (file, (uid_t) -1, group);
+	{
+	  fail = chown (file, (uid_t) -1, group);
+	}
 
       if (verbosity == V_high || (verbosity == V_changes_only && !fail))
-	describe_change (file, (fail ? CH_FAILED : CH_SUCCEEDED));
+	{
+	  enum Change_status ch_status = (! symlink_changed ? CH_NOT_APPLIED
+					  : (fail ? CH_FAILED : CH_SUCCEEDED));
+	  describe_change (file, ch_status);
+	}
 
       if (fail)
 	{
@@ -282,7 +304,7 @@ change_dir_group (const char *dir, gid_t group, const struct stat *statp)
 	  path = xrealloc (path, pathlength);
 	}
       strcpy (path + dirlength, namep);
-      errors |= change_file_group (path, group);
+      errors |= change_file_group (0, path, group);
     }
   free (path);
   free (name_space);
@@ -344,6 +366,9 @@ main (int argc, char **argv)
 	case CHAR_MAX + 1:
 	  reference_file = optarg;
 	  break;
+	case CHAR_MAX + 2:
+	  change_symlinks = 0;
+	  break;
 	case 'R':
 	  recurse = 1;
 	  break;
@@ -372,13 +397,6 @@ main (int argc, char **argv)
       usage (1);
     }
 
-#if ! HAVE_LCHOWN
-  if (change_symlinks)
-    {
-      error (1, 0, _("--no-dereference (-h) is not supported on this system"));
-    }
-#endif
-
   if (reference_file)
     {
       struct stat ref_stats;
@@ -391,7 +409,7 @@ main (int argc, char **argv)
     parse_group (argv[optind++], &group);
 
   for (; optind < argc; ++optind)
-    errors |= change_file_group (argv[optind], group);
+    errors |= change_file_group (1, argv[optind], group);
 
   if (verbosity != V_off)
     close_stdout ();
