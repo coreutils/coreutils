@@ -6,8 +6,8 @@
 Makefile.am: Makefile.am.in
 	rm -f $@ $@t
 	sed -n '1,/^##m4-files-begin/p' $< > $@t
-	(echo EXTRA_DIST = README Makefile.am.in | tr '\012' @) \
-	  |(echo *.m4|tr ' ' @) \
+	( (echo EXTRA_DIST = README Makefile.am.in | tr '\012' @); \
+	  (echo *.m4|tr ' ' @) ) \
 	  |sed 's/@$$/%/;s/@/ \\@/g' |tr @% '\012\012' \
 	  >> $@t
 	sed -n '/^##m4-files-end/,$$p' $< >> $@t
