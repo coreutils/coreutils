@@ -3,7 +3,14 @@
 dir=dir
 file=file
 
+pwd=`pwd`
+tmp=inst-basic.$$
+trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
+trap 'exit $?' 1 2 13 15
+
 framework_failure=0
+mkdir $tmp || framework_failure=1
+cd $tmp || framework_failure=1
 
 rm -rf $dir $file || framework_failure=1
 mkdir -p $dir || framework_failure=1
@@ -21,17 +28,29 @@ test -f $file || fail=1
 # Make sure the dest file has been created.
 test -f $dir/$file || fail=1
 
+# Make sure strip works.
+cp ../../../src/dd .
+cp dd dd2
+
+strip dd2 || \
+  {
+    cat 1>&2 <<EOF
+$0: WARNING!!!
+Your strip command doesn't seem to work, so skipping
+the test of install's --strip option.
+EOF
+    exit 77
+  }
+
 # This test would fail with 3.16s when using versions of strip that
 # don't work on read-only files (the one from binutils works fine).
-ginstall -s -c -m 555 ../../src/dd $dir || fail=1
+ginstall -s -c -m 555 dd $dir || fail=1
 # Make sure the dest file has been created.
-test -f $dir/dd || fail=1
+test -f dd || fail=1
 
 # ...and that the permissions are as requested.
 set X `ls -l $dir/dd`
 shift
 test "$1" = -r-xr-xr-x || fail=1
 
-rm -rf $dir $file
-
-exit $fail
+(exit $fail); exit
