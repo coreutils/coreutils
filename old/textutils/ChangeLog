@@ -5,7 +5,7 @@ Sat May  1 09:03:19 1993  Jim Meyering  (meyering@comco.com)
 
 Fri Apr 30 20:16:03 1993  Jim Meyering  (meyering@comco.com)
 
-	* configure.in [AC_HAVE_HEADERS]: Add limits.h and unistd.h.
+	* configure.in [AC_HAVE_HEADERS]: Add limits.h.
 
 	* configure.in [CFLAGS, LDFLAGS]: Assign reasonable defaults.
 
