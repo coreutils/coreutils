@@ -55,6 +55,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   POSIXLY_CORRECT is set and the first argument is not "-n", echo now
   outputs all option-like arguments instead of treating them as options.
 
+  who now prints user names in full instead of truncating them after 8 bytes.
+
 ** New features
 
   For efficiency, `sort -m' no longer copies input to a temporary file
