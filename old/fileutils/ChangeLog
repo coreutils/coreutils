@@ -1,3 +1,31 @@
+2001-05-09  Jim Meyering  <meyering@lucent.com>
+
+	* src/ls.c (main): Don't set `format_needs_stat' for --recursive (-R),
+	because that would make `ls -RF dir' stat unnecessarily all of the
+	files in dir/ on some systems.
+	Similarly, don't set `format_needs_stat' for --dereference (-L),
+	because that would make `ls -RLF dir' stat unnecessarily all non-symlink
+	files in dir/ on some systems.
+	Instead, ...
+	(gobble_file): ... also stat a file if `trace_dirs' (-R) is set and its
+	type is unknown.
+	... also stat a file if `trace_links' (-L) is set and the file is a
+	symlink or its type is unknown.
+	(print_dir): Also recognize DT_REG and DT_LNK.
+
+2001-05-07  Jim Meyering  <meyering@lucent.com>
+
+	* src/chown.c (main): Fix thinko that made --from=... fail:
+	s/argv[optind]/optarg/.  Reported by Andrew Pham.
+
+	FIXME: add a test for the above.
+
+2001-05-05  Jim Meyering  <meyering@lucent.com>
+
+	* src/ls.c (decode_switches): Complain if the envvar, QUOTING_STYLE,
+	is set to an invalid value.
+	Move some declarations of locals into scopes where they're used.
+
 2001-05-02  Jim Meyering  <meyering@lucent.com>
 
 	* doc/texinfo.tex: Update from master repository.
