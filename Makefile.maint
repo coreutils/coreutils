@@ -160,13 +160,17 @@ automake_repo=:pserver:anoncvs@anoncvs.cygnus.com:/cvs/automake
 .PHONY: wget-update
 wget-update:
 	$(WGET) $(ftp-gnu)/texinfo/texinfo.tex -O $(srcdir)/doc/texinfo.tex
-	for f in config.guess config.sub; do \
-	  $(WGET) $(ftp-gnu)/config/$$f -O $(srcdir)/$$f; \
+	for f in config.guess config.sub; do				\
+	  $(WGET) $(ftp-gnu)/config/$$f -O $(srcdir)/$$f.t		\
+	    && mv $$f.t $$f;						\
 	done
-	for f in depcomp missing; do \
-	  echo checking out $$f...; \
-	  cvs -d $(automake_repo) co -p automake/lib/$$f > t$$$$ \
-	    && mv t$$$$ $$f; \
+	f=ansi2knr.c;							\
+	  $(WGET) ftp://ftp.cs.wisc.edu/ghost/$$f -O $(srcdir)/src/$$f.f \
+	    && mv $$f.t $$f
+	for f in depcomp missing; do					\
+	  echo checking out $$f...;					\
+	  cvs -d $(automake_repo) co -p automake/lib/$$f > t$$$$	\
+	    && mv t$$$$ $$f;						\
 	done
 
 define emit-rsync-commands
