@@ -85,7 +85,7 @@
 #define TM_YEAR_BASE 1900
 
 #define HOUR(x) ((x) * 60)
- 
+
 /* An integer value, and the number of digits in its textual
    representation.  */
 typedef struct
@@ -168,7 +168,7 @@ static int yylex ();
 
 /* This grammar has 13 shift/reduce conflicts. */
 %expect 13
- 
+
 %union
 {
   int intval;
@@ -987,9 +987,6 @@ get_date (const char *p, const time_t *now)
     {
       tm.tm_hour = tm.tm_min = tm.tm_sec = 0;
     }
-  tm.tm_hour += pc.rel_hour;
-  tm.tm_min += pc.rel_minutes;
-  tm.tm_sec += pc.rel_seconds;
 
   /* Let mktime deduce tm_isdst if we have an absolute time stamp,
      or if the relative time stamp mentions days, months, or years.  */
@@ -1060,6 +1057,29 @@ get_date (const char *p, const time_t *now)
 	return -1;	/* time_t overflow */
       Start -= delta;
     }
+
+  /* Add relative hours, minutes, and seconds.  Ignore leap seconds;
+     i.e. "+ 10 minutes" means 600 seconds, even if one of them is a
+     leap second.  Typically this is not what the user wants, but it's
+     too hard to do it the other way, because the time zone indicator
+     must be applied before relative times, and if mktime is applied
+     again the time zone will be lost.  */
+  {
+    time_t t0 = Start;
+    long d1 = 60 * 60 * (long) pc.rel_hour;
+    time_t t1 = t0 + d1;
+    long d2 = 60 * (long) pc.rel_minutes;
+    time_t t2 = t1 + d2;
+    int d3 = pc.rel_seconds;
+    time_t t3 = t2 + d3;
+    if ((d1 / (60 * 60) ^ pc.rel_hour)
+	| (d2 / 60 ^ pc.rel_minutes)
+	| ((t0 + d1 < t0) ^ (d1 < 0))
+	| ((t1 + d2 < t1) ^ (d2 < 0))
+	| ((t2 + d3 < t2) ^ (d3 < 0)))
+      return -1;
+    Start = t3;
+  }
 
   return Start;
 }
