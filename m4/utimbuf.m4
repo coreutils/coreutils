@@ -1,4 +1,4 @@
-#serial 1
+#serial 2
 
 dnl From Jim Meyering
 
@@ -33,17 +33,8 @@ AC_DEFUN(jm_STRUCT_UTIMBUF,
     ])
 
   if test $fu_cv_sys_struct_utimbuf = yes; then
-    if test x = y; then
-      # This code is deliberately never run via ./configure.
-      # FIXME: this is a hack to make autoheader put the corresponding
-      # HAVE_* undef for this symbol in config.h.in.  This saves me the
-      # trouble of having to maintain the #undef in acconfig.h manually.
-      AC_CHECK_FUNCS(STRUCT_UTIMBUF)
-    fi
-    # Defining it this way (rather than via AC_DEFINE) short-circuits the
-    # autoheader check -- autoheader doesn't know it's already been taken
-    # care of by the hack above.
-    ac_kludge=HAVE_STRUCT_UTIMBUF
-    AC_DEFINE_UNQUOTED($ac_kludge)
+    AC_DEFINE_UNQUOTED(HAVE_STRUCT_UTIMBUF, 1,
+[Define if struct utimbuf is declared -- usually in <utime.h>.
+   Some systems have utime.h but don't declare the struct anywhere. ])
   fi
 ])
