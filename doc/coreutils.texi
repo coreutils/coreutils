@@ -34,7 +34,7 @@ START-INFO-DIR-ENTRY
 * chmod: (coreutils)chmod invocation.           Change file permissions.
 * chown: (coreutils)chown invocation.           Change file owners/groups.
 * chroot: (coreutils)chroot invocation.         Specify the root directory.
-* cksum: (coreutils)cksum invocation.           Print @sc{posix} CRC checksum.
+* cksum: (coreutils)cksum invocation.           Print @acronym{POSIX} CRC checksum.
 * comm: (coreutils)comm invocation.             Compare sorted files by line.
 * cp: (coreutils)cp invocation.                 Copy files.
 * csplit: (coreutils)csplit invocation.         Split by context.
@@ -457,9 +457,9 @@ basic concepts in a way suitable for novices.  Thus, if you are interested,
 please get involved in improving this manual.  The entire @sc{gnu} community
 will benefit.
 
-@cindex @sc{posix}
+@cindex @acronym{POSIX}
 The @sc{gnu} utilities documented here are mostly compatible with the
-@sc{posix} standard.
+@acronym{POSIX} standard.
 @cindex bugs, reporting
 Please report bugs to @email{bug-coreutils@@gnu.org}.  Remember
 to include the version number, machine architecture, input files, and
@@ -544,7 +544,7 @@ context that requires a file name.
 * Block size::                  BLOCK_SIZE and --block-size, in some programs.
 * Target directory::            --target-directory, in some programs.
 * Trailing slashes::            --strip-trailing-slashes, in some programs.
-* Standards conformance::       Conformance to the @sc{posix} standard.
+* Standards conformance::       Conformance to the @acronym{POSIX} standard.
 @end menu
 
 
@@ -712,7 +712,7 @@ kilobyte: @math{10^3 = 1000}.
 @cindex kibibyte, definition of
 kibibyte: @math{2^10 = 1024}.  @samp{K} is special: the SI prefix is
 @samp{k} and the IEC 60027-2 prefix is @samp{Ki}, but tradition and
-@sc{posix} use @samp{k} to mean @samp{KiB}.
+@acronym{POSIX} use @samp{k} to mean @samp{KiB}.
 @item MB
 @cindex megabyte, definition of
 megabyte: @math{10^6 = 1,000,000}.
@@ -857,7 +857,7 @@ option, @command{mv}, for example, (via the system's rename function) must
 interpret a trailing slash as a request to dereference the symbolic link
 and so must rename the indirectly referenced @emph{directory} and not
 the symbolic link.  Although it may seem surprising that such behavior
-be the default, it is required by @sc{posix} and is consistent with
+be the default, it is required by @acronym{POSIX} and is consistent with
 other parts of that standard.
 
 @node Standards conformance
@@ -865,29 +865,29 @@ other parts of that standard.
 
 @vindex POSIXLY_CORRECT
 In a few cases, the @sc{gnu} utilities' default behavior is
-incompatible with the @sc{posix} standard.  To suppress these
+incompatible with the @acronym{POSIX} standard.  To suppress these
 incompatibilities, define the @env{POSIXLY_CORRECT} environment
-variable.  Unless you are checking for @sc{posix} conformance, you
+variable.  Unless you are checking for @acronym{POSIX} conformance, you
 probably do not need to define @env{POSIXLY_CORRECT}.
 
-Newer versions of @sc{posix} are occasionally incompatible with older
-versions.  For example, older versions of @sc{posix} required the
+Newer versions of @acronym{POSIX} are occasionally incompatible with older
+versions.  For example, older versions of @acronym{POSIX} required the
 command @samp{sort +1} to sort based on the second and succeeding
-fields in each input line, but starting with @sc{posix} 1003.1-2001
+fields in each input line, but starting with @acronym{POSIX} 1003.1-2001
 the same command is required to sort the file named @file{+1}, and you
 must instead use the command @samp{sort -k 2} to get the field-based
 sort.
 
 @vindex _POSIX2_VERSION
-The @sc{gnu} utilities normally conform to the version of @sc{posix}
+The @sc{gnu} utilities normally conform to the version of @acronym{POSIX}
 that is standard for your system.  To cause them to conform to a
-different version of @sc{posix}, define the @env{_POSIX2_VERSION}
+different version of @acronym{POSIX}, define the @env{_POSIX2_VERSION}
 environment variable to a value of the form @var{yyyymm} specifying
 the year and month the standard was adopted.  Two values are currently
 supported for @env{_POSIX2_VERSION}: @samp{199209} stands for
-@sc{posix} 1003.2-1992, and @samp{200112} stands for @sc{posix}
+@acronym{POSIX} 1003.2-1992, and @samp{200112} stands for @acronym{POSIX}
 1003.1-2001.  For example, if you are running older software that
-assumes an older version of @sc{posix} and uses @samp{sort +1}, you
+assumes an older version of @acronym{POSIX} and uses @samp{sort +1}, you
 can work around the compatibility problems by setting
 @samp{_POSIX2_VERSION=199209} in your environment.
 
@@ -1291,13 +1291,13 @@ Output at most @var{bytes} bytes of the input.  Prefixes and suffixes on
 @opindex --strings
 @cindex string constants, outputting
 Instead of the normal output, output only @dfn{string constants}: at
-least @var{n} consecutive @sc{ascii} graphic characters,
+least @var{n} consecutive @acronym{ASCII} graphic characters,
 followed by a null (zero) byte.
 
 If @var{n} is omitted with @option{--strings}, the default is 3.  On
 older systems, @sc{gnu} @command{od} instead supports an obsolete
 option @option{-s[@var{n}]}, where @var{n} also defaults to 3.
-@sc{posix} 1003.1-2001 (@pxref{Standards conformance}) does not allow
+@acronym{POSIX} 1003.1-2001 (@pxref{Standards conformance}) does not allow
 @option{-s} without an argument; use @option{--strings} instead.
 
 @item -t @var{type}
@@ -1312,14 +1312,14 @@ of each output line using each of the data types that you specified,
 in the order that you specified.
 
 Adding a trailing ``z'' to any type specification appends a display
-of the @sc{ascii} character representation of the printable characters
+of the @acronym{ASCII} character representation of the printable characters
 to the output line generated by the type specification.
 
 @table @samp
 @item a
 named character
 @item c
-@sc{ascii} character or backslash escape,
+@acronym{ASCII} character or backslash escape,
 @item d
 signed decimal
 @item f
@@ -1387,7 +1387,7 @@ output types.
 If this option is not given at all, the default is 16.  If @var{n} is
 omitted with @option{--width}, the default is 32.  On older systems,
 @sc{gnu} @command{od} instead supports an obsolete option
-@option{-w[@var{n}]}, where @var{n} also defaults to 32.  @sc{posix}
+@option{-w[@var{n}]}, where @var{n} also defaults to 32.  @acronym{POSIX}
 1003.1-2001 (@pxref{Standards conformance}) does not allow @option{-w}
 without an argument; use @option{--width} instead.
 
@@ -1409,7 +1409,7 @@ Output as octal bytes.  Equivalent to @option{-toC}.
 
 @item -c
 @opindex -c
-Output as @sc{ascii} characters or backslash escapes.  Equivalent to
+Output as @acronym{ASCII} characters or backslash escapes.  Equivalent to
 @option{-tc}.
 
 @item -d
@@ -1631,7 +1631,7 @@ versions of @command{pr}:
 
 @item
 Some small @var{letter options} (@option{-s}, @option{-w}) have been
-redefined for better @sc{posix} compliance.  The output of some further
+redefined for better @acronym{POSIX} compliance.  The output of some further
 cases has been adapted to other Unix systems.  These changes are not
 compatible with earlier versions of the program.
 
@@ -1648,7 +1648,7 @@ Capital letter options override small letter ones.
 @item
 Some of the option-arguments (compare @option{-s}, @option{-e},
 @option{-i}, @option{-n}) cannot be specified as separate arguments from the
-preceding option letter (already stated in the @sc{posix} specification).
+preceding option letter (already stated in the @acronym{POSIX} specification).
 @end itemize
 
 The program accepts the following options.  Also see @ref{Common options}.
@@ -1780,7 +1780,7 @@ Merge lines of full length.  Used together with the column options
 no column alignment used; may be used with
 @option{--sep-string[=@var{string}]}.  @option{-J} has been introduced
 (together with @option{-W} and @option{--sep-string})
-to disentangle the old (@sc{posix}-compliant) options @option{-w} and
+to disentangle the old (@acronym{POSIX}-compliant) options @option{-w} and
 @option{-s} along with the three column options.
 
 
@@ -1827,7 +1827,7 @@ separator is the TAB character.  In a strict sense a TAB is always
 printed with single column output only.  The @var{TAB}-width varies
 with the @var{TAB}-position, e.g. with the left @var{margin} specified
 by @option{-o} option.  With multicolumn output priority is given to
-@samp{equal width of output columns} (a @sc{posix} specification).
+@samp{equal width of output columns} (a @acronym{POSIX} specification).
 The @var{TAB}-width is fixed to the value of the first column and does
 not change with different values of left @var{margin}.  That means a
 fixed number of spaces is always printed in the place of the
@@ -1868,7 +1868,7 @@ Separate columns by a single character @var{char}.  The default for
 character} with @option{-w}.  Without @option{-s} the default separator
 @samp{space} is set.  @option{-s[char]} turns off line truncation of all
 three column options (@option{-COLUMN}|@option{-a -COLUMN}|@option{-m}) unless
-@option{-w} is set.  This is a @sc{posix}-compliant formulation.
+@option{-w} is set.  This is a @acronym{POSIX}-compliant formulation.
 
 
 @item -S @var{string}
@@ -1886,7 +1886,7 @@ Without @option{-S} or @option{-J}, @command{pr} uses a @samp{space}
 @var{string} is equivalent to @option{--sep-string=""}.
 
 On older systems, @command{pr} instead supports an obsolete option
-@option{-S[@var{string}]}, where @var{string} is optional.  @sc{posix}
+@option{-S[@var{string}]}, where @var{string} is optional.  @acronym{POSIX}
 1003.1-2001 (@pxref{Standards conformance}) does not allow this older
 usage.  To specify an empty @var{string} portably, use
 @option{--sep-string}.
@@ -1925,7 +1925,7 @@ output only (default for @var{page_width} is 72).  @option{-s[CHAR]} turns
 off the default page width and any line truncation and column alignment.
 Lines of full length are merged, regardless of the column options
 set.  No @var{page_width} setting is possible with single column output.
-A @sc{posix}-compliant formulation.
+A @acronym{POSIX}-compliant formulation.
 
 @item -W @var{page_width}
 @itemx --page_width=@var{page_width}
@@ -1995,7 +1995,7 @@ is broken at the maximum line length as usual.
 Use a maximum line length of @var{width} columns instead of 80.
 
 On older systems, @command{fold} supports an obsolete option
-@option{-@var{width}}.  @sc{posix} 1003.1-2001 (@pxref{Standards
+@option{-@var{width}}.  @acronym{POSIX} 1003.1-2001 (@pxref{Standards
 conformance}) does not allow this; use @option{-w @var{width}}
 instead.
 
@@ -2079,7 +2079,7 @@ On older systems, @command{head} supports an obsolete option
 specified first.  @var{count} is a decimal number optionally followed
 by a size letter (@samp{b}, @samp{k}, @samp{m}) as in @code{-c}, or
 @samp{l} to mean count by lines, or other option letters (@samp{cqv}).
-@sc{posix} 1003.1-2001 (@pxref{Standards conformance}) does not allow
+@acronym{POSIX} 1003.1-2001 (@pxref{Standards conformance}) does not allow
 this; use @option{-c @var{count}} or @option{-n @var{count}} instead.
 
 @node tail invocation
@@ -2251,7 +2251,7 @@ by a size letter (@samp{b}, @samp{k}, @samp{m}) as in @code{-c}, or
 @samp{l} to mean count by lines, or other option letters
 (@samp{cfqv}).  Some older @command{tail} implementations also support
 an obsolete option @option{+@var{count}} with the same meaning as
-@option{-+@var{count}}.  @sc{posix} 1003.1-2001 (@pxref{Standards
+@option{-+@var{count}}.  @acronym{POSIX} 1003.1-2001 (@pxref{Standards
 conformance}) does not allow these options; use @option{-c
 @var{count}} or @option{-n @var{count}} instead.
 
@@ -2298,7 +2298,7 @@ Use suffixes of length @var{length}.  The default @var{length} is 2.
 Put @var{lines} lines of @var{input} into each output file.
 
 On older systems, @command{split} supports an obsolete option
-@option{-@var{lines}}.  @sc{posix} 1003.1-2001 (@pxref{Standards
+@option{-@var{lines}}.  @acronym{POSIX} 1003.1-2001 (@pxref{Standards
 conformance}) does not allow this; use @option{-l @var{lines}}
 instead.
 
@@ -2499,8 +2499,8 @@ containing the cumulative counts, with the file name @file{total}.  The
 counts are printed in this order: newlines, words, characters, bytes.
 By default, each count is output right-justified in a 7-byte field with
 one space between fields so that the numbers and file names line up nicely
-in columns.  However, @sc{posix} requires that there be exactly one space
-separating columns.  You can make @code{wc} use the @sc{posix}-mandated
+in columns.  However, @acronym{POSIX} requires that there be exactly one space
+separating columns.  You can make @code{wc} use the @acronym{POSIX}-mandated
 output format by setting the @env{POSIXLY_CORRECT} environment variable.
 
 By default, @code{wc} prints three counts: the newline, words, and byte
@@ -2628,7 +2628,7 @@ by comparing the @command{cksum} output for the received files with the
 @command{cksum} output for the original files (typically given in the
 distribution).
 
-The CRC algorithm is specified by the @sc{posix} standard.  It is not
+The CRC algorithm is specified by the @acronym{POSIX} standard.  It is not
 compatible with the BSD or System V @command{sum} algorithms (see the
 previous section); it is more robust.
 
@@ -2800,7 +2800,7 @@ order specified on the command line, according to the associated
 ordering options, until a difference is found or no fields are left.
 Unless otherwise specified, all comparisons use the character collating
 sequence specified by the @env{LC_COLLATE} locale.  @footnote{If you
-use a non-@sc{posix} locale (e.g., by setting @env{LC_ALL}
+use a non-@acronym{POSIX} locale (e.g., by setting @env{LC_ALL}
 to @samp{en_US}), then @command{sort} may produce output that is sorted
 differently than you're accustomed to.  In that case, set the @env{LC_ALL}
 environment variable to @samp{C}.  Note that setting only @env{LC_COLLATE}
@@ -2841,7 +2841,7 @@ The following options affect the ordering of output lines.  They may be
 specified globally or as part of a specific key field.  If no key
 fields are specified, global options apply to comparison of entire
 lines; otherwise the global options are inherited by key fields that do
-not specify any special options of their own.  In pre-@sc{posix}
+not specify any special options of their own.  In pre-@acronym{POSIX}
 versions of @command{sort}, global options affect only later key fields,
 so portable shell scripts should specify global options first.
 
@@ -3065,8 +3065,9 @@ starting with 1.  So to sort on the second field, you'd use
 @opindex -z
 @opindex --zero-terminated
 @cindex sort zero-terminated lines
-Treat the input as a set of lines, each terminated by a zero byte (@sc{ascii}
-@sc{nul} (Null) character) instead of an @sc{ascii} @sc{lf} (Line Feed).
+Treat the input as a set of lines, each terminated by a zero byte
+(@acronym{ASCII} @sc{nul} (Null) character) instead of an
+@acronym{ASCII} @sc{lf} (Line Feed).
 This option can be useful in conjunction with @samp{perl -0} or
 @samp{find -print0} and @samp{xargs -0} which do the same in order to
 reliably handle arbitrary pathnames (even those which contain Line Feed
@@ -3076,9 +3077,9 @@ characters.)
 
 Historical (BSD and System V) implementations of @command{sort} have
 differed in their interpretation of some options, particularly
-@option{-b}, @option{-f}, and @option{-n}.  @sc{gnu} sort follows the @sc{posix}
+@option{-b}, @option{-f}, and @option{-n}.  @sc{gnu} sort follows the @acronym{POSIX}
 behavior, which is usually (but not always!) like the System V behavior.
-According to @sc{posix}, @option{-n} no longer implies @option{-b}.  For
+According to @acronym{POSIX}, @option{-n} no longer implies @option{-b}.  For
 consistency, @option{-M} has been changed in the same way.  This may
 affect the meaning of character positions in field specifications in
 obscure cases.  The only fix is to add an explicit @option{-b}.
@@ -3103,7 +3104,7 @@ Keys may span multiple fields.
 
 On older systems, @command{sort} supports an obsolete origin-zero
 syntax @samp{+@var{pos1} [-@var{pos2}]} for specifying sort keys.
-@sc{posix} 1003.1-2001 (@pxref{Standards conformance}) does not allow
+@acronym{POSIX} 1003.1-2001 (@pxref{Standards conformance}) does not allow
 this; use @option{-k} instead.
 
 Here are some examples to illustrate various combinations of options.
@@ -3241,7 +3242,7 @@ are sequences of non-space non-tab characters that are separated from
 each other by at least one space or tab.
 
 On older systems, @command{uniq} supports an obsolete option
-@option{-@var{n}}.  @sc{posix} 1003.1-2001 (@pxref{Standards conformance})
+@option{-@var{n}}.  @acronym{POSIX} 1003.1-2001 (@pxref{Standards conformance})
 does not allow this; use @option{-f @var{n}} instead.
 
 @item -s @var{n}
@@ -3252,7 +3253,7 @@ Skip @var{n} characters before checking for uniqueness.  If you use both
 the field and character skipping options, fields are skipped over first.
 
 On older systems, @command{uniq} supports an obsolete option
-@option{+@var{n}}.  @sc{posix} 1003.1-2001 (@pxref{Standards conformance})
+@option{+@var{n}}.  @acronym{POSIX} 1003.1-2001 (@pxref{Standards conformance})
 does not allow this; use @option{-s @var{n}} instead.
 
 @item -c
@@ -3614,7 +3615,7 @@ As it is set up now, the program assumes that the input file is coded
 using 8-bit ISO 8859-1 code, also known as Latin-1 character set,
 @emph{unless} it is compiled for MS-DOS, in which case it uses the
 character set of the IBM-PC.  (@sc{gnu} @command{ptx} is not known to work on
-smaller MS-DOS machines anymore.)  Compared to 7-bit @sc{ascii}, the set
+smaller MS-DOS machines anymore.)  Compared to 7-bit @acronym{ASCII}, the set
 of characters which are letters is different; this alters the behavior
 of regular expression matching.  Thus, the default regular expression
 for a keyword allows foreign or diacriticized letters.  Keyword sorting,
@@ -3901,7 +3902,7 @@ Circumflex and tilde diacritical marks produce the sequence @code{^\@{ @}} and
 @code{~\@{ @}} respectively.  Other diacriticized characters of the
 underlying character set produce an appropriate @TeX{} sequence as far
 as possible.  The other non-graphical characters, like newline and tab,
-and all other characters which are not part of @sc{ascii}, are merely
+and all other characters which are not part of @acronym{ASCII}, are merely
 changed to exactly one space, with no special attempt to compress
 consecutive spaces.  Let me know how to improve this special character
 processing for @TeX{}.
@@ -4242,7 +4243,7 @@ to the join field.  However, when printing unpairable lines
 (using either of the @option{-a} or @option{-v} options), there is no way
 to specify the join field using @var{m.n} in @var{field-list}
 if there are unpairable lines in both files.
-To give @command{join} that functionality, @sc{posix} invented the @samp{0}
+To give @command{join} that functionality, @acronym{POSIX} invented the @samp{0}
 field specification notation.
 
 The elements in @var{field-list}
@@ -4377,10 +4378,10 @@ behave unexpectedly.  For example, @samp{tr -d '[0-9]'} deletes brackets
 as well as digits.
 
 Many historically common and even accepted uses of ranges are not
-portable.  For example, on @sc{ebcdic} hosts using the @samp{A-Z}
+portable.  For example, on @acronym{EBCDIC} hosts using the @samp{A-Z}
 range will not do what most would expect because @samp{A} through @samp{Z}
-are not contiguous as they are in @sc{ascii}.
-If you can rely on a @sc{posix} compliant version of @command{tr}, then
+are not contiguous as they are in @acronym{ASCII}.
+If you can rely on a @acronym{POSIX} compliant version of @command{tr}, then
 the best way to work around this is to use character classes (see below).
 Otherwise, it is most portable (and most ugly) to enumerate the members
 of the ranges.
@@ -4500,7 +4501,7 @@ typically have the same length.  If @var{set1} is shorter than
 @var{set2}, the extra characters at the end of @var{set2} are ignored.
 
 On the other hand, making @var{set1} longer than @var{set2} is not
-portable; @sc{posix} says that the result is undefined.  In this situation,
+portable; @acronym{POSIX} says that the result is undefined.  In this situation,
 BSD @command{tr} pads @var{set2} to the length of @var{set1} by repeating
 the last character of @var{set2} as many times as necessary.  System V
 @command{tr} truncates @var{set1} to the length of @var{set2}.
@@ -4524,7 +4525,7 @@ newlines.
 
 @noindent
 By the way, the above idiom is not portable because it uses ranges.
-Assuming a @sc{posix} compliant @command{tr}, here is a better way to write it:
+Assuming a @acronym{POSIX} compliant @command{tr}, here is a better way to write it:
 
 @example
 tr -cs '[:alnum:]' '[\n*]'
@@ -4639,7 +4640,7 @@ square brackets from interpretation by a shell.
 @vindex POSIXLY_CORRECT
 Setting the environment variable @env{POSIXLY_CORRECT} turns off the
 following warning and error messages, for strict compliance with
-@sc{posix}.  Otherwise, the following diagnostics are issued:
+@acronym{POSIX}.  Otherwise, the following diagnostics are issued:
 
 @enumerate
 
@@ -4647,7 +4648,7 @@ following warning and error messages, for strict compliance with
 When the @option{--delete} option is given but @option{--squeeze-repeats}
 is not, and @var{set2} is given, @sc{gnu} @command{tr} by default prints
 a usage message and exits, because @var{set2} would not be used.
-The @sc{posix} specification says that @var{set2} must be ignored in
+The @acronym{POSIX} specification says that @var{set2} must be ignored in
 this case. Silently ignoring arguments is a bad idea.
 
 @item
@@ -4658,7 +4659,7 @@ value 400 octal does not fit into a single byte.
 @end enumerate
 
 @sc{gnu} @command{tr} does not provide complete BSD or System V compatibility.
-For example, it is impossible to disable interpretation of the @sc{posix}
+For example, it is impossible to disable interpretation of the @acronym{POSIX}
 constructs @samp{[:alpha:]}, @samp{[=c=]}, and @samp{[c*10]}.  Also, @sc{gnu}
 @command{tr} does not delete zero bytes automatically, unlike traditional
 Unix versions, which provide no way to preserve zero bytes.
@@ -4702,7 +4703,7 @@ blanks as well as by commas.
 
 On older systems, @command{expand} supports an obsolete option
 @option{-@var{tab1}[,@var{tab2}]@dots{}}, where tabstops must be
-separated by commas.  @sc{posix} 1003.1-2001 (@pxref{Standards
+separated by commas.  @acronym{POSIX} 1003.1-2001 (@pxref{Standards
 conformance}) does not allow this; use @option{-t
 @var{tab1}[,@var{tab2}]@dots{}} instead.
 
@@ -4755,7 +4756,7 @@ blanks as well as by commas.  This option implies the @option{-a} option.
 On older systems, @command{unexpand} supports an obsolete option
 @option{-@var{tab1}[,@var{tab2}]@dots{}}, where tabstops must be
 separated by commas.  (Unlike @option{-t}, this obsolete option does
-not imply @option{-a}.)  @sc{posix} 1003.1-2001 (@pxref{Standards
+not imply @option{-a}.)  @acronym{POSIX} 1003.1-2001 (@pxref{Standards
 conformance}) does not allow this; use @option{--first-only -t
 @var{tab1}[,@var{tab2}]@dots{}} instead.
 
@@ -4802,7 +4803,7 @@ directory, acting as if it had been invoked with a single argument of @samp{.}.
 
 @vindex LC_ALL
 By default, the output is sorted alphabetically, according to the locale
-settings in effect. @footnote{If you use a non-@sc{posix}
+settings in effect. @footnote{If you use a non-@acronym{POSIX}
 locale (e.g., by setting @env{LC_ALL} to @samp{en_US}), then @command{ls} may
 produce output that is sorted differently than you're accustomed to.
 In that case, set the @env{LC_ALL} environment variable to @samp{C}.}
@@ -5084,8 +5085,8 @@ you prefer powers of 1024.
 
 @cindex sorting @command{ls} output
 These options change the order in which @command{ls} sorts the information
-it outputs.  By default, sorting is done by character code (e.g., ASCII
-order).
+it outputs.  By default, sorting is done by character code
+(e.g., @acronym{ASCII} order).
 
 @table @samp
 
@@ -5365,7 +5366,7 @@ be one of the following:
 @table @samp
 @item full-iso
 List timestamps in full, rather than using the standard abbreviation
-heuristics.  The format is @sc{iso} 8601 date, time, and time zone
+heuristics.  The format is @acronym{ISO} 8601 date, time, and time zone
 format with nanosecond precision, e.g., @samp{2001-05-14
 23:45:56.477817180 -0700}.  It's not possible to change the format, but
 you can extract out the date string with @command{cut} and then pass the
@@ -5377,7 +5378,7 @@ is available from the operating system.  For example, this can help
 when you have a Makefile that is not regenerating files properly.
 
 @item iso
-Use @sc{iso}-style time stamps like @samp{2001-05-14@ } and @samp{05-14
+Use @acronym{ISO}-style time stamps like @samp{2001-05-14@ } and @samp{05-14
 23:45}.
 
 @item locale
@@ -5391,9 +5392,9 @@ environment variables @env{LC_ALL}, @env{LC_TIME}, @env{LANG} that is
 set.
 
 @item posix-iso
-Use traditional @sc{posix}-locale dates like @samp{May 14@ @ 2001} and
-@samp{May 14 23:45} unless the user specifies a non-@sc{posix} locale,
-in which case use @sc{iso}-style dates.  This is the default.
+Use traditional @acronym{POSIX}-locale dates like @samp{May 14@ @ 2001} and
+@samp{May 14 23:45} unless the user specifies a non-@acronym{POSIX} locale,
+in which case use @acronym{ISO}-style dates.  This is the default.
 
 @item +@var{format}
 Use @var{format} for dates, where @var{format} is interpreted like the
@@ -5416,8 +5417,8 @@ ls -l --time-style=+"%Y-%m-%d $@{newline@}%m-%d %H:%M"
 @vindex TIME_STYLE
 You can specify the default value of the @option{--time-style} option
 with the environment variable @env{TIME_STYLE}.  @sc{gnu} Emacs 21 and
-later can parse @sc{iso} dates, but older Emacs versions do not, so if
-you are using an older version of Emacs and specify a non-@sc{posix}
+later can parse @acronym{ISO} dates, but older Emacs versions do not, so if
+you are using an older version of Emacs and specify a non-@acronym{POSIX}
 locale, you may need to set @samp{TIME_STYLE="locale"}.
 
 
@@ -5857,7 +5858,7 @@ creating a destination file of the same type as the source; see the
 non-@sc{gnu} systems, @option{-r} implies the equivalent of
 @option{-L} and @option{--copy-contents} for historical reasons.
 Also, it is not portable to use @option{-R} to copy symbolic links
-unless you also specify @option{-P}, as @sc{posix} allows
+unless you also specify @option{-P}, as @acronym{POSIX} allows
 implementations that dereference symbolic links by default.
 
 @item --remove-destination
@@ -6049,15 +6050,15 @@ Conversions:
 
 @item ascii
 @opindex ascii@r{, converting to}
-Convert EBCDIC to ASCII.
+Convert @acronym{EBCDIC} to @acronym{ASCII}.
 
 @item ebcdic
 @opindex ebcdic@r{, converting to}
-Convert ASCII to EBCDIC.
+Convert @acronym{ASCII} to @acronym{EBCDIC}.
 
 @item ibm
 @opindex alternate ebcdic@r{, converting to}
-Convert ASCII to alternate EBCDIC.
+Convert @acronym{ASCII} to alternate @acronym{EBCDIC}.
 
 @item block
 @opindex block @r{(space-padding)}
@@ -6778,7 +6779,7 @@ same inode, and the inode contains all the information about a
 file---indeed, it is not incorrect to say that the inode @emph{is} the
 file.  On all existing implementations, you cannot make a hard link to
 a directory, and hard links cannot cross filesystem boundaries.  (These
-restrictions are not mandated by @sc{posix}, however.)
+restrictions are not mandated by @acronym{POSIX}, however.)
 
 @cindex dereferencing symbolic links
 @cindex symbolic link, defined
@@ -7479,7 +7480,7 @@ If the first @var{file} would be a valid argument to the @option{-t}
 option and no timestamp is given with any of the @option{-d}, @option{-r},
 or @option{-t} options and the @samp{--} argument is not given, that
 argument is interpreted as the time for the other files instead of
-as a file name.  @sc{posix} 1003.1-2001 (@pxref{Standards conformance})
+as a file name.  @acronym{POSIX} 1003.1-2001 (@pxref{Standards conformance})
 does not allow this; use @option{-t} instead.
 
 @cindex empty files, creating
@@ -7696,10 +7697,10 @@ out of date.  This is the default.
 @opindex -P
 @opindex --portability
 @cindex one-line output format
-@cindex @sc{posix} output format
+@cindex @acronym{POSIX} output format
 @cindex portable output format
 @cindex output format, portable
-Use the @sc{posix} output format.  This is like the default format except
+Use the @acronym{POSIX} output format.  This is like the default format except
 for the following:
 
 @enumerate
@@ -7714,7 +7715,7 @@ Non-integer values are rounded up, instead of being rounded down or
 rounded to the nearest integer.
 
 @item
-The labels in the header output line are changed to conform to @sc{posix}.
+The labels in the header output line are changed to conform to @acronym{POSIX}.
 @end enumerate
 
 @item --sync
@@ -8037,7 +8038,7 @@ vertical tab
 @item \\
 backslash
 @item \@var{nnn}
-the character whose ASCII code is @var{nnn} (octal); if @var{nnn} is not
+the character whose @acronym{ASCII} code is @var{nnn} (octal); if @var{nnn} is not
 a valid octal number, it is printed literally.
 @end table
 
@@ -8115,7 +8116,7 @@ given, to distinguish it from the GNU @code{bash} builtin function
 @command{printf}.
 
 For larger strings, you don't need to look up the hexadecimal code
-values of each character one by one. ASCII characters mixed with \u
+values of each character one by one. @acronym{ASCII} characters mixed with \u
 escape sequences is also known as the JAVA source file encoding. You can
 use GNU recode 3.5c (or newer) to convert strings to this encoding. Here
 is how to convert a piece of text into a shell script which will output
@@ -8177,7 +8178,7 @@ pipeline.
 where an unsuccessful command is needed.
 
 By default, @command{false} honors the @option{--help} and @option{--version}
-options.  However, that is contrary to @sc{posix}, so when the environment
+options.  However, that is contrary to @acronym{POSIX}, so when the environment
 variable @env{POSIXLY_CORRECT} is set, @command{false} ignores @emph{all}
 command line arguments, including @option{--help} and @option{--version}.
 
@@ -8204,7 +8205,7 @@ you use @samp{true} in a script, you're probably using the built-in
 command, not the one documented here.
 
 By default, @command{true} honors the @option{--help} and @option{--version}
-options.  However, that is contrary to @sc{posix}, so when the environment
+options.  However, that is contrary to @acronym{POSIX}, so when the environment
 variable @env{POSIXLY_CORRECT} is set, @command{true} ignores @emph{all}
 command line arguments, including @option{--help} and @option{--version}.
 
@@ -8581,7 +8582,7 @@ expression operators.
 In the regular expression, @code{\+}, @code{\?}, and @code{\|} are
 operators which respectively match one or more, zero or one, or separate
 alternatives.  SunOS and other @command{expr}'s treat these as regular
-characters.  (@sc{posix} allows either behavior.)
+characters.  (@acronym{POSIX} allows either behavior.)
 @xref{Top, , Regular Expression Library, regex, Regex}, for details of
 regular expression syntax.  Some examples are in @ref{Examples of expr}.
 
@@ -8892,7 +8893,7 @@ The program accepts the following option.  Also see @ref{Common options}.
 @opindex --portability
 Instead of performing length checks on the underlying filesystem,
 test the length of each file name and its components against the
-@sc{posix} minimum limits for portability.  Also check that the file
+@acronym{POSIX} minimum limits for portability.  Also check that the file
 name contains no characters not in the portable file name character set.
 
 @end table
@@ -8989,8 +8990,8 @@ be used in combination with any line settings.
 @opindex --file
 Set the line opened by the filename specified in @var{device} instead of
 the tty line connected to standard input.  This option is necessary
-because opening a @sc{posix} tty requires use of the @code{O_NONDELAY} flag to
-prevent a @sc{posix} tty from blocking until the carrier detect line is high if
+because opening a @acronym{POSIX} tty requires use of the @code{O_NONDELAY} flag to
+prevent a @acronym{POSIX} tty from blocking until the carrier detect line is high if
 the @code{clocal} flag is not set.  Hence, it is not always possible
 to allow the shell to open the device in the traditional manner.
 
@@ -9011,9 +9012,9 @@ description.  The descriptions themselves refer to the positive
 case, that is, when @emph{not} negated (unless stated otherwise,
 of course).
 
-Some settings are not available on all @sc{posix} systems, since they use
-extensions.  Such arguments are marked below with ``Non-@sc{posix}'' in their
-description.  On non-@sc{posix} systems, those or other settings also may not
+Some settings are not available on all @acronym{POSIX} systems, since they use
+extensions.  Such arguments are marked below with ``Non-@acronym{POSIX}'' in their
+description.  On non-@acronym{POSIX} systems, those or other settings also may not
 be available, but it's not feasible to document all the variations: just
 try it and see.
 
@@ -9081,7 +9082,7 @@ Disable modem control signals.  May be negated.
 @cindex hardware flow control
 @cindex flow control, hardware
 @cindex RTS/CTS flow control
-Enable RTS/CTS flow control.  Non-@sc{posix}.  May be negated.
+Enable RTS/CTS flow control.  Non-@acronym{POSIX}.  May be negated.
 @end table
 
 
@@ -9155,19 +9156,19 @@ empty again.  May be negated.
 @item iuclc
 @opindex iuclc
 @cindex uppercase, translating to lowercase
-Translate uppercase characters to lowercase.  Non-@sc{posix}.  May be
+Translate uppercase characters to lowercase.  Non-@acronym{POSIX}.  May be
 negated.
 
 @item ixany
 @opindex ixany
 Allow any character to restart output (only the start character
-if negated).  Non-@sc{posix}.  May be negated.
+if negated).  Non-@acronym{POSIX}.  May be negated.
 
 @item imaxbel
 @opindex imaxbel
 @cindex beeping at input buffer full
 Enable beeping and not flushing input buffer if a character arrives
-when the input buffer is full.  Non-@sc{posix}.  May be negated.
+when the input buffer is full.  Non-@acronym{POSIX}.  May be negated.
 @end table
 
 
@@ -9185,74 +9186,74 @@ Postprocess output.  May be negated.
 @item olcuc
 @opindex olcuc
 @cindex lowercase, translating to output
-Translate lowercase characters to uppercase.  Non-@sc{posix}.  May be
+Translate lowercase characters to uppercase.  Non-@acronym{POSIX}.  May be
 negated.
 
 @item ocrnl
 @opindex ocrnl
 @cindex return, translating to newline
-Translate carriage return to newline.  Non-@sc{posix}.  May be negated.
+Translate carriage return to newline.  Non-@acronym{POSIX}.  May be negated.
 
 @item onlcr
 @opindex onlcr
 @cindex newline, translating to crlf
-Translate newline to carriage return-newline.  Non-@sc{posix}.  May be
+Translate newline to carriage return-newline.  Non-@acronym{POSIX}.  May be
 negated.
 
 @item onocr
 @opindex onocr
-Do not print carriage returns in the first column.  Non-@sc{posix}.
+Do not print carriage returns in the first column.  Non-@acronym{POSIX}.
 May be negated.
 
 @item onlret
 @opindex onlret
-Newline performs a carriage return.  Non-@sc{posix}.  May be negated.
+Newline performs a carriage return.  Non-@acronym{POSIX}.  May be negated.
 
 @item ofill
 @opindex ofill
 @cindex pad instead of timing for delaying
-Use fill (padding) characters instead of timing for delays.  Non-@sc{posix}.
+Use fill (padding) characters instead of timing for delays.  Non-@acronym{POSIX}.
 May be negated.
 
 @item ofdel
 @opindex ofdel
 @cindex pad character
-Use delete characters for fill instead of null characters.  Non-@sc{posix}.
+Use delete characters for fill instead of null characters.  Non-@acronym{POSIX}.
 May be negated.
 
 @item nl1
 @itemx nl0
 @opindex nl@var{n}
-Newline delay style.  Non-@sc{posix}.
+Newline delay style.  Non-@acronym{POSIX}.
 
 @item cr3
 @itemx cr2
 @itemx cr1
 @itemx cr0
 @opindex cr@var{n}
-Carriage return delay style.  Non-@sc{posix}.
+Carriage return delay style.  Non-@acronym{POSIX}.
 
 @item tab3
 @itemx tab2
 @itemx tab1
 @itemx tab0
 @opindex tab@var{n}
-Horizontal tab delay style.  Non-@sc{posix}.
+Horizontal tab delay style.  Non-@acronym{POSIX}.
 
 @item bs1
 @itemx bs0
 @opindex bs@var{n}
-Backspace delay style.  Non-@sc{posix}.
+Backspace delay style.  Non-@acronym{POSIX}.
 
 @item vt1
 @itemx vt0
 @opindex vt@var{n}
-Vertical tab delay style.  Non-@sc{posix}.
+Vertical tab delay style.  Non-@acronym{POSIX}.
 
 @item ff1
 @itemx ff0
 @opindex ff@var{n}
-Form feed delay style.  Non-@sc{posix}.
+Form feed delay style.  Non-@acronym{POSIX}.
 @end table
 
 
@@ -9274,7 +9275,7 @@ special characters.  May be negated.
 
 @item iexten
 @opindex iexten
-Enable non-@sc{posix} special characters.  May be negated.
+Enable non-@acronym{POSIX} special characters.  May be negated.
 
 @item echo
 @opindex echo
@@ -9308,12 +9309,12 @@ characters.  May be negated.
 @cindex case translation
 Enable input and output of uppercase characters by preceding their
 lowercase equivalents with @samp{\}, when @code{icanon} is set.
-Non-@sc{posix}.  May be negated.
+Non-@acronym{POSIX}.  May be negated.
 
 @item tostop
 @opindex tostop
 @cindex background jobs, stopping at terminal write
-Stop background jobs that try to write to the terminal.  Non-@sc{posix}.
+Stop background jobs that try to write to the terminal.  Non-@acronym{POSIX}.
 May be negated.
 
 @item echoprt
@@ -9321,7 +9322,7 @@ May be negated.
 @opindex echoprt
 @opindex prterase
 Echo erased characters backward, between @samp{\} and @samp{/}.
-Non-@sc{posix}.  May be negated.
+Non-@acronym{POSIX}.  May be negated.
 
 @item echoctl
 @itemx ctlecho
@@ -9330,7 +9331,7 @@ Non-@sc{posix}.  May be negated.
 @cindex control characters, using @samp{^@var{c}}
 @cindex hat notation for control characters
 Echo control characters in hat notation (@samp{^@var{c}}) instead
-of literally.  Non-@sc{posix}.  May be negated.
+of literally.  Non-@acronym{POSIX}.  May be negated.
 
 @item echoke
 @itemx crtkill
@@ -9338,7 +9339,7 @@ of literally.  Non-@sc{posix}.  May be negated.
 @opindex crtkill
 Echo the @code{kill} special character by erasing each character on
 the line as indicated by the @code{echoprt} and @code{echoe} settings,
-instead of by the @code{echoctl} and @code{echok} settings.  Non-@sc{posix}.
+instead of by the @code{echoctl} and @code{echok} settings.  Non-@acronym{POSIX}.
 May be negated.
 @end table
 
@@ -9420,18 +9421,18 @@ If negated, same as @code{parenb istrip opost cs7}.
 
 @item decctlq
 @opindex decctlq
-Same as @code{-ixany}.  Non-@sc{posix}.  May be negated.
+Same as @code{-ixany}.  Non-@acronym{POSIX}.  May be negated.
 
 @item tabs
 @opindex tabs
-Same as @code{tab0}.  Non-@sc{posix}.  May be negated.  If negated, same
+Same as @code{tab0}.  Non-@acronym{POSIX}.  May be negated.  If negated, same
 as @code{tab3}.
 
 @item lcase
 @itemx LCASE
 @opindex lcase
 @opindex LCASE
-Same as @code{xcase iuclc olcuc}.  Non-@sc{posix}.  May be negated.
+Same as @code{xcase iuclc olcuc}.  Non-@acronym{POSIX}.  May be negated.
 
 @item crt
 @opindex crt
@@ -9492,11 +9493,11 @@ End the line.
 
 @item eol2
 @opindex eol2
-Alternate character to end the line.  Non-@sc{posix}.
+Alternate character to end the line.  Non-@acronym{POSIX}.
 
 @item swtch
 @opindex swtch
-Switch to a different shell layer.  Non-@sc{posix}.
+Switch to a different shell layer.  Non-@acronym{POSIX}.
 
 @item start
 @opindex start
@@ -9512,20 +9513,20 @@ Send a terminal stop signal.
 
 @item dsusp
 @opindex dsusp
-Send a terminal stop signal after flushing the input.  Non-@sc{posix}.
+Send a terminal stop signal after flushing the input.  Non-@acronym{POSIX}.
 
 @item rprnt
 @opindex rprnt
-Redraw the current line.  Non-@sc{posix}.
+Redraw the current line.  Non-@acronym{POSIX}.
 
 @item werase
 @opindex werase
-Erase the last word typed.  Non-@sc{posix}.
+Erase the last word typed.  Non-@acronym{POSIX}.
 
 @item lnext
 @opindex lnext
 Enter the next character typed literally, even if it is a special
-character.  Non-@sc{posix}.
+character.  Non-@acronym{POSIX}.
 @end table
 
 
@@ -9555,13 +9556,13 @@ Set the output speed to @var{n}.
 
 @item rows @var{n}
 @opindex rows
-Tell the tty kernel driver that the terminal has @var{n} rows.  Non-@sc{posix}.
+Tell the tty kernel driver that the terminal has @var{n} rows.  Non-@acronym{POSIX}.
 
 @item cols @var{n}
 @itemx columns @var{n}
 @opindex cols
 @opindex columns
-Tell the kernel that the terminal has @var{n} columns.  Non-@sc{posix}.
+Tell the kernel that the terminal has @var{n} columns.  Non-@acronym{POSIX}.
 
 @item size
 @opindex size
@@ -9571,11 +9572,11 @@ Print the number of rows and columns that the kernel thinks the
 terminal has.  (Systems that don't support rows and columns in the kernel
 typically use the environment variables @env{LINES} and @env{COLUMNS}
 instead; however, GNU @command{stty} does not know anything about them.)
-Non-@sc{posix}.
+Non-@acronym{POSIX}.
 
 @item line @var{n}
 @opindex line
-Use line discipline @var{n}.  Non-@sc{posix}.
+Use line discipline @var{n}.  Non-@acronym{POSIX}.
 
 @item speed
 @opindex speed
@@ -10249,7 +10250,7 @@ If showing any time terms, then include the time zone using the format
 If @var{timespec} is omitted with @option{--iso-8601}, the default is
 @samp{auto}.  On older systems, @sc{gnu} @command{date} instead
 supports an obsolete option @option{-I[@var{timespec}]}, where
-@var{timespec} defaults to @samp{auto}.  @sc{posix} 1003.1-2001
+@var{timespec} defaults to @samp{auto}.  @acronym{POSIX} 1003.1-2001
 (@pxref{Standards conformance}) does not allow @option{-I} without an
 argument; use @option{--iso-8601} instead.
 
@@ -10283,7 +10284,7 @@ Set the time and date to @var{datestr}.  See @option{-d} above.
 @cindex UTC
 @cindex Greenwich Mean Time
 @cindex GMT
-Use Coordinated Universal Time (@sc{utc}) by operating as if the
+Use Coordinated Universal Time (@acronym{UTC}) by operating as if the
 @env{TZ} environment variable were set to the string @samp{UTC0}.
 Normally, @command{date} operates in the time zone indicated by
 @env{TZ}, or the system default if @env{TZ} is not set.  Coordinated
@@ -10733,7 +10734,7 @@ The program accepts the following option.  Also see @ref{Common options}.
 Add @var{adjustment} instead of 10 to the command's priority.
 
 On older systems, @command{nice} supports an obsolete option
-@option{-@var{adjustment}}.  @sc{posix} 1003.1-2001 (@pxref{Standards
+@option{-@var{adjustment}}.  @acronym{POSIX} 1003.1-2001 (@pxref{Standards
 conformance}) does not allow this; use @option{-n @var{adjustment}}
 instead.
 
@@ -11003,7 +11004,7 @@ signal.  A signal name can be given in canonical form or prefixed by
 @samp{SIG}.  The case of the letters is ignored, except for the
 @option{-@var{signal}} option which must use upper case to avoid
 ambiguity with lower case option letters.  The following signal names
-and numbers are supported on all @sc{posix} compliant systems:
+and numbers are supported on all @acronym{POSIX} compliant systems:
 
 @table @samp
 @item HUP
@@ -11024,7 +11025,7 @@ and numbers are supported on all @sc{posix} compliant systems:
 
 @noindent
 Other supported signal names have system-dependent corresponding
-numbers.  All systems conforming to @sc{posix} 1003.1-2001 also
+numbers.  All systems conforming to @acronym{POSIX} 1003.1-2001 also
 support the following signals:
 
 @table @samp
@@ -11059,7 +11060,7 @@ User-defined signal 2.
 @end table
 
 @noindent
-@sc{posix} 1003.1-2001 systems that support the @sc{xsi} extension
+@acronym{POSIX} 1003.1-2001 systems that support the @sc{xsi} extension
 also support the following signals:
 
 @table @samp
@@ -11080,7 +11081,7 @@ File size limit exceeded.
 @end table
 
 @noindent
-@sc{posix} 1003.1-2001 systems that support the @sc{xrt} extension
+@acronym{POSIX} 1003.1-2001 systems that support the @sc{xrt} extension
 also support at least eight real-time signals called @samp{RTMIN},
 @samp{RTMIN+1}, @dots{}, @samp{RTMAX-1}, @samp{RTMAX}.
 
@@ -11439,7 +11440,7 @@ redirected standard output of your program away from your screen.
 For filter programs to work together, the format of the data has to be
 agreed upon.  The most straightforward and easiest format to use is simply
 lines of text.  Unix data files are generally just streams of bytes, with
-lines delimited by the @sc{ascii} @sc{lf} (Line Feed) character,
+lines delimited by the @acronym{ASCII} @sc{lf} (Line Feed) character,
 conventionally called a ``newline'' in the Unix literature. (This is
 @code{'\n'} if you're a C programmer.)  This is the format used by all
 the traditional filtering programs.  (Many earlier operating systems
@@ -11694,7 +11695,7 @@ $ tr '[A-Z]' '[a-z]' < whats.gnu | tr -cd '[A-Za-z0-9_ \012]' | ...
 The second @command{tr} command operates on the complement of the listed
 characters, which are all the letters, the digits, the underscore, and
 the blank.  The @samp{\012} represents the newline character; it has to
-be left alone.  (The @sc{ascii} tab character should also be included for
+be left alone.  (The @acronym{ASCII} tab character should also be included for
 good measure in a production script.)
 
 At this point, we have data consisting of words separated by blank space.
