@@ -207,11 +207,9 @@ aix)
   ;;
 
 icc)
-  # Must come before tru64.
-
-  # Intel's C compiler understands `-MD -MF file'.  However
+  # Intel's C compiler understands `-MD -MF file'.  However on
   #    icc -MD -MF foo.d -c -o sub/foo.o sub/foo.c
-  # will fill foo.d with something like
+  # ICC 7.0 will fill foo.d with something like
   #    foo.o: sub/foo.c
   #    foo.o: sub/foo.h
   # which is wrong.  We want:
@@ -219,6 +217,12 @@ icc)
   #    sub/foo.o: sub/foo.h
   #    sub/foo.c:
   #    sub/foo.h:
+  # ICC 7.1 will output
+  #    foo.o: sub/foo.c sub/foo.h
+  # and will wrap long lines using \ :
+  #    foo.o: sub/foo.c ... \
+  #     sub/foo.h ... \
+  #     ...
 
   "$@" -MD -MF "$tmpdepfile"
   stat=$?
@@ -228,11 +232,15 @@ icc)
     exit $stat
   fi
   rm -f "$depfile"
-  # Each line is of the form `foo.o: dependent.h'.
+  # Each line is of the form `foo.o: dependent.h',
+  # or `foo.o: dep1.h dep2.h \', or ` dep3.h dep4.h \'.
   # Do two passes, one to just change these to
   # `$object: dependent.h' and one to simply `dependent.h:'.
-  sed -e "s,^[^:]*:,$object :," < "$tmpdepfile" > "$depfile"
-  sed -e "s,^[^:]*: \(.*\)$,\1:," < "$tmpdepfile" >> "$depfile"
+  sed "s,^[^:]*:,$object :," < "$tmpdepfile" > "$depfile"
+  # Some versions of the HPUX 10.20 sed can't process this invocation
+  # correctly.  Breaking it into two sed invocations is a workaround.
+  sed 's,^[^:]*: \(.*\)$,\1,;s/^\\$//;/^$/d;/:$/d' < "$tmpdepfile" |
+    sed -e 's/$/ :/' >> "$depfile"
   rm -f "$tmpdepfile"
   ;;
 
@@ -270,7 +278,7 @@ tru64)
    fi
    if test -f "$tmpdepfile"; then
       sed -e "s,^.*\.[a-z]*:,$object:," < "$tmpdepfile" > "$depfile"
-      # That's a space and a tab in the [].
+      # That's a tab and a space in the [].
       sed -e 's,^.*\.[a-z]*:[	 ]*,,' -e 's,$,:,' < "$tmpdepfile" >> "$depfile"
    else
       echo "#dummy" > "$depfile"
