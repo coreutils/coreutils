@@ -37,6 +37,8 @@
 #include <signal.h>
 #include <stdio.h>
 #include "system.h"
+#include "long-options.h"
+
 #ifdef _POSIX_VERSION
 #include <limits.h>
 #else
@@ -1458,6 +1460,9 @@ main (argc, argv)
 #endif				/* _POSIX_VERSION */
 
   program_name = argv[0];
+
+  parse_long_options (argc, argv, usage);
+
   have_read_stdin = 0;
   inittables ();
 
@@ -1673,6 +1678,10 @@ main (argc, argv)
 		  case 'u':
 		    unique = 1;
 		    break;
+		  case 'y':
+		    /* Accept and ignore e.g. -y0 for compatibility with
+		       Solaris 2.  */
+		    goto outer;
 		  default:
 		    fprintf (stderr, "%s: unrecognized option `-%c'\n",
 			     argv[0], *s);

@@ -1,4 +1,17 @@
+Mon Oct 25 20:16:33 1993  Jim Meyering  (meyering@comco.com)
+
+	* sort.c: Accept but ignore -y0 for compatibility with Solaris 2.
+	From Chuck Hedrick (hedrick@klinzhai.rutgers.edu).
+
+	* sort.c (main): Handle --help and --version options.
+	* Makefile.in (sort.o): Depend on long-options.h.
+
 Sun Oct 24 00:31:02 1993  Jim Meyering  (meyering@comco.com)
+
+	* csplit.c, cut.c, expand.c, fold.c, head.c, nl.c, od.c, paste.c,
+	split.c, tac.c, tail.c, unexpand.c, uniq.c: Use the preferred
+	`--longopt=arg' syntax in --help message rather than `--longopt arg'.
+	From Francois Pinard.
 
 	* tail.c: Don't include <signal.h>.  It hasn't been necessary
 	since the Dec 12, 1992 change.
