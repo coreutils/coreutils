@@ -48,6 +48,7 @@ st_dm_mode.m4 \
 st_mtim.m4 \
 stat.m4 \
 strftime.m4 \
+timespec.m4 \
 uintmax_t.m4 \
 ulonglong.m4 \
 uptime.m4 \
