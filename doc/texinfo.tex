@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{1999-01-24}%
+\def\texinfoversion{1999-01-29}%
 %
 % Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99
 % Free Software Foundation, Inc.
@@ -2477,6 +2477,8 @@ width0pt\relax} \fi
 \let\value = \expandablevalue
 %
 \unsepspaces
+% Turn off macro expansion
+\turnoffmacros
 }
 
 % If an index command is used in an @example environment, any spaces
@@ -4502,8 +4504,11 @@ width0pt\relax} \fi
  \newwrite\macscribble
  \def\scanmacro#1{%
    \begingroup \newlinechar`\^^M
+   % Undo catcode changes of \startcontents and \doprintindex
+   \catcode`\@=0 \catcode`\\=12 \escapechar=`\@
+   \toks0={#1}%
    \immediate\openout\macscribble=\jobname.tmp
-   \immediate\write\macscribble{#1}%
+   \immediate\write\macscribble{\the\toks0}%
    \immediate\closeout\macscribble
    \let\xeatspaces\eatspaces
    \input \jobname.tmp
@@ -4512,12 +4517,16 @@ width0pt\relax} \fi
 \else
 \def\scanmacro#1{%
 \begingroup \newlinechar`\^^M
+% Undo catcode changes of \startcontents and \doprintindex
+\catcode`\@=0 \catcode`\\=12 \escapechar=`\@
 \let\xeatspaces\eatspaces\scantokens{#1}\endgroup}
 \fi
 
 \newcount\paramno   % Count of parameters
 \newtoks\macname    % Macro name
 \newif\ifrecursive  % Is it recursive?
+\def\macrolist{}    % List of all defined macros in the form
+                    % \do\macro1\do\macro2...
 
 % Utility routines.
 % Thisdoes \let #1 = #2, except with \csnames.
@@ -4600,10 +4609,17 @@ width0pt\relax} \fi
   \else
      \expandafter\parsemargdef \argl;%
   \fi
-  \expandafter\ifx \csname macsave.\the\macname\endcsname \relax
-     \cslet{macsave.\the\macname}{\the\macname}%
-  \else
+  \if1\csname ismacro.\the\macname\endcsname
      \message{Warning: redefining \the\macname}%
+  \else
+     \expandafter\ifx\csname \the\macname\endcsname \relax
+     \else \errmessage{The name \the\macname\space is reserved}\fi
+     \global\cslet{macsave.\the\macname}{\the\macname}%
+     \global\expandafter\let\csname ismacro.\the\macname\endcsname=1%
+     % Add the macroname to \macrolist
+     \toks0 = \expandafter{\macrolist\do}%
+     \xdef\macrolist{\the\toks0
+       \expandafter\noexpand\csname\the\macname\endcsname}%
   \fi
   \begingroup \macrobodyctxt
   \ifrecursive \expandafter\parsermacbody
@@ -4612,11 +4628,27 @@ width0pt\relax} \fi
 
 \def\unmacro{\parsearg\unmacroxxx}
 \def\unmacroxxx#1{%
-  \expandafter\ifx \csname macsave.\the\macname\endcsname \relax
-    \errmessage{Macro \the\macname\ not defined.}%
+  \if1\csname ismacro.#1\endcsname
+    \global\cslet{#1}{macsave.#1}%
+    \global\expandafter\let \csname ismacro.#1\endcsname=0%
+    % Remove the macro name from \macrolist
+    \begingroup
+      \edef\tempa{\expandafter\noexpand\csname#1\endcsname}
+      \def\do##1{%
+        \def\tempb{##1}%
+        \ifx\tempa\tempb
+          % remove this
+        \else
+          \toks0 = \expandafter{\newmacrolist\do}%
+          \edef\newmacrolist{\the\toks0\expandafter\noexpand\tempa}%
+        \fi}
+      \def\newmacrolist{}%
+      % Execute macro list to define \newmacrolist
+      \macrolist
+      \global\let\macrolist\newmacrolist
+    \endgroup
   \else
-    \cslet{#1}{macsave.#1}%
-    \expandafter\let \csname macsave.\the\macname\endcsname \undefined
+    \errmessage{Macro #1 not defined}%
   \fi
 }
 
@@ -4675,7 +4707,8 @@ width0pt\relax} \fi
     \or % 1
       \expandafter\xdef\csname\the\macname\endcsname{%
          \bgroup\noexpand\macroargctxt
-         \noexpand\braceorline\csname\the\macname xxx\endcsname}%
+         \noexpand\braceorline
+         \expandafter\noexpand\csname\the\macname xxx\endcsname}%
       \expandafter\xdef\csname\the\macname xxx\endcsname##1{%
          \egroup\noexpand\scanmacro{\temp}}%
     \else % many
@@ -4683,7 +4716,7 @@ width0pt\relax} \fi
          \bgroup\noexpand\macroargctxt
          \noexpand\csname\the\macname xx\endcsname}
       \expandafter\xdef\csname\the\macname xx\endcsname##1{%
-          \csname\the\macname xxx\endcsname ##1,}%
+          \expandafter\noexpand\csname\the\macname xxx\endcsname ##1,}%
       \expandafter\expandafter
       \expandafter\xdef
       \expandafter\expandafter
@@ -4699,7 +4732,8 @@ width0pt\relax} \fi
     \or % 1
       \expandafter\xdef\csname\the\macname\endcsname{%
          \bgroup\noexpand\macroargctxt
-         \noexpand\braceorline\csname\the\macname xxx\endcsname}%
+         \noexpand\braceorline
+         \expandafter\noexpand\csname\the\macname xxx\endcsname}%
       \expandafter\xdef\csname\the\macname xxx\endcsname##1{%
         \egroup
         \noexpand\norecurse{\the\macname}%
@@ -4707,9 +4741,9 @@ width0pt\relax} \fi
     \else % many
       \expandafter\xdef\csname\the\macname\endcsname{%
          \bgroup\noexpand\macroargctxt
-         \noexpand\csname\the\macname xx\endcsname}
+         \expandafter\noexpand\csname\the\macname xx\endcsname}
       \expandafter\xdef\csname\the\macname xx\endcsname##1{%
-          \csname\the\macname xxx\endcsname ##1,}%
+          \expandafter\noexpand\csname\the\macname xxx\endcsname ##1,}%
       \expandafter\expandafter
       \expandafter\xdef
       \expandafter\expandafter
@@ -4733,6 +4767,10 @@ width0pt\relax} \fi
     \expandafter\parsearg
   \fi \next}
 
+% We mant to disable all macros during \shipout so that they are not
+% expanded by \write.
+\def\turnoffmacros{\begingroup \def\do##1{\let\noexpand##1=\relax}%
+  \edef\next{\macrolist}\expandafter\endgroup\next}
 
 \message{cross references,}
 \newwrite\auxfile
