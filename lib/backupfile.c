@@ -1,5 +1,5 @@
 /* backupfile.c -- make Emacs style backup file names
-   Copyright (C) 1990,1991,1992,1993,1995,1997 Free Software Foundation, Inc.
+   Copyright (C) 1990,1991,1992,1993,1995,1997, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -74,7 +74,7 @@ char *malloc ();
 # include <limits.h>
 #endif
 #ifndef CHAR_BIT
-#define CHAR_BIT 8
+# define CHAR_BIT 8
 #endif
 /* Upper bound on the string length of an integer converted to string.
    302 / 1000 is ceil (log10 (2.0)).  Subtract 1 for the sign bit;
@@ -113,8 +113,7 @@ static int version_number __BACKUPFILE_P ((const char *, const char *, size_t));
    Do not call this function if backup_type == none. */
 
 char *
-find_backup_file_name (file)
-     const char *file;
+find_backup_file_name (const char *file)
 {
   size_t backup_suffix_size_max;
   size_t file_len = strlen (file);
@@ -163,9 +162,7 @@ find_backup_file_name (file)
    */
 
 static int
-max_backup_version (file, dir)
-     const char *file;
-     const char *dir;
+max_backup_version (const char *file, const char *dir)
 {
   DIR *dirp;
   struct dirent *dp;
@@ -199,10 +196,7 @@ max_backup_version (file, dir)
    */
 
 static int
-version_number (base, backup, base_length)
-     const char *base;
-     const char *backup;
-     size_t base_length;
+version_number (const char *base, const char *backup, size_t base_length)
 {
   int version;
   const char *p;
@@ -235,8 +229,7 @@ static const enum backup_type backup_types[] =
    Unique abbreviations are accepted. */
 
 enum backup_type
-get_version (version)
-     const char *version;
+get_version (const char *version)
 {
   int i;
 
