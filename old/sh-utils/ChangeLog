@@ -1,3 +1,7 @@
+Sun Nov 26 16:09:33 1995  Jim Meyering  (meyering@comco.com)
+
+	* test.c (usage): Clarify usage.  From Karl Berry.
+
 Thu Nov 16 21:25:45 1995  Jim Meyering  (meyering@comco.com)
 
 	* Makefile.in (_all): New default target.  Depend on `all' to work
