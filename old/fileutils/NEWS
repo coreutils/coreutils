@@ -1,5 +1,7 @@
 Changes in release 4.1:
 [4.0x]
+* New ls option --quoting-style=clocale acts like --quoting-style=locale,
+  except that it quotes "like this" by default instead of `like this'.
 [4.0w]
 * When `cp -pR' fails to copy a file, it now preserves permissions, owner,
    and group of the containing directory.
