@@ -1,3 +1,10 @@
+2003-11-09  Jim Meyering  <jim@meyering.net>
+
+	* root-dev-ino.c, root-dev-ino.h: New files.
+	* Makefile.am (libfetish_a_SOURCES): Add root-dev-ino.c root-dev-ino.h.
+
+	* dev-ino.h: Include <sys/types.h> and <sys/stat.h>.
+
 2003-11-06  Jim Meyering  <jim@meyering.net>
 
 	* free.c: New file, from gnulib.
