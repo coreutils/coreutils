@@ -1,3 +1,8 @@
+2000-01-04  Jim Meyering  <meyering@ascend.com>
+
+	* Makefile.maint (PREV_VERSION): Tweak so it handles e.g., 2.0a -> 2.0.
+	(alpha): Create xdelta diffs.
+
 2000-01-02  Jim Meyering  <meyering@ascend.com>
 
 	* Version 4.0m.
