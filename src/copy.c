@@ -588,6 +588,10 @@ copy_internal (const char *src_path, const char *dst_path,
      find created files so as to not copy infinitely if a directory is
      copied into itself.  */
 
+  /* Associate the destination path with the source device and inode
+     so that if we encounter a matching dev/ino pair in the source tree
+     we can arrange to create a hard link between the corresponding names
+     in the destination tree.  */
   earlier_file = remember_copied (dst_path, src_sb.st_ino, src_sb.st_dev);
 
   src_mode = src_sb.st_mode;
@@ -772,12 +776,18 @@ copy_internal (const char *src_path, const char *dst_path,
 	  /* If src_path and earlier_file refer to the same directory entry,
 	     then warn about copying a directory into itself.  */
 	  if (same_name (src_path, earlier_file))
-	    error (0, 0, _("can't copy a directory %s into itself %s"),
-		   quote_n (0, top_level_src_path),
-		   quote_n (1, top_level_dst_path));
+	    {
+	      error (0, 0, _("cannot copy a directory, %s, into itself, %s"),
+		     quote_n (0, top_level_src_path),
+		     quote_n (1, top_level_dst_path));
+	      *copy_into_self = 1;
+	    }
 	  else
-	    error (0, 0, _("won't create hard link %s to directory %s"),
-		   quote_n (0, dst_path), quote_n (1, earlier_file));
+	    {
+	      error (0, 0, _("will not create hard link %s to directory %s"),
+		     quote_n (0, dst_path), quote_n (1, earlier_file));
+	    }
+
 	  goto un_backup;
 	}
 
@@ -823,7 +833,13 @@ copy_internal (const char *src_path, const char *dst_path,
 	  /* FIXME: this is a little fragile in that it relies on rename(2)
 	     failing with a specific errno value.  Expect problems on
 	     non-POSIX systems.  */
+	  error (0, 0, _("cannot move %s to a subdirectory of itself, %s"),
+		 quote_n (0, top_level_src_path),
+		 quote_n (1, top_level_dst_path));
 	  *copy_into_self = 1;
+	  /* FIXME-cleanup: Don't return zero here; adjust mv.c accordingly.
+	     The only caller that uses this code (mv.c) ends up setting its
+	     exit status to nonzero when copy_into_self is nonzero.  */
 	  return 0;
 	}
 
@@ -1192,7 +1208,9 @@ copy (const char *src_path, const char *dst_path,
      a directory into itself.  I don't like to make these tools do *any*
      extra work in the common case when that work is solely to handle
      exceptional cases, but in this case, I don't see a way to derive the
-     top level source and destination directory names where they're used.  */
+     top level source and destination directory names where they're used.
+     An alternative is to use COPY_INTO_SELF and print the diagnostic
+     from every caller -- but I don't wan't to do that.  */
   top_level_src_path = src_path;
   top_level_dst_path = dst_path;
 
