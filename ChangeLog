@@ -1,5 +1,7 @@
 2004-05-25  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* Version 5.3.0.
+
 	Improve the efficiency (and in one case, correctness) of code
 	that reads symlinks.
 
@@ -53,8 +55,6 @@
 	Add support for \0ooo syntax; POSIX requires this.
 
 2004-06-01  Jim Meyering  <jim@meyering.net>
-
-	* Version 5.3.0.
 
 	* Use automake-1.8b.  Regenerate dependent files.
 
