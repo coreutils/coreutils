@@ -1,5 +1,6 @@
 Changes in release 2.1
 [2.0.22]
+* `od -t f8' works once again [bug introduced in textutils-2.0.8]
 * various portability fixes, and general clean-up
 * various minor, corner-case bug fixes
 [2.0.21]

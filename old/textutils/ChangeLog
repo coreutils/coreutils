@@ -30,6 +30,7 @@
 
 2002-05-14  Jim Meyering  <meyering@lucent.com>
 
+	`od -t f8' didn't work.
 	This bug was introduced with my change of 2000-10-22 (textutils-2.0.8).
 	* src/od.c (ulonglong_t): Move declaration to precede new use.
 	[enum size_spec] (N_SIZE_SPECS): New member.
