@@ -1,5 +1,12 @@
 1998-04-26  Jim Meyering  <meyering@ascend.com>
 
+	* src/tail.c (close_fd): New function -- converted from macro.
+	[struct File_spec] (n_stat_calls): New member.
+	[struct File_spec] (n_unchanged_stats): New member.
+	(max_n_unchanged_stats): New global.
+	Initialize new members.
+	(xwrite): New function -- converted from macro.
+
 	* src/md5sum.c (md5_check): Declare local, `md5num' as _unsigned_ char*.
 	(hex_digits): Declare parameter `s' as _unsigned_ char*.
 	(split_3): Declare parameter `u' as _unsigned_ char**.
