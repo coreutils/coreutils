@@ -520,7 +520,7 @@ strip (char *path)
   switch (pid)
     {
     case -1:
-      error (1, errno, _("cannot fork"));
+      error (1, errno, _("fork system call failed"));
       break;
     case 0:			/* Child. */
       execlp ("strip", "strip", path, (char *) NULL);
