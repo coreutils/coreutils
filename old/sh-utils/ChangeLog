@@ -100,7 +100,7 @@
 
 2002-03-10  Jim Meyering  <meyering@lucent.com>
 
-	* configure.ac (AM_INIT_AUTOMAKE): Specify the required version
+	* configure.ac (AM_INIT_AUTOMAKE): Specify here the required version
 	of automake (1.6), and options (gnits dist-bzip2), rather than...
 	* Makefile.am (AUTOMAKE_OPTIONS): ...here.  Remove definition.
 
