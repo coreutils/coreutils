@@ -216,3 +216,7 @@ off_t lseek ();
 # undef putchar
 # define putchar(C) putchar_unlocked (C)
 #endif
+
+#define SAME_INODE(Stat_buf_1, Stat_buf_2) \
+  ((Stat_buf_1).st_ino == (Stat_buf_2).st_ino \
+   && (Stat_buf_1).st_dev == (Stat_buf_2).st_dev)
