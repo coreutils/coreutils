@@ -1,3 +1,10 @@
+2004-10-03  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Sync from gnulib.
+	* mbswidth.m4: Add copyright notice.
+	* vasnprintf.m4 (gl_FUNC_VASNPRINTF): Require gl_EOVERFLOW.
+	* eoverflow.m4: New file.
+
 2004-08-19  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* getopt.m4: Sync from gnulib.

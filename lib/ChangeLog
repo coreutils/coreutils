@@ -1,3 +1,13 @@
+2004-10-03  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Sync from gnulib.
+	* dirfd.h, getpagesize.h: Add copyright notice.
+	* vasnprintf.c: (VASNPRINTF): Set errno=EOVERFLOW if the output is
+	too long.
+	* vasnprintf.h: Doc fix.
+	* vasprintf.c: Don't include <limits.h>.
+	(vasprintf): Rely on vasnprintf to set errno=EOVERFLOW.
+
 2004-09-23  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* modechange.c (mode_compile): Don't decrement a pointer that
