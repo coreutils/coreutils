@@ -20,91 +20,91 @@
 #include <sys/stat.h>
 
 #ifdef STAT_MACROS_BROKEN
-#undef S_ISBLK
-#undef S_ISCHR
-#undef S_ISDIR
-#undef S_ISFIFO
-#undef S_ISLNK
-#undef S_ISMPB
-#undef S_ISMPC
-#undef S_ISNWK
-#undef S_ISREG
-#undef S_ISSOCK
+# undef S_ISBLK
+# undef S_ISCHR
+# undef S_ISDIR
+# undef S_ISFIFO
+# undef S_ISLNK
+# undef S_ISMPB
+# undef S_ISMPC
+# undef S_ISNWK
+# undef S_ISREG
+# undef S_ISSOCK
 #endif /* STAT_MACROS_BROKEN.  */
 
 #ifndef S_IFMT
-#define S_IFMT 0170000
+# define S_IFMT 0170000
 #endif
 #if !defined(S_ISBLK) && defined(S_IFBLK)
-#define S_ISBLK(m) (((m) & S_IFMT) == S_IFBLK)
+# define S_ISBLK(m) (((m) & S_IFMT) == S_IFBLK)
 #endif
 #if !defined(S_ISCHR) && defined(S_IFCHR)
-#define S_ISCHR(m) (((m) & S_IFMT) == S_IFCHR)
+# define S_ISCHR(m) (((m) & S_IFMT) == S_IFCHR)
 #endif
 #if !defined(S_ISDIR) && defined(S_IFDIR)
-#define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
+# define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
 #endif
 #if !defined(S_ISREG) && defined(S_IFREG)
-#define S_ISREG(m) (((m) & S_IFMT) == S_IFREG)
+# define S_ISREG(m) (((m) & S_IFMT) == S_IFREG)
 #endif
 #if !defined(S_ISFIFO) && defined(S_IFIFO)
-#define S_ISFIFO(m) (((m) & S_IFMT) == S_IFIFO)
+# define S_ISFIFO(m) (((m) & S_IFMT) == S_IFIFO)
 #endif
 #if !defined(S_ISLNK) && defined(S_IFLNK)
-#define S_ISLNK(m) (((m) & S_IFMT) == S_IFLNK)
+# define S_ISLNK(m) (((m) & S_IFMT) == S_IFLNK)
 #endif
 #if !defined(S_ISSOCK) && defined(S_IFSOCK)
-#define S_ISSOCK(m) (((m) & S_IFMT) == S_IFSOCK)
+# define S_ISSOCK(m) (((m) & S_IFMT) == S_IFSOCK)
 #endif
 #if !defined(S_ISMPB) && defined(S_IFMPB) /* V7 */
-#define S_ISMPB(m) (((m) & S_IFMT) == S_IFMPB)
-#define S_ISMPC(m) (((m) & S_IFMT) == S_IFMPC)
+# define S_ISMPB(m) (((m) & S_IFMT) == S_IFMPB)
+# define S_ISMPC(m) (((m) & S_IFMT) == S_IFMPC)
 #endif
 #if !defined(S_ISNWK) && defined(S_IFNWK) /* HP/UX */
-#define S_ISNWK(m) (((m) & S_IFMT) == S_IFNWK)
+# define S_ISNWK(m) (((m) & S_IFMT) == S_IFNWK)
 #endif
 
 #ifndef S_IEXEC
-#define S_IEXEC S_IXUSR
+# define S_IEXEC S_IXUSR
 #endif
 
 #ifndef S_IXUSR
-#define S_IXUSR S_IEXEC
+# define S_IXUSR S_IEXEC
 #endif
 #ifndef S_IXGRP
-#define S_IXGRP (S_IEXEC >> 3)
+# define S_IXGRP (S_IEXEC >> 3)
 #endif
 #ifndef S_IXOTH
-#define S_IXOTH (S_IEXEC >> 6)
+# define S_IXOTH (S_IEXEC >> 6)
 #endif
 #ifndef S_IXUGO
-#define S_IXUGO (S_IXUSR | S_IXGRP | S_IXOTH)
+# define S_IXUGO (S_IXUSR | S_IXGRP | S_IXOTH)
 #endif
 
 #if !defined(HAVE_MKFIFO)
-#define mkfifo(path, mode) (mknod ((path), (mode) | S_IFIFO, 0))
+# define mkfifo(path, mode) (mknod ((path), (mode) | S_IFIFO, 0))
 #endif
 
 #ifdef HAVE_SYS_PARAM_H
-#include <sys/param.h>
+# include <sys/param.h>
 #endif
 
 /* <unistd.h> should be included before any preprocessor test
    of _POSIX_VERSION.  */
 #ifdef HAVE_UNISTD_H
-#include <unistd.h>
+# include <unistd.h>
 #endif
 
 #ifndef STDIN_FILENO
-#define STDIN_FILENO 0
+# define STDIN_FILENO 0
 #endif
 
 #ifndef STDOUT_FILENO
-#define STDOUT_FILENO 1
+# define STDOUT_FILENO 1
 #endif
 
 #ifndef STDERR_FILENO
-#define STDERR_FILENO 2
+# define STDERR_FILENO 2
 #endif
 
 #include "pathmax.h"
@@ -115,33 +115,33 @@ off_t lseek ();
 #endif
 
 #ifdef TM_IN_SYS_TIME
-#include <sys/time.h>
+# include <sys/time.h>
 #else
-#include <time.h>
+# include <time.h>
 #endif
 
 /* Since major is a function on SVR4, we can't use `ifndef major'.  */
 #ifdef MAJOR_IN_MKDEV
-#include <sys/mkdev.h>
-#define HAVE_MAJOR
+# include <sys/mkdev.h>
+# define HAVE_MAJOR
 #endif
 #ifdef MAJOR_IN_SYSMACROS
-#include <sys/sysmacros.h>
-#define HAVE_MAJOR
+# include <sys/sysmacros.h>
+# define HAVE_MAJOR
 #endif
 #ifdef major			/* Might be defined in sys/types.h.  */
-#define HAVE_MAJOR
+# define HAVE_MAJOR
 #endif
 
 #ifndef HAVE_MAJOR
-#define major(dev)  (((dev) >> 8) & 0xff)
-#define minor(dev)  ((dev) & 0xff)
-#define makedev(maj, min)  (((maj) << 8) | (min))
+# define major(dev)  (((dev) >> 8) & 0xff)
+# define minor(dev)  ((dev) & 0xff)
+# define makedev(maj, min)  (((maj) << 8) | (min))
 #endif
 #undef HAVE_MAJOR
 
 #ifdef HAVE_UTIME_H
-#include <utime.h>
+# include <utime.h>
 #endif
 
 /* Some systems (even some that do have <utime.h>) don't declare this
@@ -173,9 +173,9 @@ extern int errno;
 #endif
 
 #ifdef STDC_HEADERS
-#define getopt system_getopt
-#include <stdlib.h>
-#undef getopt
+# define getopt system_getopt
+# include <stdlib.h>
+# undef getopt
 #else /* not STDC_HEADERS */
 char *getenv ();
 #endif /* STDC_HEADERS */
@@ -193,21 +193,21 @@ char *getenv ();
 #endif
 
 #ifdef HAVE_FCNTL_H
-#include <fcntl.h>
+# include <fcntl.h>
 #else
-#include <sys/file.h>
+# include <sys/file.h>
 #endif
 
 #ifndef SEEK_SET
-#define SEEK_SET 0
-#define SEEK_CUR 1
-#define SEEK_END 2
+# define SEEK_SET 0
+# define SEEK_CUR 1
+# define SEEK_END 2
 #endif
 #ifndef F_OK
-#define F_OK 0
-#define X_OK 1
-#define W_OK 2
-#define R_OK 4
+# define F_OK 0
+# define X_OK 1
+# define W_OK 2
+# define R_OK 4
 #endif
 
 #ifdef HAVE_DIRENT_H
@@ -229,19 +229,19 @@ char *getenv ();
 
 #ifdef CLOSEDIR_VOID
 /* Fake a return value. */
-#define CLOSEDIR(d) (closedir (d), 0)
+# define CLOSEDIR(d) (closedir (d), 0)
 #else
-#define CLOSEDIR(d) closedir (d)
+# define CLOSEDIR(d) closedir (d)
 #endif
 
 /* Get or fake the disk device blocksize.
    Usually defined by sys/param.h (if at all).  */
 #ifndef DEV_BSIZE
-#ifdef BSIZE
-#define DEV_BSIZE BSIZE
-#else /* !BSIZE */
-#define DEV_BSIZE 4096
-#endif /* !BSIZE */
+# ifdef BSIZE
+#  define DEV_BSIZE BSIZE
+# else /* !BSIZE */
+#  define DEV_BSIZE 4096
+# endif /* !BSIZE */
 #endif /* !DEV_BSIZE */
 
 /* Extract or fake data from a `struct stat'.
@@ -277,12 +277,8 @@ char *getenv ();
 # endif /* !hpux */
 #endif /* HAVE_ST_BLOCKS */
 
-/* Convert B 512-byte blocks to kilobytes if K is nonzero,
-   otherwise return it unchanged. */
-#define convert_blocks(b, k) ((k) ? ((b) + 1) / 2 : (b))
-
 #ifndef RETSIGTYPE
-#define RETSIGTYPE void
+# define RETSIGTYPE void
 #endif
 
 #ifndef __GNUC__
@@ -290,7 +286,7 @@ char *getenv ();
 #  include <alloca.h>
 # else
 #  ifdef _AIX
- #pragma alloca
+#   pragma alloca
 #  else
 #   ifndef alloca
 char *alloca ();
@@ -321,20 +317,20 @@ char *alloca ();
    The macro ISUPPER protects against this as well."  */
 
 #if defined (STDC_HEADERS) || (!defined (isascii) && !defined (HAVE_ISASCII))
-#define IN_CTYPE_DOMAIN(c) 1
+# define IN_CTYPE_DOMAIN(c) 1
 #else
-#define IN_CTYPE_DOMAIN(c) isascii(c)
+# define IN_CTYPE_DOMAIN(c) isascii(c)
 #endif
 
 #ifdef isblank
-#define ISBLANK(c) (IN_CTYPE_DOMAIN (c) && isblank (c))
+# define ISBLANK(c) (IN_CTYPE_DOMAIN (c) && isblank (c))
 #else
-#define ISBLANK(c) ((c) == ' ' || (c) == '\t')
+# define ISBLANK(c) ((c) == ' ' || (c) == '\t')
 #endif
 #ifdef isgraph
-#define ISGRAPH(c) (IN_CTYPE_DOMAIN (c) && isgraph (c))
+# define ISGRAPH(c) (IN_CTYPE_DOMAIN (c) && isgraph (c))
 #else
-#define ISGRAPH(c) (IN_CTYPE_DOMAIN (c) && isprint (c) && !isspace (c))
+# define ISGRAPH(c) (IN_CTYPE_DOMAIN (c) && isprint (c) && !isspace (c))
 #endif
 
 #define ISPRINT(c) (IN_CTYPE_DOMAIN (c) && isprint (c))
@@ -359,11 +355,11 @@ char *alloca ();
 #define ISDIGIT(c) ((unsigned) (c) - '0' <= 9)
 
 #ifndef __P
-#if defined (__GNUC__) || (defined (__STDC__) && __STDC__)
-#define __P(args) args
-#else
-#define __P(args) ()
-#endif  /* GCC.  */
+# if defined (__GNUC__) || (defined (__STDC__) && __STDC__)
+#  define __P(args) args
+# else
+#  define __P(args) ()
+# endif  /* GCC.  */
 #endif  /* Not __P.  */
 
 /* Take care of NLS matters.  */
