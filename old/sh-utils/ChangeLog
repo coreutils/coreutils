@@ -1,7 +1,8 @@
 Sun Jun 29 07:18:25 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/putenv.c: Define-away putenv only if it's not already defined.
-	Rather than undefining putenv, define _sys_putenv back to putenv.
+	Rather than undefining putenv after the includes, define _sys_putenv
+	back to putenv.
 
 	* configure.in (LIB_CRYPT): AC_SUBST new variable.  Use it to add
 	crypt-related library (-lufc or -lcrypt) only for the program that
