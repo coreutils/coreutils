@@ -1,9 +1,15 @@
+1998-06-29  Jim Meyering  <meyering@ascend.com>
+
+	* Version 1.16f.
+
+	* src/uptime.c: Include system.h only after error.h and readutmp.h
+	so we don't get redefinition warnings about getc, etc.
+	* src/who.c: Likewise.
+	* src/users.c: Likewise.
+
 1998-06-28  Jim Meyering  <meyering@ascend.com>
 
-	* src/*.c: Change all uses of unlocked-wrapped functions to their
-	upper case wrapper names.
-	* src/sys2.h: Add macro definitions for GNU libc unlocked wrappers
-	(e.g. FFLUSH for fflush_unlocked).
+	* src/sys2.h: Add macro definitions for GNU libc *_unlocked wrappers.
 
 1998-06-06  Jim Meyering  <meyering@ascend.com>
 
@@ -11,8 +17,6 @@
 	(posixtest): Treat `test -t' the same as `test -t 1'.
 
 1998-05-26  Jim Meyering  <meyering@ascend.com>
-
-	* Version 1.16f.
 
 	* src/test.c (two_arguments): Don't test argv[pos][2] if it's
 	past end of string.
