@@ -1,3 +1,7 @@
+2002-08-04  Jim Meyering  <meyering@lucent.com>
+
+	* Version 2.0.14.
+
 2002-07-30  Paul Eggert  <eggert@twinsun.com>
 
 	* src/chroot.c (main): Exit with status 126 or 127 when execvp or
