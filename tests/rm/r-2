@@ -24,7 +24,7 @@ LC_ALL=C
 export LC_ALL
 
 # FIXME: if this fails, it's a framework failure
-cat <<EOF | sort > t/$test.E || framework_failure=1
+cat <<EOF | sort > t/E || framework_failure=1
 removing all entries of directory t/a
 removing all entries of directory t/a/b
 removing t/a/b/g
@@ -41,13 +41,13 @@ fi
 # Note that both the expected output (above) and the actual output lines
 # are sorted, because directory entries may be processed in arbitrary order.
 fail=0
-rm --verbose -r t/a | sort > t/$test.O || fail=1
+rm --verbose -r t/a | sort > t/O || fail=1
 
 if test -d t/a; then
   fail=1
 fi
 
 # Compare expected and actual output.
-cmp t/$test.E t/$test.O || fail=1
+cmp t/E t/O || fail=1
 
 exit $fail
