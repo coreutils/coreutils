@@ -24,8 +24,9 @@ fail=0
 symlink_name_lengths='1 15 16 31 32 59 60 63 64 127 128 255 256 511 512 1024'
 for len in $symlink_name_lengths; do
   name=`yes|tr '\n' y|head -c$len`
-  # Ignore failures.
-  ln -fs $name $len > /dev/null 2>&1 && symlinks="$symlinks $len"
+  # Record the names of symlinks that are successfully created.
+  ln -fs $name $len > /dev/null 2>&1 \
+    && symlinks="$symlinks $len"
 done
 
 du -a $symlinks > out || fail=1
