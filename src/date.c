@@ -411,7 +411,7 @@ argument must be a format string beginning with `+'."),
     }
   else
     {
-      bool invalid_date = false;
+      bool valid_date = true;
       status = 0;
 
       if (!option_specified_date && !set_date)
@@ -422,11 +422,11 @@ argument must be a format string beginning with `+'."),
 		 given in the POSIX-format.  */
 	      set_date = 1;
 	      datestr = argv[optind];
-	      when.tv_sec = posixtime (datestr,
-				       (PDS_TRAILING_YEAR
-					| PDS_CENTURY | PDS_SECONDS));
+	      valid_date = posixtime (&when.tv_sec,
+				      datestr,
+				      (PDS_TRAILING_YEAR
+				       | PDS_CENTURY | PDS_SECONDS));
 	      when.tv_nsec = 0; /* FIXME: posixtime should set this.  */
-	      invalid_date = (when.tv_sec == (time_t) -1);
 	      format = NULL;
 	    }
 	  else
@@ -452,13 +452,13 @@ argument must be a format string beginning with `+'."),
 	    {
 	      when.tv_sec = get_date (datestr, NULL);
 	      when.tv_nsec = 0; /* FIXME: get_date should set this.  */
-	      invalid_date = (when.tv_sec == (time_t) -1);
+	      valid_date = (when.tv_sec != (time_t) -1);
 	    }
 
 	  format = (n_args == 1 ? argv[optind] + 1 : NULL);
 	}
 
-      if (invalid_date)
+      if (! valid_date)
 	error (1, 0, _("invalid date `%s'"), datestr);
 
       if (set_date)
