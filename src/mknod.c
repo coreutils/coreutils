@@ -77,7 +77,7 @@ MAJOR MINOR are forbidden for TYPE p, mandatory otherwise.  TYPE may be:\n\
   c, u   create a character (unbuffered) special file\n\
   p      create a FIFO\n\
 "));
-      puts (_("\nReport bugs to <fileutils-bugs@gnu.org>."));
+      puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
       close_stdout ();
     }
   exit (status);

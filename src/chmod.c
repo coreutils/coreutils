@@ -256,7 +256,7 @@ Usage: %s [OPTION]... MODE[,MODE]... FILE...\n\
 Each MODE is one or more of the letters ugoa, one of the symbols +-= and\n\
 one or more of the letters rwxXstugo.\n\
 "));
-      puts (_("\nReport bugs to <fileutils-bugs@gnu.org>."));
+      puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
       close_stdout ();
     }
   exit (status);

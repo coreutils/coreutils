@@ -358,7 +358,7 @@ version control may be set with VERSION_CONTROL, values are:\n\
   nil, existing   numbered if numbered backups exist, simple otherwise\n\
   never, simple   always make simple backups\n\
 "));
-      puts (_("\nReport bugs to <fileutils-bugs@gnu.org>."));
+      puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
       close_stdout ();
     }
   exit (status);

@@ -98,7 +98,7 @@ Remove (unlink) the FILE(s).\n\
       --help            display this help and exit\n\
       --version         output version information and exit\n\
 "));
-      puts (_("\nReport bugs to <fileutils-bugs@gnu.org>."));
+      puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
       close_stdout ();
     }
   exit (status);

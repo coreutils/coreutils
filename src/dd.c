@@ -321,7 +321,7 @@ Each KEYWORD may be:\n\
   noerror   continue after read errors\n\
   sync      pad every input block with NULs to ibs-size\n\
 "));
-      puts (_("\nReport bugs to <fileutils-bugs@gnu.org>."));
+      puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
       close_stdout ();
     }
   exit (status);

@@ -220,7 +220,7 @@ STAMP may be used without -t if none of -drt, nor --, are used.\n\
 Note that the three time-date formats recognized for the -d and -t options\n\
 and for the obsolescent argument are all different.\n\
 "));
-      puts (_("\nReport bugs to <fileutils-bugs@gnu.org>."));
+      puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
       close_stdout ();
     }
   exit (status);
