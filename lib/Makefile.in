@@ -43,8 +43,8 @@ host_triplet = @host@
 subdir = lib
 DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	ChangeLog TODO __fpending.c alloca.c asnprintf.c asprintf.c \
-	atexit.c calloc.c chdir.c chown.c dirfd.c dup2.c error.c \
-	error.h euidaccess.c fchdir-stub.c fchown-stub.c fileblocks.c \
+	atexit.c calloc.c chown.c dirfd.c dup2.c error.c error.h \
+	euidaccess.c fchdir-stub.c fchown-stub.c fileblocks.c \
 	fnmatch.c free.c fsusage.c ftruncate.c getcwd.c getdate.c \
 	getgroups.c gethostname.c getline.c getloadavg.c getndelim2.c \
 	getopt.c getopt1.c getpass.c gettimeofday.c getusershell.c \
@@ -65,22 +65,22 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/backupfile.m4 $(top_srcdir)/m4/bison.m4 \
 	$(top_srcdir)/m4/boottime.m4 $(top_srcdir)/m4/c-strtod.m4 \
 	$(top_srcdir)/m4/calloc.m4 $(top_srcdir)/m4/canon-host.m4 \
-	$(top_srcdir)/m4/canonicalize.m4 $(top_srcdir)/m4/chdir.m4 \
-	$(top_srcdir)/m4/check-decl.m4 $(top_srcdir)/m4/chown.m4 \
-	$(top_srcdir)/m4/clock_time.m4 $(top_srcdir)/m4/cloexec.m4 \
-	$(top_srcdir)/m4/closeout.m4 $(top_srcdir)/m4/codeset.m4 \
-	$(top_srcdir)/m4/d-ino.m4 $(top_srcdir)/m4/d-type.m4 \
-	$(top_srcdir)/m4/dirfd.m4 $(top_srcdir)/m4/dirname.m4 \
-	$(top_srcdir)/m4/dos.m4 $(top_srcdir)/m4/dup2.m4 \
-	$(top_srcdir)/m4/eealloc.m4 $(top_srcdir)/m4/eoverflow.m4 \
-	$(top_srcdir)/m4/error.m4 $(top_srcdir)/m4/euidaccess.m4 \
-	$(top_srcdir)/m4/exclude.m4 $(top_srcdir)/m4/exitfail.m4 \
-	$(top_srcdir)/m4/extensions.m4 $(top_srcdir)/m4/fcntl-safer.m4 \
-	$(top_srcdir)/m4/file-type.m4 $(top_srcdir)/m4/fileblocks.m4 \
-	$(top_srcdir)/m4/filemode.m4 $(top_srcdir)/m4/fnmatch.m4 \
-	$(top_srcdir)/m4/fpending.m4 $(top_srcdir)/m4/free.m4 \
-	$(top_srcdir)/m4/fstypename.m4 $(top_srcdir)/m4/fsusage.m4 \
-	$(top_srcdir)/m4/ftruncate.m4 \
+	$(top_srcdir)/m4/canonicalize.m4 \
+	$(top_srcdir)/m4/chdir-long.m4 $(top_srcdir)/m4/check-decl.m4 \
+	$(top_srcdir)/m4/chown.m4 $(top_srcdir)/m4/clock_time.m4 \
+	$(top_srcdir)/m4/cloexec.m4 $(top_srcdir)/m4/closeout.m4 \
+	$(top_srcdir)/m4/codeset.m4 $(top_srcdir)/m4/d-ino.m4 \
+	$(top_srcdir)/m4/d-type.m4 $(top_srcdir)/m4/dirfd.m4 \
+	$(top_srcdir)/m4/dirname.m4 $(top_srcdir)/m4/dos.m4 \
+	$(top_srcdir)/m4/dup2.m4 $(top_srcdir)/m4/eealloc.m4 \
+	$(top_srcdir)/m4/eoverflow.m4 $(top_srcdir)/m4/error.m4 \
+	$(top_srcdir)/m4/euidaccess.m4 $(top_srcdir)/m4/exclude.m4 \
+	$(top_srcdir)/m4/exitfail.m4 $(top_srcdir)/m4/extensions.m4 \
+	$(top_srcdir)/m4/fcntl-safer.m4 $(top_srcdir)/m4/file-type.m4 \
+	$(top_srcdir)/m4/fileblocks.m4 $(top_srcdir)/m4/filemode.m4 \
+	$(top_srcdir)/m4/fnmatch.m4 $(top_srcdir)/m4/fpending.m4 \
+	$(top_srcdir)/m4/free.m4 $(top_srcdir)/m4/fstypename.m4 \
+	$(top_srcdir)/m4/fsusage.m4 $(top_srcdir)/m4/ftruncate.m4 \
 	$(top_srcdir)/m4/getcwd-path-max.m4 $(top_srcdir)/m4/getcwd.m4 \
 	$(top_srcdir)/m4/getdate.m4 $(top_srcdir)/m4/getgroups.m4 \
 	$(top_srcdir)/m4/gethostname.m4 $(top_srcdir)/m4/getline.m4 \
@@ -177,19 +177,20 @@ am_libfetish_a_OBJECTS = acl.$(OBJEXT) getdate.$(OBJEXT) \
 	hash.$(OBJEXT) hash-pjw.$(OBJEXT) allocsa.$(OBJEXT) \
 	argmatch.$(OBJEXT) backupfile.$(OBJEXT) basename.$(OBJEXT) \
 	c-strtod.$(OBJEXT) c-strtold.$(OBJEXT) canon-host.$(OBJEXT) \
-	canonicalize.$(OBJEXT) cloexec.$(OBJEXT) closeout.$(OBJEXT) \
-	cycle-check.$(OBJEXT) diacrit.$(OBJEXT) dirname.$(OBJEXT) \
-	dup-safer.$(OBJEXT) exclude.$(OBJEXT) exitfail.$(OBJEXT) \
-	filemode.$(OBJEXT) file-type.$(OBJEXT) fopen-safer.$(OBJEXT) \
-	fts.$(OBJEXT) full-read.$(OBJEXT) full-write.$(OBJEXT) \
-	gettime.$(OBJEXT) getugroups.$(OBJEXT) hard-locale.$(OBJEXT) \
-	human.$(OBJEXT) idcache.$(OBJEXT) imaxtostr.$(OBJEXT) \
-	linebuffer.$(OBJEXT) localcharset.$(OBJEXT) \
-	long-options.$(OBJEXT) makepath.$(OBJEXT) mbswidth.$(OBJEXT) \
-	md5.$(OBJEXT) memcasecmp.$(OBJEXT) memcoll.$(OBJEXT) \
-	modechange.$(OBJEXT) offtostr.$(OBJEXT) open-safer.$(OBJEXT) \
-	path-concat.$(OBJEXT) physmem.$(OBJEXT) quote.$(OBJEXT) \
-	quotearg.$(OBJEXT) readtokens0.$(OBJEXT) readtokens.$(OBJEXT) \
+	canonicalize.$(OBJEXT) chdir-long.$(OBJEXT) cloexec.$(OBJEXT) \
+	closeout.$(OBJEXT) cycle-check.$(OBJEXT) diacrit.$(OBJEXT) \
+	dirname.$(OBJEXT) dup-safer.$(OBJEXT) exclude.$(OBJEXT) \
+	exitfail.$(OBJEXT) filemode.$(OBJEXT) file-type.$(OBJEXT) \
+	fopen-safer.$(OBJEXT) fts.$(OBJEXT) full-read.$(OBJEXT) \
+	full-write.$(OBJEXT) gettime.$(OBJEXT) getugroups.$(OBJEXT) \
+	hard-locale.$(OBJEXT) human.$(OBJEXT) idcache.$(OBJEXT) \
+	imaxtostr.$(OBJEXT) linebuffer.$(OBJEXT) \
+	localcharset.$(OBJEXT) long-options.$(OBJEXT) \
+	makepath.$(OBJEXT) mbswidth.$(OBJEXT) md5.$(OBJEXT) \
+	memcasecmp.$(OBJEXT) memcoll.$(OBJEXT) modechange.$(OBJEXT) \
+	offtostr.$(OBJEXT) open-safer.$(OBJEXT) path-concat.$(OBJEXT) \
+	physmem.$(OBJEXT) quote.$(OBJEXT) quotearg.$(OBJEXT) \
+	readtokens0.$(OBJEXT) readtokens.$(OBJEXT) \
 	root-dev-ino.$(OBJEXT) safe-read.$(OBJEXT) \
 	safe-write.$(OBJEXT) same.$(OBJEXT) save-cwd.$(OBJEXT) \
 	savedir.$(OBJEXT) settime.$(OBJEXT) sha1.$(OBJEXT) \
@@ -345,31 +346,32 @@ libfetish_a_SOURCES = acl.h acl.c getdate.h getdate.y posixtm.c \
 	hash.h hash-pjw.c hash-pjw.h __fpending.h allocsa.c allocsa.h \
 	argmatch.c argmatch.h backupfile.c backupfile.h basename.c \
 	c-strtod.c c-strtod.h c-strtold.c canon-host.c canonicalize.c \
-	canonicalize.h chdir.h cloexec.c cloexec.h closeout.c \
-	closeout.h cycle-check.c cycle-check.h dev-ino.h diacrit.c \
-	diacrit.h dirname.c dirname.h dirfd.h dup-safer.c euidaccess.h \
-	exclude.c exclude.h exit.h exitfail.c exitfail.h fcntl-safer.h \
-	filemode.c filemode.h file-type.c file-type.h fopen-safer.c \
-	fsusage.h fts.c fts_.h full-read.c full-read.h full-write.c \
-	full-write.h getcwd.h getline.h getpagesize.h getpass.h \
-	gettime.c gettext.h getugroups.c group-member.h hard-locale.c \
-	hard-locale.h human.c human.h idcache.c imaxtostr.c lchown.h \
-	linebuffer.c linebuffer.h localcharset.c localcharset.h \
-	long-options.c long-options.h makepath.c makepath.h mbswidth.c \
-	mbswidth.h md5.c md5.h memcasecmp.c memcasecmp.h memcoll.c \
-	memcoll.h mempcpy.h modechange.c modechange.h mountlist.h \
-	offtostr.c openat.h open-safer.c path-concat.c path-concat.h \
-	pathmax.h physmem.c physmem.h quote.c quote.h quotearg.c \
-	quotearg.h readtokens0.c readtokens0.h readtokens.c \
-	readtokens.h readutmp.h regex.h root-dev-ino.c root-dev-ino.h \
-	safe-read.c safe-read.h safe-write.c safe-write.h same.c \
-	same.h save-cwd.c save-cwd.h savedir.c savedir.h setenv.h \
-	settime.c sha1.c sha1.h sig2str.h stat-macros.h stdio-safer.h \
-	stripslash.c strdup.h strndup.h strverscmp.h time_r.c time_r.h \
-	timespec.h umaxtostr.c unicodeio.c unicodeio.h unistd-safer.h \
-	unlocked-io.h userspec.c userspec.h utimecmp.c utimecmp.h \
-	utimens.c utimens.h version-etc.c version-etc.h xalloc.h \
-	xalloc-die.c xfts.c xfts.h xgetcwd.c xgetcwd.h xgethostname.c \
+	canonicalize.h chdir-long.c chdir-long.h cloexec.c cloexec.h \
+	closeout.c closeout.h cycle-check.c cycle-check.h dev-ino.h \
+	diacrit.c diacrit.h dirname.c dirname.h dirfd.h dup-safer.c \
+	euidaccess.h exclude.c exclude.h exit.h exitfail.c exitfail.h \
+	fcntl-safer.h filemode.c filemode.h file-type.c file-type.h \
+	fopen-safer.c fsusage.h fts.c fts_.h full-read.c full-read.h \
+	full-write.c full-write.h getcwd.h getline.h getpagesize.h \
+	getpass.h gettime.c gettext.h getugroups.c group-member.h \
+	hard-locale.c hard-locale.h human.c human.h idcache.c \
+	imaxtostr.c lchown.h linebuffer.c linebuffer.h localcharset.c \
+	localcharset.h long-options.c long-options.h makepath.c \
+	makepath.h mbswidth.c mbswidth.h md5.c md5.h memcasecmp.c \
+	memcasecmp.h memcoll.c memcoll.h mempcpy.h modechange.c \
+	modechange.h mountlist.h offtostr.c openat.h open-safer.c \
+	path-concat.c path-concat.h pathmax.h physmem.c physmem.h \
+	quote.c quote.h quotearg.c quotearg.h readtokens0.c \
+	readtokens0.h readtokens.c readtokens.h readutmp.h regex.h \
+	root-dev-ino.c root-dev-ino.h safe-read.c safe-read.h \
+	safe-write.c safe-write.h same.c same.h save-cwd.c save-cwd.h \
+	savedir.c savedir.h setenv.h settime.c sha1.c sha1.h sig2str.h \
+	stat-macros.h stdio-safer.h stripslash.c strdup.h strndup.h \
+	strverscmp.h time_r.c time_r.h timespec.h umaxtostr.c \
+	unicodeio.c unicodeio.h unistd-safer.h unlocked-io.h \
+	userspec.c userspec.h utimecmp.c utimecmp.h utimens.c \
+	utimens.h version-etc.c version-etc.h xalloc.h xalloc-die.c \
+	xfts.c xfts.h xgetcwd.c xgetcwd.h xgethostname.c \
 	xgethostname.h xmalloc.c xmemcoll.c xmemcoll.h xnanosleep.c \
 	xnanosleep.h xreadlink.c xreadlink.h xstrndup.c xstrndup.h \
 	xstrtod.c xstrtod.h xstrtoimax.c xstrtol.c xstrtol.h \
@@ -444,7 +446,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/asprintf.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/atexit.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/calloc.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/chdir.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/chown.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/dirfd.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/dup2.Po@am__quote@
@@ -531,6 +532,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/c-strtold.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/canon-host.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/canonicalize.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/chdir-long.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cloexec.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/closeout.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cycle-check.Po@am__quote@
