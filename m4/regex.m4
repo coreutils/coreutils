@@ -1,4 +1,4 @@
-#serial 9
+#serial 10
 
 dnl Initially derived from code in GNU grep.
 dnl Mostly written by Jim Meyering.
@@ -45,7 +45,7 @@ AC_DEFUN(jm_INCLUDED_REGEX,
 
 	    /* The following example is derived from a problem report
                against gawk from Jorge Stolfi <stolfi@ic.unicamp.br>.  */
-	    s = re_compile_pattern ("[anù]*n", 7, &regex);
+	    s = re_compile_pattern ("[[anù]]*n", 7, &regex);
 	    if (s)
 	      exit (1);
 
