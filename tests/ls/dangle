@@ -27,10 +27,10 @@ fail=0
 
 # This must exit nonzero.
 ls -L dangle > /dev/null 2>&1 && fail=1
+# So must this.
+ls -H dangle > /dev/null 2>&1 && fail=1
 
 # This must exit successfully.
-ls -H dangle > out 2>&1 || fail=1
-# So must this.
 ls dangle >> out || fail=1
 
 ls slink-to-dir >> out 2>&1 || fail=1
@@ -38,7 +38,6 @@ ls -H slink-to-dir >> out 2>&1 || fail=1
 ls -L slink-to-dir >> out 2>&1 || fail=1
 
 cat <<\EOF > exp
-dangle
 dangle
 sub
 sub
