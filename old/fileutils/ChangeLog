@@ -1,6 +1,8 @@
 1999-12-13  Jim Meyering  <meyering@ascend.com>
 
-	* Version 4.0k.
+	* lib/makepath.c (make_path): Consistently use error to output
+	the verbose, `created directory ...' messages.
+	Reported by Bernhard Rosenkraenzer.
 
 1999-12-12  Jim Meyering  <meyering@ascend.com>
 
@@ -13,7 +15,11 @@
 	if not defined.  This was necessary on a NeXT Turbostation running
 	Mach 3.3.  Reported by Nelson H. F. Beebe.
 
-	* src/ls.c (usage):
+	* src/ls.c (decode_switches): If -c or -u is specified and not -l
+	(or any other option that implies -l), and no sort-type was specified,
+	then sort by the ctime (-c) or atime (-u).  Part of this change reverts
+	the 1998-01-10 delta.
+	(usage): Update to reflect this change.
 	Reported by Paul Slootman via Michael Stone.
 
 1999-12-09  Jim Meyering  <meyering@ascend.com>
