@@ -61,6 +61,12 @@
 #include "system.h"
 #include "modechange.h"
 
+#ifndef isascii
+#define isascii(c) 1
+#endif
+
+#define ISDIGIT(c) (isascii (c) && isdigit (c))
+
 #ifdef _POSIX_VERSION
 #include <sys/wait.h>
 #else
@@ -476,7 +482,7 @@ isnumber (str)
   if (*str == 0)
     return 0;
   for (; *str; str++)
-    if (!isdigit (*str))
+    if (!ISDIGIT (*str))
       return 0;
   return 1;
 }
