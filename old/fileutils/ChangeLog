@@ -2,6 +2,11 @@
 
 	* Version 4.1.1.
 
+	This mv command should fail (likewise for cp), rather than
+	silently clobbering one of the source files.
+	  rm -rf a b c; mkdir a b c; touch a/f b/f; mv a/f b/f c
+	Reported by from Dan Jacobson.
+
 	* src/cp.c (do_copy): Call dest_info_init if necessary.
 	* src/install.c (main): Likewise.
 	* src/mv.c (main): Likewise.
