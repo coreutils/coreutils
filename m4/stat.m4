@@ -2,7 +2,7 @@
 
 dnl From Jim Meyering.
 dnl Determine whether stat has the bug that it succeeds when given the
-dnl zero-length file name argument.  The stat from SunOS4.1.4 and the Hurd
+dnl zero-length file name argument.  The stat from SunOS 4.1.4 and the Hurd
 dnl (as of 1998-11-01) do this.
 dnl
 dnl If it does, then define HAVE_STAT_EMPTY_STRING_BUG and arrange to

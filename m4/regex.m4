@@ -98,7 +98,7 @@ AC_DEFUN([jm_INCLUDED_REGEX],
 # Prerequisites of lib/regex.c.
 AC_DEFUN([jm_PREREQ_REGEX],
 [
-  dnl FIXME: Maybe provide a btowc replacement someday: solaris-2.5.1 lacks it.
+  dnl FIXME: Maybe provide a btowc replacement someday: Solaris 2.5.1 lacks it.
   dnl FIXME: Check for wctype and iswctype, and and add -lw if necessary
   dnl to get them.
 
