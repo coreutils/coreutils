@@ -1,6 +1,13 @@
-2001-08-25  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.15.
+
+2001-08-24  Paul Eggert  <eggert@twinsun.com>
+
+	* src/uniq.c (different): Don't assume that lengths can fit
+	into size_t.  Tune code for the common case where the line
+	lengths differ: we avoid comparing them entirely in that case.
+
+2001-08-25  Jim Meyering  <meyering@lucent.com>
 
 	* tests/uniq/Test.pm: Add tests for -s 0 and -w 0.
 
