@@ -1,3 +1,10 @@
+	* cat.c (cat): Use memmove rather than bcopy.
+	* csplit.c (load_buffer): Use memcpy rather than bcopy.
+	* fmt.c (isopen, isclose, isperiod): Use strchr, not index.
+	(flush_paragraph): Use memmove instead of bcopy.
+
+	* lib/Makefile.in (SOURCES): Add memmove.c
+
 Tue Jan 24 22:18:19 1995  Jim Meyering  (meyering@comco.com)
 
 	* fmt.c (copy_rest): Replace `||' with `&&'.  Before, a paragraph
