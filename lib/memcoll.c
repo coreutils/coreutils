@@ -83,6 +83,7 @@ memcoll (char *s1, size_t s1len, char *s2, size_t s2len)
   diff = memcmp (s1, s2, s1len < s2len ? s1len : s2len);
   if (! diff)
     diff = s1len < s2len ? -1 : s1len != s2len;
+  errno = 0;
 
 #endif
 
