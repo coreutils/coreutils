@@ -1,3 +1,7 @@
+2001-09-25  Volker Borchert  <bt@teknon.de>
+
+	* gettimeofday.c (rpl_gettimeofday): Declare local variable `result'.
+
 2001-09-23  Jim Meyering  <meyering@lucent.com>
 
 	* mountlist.c: Remove useless parentheses in #if directives.
