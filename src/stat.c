@@ -127,6 +127,9 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
     case S_MAGIC_AFFS:
       type = "affs";
       break;
+    case S_MAGIC_DEVPTS:
+      type = "devpts";
+      break;
     case S_MAGIC_EXT:
       type = "ext";
       break;
