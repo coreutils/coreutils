@@ -1,3 +1,7 @@
+Sat May  4 20:54:32 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* system.h [IN_CTYPE_DOMAIN]: Rename from ISASCII.
+
 Mon Apr 29 22:23:40 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* basename.c (usage): Mark translatable strings.
