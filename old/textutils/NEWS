@@ -1,3 +1,5 @@
+User-visible changes in release 1.14
+* join accepts POSIX `-o 0' field specifier.
 User-visible changes in release 1.13
 * md5sum: with --check, distinguish between open/read failure and bad checksum
 * md5sum: remove -h, -s, -v short options

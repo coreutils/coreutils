@@ -1,3 +1,23 @@
+Sat Oct  7 22:27:01 1995  Jim Meyering  (meyering@comco.com)
+
+	* join.c (add_field): No longer return a value.
+	(decode_field_spec): New function.
+	(add_field_list): Rewrite to be more strict.
+	Before, `,1.2' was accepted as valid.
+	(main): Use xstrtol instead atoi.
+	Combine nearly identical -a and -v cases.
+
+Fri Oct  6 23:10:01 1995  Jim Meyering  (meyering@comco.com)
+
+	* join.c (main): Report `too few/many non-option arguments'
+	then print --help output rather than just the latter.
+	Properly interpret obsolescent usage like `join -o 2.1 2.1 2.2'.
+	(usage): Describe POSIX -1, -2 options and deprecate -j* ones
+
+	* join.c (usage): Move to precede all other functions.
+
+	* join.c: Protoize.
+
 Tue Oct  3 22:44:05 1995  Jim Meyering  (meyering@comco.com)
 
 	* csplit.c, sort.c, tac.c: Test SA_INTERRUPT, not _POSIX_VERSION,
