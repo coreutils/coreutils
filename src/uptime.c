@@ -115,7 +115,7 @@ print_uptime (int n, const STRUCT_UTMP *this)
 # if HAVE_PROC_UPTIME
       if (uptime == 0)
 # endif /* HAVE_PROC_UPTIME */
-	if (STREQ (this->ut_line, BOOT_MSG))
+	if (strncmp (this->ut_line, BOOT_MSG, sizeof this->ut_line) == 0)
 	  boot_time = UT_TIME_MEMBER (this);
 #endif /* BOOT_MSG */
       ++this;
