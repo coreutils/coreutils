@@ -46,9 +46,11 @@ char *alloca ();
 #include <stdlib.h>
 #endif
 
-#if defined (STDC_HEADERS) || defined (HAVE_ERRNO_H)
+#ifdef HAVE_ERRNO_H
 #include <errno.h>
-#else
+#endif
+
+#ifndef STDC_HEADERS
 extern int errno;
 #endif
 

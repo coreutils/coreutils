@@ -1,3 +1,21 @@
+Wed May 12 20:48:55 1993  Jim Meyering (meyering@comco.com)
+
+	* configure.in: Add check for the -ldgc library that is required
+	for getmntent on m88k DGUX-5.4 systems.
+
+Sat May  8 11:31:14 1993  Jim Meyering (meyering@comco.com)
+
+	* lib/Makefile.in (dist): Use `cp -p' instead of just `cp'
+	if linking fails.
+
+Thu May  6 22:45:25 1993  Jim Meyering (meyering@comco.com)
+
+	* makepath.c: Use explicit dcl of errno only if !STDC_HEADERS.
+	Some systems have <errno.h> but don't declare errno.
+	From Kaveh R. Ghazi <ghazi@caip.rutgers.edu>.
+
+	* getdate.y: Test TIME_WITH_SYS_TIME, not TIME_AND_SYS_TIME.
+
 Wed May  5 00:21:12 1993  Jim Meyering (meyering@comco.com)
 
 	* configure.in: Add AC_TIME_WITH_SYS_TIME.
