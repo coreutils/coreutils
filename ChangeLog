@@ -1,5 +1,12 @@
 2004-07-28  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* src/Makefile.am ($(SCRIPTS)): Don't depend on Makefile;
+	this causes Solaris 8 'make' to refuse to build "groups".
+	(localedir.h): Don't depend on Makefile: this causes Solaris
+	8 'make' to build localedir.h unnecessarily.  The dependence
+	on Makefile is ineffective anyway, since $(localedir) might
+	change even if Makefile hasn't.
+
 	* src/remove.c (remove_dir): If we can't save the state of the
 	working directory, pretend we started from "/", not ".".
 	This avoids a bug on hosts like Solaris that don't let you
