@@ -50,9 +50,9 @@ test -d $dir && fail=1
 ls $other_partition_tmpdir/$null > /dev/null || fail=1
 test -d $other_partition_tmpdir/$dir/a/b/c || fail=1
 
-sed "s,$other_partition_tmpdir,XXX," out > out2
+sed "s,$other_partition_tmpdir,XXX," out | sort > out2
 
-cat > exp <<EOF
+cat <<EOF | sort > exp
 \`$null' -> \`XXX/$null'
 removing \`$null'
 \`$dir' -> \`XXX/$dir'
