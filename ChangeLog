@@ -1,5 +1,8 @@
 2003-03-07  Jim Meyering  <jim@meyering.net>
 
+	* src/du.c: Remove everything associated with mmap-stack.c.
+	This reverts the change of 2003-02-19.
+
 	* Version 4.5.10.
 
 	* tests/du/basic: Add a test for the above fix.
