@@ -277,7 +277,7 @@ static union
   void *p;
 } alternate_signal_stack;
 
-# if defined SA_ONSTACK && defined _SC_PAGESIZE
+# if defined SA_ONSTACK && defined SA_SIGINFO && defined _SC_PAGESIZE
 
 /* Handle a segmentation violation and exit.  This function is
    async-signal-safe.  */
@@ -363,7 +363,7 @@ c_stack_action (char * const *argv __attribute__ ((unused)),
   stack_overflow_message = _("stack overflow");
 
   {
-# if ! (defined SA_ONSTACK && defined _SC_PAGESIZE)
+# if ! (defined SA_ONSTACK && defined SA_SIGINFO && defined _SC_PAGESIZE)
     return signal (SIGSEGV, die) == SIG_ERR ? -1 : 0;
 # else
     struct sigaction act;
