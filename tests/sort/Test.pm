@@ -214,6 +214,29 @@ my @tv = (
 # (i.e., not when configured with --disable-nls).
 ["nul-nls", '', "\0b\n\0a\n", "\0a\n\0b\n", 0],
 
+# Paul Eggert wrote:
+# I tested the revised `sort' against Solaris `sort', and found a
+# discrepancy that turns out to be a longstanding bug in GNU sort.
+# POSIX.2 specifies that a newline is part of the input line, and should
+# be significant during comparison; but with GNU sort the newline is
+# insignificant.  Here is an example of the bug:
+#
+# 	$ od -c t
+# 	0000000  \n  \t  \n
+# 	0000003
+# 	$ sort t | od -c
+# 	0000000  \n  \t  \n
+# 	0000003
+#
+# The correct output of the latter command should be
+#
+# 	0000000  \t  \n  \n
+# 	0000003
+#
+# because \t comes before \n in the collating sequence, and the trailing
+# \n's are part of the input line.
+["use-nl", '', "\n\t\n", "\t\n\n", 0],
+
 );
 
 sub test_vector
