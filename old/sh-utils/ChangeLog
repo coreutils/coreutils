@@ -1,6 +1,13 @@
-2002-07-02  Jim Meyering  <meyering@lucent.com>
+2002-07-15  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.13.
+
+	* src/uptime.c (print_uptime): Use STREQ in place of !strcmp.
+
+	* src/uname.c (main): Remove unnecessary uses of `defined' when
+	operating on `HAVE_...' symbols.  Remove unnecessary parentheses.
+
+2002-07-02  Jim Meyering  <meyering@lucent.com>
 
 	* src/basename.c, src/chroot.c, src/date.c, src/dirname.c (usage):
 	Use the PACKAGE_BUGREPORT e-mail address, rather than hard-coding it.
