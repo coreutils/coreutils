@@ -25,6 +25,8 @@
 #include "system.h"
 #include "linebuffer.h"
 #include "error.h"
+#include "hard-locale.h"
+#include "memcoll.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "comm"
@@ -37,6 +39,11 @@
 
 /* The name this program was run with. */
 char *program_name;
+
+#ifdef ENABLE_NLS
+/* Nonzero if the LC_COLLATE locale is hard.  */
+static int hard_LC_COLLATE;
+#endif
 
 /* If nonzero, print lines that are found only in file 1. */
 static int only_file_1;
@@ -168,11 +175,18 @@ compare_files (char **infiles)
 	order = -1;
       else
 	{
-	  /* Cannot use bcmp -- it only returns a boolean value. */
-	  order = memcmp (thisline[0]->buffer, thisline[1]->buffer,
-			  min (thisline[0]->length, thisline[1]->length));
-	  if (order == 0)
-	    order = thisline[0]->length - thisline[1]->length;
+#ifdef ENABLE_NLS
+	  if (hard_LC_COLLATE)
+	    order = memcoll (thisline[0]->buffer, thisline[0]->length,
+			     thisline[1]->buffer, thisline[1]->length);
+	  else
+#endif
+	    {
+	      order = memcmp (thisline[0]->buffer, thisline[1]->buffer,
+			      min (thisline[0]->length, thisline[1]->length));
+	      if (order == 0)
+		order = thisline[0]->length - thisline[1]->length;
+	    }
 	}
 
       /* Output the line that is lesser. */
@@ -218,6 +232,10 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+
+#ifdef ENABLE_NLS
+  hard_LC_COLLATE = hard_locale (LC_COLLATE);
+#endif
 
   only_file_1 = 1;
   only_file_2 = 1;
