@@ -1,7 +1,13 @@
+Wed Feb 19 23:06:46 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/factor.c (factor): Rewrite inner loop to be more efficient.
+	Patch from Torbjorn Granlund.
+
 Tue Feb 18 21:18:04 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* tests/date/Test.pm: Add tests for %U, %V, and %W and for a bug
 	fixed on 1996-03-05.
+	Remove misleading `-' from leap-1 test.
 
 	* tests/Makefile.am (SUBDIRS): Add factor.
 	* tests/factor: New directory.
