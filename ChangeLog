@@ -16,6 +16,8 @@
 	* src/cut.c (longopts): Likewise.
 	* src/date.c (time_spec_string): Likewise.
 	* src/df.c (find_mount_point, show_point): Likewise.
+	* src/expr.c (docolon): Likewise.
+	* src/fmt.c (long_options): Likewise.
 	* src/ls.c (time_style_args, indicator_style_args, long_options)
 	(format_args, sort_args, time_args, decode_switches)
 	(gobble_file): Likewise.
@@ -28,6 +30,7 @@
 	* src/sort.c (long_options, mergefps): Likewise.
 	* src/stat.c (long_options): Likewise.
 	* src/tac.c (main): Likewise.
+	* src/tail.c (follow_mode_string): Likewise.
 	* src/touch.c (longopts, time_args): Likewise.
 	* src/uniq.c (delimit_method_string): Likewise.
 	* src/uptime.c (print_uptime): Likewise.
