@@ -482,7 +482,6 @@ distdir: $(DISTFILES)
 	  fi; \
 	done
 
-
 @AMDEP@include $(DEPDIR)/addext$U.Po
 @AMDEP@include $(DEPDIR)/alloca.Po
 @AMDEP@include $(DEPDIR)/argmatch$U.Po
