@@ -45,6 +45,7 @@
 
 #include "system.h"
 #include "error.h"
+#include "euidaccess.h"
 #include "long-options.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -255,9 +256,8 @@ dir_ok (const char *path)
 
   /* Use access to test for search permission because
      testing permission bits of st_mode can lose with new
-     access control mechanisms.  Of course, access loses if you're
-     running setuid. */
-  if (access (path, X_OK) != 0)
+     access control mechanisms.  */
+  if (euidaccess (path, X_OK) != 0)
     {
       if (errno == EACCES)
 	error (0, 0, _("directory `%s' is not searchable"), path);
