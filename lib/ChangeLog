@@ -1,3 +1,8 @@
+2003-05-12  Jim Meyering  <jim@meyering.net>
+
+	* strftime.c (my_strftime): Let the `-' (no-pad) flag affect
+	the space-padded-by-default conversion specifiers, %e, %k, %l.
+
 2003-05-07  Paul Eggert  <eggert@twinsun.com>
 
 	* xnanosleep.c (timespec_subtract): Don't modify the 2nd arg.
