@@ -170,6 +170,8 @@ cat-id-tbl.o: ../intl/libgettext.h
 
 TAGS ID:
 
+tags info dvi:
+
 mostlyclean:
 	rm -f core core.* *.pox $(PACKAGE).po *.old.po cat-id-tbl.tmp
 	rm -fr *.o
