@@ -18,6 +18,7 @@
 
 	* src/split.c: Rename local variables: nchars -> n_bytes.
 	(main): Rename local variable: s/accum/n_units/.
+	(main): Use STDIN_FILENO, not literal `0'.
 
 2003-04-07  Jim Meyering  <jim@meyering.net>
 
