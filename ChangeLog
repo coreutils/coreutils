@@ -1,11 +1,18 @@
 2004-05-31  Jim Meyering  <jim@meyering.net>
 
-	* tests/tr/Makefile.am (TESTS_ENVIRONMENT): Set PATH.
+	* tests/Makefile.am.in (TESTS_ENVIRONMENT): Define PATH to include
+	the build src/ directory -- at the front.
+	($(srcdir)/$x-tests): Depend on Makefile.am.
+	Use $x as the program name, except when it would be `test' (test is
+	the sole program tested via mk-script that is also a shell built-in).
+	In that case, use the old ../../src/$x.
 
 2004-05-30  Jim Meyering  <jim@meyering.net>
 
 	Work around HPUX /bin/cc compiler bug that is exposed, now that
-	sets are arrays of type `bool'.
+	sets are arrays of type `bool'.  More details here:
+	http://lists.gnu.org/archive/html/bug-gnulib/2004-05/msg00094.html
+	FIXME: verify that the above URL points to the right message
 
 	* src/tr.c (card_of_complement): Use cleaner `sizeof in_set'
 	rather than `N_CHARS * sizeof(in_set[0])'.  Using HPUX's /bin/cc
