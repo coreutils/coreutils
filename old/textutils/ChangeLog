@@ -1,3 +1,8 @@
+Sat Sep  7 12:25:42 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/fmt.c (check_punctuation): Use ISPUNCT instead of ispunct.
+	(get_line): Use ISSPACE instead of isspace.  From Bruno Haible.
+
 Mon Sep  2 10:34:46 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/*.c (usage): Tell where to report bugs.
