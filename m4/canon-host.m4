@@ -1,4 +1,4 @@
-# canon-host.m4 serial 2
+# canon-host.m4 serial 3
 dnl Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
@@ -9,7 +9,7 @@ dnl the same distribution terms as the rest of that program.
 AC_DEFUN([gl_CANON_HOST],
 [
   dnl Prerequisites of lib/canon-host.c.
-  AC_CHECK_HEADERS_ONCE(stdlib.h string.h unistd.h)
+  AC_CHECK_HEADERS_ONCE(unistd.h)
   AC_CHECK_HEADERS(netdb.h sys/socket.h netinet/in.h arpa/inet.h)
 
   dnl Add any libraries as early as possible.
