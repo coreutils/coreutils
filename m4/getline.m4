@@ -1,4 +1,4 @@
-#serial 2
+#serial 3
 
 dnl See if there's a working, system-supplied version of the getline function.
 dnl We can't just do AC_REPLACE_FUNCS(getline) because some systems
