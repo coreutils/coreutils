@@ -1,6 +1,11 @@
-2004-04-04  Jim Meyering  <jim@meyering.net>
+2004-04-06  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	* src/system.h (makedev) [mkdev && !makedev]: Define in terms of mkdev.
+	Interix spells it `mkdev'.  Reported by Mark Funkenhauser.
+
+2004-04-04  Jim Meyering  <jim@meyering.net>
 
 	A specified format is no longer automatically newline terminated.
 	If you want a newline at the end of your format, use `\n'.
