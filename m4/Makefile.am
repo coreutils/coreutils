@@ -41,7 +41,6 @@ readdir.m4 \
 realloc.m4 \
 regex.m4 \
 search-libs.m4 \
-ssize_t.m4 \
 st_dm_mode.m4 \
 st_mtim.m4 \
 stat.m4 \
