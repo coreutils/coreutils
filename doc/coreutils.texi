@@ -564,8 +564,7 @@ other exit status values and a few associate different
 meanings with the values @samp{0} and @samp{1}.
 Here are some of the exceptions:
 @command{expr}, @command{false}, @command{nohup}, @command{printenv},
-@command{sort}, @command{test}, @command{true}, @command{tty},
-@command{uniq}.
+@command{sort}, @command{test}, @command{true}, @command{tty}.
 
 
 @node Backup options
@@ -4987,6 +4986,8 @@ except @samp{..}, and the third ignores names that start with @samp{#}.
 @cindex symbolic links, dereferencing
 When showing file information for a symbolic link, show information
 for the file the link references rather than the link itself.
+However, even with this option, @command{ls} still prints the name
+of the link itself, not the name of the file that the link points to.
 
 @item -R
 @itemx --recursive
