@@ -24,6 +24,7 @@ Changes in release 2.1
     opposite sides of a daylight savings time transition.
     This problem arose only with relative date strings like `last monday'.
     It was not a problem with strings that include absolute dates.
+* factor is twice as fast, for large numbers
  [2.0.11]
 * setting the date now works properly, even when using -u
 * `date -f - < /dev/null' no longer dumps core
