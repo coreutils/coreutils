@@ -22,6 +22,10 @@
 
 	* announce-gen: Sync with autoconf.
 
+	* tests/ls/time-1: Exit 77 (not 1) if we can't set up for the test.
+	This was triggered on a Linux-2.2.19 system using a file system
+	NFS-mounted from some sort of Sun.
+
 2004-03-11  Jim Meyering  <jim@meyering.net>
 
 	* Use automake-1.8.3.  Regenerate dependent files.
