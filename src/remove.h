@@ -45,7 +45,7 @@ enum RM_status
     }								\
   while (0)
 
-enum RM_status rm PARAMS ((size_t n_files, char const *const *file,
-			   struct rm_options const *x));
+enum RM_status rm (size_t n_files, char const *const *file,
+		   struct rm_options const *x);
 
 #endif
