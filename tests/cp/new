@@ -61,12 +61,16 @@ cat <<\EOF > $expected
 0 foo -> foo foo.~1~ symlink -> foo symlink-loop symlink-loop
 0 foo -> foo foo.~1~ symlink -> foo symlink-loop symlink-loop
 
-1 [cp: `foo' and `foo' are the same file] foo symlink -> foo
-1 [cp: `foo' and `foo' are the same file] foo symlink -> foo
-1 [cp: `foo' and `foo' are the same file] foo symlink -> foo
-0 foo foo.~1~ symlink -> foo
+1 [cp: `foo' and `foo' are the same file] foo
+1 [cp: `foo' and `foo' are the same file] foo
+1 [cp: `foo' and `foo' are the same file] foo
+0 foo foo.~1~
+
+1 [cp: `sl1' and `sl2' are the same file] foo sl1 -> foo sl2 -> foo
+0 foo sl1 -> foo sl2 sl2.~1~ -> foo
+0 foo sl1 -> foo sl2 -> foo sl2.~1~ -> foo
+0 foo sl1 -> foo sl2 -> foo sl2.~1~ -> foo
 
 EOF
 
-cat $actual 1>&2
-cmp $expected $actual
+cmp $expected $actual # || cat $actual 1>&2
