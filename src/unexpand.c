@@ -282,6 +282,9 @@ unexpand ()
   int pending = 0;		/* Pending columns of blanks. */
 
   fp = next_file ((FILE *) NULL);
+  if (fp == NULL)
+    return;
+
   for (;;)
     {
       c = getc (fp);

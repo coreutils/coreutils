@@ -609,7 +609,7 @@ load_buffer ()
       b->bytes_used += (unsigned) read_input (p, bytes_avail);
 
       lines_found = record_line_starts (b);
-      bytes_wanted = b->bytes_alloc + INCR_SIZE;
+      bytes_wanted = b->bytes_alloc * 2;
       if (!lines_found)
 	free_buffer (b);
     }
