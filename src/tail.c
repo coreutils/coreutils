@@ -917,7 +917,22 @@ parse_obsolescent_option (int argc, const char *const *argv,
     }
 
   if (*p != '\0')
-    return 0;
+    {
+      /* If (argv[1] begins with a `+' or if it begins with `-' followed
+	 by a digit), but has an invalid suffix character, give a diagnostic
+	 and indicate to caller that this *is* of the obsolescent form,
+	 but that it's an invalid option.  */
+      if (t_from_start || n_string)
+	{
+	  error (0, 0,
+		 _("%c: invalid suffix character in obsolescent option" ), *p);
+	  *fail = 1;
+	  return 1;
+	}
+
+      /* Otherwise, it might be a valid non-obsolescent option like -n.  */
+      return 0;
+    }
 
   *fail = 0;
   if (n_string == NULL)
