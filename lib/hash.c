@@ -1,5 +1,8 @@
 /* hash - hashing table processing.
-   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+
+   Copyright (C) 1998, 1999, 2000, 2001, 2002, 2003 Free Software
+   Foundation, Inc.
+
    Written by Jim Meyering, 1992.
 
    This program is free software; you can redistribute it and/or modify
@@ -27,11 +30,9 @@
 #if HAVE_STDLIB_H
 # include <stdlib.h>
 #endif
-#if HAVE_STDBOOL_H
-# include <stdbool.h>
-#else
-typedef enum {false = 0, true = 1} bool;
-#endif
+
+#include <limits.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <assert.h>
 
@@ -403,9 +404,6 @@ hash_do_for_each (const Hash_table *table, Hash_processor processor,
 unsigned
 hash_string (const char *string, unsigned n_buckets)
 {
-# ifndef CHAR_BIT
-#  define CHAR_BIT 8
-# endif
 # define ROTATE_LEFT(Value, Shift) \
   ((Value) << (Shift) | (Value) >> ((sizeof (unsigned) * CHAR_BIT) - (Shift)))
 # define HASH_ONE_CHAR(Value, Byte) \
