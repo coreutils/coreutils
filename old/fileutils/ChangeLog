@@ -1,3 +1,16 @@
+2000-10-28  Jim Meyering  <meyering@lucent.com>
+
+	* src/shred.c: Include assert.h.
+	(fillrand): Add a parameter, size_max.
+	Add an assertion.
+	Adjust caller.
+	(dopass): Break out of the `for (;;)' loop if size < offset.
+	That can happen now that dopass is called with SIZE == -1.
+	(do_wipefd): Accept a length of zero only for a regular file.
+	If lseek fails or returns 0 for a non-regular file, let dopass
+	determine the length.
+	Inspired by a patch from Alan Iwi.
+
 2000-10-26  Jim Meyering  <meyering@lucent.com>
 
 	* doc/getdate.texi (Authors of getdate): Add Paul Eggert.
