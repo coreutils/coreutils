@@ -1,3 +1,59 @@
+2004-05-18  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Several fixes to chgrp and chown for compatibility with POSIX and BSD:
+
+	  Check for incompatible options.  When -R and --dereference are
+	  both used, then either -H or -L must also be used.  When -R and -h
+	  are both used, then -P must be in effect.
+
+	  -H, -L, and -P have no effect unless -R is also specified.
+	  If -P and -R are both specified, -h is assumed.
+
+	  Do not optimize away the chown() system call when the file's owner
+	  and group already have the desired value.  This optimization was
+	  incorrect, as it failed to updated the last-changed time and reset
+	  special permission bits, as POSIX requires.
+
+	  Do not report an error if the owner or group of a
+	  recursively-encountered symbolic link cannot be updated because
+	  the file system does not support it.
+
+	* NEWS: Document the above.
+
+	* src/chgrp.c (main): Check for incompatible options.  -R --dereference
+	requires either -H or -L, and -R -h requires -P.  If -H, specify
+	FTS_PHYSICAL as well as FTS_COMFOLLOW; this is faster.  Make this
+	file as much like chown.c as possible.
+	* src/chown.c (main): Likewise.
+
+	* src/chown-core.c (change_file_owner): Use ent->fts_statp only if
+	needed.  Chown a directory only after chowning its children; this
+	avoids problems if the new directory ownership doesn't permit
+	access to the children.  Dereference symlinks before doing
+	ROOT_DEV_INO_CHECK, not after, so that we catch symlinks to /.
+	Do not optimize away the chown() system call when the file's owner
+	and group already have the desired value.  POSIX does not permit
+	this optimization.  Rely on chown and lchown to do the right
+	thing with symlinks and/or -1 arguments, now that we have wrappers
+	to do this.  Use ENOTSUPP not ENOSYS, and ignore all ENOTSUPP
+	errors, not just command-line errors.
+	(chown_files): Pass FTS_STAT to xfts_open if we don't need file status.
+
+	* src/system.h (ENOTSUP): Remove.
+
+	* tests/chgrp/basic: Use chown --from to discover whether the
+	group changed, since chgrp now changes unconditionally.  This
+	complicates the sed script a bit.  Do not specify --dereference,
+	since it's the default (and we want to test this).  Adjust output
+	to match the fact that chgrp no longer optimizes the case of
+	changing a file's group to the same value as before.
+	* tests/chgrp/posix-H: Do not attempt to combine -h and -H; these
+	options are incompatible, and their behavior is undefined with POSIX.
+	(changed, not_changed): Adjust to match the fact that -h is no longer
+	specified.  Sort names.
+	* tests/chown/deref: Adjust error-diagnostic spelling to match new
+	behavior.
+
 2004-06-07  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
