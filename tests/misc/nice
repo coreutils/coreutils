@@ -1,0 +1,70 @@
+#! /bin/sh
+# This script takes no arguments.
+
+if test -n "$DJDIR"; then
+  echo "$0: cannot test nice on DJGPP" >&2
+  exit 77
+fi
+
+tests='
+0 empty 10
+1 -1 1
+2 -12 12
+3 -1:-2 2
+4 -n:1 1
+5 -n:1:-2 2
+6 -n:1:-+12 12
+7 -2:-n:1 1
+8 -2:-n:12 12
+9 -+1 1
+10 -+12 12
+11 -+1:-+12 12
+12 -n:+1 1
+13 --1:-2 2
+14 --1:-2:-13 13
+15 --1:-n:2 2
+16 --1:-n:2:-3 3
+17 --1:-n:2:-13 13
+18 -n:-1:-12 12
+19 --1:-12 12
+NA LAST NA
+'
+set - $tests
+
+if test "$VERBOSE" = yes; then
+  nice --version
+  set -x
+fi
+
+_POSIX2_VERSION=199209
+export _POSIX2_VERSION
+
+# Require that this test be run at `nice' level 0.
+niceness=`nice`
+if test "$niceness" = 0; then
+    : ok
+else
+  echo "$0: this test must be run at nice level 0" 1>&2
+  exit 77
+fi
+
+fail=0
+while :; do
+  test_name=$1
+  args=$2
+  expected_result=$3
+  test $args = empty && args=''
+  test x$args = xLAST && break
+  args=`echo x$args|tr : ' '|sed 's/^x//'`
+  if test "$VERBOSE" = yes; then
+    #echo "testing \`nice $args nice\` = $expected_result ..."
+    echo "test $test_name... " | tr -d '\012'
+  fi
+  test x`nice $args nice 2> /dev/null` = x$expected_result \
+    && ok=ok || ok=FAIL fail=1
+  test "$VERBOSE" = yes && echo $ok
+  test x`nice $args nice 2> /dev/null` = x$expected_result || fail=1
+  shift; shift; shift
+done
+
+exit $fail
