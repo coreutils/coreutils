@@ -20,12 +20,18 @@
 #ifndef VERSION_ETC_H
 # define VERSION_ETC_H 1
 
+# include <stdarg.h>
 # include <stdio.h>
 
-extern char *version_etc_copyright;
+extern const char *version_etc_copyright;
 
-void version_etc (FILE *stream,
-		  const char *command_name, const char *package,
-		  const char *version, const char *writen_by);
+extern void version_etc_va (FILE *stream,
+			    const char *command_name, const char *package,
+			    const char *version, va_list authors);
+
+extern void version_etc (FILE *stream,
+			 const char *command_name, const char *package,
+			 const char *version,
+		         /* const char *author1, ...*/ ...);
 
 #endif /* VERSION_ETC_H */
