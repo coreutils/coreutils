@@ -1,3 +1,9 @@
+2000-06-17  Jim Meyering  <meyering@lucent.com>
+
+	* tests/install/basic-1: Don't fail (just exit 77) if strip doesn't
+	work.  Suggestion from Ulrich Drepper.
+	Add canonical trap/mkdir/cd, plus exit portability cruft.
+
 2000-06-16  Jim Meyering  <meyering@lucent.com>
 
 	* src/copy.c (copy_reg): Give a slightly better diagnostic upon
