@@ -1,5 +1,16 @@
 2000-04-08  Jim Meyering  <meyering@lucent.com>
 
+	* doc/fileutils.texi (cp invocation): Mention that there is an
+	application for cp's --sparse=never option.  From Martin Hippe.
+
+2000-03-10  Alan Iwi <iwi@atm.ox.ac.uk>
+
+	* src/ls.c: Add support for "ln=target" in the LS_COLORS variable,
+	to colorize links as for the file/directory pointed to.
+	* src/dircolors.hin: Add a few words of documentation of the above.
+
+2000-04-08  Jim Meyering  <meyering@lucent.com>
+
 	* src/cp.c (usage): Document that while the --backup option takes an
 	optional argument, the -b option accepts none.
 	(main): Use `backup type' in call to xget_version, not the
