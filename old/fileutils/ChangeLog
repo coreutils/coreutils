@@ -1,5 +1,7 @@
 Mon Dec  2 20:30:20 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* configure.in (jm_FUNC_MKTIME): Use this instead of AM_FUNC_MKTIME.
+
 	* src/system.h [!S_IXUGO] (S_IXUGO): Define it.
 
 	* src/ls.c (print_color_indicator): Check the file's suffix only
