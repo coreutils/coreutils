@@ -736,21 +736,19 @@ main (int argc, char **argv)
 	}
     }
 
-  /*
-   * Clear out the options that have been parsed.  This is kind of
-   * gross, but it's needed because stty SETTINGS look like options to
-   * getopt(), so we need to work around things in a really horrible
-   * way.  If any new options are ever added to stty, the short option
-   * MUST NOT be a letter which is the first letter of one of the
-   * possible stty settings.  (NOTE: I didn't add this brokeness, I
-   * just fixed the existing code so that it worked correctly in all
-   * cases of --, POSIXLY_CORRECT, etc.  [tytso:19980401.1316EST])
-   */
+  /* Clear out the options that have been parsed.  This is kind of
+     gross, but it's needed because stty SETTINGS look like options to
+     getopt(), so we need to work around things in a really horrible
+     way.  If any new options are ever added to stty, the short option
+     MUST NOT be a letter which is the first letter of one of the
+     possible stty settings.  If you change anything about how stty
+     parses options, be sure it still works with combinations of
+     short and long options, --, POSIXLY_CORRECT, etc.  */
   for (k = 1; k < argc; k++)
     {
       if (!argv[k])
 	continue;
-      /* Handle --, and set noargs if there are arguments following it */
+      /* Handle --, and reset noargs if there are arguments following it.  */
       if (STREQ (argv[k], "--"))
 	{
 	  argv[k] = 0;
@@ -764,19 +762,19 @@ main (int argc, char **argv)
 	  argv[k + 1] = 0;
 	  argv[k] = 0;
     	}
-      /* Handle "--all", "--save", and "--file=device" */
+      /* Handle "--all", "--save", and "--file=device".  */
       else if (STREQ (argv[k], "--all") ||
 	       STREQ (argv[k], "--save") ||
 	       !strncmp (argv[k], "--file=", 7))
 	argv[k] = 0;
-      /* Handle "-a", "-ag", "-aF/dev/foo", "-aF /dev/foo", etc. */
+      /* Handle "-a", "-ag", "-aF/dev/foo", "-aF /dev/foo", etc.  */
       else if (valid_options (argv[k], "ag", "F"))
 	{
 	  if (STREQ (argv[k], "-file") || argv[k][strlen (argv[k]) - 1] == 'F')
 	    argv[k + 1] = 0;
 	  argv[k] = 0;
         }
-      /* Everything else must be a normal, non-option argument. */
+      /* Everything else must be a normal, non-option argument.  */
       else
 	{
 	  noargs = 0;
@@ -1033,7 +1031,7 @@ mutually exclusive"));
   exit (0);
 }
 
-/* Return 0 if not applied because not reversible; otherwise return 1. */
+/* Return 0 if not applied because not reversible; otherwise return 1.  */
 
 static int
 set_mode (struct mode_info *info, int reversed, struct termios *mode)
