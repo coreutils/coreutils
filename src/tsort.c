@@ -111,7 +111,7 @@ With no FILE, or when FILE is -, read standard input.\n\
 static struct item *
 new_item (const char *str)
 {
-  struct item *k = xmalloc (sizeof (struct item));
+  struct item *k = xmalloc (sizeof *k);
 
   k->str = (str ? xstrdup (str): NULL);
   k->left = k->right = NULL;
@@ -286,7 +286,7 @@ record_relation (struct item *j, struct item *k)
   if (!STREQ (j->str, k->str))
     {
       k->count++;
-      p = xmalloc (sizeof (struct successor));
+      p = xmalloc (sizeof *p);
       p->suc = k;
       p->next = j->top;
       j->top = p;
