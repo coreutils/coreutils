@@ -287,9 +287,20 @@ print_entry (this)
 
   char line[sizeof (this->ut_line) + DEV_DIR_LEN + 1];
 
-  strcpy(line, DEV_DIR_WITH_TRAILING_SLASH);
-  strncpy (line + DEV_DIR_LEN, this->ut_line, sizeof (this->ut_line));
-  line[DEV_DIR_LEN + sizeof (this->ut_line)] = '\0';
+  /* Copy ut_line into LINE, prepending `/dev/' if ut_line is not
+     already an absolute pathname.  Some system may put the full,
+     absolute pathname in ut_line.  */
+  if (this->ut_line[0] == '/')
+    {
+      strncpy (line, this->ut_line, sizeof (this->ut_line));
+      line[sizeof (this->ut_line)] = '\0';
+    }
+  else
+    {
+      strcpy(line, DEV_DIR_WITH_TRAILING_SLASH);
+      strncpy (line + DEV_DIR_LEN, this->ut_line, sizeof (this->ut_line));
+      line[DEV_DIR_LEN + sizeof (this->ut_line)] = '\0';
+    }
 
   if (stat (line, &stats) == 0)
     {
