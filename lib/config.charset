@@ -1,0 +1,178 @@
+#! /bin/sh
+# Output a system dependent table of character encoding aliases.
+#
+#   Copyright (C) 2000 Free Software Foundation, Inc.
+#
+#   This program is free software; you can redistribute it and/or modify it
+#   under the terms of the GNU Library General Public License as published
+#   by the Free Software Foundation; either version 2, or (at your option)
+#   any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#   Library General Public License for more details.
+#
+#   You should have received a copy of the GNU Library General Public
+#   License along with this program; if not, write to the Free Software
+#   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+#   USA.
+#
+# The table consists of lines of the form
+#    ALIAS  CANONICAL
+#
+# ALIAS is the (system dependent) result of "nl_langinfo (CODESET)".
+# ALIAS is compared in a case sensitive way.
+#
+# CANONICAL is the GNU canonical name for this character encoding.
+# It must be an encoding supported by libiconv. Support by GNU libc is
+# also desirable. CANONICAL is case insensitive. Usually an upper case
+# MIME charset name is preferred.
+# The current list of GNU canonical charset names is as follows.
+#
+#       name                         used by which systems
+#   ASCII                     glibc solaris
+#   ISO-8859-1                glibc aix hpux irix osf solaris
+#   ISO-8859-2                glibc aix hpux irix solaris
+#   ISO-8859-4                solaris
+#   ISO-8859-5                glibc aix hpux irix solaris
+#   ISO-8859-6                aix hpux solaris
+#   ISO-8859-7                glibc aix hpux irix osf solaris
+#   ISO-8859-8                glibc aix hpux solaris
+#   ISO-8859-9                glibc aix hpux irix osf solaris
+#   ISO-8859-13               glibc
+#   ISO-8859-15               aix solaris
+#   KOI8-R                    glibc solaris
+#   KOI8-U                    glibc
+#   CP850                     aix osf
+#   CP856                     aix
+#   CP921                     aix
+#   CP922                     aix
+#   CP932                     aix
+#   CP943                     aix
+#   CP1046                    aix
+#   CP1124                    aix
+#   CP1129                    aix
+#   CP1252                    aix
+#   EUC-CN                    aix hpux solaris
+#   EUC-JP                    aix hpux solaris
+#   EUC-KR                    aix hpux solaris
+#   EUC-TW                    aix hpux solaris
+#   BIG5                      aix hpux solaris
+#   GBK                       aix
+#   SJIS                      hpux solaris
+#   TIS-620                   aix hpux solaris
+#   HP-ROMAN8                 hpux
+#   HP-ARABIC8                hpux
+#   HP-GREEK8                 hpux
+#   HP-HEBREW8                hpux
+#   HP-TURKISH8               hpux
+#   HP-KANA8                  hpux
+#   UTF-8                     glibc aix hpux solaris
+#
+# The first argument passed to this file is the canonical host specification,
+#    CPU_TYPE-MANUFACTURER-OPERATING_SYSTEM
+# or
+#    CPU_TYPE-MANUFACTURER-KERNEL-OPERATING_SYSTEM
+
+host="$1"
+os=`echo "$host" | sed -e 's/^[^-]*-[^-]*-\(.*\)$/\1/'`
+echo "# This file contains a table of character encoding aliases,"
+echo "# suitable for operating system '${os}'."
+echo "# It was automatically generated from config.charset."
+case "$os" in
+    linux* | *-gnu*)
+	# With glibc we don't need any canonicalization, because glibc
+	# supports all GNU canonical names directly.
+	echo "ANSI_X3.4-1968 ASCII" # this is a nop
+	echo "ISO_646.IRV:1983 ASCII" # this is a nop
+	echo "BALTIC ISO-8859-13" # in glibc-2.2 or newer, this is a nop
+	;;
+    aix*)
+	echo "ISO8859-1 ISO-8859-1"
+	echo "ISO8859-2 ISO-8859-2"
+	echo "ISO8859-5 ISO-8859-5"
+	echo "ISO8859-6 ISO-8859-6"
+	echo "ISO8859-7 ISO-8859-7"
+	echo "ISO8859-8 ISO-8859-8"
+	echo "ISO8859-9 ISO-8859-9"
+	echo "ISO8859-15 ISO-8859-15"
+	echo "IBM-850 CP850"
+	echo "IBM-856 CP856"
+	echo "IBM-921 CP921"
+	echo "IBM-922 CP922"
+	echo "IBM-932 CP932"
+	echo "IBM-943 CP943"
+	echo "IBM-1046 CP1046"
+	echo "IBM-1124 CP1124"
+	echo "IBM-1129 CP1129"
+	echo "IBM-1252 CP1252"
+	echo "IBM-eucCN EUC-CN"
+	echo "IBM-eucJP EUC-JP"
+	echo "IBM-eucKR EUC-KR"
+	echo "IBM-eucTW EUC-TW"
+	echo "big5 BIG5"
+	echo "GBK GBK"
+	echo "TIS-620 TIS-620"
+	echo "UTF-8 UTF-8"
+	;;
+    hpux*)
+	echo "iso88591 ISO-8859-1"
+	echo "iso88592 ISO-8859-2"
+	echo "iso88595 ISO-8859-5"
+	echo "iso88596 ISO-8859-6"
+	echo "iso88597 ISO-8859-7"
+	echo "iso88598 ISO-8859-8"
+	echo "iso88599 ISO-8859-9"
+	echo "roman8 HP-ROMAN8"
+	echo "arabic8 HP-ARABIC8"
+	echo "greek8 HP-GREEK8"
+	echo "hebrew8 HP-HEBREW8"
+	echo "turkish8 HP-TURKISH8"
+	echo "kana8 HP-KANA8"
+	echo "tis620 TIS-620"
+	echo "big5 BIG5"
+	echo "eucJP EUC-JP"
+	echo "eucKR EUC-KR"
+	echo "eucTW EUC-TW"
+	echo "hp15CN EUC-CN"
+	#echo "ccdc ?" # what is this?
+	echo "SJIS SJIS"
+	echo "utf8 UTF-8"
+	;;
+    irix*)
+	echo "ISO8859-1 ISO-8859-1"
+	echo "ISO8859-2 ISO-8859-2"
+	echo "ISO8859-5 ISO-8859-5"
+	echo "ISO8859-7 ISO-8859-7"
+	echo "ISO8859-9 ISO-8859-9"
+	;;
+    osf*)
+	echo "ISO8859-1 ISO-8859-1"
+	echo "ISO8859-7 ISO-8859-7"
+	echo "ISO8859-9 ISO-8859-9"
+	echo "cp850 CP850"
+	;;
+    solaris*)
+	echo "646 ASCII"
+	echo "ISO8859-1 ISO-8859-1"
+	echo "ISO8859-2 ISO-8859-2"
+	echo "ISO8859-4 ISO-8859-4"
+	echo "ISO8859-5 ISO-8859-5"
+	echo "ISO8859-6 ISO-8859-6"
+	echo "ISO8859-7 ISO-8859-7"
+	echo "ISO8859-8 ISO-8859-8"
+	echo "ISO8859-9 ISO-8859-9"
+	echo "ISO8859-15 ISO-8859-15"
+	echo "koi8-r KOI8-R"
+	echo "BIG5 BIG5"
+	echo "gb2312 EUC-CN"
+	echo "cns11643 EUC-TW"
+	echo "5601 EUC-KR"
+	echo "eucJP EUC-JP"
+	echo "PCK SJIS"
+	echo "TIS620.2533 TIS-620"
+	#echo "sun_eu_greek ?" # what is this?
+	echo "UTF-8 UTF-8"
+	;;
+esac
