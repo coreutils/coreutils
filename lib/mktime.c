@@ -232,7 +232,7 @@ ranged_convert (struct tm *(*convert) (const time_t *, struct tm *),
    Use *OFFSET to keep track of a guess at the offset of the result,
    compared to what the result would be for UTC without leap seconds.
    If *OFFSET's guess is correct, only one CONVERT call is needed.
-   This function has global scope because it is used also by timegm.c.  */
+   This function is external because it is used also by timegm.c.  */
 time_t
 __mktime_internal (struct tm *tp,
 		   struct tm *(*convert) (const time_t *, struct tm *),
