@@ -57,8 +57,7 @@ installdirs:
 	$(srcdir)/../mkinstalldirs $(infodir)
 
 install: all installdirs
-	test -r fileutils.info && dir=. || dir=$(srcdir); \
-	for file in fileutils.info; do \
+	cd $(srcdir) && for file in fileutils.info; do \
 	  $(INSTALL_DATA) $$dir/$$file $(infodir)/$$file; \
 	done
 
