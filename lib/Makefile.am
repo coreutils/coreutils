@@ -15,8 +15,8 @@ xmalloc.c xstrdup.c xstrtol.c xstrtoul.c yesno.c
 
 fu_LIBADD = @LIBOBJS@ @ALLOCA@
 
-HEADERS = argmatch.h backupfile.h error.h fnmatch.h fsusage.h getopt.h \
-group-member.h long-options.h makepath.h modechange.h mountlist.h \
+noinst_HEADERS = argmatch.h backupfile.h error.h fnmatch.h fsusage.h \
+getopt.h group-member.h long-options.h makepath.h modechange.h mountlist.h \
 obstack.h pathmax.h save-cwd.h xstrtol.h xstrtoul.h
 
 BUILT_SOURCES = getdate.c posixtm.c
