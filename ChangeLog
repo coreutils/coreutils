@@ -1,6 +1,11 @@
-2004-12-17  Jim Meyering  <jim@meyering.net>
+2004-12-19  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	* NEWS: Mention that one should eval "`dircolors`" rather than
+	`dircolors`.
+
+2004-12-17  Jim Meyering  <jim@meyering.net>
 
 	* tests/mv/hard-link-1: Rearrange to use newer trap-handling code,
 	so temporary directories aren't left behind upon e.g., interrupt.
