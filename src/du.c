@@ -81,6 +81,12 @@ struct htab
   struct entry *hash[1];	/* Vector of pointers in `entry_tab'.  */
 };
 
+struct saved_cwd
+  {
+    int desc;
+    char *name;
+  };
+
 
 /* Structure for dynamically resizable strings. */
 
@@ -182,6 +188,76 @@ static struct option const long_options[] =
   {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
+
+static void
+save_cwd (cwd)
+     struct saved_cwd *cwd;
+{
+  static int have_working_fchdir = 1;
+
+  if (have_working_fchdir)
+    {
+#ifdef HAVE_FCHDIR
+      cwd->desc = open (".", O_RDONLY);
+      if (cwd->desc < 0)
+	error (1, errno, "cannot open current directory");
+
+      /* On SunOS 4, fchdir returns EINVAL if accounting is enabled,
+	 so we have to fall back to chdir.  */
+      if (fchdir (cwd->desc))
+	{
+	  if (errno == EINVAL)
+	    {
+	      close (cwd->desc);
+	      cwd->desc = -1;
+	      have_working_fchdir = 0;
+	    }
+	  else
+	    {
+	      error (1, errno, "current directory");
+	    }
+	}
+#else
+#define fchdir(x) (abort (), 0)
+      have_working_fchdir = 0;
+#endif
+    }
+
+  if (!have_working_fchdir)
+    {
+      cwd->name = xgetcwd ();
+      if (cwd->name == NULL)
+	error (1, errno, "cannot get current directory");
+    }
+  else
+    {
+      cwd->name = NULL;
+    }
+}
+
+static void
+restore_cwd (cwd, dest, current)
+     const struct saved_cwd *cwd;
+     const char *dest;
+     const char *current;
+{
+
+#ifndef HAVE_FCHDIR
+#define fchdir(x) (abort (), -1)
+#endif
+
+  if (cwd->desc >= 0)
+    {
+      if (fchdir (cwd->desc) < 0)
+	error (1, errno, "cannot return to %s%s%s", dest,
+	       (current ? " from " : ""),
+	       (current ? current : ""));
+    }
+  else if (chdir (cwd->name) < 0)
+    {
+      error (1, errno, "%s", cwd->name);
+    }
+}
 
 static void
 usage (status, reason)
@@ -313,40 +389,12 @@ static void
 du_files (files)
      char **files;
 {
-#ifdef HAVE_FCHDIR
-  int starting_desc;
-#endif
-  char *starting_dir = NULL;
+  struct saved_cwd cwd;
   ino_t initial_ino;		/* Initial directory's inode. */
   dev_t initial_dev;		/* Initial directory's device. */
   int i;			/* Index in FILES. */
 
-#ifdef HAVE_FCHDIR
-  starting_desc = open (".", O_RDONLY);
-  if (starting_desc < 0)
-    error (1, errno, "cannot open current directory");
-
-  /* On SunOS 4, fchdir returns EINVAL if accounting is enabled,
-     so we have to fall back to chdir.  */
-  if (fchdir (starting_desc))
-    {
-      if (errno == EINVAL)
-	{
-	  close (starting_desc);
-	  starting_desc = -1;
-	}
-      else
-	{
-	  error (1, errno, "current directory");
-	}
-    }
-  if (starting_desc == -1)
-#endif
-  {
-    starting_dir = xgetcwd ();
-    if (starting_dir == NULL)
-      error (1, errno, "cannot get current directory");
-  }
+  save_cwd (&cwd);
 
   /* Remember the inode and device number of the current directory.  */
   if (safe_stat (".", &stat_buf))
@@ -385,16 +433,7 @@ du_files (files)
 	error (1, errno, ".");
       if (stat_buf.st_ino != initial_ino || stat_buf.st_dev != initial_dev)
 	{
-#ifdef HAVE_FCHDIR
-	  if (starting_desc >= 0)
-	    {
-	      if (fchdir (starting_desc) < 0)
-		error (1, errno, "cannot return to starting directory");
-	    }
-	  else
-#endif
-	  if (chdir (starting_dir) < 0)
-	    error (1, errno, "%s", starting_dir);
+	  restore_cwd (&cwd, "starting directory", NULL);
 	}
     }
 
@@ -405,8 +444,8 @@ du_files (files)
       fflush (stdout);
     }
 
-  if (starting_dir != NULL)
-    free (starting_dir);
+  if (cwd.name != NULL)
+    free (cwd.name);
 }
 
 /* Print (if appropriate) and return the size
@@ -449,11 +488,26 @@ count_entry (ent, top, last_dev)
       dev_t dir_dev;
       char *name_space;
       char *namep;
+      struct saved_cwd cwd;
+      int through_symlink;
+      struct stat e_buf;
 
       dir_dev = stat_buf.st_dev;
 
       if (opt_one_file_system && !top && last_dev != dir_dev)
 	return 0;		/* Don't enter a new file system.  */
+
+#ifndef S_ISDIR
+# define S_ISDIR(s) 0
+#endif
+      /* If we're dereferencing symlinks and we're about to chdir through
+	 a symlink, remember the current directory so we can return to it
+	 later.  In other cases, chdir ("..") works fine.  */
+      through_symlink = (xstat == safe_stat
+			 && safe_lstat (ent, &e_buf)
+			 && S_ISLNK (e_buf.st_mode));
+      if (through_symlink)
+	save_cwd (&cwd);
 
       if (chdir (ent) < 0)
 	{
@@ -469,9 +523,15 @@ count_entry (ent, top, last_dev)
 	  if (errno)
 	    {
 	      error (0, errno, "%s", path->text);
-	      if (chdir ("..") < 0)	/* Try to return to previous dir.  */
-		error (1, errno, "cannot change to `..' from directory %s",
-		       path->text);
+	      if (through_symlink)
+		{
+		  restore_cwd (&cwd, "..", path->text);
+		  if (cwd.name != NULL)
+		    free (cwd.name);
+		}
+	      else if (chdir ("..") < 0)
+		  error (1, errno, "cannot change to `..' from directory %s",
+			 path->text);
 	      exit_status = 1;
 	      return 0;
 	    }
@@ -495,7 +555,13 @@ count_entry (ent, top, last_dev)
 	  namep += strlen (namep) + 1;
 	}
       free (name_space);
-      if (chdir ("..") < 0)
+      if (through_symlink)
+	{
+	  restore_cwd (&cwd, "..", path->text);
+	  if (cwd.name != NULL)
+	    free (cwd.name);
+	}
+      else if (chdir ("..") < 0)
         error (1, errno, "cannot change to `..' from directory %s", path->text);
 
       str_trunc (path, pathlen - 1); /* Remove the "/" we added.  */
