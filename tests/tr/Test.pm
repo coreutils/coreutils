@@ -79,6 +79,10 @@ my @tv = (
 ['rep-1',   q|'[:*3][:digit:]' 'a-m'|,	':1239', 'cefgm', 0],
 ['rep-2',   q|'a[b*512]c' '1[x*]2'|,	'abc', '1x2', 0],
 ['rep-3',   q|'a[b*513]c' '1[x*]2'|,	'abc', '1x2', 0],
+# Another couple octal repeat count tests.
+['o-rep-1',   q|'[b*08]' '[x*]'|,	'', '', 1],
+['o-rep-2',   q|'[b*010]cd' '[a*7]BC[x*]'|, 'bcd', 'BCx', 0],
+
 ['esc',     q|'a\-z' 'A-Z'|,		'abc-z', 'AbcBC', 0],
 
 #
@@ -93,6 +97,7 @@ my @tv = (
 ['ross-4', '-dcs ' . q|'[:alnum:]' '[:digit:]'|,	'', '', 0],
 ['ross-5', '-dc ' . q|'[:lower:]'|,		'', '', 0],
 ['ross-6', '-dc ' . q|'[:upper:]'|,		'', '', 0],
+
 );
 
 sub test_vector
