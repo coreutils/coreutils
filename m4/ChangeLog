@@ -1,0 +1,6 @@
+1997-11-30  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* inttypes_h.m4: New file.
+	* uintmax_t.m4: New file.
+	* Makefile.am (EXTRA_DIST): Add inttypes_h.m4 and uintmax_t.m4.
+
