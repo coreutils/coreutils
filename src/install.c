@@ -55,7 +55,6 @@
 #include <config.h>
 #include <stdio.h>
 #include <getopt.h>
-#include <ctype.h>
 #include <sys/types.h>
 #include <pwd.h>
 #include <grp.h>
@@ -64,13 +63,6 @@
 #include "safe-stat.h"
 #include "modechange.h"
 #include "makepath.h"
-
-#if !defined (isascii) || defined (STDC_HEADERS)
-#undef isascii
-#define isascii(c) 1
-#endif
-
-#define ISDIGIT(c) (isascii (c) && isdigit (c))
 
 #ifdef _POSIX_VERSION
 #include <sys/wait.h>
