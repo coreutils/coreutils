@@ -5299,7 +5299,7 @@ Exit status:
 
 @display
 0 success
-1 minor problems (e.g., a file could not be found)
+1 minor problems (e.g., a subdirectory was not found)
 2 serious trouble (e.g., memory exhausted)
 @end display
 
@@ -6205,7 +6205,7 @@ terminal for color output from @command{ls} (and @command{dir}, etc.).
 Typical usage:
 
 @example
-eval `dircolors [@var{option}]@dots{} [@var{file}]`
+eval "`dircolors [@var{option}]@dots{} [@var{file}]`"
 @end example
 
 If @var{file} is specified, @command{dircolors} reads it to determine which
