@@ -1,29 +1,30 @@
 /* Copyright (C) 1991, 1994 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   NOTE: The canonical source of this file is maintained with the GNU C Library.
+   Bugs can be reported to bug-glibc@prep.ai.mit.edu.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   This program is free software; you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the
+   Free Software Foundation; either version 2, or (at your option) any
+   later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
-#include <string.h>
-
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
 
 /* Find the first ocurrence in S of any character in ACCEPT.  */
 char *
-DEFUN(strpbrk, (s, accept),
-      register CONST char *s AND register CONST char *accept)
+strpbrk (s, accept)
+     register const char *s;
+     register const char *accept;
 {
   while (*s != '\0')
     {
@@ -34,5 +35,5 @@ DEFUN(strpbrk, (s, accept),
       ++s;
     }
 
-  return NULL;
+  return 0;
 }
