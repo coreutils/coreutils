@@ -61,7 +61,7 @@ AC_DEFUN([UTILS_FUNC_DIRFD],
 	ac_cv_sys_dir_fd_member_name=$ac_expr
       ]
     )
-    if test $ac_cv_have_decl_dirfd = -1; then
+    if test $ac_cv_have_decl_dirfd = no; then
       AC_DEFINE_UNQUOTED(DIR_FD_MEMBER_NAME,
 	$ac_cv_sys_dir_fd_member_name,
 	[the name of the file descriptor member of DIR])
