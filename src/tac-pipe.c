@@ -30,11 +30,11 @@ struct Buf
 };
 typedef struct Buf Buf;
 
-static int
-buf_init_from_stdin (Buf *x, int eol_byte)
+static bool
+buf_init_from_stdin (Buf *x, char eol_byte)
 {
-  int last_byte_is_eol_byte = 1;
-  int fail = 0;
+  bool last_byte_is_eol_byte = true;
+  bool ok = true;
 
 #define OBS (&(x->obs))
   obstack_init (OBS);
@@ -42,18 +42,18 @@ buf_init_from_stdin (Buf *x, int eol_byte)
   while (1)
     {
       char *buf = (char *) malloc (BUFFER_SIZE);
-      int bytes_read;
+      size_t bytes_read;
 
       if (buf == NULL)
 	{
 	  /* Fall back on the code that relies on a temporary file.
 	     Write all buffers to that file and free them.  */
 	  /* FIXME */
-	  fail = 1;
+	  ok = false;
 	  break;
 	}
       bytes_read = full_read (STDIN_FILENO, buf, BUFFER_SIZE);
-      if (bytes_read < 0)
+      if (bytes_read != buffer_size && errno != 0)
 	error (EXIT_FAILURE, errno, _("read error"));
 
       {
@@ -63,14 +63,14 @@ buf_init_from_stdin (Buf *x, int eol_byte)
 	obstack_grow (OBS, &bp, sizeof (bp));
       }
 
-      if (bytes_read > 0)
+      if (bytes_read != 0)
 	last_byte_is_eol_byte = (buf[bytes_read - 1] == eol_byte);
 
       if (bytes_read < BUFFER_SIZE)
 	break;
     }
 
-  if (!fail)
+  if (ok)
     {
       /* If the file was non-empty and lacked an EOL_BYTE at its end,
 	 then add a buffer containing just that one byte.  */
@@ -80,7 +80,7 @@ buf_init_from_stdin (Buf *x, int eol_byte)
 	  if (buf == NULL)
 	    {
 	      /* FIXME: just like above */
-	      fail = 1;
+	      ok = false;
 	    }
 	  else
 	    {
@@ -102,13 +102,13 @@ buf_init_from_stdin (Buf *x, int eol_byte)
       && x->p[x->n_bufs - 1].start == x->p[x->n_bufs - 1].one_past_end)
     free (x->p[--(x->n_bufs)].start);
 
-  return fail;
+  return ok;
 }
 
 static void
 buf_free (Buf *x)
 {
-  int i;
+  size_t i;
   for (i = 0; i < x->n_bufs; i++)
     free (x->p[i].start);
   obstack_free (OBS, NULL);
@@ -153,16 +153,16 @@ line_ptr_increment (const Buf *x, const Line_ptr *lp)
   return lp_new;
 }
 
-static int
+static bool
 find_bol (const Buf *x,
 	  const Line_ptr *last_bol, Line_ptr *new_bol, char eol_byte)
 {
-  int i;
+  size_t i;
   Line_ptr tmp;
   char *last_bol_ptr;
 
   if (last_bol->ptr == x->p[0].start)
-    return 0;
+    return false;
 
   tmp = line_ptr_decrement (x, last_bol);
   last_bol_ptr = tmp.ptr;
@@ -176,10 +176,10 @@ find_bol (const Buf *x,
 	  nl_pos.i = i;
 	  nl_pos.ptr = nl;
 	  *new_bol = line_ptr_increment (x, &nl_pos);
-	  return 1;
+	  return true;
 	}
 
-      if (i <= 0)
+      if (i == 0)
 	break;
 
       --i;
@@ -193,17 +193,17 @@ find_bol (const Buf *x,
     {
       new_bol->i = 0;
       new_bol->ptr = x->p[0].start;
-      return 1;
+      return true;
     }
 
-  return 0;
+  return false;
 }
 
 static void
 print_line (FILE *out_stream, const Buf *x,
 	    const Line_ptr *bol, const Line_ptr *bol_next)
 {
-  int i;
+  size_t i;
   for (i = bol->i; i <= bol_next->i; i++)
     {
       char *a = (i == bol->i ? bol->ptr : x->p[i].start);
@@ -212,24 +212,22 @@ print_line (FILE *out_stream, const Buf *x,
     }
 }
 
-static int
+static bool
 tac_mem ()
 {
   Buf x;
   Line_ptr bol;
   char eol_byte = '\n';
-  int fail;
 
-  fail = buf_init_from_stdin (&x, eol_byte);
-  if (fail)
+  if (! buf_init_from_stdin (&x, eol_byte))
     {
       buf_free (&x);
-      return 1;
+      return false;
     }
 
   /* Special case the empty file.  */
   if (EMPTY (&x))
-    return 0;
+    return true;
 
   /* Initially, point at one past the last byte of the file.  */
   bol.i = x.n_bufs - 1;
@@ -238,11 +236,10 @@ tac_mem ()
   while (1)
     {
       Line_ptr new_bol;
-      int found = find_bol (&x, &bol, &new_bol, eol_byte);
-      if (!found)
+      if (! find_bol (&x, &bol, &new_bol, eol_byte))
 	break;
       print_line (stdout, &x, &new_bol, &bol);
       bol = new_bol;
     }
-  return 0;
+  return true;
 }
