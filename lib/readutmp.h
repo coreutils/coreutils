@@ -31,6 +31,10 @@
 # include <sys/types.h>
 
 # ifdef HAVE_UTMPX_H
+#  ifdef HAVE_UTMP_H
+    /* HPUX 10.20 needs utmp.h, for the definition of e.g., UTMP_FILE.  */
+#   include <utmp.h>
+#  endif
 #  include <utmpx.h>
 #  define UTMP_STRUCT_NAME utmpx
 #  define UT_TIME_MEMBER(UT_PTR) ((UT_PTR)->ut_tv.tv_sec)
