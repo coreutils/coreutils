@@ -1,2 +1,2 @@
 info_TEXINFOS = fileutils.texi
-DIST_OTHER = perm.texi getdate.texi
+EXTRA_DIST = perm.texi getdate.texi
