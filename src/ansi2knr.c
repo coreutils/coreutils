@@ -1,6 +1,6 @@
-/* Copyright (C) 1989, 1997, 1998, 1999 Aladdin Enterprises.  All rights reserved. */
+/* Copyright (C) 1989, 2000 Aladdin Enterprises.  All rights reserved. */
 
-/*$Id: ansi2knr.c,v 1.14 1999/04/13 14:44:33 meyering Exp $*/
+/*$Id: ansi2knr.c,v 1.15 2001/05/24 21:58:56 meyering Exp $*/
 /* Convert ANSI C function definitions to K&R ("traditional C") syntax */
 
 /*
@@ -37,21 +37,21 @@ program under the GPL.
  * There are no error messages.
  *
  * ansi2knr recognizes function definitions by seeing a non-keyword
- * identifier at the left margin, followed by a left parenthesis,
- * with a right parenthesis as the last character on the line,
- * and with a left brace as the first token on the following line
- * (ignoring possible intervening comments), except that a line
+ * identifier at the left margin, followed by a left parenthesis, with a
+ * right parenthesis as the last character on the line, and with a left
+ * brace as the first token on the following line (ignoring possible
+ * intervening comments and/or preprocessor directives), except that a line
  * consisting of only
  *	identifier1(identifier2)
  * will not be considered a function definition unless identifier2 is
  * the word "void", and a line consisting of
  *	identifier1(identifier2, <<arbitrary>>)
  * will not be considered a function definition.
- * ansi2knr will recognize a multi-line header provided
- * that no intervening line ends with a left or right brace or a semicolon.
- * These algorithms ignore whitespace and comments, except that
- * the function name must be the first thing on the line.
- * The following constructs will confuse it:
+ * ansi2knr will recognize a multi-line header provided that no intervening
+ * line ends with a left or right brace or a semicolon.  These algorithms
+ * ignore whitespace, comments, and preprocessor directives, except that
+ * the function name must be the first thing on the line.  The following
+ * constructs will confuse it:
  *	- Any other construct that starts at the left margin and
  *	    follows the above syntax (such as a macro or function call).
  *	- Some macros that tinker with the syntax of function headers.
@@ -61,6 +61,27 @@ program under the GPL.
  * The original and principal author of ansi2knr is L. Peter Deutsch
  * <ghost@aladdin.com>.  Other authors are noted in the change history
  * that follows (in reverse chronological order):
+
+	lpd 2000-04-12 backs out Eggert's changes because of bugs:
+	- concatlits didn't declare the type of its bufend argument;
+	- concatlits didn't't recognize when it was inside a comment;
+	- scanstring could scan backward past the beginning of the string; when
+	- the check for \ + newline in scanstring was unnecessary.
+
+	2000-03-05  Paul Eggert  <eggert@twinsun.com>
+
+	Add support for concatenated string literals.
+	* ansi2knr.c (concatlits): New decl.
+	(main): Invoke concatlits to concatenate string literals.
+	(scanstring): Handle backslash-newline correctly.  Work with
+	character constants.  Fix bug when scanning backwards through
+	backslash-quote.  Check for unterminated strings.
+	(convert1): Parse character constants, too.
+	(appendline, concatlits): New functions.
+	* ansi2knr.1: Document this.
+
+	lpd 1999-08-17 added code to allow preprocessor directives
+		wherever comments are allowed
 	lpd 1999-04-12 added minor fixes from Pavel Roskin
 		<pavel_roskin@geocities.com> for clean compilation with
 		gcc -W -Wall
@@ -196,6 +217,8 @@ program under the GPL.
 #define isidfirstchar(ch) (is_alpha(ch) || (ch) == '_')
 
 /* Forward references */
+char *ppdirforward();
+char *ppdirbackward();
 char *skipspace();
 char *scanstring();
 int writeblanks();
@@ -298,7 +321,7 @@ f:			if ( line >= buf + (bufsize - 1) ) /* overflow check */
 			  goto wl;
 			if ( fgets(line, (unsigned)(buf + bufsize - line), in) == NULL )
 			  goto wl;
-			switch ( *skipspace(more, 1) )
+			switch ( *skipspace(ppdirforward(more), 1) )
 			  {
 			  case '{':
 			    /* Definitely a function header. */
@@ -349,32 +372,70 @@ wl:			fputs(buf, out);
 	return 0;
 }
 
-/* Skip over whitespace and comments, in either direction. */
+/*
+ * Skip forward or backward over one or more preprocessor directives.
+ */
+char *
+ppdirforward(p)
+    char *p;
+{
+    for (; *p == '#'; ++p) {
+	for (; *p != '\r' && *p != '\n'; ++p)
+	    if (*p == 0)
+		return p;
+	if (*p == '\r' && p[1] == '\n')
+	    ++p;
+    }
+    return p;
+}
+char *
+ppdirbackward(p, limit)
+    char *p;
+    char *limit;
+{
+    char *np = p;
+
+    for (;; p = --np) {
+	if (*np == '\n' && np[-1] == '\r')
+	    --np;
+	for (; np > limit && np[-1] != '\r' && np[-1] != '\n'; --np)
+	    if (np[-1] == 0)
+		return np;
+	if (*np != '#')
+	    return p;
+    }
+}
+
+/*
+ * Skip over whitespace, comments, and preprocessor directives,
+ * in either direction.
+ */
 char *
 skipspace(p, dir)
-    register char *p;
-    register int dir;			/* 1 for forward, -1 for backward */
-{	for ( ; ; )
-	   {	while ( is_space(*p) )
-		  p += dir;
-		if ( !(*p == '/' && p[dir] == '*') )
-		  break;
-		p += dir;  p += dir;
-		while ( !(*p == '*' && p[dir] == '/') )
-		   {	if ( *p == 0 )
-			  return p;	/* multi-line comment?? */
-			p += dir;
-		   }
-		p += dir;  p += dir;
-	   }
-	return p;
+    char *p;
+    int dir;			/* 1 for forward, -1 for backward */
+{
+    for ( ; ; ) {
+	while ( is_space(*p) )
+	    p += dir;
+	if ( !(*p == '/' && p[dir] == '*') )
+	    break;
+	p += dir;  p += dir;
+	while ( !(*p == '*' && p[dir] == '/') ) {
+	    if ( *p == 0 )
+		return p;	/* multi-line comment?? */
+	    p += dir;
+	}
+	p += dir;  p += dir;
+    }
+    return p;
 }
 
 /* Scan over a quoted string, in either direction. */
 char *
 scanstring(p, dir)
-    register char *p;
-    register int dir;
+    char *p;
+    int dir;
 {
     for (p += dir; ; p += dir)
 	if (*p == '"' && p[-dir] != '\\')
@@ -412,14 +473,14 @@ writeblanks(start, end)
 int
 test1(buf)
     char *buf;
-{	register char *p = buf;
+{	char *p = buf;
 	char *bend;
 	char *endfn;
 	int contin;
 
 	if ( !isidfirstchar(*p) )
 	  return 0;		/* no name at left margin */
-	bend = skipspace(buf + strlen(buf) - 1, -1);
+	bend = skipspace(ppdirbackward(buf + strlen(buf) - 1, buf), -1);
 	switch ( *bend )
 	   {
 	   case ';': contin = 0 /*2*/; break;
@@ -498,7 +559,7 @@ convert1(buf, out, header, convert_varargs)
     int header;			/* Boolean */
     int convert_varargs;	/* Boolean */
 {	char *endfn;
-	register char *p;
+	char *p;
 	/*
 	 * The breaks table contains pointers to the beginning and end
 	 * of each argument.
