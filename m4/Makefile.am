@@ -36,7 +36,6 @@ lib-check.m4 \
 libintl.m4 \
 link-follow.m4 \
 ls-mntd-fs.m4 \
-lstat-slash.m4 \
 lstat.m4 \
 malloc.m4 \
 memcmp.m4 \
@@ -53,7 +52,6 @@ search-libs.m4 \
 st_dm_mode.m4 \
 st_mtim.m4 \
 stat.m4 \
-strerror_r.m4 \
 strftime.m4 \
 timespec.m4 \
 uintmax_t.m4 \
