@@ -1,3 +1,55 @@
+1998-02-25  Jim Meyering  <meyering@eng.ascend.com>
+
+	* Makefile.maint: Use -include, not `include' for aclocal-files.
+
+1998-02-24  Jim Meyering  <meyering@eng.ascend.com>
+
+	* lib/xstrtol.c (TYPE_SIGNED): Define.
+	(TYPE_MAXIMUM): Define.
+	(ULONG_MAX): Use TYPE_MAXIMUM.
+	(LONG_MAX): Use TYPE_MAXIMUM.
+
+	* lib/fnmatch.c: Update from libit.
+	* lib/idcache.c: Update from libit.
+
+1998-02-23  Paul Eggert  <eggert@twinsun.com>
+
+	* lib/quotearg.h, lib/quotearg.c: New files.
+	* lib/Makefile.am (libfu_a_SOURCES): Add quotearg.c.
+	(noinst_HEADERS): Add quotearg.h.
+
+	* src/ls.c: Include new file quotearg.h.
+	(enum indicator_style): Rename all to classify, and not_programs
+	to file_type, to match option spellings.  All users changed.
+	(indicator_style_args): New constant.
+	(quote_funny_chars, quote_as_string, quote_shell): Remove;
+	(filename_quoting_options, dirname_quoting_options): Use these
+	variables instead.
+	(long_options): Add --indicator-style, --quoting-style,
+	--show-control-chars.  Remove --quote-shell.
+	(dired_dump_obstack): Remove style parameter and don't output style.
+	(main): Go back to previous method of outputting //DIRED//
+	and //SUBDIRED// lines, without style.  But add a new
+	//DIRED-OPTIONS// line that does output style.
+	(decode_switches, usage): Add --indicator-style, --quoting-style,
+	--show-control-chars.  Remove --quote-shell.
+	(decode_switches): Default from QUOTING_STYLE environment variable.
+	Set new quoting vars.
+	(quote_name): Renamed from quote_filename.
+	Take new arg specifying quoting options.
+	Always print; do not have a special case for null FILE * argument.
+	All callers changed.
+	Move the guts of this function to new file quotearg.c.
+	(length_of_file_name_and_frills): Use quotearg_buffer instead
+	of (old) quote_filename to find length of file name.
+
+	(decode_switches, parse_ls_color, print_dir, gobble_file,
+	get_link_name):	Quote output in diagnostics.
+
+	* NEWS, doc/fileutils.texi: Describe above changes.
+	* doc/fileutils.texi: Mention that control characters are output
+	as question marks if output is a terminal.
+
 1998-02-22  Jim Meyering  <meyering@eng.ascend.com>
 
 	* Version 3.16m.
