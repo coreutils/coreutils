@@ -2,7 +2,7 @@
    if the source overlaps with the destination.
    Return DESTADDR. */
 
-#ifdef HAVE_CONFIG_H
+#if HAVE_CONFIG_H
 # include <config.h>
 #endif
 
