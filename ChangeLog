@@ -1,3 +1,8 @@
+2003-10-14  Jim Meyering  <jim@meyering.net>
+
+	* tests/chgrp/posix-H: New tests for the above.
+	* tests/chgrp/Makefile.am (TESTS): Add posix-H.
+
 2003-10-13  Paul Eggert  <eggert@twinsun.com>
 
 	Fix to avoid a denial-of-service attack if the display width is
@@ -13,10 +18,6 @@
 	(init_column_info): Don't allocate a lot more space than is needed
 	to represent the current set of files.  Allocate all the new
 	size_t cells in one call to xnmalloc, rather than a row at a time.
-
-2003-10-14  Jim Meyering  <jim@meyering.net>
-
-	* tests/chgrp/posix-H: New tests for the above.
 
 2003-10-13  Jim Meyering  <jim@meyering.net>
 
