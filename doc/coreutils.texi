@@ -8635,6 +8635,19 @@ options.  However, that is contrary to @acronym{POSIX}, so when the environment
 variable @env{POSIXLY_CORRECT} is set, @command{true} ignores @emph{all}
 command line arguments, including @option{--help} and @option{--version}.
 
+Note, however, that it is possible to cause @command{true}
+to exit with nonzero status: when invoked in non-@acronym{POSIX} mode,
+with the @option{--help} or @option{--version} option, and with standard
+output already closed or redirected to a file that evokes an I/O error.
+For example, using a Bourne-compatible shell:
+
+@example
+$ ./true --version >&-
+./true: write error: Bad file number
+$ ./true --version > /dev/full
+./true: write error: No space left on device
+@end example
+
 This version of @command{true} is implemented as a C program, and is thus
 more secure and faster than a shell script implementation, and may safely
 be used as a dummy shell for the purpose of disabling accounts.
