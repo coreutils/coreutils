@@ -1,7 +1,7 @@
 #serial 1
 
 dnl From Jim Meyering.
-dnl FIXME
+dnl FIXME: describe
 
 AC_DEFUN(jm_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK,
 [
@@ -38,15 +38,18 @@ AC_DEFUN(jm_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK,
    fi
   ])
 
-  # FIXME: convert to 0 or 1.
-  AC_DEFINE_UNQUOTED(LSTAT_FOLLOWS_SLASHED_SYMLINK, FIXME,
+  test $jm_cv_func_lstat_dereferences_slashed_symlink = yes \
+    && zero_one=1 \
+    || zero_one=0
+  AC_DEFINE_UNQUOTED(LSTAT_FOLLOWS_SLASHED_SYMLINK, $zero_one,
     [Define if lstat dereferences a symlink specified with a trailing slash])
 
   if test $jm_cv_func_lstat_dereferences_slashed_symlink = no; then
     AC_SUBST(LIBOBJS)
-# FIXME: append to LIBOBJS only if it's not there already.
-    LIBOBJS="$LIBOBJS lstat.$ac_objext"
-    AC_DEFINE_UNQUOTED(LSTAT_FOLLOWS_SLASHED_SYMLINK, 1,
-      [Define if lstat dereferences a symlink specified with a trailing slash])
+    # Append lstat.o if it's not already in $LIBOBJS.
+    case "$LIBOBJS" in
+      *lstat.$ac_objext*) ;;
+      *) LIBOBJS="$LIBOBJS lstat.$ac_objext" ;;
+    esac
   fi
 ])
