@@ -1,5 +1,8 @@
 1998-01-08  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/tac-pipe.c: New file.  But not yet used.
+	* src/Makefile.am (EXTRA_DIST): Add tac-pipe.c.
+
 	* src/tac.c (tac_stream): Don't perform arithmetic on now-void* pointer
 	result of xrealloc (until recently it was char*).
 
