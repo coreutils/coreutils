@@ -1,3 +1,22 @@
+2000-09-22  Jim Meyering  <meyering@lucent.com>
+
+	* src/install.c (cp_option_init):
+	Reported by Dan Pascu via Michael Stone.
+
+	* src/mv.c (do_move): Moving a directory specified with a trailing
+	slash from one partition to another, and giving it a different
+	name at the destination would cause mv to get a failed assertion.
+	Reported by Michael Stone.
+	(strip_trailing_slashes_2): Move function definition to precede
+	new first use.
+	* tests/mv/part-rename: New test for the above fix.
+	* tests/mv/Makefile.am (TESTS): Add part-rename.
+
+	* src/copy.c (copy_internal): Don't try to unlink directories when
+	using --remove-dest with -R.
+	* tests/cp/dir-rm-dest: New test for the above fix.
+	* tests/cp/Makefile.am (TESTS): Add dir-rm-dest.
+
 2000-09-19  Jim Meyering  <meyering@lucent.com>
 
 	* src/cp.c (main): When used with --force, each of the --link and
@@ -1017,7 +1036,7 @@
 2000-02-02  Jim Meyering  <meyering@lucent.com>
 
 	* tests/touch/Makefile.am (TESTS): Add fifo.
-	* tests/touch/fifo (fail): New file.
+	* tests/touch/fifo: New file.
 
 2000-02-01  Jim Meyering  <meyering@lucent.com>
 
