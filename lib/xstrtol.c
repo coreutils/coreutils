@@ -102,8 +102,11 @@ __xstrtol (s, ptr, base, val, valid_suffixes)
 	return LONGINT_INVALID_SUFFIX_CHAR;
     }
 
-  if (**p != '\0' && strchr (valid_suffixes, **p))
+  if (**p != '\0')
     {
+      if (!strchr (valid_suffixes, **p))
+	return LONGINT_INVALID_SUFFIX_CHAR;
+
       switch (**p)
 	{
 	case 'b':
