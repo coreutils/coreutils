@@ -1,3 +1,8 @@
+2004-09-05  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (String tests): Improve quality of warning about
+	quoting strings for the shell.
+
 2004-09-03  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (dd invocation): Specify which conversion options
