@@ -1,3 +1,9 @@
+2004-07-28  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* md5.m4 (gl_MD5): Do not require AC_C_INLINE, since it doesn't
+	use inline any more.  Require AC_C_BIGENDIAN, though.
+	* sha.m4 (gl_SHA): Require AC_C_BIGENDIAN.
+
 2004-07-27  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* euidaccess.m4 (gl_PREREQ_EUIDACCESS): Don't bother checking for
