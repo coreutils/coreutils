@@ -1,24 +1,24 @@
 #ifndef _xstrtol_h_
-#define _xstrtol_h_ 1
+# define _xstrtol_h_ 1
 
-#if STRING_TO_UNSIGNED
-# define __xstrtol xstrtoul
-# define __strtol strtoul
-# define __unsigned unsigned
-# define __ZLONG_MAX ULONG_MAX
-#else
-# define __xstrtol xstrtol
-# define __strtol strtol
-# define __unsigned /* empty */
-# define __ZLONG_MAX LONG_MAX
-#endif
+# if STRING_TO_UNSIGNED
+#  define __xstrtol xstrtoul
+#  define __strtol strtoul
+#  define __unsigned unsigned
+#  define __ZLONG_MAX ULONG_MAX
+# else
+#  define __xstrtol xstrtol
+#  define __strtol strtol
+#  define __unsigned /* empty */
+#  define __ZLONG_MAX LONG_MAX
+# endif
 
-#undef PARAMS
-#if defined (__STDC__) && __STDC__
-# define PARAMS(Args) Args
-#else
-# define PARAMS(Args) ()
-#endif
+# undef PARAMS
+# if defined (__STDC__) && __STDC__
+#  define PARAMS(Args) Args
+# else
+#  define PARAMS(Args) ()
+# endif
 
 enum strtol_error
   {
@@ -30,7 +30,7 @@ strtol_error
   __xstrtol PARAMS ((const char *s, char **ptr, int base,
 		     __unsigned long int *val, const char *valid_suffixes));
 
-#define _STRTOL_ERROR(Exit_code, Str, Argument_type_string, Err)	\
+# define _STRTOL_ERROR(Exit_code, Str, Argument_type_string, Err)	\
   do									\
     {									\
       switch ((Err))							\
@@ -57,10 +57,10 @@ strtol_error
     }									\
   while (0)
 
-#define STRTOL_FATAL_ERROR(Str, Argument_type_string, Err)		\
+# define STRTOL_FATAL_ERROR(Str, Argument_type_string, Err)		\
   _STRTOL_ERROR (2, Str, Argument_type_string, Err)
 
-#define STRTOL_FAIL_WARN(Str, Argument_type_string, Err)		\
+# define STRTOL_FAIL_WARN(Str, Argument_type_string, Err)		\
   _STRTOL_ERROR (0, Str, Argument_type_string, Err)
 
 #endif /* _xstrtol_h_ */
