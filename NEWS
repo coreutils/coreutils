@@ -42,6 +42,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   rm no longer requires read access to the current directory.
 
+  "sort -o -" now writes to a file named "-" instead of to standard
+  output; POSIX requires this.
+
   tail -f no longer mishandles pipes and fifos.  With no operands,
   tail now ignores -f if standard input is a pipe, as POSIX requires.
 
@@ -70,6 +73,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   tee now exits when it gets a SIGPIPE signal, as POSIX requires.
   To get tee's old behavior, use the shell command "(trap '' PIPE; tee)".
+  Also, "tee -" now writes to standard output instead of to a file named "-".
 
   ls no longer segfaults on systems for which SIZE_MAX != (size_t) -1
 
