@@ -184,8 +184,10 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -D, --dereference-args  dereference FILEs that are symbolic links\n\
 "), stdout);
       fputs (_("\
+  -H                    like --si, but also evokes a warning; will soon\n\
+                        change to be equivalent to --dereference-args (-D)\n\
   -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n\
-  -H, --si              likewise, but use powers of 1000 not 1024 (deprecated)\n\
+      --si              like -h, but use powers of 1000 not 1024\n\
   -k                    like --block-size=1K\n\
   -l, --count-links     count sizes many times if hard linked\n\
 "), stdout);
