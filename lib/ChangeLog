@@ -1,3 +1,8 @@
+2003-08-10  Jim Meyering  <jim@meyering.net>
+
+	* utimens.c (utimens): Revert most of last change.
+	Test HAVE_WORKING_UTIMES instead of HAVE_UTIMES.
+
 2003-08-09  Jim Meyering  <jim@meyering.net>
 
 	* utimens.c (utimens): Test HAVE_UTIME, not HAVE_UTIMES.
