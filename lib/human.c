@@ -90,9 +90,8 @@ human_readable (uintmax_t n, char *buf,
    N is expressed in units of FROM_BLOCK_SIZE.  FROM_BLOCK_SIZE must
    be nonnegative.
 
-   If OUTPUT_BLOCK_SIZE is positive, use units of OUTPUT_BLOCK_SIZE in
-   the output number.  OUTPUT_BLOCK_SIZE must be a multiple of
-   FROM_BLOCK_SIZE or vice versa.
+   OUTPUT_BLOCK_SIZE must be nonzero.  If it is positive, use units of
+   OUTPUT_BLOCK_SIZE in the output number.
 
    Use INEXACT_STYLE to determine whether to take the ceiling or floor
    of any result that cannot be expressed exactly.
@@ -118,6 +117,10 @@ human_readable_inexact (uintmax_t n, char *buf,
   int base;
   int to_block_size;
   int tenths = 0;
+  int multiplier;
+  int divisor;
+  int r2;
+  int r10;
   int power;
   char *p;
 
@@ -148,57 +151,49 @@ human_readable_inexact (uintmax_t n, char *buf,
 
   /* Adjust AMT out of FROM_BLOCK_SIZE units and into TO_BLOCK_SIZE units.  */
 
-  if (to_block_size <= from_block_size)
+  if (to_block_size <= from_block_size
+      ? (from_block_size % to_block_size != 0
+	 || (multiplier = from_block_size / to_block_size,
+	     (amt = n * multiplier) / multiplier != n))
+      : (from_block_size == 0
+	 || to_block_size % from_block_size != 0
+	 || (divisor = to_block_size / from_block_size,
+	     r10 = (n % divisor) * 10,
+	     r2 = (r10 % divisor) * 2,
+	     amt = n / divisor,
+	     tenths = r10 / divisor,
+	     rounding = r2 < divisor ? 0 < r2 : 2 + (divisor < r2),
+	     0)))
     {
-      int multiplier = from_block_size / to_block_size;
-      amt = n * multiplier;
+      /* Either the result cannot be computed easily using uintmax_t,
+	 or from_block_size is zero.  Fall back on floating point.
+	 FIXME: This can yield answers that are slightly off.  */
 
-      if (amt / multiplier != n)
+      double damt = n * (from_block_size / (double) to_block_size);
+
+      if (! base)
+	sprintf (buf, "%.0f", damt);
+      else
 	{
-	  /* Overflow occurred during multiplication.  We should use
-	     multiple precision arithmetic here, but we'll be lazy and
-	     resort to floating point.  This can yield answers that
-	     are slightly off.  In practice it is quite rare to
-	     overflow uintmax_t, so this is good enough for now.  */
+	  double e = 1;
+	  power = 0;
 
-	  double damt = n * (double) multiplier;
-
-	  if (! base)
-	    sprintf (buf, "%.0f", damt);
-	  else
+	  do
 	    {
-	      double e = 1;
-	      power = 0;
-
-	      do
-		{
-		  e *= base;
-		  power++;
-		}
-	      while (e * base <= damt && power < sizeof suffixes - 1);
-
-	      damt /= e;
-
-	      sprintf (buf, "%.1f%c", damt, suffixes[power]);
-	      if (4 < strlen (buf))
-		sprintf (buf, "%.0f%c", damt, suffixes[power]);
+	      e *= base;
+	      power++;
 	    }
+	  while (e * base <= damt && power < sizeof suffixes - 1);
 
-	  return buf;
+	  damt /= e;
+
+	  sprintf (buf, "%.1f%c", damt, suffixes[power]);
+	  if (4 < strlen (buf))
+	    sprintf (buf, "%.0f%c", damt, suffixes[power]);
 	}
-    }
-  else if (from_block_size == 0)
-    amt = 0;
-  else
-    {
-      int divisor = to_block_size / from_block_size;
-      int r10 = (n % divisor) * 10;
-      int r2 = (r10 % divisor) * 2;
-      amt = n / divisor;
-      tenths = r10 / divisor;
-      rounding = r2 < divisor ? 0 < r2 : 2 + (divisor < r2);
-    }
 
+      return buf;
+    }
 
   /* Use power of BASE notation if adjusted AMT is large enough.  */
 
