@@ -32,6 +32,8 @@
 #include "savedir.h"
 #include "copy.h"
 #include "cp-hash.h"
+#include "hash.h"
+#include "same.h"
 #include "dirname.h"
 #include "full-write.h"
 #include "path-concat.h"
@@ -60,6 +62,26 @@ struct dir_list
   ino_t ino;
   dev_t dev;
 };
+
+/* Describe a just-created or just-renamed destination file.  */
+struct Dest_info
+{
+  char const* name;
+  ino_t st_ino;
+  dev_t st_dev;
+};
+
+/* This is a set of destination name/inode/dev triples.  Each such triple
+   represents a file we have created corresponding to a source file name
+   that was specified on the command line.  Use it to avoid clobbering
+   source files in commands like this:
+     rm -rf a b c; mkdir a b c; touch a/f b/f; mv a/f b/f c
+   For now, it protects only regular files when copying (i.e. not renaming).
+   When renaming, it protects all non-directories.  */
+static struct hash_table *dest_info;
+
+/* Initial size of the above hash table.  */
+#define DEST_INFO_INITIAL_CAPACITY 61
 
 int euidaccess ();
 int yesno ();
@@ -565,6 +587,116 @@ overwrite_prompt (char const *dst_path, struct stat const *dst_sb)
     }
 }
 
+/* A hash function for null-terminated char* strings using
+   the method described in Aho, Sethi, & Ullman, p 436. */
+/* FIXME: this is copied from remove.c */
+
+static unsigned int
+hash_pjw (const void *x, unsigned int tablesize)
+{
+  const char *s = x;
+  unsigned int h = 0;
+  unsigned int g;
+
+  while (*s != 0)
+    {
+      h = (h << 4) + *s++;
+      if ((g = h & (unsigned int) 0xf0000000) != 0)
+        h = (h ^ (g >> 24)) ^ g;
+    }
+
+  return (h % tablesize);
+}
+
+/* Hash a dest_info entry.  */
+static unsigned int
+dest_info_hash (void const *x, unsigned int table_size)
+{
+  struct Dest_info const *p = x;
+
+  /* Also take the name into account, so that when moving N hard links to the
+     same file (all listed on the command line) all into the same directory,
+     we don't experience any N^2 behavior.  */
+  /* FIXME-maybe: is it worth the overhead of doing this
+     just to avoid N^2 in such an unusual case?  N would have
+     to be very large to make the N^2 factor noticable, and
+     one would probably encounter a limit on the lenght of
+     a command line before it became a problem.  */
+  unsigned int tmp = hash_pjw (p->name, table_size);
+
+  /* Ignoring the device number here should be fine.  */
+  return (tmp | p->st_ino) % table_size;
+}
+
+/* Compare two dest_info entries.  */
+static bool
+dest_info_compare (void const *x, void const *y)
+{
+  struct Dest_info const *a = x;
+  struct Dest_info const *b = y;
+  return (SAME_INODE (*a, *b) && same_name (a->name, b->name)) ? true : false;
+}
+
+/* Initialize the hash table implementing a set of dest_info entries.  */
+void
+dest_info_init ()
+{
+  dest_info = hash_initialize (DEST_INFO_INITIAL_CAPACITY, NULL,
+			       dest_info_hash,
+			       dest_info_compare, free);
+}
+
+/* Return nonzero if the file described by name, DEST, and DEST_STATS
+   has already been created.  Otherwise, return zero.  */
+static int
+seen_dest (char const *dest, struct stat dest_stats)
+{
+  struct Dest_info new_ent;
+
+  if (dest_info == NULL)
+    return 0;
+
+  new_ent.name = dest;
+  new_ent.st_ino = dest_stats.st_ino;
+  new_ent.st_dev = dest_stats.st_dev;
+
+  return !!hash_lookup (dest_info, &new_ent);
+}
+
+/* Record destination filename, DEST, and dev/ino from *DEST_STATS, in
+   the global table, DEST_INFO, so that if we are asked to overwrite that
+   file again, we can detect it and fail.  If DEST_INFO is NULL, return
+   immediately.  If DEST_STATS is NULL, call lstat on DEST to get device
+   and inode numbers.  If that lstat fails, simply return.  If memory
+   allocation fails, exit immediately.  */
+static void
+record_dest (char const *dest, struct stat const *dest_stats)
+{
+  struct Dest_info *ent;
+
+  if (dest_info == NULL)
+    return;
+
+  ent = (struct Dest_info *) xmalloc (sizeof *ent);
+  ent->name = dest;
+  if (dest_stats)
+    {
+      ent->st_ino = dest_stats->st_ino;
+      ent->st_dev = dest_stats->st_dev;
+    }
+  else
+    {
+      struct stat stats;
+      if (lstat (dest, &stats))
+	return;
+      ent->st_ino = stats.st_ino;
+      ent->st_dev = stats.st_dev;
+    }
+
+  if (! hash_insert (dest_info, ent))
+    xalloc_die ();
+}
+
 /* Copy the file SRC_PATH to the file DST_PATH.  The files may be of
    any type.  NEW_DST should be nonzero if the file DST_PATH cannot
    exist because its parent directory was just created; NEW_DST should
@@ -572,7 +704,7 @@ overwrite_prompt (char const *dst_path, struct stat const *dst_sb)
    number of the parent directory, or 0 if the parent of this file is
    not known.  ANCESTORS points to a linked, null terminated list of
    devices and inodes of parent directories of SRC_PATH.  COMMAND_LINE_ARG
-   is non-zero iff SRC_PATH was specified on the command line.
+   is nonzero iff SRC_PATH was specified on the command line.
    Set *COPY_INTO_SELF to nonzero if SRC_PATH is a parent of (or the
    same as) DST_PATH;  otherwise, set it to zero.
    Return 0 if successful, 1 if an error occurs. */
@@ -664,12 +796,32 @@ copy_internal (const char *src_path, const char *dst_path,
 	      return 1;
 	    }
 
-	  if (S_ISDIR (src_type) && !S_ISDIR (dst_sb.st_mode))
+	  if (!S_ISDIR (dst_sb.st_mode))
 	    {
-	      error (0, 0,
+	      if (S_ISDIR (src_type))
+		{
+		  error (0, 0,
 		     _("cannot overwrite non-directory %s with directory %s"),
-		     quote_n (0, dst_path), quote_n (1, src_path));
-	      return 1;
+			 quote_n (0, dst_path), quote_n (1, src_path));
+		  return 1;
+		}
+
+	      /* Don't let the user destroy their data, even if they try hard:
+		 This mv command must fail (likewise for cp):
+		   rm -rf a b c; mkdir a b c; touch a/f b/f; mv a/f b/f c
+		 Otherwise, the contents of b/f would be lost.
+		 In the case of `cp', b/f would be lost if the user simulated
+		 a move using cp and rm.
+		 Note that it works fine if you use --backup=numbered.  */
+	      if (command_line_arg
+		  && x->backup_type != numbered
+		  && seen_dest (dst_path, dst_sb))
+		{
+		  error (0, 0,
+			 _("will not overwrite just-created %s with %s"),
+			 quote_n (0, dst_path), quote_n (1, src_path));
+		  return 1;
+		}
 	    }
 
 	  if (!S_ISDIR (src_type))
@@ -872,6 +1024,19 @@ copy_internal (const char *src_path, const char *dst_path,
 	    printf ("%s -> %s\n", quote_n (0, src_path), quote_n (1, dst_path));
 	  if (rename_succeeded)
 	    *rename_succeeded = 1;
+
+	  if (command_line_arg)
+	    {
+	      /* Record destination dev/ino/filename, so that if we are asked
+		 to overwrite that file again, we can detect it and fail.  */
+	      /* It's fine to use the _source_ stat buffer (src_sb) to get the
+	         _destination_ dev/ino, since the rename above can't have
+		 changed those, and `mv' always uses lstat.
+		 We could limit it further by operating
+		 only on non-directories.  */
+	      record_dest (dst_path, &src_sb);
+	    }
+
 	  return 0;
 	}
 
@@ -1051,6 +1216,10 @@ copy_internal (const char *src_path, const char *dst_path,
       if (copy_reg (src_path, dst_path, x,
 		    get_dest_mode (x, src_mode), &new_dst))
 	goto un_backup;
+      if (command_line_arg)
+	{
+	  record_dest (dst_path, NULL);
+	}
     }
   else
 #ifdef S_ISFIFO
