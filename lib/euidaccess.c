@@ -59,7 +59,7 @@ gid_t getegid ();
 #endif /* not POSIX_VERSION */
 
 #include <errno.h>
-#ifndef STDC_HEADERS
+#ifndef errno
 extern int errno;
 #endif
 
@@ -177,7 +177,7 @@ euidaccess (path, mode)
       return access (path, mode);
     }
 
-  if (SAFE_STAT (path, &stats))
+  if (safe_stat (path, &stats))
     return -1;
 
   return eaccess_stat (&stats, mode, path);
