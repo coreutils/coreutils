@@ -528,7 +528,7 @@ do_copy (int n_files, char **file, const char *target_directory,
 	      /* Append all of `arg' to `dest'.  */
 	      dst_path = path_concat (dest, arg, &arg_in_concat);
 	      if (dst_path == NULL)
-		error (1, 0, _("virtual memory exhausted"));
+		xalloc_die ();
 
 	      /* For --parents, we have to make sure that the directory
 	         dir_name (dst_path) exists.  We may have to create a few
@@ -615,7 +615,7 @@ do_copy (int n_files, char **file, const char *target_directory,
 	  x = &x_tmp;
 
 	  if (new_dest == NULL)
-	    error (1, 0, _("virtual memory exhausted"));
+	    xalloc_die ();
 	}
 
       /* When the destination is specified with a trailing slash and the
