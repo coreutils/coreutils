@@ -283,6 +283,10 @@ char *stpcpy ();
 # endif
 #endif
 
+#if !HAVE_DECL_STRNDUP
+char *strndup ();
+#endif
+
 #if !HAVE_DECL_STRSTR
 char *strstr ();
 #endif
