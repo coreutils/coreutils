@@ -1,36 +1,12 @@
 ## Process this file with automake to produce Makefile.in -*-Makefile-*-.
 
-##test-files-begin
-x = tsort
-explicit =
-maint_gen = cycle-1.I cycle-1.X
-run_gen = cycle-1.O cycle-1.E
-##test-files-end
+EXTRA_DIST = $(TESTS)
 
-EXTRA_DIST = Test.pm $x-tests $(explicit) $(maint_gen)
-noinst_SCRIPTS = $x-tests
+TESTS_ENVIRONMENT = \
+  top_srcdir=$(top_srcdir) \
+  srcdir=$(srcdir) \
+  PERL="@PERL@" \
+  PATH=../../src:$$PATH \
+  PROG=tsort
 
-PERL = @PERL@
-editpl = sed -e 's,@''PERL''@,$(PERL),g' -e 's,@''srcdir''@,@srcdir@,g'
-
-TESTS = $x-tests
-
-mk_script = $(srcdir)/../mk-script
-$(srcdir)/$x-tests: $(mk_script) Test.pm
-	$(PERL) -I. -w -- $(mk_script) ../../src/$x > $@.n
-	mv $@.n $@
-	chmod 755 $@
-
-MAINTAINERCLEANFILES = $x-tests $(maint_gen)
-CLEANFILES = $(run_gen)
-
-check: $(maint_gen)
-
-Makefile.am: ../Makefile.am.in Test.pm $(mk_script)
-	rm -f $@ $@t
-	sed -n '1,/^##test-files-begin/p' $< > $@t
-	tool=`echo $(subdir)|sed 's/^tests.//;s/-test//'`; \
-	  echo "x = $$tool" >> $@t
-	$(PERL) -I. -w -- $(mk_script) --list >> $@t
-	sed -n '/^##test-files-end/,$$p' $< >> $@t
-	mv $@t $@
+TESTS = basic-1
