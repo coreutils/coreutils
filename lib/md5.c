@@ -43,6 +43,15 @@
 # if __BYTE_ORDER == __BIG_ENDIAN
 #  define WORDS_BIGENDIAN 1
 # endif
+/* We need to keep the namespace clean so define the MD5 function
+   protected using leading __ .  */
+# define md5_init_ctx __md5_init_ctx
+# define md5_process_block __md5_process_block
+# define md5_process_bytes __md5_process_bytes
+# define md5_finish_ctx __md5_finish_ctx
+# define md5_read_ctx __md5_read_ctx
+# define md5_stream __md5_stream
+# define md5_buffer __md5_buffer
 #endif
 
 #ifdef WORDS_BIGENDIAN
@@ -237,13 +246,14 @@ md5_process_bytes (buffer, len, ctx)
       memcpy (&ctx->buffer[left_over], buffer, add);
       ctx->buflen += add;
 
-      if (left_over + add > 64)
+      if (ctx->buflen > 64)
 	{
-	  md5_process_block (ctx->buffer, (left_over + add) & ~63, ctx);
+	  md5_process_block (ctx->buffer, ctx->buflen & ~63, ctx);
+
+	  ctx->buflen &= 63;
 	  /* The regions in the following copy operation cannot overlap.  */
 	  memcpy (ctx->buffer, &ctx->buffer[(left_over + add) & ~63],
-		  (left_over + add) & 63);
-	  ctx->buflen = (left_over + add) & 63;
+		  ctx->buflen);
 	}
 
       buffer = (const char *) buffer + add;
@@ -251,18 +261,46 @@ md5_process_bytes (buffer, len, ctx)
     }
 
   /* Process available complete blocks.  */
-  if (len > 64)
+  if (len >= 64)
     {
-      md5_process_block (buffer, len & ~63, ctx);
-      buffer = (const char *) buffer + (len & ~63);
-      len &= 63;
+#if !_STRING_ARCH_unaligned
+/* To check alignment gcc has an appropriate operator.  Other
+   compilers don't.  */
+# if __GNUC__ >= 2
+#  define UNALIGNED_P(p) (((md5_uintptr) p) % __alignof__ (md5_uint32) != 0)
+# else
+#  define UNALIGNED_P(p) (((md5_uintptr) p) % sizeof (md5_uint32) != 0)
+# endif
+      if (UNALIGNED_P (buffer))
+	while (len > 64)
+	  {
+	    md5_process_block (memcpy (ctx->buffer, buffer, 64), 64, ctx);
+	    buffer = (const char *) buffer + 64;
+	    len -= 64;
+	  }
+      else
+#endif
+	{
+	  md5_process_block (buffer, len & ~63, ctx);
+	  buffer = (const char *) buffer + (len & ~63);
+	  len &= 63;
+	}
     }
 
   /* Move remaining bytes in internal buffer.  */
   if (len > 0)
     {
-      memcpy (ctx->buffer, buffer, len);
-      ctx->buflen = len;
+      size_t left_over = ctx->buflen;
+
+      memcpy (&ctx->buffer[left_over], buffer, len);
+      left_over += len;
+      if (left_over >= 64)
+	{
+	  md5_process_block (ctx->buffer, 64, ctx);
+	  left_over -= 64;
+	  memcpy (ctx->buffer, &ctx->buffer[64], left_over);
+	}
+      ctx->buflen = left_over;
     }
 }
 
