@@ -1982,7 +1982,7 @@ sort_files (void)
 static int
 compare_ctime (const struct fileinfo *file1, const struct fileinfo *file2)
 {
-  int diff = longdiff (file2->stat.st_ctime, file1->stat.st_ctime);
+  int diff = CTIME_CMP (file2->stat, file1->stat);
   if (diff == 0)
     diff = strcmp (file1->name, file2->name);
   return diff;
@@ -1991,7 +1991,7 @@ compare_ctime (const struct fileinfo *file1, const struct fileinfo *file2)
 static int
 rev_cmp_ctime (const struct fileinfo *file2, const struct fileinfo *file1)
 {
-  int diff = longdiff (file2->stat.st_ctime, file1->stat.st_ctime);
+  int diff = CTIME_CMP (file2->stat, file1->stat);
   if (diff == 0)
     diff = strcmp (file1->name, file2->name);
   return diff;
@@ -2000,7 +2000,7 @@ rev_cmp_ctime (const struct fileinfo *file2, const struct fileinfo *file1)
 static int
 compare_mtime (const struct fileinfo *file1, const struct fileinfo *file2)
 {
-  int diff = longdiff (file2->stat.st_mtime, file1->stat.st_mtime);
+  int diff = MTIME_CMP (file2->stat, file1->stat);
   if (diff == 0)
     diff = strcmp (file1->name, file2->name);
   return diff;
@@ -2009,7 +2009,7 @@ compare_mtime (const struct fileinfo *file1, const struct fileinfo *file2)
 static int
 rev_cmp_mtime (const struct fileinfo *file2, const struct fileinfo *file1)
 {
-  int diff = longdiff (file2->stat.st_mtime, file1->stat.st_mtime);
+  int diff = MTIME_CMP (file2->stat, file1->stat);
   if (diff == 0)
     diff = strcmp (file1->name, file2->name);
   return diff;
@@ -2018,7 +2018,7 @@ rev_cmp_mtime (const struct fileinfo *file2, const struct fileinfo *file1)
 static int
 compare_atime (const struct fileinfo *file1, const struct fileinfo *file2)
 {
-  int diff = longdiff (file2->stat.st_atime, file1->stat.st_atime);
+  int diff = ATIME_CMP (file2->stat, file1->stat);
   if (diff == 0)
     diff = strcmp (file1->name, file2->name);
   return diff;
@@ -2027,7 +2027,7 @@ compare_atime (const struct fileinfo *file1, const struct fileinfo *file2)
 static int
 rev_cmp_atime (const struct fileinfo *file2, const struct fileinfo *file1)
 {
-  int diff = longdiff (file2->stat.st_atime, file1->stat.st_atime);
+  int diff = ATIME_CMP (file2->stat, file1->stat);
   if (diff == 0)
     diff = strcmp (file1->name, file2->name);
   return diff;
