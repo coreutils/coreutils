@@ -95,7 +95,7 @@ Compare sorted files LEFT_FILE and RIGHT_FILE line by line.\n\
    2 for a line only in file 2, 3 for a line in both. */
 
 static void
-writeline (struct linebuffer *line, FILE *stream, int class)
+writeline (const struct linebuffer *line, FILE *stream, int class)
 {
   switch (class)
     {
