@@ -9101,9 +9101,60 @@ printf @var{format} [@var{argument}]@dots{}
 @end example
 
 @command{printf} prints the @var{format} string, interpreting @samp{%}
-directives and @samp{\} escapes in the same way as the C @command{printf}
-function.  The @var{format} argument is re-used as necessary to convert
-all of the given @var{argument}s.
+directives and @samp{\} escapes to format numeric and string arguments
+in a way that is mostly similar to the C @samp{printf} function.  The
+differences are as follows:
+
+@itemize @bullet
+
+@item
+The @var{format} argument is reused as necessary to convert all the
+given @var{argument}s.  For example, the command @samp{printf %s a b}
+outputs @samp{ab}.
+
+@item
+Missing @var{argument}s are treated as null strings or as zeros,
+depending on whether the context expects a string or a number.  For
+example, the command @samp{printf %sx%d} prints @samp{x0}.
+
+@item
+@kindex \c
+An additional escape, @samp{\c}, causes @command{printf} to produce no
+further output.  For example, the command @samp{printf 'A%sC\cD%sF' B
+E} prints @samp{ABC}.
+
+@item
+The hexadecimal escape sequence @samp{\x@var{hh}} has at most two
+digits, as opposed to C where it can have an unlimited number of
+digits.  For example, the command @samp{printf '\x07e'} prints two
+bytes, whereas the C statement @samp{printf ("\x07e")} prints just
+one.
+
+@item
+@kindex %b
+@command{printf} has an additional directive, @samp{%b}, which prints its
+argument string with @samp{\} escapes interpreted in the same way as in
+the @var{format} string, except that octal escapes are of the form
+@samp{\0@var{ooo}} where @var{ooo} is 0 to 3 octal digits.
+If a precision is also given, it limits the number of bytes printed
+from the converted string.
+
+@item
+Numeric arguments must be single C constants, possibly with leading
+@samp{+} or @samp{-}.  For example, @samp{printf %.4d -3} outputs
+@samp{-0003}.
+
+@item
+@vindex POSIXLY_CORRECT
+If the leading character of a numeric argument is @samp{"} or @samp{'}
+then its value is the numeric value of the immediately following
+character.  Any remaining characters are silently ignored if the
+@env{POSIXLY_CORRECT} environment variable is set; otherwise, a
+warning is printed.  For example, @samp{printf "%d" "'a"} outputs
+@samp{97} on hosts that use the @acronym{ASCII} character set, since
+@samp{a} has the numeric value 97 in @acronym{ASCII}.
+
+@end itemize
 
 @vindex LC_NUMERIC
 A floating-point argument must use a period before any fractional
@@ -9112,14 +9163,8 @@ current locale.  For example, in a locale whose radix character is a
 comma, the command @samp{printf %g 3.14} outputs @samp{3,14} whereas
 the command @samp{printf %g 3,14} is an error.
 
-@command{printf} has one additional directive, @samp{%b}, which prints its
-argument string with @samp{\} escapes interpreted in the same way as in
-the @var{format} string, except that octal escapes are of the form
-@samp{\0@var{ooo}} where @var{ooo} is 0 to 3 octal digits.
-
 @kindex \@var{ooo}
 @kindex \x@var{hh}
-
 @command{printf} interprets @samp{\@var{ooo}} in @var{format} as an octal number
 (if @var{ooo} is 1 to 3 octal digits) specifying a character to print,
 and @samp{\x@var{hh}} as a hexadecimal number (if @var{hh} is 1 to 2 hex
@@ -9139,10 +9184,6 @@ The processing of @samp{\u} and @samp{\U} requires a full-featured
 @code{iconv} facility.  It is activated on systems with glibc 2.2 (or newer),
 or when @code{libiconv} is installed prior to this package.  Otherwise the
 use of @samp{\u} and @samp{\U} will give an error message.
-
-@kindex \c
-An additional escape, @samp{\c}, causes @command{printf} to produce no
-further output.
 
 The only options are a lone @option{--help} or
 @option{--version}.  @xref{Common options}.
