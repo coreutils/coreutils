@@ -9,6 +9,12 @@
 
 	* src/md5sum.c: Adjust to sha->sha1 renaming.
 
+2004-08-08  Dmitry V. Levin  <ldv@altlinux.org>
+
+	Minor code cleanup.
+	* src/readlink.c (canonicalize_fname): Remove unneeded proxy function.
+	(can_mode): Make variable local.
+
 2004-08-07  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/system.h (O_BINARY) [!O_BINARY && defined O_BINARY]:
