@@ -232,7 +232,7 @@ static size_t quote_name (FILE *out, const char *name,
 			  size_t *width);
 static char *make_link_path (const char *path, const char *linkname);
 static int decode_switches (int argc, char **argv);
-static bool file_interesting (const struct dirent *next);
+static bool file_ignored (char const *name);
 static uintmax_t gobble_file (const char *name, enum filetype type,
 			      bool explicit_arg, const char *dirname);
 static void print_color_indicator (const char *name, mode_t mode, int linkok);
@@ -572,17 +572,23 @@ static bool recursive;
 
 static bool immediate_dirs;
 
-/* True means don't omit files whose names start with `.'.  -A  */
+/* Which files to ignore.  */
 
-static bool all_files;
-
-/* True means don't omit files `.' and `..'
-   This flag implies `all_files'.  -a  */
-
-static bool really_all_files;
+static enum
+{
+  /* Ignore files whose names start with `.', and files specified by
+     --hide and --ignore.  */
+  IGNORE_DEFAULT,
+  
+  /* Ignore `.', `..', and files specified by --ignore.  */
+  IGNORE_DOT_AND_DOTDOT,
+     
+  /* Ignore only files specified by --ignore.  */
+  IGNORE_MINIMAL
+} ignore;
 
 /* A linked list of shell-style globbing patterns.  If a non-argument
-   file name matches any of these patterns, it is omitted.
+   file name matches any of these patterns, it is ignored.
    Controlled by -I.  Multiple -I options accumulate.
    The -B option adds `*~' and `.*~' to this list.  */
 
@@ -593,6 +599,10 @@ struct ignore_pattern
   };
 
 static struct ignore_pattern *ignore_patterns;
+
+/* Similar to IGNORE_PATTERNS, except that -a or -A causes this
+   variable itself to be ignored.  */
+static struct ignore_pattern *hide_patterns;
 
 /* True means output nongraphic chars in file names as `?'.
    (-q, --hide-control-chars)
@@ -682,6 +692,7 @@ enum
   DEREFERENCE_COMMAND_LINE_SYMLINK_TO_DIR_OPTION,
   FORMAT_OPTION,
   FULL_TIME_OPTION,
+  HIDE_OPTION,
   INDICATOR_STYLE_OPTION,
   QUOTING_STYLE_OPTION,
   SHOW_CONTROL_CHARS_OPTION,
@@ -715,6 +726,7 @@ static struct option const long_options[] =
   {"dereference-command-line", no_argument, 0, 'H'},
   {"dereference-command-line-symlink-to-dir", no_argument, 0,
    DEREFERENCE_COMMAND_LINE_SYMLINK_TO_DIR_OPTION},
+  {"hide", required_argument, 0, HIDE_OPTION},
   {"ignore", required_argument, 0, 'I'},
   {"indicator-style", required_argument, 0, INDICATOR_STYLE_OPTION},
   {"dereference", no_argument, 0, 'L'},
@@ -1348,9 +1360,9 @@ decode_switches (int argc, char **argv)
   dereference = DEREF_UNDEFINED;
   recursive = false;
   immediate_dirs = false;
-  all_files = false;
-  really_all_files = false;
-  ignore_patterns = 0;
+  ignore = IGNORE_DEFAULT;
+  ignore_patterns = NULL;
+  hide_patterns = NULL;
 
   /* FIXME: put this in a function.  */
   {
@@ -1432,8 +1444,7 @@ decode_switches (int argc, char **argv)
       switch (c)
 	{
 	case 'a':
-	  all_files = true;
-	  really_all_files = true;
+	  ignore = IGNORE_MINIMAL;
 	  break;
 
 	case 'b':
@@ -1450,8 +1461,7 @@ decode_switches (int argc, char **argv)
 
 	case 'f':
 	  /* Same as enabling -a -U and disabling -l -s.  */
-	  all_files = true;
-	  really_all_files = true;
+	  ignore = IGNORE_MINIMAL;
 	  sort_type = sort_none;
 	  sort_type_specified = true;
 	  /* disable -l */
@@ -1544,8 +1554,8 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 'A':
-	  really_all_files = false;
-	  all_files = true;
+	  if (ignore == IGNORE_DEFAULT)
+	    ignore = IGNORE_DOT_AND_DOTDOT;
 	  break;
 
 	case 'B':
@@ -1632,6 +1642,15 @@ decode_switches (int argc, char **argv)
         case AUTHOR_OPTION:
           print_author = true;
           break;
+
+	case HIDE_OPTION:
+	  {
+	    struct ignore_pattern *hide = xmalloc (sizeof *hide);
+	    hide->pattern = optarg;
+	    hide->next = hide_patterns;
+	    hide_patterns = hide;
+	  }
+	  break;
 
 	case SORT_OPTION:
 	  sort_type = XARGMATCH ("--sort", optarg, sort_args, sort_types);
@@ -2245,7 +2264,7 @@ print_dir (const char *name, const char *realname)
 	  break;
 	}
 
-      if (file_interesting (next))
+      if (! file_ignored (next->d_name))
 	{
 	  enum filetype type = unknown;
 
@@ -2326,25 +2345,29 @@ add_ignore_pattern (const char *pattern)
   ignore_patterns = ignore;
 }
 
-/* Return true if the file in `next' should be listed.  */
+/* Return true if one of the PATTERNS matches FILE.  */
 
 static bool
-file_interesting (const struct dirent *next)
+patterns_match (struct ignore_pattern const *patterns, char const *file)
 {
-  register struct ignore_pattern *ignore;
-
-  for (ignore = ignore_patterns; ignore; ignore = ignore->next)
-    if (fnmatch (ignore->pattern, next->d_name, FNM_PERIOD) == 0)
-      return false;
-
-  if (really_all_files
-      || next->d_name[0] != '.'
-      || (all_files
-	  && next->d_name[1] != '\0'
-	  && (next->d_name[1] != '.' || next->d_name[2] != '\0')))
-    return true;
-
+  struct ignore_pattern const *p;
+  for (p = patterns; p; p = p->next)
+    if (fnmatch (p->pattern, file, FNM_PERIOD) == 0)
+      return true;
   return false;
+}
+
+/* Return true if FILE should be ignored.  */
+
+static bool
+file_ignored (char const *name)
+{
+  return ((ignore != IGNORE_MINIMAL
+	   && name[0] == '.'
+	   && (ignore == IGNORE_DEFAULT || ! name[1 + (name[1] == '.')]))
+	  || (ignore == IGNORE_DEFAULT
+	      && patterns_match (hide_patterns, name))
+	  || patterns_match (ignore_patterns, name));
 }
 
 /* POSIX requires that a file size be printed without a sign, even
@@ -3997,7 +4020,7 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
 Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
-  -a, --all                  do not hide entries starting with .\n\
+  -a, --all                  do not ignore entries starting with .\n\
   -A, --almost-all           do not list implied . and ..\n\
       --author               print the author of each file\n\
   -b, --escape               print octal escapes for nongraphic characters\n\
@@ -4035,6 +4058,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       --dereference-command-line-symlink-to-dir\n\
                              follow each command line symbolic link\n\
                                that points to a directory\n\
+      --hide=PATTERN         do not list implied entries matching shell PATTERN\n\
+                               (overridden by -a or -A)\n\
 "), stdout);
       fputs (_("\
       --indicator-style=WORD append indicator with style WORD to entry names:\n\
