@@ -172,8 +172,7 @@ parse_tab_stops (char const *stops)
 	    }
 	  {
 	    /* Detect overflow.  */
-	    uintmax_t new_t = 10 * tabval + *stops - '0';
-	    if (UINTMAX_MAX / 10 < tabval || new_t < tabval * 10)
+	    if (DECIMAL_DIGIT_ACCUMULATE (tabval, *stops - '0', UINTMAX_MAX))
 	      {
 		size_t len = strspn (num_start, "0123456789");
 		char *bad_num = xstrndup (num_start, len);
@@ -182,7 +181,6 @@ parse_tab_stops (char const *stops)
 		ok = false;
 		stops = num_start + len - 1;
 	      }
-	    tabval = new_t;
 	  }
 	}
       else
@@ -421,10 +419,8 @@ main (int argc, char **argv)
 	      have_tabval = true;
 	    }
 	  {
-	    uintmax_t new_t = tabval * 10 + c - '0';
-	    if (UINTMAX_MAX / 10 < tabval || new_t < tabval * 10)
+	    if (DECIMAL_DIGIT_ACCUMULATE (tabval, c - '0', UINTMAX_MAX))
 	      error (EXIT_FAILURE, 0, _("tab stop value is too large"));
-	    tabval = new_t;
 	  }
 	  obsolete_tablist = true;
 	  break;
