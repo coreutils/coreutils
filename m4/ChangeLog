@@ -1,3 +1,21 @@
+2004-08-04  Paul Eggert  <eggert@cs.ucla.edu>
+
+	OpenBSD porting fixes.
+	* boottime.m4: Add copyright notice.
+	(GNULIB_BOOT_TIME): Include sys/param.h before testing
+	for sys/sysctl.h.
+	* fsusage.m4: Add copyright notice.
+	(gl_FSUSAGE): Include sys/param.h before checking for sys/mount.h.
+	* jm-macros.m4: Include copyright notice.
+	(gl_MACROS): Use the _ONCE variants when appropriate.
+	Include sys/param.h before testing for sys/sysctl.h and sys/mount.h.
+	* ls-mntd-fs.m4: Include copyright notice.
+	(gl_LIST_MOUNTED_FILE_SYSTEMS): Include sys/param.h before
+	testing for sys/mount.h.
+	* stat-prog.m4: Include copyright notice.
+	(cu_PREREQ_STAT_PROG): Use the _ONCE variants when appropriate.
+	Include sys/param.h before testing for sys/mount.h.
+
 2004-08-01  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* jm-macros.m4 (gl_CHECK_ALL_TYPES):
