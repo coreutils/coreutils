@@ -143,7 +143,7 @@
 #define CSTATUS Control ('t')
 #endif
 
-static char *visible ();
+static const char *visible ();
 static unsigned long baud_to_value ();
 static int recover_mode ();
 static int screen_columns ();
@@ -191,7 +191,7 @@ enum mode_type
 /* Each mode.  */
 struct mode_info
   {
-    char *name;			/* Name given on command line.  */
+    const char *name;		/* Name given on command line.  */
     enum mode_type type;	/* Which structure element to change. */
     char flags;			/* Setting and display options.  */
     unsigned long bits;		/* Bits to set for this mode.  */
@@ -352,7 +352,7 @@ static struct mode_info mode_info[] =
 /* Control character settings.  */
 struct control_info
   {
-    char *name;			/* Name given on command line.  */
+    const char *name;		/* Name given on command line.  */
     unsigned char saneval;	/* Value to set for `stty sane'.  */
     int offset;			/* Offset in c_cc.  */
   };
@@ -1528,7 +1528,7 @@ recover_mode (arg, mode)
 
 struct speed_map
 {
-  char *string;			/* ASCII representation. */
+  const char *string;		/* ASCII representation. */
   speed_t speed;		/* Internal form. */
   unsigned long value;		/* Numeric value. */
 };
@@ -1621,7 +1621,7 @@ sane_mode (mode)
 /* Return a string that is the printable representation of character CH.  */
 /* Adapted from `cat' by Torbjorn Granlund.  */
 
-static char *
+static const char *
 visible (ch)
      unsigned char ch;
 {
@@ -1667,7 +1667,7 @@ visible (ch)
       *bpout++ = ch + 64;
     }
   *bpout = '\0';
-  return buf;
+  return (const char *) buf;
 }
 
 /* Parse string S as an integer, using decimal radix by default,

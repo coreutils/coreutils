@@ -107,7 +107,7 @@ main (argc, argv)
      char **argv;
 {
   int optc;
-  char *datestr = NULL;
+  const char *datestr = NULL;
   time_t when;
   int set_date = 0;
   int print_date = 0;
@@ -218,7 +218,7 @@ non-option argument must be a format string beginning with `+'");
 
 static void
 show_date (format, when)
-     char *format;
+     const char *format;
      time_t when;
 {
   struct tm *tm;
@@ -264,7 +264,7 @@ usage (status)
     {
       printf ("\
 Usage: %s [OPTION]... [+FORMAT]\n\
-  or:  %s [-u] [--utc] [--universal] [MMDDhhmm[[CC]YY][.ss]]\n\
+  or:  %s [OPTION] [MMDDhhmm[[CC]YY][.ss]]\n\
 ",
 	      program_name, program_name);
       printf ("\
@@ -277,7 +277,8 @@ Usage: %s [OPTION]... [+FORMAT]\n\
 ");
       printf ("\
 \n\
-FORMAT controls the output.  Interpreted sequences are:\n\
+FORMAT controls the output.  The only valid option for the second form\n\
+specifies Coordinated Universal Time.  Interpreted sequences are:\n\
 \n\
   %%%%   a literal %%\n\
   %%a   locale's abbreviated weekday name (Sun..Sat)\n\
@@ -312,7 +313,7 @@ FORMAT controls the output.  Interpreted sequences are:\n\
   %%Z   time zone (e.g., EDT), or nothing if no time zone is determinable\n\
 \n\
 By default, `date' pads numeric fields with zeroes.  GNU `date'\n\
-recognizes the following nonstandard modifiers between `%' and a\n\
+recognizes the following nonstandard modifiers between `%%' and a\n\
 numeric directive.\n\
 \n\
   `-' (hyphen) do not pad the field\n\

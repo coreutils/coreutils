@@ -102,7 +102,7 @@ int gethostname ();
 
 static int read_utmp ();
 #ifdef WHO
-static char *idle_string ();
+static const char *idle_string ();
 static STRUCT_UTMP *search_entries ();
 static void print_entry ();
 static void print_heading ();
@@ -525,7 +525,7 @@ who_am_i (filename)
 /* Return a string representing the time between WHEN and the time
    that this function is first run. */
 
-static char *
+static const char *
 idle_string (when)
      time_t when;
 {
@@ -544,7 +544,7 @@ idle_string (when)
       sprintf (idle, "%02d:%02d",
 	       (int) (seconds_idle / (60 * 60)),
 	       (int) ((seconds_idle % (60 * 60)) / 60));
-      return idle;
+      return (const char *) idle;
     }
   return " old ";
 }

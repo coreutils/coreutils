@@ -204,7 +204,7 @@ main (argc, argv)
      char **argv;
 {
   int optc;
-  char *new_user = DEFAULT_USER;
+  const char *new_user = DEFAULT_USER;
   char *command = 0;
   char **additional_args = 0;
   char *shell = 0;
@@ -298,7 +298,7 @@ main (argc, argv)
 #endif
 
   if (pw->pw_shell == 0 || pw->pw_shell[0] == 0)
-    pw->pw_shell = DEFAULT_SHELL;
+    pw->pw_shell = (char *) DEFAULT_SHELL;
   if (shell == 0 && change_environment == 0)
     shell = getenv ("SHELL");
   if (shell != 0 && getuid () && restricted_shell (pw->pw_shell))
@@ -430,19 +430,24 @@ run_shell (shell, command, additional_args)
      char *command;
      char **additional_args;
 {
-  char **args;
+  const char **args;
   int argno = 1;
 
   if (additional_args)
-    args = (char **) xmalloc (sizeof (char *)
-			      * (10 + elements (additional_args)));
+    args = (const char **) xmalloc (sizeof (char *)
+				    * (10 + elements (additional_args)));
   else
-    args = (char **) xmalloc (sizeof (char *) * 10);
+    args = (const char **) xmalloc (sizeof (char *) * 10);
   if (simulate_login)
     {
-      args[0] = xmalloc (strlen (shell) + 2);
-      args[0][0] = '-';
-      strcpy (args[0] + 1, basename (shell));
+      char *arg0;
+      char *shell_basename;
+
+      shell_basename = basename (shell);
+      arg0 = xmalloc (strlen (shell_basename) + 2);
+      arg0[0] = '-';
+      strcpy (arg0 + 1, shell_basename);
+      args[0] = arg0;
     }
   else
     args[0] = basename (shell);
@@ -457,7 +462,7 @@ run_shell (shell, command, additional_args)
     for (; *additional_args; ++additional_args)
       args[argno++] = *additional_args;
   args[argno] = NULL;
-  execv (shell, args);
+  execv (shell, (char **) args);
   error (1, errno, "cannot run %s", shell);
 }
 
@@ -470,7 +475,7 @@ log_su (pw, successful)
      struct passwd *pw;
      int successful;
 {
-  char *new_user, *old_user, *tty;
+  const char *new_user, *old_user, *tty;
 
 #ifndef SYSLOG_NON_ROOT
   if (pw->pw_uid)

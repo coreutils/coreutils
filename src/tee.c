@@ -131,16 +131,16 @@ main (argc, argv)
 
   if (ignore_interrupts)
     {
-#ifdef _POSIX_VERSION
+#ifdef _POSIX_SOURCE
       struct sigaction sigact;
 
       sigact.sa_handler = SIG_IGN;
       sigemptyset (&sigact.sa_mask);
       sigact.sa_flags = 0;
       sigaction (SIGINT, &sigact, NULL);
-#else				/* !_POSIX_VERSION */
+#else				/* !_POSIX_SOURCE */
       signal (SIGINT, SIG_IGN);
-#endif				/* _POSIX_VERSION */
+#endif				/* _POSIX_SOURCE */
     }
 
   errs = tee (argc - optind, (const char **) &argv[optind]);
