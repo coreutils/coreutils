@@ -1933,7 +1933,8 @@ gobble_file (const char *name, enum filetype type, int explicit_arg,
 #endif
 
       if (S_ISLNK (files[files_index].stat.st_mode)
-	  && (explicit_arg || format == long_format || check_symlink_color))
+	  && ((explicit_arg && ! immediate_dirs)
+	      || format == long_format || check_symlink_color))
 	{
 	  char *linkpath;
 	  struct stat linkstats;
