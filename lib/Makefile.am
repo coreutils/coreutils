@@ -56,7 +56,6 @@ libfetish_a_SOURCES = \
   exitfail.c exitfail.h \
   filemode.c filemode.h \
   file-type.c file-type.h \
-  fnmatch_.h \
   fopen-safer.c \
   fsusage.h \
   ftw_.h \
@@ -138,13 +137,15 @@ libfetish_a_SOURCES += \
 libfetish_a_LIBADD = $(LIBOBJS) $(ALLOCA)
 libfetish_a_DEPENDENCIES = $(libfetish_a_LIBADD)
 
+lib_OBJECTS = $(libfetish_a_OBJECTS)
+
 
 BUILT_SOURCES = getdate.c
 MAINTAINERCLEANFILES = $(BUILT_SOURCES)
 MOSTLYCLEANFILES =
 
 EXTRA_DIST = config.charset ref-add.sin ref-del.sin \
-  fnmatch_loop.c inttostr.c inttostr.h
+  inttostr.c inttostr.h
 
 # The following is needed in order to install a simple file in $(libdir)
 # which is shared with other installed packages. We use a list of referencing
@@ -197,12 +198,25 @@ stdbool.h: stdbool_.h
 
 BUILT_SOURCES += $(ALLOCA_H)
 EXTRA_DIST += alloca_.h
-MOSTLYCLEANFILES += alloca.h alloca.ht
-# Create an <alloca.h> when the system
+
+# We need the following in order to create an <alloca.h> when the system
 # doesn't have one that works with the given compiler.
+all-local $(lib_OBJECTS): @ALLOCA_H@
 alloca.h: alloca_.h
-	cp $(srcdir)/alloca_.h $@t
-	mv $@t $@
+	cp $(srcdir)/alloca_.h alloca.h-t
+	mv alloca.h-t alloca.h
+MOSTLYCLEANFILES += alloca.h alloca.h-t
+
+BUILT_SOURCES += $(FNMATCH_H)
+EXTRA_DIST += fnmatch_.h fnmatch_loop.c
+
+# We need the following in order to create an <fnmatch.h> when the system
+# doesn't have one that supports the required API.
+all-local $(lib_OBJECTS): @FNMATCH_H@
+fnmatch.h: fnmatch_.h
+	cp $(srcdir)/fnmatch_.h fnmatch.h-t
+	mv fnmatch.h-t fnmatch.h
+MOSTLYCLEANFILES += fnmatch.h fnmatch.h-t
 
 SUFFIXES = .sed .sin
 .sin.sed:
@@ -210,4 +224,4 @@ SUFFIXES = .sed .sin
 	mv t-$@ $@
 
 CLEANFILES = charset.alias ref-add.sed ref-del.sed
-DISTCLEANFILES = ftw.h search.h fnmatch.h
+DISTCLEANFILES = ftw.h search.h
