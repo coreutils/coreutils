@@ -1,3 +1,21 @@
+2004-07-28  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* md5.h: Include <stdint.h> if HAVE_STDINT_H || _LIBC, not
+	ifdef _LIBC.
+	(md5_uint32): Use uint32_t if available.  Simplify fallback ifdefs.
+	* md5.c: Don't include <sys/types.h> or <stdlib.h>; <stddef.h>
+	suffices with C89 or better.
+	(alignof): New macro, portable to all C89 hosts.
+	(UNALIGNED): Use it.  Use uintptr_t if available, and assume
+	everything is unaligned otherwise; this is more portable than
+	assuming 'unsigned long int' will always work.
+	* sha1.c: Likewise.
+
+	* getugroups.c: Include <errno.h>.
+	(EOVERFLOW): Define if not defined.
+	(getgroups): Return -1 with errno=EOVERFLOW if an integer overflow
+	occurs.
+
 2004-07-27  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* euidaccess.c [HAVE_LIBGEN_H]: Include <libgen.h>, for
