@@ -1,6 +1,20 @@
-2003-01-15  Paul Eggert  <eggert@twinsun.com>
+2003-01-18  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.5.
+
+	* src/ls.c (Dereference_symlink) [DEREF_COMMAND_LINE_SYMLINK_TO_DIR]:
+	New member.
+	(enum) [DEREFERENCE_COMMAND_LINE_SYMLINK_TO_DIR_OPTION]: New member.
+	(long_options): Add option --dereference-command-line-symlink-to-dir.
+	(main): Make DEREF_COMMAND_LINE_SYMLINK_TO_DIR be the default,
+	rather than DEREF_COMMAND_LINE_ARGUMENTS, when none of the
+	-d, -F, -l options is specified.
+	(decode_switches): Handle --dereference-command-line-symlink-to-dir.
+	(gobble_file): Honor DEREF_COMMAND_LINE_SYMLINK_TO_DIR.
+	Change --dereference-command-line (-H) to dereference *all*
+	command line arguments, including broken symlinks.
+
+2003-01-15  Paul Eggert  <eggert@twinsun.com>
 
 	Change ls -H back to the way it was yesterday, since this is
 	compatible with FreeBSD and the POSIX spec is confusing
