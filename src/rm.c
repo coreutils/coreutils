@@ -529,11 +529,16 @@ remove_cwd_entries (void)
   struct HT *ht = NULL;
 
   /* FIXME: describe */
-  struct obstack entry_name_pool;
+  static struct obstack entry_name_pool;
+  static int first_call = 1;
 
   enum RM_status status = RM_OK;
 
-  obstack_init (&entry_name_pool);
+  if (first_call)
+    {
+      first_call = 0;
+      obstack_init (&entry_name_pool);
+    }
 
   if (dirp)
     {
@@ -674,7 +679,8 @@ remove_cwd_entries (void)
       hash_free (ht);
     }
 
-  obstack_free (&entry_name_pool, NULL);
+  if (obstack_object_size (&entry_name_pool) > 0)
+    obstack_free (&entry_name_pool, obstack_base (&entry_name_pool));
 
   return status;
 }
