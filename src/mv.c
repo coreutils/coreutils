@@ -31,6 +31,7 @@
 #include "backupfile.h"
 #include "copy.h"
 #include "cp-hash.h"
+#include "dirname.h"
 #include "error.h"
 #include "path-concat.h"
 #include "quote.h"
@@ -144,18 +145,6 @@ is_real_dir (const char *path)
   return lstat (path, &stats) == 0 && S_ISDIR (stats.st_mode);
 }
 
-static int
-strip_trailing_slashes_2 (char *path)
-{
-  char *end_p = path + strlen (path) - 1;
-  char *slash = end_p;
-
-  while (slash > path && *slash == '/')
-    *slash-- = '\0';
-
-  return slash < end_p;
-}
-
 /* Move SOURCE onto DEST.  Handles cross-filesystem moves.
    If SOURCE is a directory, DEST must not exist.
    Return 0 if successful, non-zero if an error occurred.  */
@@ -245,7 +234,7 @@ do_move (const char *source, const char *dest, const struct cp_options *x)
 
 	  /* Remove any trailing slashes.  This is necessary if we
 	     took the else branch of movefile.  */
-	  strip_trailing_slashes_2 (fs.filename);
+	  strip_trailing_slashes (fs.filename);
 
 	  status = rm (&fs, 1, &rm_options);
 	  assert (VALID_STATUS (status));
@@ -271,7 +260,7 @@ static int
 movefile (char *source, char *dest, int dest_is_dir,
 	  const struct cp_options *x)
 {
-  int dest_had_trailing_slash = strip_trailing_slashes_2 (dest);
+  int dest_had_trailing_slash = strip_trailing_slashes (dest);
   int fail;
 
   /* This code was introduced to handle the ambiguity in the semantics
@@ -282,7 +271,7 @@ movefile (char *source, char *dest, int dest_is_dir,
      rename semantics are POSIX and susv2 compliant.  */
 
   if (remove_trailing_slashes)
-    strip_trailing_slashes_2 (source);
+    strip_trailing_slashes (source);
 
   /* In addition to when DEST is a directory, if DEST has a trailing
      slash and neither SOURCE nor DEST is a directory, presume the target
@@ -297,10 +286,7 @@ movefile (char *source, char *dest, int dest_is_dir,
       char *src_basename;
       char *new_dest;
 
-      /* Remove trailing slashes before taking base_name.
-	 Otherwise, base_name ("a/") returns "".  */
-      strip_trailing_slashes_2 (source);
-
+      strip_trailing_slashes (source);
       src_basename = base_name (source);
       new_dest = path_concat (dest, src_basename, NULL);
       if (new_dest == NULL)
