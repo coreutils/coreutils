@@ -72,6 +72,42 @@ oatoi (const char *s)
   return i;
 }
 
+/* Create a mode_change entry with the specified `=ddd'-style
+   mode change operation, where NEW_MODE is `ddd'.  Return the
+   new entry, or NULL upon failure.  */
+
+static struct mode_change *
+make_node_op_equals (int new_mode)
+{
+  struct mode_change *p;
+  p = talloc (struct mode_change);
+  if (p == NULL)
+    return p;
+  p->next = NULL;
+  p->op = '=';
+  p->flags = 0;
+  p->value = new_mode;
+  p->affected = 07777;	/* Affect all permissions. */
+  return p;
+}
+
+/* Append entry E to the end of the link list with the specified
+   HEAD and TAIL.  */
+
+static void
+mode_append_entry (struct mode_change **head,
+		   struct mode_change **tail,
+		   struct mode_change *e)
+{
+  if (*head == NULL)
+    *head = *tail = e;
+  else
+    {
+      (*tail)->next = e;
+      *tail = e;
+    }
+}
+
 /* Return a linked list of file mode change operations created from
    MODE_STRING, an ASCII string that contains either an octal number
    specifying an absolute mode, or symbolic mode change operations with
@@ -89,41 +125,44 @@ struct mode_change *
 mode_compile (const char *mode_string, unsigned int masked_ops)
 {
   struct mode_change *head;	/* First element of the linked list. */
-  struct mode_change *change;	/* An element of the linked list. */
+  struct mode_change *tail;	/* An element of the linked list. */
   int i;			/* General purpose temporary. */
   int umask_value;		/* The umask value (surprise). */
-  unsigned short affected_bits;	/* Which bits in the mode are operated on. */
-  unsigned short affected_masked; /* `affected_bits' modified by umask. */
-  unsigned ops_to_mask;		/* Operators to actually use umask on. */
+
+  head = NULL;
+#ifdef lint
+  tail = NULL;
+#endif
 
   i = oatoi (mode_string);
   if (i >= 0)
     {
+      struct mode_change *p;
       if (i > 07777)
 	return MODE_INVALID;
-      head = talloc (struct mode_change);
-      if (head == NULL)
+      p = make_node_op_equals (i);
+      if (p == NULL)
 	return MODE_MEMORY_EXHAUSTED;
-      head->next = NULL;
-      head->op = '=';
-      head->flags = 0;
-      head->value = i;
-      head->affected = 07777;	/* Affect all permissions. */
+      mode_append_entry (&head, &tail, p);
       return head;
     }
 
   umask_value = umask (0);
   umask (umask_value);		/* Restore the old value. */
-
-  head = NULL;
-#ifdef lint
-  change = NULL;
-#endif
   --mode_string;
 
   /* One loop iteration for each "ugoa...=+-rwxXstugo...[=+-rwxXstugo...]". */
   do
     {
+      /* Which bits in the mode are operated on. */
+      unsigned short affected_bits = 0;
+      /* `affected_bits' modified by umask. */
+      unsigned short affected_masked;
+      /* Operators to actually use umask on. */
+      unsigned ops_to_mask = 0;
+
+      int who_specified_p;
+
       affected_bits = 0;
       ops_to_mask = 0;
       /* Turn on all the bits in `affected_bits' for each group given. */
@@ -149,37 +188,39 @@ mode_compile (const char *mode_string, unsigned int masked_ops)
     no_more_affected:
       /* If none specified, affect all bits, except perhaps those
 	 set in the umask. */
-      if (affected_bits == 0)
+      if (affected_bits)
+	who_specified_p = 1;
+      else
 	{
+	  who_specified_p = 0;
 	  affected_bits = 07777;
 	  ops_to_mask = masked_ops;
 	}
 
       while (*mode_string == '=' || *mode_string == '+' || *mode_string == '-')
 	{
-	  /* Add the element to the tail of the list, so the operations
-	     are performed in the correct order. */
-	  if (head == NULL)
+	  struct mode_change *change = talloc (struct mode_change);
+	  if (change == NULL)
 	    {
-	      head = talloc (struct mode_change);
-	      if (head == NULL)
-		return MODE_MEMORY_EXHAUSTED;
-	      change = head;
-	    }
-	  else
-	    {
-	      change->next = talloc (struct mode_change);
-	      if (change->next == NULL)
-		{
-		  mode_free (head);
-		  return MODE_MEMORY_EXHAUSTED;
-		}
-	      change = change->next;
+	      mode_free (head);
+	      return MODE_MEMORY_EXHAUSTED;
 	    }
 
 	  change->next = NULL;
 	  change->op = *mode_string;	/* One of "=+-". */
 	  affected_masked = affected_bits;
+
+	  /* Per the Single Unix Spec, if `who' is not specified and the
+	     `=' operator is used, then clear all the bits first.  */
+	  if (!who_specified_p &&
+	      ops_to_mask & (*mode_string == '=' ? MODE_MASK_EQUALS : 0))
+	    {
+	      struct mode_change *p = make_node_op_equals (0);
+	      if (p == NULL)
+		return MODE_MEMORY_EXHAUSTED;
+	      mode_append_entry (&head, &tail, p);
+	    }
+
 	  if (ops_to_mask & (*mode_string == '=' ? MODE_MASK_EQUALS
 			     : *mode_string == '+' ? MODE_MASK_PLUS
 			     : MODE_MASK_MINUS))
@@ -187,6 +228,10 @@ mode_compile (const char *mode_string, unsigned int masked_ops)
 	  change->affected = affected_masked;
 	  change->value = 0;
 	  change->flags = 0;
+
+	  /* Add the element to the tail of the list, so the operations
+	     are performed in the correct order. */
+	  mode_append_entry (&head, &tail, change);
 
 	  /* Set `value' according to the bits set in `affected_masked'. */
 	  for (++mode_string;; ++mode_string)
