@@ -201,6 +201,8 @@ struct Spec_list
     int has_restricted_char_class;
   };
 
+/* FIXME: comment */
+
 struct E_string
 {
   unsigned char *s;
@@ -964,13 +966,14 @@ find_bracketed_repeat (const unsigned char *p, size_t start_idx, size_t p_len,
       - c Any other character is interpreted as itself.  */
 
 static int
-build_spec_list (const unsigned char *unescaped_string, size_t len,
-		 struct Spec_list *result)
+build_spec_list (const struct E_string *es, struct Spec_list *result)
 {
   const unsigned char *p;
+  size_t len;
   size_t i;
 
-  p = unescaped_string;
+  p = es->s;
+  len = es->len;
 
   /* The main for-loop below recognizes the 4 multi-character constructs.
      A character that matches (in its context) none of the multi-character
@@ -1353,7 +1356,7 @@ parse_str (const unsigned char *s, struct Spec_list *spec_list)
 
   if (unquote (s, &es))
     return 1;
-  if (build_spec_list (es.s, es.len, spec_list))
+  if (build_spec_list (&es, spec_list))
     return 1;
   return 0;
 }
