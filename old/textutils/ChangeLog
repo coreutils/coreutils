@@ -1,3 +1,8 @@
+Sun Aug 18 09:34:42 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (AC_OUTPUT): Add checks/sort-test/Makefile.
+	* checks/Makefile.am (SUBDIRS): Add sort-test.
+
 Sat Aug 17 18:57:17 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* Makefile.am (EXTRA_DIST): Add acinclude.m4.
