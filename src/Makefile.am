@@ -210,6 +210,7 @@ s1 = '/^\#define AUTHORS \([^\\]\)/{;s//\1/;$(sed_filter);p;q;}'
 s2 = '/^\#define AUTHORS \\\\/{;n;$(sed_filter);p;q;}'
 # FIXME: handle *.sh
 ../AUTHORS: $(SOURCES)
+	rm -f $@-t
 	(						\
 	  set -e;					\
 	  echo "Here are the names of the programs in this package,";	\
@@ -224,4 +225,5 @@ s2 = '/^\#define AUTHORS \\\\/{;n;$(sed_filter);p;q;}'
 	      echo "$$prog: $$a";			\
 	    fi;						\
 	  done | sort -u ) > $@-t
+	chmod a-w $@-t
 	mv $@-t $@
