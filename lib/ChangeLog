@@ -1,3 +1,17 @@
+2000-12-07  Jim Meyering  <meyering@lucent.com>
+
+	* dirname.c (FILESYSTEM_PREFIX_LEN): Define.
+	(dir_name_r): Declare this function as static.
+	[BACKSLASH_IS_PATH_SEPARATOR]: Fix a bug that'd
+	manifest itself on a name containing a mix of slashes and
+	backslashes.
+	Make this function work with names starting with a DOS-style
+	drive letter and colon prefix.
+	(dir_name): Append `.' if necessary.
+	Based mostly on patches from Prashant TR and Eli Zaretskii.
+
+	* dirname.h (dir_name_r): Remove prototype.
+
 2000-12-05  Jim Meyering  <meyering@lucent.com>
 
 	* dirname.c (dir_name_r): Add `const' in a few local declarations.
