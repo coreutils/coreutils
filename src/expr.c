@@ -155,6 +155,9 @@ main (int argc, char **argv)
   VALUE *v;
 
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
 
   parse_long_options (argc, argv, "expr", version_string, usage);
 

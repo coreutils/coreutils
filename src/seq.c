@@ -103,6 +103,10 @@ main (int argc, char **argv)
   int step_is_set;
 
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
+
   equal_width = 0;
   format_str = NULL;
   separator = "\n";

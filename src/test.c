@@ -1065,6 +1065,9 @@ main (int margc, char **margv)
     return (test_error_return);
 #else /* TEST_STANDALONE */
   program_name = margv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
 #endif /* TEST_STANDALONE */
 
   argv = margv;

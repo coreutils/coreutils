@@ -38,9 +38,9 @@ sethostname (name, namelen)
 {
   /* Using sysinfo() is the SVR4 mechanism to set a hostname. */
   int result;
-  
+
   result = sysinfo (SI_SET_HOSTNAME, name, namelen);
-  
+
   return (result == -1 ? result : 0);
 }
 
@@ -79,6 +79,9 @@ main (int argc, char **argv)
   char *hostname;
 
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
 
   parse_long_options (argc, argv, "hostname", version_string, usage);
 

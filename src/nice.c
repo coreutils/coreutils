@@ -64,6 +64,10 @@ main (int argc, char **argv)
   int last_optind = 0;
 
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
+
   parse_long_options (argc, argv, "nice", version_string, usage);
 
   for (optind = 1; optind < argc; /* empty */)

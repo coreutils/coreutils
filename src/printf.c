@@ -132,6 +132,10 @@ main (int argc, char **argv)
   int args_used;
 
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
+
   exit_status = 0;
 
   parse_long_options (argc, argv, "printf", version_string, usage);

@@ -62,6 +62,9 @@ main (int argc, char **argv)
   register char *slash;
 
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
 
   parse_long_options (argc, argv, "dirname", version_string, usage);
 

@@ -119,6 +119,9 @@ main (register int argc, register char **argv, char **envp)
   int ignore_environment = 0;
 
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
 
   while ((optc = getopt_long (argc, argv, "+iu:", longopts, (int *) 0)) != EOF)
     {

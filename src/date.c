@@ -159,6 +159,9 @@ main (int argc, char **argv)
   int option_specified_date;
 
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
 
   while ((optc = getopt_long (argc, argv, "d:f:r:Rs:u", long_options, NULL))
 	 != EOF)

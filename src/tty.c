@@ -61,6 +61,10 @@ main (int argc, char **argv)
   int optc;
 
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
+
   silent = 0;
 
   while ((optc = getopt_long (argc, argv, "s", longopts, (int *) 0)) != EOF)

@@ -573,6 +573,9 @@ main (int argc, char **argv)
 #endif /* WHO */
 
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
 
 #ifdef WHO
   while ((optc = getopt_long (argc, argv, "imqsuwHT", longopts, &longind))

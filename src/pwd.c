@@ -56,6 +56,9 @@ main (int argc, char **argv)
   char *wd;
 
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
 
   parse_long_options (argc, argv, "pwd", version_string, usage);
 

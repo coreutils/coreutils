@@ -650,6 +650,9 @@ main (int argc, char **argv)
   int k;
 
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
 
   parse_long_options (argc, argv, "stty", version_string, usage);
 

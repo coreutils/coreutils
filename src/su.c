@@ -195,6 +195,10 @@ main (argc, argv)
   struct passwd pw_copy;
 
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
+
   fast_startup = 0;
   simulate_login = 0;
   change_environment = 1;

@@ -107,6 +107,9 @@ main (int argc, char **argv)
   int display_return = 1, do_v9 = 0;
 
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
 
   parse_long_options (argc, argv, "echo", version_string, usage);
 
