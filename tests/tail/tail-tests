@@ -468,8 +468,93 @@ else
   esac
 fi
 test -s tn-3.err || rm -f tn-3.err
+$xx -n +0 < $srcdir/tn-4.in > tn-4.out 2> tn-4.err
+code=$?
+if test $code != 0 ; then
+  $echo Test n-4 failed: ../../src/tail return code $code differs from expected value 0 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp tn-4.out $srcdir/tn-4.exp
+  case $? in
+    0) if test "$VERBOSE" ; then $echo passed n-4; fi ;; # equal files
+    1) $echo Test n-4 failed: files tn-4.out and $srcdir/tn-4.exp differ 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo Test n-4 may have failed. 1>&2;
+       $echo The command "cmp tn-4.out $srcdir/tn-4.exp" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s tn-4.err || rm -f tn-4.err
+$xx -n +1 < $srcdir/tn-4a.in > tn-4a.out 2> tn-4a.err
+code=$?
+if test $code != 0 ; then
+  $echo Test n-4a failed: ../../src/tail return code $code differs from expected value 0 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp tn-4a.out $srcdir/tn-4a.exp
+  case $? in
+    0) if test "$VERBOSE" ; then $echo passed n-4a; fi ;; # equal files
+    1) $echo Test n-4a failed: files tn-4a.out and $srcdir/tn-4a.exp differ 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo Test n-4a may have failed. 1>&2;
+       $echo The command "cmp tn-4a.out $srcdir/tn-4a.exp" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s tn-4a.err || rm -f tn-4a.err
+$xx -n -0 < $srcdir/tn-5.in > tn-5.out 2> tn-5.err
+code=$?
+if test $code != 0 ; then
+  $echo Test n-5 failed: ../../src/tail return code $code differs from expected value 0 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp tn-5.out $srcdir/tn-5.exp
+  case $? in
+    0) if test "$VERBOSE" ; then $echo passed n-5; fi ;; # equal files
+    1) $echo Test n-5 failed: files tn-5.out and $srcdir/tn-5.exp differ 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo Test n-5 may have failed. 1>&2;
+       $echo The command "cmp tn-5.out $srcdir/tn-5.exp" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s tn-5.err || rm -f tn-5.err
+$xx -n -1 < $srcdir/tn-5a.in > tn-5a.out 2> tn-5a.err
+code=$?
+if test $code != 0 ; then
+  $echo Test n-5a failed: ../../src/tail return code $code differs from expected value 0 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp tn-5a.out $srcdir/tn-5a.exp
+  case $? in
+    0) if test "$VERBOSE" ; then $echo passed n-5a; fi ;; # equal files
+    1) $echo Test n-5a failed: files tn-5a.out and $srcdir/tn-5a.exp differ 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo Test n-5a may have failed. 1>&2;
+       $echo The command "cmp tn-5a.out $srcdir/tn-5a.exp" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s tn-5a.err || rm -f tn-5a.err
+$xx -n  0 < $srcdir/tn-5b.in > tn-5b.out 2> tn-5b.err
+code=$?
+if test $code != 0 ; then
+  $echo Test n-5b failed: ../../src/tail return code $code differs from expected value 0 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp tn-5b.out $srcdir/tn-5b.exp
+  case $? in
+    0) if test "$VERBOSE" ; then $echo passed n-5b; fi ;; # equal files
+    1) $echo Test n-5b failed: files tn-5b.out and $srcdir/tn-5b.exp differ 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo Test n-5b may have failed. 1>&2;
+       $echo The command "cmp tn-5b.out $srcdir/tn-5b.exp" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s tn-5b.err || rm -f tn-5b.err
 if test $errors = 0 ; then
-  $echo Passed all 27 tests. 1>&2
+  $echo Passed all 32 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi

@@ -42,7 +42,7 @@ my @tv = (
 
 # Since the number is larger than 2^64, this should provoke
 # the diagnostic: `tail: 99999999999999999999: number of bytes is so large \
-# that it is not representable' on all systems... for now, probably, maybe.
+# that it is not representable' on all systems... probably, for now, maybe.
 ['err-3', '-c99999999999999999999', '', '', 1],
 ['err-4', '-c', '', '', 1],
 
@@ -53,6 +53,15 @@ my @tv = (
 ['n-1', '-n 10', "x\n" . ("y\n" x 10) . 'z', ("y\n" x 9) . 'z', 0],
 ['n-2', '-n -10', "x\n" . ("y\n" x 10) . 'z', ("y\n" x 9) . 'z', 0],
 ['n-3', '-n +10', "x\n" . ("y\n" x 10) . 'z', "y\ny\nz", 0],
+
+# Accept +0 as synonym for +1.
+['n-4',  '-n +0', "y\n" x 5, "y\n" x 5, 0],
+['n-4a', '-n +1', "y\n" x 5, "y\n" x 5, 0],
+
+# Note that -0 is *not* a synonym for -1.
+['n-5',  '-n -0', "y\n" x 5, '', 0],
+['n-5a', '-n -1', "y\n" x 5, "y\n", 0],
+['n-5b', '-n  0', "y\n" x 5, '', 0],
 );
 
 sub test_vector
