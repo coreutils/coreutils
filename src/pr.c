@@ -1693,7 +1693,7 @@ init_header (char *filename, int desc)
     {
       buf = xmalloc (INT_BUFSIZE_BOUND (long int)
 		     + MAX (10, INT_BUFSIZE_BOUND (int)));
-      sprintf (buf, "%ld.9d", (long int) s, ns);
+      sprintf (buf, "%ld.%9d", (long int) s, ns);
     }
   else
     {
