@@ -40,7 +40,7 @@
 # define mbsrtowcs __mbsrtowcs
 #endif
 
-#ifdef USE_UNLOCKED_IO
+#if USE_UNLOCKED_IO
 # include "unlocked-io.h"
 #endif
 
