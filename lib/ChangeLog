@@ -1,3 +1,9 @@
+2000-10-29  Greg Louis  <glouis@dynamicro.on.ca>
+
+	* regex.h (__restrict_arr): Move definition out of #ifndef block.
+	Required because egcs-2.91.66 (aka 1.1.2) defines __restrict, but
+	doesn't define __restrict_arr.
+
 2000-10-29  Jim Meyering  <meyering@lucent.com>
 
 	* xstat.in: Fix grammar in comment.
