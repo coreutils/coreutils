@@ -42,7 +42,7 @@ POFILES = @POFILES@
 GMOFILES = @GMOFILES@
 UPDATEPOFILES = @UPDATEPOFILES@
 DUMMYPOFILES = @DUMMYPOFILES@
-DISTFILES.common = Makefile.in.in Makevars \
+DISTFILES.common = Makefile.in.in Makevars remove-potcdate.sin \
 $(DISTFILES.common.extra1) $(DISTFILES.common.extra2) $(DISTFILES.common.extra3)
 DISTFILES = $(DISTFILES.common) POTFILES.in $(DOMAIN).pot \
 $(POFILES) $(GMOFILES) \
@@ -55,7 +55,7 @@ CATALOGS = @CATALOGS@
 # Makevars gets inserted here. (Don't remove this line!)
 
 .SUFFIXES:
-.SUFFIXES: .po .gmo .mo .nop .po-update
+.SUFFIXES: .po .gmo .mo .sed .sin .nop .po-update
 
 .po.mo:
 	$(MSGFMT) -c -o $@ $<
@@ -65,6 +65,10 @@ CATALOGS = @CATALOGS@
 	test "$(srcdir)" = . && cdcmd="" || cdcmd="cd $(srcdir) && "; \
 	echo "$${cdcmd}rm -f $${lang}.gmo && $(GMSGFMT) -c --statistics -o $${lang}.gmo $${lang}.po"; \
 	cd $(srcdir) && rm -f $${lang}.gmo && $(GMSGFMT) -c --statistics -o $${lang}.gmo $${lang}.po
+
+.sin.sed:
+	sed -e '/^#/d' $< > t-$@
+	mv t-$@ $@
 
 
 all: all-@USE_NLS@
@@ -76,19 +80,25 @@ all-no:
 # otherwise packages like GCC can not be built if only parts of the source
 # have been downloaded.
 
-$(DOMAIN).pot-update: $(POTFILES) $(srcdir)/POTFILES.in
+$(DOMAIN).pot-update: $(POTFILES) $(srcdir)/POTFILES.in remove-potcdate.sed
 	$(XGETTEXT) --default-domain=$(DOMAIN) --directory=$(top_srcdir) \
 	  --add-comments=TRANSLATORS: $(XGETTEXT_OPTIONS) \
 	  --files-from=$(srcdir)/POTFILES.in \
-	  --copyright-holder='$(COPYRIGHT_HOLDER)' \
-	&& test ! -f $(DOMAIN).po \
-	   || ( if diff -u -IPOT-Creation-Date: \
-	      	     $(DOMAIN).po $(srcdir)/$(DOMAIN).pot>/dev/null 2>&1;then \
-		  rm -f $(DOMAIN).po; \
-		else \
-	          rm -f $(srcdir)/$(DOMAIN).pot; \
-		  mv $(DOMAIN).po $(srcdir)/$(DOMAIN).pot; \
-		fi )
+	  --copyright-holder='$(COPYRIGHT_HOLDER)'
+	test ! -f $(DOMAIN).po || { \
+	  if test -f $(srcdir)/$(DOMAIN).pot; then \
+	    sed -f remove-potcdate.sed < $(srcdir)/$(DOMAIN).pot > $(DOMAIN).1po && \
+	    sed -f remove-potcdate.sed < $(DOMAIN).po > $(DOMAIN).2po && \
+	    if cmp $(DOMAIN).1po $(DOMAIN).2po >/dev/null 2>&1; then \
+	      rm -f $(DOMAIN).1po $(DOMAIN).2po $(DOMAIN).po; \
+	    else \
+	      rm -f $(DOMAIN).1po $(DOMAIN).2po $(srcdir)/$(DOMAIN).pot && \
+	      mv $(DOMAIN).po $(srcdir)/$(DOMAIN).pot; \
+	    fi; \
+	  else \
+	    mv $(DOMAIN).po $(srcdir)/$(DOMAIN).pot; \
+	  fi; \
+	}
 
 $(srcdir)/$(DOMAIN).pot:
 	$(MAKE) $(DOMAIN).pot-update
@@ -227,7 +237,8 @@ check: all
 dvi info tags TAGS ID:
 
 mostlyclean:
-	rm -f core core.* $(DOMAIN).po *.new.po
+	rm -f remove-potcdate.sed
+	rm -f core core.* $(DOMAIN).po $(DOMAIN).1po $(DOMAIN).2po *.new.po
 	rm -fr *.o
 
 clean: mostlyclean
