@@ -4,8 +4,8 @@
 	Ensure that it is a multiple of 64.
 	Rearrange loop exit tests so as to avoid performing an
 	additional fread after encountering an error or EOF.
-	Reported by Michael Bacarella.
 	* sha.c (sha_stream): Likewise.
+	Reported by Michael Bacarella.
 
 	* Makefile.am (CLEANFILES): Remove ftw.h and search.h.
 	(DISTCLEANFILES): Add them here.
