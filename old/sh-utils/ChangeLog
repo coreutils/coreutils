@@ -1,3 +1,42 @@
+2001-09-07  Jim Meyering  <meyering@lucent.com>
+
+	* Version 2.0.12.
+
+2001-09-03  Paul Eggert  <eggert@twinsun.com>
+
+	* NEWS: New 'uname' options -i or --hardware-platform,
+	and -o or --operating-system.
+	'uname -a' now outputs -i and -o information at the end.
+	New uname option --kernel-version is an alias for -v.
+	Uname option --release has been renamed to --kernel-release,
+	and --sysname has been renamed to --kernel-name;
+	the old options will work for a while, but are no longer documented.
+
+	* configure.in (HOST_OPERATING_SYSTEM): New macro; set it
+	from $host_os with a translation table and other heuristics.
+
+	* src/uname.c: Correct copyright notice as per latest coding standards.
+	Remove list of options in comment, which wasn't
+	worth maintaining separately from usage().
+
+	(print_element): Move definition up, avoiding the need for
+	declaration and allowing inlining on some platforms.
+	Keep track of whether something has been printed; this is more
+	natural than modifying `toprint'.
+
+	(PRINT_KERNEL_NAME): Renamed from PRINT_SYSNAME.
+	(PRINT_KERNEL_RELEASE): Renamed from PRINT_RELEASE.
+	(PRINT_KERNEL_VERSION): Renamed from PRINT_VERSION.
+	(PRINT_HARDWARE_PLATFORM, PRINT_OPERATING_SYSTEM): New macros.
+	(toprint): Remove global var; now local in `main'.
+	(long_options, usage, main): Implement changes described in NEWS.
+	Reorder options to reflect output order.
+	(main): Use buffers one byte longer, for compatibility with Solaris 8.
+	Output newline at end.  -a sets `toprint' to -1 now; this is simpler.
+	Do not bother invoking system calls like uname if the resulting
+	information does not need to be printed.
+	Do not fail if sysinfo fails; just print "unknown".
+
 2001-08-30  Paul Eggert  <eggert@twinsun.com>
 
 	* src/tee.c (full_write): Remove decl; not needed.
