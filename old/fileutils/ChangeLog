@@ -1,5 +1,9 @@
 1999-05-17  Paul Eggert  <eggert@twinsun.com>
 
+	* lib/getdate.y (get_date): Let mktime deduce tm_isdst if we
+	have an absolute timestamp, or if the relative timestamp
+	mentions days, months, or years.
+
 	* lib/human.c (human_readable): Allow from_block_size to be zero.
 
 1999-05-14  Jim Meyering  <meyering@ascend.com>
