@@ -49,8 +49,8 @@ struct outlist
 /* A field of a line. */
 struct field
   {
-    char *beg;			/* First character in field. */
-    char *lim;			/* Character after last character in field. */
+    const char *beg;		/* First character in field. */
+    size_t len;			/* The length of the field. */
   };
 
 /* A line read from an input file.  Newlines are not stored. */
@@ -59,6 +59,7 @@ struct line
     char *beg;			/* First character in line. */
     char *lim;			/* Character after last character in line. */
     int nfields;		/* Number of elements in `fields'. */
+    int nfields_allocated;	/* Number of elements in `fields'. */
     struct field *fields;
   };
 
@@ -111,50 +112,65 @@ static struct option const longopts[] =
 static struct line blank1;
 static struct line blank2;
 
+static void
+ADD_FIELD (struct line *line, const char *field, size_t len)
+{
+  if (line->nfields >= line->nfields_allocated)
+    {
+      line->nfields_allocated = (3 * line->nfields_allocated) / 2 + 1;
+      line->fields = (struct field *) xrealloc ((char *) line->fields,
+						(line->nfields_allocated
+						 * sizeof (struct field)));
+    }
+  line->fields[line->nfields].beg = field;
+  line->fields[line->nfields].len = len;
+  ++(line->nfields);
+}
+
 /* Fill in the `fields' structure in LINE. */
 
 static void
 xfields (line)
      struct line *line;
 {
-  static int nfields = 2;
   int i;
   register char *ptr, *lim;
-
-  line->fields = (struct field *) xmalloc (nfields * sizeof (struct field));
 
   ptr = line->beg;
   lim = line->lim;
 
   for (i = 0; ptr < lim; ++i)
     {
-      if (i == nfields)
-	{
-	  nfields *= 2;
-	  line->fields = (struct field *)
-	    xrealloc ((char *) line->fields, nfields * sizeof (struct field));
-	}
       if (tab)
 	{
-	  line->fields[i].beg = ptr;
+	  char *beg;
+
+	  beg = ptr;
 	  while (ptr < lim && *ptr != tab)
 	    ++ptr;
-	  line->fields[i].lim = ptr;
+	  ADD_FIELD (line, beg, ptr - beg);
 	  if (ptr < lim)
 	    ++ptr;
 	}
       else
 	{
-	  line->fields[i].beg = ptr;
+	  char *beg;
+
+	  beg = ptr;
 	  while (ptr < lim && !ISSPACE (*ptr))
 	    ++ptr;
-	  line->fields[i].lim = ptr;
+	  ADD_FIELD (line, beg, ptr - beg);
 	  while (ptr < lim && ISSPACE (*ptr))
 	    ++ptr;
 	}
     }
 
-  line->nfields = i;
+  if (ptr > line->beg && ((tab && ISSPACE (ptr[-1])) || ptr[-1] == tab))
+    {
+      /* Add one more (empty) field because the last character of the
+	 line was a delimiter.  */
+      ADD_FIELD (line, NULL, 0);
+    }
 }
 
 /* Read a line from FP into LINE and split it into fields.
@@ -192,6 +208,9 @@ get_line (fp, line)
 
   line->beg = ptr;
   line->lim = line->beg + i;
+  line->nfields_allocated = 0;
+  line->nfields = 0;
+  line->fields = NULL;
   xfields (line);
   return 1;
 }
@@ -250,15 +269,14 @@ keycmp (line1, line2)
      struct line *line1;
      struct line *line2;
 {
-  char *beg1, *beg2;		/* Start of field to compare in each file. */
+  const char *beg1, *beg2;	/* Start of field to compare in each file. */
   int len1, len2;		/* Length of fields to compare. */
   int diff;
 
   if (join_field_1 < line1->nfields)
     {
       beg1 = line1->fields[join_field_1].beg;
-      len1 = line1->fields[join_field_1].lim
-	- line1->fields[join_field_1].beg;
+      len1 = line1->fields[join_field_1].len;
     }
   else
     {
@@ -269,8 +287,7 @@ keycmp (line1, line2)
   if (join_field_2 < line2->nfields)
     {
       beg2 = line2->fields[join_field_2].beg;
-      len2 = line2->fields[join_field_2].lim
-	- line2->fields[join_field_2].beg;
+      len2 = line2->fields[join_field_2].len;
     }
   else
     {
@@ -300,7 +317,7 @@ prfield (n, line)
 
   if (n < line->nfields)
     {
-      len = line->fields[n].lim - line->fields[n].beg;
+      len = line->fields[n].len;
       if (len)
 	fwrite (line->fields[n].beg, 1, len, stdout);
       else if (empty_filler)
@@ -308,6 +325,24 @@ prfield (n, line)
     }
   else if (empty_filler)
     fputs (empty_filler, stdout);
+}
+
+/* Print LINE, with its fields separated by `tab'. */
+
+static void
+prline (line)
+     struct line *line;
+{
+  int i;
+
+  for (i = 0; i < line->nfields; ++i)
+    {
+      prfield (i, line);
+      if (i == line->nfields - 1)
+	putchar ('\n');
+      else
+	putchar (tab ? tab : ' ');
+    }
 }
 
 /* Print the join of LINE1 and LINE2. */
@@ -382,7 +417,7 @@ join (fp1, fp2)
       if (diff < 0)
 	{
 	  if (print_unpairables_1)
-	    prjoin (&seq1.lines[0], &blank2);
+	    prline (&seq1.lines[0]);
 	  freeline (&seq1.lines[0]);
 	  seq1.count = 0;
 	  getseq (fp1, &seq1);
@@ -391,7 +426,7 @@ join (fp1, fp2)
       if (diff > 0)
 	{
 	  if (print_unpairables_2)
-	    prjoin (&blank1, &seq2.lines[0]);
+	    prline (&seq2.lines[0]);
 	  freeline (&seq2.lines[0]);
 	  seq2.count = 0;
 	  getseq (fp2, &seq2);
@@ -452,22 +487,22 @@ join (fp1, fp2)
 
   if (print_unpairables_1 && seq1.count)
     {
-      prjoin (&seq1.lines[0], &blank2);
+      prline (&seq1.lines[0]);
       freeline (&seq1.lines[0]);
       while (get_line (fp1, &line))
 	{
-	  prjoin (&line, &blank2);
+	  prline (&line);
 	  freeline (&line);
 	}
     }
 
   if (print_unpairables_2 && seq2.count)
     {
-      prjoin (&blank1, &seq2.lines[0]);
+      prline (&seq2.lines[0]);
       freeline (&seq2.lines[0]);
       while (get_line (fp2, &line))
 	{
-	  prjoin (&blank1, &line);
+	  prline (&line);
 	  freeline (&line);
 	}
     }
@@ -570,7 +605,8 @@ make_blank (blank, count)
   for (i = 0; i < blank->nfields; i++)
     {
       blank->beg[i] = '\t';
-      blank->fields[i].lim = blank->fields[i].beg = &blank->beg[i];
+      blank->fields[i].beg = &blank->beg[i];
+      blank->fields[i].len = 0;
     }
   blank->beg[i] = '\0';
   blank->lim = &blank->beg[i];
