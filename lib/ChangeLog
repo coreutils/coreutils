@@ -1,3 +1,9 @@
+2005-03-15  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* strftime.c (my_strftime): Prepend space to format so that we can
+	reliably distinguish strftime failure from empty output on POSIX
+	hosts.
+
 2005-03-14  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* mktime.c (TYPE_TWOS_COMPLEMENT, TYPE_ONES_COMPLEMENT,
