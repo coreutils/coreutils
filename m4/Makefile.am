@@ -33,6 +33,7 @@ EXTRA_DIST += fileblocks.m4
 EXTRA_DIST += filemode.m4
 EXTRA_DIST += fnmatch.m4
 EXTRA_DIST += fpending.m4
+EXTRA_DIST += free.m4
 EXTRA_DIST += fstypename.m4
 EXTRA_DIST += fsusage.m4
 EXTRA_DIST += ftruncate.m4
