@@ -1,3 +1,22 @@
+Sat Dec 28 14:32:05 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/ls.c: Two problems fixed by these changes from Joakim Rosqvist.
+	Quoting Joakim:
+	1) The "total" number and the size of the first file as
+	output from 'ls --color -s' did not get colorized according
+	to the "no"-argument in LS_COLORS. Fixed by adding a function
+	prep_non_filename_text which prints the C_LEFT C_NORM C_RIGHT
+	strings (or C_END). It is called from main before any text is
+	output, and from print_name_with_quoting after having output a
+	colorized filename.
+	2) If the "no"-argument of LS_COLORS is set, the terminal will be
+	set to print in that color after ls exits. The man-pages suggests
+	setting "no" and "fi" to the terminals default colors to avoid
+	the problem, but that would mean I can't use anything but the
+	default color for regular files and non-filename text. Fixed by
+	outputting C_LEFT immediately followed by C_RIGHT right before
+	exit, which restores the default color.
+
 Fri Dec 27 17:29:02 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* Makefile.am (aclocal.m4): No longer depend on acinclude.m4.
