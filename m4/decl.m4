@@ -1,4 +1,4 @@
-#serial 1
+#serial 2
 
 AC_DEFUN(jm_CHECK_DECLARATION,
 [
