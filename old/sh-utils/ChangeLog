@@ -1,4 +1,15 @@
+1999-03-28  Paul Eggert  <eggert@twinsun.com>
+
+	* lib/getdate.y (get_date): Reuse tm_isdst of first localtime
+	call; this is an improvement on a bug fix suggested by
+	martin@dresden.nacamar.de.  Do not assume that localtime and
+	gmtime return non-null.
+
 1999-03-27  Jim Meyering  <meyering@ascend.com>
+
+	* src/false.sh (usage): Change `[OPTION]...' to `[OPTION]' to show
+	that only one of --help or --version is recognized at a time.
+	Reported by Meelis Roos.
 
 	* src/id.c (print_user): Use uid_t instead of int.
 	(print_group): Use gid_t instead of int.
