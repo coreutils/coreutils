@@ -3,6 +3,9 @@
   Before, it would fail with `no such file or directory'
 * ls -s symlink and ls -i symlink now print attributes of `symlink', rather
   than attributes of their referents
+* Fix a bug introduced in 4.5.4 that made it so that ls --color would no
+  longer highlight the names of files with the execute bit set when not
+  specified on the command line.
 * shred's --zero (-z) option no longer gobbles up any following string
   Before, `shred --zero file' would produce `shred: missing file argument',
   and worse, `shred --zero f1 f2 ...' would appear to work, but would leave
