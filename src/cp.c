@@ -655,18 +655,8 @@ main (int argc, char **argv)
 	  break;
 
 	case CHAR_MAX + 1:
-	  {
-	    int i;
-
-	    /* --sparse={never,auto,always}  */
-	    i = argmatch (optarg, sparse_type_string);
-	    if (i < 0)
-	      {
-		invalid_arg (_("sparse type"), optarg, i);
-		usage (1);
-	      }
-	    x.sparse_mode = sparse_type[i];
-	  }
+	  x.sparse_mode = XARGCASEMATCH ("--sparse", optarg,
+					 sparse_type_string, sparse_type);
 	  break;
 
 	case 'a':		/* Like -dpR. */
