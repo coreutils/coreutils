@@ -34,6 +34,17 @@
 #include <stdio.h>
 #include <ctype.h>
 
+#if defined (STDC_HEADERS) || !defined (isascii)
+# define ISASCII(c) 1
+#else
+# define ISASCII(c) isascii(c)
+#endif
+
+#define ISSPACE(c) (ISASCII (c) && isspace (c))
+#define ISALPHA(c) (ISASCII (c) && isalpha (c))
+#define ISUPPER(c) (ISASCII (c) && isupper (c))
+#define ISDIGIT(c) (ISASCII (c) && isdigit (c))
+
 #if	defined (vms)
 #include <types.h>
 #include <time.h>
@@ -710,7 +721,7 @@ LookupWord (buff)
 
   /* Make it lowercase. */
   for (p = buff; *p; p++)
-    if (isupper (*p))
+    if (ISUPPER (*p))
       *p = tolower (*p);
 
   if (strcmp (buff, "am") == 0 || strcmp (buff, "a.m.") == 0) {
@@ -779,7 +790,7 @@ LookupWord (buff)
     }
 
   /* Military timezones. */
-  if (buff[1] == '\0' && isalpha (*buff)) {
+  if (buff[1] == '\0' && ISALPHA (*buff)) {
     for (tp = MilitaryTable; tp->name; tp++)
       if (strcmp (buff, tp->name) == 0) {
 	yylval.Number = tp->value;
@@ -815,27 +826,27 @@ yylex ()
   int			sign;
 
   for ( ; ; ) {
-    while (isspace (*yyInput))
+    while (ISSPACE (*yyInput))
       yyInput++;
 
-    if (isdigit (c = *yyInput) || c == '-' || c == '+') {
+    if (ISDIGIT (c = *yyInput) || c == '-' || c == '+') {
       if (c == '-' || c == '+') {
 	sign = c == '-' ? -1 : 1;
-	if (!isdigit (*++yyInput))
+	if (!ISDIGIT (*++yyInput))
 	  /* skip the '-' sign */
 	  continue;
       }
       else
 	sign = 0;
-      for (yylval.Number = 0; isdigit (c = *yyInput++); )
+      for (yylval.Number = 0; ISDIGIT (c = *yyInput++); )
 	yylval.Number = 10 * yylval.Number + c - '0';
       yyInput--;
       if (sign < 0)
 	yylval.Number = -yylval.Number;
       return sign ? tSNUMBER : tUNUMBER;
     }
-    if (isalpha (c)) {
-      for (p = buff; isalpha (c = *yyInput++) || c == '.'; )
+    if (ISALPHA (c)) {
+      for (p = buff; ISALPHA (c = *yyInput++) || c == '.'; )
 	if (p < &buff[sizeof buff - 1])
 	  *p++ = c;
       *p = '\0';
