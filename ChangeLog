@@ -5,15 +5,11 @@
 	* Makefile.maint (.re-list): New rule/file, to replace
 	hard-coded list of header file names.
 	(sc_system_h_headers): Use the new file.
+	Don't look for sys2.h anymore.
 
-	* src/system.h: Include "file-type.h" rather than hard-coding all
-	of its macro definitions -- the list was slightly out of date.
+	* src/system.h: Include new "stat-macros.h" rather than hard-coding
+	all of its macro definitions -- the list was slightly out of date.
 	Suggestion from Dmitry V. Levin.
-	* src/remove.c: Don't include "file-type.h", now that system.h does.
-	* src/stat.c: Likewise.
-
-	* Makefile.maint (header_regexp): Add file-type.h.
-	(sc_system_h_headers): Don't look for sys2.h anymore.
 
 2004-04-08  Paul Eggert  <eggert@cs.ucla.edu>
 
