@@ -1,3 +1,33 @@
+1999-08-17  Jim Meyering  <meyering@ascend.com>
+
+	* configure.in: Remove check for rename and the code that would
+	enable building of the `mvdir' program.
+	* src/Makefile.am (libexec_PROGRAMS): Remove reference to @MVDIR@.
+	(EXTRA_PROGRAMS): Remove obsolete mvdir.
+	* lib/rename.c: Remove obsolete file. (it had a bug, too)
+	* src/mvdir.c: Remove obsolete file.
+	* po/POTFILES.in: Remove mvdir.c
+
+	* doc/fileutils.texi (chown, chgrp invocation): Make these sections
+	consistent with each other.
+
+1999-08-16  Jim Meyering  <meyering@ascend.com>
+
+	* src/chown.c (groupname): Declare to be `const'.
+	(change_dir_owner): Declare statp parameter to be `const'.
+	(usage): Make the output be more consistent with that from chgrp.
+
+	This change is nearly identical to the chown.c change of 1998-05-24
+	* src/chgrp.c: Accept new option, --dereference.
+	--no-dereference is now the default. Include lchown.h.
+	(enum Change_status) [CH_NOT_APPLIED]: New member.
+	(change_symlinks): Enable this by default, now.
+	(describe_change): Handle new case.
+	(change_file_group): Add new parameter: cmdline_arg.  Update callers.
+	Reorganize to reflect changed semantics.
+	(LCHOWN): Remove definitions.
+	From Bruno Haible.
+
 1999-08-10  Jim Meyering  <meyering@ascend.com>
 
 	* po/POTFILES.in: Add lib/quotearg.c.
