@@ -18,7 +18,7 @@ export LC_ALL
 LANG=C
 export LANG
 
-cat $srcdir/a0.I |  $xx -c > a0.O 2> a0.E
+cat $srcdir/a0.I | $xx -c > a0.O 2> a0.E
 code=$?
 if test $code != 0; then
   $echo "Test a0(|) failed: ../../src/wc return code $code differs from expected value 0" 1>&2
@@ -36,7 +36,7 @@ else
   esac
 fi
 test -s a0.E || rm -f a0.E
- $xx -c < $srcdir/a0.I > a0.O 2> a0.E
+$xx -c < $srcdir/a0.I > a0.O 2> a0.E
 code=$?
 if test $code != 0; then
   $echo "Test a0(<) failed: ../../src/wc return code $code differs from expected value 0" 1>&2
@@ -54,7 +54,7 @@ else
   esac
 fi
 test -s a0.E || rm -f a0.E
-cat $srcdir/a1.I |  $xx -l > a1.O 2> a1.E
+cat $srcdir/a1.I | $xx -l > a1.O 2> a1.E
 code=$?
 if test $code != 0; then
   $echo "Test a1(|) failed: ../../src/wc return code $code differs from expected value 0" 1>&2
@@ -72,7 +72,7 @@ else
   esac
 fi
 test -s a1.E || rm -f a1.E
- $xx -l < $srcdir/a1.I > a1.O 2> a1.E
+$xx -l < $srcdir/a1.I > a1.O 2> a1.E
 code=$?
 if test $code != 0; then
   $echo "Test a1(<) failed: ../../src/wc return code $code differs from expected value 0" 1>&2
@@ -90,7 +90,7 @@ else
   esac
 fi
 test -s a1.E || rm -f a1.E
-cat $srcdir/a2.I |  $xx -w > a2.O 2> a2.E
+cat $srcdir/a2.I | $xx -w > a2.O 2> a2.E
 code=$?
 if test $code != 0; then
   $echo "Test a2(|) failed: ../../src/wc return code $code differs from expected value 0" 1>&2
@@ -108,7 +108,7 @@ else
   esac
 fi
 test -s a2.E || rm -f a2.E
- $xx -w < $srcdir/a2.I > a2.O 2> a2.E
+$xx -w < $srcdir/a2.I > a2.O 2> a2.E
 code=$?
 if test $code != 0; then
   $echo "Test a2(<) failed: ../../src/wc return code $code differs from expected value 0" 1>&2
@@ -126,7 +126,7 @@ else
   esac
 fi
 test -s a2.E || rm -f a2.E
-cat $srcdir/a3.I |  $xx -c > a3.O 2> a3.E
+cat $srcdir/a3.I | $xx -c > a3.O 2> a3.E
 code=$?
 if test $code != 0; then
   $echo "Test a3(|) failed: ../../src/wc return code $code differs from expected value 0" 1>&2
@@ -144,7 +144,7 @@ else
   esac
 fi
 test -s a3.E || rm -f a3.E
- $xx -c < $srcdir/a3.I > a3.O 2> a3.E
+$xx -c < $srcdir/a3.I > a3.O 2> a3.E
 code=$?
 if test $code != 0; then
   $echo "Test a3(<) failed: ../../src/wc return code $code differs from expected value 0" 1>&2
@@ -162,7 +162,7 @@ else
   esac
 fi
 test -s a3.E || rm -f a3.E
-cat $srcdir/a4.I |  $xx -w > a4.O 2> a4.E
+cat $srcdir/a4.I | $xx -w > a4.O 2> a4.E
 code=$?
 if test $code != 0; then
   $echo "Test a4(|) failed: ../../src/wc return code $code differs from expected value 0" 1>&2
@@ -180,7 +180,7 @@ else
   esac
 fi
 test -s a4.E || rm -f a4.E
- $xx -w < $srcdir/a4.I > a4.O 2> a4.E
+$xx -w < $srcdir/a4.I > a4.O 2> a4.E
 code=$?
 if test $code != 0; then
   $echo "Test a4(<) failed: ../../src/wc return code $code differs from expected value 0" 1>&2
@@ -198,7 +198,7 @@ else
   esac
 fi
 test -s a4.E || rm -f a4.E
-cat $srcdir/a5.I |  $xx -w > a5.O 2> a5.E
+cat $srcdir/a5.I | $xx -w > a5.O 2> a5.E
 code=$?
 if test $code != 0; then
   $echo "Test a5(|) failed: ../../src/wc return code $code differs from expected value 0" 1>&2
@@ -216,7 +216,7 @@ else
   esac
 fi
 test -s a5.E || rm -f a5.E
- $xx -w < $srcdir/a5.I > a5.O 2> a5.E
+$xx -w < $srcdir/a5.I > a5.O 2> a5.E
 code=$?
 if test $code != 0; then
   $echo "Test a5(<) failed: ../../src/wc return code $code differs from expected value 0" 1>&2
@@ -234,7 +234,7 @@ else
   esac
 fi
 test -s a5.E || rm -f a5.E
-cat $srcdir/a6.I |  $xx -w > a6.O 2> a6.E
+cat $srcdir/a6.I | $xx -w > a6.O 2> a6.E
 code=$?
 if test $code != 0; then
   $echo "Test a6(|) failed: ../../src/wc return code $code differs from expected value 0" 1>&2
@@ -252,7 +252,7 @@ else
   esac
 fi
 test -s a6.E || rm -f a6.E
- $xx -w < $srcdir/a6.I > a6.O 2> a6.E
+$xx -w < $srcdir/a6.I > a6.O 2> a6.E
 code=$?
 if test $code != 0; then
   $echo "Test a6(<) failed: ../../src/wc return code $code differs from expected value 0" 1>&2
@@ -270,7 +270,7 @@ else
   esac
 fi
 test -s a6.E || rm -f a6.E
-cat $srcdir/a7.I |  $xx -l > a7.O 2> a7.E
+cat $srcdir/a7.I | $xx -l > a7.O 2> a7.E
 code=$?
 if test $code != 0; then
   $echo "Test a7(|) failed: ../../src/wc return code $code differs from expected value 0" 1>&2
@@ -288,7 +288,7 @@ else
   esac
 fi
 test -s a7.E || rm -f a7.E
- $xx -l < $srcdir/a7.I > a7.O 2> a7.E
+$xx -l < $srcdir/a7.I > a7.O 2> a7.E
 code=$?
 if test $code != 0; then
   $echo "Test a7(<) failed: ../../src/wc return code $code differs from expected value 0" 1>&2
@@ -306,7 +306,7 @@ else
   esac
 fi
 test -s a7.E || rm -f a7.E
-cat $srcdir/a8.I |  $xx -l > a8.O 2> a8.E
+cat $srcdir/a8.I | $xx -l > a8.O 2> a8.E
 code=$?
 if test $code != 0; then
   $echo "Test a8(|) failed: ../../src/wc return code $code differs from expected value 0" 1>&2
@@ -324,7 +324,7 @@ else
   esac
 fi
 test -s a8.E || rm -f a8.E
- $xx -l < $srcdir/a8.I > a8.O 2> a8.E
+$xx -l < $srcdir/a8.I > a8.O 2> a8.E
 code=$?
 if test $code != 0; then
   $echo "Test a8(<) failed: ../../src/wc return code $code differs from expected value 0" 1>&2
@@ -342,7 +342,7 @@ else
   esac
 fi
 test -s a8.E || rm -f a8.E
-cat $srcdir/a9.I |  $xx -l > a9.O 2> a9.E
+cat $srcdir/a9.I | $xx -l > a9.O 2> a9.E
 code=$?
 if test $code != 0; then
   $echo "Test a9(|) failed: ../../src/wc return code $code differs from expected value 0" 1>&2
@@ -360,7 +360,7 @@ else
   esac
 fi
 test -s a9.E || rm -f a9.E
- $xx -l < $srcdir/a9.I > a9.O 2> a9.E
+$xx -l < $srcdir/a9.I > a9.O 2> a9.E
 code=$?
 if test $code != 0; then
   $echo "Test a9(<) failed: ../../src/wc return code $code differs from expected value 0" 1>&2
@@ -378,7 +378,7 @@ else
   esac
 fi
 test -s a9.E || rm -f a9.E
-cat $srcdir/b0.I |  $xx  > b0.O 2> b0.E
+cat $srcdir/b0.I | $xx  > b0.O 2> b0.E
 code=$?
 if test $code != 0; then
   $echo "Test b0(|) failed: ../../src/wc return code $code differs from expected value 0" 1>&2
@@ -396,7 +396,7 @@ else
   esac
 fi
 test -s b0.E || rm -f b0.E
- $xx  < $srcdir/b0.I > b0.O 2> b0.E
+$xx  < $srcdir/b0.I > b0.O 2> b0.E
 code=$?
 if test $code != 0; then
   $echo "Test b0(<) failed: ../../src/wc return code $code differs from expected value 0" 1>&2
@@ -414,7 +414,7 @@ else
   esac
 fi
 test -s b0.E || rm -f b0.E
-cat $srcdir/b1.I |  $xx  > b1.O 2> b1.E
+cat $srcdir/b1.I | $xx  > b1.O 2> b1.E
 code=$?
 if test $code != 0; then
   $echo "Test b1(|) failed: ../../src/wc return code $code differs from expected value 0" 1>&2
@@ -432,7 +432,7 @@ else
   esac
 fi
 test -s b1.E || rm -f b1.E
- $xx  < $srcdir/b1.I > b1.O 2> b1.E
+$xx  < $srcdir/b1.I > b1.O 2> b1.E
 code=$?
 if test $code != 0; then
   $echo "Test b1(<) failed: ../../src/wc return code $code differs from expected value 0" 1>&2
@@ -450,7 +450,7 @@ else
   esac
 fi
 test -s b1.E || rm -f b1.E
-cat $srcdir/c0.I |  $xx -L > c0.O 2> c0.E
+cat $srcdir/c0.I | $xx -L > c0.O 2> c0.E
 code=$?
 if test $code != 0; then
   $echo "Test c0(|) failed: ../../src/wc return code $code differs from expected value 0" 1>&2
@@ -468,7 +468,7 @@ else
   esac
 fi
 test -s c0.E || rm -f c0.E
- $xx -L < $srcdir/c0.I > c0.O 2> c0.E
+$xx -L < $srcdir/c0.I > c0.O 2> c0.E
 code=$?
 if test $code != 0; then
   $echo "Test c0(<) failed: ../../src/wc return code $code differs from expected value 0" 1>&2
@@ -486,7 +486,7 @@ else
   esac
 fi
 test -s c0.E || rm -f c0.E
-cat $srcdir/c1.I |  $xx -L > c1.O 2> c1.E
+cat $srcdir/c1.I | $xx -L > c1.O 2> c1.E
 code=$?
 if test $code != 0; then
   $echo "Test c1(|) failed: ../../src/wc return code $code differs from expected value 0" 1>&2
@@ -504,7 +504,7 @@ else
   esac
 fi
 test -s c1.E || rm -f c1.E
- $xx -L < $srcdir/c1.I > c1.O 2> c1.E
+$xx -L < $srcdir/c1.I > c1.O 2> c1.E
 code=$?
 if test $code != 0; then
   $echo "Test c1(<) failed: ../../src/wc return code $code differs from expected value 0" 1>&2
@@ -522,7 +522,7 @@ else
   esac
 fi
 test -s c1.E || rm -f c1.E
-cat $srcdir/c2.I |  $xx -L > c2.O 2> c2.E
+cat $srcdir/c2.I | $xx -L > c2.O 2> c2.E
 code=$?
 if test $code != 0; then
   $echo "Test c2(|) failed: ../../src/wc return code $code differs from expected value 0" 1>&2
@@ -540,7 +540,7 @@ else
   esac
 fi
 test -s c2.E || rm -f c2.E
- $xx -L < $srcdir/c2.I > c2.O 2> c2.E
+$xx -L < $srcdir/c2.I > c2.O 2> c2.E
 code=$?
 if test $code != 0; then
   $echo "Test c2(<) failed: ../../src/wc return code $code differs from expected value 0" 1>&2

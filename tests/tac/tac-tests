@@ -18,7 +18,7 @@ export LC_ALL
 LANG=C
 export LANG
 
- $xx  $srcdir/basic-0.I > basic-0.O 2> basic-0.E
+$xx  $srcdir/basic-0.I > basic-0.O 2> basic-0.E
 code=$?
 if test $code != 0; then
   $echo "Test basic-0(F) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -36,7 +36,7 @@ else
   esac
 fi
 test -s basic-0.E || rm -f basic-0.E
-cat $srcdir/basic-0.I |  $xx  > basic-0.O 2> basic-0.E
+cat $srcdir/basic-0.I | $xx  > basic-0.O 2> basic-0.E
 code=$?
 if test $code != 0; then
   $echo "Test basic-0(|) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -54,7 +54,7 @@ else
   esac
 fi
 test -s basic-0.E || rm -f basic-0.E
- $xx  < $srcdir/basic-0.I > basic-0.O 2> basic-0.E
+$xx  < $srcdir/basic-0.I > basic-0.O 2> basic-0.E
 code=$?
 if test $code != 0; then
   $echo "Test basic-0(<) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -72,7 +72,7 @@ else
   esac
 fi
 test -s basic-0.E || rm -f basic-0.E
- $xx  $srcdir/basic-b.I > basic-b.O 2> basic-b.E
+$xx  $srcdir/basic-b.I > basic-b.O 2> basic-b.E
 code=$?
 if test $code != 0; then
   $echo "Test basic-b(F) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -90,7 +90,7 @@ else
   esac
 fi
 test -s basic-b.E || rm -f basic-b.E
-cat $srcdir/basic-b.I |  $xx  > basic-b.O 2> basic-b.E
+cat $srcdir/basic-b.I | $xx  > basic-b.O 2> basic-b.E
 code=$?
 if test $code != 0; then
   $echo "Test basic-b(|) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -108,7 +108,7 @@ else
   esac
 fi
 test -s basic-b.E || rm -f basic-b.E
- $xx  < $srcdir/basic-b.I > basic-b.O 2> basic-b.E
+$xx  < $srcdir/basic-b.I > basic-b.O 2> basic-b.E
 code=$?
 if test $code != 0; then
   $echo "Test basic-b(<) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -126,7 +126,7 @@ else
   esac
 fi
 test -s basic-b.E || rm -f basic-b.E
- $xx  $srcdir/basic-c.I > basic-c.O 2> basic-c.E
+$xx  $srcdir/basic-c.I > basic-c.O 2> basic-c.E
 code=$?
 if test $code != 0; then
   $echo "Test basic-c(F) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -144,7 +144,7 @@ else
   esac
 fi
 test -s basic-c.E || rm -f basic-c.E
-cat $srcdir/basic-c.I |  $xx  > basic-c.O 2> basic-c.E
+cat $srcdir/basic-c.I | $xx  > basic-c.O 2> basic-c.E
 code=$?
 if test $code != 0; then
   $echo "Test basic-c(|) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -162,7 +162,7 @@ else
   esac
 fi
 test -s basic-c.E || rm -f basic-c.E
- $xx  < $srcdir/basic-c.I > basic-c.O 2> basic-c.E
+$xx  < $srcdir/basic-c.I > basic-c.O 2> basic-c.E
 code=$?
 if test $code != 0; then
   $echo "Test basic-c(<) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -180,7 +180,7 @@ else
   esac
 fi
 test -s basic-c.E || rm -f basic-c.E
- $xx  $srcdir/basic-e.I > basic-e.O 2> basic-e.E
+$xx  $srcdir/basic-e.I > basic-e.O 2> basic-e.E
 code=$?
 if test $code != 0; then
   $echo "Test basic-e(F) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -198,7 +198,7 @@ else
   esac
 fi
 test -s basic-e.E || rm -f basic-e.E
-cat $srcdir/basic-e.I |  $xx  > basic-e.O 2> basic-e.E
+cat $srcdir/basic-e.I | $xx  > basic-e.O 2> basic-e.E
 code=$?
 if test $code != 0; then
   $echo "Test basic-e(|) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -216,7 +216,7 @@ else
   esac
 fi
 test -s basic-e.E || rm -f basic-e.E
- $xx  < $srcdir/basic-e.I > basic-e.O 2> basic-e.E
+$xx  < $srcdir/basic-e.I > basic-e.O 2> basic-e.E
 code=$?
 if test $code != 0; then
   $echo "Test basic-e(<) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -234,7 +234,7 @@ else
   esac
 fi
 test -s basic-e.E || rm -f basic-e.E
- $xx  $srcdir/basic-f.I > basic-f.O 2> basic-f.E
+$xx  $srcdir/basic-f.I > basic-f.O 2> basic-f.E
 code=$?
 if test $code != 0; then
   $echo "Test basic-f(F) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -252,7 +252,7 @@ else
   esac
 fi
 test -s basic-f.E || rm -f basic-f.E
-cat $srcdir/basic-f.I |  $xx  > basic-f.O 2> basic-f.E
+cat $srcdir/basic-f.I | $xx  > basic-f.O 2> basic-f.E
 code=$?
 if test $code != 0; then
   $echo "Test basic-f(|) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -270,7 +270,7 @@ else
   esac
 fi
 test -s basic-f.E || rm -f basic-f.E
- $xx  < $srcdir/basic-f.I > basic-f.O 2> basic-f.E
+$xx  < $srcdir/basic-f.I > basic-f.O 2> basic-f.E
 code=$?
 if test $code != 0; then
   $echo "Test basic-f(<) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -288,7 +288,7 @@ else
   esac
 fi
 test -s basic-f.E || rm -f basic-f.E
- $xx  $srcdir/basic-g.I > basic-g.O 2> basic-g.E
+$xx  $srcdir/basic-g.I > basic-g.O 2> basic-g.E
 code=$?
 if test $code != 0; then
   $echo "Test basic-g(F) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -306,7 +306,7 @@ else
   esac
 fi
 test -s basic-g.E || rm -f basic-g.E
-cat $srcdir/basic-g.I |  $xx  > basic-g.O 2> basic-g.E
+cat $srcdir/basic-g.I | $xx  > basic-g.O 2> basic-g.E
 code=$?
 if test $code != 0; then
   $echo "Test basic-g(|) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -324,7 +324,7 @@ else
   esac
 fi
 test -s basic-g.E || rm -f basic-g.E
- $xx  < $srcdir/basic-g.I > basic-g.O 2> basic-g.E
+$xx  < $srcdir/basic-g.I > basic-g.O 2> basic-g.E
 code=$?
 if test $code != 0; then
   $echo "Test basic-g(<) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -342,7 +342,7 @@ else
   esac
 fi
 test -s basic-g.E || rm -f basic-g.E
- $xx  $srcdir/basic-h.I > basic-h.O 2> basic-h.E
+$xx  $srcdir/basic-h.I > basic-h.O 2> basic-h.E
 code=$?
 if test $code != 0; then
   $echo "Test basic-h(F) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -360,7 +360,7 @@ else
   esac
 fi
 test -s basic-h.E || rm -f basic-h.E
-cat $srcdir/basic-h.I |  $xx  > basic-h.O 2> basic-h.E
+cat $srcdir/basic-h.I | $xx  > basic-h.O 2> basic-h.E
 code=$?
 if test $code != 0; then
   $echo "Test basic-h(|) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -378,7 +378,7 @@ else
   esac
 fi
 test -s basic-h.E || rm -f basic-h.E
- $xx  < $srcdir/basic-h.I > basic-h.O 2> basic-h.E
+$xx  < $srcdir/basic-h.I > basic-h.O 2> basic-h.E
 code=$?
 if test $code != 0; then
   $echo "Test basic-h(<) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -396,7 +396,7 @@ else
   esac
 fi
 test -s basic-h.E || rm -f basic-h.E
- $xx  $srcdir/basic-i.I > basic-i.O 2> basic-i.E
+$xx  $srcdir/basic-i.I > basic-i.O 2> basic-i.E
 code=$?
 if test $code != 0; then
   $echo "Test basic-i(F) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -414,7 +414,7 @@ else
   esac
 fi
 test -s basic-i.E || rm -f basic-i.E
-cat $srcdir/basic-i.I |  $xx  > basic-i.O 2> basic-i.E
+cat $srcdir/basic-i.I | $xx  > basic-i.O 2> basic-i.E
 code=$?
 if test $code != 0; then
   $echo "Test basic-i(|) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -432,7 +432,7 @@ else
   esac
 fi
 test -s basic-i.E || rm -f basic-i.E
- $xx  < $srcdir/basic-i.I > basic-i.O 2> basic-i.E
+$xx  < $srcdir/basic-i.I > basic-i.O 2> basic-i.E
 code=$?
 if test $code != 0; then
   $echo "Test basic-i(<) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -450,7 +450,7 @@ else
   esac
 fi
 test -s basic-i.E || rm -f basic-i.E
- $xx  $srcdir/basic-j.I > basic-j.O 2> basic-j.E
+$xx  $srcdir/basic-j.I > basic-j.O 2> basic-j.E
 code=$?
 if test $code != 0; then
   $echo "Test basic-j(F) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -468,7 +468,7 @@ else
   esac
 fi
 test -s basic-j.E || rm -f basic-j.E
-cat $srcdir/basic-j.I |  $xx  > basic-j.O 2> basic-j.E
+cat $srcdir/basic-j.I | $xx  > basic-j.O 2> basic-j.E
 code=$?
 if test $code != 0; then
   $echo "Test basic-j(|) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -486,7 +486,7 @@ else
   esac
 fi
 test -s basic-j.E || rm -f basic-j.E
- $xx  < $srcdir/basic-j.I > basic-j.O 2> basic-j.E
+$xx  < $srcdir/basic-j.I > basic-j.O 2> basic-j.E
 code=$?
 if test $code != 0; then
   $echo "Test basic-j(<) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -504,7 +504,7 @@ else
   esac
 fi
 test -s basic-j.E || rm -f basic-j.E
- $xx  $srcdir/basic-k.I > basic-k.O 2> basic-k.E
+$xx  $srcdir/basic-k.I > basic-k.O 2> basic-k.E
 code=$?
 if test $code != 0; then
   $echo "Test basic-k(F) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -522,7 +522,7 @@ else
   esac
 fi
 test -s basic-k.E || rm -f basic-k.E
-cat $srcdir/basic-k.I |  $xx  > basic-k.O 2> basic-k.E
+cat $srcdir/basic-k.I | $xx  > basic-k.O 2> basic-k.E
 code=$?
 if test $code != 0; then
   $echo "Test basic-k(|) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -540,7 +540,7 @@ else
   esac
 fi
 test -s basic-k.E || rm -f basic-k.E
- $xx  < $srcdir/basic-k.I > basic-k.O 2> basic-k.E
+$xx  < $srcdir/basic-k.I > basic-k.O 2> basic-k.E
 code=$?
 if test $code != 0; then
   $echo "Test basic-k(<) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -558,7 +558,7 @@ else
   esac
 fi
 test -s basic-k.E || rm -f basic-k.E
- $xx -b $srcdir/opt-b.I > opt-b.O 2> opt-b.E
+$xx -b $srcdir/opt-b.I > opt-b.O 2> opt-b.E
 code=$?
 if test $code != 0; then
   $echo "Test opt-b(F) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -576,7 +576,7 @@ else
   esac
 fi
 test -s opt-b.E || rm -f opt-b.E
-cat $srcdir/opt-b.I |  $xx -b > opt-b.O 2> opt-b.E
+cat $srcdir/opt-b.I | $xx -b > opt-b.O 2> opt-b.E
 code=$?
 if test $code != 0; then
   $echo "Test opt-b(|) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -594,7 +594,7 @@ else
   esac
 fi
 test -s opt-b.E || rm -f opt-b.E
- $xx -b < $srcdir/opt-b.I > opt-b.O 2> opt-b.E
+$xx -b < $srcdir/opt-b.I > opt-b.O 2> opt-b.E
 code=$?
 if test $code != 0; then
   $echo "Test opt-b(<) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -612,7 +612,7 @@ else
   esac
 fi
 test -s opt-b.E || rm -f opt-b.E
- $xx -s: $srcdir/opt-s.I > opt-s.O 2> opt-s.E
+$xx -s: $srcdir/opt-s.I > opt-s.O 2> opt-s.E
 code=$?
 if test $code != 0; then
   $echo "Test opt-s(F) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -630,7 +630,7 @@ else
   esac
 fi
 test -s opt-s.E || rm -f opt-s.E
-cat $srcdir/opt-s.I |  $xx -s: > opt-s.O 2> opt-s.E
+cat $srcdir/opt-s.I | $xx -s: > opt-s.O 2> opt-s.E
 code=$?
 if test $code != 0; then
   $echo "Test opt-s(|) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -648,7 +648,7 @@ else
   esac
 fi
 test -s opt-s.E || rm -f opt-s.E
- $xx -s: < $srcdir/opt-s.I > opt-s.O 2> opt-s.E
+$xx -s: < $srcdir/opt-s.I > opt-s.O 2> opt-s.E
 code=$?
 if test $code != 0; then
   $echo "Test opt-s(<) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -666,7 +666,7 @@ else
   esac
 fi
 test -s opt-s.E || rm -f opt-s.E
- $xx -s : -b $srcdir/opt-sb.I > opt-sb.O 2> opt-sb.E
+$xx -s : -b $srcdir/opt-sb.I > opt-sb.O 2> opt-sb.E
 code=$?
 if test $code != 0; then
   $echo "Test opt-sb(F) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -684,7 +684,7 @@ else
   esac
 fi
 test -s opt-sb.E || rm -f opt-sb.E
-cat $srcdir/opt-sb.I |  $xx -s : -b > opt-sb.O 2> opt-sb.E
+cat $srcdir/opt-sb.I | $xx -s : -b > opt-sb.O 2> opt-sb.E
 code=$?
 if test $code != 0; then
   $echo "Test opt-sb(|) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -702,7 +702,7 @@ else
   esac
 fi
 test -s opt-sb.E || rm -f opt-sb.E
- $xx -s : -b < $srcdir/opt-sb.I > opt-sb.O 2> opt-sb.E
+$xx -s : -b < $srcdir/opt-sb.I > opt-sb.O 2> opt-sb.E
 code=$?
 if test $code != 0; then
   $echo "Test opt-sb(<) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -720,7 +720,7 @@ else
   esac
 fi
 test -s opt-sb.E || rm -f opt-sb.E
- $xx -r -s '\._+' $srcdir/opt-r.I > opt-r.O 2> opt-r.E
+$xx -r -s '\._+' $srcdir/opt-r.I > opt-r.O 2> opt-r.E
 code=$?
 if test $code != 0; then
   $echo "Test opt-r(F) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -738,7 +738,7 @@ else
   esac
 fi
 test -s opt-r.E || rm -f opt-r.E
-cat $srcdir/opt-r.I |  $xx -r -s '\._+' > opt-r.O 2> opt-r.E
+cat $srcdir/opt-r.I | $xx -r -s '\._+' > opt-r.O 2> opt-r.E
 code=$?
 if test $code != 0; then
   $echo "Test opt-r(|) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -756,7 +756,7 @@ else
   esac
 fi
 test -s opt-r.E || rm -f opt-r.E
- $xx -r -s '\._+' < $srcdir/opt-r.I > opt-r.O 2> opt-r.E
+$xx -r -s '\._+' < $srcdir/opt-r.I > opt-r.O 2> opt-r.E
 code=$?
 if test $code != 0; then
   $echo "Test opt-r(<) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -774,7 +774,7 @@ else
   esac
 fi
 test -s opt-r.E || rm -f opt-r.E
- $xx -r -s '\._+' $srcdir/opt-r2.I > opt-r2.O 2> opt-r2.E
+$xx -r -s '\._+' $srcdir/opt-r2.I > opt-r2.O 2> opt-r2.E
 code=$?
 if test $code != 0; then
   $echo "Test opt-r2(F) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -792,7 +792,7 @@ else
   esac
 fi
 test -s opt-r2.E || rm -f opt-r2.E
-cat $srcdir/opt-r2.I |  $xx -r -s '\._+' > opt-r2.O 2> opt-r2.E
+cat $srcdir/opt-r2.I | $xx -r -s '\._+' > opt-r2.O 2> opt-r2.E
 code=$?
 if test $code != 0; then
   $echo "Test opt-r2(|) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -810,7 +810,7 @@ else
   esac
 fi
 test -s opt-r2.E || rm -f opt-r2.E
- $xx -r -s '\._+' < $srcdir/opt-r2.I > opt-r2.O 2> opt-r2.E
+$xx -r -s '\._+' < $srcdir/opt-r2.I > opt-r2.O 2> opt-r2.E
 code=$?
 if test $code != 0; then
   $echo "Test opt-r2(<) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -828,7 +828,7 @@ else
   esac
 fi
 test -s opt-r2.E || rm -f opt-r2.E
- $xx -b -r -s '\._+' $srcdir/opt-br.I > opt-br.O 2> opt-br.E
+$xx -b -r -s '\._+' $srcdir/opt-br.I > opt-br.O 2> opt-br.E
 code=$?
 if test $code != 0; then
   $echo "Test opt-br(F) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -846,7 +846,7 @@ else
   esac
 fi
 test -s opt-br.E || rm -f opt-br.E
-cat $srcdir/opt-br.I |  $xx -b -r -s '\._+' > opt-br.O 2> opt-br.E
+cat $srcdir/opt-br.I | $xx -b -r -s '\._+' > opt-br.O 2> opt-br.E
 code=$?
 if test $code != 0; then
   $echo "Test opt-br(|) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -864,7 +864,7 @@ else
   esac
 fi
 test -s opt-br.E || rm -f opt-br.E
- $xx -b -r -s '\._+' < $srcdir/opt-br.I > opt-br.O 2> opt-br.E
+$xx -b -r -s '\._+' < $srcdir/opt-br.I > opt-br.O 2> opt-br.E
 code=$?
 if test $code != 0; then
   $echo "Test opt-br(<) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -882,7 +882,7 @@ else
   esac
 fi
 test -s opt-br.E || rm -f opt-br.E
- $xx -b -r -s '\._+' $srcdir/opt-br2.I > opt-br2.O 2> opt-br2.E
+$xx -b -r -s '\._+' $srcdir/opt-br2.I > opt-br2.O 2> opt-br2.E
 code=$?
 if test $code != 0; then
   $echo "Test opt-br2(F) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -900,7 +900,7 @@ else
   esac
 fi
 test -s opt-br2.E || rm -f opt-br2.E
-cat $srcdir/opt-br2.I |  $xx -b -r -s '\._+' > opt-br2.O 2> opt-br2.E
+cat $srcdir/opt-br2.I | $xx -b -r -s '\._+' > opt-br2.O 2> opt-br2.E
 code=$?
 if test $code != 0; then
   $echo "Test opt-br2(|) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
@@ -918,7 +918,7 @@ else
   esac
 fi
 test -s opt-br2.E || rm -f opt-br2.E
- $xx -b -r -s '\._+' < $srcdir/opt-br2.I > opt-br2.O 2> opt-br2.E
+$xx -b -r -s '\._+' < $srcdir/opt-br2.I > opt-br2.O 2> opt-br2.E
 code=$?
 if test $code != 0; then
   $echo "Test opt-br2(<) failed: ../../src/tac return code $code differs from expected value 0" 1>&2

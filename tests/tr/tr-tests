@@ -18,7 +18,7 @@ export LC_ALL
 LANG=C
 export LANG
 
-cat $srcdir/1.I |  $xx 'abcd' '[]*]' > 1.O 2> 1.E
+cat $srcdir/1.I | $xx 'abcd' '[]*]' > 1.O 2> 1.E
 code=$?
 if test $code != 0; then
   $echo "Test 1(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -36,7 +36,7 @@ else
   esac
 fi
 test -s 1.E || rm -f 1.E
- $xx 'abcd' '[]*]' < $srcdir/1.I > 1.O 2> 1.E
+$xx 'abcd' '[]*]' < $srcdir/1.I > 1.O 2> 1.E
 code=$?
 if test $code != 0; then
   $echo "Test 1(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -54,7 +54,7 @@ else
   esac
 fi
 test -s 1.E || rm -f 1.E
-cat $srcdir/2.I |  $xx 'abc' '[%*]xyz' > 2.O 2> 2.E
+cat $srcdir/2.I | $xx 'abc' '[%*]xyz' > 2.O 2> 2.E
 code=$?
 if test $code != 0; then
   $echo "Test 2(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -72,7 +72,7 @@ else
   esac
 fi
 test -s 2.E || rm -f 2.E
- $xx 'abc' '[%*]xyz' < $srcdir/2.I > 2.O 2> 2.E
+$xx 'abc' '[%*]xyz' < $srcdir/2.I > 2.O 2> 2.E
 code=$?
 if test $code != 0; then
   $echo "Test 2(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -90,7 +90,7 @@ else
   esac
 fi
 test -s 2.E || rm -f 2.E
-cat $srcdir/3.I |  $xx '' '[.*]' > 3.O 2> 3.E
+cat $srcdir/3.I | $xx '' '[.*]' > 3.O 2> 3.E
 code=$?
 if test $code != 0; then
   $echo "Test 3(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -108,7 +108,7 @@ else
   esac
 fi
 test -s 3.E || rm -f 3.E
- $xx '' '[.*]' < $srcdir/3.I > 3.O 2> 3.E
+$xx '' '[.*]' < $srcdir/3.I > 3.O 2> 3.E
 code=$?
 if test $code != 0; then
   $echo "Test 3(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -126,7 +126,7 @@ else
   esac
 fi
 test -s 3.E || rm -f 3.E
-cat $srcdir/4.I |  $xx -t 'abcd' 'xy' > 4.O 2> 4.E
+cat $srcdir/4.I | $xx -t 'abcd' 'xy' > 4.O 2> 4.E
 code=$?
 if test $code != 0; then
   $echo "Test 4(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -144,7 +144,7 @@ else
   esac
 fi
 test -s 4.E || rm -f 4.E
- $xx -t 'abcd' 'xy' < $srcdir/4.I > 4.O 2> 4.E
+$xx -t 'abcd' 'xy' < $srcdir/4.I > 4.O 2> 4.E
 code=$?
 if test $code != 0; then
   $echo "Test 4(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -162,7 +162,7 @@ else
   esac
 fi
 test -s 4.E || rm -f 4.E
-cat $srcdir/5.I |  $xx 'abcd' 'xy' > 5.O 2> 5.E
+cat $srcdir/5.I | $xx 'abcd' 'xy' > 5.O 2> 5.E
 code=$?
 if test $code != 0; then
   $echo "Test 5(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -180,7 +180,7 @@ else
   esac
 fi
 test -s 5.E || rm -f 5.E
- $xx 'abcd' 'xy' < $srcdir/5.I > 5.O 2> 5.E
+$xx 'abcd' 'xy' < $srcdir/5.I > 5.O 2> 5.E
 code=$?
 if test $code != 0; then
   $echo "Test 5(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -198,7 +198,7 @@ else
   esac
 fi
 test -s 5.E || rm -f 5.E
-cat $srcdir/6.I |  $xx 'abcd' 'x[y*]' > 6.O 2> 6.E
+cat $srcdir/6.I | $xx 'abcd' 'x[y*]' > 6.O 2> 6.E
 code=$?
 if test $code != 0; then
   $echo "Test 6(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -216,7 +216,7 @@ else
   esac
 fi
 test -s 6.E || rm -f 6.E
- $xx 'abcd' 'x[y*]' < $srcdir/6.I > 6.O 2> 6.E
+$xx 'abcd' 'x[y*]' < $srcdir/6.I > 6.O 2> 6.E
 code=$?
 if test $code != 0; then
   $echo "Test 6(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -234,7 +234,7 @@ else
   esac
 fi
 test -s 6.E || rm -f 6.E
-cat $srcdir/7.I |  $xx -s 'a-p' '%[.*]$' > 7.O 2> 7.E
+cat $srcdir/7.I | $xx -s 'a-p' '%[.*]$' > 7.O 2> 7.E
 code=$?
 if test $code != 0; then
   $echo "Test 7(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -252,7 +252,7 @@ else
   esac
 fi
 test -s 7.E || rm -f 7.E
- $xx -s 'a-p' '%[.*]$' < $srcdir/7.I > 7.O 2> 7.E
+$xx -s 'a-p' '%[.*]$' < $srcdir/7.I > 7.O 2> 7.E
 code=$?
 if test $code != 0; then
   $echo "Test 7(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -270,7 +270,7 @@ else
   esac
 fi
 test -s 7.E || rm -f 7.E
-cat $srcdir/8.I |  $xx -s 'a-p' '[.*]$' > 8.O 2> 8.E
+cat $srcdir/8.I | $xx -s 'a-p' '[.*]$' > 8.O 2> 8.E
 code=$?
 if test $code != 0; then
   $echo "Test 8(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -288,7 +288,7 @@ else
   esac
 fi
 test -s 8.E || rm -f 8.E
- $xx -s 'a-p' '[.*]$' < $srcdir/8.I > 8.O 2> 8.E
+$xx -s 'a-p' '[.*]$' < $srcdir/8.I > 8.O 2> 8.E
 code=$?
 if test $code != 0; then
   $echo "Test 8(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -306,7 +306,7 @@ else
   esac
 fi
 test -s 8.E || rm -f 8.E
-cat $srcdir/9.I |  $xx -s 'a-p' '%[.*]' > 9.O 2> 9.E
+cat $srcdir/9.I | $xx -s 'a-p' '%[.*]' > 9.O 2> 9.E
 code=$?
 if test $code != 0; then
   $echo "Test 9(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -324,7 +324,7 @@ else
   esac
 fi
 test -s 9.E || rm -f 9.E
- $xx -s 'a-p' '%[.*]' < $srcdir/9.I > 9.O 2> 9.E
+$xx -s 'a-p' '%[.*]' < $srcdir/9.I > 9.O 2> 9.E
 code=$?
 if test $code != 0; then
   $echo "Test 9(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -342,7 +342,7 @@ else
   esac
 fi
 test -s 9.E || rm -f 9.E
-cat $srcdir/a.I |  $xx -s '[a-z]' > a.O 2> a.E
+cat $srcdir/a.I | $xx -s '[a-z]' > a.O 2> a.E
 code=$?
 if test $code != 0; then
   $echo "Test a(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -360,7 +360,7 @@ else
   esac
 fi
 test -s a.E || rm -f a.E
- $xx -s '[a-z]' < $srcdir/a.I > a.O 2> a.E
+$xx -s '[a-z]' < $srcdir/a.I > a.O 2> a.E
 code=$?
 if test $code != 0; then
   $echo "Test a(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -378,7 +378,7 @@ else
   esac
 fi
 test -s a.E || rm -f a.E
-cat $srcdir/b.I |  $xx -s '[a-c]' > b.O 2> b.E
+cat $srcdir/b.I | $xx -s '[a-c]' > b.O 2> b.E
 code=$?
 if test $code != 0; then
   $echo "Test b(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -396,7 +396,7 @@ else
   esac
 fi
 test -s b.E || rm -f b.E
- $xx -s '[a-c]' < $srcdir/b.I > b.O 2> b.E
+$xx -s '[a-c]' < $srcdir/b.I > b.O 2> b.E
 code=$?
 if test $code != 0; then
   $echo "Test b(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -414,7 +414,7 @@ else
   esac
 fi
 test -s b.E || rm -f b.E
-cat $srcdir/c.I |  $xx -s '[a-b]' > c.O 2> c.E
+cat $srcdir/c.I | $xx -s '[a-b]' > c.O 2> c.E
 code=$?
 if test $code != 0; then
   $echo "Test c(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -432,7 +432,7 @@ else
   esac
 fi
 test -s c.E || rm -f c.E
- $xx -s '[a-b]' < $srcdir/c.I > c.O 2> c.E
+$xx -s '[a-b]' < $srcdir/c.I > c.O 2> c.E
 code=$?
 if test $code != 0; then
   $echo "Test c(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -450,7 +450,7 @@ else
   esac
 fi
 test -s c.E || rm -f c.E
-cat $srcdir/d.I |  $xx -s '[b-c]' > d.O 2> d.E
+cat $srcdir/d.I | $xx -s '[b-c]' > d.O 2> d.E
 code=$?
 if test $code != 0; then
   $echo "Test d(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -468,7 +468,7 @@ else
   esac
 fi
 test -s d.E || rm -f d.E
- $xx -s '[b-c]' < $srcdir/d.I > d.O 2> d.E
+$xx -s '[b-c]' < $srcdir/d.I > d.O 2> d.E
 code=$?
 if test $code != 0; then
   $echo "Test d(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -486,7 +486,7 @@ else
   esac
 fi
 test -s d.E || rm -f d.E
-cat $srcdir/e.I |  $xx -s '[\0-\5]' > e.O 2> e.E
+cat $srcdir/e.I | $xx -s '[\0-\5]' > e.O 2> e.E
 code=$?
 if test $code != 0; then
   $echo "Test e(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -504,7 +504,7 @@ else
   esac
 fi
 test -s e.E || rm -f e.E
- $xx -s '[\0-\5]' < $srcdir/e.I > e.O 2> e.E
+$xx -s '[\0-\5]' < $srcdir/e.I > e.O 2> e.E
 code=$?
 if test $code != 0; then
   $echo "Test e(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -522,7 +522,7 @@ else
   esac
 fi
 test -s e.E || rm -f e.E
-cat $srcdir/f.I |  $xx -d '[=[=]' > f.O 2> f.E
+cat $srcdir/f.I | $xx -d '[=[=]' > f.O 2> f.E
 code=$?
 if test $code != 0; then
   $echo "Test f(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -540,7 +540,7 @@ else
   esac
 fi
 test -s f.E || rm -f f.E
- $xx -d '[=[=]' < $srcdir/f.I > f.O 2> f.E
+$xx -d '[=[=]' < $srcdir/f.I > f.O 2> f.E
 code=$?
 if test $code != 0; then
   $echo "Test f(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -558,7 +558,7 @@ else
   esac
 fi
 test -s f.E || rm -f f.E
-cat $srcdir/g.I |  $xx -d '[=]=]' > g.O 2> g.E
+cat $srcdir/g.I | $xx -d '[=]=]' > g.O 2> g.E
 code=$?
 if test $code != 0; then
   $echo "Test g(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -576,7 +576,7 @@ else
   esac
 fi
 test -s g.E || rm -f g.E
- $xx -d '[=]=]' < $srcdir/g.I > g.O 2> g.E
+$xx -d '[=]=]' < $srcdir/g.I > g.O 2> g.E
 code=$?
 if test $code != 0; then
   $echo "Test g(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -594,7 +594,7 @@ else
   esac
 fi
 test -s g.E || rm -f g.E
-cat $srcdir/h.I |  $xx -d '[:xdigit:]' > h.O 2> h.E
+cat $srcdir/h.I | $xx -d '[:xdigit:]' > h.O 2> h.E
 code=$?
 if test $code != 0; then
   $echo "Test h(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -612,7 +612,7 @@ else
   esac
 fi
 test -s h.E || rm -f h.E
- $xx -d '[:xdigit:]' < $srcdir/h.I > h.O 2> h.E
+$xx -d '[:xdigit:]' < $srcdir/h.I > h.O 2> h.E
 code=$?
 if test $code != 0; then
   $echo "Test h(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -630,7 +630,7 @@ else
   esac
 fi
 test -s h.E || rm -f h.E
-cat $srcdir/i.I |  $xx -d '[:xdigit:]' > i.O 2> i.E
+cat $srcdir/i.I | $xx -d '[:xdigit:]' > i.O 2> i.E
 code=$?
 if test $code != 0; then
   $echo "Test i(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -648,7 +648,7 @@ else
   esac
 fi
 test -s i.E || rm -f i.E
- $xx -d '[:xdigit:]' < $srcdir/i.I > i.O 2> i.E
+$xx -d '[:xdigit:]' < $srcdir/i.I > i.O 2> i.E
 code=$?
 if test $code != 0; then
   $echo "Test i(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -666,7 +666,7 @@ else
   esac
 fi
 test -s i.E || rm -f i.E
-cat $srcdir/j.I |  $xx -d '[:digit:]' > j.O 2> j.E
+cat $srcdir/j.I | $xx -d '[:digit:]' > j.O 2> j.E
 code=$?
 if test $code != 0; then
   $echo "Test j(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -684,7 +684,7 @@ else
   esac
 fi
 test -s j.E || rm -f j.E
- $xx -d '[:digit:]' < $srcdir/j.I > j.O 2> j.E
+$xx -d '[:digit:]' < $srcdir/j.I > j.O 2> j.E
 code=$?
 if test $code != 0; then
   $echo "Test j(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -702,7 +702,7 @@ else
   esac
 fi
 test -s j.E || rm -f j.E
-cat $srcdir/k.I |  $xx -d '[:digit:]' > k.O 2> k.E
+cat $srcdir/k.I | $xx -d '[:digit:]' > k.O 2> k.E
 code=$?
 if test $code != 0; then
   $echo "Test k(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -720,7 +720,7 @@ else
   esac
 fi
 test -s k.E || rm -f k.E
- $xx -d '[:digit:]' < $srcdir/k.I > k.O 2> k.E
+$xx -d '[:digit:]' < $srcdir/k.I > k.O 2> k.E
 code=$?
 if test $code != 0; then
   $echo "Test k(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -738,7 +738,7 @@ else
   esac
 fi
 test -s k.E || rm -f k.E
-cat $srcdir/l.I |  $xx -d '[:lower:]' > l.O 2> l.E
+cat $srcdir/l.I | $xx -d '[:lower:]' > l.O 2> l.E
 code=$?
 if test $code != 0; then
   $echo "Test l(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -756,7 +756,7 @@ else
   esac
 fi
 test -s l.E || rm -f l.E
- $xx -d '[:lower:]' < $srcdir/l.I > l.O 2> l.E
+$xx -d '[:lower:]' < $srcdir/l.I > l.O 2> l.E
 code=$?
 if test $code != 0; then
   $echo "Test l(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -774,7 +774,7 @@ else
   esac
 fi
 test -s l.E || rm -f l.E
-cat $srcdir/m.I |  $xx -d '[:upper:]' > m.O 2> m.E
+cat $srcdir/m.I | $xx -d '[:upper:]' > m.O 2> m.E
 code=$?
 if test $code != 0; then
   $echo "Test m(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -792,7 +792,7 @@ else
   esac
 fi
 test -s m.E || rm -f m.E
- $xx -d '[:upper:]' < $srcdir/m.I > m.O 2> m.E
+$xx -d '[:upper:]' < $srcdir/m.I > m.O 2> m.E
 code=$?
 if test $code != 0; then
   $echo "Test m(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -810,7 +810,7 @@ else
   esac
 fi
 test -s m.E || rm -f m.E
-cat $srcdir/n.I |  $xx -d '[:lower:][:upper:]' > n.O 2> n.E
+cat $srcdir/n.I | $xx -d '[:lower:][:upper:]' > n.O 2> n.E
 code=$?
 if test $code != 0; then
   $echo "Test n(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -828,7 +828,7 @@ else
   esac
 fi
 test -s n.E || rm -f n.E
- $xx -d '[:lower:][:upper:]' < $srcdir/n.I > n.O 2> n.E
+$xx -d '[:lower:][:upper:]' < $srcdir/n.I > n.O 2> n.E
 code=$?
 if test $code != 0; then
   $echo "Test n(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -846,7 +846,7 @@ else
   esac
 fi
 test -s n.E || rm -f n.E
-cat $srcdir/o.I |  $xx -d '[:alpha:]' > o.O 2> o.E
+cat $srcdir/o.I | $xx -d '[:alpha:]' > o.O 2> o.E
 code=$?
 if test $code != 0; then
   $echo "Test o(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -864,7 +864,7 @@ else
   esac
 fi
 test -s o.E || rm -f o.E
- $xx -d '[:alpha:]' < $srcdir/o.I > o.O 2> o.E
+$xx -d '[:alpha:]' < $srcdir/o.I > o.O 2> o.E
 code=$?
 if test $code != 0; then
   $echo "Test o(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -882,7 +882,7 @@ else
   esac
 fi
 test -s o.E || rm -f o.E
-cat $srcdir/p.I |  $xx -d '[:alnum:]' > p.O 2> p.E
+cat $srcdir/p.I | $xx -d '[:alnum:]' > p.O 2> p.E
 code=$?
 if test $code != 0; then
   $echo "Test p(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -900,7 +900,7 @@ else
   esac
 fi
 test -s p.E || rm -f p.E
- $xx -d '[:alnum:]' < $srcdir/p.I > p.O 2> p.E
+$xx -d '[:alnum:]' < $srcdir/p.I > p.O 2> p.E
 code=$?
 if test $code != 0; then
   $echo "Test p(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -918,7 +918,7 @@ else
   esac
 fi
 test -s p.E || rm -f p.E
-cat $srcdir/q.I |  $xx -d '[:alnum:]' > q.O 2> q.E
+cat $srcdir/q.I | $xx -d '[:alnum:]' > q.O 2> q.E
 code=$?
 if test $code != 0; then
   $echo "Test q(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -936,7 +936,7 @@ else
   esac
 fi
 test -s q.E || rm -f q.E
- $xx -d '[:alnum:]' < $srcdir/q.I > q.O 2> q.E
+$xx -d '[:alnum:]' < $srcdir/q.I > q.O 2> q.E
 code=$?
 if test $code != 0; then
   $echo "Test q(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -954,7 +954,7 @@ else
   esac
 fi
 test -s q.E || rm -f q.E
-cat $srcdir/r.I |  $xx -ds '[:alnum:]' '.' > r.O 2> r.E
+cat $srcdir/r.I | $xx -ds '[:alnum:]' '.' > r.O 2> r.E
 code=$?
 if test $code != 0; then
   $echo "Test r(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -972,7 +972,7 @@ else
   esac
 fi
 test -s r.E || rm -f r.E
- $xx -ds '[:alnum:]' '.' < $srcdir/r.I > r.O 2> r.E
+$xx -ds '[:alnum:]' '.' < $srcdir/r.I > r.O 2> r.E
 code=$?
 if test $code != 0; then
   $echo "Test r(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -990,7 +990,7 @@ else
   esac
 fi
 test -s r.E || rm -f r.E
-cat $srcdir/s.I |  $xx -cs '[:alnum:]' '\n' > s.O 2> s.E
+cat $srcdir/s.I | $xx -cs '[:alnum:]' '\n' > s.O 2> s.E
 code=$?
 if test $code != 0; then
   $echo "Test s(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1008,7 +1008,7 @@ else
   esac
 fi
 test -s s.E || rm -f s.E
- $xx -cs '[:alnum:]' '\n' < $srcdir/s.I > s.O 2> s.E
+$xx -cs '[:alnum:]' '\n' < $srcdir/s.I > s.O 2> s.E
 code=$?
 if test $code != 0; then
   $echo "Test s(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1026,7 +1026,7 @@ else
   esac
 fi
 test -s s.E || rm -f s.E
-cat $srcdir/t.I |  $xx -cs '[:alnum:]' '[\n*]' > t.O 2> t.E
+cat $srcdir/t.I | $xx -cs '[:alnum:]' '[\n*]' > t.O 2> t.E
 code=$?
 if test $code != 0; then
   $echo "Test t(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1044,7 +1044,7 @@ else
   esac
 fi
 test -s t.E || rm -f t.E
- $xx -cs '[:alnum:]' '[\n*]' < $srcdir/t.I > t.O 2> t.E
+$xx -cs '[:alnum:]' '[\n*]' < $srcdir/t.I > t.O 2> t.E
 code=$?
 if test $code != 0; then
   $echo "Test t(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1062,7 +1062,7 @@ else
   esac
 fi
 test -s t.E || rm -f t.E
-cat $srcdir/u.I |  $xx -ds 'b' 'a' > u.O 2> u.E
+cat $srcdir/u.I | $xx -ds 'b' 'a' > u.O 2> u.E
 code=$?
 if test $code != 0; then
   $echo "Test u(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1080,7 +1080,7 @@ else
   esac
 fi
 test -s u.E || rm -f u.E
- $xx -ds 'b' 'a' < $srcdir/u.I > u.O 2> u.E
+$xx -ds 'b' 'a' < $srcdir/u.I > u.O 2> u.E
 code=$?
 if test $code != 0; then
   $echo "Test u(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1098,7 +1098,7 @@ else
   esac
 fi
 test -s u.E || rm -f u.E
-cat $srcdir/v.I |  $xx -ds '[:xdigit:]' 'Z' > v.O 2> v.E
+cat $srcdir/v.I | $xx -ds '[:xdigit:]' 'Z' > v.O 2> v.E
 code=$?
 if test $code != 0; then
   $echo "Test v(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1116,7 +1116,7 @@ else
   esac
 fi
 test -s v.E || rm -f v.E
- $xx -ds '[:xdigit:]' 'Z' < $srcdir/v.I > v.O 2> v.E
+$xx -ds '[:xdigit:]' 'Z' < $srcdir/v.I > v.O 2> v.E
 code=$?
 if test $code != 0; then
   $echo "Test v(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1134,7 +1134,7 @@ else
   esac
 fi
 test -s v.E || rm -f v.E
-cat $srcdir/w.I |  $xx -ds '\350' '\345' > w.O 2> w.E
+cat $srcdir/w.I | $xx -ds '\350' '\345' > w.O 2> w.E
 code=$?
 if test $code != 0; then
   $echo "Test w(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1152,7 +1152,7 @@ else
   esac
 fi
 test -s w.E || rm -f w.E
- $xx -ds '\350' '\345' < $srcdir/w.I > w.O 2> w.E
+$xx -ds '\350' '\345' < $srcdir/w.I > w.O 2> w.E
 code=$?
 if test $code != 0; then
   $echo "Test w(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1170,7 +1170,7 @@ else
   esac
 fi
 test -s w.E || rm -f w.E
-cat $srcdir/x.I |  $xx -s 'abcdefghijklmn' '[:*016]' > x.O 2> x.E
+cat $srcdir/x.I | $xx -s 'abcdefghijklmn' '[:*016]' > x.O 2> x.E
 code=$?
 if test $code != 0; then
   $echo "Test x(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1188,7 +1188,7 @@ else
   esac
 fi
 test -s x.E || rm -f x.E
- $xx -s 'abcdefghijklmn' '[:*016]' < $srcdir/x.I > x.O 2> x.E
+$xx -s 'abcdefghijklmn' '[:*016]' < $srcdir/x.I > x.O 2> x.E
 code=$?
 if test $code != 0; then
   $echo "Test x(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1206,7 +1206,7 @@ else
   esac
 fi
 test -s x.E || rm -f x.E
-cat $srcdir/y.I |  $xx -d 'a-z' > y.O 2> y.E
+cat $srcdir/y.I | $xx -d 'a-z' > y.O 2> y.E
 code=$?
 if test $code != 0; then
   $echo "Test y(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1224,7 +1224,7 @@ else
   esac
 fi
 test -s y.E || rm -f y.E
- $xx -d 'a-z' < $srcdir/y.I > y.O 2> y.E
+$xx -d 'a-z' < $srcdir/y.I > y.O 2> y.E
 code=$?
 if test $code != 0; then
   $echo "Test y(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1242,7 +1242,7 @@ else
   esac
 fi
 test -s y.E || rm -f y.E
-cat $srcdir/z.I |  $xx -ds 'a-z' '$.' > z.O 2> z.E
+cat $srcdir/z.I | $xx -ds 'a-z' '$.' > z.O 2> z.E
 code=$?
 if test $code != 0; then
   $echo "Test z(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1260,7 +1260,7 @@ else
   esac
 fi
 test -s z.E || rm -f z.E
- $xx -ds 'a-z' '$.' < $srcdir/z.I > z.O 2> z.E
+$xx -ds 'a-z' '$.' < $srcdir/z.I > z.O 2> z.E
 code=$?
 if test $code != 0; then
   $echo "Test z(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1278,7 +1278,7 @@ else
   esac
 fi
 test -s z.E || rm -f z.E
-cat $srcdir/range-a-a.I |  $xx 'a-a' 'z' > range-a-a.O 2> range-a-a.E
+cat $srcdir/range-a-a.I | $xx 'a-a' 'z' > range-a-a.O 2> range-a-a.E
 code=$?
 if test $code != 0; then
   $echo "Test range-a-a(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1296,7 +1296,7 @@ else
   esac
 fi
 test -s range-a-a.E || rm -f range-a-a.E
- $xx 'a-a' 'z' < $srcdir/range-a-a.I > range-a-a.O 2> range-a-a.E
+$xx 'a-a' 'z' < $srcdir/range-a-a.I > range-a-a.O 2> range-a-a.E
 code=$?
 if test $code != 0; then
   $echo "Test range-a-a(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1314,7 +1314,7 @@ else
   esac
 fi
 test -s range-a-a.E || rm -f range-a-a.E
-cat $srcdir/null.I |  $xx 'a' '''' > null.O 2> null.E
+cat $srcdir/null.I | $xx 'a' '''' > null.O 2> null.E
 code=$?
 if test $code != 1; then
   $echo "Test null(|) failed: ../../src/tr return code $code differs from expected value 1" 1>&2
@@ -1332,7 +1332,7 @@ else
   esac
 fi
 test -s null.E || rm -f null.E
- $xx 'a' '''' < $srcdir/null.I > null.O 2> null.E
+$xx 'a' '''' < $srcdir/null.I > null.O 2> null.E
 code=$?
 if test $code != 1; then
   $echo "Test null(<) failed: ../../src/tr return code $code differs from expected value 1" 1>&2
@@ -1350,7 +1350,7 @@ else
   esac
 fi
 test -s null.E || rm -f null.E
-cat $srcdir/upcase.I |  $xx '[:lower:]' '[:upper:]' > upcase.O 2> upcase.E
+cat $srcdir/upcase.I | $xx '[:lower:]' '[:upper:]' > upcase.O 2> upcase.E
 code=$?
 if test $code != 0; then
   $echo "Test upcase(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1368,7 +1368,7 @@ else
   esac
 fi
 test -s upcase.E || rm -f upcase.E
- $xx '[:lower:]' '[:upper:]' < $srcdir/upcase.I > upcase.O 2> upcase.E
+$xx '[:lower:]' '[:upper:]' < $srcdir/upcase.I > upcase.O 2> upcase.E
 code=$?
 if test $code != 0; then
   $echo "Test upcase(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1386,7 +1386,7 @@ else
   esac
 fi
 test -s upcase.E || rm -f upcase.E
-cat $srcdir/dncase.I |  $xx '[:upper:]' '[:lower:]' > dncase.O 2> dncase.E
+cat $srcdir/dncase.I | $xx '[:upper:]' '[:lower:]' > dncase.O 2> dncase.E
 code=$?
 if test $code != 0; then
   $echo "Test dncase(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1404,7 +1404,7 @@ else
   esac
 fi
 test -s dncase.E || rm -f dncase.E
- $xx '[:upper:]' '[:lower:]' < $srcdir/dncase.I > dncase.O 2> dncase.E
+$xx '[:upper:]' '[:lower:]' < $srcdir/dncase.I > dncase.O 2> dncase.E
 code=$?
 if test $code != 0; then
   $echo "Test dncase(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1422,7 +1422,7 @@ else
   esac
 fi
 test -s dncase.E || rm -f dncase.E
-cat $srcdir/rep-cclass.I |  $xx 'a[=*2][=c=]' 'xyyz' > rep-cclass.O 2> rep-cclass.E
+cat $srcdir/rep-cclass.I | $xx 'a[=*2][=c=]' 'xyyz' > rep-cclass.O 2> rep-cclass.E
 code=$?
 if test $code != 0; then
   $echo "Test rep-cclass(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1440,7 +1440,7 @@ else
   esac
 fi
 test -s rep-cclass.E || rm -f rep-cclass.E
- $xx 'a[=*2][=c=]' 'xyyz' < $srcdir/rep-cclass.I > rep-cclass.O 2> rep-cclass.E
+$xx 'a[=*2][=c=]' 'xyyz' < $srcdir/rep-cclass.I > rep-cclass.O 2> rep-cclass.E
 code=$?
 if test $code != 0; then
   $echo "Test rep-cclass(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1458,7 +1458,7 @@ else
   esac
 fi
 test -s rep-cclass.E || rm -f rep-cclass.E
-cat $srcdir/rep-1.I |  $xx '[:*3][:digit:]' 'a-m' > rep-1.O 2> rep-1.E
+cat $srcdir/rep-1.I | $xx '[:*3][:digit:]' 'a-m' > rep-1.O 2> rep-1.E
 code=$?
 if test $code != 0; then
   $echo "Test rep-1(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1476,7 +1476,7 @@ else
   esac
 fi
 test -s rep-1.E || rm -f rep-1.E
- $xx '[:*3][:digit:]' 'a-m' < $srcdir/rep-1.I > rep-1.O 2> rep-1.E
+$xx '[:*3][:digit:]' 'a-m' < $srcdir/rep-1.I > rep-1.O 2> rep-1.E
 code=$?
 if test $code != 0; then
   $echo "Test rep-1(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1494,7 +1494,7 @@ else
   esac
 fi
 test -s rep-1.E || rm -f rep-1.E
-cat $srcdir/rep-2.I |  $xx 'a[b*512]c' '1[x*]2' > rep-2.O 2> rep-2.E
+cat $srcdir/rep-2.I | $xx 'a[b*512]c' '1[x*]2' > rep-2.O 2> rep-2.E
 code=$?
 if test $code != 0; then
   $echo "Test rep-2(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1512,7 +1512,7 @@ else
   esac
 fi
 test -s rep-2.E || rm -f rep-2.E
- $xx 'a[b*512]c' '1[x*]2' < $srcdir/rep-2.I > rep-2.O 2> rep-2.E
+$xx 'a[b*512]c' '1[x*]2' < $srcdir/rep-2.I > rep-2.O 2> rep-2.E
 code=$?
 if test $code != 0; then
   $echo "Test rep-2(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1530,7 +1530,7 @@ else
   esac
 fi
 test -s rep-2.E || rm -f rep-2.E
-cat $srcdir/rep-3.I |  $xx 'a[b*513]c' '1[x*]2' > rep-3.O 2> rep-3.E
+cat $srcdir/rep-3.I | $xx 'a[b*513]c' '1[x*]2' > rep-3.O 2> rep-3.E
 code=$?
 if test $code != 0; then
   $echo "Test rep-3(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1548,7 +1548,7 @@ else
   esac
 fi
 test -s rep-3.E || rm -f rep-3.E
- $xx 'a[b*513]c' '1[x*]2' < $srcdir/rep-3.I > rep-3.O 2> rep-3.E
+$xx 'a[b*513]c' '1[x*]2' < $srcdir/rep-3.I > rep-3.O 2> rep-3.E
 code=$?
 if test $code != 0; then
   $echo "Test rep-3(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1566,7 +1566,7 @@ else
   esac
 fi
 test -s rep-3.E || rm -f rep-3.E
-cat $srcdir/o-rep-1.I |  $xx '[b*08]' '[x*]' > o-rep-1.O 2> o-rep-1.E
+cat $srcdir/o-rep-1.I | $xx '[b*08]' '[x*]' > o-rep-1.O 2> o-rep-1.E
 code=$?
 if test $code != 1; then
   $echo "Test o-rep-1(|) failed: ../../src/tr return code $code differs from expected value 1" 1>&2
@@ -1584,7 +1584,7 @@ else
   esac
 fi
 test -s o-rep-1.E || rm -f o-rep-1.E
- $xx '[b*08]' '[x*]' < $srcdir/o-rep-1.I > o-rep-1.O 2> o-rep-1.E
+$xx '[b*08]' '[x*]' < $srcdir/o-rep-1.I > o-rep-1.O 2> o-rep-1.E
 code=$?
 if test $code != 1; then
   $echo "Test o-rep-1(<) failed: ../../src/tr return code $code differs from expected value 1" 1>&2
@@ -1602,7 +1602,7 @@ else
   esac
 fi
 test -s o-rep-1.E || rm -f o-rep-1.E
-cat $srcdir/o-rep-2.I |  $xx '[b*010]cd' '[a*7]BC[x*]' > o-rep-2.O 2> o-rep-2.E
+cat $srcdir/o-rep-2.I | $xx '[b*010]cd' '[a*7]BC[x*]' > o-rep-2.O 2> o-rep-2.E
 code=$?
 if test $code != 0; then
   $echo "Test o-rep-2(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1620,7 +1620,7 @@ else
   esac
 fi
 test -s o-rep-2.E || rm -f o-rep-2.E
- $xx '[b*010]cd' '[a*7]BC[x*]' < $srcdir/o-rep-2.I > o-rep-2.O 2> o-rep-2.E
+$xx '[b*010]cd' '[a*7]BC[x*]' < $srcdir/o-rep-2.I > o-rep-2.O 2> o-rep-2.E
 code=$?
 if test $code != 0; then
   $echo "Test o-rep-2(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1638,7 +1638,7 @@ else
   esac
 fi
 test -s o-rep-2.E || rm -f o-rep-2.E
-cat $srcdir/esc.I |  $xx 'a\-z' 'A-Z' > esc.O 2> esc.E
+cat $srcdir/esc.I | $xx 'a\-z' 'A-Z' > esc.O 2> esc.E
 code=$?
 if test $code != 0; then
   $echo "Test esc(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1656,7 +1656,7 @@ else
   esac
 fi
 test -s esc.E || rm -f esc.E
- $xx 'a\-z' 'A-Z' < $srcdir/esc.I > esc.O 2> esc.E
+$xx 'a\-z' 'A-Z' < $srcdir/esc.I > esc.O 2> esc.E
 code=$?
 if test $code != 0; then
   $echo "Test esc(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1674,7 +1674,7 @@ else
   esac
 fi
 test -s esc.E || rm -f esc.E
-cat $srcdir/ross-0a.I |  $xx -cs '[:upper:]' 'X[Y*]' > ross-0a.O 2> ross-0a.E
+cat $srcdir/ross-0a.I | $xx -cs '[:upper:]' 'X[Y*]' > ross-0a.O 2> ross-0a.E
 code=$?
 if test $code != 1; then
   $echo "Test ross-0a(|) failed: ../../src/tr return code $code differs from expected value 1" 1>&2
@@ -1692,7 +1692,7 @@ else
   esac
 fi
 test -s ross-0a.E || rm -f ross-0a.E
- $xx -cs '[:upper:]' 'X[Y*]' < $srcdir/ross-0a.I > ross-0a.O 2> ross-0a.E
+$xx -cs '[:upper:]' 'X[Y*]' < $srcdir/ross-0a.I > ross-0a.O 2> ross-0a.E
 code=$?
 if test $code != 1; then
   $echo "Test ross-0a(<) failed: ../../src/tr return code $code differs from expected value 1" 1>&2
@@ -1710,7 +1710,7 @@ else
   esac
 fi
 test -s ross-0a.E || rm -f ross-0a.E
-cat $srcdir/ross-0b.I |  $xx -cs '[:cntrl:]' 'X[Y*]' > ross-0b.O 2> ross-0b.E
+cat $srcdir/ross-0b.I | $xx -cs '[:cntrl:]' 'X[Y*]' > ross-0b.O 2> ross-0b.E
 code=$?
 if test $code != 1; then
   $echo "Test ross-0b(|) failed: ../../src/tr return code $code differs from expected value 1" 1>&2
@@ -1728,7 +1728,7 @@ else
   esac
 fi
 test -s ross-0b.E || rm -f ross-0b.E
- $xx -cs '[:cntrl:]' 'X[Y*]' < $srcdir/ross-0b.I > ross-0b.O 2> ross-0b.E
+$xx -cs '[:cntrl:]' 'X[Y*]' < $srcdir/ross-0b.I > ross-0b.O 2> ross-0b.E
 code=$?
 if test $code != 1; then
   $echo "Test ross-0b(<) failed: ../../src/tr return code $code differs from expected value 1" 1>&2
@@ -1746,7 +1746,7 @@ else
   esac
 fi
 test -s ross-0b.E || rm -f ross-0b.E
-cat $srcdir/ross-1a.I |  $xx -cs '[:upper:]' '[X*]' > ross-1a.O 2> ross-1a.E
+cat $srcdir/ross-1a.I | $xx -cs '[:upper:]' '[X*]' > ross-1a.O 2> ross-1a.E
 code=$?
 if test $code != 0; then
   $echo "Test ross-1a(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1764,7 +1764,7 @@ else
   esac
 fi
 test -s ross-1a.E || rm -f ross-1a.E
- $xx -cs '[:upper:]' '[X*]' < $srcdir/ross-1a.I > ross-1a.O 2> ross-1a.E
+$xx -cs '[:upper:]' '[X*]' < $srcdir/ross-1a.I > ross-1a.O 2> ross-1a.E
 code=$?
 if test $code != 0; then
   $echo "Test ross-1a(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1782,7 +1782,7 @@ else
   esac
 fi
 test -s ross-1a.E || rm -f ross-1a.E
-cat $srcdir/ross-1b.I |  $xx -cs '[:upper:][:digit:]' '[Z*]' > ross-1b.O 2> ross-1b.E
+cat $srcdir/ross-1b.I | $xx -cs '[:upper:][:digit:]' '[Z*]' > ross-1b.O 2> ross-1b.E
 code=$?
 if test $code != 0; then
   $echo "Test ross-1b(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1800,7 +1800,7 @@ else
   esac
 fi
 test -s ross-1b.E || rm -f ross-1b.E
- $xx -cs '[:upper:][:digit:]' '[Z*]' < $srcdir/ross-1b.I > ross-1b.O 2> ross-1b.E
+$xx -cs '[:upper:][:digit:]' '[Z*]' < $srcdir/ross-1b.I > ross-1b.O 2> ross-1b.E
 code=$?
 if test $code != 0; then
   $echo "Test ross-1b(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1818,7 +1818,7 @@ else
   esac
 fi
 test -s ross-1b.E || rm -f ross-1b.E
-cat $srcdir/ross-2.I |  $xx -dcs '[:lower:]' 'n-rs-z' > ross-2.O 2> ross-2.E
+cat $srcdir/ross-2.I | $xx -dcs '[:lower:]' 'n-rs-z' > ross-2.O 2> ross-2.E
 code=$?
 if test $code != 0; then
   $echo "Test ross-2(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1836,7 +1836,7 @@ else
   esac
 fi
 test -s ross-2.E || rm -f ross-2.E
- $xx -dcs '[:lower:]' 'n-rs-z' < $srcdir/ross-2.I > ross-2.O 2> ross-2.E
+$xx -dcs '[:lower:]' 'n-rs-z' < $srcdir/ross-2.I > ross-2.O 2> ross-2.E
 code=$?
 if test $code != 0; then
   $echo "Test ross-2(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1854,7 +1854,7 @@ else
   esac
 fi
 test -s ross-2.E || rm -f ross-2.E
-cat $srcdir/ross-3.I |  $xx -ds '[:xdigit:]' '[:alnum:]' > ross-3.O 2> ross-3.E
+cat $srcdir/ross-3.I | $xx -ds '[:xdigit:]' '[:alnum:]' > ross-3.O 2> ross-3.E
 code=$?
 if test $code != 0; then
   $echo "Test ross-3(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1872,7 +1872,7 @@ else
   esac
 fi
 test -s ross-3.E || rm -f ross-3.E
- $xx -ds '[:xdigit:]' '[:alnum:]' < $srcdir/ross-3.I > ross-3.O 2> ross-3.E
+$xx -ds '[:xdigit:]' '[:alnum:]' < $srcdir/ross-3.I > ross-3.O 2> ross-3.E
 code=$?
 if test $code != 0; then
   $echo "Test ross-3(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1890,7 +1890,7 @@ else
   esac
 fi
 test -s ross-3.E || rm -f ross-3.E
-cat $srcdir/ross-4.I |  $xx -dcs '[:alnum:]' '[:digit:]' > ross-4.O 2> ross-4.E
+cat $srcdir/ross-4.I | $xx -dcs '[:alnum:]' '[:digit:]' > ross-4.O 2> ross-4.E
 code=$?
 if test $code != 0; then
   $echo "Test ross-4(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1908,7 +1908,7 @@ else
   esac
 fi
 test -s ross-4.E || rm -f ross-4.E
- $xx -dcs '[:alnum:]' '[:digit:]' < $srcdir/ross-4.I > ross-4.O 2> ross-4.E
+$xx -dcs '[:alnum:]' '[:digit:]' < $srcdir/ross-4.I > ross-4.O 2> ross-4.E
 code=$?
 if test $code != 0; then
   $echo "Test ross-4(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1926,7 +1926,7 @@ else
   esac
 fi
 test -s ross-4.E || rm -f ross-4.E
-cat $srcdir/ross-5.I |  $xx -dc '[:lower:]' > ross-5.O 2> ross-5.E
+cat $srcdir/ross-5.I | $xx -dc '[:lower:]' > ross-5.O 2> ross-5.E
 code=$?
 if test $code != 0; then
   $echo "Test ross-5(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1944,7 +1944,7 @@ else
   esac
 fi
 test -s ross-5.E || rm -f ross-5.E
- $xx -dc '[:lower:]' < $srcdir/ross-5.I > ross-5.O 2> ross-5.E
+$xx -dc '[:lower:]' < $srcdir/ross-5.I > ross-5.O 2> ross-5.E
 code=$?
 if test $code != 0; then
   $echo "Test ross-5(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1962,7 +1962,7 @@ else
   esac
 fi
 test -s ross-5.E || rm -f ross-5.E
-cat $srcdir/ross-6.I |  $xx -dc '[:upper:]' > ross-6.O 2> ross-6.E
+cat $srcdir/ross-6.I | $xx -dc '[:upper:]' > ross-6.O 2> ross-6.E
 code=$?
 if test $code != 0; then
   $echo "Test ross-6(|) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1980,7 +1980,7 @@ else
   esac
 fi
 test -s ross-6.E || rm -f ross-6.E
- $xx -dc '[:upper:]' < $srcdir/ross-6.I > ross-6.O 2> ross-6.E
+$xx -dc '[:upper:]' < $srcdir/ross-6.I > ross-6.O 2> ross-6.E
 code=$?
 if test $code != 0; then
   $echo "Test ross-6(<) failed: ../../src/tr return code $code differs from expected value 0" 1>&2
@@ -1998,7 +1998,7 @@ else
   esac
 fi
 test -s ross-6.E || rm -f ross-6.E
-cat $srcdir/empty-eq.I |  $xx '[==]' x > empty-eq.O 2> empty-eq.E
+cat $srcdir/empty-eq.I | $xx '[==]' x > empty-eq.O 2> empty-eq.E
 code=$?
 if test $code != 1; then
   $echo "Test empty-eq(|) failed: ../../src/tr return code $code differs from expected value 1" 1>&2
@@ -2016,7 +2016,7 @@ else
   esac
 fi
 test -s empty-eq.E || rm -f empty-eq.E
- $xx '[==]' x < $srcdir/empty-eq.I > empty-eq.O 2> empty-eq.E
+$xx '[==]' x < $srcdir/empty-eq.I > empty-eq.O 2> empty-eq.E
 code=$?
 if test $code != 1; then
   $echo "Test empty-eq(<) failed: ../../src/tr return code $code differs from expected value 1" 1>&2
@@ -2034,7 +2034,7 @@ else
   esac
 fi
 test -s empty-eq.E || rm -f empty-eq.E
-cat $srcdir/empty-cc.I |  $xx '[::]' x > empty-cc.O 2> empty-cc.E
+cat $srcdir/empty-cc.I | $xx '[::]' x > empty-cc.O 2> empty-cc.E
 code=$?
 if test $code != 1; then
   $echo "Test empty-cc(|) failed: ../../src/tr return code $code differs from expected value 1" 1>&2
@@ -2052,7 +2052,7 @@ else
   esac
 fi
 test -s empty-cc.E || rm -f empty-cc.E
- $xx '[::]' x < $srcdir/empty-cc.I > empty-cc.O 2> empty-cc.E
+$xx '[::]' x < $srcdir/empty-cc.I > empty-cc.O 2> empty-cc.E
 code=$?
 if test $code != 1; then
   $echo "Test empty-cc(<) failed: ../../src/tr return code $code differs from expected value 1" 1>&2
