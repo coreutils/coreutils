@@ -1,26 +1,27 @@
 /* Definitions for data structures and routines for the regular
-   expression library, version 0.12.
-   Copyright (C) 1985,1989-93,1995-98,2000,2001 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.  Its master source is NOT part of
-   the C library, however.  The master source lives in /gd/gnu/lib.
+   expression library.
+   Copyright (C) 1985,1989-93,1995-98,2000,2001,2002,2003
+   Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2, or (at your option)
+   any later version.
 
-   The GNU C Library is distributed in the hope that it will be useful,
+   This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   You should have received a copy of the GNU General Public License along
+   with this program; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 #ifndef _REGEX_H
 #define _REGEX_H 1
+
+#include <sys/types.h>
 
 /* Allow the use in C++ code.  */
 #ifdef __cplusplus
@@ -164,6 +165,10 @@ typedef unsigned long int reg_syntax_t;
    treated as 'a\{1'.  */
 #define RE_INVALID_INTERVAL_ORD (RE_DEBUG << 1)
 
+/* If this bit is set, then ignore case when matching.
+   If not set, then case is significant.  */
+#define RE_ICASE (RE_INVALID_INTERVAL_ORD << 1)
+
 /* This global variable defines the particular regexp syntax to use (for
    some interfaces).  When a regexp is compiled, the syntax used is
    stored in the pattern buffer, so changing this does not affect
@@ -185,9 +190,10 @@ extern reg_syntax_t re_syntax_options;
 
 #define RE_SYNTAX_GNU_AWK						\
   ((RE_SYNTAX_POSIX_EXTENDED | RE_BACKSLASH_ESCAPE_IN_LISTS | RE_DEBUG)	\
-   & ~(RE_DOT_NOT_NULL | RE_INTERVALS | RE_CONTEXT_INDEP_OPS))
+   & ~(RE_DOT_NOT_NULL | RE_INTERVALS | RE_CONTEXT_INDEP_OPS		\
+       | RE_CONTEXT_INVALID_OPS ))
 
-#define RE_SYNTAX_POSIX_AWK						\
+#define RE_SYNTAX_POSIX_AWK 						\
   (RE_SYNTAX_POSIX_EXTENDED | RE_BACKSLASH_ESCAPE_IN_LISTS		\
    | RE_INTERVALS	    | RE_NO_GNU_OPS)
 

@@ -2,23 +2,22 @@
    version 0.12.
    (Implements POSIX draft P1003.2/D11.2, except for some of the
    internationalization features.)
-   Copyright (C) 1993-1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1993-1999, 2000-2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2, or (at your option)
+   any later version.
 
-   The GNU C Library is distributed in the hope that it will be useful,
+   This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-   02111-1307 USA.  */
+   You should have received a copy of the GNU General Public License along
+   with this program; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 /* AIX requires this to be the first thing in the file. */
 #if defined _AIX && !defined REGEX_MALLOC
@@ -95,21 +94,15 @@
 #  include <locale/coll-lookup.h>
 # endif
 
-/* This is for other GNU distributions with internationalized messages.  */
-# if (HAVE_LIBINTL_H && ENABLE_NLS) || defined _LIBC
+# ifdef _LIBC
 #  include <libintl.h>
-#  ifdef _LIBC
-#   undef gettext
-#   define gettext(msgid) __dcgettext ("libc", msgid, LC_MESSAGES)
-#  endif
+#  undef gettext
+#  define gettext(msgid) __dcgettext ("libc", msgid, LC_MESSAGES)
+   /* This define is so xgettext can find the internationalizable strings.  */
+#  define gettext_noop(msgid) msgid
 # else
-#  define gettext(msgid) (msgid)
-# endif
-
-# ifndef gettext_noop
-/* This define is so xgettext can find the internationalizable
-   strings.  */
-#  define gettext_noop(String) String
+/* This is for other GNU distributions with internationalized messages.  */
+#  include "gettext.h"
 # endif
 
 /* Support for bounded pointers.  */
