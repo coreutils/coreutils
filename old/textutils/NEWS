@@ -1,4 +1,6 @@
 User-visible changes in release 1.12
+* sort no longer reports spurious errors on Ultrix systems
+* new program: md5sum
 * all --help messages have been improved
 * join's -a1 and -a2 options work
 * tr '[:upper:]' '[:lower:]' no longer reads uninitialized memory
