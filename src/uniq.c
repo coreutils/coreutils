@@ -1,5 +1,5 @@
 /* uniq -- remove duplicate lines from a sorted file
-   Copyright (C) 86, 91, 95, 96, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 86, 91, 95, 96, 1997, 1998, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -58,6 +58,7 @@ static enum countmode countmode;
 enum output_mode
 {
   output_repeated,		/* -d Only lines that are repeated. */
+  output_all_repeated,		/* -D All lines that are repeated. */
   output_unique,		/* -u Only lines that are not repeated. */
   output_all			/* Default.  Print first copy of each line. */
 };
@@ -78,6 +79,7 @@ static struct option const longopts[] =
 {
   {"count", no_argument, NULL, 'c'},
   {"repeated", no_argument, NULL, 'd'},
+  {"all-repeated", no_argument, NULL, 'D'},
   {"ignore-case", no_argument, NULL, 'i'},
   {"unique", no_argument, NULL, 'u'},
   {"skip-fields", required_argument, NULL, 'f'},
@@ -106,6 +108,7 @@ standard input), writing to OUTPUT (or standard output).\n\
 \n\
   -c, --count           prefix lines by the number of occurrences\n\
   -d, --repeated        only print duplicate lines\n\
+  -D, --all-repeated    print all duplicate lines\n\
   -f, --skip-fields=N   avoid comparing the first N fields\n\
   -i, --ignore-case     ignore differences in case when comparing\n\
   -s, --skip-chars=N    avoid comparing the first N characters\n\
@@ -189,7 +192,8 @@ static void
 writeline (const struct linebuffer *line, FILE *stream, int linecount)
 {
   if ((mode == output_unique && linecount != 0)
-      || (mode == output_repeated && linecount == 0))
+      || (mode == output_repeated && linecount == 0)
+      || (mode == output_all_repeated && linecount == 0))
     return;
 
   if (countmode == count_occurrences)
@@ -244,18 +248,21 @@ check_file (const char *infile, const char *outfile)
 	break;
       thisfield = find_field (thisline);
       thislen = thisline->length - (thisfield - thisline->buffer);
-      if (!different (thisfield, prevfield, thislen, prevlen))
-	match_count++;
-      else
+      match = !different (thisfield, prevfield, thislen, prevlen);
+
+      if (match)
+	++match_count;
+
+      if (!match || mode == output_all_repeated)
 	{
 	  writeline (prevline, ostream, match_count);
-	  match_count = 0;
-
 	  exch = prevline;
 	  prevline = thisline;
 	  thisline = exch;
 	  prevfield = thisfield;
 	  prevlen = thislen;
+	  if (!match)
+	    match_count = 0;
 	}
     }
 
@@ -289,7 +296,7 @@ main (int argc, char **argv)
   mode = output_all;
   countmode = count_none;
 
-  while ((optc = getopt_long (argc, argv, "0123456789cdf:is:uw:", longopts,
+  while ((optc = getopt_long (argc, argv, "0123456789cdDf:is:uw:", longopts,
 			      NULL)) != -1)
     {
       switch (optc)
@@ -316,6 +323,10 @@ main (int argc, char **argv)
 
 	case 'd':
 	  mode = output_repeated;
+	  break;
+
+	case 'D':
+	  mode = output_all_repeated;
 	  break;
 
 	case 'f':		/* Like '-#'. */
@@ -400,7 +411,17 @@ main (int argc, char **argv)
     outfile = argv[optind++];
 
   if (optind < argc)
-    usage (1);			/* Extra arguments. */
+    {
+      error (0, 0, _("too many arguments"));
+      usage (1);
+    }
+
+  if (countmode == count_occurrences && mode == output_all_repeated)
+    {
+      error (0, 0,
+	   _("printing all duplicated lines and repeat counts is meaningless"));
+      usage (1);
+    }
 
   check_file (infile, outfile);
 
