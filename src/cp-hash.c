@@ -27,6 +27,7 @@
 #include "system.h"
 #include "error.h"
 #include "cp-hash.h"
+#include "quote.h"
 
 struct entry
 {
@@ -60,7 +61,7 @@ remember_created (const char *path)
 
   if (stat (path, &sb) < 0)
     {
-      error (0, errno, "%s", path);
+      error (0, errno, "%s", quote (path));
       return 1;
     }
 
