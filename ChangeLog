@@ -1,6 +1,17 @@
-2005-01-14  Jim Meyering  <jim@meyering.net>
+2005-01-15  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/shred.c (isaac_seed) [HAVE_GETHRTIME]: #if-0 this block,
+	because just calling gethrtime evokes an `illegal instruction'
+	failure when compiled with Sun's c89 on Solaris 8 and 9.
+	Reported by Nelson Beebe.
+
+	* src/shred.c (isaac_seed) [HAVE_GETHRTIME]: Don't call ISAAC_SEED
+	twice with the same value of `t'.
+	Replace nested #if-#else blocks with #if-#elif-#elif chain.
+
+2005-01-14  Jim Meyering  <jim@meyering.net>
 
 	The test, tests/tail/f-1, failed on powerpc-apple-darwin7.7.0.
 	* src/tail.c (IS_TAILABLE_FILE_TYPE): Adjust definition also to include
