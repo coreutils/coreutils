@@ -57,7 +57,7 @@ mkdir (dpath, dmode)
   int cpid, status;
   struct stat statbuf;
 
-  if (SAFE_STAT (dpath, &statbuf) == 0)
+  if (safe_stat (dpath, &statbuf) == 0)
     {
       errno = EEXIST;		/* stat worked, so it already exists.  */
       return -1;
