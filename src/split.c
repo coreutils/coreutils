@@ -354,7 +354,7 @@ main (int argc, char **argv)
     } split_type = type_undef;
   size_t in_blk_size;		/* optimal block size of input file device */
   char *buf;			/* file i/o buffer */
-  size_t accum = 0;
+  size_t n_units = 0;
   int c;
   int digits_optind = 0;
 
@@ -408,7 +408,7 @@ main (int argc, char **argv)
 	      error (0, 0, _("%s: invalid number of bytes"), optarg);
 	      usage (EXIT_FAILURE);
 	    }
-	  accum = /* FIXME: */ (int) tmp_long;
+	  n_units = /* FIXME: */ (int) tmp_long;
 	  break;
 
 	case 'l':
@@ -421,7 +421,7 @@ main (int argc, char **argv)
 	      error (0, 0, _("%s: invalid number of lines"), optarg);
 	      usage (EXIT_FAILURE);
 	    }
-	  accum = /* FIXME */ (int) tmp_long;
+	  n_units = /* FIXME */ (int) tmp_long;
 	  break;
 
 	case 'C':
@@ -434,7 +434,7 @@ main (int argc, char **argv)
 	      error (0, 0, _("%s: invalid number of bytes"), optarg);
 	      usage (EXIT_FAILURE);
 	    }
-	  accum = /* FIXME */ (int) tmp_long;
+	  n_units = /* FIXME */ (int) tmp_long;
 	  break;
 
 	case '0':
@@ -450,10 +450,10 @@ main (int argc, char **argv)
 	  if (split_type != type_undef && split_type != type_digits)
 	    FAIL_ONLY_ONE_WAY ();
 	  if (digits_optind != 0 && digits_optind != this_optind)
-	    accum = 0;		/* More than one number given; ignore other. */
+	    n_units = 0;	/* More than one number given; ignore other. */
 	  digits_optind = this_optind;
 	  split_type = type_digits;
-	  accum = accum * 10 + c - '0';
+	  n_units = n_units * 10 + c - '0';
 	  break;
 
 	case_GETOPT_HELP_CHAR;
@@ -467,7 +467,8 @@ main (int argc, char **argv)
 
   if (digits_optind && 200112 <= posix2_version ())
     {
-      error (0, 0, _("`-%d' option is obsolete; use `-l %d'"), accum, accum);
+      error (0, 0, _("`-%d' option is obsolete; use `-l %d'"),
+	     n_units, n_units);
       usage (EXIT_FAILURE);
     }
 
@@ -475,15 +476,15 @@ main (int argc, char **argv)
   if (split_type == type_undef)
     {
       split_type = type_lines;
-      accum = 1000;
+      n_units = 1000;
     }
 
-  if (accum < 1)
+  if (n_units < 1)
     {
       error (0, 0, _("invalid number"));
       usage (EXIT_FAILURE);
     }
-  num = accum;
+  num = n_units;
 
   /* Get out the filename arguments.  */
 
