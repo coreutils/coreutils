@@ -634,10 +634,10 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
   /* Return to the start directory (if necessary).  */
   if (cwd != NULL)
     {
-      int save_err = errno;
+      int saved_errno = errno;
       __chdir (cwd);
       free (cwd);
-      __set_errno (save_err);
+      __set_errno (saved_errno);
     }
 
   /* Free all memory.  */
