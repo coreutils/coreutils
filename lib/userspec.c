@@ -40,6 +40,14 @@ char *alloca ();
 #include <pwd.h>
 #include <grp.h>
 
+#if HAVE_SYS_PARAM_H
+# include <sys/param.h>
+#endif
+
+#if HAVE_LIMITS_H
+# include <limits.h>
+#endif
+
 #if HAVE_STRING_H
 # include <string.h>
 #else
@@ -58,6 +66,7 @@ char *alloca ();
 #endif
 
 #include "xalloc.h"
+#include "xstrtol.h"
 
 #if ENABLE_NLS
 # include <libintl.h>
@@ -79,6 +88,34 @@ struct group *getgrgid ();
 
 #ifndef HAVE_ENDPWENT
 # define endpwent() ((void) 0)
+#endif
+
+#ifndef CHAR_BIT
+# define CHAR_BIT 8
+#endif
+
+/* The extra casts work around common compiler bugs.  */
+#define TYPE_SIGNED(t) (! ((t) 0 < (t) -1))
+/* The outer cast is needed to work around a bug in Cray C 5.0.3.0.
+   It is necessary at least when t == time_t.  */
+#define TYPE_MINIMUM(t) ((t) (TYPE_SIGNED (t) \
+			      ? ~ (t) 0 << (sizeof (t) * CHAR_BIT - 1) : (t) 0))
+#define TYPE_MAXIMUM(t) ((t) (~ (t) 0 - TYPE_MINIMUM (t)))
+
+#ifndef UID_T_MAX
+# define UID_T_MAX TYPE_MAXIMUM (uid_t)
+#endif
+
+#ifndef GID_T_MAX
+# define GID_T_MAX TYPE_MAXIMUM (gid_t)
+#endif
+
+/* MAXUID may come from limits.h or sys/params.h.  */
+#ifndef MAXUID
+# define MAXUID UID_T_MAX
+#endif
+#ifndef MAXGID
+# define MAXGID GID_T_MAX
 #endif
 
 /* Perform the equivalent of the statement `dest = strdup (src);',
@@ -220,8 +257,12 @@ parse_user_spec (const char *spec_arg, uid_t *uid, gid_t *gid,
 		error_msg = E_bad_spec;
 	      else
 		{
-		  /* FIXME: don't use atoi!  */
-		  *uid = atoi (u);
+		  unsigned long int tmp_long;
+		  if (xstrtoul (u, NULL, 0, &tmp_long, NULL) != LONGINT_OK
+		      || tmp_long > MAXUID)
+		    return _(E_invalid_user);
+		  printf ("MAXUID: %u\n", (uid_t) MAXUID);
+		  *uid = tmp_long;
 		}
 	    }
 	}
@@ -263,8 +304,11 @@ parse_user_spec (const char *spec_arg, uid_t *uid, gid_t *gid,
 	    error_msg = E_invalid_group;
 	  else
 	    {
-	      /* FIXME: don't use atoi!  */
-	      *gid = atoi (g);
+	      unsigned long int tmp_long;
+	      if (xstrtoul (u, NULL, 0, &tmp_long, NULL) != LONGINT_OK
+		  || tmp_long > MAXGID)
+		return _(E_invalid_group);
+	      *gid = tmp_long;
 	    }
 	}
       else
