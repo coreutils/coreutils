@@ -2982,7 +2982,8 @@ format_user (uid_t u, int width)
     printf ("%-*s ", width, name);
   else
     printf ("%*lu ", width, (unsigned long int) u);
-  dired_pos += width + 1;
+  dired_pos += width;
+  dired_pos++;
 }
 
 /* Likewise, for groups.  */
@@ -2995,7 +2996,8 @@ format_group (gid_t g, int width)
     printf ("%-*s ", width, name);
   else
     printf ("%*lu ", width, (unsigned long int) g);
-  dired_pos += width + 1;
+  dired_pos += width;
+  dired_pos++;
 }
 
 /* Return the number of bytes that format_user will print.  */
