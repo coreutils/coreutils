@@ -1,3 +1,12 @@
+2003-06-02  Jim Meyering  <jim@meyering.net>
+
+	* stdbool.hin: New file.  From gnulib.
+	* Makefile.am (MOSTLYCLEANFILES): Initialize.
+	(stdbool.h): New rule.
+	(all-local $(lib_OBJECTS)): Depend on $(STDBOOL_H)
+	(MOSTLYCLEANFILES): Add stdbool.h.
+	(EXTRA_DIST): Add stdbool.h.
+
 2003-05-30  Jim Meyering  <jim@meyering.net>
 
 	* addext.c: Update from gnulib.
