@@ -1,5 +1,6 @@
 Changes in release 1.20
  Changes in test release 1.19r
+* join passes all of its test on Alpha OSF 4.0.
 * sort no longer improperly ignores blanks in determining starting and ending
   positions for keys with explicit character offsets
 * fix bug in csplit with regexp and negative offset that led to infinite loop
