@@ -668,7 +668,7 @@ static void
 show_entry (const char *path, const struct stat *statp)
 {
   if (S_ISBLK (statp->st_mode) || S_ISCHR (statp->st_mode))
-    show_disk (path);
+    show_disk (path, statp);
   else
     show_point (path, statp);
 }
