@@ -129,9 +129,6 @@ struct month
 /* The name this program was run with. */
 char *program_name;
 
-/* Table of digits. */
-static int digits[UCHAR_LIM];
-
 /* Table of white space. */
 static int blanks[UCHAR_LIM];
 
@@ -459,8 +456,6 @@ inittables (void)
     {
       if (ISBLANK (i))
 	blanks[i] = 1;
-      if (ISDIGIT (i))
-	digits[i] = 1;
       if (!ISPRINT (i))
 	nonprinting[i] = 1;
       if (!ISALNUM (i) && !ISBLANK (i))
@@ -762,29 +757,29 @@ findlines (struct buffer *buf, struct lines *lines)
 static int
 fraccompare (register const char *a, register const char *b)
 {
-  register int tmpa = UCHAR (*a);
-  register int tmpb = UCHAR (*b);
+  register int tmpa = *a;
+  register int tmpb = *b;
 
   if (tmpa == '.' && tmpb == '.')
     {
       do
-	tmpa = UCHAR (*++a), tmpb = UCHAR (*++b);
-      while (tmpa == tmpb && digits[tmpa]);
-      if (digits[tmpa] && digits[tmpb])
+	tmpa = *++a, tmpb = *++b;
+      while (tmpa == tmpb && ISDIGIT (tmpa));
+      if (ISDIGIT (tmpa) && ISDIGIT (tmpb))
 	return tmpa - tmpb;
-      if (digits[tmpa])
+      if (ISDIGIT (tmpa))
 	{
 	  while (tmpa == '0')
-	    tmpa = UCHAR (*++a);
-	  if (digits[tmpa])
+	    tmpa = *++a;
+	  if (ISDIGIT (tmpa))
 	    return 1;
 	  return 0;
 	}
-      if (digits[tmpb])
+      if (ISDIGIT (tmpb))
 	{
 	  while (tmpb == '0')
-	    tmpb = UCHAR (*++b);
-	  if (digits[tmpb])
+	    tmpb = *++b;
+	  if (ISDIGIT (tmpb))
 	    return -1;
 	  return 0;
 	}
@@ -793,18 +788,18 @@ fraccompare (register const char *a, register const char *b)
   else if (tmpa == '.')
     {
       do
-	tmpa = UCHAR (*++a);
+	tmpa = *++a;
       while (tmpa == '0');
-      if (digits[tmpa])
+      if (ISDIGIT (tmpa))
 	return 1;
       return 0;
     }
   else if (tmpb == '.')
     {
       do
-	tmpb = UCHAR (*++b);
+	tmpb = *++b;
       while (tmpb == '0');
-      if (digits[tmpb])
+      if (ISDIGIT (tmpb))
 	return -1;
       return 0;
     }
@@ -831,44 +826,45 @@ numcompare (register const char *a, register const char *b)
   if (tmpa == '-')
     {
       do
-	tmpa = UCHAR (*++a);
+	tmpa = *++a;
       while (tmpa == '0');
       if (tmpb != '-')
 	{
 	  if (tmpa == '.')
 	    do
-	      tmpa = UCHAR (*++a);
+	      tmpa = *++a;
 	    while (tmpa == '0');
-	  if (digits[tmpa])
+	  if (ISDIGIT (tmpa))
 	    return -1;
 	  while (tmpb == '0')
-	    tmpb = UCHAR (*++b);
+	    tmpb = *++b;
 	  if (tmpb == '.')
 	    do
 	      tmpb = *++b;
 	    while (tmpb == '0');
-	  if (digits[tmpb])
+	  if (ISDIGIT (tmpb))
 	    return -1;
 	  return 0;
 	}
       do
-	tmpb = UCHAR (*++b);
+	tmpb = *++b;
       while (tmpb == '0');
 
-      while (tmpa == tmpb && digits[tmpa])
-	tmpa = UCHAR (*++a), tmpb = UCHAR (*++b);
+      while (tmpa == tmpb && ISDIGIT (tmpa))
+	tmpa = *++a, tmpb = *++b;
 
-      if ((tmpa == '.' && !digits[tmpb]) || (tmpb == '.' && !digits[tmpa]))
+      if ((tmpa == '.' && !ISDIGIT (tmpb))
+	  || (tmpb == '.' && !ISDIGIT (tmpa)))
 	return -fraccompare (a, b);
 
-      if (digits[tmpa])
-	for (loga = 1; digits[UCHAR (*++a)]; ++loga)
+      if (ISDIGIT (tmpa))
+	for (loga = 1; ISDIGIT (*++a); ++loga)
 	  ;
       else
 	loga = 0;
 
-      if (digits[tmpb])
-	for (logb = 1; digits[UCHAR (*++b)]; ++logb)
+      if (ISDIGIT (tmpb))
+	for (logb = 1; ISDIGIT (*++b); ++logb)
 	  ;
       else
 	logb = 0;
@@ -884,45 +880,46 @@ numcompare (register const char *a, register const char *b)
   else if (tmpb == '-')
     {
       do
-	tmpb = UCHAR (*++b);
+	tmpb = *++b;
       while (tmpb == '0');
       if (tmpb == '.')
 	do
 	  tmpb = *++b;
 	while (tmpb == '0');
-      if (digits[tmpb])
+      if (ISDIGIT (tmpb))
 	return 1;
       while (tmpa == '0')
-	tmpa = UCHAR (*++a);
+	tmpa = *++a;
       if (tmpa == '.')
 	do
-	  tmpa = UCHAR (*++a);
+	  tmpa = *++a;
 	while (tmpa == '0');
-      if (digits[tmpa])
+      if (ISDIGIT (tmpa))
 	return 1;
       return 0;
     }
   else
     {
       while (tmpa == '0')
-	tmpa = UCHAR (*++a);
+	tmpa = *++a;
       while (tmpb == '0')
-	tmpb = UCHAR (*++b);
+	tmpb = *++b;
 
-      while (tmpa == tmpb && digits[tmpa])
-	tmpa = UCHAR (*++a), tmpb = UCHAR (*++b);
+      while (tmpa == tmpb && ISDIGIT (tmpa))
+	tmpa = *++a, tmpb = *++b;
 
-      if ((tmpa == '.' && !digits[tmpb]) || (tmpb == '.' && !digits[tmpa]))
+      if ((tmpa == '.' && !ISDIGIT (tmpb))
+	  || (tmpb == '.' && !ISDIGIT (tmpa)))
 	return fraccompare (a, b);
 
-      if (digits[tmpa])
-	for (loga = 1; digits[UCHAR (*++a)]; ++loga)
+      if (ISDIGIT (tmpa))
+	for (loga = 1; ISDIGIT (*++a); ++loga)
 	  ;
       else
 	loga = 0;
 
-      if (digits[tmpb])
-	for (logb = 1; digits[UCHAR (*++b)]; ++logb)
+      if (ISDIGIT (tmpb))
+	for (logb = 1; ISDIGIT (*++b); ++logb)
 	  ;
       else
 	logb = 0;
@@ -1787,13 +1784,13 @@ main (int argc, char **argv)
 	  key = (struct keyfield *) xmalloc (sizeof (struct keyfield));
 	  key_init (key);
 	  s = argv[i] + 1;
-	  if (! (digits[UCHAR (*s)] || (*s == '.' && digits[UCHAR (s[1])])))
+	  if (! (ISDIGIT (*s) || (*s == '.' && ISDIGIT (s[1]))))
 	    badfieldspec (argv[i]);
-	  for (t = 0; digits[UCHAR (*s)]; ++s)
+	  for (t = 0; ISDIGIT (*s); ++s)
 	    t = 10 * t + *s - '0';
 	  t2 = 0;
 	  if (*s == '.')
-	    for (++s; digits[UCHAR (*s)]; ++s)
+	    for (++s; ISDIGIT (*s); ++s)
 	      t2 = 10 * t2 + *s - '0';
 	  if (t2 || t)
 	    {
@@ -1809,7 +1806,7 @@ main (int argc, char **argv)
       else if (argv[i][0] == '-' && argv[i][1])
 	{
 	  s = argv[i] + 1;
-	  if (digits[UCHAR (*s)] || (*s == '.' && digits[UCHAR (s[1])]))
+	  if (ISDIGIT (*s) || (*s == '.' && ISDIGIT (s[1])))
 	    {
 	      if (!key)
 		{
@@ -1818,11 +1815,11 @@ main (int argc, char **argv)
 key specifiers,\nthe +POS specifier must come first"));
 		  usage (SORT_FAILURE);
 		}
-	      for (t = 0; digits[UCHAR (*s)]; ++s)
+	      for (t = 0; ISDIGIT (*s); ++s)
 		t = t * 10 + *s - '0';
 	      t2 = 0;
 	      if (*s == '.')
-		for (++s; digits[UCHAR (*s)]; ++s)
+		for (++s; ISDIGIT (*s); ++s)
 		  t2 = t2 * 10 + *s - '0';
 	      key->eword = t;
 	      key->echar = t2;
@@ -1860,9 +1857,9 @@ key specifiers,\nthe +POS specifier must come first"));
 		      xmalloc (sizeof (struct keyfield));
 		    key_init (key);
 		    /* Get POS1. */
-		    if (!digits[UCHAR (*s)])
+		    if (!ISDIGIT (*s))
 		      badfieldspec (argv[i]);
-		    for (t = 0; digits[UCHAR (*s)]; ++s)
+		    for (t = 0; ISDIGIT (*s); ++s)
 		      t = 10 * t + *s - '0';
 		    if (t == 0)
 		      {
@@ -1875,14 +1872,14 @@ to the `-k' option must be positive"));
 		    t2 = 0;
 		    if (*s == '.')
 		      {
-			if (!digits[UCHAR (s[1])])
+			if (!ISDIGIT (s[1]))
 			  {
 			    /* Provoke with `sort -k1.' */
 			    error (0, 0, _("starting field spec has `.' but \
 lacks following character offset"));
 			    badfieldspec (argv[i]);
 			  }
-			for (++s; digits[UCHAR (*s)]; ++s)
+			for (++s; ISDIGIT (*s); ++s)
 			  t2 = 10 * t2 + *s - '0';
 			if (t2 == 0)
 			  {
@@ -1920,7 +1917,7 @@ lacks following field spec"));
 			    badfieldspec (argv[i]);
 			  }
 			/* Get POS2. */
-			for (t = 0; digits[UCHAR (*s)]; ++s)
+			for (t = 0; ISDIGIT (*s); ++s)
 			  t = t * 10 + *s - '0';
 			if (t == 0)
 			  {
@@ -1933,14 +1930,14 @@ to the `-k' option must be positive"));
 			t2 = 0;
 			if (*s == '.')
 			  {
-			    if (!digits[UCHAR (s[1])])
+			    if (!ISDIGIT (s[1]))
 			      {
 				/* Provoke with `sort -k1,1.' */
 				error (0, 0, _("ending field spec has `.' \
 but lacks following character offset"));
 				badfieldspec (argv[i]);
 			      }
-			    for (++s; digits[UCHAR (*s)]; ++s)
+			    for (++s; ISDIGIT (*s); ++s)
 			      t2 = t2 * 10 + *s - '0';
 			  }
 			else
