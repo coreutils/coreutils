@@ -1,3 +1,17 @@
+Sat Mar 16 10:07:49 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* configure.in (PACKAGE_VERSION): New macro.
+	* acconfig.h (PACKAGE_VERSION): Add it.
+	* src/Makefile.am: Remove rules for generating version.c.
+	Remove references to version.o and version.h.
+	* version.c: Remove file.
+	* version.h: Remove file.
+	* basename.c date.c dirname.c echo.c env.c expr.c factor.c
+	hostname.c id.c logname.c nice.c pathchk.c printenv.c printf.c
+	pwd.c seq.c sleep.c stty.c su.c tee.c test.c tty.c uname.c
+	who-users.c whoami.c yes.c: Don't include version.h.
+	(main): Use PACKAGE_VERSION instead of version_string.
+
 Fri Mar 15 23:42:29 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* basename.c: Remove __P-protected prototype for basename.
