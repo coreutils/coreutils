@@ -38,10 +38,16 @@
 #endif
 
 #ifndef HAVE_DECL_STRTOUL
+'this configure-time declaration test was not run'
+#endif
+#if !HAVE_DECL_STRTOUL
 unsigned long long strtoul PARAMS ((char const *, char **, int));
 #endif
 
 #ifndef HAVE_DECL_STRTOULL
+'this configure-time declaration test was not run'
+#endif
+#if !HAVE_DECL_STRTOULL
 unsigned long long strtoull PARAMS ((char const *, char **, int));
 #endif
 
