@@ -102,12 +102,6 @@ extern struct tm	*localtime();
 static int yylex ();
 static int yyerror ();
 
-#if	!defined(lint) && !defined(SABER)
-static char RCS[] =
-	"$Header: str2date.y,v 2.1 90/09/06 08:15:06 cronan Exp $";
-#endif	/* !defined(lint) && !defined(SABER) */
-
-
 #define EPOCH		1970
 #define HOUR(x)		((time_t)(x) * 60)
 #define SECSPERDAY	(24L * 60L * 60L)
@@ -904,7 +898,7 @@ get_date(p, now)
 
 	if (! (tm = gmtime (&ftz.time)))
 	    return -1;
-	gmt = *tm;
+	gmt = *tm;	/* Make a copy, in case localtime modifies *tm.  */
 
 	if (! (tm = localtime (&ftz.time)))
 	    return -1;

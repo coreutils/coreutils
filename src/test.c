@@ -88,6 +88,9 @@ extern uid_t geteuid ();
 #define F_OK 0
 #endif /* R_OK */
 
+/* This name is used solely when printing --version information.  */
+#define COMMAND_NAME "test"
+
 /* The following few defines control the truth and false output of each stage.
    TRUE and FALSE are what we use to compute the final output value.
    SHELL_BOOLEAN is the form which returns truth or falseness in shell terms.
@@ -1122,7 +1125,7 @@ test_command (margc, margv)
 
   if (margv[0] && strcmp (margv[0], "[") == 0)
     {
-      parse_long_options (argc, argv, "test", usage);
+      parse_long_options (argc, argv, COMMAND_NAME, usage);
 
       --margc;
 
@@ -1139,7 +1142,7 @@ test_command (margc, margv)
   if (pos >= argc)
     test_exit (SHELL_BOOLEAN (FALSE));
 
-  parse_long_options (argc, argv, usage);
+  parse_long_options (argc, argv, COMMAND_NAME, usage);
   value = posixtest ();
 
   if (pos != argc)
