@@ -336,7 +336,7 @@ print_long_entry (const char name[])
       stream = fopen (project, "r");
       if (stream)
 	{
-	  int bytes;
+	  size_t bytes;
 
 	  printf (_("Project: "));
 
@@ -362,7 +362,7 @@ print_long_entry (const char name[])
       stream = fopen (plan, "r");
       if (stream)
 	{
-	  int bytes;
+	  size_t bytes;
 
 	  printf (_("Plan:\n"));
 
