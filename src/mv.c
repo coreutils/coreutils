@@ -106,6 +106,12 @@ rm_option_init (struct rm_options *x)
   x->stdin_tty = 0;
 
   x->verbose = 0;
+
+  /* Since this program may well have to process additional command
+     line arguments after any call to `rm', that function must preserve
+     the initial working directory, in case one of those is a
+     `.'-relative name.  */
+  x->require_restore_cwd = true;
 }
 
 static void
