@@ -70,55 +70,30 @@ char *xstrdup ();
    status code greater than 1.  */
 #define SORT_FAILURE 2
 
-#define FLOATING_POINT  '.'
-#define FLOATING_COMMA  ','
+#define C_DECIMAL_POINT '.'
 #define NEGATION_SIGN   '-'
 #define NUMERIC_ZERO    '0'
 
 #ifdef ENABLE_NLS
 # define NLS_MEMCMP(S1, S2, Len) strncoll (S1, S2, Len)
-# define NLS_STRNCMP(S1, S2, Len) strncoll_s2_readonly (S1, S2, Len)
 #else
 # define NLS_MEMCMP(S1, S2, Len) memcmp (S1, S2, Len)
-# define NLS_STRNCMP(S1, S2, Len) strncmp (S1, S2, Len)
 #endif
 
 #ifdef ENABLE_NLS
 
 static char decimal_point;
 static int th_sep; /* if CHAR_MAX + 1, then there is no thousands separator */
-static char *nls_grouping;
 
 /* This is "C" locale, need another? */
 static int need_locale = 0;
-
-/* Should we look for decimal point? */
-static int nls_fraction_found = 1;
-
-/* Look for month notations in text? */
-static int nls_month_found = 1;
 
 # define IS_THOUSANDS_SEP(x) ((x) == th_sep)
 
 #else
 
-# define decimal_point FLOATING_POINT
+# define decimal_point C_DECIMAL_POINT
 # define IS_THOUSANDS_SEP(x) 0
-
-#endif
-
-/* If native language support is requested, make a 1-1 map to the
-   locale character map, otherwise ensure normal behavior.  */
-#ifdef ENABLE_NLS
-
-/* 12 months in a year */
-# define NLS_NUM_MONTHS 12
-
-/* Maximum number of elements, to allocate per allocation unit  */
-# define NLS_MAX_GROUPS 8
-
-/* A string with one character, to enforce char collation */
-# define NLS_ONE_CHARACTER_STRING " "
 
 #endif
 
@@ -193,12 +168,21 @@ static int nonprinting[UCHAR_LIM];
 /* Table of non-dictionary characters (not letters, digits, or blanks). */
 static int nondictionary[UCHAR_LIM];
 
-/* Translation table folding lower case to upper. */
+/* Translation table folding lower case to upper.
+   FIXME: This doesn't work with multibyte character sets.  */
 static char fold_toupper[UCHAR_LIM];
 
-/* Table mapping 3-letter month names to integers.
+#define MONTHS_PER_YEAR 12
+
+#ifndef ENABLE_NLS
+# define NLS_CONST const
+#else
+# define NLS_CONST /* empty */
+#endif
+
+/* Table mapping month names to integers.
    Alphabetic order allows binary search. */
-static const struct month us_monthtab[] =
+static NLS_CONST struct month monthtab[] =
 {
   {"APR", 4},
   {"AUG", 8},
@@ -213,26 +197,6 @@ static const struct month us_monthtab[] =
   {"OCT", 10},
   {"SEP", 9}
 };
-
-#ifdef ENABLE_NLS
-
-/* Locale may have a different idea of month names   */
-static struct month nls_monthtab[NLS_NUM_MONTHS];
-static int nls_months_collide[NLS_NUM_MONTHS + 1];
-
-/* Numeric keys, to search for numeric format */
-struct nls_keyfield
-{
-  struct keyfield *key;
-  struct nls_keyfield *next;
-};
-
-static struct nls_keyfield *nls_keyhead = NULL;
-
-#endif
-
-/* Which month table to use in the program, default C */
-static const struct month *monthtab = us_monthtab;
 
 /* During the merge phase, the number of files to merge at once. */
 #define NMERGE 16
@@ -502,10 +466,10 @@ zaptemp (const char *name)
 /* Initialize the character class tables. */
 
 static int
-nls_sort_month_comp (const void *m1, const void *m2)
+struct_month_cmp (const void *m1, const void *m2)
 {
-  return strcoll (((const struct month *) m1)->name,
-		  ((const struct month *) m2)->name);
+  return strcmp (((const struct month *) m1)->name,
+		 ((const struct month *) m2)->name);
 }
 
 /* Do collation on strings S1 and S2, but for at most L characters.
@@ -526,35 +490,6 @@ strncoll (char *s1, char *s2, int len)
       diff = strcoll (s1, s2);
       s1[len] = n1;
       s2[len] = n2;
-    }
-  else
-    {
-      diff = memcmp (s1, s2, len);
-    }
-
-  return diff;
-}
-
-/* Do collation on strings S1 and S2, but for at most L characters.
-   Use the fact, that we KNOW that S2 is the shorter string and has
-   length LEN.  */
-static int
-strncoll_s2_readonly (char *s1, const char *s2, int len)
-{
-  register int diff;
-
-  assert (len == strlen (s2));
-  assert (len <= strlen (s1));
-
-  if (need_locale)
-    {
-      /* Emulate a strncoll function, by forcing strcoll to compare
-	 only the first LEN characters in each string. */
-      register unsigned char n1 = s1[len];
-
-      s1[len] = 0;
-      diff = strcoll (s1, s2);
-      s1[len] = n1;
     }
   else
     {
@@ -586,45 +521,27 @@ inittables (void)
     }
 
 #if defined ENABLE_NLS && HAVE_NL_LANGINFO
-  /* If We're not in the "C" locale, read in different names for months. */
+  /* If we're not in the "C" locale, read different names for months.  */
   if (need_locale)
     {
-      nls_months_collide[0] = 1;	/* if an error, look again       */
-      for (i = 0; i < NLS_NUM_MONTHS; i++)
+      for (i = 0; i < MONTHS_PER_YEAR; i++)
 	{
 	  char *s;
 	  size_t s_len;
-	  int j;
+	  size_t j;
+	  char *name;
 
-	  s = (char *) nl_langinfo (ABMON_1 + us_monthtab[i].val - 1);
+	  s = (char *) nl_langinfo (ABMON_1 + i);
 	  s_len = strlen (s);
-	  nls_monthtab[i].name = (char *) xmalloc (s_len + 1);
-	  nls_monthtab[i].val = us_monthtab[i].val;
+	  monthtab[i].name = name = (char *) xmalloc (s_len + 1);
+	  monthtab[i].val = i + 1;
 
-	  /* Be careful: abreviated month names
-	     may be longer than the usual 3 characters.  */
 	  for (j = 0; j < s_len; j++)
-	    nls_monthtab[i].name[j] = fold_toupper[UCHAR (s[j])];
-	  nls_monthtab[i].name[j] = '\0';
-
-	  nls_months_collide[nls_monthtab[i].val] = 0;
-	  for (j = 0; j < NLS_NUM_MONTHS; ++j)
-	    {
-	      if (STREQ (nls_monthtab[i].name, us_monthtab[i].name))
-		{
-		  /* There are indeed some month names in English which
-		     collide with the NLS name.  */
-		  nls_months_collide[nls_monthtab[i].val] = 1;
-		  break;
-		}
-	    }
+	    name[j] = fold_toupper[UCHAR (s[j])];
+	  name[j] = '\0';
 	}
-      /* Now quicksort the month table (should be sorted already!).
-         However, another locale doesn't rule out the possibility
-         of a different order of month names. */
-      qsort ((void *) nls_monthtab, NLS_NUM_MONTHS,
-	     sizeof (struct month), nls_sort_month_comp);
-      monthtab = nls_monthtab;
+      qsort ((void *) monthtab, MONTHS_PER_YEAR,
+	     sizeof (struct month), struct_month_cmp);
     }
 #endif /* NLS */
 }
@@ -948,10 +865,6 @@ findlines (struct buffer *buf, struct lines *lines)
 static int
 fraccompare (register const char *a, register const char *b)
 {
-#ifdef ENABLE_NLS
-  nls_fraction_found = 1;
-#endif
-
   if (*a == decimal_point && *b == decimal_point)
     {
       while (*++a == *++b)
@@ -985,160 +898,6 @@ fraccompare (register const char *a, register const char *b)
 /* Compare strings A and B as numbers without explicitly converting them to
    machine numbers.  Comparatively slow for short strings, but asymptotically
    hideously fast. */
-
-/* The code here, is like the above... continuous reoccurrance of the
-   same code... improved 15-JAN-1997 in connection with native languages
-   support */
-
-#ifdef ENABLE_NLS
-
-/* Decide the kind of fraction the program will use */
-static void
-nls_set_fraction (char ch)
-{
-  if (!nls_fraction_found && ch != decimal_point)
-    {
-      if (ch == FLOATING_POINT)
-	{				/* US style */
-	  decimal_point = FLOATING_POINT;
-	  th_sep = FLOATING_COMMA;
-	}
-      else if (ch == FLOATING_COMMA)
-	{				/* EU style */
-	  decimal_point = FLOATING_COMMA;
-	  th_sep = FLOATING_POINT;
-	}
-      else if (ch != decimal_point)
-	{				/* Alien    */
-	  decimal_point = ch;
-	  th_sep = CHAR_MAX + 1;
-	}
-    }
-  nls_fraction_found = 1;
-}
-
-/* Look for a fraction
-   It isn't as simple as it looks... however, consider a number:
-      1.234,00
-      1,234.00
-   It's easy to tell which is a decimal point, and which isn't.  We use
-   the grouping information to find out how many digits are grouped together
-   for thousand separator.
-
-   The idea here, is to use the grouping information... but not to
-   spend time with verifying the groups... not too much time, anyway.
-   so, a number represented to us as:
-      1.234.567,89
-   will be taken and separated into different groups, separated by a
-   separator character (Decimal point or thousands separator).
-      {1,234,567}
-   these are the groups of digits that lead to a separator character,
-   and with the trailing group is added:
-      {1,234,567,89}
-   resulting in 4 groups of numbers.  If the resulting number of groups,
-   are none, or just 1... this is not enough to decide anything about
-   the decimal point.  We need at least two for that.  With two groups
-   we have at least one separator.  That separator can be a decimal
-   point, or a thousands separator... if it is a thousands separator
-   the number of digits in the last group, will comply with the first
-   rule in the grouping rule for numeric values. i.e.
-      |{89}| = grouping[0]
-   if so, and there are only two groups of numbers, the value cannot
-   be determined.  If there are three or more numbers, the separator
-   separating the groups is checked.  If these are the same, the
-   character is determined to be a thousands separator.  If they are
-   not the same, the last separator is determined to be a decimal
-   point.  If checking the grouping rules, we find out that there
-   are no grouping rules defined, either the grouping rules is NULL
-   or the first grouping number is 0, then the locale format is used.
-
-   We try to take an advantage of a special situation.  If the trailing
-   group, the one that normally should be the fractional part, turns
-   out to have the same length as the thousands separator rule says,
-   making a doubt on that it may be a decimal point, we look for the
-   group before that, i.e. with a two group form:
-     {1234,567}
-   where the grouping rule is 3;3... we take a look at group 1, and find
-   out that |{1234}| > larger of the two first grouping rules, then
-   the separator has to be a decimal point...
-   */
-
-static void
-look_for_fraction (const char *s, const char *e)
-{
-  register const char *p;
-  register unsigned short n = 0;
-  static unsigned short max_groups = 0;
-  static unsigned short *groups = NULL;
-
-  if (groups == NULL)
-    {
-      max_groups = NLS_MAX_GROUPS;
-      groups = (unsigned short *) xmalloc (sizeof (*groups) * max_groups);
-    }
-
-  /* skip blanks and signs */
-  while (blanks[UCHAR (*s)] || *s == NEGATION_SIGN)
-    s++;
-  /* groups = {}, n = 0 */
-  for (p = s; p < e; p++)
-    {
-      /* groups[n]={number of digits leading to separator n}
-         n = number of separators so far */
-      if (*p == decimal_point || *p == th_sep || *p == FLOATING_POINT)
-	{
-	  if (++n >= max_groups)
-	    {
-	      /* BIG Number... enlarge table */
-	      max_groups += NLS_MAX_GROUPS;
-	      groups = (unsigned short *) xrealloc ((char *) groups,
-						    (sizeof (*groups)
-						     * max_groups));
-	    }
-	  groups[n] = (unsigned short) (p - s);
-	  s = p + 1;
-	}
-      else if (!ISDIGIT (*p))
-	break;
-      /* mem[s..p]=digits only */
-    }
-  /* n = number of separators in s..e */
-  groups[++n] = (short) (p - s);
-  /* n = groups in the number */
-  if (n <= 1)
-    return;			/* Only one group of numbers... not enough */
-  p = nls_grouping;
-  /* p = address of group rules
-     s = address of next character after separator */
-  s = s - 1;			/* s = address of last separator */
-  if (p && *p)
-    {
-      /* a legal trailing group, iff groups[n] == first rule */
-      if (groups[n] != (short) *p)
-	nls_set_fraction (*s);
-      else
-	{
-	  if (n == 2)
-	    {			/* Only two groups */
-	      if (groups[n - 1] > max (p[0], p[1]))
-		nls_set_fraction (*s);
-	      return;
-	    }
-	  /* if the separators are the same, it's a thousands */
-	  if (*s != *(s - groups[n]))
-	    nls_set_fraction (*s);
-	  /* s[0] = thousands separator */
-	  else if (*s == th_sep)
-	    nls_fraction_found = 1;
-	}
-    }
-  else
-    {
-      /* no grouping allowed here, last separator IS decimal point */
-      nls_set_fraction (*s);
-    }
-}
-#endif
 
 static int
 numcompare (register const char *a, register const char *b)
@@ -1303,7 +1062,7 @@ static int
 getmonth (const char *s, int len)
 {
   char *month;
-  register int i, lo = 0, hi = 12, result;
+  register int i, lo = 0, hi = MONTHS_PER_YEAR, result;
 
   while (len > 0 && blanks[UCHAR (*s)])
     {
@@ -1325,37 +1084,18 @@ getmonth (const char *s, int len)
     {
       int ix = (lo + hi) / 2;
 
-      len = strlen (monthtab[ix].name);
-      if (NLS_STRNCMP (month, monthtab[ix].name, len) < 0)
+      if (strncmp (month, monthtab[ix].name, strlen (monthtab[ix].name)) < 0)
 	hi = ix;
       else
 	lo = ix;
     }
   while (hi - lo > 1);
 
-  result = (!strncmp (month, monthtab[lo].name, len) ? monthtab[lo].val : 0);
+  result = (!strncmp (month, monthtab[lo].name, strlen (monthtab[lo].name))
+	    ? monthtab[lo].val : 0);
 
   return result;
 }
-
-#ifdef ENABLE_NLS
-/* Look for the month in locale table, and if that fails try with
-   us month name table                                              */
-static int
-nls_month_is_either_locale (const char *s, int len)
-{
-  int ind;
-
-  monthtab = nls_monthtab;
-  ind = getmonth (s, len);
-  if (ind == 0)
-    {
-      monthtab = us_monthtab;
-      ind = getmonth (s, len);
-    }
-  return ind;
-}
-#endif
 
 /* Compare two lines A and B trying every key in sequence until there
    are no more keys or a difference is found. */
@@ -1460,32 +1200,7 @@ keycompare (const struct line *a, const struct line *b)
 	}
       else if (key->month)
 	{
-#ifdef ENABLE_NLS
-
-	  /* if we haven't decided which locale to go with, we get the
-	     month name from either.  If either month name is fully
-	     solved and the month name doesn't collide with the other
-	     locale... then use that table from there forward */
-	  if (!nls_month_found)
-	    {
-	      int x;
-
-	      x = nls_month_is_either_locale (texta, lena);
-	      nls_month_found = !nls_months_collide[x];
-	      if (nls_month_found)
-		{
-		  diff = x - getmonth (textb, lenb);
-		}
-	      else
-		{
-		  diff = nls_month_is_either_locale (textb, lenb);
-		  nls_month_found = !nls_months_collide[diff];
-		  diff = x - diff;
-		}
-	    }
-	  else
-#endif
-	    diff = getmonth (texta, lena) - getmonth (textb, lenb);
+	  diff = getmonth (texta, lena) - getmonth (textb, lenb);
 	  if (diff)
 	    return key->reverse ? -diff : diff;
 	  continue;
@@ -1658,7 +1373,7 @@ compare (register const struct line *a, register const struct line *b)
       diff = UCHAR (*ap) - UCHAR (*bp);
       if (diff == 0)
 	{
-	  diff = NLS_MEMCMP (ap, bp, mini);
+	  diff = memcmp (ap, bp, mini);
 	  if (diff == 0)
 	    diff = tmpa - tmpb;
 	}
@@ -1935,65 +1650,6 @@ mergefps (FILE **fps, register int nfps, FILE *ofp)
     }
 }
 
-#ifdef ENABLE_NLS
-
-/* Find the numeric format that this file represents to us for sorting. */
-static void
-nls_numeric_format (const struct line *line, int nlines)
-{
-  struct nls_keyfield *n_key = nls_keyhead;
-
-  /* line = first line, nlines = number of lines,
-     nls_fraction_found = false                           */
-  for (; !nls_fraction_found && nlines > 0; line++, nlines--)
-    {
-      int iter;
-      for (iter = 0; !nls_fraction_found; iter++)
-	{
-	  char *text;
-	  char *lim;
-	  struct keyfield *key = n_key->key;
-
-	  /* text = {}, lim = {}, key = first key */
-	  if (iter || line->keybeg == NULL)
-	    {
-	      /* Succeding keys, where the key field is
-                 specified                              */
-	      if (key->eword >= 0) /* key->eword = length of key */
-		lim = limfield (line, key);
-	      else
-		lim = line->text + line->length;
-	      /* lim = end of key field */
-
-	      if (key->sword >= 0) /* key->sword = start of key */
-		text = begfield (line, key);
-	      else
-		text = line->text;
-	      /* text = start of field */
-	    }
-	  else
-	    {
-	      /* First key is always the whole line */
-	      text = line->keybeg;
-	      lim = line->keylim;
-	    }
-	  /* text = start of text to sort
-             lim  = end of text to sort    */
-
-	  look_for_fraction (text, lim);
-
-	  /* nls_fraction_found = decimal_point found? */
-
-	  if ((n_key = n_key->next) == nls_keyhead)
-	    break;  /* No more keys for this line */
-	}
-    }
-  nls_fraction_found = 1;
-  /* decide on current decimal_point known */
-}
-
-#endif
-
 /* Sort the array LINES with NLINES members, using TEMP for temporary space. */
 
 static void
@@ -2132,12 +1788,6 @@ sort (char **files, int nfiles, FILE *ofp)
 	      tmp = (struct line *)
 		xrealloc ((char *) tmp, ntmp * sizeof (struct line));
 	    }
-#ifdef ENABLE_NLS
-	  if (nls_keyhead)
-	    nls_keyhead = nls_keyhead->next;
-	  if (!nls_fraction_found && nls_keyhead)
-	    nls_numeric_format (lines.lines, lines.used);
-#endif
 	  sortlines (lines.lines, lines.used, tmp);
 	  if (feof (fp) && !nfiles && !n_temp_files && !buf.left)
 	    {
@@ -2187,23 +1837,6 @@ insertkey (struct keyfield *key)
     k = k->next;
   k->next = key;
   key->next = NULL;
-#ifdef ENABLE_NLS
-  if (key->numeric || key->general_numeric)
-    {
-      struct nls_keyfield *nk;
-
-      nk = (struct nls_keyfield *) xmalloc (sizeof (struct nls_keyfield));
-      nk->key = key;
-      if (nls_keyhead)
-	{
-	  nk->next = nls_keyhead->next;
-	  nls_keyhead->next = nk;
-	}
-      else
-	nk->next = nk;
-      nls_keyhead = nk;
-    }
-#endif
 }
 
 static void
@@ -2347,25 +1980,17 @@ main (int argc, char **argv)
     struct lconv *lconvp = localeconv ();
 
     /* If the locale doesn't define a decimal point, or if the decimal
-       point is multibyte, use the US notation.  We don't support
+       point is multibyte, use the C decimal point.  We don't support
        multibyte decimal points yet.  */
     decimal_point = *lconvp->decimal_point;
     if (! decimal_point || lconvp->decimal_point[1])
-      decimal_point = FLOATING_POINT;
-    else
-      nls_fraction_found = 0;  /* Figure out which decimal point to use  */
+      decimal_point = C_DECIMAL_POINT;
 
     /* We don't support multibyte thousands separators yet.  */
     th_sep = *lconvp->thousands_sep;
     if (! th_sep || lconvp->thousands_sep[1])
       th_sep = CHAR_MAX + 1;
-
-    nls_grouping  =  (char *) (lconvp->grouping);
   }
-
-  nls_month_found = 0;  /* Figure out which month notation to use */
-
-  monthtab = nls_monthtab;
 
 #endif /* NLS */
 
