@@ -2720,24 +2720,30 @@ print_horizontal (void)
       name_length = length_of_file_name_and_frills (files + filesno);
 
       for (i = 0; i < max_cols; ++i)
-	if (col_info[i].valid)
-	  {
-	    int idx = filesno % (i + 1);
-	    int real_length = name_length + (idx == i ? 0 : 2);
+	{
+	  if (col_info[i].valid)
+	    {
+	      int idx = filesno % (i + 1);
+	      int real_length = name_length + (idx == i ? 0 : 2);
 
-	    if (real_length > col_info[i].col_arr[idx])
-	      {
-		col_info[i].line_len += real_length - col_info[i].col_arr[idx];
-		col_info[i].col_arr[idx] = real_length;
-		col_info[i].valid = col_info[i].line_len < line_length;
-	      }
-	  }
+	      if (real_length > col_info[i].col_arr[idx])
+		{
+		  col_info[i].line_len += (real_length
+					   - col_info[i].col_arr[idx]);
+		  col_info[i].col_arr[idx] = real_length;
+		  col_info[i].valid = col_info[i].line_len < line_length;
+		}
+	    }
+	}
     }
 
   /* Find maximum allowed columns.  */
   for (cols = max_cols; cols > 1; --cols)
-    if (col_info[cols - 1].valid)
-      break;
+    {
+      if (col_info[cols - 1].valid)
+	break;
+    }
+
   line_fmt = &col_info[cols - 1];
 
   pos = 0;
