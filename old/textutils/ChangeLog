@@ -1,3 +1,15 @@
+2002-02-14  Paul Eggert  <eggert@twinsun.com>
+
+	Add support for POSIX 1003.1-2001, which requires removal for
+	support of obsolete "+" option syntax in sort, tail, and uniq.
+
+	* NEWS: Document this.
+
+	* src/sort.c (usage, main): Implement this.
+	* src/tail.c (usage, parse_obsolescent_option): Likewise.
+	* src/uniq.c (usage, main): Likewise.
+	* src/system.h (_POSIX2_VERSION, POSIX2_VERSION): New macros.
+
 2002-01-14  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.20.
