@@ -2,6 +2,9 @@
 
 	* Version 4.1.1.
 
+	* src/ls.c: Include dirfd.h.
+	(print_dir): If dirfd fails, resort to using stat.
+
 	* tests/ls/infloop: Redirect cmp's stderr to /dev/null.
 
 	* src/ls.c (struct pending) [st_ino, st_dev]: Remove members.
