@@ -3,9 +3,18 @@
 ##test-files-begin
 x = tail
 explicit =
-maint_gen = t1.in t1.exp t2.in t2.exp t3.in t3.exp t4.in t4.exp t5.in t5.exp
-run_gen = t1.out t1.err t2.out t2.err t3.out t3.err t4.out t4.err t5.out \
-t5.err
+maint_gen = tobs-c1.in tobs-c1.exp tobs-c2.in tobs-c2.exp tobs-c3.in \
+tobs-c3.exp tobs-c4.in tobs-c4.exp tobs-c5.in tobs-c5.exp tobs-l1.in \
+tobs-l1.exp tobs-l2.in tobs-l2.exp tobs-l3.in tobs-l3.exp tobs-l4.in \
+tobs-l4.exp tobs-l5.in tobs-l5.exp tobs-1.in tobs-1.exp tobs-2.in tobs-2.exp \
+tobs-3.in tobs-3.exp tobs-4.in tobs-4.exp tobs-5.in tobs-5.exp tobsx-1.in \
+tobsx-1.exp tobsx-2.in tobsx-2.exp terr-1.in terr-1.exp
+run_gen = tobs-c1.out tobs-c1.err tobs-c2.out tobs-c2.err tobs-c3.out \
+tobs-c3.err tobs-c4.out tobs-c4.err tobs-c5.out tobs-c5.err tobs-l1.out \
+tobs-l1.err tobs-l2.out tobs-l2.err tobs-l3.out tobs-l3.err tobs-l4.out \
+tobs-l4.err tobs-l5.out tobs-l5.err tobs-1.out tobs-1.err tobs-2.out \
+tobs-2.err tobs-3.out tobs-3.err tobs-4.out tobs-4.err tobs-5.out tobs-5.err \
+tobsx-1.out tobsx-1.err tobsx-2.out tobsx-2.err terr-1.out terr-1.err
 ##test-files-end
 
 EXTRA_DIST = mk-script.pl Test.pm $x-tests $(explicit) $(maint_gen)
