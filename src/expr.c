@@ -37,6 +37,7 @@
 #include "long-options.h"
 #include "error.h"
 #include "closeout.h"
+#include "inttostr.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "expr"
@@ -224,25 +225,6 @@ freev (VALUE *v)
   OLD (v);
 }
 
-/* Store a printable representation of I somewhere into BUF, and
-   return a pointer to the stored representation.  */
-
-static char *
-inttostr (intmax_t i, char buf[INT_STRLEN_BOUND (intmax_t) + 1])
-{
-  uintmax_t ui = i;
-  char *p = buf + INT_STRLEN_BOUND (intmax_t);
-  *p = '\0';
-  if (i < 0)
-    ui = -ui;
-  do
-    *--p = '0' + ui % 10;
-  while ((ui /= 10) != 0);
-  if (i < 0)
-    *--p = '-';
-  return p;
-}
-
 /* Print VALUE V.  */
 
 static void
@@ -254,7 +236,7 @@ printv (VALUE *v)
   switch (v->type)
     {
     case integer:
-      p = inttostr (v->u.i, buf);
+      p = imaxtostr (v->u.i, buf);
       break;
     case string:
       p = v->u.s;
@@ -292,7 +274,7 @@ tostring (VALUE *v)
   switch (v->type)
     {
     case integer:
-      v->u.s = xstrdup (inttostr (v->u.i, buf));
+      v->u.s = xstrdup (imaxtostr (v->u.i, buf));
       v->type = string;
       break;
     case string:
