@@ -1937,7 +1937,7 @@ badfieldspec (const char *s)
 static char const *
 parse_field_count (char const *string, size_t *val)
 {
-  /* '@' can't possibly be a valid suffix; return &bad_suffix so that
+  /* '@' can't possibly be a valid suffix; return &invalid_suffix so that
      the caller will eventually invoke badfieldspec.  */
   static char const invalid_suffix = '@';
   char *suffix;
