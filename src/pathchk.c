@@ -68,14 +68,21 @@
 # endif
 #endif
 
-static bool validate_file_name (char *file, bool portability);
+static bool validate_file_name (char *, bool, bool);
 
 /* The name this program was run with. */
 char *program_name;
 
+/* For long options that have no equivalent short option, use a
+   non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
+enum
+{
+  PORTABILITY_OPTION = CHAR_MAX + 1
+};
+
 static struct option const longopts[] =
 {
-  {"portability", no_argument, NULL, 'p'},
+  {"portability", no_argument, NULL, PORTABILITY_OPTION},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
@@ -93,7 +100,9 @@ usage (int status)
       fputs (_("\
 Diagnose unportable constructs in NAME.\n\
 \n\
-  -p, --portability   check for all POSIX systems, not only this one\n\
+  -p                  check for most POSIX systems\n\
+  -P                  check for empty names and leading \"-\"\n\
+      --portability   check for all POSIX systems (equivalent to -p -P)\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -106,7 +115,8 @@ int
 main (int argc, char **argv)
 {
   bool ok = true;
-  bool check_portability = false;
+  bool check_basic_portability = false;
+  bool check_extra_portability = false;
   int optc;
 
   initialize_main (&argc, &argv);
@@ -117,12 +127,21 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  while ((optc = getopt_long (argc, argv, "+p", longopts, NULL)) != -1)
+  while ((optc = getopt_long (argc, argv, "+pP", longopts, NULL)) != -1)
     {
       switch (optc)
 	{
+	case PORTABILITY_OPTION:
+	  check_basic_portability = true;
+	  check_extra_portability = true;
+	  break;
+
 	case 'p':
-	  check_portability = true;
+	  check_basic_portability = true;
+	  break;
+
+	case 'P':
+	  check_extra_portability = true;
 	  break;
 
 	case_GETOPT_HELP_CHAR;
@@ -141,9 +160,29 @@ main (int argc, char **argv)
     }
 
   for (; optind < argc; ++optind)
-    ok &= validate_file_name (argv[optind], check_portability);
+    ok &= validate_file_name (argv[optind],
+			      check_basic_portability, check_extra_portability);
 
   exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
+}
+
+/* If FILE contains a component with a leading "-", report an error
+   and return false; otherwise, return true.  */
+
+static bool
+no_leading_hyphen (char const *file)
+{
+  char const *p;
+
+  for (p = file;  (p = strchr (p, '-'));  p++)
+    if (p == file || p[-1] == '/')
+      {
+	error (0, 0, _("leading `-' in a component of file name %s"),
+	       quote (file));
+	return false;
+      }
+
+  return true;
 }
 
 /* If FILE (of length FILELEN) contains only portable characters,
@@ -199,18 +238,25 @@ component_len (char const *f)
    strlen (FILE) <= PATH_MAX
    && strlen (each-existing-directory-in-FILE) <= NAME_MAX
 
-   If PORTABILITY is true, compare against _POSIX_PATH_MAX and
+   If CHECK_BASIC_PORTABILITY is true, compare against _POSIX_PATH_MAX and
    _POSIX_NAME_MAX instead, and make sure that FILE contains no
    characters not in the POSIX portable filename character set, which
    consists of A-Z, a-z, 0-9, ., _, - (plus / for separators).
 
-   If PORTABILITY is false, make sure that all leading directories
+   If CHECK_BASIC_PORTABILITY is false, make sure that all leading directories
    along FILE that exist are searchable.
+
+   If CHECK_EXTRA_PORTABILITY is true, check that file name components do not
+   begin with "-".
+
+   If either CHECK_BASIC_PORTABILITY or CHECK_EXTRA_PORTABILITY is true,
+   check that the file name is not empty.
 
    Return true if all of these tests are successful, false if any fail.  */
 
 static bool
-validate_file_name (char *file, bool portability)
+validate_file_name (char *file, bool check_basic_portability,
+		    bool check_extra_portability)
 {
   size_t filelen = strlen (file);
 
@@ -220,17 +266,51 @@ validate_file_name (char *file, bool portability)
   /* True if component lengths need to be checked.  */
   bool check_component_lengths;
 
-  if (portability && ! portable_chars_only (file, filelen))
+  /* True if the file is known to exist.  */
+  bool file_exists = false;
+
+  if (check_extra_portability && ! no_leading_hyphen (file))
     return false;
 
-  if (*file == '\0')
-    return true;
+  if ((check_basic_portability | check_extra_portability)
+      && filelen == 0)
+    {
+      /* Fail, since empty names are not portable.  As of
+	 2005-01-06 POSIX does not address whether "pathchk -p ''"
+	 should (or is allowed to) fail, so this is not a
+	 conformance violation.  */
+      error (0, 0, _("empty file name"));
+      return false;
+    }
 
-  if (portability || PATH_MAX_MINIMUM <= filelen)
+  if (check_basic_portability)
+    {
+      if (! portable_chars_only (file, filelen))
+	return false;
+    }
+  else
+    {
+      /* Check whether a file name component is in a directory that
+	 is not searchable, or has some other serious problem.
+	 POSIX does not allow "" as a file name, but some non-POSIX
+	 hosts do (as an alias for "."), so allow "" if lstat does.  */
+
+      struct stat st;
+      if (lstat (file, &st) == 0)
+	file_exists = true;
+      else if (errno != ENOENT || filelen == 0)
+	{
+	  error (0, errno, "%s", file);
+	  return false;
+	}
+    }
+
+  if (check_basic_portability
+      || (! file_exists && PATH_MAX_MINIMUM <= filelen))
     {
       size_t maxsize;
 
-      if (portability)
+      if (check_basic_portability)
 	maxsize = _POSIX_PATH_MAX;
       else
 	{
@@ -258,26 +338,13 @@ validate_file_name (char *file, bool portability)
 	}
     }
 
-  if (! portability)
-    {
-      /* Check whether a file name component is in a directory that
-	 is not searchable, or has some other serious problem.  */
-
-      struct stat st;
-      if (lstat (file, &st) != 0 && errno != ENOENT)
-	{
-	  error (0, errno, "%s", file);
-	  return false;
-	}
-    }
-
   /* Check whether pathconf (..., _PC_NAME_MAX) can be avoided, i.e.,
      whether all file name components are so short that they are valid
-     in any file system on this platform.  If PORTABILITY, though,
+     in any file system on this platform.  If CHECK_BASIC_PORTABILITY, though,
      it's more convenient to check component lengths below.  */
 
-  check_component_lengths = portability;
-  if (! check_component_lengths)
+  check_component_lengths = check_basic_portability;
+  if (! check_component_lengths && ! file_exists)
     {
       for (start = file; *(start = component_start (start)); )
 	{
@@ -302,7 +369,7 @@ validate_file_name (char *file, bool portability)
       size_t name_max = NAME_MAX_MINIMUM;
 
       /* If nonzero, the known limit on file name components.  */
-      size_t known_name_max = (portability ? _POSIX_NAME_MAX : 0);
+      size_t known_name_max = (check_basic_portability ? _POSIX_NAME_MAX : 0);
 
       for (start = file; *(start = component_start (start)); )
 	{
