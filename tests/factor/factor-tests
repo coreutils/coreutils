@@ -9,74 +9,74 @@ $echo testing program: $xx
 errors=0
 test "$srcdir" || srcdir=.
 test "$VERBOSE" && $xx --version 2> /dev/null
-$xx 9  > t1.out 2> t1.err
+$xx 9  > 1.O 2> 1.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 1 failed: ../../src/factor return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t1.out $srcdir/t1.exp
+  cmp 1.O $srcdir/1.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 1"; fi ;;
-    1) $echo "Test 1 failed: files t1.out and $srcdir/t1.exp differ" 1>&2;
+    1) $echo "Test 1 failed: files 1.O and $srcdir/1.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 1 may have failed." 1>&2;
-       $echo The command "cmp t1.out $srcdir/t1.exp" failed. 1>&2 ;
+       $echo The command "cmp 1.O $srcdir/1.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t1.err || rm -f t1.err
-$xx 4294967291  > t2.out 2> t2.err
+test -s 1.E || rm -f 1.E
+$xx 4294967291  > 2.O 2> 2.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 2 failed: ../../src/factor return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t2.out $srcdir/t2.exp
+  cmp 2.O $srcdir/2.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 2"; fi ;;
-    1) $echo "Test 2 failed: files t2.out and $srcdir/t2.exp differ" 1>&2;
+    1) $echo "Test 2 failed: files 2.O and $srcdir/2.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 2 may have failed." 1>&2;
-       $echo The command "cmp t2.out $srcdir/t2.exp" failed. 1>&2 ;
+       $echo The command "cmp 2.O $srcdir/2.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t2.err || rm -f t2.err
-$xx 4294967292  > t3.out 2> t3.err
+test -s 2.E || rm -f 2.E
+$xx 4294967292  > 3.O 2> 3.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 3 failed: ../../src/factor return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t3.out $srcdir/t3.exp
+  cmp 3.O $srcdir/3.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 3"; fi ;;
-    1) $echo "Test 3 failed: files t3.out and $srcdir/t3.exp differ" 1>&2;
+    1) $echo "Test 3 failed: files 3.O and $srcdir/3.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 3 may have failed." 1>&2;
-       $echo The command "cmp t3.out $srcdir/t3.exp" failed. 1>&2 ;
+       $echo The command "cmp 3.O $srcdir/3.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t3.err || rm -f t3.err
-$xx 4294967293  > t4.out 2> t4.err
+test -s 3.E || rm -f 3.E
+$xx 4294967293  > 4.O 2> 4.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 4 failed: ../../src/factor return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t4.out $srcdir/t4.exp
+  cmp 4.O $srcdir/4.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 4"; fi ;;
-    1) $echo "Test 4 failed: files t4.out and $srcdir/t4.exp differ" 1>&2;
+    1) $echo "Test 4 failed: files 4.O and $srcdir/4.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 4 may have failed." 1>&2;
-       $echo The command "cmp t4.out $srcdir/t4.exp" failed. 1>&2 ;
+       $echo The command "cmp 4.O $srcdir/4.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t4.err || rm -f t4.err
+test -s 4.E || rm -f 4.E
 if test $errors = 0 ; then
   $echo Passed all 4 tests. 1>&2
 else
