@@ -1,5 +1,5 @@
 /* euidaccess -- check if effective user id can access file
-   Copyright (C) 1990, 1991, 1995, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1990, 1991, 1995, 1998, 2000 Free Software Foundation, Inc.
 
 This file is part of the GNU C Library.
 
@@ -66,6 +66,9 @@ gid_t getegid ();
 #ifndef errno
 extern int errno;
 #endif
+#ifndef __set_errno
+# define __set_errno(val) errno = (val)
+#endif
 
 #if defined(EACCES) && !defined(EACCESS)
 # define EACCESS EACCES
@@ -93,6 +96,7 @@ extern int errno;
 #ifdef _LIBC
 
 # define group_member __group_member
+# define euidaccess __euidaccess
 
 #else
 
@@ -102,15 +106,6 @@ static uid_t uid;
 /* The user's real group id. */
 static gid_t gid;
 
-/* The user's effective user id. */
-static uid_t euid;
-
-/* The user's effective group id. */
-static gid_t egid;
-
-/* Nonzero if UID, GID, EUID, and EGID have valid values. */
-static int have_ids = 0;
-
 # if HAVE_GETGROUPS
 int group_member ();
 # else
@@ -118,6 +113,15 @@ int group_member ();
 # endif
 
 #endif
+
+/* The user's effective user id. */
+static uid_t euid;
+
+/* The user's effective group id. */
+static gid_t egid;
+
+/* Nonzero if UID, GID, EUID, and EGID have valid values. */
+static int have_ids;
 
 
 /* Return 0 if the user has permission of type MODE on file PATH;
@@ -133,8 +137,9 @@ euidaccess (const char *path, int mode)
   int granted;
 
 #ifdef	_LIBC
-  uid_t uid = getuid (), euid = geteuid ();
-  gid_t gid = getgid (), egid = getegid ();
+  if (! __libc_enable_secure)
+    /* If we are not set-uid or set-gid, access does the same.  */
+    return __access (path, mode);
 #else
   if (have_ids == 0)
     {
@@ -144,11 +149,11 @@ euidaccess (const char *path, int mode)
       euid = geteuid ();
       egid = getegid ();
     }
-#endif
 
   if (uid == euid && gid == egid)
     /* If we are not set-uid or set-gid, access does the same.  */
     return access (path, mode);
+#endif
 
   if (stat (path, &stats))
     return -1;
@@ -160,6 +165,16 @@ euidaccess (const char *path, int mode)
 
   if (mode == F_OK)
     return 0;			/* The file exists. */
+
+#ifdef	_LIBC
+  /* Now we need the IDs.  */
+  if (have_ids == 0)
+    {
+      have_ids = 1;
+      euid = __geteuid ();
+      egid = __getegid ();
+    }
+#endif
 
   /* The super-user can read and write any file, and execute any file
      that anyone can execute. */
@@ -175,6 +190,40 @@ euidaccess (const char *path, int mode)
     granted = (stats.st_mode & mode);
   if (granted == mode)
     return 0;
-  errno = EACCESS;
+  __set_errno (EACCESS);
   return -1;
 }
+#undef euidaccess
+#ifdef weak_alias
+weak_alias (__euidaccess, euidaccess)
+#endif
+
+#ifdef TEST
+# include <stdio.h>
+# include <errno.h>
+# include "error.h"
+
+char *program_name;
+
+int
+main (argc, argv)
+     int argc;
+     char **argv;
+{
+  char *file;
+  int mode;
+  int err;
+
+  program_name = argv[0];
+  if (argc < 3)
+    abort ();
+  file = argv[1];
+  mode = atoi (argv[2]);
+
+  err = euidaccess (file, mode);
+  printf ("%d\n", err);
+  if (err != 0)
+    error (0, errno, "%s", file);
+  exit (0);
+}
+#endif
