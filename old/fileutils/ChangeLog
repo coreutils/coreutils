@@ -1,5 +1,7 @@
 2000-06-03  Jim Meyering  <meyering@lucent.com>
 
+	* Version 4.0t.
+
 	* src/install.c (usage): Document that -v is a synonym for --verbose.
 	* src/mkdir.c: Allow -v as synonym for --verbose, to be consistent
 	with other fileutils.
