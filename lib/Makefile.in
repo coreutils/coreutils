@@ -57,6 +57,8 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
+host_alias = @host_alias@
+host_triplet = @host@
 AMTAR = @AMTAR@
 AMTARFLAGS = @AMTARFLAGS@
 CATALOGS = @CATALOGS@
@@ -66,6 +68,7 @@ CPP = @CPP@
 DATADIRNAME = @DATADIRNAME@
 DF_PROG = @DF_PROG@
 GENCAT = @GENCAT@
+GETCONF = @GETCONF@
 GMOFILES = @GMOFILES@
 GMSGFMT = @GMSGFMT@
 GNU_PACKAGE = @GNU_PACKAGE@
@@ -106,7 +109,8 @@ closeout.c dirname.c exclude.c filemode.c \
 full-write.c human.c idcache.c \
 isdir.c long-options.c makepath.c modechange.c hash.c path-concat.c \
 quotearg.c safe-read.c save-cwd.c savedir.c stripslash.c userspec.c \
-version-etc.c xgetcwd.c xmalloc.c xstrdup.c xstrtol.c xstrtoul.c yesno.c
+version-etc.c xgetcwd.c xmalloc.c xstrdup.c \
+xstrtol.c xstrtoul.c xstrtoumax.c yesno.c
 
 
 libfu_a_LIBADD = @LIBOBJS@ @ALLOCA@
@@ -117,7 +121,7 @@ dirname.h error.h exclude.h filemode.h fnmatch.h fsusage.h \
 getdate.h getline.h getopt.h group-member.h human.h lchown.h long-options.h \
 makepath.h modechange.h mountlist.h hash.h path-concat.h pathmax.h \
 posixtm.h quotearg.h regex.h safe-read.h save-cwd.h savedir.h strverscmp.h \
-version-etc.h xalloc.h xstrtol.h xstrtoul.h
+version-etc.h xalloc.h xstrtol.h
 
 
 BUILT_SOURCES = getdate.c lstat.c stat.c
@@ -140,7 +144,8 @@ dirname$U.o exclude$U.o filemode$U.o full-write$U.o human$U.o \
 idcache$U.o isdir$U.o long-options$U.o makepath$U.o modechange$U.o \
 hash$U.o path-concat$U.o quotearg$U.o safe-read$U.o save-cwd$U.o \
 savedir$U.o stripslash$U.o userspec$U.o version-etc$U.o xgetcwd$U.o \
-xmalloc$U.o xstrdup$U.o xstrtol$U.o xstrtoul$U.o yesno$U.o
+xmalloc$U.o xstrdup$U.o xstrtol$U.o xstrtoul$U.o xstrtoumax$U.o \
+yesno$U.o
 libfu_a_OBJECTS =  $(am_libfu_a_OBJECTS)
 AR = ar
 CFLAGS = @CFLAGS@
@@ -180,7 +185,8 @@ DEP_FILES =  .deps/addext.P .deps/alloca.P .deps/argmatch.P \
 .deps/stripslash.P .deps/strncasecmp.P .deps/strndup.P .deps/strstr.P \
 .deps/strtol.P .deps/strtoul.P .deps/strverscmp.P .deps/userspec.P \
 .deps/utime.P .deps/version-etc.P .deps/xgetcwd.P .deps/xmalloc.P \
-.deps/xstrdup.P .deps/xstrtol.P .deps/xstrtoul.P .deps/yesno.P
+.deps/xstrdup.P .deps/xstrtol.P .deps/xstrtoul.P .deps/xstrtoumax.P \
+.deps/yesno.P
 SOURCES = $(libfu_a_SOURCES)
 OBJECTS = $(am_libfu_a_OBJECTS)
 
@@ -261,6 +267,7 @@ xmalloc$U.o:
 xstrdup$U.o:
 xstrtol$U.o:
 xstrtoul$U.o:
+xstrtoumax$U.o:
 yesno$U.o:
 
 libfu.a: $(libfu_a_OBJECTS) $(libfu_a_DEPENDENCIES)
@@ -412,6 +419,8 @@ xstrtol_.c: xstrtol.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/xstrtol.c; then echo $(srcdir)/xstrtol.c; else echo xstrtol.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > xstrtol_.c
 xstrtoul_.c: xstrtoul.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/xstrtoul.c; then echo $(srcdir)/xstrtoul.c; else echo xstrtoul.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > xstrtoul_.c
+xstrtoumax_.c: xstrtoumax.c $(ANSI2KNR)
+	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/xstrtoumax.c; then echo $(srcdir)/xstrtoumax.c; else echo xstrtoumax.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > xstrtoumax_.c
 yesno_.c: yesno.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/yesno.c; then echo $(srcdir)/yesno.c; else echo yesno.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > yesno_.c
 addext_.o alloca_.o argmatch_.o backupfile_.o basename_.o chown_.o \
@@ -425,8 +434,8 @@ quotearg_.o realloc_.o regex_.o rename_.o rmdir_.o rpmatch_.o \
 safe-read_.o save-cwd_.o savedir_.o stat_.o stpcpy_.o strcasecmp_.o \
 strdup_.o strftime_.o stripslash_.o strncasecmp_.o strndup_.o strstr_.o \
 strtol_.o strtoul_.o strverscmp_.o userspec_.o utime_.o version-etc_.o \
-xgetcwd_.o xmalloc_.o xstrdup_.o xstrtol_.o xstrtoul_.o yesno_.o : \
-$(ANSI2KNR)
+xgetcwd_.o xmalloc_.o xstrdup_.o xstrtol_.o xstrtoul_.o xstrtoumax_.o \
+yesno_.o : $(ANSI2KNR)
 .y.c:
 	$(YACC) $(AM_YFLAGS) $(YFLAGS) $< && mv y.tab.c $*.c
 	if test -f y.tab.h; then \
@@ -483,6 +492,7 @@ distdir: $(DISTFILES)
 	    || cp -p $$d/$$file $(distdir)/$$file || :; \
 	  fi; \
 	done
+
 
 DEPS_MAGIC := $(shell mkdir .deps > /dev/null 2>&1 || :)
 
