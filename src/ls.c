@@ -2545,8 +2545,9 @@ gobble_file (const char *name, enum filetype type, bool explicit_arg,
       blocks = ST_NBLOCKS (f->stat);
       {
 	char buf[LONGEST_HUMAN_READABLE + 1];
-	int len = strlen (human_readable (blocks, buf, human_output_opts,
-					  ST_NBLOCKSIZE, output_block_size));
+	int len = mbswidth (human_readable (blocks, buf, human_output_opts,
+					    ST_NBLOCKSIZE, output_block_size),
+			    0);
 	if (block_size_width < len)
 	  block_size_width = len;
       }
@@ -2596,8 +2597,9 @@ gobble_file (const char *name, enum filetype type, bool explicit_arg,
 	{
 	  char buf[LONGEST_HUMAN_READABLE + 1];
 	  uintmax_t size = unsigned_file_size (f->stat.st_size);
-	  int len = strlen (human_readable (size, buf, human_output_opts,
-					    1, file_output_block_size));
+	  int len = mbswidth (human_readable (size, buf, human_output_opts,
+					      1, file_output_block_size),
+			      0);
 	  if (file_size_width < len)
 	    file_size_width = len;
 	}
@@ -3051,17 +3053,15 @@ format_user_or_group (char const *name, unsigned long int id, int width)
 
   if (name)
     {
-      /* The output column count may differ from the byte count.
-	 Adjust for this, but don't output garbage if integer overflow
-	 occurs during adjustment.  */
-      len = strlen (name);
-      width -= mbswidth (name, 0);
-      width += len;
-      if (width < 0)
-	width = 0;
-      printf ("%-*s ", width, name);
-      if (len < width)
-	len = width;
+      size_t namelen = strlen (name);
+      int width_gap = width - mbswidth (name, 0);
+      int pad = MAX (0, width_gap);
+      fputs (name, stdout);
+      len = strlen (name) + pad;
+
+      do
+	putchar (' ');
+      while (pad--);
     }
   else
     {
@@ -3184,10 +3184,15 @@ print_long_format (const struct fileinfo *f)
   if (print_block_size)
     {
       char hbuf[LONGEST_HUMAN_READABLE + 1];
-      sprintf (p, "%*s ", block_size_width,
-	       human_readable (ST_NBLOCKS (f->stat), hbuf, human_output_opts,
-			       ST_NBLOCKSIZE, output_block_size));
-      p += block_size_width + 1;
+      char const *blocks =
+	human_readable (ST_NBLOCKS (f->stat), hbuf, human_output_opts,
+			ST_NBLOCKSIZE, output_block_size);
+      int pad;
+      for (pad = block_size_width - mbswidth (blocks, 0); 0 < pad; pad--)
+	*p++ = ' ';
+      while ((*p++ = *blocks++))
+	continue;
+      p[-1] = ' '; 
     }
 
   /* The last byte of the mode string is the POSIX
@@ -3229,17 +3234,21 @@ print_long_format (const struct fileinfo *f)
 	       umaxtostr (major (f->stat.st_rdev), majorbuf),
 	       minor_device_number_width,
 	       umaxtostr (minor (f->stat.st_rdev), minorbuf));
+      p += file_size_width + 1;
     }
   else
     {
       char hbuf[LONGEST_HUMAN_READABLE + 1];
-      uintmax_t size = unsigned_file_size (f->stat.st_size);
-      sprintf (p, "%*s ", file_size_width,
-	       human_readable (size, hbuf, human_output_opts,
-			       1, file_output_block_size));
+      char const *size =
+	human_readable (unsigned_file_size (f->stat.st_size),
+			hbuf, human_output_opts, 1, file_output_block_size);
+      int pad;
+      for (pad = file_size_width - mbswidth (size, 0); 0 < pad; pad--)
+	*p++ = ' ';
+      while ((*p++ = *size++))
+	continue;
+      p[-1] = ' ';
     }
-
-  p += file_size_width + 1;
 
   if ((when_local = localtime (&when)))
     {
