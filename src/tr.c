@@ -68,12 +68,12 @@ typedef int (*PFI) ();
 /* The following (but not CC_NO_CLASS) are indices into the array of
    valid character class strings. */
 enum Char_class
-{
-  CC_ALNUM = 0, CC_ALPHA = 1, CC_BLANK = 2, CC_CNTRL = 3,
-  CC_DIGIT = 4, CC_GRAPH = 5, CC_LOWER = 6, CC_PRINT = 7,
-  CC_PUNCT = 8, CC_SPACE = 9, CC_UPPER = 10, CC_XDIGIT = 11,
-  CC_NO_CLASS = 9999
-};
+  {
+    CC_ALNUM = 0, CC_ALPHA = 1, CC_BLANK = 2, CC_CNTRL = 3,
+    CC_DIGIT = 4, CC_GRAPH = 5, CC_LOWER = 6, CC_PRINT = 7,
+    CC_PUNCT = 8, CC_SPACE = 9, CC_UPPER = 10, CC_XDIGIT = 11,
+    CC_NO_CLASS = 9999
+  };
 
 /* Character class to which a character (returned by get_next) belonged;
    but it is set only if the construct from which the character was obtained
@@ -82,18 +82,18 @@ enum Char_class
    and lower class constructs have the same relative positions in string1
    and string2. */
 enum Upper_Lower_class
-{
-  UL_LOWER = 0,
-  UL_UPPER = 1,
-  UL_NONE = 2
-};
+  {
+    UL_LOWER = 0,
+    UL_UPPER = 1,
+    UL_NONE = 2
+  };
 
 /* A shortcut to ensure that when constructing the translation array,
-   one of the values returned by paired calls to get_next (from s1 and s2) is
-   from [:upper:] and the other is from [:lower:], or neither is
-   from upper or lower.  In fact, no other character classes are allowed
-   when translating, but that condition is tested elsewhere.  This array
-   is indexed by values of type enum Upper_Lower_class. */
+   one of the values returned by paired calls to get_next (from s1 and s2)
+   is from [:upper:] and the other is from [:lower:], or neither is from
+   upper or lower.  In fact, no other character classes are allowed when
+   translating, but that condition is tested elsewhere.  This array is
+   indexed by values of type enum Upper_Lower_class. */
 static int const class_ok[3][3] =
 {
   {0, 1, 0},
@@ -103,42 +103,44 @@ static int const class_ok[3][3] =
 
 /* The type of a List_element.  See build_spec_list for more details. */
 enum Range_element_type
-{
-  RE_NO_TYPE = 0,
-  RE_NORMAL_CHAR,
-  RE_RANGE,
-  RE_CHAR_CLASS,
-  RE_EQUIV_CLASS,
-  RE_REPEATED_CHAR
-};
+  {
+    RE_NO_TYPE = 0,
+    RE_NORMAL_CHAR,
+    RE_RANGE,
+    RE_CHAR_CLASS,
+    RE_EQUIV_CLASS,
+    RE_REPEATED_CHAR
+  };
 
 /* One construct in one of tr's argument strings.
-   For example, consider the POSIX version of the
-   classic tr command:
+   For example, consider the POSIX version of the classic tr command:
        tr -cs 'a-zA-Z_' '[\n*]'
    String1 has 3 constructs, two of which are ranges (a-z and A-Z),
    and a single normal character, `_'.  String2 has one construct. */
 struct List_element
-{
-  enum Range_element_type type;
-  struct List_element *next;
-  union
   {
-    int normal_char;
-    struct			/* unnamed */
-    {
-      unsigned int first_char;
-      unsigned int last_char;
-    } range;
-    enum Char_class char_class;
-    int equiv_code;
-    struct			/* unnamed */
-    {
-      unsigned int the_repeated_char;
-      long repeat_count;
-    } repeated_char;
-  } u;
-};
+    enum Range_element_type type;
+    struct List_element *next;
+    union
+      {
+	int normal_char;
+	struct			/* unnamed */
+	  {
+	    unsigned int first_char;
+	    unsigned int last_char;
+	  }
+	range;
+	enum Char_class char_class;
+	int equiv_code;
+	struct			/* unnamed */
+	  {
+	    unsigned int the_repeated_char;
+	    long repeat_count;
+	  }
+	repeated_char;
+      }
+    u;
+  };
 
 /* Each of tr's argument strings is parsed into a form that is easier
    to work with: a linked list of constructs (struct List_element).
@@ -150,39 +152,39 @@ struct List_element
    it is used by get_next to save its state when traversing the list.
    The member `state' serves a similar function. */
 struct Spec_list
-{
-  /* Points to the head of the list of range elements.
-     The first struct is a dummy; its members are never used. */
-  struct List_element *head;
+  {
+    /* Points to the head of the list of range elements.
+       The first struct is a dummy; its members are never used. */
+    struct List_element *head;
 
-  /* When appending, points to the last element.  When traversing via
-     get_next(), points to the element to process next.  Setting
-     Spec_list.state to the value BEGIN_STATE before calling get_next
-     signals get_next to initialize tail to point to head->next. */
-  struct List_element *tail;
+    /* When appending, points to the last element.  When traversing via
+       get_next(), points to the element to process next.  Setting
+       Spec_list.state to the value BEGIN_STATE before calling get_next
+       signals get_next to initialize tail to point to head->next. */
+    struct List_element *tail;
 
-  /* Used to save state between calls to get_next(). */
-  unsigned int state;
+    /* Used to save state between calls to get_next(). */
+    unsigned int state;
 
-  /* Length, in the sense that length('a-z[:digit:]123abc')
-     is 42 ( = 26 + 10 + 6). */
-  int length;
+    /* Length, in the sense that length('a-z[:digit:]123abc')
+       is 42 ( = 26 + 10 + 6). */
+    int length;
 
-  /* The number of [c*] and [c*0] constructs that appear in this spec. */
-  int n_indefinite_repeats;
+    /* The number of [c*] and [c*0] constructs that appear in this spec. */
+    int n_indefinite_repeats;
 
-  /* Non-zero if this spec contains at least one equivalence
-     class construct e.g. [=c=]. */
-  int has_equiv_class;
+    /* Non-zero if this spec contains at least one equivalence
+       class construct e.g. [=c=]. */
+    int has_equiv_class;
 
-  /* Non-zero if this spec contains at least one of [:upper:] or
-     [:lower:] class constructs. */
-  int has_upper_or_lower;
+    /* Non-zero if this spec contains at least one of [:upper:] or
+       [:lower:] class constructs. */
+    int has_upper_or_lower;
 
-  /* Non-zero if this spec contains at least one of the character class
-     constructs (all but upper and lower) that aren't allowed in s2. */
-  int has_restricted_char_class;
-};
+    /* Non-zero if this spec contains at least one of the character class
+       constructs (all but upper and lower) that aren't allowed in s2. */
+    int has_restricted_char_class;
+  };
 
 char *xmalloc ();
 char *stpcpy ();
@@ -258,7 +260,7 @@ static int translating;
 #define IO_BUF_SIZE BUFSIZ
 static unsigned char io_buf[IO_BUF_SIZE];
 
-static char const* const char_class_name[] =
+static char const *const char_class_name[] =
 {
   "alnum", "alpha", "blank", "cntrl", "digit", "graph",
   "lower", "print", "punct", "space", "upper", "xdigit"
@@ -293,7 +295,6 @@ static struct option const long_options[] =
   {NULL, 0, NULL, 0}
 };
 
-
 static void
 usage ()
 {
@@ -618,7 +619,7 @@ append_range (list, first, last)
       char *tmp2 = make_printable_char (last);
 
       error (0, 0,
-	     "range-endpoints of `%s-%s' are in reverse collating sequence order",
+       "range-endpoints of `%s-%s' are in reverse collating sequence order",
 	     tmp1, tmp2);
       free (tmp1);
       free (tmp2);
@@ -975,7 +976,6 @@ build_spec_list (unescaped_string, len, result)
 
   return 0;
 }
-
 
 /* Given a Spec_list S (with its saved state implicit in the values
    of its members `tail' and `state'), return the next single character
@@ -1381,7 +1381,7 @@ validate (s1, s2)
 
 		  if (s2->length == 0)
 		    error (1, 0,
-			   "when not truncating set1, string2 must be non-empty");
+		     "when not truncating set1, string2 must be non-empty");
 		  string2_extend (s1, s2);
 		}
 	    }
@@ -1774,7 +1774,7 @@ deleting and squeezing repeats");
 	      c2 = get_next (s2, &class_s2);
 	      if (!class_ok[(int) class_s1][(int) class_s2])
 		error (1, 0,
-		    "misaligned or mismatched upper and/or lower classes");
+		     "misaligned or mismatched upper and/or lower classes");
 	      /* The following should have been checked by validate... */
 	      if (c2 == -1)
 		break;
