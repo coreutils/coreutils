@@ -1,7 +1,25 @@
+Wed Mar 12 23:11:11 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/chgrp.c (change_file_group): Use uid of -1 to indicate
+	we don't want to change the file's user ID.
+
+	* m4/gettext.m4: Update from gettext-0.10.27.
+
+	* acconfig.h (chown): Add #undef.
+
+	* configure.in (ALL_LINGUAS): Add ko.
+	Use jm_FUNC_CHOWN.
+	* m4/chown.m4: New file.
+	* m4/Makefile.am (EXTRA_DIST): Add chown.m4.
+	* lib/chown.c: New file.
+	* lib/Makefile.am (EXTRA_DIST): Add chown.c.
+
 Sun Mar  9 22:46:41 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/ls.c (decode_switches): Ignore value of COLUMNS envionment
 	variable when it is the empty string.  Suggestion from Ulrich Drepper.
+	This makes it easier on people using shells (which?) with which it
+	is not easy to unset environment variables.
 
 Wed Feb 26 23:46:39 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
