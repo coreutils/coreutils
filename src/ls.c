@@ -1164,6 +1164,8 @@ decode_switches (int argc, char **argv)
     }
 
   filename_quoting_options = clone_quoting_options (NULL);
+  if (get_quoting_style (filename_quoting_options) == escape_quoting_style)
+    set_char_quoting (filename_quoting_options, ' ', 1);
   if (indicator_style != none)
     for (p = "*=@|" + (int) indicator_style - 1;  *p;  p++)
       set_char_quoting (filename_quoting_options, *p, 1);
