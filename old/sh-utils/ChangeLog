@@ -1,3 +1,7 @@
+Sun Dec  8 00:08:44 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/stty.c (get_win_size): Rename formal parameter from fileno to FD.
+
 Sat Dec  7 12:52:00 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/chroot.c (main): Call setlocale, bindtextdomain, and textdomain.
