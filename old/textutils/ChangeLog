@@ -1,5 +1,13 @@
 2001-03-01  Paul Eggert  <eggert@twinsun.com>
 
+	* src/sort.c (die): New function.
+	(create_temp_file, xfopen, xfclose, write_bytes, sort_buffer_size,
+	fillbuf, main): Use it to regularize error messages.  The only change
+	in behavior is that write_bytes and the final close used to say "write
+	error" but now give just the output file name, which should be enough.
+
+2001-03-01  Paul Eggert  <eggert@twinsun.com>
+
 	* src/sort.c (xfclose): Add FILE arg, and report the file name
 	on error.  All callers changed.
 
