@@ -1,3 +1,8 @@
+2002-03-08  Jim Meyering  <meyering@lucent.com>
+
+	* rename.c: Mention that this wrapper is needed also on
+	mips-dec-ultrix4.4 systems.
+
 2002-03-02  Jim Meyering  <meyering@lucent.com>
 
 	* gettime.c (gettime): Test HAVE_CLOCK_GETTIME,
