@@ -248,14 +248,13 @@ overall process.
 
 @cindex common options
 
-Certain options are available in all these programs.  Rather than
+Certain options are available in all of these programs.  Rather than
 writing identical descriptions for each of the programs, they are
 described here.  (In fact, every GNU program accepts (or should accept)
 these options.)
 
-A few of these programs take arbitrary strings as arguments.  In those
-cases, @samp{--help} and @samp{--version} are taken as these options
-only if there is one and exactly one command line argument.
+Some of these programs recognize the @samp{--help} and @samp{--version}
+options only when one of them is the sole command line argument.
 
 @table @samp
 
