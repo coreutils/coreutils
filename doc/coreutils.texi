@@ -10537,7 +10537,7 @@ time, 24-hour (hh:mm:ss)
 @item %X
 locale's time representation (%H:%M:%S)
 @item %z
-RFC-822 style numeric time zone (e.g., -0600 or +0100), or nothing if no
+RFC-2822 style numeric time zone (e.g., -0600 or +0100), or nothing if no
 time zone is determinable.  This value reflects the @emph{current} time
 zone.  It isn't changed by the @option{--date} option.
 @item %Z
@@ -10782,10 +10782,22 @@ argument; use @option{--iso-8601} instead.
 
 @item -R
 @itemx --rfc-822
+@itemx --rfc-2822
 @opindex -R
 @opindex --rfc-822
-Display the time and date using the RFC-822-conforming
-format, @samp{%a, %_d %b %Y %H:%M:%S %z}.
+@opindex --rfc-2822
+Display the time and date using the format @samp{%a, %d %b %Y %H:%M:%S
+%z}, evaluated in the C locale so abbreviations are always in English.
+For example:
+
+@example
+Fri,@ @ 1 Aug 2003 23:05:56 -0700
+@end example
+
+This format conforms to
+@uref{ftp://ftp.rfc-editor.org/in-notes/rfc2822.txt, RFC 2822} and
+@uref{ftp://ftp.rfc-editor.org/in-notes/rfc822.txt, RFC 822}, the
+current and previous standards for Internet email.
 
 @item -r @var{file}
 @itemx --reference=@var{file}
@@ -10880,11 +10892,11 @@ date --set='+2 minutes'
 @end example
 
 @item
-To print the date in the format specified by RFC-822,
-use @samp{date --rfc}.  I just did and saw this:
+To print the date in the format specified by RFC-2822,
+use @samp{date --rfc-2822}.  I just did and saw this:
 
 @example
-Mon, 25 Mar 1996 23:34:17 -0600
+Thu, 31 Jul 2003 13:13:05 -0700
 @end example
 
 @anchor{%s-examples}
