@@ -4500,7 +4500,7 @@ else
   esac
 fi
 test -s dbl-sp-b.E || rm -f dbl-sp-b.E
-$xx --test -h x -W1 $srcdir/narrow-1.I > narrow-1.O 2> narrow-1.E
+$xx --test -h x -W1 -t $srcdir/narrow-1.I > narrow-1.O 2> narrow-1.E
 code=$?
 if test $code != 0; then
   $echo "Test narrow-1 failed: ../../src/pr return code $code differs from expected value 0" 1>&2
