@@ -240,7 +240,7 @@ touch (const char *file)
 void
 usage (int status)
 {
-  if (status != 0)
+  if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
@@ -433,7 +433,7 @@ main (int argc, char **argv)
     }
 
   for (; optind < argc; ++optind)
-    err += touch (argv[optind]);
+    err |= touch (argv[optind]);
 
-  exit (err != 0);
+  exit (err == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
