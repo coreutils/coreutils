@@ -1,3 +1,7 @@
+1999-05-10  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* jm-mktime.m4, putenv.m4: Fix typos in config.h comments.
+
 1999-05-04  Paul Eggert  <eggert@twinsun.com>
 
 	* lfs.m4 (AC_LFS): -n32, -o32, and -n64 should be in CFLAGS,
