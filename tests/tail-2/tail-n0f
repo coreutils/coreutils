@@ -12,7 +12,7 @@ fi
 
 sleep 2 &
 pid=$!
-sleep .1
+sleep .5
 grep '^State:[	 ]*[S]' /proc/$pid/status > /dev/null 2>&1 || \
   {
     echo "$0:/proc/$pid/status: missing or 'different': skipping this test" 1>&2
@@ -42,8 +42,14 @@ for file in empty nonempty; do
   for c_or_n in c n; do
     tail --sleep=4 -${c_or_n} 0 -f $file &
     pid=$!
-    sleep .1
-    grep '^State:[	 ]*[S]' /proc/$pid/status > /dev/null || fail=1
+    sleep .5
+    set _ `sed -n '/^State:[	 ]*\([^	 ]\)/s//\1/p' /proc/$pid/status`
+    shift # Remove the leading `_'.
+    state=$1
+    case $state in
+      S*) ;;
+      *) echo $0: process in unexpected state: $state 1>&2; fail=1 ;;
+    esac
     kill $pid
   done
 done
