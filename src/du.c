@@ -47,6 +47,7 @@
 
 #include "system.h"
 #include "version.h"
+#include "save-cwd.h"
 #include "error.h"
 
 /* Initial number of entries in each hash table entry's table of inodes.  */
@@ -79,12 +80,6 @@ struct htab
   struct entry *hash[1];	/* Vector of pointers in `entry_tab'.  */
 };
 
-struct saved_cwd
-  {
-    int desc;
-    char *name;
-  };
-
 
 /* Structure for dynamically resizable strings. */
 
@@ -96,7 +91,6 @@ typedef struct
 } *string, stringstruct;
 
 char *savedir ();
-char *xgetcwd ();
 char *xmalloc ();
 char *xrealloc ();
 
@@ -186,72 +180,6 @@ static struct option const long_options[] =
   {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
-
-static void
-save_cwd (cwd)
-     struct saved_cwd *cwd;
-{
-  static int have_working_fchdir = 1;
-
-  if (have_working_fchdir)
-    {
-#ifdef HAVE_FCHDIR
-      cwd->desc = open (".", O_RDONLY);
-      if (cwd->desc < 0)
-	error (1, errno, "cannot open current directory");
-
-      /* On SunOS 4, fchdir returns EINVAL if accounting is enabled,
-	 so we have to fall back to chdir.  */
-      if (fchdir (cwd->desc))
-	{
-	  if (errno == EINVAL)
-	    {
-	      close (cwd->desc);
-	      cwd->desc = -1;
-	      have_working_fchdir = 0;
-	    }
-	  else
-	    {
-	      error (1, errno, "current directory");
-	    }
-	}
-#else
-#define fchdir(x) (abort (), 0)
-      have_working_fchdir = 0;
-#endif
-    }
-
-  if (!have_working_fchdir)
-    {
-      cwd->desc = -1;
-      cwd->name = xgetcwd ();
-      if (cwd->name == NULL)
-	error (1, errno, "cannot get current directory");
-    }
-  else
-    {
-      cwd->name = NULL;
-    }
-}
-
-static void
-restore_cwd (cwd, dest, current)
-     const struct saved_cwd *cwd;
-     const char *dest;
-     const char *current;
-{
-  if (cwd->desc >= 0)
-    {
-      if (fchdir (cwd->desc))
-	error (1, errno, "cannot return to %s%s%s", dest,
-	       (current ? " from " : ""),
-	       (current ? current : ""));
-    }
-  else if (chdir (cwd->name) < 0)
-    {
-      error (1, errno, "%s", cwd->name);
-    }
-}
 
 static void
 usage (status, reason)
@@ -389,7 +317,8 @@ du_files (files)
   dev_t initial_dev;		/* Initial directory's device. */
   int i;			/* Index in FILES. */
 
-  save_cwd (&cwd);
+  if (save_cwd (&cwd))
+    exit (1);
 
   /* Remember the inode and device number of the current directory.  */
   if (stat (".", &stat_buf))
@@ -428,7 +357,8 @@ du_files (files)
 	error (1, errno, ".");
       if (stat_buf.st_ino != initial_ino || stat_buf.st_dev != initial_dev)
 	{
-	  restore_cwd (&cwd, "starting directory", NULL);
+	  if (restore_cwd (&cwd, "starting directory", NULL))
+	    exit (1);
 	}
     }
 
@@ -439,8 +369,7 @@ du_files (files)
       fflush (stdout);
     }
 
-  if (cwd.name != NULL)
-    free (cwd.name);
+  free_cwd (&cwd);
 }
 
 /* Print (if appropriate) and return the size
@@ -502,7 +431,8 @@ count_entry (ent, top, last_dev)
 			 && lstat (ent, &e_buf) == 0
 			 && S_ISLNK (e_buf.st_mode));
       if (through_symlink)
-	save_cwd (&cwd);
+	if (save_cwd (&cwd))
+	  exit (1);
 
       if (chdir (ent) < 0)
 	{
@@ -520,9 +450,9 @@ count_entry (ent, top, last_dev)
 	      error (0, errno, "%s", path->text);
 	      if (through_symlink)
 		{
-		  restore_cwd (&cwd, "..", path->text);
-		  if (cwd.name != NULL)
-		    free (cwd.name);
+		  if (restore_cwd (&cwd, "..", path->text))
+		    exit (1);
+		  free_cwd (&cwd);
 		}
 	      else if (chdir ("..") < 0)
 		  error (1, errno, "cannot change to `..' from directory %s",
@@ -553,8 +483,7 @@ count_entry (ent, top, last_dev)
       if (through_symlink)
 	{
 	  restore_cwd (&cwd, "..", path->text);
-	  if (cwd.name != NULL)
-	    free (cwd.name);
+	  free_cwd (&cwd);
 	}
       else if (chdir ("..") < 0)
         error (1, errno, "cannot change to `..' from directory %s", path->text);
