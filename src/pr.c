@@ -816,7 +816,7 @@ first_last_page (char *pages)
 
   if (first_page_number > last_page_number)
     error (EXIT_FAILURE, 0,
-          _("`--pages' starting page number is larger than ending page number"));
+	_("`--pages' starting page number is larger than ending page number"));
 }
 
 /* Estimate length of col_sep_string with option -S[STRING] */
@@ -2384,8 +2384,10 @@ skip_to_page (int page)
       if (files_ready_to_read < 1)
         {
 	  /* It's very helpful, normally the total number of pages is
-	     not known in advance */
-	  error (0, 0, _("starting page number larger than total number of pages: `%d'"), n);
+	     not known in advance.  */
+	  error (0, 0,
+	     _("starting page number larger than total number of pages: `%d'"),
+		 n);
           break;
 	}
     }
@@ -2778,14 +2780,6 @@ Usage: %s [OPTION]... [FILE]...\n\
 
       printf (_("\
 Paginate or columnate FILE(s) for printing.\n\
-\n\
-Including version 1.22i: Redefinition of some SMALL LETTER options (better\n\
-POSIX compliance, adapting to other UNIXes in some cases) resulting in\n\
-violations of downward compatibility; defining some new CAPITAL LETTER options\n\
-to turn off unexpected interferences of options; capital letter options\n\
-dominate small letter ones.\n\
-Form feeds in the input cause page breaks in the output. Multiple form feeds\n\
-produce empty pages.\n\
 \n\
   +FIRST_PAGE[:LAST_PAGE], --pages=FIRST_PAGE[:LAST_PAGE]\n\
                     begin [stop] printing with page FIRST_[LAST_]PAGE\n\
