@@ -394,8 +394,8 @@ char *str;
 		++s;	
 		type = OPTION;
 	}
-	else if (isnumber(s)) {
-		while (isnumber(s))
+	else if (is_number(s)) {
+		while (is_number(s))
 			*str++ = *s++;
 		*str = '\0';
 		type = NUMBER;
@@ -409,8 +409,8 @@ char *str;
 	return(type);
 }
 
-/* isnumber -- Return TRUE if argument is the ASCII representation of a number. */
-isnumber(string)
+/* is_number -- Return TRUE if argument is the ASCII representation of a number. */
+is_number(string)
 char *string;
 {
 	if (isdigit(*string) || 
