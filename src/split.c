@@ -176,7 +176,7 @@ next_file_name (void)
    Otherwise add to the same output file already in use.  */
 
 static void
-cwrite (int new_file_flag, const char *bp, int bytes)
+cwrite (int new_file_flag, const char *bp, size_t bytes)
 {
   if (new_file_flag)
     {
@@ -191,49 +191,26 @@ cwrite (int new_file_flag, const char *bp, int bytes)
       if (output_desc < 0)
 	error (EXIT_FAILURE, errno, "%s", outfile);
     }
-  if (full_write (output_desc, bp, bytes) != (size_t) bytes)
+  if (full_write (output_desc, bp, bytes) != bytes)
     error (EXIT_FAILURE, errno, "%s", outfile);
-}
-
-/* Read NCHARS bytes from the input file into BUF.
-   Return the number of bytes successfully read.
-   If this is less than NCHARS, do not call `stdread' again.  */
-
-static int
-stdread (char *buf, int nchars)
-{
-  int n_read;
-  int to_be_read = nchars;
-
-  while (to_be_read)
-    {
-      n_read = safe_read (input_desc, buf, to_be_read);
-      if (n_read < 0)
-	return -1;
-      if (n_read == 0)
-	break;
-      to_be_read -= n_read;
-      buf += n_read;
-    }
-  return nchars - to_be_read;
 }
 
 /* Split into pieces of exactly NCHARS bytes.
    Use buffer BUF, whose size is BUFSIZE.  */
 
 static void
-bytes_split (int nchars, char *buf, int bufsize)
+bytes_split (size_t nchars, char *buf, size_t bufsize)
 {
-  int n_read;
+  size_t n_read;
   int new_file_flag = 1;
-  int to_read;
-  int to_write = nchars;
+  size_t to_read;
+  size_t to_write = nchars;
   char *bp_out;
 
   do
     {
-      n_read = stdread (buf, bufsize);
-      if (n_read < 0)
+      n_read = safe_read (input_desc, buf, bufsize);
+      if (n_read == SAFE_READ_ERROR)
         error (EXIT_FAILURE, errno, "%s", infile);
       bp_out = buf;
       to_read = n_read;
@@ -266,35 +243,36 @@ bytes_split (int nchars, char *buf, int bufsize)
    Use buffer BUF, whose size is BUFSIZE.  */
 
 static void
-lines_split (int nlines, char *buf, int bufsize)
+lines_split (size_t nlines, char *buf, size_t bufsize)
 {
-  int n_read;
+  size_t n_read;
   char *bp, *bp_out, *eob;
   int new_file_flag = 1;
-  int n = 0;
+  size_t n = 0;
 
   do
     {
-      n_read = stdread (buf, bufsize);
-      if (n_read < 0)
+      n_read = safe_read (input_desc, buf, bufsize);
+      if (n_read == SAFE_READ_ERROR)
 	error (EXIT_FAILURE, errno, "%s", infile);
       bp = bp_out = buf;
       eob = bp + n_read;
       *eob = '\n';
       for (;;)
 	{
-	  while (*bp++ != '\n')
-	    ;			/* this semicolon takes most of the time */
-	  if (bp > eob)
+	  bp = memchr (bp, '\n', eob - bp + 1);
+	  if (bp == eob)
 	    {
 	      if (eob != bp_out) /* do not write 0 bytes! */
 		{
-		  cwrite (new_file_flag, bp_out, eob - bp_out);
+		  size_t len = eob - bp_out;
+		  cwrite (new_file_flag, bp_out, len);
 		  new_file_flag = 0;
 		}
 	      break;
 	    }
 	  else
+	    ++bp;
 	    if (++n >= nlines)
 	      {
 		cwrite (new_file_flag, bp_out, bp - bp_out);
@@ -312,20 +290,20 @@ lines_split (int nlines, char *buf, int bufsize)
    where lines longer than NCHARS bytes occur. */
 
 static void
-line_bytes_split (int nchars)
+line_bytes_split (size_t nchars)
 {
-  int n_read;
+  size_t n_read;
   char *bp;
   int eof = 0;
-  int n_buffered = 0;
+  size_t n_buffered = 0;
   char *buf = (char *) xmalloc (nchars);
 
   do
     {
       /* Fill up the full buffer size from the input file.  */
 
-      n_read = stdread (buf + n_buffered, nchars - n_buffered);
-      if (n_read < 0)
+      n_read = safe_read (input_desc, buf + n_buffered, nchars - n_buffered);
+      if (n_read == SAFE_READ_ERROR)
 	error (EXIT_FAILURE, errno, "%s", infile);
 
       n_buffered += n_read;
@@ -370,14 +348,14 @@ int
 main (int argc, char **argv)
 {
   struct stat stat_buf;
-  int num;			/* numeric argument from command line */
+  size_t num;			/* numeric argument from command line */
   enum
     {
       type_undef, type_bytes, type_byteslines, type_lines, type_digits
     } split_type = type_undef;
-  int in_blk_size;		/* optimal block size of input file device */
+  size_t in_blk_size;		/* optimal block size of input file device */
   char *buf;			/* file i/o buffer */
-  int accum = 0;
+  size_t accum = 0;
   int c;
   int digits_optind = 0;
 
@@ -431,7 +409,7 @@ main (int argc, char **argv)
 	      error (0, 0, _("%s: invalid number of bytes"), optarg);
 	      usage (EXIT_FAILURE);
 	    }
-	  accum = (int) tmp_long;
+	  accum = /* FIXME: */ (int) tmp_long;
 	  break;
 
 	case 'l':
@@ -444,7 +422,7 @@ main (int argc, char **argv)
 	      error (0, 0, _("%s: invalid number of lines"), optarg);
 	      usage (EXIT_FAILURE);
 	    }
-	  accum = (int) tmp_long;
+	  accum = /* FIXME */ (int) tmp_long;
 	  break;
 
 	case 'C':
@@ -457,7 +435,7 @@ main (int argc, char **argv)
 	      error (0, 0, _("%s: invalid number of bytes"), optarg);
 	      usage (EXIT_FAILURE);
 	    }
-	  accum = (int) tmp_long;
+	  accum = /* FIXME */ (int) tmp_long;
 	  break;
 
 	case '0':
