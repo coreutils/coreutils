@@ -2,6 +2,14 @@
 
 	* Version 5.3.0.
 
+	rm (without -f) could hang unnecessarily when attempting to
+	remove a symlink to a file on an off-line NFS-mounted partition.
+	Reported by David Howells in https://bugzilla.redhat.com/124699.
+	* src/remove.c (write_protected_non_symlink): New function.
+	Don't invoke euidaccess on symlinks.
+	(prompt): Use write_protected_non_symlink rather than using
+	euidaccess directly, being careful not to call lstat twice for a file.
+
 	Fix a bug in how the --output-delimiter=D option works with
 	abutting byte or character ranges.  Reported by David Krider in
 	http://lists.gnu.org/archive/html/bug-coreutils/2004-05/msg00132.html
