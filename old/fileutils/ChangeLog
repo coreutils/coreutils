@@ -1,8 +1,10 @@
-1998-10-16  Paul Eggert  <eggert@shade.twinsun.com>
+1998-10-17  Jim Meyering  <meyering@ascend.com>
 
-	* mktime.c, strftime.c: Some systems require <unistd.h> to be
-	included before <time.h> for localtime_r to be declared
-	properly.
+	* lib/mktime.c: Declare localtime_r if necessary.
+	* lib/strftime.c: Likewise.
+
+	* tests/Fetish.pm (run_tests): Run $prog with --version only
+	if $verbose.
 
 1998-10-11  Jim Meyering  <meyering@ascend.com>
 
