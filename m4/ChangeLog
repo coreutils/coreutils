@@ -1,3 +1,7 @@
+2004-11-30  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* readutmp.m4 (gl_READUTMP): Don't check for sys/param.h.
+
 2004-11-30  Jim Meyering  <jim@meyering.net>
 
 	* chdir-long.m4: Rename from chdir.m4.
