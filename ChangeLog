@@ -1,3 +1,13 @@
+2003-04-04  Jim Meyering  <jim@meyering.net>
+
+	* Version 5.0.1.
+
+	Put LOCALEDIR macro definition in new file: localedir.h.
+	* src/Makefile.am (DEFS): Remove definition.
+	(localedir.h): New rule.
+	(BUILT_SOURCES, DISTCLEANFILES): Add localedir.h.
+	* src/system.h: Include "localedir.h".
+
 2003-04-02  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.
