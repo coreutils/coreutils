@@ -2,6 +2,8 @@
 
 	* Version 5.0.92.
 
+	* src/du.c (process_file): Remove useless disjunct.
+
 	* src/sys2.h (case_GETOPT_VERSION_CHAR): Rename parameter, Authors,
 	to Written_by.
 	* nearly all src/*.c files (WRITTEN_BY): Rename from AUTHORS.
