@@ -1,3 +1,10 @@
+2000-05-05  Bruno Haible  <haible@clisp.cons.org>
+
+	* localcharset.c (get_charset_aliases): Use malloc, realloc and memcpy
+	instead of xmalloc, xrealloc, path_concat.
+	(locale_charset): Treat empty environment variables as absent.
+	(DIRECTORY_SEPARATOR, ISSLASH): New macros.
+
 2000-05-04  Jim Meyering  <meyering@lucent.com>
 
 	* getopt.c: Update from glibc.
