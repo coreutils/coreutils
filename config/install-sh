@@ -55,7 +55,7 @@ dst=""
 dir_arg=""
 
 while [ x"$1" != x ]; do
-    case "$1" in
+    case $1 in
 	-c) instcmd=$cpprog
 	    shift
 	    continue;;
@@ -109,7 +109,7 @@ then
 	echo "install:	no input file specified" >&2
 	exit 1
 else
-	true
+	:
 fi
 
 if [ x"$dir_arg" != x ]; then
@@ -128,9 +128,9 @@ else
 # might cause directories to be created, which would be especially bad
 # if $src (and thus $dsttmp) contains '*'.
 
-	if [ -f "$src" -o -d "$src" ]
+	if [ -f "$src" ] || [ -d "$src" ]
 	then
-		true
+		:
 	else
 		echo "install:  $src does not exist" >&2
 		exit 1
@@ -141,7 +141,7 @@ else
 		echo "install:	no destination specified" >&2
 		exit 1
 	else
-		true
+		:
 	fi
 
 # If destination is a directory, append the input filename; if your system
@@ -151,7 +151,7 @@ else
 	then
 		dst=$dst/`basename "$src"`
 	else
-		true
+		:
 	fi
 fi
 
@@ -183,7 +183,7 @@ while [ $# -ne 0 ] ; do
         then
 		$mkdirprog "$pathcomp"
 	else
-		true
+		:
 	fi
 
 	pathcomp=$pathcomp/
@@ -194,10 +194,10 @@ if [ x"$dir_arg" != x ]
 then
 	$doit $instcmd "$dst" &&
 
-	if [ x"$chowncmd" != x ]; then $doit $chowncmd "$dst"; else true ; fi &&
-	if [ x"$chgrpcmd" != x ]; then $doit $chgrpcmd "$dst"; else true ; fi &&
-	if [ x"$stripcmd" != x ]; then $doit $stripcmd "$dst"; else true ; fi &&
-	if [ x"$chmodcmd" != x ]; then $doit $chmodcmd "$dst"; else true ; fi
+	if [ x"$chowncmd" != x ]; then $doit $chowncmd "$dst"; else : ; fi &&
+	if [ x"$chgrpcmd" != x ]; then $doit $chgrpcmd "$dst"; else : ; fi &&
+	if [ x"$stripcmd" != x ]; then $doit $stripcmd "$dst"; else : ; fi &&
+	if [ x"$chmodcmd" != x ]; then $doit $chmodcmd "$dst"; else : ; fi
 else
 
 # If we're going to rename the final executable, determine the name now.
@@ -216,7 +216,7 @@ else
 	then
 		dstfile=`basename "$dst"`
 	else
-		true
+		:
 	fi
 
 # Make a couple of temp file names in the proper directory.
@@ -239,10 +239,10 @@ else
 # ignore errors from any of these, just make sure not to ignore
 # errors from the above "$doit $instcmd $src $dsttmp" command.
 
-	if [ x"$chowncmd" != x ]; then $doit $chowncmd "$dsttmp";else true;fi &&
-	if [ x"$chgrpcmd" != x ]; then $doit $chgrpcmd "$dsttmp";else true;fi &&
-	if [ x"$stripcmd" != x ]; then $doit $stripcmd "$dsttmp";else true;fi &&
-	if [ x"$chmodcmd" != x ]; then $doit $chmodcmd "$dsttmp";else true;fi &&
+	if [ x"$chowncmd" != x ]; then $doit $chowncmd "$dsttmp";else :;fi &&
+	if [ x"$chgrpcmd" != x ]; then $doit $chgrpcmd "$dsttmp";else :;fi &&
+	if [ x"$stripcmd" != x ]; then $doit $stripcmd "$dsttmp";else :;fi &&
+	if [ x"$chmodcmd" != x ]; then $doit $chmodcmd "$dsttmp";else :;fi &&
 
 # Now remove or move any old file at destination location.  We try this
 # two ways since rm can't unlink itself on some systems and the destination
@@ -259,7 +259,7 @@ else
 		  (exit 1); exit
 		}
 	else
-		true
+		:
 	fi
 } &&
 
