@@ -49,7 +49,7 @@
 #endif
 
 #ifndef S_TYPEISSHM
-# define S_TYPEISSHM(Mode) 0
+# define S_TYPEISSHM(Stat_ptr) 0
 #endif
 
 #define ROUND_UP_OFFSET(X, M) ((M) - 1 - (((X) + (M) - 1) % (M)))
@@ -1172,7 +1172,7 @@ main (int argc, char **argv)
 	  if (ftruncate (STDOUT_FILENO, o) != 0
 	      && (S_ISREG (stdout_stat.st_mode)
 		  || S_ISDIR (stdout_stat.st_mode)
-		  || S_TYPEISSHM (stdout_stat.st_mode)))
+		  || S_TYPEISSHM (&stdout_stat)))
 	    {
 	      char buf[LONGEST_HUMAN_READABLE + 1];
 	      error (1, errno, _("advancing past %s bytes in output file %s"),
