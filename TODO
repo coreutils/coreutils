@@ -106,3 +106,21 @@ Let GNU su use the `wheel' group if appropriate.
 cut: when stdin is a tty, one has to hit EOF *twice* to get it to stop
 
 look at sort patches from http://www.math.cas.cz/~kasal/sw/gnu/coreutils/
+
+sort: Investigate better sorting algorithms; see Knuth vol. 3.
+
+  We tried list merge sort, but it was about 50% slower than the
+  recursive algorithm currently used by sortlines, and it used more
+  comparisons.  We're not sure why this was, as the theory suggests it
+  should do fewer comparisons, so perhaps this should be revisited.
+  List merge sort was implemented in the style of Knuth algorithm
+  5.2.4L, with the optimization suggested by exercise 5.2.4-22.  The
+  test case was 140,213,394 bytes, 426,4424 lines, text taken from the
+  GCC 3.3 distribution, sort.c compiled with GCC 2.95.4 and running on
+  Debian 3.0r1 GNU/Linux, 2.4GHz Pentium 4, single pass with no
+  temporary files and plenty of RAM.
+
+  Since comparisons seem to be the bottleneck, perhaps the best
+  algorithm to try next should be merge insertion.  See Knuth section
+  5.3.1, who credits Lester Ford, Jr. and Selmer Johnson, American
+  Mathematical Monthly 66 (1959), 387-389.
