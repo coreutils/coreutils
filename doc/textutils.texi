@@ -1799,6 +1799,11 @@ given as an argument, it prints the file name following the counts.  If
 more than one @var{file} is given, @code{wc} prints a final line
 containing the cumulative counts, with the file name @file{total}.  The
 counts are printed in this order: newlines, words, bytes.
+By default, each count is output right-justified in a 7-byte field with
+one space between fields so that the numbers and file names line up nicely
+in columns.  However, POSIX requires that there be exactly one space
+separating columns.  You can make @code{wc} use the POSIX-mandated
+output format by setting the @env{POSIXLY_CORRECT} environment variable.
 
 By default, @code{wc} prints all three counts.  Options can specify
 that only certain counts be printed.  Options do not undo others
