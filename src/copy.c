@@ -568,6 +568,13 @@ copy_internal (const char *src_path, const char *dst_path,
 		}
 	      else
 		{
+		  if (SAME_INODE (src_sb, dst_sb))
+		    {
+		      error (0, 0, _("`%s' and `%s' are the same file"),
+			     src_path, dst_path);
+		      return 1;
+		    }
+
 		  if (unlink (dst_path) && errno != ENOENT)
 		    {
 		      error (0, errno, _("cannot remove old link to `%s'"),
