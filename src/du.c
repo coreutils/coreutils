@@ -313,30 +313,30 @@ du_files (files)
      char **files;
 {
 #ifdef HAVE_FCHDIR
-  int wd_desc;
+  int starting_desc;
 #endif
-  char *wd = NULL;
+  char *starting_dir = NULL;
   ino_t initial_ino;		/* Initial directory's inode. */
   dev_t initial_dev;		/* Initial directory's device. */
   int i;			/* Index in FILES. */
 
 #ifdef HAVE_FCHDIR
-  wd_desc = open (".", O_RDONLY);
-  if (wd_desc < 0)
+  starting_desc = open (".", O_RDONLY);
+  if (starting_desc < 0)
     error (1, errno, "cannot open current directory");
 
   /* On SunOS, fchdir returns EINVAL if accounting is enabled,
      so we have to fall back to chdir.  */
-  if (fchdir (wd_desc) && errno == EINVAL)
+  if (fchdir (starting_desc) && errno == EINVAL)
     {
-      close (wd_desc);
-      wd_desc = -1;
+      close (starting_desc);
+      starting_desc = -1;
     }
-  if (wd_desc == -1)
+  if (starting_desc == -1)
 #endif
   {
-    wd = xgetcwd ();
-    if (wd == NULL)
+    starting_dir = xgetcwd ();
+    if (starting_dir == NULL)
       error (1, errno, "cannot get current directory");
   }
 
@@ -378,15 +378,15 @@ du_files (files)
       if (stat_buf.st_ino != initial_ino || stat_buf.st_dev != initial_dev)
 	{
 #ifdef HAVE_FCHDIR
-	  if (wd_desc >= 0)
+	  if (starting_desc >= 0)
 	    {
-	      if (fchdir (wd_desc) < 0)
+	      if (fchdir (starting_desc) < 0)
 		error (1, errno, "cannot return to starting directory");
 	    }
 	  else
 #endif
-	  if (chdir (wd) < 0)
-	    error (1, errno, "%s", wd);
+	  if (chdir (starting_dir) < 0)
+	    error (1, errno, "%s", starting_dir);
 	}
     }
 
@@ -397,8 +397,8 @@ du_files (files)
       fflush (stdout);
     }
 
-  if (wd != NULL)
-    free (wd);
+  if (starting_dir != NULL)
+    free (starting_dir);
 }
 
 /* Print (if appropriate) and return the size
