@@ -1,6 +1,56 @@
-1998-10-22  Jim Meyering  <meyering@ascend.com>
+1999-01-01  Jim Meyering  <meyering@ascend.com>
+
+	* man/Makefile.am (man_MANS): Add tsort.1.
+	* man/tsort.x: New (essentially empty) file.
+
+	* src/tsort.c: Rename globals N and R so they don't shadow locals.
+	(tsort): Rename from `sort'.
+
+	1998-11-07  Mark Kettenis  <kettenis@phys.uva.nl>
+	* src/Makefile.am (bin_PROGRAMS): Add tsort.
+	* src/tsort.c: New program.
+
+	* lib/Makefile.am (libtu_a_SOURCES): Add quotearg.c.
+	(noinst_HEADERS): Add quotearg.h.
+
+1998-12-22  Jim Meyering  <meyering@ascend.com>
+
+	* configure.in (ALL_LINGUAS): Add chinese (zh).
+
+1998-12-17  Jim Meyering  <meyering@ascend.com>
+
+	New options for tail:
+	--follow=name, --follow=descriptor, --allow-missing
+	* src/tail.c (Follow_mode): New enum.
+	(n_live_files): New function.
+	(tail_forever): Avoid starvation with --follow=name and a
+	continually-growing unlinked or renamed file.
+
+1998-12-13  Jim Meyering  <meyering@ascend.com>
 
 	* Version 1.22g.
+
+	* tests/uniq/Test.pm: New file.
+	* tests/uniq/Makefile.am: New file.
+	* tests/uniq: New directory.
+	* tests/Makefile.am (SUBDIRS): Add uniq.
+	* configure.in (AC_OUTPUT): Add tests/uniq/Makefile.
+	From Jochen Hein.
+
+	* lib/Makefile.am (lstat.c): Add rule to generate this from xstat.in.
+	(stat.c): Likewise.
+	(EXTRA_DIST): Add xstat.in.
+	* lib/stat.c: Remove file.
+	* lib/lstat.c: Remove file.
+	* lib/xstat.in (xstat@): New file.
+
+	* configure.in (ALL_LINGUAS): Add Russian (ru).
+
+1998-10-31  Jim Meyering  <meyering@ascend.com>
+
+	* acconfig.h (stat): New #undef.
+
+1998-10-22  Jim Meyering  <meyering@ascend.com>
 
 	* src/fold.c (usage): Add mention of --version and --help.
 	Reported by Matej Vela <mvela@public.srce.hr>.
