@@ -1,3 +1,37 @@
+1997-10-24  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/unexpand.c: Remove old-style xmalloc and xrealloc decls.
+	(add_tabstop): Cast first arg of xrealloc to char*.
+
+	* src/sort.c: Include xalloc.h.
+	(xmalloc): Remove function.
+	(xrealloc): Remove function.
+	(main): Set xalloc_fail_func to cleanup.
+	Set xmalloc_exit_failure SORT_FAILURE.
+
+	* src/paste.c: Remove old-style xmalloc and xrealloc decls.
+	(paste_parallel): Cast first arg of xrealloc to char*.
+
+	* src/od.c: Remove old-style xmalloc and xrealloc decls.
+	(decode_format_string): Cast first arg of xrealloc to char*.
+
+	* src/expand.c: Remove old-style xmalloc and xrealloc decls.
+	(add_tabstop): Cast first arg of xrealloc to char*.
+
+	* lib/xalloc.h: New file.
+
+	* src/cut.c (ADD_RANGE_PAIR): Cast first arg of xrealloc to char*.
+	(getstr): Cast xmalloc return value to char*.
+
+	* src/csplit.c: Include xalloc.h.
+	(xmalloc): Remove function.
+	(xrealloc): Remove function.
+	(main): Set xalloc_fail_func to cleanup.
+
+	* src/*.c: Remove old-style xmalloc and xrealloc decls.
+	* src/system.h: Add prototyped xcalloc, xmalloc and xrealloc decls.
+	Suggestion from Achim Blumensath.
+
 1997-10-23  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* Makefile.am (aclocal-files): Also depend on m4/Makefile.am.
