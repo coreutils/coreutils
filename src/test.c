@@ -133,6 +133,16 @@ static int or ();
 
 static int group_member ();
 
+#if __GNUC__ >= 2 && defined (__GNUC_MINOR__) \
+    && __GNUC_MINOR__ >= 5 && !defined (__STRICT_ANSI__)
+#define NO_RETURN_ATTRIBUTE __attribute__ ((noreturn))
+#else
+#define NO_RETURN_ATTRIBUTE /* empty */
+#endif
+
+static void test_syntax_error () NO_RETURN_ATTRIBUTE;
+static void beyond () NO_RETURN_ATTRIBUTE;
+
 static void
 test_syntax_error (format, arg)
      char *format, *arg;
