@@ -29,7 +29,7 @@ my @Tests =
 
      ['emptydir', 'd',  {OUT => ''}, $mkdir, $rmdir],
      ['emptydir-x2', 'd d',  {OUT => "d:\n\nd:\n"}, $mkdir, $rmdir],
-     #['no-opt-d', 'd',  {OUT => "\n"}, $mkdir, $rmdir],
+     ['emptydir-R', '-R d',  {OUT => "d:\n"}, $mkdir, $rmdir],
     );
 
 my $save_temps = $ENV{SAVE_TEMPS};
