@@ -118,7 +118,7 @@ END-INFO-DIR-ENTRY
 @ifinfo
 This file documents the GNU command line utilities.
 
-Copyright (C) 1994, 1995, 1996, 2000, 2001 Free Software Foundation, Inc.
+Copyright (C) 1994, 1995, 1996, 2000, 2001, 2002 Free Software Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.1 or
@@ -137,7 +137,7 @@ Free Documentation License''.
 
 @page
 @vskip 0pt plus 1filll
-Copyright @copyright{} 1994, 1995, 1996, 2000, 2001 Free Software
+Copyright @copyright{} 1994, 1995, 1996, 2000, 2001, 2002 Free Software
 Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
@@ -454,9 +454,9 @@ in a way suitable for novices.  Thus, if you are interested, please get
 involved in improving this manual.  The entire @sc{gnu} community will
 benefit.
 
-@cindex @sc{posix.2}
+@cindex @sc{posix}
 The @sc{gnu} utilities documented here are mostly compatible with the
-@sc{posix.2} standard.
+@sc{posix} standard.
 @cindex bugs, reporting
 Please report bugs to @email{bug-coreutils@@gnu.org}.  Remember
 to include the version number, machine architecture, input files, and
@@ -853,7 +853,7 @@ option, @code{mv}, for example, (via the system's rename function) must
 interpret a trailing slash as a request to dereference the symbolic link
 and so must rename the indirectly referenced @emph{directory} and not
 the symbolic link.  Although it may seem surprising that such behavior
-be the default, it is required by @sc{posix.2} and is consistent with
+be the default, it is required by @sc{posix} and is consistent with
 other parts of that standard.
 
 @node Output of entire files
@@ -2042,7 +2042,6 @@ when given a @var{file} of @samp{-}.  Synopses:
 @example
 tail [@var{option}]@dots{} [@var{file}]@dots{}
 tail -@var{number} [@var{option}]@dots{} [@var{file}]@dots{}
-tail +@var{number} [@var{option}]@dots{} [@var{file}]@dots{} # obsolescent
 @end example
 
 If more than one @var{file} is specified, @code{tail} prints a
@@ -2062,11 +2061,13 @@ only reverse files that are at most as large as its buffer, which is
 typically 32k.  A more reliable and versatile way to reverse files is
 the @sc{gnu} @code{tac} command.
 
-@code{tail} accepts two option formats: the new one, in which numbers
-are arguments to the options (@option{-n 1}), and the obsolescent one, in
-which the number precedes any option letters (@option{-1} or @samp{+1}).
-Warning: support for the @samp{+1} form will be withdrawn, as future
-versions of @sc{posix} will not allow it.
+@code{tail} accepts two option formats: the standard one, in which
+numbers are arguments to the options (@option{-n 1}), and the
+obsolescent one, in which the number precedes any option letters
+(@option{-1}).  On older systems @command{tail} also supports an
+obsolete option format @option{+@var{count}} with the same meaning as
+@option{-+@var{count}}, but @sc{posix} no longer allows this; use
+@option{-n +@var{count}} instead.
 
 If any option-argument is a number @var{n} starting with a @samp{+},
 @code{tail} begins printing with the @var{n}th item from the start of
@@ -2077,17 +2078,11 @@ The program accepts the following options.  Also see @ref{Common options}.
 @table @samp
 
 @item -@var{count}
-@itemx +@var{count}
 @opindex -@var{count}
-@opindex +@var{count}
 This option is only recognized if it is specified first.  @var{count} is
 a decimal number optionally followed by a size letter (@samp{b},
 @samp{k}, @samp{m}) as in @code{-c}, or @samp{l} to mean count by lines,
 or other option letters (@samp{cfqv}).
-
-Warning: the @samp{+@var{count}} usage is obsolescent.  Future versions
-of @sc{posix} will require that support for it be withdrawn.  Use
-@option{-n +@var{count}} instead.
 
 @item -c @var{bytes}
 @itemx --bytes=@var{bytes}
@@ -2575,7 +2570,7 @@ by comparing the @code{cksum} output for the received files with the
 @code{cksum} output for the original files (typically given in the
 distribution).
 
-The CRC algorithm is specified by the @sc{posix.2} standard.  It is not
+The CRC algorithm is specified by the @sc{posix} standard.  It is not
 compatible with the BSD or System V @code{sum} algorithms (see the
 previous section); it is more robust.
 
@@ -2772,11 +2767,7 @@ options are specified, @option{--stable} (@option{-s}) has no effect.
 input line length or restrictions on bytes allowed within lines.  In
 addition, if the final byte of an input file is not a newline, @sc{gnu}
 @code{sort} silently supplies one.  A line's trailing newline is not
-part of the line for comparison purposes.@footnote{@sc{posix}.2-1992
-requires that the trailing newline be part of the comparison, and some
-@code{sort} implementations obey this requirement, but it is widely
-considered to be a bug in the standard and the next version of
-@sc{posix}.2 will likely remove this requirement.}
+part of the line for comparison purposes.
 
 Upon any error, @code{sort} exits with a status of @samp{2}.
 
@@ -2936,11 +2927,10 @@ If necessary, @command{sort} reads input before opening
 commands like @code{sort -o F F} and @code{cat F | sort -o F}.
 
 @vindex POSIXLY_CORRECT
-If @option{-c} is not also specified, @option{-o} may appear after an
-input file even if @env{POSIXLY_CORRECT} is set, e.g., @samp{sort F -o
-F}.  Warning: this usage is obsolescent.  Future versions of @sc{posix}
-will require that support for it be withdrawn.  Portable scripts should
-specify @option{-o @var{output-file}} before any input files.
+On newer systems, @option{-o} cannot appear after an input file if
+@env{POSIXLY_CORRECT} is set, e.g., @samp{sort F -o F}.  Portable
+scripts should specify @option{-o @var{output-file}} before any input
+files.
 
 @item -S @var{size}
 @itemx --buffer-size=@var{size}
@@ -3023,16 +3013,6 @@ This option can be useful in conjunction with @samp{perl -0} or
 reliably handle arbitrary pathnames (even those which contain Line Feed
 characters.)
 
-@item +@var{pos1} [-@var{pos2}]
-The obsolescent, traditional option for specifying a sort field.  The field
-consists of the line between @var{pos1} and up to but @emph{not including}
-@var{pos2} (or the end of the line if @var{pos2} is omitted).  Fields
-and character positions are numbered starting with 0.  See below.
-
-Warning: the @samp{+@var{pos1}} usage is obsolescent.  Future versions of
-@sc{posix} will require that support for it be withdrawn.  Use
-@option{--key} (@option{-k}) instead.
-
 @end table
 
 Historical (BSD and System V) implementations of @code{sort} have
@@ -3044,28 +3024,29 @@ consistency, @option{-M} has been changed in the same way.  This may
 affect the meaning of character positions in field specifications in
 obscure cases.  The only fix is to add an explicit @option{-b}.
 
-A position in a sort field specified with the @option{-k} or @samp{+}
+A position in a sort field specified with the @option{-k}
 option has the form @samp{@var{f}.@var{c}}, where @var{f} is the number
 of the field to use and @var{c} is the number of the first character
-from the beginning of the field (for @samp{+@var{pos}}) or from the end
-of the previous field (for @option{-@var{pos}}).  If the @samp{.@var{c}}
-is omitted, it is taken to be the first character in the field.  If the
+from the beginning of the field.  In a start position, an omitted
+@samp{.@var{c}} stands for the field's first character.  In an end
+position, an omitted or zero @samp{.@var{c}} stands for the field's
+last character.  If the
 @option{-b} option was specified, the @samp{.@var{c}} part of a field
-specification is counted from the first nonblank character of the field
-(for @samp{+@var{pos}}) or from the first nonblank character following
-the previous field (for @option{-@var{pos}}).
+specification is counted from the first nonblank character of the field.
 
-A sort key option may also have any of the option letters @samp{Mbdfinr}
+A sort key position may also have any of the option letters @samp{Mbdfinr}
 appended to it, in which case the global ordering options are not used
 for that particular field.  The @option{-b} option may be independently
-attached to either or both of the @samp{+@var{pos}} and
-@option{-@var{pos}} parts of a field specification, and if it is inherited
+attached to either or both of the start and
+end positions of a field specification, and if it is inherited
 from the global options it will be attached to both.
 Keys may span multiple fields.
 
+On older systems @command{sort} supports an obsolete origin-zero
+syntax @samp{+@var{pos1} [-@var{pos2}]} for specifying sort keys, but
+@sc{posix} no longer allows this.  Use @option{-k} instead.
+
 Here are some examples to illustrate various combinations of options.
-In them, the @sc{posix} @option{-k} option is used to specify sort keys rather
-than the obsolescent @samp{+@var{pos1}-@var{pos2}} syntax.
 
 @itemize @bullet
 
@@ -3201,18 +3182,15 @@ Skip @var{n} fields on each line before checking for uniqueness.  Fields
 are sequences of non-space non-tab characters that are separated from
 each other by at least one space or tab.
 
-@item +@var{n}
-@itemx -s @var{n}
+@item -s @var{n}
 @itemx --skip-chars=@var{n}
-@opindex +@var{n}
 @opindex -s
 @opindex --skip-chars
 Skip @var{n} characters before checking for uniqueness.  If you use both
 the field and character skipping options, fields are skipped over first.
-
-Warning: the @samp{+@var{n}} usage is obsolescent.  Future versions of
-@sc{posix} will require that support for it be withdrawn.  Use
-@option{-s @var{n}} instead.
+On older systems, @command{uniq} also supports an obsolete option
+format @option{+@var{n}}, but @sc{posix} no longer allows this format;
+use @option{-s @var{n}} instead.
 
 @item -c
 @itemx --count
@@ -4356,7 +4334,7 @@ typically have the same length.  If @var{set1} is shorter than
 @var{set2}, the extra characters at the end of @var{set2} are ignored.
 
 On the other hand, making @var{set1} longer than @var{set2} is not
-portable; @sc{posix.2} says that the result is undefined.  In this situation,
+portable; @sc{posix} says that the result is undefined.  In this situation,
 BSD @code{tr} pads @var{set2} to the length of @var{set1} by repeating
 the last character of @var{set2} as many times as necessary.  System V
 @code{tr} truncates @var{set1} to the length of @var{set2}.
@@ -4495,7 +4473,7 @@ square brackets from interpretation by a shell.
 @vindex POSIXLY_CORRECT
 Setting the environment variable @env{POSIXLY_CORRECT} turns off the
 following warning and error messages, for strict compliance with
-@sc{posix.2}.  Otherwise, the following diagnostics are issued:
+@sc{posix}.  Otherwise, the following diagnostics are issued:
 
 @enumerate
 
@@ -5636,10 +5614,6 @@ cp --parents a/b/c existing_dir
 @noindent
 copies the file @file{a/b/c} to @file{existing_dir/a/b/c}, creating
 any missing intermediate directories.
-
-Warning: the meaning of @option{-P} will change in the future to conform
-to @sc{posix}.  Use @option{--parents} for the old meaning, and
-@option{--no-dereference} for the new.
 
 @item -r
 @cindex directories, copying recursively
@@ -7240,13 +7214,12 @@ specified files.  Synopsis:
 touch [@var{option}]@dots{} @var{file}@dots{}
 @end example
 
+Older systems support an obsolete variant syntax, as follows.
 If the first @var{file} would be a valid argument to the @option{-t}
 option and no timestamp is given with any of the @option{-d}, @option{-r},
 or @option{-t} options and the @samp{--} argument is not given, that
 argument is interpreted as the time for the other files instead of
-as a file name.  Warning: this usage is obsolescent, and future versions
-of @sc{posix} will require that support for it be withdrawn.  Use
-@option{-t} instead.
+as a file name.  This usage is obsolete; use @option{-t} instead.
 
 @cindex empty files, creating
 Any @var{file} that does not exist is created empty.
@@ -8658,7 +8631,7 @@ The program accepts the following option.  Also see @ref{Common options}.
 @opindex --portability
 Instead of performing length checks on the underlying filesystem,
 test the length of each file name and its components against the
-@sc{posix.1} minimum limits for portability.  Also check that the file
+@sc{posix} minimum limits for portability.  Also check that the file
 name contains no characters not in the portable file name character set.
 
 @end table
