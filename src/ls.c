@@ -51,6 +51,7 @@
    PATH_MAX.  */
 #include <limits.h>
 #endif
+
 #include "system.h"
 #include <fnmatch.h>
 
@@ -59,6 +60,7 @@
 #include "version.h"
 #include "safe-stat.h"
 #include "safe-lstat.h"
+#include "error.h"
 
 #define obstack_chunk_alloc xmalloc
 #define obstack_chunk_free free
@@ -95,7 +97,6 @@ char *getuser ();
 char *xmalloc ();
 char *xrealloc ();
 int argmatch ();
-void error ();
 void invalid_arg ();
 
 static char *make_link_path ();

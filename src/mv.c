@@ -45,10 +45,12 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
+
 #include "system.h"
 #include "backupfile.h"
 #include "version.h"
 #include "safe-lstat.h"
+#include "error.h"
 
 #ifndef _POSIX_VERSION
 uid_t geteuid ();
@@ -58,7 +60,6 @@ char *basename ();
 enum backup_type get_version ();
 int isdir ();
 int yesno ();
-void error ();
 int safe_read ();
 int full_write ();
 void strip_trailing_slashes ();

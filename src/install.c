@@ -58,11 +58,13 @@
 #include <sys/types.h>
 #include <pwd.h>
 #include <grp.h>
+
 #include "system.h"
 #include "version.h"
 #include "safe-stat.h"
 #include "modechange.h"
 #include "makepath.h"
+#include "error.h"
 
 #ifdef _POSIX_VERSION
 #include <sys/wait.h>
@@ -88,7 +90,6 @@ int wait ();
 char *basename ();
 char *stpcpy ();
 char *xmalloc ();
-void error ();
 int safe_read ();
 int full_write ();
 int isdir ();

@@ -44,10 +44,12 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
+
 #include "system.h"
 #include "version.h"
 #include "safe-stat.h"
 #include "safe-lstat.h"
+#include "error.h"
 
 /* Initial number of entries in each hash table entry's table of inodes.  */
 #define INITIAL_HASH_MODULE 100
@@ -93,7 +95,6 @@ char *savedir ();
 char *xgetcwd ();
 char *xmalloc ();
 char *xrealloc ();
-void error ();
 
 static int hash_insert ();
 static int hash_insert2 ();

@@ -24,8 +24,7 @@
 #include "system.h"
 #include "long-options.h"
 #include "version.h"
-
-void error ();
+#include "error.h"
 
 /* The name this program was run with. */
 char *program_name;

@@ -21,9 +21,11 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
+
 #include "system.h"
 #include "version.h"
 #include "safe-lstat.h"
+#include "error.h"
 
 #ifdef D_INO_IN_DIRENT
 #define D_INO(dp) ((dp)->d_ino)
@@ -38,7 +40,6 @@ char *xmalloc ();
 char *xrealloc ();
 int eaccess_stat ();
 int yesno ();
-void error ();
 void strip_trailing_slashes ();
 
 static int clear_directory ();

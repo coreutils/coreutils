@@ -25,11 +25,13 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <getopt.h>
+
 #include "system.h"
 #include "backupfile.h"
 #include "version.h"
 #include "safe-lstat.h"
 #include "safe-stat.h"
+#include "error.h"
 
 int link ();			/* Some systems don't declare this anywhere. */
 
@@ -61,7 +63,6 @@ char *basename ();
 enum backup_type get_version ();
 int isdir ();
 int yesno ();
-void error ();
 void strip_trailing_slashes ();
 char *stpcpy ();
 

@@ -37,15 +37,16 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <getopt.h>
+
 #include "mountlist.h"
 #include "fsusage.h"
 #include "system.h"
 #include "version.h"
 #include "safe-stat.h"
+#include "error.h"
 
 char *xmalloc ();
 char *xstrdup ();
-void error ();
 
 static int selected_fstype ();
 static int excluded_fstype ();

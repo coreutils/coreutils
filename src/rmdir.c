@@ -26,10 +26,11 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
+
 #include "system.h"
 #include "version.h"
+#include "error.h"
 
-void error ();
 void strip_trailing_slashes ();
 
 static void remove_parents ();

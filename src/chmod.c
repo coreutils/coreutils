@@ -27,13 +27,14 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
+
 #include "modechange.h"
 #include "system.h"
 #include "version.h"
 #include "safe-stat.h"
 #include "safe-lstat.h"
+#include "error.h"
 
-void error ();
 void mode_string ();
 char *savedir ();
 void strip_trailing_slashes ();

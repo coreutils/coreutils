@@ -26,11 +26,11 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
+
 #include "system.h"
 #include "modechange.h"
 #include "version.h"
-
-void error ();
+#include "error.h"
 
 static void usage ();
 

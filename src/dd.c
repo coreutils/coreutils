@@ -64,6 +64,7 @@
 
 #include "system.h"
 #include "version.h"
+#include "error.h"
 
 #define equal(p, q) (strcmp ((p),(q)) == 0)
 #define max(a, b) ((a) > (b) ? (a) : (b))
@@ -91,8 +92,8 @@
 #define C_TWOBUFS 04000
 
 char *xmalloc ();
-void error ();
 int safe_read ();
+int full_write ();
 
 static RETSIGTYPE interrupt_handler ();
 static int bit_count ();
@@ -443,7 +444,9 @@ skip (fdesc, file, records, blocksize, buf)
     {
       while (records-- > 0)
 	{
-	  nread = safe_read (fdesc, buf, blocksize).
+	  int nread;
+
+	  nread = safe_read (fdesc, buf, blocksize);
 	  if (nread < 0)
 	    {
 	      error (0, errno, "%s", file);

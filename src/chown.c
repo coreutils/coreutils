@@ -34,9 +34,11 @@
 #include <pwd.h>
 #include <grp.h>
 #include <getopt.h>
+
 #include "system.h"
 #include "version.h"
 #include "safe-lstat.h"
+#include "error.h"
 
 #ifndef _POSIX_VERSION
 struct passwd *getpwnam ();
@@ -54,7 +56,6 @@ char *parse_user_spec ();
 void strip_trailing_slashes ();
 char *xmalloc ();
 char *xrealloc ();
-void error ();
 int isnumber ();
 
 static int change_file_owner ();

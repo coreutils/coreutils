@@ -22,9 +22,11 @@
 #include <sys/types.h>
 #include <grp.h>
 #include <getopt.h>
+
 #include "system.h"
 #include "version.h"
 #include "safe-lstat.h"
+#include "error.h"
 
 #ifndef _POSIX_VERSION
 struct group *getgrnam ();
@@ -38,7 +40,6 @@ char *group_member ();
 char *savedir ();
 char *xmalloc ();
 char *xrealloc ();
-void error ();
 
 static int change_file_group ();
 static int change_dir_group ();

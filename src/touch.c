@@ -36,9 +36,11 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
+
 #include "system.h"
 #include "version.h"
 #include "safe-stat.h"
+#include "error.h"
 
 #ifndef STDC_HEADERS
 time_t mktime ();
@@ -48,7 +50,6 @@ time_t time ();
 int argmatch ();
 time_t get_date ();
 time_t posixtime ();
-void error ();
 int safe_read ();
 int full_write ();
 void invalid_arg ();
