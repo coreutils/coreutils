@@ -18,7 +18,7 @@ framework_failure=0
 mkdir -p $tmp || framework_failure=1
 cd $tmp || framework_failure=1
 mkdir -p a/b || framework_failure=1
-echo make-sure-the-file-is-non-empty > a/b/c || framework_failure=1
+printf 'make-sure-the-file-is-non-empty\n' > a/b/c || framework_failure=1
 
 if test $framework_failure = 1; then
   echo "$0: failure in testing framework" 1>&2
@@ -37,16 +37,22 @@ echo === >> out
 du -aS a >> out || fail=1
 echo === >> out
 du -s a >> out || fail=1
+echo === >> out
+du -abS a >> out || fail=1
 cat <<\EOF > exp
 4	a/b/c
 8	a/b
 12	a
 ===
 4	a/b/c
-8	a/b
+4	a/b
 4	a
 ===
 12	a
+===
+32	a/b/c
+4096	a/b
+4096	a
 EOF
 
 cmp out exp || fail=1
