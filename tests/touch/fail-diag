@@ -38,7 +38,15 @@ touch: setting times of `/': Permission denied
 touch: creating `/no/such-dir': No such file or directory
 EOF
 
-cmp out exp || fail=1
+cmp out exp || {
+  # On SunOS4, EPERM is `Not owner'
+  cat > exp2 <<\EOF
+touch: setting times of `/': Not owner
+touch: creating `/no/such-dir': No such file or directory
+EOF
+  cmp out exp2 || fail=1
+}
+
 test $fail = 1 && diff out exp 2> /dev/null
 
 (exit $fail); exit
