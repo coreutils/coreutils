@@ -1,3 +1,7 @@
+Mon Sep 16 23:13:04 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/strftime.c (strftime): New version, from GNU libc.
+
 Sun Sep 15 23:08:48 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* Makefile.am (EXTRA_DIST): Remove acinclude.m4.
