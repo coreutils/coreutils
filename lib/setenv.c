@@ -110,7 +110,8 @@ setenv (name, value, replace)
 }
 
 void
-unsetenv (const char *name)
+unsetenv (name)
+     const char *name;
 {
   const size_t len = strlen (name);
   char **ep;
