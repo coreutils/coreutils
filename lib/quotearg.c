@@ -74,36 +74,38 @@ char const *const quoting_style_args[] =
   "literal", "shell", "shell-always", "c", "escape", 0
 };
 
+/* The default quoting options.  */
+static struct quoting_options default_quoting_options;
+
 /* Allocate a new set of quoting options, with contents initially identical
-   to O if O is not null, or to a default value if O is null.
+   to O if O is not null, or to the default if O is null.
    It is the caller's responsibility to free the result.  */
 struct quoting_options *
 clone_quoting_options (struct quoting_options *o)
 {
   struct quoting_options *p
     = (struct quoting_options *) xmalloc (sizeof (struct quoting_options));
-  if (o)
-    *p = *o;
-  else
-    memset (p, 0, sizeof *p);
+  *p = *(o ? o : &default_quoting_options);
   return p;
 }
 
-/* Get the value of O's quoting style.  */
+/* Get the value of O's quoting style.  If O is null, use the default.  */
 enum quoting_style
 get_quoting_style (struct quoting_options *o)
 {
-  return o->style;
+  return (o ? o : &default_quoting_options)->style;
 }
 
-/* In O, set the value of the quoting style to S.  */
+/* In O (or in the default if O is null),
+   set the value of the quoting style to S.  */
 void
 set_quoting_style (struct quoting_options *o, enum quoting_style s)
 {
-  o->style = s;
+  (o ? o : &default_quoting_options)->style = s;
 }
 
-/* In O, set the value of the quoting options for character C to I.
+/* In O (or in the default if O is null),
+   set the value of the quoting options for character C to I.
    Return the old value.  Currently, the only values defined for I are
    0 (the default) and 1 (which means to quote the character even if
    it would not otherwise be quoted).  */
@@ -111,22 +113,23 @@ int
 set_char_quoting (struct quoting_options *o, char c, int i)
 {
   unsigned char uc = c;
-  int *p = o->quote_these_too + uc / INT_BITS;
+  int *p = (o ? o : &default_quoting_options)->quote_these_too + uc / INT_BITS;
   int shift = uc % INT_BITS;
   int r = (*p >> shift) & 1;
   *p ^= ((i & 1) ^ r) << shift;
   return r;
 }
 
-/* Place into buffer BUF (of size BUFSIZE) a quoted version of
+/* Place into buffer BUFFER (of size BUFFERSIZE) a quoted version of
    argument ARG (of size ARGSIZE), using O to control quoting.
+   If O is null, use the default.
    Terminate the output with a null character, and return the written
    size of the output, not counting the terminating null.
-   If BUFSIZE is too small to store the output string, return the
-   value that would have been returned had BUFSIZE been large enough.
+   If BUFFERSIZE is too small to store the output string, return the
+   value that would have been returned had BUFFERSIZE been large enough.
    If ARGSIZE is -1, use the string length of the argument for ARGSIZE.  */
 size_t
-quotearg_buffer (char *buf, size_t bufsize,
+quotearg_buffer (char *buffer, size_t buffersize,
 		 char const *arg, size_t argsize,
 		 struct quoting_options const *o)
 {
@@ -134,8 +137,16 @@ quotearg_buffer (char *buf, size_t bufsize,
   size_t i;
   size_t len;
   int quote_mark;
-  enum quoting_style quoting_style = o->style;
-#define STORE(c) do { if (len < bufsize) buf[len] = (c); len++; } while (0)
+  struct quoting_options const *p = o ? o : &default_quoting_options;
+  enum quoting_style quoting_style = p->style;
+#define STORE(c) \
+    do \
+      { \
+	if (len < buffersize) \
+	  buffer[len] = (c); \
+	  len++; \
+      } \
+    while (0)
 
   switch (quoting_style)
     {
@@ -168,7 +179,7 @@ quotearg_buffer (char *buf, size_t bufsize,
 		      goto needs_quoting;
 		    }
 
-		  if (o->quote_these_too[c / INT_BITS] & (1 << (c % INT_BITS)))
+		  if (p->quote_these_too[c / INT_BITS] & (1 << (c % INT_BITS)))
 		    goto needs_quoting;
 
 		  STORE (c);
@@ -254,7 +265,7 @@ quotearg_buffer (char *buf, size_t bufsize,
 	      break;
 	    }
 
-	  if (! (o->quote_these_too[c / INT_BITS] & (1 << (c % INT_BITS))))
+	  if (! (p->quote_these_too[c / INT_BITS] & (1 << (c % INT_BITS))))
 	    goto store_c;
 
 	store_escape:
@@ -269,8 +280,8 @@ quotearg_buffer (char *buf, size_t bufsize,
     STORE (quote_mark);
 
  done:
-  if (len < bufsize)
-    buf[len] = '\0';
+  if (len < buffersize)
+    buffer[len] = '\0';
   return len;
 }
 
@@ -316,12 +327,10 @@ quotearg_n_options (int n, char const *arg, struct quoting_options *options)
   }
 }
 
-struct quoting_options quotearg_quoting_options;
-
 char *
 quotearg_n (int n, char const *arg)
 {
-  return quotearg_n_options (n, arg, &quotearg_quoting_options);
+  return quotearg_n_options (n, arg, &default_quoting_options);
 }
 
 char *
@@ -334,7 +343,7 @@ char *
 quotearg_char (char const *arg, char ch)
 {
   struct quoting_options options;
-  options = quotearg_quoting_options;
+  options = default_quoting_options;
   set_char_quoting (&options, ch, 1);
   return quotearg_n_options (0, arg, &options);
 }
