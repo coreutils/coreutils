@@ -11,7 +11,7 @@ maintainer-check:
 	$(MAKE) distcheck
 	$(MAKE) my-distcheck
 
-prev_version_file = .prev-version
+prev_version_file ?= .prev-version
 
 THIS_VERSION_REGEXP = $(subst .,\.,$(VERSION))
 PREV_VERSION := $(shell cat $(prev_version_file))
@@ -26,10 +26,12 @@ my_distdir = $(PACKAGE)-$(VERSION)
 
 # Verify that all source files using _() are listed in po/POTFILES.in.
 po-check:
-	grep -E -v '^(#|$$)' po/POTFILES.in | sort > $@-1
-	grep -E -l '\b_\(' lib/*.c src/*.c | sort > $@-2
-	diff -u $@-1 $@-2
-	rm -f $@-1 $@-2
+	if test -f po/POTFILES.in; then \
+	  grep -E -v '^(#|$$)' po/POTFILES.in | sort > $@-1; \
+	  grep -E -l '\b_\(' lib/*.c src/*.c | sort > $@-2; \
+	  diff -u $@-1 $@-2 || exit 1; \
+	  rm -f $@-1 $@-2; \
+	fi
 
 # Do not save the original name or timestamp in the .tar.gz file.
 GZIP_ENV = --no-name
@@ -80,18 +82,11 @@ my-distcheck: writable-files po-check
 	echo "$(distdir).tar.gz is ready for distribution"; \
 	echo "========================"
 
-a_host = alpha.gnu.org
-b_host = freefriends.org
-
-alpha_subdir = gnu/fetish
-a_url_dir = $(alpha_subdir)
-b_url_dir = $(alpha_subdir)
-
 # This must be the same name on both hosts.
 # Make it a symlink that points to the right place.
 real_dir = fetish-ftp
 
-url_dir_list = $(foreach x,a b,ftp://$($(x)_host)/$($(x)_url_dir))
+url_dir_list = $(foreach x,$(hosts),ftp://$($(x)_host)/$($(x)_url_dir))
 
 md5 = $(shell md5sum < $(my_distdir).tar.gz|sed 's/  -//')
 sha1 = $(shell sha1sum < $(my_distdir).tar.gz|sed 's/  -//')
@@ -156,42 +151,43 @@ writable-files:
 WGET = wget
 ftp-gnu = ftp://ftp.gnu.org/gnu
 
-# Use mv, if you don't have move-if-change.
-move-if-change = move-if-change
+# Use mv, if you don't have/want move-if-change.
+move_if_change ?= move-if-change
 
 # The following pseudo table associates a local directory and a URL
 # with each of the files that belongs to some other package and is
 # regularly updated from the specified URL.
-wget-files = config.guess config.sub ansi2knr.c texinfo.tex
-get-targets = $(patsubst %,get-%,$(wget-files))
+wget_files ?= $(srcdir)/config.guess $(srcdir)/config.sub \
+              $(srcdir)/src/ansi2knr.c \
+	      $(srcdir)/doc/texinfo.tex
+get-targets = $(patsubst %, get-%, $(wget_files))
 
-config.guess-local_dir = .
 config.guess-url_prefix = $(ftp-gnu)/config/
-config.sub-local_dir = .
 config.sub-url_prefix = $(ftp-gnu)/config/
 
-ansi2knr.c-local_dir = src
 ansi2knr.c-url_prefix = ftp://ftp.cs.wisc.edu/ghost/
 
-texinfo.tex-local_dir = doc
 texinfo.tex-url_prefix = $(ftp-gnu)/texinfo/
 
-target = $(patsubst get-%,%,$@)
-url = $($(target)-url_prefix)$(target)
-local_file = $($(target)-local_dir)/$(target)
+standards.texi-url_prefix = $(ftp-gnu)/GNUinfo/
+make-stds.texi-url_prefix = $(ftp-gnu)/GNUinfo/
+
+target = $(patsubst get-%, %, $@)
+url = $($(notdir $(target))-url_prefix)$(notdir $(target))
 
 .PHONY: $(get-targets)
 $(get-targets):
 	$(WGET) $(url) -O $(target).t \
-	    && $(move-if-change) $(target).t $(local_file)
+	  && $(move_if_change) $(target).t $(target)
 
 automake_repo=:pserver:anoncvs@anoncvs.cygnus.com:/cvs/automake
 .PHONY: wget-update
 wget-update: $(get-targets)
-	for f in depcomp missing; do					\
-	  echo checking out $$f...;					\
-	  cvs -d $(automake_repo) co -p automake/lib/$$f > $$f.t	\
-	    && $(move-if-change) $$f.t $$f;				\
+	for f in depcomp missing; do                                    \
+	  test -f $$f || continue;					\
+	  echo checking out $$f...;                                     \
+	  cvs -d $(automake_repo) co -p automake/lib/$$f > $$f.t        \
+	    && $(move_if_change) $$f.t $$f;                             \
 	done
 
 define emit-rsync-commands
@@ -206,9 +202,11 @@ define emit-rsync-commands
 endef
 
 # Make sure that the copyright date in lib/version-etc.c is up to date.
-check-copyright: lib/version-etc.c
-	@grep 'N_("Copyright (C) $(shell date +%Y) Free' $< > /dev/null \
-	  || { echo 'out of date copyright in $<; update it' 1>&2; exit 1; }
+check-copyright:
+	@if test -f lib/version-etc.c; then \
+	  grep 'N_("Copyright (C) $(shell date +%Y) Free' lib/version-etc.c > /dev/null \
+	  || { echo 'out of date copyright in $<; update it' 1>&2; exit 1; }; \
+	fi
 
 alpha: writable-files po-check check-copyright
 	$(MAKE) cvs-dist
