@@ -1,5 +1,19 @@
 Changes in release 3.17:
 [3.16q]
+* `df', `du', and `ls' now accept a new option --block-size=SIZE,
+  where SIZE can be a positive integer block size, followed by an
+  optional SI prefix (e.g. `k' for kilo, `M' for Mega), followed by an
+  optional `B' (for ``byte'', indicating powers of 1024, which is the
+  default) or `D' (for ``decimal byte'', indicating powers of 1000).
+  SIZE can also be `human-readable' (for -h or --human-readable
+  behavior) or `si' (for -H or --si behavior).
+* These suffixes can also be used by `dd'; e.g. `dd bs=1MB' is equivalent
+  to `dd bs=1048576'.
+* The default block size for the `df' command is now obtained from the
+  DF_BLOCK_SIZE environment variable or, if that is not set, from BLOCK_SIZE.
+  Similarly for `du' and `ls'.
+* The output columns of `df' have been adjusted slightly to accommodate
+  larger filesystems.
 * fix gettext-related link failures seen when configuring certain ways
 [3.16p]
 * fix install bug introduced in 3.16o
