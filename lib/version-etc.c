@@ -34,10 +34,10 @@
 
 /* Default copyright goes to the FSF. */
 
-char* version_etc_copyright_fmt =
-  N_("Copyright (C) %s Free Software Foundation, Inc.");
+char* version_etc_copyright =
+  /* Do *not* mark this string for translation.  */
+  "Copyright (C) 2001 Free Software Foundation, Inc.";
 
-#define COPYRIGHT_YEAR "2001"
 
 /* Display the --version information the standard way.
 
@@ -61,7 +61,7 @@ version_etc (FILE *stream,
   fprintf (stream, _("Written by %s.\n"), authors);
   putc ('\n', stream);
 
-  fprintf (stream, _(version_etc_copyright_fmt), COPYRIGHT_YEAR);
+  fputs (version_etc_copyright, stream);
   putc ('\n', stream);
 
   fputs (_("\
