@@ -1,3 +1,9 @@
+2003-07-04  Jim Meyering  <jim@meyering.net>
+
+	Update from gnulib.
+	* xreadlink.c: Include <sys/types.h> unconditionally, instead of
+	having it depend on HAVE_SYS_TYPES_H.
+
 2003-06-18  Jim Meyering  <jim@meyering.net>
 
 	* inttostr.h (PARAMS): Remove.  All uses removed.
