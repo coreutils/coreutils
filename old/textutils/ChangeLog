@@ -8,6 +8,8 @@ Mon Dec 19 22:13:55 1994  Jim Meyering  (meyering@comco.com)
 	* lib/Makefile.in (DISTFILES): Remove safe-xstat.cin.
 	Remove all related dependencies.
 
+	* src/Makefile.in: $(OBJECTS): Depend on ../lib/error.h.
+
 Thu Dec 15 23:14:04 1994  Jim Meyering  (meyering@comco.com)
 
 	* tail.c (tail_file): Fix call to error with %s in format, but
