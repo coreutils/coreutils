@@ -874,7 +874,10 @@ main (int argc, char **argv)
     {
       if (ISDIGIT (c))
 	{
-	  accum = accum * 10 + c - '0';
+	  int new_c = accum * 10 + c - '0';
+	  if (INT_MAX / 10 < accum || new_c < 0)
+	    error (EXIT_FAILURE, 0, _("column count too large"));
+	  accum = new_c;
 	  columns = accum;
 	  explicit_columns = true;
 	  continue;
