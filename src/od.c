@@ -1342,7 +1342,7 @@ get_lcm (void)
 /* If S is a valid pre-POSIX offset specification with an optional leading '+'
    return nonzero and set *OFFSET to the offset it denotes.  */
 
-int
+static int
 parse_old_offset (const char *s, uintmax_t *offset)
 {
   int radix;
