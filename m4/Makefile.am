@@ -27,13 +27,14 @@ jm-macros.m4 \
 jm-mktime.m4 \
 jm-winsz1.m4 \
 jm-winsz2.m4 \
+largefile.m4 \
 lchown.m4 \
 lcmessage.m4 \
-lfs.m4 \
 ls-mntd-fs.m4 \
 lstat.m4 \
 malloc.m4 \
 memcmp.m4 \
+mktime.m4 \
 perl.m4 \
 prereq.m4 \
 progtest.m4 \
