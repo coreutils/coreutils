@@ -1,3 +1,7 @@
+2000-03-03  Jim Meyering  <meyering@lucent.com>
+
+	* regex.m4: Make sure re_compile_pattern accepts patterns like `{1'.
+
 2000-03-02  Jim Meyering  <meyering@lucent.com>
 
 	* timespec.m4: Require AC_HEADER_TIME before the cache check so
