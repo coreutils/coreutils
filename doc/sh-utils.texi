@@ -2783,6 +2783,29 @@ variable or @code{/bin/sh} if not set, invoked with the @samp{-i} option.
 The only options are @samp{--help} and @samp{--version}.  @xref{Common
 options}.
 
+Here are a few tips to help avoid common problems in using chroot.
+To start with a simple example, make @var{command} refer to a statically
+linked binary.  If you were to use a dynamically linked executable, then
+you'd have to arrange to have the shared libraries in the right place under
+your new root directory.
+
+For example, if you create a statically linked `ls' executable,
+and put it in /tmp/empty, you can run this command as root:
+
+@example
+$ chroot /tmp/empty /ls -Rl /
+@end example
+
+Then you'll see output like this:
+
+@example
+/:
+total 1023
+-rwxr-xr-x    1 0        0         1041745 Aug 16 11:17 ls
+@end example
+
+@c FIXME: add a more complex example
+
 
 @node env invocation
 @section @code{env}: Run a command in a modified environment
