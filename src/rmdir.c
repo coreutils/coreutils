@@ -1,5 +1,5 @@
 /* rmdir -- remove directories
-   Copyright (C) 90, 91, 1995-1999 Free Software Foundation, Inc.
+   Copyright (C) 90, 91, 1995-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -86,8 +86,7 @@ static struct option const longopts[] =
 static int
 errno_rmdir_non_empty (int error_number)
 {
-  return (error_number == ENOTEMPTY
-	  || error_number == EEXIST);
+  return (error_number == RMDIR_ERRNO_NOT_EMPTY);
 }
 
 /* Remove any empty parent directories of PATH.
