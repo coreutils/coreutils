@@ -28,10 +28,6 @@
 #include "error.h"
 #include "getdate.h"
 
-#ifndef HAVE_MEMPCPY
-# define mempcpy(D, S, N) ((void *) ((char *) memcpy (D, S, N) + (N)))
-#endif
-
 #ifndef STDC_HEADERS
 size_t strftime ();
 time_t time ();
