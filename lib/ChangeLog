@@ -3,13 +3,6 @@
 	* obstack.h: Update from GNU libc.
 	* obstack.c: Likewise.
 
-2000-11-03  Bruno Haible  <haible@clisp.cons.org>
-
-	* unicodeio.c: Include wchar.h.
-	(wcrtomb): Provide fallback definition for broken platforms.
-	(print_unicode_char): New alternative definition for platforms where
-	wchar_t is Unicode.
-
 2000-11-06  Paul Eggert  <eggert@twinsun.com>
 
 	* getusershell.c (setusershell): Use rewind rather than
