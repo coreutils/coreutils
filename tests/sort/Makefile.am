@@ -8,7 +8,8 @@ t = \
   t03h t03i t04a t04b t04c t04d t04e t05a t05b t05c t05d t05e t05f t06a t06b \
   t06c t06d t06e t06f t07a t07b t07c t07d t08a t08b t09a t09b t09c t09d t10a \
   t10a0 t10a1 t10a2 t10b t10c t10d t10e t10f t10g t11a t11b t11c t11d t12a \
-  t12b t12c t12d t13a t13b t14a t14b t15a t15b t15c t15d t15e t16a t17
+  t12b t12c t12d t13a t13b t14a t14b t15a t15b t15c t15d t15e t16a t17 \
+  t18a t18b t18c t18d t18e
 
 in = $(t:=.in)
 exp = $(t:=.exp)
