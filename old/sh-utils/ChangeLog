@@ -1,3 +1,7 @@
+Thu Mar 21 16:43:13 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* src/*.c (main): Declare to be of type int, not void.
+
 Sat Mar 16 10:07:49 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* configure.in (PACKAGE_VERSION): New macro.

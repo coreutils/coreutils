@@ -1,7 +1,10 @@
 Thu Mar 21 06:58:36 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
-	* sort.c (main): Declare to return int, not void.
+	* sort.c (main): Declare to be of type int, not void.
 	From Peter Seebach <seebs@taniemarie.solon.com>.
+	* cat.c cksum.c comm.c csplit.c cut.c expand.c fold.c head.c join.c
+	nl.c paste.c pr.c split.c sum.c tac.c tail.c tr.c unexpand.c uniq.c
+	wc.c (main): Likewise.
 
 Sat Mar 16 16:30:07 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
