@@ -205,6 +205,12 @@ int rpl_lstat PARAMS((const char *, struct stat *));
 # define DT_INIT(Val) /* empty */
 #endif
 
+#ifdef ST_MTIM_NSEC
+# define TIMESPEC_NS(timespec) ((timespec).ST_MTIM_NSEC)
+#else
+# define TIMESPEC_NS(timespec) 0
+#endif
+
 enum filetype
   {
     unknown DT_INIT (DT_UNKNOWN),
@@ -383,10 +389,11 @@ struct pending
 
 static struct pending *pending_dirs;
 
-/* Current time (seconds since 1970).  When we are printing a file's time,
-   include the year if it is more than 6 months before this time.  */
+/* Current time in seconds and nanoseconds since 1970, updated as
+   needed when deciding whether a file is recent.  */
 
-static time_t current_time;
+static time_t current_time = TYPE_MINIMUM (time_t);
+static int current_time_ns = -1;
 
 /* The number of digits to use for block sizes.
    4, or more if needed for bigger numbers.  */
@@ -866,7 +873,6 @@ main (int argc, char **argv)
   dir_defaulted = 1;
   print_dir_name = 1;
   pending_dirs = 0;
-  current_time = time ((time_t *) 0);
 
   i = decode_switches (argc, argv);
 
@@ -2379,6 +2385,45 @@ long_time_expected_width (void)
   return width;
 }
 
+/* Get the current time.  */
+
+static void
+get_current_time (void)
+{
+#if HAVE_CLOCK_GETTIME && defined CLOCK_REALTIME
+  {
+    struct timespec timespec;
+    if (clock_gettime (CLOCK_REALTIME, &timespec) == 0)
+      {
+	current_time = timespec.tv_sec;
+	current_time_ns = timespec.tv_nsec;
+	return;
+      }
+  }
+#endif
+
+  /* The clock does not have nanosecond resolution, so get the maximum
+     possible value for the current time that is consistent with the
+     reported clock.  That way, files are not considered to be in the
+     future merely because their time stamps have higher resolution
+     than the clock resolution.  */
+
+#if HAVE_GETTIMEOFDAY
+  {
+    struct timeval timeval;
+    if (gettimeofday (&timeval, NULL) == 0)
+      {
+	current_time = timeval.tv_sec;
+	current_time_ns = timeval.tv_usec * 1000 + 999;
+	return;
+      }
+  }
+#endif
+
+  current_time = time (NULL);
+  current_time_ns = 999999999;
+}
+
 static void
 print_long_format (const struct fileinfo *f)
 {
@@ -2398,6 +2443,7 @@ print_long_format (const struct fileinfo *f)
   size_t s;
   char *p;
   time_t when;
+  int when_ns IF_LINT (= 0);
   struct tm *when_local;
   char *user_name;
 
@@ -2415,12 +2461,15 @@ print_long_format (const struct fileinfo *f)
     {
     case time_ctime:
       when = f->stat.st_ctime;
+      when_ns = TIMESPEC_NS (f->stat.st_ctim);
       break;
     case time_mtime:
       when = f->stat.st_mtime;
+      when_ns = TIMESPEC_NS (f->stat.st_mtim);
       break;
     case time_atime:
       when = f->stat.st_atime;
+      when_ns = TIMESPEC_NS (f->stat.st_atim);
       break;
     }
 
@@ -2481,21 +2530,26 @@ print_long_format (const struct fileinfo *f)
 
   if ((when_local = localtime (&when)))
     {
+      time_t six_months_ago;
+      int recent;
+      char const *fmt;
+
       /* If the file appears to be in the future, update the current
 	 time, in case the file happens to have been modified since
 	 the last time we checked the clock.  */
-      time_t now = (current_time < when
-		    ? (current_time = time (NULL))
-		    : current_time);
+      if (current_time < when
+	  || (current_time == when && current_time_ns < when_ns))
+	get_current_time ();
 
       /* Consider a time to be recent if it is within the past six
 	 months.  A Gregorian year has 365.2425 * 24 * 60 * 60 ==
 	 31556952 seconds on the average.  Write this value as an
 	 integer constant to avoid floating point hassles.  */
-      time_t six_months_ago = now - 31556952 / 2;
-      int recent = six_months_ago <= when && when <= now;
-
-      char const *fmt = long_time_format[recent];
+      six_months_ago = current_time - 31556952 / 2;
+      recent = (six_months_ago <= when
+		&& (when < current_time
+		    || (when == current_time && when_ns <= current_time_ns)));
+      fmt = long_time_format[recent];
 
       for (;;)
 	{
