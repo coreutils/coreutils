@@ -775,7 +775,7 @@ skip (int fdesc, char *file, uintmax_t records, size_t blocksize,
     {
       while (records--)
 	{
-	  int nread = safe_read (fdesc, buf, blocksize);
+	  ssize_t nread = safe_read (fdesc, buf, blocksize);
 	  if (nread < 0)
 	    {
 	      error (0, errno, _("reading %s"), quote (file));
@@ -892,7 +892,7 @@ dd_copy (void)
   unsigned char *ibuf, *bufstart; /* Input buffer. */
   unsigned char *real_buf;	  /* real buffer address before alignment */
   unsigned char *real_obuf;
-  int nread;			/* Bytes read in the current block. */
+  ssize_t nread;		/* Bytes read in the current block. */
   int exit_status = 0;
   size_t page_size = getpagesize ();
   size_t n_bytes_read;
@@ -991,7 +991,7 @@ dd_copy (void)
 	    }
 	}
 
-      n_bytes_read = (size_t) nread;
+      n_bytes_read = nread;
 
       if (n_bytes_read < input_blocksize)
 	{
