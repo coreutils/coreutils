@@ -206,12 +206,11 @@ wc (fd, file)
 
   /* When counting only bytes, save some line- and word-counting
      overhead.  If FD is a `regular' Unix file, using lseek is enough
-     to get its size in bytes.  Otherwise, read blocks of BUFFER_SIZE
-     bytes at a time until EOF.
-
-     NOTE: using fstat and stats.st_size (and omitting the lseek calls)
-     overcounts when the file is not positioned at the beginning.
-     For example the command
+     to get its `size' in bytes.  Otherwise, read blocks of BUFFER_SIZE
+     bytes at a time until EOF.  Note that the `size' (number of bytes)
+     that wc reports is smaller than stats.st_size when the file is not
+     positioned at its beginning.  That's why the lseek calls below are
+     necessary.  For example the command
      `(dd ibs=99k skip=1 count=0; ./wc -c) < /etc/group'
      should make wc report `0' bytes.  */
 
@@ -219,7 +218,8 @@ wc (fd, file)
     {
       off_t current_pos, end_pos;
 
-      if ((current_pos = lseek (fd, (off_t) 0, SEEK_CUR)) != -1
+      if (fstat (fd, &stats) == 0 && S_ISREG (stats.st_mode)
+	  && (current_pos = lseek (fd, (off_t) 0, SEEK_CUR)) != -1
 	  && (end_pos  = lseek (fd, (off_t) 0, SEEK_END)) != -1)
 	{
 	  off_t diff;
@@ -248,16 +248,12 @@ wc (fd, file)
 	{
 	  register char *p = buf;
 
-	  buf[bytes_read] = '\n';	/* End of buffer sentinel. */
-	  chars += bytes_read;
-	  --p;
-	  do
+	  while ((p = memchr (p, '\n', (buf + bytes_read) - p)))
 	    {
-	      p = memchr (p + 1, '\n', bytes_read + 1);
+	      ++p;
 	      ++lines;
 	    }
-	  while (p != buf + bytes_read);
-	  --lines;
+	  chars += bytes_read;
 	}
       if (bytes_read < 0)
 	{
