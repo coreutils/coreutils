@@ -140,15 +140,16 @@ nth_parent (size_t n)
   return buf;
 }
 
-/* Return the basename of the current directory, where DOT_SB is the
-   result of lstat'ing ".".
+/* Determine the basename of the current directory, where DOT_SB is the
+   result of lstat'ing "." and prepend that to the file name in *PATH.
    Find the directory entry in `..' that matches the dev/i-node of DOT_SB.
    Upon success, update *DOT_SB with stat information of `..', chdir to `..',
    and prepend "/basename" to PATH.
    Otherwise, exit with a diagnostic.
    PARENT_HEIGHT is the number of levels `..' is above the starting directory.
    The first time this function is called (from the initial directory),
-   PARENT_HEIGHT is 1.  This is solely for diagnostics.  */
+   PARENT_HEIGHT is 1.  This is solely for diagnostics.
+   Exit nonzero upon error.  */
 
 static void
 find_dir_entry (struct stat *dot_sb, struct Path *path, size_t parent_height)
