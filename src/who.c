@@ -69,11 +69,42 @@
 # define DEAD_PROCESS INT_MAX
 #endif
 
+#ifndef BOOT_TIME
+# define BOOT_TIME 0
+#endif
+
 #ifndef NEW_TIME
-# define NEW_TIME INT_MAX
+# define NEW_TIME 0
 #endif
 
 #define IDLESTR_LEN 6
+
+#if HAVE_STRUCT_XTMP_UT_PID
+# define UT_PID(U) ((U)->ut_pid)
+# define PIDSTR_DECL_AND_INIT(Var, Utmp_ent) \
+  char Var[INT_STRLEN_BOUND (Utmp_ent->ut_pid) + 1]; \
+  sprintf (Var, "%d", Utmp_ent->ut_pid)
+#else
+# define UT_PID(U) 0
+# define PIDSTR_DECL_AND_INIT(Var, Utmp_ent) \
+  const char *Var = ""
+#endif
+
+#if HAVE_STRUCT_XTMP_UT_ID
+# define UT_ID(U) ((U)->ut_id)
+#else
+  /* Of course, sizeof "whatever" is the size of a pointer (often 4),
+     but that's ok, since the actual string has a length of only 2.  */
+# define UT_ID(U) "??"
+#endif
+
+#if HAVE_STRUCT_XTMP_UT_EXIT
+# define UT_EXIT_E_TERMINATION(U) ((U)->ut_exit.e_termination)
+# define UT_EXIT_E_EXIT(U) ((U)->ut_exit.e_exit)
+#else
+# define UT_EXIT_E_TERMINATION(U) 0
+# define UT_EXIT_E_EXIT(U) 0
+#endif
 
 int gethostname ();
 char *ttyname ();
@@ -231,15 +262,6 @@ print_line (const char *user, const char state, const char *line,
   putchar ('\n');
 }
 
-#if HAVE_STRUCT_XTMP_UT_PID
-# define PIDSTR_DECL_AND_INIT(Var) \
-  char Var[INT_STRLEN_BOUND (utmp_ent->ut_pid) + 1]; \
-  sprintf (Var, "%d", utmp_ent->ut_pid)
-#else
-# define PIDSTR_DECL_AND_INIT(Var) \
-  const char *Var = ""
-#endif
-
 /* Send properly parsed USER_PROCESS info to print_line */
 static void
 print_user (const STRUCT_UTMP *utmp_ent)
@@ -255,7 +277,7 @@ print_user (const STRUCT_UTMP *utmp_ent)
 #define DEV_DIR_LEN (sizeof (DEV_DIR_WITH_TRAILING_SLASH) - 1)
 
   char line[sizeof (utmp_ent->ut_line) + DEV_DIR_LEN + 1];
-  PIDSTR_DECL_AND_INIT (pidstr);
+  PIDSTR_DECL_AND_INIT (pidstr, utmp_ent);
 
   /* Copy ut_line into LINE, prepending `/dev/' if ut_line is not
      already an absolute pathname.  Some system may put the full,
@@ -354,62 +376,61 @@ print_boottime (const STRUCT_UTMP *utmp_ent)
   print_line ("", ' ', "system boot", time_string (utmp_ent), "", "", "", "");
 }
 
+static char *
+make_id_equals_comment (STRUCT_UTMP const *utmp_ent)
+{
+  char *comment = xmalloc (sizeof (_("id=")) + sizeof UT_ID (utmp_ent) + 1);
+  sprintf (comment, "%s%.*s", _("id="), sizeof UT_ID (utmp_ent),
+	   UT_ID (utmp_ent));
+  return comment;
+}
+
 static void
 print_deadprocs (const STRUCT_UTMP *utmp_ent)
 {
-  static char *comment, *exitstr;
-  PIDSTR_DECL_AND_INIT (pidstr);
-
-  if (!comment)
-    comment = xmalloc (sizeof (_("id=")) + sizeof (utmp_ent->ut_id) + 1);
-  sprintf (comment, "%s%.*s", _("id="), sizeof utmp_ent->ut_id,
-	   utmp_ent->ut_id);
+  static char *exitstr;
+  char *comment = make_id_equals_comment (utmp_ent);
+  PIDSTR_DECL_AND_INIT (pidstr, utmp_ent);
 
   /* FIXME: ut_exit works with GNU/Linux but is probably not portable.  */
   if (!exitstr)
     exitstr = xmalloc (sizeof (_("term="))
-		       + INT_STRLEN_BOUND (utmp_ent->ut_exit.e_termination) + 1
+		       + INT_STRLEN_BOUND (UT_EXIT_E_TERMINATION (utmp_ent)) + 1
 		       + sizeof (_("exit="))
-		       + INT_STRLEN_BOUND (utmp_ent->ut_exit.e_exit)
+		       + INT_STRLEN_BOUND (UT_EXIT_E_EXIT (utmp_ent))
 		       + 1);
-  sprintf (exitstr, "%s%d %s%d", _("term="), utmp_ent->ut_exit.e_termination,
-	   _("exit="), utmp_ent->ut_exit.e_exit);
+  sprintf (exitstr, "%s%d %s%d", _("term="), UT_EXIT_E_TERMINATION (utmp_ent),
+	   _("exit="), UT_EXIT_E_EXIT (utmp_ent));
 
   /* FIXME: add idle time? */
 
   print_line ("", ' ', utmp_ent->ut_line,
 	      time_string (utmp_ent), "", pidstr, comment, exitstr);
+  free (comment);
 }
 
 static void
 print_login (const STRUCT_UTMP *utmp_ent)
 {
-  static char *comment;
-  PIDSTR_DECL_AND_INIT (pidstr);
-
-  /* FIXME: ut_id works with GNU/Linux but is probably not portable.  */
-  if (!comment)
-    comment = xmalloc (sizeof (_("id=")) + sizeof (utmp_ent->ut_id) + 1);
-  sprintf (comment, "%s%s", _("id="), utmp_ent->ut_id);
+  char *comment = make_id_equals_comment (utmp_ent);
+  PIDSTR_DECL_AND_INIT (pidstr, utmp_ent);
 
   /* FIXME: add idle time? */
 
   print_line ("LOGIN", ' ', utmp_ent->ut_line,
 	      time_string (utmp_ent), "", pidstr, comment, "");
+  free (comment);
 }
 
 static void
 print_initspawn (const STRUCT_UTMP *utmp_ent)
 {
-  static char *comment;
-  PIDSTR_DECL_AND_INIT (pidstr);
-
-  if (!comment)
-    comment = xmalloc (sizeof (_("id=")) + sizeof (utmp_ent->ut_id) + 1);
-  sprintf (comment, "%s%s", _("id="), utmp_ent->ut_id);
+  char *comment = make_id_equals_comment (utmp_ent);
+  PIDSTR_DECL_AND_INIT (pidstr, utmp_ent);
 
   print_line ("", ' ', utmp_ent->ut_line,
 	      time_string (utmp_ent), "", pidstr, comment, "");
+  free (comment);
 }
 
 static void
@@ -424,13 +445,8 @@ static void
 print_runlevel (const STRUCT_UTMP *utmp_ent)
 {
   static char *runlevline, *comment;
-
-  /* FIXME: The following is correct for linux, may need help
-     on other platforms */
-#if 1 || HAVE_STRUCT_XTMP_UT_PID
-  int last = utmp_ent->ut_pid / 256;
-  int curr = utmp_ent->ut_pid % 256;
-#endif
+  int last = UT_PID (utmp_ent) / 256;
+  int curr = UT_PID (utmp_ent) % 256;
 
   if (!runlevline)
     runlevline = xmalloc (sizeof (_("run-level")) + 3);
