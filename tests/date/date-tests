@@ -587,8 +587,127 @@ else
   esac
 fi
 test -s rel-3a.E || rm -f rel-3a.E
+LANG=C TZ=UTC $xx -d '1997-01-19 08:17:48 +0 next second' '+%Y-%m-%d %T'  > next-s.O 2> next-s.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test next-s(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp next-s.O $srcdir/next-s.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed next-s(LANG=C TZ=UTC)"; fi ;;
+    1) $echo "Test next-s(LANG=C TZ=UTC) failed: files next-s.O and $srcdir/next-s.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test next-s(LANG=C TZ=UTC) may have failed." 1>&2;
+       $echo The command "cmp next-s.O $srcdir/next-s.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s next-s.E || rm -f next-s.E
+LANG=C TZ=UTC $xx -d '1997-01-19 08:17:48 +0 next minute' '+%Y-%m-%d %T'  > next-m.O 2> next-m.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test next-m(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp next-m.O $srcdir/next-m.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed next-m(LANG=C TZ=UTC)"; fi ;;
+    1) $echo "Test next-m(LANG=C TZ=UTC) failed: files next-m.O and $srcdir/next-m.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test next-m(LANG=C TZ=UTC) may have failed." 1>&2;
+       $echo The command "cmp next-m.O $srcdir/next-m.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s next-m.E || rm -f next-m.E
+LANG=C TZ=UTC $xx -d '1997-01-19 08:17:48 +0 next hour'   '+%Y-%m-%d %T'  > next-h.O 2> next-h.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test next-h(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp next-h.O $srcdir/next-h.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed next-h(LANG=C TZ=UTC)"; fi ;;
+    1) $echo "Test next-h(LANG=C TZ=UTC) failed: files next-h.O and $srcdir/next-h.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test next-h(LANG=C TZ=UTC) may have failed." 1>&2;
+       $echo The command "cmp next-h.O $srcdir/next-h.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s next-h.E || rm -f next-h.E
+LANG=C TZ=UTC $xx -d '1997-01-19 08:17:48 +0 next day'    '+%Y-%m-%d %T'  > next-d.O 2> next-d.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test next-d(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp next-d.O $srcdir/next-d.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed next-d(LANG=C TZ=UTC)"; fi ;;
+    1) $echo "Test next-d(LANG=C TZ=UTC) failed: files next-d.O and $srcdir/next-d.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test next-d(LANG=C TZ=UTC) may have failed." 1>&2;
+       $echo The command "cmp next-d.O $srcdir/next-d.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s next-d.E || rm -f next-d.E
+LANG=C TZ=UTC $xx -d '1997-01-19 08:17:48 +0 next week'   '+%Y-%m-%d %T'  > next-w.O 2> next-w.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test next-w(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp next-w.O $srcdir/next-w.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed next-w(LANG=C TZ=UTC)"; fi ;;
+    1) $echo "Test next-w(LANG=C TZ=UTC) failed: files next-w.O and $srcdir/next-w.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test next-w(LANG=C TZ=UTC) may have failed." 1>&2;
+       $echo The command "cmp next-w.O $srcdir/next-w.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s next-w.E || rm -f next-w.E
+LANG=C TZ=UTC $xx -d '1997-01-19 08:17:48 +0 next month' '+%Y-%m-%d %T'  > next-mo.O 2> next-mo.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test next-mo(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp next-mo.O $srcdir/next-mo.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed next-mo(LANG=C TZ=UTC)"; fi ;;
+    1) $echo "Test next-mo(LANG=C TZ=UTC) failed: files next-mo.O and $srcdir/next-mo.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test next-mo(LANG=C TZ=UTC) may have failed." 1>&2;
+       $echo The command "cmp next-mo.O $srcdir/next-mo.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s next-mo.E || rm -f next-mo.E
+LANG=C TZ=UTC $xx -d '1997-01-19 08:17:48 +0 next year'   '+%Y-%m-%d %T'  > next-y.O 2> next-y.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test next-y(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp next-y.O $srcdir/next-y.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed next-y(LANG=C TZ=UTC)"; fi ;;
+    1) $echo "Test next-y(LANG=C TZ=UTC) failed: files next-y.O and $srcdir/next-y.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test next-y(LANG=C TZ=UTC) may have failed." 1>&2;
+       $echo The command "cmp next-y.O $srcdir/next-y.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s next-y.E || rm -f next-y.E
 if test $errors = 0 ; then
-  $echo Passed all 34 tests. 1>&2
+  $echo Passed all 41 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi

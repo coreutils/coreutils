@@ -242,6 +242,8 @@ $x-tests: @MAINT@mk-script Test.pm
 	mv $@.n $@
 	chmod 755 $@
 
+mk-script: ../../config.status
+
 .pl:
 	rm -f $@ $@.tmp
 	$(editpl) $< > $@.tmp
