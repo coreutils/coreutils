@@ -39,7 +39,7 @@
 #include "xstrtod.h"
 #include "xalloc.h"
 
-#ifdef ENABLE_NLS
+#if defined ENABLE_NLS && HAVE_LANGINFO_H
 # include <langinfo.h>
 #endif
 
