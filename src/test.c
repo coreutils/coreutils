@@ -293,19 +293,15 @@ isint (register char *string, intmax_t *result)
 }
 
 /* Find the modification time of FILE, and stuff it into *AGE.
-   Return nonzero if successful, else zero. */
+   Return 0 if successful, -1 if not.  */
 static int
 age_of (char *filename, time_t *age)
 {
   struct stat finfo;
-
-  if (test_stat (filename, &finfo) < 0)
-    return (0);
-
-  if (age)
+  int r = test_stat (filename, &finfo);
+  if (r == 0)
     *age = finfo.st_mtime;
-
-  return (1);
+  return r;
 }
 
 /*
@@ -520,13 +516,13 @@ binary_operator (void)
 	    {
 	      /* nt - newer than */
 	      time_t lt, rt;
+	      int le, re;
 	      pos += 3;
 	      if (l_is_l || r_is_l)
 		test_syntax_error (_("-nt does not accept -l\n"), NULL);
-	      if (age_of (argv[op - 1], &lt) && age_of (argv[op + 1], &rt))
-		return (TRUE == (lt > rt));
-	      else
-		return (FALSE);
+	      le = age_of (argv[op - 1], &lt);
+	      re = age_of (argv[op + 1], &rt);
+	      return le > re || (le == 0 && lt > rt);
 	    }
 
 	  if (argv[op][2] == 'e' && !argv[op][3])
@@ -594,12 +590,13 @@ binary_operator (void)
 	    {
 	      /* ot - older than */
 	      time_t lt, rt;
+	      int le, re;
 	      pos += 3;
 	      if (l_is_l || r_is_l)
 		test_syntax_error (_("-ot does not accept -l\n"), NULL);
-	      if (age_of (argv[op - 1], &lt) && age_of (argv[op + 1], &rt))
-		return (TRUE == (lt < rt));
-	      return (FALSE);
+	      le = age_of (argv[op - 1], &lt);
+	      re = age_of (argv[op + 1], &rt);
+	      return le < re || (re == 0 && lt < rt);
 	    }
 	  break;
 	}
