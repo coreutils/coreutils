@@ -1,6 +1,14 @@
-2003-07-24  Jim Meyering  <jim@meyering.net>
+2003-07-25  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.90.
+
+	* tests/misc/split-fail: Disable the --line-bytes=$_4gb test,
+	because it'd evoke spurious failure on 64-bit systems.
+
+2003-07-24  Jim Meyering  <jim@meyering.net>
+
+	* src/dd.c (usage): Document the fact that SIGUSR1 makes dd
+	output its current record counts.  Reported by Jurriaan.
 
 	* tests/wc/Test.pm (test_vector): Disable the `PIPE' tests when running
 	`wc' with no options.  This goes along with the change of 2003-07-20.
