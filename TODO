@@ -95,3 +95,7 @@ sort: Add an ordering option -R that causes 'sort' to sort according
   output.  The default SEED is chosen at random, and contains enough
   information to ensure that the output permutation is random.
   suggestion from Feth AREZKI, Stephan Kasal, and Paul Eggert on 2003-07-17
+
+unexpand: [http://www.opengroup.org/onlinepubs/007908799/xcu/unexpand.html]
+  printf 'x\t \t y\n'|unexpand -t 8,9 should print its input, unmodified.
+  printf 'x\t \t y\n'|unexpand -t 5,8 should print "x\ty\n"
