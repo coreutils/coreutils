@@ -2,6 +2,9 @@ Sun May 21 07:50:00 1995  Jim Meyering  (meyering@comco.com)
 
 	* Makefile.in (.PHONY): TAGS is not a phony target.  From Franc,ois.
 
+	* xstrtol.c (__strtol): Remove prototype altogether.
+	Move inclusion of xstrtol.h back so that it follows system headers.
+
 	* Version 1.11.2.
 
 Sat May 20 06:44:14 1995  Jim Meyering  (meyering@comco.com)
