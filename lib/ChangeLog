@@ -1,3 +1,11 @@
+2003-01-12  Jim Meyering  <jim@meyering.net>
+
+	* ftw.c (ftw_startup): Rename local-shadowing local to pacify gcc.
+
+	* ftw.h, ftw.c: New files, from glibc/io.
+
+	* Makefile.am (libfetish_a_SOURCES): Add ftw.h.
+
 2003-01-11  Jim Meyering  <jim@meyering.net>
 
 	* makepath.c: Don't test HAVE_ERRNO_H.  It's not necessary.
