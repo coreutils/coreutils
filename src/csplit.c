@@ -22,6 +22,7 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include <signal.h>
+#include <limits.h>
 #include "regex.h"
 #include "system.h"
 #include "version.h"
@@ -155,6 +156,9 @@ static char *filename_space = NULL;
 /* Prefix part of output file names. */
 static char *prefix = NULL;
 
+/* Suffix part of output file names. */
+static char *suffix = NULL;
+
 /* Number of digits to use in output file names. */
 static int digits = 2;
 
@@ -167,6 +171,9 @@ static unsigned bytes_written;
 /* Output file pointer. */
 static FILE *output_stream = NULL;
 
+/* Output file name. */
+static char *output_filename = NULL;
+
 /* Perhaps it would be cleaner to pass arg values instead of indexes. */
 static char **global_argv;
 
@@ -175,6 +182,9 @@ static boolean suppress_count;
 
 /* If TRUE, remove output files on error. */
 static boolean remove_files;
+
+/* If TRUE, remove all output files which have a zero length. */
+static boolean abandon_null_files;
 
 /* The compiled pattern arguments, which determine how to split
    the input file. */
@@ -192,10 +202,12 @@ static int show_version;
 static struct option const longopts[] =
 {
   {"digits", required_argument, NULL, 'n'},
-  {"quiet", no_argument, NULL, 's'},
+  {"quiet", no_argument, NULL, 'q'},
   {"silent", no_argument, NULL, 's'},
   {"keep-files", no_argument, NULL, 'k'},
+  {"abandon-null-files", no_argument, NULL, 'z'},
   {"prefix", required_argument, NULL, 'f'},
+  {"suffix", required_argument, NULL, 'b'},
   {"help", no_argument, &show_help, 1},
   {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
@@ -849,7 +861,19 @@ process_regexp (p, repetition)
 	{
 	  line = find_line (++current_line);
 	  if (line == NULL)
-	    regexp_error (p, repetition, ignore);
+	    {
+	      if (p->repeat == INT_MAX)
+		{
+		  if (!ignore)
+		    {
+		      dump_rest_of_file ();
+		      close_output_file ();
+		    }
+		  exit (0);
+		}
+	      else
+		regexp_error (p, repetition, ignore);
+	    }
 	  line_len = line->len;
 	  if (line->str[line_len - 1] == '\n')
 	    line_len--;
@@ -877,7 +901,19 @@ process_regexp (p, repetition)
 	{
 	  line = find_line (++current_line);
 	  if (line == NULL)
-	    regexp_error (p, repetition, ignore);
+	    {
+	      if (p->repeat == INT_MAX)
+		{
+		  if (!ignore)
+		    {
+		      dump_rest_of_file ();
+		      close_output_file ();
+		    }
+		  exit (0);
+		}
+	      else
+		regexp_error (p, repetition, ignore);
+	    }
 	  line_len = line->len;
 	  if (line->str[line_len - 1] == '\n')
 	    line_len--;
@@ -936,7 +972,11 @@ static char *
 make_filename (num)
      int num;
 {
-  sprintf (filename_space, "%s%0*d", prefix, digits, num);
+  strcpy (filename_space, prefix);
+  if (suffix)
+    sprintf (filename_space+strlen(prefix), suffix, num);
+  else
+    sprintf (filename_space+strlen(prefix), "%0*d", digits, num);
   return filename_space;
 }
 
@@ -945,13 +985,11 @@ make_filename (num)
 static void
 create_output_file ()
 {
-  char *name;
-
-  name = make_filename (files_created);
-  output_stream = fopen (name, "w");
+  output_filename = make_filename (files_created);
+  output_stream = fopen (output_filename, "w");
   if (output_stream == NULL)
     {
-      error (0, errno, "%s", name);
+      error (0, errno, "%s", output_filename);
       cleanup ();
     }
   files_created++;
@@ -984,11 +1022,18 @@ close_output_file ()
     {
       if (fclose (output_stream) == EOF)
 	{
-	  error (0, errno, "write error");
+	  error (0, errno, "write error for `%s'", output_filename);
 	  cleanup ();
 	}
-      if (!suppress_count)
-	fprintf (stdout, "%d\n", bytes_written);
+      if (bytes_written == 0 && abandon_null_files)
+	{
+	  if (unlink (output_filename))
+	    error (0, errno, "%s", output_filename);
+	  files_created--;
+	}
+      else
+        if (!suppress_count)
+	  fprintf (stdout, "%d\n", bytes_written);
       output_stream = NULL;
     }
 }
@@ -1112,9 +1157,12 @@ parse_repeat_count (argnum, p, str)
     error (1, 0, "%s: `}' is required in repeat count", str);
   *end = '\0';
 
-  if (!string_to_number (&p->repeat, str +  1))
-    error (1, 0, "%s}: integer required between `{' and `}'",
-	   global_argv[argnum]);
+  if (str+1 == end-1 && *(str+1) == '*')
+    p->repeat = INT_MAX;
+  else
+    if (!string_to_number (&p->repeat, str +  1))
+      error (1, 0, "%s}: integer required between `{' and `}'",
+	     global_argv[argnum]);
 
   *end = '}';
 }
@@ -1200,6 +1248,156 @@ parse_patterns (argc, start, argv)
     }
 }
 
+static unsigned
+get_format_flags (format_ptr)
+     register char **format_ptr;
+{
+  register unsigned count = 0;
+
+  for (; **format_ptr; (*format_ptr)++)
+    switch (**format_ptr)
+      {
+      case '-':
+	break;
+
+      case '+':
+	count++;
+	break;
+
+      case ' ':
+	count++;
+	break;
+
+      case '#':
+	count += 2;	/* Allow for 0x prefix preceeding an `x' conversion */
+	break;
+
+      default:
+	return count;
+      }
+}
+
+static unsigned
+get_format_width (format_ptr)
+     register char **format_ptr;
+{
+  register unsigned count = 0;
+  register char *start;
+  register int ch_save;
+
+  start = *format_ptr;
+  for (; **format_ptr; (*format_ptr)++)
+    if (**format_ptr < '0' || **format_ptr > '9')
+      break;
+
+  ch_save = **format_ptr;
+  **format_ptr = '\0';
+  /* In the case where no minimum field width is explicitly specified,
+     allow for enough digits to encode (in octal) the value of LONG_MAX
+     for a 32 bit machine.  If the user attempts to use csplit to create
+     anywhere near 077777777777 output files... well... he'll probably
+     run into other problems before he runs out of space in the area set
+     aside to hold the filenames.  */
+  count = (*format_ptr == start) ? 11 : atoi (start);
+  **format_ptr = ch_save;
+  return count;
+}
+
+static unsigned
+get_format_prec (format_ptr)
+     register char **format_ptr;
+{
+  register unsigned count = 0;
+  register char *start;
+  register int ch_save;
+  register int is_negative;
+
+  if (**format_ptr != '.')
+    return 0;
+  (*format_ptr)++;
+
+  if (**format_ptr == '-' || **format_ptr == '+')
+    {
+      is_negative = (**format_ptr == '-');
+      (*format_ptr)++;
+    }
+
+  start = *format_ptr;
+  for (; **format_ptr; (*format_ptr)++)
+    if (**format_ptr < '0' || **format_ptr > '9')
+      break;
+
+  /* ANSI 4.9.6.1 says that is the precision is negative, it's as good as
+     not there. */
+  if (is_negative)
+    start = *format_ptr;
+
+  ch_save = **format_ptr;
+  **format_ptr = '\0';
+  count = (*format_ptr == start) ? 11 : atoi (start);
+  **format_ptr = ch_save;
+
+  return count;
+}
+
+static void
+get_format_conv_type (format_ptr)
+     register char **format_ptr;
+{
+  register int ch = *((*format_ptr)++);
+
+  switch (ch)
+    {
+    case 'd': case 'i': case 'o': case 'u': case 'x': case 'X':
+      break;
+
+    default:
+      if (ch < '~' && ch > ' ')
+        error (1, 0, "invalid conversion specifier in suffix: %c", ch);
+      else
+        error (1, 0, "invalid conversion specifier in suffix: \\%.3o", ch);
+    }
+}
+
+#ifndef max
+#define max(a,b) (((a) > (b)) ? (a) : (b))
+#endif
+
+static unsigned
+max_out (format)
+     char *format;
+{
+  register unsigned out_count = 0;
+  register unsigned percents = 0;
+
+  for (; *format; )
+    {
+      register int ch = *format++;
+
+      if (ch != '%')
+        out_count++;
+      else
+	{
+	  percents++;
+	  out_count += get_format_flags (&format);
+	  {
+	    register width = get_format_width (&format);
+	    register prec = get_format_prec (&format);
+
+	    out_count += max (width, prec);
+	  }
+	  get_format_conv_type (&format);
+	}
+    }
+
+  if (percents == 0)
+    error (1, 0, "missing % conversion specification in suffix");
+  else if (percents > 1)
+    error (1, 0, "too many % conversion specification in suffix");
+
+  return out_count;
+}
+
 static void
 interrupt_handler ()
 {
@@ -1256,7 +1454,7 @@ main (argc, argv)
     signal (SIGTERM, interrupt_handler);
 #endif
 
-  while ((optc = getopt_long (argc, argv, "f:kn:s", longopts, (int *) 0))
+  while ((optc = getopt_long (argc, argv, "f:b:kn:sqz", longopts, (int *) 0))
 	 != EOF)
     switch (optc)
       {
@@ -1265,6 +1463,10 @@ main (argc, argv)
 
       case 'f':
 	prefix = optarg;
+	break;
+
+      case 'b':
+	suffix = optarg;
 	break;
 
       case 'k':
@@ -1277,7 +1479,12 @@ main (argc, argv)
 	break;
 
       case 's':
+      case 'q':
 	suppress_count = TRUE;
+	break;
+
+      case 'z':
+	abandon_null_files = TRUE;
 	break;
 
       default:
@@ -1296,7 +1503,10 @@ main (argc, argv)
   if (optind >= argc - 1)
     usage ();
 
-  filename_space = (char *) xmalloc (strlen (prefix) + digits + 2);
+  if (suffix)
+    filename_space = (char *) xmalloc (strlen (prefix) + max_out (suffix) + 2);
+  else
+    filename_space = (char *) xmalloc (strlen (prefix) + digits + 2);
 
   set_input_file (argv[optind++]);
 
@@ -1317,9 +1527,10 @@ static void
 usage ()
 {
   fprintf (stderr, "\
-Usage: %s [-sk] [-f prefix] [-n digits] [--prefix=prefix]\n\
-       [--digits=digits] [--quiet] [--silent] [--keep-files]\n\
-       [--help] [--version] file pattern...\n",
+Usage: %s [-sqkz] [-f prefix] [-b suffix] [-n digits] [--prefix=prefix]\n\
+       [--suffix=suffix] [--digits=digits] [--quiet] [--silent]\n\
+       [--keep-files] [--abandon-null-files] [--help] [--version]\n\
+       file pattern...\n",
 	   program_name);
   exit (1);
 }
