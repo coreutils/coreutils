@@ -150,6 +150,13 @@ install-data-yes: all
 	      true; \
 	    fi; \
 	  fi; \
+	  if test "$(PACKAGE)" = "fileutils"; then \
+	    timedir=$$destdir/$$lang/LC_TIME; \
+	    rm -fr $$timedir; \
+	    ln -s LC_MESSAGES $$timedir \
+	    || (mkdir $$timedir && ln $$dir/* $$timedir); \
+	    echo "installing $$timedir as an alias for $$dir"; \
+	  fi; \
 	done
 	if test "$(PACKAGE)" = "gettext"; then \
 	  if test -x "$(MKINSTALLDIRS)"; then \
