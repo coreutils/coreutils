@@ -2,6 +2,13 @@
 
 	* Version 5.0.1.
 
+	* src/nohup.c: New file.  Rewrite of nohup.sh in C.
+	This solves a portability problem: on at least Solaris systems,
+	when nohup.sh used the vendor /bin/sh, it would exit with status
+	of `1' rather than the required 126 or 127 upon failure to exec
+	the specified program.
+	* tests/misc/nohup: Tests for the above.
+
 	* src/head.c (diagnose_copy_fd_failure): New function, renamed from
 	the macro, COPY_FD_DIAGNOSE.
 	(diagnose_copy_fd_failure): Enclose diagnostic in _(...).
