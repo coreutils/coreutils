@@ -1,4 +1,6 @@
-/* Copyright (C) 1991,93,96,97,99,2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1996, 1997, 1999, 2000, 2003 Free
+   Software Foundation, Inc.
+
    Based on strlen implementation by Torbjorn Granlund (tege@sics.se),
    with help from Dan Sahlin (dan@sics.se) and
    commentary by Jim Blandy (jimb@ai.mit.edu);
@@ -27,33 +29,18 @@ USA.  */
 # include <config.h>
 #endif
 
-#undef __ptr_t
-#if defined (__cplusplus) || (defined (__STDC__) && __STDC__)
-# define __ptr_t void *
-#else /* Not C++ or ANSI C.  */
-# define __ptr_t char *
-#endif /* C++ or ANSI C.  */
+#include <string.h>
 
 #if defined _LIBC
-# include <string.h>
 # include <memcopy.h>
 #else
 # define reg_char char
 #endif
 
-#if HAVE_STDLIB_H || defined _LIBC
-# include <stdlib.h>
-#endif
-
-#if HAVE_LIMITS_H || defined _LIBC
-# include <limits.h>
-#endif
+#include <limits.h>
+#include <stdlib.h>
 
 #define LONG_MAX_32_BITS 2147483647
-
-#ifndef LONG_MAX
-# define LONG_MAX LONG_MAX_32_BITS
-#endif
 
 #include <sys/types.h>
 #if HAVE_BP_SYM_H || defined _LIBC
@@ -66,11 +53,8 @@ USA.  */
 #undef __memchr
 
 /* Search no more than N bytes of S for C.  */
-__ptr_t
-__memchr (s, c_in, n)
-     const __ptr_t s;
-     int c_in;
-     size_t n;
+void *
+__memchr (void const *s, int c_in, size_t n)
 {
   const unsigned char *char_ptr;
   const unsigned long int *longword_ptr;
@@ -86,7 +70,7 @@ __memchr (s, c_in, n)
 		 & (sizeof (longword) - 1)) != 0;
        --n, ++char_ptr)
     if (*char_ptr == c)
-      return (__ptr_t) char_ptr;
+      return (void *) char_ptr;
 
   /* All these elucidatory comments refer to 4-byte longwords,
      but the theory applies equally well to 8-byte longwords.  */
@@ -177,22 +161,22 @@ __memchr (s, c_in, n)
 	  const unsigned char *cp = (const unsigned char *) (longword_ptr - 1);
 
 	  if (cp[0] == c)
-	    return (__ptr_t) cp;
+	    return (void *) cp;
 	  if (cp[1] == c)
-	    return (__ptr_t) &cp[1];
+	    return (void *) &cp[1];
 	  if (cp[2] == c)
-	    return (__ptr_t) &cp[2];
+	    return (void *) &cp[2];
 	  if (cp[3] == c)
-	    return (__ptr_t) &cp[3];
+	    return (void *) &cp[3];
 #if LONG_MAX > 2147483647
 	  if (cp[4] == c)
-	    return (__ptr_t) &cp[4];
+	    return (void *) &cp[4];
 	  if (cp[5] == c)
-	    return (__ptr_t) &cp[5];
+	    return (void *) &cp[5];
 	  if (cp[6] == c)
-	    return (__ptr_t) &cp[6];
+	    return (void *) &cp[6];
 	  if (cp[7] == c)
-	    return (__ptr_t) &cp[7];
+	    return (void *) &cp[7];
 #endif
 	}
 
@@ -204,7 +188,7 @@ __memchr (s, c_in, n)
   while (n-- > 0)
     {
       if (*char_ptr == c)
-	return (__ptr_t) char_ptr;
+	return (void *) char_ptr;
       else
 	++char_ptr;
     }
