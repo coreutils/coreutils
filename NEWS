@@ -26,7 +26,8 @@
   like Tru64 with __sys_siglist but no strsignal function.
 * stat.c now compiles on Ultrix systems
 * mv now removes `a' in this example on all systems: touch a; ln a b; mv a b
-  This behavior is contrary to POSIX, but I suspect POSIX will change.
+  This behavior is contrary to POSIX (which requires that the mv command do
+  nothing and exit successfully), but I suspect POSIX will change.
 
 [5.0]
 * false --help now exits nonzero
