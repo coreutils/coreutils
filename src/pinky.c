@@ -1,5 +1,5 @@
 /* GNU's pinky.
-   Copyright (C) 1992-1997, 1999-2003 Free Software Foundation, Inc.
+   Copyright (C) 1992-1997, 1999-2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -460,7 +460,7 @@ long_pinky (const int argc_names, char *const argv_names[])
 void
 usage (int status)
 {
-  if (status != 0)
+  if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
