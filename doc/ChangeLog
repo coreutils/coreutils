@@ -1,3 +1,8 @@
+2004-06-25  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (install invocation): Document
+	--target-directory in synopsis, too.
+
 2004-06-15  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (yes invocation): "--" is now supported.
