@@ -1,3 +1,13 @@
+1997-09-14  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/dd.c (equal): Use STREQ (form system.h) instead.
+	(siginfo_handler): New function to handle SIGINFO/SIGUSR1.
+	(handle_sig): New function.
+	(main): Use handle_sig instead of open-coding it.
+	Handle SIGINFO (or SIGUSR1 if that's not defined).
+	(print_stats): Move definition to precede first reference.
+	Remove prototype.
+
 1997-09-13  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/ls.c (print_many_per_line): Add some non-essential curly braces.
