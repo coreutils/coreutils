@@ -32,6 +32,10 @@
 
 #define TEST_STANDALONE 1
 
+#ifndef LBRACKET
+# define LBRACKET 0
+#endif
+
 #include "system.h"
 #include "error.h"
 #include "euidaccess.h"
@@ -859,7 +863,7 @@ unop (int op)
 static int
 one_argument (const char *s)
 {
-  if (STREQ (s, "-t"))
+  if (! getenv ("POSIXLY_CORRECT") && STREQ (s, "-t"))
     return (TRUE == (isatty (1)));
 
   return strlen (s) != 0;
@@ -1082,32 +1086,26 @@ main (int margc, char **margv)
   atexit (close_stdout);
 #endif /* TEST_STANDALONE */
 
-  argv = margv;
+  /* Recognize --help or --version unless POSIXLY_CORRECT is set.  */
+  if (! getenv ("POSIXLY_CORRECT"))
+    parse_long_options (margc, margv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
+			AUTHORS, usage);
 
-  if (margv[0] && strcmp (margv[0], "[") == 0)
+  if (LBRACKET)
     {
-      /* Don't recognize --help or --version if POSIXLY_CORRECT is set.  */
-      if (getenv ("POSIXLY_CORRECT") == NULL)
-	parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-			    AUTHORS, usage);
-
       --margc;
 
-      if (margc < 2)
-	test_exit (SHELL_BOOLEAN (FALSE));
-
-      if (margv[margc] && strcmp (margv[margc], "]") != 0)
+      if (margc < 1 || strcmp (margv[margc], "]") != 0)
 	test_syntax_error (_("missing `]'\n"), NULL);
     }
 
+  argv = margv;
   argc = margc;
   pos = 1;
 
   if (pos >= argc)
     test_exit (SHELL_BOOLEAN (FALSE));
 
-  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      AUTHORS, usage);
   value = posixtest ();
 
   if (pos != argc)
