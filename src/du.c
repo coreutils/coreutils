@@ -100,18 +100,18 @@ typedef struct String String;
 int stat ();
 int lstat ();
 
-static int hash_insert __P ((ino_t ino, dev_t dev));
-static int hash_insert2 __P ((struct htab *_htab, ino_t ino, dev_t dev));
-static uintmax_t count_entry __P ((const char *ent, int top, dev_t last_dev,
+static int hash_insert PARAMS ((ino_t ino, dev_t dev));
+static int hash_insert2 PARAMS ((struct htab *_htab, ino_t ino, dev_t dev));
+static uintmax_t count_entry PARAMS ((const char *ent, int top, dev_t last_dev,
 				   int depth));
-static void du_files __P ((char **files));
-static void hash_init __P ((unsigned int modulus,
+static void du_files PARAMS ((char **files));
+static void hash_init PARAMS ((unsigned int modulus,
 			    unsigned int entry_tab_size));
-static void hash_reset __P ((void));
-static void str_concatc __P ((String *s1, char *cstr));
-static void str_copyc __P ((String *s1, char *cstr));
-static void str_init __P ((String **s1, unsigned int size));
-static void str_trunc __P ((String *s1, unsigned int length));
+static void hash_reset PARAMS ((void));
+static void str_concatc PARAMS ((String *s1, char *cstr));
+static void str_copyc PARAMS ((String *s1, char *cstr));
+static void str_init PARAMS ((String **s1, unsigned int size));
+static void str_trunc PARAMS ((String *s1, unsigned int length));
 
 /* Name under which this program was invoked.  */
 char *program_name;

@@ -37,9 +37,9 @@ enum Change_status
 void mode_string ();
 void strip_trailing_slashes ();
 
-static int change_dir_mode __P ((const char *dir,
-				 const struct mode_change *changes,
-				 const struct stat *statp));
+static int change_dir_mode PARAMS ((const char *dir,
+				    const struct mode_change *changes,
+				    const struct stat *statp));
 
 /* The name the program was run with. */
 char *program_name;

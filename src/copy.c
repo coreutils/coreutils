@@ -39,10 +39,10 @@ int full_write ();
 int euidaccess ();
 int yesno ();
 
-static int copy_internal __P ((const char *src_path, const char *dst_path,
-			       int new_dst, dev_t device,
-			       struct dir_list *ancestors,
-			       const struct cp_options *x));
+static int copy_internal PARAMS ((const char *src_path, const char *dst_path,
+				  int new_dst, dev_t device,
+				  struct dir_list *ancestors,
+				  const struct cp_options *x));
 
 /* The invocation name of this program.  */
 extern char *program_name;

@@ -56,8 +56,8 @@ enum Change_status
 
 char *group_member ();
 
-static int change_dir_group __P ((const char *dir, int group,
-				  const struct stat *statp));
+static int change_dir_group PARAMS ((const char *dir, int group,
+				     const struct stat *statp));
 
 /* The name the program was run with. */
 char *program_name;

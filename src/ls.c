@@ -138,67 +138,69 @@ void strip_trailing_slashes ();
 char *xstrdup ();
 void invalid_arg ();
 
-static size_t quote_filename __P ((FILE *out, const char *filename));
-static char *make_link_path __P ((const char *path, const char *linkname));
-static int compare_atime __P ((const struct fileinfo *file1,
-			       const struct fileinfo *file2));
-static int rev_cmp_atime __P ((const struct fileinfo *file2,
-			       const struct fileinfo *file1));
-static int compare_ctime __P ((const struct fileinfo *file1,
-			       const struct fileinfo *file2));
-static int rev_cmp_ctime __P ((const struct fileinfo *file2,
-			       const struct fileinfo *file1));
-static int compare_mtime __P ((const struct fileinfo *file1,
-			       const struct fileinfo *file2));
-static int rev_cmp_mtime __P ((const struct fileinfo *file2,
-			       const struct fileinfo *file1));
-static int compare_size __P ((const struct fileinfo *file1,
-			      const struct fileinfo *file2));
-static int rev_cmp_size __P ((const struct fileinfo *file2,
-			      const struct fileinfo *file1));
-static int compare_name __P ((const struct fileinfo *file1,
-			      const struct fileinfo *file2));
-static int rev_cmp_name __P ((const struct fileinfo *file2,
-			      const struct fileinfo *file1));
-static int compare_extension __P ((const struct fileinfo *file1,
-				   const struct fileinfo *file2));
-static int rev_cmp_extension __P ((const struct fileinfo *file2,
-				   const struct fileinfo *file1));
-static int compare_version __P ((const struct fileinfo *file1,
-				   const struct fileinfo *file2));
-static int rev_cmp_version __P ((const struct fileinfo *file2,
-				   const struct fileinfo *file1));
-static int decode_switches __P ((int argc, char **argv));
-static int file_interesting __P ((const struct dirent *next));
-static uintmax_t gobble_file __P ((const char *name, int explicit_arg,
-				   const char *dirname));
-static int is_not_dot_or_dotdot __P ((const char *name));
-static void print_color_indicator __P ((const char *name, unsigned int mode,
-					int linkok));
-static void put_indicator __P ((const struct bin_str *ind));
-static int length_of_file_name_and_frills __P ((const struct fileinfo *f));
-static void add_ignore_pattern __P ((const char *pattern));
-static void attach __P ((char *dest, const char *dirname, const char *name));
-static void clear_files __P ((void));
-static void extract_dirs_from_files __P ((const char *dirname, int recursive));
-static void get_link_name __P ((const char *filename, struct fileinfo *f));
-static void indent __P ((int from, int to));
-static void init_col_info __P ((void));
-static void print_current_files __P ((void));
-static void print_dir __P ((const char *name, const char *realname));
-static void print_file_name_and_frills __P ((const struct fileinfo *f));
-static void print_horizontal __P ((void));
-static void print_long_format __P ((const struct fileinfo *f));
-static void print_many_per_line __P ((void));
-static void print_name_with_quoting __P ((const char *p, unsigned int mode,
-					  int linkok, struct obstack *stack));
-static void prep_non_filename_text __P ((void));
-static void print_type_indicator __P ((unsigned int mode));
-static void print_with_commas __P ((void));
-static void queue_directory __P ((const char *name, const char *realname));
-static void sort_files __P ((void));
-static void parse_ls_color __P ((void));
-static void usage __P ((int status));
+static size_t quote_filename PARAMS ((FILE *out, const char *filename));
+static char *make_link_path PARAMS ((const char *path, const char *linkname));
+static int compare_atime PARAMS ((const struct fileinfo *file1,
+				  const struct fileinfo *file2));
+static int rev_cmp_atime PARAMS ((const struct fileinfo *file2,
+				  const struct fileinfo *file1));
+static int compare_ctime PARAMS ((const struct fileinfo *file1,
+				  const struct fileinfo *file2));
+static int rev_cmp_ctime PARAMS ((const struct fileinfo *file2,
+				  const struct fileinfo *file1));
+static int compare_mtime PARAMS ((const struct fileinfo *file1,
+				  const struct fileinfo *file2));
+static int rev_cmp_mtime PARAMS ((const struct fileinfo *file2,
+				  const struct fileinfo *file1));
+static int compare_size PARAMS ((const struct fileinfo *file1,
+				 const struct fileinfo *file2));
+static int rev_cmp_size PARAMS ((const struct fileinfo *file2,
+				 const struct fileinfo *file1));
+static int compare_name PARAMS ((const struct fileinfo *file1,
+				 const struct fileinfo *file2));
+static int rev_cmp_name PARAMS ((const struct fileinfo *file2,
+				 const struct fileinfo *file1));
+static int compare_extension PARAMS ((const struct fileinfo *file1,
+				      const struct fileinfo *file2));
+static int rev_cmp_extension PARAMS ((const struct fileinfo *file2,
+				      const struct fileinfo *file1));
+static int compare_version PARAMS ((const struct fileinfo *file1,
+				    const struct fileinfo *file2));
+static int rev_cmp_version PARAMS ((const struct fileinfo *file2,
+				    const struct fileinfo *file1));
+static int decode_switches PARAMS ((int argc, char **argv));
+static int file_interesting PARAMS ((const struct dirent *next));
+static uintmax_t gobble_file PARAMS ((const char *name, int explicit_arg,
+				      const char *dirname));
+static int is_not_dot_or_dotdot PARAMS ((const char *name));
+static void print_color_indicator PARAMS ((const char *name, unsigned int mode,
+					   int linkok));
+static void put_indicator PARAMS ((const struct bin_str *ind));
+static int length_of_file_name_and_frills PARAMS ((const struct fileinfo *f));
+static void add_ignore_pattern PARAMS ((const char *pattern));
+static void attach PARAMS ((char *dest, const char *dirname, const char *name));
+static void clear_files PARAMS ((void));
+static void extract_dirs_from_files PARAMS ((const char *dirname,
+					     int recursive));
+static void get_link_name PARAMS ((const char *filename, struct fileinfo *f));
+static void indent PARAMS ((int from, int to));
+static void init_col_info PARAMS ((void));
+static void print_current_files PARAMS ((void));
+static void print_dir PARAMS ((const char *name, const char *realname));
+static void print_file_name_and_frills PARAMS ((const struct fileinfo *f));
+static void print_horizontal PARAMS ((void));
+static void print_long_format PARAMS ((const struct fileinfo *f));
+static void print_many_per_line PARAMS ((void));
+static void print_name_with_quoting PARAMS ((const char *p, unsigned int mode,
+					     int linkok,
+					     struct obstack *stack));
+static void prep_non_filename_text PARAMS ((void));
+static void print_type_indicator PARAMS ((unsigned int mode));
+static void print_with_commas PARAMS ((void));
+static void queue_directory PARAMS ((const char *name, const char *realname));
+static void sort_files PARAMS ((void));
+static void parse_ls_color PARAMS ((void));
+static void usage PARAMS ((int status));
 
 /* The name the program was run with, stripped of any leading path. */
 char *program_name;

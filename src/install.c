@@ -117,14 +117,15 @@ int full_write ();
 int isdir ();
 enum backup_type get_version ();
 
-static int change_timestamps __P ((const char *from, const char *to));
-static int change_attributes __P ((const char *path, int no_need_to_chown));
-static int copy_file __P ((const char *from, const char *to, int *to_created));
-static int install_file_in_dir __P ((const char *from, const char *to_dir));
-static int install_file_in_file __P ((const char *from, const char *to));
-static void get_ids __P ((void));
-static void strip __P ((const char *path));
-static void usage __P ((int status));
+static int change_timestamps PARAMS ((const char *from, const char *to));
+static int change_attributes PARAMS ((const char *path, int no_need_to_chown));
+static int copy_file PARAMS ((const char *from, const char *to,
+			      int *to_created));
+static int install_file_in_dir PARAMS ((const char *from, const char *to_dir));
+static int install_file_in_file PARAMS ((const char *from, const char *to));
+static void get_ids PARAMS ((void));
+static void strip PARAMS ((const char *path));
+static void usage PARAMS ((int status));
 
 /* The name this program was run with, for error messages. */
 char *program_name;

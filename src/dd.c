@@ -64,22 +64,22 @@
 int safe_read ();
 int full_write ();
 
-static RETSIGTYPE interrupt_handler __P ((int));
-static int bit_count __P ((register unsigned int i));
-static uintmax_t parse_integer __P ((char *str, int *));
-static void apply_translations __P ((void));
-static void copy __P ((void));
-static void copy_simple __P ((unsigned char *buf, int nread));
-static void copy_with_block __P ((unsigned char *buf, int nread));
-static void copy_with_unblock __P ((unsigned char *buf, int nread));
-static void parse_conversion __P ((char *str));
-static void translate_charset __P ((const unsigned char *new_trans));
-static void quit __P ((int code));
-static void scanargs __P ((int argc, char **argv));
-static void skip __P ((int fdesc, char *file, uintmax_t records,
+static RETSIGTYPE interrupt_handler PARAMS ((int));
+static int bit_count PARAMS ((register unsigned int i));
+static uintmax_t parse_integer PARAMS ((char *str, int *));
+static void apply_translations PARAMS ((void));
+static void copy PARAMS ((void));
+static void copy_simple PARAMS ((unsigned char *buf, int nread));
+static void copy_with_block PARAMS ((unsigned char *buf, int nread));
+static void copy_with_unblock PARAMS ((unsigned char *buf, int nread));
+static void parse_conversion PARAMS ((char *str));
+static void translate_charset PARAMS ((const unsigned char *new_trans));
+static void quit PARAMS ((int code));
+static void scanargs PARAMS ((int argc, char **argv));
+static void skip PARAMS ((int fdesc, char *file, uintmax_t records,
 		       size_t blocksize, unsigned char *buf));
-static void usage __P ((int status));
-static void write_output __P ((void));
+static void usage PARAMS ((int status));
+static void write_output PARAMS ((void));
 
 /* The name this program was run with. */
 char *program_name;
