@@ -521,22 +521,26 @@ done:
 }
 
 /* If DISK corresponds to a mount point, show its usage
-   and return nonzero.  Otherwise, return zero.
-   STATP must be the result of `stat (DISK, STATP)'.  */
-static int
-show_disk (const char *disk, const struct stat *statp)
+   and return true.  Otherwise, return false.  */
+static bool
+show_disk (char const *disk)
 {
-  struct mount_entry *me;
+  struct mount_entry const *me;
+  struct mount_entry const *best_match = NULL;
 
   for (me = mount_list; me; me = me->me_next)
     if (STREQ (disk, me->me_devname))
-      {
-	show_dev (me->me_devname, me->me_mountdir, me->me_type,
-		  me->me_dummy, me->me_remote);
-	return 1;
-      }
+      best_match = me;
 
-  return 0;
+  if (best_match)
+    {
+      show_dev (best_match->me_devname, best_match->me_mountdir,
+		best_match->me_type, best_match->me_dummy,
+		best_match->me_remote);
+      return true;
+    }
+
+  return false;
 }
 
 /* Figure out which device file or directory POINT is mounted on
@@ -547,121 +551,104 @@ show_point (const char *point, const struct stat *statp)
 {
   struct stat disk_stats;
   struct mount_entry *me;
-  struct mount_entry *matching_dummy = NULL;
+  struct mount_entry const *best_match = NULL;
 
   /* If POINT is an absolute path name, see if we can find the
      mount point without performing any extra stat calls at all.  */
   if (*point == '/')
     {
-      for (me = mount_list; me; me = me->me_next)
-	{
-	  if (STREQ (me->me_mountdir, point) && !STREQ (me->me_type, "lofs"))
-	    {
-	      /* Prefer non-dummy entries.  */
-	      if (! me->me_dummy)
-		goto show_me;
-	      matching_dummy = me;
-	    }
-	}
+      /* Find the best match: prefer non-dummies, and then prefer the
+	 last match if there are ties.  */
 
-      if (matching_dummy)
-	goto show_matching_dummy;
+      for (me = mount_list; me; me = me->me_next)
+	if (STREQ (me->me_mountdir, point) && !STREQ (me->me_type, "lofs")
+	    && (!best_match || best_match->me_dummy || !me->me_dummy))
+	  best_match = me;
     }
 
   /* Calculate the real absolute path for POINT, and use that to find
      the mount point.  This avoids statting unavailable mount points,
      which can hang df.  */
-  {
-    char *resolved = canonicalize_file_name (point);
-    ssize_t resolved_len = resolved ? strlen (resolved) : -1;
-    struct mount_entry *best_match = NULL;
-
-    if (1 <= resolved_len && resolved[0] == '/')
-      {
-	size_t best_match_len = 0;
-
-	for (me = mount_list; me; me = me->me_next)
-	  if (! me->me_dummy)
-	    {
-	      size_t len = strlen (me->me_mountdir);
-	      if (best_match_len < len && len <= resolved_len
-		  && (len == 1 /* root file system */
-		      || ((len == resolved_len || resolved[len] == '/')
-			  && strncmp (me->me_mountdir, resolved, len) == 0)))
-		{
-		  best_match = me;
-		  best_match_len = len;
-		}
-	    }
-      }
-
-    if (resolved)
-      free (resolved);
-
-    if (best_match && !STREQ (best_match->me_type, "lofs")
-	&& stat (best_match->me_mountdir, &disk_stats) == 0
-	&& disk_stats.st_dev == statp->st_dev)
-      {
-	me = best_match;
-	goto show_me;
-      }
-  }
-
-  for (me = mount_list; me; me = me->me_next)
+  if (! best_match)
     {
-      if (me->me_dev == (dev_t) -1)
+      char *resolved = canonicalize_file_name (point);
+      ssize_t resolved_len = resolved ? strlen (resolved) : -1;
+
+      if (1 <= resolved_len && resolved[0] == '/')
 	{
-	  if (stat (me->me_mountdir, &disk_stats) == 0)
-	    me->me_dev = disk_stats.st_dev;
-	  else
-	    {
-	      error (0, errno, "%s", quote (me->me_mountdir));
-	      exit_status = 1;
-	      /* So we won't try and fail repeatedly. */
-	      me->me_dev = (dev_t) -2;
-	    }
+	  size_t best_match_len = 0;
+
+	  for (me = mount_list; me; me = me->me_next)
+	    if (!STREQ (me->me_type, "lofs")
+		&& (!best_match || best_match->me_dummy || !me->me_dummy))
+	      {
+		size_t len = strlen (me->me_mountdir);
+		if (best_match_len <= len && len <= resolved_len
+		    && (len == 1 /* root file system */
+			|| ((len == resolved_len || resolved[len] == '/')
+			    && strncmp (me->me_mountdir, resolved, len) == 0)))
+		  {
+		    best_match = me;
+		    best_match_len = len;
+		  }
+	      }
 	}
 
-      if (statp->st_dev == me->me_dev)
-	{
-	  /* Skip bogus mtab entries.  */
-	  if (stat (me->me_mountdir, &disk_stats) != 0
-	      || disk_stats.st_dev != me->me_dev)
-	    {
-	      me->me_dev = (dev_t) -2;
-	      continue;
-	    }
+      if (resolved)
+	free (resolved);
 
-	  /* Prefer non-dummy entries.  */
-	  if (! me->me_dummy)
-	    goto show_me;
-	  matching_dummy = me;
-	}
+      if (best_match
+	  && (stat (best_match->me_mountdir, &disk_stats) != 0
+	      || disk_stats.st_dev != statp->st_dev))
+	best_match = NULL;
     }
 
-  if (matching_dummy)
-    goto show_matching_dummy;
-
-  /* We couldn't find the mount entry corresponding to POINT.  Go ahead and
-     print as much info as we can; methods that require the device to be
-     present will fail at a later point.  */
-  {
-    /* Find the actual mount point.  */
-    char *mp = find_mount_point (point, statp);
-    if (mp)
+  if (! best_match)
+    for (me = mount_list; me; me = me->me_next)
       {
-	show_dev (0, mp, 0, 0, 0);
-	free (mp);
+	if (me->me_dev == (dev_t) -1)
+	  {
+	    if (stat (me->me_mountdir, &disk_stats) == 0)
+	      me->me_dev = disk_stats.st_dev;
+	    else
+	      {
+		error (0, errno, "%s", quote (me->me_mountdir));
+		exit_status = 1;
+		/* So we won't try and fail repeatedly. */
+		me->me_dev = (dev_t) -2;
+	      }
+	  }
+
+	if (statp->st_dev == me->me_dev
+	    && !STREQ (me->me_type, "lofs")
+	    && (!best_match || best_match->me_dummy || !me->me_dummy))
+	  {
+	    /* Skip bogus mtab entries.  */
+	    if (stat (me->me_mountdir, &disk_stats) != 0
+		|| disk_stats.st_dev != me->me_dev)
+	      me->me_dev = (dev_t) -2;
+	    else
+	      best_match = me;
+	  }
       }
-  }
 
-  return;
+  if (best_match)
+    show_dev (best_match->me_devname, best_match->me_mountdir,
+	      best_match->me_type, best_match->me_dummy, best_match->me_remote);
+  else
+    {
+      /* We couldn't find the mount entry corresponding to POINT.  Go ahead and
+	 print as much info as we can; methods that require the device to be
+	 present will fail at a later point.  */
 
- show_matching_dummy:
-  me = matching_dummy;
- show_me:
-  show_dev (me->me_devname, me->me_mountdir, me->me_type, me->me_dummy,
-	    me->me_remote);
+      /* Find the actual mount point.  */
+      char *mp = find_mount_point (point, statp);
+      if (mp)
+	{
+	  show_dev (0, mp, 0, 0, 0);
+	  free (mp);
+	}
+    }
 }
 
 /* Determine what kind of node PATH is and show the disk usage
@@ -671,7 +658,7 @@ static void
 show_entry (const char *path, const struct stat *statp)
 {
   if ((S_ISBLK (statp->st_mode) || S_ISCHR (statp->st_mode))
-      && show_disk (path, statp))
+      && show_disk (path))
     return;
 
   show_point (path, statp);
