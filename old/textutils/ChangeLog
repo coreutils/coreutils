@@ -15,12 +15,12 @@
 	Reported by Mark M. Kettenis.
 
 	* configure.in: Use jm_CHECK_DECLS.
-	* m4/Makefile.am (EXTRA_DIST): Add decl.m4 and do-decl.m4.
+	* m4/Makefile.am (EXTRA_DIST): Add decl.m4 and check-decl.m4.
 
 1997-10-22  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* m4/decl.m4: New file.
-	* m4/do-decl.m4: New file.  New macro, jm_CHECK_DECLS.
+	* m4/check-decl.m4: New file.  New macro, jm_CHECK_DECLS.
 
 1997-10-16  Paul Eggert  <eggert@twinsun.com>
 
