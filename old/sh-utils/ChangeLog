@@ -1,3 +1,16 @@
+1999-04-20  Jim Meyering  <meyering@ascend.com>
+
+	Update factor to use `uintmax_t'.
+	* src/factor.c <xstrtol.h>: Include this, not xstrtoul.h.
+	<human.h>: Include.
+	Use uintmax_t in place of unsigned long.
+	Use human_readable to convert to strings for printing.
+	* lib/xstrtoumax.c: New file.
+	* lib/human.c: New file.
+	* lib/human.h: New file.
+	* lib/Makefile.am (libsu_a_SOURCES): Add human.c and xstrtoumax.c.
+	(noinst_HEADERS): Add human.h.  Remove xstrtoul.h.
+
 1999-04-19  Jim Meyering  <meyering@ascend.com>
 
 	* src/seq.c (main): Restore `+' in getopt_long string.  Otherwise,
