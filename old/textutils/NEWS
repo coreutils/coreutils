@@ -1,4 +1,6 @@
 Changes in release 1.23
+[1.22g]
+* new program: ptx (moved to this package from being its own distribution)
 [1.22f]
 * cut accepts new --output-delimiter=STR option
 * `sort -o no-such-file no-such-file' now fails, as it should
