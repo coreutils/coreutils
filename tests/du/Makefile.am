@@ -2,7 +2,7 @@
 AUTOMAKE_OPTIONS = 1.4 gnits
 
 TESTS = \
-  basic restore-wd \
+  8gb basic restore-wd \
   exclude no-x no-deref trailing-slash deref two-args slink
 EXTRA_DIST = $(TESTS)
 TESTS_ENVIRONMENT = \
