@@ -1,6 +1,20 @@
-2003-05-13  Jim Meyering  <jim@meyering.net>
+2003-05-14  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
+
+	* tests/rm/rm3: Use tr's \n notation rather than \012.
+	This package can afford to do that, since its tests are guaranteed use
+	GNU tr, which has accepted the more modern notation for 10 years.
+	* tests/rm/rm5: Likewise.
+	* tests/cp/same-file: Likewise.
+	* tests/stty/row-col-1: Likewise.
+	* tests/stty/basic-1: Likewise.
+	* tests/rm/deep-1: Likewise.
+	* tests/mv/part-symlink: Likewise.
+	* tests/mkdir/perm: Likewise.
+	* tests/misc/nice: Likewise.
+
+2003-05-13  Jim Meyering  <jim@meyering.net>
 
 	* src/copy.c (struct F_triple) [name]: Remove const attribute.
 	(triple_free): Don't apply cast to argument of free.
