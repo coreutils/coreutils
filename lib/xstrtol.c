@@ -8,6 +8,15 @@
 long int __strtol (const char *, char **, int base);
 #endif
 
+#ifdef HAVE_STRING_H
+# include <string.h>
+#else
+# include <strings.h>
+# ifndef strchr
+#  define strchr index
+# endif
+#endif
+
 #include <assert.h>
 /* FIXME: define NDEBUG before release.  */
 
@@ -30,17 +39,26 @@ extern int errno;
 
 #include "xstrtol.h"
 
+#define BKM_SCALE(x, scale_factor, error_return)			\
+      do								\
+	{								\
+	  if ((x) > (double) __ZLONG_MAX / (scale_factor))		\
+	    return (error_return);					\
+	  (x) *= (scale_factor);					\
+	}								\
+      while (0)
+
 __unsigned long int __strtol ();
 
 /* FIXME: comment.  */
 
 strtol_error
-__xstrtol (s, ptr, base, val, allow_bkm_suffix)
+__xstrtol (s, ptr, base, val, valid_suffixes)
      const char *s;
      char **ptr;
      int base;
      __unsigned long int *val;
-     int allow_bkm_suffix;
+     const char *valid_suffixes;
 {
   char *t_ptr;
   char **p;
@@ -56,7 +74,7 @@ __xstrtol (s, ptr, base, val, allow_bkm_suffix)
     return LONGINT_OVERFLOW;
   if (*p == s)
     return LONGINT_INVALID;
-  if (!allow_bkm_suffix)
+  if (!valid_suffixes)
     {
       if (**p == '\0')
 	{
@@ -67,38 +85,38 @@ __xstrtol (s, ptr, base, val, allow_bkm_suffix)
 	return LONGINT_INVALID_SUFFIX_CHAR;
     }
 
-  switch (**p)
+  if (**p != '\0' && strchr (valid_suffixes, **p))
     {
-    case '\0':
-      break;
+      switch (**p)
+	{
+	case 'b':
+	  BKM_SCALE (tmp, 512, LONGINT_OVERFLOW);
+	  ++(*p);
+	  break;
 
-#define BKM_SCALE(x, scale_factor, error_return)			\
-      do								\
-	{								\
-	  if ((x) > (double) __ZLONG_MAX / (scale_factor))		\
-	    return (error_return);					\
-	  (x) *= (scale_factor);					\
-	}								\
-      while (0)
+	case 'c':
+	  ++(*p);
+	  break;
 
-    case 'b':
-      BKM_SCALE (tmp, 512, LONGINT_OVERFLOW);
-      ++(*p);
-      break;
+	case 'k':
+	  BKM_SCALE (tmp, 1024, LONGINT_OVERFLOW);
+	  ++(*p);
+	  break;
 
-    case 'k':
-      BKM_SCALE (tmp, 1024, LONGINT_OVERFLOW);
-      ++(*p);
-      break;
+	case 'm':
+	  BKM_SCALE (tmp, 1024 * 1024, LONGINT_OVERFLOW);
+	  ++(*p);
+	  break;
 
-    case 'm':
-      BKM_SCALE (tmp, 1024 * 1024, LONGINT_OVERFLOW);
-      ++(*p);
-      break;
+	case 'w':
+	  BKM_SCALE (tmp, 2, LONGINT_OVERFLOW);
+	  ++(*p);
+	  break;
 
-    default:
-      return LONGINT_INVALID_SUFFIX_CHAR;
-      break;
+	default:
+	  return LONGINT_INVALID_SUFFIX_CHAR;
+	  break;
+	}
     }
 
   *val = tmp;
@@ -124,7 +142,7 @@ main (int argc, char** argv)
       char *p;
       __unsigned long int val;
 
-      s_err = __xstrtol (argv[i], &p, 0, &val, 1);
+      s_err = __xstrtol (argv[i], &p, 0, &val, "bckmw");
       if (s_err == LONGINT_OK)
 	{
 	  printf ("%s->%lu (%s)\n", argv[i], val, p);
