@@ -1,6 +1,10 @@
-2003-03-03  Jim Meyering  <jim@meyering.net>
+2003-03-04  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.9.
+
+	* tests/Makefile.am (check-root): Add fail-2eperm.
+
+2003-03-03  Jim Meyering  <jim@meyering.net>
 
 	* src/remove.c (remove_cwd_entries): Include the full filename of
 	the offending file, not just the basename.
