@@ -1,5 +1,7 @@
 1998-12-06  Jim Meyering  <meyering@ascend.com>
 
+	* lib/*.c: Ansideclify.
+
 	Fix `ls -R .' formatting bug that broke mktexlsr.
 	* src/ls.c: Include path-concat.h.
 	(basename_is_dot_or_dotdot): New function, derived from
