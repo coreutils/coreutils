@@ -207,6 +207,7 @@ AC_DEFUN([jm_CHECK_ALL_HEADERS],
     fcntl.h \
     fenv.h \
     float.h \
+    hurd.h \
     limits.h \
     memory.h \
     mntent.h \
