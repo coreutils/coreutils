@@ -11430,7 +11430,7 @@ shell is restricted (see @option{-m} just above).
 @cindex wheel group, not supported
 @cindex group wheel, not supported
 @cindex fascism
-@heading Why GNU @command{su} does not support the @samp{wheel} group
+@subsection Why GNU @command{su} does not support the @samp{wheel} group
 
 (This section is by Richard Stallman.)
 
