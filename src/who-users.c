@@ -728,7 +728,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("%s - %s\n", COMMAND_NAME, GNU_PACKAGE, VERSION);
+      printf ("%s (%s) %s\n", COMMAND_NAME, GNU_PACKAGE, VERSION);
       exit (0);
     }
 
