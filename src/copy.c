@@ -422,7 +422,7 @@ same_file_ok (const char *src_path, const struct stat *src_sb,
 
       /* If both the source and destination files are symlinks (and we'll
 	 know this here IFF preserving symlinks (aka xstat == lstat),
-	 then it's ok.  */
+	 then it's ok -- as long as they are distinct.  */
       if (S_ISLNK (src_sb->st_mode) && S_ISLNK (dst_sb->st_mode))
 	return ! same_name (src_path, dst_path);
 
