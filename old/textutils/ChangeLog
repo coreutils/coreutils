@@ -21,7 +21,13 @@ Sat Jan 28 07:07:23 1995  Jim Meyering  (meyering@comco.com)
 	* tr.c (substr): Don't allocate a byte for trailing NUL in result
 	since the result needn't be NUL-terminated.  Don't NUL terminate it.
 
-	* lib/Makefile.in (SOURCES): Add memmove.c
+	* configure.in (AC_REPLACE_FUNCS): Check for memmove and memcpy,
+	not bcopy.
+	(AC_CHECK_FUNCS): Add strchr and strrchr.
+
+	* lib/Makefile.in (SOURCES): Add memmove.c and memcpy.c.
+	* memmove.c: New file.
+	* memcpy.c: New file.
 
 Tue Jan 24 22:18:19 1995  Jim Meyering  (meyering@comco.com)
 
