@@ -113,7 +113,7 @@ dir_name_r (char const *path, char const **result)
 	 canonicalized "d:/path", leave alone the root case "d:/".  */
       char const *lim = path + FILESYSTEM_PREFIX_LEN (path);
 
-      while (slash > lim && ISSLASH (*slash))
+      while (lim < slash && ISSLASH (*slash))
 	--slash;
 
       length = slash - path + 1;
