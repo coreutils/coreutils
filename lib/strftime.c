@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-1999, 2000, 2001, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2000, 2001, 2003, 2004 Free Software
+   Foundation, Inc.
 
    NOTE: The canonical source of this file is maintained with the GNU C Library.
    Bugs can be reported to bug-glibc@prep.ai.mit.edu.
@@ -56,7 +57,7 @@ extern char *tzname[];
    conversion specifications.  The GNU C Library uses UTF8 multibyte
    encoding, which is safe for formats, but strftime.c can be used
    with other C libraries that use unsafe encodings.  */
-#define DO_MULTIBYTE (HAVE_MBLEN && ! MULTIBYTE_IS_FORMAT_SAFE)
+#define DO_MULTIBYTE (HAVE_MBLEN && HAVE_WCHAR_H && ! MULTIBYTE_IS_FORMAT_SAFE)
 
 #if DO_MULTIBYTE
 # if HAVE_MBRLEN
