@@ -153,16 +153,17 @@ static const char *const charname[33] =
 /* A printf control string for printing a file offset.  */
 static const char *output_address_fmt_string;
 
-/* FIXME: make this the number of octal digits in an unsigned long.  */
-#define MAX_ADDRESS_LENGTH 13
+/* The number of octal digits required to represent the largest off_t value.  */
+#define MAX_ADDRESS_LENGTH \
+  ((sizeof (off_t) * BITSPERBYTE + BITSPERBYTE - 1) / 3)
 
 /* Space for a normal address, a space, a pseudo address, parentheses
    around the pseudo address, and a trailing zero byte. */
 static char address_fmt_buffer[2 * MAX_ADDRESS_LENGTH + 4];
 static char address_pad[MAX_ADDRESS_LENGTH + 1];
 
-static unsigned long int string_min;
-static unsigned long int flag_dump_strings;
+static size_t string_min;
+static int flag_dump_strings;
 
 /* Non-zero if we should recognize the pre-POSIX non-option arguments
    that specified at most one file and optional arguments specifying
@@ -359,10 +360,9 @@ lcm (unsigned int u, unsigned int v)
 }
 
 static void
-print_s_char (long unsigned int n_bytes, const char *block,
-	      const char *fmt_string)
+print_s_char (off_t n_bytes, const char *block, const char *fmt_string)
 {
-  int i;
+  off_t i;
   for (i = n_bytes; i > 0; i--)
     {
       int tmp = (unsigned) *(const unsigned char *) block;
@@ -375,10 +375,9 @@ print_s_char (long unsigned int n_bytes, const char *block,
 }
 
 static void
-print_char (long unsigned int n_bytes, const char *block,
-	    const char *fmt_string)
+print_char (off_t n_bytes, const char *block, const char *fmt_string)
 {
-  int i;
+  off_t i;
   for (i = n_bytes; i > 0; i--)
     {
       unsigned int tmp = *(const unsigned char *) block;
@@ -388,10 +387,9 @@ print_char (long unsigned int n_bytes, const char *block,
 }
 
 static void
-print_s_short (long unsigned int n_bytes, const char *block,
-	       const char *fmt_string)
+print_s_short (off_t n_bytes, const char *block, const char *fmt_string)
 {
-  int i;
+  off_t i;
   for (i = n_bytes / sizeof (unsigned short); i > 0; i--)
     {
       int tmp = (unsigned) *(const unsigned short *) block;
@@ -404,10 +402,9 @@ print_s_short (long unsigned int n_bytes, const char *block,
 }
 
 static void
-print_short (long unsigned int n_bytes, const char *block,
-	     const char *fmt_string)
+print_short (off_t n_bytes, const char *block, const char *fmt_string)
 {
-  int i;
+  off_t i;
   for (i = n_bytes / sizeof (unsigned short); i > 0; i--)
     {
       unsigned int tmp = *(const unsigned short *) block;
@@ -417,10 +414,9 @@ print_short (long unsigned int n_bytes, const char *block,
 }
 
 static void
-print_int (long unsigned int n_bytes, const char *block,
-	   const char *fmt_string)
+print_int (off_t n_bytes, const char *block, const char *fmt_string)
 {
-  int i;
+  off_t i;
   for (i = n_bytes / sizeof (unsigned int); i > 0; i--)
     {
       unsigned int tmp = *(const unsigned int *) block;
@@ -430,10 +426,9 @@ print_int (long unsigned int n_bytes, const char *block,
 }
 
 static void
-print_long (long unsigned int n_bytes, const char *block,
-	    const char *fmt_string)
+print_long (off_t n_bytes, const char *block, const char *fmt_string)
 {
-  int i;
+  off_t i;
   for (i = n_bytes / sizeof (unsigned long); i > 0; i--)
     {
       unsigned long tmp = *(const unsigned long *) block;
@@ -444,10 +439,9 @@ print_long (long unsigned int n_bytes, const char *block,
 
 #ifdef HAVE_UNSIGNED_LONG_LONG
 static void
-print_long_long (long unsigned int n_bytes, const char *block,
-		 const char *fmt_string)
+print_long_long (off_t n_bytes, const char *block, const char *fmt_string)
 {
-  int i;
+  off_t i;
   for (i = n_bytes / sizeof (unsigned long long); i > 0; i--)
     {
       unsigned long long tmp = *(const unsigned long long *) block;
@@ -458,10 +452,9 @@ print_long_long (long unsigned int n_bytes, const char *block,
 #endif
 
 static void
-print_float (long unsigned int n_bytes, const char *block,
-	     const char *fmt_string)
+print_float (off_t n_bytes, const char *block, const char *fmt_string)
 {
-  int i;
+  off_t i;
   for (i = n_bytes / sizeof (float); i > 0; i--)
     {
       float tmp = *(const float *) block;
@@ -471,10 +464,9 @@ print_float (long unsigned int n_bytes, const char *block,
 }
 
 static void
-print_double (long unsigned int n_bytes, const char *block,
-	      const char *fmt_string)
+print_double (off_t n_bytes, const char *block, const char *fmt_string)
 {
-  int i;
+  off_t i;
   for (i = n_bytes / sizeof (double); i > 0; i--)
     {
       double tmp = *(const double *) block;
@@ -485,10 +477,9 @@ print_double (long unsigned int n_bytes, const char *block,
 
 #ifdef HAVE_LONG_DOUBLE
 static void
-print_long_double (long unsigned int n_bytes, const char *block,
-		   const char *fmt_string)
+print_long_double (off_t n_bytes, const char *block, const char *fmt_string)
 {
-  int i;
+  off_t i;
   for (i = n_bytes / sizeof (LONG_DOUBLE); i > 0; i--)
     {
       LONG_DOUBLE tmp = *(const LONG_DOUBLE *) block;
@@ -500,9 +491,9 @@ print_long_double (long unsigned int n_bytes, const char *block,
 #endif
 
 static void
-dump_hexl_mode_trailer (long unsigned int n_bytes, const char *block)
+dump_hexl_mode_trailer (off_t n_bytes, const char *block)
 {
-  int i;
+  off_t i;
   fputs ("  >", stdout);
   for (i = n_bytes; i > 0; i--)
     {
@@ -515,10 +506,10 @@ dump_hexl_mode_trailer (long unsigned int n_bytes, const char *block)
 }
 
 static void
-print_named_ascii (long unsigned int n_bytes, const char *block,
+print_named_ascii (off_t n_bytes, const char *block,
 		   const char *unused_fmt_string ATTRIBUTE_UNUSED)
 {
-  int i;
+  off_t i;
   for (i = n_bytes; i > 0; i--)
     {
       unsigned int c = *(const unsigned char *) block;
@@ -542,10 +533,10 @@ print_named_ascii (long unsigned int n_bytes, const char *block,
 }
 
 static void
-print_ascii (long unsigned int n_bytes, const char *block,
+print_ascii (off_t n_bytes, const char *block,
 	     const char *unused_fmt_string ATTRIBUTE_UNUSED)
 {
-  int i;
+  off_t i;
   for (i = n_bytes; i > 0; i--)
     {
       unsigned int c = *(const unsigned char *) block;
@@ -647,7 +638,7 @@ decode_one_format (const char *s_orig, const char *s, const char **next,
   enum output_format fmt;
   const char *pre_fmt_string;
   char *fmt_string;
-  void (*print_function) ();
+  void (*print_function) PARAMS ((off_t, const char *, const char *));
   const char *p;
   unsigned int c;
   unsigned int field_width = 0;
@@ -697,7 +688,7 @@ decode_one_format (const char *s_orig, const char *s, const char **next,
 	    size = sizeof (int);
 	  else
 	    {
-	      if (size > MAX_INTEGRAL_TYPE_SIZE
+	      if (MAX_INTEGRAL_TYPE_SIZE < size
 		  || integral_type_size[size] == NO_SIZE)
 		{
 		  error (0, 0, _("invalid type string `%s';\n\
@@ -1005,7 +996,7 @@ skip (off_t n_skip)
 	 n_skip and go on to the next file.  */
       if (S_ISREG (file_stats.st_mode))
 	{
-	  if (n_skip >= file_stats.st_size)
+	  if (file_stats.st_size <= n_skip)
 	    {
 	      n_skip -= file_stats.st_size;
 	      if (in_stream != stdin && fclose (in_stream) == EOF)
@@ -1028,10 +1019,10 @@ skip (off_t n_skip)
       /* Seek didn't work or wasn't attempted;  position the file pointer
 	 by reading.  */
 
-      for (j = n_skip / BUFSIZ; j >= 0; j--)
+      for (j = n_skip / BUFSIZ; 0 <= j; j--)
 	{
 	  char buf[BUFSIZ];
-	  size_t n_bytes_to_read = (j > 0
+	  size_t n_bytes_to_read = (0 < j
 				    ? BUFSIZ
 				    : n_skip % BUFSIZ);
 	  size_t n_bytes_read;
@@ -1091,7 +1082,7 @@ format_address_label (off_t address)
    only when it has not been padded to length BYTES_PER_BLOCK.  */
 
 static void
-write_block (off_t current_offset, long unsigned int n_bytes,
+write_block (off_t current_offset, off_t n_bytes,
 	     const char *prev_block, const char *curr_block)
 {
   static int first = 1;
@@ -1256,7 +1247,7 @@ read_block (size_t n, char *block, size_t *n_bytes_in_buffer)
 {
   int err;
 
-  assert (n > 0 && n <= bytes_per_block);
+  assert (0 < n && n <= bytes_per_block);
 
   *n_bytes_in_buffer = 0;
 
@@ -1333,7 +1324,7 @@ parse_old_offset (const char *s)
   int radix;
   off_t offset;
   enum strtol_error s_err;
-  long unsigned int tmp;
+  uintmax_t tmp;
 
   if (*s == '\0')
     return -1;
@@ -1355,12 +1346,15 @@ parse_old_offset (const char *s)
 	radix = 8;
     }
 
-  s_err = xstrtoul (s, NULL, radix, &tmp, "Bb");
+  s_err = xstrtoumax (s, NULL, radix, &tmp, "Bb");
   if (s_err != LONGINT_OK)
     {
       STRTOL_FAIL_WARN (s, _("old-style offset"), s_err);
       return -1;
     }
+  if (OFF_T_MAX < tmp)
+    error (EXIT_FAILURE, 0,
+	   _("%s is larger than the maximum file size on this system"), s);
   offset = tmp;
   return offset;
 }
@@ -1477,15 +1471,14 @@ dump_strings (void)
   err = 0;
   while (1)
     {
-      unsigned int i;
+      size_t i;
       int c;
 
       /* See if the next `string_min' chars are all printing chars.  */
     tryline:
 
       if (limit_bytes_to_format
-	  && address >= (n_bytes_to_skip + max_bytes_to_format -
-			 (off_t) string_min))
+	  && address >= (n_bytes_to_skip + max_bytes_to_format - string_min))
 	break;
 
       for (i = 0; i < string_min; i++)
@@ -1610,7 +1603,7 @@ main (int argc, char **argv)
   unsigned int i;
   unsigned int l_c_m;
   unsigned int address_pad_len;
-  unsigned long int desired_width;
+  unsigned long int desired_width IF_LINT (= 0);
   int width_specified = 0;
   int n_failed_decodes = 0;
   int err;
@@ -1661,7 +1654,7 @@ main (int argc, char **argv)
   while ((c = getopt_long (argc, argv, "abcdfhilos::xw::A:j:N:t:v",
 			   long_options, NULL)) != -1)
     {
-      unsigned long int tmp;
+      uintmax_t tmp;
       enum strtol_error s_err;
 
       switch (c)
@@ -1702,7 +1695,7 @@ it must be one character from [doxn]"),
 	  break;
 
 	case 'j':
-	  s_err = xstrtoul (optarg, NULL, 0, &tmp, "bkm");
+	  s_err = xstrtoumax (optarg, NULL, 0, &tmp, "bkm");
 	  n_bytes_to_skip = tmp;
 	  if (s_err != LONGINT_OK)
 	    STRTOL_FATAL_ERROR (optarg, _("skip argument"), s_err);
@@ -1711,17 +1704,15 @@ it must be one character from [doxn]"),
 	case 'N':
 	  limit_bytes_to_format = 1;
 
-	  /* FIXME: if off_t is long long and that's an 8-byte type,
-	     use xstrtouq here.  */
-	  s_err = xstrtoul (optarg, NULL, 0, &tmp, "bkm");
+	  s_err = xstrtoumax (optarg, NULL, 0, &tmp, "bkm");
 	  max_bytes_to_format = tmp;
 	  if (s_err != LONGINT_OK)
 	    STRTOL_FATAL_ERROR (optarg, _("limit argument"), s_err);
 
-	  if (tmp > LONG_MAX)
+	  if (OFF_T_MAX < tmp)
 	    error (EXIT_FAILURE, 0,
-		   _("specified number of bytes `%s' is larger than \
-the maximum\nrepresentable value of type `long'"), optarg);
+		   _("%s is larger than the maximum file size on this system"),
+		   optarg);
 	  break;
 
 	case 's':
@@ -1729,11 +1720,18 @@ the maximum\nrepresentable value of type `long'"), optarg);
 	    string_min = 3;
 	  else
 	    {
-	      s_err = xstrtoul (optarg, NULL, 0, &string_min, "bkm");
+	      s_err = xstrtoumax (optarg, NULL, 0, &tmp, "bkm");
 	      if (s_err != LONGINT_OK)
 		STRTOL_FATAL_ERROR (optarg, _("minimum string length"), s_err);
+
+	      /* The minimum string length may be no larger than SIZE_MAX,
+		 since we may allocate a buffer of this size.  */
+	      if (SIZE_MAX < tmp)
+		error (EXIT_FAILURE, 0, _("%s is too large"), optarg);
+
+	      string_min = tmp;
 	    }
-	  ++flag_dump_strings;
+	  flag_dump_strings = 1;
 	  break;
 
 	case 't':
@@ -1783,9 +1781,13 @@ the maximum\nrepresentable value of type `long'"), optarg);
 	    }
 	  else
 	    {
-	      s_err = xstrtoul (optarg, NULL, 10, &desired_width, "");
+	      uintmax_t w_tmp;
+	      s_err = xstrtoumax (optarg, NULL, 10, &w_tmp, "");
 	      if (s_err != LONGINT_OK)
 		STRTOL_FATAL_ERROR (optarg, _("width specification"), s_err);
+	      if (ULONG_MAX < w_tmp)
+		error (EXIT_FAILURE, 0, _("%s is too large"), optarg);
+	      desired_width = w_tmp;
 	    }
 	  break;
 
