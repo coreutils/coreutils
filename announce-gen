@@ -1,0 +1,180 @@
+#!/usr/bin/perl -w
+# Generate an announcement message.
+use strict;
+
+use Getopt::Long;
+use Ascend::Init;
+use Digest::MD5;
+use Digest::SHA1;
+
+(my $VERSION = '$Revision: 1.1 $ ') =~ tr/[0-9].//cd;
+(my $ME = $0) =~ s|.*/||;
+
+END
+{
+  # Nobody ever checks the status of print()s.  That's okay, because
+  # if any do fail, we're guaranteed to get an indicator when we close()
+  # the filehandle.
+  #
+  # Close stdout now, and if there were no errors, return happy status.
+  # If stdout has already been closed by the script, though, do nothing.
+  defined fileno STDOUT
+    or return;
+  close STDOUT
+    and return;
+
+  # Errors closing stdout.  Indicate that, and hope stderr is OK.
+  warn "$ME: closing standard output: $!\n";
+
+  # Don't be so arrogant as to assume that we're the first END handler
+  # defined, and thus the last one invoked.  There may be others yet
+  # to come.  $? will be passed on to them, and to the final _exit().
+  #
+  # If it isn't already an error, make it one (and if it _is_ an error,
+  # preserve the value: it might be important).
+  $? ||= 1;
+}
+
+sub usage ($)
+{
+  my ($exit_code) = @_;
+  my $STREAM = ($exit_code == 0 ? *STDOUT : *STDERR);
+  if ($exit_code != 0)
+    {
+      print $STREAM "Try `$ME --help' for more information.\n";
+    }
+  else
+    {
+      print $STREAM <<EOF;
+Usage: $ME [OPTIONS]
+
+OPTIONS:
+
+  Generate an announcement message.
+
+  FIXME: describe the following
+
+   --package-name=PACKAGE_NAME
+   --previous-version=VER
+   --current-version=VER
+   --release-archive-directory=DIR
+   --url-directory=URL_DIR
+
+   --help             display this help and exit
+   --version          output version information and exit
+
+EOF
+    }
+  exit $exit_code;
+}
+
+{
+  my $package_name;
+  my $prev_version;
+  my $curr_version;
+  my $release_archive_dir;
+  my @url_dir_list;
+
+  GetOptions
+    (
+     'package-name=s' => \$package_name,
+     'previous-version=s' => \$prev_version,
+     'current-version=s' => \$curr_version,
+     'release-archive-directory=s' => \$release_archive_dir,
+     'url-directory=s@' => \@url_dir_list,
+
+     help => sub { usage 0 },
+     version => sub { print "$ME version $VERSION\n"; exit },
+    ) or usage 1;
+
+  my $fail = 0;
+  # Ensure that sure each required option is specified.
+  $package_name
+    or (warn "$ME: missing package name\n"), $fail = 1;
+  $prev_version
+    or (warn "$ME: missing previous version string\n"), $fail = 1;
+  $curr_version
+    or (warn "$ME: missing current version string\n"), $fail = 1;
+  $release_archive_dir
+    or (warn "$ME: missing release directory name\n"), $fail = 1;
+  @url_dir_list
+    or (warn "$ME: missing URL directory name(s)\n"), $fail = 1;
+
+  @ARGV
+    and (warn "$ME: too many arguments\n"), $fail = 1;
+  $fail
+    and usage 1;
+
+  my $my_distdir = "$package_name-$curr_version";
+  my $tgz = "$my_distdir.tar.gz";
+  my $tbz = "$my_distdir.tar.bz2";
+  my $xd = "$package_name-$prev_version-$curr_version.xdelta";
+
+  # FIXME: make this optional?
+  my $mail_gpg_sign_cookie = '<#secure method=pgpmime mode=sign>';
+  my %size;
+
+  foreach my $f (($tgz, $tbz, $xd))
+    {
+      my $t = `du --human $f`;
+      chomp $t;
+      # FIXME: don't ignore failure...
+      $t =~ s/^([\d.]+[MkK]).*/${1}B/;
+      $size{$f} = $t;
+    }
+
+  print <<EOF;
+
+Subject: $my_distdir released
+
+$mail_gpg_sign_cookie
+FIXME: put comments here
+EOF
+
+  foreach my $url (@url_dir_list)
+    {
+      print "  $url/$tgz   ($size{$tgz})\n";
+      print "  $url/$tbz  ($size{$tbz})\n";
+    }
+
+  print "\nAnd here are xdelta-style diffs:\n";
+  foreach my $url (@url_dir_list)
+    {
+      print "  $url/$xd   ($size{$xd})\n";
+    }
+
+  print "\nHere are GPG detached signatures:\n";
+  foreach my $url (@url_dir_list)
+    {
+      print "  $url/$tgz.sig\n";
+      print "  $url/$tbz.sig\n";
+    }
+
+  print "\nHere are the MD5 and SHA1 signatures:\n";
+  foreach my $meth (qw (md5 sha1))
+    {
+      foreach my $f (($tgz, $tbz, $xd))
+	{
+	  open FH, '<', $f
+	    or die "$ME: $f: cannot open for reading: $!\n";
+	  binmode FH;
+	  my $dig =
+	    ($meth eq 'md5'
+	     ? Digest::MD5->new->addfile(*FH)->hexdigest
+	     : Digest::SHA1->new->addfile(*FH)->hexdigest);
+	  close FH;
+	  print "$dig  $f\n";
+	}
+    }
+
+  # FIXME: depend on whether it's a test release
+  # sed -n "$news-r1),$news-r2)p" NEWS
+  #   | grep -v '^\[';
+  # echo;
+  # echo ChangeLog entries:;
+  # find . -name ChangeLog -maxdepth 2
+  #   | xargs $(CVS) diff -up -r$(prev-cvs-tag) -rHEAD
+  #   | sed -n 's/^+//p'
+  #   | perl -ne 'm!^\+\+ (\./)?! or print,next;'
+  #     -e 'print "\n"."*"x70 ."\n"; s///; print; print "*"x70 ."\n"';
+}
