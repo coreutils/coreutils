@@ -1,10 +1,17 @@
 2001-09-15  Jim Meyering  <meyering@lucent.com>
 
+	* man/Makefile.summ: Remove file.
+	* man/Makefile.maint: Remove file.
+
+	* man/ginstall.x: Remove.  Renamed to ...
+	* man/install.x: ... this.  New file.
+
 	* src/touch.c (EISDIR): Define to 0, if not already defined.
 	(touch): Give a better diagnostic for e.g., `touch /' by non-root.
 	Based on a patch from Michael Stone.
 	Reported by Jeff Sheinberg as Debian bug #101677.
 	* tests/touch/fail-diag: New test, for the above fix.
+	* tests/touch/Makefile.am (TESTS): Add fail-diag.
 
 	* src/copy.c (copy_internal) [move_mode]: Support the new
 	--reply=... option.
