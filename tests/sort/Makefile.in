@@ -99,7 +99,7 @@ maint_gen = 01a.I 01a.X 02a.I 02a.X 02b.I 02b.X 02c.I 02c.X 02d.I 02d.X 02e.I \
 12a.I 12a.X 12b.I 12b.X 12c.I 12c.X 12d.I 12d.X 13a.I 13a.X 13b.I 13b.X 14a.I \
 14a.X 14b.I 14b.X 15a.I 15a.X 15b.I 15b.X 15c.I 15c.X 15d.I 15d.X 15e.I 15e.X \
 16a.I 16a.X 17.I 17.X 18a.I 18a.X 18b.I 18b.X 18c.I 18c.X 18d.I 18d.X 18e.I \
-18e.X 19a.I 19a.X 19b.I 19b.X
+18e.X 19a.I 19a.X 19b.I 19b.X 20a.I 20a.X
 run_gen = 01a.O 01a.E 02a.O 02a.E 02b.O 02b.E 02c.O 02c.E 02d.O 02d.E 02e.O \
 02e.E 02f.O 02f.E 03a.O 03a.E 03b.O 03b.E 03c.O 03c.E 03d.O 03d.E 03e.O 03e.E \
 03f.O 03f.E 03g.O 03g.E 03h.O 03h.E 03i.O 03i.E 04a.O 04a.E 04b.O 04b.E 04c.O \
@@ -112,7 +112,7 @@ run_gen = 01a.O 01a.E 02a.O 02a.E 02b.O 02b.E 02c.O 02c.E 02d.O 02d.E 02e.O \
 12a.O 12a.E 12b.O 12b.E 12c.O 12c.E 12d.O 12d.E 13a.O 13a.E 13b.O 13b.E 14a.O \
 14a.E 14b.O 14b.E 15a.O 15a.E 15b.O 15b.E 15c.O 15c.E 15d.O 15d.E 15e.O 15e.E \
 16a.O 16a.E 17.O 17.E 18a.O 18a.E 18b.O 18b.E 18c.O 18c.E 18d.O 18d.E 18e.O \
-18e.E 19a.O 19a.E 19b.O 19b.E
+18e.E 19a.O 19a.E 19b.O 19b.E 20a.O 20a.E
 
 EXTRA_DIST = mk-script.pl Test.pm $x-tests $(explicit) $(maint_gen)
 noinst_SCRIPTS = $x-tests
