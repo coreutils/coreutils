@@ -8,6 +8,7 @@
 	* src/remove.c (remove_cwd_entries): Detect and diagnose readdir
 	failures.  On some systems (at least EMC Celerra and Solaris5.8),
 	this appears to be necessary.
+	(is_empty_dir): Likewise.  Also, always close directory handle.
 	* src/ls.c (print_dir): Likewise.
 	(print_dir): Rename local variable: reading -> dirp.
 	Reported by Mike Coleman.
