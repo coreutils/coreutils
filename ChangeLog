@@ -1,6 +1,11 @@
-2003-05-26  Jim Meyering  <jim@meyering.net>
+2003-05-28  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
+
+	* src/extract-magic: Allow expansion of `$file' in the here-
+	document corresponding to the comment at the top of fs.h.
+
+2003-05-26  Jim Meyering  <jim@meyering.net>
 
 	* src/stat.c: Fix portability problem on FreeBSD5.0: don't include
 	<sys/statvfs.h> on systems without HAVE_STRUCT_STATVFS_F_BASETYPE.
