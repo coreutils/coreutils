@@ -117,7 +117,7 @@ get_dest_mode (const struct cp_options *option, mode_t mode)
   /* Honor the umask for `cp', but not for `mv' or `cp -p'.
      In addition, `cp' without -p must clear the set-user-ID and set-group-ID
      bits.  POSIX requires it do that when creating new files.  */
-  if (!option->move_mode && !option->preserve_chmod_bits)
+  if (!option->move_mode && !option->preserve_mode)
     mode &= (option->umask_kill & ~(S_ISUID | S_ISGID));
 
   return mode;
@@ -1285,7 +1285,7 @@ copy_internal (const char *src_path, const char *dst_path,
 	    }
 	}
 
-      if (x->preserve_owner_and_group)
+      if (x->preserve_ownership)
 	{
 	  /* Preserve the owner and group of the just-`copied'
 	     symbolic link, if possible.  */
@@ -1348,7 +1348,7 @@ copy_internal (const char *src_path, const char *dst_path,
     }
 
   /* Avoid calling chown if we know it's not necessary.  */
-  if (x->preserve_owner_and_group
+  if (x->preserve_ownership
       && (new_dst || !SAME_OWNER_AND_GROUP (src_sb, dst_sb)))
     {
       ran_chown = 1;
@@ -1367,7 +1367,7 @@ copy_internal (const char *src_path, const char *dst_path,
       && !(ran_chown && (src_mode & ~S_IRWXUGO)))
     return delayed_fail;
 
-  if ((x->preserve_chmod_bits || new_dst)
+  if ((x->preserve_mode || new_dst)
       && (x->copy_as_regular || S_ISREG (src_type) || S_ISDIR (src_type)))
     {
       if (chmod (dst_path, get_dest_mode (x, src_mode)))
