@@ -1,5 +1,7 @@
 1999-08-29  Jim Meyering  <meyering@ascend.com>
 
+	* configure.in (AC_YACC): Remove use, now that we require bison.
+
 	* tests/date/Test.pm (test_vector): Add a test for the Risks-reported
 	problem with syntax like this: Nov 11 1996.
 
