@@ -1,5 +1,7 @@
 /* Error handler for noninteractive utilities
-   Copyright (C) 1990-1998, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1990-1998, 2000-2002, 2003 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2, or (at your option)
@@ -58,6 +60,7 @@ unsigned int error_message_count;
 /* In the GNU C library, there is a predefined variable for this.  */
 
 # define program_name program_invocation_name
+# include <errno.h>
 # include <libio/libioP.h>
 
 /* In GNU libc we want do not want to use the common name `error' directly.
@@ -76,6 +79,8 @@ extern void __error_at_line (int status, int errnum, const char *file_name,
 # undef putc
 # define putc(c, fp) INTUSE(_IO_putc) (c, fp)
 
+# include <bits/libc-lock.h>
+
 #else /* not _LIBC */
 
 # if !HAVE_DECL_STRERROR_R && STRERROR_R_CHAR_P
@@ -83,6 +88,10 @@ extern void __error_at_line (int status, int errnum, const char *file_name,
 "this configure-time declaration test was not run"
 #  endif
 char *strerror_r ();
+# endif
+
+# ifndef SIZE_MAX
+#  define SIZE_MAX ((size_t) -1)
 # endif
 
 /* The calling program should define program_name and set it to the
@@ -137,40 +146,26 @@ error_tail (int status, int errnum, const char *message, va_list args)
     {
 # define ALLOCA_LIMIT 2000
       size_t len = strlen (message) + 1;
-      wchar_t *wmessage = NULL;
-      mbstate_t st;
-      size_t res;
-      const char *tmp;
+      const wchar_t *wmessage = L"out of memory";
+      wchar_t *wbuf = (len < ALLOCA_LIMIT
+		       ? alloca (len * sizeof *wbuf)
+		       : len <= SIZE_MAX / sizeof *wbuf
+		       ? malloc (len * sizeof *wbuf)
+		       : NULL);
 
-      do
+      if (wbuf)
 	{
-	  if (len < ALLOCA_LIMIT)
-	    wmessage = (wchar_t *) alloca (len * sizeof (wchar_t));
-	  else
-	    {
-	      if (wmessage != NULL && len / 2 < ALLOCA_LIMIT)
-		wmessage = NULL;
-
-	      wmessage = (wchar_t *) realloc (wmessage,
-					      len * sizeof (wchar_t));
-
-	      if (wmessage == NULL)
-		{
-		  fputws_unlocked (L"out of memory\n", stderr);
-		  return;
-		}
-	    }
-
+	  size_t res;
+	  mbstate_t st;
+	  const char *tmp = message;
 	  memset (&st, '\0', sizeof (st));
-	  tmp =message;
+	  res = mbsrtowcs (wbuf, &tmp, len, &st);
+	  wmessage = res == (size_t) -1 ? L"???" : wbuf;
 	}
-      while ((res = mbsrtowcs (wmessage, &tmp, len, &st)) == len);
-
-      if (res == (size_t) -1)
-	/* The string cannot be converted.  */
-	wmessage = (wchar_t *) L"???";
 
       __vfwprintf (stderr, wmessage, args);
+      if (! (len < ALLOCA_LIMIT))
+	free (wbuf);
     }
   else
 #endif
@@ -201,6 +196,14 @@ error (int status, int errnum, const char *message, ...)
 {
   va_list args;
 
+#if defined _LIBC && defined __libc_ptf_call
+  /* We do not want this call to be cut short by a thread
+     cancellation.  Therefore disable cancellation for now.  */
+  int state = PTHREAD_CANCEL_ENABLE;
+  __libc_ptf_call (pthread_setcancelstate, (PTHREAD_CANCEL_DISABLE, &state),
+		   0);
+#endif
+
   fflush (stdout);
 #ifdef _LIBC
   _IO_flockfile (stderr);
@@ -222,6 +225,9 @@ error (int status, int errnum, const char *message, ...)
 
 #ifdef _LIBC
   _IO_funlockfile (stderr);
+# ifdef __libc_ptf_call
+  __libc_ptf_call (pthread_setcancelstate, (state, NULL), 0);
+# endif
 #endif
 }
 
@@ -249,6 +255,14 @@ error_at_line (int status, int errnum, const char *file_name,
       old_file_name = file_name;
       old_line_number = line_number;
     }
+
+#if defined _LIBC && defined __libc_ptf_call
+  /* We do not want this call to be cut short by a thread
+     cancellation.  Therefore disable cancellation for now.  */
+  int state = PTHREAD_CANCEL_ENABLE;
+  __libc_ptf_call (pthread_setcancelstate, (PTHREAD_CANCEL_DISABLE, &state),
+		   0);
+#endif
 
   fflush (stdout);
 #ifdef _LIBC
@@ -281,6 +295,9 @@ error_at_line (int status, int errnum, const char *file_name,
 
 #ifdef _LIBC
   _IO_funlockfile (stderr);
+# ifdef __libc_ptf_call
+  __libc_ptf_call (pthread_setcancelstate, (state, NULL), 0);
+# endif
 #endif
 }
 
