@@ -31,11 +31,8 @@
 extern int errno;
 #endif
 #if defined LSTAT && ! LSTAT_FOLLOWS_SLASHED_SYMLINK
+# include <stdlib.h>
 # include <string.h>
-
-# if HAVE_STDLIB_H
-#  include <stdlib.h>
-# endif
 
 # ifdef STAT_MACROS_BROKEN
 #  undef S_ISLNK
@@ -47,13 +44,6 @@ extern int errno;
 #  else
 #   define S_ISLNK(m) 0
 #  endif
-# endif
-
-# ifndef HAVE_DECL_FREE
-"this configure-time declaration test was not run"
-# endif
-# if !HAVE_DECL_FREE
-void free ();
 # endif
 
 # include "xalloc.h"
