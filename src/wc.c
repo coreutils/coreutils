@@ -111,26 +111,26 @@ write_counts (uintmax_t lines,
 
   if (print_lines)
     {
-      printf ("%7s", human_readable (lines, buf, 1, 1, 0));
+      printf ("%7s", human_readable (lines, buf, 1, 1));
       space = " ";
     }
   if (print_words)
     {
-      printf ("%s%7s", space, human_readable (words, buf, 1, 1, 0));
+      printf ("%s%7s", space, human_readable (words, buf, 1, 1));
       space = " ";
     }
   if (print_chars)
     {
-      printf ("%s%7s", space, human_readable (chars, buf, 1, 1, 0));
+      printf ("%s%7s", space, human_readable (chars, buf, 1, 1));
       space = " ";
     }
   if (print_linelength)
     {
-      printf ("%s%7s", space, human_readable (linelength, buf, 1, 1, 0));
+      printf ("%s%7s", space, human_readable (linelength, buf, 1, 1));
     }
   if (*file)
     printf (" %s", file);
-  PUTCHAR ('\n');
+  putchar ('\n');
 }
 
 static void
