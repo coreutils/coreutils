@@ -1645,6 +1645,15 @@ print_files (int number_of_files, char **av)
    time:  "yy-mm-dd HH:MM"  and:  "Page NNNN". */
 #define CHARS_FOR_DATE_AND_PAGE	25
 
+#define T_BUF_FMT "%Y-%m-%d %H:%M"	/* date/time short format */
+
+/* Add `2' because the expansion of %Y occupies 4 bytes, which is two more
+   than the length of `%Y'.  Each of the other formats expand to two bytes.  */
+#define T_BUF_SIZE (2 + sizeof T_BUF_FMT)
+
+/* This string is exactly the same length as the expansion of T_BUF_FMT.  */
+#define NO_DATE "-- Date/Time -- "
+
 /* Initialize header information.
    If DESC is non-negative, it is a file descriptor open to
    FILENAME for reading.
@@ -1657,28 +1666,28 @@ print_files (int number_of_files, char **av)
 static void
 init_header (char *filename, int desc)
 {
-  int chars_per_middle, chars_free, lhs_blanks, rhs_blanks;
   char *f = filename;
-  char *no_middle = "";
-  char *header_text;
-  struct tm *tmptr;
   struct stat st;
-  char *datim = "-- Date/Time -- ";
+  size_t header_buf_size;
 
   if (filename == NULL)
     f = "";
 
   if (header != NULL)
     free (header);
-  header = (char *) xmalloc (chars_per_line + 1);
+
+  /* Allow a space on each side of the the filename-or-header.  */
+  header_buf_size = MAX (chars_per_line, CHARS_FOR_DATE_AND_PAGE + 2) + 1;
+  header = (char *) xmalloc (header_buf_size);
 
   if (!standard_header && *custom_header == '\0')
     *header = '\0';			/* blank line header */
   else
     {
-#define T_BUF_FMT "%Y-%m-%d %H:%M"	/* date/time short format */
-#define T_BUF_SIZE 17  /* FIXME: using a literal here is fragile.  */
+      int chars_per_middle, lhs_blanks, rhs_blanks;
+      struct tm *tmptr;
       char t_buf[T_BUF_SIZE];
+      char *header_text;
 
       /* If parallel files or standard input, use current time. */
       if (desc < 0 || STREQ (filename, "-") || fstat (desc, &st))
@@ -1687,15 +1696,16 @@ init_header (char *filename, int desc)
       tmptr = localtime (&st.st_mtime);
       strftime (t_buf, T_BUF_SIZE, T_BUF_FMT, tmptr);
 
-      chars_per_middle = chars_per_line - CHARS_FOR_DATE_AND_PAGE;
+      chars_per_middle = header_buf_size - 1 - CHARS_FOR_DATE_AND_PAGE;
       if (chars_per_middle < 3)
 	{
-	  header_text = no_middle;	/* Nothing free for a heading */
+	  header_text = "";	/* Nothing free for a heading */
 	  lhs_blanks = 1;
 	  rhs_blanks = 1;
 	}
       else
 	{
+	  int chars_free;
 	  header_text = standard_header ? f : custom_header;
 	  chars_free = chars_per_middle - (int) strlen (header_text);
 	  if (chars_free > 1)
@@ -1712,7 +1722,7 @@ init_header (char *filename, int desc)
 	    }
 	}
 
-      sprintf (header, _("%s%*s%s%*sPage"), (test_suite ? datim : t_buf),
+      sprintf (header, _("%s%*s%s%*sPage"), (test_suite ? NO_DATE : t_buf),
 	       lhs_blanks, " ", header_text, rhs_blanks, " ");
     }
 }
