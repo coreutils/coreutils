@@ -1,3 +1,18 @@
+Thu Feb 23 22:29:11 1995  Jim Meyering  (meyering@comco.com)
+
+	* du.c (save_cwd) [!HAVE_FCHDIR]: Always initialize cwd->desc.
+	(restore_cwd) [!HAVE_FCHDIR]: Remove unnecessary redefinition
+	of fchdir.  Both from Bruno Haible.
+
+Mon Feb 20 22:54:39 1995  Jim Meyering  (meyering@comco.com)
+
+	* du.c (save_cwd, restore_cwd): New functions.
+	(main): Use them instead of open coded versions.
+	(count_entry): Use them here instead of relying on chdir ("..") --
+	but only when necessary.  Before, with --dereference (-L),
+	traversing a symlink caused failure because chdir ("..") didn't
+	work as expected.  Reported by Bruno Haible.
+
 Sat Feb 11 07:52:01 1995  Jim Meyering  (meyering@comco.com)
 
         * configure.in (AC_REPLACE_FUNCS): Add memcmp, memcpy, and memset.
