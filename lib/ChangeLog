@@ -1,5 +1,7 @@
 2003-09-14  Jim Meyering  <jim@meyering.net>
 
+	* argmatch.c: Update from gnulib.
+
 	* Makefile.am (libfetish_a_SOURCES): Add exit.h, strndup.h,
 	time_r.c, time_r.h.
 
