@@ -31,7 +31,6 @@
 #include <stdio.h>
 #include <getopt.h>
 
-#include "version.h"
 #include "long-options.h"
 
 /* The name this program was run with. */
