@@ -1,3 +1,8 @@
+1999-12-20  Jim Meyering  <meyering@ascend.com>
+
+	* strftime.m4: Remove kludge, now that I'm using the fixed
+	autoconf-2.14a-1999-12-20.
+
 1999-12-19  Jim Meyering  <meyering@ascend.com>
 
 	* lstat-slash.m4: New file.
