@@ -107,7 +107,7 @@ static struct option const long_options[] =
   {"no-dereference", no_argument, 0, 'h'},
   {"silent", no_argument, 0, 'f'},
   {"quiet", no_argument, 0, 'f'},
-  {"reference", required_argument, 0, 12},
+  {"reference", required_argument, 0, CHAR_MAX + 1},
   {"verbose", no_argument, 0, 'v'},
   {"help", no_argument, &show_help, 1},
   {"version", no_argument, &show_version, 1},
@@ -340,7 +340,7 @@ main (int argc, char **argv)
 	{
 	case 0:
 	  break;
-	case 12:
+	case CHAR_MAX + 1:
 	  reference_file = optarg;
 	  break;
 	case 'R':
