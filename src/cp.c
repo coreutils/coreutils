@@ -663,9 +663,6 @@ do_copy (int n_files, char **file, const char *target_directory,
 	  x_tmp = *x;
 	  x_tmp.backup_type = none;
 	  x = &x_tmp;
-
-	  if (new_dest == NULL)
-	    xalloc_die ();
 	}
       else
 	{
