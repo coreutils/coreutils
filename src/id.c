@@ -285,7 +285,7 @@ print_group_list (const char *username)
 	}
     free (groups);
   }
-#endif
+#endif /* HAVE_GETGROUPS */
 }
 
 /* Print all of the info about the user's user and group IDs. */
@@ -357,7 +357,7 @@ print_full_info (const char *username)
       }
     free (groups);
   }
-#endif
+#endif /* HAVE_GETGROUPS */
 }
 
 static void
