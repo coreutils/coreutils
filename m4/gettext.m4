@@ -162,6 +162,10 @@ AC_DEFUN(AM_WITH_NLS,
       nls_cv_header_intl=intl/libintl.h
       nls_cv_header_libgt=intl/libgettext.h
     fi
+    if test -z "$nsl_cv_header_intl"; then
+      # Clean out junk possibly left behind by a previous configuration.
+      rm -f intl/libintl.h
+    fi
     AC_LINK_FILES($nls_cv_header_libgt, $nls_cv_header_intl)
     AC_OUTPUT_COMMANDS(
      [case "$CONFIG_FILES" in *po/Makefile.in*)
