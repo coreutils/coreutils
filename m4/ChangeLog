@@ -1,3 +1,8 @@
+2000-03-10  Jim Meyering  <meyering@lucent.com>
+
+	* lib-check.m4: Look for getspnam in -lgen, too.
+	From Marco Franzen.
+
 2000-02-02  Bruno Haible  <haible@clisp.cons.org>
 
 	* codeset.m4: New file.
