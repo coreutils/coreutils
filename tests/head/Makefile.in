@@ -1,6 +1,6 @@
-# Makefile.in generated automatically by automake 1.3b from Makefile.am
+# Makefile.in generated automatically by automake 1.4 from Makefile.am
 
-# Copyright (C) 1994, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+# Copyright (C) 1994, 1995-8, 1999 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
@@ -11,7 +11,7 @@
 # PARTICULAR PURPOSE.
 
 
-SHELL = /bin/sh
+SHELL = @SHELL@
 
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
@@ -46,7 +46,7 @@ AUTOMAKE = @AUTOMAKE@
 AUTOHEADER = @AUTOHEADER@
 
 INSTALL = @INSTALL@
-INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@ $(AM_INSTALL_PROGRAM_FLAGS)
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 transform = @program_transform_name@
@@ -89,17 +89,10 @@ l = @l@
 
 x = head
 explicit = in in-1024
-maint_gen = idem-0.I idem-0.X idem-1.I idem-1.X idem-2.I idem-2.X idem-3.I \
-idem-3.X basic-0-10.I basic-0-10.X basic-0-09.I basic-0-09.X basic-0-11.I \
-basic-0-11.X obs-0.I obs-0.X obs-1.I obs-1.X obs-2.I obs-2.X obs-3.I obs-3.X \
-fail-1.I fail-1.X null-1.I null-1.X posix-0.I posix-0.X posix-1.I posix-1.X \
-posix-2.I posix-2.X posix-3.I posix-3.X
-run_gen = idem-0.O idem-0.E idem-1.O idem-1.E idem-2.O idem-2.E idem-3.O \
-idem-3.E basic-0-10.O basic-0-10.E basic-0-09.O basic-0-09.E basic-0-11.O \
-basic-0-11.E obs-0.O obs-0.E obs-1.O obs-1.E obs-2.O obs-2.E obs-3.O obs-3.E \
-obs-4.O obs-4.E obs-5.O obs-5.E fail-1.O fail-1.E null-1.O null-1.E posix-0.O \
-posix-0.E posix-1.O posix-1.E posix-2.O posix-2.E posix-3.O posix-3.E \
-posix-4.O posix-4.E posix-5.O posix-5.E
+maint_gen = idem-0.I idem-0.X idem-1.I idem-1.X idem-2.I idem-2.X idem-3.I idem-3.X basic-0-10.I basic-0-10.X basic-0-09.I basic-0-09.X basic-0-11.I basic-0-11.X obs-0.I obs-0.X obs-1.I obs-1.X obs-2.I obs-2.X obs-3.I obs-3.X fail-1.I fail-1.X null-1.I null-1.X posix-0.I posix-0.X posix-1.I posix-1.X posix-2.I posix-2.X posix-3.I posix-3.X
+
+run_gen = idem-0.O idem-0.E idem-1.O idem-1.E idem-2.O idem-2.E idem-3.O idem-3.E basic-0-10.O basic-0-10.E basic-0-09.O basic-0-09.E basic-0-11.O basic-0-11.E obs-0.O obs-0.E obs-1.O obs-1.E obs-2.O obs-2.E obs-3.O obs-3.E obs-4.O obs-4.E obs-5.O obs-5.E fail-1.O fail-1.E null-1.O null-1.E posix-0.O posix-0.E posix-1.O posix-1.E posix-2.O posix-2.E posix-3.O posix-3.E posix-4.O posix-4.E posix-5.O posix-5.E
+
 
 EXTRA_DIST = Test.pm $x-tests $(explicit) $(maint_gen)
 noinst_SCRIPTS = $x-tests
@@ -124,11 +117,10 @@ DIST_COMMON =  Makefile.am Makefile.in
 DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 
 TAR = tar
-GZIP = --best
-all: Makefile $(SCRIPTS)
-
+GZIP_ENV = --best
+all: all-redirect
 .SUFFIXES:
-$(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4)
+$(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
 	cd $(top_srcdir) && $(AUTOMAKE) --gnits tests/head/Makefile
 
 Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status $(BUILT_SOURCES)
@@ -151,9 +143,13 @@ distdir: $(DISTFILES)
 	  && $(AUTOMAKE) --include-deps --build-dir=$$here --srcdir-name=$(top_srcdir) --output-dir=$$top_distdir --gnits tests/head/Makefile
 	@for file in $(DISTFILES); do \
 	  d=$(srcdir); \
-	  test -f $(distdir)/$$file \
-	  || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
-	  || cp -p $$d/$$file $(distdir)/$$file; \
+	  if test -d $$d/$$file; then \
+	    cp -pr $$/$$file $(distdir)/$$file; \
+	  else \
+	    test -f $(distdir)/$$file \
+	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
+	    || cp -p $$d/$$file $(distdir)/$$file || :; \
+	  fi; \
 	done
 check-TESTS: $(TESTS)
 	@failed=0; all=0; \
@@ -180,24 +176,30 @@ check-TESTS: $(TESTS)
 	echo "$$banner"; \
 	echo "$$dashes"; \
 	test "$$failed" -eq 0
-info:
-dvi:
-check: all
+info-am:
+info: info-am
+dvi-am:
+dvi: dvi-am
+check-am: all-am
 	$(MAKE) $(AM_MAKEFLAGS) check-TESTS
-installcheck:
-install-exec: 
-	@$(NORMAL_INSTALL)
+check: check-am
+installcheck-am:
+installcheck: installcheck-am
+install-exec-am:
+install-exec: install-exec-am
 
-install-data: 
-	@$(NORMAL_INSTALL)
+install-data-am:
+install-data: install-data-am
 
-install: install-exec install-data all
-	@:
-
-uninstall: 
-
+install-am: all-am
+	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
+install: install-am
+uninstall-am:
+uninstall: uninstall-am
+all-am: Makefile $(SCRIPTS)
+all-redirect: all-am
 install-strip:
-	$(MAKE) $(AM_MAKEFLAGS) INSTALL_PROGRAM='$(INSTALL_PROGRAM) -s' INSTALL_SCRIPT='$(INSTALL_PROGRAM)' install
+	$(MAKE) $(AM_MAKEFLAGS) AM_INSTALL_PROGRAM_FLAGS=-s install
 installdirs:
 
 
@@ -212,19 +214,28 @@ distclean-generic:
 
 maintainer-clean-generic:
 	-test -z "$(MAINTAINERCLEANFILES)" || rm -f $(MAINTAINERCLEANFILES)
-mostlyclean:  mostlyclean-generic
+mostlyclean-am:  mostlyclean-generic
 
-clean:  clean-generic mostlyclean
+mostlyclean: mostlyclean-am
 
-distclean:  distclean-generic clean
-	-rm -f config.status
+clean-am:  clean-generic mostlyclean-am
 
-maintainer-clean:  maintainer-clean-generic distclean
+clean: clean-am
+
+distclean-am:  distclean-generic clean-am
+
+distclean: distclean-am
+
+maintainer-clean-am:  maintainer-clean-generic distclean-am
 	@echo "This command is intended for maintainers to use;"
 	@echo "it deletes files that may require special tools to rebuild."
 
-.PHONY: tags distdir check-TESTS info dvi installcheck install-exec \
-install-data install uninstall all installdirs mostlyclean-generic \
+maintainer-clean: maintainer-clean-am
+
+.PHONY: tags distdir check-TESTS info-am info dvi-am dvi check check-am \
+installcheck-am installcheck install-exec-am install-exec \
+install-data-am install-data install-am install uninstall-am uninstall \
+all-redirect all-am all installdirs mostlyclean-generic \
 distclean-generic clean-generic maintainer-clean-generic clean \
 mostlyclean distclean maintainer-clean
 

@@ -1,6 +1,6 @@
-# Makefile.in generated automatically by automake 1.3b from Makefile.am
+# Makefile.in generated automatically by automake 1.4 from Makefile.am
 
-# Copyright (C) 1994, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+# Copyright (C) 1994, 1995-8, 1999 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
@@ -11,7 +11,7 @@
 # PARTICULAR PURPOSE.
 
 
-SHELL = /bin/sh
+SHELL = @SHELL@
 
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
@@ -46,7 +46,7 @@ AUTOMAKE = @AUTOMAKE@
 AUTOHEADER = @AUTOHEADER@
 
 INSTALL = @INSTALL@
-INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@ $(AM_INSTALL_PROGRAM_FLAGS)
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 transform = @program_transform_name@
@@ -88,21 +88,11 @@ VERSION = @VERSION@
 l = @l@
 
 x = join
-explicit =
-maint_gen = 1a.I1 1a.I2 1a.X 1b.I1 1b.I2 1b.X 1c.I1 1c.I2 1c.X 1d.I1 1d.I2 \
-1d.X 1e.I1 1e.I2 1e.X 1f.I1 1f.I2 1f.X 2a.I1 2a.I2 2a.X 2b.I1 2b.I2 2b.X \
-2c.I1 2c.I2 2c.X 3a.I1 3a.I2 3a.X 4a.I1 4a.I2 4a.X 4b.I1 4b.I2 4b.X 4c.I1 \
-4c.I2 4c.X 4d.I1 4d.I2 4d.X 4e.I1 4e.I2 4e.X 5a.I1 5a.I2 5a.X 5b.I1 5b.I2 \
-5b.X 5c.I1 5c.I2 5c.X 5d.I1 5d.I2 5d.X 5e.I1 5e.I2 5e.X 5f.I1 5f.I2 5f.X \
-5g.I1 5g.I2 5g.X 5h.I1 5h.I2 5h.X 5i.I1 5i.I2 5i.X 5j.I1 5j.I2 5j.X 5k.I1 \
-5k.I2 5k.X 5l.I1 5l.I2 5l.X 5m.I1 5m.I2 5m.X 6a.I1 6a.I2 6a.X 6b.I1 6b.I2 \
-6b.X 6c.I1 6c.I2 6c.X 7a.I1 7a.I2 7a.X 8a.I1 8a.I2 8a.X 8b.I1 8b.I2 8b.X \
-9a.I1 9a.I2 9a.X
-run_gen = 1a.O 1a.E 1b.O 1b.E 1c.O 1c.E 1d.O 1d.E 1e.O 1e.E 1f.O 1f.E 2a.O \
-2a.E 2b.O 2b.E 2c.O 2c.E 3a.O 3a.E 4a.O 4a.E 4b.O 4b.E 4c.O 4c.E 4d.O 4d.E \
-4e.O 4e.E 5a.O 5a.E 5b.O 5b.E 5c.O 5c.E 5d.O 5d.E 5e.O 5e.E 5f.O 5f.E 5g.O \
-5g.E 5h.O 5h.E 5i.O 5i.E 5j.O 5j.E 5k.O 5k.E 5l.O 5l.E 5m.O 5m.E 6a.O 6a.E \
-6b.O 6b.E 6c.O 6c.E 7a.O 7a.E 8a.O 8a.E 8b.O 8b.E 9a.O 9a.E
+explicit = 
+maint_gen = 1a.I1 1a.I2 1a.X 1b.I1 1b.I2 1b.X 1c.I1 1c.I2 1c.X 1d.I1 1d.I2 1d.X 1e.I1 1e.I2 1e.X 1f.I1 1f.I2 1f.X 2a.I1 2a.I2 2a.X 2b.I1 2b.I2 2b.X 2c.I1 2c.I2 2c.X 3a.I1 3a.I2 3a.X 4a.I1 4a.I2 4a.X 4b.I1 4b.I2 4b.X 4c.I1 4c.I2 4c.X 4d.I1 4d.I2 4d.X 4e.I1 4e.I2 4e.X 5a.I1 5a.I2 5a.X 5b.I1 5b.I2 5b.X 5c.I1 5c.I2 5c.X 5d.I1 5d.I2 5d.X 5e.I1 5e.I2 5e.X 5f.I1 5f.I2 5f.X 5g.I1 5g.I2 5g.X 5h.I1 5h.I2 5h.X 5i.I1 5i.I2 5i.X 5j.I1 5j.I2 5j.X 5k.I1 5k.I2 5k.X 5l.I1 5l.I2 5l.X 5m.I1 5m.I2 5m.X 6a.I1 6a.I2 6a.X 6b.I1 6b.I2 6b.X 6c.I1 6c.I2 6c.X 7a.I1 7a.I2 7a.X 8a.I1 8a.I2 8a.X 8b.I1 8b.I2 8b.X 9a.I1 9a.I2 9a.X
+
+run_gen = 1a.O 1a.E 1b.O 1b.E 1c.O 1c.E 1d.O 1d.E 1e.O 1e.E 1f.O 1f.E 2a.O 2a.E 2b.O 2b.E 2c.O 2c.E 3a.O 3a.E 4a.O 4a.E 4b.O 4b.E 4c.O 4c.E 4d.O 4d.E 4e.O 4e.E 5a.O 5a.E 5b.O 5b.E 5c.O 5c.E 5d.O 5d.E 5e.O 5e.E 5f.O 5f.E 5g.O 5g.E 5h.O 5h.E 5i.O 5i.E 5j.O 5j.E 5k.O 5k.E 5l.O 5l.E 5m.O 5m.E 6a.O 6a.E 6b.O 6b.E 6c.O 6c.E 7a.O 7a.E 8a.O 8a.E 8b.O 8b.E 9a.O 9a.E
+
 
 EXTRA_DIST = Test.pm $x-tests $(explicit) $(maint_gen)
 noinst_SCRIPTS = $x-tests
@@ -127,11 +117,10 @@ DIST_COMMON =  Makefile.am Makefile.in TODO
 DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 
 TAR = tar
-GZIP = --best
-all: Makefile $(SCRIPTS)
-
+GZIP_ENV = --best
+all: all-redirect
 .SUFFIXES:
-$(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4)
+$(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
 	cd $(top_srcdir) && $(AUTOMAKE) --gnits tests/join/Makefile
 
 Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status $(BUILT_SOURCES)
@@ -154,9 +143,13 @@ distdir: $(DISTFILES)
 	  && $(AUTOMAKE) --include-deps --build-dir=$$here --srcdir-name=$(top_srcdir) --output-dir=$$top_distdir --gnits tests/join/Makefile
 	@for file in $(DISTFILES); do \
 	  d=$(srcdir); \
-	  test -f $(distdir)/$$file \
-	  || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
-	  || cp -p $$d/$$file $(distdir)/$$file; \
+	  if test -d $$d/$$file; then \
+	    cp -pr $$/$$file $(distdir)/$$file; \
+	  else \
+	    test -f $(distdir)/$$file \
+	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
+	    || cp -p $$d/$$file $(distdir)/$$file || :; \
+	  fi; \
 	done
 check-TESTS: $(TESTS)
 	@failed=0; all=0; \
@@ -183,24 +176,30 @@ check-TESTS: $(TESTS)
 	echo "$$banner"; \
 	echo "$$dashes"; \
 	test "$$failed" -eq 0
-info:
-dvi:
-check: all
+info-am:
+info: info-am
+dvi-am:
+dvi: dvi-am
+check-am: all-am
 	$(MAKE) $(AM_MAKEFLAGS) check-TESTS
-installcheck:
-install-exec: 
-	@$(NORMAL_INSTALL)
+check: check-am
+installcheck-am:
+installcheck: installcheck-am
+install-exec-am:
+install-exec: install-exec-am
 
-install-data: 
-	@$(NORMAL_INSTALL)
+install-data-am:
+install-data: install-data-am
 
-install: install-exec install-data all
-	@:
-
-uninstall: 
-
+install-am: all-am
+	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
+install: install-am
+uninstall-am:
+uninstall: uninstall-am
+all-am: Makefile $(SCRIPTS)
+all-redirect: all-am
 install-strip:
-	$(MAKE) $(AM_MAKEFLAGS) INSTALL_PROGRAM='$(INSTALL_PROGRAM) -s' INSTALL_SCRIPT='$(INSTALL_PROGRAM)' install
+	$(MAKE) $(AM_MAKEFLAGS) AM_INSTALL_PROGRAM_FLAGS=-s install
 installdirs:
 
 
@@ -215,19 +214,28 @@ distclean-generic:
 
 maintainer-clean-generic:
 	-test -z "$(MAINTAINERCLEANFILES)" || rm -f $(MAINTAINERCLEANFILES)
-mostlyclean:  mostlyclean-generic
+mostlyclean-am:  mostlyclean-generic
 
-clean:  clean-generic mostlyclean
+mostlyclean: mostlyclean-am
 
-distclean:  distclean-generic clean
-	-rm -f config.status
+clean-am:  clean-generic mostlyclean-am
 
-maintainer-clean:  maintainer-clean-generic distclean
+clean: clean-am
+
+distclean-am:  distclean-generic clean-am
+
+distclean: distclean-am
+
+maintainer-clean-am:  maintainer-clean-generic distclean-am
 	@echo "This command is intended for maintainers to use;"
 	@echo "it deletes files that may require special tools to rebuild."
 
-.PHONY: tags distdir check-TESTS info dvi installcheck install-exec \
-install-data install uninstall all installdirs mostlyclean-generic \
+maintainer-clean: maintainer-clean-am
+
+.PHONY: tags distdir check-TESTS info-am info dvi-am dvi check check-am \
+installcheck-am installcheck install-exec-am install-exec \
+install-data-am install-data install-am install uninstall-am uninstall \
+all-redirect all-am all installdirs mostlyclean-generic \
 distclean-generic clean-generic maintainer-clean-generic clean \
 mostlyclean distclean maintainer-clean
 
