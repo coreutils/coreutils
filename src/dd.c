@@ -1043,16 +1043,18 @@ main (int argc, char **argv)
 
   if (output_file != NULL)
     {
-      /* Open the output file with *read* access only if we might
-	 need to read to satisfy a `seek=' request.  */
-      int omode = (seek_record ? O_RDWR : O_WRONLY) | O_CREAT;
+      mode_t perms = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH;
+      int opts
+	= (O_CREAT
+	   | (seek_record || (conversions_mask & C_NOTRUNC) ? 0 : O_TRUNC));
 
-      if (seek_record == 0 && !(conversions_mask & C_NOTRUNC))
-	omode |= O_TRUNC;
-      output_fd = open (output_file, omode,
-			(S_IRUSR | S_IWUSR
-			 | S_IRGRP | S_IWGRP
-			 | S_IROTH | S_IWOTH));
+      /* Open the output file with *read* access only if we might
+	 need to read to satisfy a `seek=' request.  If we can't read
+	 the file, go ahead with write-only access; it might work.  */
+      if (! seek_record
+	  || (output_fd = open (output_file, O_RDWR | opts, perms)) < 0)
+	output_fd = open (output_file, O_WRONLY | opts, perms);
+
       if (output_fd < 0)
 	error (1, errno, "%s", output_file);
 #if HAVE_FTRUNCATE
