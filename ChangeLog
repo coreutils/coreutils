@@ -2,6 +2,12 @@
 
 	* Version 5.3.0.
 
+	* tests/stty/row-col-1: Don't set rows or columns to zero, to avoid
+	a bug in the TIOCGWINSZ ioctl on at least Solaris5.9 systems.  Setting
+	either (or both) to zero would succeed, but subsequent `stty size'
+	would say `no size information for this device' due to the ioctl
+	failing with EINVAL.
+
 	* src/system.h: If PRIdMAX, PRIoMAX, PRIuMAX, and PRIxMAX are
 	not all defined and either ULONG_MAX or ULLONG_MAX is not defined,
 	then fail at compile-time rather than let tools like od produce
