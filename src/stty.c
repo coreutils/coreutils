@@ -32,19 +32,19 @@
 #include <sys/types.h>
 #include <termios.h>
 #ifdef GWINSZ_IN_SYS_IOCTL
-#include <sys/ioctl.h>
+# include <sys/ioctl.h>
 #endif
 #ifdef WINSIZE_IN_PTEM
-#include <sys/stream.h>
-#include <sys/ptem.h>
+# include <sys/stream.h>
+# include <sys/ptem.h>
 #endif
 #include <getopt.h>
 #ifdef __STDC__
-#include <stdarg.h>
-#define VA_START(args, lastarg) va_start(args, lastarg)
+# include <stdarg.h>
+# define VA_START(args, lastarg) va_start(args, lastarg)
 #else
-#include <varargs.h>
-#define VA_START(args, lastarg) va_start(args)
+# include <varargs.h>
+# define VA_START(args, lastarg) va_start(args)
 #endif
 
 #include "system.h"
@@ -53,94 +53,94 @@
 #include "error.h"
 
 #if defined(GWINSZ_BROKEN)	/* Such as for SCO UNIX 3.2.2. */
-#undef TIOCGWINSZ
+# undef TIOCGWINSZ
 #endif
 
 #ifndef _POSIX_VDISABLE
-#define _POSIX_VDISABLE ((unsigned char) 0)
+# define _POSIX_VDISABLE ((unsigned char) 0)
 #endif
 
 #define Control(c) ((c) & 0x1f)
 /* Canonical values for control characters. */
 #ifndef CINTR
-#define CINTR Control ('c')
+# define CINTR Control ('c')
 #endif
 #ifndef CQUIT
-#define CQUIT 28
+# define CQUIT 28
 #endif
 #ifndef CERASE
-#define CERASE 127
+# define CERASE 127
 #endif
 #ifndef CKILL
-#define CKILL Control ('u')
+# define CKILL Control ('u')
 #endif
 #ifndef CEOF
-#define CEOF Control ('d')
+# define CEOF Control ('d')
 #endif
 #ifndef CEOL
-#define CEOL _POSIX_VDISABLE
+# define CEOL _POSIX_VDISABLE
 #endif
 #ifndef CSTART
-#define CSTART Control ('q')
+# define CSTART Control ('q')
 #endif
 #ifndef CSTOP
-#define CSTOP Control ('s')
+# define CSTOP Control ('s')
 #endif
 #ifndef CSUSP
-#define CSUSP Control ('z')
+# define CSUSP Control ('z')
 #endif
 #if defined(VEOL2) && !defined(CEOL2)
-#define CEOL2 _POSIX_VDISABLE
+# define CEOL2 _POSIX_VDISABLE
 #endif
 #if defined(VSWTCH) && !defined(CSWTCH)
-#define CSWTCH _POSIX_VDISABLE
+# define CSWTCH _POSIX_VDISABLE
 #endif
 
 /* SunOS 5.3 loses (^Z doesn't work) if `swtch' is the same as `susp'.
    So the default is to disable `swtch.'  */
 #if defined (__sparc__) && defined (__svr4__)
-#undef CSWTCH
-#define CSWTCH _POSIX_VDISABLE
+# undef CSWTCH
+# define CSWTCH _POSIX_VDISABLE
 #endif
 
 #if defined(VWERSE) && !defined (VWERASE)	/* AIX-3.2.5 */
-#define VWERASE VWERSE
+# define VWERASE VWERSE
 #endif
 #if defined(VDSUSP) && !defined (CDSUSP)
-#define CDSUSP Control ('y')
+# define CDSUSP Control ('y')
 #endif
 #if !defined(VREPRINT) && defined(VRPRNT)	/* Irix 4.0.5 */
-#define VREPRINT VRPRNT
+# define VREPRINT VRPRNT
 #endif
 #if defined(VREPRINT) && !defined(CRPRNT)
-#define CRPRNT Control ('r')
+# define CRPRNT Control ('r')
 #endif
 #if defined(VWERASE) && !defined(CWERASE)
-#define CWERASE Control ('w')
+# define CWERASE Control ('w')
 #endif
 #if defined(VLNEXT) && !defined(CLNEXT)
-#define CLNEXT Control ('v')
+# define CLNEXT Control ('v')
 #endif
 #if defined(VDISCARD) && !defined(VFLUSHO)
-#define VFLUSHO VDISCARD
+# define VFLUSHO VDISCARD
 #endif
 #if defined(VFLUSH) && !defined(VFLUSHO)	/* Ultrix 4.2 */
-#define VFLUSHO VFLUSH
+# define VFLUSHO VFLUSH
 #endif
 #if defined(CTLECH) && !defined(ECHOCTL)	/* Ultrix 4.3 */
-#define ECHOCTL CTLECH
+# define ECHOCTL CTLECH
 #endif
 #if defined(TCTLECH) && !defined(ECHOCTL)	/* Ultrix 4.2 */
-#define ECHOCTL TCTLECH
+# define ECHOCTL TCTLECH
 #endif
 #if defined(CRTKIL) && !defined(ECHOKE)		/* Ultrix 4.2 and 4.3 */
-#define ECHOKE CRTKIL
+# define ECHOKE CRTKIL
 #endif
 #if defined(VFLUSHO) && !defined(CFLUSHO)
-#define CFLUSHO Control ('o')
+# define CFLUSHO Control ('o')
 #endif
 #if defined(VSTATUS) && !defined(CSTATUS)
-#define CSTATUS Control ('t')
+# define CSTATUS Control ('t')
 #endif
 
 static const char *visible ();
@@ -273,9 +273,9 @@ static struct mode_info mode_info[] =
   {"tab1", output, SANE_UNSET, TAB1, TABDLY},
   {"tab0", output, SANE_SET, TAB0, TABDLY},
 #else
-#ifdef OXTABS
+# ifdef OXTABS
   {"tab3", output, SANE_UNSET, OXTABS, 0},
-#endif
+# endif
 #endif
 #ifdef BSDLY
   {"bs1", output, SANE_UNSET, BS1, BSDLY},
@@ -1078,7 +1078,7 @@ set_mode (info, reversed, mode)
 	    mode->c_oflag = (mode->c_oflag & ~TABDLY) | TAB0;
 	}
 #else
-#ifdef OXTABS
+# ifdef OXTABS
       else if (!strcmp (info->name, "tabs"))
 	{
 	  if (reversed)
@@ -1086,7 +1086,7 @@ set_mode (info, reversed, mode)
 	  else
 	    mode->c_oflag = mode->c_oflag & ~OXTABS;
 	}
-#endif
+# endif
 #endif
 #if defined(XCASE) && defined(IUCLC) && defined(OLCUC)
       else if (!strcmp (info->name, "lcase")
@@ -1218,7 +1218,7 @@ set_window_size (rows, cols)
   if (cols >= 0)
     win.ws_col = cols;
 
-#ifdef TIOCSSIZE
+# ifdef TIOCSSIZE
   /* Alexander Dupuy <dupuy@cs.columbia.edu> wrote:
      The following code deals with a bug in the SunOS 4.x (and 3.x?) kernel.
      This comment from sys/ttold.h describes Sun's twisted logic - a better
@@ -1257,7 +1257,7 @@ set_window_size (rows, cols)
 	error (1, errno, _("standard input"));
       return;
     }
-#endif
+# endif
 
   if (ioctl (0, TIOCSWINSZ, (char *) &win))
     error (1, errno, _("standard input"));
