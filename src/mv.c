@@ -272,6 +272,7 @@ do_move (const char *source, const char *dest, const struct cp_options *x)
 	 and set errno to EXDEV.  */
 
       static int first = 1;
+      int copy_into_self;
 
       if (first)
 	{
@@ -281,12 +282,17 @@ do_move (const char *source, const char *dest, const struct cp_options *x)
 	  hash_init (INITIAL_HASH_MODULE, INITIAL_ENTRY_TAB_SIZE);
 	}
 
-      fail = copy (source, dest, nonexistent_dst, x);
+      fail = copy (source, dest, nonexistent_dst, x, &copy_into_self);
       if (fail)
 	{
 	  /* Restore original destination file DEST if made a backup.  */
 	  if (dest_backup && rename (dest_backup, dest))
 	    error (0, errno, _("cannot un-backup `%s'"), dest);
+	}
+      else if (copy_into_self)
+	{
+	  /* Do *not* remove SOURCE if it is the same as or a parent of DEST.
+	     Otherwise, mv would be removing the original *and* the copy.  */
 	}
       else
 	{
