@@ -1,3 +1,11 @@
+2002-11-19  Jim Meyering  <jim@meyering.net>
+
+	Avoid a link-time failure on some Linux systems.
+	* mktime.c (STATIC): Define to be empty (_LIBC) or `static' (otherwise).
+	(__mon_yday): Declare with the STATIC attribute.
+	(__mktime_internal): Likewise.
+	Based on a report from Greg Schafer.
+
 2002-11-14  Jim Meyering  <jim@meyering.net>
 
 	* long-options.c: Don't include libintl.h, and don't define `_' --
