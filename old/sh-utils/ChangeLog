@@ -1,3 +1,25 @@
+1998-04-04  Jim Meyering  <meyering@eng.ascend.com>
+
+	* acconfig.h (uintmax_t): Add #undef.
+
+	* configure.in (jm_AC_HEADER_INTTYPES_H): Use it.
+	(jm_AC_TYPE_UINTMAX_T): Use it.
+	(jm_PREREQ): Use it.
+
+	* src/system.h: Sync with system.c from fileutils.
+
+	* Makefile.am (ACLOCAL_AMFLAGS): Define this, so automake/aclocal
+	know about the m4/ subdirectory.
+	* Makefile.maint (aclocal-files): Remove now-unnecessary (with
+	automake-1.2h and the above change) aclocal-related rules and includes.
+
+1998-04-03  Jim Meyering  <meyering@eng.ascend.com>
+
+	* lib/closeout.c: New file.
+	* lib/closeout.h: New file.
+	* lib/Makefile.am (libsu_a_SOURCES): Add closeout.c.
+	(noinst_HEADERS): Add closeout.h.
+
 1998-03-27  Jim Meyering  <meyering@eng.ascend.com>
 
 	* Makefile.am (AUTOMAKE_OPTIONS): Require 1.2h.
