@@ -1,8 +1,6 @@
 /* getopt_long and getopt_long_only entry points for GNU getopt.
-
-   Copyright (C) 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1996,
-   1997, 1998, 2003 Free Software Foundation, Inc.
-
+   Copyright (C) 1987,88,89,90,91,92,93,94,96,97,98,2004
+     Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    This program is free software; you can redistribute it and/or modify
@@ -28,6 +26,7 @@
 #else
 # include "getopt.h"
 #endif
+#include "getopt_int.h"
 
 #include <stdio.h>
 
@@ -61,13 +60,19 @@
 #endif
 
 int
-getopt_long (int argc,
-	     char *const *argv,
-	     const char *options,
-	     const struct option *long_options,
-	     int *opt_index)
+getopt_long (int argc, char *const *argv, const char *options,
+	     const struct option *long_options, int *opt_index)
 {
   return _getopt_internal (argc, argv, options, long_options, opt_index, 0);
+}
+
+int
+_getopt_long_r (int argc, char *const *argv, const char *options,
+		const struct option *long_options, int *opt_index,
+		struct _getopt_data *d)
+{
+  return _getopt_internal_r (argc, argv, options, long_options, opt_index,
+			     0, d);
 }
 
 /* Like getopt_long, but '-' as well as '--' can indicate a long option.
@@ -76,19 +81,20 @@ getopt_long (int argc,
    instead.  */
 
 int
-getopt_long_only (int argc,
-		  char *const *argv,
-		  const char *options,
-		  const struct option *long_options,
-		  int *opt_index)
+getopt_long_only (int argc, char *const *argv, const char *options,
+		  const struct option *long_options, int *opt_index)
 {
   return _getopt_internal (argc, argv, options, long_options, opt_index, 1);
 }
 
-# ifdef _LIBC
-libc_hidden_def (getopt_long)
-libc_hidden_def (getopt_long_only)
-# endif
+int
+_getopt_long_only_r (int argc, char *const *argv, const char *options,
+		     const struct option *long_options, int *opt_index,
+		     struct _getopt_data *d)
+{
+  return _getopt_internal_r (argc, argv, options, long_options, opt_index,
+			     1, d);
+}
 
 #endif	/* Not ELIDE_CODE.  */
 
