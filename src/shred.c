@@ -272,9 +272,9 @@ struct isaac_state
 static void
 isaac_refill (struct isaac_state *s, uint32_t r[/* ISAAC_WORDS */])
 {
-  register uint32_t a, b;		/* Caches of a and b */
-  register uint32_t x, y;		/* Temps needed by isaac_step macro */
-  register uint32_t *m = s->mm;	/* Pointer into state array */
+  uint32_t a, b;		/* Caches of a and b */
+  uint32_t x, y;		/* Temps needed by isaac_step macro */
+  uint32_t *m = s->mm;	/* Pointer into state array */
 
   a = s->a;
   b = s->b + (++s->c);
