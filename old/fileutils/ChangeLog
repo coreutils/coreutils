@@ -1,3 +1,13 @@
+2001-04-29  Jim Meyering  <meyering@lucent.com>
+
+	* man/rm.x: Refer to shred.
+	Remove the example showing how to remove `-foo', since that is now
+	in the --help output (and hence automatically included).
+	* src/rm.c (usage): Mention shred.
+
+	* src/shred.c (usage): Include in --help output the warning about
+	some of the filesystem types on which shred is not effective.
+
 2001-04-25  Jim Meyering  <meyering@lucent.com>
 
 	* Makefile.maint (my-distcheck): Add a comment.
