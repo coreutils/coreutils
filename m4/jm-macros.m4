@@ -35,6 +35,7 @@ AC_DEFUN([jm_MACROS],
   AC_REQUIRE([jm_PREREQ])
 
   AC_REQUIRE([UTILS_FUNC_DIRFD])
+  AC_REQUIRE([AC_FUNC_ACL])
   AC_REQUIRE([jm_FUNC_LCHOWN])
   AC_REQUIRE([fetish_FUNC_RMDIR_NOTEMPTY])
   AC_REQUIRE([jm_FUNC_CHOWN])
@@ -121,7 +122,6 @@ AC_DEFUN([jm_MACROS],
   AC_REQUIRE([jm_FUNC_UTIME])
 
   AC_CHECK_FUNCS( \
-    acl \
     bcopy \
     canonicalize_file_name \
     endgrent \
@@ -218,7 +218,6 @@ AC_DEFUN([jm_CHECK_ALL_HEADERS],
     stddef.h \
     stdint.h \
     string.h \
-    sys/acl.h \
     sys/filsys.h \
     sys/fs/s5param.h \
     sys/fs_types.h \
