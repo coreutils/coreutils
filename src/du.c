@@ -577,7 +577,7 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
 
       for (namep = name_space; *namep; namep += strlen (namep) + 1)
 	{
-	  if (!excluded_filename (exclude, namep, 0))
+	  if (!excluded_filename (exclude, namep))
 	    {
 	      str_concatc (path, namep);
 	      size += count_entry (namep, 0, dir_dev, depth + 1);
@@ -739,12 +739,13 @@ main (int argc, char **argv)
 	  break;
 
 	case 'X':
-	  if (add_exclude_file (add_exclude, exclude, optarg, '\n') != 0)
+	  if (add_exclude_file (add_exclude, exclude, optarg,
+				EXCLUDE_WILDCARDS, '\n'))
 	    error (1, errno, "%s", quote (optarg));
 	  break;
 
 	case EXCLUDE_OPTION:
-	  add_exclude (exclude, optarg);
+	  add_exclude (exclude, optarg, EXCLUDE_WILDCARDS);
 	  break;
 
 	case BLOCK_SIZE_OPTION:
