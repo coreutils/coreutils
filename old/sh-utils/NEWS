@@ -1,4 +1,9 @@
 Changes in release 2.1
+* nohup's behavior is changed as follows, to conform to POSIX 1003.1-2001:
+  - nohup no longer adjusts scheduling priority; use "nice" for that.
+  - nohup now redirects stderr to stdout, if stderr is not a terminal.
+  - nohup exit status is now 126 if command was found but not invoked,
+    127 if nohup failed or if command was not found.
  [2.0.13]
 * uname and uptime work better on *BSD systems
 * pathchk now exits nonzero for a path with a directory component
