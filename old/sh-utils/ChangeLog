@@ -1,3 +1,9 @@
+Sat Jul  6 12:47:48 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (AC_REPLACE_FUNCS): Add group_member.
+	* lib/Makefile.am (su_SOURCES): Remove group-member.c.
+	(EXTRA_DIST): Add group-member.c here.
+
 Thu Jul  4 22:40:06 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/expr.c (docolon): Remove space before newline in usage message.

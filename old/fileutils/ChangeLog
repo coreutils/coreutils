@@ -1,3 +1,9 @@
+Sat Jul  6 12:46:27 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (AC_REPLACE_FUNCS): Add group_member.
+	* lib/Makefile.am (fu_SOURCES): Remove group-member.c.
+	(EXTRA_DIST): Add group-member.c here.
+
 Fri Jul  5 22:16:13 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/dircolors.c [!STDC_HEADERS]: Declare free.
