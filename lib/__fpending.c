@@ -23,15 +23,10 @@
 
 #include "__fpending.h"
 
-#include <stdlib.h>
-
 /* Return the number of pending (aka buffered, unflushed)
    bytes on the stream, FP, that is open for writing.  */
 size_t
 __fpending (FILE *fp)
 {
-  ptrdiff_t n = PENDING_OUTPUT_N_BYTES;
-  if (n < 0)
-    abort ();
-  return n;
+  return PENDING_OUTPUT_N_BYTES;
 }
