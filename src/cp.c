@@ -145,6 +145,8 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
   -p, --preserve               preserve file attributes if possible\n\
   -P, --parents                append source path to DIRECTORY\n\
   -r                           copy recursively, non-directories as files\n\
+                                 WARNING: use -R instead when you might copy\n\
+                                 special files like FIFOs or /dev/zero\n\
       --sparse=WHEN            control creation of sparse files\n\
   -R, --recursive              copy directories recursively\n\
   -s, --symbolic-link          make symbolic links instead of copying\n\
