@@ -126,7 +126,7 @@ timespec_subtract (struct timespec *diff,
       y->tv_sec += nsec;
     }
 
-  if (x->tv_nsec - y->tv_nsec > 1000000000)
+  if (1000000000 < x->tv_nsec - y->tv_nsec)
     {
       int nsec = (y->tv_nsec - x->tv_nsec) / 1000000000;
       y->tv_nsec += 1000000000 * nsec;
@@ -210,13 +210,13 @@ main (int argc, char **argv)
 	  /* No negative intervals.  */
 	  || s < 0
 	  /* S must fit in a time_t.  */
-	  || s > TIME_T_MAX
+	  || TIME_T_MAX < s
 	  /* No extra chars after the number and an optional s,m,h,d char.  */
 	  || (*p && *(p+1))
 	  /* Check any suffix char and update S based on the suffix.  */
 	  || apply_suffix (&s, *p)
 	  /* Make sure the sum fits in a time_t.  */
-	  || (seconds += s) > TIME_T_MAX
+	  || TIME_T_MAX < (seconds += s)
 	  )
 	{
 	  error (0, 0, _("invalid time interval `%s'"), argv[i]);
@@ -237,6 +237,11 @@ main (int argc, char **argv)
 
   ts_stop.tv_sec = ts_start.tv_sec + ts_sleep.tv_sec;
   ts_stop.tv_nsec = ts_start.tv_nsec + ts_sleep.tv_nsec;
+  if (1000000000 <= ts_stop.tv_nsec)
+    {
+      ++ts_stop.tv_sec;
+      ts_stop.tv_nsec -= 1000000000;
+    }
 
   while (1)
     {
