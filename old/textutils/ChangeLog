@@ -1,3 +1,39 @@
+1999-03-07  Jim Meyering  <meyering@ascend.com>
+
+	* tests/md5sum/basic-1: Remove newline test.
+	* tests/md5sum/newline-1: New file.
+	* tests/md5sum/Makefile.am (TESTS): Add newline-1.
+
+	1999-02-13  Roland Huebner  <rh@pelikan.cologne.de>
+	* src/pr.c
+	(main): Redefine options -s, -w to be POSIX compliant; introduce
+	new options -J, -S, -W to disentangle -s and -w when used together
+	with the three column options;
+	(add_line_number): Make POSIX compliant; use default number
+	separator TAB with single column output.
+	(add_line_number): Make POSIX compliant; with multicolumn output
+	now prefer `text columns of equal width' rather than a consequent
+	use of `default n-separator TAB'.
+	(add_line_number): Change line number cut-off from lower-oder to
+	higher-oder digit to avoid loss of information; no consequent
+	handling exists in different utilities and other UNIXes.
+	(char_to_clump): Expand input text tabs to 8 spaces, if
+	input_tab_char doesn't equal TAB (adapted to other UNIXes).
+	(usage): Update POSIX compliant options -s, -w; add new options -J,
+	-S, -W.
+	(main): Update the source internal documentation.
+	Some smaller BUGFIXES (print_sep_string, init_header, skip_to_page,
+	reset_status, print_header).
+
+	* tests/md5sum/basic-1 (backslash): Use .\foo instead of \.foo so we
+	don't tramp on root directory in MSDOS/Windows.
+	Suggestion from Eli Zaretskii.
+
+	1999-02-15  Eli Zaretskii  <eliz@is.elta.co.il>
+
+	* tests/md5sum/Makefile.am (TESTS_ENVIRONMENT): Run md5sum with the
+	--text option (for MSDOS).
+
 1999-03-06  Jim Meyering  <meyering@ascend.com>
 
 	* src/cut.c (getstr): Change type of `delim' parameter from char to int.
