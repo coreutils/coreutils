@@ -2,6 +2,12 @@
 
 	* Version 4.0.36.
 
+	* src/copy.c (same_file_ok): When moving a symlink onto itself,
+	don't remove the symlink.  Reported by David Luyer as Debian bug#82089,
+	via Michael Stone.
+	* tests/mv/into-self-4: New test for the above.
+	* tests/mv/Makefile.am (TESTS): Add into-self-4.
+
 	* tests/chmod/setgid: If `chmod g+s d' fails, then try to chgrp
 	to a group of which we're a member, then try the chmod again.
 
