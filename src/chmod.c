@@ -353,7 +353,7 @@ main (int argc, char **argv)
   if (changes == MODE_INVALID)
     error (1, 0, _("invalid mode"));
   else if (changes == MODE_MEMORY_EXHAUSTED)
-    error (1, 0, _("virtual memory exhausted"));
+    xalloc_die ();
   else if (changes == MODE_BAD_REFERENCE)
     error (1, errno, _("getting attributes of %s"), quote (reference_file));
 
