@@ -20,6 +20,12 @@ Sun Apr  4 09:38:00 1993  Jim Meyering  (meyering@comco.com)
 	* chown.c (main): Explicitly cast -1 to [ug]id_t to avoid compiler
 	warnings.
 
+	* cp.h: Remove unneeded extern dcl of exit_status.
+
+	* basename.c [rindex]: Don't redefine it.
+	* system.h [rindex, incl, bcopy, bzero]: Ditto.
+	* userspec.c [index]: Ditto.
+
 Sat Apr  3 18:17:23 1993  Jim Meyering  (meyering@comco.com)
 
 	* Makefile.in [Makefile]: Add dependencies and a rule to remake it.
