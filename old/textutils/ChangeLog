@@ -1,5 +1,10 @@
 Tue Jul 16 00:09:37 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* aclocal.m4 (fp_C_PROTOTYPES): Improved version from
+	François Pinard.
+	Update all other macros to reference $fp_cv_prog_cc_stdc, rather
+	than $ac_cv_prog_cc_stdc.
+
 	* src/od.c (OFF_T_MAX): Remove definition.
 	(main): Compare against LONG_MAX rather than OFF_T_MAX.
 
