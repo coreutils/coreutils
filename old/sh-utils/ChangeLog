@@ -3,8 +3,7 @@
 
 2001-06-21  Paul Eggert  <eggert@twinsun.com>
 
-	* NEWS: 'expr' now requires '+' rather
-	than 'quote' to quote tokens.
+	* NEWS: 'expr' now requires '+' rather than 'quote' to quote tokens.
 
 	* src/expr.c (posixly_correct): Remove; no longer needed.
 	(main): Do not worry about POSIXLY_CORRECT, as it's OK for
