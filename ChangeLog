@@ -1,3 +1,25 @@
+2004-09-18  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/dd.c (usage): Distinguish between options and operands.
+	(scanargs): Don't mess with argc, argv; getopt_long handles this now.
+	Say "operands" for operands, not "options".
+	(main): Use getopt_long, so that "dd --" works as POSIX requires.
+	* tests/dd/misc: Check for "dd --".
+
+	* src/chroot.c (main): Reject unknown options instead of
+	interpreting them as a directory to chroot to.
+
+	* src/cksum.c: Remove obsolete comment about POSIX 1003.2/D11.2.
+	The current standard (POSIX 1003.1-2004) is correct.
+	(crc_remainder) [defined CRCTAB]: Renamed from "remainder" to avoid
+	collision with builtin function.
+	(main) [defined CRCTAB]: Output in lowercase hexadecimal, and
+	output the first 0 as 8 digits, to make it easier to compare to
+	the text of the standard.  Output crctab to be a const array.
+	(crctab): Use result of above changes.
+	(long_options): Remove; not needed if empty.
+	(main): getopt_long can't return 0 here, so simplify the code.
+
 2004-09-13  Jim Meyering  <jim@meyering.net>
 
 	* src/Makefile.am (localedir.h): Don't redirect directly to target.
