@@ -799,7 +799,7 @@ stat.c: xstat.in
 # On systems with glibc-2.1 or newer, the file is redundant, therefore we
 # avoid installing it.
 
-all-local: charset.alias ref-add.sed ref-del.sed
+all-local: charset.alias ref-add.sed ref-del.sed lstat.c stat.c
 install-exec-local: all-local
 	$(mkinstalldirs) $(DESTDIR)$(libdir)
 	if test -f $(charset_alias); then \
