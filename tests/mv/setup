@@ -34,10 +34,9 @@ if test -z $other_partition_tmpdir; then
 This test requires a writable directory on a different disk partition,
 and I couldn\'t find one.  I tried these defaults:
   $CANDIDATE_TMP_DIRS
-Set your environment variable CANDIDATE_TMP_DIRS to make this test use
+Set your environment variable CANDIDATE_TMP_DIRS to make this test
 use a different list.
 EOF
 fi
 
 test "$VERBOSE" = yes && set -x
-
