@@ -1,0 +1,52 @@
+#! /bin/sh
+# This script was generated automatically by build-script.
+case $# in
+  0) xx='../../src/ls';;
+  *) xx="$1";;
+esac
+test "$VERBOSE" && echo=echo || echo=:
+$echo testing program: $xx
+errors=0
+test "$srcdir" || srcdir=.
+test "$VERBOSE" && $xx --version 2> /dev/null
+$xx -b $srcdir/'""""" "' $srcdir/b > q1.O 2> q1.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test q1 failed: ../../src/ls return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp q1.O $srcdir/q1.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed q1"; fi ;;
+    1) $echo "Test q1 failed: files q1.O and $srcdir/q1.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test q1 may have failed." 1>&2;
+       $echo The command "cmp q1.O $srcdir/q1.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s q1.E || rm -f q1.E
+$xx -b -Q $srcdir/'""""" "' $srcdir/b > q2.O 2> q2.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test q2 failed: ../../src/ls return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp q2.O $srcdir/q2.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed q2"; fi ;;
+    1) $echo "Test q2 failed: files q2.O and $srcdir/q2.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test q2 may have failed." 1>&2;
+       $echo The command "cmp q2.O $srcdir/q2.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s q2.E || rm -f q2.E
+if test $errors = 0 ; then
+  $echo Passed all 2 tests. 1>&2
+else
+  $echo Failed $errors tests. 1>&2
+fi
+test $errors = 0 || errors=1
+exit $errors

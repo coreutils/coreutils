@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.1l from Makefile.am
+# Makefile.in generated automatically by automake 1.1m from Makefile.am
 
 # Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -32,19 +32,31 @@ pkgincludedir = $(includedir)/@PACKAGE@
 
 top_builddir = ../..
 
+ACLOCAL = @ACLOCAL@
+AUTOCONF = @AUTOCONF@
+AUTOMAKE = @AUTOMAKE@
+AUTOHEADER = @AUTOHEADER@
+
 INSTALL = @INSTALL@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 transform = @program_transform_name@
-YACC = @YACC@
-GENCAT = @GENCAT@
-MV = @MV@
-GMSGFMT = @GMSGFMT@
+ANSI2KNR = @ANSI2KNR@
 CC = @CC@
-RANLIB = @RANLIB@
+DF_PROG = @DF_PROG@
+INSTALL_SCRIPT = @INSTALL_SCRIPT@
+LIBOBJS = @LIBOBJS@
 LN = @LN@
+MAINT = @MAINT@
+MV = @MV@
+MVDIR_PROG = @MVDIR_PROG@
+PACKAGE = @PACKAGE@
+RANLIB = @RANLIB@
 RM = @RM@
+U = @U@
+VERSION = @VERSION@
+YACC = @YACC@
 
 x = ls
 explicit = '""""" "' b
@@ -71,19 +83,16 @@ SCRIPTS =  $(noinst_SCRIPTS)
 DIST_COMMON =  Makefile.am Makefile.in
 
 
-PACKAGE = @PACKAGE@
-VERSION = @VERSION@
-
-DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) \
-	$(TEXINFOS) $(MANS) $(EXTRA_DIST)
+DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 
 TAR = tar
+GZIP = --best
 default: all
 
 .SUFFIXES:
 .SUFFIXES: .pl
-$(srcdir)/Makefile.in: @MAINT@ Makefile.am $(top_srcdir)/configure.in $(ACLOCAL) 
-	cd $(top_srcdir) && automake --gnu tests/ls/Makefile
+$(srcdir)/Makefile.in: @MAINT@ Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
+	cd $(top_srcdir) && $(AUTOMAKE) --gnu tests/ls/Makefile
 
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status $(BUILT_SOURCES)
 	cd $(top_builddir) \
