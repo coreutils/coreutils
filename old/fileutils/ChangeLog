@@ -1,5 +1,7 @@
 1999-04-04  Jim Meyering  <meyering@ascend.com>
 
+	* Version 4.0e
+
 	* tests/cp/same-file: Change the sed command used to extract the
 	filename from ls -l output, to accommodate the change in format.
 
