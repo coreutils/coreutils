@@ -1,6 +1,10 @@
 Changes in release 3.13:
-* df no longer invokes the sync system call by default.
-  Use --sync to invoke sync before getting file system sizes.
+* when building on systems that have getopt_long (like Linux), the system-
+  provided function will be used -- so executables may be a little smaller
+* chgrp, chown, cp -p, and mv all modify owner and/or group on systems
+  (like Solaris) that provide the lchown system call.
+* df no longer invokes the sync system call by default.  You can use the
+  --sync option to make df invoke sync before getting file system sizes.
 * internationalized diagnostic messages
 * mkdir accepts new option: --verbose
 * cp has been fixed so that the full file name it uses for the destination
