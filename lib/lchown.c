@@ -34,7 +34,6 @@ extern int errno;
 # define S_ISLNK(m) (((m) & S_IFMT) == S_IFLNK)
 #endif
 
-
 /* Declare chown to avoid a warning.  Don't include unistd.h,
    because it may have a conflicting prototype for lchown.  */
 int chown ();
