@@ -79,8 +79,8 @@ struct line
    same join field value.  */
 struct seq
   {
-    int count;			/* Elements used in `lines'.  */
-    int alloc;			/* Elements allocated in `lines'.  */
+    size_t count;			/* Elements used in `lines'.  */
+    size_t alloc;			/* Elements allocated in `lines'.  */
     struct line *lines;
   };
 
