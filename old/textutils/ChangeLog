@@ -1,3 +1,14 @@
+1998-06-29  Jim Meyering  <meyering@ascend.com>
+
+	* src/wc.c: Update calls to human_readable -- now there's one fewer arg.
+
+	* lib/Makefile.am (libtu_a_SOURCES): Add argmatch.c.
+	(noinst_HEADERS): Add argmatch.h.
+
+1998-06-28  Jim Meyering  <meyering@ascend.com>
+
+	* src/sys2.h: Add macro definitions for GNU libc *_unlocked wrappers.
+
 1998-06-27  Jim Meyering  <meyering@ascend.com>
 
 	* tests/pr/Test.pm: Add two tests for double spacing.
