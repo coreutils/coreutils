@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2003-11-15.16}
+\def\texinfoversion{2003-11-16.09}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
@@ -2426,21 +2426,33 @@ where each line of input produces a line of output.}
   \go
 }
 
+% multitable-only commands.
 \def\headitem{\errmessage{@headitem outside of @multitable}}
+\def\tab{\errmessage{@tab outside of @multitable}}
 
 % @multitable ... @end multitable definitions:
 %
+\newtoks\everytab  % insert after every tab.
+%
 \def\multitable{\parsearg\dotable}
+%
 \def\dotable#1{\bgroup
   \vskip\parskip
-  \let\item=\crcrwithfootnotes
-  % FIXXME, @headitem should change the font for its row to bold.
-  \let\headitem=\crcrwithfootnotes
+  %
+  % @headitem starts a heading row, which we typeset in bold.
+  % Assignments have to be global since we are inside the implicit group
+  % of an alignment entry.
+  \def\headitem{\crcrwithfootnotes\global\everytab={\bf}\the\everytab}%
+  %
+  % @item within a multitable starts a normal row, get rid of any bold.
+  \def\item{\crcrwithfootnotes\global\everytab={}}%
+  %
   % A \tab used to include \hskip1sp.  But then the space in a template
   % line is not enough.  That is bad.  So let's go back to just & until
   % we encounter the problem it was intended to solve again.  --karl,
   % nathan@acm.org, 20apr99.
-  \let\tab=&%
+  \def\tab{&\the\everytab}%
+  %
   \let\startfootins=\startsavedfootnote
   \tolerance=9500
   \hbadness=9500
@@ -2449,6 +2461,7 @@ where each line of input produces a line of output.}
   \parindent=\multitableparindent
   \overfullrule=0pt
   \global\colcount=0
+  %
   \def\Emultitable{%
     \global\setpercentfalse
     \crcrwithfootnotes\crcr
