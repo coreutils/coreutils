@@ -1,5 +1,5 @@
 /* mknod -- make special files
-   Copyright (C) 90, 91, 1995-2002 Free Software Foundation, Inc.
+   Copyright (C) 90, 91, 1995-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -218,7 +218,7 @@ major and minor device numbers may not be specified for fifo files"));
       break;
 
     default:
-      error (0, 0, "invalid device type %s", quote (argv[optind + 1]));
+      error (0, 0, _("invalid device type %s"), quote (argv[optind + 1]));
       usage (EXIT_FAILURE);
     }
 
