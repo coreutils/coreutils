@@ -479,6 +479,13 @@ is_char_class_member (enum Char_class char_class, unsigned int c)
   return result;
 }
 
+static void
+es_free (struct E_string *es)
+{
+  free (es->s);
+  free (es->escaped);
+}
+
 /* Perform the first pass over each range-spec argument S, converting all
    \c and \ddd escapes to their one-byte representations.  The conversion
    is done in-place, so S must point to writable storage.  If an invalid
@@ -1441,12 +1448,13 @@ static int
 parse_str (const unsigned char *s, struct Spec_list *spec_list)
 {
   struct E_string es;
+  int fail;
 
-  if (unquote (s, &es))
-    return 1;
-  if (build_spec_list (&es, spec_list))
-    return 1;
-  return 0;
+  fail = unquote (s, &es);
+  if (!fail)
+    fail = build_spec_list (&es, spec_list);
+  es_free (&es);
+  return fail;
 }
 
 /* Given two specification lists, S1 and S2, and assuming that
