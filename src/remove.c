@@ -720,8 +720,10 @@ remove_dir (struct File_spec *fs, int need_save_cwd, const struct rm_options *x)
 
   if (x->interactive)
     {
-      error (0, 0, _("remove directory `%s'%s? "), full_filename (dir_name),
-	     (status != RM_OK ? _(" (might be nonempty)") : ""));
+      fprintf (stderr, _("%s: remove directory `%s'%s? "),
+	       program_name,
+	       full_filename (dir_name),
+	       (status != RM_OK ? _(" (might be nonempty)") : ""));
       if (!yesno ())
 	{
 	  return RM_USER_DECLINED;
