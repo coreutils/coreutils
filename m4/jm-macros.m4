@@ -37,6 +37,7 @@ AC_DEFUN(jm_MACROS,
   AC_REQUIRE([jm_FUNC_GLIBC_UNLOCKED_IO])
   AC_REQUIRE([jm_FUNC_FNMATCH])
   AC_REQUIRE([jm_AFS])
+  AC_REQUIRE([jm_AC_PREREQ_XSTRTOUMAX])
   AC_REPLACE_FUNCS(strcasecmp strncasecmp)
 
   # By default, argmatch should fail calling usage (1).
