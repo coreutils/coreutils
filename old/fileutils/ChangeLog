@@ -1,5 +1,8 @@
 2000-11-06  Jim Meyering  <meyering@lucent.com>
 
+	* doc/texinfo.tex: Update from master repository.
+	* config.sub: Likewise.
+	* config.guess: Likewise.
 	* man/help2man: Update from latest version: 1.23.
 
 2000-11-02  Won-kyu Park  <wkpark@chem.skku.ac.kr>
