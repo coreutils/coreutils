@@ -1,4 +1,4 @@
-package T;
+package Fetish;
 
 require 5.003;
 use strict;
@@ -8,7 +8,7 @@ use FileHandle;
 use File::Compare qw(compare);
 
 @ISA = qw(Exporter);
-($VERSION = '$Revision: 1.1 $ ') =~ tr/[0-9].//cd;
+($VERSION = '$Revision: 1.2 $ ') =~ tr/[0-9].//cd;
 @EXPORT = qw (run_tests);
 
 my @Types = qw (IN OUT ERR EXIT);
@@ -44,6 +44,13 @@ my %Zero_one_type = map {$_ => 1} qw (OUT ERR EXIT);
 # If the EXIT-keyed one is omitted, then expect the exit status to be zero.
 
 my $Global_count = 1;
+
+sub _shell_quote ($)
+{
+  my ($string) = @_;
+  $string =~ s/\'/\'\\\'\'/g;
+  return "'$string'";
+}
 
 sub _create_file ($$$$$)
 {
@@ -169,7 +176,7 @@ sub run_tests ($$$$$)
 				   $file_name, $contents);
 	  if ($type eq 'IN')
 	    {
-	      push @args, $file
+	      push @args, _shell_quote $file;
 	    }
 	  else
 	    {
