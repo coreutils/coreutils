@@ -156,8 +156,8 @@ main (int argc, char **argv)
       error (0, 0, _("extra operand %s"),
 	     quote (argv[optind + expected_operands]));
       if (expected_operands == 2 && argc - optind == 4)
-	fprintf (stderr,
-		 _("Fifos do not have major and minor device numbers.\n"));
+	fprintf (stderr, "%s\n",
+		 _("Fifos do not have major and minor device numbers."));
       usage (EXIT_FAILURE);
     }
 
