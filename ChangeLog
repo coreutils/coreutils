@@ -10,6 +10,8 @@
 
 2003-04-09  Jim Meyering  <jim@meyering.net>
 
+	* tests/misc/split-fail: Add a new test for the above fix.
+
 	* src/split.c (bytes_split): Use size_t temporary (rather than
 	uintmax_t original) in remaining computations.  From Paul Eggert.
 
