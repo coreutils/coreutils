@@ -1,3 +1,28 @@
+1999-02-02  Jim Meyering  <meyering@ascend.com>
+
+	* src/ls.c (S_ISLNK, S_ISFIFO, S_ISSOCK, S_ISCHR, S_ISBLK, S_ISDOOR):
+	Define to zero if not already defined.
+	(HAVE_SYMLINKS): Define.
+	(gobble_file): Remove #ifdef.
+	(get_link_name, make_link_path): Guard these with #if HAVE_SYMLINKS
+	rather than #ifdef S_ISLNK.
+	(print_type_indicator): Remove #ifdefs and reorganize.
+	(print_color_indicator): Remove #ifdefs.
+	(length_of_file_name_and_frills): Likewise.
+
+1999-02-01  Rainer Orth  <ro@TechFak.Uni-Bielefeld.DE>
+
+	* src/dircolors.hin: Handle DOOR.
+
+	* src/ls.c (print_type_indicator): Print doors as '>'.
+	(length_of_file_name_and_frills): Account for this.
+	(indicator_no): Define C_DOOR.
+	(indicator_name): Add corresponding name.
+
+	* lib/filemode.c (ftypelet): Handle doors.
+
+	* lib/filemode.c, src/system.h (S_ISDOOR): Define if missing.
+
 1999-02-01  Jim Meyering  <meyering@ascend.com>
 
 	* lib/strcasecmp.c (STRXCASECMP_FUNCTION): Don't increment within macro
