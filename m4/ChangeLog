@@ -1,9 +1,12 @@
 2003-02-15  Jim Meyering  <jim@meyering.net>
 
+	* jm-macros.m4: Require AC_SYS_MMAP_STACK.
+
 	Add Irix6 support to physmem.c.
 	* prereq.m4 (jm_PREREQ_PHYSMEM): Also check for sys/sysget.h
 	and sys/sysinfo.h.
 	Also check for sysget.
+	Reported by Kaveh Ghazi.
 
 2003-02-12  Jim Meyering  <jim@meyering.net>
 
