@@ -30,6 +30,14 @@
 #include "obstack.h"
 #include "oa-hash.h"
 
+#ifndef PARAMS
+# if defined (__GNUC__) || __STDC__
+#  define PARAMS(args) args
+# else
+#  define PARAMS(args) ()
+# endif
+#endif
+
 #define obstack_chunk_alloc malloc
 #define obstack_chunk_free free
 
@@ -105,7 +113,9 @@ char *xmalloc ();
 char *xrealloc ();
 int yesno ();
 
-static enum RM_status rm (struct File_spec *fs, int user_specified_name);
+/* Forward dcl for recursively called function.  */
+static enum RM_status rm PARAMS ((struct File_spec *fs,
+				  int user_specified_name));
 
 /* Name this program was run with.  */
 char *program_name;
