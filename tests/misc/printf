@@ -34,4 +34,14 @@ EOF
 cmp out exp || fail=1
 test $fail = 1 && diff out exp 2> /dev/null
 
+rm -f out exp
+# Until coreutils-4.5.10, this would elicit a segfault.
+$prog '%*sy\n' -3 x > out || fail=1
+cat <<\EOF > exp
+x  y
+EOF
+
+cmp out exp || fail=1
+test $fail = 1 && diff out exp 2> /dev/null
+
 (exit $fail); exit $fail
