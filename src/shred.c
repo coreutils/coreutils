@@ -501,6 +501,10 @@ not effective:\n\
   version 3 clients\n\
 \n\
 * compressed filesystems\n\
+\n\
+In addition, file system backups and remote mirrors may contain copies\n\
+of the file that cannot be removed, and that will allow a shredded file\n\
+to be recovered later.\n\
 "), DEFAULT_PASSES);
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
     }
