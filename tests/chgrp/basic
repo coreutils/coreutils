@@ -6,6 +6,9 @@ if test "$VERBOSE" = yes; then
   chgrp --version
 fi
 
+. $srcdir/../envvar-check
+. $srcdir/../lang-default
+
 pwd=`pwd`
 tmp=basic.$$
 trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
