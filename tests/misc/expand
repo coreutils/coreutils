@@ -1,0 +1,39 @@
+#!/bin/sh
+# -*- perl -*-
+# Exercise expand.
+
+: ${PERL=perl}
+: ${srcdir=.}
+
+$PERL -e 1 > /dev/null 2>&1 || {
+  echo 1>&2 "$0: configure didn't find a usable version of Perl," \
+    "so can't run this test"
+  exit 77
+}
+
+exec $PERL -w -I$srcdir/.. -MFetish -- - <<\EOF
+#/
+require 5.003;
+use strict;
+
+(my $program_name = $0) =~ s|.*/||;
+
+$ENV{PROG} = 'expand';
+
+# Turn off localization of executable's ouput.
+@ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
+
+my @Tests =
+  (
+   ['t1', '--tabs=3',     {IN=>"a\tb"}, {OUT=>"a  b"}],
+   ['t2', '--tabs=3,6,9', {IN=>"a\tb\tc\td\te"}, {OUT=>"a  b  c  d e"}],
+   ['i1', '--tabs=3 -i', {IN=>"\ta\tb"}, {OUT=>"   a\tb"}],
+  );
+
+my $save_temps = $ENV{DEBUG};
+my $verbose = $ENV{VERBOSE};
+
+my $prog = $ENV{PROG} || die "$0: \$PROG not specified in environment\n";
+my $fail = run_tests ($program_name, $prog, \@Tests, $save_temps, $verbose);
+exit $fail;
+EOF

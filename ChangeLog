@@ -1,6 +1,10 @@
-2004-01-08  Jim Meyering  <jim@meyering.net>
+2004-01-09  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.1.1.
+
+	* configure.ac: Quote underquoted `jm_DUMMY_1' to avoid new warning.
+
+2004-01-08  Jim Meyering  <jim@meyering.net>
 
 	* src/stat.c (human_fstype): Use %lx, not %x format for `unsigned long'.
 	From Andreas Schwab.
