@@ -164,7 +164,7 @@ paste_parallel (int nfiles, char **fnamptr)
      delbuf[0] through delbuf[file_list_size]
      store the delimiters for closed files. */
   char *delbuf;
-  int delims_saved;		/* Number of delims saved in `delbuf'. */
+  size_t delims_saved;		/* Number of delims saved in `delbuf'. */
   register char *delimptr;	/* Cycling pointer into `delims'. */
   FILE **fileptr;		/* Streams open to the files to process. */
   int files_open;		/* Number of files still open to process. */
