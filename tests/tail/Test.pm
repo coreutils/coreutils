@@ -79,11 +79,13 @@ sub test_vector
     {
       my ($test_name, $flags, $in, $exp, $ret) = @$t;
 
-      $test_name =~ /^(obs|err-[134])/
+      $test_name =~ /^(obs|err-[134]|minus-)/
 	and $Test::env{$test_name} = ['_POSIX2_VERSION=199209'];
 
       # If you run the minus* tests with a FILE arg they'd hang.
-      if ($test_name =~ /^minus/)
+      # If you run the err-1 or err-3 tests with a FILE, they'd misinterpret
+      # the arg unless we are using the obsolete form.
+      if ($test_name =~ /^(minus|err-[13])/)
 	{
 	  $Test::input_via{$test_name} = {REDIR => 0, PIPE => 0};
 	}
