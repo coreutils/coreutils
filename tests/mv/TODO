@@ -1,4 +1,5 @@
-Use df to find a writable directory on a file system different from current one:
+# Use df to find a writable directory on a file system different from that
+# of the current directory.
 
 # Try these:
 tmp_dirs='
@@ -14,14 +15,21 @@ DF=df
 # FIXME
 MKDIR=mkdir
 
-tmp=df-$$
+tmp=
 
-dot_mount_point=`$DF --no-sync -P . | sed -n '2s/.*% *//p'`
+# WARNING: using sed like this to extract the mount point will fail
+# if the mount point name contains `% '.
+dot_mount_point=`$DF --no-sync -P . | sed -n '2s/.*%  *//p'`
 for d in $tmp_dirs; do
-  d_mount_point=`$DF --no-sync -P $d | sed -n '2s/.*% *//p'`
+  d_mount_point=`$DF --no-sync -P $d | sed -n '2s/.*%  *//p'`
 
   # Same partition?  Skip it.
   test x$d_mount_point = x$dot_mount_point && continue
 
   # See if we can create a directory in it.
+  if $MKDIR "$d/df-$$" > /dev/null 2>&1; then
+    tmp="$d/df-$$"
+    break
+  fi
+
 done
