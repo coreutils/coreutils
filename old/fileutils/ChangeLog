@@ -2,6 +2,9 @@
 
 	* Version 4.1.8.
 
+	* tests/mv/i-link-no: Use --reply=no rather than -i.
+	The latter depends on whether stdin is a tty.
+
 	* src/mv.c (do_move): Correct a comment.
 
 	* src/copy.c (copy_internal): Move the block that sets `earlier_file'
