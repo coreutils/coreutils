@@ -86,7 +86,7 @@ main (int argc, char **argv)
 {
   mode_t newmode;
   struct mode_change *change;
-  const char *symbolic_mode;
+  const char *specified_mode;
   int optc;
   int i_major, i_minor;
   long int tmp_major, tmp_minor;
@@ -99,7 +99,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  symbolic_mode = NULL;
+  specified_mode = NULL;
 
   while ((optc = getopt_long (argc, argv, "m:", longopts, NULL)) != -1)
     {
@@ -108,7 +108,7 @@ main (int argc, char **argv)
 	case 0:
 	  break;
 	case 'm':
-	  symbolic_mode = optarg;
+	  specified_mode = optarg;
 	  break;
 	case_GETOPT_HELP_CHAR;
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
@@ -118,10 +118,10 @@ main (int argc, char **argv)
     }
 
   newmode = (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
-  if (symbolic_mode)
+  if (specified_mode)
     {
       newmode &= ~ umask (0);
-      change = mode_compile (symbolic_mode, 0);
+      change = mode_compile (specified_mode, 0);
       if (change == MODE_INVALID)
 	error (1, 0, _("invalid mode"));
       else if (change == MODE_MEMORY_EXHAUSTED)
@@ -227,7 +227,7 @@ major and minor device numbers may not be specified for fifo files"));
      are set as specified.  This extra step is necessary in some cases
      when the containing directory has a default ACL.  */
 
-  if (symbolic_mode)
+  if (specified_mode)
     {
       if (chmod (argv[optind], newmode))
         error (0, errno, _("cannot set permissions of `%s'"),
