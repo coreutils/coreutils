@@ -1360,11 +1360,12 @@ decode_switches (int argc, char **argv)
   if (format == long_format)
     {
       if (full_time)
-	long_time_format[0] = long_time_format[1] = _("%a %b %d %H:%M:%S %Y");
+	long_time_format[0] = long_time_format[1] =
+	  dcgettext (NULL, "%a %b %d %H:%M:%S %Y", LC_TIME);
       else
 	{
-	  long_time_format[0] = _("%b %e  %Y");
-	  long_time_format[1] = _("%b %e %H:%M");
+	  long_time_format[0] = dcgettext (NULL, "%b %e  %Y", LC_TIME);
+	  long_time_format[1] = dcgettext (NULL, "%b %e %H:%M", LC_TIME);
 	}
     }
 
