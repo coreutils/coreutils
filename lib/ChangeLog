@@ -1,3 +1,9 @@
+2005-01-04  Bob Proulx  <bob@proulx.com>
+
+	* obstack.c [DEFAULT_ALIGNMENT]: Use an intermediate type to simplify
+	offsetof() macro construct to avoid compile failure with native HP-UX
+	11.0 ANSI C compiler.
+
 2005-01-03  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* utimens.c (futimens): Robustify the previous patch, by checking
