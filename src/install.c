@@ -544,7 +544,7 @@ usage (status)
 Usage: %s [OPTION]... SOURCE DEST           (1st format)\n\
   or:  %s [OPTION]... SOURCE... DIRECTORY   (2nd format)\n\
   or:  %s [OPTION]... DIRECTORY...          (3nd format)\n\
-\n",
+",
 	    program_name, program_name, program_name);
 
   if (status == 0)

@@ -319,7 +319,7 @@ usage (status)
   fprintf (status == 0 ? stdout : stderr, "\
 Usage: %s [OPTION]... MODE[,MODE]... FILE...\n\
   or:  %s [OPTION]... OCTAL_MODE FILE...\n\
-\n",
+",
 	   program_name, program_name);
 
   if (status == 0)

@@ -298,7 +298,7 @@ usage (status)
   fprintf (status == 0 ? stdout : stderr, "\
 Usage: %s [OPTION]... OWNER[.[GROUP]] FILE...\n\
   or:  %s [OPTION]... .[GROUP] FILE...\n\
-\n",
+",
 	   program_name, program_name);
 
   if (status == 0)

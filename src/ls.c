@@ -1882,7 +1882,7 @@ usage (status)
 {
   fprintf (status == 0 ? stdout : stderr, "\
 Usage: %s [OPTION]... [PATH]...\n\
-\n",
+",
 	   program_name);
 
   if (status == 0)

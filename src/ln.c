@@ -356,7 +356,7 @@ usage (status)
   fprintf (status == 0 ? stdout : stderr, "\
 Usage: %s [OPTION]... SOURCE [DEST]\n\
   or:  %s [OPTION]... SOURCE... DIRECTORY\n\
-\n",
+",
 	   program_name, program_name);
 
   if (status == 0)
