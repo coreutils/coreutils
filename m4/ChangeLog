@@ -1,8 +1,8 @@
 2003-02-12  Jim Meyering  <jim@meyering.net>
 
 	* restrict.m4 (ACX_C_RESTRICT): Minor syntactic changes:
-	Split long lines, use AC_COMPILE_IFELSE, use `case' instead of
-	nested `if's, remove unnecessary quotes.
+	Split long lines, use AC_COMPILE_IFELSE, indent, use `case'
+	instead of nested `if's, remove unnecessary quotes.
 
 	* restrict.m4 (ACX_C_RESTRICT): New macro.
 	Copied directly from the URL in the comments.
