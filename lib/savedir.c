@@ -23,6 +23,8 @@
 # include <config.h>
 #endif
 
+#include "savedir.h"
+
 #include <sys/types.h>
 
 #include <errno.h>
@@ -52,13 +54,10 @@ extern int errno;
 # define CLOSEDIR(d) closedir (d)
 #endif
 
-#ifdef STDC_HEADERS
-# include <stdlib.h>
-# include <string.h>
-#endif
 #include <stddef.h>
+#include <stdlib.h>
+#include <string.h>
 
-#include "savedir.h"
 #include "xalloc.h"
 
 /* Return a freshly allocated string containing the filenames
