@@ -1,3 +1,8 @@
+1998-11-14  Jim Meyering  <meyering@ascend.com>
+
+	* lstat.m4: Correct comment.  POSIX does not permit it to succeed.
+	* stat.m4: Likewise.
+
 1998-11-03  Jim Meyering  <meyering@ascend.com>
 
 	* stat.m4: Rewrite to set HAVE_STAT_EMPTY_STRING_BUG.
