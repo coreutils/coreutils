@@ -388,7 +388,7 @@ specifies Coordinated Universal Time.  Interpreted sequences are:\n\
   %%c   locale's date and time (Sat Nov 04 12:02:33 EST 1989)\n\
   %%d   day of month (01..31)\n\
   %%D   date (mm/dd/yy)\n\
-  %%e	day of month, blank padded ( 1..31)\n\
+  %%e   day of month, blank padded ( 1..31)\n\
   %%h   same as %%b\n\
   %%H   hour (00..23)\n\
   %%I   hour (01..12)\n\
