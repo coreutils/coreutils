@@ -1,6 +1,22 @@
-2002-07-29  Jim Meyering  <meyering@lucent.com>
+2002-08-02  Jim Meyering  <meyering@lucent.com>
 
 	* Version 0.1.0.
+
+2002-08-02  Paul Eggert  <eggert@twinsun.com>
+
+	* NEWS, doc/coreutils.texi: uniq now obeys LC_COLLATE.
+
+	* src/uniq.c: Include hard-locale.h, xmemcoll.h.
+	(hard_LC_COLLATE): New var.
+	(different): Args are now char *, not const char *.
+	Use xmemcoll instead of memcmp to compare lines, so that
+	LC_COLLATE has effect.  However, use memcmp if it is an
+	easy locale.
+	(check_file): Do not include newline in comparison, so that
+	xmemcoll has a byte to stomp on temporarily.
+	(main): Set hard_LC_COLLATE.
+
+2002-07-29  Jim Meyering  <meyering@lucent.com>
 
 	* Makefile.am (SUBDIRS): Remove djgpp, for now.
 
@@ -14,3 +30,4 @@
 	* configure.ac: Merge the three files from fileutils,
 	textutils, and sh-utils.
 	* Makefile.am: Likewise.
+	* src/Makefile.am: Likewise.
