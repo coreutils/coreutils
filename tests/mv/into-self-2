@@ -17,6 +17,11 @@ fi
 file="$other_partition_tmpdir/file"
 symlink=symlink
 
+fail=0
+
+trap 'rm -fr out out2 exp $file $symlink $other_partition_tmpdir; exit $fail' \
+  0 1 2 3 15
+
 framework_failure=0
 rm -f $file $symlink || framework_failure=1
 echo whatever > $file || framework_failure=1
@@ -35,11 +40,19 @@ export LC_ALL
 LANG=C
 export LANG
 
+unset VERSION_CONTROL
+
+if test "${VERSION_CONTROL+set}" = set; then
+  echo '$0: the VERSION_CONTROL envvar is set --' \
+    ' unset it and rerun this test' >&2
+  exit 1
+fi
+
 # This mv command should exit nonzero.
 mv $symlink $file > out 2>&1 && fail=1
 
-# And so should this one.
-mv $file $symlink >> out 2>&1 && fail=1
+# This should succeed.
+mv $file $symlink || fail=1
 
 sed \
    -e "s,mv:,XXX:," \
@@ -49,12 +62,10 @@ sed \
 
 cat > exp <<\EOF
 XXX: `ZZZ' and `YYY' are the same file
-XXX: `YYY' and `ZZZ' are the same file
 EOF
 #'
 
 cmp out2 exp || fail=1
-
-rm -fr out out2 exp $file $symlink $other_partition_tmpdir
+test $fail = 1 && diff out2 exp 2> /dev/null
 
 exit $fail
