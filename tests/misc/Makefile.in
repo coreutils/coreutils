@@ -163,6 +163,7 @@ TESTS_ENVIRONMENT = \
 
 
 TESTS = \
+  stat-fmt \
   fold \
   nohup \
   readlink \
