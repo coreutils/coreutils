@@ -576,6 +576,13 @@ prompt (Dirstack_state const *ds, char const *filename,
 	  return RM_ERROR;
 	}
 
+      if (S_ISDIR (sbuf.st_mode) && !x->recursive)
+	{
+	  error (0, EISDIR, _("cannot remove directory %s"),
+		 quote (full_filename (filename)));
+	  return RM_ERROR;
+	}
+
       /* Using permissions doesn't make sense for symlinks.  */
       if (S_ISLNK (sbuf.st_mode))
 	{
