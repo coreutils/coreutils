@@ -24,7 +24,9 @@ GZIP_ENV = '--no-name --best'
 
 CVS = cvs
 
-prev_version_file ?= .prev-version
+ifeq ($(origin prev_version_file), undefined)
+  prev_version_file = .prev-version
+endif
 
 PREV_VERSION := $(shell cat $(prev_version_file))
 
