@@ -1,3 +1,11 @@
+1999-02-08  Jim Meyering  <meyering@ascend.com>
+
+	* src/dircolors.c (slack_codes): Add "DOOR".
+	(ls_codes): Add corresponding "do".
+	Reported by John Gotts.
+
+	* configure.in (ALL_LINGUAS): Add Italian (it).
+
 1999-02-07  Jim Meyering  <meyering@ascend.com>
 
 	* Version 4.0d (aka 4.1-b4).
