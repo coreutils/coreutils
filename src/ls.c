@@ -1710,7 +1710,10 @@ gobble_file (const char *name, int explicit_arg, const char *dirname)
 	    val = lstat (path, &files[files_index].stat);
 	}
       else
-	val = lstat (path, &files[files_index].stat);
+	{
+	  val = lstat (path, &files[files_index].stat);
+	}
+
       if (val < 0)
 	{
 	  error (0, errno, "%s", path);
