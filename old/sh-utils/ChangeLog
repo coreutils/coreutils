@@ -1,3 +1,7 @@
+2000-07-02  Jim Meyering  <meyering@lucent.com>
+
+	* Version 2.0j.
+
 2000-07-01  Jim Meyering  <meyering@lucent.com>
 
 	* configure.in (jm_DUMMY_1): Wrap a snippet in a macro definition
