@@ -1,5 +1,7 @@
 Wed Jun 26 21:35:10 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* aclocal.m4 (AM_FUNC_STRTOD): New macro.
+
 	* po/Makefile.in.in (install-data): Add `else true;' to avoid
 	letting failing if-condition cause make to fail.
 	From Fred Fish (fnf@ninemoons.com).
