@@ -1233,6 +1233,74 @@ else
   esac
 fi
 test -s t17.err || rm -f t17.err
+$xx -k1.1,1.2n $srcdir/t18a.in > t18a.out 2> t18a.err
+code=$?
+if test $code != 0 ; then
+  $echo Test 18a failed: ../../src/sort return code $code differs from expected value 0 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp t18a.out $srcdir/t18a.exp
+  case $? in
+    0) if test "$VERBOSE" ; then $echo passed 18a; fi ;; # equal files
+    1) $echo Test 18a failed: files t18a.out and $srcdir/t18a.exp differ 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo Test 18a may have failed. 1>&2;
+       $echo The command "cmp t18a.out $srcdir/t18a.exp" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s t18a.err || rm -f t18a.err
+$xx -b -k1.1,1.2n $srcdir/t18b.in > t18b.out 2> t18b.err
+code=$?
+if test $code != 0 ; then
+  $echo Test 18b failed: ../../src/sort return code $code differs from expected value 0 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp t18b.out $srcdir/t18b.exp
+  case $? in
+    0) if test "$VERBOSE" ; then $echo passed 18b; fi ;; # equal files
+    1) $echo Test 18b failed: files t18b.out and $srcdir/t18b.exp differ 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo Test 18b may have failed. 1>&2;
+       $echo The command "cmp t18b.out $srcdir/t18b.exp" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s t18b.err || rm -f t18b.err
+$xx -k1.1,1.2nb $srcdir/t18c.in > t18c.out 2> t18c.err
+code=$?
+if test $code != 0 ; then
+  $echo Test 18c failed: ../../src/sort return code $code differs from expected value 0 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp t18c.out $srcdir/t18c.exp
+  case $? in
+    0) if test "$VERBOSE" ; then $echo passed 18c; fi ;; # equal files
+    1) $echo Test 18c failed: files t18c.out and $srcdir/t18c.exp differ 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo Test 18c may have failed. 1>&2;
+       $echo The command "cmp t18c.out $srcdir/t18c.exp" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s t18c.err || rm -f t18c.err
+$xx -k1.1b,1.2n $srcdir/t18d.in > t18d.out 2> t18d.err
+code=$?
+if test $code != 0 ; then
+  $echo Test 18d failed: ../../src/sort return code $code differs from expected value 0 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp t18d.out $srcdir/t18d.exp
+  case $? in
+    0) if test "$VERBOSE" ; then $echo passed 18d; fi ;; # equal files
+    1) $echo Test 18d failed: files t18d.out and $srcdir/t18d.exp differ 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo Test 18d may have failed. 1>&2;
+       $echo The command "cmp t18d.out $srcdir/t18d.exp" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s t18d.err || rm -f t18d.err
 if test $errors = 0 ; then
   $echo Passed all tests. 1>&2
 else
