@@ -1,6 +1,18 @@
-2003-06-27  Jim Meyering  <jim@meyering.net>
+2003-07-04  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
+
+	* tests/misc/head-elide-tail: Add tests of head's new --lines=-N
+	option, and perform the 1600 invocations of head IFF the envvar
+	RUN_EXPENSIVE_TESTS is set.
+
+2003-07-03  Jim Meyering  <jim@meyering.net>
+
+	* src/cp.c (do_copy): Give a better diagnostic when failing due
+	to nonexistent destination directory.  Reported by Dmitry Rutsky.
+	See http://bugs.debian.org/199730 for details.
+
+2003-06-27  Jim Meyering  <jim@meyering.net>
 
 	split's --verbose option did nothing [broken in 4.5.10 and 5.0]
 	* src/split.c (longopts): Use `1', not `0' as the value for
