@@ -4,6 +4,13 @@
 
 2004-04-18  Paul Eggert  <eggert@twinsun.com>
 
+	tee ignored SIGPIPE, but POSIX doesn't allow this.
+
+	* src/tee.c (main): Do not ignore SIGPIPE, as POSIX 1003.1-2001
+	does not allow this.  This undoes the 1996-10-24 patch.
+
+2004-04-18  Paul Eggert  <eggert@twinsun.com>
+
 	Signal-handling cleanup for coreutils.  Here are the highlights:
 
 	 - csplit sometimes failed to remove files when interrupted.
