@@ -100,7 +100,8 @@ usage (int status)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
-    printf (_("\
+    {
+      printf (_("\
 Usage: %s [OPTION] [FILE]...\n\
   or:  %s [OPTION] --check [FILE]\n\
   or:  %s [OPTION] --string=STRING ...\n\
@@ -123,7 +124,9 @@ The sums are computed as described in RFC 1321.  When checking, the input\n\
 should be a former output of this program.  The default mode is to print\n\
 a line with checksum, a character indicating type (`*' for binary, ` ' for\n\
 text), and name for each FILE.\n"),
-	    program_name, program_name, program_name);
+	      program_name, program_name, program_name);
+      puts (_("\nReport bugs to bug-gnu-utils@gnu.ai.mit.edu"));
+    }
 
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

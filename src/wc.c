@@ -85,6 +85,7 @@ read standard input.\n\
       --help             display this help and exit\n\
       --version          output version information and exit\n\
 "));
+      puts (_("\nReport bugs to bug-gnu-utils@gnu.ai.mit.edu"));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

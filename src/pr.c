@@ -1883,6 +1883,7 @@ Paginate or columnate FILE(s) for printing.\n\
 -t implied by -l N when N < 10.  Without -s, columns are separated by\n\
 spaces.  With no FILE, or when FILE is -, read standard input.\n\
 "));
+      puts (_("\nReport bugs to bug-gnu-utils@gnu.ai.mit.edu"));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

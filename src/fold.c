@@ -93,6 +93,7 @@ standard output.\n\
   -s, --spaces        break at spaces\n\
   -w, --width=WIDTH   use WIDTH columns instead of 80\n\
 "));
+      puts (_("\nReport bugs to bug-gnu-utils@gnu.ai.mit.edu"));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

@@ -425,6 +425,7 @@ With no FILE, or when FILE is -, read standard input.\n\
       --version           output version information and exit\n\
 \n\
 "));
+      puts (_("\nReport bugs to bug-gnu-utils@gnu.ai.mit.edu"));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
