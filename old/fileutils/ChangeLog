@@ -2,6 +2,13 @@
 
 	* Version 4.0.32.
 
+	* src/mkdir.c (main): With --parents, remove any trailing slashes
+	from the argument to the final mkdir call.  Required for NetBSD.
+	Reported by Volker Borchert.
+
+	* tests/mv/mv-special-1: Create and `cd' into temporary directory
+	before anything else.  Reported by Volker Borchert.
+
 	* configure, config.h.in, Makefile.in, etc.: Regenerate using the
 	very latest version (in CVS) of autoconf.
 
