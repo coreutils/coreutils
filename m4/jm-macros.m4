@@ -41,6 +41,7 @@ AC_DEFUN(jm_MACROS,
   AC_REPLACE_FUNCS(strcasecmp strncasecmp)
   AC_REPLACE_FUNCS(dup2)
   AC_REPLACE_FUNCS(memchr)
+  AC_REPLACE_FUNCS(memmove)
   AC_CHECK_FUNCS(getpagesize)
 
   # By default, argmatch should fail calling usage (1).
