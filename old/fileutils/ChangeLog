@@ -2,13 +2,14 @@ Sun Jul 21 11:58:48 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	All this is from Ulrich Drepper.
 
-	* lib/yesno.c (yesno) [HAVE_RPMATCH]: New rpmatch-based version of
-	the function.
+	* configure.in (AC_REPLACE_FUNCS): Add rpmatch.
+	* lib/Makefile.am (EXTRA_DIST): Add rpmatch.c.
+	* lib/rpmatch.c: New file.
+	* lib/yesno.c (yesno): New rpmatch-based version of the function.
+	* config.h.in (HAVE_RPMATCH): Undef it.
 
 	* lib/Makefile.am (EXTRA_DIST): Put error.c and obstack.c here...
 	(fu_SOURCES): Instead of here.
-
-	* config.h.in (HAVE_RPMATCH): Undef it.
 
 	* configure.in (AC_CHECK_FUNCS): Add rpmatch.
 	Add checks for error_at_line and obstacks so systems with GNU libc
