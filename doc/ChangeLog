@@ -1,3 +1,7 @@
+2004-04-04  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (stat invocation): Correct --format description.
+
 2004-02-25  Paul Eggert  <eggert@twinsun.com>
 
 	* coreutils.texi (Block size): Document new envvar BLOCKSIZE.
