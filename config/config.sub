@@ -3,7 +3,7 @@
 #   Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
 #   2000, 2001, 2002, 2003 Free Software Foundation, Inc.
 
-timestamp='2003-01-28'
+timestamp='2003-02-03'
 
 # This file is (in principle) common to ALL GNU software.
 # The presence of a machine in this file suggests that SOME GNU software
@@ -296,7 +296,7 @@ case $basic_machine in
 	| arm-*  | armbe-* | armle-* | armeb-* | armv*-* \
 	| avr-* \
 	| bs2000-* \
-	| c[123]* | c30-* | [cjt]90-* | c4x-* | c54x-* \
+	| c[123]* | c30-* | [cjt]90-* | c4x-* | c54x-* | c55x-* | c6x-* \
 	| clipper-* | cydra-* \
 	| d10v-* | d30v-* | dlx-* \
 	| elxsi-* \
@@ -333,7 +333,9 @@ case $basic_machine in
 	| shle-* | sh[1234]le-* | sh3ele-* | sh64-* | sh64le-* \
 	| sparc-* | sparc64-* | sparc86x-* | sparclet-* | sparclite-* \
 	| sparcv9-* | sparcv9b-* | strongarm-* | sv1-* | sx?-* \
-	| tahoe-* | thumb-* | tic30-* | tic4x-* | tic54x-* | tic80-* | tron-* \
+	| tahoe-* | thumb-* \
+	| tic30-* | tic4x-* | tic54x-* | tic55x-* | tic6x-* | tic80-* \
+	| tron-* \
 	| v850-* | v850e-* | vax-* \
 	| we32k-* \
 	| x86-* | x86_64-* | xps100-* | xscale-* | xstormy16-* \
@@ -925,6 +927,14 @@ case $basic_machine in
 		basic_machine=tic54x-unknown
 		os=-coff
 		;;
+	tic55x | c55x*)
+		basic_machine=tic55x-unknown
+		os=-coff
+		;;
+	tic6x | c6x*)
+		basic_machine=tic6x-unknown
+		os=-coff
+		;;
 	tx39)
 		basic_machine=mipstx39-unknown
 		;;
@@ -1229,6 +1239,9 @@ case $os in
 		;;
 	-aros*)
 		os=-aros
+		;;
+	-kaos*)
+		os=-kaos
 		;;
 	-none)
 		;;

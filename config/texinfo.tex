@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2003-01-31.17}
+\def\texinfoversion{2003-02-03.16}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
@@ -4502,6 +4502,7 @@ width0pt\relax} \fi
 \newskip\lskip\newskip\rskip
 
 \def\cartouche{%
+\par  % can't be in the midst of a paragraph.
 \begingroup
         \lskip=\leftskip \rskip=\rightskip
         \leftskip=0pt\rightskip=0pt %we want these *outside*.
@@ -4800,14 +4801,14 @@ width0pt\relax} \fi
 % Allow normal characters that we make active in the argument (a file name).
 \def\verbatiminclude{%
   \begingroup
-    \catcode`\\=12
-    \catcode`~=12
-    \catcode`^=12
-    \catcode`_=12
-    \catcode`|=12
-    \catcode`<=12
-    \catcode`>=12
-    \catcode`+=12
+    \catcode`\\=\other
+    \catcode`~=\other
+    \catcode`^=\other
+    \catcode`_=\other
+    \catcode`|=\other
+    \catcode`<=\other
+    \catcode`>=\other
+    \catcode`+=\other
     \parsearg\doverbatiminclude
 }
 \def\setupverbatiminclude{%
