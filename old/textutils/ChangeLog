@@ -1,3 +1,11 @@
+1999-04-11  Jim Meyering  <meyering@ascend.com>
+
+	* lib/readtokens.c (readtoken, readtokens): Protoize.
+
+1999-04-10  Jim Meyering  <meyering@ascend.com>
+
+	* src/tail.c (xwrite): Use STDOUT_FILENO instead of literal `1'.
+
 1999-04-04  Jim Meyering  <meyering@ascend.com>
 
 	* src/cat.c: Standardize --help and --version processing.
