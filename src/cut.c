@@ -467,7 +467,7 @@ set_fields (const char *fieldstr)
 	    {
 	      if (0 < j && printable_field[j] && !printable_field[j - 1])
 		{
-		  /* Remember that `j' is a range-start index.  */
+		  /* Record the fact that `j' is a range-start index.  */
 		  void *ent_from_table = hash_insert (range_start_ht,
 						      (void*) j);
 		  if (ent_from_table == NULL)
