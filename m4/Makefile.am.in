@@ -1,17 +1,12 @@
 ## This is a template from which Makefile.am is generated. -*-Makefile-*-
 
-##m4-files-begin
-##m4-files-end
-
 Makefile.am: Makefile.am.in
 	rm -f $@ $@t
-	sed -n '1,/^##m4-files-begin/p' $< > $@t
-	(((echo EXTRA_DIST =; \
-	   echo "  README Makefile.am.in" \
-	  ) | tr '\012' @); \
-	  (echo *.m4|tr ' ' @) ) \
-	  |sed 's/@$$/%/;s/@/ \\@/g' |tr @% '\012\012' \
+	(echo "## Process this file with automake to produce Makefile.in."; \
+	 echo EXTRA_DIST =;				\
+	 echo "EXTRA_DIST += README Makefile.am.in";	\
+	 ls -1 *.m4 | sed 's/^/EXTRA_DIST += /'; echo )	\
 	  >> $@t
-	sed -n '/^##m4-files-end/,$$p' $< >> $@t
+	sed -n '/^Makefile\.am:/,$$p' $< >> $@t
 	chmod a-w $@t
 	mv $@t $@
