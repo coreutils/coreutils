@@ -1,3 +1,7 @@
+Tue Nov 26 23:24:13 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* acinclude.m4: Update with macros from gettext-0.10.25.
+
 Sun Nov 24 22:43:24 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* acconfig.h (mktime): Add undef for my enhanced (beyond automake's
