@@ -2,6 +2,18 @@
 
 	* Version 5.0.1.
 
+	* src/remove.c (remove_dir): Give a diagnostic upon failed save_cwd,
+	now that that function no longer calls `error'.
+
+	* src/df.c (find_mount_point): Emit a diagnostic for each
+	failed syscall, rather than relying on caller to do that.
+	The caller couldn't do a good job, anyhow -- too many different
+	ways to fail (each with a different referent).
+	Give a diagnostic upon failed save_cwd, now that that function
+	no longer calls `error'.
+	(show_point): Don't diagnose find_mount_point's errors, now that
+	it handles them itself.
+
 	* src/df.c (find_mount_point): Don't let free clobber errno upon
 	failed chdir.
 
