@@ -8,10 +8,6 @@ strip: add an option to specify the program used to strip binaries.
 
 Makefile.maint: extract announcement-generation into a perl script
 
-Add a test of cat that takes input from a tty and ensures
-that one ^D is sufficient to make it terminate.  Probably
-requires some flavor of expect.
-
 doc/coreutils.texi:
   Address this comment: FIXME: mv's behavior in this case is system-dependent
   Better still: fix the code so it's *not* system-dependent.
