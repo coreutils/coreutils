@@ -6,7 +6,7 @@ use Getopt::Long;
 use Digest::MD5;
 use Digest::SHA1;
 
-(my $VERSION = '$Revision: 1.6 $ ') =~ tr/[0-9].//cd;
+(my $VERSION = '$Revision: 1.7 $ ') =~ tr/[0-9].//cd;
 (my $ME = $0) =~ s|.*/||;
 
 END
@@ -224,9 +224,6 @@ EOF
     }
 
   # FIXME: depend on whether it's a test release
-  # sed -n "$news-r1),$news-r2)p" NEWS
-  #   | grep -v '^\[';
-  # echo;
   # echo ChangeLog entries:;
   # find . -name ChangeLog -maxdepth 2
   #   | xargs $(CVS) diff -up -r$(prev-cvs-tag) -rHEAD
