@@ -2,6 +2,8 @@
 
 	* Version 5.0.1.
 
+	* src/stty.c (wrapf): Declare with format attribute.
+
 	The S_MAGIC_... names shouldn't be maintained in two places (prior
 	to this change, one would have to keep stat.c and fs.h in sync).
 	This change makes it so those names and the corresponding
