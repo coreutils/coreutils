@@ -3,6 +3,7 @@
 dnl FIXME
 AC_DEFUN(jm_SYS_OFF_T_PRINTF_FORMAT,
 [dnl
+  AC_REQUIRE([AC_TYPE_OFF_T])
   AC_CHECK_HEADERS(string.h stdlinb.h)
   AC_CACHE_CHECK([for printf format that works with type off_t],
     jm_cv_sys_off_t_printf_format,
