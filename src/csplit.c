@@ -1205,7 +1205,7 @@ extract_regexp (argnum, ignore, str)
   struct control *p;
   const char *err;
 
-  closing_delim = rindex (str + 1, delim);
+  closing_delim = strrchr (str + 1, delim);
   if (closing_delim == NULL)
     error (1, 0, "%s: closing delimeter `%c' missing", str, delim);
 
