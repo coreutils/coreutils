@@ -1,6 +1,10 @@
-2003-04-12  Jim Meyering  <jim@meyering.net>
+2003-04-13  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
+
+	* src/remove.c (is_empty_dir): Don't closedir (NULL).
+
+2003-04-12  Jim Meyering  <jim@meyering.net>
 
 	Giving nl an invalid STYLE argument (in --header-numbering=STYLE (-h),
 	--body-numbering=STYLE (-b), or --footer-numbering=STYLE (-f)) or
