@@ -543,6 +543,23 @@ same_file_ok (const char *src_path, const struct stat *src_sb,
   return 0;
 }
 
+static void
+overwrite_prompt (char const *dst_path, struct stat const *dst_sb)
+{
+  if (euidaccess (dst_path, W_OK) != 0)
+    {
+      fprintf (stderr,
+	       _("%s: overwrite %s, overriding mode %04lo? "),
+	       program_name, quote (dst_path),
+	       (unsigned long) (dst_sb->st_mode & CHMOD_MODE_BITS));
+    }
+  else
+    {
+      fprintf (stderr, _("%s: overwrite %s? "),
+	       program_name, quote (dst_path));
+    }
+}
+
 /* Copy the file SRC_PATH to the file DST_PATH.  The files may be of
    any type.  NEW_DST should be nonzero if the file DST_PATH cannot
    exist because its parent directory was just created; NEW_DST should
@@ -654,6 +671,9 @@ copy_internal (const char *src_path, const char *dst_path,
 
 	      if (x->update && MTIME_CMP (src_sb, dst_sb) <= 0)
 		{
+		  /* We're using --update and the source file is older
+		     than the destination file, so there is no need to
+		     copy or move.  */
 		  /* Pretend the rename succeeded, so the caller (mv)
 		     doesn't end up removing the source file.  */
 		  if (rename_succeeded)
@@ -662,22 +682,36 @@ copy_internal (const char *src_path, const char *dst_path,
 		}
 	    }
 
-	  if (!S_ISDIR (src_type) && x->interactive)
+	  if (!S_ISDIR (src_type))
 	    {
-	      if (euidaccess (dst_path, W_OK) != 0)
+	      /* cp and mv treat -i and -f differently.  */
+	      if (x->move_mode)
 		{
-		  fprintf (stderr,
-			   _("%s: overwrite %s, overriding mode %04lo? "),
-			   program_name, quote (dst_path),
-			   (unsigned long) (dst_sb.st_mode & CHMOD_MODE_BITS));
+		  if (x->interactive != I_OFF
+		      && (x->interactive == I_ON
+			  || (x->stdin_tty
+			      /* euidaccess is not meaningful for symlinks */
+			      && ! S_ISLNK (dst_sb.st_mode)
+			      && euidaccess (dst_path, W_OK) != 0)))
+		    {
+		      overwrite_prompt (dst_path, &dst_sb);
+		      if (!yesno ())
+			/* Pretend the rename succeeded, so the caller (mv)
+			   doesn't end up removing the source file.  */
+			if (rename_succeeded)
+			  *rename_succeeded = 1;
+			return 0;
+		    }
 		}
 	      else
 		{
-		  fprintf (stderr, _("%s: overwrite %s? "),
-			   program_name, quote (dst_path));
+		  if (x->interactive == I_ON)
+		    {
+		      overwrite_prompt (dst_path, &dst_sb);
+		      if (!yesno ())
+			return 0;
+		    }
 		}
-	      if (!yesno ())
-		return (move_mode ? 1 : 0);
 	    }
 
 	  if (move_mode)
