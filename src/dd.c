@@ -33,6 +33,7 @@
 #include "system.h"
 #include "closeout.h"
 #include "error.h"
+#include "safe-read.h"
 
 #ifndef SIGINFO
 # define SIGINFO SIGUSR1
@@ -62,7 +63,6 @@
 /* Use separate input and output buffers, and combine partial input blocks. */
 #define C_TWOBUFS 04000
 
-int safe_read ();
 int full_write ();
 
 /* The name this program was run with. */
