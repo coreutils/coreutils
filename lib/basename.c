@@ -23,9 +23,19 @@
 # define FILESYSTEM_PREFIX_LEN(Filename) 0
 #endif
 
+#ifndef PARAMS
+# if defined PROTOTYPES || (defined __STDC__ && __STDC__)
+#  define PARAMS(Args) Args
+# else
+#  define PARAMS(Args) ()
+# endif
+#endif
+
 #ifndef ISSLASH
 # define ISSLASH(C) ((C) == '/')
 #endif
+
+char *base_name PARAMS ((char const *name));
 
 /* In general, we can't use the builtin `basename' function if available,
    since it has different meanings in different environments.
