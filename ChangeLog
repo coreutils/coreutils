@@ -1,3 +1,9 @@
+2004-02-21  Jim Meyering  <jim@meyering.net>
+
+	* src/comm.c (usage): Tell what comm does when there are no options.
+	Reword in terms of FILE1 and FILE2 rather than `left file' and
+	`right file'.  Suggestion from Dan Jacobson.
+
 2004-02-17  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.2.0.
