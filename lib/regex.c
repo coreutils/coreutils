@@ -62,6 +62,7 @@
 # define US_CHAR_TYPE wchar_t/* unsigned character type */
 # define COMPILED_BUFFER_VAR wc_buffer
 # define OFFSET_ADDRESS_SIZE 1 /* the size which STORE_NUMBER macro use */
+# define CHAR_CLASS_SIZE (sizeof(wctype_t)/sizeof(CHAR_TYPE)+1)
 # define PUT_CHAR(c) \
   do {									      \
     if (MC_CUR_MAX == 1)						      \
@@ -2642,6 +2643,7 @@ regex_compile (pattern, size, syntax, bufp)
 	       charset[5] = p (= length of chars)
 
                charset[6] = char_class (wctype_t)
+               charset[6+CHAR_CLASS_SIZE] = char_class (wctype_t)
                          ...
                charset[l+5]  = char_class (wctype_t)
 
@@ -2816,15 +2818,16 @@ regex_compile (pattern, size, syntax, bufp)
                         if (p == pend) FREE_STACK_RETURN (REG_EBRACK);
 
 			/* Allocate the space for character class.  */
-                        GET_BUFFER_SPACE(1);
+                        GET_BUFFER_SPACE(CHAR_CLASS_SIZE);
 			/* Update the pointer to indicate end of buffer.  */
-                        b++;
+                        b += CHAR_CLASS_SIZE;
 			/* Move data which follow character classes
 			    not to violate the data.  */
-                        insert_space(1, laststart+6, b-1);
+                        insert_space(CHAR_CLASS_SIZE, laststart + 6, b - 1);
 			/* Store the character class.  */
-                        laststart[6] = (CHAR_TYPE) wt;
-                        laststart[1]++; /* Update length of char_classes */
+                        *((wctype_t*)(laststart + 6)) = wt;
+                        /* Update length of char_classes */
+                        laststart[1] += CHAR_CLASS_SIZE;
 
                         had_char_class = true;
                       }
@@ -2990,7 +2993,7 @@ regex_compile (pattern, size, syntax, bufp)
 				    /* Adjust for the alignment.  */
 				    idx = (idx + 3) & ~4;
 
-				    str[0] = (wchar_t) &extra[idx + 4];
+				    str[0] = (wchar_t) idx + 4;
 				  }
 				else if (symb_table[2 * elem] == 0 && c1 == 1)
 				  {
@@ -4355,7 +4358,8 @@ group_in_compile_stack (compile_stack, regnum)
 }
 
 #ifdef MBS_SUPPORT
-/* This insert space into the pattern.  */
+/* This insert space, which size is "num", into the pattern at "loc".
+   "end" must point the end of the allocated buffer.  */
 static void
 insert_space (num, loc, end)
      int num;
@@ -4396,13 +4400,15 @@ compile_range (range_start_char, p_ptr, pend, translate, syntax, b,
     {
       const char *collseq = (const char *) _NL_CURRENT(LC_COLLATE,
 						       _NL_COLLATE_COLLSEQWC);
+      const unsigned char *extra = (const unsigned char *)
+	_NL_CURRENT (LC_COLLATE, _NL_COLLATE_SYMB_EXTRAMB);
 
       if (range_start_char < -1)
 	{
 	  /* range_start is a collating symbol.  */
 	  int32_t *wextra;
 	  /* Retreive the index and get collation sequence value.  */
-	  wextra = (int32_t*)char_set[-range_start_char];
+	  wextra = (int32_t*)(extra + char_set[-range_start_char]);
 	  start_val = wextra[1 + *wextra];
 	}
       else
@@ -5992,19 +5998,26 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
               2*ranges_length + chars_length;
 
             /* match with char_class?  */
-	    for (i = 0; i < char_class_length ; i++)
-              if (iswctype((wint_t)c, (wctype_t)(*workp++)))
-                goto char_set_matched;
+	    for (i = 0; i < char_class_length ; i += CHAR_CLASS_SIZE)
+	      {
+		wctype_t wctype = *((wctype_t*)workp);
+		workp += CHAR_CLASS_SIZE;
+		if (iswctype((wint_t)c, wctype))
+		  goto char_set_matched;
+	      }
 
             /* match with collating_symbol?  */
 # ifdef _LIBC
 	    if (nrules != 0)
 	      {
+		const unsigned char *extra = (const unsigned char *)
+		  _NL_CURRENT (LC_COLLATE, _NL_COLLATE_SYMB_EXTRAMB);
+
 		for (workp2 = workp + coll_symbol_length ; workp < workp2 ;
 		     workp++)
 		  {
 		    int32_t *wextra;
-		    wextra = (int32_t*) *workp++;
+		    wextra = (int32_t*)(extra + *workp++);
 		    for (i = 0; i < *wextra; ++i)
 		      if (TRANSLATE(d[i]) != wextra[1 + i])
 			break;
@@ -6124,7 +6137,7 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
 
 		/* Update d, however d will be incremented at
 		   char_set_matched:, we decrement d here.  */
-		d = backup_d + (wint_t)cp - (wint_t)str_buf - 1;
+		d = backup_d + ((wchar_t*)cp - (wchar_t*)str_buf - 1);
 		if (d >= dend)
 		  {
 		    if (dend == end_match_2)
