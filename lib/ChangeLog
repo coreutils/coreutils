@@ -3,6 +3,7 @@
 	* Makefile.am (AUTOMAKE_OPTIONS): Remove definition --
 	before it pointed to ../src/ansi2knr.  Some of these files
 	have required an ANSI (c89) compiler for a year or two.
+	(libfetish_a_SOURCES): Remove unused files: c-stack.c, c-stack.h.
 
 2003-02-04  Dmitry V. Levin  <ldv@altlinux.org>
 
