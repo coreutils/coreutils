@@ -610,6 +610,36 @@ limfield (const struct line *line, const struct keyfield *key)
 	  ++ptr;
       }
 
+#ifdef POSIX_UNSPECIFIED
+  /* The following block of code makes GNU sort incompatible with
+     standard Unix sort, so it's ifdef'd out for now.
+     The POSIX spec isn't clear on how to interpret this.
+     FIXME: request clarification.
+
+     From: kwzh@gnu.ai.mit.edu (Karl Heuer)
+     Date: Thu, 30 May 96 12:20:41 -0400
+
+     [...]I believe I've found another bug in `sort'.
+
+     $ cat /tmp/sort.in
+     a b c 2 d
+     pq rs 1 t
+     $ textutils-1.15/src/sort +0.6 -0.7 </tmp/sort.in
+     a b c 2 d
+     pq rs 1 t
+     $ /bin/sort +0.6 -0.7 </tmp/sort.in
+     pq rs 1 t
+     a b c 2 d
+
+     Unix sort produced the answer I expected: sort on the single character
+     in column 6.  GNU sort produced different results, because it disagrees
+     on the interpretation of the key-end spec "-M.N".  Unix sort reads this
+     as "skip M fields, then N characters"; but GNU sort wants it to mean
+     "skip M fields, then either N characters or the rest of the current
+     field, whichever comes first".  This extra clause applies only to
+     key-ends, not key-starts.
+     */
+
   /* Make LIM point to the end of (one byte past) the current field.  */
   if (tab)
     {
@@ -628,6 +658,7 @@ limfield (const struct line *line, const struct keyfield *key)
 	++newlim;
       lim = newlim;
     }
+#endif
 
   /* If we're skipping leading blanks, don't start counting characters
      until after skipping past any leading blanks.  */
