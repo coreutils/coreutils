@@ -50,38 +50,40 @@ static struct option const long_options[] = {
 
 static char *program_name;
 
-void
-print_human_type(unsigned short mode)
+static void
+print_human_type (mode_t mode)
 {
+  char const *type;
   switch (mode & S_IFMT)
     {
     case S_IFDIR:
-      printf ("Directory");
+      type = "Directory";
       break;
     case S_IFCHR:
-      printf ("Character Device");
+      type = "Character Device";
       break;
     case S_IFBLK:
-      printf ("Block Device");
+      type = "Block Device";
       break;
     case S_IFREG:
-      printf ("Regular File");
+      type = "Regular File";
       break;
     case S_IFLNK:
-      printf ("Symbolic Link");
+      type = "Symbolic Link";
       break;
     case S_IFSOCK:
-      printf ("Socket");
+      type = "Socket";
       break;
     case S_IFIFO:
-      printf ("Fifo File");
+      type = "Fifo File";
       break;
     default:
-      printf ("Unknown");
+      type = "Unknown";
     }
+  fputs (type, stdout);
 }
 
-void
+static void
 print_human_fstype(struct statfs *statfsbuf)
 {
   char *type;
@@ -274,7 +276,7 @@ print_human_fstype(struct statfs *statfsbuf)
   free(type);
 }
 
-void
+static void
 print_human_access(struct stat const *statbuf)
 {
   char modebuf[11];
@@ -283,7 +285,7 @@ print_human_access(struct stat const *statbuf)
   fputs (modebuf, stdout);
 }
 
-void
+static void
 print_human_time(time_t *t)
 {
   char str[40];
@@ -293,7 +295,7 @@ print_human_time(time_t *t)
 }
 
 /* print statfs info */
-void
+static void
 print_statfs(char *pformat, char m, char *filename, void *data, SECURITY_ID_T sid)
 {
     struct statfs *statfsbuf = (struct statfs*)data;
@@ -428,7 +430,7 @@ print_statfs(char *pformat, char m, char *filename, void *data, SECURITY_ID_T si
 }
 
 /* print stat info */
-void
+static void
 print_stat(char *pformat, char m, char *filename, void *data, SECURITY_ID_T sid)
 {
     char linkname[256];
@@ -584,7 +586,7 @@ print_stat(char *pformat, char m, char *filename, void *data, SECURITY_ID_T sid)
     }
 }
 
-void
+static void
 print_it (char *masterformat, char *filename,
 	  void (*print_func) (char*, char, char*, void*, SECURITY_ID_T),
 	  void *data, SECURITY_ID_T sid)
@@ -644,7 +646,7 @@ print_it (char *masterformat, char *filename,
 }
 
 /* stat the filesystem and print what we find */
-void
+static void
 do_statfs (char *filename, int terse, int secure, char *format)
 {
   struct statfs statfsbuf;
@@ -698,7 +700,7 @@ do_statfs (char *filename, int terse, int secure, char *format)
 }
 
 /* stat the file and print what we find */
-void
+static void
 do_stat (char *filename, int follow_links, int terse, int secure, char *format)
 {
   struct stat statbuf;
@@ -814,7 +816,7 @@ Display file or filesystem status.\n\
   exit (status);
 }
 
-void
+static void
 verbose_usage(char *progname)
 {
     fprintf(stderr, "Usage: %s [-l] [-f] [-s] [-v] [-h] [-t] [-c format] file1 [file2 ...]\n", progname);
