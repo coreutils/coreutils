@@ -213,13 +213,14 @@ excluded_fstype (const char *fstype)
   return 0;
 }
 
-/* Like human_readable_inexact, except return "-" if the argument is -1,
-   and if NEGATIVE is 1 then N represents a negative number, expressed
-   in two's complement.  */
+/* Like human_readable_inexact with a human_ceiling
+   human_inexact_style, except return "-" if the argument is -1, and
+   if NEGATIVE is 1 then N represents a negative number, expressed in
+   two's complement.  */
+
 static char const *
 df_readable (int negative, uintmax_t n, char *buf,
-	     int from_block_size, int t_output_block_size,
-	     enum human_inexact_style s)
+	     int from_block_size, int t_output_block_size)
 {
   if (n == -1)
     return "-";
@@ -228,7 +229,7 @@ df_readable (int negative, uintmax_t n, char *buf,
       char *p = human_readable_inexact (negative ? - n : n,
 					buf + negative, from_block_size,
 					t_output_block_size,
-					negative ? - s : s);
+					human_ceiling);
       if (negative)
 	*--p = '-';
       return p;
@@ -350,16 +351,11 @@ show_dev (const char *disk, const char *mount_point, const char *fstype,
 
   printf (" %*s %*s %*s ",
 	  width, df_readable (0, total,
-			      buf[0], input_units, output_units,
-			      (posix_format
-			       ? human_ceiling
-			       : human_round_to_even)),
+			      buf[0], input_units, output_units),
 	  width, df_readable (negate_used, used,
-			      buf[1], input_units, output_units,
-			      human_ceiling),
+			      buf[1], input_units, output_units),
 	  width, df_readable (negate_available, available,
-			      buf[2], input_units, output_units,
-			      posix_format ? human_ceiling : human_floor));
+			      buf[2], input_units, output_units));
 
   if (used == -1 || available == -1)
     ;
