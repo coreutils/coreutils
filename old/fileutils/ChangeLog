@@ -1,3 +1,12 @@
+1998-01-28  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/df.c (print_header): Tweak format to align heading over
+	last column of `df -i' output.  From Andreas Schwab.
+
+1998-01-27  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makefile.am: Include Makefile.maint from $(srcdir).
+
 1998-01-25  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* Version 3.16l.
