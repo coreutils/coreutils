@@ -2,6 +2,12 @@
 
 	* Version 3.16l.
 
+	* Makefile.maint: New file.
+	* Makefile.am: Move rules common to textutils, fileutils, sh-utils
+	into Makefile.maint.
+	Include Makefile.maint.
+	(EXTRA_DIST): Add Makefile.maint.
+
 	* src/cp.c (re_protect): Don't fail for non-root when chown fails
 	due not only to lack of permission (EPERM), but also to lack of
 	support (EINVAL).  Reported by Bengt Martensson.
