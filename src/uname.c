@@ -40,7 +40,6 @@
 
 #include "system.h"
 #include "error.h"
-#include "long-options.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "uname"
@@ -82,6 +81,8 @@ static struct option const long_options[] =
   {"sysname", no_argument, NULL, 's'},
   {"processor", no_argument, NULL, 'p'},
   {"all", no_argument, NULL, 'a'},
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
 
@@ -123,9 +124,6 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      AUTHORS, usage);
-
   toprint = 0;
 
   while ((c = getopt_long (argc, argv, "snrvpma", long_options, NULL)) != -1)
@@ -163,6 +161,10 @@ main (int argc, char **argv)
 	  toprint = (PRINT_SYSNAME | PRINT_NODENAME | PRINT_RELEASE |
 		     PRINT_PROCESSOR | PRINT_VERSION | PRINT_MACHINE);
 	  break;
+
+	case_GETOPT_HELP_CHAR;
+
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
 	  usage (1);

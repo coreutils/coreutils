@@ -82,7 +82,6 @@
 #define getusershell _getusershell_sys_proto_
 
 #include "system.h"
-#include "long-options.h"
 
 #undef getusershell
 
@@ -174,6 +173,8 @@ static struct option const longopts[] =
   {"login", no_argument, NULL, 'l'},
   {"preserve-environment", no_argument, &change_environment, 0},
   {"shell", required_argument, 0, 's'},
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
   {0, 0, 0, 0}
 };
 
@@ -465,9 +466,6 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      AUTHORS, usage);
-
   fast_startup = 0;
   simulate_login = 0;
   change_environment = 1;
@@ -499,6 +497,10 @@ main (int argc, char **argv)
 	case 's':
 	  shell = optarg;
 	  break;
+
+	case_GETOPT_HELP_CHAR;
+
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
 	  usage (1);

@@ -85,7 +85,6 @@
 
 #include "system.h"
 #include "error.h"
-#include "long-options.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "env"
@@ -103,6 +102,8 @@ static struct option const longopts[] =
 {
   {"ignore-environment", no_argument, NULL, 'i'},
   {"unset", required_argument, NULL, 'u'},
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
 
@@ -144,9 +145,6 @@ main (register int argc, register char **argv, char **envp)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      AUTHORS, usage);
-
   while ((optc = getopt_long (argc, argv, "+iu:", longopts, NULL)) != -1)
     {
       switch (optc)
@@ -158,6 +156,8 @@ main (register int argc, register char **argv, char **envp)
 	  break;
 	case 'u':
 	  break;
+	case_GETOPT_HELP_CHAR;
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 	default:
 	  usage (2);
 	}

@@ -28,7 +28,6 @@
 
 #include "system.h"
 #include "error.h"
-#include "long-options.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "id"
@@ -83,6 +82,8 @@ static struct option const longopts[] =
   {"name", no_argument, NULL, 'n'},
   {"real", no_argument, NULL, 'r'},
   {"user", no_argument, NULL, 'u'},
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
 
@@ -124,9 +125,6 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      AUTHORS, usage);
-
   while ((optc = getopt_long (argc, argv, "agnruG", longopts, NULL)) != -1)
     {
       switch (optc)
@@ -151,6 +149,8 @@ main (int argc, char **argv)
 	case 'G':
 	  just_group_list = 1;
 	  break;
+	case_GETOPT_HELP_CHAR;
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 	default:
 	  usage (1);
 	}

@@ -27,7 +27,6 @@
 #include "error.h"
 #include "getdate.h"
 #include "getline.h"
-#include "long-options.h"
 #include "posixtm.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -66,6 +65,8 @@ static struct option const long_options[] =
   {"uct", no_argument, NULL, 'u'},
   {"utc", no_argument, NULL, 'u'},
   {"universal", no_argument, NULL, 'u'},
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
 
@@ -285,9 +286,6 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      AUTHORS, usage);
-
   while ((optc = getopt_long (argc, argv, "d:f:r:Rs:u", long_options, NULL))
 	 != -1)
     switch (optc)
@@ -313,6 +311,8 @@ main (int argc, char **argv)
       case 'u':
  	universal_time = 1;
 	break;
+      case_GETOPT_HELP_CHAR;
+      case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
       default:
 	usage (1);
       }
