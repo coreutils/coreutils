@@ -63,7 +63,7 @@ int xalloc_exit_failure = EXIT_FAILURE;
 char *const xalloc_msg_memory_exhausted = N_("Memory exhausted");
 
 /* FIXME: describe */
-void (*xalloc_fail_func) () = NULL;
+void (*xalloc_fail_func) () = 0;
 
 #if __STDC__ && (HAVE_VPRINTF || HAVE_DOPRNT)
 void error (int, int, const char *, ...);
