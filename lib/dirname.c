@@ -49,15 +49,11 @@ void *memrchr ();
 
 #define BACKSLASH_IS_PATH_SEPARATOR ISSLASH ('\\')
 
-/* Return the leading directories part of PATH,
-   allocated with malloc.  If out of memory, return 0.
-   Works properly even if there are trailing slashes
-   (by effectively ignoring them).  */
-
-char *
-dir_name (const char *path)
+/* Return the length of the directory part of PATH.
+   Set *RESULT to point to PATH or to `"."', as appropriate.  */
+size_t
+dir_name_r (const char *path, const char **result)
 {
-  char *newpath;
   char *slash;
   int length;			/* Length of result, not including NUL.  */
 
@@ -118,10 +114,24 @@ dir_name (const char *path)
       length = slash - path + 1;
     }
 
-  newpath = (char *) malloc (length + 1);
+  *result = path;
+  return length;
+}
+
+/* Return the leading directories part of PATH,
+   allocated with malloc.  If out of memory, return 0.
+   Works properly even if there are trailing slashes
+   (by effectively ignoring them).  */
+
+char *
+dir_name (const char *path)
+{
+  const char *result;
+  size_t length = dir_name_r (path, &result);
+  char *newpath = (char *) malloc (length + 1);
   if (newpath == 0)
     return 0;
-  strncpy (newpath, path, length);
+  strncpy (newpath, result, length);
   newpath[length] = 0;
   return newpath;
 }
