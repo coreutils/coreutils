@@ -100,16 +100,8 @@ void
 setusershell ()
 {
   default_index = 0;
-  if (shellstream == NULL)
-    shellstream = fopen (SHELLS_FILE, "r");
-  else
-    {
-#ifdef HAVE_FSEEKO
-      fseeko (shellstream, 0, 0);
-#else
-      fseek (shellstream, 0L, 0);
-#endif
-    }
+  if (shellstream)
+    rewind (shellstream);
 }
 
 /* Close the shells file. */
