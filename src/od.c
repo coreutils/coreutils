@@ -90,7 +90,7 @@ enum output_format
     CHARACTER
   };
 
-/* Each output format specification (from POSIX `-t spec' or from
+/* Each output format specification (from `-t spec' or from
    old-style options) is represented by one of these structures.  */
 struct tspec
   {
@@ -164,7 +164,7 @@ static int address_pad_len;
 static size_t string_min;
 static int flag_dump_strings;
 
-/* Non-zero if we should recognize the pre-POSIX non-option arguments
+/* Non-zero if we should recognize the older non-option arguments
    that specified at most one file and optional arguments specifying
    offset and pseudo-start address.  */
 static int traditional;
@@ -244,19 +244,29 @@ static enum size_spec integral_type_size[MAX_INTEGRAL_TYPE_SIZE + 1];
 #define MAX_FP_TYPE_SIZE sizeof(LONG_DOUBLE)
 static enum size_spec fp_type_size[MAX_FP_TYPE_SIZE + 1];
 
+static char const short_options[] =
+"abcdfhilos" OPTARG_POSIX "xw" OPTARG_POSIX "A:j:N:t:v";
+
+/* For long options that have no equivalent short option, use a
+   non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
+enum
+{
+  STRINGS_OPTION = CHAR_MAX + 1,
+  TRADITIONAL_OPTION,
+  WIDTH_OPTION
+};
+
 static struct option const long_options[] =
 {
-  /* POSIX options.  */
   {"skip-bytes", required_argument, NULL, 'j'},
   {"address-radix", required_argument, NULL, 'A'},
   {"read-bytes", required_argument, NULL, 'N'},
   {"format", required_argument, NULL, 't'},
   {"output-duplicates", no_argument, NULL, 'v'},
 
-  /* non-POSIX options.  */
-  {"strings", optional_argument, NULL, 's'},
-  {"traditional", no_argument, NULL, 'B'},
-  {"width", optional_argument, NULL, 'w'},
+  {"strings", optional_argument, NULL, STRINGS_OPTION},
+  {"traditional", no_argument, NULL, TRADITIONAL_OPTION},
+  {"width", optional_argument, NULL, WIDTH_OPTION},
 
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
@@ -283,8 +293,13 @@ concatenate them in the listed order to form the input.\n\
 With no FILE, or when FILE is -, read standard input.\n\
 \n\
 "), stdout);
-      fputs (_("\
+      if (POSIX2_VERSION < 200112)
+	fputs (_("\
 Mandatory arguments to long options are mandatory for short options too.\n\
+"), stdout);
+      else
+	fputs (_("\
+All arguments to long options are mandatory for short options.\n\
 "), stdout);
       fputs (_("\
   -A, --address-radix=RADIX   decide how file offsets are printed\n\
@@ -296,13 +311,13 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -t, --format=TYPE           select output format or formats\n\
   -v, --output-duplicates     do not use * to mark line suppression\n\
   -w, --width[=BYTES]         output BYTES bytes per output line\n\
-      --traditional           accept arguments in pre-POSIX form\n\
+      --traditional           accept arguments in traditional form\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
-Pre-POSIX format specifications may be intermixed, they accumulate:\n\
+Traditional format specifications may be intermixed; they accumulate:\n\
   -a   same as -t a,  select named characters\n\
   -b   same as -t oC, select octal bytes\n\
   -c   same as -t c,  select ASCII characters or backslash escapes\n\
@@ -321,7 +336,7 @@ Pre-POSIX format specifications may be intermixed, they accumulate:\n\
 For older syntax (second call format), OFFSET means -j OFFSET.  LABEL\n\
 is the pseudo-address at first byte printed, incremented when dump is\n\
 progressing.  For OFFSET and LABEL, a 0x or 0X prefix indicates\n\
-hexadecimal, suffixes maybe . for octal and b multiply by 512.\n\
+hexadecimal, suffixes may be . for octal and b for multiply by 512.\n\
 \n\
 TYPE is made up of one or more of these specifications:\n\
 \n\
@@ -351,8 +366,8 @@ any type adds a display of printable characters to the end of each line\n\
 of output.  \
 "), stdout);
       fputs (_("\
--s without a number implies 3.  -w without a number implies 32.\n\
-By default, od uses -A o -t d2 -w 16.\n\
+--string without a number implies 3.  --width without a number\n\
+implies 32.  By default, od uses -A o -t d2 -w 16.\n\
 "), stdout);
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
@@ -638,7 +653,7 @@ simple_strtoul (const char *s, const char **p, long unsigned int *val)
   return 0;
 }
 
-/* If S points to a single valid POSIX-style od format string, put
+/* If S points to a single valid modern od format string, put
    a description of that format in *TSPEC, make *NEXT point at the
    character following the just-decoded format (if *NEXT is non-NULL),
    and return zero.  If S is not valid, don't modify *NEXT or *TSPEC,
@@ -1001,7 +1016,7 @@ check_and_close (void)
   return err;
 }
 
-/* Decode the POSIX-style od format string S.  Append the decoded
+/* Decode the modern od format string S.  Append the decoded
    representation to the global array SPEC, reallocating SPEC if
    necessary.  Return zero if S is valid, nonzero otherwise.  */
 
@@ -1346,8 +1361,8 @@ get_lcm (void)
   return l_c_m;
 }
 
-/* If S is a valid pre-POSIX offset specification with an optional leading '+'
-   return nonzero and set *OFFSET to the offset it denotes.  */
+/* If S is a valid traditional offset specification with an optional
+   leading '+' return nonzero and set *OFFSET to the offset it denotes.  */
 
 static int
 parse_old_offset (const char *s, uintmax_t *offset)
@@ -1478,7 +1493,7 @@ dump (void)
    A string constant is a run of at least `string_min' ASCII
    graphic (or formatting) characters terminated by a null.
    Based on a function written by Richard Stallman for a
-   pre-POSIX version of od.  Return nonzero if an error
+   traditional version of od.  Return nonzero if an error
    occurs.  Otherwise, return zero.  */
 
 static int
@@ -1604,6 +1619,7 @@ main (int argc, char **argv)
   int width_specified = 0;
   int n_failed_decodes = 0;
   int err;
+  bool posix_pedantic = (getenv ("POSIXLY_CORRECT") != NULL);
 
   /* The old-style `pseudo starting address' to be printed in parentheses
      after any true address.  */
@@ -1648,8 +1664,8 @@ main (int argc, char **argv)
   address_pad_len = 7;
   flag_dump_strings = 0;
 
-  while ((c = getopt_long (argc, argv, "abcdfhilos::xw::A:j:N:t:v",
-			   long_options, NULL)) != -1)
+  while ((c = getopt_long (argc, argv, short_options, long_options, NULL))
+	 != -1)
     {
       uintmax_t tmp;
       enum strtol_error s_err;
@@ -1705,6 +1721,12 @@ it must be one character from [doxn]"),
 	  break;
 
 	case 's':
+	  if (POSIX2_VERSION < 200112 && OBSOLETE_OPTION_WARNINGS
+	      && ! optarg && ! posix_pedantic)
+	    error (0, 0,
+		   _("warning: `od -s' is obsolete; use `od --strings'"));
+	  /* Fall through.  */
+	case STRINGS_OPTION:
 	  if (optarg == NULL)
 	    string_min = 3;
 	  else
@@ -1732,12 +1754,12 @@ it must be one character from [doxn]"),
 	  abbreviate_duplicate_blocks = 0;
 	  break;
 
-	case 'B':
+	case TRADITIONAL_OPTION:
 	  traditional = 1;
 	  break;
 
-	  /* The next several cases map the old, pre-POSIX format
-	     specification options to the corresponding POSIX format
+	  /* The next several cases map the traditional format
+	     specification options to the corresponding modern format
 	     specs.  GNU od accepts any combination of old- and
 	     new-style options.  Format specification options accumulate.  */
 
@@ -1760,9 +1782,21 @@ it must be one character from [doxn]"),
 	  CASE_OLD_ARG ('o', "o2");
 	  CASE_OLD_ARG ('x', "x2");
 
+	  /* FIXME: POSIX 1003.1-2001 with XSI requires this:
+
+	     CASE_OLD_ARG ('s', "d2");
+
+	     for the traditional syntax, but this conflicts with case
+	     's' above. */
+
 #undef CASE_OLD_ARG
 
 	case 'w':
+	  if (POSIX2_VERSION < 200112 && OBSOLETE_OPTION_WARNINGS
+	      && ! optarg && ! posix_pedantic)
+	    error (0, 0, _("warning: `od -w' is obsolete; use `od --width'"));
+	  /* Fall through.  */
+	case WIDTH_OPTION:
 	  width_specified = 1;
 	  if (optarg == NULL)
 	    {
@@ -1799,11 +1833,14 @@ it must be one character from [doxn]"),
 
   n_files = argc - optind;
 
-  /* If the --backward-compatible option is used, there may be from
+  /* If the --traditional option is used, there may be from
      0 to 3 remaining command line arguments;  handle each case
      separately.
 	od [file] [[+]offset[.][b] [[+]label[.][b]]]
-     The offset and pseudo_start have the same syntax.  */
+     The offset and pseudo_start have the same syntax.
+
+     FIXME: POSIX 1003.1-2001 with XSI requires support for the
+     traditional syntax even if --traditional is not given.  */
 
   if (traditional)
     {
