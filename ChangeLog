@@ -1,6 +1,15 @@
-2003-10-21  Jim Meyering  <jim@meyering.net>
+2003-10-25  Jim Meyering  <meyering@lucent.com>
 
 	* Version 5.1.0.
+
+	* src/copy.c (triple_hash, triple_hash_no_name): Adjust to reflect
+	type changes (unsigned int -> size_t) in hash.c.
+	* src/cp-hash.c (src_to_dest_hash): Likewise.
+	* src/du.c (entry_hash): Likewise.
+	* src/ls.c (dev_ino_hash): Likewise.
+	* src/cut.c (hash_int): Likewise.  Declare function as static.
+
+2003-10-21  Jim Meyering  <jim@meyering.net>
 
 	Don't fail when run with VERBOSE=yes.
 	* tests/chgrp/basic: Do `set +x' before starting the subshell
