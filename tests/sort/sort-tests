@@ -1752,8 +1752,25 @@ else
   esac
 fi
 test -s 21g.E || rm -f 21g.E
+$xx -k 2,2fd -k 1,1r $srcdir/22a.I > 22a.O 2> 22a.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test 22a failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp 22a.O $srcdir/22a.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed 22a"; fi ;;
+    1) $echo "Test 22a failed: files 22a.O and $srcdir/22a.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test 22a may have failed." 1>&2;
+       $echo The command "cmp 22a.O $srcdir/22a.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s 22a.E || rm -f 22a.E
 if test $errors = 0 ; then
-  $echo Passed all 102 tests. 1>&2
+  $echo Passed all 103 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi
