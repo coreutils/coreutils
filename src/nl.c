@@ -177,7 +177,7 @@ usage (int status)
 Usage: %s [OPTION]... [FILE]...\n\
 "),
 	      program_name);
-      printf (_("\
+      fputs (_("\
 Write each FILE to standard output, with line numbers added.\n\
 With no FILE, or when FILE is -, read standard input.\n\
 \n\
@@ -185,12 +185,16 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -b, --body-numbering=STYLE      use STYLE for numbering body lines\n\
   -d, --section-delimiter=CC      use CC for separating logical pages\n\
   -f, --footer-numbering=STYLE    use STYLE for numbering footer lines\n\
+"), stdout);
+      fputs (_("\
   -h, --header-numbering=STYLE    use STYLE for numbering header lines\n\
   -i, --page-increment=NUMBER     line number increment at each line\n\
   -l, --join-blank-lines=NUMBER   group of NUMBER empty lines counted as one\n\
   -n, --number-format=FORMAT      insert line numbers according to FORMAT\n\
   -p, --no-renumber               do not reset line numbers at logical pages\n\
   -s, --number-separator=STRING   add STRING after (possible) line number\n\
+"), stdout);
+      fputs (_("\
   -v, --first-page=NUMBER         first line number on each logical page\n\
   -w, --number-width=NUMBER       use NUMBER columns for line numbers\n\
       --help                      display this help and exit\n\
@@ -199,6 +203,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 By default, selects -v1 -i1 -l1 -sTAB -w6 -nrn -hn -bt -fn.  CC are\n\
 two delimiter characters for separating logical pages, a missing\n\
 second character implies :.  Type \\\\ for \\.  STYLE is one of:\n\
+"), stdout);
+      fputs (_("\
 \n\
   a         number all lines\n\
   t         number only nonempty lines\n\
@@ -211,7 +217,7 @@ FORMAT is one of:\n\
   rn   right justified, no leading zeros\n\
   rz   right justified, leading zeros\n\
 \n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
