@@ -2,6 +2,8 @@
 
 	* Version 5.0.92.
 
+	* Use automake-1.7.7.  Regenerate dependent files.
+
 	* tests/Makefile.am (all_programs): Use ../src/tr -s ' ' '\n' in place
 	of `fmt -1'.  Using the just-built tr is a little cleaner.
 	Christian Krackowizer reported that HPUX 10.20 doesn't have fmt.
