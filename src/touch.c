@@ -1,5 +1,5 @@
 /* touch -- change modification and access times of files
-   Copyright (C) 1987, 1989, 1990, 1991 Free Software Foundation Inc.
+   Copyright (C) 1987, 1989, 1990, 1991, 1995 Free Software Foundation Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
