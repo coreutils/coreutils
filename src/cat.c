@@ -1,5 +1,5 @@
 /* cat -- concatenate files and print on the standard output.
-   Copyright (C) 88, 90, 91, 1995-1999 Free Software Foundation, Inc.
+   Copyright (C) 88, 90, 91, 1995-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@
 # include <sys/ioctl.h>
 #endif
 #include "system.h"
+#include "closeout.h"
 #include "error.h"
 #include "safe-read.h"
 
@@ -53,9 +54,6 @@ static char *infile;
 
 /* Descriptor on which input file is open.  */
 static int input_desc;
-
-/* Descriptor on which output file is open.  Always is 1.  */
-static int output_desc;
 
 /* Buffer for line numbers.  */
 static char line_buf[13] =
@@ -136,8 +134,7 @@ next_line_num (void)
     line_num_print--;
 }
 
-/* Plain cat.  Copies the file behind `input_desc' to the file behind
-   `output_desc'.  */
+/* Plain cat.  Copies the file behind `input_desc' to STDOUT_FILENO.  */
 
 static void
 simple_cat (
@@ -172,7 +169,7 @@ simple_cat (
 
       /* Write this block out.  */
 
-      if (full_write (output_desc, buf, n_read) < 0)
+      if (full_write (STDOUT_FILENO, buf, n_read) < 0)
 	error (EXIT_FAILURE, errno, _("write error"));
     }
 }
@@ -253,7 +250,7 @@ cat (
 	      unsigned char *wp = outbuf;
 	      do
 		{
-		  if (full_write (output_desc, wp, outsize) < 0)
+		  if (full_write (STDOUT_FILENO, wp, outsize) < 0)
 		    error (EXIT_FAILURE, errno, _("write error"));
 		  wp += outsize;
 		}
@@ -306,7 +303,7 @@ cat (
 		{
 		  int n_write = bpout - outbuf;
 
-		  if (full_write (output_desc, outbuf, n_write) < 0)
+		  if (full_write (STDOUT_FILENO, outbuf, n_write) < 0)
 		    error (EXIT_FAILURE, errno, _("write error"));
 		  bpout = outbuf;
 		}
@@ -465,6 +462,17 @@ cat (
     }
 }
 
+/* This is gross, but necessary, because of the way close_stdout
+   works and because this program closes STDOUT_FILENO directly.  */
+static void (*closeout_func) (void) = close_stdout;
+
+static void
+close_stdout_wrapper (void)
+{
+  if (closeout_func)
+    (*closeout_func) ();
+}
+
 int
 main (int argc, char **argv)
 {
@@ -536,6 +544,8 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+
+  atexit (close_stdout);
 
   /* Parse command line options.  */
 
@@ -622,11 +632,11 @@ main (int argc, char **argv)
 	}
     }
 
-  output_desc = 1;
+  closeout_func = NULL;
 
   /* Get device, i-node number, and optimal blocksize of output.  */
 
-  if (fstat (output_desc, &stat_buf) < 0)
+  if (fstat (STDOUT_FILENO, &stat_buf) < 0)
     error (EXIT_FAILURE, errno, _("standard output"));
 
   outsize = ST_BLKSIZE (stat_buf);
@@ -659,13 +669,13 @@ main (int argc, char **argv)
      with only CR-LF is an empty line.  (Besides, if they ask for
      one of these options, they don't care much about the original
      file contents anyway).  */
-  if ((!isatty (output_desc)
+  if ((!isatty (STDOUT_FILENO)
        && !(numbers || squeeze_empty_lines || mark_line_ends))
       || binary_files)
     {
       /* Switch stdout to BINARY mode.  */
       binary_output = 1;
-      SET_BINARY (output_desc);
+      SET_BINARY (STDOUT_FILENO);
       /* When stdout is in binary mode, make sure all input files are
 	 also read in binary mode.  */
       file_open_mode |= O_BINARY;
@@ -681,8 +691,8 @@ main (int argc, char **argv)
 
       /* Setting stdin to binary switches the console device to
 	 raw I/O, which also affects stdout to console.  Undo that.  */
-      if (isatty (output_desc))
-	setmode (output_desc, O_TEXT);
+      if (isatty (STDOUT_FILENO))
+	setmode (STDOUT_FILENO, O_TEXT);
     }
 #endif
 
@@ -715,7 +725,7 @@ main (int argc, char **argv)
 		 This is so "cat > xyzzy" creates a DOS-style text
 		 file, like people expect.  */
 	      if (tty_in && optind <= argc)
-		setmode (output_desc, O_TEXT);
+		setmode (STDOUT_FILENO, O_TEXT);
 	      else
 		{
 		  SET_BINARY (input_desc);
@@ -756,7 +766,7 @@ main (int argc, char **argv)
 
       if (check_redirection
 	  && stat_buf.st_dev == out_dev && stat_buf.st_ino == out_ino
-	  && (input_desc != STDIN_FILENO || output_desc != STDOUT_FILENO))
+	  && (input_desc != STDIN_FILENO))
 	{
 	  error (0, 0, _("%s: input file is output file"), infile);
 	  exit_status = 1;
@@ -816,8 +826,6 @@ main (int argc, char **argv)
 
   if (have_read_stdin && close (0) < 0)
     error (EXIT_FAILURE, errno, "-");
-  if (close (1) < 0)
-    error (EXIT_FAILURE, errno, _("write error"));
 
   exit (exit_status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
