@@ -1,3 +1,10 @@
+2004-01-29  Jim Meyering  <jim@meyering.net>
+
+	Avoid a configure-time warning about sys/ucred.h on OSF V4.0.
+	* ls-mntd-fs.m4: Test for sys/ucred.h separately, since
+	on some systems one must include <grp.h> before it.
+	Reported by Christian Krackowizer.
+
 2004-01-16  Jim Meyering  <jim@meyering.net>
 
 	* onceonly.m4: Sync with version from gettext-0.13.1.
