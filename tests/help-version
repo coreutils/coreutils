@@ -103,6 +103,9 @@ chgrp_args=--version
 chown_args=--version
 mkfifo_args=--version
 mknod_args=--version
+# Punt on uptime, since it fails (e.g., failing to get boot time)
+# on some systems, and we shouldn't let that stop `make check'.
+uptime_args=--version
 
 cmp_args="$tmp_in $tmp_in2"
 diff_args="$tmp_in $tmp_in2"
