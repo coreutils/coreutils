@@ -2731,7 +2731,7 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
   -S                         sort by file size\n"));
 
       printf (_("\
-  -s, --size                 print block size of each file\n\
+  -s, --size                 print size of each file, in blocks\n\
       --sort=WORD            ctime -c, extension -X, none -U, size -S,\n\
                                status -c, time -t\n\
       --time=WORD            atime -u, access -u, use -u\n\
