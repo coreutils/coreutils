@@ -1,6 +1,6 @@
 /* provide consistent interface to chown for systems that don't interpret
    an ID of -1 as meaning `don't change the corresponding ID'.
-   Copyright (C) 1997, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by

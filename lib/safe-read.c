@@ -1,5 +1,5 @@
 /* safe-read.c -- an interface to read that retries after interrupts
-   Copyright (C) 1993, 1994, 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1993, 1994, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by

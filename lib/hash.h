@@ -1,5 +1,5 @@
 /* hash - hashing table processing.
-   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    Written by Jim Meyering <meyering@ascend.com>, 1998.
 
    This program is free software; you can redistribute it and/or modify

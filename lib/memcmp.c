@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1995, 1997, 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1995, 1997, 1998 Free Software Foundation, Inc.
    Contributed by Torbjorn Granlund (tege@sics.se).
 
    NOTE: The canonical source of this file is maintained with the GNU C Library.

@@ -1,5 +1,5 @@
 /* fsusage.c -- return space usage of mounted filesystems
-   Copyright (C) 1991, 1992, 1996, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1992, 1996, 1998, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by

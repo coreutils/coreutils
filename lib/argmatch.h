@@ -1,5 +1,5 @@
 /* argmatch.h -- definitions and prototypes for argmatch.c
-   Copyright (C) 1990, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1990, 1998, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
