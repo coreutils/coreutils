@@ -1,4 +1,4 @@
-#serial 2
+#serial 3
 
 dnl From Jim Meyering.
 dnl Find a new-enough version of Perl.
