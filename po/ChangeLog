@@ -1,3 +1,7 @@
+2003-08-19  Jim Meyering  <jim@meyering.net>
+
+	* Makevars (MSGID_BUGS_ADDRESS): Define.
+
 2003-08-12  Jim Meyering  <jim@meyering.net>
 
 	* LINGUAS: Add Irish (ga).
