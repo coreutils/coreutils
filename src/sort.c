@@ -27,6 +27,8 @@
 #include <sys/types.h>
 #include <signal.h>
 #include <stdio.h>
+#define NDEBUG 1
+#include <assert.h>
 #include "system.h"
 #include "long-options.h"
 #include "error.h"
@@ -55,6 +57,13 @@ void free ();
 #ifndef DEFAULT_TMPDIR
 #define DEFAULT_TMPDIR "/tmp"
 #endif
+
+/* Use this as exit status in case of error, not EXIT_FAILURE.  This
+   is necessary because EXIT_FAILURE is usually 1 and POSIX requires
+   that sort exit with status 1 IFF invoked with -c and the input is
+   not properly sorted.  Any other irregular exit must exit with a
+   status code greater than 1.  */
+#define SORT_FAILURE 2
 
 /* The kind of blanks for '-b' to skip in various options. */
 enum blanktype { bl_start, bl_end, bl_both };
@@ -239,6 +248,10 @@ FILE, or when FILE is -, read standard input.\n\
 ")
 	      , DEFAULT_TMPDIR);
     }
+  /* Don't use EXIT_FAILURE here in case it is defined to be 1.
+     POSIX requires that sort return 1 IFF invoked with -c and
+     the input is not properly sorted.  */
+  assert (status == 0 || status == SORT_FAILURE);
   exit (status);
 }
 
@@ -272,7 +285,7 @@ xmalloc (unsigned int n)
     {
       error (0, 0, _("virtual memory exhausted"));
       cleanup ();
-      exit (2);
+      exit (SORT_FAILURE);
     }
   return p;
 }
@@ -297,7 +310,7 @@ xrealloc (char *p, unsigned int n)
     {
       error (0, 0, _("virtual memory exhausted"));
       cleanup ();
-      exit (2);
+      exit (SORT_FAILURE);
     }
   return p;
 }
@@ -313,7 +326,7 @@ xtmpfopen (const char *file)
     {
       error (0, errno, "%s", file);
       cleanup ();
-      exit (2);
+      exit (SORT_FAILURE);
     }
 
   return fp;
@@ -334,7 +347,7 @@ xfopen (const char *file, const char *how)
 	{
 	  error (0, errno, "%s", file);
 	  cleanup ();
-	  exit (2);
+	  exit (SORT_FAILURE);
 	}
     }
 
@@ -358,7 +371,7 @@ xfclose (FILE *fp)
 	{
 	  error (0, errno, _("flushing file"));
 	  cleanup ();
-	  exit (2);
+	  exit (SORT_FAILURE);
 	}
     }
   else
@@ -367,7 +380,7 @@ xfclose (FILE *fp)
 	{
 	  error (0, errno, _("error closing file"));
 	  cleanup ();
-	  exit (2);
+	  exit (SORT_FAILURE);
 	}
     }
 }
@@ -379,7 +392,7 @@ write_bytes (const char *buf, size_t n_bytes, FILE *fp)
     {
       error (0, errno, _("write error"));
       cleanup ();
-      exit (2);
+      exit (SORT_FAILURE);
     }
 }
 
@@ -491,7 +504,7 @@ fillbuf (struct buffer *buf, FILE *fp)
 	{
 	  error (0, errno, _("read error"));
 	  cleanup ();
-	  exit (2);
+	  exit (SORT_FAILURE);
 	}
       buf->used += cc;
     }
@@ -1585,7 +1598,7 @@ insertkey (struct keyfield *key)
 static void
 badfieldspec (const char *s)
 {
-  error (2, 0, _("invalid field specification `%s'"), s);
+  error (SORT_FAILURE, 0, _("invalid field specification `%s'"), s);
 }
 
 /* Handle interrupts and hangups. */
@@ -1760,7 +1773,7 @@ main (int argc, char **argv)
 	  if (digits[UCHAR (*s)] || (*s == '.' && digits[UCHAR (s[1])]))
 	    {
 	      if (!key)
-		usage (2);
+		usage (SORT_FAILURE);
 	      for (t = 0; digits[UCHAR (*s)]; ++s)
 		t = t * 10 + *s - '0';
 	      t2 = 0;
@@ -1792,7 +1805,8 @@ main (int argc, char **argv)
 		    else
 		      {
 			if (i == argc - 1)
-			  error (2, 0, _("option `-k' requires an argument"));
+			  error (SORT_FAILURE, 0,
+				 _("option `-k' requires an argument"));
 			else
 			  s = argv[++i];
 		      }
@@ -1912,7 +1926,8 @@ but lacks following character offset"));
 		    else
 		      {
 			if (i == argc - 1)
-			  error (2, 0, _("option `-o' requires an argument"));
+			  error (SORT_FAILURE, 0,
+				 _("option `-o' requires an argument"));
 			else
 			  outfile = argv[++i];
 		      }
@@ -1929,7 +1944,8 @@ but lacks following character offset"));
 			goto outer;
 		      }
 		    else
-		      error (2, 0, _("option `-t' requires an argument"));
+		      error (SORT_FAILURE, 0,
+			     _("option `-t' requires an argument"));
 		    break;
 		  case 'T':
 		    if (s[1])
@@ -1939,7 +1955,8 @@ but lacks following character offset"));
 			if (i < argc - 1)
 			  temp_file_prefix = argv[++i];
 			else
-			  error (2, 0, _("option `-T' requires an argument"));
+			  error (SORT_FAILURE, 0,
+				 _("option `-T' requires an argument"));
 		      }
 		    goto outer;
 		    /* break; */
@@ -1956,7 +1973,7 @@ but lacks following character offset"));
 		  default:
 		    fprintf (stderr, _("%s: unrecognized option `-%c'\n"),
 			     argv[0], *s);
-		    usage (2);
+		    usage (SORT_FAILURE);
 		  }
 		if (*s)
 		  ++s;
@@ -2001,7 +2018,11 @@ but lacks following character offset"));
     }
 
   if (checkonly)
-    exit (check (files, nfiles) != 0);
+    {
+      /* POSIX requires that sort return 1 IFF invoked with -c and the
+	 input is not properly sorted.  */
+      exit (check (files, nfiles) == 0 ? 0 : 1);
+    }
 
   if (strcmp (outfile, "-"))
     {
@@ -2032,7 +2053,7 @@ but lacks following character offset"));
 		    {
 		      error (0, errno, "%s", files[i]);
 		      cleanup ();
-		      exit (2);
+		      exit (SORT_FAILURE);
 		    }
 		  if (S_ISREG (instat.st_mode)
 		      && (instat.st_ino != outstat.st_ino
@@ -2052,7 +2073,7 @@ but lacks following character offset"));
 		{
 		  error (0, errno, "%s", files[i]);
 		  cleanup ();
-		  exit (2);
+		  exit (SORT_FAILURE);
 		}
 	      xfclose (ofp);
 	      xfclose (fp);
@@ -2076,12 +2097,12 @@ but lacks following character offset"));
      Solaris, Ultrix, and Irix.  This premature fflush makes the output
      reappear. --karl@cs.umb.edu  */
   if (fflush (ofp) < 0)
-    error (1, errno, _("%s: write error"), outfile);
+    error (SORT_FAILURE, errno, _("%s: write error"), outfile);
 
   if (have_read_stdin && fclose (stdin) == EOF)
-    error (1, errno, outfile);
+    error (SORT_FAILURE, errno, outfile);
   if (ferror (stdout) || fclose (stdout) == EOF)
-    error (1, errno, _("%s: write error"), outfile);
+    error (SORT_FAILURE, errno, _("%s: write error"), outfile);
 
-  exit (0);
+  exit (EXIT_SUCCESS);
 }
