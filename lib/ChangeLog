@@ -1,10 +1,15 @@
 2004-11-30  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* getcwd.c (is_ENAMETOOLONG): New macro.
+	(__getcwd.c): Don't restore errno; glibc doesn't.
+	[HAVE_PARTLY_WORKING_GETCWD && !defined AT_FDCWD]: Try system getcwd
+	first, falling back to our code only if its results look suspicious.
+	Ensure that the resulting buffer is only as large as necessary.
+
 	* readutmp.c: Include readutmp.h first.
 	Include <errno.h>, since readutmp.h no longer does that.
-	* readutmp.h: Don't include <sys/types.h>, <errno.h>,
+	* readutmp.h: Don't include <errno.h>,
 	<sys/param.h>, <time.h>; not needed to establish interface.
-	Include <stddef.h> instead.
 	(errno): Remove decl.
 	(HAVE_STRUCT_XTMP_UT_TYPE): Remove; no longer needed.
 	(UT_TYPE_EQ, UT_TYPE_NOT_DEFINED, UT_TYPE_BOOT_TIME,
