@@ -1,3 +1,10 @@
+1999-11-07  Paul Eggert  <eggert@set.twinsun.com>
+
+	* human.c (default_block_size): New function.
+	(humblock): Use it if no block size is specified.
+	(human_block_size): If the specified block size is zero, report an
+	error if report_errors is nonzero; otherwise use the default.
+
 1999-11-07  Jim Meyering  <meyering@ascend.com>
 
 	* src/dircolors.hin: Add several more TERM types.
