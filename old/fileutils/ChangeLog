@@ -1,6 +1,6 @@
 1998-02-01  Jim Meyering  <meyering@na-net.ornl.gov>
 
-	* POTFILES.in: Add remove.c
+	* POTFILES.in: Add remove.c.  Reported by Santiago Vila.
 
 1998-01-28  Jim Meyering  <meyering@na-net.ornl.gov>
 
