@@ -36,6 +36,9 @@ chgrp $g2 f || fail=1
 chgrp $g2 f2 || fail=1
 chgrp -R $g1 d || fail=1
 
+# Don't let verbose output interfere.
+test "$VERBOSE" = yes && set +x
+
 (
   chgrp -c $g1 f
   chgrp -c $g2 f
