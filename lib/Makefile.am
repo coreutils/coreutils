@@ -114,7 +114,7 @@ MAINTAINERCLEANFILES = $(BUILT_SOURCES)
 DISTCLEANFILES = lstat.c stat.c unlocked-io.h
 
 EXTRA_DIST = xstat.in config.charset ref-add.sin ref-del.sin gen-uio \
-  fnmatch_loop.c inttostr.c
+  fnmatch_loop.c inttostr.c inttostr.h
 
 lstat.c: xstat.in
 	sed \
