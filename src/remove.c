@@ -140,7 +140,11 @@ struct dirstack_state
   /* Used to detect cycles.  */
   struct cycle_check_state cycle_check_state;
 
-  /* Target of a longjmp in case rm detects a directory cycle.  */
+  /* Target of a longjmp in case rm has to stop processing the current
+     command-line argument.  This happens 1) when rm detects a directory
+     cycle or 2) when it has processed one or more directories, but then
+     is unable to return to the initial working directory to process
+     additional `.'-relative command-line arguments.  */
   jmp_buf current_arg_jumpbuf;
 };
 typedef struct dirstack_state Dirstack_state;
