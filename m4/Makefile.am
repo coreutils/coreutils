@@ -41,6 +41,7 @@ link-follow.m4 \
 ls-mntd-fs.m4 \
 lstat.m4 \
 malloc.m4 \
+mbrtowc.m4 \
 mbstate_t.m4 \
 mbswidth.m4 \
 memcmp.m4 \
