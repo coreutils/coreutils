@@ -5,6 +5,7 @@
 	`join -1 x' would give a misleading diagnostic
 	* src/join.c (string_to_join_field): Report that a non-numeric field
 	number is invalid, rather than `so large that it is not representable'.
+	* tests/join/Test.pm (invalid-j): New partial test for the above fix.
 
 2004-03-06  Jim Meyering  <jim@meyering.net>
 
