@@ -46,14 +46,13 @@
 # define LEAP_SECONDS_POSSIBLE 1
 #endif
 
-/* Some systems require <unistd.h> to be included before <time.h>
-   for localtime_r to be declared properly.  */
-#if HAVE_UNISTD_H
-# include <unistd.h>
-#endif
-
 #include <sys/types.h>		/* Some systems define `time_t' here.  */
 #include <time.h>
+
+/* Provide a declaration of localtime_r on systems that lack it.  */
+#if ! defined HAVE_DECL_LOCALTIME_R
+extern struct tm* localtime_r ();
+#endif
 
 #if HAVE_LIMITS_H
 # include <limits.h>
