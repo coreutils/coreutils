@@ -1,3 +1,8 @@
+Sat Sep 28 13:16:29 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/getversion.c (backup_types): Declare const.
+	(backup_args): Likewise.
+
 Sat Sep 21 10:22:28 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/dircolors.c (xstrndup): Use message that's the same as the one
