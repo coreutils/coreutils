@@ -610,10 +610,10 @@ Usage: %s [OPTION]... [FILE]...\n\
 	      program_name);
       printf ("\
 \n\
-  -b, --bytes LIST        output only these bytes\n\
-  -c, --characters LIST   output only these characters\n\
-  -d, --delimiter DELIM   use DELIM instead of TAB for field delimiter\n\
-  -f, --fields LIST       output only these fields\n\
+  -b, --bytes=LIST        output only these bytes\n\
+  -c, --characters=LIST   output only these characters\n\
+  -d, --delimiter=DELIM   use DELIM instead of TAB for field delimiter\n\
+  -f, --fields=LIST       output only these fields\n\
   -n                      (ignored)\n\
   -s, --only-delimited    do not print lines not containing delimiters\n\
       --help              display this help and exit\n\

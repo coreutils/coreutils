@@ -361,10 +361,10 @@ Usage: %s [OPTION]... [INPUT [OUTPUT]]\n\
 \n\
   -c, --count           prefix lines by the number of occurrences\n\
   -d, --repeated        only print duplicate lines\n\
-  -f, --skip-fields N   avoid comparing the N first fields\n\
-  -s, --skip-chars N    avoid comparing the N first characters\n\
+  -f, --skip-fields=N   avoid comparing the N first fields\n\
+  -s, --skip-chars=N    avoid comparing the N first characters\n\
   -u, --unique          only print unique lines\n\
-  -w, --check-chars N   compare no more then N characters in lines\n\
+  -w, --check-chars=N   compare no more then N characters in lines\n\
   -N                    same as -f N\n\
   +N                    same as -s N\n\
       --help            display this help and exit\n\

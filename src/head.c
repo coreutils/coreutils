@@ -410,8 +410,8 @@ Usage: %s [OPTION]... [FILE]...\n\
 	      program_name);
       printf ("\
 \n\
-  -c, --bytes SIZE         print first SIZE bytes\n\
-  -l, -n, --lines NUMBER   print first NUMBER lines instead of first 10\n\
+  -c, --bytes=SIZE         print first SIZE bytes\n\
+  -l, -n, --lines=NUMBER   print first NUMBER lines instead of first 10\n\
   -q, --quiet, --silent    never print headers giving file names\n\
   -v, --verbose            always print headers giving file names\n\
       --help               display this help and exit\n\

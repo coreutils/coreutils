@@ -1567,14 +1567,14 @@ Usage: %s [OPTION]... FILE PATTERN...\n\
 	      program_name);
       printf ("\
 \n\
-  -b, --suffix=FORMAT     use sprintf FORMAT instead of %%d\n\
-  -f, --prefix=PREFIX     use PREFIX instead of xx\n\
-  -k, --keep-files        do not remove output files on errors\n\
-  -n, --digits=DIGITS     use specified number of digits instead of 2\n\
-  -s, --quiet, --silent   do not print counts of output file sizes\n\
-  -z, --elide-empty-files   remove empty output files\n\
-      --help              display this help and exit\n\
-      --version           output version information and exit\n\
+  -b, --suffix=FORMAT        use sprintf FORMAT instead of %%d\n\
+  -f, --prefix=PREFIX        use PREFIX instead of xx\n\
+  -k, --keep-files           do not remove output files on errors\n\
+  -n, --digits=DIGITS        use specified number of digits instead of 2\n\
+  -s, --quiet, --silent      do not print counts of output file sizes\n\
+  -z, --elide-empty-files    remove empty output files\n\
+      --help                 display this help and exit\n\
+      --version              output version information and exit\n\
 \n\
 Read standard input if FILE is -.  Each PATTERN may be:\n\
 \n\

@@ -577,17 +577,17 @@ Usage: %s [OPTION]... [FILE]...\n\
 	      program_name);
       printf ("\
 \n\
-  -b, --body-numbering STYLE      use STYLE for numbering body lines\n\
-  -d, --section-delimiter CC      use CC for separating logical pages\n\
-  -f, --footer-numbering STYLE    use STYLE for numbering footer lines\n\
-  -h, --header-numbering STYLE    use STYLE for numbering header lines\n\
-  -i, --page-increment NUMBER     line number increment at each line\n\
-  -l, --join-blank-lines NUMBER   group of NUMBER empty lines counted as one\n\
-  -n, --number-format FORMAT      insert line numbers according to FORMAT\n\
+  -b, --body-numbering=STYLE      use STYLE for numbering body lines\n\
+  -d, --section-delimiter=CC      use CC for separating logical pages\n\
+  -f, --footer-numbering=STYLE    use STYLE for numbering footer lines\n\
+  -h, --header-numbering=STYLE    use STYLE for numbering header lines\n\
+  -i, --page-increment=NUMBER     line number increment at each line\n\
+  -l, --join-blank-lines=NUMBER   group of NUMBER empty lines counted as one\n\
+  -n, --number-format=FORMAT      insert line numbers according to FORMAT\n\
   -p, --no-renumber               do not reset line numbers at logical pages\n\
-  -s, --number-separator STRING   add STRING after (possible) line number\n\
-  -v, --first-page NUMBER         first line number on each logical page\n\
-  -w, --number-width NUMBER       use NUMBER columns for line numbers\n\
+  -s, --number-separator=STRING   add STRING after (possible) line number\n\
+  -v, --first-page=NUMBER         first line number on each logical page\n\
+  -w, --number-width=NUMBER       use NUMBER columns for line numbers\n\
       --help                      display this help and exit\n\
       --version                   output version information and exit\n\
 \n\

@@ -146,7 +146,7 @@ Usage: %s [OPTION]... [FILE]...\n\
 \n\
   -b, --before             attach the separator before instead of after\n\
   -r, --regex              intepret the separator as a regular expression\n\
-  -s, --separator STRING   use STRING as the separator instead of newline\n\
+  -s, --separator=STRING   use STRING as the separator instead of newline\n\
       --help               display this help and exit\n\
       --version            output version information and exit\n\
 \n\

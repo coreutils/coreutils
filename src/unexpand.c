@@ -461,8 +461,8 @@ Usage: %s [OPTION]... [FILE]...\n\
       printf ("\
 \n\
   -a, --all           convert all whitespace, instead of initial whitespace\n\
-  -t, --tabs NUMBER   have tabs NUMBER characters apart, not 8\n\
-  -t, --tabs LIST     use comma separated list of explicit tab positions\n\
+  -t, --tabs=NUMBER   have tabs NUMBER characters apart instead of 8\n\
+  -t, --tabs=LIST     use comma separated list of explicit tab positions\n\
       --help          display this help and exit\n\
       --version       output version information and exit\n\
 \n\

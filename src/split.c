@@ -112,9 +112,9 @@ Usage: %s [OPTION] [INPUT [PREFIX]]\n\
 	      program_name);
     printf ("\
 \n\
-  -C, --line-bytes SIZE   put at most SIZE bytes of lines per output file\n\
-  -b, --bytes SIZE        put SIZE bytes per output file\n\
-  -l, --lines NUMBER      put NUMBER lines per output file\n\
+  -C, --line-bytes=SIZE   put at most SIZE bytes of lines per output file\n\
+  -b, --bytes=SIZE        put SIZE bytes per output file\n\
+  -l, --lines=NUMBER      put NUMBER lines per output file\n\
   -NUMBER                 same as -l NUMBER\n\
       --help              display this help and exit\n\
       --version           output version information and exit\n\

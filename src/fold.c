@@ -89,7 +89,7 @@ Usage: %s [OPTION]... [FILE]...\n\
 \n\
   -b, --bytes         count bytes rather than columns\n\
   -s, --spaces        break at word boundaries\n\
-  -w, --width WIDTH   use WIDTH columns instead of 80\n\
+  -w, --width=WIDTH   use WIDTH columns instead of 80\n\
 ");
     }
   exit (status);

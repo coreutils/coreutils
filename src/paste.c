@@ -495,7 +495,7 @@ Usage: %s [OPTION]... [FILE]...\n\
 	      program_name);
       printf ("\
 \n\
-  -d, --delimiters LIST   reuse characters from LIST instead of TABs\n\
+  -d, --delimiters=LIST   reuse characters from LIST instead of TABs\n\
   -s, --serial            paste one file at a time instead of in parallel\n\
       --help              display this help and exit\n\
       --version           output version information and exit\n\

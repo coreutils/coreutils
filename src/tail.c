@@ -1028,9 +1028,9 @@ Usage: %s [OPTION]... [FILE]...\n\
 	      program_name);
       printf ("\
 \n\
-  -c, --bytes SIZE         print last SIZE bytes\n\
+  -c, --bytes=SIZE         print last SIZE bytes\n\
   -f, --follow             print files as they grow\n\
-  -l, -n, --lines NUMBER   print last NUMBER lines, instead of last 10\n\
+  -l, -n, --lines=NUMBER   print last NUMBER lines, instead of last 10\n\
   -q, --quiet, --silent    never print headers giving file names\n\
   -v, --verbose            always print headers giving file names\n\
       --help               display this help and exit\n\

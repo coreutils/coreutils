@@ -322,14 +322,14 @@ Usage: %s [OPTION]... [FILE]...\n\
 	      program_name, program_name);
       printf ("\
 \n\
-  -A, --address-radix RADIX   decide how file offsets are printed\n\
+  -A, --address-radix=RADIX   decide how file offsets are printed\n\
   -C, --backward-compatible   trigger older syntax\n\
-  -N, --read-bytes BYTES      limit dump to BYTES input bytes per file\n\
-  -j, --skip-bytes BYTES      skip BYTES input bytes first on each file\n\
-  -s, --strings [BYTES]       output strings of at least BYTES graphic chars\n\
-  -t, --format TYPE           select output format or formats\n\
+  -N, --read-bytes=BYTES      limit dump to BYTES input bytes per file\n\
+  -j, --skip-bytes=BYTES      skip BYTES input bytes first on each file\n\
+  -s, --strings[=BYTES]       output strings of at least BYTES graphic chars\n\
+  -t, --format=TYPE           select output format or formats\n\
   -v, --output-duplicates     do not use * to mark line suppression\n\
-  -w, --width [BYTES]         output BYTES bytes per output line\n\
+  -w, --width[=BYTES]         output BYTES bytes per output line\n\
       --help                  display this help and exit\n\
       --version               output version information and exit\n\
 \n\

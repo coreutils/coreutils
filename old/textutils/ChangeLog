@@ -1,5 +1,8 @@
 Sun Oct 24 00:31:02 1993  Jim Meyering  (meyering@comco.com)
 
+	* tail.c: Don't include <signal.h>.  It hasn't been necessary
+	since the Dec 12, 1992 change.
+
 	* join.c (main): Accept `-v 1' again.  First adding --version
 	long option had broken it, though -v1 still worked.  Call
 	parse_long_options instead of adding "help" and "version"
