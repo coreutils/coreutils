@@ -68,16 +68,22 @@ extern int errno;
 
 #include "xstrtol.h"
 
-#define BKM_SCALE(x, scale_factor, error_return)			\
-      do								\
-	{								\
-	  if ((x) > (double) __ZLONG_MAX / (scale_factor))		\
-	    return (error_return);					\
-	  (x) *= (scale_factor);					\
-	}								\
-      while (0)
-
 __unsigned long int __strtol ();
+
+static int
+bkm_scale (x, scale_factor)
+     __unsigned long int *x;
+     int scale_factor;
+{
+  /* The cast to `__unsigned long int' before the cast to double is
+     required to work around a bug in SunOS's /bin/cc.  */
+  if (*x > (double) ((__unsigned long int) __ZLONG_MAX) / scale_factor)
+    {
+      return 1;
+    }
+  *x *= scale_factor;
+  return 0;
+}
 
 /* FIXME: comment.  */
 
@@ -121,7 +127,8 @@ __xstrtol (s, ptr, base, val, valid_suffixes)
       switch (**p)
 	{
 	case 'b':
-	  BKM_SCALE (tmp, 512, LONGINT_OVERFLOW);
+	  if (bkm_scale (&tmp, 512))
+	    return LONGINT_OVERFLOW;
 	  ++(*p);
 	  break;
 
@@ -131,17 +138,20 @@ __xstrtol (s, ptr, base, val, valid_suffixes)
 
 	case 'B':
 	case 'k':
-	  BKM_SCALE (tmp, 1024, LONGINT_OVERFLOW);
+	  if (bkm_scale (&tmp, 1024))
+	    return LONGINT_OVERFLOW;
 	  ++(*p);
 	  break;
 
 	case 'm':
-	  BKM_SCALE (tmp, 1024 * 1024, LONGINT_OVERFLOW);
+	  if (bkm_scale (&tmp, 1024 * 1024))
+	    return LONGINT_OVERFLOW;
 	  ++(*p);
 	  break;
 
 	case 'w':
-	  BKM_SCALE (tmp, 2, LONGINT_OVERFLOW);
+	  if (bkm_scale (&tmp, 2))
+	    return LONGINT_OVERFLOW;
 	  ++(*p);
 	  break;
 
