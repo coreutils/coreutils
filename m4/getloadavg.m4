@@ -40,7 +40,7 @@ if test $ac_cv_func_getloadavg = yes; then
   AC_DEFINE(HAVE_GETLOADAVG)
   ac_have_func=yes
 else
-  AC_DEFINE(C_GETLOADAVG)
+  AC_DEFINE(C_GETLOADAVG, 1, [Define if using getloadavg.c.])
   # Figure out what our getloadavg.c needs.
   ac_have_func=no
   AC_CHECK_HEADER(sys/dg_sys_info.h,
