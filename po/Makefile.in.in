@@ -87,7 +87,7 @@ INSTOBJEXT = @INSTOBJEXT@
 
 all: all-@USE_NLS@
 
-all-yes all-gettext: cat-id-tbl.c $(CATALOGS)
+all-yes all-gettext: cat-id-tbl.c @MAINT@$(CATALOGS) $(GMOFILES)
 all-no:
 
 $(PACKAGE).pot: $(POTFILES)
@@ -181,8 +181,9 @@ maintainer-clean: distclean
 	@echo "This command is intended for maintainers to use;"
 	@echo "it deletes files that may require special tools to rebuild."
 
+.PHONY: distdir
 distdir = ../$(PACKAGE)-$(VERSION)/$(subdir)
-dist dist-gettext: update-po $(DISTFILES)
+distdir dist-gettext: update-po $(DISTFILES)
 	for file in $(DISTFILES); do \
 	  ln $(srcdir)/$$file $(distdir) 2> /dev/null \
 	    || cp -p $(srcdir)/$$file $(distdir); \
