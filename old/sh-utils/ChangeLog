@@ -1,3 +1,8 @@
+Wed Nov 20 20:37:54 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/xgethostname.c (xgethostname): Work around bug in SunOS5.5's
+	gethostname.  Reported by Fletcher Mattox.
+
 Tue Nov 19 23:01:01 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in (AM_SANITY_CHECK_CC): Remove it.  Autoconf-2.11
