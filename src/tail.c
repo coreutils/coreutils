@@ -38,7 +38,9 @@
 #include "human.h"
 #include "posixver.h"
 #include "safe-read.h"
+#include "xnanosleep.h"
 #include "xstrtol.h"
+#include "xstrtod.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "tail"
@@ -177,12 +179,6 @@ static unsigned long max_n_consecutive_size_changes_between_opens =
 /* The name this program was run with.  */
 char *program_name;
 
-/* The number of seconds to sleep between iterations.
-   During one iteration, every file name or descriptor is checked to
-   see if it has changed.  */
-/* FIXME: allow fractional seconds */
-static unsigned int sleep_interval = 1;
-
 /* The process ID of the process (presumably on the current host)
    that is writing to all followed files.  */
 static pid_t pid;
@@ -275,8 +271,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
      fputs (_("\
       --pid=PID            with -f, terminate after process ID, PID dies\n\
   -q, --quiet, --silent    never output headers giving file names\n\
-  -s, --sleep-interval=S   with -f, each iteration lasts approximately S\n\
-                           (default 1) seconds\n\
+  -s, --sleep-interval=S   with -f, sleep for approximately S seconds\n\
+                           (default 1.0) between iterations.\n\
   -v, --verbose            always output headers giving file names\n\
 "), stdout);
      fputs (HELP_OPTION_DESCRIPTION, stdout);
@@ -926,7 +922,7 @@ n_live_files (const struct File_spec *f, int n_files)
    while and try again.  Continue until the user interrupts us.  */
 
 static void
-tail_forever (struct File_spec *f, int nfiles)
+tail_forever (struct File_spec *f, int nfiles, double sleep_interval)
 {
   int last;
   int writer_is_dead = 0;
@@ -1023,7 +1019,9 @@ tail_forever (struct File_spec *f, int nfiles)
 	{
 	  if (writer_is_dead)
 	    break;
-	  sleep (sleep_interval);
+
+	  if (xnanosleep (sleep_interval))
+	    error (EXIT_FAILURE, errno, _("cannot read realtime clock"));
 
 	  /* Once the writer is dead, read the files once more to
 	     avoid a race condition.  */
@@ -1428,7 +1426,8 @@ option instead."), argv[1]);
 
 static void
 parse_options (int argc, char **argv,
-	       off_t *n_units, enum header_mode *header_mode)
+	       off_t *n_units, enum header_mode *header_mode,
+	       double *sleep_interval)
 {
   int c;
 
@@ -1537,15 +1536,11 @@ parse_options (int argc, char **argv,
 
 	case 's':
 	  {
-	    strtol_error s_err;
-	    unsigned long int tmp_ulong;
-	    s_err = xstrtoul (optarg, NULL, 10, &tmp_ulong, "");
-	    if (s_err != LONGINT_OK || tmp_ulong > UINT_MAX)
-	      {
-		error (EXIT_FAILURE, 0,
-		       _("%s: invalid number of seconds"), optarg);
-	      }
-	    sleep_interval = tmp_ulong;
+	    double s;
+	    if (xstrtod (optarg, NULL, &s) || ! (0 <= s))
+	      error (EXIT_FAILURE, 0,
+		     _("%s: invalid number of seconds"), optarg);
+	    *sleep_interval = s;
 	  }
 	  break;
 
@@ -1589,6 +1584,11 @@ main (int argc, char **argv)
   struct File_spec *F;
   int i;
 
+  /* The number of seconds to sleep between iterations.
+     During one iteration, every file name or descriptor is checked to
+     see if it has changed.  */
+  double sleep_interval = 1.0;
+
   program_name = argv[0];
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
@@ -1611,7 +1611,7 @@ main (int argc, char **argv)
       }
     else
       {
-	parse_options (argc, argv, &n_units, &header_mode);
+	parse_options (argc, argv, &n_units, &header_mode, &sleep_interval);
       }
   }
 
@@ -1652,7 +1652,7 @@ main (int argc, char **argv)
 	error (EXIT_FAILURE, errno, _("write error"));
 
       SETVBUF (stdout, NULL, _IONBF, 0);
-      tail_forever (F, n_files);
+      tail_forever (F, n_files, sleep_interval);
     }
 
   if (have_read_stdin && close (STDIN_FILENO) < 0)
