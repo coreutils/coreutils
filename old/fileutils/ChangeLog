@@ -1,10 +1,63 @@
-2002-01-19  Jim Meyering  <meyering@lucent.com>
+2002-01-21  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.6.
+
+	* src/chown-core.c: Don't include "xalloc.h", as system.h already
+	does that via sys2.h.
+	* src/ls.c: Likewise.
+	* src/shred.c: Likewise.
+
+2002-01-20  Paul Eggert  <eggert@twinsun.com>
+
+	* src/ls.c: Avoid undefined behavior when strcoll fails,
+	by resorting the directory with strcmp instead.
+
+	Include <setjmp.h>.
+	Include "quote.h".
+	(compare_atime, rev_cmp_atime, compare_ctime, rev_cmp_ctime,
+	compare_mtime, rev_cmp_mtime, compare_size, rev_comp_size,
+	compare_name, rev_cmp_name, compare_extension, rev_cmp_extension,
+	compare_version, rev_compare_version): Move before use, so that
+	we can remove the forward declaration.  Reimplement in terms of
+	the new functions described below, using xstrcoll instead of strcoll.
+	(failed_strcoll): New var.
+	(xstrcoll): New function.
+	(V): New type.
+	(cmp_ctime, compstr_ctime, rev_str_ctime): New functions.
+	(cmp_mtime, compstr_mtime, rev_str_mtime): Likewise.
+	(cmp_atime, compstr_atime, rev_str_atime): Likewise.
+	(cmp_size, compstr_size, rev_str_size): Likewise.
+	(cmp_version): Likewise.
+	(cmp_name, compstr_name, rev_str_name): Likewise.
+	(cmp_extension, compstr_extension, rev_str_extension): Likewise.
+	(sort_files): Use prototype for internal function var.
+	If the strcoll-based comparison fails, fall back on a strcmp-based one.
+
+2002-01-19  Jim Meyering  <meyering@lucent.com>
+
+	Ensure that the two version numbers in configure.ac remain in sync.
+	* Makefile.maint (local-check): Depend on ac-check.
+	(ac_p_pkg, AC_INIT_PKG): Define.
+	(ac_p_ver, AC_INIT_VER): Define.
+	(ac-check): New rule.
+
+2002-01-19  Jim Meyering  <meyering@lucent.com>
 
 	* configure.ac: Remove code that set LIBOBJS in support of ansi2knr.
 	The latest version of autoconf objected to it, and besides, I don't
 	care too much about K&R support these days.
+
+2002-01-15  Paul Eggert  <eggert@twinsun.com>
+
+	* src/shred.c (VERBOSE_UPDATE): Now counts seconds, not bytes.
+
+	(dopass): If verbose, output a line every VERBOSE_UPDATE seconds,
+	and suppress duplicate output lines.  Output a percentage as well
+	as a count of bytes.
+
+	Also, fix comment/code typo regarding how many bytes have been
+	written; this typo was harmless before, but is no longer harmless with
+	the above change in effect.
 
 2002-01-14  Paul Eggert  <eggert@twinsun.com>
 
