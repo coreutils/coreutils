@@ -26,8 +26,6 @@
 	  --no-preserve={mode,ownership,timestamps,links,all}
 	-p and --preserve remain unchanged and are equivalent to
 	  `--preserve=mode,ownership,timestamps'
-	Separate -d and --no-dereference options.  -d remains unchanged,
-	  but --no-dereference no longer implies --preserve=links
 
 	* src/cp.c (enum) [NO_DEREFERENCE_OPTION]: New member.
 	(enum) [NO_PRESERVE_ATTRIBUTES_OPTION]: New member.
