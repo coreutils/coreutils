@@ -1,7 +1,26 @@
+1999-05-02  Jim Meyering  <meyering@ascend.com>
+
+	* src/hostname.c (main): Give a better diagnostic when we fail to
+	set the hostname.
+
+	* man/Makefile.summ (hostid-summary): Use correct description.
+	Reported by Joseph S. Myers.
+
+	* lib/readutmp.c (read_utmp): Ignore the return value from utmpname.
+
+1999-04-30  Jim Meyering  <meyering@ascend.com>
+
+	* src/dirname.c (main): Manually handle `--', since we no longer
+	call getopt.  Reported by Joseph S. Myers.
+	* src/basename.c (main): Likewise.
+	* src/factor.c (main): Likewise.
+
 1999-04-25  Jim Meyering  <meyering@ascend.com>
 
 	* src/seq.c (main): Handle the case in which seq is given no args.
 	Reported by John Gotts.
+	(main): Revert last change.
+	Instead, loop on `optind < argc' to protect use of argv[optind].
 
 	* lib/human.c <inttypes.h>: Don't include it here.
 	* lib/human.h <inttypes.h>: Include it here instead.
