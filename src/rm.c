@@ -68,6 +68,7 @@
 
 #ifdef D_INO_IN_DIRENT
 # define D_INO(dp) ((dp)->d_ino)
+# define ENABLE_CYCLE_CHECK
 #else
 /* Some systems don't have inodes, so fake them to avoid lots of ifdefs.  */
 # define D_INO(dp) 1
@@ -187,7 +188,9 @@ static struct obstack len_stack;
    A directory specified on the command line has depth zero.
    This construct is used to detect directory cycles so that RM can warn
    about them rather than iterating endlessly.  */
+#ifdef ENABLE_CYCLE_CHECK
 static struct HT *active_dir_map;
+#endif
 
 /* An entry in the active_dir_map.  */
 struct active_dir_ent
@@ -829,6 +832,7 @@ rm (struct File_spec *fs, int user_specified_name)
       return RM_ERROR;
     }
 
+#ifdef ENABLE_CYCLE_CHECK
   if (S_ISDIR (filetype_mode))
     {
       int fail;
@@ -874,6 +878,7 @@ The following two directories have the same inode number:\n"));
 	  exit (1);
 	}
     }
+#endif
 
   if (!S_ISDIR (filetype_mode) || unlink_dirs)
     {
@@ -883,19 +888,24 @@ The following two directories have the same inode number:\n"));
     {
       int need_save_cwd = user_specified_name;
       enum RM_status status;
-      struct active_dir_ent tmp;
-      struct active_dir_ent *old_ent;
 
       if (need_save_cwd)
 	need_save_cwd = (strchr (fs->filename, '/') != NULL);
 
       status = remove_dir (fs, need_save_cwd);
 
-      /* Remove this directory from the active_dir_map.  */
-      tmp.inum = fs->inum;
-      old_ent = hash_delete_if_present (active_dir_map, &tmp);
-      assert (old_ent != NULL);
-      free (old_ent);
+#ifdef ENABLE_CYCLE_CHECK
+      {
+	struct active_dir_ent tmp;
+	struct active_dir_ent *old_ent;
+
+	/* Remove this directory from the active_dir_map.  */
+	tmp.inum = fs->inum;
+	old_ent = hash_delete_if_present (active_dir_map, &tmp);
+	assert (old_ent != NULL);
+	free (old_ent);
+      }
+#endif
 
       return status;
     }
@@ -970,9 +980,11 @@ main (int argc, char **argv)
   obstack_init (&dir_stack);
   obstack_init (&len_stack);
 
+#ifdef ENABLE_CYCLE_CHECK
   active_dir_map = hash_initialize (ACTIVE_DIR_INITIAL_CAPACITY, free,
 				    hash_active_dir_ent,
 				    hash_compare_active_dir_ents);
+#endif
 
   for (; optind < argc; optind++)
     {
@@ -989,7 +1001,9 @@ main (int argc, char **argv)
 	fail = 1;
     }
 
+#ifdef ENABLE_CYCLE_CHECK
   hash_free (active_dir_map);
+#endif
 
   exit (fail);
 }
