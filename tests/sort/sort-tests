@@ -1854,8 +1854,25 @@ else
   esac
 fi
 test -s nul-nls.E || rm -f nul-nls.E
+$xx  $srcdir/use-nl.I > use-nl.O 2> use-nl.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test use-nl failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp use-nl.O $srcdir/use-nl.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed use-nl"; fi ;;
+    1) $echo "Test use-nl failed: files use-nl.O and $srcdir/use-nl.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test use-nl may have failed." 1>&2;
+       $echo The command "cmp use-nl.O $srcdir/use-nl.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s use-nl.E || rm -f use-nl.E
 if test $errors = 0 ; then
-  $echo Passed all 108 tests. 1>&2
+  $echo Passed all 109 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi
