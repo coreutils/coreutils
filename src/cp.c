@@ -587,6 +587,7 @@ cp_option_init (struct cp_options *x)
   x->myeuid = geteuid ();
   x->one_file_system = 0;
   x->preserve = 0;
+  x->require_preserve = 0;
   x->recursive = 0;
   x->sparse_mode = SPARSE_AUTO;
   x->symbolic_link = 0;
@@ -647,6 +648,7 @@ main (int argc, char **argv)
 	case 'a':		/* Like -dpR. */
 	  x.dereference = 0;
 	  x.preserve = 1;
+	  x.require_preserve = 1;
 	  x.recursive = 1;
 	  x.copy_as_regular = 0;
 	  break;
@@ -675,6 +677,7 @@ main (int argc, char **argv)
 
 	case 'p':
 	  x.preserve = 1;
+	  x.require_preserve = 1;
 	  break;
 
 	case 'P':
