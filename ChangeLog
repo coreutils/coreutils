@@ -1,6 +1,11 @@
-2004-06-27  Paul Eggert  <eggert@cs.ucla.edu>
+2004-06-28  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	* src/cp.c (usage): Fix copy+paste error in description of
+	--target-directory: s/move/copy/.  From Paul Jarc.
+
+2004-06-27  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Use more-consistent rules among cp, ln, and mv when dealing with
 	last operands that are (or look like) directories.
