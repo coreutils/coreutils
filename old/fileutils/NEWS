@@ -1,5 +1,7 @@
 Changes in release 4.1:
 [4.0i]
+* touch works once again (DST-wise) when certain `--date DATE-TIME'
+  values are specified.
 * shred's -u option (short form of --remove) is now accepted
 [4.0h]
 * cp --one-file-system (-x) no longer crosses filesystem boundaries.
