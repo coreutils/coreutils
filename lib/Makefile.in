@@ -161,8 +161,8 @@ ftruncate.c getdate.c getgroups.c getline.c group-member.c lchown.c \
 lstat.c malloc.c memcmp.c memcpy.c memset.c mkdir.c mktime.c \
 mountlist.c obstack.c obstack.h realloc.c regex.c rename.c rmdir.c \
 rpmatch.c stat.c stpcpy.c strcasecmp.c strdup.c strftime.c \
-strncasecmp.c strndup.c strstr.c strtol.c strtoul.c strverscmp.c \
-utime.c
+strncasecmp.c strndup.c strstr.c strtol.c strtoul.c strtoull.c \
+strtoumax.c strverscmp.c utime.c
 
 
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -183,10 +183,10 @@ DEP_FILES =  .deps/addext.P .deps/alloca.P .deps/argmatch.P \
 .deps/safe-read.P .deps/save-cwd.P .deps/savedir.P .deps/stat.P \
 .deps/stpcpy.P .deps/strcasecmp.P .deps/strdup.P .deps/strftime.P \
 .deps/stripslash.P .deps/strncasecmp.P .deps/strndup.P .deps/strstr.P \
-.deps/strtol.P .deps/strtoul.P .deps/strverscmp.P .deps/userspec.P \
-.deps/utime.P .deps/version-etc.P .deps/xgetcwd.P .deps/xmalloc.P \
-.deps/xstrdup.P .deps/xstrtol.P .deps/xstrtoul.P .deps/xstrtoumax.P \
-.deps/yesno.P
+.deps/strtol.P .deps/strtoul.P .deps/strtoull.P .deps/strtoumax.P \
+.deps/strverscmp.P .deps/userspec.P .deps/utime.P .deps/version-etc.P \
+.deps/xgetcwd.P .deps/xmalloc.P .deps/xstrdup.P .deps/xstrtol.P \
+.deps/xstrtoul.P .deps/xstrtoumax.P .deps/yesno.P
 SOURCES = $(libfu_a_SOURCES)
 OBJECTS = $(am_libfu_a_OBJECTS)
 
@@ -401,6 +401,10 @@ strtol_.c: strtol.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/strtol.c; then echo $(srcdir)/strtol.c; else echo strtol.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > strtol_.c
 strtoul_.c: strtoul.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/strtoul.c; then echo $(srcdir)/strtoul.c; else echo strtoul.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > strtoul_.c
+strtoull_.c: strtoull.c $(ANSI2KNR)
+	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/strtoull.c; then echo $(srcdir)/strtoull.c; else echo strtoull.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > strtoull_.c
+strtoumax_.c: strtoumax.c $(ANSI2KNR)
+	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/strtoumax.c; then echo $(srcdir)/strtoumax.c; else echo strtoumax.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > strtoumax_.c
 strverscmp_.c: strverscmp.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/strverscmp.c; then echo $(srcdir)/strverscmp.c; else echo strverscmp.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > strverscmp_.c
 userspec_.c: userspec.c $(ANSI2KNR)
@@ -433,9 +437,9 @@ modechange_.o mountlist_.o obstack_.o path-concat_.o posixtm_.o \
 quotearg_.o realloc_.o regex_.o rename_.o rmdir_.o rpmatch_.o \
 safe-read_.o save-cwd_.o savedir_.o stat_.o stpcpy_.o strcasecmp_.o \
 strdup_.o strftime_.o stripslash_.o strncasecmp_.o strndup_.o strstr_.o \
-strtol_.o strtoul_.o strverscmp_.o userspec_.o utime_.o version-etc_.o \
-xgetcwd_.o xmalloc_.o xstrdup_.o xstrtol_.o xstrtoul_.o xstrtoumax_.o \
-yesno_.o : $(ANSI2KNR)
+strtol_.o strtoul_.o strtoull_.o strtoumax_.o strverscmp_.o userspec_.o \
+utime_.o version-etc_.o xgetcwd_.o xmalloc_.o xstrdup_.o xstrtol_.o \
+xstrtoul_.o xstrtoumax_.o yesno_.o : $(ANSI2KNR)
 .y.c:
 	$(YACC) $(AM_YFLAGS) $(YFLAGS) $< && mv y.tab.c $*.c
 	if test -f y.tab.h; then \
