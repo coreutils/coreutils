@@ -520,6 +520,8 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
 
       dir_dev = stat_buf.st_dev;
 
+      /* Return `0' here, not SIZE, since the SIZE bytes
+	 would reside in the new filesystem.  */
       if (opt_one_file_system && !top && last_dev != dir_dev)
 	return 0;		/* Don't enter a new file system.  */
 
@@ -553,7 +555,9 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
 	  if (cwd)
 	    free_cwd (cwd);
 	  exit_status = 1;
-	  return 0;
+	  /* Do return SIZE, here, since even though we can't chdir into ENT,
+	     we *can* count the blocks used by its directory entry.  */
+	  return opt_separate_dirs ? 0 : size;
 	}
 
       name_space = savedir (".", stat_buf.st_size);
@@ -562,7 +566,8 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
 	  error (0, errno, "%s", quote (path->text));
 	  pop_dir (cwd, path->text);
 	  exit_status = 1;
-	  return 0;
+	  /* Do count the SIZE bytes.  */
+	  return opt_separate_dirs ? 0 : size;
 	}
 
       /* Remember the current path.  */
