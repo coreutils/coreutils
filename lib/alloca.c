@@ -25,6 +25,13 @@
 # include <config.h>
 #endif
 
+#if HAVE_STRING_H
+# include <string.h>
+#endif
+#if HAVE_STDLIB_H
+# include <stdlib.h>
+#endif
+
 #ifdef emacs
 # include "blockinput.h"
 #endif
@@ -209,6 +216,9 @@ alloca (unsigned size)
   {
     register pointer new = malloc (sizeof (header) + size);
     /* Address of header.  */
+
+    if (new == 0)
+      abort();
 
     ((header *) new)->h.next = last_alloca_header;
     ((header *) new)->h.deep = depth;
