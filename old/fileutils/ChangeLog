@@ -10,7 +10,7 @@ Sat Jan 20 06:00:09 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 	(transform): Add `s/ginstall/install/;' prefix.
 
 	* lib/Makefile.am (BUILT_SOURCES): Set to posixtm.c getdate.c so
-	autodependencies work after `make distclean.'
+	autodependencies work after `make maintainer-clean.'
 
 Fri Dec 22 21:34:55 1995  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
