@@ -211,7 +211,8 @@ wc (fd, file)
 
      NOTE: using fstat and stats.st_size (and omitting the lseek calls)
      overcounts when the file is not positioned at the beginning.
-     For example the command `(dd skip=9999; wc -c) < /etc/group'
+     For example the command
+     `(dd ibs=99k skip=1 count=0; ./wc -c) < /etc/group'
      should make wc report `0' bytes.  */
 
   if (print_chars && !print_words && !print_lines)
