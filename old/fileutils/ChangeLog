@@ -4,7 +4,7 @@ Sat May  4 20:54:32 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 	* backupfile.c [IN_CTYPE_DOMAIN]: Rename from ISASCII.
 
 	* dircolors.c: Make enumerated constants upper case.
-	(main): Don't rely on ANSI-style string concatenation.
+	(main): Don't use ANSI-style string concatenation.
 	Add `static' and/or `const' to some file scope variables.
 
 Wed May  1 00:20:00 1996  Jim Meyering  (meyering@na-net.ornl.gov)
