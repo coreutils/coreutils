@@ -1,5 +1,9 @@
 Thu Jul 25 23:06:35 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/unexpand.c (unexpand): Move EOF check to follow code that
+	processes and generates output for pending spaces.  Before
+	`printf '  ' |unexpand -t 1,2' generated no output.
+
 	* src/md5sum.c (md5_check): Remove parameter, BINARY.
 	Rename local TYPE_FLAG to BINARY, so md5_file uses the binary mode
 	from the input stream rather than the one from the command line.
