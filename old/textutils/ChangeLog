@@ -2,6 +2,9 @@
 
 	* Version 2.0.16.
 
+	* src/Makefile.am (sort_DEPENDENCIES): Remove definition altogether.
+	It adds nothing to the existing: $(PROGRAMS): ../lib/libfetish.a.
+
 2001-09-24  Paul Eggert  <eggert@twinsun.com>
 
 	* src/Makefile.am (sort_DEPENDENCIES): Depend only on
