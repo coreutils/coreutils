@@ -367,7 +367,8 @@ copy_reg (const char *src_path, const char *dst_path,
 	}
       if (ip == 0)
 	{
-	  if (full_write (dest_desc, buf, n_read) != n_read)
+	  size_t n = n_read;
+	  if (full_write (dest_desc, buf, n) != n)
 	    {
 	      error (0, errno, _("writing %s"), quote (dst_path));
 	      return_val = -1;
@@ -1415,7 +1416,7 @@ copy_internal (const char *src_path, const char *dst_path,
 	      char *dest_link_val = (char *) alloca (src_link_len + 1);
 	      int dest_link_len = readlink (dst_path, dest_link_val,
 					    src_link_len + 1);
-	      if (dest_link_len == src_link_len
+	      if ((size_t) dest_link_len == src_link_len
 		  && strncmp (dest_link_val, src_link_val, src_link_len) == 0)
 		same_link = 1;
 	    }
