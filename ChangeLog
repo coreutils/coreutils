@@ -1,6 +1,75 @@
 2004-06-20  Jim Meyering  <jim@meyering.net>
 
+	* src/dd.c (input_seek_errno): Declare file-scoped variable as static.
+
+2004-06-20  Paul Eggert  <eggert@cs.ucla.edu>
+
 	* Version 5.3.0.
+
+	* src/basename.c (main):
+	Standardize on the diagnostics given when someone gives
+	too few operands ("missing operand after `xxx'") or
+	too many operands ("extra operand `xxx'").
+	Include "quote.h" and/or "error.h" if it wasn't already being included.
+	* src/chgrp.c (main): Likewise.
+	* src/chmod.c (main): Likewise.
+	* src/chown.c (main): Likewise.
+	* src/chroot.c (main): Likewise.
+	* src/comm.c (main): Likewise.
+	* src/cp.c (do_copy): Likewise.
+	* src/csplit.c (main): Likewise.
+	* src/date.c (main): Likewise.
+	* src/dircolors.c (main): Likewise.
+	* src/dirname.c (main): Likewise.
+	* src/du.c (main): Likewise.
+	* src/expr.c (main): Likewise.
+	* src/hostid.c (main): Likewise.
+	* src/hostname.c (main): Likewise.
+	* src/id.c (main): Likewise.
+	* src/install.c (main): Likewise.
+	* src/join.c (add_file_name, main): Likewise.
+	* src/link.c (main): Likewise.
+	* src/ln.c (main): Likewise.
+	* src/logname.c (main): Likewise.
+	* src/md5sum.c (main): Likewise.
+	* src/mkdir.c (main): Likewise.
+	* src/mkfifo.c (main): Likewise.
+	* src/mknod.c (main): Likewise.
+	* src/mv.c (main): Likewise.
+	* src/nohup.c (main): Likewise.
+	* src/od.c (main): Likewise.
+	* src/pathchk.c (main): Likewise.
+	* src/ptx.c (main): Likewise.
+	* src/readlink.c (main): Likewise.
+	* src/rm.c (main): Likewise.
+	* src/rmdir.c (main): Likewise.
+	* src/seq.c (main): Likewise.
+	* src/setuidgid.c (main): Likewise.
+	* src/shred.c (main): Likewise.
+	* src/sleep.c (main): Likewise.
+	* src/sort.c (main): Likewise.
+	* src/split.c (main): Likewise.
+	* src/stat.c (main): Likewise.
+	* src/test.c (beyond, main): Likewise.
+	* src/touch.c (main): Likewise.
+	* src/tr.c (main): Likewise.
+	* src/tsort.c (main): Likewise.
+	* src/tty.c (main): Likewise.
+	* src/uname.c (main): Likewise.
+	* src/uniq.c (main): Likewise.
+	* src/unlink.c (main): Likewise.
+	* src/uptime.c (main): Likewise.
+	* src/users.c (main): Likewise.
+	* src/who.c (main): Likewise.
+	* src/whoami.c (main): Likewise.
+
+	* tests/basename/basic: Adjust to new diagnostics.
+	* tests/du/files0-from: Likewise.
+	* tests/expr/basic: Likewise.
+	* tests/mv/diag: Likewise.
+	* tests/tsort/basic-1: Likewise.
+
+2004-06-20  Jim Meyering  <jim@meyering.net>
 
 	* src/ln.c: Remove declaration of yesno.
 	Instead, include yesno.h.
