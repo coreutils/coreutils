@@ -1,5 +1,5 @@
 /* env - run a program in a modified environment
-   Copyright (C) 1986, 1991-1999 Free Software Foundation, Inc.
+   Copyright (C) 1986, 1991-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -85,6 +85,7 @@
 
 #include "system.h"
 #include "error.h"
+#include "closeout.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "env"
@@ -144,6 +145,8 @@ main (register int argc, register char **argv, char **envp)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+
+  atexit (close_stdout);
 
   while ((optc = getopt_long (argc, argv, "+iu:", longopts, NULL)) != -1)
     {
