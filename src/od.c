@@ -77,6 +77,8 @@ enum size_spec
     SHORT,
     INT,
     LONG,
+    LONG_LONG,
+    /* FIXME: add INTMAX support, too */
     FLOAT_SINGLE,
     FLOAT_DOUBLE,
     FLOAT_LONG_DOUBLE
@@ -229,7 +231,11 @@ static FILE *in_stream;
 /* If nonzero, at least one of the files we read was standard input.  */
 static int have_read_stdin;
 
-#define LONGEST_INTEGRAL_TYPE long int
+#ifdef HAVE_UNSIGNED_LONG_LONG
+# define LONGEST_INTEGRAL_TYPE unsigned long long
+#else
+# define LONGEST_INTEGRAL_TYPE long int
+#endif
 
 #define MAX_INTEGRAL_TYPE_SIZE sizeof(LONGEST_INTEGRAL_TYPE)
 static enum size_spec integral_type_size[MAX_INTEGRAL_TYPE_SIZE + 1];
@@ -440,6 +446,21 @@ print_long (long unsigned int n_bytes, const char *block,
       block += sizeof (unsigned long);
     }
 }
+
+#ifdef HAVE_UNSIGNED_LONG_LONG
+static void
+print_long_long (long unsigned int n_bytes, const char *block,
+		 const char *fmt_string)
+{
+  int i;
+  for (i = n_bytes / sizeof (unsigned long long); i > 0; i--)
+    {
+      unsigned long long tmp = *(const unsigned long long *) block;
+      printf (fmt_string, tmp);
+      block += sizeof (unsigned long long);
+    }
+}
+#endif
 
 static void
 print_float (long unsigned int n_bytes, const char *block,
@@ -704,7 +725,9 @@ this system doesn't provide a %lu-byte integral type"), s_orig, size);
 	  fmt = SIGNED_DECIMAL;
 	  sprintf (fmt_string, " %%%u%sd",
 		   (field_width = bytes_to_signed_dec_digits[size]),
-		   (size_spec == LONG ? "l" : ""));
+		   (size_spec == LONG ? "l"
+		    : (size_spec == LONG_LONG ? "ll"
+		       : "")));
 	  break;
 
 	case 'o':
@@ -754,6 +777,10 @@ this system doesn't provide a %lu-byte integral type"), s_orig, size);
 
 	case LONG:
 	  print_function = print_long;
+	  break;
+
+	case LONG_LONG:
+	  print_function = print_long_long;
 	  break;
 
 	default:
@@ -1596,6 +1623,9 @@ main (int argc, char **argv)
   integral_type_size[sizeof (short int)] = SHORT;
   integral_type_size[sizeof (int)] = INT;
   integral_type_size[sizeof (long int)] = LONG;
+#ifdef HAVE_UNSIGNED_LONG_LONG
+  integral_type_size[sizeof (long long)] = LONG_LONG;
+#endif
 
   for (i = 0; i <= MAX_FP_TYPE_SIZE; i++)
     fp_type_size[i] = NO_SIZE;
