@@ -6,6 +6,7 @@
 #include <stdio.h>
 
 #include "cp.h"
+#include "copy.h"
 #include "backupfile.h"
 
 /* On Linux (from slackware-1.2.13 to 2.0.2?) there is no lchown function.
@@ -96,10 +97,6 @@ struct flag
      whether dereferencing of symlinks is done.  */
   int (*xstat) ();
 };
-
-static int copy __P ((const char *src_path, const char *dst_path,
-		      int new_dst, dev_t device,
-		      struct dir_list *ancestors, struct flag *x));
 
 int full_write ();
 int euidaccess ();
@@ -352,7 +349,7 @@ ret2:
    devices and inodes of parent directories of SRC_PATH.
    Return 0 if successful, 1 if an error occurs. */
 
-static int
+int
 copy (const char *src_path, const char *dst_path, int new_dst, dev_t device,
       struct dir_list *ancestors, struct flag *x)
 {
