@@ -39,11 +39,11 @@ extern int errno;
 #if HAVE_GETCWD
 char *getcwd ();
 #else
+# include "pathmax.h"
+# define INITIAL_BUFFER_SIZE (PATH_MAX + 1)
 char *getwd ();
 # define getcwd(Buf, Max) getwd (Buf)
 #endif
-
-#include "xalloc.h"
 
 /* Return the current directory, newly allocated, arbitrarily long.
    Return NULL and set errno on error. */
@@ -54,26 +54,35 @@ xgetcwd ()
 #if HAVE_GETCWD_NULL
   return getcwd (NULL, 0);
 #else
-  size_t buf_size = 128;  /* must be a power of 2 */
-  char *buf = NULL;
+
+  /* The initial buffer size for the working directory.  A power of 2
+     detects arithmetic overflow earlier, but is not required.  */
+# ifndef INITIAL_BUFFER_SIZE
+#  define INITIAL_BUFFER_SIZE 128
+# endif
+
+  size_t buf_size = INITIAL_BUFFER_SIZE;
 
   while (1)
     {
       char *cwd;
-      buf = (char *) xrealloc (buf, buf_size);
-
+      int saved_errno;
+      char *buf = malloc (buf_size);
+      if (! buf)
+	return NULL;
       cwd = getcwd (buf, buf_size);
-      if (cwd != NULL)
+      if (cwd)
 	return cwd;
-      if (errno != ERANGE)
-	{
-	  free (buf);
-	  return NULL;
-	}
-
+      saved_errno = errno;
+      free (buf);
+      if (saved_errno != ERANGE)
+	return NULL;
       buf_size *= 2;
       if (buf_size == 0)
-	xalloc_die ();
+	{
+	  errno = ENOMEM;
+	  return NULL;
+	}
     }
 #endif
 }
