@@ -1,5 +1,5 @@
 /* fsusage.c -- return space usage of mounted filesystems
-   Copyright (C) 1991, 1992, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1992, 1996, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -65,6 +65,12 @@ int statfs ();
 int statvfs ();
 #endif
 
+/* Many space usage primitives use all 1 bits to denote a value that is
+   not applicable or unknown.  Propagate this information by returning
+   a uintmax_t value that is all 1 bits if the argument is all 1 bits,
+   even if the argument is unsigned and smaller than unitmax_t.  */
+#define PROPAGATE_ALL_ONES(x) ((x) == -1 ? (uintmax_t) -1 : (uintmax_t) (x))
+
 int safe_read ();
 
 /* Fill in the fields of FSP with information about space usage for
@@ -87,7 +93,7 @@ get_fs_usage (path, disk, fsp)
   if (statfs (path, &fsd, sizeof (struct statfs)) != 0)
     return -1;
 
-  fsp->fsu_blocksize = fsd.f_fsize;
+  fsp->fsu_blocksize = PROPAGATE_ALL_ONES (fsd.f_fsize);
 
 #endif /* STAT_STATFS3_OSF1 */
 
@@ -99,11 +105,11 @@ get_fs_usage (path, disk, fsp)
     return -1;
 
   fsp->fsu_blocksize = 1024;
-  fsp->fsu_blocks = fsd.fd_req.btot;
-  fsp->fsu_bfree = fsd.fd_req.bfree;
-  fsp->fsu_bavail = fsd.fd_req.bfreen;
-  fsp->fsu_files = fsd.fd_req.gtot;
-  fsp->fsu_ffree = fsd.fd_req.gfree;
+  fsp->fsu_blocks = PROPAGATE_ALL_ONES (fsd.fd_req.btot);
+  fsp->fsu_bfree = PROPAGATE_ALL_ONES (fsd.fd_req.bfree);
+  fsp->fsu_bavail = PROPAGATE_ALL_ONES (fsd.fd_req.bfreen);
+  fsp->fsu_files = PROPAGATE_ALL_ONES (fsd.fd_req.gtot);
+  fsp->fsu_ffree = PROPAGATE_ALL_ONES (fsd.fd_req.gfree);
 
 #endif /* STAT_STATFS2_FS_DATA */
 
@@ -133,11 +139,13 @@ get_fs_usage (path, disk, fsp)
   close (fd);
 
   fsp->fsu_blocksize = fsd.s_type == Fs2b ? 1024 : 512;
-  fsp->fsu_blocks = fsd.s_fsize;
-  fsp->fsu_bfree = fsd.s_tfree;
-  fsp->fsu_bavail = fsd.s_tfree;
-  fsp->fsu_files = (fsd.s_isize - 2) * INOPB * (fsd.s_type == Fs2b ? 2 : 1);
-  fsp->fsu_ffree = fsd.s_tinode;
+  fsp->fsu_blocks = PROPAGATE_ALL_ONES (fsd.s_fsize);
+  fsp->fsu_bfree = PROPAGATE_ALL_ONES (fsd.s_tfree);
+  fsp->fsu_bavail = PROPAGATE_ALL_ONES (fsd.s_tfree);
+  fsp->fsu_files = (fsd.s_isize == -1
+		    ? (uintmax_t) -1
+		    : (fsd.s_isize - 2) * INOPB * (fsd.s_type == Fs2b ? 2 : 1));
+  fsp->fsu_ffree = PROPAGATE_ALL_ONES (fsd.s_tinode);
 
 #endif /* STAT_READ_FILSYS */
 
@@ -148,7 +156,7 @@ get_fs_usage (path, disk, fsp)
   if (statfs (path, &fsd) < 0)
     return -1;
 
-  fsp->fsu_blocksize = fsd.f_bsize;
+  fsp->fsu_blocksize = PROPAGATE_ALL_ONES (fsd.f_bsize);
 
 # ifdef STATFS_TRUNCATES_BLOCK_COUNTS
 
@@ -174,7 +182,7 @@ get_fs_usage (path, disk, fsp)
   if (statfs (path, &fsd) < 0)
     return -1;
 
-  fsp->fsu_blocksize = fsd.f_fsize;
+  fsp->fsu_blocksize = PROPAGATE_ALL_ONES (fsd.f_fsize);
 
 #endif /* STAT_STATFS2_FSIZE */
 
@@ -193,7 +201,7 @@ get_fs_usage (path, disk, fsp)
      systems seem to always be in terms of 512-byte blocks,
      no matter what value f_bsize has.  */
 # if _AIX || defined(_CRAY)
-   fsp->fsu_blocksize = fsd.f_bsize;
+   fsp->fsu_blocksize = PROPAGATE_ALL_ONES (fsd.f_bsize);
 # else
    fsp->fsu_blocksize = 512;
 # endif
@@ -208,18 +216,19 @@ get_fs_usage (path, disk, fsp)
     return -1;
 
   /* f_frsize isn't guaranteed to be supported.  */
-  fsp->fsu_blocksize = fsd.f_frsize ? fsd.f_frsize : fsd.f_bsize;
+  fsp->fsu_blocksize =
+    PROPAGATE_ALL_ONES (fsd.f_frsize ? fsd.f_frsize : fsd.f_bsize);
 
 #endif /* STAT_STATVFS */
 
 #if !defined(STAT_STATFS2_FS_DATA) && !defined(STAT_READ_FILSYS)
 				/* !Ultrix && !SVR2 */
 
-  fsp->fsu_blocks = fsd.f_blocks;
-  fsp->fsu_bfree = fsd.f_bfree;
-  fsp->fsu_bavail = fsd.f_bavail;
-  fsp->fsu_files = fsd.f_files;
-  fsp->fsu_ffree = fsd.f_ffree;
+  fsp->fsu_blocks = PROPAGATE_ALL_ONES (fsd.f_blocks);
+  fsp->fsu_bfree = PROPAGATE_ALL_ONES (fsd.f_bfree);
+  fsp->fsu_bavail = PROPAGATE_ALL_ONES (fsd.f_bavail);
+  fsp->fsu_files = PROPAGATE_ALL_ONES (fsd.f_files);
+  fsp->fsu_ffree = PROPAGATE_ALL_ONES (fsd.f_ffree);
 
 #endif /* not STAT_STATFS2_FS_DATA && not STAT_READ_FILSYS */
 
