@@ -5,26 +5,26 @@
 	Remove declarations of show_help and show_version.
 	(main): Use parse_long_options, including author name(s).
 	Remove the show_version and show_help blocks.
-	* cksum.c: Likewise.
-	* comm.c: Likewise.
-	* csplit.c: Likewise.
-	* cut.c: Likewise.
-	* expand.c: Likewise.
-	* fmt.c: Likewise.
-	* fold.c: Likewise.
-	* head.c: Likewise.
-	* nl.c: Likewise.
-	* od.c: Likewise.
-	* paste.c: Likewise.
-	* pr.c: Likewise.
-	* split.c: Likewise.
-	* sum.c: Likewise.
-	* tac.c: Likewise.
-	* tail.c: Likewise.
-	* tr.c: Likewise.
-	* unexpand.c: Likewise.
-	* uniq.c: Likewise.
-	* wc.c: Likewise.
+	* src/cksum.c: Likewise.
+	* src/comm.c: Likewise.
+	* src/csplit.c: Likewise.
+	* src/cut.c: Likewise.
+	* src/expand.c: Likewise.
+	* src/fmt.c: Likewise.
+	* src/fold.c: Likewise.
+	* src/head.c: Likewise.
+	* src/nl.c: Likewise.
+	* src/od.c: Likewise.
+	* src/paste.c: Likewise.
+	* src/pr.c: Likewise.
+	* src/split.c: Likewise.
+	* src/sum.c: Likewise.
+	* src/tac.c: Likewise.
+	* src/tail.c: Likewise.
+	* src/tr.c: Likewise.
+	* src/unexpand.c: Likewise.
+	* src/uniq.c: Likewise.
+	* src/wc.c: Likewise.
 
 	* src/ptx.c: Include long-options.h
 	[long_options]: Remove the "help" and "version" entries.
