@@ -1,5 +1,5 @@
 /* stty -- change and print terminal line settings
-   Copyright (C) 90,91,92,93,94,95,96,1997 Free Software Foundation, Inc.
+   Copyright (C) 90,91,92,93,94,95,96,97,1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -659,26 +659,26 @@ settings, CHAR is taken literally, or coded as in ^c, 0x37, 0177 or\n\
   exit (status);
 }
 
-/*
- * Return 1 if the string only contains valid options
- */
-int valid_options(char *opt, const char *valid_opts,
-		  const char *valid_arg_opts)
+/* Return 1 if the string only contains valid options.  */
+int
+valid_options (char *opt, const char *valid_opts,
+	       const char *valid_arg_opts)
 {
-	char ch;
-	
-	if (*opt++ != '-')
-		return 0;
+  char ch;
 
-	while (ch = *opt) {
-		opt++;
-		if (strchr(valid_opts, ch))
-			continue;
-		if (strchr(valid_arg_opts, ch))
-			return 1;
-		return 0;
-	}
+  if (*opt++ != '-')
+    return 0;
+
+  while (ch = *opt)
+    {
+      opt++;
+      if (strchr (valid_opts, ch))
+	continue;
+      if (strchr (valid_arg_opts, ch))
 	return 1;
+      return 0;
+    }
+  return 1;
 }
 
 
@@ -695,7 +695,7 @@ main (int argc, char **argv)
   int k;
   int noargs = 1;
   char *file_name = NULL, *cp;
-  int fd, fdflags;
+  int fd;
   const char *device_name;
   const char *posixly_correct = getenv("POSIXLY_CORRECT");
 
@@ -726,9 +726,9 @@ main (int argc, char **argv)
 	  output_type = recoverable;
 	  break;
 
-	case 'f':
+	case 'F':
 	  if (file_name)
-	    error(2, 0, _("Only one device can be specified.\n"));
+	    error (2, 0, _("only one device may be specified"));
 	  file_name = optarg;
 	  break;
 
@@ -747,12 +747,12 @@ main (int argc, char **argv)
    * just fixed the existing code so that it worked correctly in all
    * cases of --, POSIXLY_CORRECT, etc.  [tytso:19980401.1316EST])
    */
-  for (k = 1; k < argc; k++) 
+  for (k = 1; k < argc; k++)
     {
       if (!argv[k])
 	continue;
       /* Handle --, and set noargs if there are arguments following it */
-      if (!strcmp(argv[k], "--"))
+      if (STREQ (argv[k], "--"))
 	{
 	  argv[k] = 0;
 	  if (k < argc-1)
@@ -760,45 +760,31 @@ main (int argc, char **argv)
 	  break;
     	}
       /* Handle "--file device" */
-      if (!strcmp(argv[k], "--file"))
+      if (STREQ (argv[k], "--file"))
 	{
 	  argv[k+1] = 0;
 	  argv[k] = 0;
     	}
       /* Handle "--all", "--save", and "--file=device" */
-      else if (!strcmp(argv[k], "--all") ||
-	       !strcmp(argv[k], "--save") ||
+      else if (STREQ (argv[k], "--all") ||
+	       STREQ (argv[k], "--save") ||
 	       !strncmp(argv[k], "--file=", 7))
 	argv[k] = 0;
       /* Handle "-a", "-ag", "-aF/dev/foo", "-aF /dev/foo", etc. */
       else if (valid_options(argv[k], "ag", "F"))
 	{
-	  if (!strcmp(argv[k], "-file") ||
-	      argv[k][strlen(argv[k])-1] == 'F')
+	  if (STREQ (argv[k], "-file") || argv[k][strlen(argv[k])-1] == 'F')
 	    argv[k+1] = 0;
 	  argv[k] = 0;
         }
       /* Everything else must be a normal, non-option argument. */
       else
 	{
-	noargs = 0;
-	if (posixly_correct)
-	  break;
+	  noargs = 0;
+	  if (posixly_correct)
+	    break;
         }
     }
-
-#if 0
-  /* For debugging purposes, print out the argument */
-  for (k=1; k < argc; k++) {
-	if (argv[k])
-		printf("arg: %s\n", argv[k]);
-	else
-		printf("arg: none\n");
-  }
-  printf("File_name = %s\n", file_name ? file_name : "NONE");
-  printf("noargs = %d\n", noargs);
-#endif
-
 
   /* Specifying both -a and -g gets an error.  */
   if (verbose_output && recoverable_output)
@@ -812,19 +798,22 @@ mutually exclusive"));
 
   if (file_name)
     {
+      int fdflags;
       device_name = file_name;
-      fd = open(device_name, O_RDONLY|O_NONBLOCK);
+      fd = open (device_name, O_RDONLY|O_NONBLOCK);
       if (fd < 0)
-	error(1, errno, device_name);
-      if ((fdflags = fcntl(fd, F_GETFL)) == -1
-	  || fcntl(fd, F_SETFL, fdflags & ~O_NONBLOCK) < 0)
-	error(1, errno, _("couldn't reset non-blocking mode"));
-    } else
+	error (1, errno, device_name);
+      if ((fdflags = fcntl (fd, F_GETFL)) == -1
+	  || fcntl (fd, F_SETFL, fdflags & ~O_NONBLOCK) < 0)
+	error (1, errno, _("%s: couldn't reset non-blocking mode"),
+	       device_name);
+    }
+  else
     {
       fd = 0;
       device_name = _("standard input");
     }
-  
+
   /* Initialize to all zeroes so there is no risk memcmp will report a
      spurious difference in an uninitialized portion of the structure.  */
   memset (&mode, 0, sizeof (mode));
@@ -848,10 +837,11 @@ mutually exclusive"));
       int reversed = 0;
       int i;
 
-      if (argv[k] == 0) {
-	 k++;
-         continue;
-      }
+      if (argv[k] == 0)
+	{
+	  k++;
+	  continue;
+	}
 
       if (argv[k][0] == '-')
 	{
@@ -860,7 +850,7 @@ mutually exclusive"));
 	}
       for (i = 0; mode_info[i].name != NULL; ++i)
 	{
-	  if (!strcmp (argv[k], mode_info[i].name))
+	  if (STREQ (argv[k], mode_info[i].name))
 	    {
 	      match_found = set_mode (&mode_info[i], reversed, &mode);
 	      require_set_attr = 1;
@@ -876,7 +866,7 @@ mutually exclusive"));
 	{
 	  for (i = 0; control_info[i].name != NULL; ++i)
 	    {
-	      if (!strcmp (argv[k], control_info[i].name))
+	      if (STREQ (argv[k], control_info[i].name))
 		{
 		  if (k == argc - 1)
 		    {
@@ -893,7 +883,7 @@ mutually exclusive"));
 	}
       if (match_found == 0)
 	{
-	  if (!strcmp (argv[k], "ispeed"))
+	  if (STREQ (argv[k], "ispeed"))
 	    {
 	      if (k == argc - 1)
 		{
@@ -905,7 +895,7 @@ mutually exclusive"));
 	      speed_was_set = 1;
 	      require_set_attr = 1;
 	    }
-	  else if (!strcmp (argv[k], "ospeed"))
+	  else if (STREQ (argv[k], "ospeed"))
 	    {
 	      if (k == argc - 1)
 		{
@@ -918,7 +908,7 @@ mutually exclusive"));
 	      require_set_attr = 1;
 	    }
 #ifdef TIOCGWINSZ
-	  else if (!strcmp (argv[k], "rows"))
+	  else if (STREQ (argv[k], "rows"))
 	    {
 	      if (k == argc - 1)
 		{
@@ -929,8 +919,8 @@ mutually exclusive"));
 	      set_window_size ((int) integer_arg (argv[k]), -1,
 			       fd, device_name);
 	    }
-	  else if (!strcmp (argv[k], "cols")
-		   || !strcmp (argv[k], "columns"))
+	  else if (STREQ (argv[k], "cols")
+		   || STREQ (argv[k], "columns"))
 	    {
 	      if (k == argc - 1)
 		{
@@ -941,7 +931,7 @@ mutually exclusive"));
 	      set_window_size (-1, (int) integer_arg (argv[k]),
 			       fd, device_name);
 	    }
-	  else if (!strcmp (argv[k], "size"))
+	  else if (STREQ (argv[k], "size"))
 	    {
 	      max_col = screen_columns ();
 	      current_col = 0;
@@ -949,7 +939,7 @@ mutually exclusive"));
 	    }
 #endif
 #ifdef HAVE_C_LINE
-	  else if (!strcmp (argv[k], "line"))
+	  else if (STREQ (argv[k], "line"))
 	    {
 	      if (k == argc - 1)
 		{
@@ -961,7 +951,7 @@ mutually exclusive"));
 	      require_set_attr = 1;
 	    }
 #endif
-	  else if (!strcmp (argv[k], "speed"))
+	  else if (STREQ (argv[k], "speed"))
 	    {
 	      max_col = screen_columns ();
 	      display_speed (&mode, 0);
@@ -1016,7 +1006,7 @@ mutually exclusive"));
 	{
 #ifdef CIBAUD
 	  /* SunOS 4.1.3 (at least) has the problem that after this sequence,
-	     tcgetattr(&m1); tcsetattr(&m1); tcgetattr(&m2);
+	     tcgetattr (&m1); tcsetattr (&m1); tcgetattr (&m2);
 	     sometimes (m1 != m2).  The only difference is in the four bits
 	     of the c_cflag field corresponding to the baud rate.  To save
 	     Sun users a little confusion, don't report an error if this
@@ -1059,21 +1049,21 @@ set_mode (struct mode_info *info, int reversed, struct termios *mode)
   if (bitsp == NULL)
     {
       /* Combination mode. */
-      if (!strcmp (info->name, "evenp") || !strcmp (info->name, "parity"))
+      if (STREQ (info->name, "evenp") || STREQ (info->name, "parity"))
 	{
 	  if (reversed)
 	    mode->c_cflag = (mode->c_cflag & ~PARENB & ~CSIZE) | CS8;
 	  else
 	    mode->c_cflag = (mode->c_cflag & ~PARODD & ~CSIZE) | PARENB | CS7;
 	}
-      else if (!strcmp (info->name, "oddp"))
+      else if (STREQ (info->name, "oddp"))
 	{
 	  if (reversed)
 	    mode->c_cflag = (mode->c_cflag & ~PARENB & ~CSIZE) | CS8;
 	  else
 	    mode->c_cflag = (mode->c_cflag & ~CSIZE) | CS7 | PARODD | PARENB;
 	}
-      else if (!strcmp (info->name, "nl"))
+      else if (STREQ (info->name, "nl"))
 	{
 	  if (reversed)
 	    {
@@ -1099,21 +1089,21 @@ set_mode (struct mode_info *info, int reversed, struct termios *mode)
 #endif
 	    }
 	}
-      else if (!strcmp (info->name, "ek"))
+      else if (STREQ (info->name, "ek"))
 	{
 	  mode->c_cc[VERASE] = CERASE;
 	  mode->c_cc[VKILL] = CKILL;
 	}
-      else if (!strcmp (info->name, "sane"))
+      else if (STREQ (info->name, "sane"))
 	sane_mode (mode);
-      else if (!strcmp (info->name, "cbreak"))
+      else if (STREQ (info->name, "cbreak"))
 	{
 	  if (reversed)
 	    mode->c_lflag |= ICANON;
 	  else
 	    mode->c_lflag &= ~ICANON;
 	}
-      else if (!strcmp (info->name, "pass8"))
+      else if (STREQ (info->name, "pass8"))
 	{
 	  if (reversed)
 	    {
@@ -1126,7 +1116,7 @@ set_mode (struct mode_info *info, int reversed, struct termios *mode)
 	      mode->c_iflag &= ~ISTRIP;
 	    }
 	}
-      else if (!strcmp (info->name, "litout"))
+      else if (STREQ (info->name, "litout"))
 	{
 	  if (reversed)
 	    {
@@ -1141,7 +1131,7 @@ set_mode (struct mode_info *info, int reversed, struct termios *mode)
 	      mode->c_oflag &= ~OPOST;
 	    }
 	}
-      else if (!strcmp (info->name, "raw") || !strcmp (info->name, "cooked"))
+      else if (STREQ (info->name, "raw") || STREQ (info->name, "cooked"))
 	{
 	  if ((info->name[0] == 'r' && reversed)
 	      || (info->name[0] == 'c' && !reversed))
@@ -1172,7 +1162,7 @@ set_mode (struct mode_info *info, int reversed, struct termios *mode)
 	    }
 	}
 #ifdef IXANY
-      else if (!strcmp (info->name, "decctlq"))
+      else if (STREQ (info->name, "decctlq"))
 	{
 	  if (reversed)
 	    mode->c_iflag |= IXANY;
@@ -1181,7 +1171,7 @@ set_mode (struct mode_info *info, int reversed, struct termios *mode)
 	}
 #endif
 #ifdef TABDLY
-      else if (!strcmp (info->name, "tabs"))
+      else if (STREQ (info->name, "tabs"))
 	{
 	  if (reversed)
 	    mode->c_oflag = (mode->c_oflag & ~TABDLY) | TAB3;
@@ -1190,7 +1180,7 @@ set_mode (struct mode_info *info, int reversed, struct termios *mode)
 	}
 #else
 # ifdef OXTABS
-      else if (!strcmp (info->name, "tabs"))
+      else if (STREQ (info->name, "tabs"))
 	{
 	  if (reversed)
 	    mode->c_oflag = mode->c_oflag | OXTABS;
@@ -1200,8 +1190,8 @@ set_mode (struct mode_info *info, int reversed, struct termios *mode)
 # endif
 #endif
 #if defined(XCASE) && defined(IUCLC) && defined(OLCUC)
-      else if (!strcmp (info->name, "lcase")
-	       || !strcmp (info->name, "LCASE"))
+      else if (STREQ (info->name, "lcase")
+	       || STREQ (info->name, "LCASE"))
 	{
 	  if (reversed)
 	    {
@@ -1217,7 +1207,7 @@ set_mode (struct mode_info *info, int reversed, struct termios *mode)
 	    }
 	}
 #endif
-      else if (!strcmp (info->name, "crt"))
+      else if (STREQ (info->name, "crt"))
 	mode->c_lflag |= ECHOE
 #ifdef ECHOCTL
 	  | ECHOCTL
@@ -1226,7 +1216,7 @@ set_mode (struct mode_info *info, int reversed, struct termios *mode)
 	  | ECHOKE
 #endif
 	  ;
-      else if (!strcmp (info->name, "dec"))
+      else if (STREQ (info->name, "dec"))
 	{
 	  mode->c_cc[VINTR] = 3;	/* ^C */
 	  mode->c_cc[VERASE] = 127;	/* DEL */
@@ -1258,11 +1248,11 @@ set_control_char (struct control_info *info, const char *arg,
 {
   unsigned char value;
 
-  if (!strcmp (info->name, "min") || !strcmp (info->name, "time"))
+  if (STREQ (info->name, "min") || STREQ (info->name, "time"))
     value = integer_arg (arg);
   else if (arg[0] == '\0' || arg[1] == '\0')
     value = arg[0];
-  else if (!strcmp (arg, "^-") || !strcmp (arg, "undef"))
+  else if (STREQ (arg, "^-") || STREQ (arg, "undef"))
     value = _POSIX_VDISABLE;
   else if (arg[0] == '^' && arg[1] != '\0')	/* Ignore any trailing junk. */
     {
@@ -1464,20 +1454,20 @@ display_changed (struct termios *mode)
   current_col = 0;
 
   empty_line = 1;
-  for (i = 0; strcmp (control_info[i].name, "min"); ++i)
+  for (i = 0; !STREQ (control_info[i].name, "min"); ++i)
     {
       if (mode->c_cc[control_info[i].offset] == control_info[i].saneval)
 	continue;
       /* If swtch is the same as susp, don't print both.  */
 #if VSWTCH == VSUSP
-      if (strcmp (control_info[i].name, "swtch") == 0)
+      if (STREQ (control_info[i].name, "swtch"))
 	continue;
 #endif
       /* If eof uses the same slot as min, only print whichever applies.  */
 #if VEOF == VMIN
       if ((mode->c_lflag & ICANON) == 0
-	  && (strcmp (control_info[i].name, "eof") == 0
-	      || strcmp(control_info[i].name, "eol") == 0))
+	  && (STREQ (control_info[i].name, "eof")
+	      || STREQ (control_info[i].name, "eol")))
 	continue;
 #endif
 
@@ -1549,18 +1539,18 @@ display_all (struct termios *mode, int fd, const char *device)
   putchar ('\n');
   current_col = 0;
 
-  for (i = 0; strcmp (control_info[i].name, "min"); ++i)
+  for (i = 0; ! STREQ (control_info[i].name, "min"); ++i)
     {
       /* If swtch is the same as susp, don't print both.  */
 #if VSWTCH == VSUSP
-      if (strcmp (control_info[i].name, "swtch") == 0)
+      if (STREQ (control_info[i].name, "swtch"))
 	continue;
 #endif
       /* If eof uses the same slot as min, only print whichever applies.  */
 #if VEOF == VMIN
       if ((mode->c_lflag & ICANON) == 0
-	  && (strcmp (control_info[i].name, "eof") == 0
-	      || strcmp(control_info[i].name, "eol") == 0))
+	  && (STREQ (control_info[i].name, "eof")
+	      || STREQ(control_info[i].name, "eol")))
 	continue;
 #endif
       wrapf ("%s = %s;", control_info[i].name,
@@ -1704,7 +1694,7 @@ string_to_baud (const char *arg)
   int i;
 
   for (i = 0; speeds[i].string != NULL; ++i)
-    if (!strcmp (arg, speeds[i].string))
+    if (STREQ (arg, speeds[i].string))
       return speeds[i].speed;
   return (speed_t) -1;
 }
@@ -1729,7 +1719,7 @@ sane_mode (struct termios *mode)
   for (i = 0; control_info[i].name; ++i)
     {
 #if VMIN == VEOF
-      if (!strcmp (control_info[i].name, "min"))
+      if (STREQ (control_info[i].name, "min"))
 	break;
 #endif
       mode->c_cc[control_info[i].offset] = control_info[i].saneval;
