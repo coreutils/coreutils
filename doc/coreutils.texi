@@ -7791,6 +7791,7 @@ On some systems @code{unlink} can be used to delete the name of a
 directory.  On others, it can be used that way only by a privileged user.
 In the GNU system @code{unlink} can never delete the name of a directory.
 
+@vindex POSIXLY_CORRECT
 By default, @command{unlink} honors the @option{--help} and @option{--version}
 options.  That makes it a little harder to remove files named
 @option{--help} and @option{--version}, so when the environment variable
@@ -8946,12 +8947,39 @@ horizontal tab
 vertical tab
 @item \\
 backslash
+@item \0@var{nnn}
+the eight-bit value that is the octal number @var{nnn}
+(zero to three octal digits)
 @item \@var{nnn}
-the character whose @acronym{ASCII} code is @var{nnn} (octal); if @var{nnn} is not
-a valid octal number, it is printed literally.
+the eight-bit value that is the octal number @var{nnn}
+(one to three octal digits)
+@item \x@var{hh}
+the eight-bit value that is the hexadecimal number @var{hh}
+(one or two hexadecimal digits)
 @end table
 
+@item -E
+@opindex -E
+@cindex backslash escapes
+Disable interpretation of backslash escapes in each @var{string}.
+This is the default.  If @option{-e} and @option{-E} are both
+specified, the last one given takes effect.
+
 @end table
+
+@vindex POSIXLY_CORRECT
+If the @env{POSIXLY_CORRECT} environment variable is set, then when
+@command{echo}'s first argument is not @option{-n} it outputs
+option-like arguments instead of treating them as options.  For
+example, @code{echo -ne hello} outputs @samp{-ne hello} instead of
+plain @samp{hello}.
+
+@acronym{POSIX} does not require support for any options, and says
+that the behavior of @command{echo} is implementation-defined if any
+@var{string} contains a backslash or if the first argument is
+@option{-n}.  Portable programs can use the @command{printf} command
+if they need to omit trailing newlines or output control characters or
+backslashes.  @xref{printf invocation}.
 
 @exitstatus
 
@@ -9101,6 +9129,7 @@ pipeline.
 @dfn{failure}.  It can be used as a place holder in shell scripts
 where an unsuccessful command is needed.
 
+@vindex POSIXLY_CORRECT
 By default, @command{false} honors the @option{--help} and @option{--version}
 options.  However, that is contrary to @acronym{POSIX}, so when the environment
 variable @env{POSIXLY_CORRECT} is set, @command{false} ignores @emph{all}
@@ -9132,6 +9161,7 @@ In most modern shells, @command{true} is a built-in command, so when
 you use @samp{true} in a script, you're probably using the built-in
 command, not the one documented here.
 
+@vindex POSIXLY_CORRECT
 By default, @command{true} honors the @option{--help} and @option{--version}
 options.  However, that is contrary to @acronym{POSIX}, so when the environment
 variable @env{POSIXLY_CORRECT} is set, @command{true} ignores @emph{all}
