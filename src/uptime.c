@@ -63,7 +63,7 @@ print_uptime (int n)
     {
       char buf[BUFSIZ];
       int res;
-      fgets(buf, BUFSIZ, fp);
+      fgets (buf, BUFSIZ, fp);
       res = sscanf (buf, "%lf", &upsecs);
       if (res == 1)
 	uptime = (time_t) upsecs;
@@ -92,7 +92,7 @@ print_uptime (int n)
 	  boot_time = UT_TIME_MEMBER (this);
 #endif /* BOOT_MSG */
       ++this;
-  }
+    }
   time_now = time (0);
 #if defined HAVE_PROC_UPTIME
   if (uptime == 0)
@@ -107,7 +107,9 @@ print_uptime (int n)
   upmins = (uptime - (updays * 86400) - (uphours * 3600)) / 60;
   tmn = localtime (&time_now);
   printf (_(" %2d:%02d%s  up "), ((tmn->tm_hour % 12) == 0
-			       ? 12 : tmn->tm_hour % 12),
+				  ? 12 : tmn->tm_hour % 12),
+	  /* FIXME: use strftime, not am, pm.  Uli reports that
+	     the german translation is meaningless.  */
 	  tmn->tm_min, (tmn->tm_hour < 12 ? _("am") : _("pm")));
   if (updays > 0)
     printf ("%d %s,", updays, (updays == 1 ? _("day") : _("days")));
