@@ -291,18 +291,13 @@ Usage: %s [OPTION]... [FILE]...\n\
       printf (_("\
 Write sorted concatenation of all FILE(s) to standard output.\n\
 \n\
-  +POS1 [-POS2]    start a key at POS1, end it *before* POS2 (obsolescent)\n\
-                     field numbers and character offsets are numbered\n\
-                     starting with zero (contrast with the -k option)\n\
   -b               ignore leading blanks in sort fields or keys\n\
   -c               check if given files already sorted, do not sort\n\
   -d               consider only blanks and alphanumeric characters in keys\n\
   -f               fold lower case to upper case characters in keys\n\
   -g               compare according to general numerical value, imply -b\n\
   -i               consider only printable characters in keys\n\
-  -k POS1[,POS2]   start a key at POS1, end it *at* POS2\n\
-                     field numbers and character offsets are numbered\n\
-                     starting with one (contrast with zero-based +POS form)\n\
+  -k POS1[,POS2]   start a key at POS1, end it *at* POS2 (origin 1)\n\
   -m               merge already sorted files, do not sort\n\
   -M               compare (unknown) < `JAN' < ... < `DEC', imply -b\n\
   -n               compare according to string numerical value, imply -b\n\
@@ -316,6 +311,9 @@ Write sorted concatenation of all FILE(s) to standard output.\n\
   -u               with -c, check for strict ordering;\n\
                    with -m, only output the first of an equal sequence\n\
   -z               end lines with 0 byte, not newline, for find -print0\n\
+  +POS1 [-POS2]    start a key at POS1, end it *before* POS2 (origin 0)\n\
+                     Warning: this option is obsolescent and support for it\n\
+                     will be withdrawn.  Use -k instead.\n\
       --help       display this help and exit\n\
       --version    output version information and exit\n\
 \n\
