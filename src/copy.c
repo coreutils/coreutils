@@ -514,7 +514,7 @@ same_file_ok (const char *src_path, const struct stat *src_sb,
     {
       if (stat (dst_path, &tmp_dst_sb)
 	  || stat (src_path, &tmp_src_sb)
-	  || ! SAME_INODE (tmp_dst_sb, tmp_dst_sb))
+	  || ! SAME_INODE (tmp_src_sb, tmp_dst_sb))
 	return 1;
 
       /* FIXME: shouldn't this be testing whether we're making symlinks?  */
