@@ -6,6 +6,7 @@ Sat Oct  7 22:27:01 1995  Jim Meyering  (meyering@comco.com)
 	Before, `,1.2' was accepted as valid.
 	(main): Use xstrtol instead atoi.
 	Combine nearly identical -a and -v cases.
+	Close input files.
 
 Fri Oct  6 23:10:01 1995  Jim Meyering  (meyering@comco.com)
 
