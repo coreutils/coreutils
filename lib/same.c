@@ -54,16 +54,12 @@ extern int errno;
 # define _(Text) Text
 #endif
 
-#define STREQ(a, b) (strcmp ((a), (b)) == 0)
-
 #ifndef HAVE_DECL_FREE
 "this configure-time declaration test was not run"
 #endif
 #if !HAVE_DECL_FREE
 void free ();
 #endif
-
-char *base_name PARAMS ((char const *));
 
 #define SAME_INODE(Stat_buf_1, Stat_buf_2) \
   ((Stat_buf_1).st_ino == (Stat_buf_2).st_ino \
@@ -78,11 +74,11 @@ same_name (const char *source, const char *dest)
   struct stat source_dir_stats;
   struct stat dest_dir_stats;
   char *source_dirname, *dest_dirname;
+  char *source_basename, *dest_basename;
+  size_t source_baselen, dest_baselen;
 
   source_dirname = dir_name (source);
   dest_dirname = dir_name (dest);
-  if (source_dirname == NULL || dest_dirname == NULL)
-    xalloc_die ();
 
   if (stat (source_dirname, &source_dir_stats))
     {
@@ -99,6 +95,13 @@ same_name (const char *source, const char *dest)
   free (source_dirname);
   free (dest_dirname);
 
-  return (SAME_INODE (source_dir_stats, dest_dir_stats)
-	  && STREQ (base_name (source), base_name (dest)));
+  if (! SAME_INODE (source_dir_stats, dest_dir_stats))
+    return 0;
+
+  source_basename = base_name (source);
+  dest_basename = base_name (dest);
+  source_baselen = base_len (source_basename);
+  dest_baselen = base_len (dest_basename);
+  return (source_baselen == dest_baselen
+	  && memcmp (source_basename, dest_basename, dest_baselen) == 0);
 }
