@@ -98,6 +98,7 @@ uptime.m4 \
 utimbuf.m4 \
 utime.m4 \
 utimens.m4 \
+utimes-null.m4 \
 utimes.m4 \
 vasnprintf.m4 \
 vasprintf.m4 \

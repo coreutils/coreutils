@@ -2433,7 +2433,6 @@ AC_DEFUN([gl_UTIMENS],
   AC_REQUIRE([gl_FUNC_UTIMES])
   AC_REQUIRE([jm_CHECK_TYPE_STRUCT_TIMESPEC])
   AC_REQUIRE([jm_CHECK_TYPE_STRUCT_UTIMBUF])
-  AC_CHECK_FUNCS_ONCE(utime)
 ])
 
 #serial 7
@@ -2522,10 +2521,10 @@ AC_DEFUN([AC_STRUCT_ST_MTIM_NSEC],
  ]
 )
 
-# See if we need to work around bugs in glibc's implementation of utimes
-# from around July/August 2003.
-# First, there was a bug that would make utimes set mtime and atime
-# to zero (1970-01-01) unconditionally.
+# See if we need to work around bugs in glibc's implementation of
+# utimes from around July/August 2003.
+# First, there was a bug that would make utimes set mtime
+# and atime to zero (1970-01-01) unconditionally.
 # Then, there is/was code to round rather than truncate.
 #
 # From Jim Meyering, with suggestions from Paul Eggert.
