@@ -1030,5 +1030,7 @@ main (int argc, char **argv)
 
   exit_status |= do_copy (argc - optind, argv + optind, target_directory, &x);
 
+  forget_all ();
+
   exit (exit_status);
 }
