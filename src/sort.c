@@ -298,7 +298,6 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
   -g, --general-numeric-sort  compare according to general numerical value\n\
-
   -i, --ignore-nonprinting    consider only printable characters\n\
   -M, --month-sort            compare (unknown) < `JAN' < ... < `DEC'\n\
   -n, --numeric-sort          compare according to string numerical value\n\
