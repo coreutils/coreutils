@@ -19,7 +19,9 @@
 ## Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 ## 02111-1307, USA.
 
-ME := $(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST))
+# This is reported not to work with make-3.79.1
+# ME := $(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST))
+ME := Makefile.maint
 
 # Do not save the original name or timestamp in the .tar.gz file.
 GZIP_ENV = '--no-name --best'
@@ -67,7 +69,8 @@ syntax-check-rules = \
   sc_space_tab \
   sc_error_exit_success \
   sc_xalloc_h_in_src \
-  sc_changelog
+  sc_changelog \
+  sc_system_h_headers
 
 syntax-check: $(syntax-check-rules)
 #	@grep -E '#  *include <(limits|std(def|arg|bool))\.h>'		\
@@ -130,6 +133,37 @@ sc_xalloc_h_in_src:
 sc_changelog:
 	@grep '^[^12	]' $$(find . -name ChangeLog -maxdepth 2) &&	\
 	  { echo '$(ME): found unexpected prefix in a ChangeLog' 1>&2;	\
+	    exit 1; } || :
+
+header_regexp = \
+  alloca\
+  |closeout\
+  |ctype\
+  |dirent\
+  |errno\
+  |fcntl\
+  |inttypes\
+  |limits\
+  |locale\
+  |pathmax\
+  |std(lib|bool)\
+  |string\
+  |sys/(stat|dir|time)\
+  |time\
+  |unistd\
+  |utime\
+  |version-etc\
+  |xalloc
+h_re := $(shell echo '$(header_regexp)'|tr -d ' ')
+
+# Files in src/ should not include directly any of
+# the headers already included via system.h.
+# Get list of candidates with this:
+# grep -h include src/sys*.h|sed 's/.*include //'|sort -
+sc_system_h_headers:
+	@grep -E '^# *include ["<]($(h_re))\.h[">]'			\
+	    $(srcdir)/src/*.c &&					\
+	  { echo '$(ME): the above are already included via system.h' 1>&2; \
 	    exit 1; } || :
 
 # Ensure that date's --help output stays in sync with the info
