@@ -1576,7 +1576,6 @@ when translating"));
 
 	  if (complement && s1->has_char_class
 	      && ! (s2->length == s1->length && homogeneous_spec_list (s2)))
-	    /* FIXME: update NEWS */
 	    {
 	      error (EXIT_FAILURE, 0,
 		     _("when translating with complemented character classes,\
