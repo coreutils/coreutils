@@ -24,7 +24,9 @@ if test $framework_failure = 1; then
 fi
 
 touch $tmp/file >/dev/null 2>&1 && {
-  echo 'This test case can not be run as root'
+  echo '********************************************'
+  echo 'NOTICE: This test case cannot be run as root.'
+  echo '********************************************'
   exit 77
 }
 
