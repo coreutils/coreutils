@@ -1661,7 +1661,7 @@ valid_options (const struct cp_options *co)
    same as) DST_PATH; otherwise, set clear it.
    Return true if successful.  */
 
-bool
+extern bool
 copy (const char *src_path, const char *dst_path,
       bool nonexistent_dst, const struct cp_options *options,
       bool *copy_into_self, bool *rename_succeeded)
