@@ -2,6 +2,9 @@
 
 	* Version 4.1.1.
 
+	* src/copy.c (copy_internal): Call record_dest for all types of
+	files (for which this makes sense), not just regular ones.
+
 	* mkinstalldirs: Update from master.
 
 	* Makefile.maint (wget-update): Add mkinstalldirs.
