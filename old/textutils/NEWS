@@ -1,4 +1,13 @@
 Changes in release 2.1
+[2.0.14]
+* sort now accepts long options like "--reverse" and "--".
+* sort now checks option syntax as POSIX requires, except that (as usual
+  for GNU) options can follow file names unless POSIXLY_CORRECT is set.
+  For example, invalid positional combinations like "sort +1 -r -2" are
+  now rejected as per POSIX.
+* The next POSIX standard will require that obsolescent 'sort'
+  positional options like +1 be treated as file names, not options.
+  Please use 'sort -k' instead.
 [2.0.13]
 * pr accepts new -D or --date option, to specify date format.
 * The following changes are required by POSIX:
