@@ -944,6 +944,7 @@ main (int argc, char **argv)
 	case 'r':
 	  x.recursive = 1;
 	  x.copy_as_regular = 1;
+	  x.dereference = DEREF_ALWAYS;
 	  break;
 
 	case 'R':
