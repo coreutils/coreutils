@@ -1,3 +1,10 @@
+2003-12-18  Jim Meyering  <jim@meyering.net>
+
+	* search-libs.m4 (AC_SEARCH_LIBS): Remove file/macro, now that
+	this replacement is no longer needed.  Besides, this macro has
+	no effect with autoconf-2.58, since its `undefine' is not honored.
+	Reported by Andreas Schwab.
+
 2003-11-08  Jim Meyering  <jim@meyering.net>
 
 	* inttypes.m4: Sync from gnulib (this file was previously empty,
