@@ -1,3 +1,10 @@
+2001-09-29  Jim Meyering  <meyering@lucent.com>
+
+	* ls-mntd-fs.m4 (jm_LIST_MOUNTED_FILESYSTEMS)
+	[one-argument getmntent function]): Include stdio.h before mntent.h.
+	SunOS4.1.x needs it for the declaration of `FILE'.
+	Patch by Volker Borchert.
+
 2001-09-28  Paul Eggert  <eggert@twinsun.com>
 
 	Fix bug reported by Petter Reinholdtsen for HP-UX 10.20, which
