@@ -1,5 +1,5 @@
 /* xgethostname.c -- return current hostname with unlimited length
-   Copyright (C) 1992, 1996, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1992, 1996, 2000, 2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@ extern int errno;
 #endif
 
 #include "error.h"
+#include "xalloc.h"
 
 #ifndef ENAMETOOLONG
 # define ENAMETOOLONG 9999
@@ -39,8 +40,6 @@ extern int errno;
 #endif
 
 int gethostname ();
-char *xmalloc ();
-char *xrealloc ();
 
 #ifndef INITIAL_HOSTNAME_LENGTH
 # define INITIAL_HOSTNAME_LENGTH 34
