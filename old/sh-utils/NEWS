@@ -1,5 +1,5 @@
 Changes in release 1.13
-* when matching, expr warns about non-portability if the first character
+* when matching, expr warns about non-portability when the first character
   of the basic regular expression is `^'
 * `id user' no longer prints bogus group list
 * uses automake-generated Makefile templates
