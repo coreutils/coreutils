@@ -9,6 +9,7 @@
 	* src/false.sh: Removed.
 	* src/Makefile.am: (bin_PROGRAMS): Add true and false.
 	(bin_SCRIPTS): Remove true and false.
+	(EXTRA_DIST): Remove false.sh and true.sh.
 	* man/true.1in: New file.
 	* man/false.1in: New file.
 	* man/Makefile.am (EXTRA_DIST): Remove extra (shadowed) assignment.
