@@ -1,5 +1,9 @@
 2004-09-06  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* src/sort.c (main): Emulate Solaris 8 and 9 "sort -y", so that
+	"sort -y abc" is like "sort abc" whereas "sort -y 100" is like
+	plain "sort".
+
 	* src/od.c: Several changes for POSIX and FreeBSD compatibility.
 	(COMMON_SHORT_OPTIONS): Add -B, -D, -e, -F, -H, -I, -L, -O, -s, -X.
 	(long_options, main): --strings is now -S, not -s.
