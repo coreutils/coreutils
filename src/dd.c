@@ -48,6 +48,10 @@
 # define SIGINFO SIGUSR1
 #endif
 
+#ifndef S_TYPEISSHM
+# define S_TYPEISSHM(Mode) 0
+#endif
+
 #define ROUND_UP_OFFSET(X, M) ((M) - 1 - (((X) + (M) - 1) % (M)))
 #define PTR_ALIGN(Ptr, M) ((Ptr) \
 			   + ROUND_UP_OFFSET ((char *)(Ptr) - (char *)0, (M)))
@@ -1260,11 +1264,18 @@ main (int argc, char **argv)
 	      o = seek_bytes;
 	    }
 
-	  /* Attempt to use ftruncate only if STDOUT refers to a regular file.
-	     On Linux 2.4.0, ftruncate fails with for non-regular files.  */
-	  if (fstat (STDOUT_FILENO, &stdout_stat) == 0
-	      && S_ISREG (stdout_stat.st_mode)
-	      && ftruncate (STDOUT_FILENO, o) < 0)
+	  if (fstat (STDOUT_FILENO, &stdout_stat) != 0)
+	    error (1, errno, _("cannot fstat %s"), quote (output_file));
+
+	  /* Complain only when ftruncate fails on a regular file, a
+	     directory, or a shared memory object, as the 2000-08
+	     POSIX draft specifies ftruncate's behavior only for these
+	     file types.  For example, do not complain when Linux 2.4
+	     ftruncate fails on /dev/fd0.  */
+	  if (ftruncate (STDOUT_FILENO, o) != 0
+	      && (S_ISREG (stdout_stat.st_mode)
+		  || S_ISDIR (stdout_stat.st_mode)
+		  || S_TYPEISSHM (stdout_stat.st_mode)))
 	    {
 	      char buf[LONGEST_HUMAN_READABLE + 1];
 	      if (seek_record)
