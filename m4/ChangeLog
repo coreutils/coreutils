@@ -1,3 +1,10 @@
+1999-11-03  Jim Meyering  <meyering@ascend.com>
+
+	* ssize_t.m4: Remove file.  No longer needed since the new version of
+	AC_CHECK_TYPE checks includes unistd.h.
+	* jm-macros.m4: Use straight `AC_CHECK_TYPE(ssize_t, int)'.
+	Suggestion from Akim Demaille.
+
 1999-10-30  Jim Meyering  <meyering@ascend.com>
 
 	* uintmax_t.m4: Require 2.14a.  Remove backslash before backtick in
