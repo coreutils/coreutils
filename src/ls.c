@@ -62,6 +62,7 @@
 #include "ls.h"
 #include "version.h"
 #include "error.h"
+#include "argmatch.h"
 
 #define obstack_chunk_alloc xmalloc
 #define obstack_chunk_free free
@@ -122,7 +123,6 @@ char *getgroup ();
 char *getuser ();
 char *xmalloc ();
 char *xrealloc ();
-int argmatch ();
 void invalid_arg ();
 
 static char *make_link_path __P ((char *path, char *linkname));

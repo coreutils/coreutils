@@ -40,13 +40,13 @@
 #include "system.h"
 #include "version.h"
 #include "error.h"
+#include "argmatch.h"
 
 #ifndef STDC_HEADERS
 time_t mktime ();
 time_t time ();
 #endif
 
-int argmatch ();
 time_t get_date ();
 time_t posixtime ();
 int safe_read ();
