@@ -1,7 +1,7 @@
 2001-05-15  Jim Meyering  <meyering@lucent.com>
 
 	* regex.m4: Use proper quoting so brackets appear in the test program.
-	Reported by Bruno Haible.
+	Reported by, and with help from, Bruno Haible.
 
 2001-05-13  Jim Meyering  <meyering@lucent.com>
 
