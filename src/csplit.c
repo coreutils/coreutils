@@ -179,10 +179,10 @@ static char *suffix = NULL;
 static int digits = 2;
 
 /* Number of files created so far. */
-static unsigned files_created = 0;
+static unsigned int files_created = 0;
 
 /* Number of bytes written to current file. */
-static unsigned bytes_written;
+static unsigned int bytes_written;
 
 /* Output file pointer. */
 static FILE *output_stream = NULL;
@@ -207,7 +207,7 @@ static boolean elide_empty_files;
 static struct control *controls;
 
 /* Number of elements in `controls'. */
-static unsigned control_used;
+static unsigned int control_used;
 
 /* If non-zero, display usage information and exit.  */
 static int show_help;
@@ -233,7 +233,7 @@ static struct option const longopts[] =
 
 static char *
 xmalloc (n)
-     unsigned n;
+     unsigned int n;
 {
   char *p;
 
@@ -254,7 +254,7 @@ xmalloc (n)
 static char *
 xrealloc (p, n)
      char *p;
-     unsigned n;
+     unsigned int n;
 {
   if (p == NULL)
     return xmalloc (n);
@@ -283,7 +283,7 @@ xrealloc (p, n)
 static void
 save_to_hold_area (start, num)
      char *start;
-     unsigned num;
+     unsigned int num;
 {
   hold_area = start;
   hold_count = num;
@@ -295,7 +295,7 @@ save_to_hold_area (start, num)
 static int
 read_input (dest, max)
      char *dest;
-     unsigned max;
+     unsigned int max;
 {
   int bytes_read;
 
@@ -393,15 +393,15 @@ keep_new_line (b, line_start, line_len)
    a pointer is kept to this area, which will be used when
    the next buffer is filled. */
 
-static unsigned
+static unsigned int
 record_line_starts (b)
      struct buffer_record *b;
 {
   char *line_start;		/* Start of current line. */
   char *line_end;		/* End of each line found. */
-  unsigned bytes_left;		/* Length of incomplete last line. */
-  unsigned lines;		/* Number of lines found. */
-  unsigned line_length;		/* Length of each line found. */
+  unsigned int bytes_left;	/* Length of incomplete last line. */
+  unsigned int lines;		/* Number of lines found. */
+  unsigned int line_length;	/* Length of each line found. */
 
   if (b->bytes_used == 0)
     return 0;
@@ -447,7 +447,7 @@ record_line_starts (b)
 
 static struct buffer_record *
 create_new_buffer (size)
-     unsigned size;
+     unsigned int size;
 {
   struct buffer_record *new_buffer;
 
@@ -467,11 +467,11 @@ create_new_buffer (size)
 
 static struct buffer_record *
 get_new_buffer (min_size)
-     unsigned min_size;
+     unsigned int min_size;
 {
   struct buffer_record *p, *q;
   struct buffer_record *new_buffer; /* Buffer to return. */
-  unsigned alloc_size;		/* Actual size that will be requested. */
+  unsigned int alloc_size;	/* Actual size that will be requested. */
 
   alloc_size = START_SIZE;
   while (min_size > alloc_size)
@@ -563,9 +563,9 @@ static boolean
 load_buffer ()
 {
   struct buffer_record *b;
-  unsigned bytes_wanted = START_SIZE; /* Minimum buffer size. */
-  unsigned bytes_avail;		/* Size of new buffer created. */
-  unsigned lines_found;		/* Number of lines in this new buffer. */
+  unsigned int bytes_wanted = START_SIZE; /* Minimum buffer size. */
+  unsigned int bytes_avail;		/* Size of new buffer created. */
+  unsigned int lines_found;		/* Number of lines in this new buffer. */
   char *p;			/* Place to load into buffer. */
 
   if (have_read_eof)
@@ -593,7 +593,7 @@ load_buffer ()
 	  hold_count = 0;
 	}
 
-      b->bytes_used += (unsigned) read_input (p, bytes_avail);
+      b->bytes_used += (unsigned int) read_input (p, bytes_avail);
 
       lines_found = record_line_starts (b);
       bytes_wanted = b->bytes_alloc * 2;
@@ -610,7 +610,7 @@ load_buffer ()
 
 /* Return the line number of the first line that has not yet been retrieved. */
 
-static unsigned
+static unsigned int
 get_first_line_in_buffer ()
 {
   if (head == NULL && !load_buffer ())
@@ -663,7 +663,7 @@ remove_line ()
 
 static struct cstring *
 find_line (linenum)
-     unsigned linenum;
+     unsigned int linenum;
 {
   struct buffer_record *b;
 
@@ -679,7 +679,7 @@ find_line (linenum)
 	{
 	  /* The line is in this buffer. */
 	  struct line *l;
-	  unsigned offset;	/* How far into the buffer the line is. */
+	  unsigned int offset;	/* How far into the buffer the line is. */
 
 	  l = b->line_start;
 	  offset = linenum - b->start_line;
@@ -728,14 +728,14 @@ set_input_file (name)
 
 static void
 write_to_file (last_line, ignore, argnum)
-     unsigned last_line;
+     unsigned int last_line;
      boolean ignore;
      int argnum;
 {
   struct cstring *line;
-  unsigned first_line;		/* First available input line. */
-  unsigned lines;		/* Number of lines to output. */
-  unsigned i;
+  unsigned int first_line;		/* First available input line. */
+  unsigned int lines;		/* Number of lines to output. */
+  unsigned int i;
 
   first_line = get_first_line_in_buffer ();
 
@@ -799,8 +799,8 @@ process_line_count (p, repetition)
      struct control *p;
      int repetition;
 {
-  unsigned linenum;
-  unsigned last_line_to_save = p->lines_required * (repetition + 1);
+  unsigned int linenum;
+  unsigned int last_line_to_save = p->lines_required * (repetition + 1);
   struct cstring *line;
 
   create_output_file ();
@@ -860,8 +860,8 @@ process_regexp (p, repetition)
      int repetition;
 {
   struct cstring *line;		/* From input file. */
-  unsigned line_len;	/* To make "$" in regexps work. */
-  unsigned break_line;		/* First line number of next file. */
+  unsigned int line_len;	/* To make "$" in regexps work. */
+  unsigned int break_line;	/* First line number of next file. */
   boolean ignore = p->ignore;	/* If TRUE, skip this section. */
   int ret;
 
@@ -961,7 +961,7 @@ process_regexp (p, repetition)
 static void
 split_file ()
 {
-  int i, j;
+  unsigned int i, j;
 
   for (i = 0; i < control_used; i++)
     {
@@ -988,7 +988,7 @@ split_file ()
 
 static char *
 make_filename (num)
-     int num;
+     unsigned int num;
 {
   strcpy (filename_space, prefix);
   if (suffix)
@@ -1019,7 +1019,7 @@ create_output_file ()
 static void
 delete_all_files ()
 {
-  int i;
+  unsigned int i;
   char *name;
 
   for (i = 0; i < files_created; i++)
