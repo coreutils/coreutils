@@ -6,6 +6,7 @@
 	* chdir-long.c: Renamed from chdir.c.
 	* chdir-long.h: Renamed from chdir.h.
 	[!defined PATH_MAX]: Define chdir_long to chdir on systems like the Hurd.
+	* Makefile.am (libfetish_a_SOURCES): Reflect name changes.
 
 	* chdir.c (O_DIRECTORY): Define, if necessary.
 	(memchrcspn): Tiny wrapper around memchr.
