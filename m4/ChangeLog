@@ -1,3 +1,12 @@
+2003-08-08  Paul Eggert  <eggert@twinsun.com>
+
+	* jm-macros.m4 (jm_MACROS): Replace jm_INCLUDED_REGEX([lib/regex.c])
+	with gl_REGEX.
+	Replace jm_FUNC_MKTIME with gl_FUNC_MKTIME.
+	Remove redundant AC_FUNC_FNMATCH_GNU, jm_FUNC_MKTIME.
+	Remove AC_FUNC_VPRINTF.
+	Add gl_ERROR.
+
 2003-08-05  Paul Eggert  <eggert@twinsun.com>
 
 	* jm-macros.m4 (jm_MACROS): Use gl_GETNDELIM2 rather than
