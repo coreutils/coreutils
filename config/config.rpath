@@ -143,7 +143,7 @@ if test "$with_gnu_ld" = yes; then
       ld_shlibs=no
       ;;
     beos*)
-      if $LD --help 2>&1 | egrep ': supported targets:.* elf' > /dev/null; then
+      if $LD --help 2>&1 | grep ': supported targets:.* elf' > /dev/null; then
         :
       else
         ld_shlibs=no
@@ -162,9 +162,9 @@ if test "$with_gnu_ld" = yes; then
     netbsd*)
       ;;
     solaris* | sysv5*)
-      if $LD -v 2>&1 | egrep 'BFD 2\.8' > /dev/null; then
+      if $LD -v 2>&1 | grep 'BFD 2\.8' > /dev/null; then
         ld_shlibs=no
-      elif $LD --help 2>&1 | egrep ': supported targets:.* elf' > /dev/null; then
+      elif $LD --help 2>&1 | grep ': supported targets:.* elf' > /dev/null; then
         :
       else
         ld_shlibs=no
@@ -174,7 +174,7 @@ if test "$with_gnu_ld" = yes; then
       hardcode_direct=yes
       ;;
     *)
-      if $LD --help 2>&1 | egrep ': supported targets:.* elf' > /dev/null; then
+      if $LD --help 2>&1 | grep ': supported targets:.* elf' > /dev/null; then
         :
       else
         ld_shlibs=no
