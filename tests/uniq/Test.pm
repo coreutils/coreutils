@@ -70,8 +70,8 @@ my @tv = (
 ['93', '-f 2',   "a\ta a\na a a\n",  "a\ta a\n",                0],
 ['94', '-f 1',   "a\ta\na\ta\n",  "a\ta\n",                     0],
 # Check the count option; add tests for other options too
-['101', '-c',    "a\nb\n",          "      1\ta\n      1\tb\n", 0],
-['102', '-c',    "a\na\n",          "      2\ta\n",             0],
+['101', '-c',    "a\nb\n",          "      1 a\n      1 b\n", 0],
+['102', '-c',    "a\na\n",          "      2 a\n",             0],
 # Check the local -D (--all-repeated) option
 ['110', '-D',    "a\na\n",          "a\na\n",                   0],
 ['111', '-D -w1',"a a\na b\n",      "a a\na b\n",               0],
