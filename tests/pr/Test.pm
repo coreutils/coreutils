@@ -16,6 +16,7 @@ my @tv = (
 # combinations of options and FF-arrangements
 #
 # One FF at start of file (one empty page)
+
 ['1a', '', [\'0Ft'], [\'0F'], 0],
 ['1b', '', [\'0Fnt'], [\'0F'], 0],
 ['1c', '+3', [\'0Ft'], [\'3-0F'], 0],
@@ -263,6 +264,12 @@ my @tv = (
 ['12md', '-o3 -j -m -l17 -f', [\'tFFt-lm', \'loli'], [\'o3jml17f-lm-lo'], 0],
 
 ['margin-0', '-o 0', '', '', 0],
+
+# FIXME: that leading space on 3rd line of output should not be there
+['dbl-sp-a', '-d -l 14 -h ""', "1\n2\n", "\n\n \n\n\n1\n\n2\n\n\n\n\n\n\n", 0],
+# This test failed with 1.22e and earlier.
+['dbl-sp-b', '-d -t', "1\n2\n", "1\n\n2\n\n", 0],
+
 );
 #']]);
 
