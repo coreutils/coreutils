@@ -1,4 +1,22 @@
-## Process this file with automake to produce Makefile.in -*-Makefile-*-
+## Makefile for gnulib/lib				-*-Makefile-*-
+
+# Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002 Free
+# Software Foundation, Inc.
+
+## This program is free software; you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation; either version 2, or (at your option)
+## any later version.
+
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+
+## You should have received a copy of the GNU General Public License
+## along with this program; if not, write to the Free Software
+## Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+## 02111-1307, USA.
 
 AUTOMAKE_OPTIONS = ../src/ansi2knr
 
@@ -89,6 +107,7 @@ libfetish_a_SOURCES = \
   umaxtostr.c \
   unicodeio.c unicodeio.h \
   unistd-safer.h \
+  unlocked-io.h \
   userspec.c \
   version-etc.c version-etc.h \
   xalloc.h \
@@ -110,11 +129,10 @@ libfetish_a_LIBADD = @LIBOBJS@ @ALLOCA@
 libfetish_a_DEPENDENCIES = $(libfetish_a_LIBADD)
 
 
-BUILT_SOURCES = getdate.c unlocked-io.h
+BUILT_SOURCES = getdate.c
 MAINTAINERCLEANFILES = $(BUILT_SOURCES)
-DISTCLEANFILES = unlocked-io.h
 
-EXTRA_DIST = config.charset ref-add.sin ref-del.sin gen-uio \
+EXTRA_DIST = config.charset ref-add.sin ref-del.sin \
   fnmatch_loop.c inttostr.c inttostr.h
 
 # The following is needed in order to install a simple file in $(libdir)
@@ -124,7 +142,7 @@ EXTRA_DIST = config.charset ref-add.sin ref-del.sin gen-uio \
 # On systems with glibc-2.1 or newer, the file is redundant, therefore we
 # avoid installing it.
 
-all-local: charset.alias ref-add.sed ref-del.sed unlocked-io.h
+all-local: charset.alias ref-add.sed ref-del.sed
 
 charset_alias = $(DESTDIR)$(libdir)/charset.alias
 charset_tmp = $(DESTDIR)$(libdir)/charset.tmp
@@ -164,21 +182,3 @@ SUFFIXES = .sed .sin
 	mv t-$@ $@
 
 CLEANFILES = charset.alias ref-add.sed ref-del.sed
-
-###############################################
-
-# FIXME: remove this dependency once automake handles it.
-# As of cvs automake of about 2002-01-13,
-# this dependency is necessary to avoid a build failure
-# when running `make check' before running `make all'.
-# Otherwise, unlocked-io.h is not built before it's needed.
-getdate$U.o: unlocked-io.h
-
-# FIXME: CAUTION this list is a duplicate of one in ../Makefile.cfg.
-io_functions = \
-  clearerr feof ferror fflush fgets fputc fputs \
-  fread fwrite getc getchar putc putchar
-
-unlocked-io.h: $(srcdir)/gen-uio Makefile.am
-	srcdir=$(srcdir) $(SHELL) $(srcdir)/gen-uio $(io_functions) > $@t
-	mv $@t $@
