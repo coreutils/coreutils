@@ -133,6 +133,10 @@ extern int errno;
 #define hpux
 #endif
 
+#if defined (__hpux) && !defined (hpux)
+#define hpux
+#endif
+
 #if defined(hp300) && !defined(hpux)
 #define MORE_BSD
 #endif
@@ -529,7 +533,7 @@ getloadavg (loadavg, nelem)
   ksp = kstat_lookup (kc, "unix", 0, "system_misc");
   if (ksp == 0 ) return -1;
   if (kstat_read (kc, ksp, 0) == -1) return -1;
-  
+
 
   kn = kstat_data_lookup (ksp, "avenrun_1min");
   if (kn == 0)
