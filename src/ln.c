@@ -63,6 +63,7 @@ int symlink ();
     while (0)
 
 char *basename ();
+char *dirname ();
 enum backup_type get_version ();
 int isdir ();
 int yesno ();
@@ -119,6 +120,37 @@ static struct option const long_options[] =
   {NULL, 0, NULL, 0}
 };
 
+/* Check whether SOURCE and DEST point to the same name in the same
+   directory.  */
+
+static int
+same_name (char *source, char *dest)
+{
+  struct stat source_dir_stats;
+  struct stat dest_dir_stats;
+  char *source_dirname, *dest_dirname;
+
+  source_dirname = dirname (source);
+  dest_dirname = dirname (dest);
+  if (source_dirname == NULL || dest_dirname == NULL)
+    error (1, 0, _("virtual memory exhausted"));
+
+  if (stat (source_dirname, &source_dir_stats))
+    /* Shouldn't happen.  */
+    error (1, errno, "%s", source_dirname);
+
+  if (stat (dest_dirname, &dest_dir_stats))
+    /* Shouldn't happen.  */
+    error (1, errno, "%s", dest_dirname);
+
+  free (source_dirname);
+  free (dest_dirname);
+
+  return (source_dir_stats.st_dev == dest_dir_stats.st_dev
+	  && source_dir_stats.st_ino == dest_dir_stats.st_ino
+	  && STREQ (basename (source), basename (dest)));
+}
+
 /* Make a link DEST to the (usually) existing file SOURCE.
    Symbolic links to nonexistent files are allowed.
    If DEST is a directory, put the link to SOURCE in that directory.
@@ -166,12 +198,13 @@ do_link (const char *source, const char *dest)
       && (!symlink || stat (source, &source_stats) == 0)
       && source_stats.st_dev == dest_stats.st_dev
       && source_stats.st_ino == dest_stats.st_ino
-      /* The following is an attempt to detect reliably whether
-	 removing DEST will also remove SOURCE.  It is defeated
-	 by an invocation like `ln -f foo ./foo' when foo has more
-	 than one hard link.  FIXME: if anyone can tell me how to
-	 do this better (yet still reliably), please do.  */
-      && (source_stats.st_nlink == 1 || STREQ (source, dest)))
+      /* The following detects whether removing DEST will also remove
+ 	 SOURCE.  If the file has only one link then both are surely
+ 	 the same link.  Otherwise we check whether they point to the
+ 	 same names in the same directory.  The latter is meaningless
+ 	 when making a symbolic link.  */
+      && (source_stats.st_nlink == 1
+ 	  || (!symlink && same_name (source, dest))))
     {
       error (0, 0, _("`%s' and `%s' are the same file"), source, dest);
       return 1;
