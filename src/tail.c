@@ -34,7 +34,7 @@
 #include "argmatch.h"
 #include "error.h"
 #include "safe-read.h"
-#include "xstrtoul.h"
+#include "xstrtol.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "tail"
