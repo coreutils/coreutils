@@ -1,4 +1,4 @@
-/* safe-read.c -- an interface to read that retries after interrupts
+/* An interface to read that retries after interrupts.
    Copyright (C) 1993, 1994, 1998, 2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -13,16 +13,17 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-   */
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 #if HAVE_CONFIG_H
 # include <config.h>
 #endif
 
-#include <sys/types.h>
-#include <stdlib.h>
+/* Specification.  */
+#include "safe-read.h"
 
+/* Get ssize_t.  */
+#include <sys/types.h>
 #if HAVE_UNISTD_H
 # include <unistd.h>
 #endif
@@ -32,39 +33,47 @@
 extern int errno;
 #endif
 
-#include "safe-read.h"
+#include <limits.h>
 
-/* Read LEN bytes at PTR from descriptor DESC, retrying if interrupted.
-   Return the actual number of bytes read, zero upon EOF,
-   or SAFE_READ_ERROR upon error.
-   Abort if LEN is SAFE_READ_ERROR (aka `(size_t) -1').
+/* We don't pass an nbytes count > SSIZE_MAX to read() - POSIX says the
+   effect would be implementation-defined.  Also we don't pass an nbytes
+   count > INT_MAX but <= SSIZE_MAX to read() - this triggers a bug in
+   Tru64 5.1.  */
+#define MAX_BYTES_TO_READ INT_MAX
 
-   WARNING: although both LEN and the return value are of type size_t,
-   the range of the return value is restricted -- by virtue of being
-   returned from read(2) -- and will never be larger than SSIZE_MAX,
-   with the exception of SAFE_READ_ERROR, of course.
-   So don't test `safe_read (..., N) == N' unless you're sure that
-   N <= SSIZE_MAX.  */
-
+/* Read up to COUNT bytes at BUF from descriptor FD, retrying if interrupted.
+   Return the actual number of bytes read, zero for EOF, or SAFE_READ_ERROR
+   upon error.  */
 size_t
-safe_read (int desc, void *ptr, size_t len)
+safe_read (int fd, void *buf, size_t count)
 {
-  ssize_t n_chars;
+  size_t total_read = 0;
+  char *ptr = buf;
 
-  if (len == SAFE_READ_ERROR)
-    abort ();
-  if (len == 0)
-    return len;
-
-#ifdef EINTR
-  do
+  while (count > 0)
     {
-      n_chars = read (desc, ptr, len);
-    }
-  while (n_chars < 0 && errno == EINTR);
-#else
-  n_chars = read (desc, ptr, len);
-#endif
+      size_t nbytes_to_read = count;
+      ssize_t result;
 
-  return n_chars;
+      /* Limit the number of bytes to read in one round, to avoid running
+	 into unspecified behaviour.  But keep the file pointer block
+	 aligned when doing so.  */
+      if (nbytes_to_read > MAX_BYTES_TO_READ)
+	nbytes_to_read = MAX_BYTES_TO_READ & ~8191;
+
+      result = read (fd, ptr, nbytes_to_read);
+      if (result < 0)
+	{
+#ifdef EINTR
+	  if (errno == EINTR)
+	    continue;
+#endif
+	  return SAFE_READ_ERROR;
+	}
+      total_read += result;
+      ptr += result;
+      count -= result;
+    }
+
+  return total_read;
 }
