@@ -1,5 +1,6 @@
 #!/bin/sh
-# rm should not prompt before removing a dangling symlink
+# rm should not prompt before removing a dangling symlink.
+# But for fileutils-4.1.9, it would.
 
 if test "$VERBOSE" = yes; then
   set -x
