@@ -2,6 +2,8 @@
 
 	* coreutils.texi (tail invocation): In --sleep-interval=NUMBER,
 	NUMBER may now be a floating point number.
+	(stat invocation): Remove references to now-removed %S and %C.
+	(Time directives) [%S]: Explain why the range is [0..60].
 
 2002-08-30  Jim Meyering  <meyering@lucent.com>
 
