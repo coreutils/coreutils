@@ -2,9 +2,9 @@
 
 	* src/copy.c (copy_reg): New parameters: X and NEW_DST.
 	Remove the SPARSE_MODE parameter.  Update caller.
-	Perform POSIX-mandated (for cp) open-with-O_WRONLY|O_TRUNC when
-	the regular destination file exists;  upon failure, unlink
-	that existing file, then open again, but with O_WRONLY|O_CREAT.
+	Perform POSIX-mandated (for cp) open-with-O_WRONLY|O_TRUNC when copying
+	a regular source file and the destination file exists;  upon failure,
+	unlink that existing file, then open again, but with O_WRONLY|O_CREAT.
 	(copy_internal): `force' in not related to interactive; remove
 	the conjunct.
 	Remove the entire `else if (x->force)' block;  justifying
