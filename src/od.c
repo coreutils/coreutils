@@ -1,5 +1,5 @@
 /* od -- dump files in octal and other formats
-   Copyright (C) 92, 1995-2000 Free Software Foundation, Inc.
+   Copyright (C) 92, 1995-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -225,7 +225,7 @@ static FILE *in_stream;
 /* If nonzero, at least one of the files we read was standard input.  */
 static int have_read_stdin;
 
-#ifdef HAVE_UNSIGNED_LONG_LONG
+#if HAVE_UNSIGNED_LONG_LONG
 # define LONGEST_INTEGRAL_TYPE unsigned long long
 #else
 # define LONGEST_INTEGRAL_TYPE long int
@@ -435,7 +435,7 @@ print_long (off_t n_bytes, const char *block, const char *fmt_string)
     }
 }
 
-#ifdef HAVE_UNSIGNED_LONG_LONG
+#if HAVE_UNSIGNED_LONG_LONG
 static void
 print_long_long (off_t n_bytes, const char *block, const char *fmt_string)
 {
@@ -764,7 +764,9 @@ this system doesn't provide a %lu-byte integral type"), s_orig, size);
 	  break;
 
 	case LONG_LONG:
+#if HAVE_UNSIGNED_LONG_LONG
 	  print_function = print_long_long;
+#endif
 	  break;
 
 	default:
@@ -1633,7 +1635,7 @@ main (int argc, char **argv)
   integral_type_size[sizeof (short int)] = SHORT;
   integral_type_size[sizeof (int)] = INT;
   integral_type_size[sizeof (long int)] = LONG;
-#ifdef HAVE_UNSIGNED_LONG_LONG
+#if HAVE_UNSIGNED_LONG_LONG
   integral_type_size[sizeof (long long)] = LONG_LONG;
 #endif
 
