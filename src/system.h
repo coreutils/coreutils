@@ -132,11 +132,9 @@ extern int errno;
 
 #include <stdbool.h>
 
-#if HAVE_STDLIB_H
-# define getopt system_getopt
-# include <stdlib.h>
-# undef getopt
-#endif
+#define getopt system_getopt
+#include <stdlib.h>
+#undef getopt
 
 /* The following test is to work around the gross typo in
    systems like Sony NEWS-OS Release 4.0C, whereby EXIT_FAILURE
