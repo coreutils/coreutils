@@ -13,18 +13,12 @@
 	Remove get_date decl.
 
 	* lib/getdate.h: Removed.  Could cause confusion with an
-	automake-generated `.y.h' rule
+	automake-generated `.y.h' rule.
 	* lib/get-date.h: Renamed from getdate.h.
 	* lib/getdate.y: s/getdate.h/get-date.h/
 	* lib/Makefile.am (noinst_HEADERS): s/getdate.h/get-date.h/
 
 1998-02-19  Jim Meyering  <meyering@eng.ascend.com>
-
-	* lib/dirname.c (dirname): Include ctype.h.
-	[IN_CTYPE_DOMAIN]: Define.
-	[ISALPHA]: Define.
-	[MSDOS]: Add support for DOS-style file names with drive letters.
-	Based on a patch from Eli Zaretskii.
 
 	1997-10-17  Eli Zaretskii  <eliz@is.elta.co.il>
 	* lib/fileblocks.c [__DJGPP__]: Add missing typedef for daddr_t.
