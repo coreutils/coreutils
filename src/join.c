@@ -649,7 +649,7 @@ add_field (int file, int field)
 static int
 decode_field_spec (const char *s, int *file_index, int *field_index)
 {
-  int valid = 0;
+  int invalid = 1;
 
   /* The first character must be 0, 1, or 2.  */
   switch (s[0])
@@ -659,7 +659,7 @@ decode_field_spec (const char *s, int *file_index, int *field_index)
 	{
 	  *file_index = 0;
 	  /* Leave *field_index undefined.  */
-	  valid = 1;
+	  invalid = 0;
 	}
       else
         {
@@ -685,7 +685,7 @@ decode_field_spec (const char *s, int *file_index, int *field_index)
 	      *file_index = s[0] - '0';
 	      /* Convert to a zero-based index.  */
 	      *field_index = (int) tmp_long - 1;
-	      valid = 1;
+	      invalid = 0;
 	    }
 	}
       break;
@@ -694,7 +694,7 @@ decode_field_spec (const char *s, int *file_index, int *field_index)
       error (0, 0, _("invalid file number in field spec: `%s'"), s);
       break;
     }
-  return !valid;
+  return invalid;
 }
 
 /* Add the comma or blank separated field spec(s) in STR to `outlist'.
