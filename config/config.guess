@@ -3,7 +3,7 @@
 #   Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
 #   2000, 2001, 2002 Free Software Foundation, Inc.
 
-timestamp='2002-09-03'
+timestamp='2002-10-21'
 
 # This file is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by
@@ -109,7 +109,7 @@ trap '"'"'rm -f $files; rmdir $tmpdir; exit 1'"'"' 1 2 15 ;
 case $CC_FOR_BUILD,$HOST_CC,$CC in
  ,,)    echo "int x;" > $dummy.c ;
 	for c in cc gcc c89 c99 ; do
-	  if ($c $dummy.c -c -o $dummy.o) >/dev/null 2>&1 ; then
+	  if ($c -c -o $dummy.o $dummy.c) >/dev/null 2>&1 ; then
 	     CC_FOR_BUILD="$c"; break ;
 	  fi ;
 	done ;
@@ -257,7 +257,7 @@ main:
 	jsr \$26,exit
 	.end main
 EOF
-	$CC_FOR_BUILD $dummy.s -o $dummy 2>/dev/null
+	$CC_FOR_BUILD -o $dummy $dummy.s 2>/dev/null
 	if test "$?" = 0 ; then
 		case `$dummy` in
 			0-0)
@@ -437,7 +437,7 @@ EOF
 	  exit (-1);
 	}
 EOF
-	$CC_FOR_BUILD $dummy.c -o $dummy \
+	$CC_FOR_BUILD -o $dummy $dummy.c \
 	  && $dummy `echo "${UNAME_RELEASE}" | sed -n 's/\([0-9]*\).*/\1/p'` \
 	  && rm -f $dummy.c $dummy && rmdir $tmpdir && exit 0
 	rm -f $dummy.c $dummy && rmdir $tmpdir
@@ -524,7 +524,7 @@ EOF
 			exit(0);
 			}
 EOF
-		$CC_FOR_BUILD $dummy.c -o $dummy && $dummy && rm -f $dummy.c $dummy && rmdir $tmpdir && exit 0
+		$CC_FOR_BUILD -o $dummy $dummy.c && $dummy && rm -f $dummy.c $dummy && rmdir $tmpdir && exit 0
 		rm -f $dummy.c $dummy && rmdir $tmpdir
 		echo rs6000-ibm-aix3.2.5
 	elif grep bos324 /usr/include/stdio.h >/dev/null 2>&1; then
@@ -623,7 +623,7 @@ EOF
                   exit (0);
               }
 EOF
-		    (CCOPTS= $CC_FOR_BUILD $dummy.c -o $dummy 2>/dev/null) && HP_ARCH=`$dummy`
+		    (CCOPTS= $CC_FOR_BUILD -o $dummy $dummy.c 2>/dev/null) && HP_ARCH=`$dummy`
 		    if test -z "$HP_ARCH"; then HP_ARCH=hppa; fi
 		    rm -f $dummy.c $dummy && rmdir $tmpdir
 		fi ;;
@@ -661,7 +661,7 @@ EOF
 	  exit (0);
 	}
 EOF
-	$CC_FOR_BUILD $dummy.c -o $dummy && $dummy && rm -f $dummy.c $dummy && rmdir $tmpdir && exit 0
+	$CC_FOR_BUILD -o $dummy $dummy.c && $dummy && rm -f $dummy.c $dummy && rmdir $tmpdir && exit 0
 	rm -f $dummy.c $dummy && rmdir $tmpdir
 	echo unknown-hitachi-hiuxwe2
 	exit 0 ;;
@@ -1283,7 +1283,7 @@ main ()
 }
 EOF
 
-$CC_FOR_BUILD $dummy.c -o $dummy 2>/dev/null && $dummy && rm -f $dummy.c $dummy && rmdir $tmpdir && exit 0
+$CC_FOR_BUILD -o $dummy $dummy.c 2>/dev/null && $dummy && rm -f $dummy.c $dummy && rmdir $tmpdir && exit 0
 rm -f $dummy.c $dummy && rmdir $tmpdir
 
 # Apollos put the system type in the environment.
