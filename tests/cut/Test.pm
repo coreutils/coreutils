@@ -49,13 +49,13 @@ my @tv = (
 # You must specify bytes or fields (or chars)
 ['z', '',		":\n",			"",			1],
 # Empty field list
-['A', '-f \'\'',	":\n",			"",			1],
+['empty-fl', '-f \'\'',	":\n",			"",			1],
 # Missing field list
-['B', '-f',		":\n",			"",			1],
+['missing-fl', '-f',	":\n",			"",			1],
 # Empty byte list
-['C', '-b \'\'',	":\n",			"",			1],
+['empty-bl', '-b \'\'',	":\n",			"",			1],
 # Missing byte list
-['D', '-b',		":\n",			"",			1],
+['missing-bl', '-b',	":\n",			"",			1],
 );
 
 sub test_vector
