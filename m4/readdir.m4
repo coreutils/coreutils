@@ -1,4 +1,4 @@
-#serial 1
+#serial 2
 
 dnl SunOS's readdir is broken in such a way that rm.c has to add extra code
 dnl to test whether a NULL return value really means there are no more files
@@ -126,16 +126,8 @@ AC_CACHE_CHECK([for working readdir], jm_cv_func_working_readdir,
   jm_cv_func_working_readdir=no,
   jm_cv_func_working_readdir=no)])
 
-  if test x = y; then
-    dnl This code is deliberately never run via ./configure.
-    dnl FIXME: this is a gross hack to make autoheader put an entry
-    dnl for this HAVE_-prefixed symbol in config.h.in.
-    AC_CHECK_FUNCS(WORKING_READDIR)
-  fi
-
-
   if test $jm_cv_func_working_readdir = yes; then
-    ac_kludge=HAVE_WORKING_READDIR
-    AC_DEFINE_UNQUOTED($ac_kludge)
+    AC_DEFINE_UNQUOTED(HAVE_WORKING_READDIR, 1,
+[Define if readdir is found to work properly in some unusual cases. ])
   fi
 ])
