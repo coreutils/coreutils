@@ -1,3 +1,8 @@
+2004-05-17  Jim Meyering  <jim@meyering.net>
+
+	chgrp and chown now dereference symlinks by default, per POSIX.
+	* coreutils.texi (chgrp invocation, chown invocation): Document it.
+
 2004-05-13  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (sort invocation): Document that "sort -m -o F"
