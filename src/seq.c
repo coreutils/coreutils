@@ -79,7 +79,7 @@ usage (int status)
 {
   if (status != 0)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-		    program_name);
+	     program_name);
   else
     {
       printf (_("\
