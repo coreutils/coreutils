@@ -2138,9 +2138,7 @@ gobble_file (const char *name, enum filetype type, int explicit_arg,
 static void
 get_link_name (const char *filename, struct fileinfo *f)
 {
-  size_t link_val_len;
-
-  f->linkname = xreadlink (filename, &link_val_len);
+  f->linkname = xreadlink (filename);
   if (f->linkname == NULL)
     {
       error (0, errno, _("cannot read symbolic link %s"),
