@@ -37,6 +37,16 @@
 	* src/df.c, src/du.c, src/touch.c (long_options, main):
 	Don't assume ASCII.
 
+1998-08-18  Paul Eggert  <eggert@twinsun.com>
+
+	Port nanosecond-resolution times to UnixWare 2.1.2 and
+	pedantic Solaris 2.6.
+
+	* configure.in (AC_STRUCT_ST_MTIM_NSEC): Renamed from AC_STRUCT_ST_MTIM.
+	* acconfig.h (ST_MTIM_NSEC): New #undef.
+	* src/system.h: (ST_TIME_CMP_NS, ATIME_CMP, CTIME_CMP, MTIME_CMP):
+	Use new ST_MTIM_NSEC macro.
+
 1998-08-16  Jim Meyering  <meyering@ascend.com>
 
 	* lib/filemode.h (PARAMS): Define and use.
