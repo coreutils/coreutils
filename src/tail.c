@@ -58,6 +58,9 @@
 # define BUFSIZ (512 * 8)
 #endif
 
+/* A special value for dump_remainder's N_BYTES parameter.  */
+#define COPY_TO_EOF OFF_T_MAX
+
 /* FIXME: make Follow_name the default?  */
 #define DEFAULT_FOLLOW_MODE Follow_descriptor
 
@@ -261,42 +264,51 @@ write_header (const char *pretty_filename, const char *comment)
   first_file = 0;
 }
 
-/* Display file PRETTY_FILENAME from the current position in FD to the end.
+/* Read and output N_BYTES of file PRETTY_FILENAME starting at the current
+   position in FD.  If N_BYTES is COPY_TO_EOF, then copy until end of file.
    Return the number of bytes read from the file.  */
 
 static long
-dump_remainder (const char *pretty_filename, int fd)
+dump_remainder (const char *pretty_filename, int fd, off_t n_bytes)
 {
   char buffer[BUFSIZ];
   int bytes_read;
-  long total;
+  long n_written;
+  off_t n_remaining = n_bytes;
 
-  total = 0;
-  while ((bytes_read = safe_read (fd, buffer, BUFSIZ)) > 0)
+  n_written = 0;
+  while (1)
     {
+      long n = MIN (n_remaining, (off_t) BUFSIZ);
+      bytes_read = safe_read (fd, buffer, n);
+      if (bytes_read <= 0)
+	break;
       xwrite (STDOUT_FILENO, buffer, bytes_read);
-      total += bytes_read;
+      n_remaining -= bytes_read;
+      n_written += bytes_read;
     }
   if (bytes_read == -1)
     error (EXIT_FAILURE, errno, "%s", pretty_filename);
 
-  return total;
+  return n_written;
 }
 
 /* Print the last N_LINES lines from the end of file FD.
    Go backward through the file, reading `BUFSIZ' bytes at a time (except
    probably the first), until we hit the start of the file or have
    read NUMBER newlines.
-   POS starts out as the length of the file (the offset of the last
-   byte of the file + 1).
+   FILE_LENGTH is the length of the file (one more than the offset of the
+   last byte of the file).
    Return 0 if successful, 1 if an error occurred.  */
 
 static int
-file_lines (const char *pretty_filename, int fd, long int n_lines, off_t pos)
+file_lines (const char *pretty_filename, int fd, long int n_lines,
+	    off_t file_length)
 {
   char buffer[BUFSIZ];
   int bytes_read;
   int i;			/* Index into `buffer' for scanning.  */
+  off_t pos = file_length;
 
   if (n_lines == 0)
     return 0;
@@ -343,7 +355,7 @@ file_lines (const char *pretty_filename, int fd, long int n_lines, off_t pos)
 	  /* Not enough lines in the file; print the entire file.  */
 	  /* FIXME: check lseek return value  */
 	  lseek (fd, (off_t) 0, SEEK_SET);
-	  dump_remainder (pretty_filename, fd);
+	  dump_remainder (pretty_filename, fd, file_length);
 	  return 0;
 	}
       pos -= BUFSIZ;
@@ -829,7 +841,8 @@ tail_forever (struct File_spec *f, int nfiles)
 		write_header (pretty_name (&f[i]), NULL);
 	      last = i;
 	    }
-	  f[i].size += dump_remainder (pretty_name (&f[i]), f[i].fd);
+	  f[i].size += dump_remainder (pretty_name (&f[i]), f[i].fd,
+				       COPY_TO_EOF);
 	}
 
       if (n_live_files (f, nfiles) == 0 && ! allow_missing)
@@ -856,10 +869,6 @@ tail_bytes (const char *pretty_filename, int fd, off_t n_bytes)
      while binary output will preserve the style (Unix/DOS) of text file.  */
   SET_BINARY2 (fd, STDOUT_FILENO);
 
-  /* FIXME: resolve this like in dd.c.  */
-  /* Use fstat instead of checking for errno == ESPIPE because
-     lseek doesn't work on some special files but doesn't return an
-     error, either.  */
   if (fstat (fd, &stats))
     {
       error (0, errno, "%s", pretty_filename);
@@ -877,7 +886,7 @@ tail_bytes (const char *pretty_filename, int fd, off_t n_bytes)
 	{
 	  return 1;
 	}
-      dump_remainder (pretty_filename, fd);
+      dump_remainder (pretty_filename, fd, COPY_TO_EOF);
     }
   else
     {
@@ -916,7 +925,7 @@ tail_bytes (const char *pretty_filename, int fd, off_t n_bytes)
 	      /* FIXME: check lseek return value  */
 	      lseek (fd, -n_bytes, SEEK_END);
 	    }
-	  dump_remainder (pretty_filename, fd);
+	  dump_remainder (pretty_filename, fd, n_bytes);
 	}
       else
 	return pipe_bytes (pretty_filename, fd, n_bytes);
@@ -947,7 +956,7 @@ tail_lines (const char *pretty_filename, int fd, long int n_lines)
     {
       if (start_lines (pretty_filename, fd, n_lines))
 	return 1;
-      dump_remainder (pretty_filename, fd);
+      dump_remainder (pretty_filename, fd, COPY_TO_EOF);
     }
   else
     {
