@@ -51,6 +51,7 @@ struct dir_list
 int full_write ();
 int euidaccess ();
 int yesno ();
+char *dirname ();
 
 static int copy_internal PARAMS ((const char *src_path, const char *dst_path,
 				  int new_dst, dev_t device,
@@ -662,25 +663,40 @@ copy_internal (const char *src_path, const char *dst_path,
 #ifdef S_ISLNK
   else if (x->symbolic_link)
     {
-      if (*src_path == '/'
-	  || (!strncmp (dst_path, "./", 2) && strchr (dst_path + 2, '/') == 0)
-	  || strchr (dst_path, '/') == 0)
+      if (*src_path != '/')
 	{
-	  if (symlink (src_path, dst_path))
+	  /* Check that DST_PATH denotes a file in the current directory.  */
+	  struct stat dot_sb;
+	  struct stat dst_parent_sb;
+	  char *dst_parent;
+	  int not_current_dir;
+
+	  dst_parent = dirname (dst_path);
+	  if (dst_parent == NULL)
+	    error (1, 0, _("virtual memory exhausted"));
+
+	  not_current_dir = (!STREQ (".", dst_parent)
+			     && stat (".", &dot_sb) == 0
+			     && stat (dst_parent, &dst_parent_sb) == 0
+			     && (dot_sb.st_dev != dst_parent_sb.st_dev
+				 || dot_sb.st_ino != dst_parent_sb.st_ino));
+	  free (dst_parent);
+
+	  if (not_current_dir)
 	    {
-	      error (0, errno, "%s", dst_path);
+	      error (0, 0,
+	   _("%s: can make relative symbolic links only in current directory"),
+		     dst_path);
 	      goto un_backup;
 	    }
-
-	  return 0;
 	}
-      else
+      if (symlink (src_path, dst_path))
 	{
-	  error (0, 0,
-	   _("%s: can make relative symbolic links only in current directory"),
-		 dst_path);
+	  error (0, errno, "%s", dst_path);
 	  goto un_backup;
 	}
+
+      return 0;
     }
 #endif
   else if (x->hard_link)
