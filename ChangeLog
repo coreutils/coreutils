@@ -1,6 +1,16 @@
-2004-12-05  Jim Meyering  <jim@meyering.net>
+2004-12-06  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	* tests/du/files0-from: Sanitize environment.
+	Otherwise, e.g., BLOCKSIZE=k would cause a failure, and that
+	setting is the default (exported from /etc/profile) on at least one
+	NetBSD 1.6 system.
+	* tests/du/no-deref: Likewise.
+	* tests/cp/symlink-slash: Likewise.
+	* tests/ls/symlink-slash: Likewise
+
+2004-12-05  Jim Meyering  <jim@meyering.net>
 
 	* tests/tail/Test.pm (test_vector): Avoid test failure when
 	_POSIX2_VERSION=199209 is in the environment, or when building on
