@@ -1,6 +1,17 @@
-2001-11-27  Jim Meyering  <meyering@lucent.com>
+2001-12-01  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.18.
+
+	* src/cat.c, src/cksum.c, src/comm.c, src/csplit.c, src/cut.c:
+	* src/expand.c, src/fmt.c, src/fold.c, src/head.c, src/join.c:
+	* src/md5sum.c, src/nl.c, src/od.c, src/paste.c, src/pr.c, src/ptx.c:
+	* src/sort.c, src/split.c, src/sum.c, src/sys2.h, src/tac.c:
+	* src/tail.c, src/tr.c, src/tsort.c, src/unexpand.c, src/uniq.c:
+	* src/wc.c (usage): Use new macros, EMIT_HELP_DESCRIPTION and
+      	EMIT_VERSION_DESCRIPTION instead of hard-coding --help and --version
+	descriptions.
+
+2001-11-27  Jim Meyering  <meyering@lucent.com>
 
 	* src/system.h (SET_MODE) [O_BINARY]: Call setmode, not set_mode.
 	From Matthew Smith.
