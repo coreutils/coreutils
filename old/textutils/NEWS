@@ -1,5 +1,7 @@
 Changes in release 2.1
 [2.0.17]
+* csplit no longer gets a failed assertion for this:
+    printf 'a\n\n'|csplit - '/^$/' 2
 * sort detects physical memory attributes more portably
 * tail no longer gets a segfault on Linux's /proc/ksyms
 * sum -s produces the proper 16-bit checksum for large files
