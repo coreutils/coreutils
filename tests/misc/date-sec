@@ -30,7 +30,7 @@ fail=0
 # takes long enough as it is.
 
 n=0
-# See if the current number of seconds is just before `00'.
+# See if the current number of seconds is `00' or just before.
 s=`date +%S`
 case "$s" in
   58) n=3;;
