@@ -1,5 +1,5 @@
 [4.1.9]
-* rm can now remove very deep hierarchies, regardless of any limit on stack size
+* rm can now remove very deep hierarchies, in spite of any limit on stack size
 * new programs: link, unlink, and stat
 * New ls option: --author (for the Hurd).
 * `touch -c no-such-file' no longer fails, per POSIX
