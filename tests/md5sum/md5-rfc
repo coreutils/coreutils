@@ -1,32 +1,41 @@
 #! /bin/sh
 
-e=rfc-expected
-rm -f $e
-cat <<'EOF' > $e
-d41d8cd98f00b204e9800998ecf8427e  ""
-0cc175b9c0f1b6a831c399e269772661  "a"
-900150983cd24fb0d6963f7d28e17f72  "abc"
-f96b697d7cb7938d525a2f31aaf161d0  "message digest"
-c3fcd3d76192e4007dfb496cca67e13b  "abcdefghijklmnopqrstuvwxyz"
-d174ab98d277d9f5a5611c2c9f419d9f  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-57edf4a22be3c955ac49da2e2107b67a  "12345678901234567890123456789012345678901234567890123456789012345678901234567890"
-EOF
+md5sum=${MD5SUM:-md5sum}
 
-a=rfc-actual
-rm -f $a
-${MD5SUM:-md5sum} \
-   --string="" \
-   --string="a" \
-   --string="abc" \
-   --string="message digest" \
-   --string="abcdefghijklmnopqrstuvwxyz" \
-   --string="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789" \
-   --string="12345678901234567890123456789012345678901234567890123456789012345678901234567890" \
- > $a
+test "$VERBOSE" = yes && $md5sum --version
 
-${DIFF:-diff} $e $a
-result=$?
+set - \
+1 d41d8cd98f00b204e9800998ecf8427e  "" \
+2 0cc175b9c0f1b6a831c399e269772661  a \
+3 900150983cd24fb0d6963f7d28e17f72  abc \
+4 f96b697d7cb7938d525a2f31aaf161d0  'message digest' \
+5 c3fcd3d76192e4007dfb496cca67e13b  abcdefghijklmnopqrstuvwxyz \
+6 d174ab98d277d9f5a5611c2c9f419d9f  ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 \
+7 57edf4a22be3c955ac49da2e2107b67a  12345678901234567890123456789012345678901234567890123456789012345678901234567890 \
+LAST NA NA
 
-rm -fr $e $a
+fail=0
+while :; do
+  test_name=$1
+  test x$test_name = xLAST && break
+  expected_result="$2  -"
+  string=$3
+  tmp=md-$$
+  tmp_exp=$tmp.exp
+  tmp_out=$tmp.out
+  tmp_files="$tmp_exp $tmp_out"
+  rm -f $tmp_files
+  if test "$VERBOSE" = yes; then
+    #echo "testing \`$nice $args $nice\` = $expected_result ..."
+    echo "test $test_name... " | tr -d '\012'
+  fi
+  echo "$string"|tr -d '\012'| $md5sum - > $tmp_out
+  echo "$expected_result" > $tmp_exp
+  ${DIFF:-diff} $tmp_out $tmp_exp \
+    && ok=ok || ok=FAIL fail=1
+  test "$VERBOSE" = yes && echo $ok
+  rm -f $tmp_files
+  shift; shift; shift
+done
 
-exit $result
+exit $fail
