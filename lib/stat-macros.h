@@ -161,6 +161,21 @@
 #  endif
 # endif
 
+/* contiguous */
+# ifndef S_ISCTG
+#  define S_ISCTG(p) 0
+# endif
+
+/* Cray DMF (data migration facility): off line, with data  */
+# ifndef S_ISOFD
+#  define S_ISOFD(p) 0
+# endif
+
+/* Cray DMF (data migration facility): off line, with no data  */
+# ifndef S_ISOFL
+#  define S_ISOFL(p) 0
+# endif
+
 /* If any of the following are undefined,
    define them to their de facto standard values.  */
 # if !S_ISUID
