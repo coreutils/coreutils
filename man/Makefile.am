@@ -124,10 +124,10 @@ mapped_name = `echo $*|sed 's/install/ginstall/'`
 .x.1:
 	@echo "Updating man page $@";		\
 	mkdir $t;				\
-	ln -s ../../src/$(mapped_name) $t/$*;	\
+	(cd $t && $(LN_S) ../../src/$(mapped_name)$(EXEEXT) $*$(EXEEXT)); \
 	$(HELP2MAN)				\
 	    --include=$(srcdir)/$*.x		\
-	    --output=$@ $t/$*;			\
+	    --output=$@ $t/$*$(EXEEXT);		\
 	rm -rf $t
 
 check-local: check-x-vs-1
