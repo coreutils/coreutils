@@ -1,3 +1,9 @@
+2003-03-26  Richard Dawe  <rich@phekda.freeserve.co.uk>
+
+	* dirname.c [TEST_DIRNAME]: Update build instructions for test.
+	Add test-cases for DOS filenames. Declare program_name.
+	(main): Set up program_name.
+
 2003-03-22  Jim Meyering  <jim@meyering.net>
 
 	* strftime.c (widen): Cast alloca return value to proper type.
