@@ -28,6 +28,7 @@
 #include "error.h"
 #include "getdate.h"
 #include "posixtm.h"
+#include "posixver.h"
 #include "quote.h"
 #include "safe-read.h"
 
@@ -226,9 +227,6 @@ usage (int status)
   else
     {
       printf (_("Usage: %s [OPTION]... FILE...\n"), program_name);
-      if (POSIX2_VERSION < 200112)
-	printf (_("  or:  %s [-acm] MMDDhhmm[YY] FILE... (obsolete)\n"),
-		program_name);
       fputs (_("\
 Update the access and modification times of each FILE to the current time.\n\
 \n\
@@ -254,10 +252,6 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (_("\
 \n\
 Note that the -d and -t options accept different time-date formats.\n\
-"), stdout);
-      if (POSIX2_VERSION < 200112)
-	fputs (_("\
-Also, the obsolete time-date format differs from both other formats.\n\
 "), stdout);
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
     }
@@ -358,8 +352,8 @@ main (int argc, char **argv)
 
   /* The obsolete `MMDDhhmm[YY]' form is valid IFF there are
      two or more non-option arguments.  */
-  if (POSIX2_VERSION < 200112
-      && !date_set && 2 <= argc - optind && !STREQ (argv[optind - 1], "--"))
+  if (!date_set && 2 <= argc - optind && !STREQ (argv[optind - 1], "--")
+      && posix2_version () < 200112)
     {
       newtime = posixtime (argv[optind], PDS_TRAILING_YEAR);
       if (newtime != (time_t) -1)
