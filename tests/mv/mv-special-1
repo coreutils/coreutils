@@ -23,7 +23,8 @@ null=.mv-null
 dir=.mv-dir
 
 framework_failure=0
-
+mkdir $tmp || framework_failure=1
+cd $tmp || framework_failure=1
 rm -f $null || framework_failure=1
 mknod $null p || framework_failure=1
 mkdir -p $dir/a/b/c $dir/d/e/f || framework_failure=1
