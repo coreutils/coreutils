@@ -133,7 +133,15 @@ Adapt these contribution guidelines for coreutils:
   http://sources.redhat.com/automake/contribute.html
 
 
-Changes expected to go in, post-5.2.0:
+Bug-fix changes expected to go in, right after 5.2.0:
+====================================================
+
+  POSIX requires that `ls a-dir b-file' list b-file first.
+
+  expr patch from Paul Eggert
+
+
+Changes expected to go in, post-5.2.1:
 ======================================
 
   du and wc: add an option, --from0-file, to make them read NUL-delimited
