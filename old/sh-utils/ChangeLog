@@ -5,6 +5,17 @@ Sat Nov 13 00:11:19 1993  Jim Meyering  (meyering@comco.com)
 	* configure.in [LIBS]: Add -lbsd if that is necessary to get the
 	syslog function.  With help from Kaveh Ghazi.
 
+	* configure.in [LIBS]: Reorganize/unify the code that adds libraries
+	solely to resolve syslog.  Add a library only if it is required to
+	resolve the syslog reference.
+
+	* configure.in [AC_HAVE_HEADERS]: Check for sys/timeb.h.
+	getdate.y needs to know.
+	[LIBS]: Check for initgroups in -los.  This is required by SCO-ODT-3.0
+	when linking su.
+	[LIBS]: Check -lufc for crypt.
+	Reported by Steven W Orr (steveo@world.std.com).
+
 Thu Nov 11 23:55:48 1993  Jim Meyering  (meyering@comco.com)
 
 	* id.c [NGROUPS_MAX]: Undefine before redefining.
