@@ -78,7 +78,13 @@ extern int errno;
 
 #include "xstrtol.h"
 
-__strtol_t __strtol ();
+#ifndef strtol
+long int strtol ();
+#endif
+
+#ifndef strtoul
+unsigned long int strtoul ();
+#endif
 
 static int
 bkm_scale (__strtol_t *x, int scale_factor)
