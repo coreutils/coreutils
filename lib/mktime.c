@@ -1,44 +1,53 @@
-/* Copyright (C) 1993, 1994 Free Software Foundation, Inc.
-   Contributed by Noel Cragg (noel@cs.oberlin.edu), with fixes by
-   Michael E. Calwas (calwas@ttd.teradyne.com) and
-   Wade Hampton (tasi029@tmn.com).
+/* Copyright (C) 1993, 1994, 1995 Free Software Foundation, Inc.
+   Contributed by Paul Eggert (eggert@twinsun.com).
 
+This file is part of the GNU C Library.
 
-NOTE: The canonical source of this file is maintained with the GNU C Library.
-Bugs can be reported to bug-glibc@prep.ai.mit.edu.
+The GNU C Library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Library General Public License as
+published by the Free Software Foundation; either version 2 of the
+License, or (at your option) any later version.
 
-This program is free software; you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by the
-Free Software Foundation; either version 2, or (at your option) any
-later version.
-
-This program is distributed in the hope that it will be useful,
+The GNU C Library is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Library General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+You should have received a copy of the GNU Library General Public
+License along with the GNU C Library; see the file COPYING.LIB.  If
+not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+Cambridge, MA 02139, USA.  */
 
 /* Define this to have a standalone program to test this implementation of
    mktime.  */
-/* #define DEBUG */
+/* #define DEBUG 1 */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
 
+/* Assume that leap seconds are possible, unless told otherwise.
+   If the host has a `zic' command with a `-L leapsecondfilename' option,
+   then it supports leap seconds; otherwise it probably doesn't.  */
+#ifndef LEAP_SECONDS_POSSIBLE
+#define LEAP_SECONDS_POSSIBLE 1
+#endif
+
 #include <sys/types.h>		/* Some systems define `time_t' here.  */
 #include <time.h>
 
-
-#ifndef __isleap
-/* Nonzero if YEAR is a leap year (every 4 years,
-   except every 100th isn't, and every 400th is).  */
-#define	__isleap(year)	\
-  ((year) % 4 == 0 && ((year) % 100 != 0 || (year) % 400 == 0))
+#if __STDC__ || __GNU_LIBRARY__ || STDC_HEADERS
+#include <limits.h>
 #endif
+
+#if DEBUG
+#include <stdio.h>
+#if __STDC__ || __GNU_LIBRARY__ || STDC_HEADERS
+#include <stdlib.h>
+#endif
+/* Make it work even if the system's libc has its own mktime routine.  */
+#define mktime my_mktime
+#endif /* DEBUG */
 
 #ifndef __P
 #if defined (__GNUC__) || (defined (__STDC__) && __STDC__)
@@ -48,456 +57,352 @@ Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 #endif  /* GCC.  */
 #endif  /* Not __P.  */
 
-/* How many days are in each month.  */
-const unsigned short int __mon_lengths[2][12] =
+#ifndef CHAR_BIT
+#define CHAR_BIT 8
+#endif
+
+#ifndef INT_MIN
+#define INT_MIN (~0 << (sizeof (int) * CHAR_BIT - 1))
+#endif
+#ifndef INT_MAX
+#define INT_MAX (~0 - INT_MIN)
+#endif
+
+#ifndef TIME_T_MIN
+#define TIME_T_MIN (0 < (time_t) -1 ? (time_t) 0 \
+		    : ~ (time_t) 0 << (sizeof (time_t) * CHAR_BIT - 1))
+#endif
+#ifndef TIME_T_MAX
+#define TIME_T_MAX (~ (time_t) 0 - TIME_T_MIN)
+#endif
+
+#define TM_YEAR_BASE 1900
+#define EPOCH_YEAR 1970
+
+#ifndef __isleap
+/* Nonzero if YEAR is a leap year (every 4 years,
+   except every 100th isn't, and every 400th is).  */
+#define	__isleap(year)	\
+  ((year) % 4 == 0 && ((year) % 100 != 0 || (year) % 400 == 0))
+#endif
+
+/* How many days come before each month (0-12).  */
+const unsigned short int __mon_yday[2][13] =
   {
     /* Normal years.  */
-    { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 },
+    { 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365 },
     /* Leap years.  */
-    { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 }
+    { 0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366 }
   };
 
-
-static int times_through_search; /* This library routine should never
-				    hang -- make sure we always return
-				    when we're searching for a value */
-
-
-#ifdef DEBUG
-
-#include <stdio.h>
-#include <ctype.h>
-
-int debugging_enabled = 0;
-
-/* Print the values in a `struct tm'. */
-static void
-printtm (it)
-     struct tm *it;
-{
-  printf ("%02d/%02d/%04d %02d:%02d:%02d (%s) yday:%03d dst:%d gmtoffset:%ld",
-	  it->tm_mon + 1,
-	  it->tm_mday,
-	  it->tm_year + 1900,
-	  it->tm_hour,
-	  it->tm_min,
-	  it->tm_sec,
-	  it->tm_zone,
-	  it->tm_yday,
-	  it->tm_isdst,
-	  it->tm_gmtoff);
-}
-#endif
+static time_t ydhms_tm_diff __P ((int, int, int, int, int, const struct tm *));
+time_t __mktime_internal __P ((struct tm *,
+			       struct tm *(*) (const time_t *, struct tm *),
+			       time_t *));
 
 
-static time_t
-dist_tm (t1, t2)
-     struct tm *t1;
-     struct tm *t2;
-{
-  time_t distance = 0;
-  unsigned long int v1, v2;
-  int diff_flag = 0;
-
-  v1 = v2 = 0;
-
-#define doit(x, secs)                                                         \
-  v1 += t1->x * secs;                                                         \
-  v2 += t2->x * secs;                                                         \
-  if (!diff_flag)                                                             \
-    {                                                                         \
-      if (t1->x < t2->x)                                                      \
-	diff_flag = -1;                                                       \
-      else if (t1->x > t2->x)                                                 \
-	diff_flag = 1;                                                        \
-    }
-  
-  doit (tm_year, 31536000);	/* Okay, not all years have 365 days. */
-  doit (tm_mon, 2592000);	/* Okay, not all months have 30 days. */
-  doit (tm_mday, 86400);
-  doit (tm_hour, 3600);
-  doit (tm_min, 60);
-  doit (tm_sec, 1);
-  
-#undef doit
-  
-  /* We should also make sure that the sign of DISTANCE is correct -- if
-     DIFF_FLAG is positive, the distance should be positive and vice versa. */
-  
-  distance = (v1 > v2) ? (v1 - v2) : (v2 - v1);
-  if (diff_flag < 0)
-    distance = -distance;
-
-  if (times_through_search > 20) /* Arbitrary # of calls, but makes sure we
-				    never hang if there's a problem with
-				    this algorithm.  */
-    {
-      distance = diff_flag;
-    }
-
-  /* We need this DIFF_FLAG business because it is forseeable that the
-     distance may be zero when, in actuality, the two structures are
-     different.  This is usually the case when the dates are 366 days apart
-     and one of the years is a leap year.  */
-
-  if (distance == 0 && diff_flag)
-    distance = 86400 * diff_flag;
-
-  return distance;
-}
-      
-
-/* MKTIME converts the values in a struct tm to a time_t.  The values
-   in tm_wday and tm_yday are ignored; other values can be put outside
-   of legal ranges since they will be normalized.  This routine takes
-   care of that normalization. */
-
-void
-do_normalization (tmptr)
-     struct tm *tmptr;
-{
-
-#define normalize(foo,x,y,bar); \
-  while (tmptr->foo < x) \
-    { \
-      tmptr->bar--; \
-      tmptr->foo = (y - (x - tmptr->foo) + 1); \
-    } \
-  while (tmptr->foo > y) \
-    { \
-      tmptr->foo = (x + (tmptr->foo - y) - 1); \
-      tmptr->bar++; \
-    }
-  
-  normalize (tm_sec, 0, 59, tm_min);
-  normalize (tm_min, 0, 59, tm_hour);
-  normalize (tm_hour, 0, 23, tm_mday);
-  
-  /* Do the month first, so day range can be found. */
-  normalize (tm_mon, 0, 11, tm_year);
-
-  /* Since the day range modifies the month, we should be careful how
-     we reference the array of month lengths -- it is possible that
-     the month will go negative, hence the modulo...
-
-     Also, tm_year is the year - 1900, so we have to 1900 to have it
-     work correctly. */
-
-  normalize (tm_mday, 1,
-	     __mon_lengths[__isleap (tmptr->tm_year + 1900)]
-                          [((tmptr->tm_mon < 0)
-			    ? (12 + (tmptr->tm_mon % 12))
-			    : (tmptr->tm_mon % 12)) ],
-	     tm_mon);
-
-  /* Do the month again, because the day may have pushed it out of range. */
-  normalize (tm_mon, 0, 11, tm_year);
-
-  /* Do the day again, because the month may have changed the range. */
-  normalize (tm_mday, 1,
-	     __mon_lengths[__isleap (tmptr->tm_year + 1900)]
-	                  [((tmptr->tm_mon < 0)
-			    ? (12 + (tmptr->tm_mon % 12))
-			    : (tmptr->tm_mon % 12)) ],
-	     tm_mon);
-  
-#ifdef DEBUG
-  if (debugging_enabled)
-    {
-      printf ("   After normalizing:\n     ");
-      printtm (tmptr);
-      putchar ('\n');
-    }
-#endif
-
-}
-
-
-/* Here's where the work gets done. */
-
-#define BAD_STRUCT_TM ((time_t) -1)
-
-time_t
-_mktime_internal (timeptr, producer)
-     struct tm *timeptr;
-     struct tm *(*producer) __P ((const time_t *));
-{
-  struct tm our_tm;		/* our working space */
-  struct tm *me = &our_tm;	/* a pointer to the above */
-  time_t result;		/* the value we return */
-
-  *me = *timeptr;		/* copy the struct tm that was passed
-				   in by the caller */
-
-
-  /***************************/
-  /* Normalize the structure */
-  /***************************/
-
-  /* This routine assumes that the value of TM_ISDST is -1, 0, or 1.
-     If the user didn't pass it in that way, fix it. */
-
-  if (me->tm_isdst > 0)
-    me->tm_isdst = 1;
-  else if (me->tm_isdst < 0)
-    me->tm_isdst = -1;
-
-  do_normalization (me);
-
-  /* Get out of here if it's not possible to represent this struct.
-     If any of the values in the normalized struct tm are negative,
-     our algorithms won't work.  Luckily, we only need to check the
-     year at this point; normalization guarantees that all values will
-     be in correct ranges EXCEPT the year. */
-
-  if (me->tm_year < 0)
-    return BAD_STRUCT_TM;
-
-  /*************************************************/
-  /* Find the appropriate time_t for the structure */
-  /*************************************************/
-
-  /* Modified b-search -- make intelligent guesses as to where the
-     time might lie along the timeline, assuming that our target time
-     lies a linear distance (w/o considering time jumps of a
-     particular region).
-
-     Assume that time does not fluctuate at all along the timeline --
-     e.g., assume that a day will always take 86400 seconds, etc. --
-     and come up with a hypothetical value for the time_t
-     representation of the struct tm TARGET, in relation to the guess
-     variable -- it should be pretty close!
-
-     After testing this, the maximum number of iterations that I had
-     on any number that I tried was 3!  Not bad.
-
-     The reason this is not a subroutine is that we will modify some
-     fields in the struct tm (yday and mday).  I've never felt good
-     about side-effects when writing structured code... */
-
-  {
-    struct tm *guess_tm;
-    time_t guess = 0;
-    time_t distance = 0;
-    time_t last_distance = 0;
-
-    times_through_search = 0;
-
-    do
-      {
-	guess += distance;
-
-	times_through_search++;     
-      
-	guess_tm = (*producer) (&guess);
-      
-#ifdef DEBUG
-	if (debugging_enabled)
-	  {
-	    printf ("   Guessing time_t == %d\n     ", (int) guess);
-	    printtm (guess_tm);
-	    putchar ('\n');
-	  }
-#endif
-      
-	/* How far is our guess from the desired struct tm? */
-	distance = dist_tm (me, guess_tm);
-      
-	/* Handle periods of time where a period of time is skipped.
-	   For example, 2:15 3 April 1994 does not exist, because DST
-	   is in effect.  The distance function will alternately
-	   return values of 3600 and -3600, because it doesn't know
-	   that the requested time doesn't exist.  In these situations
-	   (even if the skip is not exactly an hour) the distances
-	   returned will be the same, but alternating in sign.  We
-	   want the later time, so check to see that the distance is
-	   oscillating and we've chosen the correct of the two
-	   possibilities.
-
-	   Useful: 3 Apr 94 765356300, 30 Oct 94 783496000 */
-
-	if ((distance == -last_distance) && (distance < last_distance))
-	  {
-	    /* If the caller specified that the DST flag was off, it's
-               not possible to represent this time. */
-	    if (me->tm_isdst == 0)
-	      {
-#ifdef DEBUG
-	    printf ("   Distance is oscillating -- dst flag nixes struct!\n");
-#endif
-		return BAD_STRUCT_TM;
-	      }
-
-#ifdef DEBUG
-	    printf ("   Distance is oscillating -- chose the later time.\n");
-#endif
-	    distance = 0;
-	  }
-
-	if ((distance == 0) && (me->tm_isdst != -1)
-	    && (me->tm_isdst != guess_tm->tm_isdst))
-	  {
-	    /* If we're in this code, we've got the right time but the
-               wrong daylight savings flag.  We need to move away from
-               the time that we have and approach the other time from
-               the other direction.  That is, if I've requested the
-               non-DST version of a time and I get the DST version
-               instead, I want to put us forward in time and search
-               backwards to get the other time.  I checked all of the
-               configuration files for the tz package -- no entry
-               saves more than two hours, so I think we'll be safe by
-               moving 24 hours in one direction.  IF THE AMOUNT OF
-               TIME SAVED IN THE CONFIGURATION FILES CHANGES, THIS
-               VALUE MAY NEED TO BE ADJUSTED.  Luckily, we can never
-               have more than one level of overlaps, or this would
-               never work. */
-
-#define SKIP_VALUE 86400
-
-	    if (guess_tm->tm_isdst == 0)
-	      /* we got the later one, but want the earlier one */
-	      distance = -SKIP_VALUE;
-	    else
-	      distance = SKIP_VALUE;
-	    
-#ifdef DEBUG
-	    printf ("   Got the right time, wrong DST value -- adjusting\n");
-#endif
-	  }
-
-	last_distance = distance;
-
-      } while (distance != 0);
-
-    /* Check to see that the dst flag matches */
-
-    if (me->tm_isdst != -1)
-      {
-	if (me->tm_isdst != guess_tm->tm_isdst)
-	  {
-#ifdef DEBUG
-	    printf ("   DST flag doesn't match!  FIXME?\n");
-#endif
-	    return BAD_STRUCT_TM;
-	  }
-      }
-
-    result = guess;		/* Success! */
-
-    /* On successful completion, the values of tm_wday and tm_yday
-       have to be set appropriately. */
-    
-    /* me->tm_yday = guess_tm->tm_yday; 
-       me->tm_mday = guess_tm->tm_mday; */
-
-    *me = *guess_tm;
-  }
-
-  /* Update the caller's version of the structure */
-
-  *timeptr = *me;
-
-  return result;
-}
-
-time_t
-#ifdef DEBUG			/* make it work even if the system's
-				   libc has it's own mktime routine */
-my_mktime (timeptr)
+#if ! HAVE_LOCALTIME_R && ! defined (localtime_r)
+#ifdef _LIBC
+#define localtime_r __localtime_r
 #else
-mktime (timeptr)
-#endif
-     struct tm *timeptr;
+/* Approximate localtime_r as best we can in its absence.  */
+#define localtime_r my_localtime_r
+static struct tm *localtime_r __P ((const time_t *, struct tm *));
+static struct tm *
+localtime_r (t, tp)
+     const time_t *t;
+     struct tm *tp;
 {
-  return _mktime_internal (timeptr, localtime);
+  struct tm *l = localtime (t);
+  if (! l)
+    return 0;
+  *tp = *l;
+  return tp;
 }
+#endif /* ! _LIBC */
+#endif /* ! HAVE_LOCALTIME_R && ! defined (localtime_r) */
+
+
+/* Yield the difference between (YEAR-YDAY HOUR:MIN:SEC) and (*TP),
+   measured in seconds, ignoring leap seconds.
+   YEAR uses the same numbering as TM->tm_year.
+   All values are in range, except possibly YEAR.
+   If overflow occurs, yield the low order bits of the correct answer.  */
+static time_t
+ydhms_tm_diff (year, yday, hour, min, sec, tp)
+     int year, yday, hour, min, sec;
+     const struct tm *tp;
+{
+  time_t ay = year + (time_t) (TM_YEAR_BASE - 1);
+  time_t by = tp->tm_year + (time_t) (TM_YEAR_BASE - 1);
+  time_t intervening_leap_days =
+    (ay/4 - by/4) - (ay/100 - by/100) + (ay/400 - by/400);
+  time_t years = ay - by;
+  time_t days = (365 * years + intervening_leap_days
+		 + (yday - tp->tm_yday));
+  return (60 * (60 * (24 * days + (hour - tp->tm_hour))
+		+ (min - tp->tm_min))
+	  + (sec - tp->tm_sec));
+}
+
+
+/* Convert *TP to a time_t value.  */
+time_t
+mktime (tp)
+     struct tm *tp;
+{
+  static time_t localtime_offset;
+  return __mktime_internal (tp, localtime_r, &localtime_offset);
+}
+
+/* Convert *TP to a time_t value, inverting
+   the monotonic and mostly-unit-linear conversion function CONVERT.
+   Use *OFFSET to keep track of a guess at the offset of the result,
+   compared to what the result would be for UTC without leap seconds.
+   If *OFFSET's guess is correct, only one CONVERT call is needed.  */
+time_t
+__mktime_internal (tp, convert, offset)
+     struct tm *tp;
+     struct tm *(*convert) __P ((const time_t *, struct tm *));
+     time_t *offset;
+{
+  time_t t, dt, t0;
+  struct tm tm;
+
+  /* The maximum number of probes (calls to CONVERT) should be enough
+     to handle any combinations of time zone rule changes, solar time,
+     and leap seconds.  Posix.1 prohibits leap seconds, but some hosts
+     have them anyway.  */
+  int remaining_probes = 4;
+
+  /* Time requested.  Copy it in case CONVERT modifies *TP; this can
+     occur if TP is localtime's returned value and CONVERT is localtime.  */
+  int sec = tp->tm_sec;
+  int min = tp->tm_min;
+  int hour = tp->tm_hour;
+  int mday = tp->tm_mday;
+  int mon = tp->tm_mon;
+  int year_requested = tp->tm_year;
+  int isdst = tp->tm_isdst;
+
+  /* Ensure that mon is in range, and set year accordingly.  */
+  int mon_remainder = mon % 12;
+  int negative_mon_remainder = mon_remainder < 0;
+  int mon_years = mon / 12 - negative_mon_remainder;
+  int year = year_requested + mon_years;
+
+  /* The other values need not be in range:
+     the remaining code handles minor overflows correctly,
+     assuming int and time_t arithmetic wraps around.
+     Major overflows are caught at the end.  */
+
+  /* Calculate day of year from year, month, and day of month.
+     The result need not be in range.  */
+  int yday = ((__mon_yday[__isleap (year + TM_YEAR_BASE)]
+	       [mon_remainder + 12 * negative_mon_remainder])
+	      + mday - 1);
+
+#if LEAP_SECONDS_POSSIBLE
+  /* Handle out-of-range seconds specially,
+     since ydhms_tm_diff assumes every minute has 60 seconds.  */
+  int sec_requested = sec;
+  if (sec < 0)
+    sec = 0;
+  if (59 < sec)
+    sec = 59;
+#endif
+
+  /* Invert CONVERT by probing.  First assume the same offset as last time.
+     Then repeatedly use the error to improve the guess.  */
+
+  tm.tm_year = EPOCH_YEAR - TM_YEAR_BASE;
+  tm.tm_yday = tm.tm_hour = tm.tm_min = tm.tm_sec = 0;
+  t0 = ydhms_tm_diff (year, yday, hour, min, sec, &tm);
+
+  for (t = t0 + *offset;
+       (dt = ydhms_tm_diff (year, yday, hour, min, sec, (*convert) (&t, &tm)));
+       t += dt)
+    if (--remaining_probes == 0)
+      return -1;
+
+  /* Check whether tm.tm_isdst has the requested value, if any.  */
+  if (0 <= isdst && 0 <= tm.tm_isdst)
+    {
+      int dst_diff = (isdst != 0) - (tm.tm_isdst != 0);
+      if (dst_diff)
+	{
+	  /* Move two hours in the direction indicated by the disagreement,
+	     probe some more, and switch to a new time if found.
+	     The largest known fallback due to daylight savings is two hours:
+	     once, in Newfoundland, 1988-10-30 02:00 -> 00:00.  */
+	  time_t ot = t - 2 * 60 * 60 * dst_diff;
+	  while (--remaining_probes != 0)
+	    {
+	      struct tm otm;
+	      if (! (dt = ydhms_tm_diff (year, yday, hour, min, sec,
+					 (*convert) (&ot, &otm))))
+		{
+		  t = ot;
+		  tm = otm;
+		  break;
+		}
+	      if ((ot += dt) == t)
+		break;  /* Avoid a redundant probe.  */
+	    }
+	}
+    }
+
+  *offset = t - t0;
+
+#if LEAP_SECONDS_POSSIBLE
+  if (sec_requested != tm.tm_sec)
+    {
+      /* Adjust time to reflect the tm_sec requested, not the normalized value.
+	 Also, repair any damage from a false match due to a leap second.  */
+      t += sec_requested - sec + (sec == 0 && tm.tm_sec == 60);
+      (*convert) (&t, &tm);
+    }
+#endif
+
+  if (TIME_T_MAX / INT_MAX / 366 / 24 / 60 / 60 < 3)
+    {
+      /* time_t isn't large enough to rule out overflows in ydhms_tm_diff,
+	 so check for major overflows.  A gross check suffices,
+	 since if t has overflowed, it is off by a multiple of
+	 TIME_T_MAX - TIME_T_MIN + 1.  So ignore any component of
+	 the difference that is bounded by a small value.  */
+
+      double dyear = (double) year_requested + mon_years - tm.tm_year;
+      double dday = 366 * dyear + mday;
+      double dsec = 60 * (60 * (24 * dday + hour) + min) + sec_requested;
+
+      if (TIME_T_MAX / 3 - TIME_T_MIN / 3 < (dsec < 0 ? - dsec : dsec))
+	return -1;
+    }
+
+  *tp = tm;
+  return t;
+}
+
+#ifdef weak_alias
+weak_alias (mktime, timelocal)
+#endif
 
-#ifdef DEBUG
-void
+#if DEBUG
+
+static int
+not_equal_tm (a, b)
+     struct tm *a;
+     struct tm *b;
+{
+  return ((a->tm_sec ^ b->tm_sec)
+	  | (a->tm_min ^ b->tm_min)
+	  | (a->tm_hour ^ b->tm_hour)
+	  | (a->tm_mday ^ b->tm_mday)
+	  | (a->tm_mon ^ b->tm_mon)
+	  | (a->tm_year ^ b->tm_year)
+	  | (a->tm_mday ^ b->tm_mday)
+	  | (a->tm_yday ^ b->tm_yday)
+	  | (a->tm_isdst ^ b->tm_isdst));
+}
+
+static void
+print_tm (tp)
+     struct tm *tp;
+{
+  printf ("%04d-%02d-%02d %02d:%02d:%02d yday %03d wday %d isdst %d",
+	  tp->tm_year + TM_YEAR_BASE, tp->tm_mon + 1, tp->tm_mday,
+	  tp->tm_hour, tp->tm_min, tp->tm_sec,
+	  tp->tm_yday, tp->tm_wday, tp->tm_isdst);
+}
+
+static int
+check_result (tk, tmk, tl, tml)
+     time_t tk;
+     struct tm tmk;
+     time_t tl;
+     struct tm tml;
+{
+  if (tk != tl || not_equal_tm (&tmk, &tml))
+    {
+      printf ("mktime (");
+      print_tm (&tmk);
+      printf (")\nyields (");
+      print_tm (&tml);
+      printf (") == %ld, should be %ld\n", (long) tl, (long) tk);
+      return 1;
+    }
+
+  return 0;
+}
+
+int
 main (argc, argv)
      int argc;
-     char *argv[];
+     char **argv;
 {
-  int time;
-  int result_time;
-  struct tm *tmptr;
-  
-  if (argc == 1)
+  int status = 0;
+  struct tm tm, tmk, tml;
+  time_t tk, tl;
+  char trailer;
+
+  if ((argc == 3 || argc == 4)
+      && (sscanf (argv[1], "%d-%d-%d%c",
+		  &tm.tm_year, &tm.tm_mon, &tm.tm_mday, &trailer)
+	  == 3)
+      && (sscanf (argv[2], "%d:%d:%d%c",
+		  &tm.tm_hour, &tm.tm_min, &tm.tm_sec, &trailer)
+	  == 3))
     {
-      long q;
-      
-      printf ("starting long test...\n");
-
-      for (q = 10000000; q < 1000000000; q += 599)
-	{
-	  struct tm *tm = localtime ((time_t *) &q);
-	  if ((q % 10000) == 0) { printf ("%ld\n", q); fflush (stdout); }
-	  if (q != my_mktime (tm))
-	    { printf ("failed for %ld\n", q); fflush (stdout); }
-	}
-      
-      printf ("test finished\n");
-
-      exit (0);
+      tm.tm_year -= TM_YEAR_BASE;
+      tm.tm_mon--;
+      tm.tm_isdst = argc == 3 ? -1 : atoi (argv[3]);
+      tmk = tm;
+      tl = mktime (&tmk);
+      tml = *localtime (&tl);
+      printf ("mktime returns %ld == ", (long) tl);
+      print_tm (&tmk);
+      printf ("\n");
+      status = check_result (tl, tmk, tl, tml);
     }
-  
-  if (argc != 2)
+  else if (argc == 4 || (argc == 5 && strcmp (argv[4], "-") == 0))
     {
-      printf ("wrong # of args\n");
-      exit (0);
+      time_t from = atol (argv[1]);
+      time_t by = atol (argv[2]);
+      time_t to = atol (argv[3]);
+
+      if (argc == 4)
+	for (tl = from; tl <= to; tl += by)
+	  {
+	    tml = *localtime (&tl);
+	    tmk = tml;
+	    tk = mktime (&tmk);
+	    status |= check_result (tk, tmk, tl, tml);
+	  }
+      else
+	for (tl = from; tl <= to; tl += by)
+	  {
+	    /* Null benchmark.  */
+	    tml = *localtime (&tl);
+	    tmk = tml;
+	    tk = tl;
+	    status |= check_result (tk, tmk, tl, tml);
+	  }
     }
-  
-  debugging_enabled = 1;	/* We want to see the info */
+  else
+    printf ("Usage:\
+\t%s YYYY-MM-DD HH:MM:SS [ISDST] # Test given time.\n\
+\t%s FROM BY TO # Test values FROM, FROM+BY, ..., TO.\n\
+\t%s FROM BY TO - # Do not test those values (for benchmark).\n",
+	    argv[0], argv[0], argv[0]);
 
-  ++argv;
-  time = atoi (*argv);
-  
-  tmptr = localtime ((time_t *) &time);
-  printf ("Localtime tells us that a time_t of %d represents\n     ", time);
-  printtm (tmptr);
-  putchar ('\n');
-
-  printf ("   Given localtime's return val, mktime returns %d which is\n     ",
-	  (int) my_mktime (tmptr));
-  printtm (tmptr);
-  putchar ('\n');
-
-#if 0
-  tmptr->tm_sec -= 20;
-  tmptr->tm_min -= 20;
-  tmptr->tm_hour -= 20;
-  tmptr->tm_mday -= 20;
-  tmptr->tm_mon -= 20;
-  tmptr->tm_year -= 20;
-  tmptr->tm_gmtoff -= 20000;	/* This has no effect! */
-  tmptr->tm_zone = NULL;	/* Nor does this! */
-  tmptr->tm_isdst = -1;
-#endif
-  
-  tmptr->tm_hour += 1;
-  tmptr->tm_isdst = -1;
-
-  printf ("\n\nchanged ranges: ");
-  printtm (tmptr);
-  putchar ('\n');
-
-  result_time = my_mktime (tmptr);
-  printf ("\nmktime: %d\n", result_time);
-
-  tmptr->tm_isdst = 0;
-
-  printf ("\n\nchanged ranges: ");
-  printtm (tmptr);
-  putchar ('\n');
-
-  result_time = my_mktime (tmptr);
-  printf ("\nmktime: %d\n", result_time);
+  return status;
 }
-#endif /* DEBUG */
 
+#endif /* DEBUG */
 
 /*
 Local Variables:
-compile-command: "gcc -g mktime.c -o mktime -DDEBUG"
+compile-command: "gcc -DDEBUG=1 -Wall -O -g mktime.c -o mktime"
 End:
 */
