@@ -1,5 +1,5 @@
 /* mv -- move or rename files
-   Copyright (C) 86, 89, 90, 91, 1995-2001 Free Software Foundation, Inc.
+   Copyright (C) 86, 89, 90, 91, 1995-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -241,6 +241,19 @@ do_move (const char *source, const char *dest, const struct cp_options *x)
 	  struct rm_options rm_options;
 	  struct File_spec fs;
 	  enum RM_status status;
+	  static int first_rm = 1;
+	  static struct dev_ino cwd_dev_ino;
+
+	  if (first_rm)
+	    {
+	      struct stat cwd_sb;
+	      if (lstat (".", &cwd_sb))
+		error (EXIT_FAILURE, errno, _("cannot lstat `.'"));
+
+	      first_rm = 0;
+	      cwd_dev_ino.st_dev = cwd_sb.st_dev;
+	      cwd_dev_ino.st_ino = cwd_sb.st_ino;
+	    }
 
 	  rm_option_init (&rm_options);
 	  rm_options.verbose = x->verbose;
@@ -253,7 +266,7 @@ do_move (const char *source, const char *dest, const struct cp_options *x)
 	     took the else branch of movefile.  */
 	  strip_trailing_slashes (fs.filename);
 
-	  status = rm (&fs, 1, &rm_options);
+	  status = rm (&fs, 1, &rm_options, &cwd_dev_ino);
 	  assert (VALID_STATUS (status));
 	  if (status == RM_ERROR)
 	    fail = 1;
