@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
    Based on strlen implemention by Torbjorn Granlund (tege@sics.se),
    with help from Dan Sahlin (dan@sics.se) and
    commentary by Jim Blandy (jimb@ai.mit.edu);
@@ -20,51 +20,63 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-
-
-
 /* Search no more than N bytes of S for C.  */
 
 char *
-memchr(s, c, n)
-     unsigned char * s ;
-     int c ;
+memchr (s, c, n)
+     unsigned char *s;
+     int c;
      unsigned n;
 {
-  unsigned char *char_ptr;
-  unsigned long int *longword_ptr;
+  const unsigned char *char_ptr;
+  const unsigned long int *longword_ptr;
   unsigned long int longword, magic_bits, charmask;
 
   c = (unsigned char) c;
 
   /* Handle the first few characters by reading one character at a time.
-     Do this until CHAR_PTR is aligned on a 4-byte border.  */
-  for (char_ptr = s; n > 0 && ((unsigned long int) char_ptr & 3) != 0;
+     Do this until CHAR_PTR is aligned on a longword boundary.  */
+  for (char_ptr = s; n > 0 && ((unsigned long int) char_ptr
+			       & (sizeof (longword) - 1)) != 0;
        --n, ++char_ptr)
     if (*char_ptr == c)
       return (char *) char_ptr;
+
+  /* All these elucidatory comments refer to 4-byte longwords,
+     but the theory applies equally well to 8-byte longwords.  */
 
   longword_ptr = (unsigned long int *) char_ptr;
 
   /* Bits 31, 24, 16, and 8 of this number are zero.  Call these bits
      the "holes."  Note that there is a hole just to the left of
      each byte, with an extra at the end:
-     
+
      bits:  01111110 11111110 11111110 11111111
-     bytes: AAAAAAAA BBBBBBBB CCCCCCCC DDDDDDDD 
+     bytes: AAAAAAAA BBBBBBBB CCCCCCCC DDDDDDDD
 
      The 1-bits make sure that carries propagate to the next 0-bit.
      The 0-bits provide holes for carries to fall into.  */
+#ifdef LONG_64_BITS
+  /* 64-bit version of the magic.  */
+  magic_bits = ((unsigned long int) 0x7efefefe << 32) | 0xfefefeff;
+#else
   magic_bits = 0x7efefeff;
+#endif /* LONG_64_BITS */
 
   /* Set up a longword, each of whose bytes is C.  */
   charmask = c | (c << 8);
   charmask |= charmask << 16;
+#ifdef LONG_64_BITS
+  charmask |= charmask << 32;
+#endif /* LONG_64_BITS */
+  if (sizeof (longword) > 8)
+    abort ();
+
 
   /* Instead of the traditional loop which tests each character,
      we will test a longword at a time.  The tricky part is testing
      if *any of the four* bytes in the longword in question are zero.  */
-  while (n >= 4)
+  while (n >= sizeof (longword))
     {
       /* We tentatively exit the loop if adding MAGIC_BITS to
 	 LONGWORD fails to change any of the hole bits of LONGWORD.
@@ -104,11 +116,11 @@ memchr(s, c, n)
 
       /* Add MAGIC_BITS to LONGWORD.  */
       if ((((longword + magic_bits)
-	
-	    /* Set those bits that were unchanged by the addition.  */
+
+      /* Set those bits that were unchanged by the addition.  */
 	    ^ ~longword)
-	       
-	   /* Look at only the hole bits.  If any of the hole bits
+
+      /* Look at only the hole bits.  If any of the hole bits
 	      are unchanged, most likely one of the bytes was a
 	      zero.  */
 	   & ~magic_bits) != 0)
@@ -116,7 +128,7 @@ memchr(s, c, n)
 	  /* Which of the bytes was C?  If none of them were, it was
 	     a misfire; continue the search.  */
 
-	   unsigned char *cp = ( unsigned char *) (longword_ptr - 1);
+	  const unsigned char *cp = (const unsigned char *) (longword_ptr - 1);
 
 	  if (cp[0] == c)
 	    return (char *) cp;
@@ -126,12 +138,22 @@ memchr(s, c, n)
 	    return (char *) &cp[2];
 	  if (cp[3] == c)
 	    return (char *) &cp[3];
+#ifdef LONG_64_BITS
+	  if (cp[4] == c)
+	    return (char *) &cp[4];
+	  if (cp[5] == c)
+	    return (char *) &cp[5];
+	  if (cp[6] == c)
+	    return (char *) &cp[6];
+	  if (cp[7] == c)
+	    return (char *) &cp[7];
+#endif /* LONG_64_BITS */
 	}
 
-      n -= 4;
+      n -= sizeof (longword);
     }
 
-  char_ptr = ( unsigned char *) longword_ptr;
+  char_ptr = (const unsigned char *) longword_ptr;
 
   while (n-- > 0)
     {
