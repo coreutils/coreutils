@@ -390,6 +390,7 @@ extern int errno;
 #ifdef LOAD_AVE_TYPE
 
 #ifndef VMS
+#ifndef __linux__
 #ifndef NLIST_STRUCT
 #include <a.out.h>
 #else /* NLIST_STRUCT */
@@ -409,6 +410,7 @@ extern int errno;
 #ifndef LDAV_SYMBOL
 #define LDAV_SYMBOL "_avenrun"
 #endif /* LDAV_SYMBOL */
+#endif /* __linux__ */
 
 #else /* VMS */
 
@@ -495,7 +497,7 @@ static int getloadavg_initialized;
 /* Offset in kmem to seek to read load average, or 0 means invalid.  */
 static long offset;
 
-#if !defined(VMS) && !defined(sgi)
+#if !defined(VMS) && !defined(sgi) && !defined(__linux__)
 static struct nlist nl[2];
 #endif /* Not VMS or sgi */
 
