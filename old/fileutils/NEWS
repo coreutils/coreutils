@@ -1,5 +1,13 @@
 Changes in release 4.1:
 [4.0g]
+* New large-file support for AIX and HP-UX, and for cross-compiles.
+* shred's default options are now suitable for devices, not files, since
+  shred is more reliable on devices.  shred now does not remove by default;
+  the old -p or --preserve option was inverted and renamed to -u or --remove.
+* shred -u now attempts to truncate devices before removing them.
+* shred -v no longer outputs carriage-returns; shred -vv has no extra effect;
+  shred -v now outputs to stderr.
+* shred now tries to find the size of a non-regular file by seeking to its end.
 * dd now opens the output file for *read* access only if `seek=' is used.
 [4.0f]
 * `ls --color' no longer segfaults
