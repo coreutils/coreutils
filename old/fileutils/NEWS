@@ -2,7 +2,7 @@ Changes in release 4.1.0:
 [4.0.45]
 * regenerate configure using a patched version of autoconf-2.49e to work
     around a bug in its test for a working memcmp function
-* ls: fix off-by-one error introduced with last patch
+* ls: fix off-by-one error introduced with the previous change
 [4.0.44]
 * ls: When given two or more arguments but the only one that exists is a
     directory, don't treat it as if it were the only argument.  Before,
