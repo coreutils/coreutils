@@ -188,11 +188,8 @@ change_file_owner (int cmdline_arg, const char *file, uid_t user, gid_t group)
 	{
 	  fail = lchown (file, newuser, newgroup);
 
-	  /* Failing to lchown a symlink is fatal only if it is a command
-	     line argument.  Symlinks encountered during a recursive
-	     traversal are silently ignored.  So, ignore the failure
-	     if it's due to lack of support (ENOSYS) and this is not a
-	     command line argument.  */
+	  /* Ignore the failure if it's due to lack of support (ENOSYS)
+	     and this is not a command line argument.  */
 	  if (!cmdline_arg && fail && errno == ENOSYS)
 	    {
 	      fail = 0;
