@@ -972,7 +972,8 @@ process_regexp (struct control *p, int repetition)
   if (!ignore)
     close_output_file ();
 
-  current_line = break_line;
+  if (p->offset > 0)
+    current_line = break_line;
 }
 
 /* Split the input file according to the control records we have built. */
