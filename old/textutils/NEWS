@@ -1,4 +1,6 @@
 Changes in release 2.1
+[2.0.13]
+* `fmt --prefix=S' now works when S contains a byte with the high bit set
 [2.0.12]
 * sort has improved performance when using very little main memory
 * sort has improved memory management
