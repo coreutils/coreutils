@@ -1,3 +1,10 @@
+2000-11-27  Jim Meyering  <meyering@lucent.com>
+
+	* Version 4.0.33.
+
+	* config.sub: Likewise.
+	* config.guess: Likewise.
+
 2000-11-26  Jim Meyering  <meyering@lucent.com>
 
 	* src/dd.c (skip): Perform the `records < blocksize' test
@@ -10,8 +17,6 @@
 	is nonzero.
 
 2000-11-25  Paul Eggert  <eggert@twinsun.com>
-
-	* Version 4.0.33.
 
 	* doc/fileutils.texi: Document seek=nB and skip=nB.
 
