@@ -1,3 +1,13 @@
+2004-08-24  Paul Eggert  <eggert@cs.ucla.edu>
+
+	POSIX-conformance fixes for "expand" and "unexpand".
+	* coreutils.texi: Standardize on "tab stop" (the POSIX usage)
+	rather than "tabstop".
+	(unexpand invocation): Use "blank" rather than "space" when
+	POSIX requires "blank".  Define "blank".  Initial blanks are
+	converted even if there's just one.  For -a, convert two or
+	more blanks only if they occur just before a tab stop.
+
 2004-08-19  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (chown invocation): Fix synopsis:

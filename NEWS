@@ -85,6 +85,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   POSIXLY_CORRECT is set and the first argument is not "-n", echo now
   outputs all option-like arguments instead of treating them as options.
 
+  expand and unexpand now conform to POSIX better.  They check for
+  blanks (which can include characters other than space and tab in
+  non-POSIX locales) instead of spaces and tabs.  Unexpand now
+  preserves some blanks instead of converting them to tabs or spaces.
+
   printf has several changes:
 
     It now uses 'intmax_t' (not 'long int') to format integers, so it

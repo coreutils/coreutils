@@ -1,3 +1,32 @@
+2004-08-24  Paul Eggert  <eggert@cs.ucla.edu>
+
+	POSIX-conformance fixes for "expand" and "unexpand".
+	Also, consistently use "tab stop" rather than "tabstop".
+	* NEWS: Document fixes.
+	* src/expand.c: Revamp to resemble the new unexpand.c better.
+	(usage): -i does not convert tabs after non-tabs.
+	(add_tab_stop): Renamed from add_tabstop.  All uses changed.
+	(parse_tab_stop): Renamed from parse_tabstop.  All uses changed.
+	(validate_tab_stop): Renamed from validate_tabstop.  All uses changed.
+	(next_file, main): Check fclose against 0, not EOF.
+	(expand): Remove unnecessary casts.
+	Add another loop nesting level, for lines, so that per-line variables
+	are initialized cleanly.
+	Revamp tab checking.  Check for write error immediately, rather
+	than just once at the end of the program.
+	* src/unexpand.c: Lkewise (for the expand.c changes).
+	(TAB_STOP_SENTINEL): Remove.
+	(tab_size): Now size_t, not uintmax_t, since we need to store
+	the sequences of blanks.
+	(max_column_width): New var.
+	(usage): Say "blank" where POSIX requires this.
+	(add_tab_stop): Calculate maximum column width.
+	(unexpand): Store the pending blanks, instead of merely counting them.
+	Follow POSIX's rules about -a requiring two blanks before a tab stop.
+	Get rid of internal label and goto.
+	* tests/unexpand/basic-1: Fix infloop-3 to match POSIX.
+	Add blanks-1 through blanks-13.
+
 2004-08-19  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: "chown : file", "chown '' file", and "chgrp '' file" now
