@@ -3,7 +3,7 @@
 
 AC_DEFUN([cu_PREREQ_STAT_PROG],
 [
-  AC_CHECK_HEADERS(sys/sysmacros.h sys/statvfs.h sys/vfs.h inttypes.h)
+  AC_CHECK_HEADERS(sys/sysmacros.h sys/statvfs.h sys/vfs.h)
   AC_CHECK_HEADERS(sys/param.h sys/mount.h)
   AC_CHECK_FUNCS(statvfs)
 
@@ -12,6 +12,7 @@ AC_DEFUN([cu_PREREQ_STAT_PROG],
     [AC_INCLUDES_DEFAULT])
 
   AC_REQUIRE([gl_AC_TYPE_LONG_LONG])
+  AC_REQUIRE([gt_HEADER_INTTYPES_H])
 
   statxfs_includes="\
 $ac_includes_default
