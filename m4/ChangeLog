@@ -1,5 +1,6 @@
 1999-08-29  Jim Meyering  <meyering@ascend.com>
 
+	* jm-macros.m4: Require jm_BISON.
 	* bison.m4: New file.
 
 1999-08-17  Paul Eggert  <eggert@twinsun.com>
