@@ -1,5 +1,9 @@
 1999-01-14  Jim Meyering  <meyering@ascend.com>
 
+	* tests/md5sum/basic-1: Use `f', not `x' as temp. file name to avoid
+	warnings from perl5.004.
+	Reported by Volker Borchert.
+
 	* lib/long-options.c (parse_long_options): Rename `usage' parameter
 	to avoid shadowing globally scoped function.
 
