@@ -1,11 +1,21 @@
+2000-02-02  Jim Meyering  <meyering@lucent.com>
+
+	* tests/touch/Makefile.am (TESTS): Add fifo.
+	* tests/touch/fifo (fail): New file.
+
 2000-02-01  Jim Meyering  <meyering@lucent.com>
+
+	* src/touch.c (O_NDELAY): Define to 0 if not defined.
+	(O_NONBLOCK): Define to O_NDELAY if not defined.
+	(touch): Open with O_NONBLOCK, so one can touch a fifo without hanging.
+	Reported by Eric G. Miller via Michael Stone.
 
 	* man/*.x: Change ." to .\".
 	Reported by Andreas Schwab and Brendan O'Dea.
 
 2000-01-31  Jim Meyering  <meyering@lucent.com>
 
-	* man/Makefile.maint (g_filter): Define.
+	* man/Makefile.maint (ginstall_filter): Define.
 	($(man_MANS)): Use it here so that the install.1 man page refers
 	to `install', not `ginstall'.  Reported by Andreas Schwab.
 
