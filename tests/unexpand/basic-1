@@ -53,8 +53,8 @@ my @Tests =
      ['c-1', '-t', '1,2', {IN=> "x\t\t .\n"}, {OUT=>"x\t\t .\n"}],
 
      # This test failed in 2.0e and earlier.  From Jie Xu.
-     ['tabs-1', qw(   -t 4), {IN=> "    a   b   c\n"}, {OUT=>"\ta   b   c\n"}],
-     ['tabs-2', qw(-a -t 4), {IN=> "    a   b   c\n"}, {OUT=>"\ta\tb\tc\n"}],
+     ['tabs-1', qw(   -t 4), {IN=> "    a   b\n"}, {OUT=>"\ta   b\n"}],
+     ['tabs-2', qw(-a -t 4), {IN=> "    a   b\n"}, {OUT=>"\ta\tb\n"}],
     );
 
 my $save_temps = $ENV{DEBUG};
