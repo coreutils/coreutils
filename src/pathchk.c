@@ -100,7 +100,7 @@
 # define NAME_MAX_FOR(p) NAME_MAX
 #endif
 
-static int validate_path (char *path, int portability);
+static bool validate_path (char *path, bool portability);
 
 /* The name this program was run with. */
 char *program_name;
@@ -154,8 +154,8 @@ Diagnose unportable constructs in NAME.\n\
 int
 main (int argc, char **argv)
 {
-  int exit_status = 0;
-  int check_portability = 0;
+  bool ok = true;
+  bool check_portability = false;
   int optc;
 
   initialize_main (&argc, &argv);
@@ -177,7 +177,7 @@ main (int argc, char **argv)
 	  break;
 
 	case 'p':
-	  check_portability = 1;
+	  check_portability = true;
 	  break;
 
 	default:
@@ -192,9 +192,9 @@ main (int argc, char **argv)
     }
 
   for (; optind < argc; ++optind)
-    exit_status |= validate_path (argv[optind], check_portability);
+    ok &= validate_path (argv[optind], check_portability);
 
-  exit (exit_status);
+  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
 /* Each element is nonzero if the corresponding ASCII character is
@@ -220,21 +220,21 @@ static char const portable_chars[256] =
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
-/* If PATH contains only portable characters, return 1, else 0.  */
+/* If PATH contains only portable characters, return true, else false.  */
 
-static int
+static bool
 portable_chars_only (const char *path)
 {
   const char *p;
 
   for (p = path; *p; ++p)
-    if (portable_chars[(unsigned char) *p] == 0)
+    if (portable_chars[to_uchar (*p)] == 0)
       {
 	error (0, 0, _("path `%s' contains nonportable character `%c'"),
 	       path, *p);
-	return 0;
+	return false;
       }
-  return 1;
+  return true;
 }
 
 /* Return 1 if PATH is a usable leading directory, 0 if not,
@@ -273,7 +273,7 @@ dir_ok (const char *path)
    strlen (PATH) <= PATH_MAX
    && strlen (each-existing-directory-in-PATH) <= NAME_MAX
 
-   If PORTABILITY is nonzero, compare against _POSIX_PATH_MAX and
+   If PORTABILITY is true, compare against _POSIX_PATH_MAX and
    _POSIX_NAME_MAX instead, and make sure that PATH contains no
    characters not in the POSIX portable filename character set, which
    consists of A-Z, a-z, 0-9, ., _, -.
@@ -281,10 +281,10 @@ dir_ok (const char *path)
    Make sure that all leading directories along PATH that exist have
    `x' permission.
 
-   Return 0 if all of these tests are successful, 1 if any fail. */
+   Return true if all of these tests are successful, false if any fail.  */
 
-static int
-validate_path (char *path, int portability)
+static bool
+validate_path (char *path, bool portability)
 {
   long int path_max;
   int last_elem;		/* Nonzero if checking last element of path. */
@@ -293,10 +293,10 @@ validate_path (char *path, int portability)
   char *parent;			/* Last existing leading directory so far.  */
 
   if (portability && !portable_chars_only (path))
-    return 1;
+    return false;
 
   if (*path == '\0')
-    return 0;
+    return true;
 
   /* Figure out the parent of the first element in PATH.  */
   parent = xstrdup (*path == '/' ? "/" : ".");
@@ -329,7 +329,7 @@ validate_path (char *path, int portability)
 	  if (exists == 0)
 	    {
 	      free (parent);
-	      return 1;
+	      return false;
 	    }
 	}
 
@@ -350,7 +350,7 @@ validate_path (char *path, int portability)
 	  error (0, 0, _("name `%s' has length %ld; exceeds limit of %ld"),
 		 start, length, name_max);
 	  free (parent);
-	  return 1;
+	  return false;
 	}
 
       if (last_elem)
@@ -374,9 +374,9 @@ validate_path (char *path, int portability)
   if (strlen (path) > (size_t) path_max)
     {
       error (0, 0, _("path `%s' has length %lu; exceeds limit of %ld"),
-	     path, (unsigned long) strlen (path), path_max);
-      return 1;
+	     path, (unsigned long int) strlen (path), path_max);
+      return false;
     }
 
-  return 0;
+  return true;
 }
