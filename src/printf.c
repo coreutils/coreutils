@@ -160,6 +160,9 @@ main (int argc, char **argv)
     }
   while (args_used > 0 && argc > 0);
 
+  if (argc > 0)
+    error (0, 0, _("warning: excess arguments have been ignored"));
+
   exit (exit_status);
 }
 
