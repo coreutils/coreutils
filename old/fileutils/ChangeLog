@@ -1,3 +1,12 @@
+2000-05-03  Bruno Haible  <haible@clisp.cons.org>
+
+	Don't fail when running `make check' with non-`C' locale.
+	* tests/cp/symlink-slash: During ls, set LANGUAGE (for GNU gettext)
+	and LC_ALL (for systems which look at LC_MESSAGES).
+	* tests/rm/r-2: Define LC_ALL instead of LANG, in case the user has
+	LC_CTYPE or LC_ALL set.  Define it and LANGUAGE before the first use
+	of sort.
+
 2000-05-03  Jim Meyering  <meyering@lucent.com>
 
 	With a recent glibc, _GNU_SOURCE, and -O, strndup may be a macro.
