@@ -2705,7 +2705,8 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
   -L, --dereference          list entries pointed to by symbolic links\n\
   -l                         use a long listing format\n\
   -m                         fill width with a comma separated list of entries\n\
-  -N, --literal              do not quote entry names\n\
+  -N, --literal              print raw entry names (don't treat e.g. control\n\
+                               characters specially)\n\
   -n, --numeric-uid-gid      list numeric UIDs and GIDs instead of names\n\
   -o                         use long listing format without group info\n\
   -p                         append a character for typing each entry\n\
