@@ -833,6 +833,24 @@ AC_CONFIG_COMMANDS_PRE(
 Usually this means the macro was only invoked conditionally.])
 fi])])
 
+# AC_GNU_SOURCE
+# --------------
+AC_DEFUN([AC_GNU_SOURCE],
+[AH_VERBATIM([_GNU_SOURCE],
+[/* Enable GNU extensions on systems that have them.  */
+#ifndef _GNU_SOURCE
+# undef _GNU_SOURCE
+#endif
+/* Enable many GNU extensions on Solaris.  */
+#ifndef __EXTENSIONS__
+# undef __EXTENSIONS__
+#endif])dnl
+AC_BEFORE([$0], [AC_COMPILE_IFELSE])dnl
+AC_BEFORE([$0], [AC_RUN_IFELSE])dnl
+AC_DEFINE([_GNU_SOURCE])
+AC_DEFINE([__EXTENSIONS__])
+])
+
 #serial 5
 
 dnl From Jim Meyering.
@@ -1200,7 +1218,7 @@ AC_DEFUN([jm_CHECK_ALL_TYPES],
   AC_REQUIRE([AC_HEADER_STAT])
   AC_REQUIRE([AC_STRUCT_ST_MTIM_NSEC])
   AC_REQUIRE([AC_STRUCT_ST_DM_MODE])
-  AC_REQUIRE([jm_CHECK_TYPE_STRUCT_TIMESPEC])
+  AC_REQUIRE([gl_TIMESPEC])
 
   AC_REQUIRE([AC_TYPE_GETGROUPS])
   AC_REQUIRE([AC_TYPE_MODE_T])
@@ -1806,7 +1824,7 @@ AC_DEFUN([_jm_DECL_HEADERS],
                    unistd.h sys/time.h utmp.h utmpx.h)
 ])
 
-#serial 33
+#serial 34
 
 dnl We use jm_ for non Autoconf macros.
 m4_pattern_forbid([^jm_[ABCDEFGHIJKLMNOPQRSTUVXYZ]])dnl
@@ -1926,7 +1944,7 @@ AC_DEFUN([jm_PREREQ_PHYSMEM],
 [
   AC_CHECK_HEADERS([unistd.h sys/pstat.h sys/sysmp.h sys/sysinfo.h \
     machine/hal_sysinfo.h sys/table.h sys/param.h sys/sysctl.h \
-    sys/systemcfg.h])
+    sys/systemcfg.h],,, [AC_INCLUDES_DEFAULT])
   AC_CHECK_FUNCS(pstat_getstatic pstat_getdynamic sysmp getsysinfo sysctl table)
 
   AC_REQUIRE([gl_SYS__SYSTEM_CONFIGURATION])
@@ -1999,7 +2017,8 @@ AC_DEFUN([jm_PREREQ_STAT],
   AC_CHECK_FUNCS(statvfs)
 
   # For `struct statfs' on Ultrix 4.4.
-  AC_CHECK_HEADERS(netinet/in.h nfs/nfs_clnt.h nfs/vfs.h)
+  AC_CHECK_HEADERS([netinet/in.h nfs/nfs_clnt.h nfs/vfs.h],,,
+    [AC_INCLUDES_DEFAULT])
 
   AC_REQUIRE([jm_AC_TYPE_LONG_LONG])
 
@@ -6382,7 +6401,7 @@ AC_DEFUN([AC_FUNC_CANONICALIZE_FILE_NAME],
     AC_CHECK_FUNC([canonicalize_file_name], , [AC_LIBOBJ(canonicalize)])
   ])
 
-#serial 5
+#serial 6
 
 dnl From Paul Eggert.
 
@@ -6410,7 +6429,7 @@ AC_DEFUN([AC_STRUCT_ST_MTIM_NSEC],
   if test $ac_cv_struct_st_mtim_nsec != no; then
     AC_DEFINE_UNQUOTED(ST_MTIM_NSEC, $ac_cv_struct_st_mtim_nsec,
       [Define to be the nanoseconds member of struct stat's st_mtim,
-   if it exists.])
+       if it exists.])
   fi
  ]
 )
@@ -6433,16 +6452,33 @@ AC_DEFUN([AC_STRUCT_ST_DM_MODE],
  ]
 )
 
-#serial 5
+#serial 7
 
 dnl From Jim Meyering
+
+AC_DEFUN([gl_TIMESPEC],
+[
+  dnl Prerequisites of lib/timespec.h.
+  AC_REQUIRE([AC_GNU_SOURCE])
+  AC_REQUIRE([AC_HEADER_TIME])
+  AC_CHECK_HEADERS_ONCE(sys/time.h)
+  jm_CHECK_TYPE_STRUCT_TIMESPEC
+  AC_STRUCT_ST_MTIM_NSEC
+
+  dnl Persuade glibc <time.h> to declare nanosleep().
+  AC_REQUIRE([AC_GNU_SOURCE])
+
+  AC_CHECK_DECLS(nanosleep, , , [#include <time.h>])
+])
 
 dnl Define HAVE_STRUCT_TIMESPEC if `struct timespec' is declared
 dnl in time.h or sys/time.h.
 
 AC_DEFUN([jm_CHECK_TYPE_STRUCT_TIMESPEC],
 [
+  AC_REQUIRE([AC_GNU_SOURCE])
   AC_REQUIRE([AC_HEADER_TIME])
+  AC_CHECK_HEADERS_ONCE(sys/time.h)
   AC_CACHE_CHECK([for struct timespec], fu_cv_sys_struct_timespec,
     [AC_TRY_COMPILE(
       [
