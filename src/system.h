@@ -311,3 +311,11 @@ char *alloca ();
 #define ISSPACE(c) (ISASCII (c) && isspace (c))
 #define ISUPPER(c) (ISASCII (c) && isupper (c))
 #define ISXDIGIT(c) (ISASCII (c) && isxdigit (c))
+
+#ifndef __P
+#if defined (__GNUC__) || (defined (__STDC__) && __STDC__)
+#define __P(args) args
+#else
+#define __P(args) ()
+#endif  /* GCC.  */
+#endif  /* Not __P.  */
