@@ -162,6 +162,7 @@ change_file_mode (const char *file, const struct mode_change *changes,
   if (newmode != (file_stats.st_mode & CHMOD_MODE_BITS))
     {
       int fail = chmod (file, newmode);
+      int saved_errno = errno;
 
       if (verbosity == V_high || (verbosity == V_changes_only && !fail))
 	describe_change (file, newmode, (fail ? CH_FAILED : CH_SUCCEEDED));
@@ -169,7 +170,7 @@ change_file_mode (const char *file, const struct mode_change *changes,
       if (fail)
 	{
 	  if (force_silent == 0)
-	    error (0, errno, "%s", file);
+	    error (0, saved_errno, "%s", file);
 	  errors = 1;
 	}
     }
