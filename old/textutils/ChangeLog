@@ -1,23 +1,23 @@
 2000-10-22  Jim Meyering  <meyering@lucent.com>
 
-	* tests/Makefile.am (SUBDIRS): Add shasum.
-	* tests/shasum/basic-1: New file.
-	* configure.in (AC_OUTPUT): Add tests/shasum/Makefile.
+	* tests/Makefile.am (SUBDIRS): Add sha1sum.
+	* tests/sha1sum/basic-1: New file.
+	* configure.in (AC_OUTPUT): Add tests/sha1sum/Makefile.
 
-	* src/Makefile.am (bin_PROGRAMS): Add shasum.
+	* src/Makefile.am (bin_PROGRAMS): Add sha1sum.
 	(md5sum_SOURCES): Define.
-	(shasum_SOURCES): Define.
+	(sha1sum_SOURCES): Define.
 	(noinst_HEADERS): Add checksum.h.
 
 	* src/md5sum.c: Factor out the differences between MD5 and SHA1,
 	and parameterize so this code may be used by both md5sum and the new
-	program, shasum.  Loosely based on a patch from Scott Miller.
+	program, sha1sum.  Loosely based on a patch from Scott Miller.
 	* src/checksum.h: New file.
 	* src/md5.c: New file that simply defines `algorithm'.
-	* src/shasum.c: Likewise.
+	* src/sha1sum.c: Likewise.
 
-	* man/Makefile.am (man_MANS): Add shasum.1.
-	* man/shasum.x: New file.
+	* man/Makefile.am (man_MANS): Add sha1sum.1.
+	* man/sha1sum.x: New file.
 
 	Support 8-byte integers, assuming they're printable with e.g., %lld.
 	* src/od.c: Add support for printing data as unsigned
