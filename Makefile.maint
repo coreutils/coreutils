@@ -242,7 +242,7 @@ signatures ?= $(distdir).tar.bz2.sig $(distdir).tar.gz.sig
 %.sig: %
 	gpg --detach-sign $<
 
-rel-files = $(xd-delta) $(distdir).tar.bz2 $(distdir).tar.gz
+rel-files = $(xd-delta) $(distdir).tar.bz2 $(distdir).tar.gz $(signatures)
 announcement: NEWS ChangeLog $(rel-files) $(signatures)
 	@./announce-gen							\
 	    --release-type=$(RELEASE_TYPE)				\
