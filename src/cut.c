@@ -452,29 +452,34 @@ set_fields (const char *fieldstr)
   /* Set the array entries corresponding to integers in the ranges of RP.  */
   for (i = 0; i < n_rp; i++)
     {
-      unsigned int j = rp[i].lo;
-
-      /* Mark the first position of each field or range with a sentinel,
-	 but not if it's already part of another range.  */
-      if (j <= rp[i].hi && ! printable_field[j])
+      unsigned int j;
+      for (j = rp[i].lo; j <= rp[i].hi; j++)
 	{
-	  if (output_delimiter_specified)
-	    {
-	      /* Remember that `j' is a range-start index.  */
-	      void *ent_from_table = hash_insert (range_start_ht, (void*) j);
-	      if (ent_from_table == NULL)
-		{
-		  /* Insertion failed due to lack of memory.  */
-		  xalloc_die ();
-		}
-	      assert ((unsigned int) ent_from_table == j);
-	    }
 	  printable_field[j] = 1;
 	}
+    }
 
-      for (++j; j <= rp[i].hi; j++)
+  if (output_delimiter_specified)
+    {
+      /* Record the range-start indices.  */
+      for (i = 0; i < n_rp; i++)
 	{
-	  printable_field[j] = 1;
+	  unsigned int j = rp[i].lo;
+	  for (j = rp[i].lo; j <= rp[i].hi; j++)
+	    {
+	      if (0 < j && printable_field[j] && !printable_field[j - 1])
+		{
+		  /* Remember that `j' is a range-start index.  */
+		  void *ent_from_table = hash_insert (range_start_ht,
+						      (void*) j);
+		  if (ent_from_table == NULL)
+		    {
+		      /* Insertion failed due to lack of memory.  */
+		      xalloc_die ();
+		    }
+		  assert ((unsigned int) ent_from_table == j);
+		}
+	    }
 	}
     }
 
