@@ -243,7 +243,7 @@ validate_tabstops (tabs, entries)
 {
   int prev_tab = 0;
   int i;
-  
+
   for (i = 0; i < entries; i++)
     {
       if (tabs[i] == 0)
@@ -262,7 +262,7 @@ unexpand ()
 {
   FILE *fp;			/* Input stream. */
   int c;			/* Each input character. */
-  /* Index in `tab_list' of next tabstop: */  
+  /* Index in `tab_list' of next tabstop: */
   int tab_index = 0;		/* For calculating width of pending tabs. */
   int print_tab_index = 0;	/* For printing as many tabs as possible. */
   int column = 0;		/* Column on screen of next char. */

@@ -241,7 +241,7 @@ validate_tabstops (tabs, entries)
 {
   int prev_tab = 0;
   int i;
-  
+
   for (i = 0; i < entries; i++)
     {
       if (tabs[i] == 0)

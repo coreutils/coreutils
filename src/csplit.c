@@ -614,7 +614,7 @@ get_first_line_in_buffer ()
   return head->first_available;
 }
 
-/* Return a pointer to the logical first line in the buffer and make the 
+/* Return a pointer to the logical first line in the buffer and make the
    next line the logical first line.
    Return NULL if there is no more input. */
 

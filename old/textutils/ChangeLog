@@ -1,3 +1,37 @@
+Wed Oct 20 20:05:48 1993  Jim Meyering  (meyering@comco.com)
+
+	* memchr.c (memchr): Do the 32-bit assignment only if !LONG_64_BITS.
+	In the 64-bit assignment, be careful to cast the shift operand to
+	long.
+	Abort if sizeof (unsigned long) > 8.
+
+Tue Oct 19 22:37:58 1993  Jim Meyering  (meyering@comco.com)
+
+	* csplit.c: Allow repeat counts to be specified via `{*}'.
+	New option --suffix=format.  Supercedes --digits option.
+	New option --abandon-null-files.
+	From Ronald F. Guilmette (rfg@netcom.com).
+
+	* csplit.1: Updated.
+	From Ronald F. Guilmette.
+	
+	* csplit.c: Remove register keyword (replace with `int' in two cases).
+
+	* csplit.c: [MAX]: Macro renamed from max and moved to top of file.
+	(bytes_to_octal_digits): New static array.
+	(get_format_flags): Combine '+' and ' ' cases of switch stmt.
+	Return count if for loop terminates.
+	(get_format_width): Use `bytes_to_octal_digits' instead of just 11.
+	(get_format_prec): Make sure is_negative is defined before used.
+	(get_format_conv_type): Give a different error message if there
+	is no conversion specifier.
+	Test ISPRINT (ch) instead of `ch < '~' && ch > ' ''.
+	(max_out): Use `%%' rather than `%' in format string.
+
+Sat Oct 16 10:45:17 1993  Jim Meyering  (meyering@comco.com)
+
+	* pr.c (main): When argc == 1, don't try to xmalloc (0).
+
 Tue Oct 12 00:53:26 1993  Jim Meyering  (meyering@comco.com)
 
 	* xwrite.c [HAVE_CONFIG_H, CONFIG_BROKETS]: Include <config.h>
@@ -725,7 +759,7 @@ Sun Aug 25 19:57:40 1991  Jim Meyering  (meyering at apple-gunkies)
 	in parallel, each failed open results in one fewer output column.
 	Added POSIX -r option to suppress the message.
 	* pr.c: Added variables: failed_opens, ignore_failed_opens.
-        These changes were based in part on work by David MacKenzie.
+	These changes were based in part on work by David MacKenzie.
 
 Sat Aug 24 15:27:39 1991  Jim Meyering  (meyering at pogo)
 

@@ -1,6 +1,6 @@
 /* paste - merge lines of files
    Copyright (C) 1984 by David M. Ihnat
- 
+
    This program is a total rewrite of the Bell Laboratories Unix(Tm)
    command of the same name, as of System V.  It contains no proprietary
    code, and therefore may be used without violation of any proprietary
@@ -16,16 +16,16 @@
    this program accepts full responsibility for any effects or loss;
    in particular, the author is not responsible for any losses,
    explicit or incidental, that may be incurred through use of this program.
- 
+
    I ask that any bugs (and, if possible, fixes) be reported to me when
    possible.  -David Ihnat (312) 784-4544 ignatz@homebru.chi.il.us
 
    The list of valid escape sequences has been expanded over the Unix
    version, to include \b, \f, \r, and \v.
- 
+
    POSIX changes, bug fixes, long-named options, and cleanup
    by David MacKenzie <djm@gnu.ai.mit.edu>.
- 
+
    Options:
    --serial
    -s				Paste one file at a time rather than
@@ -333,7 +333,7 @@ paste_parallel (nfiles, fnamptr)
 		      error (0, errno, "%s", fnamptr[i]);
 		      errors = 1;
 		    }
-		      
+
 		  fileptr[i] = CLOSED;
 		  files_open--;
 		}

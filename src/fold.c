@@ -186,7 +186,7 @@ fold_file (filename, width)
 	  allocated_out += 1024;
 	  line_out = xrealloc (line_out, allocated_out);
 	}
-      
+
       if (c == '\n')
 	{
 	  line_out[offset_out++] = c;

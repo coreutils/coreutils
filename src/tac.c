@@ -583,7 +583,7 @@ output (start, past_end)
       bytes_in_buffer = 0;
       return;
     }
-  
+
   /* Write out as many full buffers as possible. */
   while (bytes_to_add >= bytes_available)
     {

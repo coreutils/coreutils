@@ -143,11 +143,11 @@ main (argc, argv)
 	case 'u':
 	  mode = output_unique;
 	  break;
-	  
+
 	case 'w':
 	  check_chars = atoi (optarg);
 	  break;
-	  
+
 	default:
 	  usage ();
 	}

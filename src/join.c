@@ -668,7 +668,7 @@ main (argc, argv)
 
   if (show_help)
     usage ();
-  
+
   if (nfiles != 2)
     usage ();
 

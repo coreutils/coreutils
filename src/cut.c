@@ -1,6 +1,6 @@
 /* cut - remove parts of lines of files
    Copyright (C) 1984 by David M. Ihnat
- 
+
    This program is a total rewrite of the Bell Laboratories Unix(Tm)
    command of the same name, as of System V.  It contains no proprietary
    code, and therefore may be used without violation of any proprietary
