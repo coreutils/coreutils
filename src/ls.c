@@ -973,33 +973,19 @@ restore_default_color (void)
 static void
 sighandler (int sig)
 {
+  /* SIGTSTP is special, since the application can receive that signal more
+     than once.  In this case, don't set the signal handler to the default.
+     Instead, just raise the uncatchable SIGSTOP.  */
 #ifndef SA_NOCLDSTOP
-  signal (sig, SIG_IGN);
+  signal (sig, sig == SIGTSTP ? sighandler : SIG_IGN);
 #endif
 
   restore_default_color ();
 
-  /* SIGTSTP is special, since the application can receive that signal more
-     than once.  In this case, don't set the signal handler to the default.
-     Instead, just raise the uncatchable SIGSTOP.  */
   if (sig == SIGTSTP)
-    {
-      sig = SIGSTOP;
-    }
+    sig = SIGSTOP;
   else
-    {
-#ifdef SA_NOCLDSTOP
-      struct sigaction sigact;
-
-      sigact.sa_handler = SIG_DFL;
-      sigemptyset (&sigact.sa_mask);
-      sigact.sa_flags = 0;
-      sigaction (sig, &sigact, NULL);
-#else
-      signal (sig, SIG_DFL);
-#endif
-    }
-
+    signal (sig, SIG_DFL);
   raise (sig);
 }
 
@@ -1043,34 +1029,35 @@ main (int argc, char **argv)
 	check_symlink_color = 1;
 
       {
-	unsigned int j;
-	static int const sigs[] = { SIGHUP, SIGINT, SIGPIPE,
-				    SIGQUIT, SIGTERM, SIGTSTP };
-	unsigned int nsigs = sizeof sigs / sizeof *sigs;
+	int j;
+	static int const sig[] = { SIGHUP, SIGINT, SIGPIPE,
+				   SIGQUIT, SIGTERM, SIGTSTP };
+	enum { nsigs = sizeof sig / sizeof sig[0] };
+
 #ifdef SA_NOCLDSTOP
-	struct sigaction oldact, newact;
+	struct sigaction act;
 	sigset_t caught_signals;
 
 	sigemptyset (&caught_signals);
 	for (j = 0; j < nsigs; j++)
-	  sigaddset (&caught_signals, sigs[j]);
-	newact.sa_handler = sighandler;
-	newact.sa_mask = caught_signals;
-	newact.sa_flags = 0;
-#endif
+	  {
+	    sigaction (sig[j], NULL, &act);
+	    if (act.sa_handler != SIG_IGN)
+	      sigaddset (&caught_signals, sig[j]);
+	  }
+
+	act.sa_handler = sighandler;
+	act.sa_mask = caught_signals;
+	act.sa_flags = SA_RESTART;
 
 	for (j = 0; j < nsigs; j++)
-	  {
-	    int sig = sigs[j];
-#ifdef SA_NOCLDSTOP
-	    sigaction (sig, NULL, &oldact);
-	    if (oldact.sa_handler != SIG_IGN)
-	      sigaction (sig, &newact, NULL);
+	  if (sigismember (&caught_signals, sig[j]))
+	    sigaction (sig[j], &act, NULL);
 #else
-	    if (signal (sig, SIG_IGN) != SIG_IGN)
-	      signal (sig, sighandler);
+	for (j = 0; j < nsigs; j++)
+	  if (signal (sig[j], SIG_IGN) != SIG_IGN)
+	    signal (sig[j], sighandler);
 #endif
-	  }
       }
     }
 
