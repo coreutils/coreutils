@@ -1,5 +1,6 @@
 Changes in release 3.17:
 [3.16m]
+* mv can move (and doesn't read) special files
 * remove maintainer mode
 [3.16l]
 * mv can finally move non-regular files between partitions
