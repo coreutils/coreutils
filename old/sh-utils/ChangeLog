@@ -1,6 +1,10 @@
-2001-11-09  Jim Meyering  <meyering@lucent.com>
+2001-11-10  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.12.
+
+	* src/date.c (usage): Document %u.  Reported by Albert Hopkins.
+
+2001-11-09  Jim Meyering  <meyering@lucent.com>
 
 	* configure.ac: Use AC_CONFIG_FILES(...) and call AC_OUTPUT with no
 	arguments.
