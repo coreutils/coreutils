@@ -54,15 +54,15 @@ void *memrchr ();
    Works properly even if there are trailing slashes
    (by effectively ignoring them).  */
 size_t
-dir_name_r (const char *path, const char **result)
+dir_name_r (char const *path, char const **result)
 {
-  char *slash;
+  char const *slash;
   size_t length;		/* Length of result, not including NUL.  */
 
   slash = strrchr (path, '/');
   if (BACKSLASH_IS_PATH_SEPARATOR)
     {
-      char *b = strrchr (path, '\\');
+      char const *b = strrchr (path, '\\');
       if (b && slash < b)
 	slash = b;
     }
@@ -81,7 +81,7 @@ dir_name_r (const char *path, const char **result)
 	  slash = memrchr (path, '/', slash - path);
 	  if (BACKSLASH_IS_PATH_SEPARATOR)
 	    {
-	      char *b = memrchr (path, '\\', slash - path);
+	      char const *b = memrchr (path, '\\', slash - path);
 	      if (b && slash < b)
 		slash = b;
 	    }
@@ -99,7 +99,7 @@ dir_name_r (const char *path, const char **result)
       /* Remove any trailing slashes from the result.  */
       if (BACKSLASH_IS_PATH_SEPARATOR)
 	{
-	  const char *lim = ((path[0] >= 'A' && path[0] <= 'z'
+	  char const *lim = ((path[0] >= 'A' && path[0] <= 'z'
 			      && path[1] == ':')
 			     ? path + 2 : path);
 
@@ -126,9 +126,9 @@ dir_name_r (const char *path, const char **result)
    (by effectively ignoring them).  */
 
 char *
-dir_name (const char *path)
+dir_name (char const *path)
 {
-  const char *result;
+  char const *result;
   size_t length = dir_name_r (path, &result);
   char *newpath = (char *) malloc (length + 1);
   if (newpath == 0)
@@ -170,7 +170,7 @@ main ()
     {
       char path[MAX_BUFF_LEN];
       char expected_result[MAX_BUFF_LEN];
-      char *result;
+      char const *result;
       sscanf (buff, "%s %s", path, expected_result);
       result = dir_name (path);
       if (strcmp (result, expected_result))
