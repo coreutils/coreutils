@@ -1,4 +1,4 @@
-#serial 1000
+#serial 1001
 # Experimental replacement for the function in the latest CVS autoconf.
 # If the compile-test says strerror_r doesn't work, then resort to a
 # `run'-test that works on BeOS and segfaults on DEC Unix.
@@ -25,8 +25,8 @@ if test $ac_cv_func_strerror_r = yes; then
 #       endif
      ],
      [
-       char buf;
-       char x = *strerror_r (0, &buf, sizeof buf);
+       char buf[100];
+       char x = *strerror_r (0, buf, sizeof buf);
      ],
      ac_cv_func_strerror_r_works=yes,
      ac_cv_func_strerror_r_works=no
@@ -48,9 +48,9 @@ if test $ac_cv_func_strerror_r = yes; then
 	int
 	main ()
 	{
-	  char buf[2];
+	  char buf[100];
 	  char x = *strerror_r (0, buf, sizeof buf);
-	  exit (x && !isalpha (x));
+	  exit (!isalpha (x));
 	}
        ],
        ac_cv_func_strerror_r_works=yes,
