@@ -55,20 +55,43 @@ stat.c: xstat.in
 	mv $@-t $@
 
 
-# What a mess needed in order to install a simple file in $(libdir)!
+# The following is needed in order to install a simple file in $(libdir)
+# which is shared with other installed packages. We use a list of referencing
+# packages so that "make uninstall" will remove the file if and only if it
+# is not used by another installed package.
 
-all-local: charset.alias
+all-local: charset.alias ref-add.sed ref-del.sed
 
 install-exec-local: all-local
 	$(mkinstalldirs) $(DESTDIR)$(libdir)
-	$(INSTALL_DATA) charset.alias $(libdir)/charset.alias
+	if test -f $(DESTDIR)$(libdir)/charset.alias; then \
+	  sed -f ref-add.sed < $(DESTDIR)$(libdir)/charset.alias > $(DESTDIR)$(libdir)/charset.alias-t ; \
+	else \
+	  sed -f ref-add.sed < charset.alias > $(DESTDIR)$(libdir)/charset.alias-t ; \
+	fi
+	$(INSTALL_DATA) $(DESTDIR)$(libdir)/charset.alias-t $(DESTDIR)$(libdir)/charset.alias
+	rm -f $(DESTDIR)$(libdir)/charset.alias-t
 
-# Probably not a good idea. Other packages need $(libdir)/charset.alias too.
-uninstall-local:
-	-rm -f $(libdir)/charset.alias
+uninstall-local: all-local
+	if test -f $(DESTDIR)$(libdir)/charset.alias; then \
+	  sed -f ref-del.sed < $(DESTDIR)$(libdir)/charset.alias > $(DESTDIR)$(libdir)/charset.alias-t ; \
+	  if grep '^# Packages using this file: $$' $(DESTDIR)$(libdir)/charset.alias-t > /dev/null ; then \
+	    rm -f $(DESTDIR)$(libdir)/charset.alias ; \
+	  else \
+	    $(INSTALL_DATA) $(DESTDIR)$(libdir)/charset.alias-t $(DESTDIR)$(libdir)/charset.alias ; \
+	  fi ; \
+	  rm -f $(DESTDIR)$(libdir)/charset.alias-t ; \
+	fi
 
 charset.alias: config.charset
 	$(SHELL) $(srcdir)/config.charset '@host@' > $@-t
 	mv $@-t $@
+
+ref-add.sed: ref-add.sed.in
+	sed -e '/^#/d' -e 's/@''PACKAGE''@/@PACKAGE@/g' < $(srcdir)/ref-add.sed.in > ref-add.sed
+
+ref-del.sed: ref-del.sed.in
+	sed -e '/^#/d' -e 's/@''PACKAGE''@/@PACKAGE@/g' < $(srcdir)/ref-del.sed.in > ref-del.sed
+
 
 CLEANFILES = charset.alias
