@@ -1,10 +1,12 @@
+.deps
 Makefile
 getdate.c
-safe-stat.h
-safe-stat.c
+getdate.tab.c
+lstat.c
 safe-lstat.c
 safe-lstat.h
-getdate.tab.c
-.deps
+safe-stat.c
+safe-stat.h
 stat.c
-lstat.c
+strcasecmp.c
+strncasecmp.c
