@@ -122,11 +122,7 @@ extern "C" {
 #endif
 
 #ifndef __INT_TO_PTR
-#if defined __STDC__ && __STDC__
-# define __INT_TO_PTR(P) ((void *) ((P) + (char *) 0))
-#else
 # define __INT_TO_PTR(P) ((P) + (char *) 0)
-#endif
 #endif
 
 /* We need the type of the resulting object.  If __PTRDIFF_TYPE__ is
@@ -585,7 +581,7 @@ __extension__								\
     > (h)->chunk_limit - (char *) (h)->chunk)				\
    ? ((h)->next_free = (h)->chunk_limit) : 0),				\
   (h)->object_base = (h)->next_free,					\
-  __INT_TO_PTR ((h)->temp))
+  (void *) __INT_TO_PTR ((h)->temp))
 
 # if defined __STDC__ && __STDC__
 #  define obstack_free(h,obj)						\
