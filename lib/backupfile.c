@@ -109,16 +109,16 @@
 char const *simple_backup_suffix = "~";
 
 
-/* If FILENAME (which was of length FILELEN before an extension was
+/* If FILE (which was of length FILELEN before an extension was
    appended to it) is too long, replace the extension with the single
    char E.  If the result is still too long, remove the char just
    before E.  */
 
 static void
-check_extension (char *filename, size_t filelen, char e)
+check_extension (char *file, size_t filelen, char e)
 {
-  char *basename = base_name (filename);
-  size_t baselen = base_len (basename);
+  char *base = base_name (file);
+  size_t baselen = base_len (base);
   size_t baselen_max = HAVE_LONG_FILE_NAMES ? 255 : NAME_MAX_MINIMUM;
 
   if (HAVE_DOS_FILE_NAMES || NAME_MAX_MINIMUM < baselen)
@@ -129,41 +129,41 @@ check_extension (char *filename, size_t filelen, char e)
       /* Temporarily modify the buffer into its parent directory name,
 	 invoke pathconf on the directory, and then restore the buffer.  */
       char tmp[sizeof "."];
-      memcpy (tmp, basename, sizeof ".");
-      strcpy (basename, ".");
+      memcpy (tmp, base, sizeof ".");
+      strcpy (base, ".");
       errno = 0;
-      name_max = pathconf (filename, _PC_NAME_MAX);
+      name_max = pathconf (file, _PC_NAME_MAX);
       if (0 <= name_max || errno == 0)
 	{
 	  long size = baselen_max = name_max;
 	  if (name_max != size)
 	    baselen_max = SIZE_MAX;
 	}
-      memcpy (basename, tmp, sizeof ".");
+      memcpy (base, tmp, sizeof ".");
     }
 
   if (HAVE_DOS_FILE_NAMES && baselen_max <= 12)
     {
       /* Live within DOS's 8.3 limit.  */
-      char *dot = strchr (basename, '.');
+      char *dot = strchr (base, '.');
       if (!dot)
 	baselen_max = 8;
       else
 	{
 	  char const *second_dot = strchr (dot + 1, '.');
 	  baselen_max = (second_dot
-			 ? second_dot - basename
-			 : dot + 1 - basename + 3);
+			 ? second_dot - base
+			 : dot + 1 - base + 3);
 	}
     }
 
   if (baselen_max < baselen)
     {
-      baselen = filename + filelen - basename;
+      baselen = file + filelen - base;
       if (baselen_max <= baselen)
 	baselen = baselen_max - 1;
-      basename[baselen] = e;
-      basename[baselen + 1] = '\0';
+      base[baselen] = e;
+      base[baselen + 1] = '\0';
     }
 }
 
@@ -204,18 +204,18 @@ numbered_backup (char **buffer, size_t buffer_size, size_t filelen)
   struct dirent *dp;
   char *buf = *buffer;
   size_t versionlenmax = 1;
-  char *basename = base_name (buf);
-  size_t basename_offset = basename - buf;
-  size_t baselen = base_len (basename);
+  char *base = base_name (buf);
+  size_t base_offset = base - buf;
+  size_t baselen = base_len (base);
 
   /* Temporarily modify the buffer into its parent directory name,
      open the directory, and then restore the buffer.  */
   char tmp[sizeof "."];
-  memcpy (tmp, basename, sizeof ".");
-  strcpy (basename, ".");
+  memcpy (tmp, base, sizeof ".");
+  strcpy (base, ".");
   dirp = opendir (buf);
-  memcpy (basename, tmp, sizeof ".");
-  strcpy (basename + baselen, ".~1~");
+  memcpy (base, tmp, sizeof ".");
+  strcpy (base + baselen, ".~1~");
 
   if (!dirp)
     return result;
@@ -231,7 +231,7 @@ numbered_backup (char **buffer, size_t buffer_size, size_t filelen)
       if (! REAL_DIR_ENTRY (dp) || NLENGTH (dp) < baselen + 4)
 	continue;
 
-      if (memcmp (buf + basename_offset, dp->d_name, baselen + 2) != 0)
+      if (memcmp (buf + base_offset, dp->d_name, baselen + 2) != 0)
 	continue;
 
       p = dp->d_name + baselen + 2;
@@ -287,7 +287,7 @@ numbered_backup (char **buffer, size_t buffer_size, size_t filelen)
 
 /* Return the name of the new backup file for the existing file FILE,
    allocated with malloc.  Report an error and fail if out of memory.
-   Do not call this function if backup_type == none. */
+   Do not call this function if backup_type == no_backups.  */
 
 char *
 find_backup_file_name (char const *file, enum backup_type backup_type)
@@ -310,7 +310,7 @@ find_backup_file_name (char const *file, enum backup_type backup_type)
   memcpy (s, file, filelen + 1);
 
 #if HAVE_DIR
-  if (backup_type != simple)
+  if (backup_type != simple_backups)
     switch (numbered_backup (&s, ssize, filelen))
       {
       case BACKUP_IS_SAME_LENGTH:
@@ -321,7 +321,7 @@ find_backup_file_name (char const *file, enum backup_type backup_type)
 	break;
 
       case BACKUP_IS_NEW:
-	simple = (backup_type == numbered_existing);
+	simple = (backup_type == numbered_existing_backups);
 	break;
       }
 #endif
@@ -345,14 +345,14 @@ static char const * const backup_args[] =
 
 static const enum backup_type backup_types[] =
 {
-  none, none,
-  simple, simple,
-  numbered_existing, numbered_existing,
-  numbered, numbered
+  no_backups, no_backups,
+  simple_backups, simple_backups,
+  numbered_existing_backups, numbered_existing_backups,
+  numbered_backups, numbered_backups
 };
 
 /* Return the type of backup specified by VERSION.
-   If VERSION is NULL or the empty string, return numbered_existing.
+   If VERSION is NULL or the empty string, return numbered_existing_backups.
    If VERSION is invalid or ambiguous, fail with a diagnostic appropriate
    for the specified CONTEXT.  Unambiguous abbreviations are accepted.  */
 
@@ -360,7 +360,7 @@ enum backup_type
 get_version (char const *context, char const *version)
 {
   if (version == 0 || *version == 0)
-    return numbered_existing;
+    return numbered_existing_backups;
   else
     return XARGMATCH (context, version, backup_args, backup_types);
 }
