@@ -121,6 +121,7 @@ AC_DEFUN([jm_MACROS],
   AC_CHECK_FUNCS( \
     acl \
     bcopy \
+    canonicalize_file_name \
     endgrent \
     endpwent \
     fchdir \
