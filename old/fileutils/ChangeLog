@@ -1,5 +1,9 @@
 1997-09-01  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/ln.c (do_link): Form destination file name (when DEST is a
+	directory) before checking whether SOURCE and DEST are the same file.
+	See tests/ln/sf-1.  Reported by Veksler Michael.
+
 	* tests/ln: New directory and test.
 	* tests/Makefile.am (SUBDIRS): Add ln.
 	* configure.in (AC_OUTPUT): Add tests/ln/Makefile.
