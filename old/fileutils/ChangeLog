@@ -1,3 +1,35 @@
+2000-05-13  Jim Meyering  <meyering@lucent.com>
+
+	* src/help-version: New test.
+	* src/Makefile.am (TESTS): Define.
+	(TESTS_ENVIRONMENT): Likewise.
+	(EXTRA_DIST): Add help-version.
+
+	* src/chgrp.c: Arrange to call close_stdout only upon exit.
+	* src/chmod.c: Likewise.
+	* src/chown.c: Likewise.
+	* src/cp.c: Likewise.
+	* src/df.c: Likewise.
+	* src/dircolors.c: Likewise.
+	* src/du.c: Likewise.
+	* src/install.c: Likewise.
+	* src/ln.c: Likewise.
+	* src/ls.c: Likewise.
+	* src/mkdir.c: Likewise.
+	* src/mkfifo.c: Likewise.
+	* src/mknod.c: Likewise.
+	* src/mv.c: Likewise.
+	* src/rm.c: Likewise.
+	* src/rmdir.c: Likewise.
+	* src/shred.c: Likewise.
+	* src/sync.c: Likewise.
+	* src/touch.c: Likewise.
+
+	* src/dd.c: Include closeout.h.
+	(usage): Don't call close_stdout here.
+	(close_stdout_wrapper): New, kludgey, function and file-scoped global.
+	(main): Register it with atexit.
+
 2000-05-12  Jim Meyering  <meyering@lucent.com>
 
 	Unlike for mv, -i doesn't cancel the effect of -f
