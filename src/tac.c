@@ -75,6 +75,7 @@ static char *xmalloc ();
 static char *xrealloc ();
 static void output ();
 static void save_stdin ();
+static void xwrite ();
 
 void error ();
 int full_write ();
@@ -250,12 +251,13 @@ main (argc, argv)
 	  errors |= tac_file (argv[optind]);
       }
 
-  if (ferror (stdout) || fclose (stdout) == EOF)
-    error (1, errno, "write error");
+  /* Flush the output buffer. */
+  output ((char *) NULL, (char *) NULL);
 
   if (have_read_stdin && close (0) < 0)
     error (1, errno, "-");
-
+  if (close (1) < 0)
+    error (1, errno, "write error");
   exit (errors);
 }
 
@@ -600,11 +602,31 @@ output (start, past_end)
      char *start;
      char *past_end;
 {
-  int n_bytes;
+  static char buffer[WRITESIZE];
+  static int bytes_in_buffer = 0;
+  int bytes_to_add = past_end - start;
+  int bytes_available = WRITESIZE - bytes_in_buffer;
 
-  n_bytes = past_end - start;
-  
-  fwrite (start, 1, n_bytes, stdout);
+  if (start == 0)
+    {
+      xwrite (1, buffer, bytes_in_buffer);
+      bytes_in_buffer = 0;
+      return;
+    }
+
+  /* Write out as many full buffers as possible. */
+  while (bytes_to_add >= bytes_available)
+    {
+      bcopy (start, buffer + bytes_in_buffer, bytes_available);
+      bytes_to_add -= bytes_available;
+      start += bytes_available;
+      xwrite (1, buffer, WRITESIZE);
+      bytes_in_buffer = 0;
+      bytes_available = WRITESIZE;
+    }
+
+  bcopy (start, buffer + bytes_in_buffer, bytes_to_add);
+  bytes_in_buffer += bytes_to_add;
 }
 
 static RETSIGTYPE
@@ -612,6 +634,19 @@ cleanup ()
 {
   unlink (tempfile);
   exit (1);
+}
+
+static void
+xwrite (desc, buffer, size)
+     int desc;
+     char *buffer;
+     int size;
+{
+  if (full_write (desc, buffer, size) < 0)
+    {
+      error (0, errno, "write error");
+      cleanup ();
+    }
 }
 
 /* Allocate N bytes of memory dynamically, with error checking.  */
