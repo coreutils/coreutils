@@ -182,6 +182,12 @@ false.c: true.c
 	  $(srcdir)/true.c > $@-t
 	mv $@-t $@
 
+all_programs = \
+    $(bin_PROGRAMS) \
+    $(bin_SCRIPTS) \
+  $(EXTRA_PROGRAMS) \
+  $(EXTRA_SCRIPTS)
+
 pm = progs-makefile
 pr = progs-readme
 # Ensure that the list of programs in README matches the list
@@ -190,8 +196,32 @@ check: check-README
 .PHONY: check-README
 check-README:
 	rm -rf $(pr) $(pm)
-	echo $(EXTRA_PROGRAMS) $(EXTRA_SCRIPTS) $(bin_SCRIPTS) $(bin_PROGRAMS) \
+	echo $(all_programs) \
 	  | tr -s ' ' '\n' | sort -u > $(pm)
 	sed -n '/^The programs .* are:/,/^[a-zA-Z]/p' $(top_srcdir)/README \
 	  | sed -n '/^   */s///p' | tr -s ' ' '\n' > $(pr)
 	diff $(pm) $(pr) && rm -rf $(pr) $(pm)
+
+# Extract the list of authors from each file.
+sed_filter = s/^ *//;s/N_ (//;s/^"//;s/")*$$//
+# Sometimes the string is on the same line as the #define...
+s1 = '/^\#define AUTHORS \([^\\]\)/{;s//\1/;$(sed_filter);p;q;}'
+# Sometimes the string is on the backslash-continued line after the #define.
+s2 = '/^\#define AUTHORS \\\\/{;n;$(sed_filter);p;q;}'
+# FIXME: handle *.sh
+../AUTHORS: $(SOURCES)
+	(						\
+	  set -e;					\
+	  echo "Here are the names of the programs in this package,";	\
+	  echo "each followed by the name(s) of its author(s).";	\
+	  echo;						\
+	  for i in $(SOURCES); do			\
+	    a=`sed -n $(s1) $$i`;			\
+	    test "$$a" && :				\
+	      || a=`sed -n $(s2) $$i`;			\
+	    if test "$$a"; then				\
+	      prog=`echo $$i|sed 's/\.c$$//'`;		\
+	      echo "$$prog: $$a";			\
+	    fi;						\
+	  done | sort -u ) > $@-t
+	mv $@-t $@
