@@ -1,3 +1,17 @@
+Sat Mar 16 16:30:07 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* configure.in (PACKAGE_VERSION): New macro.
+	* acconfig.h (PACKAGE_VERSION): Add it.
+	* src/Makefile.am: Remove rules for generating version.c.
+	Remove references to version.o, version.h, and stamp-v.
+	* version.c: Remove file.
+	* version.h: Remove file.
+	* cat.c cksum.c comm.c csplit.c cut.c expand.c fmt.c fold.c
+	head.c join.c md5sum.c nl.c od.c paste.c pr.c sort.c split.c
+	sum.c tac.c tail.c tr.c unexpand.c uniq.c wc.c: Don't include
+	version.h.
+	(main): Use PACKAGE_VERSION instead of version_string.
+
 Mon Mar 11 16:07:08 CST 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* sort.c (write_bytes): Renamed from xfwrite.
