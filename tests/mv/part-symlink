@@ -13,6 +13,8 @@ tmp=part-sl.$$
 trap 'status=$?; cd $pwd; rm -rf $tmp $other_partition_tmpdir && exit $status' 0
 trap '(exit $?); exit' 1 2 13 15
 
+pwd_tmp=$pwd/$tmp
+
 . $srcdir/setup
 . $srcdir/../envvar-check
 
@@ -64,6 +66,7 @@ for copy in cp mv; do
       'rem_reg loc_sl' \
       ; do
     for options in '' --rem; do
+      test "$options" = --rem && test $copy = mv && continue
       rm -rf dir || fail=1
       rm -f $other_partition_tmpdir/rem_reg || fail=1
       rm -f $other_partition_tmpdir/rem_sl || fail=1
@@ -89,15 +92,24 @@ for copy in cp mv; do
 	  # Normalize the program name in the error output,
 	  # and put brackets around the output.
 	  test -s .err &&
-	    echo "[`sed 's/^[^:][^:]*\(..\):/\1:/;s,$other_partition_tmpdir/,,' .err`]"
+	    cp --backup .err /tmp
+	  test -s .err && {
+	    echo '[' | tr -d '\012'
+	    sed 's/^[^:][^:]*\(..\):/\1:/;s,'$other_partition_tmpdir/,, .err
+	    echo ']' | tr -d '\012'
+	    }
 	  # Strip off all but the file names.
 	  ls="`ls -lG --ignore=.err . \
 	      | sed \
 		  -e '/^total /d' \
+		  -e s,$other_partition_tmpdir/,, \
+		  -e s,$pwd_tmp/,, \
 		  -e 's/^...............................................//'`"
 	  ls2="`cd $other_partition_tmpdir && ls -lG --ignore=.err . \
 	      | sed \
 		  -e '/^total /d' \
+		  -e s,$other_partition_tmpdir/,, \
+		  -e s,$pwd_tmp/,, \
 		  -e 's/^...............................................//'`"
 	  echo "($ls) ($ls2)"
 
