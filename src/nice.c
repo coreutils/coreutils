@@ -107,7 +107,7 @@ main (int argc, char **argv)
 	{
 	  if (xstrtol (&s[2], NULL, 10, &adjustment, "") != LONGINT_OK)
 	    error (1, 0, _("invalid option `%s'"), s);
-	  if (! getenv ("POSIXLY_CORRECT"))
+	  if (OBSOLETE_OPTION_WARNINGS && ! getenv ("POSIXLY_CORRECT"))
 	    error (0, 0, _("warning: `%s' option is obsolete; use `-n %s'"),
 		   s, s + 1);
 
@@ -123,7 +123,7 @@ main (int argc, char **argv)
 	    ++s;
 	  if (xstrtol (&s[1], NULL, 10, &adjustment, "") != LONGINT_OK)
 	    error (1, 0, _("invalid option `%s'"), s);
-	  if (! getenv ("POSIXLY_CORRECT"))
+	  if (OBSOLETE_OPTION_WARNINGS && ! getenv ("POSIXLY_CORRECT"))
 	    error (0, 0, _("warning: `%s' option is obsolete; use `-n %s'"),
 		   argv[i], s + 1);
 
