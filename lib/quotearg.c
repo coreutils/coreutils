@@ -26,12 +26,6 @@
 #include <xalloc.h>
 
 #include <ctype.h>
-#if defined (STDC_HEADERS) || (!defined (isascii) && !defined (HAVE_ISASCII))
-# define ISASCII(c) 1
-#else
-# define ISASCII(c) isascii (c)
-#endif
-#define ISPRINT(c) (ISASCII (c) && isprint (c))
 
 #if ENABLE_NLS
 # include <libintl.h>
@@ -72,6 +66,17 @@
 #endif
 
 #define INT_BITS (sizeof (int) * CHAR_BIT)
+
+#if defined (STDC_HEADERS) || (!defined (isascii) && !defined (HAVE_ISASCII))
+/* Undefine to protect against the definition in wctype.h of solaris2.6.   */
+# undef ISASCII
+# define ISASCII(c) 1
+#else
+# define ISASCII(c) isascii (c)
+#endif
+/* Undefine to protect against the definition in wctype.h of solaris2.6.   */
+#undef ISASCII
+#define ISPRINT(c) (ISASCII (c) && isprint (c))
 
 struct quoting_options
 {
