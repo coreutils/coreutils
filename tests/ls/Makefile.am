@@ -2,7 +2,7 @@
 
 AUTOMAKE_OPTIONS = 1.2 gnits
 
-TESTS = rt-1 time-1 symlink-slash
+TESTS = rt-1 time-1 symlink-slash follow-slink
 EXTRA_DIST = $(TESTS)
 TESTS_ENVIRONMENT = \
   top_srcdir=$(top_srcdir) \
