@@ -1,3 +1,8 @@
+2000-04-08  Jim Meyering  <meyering@lucent.com>
+
+	* Makefile.am (charset.alias): Use t-$@, not $@-t so the DOS 8.3
+	names don't conflict.  Reported by Eli Zaretskii.
+
 2000-03-28  Bruno Haible  <haible@clisp.cons.org>
 
 	* unicodeio.c (print_unicode_char): Avoid triggering Solaris iconv
