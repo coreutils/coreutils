@@ -68,7 +68,6 @@ st_dm_mode.m4 \
 st_mtim.m4 \
 stat.m4 \
 stdbool.m4 \
-strerror_r.m4 \
 strftime.m4 \
 timespec.m4 \
 unlink-busy.m4 \
