@@ -1,4 +1,4 @@
-2005-02-21  Neil Conway  <neilc@samurai.com>
+2005-02-20  Neil Conway  <neilc@samurai.com>
 
 	* xgethostname.c (xgethostname): Check for ENOMEM, which is
 	returned by OSX/Darwin if the specified buffer is not large
