@@ -1,6 +1,12 @@
-2003-10-16  Jim Meyering  <jim@meyering.net>
+2003-10-17  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.1.0.
+
+	* src/du.c: Include "xfts.h".
+	(du_files): Use xfts_open, rather than fts_open.
+	* src/chown-core.c (chown_files): Likewise.
+
+2003-10-16  Jim Meyering  <jim@meyering.net>
 
 	* src/chgrp.c (main): Simply assign to bit_flags.
 	Don't bother with bit arithmetic.
