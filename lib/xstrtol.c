@@ -1,5 +1,5 @@
 /* A more useful interface to strtol.
-   Copyright (C) 1995, 1996, 1998 Free Software Foundation, Inc.
+   Copyright 1995, 1996, 1998, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -21,6 +21,12 @@
 # include <config.h>
 #endif
 
+#ifndef __strtol
+# define __strtol strtol
+# define __strtol_t long int
+# define __xstrtol xstrtol
+#endif
+
 /* Some pre-ANSI implementations (e.g. SunOS 4)
    need stderr defined if assertion checking is enabled.  */
 #include <stdio.h>
@@ -39,6 +45,7 @@
 #endif
 
 #include <assert.h>
+#include <ctype.h>
 
 #include <errno.h>
 #ifndef errno
@@ -61,34 +68,22 @@ extern int errno;
 			      ? ~ (t) 0 << (sizeof (t) * CHAR_BIT - 1) : (t) 0))
 #define TYPE_MAXIMUM(t) (~ (t) 0 - TYPE_MINIMUM (t))
 
-#ifndef ULONG_MAX
-# define ULONG_MAX TYPE_MAXIMUM (unsigned long int)
-#endif
-
-#ifndef LONG_MAX
-# define LONG_MAX TYPE_MAXIMUM (long int)
-#endif
-
 #if defined (STDC_HEADERS) || (!defined (isascii) && !defined (HAVE_ISASCII))
 # define IN_CTYPE_DOMAIN(c) 1
 #else
 # define IN_CTYPE_DOMAIN(c) isascii(c)
 #endif
 
-#ifdef isblank
-# define ISBLANK(c) (IN_CTYPE_DOMAIN (c) && isblank (c))
-#else
-# define ISBLANK(c) ((c) == ' ' || (c) == '\t')
-#endif
+#define ISSPACE(c) (IN_CTYPE_DOMAIN (c) && isspace (c))
 
 #include "xstrtol.h"
 
-__unsigned long int __strtol ();
+__strtol_t __strtol ();
 
 static int
-bkm_scale (__unsigned long int *x, int scale_factor)
+bkm_scale (__strtol_t *x, int scale_factor)
 {
-  __unsigned long int product = *x * scale_factor;
+  __strtol_t product = *x * scale_factor;
   if (*x != product / scale_factor)
     return 1;
   *x = product;
@@ -96,7 +91,7 @@ bkm_scale (__unsigned long int *x, int scale_factor)
 }
 
 static int
-bkm_scale_by_power (__unsigned long int *x, int base, int power)
+bkm_scale_by_power (__strtol_t *x, int base, int power)
 {
   while (power--)
     if (bkm_scale (x, base))
@@ -109,27 +104,24 @@ bkm_scale_by_power (__unsigned long int *x, int base, int power)
 
 strtol_error
 __xstrtol (const char *s, char **ptr, int strtol_base,
-	   __unsigned long int *val, const char *valid_suffixes)
+	   __strtol_t *val, const char *valid_suffixes)
 {
   char *t_ptr;
   char **p;
-  __unsigned long int tmp;
+  __strtol_t tmp;
 
   assert (0 <= strtol_base && strtol_base <= 36);
 
   p = (ptr ? ptr : &t_ptr);
 
-#if STRING_TO_UNSIGNED
-  {
-    const char *q = s;
-    while (ISBLANK (*q))
-      {
+  if (! TYPE_SIGNED (__strtol_t))
+    {
+      const char *q = s;
+      while (ISSPACE ((unsigned char) *q))
 	++q;
-      }
-    if (*q == '-')
-      return LONGINT_INVALID;
-  }
-#endif
+      if (*q == '-')
+	return LONGINT_INVALID;
+    }
 
   errno = 0;
   tmp = __strtol (s, p, strtol_base);
@@ -139,8 +131,8 @@ __xstrtol (const char *s, char **ptr, int strtol_base,
     return LONGINT_INVALID;
 
   /* Let valid_suffixes == NULL mean `allow any suffix'.  */
-  /* FIXME: update all callers except the one in tail.c changing
-     last parameter NULL to `""'.  */
+  /* FIXME: update all callers except the ones that allow suffixes
+     after the number, changing last parameter NULL to `""'.  */
   if (!valid_suffixes)
     {
       *val = tmp;
@@ -154,7 +146,10 @@ __xstrtol (const char *s, char **ptr, int strtol_base,
       int overflow;
 
       if (!strchr (valid_suffixes, **p))
-	return LONGINT_INVALID_SUFFIX_CHAR;
+	{
+	  *val = tmp;
+	  return LONGINT_INVALID_SUFFIX_CHAR;
+	}
 
       if (strchr (valid_suffixes, '0'))
 	{
@@ -227,6 +222,7 @@ __xstrtol (const char *s, char **ptr, int strtol_base,
 	  break;
 
 	default:
+	  *val = tmp;
 	  return LONGINT_INVALID_SUFFIX_CHAR;
 	  break;
 	}
@@ -258,7 +254,7 @@ main (int argc, char** argv)
   for (i=1; i<argc; i++)
     {
       char *p;
-      __unsigned long int val;
+      __strtol_t val;
 
       s_err = __xstrtol (argv[i], &p, 0, &val, "bckmw");
       if (s_err == LONGINT_OK)
