@@ -1,3 +1,31 @@
+1997-12-21  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/date.c: s/__P/PARAMS/
+	* src/env.c: Likewise.
+	* src/expr.c: Likewise.
+	* src/id.c: Likewise.
+	* src/nice.c: Likewise.
+	* src/pathchk.c: Likewise.
+	* src/seq.c: Likewise.
+	* src/sleep.c: Likewise.
+	* src/stty.c: Likewise.
+	* src/tee.c: Likewise.
+	* src/test.c: Likewise.
+	* src/tty.c: Likewise.
+	* src/uname.c: Likewise.
+
+	* src/system.h: Merge in several things from fileutils' version of
+	this file.
+
+	* src/factor.c: Don't include limits.h.
+	(UINT_MAX): Don't define.
+	(INT_MAX): Don't define.
+	These are all done in system.h now.
+	* src/hostname.c: Don't include limits.h.
+	* src/id.c: Don't include limits.h or sys/param.h.
+	* src/pathchk.c: Don't include limits.h.
+	* src/su.c: Likewise.
+
 1997-12-10  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/su.c (main): Make sure pw->pw_shell is non-NULL before trying
