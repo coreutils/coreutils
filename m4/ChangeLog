@@ -1,3 +1,9 @@
+2002-04-29  Paul Eggert  <eggert@twinsun.com>
+
+	* prereq.m4 (jm_PREREQ_HARD_LOCALE): Check for stdlib.h.
+	Do not check for alloca.h (no longer used) or stdbool.h (was never
+	used?).  Add AM_C_PROTOTYPES since hard-locale.h uses it.
+
 2002-04-28  Paul Eggert  <eggert@twinsun.com>
 
 	* m4/prereq.m4 (jm_PREREQ_SIG2STR): Remove; all callers changed.
