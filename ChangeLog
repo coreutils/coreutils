@@ -2,22 +2,33 @@
 
 	* Version 5.0.1.
 
+	* src/tail.c:
+	Change type of n_units, n_bytes, n_lines to be `uintmax_t'.
+	(dump_remainder): Move two declarations `down' into the scope
+	where they are used.
+	(xlseek): Return the resulting offset.
+	(file_lines): Rename parameter, file_length, to end_pos.
+	(pipe_lines): Don't coerce safe_read return value to `int'.
+	Adapt tests accordingly.
+	(pipe_bytes) [struct charbuffer] (nbytes): Change type from `int'
+	to `unsigned int'.
+	Change type of `total_bytes' from `int' to `size_t',
+	since the former wouldn't always be wide enough.
+	Don't coerce safe_read return value to `int',
+	and adapt tests accordingly.
+	Now that testing for a read error no longer involves
+	using `tmp', handle that case *after* freeing `tmp'.
+	(start_bytes): Clean up.
+	(tail_bytes): Now that `n_bytes' may be larger than
+	OFF_T_MAX, test for that condition and, if it's true, don't
+	use lseek optimizations.
+	(parse_options): Don't fail just because N_UNITS is larger than
+	the maximum size of a file -- tail may be applied to an input
+	stream (e.g., a pipe) with more data than that.
+
 	* Makefile.maint (syntax-check): Rename from alloc-check.
 	Also check for SPACE-TAB sequences.
 	Also check for malloc/calloc/realloc casts.
-
-	* src/tail.c (file_lines): Rename parameter, file_length, to end_pos.
-	(pipe_bytes): Handle the case of a read error *after* freeing `tmp'.
-
-2003-04-30  Jim Meyering  <jim@meyering.net>
-
-	* src/tail.c (dump_remainder): Move two declarations `down'
-	into the scope where they are used.
-	(pipe_lines): Don't coerce safe_read return value to `int'.
-	Adapt tests accordingly.
-	(parse_options): Don't fail (here) just because N is larger
-	than the maximum size of a file -- tail may be applied
-	to an input stream (e.g., a pipe) with more data than that.
 
 2003-05-01  Jim Meyering  <jim@meyering.net>
 
