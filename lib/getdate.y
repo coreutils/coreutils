@@ -97,9 +97,52 @@ struct timeb
 extern struct tm	*gmtime ();
 extern struct tm	*localtime ();
 
-#define yyparse getdate_yyparse
-#define yylex getdate_yylex
-#define yyerror getdate_yyerror
+/* Remap normal yacc parser interface names (yyparse, yylex, yyerror, etc),
+   as well as gratuitiously global symbol names, so we can have multiple
+   yacc generated parsers in the same program.  Note that these are only
+   the variables produced by yacc.  If other parser generators (bison,
+   byacc, etc) produce additional global names that conflict at link time,
+   then those parser generators need to be fixed instead of adding those
+   names to this list. */
+
+#define yymaxdepth gd_maxdepth
+#define yyparse gd_parse
+#define yylex   gd_lex
+#define yyerror gd_error
+#define yylval  gd_lval
+#define yychar  gd_char
+#define yydebug gd_debug
+#define yypact  gd_pact
+#define yyr1    gd_r1
+#define yyr2    gd_r2
+#define yydef   gd_def
+#define yychk   gd_chk
+#define yypgo   gd_pgo
+#define yyact   gd_act
+#define yyexca  gd_exca
+#define yyerrflag gd_errflag
+#define yynerrs gd_nerrs
+#define yyps    gd_ps
+#define yypv    gd_pv
+#define yys     gd_s
+#define yy_yys  gd_yys
+#define yystate gd_state
+#define yytmp   gd_tmp
+#define yyv     gd_v
+#define yy_yyv  gd_yyv
+#define yyval   gd_val
+#define yylloc  gd_lloc
+#define yyreds  gd_reds          /* With YYDEBUG defined */
+#define yytoks  gd_toks          /* With YYDEBUG defined */
+#define yylhs   gd_yylhs
+#define yylen   gd_yylen
+#define yydefred gd_yydefred
+#define yydgoto gd_yydgoto
+#define yysindex gd_yysindex
+#define yyrindex gd_yyrindex
+#define yygindex gd_yygindex
+#define yytable  gd_yytable
+#define yycheck  gd_yycheck
 
 static int yylex ();
 static int yyerror ();
