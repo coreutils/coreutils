@@ -9,4 +9,4 @@ TESTS_ENVIRONMENT = \
   PATH=../../src:$$PATH \
   PROG='md5sum --text'
 
-TESTS = basic-1
+TESTS = basic-1 newline-1
