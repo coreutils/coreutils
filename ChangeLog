@@ -10,6 +10,7 @@
 	Add support for new short options (many undocumented) for
 	compatibility with FreeBSD.  Remove FIXME for -s; it's now
 	POSIX-compatible.  Default format is now oS, not o2.
+	* NEWS: Describe the above.
 
 2004-09-05  Paul Eggert  <eggert@cs.ucla.edu>
 
