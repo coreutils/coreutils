@@ -1,3 +1,7 @@
+Mon Sep 23 10:00:50 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* tests/md5sum-test/Makefile.am (EXTRA_DIST): Distribute $(TESTS).
+
 Sun Sep 22 09:24:22 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/sort.c (keycompare): Declare translate to be unsigned char *.
