@@ -182,11 +182,11 @@ or -c +VALUE.\n\
 }
 
 static void
-write_header (const char *filename, const char *comment)
+write_header (const char *pretty_filename, const char *comment)
 {
   static int first_file = 1;
 
-  printf ("%s==> %s%s%s <==\n", (first_file ? "" : "\n"), filename,
+  printf ("%s==> %s%s%s <==\n", (first_file ? "" : "\n"), pretty_filename,
 	  (comment ? ": " : ""),
 	  (comment ? comment : ""));
   first_file = 0;
@@ -201,7 +201,7 @@ write_header (const char *filename, const char *comment)
    Return 0 if successful, 1 if an error occurred.  */
 
 static int
-file_lines (const char *filename, int fd, long int n_lines, off_t pos)
+file_lines (const char *pretty_filename, int fd, long int n_lines, off_t pos)
 {
   char buffer[BUFSIZ];
   int bytes_read;
@@ -222,7 +222,7 @@ file_lines (const char *filename, int fd, long int n_lines, off_t pos)
   bytes_read = safe_read (fd, buffer, bytes_read);
   if (bytes_read == -1)
     {
-      error (0, errno, "%s", filename);
+      error (0, errno, "%s", pretty_filename);
       return 1;
     }
 
@@ -258,7 +258,7 @@ file_lines (const char *filename, int fd, long int n_lines, off_t pos)
   while ((bytes_read = safe_read (fd, buffer, BUFSIZ)) > 0);
   if (bytes_read == -1)
     {
-      error (0, errno, "%s", filename);
+      error (0, errno, "%s", pretty_filename);
       return 1;
     }
   return 0;
@@ -270,7 +270,7 @@ file_lines (const char *filename, int fd, long int n_lines, off_t pos)
    Return 0 if successful, 1 if an error occured.  */
 
 static int
-pipe_lines (const char *filename, int fd, long int n_lines)
+pipe_lines (const char *pretty_filename, int fd, long int n_lines)
 {
   struct linebuffer
   {
@@ -330,7 +330,7 @@ pipe_lines (const char *filename, int fd, long int n_lines)
     }
   if (tmp->nbytes == -1)
     {
-      error (0, errno, "%s", filename);
+      error (0, errno, "%s", pretty_filename);
       errors = 1;
       free ((char *) tmp);
       goto free_lbuffers;
@@ -389,7 +389,7 @@ free_lbuffers:
    Return 0 if successful, 1 if an error occurred.  */
 
 static int
-pipe_bytes (const char *filename, int fd, off_t n_bytes)
+pipe_bytes (const char *pretty_filename, int fd, off_t n_bytes)
 {
   struct charbuffer
   {
@@ -444,7 +444,7 @@ pipe_bytes (const char *filename, int fd, off_t n_bytes)
     }
   if (tmp->nbytes == -1)
     {
-      error (0, errno, "%s", filename);
+      error (0, errno, "%s", pretty_filename);
       errors = 1;
       free ((char *) tmp);
       goto free_cbuffers;
@@ -483,7 +483,7 @@ free_cbuffers:
    Return 1 on error, 0 if ok.  */
 
 static int
-start_bytes (const char *filename, int fd, off_t n_bytes)
+start_bytes (const char *pretty_filename, int fd, off_t n_bytes)
 {
   char buffer[BUFSIZ];
   int bytes_read = 0;
@@ -492,7 +492,7 @@ start_bytes (const char *filename, int fd, off_t n_bytes)
     n_bytes -= bytes_read;
   if (bytes_read == -1)
     {
-      error (0, errno, "%s", filename);
+      error (0, errno, "%s", pretty_filename);
       return 1;
     }
   else if (n_bytes < 0)
@@ -505,7 +505,7 @@ start_bytes (const char *filename, int fd, off_t n_bytes)
    Return 1 on error, 0 if ok.  */
 
 static int
-start_lines (const char *filename, int fd, long int n_lines)
+start_lines (const char *pretty_filename, int fd, long int n_lines)
 {
   char buffer[BUFSIZ];
   int bytes_read = 0;
@@ -520,7 +520,7 @@ start_lines (const char *filename, int fd, long int n_lines)
     }
   if (bytes_read == -1)
     {
-      error (0, errno, "%s", filename);
+      error (0, errno, "%s", pretty_filename);
       return 1;
     }
   else if (bytes_to_skip < bytes_read)
@@ -536,7 +536,7 @@ start_lines (const char *filename, int fd, long int n_lines)
    until killed.  Return the number of bytes read from the file.  */
 
 static long
-dump_remainder (const char *filename, int fd)
+dump_remainder (const char *pretty_filename, int fd)
 {
   char buffer[BUFSIZ];
   int bytes_read;
@@ -550,7 +550,7 @@ output:
       total += bytes_read;
     }
   if (bytes_read == -1)
-    error (EXIT_FAILURE, errno, "%s", filename);
+    error (EXIT_FAILURE, errno, "%s", pretty_filename);
   if (forever)
     {
       fflush (stdout);
@@ -634,7 +634,7 @@ tail_forever (char **names, int nfiles)
    Return 0 if successful, 1 if an error occurred.  */
 
 static int
-tail_bytes (const char *filename, int fd, off_t n_bytes)
+tail_bytes (const char *pretty_filename, int fd, off_t n_bytes)
 {
   struct stat stats;
 
@@ -644,7 +644,7 @@ tail_bytes (const char *filename, int fd, off_t n_bytes)
      error, either.  */
   if (fstat (fd, &stats))
     {
-      error (0, errno, "%s", filename);
+      error (0, errno, "%s", pretty_filename);
       return 1;
     }
 
@@ -652,9 +652,9 @@ tail_bytes (const char *filename, int fd, off_t n_bytes)
     {
       if (S_ISREG (stats.st_mode))
 	lseek (fd, n_bytes, SEEK_CUR);
-      else if (start_bytes (filename, fd, n_bytes))
+      else if (start_bytes (pretty_filename, fd, n_bytes))
 	return 1;
-      dump_remainder (filename, fd);
+      dump_remainder (pretty_filename, fd);
     }
   else
     {
@@ -673,7 +673,7 @@ tail_bytes (const char *filename, int fd, off_t n_bytes)
 	    }
 	  else
 	    {
-	      error (0, errno, "%s", filename);
+	      error (0, errno, "%s", pretty_filename);
 	      return 1;
 	    }
 
@@ -691,10 +691,10 @@ tail_bytes (const char *filename, int fd, off_t n_bytes)
 		 Back up.  */
 	      lseek (fd, -n_bytes, SEEK_END);
 	    }
-	  dump_remainder (filename, fd);
+	  dump_remainder (pretty_filename, fd);
 	}
       else
-	return pipe_bytes (filename, fd, n_bytes);
+	return pipe_bytes (pretty_filename, fd, n_bytes);
     }
   return 0;
 }
@@ -703,22 +703,22 @@ tail_bytes (const char *filename, int fd, off_t n_bytes)
    Return 0 if successful, 1 if an error occurred.  */
 
 static int
-tail_lines (const char *filename, int fd, long int n_lines)
+tail_lines (const char *pretty_filename, int fd, long int n_lines)
 {
   struct stat stats;
   off_t length;
 
   if (fstat (fd, &stats))
     {
-      error (0, errno, "%s", filename);
+      error (0, errno, "%s", pretty_filename);
       return 1;
     }
 
   if (from_start)
     {
-      if (start_lines (filename, fd, n_lines))
+      if (start_lines (pretty_filename, fd, n_lines))
 	return 1;
-      dump_remainder (filename, fd);
+      dump_remainder (pretty_filename, fd);
     }
   else
     {
@@ -732,12 +732,12 @@ tail_lines (const char *filename, int fd, long int n_lines)
 	  && lseek (fd, (off_t) 0, SEEK_CUR) == (off_t) 0)
 	{
 	  length = lseek (fd, (off_t) 0, SEEK_END);
-	  if (length != 0 && file_lines (filename, fd, n_lines, length))
+	  if (length != 0 && file_lines (pretty_filename, fd, n_lines, length))
 	    return 1;
-	  dump_remainder (filename, fd);
+	  dump_remainder (pretty_filename, fd);
 	}
       else
-	return pipe_lines (filename, fd, n_lines);
+	return pipe_lines (pretty_filename, fd, n_lines);
     }
   return 0;
 }
@@ -747,12 +747,12 @@ tail_lines (const char *filename, int fd, long int n_lines)
    Return 0 if successful, 1 if an error occurred.  */
 
 static int
-tail (const char *filename, int fd, off_t n_units)
+tail (const char *pretty_filename, int fd, off_t n_units)
 {
   if (count_lines)
-    return tail_lines (filename, fd, (long) n_units);
+    return tail_lines (pretty_filename, fd, (long) n_units);
   else
-    return tail_bytes (filename, fd, n_units);
+    return tail_bytes (pretty_filename, fd, n_units);
 }
 
 /* Display the last N_UNITS units of file FILENAME.
@@ -765,83 +765,64 @@ tail_file (const char *filename, off_t n_units, int filenum)
 {
   int fd, errors;
   struct stat stats;
+  int is_stdin = (STREQ (filename, "-"));
+  char const *pretty_filename;
 
-  if (!strcmp (filename, "-"))
+  if (is_stdin)
     {
       have_read_stdin = 1;
-      filename = _("standard input");
+      pretty_filename = _("standard input");
+      fd = STDIN_FILENO;
+    }
+  else
+    {
+      pretty_filename = filename;
+      fd = open (filename, O_RDONLY);
+    }
+
+  if (fd == -1)
+    {
+      if (forever_multiple)
+	file_descs[filenum] = -1;
+      error (0, errno, "%s", pretty_filename);
+      errors = 1;
+    }
+  else
+    {
       if (print_headers)
-	write_header (filename, NULL);
-      errors = tail (filename, 0, n_units);
+	write_header (pretty_filename, NULL);
+      errors = tail (pretty_filename, fd, n_units);
       if (forever_multiple)
 	{
-	  if (fstat (0, &stats) < 0)
+	  if (fstat (fd, &stats) < 0)
 	    {
-	      error (0, errno, _("standard input"));
+	      error (0, errno, "%s", pretty_filename);
 	      errors = 1;
 	    }
 	  else if (!S_ISREG (stats.st_mode))
 	    {
-	      error (0, 0,
-		   _("standard input: cannot follow end of non-regular file"));
+	      error (0, 0, _("%s: cannot follow end of non-regular file"),
+		     pretty_filename);
 	      errors = 1;
 	    }
 	  if (errors)
-	    file_descs[filenum] = -1;
+	    {
+	      if (!is_stdin)
+		close (fd);
+	      file_descs[filenum] = -1;
+	    }
 	  else
 	    {
-	      file_descs[filenum] = 0;
+	      file_descs[filenum] = fd;
 	      file_sizes[filenum] = stats.st_size;
 	    }
 	}
-    }
-  else
-    {
-      /* Not standard input.  */
-      fd = open (filename, O_RDONLY);
-      if (fd == -1)
-	{
-	  if (forever_multiple)
-	    file_descs[filenum] = -1;
-	  error (0, errno, "%s", filename);
-	  errors = 1;
-	}
       else
 	{
-	  if (print_headers)
-	    write_header (filename, NULL);
-	  errors = tail (filename, fd, n_units);
-	  if (forever_multiple)
+	  if (!is_stdin && close (fd))
 	    {
-	      if (fstat (fd, &stats) < 0)
-		{
-		  error (0, errno, "%s", filename);
-		  errors = 1;
-		}
-	      else if (!S_ISREG (stats.st_mode))
-		{
-		  error (0, 0, _("%s: cannot follow end of non-regular file"),
-			 filename);
-		  errors = 1;
-		}
-	      if (errors)
-		{
-		  close (fd);
-		  file_descs[filenum] = -1;
-		}
-	      else
-		{
-		  file_descs[filenum] = fd;
-		  file_sizes[filenum] = stats.st_size;
-		}
-	    }
-	  else
-	    {
-	      if (close (fd))
-		{
-		  error (0, errno, "%s", filename);
-		  errors = 1;
-		}
+	      error (0, errno, "%s", pretty_filename);
+	      errors = 1;
 	    }
 	}
     }
