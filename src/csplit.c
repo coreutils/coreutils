@@ -46,10 +46,6 @@
 # include <stdlib.h>
 #endif
 
-#ifndef MAX
-# define MAX(a,b) (((a) > (b)) ? (a) : (b))
-#endif
-
 #ifndef TRUE
 # define FALSE 0
 # define TRUE 1
