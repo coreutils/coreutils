@@ -1,7 +1,7 @@
 Changes in release 1.16
-1.15a
 * stty -tabs works properly
 * add tests for date
+* date --date "02/29/1996 - 1 year" now works properly
 
 Changes in release 1.15
 * nice works with very recently-changed GNU libc getopt

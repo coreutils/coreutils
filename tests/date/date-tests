@@ -162,8 +162,25 @@ else
   esac
 fi
 test -s t9.err || rm -f t9.err
+LANG=C TZ=UTC $xx --date '02/29/1996 - 1 year' +%Y-%m-%d  > tleap-1.out 2> tleap-1.err
+code=$?
+if test $code != 0 ; then
+  $echo "Test leap-1(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp tleap-1.out $srcdir/tleap-1.exp
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed leap-1(LANG=C TZ=UTC)"; fi ;;
+    1) $echo "Test leap-1(LANG=C TZ=UTC) failed: files tleap-1.out and $srcdir/tleap-1.exp differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test leap-1(LANG=C TZ=UTC) may have failed." 1>&2;
+       $echo The command "cmp tleap-1.out $srcdir/tleap-1.exp" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s tleap-1.err || rm -f tleap-1.err
 if test $errors = 0 ; then
-  $echo Passed all 9 tests. 1>&2
+  $echo Passed all 10 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi
