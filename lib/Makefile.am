@@ -28,6 +28,7 @@ libfetish_a_SOURCES = \
   basename.c \
   bumpalloc.h \
   canon-host.c \
+  c-stack.c c-stack.h \
   closeout.c closeout.h \
   diacrit.c diacrit.h \
   dirname.c dirname.h \
