@@ -1,3 +1,8 @@
+2004-07-30  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/mkdir.c (create_parents, main): Use bool when appropriate.
+	(main): Use EXIT_SUCCESS/EXIT_FAILURE instead of 0/1.
+
 2004-07-29  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/mkfifo.c (main): Use EXIT_SUCCESS and EXIT_FAILURE, not 0 and 1.
@@ -34,7 +39,7 @@
 	(do_copy): Rewrite slightly to avoid need for "unreachable" comment.
 	(main): Use EXIT_SUCCESS, EXIT_FAILURE instead of 0, 1.
 	* src/rm.c (main): Likewise.
-	
+
 	md5sum, sha1sum integer cleanups.
 
 	* src/checksum.h: Don't include config.h, sys/types.h, stdio.h:
@@ -49,7 +54,7 @@
 	(digest_check): Increase limit of number of input lines to
 	UINTMAX_MAX from INT_MAX.  Diagnose any overflows of this counter.
 	Use ngettext instead of hard-to-i18nize hardcoded stuff for plurals.
-	
+
 2004-07-28  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/cat.c (exit_status): Remove.  Now done by passing a boolean
@@ -66,7 +71,7 @@
 	[O_BINARY]: Don't invoke isatty unless the other options require it.
 	(main): When deciding whether to use simple_cat, don't worry
 	about binary option; it's irrelevant.
-	
+
 	* src/dcgen: Remove comments, trailing white space, and empty
 	lines from the output strings, to save space.
 	Use a narrower type like 'unsigned char' for line lengths, if
