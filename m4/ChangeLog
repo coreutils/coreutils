@@ -1,5 +1,10 @@
 2001-09-03  Paul Eggert  <eggert@twinsun.com>
 
+	* prereq.m4 (jm_PREREQ_XGETCWD): Check for limits.h and
+	sys/param.h, as pathmax.h includes them.
+
+2001-09-03  Paul Eggert  <eggert@twinsun.com>
+
 	* prereq.m4 (jm_PREREQ): Add jm_PREREQ_XGETCWD.
 	(jm_PREREQ_XGETCWD): New macro.
 
