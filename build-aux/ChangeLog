@@ -1,0 +1,107 @@
+2005-03-20  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* config.rpath: Sync from gnulib.
+
+2005-02-25  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* config.guess, config.sub, depcomp, install-sh, mdate-sh, missing,
+	mkinstalldirs: Sync from gnulib.
+
+2005-01-21  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* config.sub: Sync from gnulib.
+
+2004-12-17  Jim Meyering  <jim@meyering.net>
+
+	* install-sh: Sync from gnulib.
+
+2004-12-16  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* mdate-sh: Sync from gnulib.
+
+2004-11-23  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* config.sub, texinfo.tex: Sync from gnulib.
+
+2004-11-17  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* config.guess, config.sub: Sync from gnulib.
+
+2004-11-10  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* texinfo.tex: Sync from gnulib.
+
+2004-11-02  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* texinfo.tex: Sync from gnulib.
+
+2004-10-29  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* config.guess, install-sh, texinfo.tex: Sync from gnulib.
+
+2004-10-03  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* config.guess, config.sub, install-sh, missing, texinfo.tex:
+	Sync from gnulib.
+
+2004-09-24  Jim Meyering  <jim@meyering.net>
+
+	* cvsu: Remove file.  The version of cvsu from the cvsutils package
+	does the same job with --find --type=... options.
+	* cvsu: New file, used by rules in coreutils' Makefile.maint.
+
+2004-08-05  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* config.guess, config.sub, install-sh, texinfo.tex: Sync from gnulib.
+
+2004-03-30  Paul Eggert  <eggert@twinsun.com>
+
+	* config.guess, config.sub, install-sh, texinfo.tex: Sync from gnulib.
+
+2003-08-16  Paul Eggert  <eggert@twinsun.com>
+
+	* config.rpath, texinfo.tex: Sync with gnulib.
+
+2003-04-21  Jim Meyering  <jim@meyering.net>
+
+	* depcomp: New version, now that this file is on the list
+	in ../Makefile.cfg.
+
+2003-01-12  Jim Meyering  <jim@meyering.net>
+
+	Lots of syntactic clean-up, mostly from Karl Berry.
+	* install-sh: Use consistent indentation, two spaces per level.
+	(scriptversion): New variable.
+	Change initializations like `variable=""' to `variable='.
+	(usage): New variable.
+	Use `test', not `['.
+	Use `test -z "$var"', not `[ x"$var" = x ]'.
+	Use `test -n "$var"', not `[ x"$var" != x ]'.
+	Alphabetize case entries.
+	Accept --help and --version options.
+	Remove unnecessary `else :' clauses.
+	Add a `Local variables' eval block to help emacs users update
+	the time-stamp variable added above.
+
+2002-12-20  Jim Meyering  <jim@meyering.net>
+
+	* install-sh: Set the execute bit on this file.
+	Reported by Vin Shelton.
+
+2002-11-09  Jim Meyering  <jim@meyering.net>
+
+	Make it work even when names contain spaces or shell metachars.
+	* install-sh: Write diagnostics to stderr, not stdout.
+	Normalize spacing in diagnostics: use one space (not two, and not a TAB)
+	after the leading `install:'.
+	Add double quotes around `$src' here: $doit $instcmd "$src" "$dsttmp"
+
+	Merge in some changes from the version in automake.
+	* install-sh: Remove unnecessary quotes around `case' argument.
+	Use `[ cond1 ] || [ cond2 ]' rather than `[ cond1 -o cond2 ]'.
+	Use `:' rather than `true'.
+
+2002-02-17  Jim Meyering  <jim@meyering.net>
+
+	* config.guess (main): Don't use `head -1'; it's no longer portable.
+	Use `sed 1q' instead.
