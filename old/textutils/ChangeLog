@@ -1,7 +1,16 @@
 1997-10-25  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* lib/memcmp.c (rpl_memcmp): Rename from memcmp.
+
+	* src/sort.c (NLS_STRNCMP) [!ENABLE_NLS]: s/strcmp/strncmp/.
+
+	* lib/xmalloc.c (xalloc_fail_func): Initialize to 0, not NULL.
+
+	* configure.in (jm_FUNC_MALLOC): Use it.
+	(jm_FUNC_REALLOC): Use it.
 	* lib/Makefile.am (noinst_HEADERS): Add xalloc.h.
 	(EXTRA_DIST): Add realloc.c.
+	(EXTRA_DIST): Add malloc.c.
 
 	* src/system.h: Include xalloc.h.
 	Remove dcls of xmalloc, xcalloc and xrealloc.
