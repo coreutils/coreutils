@@ -19,4 +19,6 @@ AC_DEFUN(AC_TYPE_SSIZE_T,
 # include <unistd.h>
 #endif
       ]
-  )])
+    )
+  ]
+)
