@@ -1,6 +1,6 @@
 /* Host name canonicalization
 
-   Copyright (C) 1995, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1999, 2000 Free Software Foundation, Inc.
 
    Written by Miles Bader <miles@gnu.ai.mit.edu>
 
@@ -43,6 +43,7 @@
 # include <arpa/inet.h>
 #endif
 
+char *strdup ();
 void free ();
 
 /* Returns the canonical hostname associated with HOST (allocated in a static
