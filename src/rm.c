@@ -607,8 +607,7 @@ remove_cwd_entries (void)
 
 /* Query the user if appropriate, and if ok try to remove the
    file or directory specified by FS.  Return RM_OK if it is removed,
-   and RM_ERROR or RM_USER_DECLINED if not.
-   FIXME: describe IS_DIR parameter.  */
+   and RM_ERROR or RM_USER_DECLINED if not.  */
 
 static enum RM_status
 remove_file (struct File_spec *fs)
