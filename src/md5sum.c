@@ -365,25 +365,18 @@ md5_check (const char *checkfile_name, int binary)
 
 	  if (n_open_or_read_failures > 0)
 	    {
-	      printf (n_properly_formated_lines == 1
-		? _("WARNING: the single listed file could not be read\n")
-		: _("WARNING: %d of the listed files could not be read\n"),
-		      n_open_or_read_failures);
+	      error (0, 0,
+		   _("WARNING: %d of %d listed file%s could not be read\n"),
+		     n_open_or_read_failures, n_properly_formated_lines,
+		     (n_properly_formated_lines == 1 ? "" : "s"));
 	    }
 
-	  if (n_mismatched_checksums == 0)
+	  if (n_mismatched_checksums > 0)
 	    {
-	      printf (n_properly_formated_lines == 1
-		      ? _("the single computed checksum matched\n")
-		      : _("all %d computed checksums matched\n"),
-		      n_computed_checkums);
-	    }
-	  else
-	    {
-	      printf (n_properly_formated_lines == 1
-	      ? _("WARNING: the single computed checksum did NOT match\n")
-	      : _("WARNING: %d out of %d computed checksums did NOT match\n"),
-		      n_mismatched_checksums, n_computed_checkums);
+	      error (0, 0,
+		   _("WARNING: %d of %d computed checksum%s did NOT match\n"),
+		     n_mismatched_checksums, n_computed_checkums,
+		     (n_computed_checkums == 1 ? "" : "s"));
 	    }
 	}
     }
