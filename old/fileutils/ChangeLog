@@ -37,8 +37,6 @@
 
 2000-08-05  Jim Meyering  <meyering@lucent.com>
 
-	* Version 4.0y.
-
 	* config.guess: Update from master repository.
 	* config.sub: Likewise.
 
