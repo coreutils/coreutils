@@ -37,6 +37,7 @@
 
 #include "system.h"
 #include "error.h"
+#include "savedir.h"
 
 #ifndef _POSIX_VERSION
 struct passwd *getpwnam ();
@@ -54,7 +55,6 @@ struct group *getgrgid ();
 # define LCHOWN(FILE, OWNER, GROUP) 1
 #endif
 
-char *savedir ();
 char *parse_user_spec ();
 void strip_trailing_slashes ();
 char *xmalloc ();

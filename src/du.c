@@ -50,6 +50,7 @@
 #include "save-cwd.h"
 #include "error.h"
 #include "xstrtol.h"
+#include "savedir.h"
 
 /* Initial number of entries in each hash table entry's table of inodes.  */
 #define INITIAL_HASH_MODULE 100
@@ -99,7 +100,6 @@ typedef struct
 int stat ();
 int lstat ();
 
-char *savedir ();
 char *xmalloc ();
 char *xrealloc ();
 

@@ -10,6 +10,7 @@
 #include "system.h"
 #include "error.h"
 #include "backupfile.h"
+#include "savedir.h"
 #include "copy.h"
 #include "cp-hash.h"
 
@@ -35,7 +36,6 @@ struct dir_list
 
 int full_write ();
 int euidaccess ();
-char *savedir ();
 char *stpcpy ();
 char *xmalloc ();
 int yesno ();
