@@ -13,5 +13,3 @@ doc/coreutils.texi:
   Better still: fix the code so it's *not* system-dependent.
 
 implement --target-directory=DIR for install (per texinfo documentation)
-
-Remove use of PARAMS in src/*.h files.
