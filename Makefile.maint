@@ -142,6 +142,15 @@ writable-files:
 	done;								\
 	test "$$fail" && exit 1 || :
 
+WGET = wget
+ftp-gnu = ftp://ftp.gnu.org/gnu
+
+.PHONY: wget-update
+wget-update:
+	$(WGET) $(ftp-gnu)/texinfo/texinfo.tex -O $(srcdir)/doc/texinfo.tex
+	$(WGET) $(ftp-gnu)/config/config.guess -O $(srcdir)/config.guess
+	$(WGET) $(ftp-gnu)/config/config.sub -O $(srcdir)/config.sub
+
 alpha: writable-files po-check
 	$(MAKE) cvs-dist
 	$(MAKE) -s announcement > /tmp/announce-$(distdir)
