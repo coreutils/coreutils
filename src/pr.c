@@ -2467,43 +2467,37 @@ Paginate or columnate FILE(s) for printing.\n\
                     use hat notation (^G) and octal backslash notation\n\
   -d, --double-space\n\
                     double space the output\n\
-  -e[CHAR[WIDTH]]\n\
-  --expand-tabs[=CHAR[WIDTH]]\n\
+  -e, --expand-tabs[=CHAR[WIDTH]]\n\
                     expand input CHARs (TABs) to tab WIDTH (8)\n\
   -F, -f, --form-feed\n\
                     use form feeds instead of newlines to separate pages\n\
                     (by a 3-line page header with -f or a 5-line header\n\
                     and trailer without -f)\n\
-  -h HEADER\n\
-  --header=HEADER   use a centered HEADER instead of filename in page headers\n\
+  -h, --header=HEADER\n\
+                    use a centered HEADER instead of filename in page headers\n\
                     with long headers left-hand-side truncation may occur\n\
                     -h \"\" prints a blank line. Don't use -h\"\"\n\
-  -i[CHAR[WIDTH]]\n\
-  --output-tabs[=CHAR[WIDTH]]\n\
+  -i, --output-tabs[=CHAR[WIDTH]]\n\
                     replace spaces with CHARs (TABs) to tab WIDTH (8)\n\
   -j, --join-lines  merge full lines, turns off -w line truncation, no column\n\
                     alignment, -s[STRING] sets separators\n\
-  -l PAGE_LENGTH\n\
-  --length PAGE_LENGTH\n\
+  -l, --length PAGE_LENGTH\n\
                     set the page length to PAGE_LENGTH (66) lines\n\
                     (default number of lines of text 56, with -f 63)\n"));
       printf (_("\
   -m, --merge       print all files in parallel, one in each column,\n\
                     truncate lines, but join lines of full length with -j\n\
-  -n[SEP[DIGITS]]\n\
-  --number-lines[=SEP[DIGITS]]\n\
+  -n, --number-lines[=SEP[DIGITS]]\n\
                     number lines, use DIGITS (5) digits, then SEP (TAB)\n\
                     default counting starts with 1st line of input file\n\
-  -N NUMBER\n\
-  --first-line-number=NUMBER\n\
+  -N, --first-line-number=NUMBER\n\
                     start counting with NUMBER at 1st line of first\n\
                     page printed (see +FIRST_PAGE)\n\
-  -o MARGIN\n\
-  --indent=MARGIN   offset each line with MARGIN spaces (do not affect -w)\n\
+  -o, --indent=MARGIN\n\
+                    offset each line with MARGIN spaces (do not affect -w)\n\
   -r, --no-file-warnings\n\
                     inhibit warning when a file cannot be opened\n\
-  -s[STRING]\n\
-  --separator[=STRING]\n\
+  -s, --separator[=STRING]\n\
                     separate columns by an optional STRING, don't use\n\
                     -s \"STRING\", -s only: No separator used (same as -s\"\"),\n\
                     without -s: Default separator \'TAB\' with -j and \'space\'\n\
@@ -2514,8 +2508,7 @@ Paginate or columnate FILE(s) for printing.\n\
                     layout by form feeds set in input files\n\
   -v, --show-nonprinting\n\
                     use octal backslash notation\n\
-  -w PAGE_WIDTH\n\
-  --width=PAGE_WIDTH\n\
+  -w, --width=PAGE_WIDTH\n\
                     set page width to PAGE_WIDTH (72) columns, truncate\n\
                     lines (see also -j option)\n\
   --help            display this help and exit\n\
