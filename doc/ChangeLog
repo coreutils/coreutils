@@ -1,3 +1,8 @@
+2002-02-15  Paul Eggert  <eggert@twinsun.com>
+
+	* coreutils.texi: Document _POSIX2_VERSION.
+	(Standards Conformance): New section.
+
 2002-01-24  Jim Meyering  <meyering@lucent.com>
 
 	* coreutils.texi (START-INFO-DIR-ENTRY): Remove a few entries
@@ -7,7 +12,7 @@
 
 	Add support for POSIX 1003.1-2001, which requires removal for
 	support of obsolete "+" option syntax in sort, tail, and uniq.
-	* doc/coreutils.texi: Document this.  (Also, document a similar
+	* coreutils.texi: Document this.  (Also, document a similar
 	change to "touch", for fileutils).
 
 2002-01-12  Jim Meyering  <meyering@lucent.com>
