@@ -1,5 +1,5 @@
 2003-09-25  Jim Meyering  <jim@meyering.net>
-            Bruno Haible  <bruno@clisp.org>
+	    Bruno Haible  <bruno@clisp.org>
 
 	[Update from gnulib]
 	This lets translators provide better translations for the
