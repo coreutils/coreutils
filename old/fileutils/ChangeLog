@@ -1,3 +1,9 @@
+2001-11-23  Jim Meyering  <meyering@lucent.com>
+
+	* src/cp-hash.c: Use opaque type, Hash_table, not `struct hash_table'.
+	* src/du.c: Likewise.
+	* src/remove.c: Likewise.
+
 2001-11-22  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.2.

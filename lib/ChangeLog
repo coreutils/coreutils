@@ -1,3 +1,8 @@
+2001-11-23  Jim Meyering  <meyering@lucent.com>
+
+	* hash.h (struct hash_table): Don't define here.  Merely declare it.
+	* hash.c (struct hash_table): Define it here instead.
+
 2001-11-22  Jim Meyering  <meyering@lucent.com>
 
 	* hash.h: Bracket contents of file with #ifndef HASH_H_ ... #endif.
