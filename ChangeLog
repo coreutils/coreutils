@@ -2,6 +2,9 @@
 
 	* Version 5.0.90.
 
+	* src/pathchk.c (validate_path): Use %ld format (not %d) for size_t
+	value.
+
 	* tests/misc/split-fail: Disable the --line-bytes=$_4gb test,
 	because it'd evoke spurious failure on 64-bit systems.
 
