@@ -1,3 +1,9 @@
+1999-12-19  Jim Meyering  <meyering@ascend.com>
+
+	* lstat-slash.m4: New file.
+	* jm-macros.m4: Use the new macro:
+	jm_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK.
+
 1999-12-07  Jim Meyering  <meyering@ascend.com>
 
 	* perl.m4: Require that File::Compare be available, too.
