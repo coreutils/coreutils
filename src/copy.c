@@ -1444,7 +1444,8 @@ copy_internal (const char *src_path, const char *dst_path,
 # if HAVE_LCHOWN
 	  if (DO_CHOWN (lchown, dst_path, src_sb.st_uid, src_sb.st_gid))
 	    {
-	      error (0, errno, _("preserving ownership for %s"), dst_path);
+	      error (0, errno, _("failed to preserve ownership for %s"),
+		     dst_path);
 	      goto un_backup;
 	    }
 # else
@@ -1506,7 +1507,8 @@ copy_internal (const char *src_path, const char *dst_path,
       ran_chown = 1;
       if (DO_CHOWN (chown, dst_path, src_sb.st_uid, src_sb.st_gid))
 	{
-	  error (0, errno, _("preserving ownership for %s"), quote (dst_path));
+	  error (0, errno, _("failed to preserve ownership for %s"),
+		 quote (dst_path));
 	  if (x->require_preserve)
 	    return 1;
 	}
@@ -1517,7 +1519,8 @@ copy_internal (const char *src_path, const char *dst_path,
   {
     file_t file = getdport (dst_path);
     if (file_chauthor (file, src_sb.st_author))
-      error (0, errno, _("preserving authorship for %s"), quote (dst_path));
+      error (0, errno, _("failed to preserve authorship for %s"),
+	     quote (dst_path));
     mach_port_deallocate (mach_task_self (), file);
   }
 #endif
