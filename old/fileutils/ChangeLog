@@ -1,3 +1,17 @@
+1997-11-13  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/mktime.c: Update from FSF.
+	* lib/strftime.c: Update from FSF.
+	* m4/strftime.m4: Check for POSIX.2's %f format spec.
+
+1997-11-12  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/copy.c (copy_dir): Use path_concat rather than open-coding it.
+
+	* src/rm.c [mempcpy]: Remove definition.
+	* src/system.h [!HAVE_MEMPCPY] (mempcpy): Define here instead.
+	* lib/path-concat.c (path_concat): Use mempcpy, not stpcpy.
+
 1997-11-09  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* m4/jm-mktime.m4 (jm_FUNC_MKTIME): Check for localtime_r.
