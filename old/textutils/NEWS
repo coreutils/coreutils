@@ -1,4 +1,6 @@
 User-visible changes in release 1.13
+* md5sum: remove -h, -s, -v short options
+* md5sum: rename --verbose to --warn, --quiet to --status
 * md5sum --check fails if it finds no properly formatted checksum lines
 * sort -c prints `disorder on...' message on standard error, not stdout
 * sort -k works as described in the texinfo documentation
