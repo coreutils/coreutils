@@ -105,7 +105,7 @@
 	* src/rmdir.c (EEXIST): Remove now-unused definition.
 	(ENOTEMPTY): Likewise.
 	(errno_rmdir_non_empty): Rewrite to use RMDIR_ERRNO_NOT_EMPTY,
-	which is determined by the autoconf test in m4/rmdir-errno.m4..
+	which is determined by the autoconf test in m4/rmdir-errno.m4.
 
 2000-05-03  Bruno Haible  <haible@clisp.cons.org>
 
