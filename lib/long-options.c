@@ -1,6 +1,6 @@
 /* Utility to accept --help and --version options as unobtrusively as possible.
 
-   Copyright (C) 1993, 1994, 1998, 1999, 2000, 2002, 2003, 2004 Free
+   Copyright (C) 1993, 1994, 1998, 1999, 2000, 2002, 2003, 2004, 2005 Free
    Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -35,9 +35,9 @@
 
 static struct option const long_options[] =
 {
-  {"help", no_argument, 0, 'h'},
-  {"version", no_argument, 0, 'v'},
-  {0, 0, 0, 0}
+  {"help", no_argument, NULL, 'h'},
+  {"version", no_argument, NULL, 'v'},
+  {NULL, 0, NULL, 0}
 };
 
 /* Process long options --help and --version, but only if argc == 2.
