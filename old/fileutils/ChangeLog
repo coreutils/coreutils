@@ -1,6 +1,19 @@
-2002-03-09  Jim Meyering  <meyering@lucent.com>
+2002-03-10  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.7.
+
+	* src/copy.c (copy_reg): Don't exit upon finding a replaced file.
+	Instead, just skip it like the diagnostic says.
+	Reported by Paul Eggert.
+
+2002-03-09  Paul Eggert  <eggert@twinsun.com>
+
+	* src/copy.c (copy_reg): Use a more concise diagnostic for
+	reporting replaced files.  This avoids a bug in the code,
+	which mishandled ino_t wider than long.
+	* src/remove.c (remove_dir): Likewise, twice.
+
+2002-03-09  Jim Meyering  <meyering@lucent.com>
 
 	* Makefile.am (EXTRA_DIST): Remove config/config.rpath,
 	now that automake knows about it.
