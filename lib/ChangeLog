@@ -10,7 +10,7 @@
 	* version-etc-fsf.c: New file, with version_etc_copyright.
 	* version-etc.c: Remove version_etc_copyright.
 	* version-etc.h (version_etc_copyright): Use [] instead of * in
-	prototype, suggested by Paul Eggert <eggert@CS.UCLA.EDU>.
+	prototype, suggested by Paul Eggert.
 
 2005-01-19  Jim Meyering  <jim@meyering.net>
 
