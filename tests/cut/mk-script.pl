@@ -9,6 +9,66 @@ use POSIX qw (assert);
 BEGIN { push @INC, '@srcdir@' if '@srcdir@' ne '.'; }
 use Test;
 
+sub spec_to_list ($$$)
+{
+  my ($spec, $test_name, $type) = @_;
+
+  assert ($type eq 'in' || $type eq 'exp');
+
+  my @all_file;
+  my @gen_file;
+  my @content_string;
+  if (ref $spec)
+    {
+      assert (ref $spec eq 'ARRAY');
+      my $file_spec;
+      foreach $file_spec (@$spec)
+	{
+	  # A file spec may be a string or a reference.
+	  # If it's a string, that string is to be the contents of a
+	  # generated (by this script) file with name derived from the
+	  # name of this test.
+	  # If it's a reference, then it must be the name of an existing
+	  # file.
+	  if (ref $file_spec)
+	    {
+	      assert (ref $file_spec eq 'SCALAR');
+	      my $existing_file = $$file_spec;
+	      # FIXME: make sure $existing_file exists somewhere.
+	      push (@all_file, $existing_file);
+	    }
+	  else
+	    {
+	      push (@content_string, $file_spec);
+	    }
+	}
+    }
+  else
+    {
+      push (@content_string, $spec);
+    }
+
+  my $i = 1;
+  my $file_contents;
+  foreach $file_contents (@content_string)
+    {
+      my $gen_file = "t$test_name.$type$i";
+      push (@all_file, $gen_file);
+      push (@gen_file, $gen_file);
+      open (F, ">$gen_file") || die "$0: $gen_file: $!\n";
+      print F $file_contents;
+      close (F) || die "$0: $gen_file: $!\n";
+      ++$i;
+    }
+
+  my %h = (
+    ALL_FILES => \@all_file,
+    GEN_FILES => \@gen_file
+  );
+
+  return \%h;
+}
+
 $| = 1;
 
 my $xx = $ARGV[0];
@@ -54,48 +114,7 @@ foreach $test_vector (@Test::t)
     my ($test_name, $flags, $in_spec, $expected, $e_ret_code)
 	= @{$test_vector};
 
-    my @in_file;
-    if (ref $in_spec)
-      {
-	assert (ref $in_spec eq 'ARRAY');
-	my $i = 0;
-	my $file_spec;
-	foreach $file_spec (@$in_spec)
-	  {
-	    # A file spec may be a string or a reference.
-	    # If it's a string, that string is to be the contents of a
-	    # generated (by this script) file with name derived from the
-	    # name of this test.
-	    # If it's a reference, then it must be the name of an existing
-	    # file.
-	    if (ref $file_spec)
-	      {
-		assert (ref $file_spec eq 'SCALAR');
-		my $existing_file = $$file_spec;
-		# FIXME: make sure $existing_file exists somewhere.
-		push (@in_file, $existing_file);
-	      }
-	    else
-	      {
-		++$i;
-		my $file_contents = $file_spec;
-		my $gen_file = "t$test_name.in$i";
-		push (@in_file, $gen_file);
-		open (IN, ">$gen_file") || die "$0: $gen_file: $!\n";
-		print IN $file_contents;
-		close (IN) || die "$0: $gen_file: $!\n";
-	      }
-	  }
-      }
-    else
-      {
-	my $file_contents = $in_spec;
-	my $gen_file = "t$test_name.in";
-	push (@in_file, $gen_file);
-	open (IN, ">$gen_file") || die "$0: $gen_file: $!\n";
-	print IN $file_contents;
-	close (IN) || die "$0: $gen_file: $!\n";
-      }
+    my $h = spec_to_list ($in_spec, $test_name, 'in');
 
     my $in1 = "t$test_name.in1";
     my $in2 = "t$test_name.in2";
@@ -110,7 +129,7 @@ foreach $test_vector (@Test::t)
 
     my @srcdir_rel_in_file;
     my $f;
-    foreach $f (@in_file)
+    foreach $f (@{ $h->{ALL_FILES} })
       {
 	push (@srcdir_rel_in_file, "\$srcdir/$f")
       }
