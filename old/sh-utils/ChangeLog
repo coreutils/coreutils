@@ -1,3 +1,10 @@
+1999-12-22  Jim Meyering  <meyering@ascend.com>
+
+	* lib/getdate.y (get_date): Fix typo in time_t overflow test.
+	From Michael Stone.
+
+	* tests/date/Test.pm (regress-1):  New test for the above.
+
 1999-12-18  Jim Meyering  <meyering@ascend.com>
 
 	* src/who.c (print_entry): Correct do_lookup test so that who
