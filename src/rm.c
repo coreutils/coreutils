@@ -37,7 +37,7 @@ char *basename ();
 char *stpcpy ();
 char *xmalloc ();
 char *xrealloc ();
-int eaccess_stat ();
+int euidaccess ();
 int yesno ();
 void strip_trailing_slashes ();
 
@@ -221,7 +221,7 @@ remove_file (statp)
      struct stat *statp;
 {
   if (!ignore_missing_files && (interactive || stdin_tty)
-      && eaccess_stat (statp, W_OK, pathname)
+      && euidaccess (pathname, W_OK)
 #ifdef S_ISLNK
       && !S_ISLNK (statp->st_mode)
 #endif
@@ -273,7 +273,7 @@ remove_dir (statp)
     }
 
   if (!ignore_missing_files && (interactive || stdin_tty)
-      && eaccess_stat (statp, W_OK, pathname))
+      && euidaccess (pathname, W_OK))
     {
       fprintf (stderr,
 	       "%s: descend directory `%s', overriding mode %04o? ",
