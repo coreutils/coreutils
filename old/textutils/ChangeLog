@@ -1,3 +1,7 @@
+Mon Oct 21 16:48:12 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/tr.c (validate): Remove TAB from diagnostic, for consistency.
+
 Sun Oct 20 13:44:07 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/Makefile.am (INCLUDES): Add -I../intl.  Reported by Eric Backus.
