@@ -1857,7 +1857,7 @@ main (int argc, char **argv)
 	      files[i] = tmp;
 	    }
 	}
-      ofp = xtmpfopen (outfile);
+      ofp = xfopen (outfile, "w");
     }
   else
     ofp = stdout;
