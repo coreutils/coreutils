@@ -151,14 +151,13 @@ sysv_sum_file (const char *file, int print_name)
 {
   int fd;
   unsigned char buf[8192];
-  register int bytes_read;
   uintmax_t total_bytes = 0;
   char hbuf[LONGEST_HUMAN_READABLE + 1];
   int r;
   int checksum;
 
   /* The sum of all the input bytes, modulo (UINT_MAX + 1).  */
-  register unsigned int s = 0;
+  unsigned int s = 0;
 
   if (STREQ (file, "-"))
     {
@@ -177,21 +176,25 @@ sysv_sum_file (const char *file, int print_name)
   /* Need binary I/O, or else byte counts and checksums are incorrect.  */
   SET_BINARY (fd);
 
-  while ((bytes_read = safe_read (fd, buf, sizeof buf)) > 0)
+  while (1)
     {
-      register int i;
+      size_t i;
+      size_t bytes_read = safe_read (fd, buf, sizeof buf);
+
+      if (bytes_read == 0)
+	break;
+
+      if (bytes_read == SAFE_READ_ERROR)
+	{
+	  error (0, errno, "%s", file);
+	  if (!STREQ (file, "-"))
+	    close (fd);
+	  return -1;
+	}
 
       for (i = 0; i < bytes_read; i++)
 	s += buf[i];
       total_bytes += bytes_read;
-    }
-
-  if (bytes_read < 0)
-    {
-      error (0, errno, "%s", file);
-      if (!STREQ (file, "-"))
-	close (fd);
-      return -1;
     }
 
   if (!STREQ (file, "-") && close (fd) == -1)
