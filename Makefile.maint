@@ -63,7 +63,9 @@ local-check = \
 # It's not a big deal -- just aesthetics.
 header-check:
 	if test -f $(srcdir)/src/sys2.h; then				\
-	  grep 'xalloc\.h' $(srcdir)/src/*.c || exit 1 && :;			\
+	  if grep 'xalloc\.h' $(srcdir)/src/*.c; then			\
+	    exit 1;							\
+	  fi;								\
 	fi
 
 # Ensure that date's --help output stays in sync with the info
