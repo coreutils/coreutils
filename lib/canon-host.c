@@ -26,6 +26,9 @@
 #ifdef HAVE_UNISTD_H
 # include <unistd.h>
 #endif
+#ifdef HAVE_STDLIB_H
+# include <stdlib.h>
+#endif
 #ifdef HAVE_STRING_H
 # include <string.h>
 #endif
@@ -46,7 +49,6 @@
 #ifndef strdup
 char *strdup ();
 #endif
-void free ();
 
 /* Returns the canonical hostname associated with HOST (allocated in a static
    buffer), or 0 if it can't be determined.  */
@@ -80,11 +82,12 @@ canon_host (const char *host)
 	     directly to gethostbyaddr because on some systems he->h_addr
 	     is located in a static library buffer that is reused in the
 	     gethostbyaddr call.  Make a copy and use that instead.  */
-	  char *h_addr_copy = strdup (he->h_addr);
+	  char *h_addr_copy = (char *) malloc (he->h_length);
 	  if (h_addr_copy == NULL)
 	    he = NULL;
 	  else
 	    {
+	      memcpy (h_addr_copy, he->h_addr, he->h_length);
 	      he = gethostbyaddr (h_addr_copy, he->h_length, he->h_addrtype);
 	      free (h_addr_copy);
 	    }
