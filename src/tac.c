@@ -546,8 +546,9 @@ tac (fd, file)
 	    }
 	  lseek (fd, file_pos, SEEK_SET);
 
-	  /* Shift the pending record data right to make room for the new. */
-	  bcopy (buffer, buffer + read_size, saved_record_size);
+	  /* Shift the pending record data right to make room for the new.
+	     The source and destination regions probably overlap.  */
+	  memmove (buffer + read_size, buffer, saved_record_size);
 	  past_end = buffer + read_size + saved_record_size;
 	  /* For non-regexp searches, avoid unneccessary scanning. */
 	  if (sentinel_length)
@@ -608,7 +609,7 @@ output (start, past_end)
   /* Write out as many full buffers as possible. */
   while (bytes_to_add >= bytes_available)
     {
-      bcopy (start, buffer + bytes_in_buffer, bytes_available);
+      memcpy (buffer + bytes_in_buffer, start, bytes_available);
       bytes_to_add -= bytes_available;
       start += bytes_available;
       xwrite (STDOUT_FILENO, buffer, WRITESIZE);
@@ -616,7 +617,7 @@ output (start, past_end)
       bytes_available = WRITESIZE;
     }
 
-  bcopy (start, buffer + bytes_in_buffer, bytes_to_add);
+  memcpy (buffer + bytes_in_buffer, start, bytes_to_add);
   bytes_in_buffer += bytes_to_add;
 }
 
