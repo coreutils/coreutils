@@ -1,3 +1,16 @@
+2001-03-12  Jim Meyering  <meyering@lucent.com>
+
+	`fmt --prefix=S' would not work properly for any string S containing
+	a byte with the high bit set.
+	* src/fmt.c (prefix): Declare to be of type unsigned char, not `char'.
+	(get_prefix): Likewise for local, `p'.
+	Reported by François Pinard.
+
+	Add a test for the above-fixed problem.
+	* tests/fmt: New directory/files.
+	* configure.in (AC_OUTPUT): Add tests/fmt/Makefile.
+	* tests/Makefile.am (SUBDIRS): Add fmt.
+
 2001-03-05  Andreas Schwab  <schwab@suse.de>
 
 	* src/tac.c (save_stdin): Use mkstemp to create temporary file.
