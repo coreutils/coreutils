@@ -1,6 +1,10 @@
-2004-02-11  Jim Meyering  <jim@meyering.net>
+2004-02-15  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.2.0.
+
+	* Makefile.am (dist-hook): Qualify target with $(srcdir)/ prefix.
+
+2004-02-11  Jim Meyering  <jim@meyering.net>
 
 	* tests/Makefile.am.in ($(srcdir)/Makefile.am): Use more portable
 	$(srcdir)/../Makefile.am.in, rather than $<.
