@@ -1,3 +1,8 @@
+2001-01-26  Jim Meyering  <meyering@lucent.com>
+
+	* prereq.m4 (jm_PREREQ_QUOTEARG): Check for stddef.h, now that
+	quotearg.c includes it.
+
 2001-01-15  Bruno Haible  <haible@clisp.cons.org>
 
 	* iconv.m4 (jm_ICONV): Also check whether the iconv declaration
