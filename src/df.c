@@ -581,7 +581,7 @@ or all filesystems by default.\n\
 int
 main (int argc, char **argv)
 {
-  int i;
+  int c;
   struct stat *stats;
 
   program_name = argv[0];
@@ -610,10 +610,10 @@ main (int argc, char **argv)
   posix_format = 0;
   exit_status = 0;
 
-  while ((i = getopt_long (argc, argv, "aiF:hkmPTt:vx:", long_options, NULL))
+  while ((c = getopt_long (argc, argv, "aiF:hkmPTt:vx:", long_options, NULL))
 	 != -1)
     {
-      switch (i)
+      switch (c)
 	{
 	case 0:			/* Long option. */
 	  break;
@@ -718,6 +718,8 @@ with the portable output format"));
     }
   else
     {
+      int i;
+
       /* stat all the given entries to make sure they get automounted,
 	 if necessary, before reading the filesystem table.  */
       stats = (struct stat *)
@@ -749,6 +751,8 @@ with the portable output format"));
     }
   else
     {
+      int i;
+
       /* Display explicitly requested empty filesystems. */
       show_listed_fs = 1;
 
