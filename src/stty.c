@@ -143,25 +143,6 @@
 # define CSTATUS Control ('t')
 #endif
 
-static const char *visible ();
-static unsigned long baud_to_value ();
-static int recover_mode ();
-static int screen_columns ();
-static int set_mode ();
-static long integer_arg ();
-static speed_t string_to_baud ();
-static tcflag_t *mode_type_flag ();
-static void display_all ();
-static void display_changed ();
-static void display_recoverable ();
-static void display_settings ();
-static void display_speed ();
-static void display_window_size ();
-static void sane_mode ();
-static void set_control_char ();
-static void set_speed ();
-static void set_window_size ();
-
 /* Which speeds to set.  */
 enum speed_setting
   {
@@ -399,6 +380,25 @@ static struct control_info control_info[] =
   {NULL, 0, 0}
 };
 
+static const char *visible __P ((unsigned char ch));
+static unsigned long baud_to_value __P ((speed_t speed));
+static int recover_mode __P ((char *arg, struct termios *mode));
+static int screen_columns __P ((void));
+static int set_mode __P ((struct mode_info *info, int reversed, struct termios *mode));
+static long integer_arg __P ((char *s));
+static speed_t string_to_baud __P ((char *arg));
+static tcflag_t *mode_type_flag __P ((enum mode_type type, struct termios *mode));
+static void display_all __P ((struct termios *mode));
+static void display_changed __P ((struct termios *mode));
+static void display_recoverable __P ((struct termios *mode));
+static void display_settings __P ((enum output_type output_type, struct termios *mode));
+static void display_speed __P ((struct termios *mode, int fancy));
+static void display_window_size __P ((int fancy));
+static void sane_mode __P ((struct termios *mode));
+static void set_control_char __P ((struct control_info *info, char *arg, struct termios *mode));
+static void set_speed __P ((enum speed_setting type, char *arg, struct termios *mode));
+static void set_window_size __P ((int rows, int cols));
+
 /* The width of the screen, for output wrapping. */
 static int max_col;
 
@@ -452,8 +452,7 @@ wrapf (message, va_alist)
 }
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
@@ -633,9 +632,7 @@ settings, CHAR is taken literally, or coded as in ^c, 0x37, 0177 or\n\
 }
 
 void
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   struct termios mode;
   enum output_type output_type;
@@ -933,10 +930,7 @@ main (argc, argv)
 /* Return 0 if not applied because not reversible; otherwise return 1. */
 
 static int
-set_mode (info, reversed, mode)
-     struct mode_info *info;
-     int reversed;
-     struct termios *mode;
+set_mode (struct mode_info *info, int reversed, struct termios *mode)
 {
   tcflag_t *bitsp;
 
@@ -1142,10 +1136,7 @@ set_mode (info, reversed, mode)
 }
 
 static void
-set_control_char (info, arg, mode)
-     struct control_info *info;
-     char *arg;
-     struct termios *mode;
+set_control_char (struct control_info *info, char *arg, struct termios *mode)
 {
   unsigned char value;
 
@@ -1168,10 +1159,7 @@ set_control_char (info, arg, mode)
 }
 
 static void
-set_speed (type, arg, mode)
-     enum speed_setting type;
-     char *arg;
-     struct termios *mode;
+set_speed (enum speed_setting type, char *arg, struct termios *mode)
 {
   speed_t baud;
 
@@ -1189,8 +1177,7 @@ set_speed (type, arg, mode)
    Return zero for success, nonzero if both ioctl's failed.  */
 
 static int
-get_win_size (win)
-     struct winsize *win;
+get_win_size (struct winsize *win)
 {
   int err;
 
@@ -1201,8 +1188,7 @@ get_win_size (win)
 }
 
 static void
-set_window_size (rows, cols)
-     int rows, cols;
+set_window_size (int rows, int cols)
 {
   struct winsize win;
 
@@ -1264,8 +1250,7 @@ set_window_size (rows, cols)
 }
 
 static void
-display_window_size (fancy)
-     int fancy;
+display_window_size (int fancy)
 {
   struct winsize win;
 
@@ -1285,7 +1270,7 @@ display_window_size (fancy)
 #endif
 
 static int
-screen_columns ()
+screen_columns (void)
 {
 #ifdef TIOCGWINSZ
   struct winsize win;
@@ -1306,9 +1291,7 @@ screen_columns ()
 }
 
 static tcflag_t *
-mode_type_flag (type, mode)
-     enum mode_type type;
-     struct termios *mode;
+mode_type_flag (enum mode_type type, struct termios *mode)
 {
   switch (type)
     {
@@ -1333,9 +1316,7 @@ mode_type_flag (type, mode)
 }
 
 static void
-display_settings (output_type, mode)
-     enum output_type output_type;
-     struct termios *mode;
+display_settings (enum output_type output_type, struct termios *mode)
 {
   switch (output_type)
     {
@@ -1354,8 +1335,7 @@ display_settings (output_type, mode)
 }
 
 static void
-display_changed (mode)
-     struct termios *mode;
+display_changed (struct termios *mode)
 {
   int i;
   int empty_line;
@@ -1426,8 +1406,7 @@ display_changed (mode)
 }
 
 static void
-display_all (mode)
-     struct termios *mode;
+display_all (struct termios *mode)
 {
   int i;
   tcflag_t *bitsp;
@@ -1475,9 +1454,7 @@ display_all (mode)
 }
 
 static void
-display_speed (mode, fancy)
-     struct termios *mode;
-     int fancy;
+display_speed (struct termios *mode, int fancy)
 {
   if (cfgetispeed (mode) == 0 || cfgetispeed (mode) == cfgetospeed (mode))
     wrapf (fancy ? "speed %lu baud;" : "%lu\n",
@@ -1491,8 +1468,7 @@ display_speed (mode, fancy)
 }
 
 static void
-display_recoverable (mode)
-     struct termios *mode;
+display_recoverable (struct termios *mode)
 {
   int i;
 
@@ -1505,9 +1481,7 @@ display_recoverable (mode)
 }
 
 static int
-recover_mode (arg, mode)
-     char *arg;
-     struct termios *mode;
+recover_mode (char *arg, struct termios *mode)
 {
   int i, n;
   unsigned int chr;
@@ -1571,8 +1545,7 @@ struct speed_map speeds[] =
 };
 
 static speed_t
-string_to_baud (arg)
-     char *arg;
+string_to_baud (char *arg)
 {
   int i;
 
@@ -1583,8 +1556,7 @@ string_to_baud (arg)
 }
 
 static unsigned long
-baud_to_value (speed)
-     speed_t speed;
+baud_to_value (speed_t speed)
 {
   int i;
 
@@ -1595,8 +1567,7 @@ baud_to_value (speed)
 }
 
 static void
-sane_mode (mode)
-     struct termios *mode;
+sane_mode (struct termios *mode)
 {
   int i;
   tcflag_t *bitsp;
@@ -1629,8 +1600,7 @@ sane_mode (mode)
 /* Adapted from `cat' by Torbjorn Granlund.  */
 
 static const char *
-visible (ch)
-     unsigned char ch;
+visible (unsigned char ch)
 {
   static char buf[10];
   char *bpout = buf;
@@ -1677,13 +1647,13 @@ visible (ch)
   return (const char *) buf;
 }
 
+/* FIXME: use xstrtol, but verify that result is not negative.  */
 /* Parse string S as an integer, using decimal radix by default,
    but allowing octal and hex numbers as in C.  */
 /* From `od' by Richard Stallman.  */
 
 static long
-integer_arg (s)
-     char *s;
+integer_arg (char *s)
 {
   long value;
   int radix = 10;
