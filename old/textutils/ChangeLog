@@ -1,3 +1,18 @@
+1999-05-21  Paul Eggert  <eggert@twinsun.com>
+
+	* src/sort.c (strtod): Declare if STDC_HEADERS is not defined.
+	(general_numcompare): Use strtod, not xstrtod.
+	Do not consider partial conversions to be errors.
+	Put -infinity at the start, and +infinity at the end;
+	follow +infinity with NaNs (sorted by bit pattern),
+	and finally by conversion errors.
+
+1999-05-21  Jim Meyering  <meyering@ascend.com>
+
+	* tests/sort/Test.pm (11d): Reverse lines in expected output
+	to reflect latest change.
+	(use-nl): New test from Paul Eggert.
+
 1999-05-20  Paul Eggert  <eggert@twinsun.com>
 
 	* src/sort.c: Treat the trailing newline as part of the line,
