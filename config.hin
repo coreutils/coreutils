@@ -364,6 +364,10 @@
    don't. */
 #undef HAVE_DECL__SYS_SIGLIST
 
+/* Define to 1 if you have the declaration of `__fpending', and to 0 if you
+   don't. */
+#undef HAVE_DECL___FPENDING
+
 /* Define to 1 if you have the declaration of `__sys_siglist', and to 0 if you
    don't. */
 #undef HAVE_DECL___SYS_SIGLIST
@@ -1209,6 +1213,9 @@
    member named physmem. */
 #undef HAVE__SYSTEM_CONFIGURATION
 
+/* Define to 1 if you have the `__fpending' function. */
+#undef HAVE___FPENDING
+
 /* Define to 1 if you have the `__secure_getenv' function. */
 #undef HAVE___SECURE_GETENV
 
@@ -1315,6 +1322,9 @@
 
 /* Define to the version of this package. */
 #undef PACKAGE_VERSION
+
+/* the number of pending output bytes on stream `fp' */
+#undef PENDING_OUTPUT_N_BYTES
 
 /* Define this if you prefer euidaccess to return the correct result even if
    this would make it nonreentrant. Define this only if your entire
