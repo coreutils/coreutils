@@ -28,10 +28,10 @@ AC_DEFUN([_AC_FUNC_FNMATCH_IF],
 [AC_CACHE_CHECK(
    [for working $1 fnmatch],
    [$2],
-  [# Some versions of Solaris, SCO, and the GNU C Library
-   # have a broken or incompatible fnmatch.
-   # So we run a test program.  If we are cross-compiling, take no chance.
-   # Thanks to John Oleynick, François Pinard, and Paul Eggert for this test.
+  [dnl Some versions of Solaris, SCO, and the GNU C Library
+   dnl have a broken or incompatible fnmatch.
+   dnl So we run a test program.  If we are cross-compiling, take no chance.
+   dnl Thanks to John Oleynick, François Pinard, and Paul Eggert for this test.
    AC_RUN_IFELSE(
       [AC_LANG_PROGRAM(
 	 [

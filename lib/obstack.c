@@ -173,7 +173,8 @@ _obstack_begin (struct obstack *h,
   chunk = h->chunk = CALL_CHUNKFUN (h, h -> chunk_size);
   if (!chunk)
     (*obstack_alloc_failed_handler) ();
-  h->next_free = h->object_base = chunk->contents;
+  h->next_free = h->object_base = __PTR_ALIGN ((char *) chunk, chunk->contents,
+					       alignment - 1);
   h->chunk_limit = chunk->limit
     = (char *) chunk + h->chunk_size;
   chunk->prev = 0;
@@ -220,7 +221,8 @@ _obstack_begin_1 (struct obstack *h, int size, int alignment,
   chunk = h->chunk = CALL_CHUNKFUN (h, h -> chunk_size);
   if (!chunk)
     (*obstack_alloc_failed_handler) ();
-  h->next_free = h->object_base = chunk->contents;
+  h->next_free = h->object_base = __PTR_ALIGN ((char *) chunk, chunk->contents,
+					       alignment - 1);
   h->chunk_limit = chunk->limit
     = (char *) chunk + h->chunk_size;
   chunk->prev = 0;
@@ -287,7 +289,10 @@ _obstack_newchunk (struct obstack *h, int length)
   /* If the object just copied was the only data in OLD_CHUNK,
      free that chunk and remove it from the chain.
      But not if that chunk might contain an empty object.  */
-  if (h->object_base == old_chunk->contents && ! h->maybe_empty_object)
+  if (! h->maybe_empty_object
+      && (h->object_base
+	  == __PTR_ALIGN ((char *) old_chunk, old_chunk->contents,
+			  h->alignment_mask)))
     {
       new_chunk->prev = old_chunk->prev;
       CALL_FREEFUN (h, old_chunk);

@@ -3,6 +3,11 @@
 	* sha1.m4: Renamed from sha.m4.
 	(gl_SHA1): Renamed from gl_SHA.  All uses changed.
 
+2004-08-08  Simon Josefsson  <jas@extundo.com>
+
+	* getpass.m4 (gl_FUNC_GETPASS, gl_FUNC_GETPASS_GNU):
+	Check getpass declaration.
+
 2004-08-07  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* canonicalize.m4, getcwd-path-max.m4, strdup.m4: Merge from gnulib.

@@ -19,6 +19,10 @@
 # include <config.h>
 #endif
 
+#if !_LIBC
+# include "getpass.h"
+#endif
+
 #if _LIBC
 # define HAVE_STDIO_EXT_H 1
 #endif

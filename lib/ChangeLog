@@ -1,5 +1,16 @@
 2004-08-09  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* Makefile.am (libfetish_a_SOURCES): Add getpass.h.
+	* getpass.h: New file.
+	* .cpp-disable: Add it.
+	* getpass.c [!_LIBC]: Include it.
+
+	* obstack.h (obstack_empty_p):
+	Don't assume that chunk->contents is suitably aligned.
+	* obstack.c (_obstack_begin, _obstack_begin_1, _obstack_newchunk):
+	Likewise. Problem reported by Benno in
+	<http://sources.redhat.com/ml/libc-alpha/2004-08/msg00055.html>.
+
 	* chown.c (rpl_chown): Work even if the file is writeable but not
 	readable.  This could be improved further but it'd take some work.
 	* fts.c (diropen): New function.

@@ -66,6 +66,7 @@ libfetish_a_SOURCES = \
   full-write.c full-write.h \
   getline.h \
   getpagesize.h \
+  getpass.h \
   gettime.c \
   gettext.h \
   getugroups.c \
