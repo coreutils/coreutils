@@ -208,7 +208,7 @@ statfs (path, fsb)
   struct stat stats;
   struct dustat fsd;
 
-  if (safe_stat (path, &stats))
+  if (stat (path, &stats))
     return -1;
   if (dustat (stats.st_dev, 0, &fsd, sizeof (fsd)))
     return -1;
