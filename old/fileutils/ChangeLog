@@ -2,6 +2,10 @@
 
 	* Version 4.1.1.
 
+	* src/ls.c: Declare some local variables to be `const', where
+	appropriate.
+	(usage): Improve the description of --dereference (-L).
+
 	* src/rm.c (usage): Clarify description of --directory (-d).
 	Based on a patch from Michael Stone.
 
