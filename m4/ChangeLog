@@ -1,3 +1,8 @@
+2000-01-29  Jim Meyering  <meyering@lucent.com>
+
+	* lib-check.m4: New file containing library-related checks from
+	fileutils and sh-utils (textutils had none).
+
 2000-01-28  Jim Meyering  <meyering@lucent.com>
 
 	* perl.m4: Change format of warning message to look more like that
