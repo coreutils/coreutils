@@ -2,7 +2,10 @@ Wed Oct  9 00:26:55 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in (/proc/uptime check): Guard the read of /proc/uptime
 	with an existence test to avoid a messy configure-time warning on
-	systems that lack that special file.
+	systems that lack that special file. Reported by Kaveh R. Ghazi.
+
+	* configure.in (check whether floor needs -lm): Fix typo: save $LIBS,
+	not $LIB.  From Kaveh R. Ghazi.
 
 	* checks/nice: Protect echoed args with leading `x' so echo doesn't
 	interpret leading -n on e.g. SunOS systems.
