@@ -1,6 +1,10 @@
 Changes in release 2.1
  [2.0.12]
 * kill: new program
+* who accepts new options: --all (-a), --boot (-b), --dead (-d), --login,
+   --process (-p), --runlevel (-r), --short (-s), --time (-t), --users (-u).
+   The -u option now produces POSIX-specified results and is the same as
+   the long option `--users'.  --idle is no longer the same as -u.
 * The following changes apply on systems conforming to POSIX 1003.1-2001,
   and are required by the new POSIX standard:
    - `date -I' is no longer supported.  Instead, use `date --iso-8601'.
