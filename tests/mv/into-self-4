@@ -1,0 +1,37 @@
+#!/bin/sh
+# confirm that `mv symlink symlink' doesn't remove symlink
+# Based on an example from David Luyer.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  mv --version
+fi
+
+. $srcdir/../envvar-check
+
+pwd=`pwd`
+tmp=mv-slink2.$$
+trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
+trap '(exit $?); exit' 1 2 13 15
+
+framework_failure=0
+mkdir $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+touch file || framework_failure=1
+ln -s file s || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo 'failure in testing framework' 1>&2
+  (exit 1); exit
+fi
+
+fail=0
+
+# This must fail.
+mv s s 2> /dev/null && fail=1
+
+# But the symlink, s, must not be removed.
+# Before 4.0.36, `s' would have been removed.
+test -f s || fail=1
+
+(exit $fail); exit
