@@ -9,4 +9,4 @@ TESTS_ENVIRONMENT = \
   PATH=`pwd`/../../src:$$PATH \
   PROG=tail
 
-TESTS = assert assert-2
+TESTS = proc-ksyms start-middle assert assert-2
