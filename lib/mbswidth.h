@@ -1,5 +1,5 @@
 /* Determine the number of screen columns needed for a string.
-   Copyright (C) 2000-2002 Free Software Foundation, Inc.
+   Copyright (C) 2000-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -16,6 +16,14 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 #include <stddef.h>
+
+/* Avoid a clash of our mbswidth() with a function of the same name defined
+   in UnixWare 7.1.1 <wchar.h>.  We need this #include before the #define
+   below.  */
+#if HAVE_WCHAR_H
+# include <wchar.h>
+#endif
+
 
 /* Optional flags to influence mbswidth/mbsnwidth behavior.  */
 
