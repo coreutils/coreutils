@@ -1,5 +1,8 @@
 Changes in release 2.1
 [2.0g]
+* pr: fix a bounds violation found by Greg McGary's bounded-pointers-enabled gcc
+  It could have caused (with low probability) the columns on the last page of
+  output *not* to be `balanced' when they should have been.
 * sort: if the -T tmpdir option is given multiple times, all the given
   directories are used; this can improve performance for huge sort/merges.
 [2.0f]
