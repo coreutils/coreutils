@@ -85,10 +85,13 @@ static const struct option long_options[] =
   { "binary", no_argument, 0, 'b' },
   { "check", no_argument, 0, 'c' },
   { "status", no_argument, 0, 2 },
+  { "string", required_argument, 0, 1 },
   { "text", no_argument, 0, 't' },
   { "warn", no_argument, 0, 'w' },
   { NULL, 0, NULL, 0 }
 };
+
+char *xmalloc ();
 
 static void
 usage (int status)
@@ -443,6 +446,8 @@ main (int argc, char **argv)
   unsigned char md5buffer[16];
   int do_check = 0;
   int opt;
+  char **string = NULL;
+  size_t n_strings = 0;
   size_t i;
   size_t err = 0;
   int file_type_specified = 0;
@@ -463,6 +468,16 @@ main (int argc, char **argv)
     switch (opt)
       {
       case 0:			/* long option */
+	break;
+      case 1: /* --string */
+	{
+	  if (string == NULL)
+	    string = (char **) xmalloc ((argc - 1) * sizeof (char *));
+
+	  if (optarg == NULL)
+	    optarg = "";
+	  string[n_strings++] = optarg;
+	}
 	break;
       case 'b':
 	file_type_specified = 1;
@@ -494,6 +509,13 @@ verifying checksums"));
       usage (EXIT_FAILURE);
     }
 
+  if (n_strings > 0 && do_check)
+    {
+      error (0, 0,
+	     _("the --string and --check options are mutually exclusive"));
+      usage (EXIT_FAILURE);
+    }
+
   if (status_only && !do_check)
     {
       error (0, 0,
@@ -508,7 +530,25 @@ verifying checksums"));
       usage (EXIT_FAILURE);
     }
 
-  if (do_check)
+  if (n_strings > 0)
+    {
+      if (optind < argc)
+	{
+	  error (0, 0, _("no files may be specified when using --string"));
+	  usage (EXIT_FAILURE);
+	}
+      for (i = 0; i < n_strings; ++i)
+	{
+	  size_t cnt;
+	  md5_buffer (string[i], strlen (string[i]), md5buffer);
+
+	  for (cnt = 0; cnt < 16; ++cnt)
+	    printf ("%02x", md5buffer[cnt]);
+
+	  printf ("  \"%s\"\n", string[i]);
+	}
+    }
+  else if (do_check)
     {
       if (optind + 1 < argc)
 	{
