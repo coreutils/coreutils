@@ -19,6 +19,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   sort option order no longer matters for the options -S, -d, -i, -o, and -t.
   Stronger options override weaker, and incompatible options are diagnosed.
 
+  `sha1sum --check' now accepts the BSD format for SHA1 message digests
+  in addition to the BSD format for MD5 ones.
+
 ** Bug fixes
 
   stat no longer overruns a buffer for format strings ending in `%'
