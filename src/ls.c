@@ -666,11 +666,11 @@ main (int argc, char **argv)
 	      (ls_mode == LS_LS ? "ls"
 	       : (ls_mode == LS_MULTI_COL ? "dir" : "vdir")),
 	      GNU_PACKAGE, VERSION);
-      exit (0);
+      exit (EXIT_SUCCESS);
     }
 
   if (show_help)
-    usage (0);
+    usage (EXIT_SUCCESS);
 
   if (print_with_color)
     parse_ls_color ();
@@ -739,6 +739,9 @@ main (int argc, char **argv)
       dired_dump_obstack ("//DIRED//", &dired_obstack);
       dired_dump_obstack ("//SUBDIRED//", &subdired_obstack);
     }
+
+  if (fclose (stdout) == EOF)
+    error (EXIT_FAILURE, errno, _("write error"));
 
   exit (exit_status);
 }
@@ -948,7 +951,7 @@ decode_switches (int argc, char **argv)
 	case 'w':
 	  if (xstrtol (optarg, NULL, 0, &tmp_long, NULL) != LONGINT_OK
 	      || tmp_long <= 0 || tmp_long > INT_MAX)
-	    error (1, 0, _("invalid line width: %s"), optarg);
+	    error (EXIT_FAILURE, 0, _("invalid line width: %s"), optarg);
 	  line_length = (int) tmp_long;
 	  break;
 
@@ -1012,7 +1015,7 @@ decode_switches (int argc, char **argv)
 	case 'T':
 	  if (xstrtol (optarg, NULL, 0, &tmp_long, NULL) != LONGINT_OK
 	      || tmp_long < 0 || tmp_long > INT_MAX)
-	    error (1, 0, _("invalid tab size: %s"), optarg);
+	    error (EXIT_FAILURE, 0, _("invalid tab size: %s"), optarg);
 	  tabsize = (int) tmp_long;
 	  break;
 
@@ -1033,7 +1036,7 @@ decode_switches (int argc, char **argv)
 	  if (i < 0)
 	    {
 	      invalid_arg (_("sort type"), optarg, i);
-	      usage (1);
+	      usage (EXIT_FAILURE);
 	    }
 	  sort_type = sort_types[i];
 	  break;
@@ -1043,7 +1046,7 @@ decode_switches (int argc, char **argv)
 	  if (i < 0)
 	    {
 	      invalid_arg (_("time type"), optarg, i);
-	      usage (1);
+	      usage (EXIT_FAILURE);
 	    }
 	  time_type = time_types[i];
 	  break;
@@ -1053,7 +1056,7 @@ decode_switches (int argc, char **argv)
 	  if (i < 0)
 	    {
 	      invalid_arg (_("format type"), optarg, i);
-	      usage (1);
+	      usage (EXIT_FAILURE);
 	    }
 	  format = formats[i];
 	  break;
@@ -1065,7 +1068,7 @@ decode_switches (int argc, char **argv)
 	      if (i < 0)
 		{
 		  invalid_arg (_("colorization criterion"), optarg, i);
-		  usage (1);
+		  usage (EXIT_FAILURE);
 		}
 	      i = color_types[i];
 	    }
@@ -1090,7 +1093,7 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	default:
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	}
     }
 
