@@ -60,9 +60,23 @@ if test $ac_cv_func_getmntent = yes; then
     # 4.3BSD, SunOS, HP-UX, Dynix, Irix
     AC_MSG_CHECKING([for one-argument getmntent function])
     AC_CACHE_VAL(fu_cv_sys_mounted_getmntent1,
-		 [test $ac_cv_header_mntent_h = yes \
-		   && fu_cv_sys_mounted_getmntent1=yes \
-		   || fu_cv_sys_mounted_getmntent1=no])
+		 [AC_TRY_COMPILE([
+#include <mntent.h>
+#if !defined MOUNTED
+# if defined _PATH_MOUNTED	/* GNU libc  */
+#  define MOUNTED _PATH_MOUNTED
+# endif
+# if defined MNT_MNTTAB	/* HP-UX.  */
+#  define MOUNTED MNT_MNTTAB
+# endif
+# if defined MNTTABNAME	/* Dynix.  */
+#  define MOUNTED MNTTABNAME
+# endif
+#endif
+],
+                    [ struct mntent *mnt = 0; char *table = MOUNTED; ],
+		    fu_cv_sys_mounted_getmntent1=yes,
+		    fu_cv_sys_mounted_getmntent1=no)])
     AC_MSG_RESULT($fu_cv_sys_mounted_getmntent1)
     if test $fu_cv_sys_mounted_getmntent1 = yes; then
       ac_list_mounted_fs=found
