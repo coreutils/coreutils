@@ -5,7 +5,7 @@ Tue Aug  8 21:49:27 1995  Jim Meyering  (meyering@comco.com)
 
 	* md5sum.c (md5_check): Fail if no valid line is found.
 	Don't use the word `fail' unless there were failures --
-	say `all N tests passed.'
+	instead, say `all N tests passed.'
 
 	* md5sum.c (main) [handling --string option]: Don't output
 	nonstandard `b' binary flag.  From Greg Troxel (gdt@bbn.com).
