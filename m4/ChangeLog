@@ -1,3 +1,7 @@
+2005-02-08  Jim Meyering  <jim@meyering.net>
+
+	* memcasecmp.m4 (gl_FUNC_MEMCASECMP): New file and macro.
+
 2005-02-07  Jim Meyering  <jim@meyering.net>
 
 	* fts.m4 (gl_FUNC_FTS): New file and macro.
