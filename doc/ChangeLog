@@ -22,3 +22,5 @@
 
 	* Makefile.am ($(DVIS), $(INFO_DEPS)): Depend on $(EXTRA_DIST).
 	(DISABLED_constants.texi): New rule -- disabled for now.
+
+	This directory is now shared by fileutils, textutils, and sh-utils.
