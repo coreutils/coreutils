@@ -91,10 +91,10 @@ l = @l@
 
 EXTRA_DIST = $(TESTS)
 
-TESTS_ENVIRONMENT =    top_srcdir=$(top_srcdir)   srcdir=$(srcdir)   PERL="@PERL@"   PATH=../../src:$$PATH   PROG=md5sum
+TESTS_ENVIRONMENT =    top_srcdir=$(top_srcdir)   srcdir=$(srcdir)   PERL="@PERL@"   PATH=../../src:$$PATH   PROG='md5sum --text'
 
 
-TESTS = basic-1
+TESTS = basic-1 newline-1
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../config.h
 CONFIG_CLEAN_FILES = 
