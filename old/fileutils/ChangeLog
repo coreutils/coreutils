@@ -43,6 +43,7 @@
 	(describe_change): Extracted/combined from chgrp.c and chown.c.
 	(change_dir_owner): Likewise.
 	(change_file_owner): Likewise.
+	* po/POTFILES.in: Add src/chown-core.c.
 
 	* configure.in (AC_OUTPUT): Add tests/chgrp/Makefile.
 	* tests/Makefile.am (SUBDIRS): Add chgrp.
