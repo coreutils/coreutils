@@ -3,6 +3,8 @@
 	a separate file.
 	* Makefile.am (DIST_OTHER): Remove VERSION.
 	* src/Makefile.am (version.c): Depend on Makefile, not ../VERSION.
+	(stamp-v): New target; depend on Makefile.
+	(DISTCLEANFILES): Add stamp-v, version.c.
 
 Tue Jan  2 00:08:08 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
