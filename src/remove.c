@@ -1,5 +1,5 @@
 /* remove.c -- core functions for removing files and directories
-   Copyright (C) 88, 90, 91, 1994-2002 Free Software Foundation, Inc.
+   Copyright (C) 88, 90, 91, 1994-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -82,10 +82,6 @@ int rpl_lstat (const char *, struct stat *);
 #else
 /* Some systems don't have inodes, so fake them to avoid lots of ifdefs.  */
 # define D_INO(dp) 1
-#endif
-
-#if !defined S_ISLNK
-# define S_ISLNK(Mode) 0
 #endif
 
 /* Initial capacity of per-directory hash table of entries that have
