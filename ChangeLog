@@ -2,7 +2,7 @@
 
 	* Version 5.0.1.
 
-	* announce-gen (print_changelog_deltas): Relax test for matching
+	* announce-gen (print_changelog_deltas): Relax tests for matching
 	version-number line in NEWS.
 
 2003-07-14  Jim Meyering  <jim@meyering.net>
