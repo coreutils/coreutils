@@ -1,3 +1,9 @@
+2002-11-06  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (printf invocation): Fix typo in index:
+	change \0x prefix to \x.
+	Change \xhhh to \xhh.
+
 2002-10-07  Paul Eggert  <eggert@twinsun.com>
 
 	Add support for locale-specific size indications (e.g.,
