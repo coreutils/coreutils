@@ -1180,8 +1180,11 @@ copy (const char *src_path, const char *dst_path,
 
   assert (valid_options (options));
 
-  /* Record the file names: they're used in case of error,
-     when copying a directory into itself.  */
+  /* Record the file names: they're used in case of error, when copying
+     a directory into itself.  I don't like to make these tools do *any*
+     extra work in the common case when that work is solely to handle
+     exceptional cases, but in this case, I don't see a way to derive the
+     top level source and destination directory names where they're used.  */
   top_level_src_path = src_path;
   top_level_dst_path = dst_path;
 
