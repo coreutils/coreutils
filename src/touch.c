@@ -373,8 +373,7 @@ main (int argc, char **argv)
 
   /* The obsolete `MMDDhhmm[YY]' form is valid IFF there are
      two or more non-option arguments.  */
-  if (!date_set && 2 <= argc - optind && !STREQ (argv[optind - 1], "--")
-      && posix2_version () < 200112)
+  if (!date_set && 2 <= argc - optind && posix2_version () < 200112)
     {
       if (posixtime (&newtime[0].tv_sec, argv[optind], PDS_TRAILING_YEAR))
 	{
