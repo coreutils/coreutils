@@ -1,7 +1,14 @@
+2000-08-04  Greg McGary  <greg@mcgary.org>
+
+	* src/tail.c (pipe_lines): Add variable `nbytes' so we can free
+	`tmp' immediately after read loop.  Don't process an empty file.
+	[This fixes a buffer-underrun error -- detected thanks to
+	bounded pointers -jmm]
+
 2000-08-05  Jim Meyering  <meyering@lucent.com>
 
-	* src/pr.c (init_header): Fix buffer-overrun error.
-	Allocated buffer was sometimes too small.
+	Fix buffer-overrun error.
+	* src/pr.c (init_header): Allocated buffer was sometimes too small.
 	Reported by Greg McGary (who found this bug using his
 	bounded-pointers-enabled gcc).
 	(init_header): Move declarations of several variables into the
