@@ -1,5 +1,5 @@
 /* system-dependent definitions for fileutils, textutils, and sh-utils packages.
-   Copyright (C) 1989, 1991-2001 Free Software Foundation, Inc.
+   Copyright (C) 1989, 1991-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -16,6 +16,12 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 /* Include sys/types.h before this file.  */
+
+#if 2 <= __GLIBC__ && 2 <= __GLIBC_MINOR__
+# if ! defined _SYS_TYPES_H
+you must include <sys/types.h> before including this file
+# endif
+#endif
 
 #include <sys/stat.h>
 
