@@ -1796,16 +1796,16 @@ badfieldspec (const char *s)
 static void
 sighandler (int sig)
 {
-#ifdef SA_INTERRUPT
+#ifdef SA_NOCLDSTOP
   struct sigaction sigact;
 
   sigact.sa_handler = SIG_DFL;
   sigemptyset (&sigact.sa_mask);
   sigact.sa_flags = 0;
   sigaction (sig, &sigact, NULL);
-#else				/* !SA_INTERRUPT */
+#else
   signal (sig, SIG_DFL);
-#endif				/* SA_INTERRUPT */
+#endif
   cleanup ();
   kill (getpid (), sig);
 }
@@ -1874,9 +1874,9 @@ main (int argc, char **argv)
   int checkonly = 0, mergeonly = 0, nfiles = 0;
   char *minus = "-", *outfile = minus, **files, *tmp;
   FILE *ofp;
-#ifdef SA_INTERRUPT
+#ifdef SA_NOCLDSTOP
   struct sigaction oldact, newact;
-#endif				/* SA_INTERRUPT */
+#endif
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -1924,7 +1924,7 @@ main (int argc, char **argv)
   xalloc_exit_failure = SORT_FAILURE;
   xalloc_fail_func = cleanup;
 
-#ifdef SA_INTERRUPT
+#ifdef SA_NOCLDSTOP
   newact.sa_handler = sighandler;
   sigemptyset (&newact.sa_mask);
   newact.sa_flags = 0;
@@ -1941,7 +1941,7 @@ main (int argc, char **argv)
   sigaction (SIGTERM, NULL, &oldact);
   if (oldact.sa_handler != SIG_IGN)
     sigaction (SIGTERM, &newact, NULL);
-#else				/* !SA_INTERRUPT */
+#else
   if (signal (SIGINT, SIG_IGN) != SIG_IGN)
     signal (SIGINT, sighandler);
   if (signal (SIGHUP, SIG_IGN) != SIG_IGN)
@@ -1950,7 +1950,7 @@ main (int argc, char **argv)
     signal (SIGPIPE, sighandler);
   if (signal (SIGTERM, SIG_IGN) != SIG_IGN)
     signal (SIGTERM, sighandler);
-#endif				/* !SA_INTERRUPT */
+#endif
 
   gkey.sword = gkey.eword = -1;
   gkey.ignore = NULL;
