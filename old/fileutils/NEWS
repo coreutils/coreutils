@@ -1,6 +1,6 @@
 Changes in release 3.13:
-* cp --force --backup FILE FILE creates a backup of FILE.  Before, it failed
-  saying that ``FILE' and `FILE' are the same file'.
+* you can create a backup of FILE with cp --force --backup FILE FILE.  Before,
+  that command failed saying that ``FILE' and `FILE' are the same file'.
 * uses automake-generated Makefile templates
 * chown and chgrp accept new option --no-dereference (-h)
 * ln -f FILE FILE fails with a diagnostic rather than silently removing FILE
