@@ -25,28 +25,28 @@ neither MSDOS nor Windows
       ac_fs_backslash_is_file_name_separator=0
     fi
 
-    AH_VERBATIM(FILESYSTEM_PREFIX_LEN,
-    [#if FILESYSTEM_ACCEPTS_DRIVE_LETTER_PREFIX
-# define FILESYSTEM_PREFIX_LEN(Filename) \
+    AH_VERBATIM(FILE_SYSTEM_PREFIX_LEN,
+    [#if FILE_SYSTEM_ACCEPTS_DRIVE_LETTER_PREFIX
+# define FILE_SYSTEM_PREFIX_LEN(Filename) \
   ((Filename)[0] && (Filename)[1] == ':' ? 2 : 0)
 #else
-# define FILESYSTEM_PREFIX_LEN(Filename) 0
+# define FILE_SYSTEM_PREFIX_LEN(Filename) 0
 #endif])
 
-    AC_DEFINE_UNQUOTED([FILESYSTEM_ACCEPTS_DRIVE_LETTER_PREFIX],
+    AC_DEFINE_UNQUOTED([FILE_SYSTEM_ACCEPTS_DRIVE_LETTER_PREFIX],
       $ac_fs_accepts_drive_letter_prefix,
       [Define on systems for which file names may have a so-called
        `drive letter' prefix, define this to compute the length of that
        prefix, including the colon.])
 
     AH_VERBATIM(ISSLASH,
-    [#if FILESYSTEM_BACKSLASH_IS_FILE_NAME_SEPARATOR
+    [#if FILE_SYSTEM_BACKSLASH_IS_FILE_NAME_SEPARATOR
 # define ISSLASH(C) ((C) == '/' || (C) == '\\')
 #else
 # define ISSLASH(C) ((C) == '/')
 #endif])
 
-    AC_DEFINE_UNQUOTED([FILESYSTEM_BACKSLASH_IS_FILE_NAME_SEPARATOR],
+    AC_DEFINE_UNQUOTED([FILE_SYSTEM_BACKSLASH_IS_FILE_NAME_SEPARATOR],
       $ac_fs_backslash_is_file_name_separator,
       [Define if the backslash character may also serve as a file name
        component separator.])
