@@ -6,7 +6,7 @@ use Getopt::Long;
 use Digest::MD5;
 use Digest::SHA1;
 
-(my $VERSION = '$Revision: 1.7 $ ') =~ tr/[0-9].//cd;
+(my $VERSION = '$Revision: 1.8 $ ') =~ tr/[0-9].//cd;
 (my $ME = $0) =~ s|.*/||;
 
 END
@@ -223,7 +223,7 @@ EOF
 	or die "$ME: $news_file: no matching lines\n";
     }
 
-  # FIXME: depend on whether it's a test release
+  # FIXME: Print ChangeLog entries only for test releases
   # echo ChangeLog entries:;
   # find . -name ChangeLog -maxdepth 2
   #   | xargs $(CVS) diff -up -r$(prev-cvs-tag) -rHEAD
