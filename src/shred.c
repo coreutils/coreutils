@@ -587,7 +587,10 @@ isaac_seed (struct isaac_state *s)
   { gid_t t = getgid ();   ISAAC_SEED (s, t); }
 
   {
-#if HAVE_GETHRTIME
+#if 0 && HAVE_GETHRTIME
+    /* This block if if-0'd out for now because it makes shred
+       fail with an `illegal instruction' when compiled with Sun's
+       c89 on Solaris 8 and 9.  */
     hrtime_t t = gethrtime ();
 #elif HAVE_CLOCK_GETTIME		/* POSIX ns-resolution */
     struct timespec t;
