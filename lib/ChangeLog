@@ -1,3 +1,12 @@
+2003-11-17  Jim Meyering  <jim@meyering.net>
+
+	On systems without utime and without a utimes function capable of
+	dealing with a NULL struct utimbuf* argument, this utime replacement
+	could -- in unusual circumstances -- leak a file descriptor.
+	* utime.c: Include <unistd.h> and <errno.h>.
+	(utime_null): Be sure to close `fd' and to preserve errno.
+	Reported by Geoff Collyer via Arnold Robbins.
+
 2003-11-13  Jim Meyering  <jim@meyering.net>
 
 	* xalloc.h, xstrtol.c: Update from gnulib.
