@@ -28,8 +28,9 @@
 #include "system.h"
 #include "long-options.h"
 #include "error.h"
-#include "xstrtoul.h"
+#include "human.h"
 #include "readtokens.h"
+#include "xstrtol.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "factor"
@@ -76,9 +77,9 @@ Print factors of each NUMBER; read standard input with no arguments.\n\
 /* FIXME: comment */
 
 static int
-factor (long unsigned int n0, int max_n_factors, long unsigned int *factors)
+factor (uintmax_t n0, int max_n_factors, uintmax_t *factors)
 {
-  register unsigned long n = n0, d, q;
+  register uintmax_t n = n0, d, q;
   int n_factors = 0;
 
   if (n < 1)
@@ -128,20 +129,21 @@ factor (long unsigned int n0, int max_n_factors, long unsigned int *factors)
 static int
 print_factors (const char *s)
 {
-  unsigned long int factors[MAX_N_FACTORS];
-  unsigned long n;
+  uintmax_t factors[MAX_N_FACTORS];
+  uintmax_t n;
   int n_factors;
   int i;
+  char buf[LONGEST_HUMAN_READABLE + 1];
 
-  if (xstrtoul (s, NULL, 10, &n, "") != LONGINT_OK)
+  if (xstrtoumax (s, NULL, 10, &n, "") != LONGINT_OK)
     {
       error (0, 0, _("`%s' is not a valid positive integer"), s);
       return 1;
     }
   n_factors = factor (n, MAX_N_FACTORS, factors);
-  printf ("%lu:", n);
+  printf ("%s:", human_readable (n, buf, 1, 1));
   for (i = 0; i < n_factors; i++)
-    printf (" %lu", factors[i]);
+    printf (" %s", human_readable (factors[i], buf, 1, 1));
   putchar ('\n');
   return 0;
 }
