@@ -28,8 +28,16 @@ if test $framework_failure = 1; then
   exit 1
 fi
 
+# Make sure we get English translations.
+LANGUAGE=C
+export LANGUAGE
+LC_ALL=C
+export LC_ALL
+LANG=C
+export LANG
+
 fail=0
-$MV $null $dir $other_partition_tmpdir || fail=1
+$MV --verbose $null $dir $other_partition_tmpdir > out || fail=1
 # Make sure the files are gone.
 test -f $null && fail=1
 test -d $dir && fail=1
@@ -38,9 +46,43 @@ test -d $dir && fail=1
 $LS $other_partition_tmpdir/$null > /dev/null || fail=1
 test -d $other_partition_tmpdir/$dir/a/b/c || fail=1
 
+sed "s,$other_partition_tmpdir,XXX," out > out2
+
+cat > exp <<\EOF
+.mv-null -> XXX/.mv-null
+removing non-directory .mv-null
+.mv-dir -> XXX/.mv-dir
+.mv-dir/a -> XXX/.mv-dir/a
+.mv-dir/a/b -> XXX/.mv-dir/a/b
+.mv-dir/a/b/c -> XXX/.mv-dir/a/b/c
+.mv-dir/a/b/c/file1 -> XXX/.mv-dir/a/b/c/file1
+.mv-dir/d -> XXX/.mv-dir/d
+.mv-dir/d/e -> XXX/.mv-dir/d/e
+.mv-dir/d/e/f -> XXX/.mv-dir/d/e/f
+.mv-dir/d/e/f/file2 -> XXX/.mv-dir/d/e/f/file2
+removing all entries of directory .mv-dir
+removing all entries of directory .mv-dir/a
+removing all entries of directory .mv-dir/a/b
+removing all entries of directory .mv-dir/a/b/c
+removing non-directory .mv-dir/a/b/c/file1
+removing the directory itself: .mv-dir/a/b/c
+removing the directory itself: .mv-dir/a/b
+removing the directory itself: .mv-dir/a
+removing all entries of directory .mv-dir/d
+removing all entries of directory .mv-dir/d/e
+removing all entries of directory .mv-dir/d/e/f
+removing non-directory .mv-dir/d/e/f/file2
+removing the directory itself: .mv-dir/d/e/f
+removing the directory itself: .mv-dir/d/e
+removing the directory itself: .mv-dir/d
+removing the directory itself: .mv-dir
+EOF
+
+cmp out2 exp || fail=1
+
 # cd $other_partition_tmpdir
 # $LS -l -A -R $other_partition_tmpdir
 
-$RM -rf $null $dir $other_partition_tmpdir
+$RM -rf $null $dir $other_partition_tmpdir out out2 exp
 
 exit $fail
