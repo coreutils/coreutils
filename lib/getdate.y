@@ -36,18 +36,16 @@
 
 #include "getdate.h"
 
-/* Use alloca only if it is known to be builtin.  */
-#if HAVE_ALLOCA
-# include <alloca.h>
-#else
-# define YYSTACK_USE_ALLOCA 0
-#endif
+/* There's no need to extend the stack, so there's no need to involve
+   alloca.  */
+#define YYSTACK_USE_ALLOCA 0
 
 /* Tell Bison how much stack space is needed.  20 should be plenty for
    this grammar, which is not right recursive.  Beware setting it too
-   high, since that might cause problems on machines whose alloca
+   high, since that might cause problems on machines whose
    implementations have lame stack-overflow checking.  */
 #define YYMAXDEPTH 20
+#define YYINITDEPTH YYMAXDEPTH
 
 /* Since the code of getdate.y is not included in the Emacs executable
    itself, there is no need to #define static in this file.  Even if
