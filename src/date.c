@@ -405,6 +405,7 @@ specifies Coordinated Universal Time.  Interpreted sequences are:\n\
   %%t   a horizontal tab\n\
   %%T   time, 24-hour (hh:mm:ss)\n\
   %%U   week number of year with Sunday as first day of week (00..53)\n\
+  %%V   week number of year with Monday as first day of week (01..52)\n\
   %%w   day of week (0..6);  0 represents Sunday\n\
   %%W   week number of year with Monday as first day of week (00..53)\n\
   %%x   locale's date representation (mm/dd/yy)\n\
