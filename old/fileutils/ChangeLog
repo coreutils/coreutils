@@ -2,6 +2,19 @@
 
 	* Version 4.1.6.
 
+	* src/copy.c (copy_reg): Don't treat errno==ENOENT as a special case.
+	(same_file_ok): Detect a case that would have lead to the errno==ENOENT
+	condition above (and a misleading diagnostic), and return 0 so we give
+	a diagnostic about the source and destination being the same file.
+	(copy_internal): Use an explicit test for errno==EXDEV to detect
+	that rename has failed because source and destination are on
+	different devices.  This reverts part of a change from 1997-12-13,
+	and is to avoid letting a race condition evoke a bogus diagnostic.
+	Note that while POSIX has encouraged the errno==EXDEV test for
+	years, it was inadequate back in 1997.	I'm hoping that many
+	more systems have conforming support these days.
+	Reported by Michael Gaughen <mgaughen@polyserve.com>
+
 	* src/shred.c (usage): Also mention Ext3.
 	Suggestion from Göran Uddeborg.
 
