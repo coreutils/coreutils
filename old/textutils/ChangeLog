@@ -2,6 +2,9 @@ Thu Jun 13 22:31:39 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in (VERSION): Bump to 1.18a.
 
+	* po/Makefile.in.in ($(PACKAGE).pot): Reapply change of May 30.
+	Depend on POTFILES only when using maintainer mode.
+
 	* intl/*: Update from gettext-0.10.18.
 
 Tue Jun 11 23:32:10 1996  Jim Meyering  <meyering@na-net.ornl.gov>
