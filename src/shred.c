@@ -65,8 +65,13 @@
 #include "system.h"
 #include "closeout.h"
 #include "error.h"
-#include "long-options.h"
 #include "xstrtoul.h"
+#include "version-etc.h"
+
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "shred"
+
+#define AUTHORS "Colin Plumb"
 
 #define DEFAULT_PASSES 25	/* Default */
 
@@ -94,6 +99,8 @@ static struct option const long_opts[] =
   {"preserve", no_argument, NULL, 'p'},
   {"verbose", no_argument, NULL, 'v'},
   {"zero", required_argument, NULL, 'z'},
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
 
@@ -1283,9 +1290,6 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "shred", GNU_PACKAGE, VERSION,
-		      "Colin Plumb", usage);
-
   isaac_seed (&s);
 
   memset (&flags, 0, sizeof flags);
@@ -1337,6 +1341,10 @@ main (int argc, char **argv)
 	case 'z':
 	  flags.zero_fill = 1;
 	  break;
+
+	case_GETOPT_HELP_CHAR;
+
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
 	  usage (1);

@@ -28,9 +28,15 @@
 #include "closeout.h"
 #include "error.h"
 #include "getdate.h"
-#include "long-options.h"
 #include "posixtm.h"
 #include "safe-read.h"
+#include "version-etc.h"
+
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "touch"
+
+#define AUTHORS \
+  "Paul Rubin, Arnold Robbins, Jim Kingdon, David MacKenzie, and Randy Smith"
 
 #ifndef STDC_HEADERS
 time_t time ();
@@ -81,6 +87,8 @@ static struct option const longopts[] =
   {"date", required_argument, 0, 'd'},
   {"file", required_argument, 0, 'r'},
   {"reference", required_argument, 0, 'r'},
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
   {0, 0, 0, 0}
 };
 
@@ -230,10 +238,6 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "touch", GNU_PACKAGE, VERSION,
-    "Paul Rubin, Arnold Robbins, Jim Kingdon, David MacKenzie, and Randy Smith",
-		      usage);
-
   change_times = no_create = use_ref = posix_date = flexible_date = 0;
   newtime = (time_t) -1;
 
@@ -285,6 +289,10 @@ main (int argc, char **argv)
 	  change_times |= XARGMATCH ("--time", optarg,
 				     time_args, time_masks);
 	  break;
+
+	case_GETOPT_HELP_CHAR;
+
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
 	  usage (1);
