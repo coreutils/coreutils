@@ -792,6 +792,28 @@ record_file (Hash_table *ht, char const *filename,
   }
 }
 
+/* When effecting a move (e.g., for mv(1)), and given the name DST_PATH
+   of the destination and a corresponding stat buffer, DST_SB, return
+   true if the logical `move' operation should not proceed.
+   Return true if it may proceed.
+   Depending on options specified in X, this code may issue an
+   interactive prompt asking whether it's ok to overwrite DST_PATH.  */
+static bool
+abandon_move (const struct cp_options *x,
+              char const *dst_path,
+              struct stat const *dst_sb)
+{
+  assert (x->move_mode);
+  return ((x->interactive == I_ALWAYS_NO
+           && UNWRITABLE (dst_path, dst_sb->st_mode))
+          || ((x->interactive == I_ASK_USER
+               || (x->interactive == I_UNSPECIFIED
+                   && x->stdin_tty
+                   && UNWRITABLE (dst_path, dst_sb->st_mode)))
+              && (overwrite_prompt (dst_path, dst_sb), 1)
+              && ! yesno ()));
+}
+
 /* Copy the file SRC_PATH to the file DST_PATH.  The files may be of
    any type.  NEW_DST should be true if the file DST_PATH cannot
    exist because its parent directory was just created; NEW_DST should
@@ -887,7 +909,8 @@ copy_internal (const char *src_path, const char *dst_path,
 				  x, &return_now, &unlink_src);
 	  if (unlink_src)
 	    {
-	      if (unlink (src_path))
+	      if (!abandon_move (x, dst_path, &dst_sb)
+		  && unlink (src_path))
 		{
 		  error (0, errno, _("cannot remove %s"), quote (src_path));
 		  return false;
@@ -980,14 +1003,7 @@ copy_internal (const char *src_path, const char *dst_path,
 	      /* cp and mv treat -i and -f differently.  */
 	      if (x->move_mode)
 		{
-		  if ((x->interactive == I_ALWAYS_NO
-		       && UNWRITABLE (dst_path, dst_sb.st_mode))
-		      || ((x->interactive == I_ASK_USER
-			   || (x->interactive == I_UNSPECIFIED
-			       && x->stdin_tty
-			       && UNWRITABLE (dst_path, dst_sb.st_mode)))
-			  && (overwrite_prompt (dst_path, &dst_sb), 1)
-			  && ! yesno ()))
+		  if (abandon_move (x, dst_path, &dst_sb))
 		    {
 		      /* Pretend the rename succeeded, so the caller (mv)
 			 doesn't end up removing the source file.  */
