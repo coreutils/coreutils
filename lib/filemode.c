@@ -22,6 +22,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#include "filemode.h"
+
 #if !S_IRUSR
 # if S_IREAD
 #  define S_IRUSR S_IREAD
@@ -88,68 +90,53 @@
 # define S_ISNWK(m) (((m) & S_IFMT) == S_IFNWK)
 #endif
 
-void mode_string ();
-static char ftypelet ();
-static void rwx ();
-static void setst ();
+/* Look at read, write, and execute bits in BITS and set
+   flags in CHARS accordingly.  */
 
-/* filemodestring - fill in string STR with an ls-style ASCII
-   representation of the st_mode field of file stats block STATP.
-   10 characters are stored in STR; no terminating null is added.
-   The characters stored in STR are:
-
-   0	File type.  'd' for directory, 'c' for character
-	special, 'b' for block special, 'm' for multiplex,
-	'l' for symbolic link, 's' for socket, 'p' for fifo,
-	'-' for regular, '?' for any other file type
-
-   1	'r' if the owner may read, '-' otherwise.
-
-   2	'w' if the owner may write, '-' otherwise.
-
-   3	'x' if the owner may execute, 's' if the file is
-	set-user-id, '-' otherwise.
-	'S' if the file is set-user-id, but the execute
-	bit isn't set.
-
-   4	'r' if group members may read, '-' otherwise.
-
-   5	'w' if group members may write, '-' otherwise.
-
-   6	'x' if group members may execute, 's' if the file is
-	set-group-id, '-' otherwise.
-	'S' if it is set-group-id but not executable.
-
-   7	'r' if any user may read, '-' otherwise.
-
-   8	'w' if any user may write, '-' otherwise.
-
-   9	'x' if any user may execute, 't' if the file is "sticky"
-	(will be retained in swap space after execution), '-'
-	otherwise.
-	'T' if the file is sticky but not executable.  */
-
-void
-filemodestring (statp, str)
-     struct stat *statp;
-     char *str;
+static void
+rwx (short unsigned int bits, char *chars)
 {
-  mode_string (statp->st_mode, str);
+  chars[0] = (bits & S_IRUSR) ? 'r' : '-';
+  chars[1] = (bits & S_IWUSR) ? 'w' : '-';
+  chars[2] = (bits & S_IXUSR) ? 'x' : '-';
 }
 
-/* Like filemodestring, but only the relevant part of the `struct stat'
-   is given as an argument.  */
+/* Set the 's' and 't' flags in file attributes string CHARS,
+   according to the file mode BITS.  */
 
-void
-mode_string (mode, str)
-     unsigned short mode;
-     char *str;
+static void
+setst (short unsigned int bits, char *chars)
 {
-  str[0] = ftypelet ((long) mode);
-  rwx ((mode & 0700) << 0, &str[1]);
-  rwx ((mode & 0070) << 3, &str[4]);
-  rwx ((mode & 0007) << 6, &str[7]);
-  setst (mode, str);
+#ifdef S_ISUID
+  if (bits & S_ISUID)
+    {
+      if (chars[3] != 'x')
+	/* Set-uid, but not executable by owner.  */
+	chars[3] = 'S';
+      else
+	chars[3] = 's';
+    }
+#endif
+#ifdef S_ISGID
+  if (bits & S_ISGID)
+    {
+      if (chars[6] != 'x')
+	/* Set-gid, but not executable by group.  */
+	chars[6] = 'S';
+      else
+	chars[6] = 's';
+    }
+#endif
+#ifdef S_ISVTX
+  if (bits & S_ISVTX)
+    {
+      if (chars[9] != 'x')
+	/* Sticky, but not executable by others.  */
+	chars[9] = 'T';
+      else
+	chars[9] = 't';
+    }
+#endif
 }
 
 /* Return a character indicating the type of file described by
@@ -166,8 +153,7 @@ mode_string (mode, str)
    '?' for any other file type.  */
 
 static char
-ftypelet (bits)
-     long bits;
+ftypelet (long int bits)
 {
 #ifdef S_ISBLK
   if (S_ISBLK (bits))
@@ -218,55 +204,57 @@ ftypelet (bits)
   return '?';
 }
 
-/* Look at read, write, and execute bits in BITS and set
-   flags in CHARS accordingly.  */
+/* Like filemodestring, but only the relevant part of the `struct stat'
+   is given as an argument.  */
 
-static void
-rwx (bits, chars)
-     unsigned short bits;
-     char *chars;
+void
+mode_string (short unsigned int mode, char *str)
 {
-  chars[0] = (bits & S_IRUSR) ? 'r' : '-';
-  chars[1] = (bits & S_IWUSR) ? 'w' : '-';
-  chars[2] = (bits & S_IXUSR) ? 'x' : '-';
+  str[0] = ftypelet ((long) mode);
+  rwx ((mode & 0700) << 0, &str[1]);
+  rwx ((mode & 0070) << 3, &str[4]);
+  rwx ((mode & 0007) << 6, &str[7]);
+  setst (mode, str);
 }
 
-/* Set the 's' and 't' flags in file attributes string CHARS,
-   according to the file mode BITS.  */
+/* filemodestring - fill in string STR with an ls-style ASCII
+   representation of the st_mode field of file stats block STATP.
+   10 characters are stored in STR; no terminating null is added.
+   The characters stored in STR are:
 
-static void
-setst (bits, chars)
-     unsigned short bits;
-     char *chars;
+   0	File type.  'd' for directory, 'c' for character
+	special, 'b' for block special, 'm' for multiplex,
+	'l' for symbolic link, 's' for socket, 'p' for fifo,
+	'-' for regular, '?' for any other file type
+
+   1	'r' if the owner may read, '-' otherwise.
+
+   2	'w' if the owner may write, '-' otherwise.
+
+   3	'x' if the owner may execute, 's' if the file is
+	set-user-id, '-' otherwise.
+	'S' if the file is set-user-id, but the execute
+	bit isn't set.
+
+   4	'r' if group members may read, '-' otherwise.
+
+   5	'w' if group members may write, '-' otherwise.
+
+   6	'x' if group members may execute, 's' if the file is
+	set-group-id, '-' otherwise.
+	'S' if it is set-group-id but not executable.
+
+   7	'r' if any user may read, '-' otherwise.
+
+   8	'w' if any user may write, '-' otherwise.
+
+   9	'x' if any user may execute, 't' if the file is "sticky"
+	(will be retained in swap space after execution), '-'
+	otherwise.
+	'T' if the file is sticky but not executable.  */
+
+void
+filemodestring (struct stat *statp, char *str)
 {
-#ifdef S_ISUID
-  if (bits & S_ISUID)
-    {
-      if (chars[3] != 'x')
-	/* Set-uid, but not executable by owner.  */
-	chars[3] = 'S';
-      else
-	chars[3] = 's';
-    }
-#endif
-#ifdef S_ISGID
-  if (bits & S_ISGID)
-    {
-      if (chars[6] != 'x')
-	/* Set-gid, but not executable by group.  */
-	chars[6] = 'S';
-      else
-	chars[6] = 's';
-    }
-#endif
-#ifdef S_ISVTX
-  if (bits & S_ISVTX)
-    {
-      if (chars[9] != 'x')
-	/* Sticky, but not executable by others.  */
-	chars[9] = 'T';
-      else
-	chars[9] = 't';
-    }
-#endif
+  mode_string (statp->st_mode, str);
 }
