@@ -1,4 +1,9 @@
 Changes in release 4.1.0:
+[4.0.44]
+* ls: When given two or more arguments but the only one that exists is a
+    directory, don't treat it as if it were the only argument.  Before,
+    `mkdir d; ls no-dir d 2>/dev/null' would act like `ls d' and produce
+    no output.  Now, it prints `d:'.
 [4.0.43]
 * regenerate configure-related files using autoconf-2.49d
 [4.0.42]
