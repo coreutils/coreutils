@@ -1,4 +1,8 @@
+[4.1.2]
 [4.1.1]
+* mv (likewise for cp), now fails rather than silently clobbering one of
+    the source files in the following example:
+    rm -rf a b c; mkdir a b c; touch a/f b/f; mv a/f b/f c
 * ls -R detects directory cycles, per POSIX.  It warns and doesn't infloop.
 * cp's -P option now means the same as --no-dereference, per POSIX.
     Use --parents to get the old meaning.
