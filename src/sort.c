@@ -1971,10 +1971,6 @@ static void
 merge (char **files, size_t n_temp_files, size_t nfiles,
        char const *output_file)
 {
-  size_t i;
-  bool got_outstat = false;
-  struct stat outstat;
-
   while (NMERGE < nfiles)
     {
       /* Number of input files processed so far.  */
@@ -2021,7 +2017,7 @@ merge (char **files, size_t n_temp_files, size_t nfiles,
       n_temp_files = out + (in < n_temp_files ? n_temp_files - in : 0);
       nfiles -= in - out;
     }
-  
+
   nfiles = avoid_trashing_input (files, n_temp_files, nfiles, output_file);
   mergefps (files, nfiles, NULL, output_file);
 }
