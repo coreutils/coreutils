@@ -1676,14 +1676,14 @@ quote_filename (register const char *p, size_t *quoted_length)
 
 	    default:
 	      /* FIXME: why not just use the ISGRAPH macro here?  */
-	      if (!(c > 040 && c < 0177))
+	      if (!ISGRAPH (c))
 		found_quotable = 1;
 	      break;
 	    }
 	}
       else
 	{
-	  if (!(c >= 040 && c < 0177)
+	  if (!ISPRINT (c)
 	      && qmark_funny_chars)
 	    found_quotable = 1;
 	}
@@ -1748,7 +1748,7 @@ quote_filename (register const char *p, size_t *quoted_length)
 	      break;
 
 	    default:
-	      if (c > 040 && c < 0177)
+	      if (ISGRAPH (c))
 		SAVECHAR (c);
 	      else
 		{
@@ -1760,7 +1760,7 @@ quote_filename (register const char *p, size_t *quoted_length)
 	}
       else
 	{
-	  if (c >= 040 && c < 0177)
+	  if (ISPRINT (c))
 	    SAVECHAR (c);
 	  else if (!qmark_funny_chars)
 	    SAVECHAR (c);
@@ -1878,7 +1878,7 @@ length_of_file_name_and_frills (struct fileinfo *f)
 	      break;
 
 	    default:
-	      if (c >= 040 && c < 0177)
+	      if (ISPRINT (c))
 		len += 1;
 	      else
 		len += 4;
