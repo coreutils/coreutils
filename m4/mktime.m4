@@ -34,6 +34,9 @@ changequote(<<, >>)dnl
 # define alarm(X) /* empty */
 #endif
 
+/* Work around redefinition to rpl_putenv by other config tests.  */
+#undef putenv
+
 static time_t time_t_max;
 
 /* Values we'll use to set the TZ environment variable.  */
