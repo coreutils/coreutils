@@ -59,7 +59,7 @@ my @Tests =
 
      ['fail-b', '9 9', {ERR => "$prog: syntax error\n"},
       {EXIT => 2}],
-     ['fail-c', {ERR => "$prog: too few arguments\n"
+     ['fail-c', {ERR => "$prog: missing operand\n"
 		 . "Try `$prog --help' for more information.\n"},
       {EXIT => 2}],
     );

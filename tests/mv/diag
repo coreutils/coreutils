@@ -39,9 +39,9 @@ mv f1 f2 f1 >> out 2>&1 && fail=1
 mv --target=f2 f1 >> out 2>&1 && fail=1
 
 cat > exp <<\EOF
-mv: missing file argument
+mv: missing file operand
 Try `mv --help' for more information.
-mv: missing file argument
+mv: missing file operand after `no-file'
 Try `mv --help' for more information.
 mv: when moving multiple files, last argument must be a directory
 Try `mv --help' for more information.
