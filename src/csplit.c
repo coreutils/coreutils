@@ -526,8 +526,19 @@ get_first_line_in_buffer (void)
 static struct cstring *
 remove_line (void)
 {
+  /* If non-NULL, this is the buffer for which the previous call
+     returned the final line.  So now, presuming that line has been
+     processed, we can free the buffer and reset this pointer.  */
+  static struct buffer_record *prev_buf = NULL;
+
   struct cstring *line;		/* Return value. */
   struct line *l;		/* For convenience. */
+
+  if (prev_buf)
+    {
+      free_buffer (prev_buf);
+      prev_buf = NULL;
+    }
 
   if (head == NULL && !load_buffer ())
     return NULL;
@@ -548,10 +559,11 @@ remove_line (void)
       head->curr_line = l->next;
       if (head->curr_line == NULL || head->curr_line->used == 0)
 	{
-	  /* Go on to the next data block. */
-	  struct buffer_record *b = head;
+	  /* Go on to the next data block.
+	     but first record the current one so we can free it
+	     once the line we're returning has been processed.  */
+	  prev_buf = head;
 	  head = head->next;
-	  free_buffer (b);
 	}
     }
 
