@@ -599,7 +599,7 @@ True if the length of @var{string} is zero.
 @itemx @var{string}
 @opindex -n
 @cindex nonzero-length string check
-True if the length of @var{string} is non-zero.
+True if the length of @var{string} is nonzero.
 
 @item @var{string1} = @var{string2}
 @opindex =
