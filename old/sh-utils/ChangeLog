@@ -1,6 +1,6 @@
-2001-08-26  Jim Meyering  <meyering@lucent.com>
+2001-08-30  Paul Eggert  <eggert@twinsun.com>
 
-	* Version 2.0.12.
+	* src/tee.c (full_write): Remove decl; not needed.
 
 2001-06-19  Paul Eggert  <eggert@twinsun.com>
 
