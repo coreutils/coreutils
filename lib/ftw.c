@@ -88,6 +88,8 @@ char *stpcpy ();
 /* #define NDEBUG 1 */
 #include <assert.h>
 
+#include "save-cwd.h"
+
 #ifndef _LIBC
 # undef __chdir
 # define __chdir chdir
@@ -95,9 +97,6 @@ char *stpcpy ();
 # define __closedir closedir
 # undef __fchdir
 # define __fchdir fchdir
-# undef __getcwd
-# define __getcwd(P, N) xgetcwd ()
-extern char *xgetcwd (void);
 # undef __mempcpy
 # define __mempcpy mempcpy
 # undef __opendir
@@ -643,7 +642,7 @@ ftw_startup (const char *dir, int is_nftw, NFTW_FUNC_T func, int descriptors,
   struct STAT st;
   int result = 0;
   int save_err;
-  char *cwd = NULL;
+  struct saved_cwd cwd;
   size_t dir_len;
 
   /* First make sure the parameters are reasonable.  */
@@ -694,9 +693,7 @@ ftw_startup (const char *dir, int is_nftw, NFTW_FUNC_T func, int descriptors,
   /* Now go to the directory containing the initial file/directory.  */
   if (flags & FTW_CHDIR)
     {
-      /* GNU extension ahead.  */
-      cwd =  __getcwd (NULL, 0);
-      if (cwd == NULL)
+      if (save_cwd (&cwd))
 	result = -1;
       else if (data.ftw.base > 0)
 	{
@@ -772,11 +769,21 @@ ftw_startup (const char *dir, int is_nftw, NFTW_FUNC_T func, int descriptors,
     }
 
   /* Return to the start directory (if necessary).  */
-  if (cwd != NULL)
+  if (flags & FTW_CHDIR)
     {
       save_err = errno;
-      __chdir (cwd);
-      free (cwd);
+      /* If restore_cwd fails and there wasn't a prior failure,
+	 then let this new errno override any prior value.
+	 FIXME: ideally, we'd be able to return some indication
+	 of what the failure means.  Otherwise, the caller will
+	 have a hard time distinguishing between e.g., `out of memory'
+	 and this sort of failure.  */
+      if (restore_cwd (&cwd) && result == 0)
+	{
+	  save_err = errno;
+	  result = -1;
+	}
+
       __set_errno (save_err);
     }
 
