@@ -162,6 +162,10 @@ static int      fts_safe_changedir __P((FTS *, FTSENT *, int, const char *))
 # define SIZE_MAX ((size_t) -1)
 #endif
 
+#ifndef O_DIRECTORY
+# define O_DIRECTORY 0
+#endif
+
 /* The extra casts work around common compiler bugs.  */
 #define TYPE_SIGNED(t) (! ((t) 0 < (t) -1))
 
