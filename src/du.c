@@ -642,7 +642,7 @@ main (int argc, char **argv)
 		     quote (optarg));
 	      fail = 1;
 	    }
- 	  break;
+	  break;
 
 	case 'm': /* obsolescent */
 	  human_output_opts = 0;
