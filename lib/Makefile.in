@@ -168,7 +168,7 @@ default: all
 .SUFFIXES:
 .SUFFIXES: .c .h .o .y
 $(srcdir)/Makefile.in: @MAINT@ Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
-	cd $(top_srcdir) && $(AUTOMAKE) --gnu lib/Makefile
+	cd $(top_srcdir) && $(AUTOMAKE) --gnits lib/Makefile
 
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status $(BUILT_SOURCES)
 	cd $(top_builddir) \
@@ -204,7 +204,7 @@ libfu.a: $(libfu_a_OBJECTS) $(libfu_a_DEPENDENCIES)
 .y.c:
 	$(SHELL) $(YLWRAP) "$(YACC)" $< y.tab.c $*.c y.tab.h $*.h -- $(YFLAGS)
 .y.h:
-	$(SHELL) $(YLWRAP) "$(YACC)" $< y.tab.c $*.h y.tab.h $*.h -- $(YFLAGS)
+	$(SHELL) $(YLWRAP) "$(YACC)" $< y.tab.c $*.c y.tab.h $*.h -- $(YFLAGS)
 
 tags: TAGS
 
@@ -234,7 +234,7 @@ distdir: $(DISTFILES)
 	here=`cd $(top_builddir) && pwd`; \
 	top_distdir=`cd $(top_distdir) && pwd`; \
 	cd $(top_srcdir) \
-	  && $(AUTOMAKE) --include-deps --build-dir=$$here --srcdir-name=$(top_srcdir) --output-dir=$$top_distdir --gnu lib/Makefile
+	  && $(AUTOMAKE) --include-deps --build-dir=$$here --srcdir-name=$(top_srcdir) --output-dir=$$top_distdir --gnits lib/Makefile
 	@for file in $(DISTFILES); do \
 	  d=$(srcdir); \
 	  test -f $(distdir)/$$file \
@@ -245,12 +245,11 @@ distdir: $(DISTFILES)
 MKDEP = gcc -M $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 
 -include .deps/.P
-.deps/.P:
+.deps/.P: $(BUILT_SOURCES)
 	test -d .deps || mkdir .deps
 	echo > $@
 
 -include $(DEP_FILES)
-$(DEP_FILES): .deps/.P
 
 mostlyclean-depend:
 
@@ -282,7 +281,7 @@ install: install-exec install-data all
 
 uninstall: 
 
-all: Makefile $(LIBRARIES) $(BUILT_SOURCES) $(HEADERS)
+all: Makefile $(LIBRARIES) $(HEADERS)
 
 install-strip:
 	$(MAKE) INSTALL_PROGRAM='$(INSTALL_PROGRAM) -s' install
