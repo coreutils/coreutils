@@ -61,15 +61,15 @@ struct outlist
 /* A field of a line.  */
 struct field
   {
-    const char *beg;		/* First character in field.  */
+    const unsigned char *beg;	/* First character in field.  */
     size_t len;			/* The length of the field.  */
   };
 
 /* A line read from an input file.  Newlines are not stored.  */
 struct line
   {
-    char *beg;			/* First character in line.  */
-    char *lim;			/* Character after last character in line.  */
+    unsigned char *beg;		/* First character in line.  */
+    unsigned char *lim;		/* Character after last character in line.  */
     int nfields;		/* Number of elements in `fields'.  */
     int nfields_allocated;	/* Number of elements in `fields'.  */
     struct field *fields;
@@ -171,7 +171,7 @@ separated by CHAR.\n\
 }
 
 static void
-ADD_FIELD (struct line *line, const char *field, size_t len)
+ADD_FIELD (struct line *line, const unsigned char *field, size_t len)
 {
   if (line->nfields >= line->nfields_allocated)
     {
@@ -191,7 +191,8 @@ static void
 xfields (struct line *line)
 {
   int i;
-  unsigned char *ptr, *lim;
+  unsigned char *ptr;
+  unsigned char *lim;
 
   ptr = line->beg;
   lim = line->lim;
@@ -229,8 +230,7 @@ xfields (struct line *line)
 	}
     }
 
-  if ((char *) ptr > line->beg
-      && ((tab && ISSPACE (ptr[-1])) || ptr[-1] == tab))
+  if (ptr > line->beg && ((tab && ISSPACE (ptr[-1])) || ptr[-1] == tab))
     {
       /* Add one more (empty) field because the last character of the
 	 line was a delimiter.  */
@@ -246,7 +246,7 @@ get_line (FILE *fp, struct line *line)
 {
   static int linesize = 80;
   int c, i;
-  char *ptr;
+  unsigned char *ptr;
 
   if (feof (fp))
     return 0;
@@ -330,7 +330,9 @@ delseq (struct seq *seq)
 static int
 keycmp (struct line *line1, struct line *line2)
 {
-  const char *beg1, *beg2;	/* Start of field to compare in each file.  */
+  /* Start of field to compare in each file.  */
+  const unsigned char *beg1, *beg2;
+
   int len1, len2;		/* Length of fields to compare.  */
   int diff;
 
