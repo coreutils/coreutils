@@ -535,7 +535,7 @@ zaptemp (const char *name)
       }
 }
 
-#ifdef ENABLE_NLS
+#if defined ENABLE_NLS && HAVE_NL_LANGINFO
 
 static int
 struct_month_cmp (const void *m1, const void *m2)
@@ -544,7 +544,7 @@ struct_month_cmp (const void *m1, const void *m2)
 		 ((const struct month *) m2)->name);
 }
 
-#endif /* NLS */
+#endif
 
 /* Initialize the character class tables. */
 
