@@ -36,7 +36,6 @@ EXTRA_DIST += fpending.m4
 EXTRA_DIST += fstypename.m4
 EXTRA_DIST += fsusage.m4
 EXTRA_DIST += ftruncate.m4
-EXTRA_DIST += ftw.m4
 EXTRA_DIST += getcwd-path-max.m4
 EXTRA_DIST += getcwd.m4
 EXTRA_DIST += getdate.m4
