@@ -27,6 +27,10 @@
 #include "makepath.h"
 #include "modechange.h"
 
+#ifndef S_IRWXUGO
+# define S_IRWXUGO (S_IRWXU | S_IRWXG | S_IRWXO)
+#endif
+
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "mkdir"
 
@@ -117,7 +121,7 @@ main (int argc, char **argv)
       usage (1);
     }
 
-  newmode = (S_IRWXU | S_IRWXG | S_IRWXO) & ~ umask (0);
+  newmode = S_IRWXUGO & ~ umask (0);
   parent_mode = S_IWUSR | S_IXUSR | newmode;
   if (symbolic_mode)
     {
@@ -131,20 +135,34 @@ main (int argc, char **argv)
 
   for (; optind < argc; ++optind)
     {
+      int fail = 0;
       if (path_mode)
 	{
-	  errors |= make_path (argv[optind], newmode, parent_mode,
-			       -1, -1, 1, verbose_fmt_string);
+	  fail = make_path (argv[optind], newmode, parent_mode,
+			    -1, -1, 1, verbose_fmt_string);
 	}
-      else if (mkdir (argv[optind], newmode))
+      else
 	{
-	  error (0, errno, _("cannot create directory `%s'"), argv[optind]);
-	  errors = 1;
+	  fail = mkdir (argv[optind], newmode);
+	  if (fail)
+	    error (0, errno, _("cannot create directory `%s'"), argv[optind]);
+	  else if (verbose_fmt_string)
+	    error (0, 0, verbose_fmt_string, argv[optind]);
 	}
-      else if (verbose_fmt_string)
+
+      /* FIXME: move this functionality into make_path. */
+      /* mkdir(2) is required to honor only the file permission bits.
+	 In particular, it needn't do anything about `special' bits,
+	 so if any were set in newmode, apply them with chmod.  */
+      if (fail == 0 && (newmode & ~S_IRWXUGO))
 	{
-	  error (0, 0, verbose_fmt_string, argv[optind]);
+	  fail = chmod (argv[optind], newmode);
+	  if (fail)
+	    error (0, errno, _("cannot set permissions of directory `%s'"),
+		   argv[optind]);
 	}
+
+      errors |= fail;
     }
 
   exit (errors);
