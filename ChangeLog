@@ -2,6 +2,9 @@
 
 	* Version 4.5.5.
 
+	* tests/ls/dangle: New test, for the above fix.
+	* tests/ls/inode: Another new test, for the above fix.
+
 	* src/ls.c (gobble_file): Fix a bug introduced in 4.5.4 that made it
 	so that ls --color would no longer highlight the names of files with
 	the execute bit set when not specified on the command line.

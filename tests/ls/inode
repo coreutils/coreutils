@@ -1,0 +1,42 @@
+#!/bin/sh
+# Make sure that ls -i works properly on symlinks.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  ls --version
+fi
+
+pwd=`pwd`
+t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
+trap 'status=$?; cd $pwd; chmod -R u+rwx $t0; rm -rf $t0 && exit $status' 0
+trap '(exit $?); exit $?' 1 2 13 15
+
+framework_failure=0
+mkdir -p $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+touch f || framework_failure=1
+ln -s f slink || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo "$0: failure in testing framework" 1>&2
+  (exit 1); exit 1
+fi
+
+fail=0
+
+set x `ls -Ci f slink`; shift
+test $# = 4 || fail=1
+# The inode numbers should differ.
+test "$1" = "$3" && fail=1
+
+set x `ls -CLi f slink`; shift
+test $# = 4 || fail=1
+# With -L, they must be the same.
+test "$1" = "$3" || fail=1
+
+set x `ls -CHi f slink`; shift
+test $# = 4 || fail=1
+# With -H, they must differ.
+test "$1" = "$3" && fail=1
+
+(exit $fail); exit $fail
