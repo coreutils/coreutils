@@ -1,5 +1,29 @@
 2003-09-13  Jim Meyering  <jim@meyering.net>
 
+	* setenv.c, strcspn.c, strdup.c, strndup.c, strnlen.c, strpbrk.c:
+	* strstr.c, strtod.c, strtoimax.c, tempname.c, unicodeio.c, userspec.c:
+	* vasprintf.h, xgethostname.c, xreadlink.c, xstrdup.c, xstrndup.c:
+	* xstrndup.h, xstrtod.c, xstrtol.c, yesno.c: Update from gnulib.
+	* strndup.h: New file, from gnulib.
+	* exit.h: New file, from GNU gettext, via gnulib.
+
+2003-09-06  Paul Eggert  <eggert@twinsun.com>
+
+	* time_r.c, time_r.h: New files.
+
+	* mktime.c (my_mktime_localtime_r): Remove; all uses changed to
+	__localtime_r.
+	(__localtime_r) [!defined _LIBC]: New macro.  Include <time_r.h>.
+	(__mktime_internal) [!defined _LIBC]: Now extern, not static.
+
+	* strftime.c (my_strftime_gmtime_r): Remove; all uses changed to
+	__gmtime_r.
+	(my_strftime_localtime_r): Remove; all uses changed to __localtime_r.
+	(__gtime_r, __localtime_r) [!HAVE_TM_GMTOFF]: New macros.
+	Include <time_r.h>.
+
+2003-09-13  Jim Meyering  <jim@meyering.net>
+
 	* strtol.c: Update from gnulib.
 
 2003-09-12  Paul Eggert  <eggert@twinsun.com>
