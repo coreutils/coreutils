@@ -1241,20 +1241,22 @@ typedef union
 /* Call this when have matched a real character; it sets `matched' flags
    for the subexpressions which we are currently inside.  Also records
    that those subexprs have matched.  */
-#define SET_REGS_MATCHED()					\
-  if (!set_regs_matched_done)					\
-    {								\
-      unsigned r;						\
-      set_regs_matched_done = 1;				\
-      for (r = lowest_active_reg; r <= highest_active_reg; r++)	\
-        {							\
-          MATCHED_SOMETHING (reg_info[r])			\
-            = EVER_MATCHED_SOMETHING (reg_info[r])		\
-            = 1;						\
-        }							\
-    }								\
-  else
-
+#define SET_REGS_MATCHED()						\
+  do									\
+    {									\
+      if (!set_regs_matched_done)					\
+	{								\
+	  unsigned r;							\
+	  set_regs_matched_done = 1;					\
+	  for (r = lowest_active_reg; r <= highest_active_reg; r++)	\
+	    {								\
+	      MATCHED_SOMETHING (reg_info[r])				\
+		= EVER_MATCHED_SOMETHING (reg_info[r])			\
+		= 1;							\
+	    }								\
+	}								\
+    }									\
+  while (0)
 
 /* Registers are set to a sentinel when they haven't yet matched.  */
 static char reg_unset_dummy;
