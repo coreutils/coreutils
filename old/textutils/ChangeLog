@@ -1,3 +1,7 @@
+Sun Jul  2 22:12:40 1995  Jim Meyering  (meyering@comco.com)
+
+	* lib/Makefile.in (check): Depend on libtu.a.
+
 	* md5sum.c (split_3): Rewrite to parse Plumb/Lankester format as well.
 	(main): Write (de facto) standard Plumb/Lankester format.
 	New option: --quiet.
