@@ -176,6 +176,9 @@ sysv_sum_file (const char *file, int print_name)
 
       for (i = 0; i < bytes_read; i++)
 	checksum += buf[i];
+      /* Reduce checksum mod 0xffff, to avoid overflow.  */
+      checksum = (checksum & 0xffff) + (checksum >> 16);
+
       total_bytes += bytes_read;
     }
 
