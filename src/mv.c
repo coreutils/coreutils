@@ -127,6 +127,7 @@ cp_option_init (struct cp_options *x)
   x->failed_unlink_is_fatal = 1;
   x->hard_link = 0;
   x->interactive = 0;
+  x->move_mode = 1;
   x->myeuid = geteuid ();
   x->one_file_system = 0;
   x->preserve_owner_and_group = 1;
@@ -167,135 +168,59 @@ is_real_dir (const char *path)
 static int
 do_move (const char *source, const char *dest, const struct cp_options *x)
 {
-  char *dest_backup = NULL;
-  struct stat source_stats;
-  struct stat dest_stats;
-  int nonexistent_dst;
+  static int first = 1;
+  int copy_into_self;
+  int rename_succeeded;
   int fail;
 
-  if (lstat (source, &source_stats) != 0)
+  if (first)
     {
-      error (0, errno, "%s", source);
-      return 1;
+      first = 0;
+
+      /* Allocate space for remembering copied and created files.  */
+      hash_init (INITIAL_HASH_MODULE, INITIAL_ENTRY_TAB_SIZE);
     }
 
-  nonexistent_dst = 1;
-  if (lstat (dest, &dest_stats) == 0)
+  fail = copy (source, dest, 0, x,
+	       &copy_into_self, &rename_succeeded);
+
+  if (!fail)
     {
-      nonexistent_dst = 0;
-
-      if (source_stats.st_dev == dest_stats.st_dev
-	  && source_stats.st_ino == dest_stats.st_ino)
+      if (copy_into_self)
 	{
-	  error (0, 0, _("`%s' and `%s' are the same file"), source, dest);
-	  return 1;
+	  /* Do *not* remove SOURCE if it is the same as or a parent
+	     of DEST.  Otherwise, mv would be removing the original
+	     *and* the copy.  */
 	}
-
-      if (S_ISDIR (dest_stats.st_mode))
+      else if (rename_succeeded)
 	{
-	  error (0, 0, _("%s: cannot overwrite directory"), dest);
-	  return 1;
-	}
-
-      if (!S_ISDIR (source_stats.st_mode) && x->update
-	  && source_stats.st_mtime <= dest_stats.st_mtime)
-	return 0;
-
-      if (!x->force && (x->interactive || stdin_tty)
-	  && euidaccess (dest, W_OK))
-	{
-	  fprintf (stderr, _("%s: replace `%s', overriding mode %04o? "),
-		   program_name, dest,
-		   (unsigned int) (dest_stats.st_mode & 07777));
-	  if (!yesno ())
-	    return 0;
-	}
-      else if (x->interactive)
-	{
-	  fprintf (stderr, _("%s: replace `%s'? "), program_name, dest);
-	  if (!yesno ())
-	    return 0;
-	}
-
-      if (x->backup_type != none)
-	{
-	  char *tmp_backup = find_backup_file_name (dest, x->backup_type);
-	  if (tmp_backup == NULL)
-	    error (1, 0, _("virtual memory exhausted"));
-	  dest_backup = (char *) alloca (strlen (tmp_backup) + 1);
-	  strcpy (dest_backup, tmp_backup);
-	  free (tmp_backup);
-	  if (rename (dest, dest_backup))
-	    {
-	      if (errno != ENOENT)
-		{
-		  error (0, errno, _("cannot backup `%s'"), dest);
-		  return 1;
-		}
-	      else
-		dest_backup = NULL;
-	    }
-	}
-    }
-  else if (errno != ENOENT)
-    {
-      error (0, errno, "%s", dest);
-      return 1;
-    }
-
-  if (x->verbose)
-    printf ("%s -> %s\n", source, dest);
-
-  /* Always try rename first.  */
-  fail = rename (source, dest);
-
-  if (fail)
-    {
-      /* This may mean SOURCE and DEST are on different devices.
-	 It may also (conceivably) mean that even though they are
-	 on the same device, rename isn't implemented for that device.
-
-	 E.g., (from Joel N. Weber),
-	 [...] there might someday be cases where you can't rename but you
-	 can copy where the device name is the same, especially on Hurd.
-	 Consider an ftpfs with a primitive ftp server that supports
-	 uploading, downloading and deleting, but not renaming.
-
-	 Also, note that comparing device numbers is not a reliable check
-	 for `can-rename'.  Some systems can be set up so that files from
-	 many different physical devices all have the same st_dev field.
-	 This is a feature of some NFS mounting configurations.
-
-	 Try copying-then-removing SOURCE instead.
-
-	 This function used to resort to copying only when rename failed
-	 and set errno to EXDEV.  */
-
-      static int first = 1;
-      int copy_into_self;
-
-      if (first)
-	{
-	  first = 0;
-
-	  /* Allocate space for remembering copied and created files.  */
-	  hash_init (INITIAL_HASH_MODULE, INITIAL_ENTRY_TAB_SIZE);
-	}
-
-      fail = copy (source, dest, nonexistent_dst, x, &copy_into_self);
-      if (fail)
-	{
-	  /* Restore original destination file DEST if made a backup.  */
-	  if (dest_backup && rename (dest_backup, dest))
-	    error (0, errno, _("cannot un-backup `%s'"), dest);
-	}
-      else if (copy_into_self)
-	{
-	  /* Do *not* remove SOURCE if it is the same as or a parent of DEST.
-	     Otherwise, mv would be removing the original *and* the copy.  */
+	  /* No need to remove anything.  SOURCE was successfully
+	     renamed to DEST.  */
 	}
       else
 	{
+	  /* This may mean SOURCE and DEST referred to different devices.
+	     It may also conceivably mean that even though they referred
+	     to the same device, rename wasn't implemented for that device.
+
+	     E.g., (from Joel N. Weber),
+	     [...] there might someday be cases where you can't rename
+	     but you can copy where the device name is the same, especially
+	     on Hurd.  Consider an ftpfs with a primitive ftp server that
+	     supports uploading, downloading and deleting, but not renaming.
+
+	     Also, note that comparing device numbers is not a reliable
+	     check for `can-rename'.  Some systems can be set up so that
+	     files from many different physical devices all have the same
+	     st_dev field.  This is a feature of some NFS mounting
+	     configurations.
+
+	     We reach this point if SOURCE has been successfully copied
+	     to DEST.  Now we have to remove SOURCE.
+
+	     This function used to resort to copying only when rename
+	     failed and set errno to EXDEV.  */
+
 	  struct rm_options rm_options;
 	  struct File_spec fs;
 	  enum RM_status status;
