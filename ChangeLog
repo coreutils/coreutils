@@ -2,6 +2,11 @@
 
 	* Version 5.3.0.
 
+	* src/printf.c (main): When given no arguments, print the standard
+	"missing operand\nTry printf --help..." message -- to be consistent.
+
+2004-06-26  Jim Meyering  <jim@meyering.net>
+
 	* src/mknod.c (main): Add \n at the end of message output via fprintf.
 
 2004-06-25  Jim Meyering  <jim@meyering.net>
@@ -64,6 +69,7 @@
 	correctly.
 	(format_user_width, format_group_width): Use it.
 
+>>>>>>> 1.965
 2004-06-21  Jim Meyering  <jim@meyering.net>
 
 	* tests/priv-check: Quote "$PATH" in PATH=$PATH.
