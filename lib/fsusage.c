@@ -74,7 +74,6 @@
 
 #if HAVE_SYS_STATVFS_H		/* SVR4 */
 # include <sys/statvfs.h>
-int statvfs ();
 #endif
 
 #include "full-read.h"
