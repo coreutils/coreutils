@@ -37,7 +37,8 @@ TERM vt100
 NORMAL 00	# global default, although everything should be something.
 FILE 00 	# normal file
 DIR 01;34 	# directory
-LINK 01;36 	# symbolic link
+LINK 01;36 	# symbolic link.  (If you set this to 'target' instead of a
+           	# numerical value, the color is as for the file pointed to.)
 FIFO 40;33	# pipe
 SOCK 01;35	# socket
 DOOR 01;35	# door
