@@ -704,7 +704,7 @@ The valid format sequences for files (without --filesystem):\n\
   %D   Device number in hex\n\
   %d   Device number in decimal\n\
   %F   File type\n\
-  %f   raw mode in hex\n\
+  %f   Raw mode in hex\n\
   %G   Group name of owner\n\
   %g   Group ID of owner\n\
 "), stdout);
