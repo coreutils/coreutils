@@ -21,6 +21,9 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
+#if HAVE_LANGINFO_H
+# include <langinfo.h>
+#endif
 
 #include "system.h"
 #include "argmatch.h"
@@ -105,6 +108,12 @@ static struct option const long_options[] =
 
 #define MAYBE_SET_TZ_UTC0 \
   do { if (universal_time) set_tz (TZ_UTC0); } while (0)
+
+#ifdef _DATE_FMT
+# define DATE_FMT_LANGINFO() nl_langinfo (_DATE_FMT)
+#else
+# define DATE_FMT_LANGINFO() ""
+#endif
 
 void
 usage (int status)
@@ -490,13 +499,17 @@ show_date (const char *format, time_t when)
 	 in the RFC format to %Z; this gives, however, an invalid
 	 RFC time format outside the continental United States and GMT. */
 
-      format = (rfc_format
-		? (universal_time
-		   ? "%a, %_d %b %Y %H:%M:%S GMT"
-		   : "%a, %_d %b %Y %H:%M:%S %z")
-		: (iso_8601_format
-		   ? iso_format_string[iso_8601_format][universal_time]
-		   : "%a %b %e %H:%M:%S %Z %Y"));
+      if (rfc_format)
+	format = (universal_time
+		  ? "%a, %_d %b %Y %H:%M:%S GMT"
+		  : "%a, %_d %b %Y %H:%M:%S %z");
+      else if (iso_8601_format)
+	format = iso_format_string[iso_8601_format][universal_time];
+      else
+	{
+	  char *date_fmt = DATE_FMT_LANGINFO ();
+	  format = *date_fmt ? date_fmt : "%a %b %e %H:%M:%S %Z %Y";
+	}
     }
   else if (*format == '\0')
     {
