@@ -183,7 +183,7 @@ paste_parallel (int nfiles, char **fnamptr)
 	{
 	  file_list_size += 12;
 	  delbuf = xrealloc (delbuf, file_list_size + 2);
-	  fileptr = xrealloc (fileptr, (file_list_size + 1) * sizeof (FILE *));
+	  fileptr = xrealloc (fileptr, (file_list_size + 1) * sizeof *fileptr);
 	}
       if (STREQ (fnamptr[files_open], "-"))
 	{
