@@ -1,5 +1,187 @@
 2004-08-03  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* src/uniq.c (hard_LC_COLLATE, ignore_case, different, check_file,
+	main): Use bool for booleans.
+	(writeline, check_file): Use uintmax_t for line counts.
+	(check_file): Check for and report line number overflow,
+	when that matters.
+	* src/wc.c (iswspace, wc): Use to_uchar rather than a cast.
+	(print_lines, print_words, print_chars, print_bytes, print_linelength,
+	have_read_stdin, wc, wc_file, main):
+	Use bool for booleans.
+	(exit_status): Remove.
+	(wc, wc_file): Return bool status.  All callers changed.
+	* src/who.c (scan_entries): 0 -> STDIN_FILENO.
+	* src/whoami.c (main): Print uids using unsigned long int, not
+	unsigned int.
+
+	* src/unexpand.c: Int cleanup and minor reorganization to be more
+	like src/expand.c.
+	Include quote.h, xstrndup.h.
+	(TAB_STOP_SENTINEL): Increase from INT_MAX to INTMAX_MAX.
+	(convert_entire_line, have_read_stdin, parse_tabstops, next_file,
+	unexpand, main):
+	Use bool for booleans.
+	(tab_size, tab_list, add_tabstop, validate_tabstops, unexpand):
+	Use uintmax_t for column counts.
+	(first_free_tab, validate_tabstops, unexpand): Use size_t for sizes.
+	(add_tabstop, parse_tabstops, main): Don't reserve UINTMAX_MAX
+	as a tab stop.
+	(parse_tabstops): Don't use ISBLANK on possibly-signed char.
+	Detect overflow in tab stop string.
+	(next_file, main): Use EXIT_FAILURE/EXIT_SUCCESS instead of 1/0.
+	(unexpand): Concatenate input files the same way expand does.
+
+	* src/touch.c (no_create, use_ref, posix_date, amtime_now,
+	touch, main): Use bool for booleans.
+	(main): Avoid integer overflow when given more than INT_MAX
+	options.
+	* src/tsort.c (struct item, n_strings): Use size_t for sizes.
+	(have_read_stdin, count_items, scan_zeros, detect_loop,
+	recurse_tree, walk_tree, tsort, main):
+	Use bool for booleans.
+	(exit_status): Remove.
+	(tsort): Return a success flag instead of storing into a global.
+	(main): Use it.
+	* src/tty.c (silent, main): Use bool for booleans.
+	(main): 0 -> STDIN_FILENO.
+	* src/uname.c (print_element): Use bool for booleans.
+
+	* src/test.c (TRUE, FALSE, SHELL_BOOLEAN, TRUTH_OR, TRUTH_AND):
+	Remove.  All uses replaced by C99 boolean primitives.
+	(TEST_TRUE, TEST_FALSE): New constants, for readability.
+	(test_unop, binop, unary_operator, binary_operator, two_arguments,
+	three_arguments, posixtest, expr, term, and, or, is_int, age_of,
+	one_argument, main): Use bool for booleans.
+	(advance, unary_advance): Now inline procedures rather than a macros.
+	(is_int): Renamed from isint, to avoid namespace clash with ctype.h.
+	(term, and, or): When it's easy, loop instead of recursing.
+	(term): Avoid integer overflow if there are INT_MAX-3 args (!).
+	(binary_operator, unary_operator): Simplify by systematically rewriting
+	true==FOO to FOO (where FOO is a boolean).
+	(unary_operator): Don't consider a file to be a regular file
+	merely because its mode&S_IFMT is zero.  Just use S_ISREG.
+	Remove unnecessary casts.  Remove ifdefs for things like
+	S_ISSOCK that are no longer needed, since stat-macros.h always
+	defines them now.
+
+	* src/tac-pipe.c (buf_init_from_stdin, find_bol, tac_mem):
+	Use bool for booleans.
+	(buf_init_from_stdin, buf_free, find_bol, print_line):
+	Use size_t for sizes.
+	* src/tac.c (separator_ends_record, tac_seekable, tac_file,
+	tac_stdin, tac_stdin_to_mem, main): Use bool for booleans.
+	(match_length, G_buffer_size, tac_seekable, main): Use size_t for sizes.
+	(tac_seekable): Use ptrdiff_t for pointer subtraction.
+	Report an error if the result is out of range.
+	(tac_seekable, main): Check for integer overflow in buffer size
+	calculations.
+	(main): Remove unnecessary casts.
+
+	* src/su.c (run_shell): Pass a new n_additional_args arg, so that
+	the callee doesn't have to count 'em.  All callers changed.
+	Don't allocate more space for the arg vector than we'll need.
+	Use memcpy to copy the args rather than rolling our own loop.
+	Use size_t for sizes.
+	(fast_startup, simulate_login, change_environment, log_su,
+	correct_password, restricted_shell, main): Use bool for booleans.
+	(longopts): Don't assume change_environment is an int.
+	Use NULL, not 0, for pointers.
+	(xsetenv): New function, replacing xputenv and concat.
+	All callers changed.
+	(elements): Remove; no longer needed.
+	(log_su, correct_passwd, main): Prefer !x to x==NULL.
+	(log_su): 2 -> STDERR_FILENO.
+	(modify_environment, main): Don't assume that getenv's returned value
+	has an indefinite lifetime.
+	(modify_environment): Allocate a larger environ.
+	(main): Remove an impossible 'case 0'; if it happens now, it'll
+	get diagnosed.  Don't assume getpwnam results outlive endpwent.
+	Check for null or empty pw_name, pw_dir and for null pw_passwd.
+
+	* src/stty.c (VA_START): Remove.  All callers now use va_start.
+	(_POSIX_VDISABLE): Remove unnecessary cast.
+	(struct control_info, visible): Use cc_t for control chars.
+	(struct control_info): Use size_t for sizes.
+	(recover_mode, set_mode, display_speed, display_window_size,
+	valid_options, main, display_changed):
+	Use bool for booleans.
+	(integer_arg): Return unsigned long int, not long int.
+	Accept new max arg; all callers changed, to specify a maximum
+	value for integer parameters instead of silently overflowing.
+	(wrap): Do not overrun the stack buffer if the output contains
+	more than 1024 bytes.  Instead, malloc a buffer.
+	(main): Remove a "what is this?!?" FIXME.  Nobody knows what it is.
+	Remove unnecessary casts.
+	(set_control_char): Allow int values only up to cc_t range.
+	(screen_columns): Don't reject INT_MAX.
+	(display_changed, display_all, display_speed, recover_mode):
+	Don't assume cc_t fits in int.
+
+	* src/remove.h: Add copyright notice.
+	(struct rm_options): Use bool for booleans.
+	* src/rmdir.c (empty_paths, ignore_fail_on_non_empty, verbose,
+	errno_rmdir_non_empty, remove_parents, main): Likewise.
+	* src/sum.c (have_read_stdin, bsd_sum_file, sysv_sum_file,
+	main): Likewise.
+	(main): Don't dump core if invoked with argv[0]==NULL.
+	* src/tee.c (tee, append, ignore_interrupts, main, tee):
+	Use bool for booleans.
+	(tee): Use ssize_t for read returns.
+
+	* src/ptx.c: Add a FIXME mentioning that there are many
+	unchecked integer overflows in this file.
+	(gnu_extensions, auto_reference, input_reference, right_reference,
+	ignore_case, initialize_regex, fix_output_parameters,
+	output_one_roff_line, output_one_text_line, output_one_dumb_line, main):
+	Use bool for booleans.
+	(SKIP_SOMETHING, compare_words, digest_break_file,
+	find_occurs_in_text, fix_output_parameters):
+	Use to_uchar instead of a caset.
+	(print_field): Rewrite to avoid cast.
+
+	* src/printf.c (posixly_correct): Use bool for booleans.
+	(verify, main): Use EXIT_FAILURE/EXIT_SUCCESS instead of 1/0.
+	(STRTOX): Rewrite to avoid casts.
+	(print_esc_char): Arg is char, not int.
+	* src/readlink.c (canonicalize): Remove.  All uses now merely inspect
+	can_mode.
+	(no_newline, verbose): Use bool for booleans.
+	(can_mode): Now of type int; use -1 to denote otherwise-uninitialized.
+	* src/shred.c (struct Options, main): Use bool for booleans.
+	(isaac_seed_data, fillpattern, wipefile): Rewrite to avoid casts.
+	* src/split.c (cwrite, bytes_split, lines_split, line_bytes_split):
+	Use bool for booleans.
+	* src/stat.c (G_fail): Remove.
+	(print_statfs): Print various gotta-be-nonnegative values using
+	unsigned long int, not long int or int.
+	(do_statfs, do_stat): Return a boolean success flag.
+	(do_stat, main): Use bool for booleans.
+
+	* src/pr.c: Add a FIXME mentioning that there are many
+	unchecked integer overflows in this file.
+	(TRUE, FALSE): Remove.  All uses replaced by true and false.
+	(struct COLUMN, read_line, print_page, print_stored, open_file,
+	skip_to_page, init_fps, parallel_files, align_empty_cols,
+	empty_line, FF_only, explicit_columns, extremities, keep_FF,
+	print_a_FF, print_a_header, use_form_feed, have_read_stdin,
+	print_across_flag, storing_columns, balance_columns,
+	truncate_lines, join_lines, untabify_input, failed_opens,
+	numbered_lines, skip_count, use_esc_sequence, use_cntrl_prefix,
+	double_space, ignore_failed_opens, use_col_separator,
+	pad_vertically, last_line, main, init_parameters, skip_read,
+	read_line, print_stored):
+	Use bool for booleans.
+	(struct COLUMN, char_to_clump, store_char, print_char):
+	Use char for chars.
+	(clump_buff, print_clump): Use char[], not int[], for an array whose
+	elements are always chars.
+	(first_last_page, main, getoptarg, balance, add_line_number,
+	char_to_uclump): Remove unnecessary casts.
+	(init_parameters): Allocate chars, not ints, for clump_buff.
+	(print_char): Use to_uchar before invoking ISPRINT.
+	(char_to_clump): Convert to unsigned char before invoking ISPRINT.
+
 	* src/nohup.c (main): Use bool for booleans.
 	* src/paste.c (paste_parallel, paste_serial, main): Likewise.
 	* src/pathchk.c (validate-path, main, portable_chars_only): Likewise.
