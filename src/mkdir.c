@@ -119,17 +119,18 @@ main (int argc, char **argv)
       usage (1);
     }
 
-  newmode = S_IRWXUGO & ~ umask (0);
-  parent_mode = S_IWUSR | S_IXUSR | newmode;
+  newmode = S_IRWXUGO;
   if (symbolic_mode)
     {
       struct mode_change *change = mode_compile (symbolic_mode, 0);
+      newmode &= ~ umask (0);
       if (change == MODE_INVALID)
 	error (1, 0, _("invalid mode %s"), quote (symbolic_mode));
       else if (change == MODE_MEMORY_EXHAUSTED)
 	xalloc_die ();
       newmode = mode_adjust (newmode, change);
     }
+  parent_mode = S_IWUSR | S_IXUSR | newmode;
 
   for (; optind < argc; ++optind)
     {
@@ -150,8 +151,11 @@ main (int argc, char **argv)
 
 	  /* mkdir(2) is required to honor only the file permission bits.
 	     In particular, it needn't do anything about `special' bits,
-	     so if any were set in newmode, apply them with chmod.  */
-	  if (fail == 0 && (newmode & ~S_IRWXUGO))
+	     so if any were set in newmode, apply them with chmod.
+	     This extra step is necessary in some cases when the containing
+	     directory has a default ACL.  */
+
+	  if (fail == 0 && symbolic_mode)
 	    {
 	      fail = chmod (argv[optind], newmode);
 	      if (fail)
@@ -160,7 +164,8 @@ main (int argc, char **argv)
 	    }
 	}
 
-      errors |= fail;
+      if (fail)
+	errors = 1;
     }
 
   exit (errors);
