@@ -153,7 +153,11 @@ mbsnwidth (const char *string, size_t nbytes, int flags)
 		      /* An invalid multibyte sequence was encountered.  */
 		      {
 			if (flags & MBSW_ACCEPT_INVALID)
-			  break;
+			  {
+			    p++;
+			    width++;
+			    break;
+			  }
 			else
 			  return -1;
 		      }
@@ -162,7 +166,11 @@ mbsnwidth (const char *string, size_t nbytes, int flags)
 		      /* An incomplete multibyte character at the end.  */
 		      {
 			if (flags & MBSW_ACCEPT_INVALID)
-			  break;
+			  {
+			    p = plimit;
+			    width++;
+			    break;
+			  }
 			else
 			  return -1;
 		      }
