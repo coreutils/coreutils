@@ -53,6 +53,17 @@
 # define optopt __GETOPT_PREFIX##optopt
 #endif
 
+/* Standalone applications get correct prototypes for getopt_long and
+   getopt_long_only; they declare "char **argv".  libc uses prototypes
+   with "char *const *argv" that are incorrect because getopt_long and
+   getopt_long_only can permute argv; this is required for backward
+   compatibility (e.g., for LSB 2.0.1).  */
+#if defined __GETOPT_PREFIX && !defined __need_getopt
+# define __getopt_argv_const /* empty */
+#else
+# define __getopt_argv_const const
+#endif
+
 /* If __GNU_LIBRARY__ is not already defined, either we are being used
    standalone, or this is the first header included in the source file.
    If we are being used with glibc, we need to include <features.h>, but
@@ -178,11 +189,11 @@ extern int getopt (int ___argc, char *const *___argv, const char *__shortopts)
        __THROW;
 
 #ifndef __need_getopt
-extern int getopt_long (int ___argc, char **___argv,
+extern int getopt_long (int ___argc, char *__getopt_argv_const *___argv,
 			const char *__shortopts,
 		        const struct option *__longopts, int *__longind)
        __THROW;
-extern int getopt_long_only (int ___argc, char **___argv,
+extern int getopt_long_only (int ___argc, char *__getopt_argv_const *___argv,
 			     const char *__shortopts,
 		             const struct option *__longopts, int *__longind)
        __THROW;

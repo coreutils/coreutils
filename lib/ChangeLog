@@ -1,5 +1,14 @@
 2004-11-16  Paul Eggert  <eggert@cs.ucla.edu>
 
+	Further getopt changes to make it more likely that glibc will
+	buy the changes back.
+	* getopt.c (POSIXLY_CORRECT): New constant.
+	(getopt): Use it, so to preserve glibc semantic
+	* getopt1.c (getopt_long, getopt_long_only): Arg is char * const *
+	when compiling for libc.
+	* getopt_.h (__getopt_argv_const): Bring it back.
+	(getopt_long, getopt_long_only): Use it.
+
 	* getopt.c (_getopt_initialize, _getopt_internal_r, _getopt_internal):
 	New arg POSIXLY_CORRECT.  All callers changed.
 	(getopt): Argv is now char * const *, as per standard.

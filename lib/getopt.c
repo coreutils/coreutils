@@ -1154,10 +1154,19 @@ _getopt_internal (int argc, char **argv, const char *optstring,
   return result;
 }
 
+/* glibc gets a LSB-compliant getopt.
+   Standalone applications get a POSIX-compliant getopt.  */
+#if _LIBC
+enum { POSIXLY_CORRECT = 0 };
+#else
+enum { POSIXLY_CORRECT = 1 };
+#endif
+
 int
 getopt (int argc, char *const *argv, const char *optstring)
 {
-  return _getopt_internal (argc, (char **) argv, optstring, NULL, NULL, 0, 1);
+  return _getopt_internal (argc, (char **) argv, optstring, NULL, NULL, 0,
+			   POSIXLY_CORRECT);
 }
 
 
