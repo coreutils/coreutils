@@ -1,5 +1,22 @@
 2004-07-28  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* src/chgrp.c (parse_group): Require base 10 when parsing
+	groups as integers.
+	(main): int -> bool when appropriate.
+	* src/chown.c (main): Likewise.
+	* src/chown-core.c: Include inttostr.h.
+	(UINT_MAX_DECIMAL_DIGITS, uint_to_string): Remove.
+	(gid_to_name, uid_to_name): Use imaxtostr/umaxtostr
+	instead of uint_to_string).
+	(describe_change): Instead of an int flag, use a char *
+	auxiliary; this avoids the need for casts.
+	Assume free (NULL) works.
+	(change_file_owner): Return true/false, not 0/-1, since
+	we don't set errno.  All callers changed.
+	Use bool when appropriate.
+	(chown_files): Likewise.
+	* src/chown-core.h (chown_files): Likewise.
+
 	* tests/chown/basic: Test for proper handling of uids like
 	"010", which must be parsed as decimal.
 
