@@ -142,6 +142,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "ext2";
     case S_MAGIC_EXT2: /* 0xEF53 */
       return "ext2/ext3";
+    case S_MAGIC_XFS: /* 0x58465342 */
+      return "xfs";
     case S_MAGIC_HPFS: /* 0xF995E849 */
       return "hpfs";
     case S_MAGIC_ISOFS: /* 0x9660 */
