@@ -57,7 +57,7 @@ while test -n "$1"; do
       ;;
     --to)
       if test -z "$2"; then
-	echo "$0: Missing argument for --to" 2>&1
+	echo "$0: Missing argument for --to" 1>&2
         exit 1
       else
         to="$to $2"
@@ -66,7 +66,7 @@ while test -n "$1"; do
       ;;
     --user)
       if test -z "$2"; then
-	echo "$0: Missing argument for --user" 2>&1
+	echo "$0: Missing argument for --user" 1>&2
         exit 1
       else
         GPG="$GPG --local-user $2"
@@ -78,7 +78,7 @@ while test -n "$1"; do
       exit 0
       ;;
     -*)
-      echo "$0: Unknown option \`$1', try \`$0 --help'" 2>&1
+      echo "$0: Unknown option \`$1', try \`$0 --help'" 1>&2
       exit 1
       ;;
     *)
@@ -88,18 +88,18 @@ while test -n "$1"; do
 done
 
 if test $# = 0; then
-  echo "$0: No file to upload" 2>&1
+  echo "$0: No file to upload" 1>&2
   exit 1
 else
   :
 fi
 
 # Make sure all files exist.  We don't want to ask
-# the passphrase if the script is unlikely to complete.
+# for the passphrase if the script will fail.
 for file;
 do
   if test ! -f $file; then
-    echo "$0: Cannot find \`$file'" 2>&1
+    echo "$0: Cannot find \`$file'" 1>&2
     exit 1
   else
     :
