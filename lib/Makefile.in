@@ -151,11 +151,12 @@ BUILT_SOURCES = getdate.c lstat.c stat.c
 MAINTAINERCLEANFILES = $(BUILT_SOURCES)
 DISTCLEANFILES = lstat.c stat.c
 
-EXTRA_DIST = xstat.in config.charset ref-add.sed.in ref-del.sed.in
+EXTRA_DIST = xstat.in config.charset ref-add.sin ref-del.sin
 
 charset_alias = $(DESTDIR)$(libdir)/charset.alias
+charset_tmp = $(DESTDIR)$(libdir)/charset.tmp
 
-SUFFIXES = .sed .sed.in
+SUFFIXES = .sed .sin
 
 CLEANFILES = charset.alias ref-add.sed ref-del.sed
 subdir = lib
@@ -246,7 +247,7 @@ OBJECTS = $(am_libfetish_a_OBJECTS)
 
 all: all-redirect
 .SUFFIXES:
-.SUFFIXES: .c .o .sed .sed.in .y
+.SUFFIXES: .c .o .sed .sin .y
 $(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
 	cd $(top_srcdir) && $(AUTOMAKE) --gnits lib/Makefile
 
@@ -796,26 +797,26 @@ install-exec-local: all-local
 	test -f $(charset_alias) \
 	  && orig=$(charset_alias) \
 	  || orig=charset.alias; \
-	sed -f ref-add.sed $$orig > $(charset_alias)-t
-	$(INSTALL_DATA) $(charset_alias)-t $(charset_alias)
-	rm -f $(charset_alias)-t
+	sed -f ref-add.sed $$orig > $(charset_tmp)
+	$(INSTALL_DATA) $(charset_tmp) $(charset_alias)
+	rm -f $(charset_tmp)
 
 uninstall-local: all-local
 	if test -f $(charset_alias); then \
-	  sed -f ref-del.sed $(charset_alias) > $(charset_alias)-t; \
-	  if grep '^# Packages using this file: $$' $(charset_alias)-t \
+	  sed -f ref-del.sed $(charset_alias) > $(charset_tmp); \
+	  if grep '^# Packages using this file: $$' $(charset_tmp) \
 	      > /dev/null; then \
 	    rm -f $(charset_alias); \
 	  else \
-	    $(INSTALL_DATA) $(charset_alias)-t $(charset_alias); \
+	    $(INSTALL_DATA) $(charset_tmp) $(charset_alias); \
 	  fi; \
-	  rm -f $(charset_alias)-t; \
+	  rm -f $(charset_tmp); \
 	fi
 
 charset.alias: config.charset
 	$(SHELL) $(srcdir)/config.charset '@host@' > $@-t
 	mv $@-t $@
-.sed.in.sed:
+.sin.sed:
 	sed -e '/^#/d' -e 's/@''PACKAGE''@/@PACKAGE@/g' $< > $@-t
 	mv $@-t $@
 
