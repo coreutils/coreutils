@@ -95,6 +95,9 @@ my @tv = (
 # From Tim Smithers: fixed in 1.22l
 ['trailing-sp', '-t: -1 1 -2 1', ["a:x \n", "a:y \n"], "a:x :y \n", 0],
 
+# From Paul Eggert: fixed in 1.22n
+['sp-vs-blank', '', ["\f 1\n", "\f 2\n"], "\f 1 2\n", 0],
+
 );
 
 
