@@ -1,6 +1,16 @@
-Tue Jan 21 22:49:00 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+Wed Jan 22 21:34:50 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
-	* Version 1.22.
+	* tests/Makefile.am (SUBDIRS): Add tail.
+	* tests/tail: New directory.
+	* configure.in (AC_OUTPUT): Add tests/tail/Makefile.
+
+	* src/tail.c (parse_options): New function.
+	(parse_obsolescent_option): New function.
+	(main): Use the new functions instead of open-coding them.
+	This better fixes the bug in handling obsolescent `+Nc' options.
+	General cleanup.
+
+Tue Jan 21 22:49:00 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/tail.c (main): Properly handle what the POSIX spec calls
 	the `obsolescent' usage (e.g., tail +2c).  It didn't work.
