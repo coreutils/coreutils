@@ -99,7 +99,7 @@ struct cp_options
   int symbolic_link;
 
   /* The bits to preserve in created files' modes. */
-  unsigned int umask_kill;
+  mode_t umask_kill;
 
   /* If nonzero, do not copy a nondirectory that has an existing destination
      with the same or newer modification time. */
