@@ -9401,8 +9401,11 @@ below.
 Synopses:
 
 @example
-test [@var{expression}]
-[ [@var{expression}] ]
+test @var{expression}
+test
+[ @var{expression} ]
+[ ]
+[ @var{option}
 @end example
 
 @cindex conflicts with shell built-ins
