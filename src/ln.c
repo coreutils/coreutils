@@ -257,7 +257,7 @@ do_link (const char *source, const char *dest)
 	  if (!yesno ())
 	    return 0;
 	}
-      else if (!remove_existing_files)
+      else if (!remove_existing_files && backup_type == none)
 	{
 	  error (0, 0, _("%s: File exists"), dest);
 	  return 1;
