@@ -4,7 +4,8 @@ Tue Jul  9 20:19:44 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 	(long_options): Add print-data-base and print-database.
 
 	* src/dircolors.c (dc_parse_stream): Don't give `unrecognized keyword'
-	message unless we've processed a matching TERM directive.
+	message unless we've processed a matching TERM directive.  Reported
+	by Karl Berry and François Pinard.
 
 	* src/install.c (UID_T_MAX): Use `(unsigned long)1' rather than
 	`(uid_t)1' to avoid problems on systems where uid_t is signed.
