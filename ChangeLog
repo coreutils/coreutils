@@ -1,6 +1,13 @@
-2002-10-11  Jim Meyering  <meyering@lucent.com>
+2002-10-12  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.5.3.
+
+	tail -c +N would perform an extra read after encountering EOF
+	[this change is analogous (bytes vs. lines) to the one of 2002-01-27]
+	* src/tail.c (start_bytes): Detect EOF, inform caller.
+	(tail_bytes): Upon EOF in start_bytes, return immediately.
+	(file_lines): Reorganize to use memrchr rather than an explicit loop.
+	Adapt to new safe_read ABI.
 
 2002-10-11  Andreas Schwab  <schwab@suse.de>
 
@@ -13,11 +20,6 @@
 	* tests/du/Makefile.am (TESTS): Add deref.
 
 2002-10-10  Jim Meyering  <meyering@lucent.com>
-
-	tail -c +2 would perform an extra read after encountering EOF
-	[this change is analogous (bytes vs. lines) to the one of 2002-01-27]
-	* src/tail.c (start_bytes): Detect EOF, inform caller.
-	(tail_bytes): Upon EOF in start_bytes, return immediately.
 
 	* tests/ln/Makefile.am (TESTS): Add target-1.
 	* tests/ln/target-1: New file/test, for the fix on 2002-10-08.
