@@ -230,10 +230,10 @@ paste_parallel (int nfiles, char **fnamptr)
 	  line_length = 0;	/* Clear so we can easily detect EOF. */
 	  if (fileptr[i] != CLOSED)
 	    {
-	      chr = GETC (fileptr[i]);
+	      chr = getc (fileptr[i]);
 	      if (chr != EOF && delims_saved)
 		{
-		  FWRITE (delbuf, sizeof (char), delims_saved, stdout);
+		  fwrite (delbuf, sizeof (char), delims_saved, stdout);
 		  delims_saved = 0;
 		}
 
@@ -242,8 +242,8 @@ paste_parallel (int nfiles, char **fnamptr)
 		  line_length++;
 		  if (chr == '\n')
 		    break;
-		  PUTC (chr, stdout);
-		  chr = GETC (fileptr[i]);
+		  putc (chr, stdout);
+		  chr = getc (fileptr[i]);
 		}
 	    }
 
@@ -253,14 +253,14 @@ paste_parallel (int nfiles, char **fnamptr)
 		 If an EOF or error, close the file and mark it in the list. */
 	      if (fileptr[i] != CLOSED)
 		{
-		  if (FERROR (fileptr[i]))
+		  if (ferror (fileptr[i]))
 		    {
 		      error (0, errno, "%s", fnamptr[i]);
 		      errors = 1;
 		    }
 		  if (fileptr[i] == stdin)
-		    CLEARERR (fileptr[i]); /* Also clear EOF. */
-		  else if (FCLOSE (fileptr[i]) == EOF)
+		    clearerr (fileptr[i]); /* Also clear EOF. */
+		  else if (fclose (fileptr[i]) == EOF)
 		    {
 		      error (0, errno, "%s", fnamptr[i]);
 		      errors = 1;
@@ -279,10 +279,10 @@ paste_parallel (int nfiles, char **fnamptr)
 		      /* No.  Some files were not closed for this line. */
 		      if (delims_saved)
 			{
-			  FWRITE (delbuf, sizeof (char), delims_saved, stdout);
+			  fwrite (delbuf, sizeof (char), delims_saved, stdout);
 			  delims_saved = 0;
 			}
-		      PUTC ('\n', stdout);
+		      putc ('\n', stdout);
 		    }
 		  continue;	/* Next read of files, or exit. */
 		}
@@ -304,14 +304,14 @@ paste_parallel (int nfiles, char **fnamptr)
 	      if (fileptr[i + 1] != ENDLIST)
 		{
 		  if (chr != '\n')
-		    PUTC (chr, stdout);
+		    putc (chr, stdout);
 		  if (*delimptr != EMPTY_DELIM)
-		    PUTC (*delimptr, stdout);
+		    putc (*delimptr, stdout);
 		  if (++delimptr == delim_end)
 		    delimptr = delims;
 		}
 	      else
-		PUTC (chr, stdout);
+		putc (chr, stdout);
 	    }
 	}
     }
@@ -350,7 +350,7 @@ paste_serial (int nfiles, char **fnamptr)
 
       delimptr = delims;	/* Set up for delimiter string. */
 
-      charold = GETC (fileptr);
+      charold = getc (fileptr);
       if (charold != EOF)
 	{
 	  /* `charold' is set up.  Hit it!
@@ -359,38 +359,38 @@ paste_serial (int nfiles, char **fnamptr)
 	     character if needed.  After the EOF, output `charold'
 	     if it's a newline; otherwise, output it and then a newline. */
 
-	  while ((charnew = GETC (fileptr)) != EOF)
+	  while ((charnew = getc (fileptr)) != EOF)
 	    {
 	      /* Process the old character. */
 	      if (charold == '\n')
 		{
 		  if (*delimptr != EMPTY_DELIM)
-		    PUTC (*delimptr, stdout);
+		    putc (*delimptr, stdout);
 
 		  if (++delimptr == delim_end)
 		    delimptr = delims;
 		}
 	      else
-		PUTC (charold, stdout);
+		putc (charold, stdout);
 
 	      charold = charnew;
 	    }
 
 	  /* Hit EOF.  Process that last character. */
-	  PUTC (charold, stdout);
+	  putc (charold, stdout);
 	}
 
       if (charold != '\n')
-	PUTC ('\n', stdout);
+	putc ('\n', stdout);
 
-      if (FERROR (fileptr))
+      if (ferror (fileptr))
 	{
 	  error (0, errno, "%s", *fnamptr);
 	  errors = 1;
 	}
       if (fileptr == stdin)
-	CLEARERR (fileptr);	/* Also clear EOF. */
-      else if (FCLOSE (fileptr) == EOF)
+	clearerr (fileptr);	/* Also clear EOF. */
+      else if (fclose (fileptr) == EOF)
 	{
 	  error (0, errno, "%s", *fnamptr);
 	  errors = 1;
@@ -485,9 +485,9 @@ main (int argc, char **argv)
     exit_status = paste_parallel (argc - optind, &argv[optind]);
   else
     exit_status = paste_serial (argc - optind, &argv[optind]);
-  if (have_read_stdin && FCLOSE (stdin) == EOF)
+  if (have_read_stdin && fclose (stdin) == EOF)
     error (EXIT_FAILURE, errno, "-");
-  if (FERROR (stdout) || fclose (stdout) == EOF)
+  if (ferror (stdout) || fclose (stdout) == EOF)
     error (EXIT_FAILURE, errno, _("write error"));
   exit (exit_status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

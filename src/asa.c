@@ -4,7 +4,7 @@ TODO
   add usage function
   call parse_long_options
   dcl, set program_name
-  do FCLOSE/error checking
+  do fclose/error checking
   */
 
 /* asa.c - interpret ASA carriage control characters
@@ -67,13 +67,13 @@ static void copy_file (FILE *fp);
 static void
 form_feed ()
 {
-  PUTCHAR ('\f');
+  putchar ('\f');
 }
 
 static void
 new_line ()
 {
-  PUTCHAR ('\n');
+  putchar ('\n');
 }
 
 static void
@@ -119,20 +119,20 @@ flush ()
 	      if (ch != ' ')
 		{
 		  if (printed)
-		    PUTCHAR ('\b');
-		  PUTCHAR (ch);
+		    putchar ('\b');
+		  putchar (ch);
 		  printed = 1;
 		}
 	    }
 	}
       if (!printed)
-	PUTCHAR (' ');
+	putchar (' ');
     }
   for (j = 0; j < line_num; j++)
     free (line_buffer[j].chr);
 
   line_num = 0;
-  PUTCHAR ('\n');
+  putchar ('\n');
 }
 
 static size_t
@@ -255,7 +255,7 @@ main (int argc, char **argv)
 	  else
 	    {
 	      copy_file (fp);
-	      FCLOSE (fp);
+	      fclose (fp);
 	    }
 	}
     }

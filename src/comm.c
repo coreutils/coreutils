@@ -103,7 +103,7 @@ writeline (struct linebuffer *line, FILE *stream, int class)
 	return;
       /* Skip the tab stop for case 1, if we are printing case 1.  */
       if (only_file_1)
-	PUTC ('\t', stream);
+	putc ('\t', stream);
       break;
 
     case 3:
@@ -111,15 +111,15 @@ writeline (struct linebuffer *line, FILE *stream, int class)
 	return;
       /* Skip the tab stop for case 1, if we are printing case 1.  */
       if (only_file_1)
-	PUTC ('\t', stream);
+	putc ('\t', stream);
       /* Skip the tab stop for case 2, if we are printing case 2.  */
       if (only_file_2)
-	PUTC ('\t', stream);
+	putc ('\t', stream);
       break;
     }
 
-  FWRITE (line->buffer, sizeof (char), line->length, stream);
-  PUTC ('\n', stream);
+  fwrite (line->buffer, sizeof (char), line->length, stream);
+  putc ('\n', stream);
 }
 
 /* Compare INFILES[0] and INFILES[1].
@@ -197,13 +197,13 @@ compare_files (char **infiles)
   for (i = 0; i < 2; i++)
     {
       free (lb1[i].buffer);
-      if (FERROR (streams[i]) || fclose (streams[i]) == EOF)
+      if (ferror (streams[i]) || fclose (streams[i]) == EOF)
 	{
 	  error (0, errno, "%s", infiles[i]);
 	  ret = 1;
 	}
     }
-  if (FERROR (stdout) || fclose (stdout) == EOF)
+  if (ferror (stdout) || fclose (stdout) == EOF)
     {
       error (0, errno, _("write error"));
       ret = 1;

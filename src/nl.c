@@ -295,7 +295,7 @@ proc_header (void)
   current_regex = &header_regex;
   if (reset_numbers)
     line_no = starting_line_number;
-  PUTCHAR ('\n');
+  putchar ('\n');
 }
 
 /* Switch to a body section. */
@@ -305,7 +305,7 @@ proc_body (void)
 {
   current_type = body_type;
   current_regex = &body_regex;
-  PUTCHAR ('\n');
+  putchar ('\n');
 }
 
 /* Switch to a footer section. */
@@ -315,7 +315,7 @@ proc_footer (void)
 {
   current_type = footer_type;
   current_regex = &footer_regex;
-  PUTCHAR ('\n');
+  putchar ('\n');
 }
 
 /* Process a regular text line in `line_buf'. */
@@ -358,8 +358,8 @@ proc_text (void)
 	print_lineno ();
       break;
     }
-  FWRITE (line_buf.buffer, sizeof (char), line_buf.length, stdout);
-  PUTCHAR ('\n');
+  fwrite (line_buf.buffer, sizeof (char), line_buf.length, stdout);
+  putchar ('\n');
 }
 
 /* Return the type of line in `line_buf'. */
@@ -431,14 +431,14 @@ nl_file (const char *file)
 
   process_file (stream);
 
-  if (FERROR (stream))
+  if (ferror (stream))
     {
       error (0, errno, "%s", file);
       return 1;
     }
   if (STREQ (file, "-"))
-    CLEARERR (stream);		/* Also clear EOF. */
-  else if (FCLOSE (stream) == EOF)
+    clearerr (stream);		/* Also clear EOF. */
+  else if (fclose (stream) == EOF)
     {
       error (0, errno, "%s", file);
       return 1;
@@ -609,12 +609,12 @@ main (int argc, char **argv)
     for (; optind < argc; optind++)
       exit_status |= nl_file (argv[optind]);
 
-  if (have_read_stdin && FCLOSE (stdin) == EOF)
+  if (have_read_stdin && fclose (stdin) == EOF)
     {
       error (0, errno, "-");
       exit_status = 1;
     }
-  if (FERROR (stdout) || fclose (stdout) == EOF)
+  if (ferror (stdout) || fclose (stdout) == EOF)
     error (EXIT_FAILURE, errno, _("write error"));
 
   exit (exit_status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);

@@ -1667,7 +1667,7 @@ squeeze_filter (unsigned char *buf, long int size, PFI reader)
 	      ++i;
 	    }
 	  if (out_len > 0
-	      && FWRITE ((char *) &buf[begin], 1, out_len, stdout) == 0)
+	      && fwrite ((char *) &buf[begin], 1, out_len, stdout) == 0)
 	    error (EXIT_FAILURE, errno, _("write error"));
 	}
 
@@ -1913,7 +1913,7 @@ without squeezing repeats"));
       do
 	{
 	  nr = read_and_delete (io_buf, IO_BUF_SIZE, NULL);
-	  if (nr > 0 && FWRITE ((char *) io_buf, 1, nr, stdout) == 0)
+	  if (nr > 0 && fwrite ((char *) io_buf, 1, nr, stdout) == 0)
 	    error (EXIT_FAILURE, errno, _("write error"));
 	}
       while (nr > 0);
@@ -2021,14 +2021,14 @@ construct in string1 must be aligned with a corresponding construct\n\
 	    {
 	      chars_read = read_and_xlate (io_buf, IO_BUF_SIZE, NULL);
 	      if (chars_read > 0
-		  && FWRITE ((char *) io_buf, 1, chars_read, stdout) == 0)
+		  && fwrite ((char *) io_buf, 1, chars_read, stdout) == 0)
 		error (EXIT_FAILURE, errno, _("write error"));
 	    }
 	  while (chars_read > 0);
 	}
     }
 
-  if (FCLOSE (stdout) == EOF)
+  if (fclose (stdout) == EOF)
     error (EXIT_FAILURE, errno, _("write error"));
 
   if (close (0) != 0)

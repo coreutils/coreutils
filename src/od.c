@@ -516,10 +516,10 @@ dump_hexl_mode_trailer (long unsigned int n_bytes, const char *block)
     {
       unsigned int c = *(const unsigned char *) block;
       unsigned int c2 = (ISPRINT(c) ? c : '.');
-      PUTCHAR (c2);
+      putchar (c2);
       block += sizeof (unsigned char);
     }
-  PUTCHAR ('<');
+  putchar ('<');
 }
 
 static void
@@ -1010,7 +1010,7 @@ skip (off_t n_skip)
 	  if (n_skip >= file_stats.st_size)
 	    {
 	      n_skip -= file_stats.st_size;
-	      if (in_stream != stdin && FCLOSE (in_stream) == EOF)
+	      if (in_stream != stdin && fclose (in_stream) == EOF)
 		{
 		  error (0, errno, "%s", input_filename);
 		  err = 1;
@@ -1040,7 +1040,7 @@ skip (off_t n_skip)
 				    ? BUFSIZ
 				    : n_skip % BUFSIZ);
 	  size_t n_bytes_read;
-	  n_bytes_read = FREAD (buf, 1, n_bytes_to_read, in_stream);
+	  n_bytes_read = fread (buf, 1, n_bytes_to_read, in_stream);
 	  n_skip -= n_bytes_read;
 	  if (n_bytes_read != n_bytes_to_read)
 	    break;
@@ -1141,7 +1141,7 @@ write_block (long unsigned int current_offset, long unsigned int n_bytes,
 	      printf ("%*s", blank_fields * field_width, "");
 	      dump_hexl_mode_trailer (n_bytes, curr_block);
 	    }
-	  PUTCHAR ('\n');
+	  putchar ('\n');
 	}
     }
   first = 0;
@@ -1159,20 +1159,20 @@ check_and_close (void)
   int err;
 
   err = 0;
-  if (FERROR (in_stream))
+  if (ferror (in_stream))
     {
       error (0, errno, "%s", input_filename);
       if (in_stream != stdin)
-	FCLOSE (in_stream);
+	fclose (in_stream);
       err = 1;
     }
-  else if (in_stream != stdin && FCLOSE (in_stream) == EOF)
+  else if (in_stream != stdin && fclose (in_stream) == EOF)
     {
       error (0, errno, "%s", input_filename);
       err = 1;
     }
 
-  if (FERROR (stdout))
+  if (ferror (stdout))
     {
       error (0, errno, _("standard output"));
       err = 1;
@@ -1252,7 +1252,7 @@ read_char (int *c)
    Then try to read the remaining bytes from the newly opened file.
    Repeat if necessary until *FILE_LIST is NULL.  Set *N_BYTES_IN_BUFFER
    to the number of bytes read.  If an error occurs, it will be detected
-   through FERROR when the stream is about to be closed.  If there is an
+   through ferror when the stream is about to be closed.  If there is an
    error, give a message but continue reading as usual and return nonzero.
    Otherwise return zero.  */
 
@@ -1278,7 +1278,7 @@ read_block (size_t n, char *block, size_t *n_bytes_in_buffer)
       size_t n_read;
 
       n_needed = n - *n_bytes_in_buffer;
-      n_read = FREAD (block + *n_bytes_in_buffer, 1, n_needed, in_stream);
+      n_read = fread (block + *n_bytes_in_buffer, 1, n_needed, in_stream);
 
       *n_bytes_in_buffer += n_read;
 
@@ -1576,10 +1576,10 @@ dump_strings (void)
 	      break;
 
 	    default:
-	      PUTC (c, stdout);
+	      putc (c, stdout);
 	    }
 	}
-      PUTCHAR ('\n');
+      putchar ('\n');
     }
 
   /* We reach this point only if we search through
@@ -1963,10 +1963,10 @@ the maximum\nrepresentable value of type `long'"), optarg);
 
 cleanup:;
 
-  if (have_read_stdin && FCLOSE (stdin) == EOF)
+  if (have_read_stdin && fclose (stdin) == EOF)
     error (EXIT_FAILURE, errno, _("standard input"));
 
-  if (FCLOSE (stdout) == EOF)
+  if (fclose (stdout) == EOF)
     error (EXIT_FAILURE, errno, _("write error"));
 
   exit (err == 0 ? EXIT_SUCCESS : EXIT_FAILURE);

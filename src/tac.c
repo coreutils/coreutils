@@ -153,7 +153,7 @@ output (const char *start, const char *past_end)
 
   if (start == 0)
     {
-      FWRITE (buffer, 1, bytes_in_buffer, stdout);
+      fwrite (buffer, 1, bytes_in_buffer, stdout);
       bytes_in_buffer = 0;
       return;
     }
@@ -164,7 +164,7 @@ output (const char *start, const char *past_end)
       memcpy (buffer + bytes_in_buffer, start, bytes_available);
       bytes_to_add -= bytes_available;
       start += bytes_available;
-      FWRITE (buffer, 1, WRITESIZE, stdout);
+      fwrite (buffer, 1, WRITESIZE, stdout);
       bytes_in_buffer = 0;
       bytes_available = WRITESIZE;
     }
@@ -368,7 +368,7 @@ tac_file (const char *file)
       return 1;
     }
   errors = tac_seekable (fileno (in), file);
-  if (FERROR (in) || fclose (in) == EOF)
+  if (ferror (in) || fclose (in) == EOF)
     {
       error (0, errno, "%s", file);
       return 1;
@@ -417,10 +417,10 @@ save_stdin (FILE **g_tmp, char **g_tempfile)
 	error (EXIT_FAILURE, errno, _("stdin: read error"));
 
       /* Don't bother checking for failure inside the loop -- check after.  */
-      FWRITE (G_buffer, 1, bytes_read, tmp);
+      fwrite (G_buffer, 1, bytes_read, tmp);
     }
 
-  if (FERROR (tmp) || fflush (tmp) == EOF)
+  if (ferror (tmp) || fflush (tmp) == EOF)
     error (EXIT_FAILURE, errno, "%s", tempfile);
 
   rewind (tmp);
@@ -497,18 +497,18 @@ tac_mem (const char *buf, size_t n_bytes, FILE *out)
   if (bol < buf + n_bytes)
     {
       /* Print out the line from bol to end of input.  */
-      FWRITE (bol, 1, (buf + n_bytes) - bol, out);
+      fwrite (bol, 1, (buf + n_bytes) - bol, out);
 
       /* Add a newline here.  Otherwise, the first and second lines
 	 of output would appear to have been joined.  */
-      FPUTC ('\n', out);
+      fputc ('\n', out);
     }
 
   while ((nl = memrchr (buf, bol - 1, '\n')) != NULL)
     {
       /* Output the line (which includes a trailing newline)
 	 from NL+1 to BOL-1.  */
-      FWRITE (nl + 1, 1, bol - (nl + 1), out);
+      fwrite (nl + 1, 1, bol - (nl + 1), out);
 
       bol = nl + 1;
     }
@@ -517,10 +517,10 @@ tac_mem (const char *buf, size_t n_bytes, FILE *out)
      When the first byte of the input is a newline, there is nothing
      left to do here.  */
   if (buf < bol)
-    FWRITE (buf, 1, bol - buf, out);
+    fwrite (buf, 1, bol - buf, out);
 
   /* FIXME: this is work in progress.... */
-  return FERROR (out);
+  return ferror (out);
 }
 
 /* FIXME: describe */
@@ -669,7 +669,7 @@ main (int argc, char **argv)
 
   if (have_read_stdin && close (0) < 0)
     error (EXIT_FAILURE, errno, "-");
-  if (FERROR (stdout) || fclose (stdout) == EOF)
+  if (ferror (stdout) || fclose (stdout) == EOF)
     error (EXIT_FAILURE, errno, _("write error"));
   exit (errors == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

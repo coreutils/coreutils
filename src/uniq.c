@@ -195,8 +195,8 @@ writeline (const struct linebuffer *line, FILE *stream, int linecount)
   if (countmode == count_occurrences)
     fprintf (stream, "%7d\t", linecount + 1);
 
-  FWRITE (line->buffer, sizeof (char), line->length, stream);
-  PUTC ('\n', stream);
+  fwrite (line->buffer, sizeof (char), line->length, stream);
+  putc ('\n', stream);
 }
 
 /* Process input file INFILE with output to OUTFILE.
@@ -238,7 +238,7 @@ check_file (const char *infile, const char *outfile)
   prevfield = find_field (prevline);
   prevlen = prevline->length - (prevfield - prevline->buffer);
 
-  while (!FEOF (istream))
+  while (!feof (istream))
     {
       if (readline (thisline, istream) == 0)
 	break;
@@ -262,10 +262,10 @@ check_file (const char *infile, const char *outfile)
   writeline (prevline, ostream, match_count);
 
  closefiles:
-  if (FERROR (istream) || fclose (istream) == EOF)
+  if (ferror (istream) || fclose (istream) == EOF)
     error (EXIT_FAILURE, errno, _("error reading %s"), infile);
 
-  if (FERROR (ostream) || fclose (ostream) == EOF)
+  if (ferror (ostream) || fclose (ostream) == EOF)
     error (EXIT_FAILURE, errno, _("error writing %s"), outfile);
 
   free (lb1.buffer);

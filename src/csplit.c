@@ -1001,7 +1001,7 @@ close_output_file (void)
 {
   if (output_stream)
     {
-      if (FERROR (output_stream) || fclose (output_stream) == EOF)
+      if (ferror (output_stream) || fclose (output_stream) == EOF)
 	{
 	  error (0, errno, _("write error for `%s'"), output_filename);
 	  output_stream = NULL;
@@ -1030,7 +1030,7 @@ close_output_file (void)
 static void
 save_line_to_file (const struct cstring *line)
 {
-  FWRITE (line->str, sizeof (char), line->len, output_stream);
+  fwrite (line->str, sizeof (char), line->len, output_stream);
   bytes_written += line->len;
 }
 
@@ -1497,7 +1497,7 @@ main (int argc, char **argv)
       cleanup_fatal ();
     }
 
-  if (!suppress_count && (FERROR (stdout) || fclose (stdout) == EOF))
+  if (!suppress_count && (ferror (stdout) || fclose (stdout) == EOF))
     error (EXIT_FAILURE, errno, _("write error"));
 
   exit (EXIT_SUCCESS);

@@ -884,9 +884,9 @@ main (int argc, char **argv)
 
   cleanup ();
 
-  if (have_read_stdin && FCLOSE (stdin) == EOF)
+  if (have_read_stdin && fclose (stdin) == EOF)
     error (EXIT_FAILURE, errno, _("standard input"));
-  if (FERROR (stdout) || fclose (stdout) == EOF)
+  if (ferror (stdout) || fclose (stdout) == EOF)
     error (EXIT_FAILURE, errno, _("write error"));
   if (failed_opens > 0)
     exit (EXIT_FAILURE);
@@ -1229,9 +1229,9 @@ close_file (COLUMN *p)
 
   if (p->status == CLOSED)
     return;
-  if (FERROR (p->fp))
+  if (ferror (p->fp))
     error (EXIT_FAILURE, errno, "%s", p->name);
-  if (p->fp != stdin && FCLOSE (p->fp) == EOF)
+  if (p->fp != stdin && fclose (p->fp) == EOF)
     error (EXIT_FAILURE, errno, "%s", p->name);
 
   if (!parallel_files)
@@ -1580,7 +1580,7 @@ print_page (void)
 
       if (pad_vertically)
 	{
-	  PUTCHAR ('\n');
+	  putchar ('\n');
 	  --lines_left_on_page;
 	}
 
@@ -1589,7 +1589,7 @@ print_page (void)
 
       if (double_space && pv)
 	{
-	  PUTCHAR ('\n');
+	  putchar ('\n');
 	  --lines_left_on_page;
 	}
     }
@@ -1605,7 +1605,7 @@ print_page (void)
     pad_down (lines_left_on_page + lines_per_footer);
   else if (keep_FF && print_a_FF)
     {
-      PUTCHAR ('\f');
+      putchar ('\f');
       print_a_FF = FALSE;
     }
 
@@ -1788,7 +1788,7 @@ pad_across_to (int position)
   else
     {
       while (++h <= position)
-	PUTCHAR (' ');
+	putchar (' ');
       output_position = position;
     }
 }
@@ -1804,10 +1804,10 @@ pad_down (int lines)
   register int i;
 
   if (use_form_feed)
-    PUTCHAR ('\f');
+    putchar ('\f');
   else
     for (i = lines; i; --i)
-      PUTCHAR ('\n');
+      putchar ('\n');
 }
 
 /* Read the rest of the line.
@@ -1822,11 +1822,11 @@ read_rest_of_line (COLUMN *p)
   register int c;
   FILE *f = p->fp;
 
-  while ((c = GETC (f)) != '\n')
+  while ((c = getc (f)) != '\n')
     {
       if (c == '\f')
 	{
-	  if ((c = GETC (f)) != '\n')
+	  if ((c = getc (f)) != '\n')
 	    ungetc (c, f);
 	  if (keep_FF)
 	    print_a_FF = TRUE;
@@ -1859,11 +1859,11 @@ skip_read (COLUMN *p, int column_number)
   COLUMN *q;
 
   /* Read 1st character in a line or any character succeeding a FF */
-  if ((c = GETC (f)) == '\f' && p->full_page_printed)
+  if ((c = getc (f)) == '\f' && p->full_page_printed)
     /* A FF-coincidence with a previous full_page_printed.
        To avoid an additional empty page, eliminate the FF */
-    if ((c = GETC (f)) == '\n')
-      c = GETC (f);
+    if ((c = getc (f)) == '\n')
+      c = getc (f);
 
   p->full_page_printed = FALSE;
 
@@ -1892,7 +1892,7 @@ skip_read (COLUMN *p, int column_number)
 		p->full_page_printed = FALSE;
 	    }
 
-	  if ((c = GETC (f)) != '\n')
+	  if ((c = getc (f)) != '\n')
 	    ungetc (c, f);
 	  hold_file (p);
 	  break;
@@ -1902,7 +1902,7 @@ skip_read (COLUMN *p, int column_number)
 	  close_file (p);
 	  break;
 	}
-      c = GETC (f);
+      c = getc (f);
     }
 
   if (skip_count)
@@ -1926,11 +1926,11 @@ print_white_space (void)
   while (goal - h_old > 1
 	 && (h_new = POS_AFTER_TAB (chars_per_output_tab, h_old)) <= goal)
     {
-      PUTCHAR (output_tab_char);
+      putchar (output_tab_char);
       h_old = h_new;
     }
   while (++h_old <= goal)
-    PUTCHAR (' ');
+    putchar (' ');
 
   output_position = goal;
   spaces_not_printed = 0;
@@ -1955,7 +1955,7 @@ print_sep_string ()
   for (; separators_not_printed > 0; --separators_not_printed)
     {
       while (l-- > 0)
-	PUTCHAR (*s++);
+	putchar (*s++);
       output_position += col_sep_length;
     }
 }
@@ -2001,7 +2001,7 @@ print_char (int c)
       else
 	++output_position;
     }
-  PUTCHAR (c);
+  putchar (c);
 }
 
 /* Skip to page PAGE before printing. */
@@ -2094,19 +2094,19 @@ read_line (COLUMN *p)
 #endif
 
   /* read 1st character in each line or any character succeeding a FF: */
-  c = GETC (p->fp);
+  c = getc (p->fp);
 
   last_input_position = input_position;
 
   if (c == '\f' && p->full_page_printed)
-    if ((c = GETC (p->fp)) == '\n')
-      c = GETC (p->fp);
+    if ((c = getc (p->fp)) == '\n')
+      c = getc (p->fp);
   p->full_page_printed = FALSE;
 
   switch (c)
     {
     case '\f':
-      if ((c = GETC (p->fp)) != '\n')
+      if ((c = getc (p->fp)) != '\n')
 	ungetc (c, p->fp);
       FF_only = TRUE;
       if (print_a_header && !storing_columns)
@@ -2179,14 +2179,14 @@ read_line (COLUMN *p)
 
   for (;;)
     {
-      c = GETC (p->fp);
+      c = getc (p->fp);
 
       switch (c)
 	{
 	case '\n':
 	  return TRUE;
 	case '\f':
-	  if ((c = GETC (p->fp)) != '\n')
+	  if ((c = getc (p->fp)) != '\n')
 	    ungetc (c, p->fp);
 	  if (keep_FF)
 	    print_a_FF = TRUE;

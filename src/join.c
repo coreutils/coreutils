@@ -248,12 +248,12 @@ get_line (FILE *fp, struct line *line)
   int c, i;
   char *ptr;
 
-  if (FEOF (fp))
+  if (feof (fp))
     return 0;
 
   ptr = xmalloc (linesize);
 
-  for (i = 0; (c = GETC (fp)) != EOF && c != '\n'; ++i)
+  for (i = 0; (c = getc (fp)) != EOF && c != '\n'; ++i)
     {
       if (i == linesize)
 	{
@@ -386,7 +386,7 @@ prfield (int n, struct line *line)
     {
       len = line->fields[n].len;
       if (len)
-	FWRITE (line->fields[n].beg, 1, len, stdout);
+	fwrite (line->fields[n].beg, 1, len, stdout);
       else if (empty_filler)
 	fputs (empty_filler, stdout);
     }
@@ -435,9 +435,9 @@ prjoin (struct line *line1, struct line *line2)
 	  o = o->next;
 	  if (o == NULL)
 	    break;
-	  PUTCHAR (tab ? tab : ' ');
+	  putchar (tab ? tab : ' ');
 	}
-      PUTCHAR ('\n');
+      putchar ('\n');
     }
   else
     {
@@ -453,26 +453,26 @@ prjoin (struct line *line1, struct line *line2)
       prfield (join_field_1, line1);
       for (i = 0; i < join_field_1 && i < line1->nfields; ++i)
 	{
-	  PUTCHAR (tab ? tab : ' ');
+	  putchar (tab ? tab : ' ');
 	  prfield (i, line1);
 	}
       for (i = join_field_1 + 1; i < line1->nfields; ++i)
 	{
-	  PUTCHAR (tab ? tab : ' ');
+	  putchar (tab ? tab : ' ');
 	  prfield (i, line1);
 	}
 
       for (i = 0; i < join_field_2 && i < line2->nfields; ++i)
 	{
-	  PUTCHAR (tab ? tab : ' ');
+	  putchar (tab ? tab : ' ');
 	  prfield (i, line2);
 	}
       for (i = join_field_2 + 1; i < line2->nfields; ++i)
 	{
-	  PUTCHAR (tab ? tab : ' ');
+	  putchar (tab ? tab : ' ');
 	  prfield (i, line2);
 	}
-      PUTCHAR ('\n');
+      putchar ('\n');
     }
 }
 
@@ -850,13 +850,13 @@ main (int argc, char **argv)
     error (EXIT_FAILURE, errno, _("both files cannot be standard input"));
   join (fp1, fp2);
 
-  if (fp1 != stdin && FCLOSE (fp1) == EOF)
+  if (fp1 != stdin && fclose (fp1) == EOF)
     error (EXIT_FAILURE, errno, "%s", names[0]);
-  if (fp2 != stdin && FCLOSE (fp2) == EOF)
+  if (fp2 != stdin && fclose (fp2) == EOF)
     error (EXIT_FAILURE, errno, "%s", names[1]);
-  if ((fp1 == stdin || fp2 == stdin) && FCLOSE (stdin) == EOF)
+  if ((fp1 == stdin || fp2 == stdin) && fclose (stdin) == EOF)
     error (EXIT_FAILURE, errno, "-");
-  if (FERROR (stdout) || fclose (stdout) == EOF)
+  if (ferror (stdout) || fclose (stdout) == EOF)
     error (EXIT_FAILURE, errno, _("write error"));
 
   exit (EXIT_SUCCESS);
