@@ -1,4 +1,7 @@
 Changes in release 4.1:
+[4.0w]
+* When `cp -pR' fails to copy a file, it now preserves permissions, owner,
+   and group of the containing directory.
 [4.0v]
 * df, du, and ls now round disk usage up and disk free space down
 * df, du, ls: --block-size=N now works for values of N that are e.g.,
