@@ -128,7 +128,7 @@ sub test_vector
       {}, "2000-06-15 09:43:57", 0],
 
      # Relative seconds, no time.
-     # This test has problems!  It works only if TZ is set to UTC+1 (as below).
+     # This test is fragile!  It works only if TZ is set to UTC+1 (as below).
      ['relative-2', "--utc -d '1970-01-01 UTC +961062237 sec' $fmt", {},
       "2000-06-15 10:43:57", 0],
 
