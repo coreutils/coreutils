@@ -1,10 +1,10 @@
 2003-03-11  Jim Meyering  <jim@meyering.net>
 
+	* Version 4.5.10.
+
 	* src/split.c (longopts): Don't hard-code `2' here.
 	Instead, just specify `&verbose', and ...
 	(main): ... remove the `case 2:' block for --verbose.
-
-	* Version 4.5.10.
 
 	* tests/du/basic: Make the test file larger than 64 bytes, so that
 	we don't immediately disqualify file systems (e.g., NetApp) on which
