@@ -745,7 +745,9 @@ numbers %lu/%lu, but now (after a chdir into it), the numbers for `.'\n\
 are %lu/%lu.  That means that while rm was running, the directory\n\
 was replaced with either another directory or a link to another directory."),
 	       full_filename (dir_name),
+	       (unsigned long)(fs->st_dev),
 	       (unsigned long)(fs->st_ino),
+	       (unsigned long)(sb.st_dev),
 	       (unsigned long)(sb.st_ino));
       }
   }
