@@ -140,10 +140,10 @@ xatoi (cp)
 }
 #endif /* MOUNTED_GETMNTENT1.  */
 
-#if defined (MOUNTED_GETMNTINFO) && !defined (__NetBSD__) && !defined (__OpenBSD__)
+#if MOUNTED_GETMNTINFO
+
 static char *
-fstype_to_string (t)
-     short t;
+fstype_to_string (short t)
 {
   switch (t)
     {
@@ -235,6 +235,18 @@ fstype_to_string (t)
       return "?";
     }
 }
+
+/* __NetBSD__ || BSD_NET2 || __OpenBSD__ */
+static char *
+fsp_to_string (const struct statfs *fsp)
+{
+# if defined HAVE_F_FSTYPENAME_IN_STATFS
+  return xstrdup (fsp->f_fstypename);
+# else
+  return fstype_to_string (fsp->f_type);
+# endif
+}
+
 #endif /* MOUNTED_GETMNTINFO */
 
 #ifdef MOUNTED_VMOUNT		/* AIX.  */
@@ -358,11 +370,7 @@ read_filesystem_list (need_fs_type, all_fs)
 	me = (struct mount_entry *) xmalloc (sizeof (struct mount_entry));
 	me->me_devname = xstrdup (fsp->f_mntfromname);
 	me->me_mountdir = xstrdup (fsp->f_mntonname);
-# if defined (__NetBSD__) || defined (__OpenBSD__)
-	me->me_type = xstrdup (fsp->f_fstypename);
-# else
-	me->me_type = fstype_to_string (fsp->f_type);
-# endif
+	me->me_type = fsp_to_string (fsp);
 	me->me_dev = (dev_t) -1;	/* Magic; means not known yet. */
 	me->me_next = NULL;
 
