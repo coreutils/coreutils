@@ -1,3 +1,7 @@
+2004-04-13  Jim Meyering  <jim@meyering.net>
+
+	* quotearg.c, quotearg.h: Remove trailing blanks.
+
 2004-04-12  Jim Meyering  <jim@meyering.net>
 
 	* inttostr.h: Update from gnulib.
