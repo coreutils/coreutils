@@ -1,3 +1,7 @@
+1998-07-28  Jim Meyering  <meyering@ascend.com>
+
+	* utimes.m4: Undef stat.
+
 1998-07-25  Jim Meyering  <meyering@ascend.com>
 
 	* utime.m4 (jm_FUNC_UTIME): New file and macro.
