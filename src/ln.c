@@ -151,12 +151,6 @@ do_link (char *source, char *dest)
 	}
     }
 
-  if (lstat (dest, &dest_stats) != 0 && errno != ENOENT)
-    {
-      error (0, errno, "%s", dest);
-      return 1;
-    }
-
   /* If the destination is a directory or (it is a symlink to a directory
      and the user has not specified --no-dereference), then form the
      actual destination name by appending basename (source) to the
