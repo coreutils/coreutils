@@ -113,19 +113,22 @@ END-INFO-DIR-ENTRY
 @end format
 @end ifinfo
 
-@ifinfo
-This file documents the GNU command line utilities.
+@copying
+This manual documents version @value{VERSION} of the @sc{gnu} command
+line utilities.
 
-Copyright (C) 1994, 1995, 1996, 2000, 2001, 2002 Free Software Foundation, Inc.
+Copyright @copyright{} 1994, 1995, 1996, 2000, 2001, 2002
+Free Software Foundation, Inc.
 
+@quotation
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.1 or
 any later version published by the Free Software Foundation; with no
 Invariant Sections, with no Front-Cover Texts, and with no Back-Cover
 Texts.  A copy of the license is included in the section entitled ``GNU
 Free Documentation License''.
-
-@end ifinfo
+@end quotation
+@end copying
 
 @titlepage
 @title @sc{gnu} @code{Core-utils}
@@ -135,15 +138,7 @@ Free Documentation License''.
 
 @page
 @vskip 0pt plus 1filll
-Copyright @copyright{} 1994, 1995, 1996, 2000, 2001, 2002 Free Software
-Foundation, Inc.
-
-Permission is granted to copy, distribute and/or modify this document
-under the terms of the GNU Free Documentation License, Version 1.1 or
-any later version published by the Free Software Foundation; with no
-Invariant Sections, with no Front-Cover Texts, and with no Back-Cover
-Texts.  A copy of the license is included in the section entitled ``GNU
-Free Documentation License''.
+@insertcopying
 @end titlepage
 
 
@@ -154,11 +149,12 @@ Free Documentation License''.
 @node Top
 @top GNU Core-utils
 
+@insertcopying
+@end ifnottex
+
 @cindex text utilities
 @cindex shell utilities
 @cindex file utilities
-This manual documents version @value{VERSION} of the @sc{gnu} command
-line utilities.
 
 @menu
 * Introduction::                       Caveats, overview, and authors.
@@ -442,16 +438,14 @@ GNU Free Documentation License
 @end detailmenu
 @end menu
 
-@end ifnottex
-
 
 @node Introduction
 @chapter Introduction
 
-This manual is incomplete: Little attempt is made to explain basic concepts
-in a way suitable for novices.  Thus, if you are interested, please get
-involved in improving this manual.  The entire @sc{gnu} community will
-benefit.
+This manual is a work in progress: many sections make no attempt to explain
+basic concepts in a way suitable for novices.  Thus, if you are interested,
+please get involved in improving this manual.  The entire @sc{gnu} community
+will benefit.
 
 @cindex @sc{posix}
 The @sc{gnu} utilities documented here are mostly compatible with the
