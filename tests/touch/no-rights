@@ -1,0 +1,34 @@
+#!/bin/sh
+# Make sure touch can update the times on a file that is neither
+# readable nor writable.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  touch --version
+fi
+
+DEFAULT_SLEEP_SECONDS=2
+SLEEP_SECONDS=${SLEEP_SECONDS=$DEFAULT_SLEEP_SECONDS}
+
+t1=touch-no-rw1
+t2=touch-no-rw2
+rm -rf $t1 $t2
+: > $t1
+
+# Make sure $t2 is two seconds newer than $t1.
+sleep $SLEEP_SECONDS
+: > $t2
+fail=0
+
+set x `ls -t $t1 $t2`
+test "$*" = "x $t2 $t1" || fail=1
+
+chmod 0 $t1
+touch -c $t1 || fail=1
+
+set x `ls -t $t1 $t2`
+test "$*" = "x $t1 $t2" || fail=1
+
+rm -f $t1 $t2
+
+exit $fail
