@@ -372,60 +372,6 @@ tac_seekable (int input_fd, const char *file)
     }
 }
 
-/* Temporary prototype -- I'm about to reorder functions.  */
-static bool tac_nonseekable (int input_fd, const char *file);
-
-/* Print FILE in reverse, copying it to a temporary
-   file first if it is not seekable.
-   Return true if successful.  */
-
-static bool
-tac_file (const char *filename)
-{
-  bool ok;
-  off_t file_size;
-  int fd;
-
-  if (STREQ (filename, "-"))
-    {
-      have_read_stdin = true;
-      fd = STDIN_FILENO;
-      filename = _("standard input");
-    }
-  else
-    {
-      fd = open (filename, O_RDONLY);
-      if (fd < 0)
-	{
-	  error (0, errno, _("cannot open %s for reading"), quote (filename));
-	  return false;
-	}
-    }
-
-  /* We need binary I/O, since `tac' relies
-     on `lseek' and byte counts.
-
-     Binary output will leave the lines' ends (NL or
-     CR/LF) intact when the output is a disk file.
-     Writing a file with CR/LF pairs at end of lines in
-     text mode has no visible effect on console output,
-     since two CRs in a row are just like one CR.  */
-  SET_BINARY2 (fd, STDOUT_FILENO);
-
-  file_size = lseek (fd, (off_t) 0, SEEK_END);
-
-  ok = (0 <= file_size
-	? tac_seekable (fd, filename)
-	: tac_nonseekable (fd, filename));
-
-  if (fd != STDIN_FILENO && close (fd) == -1)
-    {
-      error (0, errno, _("closing %s"), quote (filename));
-      ok = false;
-    }
-  return ok;
-}
-
 #if DONT_UNLINK_WHILE_OPEN
 
 static const char *file_to_remove;
@@ -518,6 +464,57 @@ tac_nonseekable (int input_fd, const char *file)
   char *tmp_file;
   copy_to_temp (&tmp_stream, &tmp_file, input_fd, file);
   return tac_seekable (fileno (tmp_stream), tmp_file);
+}
+
+/* Print FILE in reverse, copying it to a temporary
+   file first if it is not seekable.
+   Return true if successful.  */
+
+static bool
+tac_file (const char *filename)
+{
+  bool ok;
+  off_t file_size;
+  int fd;
+
+  if (STREQ (filename, "-"))
+    {
+      have_read_stdin = true;
+      fd = STDIN_FILENO;
+      filename = _("standard input");
+    }
+  else
+    {
+      fd = open (filename, O_RDONLY);
+      if (fd < 0)
+	{
+	  error (0, errno, _("cannot open %s for reading"), quote (filename));
+	  return false;
+	}
+    }
+
+  /* We need binary I/O, since `tac' relies
+     on `lseek' and byte counts.
+
+     Binary output will leave the lines' ends (NL or
+     CR/LF) intact when the output is a disk file.
+     Writing a file with CR/LF pairs at end of lines in
+     text mode has no visible effect on console output,
+     since two CRs in a row are just like one CR.  */
+  SET_BINARY2 (fd, STDOUT_FILENO);
+
+  file_size = lseek (fd, (off_t) 0, SEEK_END);
+
+  ok = (0 <= file_size
+	? tac_seekable (fd, filename)
+	: tac_nonseekable (fd, filename));
+
+  if (fd != STDIN_FILENO && close (fd) == -1)
+    {
+      error (0, errno, _("closing %s"), quote (filename));
+      ok = false;
+    }
+  return ok;
 }
 
 #if 0
