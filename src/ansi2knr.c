@@ -140,14 +140,14 @@ program under the GPL.
  * Compensate for this here.
  */
 #ifdef isascii
-# undef HAVE_ISASCII		/* just in case */
-# define HAVE_ISASCII 1
+#  undef HAVE_ISASCII		/* just in case */
+#  define HAVE_ISASCII 1
 #else
 #endif
 #if STDC_HEADERS || !HAVE_ISASCII
-# define is_ascii(c) 1
+#  define is_ascii(c) 1
 #else
-# define is_ascii(c) isascii(c)
+#  define is_ascii(c) isascii(c)
 #endif
 
 #define is_space(c) (is_ascii(c) && isspace(c))
@@ -195,26 +195,30 @@ main(argc, argv)
 			exit(1);
 		  }
 	  }
-	switch ( argc )
+	if (argc < 2 || argc > 3)
 	   {
-	default:
 		printf("Usage: ansi2knr input_file [output_file]\n");
-		exit(0);
-	case 2:
-		out = stdout;
-		break;
-	case 3:
-		out = fopen(argv[2], "w");
-		if ( out == NULL )
-		   {	fprintf(stderr, "Cannot open output file %s\n", argv[2]);
 			exit(1);
 		   }
-	   }
 	in = fopen(argv[1], "r");
 	if ( in == NULL )
-	   {	fprintf(stderr, "Cannot open input file %s\n", argv[1]);
+	  {
+	    fprintf(stderr, "Cannot open input file %s\n", argv[1]);
 		exit(1);
 	   }
+ 	if (argc == 3)
+ 	  {
+ 	    out = fopen(argv[2], "w");
+ 	    if ( out == NULL )
+ 	      {
+ 		fprintf(stderr, "Cannot open output file %s\n", argv[2]);
+ 		exit(1);
+ 	      }
+ 	  }
+ 	else
+ 	  {
+ 	    out = stdout;
+ 	  }
 	fprintf(out, "#line 1 \"%s\"\n", argv[1]);
 	buf = malloc(bufsize);
 	line = buf;
