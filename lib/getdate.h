@@ -18,14 +18,6 @@
 # include <config.h>
 #endif
 
-#ifndef PARAMS
-# if defined PROTOTYPES || (defined __STDC__ && __STDC__)
-#  define PARAMS(Args) Args
-# else
-#  define PARAMS(Args) ()
-# endif
-#endif
-
 #ifdef vms
 # include <types.h>
 # include <time.h>
@@ -43,4 +35,4 @@
 # endif
 #endif /* defined (vms) */
 
-time_t get_date PARAMS ((const char *p, const time_t *now));
+time_t get_date (const char *p, const time_t *now);

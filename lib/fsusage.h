@@ -31,15 +31,6 @@ struct fs_usage
   uintmax_t fsu_ffree;		/* Free file nodes. */
 };
 
-# ifndef PARAMS
-#  if defined PROTOTYPES || (defined __STDC__ && __STDC__)
-#   define PARAMS(Args) Args
-#  else
-#   define PARAMS(Args) ()
-#  endif
-# endif
-
-int get_fs_usage PARAMS ((const char *path, const char *disk,
-			  struct fs_usage *fsp));
+int get_fs_usage (const char *path, const char *disk, struct fs_usage *fsp);
 
 #endif
