@@ -1,4 +1,4 @@
-#serial 7
+#serial 8
 
 dnl These are the prerequisite macros for files in the lib/
 dnl directories of the fileutils, sh-utils, and textutils packages.
@@ -79,10 +79,10 @@ $ac_includes_default
 # include <utmp.h>
 #endif
 "
-  AC_CHECK_MEMBERS((struct utmpx.ut_user),,,[$utmp_includes])
-  AC_CHECK_MEMBERS((struct utmp.ut_user),,,[$utmp_includes])
-  AC_CHECK_MEMBERS((struct utmpx.ut_name),,,[$utmp_includes])
-  AC_CHECK_MEMBERS((struct utmp.ut_name),,,[$utmp_includes])
+  AC_CHECK_MEMBERS([struct utmpx.ut_user],,,[$utmp_includes])
+  AC_CHECK_MEMBERS([struct utmp.ut_user],,,[$utmp_includes])
+  AC_CHECK_MEMBERS([struct utmpx.ut_name],,,[$utmp_includes])
+  AC_CHECK_MEMBERS([struct utmp.ut_name],,,[$utmp_includes])
 ])
 
 AC_DEFUN(jm_PREREQ_REGEX,
