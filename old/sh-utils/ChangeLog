@@ -1,3 +1,9 @@
+2001-03-18  Jim Meyering  <meyering@lucent.com>
+
+	* tests/Fetish.pm: If the $DJDIR envvar is defined, set SHELL
+	to $DJDIR/bin/bash.exe.  Patch from Richard Dawe, based on a
+	suggestion from Eli Zaretskii.
+
 2001-03-10  Jim Meyering  <meyering@lucent.com>
 
 	* doc/sh-utils.texi (date invocation): Correct the description of how

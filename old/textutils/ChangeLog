@@ -2,6 +2,10 @@
 
 	* Version 2.0.13.
 
+	* tests/Fetish.pm: If the $DJDIR envvar is defined, set SHELL
+	to $DJDIR/bin/bash.exe.  Patch from Richard Dawe, based on a
+	suggestion from Eli Zaretskii.
+
 2001-03-17  Paul Eggert  <eggert@twinsun.com>
 
 	* src/sort.c, src/tail.c, src/uniq.c (usage):
