@@ -1,5 +1,5 @@
 /* GNU's read utmp module.
-   Copyright (C) 1992-2001, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1992-2001, 2003, 2004, 2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -26,6 +26,8 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <signal.h>
+#include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
 
@@ -33,6 +35,10 @@
 
 #if USE_UNLOCKED_IO
 # include "unlocked-io.h"
+#endif
+
+#ifndef SIZE_MAX
+# define SIZE_MAX ((size_t) -1)
 #endif
 
 /* Copy UT->ut_name into storage obtained from malloc.  Then remove any
@@ -56,19 +62,32 @@ extract_trimmed_name (const STRUCT_UTMP *ut)
   return trimmed_name;
 }
 
+/* Is the utmp entry U desired by the user who asked for OPTIONS?  */
+
+static inline bool
+desirable_utmp_entry (STRUCT_UTMP const *u, int options)
+{
+  return ! (options & READ_UTMP_CHECK_PIDS
+	    && (UT_PID (u) <= 0
+		|| (kill (UT_PID (u), 0) < 0 && errno == ESRCH)));
+}
+
 /* Read the utmp entries corresponding to file FILENAME into freshly-
    malloc'd storage, set *UTMP_BUF to that pointer, set *N_ENTRIES to
    the number of entries, and return zero.  If there is any error,
-   return -1, setting errno, and don't modify the parameters.  */
+   return -1, setting errno, and don't modify the parameters.
+   If OPTIONS & READ_UTMP_CHECK_PIDS is nonzero, omit entries whose
+   process-IDs do not currently exist.  */
 
 #ifdef UTMP_NAME_FUNCTION
 
 int
-read_utmp (const char *filename, size_t *n_entries, STRUCT_UTMP **utmp_buf)
+read_utmp (const char *filename, size_t *n_entries, STRUCT_UTMP **utmp_buf,
+	   int options)
 {
-  size_t n_read;
-  size_t n_alloc = 4;
-  STRUCT_UTMP *utmp = xmalloc (n_alloc * sizeof *utmp);
+  size_t n_read = 0;
+  size_t n_alloc = 0;
+  STRUCT_UTMP *utmp = NULL;
   STRUCT_UTMP *u;
 
   /* Ignore the return value for now.
@@ -79,17 +98,14 @@ read_utmp (const char *filename, size_t *n_entries, STRUCT_UTMP **utmp_buf)
 
   SET_UTMP_ENT ();
 
-  n_read = 0;
   while ((u = GET_UTMP_ENT ()) != NULL)
-    {
-      if (n_read == n_alloc)
-	{
-	  utmp = xnrealloc (utmp, n_alloc, 2 * sizeof *utmp);
-	  n_alloc *= 2;
-	}
-      ++n_read;
-      utmp[n_read - 1] = *u;
-    }
+    if (desirable_utmp_entry (u, options))
+      {
+	if (n_read == n_alloc)
+	  utmp = x2nrealloc (utmp, &n_alloc, sizeof *utmp);
+
+	utmp[n_read++] = *u;
+      }
 
   END_UTMP_ENT ();
 
@@ -108,6 +124,8 @@ read_utmp (const char *filename, size_t *n_entries, STRUCT_UTMP **utmp_buf)
   struct stat file_stats;
   size_t n_read;
   size_t size;
+  size_t i;
+  size_t n_desired;
   STRUCT_UTMP *buf;
 
   utmp = fopen (filename, "r");
@@ -121,6 +139,8 @@ read_utmp (const char *filename, size_t *n_entries, STRUCT_UTMP **utmp_buf)
       errno = e;
       return -1;
     }
+  if (! (0 <= file_stats.st_size && file_stats.st_size <= SIZE_MAX))
+    xalloc_die ();
   size = file_stats.st_size;
   buf = xmalloc (size);
   n_read = fread (buf, sizeof *buf, size / sizeof *buf, utmp);
@@ -140,7 +160,12 @@ read_utmp (const char *filename, size_t *n_entries, STRUCT_UTMP **utmp_buf)
       return -1;
     }
 
-  *n_entries = n_read;
+  n_desired = 0;
+  for (i = 0; i < n_read; i++)
+    if (desirable_utmp_entry (&utmp[i], options))
+      utmp[n_desired++] = utmp[i];
+
+  *n_entries = n_desired;
   *utmp_buf = buf;
 
   return 0;
