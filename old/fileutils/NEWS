@@ -1,5 +1,7 @@
 Changes in release 3.14:
  [3.13j]
+* touch --date=DATE accepts dates like those in an RCS log listing, e.g.,
+  `11/01/1992 05:44:34'.
 * install SRC DST no longer rejects non-regular, non-directory SRC
 * df accepts -F as a synonym for -t for compatibility with Solaris
 * cp -i /dev/null existing-file now prompts before overwriting the target
