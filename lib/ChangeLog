@@ -1,3 +1,7 @@
+2003-11-21  Jim Meyering  <jim@meyering.net>
+
+	* xreadlink.c (xreadlink): Correct outdated comment.
+
 2003-11-17  Jim Meyering  <jim@meyering.net>
 
 	On systems without utime and without a utimes function capable of
