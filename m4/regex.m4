@@ -1,7 +1,12 @@
-#serial 15
+#serial 17
 
 dnl Initially derived from code in GNU grep.
 dnl Mostly written by Jim Meyering.
+
+AC_DEFUN([gl_REGEX],
+[
+  jm_INCLUDED_REGEX([lib/regex.c])
+])
 
 dnl Usage: jm_INCLUDED_REGEX([lib/regex.c])
 dnl
@@ -47,7 +52,7 @@ AC_DEFUN([jm_INCLUDED_REGEX],
 	    /* The following example is derived from a problem report
                against gawk from Jorge Stolfi <stolfi@ic.unicamp.br>.  */
 	    memset (&regex, 0, sizeof (regex));
-	    s = re_compile_pattern ("[[anù]]*n", 7, &regex);
+	    s = re_compile_pattern ("[[an\371]]*n", 7, &regex);
 	    if (s)
 	      exit (1);
 
@@ -105,7 +110,7 @@ AC_DEFUN([jm_PREREQ_REGEX],
   dnl Persuade glibc <string.h> to declare mempcpy().
   AC_REQUIRE([AC_GNU_SOURCE])
 
-  AC_REQUIRE([ACX_C_RESTRICT])
+  AC_REQUIRE([gl_C_RESTRICT])
   AC_REQUIRE([AC_FUNC_ALLOCA])
   AC_REQUIRE([AC_HEADER_STDC])
   AC_CHECK_HEADERS_ONCE(limits.h string.h wchar.h wctype.h)
