@@ -1,6 +1,11 @@
-2004-09-23  Paul Eggert  <eggert@cs.ucla.edu>
+2004-09-24  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	* src/csplit.c (xalloc_die): Declare to be `extern', not `static'
+	to avoid a warning from gcc-3.4.1.  Reported by Paul Eggert.
+
+2004-09-23  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Makefile.maint (CVS_LIST): New macro.
 	(sc_space_tab, sc_prohibit_atoi_atof, sc_file_system,
