@@ -86,7 +86,7 @@ static char **args;
 /* The name this program was run with. */
 char *program_name;
 
-static VALUE *eval (void);
+static VALUE *eval (bool);
 static bool nomoreargs (void);
 static bool null (VALUE *v);
 static void printv (VALUE *v);
@@ -202,7 +202,7 @@ main (int argc, char **argv)
 
   args = argv + 1;
 
-  v = eval ();
+  v = eval (true);
   if (!nomoreargs ())
     syntax_error ();
   printv (v);
@@ -279,7 +279,22 @@ null (VALUE *v)
     case integer:
       return v->u.i == 0;
     case string:
-      return v->u.s[0] == '\0' || strcmp (v->u.s, "0") == 0;
+      {
+	char const *cp = v->u.s;
+	if (*cp == '\0')
+	  return true;
+
+	cp += (*cp == '-');
+
+	do
+	  {
+	    if (*cp != '0')
+	      return false;
+	  }
+	while (*++cp);
+
+	return true;
+      }
     default:
       abort ();
     }
@@ -448,7 +463,7 @@ of the basic regular expression is not portable; it is being ignored"),
 /* Handle bare operands and ( expr ) syntax.  */
 
 static VALUE *
-eval7 (void)
+eval7 (bool evaluate)
 {
   VALUE *v;
 
@@ -460,7 +475,7 @@ eval7 (void)
 
   if (nextarg ("("))
     {
-      v = eval ();
+      v = eval (evaluate);
       if (!nextarg (")"))
 	syntax_error ();
       return v;
@@ -475,7 +490,7 @@ eval7 (void)
 /* Handle match, substr, index, and length keywords, and quoting "+".  */
 
 static VALUE *
-eval6 (void)
+eval6 (bool evaluate)
 {
   VALUE *l;
   VALUE *r;
@@ -494,7 +509,7 @@ eval6 (void)
     }
   else if (nextarg ("length"))
     {
-      r = eval6 ();
+      r = eval6 (evaluate);
       tostring (r);
       v = int_value (strlen (r->u.s));
       freev (r);
@@ -502,17 +517,22 @@ eval6 (void)
     }
   else if (nextarg ("match"))
     {
-      l = eval6 ();
-      r = eval6 ();
-      v = docolon (l, r);
-      freev (l);
+      l = eval6 (evaluate);
+      r = eval6 (evaluate);
+      if (evaluate)
+	{
+	  v = docolon (l, r);
+	  freev (l);
+	}
+      else
+	v = l;
       freev (r);
       return v;
     }
   else if (nextarg ("index"))
     {
-      l = eval6 ();
-      r = eval6 ();
+      l = eval6 (evaluate);
+      r = eval6 (evaluate);
       tostring (l);
       tostring (r);
       v = int_value (strcspn (l->u.s, r->u.s) + 1);
@@ -524,9 +544,9 @@ eval6 (void)
     }
   else if (nextarg ("substr"))
     {
-      l = eval6 ();
-      i1 = eval6 ();
-      i2 = eval6 ();
+      l = eval6 (evaluate);
+      i1 = eval6 (evaluate);
+      i2 = eval6 (evaluate);
       tostring (l);
       if (!toarith (i1) || !toarith (i2)
 	  || strlen (l->u.s) < i1->u.i
@@ -546,14 +566,14 @@ eval6 (void)
       return v;
     }
   else
-    return eval7 ();
+    return eval7 (evaluate);
 }
 
 /* Handle : operator (pattern matching).
    Calls docolon to do the real work.  */
 
 static VALUE *
-eval5 (void)
+eval5 (bool evaluate)
 {
   VALUE *l;
   VALUE *r;
@@ -562,16 +582,19 @@ eval5 (void)
 #ifdef EVAL_TRACE
   trace ("eval5");
 #endif
-  l = eval6 ();
+  l = eval6 (evaluate);
   while (1)
     {
       if (nextarg (":"))
 	{
-	  r = eval6 ();
-	  v = docolon (l, r);
-	  freev (l);
+	  r = eval6 (evaluate);
+	  if (evaluate)
+	    {
+	      v = docolon (l, r);
+	      freev (l);
+	      l = v;
+	    }
 	  freev (r);
-	  l = v;
 	}
       else
 	return l;
@@ -581,17 +604,17 @@ eval5 (void)
 /* Handle *, /, % operators.  */
 
 static VALUE *
-eval4 (void)
+eval4 (bool evaluate)
 {
   VALUE *l;
   VALUE *r;
   enum { multiply, divide, mod } fxn;
-  intmax_t val;
+  intmax_t val = 0;
 
 #ifdef EVAL_TRACE
   trace ("eval4");
 #endif
-  l = eval5 ();
+  l = eval5 (evaluate);
   while (1)
     {
       if (nextarg ("*"))
@@ -602,16 +625,19 @@ eval4 (void)
 	fxn = mod;
       else
 	return l;
-      r = eval5 ();
-      if (!toarith (l) || !toarith (r))
-	error (EXPR_FAILURE, 0, _("non-numeric argument"));
-      if (fxn == multiply)
-	val = l->u.i * r->u.i;
-      else
+      r = eval5 (evaluate);
+      if (evaluate)
 	{
-	  if (r->u.i == 0)
-	    error (EXPR_FAILURE, 0, _("division by zero"));
-	  val = fxn == divide ? l->u.i / r->u.i : l->u.i % r->u.i;
+	  if (!toarith (l) || !toarith (r))
+	    error (EXPR_FAILURE, 0, _("non-numeric argument"));
+	  if (fxn == multiply)
+	    val = l->u.i * r->u.i;
+	  else
+	    {
+	      if (r->u.i == 0)
+		error (EXPR_FAILURE, 0, _("division by zero"));
+	      val = fxn == divide ? l->u.i / r->u.i : l->u.i % r->u.i;
+	    }
 	}
       freev (l);
       freev (r);
@@ -622,17 +648,17 @@ eval4 (void)
 /* Handle +, - operators.  */
 
 static VALUE *
-eval3 (void)
+eval3 (bool evaluate)
 {
   VALUE *l;
   VALUE *r;
   enum { plus, minus } fxn;
-  intmax_t val;
+  intmax_t val = 0;
 
 #ifdef EVAL_TRACE
   trace ("eval3");
 #endif
-  l = eval4 ();
+  l = eval4 (evaluate);
   while (1)
     {
       if (nextarg ("+"))
@@ -641,10 +667,13 @@ eval3 (void)
 	fxn = minus;
       else
 	return l;
-      r = eval4 ();
-      if (!toarith (l) || !toarith (r))
-	error (EXPR_FAILURE, 0, _("non-numeric argument"));
-      val = fxn == plus ? l->u.i + r->u.i : l->u.i - r->u.i;
+      r = eval4 (evaluate);
+      if (evaluate)
+	{
+	  if (!toarith (l) || !toarith (r))
+	    error (EXPR_FAILURE, 0, _("non-numeric argument"));
+	  val = fxn == plus ? l->u.i + r->u.i : l->u.i - r->u.i;
+	}
       freev (l);
       freev (r);
       l = int_value (val);
@@ -654,7 +683,7 @@ eval3 (void)
 /* Handle comparisons.  */
 
 static VALUE *
-eval2 (void)
+eval2 (bool evaluate)
 {
   VALUE *l;
   VALUE *r;
@@ -671,7 +700,7 @@ eval2 (void)
 #ifdef EVAL_TRACE
   trace ("eval2");
 #endif
-  l = eval3 ();
+  l = eval3 (evaluate);
   while (1)
     {
       if (nextarg ("<"))
@@ -688,7 +717,7 @@ eval2 (void)
 	fxn = greater_than;
       else
 	return l;
-      r = eval3 ();
+      r = eval3 (evaluate);
       tostring (l);
       tostring (r);
 
@@ -706,7 +735,7 @@ eval2 (void)
 	  lval = l->u.i;
 	  rval = r->u.i;
 	}
-      else if (collation_errno)
+      else if (collation_errno && evaluate)
 	{
 	  error (0, collation_errno, _("string comparison failed"));
 	  error (0, 0, _("Set LC_ALL='C' to work around the problem."));
@@ -736,7 +765,7 @@ eval2 (void)
 /* Handle &.  */
 
 static VALUE *
-eval1 (void)
+eval1 (bool evaluate)
 {
   VALUE *l;
   VALUE *r;
@@ -744,12 +773,12 @@ eval1 (void)
 #ifdef EVAL_TRACE
   trace ("eval1");
 #endif
-  l = eval2 ();
+  l = eval2 (evaluate);
   while (1)
     {
       if (nextarg ("&"))
 	{
-	  r = eval2 ();
+	  r = eval2 (evaluate & ~ null (l));
 	  if (null (l) || null (r))
 	    {
 	      freev (l);
@@ -767,7 +796,7 @@ eval1 (void)
 /* Handle |.  */
 
 static VALUE *
-eval (void)
+eval (bool evaluate)
 {
   VALUE *l;
   VALUE *r;
@@ -775,16 +804,21 @@ eval (void)
 #ifdef EVAL_TRACE
   trace ("eval");
 #endif
-  l = eval1 ();
+  l = eval1 (evaluate);
   while (1)
     {
       if (nextarg ("|"))
 	{
-	  r = eval1 ();
+	  r = eval1 (evaluate & null (l));
 	  if (null (l))
 	    {
 	      freev (l);
 	      l = r;
+	      if (null (l))
+		{
+		  freev (l);
+		  l = int_value (0);
+		}
 	    }
 	  else
 	    freev (r);
