@@ -402,7 +402,7 @@ hash_string (const char *string, unsigned n_buckets)
 /* Return true if CANDIDATE is a prime number.  CANDIDATE should be an odd
    number at least equal to 11.  */
 
-static int
+static bool
 is_prime (unsigned long candidate)
 {
   unsigned long divisor = 3;
