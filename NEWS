@@ -81,5 +81,222 @@
 * du and ls now report sizes of symbolic links (before they'd always report 0)
 * uniq now obeys the LC_COLLATE locale, as per POSIX 1003.1-2001 TC1.
 
+========================================================================
+Here are the NEWS entries made from fileutils-4.1 until the
+point at which the packages merged to form the coreutils:
+
+[4.1.11]
+* `rm symlink-to-unwritable' doesn't prompt [introduced in 4.1.10]
+[4.1.10]
+* rm once again gives a reasonable diagnostic when failing to remove a file
+    owned by someone else in a sticky directory [introduced in 4.1.9]
+* df now rounds all quantities up, as per POSIX.
+* New ls time style: long-iso, which generates YYYY-MM-DD HH:MM.
+* Any time style can be preceded by "posix-"; this causes "ls" to
+  use traditional timestamp format when in the POSIX locale.
+* The default time style is now posix-long-iso instead of posix-iso.
+  Set TIME_STYLE="posix-iso" to revert to the behavior of 4.1.1 thru 4.1.9.
+* `rm dangling-symlink' doesn't prompt [introduced in 4.1.9]
+* stat: remove support for --secure/-s option and related %S and %C format specs
+* stat: rename --link/-l to --dereference/-L.
+    The old options will continue to work for a while.
+[4.1.9]
+* rm can now remove very deep hierarchies, in spite of any limit on stack size
+* new programs: link, unlink, and stat
+* New ls option: --author (for the Hurd).
+* `touch -c no-such-file' no longer fails, per POSIX
+[4.1.8]
+* mv no longer mistakenly creates links to preexisting destination files
+    that aren't moved
+[4.1.7]
+* rm: close a hole that would allow a running rm process to be subverted
+[4.1.6]
+* New cp option: --copy-contents.
+* cp -r is now equivalent to cp -R.  Use cp -R -L --copy-contents to get the
+  traditional (and rarely desirable) cp -r behavior.
+* ls now accepts --time-style=+FORMAT, where +FORMAT works like date's format
+* The obsolete usage `touch [-acm] MMDDhhmm[YY] FILE...' is no longer
+  supported on systems conforming to POSIX 1003.1-2001.  Use touch -t instead.
+* cp and inter-partition mv no longer give a misleading diagnostic in some
+    unusual cases
+[4.1.5]
+* cp -r no longer preserves symlinks
+* The block size notation is now compatible with SI and with IEC 60027-2.
+  For example, --block-size=1MB now means --block-size=1000000,
+  whereas --block-size=1MiB now means --block-size=1048576.
+  A missing `B' (e.g. `1M') has the same meaning as before.
+  A trailing `B' now means decimal, not binary; this is a silent change.
+  The nonstandard `D' suffix (e.g. `1MD') is now obsolescent.
+* -H or --si now outputs the trailing 'B', for consistency with the above.
+* Programs now output trailing 'K' (not 'k') to mean 1024, as per IEC 60027-2.
+* New df, du short option -B is short for --block-size.
+* You can omit an integer `1' before a block size suffix,
+  e.g. `df -BG' is equivalent to `df -B 1G' and to `df --block-size=1G'.
+* The following options are now obsolescent, as their names are
+  incompatible with IEC 60027-2:
+   df, du: -m or --megabytes (use -BM or --block-size=1M)
+   df, du, ls: --kilobytes (use --block-size=1K)
+[4.1.4]
+* df --local no longer lists smbfs file systems whose name starts with //
+* dd now detects the Linux/tape/lseek bug at run time and warns about it.
+[4.1.3]
+* ls -R once again outputs a blank line between per-directory groups of files.
+    This was broken by the cycle-detection change in 4.1.1.
+* dd once again uses `lseek' on character devices like /dev/mem and /dev/kmem.
+    On systems with the linux kernel (at least up to 2.4.16), dd must still
+    resort to emulating `skip=N' behavior using reads on tape devices, because
+    lseek has no effect, yet appears to succeed.  This may be a kernel bug.
+[4.1.2]
+* cp no longer fails when two or more source files are the same;
+    now it just gives a warning and doesn't copy the file the second time.
+    E.g., cp a a d/ produces this:
+    cp: warning: source file `a' specified more than once
+* chmod would set the wrong bit when given symbolic mode strings like
+    these: g=o, o=g, o=u.  E.g., `chmod a=,o=w,ug=o f' would give a mode
+    of --w-r---w- rather than --w--w--w-.
+[4.1.1]
+* mv (likewise for cp), now fails rather than silently clobbering one of
+    the source files in the following example:
+    rm -rf a b c; mkdir a b c; touch a/f b/f; mv a/f b/f c
+* ls -R detects directory cycles, per POSIX.  It warns and doesn't infloop.
+* cp's -P option now means the same as --no-dereference, per POSIX.
+    Use --parents to get the old meaning.
+* When copying with the -H and -L options, cp can preserve logical
+    links between source files with --preserve=links
+* cp accepts new options:
+    --preserve[={mode,ownership,timestamps,links,all}]
+    --no-preserve={mode,ownership,timestamps,links,all}
+* cp's -p and --preserve options remain unchanged and are equivalent
+    to `--preserve=mode,ownership,timestamps'
+* mv and cp accept a new option: --reply={yes,no,query};  provides a consistent
+    mechanism to control whether one is prompted about certain existing
+    destination files.  Note that cp's and mv's -f options don't have the
+    same meaning: cp's -f option no longer merely turns off `-i'.
+* remove portability limitations (e.g., PATH_MAX on the Hurd, fixes for
+    64-bit systems)
+* mv now prompts before overwriting an existing, unwritable destination file
+    when stdin is a tty, unless --force (-f) is specified, as per POSIX.
+* mv: fix the bug whereby `mv -uf source dest' would delete source,
+    even though it's older than dest.
+* chown's --from=CURRENT_OWNER:CURRENT_GROUP option now works
+* cp now ensures that the set-user-ID and set-group-ID bits are cleared for
+    the destination file when when copying and not preserving permissions.
+* `ln -f --backup k k' gives a clearer diagnostic
+* ls no longer truncates user names or group names that are longer
+    than 8 characters.
+* ls's new --dereference-command-line option causes it to dereference
+  symbolic links on the command-line only.  It is the default unless
+  one of the -d, -F, or -l options are given.
+* ls -H now means the same as ls --dereference-command-line, as per POSIX.
+* ls -g now acts like ls -l, except it does not display owner, as per POSIX.
+* ls -n now implies -l, as per POSIX.
+* ls can now display dates and times in one of four time styles:
+
+  - The `full-iso' time style gives full ISO-style time stamps like
+    `2001-05-14 23:45:56.477817180 -0700'.
+  - The 'iso' time style gives ISO-style time stamps like '2001-05-14 '
+    and '05-14 23:45'.
+  - The 'locale' time style gives locale-dependent time stamps like
+    'touko  14  2001' and 'touko  14 23:45' (in a Finnish locale).
+  - The 'posix-iso' time style gives traditional POSIX-locale
+    time stamps like 'May 14  2001' and 'May 14 23:45' unless the user
+    specifies a non-POSIX locale, in which case it uses ISO-style dates.
+    This is the default.
+
+  You can specify a time style with an option like --time-style='iso'
+  or with an environment variable like TIME_STYLE='iso'.  GNU Emacs 21
+  and later can parse ISO dates, but older Emacs versions cannot, so
+  if you are using an older version of Emacs outside the default POSIX
+  locale, you may need to set TIME_STYLE="locale".
+
+* --full-time is now an alias for "-l --time-style=full-iso".
+
+
+========================================================================
+Here are the NEWS entries made from sh-utils-2.0 until the
+point at which the packages merged to form the coreutils:
+
+ [2.0.15]
+* date no longer accepts e.g., September 31 in the MMDDhhmm syntax
+* fix a bug in this package's .m4 files and in configure.ac
+ [2.0.14]
+* nohup's behavior is changed as follows, to conform to POSIX 1003.1-2001:
+  - nohup no longer adjusts scheduling priority; use "nice" for that.
+  - nohup now redirects stderr to stdout, if stderr is not a terminal.
+  - nohup exit status is now 126 if command was found but not invoked,
+    127 if nohup failed or if command was not found.
+ [2.0.13]
+* uname and uptime work better on *BSD systems
+* pathchk now exits nonzero for a path with a directory component
+    that specifies a non-directory
+ [2.0.12]
+* kill: new program
+* who accepts new options: --all (-a), --boot (-b), --dead (-d), --login,
+   --process (-p), --runlevel (-r), --short (-s), --time (-t), --users (-u).
+   The -u option now produces POSIX-specified results and is the same as
+   the long option `--users'.  --idle is no longer the same as -u.
+* The following changes apply on systems conforming to POSIX 1003.1-2001,
+  and are required by the new POSIX standard:
+   - `date -I' is no longer supported.  Instead, use `date --iso-8601'.
+   - `nice -NUM' is no longer supported.  Instead, use `nice -n NUM'.
+* New 'uname' options -i or --hardware-platform, and -o or --operating-system.
+   'uname -a' now outputs -i and -o information at the end.
+   New uname option --kernel-version is an alias for -v.
+   Uname option --release has been renamed to --kernel-release,
+   and --sysname has been renamed to --kernel-name;
+   the old options will work for a while, but are no longer documented.
+* 'expr' now uses the LC_COLLATE locale for string comparison, as per POSIX.
+* 'expr' now requires '+' rather than 'quote' to quote tokens;
+    this removes an incompatibility with POSIX.
+* date -d 'last friday' would print a date/time that was one hour off
+    (e.g., 23:00 on *thursday* rather than 00:00 of the preceding friday)
+    when run such that the current time and the target date/time fall on
+    opposite sides of a daylight savings time transition.
+    This problem arose only with relative date strings like `last monday'.
+    It was not a problem with strings that include absolute dates.
+* factor is twice as fast, for large numbers
+ [2.0.11]
+* setting the date now works properly, even when using -u
+* `date -f - < /dev/null' no longer dumps core
+* some DOS/Windows portability changes
+ [2.0j]
+* `date -d DATE' now parses certain relative DATEs correctly
+ [2.0i]
+* fixed a bug introduced in 2.0h that made many programs fail with a
+ `write error' when invoked with the --version option
+ [2.0h]
+* all programs fail when printing --help or --version output to a full device
+* printf exits nonzero upon write failure
+* yes now detects and terminates upon write failure
+* date --rfc-822 now always emits day and month names from the `C' locale
+* portability tweaks for Solaris8, Ultrix, and DOS
+ [2.0g]
+* date now handles two-digit years with leading zeros correctly.
+* printf interprets unicode, \uNNNN \UNNNNNNNN, on systems with the
+  required support;  from Bruno Haible.
+* stty's rprnt attribute now works on HPUX 10.20
+* seq's --equal-width option works more portably
+ [2.0f]
+* fix build problems with ut_name vs. ut_user
+ [2.0e]
+* stty: fix long-standing bug that caused test failures on at least HPUX
+  systems when COLUMNS was set to zero
+* still more portability fixes
+* unified lib/: now that directory and most of the configuration framework
+  is common between fileutils, textutils, and sh-utils
+ [2.0d]
+* fix portability problem with sleep vs lib/strtod.c's requirement for -lm
+ [2.0c]
+* fix portability problems with nanosleep.c and with the new code in sleep.c
+ [2.0b]
+* Regenerate lib/Makefile.in so that nanosleep.c is distributed.
+ [2.0a]
+* sleep accepts floating point arguments on command line
+* sleep's clock continues counting down when sleep is suspended
+* when a suspended sleep process is resumed, it continues sleeping if
+  there is any time remaining
+* who once again prints whatever host information it has, even without --lookup
+
+
   This package began as the union of the following:
   textutils-2.1, fileutils-4.1.11, sh-utils-2.0.15.

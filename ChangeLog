@@ -1,5 +1,11 @@
 2003-02-06  Jim Meyering  <jim@meyering.net>
 
+	* Version 4.5.7.
+
+	* NEWS: Add entries from old/*/NEWS
+	from fileutils-4.1 through 4.1.11 and
+	from sh-utils-2.0 through 2.0.15.  Suggestion from Karl Berry.
+
 	* Version 4.5.6.
 
 	* src/du.c (process_file): Don't return early for excluded files
