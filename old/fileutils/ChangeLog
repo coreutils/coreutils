@@ -1,6 +1,11 @@
-2002-03-08  Jim Meyering  <meyering@lucent.com>
+2002-03-09  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.7.
+
+	* Makefile.am (EXTRA_DIST): Remove config/config.rpath,
+	now that automake knows about it.
+
+2002-03-08  Jim Meyering  <meyering@lucent.com>
 
 	Don't allow a malicious user to trick another user's rm process into
 	removing unintended files.  In one scenario, if root is removing a
