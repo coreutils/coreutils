@@ -1705,6 +1705,13 @@ set_ordering (register const char *s, struct keyfield *key,
   return (char *) s;
 }
 
+static void
+key_init (struct keyfield *key)
+{
+  memset (key, 0, sizeof (*key));
+  key->eword = -1;
+}
+
 int
 main (int argc, char **argv)
 {
@@ -1775,11 +1782,7 @@ main (int argc, char **argv)
 	  if (key)
 	    insertkey (key);
 	  key = (struct keyfield *) xmalloc (sizeof (struct keyfield));
-	  key->eword = -1;
-	  key->ignore = NULL;
-	  key->translate = NULL;
-	  key->skipsblanks = key->skipeblanks = 0;
-	  key->numeric = key->general_numeric = key->month = key->reverse = 0;
+	  key_init (key);
 	  s = argv[i] + 1;
 	  if (! (digits[UCHAR (*s)] || (*s == '.' && digits[UCHAR (s[1])])))
 	    badfieldspec (argv[i]);
@@ -1852,11 +1855,7 @@ key specifiers,\nthe +POS specifier must come first"));
 		      insertkey (key);
 		    key = (struct keyfield *)
 		      xmalloc (sizeof (struct keyfield));
-		    key->eword = -1;
-		    key->ignore = NULL;
-		    key->translate = NULL;
-		    key->skipsblanks = key->skipeblanks = 0;
-		    key->numeric = key->month = key->reverse = 0;
+		    key_init (key);
 		    /* Get POS1. */
 		    if (!digits[UCHAR (*s)])
 		      badfieldspec (argv[i]);
