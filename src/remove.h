@@ -1,7 +1,7 @@
 
 struct rm_options
 {
-  /* If nonzero, ignore nonexistant files.  */
+  /* If nonzero, ignore nonexistent files.  */
   int ignore_missing_files;
 
   /* If nonzero, query the user about whether to remove each file.  */
