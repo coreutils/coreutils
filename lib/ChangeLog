@@ -1,5 +1,13 @@
 2004-11-25  Paul Eggert  <eggert@cs.ucla.edu>
 
+	Fix problems reported by Scott S. Tinsley for HP-UX 11.11 using
+	HP's ANSI C compiler.
+	* fsusage.c (statvfs) [HAVE_SYS_STATVFS_H]: Remove decl.
+	Declaring int functions causes warnings on some modern systems and
+	shouldn't be needed to compile on ancient ones.
+	* same.c (MIN) [defined MIN]: Don't define, since it's already
+	defined.
+
 	* mempcpy.c, mempcpy.h: New files, taken from gnulib.
 	* Makefile.am: (libfetish_a_SOURCES): Add getcwd.h, mempcpy.h.
 	* getcwd.c: Replace by a copy of glibc/sysdeps/posix/getcwd.c, but
