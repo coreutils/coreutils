@@ -1,4 +1,4 @@
-#serial 73   -*- autoconf -*-
+#serial 74   -*- autoconf -*-
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
@@ -248,7 +248,6 @@ AC_DEFUN([gl_CHECK_ALL_TYPES],
   AC_REQUIRE([AC_TYPE_SIZE_T])
   AC_REQUIRE([AC_TYPE_UID_T])
   AC_CHECK_TYPE(ino_t, unsigned long int)
-  AC_CHECK_TYPE(uintptr_t, size_t)
 
   gt_TYPE_SSIZE_T
 
@@ -257,7 +256,9 @@ AC_DEFUN([gl_CHECK_ALL_TYPES],
   AC_CHECK_TYPE(major_t, unsigned int)
   AC_CHECK_TYPE(minor_t, unsigned int)
 
+  AC_REQUIRE([gl_AC_TYPE_UINT32_T])
   AC_REQUIRE([gl_AC_TYPE_UINTMAX_T])
+  AC_REQUIRE([gl_AC_TYPE_UINTPTR_T])
   AC_REQUIRE([gl_AC_TYPE_UNSIGNED_LONG_LONG])
 
   AC_REQUIRE([AC_HEADER_MAJOR])
