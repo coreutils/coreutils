@@ -31,8 +31,8 @@
 #include "error.h"
 #include "version.h"
 
-/* Most systems does not make a difference between internal and external
-   text representation.  */
+/* Most systems do not distinguish between external and internal
+   text representations.  */
 #if UNIX || __UNIX__ || unix || __unix__ || _POSIX_VERSION
 # define OPENOPTS "r"
 #else
@@ -86,6 +86,40 @@ static const struct option long_options[] =
 };
 
 char *xmalloc ();
+
+static void
+usage (status)
+     int status;
+{
+  if (status != 0)
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
+	     program_name);
+  else
+    printf (_("\
+Usage: %s [OPTION] [FILE]...\n\
+  or:  %s [OPTION] --string=STRING\n\
+  or:  %s [OPTION] --check [FILE]\n\
+Print or check MD5 checksums.\n\
+With no FILE, or when FILE is -, read standard input.\n\
+\n\
+  -h, --help              display this help and exit\n\
+  -q, --quiet             don't show anything, status code shows success\n\
+  -v, --verbose           verbose output level\n\
+  -V, --version           output version information and exit\n\
+\n\
+  -b, --binary            read files in binary mode (default)\n\
+  -t, --text              read files in text mode\n\
+\n\
+  -c, --check             check MD5 sums against given list\n\
+  -s, --string=STRING     compute checksum for STRING\n\
+\n\
+The sums are computed as described in RFC 1321.  When checking, the input\n\
+should be a former output of this program.  The default mode is to print\n\
+a line with checksum, type, and name for each FILE.\n"),
+	    program_name, program_name, program_name);
+
+  exit (status);
+}
 
 /* FIXME: but this won't work with filenames containing blanks.  */
 /* FIXME: This is provisory.  Use strtok.  */
@@ -286,8 +320,8 @@ main (argc, argv)
 	  else
 	    {
 	      /* OPENOPTS is a macro.  It varies with the system.
-		 Some system make a difference between external and
-		 internal text representation.  */
+		 Some systems distinguish between internal and
+		 external text representations.  */
 
 	      fp = fopen (argv[optind], OPENOPTS);
 	      if (fp == NULL)
@@ -434,38 +468,4 @@ main (argc, argv)
     error (1, errno, "write error");
 
   exit (0);
-}
-
-static void
-usage (status)
-     int status;
-{
-  if (status != 0)
-    fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
-  else
-    printf (_("\
-Usage: %s [OPTION] [FILE]...\n\
-  or:  %s [OPTION] --string=STRING\n\
-  or:  %s [OPTION] --check [FILE]\n\
-Print or check MD5 checksums.\n\
-With no FILE, or when FILE is -, read standard input.\n\
-\n\
-  -h, --help              display this help and exit\n\
-  -q, --quiet             don't show anything, status code shows success\n\
-  -v, --verbose           verbose output level\n\
-  -V, --version           output version information and exit\n\
-\n\
-  -b, --binary            read files in binary mode (default)\n\
-  -t, --text              read files in text mode\n\
-\n\
-  -c, --check             check MD5 sums against given list\n\
-  -s, --string=STRING     compute checksum for STRING\n\
-\n\
-The sums are computed as described in RFC 1321.  When checking, the input\n\
-should be a former output of this program.  The default mode is to print\n\
-a line with checksum, type, and name for each FILE.\n"),
-	    program_name, program_name, program_name);
-
-  exit (status);
 }
