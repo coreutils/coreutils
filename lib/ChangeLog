@@ -1,3 +1,11 @@
+2002-12-31  Jim Meyering  <meyering@lucent.com>
+
+	* dev-ino.h: New file.
+	* cycle-check.c: New file.
+	* cycle-check.h: New file.
+	* Makefile.am (libfetish_a_SOURCES): Add cycle-check.c, cycle-check.h,
+	and dev-ino.h.
+
 2002-12-21  Jim Meyering  <jim@meyering.net>
 
 	* stime.c: Remove file (for real, this time).
