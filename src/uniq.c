@@ -107,6 +107,12 @@ static enum delimit_method const delimit_method_map[] =
 /* Select whether/how to delimit groups of duplicate lines.  */
 static enum delimit_method delimit_groups;
 
+static char const shortopts[] = "-cdDf:is:uw:"
+#if POSIX2_VERSION < 200112
+"0123456789"
+#endif
+;
+
 static struct option const longopts[] =
 {
   {"count", no_argument, NULL, 'c'},
@@ -157,11 +163,11 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
      fputs (_("\
   -w, --check-chars=N   compare no more than N characters in lines\n\
-  -N                    same as -f N\n\
 "), stdout);
      if (POSIX2_VERSION < 200112)
        fputs (_("\
-  +N                    same as -s N (obsolete; will be withdrawn)\n\
+  -N                    (obsolete) same as -f N\n\
+  +N                    (obsolete) same as -s N\n\
 "), stdout);
      fputs (HELP_OPTION_DESCRIPTION, stdout);
      fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -393,7 +399,8 @@ int
 main (int argc, char **argv)
 {
   int optc = 0;
-  int posixly_correct = (getenv ("POSIXLY_CORRECT") != NULL);
+  bool posixly_correct = (getenv ("POSIXLY_CORRECT") != NULL);
+  bool obsolete_skip_fields = false;
   int nfiles = 0;
   char const *file[2];
 
@@ -414,15 +421,12 @@ main (int argc, char **argv)
 
   for (;;)
     {
-      /* Parse an operand with leading "+" as a file after "--" was
-         seen; or if pedantic and a file was seen.  POSIX 1003.1-200x
-         d7 removes support for such operands, so when it becomes
-         official the code will need to be changed.  */
+      /* If obsolete, parse an operand with leading "+" as a file
+         after "--" was seen; or if pedantic and a file was seen.  */
 
       if (optc == -1
 	  || (posixly_correct && nfiles != 0)
-	  || ((optc = getopt_long (argc, argv,
-				   "-0123456789cdDf:is:uw:", longopts, NULL))
+	  || ((optc = getopt_long (argc, argv, shortopts, longopts, NULL))
 	      == -1))
 	{
 	  if (optind == argc)
@@ -444,7 +448,7 @@ main (int argc, char **argv)
 		&& xstrtoul (optarg, NULL, 10, &size, "") == LONGINT_OK
 		&& size <= SIZE_MAX)
 	      {
-		if (! posixly_correct)
+		if (OBSOLETE_OPTION_WARNINGS && ! posixly_correct)
 		  error (0, 0,
 			 _("warning: `uniq %s' is obsolete; use `uniq -s %s' instead"),
 			 optarg, optarg + 1);
@@ -460,6 +464,7 @@ main (int argc, char **argv)
 	  }
 	  break;
 
+#if POSIX2_VERSION < 200112
 	case '0':
 	case '1':
 	case '2':
@@ -476,8 +481,10 @@ main (int argc, char **argv)
 	    if (SIZE_MAX / 10 < s || skip_fields < s)
 	      error (EXIT_FAILURE, 0, "%s",
 		     _("invalid number of fields to skip"));
+	    obsolete_skip_fields = true;
 	  }
 	  break;
+#endif
 
 	case 'c':
 	  countmode = count_occurrences;
@@ -528,6 +535,10 @@ main (int argc, char **argv)
 	  usage (1);
 	}
     }
+
+  if (OBSOLETE_OPTION_WARNINGS && obsolete_skip_fields)
+    error (0, 0, _("`uniq -%lu' is obsolete; use `uniq -f %lu'"),
+	   (unsigned long) skip_fields, (unsigned long) skip_fields);
 
   if (countmode == count_occurrences && mode == output_all_repeated)
     {
