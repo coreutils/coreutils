@@ -79,46 +79,43 @@ main (int argc, char **argv)
 	    error (1, 0, _("invalid option `%s'"), s);
 
 	  minusflag = 1;
-	  /* FIXME: use strtol */
+	  /* FIXME: use xstrtol */
 	  adjustment = atoi (&s[2]);
+	  adjustment_given = 1;
+	  ++optind;
+	}
+      else if (s[0] == '-' && ISDIGIT (s[1]))
+	{
+	  if (!isinteger (&s[1]))
+	    error (1, 0, _("invalid option `%s'"), s);
+	  /* FIXME: use xstrtol */
+	  adjustment = atoi (&s[1]);
 	  adjustment_given = 1;
 	  ++optind;
 	}
       else
 	{
-	  if (s[0] == '-' && ISDIGIT (s[1]))
+	  int optc;
+	  if ((optc = getopt_long (argc, argv, "+n:",
+				   longopts, (int *) 0)) != EOF)
 	    {
-	      if (!isinteger (&s[1]))
-		error (1, 0, _("invalid option `%s'"), s);
-	      /* FIXME: use strtol */
-	      adjustment = atoi (&s[1]);
-	      adjustment_given = 1;
-	      ++optind;
-	    }
-	  else
-	    {
-	      int optc;
-	      while ((optc = getopt_long (argc, argv, "+n:",
-					  longopts, (int *) 0)) != EOF)
+	      switch (optc)
 		{
-		  switch (optc)
-		    {
-		    case '?':
-		      usage (1);
+		case '?':
+		  usage (1);
 
-		    case 'n':
-		      if (!isinteger (optarg))
-			error (1, 0, _("invalid priority `%s'"), optarg);
-		      /* FIXME: use strtol */
-		      adjustment = atoi (optarg);
-		      adjustment_given = 1;
-		      break;
-		    }
+		case 'n':
+		  if (!isinteger (optarg))
+		    error (1, 0, _("invalid priority `%s'"), optarg);
+		  /* FIXME: use xstrtol */
+		  adjustment = atoi (optarg);
+		  adjustment_given = 1;
+		  break;
 		}
-
-	      if (optc == EOF)
-		break;
 	    }
+
+	  if (optc == EOF)
+	    break;
 	}
     }
 
@@ -143,6 +140,7 @@ main (int argc, char **argv)
       exit (0);
     }
 
+  printf ("adjustment = %d\n", adjustment);
 #ifndef NICE_PRIORITY
   errno = 0;
   current_priority = GET_PRIORITY ();
