@@ -1,5 +1,5 @@
 /* GNU's pinky.
-   Copyright (C) 1992-1997, 1999-2004 Free Software Foundation, Inc.
+   Copyright (C) 1992-1997, 1999-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -288,7 +288,8 @@ print_entry (const STRUCT_UTMP *utmp_ent)
     {
       extern char *canon_host ();
       char ut_host[sizeof (utmp_ent->ut_host) + 1];
-      char *host = 0, *display = 0;
+      char *host = NULL;
+      char *display = NULL;
 
       /* Copy the host name into UT_HOST, and ensure it's nul terminated. */
       strncpy (ut_host, utmp_ent->ut_host, (int) sizeof (utmp_ent->ut_host));
