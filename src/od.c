@@ -110,9 +110,9 @@ enum size_spec
     SHORT,
     INT,
     LONG,
-    FP_SINGLE,
-    FP_DOUBLE,
-    FP_LONG_DOUBLE
+    FLOAT_SINGLE,
+    FLOAT_DOUBLE,
+    FLOAT_LONG_DOUBLE
   };
 
 enum output_format
@@ -221,7 +221,7 @@ static long int pseudo_offset;
 static const char *(*format_address) (/* long unsigned int */);
 
 /* The number of input bytes to skip before formatting and writing.  */
-static unsigned long int n_bytes_to_skip = 0;
+static off_t n_bytes_to_skip = 0;
 
 /* When non-zero, MAX_BYTES_TO_FORMAT is the maximum number of bytes
    to be read and formatted.  Otherwise all input is formatted.  */
@@ -229,7 +229,7 @@ static int limit_bytes_to_format = 0;
 
 /* The maximum number of bytes that will be formatted.  This
    value is used only when LIMIT_BYTES_TO_FORMAT is non-zero.  */
-static unsigned long int max_bytes_to_format;
+static off_t max_bytes_to_format;
 
 /* When non-zero and two or more consecutive blocks are equal, format
    only the first block and output an asterisk alone on the following
@@ -841,7 +841,7 @@ decode_one_format (s, next, tspec)
 
       switch (size_spec)
 	{
-	case FP_SINGLE:
+	case FLOAT_SINGLE:
 	  print_function = print_float;
 	  /* Don't use %#e; not all systems support it.  */
 	  pre_fmt_string = "%%%d.%de%%c";
@@ -850,7 +850,7 @@ decode_one_format (s, next, tspec)
 		   FLT_DIG + 8, FLT_DIG);
 	  break;
 
-	case FP_DOUBLE:
+	case FLOAT_DOUBLE:
 	  print_function = print_double;
 	  pre_fmt_string = "%%%d.%de%%c";
 	  fmt_string = xmalloc (strlen (pre_fmt_string));
@@ -859,7 +859,7 @@ decode_one_format (s, next, tspec)
 	  break;
 
 #ifdef HAVE_LONG_DOUBLE
-	case FP_LONG_DOUBLE:
+	case FLOAT_LONG_DOUBLE:
 	  print_function = print_long_double;
 	  pre_fmt_string = "%%%d.%dle%%c";
 	  fmt_string = xmalloc (strlen (pre_fmt_string));
@@ -949,7 +949,7 @@ decode_format_string (s)
 
 static int
 skip (n_skip)
-     long unsigned int n_skip;
+     off_t n_skip;
 {
   int err;
 
@@ -1321,13 +1321,14 @@ get_lcm ()
 /* If S is a valid pre-POSIX offset specification with an optional leading '+'
    return the offset it denotes.  Otherwise, return -1.  */
 
-long int
+off_t
 parse_old_offset (s)
      const char *s;
 {
   int radix;
-  char *suffix;
-  long offset;
+  off_t offset;
+  strtol_error s_err;
+  long unsigned int tmp;
 
   if (*s == '\0')
     return -1;
@@ -1348,42 +1349,15 @@ parse_old_offset (s)
       else
 	radix = 8;
     }
-  offset = strtoul (s, &suffix, radix);
-  if (suffix == s || errno != 0)
-    return -1;
-  if (*suffix == '.')
-    ++suffix;
 
-#define BKM_SCALE(x, scale_factor, error_return)			\
-      do								\
-	{								\
-	  if (x > (double) ULONG_MAX / scale_factor)			\
-	    return error_return;					\
-	  x *= scale_factor;						\
-	}								\
-      while (0)
-
-  switch (*suffix)
+  s_err = xstrtoul (s, NULL, radix, &tmp, "Bb");
+  if (s_err != LONGINT_OK)
     {
-    case 'b':
-      BKM_SCALE (offset, 512, -1);
-      ++suffix;
-      break;
-
-    case 'B':
-      BKM_SCALE (offset, 1024, -1);
-      ++suffix;
-      break;
-
-    default:
-      /* empty */
-      break;
+      STRTOL_FAIL_WARN (s, "old-style offset", s_err);
+      return -1;
     }
-
-  if (*suffix != '\0')
-    return -1;
-  else
-    return offset;
+  offset = tmp;
+  return offset;
 }
 
 /* Read a chunk of size BYTES_PER_BLOCK from the input files, write the
@@ -1402,11 +1376,11 @@ static int
 dump ()
 {
   char *block[2];
-  unsigned long int current_offset;
+  off_t current_offset;
+  off_t end_offset;
   int idx;
   int err;
   size_t n_bytes_read;
-  size_t end_offset;
 
 #ifdef lint  /* Suppress `used before initialized' warning.  */
   end_offset = 0;
@@ -1491,7 +1465,7 @@ dump_strings ()
 {
   int bufsize = MAX (100, string_min);
   char *buf = xmalloc (bufsize);
-  unsigned long address = n_bytes_to_skip;
+  off_t address = n_bytes_to_skip;
   int err;
 
   err = 0;
@@ -1637,12 +1611,12 @@ main (argc, argv)
   for (i = 0; i <= MAX_FP_TYPE_SIZE; i++)
     fp_type_size[i] = NO_SIZE;
 
-  fp_type_size[sizeof (float)] = FP_SINGLE;
+  fp_type_size[sizeof (float)] = FLOAT_SINGLE;
   /* The array entry for `double' is filled in after that for LONG_DOUBLE
      so that if `long double' is the same type or if long double isn't
-     supported FP_LONG_DOUBLE will never be used.  */
-  fp_type_size[sizeof (LONG_DOUBLE)] = FP_LONG_DOUBLE;
-  fp_type_size[sizeof (double)] = FP_DOUBLE;
+     supported FLOAT_LONG_DOUBLE will never be used.  */
+  fp_type_size[sizeof (LONG_DOUBLE)] = FLOAT_LONG_DOUBLE;
+  fp_type_size[sizeof (double)] = FLOAT_DOUBLE;
 
   n_specs = 0;
   n_specs_allocated = 5;
@@ -1657,6 +1631,7 @@ main (argc, argv)
 			   long_options, (int *) 0))
 	 != EOF)
     {
+      unsigned long int tmp;
       strtoul_error s_err;
 
       switch (c)
@@ -1696,7 +1671,8 @@ main (argc, argv)
 	  break;
 
 	case 'j':
-	  s_err = xstrtoul (optarg, NULL, 0, &n_bytes_to_skip, 1);
+	  s_err = xstrtoul (optarg, NULL, 0, &tmp, "bkm");
+	  n_bytes_to_skip = tmp;
 	  if (s_err != LONGINT_OK)
 	    STRTOL_FATAL_ERROR (optarg, "skip argument", s_err);
 	  break;
@@ -1704,7 +1680,7 @@ main (argc, argv)
 	case 'N':
 	  limit_bytes_to_format = 1;
 
-	  s_err = xstrtoul (optarg, NULL, 0, &max_bytes_to_format, 1);
+	  s_err = xstrtoul (optarg, NULL, 0, &max_bytes_to_format, "bkm");
 	  if (s_err != LONGINT_OK)
 	    STRTOL_FATAL_ERROR (optarg, "limit argument", s_err);
 	  break;
@@ -1714,7 +1690,7 @@ main (argc, argv)
 	    string_min = 3;
 	  else
 	    {
-	      s_err = xstrtoul (optarg, NULL, 0, &string_min, 1);
+	      s_err = xstrtoul (optarg, NULL, 0, &string_min, "bkm");
 	      if (s_err != LONGINT_OK)
 		STRTOL_FATAL_ERROR (optarg, "minimum string length", s_err);
 	    }
@@ -1769,10 +1745,9 @@ main (argc, argv)
 	    }
 	  else
 	    {
-	      s_err = xstrtoul (optarg, NULL, 10, &desired_width, 0);
+	      s_err = xstrtoul (optarg, NULL, 10, &desired_width, NULL);
 	      if (s_err != LONGINT_OK)
-		STRTOL_FATAL_ERROR (optarg, "invalid width specification",
-				    s_err);
+		STRTOL_FATAL_ERROR (optarg, "width specification", s_err);
 	    }
 	  break;
 
@@ -1804,7 +1779,7 @@ main (argc, argv)
 
   if (traditional)
     {
-      long int offset;
+      off_t offset;
 
       if (n_files == 1)
 	{
@@ -1817,7 +1792,7 @@ main (argc, argv)
 	}
       else if (n_files == 2)
 	{
-	  long int o1, o2;
+	  off_t o1, o2;
 	  if ((o1 = parse_old_offset (argv[optind])) >= 0
 	      && (o2 = parse_old_offset (argv[optind + 1])) >= 0)
 	    {
@@ -1844,7 +1819,7 @@ main (argc, argv)
 	}
       else if (n_files == 3)
 	{
-	  long int o1, o2;
+	  off_t o1, o2;
 	  if ((o1 = parse_old_offset (argv[optind + 1])) >= 0
 	      && (o2 = parse_old_offset (argv[optind + 2])) >= 0)
 	    {
