@@ -1137,6 +1137,9 @@ tail_file (struct File_spec *f, off_t n_units)
 	{
 	  f->fd = -1;
 	  f->errnum = errno;
+	  f->ignore = 0;
+	  f->ino = 0;
+	  f->dev = 0;
 	}
       error (0, errno, "%s", pretty_name (f));
       errors = 1;
