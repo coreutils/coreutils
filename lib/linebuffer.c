@@ -25,9 +25,8 @@
 #include <sys/types.h>
 #include "linebuffer.h"
 #include "unlocked-io.h"
+#include "xalloc.h"
 
-char *xmalloc ();
-char *xrealloc ();
 void free ();
 
 /* Initialize linebuffer LINEBUFFER for use. */
@@ -37,14 +36,16 @@ initbuffer (struct linebuffer *linebuffer)
 {
   linebuffer->length = 0;
   linebuffer->size = 200;
-  linebuffer->buffer = (char *) xmalloc (linebuffer->size);
+  linebuffer->buffer = xmalloc (linebuffer->size);
 }
 
 /* Read an arbitrarily long line of text from STREAM into LINEBUFFER.
    Keep the newline; append a newline if it's the last line of a file
    that ends in a non-newline character.  Do not null terminate.
-   Return LINEBUFFER, except at end of file return 0.  */
-
+   Therefore the stream can contain NUL bytes, and the length
+   (including the newline) is returned in linebuffer->length.
+   Return NULL upon error, or when STREAM is empty.
+   Otherwise, return LINEBUFFER.  */
 struct linebuffer *
 readline (struct linebuffer *linebuffer, FILE *stream)
 {
@@ -54,7 +55,7 @@ readline (struct linebuffer *linebuffer, FILE *stream)
   char *end = buffer + linebuffer->size; /* Sentinel. */
 
   if (feof (stream) || ferror (stream))
-    return 0;
+    return NULL;
 
   do
     {
@@ -62,7 +63,7 @@ readline (struct linebuffer *linebuffer, FILE *stream)
       if (c == EOF)
 	{
 	  if (p == buffer)
-	    return 0;
+	    return NULL;
 	  if (p[-1] == '\n')
 	    break;
 	  c = '\n';
@@ -70,7 +71,7 @@ readline (struct linebuffer *linebuffer, FILE *stream)
       if (p == end)
 	{
 	  linebuffer->size *= 2;
-	  buffer = (char *) xrealloc (buffer, linebuffer->size);
+	  buffer = xrealloc (buffer, linebuffer->size);
 	  p = p - linebuffer->buffer + buffer;
 	  linebuffer->buffer = buffer;
 	  end = buffer + linebuffer->size;
