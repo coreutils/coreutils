@@ -149,7 +149,7 @@ typedef struct dirstack_state Dirstack_state;
 static Dirstack_state *
 ds_init ()
 {
-  Dirstack_state *ds = XMALLOC (struct dirstack_state, 1);
+  Dirstack_state *ds = xmalloc (sizeof *ds);
   obstack_init (&ds->dir_stack);
   obstack_init (&ds->len_stack);
   obstack_init (&ds->Active_dir);
@@ -962,7 +962,7 @@ remove_dir (Dirstack_state *ds, char const *dir, struct saved_cwd **cwd_state,
 
   if (*cwd_state == NULL)
     {
-      *cwd_state = XMALLOC (struct saved_cwd, 1);
+      *cwd_state = xmalloc (sizeof **cwd_state);
       if (save_cwd (*cwd_state))
 	{
 	  error (0, errno, _("cannot get current directory"));
@@ -1141,7 +1141,7 @@ rm (size_t n_files, char const *const *file, struct rm_options const *x)
 
   ds_free (ds);
 
-  XFREE (cwd_state);
+  free (cwd_state);
 
   return status;
 }
