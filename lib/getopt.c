@@ -476,7 +476,8 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 
   if (longopts != NULL
       && (argv[optind][1] == '-'
-	  || (long_only && (argv[optind][2] || !my_index (optstring, argv[optind][1])))))
+	  || (long_only && (argv[optind][2]
+			    || !my_index (optstring, argv[optind][1])))))
     {
       char *nameend;
       const struct option *p;
@@ -509,8 +510,13 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 		indfound = option_index;
 	      }
 	    else
-	      /* Second or later nonexact match found.  */
-	      ambig = 1;
+	      {
+		/* Second or later nonexact match found.  */
+		ambig = 1;
+#ifdef lint
+		indfound = 0;
+#define
+	      }
 	  }
 
       if (ambig && !exact)
