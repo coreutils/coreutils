@@ -1,5 +1,9 @@
 2000-05-05  Jim Meyering  <meyering@lucent.com>
 
+	* jm-macros.m4 (jm_MACROS): Save and restore LIBS around AC_SEARCH_LIBS
+	call for clock_gettime.
+	(LIB_CLOCK_GETTIME): Set and AC_SUBST.
+
 	* search-libs.m4: Update from autoconf.
 
 	su doesn't work on Solaris2.6.
