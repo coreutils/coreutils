@@ -1,3 +1,5 @@
+#serial 1
+
 AC_DEFUN(jm_CHECK_DECLARATION,
 [
   AC_REQUIRE([AC_HEADER_STDC])dnl
