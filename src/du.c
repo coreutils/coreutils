@@ -392,9 +392,9 @@ count_entry (ent, top, last_dev)
 {
   long size;
 
-  if ((top && opt_dereference_arguments ?
-      stat (ent, &stat_buf) :
-      (*xstat) (ent, &stat_buf)) < 0)
+  if (((top && opt_dereference_arguments)
+       ? stat (ent, &stat_buf)
+       : (*xstat) (ent, &stat_buf)) < 0)
     {
       error (0, errno, "%s", path->text);
       exit_status = 1;
