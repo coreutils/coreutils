@@ -33,6 +33,9 @@
 # define SECURITY_ID_T security_id_t
 #else
 # define SECURITY_ID_T int
+# define is_flask_enabled() 0
+# define stat_secure(a,b,c) stat(a,b)
+# define lstat_secure(a,b,c) lstat(a,b)
 #endif
 
 #define PROGRAM_NAME "stat"
@@ -319,92 +322,40 @@ print_statfs (char *pformat, char m, char const *filename, void const *data, SEC
 	    break;
 
 	case 'l':
-#ifdef __USE_FILE_OFFSET64
-	    strcat(pformat, "lu");
-#else
-	    strcat(pformat, "u");
-#endif
-	    printf(pformat, statfsbuf->f_namelen);
+	    strcat(pformat, "llu");
+	    printf(pformat, (uintmax_t) (statfsbuf->f_namelen));
 	    break;
 	case 't':
-#ifdef __USE_FILE_OFFSET64
 	    strcat(pformat, "lx");
-#else
-	    strcat(pformat, "x");
-#endif
-	    printf(pformat, statfsbuf->f_type);
+	    printf(pformat, (long int) (statfsbuf->f_type));
 	    break;
 	case 'T':
 /*	    print_human_fstype(statfsbuf, pformat);*/
 	    print_human_fstype(statfsbuf);
 	    break;
 	case 'b':
-#ifdef __USE_FILE_OFFSET64
 	    strcat(pformat, "lld");
-#else
-# if !defined(__linux__) && defined (__GNU__)
-	    strcat(pformat, "d");
-# else
-	    strcat(pformat, "ld");
-# endif
-#endif
-	    printf(pformat, statfsbuf->f_blocks);
+	    printf(pformat, (intmax_t) (statfsbuf->f_blocks));
 	    break;
 	case 'f':
-#ifdef __USE_FILE_OFFSET64
 	    strcat(pformat, "lld");
-#else
-# if !defined(__linux__) && defined (__GNU__)
-	    strcat(pformat, "d");
-# else
-	    strcat(pformat, "ld");
-# endif
-#endif
-	    printf(pformat, statfsbuf->f_bfree);
+	    printf(pformat, (intmax_t) (statfsbuf->f_bfree));
 	    break;
 	case 'a':
-#ifdef __USE_FILE_OFFSET64
 	    strcat(pformat, "lld");
-#else
-# if !defined(__linux__) && defined (__GNU__)
-	    strcat(pformat, "d");
-# else
-	    strcat(pformat, "ld");
-# endif
-#endif
-	    printf(pformat, statfsbuf->f_bavail);
+	    printf(pformat, (intmax_t) (statfsbuf->f_bavail));
 	    break;
 	case 's':
-#ifdef __USE_FILE_OFFSET64
 	    strcat(pformat, "ld");
-#else
-	    strcat(pformat, "d");
-#endif
-	    printf(pformat, statfsbuf->f_bsize);
+	    printf(pformat, (long int) (statfsbuf->f_bsize));
 	    break;
 	case 'c':
-#ifdef __USE_FILE_OFFSET64
 	    strcat(pformat, "lld");
-#else
-# if !defined(__linux__) && defined (__GNU__)
-	    strcat(pformat, "d");
-# else
-	    strcat(pformat, "ld");
-# endif
-#endif
-	    printf(pformat, statfsbuf->f_files);
+	    printf(pformat, (intmax_t) (statfsbuf->f_files));
 	    break;
 	case 'd':
-#ifdef __USE_FILE_OFFSET64
 	    strcat(pformat, "lld");
-#else
-# if !defined(__linux__) && defined (__GNU__)
-	    strcat(pformat, "d");
-# else
-	    strcat(pformat, "ld");
-# endif
-#endif
-	    printf(pformat, statfsbuf->f_ffree);
+	    printf(pformat, (intmax_t) (statfsbuf->f_ffree));
 	    break;
 #ifdef FLASK_LINUX
 	case 'S':
@@ -650,8 +601,6 @@ do_statfs (char const *filename, int terse, int secure, char const *format)
   int i;
 
 #ifdef FLASK_LINUX
-  if (!is_flask_enabled())
-    secure = 0;
   if (secure)
     i = statfs_secure(filename, &statfsbuf, &sid);
   else
@@ -667,16 +616,13 @@ do_statfs (char const *filename, int terse, int secure, char const *format)
     {
 	if (terse != 0)
 	  {
-#ifdef FLASK_LINUX
 		if (secure)
 	      		format = "%n %i %l %t %b %f %a %s %c %d %S %C";
 		else
-#endif
 		      	format = "%n %i %l %t %b %f %a %s %c %d";
 	  }
 	else
 	  {
-#ifdef FLASK_LINUX
 		if (secure)
 		    format = "  File: \"%n\"\n"
 	                 "    ID: %-8i Namelen: %-7l Type: %T\n"
@@ -684,7 +630,6 @@ do_statfs (char const *filename, int terse, int secure, char const *format)
 	                 "Inodes: Total: %-10c Free: %-10d\n"
 	                 "   SID: %-14S  S_Context: %C\n";
 		else
-#endif
 		    format = "  File: \"%n\"\n"
 	                 "    ID: %-8i Namelen: %-7l Type: %T\n"
 	                 "Blocks: Total: %-10b Free: %-10f Available: %-10a Size: %s\n"
@@ -703,15 +648,10 @@ do_stat (char const *filename, int follow_links, int terse, int secure, char con
   int i;
   SECURITY_ID_T sid = -1;
 
-#ifdef FLASK_LINUX
-  /* FIXME: hoist this test into main.  */
-  if (!is_flask_enabled())
-    secure = 0;
   if (secure)
     i = (follow_links == 1) ? stat_secure(filename, &statbuf, &sid) : lstat_secure(filename, &statbuf, &sid);
   else
-#endif
-  i = (follow_links == 1) ? stat(filename, &statbuf) : lstat(filename, &statbuf);
+    i = (follow_links == 1) ? stat(filename, &statbuf) : lstat(filename, &statbuf);
 
   if (i == -1)
     {
@@ -723,11 +663,9 @@ do_stat (char const *filename, int follow_links, int terse, int secure, char con
     {
        if (terse != 0)
        {
-#ifdef FLASK_LINUX
 	   if (secure)
 		  format = "%n %s %b %f %u %g %D %i %h %t %T %X %Y %Z %o %S %C";
 	   else
-#endif
 	          format = "%n %s %b %f %u %g %D %i %h %t %T %X %Y %Z %o";
        }
        else
@@ -735,7 +673,6 @@ do_stat (char const *filename, int follow_links, int terse, int secure, char con
            /* tmp hack to match orignal output until conditional implemented */
           i = statbuf.st_mode & S_IFMT;
           if (i == S_IFCHR || i == S_IFBLK) {
-#ifdef FLASK_LINUX
           	if (secure)
                		format =
 	                   "  File: %N\n"
@@ -748,7 +685,6 @@ do_stat (char const *filename, int follow_links, int terse, int secure, char con
         	           "Modify: %y\n"
 	                   "Change: %z\n";
         	else
-#endif
         		format =
 	                   "  File: %N\n"
         	           "  Size: %-10s\tBlocks: %-10b IO Block: %-6o %F\n"
@@ -761,7 +697,6 @@ do_stat (char const *filename, int follow_links, int terse, int secure, char con
            }
 	   else
 	   {
-#ifdef FLASK_LINUX
 	   	if (secure)
 	               format =
         	           "  File: %N\n"
@@ -773,7 +708,6 @@ do_stat (char const *filename, int follow_links, int terse, int secure, char con
         	           "Modify: %y\n"
                 	   "Change: %z\n";
                 else
-#endif
                       format =
 	                   "  File: %N\n"
         	           "  Size: %-10s\tBlocks: %-10b IO Block: %-6o %F\n"
@@ -801,13 +735,72 @@ usage (int status)
 Display file or filesystem status.\n\
 \n\
   -f, --filesystem	display filesystem status instead of file status\n\
-  -c  --format=FMT      FIXME\n\
+  -c  --format=FORMAT   FIXME\n\
   -l, --link		follow links\n\
   -s, --secure	        FIXME\n\
   -t, --terse		print the information in terse form\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
+
+      fputs (_("\n\
+The valid format sequences for files (without --filesystem):\n\
+\n\
+  %A - Access rights in human readable form\n\
+  %a - Access rights in octal\n\
+  %b - Number of blocks allocated\n\
+  %C - Security context in SE-Linux\n\
+"), stdout);
+      fputs (_("\
+  %D - Device number in hex\n\
+  %d - Device number in decimal\n\
+  %F - File type\n\
+  %f - raw mode in hex\n\
+  %G - Group name of owner\n\
+  %g - Group ID of owner\n\
+"), stdout);
+      fputs (_("\
+  %h - Number of hard links\n\
+  %i - Inode number\n\
+  %N - Quoted File name with dereference if symbolic link\n\
+  %n - File name\n\
+  %o - IO block size\n\
+  %S - Security ID in SE-Linux\n\
+  %s - Total size, in bytes\n\
+  %T - Minor device type in hex\n\
+  %t - Major device type in hex\n\
+"), stdout);
+      fputs (_("\
+  %U - User name of owner\n\
+  %u - User ID of owner\n\
+  %X - Time of last access as seconds since Epoch\n\
+  %x - Time of last access\n\
+  %Y - Time of last modification as seconds since Epoch\n\
+  %y - Time of last modification\n\
+  %Z - Time of last change as seconds since Epoch\n\
+  %z - Time of last change\n\
+\n\
+"), stdout);
+
+      fputs (_("\
+Valid format sequences for file systems:\n\
+\n\
+  %a - Free blocks available to non-superuser\n\
+  %b - Total data blocks in file system\n\
+  %C - Security context in SE-Linux\n\
+  %c - Total file nodes in file system\n\
+  %d - Free file nodes in file system\n\
+  %f - Free blocks in file system\n\
+"), stdout);
+      fputs (_("\
+  %i - File System id in hex\n\
+  %l - Maximum length of filenames\n\
+  %n - File name\n\
+  %S - Security ID in SE-Linux\n\
+  %s - Optimal transfer block size\n\
+  %T - Type in human readable form\n\
+  %t - Type in hex\n\
+"), stdout);
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
     }
   exit (status);
@@ -914,6 +907,9 @@ main (int argc, char *argv[])
       error (0, 0, _("too few arguments"));
       usage (EXIT_FAILURE);
     }
+
+  if (!is_flask_enabled ())
+    secure = 0;
 
   for (i = optind; i < argc; i++)
     {
