@@ -434,7 +434,8 @@ show_dev (const char *disk, const char *mount_point, const char *fstype,
 
 /* Return the root mountpoint of the filesystem on which FILE exists, in
    malloced storage.  FILE_STAT should be the result of stating FILE.
-   Return NULL if unable to determine the mount point.  */
+   Give a diagnostic and return NULL if unable to determine the mount point.
+   Exit if unable to restore current working directory.  */
 static char *
 find_mount_point (const char *file, const struct stat *file_stat)
 {
@@ -443,29 +444,41 @@ find_mount_point (const char *file, const struct stat *file_stat)
   char *mp = 0;			/* The malloced mount point path.  */
 
   if (save_cwd (&cwd))
-    return NULL;
+    {
+      error (0, errno, _("cannot get current directory"));
+      return NULL;
+    }
 
   if (S_ISDIR (file_stat->st_mode))
     /* FILE is a directory, so just chdir there directly.  */
     {
       last_stat = *file_stat;
       if (chdir (file) < 0)
-	return NULL;
+	{
+	  error (0, errno, _("cannot change to directory %s"), quote (file));
+	  return NULL;
+	}
     }
   else
-    /* FILE is some other kind of file, we need to use its directory.  */
+    /* FILE is some other kind of file; use its directory.  */
     {
-      char *dir = dir_name (file);
+      char *xdir = dir_name (file);
+      char *dir;
+      ASSIGN_STRDUPA (dir, xdir);
+      free (xdir);
+
       if (chdir (dir) < 0)
 	{
-	  int saved_errno = errno;
-	  free (dir);
-	  errno = saved_errno;
+	  error (0, errno, _("cannot change to directory %s"), quote (dir));
 	  return NULL;
 	}
 
       if (stat (".", &last_stat) < 0)
-	goto done;
+	{
+	  error (0, errno, _("cannot stat current directory (now %s)"),
+		 quote (dir));
+	  goto done;
+	}
     }
 
   /* Now walk up FILE's parents until we find another filesystem or /,
@@ -475,12 +488,18 @@ find_mount_point (const char *file, const struct stat *file_stat)
     {
       struct stat st;
       if (stat ("..", &st) < 0)
-	goto done;
+	{
+	  error (0, errno, _("cannot stat %s"), quote (".."));
+	  goto done;
+	}
       if (st.st_dev != last_stat.st_dev || st.st_ino == last_stat.st_ino)
 	/* cwd is the mount point.  */
 	break;
       if (chdir ("..") < 0)
-	goto done;
+	{
+	  error (0, errno, _("cannot change to directory %s"), quote (".."));
+	  goto done;
+	}
       last_stat = st;
     }
 
@@ -634,8 +653,6 @@ show_point (const char *point, const struct stat *statp)
 	show_dev (0, mp, 0, 0, 0);
 	free (mp);
       }
-    else
-      error (0, errno, "%s", quote (point));
   }
 
   return;
