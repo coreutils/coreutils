@@ -1,3 +1,8 @@
+2000-07-09  Jim Meyering  <meyering@lucent.com>
+
+	* src/Makefile.am (seq_LDADD): Don't hard-code `-lm' -- some systems
+	don't have/need it.  From Bruno Haible.
+
 2000-07-06  Jim Meyering  <meyering@lucent.com>
 
 	* src/help-version: Punt on `groups' test, since all it does
