@@ -37,8 +37,8 @@ fail=0
 
 chown '' . || fail=1
 
-for u in $id_u $id_un ''; do
-  for g in $id_g $id_gn ''; do
+for u in $id_u "$id_un" ''; do
+  for g in $id_g "$id_gn" ''; do
     case $u$g in
       *.*) seps=':' ;;
       *)   seps=': .' ;;
