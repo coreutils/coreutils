@@ -1,5 +1,7 @@
 2000-04-03  Jim Meyering  <meyering@lucent.com>
 
+	* gettext.m4: Fix typo in comment.
+
 	* codeset.m4 (AC_CHECK_HEADERS): Add langinfo.h (moved here from
 	textutils/configure.in).  Suggestion from Paul Eggert.
 	(AC_CHECK_FUNCS): Add nl_langinfo.  (also from textutils/configure.in)
