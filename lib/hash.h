@@ -1,16 +1,26 @@
-#ifndef _hash_h_
-# define _hash_h_ 1
+#ifndef HASH_H
+# define HASH_H 1
+
+# if HAVE_CONFIG_H
+#  include <config.h>
+# endif
 
 # include <stdio.h>
-# include <stdlib.h>
 # include <assert.h>
 
+# ifdef STDC_HEADERS
+#  include <stdlib.h>
+# else
+void free ();
+char *malloc ();
+# endif
+
+# define USE_OBSTACK
 # ifdef USE_OBSTACK
 #  include "obstack.h"
 # endif
-# include "xalloc.h"
 
-# define obstack_chunk_alloc xmalloc
+# define obstack_chunk_alloc malloc
 # define obstack_chunk_free free
 
 struct hash_ent
@@ -27,12 +37,11 @@ typedef void (*Hash_key_freer_type) (void *key);
 struct HT
   {
     /* User-supplied function for freeing keys.  It is specified in
-       hash_initialize.  If non-null, it is used by hash_free,
-       hash_clear, and hash_rehash.  You should specify `free' here
-       only if you want these functions to free all of your `key'
-       data.  This is typically the case when your key is simply
-       an auxilliary struct that you have malloc'd to aggregate
-       several values.   */
+       hash_initialize.  If non-null, it is used by hash_free and
+       hash_clear.  You should specify `free' here only if you want
+       these functions to free all of your `key' data.  This is typically
+       the case when your key is simply an auxilliary struct that you
+       have malloc'd to aggregate several values.   */
     Hash_key_freer_type hash_key_freer;
 
     /* User-supplied hash function that hashes entry E to an integer
@@ -147,15 +156,13 @@ void *
 /* This interface to hash_insert_if_absent is used frequently enough to
    merit a macro here.  */
 
-# define HASH_INSERT_NEW_ITEM(ht, item)					\
+# define HASH_INSERT_NEW_ITEM(Ht, Item, Failp)				\
   do									\
     {									\
-      void *already;							\
-      int _failed;							\
-      already = hash_insert_if_absent ((ht), (item), &_failed);		\
-      assert (already == NULL);						\
-      assert (!_failed);						\
+      void *_already;							\
+      _already = hash_insert_if_absent ((Ht), (Item), Failp);		\
+      assert (_already == NULL);					\
     }									\
   while (0)
 
-#endif /* _hash_h_ */
+#endif /* HASH_H */
