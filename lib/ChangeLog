@@ -1,3 +1,9 @@
+2000-04-17  Jim Meyering  <meyering@lucent.com>
+
+	* strftime.c (my_strftime) [strftime]: Declare strftime here, since
+	the definition of it to rpl_strftime also defined-away the system's
+	declaration.
+
 2000-04-15  Jim Meyering  <meyering@lucent.com>
 
 	Use `C' to denote so-called `contiguous' files, the same way
@@ -18,7 +24,7 @@
 2000-03-28  Bruno Haible  <haible@clisp.cons.org>
 
 	* unicodeio.c (print_unicode_char): Avoid triggering Solaris iconv
-	bug.  Deal with the different error behaviour of Irix iconv.
+	bug.  Deal with the different error behavior of Irix iconv.
 
 2000-04-07  Jim Meyering  <meyering@lucent.com>
 
