@@ -227,7 +227,7 @@ struct fileinfo
 
     /* For symbolic link and long listing, st_mode of file linked to, otherwise
        zero. */
-    unsigned int linkmode;
+    mode_t linkmode;
 
     /* For symbolic link and color printing, 1 if linked-to file
        exists, otherwise 0.  */
@@ -302,7 +302,7 @@ static int decode_switches PARAMS ((int argc, char **argv));
 static int file_interesting PARAMS ((const struct dirent *next));
 static uintmax_t gobble_file PARAMS ((const char *name, enum filetype type,
 				      int explicit_arg, const char *dirname));
-static void print_color_indicator PARAMS ((const char *name, unsigned int mode,
+static void print_color_indicator PARAMS ((const char *name, mode_t mode,
 					   int linkok));
 static void put_indicator PARAMS ((const struct bin_str *ind));
 static int length_of_file_name_and_frills PARAMS ((const struct fileinfo *f));
@@ -320,11 +320,11 @@ static void print_file_name_and_frills PARAMS ((const struct fileinfo *f));
 static void print_horizontal PARAMS ((void));
 static void print_long_format PARAMS ((const struct fileinfo *f));
 static void print_many_per_line PARAMS ((void));
-static void print_name_with_quoting PARAMS ((const char *p, unsigned int mode,
+static void print_name_with_quoting PARAMS ((const char *p, mode_t mode,
 					     int linkok,
 					     struct obstack *stack));
 static void prep_non_filename_text PARAMS ((void));
-static void print_type_indicator PARAMS ((unsigned int mode));
+static void print_type_indicator PARAMS ((mode_t mode));
 static void print_with_commas PARAMS ((void));
 static void queue_directory PARAMS ((const char *name, const char *realname));
 static void sort_files PARAMS ((void));
@@ -851,7 +851,7 @@ dired_dump_obstack (const char *prefix, struct obstack *os)
       pos = (size_t *) obstack_finish (os);
       fputs (prefix, stdout);
       for (i = 0; i < n_pos; i++)
-	printf (" %d", (int) pos[i]);
+	printf (" %lu", (unsigned long) pos[i]);
       fputs ("\n", stdout);
     }
 }
@@ -2078,7 +2078,7 @@ static void
 get_link_name (const char *filename, struct fileinfo *f)
 {
   char *linkbuf;
-  register int linksize;
+  register ssize_t linksize;
 
   linkbuf = (char *) alloca (PATH_MAX + 2);
   /* Some automounters give incorrect st_size for mount points.
@@ -2105,7 +2105,7 @@ static char *
 make_link_path (const char *path, const char *linkname)
 {
   char *linkbuf;
-  int bufsiz;
+  size_t bufsiz;
 
   if (linkname == 0)
     return 0;
@@ -2550,7 +2550,7 @@ print_long_format (const struct fileinfo *f)
 
   /* The last byte of the mode string is the POSIX
      "optional alternate access method flag".  */
-  sprintf (p, "%s %3u ", modebuf, (unsigned int) f->stat.st_nlink);
+  sprintf (p, "%s %3lu ", modebuf, (unsigned long) f->stat.st_nlink);
   p += strlen (p);
 
   if (print_owner)
@@ -2559,7 +2559,7 @@ print_long_format (const struct fileinfo *f)
       if (user_name)
 	sprintf (p, "%-8.8s ", user_name);
       else
-	sprintf (p, "%-8u ", (unsigned int) f->stat.st_uid);
+	sprintf (p, "%-8lu ", (unsigned long) f->stat.st_uid);
       p += strlen (p);
     }
 
@@ -2569,13 +2569,14 @@ print_long_format (const struct fileinfo *f)
       if (group_name)
 	sprintf (p, "%-8.8s ", group_name);
       else
-	sprintf (p, "%-8u ", (unsigned int) f->stat.st_gid);
+	sprintf (p, "%-8lu ", (unsigned long) f->stat.st_gid);
       p += strlen (p);
     }
 
   if (S_ISCHR (f->stat.st_mode) || S_ISBLK (f->stat.st_mode))
-    sprintf (p, "%3u, %3u ", (unsigned) major (f->stat.st_rdev),
-	     (unsigned) minor (f->stat.st_rdev));
+    sprintf (p, "%3lu, %3lu ",
+	     (unsigned long) major (f->stat.st_rdev),
+	     (unsigned long) minor (f->stat.st_rdev));
   else
     {
       char hbuf[LONGEST_HUMAN_READABLE + 1];
@@ -2828,7 +2829,7 @@ quote_name (FILE *out, const char *name, struct quoting_options const *options)
 }
 
 static void
-print_name_with_quoting (const char *p, unsigned int mode, int linkok,
+print_name_with_quoting (const char *p, mode_t mode, int linkok,
 			 struct obstack *stack)
 {
   if (print_with_color)
@@ -2885,7 +2886,7 @@ print_file_name_and_frills (const struct fileinfo *f)
 }
 
 static void
-print_type_indicator (unsigned int mode)
+print_type_indicator (mode_t mode)
 {
   int c;
 
@@ -2917,7 +2918,7 @@ print_type_indicator (unsigned int mode)
 }
 
 static void
-print_color_indicator (const char *name, unsigned int mode, int linkok)
+print_color_indicator (const char *name, mode_t mode, int linkok)
 {
   int type = C_FILE;
   struct color_ext_type *ext;	/* Color extension */
@@ -3002,7 +3003,7 @@ length_of_file_name_and_frills (const struct fileinfo *f)
 
   if (indicator_style != none)
     {
-      unsigned filetype = f->stat.st_mode;
+      mode_t filetype = f->stat.st_mode;
 
       if (S_ISREG (filetype))
 	{
