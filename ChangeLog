@@ -1,13 +1,20 @@
 2003-11-05  Jim Meyering  <jim@meyering.net>
 
+	* Version 5.1.0.
+
 	* src/tr.c (spec_init): Fix typo in last change.
 
 	* src/sys2.h (case_GETOPT_VERSION_CHAR): Cast NULL to `(char *)' in
 	call to variadic version_etc function, so that it works even on systems
 	for which sizeof char* != sizeof int.
 	* src/true.c (main): Likewise.
-
-	* Version 5.1.0.
+	* basename.c, chroot.c, cksum.c, dd.c, dirname.c, echo.c, expr.c:
+	* factor.c, hostid.c, hostname.c, link.c, logname.c, nice.c, nohup.c:
+	* pathchk.c, printenv.c, printf.c, pwd.c, setuidgid.c, sleep.c, stty.c:
+	* sync.c, test.c, tsort.c, unlink.c, uptime.c, users.c, whoami.c, yes.c:
+	Similarly, cast NULL to `(char *)' in call to variadic function,
+	parse_long_options, so that it works even on systems for which
+	sizeof char* != sizeof int.
 
 	* src/users.c (users): Free `utmp_buf' explicitly so that people
 	don't mistake this for a real leak.
