@@ -8,7 +8,7 @@
 
 if test "$VERBOSE" = yes; then
   set -x
-  $MV --version
+  mv --version
 fi
 
 dir=into-self-dir
@@ -16,9 +16,9 @@ file=into-self-file
 
 test_failure=0
 
-$RM -rf $dir $file || test_failure=1
-$MKDIR -p $dir/a/b || test_failure=1
-$TOUCH $file || test_failure=1
+rm -rf $dir $file || test_failure=1
+mkdir -p $dir/a/b || test_failure=1
+touch $file || test_failure=1
 
 if test $test_failure = 1; then
   echo 'failure in testing framework'
@@ -36,10 +36,10 @@ LANG=C
 export LANG
 
 # This mv command should fail.
-$MV $dir $file $dir > out 2>&1 && fail=1
+mv $dir $file $dir > out 2>&1 && fail=1
 
 sed \
-   -e "s,$MV:,XXX:," \
+   -e "s,mv:,XXX:," \
    -e "s,$dir,SRC," \
    -e "s,$dir/$dir,DEST," \
   out > out2
@@ -57,6 +57,6 @@ test -d $dir || fail=1
 test -d $dir/$dir && fail=1
 # Make sure the file has been moved to the right place.
 test -f $dir/$file || fail=1
-$RM -rf $dir $file out out2 exp
+rm -rf $dir $file out out2 exp
 
 exit $fail
