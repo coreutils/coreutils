@@ -1,6 +1,16 @@
-2003-01-13  Jim Meyering  <jim@meyering.net>
+2003-01-14  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.5.
+
+	* src/ls.c (gobble_file): Fix a bug introduced in 4.5.4 that made it
+	so that ls --color would no longer highlight the names of files with
+	the execute bit set when not specified on the command line.
+	Patch by Michael Stone.  Reported by Stephen Depooter as
+	Debian bug 175135.
+
+	* tests/ls-2/tests (color-exe): New test, for the above fix.
+
+2003-01-13  Jim Meyering  <jim@meyering.net>
 
 	* tests/shred/exact: Also test for just fixed bug with --zero.
 
