@@ -71,6 +71,8 @@ long long strtoll PARAMS ((char const *, char **, int));
 #endif
 
 #ifdef UNSIGNED
+# undef HAVE_LONG_LONG
+# define HAVE_LONG_LONG HAVE_UNSIGNED_LONG_LONG
 # define INT uintmax_t
 # define strtoimax strtoumax
 # define strtol strtoul
@@ -82,16 +84,16 @@ long long strtoll PARAMS ((char const *, char **, int));
 INT
 strtoimax (char const *ptr, char **endptr, int base)
 {
-#if HAVE_UNSIGNED_LONG_LONG
+#if HAVE_LONG_LONG
   verify (size_is_that_of_long_or_long_long,
-	  (sizeof (INT) == sizeof strtol (ptr, endptr, base)
-	   || sizeof (INT) == sizeof strtoll (ptr, endptr, base)));
+	  (sizeof (INT) == sizeof (long)
+	   || sizeof (INT) == sizeof (long long)));
 
-  if (sizeof (INT) != sizeof strtol (ptr, endptr, base))
+  if (sizeof (INT) != sizeof (long))
     return strtoll (ptr, endptr, base);
 #else
   verify (size_is_that_of_long,
-	  sizeof (INT) == sizeof strtol (ptr, endptr, base));
+	  sizeof (INT) == sizeof (long));
 #endif
 
   return strtol (ptr, endptr, base);
