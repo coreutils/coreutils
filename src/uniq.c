@@ -34,12 +34,6 @@
 #undef min
 #define min(x, y) ((x) < (y) ? (x) : (y))
 
-static char *find_field ();
-static int different ();
-static void check_file ();
-static void usage ();
-static void writeline ();
-
 /* The name this program was run with. */
 char *program_name;
 
@@ -90,7 +84,191 @@ static struct option const longopts[] =
   {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
+
+static void
+usage (status)
+     int status;
+{
+  if (status != 0)
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
+	     program_name);
+  else
+    {
+      printf (_("\
+Usage: %s [OPTION]... [INPUT [OUTPUT]]\n\
+"),
+	      program_name);
+      printf (_("\
+Discard all but one of successive identical lines from INPUT (or\n\
+standard input), writing to OUTPUT (or standard output).\n\
+\n\
+  -c, --count           prefix lines by the number of occurrences\n\
+  -d, --repeated        only print duplicate lines\n\
+  -f, --skip-fields=N   avoid comparing the N first fields\n\
+  -s, --skip-chars=N    avoid comparing the N first characters\n\
+  -u, --unique          only print unique lines\n\
+  -w, --check-chars=N   compare no more than N characters in lines\n\
+  -N                    same as -f N\n\
+  +N                    same as -s N\n\
+      --help            display this help and exit\n\
+      --version         output version information and exit\n\
+\n\
+A field is a run of whitespace, than non-whitespace characters.\n\
+Fields are skipped before chars. \n\
+"));
+    }
+  exit (status);
+}
+
+/* Given a linebuffer LINE,
+   return a pointer to the beginning of the line's field to be compared. */
+
+static char *
+find_field (line)
+     struct linebuffer *line;
+{
+  register int count;
+  register char *lp = line->buffer;
+  register int size = line->length;
+  register int i = 0;
+
+  for (count = 0; count < skip_fields && i < size; count++)
+    {
+      while (i < size && ISBLANK (lp[i]))
+	i++;
+      while (i < size && !ISBLANK (lp[i]))
+	i++;
+    }
+
+  for (count = 0; count < skip_chars && i < size; count++)
+    i++;
+
+  return lp + i;
+}
+
+/* Return zero if two strings OLD and NEW match, nonzero if not.
+   OLD and NEW point not to the beginnings of the lines
+   but rather to the beginnings of the fields to compare.
+   OLDLEN and NEWLEN are their lengths. */
+
+static int
+different (old, new, oldlen, newlen)
+     char *old;
+     char *new;
+     int oldlen;
+     int newlen;
+{
+  register int order;
+
+  if (check_chars)
+    {
+      if (oldlen > check_chars)
+	oldlen = check_chars;
+      if (newlen > check_chars)
+	newlen = check_chars;
+    }
+  order = memcmp (old, new, min (oldlen, newlen));
+  if (order == 0)
+    return oldlen - newlen;
+  return order;
+}
 
+/* Output the line in linebuffer LINE to stream STREAM
+   provided that the switches say it should be output.
+   If requested, print the number of times it occurred, as well;
+   LINECOUNT + 1 is the number of times that the line occurred. */
+
+static void
+writeline (line, stream, linecount)
+     struct linebuffer *line;
+     FILE *stream;
+     int linecount;
+{
+  if ((mode == output_unique && linecount != 0)
+      || (mode == output_repeated && linecount == 0))
+    return;
+
+  if (countmode == count_occurrences)
+    fprintf (stream, "%7d\t", linecount + 1);
+
+  fwrite (line->buffer, sizeof (char), line->length, stream);
+  putc ('\n', stream);
+}
+
+/* Process input file INFILE with output to OUTFILE.
+   If either is "-", use the standard I/O stream for it instead. */
+
+static void
+check_file (infile, outfile)
+     char *infile, *outfile;
+{
+  FILE *istream;
+  FILE *ostream;
+  struct linebuffer lb1, lb2;
+  struct linebuffer *thisline, *prevline, *exch;
+  char *prevfield, *thisfield;
+  int prevlen, thislen;
+  int match_count = 0;
+
+  if (!strcmp (infile, "-"))
+    istream = stdin;
+  else
+    istream = fopen (infile, "r");
+  if (istream == NULL)
+    error (1, errno, "%s", infile);
+
+  if (!strcmp (outfile, "-"))
+    ostream = stdout;
+  else
+    ostream = fopen (outfile, "w");
+  if (ostream == NULL)
+    error (1, errno, "%s", outfile);
+
+  thisline = &lb1;
+  prevline = &lb2;
+
+  initbuffer (thisline);
+  initbuffer (prevline);
+
+  if (readline (prevline, istream) == 0)
+    goto closefiles;
+  prevfield = find_field (prevline);
+  prevlen = prevline->length - (prevfield - prevline->buffer);
+
+  while (!feof (istream))
+    {
+      if (readline (thisline, istream) == 0)
+	break;
+      thisfield = find_field (thisline);
+      thislen = thisline->length - (thisfield - thisline->buffer);
+      if (!different (thisfield, prevfield, thislen, prevlen))
+	match_count++;
+      else
+	{
+	  writeline (prevline, ostream, match_count);
+	  match_count = 0;
+
+	  exch = prevline;
+	  prevline = thisline;
+	  thisline = exch;
+	  prevfield = thisfield;
+	  prevlen = thislen;
+	}
+    }
+
+  writeline (prevline, ostream, match_count);
+
+ closefiles:
+  if (ferror (istream) || fclose (istream) == EOF)
+    error (1, errno, _("error reading %s"), infile);
+
+  if (ferror (ostream) || fclose (ostream) == EOF)
+    error (1, errno, _("error writing %s"), outfile);
+
+  free (lb1.buffer);
+  free (lb2.buffer);
+}
+
 void
 main (argc, argv)
      int argc;
@@ -185,188 +363,4 @@ main (argc, argv)
   check_file (infile, outfile);
 
   exit (0);
-}
-
-/* Process input file INFILE with output to OUTFILE.
-   If either is "-", use the standard I/O stream for it instead. */
-
-static void
-check_file (infile, outfile)
-     char *infile, *outfile;
-{
-  FILE *istream;
-  FILE *ostream;
-  struct linebuffer lb1, lb2;
-  struct linebuffer *thisline, *prevline, *exch;
-  char *prevfield, *thisfield;
-  int prevlen, thislen;
-  int match_count = 0;
-
-  if (!strcmp (infile, "-"))
-    istream = stdin;
-  else
-    istream = fopen (infile, "r");
-  if (istream == NULL)
-    error (1, errno, "%s", infile);
-
-  if (!strcmp (outfile, "-"))
-    ostream = stdout;
-  else
-    ostream = fopen (outfile, "w");
-  if (ostream == NULL)
-    error (1, errno, "%s", outfile);
-
-  thisline = &lb1;
-  prevline = &lb2;
-
-  initbuffer (thisline);
-  initbuffer (prevline);
-
-  if (readline (prevline, istream) == 0)
-    goto closefiles;
-  prevfield = find_field (prevline);
-  prevlen = prevline->length - (prevfield - prevline->buffer);
-
-  while (!feof (istream))
-    {
-      if (readline (thisline, istream) == 0)
-	break;
-      thisfield = find_field (thisline);
-      thislen = thisline->length - (thisfield - thisline->buffer);
-      if (!different (thisfield, prevfield, thislen, prevlen))
-	match_count++;
-      else
-	{
-	  writeline (prevline, ostream, match_count);
-	  match_count = 0;
-
-	  exch = prevline;
-	  prevline = thisline;
-	  thisline = exch;
-	  prevfield = thisfield;
-	  prevlen = thislen;
-	}
-    }
-
-  writeline (prevline, ostream, match_count);
-
- closefiles:
-  if (ferror (istream) || fclose (istream) == EOF)
-    error (1, errno, _("error reading %s"), infile);
-
-  if (ferror (ostream) || fclose (ostream) == EOF)
-    error (1, errno, _("error writing %s"), outfile);
-
-  free (lb1.buffer);
-  free (lb2.buffer);
-}
-
-/* Given a linebuffer LINE,
-   return a pointer to the beginning of the line's field to be compared. */
-
-static char *
-find_field (line)
-     struct linebuffer *line;
-{
-  register int count;
-  register char *lp = line->buffer;
-  register int size = line->length;
-  register int i = 0;
-
-  for (count = 0; count < skip_fields && i < size; count++)
-    {
-      while (i < size && ISBLANK (lp[i]))
-	i++;
-      while (i < size && !ISBLANK (lp[i]))
-	i++;
-    }
-
-  for (count = 0; count < skip_chars && i < size; count++)
-    i++;
-
-  return lp + i;
-}
-
-/* Return zero if two strings OLD and NEW match, nonzero if not.
-   OLD and NEW point not to the beginnings of the lines
-   but rather to the beginnings of the fields to compare.
-   OLDLEN and NEWLEN are their lengths. */
-
-static int
-different (old, new, oldlen, newlen)
-     char *old;
-     char *new;
-     int oldlen;
-     int newlen;
-{
-  register int order;
-
-  if (check_chars)
-    {
-      if (oldlen > check_chars)
-	oldlen = check_chars;
-      if (newlen > check_chars)
-	newlen = check_chars;
-    }
-  order = memcmp (old, new, min (oldlen, newlen));
-  if (order == 0)
-    return oldlen - newlen;
-  return order;
-}
-
-/* Output the line in linebuffer LINE to stream STREAM
-   provided that the switches say it should be output.
-   If requested, print the number of times it occurred, as well;
-   LINECOUNT + 1 is the number of times that the line occurred. */
-
-static void
-writeline (line, stream, linecount)
-     struct linebuffer *line;
-     FILE *stream;
-     int linecount;
-{
-  if ((mode == output_unique && linecount != 0)
-      || (mode == output_repeated && linecount == 0))
-    return;
-
-  if (countmode == count_occurrences)
-    fprintf (stream, "%7d\t", linecount + 1);
-
-  fwrite (line->buffer, sizeof (char), line->length, stream);
-  putc ('\n', stream);
-}
-
-static void
-usage (status)
-     int status;
-{
-  if (status != 0)
-    fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
-  else
-    {
-      printf (_("\
-Usage: %s [OPTION]... [INPUT [OUTPUT]]\n\
-"),
-	      program_name);
-      printf (_("\
-Discard all but one of successive identical lines from INPUT (or\n\
-standard input), writing to OUTPUT (or standard output).\n\
-\n\
-  -c, --count           prefix lines by the number of occurrences\n\
-  -d, --repeated        only print duplicate lines\n\
-  -f, --skip-fields=N   avoid comparing the N first fields\n\
-  -s, --skip-chars=N    avoid comparing the N first characters\n\
-  -u, --unique          only print unique lines\n\
-  -w, --check-chars=N   compare no more than N characters in lines\n\
-  -N                    same as -f N\n\
-  +N                    same as -s N\n\
-      --help            display this help and exit\n\
-      --version         output version information and exit\n\
-\n\
-A field is a run of whitespace, than non-whitespace characters.\n\
-Fields are skipped before chars. \n\
-"));
-    }
-  exit (status);
 }

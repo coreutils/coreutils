@@ -32,10 +32,6 @@
 
 int safe_read ();
 
-static void wc ();
-static void wc_file ();
-static void write_counts ();
-
 /* The name this program was run with. */
 char *program_name;
 
@@ -95,100 +91,28 @@ read standard input.\n\
   exit (status);
 }
 
-void
-main (argc, argv)
-     int argc;
-     char **argv;
-{
-  int optc;
-  int nfiles;
-
-  program_name = argv[0];
-  exit_status = 0;
-  print_lines = print_words = print_chars = 0;
-  total_lines = total_words = total_chars = 0;
-
-  while ((optc = getopt_long (argc, argv, "clw", longopts, (int *) 0)) != EOF)
-    switch (optc)
-      {
-      case 0:
-	break;
-
-      case 'c':
-	print_chars = 1;
-	break;
-
-      case 'l':
-	print_lines = 1;
-	break;
-
-      case 'w':
-	print_words = 1;
-	break;
-
-      default:
-	usage (1);
-      }
-
-  if (show_version)
-    {
-      printf ("wc - %s\n", version_string);
-      exit (0);
-    }
-
-  if (show_help)
-    usage (0);
-
-  if (print_lines + print_words + print_chars == 0)
-    print_lines = print_words = print_chars = 1;
-
-  nfiles = argc - optind;
-
-  if (nfiles == 0)
-    {
-      have_read_stdin = 1;
-      wc (0, "");
-    }
-  else
-    {
-      for (; optind < argc; ++optind)
-	wc_file (argv[optind]);
-
-      if (nfiles > 1)
-	write_counts (total_lines, total_words, total_chars, _("total"));
-    }
-
-  if (have_read_stdin && close (0))
-    error (1, errno, "-");
-
-  exit (exit_status);
-}
-
 static void
-wc_file (file)
+write_counts (lines, words, chars, file)
+     unsigned long lines, words, chars;
      char *file;
 {
-  if (!strcmp (file, "-"))
+  if (print_lines)
+    printf ("%7lu", lines);
+  if (print_words)
     {
-      have_read_stdin = 1;
-      wc (0, file);
+      if (print_lines)
+	putchar (' ');
+      printf ("%7lu", words);
     }
-  else
+  if (print_chars)
     {
-      int fd = open (file, O_RDONLY);
-      if (fd == -1)
-	{
-	  error (0, errno, "%s", file);
-	  exit_status = 1;
-	  return;
-	}
-      wc (fd, file);
-      if (close (fd))
-	{
-	  error (0, errno, "%s", file);
-	  exit_status = 1;
-	}
+      if (print_lines || print_words)
+	putchar (' ');
+      printf ("%7lu", chars);
     }
+  if (*file)
+    printf (" %s", file);
+  putchar ('\n');
 }
 
 static void
@@ -309,25 +233,97 @@ wc (fd, file)
 }
 
 static void
-write_counts (lines, words, chars, file)
-     unsigned long lines, words, chars;
+wc_file (file)
      char *file;
 {
-  if (print_lines)
-    printf ("%7lu", lines);
-  if (print_words)
+  if (!strcmp (file, "-"))
     {
-      if (print_lines)
-	putchar (' ');
-      printf ("%7lu", words);
+      have_read_stdin = 1;
+      wc (0, file);
     }
-  if (print_chars)
+  else
     {
-      if (print_lines || print_words)
-	putchar (' ');
-      printf ("%7lu", chars);
+      int fd = open (file, O_RDONLY);
+      if (fd == -1)
+	{
+	  error (0, errno, "%s", file);
+	  exit_status = 1;
+	  return;
+	}
+      wc (fd, file);
+      if (close (fd))
+	{
+	  error (0, errno, "%s", file);
+	  exit_status = 1;
+	}
     }
-  if (*file)
-    printf (" %s", file);
-  putchar ('\n');
+}
+
+void
+main (argc, argv)
+     int argc;
+     char **argv;
+{
+  int optc;
+  int nfiles;
+
+  program_name = argv[0];
+  exit_status = 0;
+  print_lines = print_words = print_chars = 0;
+  total_lines = total_words = total_chars = 0;
+
+  while ((optc = getopt_long (argc, argv, "clw", longopts, (int *) 0)) != EOF)
+    switch (optc)
+      {
+      case 0:
+	break;
+
+      case 'c':
+	print_chars = 1;
+	break;
+
+      case 'l':
+	print_lines = 1;
+	break;
+
+      case 'w':
+	print_words = 1;
+	break;
+
+      default:
+	usage (1);
+      }
+
+  if (show_version)
+    {
+      printf ("wc - %s\n", version_string);
+      exit (0);
+    }
+
+  if (show_help)
+    usage (0);
+
+  if (print_lines + print_words + print_chars == 0)
+    print_lines = print_words = print_chars = 1;
+
+  nfiles = argc - optind;
+
+  if (nfiles == 0)
+    {
+      have_read_stdin = 1;
+      wc (0, "");
+    }
+  else
+    {
+      for (; optind < argc; ++optind)
+	wc_file (argv[optind]);
+
+      if (nfiles > 1)
+	write_counts (total_lines, total_words, total_chars, _("total"));
+    }
+
+  if (have_read_stdin && close (0))
+    error (1, errno, "-");
+
+  exit (exit_status);
 }
