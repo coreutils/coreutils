@@ -7,6 +7,8 @@ if test "$VERBOSE" = yes; then
   mv --version
 fi
 
+umask 022
+
 pwd=`pwd`
 tmp=cp-parents.$$
 trap 'status=$?; cd $pwd; exec 1>&2; rm -rf $tmp && exit $status' 0
@@ -18,7 +20,7 @@ framework_failure=0
 mkdir $tmp || framework_failure=1
 cd $tmp || framework_failure=1
 mkdir foo bar || framework_failure=1
-mkdir -p a/b/c d || framework_failure=1
+mkdir -p a/b/c d e || framework_failure=1
 
 if test $framework_failure = 1; then
   echo 'failure in testing framework'
@@ -36,6 +38,11 @@ cp -R --parents foo/ bar || fail=1
 cp --verbose -a --parents a/b/c d > /dev/null 2>&1 || fail=1
 test -d d/a/b/c || fail=1
 
-# FIXME: add tests to check that re_protect works
+# Check that re_protect works.
+chmod go=w d/a
+cp -a --parents d/a/b/c e || fail=1
+set _ `ls -ld e/d`;       shift; case $1 in drwxr-xr-x);; *) fail=1;; esac
+set _ `ls -ld e/d/a`;     shift; case $1 in drwx-w--w-);; *) fail=1;; esac
+set _ `ls -ld e/d/a/b/c`; shift; case $1 in drwxr-xr-x);; *) fail=1;; esac
 
 (exit $fail); exit
