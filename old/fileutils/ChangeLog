@@ -1,5 +1,7 @@
 2002-06-24  Jim Meyering  <meyering@lucent.com>
 
+	* Version 4.1.10.
+
 	* src/stat.c (usage): Add missing open-quote.
 	Reported by Michael Piefel.
 
