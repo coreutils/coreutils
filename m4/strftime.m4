@@ -1,6 +1,9 @@
-#serial 4
+#serial 5
 
-AC_DEFUN(jm_STRFTIME_PREREQS,
+dnl This macro is intended to be used solely in this file.
+dnl These are the prerequisite macros for GNU's strftime.c replacement.
+dnl FIXME: the list is far from complete
+AC_DEFUN(_jm_STRFTIME_PREREQS,
 [
  dnl strftime.c uses localtime_r if it exists.  Check for it.
  AC_CHECK_FUNCS(localtime_r)
@@ -8,16 +11,19 @@ AC_DEFUN(jm_STRFTIME_PREREQS,
  dnl HAVE_TZNAME, HAVE_TZSET, HAVE_TM_ZONE, etc.
 ])
 
-dnl From Jim Meyering.
+dnl Determine if the strftime function has all the features of the GNU one.
+dnl
 dnl If you use this macro in a package, you should
 dnl add the following two lines to acconfig.h:
 dnl   /* Define to gnu_strftime if the replacement function should be used.  */
 dnl   #undef strftime
 dnl
+dnl From Jim Meyering.
+dnl
 AC_DEFUN(jm_FUNC_GNU_STRFTIME,
 [AC_REQUIRE([AC_HEADER_TIME])dnl
 
- jm_STRFTIME_PREREQS
+ _jm_STRFTIME_PREREQS
 
  AC_REQUIRE([AC_C_CONST])dnl
  AC_REQUIRE([AC_HEADER_STDC])dnl
@@ -79,6 +85,7 @@ main ()
   CMP ("%^B", "JANUARY");
   CMP ("%C", "19");		/* POSIX.2 */
   CMP ("%D", "01/09/70");	/* POSIX.2 */
+  CMP ("%F", "1970-01-09");
   CMP ("%G", "1970");		/* GNU */
   CMP ("%H", "13");
   CMP ("%I", "01");
@@ -138,6 +145,6 @@ changequote([, ])dnl
 
 AC_DEFUN(jm_FUNC_STRFTIME,
 [
-  jm_STRFTIME_PREREQS
+  _jm_STRFTIME_PREREQS
   AC_REPLACE_FUNCS(strftime)
 ])
