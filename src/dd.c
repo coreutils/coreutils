@@ -1150,15 +1150,21 @@ main (int argc, char **argv)
 #if HAVE_FTRUNCATE
       if (seek_record != 0 && !(conversions_mask & C_NOTRUNC))
 	{
+	  struct stat stdout_stat;
 	  off_t o = seek_record * output_blocksize;
 	  if (o / output_blocksize != seek_record)
 	    error (1, 0, _("file offset out of range"));
-	  if (ftruncate (STDOUT_FILENO, o) < 0)
+
+	  /* Attempt to use ftruncate only if STDOUT refers to a regular file.
+	     On Linux 2.4.0, ftruncate fails with for non-regular files.  */
+	  if (fstat (STDOUT_FILENO, &stdout_stat) == 0
+	      && S_ISREG (stdout_stat.st_mode)
+	      && ftruncate (STDOUT_FILENO, o) < 0)
 	    {
 	      char buf[LONGEST_HUMAN_READABLE + 1];
 	      error (1, errno, _("advancing past %s blocks in output file %s"),
-				 human_readable (seek_record, buf, 1, 1),
-				 quote (output_file));
+		     human_readable (seek_record, buf, 1, 1),
+		     quote (output_file));
 	    }
 	}
 #endif
