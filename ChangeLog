@@ -1,3 +1,34 @@
+2004-04-26  Jim Meyering  <jim@meyering.net>
+
+	* src/sort.c (limfield): Make a comment clearer.
+
+2004-04-25  Paul Eggert  <eggert@twinsun.com>
+
+	Fix POSIX-conformance bug: "sort -k 3,3.5b" is supposed to skip
+	leading blanks when computing the location of the field end;
+	it is not supposed to skip trailing blanks.  Solaris 8 "sort"
+	does conform to POSIX.  Also fix the documentation to clarify
+	this and related issues.
+
+	* doc/coreutils.texi (sort invocation): Mention -k earlier, so
+	that the options are in alphabetical order.  Describe how -b works
+	more-accurately; this involves fixing some examples, too.  Mention
+	what happens if the start field falls after an end field or after
+	a line end.  Warn about using -k without -b, -g, -M, -n, or -t.
+	Add an example of how to sort IPv4 addresses and Apache Common
+	Log Format dates.  Remove a duplicate example.
+	(Putting the tools together): Use separate options rather
+	than agglomerating them.
+	* src/sort.c (limfield): Use skipeblanks, not skipsblanks, to
+	decode whether to skip leading blanks.
+	(trailing_blanks): Remove.
+	(fillbuf, getmonth, keycompare): Don't trim trailing blanks.
+
+	* tests/pr/Test.pm: Fix typo in env_default comment.
+	* tests/sort/Test.pm: Likewise.
+	(18c, 18d): Reverse the order of output lines, so that the
+	test cases conform to POSIX.
+
 2004-04-22  Paul Eggert  <eggert@twinsun.com>
 
 	More signal-handling cleanup for ls.c.  Do not allow signals to
