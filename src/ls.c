@@ -4050,8 +4050,9 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
   -g                         like -l, but do not list owner\n\
-  -G, --no-group             inhibit display of group information\n\
-  -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n\
+  -G, --no-group             like -l, but do not list group\n\
+  -h, --human-readable       with -l, print sizes in human readable format\n\
+                               (e.g., 1K 234M 2G)\n\
       --si                   likewise, but use powers of 1000 not 1024\n\
   -H, --dereference-command-line\n\
                              follow symbolic links listed on the command line\n\
@@ -4064,7 +4065,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (_("\
       --indicator-style=WORD append indicator with style WORD to entry names:\n\
                                none (default), classify (-F), file-type (-p)\n\
-  -i, --inode                print index number of each file\n\
+  -i, --inode                with -l, print the index number of each file\n\
   -I, --ignore=PATTERN       do not list implied entries matching shell PATTERN\n\
   -k                         like --block-size=1K\n\
 "), stdout);
@@ -4093,19 +4094,19 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (_("\
   -r, --reverse              reverse order while sorting\n\
   -R, --recursive            list subdirectories recursively\n\
-  -s, --size                 print size of each file, in blocks\n\
+  -s, --size                 with -l, print size of each file, in blocks\n\
 "), stdout);
       fputs (_("\
   -S                         sort by file size\n\
       --sort=WORD            extension -X, none -U, size -S, time -t,\n\
                              version -v, status -c, time -t, atime -u,\n\
                              access -u, use -u\n\
-      --time=WORD            show time as WORD instead of modification time:\n\
-                             atime, access, use, ctime or status; use\n\
+      --time=WORD            with -l, show time as WORD instead of modification\n\
+                             time: atime, access, use, ctime or status; use\n\
                              specified time as sort key if --sort=time\n\
 "), stdout);
       fputs (_("\
-      --time-style=STYLE     show times using style STYLE:\n\
+      --time-style=STYLE     with -l, show times using style STYLE:\n\
                              full-iso, long-iso, iso, locale, +FORMAT.\n\
                              FORMAT is interpreted like `date'; if FORMAT is\n\
                              FORMAT1<newline>FORMAT2, FORMAT1 applies to\n\
