@@ -353,9 +353,11 @@ set_fields (fieldstr)
 			  /* No, the new sequence starts before the
 			     old.  Does the old range going to end of line
 			     extend into the new range?  */
-			  if (eol_range_start < value)
+			  if (value >= eol_range_start - 1)
+			    {
 			    /* Yes.  Simply move the end of line marker. */
 			    eol_range_start = initial;
+			    }
 			  else
 			    {
 			      /* No.  A simple range, before and disjoint from
