@@ -5,30 +5,30 @@
 
 	* lib/long-options.h: Update prototype.
 
-	* chgrp.c: Include long-options.h
+	* src/chgrp.c: Include long-options.h
 	[long_options]: Remove the "help" and "version" entries.
 	(main): Use parse_long_options, including author name(s).
 	Remove the show_version and show_help blocks.
-	* chmod.c: Likewise.
-	* chown.c: Likewise.
-	* cp.c: Likewise.
-	* dd.c: Likewise.
-	* df.c: Likewise.
-	* dircolors.c: Likewise.
-	* du.c: Likewise.
-	* install.c: Likewise.
-	* ln.c: Likewise.
-	* ls.c: Likewise.
-	* mkdir.c: Likewise.
-	* mkfifo.c: Likewise.
-	* mknod.c: Likewise.
-	* mv.c: Likewise.
-	* mvdir.c: Likewise.
-	* rm.c: Likewise.
-	* rmdir.c: Likewise.
-	* shred.c: Likewise.
-	* sync.c: Likewise.
-	* touch.c: Likewise.
+	* src/chmod.c: Likewise.
+	* src/chown.c: Likewise.
+	* src/cp.c: Likewise.
+	* src/dd.c: Likewise.
+	* src/df.c: Likewise.
+	* src/dircolors.c: Likewise.
+	* src/du.c: Likewise.
+	* src/install.c: Likewise.
+	* src/ln.c: Likewise.
+	* src/ls.c: Likewise.
+	* src/mkdir.c: Likewise.
+	* src/mkfifo.c: Likewise.
+	* src/mknod.c: Likewise.
+	* src/mv.c: Likewise.
+	* src/mvdir.c: Likewise.
+	* src/rm.c: Likewise.
+	* src/rmdir.c: Likewise.
+	* src/shred.c: Likewise.
+	* src/sync.c: Likewise.
+	* src/touch.c: Likewise.
 
 1999-02-18  Paul Eggert  <eggert@twinsun.com>
 
