@@ -8821,7 +8821,7 @@ Interpreted sequences for file stat are:
 @item %i - Inode number
 @item %n - File name
 @item %N - Quoted File name with dereference if symbolic link
-@item %o - IO block size
+@item %o - I/O block size
 @item %s - Total size, in bytes
 @item %t - Major device type in hex
 @item %T - Minor device type in hex
