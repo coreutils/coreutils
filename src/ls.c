@@ -2695,7 +2695,7 @@ sort_files (void)
 {
   /* `func' must be `volatile', so it can't be
      clobbered by a `longjmp' into this function.  */
-  volatile int (*func) (V, V);
+  int (* volatile func) (V, V);
 
   switch (sort_type)
     {
