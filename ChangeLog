@@ -1,6 +1,15 @@
-2004-03-24  Jim Meyering  <jim@meyering.net>
+2004-03-25  Jim Meyering  <jim@meyering.net>
 
-	* Version 5.3.0.
+	* src/du.c (main): Remove now-unused declaration of `i'.
+
+2004-03-24  Paul Eggert  <eggert@twinsun.com>
+
+	* src/du.c (main): Filter out file names of length zero before
+	invoking fts, so that they don't cause fatal errors.
+
+2004-03-25  Jim Meyering  <jim@meyering.net>
+
+	* tests/du/files0-from (zero-len): Add a test for the above.
 
 2004-02-25  Paul Eggert  <eggert@twinsun.com>
 
