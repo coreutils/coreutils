@@ -1,3 +1,13 @@
+1997-10-07  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/*.c: Update bug-reporting address.
+	* src/cat.c: Indent cpp directives to reflect nesting.
+	* src/cksum.c: Likewise.
+	* src/csplit.c: Likewise.
+	* src/fmt.c: Likewise.
+	* src/nl.c: Likewise.
+	* src/paste.c: Likewise.
+
 1997-09-27  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* m4/memcmp.m4: Integrate test to detect bug in memcmp from the
