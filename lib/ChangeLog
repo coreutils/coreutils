@@ -1,3 +1,24 @@
+2004-12-02  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* openat.c: Include "openat.h" before other include files.
+	Include "exitfail.h".
+	(openat): Remove #undef; no longer needed now that we include openat.h
+	first.
+	(rpl_openat): Add comment about mode_t promotion.  Simplify
+	code a bit by moving initializations around.  Use exit_failure
+	rather than EXIT_FAILURE.
+	* openat.h: Add copyright and authorship notice.
+	(AT_FDCWD): Use the same value Solaris 9 uses, except of type
+	'int' not 'unsigned int'.
+
+	* save-cwd.c: Include "save-cwd.h" before other include files.
+	(O_DIRECTORY): Remove; not needed here, since "." must be
+	a directory.  All uses removed.
+	(save_cwd): Use __sgi || __sun, not sun || __sun.  __sun is
+	universal on Suns, and we also need to test for IRIX.
+	Revamp code to use 'if' rather than '#if'.
+	Avoid unnecessary comparison of cwd->desc to 0.
+
 2004-12-01  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* hard-locale.c: Assume <locale.h> exists.
