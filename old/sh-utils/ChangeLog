@@ -1,3 +1,8 @@
+Fri Jan 19 10:00:08 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* aclocal.m4 (fp_PROG_INSTALL): New macro.
+	* configure.in: Use it instead of AC_PROG_INSTALL.
+
 Wed Jan 17 11:37:59 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* stty.c: Protoize and __P-protect forward dcls.
@@ -6,6 +11,10 @@ Wed Jan 17 11:37:59 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* lib/Makefile.am (su_SOURCES): Add xstrtol.c.
 	(HEADERS): Add xstrtol.h.
+
+	* test.c (advance): Protoize function.
+
+	* sleep.c (argdecode): Declare parameter const.
 
 Sat Jan 13 22:31:23 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
