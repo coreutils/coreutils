@@ -30,7 +30,7 @@ AC_DEFUN(AC_LFS,
   done
   case "$ac_result" in
   no)
-    case `(uname -s -r) 2>/dev/null` in
+    case "`(uname -s -r) 2>/dev/null`" in
     HP-UX' '?.10.[[2-9]][[0-9]]* | HP-UX' '?.1[[1-9]]* | HP-UX' '?.[[2-9]][[0-9]]*)
       # HP-UX 10.20 and later support large files,
       # but do not support `getconf LFS_CFLAGS'.
