@@ -350,14 +350,6 @@ char *alloca ();
    of `digit' even when the host does not conform to POSIX.  */
 #define ISDIGIT(c) ((unsigned) (c) - '0' <= 9)
 
-#ifndef PARAMS
-# if PROTOTYPES
-#  define PARAMS(Args) Args
-# else
-#  define PARAMS(Args) ()
-# endif
-#endif
-
 /* Take care of NLS matters.  */
 
 #if HAVE_LOCALE_H
