@@ -1,5 +1,5 @@
 /* savedir.c -- save the list of files in a directory in a string
-   Copyright (C) 1990 Free Software Foundation, Inc.
+   Copyright (C) 1990, 1997 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -18,13 +18,13 @@
 /* Written by David MacKenzie <djm@gnu.ai.mit.edu>. */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+# include <config.h>
 #endif
 
 #include <sys/types.h>
 
 #ifdef HAVE_UNISTD_H
-#include <unistd.h>
+# include <unistd.h>
 #endif
 
 #if HAVE_DIRENT_H
@@ -46,23 +46,25 @@
 
 #ifdef CLOSEDIR_VOID
 /* Fake a return value. */
-#define CLOSEDIR(d) (closedir (d), 0)
+# define CLOSEDIR(d) (closedir (d), 0)
 #else
-#define CLOSEDIR(d) closedir (d)
+# define CLOSEDIR(d) closedir (d)
 #endif
 
 #ifdef STDC_HEADERS
-#include <stdlib.h>
-#include <string.h>
+# include <stdlib.h>
+# include <string.h>
 #else
 char *malloc ();
 char *realloc ();
 #endif
 #ifndef NULL
-#define NULL 0
+# define NULL 0
 #endif
 
 char *stpcpy ();
+
+#include "savedir.h"
 
 /* Return a freshly allocated string containing the filenames
    in directory DIR, separated by '\0' characters;
@@ -73,7 +75,7 @@ char *stpcpy ();
 
 char *
 savedir (dir, name_size)
-     char *dir;
+     const char *dir;
      unsigned name_size;
 {
   DIR *dirp;
