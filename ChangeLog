@@ -1,11 +1,17 @@
-2002-11-30  Jim Meyering  <jim@meyering.net>
+2002-12-01  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.4.
+
+	* src/stat.c: Don't include <string.h> or <ctype.h>.
+	That's already done via system.h.
+
+2002-11-30  Jim Meyering  <jim@meyering.net>
 
 	(gobble_file): Remove the block of code that caused
 	`ls --color -F symlink-to-dir' to list the files in
 	`symlink-to-dir/.'.  Now, it prints `symlink-to-dir@', (just
 	like `ls -F symlink-to-dir') but with the addition of highlighting.
+	Reported by Jeff Sheinberg as Debian bug #168203.
 	* tests/ls-2/tests (sl-F-color, sl-dF-color): New tests for the above.
 
 	ls is now more efficient: it no longer needs to stat each directory
@@ -89,12 +95,6 @@
 	Inconsistency reported by Dmitry V. Levin.
 
 2002-11-11  Jim Meyering  <jim@meyering.net>
-
-	* src/ls.c (gobble_file): Make `ls -dF --color symlink-to-dir' work
-	properly.  Reported by Jeff Sheinberg as Debian bug #168203.
-	Patch by Michael Stone.
-
-	* tests/ls-2/tests (sl-dF-color): New test for the above fix.
 
 	* src/stat.c (usage): Transform --help items output via s/ - /   /,
 	so that help2man produces properly formatted man pages.
