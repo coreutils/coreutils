@@ -1,3 +1,14 @@
+2005-03-26  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* intprops.h (INT_STRLEN_BOUND, INT_BUFSIZE_BOUND):
+	"value of type" -> "type or expression" in comment.
+
+2005-03-26  Jim Meyering  <jim@meyering.net>
+
+	Comment nits.
+	* intprops.h: Add the apostrophe in `(one|two)'s complement'.
+	Correct typos: s/or/of/.
+
 2005-03-23  Jim Meyering  <jim@meyering.net>
 
 	* canonicalize.c: Remove duplicate `#include "stat-macros.h"'.
