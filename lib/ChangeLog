@@ -1,3 +1,23 @@
+2003-06-18  Jim Meyering  <jim@meyering.net>
+
+	* same.h: Update from gnulib.
+	* xstrtol.h: Update from gnulib.
+
+2003-06-17  Paul Eggert  <eggert@twinsun.com>
+
+	Assume C89, so PARAMS isn't needed.
+	* backupfile.h (PARAMS): Remove.  All uses removed.
+	* closeout.h, dirname.h, filemode.h, fsusage.h, getdate.h, getline.h,
+	group-member.h, hard-locale.h, hash.h, linebuffer.h, long-options.h,
+	makepath.h, memcasecmp.h, memcoll.h, modechange.h, mountlist.h,
+	path-concat.h, physmem.h, posixtm.h, quote.h, readutmp.h, same.h,
+	save-cwd.h, savedir.h, stdio-safer.h, strtoimax.c, strverscmp.h,
+	unistd-safer.h, version-etc.h, xalloc.h, xreadlink.h, xstrtod.h,
+	xstrtol.h: Likewise.
+	* filemode.h, hard-locale.h, memcoll.h, modechange.h, physmem.h, same.h,
+	strverscmp.h: Do not include config.h; no longer needed.
+	Anyway, config.h should always be included before any other file.
+
 2003-06-17  Jim Meyering  <jim@meyering.net>
 
 	* getline.c: Update from gnulib.
