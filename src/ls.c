@@ -2077,23 +2077,43 @@ print_dir (const char *name, const char *realname)
 
   clear_files ();
 
-  while ((next = readdir (dirp)) != NULL)
-    if (file_interesting (next))
-      {
-	enum filetype type = unknown;
+  while (1)
+    {
+      /* Set errno to zero so we can distinguish between a readdir failure
+	 and when readdir simply finds that there are no more entries.  */
+      errno = 0;
+      if ((next = readdir (dirp)) == NULL)
+	{
+	  if (errno)
+	    {
+	      /* Save/restore errno across closedir call.  */
+	      int e = errno;
+	      closedir (dirp);
+	      errno = e;
+
+	      /* Arrange to give a diagnostic after exiting this loop.  */
+	      dirp = NULL;
+	    }
+	  break;
+	}
+
+      if (file_interesting (next))
+	{
+	  enum filetype type = unknown;
 
 #if HAVE_STRUCT_DIRENT_D_TYPE
-	if (next->d_type == DT_DIR || next->d_type == DT_CHR
-	    || next->d_type == DT_BLK || next->d_type == DT_SOCK
-	    || next->d_type == DT_FIFO)
-	  type = next->d_type;
+	  if (next->d_type == DT_DIR || next->d_type == DT_CHR
+	      || next->d_type == DT_BLK || next->d_type == DT_SOCK
+	      || next->d_type == DT_FIFO)
+	    type = next->d_type;
 #endif
-	total_blocks += gobble_file (next->d_name, type, 0, name);
-      }
+	  total_blocks += gobble_file (next->d_name, type, 0, name);
+	}
+    }
 
-  if (CLOSEDIR (dirp))
+  if (dirp == NULL || CLOSEDIR (dirp))
     {
-      error (0, errno, "%s", quotearg_colon (name));
+      error (0, errno, _("reading directory %s"), quotearg_colon (name));
       exit_status = 1;
       /* Don't return; print whatever we got. */
     }
