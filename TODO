@@ -127,3 +127,9 @@ doc/coreutils.texi:
   Suggestion from Dan Jacobson.
   The sentence or two describing the common case must appear just once,
   and then it must be made to appear in the 70+ places where it's needed.
+
+du: rewrite to use something other than nftw to perform directory traversal.
+  Due to design limitations of nftw, ...
+    using -D makes du dereference each command
+    line argument that is a symlink to a directory.
+    A symlink to non-directory is not dereferenced.
