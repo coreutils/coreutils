@@ -1,6 +1,6 @@
 2004-04-13  Jim Meyering  <jim@meyering.net>
 
-	Change `jm_' in AC_DEFINE'd names to `gl_'.
+	Change `jm_' in AC_DEFINE'd names to `gl_'.  Update all uses.
 
 	* afs.m4, allocsa.m4, assert.m4, backupfile.m4, bison.m4:
 	* check-decl.m4, chown.m4, d-ino.m4, d-type.m4, dirname.m4:
