@@ -549,7 +549,7 @@ main (int argc, char **argv)
 	}
     }
 
-  if (skip_fields == SFO_OBSOLETE && 200112 <= posix2_version ())
+  if (skip_field_option_type == SFO_OBSOLETE && 200112 <= posix2_version ())
     {
       error (0, 0, _("`-%lu' option is obsolete; use `-f %lu'"),
 	     (unsigned long int) skip_fields, (unsigned long int) skip_fields);
