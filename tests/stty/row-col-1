@@ -26,13 +26,13 @@ export LC_ALL
 
 tests='
 1 rows_40_columns_80 40_80
-2 rows_0_columns_0 0_0
+2 rows_1_columns_1 1_1
 3 rows_40_columns_80 40_80
-4 rows_0 0_80
-5 columns_0 0_0
-6 rows_40 40_0
-7 rows_0 0_0
-8 columns_80 0_80
+4 rows_1 1_80
+5 columns_1 1_1
+6 rows_40 40_1
+7 rows_1 1_1
+8 columns_80 1_80
 9 rows_30 30_80
 NA LAST NA
 '
