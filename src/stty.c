@@ -424,10 +424,10 @@ char *program_name;
 /* VARARGS */
 static void
 #ifdef __STDC__
-wrapf (char *message,...)
+wrapf (const char *message,...)
 #else
 wrapf (message, va_alist)
-     char *message;
+     const char *message;
      va_dcl
 #endif
 {
