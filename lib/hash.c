@@ -1,38 +1,387 @@
+/* hash - hashing table processing.
+   Copyright (C) 1998 Free Software Foundation, Inc.
+   Written by Jim Meyering, 1992.
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2, or (at your option)
+   any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+
 /* A generic hash table package.  */
 
+/* Define USE_OBSTACK to 1 if you want the allocator to use obstacks instead
+   of malloc.  If you change USE_OBSTACK, you have to recompile!  */
+
+#if HAVE_CONFIG_H
+# include <config.h>
+#endif
+#if HAVE_STDLIB_H
+# include <stdlib.h>
+#endif
+#if HAVE_STDBOOL_H
+# include <stdbool.h>
+#else
+typedef enum {false = 0, true = 1} bool;
+#endif
 #include <stdio.h>
-#include <stdlib.h>
 #include <assert.h>
+
+#if !HAVE_DECL_FREE
+void free ();
+#endif
+#if !HAVE_DECL_MALLOC
+char *malloc ();
+#endif
+
+#if USE_OBSTACK
+# include "obstack.h"
+# ifndef obstack_chunk_alloc
+#  define obstack_chunk_alloc malloc
+# endif
+# ifndef obstack_chunk_free
+#  define obstack_chunk_free free
+# endif
+#endif
 
 #include "hash.h"
 
-#ifdef USE_OBSTACK
-# define ZALLOC(Ht, N) obstack_alloc (&(ht->ht_obstack), (N))
-#else
-# define ZALLOC(Ht, N) malloc ((N))
-#endif
+/* An hash table contains many internal entries, each holding a pointer to
+   some user provided data (also called a user entry).  An entry indistinctly
+   refers to both the internal entry and its associated user entry.  A user
+   entry contents may be hashed by a randomisation function (the hashing
+   function, or just `hasher' for short) into a number (or `slot') between 0
+   and the current table size.  At each slot position in the hash table,
+   starts a linked chain of entries for which the user data all hash to this
+   slot.  A bucket is the collection of all entries hashing to the same slot.
 
-#define BUCKET_HEAD(ht, idx) ((ht)->hash_table[(idx)])
+   A good `hasher' function will distribute entries rather evenly in buckets.
+   In the ideal case, the length of each bucket is roughly the number of
+   entries divided by the table size.  Finding the slot for a data is usually
+   done at constant speed by the `hasher', and the later finding of a precise
+   entry is linear in time with the size of the bucket.  Consequently, a
+   bigger hash table size (that is, a bigger number of buckets) is prone to
+   yielding shorter buckets, *given* the `hasher' function behaves properly.
 
-static int
+   Long buckets slow down the lookup algorithm.  One might use big hash table
+   sizes in hope to reduce the average length of buckets, but this might
+   become inordinate, as unused slots in the hash table take some space.  The
+   best bet is to make sure you are using a good `hasher' function (beware
+   that those are not that easy to write! :-), and to use a table size at
+   least bigger than the actual number of entries.
+
+   Currently, whenever the addition of an entry gets 80% of buckets to be
+   non-empty, this package automatically doubles the number of buckets.  */
+
+/* Information and lookup.  */
+
+/* The following few functions provide information about the overall hash
+   table organisation: the number of entries, number of buckets and maximum
+   length of buckets.  */
+
+/* Return the number of buckets in the hash table.  The table size, the total
+   number of buckets (used plus unused), or the maximum number of slots, are
+   the same quantity.  */
+
+unsigned int
+hash_get_n_buckets (const Hash_table *table)
+{
+  return table->n_buckets;
+}
+
+/* Return the number of slots in use (non-empty buckets).  */
+
+unsigned int
+hash_get_n_buckets_used (const Hash_table *table)
+{
+  return table->n_buckets_used;
+}
+
+/* Return the number of active entries.  */
+
+unsigned int
+hash_get_n_entries (const Hash_table *table)
+{
+  return table->n_entries;
+}
+
+/* Return the length of the most lenghty chain (bucket).  */
+
+unsigned int
+hash_get_max_bucket_length (const Hash_table *table)
+{
+  struct hash_entry *bucket;
+  unsigned int max_bucket_length = 0;
+
+  for (bucket = table->bucket; bucket < table->bucket_limit; bucket++)
+    if (bucket->data)
+      {
+	struct hash_entry *cursor = bucket;
+	unsigned int bucket_length = 1;
+
+	while (cursor = cursor->next, cursor)
+	  bucket_length++;
+
+	if (bucket_length > max_bucket_length)
+	  max_bucket_length = bucket_length;
+      }
+
+  return max_bucket_length;
+}
+
+/* Do a mild validation of an hash table, by traversing it and checking two
+   statistics.  */
+
+bool
+hash_table_ok (const Hash_table *table)
+{
+  struct hash_entry *bucket;
+  unsigned int n_buckets_used = 0;
+  unsigned int n_entries = 0;
+
+  for (bucket = table->bucket; bucket < table->bucket_limit; bucket++)
+    if (bucket->data)
+      {
+	struct hash_entry *cursor = bucket;
+
+	/* Count bucket head.  */
+	n_buckets_used++;
+	n_entries++;
+
+	/* Count bucket overflow.  */
+	while (cursor = cursor->next, cursor)
+	  n_entries++;
+      }
+
+  if (n_buckets_used == table->n_buckets_used && n_entries == table->n_entries)
+    return true;
+
+  return false;
+}
+
+void
+hash_print_statistics (const Hash_table *table, FILE *stream)
+{
+  unsigned int n_entries = hash_get_n_entries (table);
+  unsigned int n_buckets = hash_get_n_buckets (table);
+  unsigned int n_buckets_used = hash_get_n_buckets_used (table);
+  unsigned int max_bucket_length = hash_get_max_bucket_length (table);
+
+  fprintf (stream, "# entries:         %u\n", n_entries);
+  fprintf (stream, "# buckets:         %u\n", n_buckets);
+  fprintf (stream, "# buckets used:    %u (%.2f%%)\n", n_buckets_used,
+	   (100.0 * n_buckets_used) / n_buckets);
+  fprintf (stream, "max bucket length: %u\n", max_bucket_length);
+}
+
+/* Return the user entry from the hash table, if some entry in the hash table
+   compares equally with ENTRY, or NULL otherwise. */
+
+void *
+hash_lookup (const Hash_table *table, const void *entry)
+{
+  struct hash_entry *bucket
+    = table->bucket + table->hasher (entry, table->n_buckets);
+  struct hash_entry *cursor;
+
+  assert (bucket < table->bucket_limit);
+
+  if (bucket->data == NULL)
+    return NULL;
+
+  for (cursor = bucket; cursor; cursor = cursor->next)
+    if (table->comparator (entry, cursor->data))
+      return cursor->data;
+
+  return NULL;
+}
+
+/* Walking.  */
+
+/* The functions in this page traverse the hash table and process the
+   contained entries.  For the traversal to work properly, the hash table
+   should not be resized nor modified while any particular entry is being
+   processed.  In particular, entries should not be added or removed.  */
+
+/* Return the first data in the table, or NULL if the table is empty.  */
+
+void *
+hash_get_first (const Hash_table *table)
+{
+  struct hash_entry *bucket;
+
+  if (table->n_entries == 0)
+    return NULL;
+
+  for (bucket = table->bucket; bucket < table->bucket_limit; bucket++)
+    if (bucket->data)
+      return bucket->data;
+
+  abort ();
+}
+
+/* Return the user data for the entry following ENTRY, where ENTRY has been
+   returned by a previous call to either `hash_get_first' or `hash_get_next'.
+   Return NULL if there is no more entries.  */
+
+void *
+hash_get_next (const Hash_table *table, const void *entry)
+{
+  struct hash_entry *bucket
+    = table->bucket + table->hasher (entry, table->n_buckets);
+  struct hash_entry *cursor;
+
+  assert (bucket < table->bucket_limit);
+
+  /* Find next entry in the same bucket.  */
+  for (cursor = bucket; cursor; cursor = cursor->next)
+    if (cursor->data == entry && cursor->next)
+      return cursor->next->data;
+
+  /* Find first entry in any subsequent bucket.  */
+  for (; bucket < table->bucket_limit; bucket++)
+    if (bucket->data)
+      return bucket->data;
+
+  /* None found.  */
+  return NULL;
+}
+
+/* Fill BUFFER with pointers to active user entries in the hash table, then
+   return the number of pointers copied.  Do not copy more than BUFFER_SIZE
+   pointers.  */
+
+unsigned int
+hash_get_entries (const Hash_table *table, void **buffer, unsigned int buffer_size)
+{
+  unsigned int counter = 0;
+  struct hash_entry *bucket;
+  struct hash_entry *cursor;
+
+  for (bucket = table->bucket; bucket < table->bucket_limit; bucket++)
+    if (bucket->data)
+      for (cursor = bucket; cursor; cursor = cursor->next)
+	{
+	  if (counter >= buffer_size)
+	    return counter;
+	  buffer[counter++] = cursor->data;
+	}
+
+  return counter;
+}
+
+/* Call a PROCESSOR function for each entry of an hash table, and return the
+   number of entries for which the processor function returned success.  A
+   pointer to some PROCESSOR_DATA which will be made available to each call to
+   the processor function.  The PROCESSOR accepts two arguments: the first is
+   the user entry being walked into, the second is the value of PROCESSOR_DATA
+   as received.  The walking continue for as long as the PROCESSOR function
+   returns nonzero.  When it returns zero, the walking is interrupted.  */
+
+unsigned int
+hash_do_for_each (const Hash_table *table, Hash_processor processor,
+		  void *processor_data)
+{
+  unsigned int counter = 0;
+  struct hash_entry *bucket;
+  struct hash_entry *cursor;
+
+  for (bucket = table->bucket; bucket < table->bucket_limit; bucket++)
+    if (bucket->data)
+      for (cursor = bucket; cursor; cursor = cursor->next)
+	{
+	  if (!(*processor) (cursor->data, processor_data))
+	    return counter;
+	  counter++;
+	}
+
+  return counter;
+}
+
+/* Allocation and clean-up.  */
+
+/* Return a hash index for a NUL-terminated STRING between 0 and N_BUCKETS-1.
+   This is a convenience routine for constructing other hashing functions.  */
+
+#if USE_DIFF_HASH
+
+/* About hashings, Paul Eggert writes to me (FP), on 1994-01-01: "Please see
+   B. J. McKenzie, R. Harries & T. Bell, Selecting a hashing algorithm,
+   Software--practice & experience 20, 2 (Feb 1990), 209-224.  Good hash
+   algorithms tend to be domain-specific, so what's good for [diffutils'] io.c
+   may not be good for your application."  */
+
+unsigned int
+hash_string (const char *string, unsigned int n_buckets)
+{
+# ifndef CHAR_BIT
+#  define CHAR_BIT 8
+# endif
+# define ROTATE_LEFT(Value, Shift) \
+  ((Value) << (Shift) | (Value) >> ((sizeof (unsigned) * CHAR_BIT) - (Shift)))
+# define HASH_ONE_CHAR(Value, Byte) \
+  ((Byte) + ROTATE_LEFT (Value, 7))
+
+  unsigned value = 0;
+
+  for (; *string; string++)
+    value = HASH_ONE_CHAR (value, *(const unsigned char *) string);
+  return value % n_buckets;
+
+# undef ROTATE_LEFT
+# undef HASH_ONE_CHAR
+}
+
+#else /* not USE_DIFF_HASH */
+
+/* This one comes from `recode', and performs a bit better than the above as
+   per a few experiments.  It is inspired from a hashing routine found in the
+   very old Cyber `snoop', itself written in typical Greg Mansfield style.
+   (By the way, what happened to this excellent man?  Is he still alive?)  */
+
+unsigned int
+hash_string (const char *string, unsigned int n_buckets)
+{
+  unsigned value = 0;
+
+  while (*string)
+    value = ((value * 31 + (int) *(const unsigned char *) string++)
+	     % n_buckets);
+  return value;
+}
+
+#endif /* not USE_DIFF_HASH */
+
+/* Return true if CANDIDATE is a prime number.  CANDIDATE should be an odd
+   number at least equal to 11.  */
+
+static bool
 is_prime (candidate)
      unsigned long candidate;
 {
-  /* No even number and none less than 10 will be passed here.  */
-  unsigned long divn = 3;
-  unsigned long sq = divn * divn;
+  unsigned long divisor = 3;
+  unsigned long square = divisor * divisor;
 
-  while (sq < candidate && (candidate % divn))
+  while (square < candidate && (candidate % divisor))
     {
-      divn++;
-      sq += 4 * divn;
-      divn++;
+      divisor++;
+      square += 4 * divisor;
+      divisor++;
     }
 
-  return (candidate % divn);
+  return candidate % divisor != 0;
 }
 
-/* Round a given number up to the nearest prime. */
+/* Round a given CANDIDATE number up to the nearest prime, and return that
+   prime.  CANDIDATE should be at least equal to 10.  */
 
 static unsigned long
 next_prime (candidate)
@@ -47,640 +396,438 @@ next_prime (candidate)
   return candidate;
 }
 
-static void
-hash_free_entry (HT *ht, HASH_ENT *e)
+/* Allocate and return a new hash table, or NULL if an error is met.  The
+   initial number of buckets would be at least CANDIDATE (which need not be prime).
+
+   If DATA_FREER is not NULL, this function may be later called with the data as
+   an argument, just before they entry containing the data gets freed.  The
+   HASHER function should be supplied, and FIXME.  The COMPARATOR function
+   should also be supplied, and FIXME.  */
+
+    /* User-supplied function for freeing datas.  It is specified in
+       hash_initialize.  If non-null, it is used by hash_free and hash_clear.
+       You should specify `free' here only if you want these functions to free
+       all of your `data' data.  This is typically the case when your data is
+       simply an auxilliary struct that you have malloc'd to aggregate several
+       values.  */
+
+    /* User-supplied hash function that hashes entry ENTRY to an integer in
+       the range 0..TABLE_SIZE-1.  */
+
+    /* User-supplied function that determines whether a new entry is unique by
+       comparing the new entry to entries that hashed to the same bucket
+       index.  It should return zero for a pair of entries that compare equal,
+       non-zero otherwise.  */
+
+Hash_table *
+hash_initialize (unsigned int candidate, Hash_hasher hasher,
+		 Hash_comparator comparator, Hash_data_freer data_freer)
 {
-  e->key = NULL;
-  e->next = ht->hash_free_entry_list;
-  ht->hash_free_entry_list = e;
-}
+  Hash_table *table;
+  struct hash_entry *bucket;
 
-static HASH_ENT *
-hash_allocate_entry (HT *ht)
-{
-  HASH_ENT *new;
-  if (ht->hash_free_entry_list)
-    {
-      new = ht->hash_free_entry_list;
-      ht->hash_free_entry_list = new->next;
-    }
-  else
-    {
-      new = (HASH_ENT *) ZALLOC (ht, sizeof (HASH_ENT));
-    }
-  return new;
-}
-
-unsigned int
-hash_get_n_slots_used (const HT *ht)
-{
-  return ht->hash_n_slots_used;
-}
-
-/* Free all storage associated with HT that functions in this package
-   have allocated.  If a key_freer function has been supplied (when HT
-   was created), this function applies it to the key of each entry before
-   freeing that entry. */
-
-static void
-hash_free_0 (HT *ht, int free_user_data)
-{
-  if (free_user_data && ht->hash_key_freer != NULL)
-    {
-      unsigned int i;
-
-      for (i = 0; i < ht->hash_table_size; i++)
-	{
-	  HASH_ENT *p;
-	  HASH_ENT *next;
-
-	  for (p = BUCKET_HEAD (ht, i); p; p = next)
-	    {
-	      next = p->next;
-	      ht->hash_key_freer (p->key);
-	    }
-	}
-    }
-
-#ifdef USE_OBSTACK
-  obstack_free (&(ht->ht_obstack), NULL);
-#else
-  {
-    unsigned int i;
-    for (i = 0; i < ht->hash_table_size; i++)
-      {
-	HASH_ENT *p;
-	HASH_ENT *next;
-
-	for (p = BUCKET_HEAD (ht, i); p; p = next)
-	  {
-	    next = p->next;
-	    free (p);
-	  }
-      }
-  }
-#endif
-  ht->hash_free_entry_list = NULL;
-  free (ht->hash_table);
-}
-
-/* FIXME-comment */
-
-int
-hash_rehash (HT *ht, unsigned int new_table_size)
-{
-  HT *ht_new;
-  unsigned int i;
-
-  if (ht->hash_table_size <= 0 || new_table_size == 0)
-    return 1;
-
-  ht_new = hash_initialize (new_table_size, ht->hash_key_freer,
-			    ht->hash_hash, ht->hash_key_comparator);
-
-  if (ht_new == NULL)
-    return 1;
-
-  for (i = 0; i < ht->hash_table_size; i++)
-    {
-      HASH_ENT *p = BUCKET_HEAD (ht, i);
-      for ( /* empty */ ; p; p = p->next)
-	{
-	  int failed;
-	  const void *already_in_table;
-	  already_in_table = hash_insert_if_absent (ht_new, p->key, &failed);
-	  assert (failed == 0 && already_in_table == 0);
-	}
-    }
-
-  hash_free_0 (ht, 0);
-
-#ifdef TESTING
-  assert (hash_table_ok (ht_new));
-#endif
-  *ht = *ht_new;
-  free (ht_new);
-
-  /* FIXME: fill in ht_new->n_slots_used and other statistics fields. */
-
-  return 0;
-}
-
-/* FIXME-comment */
-
-unsigned int
-hash_get_max_chain_length (HT *ht)
-{
-  unsigned int i;
-  unsigned int max_chain_length = 0;
-
-  if (!ht->hash_dirty_max_chain_length)
-    return ht->hash_max_chain_length;
-
-  for (i = 0; i < ht->hash_table_size; i++)
-    {
-      unsigned int chain_length = 0;
-      HASH_ENT *p = BUCKET_HEAD (ht, i);
-      for ( /* empty */ ; p; p = p->next)
-	++chain_length;
-      if (chain_length > max_chain_length)
-	max_chain_length = chain_length;
-    }
-
-  ht->hash_max_chain_length = max_chain_length;
-  ht->hash_dirty_max_chain_length = 0;
-  return ht->hash_max_chain_length;
-}
-
-unsigned int
-hash_get_n_keys (const HT *ht)
-{
-  return ht->hash_n_keys;
-}
-
-unsigned int
-hash_get_table_size (const HT *ht)
-{
-  return ht->hash_table_size;
-}
-
-/* CANDIDATE_TABLE_SIZE need not be prime.  If WHEN_TO_REHASH (FIXME: add
-   this parameter) is positive, when that percentage of table entries have
-   been used, the table size is increased;  then a new, larger table
-   (GROW_FACTOR (FIXME: maybe add this parameter) times larger than the previous
-   size) is allocated and all entries in the old table are rehashed into
-   the new, larger one.  The old table is freed.  If WHEN_TO_REHASH is zero
-   or negative, the table is never resized.
-
-   The function returns non-zero
-   - if CANDIDATE_TABLE_SIZE is zero or negative
-   - if KEY_COMPARATOR or HASH is null
-   - if it was unable to allocate sufficient storage for the hash table
-   - if WHEN_TO_REHASH is zero or negative
-   Otherwise it returns zero.  */
-
-HT *
-hash_initialize (unsigned int candidate_table_size,
-		 Hash_key_freer_type key_freer,
-		 unsigned int (*hash) (const void *, unsigned int),
-		 int (*key_comparator) (const void *, const void *))
-{
-  HT *ht;
-  unsigned int i;
-  unsigned int table_size;
-
-  if (candidate_table_size <= 0)
+  if (hasher == NULL || comparator == NULL)
     return NULL;
 
-  if (hash == NULL || key_comparator == NULL)
+  table = (Hash_table *) malloc (sizeof (Hash_table));
+  if (table == NULL)
     return NULL;
 
-  ht = (HT *) malloc (sizeof (HT));
-  if (ht == NULL)
-    return NULL;
-
-  table_size = next_prime (candidate_table_size);
-  ht->hash_table = (HASH_ENT **) malloc (table_size * sizeof (HASH_ENT *));
-  if (ht->hash_table == NULL)
-    return NULL;
-
-  for (i = 0; i < table_size; i++)
+  table->n_buckets = next_prime (candidate < 10 ? 10 : candidate);
+  table->bucket = (struct hash_entry *)
+    malloc (table->n_buckets * sizeof (struct hash_entry));
+  if (table->bucket == NULL)
     {
-      BUCKET_HEAD (ht, i) = NULL;
-    }
-
-  ht->hash_free_entry_list = NULL;
-  ht->hash_table_size = table_size;
-  ht->hash_hash = hash;
-  ht->hash_key_comparator = key_comparator;
-  ht->hash_key_freer = key_freer;
-  ht->hash_n_slots_used = 0;
-  ht->hash_max_chain_length = 0;
-  ht->hash_n_keys = 0;
-  ht->hash_dirty_max_chain_length = 0;
-#ifdef USE_OBSTACK
-  obstack_init (&(ht->ht_obstack));
-#endif
-
-  return ht;
-}
-
-/* This private function is used to help with insertion and deletion.
-   If E does *not* compare equal to the key of any entry in the table,
-   return NULL.
-   When E matches an entry in the table, return a pointer to the matching
-   entry.  When DELETE is non-zero and E matches an entry in the table,
-   unlink the matching entry.  Set *CHAIN_LENGTH to the number of keys
-   that have hashed to the bucket E hashed to.  */
-
-static HASH_ENT *
-hash_find_entry (HT *ht, const void *e, unsigned int *table_idx,
-		 unsigned int *chain_length, int delete)
-{
-  unsigned int idx;
-  int found;
-  HASH_ENT *p, *prev;
-
-  idx = ht->hash_hash (e, ht->hash_table_size);
-  assert (idx < ht->hash_table_size);
-
-  *table_idx = idx;
-  *chain_length = 0;
-
-  prev = ht->hash_table[idx];
-
-  if (prev == NULL)
-    return NULL;
-
-  *chain_length = 1;
-  if (ht->hash_key_comparator (e, prev->key) == 0)
-    {
-      if (delete)
-	ht->hash_table[idx] = prev->next;
-      return prev;
-    }
-
-  p = prev->next;
-  found = 0;
-  while (p)
-    {
-      ++(*chain_length);
-      if (ht->hash_key_comparator (e, p->key) == 0)
-	{
-	  found = 1;
-	  break;
-	}
-      prev = p;
-      p = p->next;
-    }
-
-  if (!found)
-    return NULL;
-
-  assert (p != NULL);
-  if (delete)
-    prev->next = p->next;
-
-  return p;
-}
-
-/* Return non-zero if E is already in the table, zero otherwise. */
-
-int
-hash_query_in_table (const HT *ht, const void *e)
-{
-  unsigned int idx;
-  HASH_ENT *p;
-
-  idx = ht->hash_hash (e, ht->hash_table_size);
-  assert (idx < ht->hash_table_size);
-  for (p = BUCKET_HEAD (ht, idx); p != NULL; p = p->next)
-    if (ht->hash_key_comparator (e, p->key) == 0)
-      return 1;
-  return 0;
-}
-
-void *
-hash_lookup (const HT *ht, const void *e)
-{
-  unsigned int idx;
-  HASH_ENT *p;
-
-  idx = ht->hash_hash (e, ht->hash_table_size);
-  assert (idx < ht->hash_table_size);
-  for (p = BUCKET_HEAD (ht, idx); p != NULL; p = p->next)
-    if (ht->hash_key_comparator (e, p->key) == 0)
-      return p->key;
-  return NULL;
-}
-
-/* If E matches an entry already in the hash table, don't modify the
-   table and return a pointer to the matched entry.  If E does not
-   match any item in the table, insert E and return NULL.
-   If the storage required for insertion cannot be allocated
-   set *FAILED to non-zero and return NULL. */
-
-void *
-hash_insert_if_absent (HT *ht, const void *e, int *failed)
-{
-  const HASH_ENT *ent;
-  HASH_ENT *new;
-  unsigned int idx;
-  unsigned int chain_length;
-
-  assert (e != NULL);		/* Can't insert a NULL key. */
-
-  *failed = 0;
-  ent = hash_find_entry (ht, e, &idx, &chain_length, 0);
-  if (ent != NULL)
-    {
-      /* E matches a key from an entry already in the table. */
-      return ent->key;
-    }
-
-  new = hash_allocate_entry (ht);
-  if (new == NULL)
-    {
-      *failed = 1;
+      free (table);
       return NULL;
     }
+  table->bucket_limit = table->bucket + table->n_buckets;
 
-  new->key = (void *) e;
-  new->next = BUCKET_HEAD (ht, idx);
-  BUCKET_HEAD (ht, idx) = new;
-
-  if (chain_length == 0)
-    ++(ht->hash_n_slots_used);
-
-  /* The insertion has just increased chain_length by 1. */
-  ++chain_length;
-
-  if (chain_length > ht->hash_max_chain_length)
-    ht->hash_max_chain_length = chain_length;
-
-  ++(ht->hash_n_keys);
-  if ((double) ht->hash_n_keys / ht->hash_table_size > 0.80)
+  for (bucket = table->bucket; bucket < table->bucket_limit; bucket++)
     {
-      unsigned int new_size;
-      new_size = next_prime (2 * ht->hash_table_size + 1);
-      *failed = hash_rehash (ht, new_size);
+      bucket->data = NULL;
+      bucket->next = NULL;
     }
+  table->n_buckets_used = 0;
+  table->n_entries = 0;
 
-#ifdef TESTING
-  assert (hash_table_ok (ht));
+  table->hasher = hasher;
+  table->comparator = comparator;
+  table->data_freer = data_freer;
+
+  table->free_entry_list = NULL;
+#if USE_OBSTACK
+  obstack_init (&table->entry_stack);
 #endif
-
-  return NULL;
-}
-
-/* If E is already in the table, remove it and return a pointer to
-   the just-deleted key (the user may want to deallocate its storage).
-   If E is not in the table, don't modify the table and return NULL. */
-
-void *
-hash_delete_if_present (HT *ht, const void *e)
-{
-  HASH_ENT *ent;
-  void *key;
-  unsigned int idx;
-  unsigned int chain_length;
-
-  ent = hash_find_entry (ht, e, &idx, &chain_length, 1);
-  if (ent == NULL)
-    return NULL;
-
-  if (ent->next == NULL && chain_length == 1)
-    --(ht->hash_n_slots_used);
-
-  key = ent->key;
-
-  --(ht->hash_n_keys);
-  ht->hash_dirty_max_chain_length = 1;
-  if (ent->next == NULL && chain_length < ht->hash_max_chain_length)
-    ht->hash_dirty_max_chain_length = 0;
-
-  hash_free_entry (ht, ent);
-
-#ifdef TESTING
-  assert (hash_table_ok (ht));
-#endif
-  return key;
-}
-
-void
-hash_print_statistics (const HT *ht, FILE *stream)
-{
-  unsigned int n_slots_used;
-  unsigned int n_keys;
-  unsigned int max_chain_length;
-  int err;
-
-  err = hash_get_statistics (ht, &n_slots_used, &n_keys, &max_chain_length);
-  assert (err == 0);
-  fprintf (stream, "table size: %d\n", ht->hash_table_size);
-  fprintf (stream, "# slots used: %u (%.2f%%)\n", n_slots_used,
-	   (100.0 * n_slots_used) / ht->hash_table_size);
-  fprintf (stream, "# keys: %u\n", n_keys);
-  fprintf (stream, "max chain length: %u\n", max_chain_length);
-}
-
-/* If there is *NO* table (so, no meaningful stats) return non-zero
-   and don't reference the argument pointers.  Otherwise compute the
-   performance statistics and return non-zero. */
-
-int
-hash_get_statistics (const HT *ht,
-		     unsigned int *n_slots_used,
-		     unsigned int *n_keys,
-		     unsigned int *max_chain_length)
-{
-  unsigned int i;
-
-  if (ht == NULL || ht->hash_table == NULL)
-    return 1;
-
-  *max_chain_length = 0;
-  *n_slots_used = 0;
-  *n_keys = 0;
-
-  for (i = 0; i < ht->hash_table_size; i++)
-    {
-      unsigned int chain_length = 0;
-      HASH_ENT *p;
-
-      p = BUCKET_HEAD (ht, i);
-      if (p != NULL)
-	++(*n_slots_used);
-
-      for (; p; p = p->next)
-	++chain_length;
-
-      *n_keys += chain_length;
-      if (chain_length > *max_chain_length)
-	*max_chain_length = chain_length;
-    }
-  return 0;
-}
-
-int
-hash_table_ok (HT *ht)
-{
-  int code;
-  unsigned int n_slots_used;
-  unsigned int n_keys;
-  unsigned int max_chain_length;
-
-  if (ht == NULL || ht->hash_table == NULL)
-    return 1;
-
-  code = hash_get_statistics (ht, &n_slots_used, &n_keys,
-			      &max_chain_length);
-
-  if (code != 0
-      || n_slots_used != ht->hash_n_slots_used
-      || n_keys != ht->hash_n_keys
-      || max_chain_length != hash_get_max_chain_length (ht))
-    return 0;
-
-  return 1;
-}
-
-/* See hash_do_for_each_2 (below) for a variant.  */
-
-void
-hash_do_for_each (HT *ht, void (*f) (void *e, void *aux), void *aux)
-{
-  unsigned int i;
-
-#ifdef TESTING
-  assert (hash_table_ok (ht));
-#endif
-
-  if (ht->hash_table == NULL)
-    return;
-
-  for (i = 0; i < ht->hash_table_size; i++)
-    {
-      HASH_ENT *p;
-      for (p = BUCKET_HEAD (ht, i); p; p = p->next)
-	{
-	  (*f) (p->key, aux);
-	}
-    }
-}
-
-/* Just like hash_do_for_each, except that function F returns an int
-   that can signal (when non-zero) we should return early.  */
-
-int
-hash_do_for_each_2 (HT *ht, int (*f) (void *e, void *aux), void *aux)
-{
-  unsigned int i;
-
-#ifdef TESTING
-  assert (hash_table_ok (ht));
-#endif
-
-  if (ht->hash_table == NULL)
-    return 0;
-
-  for (i = 0; i < ht->hash_table_size; i++)
-    {
-      HASH_ENT *p;
-      for (p = BUCKET_HEAD (ht, i); p; p = p->next)
-	{
-	  int return_code;
-
-	  return_code = (*f) (p->key, aux);
-	  if (return_code != 0)
-	    return return_code;
-	}
-    }
-  return 0;
-}
-
-/* For each entry in the bucket addressed by BUCKET_KEY of the hash
-   table HT, invoke the function F.  If F returns non-zero, stop
-   iterating and return that value.  Otherwise, apply F to all entries
-   in the selected bucket and return zero.  The AUX argument to this
-   function is passed as the last argument in each invocation of F.
-   The first argument to F is BUCKET_KEY, and the second is the key of
-   an entry in the selected bucket. */
-
-int
-hash_do_for_each_in_selected_bucket (HT *ht, const void *bucket_key,
-				     int (*f) (const void *bucket_key,
-					       void *e, void *aux),
-				     void *aux)
-{
-  int idx;
-  HASH_ENT *p;
-
-#ifdef TESTING
-  assert (hash_table_ok (ht));
-#endif
-
-  if (ht->hash_table == NULL)
-    return 0;
-
-  idx = ht->hash_hash (bucket_key, ht->hash_table_size);
-
-  for (p = BUCKET_HEAD (ht, idx); p != NULL; p = p->next)
-    {
-      int return_code;
-
-      return_code = (*f) (bucket_key, p->key, aux);
-      if (return_code != 0)
-	return return_code;
-    }
-
-  return 0;
+  return table;
 }
 
 /* Make all buckets empty, placing any chained entries on the free list.
-   As with hash_free, apply the user-specified function key_freer
-   (if it's not NULL) to the keys of any affected entries. */
+   Apply the user-specified function data_freer (if any) to the datas of any
+   affected entries.  */
 
 void
-hash_clear (HT *ht)
+hash_clear (Hash_table *table)
 {
-  unsigned int i;
-  HASH_ENT *p;
+  struct hash_entry *bucket;
+  struct hash_entry *cursor;
 
-  for (i = 0; i < ht->hash_table_size; i++)
+  for (bucket = table->bucket; bucket < table->bucket_limit; bucket++)
+    if (bucket->data)
+      {
+	/* Free the bucket overflow.  */
+	for (cursor = bucket->next; cursor; cursor = cursor->next)
+	  {
+	    if (table->data_freer)
+	      (*table->data_freer) (cursor->data);
+	    cursor->data = NULL;
+
+	    /* Relinking is done one entry at a time, as it is to be expected
+	       that overflows are either rare or short.  */
+	    cursor->next = table->free_entry_list;
+	    table->free_entry_list = cursor;
+	  }
+
+	/* Free the bucket head.  */
+	if (table->data_freer)
+	  (*table->data_freer) (bucket->data);
+	bucket->data = NULL;
+	bucket->next = NULL;
+      }
+
+  table->n_buckets_used = 0;
+  table->n_entries = 0;
+}
+
+/* Reclaim all storage associated with an hash table.  If a data_freer
+   function has been supplied by the user when the hash table was created,
+   this function applies it to the data of each entry before freeing that
+   entry.  */
+
+void
+hash_free (Hash_table *table)
+{
+  struct hash_entry *bucket;
+  struct hash_entry *cursor;
+  struct hash_entry *next;
+
+  /* Call the user data_freer function.  */
+  if (table->data_freer && table->n_entries)
+    for (bucket = table->bucket; bucket < table->bucket_limit; bucket++)
+      if (bucket->data)
+	for (cursor = bucket; cursor; cursor = cursor->next)
+	  (*table->data_freer) (cursor->data);
+
+#if USE_OBSTACK
+
+  obstack_free (&table->entry_stack, NULL);
+
+#else
+
+  /* Free all bucket overflowed entries.  */
+  for (bucket = table->bucket; bucket < table->bucket_limit; bucket++)
+    for (cursor = bucket->next; cursor; cursor = next)
+      {
+	next = cursor->next;
+	free (cursor);
+      }
+
+  /* Also reclaim the internal list of previously freed entries.  */
+  for (cursor = table->free_entry_list; cursor; cursor = next)
     {
-      HASH_ENT *tail = NULL;
-      HASH_ENT *head = BUCKET_HEAD (ht, i);
-
-      /* Free any keys and get tail pointer to last entry in chain. */
-      for (p = head; p; p = p->next)
-	{
-	  if (ht->hash_key_freer != NULL)
-	    ht->hash_key_freer (p->key);
-	  p->key = NULL;	/* Make sure no one tries to use this key later. */
-	  tail = p;
-	}
-      BUCKET_HEAD (ht, i) = NULL;
-
-      /* If there's a chain in this bucket, tack it onto the
-         beginning of the free list. */
-      if (head != NULL)
-	{
-	  assert (tail != NULL && tail->next == NULL);
-	  tail->next = ht->hash_free_entry_list;
-	  ht->hash_free_entry_list = head;
-	}
+      next = cursor->next;
+      free (cursor);
     }
-  ht->hash_n_slots_used = 0;
-  ht->hash_max_chain_length = 0;
-  ht->hash_n_keys = 0;
-  ht->hash_dirty_max_chain_length = 0;
+
+#endif
+
+  /* Free the remainder of the hash table structure.  */
+  free (table->bucket);
+  free (table);
 }
+
+/* Insertion and deletion.  */
 
-void
-hash_free (HT *ht)
+/* Get a new hash entry for a bucket overflow, possibly by reclying a
+   previously freed one.  If this is not possible, allocate a new one.  */
+
+static struct hash_entry *
+allocate_entry (Hash_table *table)
 {
-  hash_free_0 (ht, 1);
-  free (ht);
-}
+  struct hash_entry *new;
 
-#ifdef TESTING
-
-void
-hash_print (const HT *ht)
-{
-  int i;
-
-  for (i = 0; i < ht->hash_table_size; i++)
+  if (table->free_entry_list)
     {
-      HASH_ENT *p;
+      new = table->free_entry_list;
+      table->free_entry_list = new->next;
+    }
+  else
+    {
+#if USE_OBSTACK
+      new = (struct hash_entry *)
+	obstack_alloc (&table->entry_stack, sizeof (struct hash_entry));
+#else
+      new = (struct hash_entry *) malloc (sizeof (struct hash_entry));
+#endif
+    }
 
-      if (BUCKET_HEAD (ht, i) != NULL)
-	printf ("%d:\n", i);
+  return new;
+}
 
-      for (p = BUCKET_HEAD (ht, i); p; p = p->next)
+/* Free a hash entry which was part of some bucket overflow,
+   saving it for later recycling.  */
+
+static void
+free_entry (Hash_table *table, struct hash_entry *entry)
+{
+  entry->data = NULL;
+  entry->next = table->free_entry_list;
+  table->free_entry_list = entry;
+}
+
+/* This private function is used to help with insertion and deletion.  When
+   ENTRY matches an entry in the table, return a pointer to the corresponding
+   user data and set *BUCKET_HEAD to the head of the selected bucket.
+   Otherwise, return NULL.  When DELETE is true and ENTRY matches an entry in
+   the table, unlink the matching entry.  */
+
+static void *
+hash_find_entry (Hash_table *table, const void *entry,
+		 struct hash_entry **bucket_head, bool delete)
+{
+  struct hash_entry *bucket
+    = table->bucket + table->hasher (entry, table->n_buckets);
+  struct hash_entry *cursor;
+
+  assert (bucket < table->bucket_limit);
+  *bucket_head = bucket;
+
+  /* Test for empty bucket.  */
+  if (bucket->data == NULL)
+    return NULL;
+
+  /* Check if then entry is found as the bucket head.  */
+  if ((*table->comparator) (entry, bucket->data))
+    {
+      void *data = bucket->data;
+
+      if (delete)
+	if (bucket->next)
+	  {
+	    struct hash_entry *next = bucket->next;
+
+	    /* Bump the first overflow entry into the bucket head, then save
+	       the previous first overflow entry for later recycling.  */
+	    *bucket = *next;
+	    free_entry (table, next);
+	  }
+	else
+	  bucket->data = NULL;
+
+      return data;
+    }
+
+  /* Scan the bucket overflow.  */
+  for (cursor = bucket; cursor->next; cursor = cursor->next)
+    if ((*table->comparator) (entry, cursor->next->data))
+      {
+	void *data = cursor->next->data;
+
+	if (delete)
+	  {
+	    struct hash_entry *next = cursor->next;
+
+	    /* Unlink the entry to delete, then save the freed entry for later
+	       recycling.  */
+	    cursor->next = next->next;
+	    free_entry (table, next);
+	  }
+
+	return data;
+      }
+
+  /* No entry found.  */
+  return NULL;
+}
+
+/* For an already existing hash table, change the number of buckets and make
+   it NEW_TABLE_SIZE.  The contents of the hash table are preserved.  */
+
+bool
+hash_rehash (Hash_table *table, unsigned int new_n_buckets)
+{
+  Hash_table *new_table;
+  struct hash_entry *bucket;
+  struct hash_entry *cursor;
+  struct hash_entry *next;
+
+  if (table->n_buckets <= 0 || new_n_buckets == 0)
+    return false;
+
+  new_table = hash_initialize (new_n_buckets, table->hasher,
+			       table->comparator, table->data_freer);
+  if (new_table == NULL)
+    return false;
+
+  /* Merely reuse the extra old space into the new table.  */
+#if USE_OBSTACK
+  obstack_free (&new_table->entry_stack, NULL);
+  new_table->entry_stack = table->entry_stack;
+#endif
+  new_table->free_entry_list = table->free_entry_list;
+
+  for (bucket = table->bucket; bucket < table->bucket_limit; bucket++)
+    if (bucket->data)
+      for (cursor = bucket; cursor; cursor = next)
 	{
-	  char *s = (char *) p->key;
+	  void *data = cursor->data;
+	  struct hash_entry *new_bucket
+	    = new_table->bucket + new_table->hasher (data, new_n_buckets);
+
+	  assert (new_bucket < new_table->bucket_limit);
+
+	  /* Free overflow entries as soon as possible, moving them from the
+	     old hash table into the new one, as they may be needed now.  */
+	  next = cursor->next;
+	  if (cursor != bucket)
+	    free_entry (new_table, cursor);
+
+	  /* Insert the entry into the new hash table.  */
+	  if (new_bucket->data)
+	    {
+	      struct hash_entry *new_entry = allocate_entry (new_table);
+
+	      if (new_entry == NULL)
+		return false;
+
+	      new_entry->data = data;
+	      new_entry->next = new_bucket->next;
+	      new_bucket->next = new_entry;
+	    }
+	  else
+	    {
+	      new_bucket->data = data;
+	      new_table->n_buckets_used++;
+	    }
+	}
+
+  free (table->bucket);
+  table->bucket = new_table->bucket;
+  table->bucket_limit = new_table->bucket_limit;
+  table->n_buckets = new_table->n_buckets;
+  table->n_buckets_used = new_table->n_buckets_used;
+  /* table->n_entries already holds its value.  */
+#if USE_OBSTACK
+  table->entry_stack = new_table->entry_stack;
+#endif
+  free (new_table);
+
+  return true;
+}
+
+/* If ENTRY matches an entry already in the hash table, don't modify the table
+   and return the matched entry.  Otherwise, insert ENTRY and return NULL.
+   *DONE is set to true in all cases, unless the storage required for
+   insertion cannot be allocated.  */
+
+void *
+hash_insert (Hash_table *table, const void *entry, bool *done)
+{
+  void *data;
+  struct hash_entry *bucket;
+
+  assert (entry);		/* cannot insert a NULL data */
+
+  if (data = hash_find_entry (table, entry, &bucket, false), data)
+    {
+      *done = true;
+      return data;
+    }
+
+  /* ENTRY is not matched, it should be inserted.  */
+
+  table->n_entries++;
+
+  if (bucket->data)
+    {
+      struct hash_entry *new_entry = allocate_entry (table);
+
+      if (new_entry == NULL)
+	{
+	  *done = false;
+	  return NULL;
+	}
+
+      /* Add ENTRY in the overflow of the bucket.  */
+
+      new_entry->data = (void *) entry;
+      new_entry->next = bucket->next;
+      bucket->next = new_entry;
+      *done = true;
+      return NULL;
+    }
+
+  /* Add ENTRY right in the bucket head.  */
+
+  bucket->data = (void *) entry;
+  table->n_buckets_used++;
+
+  /* If more than 80% of the buckets are in use, rehash the table two
+     times bigger.  It's no real use checking the number of entries, as if
+     the hashing function is ill-conditioned, rehashing is not likely to
+     improve it.  */
+
+  if (5 * table->n_buckets_used > 4 * table->n_buckets)
+    {
+      unsigned int new_n_buckets = next_prime (2 * table->n_buckets + 1);
+
+      *done = hash_rehash (table, new_n_buckets);
+      return NULL;
+    }
+
+  *done = true;
+  return NULL;
+}
+
+/* If ENTRY is already in the table, remove it and return the just-deleted
+   data (the user may want to deallocate its storage).  If ENTRY is not in the
+   table, don't modify the table and return NULL.  */
+
+void *
+hash_delete (Hash_table *table, const void *entry)
+{
+  void *data;
+  struct hash_entry *bucket;
+
+  if (data = hash_find_entry (table, entry, &bucket, true), !data)
+    return NULL;
+
+  if (!bucket->data)
+    table->n_buckets_used--;
+  table->n_entries--;
+
+  return data;
+}
+
+/* Testing.  */
+
+#if TESTING
+
+void
+hash_print (const Hash_table *table)
+{
+  struct hash_entry *bucket;
+
+  for (bucket = table->bucket; bucket < table->bucket_limit; bucket++)
+    {
+      struct hash_entry *cursor;
+
+      if (bucket)
+	printf ("%d:\n", slot);
+
+      for (cursor = bucket; cursor; cursor = cursor->next)
+	{
+	  char *s = (char *) cursor->data;
 	  /* FIXME */
 	  printf ("  %s\n", s);
 	}
@@ -688,87 +835,3 @@ hash_print (const HT *ht)
 }
 
 #endif /* TESTING */
-
-void
-hash_get_key_list (const HT *ht, unsigned int bufsize, void **buf)
-{
-  unsigned int i;
-  unsigned int c = 0;
-
-  for (i = 0; i < ht->hash_table_size; i++)
-    {
-      HASH_ENT *p;
-
-      for (p = BUCKET_HEAD (ht, i); p; p = p->next)
-	{
-	  if (c >= bufsize)
-	    return;
-	  buf[c++] = p->key;
-	}
-    }
-}
-
-/* Return the first key in the table.  If the table is empty, return NULL.  */
-
-void *
-hash_get_first (const HT *ht)
-{
-  unsigned int idx;
-  HASH_ENT *p;
-
-  if (ht->hash_n_keys == 0)
-    return NULL;
-
-  for (idx = 0; idx < ht->hash_table_size; idx++)
-    {
-      if ((p = BUCKET_HEAD (ht, idx)) != NULL)
-	return p->key;
-    }
-  abort ();
-}
-
-/* Return the key in the entry following the entry whose key matches E.
-   If there is the only one key in the table and that key matches E,
-   return the matching key.  If E is not in the table, return NULL.  */
-
-void *
-hash_get_next (const HT *ht, const void *e)
-{
-  unsigned int idx;
-  HASH_ENT *p;
-
-  idx = ht->hash_hash (e, ht->hash_table_size);
-  assert (idx < ht->hash_table_size);
-  for (p = BUCKET_HEAD (ht, idx); p != NULL; p = p->next)
-    {
-      if (ht->hash_key_comparator (e, p->key) == 0)
-	{
-	  if (p->next != NULL)
-	    {
-	      return p->next->key;
-	    }
-	  else
-	    {
-	      unsigned int bucket;
-
-	      /* E is the last or only key in the bucket chain.  */
-	      if (ht->hash_n_keys == 1)
-		{
-		  /* There is only one key in the table, and it matches E.  */
-		  return p->key;
-		}
-	      bucket = idx;
-	      do
-		{
-		  idx = (idx + 1) % ht->hash_table_size;
-		  if ((p = BUCKET_HEAD (ht, idx)) != NULL)
-		    return p->key;
-		}
-	      while (idx != bucket);
-	    }
-	}
-    }
-
-  /* E is not in the table.  */
-  return NULL;
-}
