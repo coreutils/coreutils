@@ -63,7 +63,7 @@ day=$2
 # Here we have to deal with the problem that the ls output gives either
 # the time of day or the year.
 case $3 in
-  *:*) set `date`; year=$6
+  *:*) set `date`; eval year=\$$#
        case $2 in
 	 Jan) nummonthtod=1;;
 	 Feb) nummonthtod=2;;
