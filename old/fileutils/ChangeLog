@@ -1,3 +1,10 @@
+2002-07-28  Jim Meyering  <meyering@lucent.com>
+
+	* configure.ac: Require automake-1.6b.
+
+	* TODO: Remove entry that mentions rm's HAVE_WORKING_READDIR.
+	Since remove.c was rewritten, rm is no longer susceptible to that.
+
 2002-07-26  Jim Meyering  <meyering@lucent.com>
 
 	* src/stat.c: Don't include malloc.h -- it was unnecessary.
