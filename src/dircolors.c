@@ -88,8 +88,6 @@ static struct option const long_options[] =
     {"csh", no_argument, NULL, 'c'},
     {"c-shell", no_argument, NULL, 'c'},
     {"help", no_argument, NULL, 'h'},
-    /* I deprecate --print-data-base.  `database' is one word.  */
-    {"print-data-base", no_argument, NULL, 'p'},
     {"print-database", no_argument, NULL, 'p'},
     {"version", no_argument, NULL, 'v'},
     {NULL, 0, NULL, 0}
