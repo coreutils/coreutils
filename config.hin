@@ -1121,6 +1121,9 @@
 /* Define if readdir is found to work properly in some unusual cases. */
 #undef HAVE_WORKING_READDIR
 
+/* Define if utimes works properly. */
+#undef HAVE_WORKING_UTIMES
+
 /* Define to 1 if the system has the type `_Bool'. */
 #undef HAVE__BOOL
 
