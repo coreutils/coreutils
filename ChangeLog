@@ -13,9 +13,15 @@
 	* src/comm.c (long_options): Likewise.
 	* src/copy.c (copy_reg): Likewise.
 	* src/csplit.c (extract_regexp): Likewise.
+	* src/cut.c (longopts): Likewise.
 	* src/date.c (time_spec_string): Likewise.
 	* src/df.c (find_mount_point, show_point): Likewise.
+	* src/ls.c (time_style_args, indicator_style_args, long_options)
+	(format_args, sort_args, time_args, decode_switches)
+	(gobble_file): Likewise.
+	* src/md5sum.c (long_options): Likewise.
 	* src/mv.c (reply_args): Likewise.
+	* src/paste.c (longopts): Likewise.
 
 2005-03-27  Jim Meyering  <jim@meyering.net>
 
