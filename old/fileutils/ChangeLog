@@ -1,3 +1,22 @@
+1999-10-23  Jim Meyering  <meyering@ascend.com>
+
+	* tests/touch/Makefile.am (TESTS): Add dangling-symlink.
+	* tests/touch/dangling-symlink: New file.
+
+1999-10-23  Paul Eggert  <eggert@twinsun.com>
+
+	* src/touch.c (full_write): Remove unused decl.
+	(open_maybe_create): Remove.
+	(touch): Don't record whether the file was created; this isn't
+	possible to do reliably and portably without race conditions.
+	If the file was created and if amtime_now is nonzero, this
+	change means we'll have to do another utime system call, but
+	that's no more harmful than the previous version of this code.
+
+1999-10-21  Jim Meyering  <meyering@ascend.com>
+
+	* configure.in (ALL_LINGUAS): Add Japanese (pa).
+
 1999-10-17  Jim Meyering  <meyering@ascend.com>
 
 	* tests/mv/backup-is-src: Remove use of mv's now-deprecated
