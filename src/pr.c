@@ -690,7 +690,7 @@ main (int argc, char **argv)
     {
       c = getopt_long (argc, argv,
 		       "-0123456789abcde::fFh:i::jl:mn::N:o:rs::tTvw:",
-		       long_options, (int *) 0);
+		       long_options, NULL);
       if (c == 1)		/* Non-option argument. */
 	{
 	  char *s;
@@ -880,7 +880,7 @@ main (int argc, char **argv)
   if (n_files == 0)
     {
       /* No file arguments specified;  read from standard input.  */
-      print_files (0, (char **) 0);
+      print_files (0, NULL);
     }
   else
     {
@@ -1015,14 +1015,14 @@ init_parameters (int number_of_files)
 
   if (numbered_lines)
     {
-      if (number_buff != (char *) 0)
+      if (number_buff != NULL)
 	free (number_buff);
       number_buff = (char *) xmalloc (2 * chars_per_number);
     }
 
   /* Pick the maximum between the tab width and the width of an
      escape sequence. */
-  if (clump_buff != (int *) 0)
+  if (clump_buff != NULL)
     free (clump_buff);
   clump_buff = (int *) xmalloc ((chars_per_input_tab > 4
 				 ? chars_per_input_tab : 4) * sizeof (int));
@@ -1365,10 +1365,10 @@ init_header (char *filename, int desc)
   struct stat st;
   char *datim = "- Date/Time --";
 
-  if (filename == 0)
+  if (filename == NULL)
     f = "";
 
-  if (header != (char *) 0)
+  if (header != NULL)
     free (header);
   header = (char *) xmalloc (chars_per_line + 1);
 
@@ -1378,7 +1378,7 @@ init_header (char *filename, int desc)
     {
       /* If parallel files or standard input, use current time. */
       if (desc < 0 || !strcmp (filename, "-") || fstat (desc, &st))
-	st.st_mtime = time ((time_t *) 0);
+	st.st_mtime = time (NULL);
 
       {
 	size_t t_buf_size = 15;
@@ -1641,15 +1641,15 @@ init_store_cols (void)
   int total_lines = lines_per_body * columns;
   int chars_if_truncate = total_lines * (chars_per_column + 1);
 
-  if (line_vector != (int *) 0)
+  if (line_vector != NULL)
     free ((int *) line_vector);
   line_vector = (int *) xmalloc ((total_lines + 1) * sizeof (int *));
 
-  if (end_vector != (int *) 0)
+  if (end_vector != NULL)
     free ((int *) end_vector);
   end_vector = (int *) xmalloc (total_lines * sizeof (int *));
 
-  if (buff != (char *) 0)
+  if (buff != NULL)
     free (buff);
   buff_allocated = use_col_separator ? 2 * chars_if_truncate
     : chars_if_truncate;	/* Tune this. */
