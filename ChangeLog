@@ -2,6 +2,9 @@
 
 	* Version 4.5.12.
 
+	* src/id.c: Remove Arnold Robbins' obsolete e-mail address
+	from `written by...' comment, at his request.
+
 2003-03-24  Paul Eggert  <eggert@twinsun.com>
 
 	Fix buffer overrun problem reported by TAKAI Kousuke, along
