@@ -1,3 +1,11 @@
+2003-09-06  Jim Meyering  <jim@meyering.net>
+
+	* Version 5.0.91.
+
+	* src/tail.c (enum): Add ALLOW_MISSING_OPTION.
+	(parse_options): Give a diagnostic for (but still accept) the
+	deprecated --allow-missing option.
+
 2003-09-04  Paul Eggert  <eggert@twinsun.com>
 
 	Don't ignore -S if input is a pipe.  Bug report by Michael McFarland in
@@ -11,8 +19,6 @@
 	(sort): Remove static var size; now done by sort_buffer_size.
 
 2003-09-05  Jim Meyering  <jim@meyering.net>
-
-	* Version 5.0.91.
 
 	* Use automake-1.7.6b and autoconf-2.57b.  Regenerate dependent files.
 
