@@ -1,7 +1,7 @@
 /* sha.c - Functions to compute SHA1 message digest of files or
    memory blocks according to the NIST specification FIPS-180-1.
 
-   Copyright (C) 2000, 2001, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2003, 2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the
@@ -28,9 +28,7 @@
 
 #include "sha1.h"
 
-#include <sys/types.h>
-
-#include <stdlib.h>
+#include <stddef.h>
 #include <string.h>
 
 #include "unlocked-io.h"
@@ -244,12 +242,11 @@ sha_process_bytes (const void *buffer, size_t len, struct sha_ctx *ctx)
   if (len >= 64)
     {
 #if !_STRING_ARCH_unaligned
-/* To check alignment gcc has an appropriate operator.  Other
-   compilers don't.  */
-# if __GNUC__ >= 2
-#  define UNALIGNED_P(p) (((md5_uintptr) p) % __alignof__ (md5_uint32) != 0)
+# define alignof(type) offsetof (struct { char c; type x; }, x)
+# ifdef UINTPTR_MAX
+#  define UNALIGNED_P(p) (((uintptr_t) p) % alignof (md5_uint32) != 0)
 # else
-#  define UNALIGNED_P(p) (((md5_uintptr) p) % sizeof (md5_uint32) != 0)
+#  define UNALIGNED_P(p) 1
 # endif
       if (UNALIGNED_P (buffer))
 	while (len > 64)

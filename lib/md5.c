@@ -1,6 +1,6 @@
 /* md5.c - Functions to compute MD5 message digest of files or memory blocks
    according to the definition of MD5 in RFC 1321 from April 1992.
-   Copyright (C) 1995, 1996, 2001, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 2001, 2003, 2004 Free Software Foundation, Inc.
    NOTE: The canonical source of this file is maintained with the GNU C
    Library.  Bugs can be reported to bug-glibc@prep.ai.mit.edu.
 
@@ -26,9 +26,7 @@
 
 #include "md5.h"
 
-#include <sys/types.h>
-
-#include <stdlib.h>
+#include <stddef.h>
 #include <string.h>
 
 #include "unlocked-io.h"
@@ -246,12 +244,11 @@ md5_process_bytes (const void *buffer, size_t len, struct md5_ctx *ctx)
   if (len >= 64)
     {
 #if !_STRING_ARCH_unaligned
-/* To check alignment gcc has an appropriate operator.  Other
-   compilers don't.  */
-# if __GNUC__ >= 2
-#  define UNALIGNED_P(p) (((md5_uintptr) p) % __alignof__ (md5_uint32) != 0)
+# define alignof(type) offsetof (struct { char c; type x; }, x)
+# ifdef UINTPTR_MAX
+#  define UNALIGNED_P(p) (((uintptr_t) p) % alignof (md5_uint32) != 0)
 # else
-#  define UNALIGNED_P(p) (((md5_uintptr) p) % sizeof (md5_uint32) != 0)
+#  define UNALIGNED_P(p) 1
 # endif
       if (UNALIGNED_P (buffer))
 	while (len > 64)
