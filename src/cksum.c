@@ -189,15 +189,15 @@ static uint_fast32_t crctab[256] =
 };
 
 /* Nonzero if any of the files read were the standard input. */
-static int have_read_stdin;
+static bool have_read_stdin;
 
 /* Calculate and print the checksum and length in bytes
    of file FILE, or of the standard input if FILE is "-".
-   If PRINT_NAME is nonzero, print FILE next to the checksum and size.
-   Return 0 if successful, -1 if an error occurs. */
+   If PRINT_NAME is true, print FILE next to the checksum and size.
+   Return true if successful.  */
 
-static int
-cksum (const char *file, int print_name)
+static bool
+cksum (const char *file, bool print_name)
 {
   unsigned char buf[BUFLEN];
   uint_fast32_t crc = 0;
@@ -210,7 +210,7 @@ cksum (const char *file, int print_name)
   if (STREQ (file, "-"))
     {
       fp = stdin;
-      have_read_stdin = 1;
+      have_read_stdin = true;
     }
   else
     {
@@ -218,7 +218,7 @@ cksum (const char *file, int print_name)
       if (fp == NULL)
 	{
 	  error (0, errno, "%s", file);
-	  return -1;
+	  return false;
 	}
     }
 
@@ -243,13 +243,13 @@ cksum (const char *file, int print_name)
       error (0, errno, "%s", file);
       if (!STREQ (file, "-"))
 	fclose (fp);
-      return -1;
+      return false;
     }
 
   if (!STREQ (file, "-") && fclose (fp) == EOF)
     {
       error (0, errno, "%s", file);
-      return -1;
+      return false;
     }
 
   hp = umaxtostr (length, length_buf);
@@ -260,14 +260,14 @@ cksum (const char *file, int print_name)
   crc = ~crc & 0xFFFFFFFF;
 
   if (print_name)
-    printf ("%u %s %s\n", (unsigned) crc, hp, file);
+    printf ("%u %s %s\n", (unsigned int) crc, hp, file);
   else
-    printf ("%u %s\n", (unsigned) crc, hp);
+    printf ("%u %s\n", (unsigned int) crc, hp);
 
   if (ferror (stdout))
     error (EXIT_FAILURE, errno, "-: %s", _("write error"));
 
-  return 0;
+  return true;
 }
 
 void
@@ -298,7 +298,7 @@ int
 main (int argc, char **argv)
 {
   int i, c;
-  int errors = 0;
+  bool ok;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -311,7 +311,7 @@ main (int argc, char **argv)
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE, VERSION,
 		      usage, AUTHORS, (char const *) NULL);
 
-  have_read_stdin = 0;
+  have_read_stdin = false;
 
   while ((c = getopt_long (argc, argv, "", long_options, NULL)) != -1)
     {
@@ -326,16 +326,17 @@ main (int argc, char **argv)
     }
 
   if (optind == argc)
-    errors |= cksum ("-", 0);
+    ok = cksum ("-", false);
   else
     {
+      ok = true;
       for (i = optind; i < argc; i++)
-	errors |= cksum (argv[i], 1);
+	ok &= cksum (argv[i], true);
     }
 
   if (have_read_stdin && fclose (stdin) == EOF)
     error (EXIT_FAILURE, errno, "-");
-  exit (errors == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
+  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
 #endif /* !CRCTAB */
