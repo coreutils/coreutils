@@ -1,3 +1,10 @@
+1999-08-20  Jim Meyering  <meyering@ascend.com>
+
+	* src/chown.c (usage): Tweak --help output to make it more consistent
+	with that of chgrp.
+	* src/chgrp.c (usage): Tweak --help output to make it more consistent
+	with that of chown.
+
 1999-08-17  Jim Meyering  <meyering@ascend.com>
 
 	* configure.in: Remove check for rename and the code that would
