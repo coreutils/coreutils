@@ -43,7 +43,7 @@
    by using the quoting style ARGMATCH_QUOTING_STYLE.  Do not use
    literal_quoting_style.  */
 #ifndef ARGMATCH_QUOTING_STYLE
-# define ARGMATCH_QUOTING_STYLE escape_quoting_style
+# define ARGMATCH_QUOTING_STYLE locale_quoting_style
 #endif
 
 /* The following test is to work around the gross typo in
@@ -155,21 +155,11 @@ argcasematch (const char *arg, const char *const *arglist,
 void
 argmatch_invalid (const char *context, const char *value, int problem)
 {
-  enum quoting_style saved_quoting_style;
-  char const *format;
+  char const *format = (problem == -1
+			? _("invalid argument %s for `%s'")
+			: _("ambiguous argument %s for `%s'"));
 
-  /* Make sure to have a good quoting style to report errors.
-     literal is insane here. */
-  saved_quoting_style = get_quoting_style (NULL);
-  set_quoting_style (NULL, ARGMATCH_QUOTING_STYLE);
-
-  format = (problem == -1
-	    ? _("invalid argument `%s' for `%s'")
-	    : _("ambiguous argument `%s' for `%s'"));
-
-  error (0, 0, format, quotearg (value), context);
-
-  set_quoting_style (NULL, saved_quoting_style);
+  error (0, 0, format, quotearg_style (ARGMATCH_QUOTING_STYLE, value), context);
 }
 
 /* List the valid arguments for argmatch.
