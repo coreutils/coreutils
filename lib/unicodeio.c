@@ -1,6 +1,6 @@
 /* Unicode character output to streams with locale dependent encoding.
 
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify it
    under the terms of the GNU Library General Public License as published
@@ -124,13 +124,11 @@ print_unicode_char (FILE *stream, unsigned int code)
       extern const char *locale_charset PARAMS ((void));
       const char *charset = locale_charset ();
 
-      is_utf8 = (charset != NULL && !strcmp (charset, UTF8_NAME));
+      is_utf8 = !strcmp (charset, UTF8_NAME);
 #if HAVE_ICONV
       if (!is_utf8)
 	{
-	  utf8_to_local = (charset != NULL
-			   ? iconv_open (charset, UTF8_NAME)
-			   : (iconv_t)(-1));
+	  utf8_to_local = iconv_open (charset, UTF8_NAME);
 	  if (utf8_to_local == (iconv_t)(-1))
 	    {
 	      /* For an unknown encoding, assume ASCII.  */
