@@ -1,4 +1,7 @@
 Changes in release 4.1:
+[4.0v]
+* df, du, ls: --block-size=N now works for values of N that are e.g.,
+    not a multiple of the file's block size
 [4.0u]
 * give proper diagnostic for mv usage error
 * fix compile problem with lib/strnlen.c
