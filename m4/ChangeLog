@@ -1,3 +1,14 @@
+2003-03-04  Jim Meyering  <jim@meyering.net>
+
+	`df /some/mount-point' no longer hangs when an unrelated hard-mount
+	is unavailable
+	* fsusage.m4 [__GLIBC__]: GNU libc's statvfs stats each mount point in
+	/proc/mounts until it finds one with matching device number.  This is
+	unnecessary when the FILE argument *is* a mount point.  No stat call
+	is necessary in that case.  So, disable the statvfs-testing code on
+	systems with GNU libc.  Reported by Andrei Gaponenko via Tim Waugh
+	as RedHat bug# 84846.
+
 2003-02-27  Jim Meyering  <jim@meyering.net>
 
 	* prereq.m4 (jm_PREREQ_PHYSMEM): Also check for `table' function.
