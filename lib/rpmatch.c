@@ -1,6 +1,6 @@
 /* Determine whether string value is affirmation or negative response
    according to current locale's data.
-   Copyright (C) 1996, 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1998, 2000, 2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -35,8 +35,8 @@
 #  include <limits.h>
 # endif
 # include <regex.h>
-# include <libintl.h>
-# define _(Text) gettext (Text)
+# include "gettext.h"
+# define _(msgid) gettext (msgid)
 
 static int
 try (const char *response, const char *pattern, const int match,
