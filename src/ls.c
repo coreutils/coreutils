@@ -45,6 +45,7 @@
 #include <getopt.h>
 #include <fnmatch.h>
 #include "system.h"
+#include "version.h"
 
 #ifndef S_IEXEC
 #define S_IEXEC S_IXUSR
@@ -112,6 +113,10 @@ static void queue_directory ();
 static void sort_files ();
 static void usage ();
 
+
+/* The name the program was run with, stripped of any leading path. */
+char *program_name;
+
 enum filetype
 {
   symbolic_link,
@@ -178,9 +183,6 @@ static time_t current_time;
    4, or more if needed for bigger numbers.  */
 
 static int block_size_size;
-
-/* The name the program was run with, stripped of any leading path. */
-char *program_name;
 
 /* Option flags */
 
@@ -355,6 +357,77 @@ static int format_needs_stat;
 /* The exit status to use if we don't get any fatal errors. */
 
 static int exit_status;
+
+/* If non-zero, display usage information and exit.  */
+static int flag_help;
+
+/* If non-zero, print the version on standard error.  */
+static int flag_version;
+
+static struct option const long_options[] =
+{
+  {"all", no_argument, 0, 'a'},
+  {"escape", no_argument, 0, 'b'},
+  {"directory", no_argument, 0, 'd'},
+  {"full-time", no_argument, 0, 'f'},
+  {"inode", no_argument, 0, 'i'},
+  {"kilobytes", no_argument, 0, 'k'},
+  {"numeric-uid-gid", no_argument, 0, 'n'},
+  {"no-group", no_argument, 0, 'G'},
+  {"hide-control-chars", no_argument, 0, 'q'},
+  {"reverse", no_argument, 0, 'r'},
+  {"size", no_argument, 0, 's'},
+  {"width", required_argument, 0, 'w'},
+  {"almost-all", no_argument, 0, 'A'},
+  {"ignore-backups", no_argument, 0, 'B'},
+  {"classify", no_argument, 0, 'F'},
+  {"file-type", no_argument, 0, 'F'},
+  {"ignore", required_argument, 0, 'I'},
+  {"dereference", no_argument, 0, 'L'},
+  {"literal", no_argument, 0, 'N'},
+  {"quote-name", no_argument, 0, 'Q'},
+  {"recursive", no_argument, 0, 'R'},
+  {"format", required_argument, 0, 12},
+  {"sort", required_argument, 0, 10},
+  {"tabsize", required_argument, 0, 'T'},
+  {"time", required_argument, 0, 11},
+  {"help", no_argument, &flag_help, 1},
+  {"version", no_argument, &flag_version, 1},
+  {0, 0, 0, 0}
+};
+
+static char const* const format_args[] =
+{
+  "verbose", "long", "commas", "horizontal", "across",
+  "vertical", "single-column", 0
+};
+
+static enum format const formats[] =
+{
+  long_format, long_format, with_commas, horizontal, horizontal,
+  many_per_line, one_per_line
+};
+
+static char const* const sort_args[] =
+{
+  "none", "time", "size", "extension", 0
+};
+
+static enum sort_type const sort_types[] =
+{
+  sort_none, sort_time, sort_size, sort_extension
+};
+
+static char const* const time_args[] =
+{
+  "atime", "access", "use", "ctime", "status", 0
+};
+
+static enum time_type const time_types[] =
+{
+  time_atime, time_atime, time_atime, time_ctime, time_ctime
+};
+
 
 void
 main (argc, argv)
@@ -372,6 +445,12 @@ main (argc, argv)
 
   program_name = argv[0];
   i = decode_switches (argc, argv);
+
+  if (flag_version)
+    fprintf (stderr, "%s\n", version_string);
+
+  if (flag_help)
+    usage ();
 
   format_needs_stat = sort_type == sort_time || sort_type == sort_size
     || format == long_format
@@ -428,68 +507,6 @@ main (argc, argv)
   exit (exit_status);
 }
 
-static struct option const long_options[] =
-{
-  {"all", no_argument, 0, 'a'},
-  {"escape", no_argument, 0, 'b'},
-  {"directory", no_argument, 0, 'd'},
-  {"full-time", no_argument, 0, 'f'},
-  {"inode", no_argument, 0, 'i'},
-  {"kilobytes", no_argument, 0, 'k'},
-  {"numeric-uid-gid", no_argument, 0, 'n'},
-  {"no-group", no_argument, 0, 'G'},
-  {"hide-control-chars", no_argument, 0, 'q'},
-  {"reverse", no_argument, 0, 'r'},
-  {"size", no_argument, 0, 's'},
-  {"width", required_argument, 0, 'w'},
-  {"almost-all", no_argument, 0, 'A'},
-  {"ignore-backups", no_argument, 0, 'B'},
-  {"classify", no_argument, 0, 'F'},
-  {"file-type", no_argument, 0, 'F'},
-  {"ignore", required_argument, 0, 'I'},
-  {"dereference", no_argument, 0, 'L'},
-  {"literal", no_argument, 0, 'N'},
-  {"quote-name", no_argument, 0, 'Q'},
-  {"recursive", no_argument, 0, 'R'},
-  {"format", required_argument, 0, 12},
-  {"sort", required_argument, 0, 10},
-  {"tabsize", required_argument, 0, 'T'},
-  {"time", required_argument, 0, 11},
-  {0, 0, 0, 0}
-};
-
-static char const* const format_args[] =
-{
-  "verbose", "long", "commas", "horizontal", "across",
-  "vertical", "single-column", 0
-};
-
-static enum format const formats[] =
-{
-  long_format, long_format, with_commas, horizontal, horizontal,
-  many_per_line, one_per_line
-};
-
-static char const* const sort_args[] =
-{
-  "none", "time", "size", "extension", 0
-};
-
-static enum sort_type const sort_types[] =
-{
-  sort_none, sort_time, sort_size, sort_extension
-};
-
-static char const* const time_args[] =
-{
-  "atime", "access", "use", "ctime", "status", 0
-};
-
-static enum time_type const time_types[] =
-{
-  time_atime, time_atime, time_atime, time_ctime, time_ctime
-};
-
 /* Set all the option flags according to the switches specified.
    Return the index of the first non-option argument.  */
 
