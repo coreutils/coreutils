@@ -1,4 +1,4 @@
-#serial 26
+#serial 27
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
@@ -176,6 +176,7 @@ AC_DEFUN(jm_MACROS,
     strerror \
     strrchr \
     sysinfo \
+    wcrtomb \
     tzset \
   )
 
