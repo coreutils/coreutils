@@ -22,7 +22,7 @@
 
 @dircategory Basics
 @direntry
-* Coreutils: (coreutils).                         Core GNU utilities.
+* Coreutils: (coreutils).       Core GNU (file, text, shell) utilities.
 * Common options: (coreutils)Common options.      Common options.
 * File permissions: (coreutils)File permissions.  Access modes.
 * Date input formats: (coreutils)Date input formats.
