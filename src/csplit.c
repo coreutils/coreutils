@@ -1,5 +1,5 @@
 /* csplit - split a file into sections determined by context lines
-   Copyright (C) 91, 1995-1999 Free Software Foundation, Inc.
+   Copyright (C) 91, 1995-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -245,16 +245,16 @@ cleanup_fatal (void)
 static RETSIGTYPE
 interrupt_handler (int sig)
 {
-#ifdef SA_INTERRUPT
+#ifdef SA_NOCLDSTOP
   struct sigaction sigact;
 
   sigact.sa_handler = SIG_DFL;
   sigemptyset (&sigact.sa_mask);
   sigact.sa_flags = 0;
   sigaction (sig, &sigact, NULL);
-#else				/* !SA_INTERRUPT */
+#else
   signal (sig, SIG_DFL);
-#endif				/* SA_INTERRUPT */
+#endif
   cleanup ();
   kill (getpid (), sig);
 }
@@ -1374,7 +1374,7 @@ main (int argc, char **argv)
 {
   int optc;
   unsigned long val;
-#ifdef SA_INTERRUPT
+#ifdef SA_NOCLDSTOP
   struct sigaction oldact, newact;
 #endif
 
@@ -1393,7 +1393,7 @@ main (int argc, char **argv)
   /* Change the way xmalloc and xrealloc fail.  */
   xalloc_fail_func = cleanup;
 
-#ifdef SA_INTERRUPT
+#ifdef SA_NOCLDSTOP
   newact.sa_handler = interrupt_handler;
   sigemptyset (&newact.sa_mask);
   newact.sa_flags = 0;
@@ -1413,7 +1413,7 @@ main (int argc, char **argv)
   sigaction (SIGTERM, NULL, &oldact);
   if (oldact.sa_handler != SIG_IGN)
     sigaction (SIGTERM, &newact, NULL);
-#else /* not SA_INTERRUPT */
+#else
   if (signal (SIGHUP, SIG_IGN) != SIG_IGN)
     signal (SIGHUP, interrupt_handler);
   if (signal (SIGINT, SIG_IGN) != SIG_IGN)
@@ -1422,7 +1422,7 @@ main (int argc, char **argv)
     signal (SIGQUIT, interrupt_handler);
   if (signal (SIGTERM, SIG_IGN) != SIG_IGN)
     signal (SIGTERM, interrupt_handler);
-#endif /* not SA_INTERRUPT */
+#endif
 
   while ((optc = getopt_long (argc, argv, "f:b:kn:sqz", longopts, NULL)) != -1)
     switch (optc)
