@@ -1,5 +1,12 @@
 2003-08-04  Paul Eggert  <eggert@twinsun.com>
 
+	Merge fnmatch module from gnulib.
+	* fnmatch.m4: New file, from gnulib.
+	* jm-macros.m4 (jm_MACROS): Require gl_FUNC_FNMATCH_GNU
+	instead of AC_FUNC_ERROR_AT_LINE.
+
+2003-08-04  Paul Eggert  <eggert@twinsun.com>
+
 	* error.m4: Sync from gnulib.
 
 2003-07-23  Jim Meyering  <jim@meyering.net>
