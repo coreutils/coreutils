@@ -119,7 +119,7 @@ install-exec-local: su
 
 uninstall-local:
 # Remove su only if it's one we installed.
-	@if grep 'GNU sh-utils' $(installed_su) > /dev/null 2>&1; then \
+	@if grep '@GNU_PACKAGE@' $(installed_su) > /dev/null 2>&1; then \
 	  echo "  rm -f $(installed_su)"; \
 	  rm -f $(installed_su); \
 	else :; fi
