@@ -1,5 +1,5 @@
 /* tail -- output the last part of file(s)
-   Copyright (C) 1989, 90, 91, 1995-2004 Free Software Foundation, Inc.
+   Copyright (C) 1989, 90, 91, 1995-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -79,9 +79,14 @@ enum Follow_mode
   Follow_descriptor = 2
 };
 
+/* On Darwin 7.7, when reading from a command-line pipe, standard
+   input is of type S_ISSOCK.  Everywhere else it's S_ISFIFO.  */
+#define IS_PIPE_LIKE_FILE_TYPE(Mode) \
+  (S_ISFIFO (Mode) || S_ISSOCK (Mode))
+
 /* The types of files for which tail works.  */
 #define IS_TAILABLE_FILE_TYPE(Mode) \
-  (S_ISREG (Mode) || S_ISFIFO (Mode) || S_ISCHR (Mode))
+  (S_ISREG (Mode) || IS_PIPE_LIKE_FILE_TYPE (Mode) || S_ISCHR (Mode))
 
 static char const *const follow_mode_string[] =
 {
@@ -1650,7 +1655,8 @@ main (int argc, char **argv)
       if (forever)
 	{
 	  struct stat stats;
-	  if (fstat (STDIN_FILENO, &stats) == 0 && S_ISFIFO (stats.st_mode))
+	  if (fstat (STDIN_FILENO, &stats) == 0
+	      && IS_PIPE_LIKE_FILE_TYPE (stats.st_mode))
 	    forever = false;
 	}
     }
