@@ -2,6 +2,12 @@
 
 	* Version 4.1.10.
 
+	* src/stat.c (print_statfs): Use `fputc ('*', stdout)'
+	instead of the combination of strcat and printf.
+	(print_statfs) [!FLASK_LINUX]: Print `*' for %S and %C,
+	rather than `S' and `C'.
+	(print_stat) [!FLASK_LINUX]: Likewise.
+
 	* src/remove.c (AD_mark_current_as_unremovable): Replace dead
 	code with an assertion.
 
