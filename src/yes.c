@@ -31,6 +31,7 @@
 
 #define AUTHORS "David MacKenzie"
 
+/* How many iterations between ferror checks.  */
 #define UNROLL 10000
 
 /* The name this program was run with. */
