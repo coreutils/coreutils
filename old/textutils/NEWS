@@ -2,6 +2,7 @@ User-visible changes in release 1.14
 * sorting works with character offsets larger than corresponding field width
 * sort's -b option and `b' modifier work
 * sort -k2,2 works.
+* csplit detects integer overflow of command line arguments
 * sort accepts new option/flag, -g, for sorting numbers in scientific notation
 * join accepts POSIX `-o 0' field specifier.
 * tr 'a[b*512]' '[a*]' < /dev/null terminates
