@@ -1,3 +1,16 @@
+2003-10-02  Jim Meyering  <jim@meyering.net>
+
+	* tests/du/inaccessible-cwd: Ensure that even when run from an
+	inaccessible directory, du can still operate on accessible
+	directories elsewhere.
+
+	* tests/rm/deep-1: Ensure that du can process a hierarchy
+	of depth 400 while using no more than 50KB of stack space.
+
+2003-10-01  Jim Meyering  <jim@meyering.net>
+
+	* src/du.c (is_symlink_to_dir): Remove now-unnecessary function.
+
 2003-10-01  Akim Demaille  <akim@epita.fr>
 
 	* Version 5.0.92.
@@ -14,7 +27,7 @@
 	Now, du works better:
 	- the depth of hierarchy du can process is no longer limited by
 	    the user's stack size (nftw uses recursion, the fts implementation
-	    doesn't)  (FIXME: add test with small stack)
+	    doesn't)
 	- works even when run from an inaccessible directory (FIXME: add test)
 	- du -D now dereferences all symlinks specified on the command line,
 	    not just the ones that reference directories (FIXME: confirm
