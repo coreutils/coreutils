@@ -76,6 +76,14 @@
 # endif
 #endif
 
+#ifndef S_IWUSR
+# ifdef S_IWRITE
+#  define S_IWUSR S_IWRITE
+# else
+#  define S_IWUSR 00200
+# endif
+#endif
+
 #ifndef S_IEXEC
 # define S_IEXEC S_IXUSR
 #endif
