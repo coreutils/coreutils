@@ -10,7 +10,7 @@ fi
 
 pwd=`pwd`
 tmp=part-sl.$$
-trap 'status=$?; cd $pwd; rm -rf $tmp $other_partition_tmpdir && exit $status' 0
+trap 'status=$?; cd $pwd; exec 1>&2; rm -rf $tmp $other_partition_tmpdir && exit $status' 0
 trap '(exit $?); exit' 1 2 13 15
 
 pwd_tmp=$pwd/$tmp
