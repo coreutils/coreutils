@@ -225,13 +225,6 @@ rel-check:
 prev-tgz = $(PACKAGE)-$(PREV_VERSION).tar.gz
 xd-delta = $(PACKAGE)-$(PREV_VERSION)-$(VERSION).xdelta
 
-GZIP = gzip
-BZIP2 = bzip2
-$(my_distdir).tar.bz2: $(my_distdir).tar.gz
-	$(GZIP) -dc $< > $(my_distdir).tar
-	rm -f $@
-	$(BZIP2) -9 $(my_distdir).tar
-
 rel-files = $(xd-delta) $(distdir).tar.bz2 $(distdir).tar.gz
 announcement: NEWS ChangeLog $(rel-files)
 	@( \
