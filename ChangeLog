@@ -2,6 +2,8 @@
 
 	* Version 4.5.4.
 
+	* tests/misc/Makefile.am (TESTS): Add printf-hex.
+
 	* tests/misc/printf: Be careful to test the code in this package,
 	not the shell built-in function.
 
