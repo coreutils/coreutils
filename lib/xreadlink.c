@@ -24,6 +24,11 @@
 #endif
 
 #include <stdio.h>
+#include <errno.h>
+#ifndef errno
+extern int errno;
+#endif
+
 #if HAVE_SYS_TYPES_H
 # include <sys/types.h>
 #endif
