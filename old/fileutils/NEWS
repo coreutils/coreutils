@@ -1,3 +1,6 @@
+[4.1.6]
+* cp and inter-partition mv no longer give a misleading diagnostic in some
+    unusual cases
 [4.1.5]
 * cp -r no longer preserves symlinks
 * The block size notation is now compatible with SI and with IEC 60027-2.
