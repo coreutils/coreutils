@@ -103,9 +103,6 @@ struct File_spec
   ino_t ino;
 
   /* FIXME: describe */
-  unsigned int n_stat_calls;
-
-  /* FIXME: describe */
   unsigned int n_unchanged_stats;
 
   /* FIXME: describe */
