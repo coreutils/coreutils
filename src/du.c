@@ -625,18 +625,15 @@ main (int argc, char **argv)
 	  break;
 
 	case 'D': /* This will eventually be 'H' (-H), too.  */
-	  bit_flags |= FTS_COMFOLLOW;
-	  break;
-
-	case 'P': /* --no-dereference */
-	  bit_flags |= FTS_PHYSICAL;
-	  bit_flags &= ~FTS_LOGICAL;
-	  bit_flags &= ~FTS_COMFOLLOW;
+	  bit_flags = FTS_COMFOLLOW;
 	  break;
 
 	case 'L': /* --dereference */
-	  bit_flags |= FTS_LOGICAL;
-	  bit_flags &= ~FTS_PHYSICAL;
+	  bit_flags = FTS_LOGICAL;
+	  break;
+
+	case 'P': /* --no-dereference */
+	  bit_flags = FTS_PHYSICAL;
 	  break;
 
 	case 'S':
