@@ -1,10 +1,10 @@
 2003-12-18  Jim Meyering  <jim@meyering.net>
 
+	* Version 5.1.0.
+
 	* configure.ac: Require automake-1.8.
 
 2003-12-12  Jim Meyering  <jim@meyering.net>
-
-	* Version 5.1.0.
 
 	* Use automake-1.8.  Regenerate dependent files.
 
