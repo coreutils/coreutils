@@ -137,3 +137,6 @@ du: rewrite to use something other than nftw to perform directory traversal.
 cp --recursive: perform dir traversals in source and dest hierarchy rather
   than forming full file names.  The latter (current) approach fails
   unnecessarily when the names become very long.
+
+`tail --follow=name --retry' should elicit a diagnostic, since no file name
+  was specified.
