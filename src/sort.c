@@ -450,10 +450,15 @@ tempname (void)
 	     (len && temp_dir[len - 1] != '/') ? "/" : "",
 	     (unsigned int) getpid () & 0xffff, seq);
   else
-    sprintf (name, "%s%ss%5.5d%2.2d.%3.3d",
-	     temp_dir,
-	     (len && temp_dir[len - 1] != '/') ? "/" : "",
-	     (unsigned int) getpid () & 0xffff, seq / 1000, seq % 1000);
+    {
+      sprintf (name, "%s%ss%5.5d%2.2d.%3.3d",
+	       temp_dir,
+	       (len && temp_dir[len - 1] != '/') ? "/" : "",
+	       (unsigned int) getpid () & 0xffff, seq / 1000, seq % 1000);
+
+      /* FIXME: fail if seq exceeds 99999 -- at which point sort
+	 would start reusing temporary file names.  */
+    }
 
   /* Make sure that SEQ's value fits in 5 digits.  */
   ++seq;
