@@ -1,5 +1,11 @@
 2004-07-28  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* src/dcgen: Remove comments, trailing white space, and empty
+	lines from the output strings, to save space.
+	Use a narrower type like 'unsigned char' for line lengths, if
+	that will do.
+	Make the output variables static, not extern.
+
 	* src/chgrp.c (parse_group): Require base 10 when parsing
 	groups as integers.
 	(main): int -> bool when appropriate.
