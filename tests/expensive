@@ -7,5 +7,5 @@ environment variable set to yes.  E.g.,
   env RUN_EXPENSIVE_TESTS=yes make check
 
 EOF
-  exit 77
+  (exit 77); exit
 fi
