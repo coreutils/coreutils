@@ -149,8 +149,16 @@ $ac_includes_default
     AC_CHECK_MEMBERS([struct utmp.ut_pid],,,[$utmp_includes])
     AC_CHECK_MEMBERS([struct utmpx.ut_id],,,[$utmp_includes])
     AC_CHECK_MEMBERS([struct utmp.ut_id],,,[$utmp_includes])
-    AC_CHECK_MEMBERS([struct utmpx.ut_exit],,,[$utmp_includes])
-    AC_CHECK_MEMBERS([struct utmp.ut_exit],,,[$utmp_includes])
+
+    AC_CHECK_MEMBERS([struct utmpx.ut_exit.ut_exit],,,[$utmp_includes])
+    AC_CHECK_MEMBERS([struct utmp.ut_exit.ut_exit],,,[$utmp_includes])
+    AC_CHECK_MEMBERS([struct utmpx.ut_exit.e_exit],,,[$utmp_includes])
+    AC_CHECK_MEMBERS([struct utmp.ut_exit.e_exit],,,[$utmp_includes])
+
+    AC_CHECK_MEMBERS([struct utmpx.ut_exit.ut_termination],,,[$utmp_includes])
+    AC_CHECK_MEMBERS([struct utmp.ut_exit.ut_termination],,,[$utmp_includes])
+    AC_CHECK_MEMBERS([struct utmpx.ut_exit.e_termination],,,[$utmp_includes])
+    AC_CHECK_MEMBERS([struct utmp.ut_exit.e_termination],,,[$utmp_includes])
     AC_LIBOBJ(readutmp)
   fi
 ])
