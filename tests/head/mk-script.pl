@@ -71,11 +71,13 @@ sub spec_to_list ($$$)
   return \%h;
 }
 
-$| = 1;
+# ~~~~~~~ main ~~~~~~~~
+{
+  $| = 1;
 
-my $xx = $ARGV[0];
+  my $xx = $ARGV[0];
 
-print <<EOF;
+  print <<EOF;
 #! /bin/sh
 # This script was generated automatically by build-script.
 case \$# in
@@ -89,7 +91,6 @@ test "\$srcdir" || srcdir=.
 test "\$VERBOSE" && \$xx --version 2> /dev/null
 EOF
 
-{
   my %seen;
 
   my $test_vector;
