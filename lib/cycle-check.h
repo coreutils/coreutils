@@ -14,7 +14,10 @@
 
    so that the proper identifiers are all declared.  */
 
+# include <stdbool.h>
 # include "dev-ino.h"
+
+struct stat;
 
 struct cycle_check_state
 {
