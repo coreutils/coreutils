@@ -31,7 +31,7 @@
 #include "system.h"
 
 #include "error.h"
-#include "getdelim2.h"
+#include "getndelim2.h"
 #include "hash.h"
 #include "quote.h"
 #include "xstrndup.h"
@@ -585,11 +585,11 @@ cut_fields (FILE *stream)
     {
       if (field_idx == 1 && buffer_first_field)
 	{
-	  int len;
+	  ssize_t len;
 	  size_t n_bytes;
 
-	  len = getdelim2 (&field_1_buffer, &field_1_bufsize, stream,
-			   delim, '\n', 0);
+	  len = getndelim2 (&field_1_buffer, &field_1_bufsize, SIZE_MAX,
+			    stream, delim, '\n', 0);
 	  if (len < 0)
 	    {
 	      if (ferror (stream) || feof (stream))
