@@ -22,6 +22,7 @@
 #include <getopt.h>
 
 #include "system.h"
+#include "c-strtod.h"
 #include "error.h"
 #include "long-options.h"
 #include "xnanosleep.h"
@@ -144,7 +145,7 @@ main (int argc, char **argv)
     {
       double s;
       const char *p;
-      if (xstrtod (argv[i], &p, &s)
+      if (xstrtod (argv[i], &p, &s, c_strtod)
 	  /* Nonnegative interval.  */
 	  || ! (0 <= s)
 	  /* No extra chars after the number and an optional s,m,h,d char.  */
