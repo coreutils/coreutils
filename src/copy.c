@@ -83,13 +83,13 @@ struct F_triple
 int euidaccess ();
 int yesno ();
 
-static int copy_internal PARAMS ((const char *src_path, const char *dst_path,
-				  int new_dst, dev_t device,
-				  struct dir_list *ancestors,
-				  const struct cp_options *x,
-				  int command_line_arg,
-				  int *copy_into_self,
-				  int *rename_succeeded));
+static int copy_internal (const char *src_path, const char *dst_path,
+			  int new_dst, dev_t device,
+			  struct dir_list *ancestors,
+			  const struct cp_options *x,
+			  int command_line_arg,
+			  int *copy_into_self,
+			  int *rename_succeeded);
 
 /* Pointers to the file names:  they're used in the diagnostic that is issued
    when we detect the user is trying to copy a directory into itself.  */

@@ -147,7 +147,7 @@ int wcwidth ();
    on systems with an lstat function that does not dereference symlinks
    that are specified with a trailing slash.  */
 #if ! LSTAT_FOLLOWS_SLASHED_SYMLINK
-int rpl_lstat PARAMS((const char *, struct stat *));
+int rpl_lstat (const char *, struct stat *);
 # undef lstat
 # define lstat(Name, Stat_buf) rpl_lstat(Name, Stat_buf)
 #endif
@@ -253,42 +253,41 @@ time_t time ();
 char *getgroup ();
 char *getuser ();
 
-static size_t quote_name PARAMS ((FILE *out, const char *name,
-				  struct quoting_options const *options));
-static char *make_link_path PARAMS ((const char *path, const char *linkname));
-static int decode_switches PARAMS ((int argc, char **argv));
-static int file_interesting PARAMS ((const struct dirent *next));
-static uintmax_t gobble_file PARAMS ((const char *name, enum filetype type,
-				      int explicit_arg, const char *dirname));
-static void print_color_indicator PARAMS ((const char *name, mode_t mode,
-					   int linkok));
-static void put_indicator PARAMS ((const struct bin_str *ind));
-static int put_indicator_direct PARAMS ((const struct bin_str *ind));
-static int length_of_file_name_and_frills PARAMS ((const struct fileinfo *f));
-static void add_ignore_pattern PARAMS ((const char *pattern));
-static void attach PARAMS ((char *dest, const char *dirname, const char *name));
-static void clear_files PARAMS ((void));
-static void extract_dirs_from_files PARAMS ((const char *dirname,
-					     int ignore_dot_and_dot_dot));
-static void get_link_name PARAMS ((const char *filename, struct fileinfo *f));
-static void indent PARAMS ((int from, int to));
-static void init_column_info PARAMS ((void));
-static void print_current_files PARAMS ((void));
-static void print_dir PARAMS ((const char *name, const char *realname));
-static void print_file_name_and_frills PARAMS ((const struct fileinfo *f));
-static void print_horizontal PARAMS ((void));
-static void print_long_format PARAMS ((const struct fileinfo *f));
-static void print_many_per_line PARAMS ((void));
-static void print_name_with_quoting PARAMS ((const char *p, mode_t mode,
-					     int linkok,
-					     struct obstack *stack));
-static void prep_non_filename_text PARAMS ((void));
-static void print_type_indicator PARAMS ((mode_t mode));
-static void print_with_commas PARAMS ((void));
-static void queue_directory PARAMS ((const char *name, const char *realname));
-static void sort_files PARAMS ((void));
-static void parse_ls_color PARAMS ((void));
-void usage PARAMS ((int status));
+static size_t quote_name (FILE *out, const char *name,
+			  struct quoting_options const *options);
+static char *make_link_path (const char *path, const char *linkname);
+static int decode_switches (int argc, char **argv);
+static int file_interesting (const struct dirent *next);
+static uintmax_t gobble_file (const char *name, enum filetype type,
+			      int explicit_arg, const char *dirname);
+static void print_color_indicator (const char *name, mode_t mode, int linkok);
+static void put_indicator (const struct bin_str *ind);
+static int put_indicator_direct (const struct bin_str *ind);
+static int length_of_file_name_and_frills (const struct fileinfo *f);
+static void add_ignore_pattern (const char *pattern);
+static void attach (char *dest, const char *dirname, const char *name);
+static void clear_files (void);
+static void extract_dirs_from_files (const char *dirname,
+				     int ignore_dot_and_dot_dot);
+static void get_link_name (const char *filename, struct fileinfo *f);
+static void indent (int from, int to);
+static void init_column_info (void);
+static void print_current_files (void);
+static void print_dir (const char *name, const char *realname);
+static void print_file_name_and_frills (const struct fileinfo *f);
+static void print_horizontal (void);
+static void print_long_format (const struct fileinfo *f);
+static void print_many_per_line (void);
+static void print_name_with_quoting (const char *p, mode_t mode,
+				     int linkok,
+				     struct obstack *stack);
+static void prep_non_filename_text (void);
+static void print_type_indicator (mode_t mode);
+static void print_with_commas (void);
+static void queue_directory (const char *name, const char *realname);
+static void sort_files (void);
+static void parse_ls_color (void);
+void usage (int status);
 
 /* The name the program was run with, stripped of any leading path. */
 char *program_name;
@@ -2573,7 +2572,7 @@ typedef void const *V;
 
 static inline int
 cmp_ctime (struct fileinfo const *a, struct fileinfo const *b,
-	   int (*cmp) PARAMS ((char const *, char const *)))
+	   int (*cmp) (char const *, char const *))
 {
   int diff = CTIME_CMP (b->stat, a->stat);
   return diff ? diff : cmp (a->name, b->name);
@@ -2585,7 +2584,7 @@ static int rev_str_ctime (V a, V b) { return compstr_ctime (b, a); }
 
 static inline int
 cmp_mtime (struct fileinfo const *a, struct fileinfo const *b,
-	   int (*cmp) PARAMS((char const *, char const *)))
+	   int (*cmp) (char const *, char const *))
 {
   int diff = MTIME_CMP (b->stat, a->stat);
   return diff ? diff : cmp (a->name, b->name);
@@ -2597,7 +2596,7 @@ static int rev_str_mtime (V a, V b) { return compstr_mtime (b, a); }
 
 static inline int
 cmp_atime (struct fileinfo const *a, struct fileinfo const *b,
-	   int (*cmp) PARAMS ((char const *, char const *)))
+	   int (*cmp) (char const *, char const *))
 {
   int diff = ATIME_CMP (b->stat, a->stat);
   return diff ? diff : cmp (a->name, b->name);
@@ -2609,7 +2608,7 @@ static int rev_str_atime (V a, V b) { return compstr_atime (b, a); }
 
 static inline int
 cmp_size (struct fileinfo const *a, struct fileinfo const *b,
-	  int (*cmp) PARAMS ((char const *, char const *)))
+	  int (*cmp) (char const *, char const *))
 {
   int diff = longdiff (b->stat.st_size, a->stat.st_size);
   return diff ? diff : cmp (a->name, b->name);
@@ -2629,7 +2628,7 @@ static int rev_cmp_version (V a, V b) { return compare_version (b, a); }
 
 static inline int
 cmp_name (struct fileinfo const *a, struct fileinfo const *b,
-	  int (*cmp) PARAMS ((char const *, char const *)))
+	  int (*cmp) (char const *, char const *))
 {
   return cmp (a->name, b->name);
 }
@@ -2643,7 +2642,7 @@ static int rev_str_name (V a, V b) { return compstr_name (b, a); }
 
 static inline int
 cmp_extension (struct fileinfo const *a, struct fileinfo const *b,
-	       int (*cmp) PARAMS ((char const *, char const *)))
+	       int (*cmp) (char const *, char const *))
 {
   char const *base1 = strrchr (a->name, '.');
   char const *base2 = strrchr (b->name, '.');
@@ -2660,7 +2659,7 @@ static int rev_str_extension (V a, V b) { return compstr_extension (b, a); }
 static void
 sort_files (void)
 {
-  int (*func) PARAMS ((V, V));
+  int (*func) (V, V);
 
   switch (sort_type)
     {

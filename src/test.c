@@ -109,22 +109,22 @@ static int pos;		/* The offset of the current argument in ARGV. */
 static int argc;	/* The number of arguments present in ARGV. */
 static char **argv;	/* The argument list. */
 
-static int unop PARAMS ((int op));
-static int binop PARAMS ((char *s));
-static int unary_operator PARAMS ((void));
-static int binary_operator PARAMS ((void));
-static int two_arguments PARAMS ((void));
-static int three_arguments PARAMS ((void));
-static int posixtest PARAMS ((void));
+static int unop (int op);
+static int binop (char *s);
+static int unary_operator (void);
+static int binary_operator (void);
+static int two_arguments (void);
+static int three_arguments (void);
+static int posixtest (void);
 
-static int expr PARAMS ((void));
-static int term PARAMS ((void));
-static int and PARAMS ((void));
-static int or PARAMS ((void));
+static int expr (void);
+static int term (void);
+static int and (void);
+static int or (void);
 
-static void test_syntax_error PARAMS ((char const *format, char const *arg))
+static void test_syntax_error (char const *format, char const *arg)
      ATTRIBUTE_NORETURN;
-static void beyond PARAMS ((void)) ATTRIBUTE_NORETURN;
+static void beyond (void) ATTRIBUTE_NORETURN;
 
 static void
 test_syntax_error (char const *format, char const *arg)

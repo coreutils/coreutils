@@ -178,7 +178,7 @@ int lstat ();
    on systems with an lstat function that does not dereference symlinks
    that are specified with a trailing slash.  */
 # if ! LSTAT_FOLLOWS_SLASHED_SYMLINK
-int rpl_lstat PARAMS((const char *, struct stat *));
+int rpl_lstat (const char *, struct stat *);
 #  undef lstat
 #  define lstat rpl_lstat
 # endif
@@ -189,7 +189,7 @@ int rename ();
    on systems with a rename function that fails for a source path
    specified with a trailing slash.  */
 # if RENAME_TRAILING_SLASH_BUG
-int rpl_rename PARAMS((const char *, const char *));
+int rpl_rename (const char *, const char *);
 #  undef rename
 #  define rename rpl_rename
 # endif
@@ -200,8 +200,8 @@ copy PARAMS ((const char *src_path, const char *dst_path,
 	      int *copy_into_self, int *rename_succeeded));
 
 void
-dest_info_init PARAMS ((struct cp_options *));
+dest_info_init (struct cp_options *);
 void
-src_info_init PARAMS ((struct cp_options *));
+src_info_init (struct cp_options *);
 
 #endif

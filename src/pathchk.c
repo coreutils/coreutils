@@ -105,7 +105,7 @@ extern int errno;
 # define NAME_MAX_FOR(p) NAME_MAX
 #endif
 
-static int validate_path PARAMS ((char *path, int portability));
+static int validate_path (char *path, int portability);
 
 /* The name this program was run with. */
 char *program_name;

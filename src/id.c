@@ -46,10 +46,10 @@ gid_t getegid ();
 
 int getugroups ();
 
-static void print_user PARAMS ((uid_t uid));
-static void print_group PARAMS ((gid_t gid));
-static void print_group_list PARAMS ((const char *username));
-static void print_full_info PARAMS ((const char *username));
+static void print_user (uid_t uid);
+static void print_group (gid_t gid);
+static void print_group_list (const char *username);
+static void print_full_info (const char *username);
 
 /* The name this program was run with. */
 char *program_name;

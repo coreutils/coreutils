@@ -407,34 +407,31 @@ static struct control_info control_info[] =
   {NULL, 0, 0}
 };
 
-static const char *visible PARAMS ((unsigned int ch));
-static unsigned long baud_to_value PARAMS ((speed_t speed));
-static int recover_mode PARAMS ((char *arg, struct termios *mode));
-static int screen_columns PARAMS ((void));
-static int set_mode PARAMS ((struct mode_info *info, int reversed,
-			     struct termios *mode));
-static long integer_arg PARAMS ((const char *s));
-static speed_t string_to_baud PARAMS ((const char *arg));
-static tcflag_t *mode_type_flag PARAMS ((enum mode_type type,
-					 struct termios *mode));
-static void display_all PARAMS ((struct termios *mode, int fd,
-				 const char *device_name));
-static void display_changed PARAMS ((struct termios *mode));
-static void display_recoverable PARAMS ((struct termios *mode));
-static void display_settings PARAMS ((enum output_type output_type,
-				      struct termios *mode, int fd,
-				      const char *device_name));
-static void display_speed PARAMS ((struct termios *mode, int fancy));
-static void display_window_size PARAMS ((int fancy, int fd,
-					 const char *device_name));
-static void sane_mode PARAMS ((struct termios *mode));
-static void set_control_char PARAMS ((struct control_info *info,
-				      const char *arg,
-				      struct termios *mode));
-static void set_speed PARAMS ((enum speed_setting type, const char *arg,
-			       struct termios *mode));
-static void set_window_size PARAMS ((int rows, int cols, int fd,
- 				  const char *device_name));
+static const char *visible (unsigned int ch);
+static unsigned long baud_to_value (speed_t speed);
+static int recover_mode (char *arg, struct termios *mode);
+static int screen_columns (void);
+static int set_mode (struct mode_info *info, int reversed,
+			     struct termios *mode);
+static long integer_arg (const char *s);
+static speed_t string_to_baud (const char *arg);
+static tcflag_t *mode_type_flag (enum mode_type type, struct termios *mode);
+static void display_all (struct termios *mode, int fd, const char *device_name);
+static void display_changed (struct termios *mode);
+static void display_recoverable (struct termios *mode);
+static void display_settings (enum output_type output_type,
+			      struct termios *mode, int fd,
+			      const char *device_name);
+static void display_speed (struct termios *mode, int fancy);
+static void display_window_size (int fancy, int fd, const char *device_name);
+static void sane_mode (struct termios *mode);
+static void set_control_char (struct control_info *info,
+			      const char *arg,
+			      struct termios *mode);
+static void set_speed (enum speed_setting type, const char *arg,
+		       struct termios *mode);
+static void set_window_size (int rows, int cols, int fd,
+			     const char *device_name);
 
 /* The width of the screen, for output wrapping. */
 static int max_col;

@@ -400,7 +400,7 @@ cleanup (void)
 
 /* Report MESSAGE for FILE, then clean up and exit.  */
 
-static void die PARAMS ((char const *, char const *)) ATTRIBUTE_NORETURN;
+static void die (char const *, char const *) ATTRIBUTE_NORETURN;
 static void
 die (char const *message, char const *file)
 {
@@ -2024,7 +2024,7 @@ insertkey (struct keyfield *key)
 
 /* Report a bad field specification SPEC, with extra info MSGID.  */
 
-static void badfieldspec PARAMS ((char const *, char const *))
+static void badfieldspec (char const *, char const *)
      ATTRIBUTE_NORETURN;
 static void
 badfieldspec (char const *spec, char const *msgid)

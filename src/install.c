@@ -78,19 +78,19 @@ int isdir ();
 
 int stat ();
 
-static int change_timestamps PARAMS ((const char *from, const char *to));
-static int change_attributes PARAMS ((const char *path));
-static int copy_file PARAMS ((const char *from, const char *to,
-			      const struct cp_options *x));
-static int install_file_to_path PARAMS ((const char *from, const char *to,
-					 const struct cp_options *x));
-static int install_file_in_dir PARAMS ((const char *from, const char *to_dir,
-					const struct cp_options *x));
-static int install_file_in_file PARAMS ((const char *from, const char *to,
-					 const struct cp_options *x));
-static void get_ids PARAMS ((void));
-static void strip PARAMS ((const char *path));
-void usage PARAMS ((int status));
+static int change_timestamps (const char *from, const char *to);
+static int change_attributes (const char *path);
+static int copy_file (const char *from, const char *to,
+		      const struct cp_options *x);
+static int install_file_to_path (const char *from, const char *to,
+				 const struct cp_options *x);
+static int install_file_in_dir (const char *from, const char *to_dir,
+				const struct cp_options *x);
+static int install_file_in_file (const char *from, const char *to,
+				 const struct cp_options *x);
+static void get_ids (void);
+static void strip (const char *path);
+void usage (int status);
 
 /* The name this program was run with, for error messages. */
 char *program_name;

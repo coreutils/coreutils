@@ -392,10 +392,10 @@ struct COLUMN
     status;			/* Status of the file pointer. */
 
     /* Func to print lines in this col. */
-    int (*print_func) PARAMS ((struct COLUMN *));
+    int (*print_func) (struct COLUMN *);
 
     /* Func to print/store chars in this col. */
-    void (*char_func) PARAMS ((int));
+    void (*char_func) (int);
 
     int current_line;		/* Index of current place in line_vector. */
     int lines_stored;		/* Number of lines stored in buff. */
@@ -414,35 +414,35 @@ typedef struct COLUMN COLUMN;
 
 #define NULLCOL (COLUMN *)0
 
-static int char_to_clump PARAMS ((int c));
-static int read_line PARAMS ((COLUMN *p));
-static int print_page PARAMS ((void));
-static int print_stored PARAMS ((COLUMN *p));
-static int open_file PARAMS ((char *name, COLUMN *p));
-static int skip_to_page PARAMS ((int page));
-static void print_header PARAMS ((void));
-static void pad_across_to PARAMS ((int position));
-static void add_line_number PARAMS ((COLUMN *p));
-static void getoptarg PARAMS ((char *arg, char switch_char, char *character,
-			       int *number));
-void usage PARAMS ((int status));
-static void print_files PARAMS ((int number_of_files, char **av));
-static void init_parameters PARAMS ((int number_of_files));
-static void init_header PARAMS ((char *filename, int desc));
-static int init_fps PARAMS ((int number_of_files, char **av));
-static void init_funcs PARAMS ((void));
-static void init_store_cols PARAMS ((void));
-static void store_columns PARAMS ((void));
-static void balance PARAMS ((int total_stored));
-static void store_char PARAMS ((int c));
-static void pad_down PARAMS ((int lines));
-static void read_rest_of_line PARAMS ((COLUMN *p));
-static void skip_read PARAMS ((COLUMN *p, int column_number));
-static void print_char PARAMS ((int c));
-static void cleanup PARAMS ((void));
-static void first_last_page PARAMS ((char *pages));
-static void print_sep_string PARAMS ((void));
-static void separator_string PARAMS ((const char *optarg_S));
+static int char_to_clump (int c);
+static int read_line (COLUMN *p);
+static int print_page (void);
+static int print_stored (COLUMN *p);
+static int open_file (char *name, COLUMN *p);
+static int skip_to_page (int page);
+static void print_header (void);
+static void pad_across_to (int position);
+static void add_line_number (COLUMN *p);
+static void getoptarg (char *arg, char switch_char, char *character,
+		       int *number);
+void usage (int status);
+static void print_files (int number_of_files, char **av);
+static void init_parameters (int number_of_files);
+static void init_header (char *filename, int desc);
+static int init_fps (int number_of_files, char **av);
+static void init_funcs (void);
+static void init_store_cols (void);
+static void store_columns (void);
+static void balance (int total_stored);
+static void store_char (int c);
+static void pad_down (int lines);
+static void read_rest_of_line (COLUMN *p);
+static void skip_read (COLUMN *p, int column_number);
+static void print_char (int c);
+static void cleanup (void);
+static void first_last_page (char *pages);
+static void print_sep_string (void);
+static void separator_string (const char *optarg_S);
 
 /* The name under which this program was invoked. */
 char *program_name;

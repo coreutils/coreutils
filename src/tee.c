@@ -32,7 +32,7 @@
 
 #define AUTHORS N_ ("Mike Parker, Richard M. Stallman, and David MacKenzie")
 
-static int tee PARAMS ((int nfiles, const char **files));
+static int tee (int nfiles, const char **files);
 
 /* If nonzero, append to output files rather than truncating them. */
 static int append;

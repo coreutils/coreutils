@@ -116,11 +116,11 @@ struct buffer_record
   struct buffer_record *next;
 };
 
-static void close_output_file PARAMS ((void));
-static void create_output_file PARAMS ((void));
-static void delete_all_files PARAMS ((void));
-static void save_line_to_file PARAMS ((const struct cstring *line));
-void usage PARAMS ((int status));
+static void close_output_file (void);
+static void create_output_file (void);
+static void delete_all_files (void);
+static void save_line_to_file (const struct cstring *line);
+void usage (int status);
 
 /* The name this program was run with. */
 char *program_name;

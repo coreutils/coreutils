@@ -72,7 +72,7 @@ enum Prompt_action
 /* On systems with an lstat function that accepts the empty string,
    arrange to make lstat calls go through the wrapper function.  */
 #if HAVE_LSTAT_EMPTY_STRING_BUG
-int rpl_lstat PARAMS((const char *, struct stat *));
+int rpl_lstat (const char *, struct stat *);
 # define lstat(Name, Stat_buf) rpl_lstat(Name, Stat_buf)
 #endif
 

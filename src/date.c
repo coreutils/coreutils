@@ -43,7 +43,7 @@
 
 int putenv ();
 
-static void show_date PARAMS ((const char *format, struct timespec when));
+static void show_date (const char *format, struct timespec when);
 
 enum Time_spec
 {

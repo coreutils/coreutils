@@ -74,10 +74,10 @@ static char **args;
 /* The name this program was run with. */
 char *program_name;
 
-static VALUE *eval PARAMS ((void));
-static int nomoreargs PARAMS ((void));
-static int null PARAMS ((VALUE *v));
-static void printv PARAMS ((VALUE *v));
+static VALUE *eval (void);
+static int nomoreargs (void);
+static int null (VALUE *v);
+static void printv (VALUE *v);
 
 void
 usage (int status)

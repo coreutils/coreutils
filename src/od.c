@@ -102,7 +102,7 @@ struct tspec
   {
     enum output_format fmt;
     enum size_spec size;
-    void (*print_function) PARAMS ((size_t, const char *, const char *));
+    void (*print_function) (size_t, const char *, const char *);
     char *fmt_string;
     int hexl_mode_trailer;
     int field_width;
@@ -193,7 +193,7 @@ static uintmax_t pseudo_offset;
 
 /* Function that accepts an address and an optional following char,
    and prints the address and char to stdout.  */
-static void (*format_address) PARAMS ((uintmax_t, char));
+static void (*format_address) (uintmax_t, char);
 
 /* The number of input bytes to skip before formatting and writing.  */
 static uintmax_t n_bytes_to_skip = 0;
@@ -676,7 +676,7 @@ decode_one_format (const char *s_orig, const char *s, const char **next,
   enum output_format fmt;
   const char *pre_fmt_string;
   char *fmt_string;
-  void (*print_function) PARAMS ((size_t, const char *, const char *));
+  void (*print_function) (size_t, const char *, const char *);
   const char *p;
   unsigned int c;
   unsigned int field_width = 0;

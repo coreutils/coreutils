@@ -53,8 +53,7 @@ enum Verbosity
   V_off
 };
 
-static int change_dir_mode PARAMS ((const char *dir,
-				    const struct mode_change *changes));
+static int change_dir_mode (const char *dir, const struct mode_change *changes);
 
 /* The name the program was run with. */
 char *program_name;
