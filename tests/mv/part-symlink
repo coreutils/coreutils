@@ -43,7 +43,6 @@ fail=0
 
 # Exercise those four cases for each of
 # cp and mv, with lots of combinations of options.
-# For now, just --rem and without.
 
 actual=actual-$$
 expected=expected-$$
@@ -65,11 +64,10 @@ for copy in cp mv; do
       'loc_sl rem_reg' \
       'rem_reg loc_sl' \
       ; do
-    for options in '' --rem '--rem -d' '--rem -b'; do
-      case "$options" in *--rem*) test $copy = mv && continue;; esac
+    for options in '' --rem '--rem -d' '--rem -b' -b -bd -d; do
+      case "$options" in *d*|*--rem*) test $copy = mv && continue;; esac
       rm -rf dir || fail=1
-      rm -f $other_partition_tmpdir/rem_reg || fail=1
-      rm -f $other_partition_tmpdir/rem_sl || fail=1
+      rm -f $other_partition_tmpdir/* || fail=1
       mkdir dir || fail=1
       cd dir || fail=1
       case "$args" in *loc_reg*) reg_abs="`pwd`/$loc_reg" ;; esac
@@ -155,11 +153,54 @@ test $fail = 1 &&
   { (exit $?); exit; }
 
 cat <<\EOF > $expected
+1 cp loc_reg rem_sl [cp: `loc_reg' and `rem_sl' are the same file ](loc_reg) (rem_sl -> dir/loc_reg)
+0 cp --rem loc_reg rem_sl (loc_reg) (rem_sl)
+0 cp --rem -d loc_reg rem_sl (loc_reg) (rem_sl)
+0 cp --rem -b loc_reg rem_sl (loc_reg) (rem_sl rem_sl~ -> dir/loc_reg)
+0 cp -b loc_reg rem_sl (loc_reg) (rem_sl rem_sl~ -> dir/loc_reg)
+0 cp -bd loc_reg rem_sl (loc_reg) (rem_sl rem_sl~ -> dir/loc_reg)
+1 cp -d loc_reg rem_sl [cp: `loc_reg' and `rem_sl' are the same file ](loc_reg) (rem_sl -> dir/loc_reg)
+
+1 cp rem_sl loc_reg [cp: `rem_sl' and `loc_reg' are the same file ](loc_reg) (rem_sl -> dir/loc_reg)
+1 cp --rem rem_sl loc_reg [cp: `rem_sl' and `loc_reg' are the same file ](loc_reg) (rem_sl -> dir/loc_reg)
+1 cp --rem -d rem_sl loc_reg [cp: `rem_sl' and `loc_reg' are the same file ](loc_reg) (rem_sl -> dir/loc_reg)
+1 cp --rem -b rem_sl loc_reg [cp: `rem_sl' and `loc_reg' are the same file ](loc_reg) (rem_sl -> dir/loc_reg)
+1 cp -b rem_sl loc_reg [cp: `rem_sl' and `loc_reg' are the same file ](loc_reg) (rem_sl -> dir/loc_reg)
+0 cp -bd rem_sl loc_reg (loc_reg -> dir/loc_reg loc_reg~) (rem_sl -> dir/loc_reg) symlink-loop symlink-loop
+1 cp -d rem_sl loc_reg [cp: `rem_sl' and `loc_reg' are the same file ](loc_reg) (rem_sl -> dir/loc_reg)
+
+1 cp loc_sl rem_reg [cp: `loc_sl' and `rem_reg' are the same file ](loc_sl -> rem_reg) (rem_reg)
+1 cp --rem loc_sl rem_reg [cp: `loc_sl' and `rem_reg' are the same file ](loc_sl -> rem_reg) (rem_reg)
+1 cp --rem -d loc_sl rem_reg [cp: `loc_sl' and `rem_reg' are the same file ](loc_sl -> rem_reg) (rem_reg)
+1 cp --rem -b loc_sl rem_reg [cp: `loc_sl' and `rem_reg' are the same file ](loc_sl -> rem_reg) (rem_reg)
+1 cp -b loc_sl rem_reg [cp: `loc_sl' and `rem_reg' are the same file ](loc_sl -> rem_reg) (rem_reg)
+0 cp -bd loc_sl rem_reg (loc_sl -> rem_reg) (rem_reg -> rem_reg rem_reg~) symlink-loop symlink-loop
+1 cp -d loc_sl rem_reg [cp: `loc_sl' and `rem_reg' are the same file ](loc_sl -> rem_reg) (rem_reg)
+
+1 cp rem_reg loc_sl [cp: `rem_reg' and `loc_sl' are the same file ](loc_sl -> rem_reg) (rem_reg)
+0 cp --rem rem_reg loc_sl (loc_sl) (rem_reg)
+0 cp --rem -d rem_reg loc_sl (loc_sl) (rem_reg)
+0 cp --rem -b rem_reg loc_sl (loc_sl loc_sl~ -> rem_reg) (rem_reg)
+0 cp -b rem_reg loc_sl (loc_sl loc_sl~ -> rem_reg) (rem_reg)
+0 cp -bd rem_reg loc_sl (loc_sl loc_sl~ -> rem_reg) (rem_reg)
+1 cp -d rem_reg loc_sl [cp: `rem_reg' and `loc_sl' are the same file ](loc_sl -> rem_reg) (rem_reg)
+
+0 mv loc_reg rem_sl () (rem_sl)
+0 mv -b loc_reg rem_sl () (rem_sl rem_sl~ -> dir/loc_reg)
+
+1 mv rem_sl loc_reg [mv: `rem_sl' and `loc_reg' are the same file ](loc_reg) (rem_sl -> dir/loc_reg)
+0 mv -b rem_sl loc_reg (loc_reg -> dir/loc_reg loc_reg~) ()
+
+1 mv loc_sl rem_reg [mv: `loc_sl' and `rem_reg' are the same file ](loc_sl -> rem_reg) (rem_reg)
+0 mv -b loc_sl rem_reg () (rem_reg -> rem_reg rem_reg~)
+
+0 mv rem_reg loc_sl (loc_sl) ()
+0 mv -b rem_reg loc_sl (loc_sl loc_sl~ -> rem_reg) ()
 
 EOF
 
 # Uncomment this if you see a failure and want to try to diagnose it.
-diff -u $expected $actual 1>&2
+#diff -u $expected $actual 1>&2
 
 cmp $expected $actual
 
