@@ -117,17 +117,17 @@ l = @l@
 
 
 x = pr
-explicit = 0F 0FF 0FFnt 0FFt 0FnFnt 0FnFt 0Fnt 0Ft 2S_f-t_notab 2Sf-t_notab \
+explicit = 0F 0FF 0FFnt 0FFt 0FnFnt 0FnFt 0Fnt 0Ft 2-S_f-t_notab 2-Sf-t_notab \
 2f-t_notab 2s_f-t_notab 2s_w60f-t_nota 2sf-t_notab 2sw60f-t_notab \
 2w60f-t_notab 3-0F 3-5l17f-t 3-FF 3a2l17-FF 3a3f-0F 3a3l15-t 3a3l8f-t \
 3b2l17-FF 3b3f-0F 3b3f-0FF 3b3f-FF 3b3l15-t 3b3l8f-t 3f-0F 3f-FF 3l17f-t \
 3l24-t 3ml17f-t 3ml24-FF 3ml24-t 3ml24-t-FF 4-7l24-FF 4l24-FF FF FFn FFtn \
-FnFn Ja3l17f-lm Jb3l17f-lm Jml17f-lm-lo W20l17f-ll W26l17f-ll W27l17f-ll \
-W28l17f-ll W35Ja3l17f-lm W35Jb3l17f-lm W35Jml17f-lmlo W35a3l17f-lm \
-W35b3l17f-lm W35ml17f-lm-lo W72Jl17f-ll W72l17f-ll a2l15-FF a2l17-FF a3-0F \
-a3f-0F a3f-0FF a3f-FF a3l15-t a3l17f-lm a3l8f-t b2l15-FF b2l17-FF b3-0F \
-b3f-0F b3f-0FF b3f-FF b3l15-t b3l17f-lm b3l8f-t l17f-t l24-FF l24-t loli \
-ml17f-0F ml17f-lm-lo ml17f-t ml17f-t-0F ml20-FF-t ml24-FF ml24-t ml24-t-FF \
+FnFn Ja3l17f-lm Jb3l17f-lm Jml17f-lm-lo W-72l17f-ll W20l17f-ll W26l17f-ll \
+W27l17f-ll W28l17f-ll W35Ja3l17f-lm W35Jb3l17f-lm W35Jml17f-lmlo W35a3l17f-lm \
+W35b3l17f-lm W35ml17f-lm-lo W72Jl17f-ll a2l15-FF a2l17-FF a3-0F a3f-0F \
+a3f-0FF a3f-FF a3l15-t a3l17f-lm a3l8f-t b2l15-FF b2l17-FF b3-0F b3f-0F \
+b3f-0FF b3f-FF b3l15-t b3l17f-lm b3l8f-t l17f-t l24-FF l24-t loli ml17f-0F \
+ml17f-lm-lo ml17f-t ml17f-t-0F ml20-FF-t ml24-FF ml24-t ml24-t-FF \
 n+2-5l17f-0FF n+2l17f-0FF n+2l17f-bl n+3-7l24-FF n+3l17f-0FF n+3l17f-bl \
 n+3ml13f-bl-FF n+3ml17f-bl-tn n+3ml17f-tn-bl n+4-8a2l17-FF n+4b2l10f-0FF \
 n+5-8b3l10f-FF n+5a3l6f-0FF n+6a2l17-FF n+6b3l6f-FF n+7l24-FF n+8l20-FF \
