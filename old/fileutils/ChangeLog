@@ -5,6 +5,8 @@
 	* src/mkdir.c (main): With --parents, remove any trailing slashes
 	from the argument to the final mkdir call.  Required for NetBSD.
 	Reported by Volker Borchert.
+	* tests/mkdir/t-slash: New test for this.
+	* tests/mkdir/Makefile.am (TESTS): Add t-slash.
 
 	* tests/mv/mv-special-1: Create and `cd' into temporary directory
 	before anything else.  Reported by Volker Borchert.
