@@ -45,4 +45,5 @@
 
 ('7a', '-a1 -e . -o 2.7',  "a\nb\nc\n", "a x y\nb\nc\n", ".\n.\n.\n", 0);
 
-('8a', '-a1 -e . -o 0,1.2',  "a\nb\nc\nd G\n", "a x y\nb\nc\ne\n", "a x\nb .\nc .\nd G\ne\n", 0);
+('8a', '-a1 -e . -o 0,1.2',  "a\nb\nc\nd G\n", "a x y\nb\nc\ne\n", "a .\nb .\nc .\nd G\n", 0);
+('8b', '-a1 -a2 -e . -o 0,1.2',  "a\nb\nc\nd G\n", "a x y\nb\nc\ne\n", "a .\nb .\nc .\nd G\ne .\n", 0);
