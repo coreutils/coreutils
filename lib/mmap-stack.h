@@ -30,4 +30,18 @@
     do { F (A, B); } while (0)
 #endif
 
+#if HAVE_MMAP_STACK
+# define RUN_WITH_BIG_STACK_4(F, A, B, C, D)				\
+    do									\
+      {									\
+	run_on_mmaped_stack ((void (*) (void)) F, 4, A, B, C, D);	\
+	error (0, errno, _("warning: unable to use large stack"));	\
+	F (A, B, C, D);							\
+      }									\
+    while (0)
+#else
+# define RUN_WITH_BIG_STACK_4(F, A, B, C, D) \
+    do { F (A, B, C, D); } while (0)
+#endif
+
 void run_on_mmaped_stack (void (*func_) (void), size_t argc_, ...);
