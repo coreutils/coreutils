@@ -5,7 +5,7 @@
 	normal course of operation (other than --version and --help), and
 	we don't want this function to make e.g. `cp 1 2 >&-' fail.
 	But do fail if it was closed and someone has tried to write to it.
-	E.g., printf 'foo' >&-
+	E.g., printf foo >&-
 
 	* __fpending.c, __fpending.h: Restore these files.
 	They're useful after all.
