@@ -273,7 +273,7 @@ hash_pjw (const void *x, unsigned int tablesize)
   while (*s != 0)
     {
       h = (h << 4) + *s++;
-      if ((g = h & 0xf0000000U) != 0)
+      if ((g = h & (unsigned int) 0xf0000000) != 0)
         h = (h ^ (g >> 24)) ^ g;
     }
 
