@@ -53,6 +53,7 @@ libfetish_a_SOURCES = \
   dup-safer.c \
   euidaccess.h \
   exclude.c exclude.h \
+  exit.h \
   exitfail.c exitfail.h \
   filemode.c filemode.h \
   file-type.c file-type.h \
@@ -103,7 +104,9 @@ libfetish_a_SOURCES = \
   sig2str.h \
   stdio-safer.h \
   stripslash.c \
+  strndup.h \
   strverscmp.h \
+  time_r.c time_r.h \
   timespec.h \
   umaxtostr.c \
   unicodeio.c unicodeio.h \
