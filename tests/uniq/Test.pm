@@ -83,6 +83,8 @@ my @tv = (
 ['117', '--all-repeated=prepend', "a\na\nb\nc\nc\n", "\na\na\n\nc\nc\n", 0],
 ['118', '--all-repeated=prepend', "a\nb\n",          "",                 0],
 ['119', '--all-repeated=badoption', "a\n",           "",                 1],
+# Check that -d and -u suppress all output, as POSIX requires.
+['120', '-d -u', "a\na\n\b",        "",                         0],
 );
 
 sub test_vector
