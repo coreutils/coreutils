@@ -69,6 +69,8 @@ my @Tests =
      ['blanks-12', '-t', '3,4', {IN=> "01  4\n"}, {OUT=> "01\t\t4\n"}],
      ['blanks-13', '-t', '3,4', {IN=> "0   4\n"}, {OUT=> "0\t\t4\n"}],
 
+     # It is debatable whether this test should require an environment
+     # setting of e.g., _POSIX2_VERSION=1.
      ['obs-ovflo', '-18446744073709551617', {IN=>''}, {OUT=>''},
       {EXIT => 1}, {ERR => "$prog: tab stop value is too large\n"}],
     );
