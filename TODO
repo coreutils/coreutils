@@ -47,10 +47,6 @@ seq: give better diagnostics for invalid formats:
    e.g. no or too many % directives
 seq: consider allowing format string to contain no %-directives
 
-dd: consider adding an option to suppress `bytes/block read/written'
-output to stderr.  Suggested here:
-  http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=165045
-
 m4: rename all macros that start with AC_ to start with another prefix
 
 resolve RH report on cp -a forwarded by Tim Waugh
@@ -155,6 +151,10 @@ Changes expected to go in, post-5.2.1:
 
   Re-add a separate test for du's stack space usage (like the one removed
   from tests/rm/deep-1).
+
+  dd: consider adding an option to suppress `bytes/block read/written'
+  output to stderr.  Suggested here:
+    http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=165045
 
   Pending copyright papers:
   ------------------------
