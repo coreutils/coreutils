@@ -25,6 +25,7 @@
 	* src/mv.c (reply_args): Likewise.
 	* src/paste.c (longopts): Likewise.
 	* src/pinky.c (print_entry): Likewise.
+	* src/pr.c (long_options): Likewise.
 	* src/ptx.c (long_options, format_args): Likewise.
 	* src/readlink.c (longopts): Likewise.
 	* src/sort.c (long_options, mergefps): Likewise.
