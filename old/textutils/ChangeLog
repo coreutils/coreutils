@@ -1,3 +1,29 @@
+1999-05-20  Paul Eggert  <eggert@twinsun.com>
+
+	* src/sort.c (keycompare): Ignore any length difference if the
+	localized comparison says the strings are equal.
+
+	* src/sort.c (memcoll, keycompare, compare): Handle NUL
+	characters properly when comparing with LC_COLLATE semantics.
+	(NLS_MEMCMP): Remove.
+	(memcoll): Renamed from strncoll.
+	Take separate lengths for each string.
+	This function is now invoked only when need_locale.
+	(keycompare): Don't copy strings when ignore and translate
+	are both NULL.
+
+1999-05-18  Paul Eggert  <eggert@twinsun.com>
+
+	* src/sort.c (MONTHTAB_CONST): Renamed from NLS_CONST; the use
+	is also changed.  Define to const also if !HAVE_NL_LANGINFO.
+
+	(usage): `,' -> `;' (English typo).
+
+1999-05-17  Eli Zaretskii  <eliz@is.elta.co.il>
+
+	* src/cat.c (main): When stdout is in binary mode, make sure all
+	input files are also read in binary mode.
+
 1999-05-17  Jim Meyering  <meyering@ascend.com>
 
 	* Version 1.22m.
