@@ -1,3 +1,34 @@
+Sat Sep 24 10:13:00 1994  Jim Meyering  (meyering@comco.com)
+
+	* nice.c (main): Revamp option processing to detect options
+	like `--7' manually and pass the rest off to getopt_long.
+	(isinteger): Use ISDIGIT.
+	Use parse_long_options.
+
+	* system.h: Include <ctype.h> and add IS* macros.
+	* expr.c: Don't include <ctype.h> or define IS* macros since
+	system.h now does that.
+	* printf.c: Ditto.
+
+	* printf.c (print_formatted): Declare DIREC_LENGTH size_t, not int.
+	(print_esc_string): Ditto for LENGTH.
+	* date.c (usage): Add description of numeric modifiers.
+	* dirname.c (main): Cast string literal to (char*).
+	* stty.c (wrapf): Declare first argument const char *.
+	* tee.c (main, tee): More const dcls and casting.
+	* who.c (read_utmp): New variable: size to avoid type warnings.
+	All of these eliminate compilation warnings reported by
+	Franc,ois Pinard.
+
+	* doc/Makefile.in (DISTFILES): Add version.texi because generating
+	that file now depends on having a version of date that can handle
+	formats like `+%Y %B'.
+	(version.texi): Generate RELEASE_DATE, too.
+	* sh-utils.texi: Use RELEASE_DATE instead of hard-coded date.
+
+	* long-options.h: Prepend underscores to arg names in prototype
+	to avoid warnings about shadowing.
+
 Sat Sep 17 15:48:10 1994  Jim Meyering  (meyering@comco.com)
 
 	* (doc): New subdirectory with texinfo documentation.
@@ -16,6 +47,15 @@ Sat Sep 17 15:48:10 1994  Jim Meyering  (meyering@comco.com)
 
 	* date.c (main): Rewrite command-line argument handling code
 	to give diagnostics for inconsistent options.
+
+	* Makefile.in: Restructure dependencies using local-*
+	and recursive-* targets to avoid evil double-colon rules.
+	Although the actions assiciated with double-colon rules are
+	run sequentially using GNU make-3.71, POSIX doesn't guarantee
+	that behavior.	The next release may run them in parallel.
+	Running the old rules in parallel would sometimes delete
+	config.status before it was used in a subdirectory make.
+	With several suggestions from Franc,ois Pinard.
 
 Thu Sep 15 19:10:51 1994  Jim Meyering  (meyering@comco.com)
 
