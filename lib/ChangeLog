@@ -1,5 +1,6 @@
 2003-06-18  Jim Meyering  <jim@meyering.net>
 
+	* getline.c (getdelim2): Move this function into its own file.
 	* getdelim2.c: Extracted from getline.c.
 
 	* linebuffer.c, linebuffer.h: Update from gnulib.
