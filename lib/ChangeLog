@@ -1,6 +1,10 @@
 2003-07-10  Jim Meyering  <jim@meyering.net>
 
-	Update from gnulib.
+	Now that a program (`who') uses asprintf, we need all of these:
+	* asnprintf.c, asprintf.c, printf-args.c, printf-args.h, printf-parse.c:
+	* printf-parse.h, vasnprintf.c, vasnprintf.h, vasprintf.c, vasprintf.h:
+	New files, from gnulib.
+
 	* alloca_.h, getpass.c, memrchr.c, obstack.h, posixver.c,
 	strftime.c, strnlen.c, strverscmp.c: Switch from LGPL to GPL.
 
