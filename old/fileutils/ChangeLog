@@ -1,3 +1,10 @@
+1998-03-21  Jim Meyering  <meyering@eng.ascend.com>
+
+	* lib/quotearg.h: Update from patch-2.5.3.
+	* lib/quotearg.c: Likewise.
+	* src/ls.c (decode_switches): Pass a null pointer instead of address
+	of quotearg_quoting_options.
+
 1998-03-19  Paul Eggert  <eggert@twinsun.com>
 
 	* lib/fsusage.h (struct fs_usage): New member
