@@ -183,7 +183,7 @@ change_dir_mode (const char *dir, const struct mode_change *changes,
   int errors = 0;
 
   errno = 0;
-  name_space = savedir (dir, statp->st_size);
+  name_space = savedir (dir, (unsigned int) statp->st_size);
   if (name_space == NULL)
     {
       if (errno)
