@@ -41,7 +41,6 @@ int
 rename (char *from, char *to)
 {
   struct stat from_stats, to_stats;
-  int pid, status;
 
   if (stat (from, &from_stats))
     return -1;
@@ -74,23 +73,27 @@ rename (char *from, char *to)
   if (S_ISDIR (from_stats.st_mode))
     {
       /* Need a setuid root process to link and unlink directories. */
-      pid = fork ();
+      int status;
+      pid_t pid = fork ();
       switch (pid)
 	{
 	case -1:		/* Error. */
-	  error (1, errno, "cannot fork");
+	  return -1;		/* errno already set */
 
 	case 0:			/* Child. */
 	  execl (MVDIR, "mvdir", from, to, (char *) 0);
-	  error (255, errno, "cannot run `%s'", MVDIR);
+	  _exit (1);
 
 	default:		/* Parent. */
 	  while (wait (&status) != pid)
 	    /* Do nothing. */ ;
 
-	  errno = 0;		/* mvdir printed the system error message. */
 	  if (status)
-	    return -1;
+	    {
+	      /* MVDIR failed.  */
+	      errno = EIO;
+	      return -1;
+	    }
 	}
     }
   else
