@@ -1,5 +1,5 @@
 /* xmalloc.c -- malloc with out of memory checking
-   Copyright (C) 1990, 91, 92, 93, 94 Free Software Foundation, Inc.
+   Copyright (C) 1990, 91, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-#ifdef HAVE_CONFIG_H
+#if HAVE_CONFIG_H
 # include <config.h>
 #endif
 
@@ -30,22 +30,34 @@
 #if STDC_HEADERS
 # include <stdlib.h>
 #else
+VOID *calloc ();
 VOID *malloc ();
 VOID *realloc ();
 void free ();
 #endif
 
-/* This is for other GNU distributions with internationalized messages.
-   The GNU C Library itself does not yet support such messages.  */
-#if HAVE_LIBINTL_H
+#if ENABLE_NLS
 # include <libintl.h>
+# define _(Text) gettext (Text)
 #else
-# define gettext(msgid) (msgid)
+# define textdomain(Domain)
+# define _(Text) Text
 #endif
+
+#include "error.h"
 
 #ifndef EXIT_FAILURE
 # define EXIT_FAILURE 1
 #endif
+
+/* Prototypes for functions defined here.  */
+#if defined (__STDC__) && __STDC__
+static VOID *fixup_null_alloc (size_t n);
+VOID *xmalloc (size_t n);
+VOID *xcalloc (size_t n, size_t s);
+VOID *xrealloc (VOID *p, size_t n);
+#endif
+
 
 /* Exit value when the requested amount of memory is not available.
    The caller may set it to some other value.  */
@@ -67,7 +79,7 @@ fixup_null_alloc (n)
   if (n == 0)
     p = malloc ((size_t) 1);
   if (p == 0)
-    error (xmalloc_exit_failure, 0, gettext ("Memory exhausted"));
+    error (xmalloc_exit_failure, 0, _("Memory exhausted"));
   return p;
 }
 
@@ -80,6 +92,20 @@ xmalloc (n)
   VOID *p;
 
   p = malloc (n);
+  if (p == 0)
+    p = fixup_null_alloc (n);
+  return p;
+}
+
+/* Allocate memory for N elements of S bytes, with error checking.  */
+
+VOID *
+xcalloc (n, s)
+     size_t n, s;
+{
+  VOID *p;
+
+  p = calloc (n, s);
   if (p == 0)
     p = fixup_null_alloc (n);
   return p;
