@@ -2,6 +2,7 @@
 AUTOMAKE_OPTIONS = 1.3 gnits
 
 TESTS = \
+  not-owner \
   no-create-missing \
   fail-diag dir-1 dangling-symlink empty-file fifo no-rights obsolescent
 EXTRA_DIST = $(TESTS)
