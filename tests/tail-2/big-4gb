@@ -23,7 +23,7 @@ cd $tmp || framework_failure=1
 echo abcdefgh | tr -d '\n' > big
 echo 87654321 | tr -d '\n' > tmp
 # Seek 4GB - 8
-dd bs=1 seek=4294967288 if=tmp of=big
+dd bs=1 seek=4294967288 if=tmp of=big 2> /dev/null
 
 if test $framework_failure = 1; then
   echo '$0: failure in testing framework' 1>&2
