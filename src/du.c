@@ -315,9 +315,9 @@ static int
 process_file (const char *file, const struct stat *sb, int file_type,
 	      struct FTW *info)
 {
-  size_t size;
-  size_t size_including_subdirs;
-  size_t size_to_propagate_to_parent;
+  uintmax_t size;
+  uintmax_t size_including_subdirs;
+  uintmax_t size_to_propagate_to_parent;
   static int first_call = 1;
   static size_t prev_level;
   static size_t n_alloc;
