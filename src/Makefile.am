@@ -19,7 +19,7 @@ noinst_HEADERS = \
   chown-core.h fs.h \
   wheel.h wheel-size.h
 EXTRA_DIST = dcgen dircolors.hin tac-pipe.c \
-  groups.sh nohup.sh wheel-gen.pl
+  groups.sh nohup.sh wheel-gen.pl extract-magic
 CLEANFILES = $(SCRIPTS) su
 
 INCLUDES = -I.. -I$(srcdir) -I$(top_srcdir)/lib -I../lib
@@ -191,6 +191,13 @@ false.c: true.c
 	  $(srcdir)/true.c > $@-t
 	@chmod a-w $@-t
 	mv $@-t $@
+
+BUILT_SOURCES += fs.h
+fs.h: stat.c extract-magic
+	rm -f $@
+	$(PERL) $(srcdir)/extract-magic $(srcdir)/stat.c > $@t
+	@chmod a-w $@t
+	mv $@t $@
 
 MAINTAINERCLEANFILES = $(BUILT_SOURCES)
 
