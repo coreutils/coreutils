@@ -19,8 +19,8 @@ AC_DEFUN(jm_AC_TYPE_UINTMAX_T,
     test $ac_cv_type_unsigned_long_long = yes \
       && ac_type='unsigned long long' \
       || ac_type='unsigned long'
-    AC_DEFINE(uintmax_t, $ac_type,
-	      [  Define to \`unsigned long' or \`unsigned long long'
+    AC_DEFINE_UNQUOTED(uintmax_t, $ac_type,
+[  Define to \`unsigned long' or \`unsigned long long'
    if <inttypes.h> doesn't define.])
   fi
 ])
