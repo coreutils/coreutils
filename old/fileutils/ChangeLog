@@ -1,5 +1,9 @@
 Mon Dec  9 18:26:54 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* lib/obstack.h: Include config.h.
+	[!HAVE_BCOPY && HAVE_MEMCPY && !defined (bcopy)]: Define bcopy
+	in terms of memcpy.  Reported by Marcus Daniels.
+
 	* configure.in (LIBOBJS): After AC_FUNC_FNMATCH, add fnmatch.o
 	and define fnmatch to rpl_fnmatch if necessary.
 
