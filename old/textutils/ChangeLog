@@ -1,6 +1,12 @@
-2001-11-23  Jim Meyering  <meyering@lucent.com>
+2001-11-25  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.18.
+
+	* src/cksum.c (usage): Indent --help and --version strings to
+	start in the 7th column.
+	* src/pr.c (usage): Likewise.
+
+2001-11-23  Jim Meyering  <meyering@lucent.com>
 
 	Factor out some common strings to make translation easier.
 
