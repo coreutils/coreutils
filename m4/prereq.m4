@@ -144,7 +144,7 @@ AC_DEFUN([jm_PREREQ_TEMPNAME],
 AC_DEFUN([jm_PREREQ_XGETCWD],
 [
   AC_C_PROTOTYPES
-  AC_CHECK_HEADERS(stdlib.h unistd.h)
+  AC_CHECK_HEADERS(limits.h stdlib.h sys/param.h unistd.h)
   AC_CHECK_FUNCS(getcwd)
   AC_FUNC_GETCWD_NULL
 ])
