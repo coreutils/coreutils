@@ -14,21 +14,42 @@ AC_DEFUN(jm_MACROS,
   dnl This macro actually runs replacement code.  See isc-posix.m4.
   AC_REQUIRE([AC_ISC_POSIX])dnl
 
-  AC_CHECK_HEADERS(string.h fcntl.h limits.h sys/time.h sys/timeb.h \
-    errno.h unistd.h stdlib.h \
-    sys/param.h sys/statfs.h sys/fstyp.h mnttab.h mntent.h utime.h \
-    sys/statvfs.h sys/vfs.h sys/mntent.h sys/mount.h sys/filsys.h \
-    sys/fs_types.h \
+  AC_CHECK_HEADERS( \
+    errno.h  \
+    fcntl.h \
+    fenv.h \
+    float.h \
+    limits.h \
+    memory.h \
+    mntent.h \
+    mnttab.h \
+    netdb.h \
+    paths.h \
+    stdlib.h \
+    string.h \
     sys/acl.h \
-    sys/wait.h sys/ioctl.h sys/fs/s5param.h termios.h values.h)
-
-  AC_CHECK_HEADERS(fcntl.h fenv.h float.h limits.h netdb.h \
-		   stdlib.h string.h sys/param.h \
-		   sys/socket.h sys/systeminfo.h sys/time.h sys/timeb.h \
-		   syslog.h unistd.h paths.h termios.h)
-
-  AC_CHECK_HEADERS(fcntl.h float.h limits.h memory.h stdlib.h string.h \
-		   unistd.h values.h)
+    sys/filsys.h \
+    sys/fs/s5param.h \
+    sys/fs_types.h \
+    sys/fstyp.h \
+    sys/ioctl.h \
+    sys/mntent.h \
+    sys/mount.h \
+    sys/param.h \
+    sys/socket.h \
+    sys/statfs.h \
+    sys/statvfs.h \
+    sys/systeminfo.h \
+    sys/time.h \
+    sys/timeb.h \
+    sys/vfs.h \
+    sys/wait.h \
+    syslog.h \
+    termios.h \
+    unistd.h \
+    utime.h \
+    values.h \
+  )
 
   jm_INCLUDED_REGEX([lib/regex.c])
 
