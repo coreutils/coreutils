@@ -902,16 +902,16 @@ wheel_size = 5
 # Tell automake to exempt then from that installcheck test.
 AM_INSTALLCHECK_STD_OPTIONS_EXEMPT = false test
 MAINTAINERCLEANFILES = $(BUILT_SOURCES)
-all_programs = \
-    $(bin_PROGRAMS) \
-    $(bin_SCRIPTS) \
-  $(EXTRA_PROGRAMS)
-
 
 # Sort in traditional ASCII order, regardless of the current locale;
 # otherwise we may get into trouble with distinct strings that the
 # current locale considers to be equal.
 ASSORT = LC_ALL=C sort
+all_programs = \
+    $(bin_PROGRAMS) \
+    $(bin_SCRIPTS) \
+  $(EXTRA_PROGRAMS)
+
 pm = progs-makefile
 pr = progs-readme
 
@@ -1674,6 +1674,9 @@ fs.h: stat.c extract-magic
 	$(PERL) $(srcdir)/extract-magic $(srcdir)/stat.c > $@t
 	@chmod a-w $@t
 	mv $@t $@
+
+all_programs.list:
+	@echo $(all_programs) | tr ' ' '\n' | $(ASSORT)
 # Ensure that the list of programs in README matches the list
 # of programs we can build.
 check: check-README check-misc
