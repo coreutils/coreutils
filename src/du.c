@@ -359,15 +359,27 @@ process_file (const char *file, const struct stat *sb, int file_type,
       break;
     }
 
-  if (!opt_count_all
-      && 1 < sb->st_nlink
-      && hash_ins (sb->st_ino, sb->st_dev))
-    return 0;			/* Have counted this already.  */
+  /* If the file is being excluded or if it has already been counted
+     via a hard link, then don't let it contribute to the sums.  */
+  if ((info->skip = excluded_filename (exclude, file + info->base))
+      || (!opt_count_all
+	  && 1 < sb->st_nlink
+	  && hash_ins (sb->st_ino, sb->st_dev)))
+    {
+      /* Note that we must not simply return here.
+	 We still have to update prev_level and maybe propagate
+	 some sums up the hierarchy.  */
+      s = size = 0;
+    }
+  else
+    {
+      s = size = ST_NBLOCKS (*sb);
+    }
 
-  if (excluded_filename (exclude, file + info->base))
+  /* If this is the first (pre-order) encounter with a directory,
+     return right away.  */
+  if (file_type == FTW_DPRE)
     return 0;
-
-  s = size = ST_NBLOCKS (*sb);
 
   if (first_call)
     {
