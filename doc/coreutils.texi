@@ -477,7 +477,7 @@ to include the version number, machine architecture, input files, and
 any other information needed to reproduce the bug: your input, what you
 expected, what you got, and why it is wrong.  Diffs are welcome, but
 please include a description of the problem as well, since this is
-sometimes difficult to infer. @xref{Bugs, , , gcc, Using and Porting GNU CC}.
+sometimes difficult to infer.  @xref{Bugs, , , gcc, Using and Porting GNU CC}.
 
 @cindex Berry, K.
 @cindex Paterson, R.
@@ -979,23 +979,26 @@ The @w{@kbd{--target-directory}} option allows the @command{cp},
 @command{install}, @command{ln}, and @command{mv} programs to be used
 conveniently with @command{xargs}.  For example, you can move the files
 from the current directory to a sibling directory, @code{d} like this:
-(However, this doesn't move files whose names begin with @samp{.}.)
 
 @smallexample
-ls |xargs mv --target-directory=../d
+ls | xargs mv --target-directory=../d --
 @end smallexample
 
-If you use the @sc{gnu} @command{find} program, you can move @emph{all}
-files with this command:
+However, this doesn't move files whose names begin with @samp{.}.
+If you use the @sc{gnu} @command{find} program, you can move those
+files too, with this command:
+
 @example
 find . -mindepth 1 -maxdepth 1 \
   | xargs mv --target-directory=../d
 @end example
 
-But that will fail if there are no files in the current directory
-or if any file has a name containing a newline character.
+But both of the above approaches fail if there are no files in the
+current directory, or if any file has a name containing a blank or
+some other special characters.
 The following example removes those limitations and requires both
 @sc{gnu} @command{find} and @sc{gnu} @command{xargs}:
+
 @example
 find . -mindepth 1 -maxdepth 1 -print0 \
   | xargs --null --no-run-if-empty \
@@ -1496,7 +1499,7 @@ od --traditional [@var{file}] [[+]@var{offset} [[+]@var{label}]]
 @end example
 
 Each line of output consists of the offset in the input, followed by
-groups of data from the file. By default, @command{od} prints the offset in
+groups of data from the file.  By default, @command{od} prints the offset in
 octal, and each group of file data is two bytes of input printed as a
 single octal number.
 
@@ -1773,9 +1776,10 @@ word of a sentence.  A @dfn{sentence break} is defined as either the end
 of a paragraph or a word ending in any of @samp{.?!}, followed by two
 spaces or end of line, ignoring any intervening parentheses or quotes.
 Like @TeX{}, @command{fmt} reads entire ``paragraphs'' before choosing line
-breaks; the algorithm is a variant of that in ``Breaking Paragraphs Into
-Lines'' (Donald E. Knuth and Michael F. Plass, @cite{Software---Practice
-and Experience}, 11 (1981), 1119--1184).
+breaks; the algorithm is a variant of that given by Donald E. Knuth
+and Michael F. Plass in ``Breaking Paragraphs Into Lines'',
+@cite{Software---Practice & Experience} @b{11}, 11 (November 1981),
+1119--1184.
 
 The program accepts the following options.  Also see @ref{Common options}.
 
@@ -1828,7 +1832,7 @@ room to balance line lengths.
 @item -p @var{prefix}
 @itemx --prefix=@var{prefix}
 Only lines beginning with @var{prefix} (possibly preceded by whitespace)
-are subject to formatting. The prefix and any preceding whitespace are
+are subject to formatting.  The prefix and any preceding whitespace are
 stripped for the formatting and then re-attached to each formatted output
 line.  One use is to format certain kinds of program comments, while
 leaving the code unchanged.
@@ -1857,7 +1861,7 @@ pr [@var{option}]@dots{} [@var{file}]@dots{}
 
 @vindex LC_MESSAGES
 By default, a 5-line header is printed at each page: two blank lines;
-a line with the date, the filename, and the page count; and two more
+a line with the date, the file name, and the page count; and two more
 blank lines.  A footer of five blank lines is also printed.
 With the @option{-F}
 option, a 3-line header is printed: the leading two blank lines are
@@ -2019,7 +2023,7 @@ per page changes from default 56 to 63 lines.
 @itemx --header=@var{HEADER}
 @opindex -h
 @opindex --header
-Replace the filename in the header with the centered string @var{header}.
+Replace the file name in the header with the centered string @var{header}.
 When using the shell, @var{header} should be quoted and should be
 separated from @option{-h} by a space.
 
@@ -2088,7 +2092,7 @@ Optional argument @var{number-separator} is the character appended to
 the line number to separate it from the text followed.  The default
 separator is the TAB character.  In a strict sense a TAB is always
 printed with single column output only.  The @var{TAB}-width varies
-with the @var{TAB}-position, e.g. with the left @var{margin} specified
+with the @var{TAB}-position, e.g., with the left @var{margin} specified
 by @option{-o} option.  With multicolumn output priority is given to
 @samp{equal width of output columns} (a @acronym{POSIX} specification).
 The @var{TAB}-width is fixed to the value of the first column and does
@@ -2142,7 +2146,7 @@ Use @var{string} to separate output columns.  The @option{-S} option doesn't
 affect the @option{-W/-w} option, unlike the @option{-s} option which does.  It
 does not affect line truncation or column alignment.
 Without @option{-S}, and with @option{-J}, @command{pr} uses the default output
-separator, TAB.
+separator, TAB@.
 Without @option{-S} or @option{-J}, @command{pr} uses a @samp{space}
 (same as @option{-S"@w{ }"}).  With @option{-S@var{string}},
 @var{string} must be nonempty; @option{--sep-string} with no
@@ -2300,10 +2304,12 @@ head [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
 If more than one @var{file} is specified, @command{head} prints a
-one-line header consisting of
+one-line header consisting of:
+
 @example
 ==> @var{file name} <==
 @end example
+
 @noindent
 before the output for each @var{file}.
 
@@ -2371,10 +2377,12 @@ tail [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
 If more than one @var{file} is specified, @command{tail} prints a
-one-line header consisting of
+one-line header consisting of:
+
 @example
 ==> @var{file name} <==
 @end example
+
 @noindent
 before the output for each @var{file}.
 
@@ -2384,7 +2392,7 @@ before the output for each @var{file}.
 reverse), since reversing a file is really a different job from printing
 the end of a file; BSD @command{tail} (which is the one with @option{-r}) can
 only reverse files that are at most as large as its buffer, which is
-typically 32 KiB.  A more reliable and versatile way to reverse files is
+typically 32 KiB@.  A more reliable and versatile way to reverse files is
 the @sc{gnu} @command{tac} command.
 
 If any option-argument is a number @var{n} starting with a @samp{+},
@@ -2478,9 +2486,11 @@ and to watch the file grow, if you invoke @command{make} and @command{tail}
 like this then the tail process will stop when your build completes.
 Without this option, you would have had to kill the @code{tail -f}
 process yourself.
+
 @example
 $ make >& makerr & tail --pid=$! -f makerr
 @end example
+
 If you specify a @var{pid} that is not in use or that does not correspond
 to the process that is writing to the tailed files, then @command{tail}
 may terminate long before any @var{file}s stop growing or it may not
@@ -2666,7 +2676,7 @@ file, so that section of the input file is effectively ignored.
 
 @item @{@var{repeat-count}@}
 Repeat the previous pattern @var{repeat-count} additional
-times. @var{repeat-count} can either be a positive integer or an
+times.  The @var{repeat-count} can either be a positive integer or an
 asterisk, meaning repeat as many times as necessary until the input is
 exhausted.
 
@@ -2675,7 +2685,7 @@ exhausted.
 The output files' names consist of a prefix (@samp{xx} by default)
 followed by a suffix.  By default, the suffix is an ascending sequence
 of two-digit decimal numbers from @samp{00} to @samp{99}.  In any case,
-concatenating the output files in sorted order by filename produces the
+concatenating the output files in sorted order by file name produces the
 original input file.
 
 By default, if @command{csplit} encounters an error or receives a hangup,
@@ -2916,7 +2926,7 @@ cksum [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
 @command{cksum} prints the CRC checksum for each file along with the number
-of bytes in the file, and the filename unless no arguments were given.
+of bytes in the file, and the file name unless no arguments were given.
 
 @command{cksum} is typically used to ensure that files
 transferred by unreliable means (e.g., netnews) have not been corrupted,
@@ -2948,7 +2958,7 @@ options}.
 If a @var{file} is specified as @samp{-} or if no files are given
 @command{md5sum} computes the checksum for the standard input.
 @command{md5sum} can also determine whether a file and checksum are
-consistent. Synopses:
+consistent.  Synopses:
 
 @example
 md5sum [@var{option}]@dots{} [@var{file}]@dots{}
@@ -2956,7 +2966,7 @@ md5sum [@var{option}]@dots{} --check [@var{file}]
 @end example
 
 For each @var{file}, @samp{md5sum} outputs the MD5 checksum, a flag
-indicating a binary or text input file, and the filename.
+indicating a binary or text input file, and the file name.
 If @var{file} is omitted or specified as @samp{-}, standard input is read.
 
 The program accepts the following options.  Also see @ref{Common options}.
@@ -2976,17 +2986,17 @@ the default.
 
 @item -c
 @itemx --check
-Read filenames and checksum information from the single @var{file}
+Read file names and checksum information from the single @var{file}
 (or from stdin if no @var{file} was specified) and report whether
 each named file and the corresponding checksum data are consistent.
 The input to this mode of @command{md5sum} is usually the output of
 a prior, checksum-generating run of @samp{md5sum}.
 Each valid line of input consists of an MD5 checksum, a binary/text
-flag, and then a filename.
+flag, and then a file name.
 Binary files are marked with @samp{*}, text with @samp{ }.
 For each such line, @command{md5sum} reads the named file and computes its
 MD5 checksum.  Then, if the computed message digest does not match the
-one on the line with the filename, the file is noted as having
+one on the line with the file name, the file is noted as having
 failed the test.  Otherwise, the file passes the test.
 By default, for each valid line, one line is written to standard
 output indicating whether the named file passed the test.
@@ -3099,7 +3109,7 @@ been specified, @command{sort} compares each pair of fields, in the
 order specified on the command line, according to the associated
 ordering options, until a difference is found or no fields are left.
 Unless otherwise specified, all comparisons use the character collating
-sequence specified by the @env{LC_COLLATE} locale.  @footnote{If you
+sequence specified by the @env{LC_COLLATE} locale.@footnote{If you
 use a non-@acronym{POSIX} locale (e.g., by setting @env{LC_ALL}
 to @samp{en_US}), then @command{sort} may produce output that is sorted
 differently than you're accustomed to.  In that case, set the @env{LC_ALL}
@@ -3407,8 +3417,8 @@ Treat the input as a set of lines, each terminated by a zero byte
 @acronym{ASCII} @sc{lf} (Line Feed).
 This option can be useful in conjunction with @samp{perl -0} or
 @samp{find -print0} and @samp{xargs -0} which do the same in order to
-reliably handle arbitrary pathnames (even those which contain Line Feed
-characters.)
+reliably handle arbitrary file names (even those containing blanks
+or other special characters).
 
 @end table
 
@@ -3553,11 +3563,12 @@ sorts is stable.
 Generate a tags file in case-insensitive sorted order.
 
 @smallexample
-find src -type f -print0 | sort -t / -z -f | xargs -0 etags --append
+find src -type f -print0 | sort -z -f | xargs -0 etags --append
 @end smallexample
 
 The use of @option{-print0}, @option{-z}, and @option{-0} in this case means
-that pathnames that contain Line Feed characters will not get broken up
+that file names that contain blanks or other special characters are
+not broken up
 by the sort operation.
 
 @c This example is a bit contrived and needs more explanation.
@@ -4001,7 +4012,7 @@ processing.
 As it is set up now, the program assumes that the input file is coded
 using 8-bit ISO 8859-1 code, also known as Latin-1 character set,
 @emph{unless} it is compiled for MS-DOS, in which case it uses the
-character set of the IBM-PC.  (@sc{gnu} @command{ptx} is not known to work on
+character set of the IBM-PC@.  (@sc{gnu} @command{ptx} is not known to work on
 smaller MS-DOS machines anymore.)  Compared to 7-bit @acronym{ASCII}, the set
 of characters which are letters is different; this alters the behavior
 of regular expression matching.  Thus, the default regular expression
@@ -4645,8 +4656,8 @@ field specification notation.
 
 The elements in @var{field-list}
 are separated by commas or blanks.
-All output lines -- including those printed because of any -a or -v
-option -- are subject to the specified @var{field-list}.
+All output lines---including those printed because of any -a or -v
+option---are subject to the specified @var{field-list}.
 
 @item -t @var{char}
 Use character @var{char} as the input and output field separator.
@@ -4932,7 +4943,8 @@ complement of @var{set1}), rather than all non-alphanumerics, to
 newlines.
 
 @noindent
-By the way, the above idiom is not portable because it uses ranges.
+By the way, the above idiom is not portable because it uses ranges, and
+it assumes that the octal code for newline is 012.
 Assuming a @acronym{POSIX} compliant @command{tr}, here is a better way to write it:
 
 @example
@@ -4969,7 +4981,7 @@ Here are some examples to illustrate various combinations of options:
 Remove all zero bytes:
 
 @example
-tr -d '\000'
+tr -d '\0'
 @end example
 
 @item
@@ -4991,7 +5003,7 @@ tr -s '\n'
 @item
 Find doubled occurrences of words in a document.
 For example, people often write ``the the'' with the repeated words
-separated by a newline.  The bourne shell script below works first
+separated by a newline.  The Bourne shell script below works first
 by converting each sequence of punctuation and blank characters to a
 single newline.  That puts each ``word'' on a line by itself.
 Next it maps all uppercase characters to lower case, and finally it
@@ -5000,8 +5012,8 @@ that were repeated.
 
 @example
 #!/bin/sh
-cat "$@@" \
-  | tr -s '[:punct:][:blank:]' '\n' \
+cat -- "$@@" \
+  | tr -s '[:punct:][:blank:]' '[\n*]' \
   | tr '[:upper:]' '[:lower:]' \
   | uniq -d
 @end example
@@ -5184,7 +5196,7 @@ directory, acting as if it had been invoked with a single argument of @samp{.}.
 
 @vindex LC_ALL
 By default, the output is sorted alphabetically, according to the locale
-settings in effect. @footnote{If you use a non-@acronym{POSIX}
+settings in effect.@footnote{If you use a non-@acronym{POSIX}
 locale (e.g., by setting @env{LC_ALL} to @samp{en_US}), then @command{ls} may
 produce output that is sorted differently than you're accustomed to.
 In that case, set the @env{LC_ALL} environment variable to @samp{C}.}
@@ -5351,14 +5363,18 @@ unusual characters such as space or newline, without fancy searching.
 
 If directories are being listed recursively (@option{-R}), output a similar
 line with offsets for each subdirectory name:
+
 @example
 //SUBDIRED// @var{beg1} @var{end1} @dots{}
 @end example
 
 Finally, output a line of the form:
+
 @example
 //DIRED-OPTIONS// --quoting-style=@var{word}
 @end example
+
+@noindent
 where @var{word} is the quoting style (@pxref{Formatting the file names}).
 
 Here is an actual example:
@@ -5663,24 +5679,24 @@ directories that contain many files with indices/version numbers in their
 names:
 
 @example
-      > ls -1            > ls -1v
-      foo.zml-1.gz       foo.zml-1.gz
-      foo.zml-100.gz     foo.zml-2.gz
-      foo.zml-12.gz      foo.zml-6.gz
-      foo.zml-13.gz      foo.zml-12.gz
-      foo.zml-2.gz       foo.zml-13.gz
-      foo.zml-25.gz      foo.zml-25.gz
-      foo.zml-6.gz       foo.zml-100.gz
+$ ls -1            $ ls -1v
+foo.zml-1.gz       foo.zml-1.gz
+foo.zml-100.gz     foo.zml-2.gz
+foo.zml-12.gz      foo.zml-6.gz
+foo.zml-13.gz      foo.zml-12.gz
+foo.zml-2.gz       foo.zml-13.gz
+foo.zml-25.gz      foo.zml-25.gz
+foo.zml-6.gz       foo.zml-100.gz
 @end example
 
 Note also that numeric parts with leading zeroes are considered as
 fractional one:
 
 @example
-      > ls -1            > ls -1v
-      abc-1.007.tgz      abc-1.007.tgz
-      abc-1.012b.tgz     abc-1.01a.tgz
-      abc-1.01a.tgz      abc-1.012b.tgz
+$ ls -1            $ ls -1v
+abc-1.007.tgz      abc-1.007.tgz
+abc-1.012b.tgz     abc-1.01a.tgz
+abc-1.01a.tgz      abc-1.012b.tgz
 @end example
 
 This functionality is implemented using the @code{strverscmp} function.
@@ -5793,7 +5809,7 @@ separated by @samp{, } (a comma and a space).
 @opindex --file-type
 @opindex --indicator-style
 @cindex file type, marking
-Append a character to each file name indicating the file type. This is
+Append a character to each file name indicating the file type.  This is
 like @option{-F}, except that executables are not marked.
 
 @item -x @var{format}
@@ -6231,7 +6247,7 @@ combination of options is this tiny Bourne shell script:
 # Usage: backup FILE...
 # Create a @sc{gnu}-style backup of each listed FILE.
 for i; do
-  cp --backup --force "$i" "$i"
+  cp --backup --force -- "$i" "$i"
 done
 @end example
 
@@ -6342,7 +6358,7 @@ to @option{--preserve=mode,ownership,timestamps}.
 
 In the absence of this option, each destination file is created with the
 permissions of the corresponding source file, minus the bits set in the
-umask and minus the set-user-id and set-group-id bits. @xref{File permissions}.
+umask and minus the set-user-id and set-group-id bits.  @xref{File permissions}.
 
 @itemx @w{@kbd{--no-preserve}=@var{attribute_list}}
 @cindex file information, preserving
@@ -6515,7 +6531,7 @@ followed by a multiplier: @samp{b}=512, @samp{c}=1,
 standard block size suffixes like @samp{k}=1024 (@pxref{Block size}).
 
 Use different @command{dd} invocations to use different block sizes for
-skipping and I/O.  For example, the following shell commands copy data
+skipping and I/O@.  For example, the following shell commands copy data
 in 512 KiB blocks between a disk and a tape, but do not save or restore a
 4 KiB label at the start of the disk:
 
@@ -6540,7 +6556,7 @@ and when @command{dd} completes, it outputs the final pair.
 
 @example
 $ dd if=/dev/zero of=/dev/null count=10M & pid=$!
-$ kill -USR1 $pid; sleep 99
+$ kill -s USR1 $pid; sleep 99
 5403604+0 records in
 5403604+0 records out
 10485760+0 records in
@@ -7131,10 +7147,10 @@ This uses many overwrite passes, with the data patterns chosen to
 maximize the damage they do to the old data.  While this will work on
 floppies, the patterns are designed for best effect on hard drives.
 For more details, see the source code and Peter Gutmann's paper
-@cite{Secure Deletion of Data from Magnetic and Solid-State Memory},
-from the proceedings of the Sixth USENIX Security Symposium (San Jose,
-California, 22--25 July, 1996).  The paper is also available online
-@url{http://www.cs.auckland.ac.nz/~pgut001/pubs/secure_del.html}.
+@uref{http://www.cs.auckland.ac.nz/~pgut001/pubs/secure_del.html,
+@cite{Secure Deletion of Data from Magnetic and Solid-State Memory}},
+from the proceedings of the Sixth @acronym{USENIX} Security Symposium (San Jose,
+California, July 22--25, 1996).
 
 @strong{Please note} that @command{shred} relies on a very important assumption:
 that the file system overwrites data in place.  This is the traditional
@@ -7217,9 +7233,9 @@ time to waste.
 @opindex -s @var{BYTES}
 @opindex --size=@var{BYTES}
 @cindex size of file to shred
-Shred the first @var{BYTES} bytes of the file. The default is to shred
+Shred the first @var{BYTES} bytes of the file.  The default is to shred
 the whole file.  @var{BYTES} can be followed by a size specification like
-@samp{K}, @samp{M}, or @samp{G} to specify a multiple. @xref{Block size}.
+@samp{K}, @samp{M}, or @samp{G} to specify a multiple.  @xref{Block size}.
 
 @item -u
 @itemx --remove
@@ -7398,7 +7414,7 @@ link to each @var{target} file in that directory, using the
 @var{target}s' names.  (But see the description of the
 @option{--no-dereference} and @option{--no-target-directory} options below.)
 
-@item If two filenames are given, @command{ln} creates a link from the
+@item If two file names are given, @command{ln} creates a link from the
 second to the first.
 
 @item If one @var{target} is given, @command{ln} creates a link to that
@@ -7696,14 +7712,15 @@ of departure.  @xref{File permissions}.
 @item Readlink mode
 
 @command{readlink} outputs the value of the given symbolic link.
-If @command{readlink} is invoked with an argument other than the pathname
+If @command{readlink} is invoked with an argument other than the name
 of a symbolic link, it produces no output and exits with a nonzero exit code.
 
 @item Canonicalize mode
 
 @command{readlink} outputs the absolute name of the given file which contains
-no `.', `..' components nor any repeated path separators (`/') or symlinks.
-If any path component is missing or unavailable,
+no @file{.}, @file{..} components nor any repeated separators
+(@file{/}) nor symbolic links.
+If the file is missing or unavailable,
 it produces no output and exits with a nonzero exit code.
 
 @end table
@@ -8280,8 +8297,8 @@ time, @command{touch} can change the timestamps for files that the user
 running it does not own but has write permission for.  Otherwise, the
 user must own the files.
 
-Although @command{touch} provides options for changing two of the times --
-the times of last access and modification -- of a file, there is actually
+Although @command{touch} provides options for changing two of the times---the
+times of last access and modification---of a file, there is actually
 a third one as well: the inode change time.  This is often referred to
 as a file's @code{ctime}.
 The inode change time represents the time when the file's meta-information
@@ -8536,8 +8553,8 @@ the common names (this list is certainly not exhaustive):
 @table @samp
 
 @item nfs
-@cindex NFS file system type
-An NFS file system, i.e., one mounted over a network from another
+@cindex @acronym{NFS} file system type
+An @acronym{NFS} file system, i.e., one mounted over a network from another
 machine.  This is the one type name which seems to be used uniformly by
 all systems.
 
@@ -8622,10 +8639,13 @@ For example, a file containing the word @samp{zoo} with no newline would,
 of course, have an apparent size of 3.  Such a small file may require
 anywhere from zero to 16 or more kilobytes of disk space, depending on
 the type and configuration of the file system on which the file resides.
-However, a sparse file created with this command
+However, a sparse file created with this command:
+
 @example
 : | dd bs=1 seek=`echo '2^31'|bc` of=big
 @end example
+
+@noindent
 has an apparent size of 2 gigabytes, yet on most modern
 systems, it actually uses almost no disk space.
 
@@ -8805,7 +8825,7 @@ stat [@var{option}]@dots{} [@var{file}]@dots{}
 
 With no option, @command{stat} reports all information about the given files.
 But it also can be used to report the information of the file systems the
-given files are located on. If the files are links, @command{stat} can
+given files are located on.  If the files are links, @command{stat} can
 also give information about the files the links point to.
 
 
@@ -8877,7 +8897,7 @@ Interpreted sequences for file system stat are:
 @itemize @bullet
 @item %n - File name
 @item %i - File System id in hex
-@item %l - Maximum length of filenames
+@item %l - Maximum length of file names
 @item %t - Type in hex
 @item %T - Type in human readable form
 @item %b - Total data blocks in file system
@@ -8909,7 +8929,8 @@ call.
 The kernel keeps data in memory to avoid doing (relatively slow) disk
 reads and writes.  This improves performance, but if the computer
 crashes, data may be lost or the file system corrupted as a
-result. @command{sync} ensures everything in memory is written to disk.
+result.  The @command{sync} command ensures everything in memory
+is written to disk.
 
 Any arguments are ignored, except for a lone @option{--help} or
 @option{--version} (@pxref{Common options}).
@@ -9021,7 +9042,7 @@ backslashes.  @xref{printf invocation}.
 @section @command{printf}: Format and print data
 
 @pindex printf
-@command{printf} does formatted printing of text. Synopsis:
+@command{printf} does formatted printing of text.  Synopsis:
 
 @example
 printf @var{format} [@var{argument}]@dots{}
@@ -9058,13 +9079,13 @@ digits) specifying a character to print.
 @samp{\u} for 16-bit Unicode characters, specified as 4 hex digits
 @var{hhhh}, and @samp{\U} for 32-bit Unicode characters, specified as 8 hex
 digits @var{hhhhhhhh}. @command{printf} outputs the Unicode characters
-according to the LC_CTYPE part of the current locale, i.e. depending
+according to the LC_CTYPE part of the current locale, i.e., depending
 on the values of the environment variables @env{LC_ALL}, @env{LC_CTYPE},
 @env{LANG}.
 
 The processing of @samp{\u} and @samp{\U} requires a full-featured
-@code{iconv} facility. It is activated on systems with glibc 2.2 (or newer),
-or when @code{libiconv} is installed prior to this package. Otherwise the
+@code{iconv} facility.  It is activated on systems with glibc 2.2 (or newer),
+or when @code{libiconv} is installed prior to this package.  Otherwise the
 use of @samp{\u} and @samp{\U} will give an error message.
 
 @kindex \c
@@ -9075,7 +9096,7 @@ The only options are a lone @option{--help} or
 @option{--version}.  @xref{Common options}.
 
 The Unicode character syntaxes are useful for writing strings in a locale
-independent way. For example, a string containing the Euro currency symbol
+independent way.  For example, a string containing the Euro currency symbol
 
 @example
 $ /usr/local/bin/printf '\u20AC 14.95'
@@ -9092,14 +9113,14 @@ $ /usr/local/bin/printf '\u4e2d\u6587'
 @noindent
 will be output correctly in all Chinese locales (GB2312, BIG5, UTF-8, etc).
 
-Note that in these examples, the full pathname of @command{printf} has been
+Note that in these examples, the full name of @command{printf} has been
 given, to distinguish it from the GNU @code{bash} builtin function
 @command{printf}.
 
 For larger strings, you don't need to look up the hexadecimal code
-values of each character one by one. @acronym{ASCII} characters mixed with \u
-escape sequences is also known as the JAVA source file encoding. You can
-use GNU recode 3.5c (or newer) to convert strings to this encoding. Here
+values of each character one by one.  @acronym{ASCII} characters mixed with \u
+escape sequences is also known as the JAVA source file encoding.  You can
+use GNU recode 3.5c (or newer) to convert strings to this encoding.  Here
 is how to convert a piece of text into a shell script which will output
 this text in a locale-independent way:
 
@@ -9748,17 +9769,20 @@ collating sequence specified by the @env{LC_COLLATE} locale.
 Here are a few examples, including quoting for shell metacharacters.
 
 To add 1 to the shell variable @code{foo}, in Bourne-compatible shells:
+
 @example
 foo=`expr $foo + 1`
 @end example
 
 To print the non-directory part of the file name stored in
-@code{$fname}, which need not contain a @code{/}.
+@code{$fname}, which need not contain a @code{/}:
+
 @example
 expr $fname : '.*/\(.*\)' '|' $fname
 @end example
 
 An example showing that @code{\+} is an operator:
+
 @example
 expr aaa : 'a\+'
 @result{} 3
@@ -9885,7 +9909,7 @@ options}.
 @cindex non-directory suffix, stripping
 
 @command{dirname} prints all but the final slash-delimited component of
-a string (presumably a filename).  Synopsis:
+a string (presumably a file name).  Synopsis:
 
 @example
 dirname @var{name}
@@ -9908,7 +9932,7 @@ options}.
 @cindex valid file names, checking for
 @cindex portable file names, checking for
 
-@command{pathchk} checks portability of filenames.  Synopsis:
+@command{pathchk} checks portability of file names.  Synopsis:
 
 @example
 pathchk [@var{option}]@dots{} @var{name}@dots{}
@@ -10036,7 +10060,7 @@ be used in combination with any line settings.
 @itemx --file=@var{device}
 @opindex -F
 @opindex --file
-Set the line opened by the filename specified in @var{device} instead of
+Set the line opened by the file name specified in @var{device} instead of
 the tty line connected to standard input.  This option is necessary
 because opening a @acronym{POSIX} tty requires use of the @code{O_NONDELAY} flag to
 prevent a @acronym{POSIX} tty from blocking until the carrier detect line is high if
@@ -10431,6 +10455,7 @@ values.
 @item sane
 @opindex sane
 Same as:
+
 @c This is too long to write inline.
 @example
 cread -ignbrk brkint -inlcr -igncr icrnl -ixoff
@@ -10439,7 +10464,9 @@ cread -ignbrk brkint -inlcr -igncr icrnl -ixoff
 ff0 isig icanon iexten echo echoe echok -echonl
 -noflsh -xcase -tostop -echoprt echoctl echoke
 @end example
-@noindent and also sets all special characters to their default values.
+
+@noindent
+and also sets all special characters to their default values.
 
 @item cooked
 @opindex cooked
@@ -10451,12 +10478,15 @@ May be negated.  If negated, same as @code{raw}.
 @item raw
 @opindex raw
 Same as:
+
 @example
 -ignbrk -brkint -ignpar -parmrk -inpck -istrip
 -inlcr -igncr -icrnl -ixon -ixoff -iuclc -ixany
 -imaxbel -opost -isig -icanon -xcase min 1 time 0
 @end example
-@noindent May be negated.  If negated, same as @code{cooked}.
+
+@noindent
+May be negated.  If negated, same as @code{cooked}.
 
 @item cbreak
 @opindex cbreak
@@ -10875,7 +10905,7 @@ options}.
 names of users currently logged in to the current host.  Each user name
 corresponds to a login session, so if a user has more than one login
 session, that user's name will appear the same number of times in the
-output. Synopsis:
+output.  Synopsis:
 
 @example
 users [@var{file}]
@@ -11137,7 +11167,8 @@ time, 24-hour (hh:mm:ss)
 @item %X
 locale's time representation (%H:%M:%S)
 @item %z
-RFC-2822 style numeric time zone (e.g., -0600 or +0100), or nothing if no
+RFC-2822 style numeric time zone (e.g., @samp{-0600} or @samp{+0100}),
+or nothing if no
 time zone is determinable.  This value reflects the @emph{current} time
 zone.  It isn't changed by the @option{--date} option.
 @item %Z
@@ -11245,7 +11276,8 @@ a horizontal tab
 @cindex fields, padding numeric
 
 By default, @command{date} pads numeric fields with zeroes, so that, for
-example, numeric months are always output as two digits. GNU @command{date}
+example, numeric months are always output as two digits.
+@acronym{GNU} @command{date}
 recognizes the following numeric modifiers between the @samp{%} and the
 directive.
 
@@ -11457,18 +11489,21 @@ date --date='2 days ago'
 
 @item
 To print the date of the day three months and one day hence:
+
 @example
 date --date='3 months 1 day'
 @end example
 
 @item
 To print the day of year of Christmas in the current year:
+
 @example
 date --date='25 Dec' +%j
 @end example
 
 @item
 To print the current full month name and the day of the month:
+
 @example
 date '+%B %d'
 @end example
@@ -11480,7 +11515,8 @@ for example @samp{date -d 1may '+%B %d'} will print @samp{May 01}.
 @item
 To print a date without the leading zero for one-digit days
 of the month, you can use the (GNU extension) @code{-} modifier to suppress
-the padding altogether.
+the padding altogether:
+
 @example
 date -d 1may '+%B %-d
 @end example
@@ -11488,12 +11524,14 @@ date -d 1may '+%B %-d
 @item
 To print the current date and time in the format required by many
 non-GNU versions of @command{date} when setting the system clock:
+
 @example
 date +%m%d%H%M%Y.%S
 @end example
 
 @item
 To set the system clock forward by two minutes:
+
 @example
 date --set='+2 minutes'
 @end example
@@ -11582,7 +11620,7 @@ date -u -d '1970-01-01 946684800 seconds' +"%Y-%m-%d %T %z"
 
 @command{uname} prints information about the machine and operating system
 it is run on.  If no options are given, @command{uname} acts as if the
-@option{-s} option were given. Synopsis:
+@option{-s} option were given.  Synopsis:
 
 @example
 uname [@var{option}]@dots{}
@@ -11709,7 +11747,7 @@ Print the kernel version.
 With no arguments, @command{hostname} prints the name of the current host
 system.  With one argument, it sets the current host name to the
 specified string.  You must have appropriate privileges to set the host
-name. Synopsis:
+name.  Synopsis:
 
 @example
 hostname [@var{name}]
@@ -11782,7 +11820,7 @@ chroot @var{newroot} [@var{command} [@var{args}]@dots{}]
 chroot @var{option}
 @end example
 
-Ordinarily, filenames are looked up starting at the root of the
+Ordinarily, file names are looked up starting at the root of the
 directory structure, i.e., @file{/}.  @command{chroot} changes the root to
 the directory @var{newroot} (which must exist) and then runs
 @var{command} with optional @var{args}.  If @var{command} is not
@@ -11798,8 +11836,8 @@ linked binary.  If you were to use a dynamically linked executable, then
 you'd have to arrange to have the shared libraries in the right place under
 your new root directory.
 
-For example, if you create a statically linked `ls' executable,
-and put it in /tmp/empty, you can run this command as root:
+For example, if you create a statically linked @command{ls} executable,
+and put it in @file{/tmp/empty}, you can run this command as root:
 
 @example
 $ chroot /tmp/empty /ls -Rl /
@@ -11870,7 +11908,7 @@ The program accepts the following options.  Also see @ref{Common options}.
 @item -u @var{name}
 @itemx --unset=@var{name}
 @opindex -u
-@opindex -unset
+@opindex --unset
 Remove variable @var{name} from the environment, if it was in the
 environment.
 
@@ -11918,7 +11956,7 @@ priority, which it inherited.  Otherwise, @command{nice} runs the given
 @var{adjustment} is given, the priority of the command is incremented by
 10.  You must have appropriate privileges to specify a negative
 adjustment.  The priority can be adjusted by @command{nice} over the range
-of -20 (the highest priority) to 19 (the lowest).
+of @minus{}20 (the highest priority) to 19 (the lowest).
 
 @cindex conflicts with shell built-ins
 @cindex built-in shell commands, conflicts with
@@ -12012,7 +12050,7 @@ $ sudo nice -n -1 nice
 @flindex nohup.out
 @command{nohup} runs the given @var{command} with hangup signals ignored,
 so that the command can continue running in the background after you log
-out. Synopsis:
+out.  Synopsis:
 
 @example
 nohup @var{command} [@var{arg}]@dots{}
@@ -12245,8 +12283,8 @@ specify processes to which a signal could be sent.
 If @var{pid} is positive, the signal is sent to the process with the
 process id @var{pid}.  If @var{pid} is zero, the signal is sent to all
 processes in the process group of the current process.  If @var{pid}
-is -1, the signal is sent to all processes for which the user has
-permission to send a signal.  If @var{pid} is less than -1, the signal
+is @minus{}1, the signal is sent to all processes for which the user has
+permission to send a signal.  If @var{pid} is less than @minus{}1, the signal
 is sent to all processes in the process group that equals the absolute
 value of @var{pid}.
 
@@ -12254,14 +12292,15 @@ If @var{pid} is not positive, a system-dependent set of system
 processes is excluded from the list of processes to which the signal
 is sent.
 
-If a negative @var{PID} argument is desired as the first one, either a
-signal must be specified as well, or the option parsing
-must be interrupted with `--' before the first @var{pid} argument.
-The following three commands are equivalent:
+If a negative @var{PID} argument is desired as the first one, it
+should be preceded by @option{--}.  However, as a common extension to
+@acronym{POSIX}, @option{--} is not required with @samp{kill
+-@var{signal} -@var{pid}}.  The following commands are equivalent:
 
 @example
 kill -15 -1
 kill -TERM -1
+kill -s TERM -- -1
 kill -- -1
 @end example
 
@@ -12467,6 +12506,7 @@ $ factor $p
 
 Similarly, it takes about 80 seconds for GNU factor (from coreutils-5.1.2)
 to ``factor'' the largest 64-bit prime:
+
 @example
 $ factor 18446744073709551557
   18446744073709551557: 18446744073709551557
@@ -12572,8 +12612,8 @@ f4240
 @end example
 
 To generate octal output, use the printf @code{%o} format instead
-of @code{%x}.  Note however that using printf works only for numbers
-smaller than @code{2^32}:
+of @code{%x}.  Note however that using printf might not work for numbers
+outside the usual 32-bit range:
 
 @example
 $ printf "%x\n" `seq -f %1.f 4294967295 4294967296`
@@ -12598,13 +12638,13 @@ otherwise you may see surprising results.  Most people would expect to
 see @code{0.3} printed as the last number in this example:
 
 @example
-$ seq -s' ' 0 .1 .3
+$ seq -s ' ' 0 .1 .3
 0 0.1 0.2
 @end example
 
 But that doesn't happen on most systems because @command{seq} is
 implemented using binary floating point arithmetic (via the C
-@code{double} type) -- which means some decimal numbers like @code{.1}
+@code{double} type)---which means some decimal numbers like @code{.1}
 cannot be represented exactly.  That in turn means some nonintuitive
 conditions like @w{@code{.1 * 3 > .3}} will end up being true.
 
@@ -12612,7 +12652,7 @@ To work around that in the above example, use a slightly larger number as
 the @var{last} value:
 
 @example
-$ seq -s' ' 0 .1 .31
+$ seq -s ' ' 0 .1 .31
 0 0.1 0.2 0.3
 @end example
 
@@ -12636,9 +12676,10 @@ by seq.
 @node Opening the software toolbox
 @chapter Opening the Software Toolbox
 
-This chapter originally appeared in @cite{Linux Journal}, volume 1,
-number 2, in the @cite{What's GNU?} column. It was written by Arnold
-Robbins.
+An earlier version of this chapter appeared in
+@uref{http://www.linuxjournal.com/article.php?sid=2762, the
+@cite{What's GNU?} column of @cite{Linux Journal}, 2 (June, 1994)}.
+It was written by Arnold Robbins.
 
 @menu
 * Toolbox introduction::        Toolbox introduction
@@ -12747,7 +12788,7 @@ For filter programs to work together, the format of the data has to be
 agreed upon.  The most straightforward and easiest format to use is simply
 lines of text.  Unix data files are generally just streams of bytes, with
 lines delimited by the @acronym{ASCII} @sc{lf} (Line Feed) character,
-conventionally called a ``newline'' in the Unix literature. (This is
+conventionally called a ``newline'' in the Unix literature.  (This is
 @code{'\n'} if you're a C programmer.)  This is the format used by all
 the traditional filtering programs.  (Many earlier operating systems
 had elaborate facilities and special purpose programs for managing
@@ -12755,7 +12796,7 @@ binary data.  Unix has always shied away from such things, under the
 philosophy that it's easiest to simply be able to view and edit your
 data with a text editor.)
 
-OK, enough introduction. Let's take a look at some of the tools, and then
+OK, enough introduction.  Let's take a look at some of the tools, and then
 we'll see how to hook them together in interesting ways.   In the following
 discussion, we will only present those command line options that interest
 us.  As you should always do, double check your system documentation
@@ -12844,7 +12885,7 @@ sequence or based on user-supplied ordering criteria.
 Finally (at least for now), we'll look at the @command{uniq} program.  When
 sorting data, you will often end up with duplicate lines, lines that
 are identical.  Usually, all you need is one instance of each line.
-This is where @command{uniq} comes in. The @command{uniq} program reads its
+This is where @command{uniq} comes in.  The @command{uniq} program reads its
 standard input.  It prints only one
 copy of each repeated line.  It does have several options.  Later on,
 we'll use the @option{-c} option, which prints each unique line, preceded
@@ -12861,7 +12902,7 @@ is logged in multiple times, his or her name should only show up in the
 output once.
 
 The administrator could sit down with the system documentation and write a C
-program that did this. It would take perhaps a couple of hundred lines
+program that did this.  It would take perhaps a couple of hundred lines
 of code and about two hours to write it, test it, and debug it.
 However, knowing the software toolbox, the administrator can instead start out
 by generating just a list of logged on users:
@@ -12894,7 +12935,7 @@ $ who | cut -c1-8 | sort | uniq
 @end example
 
 The @command{sort} command actually has a @option{-u} option that does what
-@command{uniq} does. However, @command{uniq} has other uses for which one
+@command{uniq} does.  However, @command{uniq} has other uses for which one
 cannot substitute @samp{sort -u}.
 
 The administrator puts this pipeline into a shell script, and makes it available for
@@ -12927,7 +12968,7 @@ you acquire the confidence that you are indeed using these tools correctly.
 
 Finally, by bundling the pipeline in a shell script, other users can use
 your command, without having to remember the fancy plumbing you set up for
-them. In terms of how you run them, shell scripts and compiled programs are
+them.  In terms of how you run them, shell scripts and compiled programs are
 indistinguishable.
 
 After the previous warm-up exercise, we'll look at two additional, more
@@ -12935,11 +12976,11 @@ complicated pipelines.  For them, we need to introduce two more tools.
 
 The first is the @command{tr} command, which stands for ``transliterate.''
 The @command{tr} command works on a character-by-character basis, changing
-characters. Normally it is used for things like mapping upper case to
+characters.  Normally it is used for things like mapping upper case to
 lower case:
 
 @example
-$ echo ThIs ExAmPlE HaS MIXED case! | tr '[A-Z]' '[a-z]'
+$ echo ThIs ExAmPlE HaS MIXED case! | tr '[:upper:]' '[:lower:]'
 @print{} this example has mixed case!
 @end example
 
@@ -12964,7 +13005,7 @@ command takes two sorted input files as input data, and prints out the
 files' lines in three columns.  The output columns are the data lines
 unique to the first file, the data lines unique to the second file, and
 the data lines that are common to both.  The @option{-1}, @option{-2}, and
-@option{-3} command line options @emph{omit} the respective columns. (This is
+@option{-3} command line options @emph{omit} the respective columns.  (This is
 non-intuitive and takes a little getting used to.)  For example:
 
 @example
@@ -12987,7 +13028,7 @@ $ comm f1 f2
 @print{}         55555
 @end example
 
-The single dash as a filename tells @command{comm} to read standard input
+The file name @file{-} tells @command{comm} to read standard input
 instead of a regular file.
 
 Now we're ready to build a fancy pipeline.  The first application is a word
@@ -12998,7 +13039,7 @@ The first step is to change the case of all the letters in our input file
 to one case.  ``The'' and ``the'' are the same word when doing counting.
 
 @example
-$ tr '[A-Z]' '[a-z]' < whats.gnu | ...
+$ tr '[:upper:]' '[:lower:]' < whats.gnu | ...
 @end example
 
 The next step is to get rid of punctuation.  Quoted words and unquoted words
@@ -13006,28 +13047,28 @@ should be treated identically; it's easiest to just get the punctuation out of
 the way.
 
 @smallexample
-$ tr '[A-Z]' '[a-z]' < whats.gnu | tr -cd '[A-Za-z0-9_ \012]' | ...
+$ tr '[:upper:]' '[:lower:]' < whats.gnu | tr -cd '[:alnum:]_ \n' | ...
 @end smallexample
 
 The second @command{tr} command operates on the complement of the listed
 characters, which are all the letters, the digits, the underscore, and
-the blank.  The @samp{\012} represents the newline character; it has to
+the blank.  The @samp{\n} represents the newline character; it has to
 be left alone.  (The @acronym{ASCII} tab character should also be included for
 good measure in a production script.)
 
 At this point, we have data consisting of words separated by blank space.
 The words only contain alphanumeric characters (and the underscore).  The
-next step is break the data apart so that we have one word per line. This
+next step is break the data apart so that we have one word per line.  This
 makes the counting operation much easier, as we will see shortly.
 
 @smallexample
-$ tr '[A-Z]' '[a-z]' < whats.gnu | tr -cd '[A-Za-z0-9_ \012]' |
-> tr -s '[ ]' '\012' | ...
+$ tr '[:upper:]' '[:lower:]' < whats.gnu | tr -cd '[:alnum:]_ \n' |
+> tr -s ' ' '\n' | ...
 @end smallexample
 
 This command turns blanks into newlines.  The @option{-s} option squeezes
 multiple newline characters in the output into just one.  This helps us
-avoid blank lines. (The @samp{>} is the shell's ``secondary prompt.''
+avoid blank lines.  (The @samp{>} is the shell's ``secondary prompt.''
 This is what the shell prints when it notices you haven't finished
 typing in all of a command.)
 
@@ -13035,21 +13076,21 @@ We now have data consisting of one word per line, no punctuation, all one
 case.  We're ready to count each word:
 
 @smallexample
-$ tr '[A-Z]' '[a-z]' < whats.gnu | tr -cd '[A-Za-z0-9_ \012]' |
-> tr -s '[ ]' '\012' | sort | uniq -c | ...
+$ tr '[:upper:]' '[:lower:]' < whats.gnu | tr -cd '[:alnum:]_ \n' |
+> tr -s ' ' '\n' | sort | uniq -c | ...
 @end smallexample
 
 At this point, the data might look something like this:
 
 @example
-  60 a
-   2 able
-   6 about
-   1 above
-   2 accomplish
-   1 acquire
-   1 actually
-   2 additional
+     60 a
+      2 able
+      6 about
+      1 above
+      2 accomplish
+      1 acquire
+      1 actually
+      2 additional
 @end example
 
 The output is sorted by word, not by count!  What we want is the most
@@ -13067,17 +13108,17 @@ reverse the order of the sort
 The final pipeline looks like this:
 
 @smallexample
-$ tr '[A-Z]' '[a-z]' < whats.gnu | tr -cd '[A-Za-z0-9_ \012]' |
-> tr -s '[ ]' '\012' | sort | uniq -c | sort -n -r
-@print{}  156 the
-@print{}   60 a
-@print{}   58 to
-@print{}   51 of
-@print{}   51 and
+$ tr '[:upper:]' '[:lower:]' < whats.gnu | tr -cd '[:alnum:]_ \n' |
+> tr -s ' ' '\n' | sort | uniq -c | sort -n -r
+@print{}    156 the
+@print{}     60 a
+@print{}     58 to
+@print{}     51 of
+@print{}     51 and
 @dots{}
 @end smallexample
 
-Whew!  That's a lot to digest.  Yet, the same principles apply. With six
+Whew!  That's a lot to digest.  Yet, the same principles apply.  With six
 commands, on two lines (really one long one split for convenience), we've
 created a program that does something interesting and useful, in much
 less time than we could have written a C program to do the same thing.
@@ -13095,16 +13136,16 @@ Now, how to compare our file with the dictionary?  As before, we generate
 a sorted list of words, one per line:
 
 @smallexample
-$ tr '[A-Z]' '[a-z]' < whats.gnu | tr -cd '[A-Za-z0-9_ \012]' |
-> tr -s '[ ]' '\012' | sort -u | ...
+$ tr '[:upper:]' '[:lower:]' < whats.gnu | tr -cd '[:alnum:]_ \n' |
+> tr -s ' ' '\n' | sort -u | ...
 @end smallexample
 
 Now, all we need is a list of words that are @emph{not} in the
 dictionary.  Here is where the @command{comm} command comes in.
 
 @smallexample
-$ tr '[A-Z]' '[a-z]' < whats.gnu | tr -cd '[A-Za-z0-9_ \012]' |
-> tr -s '[ ]' '\012' | sort -u |
+$ tr '[:upper:]' '[:lower:]' < whats.gnu | tr -cd '[:alnum:]_ \n' |
+> tr -s ' ' '\n' | sort -u |
 > comm -23 - /usr/dict/words
 @end smallexample
 
@@ -13152,13 +13193,13 @@ uses of programs that the authors might never have imagined.
 
 @item
 Programs should never print extraneous header or trailer data, since these
-could get sent on down a pipeline. (A point we didn't mention earlier.)
+could get sent on down a pipeline.  (A point we didn't mention earlier.)
 
 @item
 Let someone else do the hard part.
 
 @item
-Know your toolbox!  Use each program appropriately. If you don't have an
+Know your toolbox!  Use each program appropriately.  If you don't have an
 appropriate tool, build one.
 @end enumerate
 
@@ -13167,7 +13208,7 @@ anonymous @command{ftp} from: @*
 @uref{ftp://gnudist.gnu.org/textutils/textutils-1.22.tar.gz}.  (There may
 be more recent versions available now.)
 
-None of what I have presented in this column is new. The Software Tools
+None of what I have presented in this column is new.  The Software Tools
 philosophy was first introduced in the book @cite{Software Tools}, by
 Brian Kernighan and P.J. Plauger (Addison-Wesley, ISBN 0-201-03669-X).
 This book showed how to write and use software tools.  It was written in
@@ -13179,17 +13220,14 @@ lot like C; if you know C, you won't have any problem following the
 code.
 
 In 1981, the book was updated and made available as @cite{Software Tools
-in Pascal} (Addison-Wesley, ISBN 0-201-10342-7).  The first book is
-still in print; the second, alas, is not.  Both books are well worth
+in Pascal} (Addison-Wesley, ISBN 0-201-10342-7).  Both books are
+still in print and are well worth
 reading if you're a programmer.  They certainly made a major change in
 how I view programming.
 
-Initially, the programs in both books were available (on 9-track tape)
-from Addison-Wesley.  Unfortunately, this is no longer the case,
-although the @command{ratfor} versions are available from
-@uref{http://cm.bell-labs.come/who/bwk, Brian Kernighan's home page},
-and you might be able to find copies of the Pascal versions floating
-around the Internet.  For a number of years, there was an active
+The programs in both books are available from
+@uref{http://cm.bell-labs.com/who/bwk, Brian Kernighan's home page}.
+For a number of years, there was an active
 Software Tools Users Group, whose members had ported the original
 @command{ratfor} programs to essentially every computer system with a
 FORTRAN compiler.  The popularity of the group waned in the middle 1980s
