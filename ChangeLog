@@ -1,3 +1,42 @@
+2003-10-15  Jim Meyering  <jim@meyering.net>
+
+	chown and chgrp now accept POSIX-mandated -H, -L, -P options and
+	use fts to perform a directory traversal when -R is specified.
+	Before, they used explicit recursion, and as such were limited by
+	the user's stack size to handling hierarchies no deeper than
+	about 30,000 levels.
+
+	* src/chown.c: Include "userspec.h" and "fts_.h".
+	(WRITTEN_BY): Add my name.
+	(getpwnam, getgrnam, getgrgid): Remove declarations.
+	(endpwent): Remove definition.
+	(usage): Update.
+	(main): Handle new options.
+	Call new function, chown_files rather than change_file_owner.
+
+	* src/chgrp.c: Include "fts_.h".
+	(WRITTEN_BY): Add my name.
+	(MAXUID, MAXGID): Remove definitions.  Use GID_T_MAX instead of
+	the latter.
+	(usage): Update.
+	(main): Handle new options.
+	Call new function, chown_files rather than change_file_owner.
+
+	Rewrite to iterate through hierarchies using fts rather than
+	via explicit recursion.
+	* src/chown-core.c: Include "fts_.h"
+	(change_file_owner): Rewrite to use FTS* and FTSENT* and to operate
+	on a single file at a time.
+	(chown_files): New function.
+	* src/chown-core.h [enum Dereference_symlink]: Remove declaration.
+	[struct Chown_option] (recurse, force_silent): Change type to `bool'.
+	[struct Chown_option] (dereference): Remove member with ambiguous name.
+	[struct Chown_option] (affect_symlink_referent): New member.
+	(chown_files): New prototype.
+
+	* src/ln.c (usage): Clarify that --directory, -d, -F probably won't
+	work even for superuser.  Suggestion from Dan Jacobson.
+
 2003-10-14  Paul Eggert  <eggert@twinsun.com>
 
 	Fix some number-parsing bugs, e.g., "head -n 100k@" wasn't
