@@ -1303,7 +1303,7 @@ decode_switches (int argc, char **argv)
     char const *q_style = getenv ("QUOTING_STYLE");
     if (q_style)
       {
-	int i = ARGCASEMATCH (q_style, quoting_style_args, quoting_style_vals);
+	int i = ARGMATCH (q_style, quoting_style_args, quoting_style_vals);
 	if (0 <= i)
 	  set_quoting_style (NULL, quoting_style_vals[i]);
 	else
