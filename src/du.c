@@ -505,11 +505,12 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
 	}
 
       free (name_space);
-      pop_dir (cwd, path->text);
 
       str_trunc (path, prev_len); /* Remove any "/" we added.  */
+      pop_dir (cwd, path->text);
+
       if (depth <= max_depth || top)
-	print_size (size, path->length > 0 ? path->text : "/");
+	print_size (size, path->text);
       return opt_separate_dirs ? 0 : size;
     }
   else if ((opt_all && depth <= max_depth) || top)
@@ -517,7 +518,7 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
       /* FIXME: make this an option.  */
       int print_only_dir_size = 0;
       if (!print_only_dir_size)
-	print_size (size, path->length > 0 ? path->text : "/");
+	print_size (size, path->text);
     }
 
   return size;
