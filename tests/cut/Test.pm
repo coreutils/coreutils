@@ -71,9 +71,14 @@ my @tv = (
 
 );
 
-# Don't use a pipe for these tests to avoid `Broken pipe' message.
-$Test::input_via{'y'} = {REDIR => 0, FILE => 0};
-$Test::input_via{'z'} = {REDIR => 0, FILE => 0};
+# Don't use a pipe for failing tests.  Otherwise, sometimes they
+# fail so early they'd evoke the `Broken pipe' message.
+my $t;
+foreach $t (@tv)
+  {
+    my ($test_name, $flags, $in, $exp, $ret) = @$t;
+    $Test::input_via{$test_name} = {REDIR => 0, FILE => 0} if $ret;
+  }
 
 sub test_vector
 {
