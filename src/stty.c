@@ -107,6 +107,7 @@
 /* SunOS 5.3 loses (^Z doesn't work) if `swtch' is the same as `susp'.
    So the default is to disable `swtch.'  */
 #if defined (__sparc__) && defined (__svr4__)
+#undef CSWTCH
 #define	CSWTCH _POSIX_VDISABLE
 #endif
 
@@ -632,10 +633,10 @@ main (argc, argv)
      char **argv;
 {
   struct termios mode;
-  struct termios new_mode;
   enum output_type output_type = changed;
   int optc;
   int require_set_attr;
+  int speed_was_set;
 
   program_name = argv[0];
   opterr = 0;
@@ -691,6 +692,7 @@ done:;
       exit (0);
     }
 
+  speed_was_set = 0;
   require_set_attr = 0;
   while (optind < argc)
     {
@@ -747,6 +749,7 @@ done:;
 		}
 	      ++optind;
 	      set_speed (input_speed, argv[optind], &mode);
+	      speed_was_set = 1;
 	      require_set_attr = 1;
 	    }
 	  else if (!strcmp (argv[optind], "ospeed"))
@@ -758,6 +761,7 @@ done:;
 		}
 	      ++optind;
 	      set_speed (output_speed, argv[optind], &mode);
+	      speed_was_set = 1;
 	      require_set_attr = 1;
 	    }
 #ifdef TIOCGWINSZ
@@ -803,6 +807,7 @@ done:;
 	  else if (string_to_baud (argv[optind]) != (speed_t) -1)
 	    {
 	      set_speed (both_speeds, argv[optind], &mode);
+	      speed_was_set = 1;
 	      require_set_attr = 1;
 	    }
 	  else
@@ -820,6 +825,8 @@ done:;
 
   if (require_set_attr)
     {
+      struct termios new_mode;
+
       if (tcsetattr (0, TCSADRAIN, &mode))
 	error (1, errno, "standard input");
 
@@ -844,8 +851,23 @@ done:;
 	 and not all systems have the same fields in this structure.  */
 
       if (memcmp (&mode, &new_mode, sizeof (mode)) != 0)
-	error (1, 0,
+	{
+#ifdef CIBAUD
+	  /* SunOS 4.1.3 (at least) has the problem that after this sequence,
+	       tcgetattr(&m1); tcsetattr(&m1); tcgetattr(&m2); 
+	     sometimes (m1 != m2).  The only difference is in the four bits
+	     of the c_cflag field corresponding to the baud rate.  To save
+	     Sun users a little confusion, don't report an error if this
+	     happens.  But suppress the error only if we haven't tried to
+	     set the baud rate explicitly -- otherwise we'd never give an
+	     error for a true failure to set the baud rate.  */
+
+          new_mode.c_cflag &= (~CIBAUD);
+	  if (speed_was_set || memcmp (&mode, &new_mode, sizeof (mode)) != 0)
+#endif
+	  error (1, 0,
 	       "standard input: unable to perform all requested operations");
+	}
     }
 
   exit (0);
