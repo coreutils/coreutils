@@ -31,8 +31,6 @@
 #include <config.h>
 #include <stdio.h>
 #include <sys/types.h>
-#include <pwd.h>
-#include <grp.h>
 #include <getopt.h>
 
 #include "system.h"
@@ -40,6 +38,7 @@
 #include "lchown.h"
 #include "quote.h"
 #include "savedir.h"
+#include "chown-core.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "chown"
@@ -59,51 +58,8 @@ struct group *getgrgid ();
 char *parse_user_spec ();
 void strip_trailing_slashes ();
 
-enum Change_status
-{
-  CH_NOT_APPLIED,
-  CH_SUCCEEDED,
-  CH_FAILED,
-  CH_NO_CHANGE_REQUESTED
-};
-
-enum Verbosity
-{
-  /* Print a message for each file that is processed.  */
-  V_high,
-
-  /* Print a message for each file whose attributes we change.  */
-  V_changes_only,
-
-  /* Do not be verbose.  This is the default. */
-  V_off
-};
-
-static int change_dir_owner PARAMS ((const char *dir, uid_t user, gid_t group,
-				     uid_t old_user, gid_t old_group,
-				     const struct stat *statp));
-
 /* The name the program was run with. */
 char *program_name;
-
-/* If nonzero, and the systems has support for it, change the ownership
-   of symbolic links rather than any files they point to.  */
-static int change_symlinks = 1;
-
-/* If nonzero, change the ownership of directories recursively. */
-static int recurse;
-
-/* If nonzero, force silence (no error messages). */
-static int force_silent;
-
-/* Level of verbosity.  */
-static enum Verbosity verbosity = V_off;
-
-/* The name of the user to which ownership of the files is being given. */
-static char *username;
-
-/* The name of the group to which ownership of the files is being given. */
-static const char *groupname;
 
 /* The argument to the --reference option.  Use the owner and group IDs
    of this file.  This file must exist.  */
@@ -133,188 +89,6 @@ static struct option const long_options[] =
   {GETOPT_VERSION_OPTION_DECL},
   {0, 0, 0, 0}
 };
-
-/* Tell the user how/if the user and group of FILE have been changed.
-   CHANGED describes what (if anything) has happened. */
-
-static void
-describe_change (const char *file, enum Change_status changed)
-{
-  const char *fmt;
-
-  if (changed == CH_NOT_APPLIED)
-    {
-      printf (_("neither symbolic link %s nor referent has been changed\n"),
-	      quote (file));
-      return;
-    }
-
-  switch (changed)
-    {
-    case CH_SUCCEEDED:
-      fmt = _("owner of %s changed to ");
-      break;
-    case CH_FAILED:
-      fmt = _("failed to change owner of %s to ");
-      break;
-    case CH_NO_CHANGE_REQUESTED:
-      fmt = _("owner of %s retained as ");
-      break;
-    default:
-      abort ();
-    }
-  printf (fmt, file);
-  if (groupname)
-    printf ("%s.%s\n", username, groupname);
-  else
-    printf ("%s\n", username);
-}
-
-/* Change the ownership of FILE to UID USER and GID GROUP
-   provided it presently has UID OLDUSER and GID OLDGROUP.
-   If it is a directory and -R is given, recurse.
-   Return 0 if successful, 1 if errors occurred. */
-
-static int
-change_file_owner (int cmdline_arg, const char *file, uid_t user, gid_t group,
-		   uid_t old_user, gid_t old_group)
-{
-  struct stat file_stats;
-  uid_t newuser;
-  gid_t newgroup;
-  int errors = 0;
-
-  if (lstat (file, &file_stats))
-    {
-      if (force_silent == 0)
-	error (0, errno, _("getting attributes of %s"), quote (file));
-      return 1;
-    }
-
-  if ((old_user == (uid_t) -1  || file_stats.st_uid == old_user) &&
-      (old_group == (gid_t) -1 || file_stats.st_gid == old_group))
-    {
-      newuser = user == (uid_t) -1 ? file_stats.st_uid : user;
-      newgroup = group == (gid_t) -1 ? file_stats.st_gid : group;
-      if (newuser != file_stats.st_uid || newgroup != file_stats.st_gid)
-	{
-	  int fail;
-	  int symlink_changed = 1;
-	  int saved_errno;
-
-	  if (S_ISLNK (file_stats.st_mode) && change_symlinks)
-	    {
-	      fail = lchown (file, newuser, newgroup);
-
-	      /* Ignore the failure if it's due to lack of support (ENOSYS)
-		 and this is not a command line argument.  */
-	      if (!cmdline_arg && fail && errno == ENOSYS)
-		{
-		  fail = 0;
-		  symlink_changed = 0;
-		}
-	    }
-	  else
-	    {
-	      fail = chown (file, newuser, newgroup);
-	    }
-	  saved_errno = errno;
-
-	  if (verbosity == V_high || (verbosity == V_changes_only && !fail))
-	    {
-	      enum Change_status ch_status = (! symlink_changed
-					      ? CH_NOT_APPLIED
-					      : (fail
-						 ? CH_FAILED : CH_SUCCEEDED));
-	      describe_change (file, ch_status);
-	    }
-
-	  if (fail)
-	    {
-	      if (force_silent == 0)
-		error (0, saved_errno, _("changing ownership of %s"),
-		       quote (file));
-	      errors = 1;
-	    }
-	  else
-	    {
-	      /* The change succeeded.  On some systems, the chown function
-		 resets the `special' permission bits.  When run by a
-		 `privileged' user, this program must ensure that at least
-		 the set-uid and set-group ones are still set.  */
-	      if (file_stats.st_mode & ~S_IRWXUGO
-		  /* If this is a symlink and we changed *it*, then skip it.  */
-		  && ! (S_ISLNK (file_stats.st_mode) && change_symlinks))
-		{
-		  if (chmod (file, file_stats.st_mode))
-		    {
-		      error (0, saved_errno,
-			     _("unable to restore permissions of %s"),
-			     quote (file));
-		      fail = 1;
-		    }
-		}
-	    }
-	}
-      else if (verbosity == V_high)
-	{
-	  describe_change (file, CH_NO_CHANGE_REQUESTED);
-	}
-    }
-
-  if (recurse && S_ISDIR (file_stats.st_mode))
-    errors |= change_dir_owner (file, user, group,
-				old_user, old_group, &file_stats);
-  return errors;
-}
-
-/* Recursively change the ownership of the files in directory DIR
-   to UID USER and GID GROUP.
-   STATP points to the results of lstat on DIR.
-   Return 0 if successful, 1 if errors occurred. */
-
-static int
-change_dir_owner (const char *dir, uid_t user, gid_t group,
-		  uid_t old_user, gid_t old_group,
-		  const struct stat *statp)
-{
-  char *name_space, *namep;
-  char *path;			/* Full path of each entry to process. */
-  unsigned dirlength;		/* Length of `dir' and '\0'. */
-  unsigned filelength;		/* Length of each pathname to process. */
-  unsigned pathlength;		/* Bytes allocated for `path'. */
-  int errors = 0;
-
-  name_space = savedir (dir, statp->st_size);
-  if (name_space == NULL)
-    {
-      if (force_silent == 0)
-	error (0, errno, "%s", quote (dir));
-      return 1;
-    }
-
-  dirlength = strlen (dir) + 1;	/* + 1 is for the trailing '/'. */
-  pathlength = dirlength + 1;
-  /* Give `path' a dummy value; it will be reallocated before first use. */
-  path = xmalloc (pathlength);
-  strcpy (path, dir);
-  path[dirlength - 1] = '/';
-
-  for (namep = name_space; *namep; namep += filelength - dirlength)
-    {
-      filelength = dirlength + strlen (namep) + 1;
-      if (filelength > pathlength)
-	{
-	  pathlength = filelength * 2;
-	  path = xrealloc (path, pathlength);
-	}
-      strcpy (path + dirlength, namep);
-      errors |= change_file_owner (0, path, user, group, old_user, old_group);
-    }
-  free (path);
-  free (name_space);
-  return errors;
-}
 
 void
 usage (int status)
@@ -368,6 +142,7 @@ main (int argc, char **argv)
   gid_t group = (uid_t) -1;	/* New gid; -1 if not to be changed. */
   uid_t old_user = (uid_t) -1;	/* Old uid; -1 if unrestricted. */
   gid_t old_group = (uid_t) -1;	/* Old gid; -1 if unrestricted. */
+  struct Chown_option chopt;
 
   int errors = 0;
   int optc;
@@ -379,7 +154,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  recurse = force_silent = 0;
+  chopt_init (&chopt);
 
   while ((optc = getopt_long (argc, argv, "Rcfhv", long_options, NULL)) != -1)
     {
@@ -391,7 +166,7 @@ main (int argc, char **argv)
 	  reference_file = optarg;
 	  break;
 	case DEREFERENCE_OPTION:
-	  change_symlinks = 0;
+	  chopt.change_symlinks = 0;
 	  break;
 	case FROM_OPTION:
 	  {
@@ -404,19 +179,19 @@ main (int argc, char **argv)
 	    break;
 	  }
 	case 'R':
-	  recurse = 1;
+	  chopt.recurse = 1;
 	  break;
 	case 'c':
-	  verbosity = V_changes_only;
+	  chopt.verbosity = V_changes_only;
 	  break;
 	case 'f':
-	  force_silent = 1;
+	  chopt.force_silent = 1;
 	  break;
 	case 'h':
-	  change_symlinks = 1;
+	  chopt.change_symlinks = 1;
 	  break;
 	case 'v':
-	  verbosity = V_high;
+	  chopt.verbosity = V_high;
 	  break;
 	case_GETOPT_HELP_CHAR;
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
@@ -438,17 +213,19 @@ main (int argc, char **argv)
       if (stat (reference_file, &ref_stats))
 	error (1, errno, _("getting attributes of %s"), quote (reference_file));
 
-      user  = ref_stats.st_uid;
+      user = ref_stats.st_uid;
+      chopt.user_name = uid_to_name (ref_stats.st_uid);
       group = ref_stats.st_gid;
+      chopt.group_name = gid_to_name (ref_stats.st_gid);
     }
   else
     {
       const char *e = parse_user_spec (argv[optind], &user, &group,
-				       &username, &groupname);
+				       &chopt.user_name, &chopt.group_name);
       if (e)
         error (1, 0, "%s: %s", argv[optind], e);
-      if (username == NULL)
-        username = "";
+      if (chopt.user_name == NULL)
+        chopt.user_name = "";
 
       optind++;
     }
@@ -457,8 +234,10 @@ main (int argc, char **argv)
     {
       strip_trailing_slashes (argv[optind]);
       errors |= change_file_owner (1, argv[optind], user, group,
-				   old_user, old_group);
+				   old_user, old_group, &chopt);
     }
+
+  chopt_free (&chopt);
 
   exit (errors);
 }
