@@ -178,14 +178,13 @@ am_libfetish_a_OBJECTS = acl.$(OBJEXT) getdate.$(OBJEXT) \
 	filemode.$(OBJEXT) file-type.$(OBJEXT) fopen-safer.$(OBJEXT) \
 	fts.$(OBJEXT) full-read.$(OBJEXT) full-write.$(OBJEXT) \
 	gettime.$(OBJEXT) getugroups.$(OBJEXT) hard-locale.$(OBJEXT) \
-	human.$(OBJEXT) idcache.$(OBJEXT) isdir.$(OBJEXT) \
-	imaxtostr.$(OBJEXT) linebuffer.$(OBJEXT) \
-	localcharset.$(OBJEXT) long-options.$(OBJEXT) \
-	makepath.$(OBJEXT) mbswidth.$(OBJEXT) md5.$(OBJEXT) \
-	memcasecmp.$(OBJEXT) memcoll.$(OBJEXT) modechange.$(OBJEXT) \
-	offtostr.$(OBJEXT) open-safer.$(OBJEXT) path-concat.$(OBJEXT) \
-	physmem.$(OBJEXT) quote.$(OBJEXT) quotearg.$(OBJEXT) \
-	readtokens0.$(OBJEXT) readtokens.$(OBJEXT) \
+	human.$(OBJEXT) idcache.$(OBJEXT) imaxtostr.$(OBJEXT) \
+	linebuffer.$(OBJEXT) localcharset.$(OBJEXT) \
+	long-options.$(OBJEXT) makepath.$(OBJEXT) mbswidth.$(OBJEXT) \
+	md5.$(OBJEXT) memcasecmp.$(OBJEXT) memcoll.$(OBJEXT) \
+	modechange.$(OBJEXT) offtostr.$(OBJEXT) open-safer.$(OBJEXT) \
+	path-concat.$(OBJEXT) physmem.$(OBJEXT) quote.$(OBJEXT) \
+	quotearg.$(OBJEXT) readtokens0.$(OBJEXT) readtokens.$(OBJEXT) \
 	root-dev-ino.$(OBJEXT) safe-read.$(OBJEXT) \
 	safe-write.$(OBJEXT) same.$(OBJEXT) save-cwd.$(OBJEXT) \
 	savedir.$(OBJEXT) settime.$(OBJEXT) sha1.$(OBJEXT) \
@@ -348,13 +347,13 @@ libfetish_a_SOURCES = acl.h acl.c getdate.h getdate.y posixtm.c \
 	fsusage.h fts.c fts_.h full-read.c full-read.h full-write.c \
 	full-write.h getline.h getpagesize.h gettime.c gettext.h \
 	getugroups.c group-member.h hard-locale.c hard-locale.h \
-	human.c human.h idcache.c isdir.c imaxtostr.c lchown.h \
-	linebuffer.c linebuffer.h localcharset.c localcharset.h \
-	long-options.c long-options.h makepath.c makepath.h mbswidth.c \
-	mbswidth.h md5.c md5.h memcasecmp.c memcasecmp.h memcoll.c \
-	memcoll.h modechange.c modechange.h mountlist.h offtostr.c \
-	open-safer.c path-concat.c path-concat.h pathmax.h physmem.c \
-	physmem.h quote.c quote.h quotearg.c quotearg.h readtokens0.c \
+	human.c human.h idcache.c imaxtostr.c lchown.h linebuffer.c \
+	linebuffer.h localcharset.c localcharset.h long-options.c \
+	long-options.h makepath.c makepath.h mbswidth.c mbswidth.h \
+	md5.c md5.h memcasecmp.c memcasecmp.h memcoll.c memcoll.h \
+	modechange.c modechange.h mountlist.h offtostr.c open-safer.c \
+	path-concat.c path-concat.h pathmax.h physmem.c physmem.h \
+	quote.c quote.h quotearg.c quotearg.h readtokens0.c \
 	readtokens0.h readtokens.c readtokens.h readutmp.h regex.h \
 	root-dev-ino.c root-dev-ino.h safe-read.c safe-read.h \
 	safe-write.c safe-write.h same.c same.h save-cwd.c save-cwd.h \
@@ -543,7 +542,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/human.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/idcache.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imaxtostr.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/isdir.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/linebuffer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/localcharset.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/long-options.Po@am__quote@
