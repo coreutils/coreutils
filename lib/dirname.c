@@ -32,6 +32,7 @@ char *malloc ();
 #  define strrchr rindex
 # endif
 #endif
+#include <assert.h>
 
 #ifndef ISSLASH
 # define ISSLASH(C) ((C) == '/')
@@ -52,6 +53,13 @@ dir_name (const char *path)
   int length;			/* Length of result, not including NUL.  */
 
   slash = strrchr (path, '/');
+
+  /* Make sure there are no trailing slashes.  */
+  assert (slash == NULL	   /* There are no slashes in PATH.  */
+	  || slash[1] != 0 /* There is a non-NUL byte after the last slash.  */
+	  || path == slash /* PATH is just `/'.  */
+	  );
+
   if (slash == 0)
     {
       /* File is in the current directory.  */
