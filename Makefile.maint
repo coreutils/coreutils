@@ -312,7 +312,7 @@ $(get-targets):
 	$(WGET) $(url) -O $(target).t \
 	  && $(move_if_change) $(target).t $(target)
 
-automake_repo=:pserver:anoncvs@anoncvs.cygnus.com:/cvs/automake
+automake_repo = :pserver:anoncvs@subversions.gnu.org:/cvsroot/automake
 .PHONY: wget-update
 wget-update: $(get-targets)
 	cd config &&							\
