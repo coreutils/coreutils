@@ -12,10 +12,10 @@
 	* lib/Makefile.am (EXTRA_DIST): Add realloc.c.
 	* acconfig.h (realloc): Add #undef.
 
-	* src/dd.c (equal): Use STREQ (form system.h) instead.
-	(siginfo_handler): New function to handle SIGINFO/SIGUSR1.
-	(handle_sig): New function.
-	(main): Use handle_sig instead of open-coding it.
+	* src/dd.c (equal): Use STREQ (from system.h) instead.
+	(siginfo_handler): New function: handler for SIGINFO/SIGUSR1.
+	(install_handler): New function.
+	(main): Use install_handler instead of open-coding it.
 	Handle SIGINFO (or SIGUSR1 if that's not defined).
 	(print_stats): Move definition to precede first reference.
 	Remove prototype.
