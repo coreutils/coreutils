@@ -7333,7 +7333,8 @@ assumption.  Exceptions include:
 
 @item
 Log-structured or journaled file systems, such as those supplied with
-AIX and Solaris, and JFS, ReiserFS, XFS, Ext3, etc.
+AIX and Solaris, and JFS, ReiserFS, XFS, Ext3, BFS, NTFS etc.@: when
+they are configured to journal @emph{data}.
 
 @item
 File systems that write redundant data and carry on even if some writes
