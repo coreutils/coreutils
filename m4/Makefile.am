@@ -9,6 +9,7 @@ assert.m4 \
 bison.m4 \
 boottime.m4 \
 c-stack.m4 \
+canonicalize.m4 \
 check-decl.m4 \
 chown.m4 \
 codeset.m4 \
@@ -21,6 +22,7 @@ fpending.m4 \
 fstypename.m4 \
 fsusage.m4 \
 ftruncate.m4 \
+ftw.m4 \
 getcwd.m4 \
 getgroups.m4 \
 getline.m4 \
