@@ -57,6 +57,7 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
+AMTARFLAGS = @AMTARFLAGS@
 CATALOGS = @CATALOGS@
 CATOBJEXT = @CATOBJEXT@
 CC = @CC@
@@ -83,6 +84,7 @@ POFILES = @POFILES@
 POSUB = @POSUB@
 POW_LIBM = @POW_LIBM@
 RANLIB = @RANLIB@
+TAR = @TAR@
 U = @U@
 USE_INCLUDED_LIBINTL = @USE_INCLUDED_LIBINTL@
 USE_NLS = @USE_NLS@
@@ -92,9 +94,23 @@ l = @l@
 
 x = tail
 explicit = 
-maint_gen = obs-c1.I obs-c1.X obs-c2.I obs-c2.X obs-c3.I obs-c3.X obs-c4.I obs-c4.X obs-c5.I obs-c5.X obs-l1.I obs-l1.X obs-l2.I obs-l2.X obs-l3.I obs-l3.X obs-l4.I obs-l4.X obs-l5.I obs-l5.X obs-1.I obs-1.X obs-2.I obs-2.X obs-3.I obs-3.X obs-4.I obs-4.X obs-5.I obs-5.X obsx-1.I obsx-1.X obsx-2.I obsx-2.X obs-l.I obs-l.X err-1.I err-1.X err-2.I err-2.X err-3.I err-3.X err-4.I err-4.X err-5.I err-5.X err-6.I err-6.X minus-1.I minus-1.X minus-2.I minus-2.X n-1.I n-1.X n-2.I n-2.X n-3.I n-3.X n-4.I n-4.X n-4a.I n-4a.X n-5.I n-5.X n-5a.I n-5a.X n-5b.I n-5b.X
+maint_gen = obs-c1.I obs-c1.X obs-c2.I obs-c2.X obs-c3.I obs-c3.X obs-c4.I \
+obs-c4.X obs-c5.I obs-c5.X obs-l1.I obs-l1.X obs-l2.I obs-l2.X obs-l3.I \
+obs-l3.X obs-l4.I obs-l4.X obs-l5.I obs-l5.X obs-1.I obs-1.X obs-2.I obs-2.X \
+obs-3.I obs-3.X obs-4.I obs-4.X obs-5.I obs-5.X obsx-1.I obsx-1.X obsx-2.I \
+obsx-2.X obs-l.I obs-l.X err-1.I err-1.X err-2.I err-2.X err-3.I err-3.X \
+err-4.I err-4.X err-5.I err-5.X err-6.I err-6.X minus-1.I minus-1.X minus-2.I \
+minus-2.X n-1.I n-1.X n-2.I n-2.X n-3.I n-3.X n-4.I n-4.X n-4a.I n-4a.X n-5.I \
+n-5.X n-5a.I n-5a.X n-5b.I n-5b.X
 
-run_gen = obs-c1.O obs-c1.E obs-c2.O obs-c2.E obs-c3.O obs-c3.E obs-c4.O obs-c4.E obs-c5.O obs-c5.E obs-l1.O obs-l1.E obs-l2.O obs-l2.E obs-l3.O obs-l3.E obs-l4.O obs-l4.E obs-l5.O obs-l5.E obs-1.O obs-1.E obs-2.O obs-2.E obs-3.O obs-3.E obs-4.O obs-4.E obs-5.O obs-5.E obsx-1.O obsx-1.E obsx-2.O obsx-2.E obs-l.O obs-l.E err-1.O err-1.E err-2.O err-2.E err-3.O err-3.E err-4.O err-4.E err-5.O err-5.E err-6.O err-6.E minus-1.O minus-1.E minus-2.O minus-2.E n-1.O n-1.E n-2.O n-2.E n-3.O n-3.E n-4.O n-4.E n-4a.O n-4a.E n-5.O n-5.E n-5a.O n-5a.E n-5b.O n-5b.E
+run_gen = obs-c1.O obs-c1.E obs-c2.O obs-c2.E obs-c3.O obs-c3.E obs-c4.O \
+obs-c4.E obs-c5.O obs-c5.E obs-l1.O obs-l1.E obs-l2.O obs-l2.E obs-l3.O \
+obs-l3.E obs-l4.O obs-l4.E obs-l5.O obs-l5.E obs-1.O obs-1.E obs-2.O obs-2.E \
+obs-3.O obs-3.E obs-4.O obs-4.E obs-5.O obs-5.E obsx-1.O obsx-1.E obsx-2.O \
+obsx-2.E obs-l.O obs-l.E err-1.O err-1.E err-2.O err-2.E err-3.O err-3.E \
+err-4.O err-4.E err-5.O err-5.E err-6.O err-6.E minus-1.O minus-1.E minus-2.O \
+minus-2.E n-1.O n-1.E n-2.O n-2.E n-3.O n-3.E n-4.O n-4.E n-4a.O n-4a.E n-5.O \
+n-5.E n-5a.O n-5a.E n-5b.O n-5b.E
 
 
 EXTRA_DIST = Test.pm $x-tests $(explicit) $(maint_gen)
@@ -114,12 +130,12 @@ CONFIG_HEADER = ../../config.h
 CONFIG_CLEAN_FILES = 
 SCRIPTS =  $(noinst_SCRIPTS)
 
+DIST_SOURCES = 
 DIST_COMMON =  Makefile.am Makefile.in
 
 
-DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
+DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 
-TAR = gtar
 GZIP_ENV = --best
 all: all-redirect
 .SUFFIXES:
@@ -155,24 +171,50 @@ distdir: $(DISTFILES)
 	  fi; \
 	done
 check-TESTS: $(TESTS)
-	@failed=0; all=0; \
+	@failed=0; all=0; xfail=0; xpass=0; \
 	srcdir=$(srcdir); export srcdir; \
 	for tst in $(TESTS); do \
-	  if test -f $$tst; then dir=.; \
-	  else dir="$(srcdir)"; fi; \
-	  if $(TESTS_ENVIRONMENT) $$dir/$$tst; then \
+	  if test -f ./$$tst; then dir=./; \
+	  elif test -f $$tst; then dir=; \
+	  else dir="$(srcdir)/"; fi; \
+	  if $(TESTS_ENVIRONMENT) $${dir}$$tst; then \
 	    all=`expr $$all + 1`; \
-	    echo "PASS: $$tst"; \
+	    case " $(XFAIL_TESTS) " in \
+	    *" $$tst "*) \
+	      xpass=`expr $$xpass + 1`; \
+	      failed=`expr $$failed + 1`; \
+	      echo "XPASS: $$tst"; \
+	    ;; \
+	    *) \
+	      echo "PASS: $$tst"; \
+	    ;; \
+	    esac; \
 	  elif test $$? -ne 77; then \
 	    all=`expr $$all + 1`; \
-	    failed=`expr $$failed + 1`; \
-	    echo "FAIL: $$tst"; \
+	    case " $(XFAIL_TESTS) " in \
+	    *" $$tst "*) \
+	      xfail=`expr $$xfail + 1`; \
+	      echo "XFAIL: $$tst"; \
+	    ;; \
+	    *) \
+	      failed=`expr $$failed + 1`; \
+	      echo "FAIL: $$tst"; \
+	    ;; \
+	    esac; \
 	  fi; \
 	done; \
 	if test "$$failed" -eq 0; then \
-	  banner="All $$all tests passed"; \
+	  if test "$$xfail" -eq 0; then \
+	    banner="All $$all tests passed"; \
+	  else \
+	    banner="All $$all tests behaved as expected ($$xfail expected failures)"; \
+	  fi; \
 	else \
-	  banner="$$failed of $$all tests failed"; \
+	  if test "$$xpass" -eq 0; then \
+	    banner="$$failed of $$all tests failed"; \
+	  else \
+	    banner="$$failed of $$all tests did not behave as expected ($$xpass unexpected passes)"; \
+	  fi; \
 	fi; \
 	dashes=`echo "$$banner" | sed s/./=/g`; \
 	echo "$$dashes"; \
@@ -238,7 +280,7 @@ maintainer-clean: maintainer-clean-am
 .PHONY: tags distdir check-TESTS info-am info dvi-am dvi check check-am \
 installcheck-am installcheck install-exec-am install-exec \
 install-data-am install-data install-am install uninstall-am uninstall \
-all-redirect all-am all installdirs mostlyclean-generic \
+all-redirect all-am all install-strip installdirs mostlyclean-generic \
 distclean-generic clean-generic maintainer-clean-generic clean \
 mostlyclean distclean maintainer-clean
 
