@@ -9,178 +9,399 @@ $echo testing program: $xx
 errors=0
 test "$srcdir" || srcdir=.
 test "$VERBOSE" && $xx --version 2> /dev/null
-LANG=C TZ=UTC $xx -d '1997-01-19 08:17:48 +0' +'%% %a %A %b %B'  > t1.out 2> t1.err
+LANG=C TZ=UTC $xx -d '1997-01-19 08:17:48 +0' +'%% %a %A %b %B'  > 1.O 2> 1.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 1(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t1.out $srcdir/t1.exp
+  cmp 1.O $srcdir/1.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 1(LANG=C TZ=UTC)"; fi ;;
-    1) $echo "Test 1(LANG=C TZ=UTC) failed: files t1.out and $srcdir/t1.exp differ" 1>&2;
+    1) $echo "Test 1(LANG=C TZ=UTC) failed: files 1.O and $srcdir/1.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 1(LANG=C TZ=UTC) may have failed." 1>&2;
-       $echo The command "cmp t1.out $srcdir/t1.exp" failed. 1>&2 ;
+       $echo The command "cmp 1.O $srcdir/1.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t1.err || rm -f t1.err
-LANG=C TZ=GMT $xx -d '1997-01-19 08:17:48 +0' +'%c'  > t2.out 2> t2.err
+test -s 1.E || rm -f 1.E
+LANG=C TZ=UTC $xx -d '1997-01-19 08:17:48 +0' +'%c'  > 2.O 2> 2.E
 code=$?
 if test $code != 0 ; then
-  $echo "Test 2(LANG=C TZ=GMT) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test 2(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t2.out $srcdir/t2.exp
+  cmp 2.O $srcdir/2.X
   case $? in
-    0) if test "$VERBOSE" ; then $echo "passed 2(LANG=C TZ=GMT)"; fi ;;
-    1) $echo "Test 2(LANG=C TZ=GMT) failed: files t2.out and $srcdir/t2.exp differ" 1>&2;
+    0) if test "$VERBOSE" ; then $echo "passed 2(LANG=C TZ=UTC)"; fi ;;
+    1) $echo "Test 2(LANG=C TZ=UTC) failed: files 2.O and $srcdir/2.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
-    2) $echo "Test 2(LANG=C TZ=GMT) may have failed." 1>&2;
-       $echo The command "cmp t2.out $srcdir/t2.exp" failed. 1>&2 ;
+    2) $echo "Test 2(LANG=C TZ=UTC) may have failed." 1>&2;
+       $echo The command "cmp 2.O $srcdir/2.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t2.err || rm -f t2.err
-LANG=C TZ=UTC $xx -d '1997-01-19 08:17:48 +0' +'%d_%D_%e_%h_%H'  > t3.out 2> t3.err
+test -s 2.E || rm -f 2.E
+LANG=C TZ=UTC $xx -d '1997-01-19 08:17:48 +0' +'%d_%D_%e_%h_%H'  > 3.O 2> 3.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 3(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t3.out $srcdir/t3.exp
+  cmp 3.O $srcdir/3.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 3(LANG=C TZ=UTC)"; fi ;;
-    1) $echo "Test 3(LANG=C TZ=UTC) failed: files t3.out and $srcdir/t3.exp differ" 1>&2;
+    1) $echo "Test 3(LANG=C TZ=UTC) failed: files 3.O and $srcdir/3.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 3(LANG=C TZ=UTC) may have failed." 1>&2;
-       $echo The command "cmp t3.out $srcdir/t3.exp" failed. 1>&2 ;
+       $echo The command "cmp 3.O $srcdir/3.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t3.err || rm -f t3.err
-LANG=C TZ=UTC $xx -d '1997-01-19 08:17:48 +0' +'%I_%j_%k_%l_%m'  > t4.out 2> t4.err
+test -s 3.E || rm -f 3.E
+LANG=C TZ=UTC $xx -d '1997-01-19 08:17:48 +0' +'%I_%j_%k_%l_%m'  > 4.O 2> 4.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 4(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t4.out $srcdir/t4.exp
+  cmp 4.O $srcdir/4.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 4(LANG=C TZ=UTC)"; fi ;;
-    1) $echo "Test 4(LANG=C TZ=UTC) failed: files t4.out and $srcdir/t4.exp differ" 1>&2;
+    1) $echo "Test 4(LANG=C TZ=UTC) failed: files 4.O and $srcdir/4.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 4(LANG=C TZ=UTC) may have failed." 1>&2;
-       $echo The command "cmp t4.out $srcdir/t4.exp" failed. 1>&2 ;
+       $echo The command "cmp 4.O $srcdir/4.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t4.err || rm -f t4.err
-LANG=C TZ=UTC $xx -d '1997-01-19 08:17:48 +0' +'%M_%n_%p_%r'  > t5.out 2> t5.err
+test -s 4.E || rm -f 4.E
+LANG=C TZ=UTC $xx -d '1997-01-19 08:17:48 +0' +'%M_%n_%p_%r'  > 5.O 2> 5.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 5(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t5.out $srcdir/t5.exp
+  cmp 5.O $srcdir/5.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 5(LANG=C TZ=UTC)"; fi ;;
-    1) $echo "Test 5(LANG=C TZ=UTC) failed: files t5.out and $srcdir/t5.exp differ" 1>&2;
+    1) $echo "Test 5(LANG=C TZ=UTC) failed: files 5.O and $srcdir/5.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 5(LANG=C TZ=UTC) may have failed." 1>&2;
-       $echo The command "cmp t5.out $srcdir/t5.exp" failed. 1>&2 ;
+       $echo The command "cmp 5.O $srcdir/5.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t5.err || rm -f t5.err
-LANG=C TZ=UTC $xx -d '1997-01-19 08:17:48 +0' +'%s_%S_%t_%T'  > t6.out 2> t6.err
+test -s 5.E || rm -f 5.E
+LANG=C TZ=UTC $xx -d '1997-01-19 08:17:48 +0' +'%s_%S_%t_%T'  > 6.O 2> 6.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 6(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t6.out $srcdir/t6.exp
+  cmp 6.O $srcdir/6.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 6(LANG=C TZ=UTC)"; fi ;;
-    1) $echo "Test 6(LANG=C TZ=UTC) failed: files t6.out and $srcdir/t6.exp differ" 1>&2;
+    1) $echo "Test 6(LANG=C TZ=UTC) failed: files 6.O and $srcdir/6.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 6(LANG=C TZ=UTC) may have failed." 1>&2;
-       $echo The command "cmp t6.out $srcdir/t6.exp" failed. 1>&2 ;
+       $echo The command "cmp 6.O $srcdir/6.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t6.err || rm -f t6.err
-LANG=C TZ=UTC $xx -d '1997-01-19 08:17:48 +0' +'%U_%V_%w_%W'  > t7.out 2> t7.err
+test -s 6.E || rm -f 6.E
+LANG=C TZ=UTC $xx -d '1997-01-19 08:17:48 +0' +'%U_%V_%w_%W'  > 7.O 2> 7.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 7(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t7.out $srcdir/t7.exp
+  cmp 7.O $srcdir/7.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 7(LANG=C TZ=UTC)"; fi ;;
-    1) $echo "Test 7(LANG=C TZ=UTC) failed: files t7.out and $srcdir/t7.exp differ" 1>&2;
+    1) $echo "Test 7(LANG=C TZ=UTC) failed: files 7.O and $srcdir/7.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 7(LANG=C TZ=UTC) may have failed." 1>&2;
-       $echo The command "cmp t7.out $srcdir/t7.exp" failed. 1>&2 ;
+       $echo The command "cmp 7.O $srcdir/7.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t7.err || rm -f t7.err
-LANG=C TZ=UTC $xx -d '1997-01-19 08:17:48 +0' +'%x_%X_%y_%Y'  > t8.out 2> t8.err
+test -s 7.E || rm -f 7.E
+LANG=C TZ=UTC $xx -d '1997-01-19 08:17:48 +0' +'%x_%X_%y_%Y'  > 8.O 2> 8.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 8(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t8.out $srcdir/t8.exp
+  cmp 8.O $srcdir/8.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 8(LANG=C TZ=UTC)"; fi ;;
-    1) $echo "Test 8(LANG=C TZ=UTC) failed: files t8.out and $srcdir/t8.exp differ" 1>&2;
+    1) $echo "Test 8(LANG=C TZ=UTC) failed: files 8.O and $srcdir/8.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 8(LANG=C TZ=UTC) may have failed." 1>&2;
-       $echo The command "cmp t8.out $srcdir/t8.exp" failed. 1>&2 ;
+       $echo The command "cmp 8.O $srcdir/8.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t8.err || rm -f t8.err
-LANG=C TZ=UTC $xx -d '1997-01-19 08:17:48 +0' +'%z_%Z'  > t9.out 2> t9.err
+test -s 8.E || rm -f 8.E
+LANG=C TZ=GMT $xx -d '1997-01-19 08:17:48 +0' +'%z_%Z'  > 9.O 2> 9.E
 code=$?
 if test $code != 0 ; then
-  $echo "Test 9(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test 9(LANG=C TZ=GMT) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t9.out $srcdir/t9.exp
+  cmp 9.O $srcdir/9.X
   case $? in
-    0) if test "$VERBOSE" ; then $echo "passed 9(LANG=C TZ=UTC)"; fi ;;
-    1) $echo "Test 9(LANG=C TZ=UTC) failed: files t9.out and $srcdir/t9.exp differ" 1>&2;
+    0) if test "$VERBOSE" ; then $echo "passed 9(LANG=C TZ=GMT)"; fi ;;
+    1) $echo "Test 9(LANG=C TZ=GMT) failed: files 9.O and $srcdir/9.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
-    2) $echo "Test 9(LANG=C TZ=UTC) may have failed." 1>&2;
-       $echo The command "cmp t9.out $srcdir/t9.exp" failed. 1>&2 ;
+    2) $echo "Test 9(LANG=C TZ=GMT) may have failed." 1>&2;
+       $echo The command "cmp 9.O $srcdir/9.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t9.err || rm -f t9.err
-LANG=C TZ=UTC $xx --date '02/29/1996 - 1 year' +%Y-%m-%d  > tleap-1.out 2> tleap-1.err
+test -s 9.E || rm -f 9.E
+LANG=C TZ=UTC $xx --date '02/29/1996 1 year' +%Y-%m-%d  > leap-1.O 2> leap-1.E
 code=$?
 if test $code != 0 ; then
   $echo "Test leap-1(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp tleap-1.out $srcdir/tleap-1.exp
+  cmp leap-1.O $srcdir/leap-1.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed leap-1(LANG=C TZ=UTC)"; fi ;;
-    1) $echo "Test leap-1(LANG=C TZ=UTC) failed: files tleap-1.out and $srcdir/tleap-1.exp differ" 1>&2;
+    1) $echo "Test leap-1(LANG=C TZ=UTC) failed: files leap-1.O and $srcdir/leap-1.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test leap-1(LANG=C TZ=UTC) may have failed." 1>&2;
-       $echo The command "cmp tleap-1.out $srcdir/tleap-1.exp" failed. 1>&2 ;
+       $echo The command "cmp leap-1.O $srcdir/leap-1.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s tleap-1.err || rm -f tleap-1.err
+test -s leap-1.E || rm -f leap-1.E
+LANG=C TZ=UTC $xx --date '1995-1-1' +%U  > U95-1.O 2> U95-1.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test U95-1(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp U95-1.O $srcdir/U95-1.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed U95-1(LANG=C TZ=UTC)"; fi ;;
+    1) $echo "Test U95-1(LANG=C TZ=UTC) failed: files U95-1.O and $srcdir/U95-1.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test U95-1(LANG=C TZ=UTC) may have failed." 1>&2;
+       $echo The command "cmp U95-1.O $srcdir/U95-1.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s U95-1.E || rm -f U95-1.E
+LANG=C TZ=UTC $xx --date '1995-1-7' +%U  > U95-2.O 2> U95-2.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test U95-2(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp U95-2.O $srcdir/U95-2.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed U95-2(LANG=C TZ=UTC)"; fi ;;
+    1) $echo "Test U95-2(LANG=C TZ=UTC) failed: files U95-2.O and $srcdir/U95-2.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test U95-2(LANG=C TZ=UTC) may have failed." 1>&2;
+       $echo The command "cmp U95-2.O $srcdir/U95-2.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s U95-2.E || rm -f U95-2.E
+LANG=C TZ=UTC $xx --date '1995-1-8' +%U  > U95-3.O 2> U95-3.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test U95-3(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp U95-3.O $srcdir/U95-3.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed U95-3(LANG=C TZ=UTC)"; fi ;;
+    1) $echo "Test U95-3(LANG=C TZ=UTC) failed: files U95-3.O and $srcdir/U95-3.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test U95-3(LANG=C TZ=UTC) may have failed." 1>&2;
+       $echo The command "cmp U95-3.O $srcdir/U95-3.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s U95-3.E || rm -f U95-3.E
+LANG=C TZ=UTC $xx --date '1992-1-1' +%U  > U92-1.O 2> U92-1.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test U92-1(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp U92-1.O $srcdir/U92-1.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed U92-1(LANG=C TZ=UTC)"; fi ;;
+    1) $echo "Test U92-1(LANG=C TZ=UTC) failed: files U92-1.O and $srcdir/U92-1.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test U92-1(LANG=C TZ=UTC) may have failed." 1>&2;
+       $echo The command "cmp U92-1.O $srcdir/U92-1.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s U92-1.E || rm -f U92-1.E
+LANG=C TZ=UTC $xx --date '1992-1-4' +%U  > U92-2.O 2> U92-2.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test U92-2(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp U92-2.O $srcdir/U92-2.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed U92-2(LANG=C TZ=UTC)"; fi ;;
+    1) $echo "Test U92-2(LANG=C TZ=UTC) failed: files U92-2.O and $srcdir/U92-2.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test U92-2(LANG=C TZ=UTC) may have failed." 1>&2;
+       $echo The command "cmp U92-2.O $srcdir/U92-2.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s U92-2.E || rm -f U92-2.E
+LANG=C TZ=UTC $xx --date '1992-1-5' +%U  > U92-3.O 2> U92-3.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test U92-3(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp U92-3.O $srcdir/U92-3.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed U92-3(LANG=C TZ=UTC)"; fi ;;
+    1) $echo "Test U92-3(LANG=C TZ=UTC) failed: files U92-3.O and $srcdir/U92-3.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test U92-3(LANG=C TZ=UTC) may have failed." 1>&2;
+       $echo The command "cmp U92-3.O $srcdir/U92-3.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s U92-3.E || rm -f U92-3.E
+LANG=C TZ=UTC $xx --date '1992-1-1' +%V  > V92-1.O 2> V92-1.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test V92-1(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp V92-1.O $srcdir/V92-1.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed V92-1(LANG=C TZ=UTC)"; fi ;;
+    1) $echo "Test V92-1(LANG=C TZ=UTC) failed: files V92-1.O and $srcdir/V92-1.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test V92-1(LANG=C TZ=UTC) may have failed." 1>&2;
+       $echo The command "cmp V92-1.O $srcdir/V92-1.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s V92-1.E || rm -f V92-1.E
+LANG=C TZ=UTC $xx --date '1992-1-5' +%V  > V92-2.O 2> V92-2.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test V92-2(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp V92-2.O $srcdir/V92-2.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed V92-2(LANG=C TZ=UTC)"; fi ;;
+    1) $echo "Test V92-2(LANG=C TZ=UTC) failed: files V92-2.O and $srcdir/V92-2.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test V92-2(LANG=C TZ=UTC) may have failed." 1>&2;
+       $echo The command "cmp V92-2.O $srcdir/V92-2.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s V92-2.E || rm -f V92-2.E
+LANG=C TZ=UTC $xx --date '1992-1-6' +%V  > V92-3.O 2> V92-3.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test V92-3(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp V92-3.O $srcdir/V92-3.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed V92-3(LANG=C TZ=UTC)"; fi ;;
+    1) $echo "Test V92-3(LANG=C TZ=UTC) failed: files V92-3.O and $srcdir/V92-3.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test V92-3(LANG=C TZ=UTC) may have failed." 1>&2;
+       $echo The command "cmp V92-3.O $srcdir/V92-3.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s V92-3.E || rm -f V92-3.E
+LANG=C TZ=UTC $xx --date '1992-1-1' +%W  > W92-1.O 2> W92-1.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test W92-1(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp W92-1.O $srcdir/W92-1.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed W92-1(LANG=C TZ=UTC)"; fi ;;
+    1) $echo "Test W92-1(LANG=C TZ=UTC) failed: files W92-1.O and $srcdir/W92-1.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test W92-1(LANG=C TZ=UTC) may have failed." 1>&2;
+       $echo The command "cmp W92-1.O $srcdir/W92-1.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s W92-1.E || rm -f W92-1.E
+LANG=C TZ=UTC $xx --date '1992-1-5' +%W  > W92-2.O 2> W92-2.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test W92-2(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp W92-2.O $srcdir/W92-2.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed W92-2(LANG=C TZ=UTC)"; fi ;;
+    1) $echo "Test W92-2(LANG=C TZ=UTC) failed: files W92-2.O and $srcdir/W92-2.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test W92-2(LANG=C TZ=UTC) may have failed." 1>&2;
+       $echo The command "cmp W92-2.O $srcdir/W92-2.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s W92-2.E || rm -f W92-2.E
+LANG=C TZ=UTC $xx --date '1992-1-6' +%W  > W92-3.O 2> W92-3.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test W92-3(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp W92-3.O $srcdir/W92-3.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed W92-3(LANG=C TZ=UTC)"; fi ;;
+    1) $echo "Test W92-3(LANG=C TZ=UTC) failed: files W92-3.O and $srcdir/W92-3.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test W92-3(LANG=C TZ=UTC) may have failed." 1>&2;
+       $echo The command "cmp W92-3.O $srcdir/W92-3.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s W92-3.E || rm -f W92-3.E
+LANG=C TZ=UTC $xx --date '1998-1-1 3 years' +%Y  > millen-1.O 2> millen-1.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test millen-1(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp millen-1.O $srcdir/millen-1.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed millen-1(LANG=C TZ=UTC)"; fi ;;
+    1) $echo "Test millen-1(LANG=C TZ=UTC) failed: files millen-1.O and $srcdir/millen-1.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test millen-1(LANG=C TZ=UTC) may have failed." 1>&2;
+       $echo The command "cmp millen-1.O $srcdir/millen-1.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s millen-1.E || rm -f millen-1.E
 if test $errors = 0 ; then
-  $echo Passed all 10 tests. 1>&2
+  $echo Passed all 23 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi
