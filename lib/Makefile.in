@@ -252,6 +252,7 @@ libfetish_a_SOURCES = \
   xnanosleep.c xnanosleep.h \
   xreadlink.c xreadlink.h \
   xstrdup.c \
+  xstrndup.c xstrndup.h \
   xstrtod.c xstrtod.h \
   xstrtol.c xstrtol.h \
   xstrtoul.c \
@@ -314,9 +315,9 @@ am_libfetish_a_OBJECTS = acl.$(OBJEXT) getdate.$(OBJEXT) \
 	unicodeio.$(OBJEXT) userspec.$(OBJEXT) version-etc.$(OBJEXT) \
 	xgetcwd.$(OBJEXT) xgethostname.$(OBJEXT) xmalloc.$(OBJEXT) \
 	xmemcoll.$(OBJEXT) xnanosleep.$(OBJEXT) xreadlink.$(OBJEXT) \
-	xstrdup.$(OBJEXT) xstrtod.$(OBJEXT) xstrtol.$(OBJEXT) \
-	xstrtoul.$(OBJEXT) xstrtoimax.$(OBJEXT) xstrtoumax.$(OBJEXT) \
-	yesno.$(OBJEXT)
+	xstrdup.$(OBJEXT) xstrndup.$(OBJEXT) xstrtod.$(OBJEXT) \
+	xstrtol.$(OBJEXT) xstrtoul.$(OBJEXT) xstrtoimax.$(OBJEXT) \
+	xstrtoumax.$(OBJEXT) yesno.$(OBJEXT)
 libfetish_a_OBJECTS = $(am_libfetish_a_OBJECTS)
 
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
@@ -395,10 +396,10 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/xgetcwd.Po ./$(DEPDIR)/xgethostname.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/xmalloc.Po ./$(DEPDIR)/xmemcoll.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/xnanosleep.Po ./$(DEPDIR)/xreadlink.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/xstrdup.Po ./$(DEPDIR)/xstrtod.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/xstrtoimax.Po ./$(DEPDIR)/xstrtol.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/xstrtoul.Po ./$(DEPDIR)/xstrtoumax.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/yesno.Po
+@AMDEP_TRUE@	./$(DEPDIR)/xstrdup.Po ./$(DEPDIR)/xstrndup.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/xstrtod.Po ./$(DEPDIR)/xstrtoimax.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/xstrtol.Po ./$(DEPDIR)/xstrtoul.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/xstrtoumax.Po ./$(DEPDIR)/yesno.Po
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
@@ -595,6 +596,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xnanosleep.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xreadlink.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xstrdup.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xstrndup.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xstrtod.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xstrtoimax.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xstrtol.Po@am__quote@
