@@ -369,13 +369,13 @@ cleanup (void)
     unlink (node->name);
 }
 
-/* Report an error for STRING, clean up, and exit.  */
+/* Report MESSAGE for FILE, then clean up and exit.  */
 
-static void die PARAMS ((char const *)) ATTRIBUTE_NORETURN;
+static void die PARAMS ((char const *, char const *)) ATTRIBUTE_NORETURN;
 static void
-die (char const *string)
+die (char const *message, char const *file)
 {
-  error (0, errno, "%s", string);
+  error (0, errno, "%s: %s", message, file);
   cleanup ();
   exit (SORT_FAILURE);
 }
@@ -413,7 +413,7 @@ create_temp_file (FILE **pfp)
   errno = saved_errno;
 
   if (fd < 0 || (*pfp = fdopen (fd, "w")) == NULL)
-    die (file);
+    die (_("cannot create temporary file"), file);
 
   return file;
 }
@@ -436,7 +436,7 @@ xfopen (const char *file, const char *how)
   else
     {
       if ((fp = fopen_safer (file, how)) == NULL)
-	die (file);
+	die (_("open failed"), file);
     }
 
   return fp;
@@ -456,7 +456,7 @@ xfclose (FILE *fp, char const *file)
   else
     {
       if (fclose (fp) != 0)
-	die (file);
+	die (_("close failed"), file);
     }
 }
 
@@ -464,7 +464,7 @@ static void
 write_bytes (const char *buf, size_t n_bytes, FILE *fp, const char *output_file)
 {
   if (fwrite (buf, 1, n_bytes, fp) != n_bytes)
-    die (output_file);
+    die (_("write failed"), output_file);
 }
 
 /* Append DIR to the array of temporary directory names.  */
@@ -671,7 +671,7 @@ sort_buffer_size (FILE *const *fps, int nfps,
 	   : strcmp (files[i], "-") == 0 ? fstat (STDIN_FILENO, &st)
 	   : stat (files[i], &st))
 	  != 0)
-	die (files[i]);
+	die (_("stat failed"), files[i]);
 
       file_size = S_ISREG (st.st_mode) ? st.st_size : INPUT_FILE_SIZE_GUESS;
 
@@ -922,7 +922,7 @@ fillbuf (struct buffer *buf, register FILE *fp, char const *file)
 	  if (bytes_read != readsize)
 	    {
 	      if (ferror (fp))
-		die (file);
+		die (_("read failed"), file);
 	      if (feof (fp))
 		{
 		  buf->eof = 1;
@@ -2471,7 +2471,7 @@ but lacks following character offset"));
     sort (files, nfiles, outfile);
 
   if (have_read_stdin && fclose (stdin) == EOF)
-    die ("-");
+    die (_("close failed"), "-");
 
   cleanup ();
   exit (EXIT_SUCCESS);
