@@ -32,6 +32,7 @@ jm-winsz2.m4 \
 largefile.m4 \
 lchown.m4 \
 lcmessage.m4 \
+lib-check.m4 \
 link-follow.m4 \
 ls-mntd-fs.m4 \
 lstat-slash.m4 \

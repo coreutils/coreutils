@@ -1,3 +1,8 @@
+2000-01-28  Jim Meyering  <meyering@lucent.com>
+
+	* perl.m4: Change format of warning message to look more like that
+	from the missing script.  Suggestion from François Pinard.
+
 2000-01-25  Jim Meyering  <meyering@lucent.com>
 
 	* timespec.m4: Require AC_HEADER_TIME, and include sys/time.h as well
