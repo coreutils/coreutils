@@ -305,10 +305,10 @@ static unsigned char const ebcdic_to_ascii[] =
   070, 071, 0372, 0373, 0374, 0375, 0376, 0377
 };
 
-/* If non-zero, display usage information and exit.  */
+/* If nonzero, display usage information and exit.  */
 static int show_help;
 
-/* If non-zero, print the version on standard output and exit.  */
+/* If nonzero, print the version on standard output and exit.  */
 static int show_version;
 
 static struct option const long_options[] =

@@ -50,13 +50,13 @@ static void usage ();
 /* The name this program was run with, for error messages. */
 char *program_name;
 
-/* If non-zero, display usage information and exit.  */
+/* If nonzero, display usage information and exit.  */
 static int show_help;
 
-/* If non-zero, print the version on standard output and exit.  */
+/* If nonzero, print the version on standard output and exit.  */
 static int show_version;
 
-/* If non-zero, print or set Coordinated Universal Time.  */
+/* If nonzero, print or set Coordinated Universal Time.  */
 static int universal_time = 0;
 
 static struct option const long_options[] =
@@ -76,7 +76,7 @@ static struct option const long_options[] =
 /* Parse each line in INPUT_FILENAME as with --date and display the
    each resulting time and date.  If the file cannot be opened, tell why
    then exit.  Issue a diagnostic for any lines that cannot be parsed.
-   If any line cannot be parsed, return non-zero;  otherwise return zero.  */
+   If any line cannot be parsed, return nonzero;  otherwise return zero.  */
 
 static int
 batch_convert (input_filename, format)

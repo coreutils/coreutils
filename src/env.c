@@ -96,10 +96,10 @@ extern char **environ;
 /* The name by which this program was run. */
 char *program_name;
 
-/* If non-zero, display usage information and exit.  */
+/* If nonzero, display usage information and exit.  */
 static int show_help;
 
-/* If non-zero, print the version on standard output and exit.  */
+/* If nonzero, print the version on standard output and exit.  */
 static int show_version;
 
 static struct option const longopts[] =
@@ -150,7 +150,7 @@ main (argc, argv, envp)
 
   if (optind != argc && !strcmp (argv[optind], "-"))
     ignore_environment = 1;
-  
+
   environ = dummy_environ;
   environ[0] = NULL;
 

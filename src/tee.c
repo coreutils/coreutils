@@ -41,10 +41,10 @@ static int ignore_interrupts;
 /* The name that this program was run with. */
 char *program_name;
 
-/* If non-zero, display usage information and exit.  */
+/* If nonzero, display usage information and exit.  */
 static int show_help;
 
-/* If non-zero, print the version on standard output and exit.  */
+/* If nonzero, print the version on standard output and exit.  */
 static int show_version;
 
 static struct option const long_options[] =
@@ -85,7 +85,7 @@ main (argc, argv)
 {
   int errs;
   int optc;
-	
+
   program_name = argv[0];
   append = 0;
   ignore_interrupts = 0;

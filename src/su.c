@@ -161,10 +161,10 @@ extern char **environ;
 /* The name this program was run with.  */
 char *program_name;
 
-/* If non-zero, display usage information and exit.  */
+/* If nonzero, display usage information and exit.  */
 static int show_help;
 
-/* If non-zero, print the version on standard output and exit.  */
+/* If nonzero, print the version on standard output and exit.  */
 static int show_version;
 
 /* If nonzero, pass the `-f' option to the subshell.  */

@@ -248,7 +248,7 @@ integer_expected_error (pch)
   test_syntax_error (_("integer expression expected %s\n"), pch);
 }
 
-/* Return non-zero if the characters pointed to by STRING constitute a
+/* Return nonzero if the characters pointed to by STRING constitute a
    valid number.  Stuff the converted number into RESULT if RESULT is
    a non-null pointer to a long. */
 static int
@@ -309,7 +309,7 @@ isint (string, result)
 }
 
 /* Find the modification time of FILE, and stuff it into AGE, a pointer
-   to a long.  Return non-zero if successful, else zero. */
+   to a long.  Return nonzero if successful, else zero. */
 static int
 age_of (filename, age)
      char *filename;
@@ -882,7 +882,7 @@ binop (s)
 	  (STREQ (s, "-gt")) || (STREQ (s, "-ge")));
 }
 
-/* Return non-zero if OP is one of the test command's unary operators. */
+/* Return nonzero if OP is one of the test command's unary operators. */
 static int
 unop (op)
      int op;
@@ -1008,7 +1008,7 @@ EXPRESSION is true or false and sets exit status.  It is one of:\n\
   EXPRESSION1 -a EXPRESSION2   both EXPRESSION1 and EXPRESSION2 are true\n\
   EXPRESSION1 -o EXPRESSION2   either EXPRESSION1 or EXPRESSION2 is true\n\
 \n\
-  [-n] STRING          the length of STRING is non-zero\n\
+  [-n] STRING          the length of STRING is nonzero\n\
   -z STRING            the length of STRING is zero\n\
   STRING1 = STRING2    the strings are equal\n\
   STRING1 != STRING2   the strings are not equal\n\

@@ -93,10 +93,10 @@ static char *ref_file;
 /* Info about the reference file. */
 static struct stat ref_stats;
 
-/* If non-zero, display usage information and exit.  */
+/* If nonzero, display usage information and exit.  */
 static int show_help;
 
-/* If non-zero, print the version on standard output and exit.  */
+/* If nonzero, print the version on standard output and exit.  */
 static int show_version;
 
 static struct option const longopts[] =

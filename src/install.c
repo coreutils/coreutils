@@ -134,10 +134,10 @@ static int strip_files;
 /* If nonzero, install a directory instead of a regular file. */
 static int dir_arg;
 
-/* If non-zero, display usage information and exit.  */
+/* If nonzero, display usage information and exit.  */
 static int show_help;
 
-/* If non-zero, print the version on standard output and exit.  */
+/* If nonzero, print the version on standard output and exit.  */
 static int show_version;
 
 static struct option const long_options[] =
@@ -303,7 +303,7 @@ static char buffer[READ_SIZE];
 
 /* Copy file FROM onto file TO, creating TO if necessary.
    Return 0 if the copy is successful, 1 if not.  If the copy is
-   successful, set *TO_CREATED to non-zero if TO was created (if it did
+   successful, set *TO_CREATED to nonzero if TO was created (if it did
    not exist or did, but was unlinked) and to zero otherwise.  If the
    copy fails, don't modify *TO_CREATED.  */
 
@@ -394,7 +394,7 @@ copy_file (char *from, char *to, int *to_created)
 }
 
 /* Set the attributes of file or directory PATH.
-   If NO_NEED_TO_CHOWN is non-zero, don't call chown.
+   If NO_NEED_TO_CHOWN is nonzero, don't call chown.
    Return 0 if successful, 1 if not. */
 
 static int

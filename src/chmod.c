@@ -57,10 +57,10 @@ static int verbose;
 /* If nonzero, describe only modes that change. */
 static int changes_only;
 
-/* If non-zero, display usage information and exit.  */
+/* If nonzero, display usage information and exit.  */
 static int show_help;
 
-/* If non-zero, print the version on standard output and exit.  */
+/* If nonzero, print the version on standard output and exit.  */
 static int show_version;
 
 static struct option const long_options[] =
@@ -94,7 +94,7 @@ describe_change (char *file, short unsigned int mode, int changed)
 }
 
 /* Change the mode of FILE according to the list of operations CHANGES.
-   If DEREF_SYMLINK is non-zero and FILE is a symbolic link, change the
+   If DEREF_SYMLINK is nonzero and FILE is a symbolic link, change the
    mode of the referenced file.  If DEREF_SYMLINK is zero, ignore symbolic
    links.  Return 0 if successful, 1 if errors occurred. */
 

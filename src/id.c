@@ -84,10 +84,10 @@ static gid_t rgid, egid;
 /* The number of errors encountered so far. */
 static int problems = 0;
 
-/* If non-zero, display usage information and exit.  */
+/* If nonzero, display usage information and exit.  */
 static int show_help;
 
-/* If non-zero, print the version on standard output and exit.  */
+/* If nonzero, print the version on standard output and exit.  */
 static int show_version;
 
 static struct option const longopts[] =
@@ -285,14 +285,14 @@ print_full_info (username)
     problems++;
   else
     printf ("(%s)", pwd->pw_name);
-  
+
   printf (" gid=%u", (unsigned) rgid);
   grp = getgrgid (rgid);
   if (grp == NULL)
     problems++;
   else
     printf ("(%s)", grp->gr_name);
-  
+
   if (euid != ruid)
     {
       printf (" euid=%u", (unsigned) euid);
@@ -302,7 +302,7 @@ print_full_info (username)
       else
 	printf ("(%s)", pwd->pw_name);
     }
-  
+
   if (egid != rgid)
     {
       printf (" egid=%u", (unsigned) egid);

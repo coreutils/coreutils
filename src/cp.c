@@ -130,10 +130,10 @@ static int umask_kill;
 /* This process's effective user ID.  */
 static uid_t myeuid;
 
-/* If non-zero, display usage information and exit.  */
+/* If nonzero, display usage information and exit.  */
 static int show_help;
 
-/* If non-zero, print the version on standard output and exit.  */
+/* If nonzero, print the version on standard output and exit.  */
 static int show_version;
 
 static struct option const long_opts[] =
@@ -459,7 +459,7 @@ do_copy (int argc, char **argv)
 }
 
 /* Copy the file SRC_PATH to the file DST_PATH.  The files may be of
-   any type.  NEW_DST should be non-zero if the file DST_PATH cannot
+   any type.  NEW_DST should be nonzero if the file DST_PATH cannot
    exist because its parent directory was just created; NEW_DST should
    be zero if DST_PATH might already exist.  DEVICE is the device
    number of the parent directory, or 0 if the parent of this file is
@@ -1037,7 +1037,7 @@ re_protect (char *const_dst_path, int src_offset, struct dir_attr *attr_list)
 }
 
 /* Read the contents of the directory SRC_PATH_IN, and recursively
-   copy the contents to DST_PATH_IN.  NEW_DST is non-zero if
+   copy the contents to DST_PATH_IN.  NEW_DST is nonzero if
    DST_PATH_IN is a directory that was created previously in the
    recursion.   SRC_SB and ANCESTORS describe SRC_PATH_IN.
    Return 0 if successful, -1 if an error occurs. */
@@ -1188,13 +1188,13 @@ copy_reg (char *src_path, char *dst_path)
 	{
 	  buf[n_read] = 1;	/* Sentinel to stop loop.  */
 
-	  /* Find first non-zero *word*, or the word with the sentinel.  */
+	  /* Find first nonzero *word*, or the word with the sentinel.  */
 
 	  ip = (int *) buf;
 	  while (*ip++ == 0)
 	    ;
 
-	  /* Find the first non-zero *byte*, or the sentinel.  */
+	  /* Find the first nonzero *byte*, or the sentinel.  */
 
 	  cp = (char *) (ip - 1);
 	  while (*cp++ == 0)

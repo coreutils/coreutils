@@ -1186,7 +1186,7 @@ set_speed (type, arg, mode)
 
 /* Get window size information.  First try getting the information
    associated with standard output and if that fails, try standard input.
-   Return zero for success, non-zero if both ioctl's failed.  */
+   Return zero for success, nonzero if both ioctl's failed.  */
 
 static int
 get_win_size (win)

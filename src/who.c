@@ -92,10 +92,10 @@ char *xmalloc ();
 /* The name this program was run with. */
 char *program_name;
 
-/* If non-zero, display usage information and exit.  */
+/* If nonzero, display usage information and exit.  */
 static int show_help;
 
-/* If non-zero, print the version on standard output and exit.  */
+/* If nonzero, print the version on standard output and exit.  */
 static int show_version;
 
 #ifdef WHO
@@ -226,7 +226,7 @@ print_entry (this)
       mesg = '?';
       last_change = 0;
     }
-  
+
   printf ("%-8.*s", (int) sizeof (this->ut_name), this->ut_name);
   if (include_mesg)
     printf ("  %c  ", mesg);
@@ -492,7 +492,7 @@ who_am_i (filename)
   if (tty == NULL)
     return;
   tty += 5;			/* Remove "/dev/".  */
-  
+
   utmp_entry = search_entries (read_utmp (filename), tty);
   if (utmp_entry == NULL)
     return;

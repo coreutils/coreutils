@@ -20,7 +20,7 @@
    -s, --sysname	SunOS
    -n, --nodename	rocky8
    -r, --release	4.0
-   -v, --version	
+   -v, --version
    -m, --machine	sun
    -a, --all		SunOS rocky8 4.0  sun
 
@@ -63,10 +63,10 @@ static unsigned char toprint;
 /* The name this program was run with, for error messages. */
 char *program_name;
 
-/* If non-zero, display usage information and exit.  */
+/* If nonzero, display usage information and exit.  */
 static int show_help;
 
-/* If non-zero, print the version on standard output and exit.  */
+/* If nonzero, print the version on standard output and exit.  */
 static int show_version;
 
 static struct option const long_options[] =

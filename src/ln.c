@@ -92,10 +92,10 @@ static int hard_dir_link;
    symlink-to-dir before creating the new link.  */
 static int dereference_dest_dir_symlinks = 1;
 
-/* If non-zero, display usage information and exit.  */
+/* If nonzero, display usage information and exit.  */
 static int show_help;
 
-/* If non-zero, print the version on standard output and exit.  */
+/* If nonzero, print the version on standard output and exit.  */
 static int show_version;
 
 static struct option const long_options[] =
@@ -177,7 +177,7 @@ do_link (char *source, char *dest)
       char *new_dest;
       PATH_BASENAME_CONCAT (new_dest, dest, source);
       dest = new_dest;
-      /* Set this to non-zero to force another call to lstat
+      /* Set this to nonzero to force another call to lstat
 	 with the new destination.  */
       lstat_status = 1;
     }

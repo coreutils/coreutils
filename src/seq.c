@@ -30,7 +30,7 @@ static int check_format ();
 static char *get_width_format ();
 static int print_numbers ();
 
-/* If non-zero print all number with equal width. */
+/* If nonzero print all number with equal width. */
 static int equal_width;
 
 /* The printf(3) format used for output. */
@@ -45,10 +45,10 @@ char *program_name;
 /* The string used to separate two number. */
 static char *separator;
 
-/* If non-zero, display usage information and exit.  */
+/* If nonzero, display usage information and exit.  */
 static int show_help;
 
-/* If non-zero, print the version on standard output and exit.  */
+/* If nonzero, print the version on standard output and exit.  */
 static int show_version;
 
 /* The increment. */
@@ -111,7 +111,7 @@ main (argc, argv)
   from = 1.0;
   step_is_set = 0;
 
-  /* We have to handle negative numbers in the command line but this 
+  /* We have to handle negative numbers in the command line but this
      conflicts with the command line arguments.  So the getopt mode is
      REQUIRE_ORDER (the '+' in the format string) and it abort on the
      first non-option or negative number.  */

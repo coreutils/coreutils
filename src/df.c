@@ -81,7 +81,7 @@ static int posix_format;
 
 /* If nonzero, invoke the `sync' system call before getting any usage data.
    Using this option can make df very slow, especially with many or very
-   busy disks.  Default to non-zero because the sync call does make a
+   busy disks.  Default to nonzero because the sync call does make a
    difference on some systems -- SunOs4.1.3, for one.  I have been assured
    that it is *not* necessary on Linux, so there should be a way to
    configure this.  FIXME.  */
@@ -119,13 +119,13 @@ static struct fs_type_list *fs_exclude_list;
 /* Linked list of mounted filesystems. */
 static struct mount_entry *mount_list;
 
-/* If non-zero, display usage information and exit.  */
+/* If nonzero, display usage information and exit.  */
 static int show_help;
 
-/* If non-zero, print the version on standard output and exit.  */
+/* If nonzero, print the version on standard output and exit.  */
 static int show_version;
 
-/* If non-zero, print filesystem type as well.  */
+/* If nonzero, print filesystem type as well.  */
 static int print_type;
 
 static struct option const long_options[] =

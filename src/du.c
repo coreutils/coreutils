@@ -159,10 +159,10 @@ static int (*xstat) ();
 /* The exit status to use if we don't get any fatal errors. */
 static int exit_status;
 
-/* If non-zero, display usage information and exit.  */
+/* If nonzero, display usage information and exit.  */
 static int show_help;
 
-/* If non-zero, print the version on standard output and exit.  */
+/* If nonzero, print the version on standard output and exit.  */
 static int show_version;
 
 /* Grand total size of all args. */
@@ -554,7 +554,7 @@ hash_reset (void)
 
 /* Insert an item (inode INO and device DEV) in the hash
    structure in the global variable `htab', if an entry with the same data
-   was not found already.  Return zero if the item was inserted and non-zero
+   was not found already.  Return zero if the item was inserted and nonzero
    if it wasn't.  */
 
 static int
@@ -621,7 +621,7 @@ hash_insert (ino_t ino, dev_t dev)
 }
 
 /* Insert INO and DEV in the hash structure HTAB, if not
-   already present.  Return zero if inserted and non-zero if it
+   already present.  Return zero if inserted and nonzero if it
    already existed.  */
 
 static int

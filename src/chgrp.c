@@ -73,10 +73,10 @@ static int changes_only;
 /* The name of the group to which ownership of the files is being given. */
 static char *groupname;
 
-/* If non-zero, display usage information and exit.  */
+/* If nonzero, display usage information and exit.  */
 static int show_help;
 
-/* If non-zero, print the version on standard output and exit.  */
+/* If nonzero, print the version on standard output and exit.  */
 static int show_version;
 
 static struct option const long_options[] =
