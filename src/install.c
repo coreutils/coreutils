@@ -611,6 +611,9 @@ In the third format, create all components of the given DIRECTORY(ies).\n\
 \n\
 "), stdout);
       fputs (_("\
+Mandatory arguments to long options are mandatory for short options too.\n\
+"), stdout);
+      fputs (_("\
       --backup[=CONTROL] make a backup of each existing destination file\n\
   -b                  like --backup but does not accept an argument\n\
   -c                  (ignored)\n\

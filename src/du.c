@@ -190,6 +190,11 @@ usage (int status)
       fputs (_("\
 Summarize disk usage of each FILE, recursively for directories.\n\
 \n\
+"), stdout);
+      fputs (_("\
+Mandatory arguments to long options are mandatory for short options too.\n\
+"), stdout);
+      fputs (_("\
   -a, --all             write counts for all files, not just directories\n\
       --block-size=SIZE use SIZE-byte blocks\n\
   -b, --bytes           print size in bytes\n\

@@ -3565,6 +3565,11 @@ usage (int status)
 List information about the FILEs (the current directory by default).\n\
 Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
 \n\
+"), stdout);
+      fputs (_("\
+Mandatory arguments to long options are mandatory for short options too.\n\
+"), stdout);
+      fputs (_("\
   -a, --all                  do not hide entries starting with .\n\
   -A, --almost-all           do not list implied . and ..\n\
   -b, --escape               print octal escapes for nongraphic characters\n\

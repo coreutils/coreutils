@@ -231,6 +231,11 @@ usage (int status)
       fputs (_("\
 Update the access and modification times of each FILE to the current time.\n\
 \n\
+"), stdout);
+      fputs (_("\
+Mandatory arguments to long options are mandatory for short options too.\n\
+"), stdout);
+      fputs (_("\
   -a                     change only the access time\n\
   -c, --no-create        do not create any files\n\
   -d, --date=STRING      parse STRING and use it instead of current time\n\

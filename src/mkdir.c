@@ -62,6 +62,11 @@ usage (int status)
       fputs (_("\
 Create the DIRECTORY(ies), if they do not already exist.\n\
 \n\
+"), stdout);
+      fputs (_("\
+Mandatory arguments to long options are mandatory for short options too.\n\
+"), stdout);
+      fputs (_("\
   -m, --mode=MODE   set permission mode (as in chmod), not rwxrwxrwx - umask\n\
   -p, --parents     no error if existing, make parent directories as needed\n\
   -v, --verbose     print a message for each created directory\n\

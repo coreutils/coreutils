@@ -66,6 +66,11 @@ usage (int status)
       fputs (_("\
 Create the special file NAME of the given TYPE.\n\
 \n\
+"), stdout);
+      fputs (_("\
+Mandatory arguments to long options are mandatory for short options too.\n\
+"), stdout);
+      fputs (_("\
   -m, --mode=MODE   set permission mode (as in chmod), not a=rw - umask\n\
 "), stdout);
       fputs (_("\

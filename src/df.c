@@ -756,6 +756,11 @@ usage (int status)
 Show information about the filesystem on which each FILE resides,\n\
 or all filesystems by default.\n\
 \n\
+"), stdout);
+      fputs (_("\
+Mandatory arguments to long options are mandatory for short options too.\n\
+"), stdout);
+      fputs (_("\
   -a, --all             include filesystems having 0 blocks\n\
       --block-size=SIZE use SIZE-byte blocks\n\
   -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n\

@@ -464,10 +464,15 @@ usage (int status)
   else
     {
       printf (_("Usage: %s [OPTIONS] FILE [...]\n"), program_name);
-      printf (_("\
+      fputs (_("\
 Overwrite the specified FILE(s) repeatedly, in order to make it harder\n\
 for even very expensive hardware probing to recover the data.\n\
 \n\
+"), stdout);
+      fputs (_("\
+Mandatory arguments to long options are mandatory for short options too.\n\
+"), stdout);
+      printf (_("\
   -f, --force    change permissions to allow writing if necessary\n\
   -n, --iterations=N  Overwrite N times instead of the default (%d)\n\
   -s, --size=N   shred this many bytes (suffixes like k, M, G accepted)\n\
