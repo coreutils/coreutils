@@ -13,6 +13,7 @@
 	specified via the obsolete form.  E.g., now this command fails:
 	_POSIX2_VERSION=1 ./unexpand -$(echo '2^64+1'|bc)
 	Before it would act like `_POSIX2_VERSION=1 ./unexpand -1'.
+	* tests/unexpand/basic-1 (obs-ovflo): New test for this.
 
 2005-01-10  Paul Eggert  <eggert@cs.ucla.edu>
 
