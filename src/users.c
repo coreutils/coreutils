@@ -1,5 +1,5 @@
 /* GNU's users.
-   Copyright (C) 1992-2004 Free Software Foundation, Inc.
+   Copyright (C) 1992-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -80,15 +80,16 @@ list_entries_users (size_t n, const STRUCT_UTMP *this)
   free (u);
 }
 
-/* Display a list of users on the system, according to utmp file FILENAME. */
+/* Display a list of users on the system, according to utmp file FILENAME.
+   Use read_utmp OPTIONS to read FILENAME.  */
 
 static void
-users (const char *filename)
+users (const char *filename, int options)
 {
   size_t n_users;
   STRUCT_UTMP *utmp_buf;
 
-  if (read_utmp (filename, &n_users, &utmp_buf) != 0)
+  if (read_utmp (filename, &n_users, &utmp_buf, options) != 0)
     error (EXIT_FAILURE, errno, "%s", filename);
 
   list_entries_users (n_users, utmp_buf);
@@ -137,11 +138,11 @@ main (int argc, char **argv)
   switch (argc - optind)
     {
     case 0:			/* users */
-      users (UTMP_FILE);
+      users (UTMP_FILE, READ_UTMP_CHECK_PIDS);
       break;
 
     case 1:			/* users <utmp file> */
-      users (argv[optind]);
+      users (argv[optind], 0);
       break;
 
     default:			/* lose */
