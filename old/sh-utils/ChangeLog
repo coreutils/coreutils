@@ -1,3 +1,7 @@
+1997-07-15  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/getloadavg.c: Merge in changes from FSF.
+
 1997-07-13  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* doc/Makefile.am (EXTRA_DIST): Remove explicit mention of texinfo.texi.
