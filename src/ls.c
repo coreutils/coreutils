@@ -2025,7 +2025,12 @@ print_long_format (const struct fileinfo *f)
   char *p;
   time_t when;
 
+#ifdef HAVE_ST_DM_MODE
+  mode_string (f->stat.st_dm_mode, modebuf);
+#else
   mode_string (f->stat.st_mode, modebuf);
+#endif
+
   modebuf[10] = '\0';
 
   switch (time_type)
