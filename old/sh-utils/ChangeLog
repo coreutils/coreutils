@@ -1,3 +1,10 @@
+1999-09-02  Jim Meyering  <meyering@ascend.com>
+
+	* src/expr.c: Remove xstrdup declaration.
+	* src/date.c: Likewise.
+	* src/pathchk.c: Likewise.
+	* src/su.c: Likewise.
+
 1999-08-29  Jim Meyering  <meyering@ascend.com>
 
 	* tests/nice: Use `nice' instead of $nice.
