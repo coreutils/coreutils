@@ -789,7 +789,17 @@ recheck (struct File_spec *f)
     }
   else
     {
-      close_fd (fd, pretty_name (f));
+      if (f->fd == -1)
+	{
+	  /* This happens when one iteration finds the file missing,
+	     then the preceding <dev,inode> pair is reused as the
+	     file is recreated.  */
+	  new_file = 1;
+	}
+      else
+	{
+	  close_fd (fd, pretty_name (f));
+	}
     }
 
   if (new_file)
@@ -855,9 +865,9 @@ tail_forever (struct File_spec *f, int nfiles)
 
 	  if (fstat (f[i].fd, &stats) < 0)
 	    {
-	      error (0, errno, "%s", pretty_name (&f[i]));
 	      f[i].fd = -1;
 	      f[i].errnum = errno;
+	      error (0, errno, "%s", pretty_name (&f[i]));
 	      continue;
 	    }
 
@@ -1119,9 +1129,9 @@ tail_file (struct File_spec *f, off_t n_units)
 	  /* FIXME: duplicate code */
 	  if (fstat (fd, &stats) < 0)
 	    {
-	      error (0, errno, "%s", pretty_name (f));
 	      errors = 1;
 	      f->errnum = errno;
+	      error (0, errno, "%s", pretty_name (f));
 	    }
 
 	  if (errors)
