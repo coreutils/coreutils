@@ -1566,7 +1566,7 @@ copy_internal (const char *src_path, const char *dst_path,
       error (0, errno, _("failed to lookup file %s"), quote (dst_path));
     else
       {
-	int err = file_chauthor (file, src_sb.st_author);
+	error_t err = file_chauthor (file, src_sb.st_author);
 	if (err)
 	  error (0, err, _("failed to preserve authorship for %s"),
 		 quote (dst_path));
