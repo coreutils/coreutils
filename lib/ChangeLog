@@ -1,3 +1,8 @@
+2001-12-02  Jim Meyering  <meyering@lucent.com>
+
+	* regex.c [!__BOUNDED_POINTERS__]: Define away __bounded,
+        __unbounded, and __ptrvalue.  Reported by Uwe H. Steinfeld.
+
 2001-11-30  Akim Demaille  <akim@epita.fr>
 
 	* xstrdup.c: Include xalloc.h, so that xstrdup is declared
