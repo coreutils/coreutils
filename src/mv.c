@@ -239,7 +239,7 @@ copy_reg (const char *source, const char *dest, const struct stat *source_stats)
 
 /* Move SOURCE onto DEST.  Handles cross-filesystem moves.
    If SOURCE is a directory, DEST must not exist.
-   Return 0 if successful, 1 if an error occurred.  */
+   Return 0 if successful, non-zero if an error occurred.  */
 
 static int
 do_move (const char *source, const char *dest)
@@ -247,6 +247,7 @@ do_move (const char *source, const char *dest)
   char *dest_backup = NULL;
   struct stat source_stats;
   struct stat dest_stats;
+  int fail;
 
   if (lstat (source, &source_stats) != 0)
     {
@@ -319,37 +320,47 @@ do_move (const char *source, const char *dest)
   if (verbose)
     printf ("%s -> %s\n", source, dest);
 
-  if (rename (source, dest) == 0)
+  /* Always try rename first.  */
+  fail = rename (source, dest);
+
+  if (fail)
     {
-      return 0;
+      /* This may mean SOURCE and DEST are on different devices.
+	 It may also (conceivably) mean that even though they are
+	 on the same device, rename isn't implemented for that device.
+
+	 E.g., (from Joel N. Weber),
+	 [...] there might someday be cases where you can't rename but you
+	 can copy where the device name is the same, especially on Hurd.
+	 Consider an ftpfs with a primitive ftp server that supports
+	 uploading, downloading and deleting, but not renaming.
+
+	 Also, note that comparing device numbers is not a reliable check
+	 for `can-rename'.  Some systems can be set up so that files from
+	 many different physical devices all have the same st_dev field.
+	 This is a feature of some NFS mounting configurations.
+
+	 Try copying-then-removing SOURCE instead.
+
+	 This function used to resort to copying only when rename failed
+	 and set errno to EXDEV.  */
+
+      fail = copy_reg (source, dest, &source_stats);
+      if (fail)
+	{
+	  /* Restore original destination file DEST if made a backup.  */
+	  if (dest_backup && rename (dest_backup, dest))
+	    error (0, errno, _("cannot un-backup `%s'"), dest);
+	}
+      else
+	{
+	  fail = unlink (source);
+	  if (fail)
+	    error (0, errno, _("cannot remove `%s'"), source);
+	}
     }
 
-  if (errno != EXDEV)
-    {
-      error (0, errno, _("cannot move `%s' to `%s'"), source, dest);
-      goto un_backup;
-    }
-
-  /* rename failed on cross-filesystem link.  Copy the file instead. */
-
-  if (copy_reg (source, dest, &source_stats))
-    goto un_backup;
-
-  if (unlink (source))
-    {
-      error (0, errno, _("cannot remove `%s'"), source);
-      return 1;
-    }
-
-  return 0;
-
- un_backup:
-  if (dest_backup)
-    {
-      if (rename (dest_backup, dest))
-	error (0, errno, _("cannot un-backup `%s'"), dest);
-    }
-  return 1;
+  return fail;
 }
 
 static int
@@ -367,7 +378,7 @@ strip_trailing_slashes_2 (char *path)
 /* Move file SOURCE onto DEST.  Handles the case when DEST is a directory.
    DEST_IS_DIR must be nonzero when DEST is a directory or a symlink to a
    directory and zero otherwise.
-   Return 0 if successful, 1 if an error occurred.  */
+   Return 0 if successful, non-zero if an error occurred.  */
 
 static int
 movefile (char *source, char *dest, int dest_is_dir)
