@@ -1,7 +1,7 @@
 1999-08-22  Jim Meyering  <meyering@ascend.com>
 
 	* src/tsort.c (detect_loop): There's no loop if k->top is NULL.
-	Niklas Edmundsson reported that tsort could segfault.
+	Niklas Edmundsson showed how to make tsort segfault.
 
 	* tests/tsort/Makefile.am: Rewrite to use Fetish.pm-based framework.
 	* tests/tsort/basic-1: New file.
