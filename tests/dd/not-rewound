@@ -1,5 +1,6 @@
 #!/bin/sh
-# Make sure dd does the right thing when the file descriptor is not rewound.
+# Make sure dd does the right thing when the input file descriptor
+# is not rewound.
 
 if test "$VERBOSE" = yes; then
   set -x

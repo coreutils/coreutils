@@ -1,3 +1,9 @@
+2000-08-23  Jim Meyering  <meyering@lucent.com>
+
+	* tests/dd/not-rewound: New test, for the SEEK_CUR vs. SEEK_SET part
+	of last change.  Based on Paul's example.
+	* tests/dd/Makefile.am (TESTS): Add not-rewound.
+
 2000-08-22  Paul Eggert  <eggert@twinsun.com>
 
 	* src/dd.c (skip):
