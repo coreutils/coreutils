@@ -1,6 +1,11 @@
-2002-06-02  Jim Meyering  <meyering@lucent.com>
+2002-06-07  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.9.
+
+	* src/remove.c (remove_entry): Use DT_IS_DIR only if
+	HAVE_STRUCT_DIRENT_D_TYPE is defined.
+
+2002-06-02  Jim Meyering  <meyering@lucent.com>
 
 	`rm' no longer uses explicit recursion, and as such is now able
 	to remove hierarchies of effectively unlimited depth.  Prior to
