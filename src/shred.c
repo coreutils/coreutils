@@ -1209,7 +1209,7 @@ wipename (char *oldname, struct Options const *flags)
 		  if (flags->verbose > 1)
 		    flushstatus ();
 		}
-	      memcpy (oldname + (base - newname), newname, len + 1);
+	      memcpy (oldname + (base - newname), base, len + 1);
 	      break;
 	    }
 	}
