@@ -1,9 +1,9 @@
 2003-10-16  Jim Meyering  <jim@meyering.net>
 
-	* readutmp.c: Fix indentation, from gnulib.
-
 	* xmalloc.c: Include <string.h>, for declarations of memset and memcpy.
 
+	* getgroups.c: Update from gnulib.
+	* readutmp.c: Fix indentation, from gnulib.
 	* exclude.c: Update from gnulib.
 	* xgethostname.c: Include xgethostname.h.
 	* xgethostname.h: New file, from gnulib.
