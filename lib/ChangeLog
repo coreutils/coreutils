@@ -1,3 +1,9 @@
+2000-10-23  Jim Meyering  <meyering@lucent.com>
+
+	* hard-locale.c (hard_locale): Revert last change -- it was simply
+	wrong.  That set_locale call must not have any side effects.
+	From Paul Eggert.
+
 2000-10-22  Jim Meyering  <meyering@lucent.com>
 
 	* md5.c (md5_process_block) [OP]: Use `rol', not CYCLIC.
