@@ -545,7 +545,7 @@ pipe_lines (const char *pretty_filename, int fd, long int n_lines)
   /* Find the correct beginning, then print the rest of the file.  */
   if (total_lines > n_lines)
     {
-      char *cp;
+      const char *cp;
 
       /* Skip `total_lines' - `n_lines' newlines.  We made sure that
          `total_lines' - `n_lines' <= `tmp->nlines'.  */
