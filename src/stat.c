@@ -610,7 +610,6 @@ print_it (char const *masterformat, char const *filename,
     }
   free (format);
   free (dest);
-  fputc ('\n', stdout);
 }
 
 /* stat the filesystem and print what we find */
@@ -630,11 +629,11 @@ do_statfs (char const *filename, int terse, char const *format)
   if (format == NULL)
     {
       format = (terse
-		? "%n %i %l %t %b %f %a %s %c %d"
+		? "%n %i %l %t %b %f %a %s %c %d\n"
 		: "  File: \"%n\"\n"
 		"    ID: %-8i Namelen: %-7l Type: %T\n"
 		"Blocks: Total: %-10b Free: %-10f Available: %-10a Size: %s\n"
-		"Inodes: Total: %-10c Free: %-10d");
+		"Inodes: Total: %-10c Free: %-10d\n");
     }
 
   print_it (format, filename, print_statfs, &statfsbuf);
@@ -660,7 +659,7 @@ do_stat (char const *filename, int follow_links, int terse,
     {
       if (terse != 0)
 	{
-	  format = "%n %s %b %f %u %g %D %i %h %t %T %X %Y %Z %o";
+	  format = "%n %s %b %f %u %g %D %i %h %t %T %X %Y %Z %o\n";
 	}
       else
 	{
@@ -674,7 +673,7 @@ do_stat (char const *filename, int follow_links, int terse,
 		"Device: %Dh/%dd\tInode: %-10i  Links: %-5h"
 		" Device type: %t,%T\n"
 		"Access: (%04a/%10.10A)  Uid: (%5u/%8U)   Gid: (%5g/%8G)\n"
-		"Access: %x\n" "Modify: %y\n" "Change: %z";
+		"Access: %x\n" "Modify: %y\n" "Change: %z\n";
 	    }
 	  else
 	    {
@@ -683,7 +682,7 @@ do_stat (char const *filename, int follow_links, int terse,
 		"  Size: %-10s\tBlocks: %-10b IO Block: %-6o %F\n"
 		"Device: %Dh/%dd\tInode: %-10i  Links: %h\n"
 		"Access: (%04a/%10.10A)  Uid: (%5u/%8U)   Gid: (%5g/%8G)\n"
-		"Access: %x\n" "Modify: %y\n" "Change: %z";
+		"Access: %x\n" "Modify: %y\n" "Change: %z\n";
 	    }
 	}
     }
