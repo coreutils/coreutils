@@ -1081,10 +1081,7 @@ skip (uintmax_t n_skip)
 		n_skip -= file_stats.st_size;
 	      else
 		{
-		  off_t offset = n_skip;
-		  if (offset == n_skip && 0 <= offset
-		      ? fseeko (in_stream, offset, SEEK_CUR) != 0
-		      : (errno = EOVERFLOW, 1))
+		  if (fseeko (in_stream, n_skip, SEEK_CUR) != 0)
 		    {
 		      error (0, errno, "%s", input_filename);
 		      err = 1;
