@@ -1,5 +1,11 @@
 Tue Nov 24 08:42:30 1992  Jim Meyering  (meyering@idefix.comco.com)
 
+	* tr.c: Define new macros ISPRINT, ISALNUM, ISXDIGIT, ... that
+	use isascii if it is defined.
+	(is_char_class_member, make_printable_char, make_printable_str,
+	non_neg_strtol): Use new macros instead of lower case ones
+	from <ctype.h>.
+
 	* od.c (print_ascii, dump_strings): Use ISDIGIT and ISPRINT
 	macros like pr.c.  Suggested by David J. MacKenzie.
 
