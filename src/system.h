@@ -193,9 +193,15 @@ extern int errno;
 #ifndef HAVE_STRUCT_STAT_ST_BLOCKS
 # define ST_BLKSIZE(statbuf) DEV_BSIZE
 # if defined(_POSIX_SOURCE) || !defined(BSIZE) /* fileblocks.c uses BSIZE.  */
-#  define ST_NBLOCKS(statbuf) ((statbuf).st_size / ST_NBLOCKSIZE + ((statbuf).st_size % ST_NBLOCKSIZE != 0))
+#  define ST_NBLOCKS(statbuf) \
+  (S_ISREG ((statbuf).st_mode) \
+   || S_ISDIR ((statbuf).st_mode) \
+   ? (statbuf).st_size / ST_NBLOCKSIZE + ((statbuf).st_size % ST_NBLOCKSIZE != 0) : 0)
 # else /* !_POSIX_SOURCE && BSIZE */
-#  define ST_NBLOCKS(statbuf) (st_blocks ((statbuf).st_size))
+#  define ST_NBLOCKS(statbuf) \
+  (S_ISREG ((statbuf).st_mode) \
+   || S_ISDIR ((statbuf).st_mode) \
+   ? st_blocks ((statbuf).st_size) : 0)
 # endif /* !_POSIX_SOURCE && BSIZE */
 #else /* HAVE_STRUCT_STAT_ST_BLOCKS */
 /* Some systems, like Sequents, return st_blksize of 0 on pipes. */
@@ -211,14 +217,20 @@ extern int errno;
 #   define ST_NBLOCKSIZE (4 * 1024)
 #  else /* not AIX PS/2 */
 #   if defined(_CRAY)
-#    define ST_NBLOCKS(statbuf) ((statbuf).st_blocks * ST_BLKSIZE(statbuf)/ST_NBLOCKSIZE)
+#    define ST_NBLOCKS(statbuf) \
+  (S_ISREG ((statbuf).st_mode) \
+   || S_ISDIR ((statbuf).st_mode) \
+   ? (statbuf).st_blocks * ST_BLKSIZE(statbuf)/ST_NBLOCKSIZE : 0)
 #   endif /* _CRAY */
 #  endif /* not AIX PS/2 */
 # endif /* !hpux */
 #endif /* HAVE_STRUCT_STAT_ST_BLOCKS */
 
 #ifndef ST_NBLOCKS
-# define ST_NBLOCKS(statbuf) ((statbuf).st_blocks)
+# define ST_NBLOCKS(statbuf) \
+  (S_ISREG ((statbuf).st_mode) \
+   || S_ISDIR ((statbuf).st_mode) \
+   ? (statbuf).st_blocks : 0)
 #endif
 
 #ifndef ST_NBLOCKSIZE
