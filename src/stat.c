@@ -433,7 +433,7 @@ print_stat (char *pformat, char m, char const *filename, void const *data)
       strcat (pformat, "s");
       if (S_ISLNK (statbuf->st_mode))
 	{
-	  char *linkname = xreadlink (filename);
+	  char *linkname = xreadlink (filename, statbuf->st_size);
 	  if (linkname == NULL)
 	    {
 	      error (0, errno, _("cannot read symbolic link %s"),
