@@ -164,7 +164,7 @@ static enum operating_mode operating_mode;
 static int suppress_non_delimited;
 
 /* The delimeter character for field mode. */
-static unsigned char delim;
+static int delim;
 
 /* Nonzero if we have ever read standard input. */
 static int have_read_stdin;
