@@ -6998,7 +6998,7 @@ If a destination file exists but is normally unwritable, standard input
 is a terminal, and the @option{-f} or @option{--force} option is not given,
 @command{mv} prompts the user for whether to replace the file.  (You might
 own the file, or have write permission on its directory.)  If the
-response does not begin with @samp{y} or @samp{Y}, the file is skipped.
+response is not affirmative, the file is skipped.
 
 @emph{Warning}: If you try to move a symlink that points to a directory,
 and you specify the symlink with a trailing slash, then @command{mv}
@@ -7024,8 +7024,8 @@ Do not prompt the user before removing a destination file.
 @opindex --interactive
 @cindex prompts, forcing
 Prompt whether to overwrite each existing destination file, regardless
-of its permissions.  If the response does not begin with @samp{y} or
-@samp{Y}, the file is skipped.
+of its permissions.
+If the response is not affirmative, the file is skipped.
 
 @itemx @w{@kbd{--reply}[=@var{how}]}
 @opindex --reply
@@ -7087,8 +7087,8 @@ rm [@var{option}]@dots{} [@var{file}]@dots{}
 If a file is unwritable, standard input is a terminal, and the @option{-f}
 or @option{--force} option is not given, or the @option{-i} or
 @option{--interactive} option @emph{is} given, @command{rm} prompts the user
-for whether to remove the file.  If the response does not begin with
-@samp{y} or @samp{Y}, the file is skipped.
+for whether to remove the file.
+If the response is not affirmative, the file is skipped.
 
 @emph{Warning}: If you use @command{rm} to remove a file, it is usually
 possible to recover the contents of that file.  If you want more assurance
@@ -7124,8 +7124,8 @@ Ignore any previous @option{--interactive} (@option{-i}) option.
 @itemx --interactive
 @opindex -i
 @opindex --interactive
-Prompt whether to remove each file.  If the response does not begin
-with @samp{y} or @samp{Y}, the file is skipped.
+Prompt whether to remove each file.
+If the response is not affirmative, the file is skipped.
 Ignore any previous @option{--force} (@option{-f}) option.
 
 @itemx --preserve-root
