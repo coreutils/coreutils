@@ -1,3 +1,15 @@
+1997-12-25  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in: Remove AC_DEFINE of _GNU_SOURCE.
+	* acconfig.h (_GNU_SOURCE): Define if not already defined.
+	Put this code in @TOP@ section.
+	(_GNU_SOURCE): Remove #undef.
+
+1997-12-22  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in: AC_DEFINE _GNU_SOURCE.
+	* acconfig.h: Add _GNU_SOURCE.
+
 1997-12-21  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/date.c: s/__P/PARAMS/
