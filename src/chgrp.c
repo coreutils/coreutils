@@ -1,5 +1,5 @@
 /* chgrp -- change group ownership of files
-   Copyright (C) 89, 90, 91, 95, 96, 1997 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 95, 96, 97, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@
 
 #include "system.h"
 #include "xstrtoul.h"
+#include "closeout.h"
 #include "error.h"
 #include "savedir.h"
 #include "group-member.h"
@@ -55,6 +56,18 @@ enum Change_status
   CH_NO_CHANGE_REQUESTED
 };
 
+enum Verbosity
+{
+  /* Print a message for each file that is processed.  */
+  V_high,
+
+  /* Print a message for each file whose attributes we change.  */
+  V_changes_only,
+
+  /* Do not be verbose.  This is the default. */
+  V_off
+};
+
 static int change_dir_group PARAMS ((const char *dir, int group,
 				     const struct stat *statp));
 
@@ -71,11 +84,8 @@ static int recurse;
 /* If nonzero, force silence (no error messages). */
 static int force_silent;
 
-/* If nonzero, describe the files we process. */
-static int verbose;
-
-/* If nonzero, describe only owners or groups that change. */
-static int changes_only;
+/* Level of verbosity.  */
+static enum Verbosity verbosity = V_off;
 
 /* The name of the group to which ownership of the files is being given. */
 static const char *groupname;
@@ -188,7 +198,7 @@ change_file_group (const char *file, int group)
       else
 	fail = chown (file, (uid_t) -1, group);
 
-      if (verbose || (changes_only && !fail))
+      if (verbosity == V_high || (verbosity == V_changes_only && !fail))
 	describe_change (file, (fail ? CH_FAILED : CH_SUCCEEDED));
 
       if (fail)
@@ -215,7 +225,7 @@ change_file_group (const char *file, int group)
 	    }
 	}
     }
-  else if (verbose && changes_only == 0)
+  else if (verbosity == V_high)
     {
       describe_change (file, CH_NO_CHANGE_REQUESTED);
     }
@@ -305,6 +315,7 @@ Change the group membership of each FILE to GROUP.\n\
       --version          output version information and exit\n\
 "));
       puts (_("\nReport bugs to <fileutils-bugs@gnu.org>."));
+      close_stdout ();
     }
   exit (status);
 }
@@ -321,7 +332,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  recurse = force_silent = verbose = changes_only = 0;
+  recurse = force_silent = 0;
 
   while ((optc = getopt_long (argc, argv, "Rcfhv", long_options, NULL)) != -1)
     {
@@ -336,8 +347,7 @@ main (int argc, char **argv)
 	  recurse = 1;
 	  break;
 	case 'c':
-	  verbose = 1;
-	  changes_only = 1;
+	  verbosity = V_changes_only;
 	  break;
 	case 'f':
 	  force_silent = 1;
@@ -346,7 +356,7 @@ main (int argc, char **argv)
 	  change_symlinks = 1;
 	  break;
 	case 'v':
-	  verbose = 1;
+	  verbosity = V_high;
 	  break;
 	default:
 	  usage (1);
@@ -356,6 +366,7 @@ main (int argc, char **argv)
   if (show_version)
     {
       printf ("chgrp (%s) %s\n", GNU_PACKAGE, VERSION);
+      close_stdout ();
       exit (0);
     }
 
@@ -389,5 +400,7 @@ main (int argc, char **argv)
   for (; optind < argc; ++optind)
     errors |= change_file_group (argv[optind], group);
 
+  if (verbosity != V_off)
+    close_stdout ();
   exit (errors);
 }
