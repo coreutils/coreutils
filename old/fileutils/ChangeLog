@@ -1,9 +1,18 @@
+1998-10-31  Jim Meyering  <meyering@ascend.com>
+
+	* Version 4.0-b7.
+
+	* tests/rm/Makefile.am (TESTS): Add new test `empty-name',
+	but comment it out.
+	* tests/rm/empty-name: New file.
+	* acconfig.h (stat): New #undef.
+
 1998-10-25  Jim Meyering  <meyering@ascend.com>
+
+	* Version 4.0-b6.
 
 	* README: Man pages will now be supported to the extent that
 	people send patches.
-
-	* Version 4.0-b6.
 
 	* tests/rm/unreadable: Two new tests.
 	* tests/rm/Makefile.am (TESTS): Add new test `unreadable'.  But comment
