@@ -80,10 +80,9 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/getcwd-path-max.m4 $(top_srcdir)/m4/getcwd.m4 \
 	$(top_srcdir)/m4/getdate.m4 $(top_srcdir)/m4/getgroups.m4 \
 	$(top_srcdir)/m4/gethostname.m4 $(top_srcdir)/m4/getline.m4 \
-	$(top_srcdir)/m4/getloadavg.m4 $(top_srcdir)/m4/getndelim2.m4 \
-	$(top_srcdir)/m4/getopt.m4 $(top_srcdir)/m4/getpagesize.m4 \
-	$(top_srcdir)/m4/getpass.m4 $(top_srcdir)/m4/gettext.m4 \
-	$(top_srcdir)/m4/gettimeofday.m4 \
+	$(top_srcdir)/m4/getndelim2.m4 $(top_srcdir)/m4/getopt.m4 \
+	$(top_srcdir)/m4/getpagesize.m4 $(top_srcdir)/m4/getpass.m4 \
+	$(top_srcdir)/m4/gettext.m4 $(top_srcdir)/m4/gettimeofday.m4 \
 	$(top_srcdir)/m4/getugroups.m4 \
 	$(top_srcdir)/m4/getusershell.m4 $(top_srcdir)/m4/glibc21.m4 \
 	$(top_srcdir)/m4/group-member.m4 \
