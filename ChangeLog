@@ -8,8 +8,8 @@
 
 2003-01-20  Jim Meyering  <jim@meyering.net>
 
-	* tests/date/Test.pm (wide-fmt): New test to demonstrate that large
-	format widths no longer smash strftime's stack and cause infloop.
+	* tests/date/Test.pm (wide-fmt): New test to demonstrate that
+	large format widths no longer cause strftime to infloop.
 
 	* Makefile.maint (mail_gpg_sign_cookie): Remove now-unused definition.
 
