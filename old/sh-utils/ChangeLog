@@ -1,5 +1,8 @@
 Sat Dec  7 12:52:00 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/chroot.c (main): Call setlocale, bindtextdomain, and textdomain.
+	From Michel Robitaille.
+
 	* configure.in (ALL_LINGUAS): Add Portuguese (pt).
 
 	* lib/getloadavg.c [__SVR4]: Define SVR4.
