@@ -20,7 +20,7 @@ framework_failure=0
 mkdir -p $tmp || framework_failure=1
 cd $tmp || framework_failure=1
 
-mkdir dir dir/sub
+mkdir -p dir/sub
 ( cd dir && { echo non-empty > f1; ln f1 f2; echo non-empty > sub/F; } )
 
 if test $framework_failure = 1; then
