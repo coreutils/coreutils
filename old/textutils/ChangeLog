@@ -1,3 +1,9 @@
+1997-09-14  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/od.c (main) [--traditional]: Don't give diagnostic about there
+	being more than three arguments if there are *no* arguments specified.
+	Reported by Jochen Hein.
+
 1997-09-13  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* tests/sort-test/Test.pm: Add tests 19a and 19b.
