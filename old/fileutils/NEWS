@@ -1,5 +1,6 @@
 Changes in release 3.14:
 * chgrp no longer aborts when given a group number larger than INT_MAX
+* chgrp now fails when run by root with an unrecognized group name
 * when possible, cp -p preserves owner/group even on symlinks in case
   they're in a directory that has the sticky-bit set.
 * cp --recursive --parents SRC DEST works when SRC is an absolute file name.
