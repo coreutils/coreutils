@@ -776,6 +776,7 @@ my_strftime (CHAR_T *s, size_t maxsize, const CHAR_T *format,
 	      *u++ = modifier;
 	    *u++ = format_char;
 	    *u = '\0';
+	    ubuf[0] = '\1';
 	    len = strftime (ubuf, sizeof ubuf, ufmt, tp);
 	    if (len == 0 && ubuf[0] != '\0')
 	      return 0;
