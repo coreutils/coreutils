@@ -114,7 +114,7 @@ numerically or literally.  All these strings specify the same calendar date:
 
 @example
 1970-09-17           # ISO 8601.
-70-9-17              # This century assumed by default.
+70-9-17              # Assume 19xx for 69 through 99, 20xx for 00 through 68.
 70-09-17             # Leading zeros are ignored.
 9/17/72              # Common U.S. writing.
 24 September 1972
@@ -141,8 +141,9 @@ For numeric months, the ISO 8601 format
 @samp{@var{year}-@var{month}-@var{day}} is allowed, where @var{year} is
 any positive number, @var{month} is a number between 01 and 12, and
 @var{day} is a number between 01 and 31.  A leading zero must be present
-if a number is less than ten.  If @var{year} is less than 100, then 1900
-is added to it to force a date in this century.  The construct
+if a number is less than ten.  If @var{year} is 68 or smaller, then 2000
+is added to it; otherwise, if @var{year} is less than 100,
+then 1900 is added to it.  The construct
 @samp{@var{month}/@var{day}/@var{year}}, popular in the United States,
 is accepted.  Also @samp{@var{month}/@var{day}}, omitting the year.
 
