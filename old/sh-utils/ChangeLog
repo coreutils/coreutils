@@ -1,3 +1,9 @@
+2001-04-20  Jim Meyering  <meyering@lucent.com>
+
+	* doc/sh-utils.texi (false invocation): Describe how --help and
+	--version are treated with and without POSIXLY_CORRECT.
+	(true invocation): Likewise.  Forwarded by Michael Stone.
+
 2001-03-18  Jim Meyering  <meyering@lucent.com>
 
 	* tests/Fetish.pm: If the $DJDIR envvar is defined, set SHELL
