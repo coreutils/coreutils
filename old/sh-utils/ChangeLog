@@ -1,3 +1,10 @@
+Sat Apr 13 13:24:35 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* date.c (usage): Add missing `\n\' at the end of newly added
+	lines for %e and %z.
+
+	* who-users.c (print_uptime): Call getloadavg only if we have it.
+
 Fri Apr 12 22:03:13 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* configure.in (LINGUAS): Add de.
