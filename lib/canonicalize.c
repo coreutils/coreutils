@@ -1,5 +1,5 @@
 /* Return the canonical absolute name of a given file.
-   Copyright (C) 1996-2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2002, 2003, 2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -260,7 +260,7 @@ canonicalize_file_name (const char *name)
 		}
 #  endif /* MAXSYMLINKS */
 
-	      buf = xreadlink (rpath);
+	      buf = xreadlink (rpath, st.st_size);
 	      if (!buf)
 		goto error;
 
