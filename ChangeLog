@@ -2,6 +2,11 @@
 
 	* Version 4.5.10.
 
+	* tests/Makefile.am (evar-check): Check for POSIXLY_CORRECT not as a
+	shell variable, but only in the environment.  With /bin/sh->bash, the
+	shell variable is set to `y', and that would cause a spurious warning.
+	Reported by Bob Proulx.
+
 	* tests/Makefile.am (check-root): Remove touch/fifo.
 	It doesn't appear to have to be run as root.
 
