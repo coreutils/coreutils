@@ -1,6 +1,13 @@
-2003-03-19  Jim Meyering  <jim@meyering.net>
+2003-03-20  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.11.
+
+	* src/Makefile.am (all-local): Append $(EXEEXT) to use of `su'
+	(install-root): Likewise.
+	(install-exec-local): Likewise.
+	Based on a patch from Richard Dawe.
+
+2003-03-19  Jim Meyering  <jim@meyering.net>
 
 	* man/Makefile.am (.x.1): Use $(LN_S) instead of 'ln -s',
 	because the DJGPP 2.03 port of 'ln -s' doesn't work.
