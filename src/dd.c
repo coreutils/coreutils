@@ -864,7 +864,12 @@ dd_copy (void)
      page boundary to cover all bases.  Note that due to the swab
      algorithm, we must have at least one byte in the page before
      the input buffer;  thus we allocate 2 pages of slop in the
-     real buffer.  8k above the blocksize shouldn't bother anyone.  */
+     real buffer.  8k above the blocksize shouldn't bother anyone.
+
+     The page alignment is necessary on any linux system that supports
+     either the SGI raw I/O patch or Steven Tweedies raw I/O patch.
+     It is necessary when accessing raw (i.e. character special) disk
+     devices on Unixware or other SVR4-derived system.  */
 
   real_buf = (unsigned char *) xmalloc (input_blocksize
 					+ 2 * SWAB_ALIGN_OFFSET
