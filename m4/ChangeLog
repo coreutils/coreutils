@@ -1,3 +1,16 @@
+2001-06-20  Paul Eggert  <eggert@twinsun.com>
+
+	* inttypes.m4: Add AC_PREREQ(2.13).
+	(jm_AC_HEADER_INTTYPES_H): Test for intmax_t, too.
+	(jm_AC_TYPE_INTMAX_T): New macro.
+	(jm_AC_TYPE_UINTMAX_T): Moved here from uintmax_t.m4.
+
+	* longlong.m4 (jm_AC_TYPE_LONG_LONG): New macro.
+
+	* longlong.m4: Renamed from ulonglong.m4.
+	* inttypes.m4: Renamed from inttypes_h.m4.
+	* uintmax_t.m4: Removed.
+
 2001-08-12  Jim Meyering  <meyering@lucent.com>
 
 	* afs.m4, assert.m4, bison.m4, check-decl.m4, chown.m4, d-ino.m4,
@@ -123,7 +136,7 @@
 
 2001-05-11  Paul Eggert  <eggert@twinsun.com>
 
-	* m4/strftime.m4 (jm_FUNC_GNU_STRFTIME):
+	* strftime.m4 (jm_FUNC_GNU_STRFTIME):
 	Don't bother to check library strftime, since
 	we'll be using our own my_strftime function anyway.
 	Define my_strftime instead of strftime.
