@@ -1,3 +1,14 @@
+2003-01-10  Jim Meyering  <jim@meyering.net>
+
+	* save-cwd.h: Remove uses of PARAMS.
+
+2002-11-30  Dmitry V. Levin  <ldv@altlinux.org>
+
+	* xgetcwd.h: New file.
+	* Makefile.am (libfetish_a_SOURCES): Add xgetcwd.h.
+	* save-cwd.c: Include "xgetcwd.h".
+	* xgetcwd.c: Likewise.
+
 2002-11-30  Dmitry V. Levin  <ldv@altlinux.org>
 
 	* getgroups.c: Don't declare functions declared by xalloc.h.
