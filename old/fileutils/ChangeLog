@@ -1,3 +1,8 @@
+1999-03-18  Jim Meyering  <meyering@ascend.com>
+
+	* src/remove.c (remove_cwd_entries): Reflect changes in hash_insert.
+	(remove_init): Call hash_initialize with one more argument.
+
 1999-03-15  Jim Meyering  <meyering@ascend.com>
 
 	Revamp to allow fine-tuning to control when and by how
