@@ -1,6 +1,11 @@
 #!/bin/sh
 
 # This is a bit of a torture test for mkdir -p, too.
+# GNU rm performs *much* better on systems that have a d_type member
+# in the directory structure because then it does only one stat per
+# command line argument.
+
+# If this test takes too long on your system, blame the OS.
 
 : ${RM=rm}
 : ${MKDIR=mkdir}
