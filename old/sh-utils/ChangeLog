@@ -1,6 +1,10 @@
-2001-09-11  Jim Meyering  <meyering@lucent.com>
+2001-09-16  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.12.
+
+	* man/Makefile.am: Revamp this file, as for fileutils.
+
+2001-09-11  Jim Meyering  <meyering@lucent.com>
 
 	* configure.in: Move HOST_OPERATING_SYSTEM code from this file
 	into a new macro defined in m4/host-os.m4.
