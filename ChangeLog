@@ -1,6 +1,12 @@
-2004-03-06  Jim Meyering  <jim@meyering.net>
+2004-03-10  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.2.1.
+
+	`join -1 x' would give a misleading diagnostic
+	* src/join.c (string_to_join_field): Report that a non-numeric field
+	number is invalid, rather than `so large that it is not representable'.
+
+2004-03-06  Jim Meyering  <jim@meyering.net>
 
 	cp --sparse=always sparse-image-file.img /dev/hda1 could
 	produce an invalid copy on the destination device.
