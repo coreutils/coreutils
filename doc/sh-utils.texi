@@ -3201,12 +3201,13 @@ options}.
 
 The algorithm it uses is not very sophisticated, so for some inputs
 @code{factor} runs for a long time.  The hardest numbers to factor are
-the products of large primes.  Factoring the square of the largest 32-bit
-prime number takes over 10 minutes of CPU time on a 400MHz Pentium II.
+the products of large primes.  Factoring the product of the two largest 32-bit
+prime numbers takes over 10 minutes of CPU time on a 400MHz Pentium II.
 
 @example
-$ factor `echo '4294967291^2'|bc`
-18446744030759878681: 4294967291 4294967291
+$ p=`echo '4294967279 4294967291*p'|dc`
+$ factor $p
+18446743979220271189: 4294967279 4294967291
 @end example
 
 In contrast, @code{factor} factors the largest 64-bit number in just
