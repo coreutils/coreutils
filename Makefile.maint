@@ -19,6 +19,8 @@
 ## Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 ## 02111-1307, USA.
 
+ME := $(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST))
+
 # Do not save the original name or timestamp in the .tar.gz file.
 GZIP_ENV = '--no-name --best'
 
@@ -57,29 +59,16 @@ local-check = \
 # Make sure C source files in src/ don't include xalloc.h directly,
 # since they all already include it via sys2.h.
 # It's not a big deal -- just aesthetics.
-syntax-check:
-	if test -f $(srcdir)/src/sys2.h; then				\
-	  if grep 'xalloc\.h' $(srcdir)/src/*.c; then			\
-	    exit 1;							\
-	  fi;								\
-	fi
-	@grep -E '[ ]	' --exclude=$(srcdir)/lib/regex.c		\
-		$(srcdir)/{lib,src}/*.[chly]				\
-		$(find -name Makefile.am) &&				\
-	  { echo '$(ME): found SPACE-TAB sequence; remove the SPACE'	\
-		1>&2; \
-	    exit 1; } || :
-	@grep -E '\<free \(\(' $(srcdir)/{lib,src}/*.[chly] &&		\
-	  { echo '$(ME): don'\''t cast free argument' 1>&2;		\
-	    exit 1; } || :
-	@grep -E --exclude=$(srcdir)/lib/regex.c			\
-	    '\*\) *x(m|c|re)alloc\>' $(srcdir)/{lib,src}/*.[chy] &&	\
-	  { echo '$(ME): don'\''t cast x*alloc return value' 1>&2;	\
-	    exit 1; } || :
-	@grep -F 'error (EXIT_SUCCESS,'					\
-	    $$(find -type f -name '*.[chly]') &&			\
-	  { echo '$(ME): found error (EXIT_SUCCESS' 1>&2;		\
-	    exit 1; } || :
+.PHONY: $(syntax-check-rules)
+syntax-check-rules = \
+  sc_unmarked_diagnostics \
+  sc_cast_of_argument_to_free \
+  sc_cast_of_x_alloc_return_value \
+  sc_space_tab \
+  sc_error_exit_success \
+  sc_xalloc_h_in_src
+
+syntax-check: $(syntax-check-rules)
 #	@grep -E '#  *include <(limits|std(def|arg|bool))\.h>'		\
 #	    $$(find -type f -name '*.[chly]') &&			\
 #	  { echo '$(ME): found conditional include' 1>&2;		\
@@ -90,6 +79,51 @@ syntax-check:
 #	  { echo '$(ME): FIXME' 1>&2;					\
 #	    exit 1; } || :
 # FIXME: don't allow `#include .strings\.h' anywhere
+
+# Look for diagnostics that aren't marked for translation.
+# This won't find any for which error's format string is on a separate line.
+sc_unmarked_diagnostics:
+	@grep --exclude=$(srcdir)/src/shred.c -E			\
+	    '\<error \([^"]*"[^"]*[a-z]{3}' $(srcdir)/{lib,src}/*.c	\
+	  | grep -v '_(' &&						\
+	  { echo '$(ME): found unmarked diagnostic(s)' 1>&2;		\
+	    exit 1; } || :
+
+sc_cast_of_argument_to_free:
+	@grep -E '\<free \(\(' $(srcdir)/{lib,src}/*.[chly] &&		\
+	  { echo '$(ME): don'\''t cast free argument' 1>&2;		\
+	    exit 1; } || :
+
+sc_cast_of_x_alloc_return_value:
+	@grep -E --exclude=$(srcdir)/lib/regex.c			\
+	    '\*\) *x(m|c|re)alloc\>' $(srcdir)/{lib,src}/*.[chy] &&	\
+	  { echo '$(ME): don'\''t cast x*alloc return value' 1>&2;	\
+	    exit 1; } || :
+
+sc_space_tab:
+	@grep -E '[ ]	' --exclude=$(srcdir)/lib/regex.c		\
+		$(srcdir)/{lib,src}/*.[chly]				\
+		$(find -name Makefile.am) &&				\
+	  { echo '$(ME): found SPACE-TAB sequence; remove the SPACE'	\
+		1>&2; \
+	    exit 1; } || :
+
+# Using EXIT_SUCCESS as the first argument to error is misleading,
+# since when that parameter is 0, error does not exit.  Use `0' instead.
+sc_error_exit_success:
+	@grep -F 'error (EXIT_SUCCESS,'					\
+	    $$(find -type f -name '*.[chly]') &&			\
+	  { echo '$(ME): found error (EXIT_SUCCESS' 1>&2;		\
+	    exit 1; } || :
+
+# xalloc.h is included via system.h, so should not be included
+# directly by any file in src/.
+sc_xalloc_h_in_src:
+	@if test -f $(srcdir)/src/sys2.h; then				\
+	  if grep 'xalloc\.h' $(srcdir)/src/*.c; then			\
+	    exit 1;							\
+	  fi;								\
+	fi
 
 # Ensure that date's --help output stays in sync with the info
 # documentation for GNU strftime.  The only exception is %N,
