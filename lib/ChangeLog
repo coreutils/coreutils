@@ -1,3 +1,11 @@
+2000-07-10  Paul Eggert  <eggert@twinsun.com>
+
+	From a suggestion by Bruno Haible.
+	* quotearg.c (mbrtowc): Do not use HAVE_WCHAR_H in the definition.
+	Use defined mbstate_t, not HAVE_MBSTATE_T_OBJECT,
+	to decide whether to define the BeOS workaround macro;
+	this adjusts to the change to AC_MBSTATE_T.
+
 2000-07-13  Paul Eggert  <eggert@twinsun.com>
 
 	* quotearg.h (enum quoting style): New enum clocale_quoting_style.
