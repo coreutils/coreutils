@@ -1,5 +1,8 @@
 2000-09-04  Jim Meyering  <meyering@lucent.com>
 
+	* tests/mv/force: mv's --force (-f) option is no longer needed for
+	this test, now that all it does is cancel --interactive (-i).
+
 	* tests/cp/same-file: Add new tests using cp's --rem option.
 	Reflect the fact that cp's -f option no longer causes cp to remove the
 	destination file before trying to open it.
