@@ -1,5 +1,11 @@
 1999-03-06  Jim Meyering  <meyering@ascend.com>
 
+	* src/cut.c (getstr): Change type of `delim' parameter from char to int.
+	(cut_fields): Cast to `unsigned char' before comparing.
+	(main): Cast to `unsigned char' before assigning.
+	From Arne Juul.
+	* tests/cut/Test.pm: Add a test to exercise the bug.
+
 	* src/ptx.c (swallow_file_in_memory): Use a `%s' format in error call,
 	in case the argument string contains a `%'.
 	(main): Likewise.
