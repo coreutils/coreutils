@@ -1,5 +1,10 @@
 1999-01-24  Jim Meyering  <meyering@ascend.com>
 
+	* lib/quotearg.c (quotearg_n_options): Revert type of parameter `n'
+	(and hence that of the local `n1', too) to `int' at Paul's request.
+
+	* lib/closeout.c: Add comments.
+
 	* src/shred.c (fdatasync): Remove function.  instead, ...
 	(fdatasync) [! HAVE_FDATASYNC]: Define to fsync.
 	From Colin Plumb.
