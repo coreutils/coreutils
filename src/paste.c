@@ -294,7 +294,7 @@ paste_parallel (int nfiles, char **fnamptr)
 	      /* Except for last file, replace last newline with delim. */
 	      if (fileptr[i + 1] != ENDLIST)
 		{
-		  if (chr != '\n')
+		  if (chr != '\n' && chr != EOF)
 		    putc (chr, stdout);
 		  if (*delimptr != EMPTY_DELIM)
 		    putc (*delimptr, stdout);
@@ -302,7 +302,12 @@ paste_parallel (int nfiles, char **fnamptr)
 		    delimptr = delims;
 		}
 	      else
-		putc (chr, stdout);
+		{
+		  /* If the last line of the last file lacks a newline,
+		     print one anyhow.  POSIX requires this.  */
+		  char c = (chr == EOF ? '\n' : chr);
+		  putc (c, stdout);
+		}
 	    }
 	}
     }
