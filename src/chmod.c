@@ -339,9 +339,10 @@ int
 main (int argc, char **argv)
 {
   struct mode_change *changes;
+  char *mode = NULL;
+  size_t mode_len = 0;
+  size_t mode_alloc = 0;
   bool ok;
-  int modeind = 0;		/* Index of the mode argument in `argv'. */
-  int thisind;
   bool preserve_root = false;
   int c;
 
@@ -355,14 +356,11 @@ main (int argc, char **argv)
 
   recurse = force_silent = false;
 
-  while (1)
+  while ((c = getopt_long (argc, argv,
+			   "Rcfvr::w::x::X::s::t::u::g::o::a::,::+::-::=::",
+			   long_options, NULL))
+	 != -1)
     {
-      thisind = optind ? optind : 1;
-
-      c = getopt_long (argc, argv, "RcfvrwxXstugoa,+-=", long_options, NULL);
-      if (c == -1)
-	break;
-
       switch (c)
 	{
 	case 'r':
@@ -379,15 +377,25 @@ main (int argc, char **argv)
 	case '+':
 	case '-':
 	case '=':
-	  if (modeind != 0 && modeind != thisind)
-	    {
-	      static char char_string[2] = {0, 0};
-	      char_string[0] = c;
-	      error (EXIT_FAILURE, 0,
-		     _("invalid character %s in mode string %s"),
-		     quote_n (0, char_string), quote_n (1, argv[thisind]));
-	    }
-	  modeind = thisind;
+	  {
+	    /* Allocate a mode string (e.g., "-rwx") by concatenating
+	       the argument containing this option.  If a previous mode
+	       string was given, concatenate the previous string, a
+	       comma, and the new string (e.g., "-s,-rwx").  */
+
+	    char const *arg = argv[optind - 1];
+	    size_t arg_len = strlen (arg);
+	    size_t mode_comma_len = mode_len + !!mode_len;
+	    size_t new_mode_len = mode_comma_len + arg_len;
+	    if (mode_alloc <= new_mode_len)
+	      {
+		mode_alloc = new_mode_len + 1;
+		mode = x2realloc (mode, &mode_alloc);
+	      }
+	    mode[mode_len] = ',';
+	    strcpy (mode + mode_comma_len, arg);
+	    mode_len = new_mode_len;
+	  }
 	  break;
 	case NO_PRESERVE_ROOT:
 	  preserve_root = false;
@@ -417,12 +425,21 @@ main (int argc, char **argv)
 	}
     }
 
-  if (modeind == 0 && reference_file == NULL)
-    modeind = optind++;
+  if (reference_file)
+    {
+      if (mode)
+	error (EXIT_FAILURE, 0,
+	       _("cannot combine mode and --reference options"));
+    }
+  else
+    {
+      if (!mode)
+	mode = argv[optind++];
+    }
 
   if (optind >= argc)
     {
-      if (modeind == 0 || modeind != argc - 1)
+      if (!mode || mode != argv[optind - 1])
 	error (0, 0, _("missing operand"));
       else
 	error (0, 0, _("missing operand after %s"), quote (argv[argc - 1]));
@@ -430,11 +447,10 @@ main (int argc, char **argv)
     }
 
   changes = (reference_file ? mode_create_from_ref (reference_file)
-	     : mode_compile (argv[modeind], MODE_MASK_ALL));
+	     : mode_compile (mode, MODE_MASK_ALL));
 
   if (changes == MODE_INVALID)
-    error (EXIT_FAILURE, 0,
-	   _("invalid mode string: %s"), quote (argv[modeind]));
+    error (EXIT_FAILURE, 0, _("invalid mode: %s"), quote (mode));
   else if (changes == MODE_MEMORY_EXHAUSTED)
     xalloc_die ();
   else if (changes == MODE_BAD_REFERENCE)
