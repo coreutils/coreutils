@@ -4,6 +4,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  For some types of errors (e.g., read-only file system, I/O error)
+  when first encountering a directory, `rm -r' would mistakenly fail
+  to remove files under that directory.
+
   ptx now diagnoses invalid values for its --width=N (-w)
   and --gap-size=N (-g) options.
 
