@@ -304,8 +304,10 @@ Copy a file, converting and formatting according to the options.\n\
       --help      display this help and exit\n\
       --version   output version information and exit\n\
 \n\
-BYTES may be suffixed: by xM for multiplication by M, by c for x1,\n\
-by w for x2, by b for x512, by k for x1024.  Each KEYWORD may be:\n\
+BYTES may be followed by the following multiplicative suffixes:\n\
+xM M, c 1, w 2, b 512, kD 1000, k 1024, MD 1,000,000, M 1,048,576,\n\
+GD 1,000,000,000, G 1,073,741,824, and so on for T, P, E, Z, Y.\n\
+Each KEYWORD may be:\n\
 \n\
   ascii     from EBCDIC to ASCII\n\
   ebcdic    from ASCII to EBCDIC\n\
@@ -352,15 +354,15 @@ print_stats (void)
 {
   char buf[2][LONGEST_HUMAN_READABLE + 1];
   fprintf (stderr, _("%s+%s records in\n"),
-	   human_readable (r_full, buf[0], 1, 1, 0),
-	   human_readable (r_partial, buf[1], 1, 1, 0));
+	   human_readable (r_full, buf[0], 1, 1),
+	   human_readable (r_partial, buf[1], 1, 1));
   fprintf (stderr, _("%s+%s records out\n"),
-	   human_readable (w_full, buf[0], 1, 1, 0),
-	   human_readable (w_partial, buf[1], 1, 1, 0));
+	   human_readable (w_full, buf[0], 1, 1),
+	   human_readable (w_partial, buf[1], 1, 1));
   if (r_truncate > 0)
     {
       fprintf (stderr, "%s %s\n",
-	       human_readable (r_truncate, buf[0], 1, 1, 0),
+	       human_readable (r_truncate, buf[0], 1, 1),
 	       (r_truncate == 1
 		? _("truncated record")
 		: _("truncated records")));
@@ -503,6 +505,12 @@ parse_integer (char *str, int *invalid)
   for (;;)
     {
       uintmax_t multiplier;
+      int power = 0;
+
+#ifdef lint
+      /* Suppress `used before initialized' warning.  */
+      multiplier = 0;
+#endif
 
       switch (*p++)
 	{
@@ -513,8 +521,23 @@ parse_integer (char *str, int *invalid)
 	  break;
 	case 'c':
 	  continue;
-	case 'k':
-	  multiplier = 1024;
+	case 'E': /* Exa */
+	  power = 6;
+	  break;
+	case 'G': /* Giga */
+	  power = 3;
+	  break;
+	case 'k': /* kilo */
+	  power = 1;
+	  break;
+	case 'M': /* Mega */
+	  power = 2;
+	  break;
+	case 'P': /* Peta */
+	  power = 5;
+	  break;
+	case 'T': /* Tera */
+	  power = 4;
 	  break;
 	case 'w':
 	  multiplier = 2;
@@ -523,11 +546,35 @@ parse_integer (char *str, int *invalid)
 	  multiplier = parse_integer (p, invalid);
 	  p = "";
 	  break;
+	case 'Y': /* Yotta */
+	  power = 8;
+	  break;
+	case 'Z': /* Zetta */
+	  power = 7;
+	  break;
 	default:
 	  {
 	    *invalid = 1;
 	    return 0;
 	  }
+	}
+
+      if (power)
+	{
+	  int base = 1024;
+
+	  switch (*p)
+	    {
+	    case 'B': p++; break;
+	    case 'D': p++; base = 1000; break;
+	    }
+
+	  for (multiplier = base;  --power;  multiplier *= base)
+	    if (multiplier * base / base != multiplier)
+	      {
+		*invalid = 1;
+		return 0;
+	      }
 	}
 
       if (multiplier != 0 && n * multiplier / multiplier != n)
