@@ -1070,7 +1070,7 @@ tail_bytes (const char *pretty_filename, int fd, off_t n_bytes)
       if (S_ISREG (stats.st_mode))
 	{
 	  off_t current_pos, end_pos;
-	  size_t bytes_remaining;
+	  off_t bytes_remaining;
 
 	  if ((current_pos = lseek (fd, (off_t) 0, SEEK_CUR)) != -1
 	      && (end_pos = lseek (fd, (off_t) 0, SEEK_END)) != -1)
