@@ -63,6 +63,13 @@ AC_DEFUN(jm_MACROS,
   dnl ...: warning: AC_TRY_RUN called without default to allow cross compiling
   AC_FUNC_SETVBUF_REVERSED
 
+  # used by sleep and shred
+  # Solaris 2.5.1 needs -lposix4 to get the clock_gettime function.
+  # Solaris 7 prefers the library name -lrt to the obsolescent name -lposix4.
+  AC_SEARCH_LIBS(clock_gettime, [rt posix4])
+  AC_CHECK_FUNCS(clock_gettime)
+  AC_CHECK_FUNCS(gettimeofday)
+
   AM_FUNC_GETLINE
   if test $am_cv_func_working_getline != yes; then
     AC_CHECK_FUNCS(getdelim)
