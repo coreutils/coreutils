@@ -45,10 +45,7 @@ struct group *getgrent ();
    the current process. */
 
 int
-getugroups (maxcount, grouplist, username)
-     int maxcount;
-     GETGROUPS_T *grouplist;
-     char *username;
+getugroups (int maxcount, GETGROUPS_T *grouplist, char *username)
 {
   struct group *grp;
   register char **cp;
