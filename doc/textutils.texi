@@ -103,7 +103,7 @@ by the Foundation.
 @end titlepage
 
 
-@ifinfo
+@ifnottex
 @node Top
 @top GNU text utilities
 
@@ -203,7 +203,7 @@ Opening the software toolbox
 @end detailmenu
 @end menu
 
-@end ifinfo
+@end ifnottex
 
 
 @node Introduction
