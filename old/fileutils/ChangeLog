@@ -1,3 +1,7 @@
+1999-07-28  Jim Meyering  <meyering@ascend.com>
+
+	* configure.in (ALL_LINGUAS): Add Brazilian Portuguese (pt_BR).
+
 1999-07-24  Jim Meyering  <meyering@ascend.com>
 
 	* src/dd.c (PTR_ALIGN, ROUND_UP_OFFSET): New macros.
