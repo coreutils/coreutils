@@ -1,7 +1,8 @@
 2003-09-19  Jim Meyering  <jim@meyering.net>
 
-	* version-etc.c: (version_etc): Rename parameter, authors,
+	* version-etc.h: (version_etc): Rename parameter, authors,
 	to written_by.
+	* version-etc.c: (version_etc): Likewise.
 	Combine fprintf and following putc('\n'.
 
 	* version-etc.c, version-etc.h: Revert yesterday's changes.
