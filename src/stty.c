@@ -232,6 +232,9 @@ static struct mode_info mode_info[] =
 #ifdef IMAXBEL
   {"imaxbel", input, SANE_SET | REV, IMAXBEL, 0},
 #endif
+#ifdef IUTF8
+  {"iutf8", input, SANE_UNSET | REV, IUTF8, 0},
+#endif
 
   {"opost", output, SANE_SET | REV, OPOST, 0},
 #ifdef OLCUC
@@ -581,6 +584,9 @@ Input settings:\n\
    [-]istrip     clear high (8th) bit of input characters\n\
 "), stdout);
       fputs (_("\
+ * [-]iutf8      assume input characters are UTF-8 encoded\n\
+"), stdout);
+      fputs (_("\
  * [-]iuclc      translate uppercase characters to lowercase\n\
  * [-]ixany      let any character restart output, not only start character\n\
    [-]ixoff      enable sending of start/stop characters\n\
@@ -682,7 +688,7 @@ Combination settings:\n\
    -raw          same as cooked\n\
 "), stdout);
       fputs (_("\
-   sane          same as cread -ignbrk brkint -inlcr -igncr icrnl\n\
+   sane          same as cread -ignbrk brkint -inlcr -igncr icrnl -iutf8\n\
                  -ixoff -iuclc -ixany imaxbel opost -olcuc -ocrnl onlcr\n\
                  -onocr -onlret -ofill -ofdel nl0 cr0 tab0 bs0 vt0 ff0\n\
                  isig icanon iexten echo echoe echok -echonl -noflsh\n\
