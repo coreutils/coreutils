@@ -1,6 +1,8 @@
 #!/bin/sh
 # Make sure we give a sensible diagnostic when a cross-device `mv'
 # fails, e.g., because the destination cannot be unlinked.
+# This is a bit fragile since it relies on the string used
+# for EPERM: `permission denied'.
 
 if test "$VERBOSE" = yes; then
   set -x
