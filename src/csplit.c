@@ -1037,6 +1037,7 @@ close_output_file ()
       if (fclose (output_stream) == EOF)
 	{
 	  error (0, errno, _("write error for `%s'"), output_filename);
+	  output_stream = NULL;
 	  cleanup ();
 	}
       if (bytes_written == 0 && elide_empty_files)
