@@ -1,5 +1,7 @@
 2004-01-17  Jim Meyering  <jim@meyering.net>
 
+	* announce-gen (print_changelog_deltas): Use .sig suffix, not .asc.
+
 	* Version 5.1.1.
 
 2003-12-15  Paul Eggert  <eggert@twinsun.com>
