@@ -1,3 +1,11 @@
+Wed Jun 11 15:13:56 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/expr.c (docolon): Test (re_buffer.re_nsub > 0) rather than
+	searching for `\(' to determine whether to return 0 or the empty
+	string.  Before it would improperly return '' if the pattern
+	contained a substring like this: `\\('.  From Karl Heuer.
+	For example, running expr c : '\\(' should print `0'.
+
 Sun Jun  1 12:00:10 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/getdate.y (OtherTable): Interpret `next' as 1 (not 2) units.
