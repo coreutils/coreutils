@@ -1,11 +1,9 @@
 #! /bin/sh
 # Make sure stty can parse most of its options.
 
-: ${STTY=stty}
-
 if test "$VERBOSE" = yes; then
   set -x
-  $RM --version
+  stty --version
 fi
 
 # The following list of reversible options was generated with
@@ -23,20 +21,20 @@ REV_oddp=1 REV_nl=1 REV_cooked=1 REV_raw=1 REV_pass8=1 REV_litout=1
 REV_cbreak=1 REV_decctlq=1 REV_tabs=1 REV_lcase=1 REV_LCASE=1
 
 saved_state=.saved-state
-$STTY --save > $saved_state || exit 1
-trap "status=$?; $STTY `cat $saved_state`; rm -f $saved_state; exit $status" \
+stty --save > $saved_state || exit 1
+trap "status=$?; stty `cat $saved_state`; rm -f $saved_state; exit $status" \
   0 1 2 3 15
-$STTY `cat $saved_state` || exit 1
+stty `cat $saved_state` || exit 1
 
 # Build a list of all boolean options stty accepts on this system.
 options=`stty -a|tail +2|tr ';' '\012'|sed '/ = /d;s/^ //'|tr -s ' -' '\012'`
 
 # Take them one at a time, with and without the leading `-'.
 for opt in $options; do
-  $STTY $opt || exit 1
+  stty $opt || exit 1
   rev=`eval echo "\\\$REV_$opt"`
   if test -n "$rev"; then
-    $STTY -$opt || exit 1
+    stty -$opt || exit 1
   fi
 done
 
@@ -46,18 +44,18 @@ if test -n "$RUN_LONG_TESTS"; then
     echo .|tr -d '\012'
     for opt2 in $options; do
 
-      $STTY $opt1 $opt2 || exit 1
+      stty $opt1 $opt2 || exit 1
 
       rev1=`eval echo "\\\$REV_$opt1"`
       rev2=`eval echo "\\\$REV_$opt2"`
       if test -n "$rev1"; then
-	$STTY -$opt1 $opt2 || exit 1
+	stty -$opt1 $opt2 || exit 1
       fi
       if test -n "$rev2"; then
-	$STTY $opt1 -$opt2 || exit 1
+	stty $opt1 -$opt2 || exit 1
       fi
       if test "$rev1$rev2" = 11; then
-	$STTY -$opt1 -$opt2 || exit 1
+	stty -$opt1 -$opt2 || exit 1
       fi
     done
   done
