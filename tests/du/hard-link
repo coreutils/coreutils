@@ -1,6 +1,7 @@
 #!/bin/sh
 # Ensure that hard-linked files are counted (and listed) only once.
 # Likewise for excluded directories.
+# Ensure that hard links _are_ listed twice when using --count-links.
 
 if test "$VERBOSE" = yes; then
   set -x
@@ -30,8 +31,15 @@ fi
 fail=0
 
 du -a --exclude=sub dir | sed 's/^[0-9][0-9]*	//' > out || fail=1
+echo === >> out
+du  --count-links -a --exclude=sub dir | sed 's/^[0-9][0-9]*	//' >> out \
+  || fail=1
 cat <<\EOF > exp
 dir/f1
+dir
+===
+dir/f1
+dir/f2
 dir
 EOF
 
