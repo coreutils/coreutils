@@ -1,6 +1,6 @@
-/* Copyright (C) 1989, 1997, 1998 Aladdin Enterprises.  All rights reserved. */
+/* Copyright (C) 1989, 1997, 1998, 1999 Aladdin Enterprises.  All rights reserved. */
 
-/*$Id: ansi2knr.c,v 1.10 1999/01/25 00:34:26 meyering Exp $*/
+/*$Id: ansi2knr.c,v 1.11 1999/01/25 05:50:56 meyering Exp $*/
 /* Convert ANSI C function definitions to K&R ("traditional C") syntax */
 
 /*
@@ -51,13 +51,15 @@ program under the GPL.
  * The following constructs will confuse it:
  *	- Any other construct that starts at the left margin and
  *	    follows the above syntax (such as a macro or function call).
- *	- Some macros that tinker with the syntax of the function header.
+ *	- Some macros that tinker with the syntax of function headers.
  */
 
 /*
  * The original and principal author of ansi2knr is L. Peter Deutsch
  * <ghost@aladdin.com>.  Other authors are noted in the change history
  * that follows (in reverse chronological order):
+	lpd 1999-01-24 added a check for write errors on the output,
+		suggested by Jim Meyering <meyering@ascend.com>
 	lpd 1998-11-09 added further hack to recognize identifier(void)
 		as being a procedure
 	lpd 1998-10-23 added hack to recognize lines consisting of
@@ -191,6 +193,7 @@ main(argc, argv)
 	FILE *out = stdout;
 	char *filename = 0;
 	char *program_name = argv[0];
+	char *output_name = 0;
 #define bufsize 5000			/* arbitrary size */
 	char *buf;
 	char *line;
@@ -206,6 +209,7 @@ main(argc, argv)
 	 * check for this switch for backward compatibility.
 	 */
 	int convert_varargs = 1;
+	int output_error;
 
 	while ( argc > 1 && argv[1][0] == '-' ) {
 	  if ( !strcmp(argv[1], "--varargs") ) {
@@ -220,7 +224,8 @@ main(argc, argv)
 	    argv += 2;
 	    continue;
 	  }
-	  fprintf(stderr, "Unrecognized switch: %s\n", argv[1]);
+	  fprintf(stderr, "%s: Unrecognized switch: %s\n", program_name,
+		  argv[1]);
 	  fprintf(stderr, usage);
 	  exit(1);
 	}
@@ -230,16 +235,19 @@ main(argc, argv)
 		fprintf(stderr, usage);
 		exit(0);
 	case 3:
-		out = fopen(argv[2], "w");
+		output_name = argv[2];
+		out = fopen(output_name, "w");
 		if ( out == NULL ) {
-		  fprintf(stderr, "Cannot open output file %s\n", argv[2]);
+		  fprintf(stderr, "%s: Cannot open output file %s\n",
+			  program_name, output_name);
 		  exit(1);
 		}
 		/* falls through */
 	case 2:
 		in = fopen(argv[1], "r");
 		if ( in == NULL ) {
-		  fprintf(stderr, "Cannot open input file %s\n", argv[1]);
+		  fprintf(stderr, "%s: Cannot open input file %s\n",
+			  program_name, argv[1]);
 		  exit(1);
 		}
 		if ( filename == 0 )
@@ -301,13 +309,18 @@ wl:			fputs(buf, out);
 	if ( line != buf )
 	  fputs(buf, out);
 	free(buf);
-
-	if (ferror (out) || fclose (out) != 0)
-	  {
-	    fprintf (stderr, "%s: write error\n", program_name);
-	    exit (1);
-	  }
-
+	if ( output_name ) {
+	  output_error = ferror(out);
+	  output_error |= fclose(out);
+	} else {		/* out == stdout */
+	  fflush(out);
+	  output_error = ferror(out);
+	}
+	if ( output_error ) {
+	  fprintf(stderr, "%s: error writing to %s\n", program_name,
+		  (output_name ? output_name : "stdout"));
+	  exit(1);
+	}
 	if ( in != stdin )
 	  fclose(in);
 	return 0;
