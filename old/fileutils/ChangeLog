@@ -1,3 +1,17 @@
+1999-07-15  Jim Meyering  <meyering@ascend.com>
+
+	* src/dd.c: Include getpagesize.h.
+	(ROUND_UP_TO_MODULUS): Define.
+	(dd_copy): Page-align the input buffer.
+	Based on a patch from Scott Lurndal.
+
+	* getpagesize.h: New file.
+	* lib/Makefile.am (noinst_HEADERS): Add getpagesize.h.
+
+	* lib/fsusage.c (get_fs_usage) [STATFS_TRUNCATES_BLOCK_COUNTS]:
+	Work around SunOS botch also when block size is different from 1k.
+	From Jürgen Fluk.
+
 1999-07-10  Jim Meyering  <meyering@ascend.com>
 
 	* man/help2man: Import version 1.012.
