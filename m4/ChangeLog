@@ -1,3 +1,7 @@
+1999-07-15  Jim Meyering  <meyering@ascend.com>
+
+	* jm-macros.m4: (AC_CHECK_FUNCS): Check for getpagesize.
+
 1999-05-22  Jim Meyering  <meyering@ascend.com>
 
 	* jm-macros.m4 (AC_REPLACE_FUNCS): Add memchr.
