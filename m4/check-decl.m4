@@ -1,4 +1,4 @@
-#serial 16
+#serial 17
 
 dnl This is just a wrapper function to encapsulate this kludge.
 dnl Putting it in a separate file like this helps share it between
@@ -41,6 +41,14 @@ AC_DEFUN(jm_CHECK_DECLS,
 #if HAVE_UTMP_H
 # include <utmp.h>
 #endif
+
+#if HAVE_GRP_H
+# include <grp.h>
+#endif
+
+#if HAVE_PWD_H
+# include <pwd.h>
+#endif
 '
 
   AC_CHECK_DECLS([
@@ -72,6 +80,6 @@ dnl This is a little helper so we can require these header checks.
 AC_DEFUN(_jm_DECL_HEADERS,
 [
   AC_REQUIRE([AC_HEADER_STDC])
-  AC_CHECK_HEADERS(memory.h string.h strings.h stdlib.h unistd.h sys/time.h \
-                   utmp.h utmpx.h)
+  AC_CHECK_HEADERS(grp.h memory.h pwd.h string.h strings.h stdlib.h \
+                   unistd.h sys/time.h utmp.h utmpx.h)
 ])
