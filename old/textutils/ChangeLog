@@ -1,3 +1,8 @@
+Sat Feb  1 07:21:43 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/pr.c (init_parameters): For compatibility: use default
+	separator `TAB' with full length lines.  From Roland Huebner.
+
 Fri Jan 31 19:53:54 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/tac.c: Rename globals buffer and buffer_size to have G_ prefix
