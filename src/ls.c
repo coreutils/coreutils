@@ -2345,11 +2345,11 @@ print_long_format (const struct fileinfo *f)
 	     Allow a 1 hour slop factor for what is considered "the future",
 	     to allow for NFS server/client clock disagreement.
 	     Show the year instead of the time of day.  */
-	  fmt = "%b %e  %Y";
+	  fmt = _("%b %e  %Y");
 	}
       else
 	{
-	  fmt = "%b %e %H:%M";
+	  fmt = _("%b %e %H:%M");
 	}
     }
 
