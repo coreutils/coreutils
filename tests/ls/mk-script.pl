@@ -14,6 +14,8 @@ use POSIX qw (assert);
 BEGIN { push @INC, '@srcdir@' if '@srcdir@' ne '.'; }
 use Test;
 
+my $srcdir = '@srcdir@';
+
 sub validate
 {
   my %seen;
@@ -114,7 +116,7 @@ sub spec_to_list ($$$)
       my $suffix = (@content_string > 1 ? $i : '');
       my $maint_gen_file = "$test_name$type$suffix";
       push (@maint_gen_file, $maint_gen_file);
-      open (F, ">$maint_gen_file") || die "$0: $maint_gen_file: $!\n";
+      open (F, ">$srcdir/$maint_gen_file") || die "$0: $maint_gen_file: $!\n";
       print F $file_contents;
       close (F) || die "$0: $maint_gen_file: $!\n";
       ++$i;
