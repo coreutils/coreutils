@@ -1,3 +1,11 @@
+Sat Dec 14 14:51:50 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* acinclude.m4 (jm_SYS_PROC_UPTIME): Fix typo in cache variable
+	name for cross compiling.
+	Remove definitions of gettext-related macros.  The gettext
+	installation procedure installs corresponding .m4 files so that
+	aclocal will use them.
+
 Wed Dec 11 19:34:22 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* Version 3.14.
