@@ -579,7 +579,10 @@ cut_fields (FILE *stream)
 	  if (print_kth (field_idx))
 	    {
 	      if (found_any_selected_field)
-		putchar (delim);
+		{
+		  /* FIXME: use output delimiter here */
+		  putchar (delim);
+		}
 	      found_any_selected_field = 1;
 
 	      while ((c = getc (stream)) != delim && c != '\n' && c != EOF)
