@@ -5,12 +5,13 @@
 # sh-utils: Pawe³ Krawczyk <kravietz@ceti.pl>, 1997, 1998, 1999.
 # fileutils: Thanks for help to Marta Bartnicka, 1999.
 # fileutils: Andrzej Krzysztofowicz  <ankry@mif.pg.gda.pl>, 2002.
+# Thanks for help and 246 remarks to Jakub Bogusz, 2003
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: coreutils 4.5.8\n"
-"POT-Creation-Date: 2003-03-05 08:46+0100\n"
-"PO-Revision-Date: 2003-02-27 03:00+0100\n"
+"Project-Id-Version: coreutils 4.5.9\n"
+"POT-Creation-Date: 2003-03-12 23:59+0100\n"
+"PO-Revision-Date: 2003-03-10 22:00+0100\n"
 "Last-Translator: Rafa³ Maszkowski <rzm@icm.edu.pl>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -19,17 +20,17 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
 
-#: lib/argmatch.c:129
+#: lib/argmatch.c:135
 #, c-format
 msgid "invalid argument %s for %s"
 msgstr "b³êdny argument %s opcji %s"
 
-#: lib/argmatch.c:130
+#: lib/argmatch.c:136
 #, c-format
 msgid "ambiguous argument %s for %s"
 msgstr "niejednoznaczny argument %s opcji %s"
 
-#: lib/argmatch.c:149
+#: lib/argmatch.c:155
 msgid "Valid arguments are:"
 msgstr "Prawid³owe argumenty to:"
 
@@ -160,14 +161,14 @@ msgstr "rozmiar bloku"
 
 #: lib/makepath.c:124 src/df.c:497 src/remove.c:402
 msgid "failed to return to initial working directory"
-msgstr ""
+msgstr "nie uda³o siê wróciæ do pocz±tkowego katalogu roboczego"
 
 #: lib/makepath.c:173 src/copy.c:1288 src/mkdir.c:170
 #, c-format
 msgid "cannot create directory %s"
 msgstr "nie mo¿na utworzyæ katalogu %s"
 
-#: lib/makepath.c:179 lib/makepath.c:421 src/cp.c:444 src/cp.c:466
+#: lib/makepath.c:179 lib/makepath.c:421 src/cp.c:446 src/cp.c:468
 #, c-format
 msgid "%s exists but is not a directory"
 msgstr "%s istnieje, ale nie jest katalogiem"
@@ -186,10 +187,6 @@ msgstr "nie mo¿na przej¶æ do katalogu %s"
 #, c-format
 msgid "cannot change permissions of %s"
 msgstr "nie mo¿na zmieniæ uprawnieñ do %s"
-
-#: lib/mmap-stack.h:31 lib/mmap-stack.h:45
-msgid "warning: unable to use large stack"
-msgstr "uwaga: nie mo¿na uzyæ du¿ego stosu"
 
 #: lib/obstack.c:487 lib/obstack.c:490 lib/xmalloc.c:63
 msgid "memory exhausted"
@@ -265,7 +262,7 @@ msgstr ""
 
 #: lib/xmemcoll.c:57
 msgid "string comparison failed"
-msgstr "nie uda³o siê porównanie ³ancuchów znaków"
+msgstr "nie uda³o siê porównanie ³añcuchów znaków"
 
 #: lib/xmemcoll.c:58
 msgid "Set LC_ALL='C' to work around the problem."
@@ -277,18 +274,18 @@ msgid "The strings compared were %s and %s."
 msgstr "Porównywane ³añcuchy znaków do %s i %s."
 
 #: src/basename.c:50 src/cat.c:88 src/chgrp.c:122 src/chmod.c:238
-#: src/chown.c:95 src/chroot.c:41 src/cksum.c:278 src/comm.c:69 src/cp.c:158
+#: src/chown.c:95 src/chroot.c:41 src/cksum.c:278 src/comm.c:69 src/cp.c:160
 #: src/csplit.c:1492 src/cut.c:170 src/date.c:113 src/dd.c:284 src/df.c:707
-#: src/dircolors.c:99 src/dirname.c:42 src/du.c:171 src/echo.c:73
+#: src/dircolors.c:99 src/dirname.c:42 src/du.c:170 src/echo.c:73
 #: src/env.c:115 src/expand.c:106 src/expr.c:86 src/factor.c:70 src/fmt.c:267
 #: src/fold.c:63 src/head.c:84 src/hostid.c:44 src/hostname.c:63 src/id.c:83
 #: src/install.c:593 src/join.c:140 src/kill.c:89 src/link.c:47 src/ln.c:335
 #: src/logname.c:44 src/ls.c:3757 src/md5sum.c:121 src/mkdir.c:57
 #: src/mkfifo.c:51 src/mknod.c:51 src/mv.c:307 src/nice.c:63 src/nl.c:172
 #: src/od.c:283 src/paste.c:399 src/pathchk.c:142 src/pinky.c:465
-#: src/pr.c:2750 src/printenv.c:59 src/printf.c:93 src/ptx.c:1855 src/pwd.c:42
+#: src/pr.c:2750 src/printenv.c:59 src/printf.c:96 src/ptx.c:1855 src/pwd.c:42
 #: src/readlink.c:65 src/rm.c:95 src/rmdir.c:142 src/seq.c:78 src/shred.c:156
-#: src/sleep.c:59 src/sort.c:272 src/split.c:92 src/stat.c:679 src/stty.c:494
+#: src/sleep.c:48 src/sort.c:272 src/split.c:92 src/stat.c:679 src/stty.c:494
 #: src/su.c:433 src/sum.c:56 src/sync.c:40 src/tac.c:123 src/tail.c:230
 #: src/tee.c:59 src/test.c:975 src/touch.c:240 src/tr.c:323 src/tsort.c:93
 #: src/tty.c:58 src/uname.c:106 src/unexpand.c:371 src/uniq.c:135
@@ -318,18 +315,18 @@ msgstr ""
 "\n"
 
 #: src/basename.c:66 src/cat.c:124 src/chgrp.c:152 src/chmod.c:264
-#: src/chown.c:139 src/chroot.c:59 src/cksum.c:293 src/comm.c:86 src/cp.c:255
+#: src/chown.c:139 src/chroot.c:59 src/cksum.c:293 src/comm.c:86 src/cp.c:257
 #: src/csplit.c:1534 src/cut.c:215 src/date.c:215 src/dd.c:331 src/df.c:746
-#: src/dircolors.c:120 src/dirname.c:58 src/du.c:220 src/echo.c:105
+#: src/dircolors.c:120 src/dirname.c:58 src/du.c:219 src/echo.c:105
 #: src/env.c:134 src/expand.c:131 src/expr.c:149 src/factor.c:90
 #: src/false.c:45 src/fmt.c:297 src/fold.c:86 src/head.c:115 src/hostid.c:57
 #: src/hostname.c:76 src/id.c:104 src/install.c:648 src/join.c:181
 #: src/kill.c:119 src/link.c:59 src/ln.c:390 src/logname.c:55 src/ls.c:3891
 #: src/md5sum.c:157 src/mkdir.c:76 src/mkfifo.c:68 src/mknod.c:82 src/mv.c:361
 #: src/nice.c:77 src/nl.c:227 src/od.c:370 src/paste.c:423 src/pathchk.c:154
-#: src/pinky.c:492 src/pr.c:2862 src/printenv.c:72 src/printf.c:141
+#: src/pinky.c:492 src/pr.c:2862 src/printenv.c:72 src/printf.c:144
 #: src/pwd.c:53 src/readlink.c:82 src/rm.c:127 src/rmdir.c:162 src/seq.c:104
-#: src/shred.c:219 src/sleep.c:75 src/sort.c:343 src/split.c:124
+#: src/shred.c:220 src/sleep.c:64 src/sort.c:343 src/split.c:124
 #: src/stat.c:750 src/stty.c:708 src/su.c:454 src/sum.c:76 src/sync.c:51
 #: src/tac.c:146 src/tail.c:300 src/tee.c:72 src/test.c:1057 src/touch.c:271
 #: src/tr.c:396 src/true.c:45 src/tsort.c:105 src/tty.c:70 src/uname.c:128
@@ -341,20 +338,20 @@ msgid ""
 "Report bugs to <%s>.\n"
 msgstr ""
 "\n"
-"Raporty o b³êdach wysy³aj do %s.\n"
+"Raporty o b³êdach wysy³aj do %s .\n"
 
 #: src/basename.c:114 src/chgrp.c:210 src/chmod.c:352 src/chown.c:211
 #: src/chroot.c:78 src/csplit.c:1464 src/dirname.c:89 src/expr.c:178
 #: src/install.c:284 src/link.c:87 src/mkdir.c:124 src/mkfifo.c:113
 #: src/mknod.c:137 src/pathchk.c:194 src/readlink.c:101 src/readlink.c:133
-#: src/rm.c:199 src/rmdir.c:206 src/seq.c:411 src/sleep.c:150 src/stat.c:801
+#: src/rm.c:199 src/rmdir.c:206 src/seq.c:411 src/sleep.c:139 src/stat.c:801
 #: src/unlink.c:88
 msgid "too few arguments"
 msgstr "za ma³o argumentów"
 
 #: src/basename.c:115 src/dircolors.c:482 src/dirname.c:90 src/hostid.c:79
 #: src/hostname.c:122 src/link.c:93 src/mknod.c:139 src/readlink.c:141
-#: src/seq.c:417 src/split.c:502 src/tr.c:1848 src/unlink.c:94
+#: src/seq.c:417 src/split.c:498 src/tr.c:1848 src/unlink.c:94
 #: src/uptime.c:244 src/users.c:169 src/who.c:764
 msgid "too many arguments"
 msgstr "za du¿o argumentów"
@@ -416,7 +413,7 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"  -B, --binary             pisz w trybie binarnym na konsolê.\n"
+"  -B, --binary             pisanie na konsolê w trybie binarnym.\n"
 "\n"
 
 #: src/cat.c:314
@@ -466,7 +463,7 @@ msgid ""
 "  or:  %s [OPTION]... --reference=RFILE FILE...\n"
 msgstr ""
 "Sk³adnia: %s [OPCJA]... GRUPA PLIK...\n"
-"    albo:  %s [OPCJA] --reference=PLIK_WZ PLIK...\n"
+"    albo: %s [OPCJA]... --reference=PLIK_WZ PLIK...\n"
 
 #: src/chgrp.c:131
 msgid ""
@@ -476,11 +473,11 @@ msgid ""
 "      --dereference      affect the referent of each symbolic link, rather\n"
 "                         than the symbolic link itself\n"
 msgstr ""
-"Zmiana w³a¶ciciela i/lub grupy ka¿dego PLIKU na W£A¦CICIELA i/lub GRUPÊ.\n"
+"Zmiana grupy ka¿dego PLIKU na GRUPÊ.\n"
 "\n"
 "  -c, --changes          jak -v, ale podanie tylko kiedy zasz³a zmiana\n"
 "      --dereference      zmiany maj± dotyczyæ plików wskazywanych przez\n"
-"                         dowi±zania symboliczne, a nie ich samych\n"
+"                         dowi±zania symboliczne, a nie samych dowi±zañ\n"
 
 #: src/chgrp.c:138 src/chown.c:112
 msgid ""
@@ -504,13 +501,13 @@ msgid ""
 "  -v, --verbose          output a diagnostic for every file processed\n"
 msgstr ""
 "  -f, --silent, --quiet  wy³±czenie wiêkszo¶ci komunikatów o b³êdach\n"
-"      --reference=PLIK_WZ  u¿ycie w³a¶ciciela i grupy PLIK_WZR zamiast\n"
-"                         podanych warto¶ci W£A¦CICIEL.GRUPA\n"
+"      --reference=PLIK_WZ  u¿ycie grupy pliku PLIK_WZR zamiast podanej\n"
+"                         warto¶ci GRUPA\n"
 "  -R, --recursive        zmiany rekursywne\n"
 "  -v, --verbose          wypisanie informacji o ka¿dym przetwarzanym pliku\n"
 
 #: src/chgrp.c:218 src/chmod.c:157 src/chmod.c:365 src/chown-core.c:235
-#: src/chown-core.c:247 src/chown.c:220 src/cp.c:301 src/touch.c:169
+#: src/chown-core.c:247 src/chown.c:220 src/cp.c:303 src/touch.c:169
 #: src/touch.c:363
 #, c-format
 msgid "failed to get attributes of %s"
@@ -548,7 +545,7 @@ msgid ""
 "  or:  %s [OPTION]... OCTAL-MODE FILE...\n"
 "  or:  %s [OPTION]... --reference=RFILE FILE...\n"
 msgstr ""
-"Sk³adnia: %s [OPCJA]... UPRAWN,[UPRAWN]... PLIK...\n"
+"Sk³adnia: %s [OPCJA]... UPRAWN[,UPRAWN]... PLIK...\n"
 "    albo: %s [OPCJA]... UPRAWN_ÓS PLIK...\n"
 "    albo: %s [OPCJA]... --reference=PLIK_WZ PLIK...\n"
 
@@ -631,7 +628,7 @@ msgstr "grupa %s zachowana jako %s\n"
 #: src/chown-core.c:326
 #, c-format
 msgid "changing ownership of %s"
-msgstr "zmiana w³asciciela %s"
+msgstr "zmiana w³a¶ciciela %s"
 
 #: src/chown-core.c:327
 #, c-format
@@ -666,7 +663,7 @@ msgstr ""
 "\n"
 "  -c, --changes          jak -v, ale podanie tylko kiedy zasz³a zmiana\n"
 "      --dereference      zmiany maj± dotyczyæ plików wskazywanych przez\n"
-"                         dowi±zania symboliczne, a nie ich samych\n"
+"                         dowi±zania symboliczne, a nie samych dowi±zañ\n"
 
 #: src/chown.c:117
 msgid ""
@@ -678,7 +675,7 @@ msgid ""
 "match\n"
 "                         is not required for the omitted attribute.\n"
 msgstr ""
-"      --from=BIE¯¡CY_W£A¦C:BIE¯¡CA_GRUPA\n"
+"      --from=BIE¯¡CY_W£A¦CICIEL:BIE¯¡CA_GRUPA\n"
 "                         zmiana w³a¶ciciela i/lub grupy ka¿dego pliku, "
 "je¿eli\n"
 "                         bie¿±cy w³a¶ciciel i /lub grupa s± takie jak "
@@ -770,7 +767,7 @@ msgstr ""
 msgid ""
 "Print CRC checksum and byte counts of each FILE.\n"
 "\n"
-msgstr "Wypisanie sumy CRC i ilo¶ci bajtów ka¿dego PLIKU,\n"
+msgstr "Wypisanie sumy CRC i liczby bajtów ka¿dego PLIKU.\n"
 
 #: src/comm.c:35 src/ls.c:131 src/uniq.c:40
 msgid "Richard Stallman and David MacKenzie"
@@ -793,7 +790,7 @@ msgstr ""
 "\n"
 "  -1              bez pokazania linii, które s± tylko w lewym pliku\n"
 "  -2              bez pokazania linii, które s± tylko w prawym pliku\n"
-"  -3              bez pokazania linii, które s± tylko w jednym pliku\n"
+"  -3              bez pokazania linii, które s± w obu plikach\n"
 
 #: src/copy.c:162 src/du.c:332
 #, c-format
@@ -808,7 +805,7 @@ msgstr "nie mo¿na otworzyæ %s do czytania"
 #: src/copy.c:232 src/copy.c:286 src/copy.c:301 src/dd.c:1199
 #, c-format
 msgid "cannot fstat %s"
-msgstr "nie mo¿na fstat %s"
+msgstr "nie mo¿na wykonaæ fstat na %s"
 
 #: src/copy.c:242
 #, c-format
@@ -834,7 +831,7 @@ msgstr "czytanie %s"
 #: src/copy.c:362
 #, c-format
 msgid "cannot lseek %s"
-msgstr "nie mo¿na lseek %s"
+msgstr "nie mo¿na wykonaæ lseek na %s"
 
 #: src/copy.c:377 src/copy.c:401 src/dd.c:1054 src/dd.c:1115
 #, c-format
@@ -859,7 +856,7 @@ msgstr "%s: zamazaæ %s? "
 #: src/copy.c:810 src/copy.c:848 src/stat.c:637
 #, c-format
 msgid "cannot stat %s"
-msgstr "nie mo¿na stat %s"
+msgstr "nie mo¿na wykonaæ stat na %s"
 
 #: src/copy.c:820
 #, c-format
@@ -975,7 +972,7 @@ msgstr "nie mo¿na utworzyæ dowi±zania symbolicznego %s do %s"
 #: src/copy.c:1364
 #, c-format
 msgid "cannot create link %s"
-msgstr "nie mo¿na utworzyæ dowi±zania symbolicznego %s"
+msgstr "nie mo¿na utworzyæ dowi±zania %s"
 
 #: src/copy.c:1389 src/mkfifo.c:133
 #, c-format
@@ -997,7 +994,7 @@ msgstr "nie mo¿na przeczytaæ dowi±zania symbolicznego %s"
 msgid "cannot create symbolic link %s"
 msgstr "nie mo¿na utworzyæ dowi±zania symbolicznego %s"
 
-#: src/copy.c:1456 src/copy.c:1519 src/cp.c:337
+#: src/copy.c:1456 src/copy.c:1519 src/cp.c:339
 #, c-format
 msgid "failed to preserve ownership for %s"
 msgstr "nie uda³o siê zachowaæ w³asno¶ci %s"
@@ -1032,30 +1029,30 @@ msgstr "nie mo¿na przywróciæ kopii zapasowej %s"
 msgid "%s -> %s (unbackup)\n"
 msgstr "%s -> %s (przywrócenie kopii zapasowej)\n"
 
-#: src/cp.c:54
+#: src/cp.c:53
 msgid "Torbjorn Granlund, David MacKenzie, and Jim Meyering"
 msgstr "Torbjorn Granlund, David MacKenzie i Jim Meyering"
 
-#: src/cp.c:162 src/mv.c:311
+#: src/cp.c:164 src/mv.c:311
 #, c-format
 msgid ""
 "Usage: %s [OPTION]... SOURCE DEST\n"
 "  or:  %s [OPTION]... SOURCE... DIRECTORY\n"
 "  or:  %s [OPTION]... --target-directory=DIRECTORY SOURCE...\n"
 msgstr ""
-"Sk³adnia: %s [OPCJA]... PIERWSZA\n"
-"    albo: %s [OPCJA]... PIERWSZA OSTATNIA\n"
-"    albo: %s [OPCJA]... PIERWSZA KROK OSTATNIA\n"
+"Sk³adnia: %s [OPCJA]... ¬RÓD£O CEL\n"
+"    albo: %s [OPCJA]... ¬RÓD£O... KATALOG\n"
+"    albo: %s [OPCJA]... --target-directory=KATALOG ¬RÓD£O...\n"
 
-#: src/cp.c:168
+#: src/cp.c:170
 msgid ""
 "Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n"
 "\n"
 msgstr ""
-"Skopiowanie ¯RÓD£A do CELU lub ¬RÓD£A/¬RÓDE£ do KATALOGU.\n"
+"Skopiowanie ¬RÓD£A do CELU lub ¬RÓD£A/¬RÓDE£ do KATALOGU.\n"
 "\n"
 
-#: src/cp.c:172 src/csplit.c:1505 src/cut.c:182 src/df.c:717 src/du.c:180
+#: src/cp.c:174 src/csplit.c:1505 src/cut.c:182 src/df.c:717 src/du.c:179
 #: src/expand.c:119 src/fmt.c:277 src/fold.c:76 src/head.c:98
 #: src/install.c:609 src/kill.c:103 src/ln.c:354 src/ls.c:3767 src/mkdir.c:66
 #: src/mkfifo.c:60 src/mknod.c:61 src/mv.c:321 src/nl.c:185 src/paste.c:413
@@ -1067,7 +1064,7 @@ msgid ""
 msgstr ""
 "Argumenty obowi±zkowe dla opcji d³ugich obowi±zuj± równie¿ dla krótkich.\n"
 
-#: src/cp.c:175
+#: src/cp.c:177
 msgid ""
 "  -a, --archive                same as -dpR\n"
 "      --backup[=CONTROL]       make a backup of each existing destination "
@@ -1079,12 +1076,15 @@ msgid ""
 "  -d                           same as --no-dereference --preserve=link\n"
 msgstr ""
 "  -a, --archive                to samo co -dpR\n"
-"      --backup[=TRYB]          robienie kopii zapasowej ka¿dego pliku\n"
-"                                 docelowego\n"
+"      --backup[=TRYB]          robienie kopii zapasowej ka¿dego "
+"istniej±cego\n"
+"                                 pliku docelowego\n"
 "  -b                           jak --backup, ale bez podawania argumentu\n"
-"  -d, --no-dereference         bez rozwi±zywania dowi±zañ symbolicznych\n"
+"      --copy-contents          kopiowanie zawarto¶ci pliku specjalnego w\n"
+"                                 przypadku rekursji\n"
+"  -d                           to samo co --no-dereference --preserve=link\n"
 
-#: src/cp.c:182
+#: src/cp.c:184
 msgid ""
 "      --no-dereference         never follow symbolic links\n"
 "  -f, --force                  if an existing destination file cannot be\n"
@@ -1096,10 +1096,10 @@ msgstr ""
 "  -f, --force                  kasowanie istniej±cych plików docelowych "
 "je¿eli\n"
 "                                 nie daj± siê otworzyæ\n"
-"  -i, --interactive            pytanie przez zamazaniem\n"
+"  -i, --interactive            pytanie przed zamazaniem\n"
 "  -H                           rozwi±zywanie argumentów - dowi±zañ symb.\n"
 
-#: src/cp.c:189
+#: src/cp.c:191
 msgid ""
 "  -l, --link                   link files instead of copying\n"
 "  -L, --dereference            always follow symbolic links\n"
@@ -1109,17 +1109,18 @@ msgid ""
 "                                 additional attributes: links, all\n"
 msgstr ""
 "  -l, --link                   dowi±zywanie plików zamiast kopiowania\n"
-"  -L, --dereference            rozwi±zywanie dowi±zañ symbolicznych\n"
+"  -L, --dereference            rozwi±zywanie wszystkich dowi±zañ "
+"symbolicznych\n"
 "  -p                           to samo co --preserve=mode,ownership,"
 "timestamps\n"
 "      --preserve[=LISTA_ATR]   zachowanie podanych atrybutów, je¿eli to\n"
 "                               mo¿liwe (domy¶lnie: mode (uprawnienia),\n"
 "                               ownership (w³a¶ciciel, grupa), timestamps\n"
-"                               (czasy), je¿eli mo¿liwe s± dodatkowe "
-"atrybuty:\n"
-"                               links (dowi±zania), all (wszystkie)\n"
+"                               (czasy); je¿eli mo¿liwe, to dodatkowych\n"
+"                               atrybutów: links (dowi±zania), all "
+"(wszystkie))\n"
 
-#: src/cp.c:197
+#: src/cp.c:199
 msgid ""
 "      --no-preserve=ATTR_LIST  don't preserve the specified attributes\n"
 "      --parents                append source path to DIRECTORY\n"
@@ -1129,7 +1130,7 @@ msgstr ""
 "      --parents                dodanie ¶cie¿ki ¼ród³owej do KATALOGU\n"
 "  -P                           to samo co `--no-dereference'\n"
 
-#: src/cp.c:202
+#: src/cp.c:204
 msgid ""
 "  -R, -r, --recursive          copy directories recursively\n"
 "      --remove-destination     remove each existing destination file before\n"
@@ -1141,7 +1142,7 @@ msgstr ""
 "docelowego\n"
 "                                 przed prób± jego otwarcia (por. z --force)\n"
 
-#: src/cp.c:207
+#: src/cp.c:209
 msgid ""
 "      --reply={yes,no,query}   specify how to handle the prompt about an\n"
 "                                 existing destination file\n"
@@ -1154,9 +1155,9 @@ msgstr ""
 "      --sparse=GDY             sterowanie tworzeniem plików rzadkich\n"
 "      --strip-trailing-slashes skasowanie ewentualnych koñcowych uko¶ników "
 "z\n"
-"                                 nazw argunetów ¬RÓD£OWYCH\n"
+"                                 nazw argumentów ¬RÓD£OWYCH\n"
 
-#: src/cp.c:214
+#: src/cp.c:216
 msgid ""
 "  -s, --symbolic-link          make symbolic links instead of copying\n"
 "  -S, --suffix=SUFFIX          override the usual backup suffix\n"
@@ -1168,7 +1169,7 @@ msgstr ""
 "      --target-directory=KATALOG  przeniesienie wszystkich ¬RÓDE£ do "
 "KATALOGU\n"
 
-#: src/cp.c:219
+#: src/cp.c:221
 msgid ""
 "  -u, --update                 copy only when the SOURCE file is newer\n"
 "                                 than the destination file or when the\n"
@@ -1182,7 +1183,7 @@ msgstr ""
 "  -x, --one-file-system        pozostanie w jednym systemie plików\n"
 "\n"
 
-#: src/cp.c:228
+#: src/cp.c:230
 msgid ""
 "\n"
 "By default, sparse SOURCE files are detected by a crude heuristic and the\n"
@@ -1202,7 +1203,7 @@ msgstr ""
 "U¿yj --sparse=never (nigdy) ¿eby zakazaæ tworzenia plików rzadkich.\n"
 "\n"
 
-#: src/cp.c:237
+#: src/cp.c:239
 msgid ""
 "The backup suffix is `~', unless set with --suffix or SIMPLE_BACKUP_SUFFIX.\n"
 "The version control method may be selected via the --backup option or "
@@ -1218,7 +1219,7 @@ msgstr ""
 "Mo¿liwe warto¶ci:\n"
 "\n"
 
-#: src/cp.c:243 src/install.c:642 src/ln.c:384 src/mv.c:355
+#: src/cp.c:245 src/install.c:642 src/ln.c:384 src/mv.c:355
 msgid ""
 "  none, off       never make backups (even if --backup is given)\n"
 "  numbered, t     make numbered backups\n"
@@ -1227,12 +1228,12 @@ msgid ""
 msgstr ""
 "  none, off       nigdy nie s± tworzone kopie zapasowe (nawet gdy jest "
 "podana\n"
-"                  opcja --backup\n"
+"                  opcja --backup)\n"
 "  numbered, t     tworzenie numerowanych kopii zapasowych\n"
-"  existing, nil   numerowane je¿eli takie ju¿ istnieja, je¿eli nie - proste\n"
+"  existing, nil   numerowane je¿eli takie ju¿ istniej±, je¿eli nie - proste\n"
 "  simple, never   tworzenie zawsze prostych kopii zapasowych\n"
 
-#: src/cp.c:249
+#: src/cp.c:251
 msgid ""
 "\n"
 "As a special case, cp makes a backup of SOURCE when the force and backup\n"
@@ -1240,70 +1241,70 @@ msgid ""
 "regular file.\n"
 msgstr ""
 "\n"
-"W przypadku specjalnym cp robi kopiê zapasow± ¯RÓD£A je¿eli s± podane\n"
-"opcje force i backup, a ¯RÓD£O i CEL s± t± sam± nazw± istniej±cego pliku\n"
+"W przypadku specjalnym cp robi kopiê zapasow± ¬RÓD£A je¿eli s± podane\n"
+"opcje force i backup, a ¬RÓD£O i CEL s± t± sam± nazw± istniej±cego pliku\n"
 "zwyk³ego\n"
 
-#: src/cp.c:323
+#: src/cp.c:325
 #, c-format
 msgid "failed to preserve times for %s"
 msgstr "nie uda³o siê zachowaæ czasu %s"
 
-#: src/cp.c:347
+#: src/cp.c:349
 #, c-format
 msgid "failed to preserve permissions for %s"
 msgstr "nie uda³o siê zachowaæ uprawnieñ do %s"
 
-#: src/cp.c:432
+#: src/cp.c:434
 #, c-format
 msgid "cannot make directory %s"
 msgstr "nie mo¿na utworzyæ katalogu %s"
 
-#: src/cp.c:491 src/ln.c:490 src/mv.c:459 src/shred.c:1599
+#: src/cp.c:493 src/ln.c:490 src/mv.c:459 src/shred.c:1601
 msgid "missing file argument"
 msgstr "brakuj±cy argument plikowy"
 
-#: src/cp.c:496
+#: src/cp.c:498
 msgid "missing destination file"
-msgstr "brakuj±ca plik docelowy"
+msgstr "brakuj±cy plik docelowy"
 
-#: src/cp.c:521 src/ln.c:161 src/ln.c:183 src/ln.c:210 src/ln.c:297
+#: src/cp.c:523 src/ln.c:161 src/ln.c:183 src/ln.c:210 src/ln.c:297
 #, c-format
 msgid "accessing %s"
 msgstr "dostêp do %s"
 
-#: src/cp.c:544
+#: src/cp.c:546
 #, c-format
 msgid "%s: specified target is not a directory"
 msgstr "%s: podany CEL nie jest katalogiem"
 
-#: src/cp.c:552
+#: src/cp.c:554
 #, c-format
 msgid "copying multiple files, but last argument %s is not a directory"
 msgstr "kopiowanie wielu plików, ostatni argument %s nie jest katalogiem"
 
-#: src/cp.c:650
+#: src/cp.c:652
 msgid "when preserving paths, the destination must be a directory"
 msgstr "je¿eli s± zachowane ¶cie¿ki, ostatni argument musi byæ katalogiem"
 
-#: src/cp.c:895 src/install.c:219 src/ln.c:434 src/mv.c:405
+#: src/cp.c:878 src/install.c:219 src/ln.c:434 src/mv.c:405
 #, c-format
 msgid ""
 "warning: --version-control (-V) is obsolete;  support for it\n"
 "will be removed in some future release.  Use --backup=%s instead."
 msgstr ""
 "uwaga: opcja --version-control (-V) jest przestarza³a i zostanie usuniêta\n"
-"w jednej z nastepnych wersji. U¿ywaj --backup=%s ."
+"w jednej z nastêpnych wersji. U¿ywaj --backup=%s ."
 
-#: src/cp.c:989 src/ln.c:464
+#: src/cp.c:972 src/ln.c:464
 msgid "symbolic links are not supported on this system"
 msgstr "ten system nie ma dowi±zañ symbolicznych"
 
-#: src/cp.c:1025
+#: src/cp.c:1008
 msgid "cannot make both hard and symbolic links"
 msgstr "nie mo¿na zrobiæ dowi±zania symbolicznego i zwyk³ego równocze¶nie"
 
-#: src/cp.c:1033 src/install.c:275 src/ln.c:530 src/mv.c:483
+#: src/cp.c:1016 src/install.c:275 src/ln.c:530 src/mv.c:483
 msgid "backup type"
 msgstr "rodzaj kopii zapasowej"
 
@@ -1441,7 +1442,7 @@ msgid ""
 msgstr ""
 "Zapisanie kawa³ków PLIKU oddzielonych przez WZORCE do plików `xx01', "
 "`xx02',\n"
-"..., i podanie ilo¶æ bajtów w ka¿dym kawa³ku na standardowym wyj¶ciu.\n"
+"..., i podanie liczby bajtów w ka¿dym kawa³ku na standardowym wyj¶ciu.\n"
 "\n"
 
 #: src/csplit.c:1508
@@ -1453,7 +1454,7 @@ msgid ""
 msgstr ""
 "  -b, --suffix-format=FORMAT u¿ycie FORMATU sprintf zamiast %d\n"
 "  -f, --prefix=PRZEDROSTEK   u¿ycie PRZEDROSTKA zamiast `xx'\n"
-"  -k, --keep-files           bez kasowanie plików wyj¶ciowych w razie "
+"  -k, --keep-files           bez kasowania plików wyj¶ciowych w razie "
 "b³êdów\n"
 
 #: src/csplit.c:1513
@@ -1462,8 +1463,8 @@ msgid ""
 "  -s, --quiet, --silent      do not print counts of output file sizes\n"
 "  -z, --elide-empty-files    remove empty output files\n"
 msgstr ""
-"  -n, --digits=CYFRY         u¿ycie podanej ilo¶ci CYFR zamiast dwóch\n"
-"  -s, --quiet, --silent      nie podawaj ilo¶ci bajtów w plikach "
+"  -n, --digits=CYFRY         u¿ycie podanej liczby CYFR zamiast dwóch\n"
+"  -s, --quiet, --silent      bez podawania liczby bajtów w plikach "
 "wyj¶ciowych\n"
 "  -z, --elide-empty-files    usuniêcie pustych plików wyj¶ciowych\n"
 
@@ -1487,15 +1488,16 @@ msgid ""
 "A line OFFSET is a required `+' or `-' followed by a positive integer.\n"
 msgstr ""
 "\n"
-"  LICZBA_CA£KOWITA   kopiowanie do podanej linii o numerze "
+"  LICZBA_CA£KOWITA         kopiowanie do podanej linii o numerze "
 "LICZBA_CA£KOWITA,\n"
-"                       oprócz tej linii\n"
+"                           oprócz tej linii\n"
 "  /REGEXP/[PRZESUNIÊCIE]   kopiowanie do pasuj±cej linii, oprócz tej linii\n"
 "  %REGEXP%[PRZESUNIÊCIE]   przeskoczenie do pasuj±cej linii, ale bez niej "
 "samej\n"
-"  {LICZBA_CA£KOWITA}       powtórzenie poprzedniego wzorca podan± ilo¶æ "
+"  {LICZBA_CA£KOWITA}       powtórzenie poprzedniego wzorca podan± liczbê "
 "razy\n"
-"  {*}                powtórzenie poprzedniego wzorca tyle razy ile siê da\n"
+"  {*}                      powtórzenie poprzedniego wzorca tyle razy ile siê "
+"da\n"
 "\n"
 "PRZESUNIÊCIE linii musi siê sk³adaæ z `+' albo `-' oraz liczby ca³kowitej.\n"
 
@@ -1503,7 +1505,7 @@ msgstr ""
 msgid "David Ihnat, David MacKenzie, and Jim Meyering"
 msgstr "David Ihnat, David MacKenzie i Jim Meyering"
 
-#: src/cut.c:174 src/df.c:711 src/du.c:175 src/expand.c:110 src/fold.c:67
+#: src/cut.c:174 src/df.c:711 src/du.c:174 src/expand.c:110 src/fold.c:67
 #: src/head.c:88 src/ls.c:3761 src/nl.c:176 src/paste.c:403 src/pr.c:2754
 #: src/sort.c:276 src/sum.c:60 src/tac.c:127 src/tail.c:234 src/tee.c:63
 #: src/unexpand.c:375 src/wc.c:125
@@ -1527,7 +1529,7 @@ msgid ""
 msgstr ""
 "  -b, --bytes=LISTA       wypisanie tylko tych bajtów\n"
 "  -c, --characters=LISTA  wypisanie tylko tych znaków\n"
-"  -d, --delimiter=OGRANICZNIK   u¿ycie OGRANICZNIKA zamiast TABa jak "
+"  -d, --delimiter=OGRANICZNIK  u¿ycie OGRANICZNIKA zamiast TABa jako "
 "separatora\n"
 
 #: src/cut.c:190
@@ -1587,7 +1589,7 @@ msgstr "b³êdna lista bajtów lub pól"
 
 #: src/cut.c:667 src/cut.c:676
 msgid "only one type of list may be specified"
-msgstr "mo¿na podaæ tylko jeden tym listy"
+msgstr "mo¿na podaæ tylko jeden typ listy"
 
 #: src/cut.c:670
 msgid "missing list of positions"
@@ -1599,7 +1601,7 @@ msgstr "brakuj±ca lista pól"
 
 #: src/cut.c:686
 msgid "the delimiter must be a single character"
-msgstr "ogranicznik musi byæ pojedyñczym znakiem"
+msgstr "ogranicznik musi byæ pojedynczym znakiem"
 
 #: src/cut.c:717
 msgid "you must specify a list of bytes, characters, or fields"
@@ -1648,6 +1650,7 @@ msgstr ""
 "                           je¶li `hours' (godziny), `minutes' (minuty) lub\n"
 "                           `seconds' (sekundy) - datê oraz czas z ¿±dan±\n"
 "                           precyzj±\n"
+"                           Brak parametru CZAS oznacza to samo co `date'.\n"
 
 #: src/date.c:133
 msgid ""
@@ -1674,7 +1677,7 @@ msgstr ""
 "FORMAT okre¶la wyj¶cie. Jako druga opcja mo¿e siê pojawiaæ jedynie\n"
 "opcja wskazuj±ca na u¿ycie czasu uniwersalnego. Rozpoznawane sekwencje:\n"
 "\n"
-"  %%   literalny znak procenta %%\n"
+"  %%   literalny znak procenta %\n"
 "  %a   lokalny skrót nazwy dnia tygodnia (pon...nie)\n"
 
 #: src/date.c:149
@@ -1696,8 +1699,8 @@ msgid ""
 "  %D   date (mm/dd/yy)\n"
 "  %e   day of month, blank padded ( 1..31)\n"
 msgstr ""
-"  %C   stulecie (rok podzielony przez 100 i obciêty do liczby ca³kowitej [00-"
-"99]\n"
+"  %C   stulecie (rok podzielony przez 100 i obciêty do liczby ca³kowitej) "
+"[00-99]\n"
 "  %d   dzieñ miesi±ca (01..31)\n"
 "  %D   data (mm/dd/rr)\n"
 "  %e   dzieñ miesi±ca uzupe³niony spacjami ( 1...31)\n"
@@ -1709,8 +1712,8 @@ msgid ""
 "  %G   the 4-digit year corresponding to the %V week number\n"
 msgstr ""
 "  %F   to samo co %Y-%m-%d\n"
-"  %g   2-cyfrowy rok odpowiadaj±cy to numerowi tygodnia %V\n"
-"  %G   4-cyfrowy rok odpowiadaj±cy to numerowi tygodnia %V\n"
+"  %g   2-cyfrowy rok odpowiadaj±cy numerowi tygodnia %V\n"
+"  %G   4-cyfrowy rok odpowiadaj±cy numerowi tygodnia %V\n"
 
 #: src/date.c:166
 msgid ""
@@ -1748,8 +1751,8 @@ msgid ""
 msgstr ""
 "  %n   znak nowej linii\n"
 "  %N   nanosekundy (000000000..999999999)\n"
-"  %p   lokalny odpowiednik AM lub PM (w wielu locales pusty)\n"
-"  %P   lokalny odpowiednik am lub pm (w wielu locales pusty)\n"
+"  %p   lokalny odpowiednik AM lub PM (w wielu lokalizacjach pusty)\n"
+"  %P   lokalny odpowiednik am lub pm (w wielu lokalizacjach pusty)\n"
 "  %r   czas w formacie 12-godzinnym (gg:mm:ss [AP]M)\n"
 "  %R   czas w formacie 24-godzinnym (gg:mm)\n"
 "  %s   liczba sekund od 00:00:00, 1 stycznia 1970 (rozszerzenie GNU)\n"
@@ -1761,7 +1764,7 @@ msgid ""
 "  %T   time, 24-hour (hh:mm:ss)\n"
 "  %u   day of week (1..7);  1 represents Monday\n"
 msgstr ""
-"  %S   sekunda (00...60)\n"
+"  %S   sekunda (00...60); 60 oznacza sekundê przestêpn±\n"
 "  %t   tabulator poziomy\n"
 "  %T   czas w formacie 24-godzinnym (gg:mm:ss)\n"
 "  %u   dzieñ tygodnia (1..7); 1 to poniedzia³ek\n"
@@ -1774,7 +1777,7 @@ msgid ""
 "  %W   week number of year with Monday as first day of week (00..53)\n"
 msgstr ""
 "  %U   numer tygodnia w roku, niedziela zaczyna tydzieñ (00...53)\n"
-"  %V   numer tygodnia w roku, poniedzia³ek zaczyna tydzieñ (01...52)\n"
+"  %V   numer tygodnia w roku, poniedzia³ek zaczyna tydzieñ (01...53)\n"
 "  %w   numer dnia tygodnia (0...6), 0 oznacza niedzielê\n"
 "  %W   numer tygodnia w roku, poniedzia³ek zaczyna tydzieñ (00...53)\n"
 
@@ -1785,7 +1788,7 @@ msgid ""
 "  %y   last two digits of year (00..99)\n"
 "  %Y   year (1970...)\n"
 msgstr ""
-"  %x   lokalna reprezentacja daty (mm/dd/rr)\n"
+"  %x   lokalna reprezentacja daty (rrrr.mm.dd)\n"
 "  %X   lokalna reprezentacja czasu (%H:%M:%S)\n"
 "  %y   dwie ostatnie cyfry roku (00...99)\n"
 "  %Y   rok (1970...)\n"
@@ -1801,12 +1804,12 @@ msgid ""
 "  `-' (hyphen) do not pad the field\n"
 "  `_' (underscore) pad the field with spaces\n"
 msgstr ""
-"  %z   numer strefy czasowej wg RFC-822 (-0500) (rozszerzenie "
+"  %z   strefa czasowa w formacie RFC-822 (-0500) (rozszerzenie "
 "niestandardowe)\n"
 "  %Z   strefa czasowa (np. EDT) lub nic, je¶li nie mo¿na ustaliæ\n"
 "\n"
 "Domy¶lnie  date  dope³nia pola numeryczne zerami. GNU  date  rozpoznaje\n"
-"poni¿sze modyfikatory pomiêdzy `%' a dyrektyw± numeryczn±.\n"
+"poni¿sze modyfikatory pomiêdzy `%' a dyrektyw± numeryczn±:\n"
 "\n"
 "  `-' (kreska) nie dope³nia zerami\n"
 "  `_' (pokre¶lenie) dope³nia spacjami\n"
@@ -1829,7 +1832,7 @@ msgstr "opcje specyfikuj±ce daty do wy¶wietlenia wzajemnie siê wykluczaj±"
 
 #: src/date.c:371
 msgid "the options to print and set the time may not be used together"
-msgstr "opcje wy¶wietlaj±e i ustawiaj±ce czas nie mog± byæ u¿ywane razem"
+msgstr "opcje wy¶wietlaj±ce i ustawiaj±ce czas nie mog± byæ u¿ywane razem"
 
 #: src/date.c:377
 #, c-format
@@ -1885,12 +1888,12 @@ msgid ""
 msgstr ""
 "Kopiowanie pliku z przekszta³caniem i formatowaniem zgodnie z opcjami.\n"
 "\n"
-"  bs=BAJTÓW       wymuszenie ibs=BAJTÓW and obs=BAJTÓW\n"
+"  bs=BAJTÓW       wymuszenie ibs=BAJTÓW i obs=BAJTÓW\n"
 "  cbs=BAJTÓW      przekszta³cenie tylu BAJTÓW za jednym razem\n"
 "  conv=S£OWA_KL   przekszta³cenie pliku wg listy s³ów kluczowych\n"
 "                    oddzielonych przecinkami\n"
 "  count=BLOKÓW    skopiowanie tylko tyle BLOKÓW z wej¶cia\n"
-"  ibs=BAJTÓW      czytanie tyle BAJTÓW naraz\n"
+"  ibs=BAJTÓW      czytanie tylu BAJTÓW naraz\n"
 
 #: src/dd.c:298
 msgid ""
@@ -1900,10 +1903,9 @@ msgid ""
 "  seek=BLOCKS     skip BLOCKS obs-sized blocks at start of output\n"
 "  skip=BLOCKS     skip BLOCKS ibs-sized blocks at start of input\n"
 msgstr ""
-"  if=PLIK         czytanie z PLIKU zamiast ze std. wej¶cia\n"
+"  if=PLIK         czytanie z PLIKU zamiast ze standardowego wej¶cia\n"
 "  obs=BAJTÓW      zapisanie tylu BAJTÓW naraz\n"
-"  of=PLIK         zapisanie do PLIKU zamiast do standardowego wyj¶cia, bez\n"
-"                    skracania pliku\n"
+"  of=PLIK         zapisanie do PLIKU zamiast do standardowego wyj¶cia\n"
 "  seek=BLOKÓW     przeskoczenie tylu BLOKÓW o rozmiarze ibs na wyj¶ciu\n"
 "  skip=BLOKÓW     przeskoczenie tylu BLOKÓW o rozmiarze ibs na wej¶ciu\n"
 
@@ -2025,7 +2027,7 @@ msgid ""
 "  of mt_type=0x%0lx -- see <sys/mtio.h> for the list of types"
 msgstr ""
 "uwaga: ominiêcie b³êdu dzia³ania lseek w j±drze dla pliku (%s)\n"
-"  mt_type=0x%0lx - zobacz listê typów w <sys/mtio.h>"
+"  o mt_type=0x%0lx - zobacz listê typów w <sys/mtio.h>"
 
 #: src/dd.c:1170 src/dd.c:1188
 #, c-format
@@ -2039,26 +2041,24 @@ msgstr "pozycja w pliku spoza zakresu"
 #: src/dd.c:1214
 #, c-format
 msgid "advancing past %s bytes in output file %s"
-msgstr "przesuniêcie o %s bajtów w pliku wyj¶ciowych %s"
+msgstr "zmiana d³ugo¶ci na %s bajtów w pliku wyj¶ciowym %s"
 
 #: src/df.c:49
 msgid "Torbjorn Granlund, David MacKenzie, Larry McVoy, and Paul Eggert"
 msgstr "Torbjorn Granlund, David MacKenzie, Larry McVoy i Paul Eggert"
 
 #: src/df.c:153
-#, fuzzy
 msgid "Filesystem    Type"
-msgstr "System plików "
+msgstr "System plików  Typ"
 
 #: src/df.c:155
-#, fuzzy
 msgid "Filesystem        "
-msgstr "System plików "
+msgstr "System plików     "
 
 #: src/df.c:158
 #, c-format
 msgid "    Inodes   IUsed   IFree IUse%%"
-msgstr "    inody   u¿yteI  wolneI %%u¿.I"
+msgstr "    iwêz³y  u¿yteI  wolneI %%u¿.I"
 
 #: src/df.c:162
 #, c-format
@@ -2090,7 +2090,7 @@ msgid ""
 "or all filesystems by default.\n"
 "\n"
 msgstr ""
-"Pokazuje informacjê o systemie plików w którym jest ka¿dy z PLIKÓW, "
+"Pokazuje informacje o systemie plików, w którym jest ka¿dy z PLIKÓW, "
 "domy¶lnie\n"
 "o wszystkich systemach plików.\n"
 "\n"
@@ -2104,7 +2104,7 @@ msgid ""
 "  -H, --si              likewise, but use powers of 1000 not 1024\n"
 msgstr ""
 "  -a, --all             pokazanie równie¿ systemów plików maj±cych 0 bloków\n"
-"      --block-size=ROZM u¿ycie bloków o podanym ROZMIARZE\n"
+"  -B, --block-size=ROZM u¿ycie bloków o podanym ROZMIARZE\n"
 "  -h, --human-readable  rozmiary w formacie dla ludzi (np. 1K 234M 2G)\n"
 "  -H, --si              podobnie, ale z u¿yciem potêg 1000, nie 1024\n"
 
@@ -2116,7 +2116,7 @@ msgid ""
 "      --no-sync         do not invoke sync before getting usage info "
 "(default)\n"
 msgstr ""
-"  -i, --inodes          wypisz informacjê i i-wêz³ach zamiast o blokach\n"
+"  -i, --inodes          wypisanie informacji o i-wêz³ach zamiast o blokach\n"
 "  -k                    jak --block-size=1K\n"
 "  -l, --local           ograniczenie do lokalnych systemów plików\n"
 "      --no-sync         bez wywo³ania sync przez pobraniem informacji o\n"
@@ -2138,7 +2138,7 @@ msgstr ""
 "  -x, --exclude-type=TYP   pokazanie tylko systemów plików nie tego TYPU\n"
 "  -v                    (ignorowane)\n"
 
-#: src/df.c:742 src/du.c:216 src/ls.c:3879
+#: src/df.c:742 src/du.c:215 src/ls.c:3879
 msgid ""
 "\n"
 "SIZE may be (or may be an integer optionally followed by) one of following:\n"
@@ -2177,11 +2177,11 @@ msgid ""
 "  -c, --csh, --c-shell        output C shell code to set LS_COLORS\n"
 "  -p, --print-database        output defaults\n"
 msgstr ""
-"Wypisanie poleceñ ustawiaj±cych zmienn± ¶rodowiskow± LS_COLOR.\n"
+"Wypisanie poleceñ ustawiaj±cych zmienn± ¶rodowiskow± LS_COLORS.\n"
 "\n"
 "Ustalenie formatu:\n"
-"  -b, --sh, --bourne-shell    w kodzie shella Bourne'a\n"
-"  -c, --csh, --c-shell        w kodzie shella C\n"
+"  -b, --sh, --bourne-shell    w kodzie pow³oki Bourne'a\n"
+"  -c, --csh, --c-shell        w kodzie pow³oki C\n"
 "  -p, --print-database        wypisanie warto¶ci domy¶lnych\n"
 
 #: src/dircolors.c:114
@@ -2193,9 +2193,9 @@ msgid ""
 msgstr ""
 "\n"
 "Je¿eli jest podany PLIK, jest czytany dla okre¶lenia jakie kolory s± u¿yte\n"
-"z jakimi rozszereniami. W przeciwnym wypadku u¿yta jest wkompilowana baza\n"
+"z jakimi rozszerzeniami. W przeciwnym wypadku u¿yta jest wkompilowana baza\n"
 "danych. Szczegó³y formatu tych plików mo¿na zobaczyæ przez\n"
-" `dircolors --print-database'.\n"
+"`dircolors --print-database'.\n"
 
 #: src/dircolors.c:299
 #, c-format
@@ -2216,8 +2216,8 @@ msgid ""
 "the options to output dircolors' internal database and\n"
 "to select a shell syntax are mutually exclusive"
 msgstr ""
-"opcje w³±czaj±ce wy¶wietlanie wewnêtrznej bazy dircolors i wybranie pow³oki\n"
-"wykluczaj± siê wzajemnie"
+"opcje w³±czaj±ce wy¶wietlanie wewnêtrznej bazy dircolors i wybranie sk³adni\n"
+"pow³oki wykluczaj± siê wzajemnie"
 
 #: src/dircolors.c:475
 msgid ""
@@ -2229,7 +2229,7 @@ msgstr ""
 
 #: src/dircolors.c:504
 msgid "no SHELL environment variable, and no shell type option given"
-msgstr "Brak zmiennej ¶rodowiskowej SHELL i opcji typu shella"
+msgstr "Brak zmiennej ¶rodowiskowej SHELL i opcji typu pow³oki"
 
 #: src/dirname.c:33 src/pathchk.c:59
 msgid "David MacKenzie and Jim Meyering"
@@ -2255,14 +2255,14 @@ msgstr ""
 "`/', wy¶wietla `.' (co oznacza katalog bie¿±cy).\n"
 "\n"
 
-#: src/du.c:50
+#: src/du.c:49
 msgid ""
 "Torbjorn Granlund, David MacKenzie, Larry McVoy, Paul Eggert, and Jim "
 "Meyering"
 msgstr ""
 "Torbjorn Granlund, David MacKenzie, Larry McVoy, Paul Eggert i Jim Meyering"
 
-#: src/du.c:176
+#: src/du.c:175
 msgid ""
 "Summarize disk usage of each FILE, recursively for directories.\n"
 "\n"
@@ -2270,7 +2270,7 @@ msgstr ""
 "Podsumowuje zajêto¶æ dysku przez ka¿dy PLIK, rekursywnie dla katalogów.\n"
 "\n"
 
-#: src/du.c:183
+#: src/du.c:182
 msgid ""
 "  -a, --all             write counts for all files, not just directories\n"
 "      --apparent-size   print apparent sizes, rather than disk usage; "
@@ -2288,7 +2288,7 @@ msgstr ""
 "      --apparent-size   podanie rozmiarów pozornych zamiast zu¿ycia dysku;\n"
 "                          chocia¿ rozmiar pozorny jest zwykle mniejszy, "
 "mo¿e\n"
-"                          byæ te¿ wiêkszy z powodu dziur (pliku rzadkie -\n"
+"                          byæ te¿ wiêkszy z powodu dziur (plików rzadkich -\n"
 "                          sparse), wewnêtrznej fragmentacji, bloków "
 "po¶rednich\n"
 "                          itp.\n"
@@ -2297,7 +2297,7 @@ msgstr ""
 "  -c, --total           wypisanie podsumowania ca³o¶ci\n"
 "  -D, --dereference-args  rozwijanie PLIKÓW - dowi±zañ symbolicznych\n"
 
-#: src/du.c:194
+#: src/du.c:193
 msgid ""
 "  -h, --human-readable  print sizes in human readable format (e.g., 1K 234M "
 "2G)\n"
@@ -2309,10 +2309,10 @@ msgstr ""
 "2G)\n"
 "  -H, --si              podobnie, ale z u¿yciem potêg 1000, nie 1024\n"
 "  -k, --kilobytes       to samo co --block-size=1K\n"
-"  -l, --count-links     liczenie rozmiaru wielokrotnie je¿eli plik ma "
-"dowi±zania\n"
+"  -l, --count-links     liczenie rozmiaru wielokrotnie je¿eli plik ma\n"
+"                        dowi±zania\n"
 
-#: src/du.c:200
+#: src/du.c:199
 msgid ""
 "  -L, --dereference     dereference all symbolic links\n"
 "  -S, --separate-dirs   do not include size of subdirectories\n"
@@ -2322,7 +2322,7 @@ msgstr ""
 "  -S, --separate-dirs   bez uwzglêdniania rozmiarów katalogów\n"
 "  -s, --summarize       wypisanie tylko podsumowañ dla ka¿dego argumentu\n"
 
-#: src/du.c:205
+#: src/du.c:204
 msgid ""
 "  -x, --one-file-system  skip directories on different filesystems\n"
 "  -X FILE, --exclude-from=FILE  Exclude files that match any pattern in "
@@ -2339,12 +2339,10 @@ msgstr ""
 "  -X PLIK, --exclude-from=PLIK  pominiêcie plików pasuj±cych do wzorców w "
 "PLIKU\n"
 "      --exclude=WZÓR    pominiêcie plików pasuj±cych do WZORU\n"
-"      --max-depth=N     wypisanie podsumowania dla katalogu (lub pliku - z --"
-"all)\n"
-"                          tylko je¿eli jest N lub wiêcej poziomów poni¿ej\n"
-"                          podanego jako argument komendy;  --max-depth=0 "
-"jest\n"
-"                          tym samym co -summarize\n"
+"      --max-depth=N     wypisanie podsumowania dla katalogu (lub pliku -\n"
+"                          z --all) tylko je¿eli jest N lub mniej poziomów\n"
+"                          poni¿ej podanego jako argument komendy;\n"
+"                          --max-depth=0 jest tym samym co -summarize\n"
 
 #: src/du.c:337
 #, c-format
@@ -2361,27 +2359,27 @@ msgstr "nie mo¿na przej¶æ do katalogu %s"
 msgid "cannot read directory %s"
 msgstr "nie mo¿na przeczytaæ katalogu %s"
 
-#: src/du.c:543 src/ls.c:2241 src/wc.c:591
+#: src/du.c:554 src/ls.c:2241 src/wc.c:591
 msgid "total"
 msgstr "razem"
 
-#: src/du.c:630
+#: src/du.c:641
 #, c-format
 msgid "invalid maximum depth %s"
-msgstr "b³êdny maksymalny poziom zag³êbienia: `%s'"
+msgstr "b³êdny maksymalny poziom zag³êbienia %s"
 
-#: src/du.c:696
+#: src/du.c:707
 msgid "cannot both summarize and show all entries"
 msgstr "nie mo¿na równocze¶nie tylko podsumowaæ i wypisaæ wszystkich danych"
 
-#: src/du.c:703
+#: src/du.c:714
 msgid "warning: summarizing is the same as using --max-depth=0"
-msgstr "ostrze¿enie: --summarizie jest tym samym co --max-depth=0"
+msgstr "uwaga: --summarize jest tym samym co --max-depth=0"
 
-#: src/du.c:709
+#: src/du.c:720
 #, c-format
 msgid "warning: summarizing conflicts with --max-depth=%d"
-msgstr "ostrze¿enie: --summarize nie mo¿e byæ u¿yte rezem z --max-depth=%d"
+msgstr "uwaga: --summarize nie mo¿e byæ u¿yte razem z --max-depth=%d"
 
 #: src/echo.c:77
 #, c-format
@@ -2400,8 +2398,8 @@ msgstr ""
 "Wy¶wietlenie £AÑCUCHA(ÓW) na standardowym wyj¶ciu.\n"
 "\n"
 "  -n              bez wy¶wietlania znaku nowej linii na koñcu\n"
-"  -e              w³±czenie interpretacji sekwencji steruj±cych, opisanych "
-"poni¿ej\n"
+"  -e              w³±czenie interpretacji sekwencji steruj±cych, podanych "
+"ni¿ej\n"
 "  -E              wy³±czenie interpretacji tych sekwencji w £AÑCUCHACH\n"
 
 #: src/echo.c:88
@@ -2419,7 +2417,7 @@ msgstr ""
 "sekwencje:\n"
 "\n"
 "  \\NNN   znak o kodzie ASCII wynosz±cym NNN (ósemkowo)\n"
-"  \\\\    uko¶nik odwrotny (ang. backslash)\n"
+"  \\\\     uko¶nik odwrotny (ang. backslash)\n"
 "  \\a     dzwonek (BEL)\n"
 "  \\b     znak cofania (ang. backspace)\n"
 
@@ -2512,7 +2510,7 @@ msgstr "kolejne pozycje TABa musz± rosn±æ"
 
 #: src/expand.c:386
 msgid "`-LIST' option is obsolete; use `-t LIST'"
-msgstr "opcja `-LIST' jest rpzestarza³a, nale¿y u¿ywaæ `-t LISTA'"
+msgstr "opcja `-LIST' jest przestarza³a, nale¿y u¿ywaæ `-t LISTA'"
 
 #: src/expr.c:90
 #, c-format
@@ -2537,9 +2535,9 @@ msgstr ""
 "Wypisanie warto¶ci WYRA¯ENIA na standardowym wyj¶ciu. Puste linie poni¿ej\n"
 "rozdzielaj± grupy o wzrastaj±cym pierwszeñstwie. WYRA¯ENIE ma postaæ:\n"
 "\n"
-"  ARG1 | ARG2       ARG1 je¶li nie jest równy NULL ani 0, inaczej ARG2\n"
+"  ARG1 | ARG2       ARG1 je¶li nie jest pusty ani równy 0, inaczej ARG2\n"
 "\n"
-"  ARG1 & ARG2       ARG1 je¶li argument nie jest równy NULL ani 0, inaczej "
+"  ARG1 & ARG2       ARG1 je¶li ¿aden argument nie jest pusty ani 0, inaczej "
 "0\n"
 
 #: src/expr.c:107
@@ -2612,7 +2610,7 @@ msgstr ""
 "                               nawet je¿eli jest to s³owo kluczowe, jak\n"
 "                               `match' albo operator jak '/'\n"
 "\n"
-"  ( WYRA¯ENIE )                warto¶æ wyra¿enia\n"
+"  ( WYRA¯ENIE )              warto¶æ WYRA¯ENIA\n"
 
 #: src/expr.c:142
 msgid ""
@@ -2653,7 +2651,7 @@ msgstr "argument nieliczbowy"
 
 #: src/expr.c:592
 msgid "division by zero"
-msgstr "dzielenie rpzez zero"
+msgstr "dzielenie przez zero"
 
 #: src/factor.c:74
 #, c-format
@@ -2716,8 +2714,8 @@ msgid ""
 "If no FILE or if FILE is `-', read standard input.\n"
 "\n"
 msgstr ""
-"Przeformatowuje akapity w PLIKU(ACH), wynik na standardowym wyj¶ciu.\n"
-"Je¿eli PLIK nie jest podany albo podany jako `-', czyta standardowe "
+"Przeformatowanie akapitów w PLIKU(ACH), wynik na standardowym wyj¶ciu.\n"
+"Je¿eli PLIK nie jest podany lub PLIK to `-', czytane jest standardowe "
 "wej¶cie.\n"
 
 #: src/fmt.c:280
@@ -2728,7 +2726,7 @@ msgid ""
 msgstr ""
 "  -c, --crown-margin        zachowanie wciêæ w pierwszych dwóch liniach\n"
 "  -p, --prefix=ZNAKI        ³±czenie tylko linii maj±cych przedrostek ZNAKI\n"
-"  -s, --split-only          podzielenie d³ugich liniei ale bez wyrównania\n"
+"  -s, --split-only          podzielenie d³ugich linii, ale bez wyrównania\n"
 
 #: src/fmt.c:286
 msgid ""
@@ -2788,7 +2786,7 @@ msgstr "opcja `%s' jest przestarza³a, u¿ywaj `%s'"
 #: src/fold.c:295
 #, c-format
 msgid "invalid number of columns: `%s'"
-msgstr "b³êdna ilo¶æ kolumn: `%s'"
+msgstr "b³êdna liczba kolumn: `%s'"
 
 #: src/head.c:92
 msgid ""
@@ -2798,7 +2796,7 @@ msgid ""
 "\n"
 msgstr ""
 "Wypisanie 10 pierwszych linii ka¿dego PLIKU na standardowym wyj¶ciu.\n"
-"Dla wiêkszej ilo¶ci PLIKów ka¿dy kawa³ek ma nag³ówek z nazw±.\n"
+"Dla wiêkszej liczby PLIKÓW ka¿dy kawa³ek ma nag³ówek z nazw±.\n"
 "Je¿eli PLIK nie jest podany lub PLIK to -, czytane jest standardowe "
 "wej¶cie.\n"
 "\n"
@@ -2835,23 +2833,23 @@ msgstr "nie mo¿na zmieniæ pozycji w pliku %s"
 #: src/head.c:256 src/tail.c:1388
 #, c-format
 msgid "%s: %s is so large that it is not representable"
-msgstr "%s: %s jest tak du¿e, ¿e nie mo¿e zostaæ wyra¿one"
+msgstr "%s: %s jest tak du¿a, ¿e nie mo¿e zostaæ wyra¿ona"
 
 #: src/head.c:257 src/tail.c:1390
 msgid "number of lines"
-msgstr "ilo¶æ linii"
+msgstr "liczba linii"
 
 #: src/head.c:257 src/tail.c:1391
 msgid "number of bytes"
-msgstr "ilo¶æ bajtów"
+msgstr "liczba bajtów"
 
 #: src/head.c:264 src/tail.c:1478
 msgid "invalid number of lines"
-msgstr "b³êdna ilo¶æ linii"
+msgstr "b³êdna liczba linii"
 
 #: src/head.c:265 src/tail.c:1479
 msgid "invalid number of bytes"
-msgstr "b³êdna ilo¶æ bajtów"
+msgstr "b³êdna liczba bajtów"
 
 #: src/head.c:341
 #, c-format
@@ -2886,13 +2884,13 @@ msgid ""
 msgstr ""
 "Sk³adnia: %s [NAZWA]\n"
 "    albo: %s OPCJA\n"
-"Wy¶wietla nazwê tego systemu.\n"
+"Wy¶wietlenie lub ustawienie nazwy tego systemu.\n"
 "\n"
 
 #: src/hostname.c:104
 #, c-format
 msgid "cannot set hostname to `%s'"
-msgstr "nie mo¿na ustawiæ nazwy `%s'"
+msgstr "nie mo¿na ustawiæ nazwy systemu na `%s'"
 
 #: src/hostname.c:110
 msgid "cannot set hostname; this system lacks the functionality"
@@ -2928,8 +2926,8 @@ msgstr ""
 "  -a              ignorowane, dla zachowania kompatybilno¶ci z innymi "
 "wersjami\n"
 "  -g, --group     wy¶wietlenie tylko efektywnego identyfikatora grupy\n"
-"  -G, --groups    wy¶wietlenie pe³n± listê grup\n"
-"  -n, --name      wy¶wietlenie nazwy zamiast numerów, dla -ugG\n"
+"  -G, --groups    wy¶wietlenie pe³nej listy grup\n"
+"  -n, --name      wy¶wietlenie nazw zamiast numerów, dla -ugG\n"
 "  -r, --real      wy¶wietlenie rzeczywistego ID zamiast efektywnego, dla -"
 "ugG\n"
 "  -u, --user      wy¶wietlenie tylko efektywnego identyfikatora u¿ytkownika\n"
@@ -2960,7 +2958,7 @@ msgstr "%s: Nie ma takiego u¿ytkownika"
 #: src/id.c:212
 #, c-format
 msgid "cannot find name for user ID %u"
-msgstr "brak nazwy u¿ytkownika dla ID %u"
+msgstr "nie mo¿na znale¼æ nazwy u¿ytkownika o ID %u"
 
 #: src/id.c:235
 #, c-format
@@ -3016,7 +3014,7 @@ msgstr "nie powiiod³o siê wywo³anie systemowe fork"
 
 #: src/install.c:532
 msgid "cannot run strip"
-msgstr "nie uda³o siê uruchomic strip"
+msgstr "nie uda³o siê uruchomiæ strip"
 
 #: src/install.c:539
 msgid "strip failed"
@@ -3064,10 +3062,11 @@ msgid ""
 "  -d, --directory     treat all arguments as directory names; create all\n"
 "                        components of the specified directories\n"
 msgstr ""
-"      --backup[=CONTROL]   robienie kopii zapasowej przed usuniêciem pliku\n"
+"      --backup[=TRYB] robienie kopii zapasowej przed zamazaniem pliku\n"
 "  -b                  jak --backup, ale bez podawania argumentu\n"
 "  -c                  (ignorowane)\n"
-"  -d, --directory     traktowanie wszystkich argumentów jak nazw katalogów;\n"
+"  -d, --directory     traktowanie wszystkich argumentów jako nazw "
+"katalogów;\n"
 "                        tworzenie katalogów sk³adowych podanych katalogów\n"
 
 #: src/install.c:619
@@ -3146,7 +3145,7 @@ msgstr ""
 "  -a NUMER          wypisanie linii nie do pary z pliku NUMER, gdzie numer "
 "to\n"
 "                      1 albo 2, odpowiadaj±cy PLIKOWI1 albi PLIKOWI2\n"
-"  -e PUSTE          zamienia brakuj±ce pola na wej¶ciu na PUSTE\n"
+"  -e PUSTE          zamiana brakuj±cych pól na wej¶ciu na PUSTE\n"
 
 #: src/join.c:157
 msgid ""
@@ -3193,7 +3192,7 @@ msgstr ""
 "ZNAK. POLE jest numerem pola liczonym od 1.  FORMAT to jedna lub wiêcej\n"
 "specyfikacji oddzielonych przecinkami lub odstêpami, ka¿da w postaci\n"
 "`NUMER.POLE' albo `0'. Domy¶lny format wypisuje pole ³±cz±ce, pozosta³e\n"
-"pola z PLIK1 i pozosta³e pola z PLIK2, wszystkie oddzielone ZNAKIEM.\n"
+"pola z PLIKU1 i pozosta³e pola z PLIKU2, wszystkie oddzielone ZNAKIEM.\n"
 
 #: src/join.c:645
 #, c-format
@@ -3240,8 +3239,8 @@ msgid ""
 "  or:  %s -t [SIGNAL]...\n"
 msgstr ""
 "Sk³adnia: %s [-s SYGNA£ | -SYGNA£] PID...\n"
-"    albo: %s -l [SYGNAL]...\n"
-"    albo: %s -t [SYGNAL]...\n"
+"    albo: %s -l [SYGNA£]...\n"
+"    albo: %s -t [SYGNA£]...\n"
 
 #: src/kill.c:99
 msgid ""
@@ -3262,7 +3261,7 @@ msgstr ""
 "  -s, --signal=SYGNA£, -SYGNA£\n"
 "                   nazwa albo numer SYGNA£U do wys³ania\n"
 "  -l, --list       lista nazw sygna³ów albo konwersja nazw na/z numery\n"
-"  -t, --table      tablice informacji o sygna³ach\n"
+"  -t, --table      tablica informacji o sygna³ach\n"
 
 #: src/kill.c:114
 msgid ""
@@ -3370,7 +3369,7 @@ msgstr "tworzenie dowi±zania symbolicznego %s do %s"
 #: src/ln.c:305
 #, c-format
 msgid "create hard link %s to %s"
-msgstr "tworzenie dowi±zania %s do %s"
+msgstr "tworzenie dowi±zania zwyk³ego %s do %s"
 
 #: src/ln.c:319
 #, c-format
@@ -3380,7 +3379,7 @@ msgstr "tworzenie dowi±zania symbolicznego %s do %s"
 #: src/ln.c:320
 #, c-format
 msgid "creating hard link %s to %s"
-msgstr "tworzenie dowi±zania %s do %s"
+msgstr "tworzenie dowi±zania zwyk³ego %s do %s"
 
 #: src/ln.c:339
 #, c-format
@@ -3403,17 +3402,18 @@ msgid ""
 "links with --symbolic.  When creating hard links, each TARGET must exist.\n"
 "\n"
 msgstr ""
-"Utworzenie dowi±zania do podanego CELU z opcjonalna nazw± NAZWA_DOWI¡ZANIA\n"
+"Utworzenie dowi±zania do podanego CELU z opcjonaln± nazw± NAZWA_DOWI¡ZANIA\n"
 "Je¿eli pominiêta jest nazwa NAZWA_DOWI¡ZANIA w bie¿±cym katalogu jest "
 "tworzone\n"
 "dowi±zanie z nazw± tak± jak CEL. Je¿eli u¿yta jest druga forma, z wiêcej "
 "ni¿\n"
-"jednym CELEM, ostatni argument musi byc katalogiem; dowi±zania do ka¿dego "
+"jednym CELEM, ostatni argument musi byæ katalogiem; dowi±zania do ka¿dego "
 "CELU\n"
 "bêda utworzone w KATALOGU. Domy¶lnie tworzone s± zwyk³e dowi±zania, "
 "symboliczne\n"
 "gdy jest u¿yta opcja --symbolic. Przy tworzeniu zwyk³ych dowi±zañ ka¿dy CEL\n"
 "musi istnieæ.\n"
+"\n"
 
 #: src/ln.c:357
 msgid ""
@@ -3423,7 +3423,7 @@ msgid ""
 "  -d, -F, --directory         hard link directories (super-user only)\n"
 "  -f, --force                 remove existing destination files\n"
 msgstr ""
-"      --backup[=CONTROL]      zrobienie kopii zapasowej przed skasowaniem\n"
+"      --backup[=TRYB]         zrobienie kopii zapasowej przed skasowaniem\n"
 "  -b                          jak --backup, ale bez argumentu\n"
 "  -d, -F, --directory         dowi±zanie zwyk³e do katalogów (tylko super-"
 "user)\n"
@@ -3476,13 +3476,13 @@ msgid ""
 "Print the name of the current user.\n"
 "\n"
 msgstr ""
-"Wypisuje identyfikator uzytkownika.\n"
+"Wypisuje nazwê aktualnego u¿ytkownika.\n"
 "\n"
 
 #: src/logname.c:99
 #, c-format
 msgid "%s: no login name\n"
-msgstr "%s: brak identyfikatora\n"
+msgstr "%s: brak nazwy u¿ytkownika\n"
 
 #: src/ls.c:673
 msgid "%b %e  %Y"
@@ -3510,7 +3510,7 @@ msgstr "ignorujê b³êdny rozmiar tab-a w zmiennej ¶rodowiska TABSIZE: %s"
 #: src/ls.c:1482
 #, c-format
 msgid "invalid line width: %s"
-msgstr "b³êdny szeroko¶æ linii: %s"
+msgstr "b³êdna szeroko¶æ linii: %s"
 
 #: src/ls.c:1556
 #, c-format
@@ -3534,7 +3534,7 @@ msgstr "niezrozumia³a warto¶æ zmiennej ¶rodowiska LS_COLORS"
 #: src/ls.c:2145
 #, c-format
 msgid "cannot determine device and inode of %s"
-msgstr "nie mo¿na ustaliæ urz±dzenia i inode'u %s"
+msgstr "nie mo¿na ustaliæ urz±dzenia i i-wêz³a %s"
 
 #: src/ls.c:2155
 #, c-format
@@ -3544,7 +3544,7 @@ msgstr "nie bêdzie wylistowany katalog %s ju¿ wylistowany poprzednio"
 #: src/ls.c:2208 src/remove.c:928
 #, c-format
 msgid "reading directory %s"
-msgstr "czytowanie katalogu %s"
+msgstr "czytanie katalogu %s"
 
 #: src/ls.c:2603
 #, c-format
@@ -3568,7 +3568,7 @@ msgid ""
 "      --author               print the author of each file\n"
 "  -b, --escape               print octal escapes for nongraphic characters\n"
 msgstr ""
-"  -a, --all                  bez chowania plików zaczynaj±cych siê od .\n"
+"  -a, --all                  bez ukrywania plików zaczynaj±cych siê od .\n"
 "  -A, --almost-all           bez pokazania . ani ..\n"
 "      --author               wypisanie autora ka¿dego pliku\n"
 "  -b, --escape               wypisanie znaków niegraficznych ósemkowo\n"
@@ -3583,7 +3583,7 @@ msgid ""
 "                               with -l: show ctime and sort by name\n"
 "                               otherwise: sort by ctime\n"
 msgstr ""
-"      --block-size=ROZMIAR   u¿ycie bloków o podanym ROZMIARZE\n"
+"      --block-size=ROZMIAR   u¿ycie bloków o podanym w bajtach ROZMIARZE\n"
 "  -B, --ignore-backups       bez pokazania plików koñcz±cych siê na ~\n"
 "  -c                         z -lt: sortowanie wg i wypisanie ctime (czasu\n"
 "                               ostatniej modyfikacji danych o pliku)\n"
@@ -3603,9 +3603,9 @@ msgid ""
 msgstr ""
 "  -C                         wypisanie plików w kolumnach\n"
 "      --color[=GDY]          sterowanie u¿ycia kolorów rozró¿niaj±cych typy\n"
-"                              plików. GDY mo¿e byæ `never' (nigdy), "
+"                               plików. GDY mo¿e byæ `never' (nigdy), "
 "`always'\n"
-"                              (zawsze) albo `auto' (automatyczne)\n"
+"                               (zawsze) albo `auto' (automatyczne)\n"
 "  -d, --directory            pokazanie katalogów zamiast ich zawarto¶ci, "
 "bez\n"
 "                               rozwi±zywania dowi±zañ symblicznych\n"
@@ -3671,10 +3671,10 @@ msgstr ""
 "S£OWO:\n"
 "                               none (domy¶lnie), classify (-F), file-type (-"
 "p)\n"
-"  -i, --inode                pokazywanie numeru inode ka¿dego pliku\n"
+"  -i, --inode                pokazywanie numeru i-wêz³a ka¿dego pliku\n"
 "  -I, --ignore=WZÓR          bez pokazywania plików pasuj±cych do shellowego "
 "WZORU\n"
-"  -k                         jak --block-size=1024\n"
+"  -k                         jak --block-size=1K\n"
 
 #: src/ls.c:3817
 msgid ""
@@ -3700,14 +3700,12 @@ msgid ""
 "  -o                         like -l, but do not list group information\n"
 "  -p, --file-type            append indicator (one of /=@|) to entries\n"
 msgstr ""
-"  -n, --numeric-uid-gid      pokazanie liczbowo UID i GID zamiast podawania "
-"nazw\n"
-"  -N, --literal              wypisanie nazwy dok³adnie (nie s± traktowane "
-"specjalnie\n"
-"                               n.p. znaki steruj±ce)\n"
+"  -n, --numeric-uid-gid      jak -l, ale pokazanie UID i GID liczbowo\n"
+"  -N, --literal              wypisanie nazwy dok³adnie (bez specjalnego\n"
+"                               traktowania np. znaków steruj±cych)\n"
 "  -o                         jak -l, ale bez informacji o grupie\n"
-"  -p, --file-type            dopisanie znaku wskazuj±cego typ pliku (jeden "
-"z /=@|)\n"
+"  -p, --file-type            dopisanie znaku wskazuj±cego typ pliku (z /"
+"=@|)\n"
 
 #: src/ls.c:3831
 msgid ""
@@ -3723,8 +3721,8 @@ msgstr ""
 "  -q, --hide-control-chars   pisanie ? zamiast znaków steruj±cych\n"
 "      --show-control-chars   pokazanie znaków niedrukowalnych (domy¶lnie, "
 "chyba\n"
-"                             ¿e program nazywa siê `ls' i pisze do "
-"terminala)\n"
+"                             ¿e program nazywa siê `ls' i pisze na "
+"terminalu)\n"
 "  -Q, --quote-name           ujêcie nazw w cudzys³owy\n"
 "      --quoting-style=S£OWO  zabezpieczenie znaków specjalnych w stylu "
 "S£OWO:\n"
@@ -3739,7 +3737,7 @@ msgid ""
 msgstr ""
 "  -r, --reverse              odwrotny porz±dek sortowania\n"
 "  -R, --recursive            rekursywne listowanie katalogów\n"
-"  -s, --size                 wypisanie ilo¶ci bloków zajêtych przez ka¿dy "
+"  -s, --size                 wypisanie liczby bloków zajêtych przez ka¿dy "
 "plik\n"
 
 #: src/ls.c:3844
@@ -3758,16 +3756,14 @@ msgstr ""
 "      --sort=S£OWO           sortowanie wg: extension -X (rozszerzenia), "
 "none\n"
 "                               -U (wcale), size -S (rozmiaru), time -t\n"
-"                                (czasu), version -v (wersji), status -c\n"
-"                                (czasu zm. inf. o pliku), atime -u access -"
-"u,\n"
-"                                use -u (czasu ostatniego dostêpu)\n"
-"      --time=S£OWO           pokaaznie czasu inny ni¿ czas modyfikacji, "
-"okre¶l.\n"
-"                               S£OWEM: atime, access, use, ctime albo "
-"status;\n"
-"                               u¿ycie podanego czasu do sortowania gdy\n"
-"                               --sort=time\n"
+"                               (czasu), version -v (wersji), status -c\n"
+"                               (czasu zmiany informacji o pliku), atime -u,\n"
+"                               access -u, use -u (czasu ostatniego dostêpu)\n"
+"      --time=S£OWO           pokazanie czasu innego ni¿ czas modyfikacji,\n"
+"                               okre¶lonego S£OWEM: atime, access, use, "
+"ctime\n"
+"                               albo status; u¿ycie podanego czasu do\n"
+"                               sortowania gdy podano --sort=time\n"
 
 #: src/ls.c:3853
 msgid ""
@@ -3804,7 +3800,7 @@ msgstr ""
 "  -u                         z -lt: sortowanie wg i wypisanie czasu\n"
 "                               ostatniego dostêpu; z -l: wypisanie czasu\n"
 "                               dostêpu i sortowanie wg nazw; w przeciwnym\n"
-"                               przypadku: sortowanie wg czasu dostepu\n"
+"                               przypadku: sortowanie wg czasu dostêpu\n"
 "  -U                         bez sortowania, wypisanie kolejno¶ci jak w "
 "katalogu\n"
 "  -v                         sortowanie wg wersji\n"
@@ -3879,10 +3875,10 @@ msgid ""
 "  -w, --warn              warn about improperly formated checksum lines\n"
 "\n"
 msgstr ""
-"Nastêpuj±ce opcje s± potrzebne tylko do sprawdzania sum kontrolnych:\n"
-"      --status            nie wypisuje nic, przekazuje wynik przez kod "
-"wyj¶ciowy\n"
-"  -w, --warn              ostrzega o nieopoprawnie sformatowanych liniach "
+"Nastêpuj±ce opcje s± przydatne tylko przy sprawdzaniu sum kontrolnych:\n"
+"      --status            bez wypisywania niczego, kod wyj¶cia przekazuje "
+"wynik\n"
+"  -w, --warn              ostrzeganie o niepoprawnie sformatowanych liniach "
 "sum\n"
 "\n"
 
@@ -3986,11 +3982,11 @@ msgstr "opcje --string i --check wzajemnie siê wykluczaj±"
 
 #: src/md5sum.c:579
 msgid "the --status option is meaningful only when verifying checksums"
-msgstr "opcja --status ma znaczenie tylko pzy weryfikacji sum kontrolnych"
+msgstr "opcja --status ma znaczenie tylko przy weryfikacji sum kontrolnych"
 
 #: src/md5sum.c:586
 msgid "the --warn option is meaningful only when verifying checksums"
-msgstr "opcja --warn ma znaczenie tylko pzy weryfikacji sum kontrolnych"
+msgstr "opcja --warn ma znaczenie tylko przy weryfikacji sum kontrolnych"
 
 #: src/md5sum.c:596
 msgid "no files may be specified when using --string"
@@ -4003,7 +3999,7 @@ msgstr "je¿eli jest u¿ywana opcja --check mo¿na podaæ tylko jeden argument"
 #: src/mkdir.c:61
 #, c-format
 msgid "Usage: %s [OPTION] DIRECTORY...\n"
-msgstr "Sk³adnia: %s [OPCJA] [KATALOG]...\n"
+msgstr "Sk³adnia: %s [OPCJA] KATALOG...\n"
 
 #: src/mkdir.c:62
 msgid ""
@@ -4020,10 +4016,9 @@ msgid ""
 "  -p, --parents     no error if existing, make parent directories as needed\n"
 "  -v, --verbose     print a message for each created directory\n"
 msgstr ""
-"Utworzenie KATALOGU/ÓW, je¿eli jeszcze nie istniej±.\n"
-"\n"
 "  -m, --mode=UPRAWN ustawienie uprawnieñ (jak w chmod), nie rwxrwxrwx-umask\n"
-"  -p, --parents     utworzenie ca³ej ¶cie¿ki katalogów\n"
+"  -p, --parents     bez b³êdu gdy istnieje, utworzenie ca³ej ¶cie¿ki "
+"katalogów\n"
 "  -v, --verbose     wypisanie komunikatu o ka¿dym utworzonym katalogu\n"
 
 #: src/mkdir.c:113
@@ -4093,8 +4088,7 @@ msgstr ""
 "Dla TYPÓW b, c i u musi byæ podany zarówno WIÊKSZY jak MNIEJSZY numer\n"
 "urz±dzenia. Oba numery musz± byæ pominiête je¿eli TYP to p. Je¿eli WIÊKSZY\n"
 "lub MNIEJSZY zaczyna siê od 0x albo 0X, jest interpretowany jako liczba\n"
-"szestnastkowa. Je¿eli zaczyna siê od 0 - jako ósemkowa. W innych wypadkach "
-"-\n"
+"szesnastkowa. Je¿eli zaczyna siê od 0 - jako ósemkowa. W innych wypadkach -\n"
 "jako dziêsi±tkowa. TYP mo¿e byæ:\n"
 
 #: src/mknod.c:76
@@ -4107,19 +4101,19 @@ msgstr ""
 "\n"
 "  b      specjalny plik blokowy (buforowany)\n"
 "  c, u   specjalny plik znakowy (niebuforowany)\n"
-"  p      potoku (FIFO)\n"
+"  p      potok (FIFO)\n"
 
 #: src/mknod.c:141
 msgid "wrong number of arguments"
-msgstr "z³a ilo¶æ argumentów"
+msgstr "z³a liczba argumentów"
 
 #: src/mknod.c:153
 msgid "block special files not supported"
-msgstr "nie mo¿na tworzyæ specjalnych plików blokowych"
+msgstr "specjalne pliki blokowe nie s± obs³ugiwane"
 
 #: src/mknod.c:162
 msgid "character special files not supported"
-msgstr "specjalne pliki znakowe nie znane w tym systemie"
+msgstr "specjalne pliki znakowe nie s± obs³ugiwane"
 
 #: src/mknod.c:171
 msgid ""
@@ -4177,8 +4171,9 @@ msgid ""
 "  -i, --interactive            prompt before overwrite\n"
 "                                 equivalent to --reply=query\n"
 msgstr ""
-"      --backup[=TRYB]          zrobienie kopii zapasowej ka¿dego pliku\n"
-"                                 docelowego\n"
+"      --backup[=TRYB]          zrobienie kopii zapasowej ka¿dego "
+"istniej±cego\n"
+"                                 pliku docelowego\n"
 "  -b                           jak --backup, ale bez podawania argumentu\n"
 "  -f, --force                  bez pytania przed zamazaniem pliku\n"
 "                                 równowa¿ne --reply=yes\n"
@@ -4210,7 +4205,7 @@ msgid ""
 "  -v, --verbose                explain what is being done\n"
 msgstr ""
 "      --target-directory=KATALOG  przeniesienie wszystkich argumentów\n"
-"                                  ¯RÓD£OWYCH do KATALOGU\n"
+"                                  ¬RÓD£OWYCH do KATALOGU\n"
 "  -u, --update                 przenoszenie tylko gdy ¬RÓD£O jest nowsze od\n"
 "                                 CELU albo nie ma CELU\n"
 "  -v, --verbose                wyja¶nianie co siê dzieje\n"
@@ -4228,7 +4223,7 @@ msgstr ""
 #: src/nice.c:67
 #, c-format
 msgid "Usage: %s [OPTION] [COMMAND [ARG]...]\n"
-msgstr "Sk³adnia: %s [OPCJA] [POLECENIE] [ARGUMENT]...\n"
+msgstr "Sk³adnia: %s [OPCJA] [POLECENIE [ARGUMENT]...]\n"
 
 #: src/nice.c:68
 msgid ""
@@ -4243,7 +4238,7 @@ msgstr ""
 "ZMIANA wynosi 10. Zakres wynosi od -20 (najwy¿szy priorytet) do 19 "
 "(najni¿szy).\n"
 "\n"
-"  -n, --adjustment=ZMIANA   zwiêksza priorytet o ZMIANÊ\n"
+"  -n, --adjustment=ZMIANA   zwiêkszenie priorytetu o ZMIANÊ\n"
 
 #: src/nice.c:109 src/nice.c:122
 #, c-format
@@ -4261,7 +4256,7 @@ msgstr "razem z priorytetem musi byæ podane polecenie"
 
 #: src/nice.c:178 src/nice.c:187
 msgid "cannot get priority"
-msgstr "nie mo¿na odzczytaæ priorytetu"
+msgstr "nie mo¿na odczytaæ priorytetu"
 
 #: src/nice.c:192
 msgid "cannot set priority"
@@ -4290,7 +4285,7 @@ msgid ""
 msgstr ""
 "  -b, --body-numbering=STYL       u¿ycie STYLU do numerowania linii tre¶ci\n"
 "  -d, --section-delimiter=CC      u¿ycie CC do oddzielania stron logicznych\n"
-"  -f, --footer-numbering=STYLE    u¿ycie STYLU do numerowania stopek\n"
+"  -f, --footer-numbering=STYL     u¿ycie STYLU do numerowania linii stopek\n"
 
 #: src/nl.c:193
 msgid ""
@@ -4303,7 +4298,7 @@ msgid ""
 "pages\n"
 "  -s, --number-separator=STRING   add STRING after (possible) line number\n"
 msgstr ""
-"  -h, --header-numbering=STYLE    u¿ycie STYLU do numeracji linii nag³ówka\n"
+"  -h, --header-numbering=STYL     u¿ycie STYLU do numeracji linii nag³ówka\n"
 "  -i, --page-increment=ILE        przyrost numeracji linii\n"
 "  -l, --join-blank-lines=ILE      grupa ILU pustych linii liczona jako "
 "jedna\n"
@@ -4319,7 +4314,7 @@ msgid ""
 "  -v, --first-page=NUMBER         first line number on each logical page\n"
 "  -w, --number-width=NUMBER       use NUMBER columns for line numbers\n"
 msgstr ""
-"  -v, --first-page=NUMER          numer pierwszej linii na stronie "
+"  -v, --first-page=NUMER          NUMER pierwszej linii na stronie "
 "logicznej\n"
 "  -w, --number-width=ILE          ILE kolumn na numery linii\n"
 
@@ -4354,7 +4349,7 @@ msgstr ""
 "  a         numerowanie wszystkich linii\n"
 "  t         numerowanie tylko niepustych linii\n"
 "  n         bez numerowania linii\n"
-"  pWYR_REG   numerowanie tylko linii pasuj±cych do WYR_REG\n"
+"  pWYR_REG  numerowanie tylko linii pasuj±cych do WYR_REG\n"
 "\n"
 "FORMAT to jeden z:\n"
 "\n"
@@ -4376,7 +4371,7 @@ msgstr "b³êdny przyrost numeru linii: `%s'"
 #: src/nl.c:527
 #, c-format
 msgid "invalid number of blank lines: `%s'"
-msgstr "b³êdna ilo¶æ pustych linii: `%s'"
+msgstr "b³êdna liczba pustych linii: `%s'"
 
 #: src/nl.c:541
 #, c-format
@@ -4402,7 +4397,7 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Wypisanie jednoznacznej reprezentacji PLIKU, domy¶lnie bajty, ósemkowo, na\n"
+"Wypisanie jednoznacznej reprezentacji PLIKU, domy¶lnie bajty ósemkowo, na\n"
 "standardowe wyj¶cie. Je¿eli PLIK nie jest podany lub PLIK to -, czytane\n"
 "jest standardowe wej¶cie.\n"
 "\n"
@@ -4431,7 +4426,7 @@ msgid ""
 "      --traditional           accept arguments in traditional form\n"
 msgstr ""
 "  -N, --read-bytes=BAJTY      ograniczenie wielko¶ci do BAJTÓW\n"
-"  -s, --strings[=BAJTY]       wypisanie przynajmniej tyle BAJTÓW znaków\n"
+"  -s, --strings[=BAJTY]       wypisanie przynajmniej tylu BAJTÓW znaków\n"
 "                              graficznych\n"
 "  -t, --format=TYP            wybranie formatu/formatów danych wyj¶ciowych\n"
 "  -v, --output-duplicates     bez u¿ywania * do zaznaczania powtórzonych "
@@ -4454,8 +4449,8 @@ msgstr ""
 "Tradycyjne specyfikacje formatu mog± byæ mieszane, akumuluj± siê:\n"
 "  -a   to samo co -t a,  nazwy znaków\n"
 "  -b   to samo co -t oC, bajty ósemkowo\n"
-"  -c   to samo co -t c,  znaki ASCII i numery znaków z backslashem\n"
-"  -d   to samo co -t u2, dziesiêtnie liczby short ze znakiem\n"
+"  -c   to samo co -t c,  znaki ASCII lub kody znaków z backslashem\n"
+"  -d   to samo co -t u2, dziesiêtnie liczby short bez znaku\n"
 
 #: src/od.c:324
 msgid ""
@@ -4467,11 +4462,11 @@ msgid ""
 "  -x   same as -t x2, select hexadecimal shorts\n"
 msgstr ""
 "  -f   to samo co -t fF, zmiennoprzecinkowy float\n"
-"  -h   to samo co -t x2, szestnastkowo short\n"
+"  -h   to samo co -t x2, szesnastkowo short\n"
 "  -i   to samo co -t d2, dziesiêtnie short\n"
-"  -l   to samo co -t d4, dziesiêtnmie long\n"
+"  -l   to samo co -t d4, dziesiêtnie long\n"
 "  -o   to samo co -t o2, ósemkowo short\n"
-"  -x   to samo co -t x2, szestnastkowo short\n"
+"  -x   to samo co -t x2, szesnastkowo short\n"
 
 #: src/od.c:332
 msgid ""
@@ -4492,12 +4487,12 @@ msgstr ""
 "trakcie\n"
 "pracy programu. Dla PRZESUNIÊCIA i ETYKIETY przedrostek 0x lub 0X oznacza "
 "zapis\n"
-"szestnastkowy, dla ósemkowego mo¿e byæ przyrostek . , a b mno¿y przez 512.\n"
+"szesnastkowy, dla ósemkowego mo¿e byæ przyrostek . , a b mno¿y przez 512.\n"
 "\n"
 "TYP sk³ada siê z jednej lub wiêcej nastêpuj±cych specyfikacji:\n"
 "\n"
-"  a          nazwy znaków\n"
-"  c          znaki ASCII lub numery znaków z backslashem\n"
+"  a           nazwy znaków\n"
+"  c           znaki ASCII lub kody znaków z backslashem\n"
 
 #: src/od.c:344
 msgid ""
@@ -4507,11 +4502,11 @@ msgid ""
 "  u[SIZE]    unsigned decimal, SIZE bytes per integer\n"
 "  x[SIZE]    hexadecimal, SIZE bytes per integer\n"
 msgstr ""
-"  d[ROZMIAR]  dziesiêtny ze znakiem, liczba o takim ROZMIARZE\n"
-"  f[ROZMIAR]  zmiennoprzecinkowy, liczba o takim ROZMIARZE\n"
-"  o[ROZMIAR]  ósemkowy, liczba o takim ROZMIARZE\n"
-"  u[ROZMIAR]  dziesiêtny bez znaku, liczba o takim ROZMIARZE\n"
-"  x[ROZMIAR]  szestnastkowy, liczba o takim ROZMIARZE\n"
+"  d[ROZMIAR]  dziesiêtny ze znakiem, liczba o takim ROZMIARZE w bajtach\n"
+"  f[ROZMIAR]  zmiennoprzecinkowy, liczba o takim ROZMIARZE w bajtach\n"
+"  o[ROZMIAR]  ósemkowy, liczba o takim ROZMIARZE w bajtach\n"
+"  u[ROZMIAR]  dziesiêtny bez znaku, liczba o takim ROZMIARZE w bajtach\n"
+"  x[ROZMIAR]  szesnastkowy, liczba o takim ROZMIARZE w bajtach\n"
 
 #: src/od.c:351
 msgid ""
@@ -4537,23 +4532,20 @@ msgid ""
 "of output.  "
 msgstr ""
 "\n"
-"BAZÊ oznacza siê d je¿eli dziesiêtna, o - ósemkowa, x - szestnastkowa, n -\n"
-"¿adna. BAJTY s± w zapisie szestnastkowym je¿eli maja przedrostek 0x albo "
-"0X,\n"
-"je¿eli przyrostek to b, s± mno¿one przez 512, k - 1204, m - 1048576. "
+"BAZÊ oznacza siê d je¿eli dziesiêtna, o - ósemkowa, x - szesnastkowa, n -\n"
+"¿adna. BAJTY s± w zapisie szesnastkowym je¿eli maja przedrostek 0x albo 0X,\n"
+"je¿eli przyrostek to b, s± mno¿one przez 512, k - 1024, m - 1048576. "
 "Dodanie\n"
-"przyrostka `z' do dowonego typu dodaje wy¶wietlanie znaków drukowalnych na\n"
-"koñcu ka¿dej linii.  -s bez liczby oznacza -s 3.  -w bez liczby oznacza -w "
-"32.\n"
-"Domy¶lnie od u¿ywa -A o -t d2 -w 16. "
+"przyrostka `z' do dowolnego typu dodaje wy¶wietlanie znaków drukowalnych na\n"
+"koñcu ka¿dej linii. "
 
 #: src/od.c:366
 msgid ""
 "--string without a number implies 3.  --width without a number\n"
 "implies 32.  By default, od uses -A o -t d2 -w 16.\n"
 msgstr ""
-"Opcja --string bez liczby oznacza d³ugo¶æ równ± 3. Opcja --width bez liczby\n"
-"oznacza szeroko¶æ równ± 32. Domy¶lnie od u¿ywa -A o -t d2 -w 16 .\n"
+"--string bez liczby oznacza d³ugo¶æ równ± 3. --width bez\n"
+"liczby oznacza szeroko¶æ równ± 32. Domy¶lnie od u¿ywa -A o -t d2 -w 16.\n"
 
 #: src/od.c:722 src/od.c:844
 #, c-format
@@ -4566,7 +4558,8 @@ msgid ""
 "invalid type string `%s';\n"
 "this system doesn't provide a %lu-byte integral type"
 msgstr ""
-"b³êdny ³añcuch typu `%s';ten system nie ma %lu-bajtowych liczb ca³kowitych"
+"b³êdny ³añcuch typu `%s';\n"
+"ten system nie ma %lu-bajtowych liczb ca³kowitych"
 
 #: src/od.c:854
 #, c-format
@@ -4574,8 +4567,8 @@ msgid ""
 "invalid type string `%s';\n"
 "this system doesn't provide a %lu-byte floating point type"
 msgstr ""
-"b³êdny ³añcuch typu `%s';ten system nie ma %lu-bajtowych liczb "
-"zmiennoprzecinkowych"
+"b³êdny ³añcuch typu `%s';\n"
+"ten system nie ma %lu-bajtowych liczb zmiennoprzecinkowych"
 
 #: src/od.c:917
 #, c-format
@@ -4598,15 +4591,15 @@ msgstr ""
 
 #: src/od.c:1717
 msgid "skip argument"
-msgstr "przeskakujê argument"
+msgstr "pominiêcie argumentu"
 
 #: src/od.c:1725
 msgid "limit argument"
-msgstr "ograniczam argument"
+msgstr "ograniczenie argumentu"
 
 #: src/od.c:1735
 msgid "minimum string length"
-msgstr "minimalna d³ugo¶c ³añcucha"
+msgstr "minimalna d³ugo¶æ ³añcucha"
 
 #: src/od.c:1740 src/od.c:1806
 #, c-format
@@ -4802,13 +4795,13 @@ msgid ""
 "  -q              omit the user's full name, remote host and idle time\n"
 "                  in short format\n"
 msgstr ""
-"  -f               pominiêcie nag³ówków kolumn w formacie skróconym\n"
-"  -w               pominiêcie nazwiska u¿ytkownika w formacie skróconym\n"
-"  -i               pominiêcie nazwiska i  zdalnego systemu w formacie "
+"  -f              pominiêcie nag³ówków kolumn w formacie skróconym\n"
+"  -w              pominiêcie nazwiska u¿ytkownika w formacie skróconym\n"
+"  -i              pominiêcie nazwiska i zdalnego systemu w formacie "
 "skróconym\n"
-"  -q               pominiêcie nazwiska, zdalnego system oraz czasu "
+"  -q              pominiêcie nazwiska, zdalnego system oraz czasu "
 "bezczynno¶ci\n"
-"                   w formacie skróconym\n"
+"                  w formacie skróconym\n"
 
 #: src/pinky.c:487
 #, c-format
@@ -4824,8 +4817,7 @@ msgstr ""
 #: src/pinky.c:574
 msgid "no username specified; at least one must be specified when using -l"
 msgstr ""
-"brak nazwy u¿ytkownika - musi byæ podana chocia¿ jedna, je¿eli jest u¿yta "
-"opcja -l"
+"brak nazwy u¿ytkownika - musi byæ podana chocia¿ jedna, je¿eli u¿yto opcji -l"
 
 #: src/pr.c:328
 msgid "Pete TerMaat and Roland Huebner"
@@ -4857,12 +4849,12 @@ msgstr "`--pages=PIERWSZA_STRONA[:OSTATNIA_STRONA]' - brakuj±cy argument"
 #: src/pr.c:922
 #, c-format
 msgid "`--columns=COLUMN' invalid number of columns: `%s'"
-msgstr "`--columns=COLUMN' b³êdna ilo¶æ kolumn: `%s'"
+msgstr "`--columns=COLUMN' b³êdna liczba kolumn: `%s'"
 
 #: src/pr.c:976
 #, c-format
 msgid "`-l PAGE_LENGTH' invalid number of lines: `%s'"
-msgstr "`-l D£_STRONY' b³êdna ilo¶æ linii: `%s'"
+msgstr "`-l D£_STRONY' b³êdna liczba linii: `%s'"
 
 #: src/pr.c:1000
 #, c-format
@@ -4877,12 +4869,12 @@ msgstr "`-o MARGINES' b³êdne przesuniêcie linii: `%s'"
 #: src/pr.c:1053
 #, c-format
 msgid "`-w PAGE_WIDTH' invalid number of characters: `%s'"
-msgstr "`-w SZEROKO¦Æ_STRONY' b³êdna ilo¶æ znaków: `%s'"
+msgstr "`-w SZEROKO¦Æ_STRONY' b³êdna liczba znaków: `%s'"
 
 #: src/pr.c:1065
 #, c-format
 msgid "`-W PAGE_WIDTH' invalid number of characters: `%s'"
-msgstr "`-W SZEROKO¦Æ_STRONY' b³êdna ilo¶æ znaków: `%s'"
+msgstr "`-W SZEROKO¦Æ_STRONY' b³êdna liczba znaków: `%s'"
 
 #: src/pr.c:1079
 msgid "%b %e %H:%M %Y"
@@ -4895,7 +4887,7 @@ msgstr "Przy wypisywaniu równoleg³ym nie mo¿na podawaæ liczby kolumn."
 # wzd³u¿? - rzm
 #: src/pr.c:1092
 msgid "Cannot specify both printing across and printing in parallel."
-msgstr "Nie mo¿na wypisywac równocze¶nie wzd³u¿ i równolegle."
+msgstr "Nie mo¿na wypisywaæ równocze¶nie w kolejnych kolumnach i równolegle."
 
 #: src/pr.c:1188
 #, c-format
@@ -4909,7 +4901,7 @@ msgstr "szeroko¶æ strony za ma³a"
 #: src/pr.c:2362
 #, c-format
 msgid "starting page number larger than total number of pages: `%d'"
-msgstr "numer strony pocz±tkowej jest wiêkszy ni¿ ilo¶æ stron: `%d'"
+msgstr "numer strony pocz±tkowej jest wiêkszy ni¿ liczba stron: `%d'"
 
 #: src/pr.c:2393
 #, c-format
@@ -4940,7 +4932,7 @@ msgstr ""
 "  -COLUMN, --columns=KOLUMNY\n"
 "                    wypisywanie danych w tylu KOLUMNACH i drukowanie kolumn "
 "od\n"
-"                    góry do do³u, chyba ¿e u¿yte jest -a. Wyrównanie ilo¶ci\n"
+"                    góry do do³u, chyba ¿e u¿yte jest -a. Wyrównanie liczby\n"
 "                    linii w kolumnach na ka¿dej stronie.\n"
 
 #: src/pr.c:2774
@@ -4980,8 +4972,8 @@ msgstr ""
 "  -F, -f, --form-feed\n"
 "                    do odzielania stron bêdzie u¿yty znak nowej strony "
 "zamiast\n"
-"                    znaku nowej linii (przez 3-liniowy nag³ówek strony z -f\n"
-"                    lub 5-liniowy nag³ówek i stopkê bez -f)\n"
+"                    znaku nowej linii (przez 3-liniowy nag³ówek strony z -F\n"
+"                    lub 5-liniowy nag³ówek i stopkê bez -F)\n"
 
 #: src/pr.c:2792
 msgid ""
@@ -5018,10 +5010,10 @@ msgid ""
 "                    truncate lines, but join lines of full length with -J\n"
 msgstr ""
 "  -l D£UGO¦Æ_STRONY, --length=D£UGO¦Æ_STRONY\n"
-"                    ustawienie takiej D£UGO¦ÆI_STRONY w liniach (66)\n"
-"                    (domy¶lna ilo¶æ linii tekstu: 56; dla -f 63)\n"
+"                    ustawienie takiej D£UGO¦CI_STRONY w liniach (66)\n"
+"                    (domy¶lna liczba linii tekstu: 56; dla -F 63)\n"
 "  -m, --merge       wypisanie wszystkich plików równolegle, ka¿dy w jednej\n"
-"                    kolumnie, linii s± obcinane, ale linie o pe³nej "
+"                    kolumnie, linie s± obcinane, ale linie o pe³nej "
 "d³ugo¶ci\n"
 "                    s± ³±czone przez -J\n"
 
@@ -5056,7 +5048,7 @@ msgstr ""
 "                    wp³ywa na -w ani -W, MARGINES zostanie dodany do\n"
 "                    SZEROKO¦CI_STRONY\n"
 "  -r, --no-file-warnings\n"
-"                    bez ostrze¿eñ, ¿e plik nie mo¿e byæ otwarty\n"
+"                    bez ostrze¿eñ kiedy plik nie mo¿e byæ otwarty\n"
 
 #: src/pr.c:2823
 msgid ""
@@ -5071,9 +5063,9 @@ msgstr ""
 "                    oddzielanie kolumn pojedynczym ZNAKIEM, domy¶lnie "
 "TABem,\n"
 "                    je¿eli bez opcji -w, 'no char' z opcj± -w\n"
-"                    -s[ZNAK] wy³±cza obcinanie linii we wszystkich 3\n"
-"                    kolumnach, s± w³±czane opcje (-COLUMN|-a -COLUMN|-m),\n"
-"                    chyba ¿e jest u¿yta opcja -w\n"
+"                    -s[ZNAK] wy³±cza obcinanie linii we wszystkich 3 "
+"uk³adach\n"
+"                    kolumn (-COLUMN|-a -COLUMN|-m), chyba ¿e u¿yto opcji -w\n"
 
 #: src/pr.c:2830
 msgid "  -SSTRING, --sep-string[=STRING]\n"
@@ -5114,7 +5106,7 @@ msgstr ""
 "  -v, --show-nonprinting\n"
 "                    u¿ycie zapisu ósemkowego z backslashem\n"
 "  -w SZEROKO¦Æ_STRONY, --width=SZEROKO¦Æ_STRONY\n"
-"                    ustawienie SZEROKO¦ÆI_STRONY w kolumnach (72), tylko "
+"                    ustawienie SZEROKO¦CI_STRONY w kolumnach (72), tylko "
 "dla\n"
 "                    wydruku wielokolumnowego, -s[ZNAK] wy³±cza warto¶æ\n"
 "                    domy¶ln± (72)\n"
@@ -5129,7 +5121,7 @@ msgid ""
 msgstr ""
 "  -W SZEROKO¦Æ_STRONY, --page-width=SZEROKO¦Æ_STRONY\n"
 "                    ustawienie szeroko¶ci strony zawsze do "
-"SZEROKO¦ÆI_STRONY\n"
+"SZEROKO¦CI_STRONY\n"
 "                    (72), obcinanie linii, chyba ¿e jest u¿yta opcja -J; "
 "nie\n"
 "                    przeszkadza opcjom -S ani -s.\n"
@@ -5141,7 +5133,7 @@ msgid ""
 "FILE is -, read standard input.\n"
 msgstr ""
 "\n"
-"-T jest w³±czane gdy u¿yte jest -l nn kiedy nn <= 10 lub <= 3 albo -F.\n"
+"-T jest w³±czane gdy u¿yte jest -l nn kiedy nn <= 10 lub <= 3 z -F.\n"
 "Je¿eli PLIK nie jest podany lub PLIK to -, czytane jest standardowe "
 "wej¶cie.\n"
 
@@ -5159,16 +5151,16 @@ msgid ""
 msgstr ""
 "Sk³adnia: %s [ZMIENNA]...\n"
 "    albo: %s OPCJA\n"
-"Je¿eli nie jest podana ¿adna zmienna ¶rodowiskowa, wypisywane s± wszstkie.\n"
+"Je¿eli nie jest podana ¿adna zmienna ¶rodowiskowa, wypisywane s± wszystkie.\n"
 "\n"
 
-#: src/printf.c:84
+#: src/printf.c:87
 #, c-format
 msgid ""
 "warning: %s: character(s) following character constant have been ignored"
-msgstr "%s: znaki nastêpuj±ce po sta³ym znaku zosta³y zignorowane"
+msgstr "uwaga: %s: znaki nastêpuj±ce po sta³ej znakowej zosta³y zignorowane"
 
-#: src/printf.c:97
+#: src/printf.c:100
 #, c-format
 msgid ""
 "Usage: %s FORMAT [ARGUMENT]...\n"
@@ -5177,13 +5169,15 @@ msgstr ""
 "Sk³adnia: %s FORMAT [ARGUMENT]...\n"
 "    albo: %s OPCJA\n"
 
-#: src/printf.c:102
+#: src/printf.c:105
 msgid ""
 "Print ARGUMENT(s) according to FORMAT.\n"
 "\n"
-msgstr "Wypisuje ARGUMENT(Y) wed³ug FORMATU.\n"
+msgstr ""
+"Wypisuje ARGUMENT(Y) zgodnie z FORMATEM.\n"
+"\n"
 
-#: src/printf.c:108
+#: src/printf.c:111
 msgid ""
 "\n"
 "FORMAT controls the output as in C printf.  Interpreted sequences are:\n"
@@ -5199,7 +5193,7 @@ msgstr ""
 "  \\0NNN   znak o ósemkowej warto¶ci NNN (0 do 3 cyfr)\n"
 "  \\\\      uko¶nik odwrotny (ang. backslash)\n"
 
-#: src/printf.c:116
+#: src/printf.c:119
 msgid ""
 "  \\a      alert (BEL)\n"
 "  \\b      backspace\n"
@@ -5211,7 +5205,7 @@ msgstr ""
 "  \\c      zatrzymanie dalszego wy¶wietlania\n"
 "  \\f      przesuniêcie o stronê (FF)\n"
 
-#: src/printf.c:122
+#: src/printf.c:125
 msgid ""
 "  \\n      new line\n"
 "  \\r      carriage return\n"
@@ -5223,7 +5217,7 @@ msgstr ""
 "  \\t      tabulator poziomy\n"
 "  \\v      tabulator pionowy\n"
 
-#: src/printf.c:128
+#: src/printf.c:131
 msgid ""
 "  \\xNN    byte with hexadecimal value NN (1 to 2 digits)\n"
 "\n"
@@ -5232,10 +5226,10 @@ msgid ""
 msgstr ""
 "  \\xNN    znak o szesnastkowym kodzie NN (1 do 2 cyfr)\n"
 "\n"
-"  \\uNNNN  znak o szestnastkowym kodzie NNNN (4 cyfry)\n"
-"  \\UNNNNNNNN  znak o szestnastkowym kodzie NNNNNNNN (8 cyfr)\n"
+"  \\uNNNN  znak o szesnastkowym kodzie NNNN (4 cyfry)\n"
+"  \\UNNNNNNNN  znak o szesnastkowym kodzie NNNNNNNN (8 cyfr)\n"
 
-#: src/printf.c:134
+#: src/printf.c:137
 msgid ""
 "  %%      a single %\n"
 "  %b      ARGUMENT as a string with `\\' escapes interpreted\n"
@@ -5243,48 +5237,58 @@ msgid ""
 "and all C format specifications ending with one of diouxXfeEgGcs, with\n"
 "ARGUMENTs converted to proper type first.  Variable widths are handled.\n"
 msgstr ""
-"  %%         pojedyñczy %\n"
-"  %b         ARGUMENT ze zinterpretowanymi sekwencjami `\\'\n"
+"  %%      pojedynczy %\n"
+"  %b      ARGUMENT ze zinterpretowanymi sekwencjami `\\'\n"
 "\n"
 "i wszystkie specyfikacje formatu C zakoñczone jednym ze znaków\n"
 "diouxXfeEgGcs, z ARGUMENTAMI przekszta³conymi najpierw do odpowiednich\n"
 "typów. S± obs³ugiwane zmienne szeroko¶ci.\n"
 
-#: src/printf.c:157
+#: src/printf.c:160
 #, c-format
 msgid "%s: expected a numeric value"
 msgstr "%s: spodziewana warto¶æ liczbowa"
 
-#: src/printf.c:159
+#: src/printf.c:162
 #, c-format
 msgid "%s: value not completely converted"
 msgstr "%s: warto¶æ nie przekszta³cona w ca³o¶ci"
 
-#: src/printf.c:251 src/printf.c:277
+#: src/printf.c:254 src/printf.c:280
 msgid "missing hexadecimal number in escape"
 msgstr "brak liczby szesnastkowej w sekwencji"
 
-#: src/printf.c:289
+#: src/printf.c:292
 #, c-format
 msgid "invalid universal character name \\%c%0*x"
 msgstr "b³êdna nazwa znaku uniwersalnego \\%c%0*x"
 
-#: src/printf.c:295
+#: src/printf.c:298
 #, c-format
 msgid "\\%c: invalid escape"
 msgstr "\\%c: b³êdna sekwencja escape"
 
-#: src/printf.c:503
+#: src/printf.c:465
+#, fuzzy, c-format
+msgid "invalid field width: %s"
+msgstr "b³êdna szeroko¶æ linii: %s"
+
+#: src/printf.c:491
+#, fuzzy, c-format
+msgid "invalid precision: %s"
+msgstr "b³êdna konwersja: %s"
+
+#: src/printf.c:512
 #, c-format
 msgid "%%%c: invalid directive"
 msgstr "%%%c: b³êdna dyrektywa"
 
-#: src/printf.c:560
+#: src/printf.c:569
 #, c-format
 msgid "Usage: %s format [argument...]\n"
 msgstr "Sk³adnia: %s format [argument...]\n"
 
-#: src/printf.c:578
+#: src/printf.c:587
 #, c-format
 msgid "warning: ignoring excess arguments, starting with `%s'"
 msgstr "uwaga: nadmiarowe argumenty pocz±wszy od `%s' zosta³y zignorowane"
@@ -5308,7 +5312,9 @@ msgid ""
 "Output a permuted index, including context, of the words in the input "
 "files.\n"
 "\n"
-msgstr "Pokazanie indeksu s³ów z plików wej¶ciowych razem z kontekstem.\n"
+msgstr ""
+"Pokazanie indeksu s³ów z plików wej¶ciowych razem z kontekstem.\n"
+"\n"
 
 #: src/ptx.c:1870
 msgid ""
@@ -5339,7 +5345,8 @@ msgstr ""
 "                                 liczone w -w\n"
 "  -S, --sentence-regexp=REGEXP   REGEXP dla okre¶lenia koñców linii lub "
 "zdañ\n"
-"  -T, --format=tex               gerowanie wyj¶cia w postaci dyrektyw TeX-a\n"
+"  -T, --format=tex               generowanie wyj¶cia w postaci dyrektyw TeX-"
+"a\n"
 
 #: src/ptx.c:1883
 msgid ""
@@ -5350,15 +5357,14 @@ msgid ""
 "  -i, --ignore-file=FILE         read ignore word list from FILE\n"
 "  -o, --only-file=FILE           read only word list from this FILE\n"
 msgstr ""
-"  -W, --word-regexp=REGEXP       u¿ycie REGEXPa to rozpoznawania s³ów\n"
+"  -W, --word-regexp=REGEXP       u¿ycie REGEXPa do rozpoznawania s³ów\n"
 "                                 kluczowych\n"
 "  -b, --break-file=PLIK          znaki rozdzielaj±ce s³owa s± w tym PLIKU\n"
-"  -f, --ignore-case              traktowanie ma³ych liter njak wielkich "
-"przy\n"
+"  -f, --ignore-case              traktowanie ma³ych liter jak wielkich przy\n"
 "                                 sortowaniu\n"
 "  -g, --gap-size=LICZBA          odstêp w kolumnach miêdzy polami "
 "wyj¶ciowymi\n"
-"  -i, --ignore-file=PLIK         czytanie listy ignorowanych s³ów z PLIKu\n"
+"  -i, --ignore-file=PLIK         czytanie listy ignorowanych s³ów z PLIKU\n"
 "  -o, --only-file=FILE           uwzglêdnienie tylko s³ów z PLIKU\n"
 
 #: src/ptx.c:1891
@@ -5371,7 +5377,8 @@ msgstr ""
 "  -r, --references               pierwsze pole ka¿dej linii jest "
 "odno¶nikiem\n"
 "  -t, --typeset-mode               - nie zaimplementowane -\n"
-"  -w, --width=NUMBER             szeroko¶æ wyj¶cia, bez odno¶ników\n"
+"  -w, --width=NUMBER             szeroko¶æ wyj¶cia w kolumnach, bez "
+"odno¶ników\n"
 
 #: src/ptx.c:1898
 msgid ""
@@ -5391,7 +5398,7 @@ msgid ""
 "any later version.\n"
 "\n"
 msgstr ""
-"Ten program jest darmowy; mo¿esz go rozprowadzaæ i/lub modyfikowaæ\n"
+"Ten program jest darmowy; mo¿na go rozprowadzaæ i/lub modyfikowaæ\n"
 "przestrzegaj±c warunków Powszechnej Licencji Publicznej GNU (General Public\n"
 "Licence) opublikowanej przez Free Software Foundation, w wersji 2 lub, do\n"
 "wyboru, dowolnej po¼niejszej.\n"
@@ -5407,7 +5414,7 @@ msgid ""
 msgstr ""
 "Ten program ten jest rozprowadzany w nadziei, ¿e bêdzie przydatny,\n"
 "ale BEZ ¯ADNEJ GWARANCJI, nawet bez domy¶lnej gwarancji JAKO¦CI\n"
-"lub PRZYDATNO¦CI DO KONKRETNYCH ZASTOSOWAÑ. Szczegó³y znajdziesz\n"
+"lub PRZYDATNO¦CI DO KONKRETNYCH ZASTOSOWAÑ. Szczegó³y znajduj± siê\n"
 "w Powszechnej Licencji Publicznej GNU.\n"
 "\n"
 
@@ -5417,19 +5424,21 @@ msgid ""
 "along with this program; if not, write to the Free Software Foundation,\n"
 "Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"
 msgstr ""
-"Powiniene¶ otrzymaæ kopiê Powszechnej Licencji Publicznej GNU wraz\n"
-"z tym programem. Je¶li nie, napisz do Free Software Foundation,\n"
+"Kopia Powszechnej Licencji Publicznej GNU powinna byæ dostarczona wraz\n"
+"z tym programem. Je¶li nie, mo¿na napisaæ do Free Software Foundation,\n"
 "Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"
 
 #: src/pwd.c:47
 msgid ""
 "Print the full filename of the current working directory.\n"
 "\n"
-msgstr "Wypisanie pe³nej nazwy bie¿±cego katalogu.\n"
+msgstr ""
+"Wypisanie pe³nej nazwy bie¿±cego katalogu.\n"
+"\n"
 
 #: src/pwd.c:74
 msgid "ignoring non-option arguments"
-msgstr "zignorowane argumenty nie bêd±ce opcjami"
+msgstr "zignorowano argumenty nie bêd±ce opcjami"
 
 #: src/pwd.c:78
 msgid "cannot get current directory"
@@ -5446,6 +5455,7 @@ msgid ""
 "\n"
 msgstr ""
 "Wy¶wietlenie warto¶ci dowi±zania symbolicznego na standardowym wyj¶ciu.\n"
+"\n"
 
 #: src/readlink.c:72
 msgid ""
@@ -5459,7 +5469,7 @@ msgstr ""
 "  -f, --canonicalize      doprowadzenie do postaci typowej przez rekursywne\n"
 "                          rozwi±zanie ka¿dego dowi±zania symbolicznego w\n"
 "                          ka¿dym sk³adniku podanej ¶cie¿ki\n"
-"  -n, --no-newline        bez wypisywaie koñcowego znaku nowej linii\n"
+"  -n, --no-newline        bez wypisywania koñcowego znaku nowej linii\n"
 "  -q, --quiet,\n"
 "  -s, --silent            bez pokazywania wiêkszo¶ci komunikatów o b³êdach\n"
 "  -v, --verbose           pokazywanie komnikatów o b³êdach\n"
@@ -5472,17 +5482,17 @@ msgstr "nie mo¿na przej¶æ z %s do .."
 #: src/remove.c:407 src/remove.c:488
 #, c-format
 msgid "cannot lstat `.' in %s"
-msgstr "nie mo¿na lstat `.' w %s"
+msgstr "nie mo¿na wykonaæ lstat `.' w %s"
 
 #: src/remove.c:414 src/remove.c:492
 #, c-format
 msgid "%s changed dev/ino"
-msgstr "%s zmieni³ urz±dznie/inode"
+msgstr "%s zmieni³ urz±dzenie/i-wêze³"
 
 #: src/remove.c:573 src/remove.c:711 src/remove.c:880 src/remove.c:983
 #, c-format
 msgid "cannot lstat %s"
-msgstr "nie mo¿na lstat %s"
+msgstr "nie mo¿na wykonaæ lstat na %s"
 
 #: src/remove.c:602
 #, c-format
@@ -5539,9 +5549,9 @@ msgid ""
 "  %s\n"
 msgstr ""
 "UWAGA: Cykliczna struktura katalogów.\n"
-"Prawie na pewno oznacza to, ¿e masz zepsuty system plików.\n"
-"ZAWIADOM ADMIBNISTRATORA SYSTEMU.\n"
-"nastêpuj±ce dwa katalogi s± czê¶ci± cyklu:\n"
+"Prawie na pewno oznacza to, ¿e system plików jest uszkodzony.\n"
+"NALE¯Y ZAWIADOMIÆ ADMINISTRATORA SYSTEMU.\n"
+"Nastêpuj±cy katalog jest czê¶ci± cyklu:\n"
 "  %s\n"
 
 #: src/remove.c:1097
@@ -5573,7 +5583,8 @@ msgstr ""
 "  -d, --directory       usuniêcie PLIKU, nawet je¿eli jest to niepusty "
 "katalog\n"
 "                          (tylko super-user)\n"
-"  -f, --force           zignorowanie nieistniej±cych plików bez pytania\n"
+"  -f, --force           zignorowanie nieistniej±cych plików, wy³±czenie "
+"pytañ\n"
 "  -i, --interactive     pytanie przed ka¿dym usuniêciem pliku\n"
 "  -r, -R, --recursive   usuwanie zawarto¶ci katalogów rekursywnie\n"
 "  -v, --verbose         wyja¶nianie co siê dzieje\n"
@@ -5589,8 +5600,8 @@ msgid ""
 "  %s ./-foo\n"
 msgstr ""
 "\n"
-"¯eby usun±c plik z nazn± zaczynaj±ca siê od `-', np. `-foo', u¿yj jednego\n"
-"poleceñ:\n"
+"¯eby usun±æ plik z nazw± zaczynaj±ca siê od `-', np. `-foo', mo¿na u¿yæ\n"
+"jednego z poleceñ:\n"
 "  %s -- -foo\n"
 "\n"
 "  %s ./-foo\n"
@@ -5604,10 +5615,12 @@ msgid ""
 "truly unrecoverable, consider using shred.\n"
 msgstr ""
 "\n"
-"Zauwa¿, ¿e gdy u¿ywasz rm do usuniêcia pliku, zwykle mo¿liwe jest "
-"odzyskanie\n"
-"jego zawarto¶ci. Je¿eli potrzebujesz wiêcej pewno¶ci, ¿e zawarto¶æ bêdzie\n"
-"bardzo trudno odzyskaæ, u¿yj schred-a.\n"
+"Warto zauwa¿yæ, ¿e po u¿yciu rm do usuniêcia pliku zazwyczaj mo¿na "
+"odtworzyæ\n"
+"jego zawarto¶æ. Gdy istnieje potrzeba pewniejszego zagwarantowania, ¿e\n"
+"zawarto¶æ pliku jest rzeczywi¶cie nie do odtworzenia, nale¿y rozwa¿yæ "
+"u¿ycie\n"
+"programu shred.\n"
 
 #: src/rmdir.c:116 src/rmdir.c:217
 #, c-format
@@ -5628,6 +5641,7 @@ msgid ""
 "                  is non-empty\n"
 msgstr ""
 "Usuwanie pustych KATALOGÓW.\n"
+"\n"
 "      --ignore-fail-on-non-empty\n"
 "                  zignorowanie b³êdów spowodowanych wy³±cznie tym, ¿e "
 "katalog\n"
@@ -5725,7 +5739,7 @@ msgstr "nie mo¿na podawaæ formatu, gdy drukowane s± ³añcuchy o równej d³ugo¶ci"
 #: src/shred.c:160
 #, c-format
 msgid "Usage: %s [OPTIONS] FILE [...]\n"
-msgstr "Sk³adnia: %s [OPCJA] PLIK [...]\n"
+msgstr "Sk³adnia: %s [OPCJE] PLIK [...]\n"
 
 #: src/shred.c:161
 msgid ""
@@ -5746,23 +5760,25 @@ msgid ""
 msgstr ""
 "  -f, --force    zmiana uprawnieñ w razie potrzeby, ¿eby pozwoliæ na zapis\n"
 "  -n, --iterations=N  zamazanie N razy zamiast domy¶lnych %d\n"
-"  -s, --size=N   zamazanie N bajtów (mo¿na u¿ywaæ przyrostków K, M i G)\n"
+"  -s, --size=N   zamazanie N bajtów (mo¿na u¿ywaæ przyrostków typu K, M, G)\n"
 
 #: src/shred.c:174
+#, fuzzy
 msgid ""
 "  -u, --remove   truncate and remove file after overwriting\n"
 "  -v, --verbose  show progress\n"
-"  -x, --exact    do not round file sizes up to the next full block\n"
+"  -x, --exact    do not round file sizes up to the next full block;\n"
+"                   this is the default for non-regular files\n"
 "  -z, --zero     add a final overwrite with zeros to hide shredding\n"
 "  -              shred standard output\n"
 msgstr ""
 "  -u, --remove   skrócenie i skasowanie pliku po zamazaniu\n"
 "  -v, --verbose  pokazywanie przebiegu zamazywania\n"
-"  -x, --exact    bez zaokr±glania rozmiarów plików do pe³nych bloków\n"
+"  -x, --exact    bez zaokr±glania rozmiarów plików w górê do pe³nych bloków\n"
 "  -z, --zero     dodatkowe zamazanie zerami, aby ukryæ zamazywanie\n"
 "  -              zamazanie standardowego wyj¶cia\n"
 
-#: src/shred.c:183
+#: src/shred.c:184
 msgid ""
 "\n"
 "Delete FILE(s) if --remove (-u) is specified.  The default is not to remove\n"
@@ -5775,10 +5791,10 @@ msgstr ""
 "Je¿eli podana jest opcja --remove (-u) PLIK jest kasowany. Domy¶lnie PLIK\n"
 "nie jest kasowany, poniewa¿ czêsto operacje dotycz± plików urz±dzeñ, jak\n"
 "/dev/hda, a takie pliki zwykle nie powinny byæ usuwane. Przy zamazywaniu\n"
-"zwyk³ych plików zwykle nale¿y u¿yæ opcji --remove.\n"
+"zwyk³ych plików zwykle u¿ywa siê opcji --remove.\n"
 "\n"
 
-#: src/shred.c:191
+#: src/shred.c:192
 msgid ""
 "CAUTION: Note that shred relies on a very important assumption:\n"
 "that the filesystem overwrites data in place.  This is the traditional\n"
@@ -5787,13 +5803,13 @@ msgid ""
 "not effective:\n"
 "\n"
 msgstr ""
-"UWAGA: Nale¿y pamiêtaæ, ¿e shred opiera sie na wa¿nym za³o¿eniu: ¿e system\n"
+"UWAGA: Nale¿y pamiêtaæ, ¿e shred opiera siê na wa¿nym za³o¿eniu: ¿e system\n"
 "plików (i dysk) zamazuje dane w tym samym miejscu, gdzie je pierwotnie\n"
 "zapisa³. Tak dzieje siê tradycyjnie, ale wiele nowoczesnych systemów plików\n"
 "tak nie robi. Z nastêpuj±cymi systemami plików shred nie dzia³a efektywnie:\n"
 "\n"
 
-#: src/shred.c:199
+#: src/shred.c:200
 msgid ""
 "* log-structured or journaled filesystems, such as those supplied with\n"
 "  AIX and Solaris (and JFS, ReiserFS, XFS, Ext3, etc.)\n"
@@ -5813,7 +5829,7 @@ msgstr ""
 "* które zapisuj± stan chwilowy, jak serwer NFS Network Appliance\n"
 "\n"
 
-#: src/shred.c:209
+#: src/shred.c:210
 msgid ""
 "* filesystems that cache in temporary locations, such as NFS\n"
 "  version 3 clients\n"
@@ -5830,94 +5846,94 @@ msgstr ""
 "\n"
 "Dodatkowo backupy i zdalne kopie mog± zawieraæ egzemplarze tego samego "
 "pliku,\n"
-"które nie mog± zostaæ usuniête i plik zamazany schreddem mo¿e zostaæ\n"
+"które nie mog± zostaæ usuniête i plik zamazany schredem mo¿e zostaæ\n"
 "odtworzony\n"
 
-#: src/shred.c:807
+#: src/shred.c:808
 #, c-format
 msgid "%s: cannot rewind"
 msgstr "%s: nie mo¿na przewin±æ"
 
-#: src/shred.c:830
+#: src/shred.c:831
 #, c-format
 msgid "%s: pass %lu/%lu (%s)..."
 msgstr "%s: przebieg %lu/%lu (%s)..."
 
-#: src/shred.c:867
+#: src/shred.c:868
 #, c-format
 msgid "%s: error writing at offset %s"
 msgstr "%s: b³±d zapisu na pozycji %s"
 
-#: src/shred.c:896
+#: src/shred.c:897
 #, c-format
 msgid "%s: file too large"
 msgstr "%s: plik jest za du¿y"
 
-#: src/shred.c:919
+#: src/shred.c:920
 #, c-format
 msgid "%s: pass %lu/%lu (%s)...%s"
 msgstr "%s: przebieg %lu/%lu (%s)...%s"
 
-#: src/shred.c:935
+#: src/shred.c:936
 #, c-format
 msgid "%s: pass %lu/%lu (%s)...%s/%s %d%%"
 msgstr "%s: przebieg %lu/%lu (%s)...%s/%s %d%%"
 
-#: src/shred.c:1194
+#: src/shred.c:1195
 #, c-format
 msgid "%s: invalid file type"
 msgstr "%s: b³êdny typ pliku"
 
-#: src/shred.c:1211
+#: src/shred.c:1212
 #, c-format
 msgid "%s: file has negative size"
 msgstr "%s: plik ma ujemny rozmiar"
 
-#: src/shred.c:1263
+#: src/shred.c:1265
 #, c-format
 msgid "%s: error truncating"
 msgstr "%s: b³±d obcinania"
 
-#: src/shred.c:1284
+#: src/shred.c:1286
 #, c-format
 msgid "%s: cannot shred append-only file descriptor"
 msgstr "%s: nie mo¿na zamazywaæ pliku tylko do dopisywania"
 
-#: src/shred.c:1369
+#: src/shred.c:1371
 #, c-format
 msgid "%s: removing"
-msgstr "%s: usuwam"
+msgstr "%s: usuwanie"
 
-#: src/shred.c:1410
+#: src/shred.c:1412
 #, c-format
 msgid "%s: renamed to %s"
 msgstr "%s: przemianowany na %s"
 
-#: src/shred.c:1436
+#: src/shred.c:1438
 #, c-format
 msgid "%s: removed"
 msgstr "%s: skasowany"
 
-#: src/shred.c:1501
+#: src/shred.c:1503
 #, c-format
 msgid "%s: cannot remove"
 msgstr "%s: nie mo¿na skasowaæ pliku"
 
-#: src/shred.c:1549
+#: src/shred.c:1551
 #, c-format
 msgid "%s: invalid number of passes"
-msgstr "%s: b³êdna ilo¶æ przebiegów"
+msgstr "%s: b³êdna liczba przebiegów"
 
-#: src/shred.c:1566
+#: src/shred.c:1568
 #, c-format
 msgid "%s: invalid file size"
 msgstr "%s: b³êdny rozmiar pliku"
 
-#: src/sleep.c:45
+#: src/sleep.c:34
 msgid "Jim Meyering and Paul Eggert"
 msgstr "Jim Meyering i Paul Eggert"
 
-#: src/sleep.c:63
+#: src/sleep.c:52
 #, c-format
 msgid ""
 "Usage: %s NUMBER[SUFFIX]...\n"
@@ -5939,12 +5955,12 @@ msgstr ""
 "dowoln± liczb± zmiennoprzecinkow±.\n"
 "\n"
 
-#: src/sleep.c:166
+#: src/sleep.c:155
 #, c-format
 msgid "invalid time interval `%s'"
 msgstr "b³êdny odstêp czasowy `%s'"
 
-#: src/sleep.c:177 src/tail.c:1031
+#: src/sleep.c:166 src/tail.c:1031
 msgid "cannot read realtime clock"
 msgstr "nie mo¿na odczytaæ zegara systemowego"
 
@@ -5992,6 +6008,7 @@ msgstr ""
 "  -n, --numeric-sort          porównywanie wed³ug warto¶ci liczbowych "
 "³añcuchów\n"
 "  -r, --reverse               odwrotny porz±dek sortowania\n"
+"\n"
 
 #: src/sort.c:302
 msgid ""
@@ -6032,12 +6049,13 @@ msgid ""
 "                              otherwise: output only the first of an equal "
 "run\n"
 msgstr ""
-"  -t, --field-separator=SEP  u¿ycie SEPARATORA zamiast zamiast przej¶cia\n"
+"  -t, --field-separator=SEP  u¿ycie SEPARATORA zamiast przej¶cia\n"
 "                              odstêp - nie-odstêp\n"
 "  -T, --temporary-directory=KATALOG  u¿ycie KATALOGU na pliki tymczasowe, "
 "nie\n"
-"                              $TMPDIR ani %s\n"
-"  -u, --unique              z -c: sprawdzenie ró¿no¶ci kolejnych linii\n"
+"                              $TMPDIR ani %s; wiêcej opcji to wiêcej "
+"katalogów\n"
+"  -u, --unique              z -c: sprawdzenie ¶cis³ego uporz±dkowania\n"
 "                              bez -c: wypisanie tylko pierwszej z "
 "identycznych\n"
 "                              linii\n"
@@ -6048,7 +6066,6 @@ msgstr ""
 "  -z, --zero-terminated     zakoñczenie linii bajtem 0 zamiast znakiem "
 "nowej\n"
 "                              linii\n"
-"\n"
 
 #: src/sort.c:324
 msgid ""
@@ -6064,7 +6081,7 @@ msgstr ""
 "\n"
 "POZ to P[.Z][OPCJE], gdzie P to numer pola, a Z pozycja znaku w polu, oba\n"
 "liczone od jedynki. OPCJE zawieraj± jedn± lub wiêcej liter, które dla tego\n"
-"klucz s± wa¿niejsze ni¿ opcje globalne. Je¿eli nie jest podany klucz, ca³a\n"
+"klucza s± wa¿niejsze ni¿ opcje globalne. Je¿eli nie jest podany klucz, ca³a\n"
 "linia jest u¿ywana jako klucz.\n"
 "\n"
 "ROZMIAR mo¿e byæ uzupe³niony o nastêpuj±ce mno¿niki:\n"
@@ -6083,8 +6100,9 @@ msgid ""
 msgstr ""
 "% - 1% pamiêci, b - 1, K - 1024 (domy¶lnie) itd. dla M, G, T, P, E, Z, Y.\n"
 "\n"
-"Je¿eli plik nie jest podany albo podany jako -, czytane jest standardowe\n"
-"  wej¶cie\n"
+"Je¿eli PLIK nie jest podany albo podany jako -, czytane jest standardowe\n"
+"wej¶cie\n"
+"\n"
 "*** UWAGA ***\n"
 "Locale ustawione przez zmienne ¶rodowiskowe wp³ywa na porz±dek sortowania.\n"
 "Ustaw LC_ALL=C ¿eby przywróciæ tradycyjny porz±dek sortowania, który u¿ywa\n"
@@ -6191,10 +6209,9 @@ msgid ""
 "PREFIX is `x'.  With no INPUT, or when INPUT is -, read standard input.\n"
 "\n"
 msgstr ""
-"Zapisanie równych kawa³ki PLIKU do PRZEDROSTEKaa, PRZEDROSTEKab, ...;\n"
-"domy¶lny PRZEDROSTEK to `x'. Je¿eli PLIK nie jest podany lub -, czytane "
-"jest\n"
-"standardowe wej¶cie\n"
+"Zapisanie równych kawa³ków PLIKU do PRZEDROSTEKaa, PRZEDROSTEKab, ...;\n"
+"domy¶lny PRZEDROSTEK to `x'. Je¿eli PLIK nie jest podany lub podano -,\n"
+"czytane jest standardowe wej¶cie\n"
 "\n"
 
 #: src/split.c:108
@@ -6208,15 +6225,16 @@ msgstr ""
 "  -a, --suffix-length=N   u¿ycie przyrostków o d³ugo¶ci N (domy¶lnie %d)\n"
 "  -b, --bytes=ROZMIAR     zapisanie po ROZMIAR bajtów do plików wyj¶ciowych\n"
 "  -C, --line-bytes=ROZMIAR  zapisanie najwy¿ej ROZMIAR bajtów pe³nych linii\n"
-"  -l, --lines=ILE         zapisz ILE linii do ka¿dego pliku wyj¶ciowego\n"
+"  -l, --lines=ILE         zapis ILU linii do ka¿dego pliku wyj¶ciowego\n"
 
 #: src/split.c:114
 msgid ""
 "      --verbose           print a diagnostic to standard error just\n"
 "                            before each output file is opened\n"
 msgstr ""
-"      --verbose           przed otwarciem ka¿dego pliku wypisz komunikaty\n"
-"                            diagnostyczne do standardowego b³êdu\n"
+"      --verbose           przed otwarciem ka¿dego pliku wypisanie "
+"komunikatów\n"
+"                            diagnostycznych na standardowe wyj¶cie b³êdów\n"
 
 #: src/split.c:171
 msgid "Output file suffixes exhausted"
@@ -6225,7 +6243,7 @@ msgstr "Zabrak³o przyrostków plików wyj¶ciowych"
 #: src/split.c:189
 #, c-format
 msgid "creating file `%s'\n"
-msgstr "tworzê plik `%s'\n"
+msgstr "tworzenie pliku `%s'\n"
 
 #: src/split.c:341
 msgid "cannot split in more than one way"
@@ -6239,19 +6257,19 @@ msgstr "%s: b³êdna d³ugo¶æ przyrostka"
 #: src/split.c:408 src/split.c:434
 #, c-format
 msgid "%s: invalid number of bytes"
-msgstr "%s: b³êdna ilo¶æ bajtów"
+msgstr "%s: b³êdna liczba bajtów"
 
 #: src/split.c:421
 #, c-format
 msgid "%s: invalid number of lines"
-msgstr "%s: b³êdna ilo¶æ linii"
+msgstr "%s: b³êdna liczba linii"
 
-#: src/split.c:474
+#: src/split.c:470
 #, c-format
 msgid "`-%d' option is obsolete; use `-l %d'"
 msgstr "opcja `-%d' jest przestarza³a, u¿ywaj `-l %d'"
 
-#: src/split.c:487
+#: src/split.c:483
 msgid "invalid number"
 msgstr "b³êdna liczba"
 
@@ -6301,10 +6319,9 @@ msgstr ""
 "  %A   prawa dostêpu w postaci czytelnej dla cz³owieka\n"
 "  %a   prawa dostêpu ósemkowo\n"
 "  %B   rozmiar w bajtach ka¿dego bloku podanego przez `%b'\n"
-"  %b   ilo¶æ zajêtych bloków (zobacz %B)\n"
+"  %b   liczba zajêtych bloków (zobacz %B)\n"
 
 #: src/stat.c:703
-#, fuzzy
 msgid ""
 "  %D   Device number in hex\n"
 "  %d   Device number in decimal\n"
@@ -6313,10 +6330,10 @@ msgid ""
 "  %G   Group name of owner\n"
 "  %g   Group ID of owner\n"
 msgstr ""
-"  %D   numer urz±dzenia szestnastkowo\n"
+"  %D   numer urz±dzenia szesnastkowo\n"
 "  %d   numer urz±dzenia dziesiêtnie\n"
 "  %F   typ pliku\n"
-"  %f   tryb surowy, szestnastkowo\n"
+"  %f   tryb surowy, szesnastkowo\n"
 "  %G   nazwa grupy w³a¶ciciela pliku\n"
 "  %g   numer grupy w³a¶ciciela pliku\n"
 
@@ -6331,14 +6348,14 @@ msgid ""
 "  %T   Minor device type in hex\n"
 "  %t   Major device type in hex\n"
 msgstr ""
-"  %h   ilo¶æ dowi±zañ zwyk³ych\n"
-"  %i   numer inode'u\n"
+"  %h   liczba dowi±zañ zwyk³ych\n"
+"  %i   numer i-wêz³a\n"
 "  %N   nazwa pliku w cudzys³owach, rozwi±zana je¿eli dowi±zanie symboliczne\n"
 "  %n   nazwa pliku\n"
 "  %o   rozmiar bloku wej¶cia/wyj¶cia\n"
 "  %s   ca³kowity rozmiar w bajtach\n"
-"  %T   mniejszy numer urz±dzenia szestnastkowo\n"
-"  %t   wiêkszy numer urz±dzenia szestnastkowo\n"
+"  %T   mniejszy numer urz±dzenia szesnastkowo\n"
+"  %t   wiêkszy numer urz±dzenia szesnastkowo\n"
 
 #: src/stat.c:721
 msgid ""
@@ -6353,7 +6370,7 @@ msgid ""
 "\n"
 msgstr ""
 "  %U   nazwa w³a¶ciciela\n"
-"  %u   numer uzytkownika w³a¶ciciela\n"
+"  %u   numer u¿ytkownika w³a¶ciciela\n"
 "  %X   czas ostatniego czytania w sekundach od Epoki\n"
 "  %x   czas ostatniego czytania\n"
 "  %Y   czas ostatniej modyfikacji w sekundach od Epoki\n"
@@ -6374,11 +6391,11 @@ msgid ""
 msgstr ""
 "Prawid³owe specyfikacje formatu dla systemów plików:\n"
 "\n"
-"  %a   ilo¶æ wolnych bloków dostêpnych dla zwyk³ego u¿ytkownika\n"
-"  %b   ca³kowita ilo¶æ bloków danych w systemie plików\n"
-"  %c   ca³kowita ilo¶æ inode'ów w systemie plików\n"
-"  %d   ilo¶æ wolnych inode'ów w systemie plików\n"
-"  %f   ilo¶æ wolnych bloków w systemie plików\n"
+"  %a   liczba wolnych bloków dostêpnych dla zwyk³ego u¿ytkownika\n"
+"  %b   ca³kowita liczba bloków danych w systemie plików\n"
+"  %c   ca³kowita liczba i-wêz³ów w systemie plików\n"
+"  %d   liczba wolnych i-wêz³ów w systemie plików\n"
+"  %f   liczba wolnych bloków w systemie plików\n"
 
 #: src/stat.c:742
 msgid ""
@@ -6389,12 +6406,12 @@ msgid ""
 "  %T   Type in human readable form\n"
 "  %t   Type in hex\n"
 msgstr ""
-"  %i   identyfikator systemu plików szestnastkowo\n"
+"  %i   identyfikator systemu plików szesnastkowo\n"
 "  %l   maksymalna d³ugo¶æ nazw plików\n"
 "  %n   nazwa pliku\n"
 "  %s   optymalny rozmiar bloku przy zapisie/odczycie\n"
-"  %T   informacje w formie czytelnej dla cz³owieka\n"
-"  %t   typ szestnastkowo\n"
+"  %T   typ w formie czytelnej dla cz³owieka\n"
+"  %t   typ szesnastkowo\n"
 
 #: src/stty.c:498
 #, c-format
@@ -6403,9 +6420,9 @@ msgid ""
 "  or:  %s [-F DEVICE] [--file=DEVICE] [-a|--all]\n"
 "  or:  %s [-F DEVICE] [--file=DEVICE] [-g|--save]\n"
 msgstr ""
-"Sk³adnia: %s [-F urz±dzenie] [--file=urz±dzenie] [USTAWIENIA]...\n"
-"    albo: %s [-F urz±dzenie] [--file=urz±dzenie] [-a|--all]\n"
-"    albo: %s [-F urz±dzenie] [--file=urz±dzenie] [-g|--save]\n"
+"Sk³adnia: %s [-F URZ¡DZENIE] [--file=URZ¡DZENIE] [USTAWIENIA]...\n"
+"    albo: %s [-F URZ¡DZENIE] [--file=URZ¡DZENIE] [-a|--all]\n"
+"    albo: %s [-F URZ¡DZENIE] [--file=URZ¡DZENIE] [-g|--save]\n"
 
 #: src/stty.c:504
 msgid ""
@@ -6415,7 +6432,7 @@ msgid ""
 "  -g, --save         print all current settings in a stty-readable form\n"
 "  -F, --file=DEVICE  open and use the specified DEVICE instead of stdin\n"
 msgstr ""
-"Wy¶wietla lub zmienia ustawienia terminala.\n"
+"Wy¶wietlenie lub zmiana ustawieñ terminala.\n"
 "\n"
 "  -a, --all          wy¶wietlenie wszystkich aktualnych ustawieñ w postaci\n"
 "                       czytelnej dla cz³owieka\n"
@@ -6538,7 +6555,7 @@ msgstr ""
 "Ustawienia steruj±ce:\n"
 "   [-]clocal     wy³±czenie sygna³ów sterowania modemu\n"
 "   [-]cread      w³±czenie odbioru z wej¶cia\n"
-" * [-]crtscts    w³±czenie protokó³u RTS/CTS (handshaking)\n"
+" * [-]crtscts    w³±czenie protoko³u RTS/CTS (handshaking)\n"
 "   csN           ustawienie wielko¶ci znaku na N bitów, N w zakresie [5..8]\n"
 
 #: src/stty.c:570
@@ -6555,7 +6572,7 @@ msgstr ""
 "                   terminal\n"
 "   [-]hupcl      to samo co  [-]hup\n"
 "   [-]parenb     w³±czenie ustawiania i sprawdzania bitu parzysto¶ci\n"
-"   [-]parodd     w³±czenie nieparzysto¶ci (nawet z `-')\n"
+"   [-]parodd     w³±czenie parzysto¶ci nieparzystej (parzystej z `-')\n"
 
 #: src/stty.c:577
 msgid ""
@@ -6569,7 +6586,7 @@ msgstr ""
 "\n"
 "Ustawienia wej¶cia:\n"
 "   [-]brkint     znaki break powoduj± wys³anie sygna³u przerwania\n"
-"   [-]icrnl      zamienieanie znaków CR na NL\n"
+"   [-]icrnl      zamienianie znaków CR na NL\n"
 "   [-]ignbrk     ignorowanie znaku break\n"
 "   [-]igncr      ignorowanie znaku CR\n"
 
@@ -6581,7 +6598,7 @@ msgid ""
 "   [-]inpck      enable input parity checking\n"
 "   [-]istrip     clear high (8th) bit of input characters\n"
 msgstr ""
-"   [-]ignpar     ignorowanie znaków z b³êdn± parzysto¶ci±\n"
+"   [-]ignpar     ignorowanie znaków z b³êdami parzysto¶ci\n"
 " * [-]imaxbel    piszczenie przy pe³nym buforze (bez jego opró¿niania) po\n"
 "                   wprowadzeniu znaku\n"
 "   [-]inlcr      zamienianie znaków NL na CR\n"
@@ -6597,10 +6614,10 @@ msgid ""
 "   [-]parmrk     mark parity errors (with a 255-0-character sequence)\n"
 "   [-]tandem     same as [-]ixoff\n"
 msgstr ""
-" * [-]iuclc      zamienianie du¿ych liter na ma³e\n"
+" * [-]iuclc      zamienianie wielkich liter na ma³e\n"
 " * [-]ixany      ka¿dy znak wznawia transmisjê, nie tylko start\n"
-"   [-]ixoff      w³±czenie przesy³anie znaków start/stop\n"
-"   [-]ixon       w³±czenie protokó³u kontroli przep³ywu XON/XOF\n"
+"   [-]ixoff      w³±czenie wysy³ania znaków start/stop\n"
+"   [-]ixon       w³±czenie protoko³u sterowania przep³ywem XON/XOF\n"
 "   [-]parmrk     zaznaczanie b³êdów parzysto¶ci sekwencj± 255-0-znak\n"
 "   [-]tandem     to samo co  [-]ixoff\n"
 
@@ -6632,7 +6649,7 @@ msgstr ""
 " * [-]ocrnl      zamienianie znaku CR na NL\n"
 " * [-]ofdel      u¿ywanie znaku DEL zamiast NUL jako znaku wype³niaj±cego\n"
 " * [-]ofill      u¿ywanie znaków wype³niaj±cych zamiast opó¼nieñ transmisji\n"
-" * [-]olcuc      zamienianie ma³ych litery na wielkie\n"
+" * [-]olcuc      zamienianie ma³ych liter na wielkie\n"
 " * [-]onlcr      zamienianie znaków NL na sekwencje CR-NL\n"
 " * [-]onlret     znak NL powoduje powrót karetki (carriage return)\n"
 
@@ -6665,9 +6682,9 @@ msgstr ""
 "\n"
 "Ustawienia lokalne:\n"
 "   [-]crterase   wy¶wietlanie znaku erase jako BS-spacja-BS\n"
-" * crtkill       kasowanie ca³ej liniu zgodnie z ustawieniami echoprt i "
+" * crtkill       kasowanie ca³ej linii zgodnie z ustawieniami echoprt i "
 "echoe\n"
-" * -crtkill      kasowanie ca³ej liniu zgodnie z ustawieniami echoctl i "
+" * -crtkill      kasowanie ca³ej linii zgodnie z ustawieniami echoctl i "
 "echok\n"
 
 #: src/stty.c:631
@@ -6708,7 +6725,7 @@ msgid ""
 " * [-]xcase      with icanon, escape with `\\' for uppercase characters\n"
 msgstr ""
 "   [-]isig       wy¶wietlanie znaków intr, quit i susp\n"
-"   [-]noflsh     bez opró¿niania bufora po znakch intr i quit\n"
+"   [-]noflsh     bez opró¿niania bufora po znakach intr i quit\n"
 " * [-]prterase   to samo co  [-]echoprt\n"
 " * [-]tostop     zatrzymywanie procesów w tle, próbuj±cych pisaæ na "
 "terminal\n"
@@ -6751,7 +6768,7 @@ msgstr ""
 "   dec           jak echoe echoctl echoke -ixany intr ^c erase 0177\n"
 "                 kill ^u\n"
 " * [-]decctlq    jak [-]ixany\n"
-"   ek            ustaw znaki erase i kill na warto¶ci domy¶lne\n"
+"   ek            ustawienie znaków erase i kill na warto¶ci domy¶lne\n"
 "   evenp         jak parenb -parodd cs7\n"
 
 #: src/stty.c:672
@@ -6824,7 +6841,7 @@ msgstr ""
 "Obs³uga linii terminalowej pod³±czonej do standardowego wej¶cia.\n"
 "Bez argumentów wy¶wietla prêdko¶æ transmisji, rygor linii i odchylenia\n"
 "od stty sane. W ustawieniach ZNAK powinien byæ podany dos³ownie lub\n"
-"zakodowany np. ^c, 0x37, 0177 lub 127; warto¶æ ^- lub s³owo undef jest\n"
+"zakodowany np. ^c, 0x37, 0177 lub 127; warto¶æ ^- lub s³owo undef s±\n"
 "u¿ywane do wy³±czania znaków specjalnych.\n"
 
 #: src/stty.c:787
@@ -6839,7 +6856,7 @@ msgstr "opcje --all i --save wzajemnie siê wykluczaj±"
 
 #: src/stty.c:887
 msgid "when specifying an output style, modes may not be set"
-msgstr "tryb nie mo¿e byæ ustawiany, gdy podajesz format wyj¶cia"
+msgstr "tryb nie mo¿e byæ ustawiany, gdy podany jest format wyj¶cia"
 
 #: src/stty.c:903
 #, c-format
@@ -6886,7 +6903,7 @@ msgstr "getpass: otwarcie /dev/tty niemo¿liwe"
 
 #: src/su.c:350
 msgid "cannot set groups"
-msgstr "nie mo¿na ustawiæ grupy"
+msgstr "nie mo¿na ustawiæ grup"
 
 #: src/su.c:354
 msgid "cannot set group id"
@@ -6915,12 +6932,13 @@ msgstr ""
 "Zmiana efektywnego identyfikatora u¿ytkownika i grupy na identyfikator\n"
 "U¯YTKOWNIKA.\n"
 "\n"
-"  -, -l, --login              uruchomienie pow³oki podstawow± (login shell)\n"
-"  -c, --command=POLECENIE     przekazanie POLECENIA pow³oce opcj± -c\n"
-"  -f, --fast                  przekazanie -f pow³oce (dla csh lub tcsh)\n"
-"  -m, --preserve-environment  bez kasowanie zmiennych ¶rodowiskowych\n"
-"  -p                          to samo co  -m\n"
-"  -s, --shell=POW£OKA         uruchomienie POW£OKI, je¶li /etc/shells "
+"  -, -l, --login               uruchomienie pow³oki podstawowej (login "
+"shell)\n"
+"  -c, --command=POLECENIE      przekazanie POLECENIA pow³oce opcj± -c\n"
+"  -f, --fast                   przekazanie -f pow³oce (dla csh lub tcsh)\n"
+"  -m, --preserve-environment   bez kasowania zmiennych ¶rodowiskowych\n"
+"  -p                           to samo co  -m\n"
+"  -s, --shell=POW£OKA          uruchomienie POW£OKI, je¶li /etc/shells "
 "pozwala\n"
 
 #: src/su.c:450
@@ -6943,12 +6961,12 @@ msgstr "niepoprawne has³o"
 #: src/su.c:569
 #, c-format
 msgid "using restricted shell %s"
-msgstr "u¿ywam ograniczonej pow³oki %s"
+msgstr "u¿ycie pow³oki z ograniczeniami %s"
 
 #: src/su.c:580
 #, c-format
 msgid "warning: cannot change directory to %s"
-msgstr "uwaga: nie mo¿na zmieniæ katalogu na `%s'"
+msgstr "uwaga: nie mo¿na zmieniæ katalogu na %s"
 
 #: src/sum.c:36
 msgid "Kayvan Aghaiepour and David MacKenzie"
@@ -6961,20 +6979,17 @@ msgid ""
 "  -r              defeat -s, use BSD sum algorithm, use 1K blocks\n"
 "  -s, --sysv      use System V sum algorithm, use 512 bytes blocks\n"
 msgstr ""
-"Wypisanie sumy kontrolnej i ilo¶ci bloków dla ka¿dego PLIKU.\n"
+"Wypisanie sumy kontrolnej i liczby bloków dla ka¿dego PLIKU.\n"
 "\n"
 "  -r              u¿ycie algorytmu BSD i bloków po 1 KB\n"
 "  -s, --sysv      u¿ycie algorytmu Systemu V i bloków po 512 bajtów\n"
-"\n"
-"Je¿eli PLIK nie jest podany lub PLIK to -, czytane jest standardowe "
-"wej¶cie.\n"
 
 #: src/sync.c:45
 msgid ""
 "Force changed blocks to disk, update the super block.\n"
 "\n"
 msgstr ""
-"Wymuszenie zapisu zmienionych bloków na dysk, aktualizacja super-bloku\n"
+"Wymuszenie zapisu zmienionych bloków na dysk, aktualizacja super-bloku.\n"
 "\n"
 
 #: src/sync.c:70 src/tty.c:112
@@ -7036,7 +7051,7 @@ msgid ""
 "\n"
 msgstr ""
 "Wypisanie %d ostatnich linii ka¿dego PLIKU na standardowym wyj¶ciu.\n"
-"Dla wiêkszej ilo¶ci PLIKÓW ka¿da porcja ma nag³ówek z nazw±. Je¿eli PLIK "
+"Dla wiêkszej liczby PLIKÓW ka¿da porcja ma nag³ówek z nazw±. Je¿eli PLIK "
 "nie\n"
 "jest podany lub PLIK to -, czytane jest standardowe wej¶cie.\n"
 "\n"
@@ -7048,8 +7063,8 @@ msgid ""
 "                           inaccessible later -- useful only with -f\n"
 "  -c, --bytes=N            output the last N bytes\n"
 msgstr ""
-"      --retry              sta³e ponawianie otwierania pliku\n"
-"  -c, --bytes=N            wypisanie pierwszych N bajtów\n"
+"      --retry              sta³e ponawianie próby otwierania pliku\n"
+"  -c, --bytes=N            wypisanie ostatnich N bajtów\n"
 
 #: src/tail.c:253
 msgid ""
@@ -7081,7 +7096,7 @@ msgstr ""
 "(domy¶lnie\n"
 "                           %d) iteracjach, ¿eby sprawdziæ czy zosta³ "
 "usuniêty\n"
-"                           albo przemianowany\n"
+"                           albo przemianowany (czêsty przypadek dla logów)\n"
 
 #: src/tail.c:271
 msgid ""
@@ -7108,7 +7123,7 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Je¿eli pierwszy znak N (ilo¶ci bajtów lub linii) to `+', pisanie zaczyna\n"
+"Je¿eli pierwszy znak N (liczby bajtów lub linii) to `+', pisanie zaczyna\n"
 "siê od N-tego elementu od pocz±tku ka¿dego pliku. W przeciwnym wypadku\n"
 "wypisanych jest ostatnich N elementów pliku. N mo¿e mieæ mno¿nik: b - 512, "
 "k\n"
@@ -7121,8 +7136,9 @@ msgid ""
 "means that even if a tail'ed file is renamed, tail will continue to track\n"
 "its end.  "
 msgstr ""
-"Z --follow (-f) tail ¶ledzi przyrosty zawarto¶ci pliku o okre¶lonym\n"
-"deskryptorze, wiêc nawet po zmianie nazwy. "
+"Z --follow (-f) tail domy¶lnie ¶ledzi przyrosty zawarto¶ci pliku o "
+"okre¶lonym\n"
+"deskryptorze, wiêc nawet po zmianie nazwy ¶ledzi ten sam plik. "
 
 #: src/tail.c:293
 msgid ""
@@ -7132,17 +7148,19 @@ msgid ""
 "named file by reopening it periodically to see if it has been removed and\n"
 "recreated by some other program.\n"
 msgstr ""
-"To zachowanie jest niepo¿±dane, je¿eli ma byæ ¶ledzony ma byæ plik o\n"
-"okre¶lonej nazwie (np. rotowany log). W tym przypadku nale¿y u¿yæ\n"
-"--follow=name , co powoduje, ¿e tail ¶ledzi podany plik, otwieraj±c go co\n"
-"jaki¶ czas ponownie, ¿eby sprawdziæ nie zosta³ usuniêty i ponownie "
-"utworzony\n"
-"przez jakis program.\n"
+"To zachowanie\n"
+"jest niepo¿±dane, je¿eli ¶ledzony ma byæ plik o okre¶lonej nazwie (np.\n"
+"plik loga podlegaj±cy rotacji). W tym przypadku nale¿y u¿yæ --follow=name, "
+"co\n"
+"powoduje, ¿e tail ¶ledzi podany plik, otwieraj±c go co jaki¶ czas ponownie,\n"
+"¿eby sprawdziæ, czy nie zosta³ usuniêty i ponownie utworzony przez jaki¶ "
+"inny\n"
+"program.\n"
 
 #: src/tail.c:331
 #, c-format
 msgid "closing %s (fd=%d)"
-msgstr "zamykam %s (fd=%d)"
+msgstr "zamykanie %s (fd=%d)"
 
 #: src/tail.c:391
 #, c-format
@@ -7157,12 +7175,12 @@ msgstr "%s: nie mo¿na ustawiæ pozycji wzglêdnej %s"
 #: src/tail.c:400
 #, c-format
 msgid "%s: cannot seek to end-relative offset %s"
-msgstr "%s: nie mo¿na ustawiæ pozycji wzglêdnej za koñcem pliku %s"
+msgstr "%s: nie mo¿na ustawiæ pozycji %s wzglêdem koñca pliku"
 
 #: src/tail.c:818
 #, c-format
 msgid "`%s' has become inaccessible"
-msgstr "`%s' sta³ sie niedostêpny"
+msgstr "`%s' sta³ siê niedostêpny"
 
 #: src/tail.c:835
 #, c-format
@@ -7174,17 +7192,17 @@ msgstr ""
 #: src/tail.c:856
 #, c-format
 msgid "`%s' has become accessible"
-msgstr "`%s' sta³ siê dostepny"
+msgstr "`%s' sta³ siê dostêpny"
 
 #: src/tail.c:864
 #, c-format
 msgid "`%s' has appeared;  following end of new file"
-msgstr "`%s' zosta³ zamieniony; ¶ledzê koniec nowego pliku"
+msgstr "`%s' pojawi³ siê; ¶ledzenie koñca nowego pliku"
 
 #: src/tail.c:875
 #, c-format
 msgid "`%s' has been replaced;  following end of new file"
-msgstr "`%s' zosta³ zamieniony; ¶ledzê koniec nowego pliku"
+msgstr "`%s' zosta³ podmieniony; ¶ledzenie koñca nowego pliku"
 
 #: src/tail.c:1000
 #, c-format
@@ -7198,7 +7216,7 @@ msgstr "nie ma wiêcej plików"
 #: src/tail.c:1236
 #, c-format
 msgid "%s: cannot follow end of this type of file; giving up on this name"
-msgstr "%s: pliku tego typu nie bêdzie ¶ledzony"
+msgstr "%s: pliku tego typu nie mo¿na ¶ledziæ"
 
 #: src/tail.c:1356
 #, c-format
@@ -7212,8 +7230,8 @@ msgid ""
 "there may be no more than one file argument.  Use the equivalent -n or -c\n"
 "option instead."
 msgstr ""
-"za du¿o argumentów; Gdy jest jest u¿ywana przestarza³a sk³adnia taila\n"
-"(%s) nie mo¿e byæ wiêcej ni¿ jeden argument plikowy. U¿yj odpowiednika,\n"
+"za du¿o argumentów; Gdy jest u¿ywana przestarza³a sk³adnia taila (%s)\n"
+"nie mo¿e byæ wiêcej ni¿ jeden argument plikowy. Nale¿y u¿yæ odpowiednika,\n"
 "opcji -n albo -c."
 
 #: src/tail.c:1414
@@ -7235,18 +7253,18 @@ msgstr "opcja `%s' jest przestarza³a; u¿yj `%s-%c %.*s'"
 #: src/tail.c:1484
 #, c-format
 msgid "%s is larger than the maximum file size on this system"
-msgstr "%s jest wiêksze ni¿ maksymalny rozmair pliku w tym systemie"
+msgstr "%s jest wiêksze ni¿ maksymalny rozmiar pliku w tym systemie"
 
 #: src/tail.c:1510
 #, c-format
 msgid "%s: invalid maximum number of unchanged stats between opens"
 msgstr ""
-"%s: b³êdna ilo¶æ maksymalna braków zmian stanów miêdzy otwarciami pliku"
+"%s: b³êdna maksymalna liczba braków zmian stanów miêdzy otwarciami pliku"
 
 #: src/tail.c:1522
 #, c-format
 msgid "%s: invalid maximum number of consecutive size changes"
-msgstr "%s: b³êdna ilo¶æ maksymalna kolejnych zmian rozmiaru"
+msgstr "%s: b³êdna maksymalna liczba kolejnych zmian rozmiaru"
 
 #: src/tail.c:1534
 #, c-format
@@ -7256,11 +7274,11 @@ msgstr "%s: b³êdny PID"
 #: src/tail.c:1549
 #, c-format
 msgid "%s: invalid number of seconds"
-msgstr "%s: b³êdna ilo¶æ sekund"
+msgstr "%s: b³êdna liczba sekund"
 
 #: src/tail.c:1568
 msgid "warning: --retry is useful only when following by name"
-msgstr "uwaga: opcja --retry jest przydatna przy ¶ledzeniu nazwy"
+msgstr "uwaga: opcja --retry jest przydatna tylko przy ¶ledzeniu nazwy"
 
 #: src/tail.c:1572
 msgid "warning: PID ignored; --pid=PID is useful only when following"
@@ -7284,8 +7302,8 @@ msgid ""
 msgstr ""
 "Kopiuje standardowe wej¶cie do ka¿dego PLIKU oraz na standardowe wyj¶cie.\n"
 "\n"
-"  -a, --append              dopisuj do PLIKU, nie nadpisuj\n"
-"  -i, --ignore-interrupts   ignoruj sygna³y przerwania\n"
+"  -a, --append              dopisywanie do PLIKU, nie nadpisywanie\n"
+"  -i, --ignore-interrupts   ignorowanie sygna³ów przerwania\n"
 
 #: src/test.c:216
 msgid "argument expected\n"
@@ -7377,7 +7395,7 @@ msgstr "-ot nie dopuszcza -l\n"
 
 #: src/test.c:593
 msgid "unknown binary operator"
-msgstr "nieznany operator binarny"
+msgstr "nieznany operator dwuargumentowy"
 
 #: src/test.c:781
 msgid "after -t"
@@ -7435,8 +7453,8 @@ msgstr ""
 "\n"
 "  [-n] £AÑCUCH         £AÑCUCH ma d³ugo¶æ ró¿n± od zera\n"
 "  -z £AÑCUCH           £AÑCUCH ma d³ugo¶æ równ± zero\n"
-"  £AÑCUCH1 = £AÑCUCH2  ³añcuchy sa równe\n"
-"  £AÑCUCH1 != £AÑCUCH2 ³añcuchy sa ró¿ne\n"
+"  £AÑCUCH1 = £AÑCUCH2  ³añcuchy s± równe\n"
+"  £AÑCUCH1 != £AÑCUCH2 ³añcuchy s± ró¿ne\n"
 
 #: src/test.c:1009
 msgid ""
@@ -7507,7 +7525,7 @@ msgid ""
 msgstr ""
 "  -L PLIK     PLIK istnieje i jest dowi±zaniem symbolicznym\n"
 "  -O PLIK     PLIK istnieje i jego w³a¶cicielem jest efektywny u¿ytkownik\n"
-"  -p PLIK     PLIK istnieje i jest ³±czem nazwanym (named pipe)\n"
+"  -p PLIK     PLIK istnieje i jest potokiem z nazw± (named pipe)\n"
 "  -r PLIK     PLIK istnieje i mo¿e byæ czytany\n"
 "  -s PLIK     PLIK istnieje i ma d³ugo¶æ wiêksz± od zera\n"
 
@@ -7521,8 +7539,8 @@ msgid ""
 "  -x FILE     FILE exists and is executable\n"
 msgstr ""
 "  -S PLIK     PLIK istnieje i jest gniazdem\n"
-"  -t PLIK     deskryptor pliku FD (domy¶lnie standardowe wyj¶cie) jest\n"
-"              otwarty na terminal\n"
+"  -t [DP]     deskryptor pliku DP (domy¶lnie standardowe wyj¶cie) jest\n"
+"              otwarty na terminalu\n"
 "  -u PLIK     PLIK istnieje i ma atrybut set-user-id (SUID)\n"
 "  -w PLIK     PLIK istnieje i mo¿e byæ zapisywany\n"
 "  -x PLIK     PLIK istnieje i jest wykonywalny\n"
@@ -7535,8 +7553,9 @@ msgid ""
 "INTEGER may also be -l STRING, which evaluates to the length of STRING.\n"
 msgstr ""
 "\n"
-"Zwróæ uwagê na to, ¿e nawiasy musz± byæ chronione (np. przez `\\') przed \n"
-"interpretacj± przez pow³okê. LICZBA musi byæ ca³kowita i mo¿e mieæ tak¿e\n"
+"Nale¿y zwróciæ uwagê na to, ¿e nawiasy musz± byæ chronione (np. przez `\\')\n"
+"przed interpretacj± przez pow³okê. LICZBA musi byæ ca³kowita i mo¿e mieæ "
+"tak¿e\n"
 "postaæ -l £AÑCUCH, czyli d³ugo¶æ £AÑCUCHA.\n"
 
 #: src/test.c:1067
@@ -7615,7 +7634,7 @@ msgid ""
 "Note that the -d and -t options accept different time-date formats.\n"
 msgstr ""
 "\n"
-"Zauwa¿, ¿e opcje -d i -t akceptuj± trzy ró¿ne formaty daty/czasu.\n"
+"Nale¿y zauwa¿yæ, ¿e opcje -d i -t przyjmuj± ró¿ne formaty daty/czasu.\n"
 
 #: src/touch.c:311 src/touch.c:331
 #, c-format
@@ -7624,7 +7643,7 @@ msgstr "b³êdny format daty %s"
 
 #: src/touch.c:355
 msgid "cannot specify times from more than one source"
-msgstr "nie mo¿na podaæ czasu z wiêcej niz jednego ¼ród³a"
+msgstr "nie mo¿na podaæ czasu z wiêcej ni¿ jednego ¼ród³a"
 
 #: src/touch.c:378
 #, c-format
@@ -7641,7 +7660,7 @@ msgstr "brak argumentu plikowego"
 #: src/tr.c:327
 #, c-format
 msgid "Usage: %s [OPTION]... SET1 [SET2]\n"
-msgstr "Sk³adnia %s [OPCJA]... ZBIÓR1 [ZBIÓR2]\n"
+msgstr "Sk³adnia: %s [OPCJA]... ZBIÓR1 [ZBIÓR2]\n"
 
 #: src/tr.c:331
 msgid ""
@@ -7661,8 +7680,8 @@ msgstr ""
 "\n"
 "  -c, --complement        zbiór znaków komplementarny do ZBIORU1\n"
 "  -d, --delete            skasowanie znaków ze ZBIORU1, bez zamian\n"
-"  -s, --squeeze-repeats   zamiania ci±gu takich samych znaków ze ZBIORU1 na\n"
-"                            pojedyñcze wyst±pienia takich znaków\n"
+"  -s, --squeeze-repeats   zamiana ci±gu takich samych znaków ze ZBIORU1 na\n"
+"                            pojedyncze wyst±pienia takich znaków\n"
 "  -t, --truncate-set1     najpierw ZBIÓR1 jest obcinany do d³ugo¶ci ZBIORU2\n"
 
 #: src/tr.c:344
@@ -7681,7 +7700,7 @@ msgid ""
 "  \\t              horizontal tab\n"
 msgstr ""
 "\n"
-"ZBIORy s± podawane jako ci±gi znaków. Wiêkszo¶æ znaków reprezentuje same\n"
+"ZBIORY s± podawane jako ci±gi znaków. Wiêkszo¶æ znaków reprezentuje same\n"
 "siebie. Specjalnie interpretowane ci±gi to:\n"
 "\n"
 "  \\NNN            znak o warto¶ci ósemkowej NNN (od 1 do 3 cyfr "
@@ -7708,9 +7727,8 @@ msgid ""
 msgstr ""
 "  \\v              tabulacja pionowa\n"
 "  ZNAK1-ZNAK2     wszystkie znaki od ZNAK1 do ZNAK2, rosn±co\n"
-"  [ZNAK1-ZNAK2]   to samo co ZNAK1-ZNAK2, je¿eli u¿yte w obu zbiorach\n"
 "  [ZNAK*]         w ZBIORZE2 kopiuje ZNAK uzupe³niaj±c do d³ugo¶ci ZBIORU1\n"
-"  [ZNAK*POWTÓRZ]  POWTÓRZ kopii ZNAKu, ósemkowe gdy zaczyna siê od 0\n"
+"  [ZNAK*POWTÓRZ]  POWTÓRZ kopii ZNAKU, ósemkowo gdy zaczyna siê od 0\n"
 "  [:alnum:]       wszystkie litery i cyfry\n"
 "  [:alpha:]       wszystkie litery\n"
 "  [:blank:]       wszystkie odstêpy poziome\n"
@@ -7733,8 +7751,8 @@ msgstr ""
 "  [:print:]       wszystkie znaki drukowalne w³±cznie ze spacj±\n"
 "  [:punct:]       wszystkie znaki przestankowe\n"
 "  [:space:]       wszystkie odstêpy poziome i pionowe\n"
-"  [:upper:]       wszystkie du¿e litery\n"
-"  [:xdigit:]      wszystkie cyfry szestnastkowe\n"
+"  [:upper:]       wszystkie wielkie litery\n"
+"  [:xdigit:]      wszystkie cyfry szesnastkowe\n"
 "  [=ZNAK=]        wszystkie znaki równowa¿ne ZNAKOWI\n"
 
 #: src/tr.c:379
@@ -7748,7 +7766,8 @@ msgstr ""
 "Zamiana nastêpuje gdy nie jest podana opcja -d i s± podane oba zbiory "
 "ZBIÓR1\n"
 "i ZBIÓR2. -t mo¿e byæ u¿yte tylko przy zamianie. W razie potrzeby ZBIÓR2\n"
-"jest uzupe³niany do d³ugo¶ci ZBIORU1 przez powtórzenie ostatniego znaku. "
+"jest uzupe³niany do d³ugo¶ci ZBIORU1 przez powtórzenie ostatniego znaku.\n"
+"Nadmiarowe znaki ZBIORU2 s± ignorowane. "
 
 #: src/tr.c:385
 msgid ""
@@ -7757,12 +7776,10 @@ msgid ""
 "expand in ascending order; used in SET2 while translating, they may\n"
 "only be used in pairs to specify case conversion.  "
 msgstr ""
-"Nadmiarowe znaki\n"
-"ZBIORU2 s± ignorowane. Tylko [:lower:] i [:upper:] bêd± na pewno rozwiniête "
-"w\n"
-"porz±dku rosn±cym; u¿yte w ZBIORZE2 przy zamianie, mog± byæ tylko zestawione "
-"w\n"
-"parach dla konwersji ma³e-wielkie litery. "
+"Tylko [:lower:] i [:upper:] bêd± na\n"
+"pewno rozwiniête w porz±dku rosn±cym; u¿yte w ZBIORZE2 przy zamianie, mog± "
+"byæ\n"
+"tylko zestawione w parach dla konwersji ma³e-wielkie litery. "
 
 #: src/tr.c:391
 msgid ""
@@ -7771,7 +7788,7 @@ msgid ""
 "translation or deletion.\n"
 msgstr ""
 "Je¿eli operacj±\n"
-"nie jest ani zamiana ani kasowanie -s u¿ywa ZBIORU1. W przeciwnym wypadku\n"
+"nie jest ani zamiana ani kasowanie, -s u¿ywa ZBIORU1. W przeciwnym wypadku\n"
 "u¿ywa ZBIORU2 i kompresja powtórzeñ zachodzi po zamianie i kasowaniu.\n"
 
 #: src/tr.c:557
@@ -7785,7 +7802,7 @@ msgstr ""
 
 #: src/tr.c:566
 msgid "invalid backslash escape at end of string"
-msgstr "b³êdny backslash na koñcu ³añcucha znaków"
+msgstr "b³êdna sekwencja z backslashem na koñcu ³añcucha znaków"
 
 #: src/tr.c:572
 #, c-format
@@ -7800,7 +7817,7 @@ msgstr "koñce zakresu `%s-%s' s± w odwrotnym porz±dku sortowania"
 #: src/tr.c:906
 #, c-format
 msgid "invalid repeat count `%s' in [c*n] construct"
-msgstr "b³êdna ilo¶æ powtórzeñ `%s' w specyfikacji [c*n]"
+msgstr "b³êdna liczba powtórzeñ `%s' w specyfikacji [c*n]"
 
 #: src/tr.c:999
 msgid "missing character class name `[::]'"
@@ -7808,7 +7825,7 @@ msgstr "brakuj±ca nazwa klasy znaków `[::]'"
 
 #: src/tr.c:1002
 msgid "missing equivalence class character `[==]'"
-msgstr "brakuj±ca klasa równowa¿no¶ci znaków `[==]'"
+msgstr "brakuj±cy znak dla klasy równowa¿no¶ci `[==]'"
 
 #: src/tr.c:1025
 #, c-format
@@ -7818,7 +7835,7 @@ msgstr "b³êdna klasa znaków `%s'"
 #: src/tr.c:1050
 #, c-format
 msgid "%s: equivalence class operand must be a single character"
-msgstr "%s: operator równowa¿ny klasie musi byæ pojedyñczym znakiem"
+msgstr "%s: operand klasy równowa¿no¶ci musi byæ pojedynczym znakiem"
 
 # should it be string1 or SET1?
 #: src/tr.c:1522
@@ -7828,11 +7845,11 @@ msgstr "specyfikacja powtarzania [c*] nie mo¿e byæ w ZBIORZE1"
 # string2 or SET2?
 #: src/tr.c:1532
 msgid "only one [c*] repeat construct may appear in string2"
-msgstr "tylko jedna specyfikacja powtarzania [c*] mo¿e byæ z ZBIORZE2"
+msgstr "tylko jedna specyfikacja powtarzania [c*] mo¿e byæ w ZBIORZE2"
 
 #: src/tr.c:1540
 msgid "[=c=] expressions may not appear in string2 when translating"
-msgstr "wyra¿enia [=c=] nie mog± byæ z ZBIORZE2 przy zamianie"
+msgstr "wyra¿enia [=c=] nie mog± byæ w ZBIORZE2 przy zamianie"
 
 #: src/tr.c:1553
 msgid "when not truncating set1, string2 must be non-empty"
@@ -7844,15 +7861,15 @@ msgid ""
 "when translating with complemented character classes,\n"
 "string2 must map all characters in the domain to one"
 msgstr ""
-"przy u¿yciu uzupe³nionych klas znaków przy zamianie\n"
-"ZBIÓR2 musi mapowaæ wszystkie znaki z domeny do jednego"
+"przy zamianie z u¿yciem dope³nieñ klas znaków,\n"
+"ZBIÓR2 musi odwzorowywaæ wszystkie znaki z dziedziny na jeden"
 
 #: src/tr.c:1569
 msgid ""
 "when translating, the only character classes that may appear in\n"
 "string2 are `upper' and `lower'"
 msgstr ""
-"przy zamianie w ZBIORZE2 mog± siê poajawiæ tylko klasy znaków\n"
+"przy zamianie w ZBIORZE2 mog± siê pojawiæ tylko klasy znaków\n"
 "`upper' i `lower'"
 
 #: src/tr.c:1578
@@ -7878,7 +7895,7 @@ msgstr "przy kompresji powtórzeñ musi byæ podany przynajmniej 1 zbiór"
 # ? - rzm
 #: src/tr.c:1967
 msgid "misaligned [:upper:] and/or [:lower:] construct"
-msgstr "niedopasowane [:upper:] i/lub [:lower:]"
+msgstr "nie wyrównane konstrukcje [:upper:] i/lub [:lower:]"
 
 #: src/tr.c:1990
 msgid ""
@@ -7886,9 +7903,10 @@ msgid ""
 "construct in string1 must be aligned with a corresponding construct\n"
 "([:upper:] or [:lower:], respectively) in string2"
 msgstr ""
-"b³êdne mapowanie identyczno¶ci;  przy t³umaczeniu ka¿de wyra¿enie [:lower:]\n"
-"lub [:upper:] w £AÑCUCHU1 musi byæ dopasowane do odpowiedniego wyra¿enia\n"
-"(odpowiednie [:upper:] lub [:lower:]) w £AÑCUCHU2"
+"b³êdne odwzorowanie identyczno¶ci;  przy t³umaczeniu ka¿de wyra¿enie [:"
+"lower:]\n"
+"lub [:upper:] w ZBIORZE1 musi byæ wyrównane z odpowiadaj±cym wyra¿eniem\n"
+"(odpowiednio [:upper:] lub [:lower:]) w ZBIORZE2"
 
 #: src/true.c:34
 #, c-format
@@ -7916,8 +7934,9 @@ msgid ""
 "\n"
 msgstr ""
 "Sk³adnia: %s [OPCJA] [PLIK]\n"
-"Wypisanie sumy CRC i ilo¶ci bajtów ka¿dego PLIKU,\n"
-"Bez PLIKU albo gdy PLIK to -, czytane jest standardowe wej¶cie.\n"
+"Wypisanie ca³kowicie uporz±dkowanej listy zgodnie z czê¶ciowym porz±dkiem\n"
+"w PLIKU. Gdy nie podano PLIKU albo gdy PLIK to -, czytane jest standardowe\n"
+"wej¶cie.\n"
 "\n"
 
 #: src/tsort.c:533
@@ -7953,11 +7972,11 @@ msgid ""
 "  -n, --nodename           print the network node hostname\n"
 "  -r, --kernel-release     print the kernel release\n"
 msgstr ""
-"Napisanie informacji o systemie. Brak opcji dzia³a jak z -s.\n"
+"Napisanie informacji o systemie. Bez opcji dzia³a jak z -s.\n"
 "\n"
 "  -a, --all                pokazanie wszystkich informacji w tej "
 "kolejno¶ci:\n"
-"  -s, --kernel-name        pokazanie nazwy systemu operacyjnego\n"
+"  -s, --kernel-name        pokazanie nazwy j±dra systemu operacyjnego\n"
 "  -n, --nodename           pokazanie sieciowej nazwy systemu\n"
 "  -r, --kernel-release     pokazanie numeru edycji j±dra systemu\n"
 
@@ -7970,7 +7989,7 @@ msgid ""
 "  -o, --operating-system   print the operating system\n"
 msgstr ""
 "  -v, --kernel-version     pokazanie numeru wersji j±dra systemu\n"
-"  -m, --machine            pokazanie nazwy hardware'u\n"
+"  -m, --machine            pokazanie nazwy sprzêtu (architektury)\n"
 "  -p, --processor          pokazanie typu procesora\n"
 "  -i, --hardware-platform  pokazanie platformy sprzêtowej\n"
 "  -o, --operating-system   pokazanie nazwy systemu operacyjnego\n"
@@ -8031,7 +8050,7 @@ msgid ""
 "  -c, --count           prefix lines by the number of occurrences\n"
 "  -d, --repeated        only print duplicate lines\n"
 msgstr ""
-"  -c, --count           poprzedzenie linii ilo¶ci± powtórzeñ\n"
+"  -c, --count           poprzedzenie linii liczb± powtórzeñ\n"
 "  -d, --repeated        wypisanie tylko powtórzonych linii\n"
 
 #: src/uniq.c:155
@@ -8047,13 +8066,14 @@ msgstr ""
 "  -D, --all-repeated[=metoda-oddzielenia]  wypisanie wszystkich "
 "powtarzaj±cych\n"
 "                        siê linii.\n"
-"                        metoda-oddzielenia={none(default,prepend,separate}\n"
+"                        metoda-oddzielenia={none(domy¶lna),prepend,"
+"separate}\n"
 "                        Oddzielanie jest robione przez puste linie\n"
 "  -f, --skip-fields=N   bez porównania pierwszych N pól\n"
 "  -i, --ignore-case     ignorowanie ró¿nic miêdzy ma³ymi i wielkimi "
 "literami\n"
 "  -s, --skip-chars=N    bez porównania pierwszych N znaków\n"
-"  -u, --unique          wypisanie tylko linie unikalnych\n"
+"  -u, --unique          wypisanie tylko linii unikalnych\n"
 
 #: src/uniq.c:164
 msgid "  -w, --check-chars=N   compare no more than N characters in lines\n"
@@ -8067,7 +8087,7 @@ msgid ""
 msgstr ""
 "\n"
 "Pole to ci±g znaków odstêpu, za którym s± znaki nie bêd±ce znakami odstepu.\n"
-"Pola s± przeskakiwane przez przeskakiwaniem znaków. \n"
+"Pola s± przeskakiwane przed przeskakiwaniem znaków. \n"
 
 #: src/uniq.c:381
 #, c-format
@@ -8218,12 +8238,12 @@ msgid ""
 "  -m, --chars            print the character counts\n"
 "  -l, --lines            print the newline counts\n"
 msgstr ""
-"Dla ka¿dego PLIKU wypisywana jest ilo¶æ linii, s³ów i bajtów oraz\n"
+"Dla ka¿dego PLIKU wypisywana jest liczba linii, s³ów i bajtów oraz\n"
 "podsumowanie je¿eli podany jest wiêcej ni¿ jeden PLIK. Je¿eli PLIK nie jest\n"
 "podany lub PLIK to -, czytane jest standardowe wej¶cie.\n"
-"  -c, --bytes            wypisanie ilo¶ci bajtów\n"
-"  -m, --chars            wypisanie ilo¶ci znaków\n"
-"  -l, --lines            wypisanie ilo¶ci znaków nowej linii\n"
+"  -c, --bytes            wypisanie liczby bajtów\n"
+"  -m, --chars            wypisanie liczby znaków\n"
+"  -l, --lines            wypisanie liczby znaków nowej linii\n"
 
 #: src/wc.c:137
 msgid ""
@@ -8231,7 +8251,7 @@ msgid ""
 "  -w, --words            print the word counts\n"
 msgstr ""
 "  -L, --max-line-length  wypisanie d³ugo¶ci najd³u¿szej linii\n"
-"  -w, --words            wypisanie ilo¶ci s³ów\n"
+"  -w, --words            wypisanie liczby s³ów\n"
 
 #: src/who.c:41
 msgid "Joseph Arceneaux, David MacKenzie, and Michael Stone"
@@ -8247,7 +8267,7 @@ msgstr "id="
 
 #: src/who.c:403 src/who.c:408
 msgid "term="
-msgstr "term="
+msgstr "zakoñczenie="
 
 #: src/who.c:405 src/who.c:409
 msgid "exit="
@@ -8272,7 +8292,7 @@ msgid ""
 "# users=%u\n"
 msgstr ""
 "\n"
-"# u¿ytkownicy=%u\n"
+"liczba u¿ytkowników=%u\n"
 
 #: src/who.c:498
 msgid "NAME"
@@ -8300,7 +8320,7 @@ msgstr "KOMENTARZ"
 
 #: src/who.c:499
 msgid "EXIT"
-msgstr "WYJ¦ÆIE"
+msgstr "WYJ¦CIE"
 
 #: src/who.c:574
 #, c-format
@@ -8317,9 +8337,9 @@ msgid ""
 msgstr ""
 "\n"
 "  -a, --all         to samo co  -b -d --login -p -r -t -T -u\n"
-"  -b, --boot        czas ostatniego rebootu systemu\n"
+"  -b, --boot        czas ostatniego uruchomienia systemu\n"
 "  -d, --dead        wypisanie martwych procesów\n"
-"  -H, --heading     ypisanie nag³ówków kolumn\n"
+"  -H, --heading     wypisanie linii nag³ówków kolumn\n"
 
 #: src/who.c:582
 msgid ""
@@ -8331,7 +8351,7 @@ msgstr ""
 "  -i, --idle        wypisanie czasu bezczynno¶ci jako GODZ:MIN, . albo\n"
 "                    dawno (przestarza³e, u¿ywaj -u)\n"
 "      --login       pokazanie systemowych procesów login\n"
-"                    (równowa¿ne  SUS -l)\n"
+"                    (równowa¿ne opcji  -l  z SUS)\n"
 
 #: src/who.c:588
 msgid ""
@@ -8340,7 +8360,7 @@ msgid ""
 "  -m                only hostname and user associated with stdin\n"
 "  -p, --process     print active processes spawned by init\n"
 msgstr ""
-"  -l, --lookup      rozwi±zywanie nazw systemów w DNSie\n"
+"  -l, --lookup      rozwi±zywanie nazw systemów w DNS-ie\n"
 "                    (-l jest przestarza³e, u¿ywaj  --lookup)\n"
 "  -m                wy¶wietlenie tylko nazwy systemu i u¿ytkownika "
 "zwi±zanego\n"
@@ -8369,8 +8389,9 @@ msgid ""
 msgstr ""
 "  -T, -w, --mesg    zaznaczenie czy u¿ytkownik przyjmuje komunikaty: +, - "
 "lub ?\n"
+"  -u, --users       wypisanie zalogowanych u¿ytkowników\n"
 "      --message     to samo co  -T\n"
-"      --writeable   to samo co  -T\n"
+"      --writable    to samo co  -T\n"
 
 #: src/who.c:608
 #, c-format
@@ -8380,7 +8401,7 @@ msgid ""
 "If ARG1 ARG2 given, -m presumed: `am i' or `mom likes' are usual.\n"
 msgstr ""
 "\n"
-"Je¶li nie podano PLIKU, u¿ywa %s. Czêsto podaje siê %s.\n"
+"Je¶li nie podano PLIKU, u¿ywany jest %s. Czêsto podaje siê %s.\n"
 "Obecno¶æ ARG1 ARG2 implikuje -m. Typowe wywo³ania: `am i', `mom likes'.\n"
 
 #: src/who.c:711
@@ -8392,8 +8413,7 @@ msgid ""
 "Warning: the meaning of '-l' will change in a future release to conform to "
 "POSIX"
 msgstr ""
-"Uwaga: znaczenie opcji `-l' zmieni siê w przysz³o¶ci tak, by poasowaæ do "
-"standardu POSIX"
+"Uwaga: znaczenie opcji `-l' zmieni siê w przysz³o¶ci na zgodne z norm± POSIX"
 
 #: src/whoami.c:53
 msgid ""
@@ -8425,6 +8445,7 @@ msgid ""
 "\n"
 msgstr ""
 "Powtarzanie na wyj¶ciu linii ze wszystkimi podanymi £AÑCUCH(AMI) albo `y'\n"
+"\n"
 
-#~ msgid "   Type"
-#~ msgstr "   typ "
+#~ msgid "warning: unable to use large stack"
+#~ msgstr "uwaga: nie mo¿na uzyæ du¿ego stosu"

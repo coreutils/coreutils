@@ -520,7 +520,6 @@ uninstall-info: uninstall-info-recursive
 check-root:
 	cd chown && $(MAKE) check TESTS=basic
 	cd cp    && $(MAKE) check TESTS=special-bits
-	cd touch && $(MAKE) check TESTS=fifo
 	cd mv    && $(MAKE) check TESTS=mv-special-1
 	cd rm    && $(MAKE) check TESTS=fail-2eperm
 
@@ -529,7 +528,7 @@ check-recursive: evar-check root-hint
 # Warn when `make check' is run with POSIXLY_CORRECT or CDPATH set.
 .PHONY: evar-check
 evar-check:
-	test "$${POSIXLY_CORRECT+set}" = set \
+	../src/printenv POSIXLY_CORRECT >/dev/null \
 	  && sed s/%%/POSIXLY_CORRECT/ $(srcdir)/.env-warn || :
 	test "$${CDPATH+set}" = set \
 	  && sed s/%%/CDPATH/ $(srcdir)/.env-warn || :
