@@ -7091,7 +7091,9 @@ Make a backup of each file that would otherwise be overwritten or removed.
 @opindex -F
 @opindex --directory
 @cindex hard links to directories
-Allow the super-user to make hard links to directories.
+Allow the super-user to attempt to make hard links to directories.
+However, note that this will probably fail due to
+system restrictions, even for the super-user.
 
 @item -f
 @itemx --force
