@@ -34,7 +34,7 @@
 /* Most systems do not distinguish between external and internal
    text representations.  */
 #if UNIX || __UNIX__ || unix || __unix__ || _POSIX_VERSION
-# define OPENOPTS "r"
+# define OPENOPTS(BINARY) "r"
 #else
 # ifdef MSDOS
 #  define TEXT1TO1 "rb"
@@ -49,7 +49,7 @@
     "Cannot determine system type."
 #  endif
 # endif
-# define OPENOPTS (binary != 0 ? TEXT1TO1 : TEXTCNVT)
+# define OPENOPTS(BINARY) ((BINARY) != 0 ? TEXT1TO1 : TEXTCNVT)
 #endif
 
 #undef __P
@@ -68,11 +68,14 @@
 /* Hook for i18n.  */
 #define _(str) str
 
-/* FIXME: comment. */
-static int verbose = 0;
+/* Nonzero if any of the files read were the standard input. */
+static int have_read_stdin;
 
 /* FIXME: comment. */
 static int quiet = 0;
+
+/* FIXME: comment. */
+static int verbose = 0;
 
 /* The name this program was run with.  */
 char *program_name;
@@ -189,33 +192,39 @@ hex_digits (s)
 /* FIXME: allow newline in filename by encoding it. */
 
 static int
-md5_file (filename, binary)
+md5_file (filename, binary, md5_result)
      const char *filename;
      int binary;
+     unsigned char *md5_result;
 {
-  unsigned char md5buffer[16];
   FILE *fp;
-  size_t i;
   int err;
 
   if (strcmp (filename, "-") == 0)
-    fp = stdin;
+    {
+      have_read_stdin = 1;
+      fp = stdin;
+    }
   else
     {
       /* OPENOPTS is a macro.  It varies with the system.
 	 Some systems distinguish between internal and
 	 external text representations.  */
 
-      fp = fopen (filename, OPENOPTS);
+      fp = fopen (filename, OPENOPTS (binary));
       if (fp == NULL)
-	error (EXIT_FAILURE, errno, "%s", filename);
+	{
+	  error (0, errno, "%s", filename);
+	  return 1;
+	}
     }
 
-  err = md5_stream (fp, md5buffer);
+  err = md5_stream (fp, md5_result);
   if (err)
     {
       error (0, errno, "%s", filename);
-      fclose (fp);
+      if (fp != stdin)
+	fclose (fp);
       return 1;
     }
 
@@ -225,24 +234,23 @@ md5_file (filename, binary)
       return 1;
     }
 
-  for (i = 0; i < 16; ++i)
-    printf ("%02x", md5buffer[i]);
-
-  printf (" %c%s\n", binary ? '*' : ' ', filename);
   return 0;
 }
 
 static int
-md5_check (checkfile_name)
+md5_check (checkfile_name, binary)
      const char *checkfile_name;
+     int binary;
 {
   FILE *checkfile_stream;
   int n_tests = 0;
   int n_tests_failed = 0;
   unsigned char md5buffer[16];
+  size_t line_number;
 
   if (strcmp (checkfile_name, "-") == 0)
     {
+      have_read_stdin = 1;
       checkfile_name = "standard input";
       checkfile_stream = stdin;
     }
@@ -250,12 +258,13 @@ md5_check (checkfile_name)
     {
       checkfile_stream = fopen (checkfile_name, "r");
       if (checkfile_stream == NULL)
-	if (quiet)
-	  exit (EXIT_FAILURE);
-	else
-	  error (EXIT_FAILURE, errno, "%s", checkfile_name);
+	{
+	  error (0, errno, "%s", checkfile_name);
+	  return 1;
+	}
     }
 
+  line_number = 0;
   do
     {
       char line[1024];
@@ -263,6 +272,8 @@ md5_check (checkfile_name)
       int type_flag;
       char *md5num;
       int err;
+
+      ++line_number;
 
       /* FIXME: Use getline, not fgets.  */
       if (fgets (line, 1024, checkfile_stream) == NULL)
@@ -279,9 +290,12 @@ md5_check (checkfile_name)
       err = split_3 (line, &md5num, &type_flag, &filename);
       if (err || !hex_digits (md5num))
 	{
-	  /* FIXME: report file name and line number.  */
 	  if (verbose)
-	    error (0, 0, _("invalid line in check file: %s"), line);
+	    {
+	      /* FIXME: use fprintf rather than error?  */
+	      error (0, 0, _("%s: %lu: invalid MD5 checksum line"),
+		     checkfile_name, (unsigned long) line_number);
+	    }
 	}
       else
 	{
@@ -289,46 +303,45 @@ md5_check (checkfile_name)
 					  '4', '5', '6', '7',
 					  '8', '9', 'a', 'b',
 					  'c', 'd', 'e', 'f' };
-	  size_t cnt;
-	  FILE *fp;
-
-	  if (strcmp (filename, "-") == 0)
-	    fp = stdin;
-	  else
-	    {
-	      fp = fopen (filename, OPENOPTS);
-	      if (fp == NULL)
-		error (EXIT_FAILURE, errno, "%s", filename);
-	    }
+	  int fail;
 
 	  ++n_tests;
-	  md5_stream (fp, md5buffer);
 
-	  if (fp != stdin && fclose (fp) == EOF)
-	    error (EXIT_FAILURE, errno, "%s", filename);
+	  fail = md5_file (filename, binary, md5buffer);
 
-	  /* Compare generated binary number with text representation
-	     in check file.  Ignore case of hex digits.  */
-	  for (cnt = 0; cnt < 16; ++cnt)
-	    if (TOLOWER (md5num[2 * cnt]) != bin2hex[md5buffer[cnt] >> 4]
-		|| TOLOWER (md5num[2 * cnt + 1])
-		   != (bin2hex[md5buffer[cnt] & 0xf]))
-	      break;
+	  if (!fail)
+	    {
+	      size_t cnt;
+	      /* Compare generated binary number with text representation
+		 in check file.  Ignore case of hex digits.  */
+	      for (cnt = 0; cnt < 16; ++cnt)
+		{
+		  if (TOLOWER (md5num[2 * cnt]) != bin2hex[md5buffer[cnt] >> 4]
+		      || (TOLOWER (md5num[2 * cnt + 1])
+			  != (bin2hex[md5buffer[cnt] & 0xf])))
+		    break;
+		}
+	      if (cnt != 16)
+		fail = 1;
+	    }
 
-	  if (cnt != 16)
+	  if (fail)
 	    ++n_tests_failed;
+
 	  if (!quiet)
 	    {
-	      printf ("%s: %s\n", filename,
-		      (cnt == 16 ? _("OK") : _("FAILED")));
+	      printf ("%s: %s\n", filename, (fail ? _("FAILED") : _("OK")));
 	      fflush (stdout);
 	    }
 	}
     }
-  while (!feof (checkfile_stream));
+  while (!feof (checkfile_stream) && !ferror (checkfile_stream));
 
-  if (fclose (checkfile_stream) == EOF)
-    error (EXIT_FAILURE, errno, "%s", checkfile_name);
+  if (checkfile_stream != stdin && fclose (checkfile_stream) == EOF)
+    {
+      error (0, errno, "%s", checkfile_name);
+      return 1;
+    }
 
   if (!quiet)
     printf (n_tests == 1 ? (n_tests_failed ? _("Test failed\n")
@@ -346,7 +359,6 @@ main (argc, argv)
      char *argv[];
 {
   unsigned char md5buffer[16];
-  int binary = 0;	/* Text is default of the Plumb/Lankester format.  */
   int do_check = 0;
   int do_help = 0;
   int do_version = 0;
@@ -355,6 +367,10 @@ main (argc, argv)
   char n_strings = 0;
   size_t i;
   size_t err = 0;
+
+  /* FIXME: comment. */
+  /* Text is default of the Plumb/Lankester format.  */
+  int binary = 0;
 
   /* Setting values of global variables.  */
   program_name = argv[0];
@@ -446,7 +462,18 @@ main (argc, argv)
 
       for (; optind < argc; ++optind)
 	{
-	  err |= md5_file (argv[optind], binary);
+	  size_t i;
+	  int fail;
+
+	  fail = md5_file (argv[optind], binary, md5buffer);
+	  err |= fail;
+	  if (!fail)
+	    {
+	      for (i = 0; i < 16; ++i)
+		printf ("%02x", md5buffer[i]);
+
+	      printf (" %c%s\n", binary ? '*' : ' ', argv[optind]);
+	    }
 	}
     }
   else
@@ -458,11 +485,14 @@ main (argc, argv)
 	  usage (EXIT_FAILURE);
 	}
 
-      err = md5_check (optind == argc ? "-" : argv[optind]);
+      err = md5_check (optind == argc ? "-" : argv[optind], binary);
     }
 
   if (fclose (stdout) == EOF)
-    error (EXIT_FAILURE, errno, _("standard output"));
+    error (EXIT_FAILURE, errno, _("write error"));
+
+  if (have_read_stdin && fclose (stdin) == EOF)
+    error (EXIT_FAILURE, errno, _("standard input"));
 
   exit (err == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
