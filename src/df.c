@@ -473,7 +473,7 @@ or all filesystems by default.\n\
   -P, --portability     use the POSIX output format\n\
       --sync            invoke sync before getting usage info\n\
   -t, --type=TYPE       limit listing to filesystems of type TYPE\n\
-  -T, --print-type      print filesystem type\n\  
+  -T, --print-type      print filesystem type\n\
   -x, --exclude-type=TYPE   limit listing to filesystems not of type TYPE\n\
   -v                    (ignored)\n\
       --help            display this help and exit\n\
