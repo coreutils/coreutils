@@ -23,8 +23,6 @@
 	Don't close stdout explicitly.  Replace uses of global constant,
 	output_desc, with uses of STDOUT_FILENO.
 
-	* src/tail.c: FIXME
-
 	Arrange to call close_stdout upon exit.  Don't close stdout explicitly.
 	* src/cksum.c: Likewise.
 	* src/comm.c: Likewise.
