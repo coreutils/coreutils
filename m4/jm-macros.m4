@@ -104,7 +104,6 @@ AC_DEFUN([gl_MACROS],
     endgrent \
     endpwent \
     ftruncate \
-    gethrtime \
     hasmntopt \
     isascii \
     iswspace \
