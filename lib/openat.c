@@ -25,6 +25,7 @@
 #undef openat
 
 #include <stdlib.h>
+#include <stdarg.h>
 #include <unistd.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -37,22 +38,32 @@
 #include "gettext.h"
 #define _(msgid) gettext (msgid)
 
-// FIXME
-// int openat (int fildes, const char *path, int oflag, /* mode_t mode */...);
-
 /* Replacement for Solaris' openat function.
    <http://www.google.com/search?q=openat+site:docs.sun.com>
    Simulate it by doing save_cwd/fchdir/open/restore_cwd.
    If either the fchdir or the restore_cwd fails, then exit nonzero.  */
 int
-rpl_openat (int fd, char const *filename, int flags)
+rpl_openat (int fd, char const *filename, int flags, ...)
 {
   struct saved_cwd saved_cwd;
   int saved_errno = 0;
   int new_fd;
+  mode_t mode;
+
+  if (flags & O_CREAT)
+    {
+      va_list arg;
+      va_start (arg, flags);
+      mode = va_arg (arg, mode_t);
+      va_end (arg);
+    }
+  else
+    {
+      mode = 0;
+    }
 
   if (fd == AT_FDCWD || *filename == '/')
-    return open (filename, flags);
+    return open (filename, flags, mode);
 
   if (save_cwd (&saved_cwd) != 0)
     error (EXIT_FAILURE, errno,
@@ -63,7 +74,7 @@ rpl_openat (int fd, char const *filename, int flags)
       return -1;
     }
 
-  new_fd = open (filename, flags);
+  new_fd = open (filename, flags, mode);
   if (new_fd < 0)
     saved_errno = errno;
 
