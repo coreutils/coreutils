@@ -529,7 +529,7 @@ isaac_seed_finish (struct isaac_state *s)
  * possibility of SIGILL while we're working.
  */
 static jmp_buf env;
-static RETSIGTYPE
+static void
 sigill_handler (int signum)
 {
   (void) signum;
@@ -546,7 +546,7 @@ sigill_handler (int signum)
 static void
 isaac_seed_machdep (struct isaac_state *s)
 {
-  RETSIGTYPE (*old_handler[2]) (int);
+  void (* volatile old_handler[2]) (int);
 
   /* This is how one does try/except in C */
   old_handler[0] = signal (SIGILL, sigill_handler);
