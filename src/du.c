@@ -415,7 +415,9 @@ count_entry (ent, top, last_dev)
 	  if (errno)
 	    {
 	      error (0, errno, "%s", path->text);
-	      chdir ("..");	/* Try to return to previous directory.  */
+	      if (chdir ("..") < 0)	/* Try to return to previous dir.  */
+		error (1, errno, "cannot change to `..' from directory %s",
+		       path->text);
 	      exit_status = 1;
 	      return 0;
 	    }
@@ -439,7 +441,8 @@ count_entry (ent, top, last_dev)
 	  namep += strlen (namep) + 1;
 	}
       free (name_space);
-      chdir ("..");
+      if (chdir ("..") < 0)
+        error (1, errno, "cannot change to `..' from directory %s", path->text);
 
       str_trunc (path, pathlen - 1); /* Remove the "/" we added.  */
       if (!opt_summarize_only || top)
