@@ -1,4 +1,14 @@
-Thu Jun 15 13:42:38 1995  Jim Meyering  (meyering@comco.com)
+Thu Jun 15 22:09:14 1995  Jim Meyering  (meyering@comco.com)
+
+	* md5sum.c Remove unnecessary uses of `defined' in #if* tests.
+	Don't use #elif.  Some older compilers don't grok it.
+	(split_3): New function to parse out sum, flag, and filename
+	when reading check file.
+	(hex_digits): Remove length parameter since string parameter is
+	now nul-terminated.
+	(main): Don't allocate separate arrays for filename and sum
+	when checking.  Get pointers into line buffer with split_3 instead
+	of using sscanf.
 
 	* md5sum.c: Don't include values.h.
 	[__P]: Undefine it.
