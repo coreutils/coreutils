@@ -2,6 +2,12 @@
 
 	* Version 5.3.1.
 
+	Factor out column-count processing.
+	* src/pr.c: Include "inttostr.h".
+	(parse_column_count): New function.
+	(main): Use the new function for both old-style, -9, and long,
+	--columns=-9, options.
+
 	* src/cksum.c: Remove `register' keyword.
 	* src/cut.c: Likewise.
 	* src/dd.c: Likewise.
