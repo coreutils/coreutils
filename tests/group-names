@@ -2,7 +2,7 @@
 # Set `groups' to a space-separated list of at least two groups of which
 # the user is a member.
 
-groups=${FETISH_GROUPS-`id -nG 2>/dev/null`}
+groups=${FETISH_GROUPS-`(id -nG || /usr/xpg4/bin/id -nG) 2>/dev/null`}
 case "$groups" in
   *' '*) ;;
   *) cat <<EOF 1>&2
