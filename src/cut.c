@@ -304,7 +304,7 @@ set_fields (const char *fieldstr)
 			  /* No, the new sequence starts before the
 			     old.  Does the old range going to end of line
 			     extend into the new range?  */
-			  if (value + 1 >= eol_range_start)
+			  if (eol_range_start <= value)
 			    {
 			      /* Yes.  Simply move the end of line marker. */
 			      eol_range_start = initial;
