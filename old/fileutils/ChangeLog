@@ -1,6 +1,11 @@
-2002-07-18  Jim Meyering  <meyering@lucent.com>
+2002-07-19  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.10.
+
+	* tests/Makefile.am (EXTRA_DIST): Add input-tty.
+	* tests/input-tty: New file.
+
+2002-07-18  Jim Meyering  <meyering@lucent.com>
 
 	* src/dircolors.hin: Add the following to the list of colorizable
 	TERM names: dtterm xterm-color Eterm.
