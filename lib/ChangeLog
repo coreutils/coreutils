@@ -1,3 +1,10 @@
+2000-11-06  Paul Eggert  <eggert@twinsun.com>
+
+	* lib/getusershell.c (setusershell): Use rewind rather than
+	fseek/fseeko, to avoid configuration hassles with fseeko.
+	Don't bother opening SHELLS_FILE if shellstream is NULL;
+	it's not necessary.
+
 2000-11-05  Jim Meyering  <meyering@lucent.com>
 
 	* makepath.h (make_dir): Declare.
@@ -55,6 +62,7 @@
 	* memcmp.c: Likewise.
 
 	* getusershell.c (setusershell) [HAVE_FSEEKO]: Use fseeko.
+	Avoid using fseek, when possible -- it's broken by design.
 	Patch by Ulrich Drepper.
 
 2000-10-26  Jim Meyering  <meyering@lucent.com>
