@@ -143,7 +143,7 @@ main (int argc, char **argv)
   /* We have to handle negative numbers in the command line but this
      conflicts with the command line arguments.  So explicitly check first
      whether the next argument looks like a negative number.  */
-  while (1)
+  while (optind < argc)
     {
       if (argv[optind][0] == '-'
 	  && ((optc = argv[optind][1]) == decimal_point[0]
