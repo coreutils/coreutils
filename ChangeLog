@@ -4,6 +4,7 @@
 
 	* src/stat.c: Don't include <string.h> or <ctype.h>.
 	That's already done via system.h.
+	* src/dircolors.c: Don't include <ctype.h>.
 
 2002-11-30  Jim Meyering  <jim@meyering.net>
 
