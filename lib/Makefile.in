@@ -192,7 +192,7 @@ HEADERS =  $(noinst_HEADERS)
 
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 DEP_FILES =  @AMDEP@ $(DEPDIR)/addext$U.Po $(DEPDIR)/alloca.Po \
-$(DEPDIR)/argmatch$U.Po $(DEPDIR)/backupfile$U.Po \
+$(DEPDIR)/argmatch$U.Po $(DEPDIR)/atexit.Po $(DEPDIR)/backupfile$U.Po \
 $(DEPDIR)/basename$U.Po $(DEPDIR)/canon-host$U.Po $(DEPDIR)/chown.Po \
 $(DEPDIR)/closeout$U.Po $(DEPDIR)/diacrit$U.Po $(DEPDIR)/dirname$U.Po \
 $(DEPDIR)/dup2.Po $(DEPDIR)/error.Po $(DEPDIR)/euidaccess.Po \
@@ -229,15 +229,15 @@ $(DEPDIR)/xmalloc$U.Po $(DEPDIR)/xstrdup$U.Po $(DEPDIR)/xstrtod$U.Po \
 $(DEPDIR)/xstrtol$U.Po $(DEPDIR)/xstrtoul$U.Po \
 $(DEPDIR)/xstrtoumax$U.Po $(DEPDIR)/yesno$U.Po
 DIST_COMMON =  README $(noinst_HEADERS) ChangeLog Makefile.am \
-Makefile.in TODO alloca.c chown.c dup2.c error.c error.h euidaccess.c \
-fileblocks.c fnmatch.c fsusage.c ftruncate.c getdate.c getgroups.c \
-gethostname.c getline.c getloadavg.c getusershell.c group-member.c \
-lchown.c malloc.c memchr.c memcmp.c memcpy.c memmove.c memset.c mkdir.c \
-mktime.c mountlist.c nanosleep.c obstack.c obstack.h putenv.c realloc.c \
-regex.c rmdir.c rpmatch.c stime.c stpcpy.c strcasecmp.c strcspn.c \
-strdup.c strftime.c strncasecmp.c strndup.c strnlen.c strpbrk.c \
-strstr.c strtod.c strtol.c strtoul.c strtoull.c strtoumax.c \
-strverscmp.c utime.c
+Makefile.in TODO alloca.c atexit.c chown.c dup2.c error.c error.h \
+euidaccess.c fileblocks.c fnmatch.c fsusage.c ftruncate.c getdate.c \
+getgroups.c gethostname.c getline.c getloadavg.c getusershell.c \
+group-member.c lchown.c malloc.c memchr.c memcmp.c memcpy.c memmove.c \
+memset.c mkdir.c mktime.c mountlist.c nanosleep.c obstack.c obstack.h \
+putenv.c realloc.c regex.c rmdir.c rpmatch.c stime.c stpcpy.c \
+strcasecmp.c strcspn.c strdup.c strftime.c strncasecmp.c strndup.c \
+strnlen.c strpbrk.c strstr.c strtod.c strtol.c strtoul.c strtoull.c \
+strtoumax.c strverscmp.c utime.c
 
 
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -301,6 +301,8 @@ alloca_.c: alloca.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/alloca.c; then echo $(srcdir)/alloca.c; else echo alloca.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > alloca_.c
 argmatch_.c: argmatch.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/argmatch.c; then echo $(srcdir)/argmatch.c; else echo argmatch.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > argmatch_.c
+atexit_.c: atexit.c $(ANSI2KNR)
+	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/atexit.c; then echo $(srcdir)/atexit.c; else echo atexit.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > atexit_.c
 backupfile_.c: backupfile.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/backupfile.c; then echo $(srcdir)/backupfile.c; else echo backupfile.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > backupfile_.c
 basename_.c: basename.c $(ANSI2KNR)
@@ -499,9 +501,9 @@ xstrtoumax_.c: xstrtoumax.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/xstrtoumax.c; then echo $(srcdir)/xstrtoumax.c; else echo xstrtoumax.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > xstrtoumax_.c
 yesno_.c: yesno.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/yesno.c; then echo $(srcdir)/yesno.c; else echo yesno.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > yesno_.c
-addext_.o alloca_.o argmatch_.o backupfile_.o basename_.o canon-host_.o \
-chown_.o closeout_.o diacrit_.o dirname_.o dup2_.o error_.o \
-euidaccess_.o exclude_.o fileblocks_.o filemode_.o fnmatch_.o \
+addext_.o alloca_.o argmatch_.o atexit_.o backupfile_.o basename_.o \
+canon-host_.o chown_.o closeout_.o diacrit_.o dirname_.o dup2_.o \
+error_.o euidaccess_.o exclude_.o fileblocks_.o filemode_.o fnmatch_.o \
 fsusage_.o ftruncate_.o full-write_.o getdate_.o getgroups_.o \
 gethostname_.o getline_.o getloadavg_.o getopt_.o getopt1_.o \
 getugroups_.o getusershell_.o group-member_.o hard-locale_.o hash_.o \
@@ -561,6 +563,7 @@ maintainer-clean-tags:
 @AMDEP@include $(DEPDIR)/addext$U.Po
 @AMDEP@include $(DEPDIR)/alloca.Po
 @AMDEP@include $(DEPDIR)/argmatch$U.Po
+@AMDEP@include $(DEPDIR)/atexit.Po
 @AMDEP@include $(DEPDIR)/backupfile$U.Po
 @AMDEP@include $(DEPDIR)/basename$U.Po
 @AMDEP@include $(DEPDIR)/canon-host$U.Po
