@@ -1,5 +1,7 @@
 2000-07-01  Jim Meyering  <meyering@lucent.com>
 
+	* Version 4.0v.
+
 	* tests/touch/dangling-symlink: Warn about the problem rather
 	than failing, on some very recent (at least 2.3.99) versions of
 	the Linux kernel.  Suggestion from Ulrich Drepper.
