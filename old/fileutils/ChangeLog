@@ -19,6 +19,11 @@ Tue Apr 23 22:05:35 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 	formal parameters.
 	* backupfile.h: Likewise.
 
+	* du.c (usage): The long-named arg is --human-readable, not --human.
+	* df.c: Be consistent.  Accept --human-readable, not just --human.
+	(usage): Reflect the change.
+	From Karl Berry.
+
 Sun Apr 21 08:04:51 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* df.c (usage): Reflect that now --no-sync is the default.
