@@ -1058,6 +1058,8 @@ INTEGER may also be -l STRING, which evaluates to the length of STRING.\n\
 # define main test_command
 #endif
 
+#define AUTHORS "FIXME: ksb and mjb"
+
 /*
  * [:
  *	'[' expr ']'
@@ -1089,7 +1091,8 @@ main (int margc, char **margv)
     {
       /* Don't recognize --help or --version if POSIXLY_CORRECT is set.  */
       if (getenv ("POSIXLY_CORRECT") == NULL)
-	parse_long_options (argc, argv, COMMAND_NAME, GNU_PACKAGE, VERSION, usage);
+	parse_long_options (argc, argv, COMMAND_NAME, GNU_PACKAGE, VERSION,
+			    AUTHORS, usage);
 
       --margc;
 
@@ -1106,7 +1109,8 @@ main (int margc, char **margv)
   if (pos >= argc)
     test_exit (SHELL_BOOLEAN (FALSE));
 
-  parse_long_options (argc, argv, COMMAND_NAME, GNU_PACKAGE, VERSION, usage);
+  parse_long_options (argc, argv, COMMAND_NAME, GNU_PACKAGE, VERSION,
+		      AUTHORS, usage);
   value = posixtest ();
 
   if (pos != argc)

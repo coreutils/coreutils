@@ -61,8 +61,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "chroot", GNU_PACKAGE, VERSION, usage);
-
+  parse_long_options (argc, argv, "chroot", GNU_PACKAGE, VERSION,
+		      "Roland McGrath", usage);
   if (argc == 1)
     {
       error (0, 0, _("too few arguments"));

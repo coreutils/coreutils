@@ -174,7 +174,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "factor", GNU_PACKAGE, VERSION, usage);
+  parse_long_options (argc, argv, "factor", GNU_PACKAGE, VERSION,
+		      "Paul Rubin", usage);
 
   fail = 0;
   if (argc == 1)

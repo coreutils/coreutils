@@ -491,7 +491,8 @@ main (int argc, char **argv)
   /* Don't recognize --help or --version if POSIXLY_CORRECT is set.  */
   posixly_correct = (getenv ("POSIXLY_CORRECT") != NULL);
   if (!posixly_correct)
-    parse_long_options (argc, argv, "printf", GNU_PACKAGE, VERSION, usage);
+    parse_long_options (argc, argv, "printf", GNU_PACKAGE, VERSION,
+			"David MacKenzie", usage);
 
   if (argc == 1)
     {

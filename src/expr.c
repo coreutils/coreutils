@@ -167,7 +167,8 @@ main (int argc, char **argv)
 
   /* Recognize --help or --version only if POSIXLY_CORRECT is not set.  */
   if (!posixly_correct)
-    parse_long_options (argc, argv, "expr", GNU_PACKAGE, VERSION, usage);
+    parse_long_options (argc, argv, "expr", GNU_PACKAGE, VERSION,
+			"Mike Parker", usage);
 
   if (argc == 1)
     {

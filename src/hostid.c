@@ -63,7 +63,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "hostid", GNU_PACKAGE, VERSION, usage);
+  parse_long_options (argc, argv, "hostid", GNU_PACKAGE, VERSION,
+		      "Jim Meyering", usage);
 
   if (argc > 1)
     {

@@ -93,7 +93,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "basename", GNU_PACKAGE, VERSION, usage);
+  parse_long_options (argc, argv, "basename", GNU_PACKAGE, VERSION,
+		      "FIXME unknown", usage);
 
   if (argc == 1 || argc > 3)
     {

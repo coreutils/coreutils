@@ -704,7 +704,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "stty", GNU_PACKAGE, VERSION, usage);
+  parse_long_options (argc, argv, "stty", GNU_PACKAGE, VERSION,
+		      "David MacKenzie", usage);
 
   output_type = changed;
   verbose_output = 0;

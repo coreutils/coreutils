@@ -88,7 +88,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "nice", GNU_PACKAGE, VERSION, usage);
+  parse_long_options (argc, argv, "nice", GNU_PACKAGE, VERSION,
+		      "David MacKenzie", usage);
 
   for (i = 1; i < argc; /* empty */)
     {

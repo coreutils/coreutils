@@ -114,7 +114,8 @@ main (int argc, char **argv)
 
   /* Don't recognize --help or --version if POSIXLY_CORRECT is set.  */
   if (getenv ("POSIXLY_CORRECT") == NULL)
-    parse_long_options (argc, argv, "echo", GNU_PACKAGE, VERSION, usage);
+    parse_long_options (argc, argv, "echo", GNU_PACKAGE, VERSION,
+		      "FIXME unknown", usage);
   else
     allow_options = 0;
 
