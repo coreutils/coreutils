@@ -73,6 +73,11 @@ char *alloca ();
 # include <sys/stat.h>
 #endif
 
+#include <limits.h>
+#ifndef PATH_MAX
+# define PATH_MAX 1024
+#endif
+
 #if ! _LIBC && !HAVE_DECL_STPCPY && !defined stpcpy
 char *stpcpy ();
 #endif
@@ -349,18 +354,20 @@ process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
   struct STAT st;
   int result = 0;
   int flag = 0;
+  size_t new_buflen;
 
   if (name[0] == '.' && (name[1] == '\0'
 			 || (name[1] == '.' && name[2] == '\0')))
     /* Don't process the "." and ".." entries.  */
     return 0;
 
-  if (data->dirbufsize < data->ftw.base + namlen + 2)
+  new_buflen = data->ftw.base + namlen + 2;
+  if (data->dirbufsize < new_buflen)
     {
       /* Enlarge the buffer.  */
       char *newp;
 
-      data->dirbufsize *= 2;
+      data->dirbufsize = 2 * new_buflen;
       newp = (char *) realloc (data->dirbuf, data->dirbufsize);
       if (newp == NULL)
 	return -1;
@@ -650,11 +657,7 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
   memset (data.dirstreams, '\0', data.maxdir * sizeof (struct dir_data *));
 
   dir_len = strlen (dir);
-#ifdef PATH_MAX
   data.dirbufsize = MAX (2 * dir_len, PATH_MAX);
-#else
-  data.dirbufsize = 2 * dir_len;
-#endif
   data.dirbuf = (char *) malloc (data.dirbufsize);
   if (data.dirbuf == NULL)
     return -1;
