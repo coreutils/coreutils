@@ -105,8 +105,8 @@ static int show_version;
 
 static struct option const longopts[] =
 {
-  {"before", no_argument, &separator_ends_record, 0},
-  {"regex", no_argument, &sentinel_length, 0},
+  {"before", no_argument, NULL, 'b'},
+  {"regex", no_argument, NULL, 'r'},
   {"separator", required_argument, NULL, 's'},
   {"help", no_argument, &show_help, 1},
   {"version", no_argument, &show_version, 1},
@@ -344,7 +344,10 @@ tac_seekable (int input_fd, const char *file)
 	      output (match_start, past_end);
 	      past_end = match_start;
 	    }
-	  match_start -= match_length - 1;
+
+	  /* For non-regex matching, we can back up.  */
+	  if (sentinel_length > 0)
+	    match_start -= match_length - 1;
 	}
     }
 }
