@@ -18,6 +18,7 @@
 ## 02111-1307, USA.
 
 noinst_LIBRARIES = libfetish.a
+noinst_PROGRAMS = t-fpending
 
 AM_CPPFLAGS = -I.. -I$(srcdir)
 DEFS += -DLIBDIR=\"$(libdir)\"
@@ -245,6 +246,11 @@ MOSTLYCLEANFILES += fnmatch.h fnmatch.h-t
 
 BUILT_SOURCES += $(GETOPT_H)
 EXTRA_DIST += getopt_.h getopt_int.h
+
+check: unit-test
+
+unit-test:
+	./t-fpending > /dev/null
 
 # We need the following in order to create an <getopt.h> when the system
 # doesn't have one that works with the given compiler.
