@@ -22,11 +22,19 @@
 #endif
 
 #ifndef SHELLS_FILE
+# ifndef __DJGPP__
 /* File containing a list of nonrestricted shells, one per line. */
-# define SHELLS_FILE "/etc/shells"
+#  define SHELLS_FILE "/etc/shells"
+# else
+/* This is a horrible kludge.  Isn't there a better way?  */
+#  define SHELLS_FILE "/dev/env/DJDIR/etc/shells"
+# endif
 #endif
 
 #include <stdio.h>
+#if HAVE_STDLIB_H
+# include <stdlib.h>
+#endif
 #include <ctype.h>
 #include "xalloc.h"
 
@@ -40,9 +48,17 @@
 
 static int readname ();
 
+#if ! defined ADDITIONAL_DEFAULT_SHELLS && defined __MSDOS__
+# define ADDITIONAL_DEFAULT_SHELLS \
+  "c:/dos/command.com", "c:/windows/command.com", "c:/command.com",
+#else
+# define ADDITIONAL_DEFAULT_SHELLS /* empty */
+#endif
+
 /* List of shells to use if the shells file is missing. */
 static char const* const default_shells[] =
 {
+  ADDITIONAL_DEFAULT_SHELLS
   "/bin/sh", "/bin/csh", "/usr/bin/sh", "/usr/bin/csh", NULL
 };
 
