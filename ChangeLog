@@ -2,6 +2,15 @@
 
 	* Version 4.5.11.
 
+	* man/Makefile.am (.x.1): Use $(LN_S) instead of 'ln -s',
+	because the DJGPP 2.03 port of 'ln -s' doesn't work.
+	Include $(EXEEXT) in program names.
+	Since $(LN_S) may degenerate to `cp -p', be careful
+	to invoke it from the destination directory.
+	Mostly from Richard Dawe.
+
+	* configure.ac: Use AC_PROG_LN_S.
+
 	* tests/mv/part-symlink: Unset CDPATH.  Otherwise, having the
 	CDPATH shell variable set could cause this test to fail.
 	Reported by Karl Berry.
