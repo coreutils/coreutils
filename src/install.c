@@ -174,6 +174,7 @@ cp_option_init (struct cp_options *x)
   x->verbose = 0;
   x->xstat = stat;
   x->dest_info = NULL;
+  x->src_info = NULL;
 }
 
 int

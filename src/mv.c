@@ -149,6 +149,7 @@ cp_option_init (struct cp_options *x)
   x->verbose = 0;
   x->xstat = lstat;
   x->dest_info = NULL;
+  x->src_info = NULL;
 }
 
 /* If PATH is an existing directory, return nonzero, else 0.  */
