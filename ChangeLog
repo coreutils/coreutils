@@ -3,6 +3,7 @@
 	* Version 4.5.5.
 
 	* tests/touch/not-owner: New test, mostly extracted from fail-diag.
+	* tests/touch/Makefile.am (TESTS): Add not-owner.
 	* tests/touch/fail-diag: Remove the test for non-owner diagnostic.
 	Now, this tests only the nonexistent-directory diagnostic.
 	Suggestion from Michael Stone.
