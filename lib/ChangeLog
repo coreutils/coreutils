@@ -1,8 +1,13 @@
 2003-04-10  Jim Meyering  <jim@meyering.net>
 
-	* canonicalize.c (canonicalize_file_name): Remove stray semicolon
-	that caused `readlink --canonical RELATIVE_NAME' to fail on e.g.,
-	Solaris systems.  Reported by Bruce Korb.
+	* canonicalize.c (canonicalize_file_name) [HAVE_RESOLVEPATH]: Remove
+	stray semicolon that caused `readlink --canonical RELATIVE_NAME' to
+	fail on e.g., Solaris systems.  Reported by Bruce Korb.
+	(canonicalize_file_name): Return NULL immediately if resolvepath fails.
+	Otherwise, `readlink --canonical /no-such-file' would exhaust
+	virtual memory on some systems (e.g. Solaris).
+	(canonicalize_file_name): Always free `extra_buf' before returning.
+	(canonicalize_file_name): NUL-terminate the result.
 
 2003-04-05  Jim Meyering  <jim@meyering.net>
 
