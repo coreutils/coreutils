@@ -892,7 +892,7 @@ main (int argc, char **argv)
       if (ISDIGIT (c))
 	{
 	  /* Accumulate column-count digits specified via old-style options. */
-	  if (n_digits == n_alloc)
+	  if (n_digits + 1 >= n_alloc)
 	    column_count_string
 	      = x2nrealloc (column_count_string, &n_alloc,
 			    sizeof *column_count_string);
