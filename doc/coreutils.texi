@@ -6554,53 +6554,15 @@ However, mount point directories @emph{are} copied.
 
 @command{dd} copies a file (from standard input to standard output, by
 default) with a changeable I/O block size, while optionally performing
-conversions on it.  Synopsis:
+conversions on it.  Synopses:
 
 @example
-dd [@var{option}]@dots{}
+dd [@var{operand}]@dots{}
+dd @var{option}
 @end example
 
-The program accepts the following options.  Also see @ref{Common options}.
-
-@cindex multipliers after numbers
-The numeric-valued options below (@var{bytes} and @var{blocks}) can be
-followed by a multiplier: @samp{b}=512, @samp{c}=1,
-@samp{w}=2, @samp{x@var{m}}=@var{m}, or any of the
-standard block size suffixes like @samp{k}=1024 (@pxref{Block size}).
-
-Use different @command{dd} invocations to use different block sizes for
-skipping and I/O@.  For example, the following shell commands copy data
-in 512 KiB blocks between a disk and a tape, but do not save or restore a
-4 KiB label at the start of the disk:
-
-@example
-disk=/dev/rdsk/c0t1d0s2
-tape=/dev/rmt/0
-
-# Copy all but the label from disk to tape.
-(dd bs=4k skip=1 count=0 && dd bs=512k) <$disk >$tape
-
-# Copy from tape back to disk, but leave the disk label alone.
-(dd bs=4k seek=1 count=0 && dd bs=512k) <$tape >$disk
-@end example
-
-Note that sending a @samp{SIGUSR1} signal to a running @command{dd}
-process makes it print to standard error the number of records read
-and written so far, then to resume copying.  In the example below,
-@command{dd} is run in the background to copy 10 million blocks.
-The @command{kill} command makes it output the first pair of
-intermediate record counts,
-and when @command{dd} completes, it outputs the final pair.
-
-@example
-$ dd if=/dev/zero of=/dev/null count=10M & pid=$!
-$ kill -s USR1 $pid; sleep 99
-5403604+0 records in
-5403604+0 records out
-10485760+0 records in
-10485760+0 records out
-@end example
-
+The only options are @option{--help} and @option{--version}.
+@xref{Common options}.  @command{dd} accepts the following operands.
 
 @table @samp
 
@@ -6813,6 +6775,45 @@ should not be specified, and the other flags
 affected file descriptors, even after @command{dd} exits.
 
 @end table
+
+@cindex multipliers after numbers
+The numeric-valued strings above (@var{bytes} and @var{blocks}) can be
+followed by a multiplier: @samp{b}=512, @samp{c}=1,
+@samp{w}=2, @samp{x@var{m}}=@var{m}, or any of the
+standard block size suffixes like @samp{k}=1024 (@pxref{Block size}).
+
+Use different @command{dd} invocations to use different block sizes for
+skipping and I/O@.  For example, the following shell commands copy data
+in 512 KiB blocks between a disk and a tape, but do not save or restore a
+4 KiB label at the start of the disk:
+
+@example
+disk=/dev/rdsk/c0t1d0s2
+tape=/dev/rmt/0
+
+# Copy all but the label from disk to tape.
+(dd bs=4k skip=1 count=0 && dd bs=512k) <$disk >$tape
+
+# Copy from tape back to disk, but leave the disk label alone.
+(dd bs=4k seek=1 count=0 && dd bs=512k) <$tape >$disk
+@end example
+
+Note that sending a @samp{SIGUSR1} signal to a running @command{dd}
+process makes it print to standard error the number of records read
+and written so far, then to resume copying.  In the example below,
+@command{dd} is run in the background to copy 10 million blocks.
+The @command{kill} command makes it output the first pair of
+intermediate record counts,
+and when @command{dd} completes, it outputs the final pair.
+
+@example
+$ dd if=/dev/zero of=/dev/null count=10M & pid=$!
+$ kill -s USR1 $pid; sleep 99
+5403604+0 records in
+5403604+0 records out
+10485760+0 records in
+10485760+0 records out
+@end example
 
 @exitstatus
 
