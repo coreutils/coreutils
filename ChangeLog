@@ -2,6 +2,8 @@
 
 	* Version 5.0.91.
 
+	* configure.ac (AM_INIT_AUTOMAKE): Specify automake-1.7.6.
+
 	Make seq's --width (-w) option work properly even when the
 	endpoint requiring the largest width is negative and smaller than
 	the other endpoint.
