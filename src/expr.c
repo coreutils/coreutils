@@ -173,7 +173,7 @@ main (int argc, char **argv)
       ++argv;
     }
 
-  if (argc == 1)
+  if (argc <= 1)
     {
       error (0, 0, _("too few arguments"));
       usage (EXIT_FAILURE);
