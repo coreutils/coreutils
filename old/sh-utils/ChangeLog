@@ -1,3 +1,12 @@
+2000-01-16  Jim Meyering  <meyering@lucent.com>
+
+	* src/date.c (usage): Correct error in %V description.
+	From Wolfram Kleff.
+
+	* configure.in: Remove jm_FUNC_GROUP_MEMBER, jm_FUNC_PUTENV,
+	AM_FUNC_GETLOADAVG, jm_SYS_PROC_UPTIME, AM_SYS_POSIX_TERMIOS,
+	jm_HEADER_TIOCGWINSZ_NEEDS_SYS_IOCTL.
+
 2000-01-15  Jim Meyering  <meyering@lucent.com>
 
 	* configure.in (AC_REPLACE_FUNCS): Remove gethostname, getusershell,
