@@ -156,7 +156,7 @@ target_alias = @target_alias@
 
 noinst_LIBRARIES = libfetish.a
 
-INCLUDES = -I.. -I$(srcdir)
+AM_CPPFLAGS = -I.. -I$(srcdir)
 
 libfetish_a_SOURCES = \
   acl.h acl.c \
