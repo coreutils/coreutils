@@ -3,8 +3,6 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
-  csplit no longer reads from freed memory (dumping core on some systems)
-
   chgrp, chmod, and chown can now process (with -R) hierarchies of virtually
   unlimited depth.  Before, they would fail to operate on any file they
   encountered with a relative name of length PATH_MAX (often 4096) or longer.
@@ -32,6 +30,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   Now, using -H elicits a warning to that effect.
 
 ** Bug fixes
+
+  csplit no longer reads from freed memory (dumping core on some systems)
 
   csplit would mistakenly exhaust virtual memory in some cases
 
