@@ -76,14 +76,15 @@ PREV_VERSION := $(shell echo $(VERSION)|tr b-z a-y|sed 's/a$$//')
 PREV_VERSION_REGEXP := $(shell echo $(PREV_VERSION)|sed 's/\./\\./g')
 v = Version
 
-a_host=alpha.gnu.org
-b_host=tug.org
+a_host = alpha.gnu.org
+b_host = tug.org
 
-a_url_dir=gnu/fetish
-b_url_dir=gnu/fetish
+alpha_subdir = gnu/fetish
+a_url_dir = $(alpha_subdir)
+b_url_dir = $(alpha_subdir)
 
-a_real_dir=/fs/share/ftp/gnu/fetish
-b_real_dir=/home/ftp/pub/gnu/fetish
+a_real_dir = /fs/share/ftp/$(alpha_subdir)
+b_real_dir = /home/ftp/pub/$(alpha_subdir)
 
 url_dir_list = $(foreach x,a b,ftp://$($(x)_host)/$($(x)_url_dir))
 
