@@ -86,7 +86,7 @@ struct cp_options
 };
 
 int
-copy __P ((const char *src_path, const char *dst_path,
-	   int nonexistent_dst, const struct cp_options *options));
+copy PARAMS ((const char *src_path, const char *dst_path,
+	      int nonexistent_dst, const struct cp_options *options));
 
 #endif
