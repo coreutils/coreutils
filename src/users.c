@@ -51,15 +51,13 @@ userid_compare (const void *v_a, const void *v_b)
 }
 
 static void
-list_entries_users (int n, const STRUCT_UTMP *this)
+list_entries_users (size_t n, const STRUCT_UTMP *this)
 {
-  char **u;
-  int i;
-  int n_entries;
+  char **u = xnmalloc (n, sizeof *u);
+  size_t i;
+  size_t n_entries = 0;
 
-  n_entries = 0;
-  u = xnmalloc (n, sizeof *u);
-  for (i = 0; i < n; i++)
+  while (n--)
     {
       if (UT_USER (this) [0]
 #ifdef USER_PROCESS
@@ -81,9 +79,8 @@ list_entries_users (int n, const STRUCT_UTMP *this)
 
   for (i = 0; i < n_entries; i++)
     {
-      int c;
+      char c = (i < n_entries - 1 ? ' ' : '\n');
       fputs (u[i], stdout);
-      c = (i < n_entries - 1 ? ' ' : '\n');
       putchar (c);
     }
 
@@ -97,11 +94,10 @@ list_entries_users (int n, const STRUCT_UTMP *this)
 static void
 users (const char *filename)
 {
-  int n_users;
+  size_t n_users;
   STRUCT_UTMP *utmp_buf;
-  int fail = read_utmp (filename, &n_users, &utmp_buf);
 
-  if (fail)
+  if (read_utmp (filename, &n_users, &utmp_buf) != 0)
     error (EXIT_FAILURE, errno, "%s", filename);
 
   list_entries_users (n_users, utmp_buf);
@@ -134,7 +130,7 @@ If FILE is not specified, use %s.  %s as FILE is common.\n\
 int
 main (int argc, char **argv)
 {
-  int optc, longind;
+  int optc;
   initialize_main (&argc, &argv);
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -146,7 +142,7 @@ main (int argc, char **argv)
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 		      usage, AUTHORS, (char const *) NULL);
 
-  while ((optc = getopt_long (argc, argv, "", longopts, &longind)) != -1)
+  while ((optc = getopt_long (argc, argv, "", longopts, NULL)) != -1)
     {
       switch (optc)
 	{
