@@ -18,6 +18,7 @@
 /* Written by Jim Meyering.  */
 
 #include <config.h>
+#include <getopt.h>
 #include <stdio.h>
 #include <sys/types.h>
 
@@ -90,39 +91,33 @@ main (int argc, char **argv)
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 		      usage, AUTHORS, (char const *) NULL);
+  if (getopt (argc, argv, "") != -1)
+    usage (EXIT_FAILURE);
 
-  /* The above handles --help and --version.
-     Since there is no other invocation of getopt, handle `--' here.  */
-  if (1 < argc && STREQ (argv[1], "--"))
+  if (argc == optind + 1)
     {
-      --argc;
-      ++argv;
-    }
-
 #ifdef HAVE_SETHOSTNAME
-  if (argc == 2)
-    {
-      /* Set hostname to argv[1].  */
-      if (sethostname (argv[1], strlen (argv[1])) != 0)
-	error (EXIT_FAILURE, errno, _("cannot set hostname to `%s'"), argv[1]);
-      exit (EXIT_SUCCESS);
-    }
+      /* Set hostname to operand.  */
+      char const *name = argv[optind];
+      if (sethostname (name, strlen (name)) != 0)
+	error (EXIT_FAILURE, errno, _("cannot set name to `%s'"), name);
 #else
-  if (argc == 2)
-    error (EXIT_FAILURE, 0,
-	   _("cannot set hostname; this system lacks the functionality"));
+      error (EXIT_FAILURE, 0,
+	     _("cannot set hostname; this system lacks the functionality"));
 #endif
+    }
 
-  if (argc <= 1)
+  if (argc <= optind)
     {
       hostname = xgethostname ();
       if (hostname == NULL)
 	error (EXIT_FAILURE, errno, _("cannot determine hostname"));
       printf ("%s\n", hostname);
     }
-  else
+
+  if (optind + 1 < argc)
     {
-      error (0, 0, _("extra operand %s"), quote (argv[2]));
+      error (0, 0, _("extra operand %s"), quote (argv[optind + 1]));
       usage (EXIT_FAILURE);
     }
 

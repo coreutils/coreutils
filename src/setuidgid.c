@@ -18,6 +18,7 @@
 /* Written by Jim Meyering  */
 
 #include <config.h>
+#include <getopt.h>
 #include <stdio.h>
 #include <sys/types.h>
 #include <pwd.h>
@@ -85,25 +86,19 @@ main (int argc, char **argv)
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 		      usage, AUTHORS, (char const *) NULL);
+  if (getopt (argc, argv, "+") != -1)
+    usage (SETUIDGID_FAILURE);
 
-  /* The above handles --help and --version.
-     Since there is no other invocation of getopt, handle `--' here.  */
-  if (argc > 1 && STREQ (argv[1], "--"))
+  if (argc <= optind + 1)
     {
-      --argc;
-      ++argv;
-    }
-
-  if (argc <= 2)
-    {
-      if (argc < 2)
+      if (argc < optind + 1)
 	error (0, 0, _("missing operand"));
       else
-	error (0, 0, _("missing operand after %s"), quote (argv[argc - 1]));
+	error (0, 0, _("missing operand after %s"), quote (argv[optind]));
       usage (SETUIDGID_FAILURE);
     }
 
-  user_id = argv[1];
+  user_id = argv[optind];
   pwd = getpwnam (user_id);
   if (pwd == NULL)
     error (SETUIDGID_FAILURE, errno,
@@ -121,7 +116,7 @@ main (int argc, char **argv)
 	   _("cannot set user-ID to %lu"), (unsigned long int) pwd->pw_uid);
 
   {
-    char **cmd = argv + 2;
+    char **cmd = argv + optind + 1;
     int exit_status;
     execvp (*cmd, cmd);
     exit_status = (errno == ENOENT ? EXIT_ENOENT : EXIT_CANNOT_INVOKE);

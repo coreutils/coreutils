@@ -18,6 +18,7 @@
 /* Written by Jim Meyering  */
 
 #include <config.h>
+#include <getopt.h>
 #include <stdio.h>
 #include <sys/types.h>
 #include <signal.h>
@@ -86,16 +87,10 @@ main (int argc, char **argv)
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 		      usage, AUTHORS, (char const *) NULL);
+  if (getopt (argc, argv, "+") != -1)
+    usage (EXIT_FAILURE);
 
-  /* The above handles --help and --version.
-     Now, handle `--'.  */
-  if (argc > 1 && STREQ (argv[1], "--"))
-    {
-      --argc;
-      ++argv;
-    }
-
-  if (argc <= 1)
+  if (argc <= optind)
     {
       error (0, 0, _("missing operand"));
       usage (NOHUP_FAILURE);
@@ -168,7 +163,7 @@ main (int argc, char **argv)
   {
     int exit_status;
     int saved_errno;
-    char **cmd = argv + 1;
+    char **cmd = argv + optind;
 
     execvp (*cmd, cmd);
     exit_status = (errno == ENOENT ? EXIT_ENOENT : EXIT_CANNOT_INVOKE);

@@ -16,6 +16,7 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 #include <config.h>
+#include <getopt.h>
 #include <stdio.h>
 #include <sys/types.h>
 
@@ -305,16 +306,10 @@ main (int argc, char **argv)
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 		      usage, AUTHORS, (char const *) NULL);
+  if (getopt (argc, argv, "") != -1)
+    usage (EXIT_FAILURE);
 
-  /* The above handles --help and --version.
-     Since there is no other invocation of getopt, handle `--' here.  */
-  if (1 < argc && STREQ (argv[1], "--"))
-    {
-      --argc;
-      ++argv;
-    }
-
-  if (1 < argc)
+  if (optind < argc)
     error (0, 0, _("ignoring non-option arguments"));
 
   wd = xgetcwd ();

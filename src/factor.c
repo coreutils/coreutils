@@ -19,6 +19,7 @@
    Adapted for GNU, fixed to factor UINT_MAX by Jim Meyering.  */
 
 #include <config.h>
+#include <getopt.h>
 #include <stdio.h>
 #include <sys/types.h>
 
@@ -201,20 +202,15 @@ main (int argc, char **argv)
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 		      usage, AUTHORS, (char const *) NULL);
-  /* The above handles --help and --version.
-     Since there is no other invocation of getopt, handle `--' here.  */
-  if (argc > 1 && STREQ (argv[1], "--"))
-    {
-      --argc;
-      ++argv;
-    }
+  if (getopt (argc, argv, "") != -1)
+    usage (EXIT_FAILURE);
 
-  if (argc == 1)
+  if (argc <= optind)
     ok = do_stdin ();
   else
     {
       int i;
-      for (i = 1; i < argc; i++)
+      for (i = optind; i < argc; i++)
 	if (! print_factors (argv[i]))
 	  usage (EXIT_FAILURE);
       ok = true;
