@@ -28,6 +28,7 @@
 # include <sys/sysctl.h>
 #endif
 
+#include "c-strtod.h"
 #include "error.h"
 #include "long-options.h"
 #include "quote.h"
@@ -55,7 +56,7 @@ print_uptime (int n, const STRUCT_UTMP *this)
   time_t boot_time = 0;
   time_t time_now;
   time_t uptime = 0;
-  int updays;
+  long int updays;
   int uphours;
   int upmins;
   struct tm *tmn;
@@ -73,12 +74,11 @@ print_uptime (int n, const STRUCT_UTMP *this)
       char *b = fgets (buf, BUFSIZ, fp);
       if (b == buf)
 	{
-	  /* The following sscanf must use the C locale.  */
-	  setlocale (LC_NUMERIC, "C");
-	  res = sscanf (buf, "%lf", &upsecs);
-	  setlocale (LC_NUMERIC, "");
-	  if (res == 1)
-	    uptime = (time_t) upsecs;
+	  char *end_ptr;
+	  upsecs = c_strtod (buf, &end_ptr);
+	  if (buf != end_ptr)
+	    uptime = (0 <= upsecs && upsecs < TYPE_MAXIMUM (time_t)
+		      ? upsecs : -1);
 	}
 
       fclose (fp);
@@ -141,9 +141,14 @@ print_uptime (int n, const STRUCT_UTMP *this)
 	    tmn->tm_min, (tmn->tm_hour < 12 ? _("am") : _("pm")));
   else
     printf (_(" ??:????  up "));
-  if (updays > 0)
-    printf (ngettext("%d day", "%d days", updays), updays);
-  printf (" %2d:%02d,  ", uphours, upmins);
+  if (uptime == (time_t) -1)
+    printf (_("???? days ??:??,  "));
+  else
+    {
+      if (0 < updays)
+	printf (ngettext ("%ld day", "%ld days", updays), updays);
+      printf (" %2d:%02d,  ", uphours, upmins);
+    }
   printf (ngettext ("%d user", "%d users", entries), entries);
 
 #if defined (HAVE_GETLOADAVG) || defined (C_GETLOADAVG)
