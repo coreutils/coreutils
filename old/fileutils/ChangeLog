@@ -1,3 +1,7 @@
+1999-04-07  Jim Meyering  <meyering@ascend.com>
+
+	* lib/getdate.y (difftm): Protoize.
+
 1999-04-06  Jim Meyering  <meyering@ascend.com>
 
 	* lib/strftime.c: Update from master source in libc.
