@@ -1,3 +1,9 @@
+2000-10-30  Paul Eggert  <eggert@twinsun.com>
+
+	* lib/fnmatch.c (FOLD): Do not assume that characters are unsigned.
+	(fnmatch): Fix some FNM_FILE_NAME and FNM_LEADING_DIR bugs,
+	e.g. fnmatch("d*/*1", "d/s/1", FNM_FILE_NAME) incorrectly yielded zero.
+
 2000-10-29  Greg Louis  <glouis@dynamicro.on.ca>
 
 	* regex.h (__restrict_arr): Move definition out of #ifndef block.
