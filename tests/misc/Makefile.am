@@ -10,6 +10,7 @@ TESTS_ENVIRONMENT = \
   PROG=$$tst
 
 TESTS = \
+  paste-no-nl \
   stat-fmt \
   fold \
   nohup \
