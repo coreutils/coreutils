@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in -*-Makefile-*-
 dist_man_MANS = \
-  cat.1 cksum.1 comm.1 csplit.1 cut.1 expand.1 fmt.1 \
+  cksum.1 comm.1 csplit.1 cut.1 expand.1 fmt.1 \
   fold.1 head.1 join.1 md5sum.1 nl.1 od.1 paste.1 pr.1 ptx.1 \
   sha1sum.1 sort.1 split.1 sum.1 \
   tac.1 tail.1 tr.1 tsort.1 unexpand.1 uniq.1 wc.1 \
@@ -128,3 +128,15 @@ mapped_name = `echo $*|sed 's/install/ginstall/'`
 	    --include=$(srcdir)/$*.x		\
 	    --output=$@ $t/$*;			\
 	rm -rf $t
+
+check-local: check-x-vs-1
+
+# Ensure that for each .x file in this directory, there is a
+# corresponding .1 file in the definition of $(dist_man_MANS) above.
+.PHONY: check-x-vs-1
+check-x-vs-1:
+	t=ls-files.$$$$;						\
+	ls -1 *.x | sed 's/\.x$$//' | sort > $$t;			\
+	echo $(dist_man_MANS) | fmt -w1 | sed 's/\.1$$//' | sort -u	\
+	  | diff - $$t || { rm $$t; exit 1; };				\
+	rm $$t
