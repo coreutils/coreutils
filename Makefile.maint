@@ -1,6 +1,8 @@
 # -*-Makefile-*-
 # This Makefile fragment is shared between fileutils, sh-utils, textutils.
 
+Makefile.in: Makefile.maint
+
 maintainer-check:
 	if head ChangeLog| grep 'Version $(VERSION)' > /dev/null; then \
 	  :; \
