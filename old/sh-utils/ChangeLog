@@ -1,3 +1,39 @@
+2000-01-05  Jim Meyering  <meyering@ascend.com>
+
+	* lib/Makefile.am (noinst_HEADERS): Add nanosleep.h.
+	* lib/nanosleep.h: New file.
+	* lib/nanosleep.c: Include it.
+	Don't include time.h or sys/time.h here.
+	* src/sleep.c: Include it.
+	(AUTHORS): Add Paul Eggert.
+
+2000-01-04  Jim Meyering  <meyering@ascend.com>
+
+	* lib/nanosleep.c: Include both time.h and sys/time.h only
+	#if TIME_WITH_SYS_TIME.
+
+2000-01-03  Paul Eggert  <eggert@twinsun.com>
+
+	Fix some porting and rounding problems with the new `sleep' code.
+
+	* configure.in (AC_CHECK_HEADERS): Add fenv.h.
+	(FESETROUND_LIBM): New macro.
+
+	* lib/xstrtod.c: Add #pragma STDC FENV_ACCESS ON if C99.
+	* src/sleep.c: Likewise.
+
+	* src/Makefile.am (sleep_LDADD, sleep_DEPENDENCIES): New macros.
+
+	* src/sleep.c (<fenv.h>): Include if available.
+	(main): Always round floating-point interval calculations upwards,
+	as we must sleep for at least the specified time.
+	Do the right thing with NaNs.
+
+	(main): Sleep forever if the time calculations overflow.
+	(apply_suffix): Don't assert that *s <= TIME_T_MAX.
+
+	(clock_get_realtime): Fix typo; address was improperly taken.
+
 2000-01-02  Jim Meyering  <meyering@ascend.com>
 
 	* Version 2.0b.
