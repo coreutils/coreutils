@@ -1,4 +1,7 @@
 Changes in release 4.01:
+[4.0.32]
+* mkdir no longer sets the permissions of the final directory component
+  if it already exists (this bug, too, was introduced recently)
 [4.0.31]
 * mkdir: fix a bug introduced in 4.0.30 whereby `mkdir existing-dir' would
   succeed.  Now it fails, as it should (and used to).
