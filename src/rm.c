@@ -211,7 +211,12 @@ rm (void)
       return 1;
     }
 
-  if (lstat (pathname, &path_stats))
+  if (lstat (pathname, &path_stats)
+      /* The following or-clause is solely for systems like SunOS 4.1.3
+         with (broken) lstat that interpret a zero-length file name
+	 argument as something meaningful.  For such systems, manually
+	 set errno to ENOENT.  */
+      || (pathname[0] == '\0' && (errno = ENOENT)))
     {
       if (errno == ENOENT && ignore_missing_files)
 	return 0;
