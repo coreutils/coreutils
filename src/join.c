@@ -71,12 +71,17 @@ char *xrealloc ();
 #define min(A, B) ((A) < (B) ? (A) : (B))
 #define max(A, B) ((A) > (B) ? (A) : (B))
 
-/* An element of the list describing the format of each
+/* An element of the list identifying which fields to print for each
    output line.  */
 struct outlist
   {
-    int file;			/* File to take field from (1 or 2).  */
-    int field;			/* Field number to print.  */
+    /* File number: 0, 1, or 2.  0 means use the join field.
+       1 means use the first file argument, 2 the second.  */
+    int file;
+
+    /* Field index (zero-based), specified only when FILE is 1 or 2.  */
+    int field;
+
     struct outlist *next;
   };
 
@@ -409,7 +414,28 @@ prjoin (struct line *line1, struct line *line2)
       o = outlist;
       while (1)
 	{
-	  prfield (o->field - 1, o->file == 1 ? line1 : line2);
+	  int field;
+	  struct line *line;
+
+	  if (o->file == 0)
+	    {
+	      if (line1 == &uni_blank)
+	        {
+		  line = line2;
+		  field = join_field_2;
+		}
+	      else
+	        {
+		  line = line1;
+		  field = join_field_1;
+		}
+	    }
+	  else
+	    {
+	      line = (o->file == 1 ? line1 : line2);
+	      field = o->field;
+	    }
+	  prfield (field, line);
 	  o = o->next;
 	  if (o == NULL)
 	    break;
@@ -578,8 +604,8 @@ add_field (int file, int field)
 {
   struct outlist *o;
 
-  assert (file == 1 || file == 2);
-  assert (field > 0);
+  assert (file == 0 || file == 1 || file == 2);
+  assert (field >= 0);
 
   o = (struct outlist *) xmalloc (sizeof (struct outlist));
   o->file = file;
@@ -592,8 +618,9 @@ add_field (int file, int field)
 }
 
 /* Convert a single field specifier string, S, to a *FILE_INDEX, *FIELD_INDEX
-   pair.  If S is valid, return zero.  Otherwise, give a diagnostic, don't
-   update *FILE_INDEX or *FIELD_INDEX, and return non-zero.  */
+   pair.  In S, the field index string is 1-based; *FIELD_INDEX is zero-based.
+   If S is valid, return zero.  Otherwise, give a diagnostic, don't update
+   *FILE_INDEX or *FIELD_INDEX, and return non-zero.  */
 
 static int
 decode_field_spec (const char *s, int *file_index, int *field_index)
@@ -606,8 +633,8 @@ decode_field_spec (const char *s, int *file_index, int *field_index)
     case '0':
       if (s[1] == '\0')
 	{
-	  *file_index = 1;
-	  *field_index = join_field_1 + 1;
+	  *file_index = 0;
+	  /* Leave *field_index undefined.  */
 	  valid = 1;
 	}
       else
@@ -632,7 +659,8 @@ decode_field_spec (const char *s, int *file_index, int *field_index)
 	  else
 	    {
 	      *file_index = s[0] - '0';
-	      *field_index = (int) tmp_long;
+	      /* Convert to a zero-based index.  */
+	      *field_index = (int) tmp_long - 1;
 	      valid = 1;
 	    }
 	}
