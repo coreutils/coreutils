@@ -1,4 +1,5 @@
 Changes in release 2.1
+ [2.0k]
  [2.0j]
 * `date -d DATE' now parses certain relative DATEs correctly
  [2.0i]
