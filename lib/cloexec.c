@@ -37,27 +37,29 @@
 
 /* Set the `FD_CLOEXEC' flag of DESC if VALUE is true,
    or clear the flag if VALUE is false.
-   Return true on success, or false on error with `errno' set. */
+   Return 0 on success, or -1 on error with `errno' set. */
 
-bool
+int
 set_cloexec_flag (int desc, bool value)
 {
 #if defined F_GETFD && defined F_SETFD
 
   int flags = fcntl (desc, F_GETFD, 0);
-  int newflags;
 
-  if (flags < 0)
-    return false;
+  if (0 <= flags)
+    {
+      int newflags = (value ? flags | FD_CLOEXEC : flags & ~FD_CLOEXEC);
 
-  newflags = (value ? flags | FD_CLOEXEC : flags & ~FD_CLOEXEC);
+      if (flags == newflags
+	  || fcntl (desc, F_SETFD, newflags) != -1)
+	return 0;
+    }
 
-  return (flags == newflags
-	  || fcntl (desc, F_SETFD, newflags) != -1);
+  return -1;
 
 #else
 
-  return true;
+  return 0;
 
 #endif
 }

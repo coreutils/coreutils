@@ -34,13 +34,8 @@ extern int errno;
 # include <unistd.h>
 #endif
 
-/* For those losing systems which don't have 'alloca' we have to add
-   some additional code emulating it.  */
-#if _LIBC || HAVE_ALLOCA
-# define freea(p) /* nothing */
-#else
-# define alloca(n) malloc (n)
-# define freea(p) free (p)
+#if !_LIBC
+# include "allocsa.h"
 #endif
 
 #if !_LIBC
@@ -163,11 +158,18 @@ __add_to_environ (const char *name, const char *value, const char *combined,
 	{
 	  /* See whether the value is already known.  */
 #ifdef USE_TSEARCH
-	  new_value = (char *) alloca (namelen + 1 + vallen);
 # ifdef _LIBC
+	  new_value = (char *) alloca (namelen + 1 + vallen);
 	  __mempcpy (__mempcpy (__mempcpy (new_value, name, namelen), "=", 1),
 		     value, vallen);
 # else
+	  new_value = (char *) allocsa (namelen + 1 + vallen);
+	  if (new_value == NULL)
+	    {
+	      __set_errno (ENOMEM);
+	      UNLOCK;
+	      return -1;
+	    }
 	  memcpy (new_value, name, namelen);
 	  new_value[namelen] = '=';
 	  memcpy (&new_value[namelen + 1], value, vallen);
@@ -180,8 +182,8 @@ __add_to_environ (const char *name, const char *value, const char *combined,
 	      new_environ[size] = (char *) malloc (namelen + 1 + vallen);
 	      if (new_environ[size] == NULL)
 		{
-#ifdef USE_TSEARCH
-		  freea (new_value);
+#if defined USE_TSEARCH && !defined _LIBC
+		  freesa (new_value);
 #endif
 		  __set_errno (ENOMEM);
 		  UNLOCK;
@@ -200,8 +202,8 @@ __add_to_environ (const char *name, const char *value, const char *combined,
 		 user string or not.  */
 	      STORE_VALUE (new_environ[size]);
 	    }
-#ifdef USE_TSEARCH
-	  freea (new_value);
+#if defined USE_TSEARCH && !defined _LIBC
+	  freesa (new_value);
 #endif
 	}
 
@@ -223,11 +225,19 @@ __add_to_environ (const char *name, const char *value, const char *combined,
       else
 	{
 #ifdef USE_TSEARCH
-	  char *new_value = alloca (namelen + 1 + vallen);
+	  char *new_value;
 # ifdef _LIBC
+	  new_value = alloca (namelen + 1 + vallen);
 	  __mempcpy (__mempcpy (__mempcpy (new_value, name, namelen), "=", 1),
 		     value, vallen);
 # else
+	  new_value = allocsa (namelen + 1 + vallen);
+	  if (new_value == NULL)
+	    {
+	      __set_errno (ENOMEM);
+	      UNLOCK;
+	      return -1;
+	    }
 	  memcpy (new_value, name, namelen);
 	  new_value[namelen] = '=';
 	  memcpy (&new_value[namelen + 1], value, vallen);
@@ -240,9 +250,10 @@ __add_to_environ (const char *name, const char *value, const char *combined,
 	      np = malloc (namelen + 1 + vallen);
 	      if (np == NULL)
 		{
-#ifdef USE_TSEARCH
-		  freea (new_value);
+#if defined USE_TSEARCH && !defined _LIBC
+		  freesa (new_value);
 #endif
+		  __set_errno (ENOMEM);
 		  UNLOCK;
 		  return -1;
 		}
@@ -257,8 +268,8 @@ __add_to_environ (const char *name, const char *value, const char *combined,
 	      /* And remember the value.  */
 	      STORE_VALUE (np);
 	    }
-#ifdef USE_TSEARCH
-	  freea (new_value);
+#if defined USE_TSEARCH && !defined _LIBC
+	  freesa (new_value);
 #endif
 	}
 

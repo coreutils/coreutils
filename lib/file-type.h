@@ -1,6 +1,6 @@
 /* Return a string describing the type of a file.
 
-   Copyright (C) 1993, 1994, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1993, 1994, 2001, 2002, 2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -138,6 +138,15 @@ char const *file_type (struct stat const *);
 # endif
 
 
+# ifndef S_TYPEISMQ
+#  define S_TYPEISMQ(p) 0
+# endif
+
+# ifndef S_TYPEISTMO
+#  define S_TYPEISTMO(p) 0
+# endif
+
+
 # ifndef S_TYPEISSEM
 #  ifdef S_INSEM
 #   define S_TYPEISSEM(p) (S_ISNAM ((p)->st_mode) && (p)->st_rdev == S_INSEM)
@@ -152,10 +161,6 @@ char const *file_type (struct stat const *);
 #  else
 #   define S_TYPEISSHM(p) 0
 #  endif
-# endif
-
-# ifndef S_TYPEISMQ
-#  define S_TYPEISMQ(p) 0
 # endif
 
 #endif /* FILE_TYPE_H */

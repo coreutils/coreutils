@@ -22,6 +22,9 @@
 # include <config.h>
 #endif
 
+/* Specification.  */
+#include "userspec.h"
+
 #include <alloca.h>
 
 #include <stdio.h>
@@ -41,7 +44,7 @@
 # include <unistd.h>
 #endif
 
-#include "userspec.h"
+#include "strdup.h"
 #include "xalloc.h"
 #include "xstrtol.h"
 
@@ -107,10 +110,6 @@ struct group *getgrgid ();
    ISDIGIT_LOCALE unless it's important to use the locale's definition
    of `digit' even when the host does not conform to POSIX.  */
 #define ISDIGIT(c) ((unsigned) (c) - '0' <= 9)
-
-#ifndef strdup
-char *strdup ();
-#endif
 
 /* Return nonzero if STR represents an unsigned decimal integer,
    otherwise return 0. */

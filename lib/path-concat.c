@@ -1,6 +1,6 @@
 /* path-concat.c -- concatenate two arbitrary pathnames
 
-   Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003 Free
+   Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004 Free
    Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -23,6 +23,9 @@
 # include <config.h>
 #endif
 
+/* Specification.  */
+#include "path-concat.h"
+
 #ifndef HAVE_MEMPCPY
 # define mempcpy(D, S, N) ((void *) ((char *) memcpy (D, S, N) + (N)))
 #endif
@@ -35,13 +38,9 @@
 # include <unistd.h>
 #endif
 
-#ifndef strdup
-char *strdup ();
-#endif
-
+#include "strdup.h"
 #include "dirname.h"
 #include "xalloc.h"
-#include "path-concat.h"
 
 /* Concatenate two pathname components, DIR and BASE, in
    newly-allocated storage and return the result.  Return 0 if out of

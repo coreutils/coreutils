@@ -606,7 +606,9 @@ getloadavg (double loadavg[], int nelem)
     return -1;
 
   /* The following sscanf must use the C locale.  */
-  old_locale = xstrdup (setlocale (LC_NUMERIC, NULL));
+  old_locale = setlocale (LC_NUMERIC, NULL);
+  if (old_locale)
+    old_locale = xstrdup (old_locale);
   setlocale (LC_NUMERIC, "C");
   count = sscanf (ldavgbuf, "%lf %lf %lf",
 		  &load_ave[0], &load_ave[1], &load_ave[2]);

@@ -81,18 +81,15 @@ getndelim2 (char **lineptr, size_t *linesize, size_t nmax,
 	  size_t newlinesize =
 	    (*linesize > MIN_CHUNK ? 2 * *linesize : *linesize + MIN_CHUNK);
 
-	  if (newlinesize > nmax)
+	  if (! (*linesize < newlinesize && newlinesize <= nmax))
 	    newlinesize = nmax;
 
-	  if (newlinesize > *linesize)
-	    {
-	      *linesize = newlinesize;
-	      nbytes_avail = *linesize + *lineptr - read_pos;
-	      *lineptr = realloc (*lineptr, *linesize);
-	      if (!*lineptr)
-		return -1;
-	      read_pos = *linesize - nbytes_avail + *lineptr;
-	    }
+	  *linesize = newlinesize;
+	  nbytes_avail = *linesize + *lineptr - read_pos;
+	  *lineptr = realloc (*lineptr, *linesize);
+	  if (!*lineptr)
+	    return -1;
+	  read_pos = *linesize - nbytes_avail + *lineptr;
 	}
 
       c = getc (stream);

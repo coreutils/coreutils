@@ -28,7 +28,7 @@ STATIC
 int
 printf_fetchargs (va_list args, arguments *a)
 {
-  unsigned int i;
+  size_t i;
   argument *ap;
 
   for (i = 0, ap = &a->arg[0]; i < a->count; i++, ap++)

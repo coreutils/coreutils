@@ -145,29 +145,17 @@ readname (char **name, size_t *size, FILE *stream)
   int c;
   size_t name_index = 0;
 
-  if (*name == NULL)
-    {
-      /* The initial size must be a power of two, so that the overflow
-	 check works.  */
-      *size = 16;
-
-      *name = xmalloc (*size);
-    }
-
   /* Skip blank space.  */
   while ((c = getc (stream)) != EOF && ISSPACE (c))
     /* Do nothing. */ ;
 
-  while (c != EOF && !ISSPACE (c))
+  for (;;)
     {
+      if (*size <= name_index)
+	*name = x2nrealloc (*name, size, sizeof **name);
+      if (c == EOF || ISSPACE (c))
+	break;
       (*name)[name_index++] = c;
-      if (*size < name_index)
-	{
-	  *size *= 2;
-	  if (! *size)
-	    xalloc_die ();
-	  *name = xrealloc (*name, *size);
-	}
       c = getc (stream);
     }
   (*name)[name_index] = '\0';
