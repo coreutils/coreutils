@@ -505,7 +505,7 @@ AD_is_removable (Dirstack_state const *ds, char const *file)
   return ! (top->unremovable && hash_lookup (top->unremovable, file));
 }
 
-/* Return nonzero if DIR is determined to be an empty directory
+/* Return true if DIR is determined to be an empty directory
    or if opendir or readdir fails.  */
 static bool
 is_empty_dir (char const *dir)
