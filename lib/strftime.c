@@ -77,7 +77,11 @@ USA.  */
 #endif
 #endif
 
-static unsigned int week __P((const struct tm *const, int, int));
+/* Uncomment following line in the production version.  */
+/* #define NDEBUG */
+#include <assert.h>
+
+static unsigned int week __P ((const struct tm *const, int, int));
 
 
 #define	add(n, f)							      \
@@ -93,7 +97,7 @@ static unsigned int week __P((const struct tm *const, int, int));
 	    p += (n);							      \
 	  }								      \
     } while (0)
-#define	cpy(n, s)	add((n), memcpy((PTR) p, (PTR) (s), (n)))
+#define	cpy(n, s)	add ((n), memcpy((PTR) p, (PTR) (s), (n)))
 
 #ifdef _LIBC
 #define	fmt(n, args)	add((n), if (sprintf args != (n)) return 0)
@@ -189,8 +193,8 @@ strftime (s, maxsize, format, tp)
   size_t am_len = 3;
   size_t ap_len = 2;
 #endif
-  size_t wkday_len = strlen(f_wkday);
-  size_t month_len = strlen(f_month);
+  size_t wkday_len = strlen (f_wkday);
+  size_t month_len = strlen (f_month);
   const unsigned int y_week0 = week (tp, 0, 7);
   const unsigned int y_week1 = week (tp, 1, 7);
   const unsigned int y_week2 = week (tp, 1, 3);
@@ -230,10 +234,10 @@ strftime (s, maxsize, format, tp)
       const char *subfmt;
 
 #if HAVE_MBLEN
-      if (!isascii(*f))
+      if (!isascii (*f))
 	{
 	  /* Non-ASCII, may be a multibyte.  */
-	  int len = mblen(f, strlen(f));
+	  int len = mblen (f, strlen (f));
 	  if (len > 0)
 	    {
 	      cpy(len, f);
@@ -244,7 +248,7 @@ strftime (s, maxsize, format, tp)
 
       if (*f != '%')
 	{
-	  add(1, *p = *f);
+	  add (1, *p = *f);
 	  continue;
 	}
 
@@ -270,24 +274,24 @@ strftime (s, maxsize, format, tp)
 	{
 	case '\0':
 	case '%':
-	  add(1, *p = *f);
+	  add (1, *p = *f);
 	  break;
 
 	case 'a':
-	  cpy(aw_len, a_wkday);
+	  cpy (aw_len, a_wkday);
 	  break;
 
 	case 'A':
-	  cpy(wkday_len, f_wkday);
+	  cpy (wkday_len, f_wkday);
 	  break;
 
 	case 'b':
 	case 'h':		/* GNU extension.  */
-	  cpy(am_len, a_month);
+	  cpy (am_len, a_month);
 	  break;
 
 	case 'B':
-	  cpy(month_len, f_month);
+	  cpy (month_len, f_month);
 	  break;
 
 	case 'c':
@@ -394,7 +398,7 @@ strftime (s, maxsize, format, tp)
 	  break;
 
 	case 'p':
-	  cpy(ap_len, ampm);
+	  cpy (ap_len, ampm);
 	  break;
 
 	case 'R':		/* GNU extension.  */
@@ -408,17 +412,38 @@ strftime (s, maxsize, format, tp)
 	case 'S':
 	  DO_NUMBER (2, tp->tm_sec);
 
+	case 's':		/* GNU extension.  */
+	  {
+	    struct tm writable_tm = *tp;
+	    unsigned long int num = (unsigned long int) mktime (&writable_tm);
+	    /* `3 * sizeof (unsigned long int)' is an approximation of
+	       the size of the decimal representation of NUM, valid
+	       for sizes <= 16.  */
+	    int printed = 3 * sizeof (unsigned long int);
+	    maxdigits = printed;
+	    assert (sizeof (unsigned long int) <= 16);
+#ifdef _LIBC
+	    add (maxdigits, printed = sprintf (p, "%lu", num));
+#else
+	    add (maxdigits, sprintf (p, "%lu", num); printed = strlen (p));
+#endif
+	    /* Back up if fewer than MAXDIGITS chars written for pad_none.  */
+	    p -= maxdigits - printed;
+	    i -= maxdigits - printed;
+	  }
+	break;
+
 	case 'X':
 #ifdef _NL_CURRENT
 	  subfmt = _NL_CURRENT (LC_TIME, T_FMT);
 	  goto subformat;
 #endif
 	  /* Fall through.  */
-	case 'T':		/* GNU extenstion.  */
+	case 'T':		/* GNU extension.  */
 	  subfmt = "%H:%M:%S";
 	  goto subformat;
 
-	case 't':		/* GNU extenstion.  */
+	case 't':		/* GNU extension.  */
 	  add (1, *p = '\t');
 	  break;
 
@@ -444,8 +469,46 @@ strftime (s, maxsize, format, tp)
 	  cpy(zonelen, zone);
 	  break;
 
+	case 'z':
+	  {
+	    struct tm tml = *tp;
+	    time_t t = mktime (&tml);
+	    struct tm tmg;
+	    int diff;
+
+	    tml = *localtime (&t);	/* Canonicalize the local time.  */
+	    tmg = *gmtime (&t);
+
+	    /* Compute the difference.  */
+	    diff = tml.tm_min - tmg.tm_min;
+	    diff += 60 * (tml.tm_hour - tmg.tm_hour);
+
+	    if (tml.tm_mon != tmg.tm_mon)
+	      {
+		/* We assume no timezone differs from UTC by more than
+		   +- 23 hours.  This should be safe.  */
+		if (tmg.tm_mday == 1)
+		  tml.tm_mday = 0;
+		else /* tml.tm_mday == 1 */
+		  tmg.tm_mday = 0;
+	      }
+	    diff += 1440 * (tml.tm_mday - tmg.tm_mday);
+
+	    if (diff < 0)
+	      {
+		add (1, *p = '-');
+		diff = -diff;
+	      }
+	    else
+	      add (1, *p = '+');
+
+	    pad = pad_zero;
+	    DO_NUMBER (4, ((diff / 60) % 24) * 100 + diff % 60);
+	  }
+
 	default:
 	  /* Bad format.  */
+	  add (1, *p = *f);
 	  break;
 	}
     }
