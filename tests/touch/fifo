@@ -8,8 +8,9 @@ fi
 
 framework_failure=0
 
-rm -rf fifo
-mkfifo fifo || framework_failure=1
+tmp=fifo-$$
+rm -rf $tmp
+mkfifo $tmp || framework_failure=1
 
 if test $framework_failure = 1; then
   echo 'failure in testing framework'
@@ -18,7 +19,7 @@ fi
 
 fail=0
 
-touch fifo || fail=1
-rm -rf fifo
+touch $tmp || fail=1
+rm -rf $tmp
 
 exit $fail
