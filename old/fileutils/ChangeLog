@@ -1,5 +1,8 @@
 2002-04-14  Jim Meyering  <meyering@lucent.com>
 
+	* src/Makefile.am (bin_PROGRAMS): Add stat.
+	(noinst_HEADERS): Add fs.h.
+
 	* src/stat.c [HAVE_SYS_VFS_H]: Guard incluion of sys/vfs.h.
 	Constify many parameters.
 	(print_statfs): Fix typo: Use %u (to match %lu) for namelen, not %d.
