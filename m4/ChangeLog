@@ -1,5 +1,8 @@
 2003-05-26  Jim Meyering  <jim@meyering.net>
 
+	* dirfd.m4 (UTILS_FUNC_DIRFD): Merge in change from gnulib,
+	fixing an M4 quoting bug.
+
 	* lib-ld.m4 (AC_LIB_PROG_LD_GNU): Use TAB-SP, not SP-TAB
 	when setting IFS.
 	* progtest.m4 (AM_PATH_PROG_WITH_TEST): Likewise.
