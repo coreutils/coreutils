@@ -8,7 +8,7 @@
 
 	* tests/Fetish.pm: Accept new directives: OUT_SUBST, ERR_SUBST.
 	Rename `%tmp' to `%actual'.  Reverse order of last two args to
-	_compare_files (to actual, $expected) so as to match declaration.
+	_compare_files (to $actual, $expected) so as to match declaration.
 
 2004-03-28  Paul Eggert  <eggert@twinsun.com>
 
