@@ -317,50 +317,50 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	$(DEPDIR)/atexit.Po $(DEPDIR)/canonicalize.Po \
 @AMDEP_TRUE@	$(DEPDIR)/chown.Po $(DEPDIR)/dirfd.Po \
 @AMDEP_TRUE@	$(DEPDIR)/dup2.Po $(DEPDIR)/error.Po \
-@AMDEP_TRUE@	$(DEPDIR)/euidaccess.Po $(DEPDIR)/fchown-stub.Po \
-@AMDEP_TRUE@	$(DEPDIR)/fileblocks.Po $(DEPDIR)/fnmatch.Po \
-@AMDEP_TRUE@	$(DEPDIR)/fsusage.Po $(DEPDIR)/ftruncate.Po \
-@AMDEP_TRUE@	$(DEPDIR)/ftw.Po $(DEPDIR)/getcwd.Po \
-@AMDEP_TRUE@	$(DEPDIR)/getgroups.Po $(DEPDIR)/gethostname.Po \
-@AMDEP_TRUE@	$(DEPDIR)/getline.Po $(DEPDIR)/getloadavg.Po \
-@AMDEP_TRUE@	$(DEPDIR)/getpass.Po $(DEPDIR)/gettimeofday.Po \
-@AMDEP_TRUE@	$(DEPDIR)/getusershell.Po $(DEPDIR)/group-member.Po \
-@AMDEP_TRUE@	$(DEPDIR)/lchown.Po $(DEPDIR)/lstat-stub.Po \
-@AMDEP_TRUE@	$(DEPDIR)/lstat.Po $(DEPDIR)/malloc.Po \
-@AMDEP_TRUE@	$(DEPDIR)/memchr.Po $(DEPDIR)/memcmp.Po \
-@AMDEP_TRUE@	$(DEPDIR)/memcpy.Po $(DEPDIR)/memmove.Po \
-@AMDEP_TRUE@	$(DEPDIR)/memrchr.Po $(DEPDIR)/memset.Po \
-@AMDEP_TRUE@	$(DEPDIR)/mkdir.Po $(DEPDIR)/mkstemp.Po \
-@AMDEP_TRUE@	$(DEPDIR)/mktime.Po $(DEPDIR)/mountlist.Po \
-@AMDEP_TRUE@	$(DEPDIR)/nanosleep.Po $(DEPDIR)/obstack.Po \
-@AMDEP_TRUE@	$(DEPDIR)/putenv.Po $(DEPDIR)/raise.Po \
-@AMDEP_TRUE@	$(DEPDIR)/readlink-stub.Po $(DEPDIR)/readutmp.Po \
-@AMDEP_TRUE@	$(DEPDIR)/realloc.Po $(DEPDIR)/regex.Po \
-@AMDEP_TRUE@	$(DEPDIR)/rename.Po $(DEPDIR)/rmdir.Po \
-@AMDEP_TRUE@	$(DEPDIR)/rpmatch.Po $(DEPDIR)/sig2str.Po \
-@AMDEP_TRUE@	$(DEPDIR)/stat.Po $(DEPDIR)/stpcpy.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strcasecmp.Po $(DEPDIR)/strcspn.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strdup.Po $(DEPDIR)/strncasecmp.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strndup.Po $(DEPDIR)/strnlen.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strpbrk.Po $(DEPDIR)/strstr.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strtod.Po $(DEPDIR)/strtoimax.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strtol.Po $(DEPDIR)/strtoll.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strtoul.Po $(DEPDIR)/strtoull.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strtoumax.Po $(DEPDIR)/strverscmp.Po \
-@AMDEP_TRUE@	$(DEPDIR)/tempname.Po $(DEPDIR)/tsearch.Po \
-@AMDEP_TRUE@	$(DEPDIR)/utime.Po ./$(DEPDIR)/acl.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/addext.Po ./$(DEPDIR)/argmatch.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/backupfile.Po ./$(DEPDIR)/basename.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/canon-host.Po ./$(DEPDIR)/closeout.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/cycle-check.Po ./$(DEPDIR)/diacrit.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/dirname.Po ./$(DEPDIR)/dup-safer.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/exclude.Po ./$(DEPDIR)/exitfail.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/file-type.Po ./$(DEPDIR)/filemode.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/fopen-safer.Po ./$(DEPDIR)/full-read.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/full-write.Po ./$(DEPDIR)/getdate.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/getopt.Po ./$(DEPDIR)/getopt1.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/getstr.Po ./$(DEPDIR)/gettime.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/getugroups.Po \
+@AMDEP_TRUE@	$(DEPDIR)/euidaccess.Po $(DEPDIR)/fchdir-stub.Po \
+@AMDEP_TRUE@	$(DEPDIR)/fchown-stub.Po $(DEPDIR)/fileblocks.Po \
+@AMDEP_TRUE@	$(DEPDIR)/fnmatch.Po $(DEPDIR)/fsusage.Po \
+@AMDEP_TRUE@	$(DEPDIR)/ftruncate.Po $(DEPDIR)/ftw.Po \
+@AMDEP_TRUE@	$(DEPDIR)/getcwd.Po $(DEPDIR)/getgroups.Po \
+@AMDEP_TRUE@	$(DEPDIR)/gethostname.Po $(DEPDIR)/getline.Po \
+@AMDEP_TRUE@	$(DEPDIR)/getloadavg.Po $(DEPDIR)/getpass.Po \
+@AMDEP_TRUE@	$(DEPDIR)/gettimeofday.Po $(DEPDIR)/getusershell.Po \
+@AMDEP_TRUE@	$(DEPDIR)/group-member.Po $(DEPDIR)/lchown.Po \
+@AMDEP_TRUE@	$(DEPDIR)/lstat-stub.Po $(DEPDIR)/lstat.Po \
+@AMDEP_TRUE@	$(DEPDIR)/malloc.Po $(DEPDIR)/memchr.Po \
+@AMDEP_TRUE@	$(DEPDIR)/memcmp.Po $(DEPDIR)/memcpy.Po \
+@AMDEP_TRUE@	$(DEPDIR)/memmove.Po $(DEPDIR)/memrchr.Po \
+@AMDEP_TRUE@	$(DEPDIR)/memset.Po $(DEPDIR)/mkdir.Po \
+@AMDEP_TRUE@	$(DEPDIR)/mkstemp.Po $(DEPDIR)/mktime.Po \
+@AMDEP_TRUE@	$(DEPDIR)/mountlist.Po $(DEPDIR)/nanosleep.Po \
+@AMDEP_TRUE@	$(DEPDIR)/obstack.Po $(DEPDIR)/putenv.Po \
+@AMDEP_TRUE@	$(DEPDIR)/raise.Po $(DEPDIR)/readlink-stub.Po \
+@AMDEP_TRUE@	$(DEPDIR)/readutmp.Po $(DEPDIR)/realloc.Po \
+@AMDEP_TRUE@	$(DEPDIR)/regex.Po $(DEPDIR)/rename.Po \
+@AMDEP_TRUE@	$(DEPDIR)/rmdir.Po $(DEPDIR)/rpmatch.Po \
+@AMDEP_TRUE@	$(DEPDIR)/sig2str.Po $(DEPDIR)/stat.Po \
+@AMDEP_TRUE@	$(DEPDIR)/stpcpy.Po $(DEPDIR)/strcasecmp.Po \
+@AMDEP_TRUE@	$(DEPDIR)/strcspn.Po $(DEPDIR)/strdup.Po \
+@AMDEP_TRUE@	$(DEPDIR)/strncasecmp.Po $(DEPDIR)/strndup.Po \
+@AMDEP_TRUE@	$(DEPDIR)/strnlen.Po $(DEPDIR)/strpbrk.Po \
+@AMDEP_TRUE@	$(DEPDIR)/strstr.Po $(DEPDIR)/strtod.Po \
+@AMDEP_TRUE@	$(DEPDIR)/strtoimax.Po $(DEPDIR)/strtol.Po \
+@AMDEP_TRUE@	$(DEPDIR)/strtoll.Po $(DEPDIR)/strtoul.Po \
+@AMDEP_TRUE@	$(DEPDIR)/strtoull.Po $(DEPDIR)/strtoumax.Po \
+@AMDEP_TRUE@	$(DEPDIR)/strverscmp.Po $(DEPDIR)/tempname.Po \
+@AMDEP_TRUE@	$(DEPDIR)/tsearch.Po $(DEPDIR)/utime.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/acl.Po ./$(DEPDIR)/addext.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/argmatch.Po ./$(DEPDIR)/backupfile.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/basename.Po ./$(DEPDIR)/canon-host.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/closeout.Po ./$(DEPDIR)/cycle-check.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/diacrit.Po ./$(DEPDIR)/dirname.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/dup-safer.Po ./$(DEPDIR)/exclude.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/exitfail.Po ./$(DEPDIR)/file-type.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/filemode.Po ./$(DEPDIR)/fopen-safer.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/full-read.Po ./$(DEPDIR)/full-write.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/getdate.Po ./$(DEPDIR)/getopt.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/getopt1.Po ./$(DEPDIR)/getstr.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/gettime.Po ./$(DEPDIR)/getugroups.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/hard-locale.Po ./$(DEPDIR)/hash-pjw.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/hash.Po ./$(DEPDIR)/human.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/idcache.Po ./$(DEPDIR)/imaxtostr.Po \
@@ -395,10 +395,10 @@ YACCCOMPILE = $(YACC) $(YFLAGS) $(AM_YFLAGS)
 DIST_SOURCES = $(libfetish_a_SOURCES)
 DIST_COMMON = README ChangeLog Makefile.am Makefile.in TODO \
 	__fpending.c alloca.c atexit.c canonicalize.c chown.c dirfd.c \
-	dup2.c error.c error.h euidaccess.c fchown-stub.c fileblocks.c \
-	fnmatch.c fsusage.c ftruncate.c ftw.c getcwd.c getdate.c \
-	getgroups.c gethostname.c getline.c getloadavg.c getpass.c \
-	gettimeofday.c getusershell.c group-member.c lchown.c \
+	dup2.c error.c error.h euidaccess.c fchdir-stub.c fchown-stub.c \
+	fileblocks.c fnmatch.c fsusage.c ftruncate.c ftw.c getcwd.c \
+	getdate.c getgroups.c gethostname.c getline.c getloadavg.c \
+	getpass.c gettimeofday.c getusershell.c group-member.c lchown.c \
 	lstat-stub.c lstat.c malloc.c memchr.c memcmp.c memcpy.c \
 	memmove.c memrchr.c memset.c mkdir.c mkstemp.c mktime.c \
 	mountlist.c nanosleep.c obstack.c obstack.h putenv.c raise.c \
@@ -444,6 +444,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/dup2.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/error.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/euidaccess.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fchdir-stub.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fchown-stub.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fileblocks.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fnmatch.Po@am__quote@
