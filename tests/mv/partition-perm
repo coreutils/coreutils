@@ -24,7 +24,7 @@ cd $dir
 : > file
 chmod a=rwx file
 
-umask 777
+umask 077
 mv file $other_partition_tmpdir
 
 fail=0
@@ -32,6 +32,7 @@ test -f file && fail=1
 test -f $other_partition_tmpdir/file || fail=1
 
 # This would have failed with the mv from fileutils-4.0i.
-test -r $other_partition_tmpdir/file || fail=1
+set _ `ls -l $other_partition_tmpdir/file`; shift; mode=$1
+test "$mode" = "-rwxrwxrwx" || fail=1
 
 exit $fail
