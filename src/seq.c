@@ -257,46 +257,45 @@ scan_double_arg (const char *arg)
    Return 0 if not, 1 if correct.  */
 
 static int
-check_format (const char *format_string)
+check_format (const char *fmt)
 {
-  while (*format_string != '\0')
+  while (*fmt != '\0')
     {
-      if (*format_string == '%')
+      if (*fmt == '%')
 	{
-	  format_string++;
-	  if (*format_string != '%')
+	  fmt++;
+	  if (*fmt != '%')
 	    break;
 	}
 
-      format_string++;
+      fmt++;
     }
-  if (*format_string == '\0')
+  if (*fmt == '\0')
     return 0;
 
-  format_string += strspn (format_string, "-+#0");
-  if (isdigit (*format_string))
+  fmt += strspn (fmt, "-+#0");
+  if (isdigit (*fmt))
     {
-      format_string += strspn (format_string, "012345789");
+      fmt += strspn (fmt, "012345789");
 
-      if (*format_string == '.')
-	format_string += strspn (++format_string, "0123456789");
+      if (*fmt == '.')
+	fmt += strspn (++fmt, "0123456789");
     }
 
-  if (*format_string != 'e' && *format_string != 'f' &&
-      *format_string != 'g')
+  if (*fmt != 'e' && *fmt != 'f' && *fmt != 'g')
     return 0;
 
-  format_string++;
-  while (*format_string != '\0')
+  fmt++;
+  while (*fmt != '\0')
     {
-      if (*format_string == '%')
+      if (*fmt == '%')
 	{
-	  format_string++;
-	  if (*format_string != '%')
+	  fmt++;
+	  if (*fmt != '%')
 	    return 0;
 	}
 
-      format_string++;
+      fmt++;
     }
 
   return 1;
@@ -393,7 +392,7 @@ get_width_format (void)
 /* Actually print the sequence of numbers in the specified range, with the
    given or default stepping and format.  */
 static int
-print_numbers (const char *format_str)
+print_numbers (const char *fmt)
 {
   if (first > last)
     {
@@ -408,7 +407,7 @@ the increment must be negative"));
 	  /* NOTREACHED */
 	}
 
-      printf (format_str, first);
+      printf (fmt, first);
       for (i = 1; /* empty */; i++)
 	{
 	  double x = first + i * step;
@@ -417,7 +416,7 @@ the increment must be negative"));
 	    break;
 
 	  fputs (separator, stdout);
-	  printf (format_str, x);
+	  printf (fmt, x);
 	}
     }
   else
@@ -433,7 +432,7 @@ the increment must be positive"));
 	  /* NOTREACHED */
 	}
 
-      printf (format_str, first);
+      printf (fmt, first);
       for (i = 1; /* empty */; i++)
 	{
 	  double x = first + i * step;
