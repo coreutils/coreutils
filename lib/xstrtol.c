@@ -98,6 +98,7 @@ __xstrtol (s, ptr, base, val, valid_suffixes)
 	  ++(*p);
 	  break;
 
+	case 'B':
 	case 'k':
 	  BKM_SCALE (tmp, 1024, LONGINT_OVERFLOW);
 	  ++(*p);

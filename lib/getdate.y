@@ -585,10 +585,14 @@ ToSeconds (Hours, Minutes, Seconds, Meridian)
   case MERam:
     if (Hours < 1 || Hours > 12)
       return -1;
+    if (Hours == 12)
+      Hours = 0;
     return (Hours * 60L + Minutes) * 60L + Seconds;
   case MERpm:
     if (Hours < 1 || Hours > 12)
       return -1;
+    if (Hours == 12)
+      Hours = 0;
     return ((Hours + 12) * 60L + Minutes) * 60L + Seconds;
   default:
     abort ();

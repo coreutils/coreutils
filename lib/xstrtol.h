@@ -27,9 +27,9 @@ typedef enum strtol_error strtol_error;
 
 strtol_error
   __xstrtol __P ((const char *s, char **ptr, int base,
-		  __unsigned long int *val, int allow_bkm_suffix));
+		  __unsigned long int *val, const char *valid_suffixes));
 
-#define STRTOL_FATAL_ERROR(str, argument_type_string, err)		\
+#define _STRTOL_ERROR(exit_code, str, argument_type_string, err)	\
   do									\
     {									\
       switch ((err))							\
@@ -38,20 +38,27 @@ strtol_error
 	  abort ();							\
 									\
 	case LONGINT_INVALID:						\
-	  error (2, 0, "invalid %s `%s'", (argument_type_string), (str));\
+	  error ((exit_code), 0, "invalid %s `%s'",			\
+		 (argument_type_string), (str));			\
 	  break;							\
 									\
 	case LONGINT_INVALID_SUFFIX_CHAR:				\
-	  error (2, 0, "invalid character following %s `%s'",		\
+	  error ((exit_code), 0, "invalid character following %s `%s'",	\
 		 (argument_type_string), (str));			\
 	  break;							\
 									\
 	case LONGINT_OVERFLOW:						\
-	  error (2, 0, "%s `%s' larger than maximum long int",		\
+	  error ((exit_code), 0, "%s `%s' larger than maximum long int",\
 		 (argument_type_string), (str));			\
 	  break;							\
 	}								\
     }									\
   while (0)
+
+#define STRTOL_FATAL_ERROR(str, argument_type_string, err)		\
+  _STRTOL_ERROR (2, str, argument_type_string, err)
+
+#define STRTOL_FAIL_WARN(str, argument_type_string, err)		\
+  _STRTOL_ERROR (0, str, argument_type_string, err)
 
 #endif /* _xstrtol_h_ */
