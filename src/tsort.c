@@ -295,7 +295,7 @@ record_relation (struct item *j, struct item *k)
 }
 
 static int
-count_items (struct item *k)
+count_items (struct item *unused ATTRIBUTE_UNUSED)
 {
   n_strings++;
   return 0;
