@@ -1,3 +1,15 @@
+1999-04-08  Jim Meyering  <meyering@ascend.com>
+
+	1999-03-25  James R. Van Zandt  <jrv@vanzandt.mv.com>
+	* doc/sh-utils.texi (Options for date): Document --iso-8601
+	* src/date.c: Accept new option: --iso-8601.
+	* lib/Makefile.am (libsu_a_SOURCES): Add argmatch.c and quotearg.c.
+	(noinst_HEADERS): Add argmatch.h and quotearg.h.
+	* lib/argmatch.c: New file.
+	* lib/argmatch.h: New file.
+	* lib/quotearg.c: New file.
+	* lib/quotearg.h: New file.
+
 1999-03-30  Jim Meyering  <meyering@ascend.com>
 
 	* src/sys2.h: Include "closeout.h" and "version-etc.h"
