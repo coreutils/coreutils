@@ -1,3 +1,4 @@
+[4.5.3]
 [4.5.2]
 * `rm -i dir' (without --recursive (-r)) no longer recurses into dir
 * `tail -c N FILE' now works with files of size >= 4GB
