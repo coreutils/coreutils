@@ -1,3 +1,16 @@
+2001-02-20  Paul Eggert  <eggert@twinsun.com>
+
+	* src/ls.c (FULL_TIME_OPTION): Renamed from FULL_TIME, for
+	consistency with the other enum values.
+
+2001-02-20  Paul Eggert  <eggert@twinsun.com>
+
+	* NEWS, doc/fileutils.texi: ls -H is now obsolescent.
+	* src/ls.c (SI_OPTION): New enum value.
+	(long_options): Use it instead of 'H' for --si.
+	(decode_switches): Warn that -H will change soon.
+	(usage): Likewise.
+
 2001-02-18  Jim Meyering  <meyering@lucent.com>
 
 	* tests/rm/Makefile.am (TESTS): Add isatty.
