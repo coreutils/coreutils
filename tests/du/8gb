@@ -1,5 +1,6 @@
 #!/bin/sh
-# ensure that uintmax_t is wide enough
+# Ensure that du does not rely on narrow types like size_t for
+# file sizes or sums.
 
 if test "$VERBOSE" = yes; then
   set -x
