@@ -1,5 +1,25 @@
 2003-05-14  Jim Meyering  <jim@meyering.net>
 
+	* Makefile.maint (syntax-check): Add another check.
+
+2003-05-13  Paul Eggert  <eggert@twinsun.com>
+
+	Fix uniq to conform to POSIX, which requires that "uniq -d -u"
+	must output nothing.  Problem reported by Josh Hyman.
+
+	* src/uniq.c (enum output_mode, mode): Remove, replacing with:
+	(output_unique, output_first_repeated, output_later_repeated):
+	New vars.  All uses of "mode" changed to use these variables,
+	which are not mutually exclusive as "mode" was.
+	(writeline): New arg "match", used to control whether to
+	obey output_first_repeated or output_later_repeated.
+	All callers changed.
+	(check_file, main): Adjust to above changes.
+
+	* tests/uniq/Test.pm: Test that 'uniq -d -u' outputs nothing.
+
+2003-05-14  Jim Meyering  <jim@meyering.net>
+
 	* Version 5.0.1.
 
 	* tests/rm/rm3: Use tr's \n notation rather than \012.
