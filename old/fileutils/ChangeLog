@@ -1,3 +1,9 @@
+Sat Dec 23 11:33:19 1995  Jim Meyering  (meyering@comco.com)
+
+	* ls.c (decode_switches): Make -o a synonym for -lG for compatibility
+	with most other versions of ls.  Reported by Karl Berry.
+	(usage): Update.
+
 Fri Dec 22 00:48:01 1995  Jim Meyering  (meyering@comco.com)
 
 	* dd.c (cleanup): New function -- broken out from quit.
