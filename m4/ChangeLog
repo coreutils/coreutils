@@ -1,5 +1,8 @@
 2000-01-22  Jim Meyering  <meyering@lucent.com>
 
+	* prereq.m4 (jm_PREREQ_ADDEXT): New macro.  Parts moved here
+	from fileutils' configure.in.
+
 	* decl.m4: Remove kludgy `test -z $ac_...AC_CHECK_HEADERS(...)' code.
 	Moved tests into their own function (_jm_DECL_HEADERS) in check-decl.m4.
 
