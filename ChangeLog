@@ -2,6 +2,9 @@
 
 	* Version 5.3.0.
 
+	* src/du.c (G_fail, opt_nul_terminate_output): Declare `static'.
+	* src/ln.c (backup_type): Likewise.
+
 	* src/remove.c (rm): Add `extern' keyword.
 	* src/cp-hash.c (forget_created, remember_created)
 	(src_to_dest_lookup, remember_copied, hash_init, forget_all): Likewise.
