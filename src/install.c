@@ -288,7 +288,7 @@ main (int argc, char **argv)
 	  mkdir_and_install = 1;
 	  break;
 	case 'v':
-	  x.verbose = 0;
+	  x.verbose = 1;
 	  break;
 	case 'g':
 	  group_name = optarg;
@@ -425,6 +425,9 @@ install_file_to_path (const char *from, const char *to,
 	 */
       fail = make_path (dest_dir, mode, mode, owner_id, group_id, 0,
 			(x->verbose ? _("creating directory `%s'") : NULL));
+
+      if (fail == 0)
+	fail = install_file_in_dir (from, dest_dir, x);
     }
   else
     {
