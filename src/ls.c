@@ -2184,7 +2184,7 @@ make_link_path (const char *path, const char *linkname)
 static int
 basename_is_dot_or_dotdot (const char *name)
 {
-  char *base = base_name (name);
+  char const *base = base_name (name);
   return DOT_OR_DOTDOT (base);
 }
 
@@ -2379,11 +2379,9 @@ rev_cmp_name (const struct fileinfo *file2, const struct fileinfo *file1)
 static int
 compare_extension (const struct fileinfo *file1, const struct fileinfo *file2)
 {
-  register char *base1, *base2;
-  register int cmp;
-
-  base1 = strrchr (file1->name, '.');
-  base2 = strrchr (file2->name, '.');
+  int cmp;
+  char const *base1 = strrchr (file1->name, '.');
+  char const *base2 = strrchr (file2->name, '.');
   if (base1 == 0 && base2 == 0)
     return strcoll (file1->name, file2->name);
   if (base1 == 0)
@@ -2399,11 +2397,9 @@ compare_extension (const struct fileinfo *file1, const struct fileinfo *file2)
 static int
 rev_cmp_extension (const struct fileinfo *file2, const struct fileinfo *file1)
 {
-  register char *base1, *base2;
-  register int cmp;
-
-  base1 = strrchr (file1->name, '.');
-  base2 = strrchr (file2->name, '.');
+  int cmp;
+  char const *base1 = strrchr (file1->name, '.');
+  char const *base2 = strrchr (file2->name, '.');
   if (base1 == 0 && base2 == 0)
     return strcoll (file1->name, file2->name);
   if (base1 == 0)
@@ -2606,7 +2602,7 @@ print_long_format (const struct fileinfo *f)
 
   if (print_owner)
     {
-      char *user_name = (numeric_ids ? NULL : getuser (f->stat.st_uid));
+      char const *user_name = (numeric_ids ? NULL : getuser (f->stat.st_uid));
       if (user_name)
 	sprintf (p, "%-8s ", user_name);
       else
@@ -2616,7 +2612,7 @@ print_long_format (const struct fileinfo *f)
 
   if (print_group)
     {
-      char *group_name = (numeric_ids ? NULL : getgroup (f->stat.st_gid));
+      char const *group_name = (numeric_ids ? NULL : getgroup (f->stat.st_gid));
       if (group_name)
 	sprintf (p, "%-8s ", group_name);
       else
@@ -2760,8 +2756,8 @@ quote_name (FILE *out, const char *name, struct quoting_options const *options)
 #if HAVE_MBRTOWC
       if (MB_CUR_MAX > 1)
 	{
-	  const char *p = buf;
-	  char *plimit = buf + len;
+	  char const *p = buf;
+	  char const *plimit = buf + len;
 	  char *q = buf;
 	  displayed_width = 0;
 
@@ -2864,7 +2860,7 @@ quote_name (FILE *out, const char *name, struct quoting_options const *options)
 #endif
 	{
 	  char *p = buf;
-	  char *plimit = buf + len;
+	  char const *plimit = buf + len;
 
 	  while (p < plimit)
 	    {
