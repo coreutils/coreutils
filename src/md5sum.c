@@ -2,24 +2,24 @@
    of MD5 in RFC 1321 from April 1992.
    Copyright (C) 1995 Software Foundation, Inc.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2, or (at your option)
-any later version.
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2, or (at your option)
+   any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
 /* If you want to use this code in your own program as a library just
    define the preprocessor macro `USE_AS_LIBRARY'.
 
-        cc -DUSE_AS_LIBRARY -c md5sum.c
+   cc -DUSE_AS_LIBRARY -c md5sum.c
  */
 
 /* Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>.  */
@@ -49,7 +49,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 #include "version.h"
 
 #ifdef WORDS_BIGENDIAN
-# define SWAP(n)							      \
+# define SWAP(n)							\
     (((n) << 24) | (((n) & 0xff00) << 8) | (((n) >> 8) & 0xff00) | ((n) >> 24))
 #else
 # define SWAP(n) (n)
@@ -129,6 +129,7 @@ static const struct option long_options[] =
   { "text", no_argument, 0, 't' },
   { "verbose", no_argument, 0, 'v' },
   { "version", no_argument, 0, 'V' },
+  { NULL, 0, NULL, 0 }
 };
 
 /* Prototypes for local functions.  */
@@ -139,7 +140,6 @@ void *md5_file __P ((const char *filename, void *resblock, int binary));
 void *md5_buffer __P ((const char *buffer, size_t len, void *resblock));
 static void process_buffer __P ((const void *buffer, size_t len,
 				 struct md5_ctx *ctx));
-
 
 #ifndef USE_AS_LIBRARY
 int
@@ -289,7 +289,6 @@ main (argc, argv)
   exit (0);
 }
 
-
 static void
 usage (status)
      int status;
@@ -320,7 +319,6 @@ produce a list with the checksum informations.  A file name - denotes stdin.\n")
 }
 #endif
 
-
 /* Initialize structure containing state of computation.
    (RFC 1321, 3.3: Step 3)  */
 static INLINE void
@@ -348,11 +346,10 @@ result (ctx, resbuf)
   return resbuf;
 }
 
-
 /* Read file FILENAME and process it using the MD5 algorithm.  When BINARY
-   is != 0 and has a "special" text file format (e.g. MSDOG) conversation
-   takes place while reading.  The resulting checksum will be placed in the
-    first 16 bytes following RESBLOCK.  */
+   is non-zero and has a "special" text file format (e.g. MSDOG) conversation
+   takes place while reading.  The resulting checksum will be written into
+   the 16 bytes beginning at RESBLOCK.  */
 /* ARGSUSED */
 void *
 md5_file (filename, resblock, binary)
@@ -360,9 +357,10 @@ md5_file (filename, resblock, binary)
      void *resblock;
      int binary;
 {
+  /* Important: BLOCKSIZE must be a multiple of 64.  */
 #define BLOCKSIZE 4096
   struct md5_ctx ctx;
-  uint32 len[2] = { 0, 0 };
+  uint32 len[2] = {0, 0};
   char buffer[BLOCKSIZE + 72];
   size_t pad, sum;
   FILETYPE f;
@@ -389,7 +387,7 @@ md5_file (filename, resblock, binary)
   while (1)
     {
       /* We read the file in blocks of BLOCKSIZE bytes.  One call of the
-	 computation funtion processes the whole buffer so that with the
+	 computation function processes the whole buffer so that with the
 	 next round of the loop another block can be read.  */
       size_t n;
       sum = 0;
@@ -410,11 +408,11 @@ md5_file (filename, resblock, binary)
       if (len[0] < sum)
 	++len[1];
 
-      /* If end of file is reached end the loop.  */
+      /* If end of file is reached, end the loop.  */
       if (n == 0)
 	break;
 
-      /* Process buffer with BLOCKSIZE bytes.  Please note take
+      /* Process buffer with BLOCKSIZE bytes.  Note that
 			BLOCKSIZE % 64 == 0
        */
       process_buffer (buffer, BLOCKSIZE, &ctx);
@@ -492,10 +490,9 @@ md5_buffer (buffer, len, resblock)
 #define FH(b, c, d) (work.b ^ work.c ^ work.d)
 #define FI(b, c, d) (work.c ^ (work.b | ~work.d))
 
-/* Process the next LEN bytes following BUFFER and use the context given
-   in CTX.  It is assumed that
-				LEN % 64 == 0
- */
+/* Process LEN bytes of BUFFER, accumulating context into CTX.
+   It is assumed that LEN % 64 == 0.  */
+
 static void
 process_buffer (buffer, len, ctx)
      const void *buffer;
@@ -521,105 +518,111 @@ process_buffer (buffer, len, ctx)
 	 little endian byte order we perhaps have to change the byte order
 	 before the computation.  To reduce the work for the next steps
 	 we store the swapped words in the array CORRECT_WORDS.  */
-#define OP(a, b, c, d, s, T)						      \
-      {									      \
-	work.a += FF (b, c, d) + (*cwp++ = SWAP (*words)) + T;                \
-	++words;                                                              \
-	CYCLIC (work.a, s);						      \
-	work.a += work.b;						      \
-      }
 
-      /* It is sad that C does not provide an operator for cyclic rotation.
-	 Hope the C compiler is smart enough.  */
+#define OP(a, b, c, d, s, T)						\
+      do								\
+        {								\
+	  work.a += FF (b, c, d) + (*cwp++ = SWAP (*words)) + T;	\
+	  ++words;							\
+	  CYCLIC (work.a, s);						\
+	  work.a += work.b;						\
+        }								\
+      while (0)
+
+      /* It is unfortunate that C does not provide an operator for
+	 cyclic rotation.  Hope the C compiler is smart enough.  */
 #define CYCLIC(w, s) (w = (w << s) | (w >> (32 - s)))
 
-      /* Before we start one word to the strange constants.  They are defined
-	 in RFC 1321 as
-		T[i] = (int) (4294967296.0 * fabs (sin (i))), i=1..64
+      /* Before we start, one word to the strange constants.
+	 They are defined in RFC 1321 as
+
+	 T[i] = (int) (4294967296.0 * fabs (sin (i))), i=1..64
        */
 
       /* Round 1.  */
-      OP (A, B, C, D,  7, 0xd76aa478)
-      OP (D, A, B, C, 12, 0xe8c7b756)
-      OP (C, D, A, B, 17, 0x242070db)
-      OP (B, C, D, A, 22, 0xc1bdceee)
-      OP (A, B, C, D,  7, 0xf57c0faf)
-      OP (D, A, B, C, 12, 0x4787c62a)
-      OP (C, D, A, B, 17, 0xa8304613)
-      OP (B, C, D, A, 22, 0xfd469501)
-      OP (A, B, C, D,  7, 0x698098d8)
-      OP (D, A, B, C, 12, 0x8b44f7af)
-      OP (C, D, A, B, 17, 0xffff5bb1)
-      OP (B, C, D, A, 22, 0x895cd7be)
-      OP (A, B, C, D,  7, 0x6b901122)
-      OP (D, A, B, C, 12, 0xfd987193)
-      OP (C, D, A, B, 17, 0xa679438e)
-      OP (B, C, D, A, 22, 0x49b40821)
+      OP (A, B, C, D,  7, 0xd76aa478);
+      OP (D, A, B, C, 12, 0xe8c7b756);
+      OP (C, D, A, B, 17, 0x242070db);
+      OP (B, C, D, A, 22, 0xc1bdceee);
+      OP (A, B, C, D,  7, 0xf57c0faf);
+      OP (D, A, B, C, 12, 0x4787c62a);
+      OP (C, D, A, B, 17, 0xa8304613);
+      OP (B, C, D, A, 22, 0xfd469501);
+      OP (A, B, C, D,  7, 0x698098d8);
+      OP (D, A, B, C, 12, 0x8b44f7af);
+      OP (C, D, A, B, 17, 0xffff5bb1);
+      OP (B, C, D, A, 22, 0x895cd7be);
+      OP (A, B, C, D,  7, 0x6b901122);
+      OP (D, A, B, C, 12, 0xfd987193);
+      OP (C, D, A, B, 17, 0xa679438e);
+      OP (B, C, D, A, 22, 0x49b40821);
 
       /* For the second to fourth round we have the possibly swapped words
 	 in CORRECT_WORDS.  Redefine the macro to take an additional first
 	 argument specifying the function to use.  */
 #undef OP
-#define OP(f, a, b, c, d, k, s, T)					      \
-      {									      \
-	work.a += f (b, c, d) + correct_words[k] + T;			      \
-	CYCLIC (work.a, s);						      \
-	work.a += work.b;						      \
-      }
+#define OP(f, a, b, c, d, k, s, T)					\
+      do 								\
+	{								\
+	  work.a += f (b, c, d) + correct_words[k] + T;			\
+	  CYCLIC (work.a, s);						\
+	  work.a += work.b;						\
+	}								\
+      while (0)
 
       /* Round 2.  */
-      OP (FG, A, B, C, D,  1,  5, 0xf61e2562)
-      OP (FG, D, A, B, C,  6,  9, 0xc040b340)
-      OP (FG, C, D, A, B, 11, 14, 0x265e5a51)
-      OP (FG, B, C, D, A,  0, 20, 0xe9b6c7aa)
-      OP (FG, A, B, C, D,  5,  5, 0xd62f105d)
-      OP (FG, D, A, B, C, 10,  9, 0x02441453)
-      OP (FG, C, D, A, B, 15, 14, 0xd8a1e681)
-      OP (FG, B, C, D, A,  4, 20, 0xe7d3fbc8)
-      OP (FG, A, B, C, D,  9,  5, 0x21e1cde6)
-      OP (FG, D, A, B, C, 14,  9, 0xc33707d6)
-      OP (FG, C, D, A, B,  3, 14, 0xf4d50d87)
-      OP (FG, B, C, D, A,  8, 20, 0x455a14ed)
-      OP (FG, A, B, C, D, 13,  5, 0xa9e3e905)
-      OP (FG, D, A, B, C,  2,  9, 0xfcefa3f8)
-      OP (FG, C, D, A, B,  7, 14, 0x676f02d9)
-      OP (FG, B, C, D, A, 12, 20, 0x8d2a4c8a)
+      OP (FG, A, B, C, D,  1,  5, 0xf61e2562);
+      OP (FG, D, A, B, C,  6,  9, 0xc040b340);
+      OP (FG, C, D, A, B, 11, 14, 0x265e5a51);
+      OP (FG, B, C, D, A,  0, 20, 0xe9b6c7aa);
+      OP (FG, A, B, C, D,  5,  5, 0xd62f105d);
+      OP (FG, D, A, B, C, 10,  9, 0x02441453);
+      OP (FG, C, D, A, B, 15, 14, 0xd8a1e681);
+      OP (FG, B, C, D, A,  4, 20, 0xe7d3fbc8);
+      OP (FG, A, B, C, D,  9,  5, 0x21e1cde6);
+      OP (FG, D, A, B, C, 14,  9, 0xc33707d6);
+      OP (FG, C, D, A, B,  3, 14, 0xf4d50d87);
+      OP (FG, B, C, D, A,  8, 20, 0x455a14ed);
+      OP (FG, A, B, C, D, 13,  5, 0xa9e3e905);
+      OP (FG, D, A, B, C,  2,  9, 0xfcefa3f8);
+      OP (FG, C, D, A, B,  7, 14, 0x676f02d9);
+      OP (FG, B, C, D, A, 12, 20, 0x8d2a4c8a);
 
       /* Round 3.  */
-      OP (FH, A, B, C, D,  5,  4, 0xfffa3942)
-      OP (FH, D, A, B, C,  8, 11, 0x8771f681)
-      OP (FH, C, D, A, B, 11, 16, 0x6d9d6122)
-      OP (FH, B, C, D, A, 14, 23, 0xfde5380c)
-      OP (FH, A, B, C, D,  1,  4, 0xa4beea44)
-      OP (FH, D, A, B, C,  4, 11, 0x4bdecfa9)
-      OP (FH, C, D, A, B,  7, 16, 0xf6bb4b60)
-      OP (FH, B, C, D, A, 10, 23, 0xbebfbc70)
-      OP (FH, A, B, C, D, 13,  4, 0x289b7ec6)
-      OP (FH, D, A, B, C,  0, 11, 0xeaa127fa)
-      OP (FH, C, D, A, B,  3, 16, 0xd4ef3085)
-      OP (FH, B, C, D, A,  6, 23, 0x04881d05)
-      OP (FH, A, B, C, D,  9,  4, 0xd9d4d039)
-      OP (FH, D, A, B, C, 12, 11, 0xe6db99e5)
-      OP (FH, C, D, A, B, 15, 16, 0x1fa27cf8)
-      OP (FH, B, C, D, A,  2, 23, 0xc4ac5665)
+      OP (FH, A, B, C, D,  5,  4, 0xfffa3942);
+      OP (FH, D, A, B, C,  8, 11, 0x8771f681);
+      OP (FH, C, D, A, B, 11, 16, 0x6d9d6122);
+      OP (FH, B, C, D, A, 14, 23, 0xfde5380c);
+      OP (FH, A, B, C, D,  1,  4, 0xa4beea44);
+      OP (FH, D, A, B, C,  4, 11, 0x4bdecfa9);
+      OP (FH, C, D, A, B,  7, 16, 0xf6bb4b60);
+      OP (FH, B, C, D, A, 10, 23, 0xbebfbc70);
+      OP (FH, A, B, C, D, 13,  4, 0x289b7ec6);
+      OP (FH, D, A, B, C,  0, 11, 0xeaa127fa);
+      OP (FH, C, D, A, B,  3, 16, 0xd4ef3085);
+      OP (FH, B, C, D, A,  6, 23, 0x04881d05);
+      OP (FH, A, B, C, D,  9,  4, 0xd9d4d039);
+      OP (FH, D, A, B, C, 12, 11, 0xe6db99e5);
+      OP (FH, C, D, A, B, 15, 16, 0x1fa27cf8);
+      OP (FH, B, C, D, A,  2, 23, 0xc4ac5665);
 
       /* Round 4.  */
-      OP (FI, A, B, C, D,  0,  6, 0xf4292244)
-      OP (FI, D, A, B, C,  7, 10, 0x432aff97)
-      OP (FI, C, D, A, B, 14, 15, 0xab9423a7)
-      OP (FI, B, C, D, A,  5, 21, 0xfc93a039)
-      OP (FI, A, B, C, D, 12,  6, 0x655b59c3)
-      OP (FI, D, A, B, C,  3, 10, 0x8f0ccc92)
-      OP (FI, C, D, A, B, 10, 15, 0xffeff47d)
-      OP (FI, B, C, D, A,  1, 21, 0x85845dd1)
-      OP (FI, A, B, C, D,  8,  6, 0x6fa87e4f)
-      OP (FI, D, A, B, C, 15, 10, 0xfe2ce6e0)
-      OP (FI, C, D, A, B,  6, 15, 0xa3014314)
-      OP (FI, B, C, D, A, 13, 21, 0x4e0811a1)
-      OP (FI, A, B, C, D,  4,  6, 0xf7537e82)
-      OP (FI, D, A, B, C, 11, 10, 0xbd3af235)
-      OP (FI, C, D, A, B,  2, 15, 0x2ad7d2bb)
-      OP (FI, B, C, D, A,  9, 21, 0xeb86d391)
+      OP (FI, A, B, C, D,  0,  6, 0xf4292244);
+      OP (FI, D, A, B, C,  7, 10, 0x432aff97);
+      OP (FI, C, D, A, B, 14, 15, 0xab9423a7);
+      OP (FI, B, C, D, A,  5, 21, 0xfc93a039);
+      OP (FI, A, B, C, D, 12,  6, 0x655b59c3);
+      OP (FI, D, A, B, C,  3, 10, 0x8f0ccc92);
+      OP (FI, C, D, A, B, 10, 15, 0xffeff47d);
+      OP (FI, B, C, D, A,  1, 21, 0x85845dd1);
+      OP (FI, A, B, C, D,  8,  6, 0x6fa87e4f);
+      OP (FI, D, A, B, C, 15, 10, 0xfe2ce6e0);
+      OP (FI, C, D, A, B,  6, 15, 0xa3014314);
+      OP (FI, B, C, D, A, 13, 21, 0x4e0811a1);
+      OP (FI, A, B, C, D,  4,  6, 0xf7537e82);
+      OP (FI, D, A, B, C, 11, 10, 0xbd3af235);
+      OP (FI, C, D, A, B,  2, 15, 0x2ad7d2bb);
+      OP (FI, B, C, D, A,  9, 21, 0xeb86d391);
 
       /* Add the starting values of the context.  */
       work.A += save.A;
