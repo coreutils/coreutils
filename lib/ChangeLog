@@ -1,5 +1,9 @@
 2003-10-17  Jim Meyering  <jim@meyering.net>
 
+	* xfts.c, xfts.h: New files.
+	This factors out code used by du.c, chmod.c, and chown-core.c.
+	* Makefile.am (libfetish_a_SOURCES): Add xfts.c and xfts.h.
+
 	* error.h: Update from gnulib.
 	* getpass.c: Likewise.
 	* fnmatch.c: Likewise.
