@@ -1,5 +1,7 @@
 2000-10-23  Jim Meyering  <meyering@lucent.com>
 
+	* Makefile.maint: Clean up version-related variables.
+
 	* Version 2.0.8.
 
 	* Makefile.am (EXTRA_DIST): Add .prev-version.
