@@ -713,7 +713,7 @@ main (int argc, char **argv)
 {
   int optc, exit_status = 0;
   int delim_specified = 0;
-  char *spec_list_string;
+  char *spec_list_string IF_LINT(= NULL);
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
