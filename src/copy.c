@@ -741,16 +741,37 @@ copy_internal (const char *src_path, const char *dst_path,
 
   src_type = src_sb.st_mode;
 
-  /* We wouldn't insert a node unless nlink > 1, except that we need to
-     find created files so as to not copy infinitely if a directory is
-     copied into itself.  */
-
   /* Associate the destination path with the source device and inode
      so that if we encounter a matching dev/ino pair in the source tree
      we can arrange to create a hard link between the corresponding names
-     in the destination tree.  */
-  if (1 < src_sb.st_nlink || S_ISDIR (src_type))
-    earlier_file = remember_copied (dst_path, src_sb.st_ino, src_sb.st_dev);
+     in the destination tree.
+
+     Sometimes, when preserving links, we have to record dev/ino even
+     though st_nlink == 1:
+     - when using -H and processing a command line argument;
+	that command line argument could be a symlink pointing to another
+	command line argument.  With `cp -H --preserve=link', we hard-link
+	those two destination files.
+     - likewise for -L except that it applies to all files, not just
+	command line arguments.
+
+     Also record directory dev/ino when using --recursive.  We'll use that
+     info to detect this problem: cp -R dir dir.  FIXME-maybe: ideally,
+     directory info would be recorded in a separate hash table, since
+     such entries are useful only while a single command line hierarchy
+     is being copied -- so that separate table could be cleared between
+     command line args.  Using the same hash table to preserve hard
+     links means that it may not be cleared.  */
+
+  if ((x->preserve_links
+       && (1 < src_sb.st_nlink
+	   || (command_line_arg
+	       && x->dereference == DEREF_COMMAND_LINE_ARGUMENTS)
+	   || x->dereference == DEREF_ALWAYS))
+      || (x->recursive && S_ISDIR (src_type)))
+    {
+      earlier_file = remember_copied (dst_path, src_sb.st_ino, src_sb.st_dev);
+    }
 
   src_mode = src_sb.st_mode;
 
@@ -972,7 +993,7 @@ copy_internal (const char *src_path, const char *dst_path,
   /* Did we copy this inode somewhere else (in this command line argument)
      and therefore this is a second hard link to the inode?  */
 
-  if (x->dereference == DEREF_NEVER && src_sb.st_nlink > 1 && earlier_file)
+  if (earlier_file)
     {
       /* Avoid damaging the destination filesystem by refusing to preserve
 	 hard-linked directories (which are found at least in Netapp snapshot
@@ -1436,7 +1457,7 @@ copy (const char *src_path, const char *dst_path,
      exceptional cases, but in this case, I don't see a way to derive the
      top level source and destination directory names where they're used.
      An alternative is to use COPY_INTO_SELF and print the diagnostic
-     from every caller -- but I don't wan't to do that.  */
+     from every caller -- but I don't want to do that.  */
   top_level_src_path = src_path;
   top_level_dst_path = dst_path;
 
