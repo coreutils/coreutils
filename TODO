@@ -124,7 +124,8 @@ sort: Investigate better sorting algorithms; see Knuth vol. 3.
   5.3.1, who credits Lester Ford, Jr. and Selmer Johnson, American
   Mathematical Monthly 66 (1959), 387-389.
 
-Document the exit status of each and every program.
+doc/coreutils.texi:
+  Document the exit status of each and every program.
   Suggestion from Dan Jacobson.
   The sentence or two describing the common case must appear just once,
   and then it must be made to appear in the 70+ places where it's needed.
