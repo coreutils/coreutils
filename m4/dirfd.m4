@@ -31,38 +31,38 @@ AC_DEFUN([UTILS_FUNC_DIRFD],
     AC_REPLACE_FUNCS([dirfd])
     AC_CACHE_CHECK(
 	      [how to get the file descriptor associated with an open DIR*],
-		   ac_cv_sys_dir_to_fd,
+		   ac_cv_sys_dir_fd_member_name,
       [
         dirfd_save_DEFS=$DEFS
-	for ac_expr in						\
-								\
-	    'dir_p->d_fd'					\
-								\
-	    'dir_p->dd_fd'					\
-								\
-	    '# systems for which the info is not available'	\
-	    -1							\
-	    ; do
+	for ac_expr in d_fd dd_fd; do
 
-	  # Skip each embedded comment.
-	  case "$ac_expr" in '#'*) continue;; esac
-
-	  DEFS="$DEFS -DDIR_TO_FD=$ac_expr"
+	  DEFS="$DEFS -DDIR_FD_MEMBER_NAME=$ac_expr"
 	  AC_TRY_COMPILE(
 	    [$dirfd_headers
 	    ],
-	    [DIR *dir_p = opendir("."); (void) ($ac_expr);],
-	    dir_fd_done=yes
+	    [DIR *dir_p = opendir("."); (void) dir_p->DIR_FD_MEMBER_NAME;],
+	    dir_fd_found=yes
 	  )
 	  DEFS=$dirfd_save_DEFS
-	  test "$dir_fd_done" = yes && break
+	  test "$dir_fd_found" = yes && break
 	done
+	test "$dir_fd_found" = yes || ac_expr=-1
 
-	ac_cv_sys_dir_to_fd=$ac_expr
+	ac_cv_sys_dir_fd_member_name=$ac_expr
       ]
     )
-    AC_DEFINE_UNQUOTED(DIR_TO_FD,
-      $ac_cv_sys_dir_to_fd,
-      [the file descriptor associated with `dir_p'])
+    if test $ac_cv_have_decl_dirfd = -1; then
+      AC_DEFINE_UNQUOTED(DIR_FD_MEMBER_NAME,
+	$ac_cv_sys_dir_fd_member_name,
+	[the name of the file descriptor member of DIR])
+    fi
+    AH_VERBATIM(DIR_TO_FD,
+		[#ifdef DIR_FD_MEMBER_NAME
+		 # define DIR_TO_FD(Dir_p) ((Dir_p)->DIR_FD_MEMBER_NAME)
+		 #else
+		 # define DIR_TO_FD(Dir_p) -1
+		 #endif
+		 ]
+		)
   fi
 ])
