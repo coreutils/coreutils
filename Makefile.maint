@@ -126,14 +126,14 @@ sc_space_tab:
 	  { echo '$(ME): found SPACE-TAB sequence; remove the SPACE'	\
 		1>&2; exit 1; } || :
 
-# Don't use atoi, atof, or atol in `real' code.
+# Don't use atoi, atof, atol, atoll, or atoq in `real' code.
 # They provide no error checking mechanism.
 # Instead, use strto* functions.
 sc_prohibit_atoi_atof:
 	@( cvsu --list ) > /dev/null 2>&1 || : &&			\
-	  grep '\<ato[fil]\>'						\
+	  grep -E '\<(ato[filq]|atoll)\>'				\
 	     $$(cvsu --list | grep -vEf .x-$@ ) &&			\
-	  { echo '$(ME): do not use atof, atoi, or atol'		\
+	  { echo '$(ME): do not use atof, atoi, atol, atoll, or atoq'	\
 		1>&2; exit 1; } || :
 
 # Using EXIT_SUCCESS as the first argument to error is misleading,
