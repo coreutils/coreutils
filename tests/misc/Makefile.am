@@ -10,5 +10,6 @@ TESTS_ENVIRONMENT = \
   PROG=$$tst
 
 TESTS = \
+  cat-tty-eof \
   printf-hex \
   nl split-l printf split-a head-pos sort head-c csplit nice pathchk1
