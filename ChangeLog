@@ -1,6 +1,11 @@
-2003-04-05  Jim Meyering  <jim@meyering.net>
+2003-04-06  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
+
+	* Makefile.maint (makefile-check): New rule.
+	(local-check): Add it.
+
+2003-04-05  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (nearly all of them):
 	Use $(VAR) rather than @VAR@, now that we can rely on automake to
