@@ -40,7 +40,7 @@ char *xmalloc ();
 char *xrealloc ();
 
 static int change_dir_mode __P ((char *dir, struct mode_change *changes,
-			    struct stat *statp));
+				 struct stat *statp));
 
 /* The name the program was run with. */
 char *program_name;
