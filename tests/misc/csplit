@@ -1,5 +1,5 @@
 #!/bin/sh
-# csplit could get a failed assertion prior to 2.0.17
+# various csplit tests
 
 if test "$VERBOSE" = yes; then
   set -x
@@ -24,16 +24,24 @@ fi
 
 fail=0
 
+# csplit could get a failed assertion to 2.0.17
 (echo a; echo; echo) > in
 csplit in '/^$/' 2 > out || fail=1
-
 cat <<EOF > exp
 2
 0
 2
 EOF
-
 cmp out exp || fail=1
 test $fail = 1 && diff out exp 2> /dev/null
+rm -f in out exp
+
+# csplit would infloop
+(echo; echo a) > in
+csplit in '/a/-1' '{*}' > out || fail=1
+cat <<EOF > exp
+0
+3
+EOF
 
 (exit $fail); exit
