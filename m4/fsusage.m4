@@ -1,4 +1,4 @@
-#serial 6
+#serial 7
 
 # From fileutils/configure.in
 
@@ -188,12 +188,6 @@ if test $ac_fsusage_space = no; then
     ac_fsusage_space=yes)
 fi
 
-dnl FIXME: this should use AS_IF instead:
-dnl AS_IF([test $ac_fsusage_space = found], [$1], [$2])
-if test $ac_fsusage_space = yes; then
-$1
-else
-$2
-fi
+AS_IF([test $ac_fsusage_space = found], [$1], [$2])
 
 ])
