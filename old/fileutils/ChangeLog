@@ -1,5 +1,7 @@
 2000-07-30  Jim Meyering  <meyering@lucent.com>
 
+	* Version 4.0y.
+
 	* src/df.c: Convert "`%s'" in format strings to "%s", and wrap each
 	corresponding argument in a `quote (...)' call.
 	* src/dircolors.c: Likewise.
@@ -9,6 +11,7 @@
 	* src/mknod.c: Likewise.
 	* src/shred.c: Likewise.
 	* src/rmdir.c: Likewise.
+	* src/cp-hash.c: Likewise.
 
 	* src/chgrp.c: Convert "`%s'" in format strings to "%s", and wrap each
 	corresponding argument in a `quote (...)' call.
@@ -22,6 +25,7 @@
 	* tests/help-version: ...here
 	* tests/Makefile.am (TESTS): Set to help-version.
 	(TESTS_ENVIRONMENT): Define.
+	(EXTRA_DIST): Add $(TESTS).
 	* src/Makefile.am (EXTRA_DIST): Remove help-version.
 	(TESTS): Remove definition.
 	(TESTS_ENVIRONMENT): Remove definition.
