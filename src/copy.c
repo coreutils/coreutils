@@ -1,5 +1,5 @@
 /* copy.c -- core functions for copying files and directories
-   Copyright (C) 89, 90, 91, 1995-2004 Free Software Foundation.
+   Copyright (C) 89, 90, 91, 1995-2005 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -1649,6 +1649,7 @@ valid_options (const struct cp_options *co)
   assert (co != NULL);
   assert (VALID_BACKUP_TYPE (co->backup_type));
   assert (VALID_SPARSE_MODE (co->sparse_mode));
+  assert (!(co->hard_link && co->symbolic_link));
   return true;
 }
 
