@@ -30,6 +30,9 @@ po-check:
 	diff -u $@-1 $@-2
 	rm -f $@-1 $@-2
 
+# Do not save the original name or timestamp in the .tar.gz file.
+GZIP_ENV = --no-name
+
 # Tag before making distribution.  Also, don't make a distribution if
 # checks fail.  Also, make sure the NEWS file is up-to-date.
 # FIXME: use dist-hook/my-dist like distcheck-hook/my-distcheck.
