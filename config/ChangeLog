@@ -1,3 +1,16 @@
+2002-11-09  Jim Meyering  <jim@meyering.net>
+
+	Make it work even when names contain spaces or shell metachars.
+	* install-sh: Write diagnostics to stderr, not stdout.
+	Normalize spacing in diagnostics: use one space (not two, and not a TAB)
+	after the leading `install:'.
+	Add double quotes around `$src' here: $doit $instcmd "$src" "$dsttmp"
+
+	Merge in some changes from the version in automake.
+	* install-sh: Remove unnecessary quotes around `case' argument.
+	Use `[ cond1 ] || [ cond2 ]' rather than `[ cond1 -o cond2 ]'.
+	Use `:' rather than `true'.
+
 2002-02-17  Jim Meyering  <jim@meyering.net>
 
 	* config.guess (main): Don't use `head -1'; it's no longer portable.
