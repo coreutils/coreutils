@@ -1,3 +1,9 @@
+2001-03-13  Jim Meyering  <meyering@lucent.com>
+
+	* path-concat.c (path_concat) [FILESYSTEM_ACCEPTS_DRIVE_LETTER_PREFIX]:
+	Don't insert a backslash when concatenating e.g., `C:' and `foo'.
+	From Bruno Haible.
+
 2001-03-06  Bruno Haible  <haible@clisp.cons.org>
 
 	* localcharset.c (locale_charset): Don't use setlocale(LC_CTYPE,NULL).
