@@ -1,5 +1,9 @@
 2003-06-18  Jim Meyering  <jim@meyering.net>
 
+	Merge in change from gnulib.
+	* makepath.c: Remove block of alloca-related code in favor
+	of an unconditional `#include <alloca.h>'.
+
 	* xalloc.h: Include <stddef.h>.
 	Remove unnecessary parentheses.
 	Use `1990-2000' notation in Copyright line until Emacs'
