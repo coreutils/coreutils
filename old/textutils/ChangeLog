@@ -1,6 +1,5 @@
 2002-02-18  Jim Meyering  <meyering@lucent.com>
 
-
 	* Version 2.0.21.
 
 	* tests/tail/Test.pm: For tests matching /^(obs|err-[134])/,
