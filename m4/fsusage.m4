@@ -1,11 +1,34 @@
-#serial 12
+# fsusage.m4 serial 13
+# Obtaining file system usage information.
 
-# From fileutils/configure.in
+# Copyright (C) 1997, 1998, 2000, 2001, 2003, 2004 Free Software
+# Foundation, Inc.
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software Foundation,
+# Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+# Written by Jim Meyering.
 
 AC_DEFUN([gl_FSUSAGE],
 [
   AC_CHECK_HEADERS_ONCE(sys/param.h)
-  AC_CHECK_HEADERS(sys/mount.h sys/vfs.h sys/fs_types.h)
+  AC_CHECK_HEADERS_ONCE(sys/vfs.h sys/fs_types.h)
+  AC_CHECK_HEADERS(sys/mount.h, [], [],
+    [AC_INCLUDES_DEFAULT
+     [#if HAVE_SYS_PARAM_H
+       #include <sys/param.h>
+      #endif]])
   gl_FILE_SYSTEM_USAGE([gl_cv_fs_space=yes], [gl_cv_fs_space=no])
   if test $gl_cv_fs_space = yes; then
     AC_LIBOBJ(fsusage)
