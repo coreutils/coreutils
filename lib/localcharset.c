@@ -17,7 +17,7 @@
    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
    USA.  */
 
-/* Written by Bruno Haible <haible@clisp.cons.org>.  */
+/* Written by Bruno Haible <bruno@clisp.org>.  */
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
@@ -80,6 +80,11 @@
 #ifdef HAVE_GETC_UNLOCKED
 # undef getc
 # define getc getc_unlocked
+#endif
+
+#ifdef __cplusplus
+/* When compiling with "gcc -x c++", produce a function with C linkage.  */
+extern "C" const char * locale_charset (void);
 #endif
 
 /* The following static variable is declared 'volatile' to avoid a
@@ -201,7 +206,20 @@ get_charset_aliases ()
 
 # if defined WIN32
       cp = "CP936" "\0" "GBK" "\0"
-	   "CP1361" "\0" "JOHAB" "\0";
+	   "CP1361" "\0" "JOHAB" "\0"
+	   "CP20127" "\0" "ASCII" "\0"
+	   "CP20866" "\0" "KOI8-R" "\0"
+	   "CP21866" "\0" "KOI8-RU" "\0"
+	   "CP28591" "\0" "ISO-8859-1" "\0"
+	   "CP28592" "\0" "ISO-8859-2" "\0"
+	   "CP28593" "\0" "ISO-8859-3" "\0"
+	   "CP28594" "\0" "ISO-8859-4" "\0"
+	   "CP28595" "\0" "ISO-8859-5" "\0"
+	   "CP28596" "\0" "ISO-8859-6" "\0"
+	   "CP28597" "\0" "ISO-8859-7" "\0"
+	   "CP28598" "\0" "ISO-8859-8" "\0"
+	   "CP28599" "\0" "ISO-8859-9" "\0"
+	   "CP28605" "\0" "ISO-8859-15" "\0";
 # endif
 #endif
 
@@ -267,7 +285,7 @@ locale_charset ()
 
   static char buf[2 + 10 + 1];
 
-  /* Win32 has a function returning the locale's codepage as a number.  */
+  /* Woe32 has a function returning the locale's codepage as a number.  */
   sprintf (buf, "CP%u", GetACP ());
   codeset = buf;
 
@@ -340,6 +358,12 @@ locale_charset ()
 	codeset = aliases + strlen (aliases) + 1;
 	break;
       }
+
+  /* Don't return an empty string.  GNU libc and GNU libiconv interpret
+     the empty string as denoting "the locale's character encoding",
+     thus GNU libiconv would call this function a second time.  */
+  if (codeset[0] == '\0')
+    codeset = "ASCII";
 
   return codeset;
 }

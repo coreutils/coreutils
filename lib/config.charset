@@ -34,7 +34,7 @@
 #   ASCII, ANSI_X3.4-1968     glibc solaris freebsd
 #   ISO-8859-1                glibc aix hpux irix osf solaris freebsd   yes
 #   ISO-8859-2                glibc aix hpux irix osf solaris freebsd   yes
-#   ISO-8859-3                glibc                                     yes
+#   ISO-8859-3                glibc solaris                             yes
 #   ISO-8859-4                osf solaris freebsd                       yes
 #   ISO-8859-5                glibc aix hpux irix osf solaris freebsd   yes
 #   ISO-8859-6                glibc aix hpux solaris                    yes
@@ -42,9 +42,11 @@
 #   ISO-8859-8                glibc aix hpux osf solaris                yes
 #   ISO-8859-9                glibc aix hpux irix osf solaris           yes
 #   ISO-8859-13               glibc
+#   ISO-8859-14               glibc
 #   ISO-8859-15               glibc aix osf solaris freebsd
 #   KOI8-R                    glibc solaris freebsd                     yes
 #   KOI8-U                    glibc freebsd                             yes
+#   KOI8-T                    glibc
 #   CP437                     dos
 #   CP775                     dos
 #   CP850                     aix osf dos
@@ -58,35 +60,38 @@
 #   CP865                     dos
 #   CP866                     freebsd dos
 #   CP869                     dos
-#   CP874                     win32 dos
+#   CP874                     woe32 dos
 #   CP922                     aix
-#   CP932                     aix win32 dos
+#   CP932                     aix woe32 dos
 #   CP943                     aix
-#   CP949                     osf win32 dos
-#   CP950                     win32 dos
+#   CP949                     osf woe32 dos
+#   CP950                     woe32 dos
 #   CP1046                    aix
 #   CP1124                    aix
+#   CP1125                    dos
 #   CP1129                    aix
-#   CP1250                    win32
-#   CP1251                    glibc win32
-#   CP1252                    aix win32
-#   CP1253                    win32
-#   CP1254                    win32
-#   CP1255                    win32
-#   CP1256                    win32
-#   CP1257                    win32
+#   CP1250                    woe32
+#   CP1251                    glibc woe32
+#   CP1252                    aix woe32
+#   CP1253                    woe32
+#   CP1254                    woe32
+#   CP1255                    glibc woe32
+#   CP1256                    woe32
+#   CP1257                    woe32
 #   GB2312                    glibc aix hpux irix solaris freebsd       yes
 #   EUC-JP                    glibc aix hpux irix osf solaris freebsd   yes
 #   EUC-KR                    glibc aix hpux irix osf solaris freebsd   yes
 #   EUC-TW                    glibc aix hpux irix osf solaris
 #   BIG5                      glibc aix hpux osf solaris freebsd        yes
-#   BIG5-HKSCS                glibc
-#   GBK                       aix osf win32 dos
-#   GB18030                   glibc
+#   BIG5-HKSCS                glibc solaris
+#   GBK                       glibc aix osf solaris woe32 dos
+#   GB18030                   glibc solaris
 #   SHIFT_JIS                 hpux osf solaris freebsd                  yes
-#   JOHAB                     glibc win32
+#   JOHAB                     glibc solaris woe32
 #   TIS-620                   glibc aix hpux osf solaris
 #   VISCII                    glibc                                     yes
+#   TCVN5712-1                glibc
+#   GEORGIAN-PS               glibc
 #   HP-ROMAN8                 hpux
 #   HP-ARABIC8                hpux
 #   HP-GREEK8                 hpux
@@ -217,6 +222,7 @@ case "$os" in
 	echo "646 ASCII"
 	echo "ISO8859-1 ISO-8859-1"
 	echo "ISO8859-2 ISO-8859-2"
+	echo "ISO8859-3 ISO-8859-3"
 	echo "ISO8859-4 ISO-8859-4"
 	echo "ISO8859-5 ISO-8859-5"
 	echo "ISO8859-6 ISO-8859-6"
@@ -226,9 +232,13 @@ case "$os" in
 	echo "ISO8859-15 ISO-8859-15"
 	echo "koi8-r KOI8-R"
 	echo "BIG5 BIG5"
+	echo "Big5-HKSCS BIG5-HKSCS"
 	echo "gb2312 GB2312"
+	echo "GBK GBK"
+	echo "GB18030 GB18030"
 	echo "cns11643 EUC-TW"
 	echo "5601 EUC-KR"
+	echo "ko_KR.johap92 JOHAB"
 	echo "eucJP EUC-JP"
 	echo "PCK SHIFT_JIS"
 	echo "TIS620.2533 TIS-620"
@@ -272,6 +282,20 @@ case "$os" in
 	echo "ja_JP.Shift_JIS SHIFT_JIS"
 	echo "ko_KR.EUC EUC-KR"
 	;;
+    netbsd*)
+	echo "646 ASCII"
+	echo "ISO8859-1 ISO-8859-1"
+	echo "ISO8859-2 ISO-8859-2"
+	echo "ISO8859-4 ISO-8859-4"
+	echo "ISO8859-5 ISO-8859-5"
+	echo "ISO8859-15 ISO-8859-15"
+	echo "eucCN GB2312"
+	echo "eucJP EUC-JP"
+	echo "eucKR EUC-KR"
+	echo "eucTW EUC-TW"
+	echo "BIG5 BIG5"
+	echo "SJIS SHIFT_JIS"
+	;;
     beos*)
 	# BeOS has a single locale, and it has UTF-8 encoding.
 	echo "* UTF-8"
@@ -286,7 +310,7 @@ case "$os" in
 	echo "# country is not the one your DOS machine actually uses, just"
 	echo "# correct it in this file, and send a mail to"
 	echo "# Juan Manuel Guerrero <st001906@hrz1.hrz.tu-darmstadt.de>"
-	echo "# and Bruno Haible <haible@clisp.cons.org>."
+	echo "# and Bruno Haible <bruno@clisp.org>."
 	echo "#"
 	echo "C ASCII"
 	# ISO-8859-1 languages
@@ -396,8 +420,10 @@ case "$os" in
 	echo "bg_BG CP866" # not CP855 ??
 	echo "mk CP866"    # not CP855 ??
 	echo "mk_MK CP866" # not CP855 ??
-	echo "ru KOI8-R"    # not CP866 ??
-	echo "ru_RU KOI8-R" # not CP866 ??
+	echo "ru CP866"
+	echo "ru_RU CP866"
+	echo "uk CP1125"
+	echo "uk_UA CP1125"
 	# ISO-8859-6 languages
 	echo "ar CP864"
 	echo "ar_AE CP864"
