@@ -34,6 +34,7 @@ START-INFO-DIR-ENTRY
 * factor: (sh-utils)factor invocation.          Print prime factors
 * false: (sh-utils)false invocation.            Do nothing, unsuccessfully.
 * groups: (sh-utils)groups invocation.          Print group names a user is in.
+* hostid: (sh-utils)hostid invocation.          Print numeric host identifier.
 * hostname: (sh-utils)hostname invocation.      Print or set system name.
 * id: (sh-utils)id invocation.                  Print real/effective uid/gid.
 * logname: (sh-utils)logname invocation.        Print current login name.
@@ -2180,6 +2181,7 @@ information.
 * date invocation::             Print or set system date and time.
 * uname invocation::            Print system information.
 * hostname invocation::         Print or set system name.
+* hostid invocation::           Print numeric host identifier.
 @end menu
 
 
@@ -2714,7 +2716,6 @@ Print the operating system version.
 
 @end table
 
-
 @node hostname invocation
 @section @code{hostname}: Print or set system name
 
@@ -2735,6 +2736,29 @@ hostname [@var{name}]
 
 The only options are @samp{--help} and @samp{--version}.  @xref{Common
 options}.
+
+
+@node hostid invocation
+@section @code{hostid}: Print numeric host identifier.
+
+@pindex hostid
+@cindex printing the host identifier
+
+@code{hostid} prints the numeric identifier of the current host
+in hexadecimal.  This command accepts no arguments.
+The only options are @samp{--help} and @samp{--version}.
+@xref{Common options}.
+
+For example, here's what it prints on one system I use:
+
+@example
+$ hostid
+1bac013d
+@end example
+
+On that system, the 32-bit quantity happens to be closely
+related to the system's Internet address, but that isn't always
+the case.
 
 
 @node Modified command invocation
