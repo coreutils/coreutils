@@ -1,3 +1,10 @@
+2001-11-05  Jim Meyering  <meyering@lucent.com>
+
+	* coreutils.texi (sort invocation): Recommend setting LC_ALL=C,
+	not LC_COLLATE=C.  Explain how the latter can cause problems.
+	Based on a message from Paul Eggert.
+	(ls invocation): Recommend setting LC_ALL=C, not LC_COLLATE=C.
+
 2001-10-21  Jim Meyering  <meyering@lucent.com>
 
 	* coreutils.texi (cp invocation): Describe --reply=...
