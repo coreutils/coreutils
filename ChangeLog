@@ -2,6 +2,13 @@
 
 	* Version 5.2.0.
 
+	`make check' from a build inside a chroot environment would fail
+	* tests/help-version: Specify an argument (`/') for df, in the
+	unusual event that there is no valid entry in /etc/mtab.
+	Likewise for id: add the -u option, so we don't get spurious
+	failures when there are no user or group names.
+	Patch by Tim Waugh.
+
 	* src/sort.c (usage) [-u]: Add punctuation so that the description in
 	the help2man-generated (line-joined) man page is more readable.
 	Reported by Tim Waugh.
