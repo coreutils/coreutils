@@ -37,12 +37,12 @@ int statfs ();
 # include <sys/vfs.h>
 #endif
 
-#if HAVE_SYS_FS_S5PARAM_H /* Fujitsu UXP/V */
+#if HAVE_SYS_FS_S5PARAM_H	/* Fujitsu UXP/V */
 # include <sys/fs/s5param.h>
 #endif
 
-#if defined(HAVE_SYS_FILSYS_H) && !defined(_CRAY)
-# include <sys/filsys.h>		/* SVR2.  */
+#if defined (HAVE_SYS_FILSYS_H) && !defined (_CRAY)
+# include <sys/filsys.h>	/* SVR2 */
 #endif
 
 #if HAVE_FCNTL_H
@@ -53,11 +53,11 @@ int statfs ();
 # include <sys/statfs.h>
 #endif
 
-#if HAVE_DUSTAT_H		/* AIX PS/2.  */
+#if HAVE_DUSTAT_H		/* AIX PS/2 */
 # include <sys/dustat.h>
 #endif
 
-#if HAVE_SYS_STATVFS_H	/* SVR4.  */
+#if HAVE_SYS_STATVFS_H		/* SVR4 */
 # include <sys/statvfs.h>
 int statvfs ();
 #endif
@@ -78,11 +78,11 @@ adjust_blocks (blocks, fromsize, tosize)
   if (fromsize <= 0)
     return -1;
 
-  if (fromsize == tosize)	/* E.g., from 512 to 512.  */
+  if (fromsize == tosize)	/* e.g., from 512 to 512 */
     return blocks;
-  else if (fromsize > tosize)	/* E.g., from 2048 to 512.  */
+  else if (fromsize > tosize)	/* e.g., from 2048 to 512 */
     return blocks * (fromsize / tosize);
-  else				/* E.g., from 256 to 512.  */
+  else				/* e.g., from 256 to 512 */
     return (blocks + (blocks < 0 ? -1 : 1)) / (tosize / fromsize);
 }
 
@@ -98,31 +98,38 @@ get_fs_usage (path, disk, fsp)
      const char *disk;
      struct fs_usage *fsp;
 {
-#if defined (STAT_STATFS3_OSF1)
+#ifdef STAT_STATFS3_OSF1
+# define CONVERT_BLOCKS(B) adjust_blocks ((B), fsd.f_fsize, 512)
+
   struct statfs fsd;
 
   if (statfs (path, &fsd, sizeof (struct statfs)) != 0)
     return -1;
-# define CONVERT_BLOCKS(b) adjust_blocks ((b), fsd.f_fsize, 512)
+
 #endif /* STAT_STATFS3_OSF1 */
 
-#ifdef STAT_STATFS2_FS_DATA	/* Ultrix.  */
+#ifdef STAT_STATFS2_FS_DATA	/* Ultrix */
+# define CONVERT_BLOCKS(B) adjust_blocks ((B), 1024, 512)
+
   struct fs_data fsd;
 
   if (statfs (path, &fsd) != 1)
     return -1;
-# define CONVERT_BLOCKS(b) adjust_blocks ((b), 1024, 512)
   fsp->fsu_blocks = CONVERT_BLOCKS (fsd.fd_req.btot);
   fsp->fsu_bfree = CONVERT_BLOCKS (fsd.fd_req.bfree);
   fsp->fsu_bavail = CONVERT_BLOCKS (fsd.fd_req.bfreen);
   fsp->fsu_files = fsd.fd_req.gtot;
   fsp->fsu_ffree = fsd.fd_req.gfree;
-#endif
 
-#ifdef STAT_READ_FILSYS		/* SVR2.  */
+#endif /* STAT_STATFS2_FS_DATA */
+
+#ifdef STAT_READ_FILSYS		/* SVR2 */
 # ifndef SUPERBOFF
 #  define SUPERBOFF (SUPERB * 512)
 # endif
+# define CONVERT_BLOCKS(B) \
+    adjust_blocks ((B), (fsd.s_type == Fs2b ? 1024 : 512), 512)
+
   struct filsys fsd;
   int fd;
 
@@ -136,21 +143,24 @@ get_fs_usage (path, disk, fsp)
       return -1;
     }
   close (fd);
-# define CONVERT_BLOCKS(b) adjust_blocks ((b), (fsd.s_type == Fs2b ? 1024 : 512), 512)
   fsp->fsu_blocks = CONVERT_BLOCKS (fsd.s_fsize);
   fsp->fsu_bfree = CONVERT_BLOCKS (fsd.s_tfree);
   fsp->fsu_bavail = CONVERT_BLOCKS (fsd.s_tfree);
   fsp->fsu_files = (fsd.s_isize - 2) * INOPB * (fsd.s_type == Fs2b ? 2 : 1);
   fsp->fsu_ffree = fsd.s_tinode;
-#endif
 
-#ifdef STAT_STATFS2_BSIZE	/* 4.3BSD, SunOS 4, HP-UX, AIX.  */
+#endif /* STAT_READ_FILSYS */
+
+#ifdef STAT_STATFS2_BSIZE	/* 4.3BSD, SunOS 4, HP-UX, AIX */
+# define CONVERT_BLOCKS(B) adjust_blocks ((B), fsd.f_bsize, 512)
+
   struct statfs fsd;
 
   if (statfs (path, &fsd) < 0)
     return -1;
 
 # ifdef STATFS_TRUNCATES_BLOCK_COUNTS
+
   /* In SunOS 4.1.2, 4.1.3, and 4.1.3_U1, the block counts in the
      struct statfs are truncated to 2GB.  These conditions detect that
      truncation, presumably without botching the 4.1.1 case, in which
@@ -164,18 +174,33 @@ get_fs_usage (path, disk, fsp)
     }
 # endif /* STATFS_TRUNCATES_BLOCK_COUNTS */
 
-# define CONVERT_BLOCKS(b) adjust_blocks ((b), fsd.f_bsize, 512)
-#endif
+#endif /* STAT_STATFS2_BSIZE */
 
-#ifdef STAT_STATFS2_FSIZE	/* 4.4BSD.  */
+#ifdef STAT_STATFS2_FSIZE	/* 4.4BSD */
+# define CONVERT_BLOCKS(B) adjust_blocks ((B), fsd.f_fsize, 512)
+
   struct statfs fsd;
 
   if (statfs (path, &fsd) < 0)
     return -1;
-# define CONVERT_BLOCKS(b) adjust_blocks ((b), fsd.f_fsize, 512)
-#endif
 
-#ifdef STAT_STATFS4		/* SVR3, Dynix, Irix, AIX.  */
+#endif /* STAT_STATFS2_FSIZE */
+
+#ifdef STAT_STATFS4		/* SVR3, Dynix, Irix, AIX */
+# if _AIX || defined(_CRAY)
+#  define CONVERT_BLOCKS(B) adjust_blocks ((B), fsd.f_bsize, 512)
+#  ifdef _CRAY
+#   define f_bavail f_bfree
+#  endif
+# else
+#  define CONVERT_BLOCKS(B) (B)
+#  ifndef _SEQUENT_		/* _SEQUENT_ is DYNIX/ptx */
+#   ifndef DOLPHIN		/* DOLPHIN 3.8.alfa/7.18 has f_bavail */
+#    define f_bavail f_bfree
+#   endif
+#  endif
+# endif
+
   struct statfs fsd;
 
   if (statfs (path, &fsd, sizeof fsd, 0) < 0)
@@ -183,38 +208,31 @@ get_fs_usage (path, disk, fsp)
   /* Empirically, the block counts on most SVR3 and SVR3-derived
      systems seem to always be in terms of 512-byte blocks,
      no matter what value f_bsize has.  */
-# if _AIX || defined(_CRAY)
-#  define CONVERT_BLOCKS(b) adjust_blocks ((b), fsd.f_bsize, 512)
-#  ifdef _CRAY
-#   define f_bavail f_bfree
-#  endif
-# else
-#  define CONVERT_BLOCKS(b) (b)
-#  ifndef _SEQUENT_		/* _SEQUENT_ is DYNIX/ptx.  */
-#   ifndef DOLPHIN		/* DOLPHIN 3.8.alfa/7.18 has f_bavail */
-#    define f_bavail f_bfree
-#   endif
-#  endif
-# endif
-#endif
 
-#ifdef STAT_STATVFS		/* SVR4.  */
+#endif /* STAT_STATFS4 */
+
+#ifdef STAT_STATVFS		/* SVR4 */
+# define CONVERT_BLOCKS(B) \
+    adjust_blocks ((B), fsd.f_frsize ? fsd.f_frsize : fsd.f_bsize, 512)
+
   struct statvfs fsd;
 
   if (statvfs (path, &fsd) < 0)
     return -1;
   /* f_frsize isn't guaranteed to be supported.  */
-# define CONVERT_BLOCKS(b) \
-  adjust_blocks ((b), fsd.f_frsize ? fsd.f_frsize : fsd.f_bsize, 512)
-#endif
 
-#if !defined(STAT_STATFS2_FS_DATA) && !defined(STAT_READ_FILSYS) /* !Ultrix && !SVR2.  */
+#endif /* STAT_STATVFS */
+
+#if !defined(STAT_STATFS2_FS_DATA) && !defined(STAT_READ_FILSYS)
+				/* !Ultrix && !SVR2 */
+
   fsp->fsu_blocks = CONVERT_BLOCKS (fsd.f_blocks);
   fsp->fsu_bfree = CONVERT_BLOCKS (fsd.f_bfree);
   fsp->fsu_bavail = CONVERT_BLOCKS (fsd.f_bavail);
   fsp->fsu_files = fsd.f_files;
   fsp->fsu_ffree = fsd.f_ffree;
-#endif
+
+#endif /* not STAT_STATFS2_FS_DATA && not STAT_READ_FILSYS */
 
   return 0;
 }
@@ -245,4 +263,5 @@ statfs (path, fsb)
   fsb->f_fsid.val[1] = fsd.du_pckno;
   return 0;
 }
+
 #endif /* _AIX && _I386 */
