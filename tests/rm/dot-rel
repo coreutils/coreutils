@@ -1,5 +1,6 @@
 #!/bin/sh
-# use rm -r to remove two non-empty dot-relative directories.
+# Use rm -r to remove two non-empty dot-relative directories.
+# This would have failed between 2004-10-18 and 2004-10-21.
 
 if test "$VERBOSE" = yes; then
   set -x
