@@ -45,15 +45,31 @@ $prog '3 \x40\n'      >> out || fail=1
 POSIXLY_CORRECT=1 \
 $prog '4 \x40\n'      >> out || fail=1
 $prog '5 % +d\n' 234  >> out || fail=1
+
+# This should print "6 !\n", but don't rely on `!' being the
+# one-byte representation of octal 041.  With printf prior to
+# coreutils-5.0.1, it would print six bytes: "6 \41\n".
+$prog '6 \41\n' | tr '\41' '!' >> out
+
+# Note that as of coreutils-5.0.1, printf with a format of '\0002x'
+# prints a NUL byte followed by the digit `2' and an `x'.
+# By contrast bash's printf outputs the same thing as $(printf '\2x') does.
+$prog '7 \2y \02y \002y \0002y\n' |tr '\0\2' '*=' >> out
+
+$prog '8 %b %b %b %b\n' '\1y' '\01y' '\001y' '\0001y'|tr '\1' = >> out
+
 cat <<\EOF > exp
 1 x  y
 2 \x
 3 @
 4 \x40
 5 +234
+6 !
+7 =y =y =y *2y
+8 =y =y =y =y
 EOF
 
 cmp out exp || fail=1
-test $fail = 1 && diff out exp 2> /dev/null
+test $fail = 1 && diff -au out exp 2> /dev/null
 
 (exit $fail); exit $fail
