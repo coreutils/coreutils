@@ -58,7 +58,7 @@ extern int errno;
 
 #define AUTHORS "David MacKenzie and Jim Meyering"
 
-#ifdef _POSIX_VERSION
+#if HAVE_PATHCONF
 # ifndef PATH_MAX
 #  define PATH_MAX_FOR(p) pathconf_wrapper ((p), _PC_PATH_MAX)
 # endif /* not PATH_MAX */
@@ -66,7 +66,7 @@ extern int errno;
 #  define NAME_MAX_FOR(p) pathconf_wrapper ((p), _PC_NAME_MAX);
 # endif /* not NAME_MAX */
 
-#else /* not _POSIX_VERSION */
+#else
 
 # include <sys/param.h>
 # ifndef PATH_MAX
@@ -85,7 +85,7 @@ extern int errno;
 #  endif /* not MAXNAMLEN */
 # endif /* not NAME_MAX */
 
-#endif /* not _POSIX_VERSION */
+#endif
 
 #ifndef _POSIX_PATH_MAX
 # define _POSIX_PATH_MAX 255
