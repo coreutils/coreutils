@@ -1,6 +1,7 @@
 #!/bin/sh
 
 # This is a bit of a torture test for mkdir -p, too.
+# Also make sure du can process this tree without using too much stack space.
 # GNU rm performs *much* better on systems that have a d_type member
 # in the directory structure because then it does only one stat per
 # command line argument.
@@ -37,6 +38,13 @@ echo done
 
 # Make sure the deep dir was created.
 test -d $deep || fail=1
+
+# Make sure du can handle it without lots using of stack.
+# Before switching to the non-recursive, fts-based version of du,
+# this invocation of du would require a stack of at least 115KB
+# on an x86 linux-2.4.22 system.  The fts-based version needs
+# only 8KB on that same system.
+( ulimit -s 50; du -s $deep > /dev/null ) || fail=1
 
 echo "deleting $tmp..." |tr -d '\n'
 rm -r $tmp || fail=1
