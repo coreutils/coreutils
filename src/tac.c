@@ -85,7 +85,7 @@ static int separator_ends_record;
 /* 0 if `separator' is to be matched as a regular expression;
    otherwise, the length of `separator', used as a sentinel to
    stop the search. */
-static int sentinel_length;
+static size_t sentinel_length;
 
 /* The length of a match with `separator'.  If `sentinel_length' is 0,
    `match_length' is computed every time a match succeeds;
@@ -419,7 +419,6 @@ save_stdin (FILE **g_tmp, char **g_tempfile)
   static char *tempdir;
   char *tempfile;
   FILE *tmp;
-  ssize_t bytes_read;
   int fd;
 
   if (template == NULL)
@@ -447,10 +446,10 @@ save_stdin (FILE **g_tmp, char **g_tempfile)
 
   while (1)
     {
-      bytes_read = safe_read (STDIN_FILENO, G_buffer, read_size);
+      size_t bytes_read = safe_read (STDIN_FILENO, G_buffer, read_size);
       if (bytes_read == 0)
 	break;
-      if (bytes_read < 0)
+      if (bytes_read == SAFE_READ_ERROR)
 	error (EXIT_FAILURE, errno, _("stdin: read error"));
 
       if (fwrite (G_buffer, 1, bytes_read, tmp) != bytes_read)
@@ -572,7 +571,7 @@ tac_stdin_to_mem (void)
 
   while (1)
     {
-      ssize_t bytes_read;
+      size_t bytes_read;
       if (buf == NULL)
 	buf = (char *) malloc (bufsiz);
       else
@@ -589,7 +588,7 @@ tac_stdin_to_mem (void)
       bytes_read = safe_read (STDIN_FILENO, buf + n_bytes, bufsiz - n_bytes);
       if (bytes_read == 0)
 	break;
-      if (bytes_read < 0)
+      if (bytes_read == SAFE_READ_ERROR)
 	error (EXIT_FAILURE, errno, _("stdin: read error"));
       n_bytes += bytes_read;
 
