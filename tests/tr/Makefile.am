@@ -2,7 +2,7 @@
 
 AUTOMAKE_OPTIONS = 1.0
 
-EXTRA_DIST = build-script.pl main test.data.pl
+EXTRA_DIST = build-script.pl test.data.pl
 noinst_SCRIPTS = tr-tests
 
 PERL = @PERL@
@@ -10,8 +10,8 @@ editpl = sed -e 's,@''PERL''@,$(PERL),g'
 
 TESTS = tr-tests
 
-tr-tests: main build-script test.data.pl
-	./main test.data.pl > $@.n
+tr-tests: build-script test.data.pl
+	./build-script test.data.pl > $@.n
 	mv $@.n $@
 	chmod 755 $@
 
