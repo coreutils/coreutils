@@ -36,7 +36,6 @@
    Numeric modifiers (a nonstandard extension):
    -	do not pad the field
    _	pad the field with spaces
-   %s   time in seconds since 00:00:00, Jan 1, 1970
 
    Time fields:
    %H	hour (00..23)
@@ -47,7 +46,7 @@
    %p	locale's AM or PM
    %r	time, 12-hour (hh:mm:ss [AP]M)
    %R	time, 24-hour (hh:mm)
-   %s   time in seconds since 00:00:00, Jan 1, 1970 (a nonstandard extension)
+   %s	time in seconds since 00:00:00, Jan 1, 1970 (a nonstandard extension)
    %S	second (00..61)
    %T	time, 24-hour (hh:mm:ss)
    %X	locale's time representation (%H:%M:%S)

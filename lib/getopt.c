@@ -20,6 +20,14 @@
    along with this program; if not, write to the Free Software
    Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
+/* 
+ * This tells Alpha OSF/1 not to define a getopt prototype in <stdio.h>.
+ * Ditto for AIX 3.2 and <stdlib.h>.
+ */
+#ifndef _NO_PROTO
+#define _NO_PROTO
+#endif
+
 #ifdef HAVE_CONFIG_H
 #if defined (emacs) || defined (CONFIG_BROKETS)
 /* We use <config.h> instead of "config.h" so that a compilation
@@ -37,11 +45,6 @@
 #ifndef const
 #define const
 #endif
-#endif
-
-/* This tells Alpha OSF/1 not to define a getopt prototype in <stdio.h>.  */
-#ifndef _NO_PROTO
-#define _NO_PROTO
 #endif
 
 #include <stdio.h>

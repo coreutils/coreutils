@@ -1,3 +1,25 @@
+Tue Dec 28 15:49:32 1993  Jim Meyering  (meyering@comco.com)
+
+	* install.sh: New file.
+	Makefile.in [DISTFILES]: Add it.
+
+	* who.c (read_utmp): Use stdio functions instead of open/read/close
+	to avoid having to handle POSIX read's -1/errno=EINTR failure case.
+
+	* tee.c (tee): A POSIX implementation of the read system call
+	may return -1 and set errno to EINTR when it is interrupted.
+	Retry instead of failing with an error.
+	(tee): Don't use xwrite.  Use safe_write instead and include the
+	losing file name in the message reporting a write failure.
+	Don't treat standard output as a special case, so a failed write
+	to stdout doesn't exit immediately.
+
+Sat Dec 25 23:15:58 1993  Jim Meyering  (meyering@comco.com)
+
+	* who.c (main): Don't chdir ("/dev") for the stat in print_entry.
+	(print_entry): Instead of stat'ing the /dev-relative path, ut_line,
+	stat the absolute path with "/dev/" prefix.  From David MacKenzie.
+
 Wed Dec 22 00:53:51 1993  Jim Meyering  (meyering@comco.com)
 
 	* expr.c (toarith): Interpret the empty string as just that
