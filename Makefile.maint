@@ -69,14 +69,16 @@ header-check:
 	fi
 
 # Ensure that date's --help output stays in sync with the info
-# documentation for GNU strftime.
+# documentation for GNU strftime.  The only exception is %N,
+# which date accepts but GNU strftime does not.
 extract_char = sed 's/^[^%][^%]*%\(.\).*/\1/'
 strftime-check:
 	if test -f $(srcdir)/src/date.c; then				\
 	  grep '^  %.  ' $(srcdir)/src/date.c | sort			\
 	    | $(extract_char) > $@-src;					\
-	  info libc date calendar format | sort | grep '^    `%.'\'	\
-	    | $(extract_char) > $@-info;				\
+	  { echo N;							\
+	    info libc date calendar format | grep '^    `%.'\'		\
+	      | $(extract_char); } | sort > $@-info;			\
 	  diff -u $@-src $@-info || exit 1;				\
 	  rm -f $@-src $@-info;						\
 	fi
