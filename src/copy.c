@@ -571,7 +571,8 @@ overwrite_prompt (char const *dst_path, struct stat const *dst_sb)
    be zero if DST_PATH might already exist.  DEVICE is the device
    number of the parent directory, or 0 if the parent of this file is
    not known.  ANCESTORS points to a linked, null terminated list of
-   devices and inodes of parent directories of SRC_PATH.
+   devices and inodes of parent directories of SRC_PATH.  COMMAND_LINE_ARG
+   is non-zero iff SRC_PATH was specified on the command line.
    Set *COPY_INTO_SELF to nonzero if SRC_PATH is a parent of (or the
    same as) DST_PATH;  otherwise, set it to zero.
    Return 0 if successful, 1 if an error occurs. */
@@ -582,7 +583,7 @@ copy_internal (const char *src_path, const char *dst_path,
 	       dev_t device,
 	       struct dir_list *ancestors,
 	       const struct cp_options *x,
-	       int move_mode,
+	       int command_line_arg,
 	       int *copy_into_self,
 	       int *rename_succeeded)
 {
@@ -597,6 +598,13 @@ copy_internal (const char *src_path, const char *dst_path,
   int delayed_fail;
   int copied_as_regular = 0;
   int ran_chown = 0;
+
+  /* move_mode is set to the value from the `options' parameter for the
+     first copy_internal call.  For any subsequent recursive call, it must
+     be zero.  This is because if we're moving (via mv) a hierarchy and
+     end up having to recurse, it means the initial rename failed and so we
+     are in the process of *copy*ing all of the parts, not renaming them.  */
+  int move_mode = (command_line_arg ? x->move_mode : 0);
 
   if (move_mode && rename_succeeded)
     *rename_succeeded = 0;
@@ -697,28 +705,14 @@ copy_internal (const char *src_path, const char *dst_path,
 	      /* cp and mv treat -i and -f differently.  */
 	      if (x->move_mode)
 		{
-		  int do_move = 1;
-
-		  if (x->interactive == I_ALWAYS_NO)
-		    {
-		      if (UNWRITABLE (dst_path, dst_sb.st_mode))
-			{
-			  do_move = 0;
-			}
-		    }
-		  else if (x->interactive == I_ASK_USER
+		  if ((x->interactive == I_ALWAYS_NO
+		       && UNWRITABLE (dst_path, dst_sb.st_mode))
+		      || ((x->interactive == I_ASK_USER
 			   || (x->interactive == I_UNSPECIFIED
 			       && x->stdin_tty
 			       && UNWRITABLE (dst_path, dst_sb.st_mode)))
-		    {
-		      overwrite_prompt (dst_path, &dst_sb);
-		      if (!yesno ())
-			{
-			  do_move = 0;
-			}
-		    }
-
-		  if ( ! do_move)
+			  && (overwrite_prompt (dst_path, &dst_sb), 1)
+			  && ! yesno ()))
 		    {
 		      /* Pretend the rename succeeded, so the caller (mv)
 			 doesn't end up removing the source file.  */
@@ -773,7 +767,7 @@ copy_internal (const char *src_path, const char *dst_path,
 	      if (STREQ (tmp_backup, src_path))
 		{
 		  const char *fmt;
-		  fmt = (move_mode
+		  fmt = (x->move_mode
 		 ? _("backing up %s would destroy source;  %s not moved")
 		 : _("backing up %s would destroy source;  %s not copied"));
 		  error (0, 0, fmt,
@@ -868,6 +862,8 @@ copy_internal (const char *src_path, const char *dst_path,
       return 0;
     }
 
+  /* Note that this is testing the local variable move_mode, not
+     the x->move_mode member.  */
   if (move_mode)
     {
       if (rename (src_path, dst_path) == 0)
@@ -1262,11 +1258,6 @@ copy (const char *src_path, const char *dst_path,
       int nonexistent_dst, const struct cp_options *options,
       int *copy_into_self, int *rename_succeeded)
 {
-  /* move_mode is set to the value from the `options' parameter for the
-     first copy_internal call.  For all subsequent calls (if any), it must
-     be zero.  */
-  int move_mode = options->move_mode;
-
   assert (valid_options (options));
 
   /* Record the file names: they're used in case of error, when copying
@@ -1280,5 +1271,5 @@ copy (const char *src_path, const char *dst_path,
   top_level_dst_path = dst_path;
 
   return copy_internal (src_path, dst_path, nonexistent_dst, 0, NULL,
-			options, move_mode, copy_into_self, rename_succeeded);
+			options, 1, copy_into_self, rename_succeeded);
 }
