@@ -1,6 +1,11 @@
-2001-11-25  Jim Meyering  <meyering@lucent.com>
+2001-12-08  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.12.
+
+	* Makefile.cfg (wget_files): Remove ansi2knr.c, since it's
+	no longer available at that location.
+
+2001-11-25  Jim Meyering  <meyering@lucent.com>
 
 	* basename.c, dirname.c, expr.c, factor.c, hostname.c (usage):
 	* logname.c, printenv.c, printf.c, pwd.c, sleep.c, test.c (usage):
