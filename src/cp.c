@@ -541,18 +541,18 @@ do_copy (int n_files, char **file, const char *target_directory,
 
   if (!dest_is_dir)
     {
-      if (target_directory)
+      if (target_directory || 1 < n_files)
 	{
-	  error (0, 0, _("%s: specified target is not a directory"),
-		 quote (dest));
-	  usage (EXIT_FAILURE);
-	}
+	  char const *msg;
+	  if (new_dst)
+	    msg = N_("%s: specified destination directory does not exist");
+	  else if (target_directory)
+	    msg = N_("%s: specified target is not a directory");
+	  else /* n_files > 1 */
+	    msg =
+	  N_("copying multiple files, but last argument %s is not a directory");
 
-      if (n_files > 1)
-	{
-	  error (0, 0,
-	 _("copying multiple files, but last argument %s is not a directory"),
-	     quote (dest));
+	  error (0, 0, _(msg), quote (dest));
 	  usage (EXIT_FAILURE);
 	}
     }
