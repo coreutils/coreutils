@@ -1,6 +1,9 @@
-2003-01-11  Jim Meyering  <jim@meyering.net>
+2003-01-12  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.5.
+
+	* src/unexpand.c (usage): Document --first-only and mention that
+	--tabs=N (-t) enables --all (-a).
 
 2002-12-01  Dmitry V. Levin  <ldv@altlinux.org>
 
