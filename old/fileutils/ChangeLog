@@ -9,7 +9,6 @@
 	Remove hash table, active_dir_map, used to detect directory cycles.
 	Instead, detect them lazily with just O(1) memory.
 	Suggestion from Andi Kleen.
-
 	* src/remove.c (is_power_of_two): New function.
 	(print_nth_dir, make_active_dir_ent): Remove functions.
 	(hash_active_dir_ent, hash_compare_active_dir_ents): Likewise.
