@@ -39,6 +39,7 @@
 	FIXME: maybe I should.
 	* src/cp.c: Likewise.
 	* src/remove.c: Likewise.
+	* src/install.c: Likewise.  and improve a couple diagnostics.
 
 2000-07-13  Paul Eggert  <eggert@twinsun.com>
 
