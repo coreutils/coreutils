@@ -573,7 +573,7 @@ inittables (void)
 	  name[j] = '\0';
 	}
       qsort ((void *) monthtab, MONTHS_PER_YEAR,
-	     sizeof (struct month), struct_month_cmp);
+	     sizeof *monthtab, struct_month_cmp);
     }
 #endif
 }
@@ -1992,7 +1992,8 @@ sort (char * const *files, int nfiles, char const *output_file)
       char const *file = *files;
       FILE *fp = xfopen (file, "r");
       FILE *tfp;
-      size_t bytes_per_line = 2 * sizeof (struct line) - sizeof (struct line) / 2;
+      size_t bytes_per_line = (2 * sizeof (struct line)
+			       - sizeof (struct line) / 2);
 
       if (! buf.alloc)
 	initbuf (&buf, bytes_per_line,
