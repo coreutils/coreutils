@@ -158,7 +158,7 @@ char *program_name;
 
 static enum operating_mode operating_mode;
 
-/* If non-zero do not output lines containing no delimeter characters.
+/* If nonzero do not output lines containing no delimeter characters.
    Otherwise, all such lines are printed.  This option is valid only
    with field mode.  */
 static int suppress_non_delimited;
@@ -169,10 +169,10 @@ static int delim;
 /* Nonzero if we have ever read standard input. */
 static int have_read_stdin;
 
-/* If non-zero, display usage information and exit.  */
+/* If nonzero, display usage information and exit.  */
 static int show_help;
 
-/* If non-zero, print the version on standard output then exit.  */
+/* If nonzero, print the version on standard output then exit.  */
 static int show_version;
 
 static struct option const longopts[] =
@@ -321,7 +321,7 @@ print_kth (unsigned int k)
    to its starting index.  FIELDSTR should be composed of one or more
    numbers or ranges of numbers, separated by blanks or commas.
    Incomplete ranges may be given: `-m' means `1-m'; `n-' means `n'
-   through end of line.  Return non-zero if FIELDSTR contains at least
+   through end of line.  Return nonzero if FIELDSTR contains at least
    one field specification, zero otherwise.  */
 
 /* FIXME-someday:  What if the user wants to cut out the 1,000,000-th field

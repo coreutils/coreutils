@@ -618,7 +618,7 @@ add_field (int file, int field)
 /* Convert a single field specifier string, S, to a *FILE_INDEX, *FIELD_INDEX
    pair.  In S, the field index string is 1-based; *FIELD_INDEX is zero-based.
    If S is valid, return zero.  Otherwise, give a diagnostic, don't update
-   *FILE_INDEX or *FIELD_INDEX, and return non-zero.  */
+   *FILE_INDEX or *FIELD_INDEX, and return nonzero.  */
 
 static int
 decode_field_spec (const char *s, int *file_index, int *field_index)
@@ -672,7 +672,7 @@ decode_field_spec (const char *s, int *file_index, int *field_index)
 }
 
 /* Add the comma or blank separated field spec(s) in STR to `outlist'.
-   Return non-zero to indicate failure.  */
+   Return nonzero to indicate failure.  */
 
 static int
 add_field_list (const char *c_str)

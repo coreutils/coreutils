@@ -163,10 +163,10 @@ static void put_space __P ((int space));
 /* The name this program was run with.  */
 const char *program_name;
 
-/* If non-zero, display usage information and exit.  */
+/* If nonzero, display usage information and exit.  */
 static int show_help = 0;
 
-/* If non-zero, print the version on standard output and exit.  */
+/* If nonzero, print the version on standard output and exit.  */
 static int show_version = 0;
 
 /* Option values.  */
@@ -256,7 +256,7 @@ static int next_char;
    after the current paragraph.  */
 static int next_prefix_indent;
 
-/* If non-zero, the length of the last line output in the current
+/* If nonzero, the length of the last line output in the current
    paragraph, used to charge for raggedness at the split point for long
    paragraphs chosen by fmt_paragraph().  */
 static int last_line_length;

@@ -324,7 +324,7 @@ static int output_position;
    Important for converting tabs to spaces on input. */
 static int input_position;
 
-/* Count number of failed opens so we can exit with non-zero
+/* Count number of failed opens so we can exit with nonzero
    status if there were any.  */
 static int failed_opens = 0;
 
@@ -427,10 +427,10 @@ static int *clump_buff;
 /* True means we truncate lines longer than chars_per_column. */
 static int truncate_lines = FALSE;
 
-/* If non-zero, display usage information and exit.  */
+/* If nonzero, display usage information and exit.  */
 static int show_help;
 
-/* If non-zero, print the version on standard output then exit.  */
+/* If nonzero, print the version on standard output then exit.  */
 static int show_version;
 
 static struct option const long_options[] =

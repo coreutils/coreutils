@@ -70,13 +70,13 @@ static int input_desc;
 /* Descriptor on which output file is open.  */
 static int output_desc;
 
-/* If non-zero, display usage information and exit.  */
+/* If nonzero, display usage information and exit.  */
 static int show_help;
 
-/* If non-zero, print the version on standard output then exit.  */
+/* If nonzero, print the version on standard output then exit.  */
 static int show_version;
 
-/* If non-zero, print a diagnostic on standard error just before each
+/* If nonzero, print a diagnostic on standard error just before each
    output file is opened. */
 static int verbose;
 

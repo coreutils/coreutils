@@ -47,10 +47,10 @@ static int have_read_stdin;
 /* The error code to return to the system. */
 static int exit_status;
 
-/* If non-zero, display usage information and exit.  */
+/* If nonzero, display usage information and exit.  */
 static int show_help;
 
-/* If non-zero, print the version on standard output then exits.  */
+/* If nonzero, print the version on standard output then exits.  */
 static int show_version;
 
 static struct option const longopts[] =

@@ -196,7 +196,7 @@ struct Spec_list
     /* The number of [c*] and [c*0] constructs that appear in this spec.  */
     int n_indefinite_repeats;
 
-    /* If n_indefinite_repeats is non-zero, this points to the List_element
+    /* If n_indefinite_repeats is nonzero, this points to the List_element
        corresponding to the last [c*] or [c*0] construct encountered in
        this spec.  Otherwise it is undefined.  */
     struct List_element *indefinite_repeat_element;
@@ -225,7 +225,7 @@ struct E_string
   size_t len;
 };
 
-/* Return non-zero if the Ith character of escaped string ES matches C
+/* Return nonzero if the Ith character of escaped string ES matches C
    and is not escaped itself.  */
 #define ES_MATCH(ES, I, C) ((ES)->s[(I)] == (C) && !(ES)->escaped[(I)])
 
@@ -237,29 +237,29 @@ int safe_read ();
 /* The name by which this program was run.  */
 char *program_name;
 
-/* When non-zero, each sequence in the input of a repeated character
+/* When nonzero, each sequence in the input of a repeated character
    (call it c) is replaced (in the output) by a single occurrence of c
    for every c in the squeeze set.  */
 static int squeeze_repeats = 0;
 
-/* When non-zero, removes characters in the delete set from input.  */
+/* When nonzero, removes characters in the delete set from input.  */
 static int delete = 0;
 
 /* Use the complement of set1 in place of set1.  */
 static int complement = 0;
 
-/* When non-zero, this flag causes GNU tr to provide strict
+/* When nonzero, this flag causes GNU tr to provide strict
    compliance with POSIX draft 1003.2.11.2.  The POSIX spec
    says that when -d is used without -s, string2 (if present)
    must be ignored.  Silently ignoring arguments is a bad idea.
    The default GNU behavior is to give a usage message and exit.
-   Additionally, when this flag is non-zero, tr prints warnings
+   Additionally, when this flag is nonzero, tr prints warnings
    on stderr if it is being used in a manner that is not portable.
    Applicable warnings are given by default, but are suppressed
    if the environment variable `POSIXLY_CORRECT' is set, since
    being POSIX conformant means we can't issue such messages.
    Warnings on the following topics are suppressed when this
-   variable is non-zero:
+   variable is nonzero:
    1. Ambiguous octal escapes.  */
 static int posix_pedantic;
 
@@ -275,7 +275,7 @@ static int posix_pedantic;
    corresponding character in string2.  That is, string1 is effectively
    truncated to the length of string2.
 
-   When non-zero, this flag causes GNU tr to imitate the behavior
+   When nonzero, this flag causes GNU tr to imitate the behavior
    of System V tr when translating with string1 longer than string2.
    The default is to emulate BSD tr.  This flag is ignored in modes where
    no translation is performed.  Emulating the System V tr
@@ -330,10 +330,10 @@ static SET_TYPE in_delete_set[N_CHARS];
    two specification strings and the delete switch is not given.  */
 static char xlate[N_CHARS];
 
-/* If non-zero, display usage information and exit.  */
+/* If nonzero, display usage information and exit.  */
 static int show_help;
 
-/* If non-zero, print the version on standard output then exit.  */
+/* If nonzero, print the version on standard output then exit.  */
 static int show_version;
 
 static struct option const long_options[] =
@@ -417,7 +417,7 @@ translation or deletion.\n\
   exit (status);
 }
 
-/* Return non-zero if the character C is a member of the
+/* Return nonzero if the character C is a member of the
    equivalence class containing the character EQUIV_CLASS.  */
 
 static int
@@ -426,7 +426,7 @@ is_equiv_class_member (unsigned int equiv_class, unsigned int c)
   return (equiv_class == c);
 }
 
-/* Return non-zero if the character C is a member of the
+/* Return nonzero if the character C is a member of the
    character class CHAR_CLASS.  */
 
 static int
@@ -482,7 +482,7 @@ is_char_class_member (enum Char_class char_class, unsigned int c)
 /* Perform the first pass over each range-spec argument S, converting all
    \c and \ddd escapes to their one-byte representations.  The conversion
    is done in-place, so S must point to writable storage.  If an invalid
-   quote sequence is found print an error message and return non-zero.
+   quote sequence is found print an error message and return nonzero.
    Otherwise set *LEN to the length of the resulting string and return
    zero.  The resulting array of characters may contain zero-bytes;
    however, on input, S is assumed to be null-terminated, and hence
@@ -720,7 +720,7 @@ append_normal_char (struct Spec_list *list, unsigned int c)
 
 /* Append a newly allocated structure representing the range
    of characters from FIRST to LAST to the specification list LIST.
-   Return non-zero if LAST precedes FIRST in the collating sequence,
+   Return nonzero if LAST precedes FIRST in the collating sequence,
    zero otherwise.  This means that '[c-c]' is acceptable.  */
 
 static int
@@ -754,7 +754,7 @@ append_range (struct Spec_list *list, unsigned int first, unsigned int last)
 /* If CHAR_CLASS_STR is a valid character class string, append a
    newly allocated structure representing that character class to the end
    of the specification list LIST and return 0.  If CHAR_CLASS_STR is not
-   a valid string return non-zero.  */
+   a valid string return nonzero.  */
 
 static int
 append_char_class (struct Spec_list *list,
@@ -801,7 +801,7 @@ append_repeated_char (struct Spec_list *list, unsigned int the_char,
    the length of that string, LEN, if LEN is exactly one, append
    a newly allocated structure representing the specified
    equivalence class to the specification list, LIST and return zero.
-   If LEN is not 1, return non-zero.  */
+   If LEN is not 1, return nonzero.  */
 
 static int
 append_equiv_class (struct Spec_list *list,
@@ -844,7 +844,7 @@ substr (const unsigned char *p, size_t first_idx, size_t last_idx)
 /* Search forward starting at START_IDX for the 2-char sequence
    (PRE_BRACKET_CHAR,']') in the string P of length P_LEN.  If such
    a sequence is found, set *RESULT_IDX to the index of the first
-   character and return non-zero. Otherwise return zero.  P may contain
+   character and return nonzero. Otherwise return zero.  P may contain
    zero bytes.  */
 
 static int
@@ -867,7 +867,7 @@ find_closing_delim (const struct E_string *es, size_t start_idx,
    containing embedded zero bytes, to a long integer value.
    If the string represents a negative value, a value larger
    than LONG_MAX, or if all LEN characters do not represent a
-   valid integer, return non-zero and do not modify *VAL.
+   valid integer, return nonzero and do not modify *VAL.
    Otherwise, return zero and set *VAL to the converted value.  */
 
 static int
@@ -961,7 +961,7 @@ find_bracketed_repeat (const struct E_string *es, size_t start_idx,
   return -1;			/* No bracket found.  */
 }
 
-/* Return non-zero if the string at ES->s[IDX] matches the regular
+/* Return nonzero if the string at ES->s[IDX] matches the regular
    expression `\*[0-9]*\]', zero otherwise.  To match, the `*' and
    the `]' must not be escaped.  */
 
@@ -1089,7 +1089,7 @@ build_spec_list (const struct E_string *es, struct Spec_list *result)
 		    }
 		  free (opnd_str);
 
-		  /* Return non-zero if append_*_class reports a problem.  */
+		  /* Return nonzero if append_*_class reports a problem.  */
 		  if (parse_failed)
 		    return 1;
 		  else
@@ -1423,7 +1423,7 @@ spec_init (struct Spec_list *spec_list)
    one converts all \c and \ddd escapes to their one-byte representations.
    The second constructs a linked specification list, SPEC_LIST, of the
    characters and constructs that comprise the argument string.  If either
-   of these passes detects an error, this function returns non-zero.  */
+   of these passes detects an error, this function returns nonzero.  */
 
 static int
 parse_str (const unsigned char *s, struct Spec_list *spec_list)
@@ -1769,7 +1769,7 @@ read_and_xlate (unsigned char *buf, long int size, PFI not_used)
 /* Initialize a boolean membership set IN_SET with the character
    values obtained by traversing the linked list of constructs S
    using the function `get_next'.  If COMPLEMENT_THIS_SET is
-   non-zero the resulting set is complemented.  */
+   nonzero the resulting set is complemented.  */
 
 static void
 set_initialize (struct Spec_list *s, int complement_this_set, SET_TYPE *in_set)

@@ -113,10 +113,10 @@ char *program_name;
 /* Nonzero if we have ever read standard input.  */
 static int have_read_stdin;
 
-/* If non-zero, display usage information and exit.  */
+/* If nonzero, display usage information and exit.  */
 static int show_help;
 
-/* If non-zero, print the version on standard output then exit.  */
+/* If nonzero, print the version on standard output then exit.  */
 static int show_version;
 
 static struct option const long_options[] =

@@ -214,10 +214,10 @@ static struct control *controls;
 /* Number of elements in `controls'. */
 static unsigned int control_used;
 
-/* If non-zero, display usage information and exit.  */
+/* If nonzero, display usage information and exit.  */
 static int show_help;
 
-/* If non-zero, print the version on standard output then exit.  */
+/* If nonzero, print the version on standard output then exit.  */
 static int show_version;
 
 static struct option const longopts[] =

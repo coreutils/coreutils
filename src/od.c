@@ -222,15 +222,15 @@ static const char *(*format_address) __P ((long unsigned int));
 /* The number of input bytes to skip before formatting and writing.  */
 static off_t n_bytes_to_skip = 0;
 
-/* When non-zero, MAX_BYTES_TO_FORMAT is the maximum number of bytes
+/* When nonzero, MAX_BYTES_TO_FORMAT is the maximum number of bytes
    to be read and formatted.  Otherwise all input is formatted.  */
 static int limit_bytes_to_format = 0;
 
 /* The maximum number of bytes that will be formatted.  This
-   value is used only when LIMIT_BYTES_TO_FORMAT is non-zero.  */
+   value is used only when LIMIT_BYTES_TO_FORMAT is nonzero.  */
 static off_t max_bytes_to_format;
 
-/* When non-zero and two or more consecutive blocks are equal, format
+/* When nonzero and two or more consecutive blocks are equal, format
    only the first block and output an asterisk alone on the following
    line to indicate that identical blocks have been elided.  */
 static int abbreviate_duplicate_blocks = 1;
@@ -262,7 +262,7 @@ static char const *const *file_list;
 /* The input stream associated with the current file.  */
 static FILE *in_stream;
 
-/* If non-zero, at least one of the files we read was standard input.  */
+/* If nonzero, at least one of the files we read was standard input.  */
 static int have_read_stdin;
 
 #define LONGEST_INTEGRAL_TYPE long int
@@ -273,10 +273,10 @@ static enum size_spec integral_type_size[MAX_INTEGRAL_TYPE_SIZE + 1];
 #define MAX_FP_TYPE_SIZE sizeof(LONG_DOUBLE)
 static enum size_spec fp_type_size[MAX_FP_TYPE_SIZE + 1];
 
-/* If non-zero, display usage information and exit.  */
+/* If nonzero, display usage information and exit.  */
 static int show_help;
 
-/* If non-zero, print the version on standard output then exit.  */
+/* If nonzero, print the version on standard output then exit.  */
 static int show_version;
 
 static struct option const long_options[] =
@@ -607,7 +607,7 @@ print_ascii (long unsigned int n_bytes, const char *block,
    unsigned long integer value.  If S points to a non-digit set *P to S,
    *VAL to 0, and return 0.  Otherwise, accumulate the integer value of
    the string of digits.  If the string of digits represents a value
-   larger than ULONG_MAX, don't modify *VAL or *P and return non-zero.
+   larger than ULONG_MAX, don't modify *VAL or *P and return nonzero.
    Otherwise, advance *P to the first non-digit after S, set *VAL to
    the result of the conversion and return zero.  */
 
@@ -633,7 +633,7 @@ simple_strtoul (const char *s, const char **p, long unsigned int *val)
    description of that format in *TSPEC, make *NEXT point at the character
    following the just-decoded format (if *NEXT is non-NULL), and return
    zero.  If S is not valid, don't modify *NEXT or *TSPEC and return
-   non-zero.  For example, if S were "d4afL" *NEXT would be set to "afL"
+   nonzero.  For example, if S were "d4afL" *NEXT would be set to "afL"
    and *TSPEC would be
      {
        fmt = SIGNED_DECIMAL;
@@ -873,7 +873,7 @@ decode_one_format (const char *s, const char **next, struct tspec *tspec)
 
 /* Decode the POSIX-style od format string S.  Append the decoded
    representation to the global array SPEC, reallocating SPEC if
-   necessary.  Return zero if S is valid, non-zero otherwise.  */
+   necessary.  Return zero if S is valid, nonzero otherwise.  */
 
 static int
 decode_format_string (const char *s)
@@ -909,7 +909,7 @@ decode_format_string (const char *s)
    file pointer IN_STREAM to position N_SKIP in the concatenation of
    those files.  If any file operation fails or if there are fewer than
    N_SKIP bytes in the combined input, give an error message and return
-   non-zero.  When possible, use seek- rather than read operations to
+   nonzero.  When possible, use seek- rather than read operations to
    advance IN_STREAM.  A file name of "-" is interpreted as standard
    input.  */
 
@@ -1101,7 +1101,7 @@ write_block (long unsigned int current_offset, long unsigned int n_bytes,
 }
 
 /* Test whether there have been errors on in_stream, and close it if
-   it is not standard input.  Return non-zero if there has been an error
+   it is not standard input.  Return nonzero if there has been an error
    on in_stream or stdout; return zero otherwise.  This function will
    report more than one error only if both a read and a write error
    have occurred.  */
@@ -1143,7 +1143,7 @@ check_and_close (void)
    the list.  Then try to read a byte from the newly opened file.
    Repeat if necessary until *FILE_LIST is NULL.  When EOF is reached
    for the last file in FILE_LIST, set *C to EOF and return.  Subsequent
-   calls do likewise.  The return value is non-zero if any errors
+   calls do likewise.  The return value is nonzero if any errors
    occured, zero otherwise.  */
 
 static int
@@ -1205,7 +1205,7 @@ read_char (int *c)
    Repeat if necessary until *FILE_LIST is NULL.  Set *N_BYTES_IN_BUFFER
    to the number of bytes read.  If an error occurs, it will be detected
    through ferror when the stream is about to be closed.  If there is an
-   error, give a message but continue reading as usual and return non-zero.
+   error, give a message but continue reading as usual and return nonzero.
    Otherwise return zero.  */
 
 static int
@@ -1330,7 +1330,7 @@ parse_old_offset (const char *s)
    multiple of all format spec sizes.  Write the final block.  Finally,
    write on a line by itself the offset of the byte after the last byte
    read.  Accumulate return values from calls to read_block and
-   check_and_close, and if any was non-zero, return non-zero.
+   check_and_close, and if any was nonzero, return nonzero.
    Otherwise, return zero.  */
 
 static int
@@ -1423,7 +1423,7 @@ dump (void)
    A string constant is a run of at least `string_min' ASCII
    graphic (or formatting) characters terminated by a null.
    Based on a function written by Richard Stallman for a
-   pre-POSIX version of od.  Return non-zero if an error
+   pre-POSIX version of od.  Return nonzero if an error
    occurs.  Otherwise, return zero.  */
 
 static int
