@@ -584,6 +584,7 @@ cut_fields (FILE *stream)
 			    stream, delim, '\n', 0);
 	  if (len < 0)
 	    {
+	      free (field_1_buffer);
 	      if (ferror (stream) || feof (stream))
 		break;
 	      xalloc_die ();
