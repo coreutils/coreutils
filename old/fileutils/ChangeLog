@@ -2,7 +2,7 @@
 
 	* Version 4.0s.
 
-	* tests/mv/Makefile.am (TESTS): Add i-2.
+	* tests/mv/Makefile.am (TESTS): Add i-2, for 2000-05-12 change.
 
 	* tests/rm/r-2: Clean up.
 	* tests/ls/time-1 (LC_ALL): Set it unconditionally.
