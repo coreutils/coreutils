@@ -1,7 +1,6 @@
 Changes in release 2.1
  [2.0.15]
-* Fix some minor time-related bugs with POSIX time arguments.  E.g., date no
-    longer accepts September 31 in the MMDDhhmm syntax.
+* date no longer accepts e.g., September 31 in the MMDDhhmm syntax
 * fix a bug in this package's .m4 files and in configure.ac
  [2.0.14]
 * nohup's behavior is changed as follows, to conform to POSIX 1003.1-2001:
