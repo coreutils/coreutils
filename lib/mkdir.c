@@ -1,5 +1,5 @@
 /* BSD compatible make directory function for System V
-   Copyright (C) 1988, 1990 Free Software Foundation, Inc.
+   Copyright (C) 1988, 1990, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -48,9 +48,7 @@ extern int errno;
    subroutine didn't return EEXIST.  It does now.  */
 
 int
-mkdir (dpath, dmode)
-     char *dpath;
-     int dmode;
+mkdir (const char *dpath, int dmode)
 {
   int cpid, status;
   struct stat statbuf;

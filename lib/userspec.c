@@ -93,8 +93,7 @@ char *strdup ();
    otherwise return 0. */
 
 static int
-is_number (str)
-     const char *str;
+is_number (const char *str)
 {
   for (; *str; str++)
     if (!isdigit (*str))
@@ -115,11 +114,7 @@ is_number (str)
    Return NULL if successful, a static error message string if not.  */
 
 const char *
-parse_user_spec (spec_arg, uid, gid, username_arg, groupname_arg)
-     const char *spec_arg;
-     uid_t *uid;
-     gid_t *gid;
-     char **username_arg, **groupname_arg;
+parse_user_spec (const char *spec_arg, uid_t *uid, gid_t *gid, char **username_arg, char **groupname_arg)
 {
   static const char *tired = "virtual memory exhausted";
   const char *error_msg;

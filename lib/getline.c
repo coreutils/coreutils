@@ -1,6 +1,6 @@
 /* getline.c -- Replacement for GNU C library function getline
 
-Copyright (C) 1993, 1996, 1997 Free Software Foundation, Inc.
+Copyright (C) 1993, 1996, 1997, 1998 Free Software Foundation, Inc.
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License as
@@ -34,10 +34,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
 #if defined __GNU_LIBRARY__ && HAVE_GETDELIM
 
 int
-getline (lineptr, n, stream)
-     char **lineptr;
-     size_t *n;
-     FILE *stream;
+getline (char **lineptr, size_t *n, FILE *stream)
 {
   return getdelim (lineptr, n, '\n', stream);
 }
@@ -64,12 +61,7 @@ char *malloc (), *realloc ();
    null terminator), or -1 on error or EOF.  */
 
 int
-getstr (lineptr, n, stream, terminator, offset)
-     char **lineptr;
-     size_t *n;
-     FILE *stream;
-     char terminator;
-     size_t offset;
+getstr (char **lineptr, size_t *n, FILE *stream, char terminator, size_t offset)
 {
   int nchars_avail;		/* Allocated but unused chars in *LINEPTR.  */
   char *read_pos;		/* Where we're reading into *LINEPTR. */
@@ -138,20 +130,13 @@ getstr (lineptr, n, stream, terminator, offset)
 }
 
 int
-getline (lineptr, n, stream)
-     char **lineptr;
-     size_t *n;
-     FILE *stream;
+getline (char **lineptr, size_t *n, FILE *stream)
 {
   return getstr (lineptr, n, stream, '\n', 0);
 }
 
 int
-getdelim (lineptr, n, delimiter, stream)
-     char **lineptr;
-     size_t *n;
-     int delimiter;
-     FILE *stream;
+getdelim (char **lineptr, size_t *n, int delimiter, FILE *stream)
 {
   return getstr (lineptr, n, stream, delimiter, 0);
 }

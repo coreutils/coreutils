@@ -16,10 +16,7 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 char *
-memset (str, c, len)
-     char *str;
-     int c;
-     unsigned len;
+memset (char *str, int c, unsigned int len)
 {
   register char *st = str;
 

@@ -57,8 +57,7 @@ char *xgetcwd PARAMS ((void));
    called, but doing so is ok.  Otherwise, return zero.  */
 
 int
-save_cwd (cwd)
-     struct saved_cwd *cwd;
+save_cwd (struct saved_cwd *cwd)
 {
   static int have_working_fchdir = 1;
 
@@ -118,10 +117,7 @@ save_cwd (cwd)
    */
 
 int
-restore_cwd (cwd, dest, from)
-     const struct saved_cwd *cwd;
-     const char *dest;
-     const char *from;
+restore_cwd (const struct saved_cwd *cwd, const char *dest, const char *from)
 {
   int fail = 0;
   if (cwd->desc >= 0)
@@ -144,8 +140,7 @@ restore_cwd (cwd, dest, from)
 }
 
 void
-free_cwd (cwd)
-     struct saved_cwd *cwd;
+free_cwd (struct saved_cwd *cwd)
 {
   if (cwd->desc >= 0)
     close (cwd->desc);

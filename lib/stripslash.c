@@ -32,8 +32,7 @@
    when given a path that ends in "/" (except for the root directory).  */
 
 void
-strip_trailing_slashes (path)
-     char *path;
+strip_trailing_slashes (char *path)
 {
   int last;
 

@@ -34,8 +34,7 @@
    return nonzero, else 0.  */
 
 int
-isdir (path)
-     char *path;
+isdir (const char *path)
 {
   struct stat stats;
 

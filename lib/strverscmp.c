@@ -43,9 +43,7 @@
 */
 
 int
-strverscmp (s1, s2)
-     const char *s1;
-     const char *s2;
+strverscmp (const char *s1, const char *s2)
 {
   const unsigned char *p1 = (const unsigned char *) s1;
   const unsigned char *p2 = (const unsigned char *) s2;

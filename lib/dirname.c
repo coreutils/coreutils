@@ -39,8 +39,7 @@ char *malloc ();
    removed.  */
 
 char *
-dirname (path)
-     char *path;
+dirname (char *path)
 {
   char *newpath;
   char *slash;

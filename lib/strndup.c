@@ -33,9 +33,7 @@ char *malloc ();
 
 /* Duplicate S, returning an identical malloc'd string.  */
 char *
-strndup (s, n)
-     const char *s;
-     size_t n;
+strndup (const char *s, size_t n)
 {
   char *new = malloc (n + 1);
 

@@ -126,9 +126,7 @@ time_t __mktime_internal __P ((struct tm *,
    are buggy.  */
 static struct tm *my_mktime_localtime_r __P ((const time_t *, struct tm *));
 static struct tm *
-my_mktime_localtime_r (t, tp)
-     const time_t *t;
-     struct tm *tp;
+my_mktime_localtime_r (const time_t *t, struct tm *tp)
 {
   struct tm *l = localtime (t);
   if (! l)
@@ -146,9 +144,8 @@ my_mktime_localtime_r (t, tp)
    If TP is null, return a nonzero value.
    If overflow occurs, yield the low order bits of the correct answer.  */
 static time_t
-ydhms_tm_diff (year, yday, hour, min, sec, tp)
-     int year, yday, hour, min, sec;
-     const struct tm *tp;
+ydhms_tm_diff (int year, int yday, int hour, int min, int sec,
+	       const struct tm *tp)
 {
   if (!tp)
     return 1;
@@ -180,8 +177,7 @@ static time_t localtime_offset;
 
 /* Convert *TP to a time_t value.  */
 time_t
-mktime (tp)
-     struct tm *tp;
+mktime (struct tm *tp)
 {
 #ifdef _LIBC
   /* POSIX.1 8.1.1 requires that whenever mktime() is called, the
@@ -197,10 +193,8 @@ mktime (tp)
    If *T is out of range for conversion, adjust it so that
    it is the nearest in-range value and then convert that.  */
 static struct tm *
-ranged_convert (convert, t, tp)
-     struct tm *(*convert) __P ((const time_t *, struct tm *));
-     time_t *t;
-     struct tm *tp;
+ranged_convert (struct tm *(*convert) (const time_t *, struct tm *),
+		time_t *t, struct tm *tp)
 {
   struct tm *r;
 
@@ -247,10 +241,9 @@ ranged_convert (convert, t, tp)
    compared to what the result would be for UTC without leap seconds.
    If *OFFSET's guess is correct, only one CONVERT call is needed.  */
 time_t
-__mktime_internal (tp, convert, offset)
-     struct tm *tp;
-     struct tm *(*convert) __P ((const time_t *, struct tm *));
-     time_t *offset;
+__mktime_internal (struct tm *tp,
+		   struct tm *(*convert) (const time_t *, struct tm *),
+		   time_t *offset)
 {
   time_t t, dt, t0, t1, t2;
   struct tm tm;

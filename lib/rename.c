@@ -38,9 +38,7 @@ extern int errno;
    Return 0 if successful, -1 if not. */
 
 int
-rename (from, to)
-     char *from;
-     char *to;
+rename (char *from, char *to)
 {
   struct stat from_stats, to_stats;
   int pid, status;

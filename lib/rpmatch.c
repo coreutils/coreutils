@@ -40,13 +40,7 @@
 #endif
 
 static int
-try (response, pattern, match, nomatch, lastp, re)
-     const char *response;
-     const char *pattern;
-     const int match;
-     const int nomatch;
-     const char **lastp;
-     regex_t *re;
+try (const char *response, const char *pattern, const int match, const int nomatch, const char **lastp, regex_t *re)
 {
   if (pattern != *lastp)
     {
@@ -69,8 +63,7 @@ try (response, pattern, match, nomatch, lastp, re)
 
 
 int
-rpmatch (response)
-     const char *response;
+rpmatch (const char *response)
 {
   /* Match against one of the response patterns, compiling the pattern
      first if necessary.  */

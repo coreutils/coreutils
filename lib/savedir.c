@@ -76,9 +76,7 @@ char *stpcpy ();
    Return NULL if DIR cannot be opened or if out of memory. */
 
 char *
-savedir (dir, name_size)
-     const char *dir;
-     unsigned int name_size;
+savedir (const char *dir, unsigned int name_size)
 {
   DIR *dirp;
   struct dirent *dp;

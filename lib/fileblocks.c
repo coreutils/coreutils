@@ -50,8 +50,7 @@ typedef long daddr_t; /* for disk address */
 /* Return the number of 512-byte blocks in a file of SIZE bytes. */
 
 off_t
-st_blocks (size)
-     off_t size;
+st_blocks (off_t size)
 {
   off_t datablks = size / 512 + (size % 512 != 0);
   off_t indrblks = 0;

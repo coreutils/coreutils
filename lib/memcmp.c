@@ -104,8 +104,7 @@ static int memcmp_bytes __P((op_t, op_t));
 __inline
 # endif
 static int
-memcmp_bytes (a, b)
-     op_t a, b;
+memcmp_bytes (long unsigned int a, long unsigned int b)
 {
   long int srcp1 = (long int) &a;
   long int srcp2 = (long int) &b;
@@ -132,10 +131,7 @@ static int memcmp_common_alignment __P((long, long, size_t));
 __inline
 #endif
 static int
-memcmp_common_alignment (srcp1, srcp2, len)
-     long int srcp1;
-     long int srcp2;
-     size_t len;
+memcmp_common_alignment (long int srcp1, long int srcp2, size_t len)
 {
   op_t a0, a1;
   op_t b0, b1;
@@ -222,10 +218,7 @@ static int memcmp_not_common_alignment __P((long, long, size_t));
 __inline
 #endif
 static int
-memcmp_not_common_alignment (srcp1, srcp2, len)
-     long int srcp1;
-     long int srcp2;
-     size_t len;
+memcmp_not_common_alignment (long int srcp1, long int srcp2, size_t len)
 {
   op_t a0, a1, a2, a3;
   op_t b0, b1, b2, b3;
@@ -325,10 +318,7 @@ memcmp_not_common_alignment (srcp1, srcp2, len)
 }
 
 int
-rpl_memcmp (s1, s2, len)
-     const __ptr_t s1;
-     const __ptr_t s2;
-     size_t len;
+rpl_memcmp (const void *s1, const void *s2, size_t len)
 {
   op_t a0;
   op_t b0;

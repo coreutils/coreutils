@@ -101,10 +101,7 @@ int safe_read ();
    ERRNO is either a system error value, or zero if DISK is NULL
    on a system that requires a non-NULL value.  */
 int
-get_fs_usage (path, disk, fsp)
-     const char *path;
-     const char *disk;
-     struct fs_usage *fsp;
+get_fs_usage (const char *path, const char *disk, struct fs_usage *fsp)
 {
 #ifdef STAT_STATFS3_OSF1
 
@@ -262,9 +259,7 @@ get_fs_usage (path, disk, fsp)
 /* AIX PS/2 does not supply statfs.  */
 
 int
-statfs (path, fsb)
-     char *path;
-     struct statfs *fsb;
+statfs (char *path, struct statfs *fsb)
 {
   struct stat stats;
   struct dustat fsd;

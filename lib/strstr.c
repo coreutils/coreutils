@@ -30,9 +30,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 typedef unsigned chartype;
 
 char *
-strstr (phaystack, pneedle)
-     const char *phaystack;
-     const char *pneedle;
+strstr (const char *phaystack, const char *pneedle)
 {
   register const unsigned char *haystack, *needle;
   register chartype b, c;

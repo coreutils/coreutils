@@ -11,9 +11,7 @@
 #ifdef F_CHSIZE
 
 int
-ftruncate (fd, length)
-     int fd;
-     off_t length;
+ftruncate (int fd, off_t length)
 {
   return fcntl (fd, F_CHSIZE, length);
 }
@@ -30,9 +28,7 @@ ftruncate (fd, length)
 #  endif
 
 int
-ftruncate (fd, length)
-     int fd;
-     off_t length;
+ftruncate (int fd, off_t length)
 {
   struct flock fl;
   struct stat filebuf;
@@ -75,9 +71,7 @@ ftruncate (fd, length)
 #  if HAVE_CHSIZE
 
 int
-ftruncate (fd, length)
-     int fd;
-     off_t length;
+ftruncate (int fd, off_t length)
 {
   return chsize (fd, length);
 }
@@ -90,9 +84,7 @@ extern int errno;
 #   endif
 
 int
-ftruncate (fd, length)
-     int fd;
-     off_t length;
+ftruncate (int fd, off_t length)
 {
   errno = EIO;
   return -1;

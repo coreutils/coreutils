@@ -34,10 +34,7 @@
 /* FIXME: describe.  */
 
 int
-rpl_chown (file, uid, gid)
-     const char *file;
-     uid_t uid;
-     gid_t gid;
+rpl_chown (const char *file, uid_t uid, gid_t gid)
 {
   if (gid == (gid_t) -1 || uid == (uid_t) -1)
     {
