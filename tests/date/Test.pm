@@ -83,15 +83,24 @@ sub test_vector
      ['next-mo', "-d '$d1 next month' '+%Y-%m-%d %T'", {}, "$dm $t0", 0],
      ['next-y', "-d '$d1 next year'   '+%Y-%m-%d %T'", {}, "$dy $t0", 0],
 
-     # These two tests failed for sh-utils-1.16.
+     # These utc-* tests failed for sh-utils-1.16.
      ['utc-0', "-u -d '08/01/97 6:00' '+%D,%H:%M'", {}, "08/01/97,10:00", 0],
+     # Same as above, but don't rely on TZ in environment.
+     ['utc-0a', "-u -d '08/01/97 6:00 UTC +4 hours' '+%D,%H:%M'", {},
+      "08/01/97,10:00", 0],
+     # Make sure --file=FILE works with -u.
      ['utc-1', "-u --file=- '+%Y-%m-%d %T'", "$d0 $t0\n$d0 $t0\n",
+      "$d0 $th\n$d0 $th", 0],
+     # Same as above, but don't rely on TZ in environment.
+     ['utc-1a', "-u --file=- '+%Y-%m-%d %T'",
+      "$d0 $t0 UTC +1 hour\n$d0 $t0 UTC +1 hour\n",
       "$d0 $th\n$d0 $th", 0],
 
      # From the examples in the documentation.
      ['date2sec-0', "-d '1970-01-01 00:00:01' +%s", {}, "7201", 0],
+     # Same as above, but don't rely on TZ in environment.
+     ['date2sec-0a', "-d '1970-01-01 00:00:01 UTC +2 hours' +%s", {}, "7201",0],
 
-     # From the examples in the documentation.
      ['date2sec-1', "-d 2000-01-01 +%s", {}, "946684800", 0],
      ['sec2date-0', "-d '1970-01-01 UTC 946684800 sec' +'%Y-%m-%d %T %z'", {},
       "2000-01-01 00:00:00 +0000", 0],
@@ -108,10 +117,11 @@ sub test_vector
       push (@tv, [$test_name, $flags, $in, "$exp\n", $ret]);
     }
 
-  $Test::env{'utc-0'} = ['TZ=EST5EDT'];
+  $Test::env{'utc-0'} = ['TZ=UTC+4'];
 
   $Test::env{'utc-1'} = ['TZ=UTC+1'];
   $Test::input_via{'utc-1'} = {REDIR => 0};
+  $Test::input_via{'utc-1a'} = {REDIR => 0};
 
   $Test::env{'date2sec-0'} = ['TZ=UTC+2'];
 
