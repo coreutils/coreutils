@@ -7183,8 +7183,3 @@ regfree (preg)
 }
 
 #endif /* not emacs  */
-
-
-
-
-
