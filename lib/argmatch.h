@@ -1,5 +1,5 @@
 /* argmatch.h -- definitions and prototypes for argmatch.c
-   Copyright (C) 1990, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1990, 1998, 1999, 2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -123,7 +123,7 @@ const char *argmatch_to_argument
 	   const char *vallist, size_t valsize));
 
 # define ARGMATCH_TO_ARGUMENT(Value, Arglist, Vallist)			\
-  argmatch_to_argument ((char const *) &(Value), (Arglist), 		\
+  argmatch_to_argument ((Value), (Arglist), 		\
 		        (const char *) (Vallist), sizeof (*(Vallist)))
 
 #endif /* ARGMATCH_H_ */
