@@ -24,7 +24,7 @@ Sat Mar 16 10:46:23 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 Sun Mar 10 22:36:11 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* backupfile.c (max_backup_version): Declare file_name_length to
-	be of type size_t.  This avoid a warning from gcc -Wall.
+	be of type size_t.  This avoids a warning from gcc -Wall.
 
 	* chmod.c chown.c cp.c dd.c df.c du.c install.c ln.c ls.c
 	mkdir.c mkfifo.c mknod.c mv.c mvdir.c rm.c rmdir.c sync.c
