@@ -327,6 +327,17 @@ Each KEYWORD may be:\n\
   sync      pad every input block with NULs to ibs-size; when used\n\
               with block or unblock, pad with spaces rather than NULs\n\
 "), stdout);
+      fputs (_("\
+\n\
+Note that sending a SIGUSR1 signal to a running `dd' process makes it\n\
+print to standard error the number of records read and written so far,\n\
+then to resume copying.\n\
+\n\
+  $ dd if=/dev/zero of=/dev/null& pid=$!\n\
+  $ kill -USR1 $pid; sleep 1; kill $pid\n\
+  10899206+0 records in\n\
+  10899206+0 records out\n\
+"), stdout);
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
   exit (status);
