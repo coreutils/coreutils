@@ -1,3 +1,10 @@
+2000-11-05  Jim Meyering  <meyering@lucent.com>
+
+	* src/mkdir.c (main): Use make_dir instead of using mkdir directly.
+	Diagnose as failure when mkdir tries to create (without the --parent
+	(-p) option) a directory that already exists.
+	* tests/cp/cp-parents: Add a test for the above fix.
+
 2000-11-01  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.0.30.
