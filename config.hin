@@ -438,7 +438,7 @@
 /* Define to 1 if you have the `getdelim' function. */
 #undef HAVE_GETDELIM
 
-/* Define to 1 if you have the `getgroups' function. */
+/* Define to 1 if your system has a working `getgroups' function. */
 #undef HAVE_GETGROUPS
 
 /* Define to 1 if you have the `gethostbyaddr' function. */

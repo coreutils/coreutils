@@ -1,4 +1,4 @@
-# generated automatically by aclocal 1.6f -*- Autoconf -*-
+# generated automatically by aclocal 1.7 -*- Autoconf -*-
 
 # Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002
 # Free Software Foundation, Inc.
@@ -179,14 +179,14 @@ echo "timestamp for $1" >`AS_DIRNAME([$1])`/stamp-h[]$_am_stamp_count])
 # ----------------------------
 # Automake X.Y traces this macro to ensure aclocal.m4 has been
 # generated from the m4 files accompanying Automake X.Y.
-AC_DEFUN([AM_AUTOMAKE_VERSION],[am__api_version="1.6f"])
+AC_DEFUN([AM_AUTOMAKE_VERSION],[am__api_version="1.7"])
 
 # AM_SET_CURRENT_AUTOMAKE_VERSION
 # -------------------------------
 # Call AM_AUTOMAKE_VERSION so it can be traced.
 # This function is AC_REQUIREd by AC_INIT_AUTOMAKE.
 AC_DEFUN([AM_SET_CURRENT_AUTOMAKE_VERSION],
-	 [AM_AUTOMAKE_VERSION([1.6f])])
+	 [AM_AUTOMAKE_VERSION([1.7])])
 
 # Helper functions for option handling.                    -*- Autoconf -*-
 
@@ -851,7 +851,7 @@ WARNING: You don't seem to have perl5.003 or newer installed, or you lack
 ] )
 ])
 
-#serial 52   -*- autoconf -*-
+#serial 53   -*- autoconf -*-
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
@@ -919,7 +919,6 @@ AC_DEFUN([jm_MACROS],
   AC_REQUIRE([gt_INTTYPES_PRI])
 
   AC_REQUIRE([jm_FUNC_GETGROUPS])
-  test -n "$GETGROUPS_LIB" && LIBS="$GETGROUPS_LIB $LIBS"
 
   AC_REQUIRE([AC_FUNC_FSEEKO])
   AC_REQUIRE([AC_FUNC_VPRINTF])
@@ -2022,66 +2021,6 @@ AC_DEFUN([jm_PREREQ_ERROR],
   AC_FUNC_STRERROR_R
   AC_HEADER_STDC
 ])
-
-#serial 1003
-# Experimental replacement for the function in the latest CVS autoconf.
-# Use with the error.c file in ../lib.
-
-# Copyright 2001 Free Software Foundation, Inc.
-
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2, or (at your option)
-# any later version.
-
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software Foundation,
-# Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
-
-undefine([AC_FUNC_STRERROR_R])
-
-# AC_FUNC_STRERROR_R
-# ------------------
-AC_DEFUN([AC_FUNC_STRERROR_R],
-[AC_CHECK_DECLS([strerror_r])
-AC_CHECK_FUNCS([strerror_r])
-AC_CACHE_CHECK([whether strerror_r returns char *],
-               ac_cv_func_strerror_r_char_p,
-   [
-    ac_cv_func_strerror_r_char_p=no
-    if test $ac_cv_have_decl_strerror_r = yes; then
-      AC_COMPILE_IFELSE([AC_LANG_PROGRAM([AC_INCLUDES_DEFAULT],
-	[[
-	  char buf[100];
-	  char x = *strerror_r (0, buf, sizeof buf);
-	  char *p = strerror_r (0, buf, sizeof buf);
-	]])],
-			ac_cv_func_strerror_r_char_p=yes)
-    else
-      # strerror_r is not declared.  Choose between
-      # systems that have relatively inaccessible declarations for the
-      # function.  BeOS and DEC UNIX 4.0 fall in this category, but the
-      # former has a strerror_r that returns char*, while the latter
-      # has a strerror_r that returns `int'.
-      # This test should segfault on the DEC system.
-      AC_RUN_IFELSE([AC_LANG_PROGRAM([AC_INCLUDES_DEFAULT
-	extern char *strerror_r ();],
-	[[char buf[100];
-	  char x = *strerror_r (0, buf, sizeof buf);
-	  exit (!isalpha (x));]])],
-                    ac_cv_func_strerror_r_char_p=yes, , :)
-    fi
-  ])
-if test $ac_cv_func_strerror_r_char_p = yes; then
-  AC_DEFINE([STRERROR_R_CHAR_P], 1,
-	    [Define to 1 if strerror_r returns char *.])
-fi
-])# AC_FUNC_STRERROR_R
 
 #serial 7
 
@@ -3299,51 +3238,19 @@ char *p = PRId32;
   fi
 ])
 
-#serial 5
+#serial 6
 
 dnl From Jim Meyering.
-dnl
-dnl Invoking code should check $GETGROUPS_LIB something like this:
-dnl  jm_FUNC_GETGROUPS
-dnl  test -n "$GETGROUPS_LIB" && LIBS="$GETGROUPS_LIB $LIBS"
-dnl
+dnl A wrapper around AC_FUNC_GETGROUPS.
 
 AC_DEFUN([jm_FUNC_GETGROUPS],
-[AC_REQUIRE([AC_TYPE_GETGROUPS])dnl
- AC_REQUIRE([AC_TYPE_SIZE_T])dnl
- AC_CHECK_FUNCS(getgroups)
-
- # If we don't yet have getgroups, see if it's in -lbsd.
- # This is reported to be necessary on an ITOS 3000WS running SEIUX 3.1.
- if test $ac_cv_func_getgroups = no; then
-   jm_cv_sys_getgroups_saved_lib="$LIBS"
-   AC_CHECK_LIB(bsd, getgroups, [GETGROUPS_LIB=-lbsd])
-   LIBS="$jm_cv_sys_getgroups_saved_lib"
- fi
-
- # Run the program to test the functionality of the system-supplied
- # getgroups function only if there is such a function.
- if test $ac_cv_func_getgroups = yes; then
-   AC_CACHE_CHECK([for working getgroups], jm_cv_func_working_getgroups,
-    [AC_TRY_RUN([
-      int
-      main ()
-      {
-	/* On Ultrix 4.3, getgroups (0, 0) always fails.  */
-	exit (getgroups (0, 0) == -1 ? 1 : 0);
-      }
-		],
-	       jm_cv_func_working_getgroups=yes,
-	       jm_cv_func_working_getgroups=no,
-	       dnl When crosscompiling, assume getgroups is broken.
-	       jm_cv_func_working_getgroups=no)
-    ])
-    if test $jm_cv_func_working_getgroups = no; then
-      AC_LIBOBJ(getgroups)
-      AC_DEFINE(getgroups, rpl_getgroups,
-	[Define as rpl_getgroups if getgroups doesn't work right.])
-    fi
+[AC_REQUIRE([AC_FUNC_GETGROUPS])dnl
+  if test $cv_func_getgroups_works = no; then
+    AC_LIBOBJ(getgroups)
+    AC_DEFINE(getgroups, rpl_getgroups,
+      [Define as rpl_getgroups if getgroups doesn't work right.])
   fi
+  test -n "$GETGROUPS_LIB" && LIBS="$GETGROUPS_LIB $LIBS"
 ])
 
 #serial 5
@@ -5486,7 +5393,7 @@ $ac_includes_default
   AC_SUBST(LIB_CRYPT)
 ])
 
-# gettext.m4 serial 15 (gettext-0.11.3)
+# gettext.m4 serial 17 (gettext-0.11.5)
 dnl Copyright (C) 1995-2002 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
@@ -5521,7 +5428,9 @@ dnl    AM-DISABLE-SHARED). If INTLSYMBOL is 'no-libtool', a static library
 dnl    $(top_builddir)/intl/libintl.a will be created.
 dnl If NEEDSYMBOL is specified and is 'need-ngettext', then GNU gettext
 dnl    implementations (in libc or libintl) without the ngettext() function
-dnl    will be ignored.
+dnl    will be ignored.  If NEEDSYMBOL is specified and is
+dnl    'need-formatstring-macros', then GNU gettext implementations that don't
+dnl    support the ISO C 99 <inttypes.h> formatstring macros will be ignored.
 dnl INTLDIR is used to find the intl libraries.  If empty,
 dnl    the value `$(top_builddir)/intl/' is used.
 dnl
@@ -5548,9 +5457,9 @@ AC_DEFUN([AM_GNU_GETTEXT],
   ifelse([$1], [], , [ifelse([$1], [external], , [ifelse([$1], [no-libtool], , [ifelse([$1], [use-libtool], ,
     [errprint([ERROR: invalid first argument to AM_GNU_GETTEXT
 ])])])])])
-  ifelse([$2], [], , [ifelse([$2], [need-ngettext], ,
+  ifelse([$2], [], , [ifelse([$2], [need-ngettext], , [ifelse([$2], [need-formatstring-macros], ,
     [errprint([ERROR: invalid second argument to AM_GNU_GETTEXT
-])])])
+])])])])
   define(gt_included_intl, ifelse([$1], [external], [no], [yes]))
   define(gt_libtool_suffix_prefix, ifelse([$1], [use-libtool], [l], []))
 
@@ -5613,13 +5522,20 @@ AC_DEFUN([AM_GNU_GETTEXT],
         dnl to fall back to GNU NLS library.
 
         dnl Add a version number to the cache macros.
-        define([gt_api_version], ifelse([$2], [need-ngettext], 2, 1))
+        define([gt_api_version], ifelse([$2], [need-formatstring-macros], 3, ifelse([$2], [need-ngettext], 2, 1)))
         define([gt_cv_func_gnugettext_libc], [gt_cv_func_gnugettext]gt_api_version[_libc])
         define([gt_cv_func_gnugettext_libintl], [gt_cv_func_gnugettext]gt_api_version[_libintl])
 
         AC_CACHE_CHECK([for GNU gettext in libc], gt_cv_func_gnugettext_libc,
          [AC_TRY_LINK([#include <libintl.h>
-extern int _nl_msg_cat_cntr;
+]ifelse([$2], [need-formatstring-macros],
+[#ifndef __GNU_GETTEXT_SUPPORTED_REVISION
+#define __GNU_GETTEXT_SUPPORTED_REVISION(major) ((major) == 0 ? 0 : -1)
+#endif
+changequote(,)dnl
+typedef int array [2 * (__GNU_GETTEXT_SUPPORTED_REVISION(0) >= 1) - 1];
+changequote([,])dnl
+], [])[extern int _nl_msg_cat_cntr;
 extern int *_nl_domain_bindings;],
             [bindtextdomain ("", "");
 return (int) gettext ("")]ifelse([$2], [need-ngettext], [ + (int) ngettext ("", "", 0)], [])[ + _nl_msg_cat_cntr + *_nl_domain_bindings],
@@ -5644,7 +5560,14 @@ return (int) gettext ("")]ifelse([$2], [need-ngettext], [ + (int) ngettext ("", 
             LIBS="$LIBS $LIBINTL"
             dnl Now see whether libintl exists and does not depend on libiconv.
             AC_TRY_LINK([#include <libintl.h>
-extern int _nl_msg_cat_cntr;
+]ifelse([$2], [need-formatstring-macros],
+[#ifndef __GNU_GETTEXT_SUPPORTED_REVISION
+#define __GNU_GETTEXT_SUPPORTED_REVISION(major) ((major) == 0 ? 0 : -1)
+#endif
+changequote(,)dnl
+typedef int array [2 * (__GNU_GETTEXT_SUPPORTED_REVISION(0) >= 1) - 1];
+changequote([,])dnl
+], [])[extern int _nl_msg_cat_cntr;
 extern
 #ifdef __cplusplus
 "C"
@@ -5658,7 +5581,14 @@ return (int) gettext ("")]ifelse([$2], [need-ngettext], [ + (int) ngettext ("", 
             if test "$gt_cv_func_gnugettext_libintl" != yes && test -n "$LIBICONV"; then
               LIBS="$LIBS $LIBICONV"
               AC_TRY_LINK([#include <libintl.h>
-extern int _nl_msg_cat_cntr;
+]ifelse([$2], [need-formatstring-macros],
+[#ifndef __GNU_GETTEXT_SUPPORTED_REVISION
+#define __GNU_GETTEXT_SUPPORTED_REVISION(major) ((major) == 0 ? 0 : -1)
+#endif
+changequote(,)dnl
+typedef int array [2 * (__GNU_GETTEXT_SUPPORTED_REVISION(0) >= 1) - 1];
+changequote([,])dnl
+], [])[extern int _nl_msg_cat_cntr;
 extern
 #ifdef __cplusplus
 "C"
@@ -5953,7 +5883,7 @@ AC_DEFUN([AM_PO_SUBDIRS],
         ;;
       esac
     done],
-   [# Capture the value of obsolete $ALL_LINGUAS because we need it to compute
+   [# Capture the value of obsolete ALL_LINGUAS because we need it to compute
     # POFILES, GMOFILES, UPDATEPOFILES, DUMMYPOFILES, CATALOGS. But hide it
     # from automake.
     eval 'ALL_LINGUAS''="$ALL_LINGUAS"'
@@ -5983,6 +5913,8 @@ AC_DEFUN([AM_INTL_SUBDIR],
   AC_REQUIRE([AC_FUNC_MMAP])dnl
   AC_REQUIRE([jm_GLIBC21])dnl
   AC_REQUIRE([gt_INTDIV0])dnl
+  AC_REQUIRE([jm_AC_TYPE_UINTMAX_T])dnl
+  AC_REQUIRE([gt_INTTYPES_PRI])dnl
 
   AC_CHECK_HEADERS([argz.h limits.h locale.h nl_types.h malloc.h stddef.h \
 stdlib.h string.h unistd.h sys/param.h])
@@ -6043,6 +5975,10 @@ AC_DEFUN([AM_MKINSTALLDIRS],
   fi
   AC_SUBST(MKINSTALLDIRS)
 ])
+
+
+dnl Usage: AM_GNU_GETTEXT_VERSION([gettext-version])
+AC_DEFUN([AM_GNU_GETTEXT_VERSION], [])
 
 # progtest.m4 serial 2 (gettext-0.10.40)
 dnl Copyright (C) 1996-2002 Free Software Foundation, Inc.
