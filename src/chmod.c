@@ -155,7 +155,7 @@ change_file_mode (const char *file, const struct mode_change *changes,
   if (deref_symlink ? stat (file, &file_stats) : lstat (file, &file_stats))
     {
       if (force_silent == 0)
-	error (0, errno, _("getting attributes of %s"), quote (file));
+	error (0, errno, _("failed to get attributes of %s"), quote (file));
       return 1;
     }
 
@@ -362,7 +362,7 @@ main (int argc, char **argv)
   else if (changes == MODE_MEMORY_EXHAUSTED)
     xalloc_die ();
   else if (changes == MODE_BAD_REFERENCE)
-    error (1, errno, _("getting attributes of %s"), quote (reference_file));
+    error (1, errno, _("failed to get attributes of %s"), quote (reference_file));
 
   for (; optind < argc; ++optind)
     errors |= change_file_mode (argv[optind], changes, 1);
