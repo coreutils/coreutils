@@ -2,6 +2,7 @@
 
 	* canonicalize.m4 (AC_FUNC_CANONICALIZE_FILE_NAME): New file and macro.
 	* jm-macros.m4: Require AC_FUNC_CANONICALIZE_FILE_NAME.
+	(jm_MACROS): No longer check for resolvepath or canonicalize_file_name.
 
 2002-12-15  Jim Meyering  <jim@meyering.net>
 
