@@ -44,7 +44,7 @@
 	many as 10^18 - 1 lines (the old limit was 10^11 - 1, and could
 	be exceeded without too much trouble).	Use this symbol rather
 	than hard-coding the constant everywhere.
-	(next_line_num): Rather than overruning for input with more lines,
+	(next_line_num): Rather than overrunning for input with more lines,
 	mark the line number by putting a `>' in the leftmost slot.
 	Patch by Jan Nieuwenhuizen.
 
