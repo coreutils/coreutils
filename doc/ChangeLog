@@ -1,3 +1,8 @@
+2004-12-08  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* getdate.texi (Time of day items, Time zone items):
+	Describe new formats +00:00, UTC+00:00.
+
 2004-12-04  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (cut invocation): Say when --complement is useful.

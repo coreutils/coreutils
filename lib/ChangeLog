@@ -1,3 +1,12 @@
+2004-12-08  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* getdate.y (textint): New member "negative".
+	(time_zone_hhmm): New function.
+	Expect 14 shift-reduce conflicts, not 13.
+	(o_colon_minutes): New rule.
+	(time, zone): Use it to add support for +HH:MM, UTC+HH:MM.
+	(yylex): Set the "negative" member of signed numbers.
+
 2004-12-06  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (libfetish_a_SOURCES): Begin removing .c and .h file
