@@ -1,6 +1,6 @@
 #!/bin/sh
-# Make sure that rm -rf '' fails.
-# On SunOS 4.1.3, running rm -rf '' in a nonempty directory may
+# Make sure that rm -r '' fails.
+# On SunOS 4.1.3, running rm -r '' in a nonempty directory may
 # actually remove files with names of entries in the current directory
 # but relative to `/' rather than relative to the current directory.
 
@@ -14,6 +14,13 @@ fi
 
 tmp=t-rm.$$
 
+# We're going to run RM from a subdir.
+# Prepend ../ if $RM is a relative file name.
+case $RM in
+  /*) ;;
+  */*) RM=../$RM
+esac
+
 test_failure=0
 mkdir $tmp || test_failure=1
 
@@ -24,7 +31,7 @@ fi
 
 fail=0
 cd $tmp
-$RM -rf '' > /dev/null 2>&1 && fail=1
+$RM -r '' > /dev/null 2>&1 && fail=1
 cd ..
 rm -rf $tmp
 
