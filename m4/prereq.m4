@@ -20,6 +20,7 @@ AC_DEFUN([jm_PREREQ],
   jm_PREREQ_REGEX
   jm_PREREQ_TEMPNAME # called by mkstemp
   jm_PREREQ_XGETCWD
+  jm_PREREQ_XREADLINK
 ])
 
 AC_DEFUN([jm_PREREQ_ADDEXT],
@@ -147,4 +148,10 @@ AC_DEFUN([jm_PREREQ_XGETCWD],
   AC_CHECK_HEADERS(limits.h stdlib.h sys/param.h unistd.h)
   AC_CHECK_FUNCS(getcwd)
   AC_FUNC_GETCWD_NULL
+])
+
+AC_DEFUN([jm_PREREQ_XREADLINK],
+[
+  AC_C_PROTOTYPES
+  AC_CHECK_HEADERS(limits.h stdlib.h sys/types.h unistd.h)
 ])
