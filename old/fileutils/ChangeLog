@@ -1,4 +1,16 @@
+1998-07-27  Jim Meyering  <meyering@ascend.com>
+
+	* tests/install/Makefile.am (TESTS_ENVIRONMENT): Set LS, MKDIR, and RM.
+
+	* tests/install/basic-1: Add a test for this.
+	* src/install.c: Make copy create each destination file initially
+	with mode 0600 so strip will work, then apply specified mode.
+	Arne Henrik Juul reported that `./ginstall -s -c -m 555 dd /tmp' failed.
+
 1998-07-25  Jim Meyering  <meyering@ascend.com>
+
+	* src/mv.c (chown): Remove unused definition.
+	Reported by Kaveh Ghazi.
 
 	* src/rmdir.c (main): rmdir fails with EEXIST on some systems.
 	Handle that, so --ignore-fail-on-non-empty works.
