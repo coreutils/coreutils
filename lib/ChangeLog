@@ -1,5 +1,6 @@
 2001-08-26  Jim Meyering  <meyering@lucent.com>
 
+	* strtoll.c: New file, from GNU libc.
 	* xstrtoimax.c: New file.
 
 	* strtoumax.c: New file.  Simply include "strtoumax.c".
