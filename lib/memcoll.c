@@ -21,6 +21,8 @@
 # include <config.h>
 #endif
 
+#include <sys/types.h>
+
 #if HAVE_STRING_H
 # include <string.h>
 #endif
