@@ -1,3 +1,15 @@
+2004-06-29  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (Common options, Target directory, cp
+	invocation, install invocation, mv invocation, ln invocation):
+	Likewise.
+	(link invocation): Explain how to rewrite link using ln now
+	that we have --no-target-directory.
+	(ln invocation): Explain that --no-target-directory subsumes
+	--no-dereference.
+	(unlink invocation): Modify wording to match new wording in
+	link invocation.
+
 2004-06-25  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (install invocation): Document
