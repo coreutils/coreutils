@@ -2,6 +2,9 @@
 
 	* Version 5.0.
 
+	* Makefile.maint (TMPDIR): Make sure it's defined.
+	(my-distcheck): Build in $(TMPDIR), not `.'.
+
 	* src/Makefile.am (false.c): Change all occurrences of
 	`(EXIT_SUCCESS)' to `(EXIT_FAILURE)'.  Reported by Paul Jarc,
 
