@@ -4051,6 +4051,9 @@ options}.
 @opindex --bytes
 Print only the bytes in positions listed in @var{byte-list}.  Tabs and
 backspaces are treated like any other character; they take up 1 byte.
+If an output delimiter is specified, (see the description of
+@option{--output-delimiter}), then output that string between
+ranges of selected bytes.
 
 @item -c @var{character-list}
 @itemx --characters=@var{character-list}
@@ -4060,6 +4063,9 @@ Print only characters in positions listed in @var{character-list}.
 The same as @option{-b} for now, but internationalization will change
 that.  Tabs and backspaces are treated like any other character; they
 take up 1 character.
+If an output delimiter is specified, (see the description of
+@option{--output-delimiter}), then output that string between
+ranges of selected bytes.
 
 @item -f @var{field-list}
 @itemx --fields=@var{field-list}
@@ -4090,8 +4096,11 @@ character.  Normally, any line without a field separator is printed verbatim.
 
 @itemx --output-delimiter=@var{output_delim_string}
 @opindex --output-delimiter
-For @option{-f}, output fields are separated by @var{output_delim_string}.
-The default is to use the input delimiter.
+With @option{-f}, output fields are separated by @var{output_delim_string}.
+The default with @option{-f} is to use the input delimiter.
+When using @option{-b} or @option{-c} to select ranges of byte or
+character offsets (as opposed to ranges of fields),
+output @var{output_delim_string} between ranges of selected bytes.
 
 
 @end table
