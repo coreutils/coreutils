@@ -29,6 +29,9 @@
 #ifdef _LIBC
 # define HAVE_LIMITS_H 1
 # define STDC_HEADERS 1
+# define STATIC /* empty */
+#else
+# define STATIC static
 #endif
 
 /* Assume that leap seconds are possible, unless told otherwise.
@@ -100,7 +103,7 @@
 #endif
 
 /* How many days come before each month (0-12).  */
-const unsigned short int __mon_yday[2][13] =
+STATIC const unsigned short int __mon_yday[2][13] =
   {
     /* Normal years.  */
     { 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365 },
@@ -213,7 +216,7 @@ ranged_convert (struct tm *(*convert) (const time_t *, struct tm *),
    Use *OFFSET to keep track of a guess at the offset of the result,
    compared to what the result would be for UTC without leap seconds.
    If *OFFSET's guess is correct, only one CONVERT call is needed.  */
-time_t
+STATIC time_t
 __mktime_internal (struct tm *tp,
 		   struct tm *(*convert) (const time_t *, struct tm *),
 		   time_t *offset)
