@@ -1,4 +1,10 @@
 2000-01-22  Jim Meyering  <meyering@lucent.com>
+
+	* strtoumax.c: [! HAVE_DECL_STRTOUL]: Declare strtoul.
+	[! HAVE_DECL_STRTOULL]: Declare strtoull.
+	Required for some AIX systems.  Reported by Christian Krackowizer.
+	[TESTING] (main): New function.
+
 	1997-10-17  Eli Zaretskii  <eliz@is.elta.co.il>
 	* dirname.c (dir_name): Support for DOS-style file names with drive
 	letters.
