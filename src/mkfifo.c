@@ -39,7 +39,7 @@ char *program_name;
 /* If non-zero, display usage information and exit.  */
 static int show_help;
 
-/* If non-zero, print the version on standard error.  */
+/* If non-zero, print the version on standard output and exit.  */
 static int show_version;
 
 static struct option const longopts[] =
@@ -83,7 +83,7 @@ main (argc, argv)
 
   if (show_version)
     {
-      fprintf (stderr, "%s\n", version_string);
+      printf ("%s\n", version_string);
       exit (0);
     }
 

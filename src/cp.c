@@ -122,7 +122,7 @@ static uid_t myeuid;
 /* If non-zero, display usage information and exit.  */
 static int show_help;
 
-/* If non-zero, print the version on standard error.  */
+/* If non-zero, print the version on standard output and exit.  */
 static int show_version;
 
 static struct option const long_opts[] =
@@ -262,7 +262,7 @@ main (argc, argv)
 
   if (show_version)
     {
-      fprintf (stderr, "%s\n", version_string);
+      printf ("%s\n", version_string);
       exit (0);
     }
 
@@ -748,9 +748,10 @@ copy (src_path, dst_path, new_dst, device, ancestors)
 #ifdef S_ISLNK
   if (S_ISLNK (src_type))
     {
-      char link_val[PATH_MAX + 1];
+      char *link_val;
       int link_size;
 
+      link_val = (char *) alloca (PATH_MAX + 2);
       link_size = readlink (src_path, link_val, sizeof (link_val) - 1);
       if (link_size < 0)
 	{

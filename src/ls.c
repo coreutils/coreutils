@@ -361,7 +361,7 @@ static int exit_status;
 /* If non-zero, display usage information and exit.  */
 static int show_help;
 
-/* If non-zero, print the version on standard error.  */
+/* If non-zero, print the version on standard output and exit.  */
 static int show_version;
 
 static struct option const long_options[] =
@@ -448,7 +448,7 @@ main (argc, argv)
 
   if (show_version)
     {
-      fprintf (stderr, "%s\n", version_string);
+      printf ("%s\n", version_string);
       exit (0);
     }
 
@@ -1076,9 +1076,10 @@ get_link_name (filename, f)
      char *filename;
      struct file *f;
 {
-  char linkbuf[PATH_MAX + 1];
+  char *linkbuf;
   register int linksize;
 
+  linkbuf = (char *) alloca (PATH_MAX + 2);
   /* Some automounters give incorrect st_size for mount points.
      I can't think of a good workaround for it, though.  */
   linksize = readlink (filename, linkbuf, sizeof (linkbuf) - 1);
