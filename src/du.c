@@ -300,7 +300,8 @@ print_size (uintmax_t n_blocks, const char *string)
 {
   char buf[LONGEST_HUMAN_READABLE + 1];
   printf ("%s\t%s\n",
-	  human_readable (n_blocks, buf, ST_NBLOCKSIZE, output_block_size),
+	  human_readable_inexact (n_blocks, buf, ST_NBLOCKSIZE,
+				  output_block_size, human_ceiling),
 	  string);
   fflush (stdout);
 }
