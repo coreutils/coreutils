@@ -118,6 +118,7 @@ libfetish_a_SOURCES = \
   unistd-safer.h \
   unlocked-io.h \
   userspec.c userspec.h \
+  utimecmp.c utimecmp.h \
   utimens.c utimens.h \
   version-etc.c version-etc.h \
   xalloc.h \
