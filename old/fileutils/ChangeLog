@@ -2,6 +2,9 @@
 
 	* Version 4.1.9.
 
+	* Makefile.maint (wget-update): Checkout into config/.
+	Warn when skipping a file.
+
 	* src/stat.c: Include sys/statvfs.h.
 	[!HAVE_SYS_STATVFS_H && !HAVE_SYS_VFS_H]: Include sys/param.h
 	and sys/mount.h, to get decl of struct statfs on NetBSD 1.5.2.
@@ -68,9 +71,6 @@
 
 	* tests/mv/perm-1: New file, to demonstrate fix of 2002-06-12.
 	* tests/mv/Makefile.am (TESTS): Add perm-1.
-
-	* Makefile.maint (wget-update): `cd' to config first.
-	Warn when omitting a file ... FIXME
 
 	* src/system.h: For GNU libc 2.2 and newer, ensure that <sys/types.h>
 	has been included before this file.
