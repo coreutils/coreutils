@@ -1,3 +1,13 @@
+2001-08-07  Jim Meyering  <meyering@lucent.com>
+
+	* src/printf.c (cfcc_msg): Remove now-inaccurate part of comment.
+	From Bruno Haible.
+
+2001-07-04  Jim Meyering  <meyering@lucent.com>
+
+	* Makefile.cfg: New file with package-specific definitions.
+	* Makefile.am (EXTRA_DIST): Add Makefile.cfg.
+
 2001-06-09  Jim Meyering  <meyering@lucent.com>
 
 	(PIDSTR_DECL_AND_INIT): Define.
