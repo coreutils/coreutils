@@ -3425,11 +3425,14 @@ A backslash.
 The notation @samp{@var{m}-@var{n}} expands to all of the characters
 from @var{m} through @var{n}, in ascending order.  @var{m} should
 collate before @var{n}; if it doesn't, an error results.  As an example,
-@samp{0-9} is the same as @samp{0123456789}.  Although GNU @code{tr}
-does not support the System V syntax that uses square brackets to
-enclose ranges, translations specified in that format will still work as
-long as the brackets in @var{string1} correspond to identical brackets
-in @var{string2}.
+@samp{0-9} is the same as @samp{0123456789}.
+
+GNU @code{tr} does not support the System V syntax that uses square
+brackets to enclose ranges.  Translations specified in that format
+sometimes work as expected, since the brackets are often transliterated
+to themselves.  However, they should be avoided because they sometimes
+behave unexpectedly.  For example, @samp{tr -d '[0-9]'} deletes brackets
+as well as digits.
 
 Many historically common and even accepted uses of ranges are not
 portable.  For example, on @sc{ebcdic} hosts using the @samp{A-Z}
@@ -4110,7 +4113,7 @@ characters. Normally it is used for things like mapping upper case to
 lower case:
 
 @example
-$ echo ThIs ExAmPlE HaS MIXED case! | tr '[A-Z]' '[a-z]'
+$ echo ThIs ExAmPlE HaS MIXED case! | tr '[:upper:]' '[:lower:]'
 this example has mixed case!
 @end example
 
@@ -4169,7 +4172,7 @@ The first step is to change the case of all the letters in our input file
 to one case.  ``The'' and ``the'' are the same word when doing counting.
 
 @example
-$ tr '[A-Z]' '[a-z]' < whats.gnu | ...
+$ tr '[:upper:]' '[:lower:]' < whats.gnu | ...
 @end example
 
 The next step is to get rid of punctuation.  Quoted words and unquoted words
@@ -4177,7 +4180,7 @@ should be treated identically; it's easiest to just get the punctuation out of
 the way.
 
 @smallexample
-$ tr '[A-Z]' '[a-z]' < whats.gnu | tr -cd '[A-Za-z0-9_ \012]' | ...
+$ tr '[:upper:]' '[:lower:]' < whats.gnu | tr -cd '[:alnum:]_ \012' | ...
 @end smallexample
 
 The second @code{tr} command operates on the complement of the listed
@@ -4192,8 +4195,8 @@ next step is break the data apart so that we have one word per line. This
 makes the counting operation much easier, as we will see shortly.
 
 @smallexample
-$ tr '[A-Z]' '[a-z]' < whats.gnu | tr -cd '[A-Za-z0-9_ \012]' |
-> tr -s '[ ]' '\012' | ...
+$ tr '[:upper:]' '[:lower:]' < whats.gnu | tr -cd '[:alnum:]_ \012' |
+> tr -s ' ' '\012' | ...
 @end smallexample
 
 This command turns blanks into newlines.  The @samp{-s} option squeezes
@@ -4206,8 +4209,8 @@ We now have data consisting of one word per line, no punctuation, all one
 case.  We're ready to count each word:
 
 @smallexample
-$ tr '[A-Z]' '[a-z]' < whats.gnu | tr -cd '[A-Za-z0-9_ \012]' |
-> tr -s '[ ]' '\012' | sort | uniq -c | ...
+$ tr '[:upper:]' '[:lower:]' < whats.gnu | tr -cd '[:alnum:]_ \012' |
+> tr -s ' ' '\012' | sort | uniq -c | ...
 @end smallexample
 
 At this point, the data might look something like this:
@@ -4238,8 +4241,8 @@ reverse the order of the sort
 The final pipeline looks like this:
 
 @smallexample
-$ tr '[A-Z]' '[a-z]' < whats.gnu | tr -cd '[A-Za-z0-9_ \012]' |
-> tr -s '[ ]' '\012' | sort | uniq -c | sort -nr
+$ tr '[:upper:]' '[:lower:]' < whats.gnu | tr -cd '[:alnum:]_ \012' |
+> tr -s ' ' '\012' | sort | uniq -c | sort -nr
  156 the
   60 a
   58 to
@@ -4265,16 +4268,16 @@ Now, how to compare our file with the dictionary?  As before, we generate
 a sorted list of words, one per line:
 
 @smallexample
-$ tr '[A-Z]' '[a-z]' < whats.gnu | tr -cd '[A-Za-z0-9_ \012]' |
-> tr -s '[ ]' '\012' | sort -u | ...
+$ tr '[:upper:]' '[:lower:]' < whats.gnu | tr -cd '[:alnum:]_ \012' |
+> tr -s ' ' '\012' | sort -u | ...
 @end smallexample
 
 Now, all we need is a list of words that are @emph{not} in the
 dictionary.  Here is where the @code{comm} command comes in.
 
 @smallexample
-$ tr '[A-Z]' '[a-z]' < whats.gnu | tr -cd '[A-Za-z0-9_ \012]' |
-> tr -s '[ ]' '\012' | sort -u |
+$ tr '[:upper:]' '[:lower:]' < whats.gnu | tr -cd '[:alnum:]_ \012' |
+> tr -s ' ' '\012' | sort -u |
 > comm -23 - /usr/lib/ispell/ispell.words
 @end smallexample
 
