@@ -1,6 +1,46 @@
-1998-02-25  Jim Meyering  <meyering@eng.ascend.com>
+1998-03-13  Jim Meyering  <meyering@eng.ascend.com>
 
-	* Makefile.maint: Use -include, not `include' for aclocal-files.
+	* src/remove.c: Use `virtual memory exhausted' message, not
+	`Memory exhausted' to be consistent with the majority of other
+	such messages.
+	Say `removing all...', not `removing any...'.
+	* src/rmdir.c (remove_parents): Be consistent with documentation of
+	--verbose option and with remove.c in saying `removing...' before
+	the operation is attempted.
+	(main): Likewise.
+	Suggestions from Santiago Vila.
+
+	* src/copy.c (copy_dir): Add new parameter, copy_into_self, and set it.
+	(copy_internal): Likewise.
+	(copy): Likewise.
+	Update all callers.
+	* src/cp.c (do_copy): Add unused arg in calls to copy.
+	* src/mv.c (do_move): Add &copy_into_self arg in call to copy.
+	Don't remove source directory when copy_into_self is nonzero.
+	Reported by Arne Henrik Juul.
+
+1998-03-10  Jim Meyering  <meyering@eng.ascend.com>
+
+	* Running this command
+    	mkdir j;touch k; ./mv j k j
+  	(correctly) copies j into j/j and moves k to j/k,
+  	but then it removes `j' and you're left with nothing.
+  	Not nice, eh?
+
+	The fix is simple in concept: don't remove a source directory
+	if it is a parent of (or the same as) the destination directory.
+	I don't think POSIX discusses this case.
+
+1998-02-28   Eli Zaretskii  <eliz@is.elta.co.il>
+
+	* userspec.c (parse_user_spec) [__DJGPP__]: Make function know
+	about any arbitrary user and group by pretending to be the user
+	and to belong to the group specified in `spec_arg' argument.
+
+	* idcache.c (getuidbyname) [__DJGPP__]: Make function know about
+	any arbitrary user name.
+	(getgidbyname) [__DJGPP__]: Make function know about any arbitrary
+	group name.
 
 1998-02-24  Jim Meyering  <meyering@eng.ascend.com>
 
