@@ -1,5 +1,8 @@
 Sun Nov 24 22:43:24 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* acconfig.h (mktime): Add undef for my enhanced (beyond automake's
+	1.1g version of) AM_FUNC_MKTIME.
+
 	* acinclude.m4 (AM_FUNC_GETLINE): Use am_, not su_ prefix for
 	local/cache variables.
 
@@ -31,7 +34,7 @@ Fri Nov 22 22:14:10 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/cp.c (copy): With -i and not -f, prompt for any type of
 	(non-directory) source file before overwriting an existing target.
-	Reported by Mark A. Thomas.
+	Reported by Mark A. Thomas and Emile LeBlanc.
 
 Tue Nov 19 23:10:32 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
