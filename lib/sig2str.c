@@ -28,10 +28,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#if HAVE_SYS_WAIT_H
-# include <sys/wait.h>
-#endif
-
 #include "sig2str.h"
 
 #ifndef SIGRTMIN
