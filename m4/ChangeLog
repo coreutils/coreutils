@@ -1,3 +1,8 @@
+2002-05-28  Jim Meyering  <meyering@lucent.com>
+
+	* readdir.m4 (jm_FUNC_READDIR): Undefine `mkdir', not `rmdir'.
+	Reported by Volker Borchert.
+
 2002-05-27  Jim Meyering  <meyering@lucent.com>
 
 	* gettimeofday.m4 (AC_FUNC_GETTIMEOFDAY_CLOBBER): Also replace
