@@ -1,3 +1,45 @@
+1999-03-03  Jim Meyering  <meyering@ascend.com>
+
+	* src/cat.c: Include long-options.h
+	[long_options]: Remove the "help" and "version" entries.
+	Remove declarations of show_help and show_version.
+	(main): Use parse_long_options, including author name(s).
+	Remove the show_version and show_help blocks.
+	* cksum.c: Likewise.
+	* comm.c: Likewise.
+	* csplit.c: Likewise.
+	* cut.c: Likewise.
+	* expand.c: Likewise.
+	* fmt.c: Likewise.
+	* fold.c: Likewise.
+	* head.c: Likewise.
+	* nl.c: Likewise.
+	* od.c: Likewise.
+	* paste.c: Likewise.
+	* pr.c: Likewise.
+	* split.c: Likewise.
+	* sum.c: Likewise.
+	* tac.c: Likewise.
+	* tail.c: Likewise.
+	* tr.c: Likewise.
+	* unexpand.c: Likewise.
+	* uniq.c: Likewise.
+	* wc.c: Likewise.
+
+	* src/ptx.c: Include long-options.h
+	[long_options]: Remove the "help" and "version" entries.
+	Remove declarations of show_help and show_version.
+	(main): Remove `const' attribute from dcl of argv parameter.
+	Call bindtextdomain and textdomain.
+	Use parse_long_options, including author name(s).
+	Remove the show_version and show_help blocks.
+
+	* src/join.c (main): Include author name argument in call to
+	parse_long_options.
+	* src/md5sum.c (main): Likewise.
+	* src/sort.c (main): Likewise.
+	* src/tsort.c (main): Likewise.
+
 1999-02-07  Jim Meyering  <meyering@ascend.com>
 
 	* Version 1.22h.
