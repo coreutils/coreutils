@@ -1,0 +1,48 @@
+#!/bin/sh
+# move a directory into itself, with a twist
+
+: ${MV=mv}
+: ${RM=rm}
+
+if test "$VERBOSE" = yes; then
+  set -x
+  $MV --version
+fi
+
+dir1=is3-dir1
+dir2=is3-dir2
+
+framework_failure=0
+$RM -rf $dir1 $dir2 || framework_failure=1
+mkdir $dir1 $dir2 || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo 'failure in testing framework'
+  exit 1
+fi
+
+# Make sure we get English translations.
+LANGUAGE=C
+export LANGUAGE
+LC_ALL=C
+export LC_ALL
+LANG=C
+export LANG
+
+# This mv command should exit nonzero.
+$MV $dir1 $dir2 $dir2 > out 2>&1 && fail=1
+
+sed \
+   -e "s,$MV:,XXX:,g" \
+   -e "s,$dir2,ZZZ,g" \
+  out > out2
+
+cat > exp <<\EOF
+XXX: cannot move `ZZZ' to a subdirectory of itself, `ZZZ/ZZZ'
+EOF
+
+cmp out2 exp || fail=1
+
+$RM -fr out out2 exp $dir1 $dir2
+
+exit $fail
