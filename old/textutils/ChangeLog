@@ -1,3 +1,8 @@
+Sun Jun 15 06:36:41 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/pr.c (init_header) [T_BUF_FMT]: Output the 4-digit year (not the
+	2-digit abbreviation) in each page header.  Reported by Noah Friedman.
+
 Sat Jun 14 12:29:12 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/cut.c (cut_fields): Detect when the input is empty and handle
