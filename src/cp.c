@@ -156,7 +156,7 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
   -b                           like --backup but does not accept an argument\n\
   -d, --no-dereference         never follow symbolic links\n\
   -f, --force                  if an existing destination file cannot be\n\
-                                   opened, remove it and try again\n\
+                                 opened, remove it and try again\n\
   -i, --interactive            prompt before overwrite\n\
   -H                           follow command-line symbolic links\n\
   -l, --link                   link files instead of copying\n\
