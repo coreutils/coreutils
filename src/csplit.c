@@ -1129,7 +1129,7 @@ check_for_offset (struct control *p, const char *str, const char *num)
   if (*num != '-' && *num != '+')
     error (EXIT_FAILURE, 0, _("%s: `+' or `-' expected after delimeter"), str);
 
-  if (xstrtoul (num + 1, NULL, 10, &val, NULL) != LONGINT_OK
+  if (xstrtoul (num + 1, NULL, 10, &val, "") != LONGINT_OK
       || val > UINT_MAX)
     error (EXIT_FAILURE, 0, _("%s: integer expected after `%c'"), str, *num);
   p->offset = (unsigned int) val;
@@ -1158,7 +1158,7 @@ parse_repeat_count (int argnum, struct control *p, char *str)
     p->repeat_forever = 1;
   else
     {
-      if (xstrtoul (str + 1, NULL, 10, &val, NULL) != LONGINT_OK
+      if (xstrtoul (str + 1, NULL, 10, &val, "") != LONGINT_OK
 	  || val > UINT_MAX)
 	{
 	  error (EXIT_FAILURE, 0,
@@ -1240,7 +1240,7 @@ parse_patterns (int argc, int start, char **argv)
 	  p = new_control_record ();
 	  p->argnum = i;
 
-	  if (xstrtoul (argv[i], NULL, 10, &val, NULL) != LONGINT_OK
+	  if (xstrtoul (argv[i], NULL, 10, &val, "") != LONGINT_OK
 	      || val > INT_MAX)
 	    error (EXIT_FAILURE, 0, _("%s: invalid pattern"), argv[i]);
 	  if (val == 0)
@@ -1496,7 +1496,7 @@ main (int argc, char **argv)
 	break;
 
       case 'n':
-	if (xstrtoul (optarg, NULL, 10, &val, NULL) != LONGINT_OK
+	if (xstrtoul (optarg, NULL, 10, &val, "") != LONGINT_OK
 	    || val > INT_MAX)
 	  error (EXIT_FAILURE, 0, _("%s: invalid number"), optarg);
 	digits = (int) val;

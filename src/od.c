@@ -1776,7 +1776,7 @@ the maximum\nrepresentable value of type `long'"), optarg);
 	    }
 	  else
 	    {
-	      s_err = xstrtoul (optarg, NULL, 10, &desired_width, NULL);
+	      s_err = xstrtoul (optarg, NULL, 10, &desired_width, "");
 	      if (s_err != LONGINT_OK)
 		STRTOL_FATAL_ERROR (optarg, _("width specification"), s_err);
 	    }

@@ -12,8 +12,8 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 /* Written by David MacKenzie, djm@gnu.ai.mit.edu. */
 
@@ -295,7 +295,7 @@ main (int argc, char **argv)
 	case 'w':		/* Line width. */
 	  {
 	    long int tmp_long;
-	    if (xstrtol (optarg, NULL, 10, &tmp_long, NULL) != LONGINT_OK
+	    if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
 		|| tmp_long <= 0 || tmp_long > INT_MAX)
 	      error (EXIT_FAILURE, 0,
 		     _("invalid number of columns: `%s'"), optarg);

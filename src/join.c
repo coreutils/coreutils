@@ -12,8 +12,8 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
    Written by Mike Haertel, mike@gnu.ai.mit.edu.  */
 
@@ -678,7 +678,7 @@ decode_field_spec (const char *s, int *file_index, int *field_index)
 	  strtol_error s_err;
 	  long int tmp_long;
 
-	  s_err = xstrtol (s + 2, NULL, 10, &tmp_long, NULL);
+	  s_err = xstrtol (s + 2, NULL, 10, &tmp_long, "");
 	  if (s_err != LONGINT_OK || tmp_long <= 0 || tmp_long > INT_MAX)
 	    {
 	      error (0, 0, _("invalid field number: `%s'"), s + 2);
@@ -787,7 +787,7 @@ main (int argc, char **argv)
 	    /* Fall through.  */
 
 	case 'a':
-	  if (xstrtol (optarg, NULL, 10, &val, NULL) != LONGINT_OK
+	  if (xstrtol (optarg, NULL, 10, &val, "") != LONGINT_OK
 	      || (val != 1 && val != 2))
 	    error (EXIT_FAILURE, 0, _("invalid field number: `%s'"), optarg);
 	  if (val == 1)
@@ -805,7 +805,7 @@ main (int argc, char **argv)
 	  break;
 
 	case '1':
-	  if (xstrtol (optarg, NULL, 10, &val, NULL) != LONGINT_OK
+	  if (xstrtol (optarg, NULL, 10, &val, "") != LONGINT_OK
 	      || val <= 0 || val > INT_MAX)
 	    {
 	      error (EXIT_FAILURE, 0,
@@ -815,7 +815,7 @@ main (int argc, char **argv)
 	  break;
 
 	case '2':
-	  if (xstrtol (optarg, NULL, 10, &val, NULL) != LONGINT_OK
+	  if (xstrtol (optarg, NULL, 10, &val, "") != LONGINT_OK
 	      || val <= 0 || val > INT_MAX)
 	    error (EXIT_FAILURE, 0,
 		   _("invalid field number for file 2: `%s'"), optarg);
@@ -823,7 +823,7 @@ main (int argc, char **argv)
 	  break;
 
 	case 'j':
-	  if (xstrtol (optarg, NULL, 10, &val, NULL) != LONGINT_OK
+	  if (xstrtol (optarg, NULL, 10, &val, "") != LONGINT_OK
 	      || val <= 0 || val > INT_MAX)
 	    error (EXIT_FAILURE, 0, _("invalid field number: `%s'"), optarg);
 	  join_field_1 = join_field_2 = (int) val - 1;

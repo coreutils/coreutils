@@ -12,8 +12,8 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 /*  Author: Pete TerMaat.  */
 
@@ -634,7 +634,7 @@ first_last_page (char *pages)
 
   {
     long int tmp_long;
-    if (xstrtol (pages, NULL, 10, &tmp_long, NULL) != LONGINT_OK
+    if (xstrtol (pages, NULL, 10, &tmp_long, "") != LONGINT_OK
 	|| tmp_long <= 0 || tmp_long > INT_MAX)
       error (EXIT_FAILURE, 0, _("invalid starting page number: `%s'"),
 	     pages);
@@ -646,7 +646,7 @@ first_last_page (char *pages)
 
   {
     long int tmp_long;
-    if (xstrtol (str1 + 1, NULL, 10, &tmp_long, NULL) != LONGINT_OK
+    if (xstrtol (str1 + 1, NULL, 10, &tmp_long, "") != LONGINT_OK
 	|| tmp_long <= 0 || tmp_long > INT_MAX)
       error (EXIT_FAILURE, 0, _("invalid ending page number: `%s'"),
 	     str1 + 1);
@@ -775,7 +775,7 @@ main (int argc, char **argv)
 	case 'l':
 	  {
 	    long int tmp_long;
-	    if (xstrtol (optarg, NULL, 10, &tmp_long, NULL) != LONGINT_OK
+	    if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
 		|| tmp_long <= 0 || tmp_long > INT_MAX)
 	      {
 		error (EXIT_FAILURE, 0,
@@ -799,7 +799,7 @@ main (int argc, char **argv)
 	  skip_count = FALSE;
 	  {
 	    long int tmp_long;
-	    if (xstrtol (optarg, NULL, 10, &tmp_long, NULL) != LONGINT_OK
+	    if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
 		|| tmp_long > INT_MAX)
 	      {
 		error (EXIT_FAILURE, 0,
@@ -812,7 +812,7 @@ main (int argc, char **argv)
 	case 'o':
 	  {
 	    long int tmp_long;
-	    if (xstrtol (optarg, NULL, 10, &tmp_long, NULL) != LONGINT_OK
+	    if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
 		|| tmp_long <= 0 || tmp_long > INT_MAX)
 	      error (EXIT_FAILURE, 0,
 		     _("`-o MARGIN' invalid line offset: `%s'"), optarg);
@@ -842,7 +842,7 @@ main (int argc, char **argv)
 	  truncate_lines = TRUE;
 	  {
 	    long int tmp_long;
-	    if (xstrtol (optarg, NULL, 10, &tmp_long, NULL) != LONGINT_OK
+	    if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
 		|| tmp_long <= 0 || tmp_long > INT_MAX)
 	      error (EXIT_FAILURE, 0,
 		 _("`-w PAGE_WIDTH' invalid column number: `%s'"), optarg);
@@ -919,7 +919,7 @@ getoptarg (char *arg, char switch_char, char *character, int *number)
   if (*arg)
     {
       long int tmp_long;
-      if (xstrtol (arg, NULL, 10, &tmp_long, NULL) != LONGINT_OK
+      if (xstrtol (arg, NULL, 10, &tmp_long, "") != LONGINT_OK
 	  || tmp_long <= 0 || tmp_long > INT_MAX)
 	{
 	  error (0, 0,
