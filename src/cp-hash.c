@@ -19,7 +19,30 @@
 
 #include <config.h>
 #include <stdio.h>
-#include "cp.h"
+#include <sys/types.h>
+#include "system.h"
+#include "error.h"
+#include "cp-hash.h"
+
+struct entry
+{
+  ino_t ino;
+  dev_t dev;
+  char *node;			/* Path name, or &new_file for new inodes.  */
+  struct entry *coll_link;	/* 0 = entry not occupied.  */
+};
+
+struct htab
+{
+  unsigned modulus;		/* Size of the `hash' pointer vector.  */
+  struct entry *entry_tab;	/* Pointer to dynamically growing vector.  */
+  unsigned entry_tab_size;	/* Size of current `entry_tab' allocation.  */
+  unsigned first_free_entry;	/* Index in `entry_tab'.  */
+  struct entry *hash[1];	/* Vector of pointers in `entry_tab'.  */
+};
+
+char *xmalloc ();
+char *xrealloc ();
 
 struct htab *htab;
 char new_file;
@@ -92,7 +115,47 @@ forget_all (void)
   for (i = htab->modulus; i > 0; i--)
     *p++ = NULL;
 }
-
+
+/* Insert path NODE, copied from inode number INO and device number DEV,
+   into the hash structure HTAB, if not already present.
+   Return NULL if inserted, otherwise non-NULL. */
+
+static char *
+hash_insert2 (struct htab *ht, ino_t ino, dev_t dev, const char *node)
+{
+  struct entry **hp, *ep2, *ep;
+  hp = &ht->hash[ino % ht->modulus];
+  ep2 = *hp;
+
+  /* Collision?  */
+
+  if (ep2 != NULL)
+    {
+      ep = ep2;
+
+      /* Search for an entry with the same data.  */
+
+      do
+	{
+	  if (ep->ino == ino && ep->dev == dev)
+	    return ep->node;	/* Found an entry with the same data.  */
+	  ep = ep->coll_link;
+	}
+      while (ep != NULL);
+
+      /* Did not find it.  */
+
+    }
+
+  ep = *hp = &ht->entry_tab[ht->first_free_entry++];
+  ep->ino = ino;
+  ep->dev = dev;
+  ep->node = (char *) node;
+  ep->coll_link = ep2;		/* ep2 is NULL if not collision.  */
+
+  return NULL;
+}
+
 /* Insert path NODE, copied from inode number INO and device number DEV,
    into the hash structure in the global variable `htab', if an entry with
    the same inode and device was not found already.
@@ -159,44 +222,4 @@ hash_insert (ino_t ino, dev_t dev, const char *node)
     }
 
   return hash_insert2 (htab_r, ino, dev, node);
-}
-
-/* Insert path NODE, copied from inode number INO and device number DEV,
-   into the hash structure HTAB, if not already present.
-   Return NULL if inserted, otherwise non-NULL. */
-
-char *
-hash_insert2 (struct htab *htab, ino_t ino, dev_t dev, const char *node)
-{
-  struct entry **hp, *ep2, *ep;
-  hp = &htab->hash[ino % htab->modulus];
-  ep2 = *hp;
-
-  /* Collision?  */
-
-  if (ep2 != NULL)
-    {
-      ep = ep2;
-
-      /* Search for an entry with the same data.  */
-
-      do
-	{
-	  if (ep->ino == ino && ep->dev == dev)
-	    return ep->node;	/* Found an entry with the same data.  */
-	  ep = ep->coll_link;
-	}
-      while (ep != NULL);
-
-      /* Did not find it.  */
-
-    }
-
-  ep = *hp = &htab->entry_tab[htab->first_free_entry++];
-  ep->ino = ino;
-  ep->dev = dev;
-  ep->node = (char *) node;
-  ep->coll_link = ep2;		/* ep2 is NULL if not collision.  */
-
-  return NULL;
 }
