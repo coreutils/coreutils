@@ -27,7 +27,7 @@
 % As a special exception, when this file is read by TeX when processing
 % a Texinfo source document, you may use the result without
 % restriction.  (This has been our intent since Texinfo was invented.)
-% 
+%
 % Please try the latest version of texinfo.tex before submitting bug
 % reports; you can get the latest version from:
 %   http://www.gnu.org/software/texinfo/ (the Texinfo home page), or
@@ -55,7 +55,7 @@
 % It is possible to adapt texinfo.tex for other languages, to some
 % extent.  You can get the existing language-specific files from the
 % full Texinfo distribution.
-% 
+%
 % The GNU Texinfo home page is http://www.gnu.org/software/texinfo.
 
 
@@ -481,16 +481,16 @@
 \def\flushcr{\ifx\par\lisppar \def\next##1{}\else \let\next=\relax \fi \next}
 
 % Define the framework for environments in texinfo.tex.  It's used like this:
-% 
+%
 %   \envdef\foo{...}
 %   \def\Efoo{...}
-%   
+%
 % It's the responsibility of \envdef to insert \begingroup before the
 % actual body; @end closes the group after calling \Efoo.  \envdef also
 % defines \thisenv, so the current environment is known; @end checks
 % whether the environment name matches.  The \checkenv macro can also be
 % used to check whether the current environment is the one expected.
-% 
+%
 % Non-false conditionals (@iftex, @ifset) don't fit into this, so they
 % are not treated as enviroments; they don't open a group.  (The
 % implementation of @end takes care not to call \endgroup in this
@@ -607,7 +607,7 @@
 
 % The \TeX{} logo, as in plain, but resetting the spacing so that a
 % period following counts as ending a sentence.  (Idea found in latex.)
-% 
+%
 \edef\TeX{\TeX \spacefactor=3000 }
 
 % @LaTeX{} logo.  Not quite the same results as the definition in
@@ -615,7 +615,7 @@
 % convenient for us to use an explicitly smaller font, rather than using
 % the \scriptstyle font (since we don't reset \scriptstyle and
 % \scriptscriptstyle).
-% 
+%
 \def\LaTeX{%
   L\kern-.36em
   {\setbox0=\hbox{T}%
@@ -1096,7 +1096,7 @@ where each line of input produces a line of output.}
 
 % @comma{} is so commas can be inserted into text without messing up
 % Texinfo's parsing.
-% 
+%
 \let\comma = ,
 
 % @refill is a no-op.
@@ -1221,7 +1221,7 @@ where each line of input produces a line of output.}
   % of subentries (or empty, for subsubsections).  #3 is the node
   % text, which might be empty if this toc entry had no
   % corresponding node.  #4 is the page number.
-  % 
+  %
   \def\dopdfoutline#1#2#3#4{%
     % Generate a link to the node text if that exists; else, use the
     % page number.  We could generate a destination for the section
@@ -1276,7 +1276,7 @@ where each line of input produces a line of output.}
       % Read toc second time, this time actually producing the outlines.
       % The `-' means take the \expnumber as the absolute number of
       % subentries, which we calculated on our first read of the .toc above.
-      % 
+      %
       % We use the node names as the destinations.
       \def\numchapentry##1##2##3##4{%
         \dopdfoutline{##1}{count-\expnumber{chap##2}}{##3}{##4}}%
@@ -1292,7 +1292,7 @@ where each line of input produces a line of output.}
       % since the encoding is unknown.  For example, the eogonek from
       % Latin 2 (0xea) gets translated to a | character.  Info from
       % Staszek Wawrykiewicz, 19 Jan 2004 04:09:24 +0100.
-      % 
+      %
       % xx to do this right, we have to translate 8-bit characters to
       % their "best" equivalent, based on the @documentencoding.  Right
       % now, I guess we'll just let the pdf reader have its way.
@@ -1393,14 +1393,14 @@ where each line of input produces a line of output.}
 % Change the current font style to #1, remembering it in \curfontstyle.
 % For now, we do not accumulate font styles: @b{@i{foo}} prints foo in
 % italics, not bold italics.
-% 
+%
 \def\setfontstyle#1{%
   \def\curfontstyle{#1}% not as a control sequence, because we are \edef'd.
   \csname ten#1\endcsname  % change the current font
 }
 
 % Select #1 fonts with the current style.
-% 
+%
 \def\selectfonts#1{\csname #1fonts\endcsname \csname\curfontstyle\endcsname}
 
 \def\rm{\fam=0 \setfontstyle{rm}}
@@ -1596,13 +1596,13 @@ where each line of input produces a line of output.}
 % of just \STYLE.  We do this because \STYLE needs to also set the
 % current \fam for math mode.  Our \STYLE (e.g., \rm) commands hardwire
 % \tenSTYLE to set the current font.
-% 
+%
 % Each font-changing command also sets the names \lsize (one size lower)
 % and \lllsize (three sizes lower).  These relative commands are used in
 % the LaTeX logo and acronyms.
-% 
+%
 % This all needs generalizing, badly.
-% 
+%
 \def\textfonts{%
   \let\tenrm=\textrm \let\tenit=\textit \let\tensl=\textsl
   \let\tenbf=\textbf \let\tentt=\texttt \let\smallcaps=\textsc
@@ -1935,7 +1935,7 @@ where each line of input produces a line of output.}
 }
 
 % @pounds{} is a sterling sign, which is in the CM italic font.
-% 
+%
 \def\pounds{{\it\$}}
 
 % @registeredsymbol - R in a circle.  The font for the R should really
@@ -2050,7 +2050,7 @@ where each line of input produces a line of output.}
 
 % @author should come last, but may come many times.
 % It can also be used inside @quotation.
-% 
+%
 \parseargdef\author{%
   \def\temp{\quotation}%
   \ifx\thisenv\temp
@@ -2550,7 +2550,7 @@ where each line of input produces a line of output.}
 
 % #1 is the @columnfraction, usually a decimal number like .5, but might
 % be just 1.  We just use it, whatever it is.
-% 
+%
 \def\pickupwholefraction#1 {%
   \global\advance\colcount by 1
   \expandafter\xdef\csname col\the\colcount\endcsname{#1\hsize}%
@@ -2810,7 +2810,7 @@ width0pt\relax} \fi
 }
 
 % We have to swallow the remaining "\_STOP_".
-% 
+%
 \def\doignoretextzzz#1{%
   \ifnum\doignorecount = 0	% We have just found the outermost @end.
     \let\next\enddoignore
@@ -3519,7 +3519,7 @@ width0pt\relax} \fi
 % But this frozes the catcodes in the argument, and can cause problems to
 % @code, which sets - active.  This problem was fixed by a kludge---
 % ``-'' was active throughout whole index, but this isn't really right.
-% 
+%
 % The right solution is to prevent \entry from swallowing the whole text.
 %                                 --kasal, 21nov03
 \def\entry{%
@@ -3785,7 +3785,7 @@ width0pt\relax} \fi
 % We do the following ugly conditional instead of the above simple
 % construct for the sake of pdftex, which needs the actual
 % letter in the expansion, not just typeset.
-% 
+%
 \def\appendixletter{%
   \ifnum\appendixno=`A A%
   \else\ifnum\appendixno=`B B%
@@ -3922,11 +3922,11 @@ width0pt\relax} \fi
 
 % @chapter, @appendix, @unnumbered.  Increment top-level counter, reset
 % all lower-level sectioning counters to zero.
-% 
+%
 % Also set \chaplevelprefix, which we prepend to @float sequence numbers
 % (e.g., figures), q.v.  By default (before any chapter), that is empty.
 \let\chaplevelprefix = \empty
-% 
+%
 \outer\parseargdef\chapter{\numhead0{#1}} % normally numhead0 calls chapterzzz
 \def\chapterzzz#1{%
   % section resetting is \global in case the chapter is in a group, such
@@ -4150,10 +4150,10 @@ width0pt\relax} \fi
 \CHAPPAGon
 
 % Chapter opening.
-% 
+%
 % #1 is the text, #2 is the section type (Ynumbered, Ynothing,
 % Yappendix, Yomitfromtoc), #3 the chapter number.
-% 
+%
 % To test against our argument.
 \def\Ynothingkeyword{Ynothing}
 \def\Yomitfromtockeyword{Yomitfromtoc}
@@ -4229,7 +4229,7 @@ width0pt\relax} \fi
 
 % I don't think this chapter style is supported any more, so I'm not
 % updating it with the new noderef stuff.  We'll see.  --karl, 11aug03.
-% 
+%
 \def\setchapterstyle #1 {\csname CHAPF#1\endcsname}
 %
 \def\unnchfopen #1{%
@@ -4253,7 +4253,7 @@ width0pt\relax} \fi
 
 % Section titles.  These macros combine the section number parts and
 % call the generic \sectionheading to do the printing.
-% 
+%
 \newskip\secheadingskip
 \def\secheadingbreak{\dobreak \secheadingskip{-1000}}
 
@@ -4267,11 +4267,11 @@ width0pt\relax} \fi
 
 
 % Print any size, any type, section title.
-% 
+%
 % #1 is the text, #2 is the section level (sec/subsec/subsubsec), #3 is
 % the section type for xrefs (Ynumbered, Ynothing, Yappendix), #4 is the
 % section number.
-% 
+%
 \def\sectionheading#1#2#3#4{%
   {%
     % Switch to the right set of fonts.
@@ -4344,14 +4344,14 @@ width0pt\relax} \fi
 \newwrite\tocfile
 
 % Write an entry to the toc file, opening it if necessary.
-% Called from @chapter, etc.  
-% 
+% Called from @chapter, etc.
+%
 % Example usage: \writetocentry{sec}{Section Name}{\the\chapno.\the\secno}
 % We append the current node name (if any) and page number as additional
 % arguments for the \{chap,sec,...}entry macros which will eventually
 % read this.  The node name is used in the pdf outlines as the
 % destination to jump to.
-% 
+%
 % We open the .toc file for writing here instead of at @setfilename (or
 % any other fixed time) so that @contents can be anywhere in the document.
 % But if #1 is `omit', then we don't do anything.  This is used for the
@@ -4482,7 +4482,7 @@ width0pt\relax} \fi
   % But use \hss just in case.
   % (This space doesn't include the extra space that gets added after
   % the label; that gets put in by \shortchapentry above.)
-  % 
+  %
   % We'd like to right-justify chapter numbers, but that looks strange
   % with appendix letters.  And right-justifying numbers and
   % left-justifying letters looks strange when there is less than 10
@@ -4507,7 +4507,7 @@ width0pt\relax} \fi
 
 % Appendices, in the main contents.
 % Need the word Appendix, and a fixed-size box.
-% 
+%
 \def\appendixbox#1{%
   % We use M since it's probably the widest letter.
   \setbox0 = \hbox{\putwordAppendix{} M}%
@@ -4884,7 +4884,7 @@ width0pt\relax} \fi
 
 % We have retained a nonzero parskip for the environment, since we're
 % doing normal filling.
-% 
+%
 \def\Equotation{%
   \par
   \ifx\quotationauthor\undefined\else
@@ -5287,7 +5287,7 @@ width0pt\relax} \fi
 % #1 is the category, such as "Function".
 % #2 is the return type, if any.
 % #3 is the function name.
-% 
+%
 % We are followed by (but not passed) the arguments, if any.
 %
 \def\defname#1#2#3{%
@@ -5345,9 +5345,9 @@ width0pt\relax} \fi
 % tt for the name.  This is because literal text is sometimes needed in
 % the argument list (groff manual), and ttsl and tt are not very
 % distinguishable.  Prevent hyphenation at `-' chars.
-% 
+%
 \def\defunargs#1{%
-  % use sl by default (not ttsl), 
+  % use sl by default (not ttsl),
   % tt for the names.
   \df \sl \hyphenchar\font=0
   %
@@ -5762,7 +5762,7 @@ width0pt\relax} \fi
 
 % Write a cross-reference definition for the current node.  #1 is the
 % type (Ynumbered, Yappendix, Ynothing).
-% 
+%
 \def\donoderef#1{%
   \ifx\lastnode\empty\else
     \setref{\lastnode}{#1}%
@@ -5785,11 +5785,11 @@ width0pt\relax} \fi
 % 2) NAME-snt   - section number and type, passed as the SNT arg, or
 %                 empty for anchors.
 % 3) NAME-pg    - the page number.
-% 
+%
 % This is called from \donoderef, \anchor, and \dofloat.  In the case of
 % floats, there is an additional part, which is not written here:
 % 4) NAME-lof   - the text as it should appear in a @listoffloats.
-% 
+%
 \def\setref#1#2{%
   \pdfmkdest{#1}%
   \iflinks
@@ -5884,13 +5884,13 @@ width0pt\relax} \fi
     \fi
     %
     % if the user also gave the printed manual name (fifth arg), append
-    % "in MANUALNAME". 
+    % "in MANUALNAME".
     \ifdim \wd1 > 0pt
       \space \putwordin{} \cite{\printedmanual}%
     \fi
   \else
     % node/anchor (non-float) references.
-    % 
+    %
     % If we use \unhbox0 and \unhbox1 to print the node names, TeX does not
     % insert empty discretionaries after hyphens, which means that it will
     % not find a line break at a hyphen in a node names.  Since some manuals
@@ -6001,7 +6001,7 @@ width0pt\relax} \fi
     % it was a float, and we have the (safe) float type in \iffloattype.
     \expandafter\let\expandafter\floatlist
       \csname floatlist\iffloattype\endcsname
-    % 
+    %
     % Is this the first time we've seen this float type?
     \expandafter\ifx\floatlist\relax
       \toks0 = {\do}% yes, so just \do
@@ -6017,7 +6017,7 @@ width0pt\relax} \fi
 }
 
 % Read the last existing aux file, if any.  No error if none exists.
-% 
+%
 \def\tryauxfile{%
   \openin 1 \jobname.aux
   \ifeof 1 \else
@@ -6325,19 +6325,19 @@ width0pt\relax} \fi
 % @float FLOATTYPE,LOC ... @end float for displayed figures, tables, etc.
 % We don't actually implement floating yet, we just plop the float "here".
 % But it seemed the best name for the future.
-% 
+%
 \envparseargdef\float{\dofloat #1,,,\finish}
 
 % #1 is the optional FLOATTYPE, the text label for this float, typically
 % "Figure", "Table", "Example", etc.  Can't contain commas.  If omitted,
 % this float will not be numbered and cannot be referred to.
-% 
+%
 % #2 is the optional xref label.  Also must be present for the float to
 % be referable.
-% 
+%
 % #3 is the optional positioning argument; for now, it is ignored.  It
 % will somehow specify the positions allowed to float to (here, top, bottom).
-% 
+%
 % We keep a separate counter for each FLOATTYPE, which we reset at each
 % chapter-level command.
 \let\resetallfloatnos=\empty
@@ -6373,7 +6373,7 @@ width0pt\relax} \fi
     \ifx\floatlabel\empty \else
       % We want each FLOATTYPE to be numbered separately (Figure 1,
       % Table 1, Figure 2, ...).  (And if no label, no number.)
-      % 
+      %
       \expandafter\getfloatno\csname\safefloattype floatno\endcsname
       \global\advance\floatno by 1
       %
@@ -6383,7 +6383,7 @@ width0pt\relax} \fi
         % labels (which have a completely different output format) from
         % node and anchor labels.  And \xrdef uses it to construct the
         % lists of floats.
-        % 
+        %
         \edef\thissection{\floatmagic=\safefloattype}%
         \setref{\floatlabel}{Yfloat}%
       }%
@@ -6467,7 +6467,7 @@ width0pt\relax} \fi
 }
 
 % Append the tokens #2 to the definition of macro #1, not expanding either.
-% 
+%
 \newtoks\appendtomacroAtoks
 \newtoks\appendtomacroBtoks
 \def\appendtomacro#1#2{%
@@ -6477,7 +6477,7 @@ width0pt\relax} \fi
 }
 
 % @caption, @shortcaption are easy.
-% 
+%
 \long\def\caption#1{\checkenv\float \def\thiscaption{#1}}
 \def\shortcaption#1{\checkenv\float \def\thisshortcaption{#1}}
 
@@ -6498,7 +6498,7 @@ width0pt\relax} \fi
 % \setref calls this to get the XREFLABEL-snt value.  We want an @xref
 % to the FLOATLABEL to expand to "Figure 3.1".  We call \setref when we
 % first read the @float command.
-% 
+%
 \def\Yfloat{\floattype@tie \chaplevelprefix\the\floatno}%
 
 % Magic string used for the XREFLABEL-title value, so \xrefX can
@@ -6508,12 +6508,12 @@ width0pt\relax} \fi
 % #1 is the control sequence we are passed; we expand into a conditional
 % which is true if #1 represents a float ref.  That is, the magic
 % \thissection value which we \setref above.
-% 
+%
 \def\iffloat#1{\expandafter\doiffloat#1==\finish}
 %
 % #1 is (maybe) the \floatmagic string.  If so, #2 will be the
 % (safe) float type for this float.  We set \iffloattype to #2.
-% 
+%
 \def\doiffloat#1=#2=#3\finish{%
   \def\temp{#1}%
   \def\iffloattype{#2}%
@@ -6521,7 +6521,7 @@ width0pt\relax} \fi
 }
 
 % @listoffloats FLOATTYPE - print a list of floats like a table of contents.
-% 
+%
 \parseargdef\listoffloats{%
   \def\floattype{#1}% floattype
   {%
@@ -6551,10 +6551,10 @@ width0pt\relax} \fi
 % xref label, in the form LABEL-title, which is how we save it in the
 % aux file.  We strip off the -title and look up \XRLABEL-lof, which
 % has the text we're supposed to typeset here.
-% 
+%
 % Figures without xref labels will not be included in the list (since
 % they won't appear in the aux file).
-% 
+%
 \def\listoffloatsdo#1{\listoffloatsdoentry#1\finish}
 \def\listoffloatsdoentry#1-title\finish{{%
   % Can't fully expand XR#1-lof because it can contain anything.  Just
