@@ -6,4 +6,4 @@
 #endif
 
 char *
-path_concat _P ((const char *dir, const char *base, char **base_in_result));
+path_concat __P ((const char *dir, const char *base, char **base_in_result));
