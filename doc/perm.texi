@@ -74,7 +74,7 @@ save the program's text image on the swap device so it will load more
 quickly when run (called the @dfn{sticky bit}).  For directories on some
 systems, prevent users from removing or renaming a file in a directory
 unless they own the file or the directory; this is called the
-@dfn{restriction deletion flag} for the directory.
+@dfn{restricted deletion flag} for the directory.
 @end enumerate
 
 @node Symbolic Modes
