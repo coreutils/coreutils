@@ -28,7 +28,6 @@
 #include <sys/types.h>
 
 #include "system.h"
-#include "dirname.h"
 #include "error.h"
 #include "quote.h"
 
@@ -208,10 +207,6 @@ main (int argc, char **argv)
     {
       int fail;
       char *dir = argv[optind];
-
-      /* Stripping slashes is harmless for rmdir;
-	 if the arg is not a directory, it will fail with ENOTDIR.  */
-      strip_trailing_slashes (dir);
 
       /* Give a diagnostic for each attempted removal if --verbose.  */
       if (verbose)
