@@ -1,4 +1,4 @@
-#serial 1
+#serial 2
 
 # When rmdir fails because the specified directory is not empty, it sets
 # errno to some value, usually ENOTEMPTY.  However, on some AIX systems,
@@ -25,12 +25,12 @@ extern int errno;
 	  int val;
 	  rmdir ("confdir2");
 	  val = errno;
-	  s = fopen ("confdir2/file", "w");
+	  s = fopen ("confdir2/errno", "w");
 	  fprintf (s, "%d\n", val);
 	  exit (0);
 	}
 	],
-      fetish_cv_func_rmdir_errno_not_empty=`cat confdir2/file`,
+      fetish_cv_func_rmdir_errno_not_empty=`cat confdir2/errno`,
       fetish_cv_func_rmdir_errno_not_empty='configure error in rmdir-errno.m4',
       fetish_cv_func_rmdir_errno_not_empty=ENOTEMPTY
       )
