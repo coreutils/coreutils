@@ -8,6 +8,7 @@
 	twos-complement arithmetic.  :-)
 
 2001-08-10  Jim Meyering  <meyering@lucent.com>
+
 	* ls.c (print_long_format): Multiply the shift width by zero
 	to avoid a warning from gcc on hosts with an unsigned type for the
 	st_size member.
