@@ -42,6 +42,7 @@
 	before 2003-01-31.  Patch by Bruno Haible.
 
 	* tests/du/basic: New test.
+	* tests/du/Makefile.am (TESTS): Add basic.
 
 	* tests/envvar-check: Add checks for the following:
 	BLOCK_SIZE, DU_BLOCK_SIZE, DF_BLOCK_SIZE, LS_BLOCK_SIZE.
