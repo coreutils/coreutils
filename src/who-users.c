@@ -37,11 +37,13 @@
 #include <sys/types.h>
 
 #ifdef HAVE_UTMPX_H
-#include <utmpx.h>
-#define STRUCT_UTMP struct utmpx
+# include <utmpx.h>
+# define STRUCT_UTMP struct utmpx
+# define UT_TIME_MEMBER(UT_PTR) ((UT_PTR)->ut_tv.tv_sec)
 #else
-#include <utmp.h>
-#define STRUCT_UTMP struct utmp
+# include <utmp.h>
+# define STRUCT_UTMP struct utmp
+# define UT_TIME_MEMBER(UT_PTR) ((UT_PTR)->ut_time)
 #endif
 
 #include <time.h>
@@ -143,7 +145,12 @@ print_uptime (int n)
 {
   register STRUCT_UTMP *this = utmp_contents;
   register int entries = 0;
-  time_t boot_time=0,time_now,uptime,updays,uphours,upmins;
+  time_t boot_time = 0;
+  time_t time_now;
+  time_t uptime;
+  int updays;
+  int uphours;
+  int upmins;
   struct tm *tmn;
   double avg[3];
   int loads;
@@ -151,25 +158,22 @@ print_uptime (int n)
   /* Loop through all the utmp entries we just read and count up the valid
      ones, also in the process possibly gleaning boottime. */
   while (n--)
-  {
-    if (this->ut_name[0]
-#ifdef USER_PROCESS
-	&& this->ut_type == USER_PROCESS
-#endif
-	)
     {
-      entries++;
-    }
-    /* If BOOT_MSG is defined, we can get boottime from utmp.  This avoids
-       possibly needing special privs to read /dev/kmem. */
-#ifdef BOOT_MSG
-#ifdef HAVE_UTMPX_H
-    if (!strcmp (this->ut_line, BOOT_MSG)) boot_time = this->ut_tv.tv_sec;
-#else
-    if (!strcmp (this->ut_line, BOOT_MSG)) boot_time = this->ut_time;
+      if (this->ut_name[0]
+#ifdef USER_PROCESS
+	  && this->ut_type == USER_PROCESS
 #endif
+	  )
+	{
+	  ++entries;
+	}
+      /* If BOOT_MSG is defined, we can get boottime from utmp.  This avoids
+	 possibly needing special privs to read /dev/kmem. */
+#ifdef BOOT_MSG
+      if (!strcmp (this->ut_line, BOOT_MSG))
+	boot_time = UT_TIME_MEMBER (this);
 #endif /* BOOT_MSG */
-    this++;
+      ++this;
   }
   if (boot_time == 0)
     error (1, errno, "couldn't get boot time");
@@ -177,12 +181,12 @@ print_uptime (int n)
   uptime = time_now - boot_time;
   updays = uptime / 86400;
   uphours = (uptime - (updays * 86400)) / 3600;
-  upmins = (uptime - (updays * 86400) - (uphours*3600)) / 60;
+  upmins = (uptime - (updays * 86400) - (uphours * 3600)) / 60;
   tmn = localtime (&time_now);
   printf (" %2d:%02d%s  up ", ((tmn->tm_hour % 12) == 0
 			       ? 12 : tmn->tm_hour % 12),
 	  tmn->tm_min, (tmn->tm_hour < 12 ? "am" : "pm"));
-  if (updays>0)
+  if (updays > 0)
     printf ("%d %s,", updays, (updays == 1 ? "days" : "day"));
   printf (" %2d:%02d,  %d %s", uphours, upmins, entries,
 	  (entries == 1) ? "user" : "users");
@@ -301,12 +305,7 @@ print_entry (STRUCT_UTMP *this)
   if (include_mesg)
     printf ("  %c  ", mesg);
   printf (" %-8.*s", (int) sizeof (this->ut_line), this->ut_line);
-
-#ifdef HAVE_UTMPX_H
-  printf (" %-12.12s", ctime (&this->ut_tv.tv_sec) + 4);
-#else
-  printf (" %-12.12s", ctime (&this->ut_time) + 4);
-#endif
+  printf (" %-12.12s", ctime (&UT_TIME_MEMBER (this)) + 4);
 
   if (include_idle)
     {
@@ -400,7 +399,7 @@ list_entries_users (int n)
 
   n_entries = 0;
   u = (char **) xmalloc (n * sizeof (u[0]));
-  for (i=0; i<n; i++)
+  for (i = 0; i < n; i++)
     {
       if (this->ut_name[0]
 #ifdef USER_PROCESS
@@ -420,7 +419,7 @@ list_entries_users (int n)
 
   qsort (u, n_entries, sizeof (u[0]), userid_compare);
 
-  for (i=0; i<n_entries; i++)
+  for (i = 0; i < n_entries; i++)
     {
       int c;
       fputs (u[i], stdout);
@@ -428,7 +427,7 @@ list_entries_users (int n)
       putchar (c);
     }
 
-  for (i=0; i<n_entries; i++)
+  for (i = 0; i < n_entries; i++)
     free (u[i]);
   free (u);
 }
