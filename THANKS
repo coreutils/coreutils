@@ -1,10 +1,9 @@
-These people have contributed to the GNU fileutils, textutils,
-and/or sh-utils packages.  Some have reported problems, others have
-contributed improvements to the documentation, actual code, and even
+These people have contributed to the GNU coreutils (formerly, the fileutils,
+textutils, and/or sh-utils packages).  Some have reported problems, others
+have contributed improvements to the documentation, actual code, and even
 complete programs.  Those contributions are described in the ChangeLog
 files.  If your name has been left out, if you'd rather not be listed,
 or if you'd prefer a different address be used, please let me know.
-Some old names and addresses are still in the ChangeLog.
 
 Achim Blumensath                    blume@corona.oche.de
 Adam Klein                          aklein@debian.org
