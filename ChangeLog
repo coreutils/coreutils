@@ -11,8 +11,9 @@
 	* src/Makefile.am (bin_PROGRAMS): Add readlink.
 	* src/readlink.c: New file.
 
-	* man/Makefile.am: Add readlink.
 	* man/readlink.x: New file.
+	* man/Makefile.am (dist_man_MANS): Add readlink.1.
+	(readlink.1): New rule.
 
 2003-01-09  Jim Meyering  <jim@meyering.net>
 
