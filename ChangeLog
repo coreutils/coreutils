@@ -1,3 +1,9 @@
+2003-06-09  John David Anglin  <dave.anglin@nrc-cnrc.gc.ca>
+
+	Fix for build failure on Ultrix 4.3.
+	* src/stat.c: Include sys/statvfs.h in preference to sys/vfs.h.
+	Include sys/param.h and sys/mount.h on ultrix.
+
 2003-06-16  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
