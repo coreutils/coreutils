@@ -203,7 +203,6 @@ time_t time ();
 char *getgroup ();
 char *getuser ();
 void strip_trailing_slashes ();
-char *xstrdup ();
 
 static size_t quote_name PARAMS ((FILE *out, const char *name,
 				  struct quoting_options const *options));

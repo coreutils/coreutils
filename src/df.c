@@ -43,7 +43,6 @@
   "Torbjorn Granlund, David MacKenzie, Larry McVoy, and Paul Eggert"
 
 void strip_trailing_slashes ();
-char *xstrdup ();
 char *xgetcwd ();
 
 /* Name this program was run with. */

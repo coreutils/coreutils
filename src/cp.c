@@ -59,7 +59,6 @@ int stat ();
 int lstat ();
 
 void strip_trailing_slashes ();
-char *xstrdup ();
 
 /* Initial number of entries in each hash table entry's table of inodes.  */
 #define INITIAL_HASH_MODULE 100
