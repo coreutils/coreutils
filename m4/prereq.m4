@@ -78,7 +78,7 @@ AC_DEFUN(jm_PREREQ_MEMCHR,
 AC_DEFUN(jm_PREREQ_QUOTEARG,
 [
   AC_CHECK_FUNCS(isascii iswprint mbrtowc)
-  AC_CHECK_HEADERS(limits.h stdlib.h string.h wchar.h wctype.h)
+  AC_CHECK_HEADERS(limits.h stddef.h stdlib.h string.h wchar.h wctype.h)
   AC_HEADER_STDC
   AC_C_BACKSLASH_A
   AC_MBSTATE_T
