@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2002-02-14.08}
+\def\texinfoversion{2002-03-01.06}
 %
 % Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99,
 %               2000, 01, 02 Free Software Foundation, Inc.
@@ -847,7 +847,7 @@ where each line of input produces a line of output.}
 % at least we can have real math in the main text, where it's needed most.
 %
 % 
-\let\implicitmath = $
+\let\implicitmath = $%$ font-lock fix
 %
 % One complication: _ usually means subscripts, but it could also mean
 % an actual _ character, as in @math{@var{some_variable} + 1}.  So make
@@ -6173,7 +6173,7 @@ should work if nowhere else does.}
 \def\normalless{<}
 \def\normalgreater{>}
 \def\normalplus{+}
-\def\normaldollar{$}
+\def\normaldollar{$}%$ font-lock fix
 
 % This macro is used to make a character print one way in ttfont
 % where it can probably just be output, and another way in other fonts,
@@ -6222,7 +6222,7 @@ should work if nowhere else does.}
 \catcode`\+=\active
 \def+{{\tt \char 43}}
 \catcode`\$=\active
-\def${\ifusingit{{\sl\$}}\normaldollar}
+\def${\ifusingit{{\sl\$}}\normaldollar}%$ font-lock fix
 %\catcode 27=\active
 %\def^^[{$\diamondsuit$}
 
@@ -6267,7 +6267,7 @@ should work if nowhere else does.}
 @let<=@normalless
 @let>=@normalgreater
 @let+=@normalplus
-@let$=@normaldollar}
+@let$=@normaldollar}%$ font-lock fix
 
 @def@normalturnoffactive{@let"=@normaldoublequote
 @let\=@normalbackslash
@@ -6278,7 +6278,7 @@ should work if nowhere else does.}
 @let<=@normalless
 @let>=@normalgreater
 @let+=@normalplus
-@let$=@normaldollar}
+@let$=@normaldollar}%$ font-lock fix
 
 % Make _ and + \other characters, temporarily.
 % This is canceled by @fixbackslash.
