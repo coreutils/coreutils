@@ -1,5 +1,5 @@
 /* stat.c -- display file or filesystem status
-   Copyright (C) 2001, 2002, 2003 Free Software Foundation.
+   Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -308,9 +308,9 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
     return (char *) type;
 
   {
-    static char buf[sizeof "UNKNOWN (0x%x)" - 2
+    static char buf[sizeof "UNKNOWN (0x%lx)" - 3
 		    + 2 * sizeof (statfsbuf->f_type)];
-    sprintf (buf, "UNKNOWN (0x%x)", statfsbuf->f_type);
+    sprintf (buf, "UNKNOWN (0x%lx)", (unsigned long) statfsbuf->f_type);
     return buf;
   }
 #endif
