@@ -1,5 +1,12 @@
 2003-11-05  Jim Meyering  <jim@meyering.net>
 
+	* src/tr.c (spec_init): Fix typo in last change.
+
+	* src/sys2.h (case_GETOPT_VERSION_CHAR): Cast NULL to `(char *)' in
+	call to variadic version_etc function, so that it works even on systems
+	for which sizeof char* != sizeof int.
+	* src/true.c (main): Likewise.
+
 	* Version 5.1.0.
 
 	* src/users.c (users): Free `utmp_buf' explicitly so that people
