@@ -612,7 +612,9 @@ show_point (const char *point, const struct stat *statp)
 	    }
       }
 
-    if (best_match && !STREQ (best_match->me_type, "lofs"))
+    if (best_match && !STREQ (best_match->me_type, "lofs")
+	&& stat (best_match->me_mountdir, &disk_stats) == 0
+	&& disk_stats.st_dev == statp->st_dev)
       {
 	me = best_match;
 	goto show_me;
