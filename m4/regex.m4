@@ -1,4 +1,4 @@
-#serial 5
+#serial 6
 
 dnl Initially derived from code in GNU grep.
 dnl Mostly written by Jim Meyering.
@@ -21,9 +21,7 @@ AC_DEFUN(jm_INCLUDED_REGEX,
     AC_CACHE_CHECK([for working re_compile_pattern],
 		   jm_cv_func_working_re_compile_pattern,
       AC_TRY_RUN(
-	changequote(<<, >>)dnl
-	<<
-#include <stdio.h>
+[#include <stdio.h>
 #include <regex.h>
 	  int
 	  main ()
@@ -37,9 +35,7 @@ AC_DEFUN(jm_INCLUDED_REGEX,
 	    /* This should fail with _Invalid character class name_ error.  */
 	    exit (s ? 0 : 1);
 	  }
-	>>,
-	changequote([, ])dnl
-
+	],
 	       jm_cv_func_working_re_compile_pattern=yes,
 	       jm_cv_func_working_re_compile_pattern=no,
 	       dnl When crosscompiling, assume it's broken.
