@@ -1,3 +1,9 @@
+Sat May 27 00:35:47 1995  Jim Meyering  (meyering@comco.com)
+
+	* system.h [!STDC_HEADERS && HAVE_MEMORY_H]: Include memory.h.
+	Without this, SunOS doesn't get type for memchr.
+	Reported by Kaveh Ghazi.
+
 Sun May 21 07:20:55 1995  Jim Meyering  (meyering@comco.com)
 
 	* all source files (usage): Include one- or two-line synopsis
