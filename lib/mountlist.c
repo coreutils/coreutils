@@ -612,6 +612,7 @@ read_filesystem_list (int need_fs_type)
 
     if (ferror (fp))
       {
+	/* The last fread() call must have failed.  */
 	int saved_errno = errno;
 	fclose (fp);
 	errno = saved_errno;
