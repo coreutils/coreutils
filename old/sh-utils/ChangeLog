@@ -1,3 +1,10 @@
+Thu May  1 00:10:11 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* ansi2knr.c echo.c factor.c hostname.c id.c nice.c pathchk.c
+	spline.c test.c uname.c: Indent cpp-directives.
+
+	* src/system.h (N_): Define.
+
 Sun Apr 27 18:30:53 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/printf.c: (cfcc_msg): File-scope constant.
