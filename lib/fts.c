@@ -46,6 +46,7 @@ static char sccsid[] = "@(#)fts.c	8.6 (Berkeley) 8/14/94";
 #include <fcntl.h>
 #include <errno.h>
 #include <fts.h>
+#include <search.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -151,6 +152,50 @@ static int      fts_safe_changedir __P((FTS *, FTSENT *, int, const char *))
 #define	BNAMES		2		/* fts_children, names only */
 #define	BREAD		3		/* fts_read */
 
+struct known_object
+{
+  dev_t dev;
+  ino_t ino;
+  FTSENT *fts_ent;
+};
+
+static int
+object_compare (const void *p1, const void *p2)
+{
+  /* We don't need a sophisticated and useful comparison.  We are only
+     interested in equality.  However, we must be careful not to
+     accidentally compare `holes' in the structure.  */
+  const struct known_object *kp1 = p1, *kp2 = p2;
+  int cmp1;
+  cmp1 = (kp1->ino > kp2->ino) - (kp1->ino < kp2->ino);
+  if (cmp1 != 0)
+    return cmp1;
+  return (kp1->dev > kp2->dev) - (kp1->dev < kp2->dev);
+}
+
+static inline int
+add_object (FTS *fts, FTSENT *data, const struct stat *st)
+{
+  struct known_object *newp = malloc (sizeof (struct known_object));
+  if (newp == NULL)
+    return -1;
+  newp->dev = st->st_dev;
+  newp->ino = st->st_ino;
+  newp->fts_ent = data;
+  return tsearch (newp, &fts->fts_dir_signatures, object_compare) ? 0 : -1;
+}
+
+static inline FTSENT *
+find_object (const FTS *fts, const struct stat *st)
+{
+  struct known_object obj;
+  struct known_object const *t;
+  obj.dev = st->st_dev;
+  obj.ino = st->st_ino;
+  t = tfind (&obj, &fts->fts_dir_signatures, object_compare);
+  return t ? t->fts_ent : NULL;
+}
+
 FTS *
 fts_open(argv, options, compar)
 	char * const *argv;
@@ -244,6 +289,8 @@ fts_open(argv, options, compar)
 	sp->fts_cur->fts_link = root;
 	sp->fts_cur->fts_info = FTS_INIT;
 
+	sp->fts_dir_signatures = NULL;
+
 	/*
 	 * If using chdir(2), grab a file descriptor pointing to dot to ensure
 	 * that we can get back here; this could be avoided for some paths,
@@ -296,7 +343,7 @@ fts_close(sp)
 	FTS *sp;
 {
 	register FTSENT *freep, *p;
-	int saved_errno;
+	int saved_errno = 0;
 
 	/*
 	 * This still works if we haven't read anything -- the dummy structure
@@ -321,20 +368,23 @@ fts_close(sp)
 
 	/* Return to original directory, save errno if necessary. */
 	if (!ISSET(FTS_NOCHDIR)) {
-		saved_errno = fchdir(sp->fts_rfd) ? errno : 0;
+		if (fchdir(sp->fts_rfd))
+			saved_errno = errno;
 		(void)close(sp->fts_rfd);
-
-		/* Set errno and return. */
-		if (saved_errno != 0) {
-			/* Free up the stream pointer. */
-			free(sp);
-			__set_errno (saved_errno);
-			return (-1);
-		}
 	}
+
+	/* Free all of the directory fingerprint info.  */
+	tdestroy (sp->fts_dir_signatures, free);
 
 	/* Free up the stream pointer. */
 	free(sp);
+
+	/* Set errno and return. */
+	if (saved_errno) {
+		__set_errno (saved_errno);
+		return (-1);
+	}
+
 	return (0);
 }
 
@@ -913,9 +963,6 @@ fts_stat(sp, p, follow)
 	register FTSENT *p;
 	int follow;
 {
-	register FTSENT *t;
-	register dev_t dev;
-	register ino_t ino;
 	struct stat *sbp, sb;
 	int saved_errno;
 
@@ -955,6 +1002,7 @@ err:		memset(sbp, 0, sizeof(struct stat));
 	}
 
 	if (S_ISDIR(sbp->st_mode)) {
+		FTSENT *t;
 		/*
 		 * Set the device/inode.  Used to find cycles and check for
 		 * crossing mount points.  Also remember the link count, used
@@ -962,25 +1010,27 @@ err:		memset(sbp, 0, sizeof(struct stat));
 		 * understood that these fields are only referenced if fts_info
 		 * is set to FTS_D.
 		 */
-		dev = p->fts_dev = sbp->st_dev;
-		ino = p->fts_ino = sbp->st_ino;
+		p->fts_dev = sbp->st_dev;
+		p->fts_ino = sbp->st_ino;
 		p->fts_nlink = sbp->st_nlink;
 
 		if (ISDOT(p->fts_name))
 			return (FTS_DOT);
 
 		/*
-		 * Cycle detection is done by brute force when the directory
-		 * is first encountered.  If the tree gets deep enough or the
-		 * number of symbolic links to directories is high enough,
-		 * something faster might be worthwhile.
+		 * See if we've already encountered this directory.
+		 * This can happen when following symlinks as well as
+		 * with a corrupted directory hierarchy.
 		 */
-		for (t = p->fts_parent;
-		    t->fts_level >= FTS_ROOTLEVEL; t = t->fts_parent)
-			if (ino == t->fts_ino && dev == t->fts_dev) {
-				p->fts_cycle = t;
-				return (FTS_DC);
-			}
+		if ((t = find_object (sp, sbp))) {
+			p->fts_cycle = t;
+			return (FTS_DC);
+		}
+
+		/* Remember the object, ignoring any failure.  If we're running
+		   out of memory, detecting cycles isn't a high priority.  */
+		add_object (sp, p, sbp);
+
 		return (FTS_D);
 	}
 	if (S_ISLNK(sbp->st_mode))
