@@ -1,5 +1,7 @@
 2000-05-06  Jim Meyering  <meyering@lucent.com>
 
+	* src/Makefile.am (shred_LDADD): Add @LIB_CLOCK_GETTIME@.
+
 	* src/rmdir.c (EEXIST): Remove now-unused definition.
 	(ENOTEMPTY): Likewise.
 	(errno_rmdir_non_empty): Rewrite to use RMDIR_ERRNO_NOT_EMPTY,
