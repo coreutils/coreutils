@@ -1,19 +1,23 @@
 /* error.h -- declaration for error-reporting function
-   Copyright (C) 1995 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996 Software Foundation, Inc.
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+This file is part of the GNU C Library.  Its master source is NOT part of
+the C library, however.  The master source lives in /gd/gnu/lib.
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+The GNU C Library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Library General Public License as
+published by the Free Software Foundation; either version 2 of the
+License, or (at your option) any later version.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
+The GNU C Library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Library General Public License for more details.
+
+You should have received a copy of the GNU Library General Public
+License along with the GNU C Library; see the file COPYING.LIB.  If
+not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+Cambridge, MA 02139, USA.  */
 
 #ifndef _error_h_
 #define _error_h_
@@ -31,14 +35,35 @@
 # endif
 #endif
 
-#if __STDC__
-void error (int, int, const char *, ...) \
-  __attribute__ ((__format__ (__printf__, 3, 4)));
+#if defined (__STDC__) && __STDC__
+
+/* Print a message with `fprintf (stderr, FORMAT, ...)';
+   if ERRNUM is nonzero, follow it with ": " and strerror (ERRNUM).
+   If STATUS is nonzero, terminate the program with `exit (STATUS)'.  */
+
+extern void error (int status, int errnum, const char *format, ...)
+     __attribute__ ((__format__ (__printf__, 3, 4)));
+
+extern void error_at_line (int status, int errnum, const char *fname,
+			   unsigned int lineno, const char *format, ...)
+     __attribute__ ((__format__ (__printf__, 5, 6)));
+
+/* If NULL, error will flush stdout, then print on stderr the program
+   name, a colon and a space.  Otherwise, error will call this
+   function without parameters instead.  */
+extern void (*error_print_progname) (void);
+
 #else
 void error ();
+void error_at_line ();
+extern void (*error_print_progname) ();
 #endif
 
 /* This variable is incremented each time `error' is called.  */
 extern unsigned int error_message_count;
+
+/* Sometimes we want to have at most one error per line.  This
+   variable controls whether this mode is selected or not.  */
+extern int error_one_per_line;
 
 #endif /* _error_h_ */

@@ -1,19 +1,23 @@
 /* error.c -- error handler for noninteractive utilities
-   Copyright (C) 1990, 91, 92, 93, 94, 95 Free Software Foundation, Inc.
+   Copyright (C) 1990, 91, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+This file is part of the GNU C Library.  Its master source is NOT part of
+the C library, however.  The master source lives in /gd/gnu/lib.
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+The GNU C Library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Library General Public License as
+published by the Free Software Foundation; either version 2 of the
+License, or (at your option) any later version.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+The GNU C Library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Library General Public License for more details.
+
+You should have received a copy of the GNU Library General Public
+License along with the GNU C Library; see the file COPYING.LIB.  If
+not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+Cambridge, MA 02139, USA.  */
 
 /* Written by David MacKenzie <djm@gnu.ai.mit.edu>.  */
 
@@ -43,23 +47,35 @@
 void exit ();
 #endif
 
-/* This variable is incremented each time `error' is called.  */
-unsigned int error_message_count;
+#ifndef _
+#define _(String) String
+#endif
 
 /* If NULL, error will flush stdout, then print on stderr the program
    name, a colon and a space.  Otherwise, error will call this
    function without parameters instead.  */
-void (*error_print_progname) () = NULL;
+void (*error_print_progname) (
+#if __STDC__ - 0
+			      void
+#endif
+			      );
+
+/* This variable is incremented each time `error' is called.  */
+unsigned int error_message_count;
 
 #ifdef _LIBC
+/* In the GNU C library, there is a predefined variable for this.  */
+
 #define program_name program_invocation_name
-#endif
+#include <errno.h>
+
+#else
 
 /* The calling program should define program_name and set it to the
    name of the executing program.  */
 extern char *program_name;
 
-#if HAVE_STRERROR || _LIBC
+#if HAVE_STRERROR
 # ifndef strerror		/* On some systems, strerror is a macro */
 char *strerror ();
 # endif
@@ -73,10 +89,11 @@ private_strerror (errnum)
 
   if (errnum > 0 && errnum <= sys_nerr)
     return sys_errlist[errnum];
-  return "Unknown system error";
+  return _("Unknown system error");
 }
 #define strerror private_strerror
-#endif
+#endif	/* HAVE_STRERROR */
+#endif	/* _LIBC */
 
 /* Print the program name and error message MESSAGE, which is a printf-style
    format string with optional args.
@@ -120,7 +137,6 @@ error (status, errnum, message, va_alist)
 #endif
 
   ++error_message_count;
-
   if (errnum)
     fprintf (stderr, ": %s", strerror (errnum));
   putc ('\n', stderr);
@@ -128,3 +144,4 @@ error (status, errnum, message, va_alist)
   if (status)
     exit (status);
 }
+
