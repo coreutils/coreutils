@@ -1,0 +1,60 @@
+#!/bin/sh
+# make sure we get proper diagnostics: e.g., with --target-dir=d but no args
+
+if test "$VERBOSE" = yes; then
+  set -x
+  mv --version
+fi
+
+pwd=`pwd`
+tmp=diag-$$
+trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
+trap 'exit $?' 1 2 13 15
+
+framework_failure=0
+mkdir $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+
+touch f1 || framework_failure=1
+touch f2 || framework_failure=1
+touch d || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo 'failure in testing framework'
+  exit 1
+fi
+
+# Make sure we get English translations.
+LANGUAGE=C
+export LANGUAGE
+LC_ALL=C
+export LC_ALL
+LANG=C
+export LANG
+
+# These mv commands should all exit nonzero.
+
+# Too few args.  This first one did fail, but with an incorrect diagnostic
+# until fileutils-4.0u.
+mv --target=d >> out 2>&1 && fail=1
+mv no-file >> out 2>&1 && fail=1
+
+# Target is not a directory.
+mv f1 f2 f1 >> out 2>&1 && fail=1
+mv --target=f2 f1 >> out 2>&1 && fail=1
+
+cat > exp <<\EOF
+mv: missing file argument
+Try `mv --help' for more information.
+mv: missing file argument
+Try `mv --help' for more information.
+mv: when moving multiple files, last argument must be a directory
+Try `mv --help' for more information.
+mv: specified target, `f2' is not a directory
+Try `mv --help' for more information.
+EOF
+
+cmp out exp || fail=1
+
+(exit $fail)
+exit $fail
