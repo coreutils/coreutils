@@ -1,0 +1,7 @@
+2002-07-01  Jim Meyering  <meyering@lucent.com>
+
+	* Version 0.1.0.
+
+	* configure.ac: Merge the three files from fileutils,
+	textutils, and sh-utils.
+	* Makefile.am: Likewise.
