@@ -125,7 +125,7 @@ static struct option const long_options[] =
    Return 1 if there is an error, otherwise 0.  */
 
 static int
-do_link (char *source, char *dest)
+do_link (const char *source, const char *dest)
 {
   struct stat source_stats;
   struct stat dest_stats;
