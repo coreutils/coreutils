@@ -173,9 +173,11 @@ canonicalize_file_name (const char *name)
       if (!rpath)
 	return NULL;
       dest = strchr (rpath, '\0');
-      if (dest < rpath + PATH_MAX)
+      if (dest - rpath < PATH_MAX)
 	{
-	  rpath = xrealloc (rpath, PATH_MAX);
+	  char *p = xrealloc (rpath, PATH_MAX);
+	  dest = p + (dest - rpath);
+	  rpath = p;
 	  rpath_limit = rpath + PATH_MAX;
 	}
       else
