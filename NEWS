@@ -11,8 +11,8 @@
       $ ls -l --block-size="K"
       -rw-rw-r--    1 eggert   src          46371K Sep 24 23:40 file
 * ls's --block-size option now affects file sizes in all cases, not
-  just for --block-size=si and --block-size=si.  Fractional sizes
-  are now always rounded up, for consistency with df and du.
+  just for --block-size=human-readable and --block-size=si.  Fractional
+  sizes are now always rounded up, for consistency with df and du.
 * df now displays the block size using powers of 1000 if the requested
   block size seems to be a multiple of a power of 1000.
 * `yes|nl -s%n' no longer evokes a segfault
