@@ -501,8 +501,8 @@ tac_nonseekable (int input_fd, const char *file)
 {
   FILE *tmp_stream;
   char *tmp_file;
-  copy_to_temp (&tmp_stream, &tmp_file, input_fd, file);
-  return tac_seekable (fileno (tmp_stream), tmp_file);
+  return (copy_to_temp (&tmp_stream, &tmp_file, input_fd, file)
+	  && tac_seekable (fileno (tmp_stream), tmp_file));
 }
 
 /* Print FILE in reverse, copying it to a temporary
