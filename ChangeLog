@@ -8,6 +8,9 @@
 	Reported by Jeff Sheinberg as Debian bug #211591;
 	http://bugs.debian.org/205251
 
+	* tests/du/deref-args: New file/test for the above.
+	* tests/du/Makefile.am (TESTS): Add deref-args.
+
 	* src/du.c (process_file): Remove useless disjunct.
 
 	* src/sys2.h (case_GETOPT_VERSION_CHAR): Rename parameter, Authors,

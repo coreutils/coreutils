@@ -15,7 +15,7 @@ trap '(exit $?); exit $?' 1 2 13 15
 framework_failure=0
 mkdir -p $tmp || framework_failure=1
 cd $tmp || framework_failure=1
-mkdir -p dir/a/b
+mkdir -p dir/a
 ln -s dir slink
 
 if test $framework_failure = 1; then
@@ -26,8 +26,13 @@ fi
 fail=0
 
 du -D slink | sed 's/^[0-9][0-9]*	//' > out
+# Ensure that the trailing slash is preserved and handled properly.
+du -D slink/ | sed 's/^[0-9][0-9]*	//' >> out
 cat <<\EOF > exp
+slink/a
 slink
+slink/a
+slink/
 EOF
 
 cmp out exp || fail=1
