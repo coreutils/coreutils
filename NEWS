@@ -84,6 +84,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   pathchk no longer accepts trailing options, e.g., "pathchk -p foo -b"
   now treats -b as a file name to check, not as an invalid option.
 
+  pr now supports page numbers up to 2**64 on most hosts, and it
+  detects page number overflow instead of silently wrapping around.
+  pr now accepts file names that begin with "+" so long as the rest of
+  the file name does not look like a page range.
+
   printf has several changes:
 
     It now uses 'intmax_t' (not 'long int') to format integers, so it
