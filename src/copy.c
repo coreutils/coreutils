@@ -185,7 +185,16 @@ copy_reg (const char *src_path, const char *dst_path,
   source_desc = open (src_path, O_RDONLY);
   if (source_desc < 0)
     {
-      error (0, errno, "%s", src_path);
+      /* If SRC_PATH doesn't exist, then chances are good that the
+	 user did something like this `cp --backup foo foo': and foo
+	 existed to start with, but copy_internal renamed DST_PATH
+	 with the backup suffix, thus also renaming SRC_PATH.  */
+      if (errno == ENOENT)
+	error (0, 0, _("`%s' and `%s' are the same file"),
+	       src_path, dst_path);
+      else
+	error (0, errno, "%s", src_path);
+
       return -1;
     }
 
@@ -415,39 +424,49 @@ copy_internal (const char *src_path, const char *dst_path,
 	      return 1;
 	    }
 	  else
-	    new_dst = 1;
+	    {
+	      new_dst = 1;
+	    }
 	}
       else
 	{
-	  int same;
-
 	  /* The destination file exists already.  */
 
-	  same = (src_sb.st_ino == dst_sb.st_ino
-		  && src_sb.st_dev == dst_sb.st_dev);
+	  if (x->backup_type == none)
+	    {
+	      int same;
+
+	      same = (src_sb.st_ino == dst_sb.st_ino
+		      && src_sb.st_dev == dst_sb.st_dev);
 
 #ifdef S_ISLNK
-	  /* If we're preserving symlinks (--no-dereference) and the
-	     destination file is a symlink, use stat (not xstat) to
-	     see if it points back to the source.  */
-	  if (!same && !x->dereference && S_ISLNK (dst_sb.st_mode))
-	    {
-	      struct stat dst2_sb;
-	      if (stat (dst_path, &dst2_sb) == 0
-		  && (src_sb.st_ino == dst2_sb.st_ino &&
-		      src_sb.st_dev == dst2_sb.st_dev))
-		same = 1;
-	    }
+	      /* If we're preserving symlinks (--no-dereference) and either
+		 file is a symlink, use stat (not xstat) to see if they refer
+		 to the same file.  */
+	      if (!same && !x->dereference
+		  && (S_ISLNK (dst_sb.st_mode) || S_ISLNK (src_sb.st_mode)))
+		{
+		  struct stat dst2_sb;
+		  struct stat src2_sb;
+		  if (stat (dst_path, &dst2_sb) == 0
+		      && stat (src_path, &src2_sb) == 0
+		      && src2_sb.st_ino == dst2_sb.st_ino
+		      && src2_sb.st_dev == dst2_sb.st_dev)
+		    {
+		      same = 1;
+		    }
+		}
 #endif
 
-	  if (same)
-	    {
-	      if (x->hard_link)
-		return 0;
+	      if (same)
+		{
+		  if (x->hard_link)
+		    return 0;
 
-	      error (0, 0, _("`%s' and `%s' are the same file"),
-		     src_path, dst_path);
-	      return 1;
+		  error (0, 0, _("`%s' and `%s' are the same file"),
+			 src_path, dst_path);
+		  return 1;
+		}
 	    }
 
 	  if (!S_ISDIR (src_type))
