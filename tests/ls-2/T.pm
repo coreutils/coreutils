@@ -15,24 +15,25 @@ my @Types = qw (IN OUT ERR EXIT);
 my %Types = map {$_ => 1} @Types;
 my %Zero_one_type = map {$_ => 1} qw (OUT ERR EXIT);
 
-my $count = 1;
+my $Global_count = 1;
 
-sub _create_file ($$$$)
+sub _create_file ($$$$$)
 {
-  my ($program_name, $test_name, $file_name, $data) = @_;
-  my $file = "$test_name-$$.$count";
+  my ($program_name, $test_name, $type, $file_name, $data) = @_;
+  my $file;
   if (defined $file_name)
     {
       $file = $file_name;
     }
   else
     {
-      $file = "$test_name-$$.$count";
-      ++$count;
+      $file = "$test_name-$$.$Global_count";
+      ++$Global_count;
     }
 
   # The test spec gave a string.
   # Write it to a temp file and return tempfile name.
+  #warn "writing $type `$data' to $file\n";
   my $fh = new FileHandle "> $file";
   die "$program_name: $file: $!\n" if ! $fh;
   print $fh $data;
@@ -79,6 +80,7 @@ sub run_tests ($$$$$)
       my $test_name = shift @$t;
       my $expect = {};
 
+      $Global_count = 1;
       my @args;
       my $io_spec;
       my %seen_type;
@@ -132,10 +134,16 @@ sub run_tests ($$$$$)
 	    }
 
 	  my $is_junk_file = (! defined $file_name);
-	  my $file = _create_file ($program_name, $test_name,
+	  my $file = _create_file ($program_name, $test_name, $type,
 				   $file_name, $contents);
-	  push @args, $file
-	    if $type eq 'IN';
+	  if ($type eq 'IN')
+	    {
+	      push @args, $file
+	    }
+	  else
+	    {
+	      $expect->{$type} = $file;
+	    }
 
 	  if ($is_junk_file)
 	    {
@@ -159,7 +167,7 @@ sub run_tests ($$$$$)
 	{
 	  if (!exists $expect->{$eo})
 	    {
-	      $expect->{$eo} = _create_file ($program_name, $test_name,
+	      $expect->{$eo} = _create_file ($program_name, $test_name, $eo,
 					     undef, '');
 	      push @junk_files, $expect->{$eo};
 	    }

@@ -33,7 +33,7 @@ my $program_name;
 #   on stdout (or stderr).
 # If the EXIT-keyed one is omitted, then expect the exit status to be zero.
 
-my $q_bell = {IN => {"q\a" => ''}}
+my $q_bell = {IN => {"q\a" => ''}};
 my @Tests =
     (
      # test-name options input expected-output
@@ -51,7 +51,7 @@ my @Tests =
     );
 
 my $save_temps = 0;
-my $verbose = 0;
+my $verbose = $ENV{VERBOSE};
 
 my $prog = $ENV{LS} || 'ls';
 my $fail = run_tests ($program_name, $prog, \@Tests, $save_temps, $verbose);
