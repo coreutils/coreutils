@@ -1,6 +1,6 @@
 [4.5.9]
 * pwd now fails if the name of the working directory is so long that getcwd
-  truncates it.  Before it would return the truncated name.
+  truncates it.  Before it would print the truncated name and exit successfully.
 * `df /some/mount-point' no longer hangs on a GNU libc system when another
   hard-mounted NFS file system (preceding /some/mount-point in /proc/mounts)
   is inaccessible.
