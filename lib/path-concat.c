@@ -33,7 +33,10 @@ char *stpcpy ();
    BASE in the returned concatenation.  */
 
 char *
-path_concat (const char *dir, const char *base, char **base_in_result)
+path_concat (dir, base, base_in_result)
+     const char *dir;
+     const char *base;
+     char **base_in_result;
 {
   char *p;
   char *p_concat;
