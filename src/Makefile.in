@@ -478,8 +478,7 @@ shred_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1) \
 sleep_SOURCES = sleep.c
 sleep_OBJECTS = sleep.$(OBJEXT)
 am__DEPENDENCIES_3 = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1)
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
 sleep_DEPENDENCIES = $(am__DEPENDENCIES_3)
 sort_SOURCES = sort.c
 sort_OBJECTS = sort.$(OBJEXT)
@@ -701,7 +700,6 @@ LIB_EACCESS = @LIB_EACCESS@
 LIB_FDATASYNC = @LIB_FDATASYNC@
 LIB_GETHRXTIME = @LIB_GETHRXTIME@
 LIB_NANOSLEEP = @LIB_NANOSLEEP@
-LIB_XNANOSLEEP = @LIB_XNANOSLEEP@
 LN_S = @LN_S@
 LTLIBICONV = @LTLIBICONV@
 LTLIBINTL = @LTLIBINTL@
@@ -828,7 +826,7 @@ seq_LDADD = $(LDADD) $(SEQ_LIBM)
 # If necessary, add -lm to resolve the `pow' reference in lib/strtod.c
 # or for the fesetround reference in programs using nanosec.c.
 nanosec_libs = \
-  $(LDADD) $(FESETROUND_LIBM) $(POW_LIB) $(LIB_XNANOSLEEP) $(LIB_NANOSLEEP)
+  $(LDADD) $(FESETROUND_LIBM) $(POW_LIB) $(LIB_NANOSLEEP)
 
 sleep_LDADD = $(nanosec_libs)
 tail_LDADD = $(nanosec_libs)
