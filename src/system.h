@@ -312,10 +312,6 @@ char *alloca ();
 #define ISUPPER(c) (ISASCII (c) && isupper (c))
 #define ISXDIGIT(c) (ISASCII (c) && isxdigit (c))
 
-/* Disable string localization for the time being.  */
-#undef _
-#define _(String) String
-
 #ifndef __P
 #if defined (__GNUC__) || (defined (__STDC__) && __STDC__)
 #define __P(args) args
