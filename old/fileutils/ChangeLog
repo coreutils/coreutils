@@ -1,11 +1,35 @@
-Sat Jun 22 16:57:53 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+Mon Jun 24 22:39:02 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* dircolors.c (dc_parse_stream): Remove spurious newline in
+	error message.
+
+Sun Jun 23 12:58:32 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* dircolors.hin: New file.
+	* dcgen.pl: New file.
+	* src/Makefile.am (dircolors.h): Add a rule to create this file.
+	(dcgen): Likewise.
+
+	* dircolors.c (parse_line): Rewrite to avoid modifying LINE.
+	Put LINE first in parameter list.
+	Adjust caller.
+	(dc_parse_stream): Free KEYWD and ARG.
+	(main): Give diagnostic for unreasonable combinations of
+	options/arguments.
+
+	* lib/Makefile.am (EXTRA_DIST): Add strndup.c.
+	* configure.in (AC_REPLACE_FUNCS): Add strndup.
+	* strndup.c: New file.  From id-utils-3.0k.
+	(strndup): Deansify.
+	[!STDC_HEADERS]: Include string.h and stdlib.h.
+
+Sat Jun 22 16:57:53 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* dircolors.c: Major overhaul.  No longer read from /etc/DIR_COLORS
 	or from ~/.dircolors.  Defaults are now compiled in.  If you specify
 	a file on the command line, it is used instead of the compiled-in
 	defaults.
-	(main): New option --print (-p).
+	(main): New option --print-database (-p).
 	Detect write failure.
 	Add --bourne-shell and --c-shell aliases for --sh and --csh resp.
 
