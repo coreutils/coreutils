@@ -5,3 +5,4 @@ config-log
 tests/misc/nl
 po/de.po
 m4/lib-ld.m4
+aclocal.m4
