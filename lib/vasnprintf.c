@@ -707,6 +707,22 @@ vasnprintf (char *resultbuf, size_t *lengthp, const char *format, va_list args)
 			    p[1] = '\0';
 			    continue;
 			  }
+			else if (retcount < 0)
+			  {
+			    /* The system's snprintf is sorely deficient:
+			       it doesn't recognize the `%n' directive, and it
+			       returns -1 (rather than the length that would
+			       have been required) when the buffer is too small.
+			       This is the case at with least HPUX 10.20.
+			       Double the memory allocation.  */
+			    size_t n = allocated;
+			    if (n < 2 * allocated)
+			      {
+				n = 2 * allocated;
+				ENSURE_ALLOCATION (n);
+				continue;
+			      }
+			  }
 			count = retcount;
 		      }
 #endif
