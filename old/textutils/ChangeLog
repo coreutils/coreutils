@@ -1,3 +1,8 @@
+2001-02-22  Jim Meyering  <meyering@lucent.com>
+
+	* src/sort.c (keycompare): Move declarations of locals, lena and lenb,
+	into the inner scope where they are used.
+
 2001-02-19  Jim Meyering  <meyering@lucent.com>
 
 	* src/sort.c (AUTHORS): Add Paul Eggert.
