@@ -2280,7 +2280,7 @@ print_dir (char const *name, char const *realname, bool command_line_arg)
 	 we've found a loop, and do not process this directory.  */
       if (visit_dir (dir_stat.st_dev, dir_stat.st_ino))
 	{
-	  error (0, 0, _("not listing already-listed directory: %s"),
+	  error (0, 0, _("%s: not listing already-listed directory"),
 		 quotearg_colon (name));
 	  return;
 	}
