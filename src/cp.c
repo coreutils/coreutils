@@ -60,7 +60,7 @@ struct dir_attr
 enum
 {
   TARGET_DIRECTORY_OPTION = CHAR_MAX + 1,
-  SPARSE_OPTION = CHAR_MAX + 2
+  SPARSE_OPTION
 };
 
 int stat ();
