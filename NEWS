@@ -1,3 +1,13 @@
+[4.5.10]
+Planned changes:
+  Andreas' suggestion re cp --no-preserve
+  Rich's stub patches
+  shred non-regular should imply --exact (do not round up)
+* du no longer dumps core due to `infinite' recursion via nftw's
+  use of the buggy replacement function in getcwd.c
+* portability patches for a few vendor compilers
+* du -S *really* now works like it did before the change in 4.5.5
+
 [4.5.9]
 * du no longer truncates file sizes or sums to fit in 32-bit size_t
 * work around Linux kernel bug in getcwd (fixed in 2.4.21-pre4), so that pwd
