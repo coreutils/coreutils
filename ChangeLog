@@ -2,8 +2,6 @@
 
 	* Version 5.3.0.
 
-	* tests/chown/basic: Add a few more tests.
-
 	tac would exit immediately upon I/O or temp-file creation failure.
 	Now it continues on, processing any remaining command line arguments.
 
@@ -21,6 +19,8 @@
 	* NEWS: Document this.
 	* tests/misc/tac-continue: New test for this.
 	* tests/misc/Makefile.am (TESTS): Add tac-continue.
+
+	* tests/chown/basic: Add a few more tests.
 
 2004-12-13  Paul Eggert  <eggert@cs.ucla.edu>
 
