@@ -264,6 +264,23 @@ char *alloca ();
 # include <inttypes.h> /* for the definition of UINTMAX_MAX */
 #endif
 
+#if !defined PRIdMAX || PRI_MACROS_BROKEN
+# undef PRIdMAX
+# define PRIdMAX (sizeof (uintmax_t) == sizeof (long) ? "ld" : "lld")
+#endif
+#if !defined PRIoMAX || PRI_MACROS_BROKEN
+# undef PRIoMAX
+# define PRIoMAX (sizeof (uintmax_t) == sizeof (long) ? "lo" : "llo")
+#endif
+#if !defined PRIuMAX || PRI_MACROS_BROKEN
+# undef PRIuMAX
+# define PRIuMAX (sizeof (uintmax_t) == sizeof (long) ? "lu" : "llu")
+#endif
+#if !defined PRIxMAX || PRI_MACROS_BROKEN
+# undef PRIxMAX
+# define PRIxMAX (sizeof (uintmax_t) == sizeof (long) ? "lx" : "llx")
+#endif
+
 #include <ctype.h>
 
 /* Jim Meyering writes:
