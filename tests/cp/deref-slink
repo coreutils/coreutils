@@ -11,12 +11,12 @@ fi
 . $srcdir/../lang-default
 
 pwd=`pwd`
-tmp=FIXME.$$
-trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
+t0=`echo "$0"|sed 's,.*/,,'`.tmp;tmp=$t0/$$
+trap 'status=$?; cd $pwd; rm -rf $t0 && exit $status' 0
 trap '(exit $?); exit' 1 2 13 15
 
 framework_failure=0
-mkdir $tmp || framework_failure=1
+mkdir -p $tmp || framework_failure=1
 cd $tmp || framework_failure=1
 touch f slink-target || framework_failure=1
 ln -s slink-target slink || framework_failure=1

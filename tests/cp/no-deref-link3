@@ -25,4 +25,4 @@ test "`cat a`" = $msg || fail=1
 
 rm -f a b
 
-exit $fail
+(exit $fail); exit

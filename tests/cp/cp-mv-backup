@@ -88,4 +88,4 @@ cmp $expected $actual || fail=1
 # Uncomment this if you see a failure and want to try to diagnose it.
 test $fail = 1 && diff -c $expected $actual 1>&2
 
-exit $fail
+(exit $fail); exit

@@ -31,4 +31,4 @@ cmp out2 exp || fail=1
 
 rm -f out out2 exp a a~
 
-exit $fail
+(exit $fail); exit

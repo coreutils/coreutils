@@ -9,10 +9,13 @@ fi
 
 . $srcdir/../lang-default
 
-tmp=t-cpsymsl.$$
+pwd=`pwd`
+t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
+trap 'status=$?; cd $pwd; rm -rf $t0 && exit $status' 0
+trap '(exit $?); exit' 1 2 13 15
 
 framework_failure=0
-mkdir $tmp || framework_failure=1
+mkdir -p $tmp || framework_failure=1
 cd $tmp || framework_failure=1
 
 mkdir dir || framework_failure=1
@@ -34,7 +37,4 @@ set `ls -l s`
 # call and so cp ends up dereferencing the symlink and copying the directory.
 test "$*" = 'total 0' && : || fail=1
 
-cd ..
-rm -rf $tmp
-
-exit $fail
+(exit $fail); exit
