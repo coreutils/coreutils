@@ -14,3 +14,17 @@ like stdc-print and think I sent you an early verison.
 I don't like the name `cursor'.  I much prefer short names
 like `p' for index variables.  I doubt I'll change all of them,
 but thought you should know why some will probably end up changing.
+
+#define USE_OBSTACK somewhere
+
+Fix this comment.  Depending on system and application...
+Mention fragmentation.
+  +#if USE_OBSTACK
+  +    /* Whenever obstacks are used, it is possible to allocate all overflowed
+  +       entries into a single stack, so they all can be freed in a single
+  +       operation.  It is not clear if the speedup is worth the trouble.  */
+  +    struct obstack entry_stack;
+  +#endif
+
+
+assert (bucket_limit - bucket == n_buckets) ?
