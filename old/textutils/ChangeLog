@@ -1,5 +1,14 @@
 2001-01-02  Jim Meyering  <meyering@lucent.com>
 
+	* src/od.c (ulonglong_t): Define place-holder type to avoid some #if
+	directives.
+	(LONGEST_INTEGRAL_TYPE): Remove definition.
+	(MAX_INTEGRAL_TYPE_SIZE): Use ulonglong_t instead of
+	LONGEST_INTEGRAL_TYPE.
+	(print_long_long): Compile this function even on systems without
+	long long support.
+	(decode_one_format): Remove #if directive.
+
 	* src/od.c (decode_one_format): Guard use of print_long_long with
 	`#if HAVE_UNSIGNED_LONG_LONG'.  From Darren Salt.
 	Change all `#ifdef HAVE_UNSIGNED_LONG_LONG' to use `#if' instead.
