@@ -1,3 +1,15 @@
+Sun Apr 28 17:10:03 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* fmt.c (copy_rest): Don't copy past end of prefix.  Output
+	trailing spaces if the prefix had any.  Before, the command
+	perl -e 'print "| S";' |fmt -p' |  '|tr '\0' @ output `|@S'.
+	Reported by François Pinard.
+
+	* configure.in: Make fp_C_PROTOTYPES precede AC_C_INLINE.
+	Otherwise, some systems lose because the value AC_C_INLINE choses
+	with plain `cc' is different from that chosen when using the ANSI-mode
+	C compiler.  From Kaveh Ghazi.
+
 Tue Apr 23 22:05:35 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* aclocal.m4 (AC_REPLACE_GNU_GETOPT): New macro.
