@@ -52,10 +52,6 @@
 #include "error.h"
 #include "xstrtol.h"
 
-#if defined(GWINSZ_BROKEN)	/* Such as for SCO UNIX 3.2.2. */
-# undef TIOCGWINSZ
-#endif
-
 #ifndef _POSIX_VDISABLE
 # define _POSIX_VDISABLE ((unsigned char) 0)
 #endif
