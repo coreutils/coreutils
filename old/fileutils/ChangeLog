@@ -5,11 +5,13 @@
 	* src/install.c: Remove big, option-describing comment block.
 	(main): Rename local `symbolic_mode' to `specified_mode'.
 
-	* src/mkdir.c (main): Rather than setting the umask to 0 and hand-apply
-	the previously-set umask, pass the full create mask (0777 or 0666) to
-	mkdir and let the kernel apply the umask.  The difference shows up only
-	on file systems with ACL support when the containing directory has a
-	default ACL.  Patch by Andreas Gruenbacher.
+	* src/mkdir.c (main): Don't set the umask to 0 and hand-apply
+	the previously-set umask unconditionally.  Do that only when a
+	MODE has been specified.  Otherwise, call mkdir with the full
+	creation mask (0777 or 0666) and let the kernel apply the umask.
+	The difference shows up only on file systems with ACL support
+	when the containing directory has a default ACL.
+	Patch by Andreas Gruenbacher.
 	(main): Rename local `symbolic_mode' to `specified_mode'.
 
 	* tests/mkdir/perm: New test.
