@@ -29,6 +29,7 @@
 
 #include "system.h"
 #include "closeout.h"
+#include "exitfail.h"
 #include "error.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -84,7 +85,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  close_stdout_set_status (3);
+  exit_failure = 3;
   atexit (close_stdout);
 
   silent = 0;

@@ -2183,8 +2183,8 @@ main (int argc, char **argv)
 
   atexit (cleanup);
 
+  exit_failure = SORT_FAILURE;
   atexit (close_stdout);
-  close_stdout_set_status (SORT_FAILURE);
 
   hard_LC_COLLATE = hard_locale (LC_COLLATE);
 #if HAVE_NL_LANGINFO

@@ -29,6 +29,7 @@
 #include "argmatch.h"
 #include "closeout.h"
 #include "error.h"
+#include "exitfail.h"
 #include "getdate.h"
 #include "getline.h"
 #include "posixtm.h"
@@ -309,7 +310,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  close_stdout_set_status (2);
+  exit_failure = 2;
   atexit (close_stdout);
 
   while ((optc = getopt_long (argc, argv, short_options, long_options, NULL))
