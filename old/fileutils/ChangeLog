@@ -1,3 +1,17 @@
+2000-08-13  Jim Meyering  <meyering@lucent.com>
+
+	* src/copy.c (get_dest_mode): Rename from new_nondir_mode.
+	Honor the umask for `cp', but not for `mv' or `cp -p'.
+	(copy_reg): New 4th parameter, dst_mode.  Pass it as 3rd arg. to open.
+	(copy_internal): Change type of locals `src_mode' and `src_type' from
+	int to mode_t.
+	Remove unnecessary local `fix_mode'.
+	Combine two if-stmts into one.
+	Pass `src_mode' as 4th arg to copy_reg.
+	If we've just created a new regular file, return early, skipping the
+	chmod step.  copy_reg now sets permissions of such files upon creation.
+	Use get_dest_mode, so there's just one chmod call here.
+
 2000-08-12  Jim Meyering  <meyering@lucent.com>
 
 	* tests/mv/into-self-2: Remove test for the VERSION_CONTROL and/or
