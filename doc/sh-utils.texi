@@ -368,11 +368,13 @@ is also known as the JAVA source file encoding. You can use GNU recode 3.5c
 piece of text into a shell script which will output this text in a locale
 independent way:
 
-@example
-$ LC_CTYPE=zh_CN.big5 /usr/local/bin/printf '\u4e2d\u6587\n' > sample.txt
-$ recode BIG5..JAVA < sample.txt | \
-  sed -e "s|^|/usr/local/bin/printf '|" -e "s|$|\\\\n'|" > sample.sh
-@end example
+@smallexample
+$ LC_CTYPE=zh_CN.big5 /usr/local/bin/printf \
+    '\u4e2d\u6587\n' > sample.txt
+$ recode BIG5..JAVA < sample.txt \
+    | sed -e "s|^|/usr/local/bin/printf '|" -e "s|$|\\\\n'|" \
+    > sample.sh
+@end smallexample
 
 
 @node yes invocation
@@ -1618,8 +1620,8 @@ Same as:
 @example
 cread -ignbrk brkint -inlcr -igncr icrnl -ixoff -iuclc -ixany
 imaxbel opost -olcuc -ocrnl onlcr -onocr -onlret -ofill -ofdel
-nl0 cr0 tab0 bs0 vt0 ff0 isig icanon iexten echo echoe echok -echonl
--noflsh -xcase -tostop -echoprt echoctl echoke
+nl0 cr0 tab0 bs0 vt0 ff0 isig icanon iexten echo echoe echok
+-echonl -noflsh -xcase -tostop -echoprt echoctl echoke
 @end example
 @noindent and also sets all special characters to their default values.
 
@@ -1635,8 +1637,8 @@ May be negated.  If negated, same as @code{raw}.
 Same as:
 @example
 -ignbrk -brkint -ignpar -parmrk -inpck -istrip -inlcr -igncr
--icrnl -ixon -ixoff -iuclc -ixany -imaxbel -opost -isig -icanon
--xcase min 1 time 0
+-icrnl -ixon -ixoff -iuclc -ixany -imaxbel -opost -isig
+-icanon -xcase min 1 time 0
 @end example
 @noindent May be negated.  If negated, same as @code{cooked}.
 
