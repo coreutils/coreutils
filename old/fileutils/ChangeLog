@@ -6,6 +6,8 @@
 
 2001-01-07  Karl Eichwalder  <ke@suse.de>
 
+	* src/ls.c (usage): Untabify.
+
 	* src/chgrp.c (parse_group): Normalize spelling.
 
 2001-01-03  Paul Eggert  <eggert@twinsun.com>
