@@ -1110,7 +1110,7 @@ by w for x2, by b for x512, by k for x1024.  Each KEYWORD may be:\n\
   ascii     from EBCDIC to ASCII\n\
   ebcdic    from ASCII to EBCDIC\n\
   ibm       from ASCII to alternated EBCDIC\n\
-  block     pad newline-terminated records with spaces to cbs-size \n\
+  block     pad newline-terminated records with spaces to cbs-size\n\
   unblock   replace trailing spaces in cbs-size records with newline\n\
   lcase     change upper case to lower case\n\
   ucase     change lower case to upper case\n\
