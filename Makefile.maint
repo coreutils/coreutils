@@ -384,13 +384,8 @@ rel-check:
 prev-tgz = $(PACKAGE)-$(PREV_VERSION).tar.gz
 xd-delta = $(PACKAGE)-$(PREV_VERSION)-$(VERSION).xdelta
 
-# signatures ?= $(distdir).tar.bz2.sig $(distdir).tar.gz.sig
-%.sig: %
-	rm -f $@
-	gpg --armor --detach-sign -o $@ $<
-
-rel-files = $(xd-delta) $(distdir).tar.bz2 $(distdir).tar.gz $(signatures)
-announcement: NEWS ChangeLog $(rel-files) $(signatures)
+rel-files = $(xd-delta) $(DIST_ARCHIVES)
+announcement: NEWS ChangeLog $(rel-files)
 	@./announce-gen							\
 	    --release-type=$(RELEASE_TYPE)				\
 	    --package=$(PACKAGE)					\
@@ -503,7 +498,10 @@ cvs-update:
 define emit-upload-commands
 	echo =====================================
 	echo =====================================
-	echo upload $(PACKAGE) $(PREV_VERSION) $(VERSION)
+	echo "$(srcdir)/gnupload $(GNUPLOADFLAGS) \\"
+	echo "    --to fetish.sf.net:fetish-ftp \\"
+	echo "    --to $(gnu_rel_host):coreutils \\"
+	echo "  $(rel-files)
 	echo '# send the /tmp/announcement e-mail'
 	echo =====================================
 	echo =====================================
