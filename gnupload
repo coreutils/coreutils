@@ -1,7 +1,7 @@
 #!/bin/sh
 # Sign files and upload them.
 
-scriptversion=2004-01-25.02
+scriptversion=2004-01-28.17
 
 # Copyright (C) 2004  Free Software Foundation
 #
@@ -24,7 +24,7 @@ scriptversion=2004-01-25.02
 
 set -e
 
-GPG='gpg --batch --no-tty'
+GPG='/usr/bin/gpg --batch --no-tty'
 to=
 
 usage="Usage: $0 [OPTIONS]... FILES...
@@ -47,7 +47,9 @@ Example:
   gnupload --to sources.redhat.com:~ftp/automake \\
            --to alpha.gnu.org:automake \\
            automake-1.8.2b.tar.gz automake-1.8.2b.tar.bz2
-"
+
+Report bugs to <bug-automake@gnu.org>.
+Send patches to <automake-patches@gnu.org>."
 
 while test -n "$1"; do
   case $1 in
@@ -106,10 +108,15 @@ do
   fi
 done
 
+# Make sure passphrase is not exported in the environment.
+unset passphrase
+
 # Reset PATH to be sure that echo is a built-in.  We will later use
 # `echo $passphrase' to output the passphrase, so it is important that
 # it is a built-in (third-party programs tend to appear in `ps'
 # listings with their arguments...).
+# Remember this script runs with `set -e', so if echo is not built-in
+# it will exit now.
 PATH=/empty echo -n "Enter GPG passphrase: "
 stty -echo
 read -r passphrase
