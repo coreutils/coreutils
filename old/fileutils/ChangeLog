@@ -1,5 +1,11 @@
 Sat Oct  5 08:07:03 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* lib/filemode.c (ftypelet) [HAVE_ST_DM_MODE]: Add support for
+	Cray's migrated dmf files.
+	* src/ls.c (print_long_format) [HAVE_ST_DM_MODE]: Likewise.
+	* acconfig.h [HAVE_ST_DM_MODE]: New macro.
+	From Johan Danielsson.
+
 	* acinclude.m4 (AC_HEADER_SYS_TIME_H): New macro.
 	(AM_FUNC_MKTIME): Require AC_HEADER_SYS_TIME_H so that configure's
 	checking... messages don't get nested.
