@@ -23,6 +23,8 @@
 # include <config.h>
 #endif
 
+#include "makepath.h"
+
 #include <alloca.h>
 
 #include <stdio.h>
@@ -44,9 +46,7 @@
 # define S_IRWXUGO (S_IRWXU | S_IRWXG | S_IRWXO)
 #endif
 
-#if STDC_HEADERS
-# include <stdlib.h>
-#endif
+#include <stdlib.h>
 
 #include <errno.h>
 
@@ -54,14 +54,7 @@
 extern int errno;
 #endif
 
-#if HAVE_STRING_H
-# include <string.h>
-#else
-# include <strings.h>
-# ifndef strchr
-#  define strchr index
-# endif
-#endif
+#include <string.h>
 
 #ifndef S_ISUID
 # define S_ISUID 04000
@@ -87,8 +80,6 @@ extern int errno;
 #endif
 
 #define WX_USR (S_IWUSR | S_IXUSR)
-
-#include "makepath.h"
 
 #include "gettext.h"
 #define _(msgid) gettext (msgid)
