@@ -527,6 +527,10 @@ enum
 # define SIZE_MAX TYPE_MAXIMUM (size_t)
 #endif
 
+#ifndef UINTMAX_MAX
+# define UINTMAX_MAX TYPE_MAXIMUM (uintmax_t)
+#endif
+
 #ifndef OFF_T_MIN
 # define OFF_T_MIN TYPE_MINIMUM (off_t)
 #endif
