@@ -426,8 +426,8 @@ close_src_desc:
    work to do and should return successfully, right away.
 
    Set *UNLINK_SRC if we've determined that the caller wants to do
-   `rename (a, b)' where `a' and `b' are hard links to the same file.
-   In that case, the caller should try to unlink `a' and then return
+   `rename (a, b)' where `a' and `b' are distinct hard links to the same
+   file. In that case, the caller should try to unlink `a' and then return
    successfully.  Ideally, we wouldn't have to do that, and we'd be
    able to rely on rename to remove the source file.  However, POSIX
    mistakenly requires that such a rename call do *nothing* and return
@@ -561,7 +561,9 @@ same_file_ok (const char *src_path, const struct stat *src_sb,
       if (S_ISLNK (dst_sb_link->st_mode))
 	return 1;
 
-      if (same_link && !same_name (src_path, dst_path))
+      if (same_link
+	  && 1 < dst_sb_link->st_nlink
+	  && ! same_name (src_path, dst_path))
 	{
 	  if (x->move_mode)
 	    {
