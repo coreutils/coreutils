@@ -1,17 +1,21 @@
 2000-12-25  Jim Meyering  <meyering@lucent.com>
 
+	Clean-up to avoid warnings from Irix's c89.
 	* src/remove.c (hash_compare_active_dir_ents): Return explicit `true'
 	or `false', rather than relying on implicit int-to-enum cast.
-
+	* src/copy.c (same_file_ok): Remove declaration and set of unused
+	variables: src_sb_no_link, dst_sb_no_link.
 	* src/ls.c (extract_dirs_from_files): Remove unused variable.
 	Reported by Nelson Beebe.
-	(gobble_file): Move decl of local, val, into the scope where it's used.
+	
+	* src/ls.c (gobble_file): Move decl of local, val, into the scope
+	where it's used.
 
 2000-12-24  Jim Meyering  <meyering@lucent.com>
 
 	For both ln and install, when using `--backup=simple --suffix=S',
 	the suffix `S' wasn't used.
-	
+
 	* src/ln.c (main): Actually use the local variable,
 	`backup_suffix_string'.
 	* src/install.c (main): Likewise.
