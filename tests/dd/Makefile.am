@@ -7,6 +7,6 @@ TESTS_ENVIRONMENT = \
   srcdir=$(srcdir) \
   PERL="@PERL@" \
   PATH=`pwd`/../../src:$$PATH \
-  PROG=ls
+  PROG=dd
 
 TESTS = misc not-rewound
