@@ -3,3 +3,4 @@ fnmatch.h
 getopt.h
 obstack.h
 regex.h
+getpagesize.h
