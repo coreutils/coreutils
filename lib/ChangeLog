@@ -8,7 +8,7 @@
 
 	* xnanosleep.c (initialized): Remove declaration now that it's unused.
 
-2002-10-12  Paul Eggert  <eggert@twionsun.com>
+2002-10-12  Paul Eggert  <eggert@twinsun.com>
 
 	* xnanosleep.c: There's no need to futz with the rounding mode,
 	since the code should work properly even in the default rounding mode.
