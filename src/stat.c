@@ -124,6 +124,12 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
   switch (statfsbuf->f_type)
     {
 # if defined __linux__
+
+      /* IMPORTANT NOTE: Each of the following `case S_MAGIC_...:'
+	 statements must be followed by a hexadecimal constant in
+	 a comment.  The S_MAGIC_... name and constant are automatically
+	 combined to produce the #define directives in fs.h.  */
+
     case S_MAGIC_AFFS: /* 0xADFF */
       type = "affs";
       break;
