@@ -1,3 +1,8 @@
+2001-09-04  Paul Eggert  <eggert@twinsun.com>
+
+	* prereq.m4 (jm_PREREQ_XREADLINK): New macro.
+	(jm_PREREQ): Use it.
+
 2001-09-03  Paul Eggert  <eggert@twinsun.com>
 
 	* prereq.m4 (jm_PREREQ_XGETCWD): Check for limits.h and
