@@ -611,11 +611,9 @@ copy (void)
       if (ibuf == obuf)		/* If not C_TWOBUFS. */
 	{
 	  int nwritten = full_write (output_fd, obuf, nread);
-	  if (nwritten != nread)
+	  if (nwritten < 0)
 	    {
 	      error (0, errno, "%s", output_file);
-	      if (nwritten > 0)
-		w_partial++;
 	      quit (1);
 	    }
 	  else if (nread == input_blocksize)
@@ -677,7 +675,7 @@ copy (void)
       int nwritten = full_write (output_fd, obuf, oc);
       if (nwritten > 0)
 	w_partial++;
-      if (nwritten != oc)
+      if (nwritten < 0)
 	{
 	  error (0, errno, "%s", output_file);
 	  quit (1);
