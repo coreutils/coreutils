@@ -1,4 +1,4 @@
-#serial 14
+#serial 15
 
 dnl This is just a wrapper function to encapsulate this kludge.
 dnl Putting it in a separate file like this helps share it between
@@ -47,7 +47,10 @@ AC_DEFUN(jm_CHECK_DECLS,
     free,
     getenv,
     geteuid,
+    getgrgid
     getlogin,
+    getpwuid
+    getuid
     getutent,
     lseek,
     malloc,
