@@ -1,5 +1,11 @@
 2001-06-16  Jim Meyering  <meyering@lucent.com>
 
+	* src/ls.c (main): Recheck global print_with_color after calling
+	parse_ls_color, since that function may have reset it.
+	Based on a patch from Richard Dawe.
+
+2001-06-16  Jim Meyering  <meyering@lucent.com>
+
 	* config.sub: Update from master repository.
 	* config.guess: Likewise.
 
