@@ -1,4 +1,7 @@
 Changes in release 4.01:
+[4.0.36]
+* `cp -d file symlink-to-some-other-file' no longer fails
+* performance improvements for ls
 [4.0.35]
 * ln --backup=simple --suffix=SUFFIX once again uses SUFFIX
 * install: Likewise.
