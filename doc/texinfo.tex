@@ -22,13 +22,26 @@
 %You are forbidden to forbid anyone else to use, share and improve
 %what you give them.   Help stamp out software-hoarding!
 
+
+% Send bug reports to bug-texinfo@prep.ai.mit.edu.
+% Please include a *precise* test case in each bug report.
+
+
+% Make it possible to create a .fmt file just by loading this file:
+% if the underlying format is not loaded, start by loading it now.
+% Added by gildea November 1993.
+\expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
+
 % This automatically updates the version number based on RCS.
 \def\deftexinfoversion$#1: #2 ${\def\texinfoversion{#2}}
-\deftexinfoversion$Revision: 1.7 $
+\deftexinfoversion$Revision: 1.8 $
 \message{Loading texinfo package [Version \texinfoversion]:}
 
-% Print the version number if in a .fmt file.
-\everyjob{\message{[Texinfo version \texinfoversion]}\message{}}
+% If in a .fmt file, print the version number
+% and turn on active characters that we couldn't do earlier because
+% they might have appeared in the input file name.
+\everyjob{\message{[Texinfo version \texinfoversion]}\message{}
+  \catcode`+=\active \catcode`\_=\active}
 
 % Save some parts of plain tex whose names we will redefine.
 
@@ -759,7 +772,10 @@ where each line of input produces a line of output.}
   \else \setzzz{#1}#2\endsetzzz % Remove the trailing space \setxxx inserted.
   \fi
 }
-\def\setzzz#1#2 \endsetzzz{\expandafter\xdef\csname SET#1\endcsname{#2}}
+% Can't use \xdef to pre-expand #2 and save some time, since \temp or
+% \next or other control sequences that we've defined might get us into
+% an infinite loop. Consider `@set foo @cite{bar}'.
+\def\setzzz#1#2 \endsetzzz{\expandafter\gdef\csname SET#1\endcsname{#2}}
 
 % @clear VAR clears (i.e., unsets) the variable VAR.
 %
@@ -951,7 +967,7 @@ where each line of input produces a line of output.}
 \let\indtt=\ninett
 \let\indsf=\indrm
 \let\indbf=\indrm
-\let\indsc=\indrm
+\setfont\indsc{csc10 at 9pt}
 \font\indi=cmmi9
 \font\indsy=cmsy9
 
@@ -2038,6 +2054,7 @@ July\or August\or September\or October\or November\or December\fi
 
 \let\indexbackslash=0  %overridden during \printindex.
 
+\let\SETmarginindex=\relax %initialize!
 % workhorse for all \fooindexes
 % #1 is name of index, #2 is stuff to put there
 \def\doind #1#2{%
@@ -3340,6 +3357,9 @@ July\or August\or September\or October\or November\or December\fi
 
 \gdef\functionparens{\boldbrax\let&=\amprm\parencount=0 }
 \gdef\boldbrax{\let(=\opnr\let)=\clnr\let[=\lbrb\let]=\rbrb}
+% This is used to turn on special parens
+% but make & act ordinary (given that it's active).
+\gdef\boldbraxnoamp{\let(=\opnr\let)=\clnr\let[=\lbrb\let]=\rbrb\let&=\ampnr}
 
 % Definitions of (, ) and & used in args for functions.
 % This is the definition of ( outside of all parentheses.
@@ -3548,7 +3568,8 @@ July\or August\or September\or October\or November\or December\fi
 \def\deftypefunargs #1{%
 % Expand, preventing hyphenation at `-' chars.
 % Note that groups don't affect changes in \hyphenchar.
-\functionparens
+% Use \boldbraxnoamp, not \functionparens, so that & is not special.
+\boldbraxnoamp
 \tclose{#1}% avoid \code because of side effects on active chars
 \interlinepenalty=10000
 \advance\rightskip by 0pt plus 1fil
@@ -4240,6 +4261,10 @@ July\or August\or September\or October\or November\or December\fi
 
 \def\afourlatex{\changepagesizes{22cm}{15cm}{7mm}{4.6mm}{5mm}}
 
+% Use @afourwide to print on European A4 paper in wide format.
+\def\afourwide{\afourpaper
+\changepagesizes{9.5in}{6.5in}{\hoffset}{\normaloffset}{\bindingoffset}}
+
 % Define macros to output various characters with catcode for normal text.
 \catcode`\"=\other
 \catcode`\~=\other
@@ -4313,6 +4338,15 @@ July\or August\or September\or October\or November\or December\fi
 {\catcode`\==\active
 \global\def={{\tt \char 61}}}
 
+\catcode`+=\active
+\catcode`\_=\active
+
+% If a .fmt file is being used, characters that might appear in a file
+% name cannot be active until we have parsed the command line.
+% So turn them off again, and have \everyjob (or @setfilename) turn them on.
+% \otherifyactive is called near the end of this file.
+\def\otherifyactive{\catcode`+=\other \catcode`\_=\other}
+
 \catcode`\@=0
 
 % \rawbackslashxx output one backslash character in current font
@@ -4355,6 +4389,10 @@ July\or August\or September\or October\or November\or December\fi
 @let>=@normalgreater
 @let+=@normalplus}
 
+% Make _ and + \other characters, temporarily.
+% This is canceled by @fixbackslash.
+@otherifyactive
+
 % If a .fmt file is being used, we don't want the `\input texinfo' to show up.
 % That is what \eatinput is for; after that, the `\' should revert to printing
 % a backslash.
@@ -4365,8 +4403,11 @@ July\or August\or September\or October\or November\or December\fi
 % On the other hand, perhaps the file did not have a `\input texinfo'. Then
 % the first `\{ in the file would cause an error. This macro tries to fix
 % that, assuming it is called before the first `\' could plausibly occur.
+% Also back turn on active characters that might appear in the input
+% file name, in case not using a pre-dumped format.
 %
-@gdef@fixbackslash{@ifx\@eatinput @let\ = @normalbackslash @fi}
+@gdef@fixbackslash{@ifx\@eatinput @let\ = @normalbackslash @fi
+  @catcode`+=@active @catcode`@_=@active}
 
 %% These look ok in all fonts, so just make them not special.  The @rm below
 %% makes sure that the current font starts out as the newly loaded cmr10
