@@ -42,11 +42,7 @@
 #endif
 
 #ifndef PATH_MAX
-# ifdef	MAXPATHLEN
-#  define PATH_MAX MAXPATHLEN
-# else
-#  error "use this module only if your system defines PATH_MAX"
-# endif
+# error "use this module only if your system defines PATH_MAX"
 #endif
 
 /* FIXME: this use of `MIN' is our sole concession to arbitrary limitations.
@@ -65,7 +61,7 @@ struct cd_buf
      above, we'll still have to avoid allocating 2^31 bytes on
      systems that define PATH_MAX to very large number.
      Ideally, we'd allocate enough to deal with most names, and
-     dynamically increase the buffer size only necessary.  */
+     dynamically increase the buffer size only when necessary.  */
   char buffer[MAX_COMPONENT_LENGTH + 1];
   char *avail;
   int fd;
