@@ -14,7 +14,7 @@ exp = $(in:.in=.exp)
 out = $(in:.in=.out)
 err = $(in:.in=.err)
 
-EXTRA_DIST = build-script.pl Test.pm $(in) $(exp)
+EXTRA_DIST = build-script.pl Test.pm $x-tests $(in) $(exp)
 noinst_SCRIPTS = $x-tests
 
 PERL = @PERL@
@@ -22,7 +22,7 @@ editpl = sed -e 's,@''PERL''@,$(PERL),g' -e 's,@''srcdir''@,@srcdir@,g'
 
 TESTS = $x-tests
 
-$x-tests: build-script Test.pm
+$x-tests: @MAINT@ build-script Test.pm
 	./build-script ../../src/$x > $@.n
 	mv $@.n $@
 	chmod 755 $@
