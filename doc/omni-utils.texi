@@ -6125,11 +6125,11 @@ not truncate or remove the output file.  This default is more suitable
 for devices, which typically cannot be truncated and should not be
 removed.
 
-Don't forget about the risk of backups.
-In large multiuser environments, there may be long-term file system
-backups that retain copies of files that are later shredded.  While
-it may be impossible to recover a shredded file from disk, it may be
-relatively trivial to do so from backup media.
+Finally, consider the risk of backups and mirrors.
+File system backups and remote mirrors may contain copies of the
+file that cannot be removed, and that will allow a shredded file
+to be recovered later.  So if you keep any data you may later want
+to destroy using @code{shred}, be sure that it is not backed up or mirrored.
 
 @example
 shred [@var{option}]@dots{} @var{file}[@dots{}]
