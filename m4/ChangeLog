@@ -1,3 +1,8 @@
+2000-07-05  Bruno Haible  <haible@clisp.cons.org>
+
+	* strerror_r.m4 (AC_FUNC_STRERROR_R): Pass a reasonably large buffer
+	to strerror_r.
+
 2000-07-05  Paul Eggert  <eggert@twinsun.com>
 	and Bruno Haible  <haible@clisp.cons.org>
 
