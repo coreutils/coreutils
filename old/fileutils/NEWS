@@ -1,5 +1,8 @@
 Changes in release 4.1:
 [4.0k]
+* mv may now be used to move a file onto a symlink to itself when that
+  symlink is on a separate partition.  With fileutils-4.0j, it would
+  fail with a diagnostic saying they were the same file.
 * touch would fail with the misleading diagnostic `no such file' when asked
   to create a file in an unwritable directory.  Now it says something like
   `permission denied' or `read-only file system'.
