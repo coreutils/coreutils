@@ -3,6 +3,13 @@
 	* xmalloc.c: Use `virtual memory exhausted', not `Memory exhausted'.
 	* obstack.c (print_and_abort): Likewise.
 
+2000-07-30  Paul Eggert  <eggert@twinsun.com>
+
+	* quotearg.c (quotearg_n_options): Preallocate a slot 0
+	buffer, so that the caller can always quote one small
+	component of a "memory exhausted" message in slot 0.
+	From a suggestion by Jim Meyering.
+
 2000-07-30  Jim Meyering  <meyering@lucent.com>
 
 	* makepath.c (make_path): Quote the other instance, too.
