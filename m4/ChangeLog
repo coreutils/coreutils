@@ -1,3 +1,9 @@
+2003-02-17  Jim Meyering  <jim@meyering.net>
+
+	* prereq.m4 (jm_PREREQ_PHYSMEM): Undo last change, since
+	Kaveh Ghazi found a better way to get the required information.
+	Add check for sys/sysmp.h.
+
 2003-02-15  Jim Meyering  <jim@meyering.net>
 
 	* mmap-stack.m4: New file.
