@@ -1,6 +1,27 @@
-2000-12-09  Jim Meyering  <meyering@lucent.com>
+2000-12-15  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.0.34.
+
+	* src/chown.c (main): Reflect renaming: s/dereference/change_symlinks/.
+	* src/chgrp.c (main): Likewise.
+
+	* src/chown-core.h [enum Dereference_symlink] (dereference): Rename
+	from change_symlinks.
+	* src/chown-core.c: Declare lstat.
+	Rename change_symlinks member to `dereference' and use the DEREF_*
+	enum values.
+	(describe_change): Merge the chgrp and chown switch statements.
+	Use xmalloc to form the `user:group' string.
+	(change_file_owner): Record (and later, use) is_symlink and is_directory
+	from the lstat stats, in order to control whether we operate on symlinks
+	and whether (with -R) we traverse symlinks to directories.
+	When dereferencing, use open/fchown (rather than chown) on symlinks.
+
+	* src/chown-core.c (describe_change): Use `:' (not `.') to separate the
+	username and group in messages evoked by the --verbose and --changes
+	options.
+
+2000-12-09  Jim Meyering  <meyering@lucent.com>
 
 	* src/Makefile.am (noinst_HEADERS): Add chown-core.h.
 	(chown_SOURCES): Define.
@@ -49,6 +70,7 @@
 	* tests/Makefile.am (SUBDIRS): Add chgrp.
 	* tests/chgrp: New directory.
 	* tests/chgrp/basic: New test.
+	* tests/chgrp/deref: Likewise.
 	* tests/chgrp/Makefile.am: New file.
 
 	* src/chown.c (change_file_owner): Restore special file permission
