@@ -21,9 +21,15 @@ Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 #endif
 
 #if STDC_HEADERS || _LIBC
+# include <stddef.h>
 # include <stdlib.h>
+#else
+# ifndef NULL
+#  define NULL 0
+# endif
 #endif
 
+#include <sys/types.h>
 #include <regex.h>
 
 #if ENABLE_NLS
