@@ -1,5 +1,33 @@
 2003-01-04  Jim Meyering  <jim@meyering.net>
 
+	rm could be tricked into mistakenly reporting a cycle.
+
+	* src/remove.c: [cycle_check_state]: New global.
+	(remove_cwd_entries): Adapt to new semantics of cycle_check.
+	(rm): Call cycle_check_init and cycle_check_free for each file.
+	* tests/rm/cycle (rm): New test, for the above fix.
+	* tests/rm/Makefile.am (TESTS): Add cycle.
+
+	When rm detects a cycle, don't abort the entire command,
+	but rather just the affected command line argument.
+	* src/remove.c: Include <setjmp.h>
+	(struct dirstack_state) [current_arg_jumpbuf]: New member.
+	(remove_cwd_entries): Call longjmp if we detect a cycle.
+	(rm): Call setjmp here.
+
+	* src/remove.c (cycle_check, is_power_of_two): Remove functions.
+	Instead, include cycle-check.h and use it.
+
+	* src/remove.h (struct dev_ino): Remove declaration.
+
+	* src/remove.c (remove_cwd_entries): Fix typos in comment.
+
+	Don't include trailing /. in diagnostics about directories.
+	* src/remove.c (full_filename_): When FILENAME is just `.'
+	and there is a nonempty directory-name part, don't append `/.'.
+	* tests/rm/unread2: Remove trailing /. from diagnostic.
+	* tests/rm/rm2: Likewise.
+
 	* src/remove.c (struct dirstack_state): Define.
 	To be used in place of these file-scoped globals ...
 	(dir_stack, len_stack, Active_dir): Remove globals.
@@ -34,31 +62,7 @@
 	* src/ls.c: Include "dev-ino.h".
 	[struct dev_ino]: Remove declaration.
 
-2003-01-03  Jim Meyering  <meyering@lucent.com>
-
-	Don't include trailing /. in diagnostics about directories.
-	* src/remove.c (full_filename_): When FILENAME is just `.'
-	and there is a nonempty directory-name part, don't append `/.'.
-	* tests/rm/unread2: Remove trailing /. from diagnostic.
-	* tests/rm/rm2: Likewise.
-
-	When rm detects a cycle, don't abort the entire command,
-	but rather just the affected command line argument.
-	* src/remove.c: Include <setjmp.h>
-	(struct dirstack_state) [current_arg_jumpbuf]: New member.
-	(remove_cwd_entries): Call longjmp if we detect a cycle.
-	(rm): Call setjmp here.
-
 2003-01-02  Jim Meyering  <meyering@lucent.com>
-
-	rm could be tricked into mistakenly reporting a cycle.
-
-	* src/remove.c: Include cycle-check.h.
-	[cycle_check_state]: New global.
-	(remove_cwd_entries): Adapt to new semantics of cycle_check.
-	(rm): Call cycle_check_init and cycle_check_free for each file.
-	* tests/rm/cycle (rm): New test, for the above fix.
-	* tests/rm/Makefile.am (TESTS): Add cycle.
 
 	* src/cp.c (do_copy): Tweak diagnostic to be consistent with the one
 	from mv: s/missing file arguments/missing file argument/.
@@ -67,10 +71,6 @@
 
 	* tests/rm/isatty: Enable this test.
 
-2003-01-01  Jim Meyering  <meyering@lucent.com>
-
-	* src/remove.c (cycle_check, is_power_of_two): Remove functions.
-	Instead, include cycle-check.h and use it.
 
 2002-12-31  Jim Meyering  <meyering@lucent.com>
 
