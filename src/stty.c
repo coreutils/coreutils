@@ -271,6 +271,10 @@ static struct mode_info mode_info[] =
   {"tab2", output, SANE_UNSET, TAB2, TABDLY},
   {"tab1", output, SANE_UNSET, TAB1, TABDLY},
   {"tab0", output, SANE_SET, TAB0, TABDLY},
+#else
+#ifdef OXTABS
+  {"tab3", output, SANE_UNSET, OXTABS, 0},
+#endif
 #endif
 #ifdef BSDLY
   {"bs1", output, SANE_UNSET, BS1, BSDLY},
@@ -329,7 +333,7 @@ static struct mode_info mode_info[] =
 #ifdef IXANY
   {"decctlq", combination, REV | OMIT, 0, 0},
 #endif
-#ifdef TABDLY
+#if defined (TABDLY) || defined (OXTABS)
   {"tabs", combination, REV | OMIT, 0, 0},
 #endif
 #if defined(XCASE) && defined(IUCLC) && defined(OLCUC)
@@ -1063,6 +1067,16 @@ set_mode (info, reversed, mode)
 	  else
 	    mode->c_oflag = (mode->c_oflag & ~TABDLY) | TAB0;
 	}
+#else
+#ifdef OXTABS
+      else if (!strcmp (info->name, "tabs"))
+	{
+	  if (reversed)
+	    mode->c_oflag = mode->c_oflag | OXTABS;
+	  else
+	    mode->c_oflag = mode->c_oflag & ~OXTABS;
+	}
+#endif
 #endif
 #if defined(XCASE) && defined(IUCLC) && defined(OLCUC)
       else if (!strcmp (info->name, "lcase")

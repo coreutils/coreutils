@@ -1,3 +1,18 @@
+Sat Sep 03 00:41:53 1994  Jim Meyering  (meyering@comco.com)
+
+	* lib/Makefile.in (safe-lstat.c, safe-lstat.h, safe-stat.c,
+	safe-stat.h): Use $(srcdir) to find source files.
+	(.c.o): Use -I. to get safe-lstat.h and safe-stat.h from the
+	build directory.
+	* src/Makefile.in (incl): Add -I../lib to get lib/safe-lstat.h and
+	lib/safe-stat.h from the build directory.  From Michael I Bushnell
+	<mib@geech.gnu.ai.mit.edu>.
+
+	* Makefile.in: Remove rules to create installation directories.
+	* {src,man}/Makefile.in: Put them here instead.
+
+	* configure.in: Update to take advantage of autoconf 2.0 features.
+
 Sat Aug 27 16:57:20 1994  Jim Meyering  (meyering@comco.com)
 
 	* system.h [BROKEN_STAT_MACROS]: Remove unnecessary #ifdef's.
@@ -11,7 +26,7 @@ Mon Aug 01 21:58:14 1994  Jim Meyering  (meyering@comco.com)
 
 	* date.c: Add --utc option.  It will supercede --uct.
 	Change references to `universal coordinated time' to
-	coorect `coordinated universal time'.  From Harris Boldt Edelman
+	correct `coordinated universal time'.  From Harris Boldt Edelman
 	<hbe@red-eft.la.ca.us>.
 	* date.1: Correct the documentation, too.
 
