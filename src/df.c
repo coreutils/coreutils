@@ -280,7 +280,9 @@ main (int argc, char **argv)
     }
 
   mount_list =
-    read_filesystem_list ((fs_select_list != NULL || fs_exclude_list != NULL),
+    read_filesystem_list ((fs_select_list != NULL
+			   || fs_exclude_list != NULL
+			   || print_type),
 			  show_all_fs);
 
   if (mount_list == NULL)
