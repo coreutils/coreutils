@@ -1,3 +1,21 @@
+/* Traverse a file hierarchy.
+
+   Copyright (C) 2004 Free Software Foundation, Inc.
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2, or (at your option)
+   any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+
 /*
  * Copyright (c) 1989, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -43,6 +61,7 @@
 #  define __END_DECLS
 # endif
 
+# include <stddef.h>
 # include <sys/types.h>
 # include "hash.h"
 # include "cycle-check.h"
@@ -55,7 +74,7 @@ typedef struct {
 	char *fts_path;			/* path for this descent */
 	int fts_rfd;			/* fd for root */
 	size_t fts_pathlen;		/* sizeof(path) */
-	int fts_nitems;			/* elements in the sort array */
+	size_t fts_nitems;			/* elements in the sort array */
 	int (*fts_compar) (const void *, const void *); /* compare fn */
 
 # define FTS_COMFOLLOW	0x0001		/* follow command line symlinks */
@@ -116,11 +135,11 @@ typedef struct _ftsent {
 	dev_t fts_dev;			/* device */
 	nlink_t fts_nlink;		/* link count */
 
-# define FTS_ROOTPARENTLEVEL	-1
+# define FTS_ROOTPARENTLEVEL	(-1)
 # define FTS_ROOTLEVEL		 0
-	int fts_level;			/* depth (-1 to N) */
+	ptrdiff_t fts_level;		/* depth (-1 to N) */
 
-	u_short fts_namelen;		/* strlen(fts_name) */
+	size_t fts_namelen;		/* strlen(fts_name) */
 
 # define FTS_D		 1		/* preorder directory */
 # define FTS_DC		 2		/* directory that causes cycles */
@@ -148,7 +167,7 @@ typedef struct _ftsent {
 # define FTS_SKIP	 4		/* discard node */
 	u_short fts_instr;		/* fts_set() instructions */
 
-	struct stat *fts_statp;		/* stat(2) information */
+	struct stat fts_statp[1];	/* stat(2) information */
 	char fts_name[1];		/* file name */
 } FTSENT;
 
