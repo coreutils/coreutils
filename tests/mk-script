@@ -273,10 +273,11 @@ EOF1
 	|| {FILE => 0};
 
       my $n_vias = keys %$vias;
-      my ($via, $val);
-      while (($via, $val) = each %$vias)
+      my $via;
+      foreach $via (sort keys %$vias)
 	{
 	  my $cmd;
+	  my $val = $vias->{$via};
 	  my $via_msg = ($n_vias == 1 ? '' : $via_msg_string{$via});
 	  my $file_args = join (' ', @srcdir_rel_in_file);
 
