@@ -24,6 +24,7 @@ struct linebuffer
   char *buffer;
 };
 
+#undef __P
 #if defined (__STDC__) && __STDC__
 #define	__P(x) x
 #else
