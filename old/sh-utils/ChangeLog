@@ -1,3 +1,11 @@
+Tue Dec 10 06:36:57 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* acconfig.h (strftime): Add #undef.
+	From Karl Heuer.
+
+	* acinclude.m4 (AM_GNU_GETTEXT): Don't require AC_ISC_POSIX.
+	From Karl Heuer.
+
 Mon Dec  9 06:58:11 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in: Bump version to 1.12s.
