@@ -2,6 +2,8 @@ Thu Sep 28 23:16:05 1995  Jim Meyering  (meyering@comco.com)
 
 	* Version 1.13.
 
+	* Makefile.in (DISTFILES): Remove README.alpha for major release.
+
 	* od.c (decode_one_format): Remove spurious semicolon.
 	From John Kodis (kodis@daacdev1.stx.com).
 
