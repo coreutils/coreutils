@@ -7,6 +7,9 @@ use strict;
 # Turn off localisation of executable's ouput.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
+my $mkdir = {PRE => sub {mkdir 'd',0755 or die "d: $!\n"}};
+my $rmdir = {POST => sub {rmdir 'd' or die "d: $!\n"}};
+
 my $q_bell = {IN => {"q\a" => ''}};
 my @Tests =
     (
@@ -23,9 +26,13 @@ my @Tests =
      ['q-qs-sh-a', '--quoting=shell-always', $q_bell, {OUT => "'q\a'\n"}],
      ['q-qs-c', '--quoting=c',               $q_bell, {OUT => "\"q\\a\"\n"}],
      ['q-qs-esc', '--quoting=escape',        $q_bell, {OUT => "q\\a\n"}],
+
+     ['emptydir', 'd',  {OUT => ''}, $mkdir, $rmdir],
+     ['emptydir-x2', 'd d',  {OUT => "d:\n\nd:\n"}, $mkdir, $rmdir],
+     #['no-opt-d', 'd',  {OUT => "\n"}, $mkdir, $rmdir],
     );
 
-my $save_temps = 0;
+my $save_temps = $ENV{SAVE_TEMPS};
 my $verbose = $ENV{VERBOSE};
 
 my $prog = $ENV{PROG} || die "$0: \$PROG not specified in environment\n";
