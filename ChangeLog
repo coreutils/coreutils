@@ -1,6 +1,25 @@
-2004-11-15  Paul Eggert  <eggert@cs.ucla.edu>
+2004-11-16  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	* src/basename.c, src/chroot.c, src/cksum.c, src/dd.c, src/dirname.c,
+	src/factor.c, src/hostid.c, src/hostname.c, src/link.c, src/logname.c,
+	src/nohup.c, src/printenv.c, src/pwd.c, src/setuidgid.c, src/sleep.c,
+	src/sync.c, src/tsort.c, src/unlink.c, src/uptime.c, src/users.c,
+	src/whoami.c, src/yes.c (main): Use getopt_long rather than getopt.
+	* src/readlink.c (main): argv is not const.
+
+	* src/cut.c (usage): Improve documentation along the lines suggested
+	by Debian 5.2.1-2.
+	* src/echo.c (usage): Likewise.
+	* src/expr.c (usage): Likewise.
+
+	* src/dircolors.hin: Add putty, screen-bce.
+
+	* src/pinky.c (print_entry): Fix memory leak.
+	* src/who.c (print_user): Likewise.
+
+2004-11-15  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: New dd operand "status=noxfer".
 	* src/dd.c (C_ASCII, C_EBCDIC, C_IBM, C_BLOCK, C_UNBLOCK,
