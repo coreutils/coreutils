@@ -1,5 +1,27 @@
 2000-08-20  Jim Meyering  <meyering@lucent.com>
 
+	Add support for cp's new POSIX-mandated -H and -L options.
+	* src/copy.h (enum Dereference_symlink): Define.
+	(struct cp_options) [dereference]: Change type to Dereference_symlink.
+	* src/copy.c: Declare lstat.
+	(copy_dir): Set `xstat' member to lstat so that with `-H' we don't
+	follow symlinks found via recursive traversal.
+	Update uses of `dereference' to compare against new enum member names.
+	* src/cp.c (long_opts): Add --dereference, -L.
+	(usage): Describe -L and -H.
+	(cp_option_init): Initialize to DEREF_UNDEFINED, not `1'.
+	(main): Add `H' and `-L' to getopt spec string.
+	[case 'a']: Initialize `dereference' to DEREF_NEVER, not 0.
+	[case 'd']: Likewise.
+	[case 'H']: New case.
+	[case 'L']: New case.
+	[case 'R']: Don't set dereference to `0' here.
+	If it's not yet defined, set x.dereference to DEREF_NEVER
+	if -R was specified, else set it to DEREF_ALWAYS.
+	Set x.xstat accordingly for -H.
+	* src/mv.c (cp_option_init): Initialize to DEREF_NEVER, not `0'.
+	* src/install.c (cp_option_init): Initialize to DEREF_ALWAYS, not `1'.
+
 	* src/du.c (print_totals): Rename global from opt_combined_arguments.
 
 2000-08-17  Paul Eggert  <eggert@twinsun.com>
