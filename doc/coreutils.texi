@@ -7660,6 +7660,7 @@ reports on the filesystem containing each argument @var{file}.
 
 Normally the disk space is printed in units of
 1024 bytes, but this can be overridden (@pxref{Block size}).
+Non-integer quantities are rounded up to the next higher unit.
 
 @cindex disk device file
 @cindex device file, disk
@@ -7765,10 +7766,6 @@ that if the mount device name is more than 20 characters long (e.g., for
 some network mounts), the columns are misaligned.
 
 @item
-Non-integer values are rounded up, instead of being rounded down or
-rounded to the nearest integer.
-
-@item
 The labels in the header output line are changed to conform to @acronym{POSIX}.
 @end enumerate
 
@@ -7865,6 +7862,7 @@ du [@var{option}]@dots{} [@var{file}]@dots{}
 With no arguments, @command{du} reports the disk space for the current
 directory.  Normally the disk space is printed in units of
 1024 bytes, but this can be overridden (@pxref{Block size}).
+Non-integer quantities are rounded up to the next higher unit.
 
 The program accepts the following options.  Also see @ref{Common options}.
 
