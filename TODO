@@ -70,6 +70,7 @@ Now that AC_FUNC_LSTAT and AC_FUNC_STAT are in autoconf,
 remove m4/stat.m4 and m4/lstat.m4.
 
 df: alignment problem of `Used' heading with e.g., -mP
+  reported by Karl Berry
 
 tr: support nontrivial equivalence classes, e.g. [=e=] with LC_COLLATE=fr_FR
 
@@ -80,9 +81,17 @@ lib/strftime.c: Since %N is the only format that we need but that
   would expand /%(-_)?\d*N/ to the desired string and then pass the
   resulting string to glibc's strftime.
 
-chown-core.c: warn when operating on set-UID or set-GID regular file
-
 sort: Compress temporary files when doing large external sort/merges.
   This improves performance when you can compress/uncompress faster than
   you can read/write, which is common in these days of fast CPUs.
   suggestion from Charles Randall on 2001-08-10
+
+sort: Add an ordering option -R that causes 'sort' to sort according
+  to a random permutation of the correct sort order.  Also, add an
+  option --random-seed=SEED that causes 'sort' to use an arbitrary
+  string SEED to select which permutations to use, in a deterministic
+  manner: that is, if you sort a permutation of the same input file
+  with the same --random-seed=SEED option twice, you'll get the same
+  output.  The default SEED is chosen at random, and contains enough
+  information to ensure that the output permutation is random.
+  suggestion from Feth AREZKI, Stephan Kasal, and Paul Eggert on 2003-07-17
