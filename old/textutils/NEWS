@@ -1,3 +1,7 @@
+Changes in release 1.23
+* pr: For compatibility (also more POSIX compliant): Include default
+  separator `TAB' when merging lines of full length.
+
 Changes in release 1.22
 [1.21a]
 * Fix a bug in tail when invoked with an argument like `+NUMBERc'
