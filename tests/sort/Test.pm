@@ -198,6 +198,11 @@ my @tv = (
 ["22a", '-k 2,2fd -k 1,1r', "3 b\n4 B\n", "4 B\n3 b\n", 0],
 ["22b", '-k 2,2d  -k 1,1r', "3 b\n4 b\n", "4 b\n3 b\n", 0],
 
+["no-file1", 'no-file', {}, '', 2],
+# This test failed until 1.22f.  Sort didn't give an error.
+# From Will Edgington.
+["o-no-file1", '-o no-such-file no-such-file', {}, '', 2],
+
 );
 
 sub test_vector
