@@ -9,7 +9,7 @@ $echo testing program: $xx
 errors=0
 test "$srcdir" || srcdir=.
 test "$VERBOSE" && $xx --version 2> /dev/null
-$xx  t01a.in > t01a.out 2> t01a.err
+$xx  $srcdir/t01a.in > t01a.out 2> t01a.err
 code=$?
 if test $code != 0 ; then
   $echo Test 01a failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -26,7 +26,7 @@ else
   esac
 fi
 test -s t01a.err || rm -f t01a.err
-$xx -c t02a.in > t02a.out 2> t02a.err
+$xx -c $srcdir/t02a.in > t02a.out 2> t02a.err
 code=$?
 if test $code != 0 ; then
   $echo Test 02a failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -43,7 +43,7 @@ else
   esac
 fi
 test -s t02a.err || rm -f t02a.err
-$xx -c t02b.in > t02b.out 2> t02b.err
+$xx -c $srcdir/t02b.in > t02b.out 2> t02b.err
 code=$?
 if test $code != 1 ; then
   $echo Test 02b failed: ../../src/sort return code $code differs from expected value 1 1>&2
@@ -60,7 +60,7 @@ else
   esac
 fi
 test -s t02b.err || rm -f t02b.err
-$xx -cu t02c.in > t02c.out 2> t02c.err
+$xx -cu $srcdir/t02c.in > t02c.out 2> t02c.err
 code=$?
 if test $code != 1 ; then
   $echo Test 02c failed: ../../src/sort return code $code differs from expected value 1 1>&2
@@ -77,7 +77,7 @@ else
   esac
 fi
 test -s t02c.err || rm -f t02c.err
-$xx -cu t02d.in > t02d.out 2> t02d.err
+$xx -cu $srcdir/t02d.in > t02d.out 2> t02d.err
 code=$?
 if test $code != 0 ; then
   $echo Test 02d failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -94,7 +94,7 @@ else
   esac
 fi
 test -s t02d.err || rm -f t02d.err
-$xx -cu t02e.in > t02e.out 2> t02e.err
+$xx -cu $srcdir/t02e.in > t02e.out 2> t02e.err
 code=$?
 if test $code != 1 ; then
   $echo Test 02e failed: ../../src/sort return code $code differs from expected value 1 1>&2
@@ -111,7 +111,7 @@ else
   esac
 fi
 test -s t02e.err || rm -f t02e.err
-$xx -cu t02f.in > t02f.out 2> t02f.err
+$xx -cu $srcdir/t02f.in > t02f.out 2> t02f.err
 code=$?
 if test $code != 1 ; then
   $echo Test 02f failed: ../../src/sort return code $code differs from expected value 1 1>&2
@@ -128,7 +128,7 @@ else
   esac
 fi
 test -s t02f.err || rm -f t02f.err
-$xx -k1 t03a.in > t03a.out 2> t03a.err
+$xx -k1 $srcdir/t03a.in > t03a.out 2> t03a.err
 code=$?
 if test $code != 0 ; then
   $echo Test 03a failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -145,7 +145,7 @@ else
   esac
 fi
 test -s t03a.err || rm -f t03a.err
-$xx -k1,1 t03b.in > t03b.out 2> t03b.err
+$xx -k1,1 $srcdir/t03b.in > t03b.out 2> t03b.err
 code=$?
 if test $code != 0 ; then
   $echo Test 03b failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -162,7 +162,7 @@ else
   esac
 fi
 test -s t03b.err || rm -f t03b.err
-$xx -k1 -k2 t03c.in > t03c.out 2> t03c.err
+$xx -k1 -k2 $srcdir/t03c.in > t03c.out 2> t03c.err
 code=$?
 if test $code != 0 ; then
   $echo Test 03c failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -179,7 +179,7 @@ else
   esac
 fi
 test -s t03c.err || rm -f t03c.err
-$xx -k0 t03d.in > t03d.out 2> t03d.err
+$xx -k0 $srcdir/t03d.in > t03d.out 2> t03d.err
 code=$?
 if test $code != 2 ; then
   $echo Test 03d failed: ../../src/sort return code $code differs from expected value 2 1>&2
@@ -196,7 +196,7 @@ else
   esac
 fi
 test -s t03d.err || rm -f t03d.err
-$xx -k1.0 t03e.in > t03e.out 2> t03e.err
+$xx -k1.0 $srcdir/t03e.in > t03e.out 2> t03e.err
 code=$?
 if test $code != 2 ; then
   $echo Test 03e failed: ../../src/sort return code $code differs from expected value 2 1>&2
@@ -213,7 +213,7 @@ else
   esac
 fi
 test -s t03e.err || rm -f t03e.err
-$xx -k1.1,-k0 t03f.in > t03f.out 2> t03f.err
+$xx -k1.1,-k0 $srcdir/t03f.in > t03f.out 2> t03f.err
 code=$?
 if test $code != 2 ; then
   $echo Test 03f failed: ../../src/sort return code $code differs from expected value 2 1>&2
@@ -230,7 +230,7 @@ else
   esac
 fi
 test -s t03f.err || rm -f t03f.err
-$xx -k1.1,1.0 t03g.in > t03g.out 2> t03g.err
+$xx -k1.1,1.0 $srcdir/t03g.in > t03g.out 2> t03g.err
 code=$?
 if test $code != 0 ; then
   $echo Test 03g failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -247,7 +247,7 @@ else
   esac
 fi
 test -s t03g.err || rm -f t03g.err
-$xx -k1.1,1 t03h.in > t03h.out 2> t03h.err
+$xx -k1.1,1 $srcdir/t03h.in > t03h.out 2> t03h.err
 code=$?
 if test $code != 0 ; then
   $echo Test 03h failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -264,7 +264,7 @@ else
   esac
 fi
 test -s t03h.err || rm -f t03h.err
-$xx -k1,1 t03i.in > t03i.out 2> t03i.err
+$xx -k1,1 $srcdir/t03i.in > t03i.out 2> t03i.err
 code=$?
 if test $code != 0 ; then
   $echo Test 03i failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -281,7 +281,7 @@ else
   esac
 fi
 test -s t03i.err || rm -f t03i.err
-$xx -nc t04a.in > t04a.out 2> t04a.err
+$xx -nc $srcdir/t04a.in > t04a.out 2> t04a.err
 code=$?
 if test $code != 0 ; then
   $echo Test 04a failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -298,7 +298,7 @@ else
   esac
 fi
 test -s t04a.err || rm -f t04a.err
-$xx -n t04b.in > t04b.out 2> t04b.err
+$xx -n $srcdir/t04b.in > t04b.out 2> t04b.err
 code=$?
 if test $code != 0 ; then
   $echo Test 04b failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -315,7 +315,7 @@ else
   esac
 fi
 test -s t04b.err || rm -f t04b.err
-$xx -k1n t04c.in > t04c.out 2> t04c.err
+$xx -k1n $srcdir/t04c.in > t04c.out 2> t04c.err
 code=$?
 if test $code != 0 ; then
   $echo Test 04c failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -332,7 +332,7 @@ else
   esac
 fi
 test -s t04c.err || rm -f t04c.err
-$xx -k1 t04d.in > t04d.out 2> t04d.err
+$xx -k1 $srcdir/t04d.in > t04d.out 2> t04d.err
 code=$?
 if test $code != 0 ; then
   $echo Test 04d failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -349,7 +349,7 @@ else
   esac
 fi
 test -s t04d.err || rm -f t04d.err
-$xx -k2 t04e.in > t04e.out 2> t04e.err
+$xx -k2 $srcdir/t04e.in > t04e.out 2> t04e.err
 code=$?
 if test $code != 0 ; then
   $echo Test 04e failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -366,7 +366,7 @@ else
   esac
 fi
 test -s t04e.err || rm -f t04e.err
-$xx -k1,2 t05a.in > t05a.out 2> t05a.err
+$xx -k1,2 $srcdir/t05a.in > t05a.out 2> t05a.err
 code=$?
 if test $code != 0 ; then
   $echo Test 05a failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -383,7 +383,7 @@ else
   esac
 fi
 test -s t05a.err || rm -f t05a.err
-$xx -k1,2 t05b.in > t05b.out 2> t05b.err
+$xx -k1,2 $srcdir/t05b.in > t05b.out 2> t05b.err
 code=$?
 if test $code != 0 ; then
   $echo Test 05b failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -400,7 +400,7 @@ else
   esac
 fi
 test -s t05b.err || rm -f t05b.err
-$xx -k1 -k2 t05c.in > t05c.out 2> t05c.err
+$xx -k1 -k2 $srcdir/t05c.in > t05c.out 2> t05c.err
 code=$?
 if test $code != 0 ; then
   $echo Test 05c failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -417,7 +417,7 @@ else
   esac
 fi
 test -s t05c.err || rm -f t05c.err
-$xx -k2,2 t05d.in > t05d.out 2> t05d.err
+$xx -k2,2 $srcdir/t05d.in > t05d.out 2> t05d.err
 code=$?
 if test $code != 0 ; then
   $echo Test 05d failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -434,7 +434,7 @@ else
   esac
 fi
 test -s t05d.err || rm -f t05d.err
-$xx -k2,2 t05e.in > t05e.out 2> t05e.err
+$xx -k2,2 $srcdir/t05e.in > t05e.out 2> t05e.err
 code=$?
 if test $code != 0 ; then
   $echo Test 05e failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -451,7 +451,7 @@ else
   esac
 fi
 test -s t05e.err || rm -f t05e.err
-$xx -k2,2 t05f.in > t05f.out 2> t05f.err
+$xx -k2,2 $srcdir/t05f.in > t05f.out 2> t05f.err
 code=$?
 if test $code != 0 ; then
   $echo Test 05f failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -468,7 +468,7 @@ else
   esac
 fi
 test -s t05f.err || rm -f t05f.err
-$xx -k 1,2 t06a.in > t06a.out 2> t06a.err
+$xx -k 1,2 $srcdir/t06a.in > t06a.out 2> t06a.err
 code=$?
 if test $code != 0 ; then
   $echo Test 06a failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -485,7 +485,7 @@ else
   esac
 fi
 test -s t06a.err || rm -f t06a.err
-$xx -k 1,2 t06b.in > t06b.out 2> t06b.err
+$xx -k 1,2 $srcdir/t06b.in > t06b.out 2> t06b.err
 code=$?
 if test $code != 0 ; then
   $echo Test 06b failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -502,7 +502,7 @@ else
   esac
 fi
 test -s t06b.err || rm -f t06b.err
-$xx -k 1 -k 2 t06c.in > t06c.out 2> t06c.err
+$xx -k 1 -k 2 $srcdir/t06c.in > t06c.out 2> t06c.err
 code=$?
 if test $code != 0 ; then
   $echo Test 06c failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -519,7 +519,7 @@ else
   esac
 fi
 test -s t06c.err || rm -f t06c.err
-$xx -k 2,2 t06d.in > t06d.out 2> t06d.err
+$xx -k 2,2 $srcdir/t06d.in > t06d.out 2> t06d.err
 code=$?
 if test $code != 0 ; then
   $echo Test 06d failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -536,7 +536,7 @@ else
   esac
 fi
 test -s t06d.err || rm -f t06d.err
-$xx -k 2,2 t06e.in > t06e.out 2> t06e.err
+$xx -k 2,2 $srcdir/t06e.in > t06e.out 2> t06e.err
 code=$?
 if test $code != 0 ; then
   $echo Test 06e failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -553,7 +553,7 @@ else
   esac
 fi
 test -s t06e.err || rm -f t06e.err
-$xx -k 2,2 t06f.in > t06f.out 2> t06f.err
+$xx -k 2,2 $srcdir/t06f.in > t06f.out 2> t06f.err
 code=$?
 if test $code != 0 ; then
   $echo Test 06f failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -570,7 +570,7 @@ else
   esac
 fi
 test -s t06f.err || rm -f t06f.err
-$xx -k 2,3 t07a.in > t07a.out 2> t07a.err
+$xx -k 2,3 $srcdir/t07a.in > t07a.out 2> t07a.err
 code=$?
 if test $code != 0 ; then
   $echo Test 07a failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -587,7 +587,7 @@ else
   esac
 fi
 test -s t07a.err || rm -f t07a.err
-$xx -k 2,3 t07b.in > t07b.out 2> t07b.err
+$xx -k 2,3 $srcdir/t07b.in > t07b.out 2> t07b.err
 code=$?
 if test $code != 0 ; then
   $echo Test 07b failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -604,7 +604,7 @@ else
   esac
 fi
 test -s t07b.err || rm -f t07b.err
-$xx -k 2,3 t07c.in > t07c.out 2> t07c.err
+$xx -k 2,3 $srcdir/t07c.in > t07c.out 2> t07c.err
 code=$?
 if test $code != 0 ; then
   $echo Test 07c failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -621,7 +621,7 @@ else
   esac
 fi
 test -s t07c.err || rm -f t07c.err
-$xx +1 -3 t07d.in > t07d.out 2> t07d.err
+$xx +1 -3 $srcdir/t07d.in > t07d.out 2> t07d.err
 code=$?
 if test $code != 0 ; then
   $echo Test 07d failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -638,7 +638,7 @@ else
   esac
 fi
 test -s t07d.err || rm -f t07d.err
-$xx -k 2.,3 t08a.in > t08a.out 2> t08a.err
+$xx -k 2.,3 $srcdir/t08a.in > t08a.out 2> t08a.err
 code=$?
 if test $code != 2 ; then
   $echo Test 08a failed: ../../src/sort return code $code differs from expected value 2 1>&2
@@ -655,7 +655,7 @@ else
   esac
 fi
 test -s t08a.err || rm -f t08a.err
-$xx -k 2, t08b.in > t08b.out 2> t08b.err
+$xx -k 2, $srcdir/t08b.in > t08b.out 2> t08b.err
 code=$?
 if test $code != 2 ; then
   $echo Test 08b failed: ../../src/sort return code $code differs from expected value 2 1>&2
@@ -672,7 +672,7 @@ else
   esac
 fi
 test -s t08b.err || rm -f t08b.err
-$xx -g t09a.in > t09a.out 2> t09a.err
+$xx -g $srcdir/t09a.in > t09a.out 2> t09a.err
 code=$?
 if test $code != 0 ; then
   $echo Test 09a failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -689,7 +689,7 @@ else
   esac
 fi
 test -s t09a.err || rm -f t09a.err
-$xx -n t09b.in > t09b.out 2> t09b.err
+$xx -n $srcdir/t09b.in > t09b.out 2> t09b.err
 code=$?
 if test $code != 0 ; then
   $echo Test 09b failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -706,7 +706,7 @@ else
   esac
 fi
 test -s t09b.err || rm -f t09b.err
-$xx -n t09c.in > t09c.out 2> t09c.err
+$xx -n $srcdir/t09c.in > t09c.out 2> t09c.err
 code=$?
 if test $code != 0 ; then
   $echo Test 09c failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -723,7 +723,7 @@ else
   esac
 fi
 test -s t09c.err || rm -f t09c.err
-$xx -k2g t09d.in > t09d.out 2> t09d.err
+$xx -k2g $srcdir/t09d.in > t09d.out 2> t09d.err
 code=$?
 if test $code != 0 ; then
   $echo Test 09d failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -740,7 +740,7 @@ else
   esac
 fi
 test -s t09d.err || rm -f t09d.err
-$xx -t : -k 2.2,2.2 t10a.in > t10a.out 2> t10a.err
+$xx -t : -k 2.2,2.2 $srcdir/t10a.in > t10a.out 2> t10a.err
 code=$?
 if test $code != 0 ; then
   $echo Test 10a failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -757,7 +757,7 @@ else
   esac
 fi
 test -s t10a.err || rm -f t10a.err
-$xx -t : +1.1 -1.2 t10b.in > t10b.out 2> t10b.err
+$xx -t : +1.1 -1.2 $srcdir/t10b.in > t10b.out 2> t10b.err
 code=$?
 if test $code != 0 ; then
   $echo Test 10b failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -774,7 +774,7 @@ else
   esac
 fi
 test -s t10b.err || rm -f t10b.err
-$xx -t : -k 2.2,2.2 t10c.in > t10c.out 2> t10c.err
+$xx -t : -k 2.2,2.2 $srcdir/t10c.in > t10c.out 2> t10c.err
 code=$?
 if test $code != 0 ; then
   $echo Test 10c failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -791,7 +791,7 @@ else
   esac
 fi
 test -s t10c.err || rm -f t10c.err
-$xx -t : +1.1 -1.2 t10d.in > t10d.out 2> t10d.err
+$xx -t : +1.1 -1.2 $srcdir/t10d.in > t10d.out 2> t10d.err
 code=$?
 if test $code != 0 ; then
   $echo Test 10d failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -808,7 +808,7 @@ else
   esac
 fi
 test -s t10d.err || rm -f t10d.err
-$xx -k 2.3,2.3 t10a0.in > t10a0.out 2> t10a0.err
+$xx -k 2.3,2.3 $srcdir/t10a0.in > t10a0.out 2> t10a0.err
 code=$?
 if test $code != 0 ; then
   $echo Test 10a0 failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -825,7 +825,7 @@ else
   esac
 fi
 test -s t10a0.err || rm -f t10a0.err
-$xx -k 1.2,1.2 t10a1.in > t10a1.out 2> t10a1.err
+$xx -k 1.2,1.2 $srcdir/t10a1.in > t10a1.out 2> t10a1.err
 code=$?
 if test $code != 0 ; then
   $echo Test 10a1 failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -842,7 +842,7 @@ else
   esac
 fi
 test -s t10a1.err || rm -f t10a1.err
-$xx -b -k 2.2,2.2 t10a2.in > t10a2.out 2> t10a2.err
+$xx -b -k 2.2,2.2 $srcdir/t10a2.in > t10a2.out 2> t10a2.err
 code=$?
 if test $code != 0 ; then
   $echo Test 10a2 failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -859,7 +859,7 @@ else
   esac
 fi
 test -s t10a2.err || rm -f t10a2.err
-$xx -k 1.2,1.2 t10e.in > t10e.out 2> t10e.err
+$xx -k 1.2,1.2 $srcdir/t10e.in > t10e.out 2> t10e.err
 code=$?
 if test $code != 0 ; then
   $echo Test 10e failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -876,7 +876,7 @@ else
   esac
 fi
 test -s t10e.err || rm -f t10e.err
-$xx -t : -k 1.3,1.3 t10f.in > t10f.out 2> t10f.err
+$xx -t : -k 1.3,1.3 $srcdir/t10f.in > t10f.out 2> t10f.err
 code=$?
 if test $code != 0 ; then
   $echo Test 10f failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -893,7 +893,7 @@ else
   esac
 fi
 test -s t10f.err || rm -f t10f.err
-$xx -k 1.4,1.4 t10g.in > t10g.out 2> t10g.err
+$xx -k 1.4,1.4 $srcdir/t10g.in > t10g.out 2> t10g.err
 code=$?
 if test $code != 0 ; then
   $echo Test 10g failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -910,7 +910,7 @@ else
   esac
 fi
 test -s t10g.err || rm -f t10g.err
-$xx -t: -k1,1b -k2,2 t11a.in > t11a.out 2> t11a.err
+$xx -t: -k1,1b -k2,2 $srcdir/t11a.in > t11a.out 2> t11a.err
 code=$?
 if test $code != 0 ; then
   $echo Test 11a failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -927,7 +927,7 @@ else
   esac
 fi
 test -s t11a.err || rm -f t11a.err
-$xx -t: -k1,1b -k2,2 t11b.in > t11b.out 2> t11b.err
+$xx -t: -k1,1b -k2,2 $srcdir/t11b.in > t11b.out 2> t11b.err
 code=$?
 if test $code != 0 ; then
   $echo Test 11b failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -944,7 +944,7 @@ else
   esac
 fi
 test -s t11b.err || rm -f t11b.err
-$xx -t: -k2,2b -k3,3 t11c.in > t11c.out 2> t11c.err
+$xx -t: -k2,2b -k3,3 $srcdir/t11c.in > t11c.out 2> t11c.err
 code=$?
 if test $code != 0 ; then
   $echo Test 11c failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -961,7 +961,7 @@ else
   esac
 fi
 test -s t11c.err || rm -f t11c.err
-$xx -t: -k2,2b -k3,3 t11d.in > t11d.out 2> t11d.err
+$xx -t: -k2,2b -k3,3 $srcdir/t11d.in > t11d.out 2> t11d.err
 code=$?
 if test $code != 0 ; then
   $echo Test 11d failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -978,7 +978,7 @@ else
   esac
 fi
 test -s t11d.err || rm -f t11d.err
-$xx -n -t: +1 t12a.in > t12a.out 2> t12a.err
+$xx -n -t: +1 $srcdir/t12a.in > t12a.out 2> t12a.err
 code=$?
 if test $code != 0 ; then
   $echo Test 12a failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -995,7 +995,7 @@ else
   esac
 fi
 test -s t12a.err || rm -f t12a.err
-$xx -n -t: +1 t12b.in > t12b.out 2> t12b.err
+$xx -n -t: +1 $srcdir/t12b.in > t12b.out 2> t12b.err
 code=$?
 if test $code != 0 ; then
   $echo Test 12b failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -1012,7 +1012,7 @@ else
   esac
 fi
 test -s t12b.err || rm -f t12b.err
-$xx -n -t: +1 t12c.in > t12c.out 2> t12c.err
+$xx -n -t: +1 $srcdir/t12c.in > t12c.out 2> t12c.err
 code=$?
 if test $code != 0 ; then
   $echo Test 12c failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -1029,7 +1029,7 @@ else
   esac
 fi
 test -s t12c.err || rm -f t12c.err
-$xx -n -t: +1 t12d.in > t12d.out 2> t12d.err
+$xx -n -t: +1 $srcdir/t12d.in > t12d.out 2> t12d.err
 code=$?
 if test $code != 0 ; then
   $echo Test 12d failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -1046,7 +1046,7 @@ else
   esac
 fi
 test -s t12d.err || rm -f t12d.err
-$xx +0.1n t13a.in > t13a.out 2> t13a.err
+$xx +0.1n $srcdir/t13a.in > t13a.out 2> t13a.err
 code=$?
 if test $code != 0 ; then
   $echo Test 13a failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -1063,7 +1063,7 @@ else
   esac
 fi
 test -s t13a.err || rm -f t13a.err
-$xx +0.1n t13b.in > t13b.out 2> t13b.err
+$xx +0.1n $srcdir/t13b.in > t13b.out 2> t13b.err
 code=$?
 if test $code != 0 ; then
   $echo Test 13b failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -1080,7 +1080,7 @@ else
   esac
 fi
 test -s t13b.err || rm -f t13b.err
-$xx -d -u t14a.in > t14a.out 2> t14a.err
+$xx -d -u $srcdir/t14a.in > t14a.out 2> t14a.err
 code=$?
 if test $code != 0 ; then
   $echo Test 14a failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -1097,7 +1097,7 @@ else
   esac
 fi
 test -s t14a.err || rm -f t14a.err
-$xx -f -d -u t14b.in > t14b.out 2> t14b.err
+$xx -f -d -u $srcdir/t14b.in > t14b.out 2> t14b.err
 code=$?
 if test $code != 0 ; then
   $echo Test 14b failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -1114,7 +1114,7 @@ else
   esac
 fi
 test -s t14b.err || rm -f t14b.err
-$xx -i -u t15a.in > t15a.out 2> t15a.err
+$xx -i -u $srcdir/t15a.in > t15a.out 2> t15a.err
 code=$?
 if test $code != 0 ; then
   $echo Test 15a failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -1131,7 +1131,7 @@ else
   esac
 fi
 test -s t15a.err || rm -f t15a.err
-$xx -i -u t15b.in > t15b.out 2> t15b.err
+$xx -i -u $srcdir/t15b.in > t15b.out 2> t15b.err
 code=$?
 if test $code != 0 ; then
   $echo Test 15b failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -1148,7 +1148,7 @@ else
   esac
 fi
 test -s t15b.err || rm -f t15b.err
-$xx -i -u t15c.in > t15c.out 2> t15c.err
+$xx -i -u $srcdir/t15c.in > t15c.out 2> t15c.err
 code=$?
 if test $code != 0 ; then
   $echo Test 15c failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -1165,7 +1165,7 @@ else
   esac
 fi
 test -s t15c.err || rm -f t15c.err
-$xx -i -u t15d.in > t15d.out 2> t15d.err
+$xx -i -u $srcdir/t15d.in > t15d.out 2> t15d.err
 code=$?
 if test $code != 0 ; then
   $echo Test 15d failed: ../../src/sort return code $code differs from expected value 0 1>&2
@@ -1182,7 +1182,7 @@ else
   esac
 fi
 test -s t15d.err || rm -f t15d.err
-$xx -i -u t15e.in > t15e.out 2> t15e.err
+$xx -i -u $srcdir/t15e.in > t15e.out 2> t15e.err
 code=$?
 if test $code != 0 ; then
   $echo Test 15e failed: ../../src/sort return code $code differs from expected value 0 1>&2
