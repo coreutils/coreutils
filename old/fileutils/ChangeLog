@@ -1,6 +1,11 @@
-2001-09-04  Jim Meyering  <meyering@lucent.com>
+2001-09-08  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.1.
+
+	* src/copy.c (copy_internal): Add braces around now-multi-stmt
+	if-block.  This fixes a bug introduced by my 2001-08-06 change.
+	* tests/mv/i-4: New test, for the above.
+	* tests/mv/Makefile.am (TESTS): Add i-4.
 
 2001-09-04  Paul Eggert  <eggert@twinsun.com>
 
