@@ -8,6 +8,7 @@
 
 	* tests/ls/file-type: New file.  Test for the above.
 	A test to contrast ls -F and ls --indicator-style=file-type.
+	* tests/ls/Makefile.am (TESTS): Add file-type.
 
 2002-12-04  Jim Meyering  <jim@meyering.net>
 
