@@ -1,3 +1,7 @@
+2003-09-09  Jim Meyering  <jim@meyering.net>
+
+	* getversion.c: Remove unused file.  Reported by Paul Eggert.
+
 2003-09-03  Paul Eggert  <eggert@twinsun.com>
 
 	* human.c (human_readable): Fix bug that rounded 10501 to 10k.
