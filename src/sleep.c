@@ -34,6 +34,7 @@
 #include "system.h"
 #include "error.h"
 #include "long-options.h"
+#include "nanosleep.h"
 #include "xstrtod.h"
 
 #if HAVE_FENV_H
@@ -46,7 +47,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "sleep"
 
-#define AUTHORS "Jim Meyering"
+#define AUTHORS "Jim Meyering and Paul Eggert"
 
 /* The name by which this program was run. */
 char *program_name;
