@@ -29,6 +29,10 @@
 #endif
 
 #include <stdio.h>
+
+#include <assert.h>
+/* FIXME: define NDEBUG here.  */
+
 #include <getopt.h>
 #include <sys/types.h>
 #ifndef NICE_PRIORITY
@@ -38,6 +42,7 @@
 
 #include "version.h"
 #include "system.h"
+#include "long-options.h"
 
 #ifdef NICE_PRIORITY
 #define GET_PRIORITY() nice (0)
@@ -53,38 +58,9 @@ static void usage ();
 /* The name this program was run with. */
 char *program_name;
 
-/* If non-zero, display usage information and exit.  */
-static int show_help;
-
-/* If non-zero, print the version on standard output and exit.  */
-static int show_version;
-
 static struct option const longopts[] =
 {
   {"adjustment", required_argument, NULL, 'n'},
-  {"help", no_argument, &show_help, 250},
-  {"version", no_argument, &show_version, 250},
-  {"0", no_argument, NULL, 1},
-  {"1", no_argument, NULL, 2},
-  {"2", no_argument, NULL, 3},
-  {"3", no_argument, NULL, 4},
-  {"4", no_argument, NULL, 5},
-  {"5", no_argument, NULL, 6},
-  {"6", no_argument, NULL, 7},
-  {"7", no_argument, NULL, 8},
-  {"8", no_argument, NULL, 9},
-  {"9", no_argument, NULL, 10},
-  {"10", no_argument, NULL, 11},
-  {"11", no_argument, NULL, 12},
-  {"12", no_argument, NULL, 13},
-  {"13", no_argument, NULL, 14},
-  {"14", no_argument, NULL, 15},
-  {"15", no_argument, NULL, 16},
-  {"16", no_argument, NULL, 17},
-  {"17", no_argument, NULL, 18},
-  {"18", no_argument, NULL, 19},
-  {"19", no_argument, NULL, 20},
-  {"20", no_argument, NULL, 21},
   {NULL, 0, NULL, 0}
 };
 
@@ -97,57 +73,67 @@ main (argc, argv)
   int adjustment = 0;
   int minusflag = 0;
   int adjustment_given = 0;
-  int optc;
+  int long_option_priority = 0;
+  int last_optind = 0;
 
   program_name = argv[0];
+  parse_long_options (argc, argv, "nice", version_string, usage);
 
-  while ((optc = getopt_long (argc, argv, "+0123456789-n:", longopts,
-			      (int *) 0)) != EOF)
+  for (optind = 1; optind < argc; /* empty */)
     {
-      switch (optc)
+      char *s;
+
+      s = argv[optind];
+
+      if (s[0] == '-' && s[1] == '-' && ISDIGIT (s[2]))
 	{
-	case '?':
-	  usage (1);
+	  if (!isinteger (&s[2]))
+	    error (1, 0, "invalid option `%s'", s);
 
-	case 0:
-	  break;
-	  
-	case 'n':
-	  if (!isinteger (optarg))
-	    error (1, 0, "invalid priority `%s'", optarg);
-	  adjustment = atoi (optarg);
-	  adjustment_given = 1;
-	  break;
-
-	case '-':
 	  minusflag = 1;
-	  break;
+	  adjustment = atoi (&s[2]);
+	  adjustment_given = 1;
+	  long_option_priority = 1;
+	  ++optind;
+	}
+      else
+	{
+	  int optc;
+	  while ((optc = getopt_long (argc, argv, "+0123456789n:", longopts,
+				      (int *) 0)) != EOF)
+	    {
+	      switch (optc)
+		{
+		case '?':
+		  usage (1);
 
-	default:
-	  if (optc <= 21)
-	    {
-	      minusflag = 1;
-	      adjustment = optc - 1;
-	      adjustment_given = 1;
+		case 'n':
+		  if (!isinteger (optarg))
+		    error (1, 0, "invalid priority `%s'", optarg);
+		  adjustment = atoi (optarg);
+		  adjustment_given = 1;
+		  break;
+
+		default:
+		  assert (ISDIGIT (optc));
+		  /* Reset ADJUSTMENT if the last priority-specifying option
+		     was not of the same type or if it was, but a separate
+		     option.  */
+		  if (long_option_priority ||
+		      (adjustment_given && optind != last_optind))
+		    {
+		      long_option_priority = 0;
+		      adjustment = 0;
+		    }
+		  adjustment = adjustment * 10 + optc - '0';
+		  adjustment_given = 1;
+		  last_optind = optind;
+		}
 	    }
-	  else
-	    {
-	      /* FIXME: make sure that this gets a warning if we've
-		 already seen a negative long option.  */
-	      adjustment = adjustment * 10 + optc - '0';
-	      adjustment_given = 1;
-	    }
+	  if (optc == EOF)
+	    break;
 	}
     }
-
-  if (show_version)
-    {
-      printf ("nice - %s\n", version_string);
-      exit (0);
-    }
-
-  if (show_help)
-    usage (0);
 
   if (minusflag)
     adjustment = -adjustment;
@@ -198,7 +184,7 @@ isinteger (s)
     return 0;
   while (*s)
     {
-      if (*s < '0' || *s > '9')
+      if (!ISDIGIT (*s))
 	return 0;
       ++s;
     }
