@@ -11,10 +11,7 @@ use File::Compare qw(compare);
 $VERSION = '0.5';
 @EXPORT = qw (run_tests);
 
-my @Types = qw (IN_FILE IN_DATA
-		OUT_FILE OUT_DATA
-		ERR_FILE ERR_DATA
-		EXIT_STATUS);
+my @Types = qw (OUT ERR EXIT);
 my %Types = map {$_ => 1} @Types;
 
 my $count = 1;
@@ -86,16 +83,31 @@ sub run_tests ($$$$$)
 	      next;
 	    }
 
-	  die "$program_name: $test_name: invalid test spec\n"
-	    if ref $arg ne 'HASH';
-	  # FIXME: reenable this test
-	  #die "$program_name: $test_name: invalid hash in test spec\n"
-	  #  if scalar %$arg != 1;
-
-	  my ($data, $type) = each %$arg;
-
-	  die "$program_name: $test_name: `$type': invalid in test spec\n"
-	    if ! $Types{$type};
+	  my $type;
+	  my $fs;
+	  if (ref $arg eq 'HASH')
+	    {
+	      my $n = keys %$arg;
+	      die "$program_name: $test_name: output spec has $n element --"
+		. " expected 1\n"
+		  if $n != 1;
+	      ($type, $fs) = each %$arg;
+	      die "$program_name: $test_name: `$type': invalid in test spec\n"
+		if ! $Types{$type};
+	    }
+	  elsif (ref $arg eq 'ARRAY')
+	    {
+	      my $n = @$arg;
+	      die "$program_name:: input file spec has $n element --"
+		. " expected 1\n"
+		  if $n != 1;
+	      $fs = $arg->[0];
+	      $type = 'IN';
+	    }
+	  else
+	    {
+	      die "$program_name: $test_name: invalid test spec\n";
+	    }
 
 	  if ($type =~ /_FILE$/ || $type =~ /_DATA$/)
 	    {
