@@ -1,5 +1,8 @@
 1997-07-12  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* po/POTFILES.in: Add who.c, users.c, uptime.c.
+	Remove who-users.c.
+
 	* src/who.c: Rename lots of `this' locals.
 	Make some parameters `const'.
 	(who): Update read_utmp caller.
