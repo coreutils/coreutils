@@ -24,6 +24,10 @@
 #include <sys/types.h>
 #include "system.h"
 
+#if HAVE_SYSCTL && HAVE_SYS_SYSCTL_H
+# include <sys/sysctl.h>
+#endif
+
 #include "error.h"
 #include "long-options.h"
 #include "readutmp.h"
@@ -80,6 +84,19 @@ print_uptime (int n, const STRUCT_UTMP *this)
       fclose (fp);
     }
 #endif /* HAVE_PROC_UPTIME */
+
+#if HAVE_SYSCTL && defined CTL_KERN && defined KERN_BOOTTIME
+  {
+    /* FreeBSD specific: fetch sysctl "kern.boottime".  */
+    static int request[2] = { CTL_KERN, KERN_BOOTTIME };
+    struct timeval result;
+    size_t result_len = sizeof result;
+
+    if (0 <= sysctl (request, 2, &result, &result_len, NULL, 0))
+      boot_time = result.tv_sec;
+  }
+#endif
+
   /* Loop through all the utmp entries we just read and count up the valid
      ones, also in the process possibly gleaning boottime. */
   while (n--)
