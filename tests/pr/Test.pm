@@ -154,19 +154,19 @@ my @tv = (
 ['6bc', '-t -b -3 -l 24', [\'FnFn'], [\'tb3-FF'], 0],
 #
 # Do not print header and footer nor "FF set by Hand" (-T option)
-['7a', '-T -l 24', [\'tn'], [\'T-t'], 0],
-['7b', '-T -l 17 -f', [\'tn'], [\'T-t'], 0],
-['7c', '-T -l 17 -f', [\'tFFt-bl'], [\'T-bl'], 0],
-['7d', '-T -l 24', [\'0FnFnt'], [\'T-0FF'], 0],
-['7e', '-T -l 24', [\'FFn'], [\'T-FF'], 0],
-['7f', '-T -l 24', [\'FnFn'], [\'T-FF'], 0],
-['7g', '-T -l 17 -f', [\'FFn'], [\'T-FF'], 0],
-['7aa', '-T -a -3', [\'0FnFnt'], [\'Ta3-0FF'], 0],
-['7ab', '-T -a -3', [\'FFn'], [\'Ta3-FF'], 0],
-['7ac', '-T -a -3 -l 24', [\'FnFn'], [\'Ta3-FF'], 0],
-['7ba', '-T -b -3', [\'0FnFnt'], [\'Tb3-0FF'], 0],
-['7bb', '-T -b -3', [\'FFn'], [\'Tb3-FF'], 0],
-['7bc', '-T -b -3 -l 24', [\'FnFn'], [\'Tb3-FF'], 0],
+['7a', '-T -l 24', [\'tn'], [\'tt-t'], 0],
+['7b', '-T -l 17 -f', [\'tn'], [\'tt-t'], 0],
+['7c', '-T -l 17 -f', [\'tFFt-bl'], [\'tt-bl'], 0],
+['7d', '-T -l 24', [\'0FnFnt'], [\'tt-0FF'], 0],
+['7e', '-T -l 24', [\'FFn'], [\'tt-FF'], 0],
+['7f', '-T -l 24', [\'FnFn'], [\'tt-FF'], 0],
+['7g', '-T -l 17 -f', [\'FFn'], [\'tt-FF'], 0],
+['7aa', '-T -a -3', [\'0FnFnt'], [\'tta3-0FF'], 0],
+['7ab', '-T -a -3', [\'FFn'], [\'tta3-FF'], 0],
+['7ac', '-T -a -3 -l 24', [\'FnFn'], [\'tta3-FF'], 0],
+['7ba', '-T -b -3', [\'0FnFnt'], [\'ttb3-0FF'], 0],
+['7bb', '-T -b -3', [\'FFn'], [\'ttb3-FF'], 0],
+['7bc', '-T -b -3 -l 24', [\'FnFn'], [\'ttb3-FF'], 0],
 #
 # lhs-truncation of header
 # pr-1.19m: Text line truncation only with column output
