@@ -1,3 +1,10 @@
+1998-09-19  Jim Meyering  <meyering@ascend.com>
+
+	* src/stty.c (main): Revamp option processing, again.
+	stty couldn't parse some of its options.
+	* tests/stty/basic-1: New test.
+	* tests/stty/Makefile.am (TESTS): Add basic-1.
+
 1998-08-29  Jim Meyering  <meyering@ascend.com>
 
 	* src/su.c (longopts): Use corresponding short-option character
