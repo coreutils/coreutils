@@ -1,5 +1,14 @@
 2004-06-19  Jim Meyering  <jim@meyering.net>
 
+	* filemode.c: Remove all S_IS* and S_IF* definitions.
+	Instead, just include "stat-macros.h".
+	* stat.c: Likewise.
+	* rmdir.c: Likewise.
+	* makepath.c: Likewise.
+	* lchown.c: Likewise.
+	* isdir.c: Likewise.
+	* canonicalize.c: Likewise.
+
 	Add S_IS* definitions from filemode.c.
 	* stat-macros.h (S_ISCTG): Define to zero if not already defined.
 	(S_ISOFD): Likewise.
