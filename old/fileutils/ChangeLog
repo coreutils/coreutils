@@ -1,3 +1,10 @@
+1998-09-27  Jim Meyering  <meyering@ascend.com>
+
+	* configure.in: Remove use of AC_FUNC_FNMATCH and associated code.
+	Now, it is invoked through jm_MACROS.
+
+	* lib/strftime.c (my_strftime): Update from FSF.
+
 1998-09-26  Jim Meyering  <meyering@ascend.com>
 
 	* src/copy.c (copy_internal): Don't preserve hard-linked directories

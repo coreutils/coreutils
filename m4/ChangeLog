@@ -1,3 +1,18 @@
+1998-09-27  Jim Meyering  <meyering@ascend.com>
+
+	* jm-macros.m4 (jm_MACROS): Require jm_FUNC_FNMATCH.
+
+	* fnmatch.m4 (jm_FUNC_FNMATCH): New file/macro.  Extracted from
+	../configure.in, including a change from Gordon Matzigkeit to allow
+	cross-compiling for the Hurd.
+
+	* glibc.m4: New file.  From Gordon Matzigkeit.
+	Indent.
+
+1998-09-21  Jim Meyering  <meyering@ascend.com>
+
+	* chown.m4: Declare locals: before, after.  From Andries Brouwer.
+
 1998-08-18  Paul Eggert  <eggert@twinsun.com>
 
 	Port nanosecond-resolution times to UnixWare 2.1.2 and
