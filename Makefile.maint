@@ -42,3 +42,27 @@ my-distcheck: dist
 	@echo "========================"; \
 	echo "$(distdir).tar.gz is ready for distribution"; \
 	echo "========================"
+
+THIS_VERSION_REGEXP := $(shell echo $(VERSION)|sed 's/\./\\./g')
+# FIXME: this works only for test releases.
+PREV_VERSION := $(shell echo $(VERSION)|tr a-z Xa-y)
+PREV_VERSION_REGEXP := $(shell echo $(PREV_VERSION)|sed 's/\./\\./g')
+v = Version
+announcement: NEWS ChangeLog $(distdir).tar.gz
+	@( \
+	  echo Subject: $(distdir) released; \
+	  echo; \
+	  echo FIXME: put comments here; \
+	  echo; \
+	  echo "  ftp://alpha.gnu.org/gnu/$(distdir).tar.gz"; \
+	  echo; \
+	  md5sum $(distdir).tar.gz; \
+	  echo; \
+	  echo NEWS:; \
+	  sed -n "/$(THIS_VERSION_REGEXP)/,/$(PREV_VERSION_REGEXP)/p" NEWS \
+	    | grep -v '^\['; \
+	  echo; \
+	  echo ChangeLog entries:; \
+	  sed -n "/$v $(THIS_VERSION_REGEXP)/,/$v $(PREV_VERSION_REGEXP)/p" \
+	    ChangeLog | grep -v '\* $v'; \
+	)
