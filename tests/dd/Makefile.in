@@ -126,7 +126,7 @@ TESTS_ENVIRONMENT = \
   PROG=dd
 
 
-TESTS = misc not-rewound skip-seek
+TESTS = misc not-rewound skip-seek skip-seek2
 subdir = tests/dd
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../config.h
