@@ -3,6 +3,14 @@
    more time, I'll merge the remaining things in system.h and everything
    in this file will go back there. */
 
+#ifndef UID_T_MAX
+# define UID_T_MAX TYPE_MAXIMUM (uid_t)
+#endif
+
+#ifndef GID_T_MAX
+# define GID_T_MAX TYPE_MAXIMUM (gid_t)
+#endif
+
 #ifndef RETSIGTYPE
 # define RETSIGTYPE void
 #endif
