@@ -325,12 +325,19 @@ du_files (files)
   if (starting_desc < 0)
     error (1, errno, "cannot open current directory");
 
-  /* On SunOS, fchdir returns EINVAL if accounting is enabled,
+  /* On SunOS 4, fchdir returns EINVAL if accounting is enabled,
      so we have to fall back to chdir.  */
-  if (fchdir (starting_desc) && errno == EINVAL)
+  if (fchdir (starting_desc))
     {
-      close (starting_desc);
-      starting_desc = -1;
+      if (errno == EINVAL)
+	{
+	  close (starting_desc);
+	  starting_desc = -1;
+	}
+      else
+	{
+	  error (1, errno, "current directory");
+	}
     }
   if (starting_desc == -1)
 #endif
