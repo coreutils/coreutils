@@ -2,7 +2,16 @@
 
 	* Version 4.1.6.
 
-	* src/cp.c (main): Fail if -r is specified after --archive (-a)
+	* src/copy.c (copy_internal): For each symlink copied by cp -r,
+	issue a warning that `cp -r' is not portable.
+
+	* src/cp.c (main): Revert change of 2001-12-29.  With this change,
+	cp -r once again preserves symlinks.
+	(usage): Document the original (now-restored) behavior.
+	* tests/cp/r-vs-symlink: Reflect changed semantics of cp's -r option.
+
+	* src/cp.c (main): Warn when -r is specified before --archive (-a).
+	* src/cp.c (main): Fail when -r is specified after --archive (-a)
 	on the command line.
 
 	* src/copy.c (copy_reg): Detect abuse of a race condition
