@@ -20,6 +20,12 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
+  For efficiency, `sort -m' no longer copies input to a temporary file
+  merely because the input happens to come from a pipe.  As a result,
+  some relatively-contrived examples like `cat F | sort -m -o F - G'
+  are no longer safe, as `sort' might start writing F before `cat' is
+  done reading it.  This problem cannot occur unless `-m' is used.
+
   pwd now works even when run from a working directory whose name
   is longer than PATH_MAX.
 
