@@ -29,8 +29,8 @@
 #  define ISSLASH(C) ((C) == DIRECTORY_SEPARATOR)
 # endif
 
-# ifndef FILESYSTEM_PREFIX_LEN
-#  define FILESYSTEM_PREFIX_LEN(Filename) 0
+# ifndef FILE_SYSTEM_PREFIX_LEN
+#  define FILE_SYSTEM_PREFIX_LEN(Filename) 0
 # endif
 
 # define IS_ABSOLUTE_FILE_NAME(Name) (ISSLASH (*Name))
