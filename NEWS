@@ -36,6 +36,10 @@ GNU coreutils NEWS                                    -*- outline -*-
     recursively-encountered symbolic link cannot be updated because
     the file system does not support it.
 
+  md5sum and sha1sum now report an error when given so many input
+  lines that their line counter overflows, instead of silently
+  reporting incorrect results.
+
   rm no longer requires read access to the current directory.
 
   tail -f no longer mishandles pipes and fifos.  With no operands,
