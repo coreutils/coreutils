@@ -6,7 +6,7 @@
 # but which still want to provide support for the GNU gettext functionality.
 # Please note that the actual code is *not* freely available.
 
-# serial 108
+# serial 109
 
 AC_PREREQ(2.13)               dnl Minimum Autoconf version required.
 
@@ -286,7 +286,7 @@ strdup __argz_count __argz_stringify __argz_next])
 
    dnl If the AC_CONFIG_AUX_DIR macro for autoconf is used we possibly
    dnl find the mkinstalldirs script in another subdir but ($top_srcdir).
-   dnl Try to locate is.
+   dnl Try to locate it.
    MKINSTALLDIRS=
    if test -n "$ac_aux_dir"; then
      MKINSTALLDIRS="$ac_aux_dir/mkinstalldirs"
