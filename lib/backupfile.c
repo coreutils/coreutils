@@ -68,8 +68,17 @@ char *malloc ();
 # define IN_CTYPE_DOMAIN(c) isascii(c)
 #endif
 
-#define ISDIGIT(c) (IN_CTYPE_DOMAIN ((unsigned char) (c)) \
-		    && isdigit ((unsigned char) (c)))
+#define ISDIGIT_LOCALE(c) (IN_CTYPE_DOMAIN (c) && isdigit (c))
+
+/* ISDIGIT differs from ISDIGIT_LOCALE, as follows:
+   - Its arg may be any int or unsigned int; it need not be an unsigned char.
+   - It's guaranteed to evaluate its argument exactly once.
+   - It's typically faster.
+   Posix 1003.2-1992 section 2.5.2.1 page 50 lines 1556-1558 says that
+   only '0' through '9' are digits.  Prefer ISDIGIT to ISDIGIT_LOCALE unless
+   it's important to use the locale's definition of `digit' even when the
+   host does not conform to Posix.  */
+#define ISDIGIT(c) ((unsigned) (c) - '0' <= 9)
 
 #if defined (HAVE_UNISTD_H)
 #include <unistd.h>
