@@ -1,6 +1,7 @@
 2003-01-22  Jim Meyering  <jim@meyering.net>
 
 	* ftw_.h: Change all uses of __const to const.
+	* search_.h: Likewise.
 
 	* Makefile.am (CLEANFILES): Add generated files: ftw.h search.h.
 
