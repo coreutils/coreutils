@@ -1,6 +1,13 @@
-2004-05-12  Jim Meyering  <jim@meyering.net>
+2004-05-12  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	* src/od.c (print_ascii, dump_strings): Use e.g. '\a' rather than
+	'\007', for portability to EBCDIC hosts.
+	* src/printf.c (print_esc_char): Likewise.
+	* src/tr.c (unquote, make_printable_str): Likewise.
+
+2004-05-12  Jim Meyering  <jim@meyering.net>
 
 	* src/remove.c (AD_pop_and_chdir): Move lstat-`.' into if-block
 	where the result is used.  This avoids one unnecessary lstat call
