@@ -1,6 +1,6 @@
 /* Which POSIX version to conform to, for utilities.
 
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -23,11 +23,7 @@
 #endif
 
 #include <limits.h>
-
 #include <stdlib.h>
-#if !HAVE_DECL_GETENV && !defined getenv
-char *getenv ();
-#endif
 
 #if HAVE_UNISTD_H
 # include <unistd.h>
