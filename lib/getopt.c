@@ -199,15 +199,19 @@ my_index (str, chr)
    (Supposedly there are some machines where it might get a warning,
    but changing this conditional to __STDC__ is too risky.)  */
 #ifdef __GNUC__
+#if ! (defined (emacs) && !defined (__STDC__))
 #ifdef IN_GCC
 #include "gstddef.h"
-#else
+#else /* not IN_GCC */
+/* Motorola Delta 68k R3V7 comes with GCC but not stddef.h.
+   Enable Emacs to compile on it.  */
 #include <stddef.h>
-#endif
+#endif /* not IN_GCC */
 extern size_t strlen (const char *);
-#endif
+#endif /* ! (defined (emacs) && !defined (__STDC__)) */
+#endif /* __GNUC__ */
 
-#endif				/* GNU C library.  */
+#endif /* not __GNU_LIBRARY__ */
 
 /* Handle permutation of arguments.  */
 

@@ -1,10 +1,50 @@
-Mon Jan 24 12:57:18 1994  Jim Meyering  (meyering@comco.com)
+Thu Feb 10 01:22:37 1994  Jim Meyering  (meyering@comco.com)
+
+	* stty.c [CSWTCH] (__sparc__ && __svr4__): Define `swtch' to
+	_POSIX_VDISABLE by default.  Otherwise, the default settings on
+	SunOS 5.3 (from /usr/include/sys/termios.h) have both `swtch'
+	and `susp' set to ^Z.  Those default settings are not unusual.
+	What is unusual is that with such settings on SunOS 5.3, the tty
+	driver doesn't generate a signal for control-Z.  Reported by
+	Brent Wiese <brent@dot.imgen.bcm.tmc.edu>.
+
+	* stty.c (main) [CIBAUD]: Don't report an error on SunOS 4.1.x
+	systems if the only difference is in this nybble of c_cflag.
+	See the comments for the gory details.  Thanks to
+	Erez "HWank1" Zadok <ezk@cs.columbia.edu> for reporting this
+	and helping me reproduce it.
+
+Tue Feb 01 00:59:56 1994  Jim Meyering  (meyering@comco.com)
+
+	* stty.c (main): Call tcsetattr only if we've updated tty modes,
+	not e.g. if we've changed the window size.
+
+	* Update Copyright dates in src/*.
+
+Fri Jan 28 11:02:21 1994  Jim Meyering  (meyering@comco.com)
+
+	* configure.in: Don't set LDFLAGS since linking now uses both
+	LDFLAGS and CFLAGS.
+
+Wed Jan 26 10:54:02 1994  Jim Meyering  (meyering@comco.com)
+
+	* stty.c (get_win_size): New function.  Try getting size first
+	for the device on stdout.  Try stdin only if that fails.  Suggested
+	by Andreas Schwab <schwab@issan.informatik.uni-dortmund.de>.
+	(set_win_size): Call get_win_size instead of calling ioctl directly.
+	(display_window_size): Ditto.
+	(screen_columns): Ditto.
+
+Mon Jan 24 22:57:18 1994  Jim Meyering  (meyering@comco.com)
 
 	* stty.c (set_window_size): Work around SunOS 4.x kernel bug that
 	makes `stty rows 34 cols 80;stty rows 0;stty cols 0' incorrectly
 	set rows to 80 and columns to 0.  Sun's stty has this problem, too.
 	The kernel bug is fixed in Solaris 2.  Mostly from Alexander Dupuy
 	<dupuy@cs.columbia.edu>.
+
+	* src/Makefile.in: Use both LDFLAGS and CFLAGS when linking.
+	* man/Makefile.in: Use binprefix as the default manprefix.
 
 Thu Jan 13 17:27:38 1994  Jim Meyering  (meyering@comco.com)
 
