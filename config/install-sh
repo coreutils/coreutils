@@ -106,7 +106,7 @@ done
 
 if [ x"$src" = x ]
 then
-	echo "install:	no input file specified" >&2
+	echo "install: no input file specified" >&2
 	exit 1
 else
 	:
@@ -132,13 +132,13 @@ else
 	then
 		:
 	else
-		echo "install:  $src does not exist" >&2
+		echo "install: $src does not exist" >&2
 		exit 1
 	fi
 
 	if [ x"$dst" = x ]
 	then
-		echo "install:	no destination specified" >&2
+		echo "install: no destination specified" >&2
 		exit 1
 	else
 		:
@@ -231,7 +231,7 @@ else
 
 # Move or copy the file name to the temp name
 
-	$doit $instcmd $src "$dsttmp" &&
+	$doit $instcmd "$src" "$dsttmp" &&
 
 # and set any options; do chmod last to preserve setuid bits
 
@@ -239,12 +239,12 @@ else
 # ignore errors from any of these, just make sure not to ignore
 # errors from the above "$doit $instcmd $src $dsttmp" command.
 
-	if [ x"$chowncmd" != x ]; then $doit $chowncmd "$dsttmp";else :;fi &&
-	if [ x"$chgrpcmd" != x ]; then $doit $chgrpcmd "$dsttmp";else :;fi &&
-	if [ x"$stripcmd" != x ]; then $doit $stripcmd "$dsttmp";else :;fi &&
-	if [ x"$chmodcmd" != x ]; then $doit $chmodcmd "$dsttmp";else :;fi &&
+	if [ x"$chowncmd" != x ]; then $doit $chowncmd "$dsttmp"; else :;fi &&
+	if [ x"$chgrpcmd" != x ]; then $doit $chgrpcmd "$dsttmp"; else :;fi &&
+	if [ x"$stripcmd" != x ]; then $doit $stripcmd "$dsttmp"; else :;fi &&
+	if [ x"$chmodcmd" != x ]; then $doit $chmodcmd "$dsttmp"; else :;fi &&
 
-# Now remove or move any old file at destination location.  We try this
+# Now remove or move aside any old file at destination location.  We try this
 # two ways since rm can't unlink itself on some systems and the destination
 # file might be busy for other reasons.  In this case, the final cleanup
 # might fail but the new file should still install successfully.
