@@ -38,7 +38,6 @@
 #include "error.h"
 #include "xstrtod.h"
 
-#undef ENABLE_NLS
 #ifdef ENABLE_NLS
 /* FIXME: this may need some heading.... applies to Debian linux for
    reading the structure of _NL_ITEM... to get abreviated month names */
@@ -538,25 +537,29 @@ nls_sort_month_comp (struct month *m1, struct month *m2)
 }
 
 /* Do collation on strings S1 and S2, but for at most L characters.
-   we use the fact, that we KNOW that L is the min of the two lengths */
+   we use the fact, that we KNOW that LEN is the min of the two lengths */
 static int
-strncoll (unsigned char *s1, unsigned char *s2, int l)
+strncoll (unsigned char *s1, unsigned char *s2, int len)
 {
-  register int diff = 0;
+  register int diff;
 
   if (need_locale)
     {
-      /* Let's emulate a strncoll() function, by forcing strcoll() */
-      /* to compare only l characters in both strings.             */
-      register unsigned char n1 = s1[l], n2 = s2[l];
+      /* Emulate a strncoll() function, by forcing strcoll to compare
+	 only the first LEN characters in each string. */
+      register unsigned char n1 = s1[len];
+      register unsigned char n2 = s2[len];
 
-      s1[l] = s2[l] = 0;
+      s1[len] = s2[len] = 0;
       diff = strcoll (s1, s2);
-      s1[l] = n1;
-      s2[l] = n2;
+      s1[len] = n1;
+      s2[len] = n2;
     }
   else
-    diff = memcmp (s1, s2, l);
+    {
+      diff = memcmp (s1, s2, len);
+    }
+
   return diff;
 }
 
@@ -1116,6 +1119,7 @@ nls_set_fraction (register unsigned char ch)
    out that |{1234}| > larger of the two first grouping rules, then
    the seperator has to be a decimal point...
 
+   FIXME: change descriptions go in ChangeLog
 Changes:
 
 14/10/1997... ÖEH
@@ -1131,7 +1135,6 @@ Changes:
 static void
 look_for_fraction (unsigned const char *s, unsigned const char *e)
 {
-  /* I don't think it's reasonable to think of more than 6 groups */
   register unsigned const char *p = s;
   register unsigned short n = 0;
   static unsigned short max_groups = 0;
@@ -1139,7 +1142,7 @@ look_for_fraction (unsigned const char *s, unsigned const char *e)
 
   if (groups == NULL) {
     max_groups = NLS_MAX_GROUPS;
-    groups = (short *)xmalloc(sizeof(short) * max_groups);
+    groups = (unsigned short *) xmalloc (sizeof (*groups) * max_groups);
   }
 
   /* skip blanks and signs */
@@ -1154,9 +1157,10 @@ look_for_fraction (unsigned const char *s, unsigned const char *e)
 	{
 	  if (++n >= max_groups) {  /* WOW! BIG Number... enlarge table */
 	    max_groups += NLS_MAX_GROUPS;
-	    groups = (short *)xrealloc((char *)groups, sizeof(short) * max_groups);
+	    groups = (unsigned short *) xrealloc ((char *)groups,
+						  sizeof(*groups) * max_groups);
 	  }
-	  groups[n] = (short) (p - s);
+	  groups[n] = (unsigned short) (p - s);
 	  s = p + 1;
 	}
       else if (!ISDIGIT (*p))
@@ -1194,7 +1198,9 @@ look_for_fraction (unsigned const char *s, unsigned const char *e)
       nls_fraction_found = 1;
     }
   else /* no grouping allowed here, last seperator IS decimal point */
+    {
       nls_set_fraction (*s);
+    }
 }
 
 static int
@@ -1630,6 +1636,7 @@ keycompare (const struct line *a, const struct line *b)
          character sets.  */
       else if (need_locale)
 	{
+	  /* FIXME: rewrite not to use variable size arrays */
 	  unsigned char copy_a[lena + 1], copy_b[lenb + 1];
 	  int la, lb, i;
 
