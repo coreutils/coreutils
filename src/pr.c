@@ -46,7 +46,7 @@
    -  With single column output
       only one POSIX requirement has to be met:
    The default n-separator should be a TAB. The consequence is a
-   different width between the number an the text if the output position
+   different width between the number and the text if the output position
    of the separator changes, i.e. it depends upon the left margin used.
    That's not nice but easy-to-use together with the defaults of other
    utilities, e.g. sort or cut. - Same as SunOS does.
@@ -878,15 +878,13 @@ main (int argc, char **argv)
       if (ISDIGIT (c))
 	{
 	  accum = accum * 10 + c - '0';
+	  columns = accum;
+	  explicit_columns = TRUE;
 	  continue;
 	}
 
-      if (accum > 0)
-	{
-	  columns = accum;
-	  explicit_columns = TRUE;
-	  accum = 0;
-	}
+      if (accum > 0)            /* reset for subsequent params */
+	accum = 0;
 
       switch (c)
 	{
@@ -2769,7 +2767,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   +FIRST_PAGE[:LAST_PAGE], --pages=FIRST_PAGE[:LAST_PAGE]\n\
                     begin [stop] printing with page FIRST_[LAST_]PAGE\n\
   -COLUMN, --columns=COLUMN\n\
-                    produce COLUMN-column output and print columns down,\n\
+                    output COLUMN columns and print columns down,\n\
                     unless -a is used. Balance number of lines in the\n\
                     columns on each page.\n\
 "), stdout);
