@@ -290,10 +290,10 @@ unexpand (void)
 	    {
 	      if (tab_size == 0)
 		{
-		  /* Do not let tab_index == first_free_tab;
+		  /* Do not let print_tab_index == first_free_tab;
 		     stop when it is 1 less. */
-		  while (tab_index < first_free_tab - 1
-			 && column >= tab_list[tab_index])
+		  while (print_tab_index < first_free_tab - 1
+			 && column >= tab_list[print_tab_index])
 		    print_tab_index++;
 		  next_tab_column = tab_list[print_tab_index];
 		  if (print_tab_index < first_free_tab - 1)
