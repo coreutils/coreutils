@@ -236,6 +236,10 @@
    */
 #undef HAVE_DECL_MALLOC
 
+/* Define to 1 if you have a declaration of mbswidth() in <wchar.h>, and to 0
+   otherwise. */
+#undef HAVE_DECL_MBSWIDTH_IN_WCHAR_H
+
 /* Define to 1 if you have the declaration of `memchr', and to 0 if you don't.
    */
 #undef HAVE_DECL_MEMCHR
@@ -263,6 +267,10 @@
 /* Define to 1 if you have the declaration of `stpcpy', and to 0 if you don't.
    */
 #undef HAVE_DECL_STPCPY
+
+/* Define to 1 if you have the declaration of `strdup', and to 0 if you don't.
+   */
+#undef HAVE_DECL_STRDUP
 
 /* Define to 1 if you have the declaration of `strerror_r', and to 0 if you
    don't. */
@@ -1165,6 +1173,9 @@
 /* Define to 1 if `major', `minor', and `makedev' are declared in
    <sysmacros.h>. */
 #undef MAJOR_IN_SYSMACROS
+
+/* If malloc(0) is != NULL, define this to 1. Otherwise define this to 0. */
+#undef MALLOC_0_IS_NONNULL
 
 /* Define if there is no specific function for reading the list of mounted
    filesystems. fread will be used to read /etc/mnttab. (SVR2) */
