@@ -2,6 +2,12 @@
 
 	* Version 5.0.92.
 
+	`du -D symlink-to-dir' would mistakenly omit the slash in
+	lines like this: 24	symlink-to-dir/subdir
+	* src/du.c (process_file): Fix offset calculation.
+	Reported by Jeff Sheinberg as Debian bug #211591;
+	http://bugs.debian.org/205251
+
 	* src/du.c (process_file): Remove useless disjunct.
 
 	* src/sys2.h (case_GETOPT_VERSION_CHAR): Rename parameter, Authors,
