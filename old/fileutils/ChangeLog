@@ -5,6 +5,8 @@
 	(AC_SUBST(DF_PROG)): Move this to m4/.
 	(ftruncate test): Move into new file: m4/ftruncate.m4.
 	(AC_HEADER_MAJOR, AC_HEADER_DIRENT): Move into m4/.
+	Remove df-related tests.  i.e., move jm_LIST_MOUNTED_FILESYSTEMS,
+	jm_FSTYPENAME, and jm_FILE_SYSTEM_USAGE) into m4/.
 
 2000-01-22  Jim Meyering  <meyering@lucent.com>
 

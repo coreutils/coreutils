@@ -1,5 +1,7 @@
 2000-01-23  Jim Meyering  <meyering@lucent.com>
 
+	* jm-macros.m4: Move df-related tests here from fileutils/configure.in
+
 	* ls-mntd-fs.m4: s/list_mounted_fs/ac_list_mounted_fs/
 	(jm_LIST_MOUNTED_FILESYSTEMS): Take two parameters.
 
