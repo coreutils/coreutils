@@ -1,6 +1,12 @@
-2004-04-13  Jim Meyering  <jim@meyering.net>
+2004-04-14  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	Remove m4/Makefile.am: it's no longer needed, with newer automake
+	* configure.ac (AC_CONFIG_FILES): Remove m4/Makefile.in from the list.
+	* Makefile.am (SUBDIRS): Remove `m4' from the list.
+
+2004-04-13  Jim Meyering  <jim@meyering.net>
 
 	* configure.ac: Change `jm_' in AC_DEFINE'd names to `gl_'.
 
