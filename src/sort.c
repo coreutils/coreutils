@@ -312,10 +312,8 @@ global -Mbdfinr settings for that key.  If no key is given, use the entire\n\
 line as the key.  With no FILE, or when FILE is -, read standard input.\n\
 \n\
 *** WARNING ***\n\
-This version of sort honors the locale settings in your environment.\n\
-For example, if you set one of the LANG or LC_ALL environment variables\n\
-to `en_US', then sort will work very differently than most people expect.\n\
-If that's not what you want, then set LC_ALL to POSIX in your environment.\n\
+The locale specified by the environment affects sort order.\n\
+Set LC_ALL=C to get the traditional sort order that uses native byte values.\n\
 ")
 	      );
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
