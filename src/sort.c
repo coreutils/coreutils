@@ -266,6 +266,8 @@ static int have_read_stdin;
 /* List of key field comparisons to be tried.  */
 static struct keyfield *keylist;
 
+static void sortlines_temp (struct line *, size_t, struct line *);
+
 void
 usage (int status)
 {
@@ -1782,16 +1784,50 @@ mergefps (char **files, register int nfiles,
   xfclose (ofp, output_file);
 }
 
+/* Merge into T the two sorted arrays of lines LO (with NLO members)
+   and HI (with NHI members).  T, LO, and HI point just past their
+   respective arrays, and the arrays are in reverse order.  NLO and
+   NHI must be positive, and HI - NHI must equal T - (NLO + NHI).  */
+
+static inline void
+mergelines (struct line *t,
+	    struct line const *lo, size_t nlo,
+	    struct line const *hi, size_t nhi)
+{
+  for (;;)
+    if (compare (lo - 1, hi - 1) <= 0)
+      {
+	*--t = *--lo;
+	if (! --nlo)
+	  {
+	    /* HI - NHI equalled T - (NLO + NHI) when this function
+	       began.  Therefore HI must equal T now, and there is no
+	       need to copy from HI to T.  */
+	    return;
+	  }
+      }
+    else
+      {
+	*--t = *--hi;
+	if (! --nhi)
+	  {
+	    do
+	      *--t = *--lo;
+	    while (--nlo);
+
+	    return;
+	  }
+      }
+}
+
 /* Sort the array LINES with NLINES members, using TEMP for temporary space.
+   NLINES must be at least 2.
    The input and output arrays are in reverse order, and LINES and
    TEMP point just past the end of their respective arrays.  */
 
 static void
 sortlines (struct line *lines, size_t nlines, struct line *temp)
 {
-  register struct line *lo, *hi, *t;
-  register size_t nlo, nhi;
-
   if (nlines == 2)
     {
       if (0 < compare (&lines[-1], &lines[-2]))
@@ -1800,32 +1836,51 @@ sortlines (struct line *lines, size_t nlines, struct line *temp)
 	  lines[-1] = lines[-2];
 	  lines[-2] = tmp;
 	}
-      return;
     }
+  else
+    {
+      size_t nlo = nlines / 2;
+      size_t nhi = nlines - nlo;
+      struct line *lo = lines;
+      struct line *hi = lines - nlo;
+      struct line *sorted_lo = temp;
 
-  nlo = nlines / 2;
-  lo = lines;
-  nhi = nlines - nlo;
-  hi = lines - nlo;
+      sortlines (hi, nhi, temp);
+      if (1 < nlo)
+	sortlines_temp (lo, nlo, sorted_lo);
+      else
+	sorted_lo[-1] = lo[-1];
+  
+      mergelines (lines, sorted_lo, nlo, hi, nhi);
+    }
+}
 
-  if (nlo > 1)
-    sortlines (lo, nlo, temp);
+/* Like sortlines (LINES, NLINES, TEMP), except output into TEMP
+   rather than sorting in place.  */
 
-  if (nhi > 1)
-    sortlines (hi, nhi, temp);
+static void
+sortlines_temp (struct line *lines, size_t nlines, struct line *temp)
+{
+  if (nlines == 2)
+    {
+      bool swap = (0 < compare (&lines[-1], &lines[-2]));
+      temp[-1] = lines[-1 - swap];
+      temp[-2] = lines[-2 + swap];
+    }
+  else
+    {
+      size_t nlo = nlines / 2;
+      size_t nhi = nlines - nlo;
+      struct line *lo = lines;
+      struct line *hi = lines - nlo;
+      struct line *sorted_hi = temp - nlo;
 
-  t = temp;
+      sortlines_temp (hi, nhi, sorted_hi);
+      if (1 < nlo)
+	sortlines (lo, nlo, temp);
 
-  while (nlo && nhi)
-    if (compare (lo - 1, hi - 1) <= 0)
-      *--t = *--lo, --nlo;
-    else
-      *--t = *--hi, --nhi;
-  while (nlo--)
-    *--t = *--lo;
-
-  for (lo = lines, nlo = nlines - nhi, t = temp; nlo; --nlo)
-    *--lo = *--t;
+      mergelines (temp, lo, nlo, sorted_hi, nhi);
+    }
 }
 
 /* Return the index of the first of NFILES FILES that is the same file
@@ -1963,7 +2018,8 @@ sort (char **files, int nfiles, char const *output_file)
 
 	  line = buffer_linelim (&buf);
 	  linebase = line - buf.nlines;
-	  sortlines (line, buf.nlines, linebase);
+	  if (1 < buf.nlines)
+	    sortlines (line, buf.nlines, linebase);
 	  if (buf.eof && !nfiles && !n_temp_files && !buf.left)
 	    {
 	      xfclose (fp, file);
