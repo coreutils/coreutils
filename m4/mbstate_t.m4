@@ -1,4 +1,4 @@
-# serial 2
+# serial 3
 
 # From Paul Eggert.
 
@@ -6,13 +6,16 @@
 # so you can't declare an object of that type.
 # Check for this incompatibility with Standard C.
 
-# Include stdio.h first, because otherwise this test would fail on Linux
-# (at least 2.2.16) because the `_XOPEN_SOURCE 500' definition elicits
+# Include stdlib.h first, because otherwise this test would fail on Linux
+# (at least glibc-2.1.3) because the `_XOPEN_SOURCE 500' definition elicits
 # a syntax error in wchar.h due to the use of undefined __int32_t.
 
 AC_DEFUN(AC_MBSTATE_T_OBJECT,
   [AC_CACHE_CHECK([for mbstate_t object type], ac_cv_type_mbstate_t_object,
-    [AC_TRY_COMPILE([#include <stdio.h>
+    [AC_TRY_COMPILE([
+#if HAVE_STDLIB_H
+# include <stdlib.h>
+#endif
 #include <wchar.h>],
       [mbstate_t x; return sizeof x;],
       ac_cv_type_mbstate_t_object=yes,
