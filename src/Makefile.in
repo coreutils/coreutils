@@ -182,10 +182,10 @@ binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS) $(noinst_PROGRAMS)
 am___OBJECTS = lbracket.$(OBJEXT)
 __OBJECTS = $(am___OBJECTS)
-__LDADD = $(LDADD)
 am__DEPENDENCIES_1 =
-__DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
+am__DEPENDENCIES_2 = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
 	../lib/libfetish.a
+__DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
 basename_SOURCES = basename.c
 basename_OBJECTS = basename.$(OBJEXT)
 basename_LDADD = $(LDADD)
@@ -228,8 +228,6 @@ comm_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
 	../lib/libfetish.a
 am_cp_OBJECTS = cp.$(OBJEXT) copy.$(OBJEXT) cp-hash.$(OBJEXT)
 cp_OBJECTS = $(am_cp_OBJECTS)
-am__DEPENDENCIES_2 = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
 cp_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
 csplit_SOURCES = csplit.c
 csplit_OBJECTS = csplit.$(OBJEXT)
@@ -794,6 +792,8 @@ mv_LDADD = $(LDADD) $(LIB_EACCESS)
 pathchk_LDADD = $(LDADD) $(LIB_EACCESS)
 rm_LDADD = $(LDADD) $(LIB_EACCESS)
 test_LDADD = $(LDADD) $(LIB_EACCESS)
+# This is for the '[' program.  Automake transliterates '[' to '_'.
+__LDADD = $(LDADD) $(LIB_EACCESS)
 
 # for clock_gettime and fdatasync
 dd_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME) $(LIB_FDATASYNC)
@@ -943,7 +943,7 @@ uninstall-binPROGRAMS:
 	done
 
 clean-binPROGRAMS:
-	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS) > /dev/null 2>&1 || /bin/rm -f $(bin_PROGRAMS)
+	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
 
 installcheck-binPROGRAMS: $(bin_PROGRAMS)
 	bad=0; pid=$$$$; list="$(bin_PROGRAMS)"; for p in $$list; do \
