@@ -1,3 +1,7 @@
+2001-09-15  Jim Meyering  <meyering@lucent.com>
+
+	* jm-macros.m4: Check for help2man.
+
 2001-09-11  Jim Meyering  <meyering@lucent.com>
 
 	* host-os.m4 (UTILS_HOST_OS): New file/macro.

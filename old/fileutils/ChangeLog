@@ -1,10 +1,13 @@
 2001-09-15  Jim Meyering  <meyering@lucent.com>
 
+	Convert to a more conventional (e.g., like autoconf) Makefile.am.
+	* man/Makefile.am: Remove hacks.
+	* man/GNUmakefile: Remove file.
 	* man/Makefile.summ: Remove file.
 	* man/Makefile.maint: Remove file.
-
 	* man/ginstall.x: Remove.  Renamed to ...
 	* man/install.x: ... this.  New file.
+	Michael Stone reported that man pages weren't built in non-srcdir build.
 
 	* src/touch.c (EISDIR): Define to 0, if not already defined.
 	(touch): Give a better diagnostic for e.g., `touch /' by non-root.
