@@ -6,7 +6,6 @@ dnl From Jim Meyering
 AC_DEFUN([UTILS_FUNC_DIRFD],
 [
   AC_HEADER_DIRENT
-  AC_REPLACE_FUNCS([dirfd])
   dirfd_headers='
 #if HAVE_DIRENT_H
 # include <dirent.h>
@@ -23,8 +22,13 @@ AC_DEFUN([UTILS_FUNC_DIRFD],
 # endif /* HAVE_NDIR_H */
 #endif /* HAVE_DIRENT_H */
 '
+  AC_CHECK_FUNCS(dirfd)
   AC_CHECK_DECLS([dirfd], , , $dirfd_headers)
-  if test $ac_cv_func_dirfd = no; then
+
+  # Use the replacement only if we have neither the function
+  # nor a declaration.
+  if test $ac_cv_func_dirfd,$ac_cv_have_decl_dirfd = no,no; then
+    AC_REPLACE_FUNCS([dirfd])
     AC_CACHE_CHECK(
 	      [how to get the file descriptor associated with an open DIR*],
 		   ac_cv_sys_dir_to_fd,
@@ -32,10 +36,8 @@ AC_DEFUN([UTILS_FUNC_DIRFD],
         dirfd_save_DEFS=$DEFS
 	for ac_expr in						\
 								\
-	    '# Solaris'						\
 	    'dir_p->d_fd'					\
 								\
-	    '# Solaris'						\
 	    'dir_p->dd_fd'					\
 								\
 	    '# systems for which the info is not available'	\
