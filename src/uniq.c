@@ -19,9 +19,6 @@
 
 #include <config.h>
 
-/* Get isblank from GNU libc.  */
-#define _GNU_SOURCE
-
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
