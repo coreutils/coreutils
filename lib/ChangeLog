@@ -10,6 +10,7 @@
 	* mbswidth.c: Likewise.
 	* localcharset.c: Likewise.
 	* config.charset: Likewise.
+	* unicodeio.c: Likewise.
 
 2002-11-22  Paul Eggert  <eggert@twinsun.com>
 
