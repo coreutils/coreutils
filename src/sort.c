@@ -2472,9 +2472,23 @@ main (int argc, char **argv)
 	  break;
 
 	case 'y':
-	  /* Accept and ignore e.g. -y0 for compatibility with Solaris
-	     2.x through Solaris 7.  -y is marked as obsolete starting
-	     with Solaris 8.  */
+	  /* Accept and ignore e.g. -y0 for compatibility with Solaris 2.x
+	     through Solaris 7.  It is also accepted by many non-Solaris
+	     "sort" implementations, e.g., AIX 5.2, HP-UX 11i v2, IRIX 6.5.
+	     -y is marked as obsolete starting with Solaris 8 (1999), but is
+	     still accepted as of Solaris 10 prerelease (2004).
+
+	     Solaris 2.5.1 "sort -y 100" reads the input file "100", but
+	     emulate Solaris 8 and 9 "sort -y 100" which ignores the "100",
+	     and which in general ignores the argument after "-y" if it
+	     consists entirely of digits (it can even be empty).  */
+	  if (!optarg && optind != argc)
+	    {
+	      char const *p;
+	      for (p = argv[optind]; ISDIGIT (*p); p++)
+		continue;
+	      optind += !*p;
+	    }
 	  break;
 
 	case 'z':
