@@ -1,4 +1,20 @@
+2000-10-29  Jim Meyering  <meyering@lucent.com>
+
+	* src/ls.c (DT_INIT): Define.
+	[enum filetype]: Remove the #ifdef, and use DT_INIT on the
+	initializers instead.  Reported by John David Anglin.
+
+	* tests/lang-default (LC_COLLATE): Set it to the empty string and
+	export it.  Otherwise, tests/cp/cp-mv-backup would fail e.g., when
+	LC_COLLATE was set to en.  Reported by Vin Shelton.
+
 2000-10-28  Jim Meyering  <meyering@lucent.com>
+
+	* src/ls.c (main): In call to gobble_file with `"."', use `directory'
+	as the type, not `unknown'.
+	[enum filetype] (arg_directory): Rather than `100', use
+	a number that should never conflict with another DT_* value.
+	From Ulrich Drepper.
 
 	* Version 4.0.28.
 
