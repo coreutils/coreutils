@@ -54,7 +54,7 @@ char *getenv ();
 
 #include <argmatch.h>
 #include <error.h>
-#include <xstrtoul.h>
+#include <xstrtol.h>
 
 #include "human.h"
 
