@@ -165,7 +165,13 @@ do_link (const char *source, const char *dest)
       && lstat_status == 0
       && (!symlink || stat (source, &source_stats) == 0)
       && source_stats.st_dev == dest_stats.st_dev
-      && source_stats.st_ino == dest_stats.st_ino)
+      && source_stats.st_ino == dest_stats.st_ino
+      /* The following is an attempt to detect reliably whether
+	 removing DEST will also remove SOURCE.  It is defeated
+	 by an invocation like `ln -f foo ./foo' when foo has more
+	 than one hard link.  FIXME: if anyone can tell me how to
+	 do this better (yet still reliably), please do.  */
+      && (source_stats.st_nlink == 1 || STREQ (source, dest)))
     {
       error (0, 0, _("`%s' and `%s' are the same file"), source, dest);
       return 1;
