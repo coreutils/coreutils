@@ -1,3 +1,14 @@
+1997-10-25  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/xalloc.h: New file.
+
+	* lib/xmalloc.c: Include xalloc.h.
+	Change VOID to void.
+	(xalloc_exit_failure): Renamed extern.
+	(xalloc_msg_memory_exhausted): New extern.
+	(xalloc_fail_func): New extern.
+	(fixup_null_alloc): Use new variables.
+
 1997-10-24  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/unexpand.c: Remove old-style xmalloc and xrealloc decls.
@@ -7,7 +18,7 @@
 	(xmalloc): Remove function.
 	(xrealloc): Remove function.
 	(main): Set xalloc_fail_func to cleanup.
-	Set xmalloc_exit_failure SORT_FAILURE.
+	Set xalloc_exit_failure SORT_FAILURE.
 
 	* src/paste.c: Remove old-style xmalloc and xrealloc decls.
 	(paste_parallel): Cast first arg of xrealloc to char*.
