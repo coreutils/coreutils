@@ -1,3 +1,7 @@
+1999-05-22  Jim Meyering  <meyering@ascend.com>
+
+	* jm-macros.m4 (AC_REPLACE_FUNCS): Add memchr.
+
 1999-05-20  Jim Meyering  <meyering@ascend.com>
 
 	* search-libs.m4 [AC_SEARCH_LIBS]: Quote name in undefine.
