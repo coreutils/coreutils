@@ -26,7 +26,7 @@ Sat Feb 24 12:20:58 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 	(arithf): Likewise.
 	(arithdivf): Likewise.
 
-	* text.c: __P-protect forward declarations.
+	* test.c: __P-protect forward declarations.
 	(main): Protoize function definition.
 
 	* date.c (batch_convert): Declare BUFLEN local to be of type size_t,
