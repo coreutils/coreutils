@@ -1,9 +1,16 @@
 2000-06-14  Paul Eggert  <eggert@twinsun.com>
 
+	* lib/human.c (human_readable_inexact): Allow an input block
+	size that is not a multiple of the output block size, and vice versa.
+
+2000-06-14  Paul Eggert  <eggert@twinsun.com>
+
 	* lib/getdate.y (get_date): Apply relative times after time
 	zone indicator, not before.  Reported by Todd A. Jacobs.
 
 2000-06-13  Jim Meyering  <meyering@lucent.com>
+
+	* Makefile.am (all-local): Depend on lstat.c and stat.c.
 
 	* xstat.in [!HAVE_DECL_FREE]: Declare free in lstat.c.
 
