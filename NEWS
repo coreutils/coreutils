@@ -1,4 +1,20 @@
 GNU coreutils NEWS                                    -*- outline -*-
+* Major changes in release 5.2.1 (2004-02-19) [stable]
+
+** Bug fixes
+
+  `expr' now conforms to POSIX better:
+
+    Integers like -0 and 00 are now treated as zero.
+
+    The `|' operator now returns 0, not its first argument, if both
+    arguments are null or zero.  E.g., `expr "" \| ""' now returns 0,
+    not the empty string.
+
+    The `|' and `&' operators now use short-circuit evaluation, e.g.,
+    `expr 1 \| 1 / 0' no longer reports a division by zero.
+
+
 * Major changes in release 5.2.0 (2004-02-19) [stable]
 
 ** Bug fixes
