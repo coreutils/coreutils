@@ -1,5 +1,6 @@
 #!/bin/sh
 # Make sure cp --link -f works when the target exists.
+# This failed for 4.0z (due to a bug introduced in that test release).
 
 if test "$VERBOSE" = yes; then
   set -x
