@@ -12,7 +12,7 @@ use FileHandle;
 use File::Compare qw(compare);
 
 @ISA = qw(Exporter);
-($VERSION = '$Revision: 1.6 $ ') =~ tr/[0-9].//cd;
+($VERSION = '$Revision: 1.7 $ ') =~ tr/[0-9].//cd;
 @EXPORT = qw (run_tests);
 
 my $debug = $ENV{DEBUG};
@@ -271,7 +271,10 @@ sub run_tests ($$$$$)
 	  if (compare ($expect->{$eo}, $tmp{$eo}))
 	    {
 	      warn "$program_name: test $test_name: std$eo_lower mismatch,"
-		. " comparing $expect->{$eo} and $tmp{$eo}\n";
+		. " comparing $expect->{$eo} (expected)"
+		  . " and $tmp{$eo} (actual)\n";
+	      # Ignore any failure.
+	      system "diff -c $expect->{$eo} $tmp{$eo}";
 	      $fail = 1;
 	    }
 	}
