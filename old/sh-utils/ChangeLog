@@ -1,3 +1,13 @@
+2000-11-13  Paul Eggert  <eggert@twinsun.com>
+
+	* src/sys2.h (ST_TIME_CMP_NS): Fix typo: ST_MTIM_NSEC should
+	be tested with #ifdef, not with #if.
+
+2000-11-12  Jim Meyering  <meyering@lucent.com>
+
+	* src/date.c (show_date): Add a comment explaining why the
+	format string must not be translatable via _().  From Paul Eggert.
+
 2000-10-31  Jim Meyering  <meyering@lucent.com>
 
 	* doc/sh-utils.texi: Clean up indentation and punctuation.

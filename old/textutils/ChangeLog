@@ -1,3 +1,8 @@
+2000-11-13  Paul Eggert  <eggert@twinsun.com>
+
+	* src/sys2.h (ST_TIME_CMP_NS): Fix typo: ST_MTIM_NSEC should
+	be tested with #ifdef, not with #if.
+
 2000-11-11  Jim Meyering  <meyering@lucent.com>
 
 	* doc/textutils.texi: More minor rewording and grammar correction.
