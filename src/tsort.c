@@ -25,9 +25,9 @@
 # include <config.h>
 #endif
 
+#include <stdio.h>
 #include <assert.h>
 #include <getopt.h>
-#include <stdio.h>
 
 #include "long-options.h"
 #include "system.h"
@@ -167,7 +167,7 @@ search_item (struct item *root, const char *str)
 	    p->right = q;
 
 	  /* A6. Adjust balance factors.  */
-	  assert (strcmp (str, s->str));
+	  assert (!STREQ (str, s->str));
 	  if (strcmp (str, s->str) < 0)
 	    {
 	      r = p = s->left;
@@ -181,7 +181,7 @@ search_item (struct item *root, const char *str)
 
 	  while (p != q)
 	    {
-	      assert (strcmp (str, p->str));
+	      assert (!STREQ (str, p->str));
 	      if (strcmp (str, p->str) < 0)
 		{
 		  p->balance = -1;
@@ -275,7 +275,7 @@ record_relation (struct item *j, struct item *k)
 {
   struct successor *p;
 
-  if (strcmp (j->str, k->str))
+  if (!STREQ (j->str, k->str))
     {
       k->count++;
       p = xmalloc (sizeof (struct successor));
@@ -381,7 +381,7 @@ tsort (const char *file)
   while (1)
     {
       long int len;
-      
+
       /* T2. Next Relation.  */
       len = readtoken (fp, DELIM, sizeof (DELIM) - 1, &tokenbuffer);
       if (len < 0)
