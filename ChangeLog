@@ -8,6 +8,7 @@
 	* src/expr.c (nextarg): Likewise.
 	* src/su.c (correct_password, restricted_shell, main): Likewise.
 	* src/ptx.c (swallow_file_in_memory, main): Likewise.
+	* src/test.c (binary_operator, and, or, main): Likewise.
 
 2004-05-13  Paul Eggert  <eggert@cs.ucla.edu>
 
