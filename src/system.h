@@ -19,38 +19,18 @@
 
 #include <sys/stat.h>
 
-#ifdef	STAT_MACROS_BROKEN
-#ifdef S_ISBLK
+#ifdef STAT_MACROS_BROKEN
 #undef S_ISBLK
-#endif
-#ifdef S_ISCHR
 #undef S_ISCHR
-#endif
-#ifdef S_ISDIR
 #undef S_ISDIR
-#endif
-#ifdef S_ISFIFO
 #undef S_ISFIFO
-#endif
-#ifdef S_ISLNK
 #undef S_ISLNK
-#endif
-#ifdef S_ISMPB
 #undef S_ISMPB
-#endif
-#ifdef S_ISMPC
 #undef S_ISMPC
-#endif
-#ifdef S_ISNWK
 #undef S_ISNWK
-#endif
-#ifdef S_ISREG
 #undef S_ISREG
-#endif
-#ifdef S_ISSOCK
 #undef S_ISSOCK
-#endif
-#endif	/* STAT_MACROS_BROKEN.  */
+#endif /* STAT_MACROS_BROKEN.  */
 
 #ifndef S_ISREG			/* Doesn't have POSIX.1 stat stuff. */
 #define mode_t unsigned short
@@ -95,6 +75,18 @@
    of _POSIX_VERSION.  */
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
+
+#ifndef STDIN_FILENO
+#define STDIN_FILENO 0
+#endif
+
+#ifndef STDOUT_FILENO
+#define STDOUT_FILENO 1
+#endif
+
+#ifndef STDERR_FILENO
+#define STDERR_FILENO 2
 #endif
 
 #include "pathmax.h"
@@ -252,8 +244,14 @@ extern int errno;
    otherwise return it unchanged. */
 #define convert_blocks(b, k) ((k) ? ((b) + 1) / 2 : (b))
 
+#include "safe-stat.h"
+#include "safe-lstat.h"
+
 #ifndef S_ISLNK
 #define lstat stat
+#undef SAFE_LSTAT
+#define SAFE_LSTAT SAFE_STAT
+#define safe_lstat safe_stat
 #endif
 
 #ifndef RETSIGTYPE
