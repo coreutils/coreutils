@@ -462,7 +462,8 @@ write_output (void)
   oc = 0;
 }
 
-/* Interpret one "conv=..." option. */
+/* Interpret one "conv=..." option.
+   As a by product, this function replaces each `,' in STR with a NUL byte.  */
 
 static void
 parse_conversion (char *str)
@@ -496,14 +497,15 @@ parse_conversion (char *str)
    this format. */
 
 static uintmax_t
-parse_integer (char *str, int *invalid)
+parse_integer (const char *str, int *invalid)
 {
   uintmax_t n;
-  enum strtol_error e = xstrtoumax (str, &str, 10, &n, "bcEGkMPTwYZ0");
+  char *suffix;
+  enum strtol_error e = xstrtoumax (str, &suffix, 10, &n, "bcEGkMPTwYZ0");
 
-  if (e == LONGINT_INVALID_SUFFIX_CHAR && *str == 'x')
+  if (e == LONGINT_INVALID_SUFFIX_CHAR && *suffix == 'x')
     {
-      uintmax_t multiplier = parse_integer (str + 1, invalid);
+      uintmax_t multiplier = parse_integer (suffix + 1, invalid);
 
       if (multiplier != 0 && n * multiplier / multiplier != n)
 	{
