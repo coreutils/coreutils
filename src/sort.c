@@ -1878,9 +1878,7 @@ sortlines_temp (struct line *lines, size_t nlines, struct line *temp)
 }
 
 /* Return the index of the first of NFILES FILES that is the same file
-   as OUTFILE.  If none can be the same, return NFILES.  Consider an
-   input pipe to be the same as OUTFILE, since the pipe might be the
-   output of a command like "cat OUTFILE".  */
+   as OUTFILE.  If none can be the same, return NFILES.  */
 
 static int
 first_same_file (char * const *files, int nfiles, char const *outfile)
@@ -1910,7 +1908,7 @@ first_same_file (char * const *files, int nfiles, char const *outfile)
 	    ? fstat (STDIN_FILENO, &instat)
 	    : stat (files[i], &instat))
 	   == 0)
-	  && (S_ISFIFO (instat.st_mode) || SAME_INODE (instat, outstat)))
+	  && SAME_INODE (instat, outstat))
 	return i;
     }
 
