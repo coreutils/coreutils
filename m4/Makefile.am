@@ -19,6 +19,7 @@ d-type.m4 \
 dirfd.m4 \
 dos.m4 \
 error.m4 \
+fnmatch.m4 \
 fpending.m4 \
 fstypename.m4 \
 fsusage.m4 \
