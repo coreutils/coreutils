@@ -27,10 +27,11 @@
 # include <config.h>
 #endif
 
-#include <stdlib.h>
 #include <string.h>
 
-#if defined (_LIBC)
+#include <stddef.h>
+
+#if defined _LIBC
 # include <memcopy.h>
 #else
 # define reg_char char
@@ -38,9 +39,19 @@
 
 #include <limits.h>
 
-#define LONG_MAX_32_BITS 2147483647
+#if HAVE_INTTYPES_H
+# include <inttypes.h>
+#endif
+#if defined _LIBC || HAVE_STDINT_H
+# include <stdint.h>
+#endif
 
-#include <sys/types.h>
+#define alignof(type) offsetof (struct { char c; type x; }, x)
+#ifdef UINTPTR_MAX
+# define UNALIGNED_P(p) (((uintptr_t) p) % alignof (unsigned long int) != 0)
+#else
+# define UNALIGNED_P(p) 1
+#endif
 
 #undef __memrchr
 #undef memrchr
@@ -57,22 +68,22 @@ __memrchr (void const *s, int c_in, size_t n)
   const unsigned long int *longword_ptr;
   unsigned long int longword, magic_bits, charmask;
   unsigned reg_char c;
+  int i;
 
   c = (unsigned char) c_in;
 
   /* Handle the last few characters by reading one character at a time.
      Do this until CHAR_PTR is aligned on a longword boundary.  */
   for (char_ptr = (const unsigned char *) s + n;
-       n > 0 && ((unsigned long int) char_ptr
-		 & (sizeof (longword) - 1)) != 0;
+       n > 0 && UNALIGNED_P (char_ptr);
        --n)
     if (*--char_ptr == c)
       return (void *) char_ptr;
 
   /* All these elucidatory comments refer to 4-byte longwords,
-     but the theory applies equally well to 8-byte longwords.  */
+     but the theory applies equally well to any size longwords.  */
 
-  longword_ptr = (unsigned long int *) char_ptr;
+  longword_ptr = (const unsigned long int *) char_ptr;
 
   /* Bits 31, 24, 16, and 8 of this number are zero.  Call these bits
      the "holes."  Note that there is a hole just to the left of
@@ -84,26 +95,28 @@ __memrchr (void const *s, int c_in, size_t n)
      The 1-bits make sure that carries propagate to the next 0-bit.
      The 0-bits provide holes for carries to fall into.  */
 
-  if (sizeof (longword) != 4 && sizeof (longword) != 8)
-    abort ();
+  /* Set MAGIC_BITS to be this pattern of 1 and 0 bits.
+     Set CHARMASK to be a longword, each of whose bytes is C.  */
 
-#if LONG_MAX <= LONG_MAX_32_BITS
-  magic_bits = 0x7efefeff;
-#else
-  magic_bits = ((unsigned long int) 0x7efefefe << 32) | 0xfefefeff;
-#endif
-
-  /* Set up a longword, each of whose bytes is C.  */
+  magic_bits = 0xfefefefe;
   charmask = c | (c << 8);
   charmask |= charmask << 16;
-#if LONG_MAX > LONG_MAX_32_BITS
+#if 0xffffffffU < ULONG_MAX
+  magic_bits |= magic_bits << 32;
   charmask |= charmask << 32;
+  if (8 < sizeof longword)
+    for (i = 64; i < sizeof longword * 8; i *= 2)
+      {
+	magic_bits |= magic_bits << i;
+	charmask |= charmask << i;
+      }
 #endif
+  magic_bits = (ULONG_MAX >> 1) & (magic_bits | 1);
 
   /* Instead of the traditional loop which tests each character,
      we will test a longword at a time.  The tricky part is testing
      if *any of the four* bytes in the longword in question are zero.  */
-  while (n >= sizeof (longword))
+  while (n >= sizeof longword)
     {
       /* We tentatively exit the loop if adding MAGIC_BITS to
 	 LONGWORD fails to change any of the hole bits of LONGWORD.
@@ -157,16 +170,18 @@ __memrchr (void const *s, int c_in, size_t n)
 
 	  const unsigned char *cp = (const unsigned char *) longword_ptr;
 
-#if LONG_MAX > 2147483647
-	  if (cp[7] == c)
+	  if (8 < sizeof longword)
+	    for (i = sizeof longword - 1; 8 <= i; i--)
+	      if (cp[i] == c)
+		return (void *) &cp[i];
+	  if (7 < sizeof longword && cp[7] == c)
 	    return (void *) &cp[7];
-	  if (cp[6] == c)
+	  if (6 < sizeof longword && cp[6] == c)
 	    return (void *) &cp[6];
-	  if (cp[5] == c)
+	  if (5 < sizeof longword && cp[5] == c)
 	    return (void *) &cp[5];
-	  if (cp[4] == c)
+	  if (4 < sizeof longword && cp[4] == c)
 	    return (void *) &cp[4];
-#endif
 	  if (cp[3] == c)
 	    return (void *) &cp[3];
 	  if (cp[2] == c)
@@ -177,7 +192,7 @@ __memrchr (void const *s, int c_in, size_t n)
 	    return (void *) cp;
 	}
 
-      n -= sizeof (longword);
+      n -= sizeof longword;
     }
 
   char_ptr = (const unsigned char *) longword_ptr;
