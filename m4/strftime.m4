@@ -56,7 +56,7 @@ main ()
 
   /* This is necessary to make strftime give consistent zone strings and
      e.g., seconds since the epoch (%s).  */
-  putenv ("TZ=GMT");
+  putenv ("TZ=GMT0");
 
 #undef CMP
 #define CMP(Fmt, Expected) n_fail += compare ((Fmt), tm, (Expected))
