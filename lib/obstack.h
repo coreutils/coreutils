@@ -103,6 +103,10 @@ Summary:
 #ifndef __OBSTACK_H__
 #define __OBSTACK_H__
 
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
+
 /* We use subtraction of (char *)0 instead of casting to int
    because on word-addressable machines a simple cast to int
    may ignore the byte-within-word field of the pointer.  */
@@ -137,6 +141,15 @@ Summary:
 #else
 #define PTR_INT_TYPE long
 #endif
+
+#if HAVE_STRING_H || STDC_HEADERS
+# include <string.h>
+# ifndef bcopy
+#  define bcopy(s, d, n) memcpy ((d), (s), (n))
+# endif
+#else /* HAVE_STRING_H || STDC_HEADERS */
+# include <strings.h>
+#endif   /* not (HAVE_STRING_H || STDC_HEADERS) */
 
 struct _obstack_chunk		/* Lives at front of each chunk. */
 {
@@ -331,7 +344,7 @@ __extension__								\
 /* These assume that the obstack alignment is good enough for pointers or ints,
    and that the data added so far to the current object
    shares that much alignment.  */
-   
+
 #define obstack_ptr_grow(OBSTACK,datum)					\
 __extension__								\
 ({ struct obstack *__o = (OBSTACK);					\
