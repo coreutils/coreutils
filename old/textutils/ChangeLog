@@ -1,3 +1,15 @@
+Thu Dec 14 21:13:22 1995  Jim Meyering  (meyering@comco.com)
+
+	* fold.c (main): Use xstrtol instead of atoi.
+	(fold_file): Make a couple locals `int', not size_t, and cast
+	fwrite's arg3 to size_t.
+
+	* nl.c (main): Use xstrtol instead of atoi.
+	Rename misleading --first-page=N option to --starting-line-number=N.
+	(usage): Update.
+
+	* uniq.c (main): Use xstrtol instead of atoi.
+
 Fri Dec  8 20:48:00 1995  Jim Meyering  (meyering@comco.com)
 
 	* aclocal.m4 (fp_C_PROTOTYPES): Set ANSI2KNR to ./ansi2knr.
