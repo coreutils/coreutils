@@ -1,3 +1,8 @@
+1999-12-22  Jim Meyering  <meyering@ascend.com>
+
+	* lib/getdate.y (get_date): Fix typo in time_t overflow test.
+	From Michael Stone.
+
 1999-12-19  Jim Meyering  <meyering@ascend.com>
 
 	* Version 4.0l.
