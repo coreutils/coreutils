@@ -1,9 +1,27 @@
+2000-05-07  Jim Meyering  <meyering@lucent.com>
+
+	* tests/date/Test.pm ($Test::env{'rfc822-1'}): Add TZ=UTC.
+
+2000-05-06  Jim Meyering  <meyering@lucent.com>
+
+	* src/Makefile.am (sleep_LDADD): Add @LIB_CLOCK_GETTIME@ and
+	@LIB_NANOSLEEP@.
+
+	* src/tty.c (main): Warn about arguments, don't fail.
+	(usage): Call close_stdout_status from here as well as from main.
+
 2000-05-05  Jim Meyering  <meyering@lucent.com>
 
 	Exit nonzero upon write failure.
 	* src/printf.c: Include "closeout.h".
 	(main): Call close_stdout.
 	Reported by Ian Jackson via Michael Stone.
+
+	* src/factor.c: Likewise.
+	* src/hostname.c: Likewise.
+	* src/logname.c: Likewise.
+	* src/pwd.c: Likewise.
+	* src/seq.c: Likewise.
 
 2000-05-04  Jim Meyering  <meyering@lucent.com>
 
