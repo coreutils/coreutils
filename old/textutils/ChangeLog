@@ -1,3 +1,36 @@
+Fri Jul 21 01:21:49 1995  Jim Meyering  (meyering@comco.com)
+
+	* md5sum.c (md5_file): New function -- extracted from main.
+	(main): Call the new function instead of doing all that in an
+	if-stmt. Always use "%s" format rather than raw filename as
+	format argument in printf-style functions like error.  Otherwise,
+	filenames containing `%' are likely to lose.
+	Remove all mention of `old format'.
+	(split_3): No longer parse the `new format.'  There is only one
+	valid format now: the compatible one.
+
+	* lib/Makefile.in: (SOURCES): Add md5.c.
+	(OBJECTS): Add md5.o.
+	(DISTFILES): Add md5.h.
+	(md5.o): Depend on md5.h.
+
+	* system.h [!EXIT_FAILURE, !EXIT_SUCCESS]: Define them.
+	* lib/md5.c (md5_stream): Check for read failure and return
+	indication of success rather than second argument.
+	* lib/md5.h (md5_stream): Update prototype.
+	[__P]: Define macro.
+	* md5sum.c: Use EXIT_FAILURE and EXIT_SUCCESS.
+	(main): Report an error if md5_stream fails.  Otherwise, running
+	`md5sum dir-on-mounted-filesystem' always reported the checksum
+	for an empty file.  Now it gets the `is a directory' error.
+	Greg McGary (gkm@magilla.cichlid.com) reported that the released
+	version got stuck in an infinite loop with such arguments.
+
+	* lib/md5.c: New file.
+	* lib/md5.h: New file.
+	* md5sum.c: Rewritten to use library interface.
+	From Ulrich Drepper.
+
 Sun Jul 16 18:42:34 1995  Jim Meyering  (meyering@comco.com)
 
 	* configure.in: Add AC_C_INLINE: md5sum.c uses inline keyword.
