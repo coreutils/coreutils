@@ -58,7 +58,7 @@ installdirs:
 
 install: all installdirs
 	cd $(srcdir) && for file in fileutils.info; do \
-	  $(INSTALL_DATA) $$dir/$$file $(infodir)/$$file; \
+	  $(INSTALL_DATA) $$file $(infodir)/$$file; \
 	done
 
 uninstall:
