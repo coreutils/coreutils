@@ -89,6 +89,38 @@
 # define INODE_DIGITS 7
 #endif
 
+#ifdef S_ISLNK
+# define HAVE_SYMLINKS 1
+#else
+# define HAVE_SYMLINKS 0
+#endif
+
+/* If any of the S_* macros are undefined, define them here so each
+   use doesn't have to be guarded with e.g., #ifdef S_ISLNK.  */
+#ifndef S_ISLNK
+# define S_ISLNK(Mode) 0
+#endif
+
+#ifndef S_ISFIFO
+# define S_ISFIFO(Mode) 0
+#endif
+
+#ifndef S_ISSOCK
+# define S_ISSOCK(Mode) 0
+#endif
+
+#ifndef S_ISCHR
+# define S_ISCHR(Mode) 0
+#endif
+
+#ifndef S_ISBLK
+# define S_ISBLK(Mode) 0
+#endif
+
+#ifndef S_ISDOOR
+# define S_ISDOOR(Mode) 0
+#endif
+
 enum filetype
   {
     symbolic_link,
@@ -1704,7 +1736,6 @@ gobble_file (const char *name, int explicit_arg, const char *dirname)
 	  return 0;
 	}
 
-#ifdef S_ISLNK
       if (S_ISLNK (files[files_index].stat.st_mode)
 	  && (explicit_arg || format == long_format || print_with_color))
 	{
@@ -1752,14 +1783,10 @@ gobble_file (const char *name, int explicit_arg, const char *dirname)
 	  if (linkpath)
 	    free (linkpath);
 	}
-#endif
 
-#ifdef S_ISLNK
       if (S_ISLNK (files[files_index].stat.st_mode))
 	files[files_index].filetype = symbolic_link;
-      else
-#endif
-      if (S_ISDIR (files[files_index].stat.st_mode))
+      else if (S_ISDIR (files[files_index].stat.st_mode))
 	{
 	  if (explicit_arg && !immediate_dirs)
 	    files[files_index].filetype = arg_directory;
@@ -1787,7 +1814,7 @@ gobble_file (const char *name, int explicit_arg, const char *dirname)
   return blocks;
 }
 
-#ifdef S_ISLNK
+#if HAVE_SYMLINKS
 
 /* Put the name of the file that `filename' is a symbolic link to
    into the `linkname' field of `f'. */
@@ -2397,32 +2424,33 @@ print_file_name_and_frills (const struct fileinfo *f)
 static void
 print_type_indicator (unsigned int mode)
 {
-  if (S_ISDIR (mode))
-    DIRED_PUTCHAR ('/');
+  int c;
 
-#ifdef S_ISLNK
-  if (S_ISLNK (mode))
-    DIRED_PUTCHAR ('@');
-#endif
+  if (S_ISREG (mode))
+    {
+      if (indicator_style == classify && (mode & S_IXUGO))
+	c ='*';
+      else
+	c = 0;
+    }
+  else
+    {
+      if (S_ISDIR (mode))
+	c = '/';
+      else if (S_ISLNK (mode))
+	c = '@';
+      else if (S_ISFIFO (mode))
+	c = '|';
+      else if (S_ISSOCK (mode))
+	c = '=';
+      else if (S_ISDOOR (mode))
+	c = '>';
+      else
+	c = 0;
+    }
 
-#ifdef S_ISFIFO
-  if (S_ISFIFO (mode))
-    DIRED_PUTCHAR ('|');
-#endif
-
-#ifdef S_ISSOCK
-  if (S_ISSOCK (mode))
-    DIRED_PUTCHAR ('=');
-#endif
-
-#ifdef S_ISDOOR
-  if (S_ISDOOR (mode))
-    DIRED_PUTCHAR ('>');
-#endif
-
-  if (S_ISREG (mode) && indicator_style == classify
-      && (mode & S_IXUGO))
-    DIRED_PUTCHAR ('*');
+  if (c)
+    DIRED_PUTCHAR (c);
 }
 
 static void
@@ -2443,37 +2471,19 @@ print_color_indicator (const char *name, unsigned int mode, int linkok)
     {
       if (S_ISDIR (mode))
 	type = C_DIR;
-
-#ifdef S_ISLNK
       else if (S_ISLNK (mode))
 	type = ((!linkok && color_indicator[C_ORPHAN].string)
 		? C_ORPHAN : C_LINK);
-#endif
-
-#ifdef S_ISFIFO
       else if (S_ISFIFO (mode))
 	type = C_FIFO;
-#endif
-
-#ifdef S_ISSOCK
       else if (S_ISSOCK (mode))
 	type = C_SOCK;
-#endif
-
-#ifdef S_ISBLK
       else if (S_ISBLK (mode))
 	type = C_BLK;
-#endif
-
-#ifdef S_ISCHR
       else if (S_ISCHR (mode))
 	type = C_CHR;
-#endif
-
-#ifdef S_ISDOOR
       else if (S_ISDOOR (mode))
 	type = C_DOOR;
-#endif
 
       if (type == C_FILE && (mode & S_IXUGO) != 0)
 	type = C_EXEC;
@@ -2538,19 +2548,11 @@ length_of_file_name_and_frills (const struct fileinfo *f)
 	    len += 1;
 	}
       else if (S_ISDIR (filetype)
-#ifdef S_ISLNK
 	       || S_ISLNK (filetype)
-#endif
-#ifdef S_ISFIFO
 	       || S_ISFIFO (filetype)
-#endif
-#ifdef S_ISSOCK
 	       || S_ISSOCK (filetype)
-#endif
-#ifdef S_ISDOOR
 	       || S_ISDOOR (filetype)
-#endif
-	)
+	       )
 	len += 1;
     }
 
