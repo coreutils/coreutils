@@ -63,7 +63,8 @@ char *savedir ();
 char *xmalloc ();
 char *xrealloc ();
 
-static int change_dir_group __P ((char *dir, int group, struct stat *statp));
+static int change_dir_group __P ((const char *dir, int group,
+				  const struct stat *statp));
 
 /* The name the program was run with. */
 char *program_name;
@@ -85,7 +86,7 @@ static int verbose;
 static int changes_only;
 
 /* The name of the group to which ownership of the files is being given. */
-static char *groupname;
+static const char *groupname;
 
 /* If nonzero, display usage information and exit.  */
 static int show_help;
@@ -110,7 +111,7 @@ static struct option const long_options[] =
    has been given; if CHANGED is zero, FILE was that group already. */
 
 static void
-describe_change (char *file, int changed)
+describe_change (const char *file, int changed)
 {
   if (changed)
     printf (_("group of %s changed to %s\n"), file, groupname);
@@ -121,7 +122,7 @@ describe_change (char *file, int changed)
 /* Set *G according to NAME. */
 
 static void
-parse_group (char *name, int *g)
+parse_group (const char *name, int *g)
 {
   struct group *grp;
 
@@ -135,12 +136,17 @@ parse_group (char *name, int *g)
       strtol_error s_err;
       unsigned long int tmp_long;
 
+      if (!ISDIGIT (*name))
+	error (1, 0, _("invalid group name `%s'"), name);
+
       s_err = xstrtoul (name, NULL, 0, &tmp_long, NULL);
+      if (s_err != LONGINT_OK)
+	STRTOL_FATAL_ERROR (name, _("group number"), s_err);
+
+      if (tmp_long > INT_MAX)
+	error (1, 0, _("invalid group number `%s'"), name);
+
       *g = tmp_long;
-      if (s_err == LONGINT_OVERFLOW || tmp_long > INT_MAX)
-	{
-	  STRTOL_FATAL_ERROR (name, _("group number"), s_err);
-	}
     }
   else
     *g = grp->gr_gid;
@@ -152,7 +158,7 @@ parse_group (char *name, int *g)
    Return 0 if successful, 1 if errors occurred. */
 
 static int
-change_file_group (char *file, int group)
+change_file_group (const char *file, int group)
 {
   struct stat file_stats;
   int errors = 0;
@@ -214,7 +220,7 @@ change_file_group (char *file, int group)
    Return 0 if successful, 1 if errors occurred. */
 
 static int
-change_dir_group (char *dir, int group, struct stat *statp)
+change_dir_group (const char *dir, int group, const struct stat *statp)
 {
   char *name_space, *namep;
   char *path;			/* Full path of each entry to process. */
