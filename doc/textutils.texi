@@ -1054,7 +1054,7 @@ head [@var{option}]@dots{} [@var{file}]@dots{}
 head -@var{number} [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
-If more than one @var{file} is specicified, @code{head} prints a
+If more than one @var{file} is specified, @code{head} prints a
 one-line header consisting of
 @example
 ==> @var{file name} <==
@@ -1312,7 +1312,7 @@ file, so that section of the input file is effectively ignored.
 Repeat the previous pattern @var{repeat-count} additional
 times. @var{repeat-count} can either be a positive integer or an
 asterisk, meaning repeat as many times as necessary until the input is
-exausted.
+exhausted.
 
 @end table
 
@@ -2114,7 +2114,7 @@ For @samp{-f}, fields are separated by the first character in @var{delim}
 
 @item -n
 @opindex -n
-Do not split multibyte characters (no-op for now).
+Do not split multi-byte characters (no-op for now).
 
 @item -s
 @itemx --only-delimited
@@ -3218,7 +3218,7 @@ much more efficient and do more than these programs do.  Nevertheless, as
 exposition of good programming style, and evangelism for a still-valuable
 philosophy, these books are unparalleled, and I recommend them highly.
 
-Acknowledgement: I would like to express my gratitude to Brian Kernighan
+Acknowledgment: I would like to express my gratitude to Brian Kernighan
 of Bell Labs, the original Software Toolsmith, for reviewing this column.
 
 
