@@ -1,6 +1,12 @@
-2003-05-07  Jim Meyering  <jim@meyering.net>
+2003-05-09  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
+
+	* src/sort.c (main): Don't overrun array bound if argc is 0.
+	That would happen when invoked via: execl ("/usr/bin/sort", NULL);
+	Reported by Wartan Hachaturow.
+
+2003-05-07  Jim Meyering  <jim@meyering.net>
 
 	Implement support so that `head --lines=-N' works on seekable files.
 	* src/head.c (enum Copy_fd_status): Define.
