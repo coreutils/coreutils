@@ -276,7 +276,7 @@ Usage: %s [OPTION]... [FILE]...\n\
   or:  %s --traditional [FILE] [[+]OFFSET [[+]LABEL]]\n\
 "),
 	      program_name, program_name);
-      printf (_("\n\
+      fputs (_("\n\
 Write an unambiguous representation, octal bytes by default,\n\
 of FILE to standard output.  With more than one FILE argument,\n\
 concatenate them in the listed order to form the input.\n\
@@ -285,12 +285,16 @@ With no FILE, or when FILE is -, read standard input.\n\
 Mandatory arguments to long options are mandatory for short options too.\n\
   -A, --address-radix=RADIX   decide how file offsets are printed\n\
   -j, --skip-bytes=BYTES      skip BYTES input bytes first\n\
+"), stdout);
+      fputs (_("\
   -N, --read-bytes=BYTES      limit dump to BYTES input bytes\n\
   -s, --strings[=BYTES]       output strings of at least BYTES graphic chars\n\
   -t, --format=TYPE           select output format or formats\n\
   -v, --output-duplicates     do not use * to mark line suppression\n\
   -w, --width[=BYTES]         output BYTES bytes per output line\n\
       --traditional           accept arguments in pre-POSIX form\n\
+"), stdout);
+      fputs (_("\
       --help                  display this help and exit\n\
       --version               output version information and exit\n\
 \n\
@@ -299,14 +303,16 @@ Pre-POSIX format specifications may be intermixed, they accumulate:\n\
   -b   same as -t oC, select octal bytes\n\
   -c   same as -t c,  select ASCII characters or backslash escapes\n\
   -d   same as -t u2, select unsigned decimal shorts\n\
+"), stdout);
+      fputs (_("\
   -f   same as -t fF, select floats\n\
   -h   same as -t x2, select hexadecimal shorts\n\
   -i   same as -t d2, select decimal shorts\n\
   -l   same as -t d4, select decimal longs\n\
   -o   same as -t o2, select octal shorts\n\
   -x   same as -t x2, select hexadecimal shorts\n\
-"));
-      printf (_("\
+"), stdout);
+      fputs (_("\
 \n\
 For older syntax (second call format), OFFSET means -j OFFSET.  LABEL\n\
 is the pseudo-address at first byte printed, incremented when dump is\n\
@@ -317,6 +323,8 @@ TYPE is made up of one or more of these specifications:\n\
 \n\
   a          named character\n\
   c          ASCII character or backslash escape\n\
+"), stdout);
+      fputs (_("\
   d[SIZE]    signed decimal, SIZE bytes per integer\n\
   f[SIZE]    floating point, SIZE bytes per integer\n\
   o[SIZE]    octal, SIZE bytes per integer\n\
@@ -325,16 +333,20 @@ TYPE is made up of one or more of these specifications:\n\
 \n\
 SIZE is a number.  For TYPE in doux, SIZE may also be C for\n\
 sizeof(char), S for sizeof(short), I for sizeof(int) or L for\n\
+"), stdout);
+      fputs (_("\
 sizeof(long).  If TYPE is f, SIZE may also be F for sizeof(float), D\n\
 for sizeof(double) or L for sizeof(long double).\n\
 \n\
 RADIX is d for decimal, o for octal, x for hexadecimal or n for none.\n\
 BYTES is hexadecimal with 0x or 0X prefix, it is multiplied by 512\n\
+"), stdout);
+      fputs (_("\
 with b suffix, by 1024 with k and by 1048576 with m.  Adding a z suffix to\n\
 any type adds a display of printable characters to the end of each line\n\
 of output.  -s without a number implies 3.  -w without a number implies 32.\n\
 By default, od uses -A o -t d2 -w 16.\n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
