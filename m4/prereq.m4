@@ -1,4 +1,4 @@
-#serial 13
+#serial 14
 
 dnl These are the prerequisite macros for files in the lib/
 dnl directories of the fileutils, sh-utils, and textutils packages.
@@ -91,7 +91,8 @@ AC_DEFUN(jm_PREREQ_READUTMP,
 $ac_includes_default
 #ifdef HAVE_UTMPX_H
 # include <utmpx.h>
-#else
+#endif
+#ifdef HAVE_UTMP_H
 # include <utmp.h>
 #endif
 "
