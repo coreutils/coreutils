@@ -379,7 +379,7 @@ enum time_style
 
 static char const *const time_style_args[] =
 {
-  "full-iso", "long-iso", "iso", "locale", 0
+  "full-iso", "long-iso", "iso", "locale", NULL
 };
 
 static enum time_style const time_style_types[] =
@@ -474,7 +474,7 @@ static enum indicator_style indicator_style;
 /* Names of indicator styles.  */
 static char const *const indicator_style_args[] =
 {
-  "none", "classify", "file-type", 0
+  "none", "classify", "file-type", NULL
 };
 
 static enum indicator_style const indicator_style_types[]=
@@ -723,45 +723,45 @@ enum
 
 static struct option const long_options[] =
 {
-  {"all", no_argument, 0, 'a'},
-  {"escape", no_argument, 0, 'b'},
-  {"directory", no_argument, 0, 'd'},
-  {"dired", no_argument, 0, 'D'},
-  {"full-time", no_argument, 0, FULL_TIME_OPTION},
-  {"human-readable", no_argument, 0, 'h'},
-  {"inode", no_argument, 0, 'i'},
-  {"kilobytes", no_argument, 0, 'k'}, /* long form is obsolescent */
-  {"numeric-uid-gid", no_argument, 0, 'n'},
-  {"no-group", no_argument, 0, 'G'},
-  {"hide-control-chars", no_argument, 0, 'q'},
-  {"reverse", no_argument, 0, 'r'},
-  {"size", no_argument, 0, 's'},
-  {"width", required_argument, 0, 'w'},
-  {"almost-all", no_argument, 0, 'A'},
-  {"ignore-backups", no_argument, 0, 'B'},
-  {"classify", no_argument, 0, 'F'},
-  {"file-type", no_argument, 0, 'p'},
-  {"si", no_argument, 0, SI_OPTION},
-  {"dereference-command-line", no_argument, 0, 'H'},
-  {"dereference-command-line-symlink-to-dir", no_argument, 0,
+  {"all", no_argument, NULL, 'a'},
+  {"escape", no_argument, NULL, 'b'},
+  {"directory", no_argument, NULL, 'd'},
+  {"dired", no_argument, NULL, 'D'},
+  {"full-time", no_argument, NULL, FULL_TIME_OPTION},
+  {"human-readable", no_argument, NULL, 'h'},
+  {"inode", no_argument, NULL, 'i'},
+  {"kilobytes", no_argument, NULL, 'k'}, /* long form is obsolescent */
+  {"numeric-uid-gid", no_argument, NULL, 'n'},
+  {"no-group", no_argument, NULL, 'G'},
+  {"hide-control-chars", no_argument, NULL, 'q'},
+  {"reverse", no_argument, NULL, 'r'},
+  {"size", no_argument, NULL, 's'},
+  {"width", required_argument, NULL, 'w'},
+  {"almost-all", no_argument, NULL, 'A'},
+  {"ignore-backups", no_argument, NULL, 'B'},
+  {"classify", no_argument, NULL, 'F'},
+  {"file-type", no_argument, NULL, 'p'},
+  {"si", no_argument, NULL, SI_OPTION},
+  {"dereference-command-line", no_argument, NULL, 'H'},
+  {"dereference-command-line-symlink-to-dir", no_argument, NULL,
    DEREFERENCE_COMMAND_LINE_SYMLINK_TO_DIR_OPTION},
-  {"hide", required_argument, 0, HIDE_OPTION},
-  {"ignore", required_argument, 0, 'I'},
-  {"indicator-style", required_argument, 0, INDICATOR_STYLE_OPTION},
-  {"dereference", no_argument, 0, 'L'},
-  {"literal", no_argument, 0, 'N'},
-  {"quote-name", no_argument, 0, 'Q'},
-  {"quoting-style", required_argument, 0, QUOTING_STYLE_OPTION},
-  {"recursive", no_argument, 0, 'R'},
-  {"format", required_argument, 0, FORMAT_OPTION},
-  {"show-control-chars", no_argument, 0, SHOW_CONTROL_CHARS_OPTION},
-  {"sort", required_argument, 0, SORT_OPTION},
-  {"tabsize", required_argument, 0, 'T'},
-  {"time", required_argument, 0, TIME_OPTION},
-  {"time-style", required_argument, 0, TIME_STYLE_OPTION},
-  {"color", optional_argument, 0, COLOR_OPTION},
-  {"block-size", required_argument, 0, BLOCK_SIZE_OPTION},
-  {"author", no_argument, 0, AUTHOR_OPTION},
+  {"hide", required_argument, NULL, HIDE_OPTION},
+  {"ignore", required_argument, NULL, 'I'},
+  {"indicator-style", required_argument, NULL, INDICATOR_STYLE_OPTION},
+  {"dereference", no_argument, NULL, 'L'},
+  {"literal", no_argument, NULL, 'N'},
+  {"quote-name", no_argument, NULL, 'Q'},
+  {"quoting-style", required_argument, NULL, QUOTING_STYLE_OPTION},
+  {"recursive", no_argument, NULL, 'R'},
+  {"format", required_argument, NULL, FORMAT_OPTION},
+  {"show-control-chars", no_argument, NULL, SHOW_CONTROL_CHARS_OPTION},
+  {"sort", required_argument, NULL, SORT_OPTION},
+  {"tabsize", required_argument, NULL, 'T'},
+  {"time", required_argument, NULL, TIME_OPTION},
+  {"time-style", required_argument, NULL, TIME_STYLE_OPTION},
+  {"color", optional_argument, NULL, COLOR_OPTION},
+  {"block-size", required_argument, NULL, BLOCK_SIZE_OPTION},
+  {"author", no_argument, NULL, AUTHOR_OPTION},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
@@ -770,7 +770,7 @@ static struct option const long_options[] =
 static char const *const format_args[] =
 {
   "verbose", "long", "commas", "horizontal", "across",
-  "vertical", "single-column", 0
+  "vertical", "single-column", NULL
 };
 
 static enum format const format_types[] =
@@ -781,7 +781,7 @@ static enum format const format_types[] =
 
 static char const *const sort_args[] =
 {
-  "none", "time", "size", "extension", "version", 0
+  "none", "time", "size", "extension", "version", NULL
 };
 
 static enum sort_type const sort_types[] =
@@ -791,7 +791,7 @@ static enum sort_type const sort_types[] =
 
 static char const *const time_args[] =
 {
-  "atime", "access", "use", "ctime", "status", 0
+  "atime", "access", "use", "ctime", "status", NULL
 };
 
 static enum time_type const time_types[] =
@@ -804,7 +804,7 @@ static char const *const color_args[] =
   /* force and none are for compatibility with another color-ls version */
   "always", "yes", "force",
   "never", "no", "none",
-  "auto", "tty", "if-tty", 0
+  "auto", "tty", "if-tty", NULL
 };
 
 static enum color_type const color_types[] =
@@ -1339,7 +1339,7 @@ static int
 decode_switches (int argc, char **argv)
 {
   int c;
-  char *time_style_option = 0;
+  char *time_style_option = NULL;
 
   /* Record whether there is an option specifying sort type.  */
   bool sort_type_specified = false;
@@ -2476,7 +2476,7 @@ gobble_file (char const *name, enum filetype type, bool command_line_arg,
     }
 
   f = &files[files_index];
-  f->linkname = 0;
+  f->linkname = NULL;
   f->linkmode = 0;
   f->linkok = false;
 
