@@ -1,4 +1,8 @@
-	(LIBOBJS): Split assignment into two statements to accomodate automake-0.29.
+Mon Feb 12 23:23:25 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* configure.in (LIBOBJS): Split assignment into two statements to
+	accomodate automake-0.29 buglet.
+
 	Adapt for automake-0.29.
 	* Makefile.in (CONFIG_HEADER): Don't define.  Automake now does it.
 	* src/Makefile.in: Likewise.
