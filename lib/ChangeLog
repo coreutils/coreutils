@@ -1,3 +1,12 @@
+2004-04-18  Paul Eggert  <eggert@twinsun.com>
+
+	* nanosleep.c (suspended): Change its type from int to
+	sig_atomic_t volatile.
+	(first_call): Make it private to rpl_nanosleep, and have it
+	be zero initially as that's a bit faster.
+	(my_usleep): Round up fractional times instead of truncating them,
+	as this is the usual meaning for 'sleep'.
+
 2004-04-20  Jim Meyering  <jim@meyering.net>
 
 	* getndelim2.c (getndelim2): Upon realloc failure, don't leak memory.
