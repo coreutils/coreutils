@@ -953,8 +953,25 @@ else
   esac
 fi
 test -s risks-1.E || rm -f risks-1.E
+LANG=C $xx -u -d '1996-11-10 0:00:00 +0' '+%Y-%m-%d %T'  > regress-1.O 2> regress-1.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test regress-1(LANG=C) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp regress-1.O $srcdir/regress-1.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed regress-1(LANG=C)"; fi ;;
+    1) $echo "Test regress-1(LANG=C) failed: files regress-1.O and $srcdir/regress-1.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test regress-1(LANG=C) may have failed." 1>&2;
+       $echo The command "cmp regress-1.O $srcdir/regress-1.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s regress-1.E || rm -f regress-1.E
 if test $errors = 0 ; then
-  $echo Passed all 55 tests. 1>&2
+  $echo Passed all 56 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi
