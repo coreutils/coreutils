@@ -101,7 +101,8 @@ usage (int status)
 Remove (unlink) the FILE(s).\n\
 \n\
   -d, --directory       unlink FILE, even if it is a non-empty directory\n\
-                          (super-user only)\n\
+                          (super-user only; this works only if your system\n\
+                           supports `unlink' for nonempty directories)\n\
   -f, --force           ignore nonexistent files, never prompt\n\
   -i, --interactive     prompt before any removal\n\
   -r, -R, --recursive   remove the contents of directories recursively\n\
