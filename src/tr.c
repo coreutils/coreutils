@@ -871,11 +871,16 @@ non_neg_strtol (s, len, val)
 
   for (i = 0; i < len; i++)
     {
-      int c = s[i] - '0';
+      unsigned int c;
 
-      if (c >= base || c < 0)
+      if (s[i] < '0')
 	return 1;
-      if (i > 8 && sum > (LONG_MAX - c) / base)
+
+      c = s[i] - '0';
+      if (c >= base)
+	return 1;
+
+      if (sum > (LONG_MAX - c) / base)
 	return 1;
       sum = sum * base + c;
     }
