@@ -1,5 +1,7 @@
 2003-05-14  Jim Meyering  <jim@meyering.net>
 
+	* Version 5.0.1.
+
 	* Makefile.maint (syntax-check): Add another check.
 
 2003-05-13  Paul Eggert  <eggert@twinsun.com>
@@ -19,8 +21,6 @@
 	* tests/uniq/Test.pm: Test that 'uniq -d -u' outputs nothing.
 
 2003-05-14  Jim Meyering  <jim@meyering.net>
-
-	* Version 5.0.1.
 
 	* tests/rm/rm3: Use tr's \n notation rather than \012.
 	This package can afford to do that, since its tests are guaranteed use
