@@ -73,6 +73,10 @@ syntax-check:
 	    '\*\) *x(m|c|re)alloc\>' $(srcdir)/{lib,src}/*.[chy] &&	\
 	  { echo 'Makefile.maint: don'\''t cast x*alloc return value' 1>&2; \
 	    exit 1; } || :
+	@grep -F 'error (EXIT_SUCCESS,'					\
+		$(find -name '*.[chly]') &&				\
+	  { echo 'Makefile.maint: found error (EXIT_SUCCESS' 1>&2;	\
+	    exit 1; } || :
 
 #	grep -E '^#  *include <(string|stdlib)\.h>'			\
 #	    $(srcdir)/{lib,src}/*.[chy] &&				\
