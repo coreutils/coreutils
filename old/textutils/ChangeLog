@@ -1,3 +1,22 @@
+1996-12-12  Paul Eggert  <eggert@twinsun.com>
+
+	* system.h (ISDIGIT): Replace with smaller, faster edition
+	that yields nonzero only on ASCII digits.
+	(ISDIGIT_LOCALE): New macro, with same meaning that ISDIGIT
+	used to have.
+
+	* tr.c (is_char_class_member): Use ISDIGIT_LOCALE instead of
+	ISDIGIT to test for characters in CC_DIGIT class.
+
+	* sort.c (digits): Remove; subsumed by new ISDIGIT.
+	(inittables): Remove initialization of `digits'.
+	(fraccompare, numcompare, main): Use ISDIGIT (x) instead of digits[x].
+	(fraccompare, numcompare): Avoid casts to unsigned char that are no
+	longer needed.
+
+	* csplit.c (get_format_width, get_format_prec): Avoid
+	unnecessary comparison of digit to '\0'.
+
 Thu Dec 12 23:42:51 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/sort.c (usage): Clarify description of -u option.
