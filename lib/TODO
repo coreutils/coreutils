@@ -1,0 +1,15 @@
+
+Always use curly braces around statements in if/else/while/do/etc.
+that span more than a line -- even around multiline simple statements
+or single-line simple statements preceded by a comment line.
+
+Never have lines longer than 80 chars.
+
+Remove ^L characters.  We don't want/need such crutches.
+Get a good (smart) pagination filter.  I have one (a perl script)
+that usually does a decent job for me -- I called it something
+like stdc-print and think I sent you an early verison.
+
+I don't like the name `cursor'.  I much prefer short names
+like `p' for index variables.  I doubt I'll change all of them,
+but thought you should know why some will probably end up changing.
