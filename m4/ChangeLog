@@ -1,3 +1,7 @@
+2000-11-30  Jim Meyering  <meyering@lucent.com>
+
+	* getloadavg.m4: s/ifval/m4_ifval/ to accommodate new autoconf.
+
 2000-11-03  Bruno Haible  <haible@clisp.cons.org>
 
 	* jm-macros.m4 (jm_MACROS): Add test for wcrtomb.
