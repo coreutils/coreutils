@@ -5,8 +5,8 @@ dnl Using code from emacs, based on suggestions from Paul Eggert
 dnl and Ulrich Drepper.
 
 dnl Find out how to determine the number of pending output bytes on a stream.
-dnl Solaris provides __fpending.  On other systems, we have to grub around
-dnl in the FILE struct.
+dnl glibc (2.1.93 and newer) and Solaris provide __fpending.  On other systems,
+dnl we have to grub around in the FILE struct.
 
 AC_DEFUN(jm_FUNC_FPENDING,
 [
