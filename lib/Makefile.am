@@ -4,7 +4,7 @@ AUTOMAKE_OPTIONS = ../src/ansi2knr
 
 noinst_LIBRARIES = libfetish.a
 
-INCLUDES = -I.. -I$(srcdir) -I../intl
+INCLUDES = -I.. -I$(srcdir)
 DEFS = -DLIBDIR=\"$(libdir)\" @DEFS@
 
 ## Put relatively complex files at the beginning of the list so
@@ -43,6 +43,7 @@ libfetish_a_SOURCES = \
   getpagesize.h \
   getstr.c getstr.h \
   gettime.c \
+  gettext.h \
   getugroups.c \
   group-member.h \
   hard-locale.c hard-locale.h \
