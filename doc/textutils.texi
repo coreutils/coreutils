@@ -41,6 +41,7 @@ START-INFO-DIR-ENTRY
 * wc: (textutils)wc invocation.			Byte, word, and line counts.
 * sum: (textutils)sum invocation.		Print traditional checksum.
 * cksum: (textutils)cksum invocation.		Print POSIX CRC checksum.
+* md5sum: (textutils)md5sum invocation.         Print RFC1321 MD5 digest.
 * sort: (textutils)sort invocation.		Sort text files.
 * uniq: (textutils)uniq invocation.		Uniqify files.
 * comm: (textutils)comm invocation.		Compare sorted files by line.
@@ -123,7 +124,7 @@ utilities.
 * Output of entire files::      cat tac nl od
 * Formatting file contents::    fmt pr fold
 * Output of parts of files::    head tail split csplit
-* Summarizing files::           wc sum cksum
+* Summarizing files::           wc sum cksum md5sum
 * Operating on sorted files::   sort uniq comm
 * Operating on fields within a line::  cut paste join
 * Operating on characters::     tr expand unexpand
@@ -1402,6 +1403,7 @@ contents of files.
 * wc invocation::               Print byte, word, and line counts.
 * sum invocation::              Print checksum and block counts.
 * cksum invocation::            Print CRC checksum and byte counts.
+* md5sum invocation::           Print RFC1321 MD5 message digest.
 @end menu
 
 
@@ -1543,6 +1545,101 @@ distribution).
 The CRC algorithm is specified by the POSIX.2 standard.  It is not
 compatible with the BSD or System V @code{sum} programs; it is more
 robust.
+
+
+@node md5sum invocation
+@section @code{md5sum}: Print RFC1321 MD5 message digest.
+
+@pindex md5sum
+@cindex MD5
+@cindex message digest
+@cindex fingerprint
+@cindex RFC1321
+
+@noindent
+RFC1321 says about the message digest produced by @code{md5sum}
+
+@quotation
+it is conjectured that it is computationally infeasible to produce two
+messages having the same message digest, or to produce any message
+having a given prespecified target message digest.
+@end quotation
+
+Therefor the message digest produced by @code{md5sum} is a much more
+reliable test for a change in a file.
+
+By default @code{md5sum} computes for each @var{file} the message digest
+and prints it.  If the file name is @samp{-} standard input is read.
+When signaled @code{md5sum} also can compare the values in an exiting
+message digest catalog with newly computed values, telling about
+differences.
+
+Synopsis:
+
+@example
+md5sum [@var{option}]@dots{} [@var{file}]@dots{}
+@end example
+
+When computing message digests @code{md5sum} writes for each input file in
+line with the message digest, a binary/text flag, and the file name.  The
+binary/text flag is nt important on UN*X systems.  But ``strange''
+systems (as MSDOG) have different representations for text files in
+memory and on the disk.  To get the same results for these files on an
+UN*X machine the text is converted on the fly while reading.
+
+If checking against an existing message digest catalog is requested
+the catalog file should be the output of a former run of @code{md5sum}.
+Any lines not in the correct format will be ignored.  If all three
+fields are correctly read the message digest for the specified file will
+be computed in compared with the digest given in the catalog file.  Any
+differences will be signaled.
+
+
+@table @samp
+
+@item -b
+@itemx --binary
+@opindex -b
+@opindex --binary
+Treat all files as binary files.  I.e. even on systems which make
+differences between the text and binary file representation the files
+are read just as they are store on the disk.  The is the default value.
+To toggle the behaviour use the @samp{--text} option.
+
+@item -c @var{file}
+@itemx --check=@var{file}
+@opindex -c
+@opindex --check
+Check for the files given in @var{file} whether the message digest is
+different to the one given in @var{file}.  The format of file is
+
+@example
+<32 character hexadecimal message digest> <binary flag> <filename>
+@end example
+
+
+@item -s[@var{string}]
+@itemx --string=[@var{string}]
+@opindex -s
+@opindex --string
+Instead of computing the messages digest for a file do it for the given
+@var{string}.  Note that the string is an @emph{optional} argument.
+
+@item -t
+@itemx --text
+@opindex -t
+@opindex --test
+Treat all input files as text files.  As explained above this makes it
+possible to get the same message digest for a text file on all systems.
+
+@item -v
+@itemx --verbose
+@opindex -v
+@opindex --verbose
+Print more information while processing.
+
+
+@end table
 
 
 @node Operating on sorted files
