@@ -1,3 +1,10 @@
+Thu Aug  1 22:12:15 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/system.h (ST_NBLOCKS) [_CRAY]: Special case for Cray.
+	* lib/fsusage.c (get_fs_usage) [STAT_STATFS4] [_CRAY]: Define
+	f_bavail to f_bfree.
+	From by Johan Danielsson.
+
 Wed Jul 31 23:39:23 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/ln.c [LINK_TYPE]: Remove macro.  NLS messages aren't
