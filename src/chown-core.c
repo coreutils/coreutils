@@ -28,6 +28,7 @@
 #include "xfts.h"
 #include "lchown.h"
 #include "quote.h"
+#include "root-dev-ino.h"
 #include "savedir.h"
 #include "chown-core.h"
 
@@ -44,6 +45,7 @@ void
 chopt_init (struct Chown_option *chopt)
 {
   chopt->verbosity = V_off;
+  chopt->root_dev_ino = NULL;
   chopt->affect_symlink_referent = false;
   chopt->recurse = false;
   chopt->force_silent = false;
@@ -188,7 +190,6 @@ change_file_owner (FTS *fts, FTSENT *ent,
       return 1;
 
     case FTS_ERR:
-      /* if (S_ISDIR (ent->fts_statp->st_mode) && FIXME */
       error (0, ent->fts_errno, _("%s"), quote (file_full_name));
       return 1;
 
@@ -199,6 +200,12 @@ change_file_owner (FTS *fts, FTSENT *ent,
 
     default:
       break;
+    }
+
+  if (ROOT_DEV_INO_CHECK (chopt->root_dev_ino, file_stats))
+    {
+      ROOT_DEV_INO_WARN (file_full_name);
+      return 1;
     }
 
   if ((old_uid == (uid_t) -1 || file_stats->st_uid == old_uid)
