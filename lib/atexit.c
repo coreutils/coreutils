@@ -3,8 +3,6 @@
 
 #include "config.h"
 
-#ifdef HAVE_ON_EXIT
-
 int
 atexit(f)
      void (*f)();
@@ -14,5 +12,3 @@ atexit(f)
   on_exit (f, 0);
   return 0;
 }
-
-#endif
