@@ -1,5 +1,5 @@
 /* yesno.c -- read a yes/no response from stdin
-   Copyright (C) 1990, 1998, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1990, 1998, 2001, 2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -20,9 +20,7 @@
 #endif
 
 #include <ctype.h>
-#if HAVE_STDLIB_H
-# include <stdlib.h>
-#endif
+#include <stdlib.h>
 #include <stdio.h>
 #include "unlocked-io.h"
 
@@ -30,10 +28,10 @@
    and return nonzero if that line begins with y or Y,
    otherwise return 0. */
 
-int rpmatch ();
+extern int rpmatch (char const *response);
 
 int
-yesno ()
+yesno (void)
 {
   /* We make some assumptions here:
      a) leading white space in the response are not vital
