@@ -1,4 +1,4 @@
-#serial 12
+#serial 13
 
 dnl This macro is intended to be used solely in this file.
 dnl These are the prerequisite macros for GNU's strftime.c replacement.
@@ -76,6 +76,11 @@ main ()
   struct tm *tm;
   time_t t = 738367; /* Fri Jan  9 13:06:07 1970 */
   tm = gmtime (&t);
+
+  /* Undefine this in case the configure-time putenv test has defined it
+     to something else.  The use we make of this function here doesn't
+     require the added functionality of the replacement one.  */
+#undef putenv
 
   /* This is necessary to make strftime give consistent zone strings and
      e.g., seconds since the epoch (%s).  */
