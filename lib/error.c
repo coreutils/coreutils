@@ -152,7 +152,10 @@ error (status, errnum, message, va_alist)
     {
 #if defined HAVE_STRERROR_R || defined _LIBC
       char errbuf[1024];
-      fprintf (stderr, ": %s", __strerror_r (errnum, errbuf, sizeof errbuf));
+      /* Don't use __strerror_r's return value because on some systems
+	 (at least DEC UNIX 4.0[A-D]) strerror_r returns `int'.  */
+      __strerror_r (errnum, errbuf, sizeof errbuf);
+      fprintf (stderr, ": %s", errbuf);
 #else
       fprintf (stderr, ": %s", strerror (errnum));
 #endif
