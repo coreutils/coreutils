@@ -65,7 +65,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "nice", PACKAGE_VERSION, usage);
+  parse_long_options (argc, argv, "nice", GNU_PACKAGE, VERSION, usage);
 
   for (optind = 1; optind < argc; /* empty */)
     {

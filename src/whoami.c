@@ -88,7 +88,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("whoami - %s\n", PACKAGE_VERSION);
+      printf ("whoami (%s) %s\n", GNU_PACKAGE, VERSION);
       exit (0);
     }
 

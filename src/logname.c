@@ -83,7 +83,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("logname - %s\n", PACKAGE_VERSION);
+      printf ("logname (%s) %s\n", GNU_PACKAGE, VERSION);
       exit (0);
     }
 

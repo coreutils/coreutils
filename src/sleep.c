@@ -87,7 +87,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("sleep - %s\n", PACKAGE_VERSION);
+      printf ("sleep (%s) %s\n", GNU_PACKAGE, VERSION);
       exit (0);
     }
 

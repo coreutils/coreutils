@@ -83,7 +83,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "hostname", PACKAGE_VERSION, usage);
+  parse_long_options (argc, argv, "hostname", GNU_PACKAGE, VERSION, usage);
 
 #ifdef HAVE_SETHOSTNAME
   if (argc == 2)

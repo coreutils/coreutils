@@ -101,7 +101,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("printenv - %s\n", PACKAGE_VERSION);
+      printf ("printenv (%s) %s\n", GNU_PACKAGE, VERSION);
       exit (0);
     }
 

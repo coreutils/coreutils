@@ -161,7 +161,7 @@ main (int argc, char **argv)
 
   /* Don't recognize --help or --version if POSIXLY_CORRECT is set.  */
   if (getenv ("POSIXLY_CORRECT") == NULL)
-    parse_long_options (argc, argv, "expr", PACKAGE_VERSION, usage);
+    parse_long_options (argc, argv, "expr", GNU_PACKAGE, VERSION, usage);
 
   if (argc == 1)
     {

@@ -162,7 +162,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("seq - %s\n", PACKAGE_VERSION);
+      printf ("seq (%s) %s\n", GNU_PACKAGE, VERSION);
       exit (0);
     }
 

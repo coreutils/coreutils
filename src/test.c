@@ -1076,7 +1076,7 @@ main (int margc, char **margv)
     {
       /* Don't recognize --help or --version if POSIXLY_CORRECT is set.  */
       if (getenv ("POSIXLY_CORRECT") == NULL)
-	parse_long_options (argc, argv, COMMAND_NAME, PACKAGE_VERSION, usage);
+	parse_long_options (argc, argv, COMMAND_NAME, GNU_PACKAGE, VERSION, usage);
 
       --margc;
 
@@ -1093,7 +1093,7 @@ main (int margc, char **margv)
   if (pos >= argc)
     test_exit (SHELL_BOOLEAN (FALSE));
 
-  parse_long_options (argc, argv, COMMAND_NAME, PACKAGE_VERSION, usage);
+  parse_long_options (argc, argv, COMMAND_NAME, GNU_PACKAGE, VERSION, usage);
   value = posixtest ();
 
   if (pos != argc)

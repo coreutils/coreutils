@@ -198,7 +198,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("date - %s\n", PACKAGE_VERSION);
+      printf ("date (%s) %s\n", GNU_PACKAGE, VERSION);
       exit (0);
     }
 

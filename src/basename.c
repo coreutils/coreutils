@@ -93,7 +93,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "basename", PACKAGE_VERSION, usage);
+  parse_long_options (argc, argv, "basename", GNU_PACKAGE, VERSION, usage);
 
   if (argc == 1 || argc > 3)
     {

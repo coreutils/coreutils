@@ -55,7 +55,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "yes", PACKAGE_VERSION, usage);
+  parse_long_options (argc, argv, "yes", GNU_PACKAGE, VERSION, usage);
 
   if (argc == 1)
     while (1)

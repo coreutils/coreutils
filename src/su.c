@@ -491,7 +491,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("su - %s\n", PACKAGE_VERSION);
+      printf ("su (%s) %s\n", GNU_PACKAGE, VERSION);
       exit (0);
     }
 

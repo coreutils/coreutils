@@ -182,7 +182,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "factor", PACKAGE_VERSION, usage);
+  parse_long_options (argc, argv, "factor", GNU_PACKAGE, VERSION, usage);
 
   fail = 0;
   if (argc == 1)

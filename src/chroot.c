@@ -58,7 +58,7 @@ main (int argc, char **argv)
 {
   program_name = argv[0];
 
-  parse_long_options (argc, argv, "chroot", PACKAGE_VERSION, usage);
+  parse_long_options (argc, argv, "chroot", GNU_PACKAGE, VERSION, usage);
 
   if (argc == 1)
     {

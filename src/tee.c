@@ -114,7 +114,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("tee - %s\n", PACKAGE_VERSION);
+      printf ("tee (%s) %s\n", GNU_PACKAGE, VERSION);
       exit (0);
     }
 

@@ -133,7 +133,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("id - %s\n", PACKAGE_VERSION);
+      printf ("id (%s) %s\n", GNU_PACKAGE, VERSION);
       exit (0);
     }
 

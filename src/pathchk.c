@@ -142,7 +142,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("pathchk - %s\n", PACKAGE_VERSION);
+      printf ("pathchk (%s) %s\n", GNU_PACKAGE, VERSION);
       exit (0);
     }
 

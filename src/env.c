@@ -140,7 +140,7 @@ main (register int argc, register char **argv, char **envp)
 
   if (show_version)
     {
-      printf ("env - %s\n", PACKAGE_VERSION);
+      printf ("env (%s) %s\n", GNU_PACKAGE, VERSION);
       exit (0);
     }
 

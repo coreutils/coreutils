@@ -66,7 +66,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "dirname", PACKAGE_VERSION, usage);
+  parse_long_options (argc, argv, "dirname", GNU_PACKAGE, VERSION, usage);
 
   if (argc != 2)
     {
