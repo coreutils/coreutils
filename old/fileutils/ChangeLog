@@ -1,6 +1,32 @@
-2002-07-06  Jim Meyering  <meyering@lucent.com>
+2002-07-08  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.10.
+
+2002-07-07  Paul Eggert  <eggert@twinsun.com>
+
+	NEWS, doc/coreutils.texi:
+	New ls time style: long-iso, which generates YYYY-MM-DD HH:MM.
+	Any time style can be preceded by "posix-".
+	The default time style is now posix-long-iso instead of posix-iso.
+
+	* src/ls.c (enum time_style): Remove posix_iso_time_style.
+	Add long_iso_time_style.
+	(time_style_args, time_style_types, decode_switches): Likewise.
+	(decode_switches): If a time style is prefixed by "posix-", ignore
+	it if in the POSIX locale.  Default style is now posix-long-iso.
+	(usage): Explain the above.
+
+2002-07-07  Jim Meyering  <meyering@lucent.com>
+
+	* src/stat.c (print_it): Use xstrdup, not strdup.
+	Use fputc rather than printf "\n".
+
+	* src/stat.c: Include quote.h.
+	(print_stat): Use xreadlink, rather than using readlink directly.
+	Use the quote function rather than hard-coded double quotes.
+	Use error, not perror.
+
+2002-07-06  Jim Meyering  <meyering@lucent.com>
 
 	* tests/Makefile.am (envvar-check): Mark as `.PHONY'.
 
