@@ -1,3 +1,13 @@
+2000-06-10  Jim Meyering  <meyering@lucent.com>
+
+	* Version 4.0u.
+
+2000-06-08  Brian Youmans  <3diff@gnu.org>
+
+	* doc/perm.texi (Multiple Changes): Fix typo.
+	* doc/fileutils.texi: A few typos and minor formatting fixes.
+	* doc/getdate.texi: Likewise.
+
 2000-06-06  Jim Meyering  <meyering@lucent.com>
 
 	* Makefile.maint (alpha_subdir): Factor out `gnu/fetish'.
