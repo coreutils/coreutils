@@ -29,8 +29,12 @@ my @tv = (
 ['obs-4', '-2b', [\'in'], [\'in-1024'], 0], #'
 ['obs-5', '-1k', [\'in'], [\'in-1024'], 0], #'
 
-# This test fails for textutils-1.22, because head didn't fail.
-['fail-0', '-n 4096m', 'a\n', '', 1], #'
+# This test fails for textutils-1.22, because head let 4096m overflow to 0.
+# Now it gets a diagnostic.
+['fail-0', '-n 4096m', "a\n", "", 1],
+
+# In spite of its name, this test passes -- just to contrast with the above.
+['fail-1', '-n 2048m', "a\n", "a\n", 0],
 
 );
 
