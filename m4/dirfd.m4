@@ -58,11 +58,11 @@ AC_DEFUN([UTILS_FUNC_DIRFD],
     fi
     AH_VERBATIM(DIR_TO_FD,
 		[#ifdef DIR_FD_MEMBER_NAME
-		 # define DIR_TO_FD(Dir_p) ((Dir_p)->DIR_FD_MEMBER_NAME)
-		 #else
-		 # define DIR_TO_FD(Dir_p) -1
-		 #endif
-		 ]
-		)
+# define DIR_TO_FD(Dir_p) ((Dir_p)->DIR_FD_MEMBER_NAME)
+#else
+# define DIR_TO_FD(Dir_p) -1
+#endif
+]
+    )
   fi
 ])
