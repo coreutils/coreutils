@@ -1,3 +1,9 @@
+2000-08-03  Greg McGary  <greg@mcgary.org>
+
+	* regex.c (SET_HIGH_BOUND, MOVE_BUFFER_POINTER,
+	ELSE_EXTEND_BUFFER_HIGH_BOUND): New macros.
+	(EXTEND_BUFFER): Use them.
+
 2000-08-01  Jim Meyering  <meyering@lucent.com>
 
 	* dirname.c (ISSLASH): Define.
