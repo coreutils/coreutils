@@ -39,7 +39,7 @@ INSTALL_SCRIPT = @INSTALL_SCRIPT@
 transform = @program_transform_name@
 
 info_TEXINFOS = fileutils.texi
-DIST_OTHER = perm.texi getdate.texi
+EXTRA_DIST = perm.texi getdate.texi
 CONFIG_HEADER = ../config.h
 
 MAKEINFO = makeinfo

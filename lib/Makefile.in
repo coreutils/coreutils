@@ -40,7 +40,7 @@ transform = @program_transform_name@
 
 noinst_LIBRARIES = fu
 
-DIST_OTHER = alloca.c euidaccess.c fnmatch.c fsusage.c ftruncate.c \
+EXTRA_DIST = alloca.c euidaccess.c fnmatch.c fsusage.c ftruncate.c \
 getdate.y memcmp.c memcpy.c memset.c mkdir.c mktime.c mountlist.c \
 posixtm.y rename.c rmdir.c stpcpy.c strdup.c strstr.c strtol.c strtoul.c
 
