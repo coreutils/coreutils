@@ -28,6 +28,8 @@
 #include <stdio.h>
 #include <sys/types.h>
 
+#define TEST_STANDALONE 1
+
 #if !defined (TEST_STANDALONE)
 #  include "shell.h"
 #  include "posixstat.h"
