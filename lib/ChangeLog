@@ -1,3 +1,9 @@
+2003-01-30  Richard Dawe  <rich@phekda.freeserve.co.uk>
+
+	* fchown-stub.c: New file: trivial stub for fchown.
+	* lstat-stub.c: New file: trivial stub for lstat.
+	* readlink-stub.c: New file: trivial stub for readlink.
+
 2003-03-09  Paul Eggert  <eggert@twinsun.com>
 
 	* argmatch.c (EXIT_FAILURE): Define if the system doesn't.
