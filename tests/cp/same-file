@@ -2,7 +2,8 @@
 # Test some of cp's options and how cp handles situations in
 # which a naive implementation might overwrite the source file.
 
-: ${CP=cp}
+# FIXME: punt for now
+CP=cp
 
 if test "$VERBOSE" = yes; then
   set -x
@@ -23,7 +24,9 @@ trap "cd $pwd; rm -rf $actual $expected dir" 0 1 2 3 15
 
 exec 1> $actual
 
+# FIXME: This should be bigger: like more than 8k
 contents=XYZ
+
 for args in 'foo symlink' 'symlink foo' 'foo foo' 'sl1 sl2' 'foo hardlink'; do
   for options in '' -d -f -df -b -bd -bf -bdf \
 		 -l -dl -fl -dfl -bl -bdl -bfl -bdfl; do
