@@ -1,3 +1,17 @@
+2001-08-10  Paul Eggert  <eggert@twinsun.com>
+
+	* src/ls.c (print_long_format): Simplify previous patch for
+	listing negative sizes, by adding OFF_T_MAX - OFF_T_MIN + 1
+	instead of doing a fancy conditional shift.  This is simpler
+	and it avoids GCC's bogus compile-time warning about shift
+	counts.  (As a bonus, it is portable to hosts that do not use
+	twos-complement arithmetic.  :-)
+
+2001-08-10  Jim Meyering  <meyering@lucent.com>
+	* ls.c (print_long_format): Multiply the shift width by zero
+	to avoid a warning from gcc on hosts with an unsigned type for the
+	st_size member.
+
 2001-08-06  Paul Eggert  <eggert@twinsun.com>
 
 	* src/ls.c (print_long_format): If a file size is negative, assume
