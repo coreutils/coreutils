@@ -1,5 +1,5 @@
 /* dd -- convert a file while copying it.
-   Copyright (C) 85, 90, 91, 1995-2000 Free Software Foundation, Inc.
+   Copyright (C) 85, 90, 91, 1995-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -1111,7 +1111,7 @@ main (int argc, char **argv)
   /* Arrange to close stdout if parse_long_options exits.  */
   atexit (close_stdout_wrapper);
 
-  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
+  parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE, VERSION,
 		      AUTHORS, usage);
 
   /* Don't close stdout on exit from here on.  */
