@@ -698,7 +698,10 @@ main (int argc, char **argv)
   if (i < argc)
     dir_defaulted = 0;
   for (; i < argc; i++)
-    gobble_file (argv[i], 1, "");
+    {
+      strip_trailing_slashes (argv[i]);
+      gobble_file (argv[i], 1, "");
+    }
 
   if (dir_defaulted)
     {
