@@ -51,11 +51,14 @@ STRXCASECMP_FUNCTION (const char *s1, const char *s2 STRXCASECMP_DECLARE_N)
 
   do
     {
-      c1 = TOLOWER (*p1++);
-      c2 = TOLOWER (*p2++);
+      c1 = TOLOWER (*p1);
+      c2 = TOLOWER (*p2);
 
       if (LENGTH_LIMIT_EXPR (--n == 0) || c1 == '\0')
 	break;
+
+      ++p1;
+      ++p2;
     }
   while (c1 == c2);
 
