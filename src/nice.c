@@ -25,6 +25,7 @@
 #include <getopt.h>
 #include <sys/types.h>
 #ifndef NICE_PRIORITY
+# include <time.h>
 # include <sys/resource.h>
 #endif
 
