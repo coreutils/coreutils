@@ -1,4 +1,13 @@
+2001-08-18  Jim Meyering  <meyering@lucent.com>
+
 	* Version 2.0.12.
+
+2001-06-21  Paul Eggert  <eggert@twinsun.com>
+
+	* src/expr.c (isstring): Remove.
+	(eval2): Do comparisons as strings first, before trying to convert to
+	integer.  This avoids loss of information and wrong result, e.g. for
+	"expr '00' '<' '0!'", where you don't want to convert '00' to '0'.
 
 2001-06-21  Paul Eggert  <eggert@twinsun.com>
 
