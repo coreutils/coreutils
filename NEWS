@@ -6,7 +6,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   du can now process hierarchies of virtually unlimited depth.
   Before, du was limited by the user's stack size and it would get a
   stack overflow error (often a segmentation fault) when applied to
-  a hierarchy of depth around 30,000.
+  a hierarchy of depth around 30,000 or larger.
 
   du works even when run from an inaccessible directory
 
