@@ -10,12 +10,15 @@ tmp=mkdir-sp-$$
 trap 'status=$?; rm -rf $tmp && exit $status' 0
 trap 'exit $?' 1 2 13 15
 
-mkdir -m2755 $tmp || fail=1
+numeric_mode=2755
+mode_string=drwxr-sr-x
+
+mkdir -m$numeric_mode $tmp || fail=1
 
 test -d $tmp || fail=1
 set -- `ls -ld $tmp`
 case "$1" in
-  drwxr-sr-x) ;;
+  $mode_string) ;;
   *) fail=1 ;;
 esac
 
@@ -23,15 +26,15 @@ rmdir $tmp || fail=1
 tmp2=$tmp/sub
 
 # This should fail.
-mkdir -m2755 $tmp2 2> /dev/null && fail=1
+mkdir -m$numeric_mode $tmp2 2> /dev/null && fail=1
 
 # Now test the --parents option.
-mkdir --parents -m2755 $tmp2 || fail=1
+mkdir --parents -m$numeric_mode $tmp2 || fail=1
 
 test -d $tmp2 || fail=1
 set -- `ls -ld $tmp2`
 case "$1" in
-  drwxr-sr-x) ;;
+  $mode_string) ;;
   *) fail=1 ;;
 esac
 
