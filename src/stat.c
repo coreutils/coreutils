@@ -25,10 +25,10 @@
 #include <grp.h>
 #include <unistd.h>
 #include <time.h>
-#if HAVE_SYS_VFS_H
-# include <sys/vfs.h>
-#elif HAVE_SYS_STATVFS_H && HAVE_STRUCT_STATVFS_F_BASETYPE
+#if HAVE_SYS_STATVFS_H && HAVE_STRUCT_STATVFS_F_BASETYPE
 # include <sys/statvfs.h>
+#elif HAVE_SYS_VFS_H
+# include <sys/vfs.h>
 #elif HAVE_SYS_MOUNT_H && HAVE_SYS_PARAM_H
 /* NOTE: freebsd5.0 needs sys/param.h and sys/mount.h for statfs.
    It does have statvfs.h, but shouldn't use it, since it doesn't
@@ -36,11 +36,12 @@
 /* NetBSD 1.5.2 needs these, for the declaration of struct statfs. */
 # include <sys/param.h>
 # include <sys/mount.h>
-#elif HAVE_NETINET_IN_H && HAVE_NFS_NFS_CLNT_H && HAVE_NFS_VFS_H
+# if HAVE_NETINET_IN_H && HAVE_NFS_NFS_CLNT_H && HAVE_NFS_VFS_H
 /* Ultrix 4.4 needs these for the declaration of struct statfs.  */
-# include <netinet/in.h>
-# include <nfs/nfs_clnt.h>
-# include <nfs/vfs.h>
+#  include <netinet/in.h>
+#  include <nfs/nfs_clnt.h>
+#  include <nfs/vfs.h>
+# endif
 #endif
 
 #include "system.h"
