@@ -2,6 +2,9 @@ Tue May  7 22:10:20 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* configure.in: Require autoconf-2.10.
 
+	* aclocal.m4 (jm_MAINTAINER_MODE): New macro.
+	* configure.in (jm_MAINTAINER_MODE): Use it.
+
 Sun May  5 20:27:47 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* src/Makefile.am (bin_PROGRAMS): Add dircolors.
