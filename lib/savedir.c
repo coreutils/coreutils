@@ -1,5 +1,5 @@
 /* savedir.c -- save the list of files in a directory in a string
-   Copyright (C) 1990, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1990, 1997, 1998, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -76,7 +76,7 @@ char *stpcpy ();
    Return NULL if DIR cannot be opened or if out of memory. */
 
 char *
-savedir (const char *dir, unsigned int name_size)
+savedir (const char *dir, off_t name_size)
 {
   DIR *dirp;
   struct dirent *dp;
@@ -102,7 +102,7 @@ savedir (const char *dir, unsigned int name_size)
 	  || (dp->d_name[1] != '\0'
 	      && (dp->d_name[1] != '.' || dp->d_name[2] != '\0')))
 	{
-	  unsigned size_needed = (namep - name_space) + NAMLEN (dp) + 2;
+	  size_t off_t = (namep - name_space) + NAMLEN (dp) + 2;
 
 	  if (size_needed > name_size)
 	    {
