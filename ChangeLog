@@ -1,3 +1,8 @@
+2004-09-22  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/ls.c (decode_switches): Don't compare a short value
+	to SIZE_MAX: GCC sometimes complains.
+
 2004-09-21  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: The following commands now reject unknown options:
