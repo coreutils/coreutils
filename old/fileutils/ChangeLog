@@ -2,6 +2,11 @@
 
 	* Version 4.0p.
 
+	* src/system.h (ST_NBLOCKS): Use st_size only for regular files and
+	for directories.  From H. J. Lu.
+
+	* src/dd.c (main): Exit with nonzero status if ftruncate fails.
+
 2000-01-24  Jim Meyering  <meyering@lucent.com>
 
 	* src/ln.c (usage): Describe behavior when LINK_NAME is omitted.
