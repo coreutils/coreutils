@@ -8,6 +8,10 @@
 	* src/chown.c (usage): Update to reflect this.
 	* src/chgrp.c (usage): Likewise.
 	* NEWS: Describe the change.
+	Adapt tests accordingly.
+	* tests/chgrp/basic: Use -h where necessary to retain semantics.
+	* tests/chgrp/deref: Likewise.
+	* tests/chgrp/posix-H: Likewise.
 
 2004-05-15  Paul Eggert  <eggert@cs.ucla.edu>
 
