@@ -1,5 +1,8 @@
 1998-10-25  Jim Meyering  <meyering@ascend.com>
 
+	* README: Man pages will now be supported to the extent that
+	people send patches.
+
 	* Version 4.0-b6.
 
 	* tests/rm/unreadable: Two new tests.
