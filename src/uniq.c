@@ -387,12 +387,15 @@ check_file (const char *infile, const char *outfile)
   if (ferror (istream) || fclose (istream) == EOF)
     error (EXIT_FAILURE, errno, _("error reading %s"), infile);
 
-  if (ferror (ostream))
-    error (EXIT_FAILURE, 0, _("error writing %s"), outfile);
-  /* Close ostream only if it's not stdout -- the latter is closed
-     via the atexit-invoked close_stdout.  */
-  if (ostream != stdout && fclose (ostream) != 0)
-    error (EXIT_FAILURE, errno, _("error writing %s"), outfile);
+  /* Check for errors and close ostream only if it's not stdout --
+     stdout is handled via the atexit-invoked close_stdout function.  */
+  if (ostream != stdout)
+    {
+      if (ferror (ostream))
+	error (EXIT_FAILURE, 0, _("error writing %s"), outfile);
+      if (ostream != stdout && fclose (ostream) != 0)
+	error (EXIT_FAILURE, errno, _("error writing %s"), outfile);
+    }
 
   free (lb1.buffer);
   free (lb2.buffer);
