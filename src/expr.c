@@ -178,7 +178,7 @@ main (argc, argv)
 
   program_name = argv[0];
 
-  parse_long_options (argc, argv, usage);
+  parse_long_options (argc, argv, "expr", usage);
 
   if (argc == 1)
     usage (1);

@@ -1122,7 +1122,7 @@ test_command (margc, margv)
 
   if (margv[0] && strcmp (margv[0], "[") == 0)
     {
-      parse_long_options (margc, margv, usage);
+      parse_long_options (argc, argv, "test", usage);
 
       --margc;
 

@@ -72,7 +72,7 @@ main (argc, argv)
 
   program_name = argv[0];
 
-  parse_long_options (argc, argv, usage);
+  parse_long_options (argc, argv, "dirname", usage);
 
   if (argc != 2)
     usage (1);

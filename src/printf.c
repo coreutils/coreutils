@@ -156,7 +156,7 @@ main (argc, argv)
   program_name = argv[0];
   exit_status = 0;
 
-  parse_long_options (argc, argv, usage);
+  parse_long_options (argc, argv, "printf", usage);
 
   if (argc == 1)
     {

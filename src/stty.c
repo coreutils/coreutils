@@ -639,7 +639,7 @@ main (argc, argv)
 
   program_name = argv[0];
 
-  parse_long_options (argc, argv, usage);
+  parse_long_options (argc, argv, "stty", usage);
 
   output_type = changed;
   verbose_output = 0;
