@@ -1,4 +1,4 @@
-# serial 4
+# serial 5
 
 # From Paul Eggert.
 
@@ -12,17 +12,21 @@
 
 AC_DEFUN(AC_MBSTATE_T_OBJECT,
   [
-   # Check for the mbstate_t type.
-   ac_mbs_tmp=$ac_includes_default
-   ac_includes_default="
-$ac_includes_default
-#if HAVE_WCHAR_H
-# include <wchar.h>
+   AC_CHECK_HEADERS(stdlib.h)
+
+   AC_CACHE_CHECK([for mbstate_t], ac_cv_type_mbstate_t,
+    [AC_TRY_COMPILE([
+#if HAVE_STDLIB_H
+# include <stdlib.h>
 #endif
-"
-   AC_CHECK_TYPE(mbstate_t, int)
-   # Restore the default value.
-   ac_includes_default=$ac_mbs_tmp
+#include <wchar.h>],
+      [mbstate_t *x; return sizeof x;],
+      ac_cv_type_mbstate_t=yes,
+      ac_cv_type_mbstate_t=no)])
+   if test $ac_cv_type_mbstate_t != yes; then
+     AC_DEFINE(mbstate_t, int,
+	       [Define to int if <wchar.h> does not define.])
+   fi
 
    AC_CACHE_CHECK([for mbstate_t object type], ac_cv_type_mbstate_t_object,
     [AC_TRY_COMPILE([
