@@ -1,6 +1,12 @@
-2005-03-06  Jim Meyering  <jim@meyering.net>
+2005-03-08  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	* src/date.c (usage): Redo to match recent documentation changes.
+	Don't bother documenting which usages are GNU extensions; the list
+	wasn't correct, and is better left to the printed manual anyway.
+
+2005-03-06  Jim Meyering  <jim@meyering.net>
 
 	Factor out column-count processing.
 	* src/pr.c: Include "inttostr.h".
