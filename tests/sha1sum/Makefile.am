@@ -7,6 +7,6 @@ TESTS_ENVIRONMENT = \
   srcdir=$(srcdir) \
   PERL="@PERL@" \
   PATH=`pwd`/../../src:$$PATH \
-  PROG=shasum
+  PROG=sha1sum
 
 TESTS = basic-1
