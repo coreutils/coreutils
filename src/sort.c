@@ -861,6 +861,8 @@ keycompare (a, b)
 		diff = translate[UCHAR (*--texta)] - translate[UCHAR (*--textb)];
 		break;
 	      }
+	    else if (texta == lima && textb < limb) diff = -1;
+	    else if (texta < lima && textb == limb) diff = 1;
 	  }
       else if (ignore)
 	while (texta < lima && textb < limb)
@@ -874,6 +876,8 @@ keycompare (a, b)
 		diff = *--texta - *--textb;
 		break;
 	      }
+	    else if (texta == lima && textb < limb) diff = -1;
+	    else if (texta < lima && textb == limb) diff = 1;
 	  }
       else if (translate)
 	while (texta < lima && textb < limb)
@@ -1624,13 +1628,15 @@ main (argc, argv)
 			/* Get POS2. */
 			for (t = 0; digits[UCHAR (*s)]; ++s)
 			  t = t * 10 + *s - '0';
+			if (t)
+			      t--;
 			t2 = 0;
 			if (*s == '.')
 			  {
 			    for (++s; digits[UCHAR (*s)]; ++s)
 			      t2 = t2 * 10 + *s - '0';
 			    if (t2)
-			      t--;
+			      t2--;
 			  }
 			key->eword = t;
 			key->echar = t2;
