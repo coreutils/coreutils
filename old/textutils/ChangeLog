@@ -1,6 +1,22 @@
-2001-08-31  Jim Meyering  <meyering@lucent.com>
+2001-09-12  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.15.
+
+	tail: accept new option: -F, equivalent to `--follow=name --retry',
+	for compatibility with FreeBSD and NetBSD versions of tail.
+
+	* src/tail.c (usage): Describe new option.
+	(parse_options): Accept it.
+	Patch by Christian Kurz, via Herbert Xu.
+
+	The command `echo foo|fmt -w 100000' would cause fmt to segfault.
+
+	* src/fmt.c [struct Word]: Declare members length, space, and
+	line_length to be of type `int', not short.
+	(MAXCOST): Define using TYPE_MAXIMUM.
+	Reported by Herbert Xu.
+
+2001-08-31  Jim Meyering  <meyering@lucent.com>
 
 	* src/fmt.c (bool): Remove typedef, now that it's in system.h.
 	(TRUE): Define to `true', not 1.
