@@ -1,6 +1,6 @@
 2003-12-20  Jim Meyering  <jim@meyering.net>
 
-	* fts.c [!_LIBC]: Define __P.
+	* fts.c [!_LIBC]: Undefine, then define-away __P.
 
 2003-12-19  Jim Meyering  <jim@meyering.net>
 
