@@ -214,10 +214,12 @@ static size_t bytes_per_block;
    It differs from *file_list only when *file_list is "-".  */
 static char const *input_filename;
 
-/* A NULL-terminated list of the file-arguments from the command line.
-   If no file-arguments were specified, this variable is initialized
-   to { "-", NULL }.  */
+/* A NULL-terminated list of the file-arguments from the command line.  */
 static char const *const *file_list;
+
+/* Initializer for file_list if no file-arguments
+   were specified on the command line.  */
+static char const *const default_file_list[] = {"-", NULL};
 
 /* The input stream associated with the current file.  */
 static FILE *in_stream;
@@ -271,13 +273,15 @@ Usage: %s [OPTION]... [FILE]...\n\
   or:  %s --traditional [FILE] [[+]OFFSET [[+]LABEL]]\n\
 "),
 	      program_name, program_name);
-      printf (_("\
-Write an unambiguous representation, octal bytes by default, of FILE\n\
-to standard output.  With no FILE, or when FILE is -, read standard input.\n\
+      printf (_("\n\
+Write an unambiguous representation, octal bytes by default,\n\
+of FILE to standard output.  With more than one FILE argument,\n\
+concatenate them in the listed order to form the input.\n\
+With no FILE, or when FILE is -, read standard input.\n\
 \n\
   -A, --address-radix=RADIX   decide how file offsets are printed\n\
-  -j, --skip-bytes=BYTES      skip BYTES input bytes first on each file\n\
-  -N, --read-bytes=BYTES      limit dump to BYTES input bytes per file\n\
+  -j, --skip-bytes=BYTES      skip BYTES input bytes first\n\
+  -N, --read-bytes=BYTES      limit dump to BYTES input bytes\n\
   -s, --strings[=BYTES]       output strings of at least BYTES graphic chars\n\
   -t, --format=TYPE           select output format or formats\n\
   -v, --output-duplicates     do not use * to mark line suppression\n\
@@ -892,6 +896,88 @@ this system doesn't provide a %lu-byte floating point type"), s_orig, size);
   return 0;
 }
 
+/* Given a list of one or more input filenames FILE_LIST, set the global
+   file pointer IN_STREAM and the global string INPUT_FILENAME to the
+   first one that can be successfully opened. Modify FILE_LIST to
+   reference the next filename in the list.  A file name of "-" is
+   interpreted as standard input.  If any file open fails, give an error
+   message and return nonzero.  */
+
+static int
+open_next_file (void)
+{
+  int err = 0;
+
+  do
+    {
+      input_filename = *file_list;
+      if (input_filename == NULL)
+	return err;
+      ++file_list;
+
+      if (STREQ (input_filename, "-"))
+	{
+	  input_filename = _("standard input");
+	  in_stream = stdin;
+	  have_read_stdin = 1;
+	}
+      else
+	{
+	  in_stream = fopen (input_filename, "r");
+	  if (in_stream == NULL)
+	    {
+	      error (0, errno, "%s", input_filename);
+	      err = 1;
+	    }
+	}
+    }
+  while (in_stream == NULL);
+
+  if (limit_bytes_to_format && !flag_dump_strings)
+    setbuf (in_stream, NULL);
+  SET_BINARY (fileno (in_stream));
+
+  return err;
+}
+
+/* Test whether there have been errors on in_stream, and close it if
+   it is not standard input.  Return nonzero if there has been an error
+   on in_stream or stdout; return zero otherwise.  This function will
+   report more than one error only if both a read and a write error
+   have occurred.  */
+
+static int
+check_and_close (void)
+{
+  int err = 0;
+
+  if (in_stream != NULL)
+    {
+      if (ferror (in_stream))
+	{
+	  error (0, errno, "%s", input_filename);
+	  if (in_stream != stdin)
+	    fclose (in_stream);
+	  err = 1;
+	}
+      else if (in_stream != stdin && fclose (in_stream) == EOF)
+	{
+	  error (0, errno, "%s", input_filename);
+	  err = 1;
+	}
+
+      in_stream = NULL;
+    }
+
+  if (ferror (stdout))
+    {
+      error (0, errno, _("standard output"));
+      err = 1;
+    }
+
+  return err;
+}
+
 /* Decode the POSIX-style od format string S.  Append the decoded
    representation to the global array SPEC, reallocating SPEC if
    necessary.  Return zero if S is valid, nonzero otherwise.  */
@@ -933,42 +1019,20 @@ decode_format_string (const char *s)
    file pointer IN_STREAM to position N_SKIP in the concatenation of
    those files.  If any file operation fails or if there are fewer than
    N_SKIP bytes in the combined input, give an error message and return
-   nonzero.  When possible, use seek- rather than read operations to
-   advance IN_STREAM.  A file name of "-" is interpreted as standard
-   input.  */
+   nonzero.  When possible, use seek rather than read operations to
+   advance IN_STREAM.  */
 
 static int
 skip (off_t n_skip)
 {
-  int err;
+  int err = 0;
 
-  err = 0;
-  for ( /* empty */ ; *file_list != NULL; ++file_list)
+  if (n_skip == 0)
+    return 0;
+
+  while (in_stream != NULL)	/* EOF.  */
     {
       struct stat file_stats;
-      int j;
-
-      if (STREQ (*file_list, "-"))
-	{
-	  input_filename = _("standard input");
-	  in_stream = stdin;
-	  have_read_stdin = 1;
-	}
-      else
-	{
-	  input_filename = *file_list;
-	  in_stream = fopen (input_filename, "r");
-	  if (in_stream == NULL)
-	    {
-	      error (0, errno, "%s", input_filename);
-	      err = 1;
-	      continue;
-	    }
-	}
-      SET_BINARY (fileno (in_stream));
-
-      if (n_skip == 0)
-	break;
 
       /* First try seeking.  For large offsets, this extra work is
 	 worthwhile.  If the offset is below some threshold it may be
@@ -980,58 +1044,60 @@ skip (off_t n_skip)
 	     Try to do that by getting file's size using fstat.
 	     But that will work only for regular files.  */
 
-      if (fstat (fileno (in_stream), &file_stats))
+      if (fstat (fileno (in_stream), &file_stats) == 0)
 	{
-	  error (0, errno, "%s", input_filename);
-	  err = 1;
-	  continue;
-	}
+	  /* The st_size field is valid only for regular files
+	     (and for symbolic links, which cannot occur here).
+	     If the number of bytes left to skip is at least
+	     as large as the size of the current file, we can
+	     decrement n_skip and go on to the next file.  */
 
-      /* The st_size field is valid only for regular files
-	 (and for symbolic links, which cannot occur here).
-	 If the number of bytes left to skip is at least as large as
-	 the size of the current file, we can decrement
-	 n_skip and go on to the next file.  */
-      if (S_ISREG (file_stats.st_mode))
-	{
-	  if (file_stats.st_size <= n_skip)
+	  if (S_ISREG (file_stats.st_mode) && file_stats.st_size <= n_skip)
 	    {
 	      n_skip -= file_stats.st_size;
-	      if (in_stream != stdin && fclose (in_stream) == EOF)
-		{
-		  error (0, errno, "%s", input_filename);
-		  err = 1;
-		}
-	      continue;
 	    }
+
+	  /* If the number of bytes left to skip is less than the size
+	     of the current file, try seeking to the correct offset.  */
+
+	  else if (S_ISREG (file_stats.st_mode) &&
+		   fseek (in_stream, n_skip, SEEK_CUR) == 0)
+	    {
+	      n_skip = 0;
+	    }
+
+	  /* If seek didn't work or wasn't attempted,
+	     position the file pointer by reading.  */
+
 	  else
 	    {
-	      if (0 <= lseek (fileno (in_stream), n_skip, SEEK_CUR))
+	      char buf[BUFSIZ];
+	      size_t n_bytes_read, n_bytes_to_read = BUFSIZ;
+
+	      while (0 < n_skip)
 		{
-		  n_skip = 0;
-		  break;
+		  if (n_skip < n_bytes_to_read)
+		    n_bytes_to_read = n_skip;
+		  n_bytes_read = fread (buf, 1, n_bytes_to_read, in_stream);
+		  n_skip -= n_bytes_read;
+		  if (n_bytes_read != n_bytes_to_read)
+		    break;
 		}
 	    }
-	}
 
-      /* Seek didn't work or wasn't attempted;  position the file pointer
-	 by reading.  */
-
-      for (j = n_skip / BUFSIZ; 0 <= j; j--)
-	{
-	  char buf[BUFSIZ];
-	  size_t n_bytes_to_read = (0 < j
-				    ? BUFSIZ
-				    : n_skip % BUFSIZ);
-	  size_t n_bytes_read;
-	  n_bytes_read = fread (buf, 1, n_bytes_to_read, in_stream);
-	  n_skip -= n_bytes_read;
-	  if (n_bytes_read != n_bytes_to_read)
+	  if (n_skip == 0)
 	    break;
 	}
 
-      if (n_skip == 0)
-	break;
+      else   /* cannot fstat() file */
+	{
+	  error (0, errno, "%s", input_filename);
+	  err = 1;
+	}
+
+      err |= check_and_close ();
+
+      err |= open_next_file ();
     }
 
   if (n_skip != 0)
@@ -1162,119 +1228,57 @@ write_block (off_t current_offset, off_t n_bytes,
   first = 0;
 }
 
-/* Test whether there have been errors on in_stream, and close it if
-   it is not standard input.  Return nonzero if there has been an error
-   on in_stream or stdout; return zero otherwise.  This function will
-   report more than one error only if both a read and a write error
-   have occurred.  */
+/* Read a single byte into *C from the concatenation of the input files
+   named in the global array FILE_LIST.  On the first call to this
+   function, the global variable IN_STREAM is expected to be an open
+   stream associated with the input file INPUT_FILENAME.  If IN_STREAM
+   is at end-of-file, close it and update the global variables IN_STREAM
+   and INPUT_FILENAME so they correspond to the next file in the list.
+   Then try to read a byte from the newly opened file.  Repeat if
+   necessary until EOF is reached for the last file in FILE_LIST, then
+   set *C to EOF and return.  Subsequent calls do likewise.  The return
+   value is nonzero if any errors occured, zero otherwise.  */
 
 static int
-check_and_close (void)
+read_char (int *c)
 {
-  int err;
+  int err = 0;
 
-  err = 0;
-  if (ferror (in_stream))
-    {
-      error (0, errno, "%s", input_filename);
-      if (in_stream != stdin)
-	fclose (in_stream);
-      err = 1;
-    }
-  else if (in_stream != stdin && fclose (in_stream) == EOF)
-    {
-      error (0, errno, "%s", input_filename);
-      err = 1;
-    }
+  *c = EOF;
 
-  if (ferror (stdout))
+  while (in_stream != NULL)	/* EOF.  */
     {
-      error (0, errno, _("standard output"));
-      err = 1;
+      *c = fgetc (in_stream);
+
+      if (*c != EOF)
+	break;
+
+      err |= check_and_close ();
+
+      err |= open_next_file ();
     }
 
   return err;
 }
 
-/* Read a single byte into *C from the concatenation of the input files
-   named in the global array FILE_LIST.  On the first call to this
-   function, the global variable IN_STREAM is expected to be an open
-   stream associated with the input file *FILE_LIST.  If IN_STREAM is
-   at end-of-file, close it and update the global variables IN_STREAM,
-   FILE_LIST, and INPUT_FILENAME so they correspond to the next file in
-   the list.  Then try to read a byte from the newly opened file.
-   Repeat if necessary until *FILE_LIST is NULL.  When EOF is reached
-   for the last file in FILE_LIST, set *C to EOF and return.  Subsequent
-   calls do likewise.  The return value is nonzero if any errors
-   occured, zero otherwise.  */
-
-static int
-read_char (int *c)
-{
-  int err;
-
-  if (*file_list == NULL)
-    {
-      *c = EOF;
-      return 0;
-    }
-
-  err = 0;
-  while (1)
-    {
-      *c = fgetc (in_stream);
-
-      if (*c != EOF)
-	return err;
-
-      err |= check_and_close ();
-
-      do
-	{
-	  ++file_list;
-	  if (*file_list == NULL)
-	    return err;
-
-	  if (STREQ (*file_list, "-"))
-	    {
-	      input_filename = _("standard input");
-	      in_stream = stdin;
-	      have_read_stdin = 1;
-	    }
-	  else
-	    {
-	      input_filename = *file_list;
-	      in_stream = fopen (input_filename, "r");
-	      if (in_stream == NULL)
-		{
-		  error (0, errno, "%s", input_filename);
-		  err = 1;
-		}
-	    }
-	  SET_BINARY (fileno (in_stream));
-	}
-      while (in_stream == NULL);
-    }
-}
-
 /* Read N bytes into BLOCK from the concatenation of the input files
    named in the global array FILE_LIST.  On the first call to this
    function, the global variable IN_STREAM is expected to be an open
-   stream associated with the input file *FILE_LIST.  On subsequent
-   calls, if *FILE_LIST is NULL, don't modify BLOCK and return zero.
-   If all N bytes cannot be read from IN_STREAM, close IN_STREAM and
-   update the global variables IN_STREAM, FILE_LIST, and INPUT_FILENAME.
-   Then try to read the remaining bytes from the newly opened file.
-   Repeat if necessary until *FILE_LIST is NULL.  Set *N_BYTES_IN_BUFFER
-   to the number of bytes read.  If an error occurs, it will be detected
-   through ferror when the stream is about to be closed.  If there is an
-   error, give a message but continue reading as usual and return nonzero.
-   Otherwise return zero.  */
+   stream associated with the input file INPUT_FILENAME.  If all N
+   bytes cannot be read from IN_STREAM, close IN_STREAM and update
+   the global variables IN_STREAM and INPUT_FILENAME.  Then try to
+   read the remaining bytes from the newly opened file.  Repeat if
+   necessary until EOF is reached for the last file in FILE_LIST.
+   On subsequent calls, don't modify BLOCK and return zero.  Set
+   *N_BYTES_IN_BUFFER to the number of bytes read.  If an error occurs,
+   it will be detected through ferror when the stream is about to be
+   closed.  If there is an error, give a message but continue reading
+   as usual and return nonzero.  Otherwise return zero.  */
 
 static int
 read_block (size_t n, char *block, size_t *n_bytes_in_buffer)
 {
-  int err;
+  int err = 0;
 
   assert (0 < n && n <= bytes_per_block);
 
@@ -1283,11 +1287,7 @@ read_block (size_t n, char *block, size_t *n_bytes_in_buffer)
   if (n == 0)
     return 0;
 
-  if (*file_list == NULL)
-    return 0;			/* EOF.  */
-
-  err = 0;
-  while (1)
+  while (in_stream != NULL)	/* EOF.  */
     {
       size_t n_needed;
       size_t n_read;
@@ -1298,36 +1298,14 @@ read_block (size_t n, char *block, size_t *n_bytes_in_buffer)
       *n_bytes_in_buffer += n_read;
 
       if (n_read == n_needed)
-	return err;
+	break;
 
       err |= check_and_close ();
 
-      do
-	{
-	  ++file_list;
-	  if (*file_list == NULL)
-	    return err;
-
-	  if (STREQ (*file_list, "-"))
-	    {
-	      input_filename = _("standard input");
-	      in_stream = stdin;
-	      have_read_stdin = 1;
-	    }
-	  else
-	    {
-	      input_filename = *file_list;
-	      in_stream = fopen (input_filename, "r");
-	      if (in_stream == NULL)
-		{
-		  error (0, errno, "%s", input_filename);
-		  err = 1;
-		}
-	    }
-	  SET_BINARY (fileno (in_stream));
-	}
-      while (in_stream == NULL);
+      err |= open_next_file ();
     }
+
+  return err;
 }
 
 /* Return the least common multiple of the sizes associated
@@ -1475,7 +1453,7 @@ dump (void)
 
   format_address (current_offset, '\n');
 
-  if (limit_bytes_to_format && current_offset > end_offset)
+  if (limit_bytes_to_format && current_offset >= end_offset)
     err |= check_and_close ();
 
   return err;
@@ -1593,7 +1571,7 @@ dump_strings (void)
     }
 
   /* We reach this point only if we search through
-     (max_bytes_to_format - string_min) bytes before reachine EOF.  */
+     (max_bytes_to_format - string_min) bytes before reaching EOF.  */
 
   free (buf);
 
@@ -1913,17 +1891,27 @@ it must be one character from [doxn]"),
     }
 
   if (n_files > 0)
-    file_list = (char const *const *) &argv[optind];
+    {
+      /* Set the global pointer FILE_LIST so that it
+	 references the first file-argument on the command-line.  */
+
+      file_list = (char const *const *) &argv[optind];
+    }
   else
     {
-      /* If no files were listed on the command line, set up the
-	 global array FILE_LIST so that it contains the null-terminated
-	 list of one name: "-".  */
-      static char const *const default_file_list[] = {"-", NULL};
+      /* No files were listed on the command line.
+	 Set the global pointer FILE_LIST so that it
+	 references the null-terminated list of one name: "-".  */
 
       file_list = default_file_list;
     }
 
+  /* open the first input file */
+  err |= open_next_file ();
+  if (in_stream == NULL)
+    goto cleanup;
+
+  /* skip over any unwanted header bytes */
   err |= skip (n_bytes_to_skip);
   if (in_stream == NULL)
     goto cleanup;
