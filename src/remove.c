@@ -397,8 +397,9 @@ AD_pop_and_chdir (Dirstack_state *ds)
     }
   else
     {
-      if (restore_cwd (&top->u.saved_cwd, NULL, NULL))
-	exit (EXIT_FAILURE);
+      if (restore_cwd (&top->u.saved_cwd))
+	error (EXIT_FAILURE, errno,
+	       _("failed to return to initial working directory"));
     }
 
   if (lstat (".", &sb))
