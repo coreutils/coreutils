@@ -17,7 +17,7 @@ mkdir $tmp $tmp/a $tmp/a/b
 > $tmp/a/b/g
 
 # FIXME: if this fails, it's a framework failure
-cat <<EOF > $tmp/$test.E
+cat <<EOF | sort > $tmp/$test.E
 removing all entries of directory $tmp/a
 removing all entries of directory $tmp/a/b
 removing $tmp/a/b/g
@@ -31,8 +31,10 @@ export LANGUAGE
 LANG=C
 export LANG
 
+# Note that both the expected output (above) and the actual output lines
+# are sorted, because directory entries may be processed in arbitrary order.
 fail=0
-$RM --verbose -r $tmp/a > $tmp/$test.O || fail=1
+$RM --verbose -r $tmp/a | sort > $tmp/$test.O || fail=1
 
 if test -d $tmp/a; then
   fail=1
