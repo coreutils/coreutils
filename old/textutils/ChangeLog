@@ -1,3 +1,17 @@
+Tue Dec  5 17:49:53 1995  Jim Meyering  (meyering@comco.com)
+
+	* sort.c (main): Diagnose invalid arguments to -k, then fail.
+
+	* sort.c (numcompare): Properly handle all cases in which signs differ.
+	From Karl Heuer.
+
+	* Makefile.in (mandir): @mandir@ is just $(prefix)/man.
+  	Append `/man1'.  Reported by Karl Heuer.
+
+	* sum.c (bsd_sum_file): Remove misleading comment.  From Karl Heuer.
+
+	* src/Makefile.in [.c._o]: Don't create $<-tmp.  From Kaveh Ghazi.
+
 Fri Dec  1 01:02:36 1995  Jim Meyering  (meyering@comco.com)
 
 	* lib/Makefile.in (default): New target.
