@@ -1,10 +1,11 @@
-#serial 1
+#serial 2
 dnl Run a program to determine whether whether link(2) follows symlinks.
 dnl Set LINK_FOLLOWS_SYMLINKS accordingly.
 
 AC_DEFUN(jm_AC_FUNC_LINK_FOLLOWS_SYMLINK,
 [dnl
-  AC_CACHE_CHECK([whether link(2) follows symlinks],
+  AC_CACHE_CHECK(
+    [whether link(2) dereferences a symlink specified with a trailing slash],
 		 jm_ac_cv_func_link_follows_symlink,
   [
     dnl poor-man's AC_REQUIRE: FIXME: repair this once autoconf-3 provides
