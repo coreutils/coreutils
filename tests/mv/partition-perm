@@ -7,6 +7,7 @@ if test "$VERBOSE" = yes; then
 fi
 
 . $srcdir/setup
+. $srcdir/../envvar-check
 
 if test -z "$other_partition_tmpdir"; then
   exit 77
@@ -20,20 +21,6 @@ dir=p-perm-$$
 trap "cd $pwd; rm -rf $dir $other_partition_tmpdir" 0 1 2 3 15
 
 mkdir $dir
-unset VERSION_CONTROL SIMPLE_BACKUP_SUFFIX
-
-if test "${VERSION_CONTROL+set}" = set; then
-  echo '$0: the VERSION_CONTROL envvar is set --' \
-    ' unset it and rerun this test' >&2
-  exit 1
-fi
-
-if test "${SIMPLE_BACKUP_SUFFIX+set}" = set; then
-  echo '$0: the SIMPLE_BACKUP_SUFFIX envvar is set --' \
-    ' unset it and rerun this test' >&2
-    >&2
-  exit 1
-fi
 
 cd $dir
 : > file
