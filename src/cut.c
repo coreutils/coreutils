@@ -580,8 +580,8 @@ cut_fields (FILE *stream)
 	  ssize_t len;
 	  size_t n_bytes;
 
-	  len = getndelim2 (&field_1_buffer, &field_1_bufsize, SIZE_MAX,
-			    stream, delim, '\n', 0);
+	  len = getndelim2 (&field_1_buffer, &field_1_bufsize, 0,
+			    GETNLINE_NO_LIMIT, delim, '\n', stream);
 	  if (len < 0)
 	    {
 	      free (field_1_buffer);
