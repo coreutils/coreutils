@@ -1,5 +1,7 @@
 Fri Nov  1 21:33:16 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* lib/strtol.c: Update from GNU libc.
+
 	* tests/sort-test/Test.pm: Add a test to exercize this fix.
 
 	* src/sort.c [!ENABLE_ASSERTIONS]: Guard NDEBUG definition.
