@@ -742,6 +742,11 @@ this system doesn't provide a %lu-byte integral type"), s_orig, size);
 	  break;
 	}
 
+#define ISPEC_TO_FORMAT(Spec, Min_format, Long_format, Max_format)	\
+  ((Spec) == LONG_LONG ? (Max_format)					\
+   : ((Spec) == LONG ? (Long_format)					\
+      : (Min_format)))							\
+
 #define FMT_BYTES_ALLOCATED 9
       fmt_string = xmalloc (FMT_BYTES_ALLOCATED);
 
@@ -751,32 +756,30 @@ this system doesn't provide a %lu-byte integral type"), s_orig, size);
 	{
 	case 'd':
 	  fmt = SIGNED_DECIMAL;
-	  sprintf (fmt_string, " %%%u%sd",
+	  sprintf (fmt_string, " %%%u%s",
 		   (field_width = bytes_to_signed_dec_digits[size]),
-		   (size_spec == LONG ? "l"
-		    : (size_spec == LONG_LONG ? "ll"
-		       : "")));
+		   ISPEC_TO_FORMAT (size_spec, "d", "ld", PRIdMAX));
 	  break;
 
 	case 'o':
 	  fmt = OCTAL;
-	  sprintf (fmt_string, " %%0%u%so",
+	  sprintf (fmt_string, " %%0%u%s",
 		   (field_width = bytes_to_oct_digits[size]),
-		   (size_spec == LONG ? "l" : ""));
+		   ISPEC_TO_FORMAT (size_spec, "o", "lo", PRIoMAX));
 	  break;
 
 	case 'u':
 	  fmt = UNSIGNED_DECIMAL;
-	  sprintf (fmt_string, " %%%u%su",
+	  sprintf (fmt_string, " %%%u%s",
 		   (field_width = bytes_to_unsigned_dec_digits[size]),
-		   (size_spec == LONG ? "l" : ""));
+		   ISPEC_TO_FORMAT (size_spec, "u", "lu", PRIuMAX));
 	  break;
 
 	case 'x':
 	  fmt = HEXADECIMAL;
-	  sprintf (fmt_string, " %%0%u%sx",
+	  sprintf (fmt_string, " %%0%u%s",
 		   (field_width = bytes_to_hex_digits[size]),
-		   (size_spec == LONG ? "l" : ""));
+		   ISPEC_TO_FORMAT (size_spec, "x", "lx", PRIxMAX));
 	  break;
 
 	default:
@@ -1646,6 +1649,8 @@ main (int argc, char **argv)
   integral_type_size[sizeof (int)] = INT;
   integral_type_size[sizeof (long int)] = LONG;
 #if HAVE_UNSIGNED_LONG_LONG
+  /* If `long' and `long long' have the same size, it's fine
+     to overwrite the entry for `long' with this one.  */
   integral_type_size[sizeof (ulonglong_t)] = LONG_LONG;
 #endif
 
