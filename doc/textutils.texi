@@ -103,6 +103,9 @@ by the Foundation.
 @end titlepage
 
 
+@c If your makeinfo doesn't grok this @ifnottex directive, then either
+@c get a newer version of makeinfo or do s/ifnottex/ifinfo/ here and on
+@c the matching @end directive below.
 @ifnottex
 @node Top
 @top GNU text utilities
@@ -961,23 +964,43 @@ optionally outputting in multicolumn format; optionally merges all
 pr [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
-By default, a 5-line header is printed: two blank lines; a line with the
-date, the file name, and the page count; and two more blank lines.  A
-footer of five blank lines is also printed. With the @samp{-f} option, a
-3-line header is printed: the leading two blank lines are omitted; no
-footer used. The default @var{page_length} in both cases is 66 lines.
-The text line of the header takes up the full @var{page_width} in the
-form @samp{yy-mm-dd HH:MM string Page nnnn}. String is a centered
-string.
+By default, a 5-line header is printed at each page: two blank lines;
+a line with the date, the filename, and the page count; and two more
+blank lines.  A footer of five blank lines is also printed.  With the @samp{-F}
+option, a 3-line header is printed: the leading two blank lines are
+omitted; no footer is used.  The default @var{page_length} in both cases is 66
+lines.  The default number of text lines changes from 56 (without @samp{-F})
+to 63 (with @samp{-F}).  The text line of the header takes up the full
+@var{page_width} in the form @samp{yyyy-mm-dd HH:MM string Page nnnn}.
+String is a centered header string.
 
-Form feeds in the input cause page breaks in the output. Multiple form
+Form feeds in the input cause page breaks in the output.  Multiple form
 feeds produce empty pages.
 
-Columns have equal width, separated by an optional string (default
-space). Lines will always be truncated to line width (default 72),
-unless you use the @samp{-j} option. For single column output no line
-truncation occurs by default. Use @samp{-w} option to truncate lines
-in that case.
+Columns are of equal width, separated by an optional string (default
+is @samp{space}).  For multicolumn output, lines will always be truncated to
+@var{page_width} (default 72), unless you use the @samp{-J} option.  For single
+column output no line truncation occurs by default.  Use @samp{-W} option to
+truncate lines in that case.
+
+   Including version 1.22i:
+
+Some small @var{letter options} (@samp{-s}, @samp{-w}) has been redefined
+with the object of a better @var{posix} compliance.  The output of some
+further cases has been adapted to other @var{unix}es.  A violation of
+downward compatibility has to be accepted.
+
+Some @var{new capital letter} options (@samp{-J}, @samp{-S}, @samp{-W})
+has been introduced to turn off unexpected interferences of small letter
+options.  The @samp{-N} option and the second argument @var{last_page}
+of @samp{+FIRST_PAGE} offer more flexibility.  The detailed handling of
+form feeds set in the input files requires @samp{-T} option.
+
+Capital letter options dominate small letter ones.
+
+Some of the option-arguments (compare @samp{-s}, @samp{-S}, @samp{-e},
+@samp{-i}, @samp{-n}) cannot be specified as separate arguments from the
+preceding option letter (already stated in the @var{posix} specification).
 
 The program accepts the following options.  Also see @ref{Common options}.
 
@@ -987,32 +1010,39 @@ The program accepts the following options.  Also see @ref{Common options}.
 @itemx --pages=@var{first_page}[:@var{last_page}]
 @opindex +@var{first_page}[:@var{last_page}]
 @opindex --pages
-Begin printing with page @var{first_page} and stop with
-@var{last_page}. Missing @samp{:@var{last_page}} implies end of file. While
-estimating the number of skipped pages each form feed in the input file
-results in a new page. Page counting with and without
-@samp{+@var{first_page}} is identical. By default, it starts with the
-first page of input file (not first page printed). Page numbering may be
-altered by @samp{-N} option.
+Begin printing with page @var{first_page} and stop with @var{last_page}.
+Missing @samp{:@var{last_page}} implies end of file.  While estimating
+the number of skipped pages each form feed in the input file results
+in a new page.  Page counting with and without @samp{+@var{first_page}}
+is identical.  By default, counting starts with the first page of input
+file (not first page printed).  Line numbering may be altered by @samp{-N}
+option.
 
 @item -@var{column}
 @itemx --columns=@var{column}
 @opindex -@var{column}
 @opindex --columns
 @cindex down columns
-With each single @var{file}, produce @var{column}-column output and
-print columns down. The column width is automatically estimated from
-@var{page_width}. This option might well cause some columns to be
-truncated. The number of lines in the columns on each page will be
-balanced. @samp{-@var{column}} may not be used with @samp{-m} option.
+With each single @var{file}, produce @var{column} columns of output
+(default is 1) and print columns down, unless @samp{-a} is used.  The
+column width is automatically decreased as @var{column} increases; unless
+you use the @samp{-W/-w} option to increase @var{page_width} as well.
+This option might well cause some lines to be truncated.  The number of
+lines in the columns on each page are balanced.  The options @samp{-e}
+and @samp{-i} are on for multiple text-column output.  Together with
+@samp{-J} option column alignment and line truncation is turned off.
+Lines of full length are joined in a free field format and @samp{-S}
+option may set field separators.  @samp{-@var{column}} may not be used
+with @samp{-m} option.
 
 @item -a
 @itemx --across
 @opindex -a
 @opindex --across
 @cindex across columns
-With each single @var{file}, print columns across rather than down.
-@var{column} must be greater than one.
+With each single @var{file}, print columns across rather than down.  The
+@samp{-@var{column}} option must be given with @var{column} greater than one.
+If a line is too long to fit in a column, it is truncated.
 
 @item -c
 @itemx --show-control-chars
@@ -1034,7 +1064,7 @@ Double space the output.
 @opindex -e
 @opindex --expand-tabs
 @cindex input tabs
-Expand tabs to spaces on input.  Optional argument @var{in-tabchar} is
+Expand @var{tab}s to spaces on input.  Optional argument @var{in-tabchar} is
 the input tab character (default is @key{TAB}).  Second optional
 argument @var{in-tabwidth} is the input tab character's width (default
 is 8).
@@ -1045,93 +1075,110 @@ is 8).
 @opindex -F
 @opindex -f
 @opindex --form-feed
-Use a form feed instead of newlines to separate output pages. Default
-page length of 66 lines is not altered. But the number of lines of text
-per page changes from 56 to 63 lines.
-
+Use a form feed instead of newlines to separate output pages.  The default
+page length of 66 lines is not altered.  But the number of lines of text
+per page changes from default 56 to 63 lines.
 
 @item -h @var{HEADER}
 @itemx --header=@var{HEADER}
 @opindex -h
 @opindex --header
-Replace the file name in the header with the centered string
-@var{header}. Left-hand-side truncation (marked by a @samp{*}) may occur
-if the total header line @samp{yy-mm-dd HH:MM HEADER Page nnnn}
-becomes larger than @var{page_width}. @samp{-h ""} prints a blank line
-header. Don't use @samp{-h""}. A space between the -h option and the
-argument is always peremptory.
+Replace the filename in the header with the centered string @var{header}.
+Left-hand-side truncation (marked by a @samp{*}) may occur if the total
+header line @samp{yyyy-mm-dd HH:MM HEADER Page nnnn} becomes larger than
+@var{page_width}.  @samp{-h ""} prints a blank line header.  Don't use
+@samp{-h""}.
+A space between the @samp{-h} option and the argument is always
+indispensable.
 
 @item -i[@var{out-tabchar}[@var{out-tabwidth}]]
 @itemx --output-tabs[=@var{out-tabchar}[@var{out-tabwidth}]]
 @opindex -i
 @opindex --output-tabs
 @cindex output tabs
-Replace spaces with tabs on output.  Optional argument @var{out-tabchar}
+Replace spaces with @var{tab}s on output.  Optional argument @var{out-tabchar}
 is the output tab character (default is @key{TAB}).  Second optional
 argument @var{out-tabwidth} is the output tab character's width (default
 is 8).
 
-@item -j
+@item -J
 @itemx --join-lines
-@opindex -j
+@opindex -J
 @opindex --join-lines
-Merge lines of full length. Used together with the column options
-@samp{-@var{column}}, @samp{-a -@var{column}} or @samp{-m}. Turns off
-@samp{-w} line truncation; no column alignment used; may be used with
-@samp{-s[@var{separator}]}.
+Merge lines of full length.  Used together with the column options
+@samp{-@var{column}}, @samp{-a -@var{column}} or @samp{-m}.  Turns off
+@samp{-W/-w} line truncation;
+no column alignment used; may be used with @samp{-S[@var{string}]}.
+@samp{-J} has been introduced (together with @samp{-W} and @samp{-S})
+to disentangle the old (@var{posix} compliant) options @samp{-w} and
+@samp{-s} along with the three column options.
 
 
 @item -l @var{page_length}
 @itemx --length=@var{page_length}
 @opindex -l
 @opindex --length
-Set the page length to @var{page_length} (default 66) lines. If
-@var{page_length} is less than or equal 10 (and <= 3 with @samp{-f}),
-the headers and footers are omitted, and all form feeds set in input
-files are eliminated, as if the @samp{-T} option had been given.
+Set the page length to @var{page_length} (default 66) lines, including
+the lines of the header [and the footer].  If @var{page_length} is less
+than or equal 10 (and <= 3 with @samp{-F}), the header and footer are
+omitted, and all form feeds set in input files are eliminated, as if
+the @samp{-T} option had been given.
 
 @item -m
 @itemx --merge
 @opindex -m
 @opindex --merge
-Merge and print all @var{file}s in parallel, one in each column. If a
-line is too long to fit in a column, it is truncated (but see
-@samp{-j}). @samp{-s[@var{separator}]} may be used. Empty pages in some
-@var{file}s (form feeds set) produce empty columns, still marked by
-@var{separator}. Completely empty common pages show no separators or
-line numbers. The default header becomes
-@samp{yy-mm-dd HH:MM <blanks> Page nnnn}; may be used with
-@samp{-h @var{header}} to fill up the middle part.
-
+Merge and print all @var{file}s in parallel, one in each column.  If a
+line is too long to fit in a column, it is truncated, unless @samp{-J}
+option is used.  @samp{-S[@var{string}]} may be used.  Empty pages in
+some @var{file}s (form feeds set) produce empty columns, still marked
+by @var{string}.  The result is a continuous line numbering and column
+marking throughout the whole merged file.  Completely empty merged pages
+show no separators or line numbers.  The default header becomes
+@samp{yyyy-mm-dd HH:MM <blanks> Page nnnn}; may be used with
+@samp{-h @var{header}} to fill up the middle blank part.
 
 @item -n[@var{number-separator}[@var{digits}]]
 @itemx --number-lines[=@var{number-separator}[@var{digits}]]
 @opindex -n
 @opindex --number-lines
-Precede each column with a line number; with parallel @var{file}s
-(@samp{-m}), precede only each line with a line number. Optional argument
-@var{number-separator} is the character to print after each number
-(default is @key{TAB}).  Optional argument @var{digits} is the number of
-digits per line number (default is 5). Default line counting starts with
-first line of the input file (not with the first line printed, see
-@samp{-N}).
+Provide @var{digits} digit line numbering (default for @var{digits} is
+5).  With multicolumn output the number occupies the first @var{digits}
+column positions of each text column or only each line of @samp{-m}
+output.  With single column output the number precedes each line just as
+@samp{-m} does.  Default counting of the line numbers starts with 1st
+line of the input file (not the 1st line printed, compare the
+@samp{--page} option and @samp{-N} option).
+Optional argument @var{number-separator} is the character appended to
+the line number to separate it from the text followed.  The default
+separator is a @key{TAB}.  In a strict sense a @key{TAB} is always
+printed with single column output only.  The @var{TAB}-width varies
+with the @var{TAB}-position, e.g. with the left @var{margin} specified
+by @samp{-o} option.  With multicolumn output priority is given to
+@samp{equal width of output columns} (a @var{posix} specification).
+The @var{TAB}-width is fixed to the value of the 1st column and does
+not change with different values of left @var{margin}.  That means a
+fixed number of spaces is always printed in the place of the
+@var{number-separator tab}.  The tabification depends upon the output
+position.
 
 @item -N @var{line_number}
 @itemx --first-line-number=@var{line_number}
 @opindex -N
 @opindex --first-line-number
-Start line counting with no. @var{line_number} at first line of first
-page printed.
+Start line counting with the number @var{line_number} at first line of
+first page printed (in most cases not the first line of the input file).
 
-@item -o @var{n}
-@itemx --indent=@var{n}
+@item -o @var{margin}
+@itemx --indent=@var{margin}
 @opindex -o
 @opindex --indent
 @cindex indenting lines
 @cindex left margin
-Indent each line with @var{n} (default is zero) spaces wide, i.e., set
-the left margin.  The total page width is @var{n} plus the width set
-with the @samp{-w} option.
+Indent each line with a margin @var{margin} spaces wide (default is zero).
+The total page width is the size of the margin plus the @var{page_width}
+set with the @samp{-W/-w} option.  A limited overflow may occur with
+numbered single column output (compare @samp{-n} option).
 
 @item -r
 @itemx --no-file-warnings
@@ -1140,34 +1187,50 @@ with the @samp{-w} option.
 Do not print a warning message when an argument @var{file} cannot be
 opened.  (The exit status will still be nonzero, however.)
 
-@item -s[@var{separator}]
-@itemx --separator[=@var{separator}]
+@item -s[@var{char}]
+@itemx --separator[=@var{char}]
 @opindex -s
 @opindex --separator
-Separate columns by a string @var{separator}. Don't use
-@samp{-s @var{separator}}, no space between flag and argument. If this
-option is omitted altogether, the default is @key{TAB} together with
-@samp{-j} option and space otherwise (same as @samp{-s" "}). With
-@samp{-s} only, no separator is used (same as @samp{-s""}). @samp{-s}
-does not affect line truncation or column alignment.
+Separate columns by a single character @var{char}.  Default for @var{char}
+is the @key{TAB} character without @samp{-w} and @samp{no character} with
+@samp{-w}.  Without @samp{-s} default separator @samp{space} is set.
+@samp{-s[char]} turns off line truncation of all three column options
+(@samp{-COLUMN}|@samp{-a -COLUMN}|@samp{-m}) except @samp{-w} is set.
+That is a @var{posix} compliant formulation.
+
+
+@item -S[@var{string}]
+@itemx --sep-string[=@var{string}]
+@opindex -S
+@opindex --sep-string
+Separate columns by any string @var{string}.  The @samp{-S} option doesn't
+react upon the @samp{-W/-w} option (unlike @samp{-s} option does).  It
+does not affect line truncation or column alignment.  A separator is
+defined, nothing else.  Without @samp{-S}: default separator @key{TAB}
+is used with @samp{-J} and @samp{space} otherwise (same as @samp{-S" "}).
+With @samp{-S} only: no separator is used, same as @samp{-S""}.  Quotes
+should be used with blanks and some shell active characters.  Some of the
+@code{pr} options don't allow the option letter to be separated from its
+argument.  @samp{-S/-s} is one of them.  Don't use @samp{-S "STRING"}.
+That's @var{posix} compliant.
 
 @item -t
 @itemx --omit-header
 @opindex -t
 @opindex --omit-header
 Do not print the usual header [and footer] on each page, and do not fill
-out the bottoms of pages (with blank lines or a form feed). No page
-structure is produced, but retain form feeds set in the input files. The
-predefined page layout is not changed. @samp{-t} or @samp{-T} may be
-useful together with other options; e.g.: @samp{-t -e4}, expand
-@key{TAB} in the input file to 4 spaces but do not do any other changes.
-Use of @samp{-t} overrides @samp{-h}.
+out the bottom of pages (with blank lines or a form feed).  No page
+structure is produced, but form feeds set in the input files are retained.
+The predefined pagination is not changed.  @samp{-t} or @samp{-T} may be
+useful together with other options; e.g.: @samp{-t -e4}, expand @key{TAB}
+in the input file to 4 spaces but don't make any other changes.  Use of
+@samp{-t} overrides @samp{-h}.
 
 @item -T
 @itemx --omit-pagination
 @opindex -T
 @opindex --omit-pagination
-Do not print header [and footer]. In addition eliminate all form feeds
+Do not print header [and footer].  In addition eliminate all form feeds
 set in the input files.
 
 @item -v
@@ -1180,14 +1243,28 @@ Print unprintable characters in octal backslash notation.
 @itemx --width=@var{page_width}
 @opindex -w
 @opindex --width
-Set the page width to @var{page_width} (default 72) characters.
-With/without @samp{-w}, header lines are always truncated to
-@var{page_width} characters. With @samp{-w}, text lines are truncated,
-unless @samp{-j} is used. Without @samp{-w} together with one of the
-column options @samp{-@var{column}}, @samp{-a -@var{column}} or
-@samp{-m}, default truncation of text lines to 72 characters is used.
-Without @samp{-w} and without any of the column options, no line
-truncation is used. That's equivalent to @samp{-w 72 -j}.
+Set page width to @var{page_width} characters for multiple text-column
+output only (default for @var{page_width} is 72).  @samp{-s[CHAR]} turns
+off the default page width and any line truncation and column alignment.
+Lines of full length are merged, regardless of the column options
+set.  No @var{page_width} setting is possible with single column output.
+A @var{posix} compliant formulation.
+
+@item -W @var{page_width}
+@itemx --page_width=@var{page_width}
+@opindex -W
+@opindex --page_width
+Set the page width to @var{page_width} characters.  That's valid with and
+without a column option.  Text lines are truncated, unless @samp{-J}
+is used.  Together with one of the three column options
+(@samp{-@var{column}}, @samp{-a -@var{column}} or @samp{-m}) column
+alignment is always used.  The separator options @samp{-S} or @samp{-s}
+don't affect the @samp{-W} option.  Default is 72 characters.  Without
+@samp{-W @var{page_width}} and without any of the column options NO line
+truncation is used (defined to keep downward compatibility and to meet
+most frequent tasks).  That's equivalent to @samp{-W 72 -J}.  With and
+without @samp{-W @var{page_width}} the header line is always truncated
+to avoid line overflow.
 
 @end table
 
@@ -1207,7 +1284,7 @@ lines.  Synopsis:
 fold [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
-By default, @code{fold} breaks lines wider than 80 columns. The output
+By default, @code{fold} breaks lines wider than 80 columns.  The output
 is split into as many lines as necessary.
 
 @cindex screen columns
