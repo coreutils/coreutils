@@ -1,10 +1,15 @@
-#serial 5
+#serial 6
+
+# Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
+# This file is free software; the Free Software Foundation
+# gives unlimited permission to copy and/or distribute it,
+# with or without modifications, as long as this notice is preserved.
 
 dnl From Jim Meyering.
 dnl
 dnl See if gettimeofday clobbers the static buffer that localtime uses
-dnl for it's return value.  The gettimeofday function from Mac OS X 10.0.4,
-dnl i.e. Darwin 1.3.7 has this problem.
+dnl for its return value.  The gettimeofday function from Mac OS X 10.0.4
+dnl (i.e., Darwin 1.3.7) has this problem.
 dnl
 dnl If it does, then arrange to use gettimeofday and localtime only via
 dnl the wrapper functions that work around the problem.

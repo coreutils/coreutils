@@ -1,4 +1,10 @@
-#serial 7
+#serial 8
+
+# Copyright (C) 1996, 1999, 2001, 2002, 2004 Free Software Foundation, Inc.
+# This file is free software; the Free Software Foundation
+# gives unlimited permission to copy and/or distribute it,
+# with or without modifications, as long as this notice is preserved.
+
 dnl From Jim Meyering and Paul Eggert.
 AC_DEFUN([gl_HEADER_TIOCGWINSZ_IN_TERMIOS_H],
 [AC_REQUIRE([AC_SYS_POSIX_TERMIOS])

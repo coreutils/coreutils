@@ -1,4 +1,9 @@
-#serial 3
+#serial 4
+
+# Copyright (C) 2000, 2001, Free Software Foundation, Inc.
+# This file is free software; the Free Software Foundation
+# gives unlimited permission to copy and/or distribute it,
+# with or without modifications, as long as this notice is preserved.
 
 # When rmdir fails because the specified directory is not empty, it sets
 # errno to some value, usually ENOTEMPTY.  However, on some AIX systems,

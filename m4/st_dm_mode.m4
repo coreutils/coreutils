@@ -1,4 +1,9 @@
-#serial 3
+#serial 4
+
+# Copyright (C) 1998, 1999, 2001 Free Software Foundation, Inc.
+# This file is free software; the Free Software Foundation
+# gives unlimited permission to copy and/or distribute it,
+# with or without modifications, as long as this notice is preserved.
 
 # Define HAVE_ST_DM_MODE if struct stat has an st_dm_mode member.
 

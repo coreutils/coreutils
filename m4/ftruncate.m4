@@ -1,6 +1,11 @@
-#serial 6
+#serial 7
 
 # See if we need to emulate a missing ftruncate function using fcntl or chsize.
+
+# Copyright (C) 2000, 2001, 2003, 2004 Free Software Foundation, Inc.
+# This file is free software; the Free Software Foundation
+# gives unlimited permission to copy and/or distribute it,
+# with or without modifications, as long as this notice is preserved.
 
 AC_DEFUN([gl_FUNC_FTRUNCATE],
 [

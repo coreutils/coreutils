@@ -1,4 +1,9 @@
-#serial 5
+#serial 6
+
+# Copyright (C) 1996, 1999, 2001, 2004 Free Software Foundation, Inc.
+# This file is free software; the Free Software Foundation
+# gives unlimited permission to copy and/or distribute it,
+# with or without modifications, as long as this notice is preserved.
 
 AC_DEFUN([gl_HEADER_TIOCGWINSZ_NEEDS_SYS_IOCTL],
 [AC_REQUIRE([gl_HEADER_TIOCGWINSZ_IN_TERMIOS_H])

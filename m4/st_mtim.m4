@@ -1,4 +1,9 @@
-#serial 6
+#serial 7
+
+# Copyright (C) 1998, 1999, 2001, 2003 Free Software Foundation, Inc.
+# This file is free software; the Free Software Foundation
+# gives unlimited permission to copy and/or distribute it,
+# with or without modifications, as long as this notice is preserved.
 
 dnl From Paul Eggert.
 
