@@ -1,4 +1,4 @@
-#serial 54   -*- autoconf -*-
+#serial 55   -*- autoconf -*-
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
@@ -87,6 +87,9 @@ AC_DEFUN([jm_MACROS],
   AC_REPLACE_FUNCS(euidaccess memcmp rmdir rpmatch strndup strverscmp)
   AC_REPLACE_FUNCS(atexit)
   AC_REPLACE_FUNCS(getpass)
+
+  # raise is used by at least sort and ls.
+  AC_REPLACE_FUNCS(raise)
 
   dnl used by e.g. intl/*domain.c and lib/canon-host.c
   AC_REPLACE_FUNCS(strdup)
