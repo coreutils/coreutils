@@ -122,7 +122,7 @@ struct fileinfo
 
 struct bin_str
   {
-    unsigned int len;		/* Number of bytes */
+    int len;			/* Number of bytes */
     char *string;		/* Pointer to the same */
   };
 
@@ -138,6 +138,7 @@ void strip_trailing_slashes ();
 char *xstrdup ();
 void invalid_arg ();
 
+static size_t quote_filename __P ((FILE *out, const char *filename));
 static char *make_link_path __P ((const char *path, const char *linkname));
 static int compare_atime __P ((const struct fileinfo *file1,
 			       const struct fileinfo *file2));
@@ -190,7 +191,7 @@ static void print_horizontal __P ((void));
 static void print_long_format __P ((const struct fileinfo *f));
 static void print_many_per_line __P ((void));
 static void print_name_with_quoting __P ((const char *p, unsigned int mode,
-					  int linkok));
+					  int linkok, struct obstack *stack));
 static void prep_non_filename_text __P ((void));
 static void print_type_indicator __P ((unsigned int mode));
 static void print_with_commas __P ((void));
@@ -459,6 +460,10 @@ static int qmark_funny_chars;
 
 static int quote_as_string;
 
+/* Nonzero means use shell style quoting; it is also unambiguous.  -e  */
+
+static int quote_shell;
+
 /* The number of chars per hardware tab stop.  Setting this to zero
    inhibits the use of TAB characters for separating columns.  -T */
 static int tabsize;
@@ -517,6 +522,7 @@ static struct option const long_options[] =
   {"dereference", no_argument, 0, 'L'},
   {"literal", no_argument, 0, 'N'},
   {"quote-name", no_argument, 0, 'Q'},
+  {"quote-shell", no_argument, 0, 'e'},
   {"recursive", no_argument, 0, 'R'},
   {"format", required_argument, 0, 12},
   {"sort", required_argument, 0, 10},
@@ -642,11 +648,11 @@ static int max_idx;
 #define MIN_COLUMN_WIDTH	3
 
 
-/* Write to standard output the string PREFIX followed by a space-separated
-   list of the integers stored in OS all on one line.  */
+/* Write to standard output the strings PREFIX and STYLE, followed by
+   a space-separated list of the integers stored in OS all on one line.  */
 
 static void
-dired_dump_obstack (const char *prefix, struct obstack *os)
+dired_dump_obstack (const char *prefix, const char *style, struct obstack *os)
 {
   int n_pos;
 
@@ -658,6 +664,7 @@ dired_dump_obstack (const char *prefix, struct obstack *os)
 
       pos = (size_t *) obstack_finish (os);
       fputs (prefix, stdout);
+      fputs (style, stdout);
       for (i = 0; i < n_pos; i++)
 	printf (" %d", (int) pos[i]);
       fputs ("\n", stdout);
@@ -764,9 +771,13 @@ main (int argc, char **argv)
 
   if (dired && format == long_format)
     {
+      const char *quoting_style = (quote_shell ? " -e"
+				   : quote_as_string ? " -Q"
+				   : quote_funny_chars ? " -b"
+				   : " -N");
       /* No need to free these since we're about to exit.  */
-      dired_dump_obstack ("//DIRED//", &dired_obstack);
-      dired_dump_obstack ("//SUBDIRED//", &subdired_obstack);
+      dired_dump_obstack ("//DIRED//", quoting_style, &dired_obstack);
+      dired_dump_obstack ("//SUBDIRED//", quoting_style, &subdired_obstack);
     }
 
   if (fclose (stdout) == EOF)
@@ -846,6 +857,7 @@ decode_switches (int argc, char **argv)
   really_all_files = 0;
   ignore_patterns = 0;
   quote_as_string = 0;
+  quote_shell = 1;
 
   if ((p = getenv ("BLOCKSIZE"))
       && strncmp (p, "HUMAN", sizeof ("HUMAN") - 1) == 0)
@@ -897,7 +909,7 @@ decode_switches (int argc, char **argv)
     }
 
   while ((c = getopt_long (argc, argv,
-			   "abcdfghiklmnopqrstuvw:xABCDFGHI:LNQRST:UX1",
+			   "abcdefghiklmnopqrstuvw:xABCDFGHI:LNQRST:UX1",
 			   long_options, NULL)) != -1)
     {
       switch (c)
@@ -912,6 +924,8 @@ decode_switches (int argc, char **argv)
 
 	case 'b':
 	  quote_funny_chars = 1;
+	  quote_as_string = 0;
+	  quote_shell = 0;
 	  qmark_funny_chars = 0;
 	  break;
 
@@ -922,6 +936,13 @@ decode_switches (int argc, char **argv)
 
 	case 'd':
 	  immediate_dirs = 1;
+	  break;
+
+	case 'e':
+	  quote_shell = 1;
+	  quote_as_string = 0;
+	  quote_funny_chars = 0;
+	  qmark_funny_chars = 0;
 	  break;
 
 	case 'f':
@@ -979,7 +1000,9 @@ decode_switches (int argc, char **argv)
 
 	case 'q':
 	  qmark_funny_chars = 1;
+	  quote_as_string = 0;
 	  quote_funny_chars = 0;
+	  quote_shell = 0;
 	  break;
 
 	case 'r':
@@ -1048,13 +1071,16 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 'N':
+	  quote_as_string = 0;
 	  quote_funny_chars = 0;
+	  quote_shell = 0;
 	  qmark_funny_chars = 0;
 	  break;
 
 	case 'Q':
 	  quote_as_string = 1;
 	  quote_funny_chars = 1;
+	  quote_shell = 0;
 	  qmark_funny_chars = 0;
 	  break;
 
@@ -1550,12 +1576,9 @@ print_dir (const char *name, const char *realname)
 
   if (print_dir_name)
     {
-      const char *dir;
-
       DIRED_INDENT ();
-      dir = (realname ? realname : name);
       PUSH_CURRENT_DIRED_POS (&subdired_obstack);
-      FPUTS (dir, stdout, strlen (dir));
+      dired_pos += quote_filename (stdout, realname ? realname : name);
       PUSH_CURRENT_DIRED_POS (&subdired_obstack);
       FPUTS_LITERAL (":\n", stdout);
     }
@@ -2260,16 +2283,16 @@ print_long_format (const struct fileinfo *f)
 
   DIRED_INDENT ();
   FPUTS (buf, stdout, p - buf);
-  PUSH_CURRENT_DIRED_POS (&dired_obstack);
-  print_name_with_quoting (f->name, f->stat.st_mode, f->linkok);
-  PUSH_CURRENT_DIRED_POS (&dired_obstack);
+  print_name_with_quoting (f->name, f->stat.st_mode, f->linkok,
+			   &dired_obstack);
 
   if (f->filetype == symbolic_link)
     {
       if (f->linkname)
 	{
 	  FPUTS_LITERAL (" -> ", stdout);
-	  print_name_with_quoting (f->linkname, f->linkmode, f->linkok - 1);
+	  print_name_with_quoting (f->linkname, f->linkmode, f->linkok - 1,
+				   NULL);
 	  if (indicator_style != none)
 	    print_type_indicator (f->linkmode);
 	}
@@ -2278,164 +2301,151 @@ print_long_format (const struct fileinfo *f)
     print_type_indicator (f->stat.st_mode);
 }
 
-/* Set QUOTED_LENGTH to strlen(P) and return NULL if P == quoted(P).
-   Otherwise, return xmalloc'd storage containing the quoted version
-   of P and set QUOTED_LENGTH to the length of the quoted P.  */
+/* If OUT is not null, output a quoted representation of the file name P.
+   Return the number of characters in P's quoted representation.  */
 
-static char *
-quote_filename (register const char *p, size_t *quoted_length)
+static size_t
+quote_filename (register FILE *out, register const char *p)
 {
   register unsigned char c;
-  const char *p0 = p;
-  char *quoted, *q;
-  int found_quotable;
+  register size_t len;
+#define OUTCHAR(c) do { len++; if (out) putc (c, out); } while (0)
 
-  if (!quote_as_string && !quote_funny_chars && !qmark_funny_chars)
+  if (quote_shell)
     {
-      *quoted_length = strlen (p);
-      return NULL;
-    }
+      const char *p0 = p;
 
-  found_quotable = 0;
-  for (c = *p; c; c = *++p)
-    {
-      if (quote_funny_chars)
+      switch (*p)
 	{
-	  switch (c)
-	    {
-	    case '\\':
-	    case '\n':
-	    case '\b':
-	    case '\r':
-	    case '\t':
-	    case '\f':
-	    case ' ':
-	      found_quotable = 1;
-	      break;
+	case '\0': case '#': case '~':
+	  break;
 
-	    default:
-	      if (!ISGRAPH (c))
-		found_quotable = 1;
+	default:
+	  for (;; p++)
+	    {
+	      switch (*p)
+		{
+		default:
+		  continue;
+
+		case '\t': case '\n': case ' ':
+		case '!': /* special in csh */
+		case '"': case '$': case '&': case '\'':
+		case '(': case ')': case '*': case ';':
+		case '<': case '>': case '?': case '[': case '\\':
+		case '^': /* synonym for | in old /bin/sh, e.g. SunOS 4.1.4 */
+		case '`': case '|':
+		  break;
+
+		case '\0':
+		  switch (p[-1])
+		    {
+		    case '=': case '@':
+		      /* These require quoting if at the end of the file name,
+			 to avoid ambiguity with the output of -F or -p.  */
+		      break;
+
+		    default:
+		      len = p - p0;
+		      if (out)
+			fwrite (p0, 1, len, out);
+		      return len;
+		    }
+
+		  break;
+		}
+
 	      break;
+	  }
+	}
+
+      /* Shell quoting is needed.  */
+
+      p = p0;
+      len = 0;
+      OUTCHAR ('\'');
+
+      while ((c = *p++))
+	{
+	  OUTCHAR (c);
+
+	  if (c == '\'')
+	    {
+	      OUTCHAR ('\\');
+	      OUTCHAR ('\'');
+	      OUTCHAR ('\'');
 	    }
 	}
-      else
-	{
-	  if (!ISPRINT (c) && qmark_funny_chars)
-	    found_quotable = 1;
-	}
-      if (found_quotable)
-	break;
+
+      OUTCHAR ('\'');
     }
-
-  if (!found_quotable && !quote_as_string)
+  else
     {
-      *quoted_length = p - p0;
-      return NULL;
-    }
+      len = 0;
 
-  p = p0;
+      if (quote_as_string)
+	OUTCHAR ('"');
 
-  quoted = xmalloc (4 * strlen (p)
-		    /* Add two (one for beginning and one for ending quote)
-		       if --quote-name (-Q) was specified.  */
-		    + (quote_as_string ? 2 : 0)
-		    + 1);
-  q = quoted;
-
-#define SAVECHAR(c) *q++ = (c)
-#define SAVE_2_CHARS(c12) \
-    do { *q++ = ((c12)[0]); \
-	 *q++ = ((c12)[1]); } while (0)
-
-  if (quote_as_string)
-    SAVECHAR ('"');
-
-  while ((c = *p++))
-    {
-      if (quote_funny_chars)
+      while ((c = *p++))
 	{
-	  switch (c)
+	  if (quote_funny_chars)
 	    {
-	    case '\\':
-	      SAVE_2_CHARS ("\\\\");
-	      break;
-
-	    case '\n':
-	      SAVE_2_CHARS ("\\n");
-	      break;
-
-	    case '\b':
-	      SAVE_2_CHARS ("\\b");
-	      break;
-
-	    case '\r':
-	      SAVE_2_CHARS ("\\r");
-	      break;
-
-	    case '\t':
-	      SAVE_2_CHARS ("\\t");
-	      break;
-
-	    case '\f':
-	      SAVE_2_CHARS ("\\f");
-	      break;
-
-	    case ' ':
-	      SAVE_2_CHARS ("\\ ");
-	      break;
-
-	    case '"':
-	      if (quote_as_string)
-		SAVECHAR ('\\');
-	      SAVECHAR ('"');
-	      break;
-
-	    default:
-	      if (ISGRAPH (c))
-		SAVECHAR (c);
-	      else
+	      switch (c)
 		{
-		  char buf[5];
-		  sprintf (buf, "\\%03o", (unsigned int) c);
-		  q = stpcpy (q, buf);
+		case '\\': OUTCHAR ('\\'); break;
+		case '\n': OUTCHAR ('\\'); c = 'n'; break;
+		case '\b': OUTCHAR ('\\'); c = 'b'; break;
+		case '\r': OUTCHAR ('\\'); c = 'r'; break;
+		case '\t': OUTCHAR ('\\'); c = 't'; break;
+		case '\f': OUTCHAR ('\\'); c = 'f'; break;
+
+		case ' ':
+		  if (!quote_as_string)
+		    OUTCHAR ('\\');
+		  break;
+
+		case '"':
+		  if (quote_as_string)
+		    OUTCHAR ('\\');
+		  break;
+
+		default:
+		  if (!ISGRAPH (c))
+		    {
+		      OUTCHAR ('\\');
+		      OUTCHAR ('0' + (c >> 6));
+		      OUTCHAR ('0' + ((c >> 3) & 3));
+		      c = '0' + (c & 3);
+		    }
 		}
 	    }
+	  else if (qmark_funny_chars && !ISPRINT (c))
+	    c = '?';
+
+	  OUTCHAR (c);
 	}
-      else
-	{
-	  if (ISPRINT (c))
-	    SAVECHAR (c);
-	  else if (!qmark_funny_chars)
-	    SAVECHAR (c);
-	  else
-	    SAVECHAR ('?');
-	}
+
+      if (quote_as_string)
+	OUTCHAR ('"');
     }
 
-  if (quote_as_string)
-    SAVECHAR ('"');
-
-  *quoted_length = q - quoted;
-
-  SAVECHAR ('\0');
-
-  return quoted;
+  return len;
 }
 
 static void
-print_name_with_quoting (const char *p, unsigned int mode, int linkok)
+print_name_with_quoting (const char *p, unsigned int mode, int linkok,
+			 struct obstack *stack)
 {
-  char *quoted;
-  size_t quoted_length;
-
   if (print_with_color)
     print_color_indicator (p, mode, linkok);
 
-  quoted = quote_filename (p, &quoted_length);
-  FPUTS (quoted != NULL ? quoted : p, stdout, quoted_length);
-  if (quoted)
-    free (quoted);
+  if (stack)
+    PUSH_CURRENT_DIRED_POS (stack);
+
+  dired_pos += quote_filename (stdout, p);
+
+  if (stack)
+    PUSH_CURRENT_DIRED_POS (stack);
 
   if (print_with_color)
     prep_non_filename_text ();
@@ -2472,7 +2482,7 @@ print_file_name_and_frills (const struct fileinfo *f)
 	    human_readable ((uintmax_t) ST_NBLOCKS (f->stat), buf,
 			    ST_NBLOCKSIZE, output_units, 0));
 
-  print_name_with_quoting (f->name, f->stat.st_mode, f->linkok);
+  print_name_with_quoting (f->name, f->stat.st_mode, f->linkok, NULL);
 
   if (indicator_style != none)
     print_type_indicator (f->stat.st_mode);
@@ -2562,7 +2572,7 @@ print_color_indicator (const char *name, unsigned int mode, int linkok)
 	  name += len;		/* Pointer to final \0.  */
 	  for (ext = col_ext_list; ext != NULL; ext = ext->next)
 	    {
-	      if (ext->ext.len <= len
+	      if ((size_t) ext->ext.len <= len
 		  && strncmp (name - ext->ext.len, ext->ext.string,
 			      ext->ext.len) == 0)
 		break;
@@ -2591,8 +2601,6 @@ put_indicator (const struct bin_str *ind)
 static int
 length_of_file_name_and_frills (const struct fileinfo *f)
 {
-  register char *p = f->name;
-  register unsigned char c;
   register int len = 0;
 
   if (print_inode)
@@ -2601,42 +2609,7 @@ length_of_file_name_and_frills (const struct fileinfo *f)
   if (print_block_size)
     len += 1 + block_size_size;
 
-  if (quote_as_string)
-    len += 2;
-
-  while ((c = *p++))
-    {
-      if (quote_funny_chars)
-	{
-	  switch (c)
-	    {
-	    case '\\':
-	    case '\n':
-	    case '\b':
-	    case '\r':
-	    case '\t':
-	    case '\f':
-	    case ' ':
-	      len += 2;
-	      break;
-
-	    case '"':
-	      if (quote_as_string)
-		len += 2;
-	      else
-		len += 1;
-	      break;
-
-	    default:
-	      if (ISPRINT (c))
-		len += 1;
-	      else
-		len += 4;
-	    }
-	}
-      else
-	len += 1;
-    }
+  len += quote_filename (0, f->name);
 
   if (indicator_style != none)
     {
@@ -2955,6 +2928,7 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
                                types.  WHEN may be `never', `always', or `auto'\n\
   -d, --directory            list directory entries instead of contents\n\
   -D, --dired                generate output designed for Emacs' dired mode\n\
+  -e, --quote-shell          quote entry names for shell (default)\n\
   -f                         do not sort, enable -aU, disable -lst\n\
   -F, --classify             append a character for typing each entry\n\
       --format=WORD          across -x, commas -m, horizontal -x, long -l,\n\
