@@ -100,16 +100,6 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(BUILT_SOURCES) $(HEADERS) \
 	$(TEXINFOS) $(INFOS) $(MANS) $(EXTRA_DIST) $(DATA)
 DEP_DISTFILES = $(DIST_COMMON) $(SOURCES) $(BUILT_SOURCES) $(HEADERS) \
 	$(TEXINFOS) $(INFO_DEPS) $(MANS) $(EXTRA_DIST) $(DATA)
-DEP_FILES = .deps/alloca.P .deps/argmatch.P .deps/backupfile.P \
-.deps/basename.P .deps/dirname.P .deps/error.P .deps/fileblocks.P \
-.deps/filemode.P .deps/fnmatch.P .deps/fsusage.P .deps/ftruncate.P \
-.deps/full-write.P .deps/getdate.P .deps/getopt.P .deps/getopt1.P \
-.deps/getversion.P .deps/group-member.P .deps/idcache.P .deps/isdir.P \
-.deps/long-options.P .deps/makepath.P .deps/modechange.P \
-.deps/mountlist.P .deps/obstack.P .deps/posixtm.P .deps/safe-read.P \
-.deps/save-cwd.P .deps/savedir.P .deps/stripslash.P .deps/userspec.P \
-.deps/xgetcwd.P .deps/xmalloc.P .deps/xstrdup.P .deps/xstrtol.P \
-.deps/xstrtoul.P .deps/yesno.P
 SOURCES = $(fu_SOURCES)
 OBJECTS = $(fu_OBJECTS)
 
@@ -175,33 +165,43 @@ dist: $(DEP_DISTFILES)
 	  || ln $(srcdir)/$$file $(distdir)/$$file 2> /dev/null \
 	  || cp -p $(srcdir)/$$file $(distdir)/$$file; \
 	done
+alloca.o: alloca.c
+argmatch.o: argmatch.c
+backupfile.o: backupfile.c backupfile.h
+basename.o: basename.c
+dirname.o: dirname.c
+error.o: error.c
+fileblocks.o: fileblocks.c
+filemode.o: filemode.c
+fnmatch.o: fnmatch.c
+fsusage.o: fsusage.c fsusage.h
+ftruncate.o: ftruncate.c
+full-write.o: full-write.c
+getdate.o: getdate.c
+getopt.o: getopt.c
+getopt1.o: getopt1.c getopt.h
+getversion.o: getversion.c backupfile.h
+group-member.o: group-member.c group-member.h
+idcache.o: idcache.c
+isdir.o: isdir.c
+long-options.o: long-options.c long-options.h
+makepath.o: makepath.c makepath.h
+modechange.o: modechange.c modechange.h
+mountlist.o: mountlist.c mountlist.h
+obstack.o: obstack.c obstack.h
+posixtm.o: posixtm.c
+safe-read.o: safe-read.c
+save-cwd.o: save-cwd.c ../config.h save-cwd.h error.h
+savedir.o: savedir.c
+stripslash.o: stripslash.c
+userspec.o: userspec.c
+xgetcwd.o: xgetcwd.c pathmax.h
+xmalloc.o: xmalloc.c
+xstrdup.o: xstrdup.c
+xstrtol.o: xstrtol.c xstrtol.h
+xstrtoul.o: xstrtoul.c xstrtol.c xstrtol.h
+yesno.o: yesno.c
 
-# This fragment is probably only useful for maintainers.  It relies on
-# GNU make and gcc.  It is only included in the generated Makefile.in
-# if `automake' is not passed the `--include-deps' flag.
-
-MKDEP = gcc -MM $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
-
--include .deps/.P
-.deps/.P: $(BUILT_SOURCES)
-	test -d .deps || mkdir .deps
-	echo > $@
-
--include $(DEP_FILES)
-$(DEP_FILES): .deps/.P
-
-.deps/%.P: %.c
-	@echo "mkdeps $< > $@"
-	@re=`echo 's,^$(srcdir)//*,,g;s, $(srcdir)//*, ,g' | sed 's,\.,\\\\.,g'`; \
-	  $(MKDEP) $< | sed "$$re" > $@-tmp
-	@if test -n "$o"; then			\
-	  sed 's/\.o:/$$o:/' $@-tmp > $@;	\
-	  rm $@-tmp;				\
-	else					\
-	  mv $@-tmp $@;				\
-	fi
-
-# End of maintainer-only section
 info:
 
 dvi:
