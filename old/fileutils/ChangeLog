@@ -1,3 +1,30 @@
+2001-05-12  Paul Eggert  <eggert@twinsun.com>
+
+	* src/system.h (NODEV): New macro, if not already defined.
+
+	* src/mknod.c (main): Check for overflow when converting out
+	of uintmax_t.  Do not assume that major_t and minor_t are no
+	wider than int.  Check for makedev failures.  Convert device
+	numbers via uintmax_t, not unsigned long, just in case.
+	Coalesce duplicate code in the block and character device
+	cases.
+
+2001-05-11  Paul Eggert  <eggert@twinsun.com>
+
+	Add new --dereference-command-line option.
+	-H now means this instead of meaning --si, as POSIX requires.
+
+	* NEWS, doc/fileutils.texi: Document this.
+
+	* src/ls.c (enum Dereference_symlink): New type.
+	(dereference): New var, replacing trace_links, which was removed.
+	(long_options, main, decode_switches, gobble_file, usage):
+	Implement the changes.
+
+	* tests/ls-2/tests:
+	Rename slink-dir test to slink-dir-dF.  Add new tests
+	slink-dir-F, slink-dir-dFH, slink-dir-dFL.
+
 2001-05-11  Paul Eggert  <eggert@twinsun.com>
 
 	dirname code cleanup.  base_name now behaves more compatibly
