@@ -1,3 +1,9 @@
+2001-06-24  Jim Meyering  <meyering@lucent.com>
+
+	* regex.m4 (jm_INCLUDED_REGEX): Use a quadrigraph to represent an
+	unmatched right bracket, rather than kludging it with an extra,
+	falsely-matching quote in a comment.  Patch by Akim Demaille.
+
 2001-05-27  Jim Meyering  <meyering@lucent.com>
 
 	* prereq.m4 (jm_PREREQ_READUTMP): Check for ut_type in struct utmpx.
