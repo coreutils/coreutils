@@ -130,7 +130,12 @@ main (argc, argv)
     }
 
   if (optind == argc)
+    {
+      if (ignore_missing_files)
+	exit (0);
+      else
     usage ();
+    }
 
   stdin_tty = isatty (0);
 
