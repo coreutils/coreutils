@@ -1,3 +1,7 @@
+2004-06-24  Jim Meyering  <jim@meyering.net>
+
+	* obstack.h (obstack_base): Fix parentheses.  From Paul Eggert.
+
 2004-06-20  Jim Meyering  <jim@meyering.net>
 
 	* obstack.h (obstack_base): Cast to (void *), per documentation.
