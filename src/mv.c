@@ -58,10 +58,8 @@ enum
   REPLY_OPTION
 };
 
-int euidaccess ();
 int isdir ();
 int lstat ();
-int yesno ();
 
 /* The name this program was run with. */
 char *program_name;
