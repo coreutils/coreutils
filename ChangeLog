@@ -1,3 +1,28 @@
+2003-11-06  Dennis Smit  <ds@nerds-incorporated.org>
+
+	* src/wc.c (main): Free `fstatus' so there is no confusion about
+        whether it's leaked or not.
+	* src/who.c (who): Likewise for `utmp_buf'.
+
+2003-11-05  Paul Eggert  <eggert@twinsun.com>
+
+	Fix 'cut' problems with size_t overflow and unsigned int.
+	More generally, resize integer variables to fit use more precisely.
+	* src/cut.c (ADD_RANGE_PAIR): Remove unnecessary parens.
+	(struct range_pair): Make members to be of type size_t, not unsigned.
+	(max_range_endpoint, eol_range_start): Now size_t, not unsigned.
+	(suppress_non_delimited, output_delimiter_specified,
+	have_read_stdin, print_kth, set_fields): Now bool, nt int.
+	(delim): Now unsigned char, not int.
+	(mark_printable_field, is_printable_field, is_range_start_index,
+	set_fields, set_fields, cut_bytes, cut_fields):
+	Use size_t, not unsigned, for field and byte counts.
+	(hash_int): Use uintptr_t, not unsigned, for pointers converted
+	to integers.  This squeezes more info out of them.
+	(set_fields, cut_bytes, cut_fields, main):
+	Use bool, not int, for booleans.
+	(set_fields): Allocate zeroed byte array with xzalloc, not xcalloc.
+
 2003-11-05  Paul Eggert  <eggert@twinsun.com>
 
 	* man/Makefile.am (check-programs-vs-x):
