@@ -3,6 +3,7 @@
 	* Version 2.0.21.
 
 	* tests/misc/head-pos: New file/test for the change of 2002-02-08.
+	* tests/misc/Makefile.am (TESTS): Add head-pos.
 
 	* src/tr.c (unquote): Make comment a little clearer.
 
