@@ -2,6 +2,9 @@
 
 	* Version 4.1.6.
 
+	Avoid giving a misleading diagnostic in some unusual cases.
+	Instead, give one that makes sense.
+
 	* src/copy.c (copy_reg): Don't treat errno==ENOENT as a special case.
 	(same_file_ok): Detect a case that would have lead to the errno==ENOENT
 	condition above (and a misleading diagnostic), and return 0 so we give
