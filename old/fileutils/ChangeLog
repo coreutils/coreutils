@@ -1,5 +1,8 @@
 2001-02-18  Jim Meyering  <meyering@lucent.com>
 
+	* tests/rm/Makefile.am (TESTS): Add isatty.
+	* tests/rm/isatty: New test, for the bug fixed below.
+
 	* Version 4.0.41.
 
 	* depcomp: New version, from automake.
