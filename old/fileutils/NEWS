@@ -1,5 +1,6 @@
 Changes in release 4.1:
 [4.0j]
+* mkdir may now be used to set special bits  e.g., `mkdir -m o+t dir' works
 * touch can now change the time(s) of a file you own even if you don't have
   read or write access to it
 * rm no longer dumps core after warning about directory cycles
