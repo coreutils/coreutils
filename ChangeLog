@@ -1,5 +1,7 @@
 2005-02-02  Jim Meyering  <jim@meyering.net>
 
+	* Version 5.3.1.
+
 	* tests/du/8gb: Also adjust the test (s/64/128/) to detect
 	systems that don't support sparse files.
 	Check for $2 -ge 128, rather than $2 = 128, in case
@@ -13,8 +15,6 @@
 	detect that sparse files can be created on NTFS under cygwin.
 
 2005-01-30  Jim Meyering  <jim@meyering.net>
-
-	* Version 5.3.1.
 
 	* src/head.c (elide_tail_bytes_pipe): Correct wording in diagnostic.
 
