@@ -113,6 +113,10 @@ struct File_spec
 
   /* FIXME: describe */
   int missing;
+
+  /* The value of errno seen last time we checked this file.  */
+  int errnum;
+
 };
 
 /* FIXME: describe */
@@ -653,6 +657,7 @@ recheck (struct File_spec *f)
   int fail = 0;
   int is_stdin = (STREQ (f->name, "-"));
   int was_missing = f->missing;
+  int prev_errnum = f->errnum;
   int new_file;
 
   fd = (is_stdin ? STDIN_FILENO : open (f->name, O_RDONLY));
@@ -664,6 +669,7 @@ recheck (struct File_spec *f)
   if (fd == -1 || fstat (fd, &new_stats) < 0)
     {
       fail = 1;
+      f->errnum = errno;
       if (f->missing)
 	{
 	  if (!was_missing)
@@ -673,7 +679,7 @@ recheck (struct File_spec *f)
 	      /* say nothing... it's still missing */
 	    }
 	}
-      else
+      else if (prev_errnum != errno)
 	{
 	  error (0, errno, "%s", pretty_name (f));
 	}
@@ -682,11 +688,14 @@ recheck (struct File_spec *f)
 	   && !S_ISFIFO (new_stats.st_mode))
     {
       fail = 1;
+      f->errnum = -1;	/* FIXME */
       error (0, 0,
 	     _("`%s' has been replaced with a non-regular file;  \
 cannot follow end of non-regular file"),
 	     pretty_name (f));
     }
+  else
+    f->errnum = 0;
 
   new_file = 0;
   if (fail)
@@ -694,6 +703,13 @@ cannot follow end of non-regular file"),
       close_fd (fd, pretty_name (f));
       close_fd (f->fd, pretty_name (f));
       f->fd = -1;
+    }
+  else if (prev_errnum && prev_errnum != ENOENT)
+    {
+      new_file = 1;
+      if (f->fd != -1)
+	close_fd (f->fd, pretty_name (f)); /* close the old handle */
+      error (0, 0, _("`%s' has become accessible"), pretty_name (f));
     }
   else if (f->ino != new_stats.st_ino || f->dev != new_stats.st_dev)
     {
@@ -783,8 +799,7 @@ tail_forever (struct File_spec *f, int nfiles)
 
 	  if (f[i].fd < 0)
 	    {
-	      if (f[i].missing)
-		recheck (&f[i]);
+	      recheck (&f[i]);
 	      continue;
 	    }
 
@@ -792,6 +807,7 @@ tail_forever (struct File_spec *f, int nfiles)
 	    {
 	      error (0, errno, "%s", pretty_name (&f[i]));
 	      f[i].fd = -1;
+	      f[i].errnum = errno;
 	      continue;
 	    }
 
@@ -1022,7 +1038,10 @@ tail_file (struct File_spec *f, off_t n_units)
   if (fd == -1)
     {
       if (forever)
-	f->fd = -1;
+	{
+	  f->fd = -1;
+	  f->errnum = errno;
+	}
       error (0, errno, "%s", pretty_name (f));
       errors = 1;
     }
@@ -1033,17 +1052,20 @@ tail_file (struct File_spec *f, off_t n_units)
       errors = tail (pretty_name (f), fd, n_units);
       if (forever)
 	{
+	  f->errnum = 0;
 	  /* FIXME: duplicate code */
 	  if (fstat (fd, &stats) < 0)
 	    {
 	      error (0, errno, "%s", pretty_name (f));
 	      errors = 1;
+	      f->errnum = errno;
 	    }
 	  else if (!S_ISREG (stats.st_mode) && !S_ISFIFO (stats.st_mode))
 	    {
 	      error (0, 0, _("%s: cannot follow end of non-regular file"),
 		     pretty_name (f));
 	      errors = 1;
+	      f->errnum = -1;	/* FIXME */
 	    }
 	  if (errors)
 	    {
