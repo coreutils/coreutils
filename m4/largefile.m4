@@ -1,4 +1,4 @@
-#serial 9
+#serial 10
 
 dnl By default, many hosts won't let programs access large files;
 dnl one must use special compiler options to get large-file access to work.
@@ -107,14 +107,21 @@ AC_DEFUN(AC_SYS_LARGEFILE,
 [	hpux10.[2-9][0-9]* | hpux1[1-9]* | hpux[2-9][0-9]*)]
 	  ac_cv_sys_file_offset_bits=64 ;;
 	esac])
+     AC_SYS_LARGEFILE_MACRO_VALUE(_GNU_SOURCE,
+       ac_cv_sys_gnu_source,
+       [Define to make ftello visible on some hosts (e.g. glibc 2.1.3).],
+       [AC_TRY_COMPILE([#include <stdio.h>], [return !ftello;], ,
+	  [AC_TRY_COMPILE([#define _GNU_SOURCE 1
+#include <stdio.h>],
+	     [return !ftello;],
+	     ac_cv_sys_gnu_source=1)])])
      AC_SYS_LARGEFILE_MACRO_VALUE(_LARGEFILE_SOURCE,
        ac_cv_sys_largefile_source,
-       [Define to make fseeko etc. visible, on some hosts.],
-       [case "$host_os" in
-	# HP-UX 10.20 and later
-[	hpux10.[2-9][0-9]* | hpux1[1-9]* | hpux[2-9][0-9]*)]
-	  ac_cv_sys_largefile_source=1 ;;
-	esac])
+       [Define to make ftello visible on some hosts (e.g. HP-UX 10.20).],
+       [AC_TRY_COMPILE([#include <stdio.h>], [return !ftello;], ,
+	  [AC_TRY_COMPILE([#define _LARGEFILE_SOURCE 1
+#include <stdio.h>], [return !ftello;],
+	     ac_cv_sys_largefile_source=1)])])
      AC_SYS_LARGEFILE_MACRO_VALUE(_LARGE_FILES,
        ac_cv_sys_large_files,
        [Define for large files, on AIX-style hosts.],
