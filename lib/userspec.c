@@ -27,6 +27,7 @@
 
 #include <alloca.h>
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <sys/types.h>
 #include <pwd.h>
@@ -44,6 +45,7 @@
 # include <unistd.h>
 #endif
 
+#include "inttostr.h"
 #include "strdup.h"
 #include "xalloc.h"
 #include "xstrtol.h"
@@ -96,9 +98,9 @@ struct group *getgrgid ();
 #define V_STRDUP(dest, src)						\
   do									\
     {									\
-      int _len = strlen ((src));					\
-      (dest) = (char *) alloca (_len + 1);				\
-      strcpy (dest, src);						\
+      size_t size = strlen (src) + 1;					\
+      (dest) = (char *) alloca (size);					\
+      memcpy (dest, src, size);						\
     }									\
   while (0)
 
@@ -109,19 +111,25 @@ struct group *getgrgid ();
    POSIX says that only '0' through '9' are digits.  Prefer ISDIGIT to
    ISDIGIT_LOCALE unless it's important to use the locale's definition
    of `digit' even when the host does not conform to POSIX.  */
-#define ISDIGIT(c) ((unsigned) (c) - '0' <= 9)
+#define ISDIGIT(c) ((unsigned int) (c) - '0' <= 9)
 
-/* Return nonzero if STR represents an unsigned decimal integer,
-   otherwise return 0. */
+#ifdef __DJGPP__
 
-static int
+/* Return true if STR represents an unsigned decimal integer.  */
+
+static bool
 is_number (const char *str)
 {
-  for (; *str; str++)
-    if (!ISDIGIT (*str))
-      return 0;
-  return 1;
+  do
+    {
+      if (!ISDIGIT (*str))
+	return false;
+    }
+  while (*++str);
+
+  return true;
 }
+#endif
 
 /* Extract from NAME, which has the form "[user][:.][group]",
    a USERNAME, UID U, GROUPNAME, and GID G.
@@ -209,23 +217,16 @@ parse_user_spec (const char *spec_arg, uid_t *uid, gid_t *gid,
       pwd = getpwnam (u);
       if (pwd == NULL)
 	{
-
-	  if (!is_number (u))
-	    error_msg = E_invalid_user;
+	  bool use_login_group = (separator != NULL && g == NULL);
+	  if (use_login_group)
+	    error_msg = E_bad_spec;
 	  else
 	    {
-	      int use_login_group;
-	      use_login_group = (separator != NULL && g == NULL);
-	      if (use_login_group)
-		error_msg = E_bad_spec;
-	      else
-		{
-		  unsigned long int tmp_long;
-		  if (xstrtoul (u, NULL, 0, &tmp_long, NULL) != LONGINT_OK
-		      || tmp_long > MAXUID)
-		    return _(E_invalid_user);
-		  *uid = tmp_long;
-		}
+	      unsigned long int tmp_long;
+	      if (! (xstrtoul (u, NULL, 10, &tmp_long, "") == LONGINT_OK
+		     && tmp_long <= MAXUID))
+		return _(E_invalid_user);
+	      *uid = tmp_long;
 	    }
 	}
       else
@@ -239,12 +240,9 @@ parse_user_spec (const char *spec_arg, uid_t *uid, gid_t *gid,
 	      grp = getgrgid (pwd->pw_gid);
 	      if (grp == NULL)
 		{
-		  /* This is enough room to hold the unsigned decimal
-		     representation of any 32-bit quantity and the trailing
-		     zero byte.  */
-		  char uint_buf[21];
-		  sprintf (uint_buf, "%u", (unsigned) (pwd->pw_gid));
-		  V_STRDUP (groupname, uint_buf);
+		  char buf[INT_BUFSIZE_BOUND (uintmax_t)];
+		  char const *num = umaxtostr (pwd->pw_gid, buf);
+		  V_STRDUP (groupname, num);
 		}
 	      else
 		{
@@ -262,16 +260,11 @@ parse_user_spec (const char *spec_arg, uid_t *uid, gid_t *gid,
       grp = getgrnam (g);
       if (grp == NULL)
 	{
-	  if (!is_number (g))
-	    error_msg = E_invalid_group;
-	  else
-	    {
-	      unsigned long int tmp_long;
-	      if (xstrtoul (g, NULL, 0, &tmp_long, NULL) != LONGINT_OK
-		  || tmp_long > MAXGID)
-		return _(E_invalid_group);
-	      *gid = tmp_long;
-	    }
+	  unsigned long int tmp_long;
+	  if (! (xstrtoul (g, NULL, 10, &tmp_long, "") == LONGINT_OK
+		 && tmp_long <= MAXGID))
+	    return _(E_invalid_group);
+	  *gid = tmp_long;
 	}
       else
 	*gid = grp->gr_gid;
@@ -336,10 +329,10 @@ main (int argc, char **argv)
       tmp = strdup (argv[i]);
       e = parse_user_spec (tmp, &uid, &gid, &username, &groupname);
       free (tmp);
-      printf ("%s: %u %u %s %s %s\n",
+      printf ("%s: %lu %lu %s %s %s\n",
 	      argv[i],
-	      (unsigned int) uid,
-	      (unsigned int) gid,
+	      (unsigned long int) uid,
+	      (unsigned long int) gid,
 	      NULL_CHECK (username),
 	      NULL_CHECK (groupname),
 	      NULL_CHECK (e));
