@@ -5,6 +5,11 @@
 	Problem reported by Felipe Kellermann in:
 	http://lists.gnu.org/archive/html/bug-coreutils/2004-09/msg00081.html
 
+2004-09-12  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.maint (my-distcheck): When building with -Werror, also
+	require -Wshadow.
+
 2004-09-10  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: "tail" now handles obscure POSIX 1003.2-1992 cases better.
