@@ -81,9 +81,6 @@ my @tv = (
 ['rep-3',   q|'a[b*513]c' '1[x*]2'|,	'abc', '1x2', 0],
 ['esc',     q|'a\-z' 'A-Z'|,		'abc-z', 'AbcBC', 0],
 
-
-
-
 #
 # From Ross
 ['ross-0a', '-cs ' . q|'[:upper:]' 'X[Y*]'|,	'', '', 1],
@@ -100,6 +97,13 @@ my @tv = (
 
 sub test_vector
 {
+  my $t;
+  foreach $t (@tv)
+    {
+      my ($test_name, $flags, $in, $exp, $ret) = @$t;
+      $Test::input_via{$test_name} = {REDIR => 0, PIPE => 0};
+    }
+
   return @tv;
 }
 
