@@ -13,11 +13,6 @@ AC_DEFUN([UTILS_FUNC_MKSTEMP],
     AC_CACHE_CHECK([for mkstemp limitations],
       utils_cv_func_mkstemp_limitations,
       [
-	utils_tmpdir_mkstemp=mkst-$$$$
-	# Arrange for deletion-upon-exception of this temporary directory.
-	ac_clean_files="$ac_clean_files $utils_tmpdir_mkstemp"
-	mkdir $utils_tmpdir_mkstemp
-
 	AC_TRY_RUN([
 #         include <stdlib.h>
 	  int main ()
@@ -25,7 +20,7 @@ AC_DEFUN([UTILS_FUNC_MKSTEMP],
 	    int i;
 	    for (i = 0; i < 30; i++)
 	      {
-		char template[] = "$utils_tmpdir_mkstemp/aXXXXXX";
+		char template[] = "conftestXXXXXX";
 		int fd = mkstemp (template);
 		if (fd == -1)
 		  exit (1);
@@ -38,8 +33,6 @@ AC_DEFUN([UTILS_FUNC_MKSTEMP],
 	utils_cv_func_mkstemp_limitations=yes,
 	utils_cv_func_mkstemp_limitations=yes
 	)
-
-	rm -rf $utils_tmpdir_mkstemp
       ]
     )
   fi
