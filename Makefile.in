@@ -146,9 +146,17 @@ sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 
-SUBDIRS = lib src doc man m4 po tests old
+SUBDIRS = lib src doc man m4 po tests
 EXTRA_DIST = Makefile.cfg Makefile.maint GNUmakefile \
-  .kludge-stamp .prev-version THANKS-to-translators THANKStt.in
+  .kludge-stamp .prev-version THANKS-to-translators THANKStt.in \
+  old/fileutils/ChangeLog \
+  old/fileutils/ChangeLog-1997 \
+  old/sh-utils/ChangeLog \
+  old/sh-utils/ChangeLog.0 \
+  old/textutils/ChangeLog \
+  old/fileutils/NEWS \
+  old/sh-utils/NEWS \
+  old/textutils/NEWS
 
 
 ACLOCAL_AMFLAGS = -I m4
@@ -362,7 +370,7 @@ distdir: $(DISTFILES)
 	esac
 	$(am__remove_distdir)
 	mkdir $(distdir)
-	$(mkinstalldirs) $(distdir)/config $(distdir)/po
+	$(mkinstalldirs) $(distdir)/config $(distdir)/old/fileutils $(distdir)/old/sh-utils $(distdir)/old/textutils $(distdir)/po
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \
 	  case $$file in \
