@@ -47,6 +47,9 @@ void exit ();
 # define _(String) String
 #endif
 
+/* Get prototypes for the functions defined here.  */
+#include <error.h>
+
 /* If NULL, error will flush stdout, then print on stderr the program
    name, a colon and a space.  Otherwise, error will call this
    function without parameters instead.  */
