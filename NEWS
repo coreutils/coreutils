@@ -36,14 +36,6 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   cut's --output-delimiter=D option works with abutting byte ranges.
 
-  The --date (-d) option of "date" and "touch" is now pickier about date values:
-  it rejects dates like "January 32" that have out-of-range components.
-  Also, date values can now have leading TZ="..." assignments that override
-  the environment only while that date is being processed.  For example,
-  the following shell command converts from Paris to New York time:
-
-     TZ="America/New_York" date --date='TZ="Europe/Paris" 2004-10-31 06:30'
-
   du no longer segfaults when a subdirectory of an operand
   directory is removed while du is traversing that subdirectory.
   Since the bug was in the underlying fts.c module, it also affected
@@ -221,12 +213,25 @@ GNU coreutils NEWS                                    -*- outline -*-
   du accepts a new option --files0-from=FILE, where FILE contains a
   list of NUL-terminated file names.
 
-  `date -d' and `touch -d' now accept integer counts of seconds since
-  1970 when prefixed by `@'.  For example, `@321' represents
-  1970-01-01 00:05:21 UTC.
+  Date syntax as used by date -d, date -f, and touch -d has been
+  changed as follows:
 
-  `date -d', `date -f' and `touch -d' now handle fractional time
-  stamps like 2004-02-27 14:19:13.489392193.
+    Dates like `January 32' with out-of-range components are now rejected.
+
+    Dates can have fractional time stamps like 2004-02-27 14:19:13.489392193.
+
+    Dates can be entered via integer counts of seconds since 1970 when
+    prefixed by `@'.  For example, `@321' represents 1970-01-01 00:05:21 UTC.
+
+    Time zone corrections can now separate hours and minutes with a colon,
+    and can follow standard abbreviations like "UTC".  For example,
+    "UTC +0530" and "+05:30" are supported, and are both equivalent to "+0530".
+
+    Date values can now have leading TZ="..." assignments that override
+    the environment only while that date is being processed.  For example,
+    the following shell command converts from Paris to New York time:
+
+      TZ="America/New_York" date --date='TZ="Europe/Paris" 2004-10-31 06:30'
 
   `date' has a new option --iso-8601=ns that outputs
   nanosecond-resolution time stamps.
