@@ -8,7 +8,7 @@ use FileHandle;
 use File::Compare qw(compare);
 
 @ISA = qw(Exporter);
-($VERSION = '$Revision: 1.14 $ ') =~ tr/[0-9].//cd;
+($VERSION = '$Revision: 1.15 $ ') =~ tr/[0-9].//cd;
 @EXPORT = qw (run_tests);
 
 my @Types = qw (IN OUT ERR EXIT);
@@ -204,7 +204,8 @@ sub run_tests ($$$$$)
 	    }
 	}
 
-      # FIXME: Require at least one of OUT_DATA, OUT_FILE.  Why?
+      # FIXME: Does it ever make sense to specify a filename *and* contents
+      # in OUT or ERR spec?
 
       warn "$test_name...\n" if $verbose;
       my $t_out = "$test_name-out";
