@@ -26,6 +26,7 @@
 
 #include <config.h>
 #include <getopt.h>
+#include <stdio.h>
 
 #include "error.h"
 #include "readutmp.h"
