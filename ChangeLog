@@ -1,6 +1,12 @@
-2005-02-20  Paul Eggert  <eggert@cs.ucla.edu>
+2005-02-21  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	* src/Makefile.am (dd_LDADD, shred_LDADD): Add $(LIB_GETHRXTIME).
+	(nanosec_libs): Add $(LIB_XNANOSLEEP).  Needed for newer GNU/Linux
+	hosts with clock_gettime.
+
+2005-02-20  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: Describe user-visible change to dd.
 	* src/Makefile.am (dd_LDADD, shred_LDADD, nanosec_libs):

@@ -1,3 +1,8 @@
+2005-02-21  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* Makefile.am (libfetish_a_SOURCES): Remove xnanosleep.c,
+	xnanosleep.h; now done by ../m4/xnanosleep.m4 automatically.
+
 2005-02-20  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* gethrxtime.h, gethrxtime.c, xtime.h: New files.

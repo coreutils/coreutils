@@ -1,3 +1,13 @@
+2005-02-21  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* xnanosleep.m4: New file.
+	* gethrxtime.m4 (gl_PREREQ_GETHRXTIME): Require gl_CLOCK_TIME,
+	gl_USE_SYSTEM_EXTENSIONS.  Check whether CLOCK_MONOTONIC is
+	defined, and set LIB_GETHRXTIME accordingly.  This is needed
+	for newer GNU/Linux systems that have clock_gettime, so that they
+	link in the appropriate library for it when needed.
+	* prereq.m4 (gl_PREREQ): Require gl_XNANOSLEEP.
+
 2005-02-20  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* gethrxtime.m4: New file.
