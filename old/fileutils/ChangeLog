@@ -1,5 +1,7 @@
 Sat Jan 25 00:34:39 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* Version 3.16.
+
 	* src/du.c (count_entry): Fix blatant bug (typo?) that made
 	--megabytes report numbers in units of kilobytes.
 	Reported by Galen Hazelwood.
