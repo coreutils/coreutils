@@ -2,7 +2,7 @@
 
 	* Version 4.0.33.
 
-	* tests/touch/no-rights: Use touch with `-d tomorrow' to avoid
+	* tests/touch/no-rights: Use touch with `-d tomorrow' to avoid a
 	race condition.
 
 	* tests/Fetish.pm (_compare_files): New function.
