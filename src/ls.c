@@ -43,7 +43,8 @@
 #include <config.h>
 #include <sys/types.h>
 
-#if HAVE_SYS_IOCTL_H
+#include <termios.h>
+#ifdef GWINSZ_IN_SYS_IOCTL
 # include <sys/ioctl.h>
 #endif
 
@@ -127,24 +128,6 @@ struct bin_str
   {
     unsigned int len;		/* Number of bytes */
     char *string;		/* Pointer to the same */
-  };
-
-struct bin_str color_indicator[] =
-  {
-    { LEN_STR_PAIR ("\033[") },		/* lc: Left of color sequence */
-    { LEN_STR_PAIR ("m") },		/* rc: Right of color sequence */
-    { 0, NULL },			/* ec: End color (replaces lc+no+rc) */
-    { LEN_STR_PAIR ("0") },		/* no: Normal */
-    { LEN_STR_PAIR ("0") },		/* fi: File: default */
-    { LEN_STR_PAIR ("32") },		/* di: Directory: green */
-    { LEN_STR_PAIR ("36") },		/* ln: Symlink: cyan */
-    { LEN_STR_PAIR ("31") },		/* pi: Pipe: red */
-    { LEN_STR_PAIR ("33") },		/* so: Socket: yellow/brown */
-    { LEN_STR_PAIR ("44;37") },		/* bd: Block device: white on blue */
-    { LEN_STR_PAIR ("44;37") },		/* cd: Char device: white on blue */
-    { 0, NULL },			/* mi: Missing file: undefined */
-    { 0, NULL },			/* or: Orphanned symlink: undefined */
-    { LEN_STR_PAIR ("35") }		/* ex: Executable: purple */
   };
 
 #ifndef STDC_HEADERS
@@ -390,6 +373,24 @@ struct col_ext_type
     struct bin_str ext;		/* The extension we're looking for */
     struct bin_str seq;		/* The sequence to output when we do */
     struct col_ext_type *next;	/* Next in list */
+  };
+
+static struct bin_str color_indicator[] =
+  {
+    { LEN_STR_PAIR ("\033[") },		/* lc: Left of color sequence */
+    { LEN_STR_PAIR ("m") },		/* rc: Right of color sequence */
+    { 0, NULL },			/* ec: End color (replaces lc+no+rc) */
+    { LEN_STR_PAIR ("0") },		/* no: Normal */
+    { LEN_STR_PAIR ("0") },		/* fi: File: default */
+    { LEN_STR_PAIR ("32") },		/* di: Directory: green */
+    { LEN_STR_PAIR ("36") },		/* ln: Symlink: cyan */
+    { LEN_STR_PAIR ("31") },		/* pi: Pipe: red */
+    { LEN_STR_PAIR ("33") },		/* so: Socket: yellow/brown */
+    { LEN_STR_PAIR ("44;37") },		/* bd: Block device: white on blue */
+    { LEN_STR_PAIR ("44;37") },		/* cd: Char device: white on blue */
+    { 0, NULL },			/* mi: Missing file: undefined */
+    { 0, NULL },			/* or: Orphanned symlink: undefined */
+    { LEN_STR_PAIR ("35") }		/* ex: Executable: purple */
   };
 
 /* FIXME: comment  */
