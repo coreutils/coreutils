@@ -16,6 +16,7 @@ AC_DEFUN([jm_PREREQ],
   jm_PREREQ_MBSWIDTH
   jm_PREREQ_MEMCHR
   jm_PREREQ_PHYSMEM
+  jm_PREREQ_POSIXVER
   jm_PREREQ_QUOTEARG
   jm_PREREQ_READUTMP
   jm_PREREQ_REGEX
@@ -89,6 +90,12 @@ AC_DEFUN([jm_PREREQ_PHYSMEM],
 [
   AC_CHECK_HEADERS(sys/pstat.h unistd.h)
   AC_CHECK_FUNCS(pstat_getstatic pstat_getdynamic)
+])
+
+AC_DEFUN([jm_PREREQ_POSIXVER],
+[
+  AC_CHECK_HEADERS(unistd.h)
+  AC_CHECK_DECLS([getenv])
 ])
 
 AC_DEFUN([jm_PREREQ_QUOTEARG],
