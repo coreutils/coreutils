@@ -1,6 +1,12 @@
-2003-08-26  Jim Meyering  <jim@meyering.net>
+2003-08-27  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.91.
+
+	* src/stat.c (print_it): Avoid buffer overrun that would
+	occur when the user-specified format string ends with `%'.
+	Patch by Tommi Kyntola.
+
+2003-08-26  Jim Meyering  <jim@meyering.net>
 
 	Apply changes from bison.
 	* GNUmakefile (SHELL): Define to `sh', if necessary.
