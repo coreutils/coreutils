@@ -293,6 +293,9 @@ TESTS = $x-tests
 mk_script = $(srcdir)/../mk-script
 MAINTAINERCLEANFILES = $x-tests $(maint_gen)
 CLEANFILES = $(run_gen)
+TESTS_ENVIRONMENT = \
+  PATH="`pwd`/../../src$(PATH_SEPARATOR)$$PATH"
+
 all: all-am
 
 .SUFFIXES:
