@@ -1,6 +1,20 @@
-2004-11-23  Paul Eggert  <eggert@cs.ucla.edu>
+2004-11-24  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	Since the changes of 2004-05-22, the u.saved_cwd member at
+	the bottom of the active-directory stack was no longer
+	strictly necessary.  This change removes that member and uses
+	the newer cwd_state parameter for the final restore_cwd.
+
+	* src/remove.c (struct AD_ent) [u]: Remove now-unnecessary union.
+	[dev_ino]: Rename from `a'.
+	(AD_pop_and_chdir): Add a parameter to play the role of just-removed
+	bottom-of-stack cwd-state member.
+	(AD_pop_and_chdir): No longer return boolean.  Adjust caller.
+	(AD_push_initial): Remove CWD parameter.  Adjust caller.
+
+2004-11-23  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Minor performance improvements and cleanups for "touch".
 	* src/touch.c (posix_date): Remove; not needed as a static var.
