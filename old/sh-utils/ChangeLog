@@ -596,10 +596,6 @@
 	(main): Handle new options.
 	Mostly from Michael Stone.
 
-	FIXME (remove this, later): This probably doesn't compile on any
-	type of system except Linux, due to the unprotected uses of e.g.,
-	utmp_ent->ut_exit.e_termination.
-
 2001-05-11  Paul Eggert  <eggert@twinsun.com>
 
 	dirname code cleanup.  base_name now behaves more compatibly
