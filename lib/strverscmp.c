@@ -94,7 +94,7 @@ strverscmp (s1, s2)
   state = result_type[state << 2 | ((c2 == '0') + (isdigit (c2) != 0))];
 
   switch (state)
-  {
+    {
     case CMP:
       return diff;
 
@@ -107,5 +107,5 @@ strverscmp (s1, s2)
 
     default:
       return state;
-  }
+    }
 }
