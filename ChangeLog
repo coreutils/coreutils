@@ -1,6 +1,15 @@
-2004-02-02  Jim Meyering  <jim@meyering.net>
+2004-02-05  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.1.3.
+
+	* src/system.h (ST_TIME_CMP_NS, ST_TIME_CMP): Remove definitions.
+	(ATIME_CMP, CTIME_CMP, MTIME_CMP, TIMESPEC_NS): Likewise.
+	Now, those are all defined in timespec.h.
+	Include timespec.h.
+
+	* src/date.c: Don't include timespec.h, now that system.h does it.
+
+2004-02-02  Jim Meyering  <jim@meyering.net>
 
 	* src/stat.c (do_stat): Remove extra trailing newline from
 	default formats.  Reported by Nelson H. F. Beebe.
