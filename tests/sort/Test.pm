@@ -196,6 +196,7 @@ my @tv = (
 
 # This test failed until 1.22f.  From Zvi Har'El.
 ["22a", '-k 2,2fd -k 1,1r', "3 b\n4 B\n", "4 B\n3 b\n", 0],
+["22b", '-k 2,2d  -k 1,1r', "3 b\n4 b\n", "4 b\n3 b\n", 0],
 
 );
 
