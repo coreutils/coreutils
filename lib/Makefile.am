@@ -18,6 +18,7 @@ libfetish_a_SOURCES = \
   strftime.c \
   getopt.c getopt.h getopt1.c \
   hash.c hash.h \
+  hash-pjw.c hash-pjw.h \
   __fpending.h \
   addext.c \
   argmatch.c argmatch.h \
