@@ -6073,6 +6073,9 @@ later can parse @acronym{ISO} dates, but older Emacs versions do not, so if
 you are using an older version of Emacs and specify a non-@acronym{POSIX}
 locale, you may need to set @samp{TIME_STYLE="locale"}.
 
+To avoid certain denial-of-service attacks, timestamps that would be
+longer than 1000 bytes may be treated as errors.
+
 
 @node Formatting the file names
 @subsection Formatting the file names
