@@ -108,8 +108,7 @@ by the Foundation.
 @cindex text utilities
 @cindex utilities for text handling
 
-This manual minimally documents version @value{VERSION} of the GNU text
-utilities.
+This manual documents version @value{VERSION} of the GNU text utilities.
 
 @menu
 * Introduction::                       Caveats, overview, and authors.
