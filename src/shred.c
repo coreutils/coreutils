@@ -95,6 +95,7 @@
 # include "error.h"
 # include "human.h"
 # include "quotearg.h"		/* For quotearg_colon */
+# include "quote.h"		/* For quotearg_colon */
 # include "xalloc.h"
 char *xstrdup PARAMS ((char const *));
 
@@ -1608,7 +1609,8 @@ wipename (char *oldname, char const *qoldname, struct Options const *flags)
 		       * about renaming oldname.  newname doesn't need
 		       * quoting because we picked it.
 		       */
-		      error (0, 0, _("%s: renamed to `%s'"), qoldname, newname);
+		      error (0, 0, _("%s: renamed to %s"), qoldname,
+			     quote (newname));
 		    }
 		  memcpy (oldname + (base - newname), base, len + 1);
 		  break;
