@@ -254,9 +254,15 @@ typedef enum {false = 0, true = 1} bool;
    ? st_blocks ((statbuf).st_size) : 0)
 # endif /* !_POSIX_SOURCE && BSIZE */
 #else /* HAVE_STRUCT_STAT_ST_BLOCKS */
-/* Some systems, like Sequents, return st_blksize of 0 on pipes. */
-# define ST_BLKSIZE(statbuf) ((statbuf).st_blksize > 0 \
-			       ? (statbuf).st_blksize : DEV_BSIZE)
+/* Some systems, like Sequents, return st_blksize of 0 on pipes.
+   Also, when running `cat large-file | rsh hp-ux-system', cat would
+   determine that the output stream had an st_blksize of 2147421096.
+   So here we arbitrarily limit the `optimal' block size to 4MB.
+   If anyone knows of a system for which the legitimate value for
+   st_blksize can exceed 4MB, please report it as a bug in this code.  */
+# define ST_BLKSIZE(statbuf) ((0 < (statbuf).st_blksize \
+			       && (statbuf).st_blksize <= (1 << 22)) /* 4MB */ \
+			      ? (statbuf).st_blksize : DEV_BSIZE)
 # if defined hpux || defined __hpux__ || defined __hpux
 /* HP-UX counts st_blocks in 1024-byte units.
    This loses when mixing HP-UX and BSD filesystems with NFS.  */
