@@ -309,8 +309,6 @@ main (argc, argv)
     }
   if (shell == 0)
     {
-      /* FIXME: Using malloc (through xstrdup) to allocate this space
-	 is a minor memory leak.  Consider using alloca instead.  */
       shell = xstrdup (pw->pw_shell);
     }
   modify_environment (pw, shell);
