@@ -1,5 +1,5 @@
 /* cp-hash.c  -- file copying (hash search routines)
-   Copyright (C) 89, 90, 91, 1995-2000 Free Software Foundation.
+   Copyright (C) 89, 90, 91, 1995-2001 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -33,7 +33,11 @@ struct entry
 {
   ino_t ino;
   dev_t dev;
-  char *node;			/* Path name, or &new_file for new inodes.  */
+  /* Destination path name (of non-directory or pre-existing directory)
+     corresponding to the dev/ino of a copied file, or the destination path
+     name corresponding to a dev/ino pair for a newly-created directory. */
+  char *node;
+
   struct entry *coll_link;	/* 0 = entry not occupied.  */
 };
 
@@ -46,8 +50,7 @@ struct htab
   struct entry *hash[1];	/* Vector of pointers in `entry_tab'.  */
 };
 
-struct htab *htab;
-char new_file;
+static struct htab *htab;
 
 static char *cph_hash_insert PARAMS ((ino_t ino, dev_t dev, const char *node));
 
@@ -65,7 +68,7 @@ remember_created (const char *path)
       return 1;
     }
 
-  cph_hash_insert (sb.st_ino, sb.st_dev, &new_file);
+  cph_hash_insert (sb.st_ino, sb.st_dev, path);
   return 0;
 }
 
