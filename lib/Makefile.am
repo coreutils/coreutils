@@ -33,7 +33,7 @@ libfetish_a_SOURCES = \
   posixtm.c posixtm.h \
   posixver.c posixver.h \
   strftime.c strftime.h \
-  getopt.c getopt.h getopt1.c \
+  getopt.c getopt.h getopt1.c getopt_int.c \
   hash.c hash.h \
   hash-pjw.c hash-pjw.h \
   __fpending.h \
