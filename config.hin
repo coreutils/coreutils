@@ -611,6 +611,12 @@
 /* Define to 1 if you have the `next_dev' function. */
 #undef HAVE_NEXT_DEV
 
+/* Define to 1 if you have the <nfs/nfs_clnt.h> header file. */
+#undef HAVE_NFS_NFS_CLNT_H
+
+/* Define to 1 if you have the <nfs/vfs.h> header file. */
+#undef HAVE_NFS_VFS_H
+
 /* Define to 1 if you have the <nlist.h> header file. */
 #undef HAVE_NLIST_H
 
