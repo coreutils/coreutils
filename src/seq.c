@@ -140,12 +140,6 @@ main (int argc, char **argv)
   }
 #endif
 
-  if (argc == 1)
-    {
-      error (0, 0, _("too few arguments"));
-      usage (1);
-    }
-
   /* We have to handle negative numbers in the command line but this
      conflicts with the command line arguments.  So explicitly check first
      whether the next argument looks like a negative number.  */
