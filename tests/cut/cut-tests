@@ -2556,6 +2556,60 @@ else
   esac
 fi
 test -s out-delim3.E || rm -f out-delim3.E
+$xx -c1-3,2-4,6- --output-d=: $srcdir/out-delim3a.I > out-delim3a.O 2> out-delim3a.E
+code=$?
+if test $code != 0; then
+  $echo "Test out-delim3a(F) failed: ../../src/cut return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp out-delim3a.O $srcdir/out-delim3a.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE"; then $echo "passed out-delim3a(F)"; fi;;
+    1) $echo "Test out-delim3a(F) failed: files out-delim3a.O and $srcdir/out-delim3a.X differ" 1>&2
+       (diff -c out-delim3a.O $srcdir/out-delim3a.X) 2> /dev/null
+       errors=`expr $errors + 1`;;
+    2) $echo "Test out-delim3a(F) may have failed." 1>&2
+       $echo The command "cmp out-delim3a.O $srcdir/out-delim3a.X" failed. 1>&2
+       errors=`expr $errors + 1`;;
+  esac
+fi
+test -s out-delim3a.E || rm -f out-delim3a.E
+cat $srcdir/out-delim3a.I | $xx -c1-3,2-4,6- --output-d=: > out-delim3a.O 2> out-delim3a.E
+code=$?
+if test $code != 0; then
+  $echo "Test out-delim3a(|) failed: ../../src/cut return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp out-delim3a.O $srcdir/out-delim3a.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE"; then $echo "passed out-delim3a(|)"; fi;;
+    1) $echo "Test out-delim3a(|) failed: files out-delim3a.O and $srcdir/out-delim3a.X differ" 1>&2
+       (diff -c out-delim3a.O $srcdir/out-delim3a.X) 2> /dev/null
+       errors=`expr $errors + 1`;;
+    2) $echo "Test out-delim3a(|) may have failed." 1>&2
+       $echo The command "cmp out-delim3a.O $srcdir/out-delim3a.X" failed. 1>&2
+       errors=`expr $errors + 1`;;
+  esac
+fi
+test -s out-delim3a.E || rm -f out-delim3a.E
+$xx -c1-3,2-4,6- --output-d=: < $srcdir/out-delim3a.I > out-delim3a.O 2> out-delim3a.E
+code=$?
+if test $code != 0; then
+  $echo "Test out-delim3a(<) failed: ../../src/cut return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp out-delim3a.O $srcdir/out-delim3a.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE"; then $echo "passed out-delim3a(<)"; fi;;
+    1) $echo "Test out-delim3a(<) failed: files out-delim3a.O and $srcdir/out-delim3a.X differ" 1>&2
+       (diff -c out-delim3a.O $srcdir/out-delim3a.X) 2> /dev/null
+       errors=`expr $errors + 1`;;
+    2) $echo "Test out-delim3a(<) may have failed." 1>&2
+       $echo The command "cmp out-delim3a.O $srcdir/out-delim3a.X" failed. 1>&2
+       errors=`expr $errors + 1`;;
+  esac
+fi
+test -s out-delim3a.E || rm -f out-delim3a.E
 $xx -c4-,2-3 --output-d=: $srcdir/out-delim4.I > out-delim4.O 2> out-delim4.E
 code=$?
 if test $code != 0; then
@@ -2664,8 +2718,62 @@ else
   esac
 fi
 test -s out-delim5.E || rm -f out-delim5.E
+$xx -c2,1-3 --output-d=: $srcdir/out-delim6.I > out-delim6.O 2> out-delim6.E
+code=$?
+if test $code != 0; then
+  $echo "Test out-delim6(F) failed: ../../src/cut return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp out-delim6.O $srcdir/out-delim6.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE"; then $echo "passed out-delim6(F)"; fi;;
+    1) $echo "Test out-delim6(F) failed: files out-delim6.O and $srcdir/out-delim6.X differ" 1>&2
+       (diff -c out-delim6.O $srcdir/out-delim6.X) 2> /dev/null
+       errors=`expr $errors + 1`;;
+    2) $echo "Test out-delim6(F) may have failed." 1>&2
+       $echo The command "cmp out-delim6.O $srcdir/out-delim6.X" failed. 1>&2
+       errors=`expr $errors + 1`;;
+  esac
+fi
+test -s out-delim6.E || rm -f out-delim6.E
+cat $srcdir/out-delim6.I | $xx -c2,1-3 --output-d=: > out-delim6.O 2> out-delim6.E
+code=$?
+if test $code != 0; then
+  $echo "Test out-delim6(|) failed: ../../src/cut return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp out-delim6.O $srcdir/out-delim6.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE"; then $echo "passed out-delim6(|)"; fi;;
+    1) $echo "Test out-delim6(|) failed: files out-delim6.O and $srcdir/out-delim6.X differ" 1>&2
+       (diff -c out-delim6.O $srcdir/out-delim6.X) 2> /dev/null
+       errors=`expr $errors + 1`;;
+    2) $echo "Test out-delim6(|) may have failed." 1>&2
+       $echo The command "cmp out-delim6.O $srcdir/out-delim6.X" failed. 1>&2
+       errors=`expr $errors + 1`;;
+  esac
+fi
+test -s out-delim6.E || rm -f out-delim6.E
+$xx -c2,1-3 --output-d=: < $srcdir/out-delim6.I > out-delim6.O 2> out-delim6.E
+code=$?
+if test $code != 0; then
+  $echo "Test out-delim6(<) failed: ../../src/cut return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp out-delim6.O $srcdir/out-delim6.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE"; then $echo "passed out-delim6(<)"; fi;;
+    1) $echo "Test out-delim6(<) failed: files out-delim6.O and $srcdir/out-delim6.X differ" 1>&2
+       (diff -c out-delim6.O $srcdir/out-delim6.X) 2> /dev/null
+       errors=`expr $errors + 1`;;
+    2) $echo "Test out-delim6(<) may have failed." 1>&2
+       $echo The command "cmp out-delim6.O $srcdir/out-delim6.X" failed. 1>&2
+       errors=`expr $errors + 1`;;
+  esac
+fi
+test -s out-delim6.E || rm -f out-delim6.E
 if test $errors = 0; then
-  $echo Passed all 147 tests. 1>&2
+  $echo Passed all 153 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi
