@@ -77,7 +77,7 @@ main (int argc, char **argv)
 {
   unsigned int newmode;
   unsigned int parent_mode;
-  char *symbolic_mode = NULL;
+  const char *symbolic_mode = NULL;
   const char *verbose_fmt_string = NULL;
   int errors = 0;
   int optc;
