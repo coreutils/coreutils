@@ -33,4 +33,8 @@ AC_DEFUN(jm_MACROS,
   AC_REQUIRE([jm_FUNC_GLIBC_UNLOCKED_IO])
   AC_REQUIRE([jm_FUNC_FNMATCH])
   AC_REPLACE_FUNCS(strcasecmp strncasecmp)
+
+  # By default, argmatch should fail calling usage (1).
+  AC_DEFINE(ARGMATCH_EXIT_FAILURE, [usage (1)],
+	    [Define to the function xargmatch calls on failures.])
 ])
