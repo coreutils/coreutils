@@ -26,6 +26,7 @@
 #include "system.h"
 
 #include "error.h"
+#include "inttostr.h"
 #include "readutmp.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -160,6 +161,33 @@ idle_string (time_t when)
   return (const char *) idle_hhmm;
 }
 
+/* Return a standard time string, "mon dd hh:mm"
+   FIXME: handle localization */
+static const char *
+time_string (const STRUCT_UTMP *utmp_ent)
+{
+  /* Don't take the address of UT_TIME_MEMBER directly.
+     Ulrich Drepper wrote:
+     ``... GNU libc (and perhaps other libcs as well) have extended
+     utmp file formats which do not use a simple time_t ut_time field.
+     In glibc, ut_time is a macro which selects for backward compatibility
+     the tv_sec member of a struct timeval value.''  */
+  time_t tm = UT_TIME_MEMBER (utmp_ent);
+
+  char *ptr = ctime (&tm);
+  if (ptr)
+    {
+      ptr += 4;
+      ptr[12] = '\0';
+    }
+  else
+    {
+      static char buf[INT_BUFSIZE_BOUND (intmax_t)];
+      ptr = (TYPE_SIGNED (time_t) ? imaxtostr (tm, buf) : umaxtostr (tm, buf));
+    }
+  return ptr;
+}
+
 /* Display a line of information about UTMP_ENT. */
 
 static void
@@ -173,7 +201,6 @@ print_entry (const STRUCT_UTMP *utmp_ent)
 #define DEV_DIR_LEN (sizeof (DEV_DIR_WITH_TRAILING_SLASH) - 1)
 
   char line[sizeof (utmp_ent->ut_line) + DEV_DIR_LEN + 1];
-  time_t tm;
 
   /* Copy ut_line into LINE, prepending `/dev/' if ut_line is not
      already an absolute pathname.  Some system may put the full,
@@ -238,14 +265,7 @@ print_entry (const STRUCT_UTMP *utmp_ent)
 	printf (" %-6s", "???");
     }
 
-  /* Don't take the address of UT_TIME_MEMBER directly.
-     Ulrich Drepper wrote:
-     ``... GNU libc (and perhaps other libcs as well) have extended
-     utmp file formats which do not use a simple time_t ut_time field.
-     In glibc, ut_time is a macro which selects for backward compatibility
-     the tv_sec member of a struct timeval value.''  */
-  tm = UT_TIME_MEMBER (utmp_ent);
-  printf (" %-12.12s", ctime (&tm) + 4);
+  printf (" %s", time_string (utmp_ent));
 
 #ifdef HAVE_UT_HOST
   if (include_where && utmp_ent->ut_host[0])
