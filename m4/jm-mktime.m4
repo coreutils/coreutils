@@ -1,4 +1,4 @@
-#serial 6
+#serial 7
 
 dnl From Jim Meyering.
 dnl A wrapper around AC_FUNC_MKTIME.
@@ -11,6 +11,6 @@ AC_DEFUN(jm_FUNC_MKTIME,
 
  if test $ac_cv_func_working_mktime = no; then
    AC_DEFINE_UNQUOTED(mktime, rpl_mktime,
-    [Define to gnu_mktime if the replacement function should be used.])
+    [Define to rpl_mktime if the replacement function should be used.])
  fi
 ])
