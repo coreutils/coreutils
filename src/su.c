@@ -77,27 +77,21 @@
 #include <grp.h>
 #include "system.h"
 
-#if defined(HAVE_SYSLOG_H) && defined(HAVE_SYSLOG)
-#include <syslog.h>
-#else /* !HAVE_SYSLOG_H */
-#ifdef SYSLOG_SUCCESS
-#undef SYSLOG_SUCCESS
+#if HAVE_SYSLOG_H && HAVE_SYSLOG
+# include <syslog.h>
+#else
+# undef SYSLOG_SUCCESS
+# undef SYSLOG_FAILURE
+# undef SYSLOG_NON_ROOT
 #endif
-#ifdef SYSLOG_FAILURE
-#undef SYSLOG_FAILURE
-#endif
-#ifdef SYSLOG_NON_ROOT
-#undef SYSLOG_NON_ROOT
-#endif
-#endif /* !HAVE_SYSLOG_H */
 
 #ifdef _POSIX_VERSION
-#include <limits.h>
+# include <limits.h>
 #else /* not _POSIX_VERSION */
 struct passwd *getpwuid ();
 struct group *getgrgid ();
 uid_t getuid ();
-#include <sys/param.h>
+# include <sys/param.h>
 #endif /* not _POSIX_VERSION */
 
 #ifndef HAVE_ENDGRENT
@@ -108,28 +102,28 @@ uid_t getuid ();
 # define endpwent() ((void) 0)
 #endif
 
-#ifdef HAVE_SHADOW_H
-#include <shadow.h>
+#if HAVE_SHADOW_H
+# include <shadow.h>
 #endif
 
 #include "error.h"
 
-#ifdef HAVE_PATHS_H
-#include <paths.h>
+#if HAVE_PATHS_H
+# include <paths.h>
 #endif
 
 /* The default PATH for simulated logins to non-superuser accounts.  */
 #ifdef _PATH_DEFPATH
-#define DEFAULT_LOGIN_PATH _PATH_DEFPATH
+# define DEFAULT_LOGIN_PATH _PATH_DEFPATH
 #else
-#define DEFAULT_LOGIN_PATH ":/usr/ucb:/bin:/usr/bin"
+# define DEFAULT_LOGIN_PATH ":/usr/ucb:/bin:/usr/bin"
 #endif
 
 /* The default PATH for simulated logins to superuser accounts.  */
 #ifdef _PATH_DEFPATH_ROOT
-#define DEFAULT_ROOT_LOGIN_PATH _PATH_DEFPATH_ROOT
+# define DEFAULT_ROOT_LOGIN_PATH _PATH_DEFPATH_ROOT
 #else
-#define DEFAULT_ROOT_LOGIN_PATH "/usr/ucb:/bin:/usr/bin:/etc"
+# define DEFAULT_ROOT_LOGIN_PATH "/usr/ucb:/bin:/usr/bin:/etc"
 #endif
 
 /* The shell to run if none is given in the user's passwd entry.  */
@@ -228,10 +222,10 @@ log_su (const struct passwd *pw, int successful)
 {
   const char *new_user, *old_user, *tty;
 
-#ifndef SYSLOG_NON_ROOT
+# ifndef SYSLOG_NON_ROOT
   if (pw->pw_uid)
     return;
-#endif
+# endif
   new_user = pw->pw_name;
   /* The utmp entry (via getlogin) is probably the best way to identify
      the user, especially if someone su's from a su-shell.  */
@@ -248,20 +242,20 @@ log_su (const struct passwd *pw, int successful)
     tty = "none";
   /* 4.2BSD openlog doesn't have the third parameter.  */
   openlog (basename (program_name), 0
-#ifdef LOG_AUTH
+# ifdef LOG_AUTH
 	   , LOG_AUTH
-#endif
+# endif
 	   );
   syslog (LOG_NOTICE,
-#ifdef SYSLOG_NON_ROOT
+# ifdef SYSLOG_NON_ROOT
 	  "%s(to %s) %s on %s",
-#else
+# else
 	  "%s%s on %s",
-#endif
+# endif
 	  successful ? "" : "FAILED SU ",
-#ifdef SYSLOG_NON_ROOT
+# ifdef SYSLOG_NON_ROOT
 	  new_user,
-#endif
+# endif
 	  old_user, tty);
   closelog ();
 }
