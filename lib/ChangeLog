@@ -1,3 +1,13 @@
+2001-08-30  Paul Eggert  <eggert@twinsun.com>
+
+	* lib/xgetcwd.c: Don't include pathmax.h.
+	Include stdlib.h and unistd.h if available.
+	Include xalloc.h.
+	(xmalloc, xstrdup, free): Remove decls.
+	(xgetcwd): Don't assume sizes fit in unsigned.
+	Check for overflow when computing sizes.
+	Simplify reallocation code.
+
 2001-08-28  Paul Eggert  <eggert@twinsun.com>
 
 	* Makefile.am (libfetish_a_SOURCES): Remove strtoxmax.c.
