@@ -1,12 +1,29 @@
 2001-08-04  Jim Meyering  <meyering@lucent.com>
 
+	* tests/root-only: Correct the primary test: s/||/&&/.
+	Remove *all* write access, no just that of the owner.
+
+	* src/copy.c (copy_internal):
+	Reported by Vin Shelton.
+
 	* tests/mv/i-3: New test for the above fix.
+
+2001-08-03  Paul Eggert  <eggert@twinsun.com>
+
+	* ls.c (quote_name): Pass 0 to mbsnwidth, since the default
+	got changed and we want the default now.
+
+2001-08-03  Paul Eggert  <eggert@twinsun.com>
+
+	* ls.c (quote_name): Pass 0 to mbsnwidth, since the default
+	got changed and we want the default now.
 
 2001-07-15  Jim Meyering  <meyering@lucent.com>
 
 	* src/copy.c (copy_internal): Set *rename_succeeded, so that
 	the caller (mv) doesn't remove the source file.
 	FIXME: add test case
+	Reported by FIXME?
 
 	* src/Makefile.am (INCLUDES): Add -I../lib so sys2.h can include
 	the new, generated file, unlocked-io.h.
