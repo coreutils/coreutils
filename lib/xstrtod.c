@@ -14,6 +14,11 @@ double strtod ();
 #include <ctype.h>
 #include "xstrtod.h"
 
+/* An interface to strtod that encapsulates all the error checking
+   one should usually perform.  Like strtod, but return zero upon
+   successful conversion and put the result in *RESULT.  Return
+   non-zero upon any failure.  */
+
 int
 xstrtod (str, ptr, result)
      const char *str;
