@@ -1,3 +1,8 @@
+2000-09-29  Jim Meyering  <meyering@lucent.com>
+
+	* src/yes.c (usage): Add a separate usage line, just for `OPTION'.
+	Suggestion from M. P. Suzuki.
+
 2000-09-09  Jim Meyering  <meyering@lucent.com>
 
 	* src/date.c (usage): Make the second `Usage' line more precise
