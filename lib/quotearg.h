@@ -24,11 +24,11 @@ enum quoting_style
     shell_quoting_style,	/* --quoting-style=shell */
     shell_always_quoting_style,	/* --quoting-style=shell-always */
     c_quoting_style,		/* --quoting-style=c */
-    escape_quoting_style	/* --quoting-style=escape */
+    escape_quoting_style,	/* --quoting-style=escape */
+    locale_quoting_style	/* --quoting-style=locale */
   };
 
-/* For now, --quoting-style=literal is the default, but
-   this is planned to change to --quoting-style=shell in the future.  */
+/* For now, --quoting-style=literal is the default, but this may change.  */
 #ifndef DEFAULT_QUOTING_STYLE
 # define DEFAULT_QUOTING_STYLE literal_quoting_style
 #endif
@@ -92,6 +92,15 @@ char *quotearg_n PARAMS ((unsigned int n, char const *arg));
 
 /* Equivalent to quotearg_n (0, ARG).  */
 char *quotearg PARAMS ((char const *arg));
+
+/* Use style S and storage slot N to return a quoted version of the string ARG.
+   This is like quotearg_n (N, ARG), except that it uses S with no other
+   options to specify the quoting method.  */
+char *quotearg_n_style PARAMS ((unsigned int n, enum quoting_style s,
+				char const *arg));
+
+/* Equivalent to quotearg_n_style (0, S, ARG).  */
+char *quotearg_style PARAMS ((enum quoting_style s, char const *arg));
 
 /* Like quotearg (ARG), except also quote any instances of CH.  */
 char *quotearg_char PARAMS ((char const *arg, char ch));
