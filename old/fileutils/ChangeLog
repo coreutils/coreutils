@@ -1,3 +1,8 @@
+1999-08-22  Jim Meyering  <meyering@ascend.com>
+
+	* src/dd.c (parse_integer): Add `const' to char* parameter and
+	add a separate `suffix' variable.
+
 1999-08-20  Jim Meyering  <meyering@ascend.com>
 
 	* src/chown.c (usage): Tweak --help output to make it more consistent
