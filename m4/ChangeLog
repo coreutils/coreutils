@@ -1,3 +1,10 @@
+1999-07-05  Paul Eggert  <eggert@twinsun.com>
+
+	* m4/gettext.m4 (AM_WITH_NLS): Remove unnecessary lines.
+	Fix typo: $nls_cv_header_intl was misspelled as $nsl_cv_header_intl.
+	(AM_GNU_GETTEXT): Fix problem with brackets and m4 quoting,
+	and simplify the shell code.
+
 1999-07-20  Jim Meyering  <meyering@ascend.com>
 
 	* jm-macros.m4 (AC_REPLACE_FUNCS): Add memmove.
