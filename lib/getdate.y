@@ -15,6 +15,10 @@
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
+
+#ifdef FORCE_ALLOCA_H
+#include <alloca.h>
+#endif
 #endif
 
 /* Since the code of getdate.y is not included in the Emacs executable
@@ -90,6 +94,7 @@ static int yylex ();
 static int yyerror ();
 
 #define EPOCH		1970
+#define DOOMSDAY	2038
 #define HOUR(x)		((time_t)(x) * 60)
 #define SECSPERDAY	(24L * 60L * 60L)
 
@@ -242,7 +247,7 @@ day	: tDAY {
 	    yyDayOrdinal = 1;
 	    yyDayNumber = $1;
 	}
-	| tUNUMBER tDAY { /* FIXME */
+	| tUNUMBER tDAY {
 	    yyDayOrdinal = $1;
 	    yyDayNumber = $2;
 	}
@@ -279,7 +284,6 @@ date	: tUNUMBER '/' tUNUMBER {
 	    yyYear = $4;
 	}
 	| tUNUMBER tMONTH {
-	    /* FIXME: `date -d 'next october'' is interpreted as 2 october.  */
 	    yyMonth = $2;
 	    yyDay = $1;
 	}
@@ -315,10 +319,10 @@ relunit	: tUNUMBER tMINUTE_UNIT {
 	| tSEC_UNIT {
 	    yyRelSeconds++;
 	}
-	| tSNUMBER tMONTH_UNIT { /* FIXME */
+	| tSNUMBER tMONTH_UNIT {
 	    yyRelMonth += $1 * $2;
 	}
-	| tUNUMBER tMONTH_UNIT { /* FIXME */
+	| tUNUMBER tMONTH_UNIT {
 	    yyRelMonth += $1 * $2;
 	}
 	| tMONTH_UNIT {
@@ -613,11 +617,13 @@ Convert (Month, Day, Year, Hours, Minutes, Seconds, Meridian, DSTmode)
 
   if (Year < 0)
     Year = -Year;
-  if (Year < 100)
+  if (Year < DOOMSDAY-2000)
+    Year += 2000;
+  else if (Year < 100)
     Year += 1900;
   DaysInMonth[1] = Year % 4 == 0 && (Year % 100 != 0 || Year % 400 == 0)
     ? 29 : 28;
-  if (Year < EPOCH || Year > 2037
+  if (Year < EPOCH || Year >= DOOMSDAY
       || Month < 1 || Month > 12
       /* Lint fluff:  "conversion from long may lose accuracy" */
       || Day < 1 || Day > DaysInMonth[(int)--Month])
