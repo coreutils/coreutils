@@ -1,6 +1,23 @@
-2002-10-10  Jim Meyering  <meyering@lucent.com>
+2002-10-11  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.5.3.
+
+2002-10-11  Andreas Schwab  <schwab@suse.de>
+
+	* src/du.c (count_entry): Also save cwd when dereferencing
+	arguments and we are at toplevel.  Reported by Michal Svec.
+
+2002-10-11  Jim Meyering  <meyering@lucent.com>
+
+	* tests/du/deref: New file/test, for the above fix.
+	* tests/du/Makefile.am (TESTS): Add deref.
+
+2002-10-10  Jim Meyering  <meyering@lucent.com>
+
+	tail -c +2 would perform an extra read after encountering EOF
+	[this change is analogous (bytes vs. lines) to the one of 2002-01-27]
+	* src/tail.c (start_bytes): Detect EOF, inform caller.
+	(tail_bytes): Upon EOF in start_bytes, return immediately.
 
 	* tests/ln/Makefile.am (TESTS): Add target-1.
 	* tests/ln/target-1: New file/test, for the fix on 2002-10-08.
