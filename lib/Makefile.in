@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 0.29 from Makefile.am
+# Makefile.in generated automatically by automake 0.30 from Makefile.am
 
 # Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -55,8 +55,8 @@ xmalloc.c xstrdup.c xstrtol.c xstrtoul.c yesno.c
 
 fu_LIBADD = @LIBOBJS@ @ALLOCA@
 
-HEADERS = argmatch.h backupfile.h error.h fnmatch.h fsusage.h getopt.h \
-group-member.h long-options.h makepath.h modechange.h mountlist.h \
+noinst_HEADERS = argmatch.h backupfile.h error.h fnmatch.h fsusage.h \
+getopt.h group-member.h long-options.h makepath.h modechange.h mountlist.h \
 obstack.h pathmax.h save-cwd.h xstrtol.h xstrtoul.h
 
 BUILT_SOURCES = getdate.c posixtm.c
@@ -69,7 +69,7 @@ CC = @CC@
 LEX = @LEX@
 YACC = @YACC@
 
-DEFS = @DEFS@
+DEFS = @DEFS@ -I. -I$(srcdir) -I..
 CPPFLAGS = @CPPFLAGS@
 CFLAGS = @CFLAGS@
 LDFLAGS = @LDFLAGS@
@@ -78,17 +78,19 @@ LIBS = @LIBS@
 COMPILE = $(CC) -c $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 LINK = $(CC) $(LDFLAGS) -o $@
 fu_OBJECTS = getdate.o posixtm.o argmatch.o backupfile.o basename.o \
-dirname.o error.o fileblocks.o filemode.o full-write.o getopt.o \
-getopt1.o getversion.o group-member.o idcache.o isdir.o long-options.o \
-makepath.o modechange.o obstack.o safe-read.o save-cwd.o savedir.o \
-stripslash.o userspec.o xgetcwd.o xmalloc.o xstrdup.o xstrtol.o \
-xstrtoul.o yesno.o
+    dirname.o error.o fileblocks.o filemode.o full-write.o getopt.o \
+    getopt1.o getversion.o group-member.o idcache.o isdir.o \
+    long-options.o makepath.o modechange.o obstack.o safe-read.o \
+    save-cwd.o savedir.o stripslash.o userspec.o xgetcwd.o xmalloc.o \
+    xstrdup.o xstrtol.o xstrtoul.o yesno.o
 LIBFILES =  libfu.a
 
 AR = ar
 RANLIB = @RANLIB@
+HEADERS = $(noinst_HEADERS)
+
 DIST_COMMON = Makefile.am Makefile.in alloca.c fileblocks.c fnmatch.c \
-fsusage.c ftruncate.c mountlist.c
+    fsusage.c ftruncate.c mountlist.c
 
 
 PACKAGE = @PACKAGE@
@@ -98,23 +100,31 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(BUILT_SOURCES) $(HEADERS) \
 	$(TEXINFOS) $(INFOS) $(MANS) $(DIST_OTHER) $(DATA)
 DEP_DISTFILES = $(DIST_COMMON) $(SOURCES) $(BUILT_SOURCES) $(HEADERS) \
 	$(TEXINFOS) $(INFO_DEPS) $(MANS) $(DIST_OTHER) $(DATA)
-DEP_FILES = .deps/alloca.P .deps/argmatch.P .deps/backupfile.P \
-.deps/basename.P .deps/dirname.P .deps/error.P .deps/fileblocks.P \
-.deps/filemode.P .deps/fnmatch.P .deps/fsusage.P .deps/ftruncate.P \
-.deps/full-write.P .deps/getdate.P .deps/getopt.P .deps/getopt1.P \
-.deps/getversion.P .deps/group-member.P .deps/idcache.P .deps/isdir.P \
-.deps/long-options.P .deps/makepath.P .deps/modechange.P \
-.deps/mountlist.P .deps/obstack.P .deps/posixtm.P .deps/safe-read.P \
-.deps/save-cwd.P .deps/savedir.P .deps/stripslash.P .deps/userspec.P \
-.deps/xgetcwd.P .deps/xmalloc.P .deps/xstrdup.P .deps/xstrtol.P \
-.deps/xstrtoul.P .deps/yesno.P
+DEP_FILES = $(srcdir)/.deps/alloca.P $(srcdir)/.deps/argmatch.P \
+    $(srcdir)/.deps/backupfile.P $(srcdir)/.deps/basename.P \
+    $(srcdir)/.deps/dirname.P $(srcdir)/.deps/error.P \
+    $(srcdir)/.deps/fileblocks.P $(srcdir)/.deps/filemode.P \
+    $(srcdir)/.deps/fnmatch.P $(srcdir)/.deps/fsusage.P \
+    $(srcdir)/.deps/ftruncate.P $(srcdir)/.deps/full-write.P \
+    $(srcdir)/.deps/getdate.P $(srcdir)/.deps/getopt.P \
+    $(srcdir)/.deps/getopt1.P $(srcdir)/.deps/getversion.P \
+    $(srcdir)/.deps/group-member.P $(srcdir)/.deps/idcache.P \
+    $(srcdir)/.deps/isdir.P $(srcdir)/.deps/long-options.P \
+    $(srcdir)/.deps/makepath.P $(srcdir)/.deps/modechange.P \
+    $(srcdir)/.deps/mountlist.P $(srcdir)/.deps/obstack.P \
+    $(srcdir)/.deps/posixtm.P $(srcdir)/.deps/safe-read.P \
+    $(srcdir)/.deps/save-cwd.P $(srcdir)/.deps/savedir.P \
+    $(srcdir)/.deps/stripslash.P $(srcdir)/.deps/userspec.P \
+    $(srcdir)/.deps/xgetcwd.P $(srcdir)/.deps/xmalloc.P \
+    $(srcdir)/.deps/xstrdup.P $(srcdir)/.deps/xstrtol.P \
+    $(srcdir)/.deps/xstrtoul.P $(srcdir)/.deps/yesno.P
 SOURCES = $(fu_SOURCES)
 OBJECTS = $(fu_OBJECTS)
 
 default: all
 
 
-$(srcdir)/Makefile.in: Makefile.am
+$(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in
 	cd $(top_srcdir) && automake $(subdir)/Makefile
 
 Makefile: $(top_builddir)/config.status Makefile.in
@@ -180,19 +190,17 @@ dist: $(DEP_DISTFILES)
 
 MKDEP = gcc -MM $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 
--include .deps/.P
-.deps/.P: $(BUILT_SOURCES)
-	test -d .deps || mkdir .deps
-	: > $@
+-include $(srcdir)/.deps/.P
+$(srcdir)/.deps/.P: $(BUILT_SOURCES)
+	cd $(srcdir) && test -d .deps || mkdir .deps
+	echo > $@
 
 -include $(DEP_FILES)
-$(DEP_FILES): .deps/.P
+$(DEP_FILES): $(srcdir)/.deps/.P
 
-.deps/%.P: %.c
+$(srcdir)/.deps/%.P: $(srcdir)/%.c
 	@echo "mkdeps $< > $@"
-	@test $(srcdir) = . \
-	  && re=s/x/x/ \
-	  || re=`echo 's,^$(srcdir)/*,,g;s, $(srcdir)/*, ,g' | sed 's,\.,\\\\.,g'`; \
+	@re=`echo 's,^$(srcdir)//*,,g;s, $(srcdir)//*, ,g' | sed 's,\.,\\\\.,g'`; \
 	  $(MKDEP) $< | sed "$$re" > $@-tmp
 	@if test -n "$o"; then			\
 	  sed 's/\.o:/$$o:/' $@-tmp > $@;	\
@@ -202,8 +210,6 @@ $(DEP_FILES): .deps/.P
 	fi
 
 # End of maintainer-only section
-all: $(LIBFILES)
-
 info:
 
 dvi:
@@ -212,10 +218,16 @@ check: all
 
 installcheck:
 
-install: all
+install-exec: 
+
+install-data: 
+
+install: install-exec install-data
 	@:
 
 uninstall: 
+
+all: $(LIBFILES) $(HEADERS) Makefile
 
 installdirs:
 
@@ -234,29 +246,30 @@ maintainer-clean-generic:
 	test -z "$(MAINTAINERCLEANFILES)" || rm -f $(MAINTAINERCLEANFILES)
 	test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 mostlyclean:  mostlyclean-noinstLIBRARIES mostlyclean-compile \
-mostlyclean-tags mostlyclean-generic
+		mostlyclean-tags mostlyclean-generic
 
 clean:  clean-noinstLIBRARIES clean-compile clean-tags clean-generic \
-mostlyclean 
+		mostlyclean 
 
 distclean:  distclean-noinstLIBRARIES distclean-compile distclean-tags \
-distclean-generic clean 
+		distclean-generic clean 
 	rm -f config.status
 
 maintainer-clean:  maintainer-clean-noinstLIBRARIES \
-maintainer-clean-compile maintainer-clean-tags maintainer-clean-generic \
-distclean 
+		maintainer-clean-compile maintainer-clean-tags \
+		maintainer-clean-generic distclean 
 	@echo "This command is intended for maintainers to use;"
 	@echo "it deletes files that may require special tools to rebuild."
 
 .PHONY: default mostlyclean-noinstLIBRARIES distclean-noinstLIBRARIES \
-clean-noinstLIBRARIES maintainer-clean-noinstLIBRARIES \
-mostlyclean-compile distclean-compile clean-compile \
-maintainer-clean-compile tags mostlyclean-tags distclean-tags \
-clean-tags maintainer-clean-tags dist all info dvi check installcheck \
-install uninstall installdirs mostlyclean-generic distclean-generic \
-clean-generic maintainer-clean-generic clean mostlyclean distclean \
-maintainer-clean
+    clean-noinstLIBRARIES maintainer-clean-noinstLIBRARIES \
+    mostlyclean-compile distclean-compile clean-compile \
+    maintainer-clean-compile tags mostlyclean-tags distclean-tags \
+    clean-tags maintainer-clean-tags dist info dvi check installcheck \
+    install-exec install-data install uninstall all installdirs \
+    mostlyclean-generic distclean-generic clean-generic \
+    maintainer-clean-generic clean mostlyclean distclean \
+    maintainer-clean
 
 
 # Since this directory contains two parsers, we have to be careful to avoid

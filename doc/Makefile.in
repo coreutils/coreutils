@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 0.29 from Makefile.am
+# Makefile.in generated automatically by automake 0.30 from Makefile.am
 
 # Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -50,7 +50,7 @@ DVIS = fileutils.dvi
 TEXINFOS = fileutils.texi
 
 DIST_COMMON = Makefile.am Makefile.in mdate-sh stamp-vti texinfo.tex \
-version.texi
+    version.texi
 
 
 PACKAGE = @PACKAGE@
@@ -63,7 +63,7 @@ DEP_DISTFILES = $(DIST_COMMON) $(SOURCES) $(BUILT_SOURCES) $(HEADERS) \
 default: all
 
 
-$(srcdir)/Makefile.in: Makefile.am
+$(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in
 	cd $(top_srcdir) && automake $(subdir)/Makefile
 
 Makefile: $(top_builddir)/config.status Makefile.in
@@ -117,8 +117,9 @@ uninstall-info:
 
 mostlyclean-info:
 	rm -f fileutils.aux fileutils.cp fileutils.cps fileutils.dvi \
-	  fileutils.fn fileutils.fns fileutils.ky fileutils.log fileutils.pg \
-	  fileutils.toc fileutils.tp fileutils.vr fileutils.op
+	  fileutils.fn fileutils.fns fileutils.ky fileutils.log \
+	  fileutils.pg fileutils.toc fileutils.tp fileutils.vr \
+	  fileutils.op
 
 clean-info:
 
@@ -138,8 +139,6 @@ dist: $(DEP_DISTFILES)
 	  || ln $(srcdir)/$$file $(distdir)/$$file 2> /dev/null \
 	  || cp -p $(srcdir)/$$file $(distdir)/$$file; \
 	done
-all: info
-
 info: $(INFO_DEPS)
 
 dvi: $(DVIS)
@@ -148,12 +147,16 @@ check: all
 
 installcheck:
 
+install-exec: 
+
 install-data: install-info
 
-install: install-data
+install: install-exec install-data
 	@:
 
 uninstall: uninstall-info
+
+all: $(INFO_DEPS) Makefile
 
 installdirs:
 	$(top_srcdir)/mkinstalldirs  $(infodir)
@@ -180,16 +183,17 @@ distclean:  distclean-vti distclean-info distclean-generic clean
 	rm -f config.status
 
 maintainer-clean:  maintainer-clean-vti maintainer-clean-info \
-maintainer-clean-generic distclean 
+		maintainer-clean-generic distclean 
 	@echo "This command is intended for maintainers to use;"
 	@echo "it deletes files that may require special tools to rebuild."
 
 .PHONY: default mostlyclean-vti distclean-vti clean-vti \
-maintainer-clean-vti install-info uninstall-info mostlyclean-info \
-distclean-info clean-info maintainer-clean-info tags dist all info dvi \
-check installcheck install-data install uninstall installdirs \
-mostlyclean-generic distclean-generic clean-generic \
-maintainer-clean-generic clean mostlyclean distclean maintainer-clean
+    maintainer-clean-vti install-info uninstall-info mostlyclean-info \
+    distclean-info clean-info maintainer-clean-info tags dist info dvi \
+    check installcheck install-exec install-data install uninstall all \
+    installdirs mostlyclean-generic distclean-generic clean-generic \
+    maintainer-clean-generic clean mostlyclean distclean \
+    maintainer-clean
 
 .SUFFIXES:
 .SUFFIXES: .texi .info .dvi
