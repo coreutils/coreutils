@@ -1,3 +1,35 @@
+2000-05-20  Jim Meyering  <meyering@lucent.com>
+
+	* src/cat.c: FIXME
+	* src/tail.c: FIXME
+
+	Arrange to call close_stdout upon exit.  Don't close stdout explicitly.
+	* src/cksum.c: Likewise.
+	* src/comm.c: Likewise.
+	* src/csplit.c: Likewise.
+	* src/cut.c: Likewise.
+	* src/expand.c: Likewise.
+	* src/fmt.c: Likewise.
+	* src/fold.c: Likewise.
+	* src/head.c: Likewise.
+	* src/join.c: Likewise.
+	* src/md5sum.c: Likewise.
+	* src/nl.c: Likewise.
+	* src/od.c: Likewise.
+	* src/paste.c: Likewise.
+	* src/pr.c: Likewise.
+	* src/ptx.c: Likewise.
+	* src/sort.c: Likewise. (but set exit status and file name, too)
+	* src/split.c: Likewise.
+	* src/sum.c: Likewise.
+	* src/tac.c: Likewise.
+	* src/tr.c: Likewise.
+	* src/tsort.c: Likewise.
+	* src/unexpand.c: Likewise.
+	* src/uniq.c: Likewise.
+	* src/wc.c:: Likewise.
+
+
 2000-05-13  Jim Meyering  <meyering@lucent.com>
 
 	* src/help-version: Run each program successfully at least once.
