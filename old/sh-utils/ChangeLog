@@ -1,5 +1,8 @@
 Sat Jul 13 14:22:54 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/chroot.c (usage): Add a `\' after `\n' in usage message.
+	Otherwise, SunOS's /bin/cc chokes.
+
 	* src/stty.c [GWINSZ_BROKEN]: Remove thus-guarded `#undef TIOCGWINSZ'.
 	GWINSZ_BROKEN can't be defined anymore.
 
