@@ -1,5 +1,5 @@
 /* tsort - topological sort.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -66,11 +66,17 @@ char *program_name;
 /* Nonzero if any of the input files are the standard input. */
 static int have_read_stdin;
 
+/* The error code to return to the system. */
+static int exit_status;
+
 /* The head of the sorted list.  */
 static struct item *head = NULL;
 
 /* The tail of the list of `zeros', strings that have no predecessors.  */
 static struct item *zeros = NULL;
+
+/* Used for loop detection.  */
+static struct item *loop = NULL;
 
 /* The number of strings to sort.  */
 static int n_strings = 0;
@@ -288,16 +294,18 @@ record_relation (struct item *j, struct item *k)
     }
 }
 
-static void
+static int
 count_items (struct item *k)
 {
   n_strings++;
+  return 0;
 }
 
-static void
+static int
 scan_zeros (struct item *k)
 {
-  if (k->count == 0)
+  /* Ignore strings that have already been printed.  */
+  if (k->count == 0 && k->str)
     {
       if (head == NULL)
 	head = k;
@@ -306,48 +314,124 @@ scan_zeros (struct item *k)
 
       zeros = k;
     }
+
+  return 0;
 }
 
-/* If K is part of a loop, print the loop on standard error, and exit.  */
+/* Try to detect the loop.  If we have detected that K is part of a
+   loop, print the loop on standard error, remove a relation to break
+   the loop, and return non-zero.
 
-static void
+   The loop detection strategy is as follows: Realise that what we're
+   dealing with is essentially a directed graph.  If we find an item
+   that is part of a graph that contains a cycle we traverse the graph
+   in backwards direction.  In general there is no unique way to do
+   this, but that is no problem.  If we encounter an item that we have
+   encountered before, we know that we've found a cycle.  All we have
+   to do now is retrace our steps, printing out the items until we
+   encounter that item again.  (This does not have to be the item that
+   we started at in the first place.)  Since the order */
+
+static int
 detect_loop (struct item *k)
 {
-  if (k->count > 0 && k->top)
+  if (k->count > 0)
     {
-      while (k && k->count > 0)
-	{
-	  k->count = 0;
-	  fprintf (stderr, "%s: %s\n", program_name, k->str);
-	  k = k->top->suc;
-	}
+      /* K does not have to be part of a cycle.  It is however part of
+	 a graph that contains a cycle.  */
 
-      exit (EXIT_FAILURE);
+      if (loop == NULL)
+	/* Start traversing the graph at K.  */
+	loop = k;
+      else
+	{
+	  struct successor **p = &k->top;
+
+	  while (*p)
+	    {
+	      if ((*p)->suc == loop)
+		{
+		  if (k->qlink)
+		    {
+		      /* We have found a loop.  Retrace our steps.  */
+		      while (loop)
+			{
+			  struct item *tmp = loop->qlink;
+
+			  fprintf (stderr, "%s: %s\n", program_name,
+				   loop->str);
+
+			  /* Until we encounter K again.  */
+			  if (loop == k)
+			    {
+			      /* Remove relation.  */
+			      (*p)->suc->count--;
+			      *p = (*p)->next;
+			      break;
+			    }
+
+			  /* Tidy things up since we might have to
+                             detect another loop.  */
+			  loop->qlink = NULL;
+			  loop = tmp;
+			}
+
+		      while (loop)
+			{
+			  struct item *tmp = loop->qlink;
+
+			  loop->qlink = NULL;
+			  loop = tmp;
+			}
+
+		      /* Since we have found the loop, stop walking
+                         the tree.  */
+		      return 1;
+		    }
+		  else
+		    {
+		      k->qlink = loop;
+		      loop = k;
+		      break;
+		    }
+		}
+
+	      p = &(*p)->next;
+	    }
+	}
     }
+
+  return 0;
 }
 
-/* Recurse (sub)tree rooted at ROOT, calling ACTION for each node.  */
+/* Recurse (sub)tree rooted at ROOT, calling ACTION for each node.
+   Stop when ACTION returns non-zero.  */
 
-static void
-recurse_tree (struct item *root, void (*action) (struct item *))
+static int
+recurse_tree (struct item *root, int (*action) (struct item *))
 {
   if (root->left == NULL && root->right == NULL)
-    (*action) (root);
+    return (*action) (root);
   else
     {
       if (root->left != NULL)
-	recurse_tree (root->left, action);
-      (*action) (root);
+	if (recurse_tree (root->left, action))
+	  return 1;
+      if ((*action) (root))
+	return 1;
       if (root->right != NULL)
-	recurse_tree (root->right, action);
+	if (recurse_tree (root->right, action))
+	  return 1;
     }
+
+  return 0;
 }
 
 /* Walk the tree specified by the head ROOT, calling ACTION for
    each node.  */
 
 static void
-walk_tree (struct item *root, void (*action) (struct item *))
+walk_tree (struct item *root, int (*action) (struct item *))
 {
   if (root->right)
     recurse_tree (root->right, action);
@@ -406,46 +490,51 @@ tsort (const char *file)
   /* T1. Initialize (N <- n).  */
   walk_tree (root, count_items);
 
-  /* T4. Scan for zeros.  */
-  walk_tree (root, scan_zeros);
-
-  while (head)
+  while (n_strings > 0)
     {
-      struct successor *p = head->top;
+      /* T4. Scan for zeros.  */
+      walk_tree (root, scan_zeros);
 
-      /* T5. Output front of queue.  */
-      printf ("%s\n", head->str);
-      n_strings--;
-
-      /* T6. Erase relations.  */
-      while (p)
+      while (head)
 	{
-	  p->suc->count--;
-	  if (p->suc->count == 0)
+	  struct successor *p = head->top;
+
+	  /* T5. Output front of queue.  */
+	  printf ("%s\n", head->str);
+	  head->str = NULL;	/* Avoid printing the same string twice.  */
+	  n_strings--;
+
+	  /* T6. Erase relations.  */
+	  while (p)
 	    {
-	      zeros->qlink = p->suc;
-	      zeros = p->suc;
+	      p->suc->count--;
+	      if (p->suc->count == 0)
+		{
+		  zeros->qlink = p->suc;
+		  zeros = p->suc;
+		}
+
+	      p = p->next;
 	    }
 
-	  p = p->next;
+	  /* T7. Remove from queue.  */
+	  head = head->qlink;
 	}
 
-      /* T7. Remove from queue.  */
-      head = head->qlink;
-    }
+      /* T8.  End of process.  */
+      assert (n_strings >= 0);
+      if (n_strings > 0)
+	{
+	  /* The input contains a loop.  */
+	  error (0, 0, _("%s: input contains a loop:"),
+		 (have_read_stdin ? "-" : file));
+	  exit_status = 1;
 
-  /* T8.  End of process.  */
-  assert (n_strings >= 0);
-  if (n_strings > 0)
-    {
-      error (0, 0, _("%s: input contains a loop:"),
-	     (have_read_stdin ? "-" : file));
-
-      /* Print out loop.  */
-      walk_tree (root, detect_loop);
-
-      /* Should not happen.  */
-      error (EXIT_FAILURE, 0, _("could not find loop"));
+	  /* Print the loop and remove a relation to break it.  */
+	  do
+	    walk_tree (root, detect_loop);
+	  while (loop);
+	}
     }
 }
 
@@ -458,6 +547,8 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+
+  exit_status = 0;
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 		      AUTHORS, usage);
@@ -490,5 +581,5 @@ main (int argc, char **argv)
   if (have_read_stdin && fclose (stdin) == EOF)
     error (EXIT_FAILURE, errno, _("standard input"));
 
-  exit (EXIT_SUCCESS);
+  exit (exit_status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
