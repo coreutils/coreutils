@@ -4,6 +4,7 @@
 
 	* tests/cp/same-file: Correct erroneous expected output from
 	the `cp -f foo foo' tests.
+	* po/POTFILES.in: Add same.c.
 	* lib/same.h: New file.
 	* lib/same.c: New file (function extracted from ln.c).
 	* lib/Makefile.am (libfu_a_SOURCES): Add same.c.
