@@ -307,7 +307,7 @@ quotearg_buffer (char *buffer, size_t buffersize,
    N must be nonnegative.  */
 static char *
 quotearg_n_options (unsigned int n, char const *arg,
-		    struct quoting_options *options)
+		    struct quoting_options const *options)
 {
   static unsigned int nslots;
   static struct slotvec
