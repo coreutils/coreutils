@@ -1,6 +1,22 @@
-1998-10-31  Jim Meyering  <meyering@ascend.com>
+1998-11-07  Jim Meyering  <meyering@ascend.com>
 
 	* Version 4.0-b7.
+
+	Accommodate the Hurd (defining lstat to rpl_lstat via config.h didn't
+	work on Hurd systems because of an inline definition of lstat in a
+	system header file).  This also makes it so that you may run `ls '' '
+	on systems that let l?stat operate on the empty string.
+
+	* src/remove.c [HAVE_LSTAT_EMPTY_STRING_BUG]: Define lstat to rpl_lstat
+	and declare the latter.
+	* lib/stat.c [stat]: Remove #undef.
+	(rpl_stat): Protoize.
+	* lib/lstat.c [lstat]: Remove #undef.
+	(rpl_lstat): Protoize.  Use ENOENT, not EINVAL, to be consistent
+	with lib/stat.c.
+	* acconfig.h: Remove #undef's for lstat and stat.
+
+1998-10-31  Jim Meyering  <meyering@ascend.com>
 
 	* tests/rm/Makefile.am (TESTS): Add new test `empty-name',
 	but comment it out.
@@ -9,7 +25,7 @@
 	* acconfig.h (stat): New #undef.
 	This omission was uncovered when Mark Kettenis reported that
 	`rm -r ''' got a failed assertion on the Hurd.  This change
-	doesn't fix *that* problem.
+	doesn't fix *that* problem -- see above.
 
 1998-10-25  Jim Meyering  <meyering@ascend.com>
 
