@@ -149,77 +149,54 @@ void setusershell ();
 
 extern char **environ;
 
-static void run_shell (const char *, const char *, char **)
+static void run_shell (char const *, char const *, char **, size_t)
      ATTRIBUTE_NORETURN;
 
 /* The name this program was run with.  */
 char *program_name;
 
-/* If nonzero, pass the `-f' option to the subshell.  */
-static int fast_startup;
+/* If true, pass the `-f' option to the subshell.  */
+static bool fast_startup;
 
-/* If nonzero, simulate a login instead of just starting a shell.  */
-static int simulate_login;
+/* If true, simulate a login instead of just starting a shell.  */
+static bool simulate_login;
 
-/* If nonzero, change some environment vars to indicate the user su'd to.  */
-static int change_environment;
+/* If true, change some environment vars to indicate the user su'd to.  */
+static bool change_environment;
 
 static struct option const longopts[] =
 {
-  {"command", required_argument, 0, 'c'},
+  {"command", required_argument, NULL, 'c'},
   {"fast", no_argument, NULL, 'f'},
   {"login", no_argument, NULL, 'l'},
-  {"preserve-environment", no_argument, &change_environment, 0},
-  {"shell", required_argument, 0, 's'},
+  {"preserve-environment", no_argument, NULL, 'p'},
+  {"shell", required_argument, NULL, 's'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {0, 0, 0, 0}
+  {NULL, 0, NULL, 0}
 };
 
-/* Add VAL to the environment, checking for out of memory errors.  */
+/* Add NAME=VAL to the environment, checking for out of memory errors.  */
 
 static void
-xputenv (char *val)
+xsetenv (char const *name, char const *val)
 {
-  if (putenv (val))
+  size_t namelen = strlen (name);
+  size_t vallen = strlen (val);
+  char *string = xmalloc (namelen + 1 + vallen + 1);
+  strcpy (string, name);
+  string[namelen] = '=';
+  strcpy (string + namelen + 1, val);
+  if (putenv (string) != 0)
     xalloc_die ();
-}
-
-/* Return a newly-allocated string whose contents concatenate
-   those of S1, S2, S3.  */
-
-static char *
-concat (const char *s1, const char *s2, const char *s3)
-{
-  int len1 = strlen (s1), len2 = strlen (s2), len3 = strlen (s3);
-  char *result = xmalloc (len1 + len2 + len3 + 1);
-
-  strcpy (result, s1);
-  strcpy (result + len1, s2);
-  strcpy (result + len1 + len2, s3);
-  result[len1 + len2 + len3] = 0;
-
-  return result;
-}
-
-/* Return the number of elements in ARR, a null-terminated array.  */
-
-static int
-elements (char **arr)
-{
-  int n = 0;
-
-  for (n = 0; *arr; ++arr)
-    ++n;
-  return n;
 }
 
 #if defined (SYSLOG_SUCCESS) || defined (SYSLOG_FAILURE)
 /* Log the fact that someone has run su to the user given by PW;
-   if SUCCESSFUL is nonzero, they gave the correct password, etc.  */
+   if SUCCESSFUL is true, they gave the correct password, etc.  */
 
 static void
-log_su (const struct passwd *pw, int successful)
+log_su (struct passwd const *pw, bool successful)
 {
   const char *new_user, *old_user, *tty;
 
@@ -231,15 +208,15 @@ log_su (const struct passwd *pw, int successful)
   /* The utmp entry (via getlogin) is probably the best way to identify
      the user, especially if someone su's from a su-shell.  */
   old_user = getlogin ();
-  if (old_user == NULL)
+  if (!old_user)
     {
       /* getlogin can fail -- usually due to lack of utmp entry.
 	 Resort to getpwuid.  */
       struct passwd *pwd = getpwuid (getuid ());
       old_user = (pwd ? pwd->pw_name : "");
     }
-  tty = ttyname (2);
-  if (tty == NULL)
+  tty = ttyname (STDERR_FILENO);
+  if (!tty)
     tty = "none";
   /* 4.2BSD openlog doesn't have the third parameter.  */
   openlog (base_name (program_name), 0
@@ -263,11 +240,11 @@ log_su (const struct passwd *pw, int successful)
 #endif
 
 /* Ask the user for a password.
-   Return 1 if the user gives the correct password for entry PW,
-   0 if not.  Return 1 without asking for a password if run by UID 0
+   Return true if the user gives the correct password for entry PW,
+   false if not.  Return true without asking for a password if run by UID 0
    or if PW has an empty password.  */
 
-static int
+static bool
 correct_password (const struct passwd *pw)
 {
   char *unencrypted, *encrypted, *correct;
@@ -282,14 +259,14 @@ correct_password (const struct passwd *pw)
 #endif
     correct = pw->pw_passwd;
 
-  if (getuid () == 0 || correct == 0 || correct[0] == '\0')
-    return 1;
+  if (getuid () == 0 || !correct || correct[0] == '\0')
+    return true;
 
   unencrypted = getpass (_("Password:"));
-  if (unencrypted == NULL)
+  if (!unencrypted)
     {
       error (0, 0, _("getpass: cannot open /dev/tty"));
-      return 0;
+      return false;
     }
   encrypted = crypt (unencrypted, correct);
   memset (unencrypted, 0, strlen (unencrypted));
@@ -302,24 +279,24 @@ correct_password (const struct passwd *pw)
 static void
 modify_environment (const struct passwd *pw, const char *shell)
 {
-  char *term;
-
   if (simulate_login)
     {
       /* Leave TERM unchanged.  Set HOME, SHELL, USER, LOGNAME, PATH.
          Unset all other environment variables.  */
-      term = getenv ("TERM");
-      environ = xmalloc (2 * sizeof (char *));
-      environ[0] = 0;
+      char const *term = getenv ("TERM");
       if (term)
-	xputenv (concat ("TERM", "=", term));
-      xputenv (concat ("HOME", "=", pw->pw_dir));
-      xputenv (concat ("SHELL", "=", shell));
-      xputenv (concat ("USER", "=", pw->pw_name));
-      xputenv (concat ("LOGNAME", "=", pw->pw_name));
-      xputenv (concat ("PATH", "=", (pw->pw_uid
-				     ? DEFAULT_LOGIN_PATH
-				     : DEFAULT_ROOT_LOGIN_PATH)));
+	term = xstrdup (term);
+      environ = xmalloc ((6 + !!term) * sizeof (char *));
+      environ[0] = NULL;
+      if (term)
+	xsetenv ("TERM", term);
+      xsetenv ("HOME", pw->pw_dir);
+      xsetenv ("SHELL", shell);
+      xsetenv ("USER", pw->pw_name);
+      xsetenv ("LOGNAME", pw->pw_name);
+      xsetenv ("PATH", (pw->pw_uid
+			? DEFAULT_LOGIN_PATH
+			: DEFAULT_ROOT_LOGIN_PATH));
     }
   else
     {
@@ -327,12 +304,12 @@ modify_environment (const struct passwd *pw, const char *shell)
 	 USER and LOGNAME.  */
       if (change_environment)
 	{
-	  xputenv (concat ("HOME", "=", pw->pw_dir));
-	  xputenv (concat ("SHELL", "=", shell));
+	  xsetenv ("HOME", pw->pw_dir);
+	  xsetenv ("SHELL", shell);
 	  if (pw->pw_uid)
 	    {
-	      xputenv (concat ("USER", "=", pw->pw_name));
-	      xputenv (concat ("LOGNAME", "=", pw->pw_name));
+	      xsetenv ("USER", pw->pw_name);
+	      xsetenv ("LOGNAME", pw->pw_name);
 	    }
 	}
     }
@@ -357,20 +334,17 @@ change_identity (const struct passwd *pw)
 
 /* Run SHELL, or DEFAULT_SHELL if SHELL is empty.
    If COMMAND is nonzero, pass it to the shell with the -c option.
-   If ADDITIONAL_ARGS is nonzero, pass it to the shell as more
-   arguments.  */
+   Pass ADDITIONAL_ARGS to the shell as more arguments; there
+   are N_ADDITIONAL_ARGS extra arguments.  */
 
 static void
-run_shell (const char *shell, const char *command, char **additional_args)
+run_shell (char const *shell, char const *command, char **additional_args,
+	   size_t n_additional_args)
 {
-  const char **args;
-  int argno = 1;
+  size_t n_args = 1 + fast_startup + 2 * !!command + n_additional_args + 1;
+  char const **args = xnmalloc (n_args, sizeof *args);
+  size_t argno = 1;
 
-  if (additional_args)
-    args = xmalloc (sizeof (char *)
-				    * (10 + elements (additional_args)));
-  else
-    args = xmalloc (sizeof (char *) * 10);
   if (simulate_login)
     {
       char *arg0;
@@ -391,10 +365,8 @@ run_shell (const char *shell, const char *command, char **additional_args)
       args[argno++] = "-c";
       args[argno++] = command;
     }
-  if (additional_args)
-    for (; *additional_args; ++additional_args)
-      args[argno++] = *additional_args;
-  args[argno] = NULL;
+  memcpy (args + argno, additional_args, n_additional_args * sizeof *args);
+  args[argno + n_additional_args] = NULL;
   execv (shell, (char **) args);
 
   {
@@ -404,10 +376,10 @@ run_shell (const char *shell, const char *command, char **additional_args)
   }
 }
 
-/* Return 1 if SHELL is a restricted shell (one not returned by
-   getusershell), else 0, meaning it is a standard shell.  */
+/* Return true if SHELL is a restricted shell (one not returned by
+   getusershell), else false, meaning it is a standard shell.  */
 
-static int
+static bool
 restricted_shell (const char *shell)
 {
   char *line;
@@ -418,11 +390,11 @@ restricted_shell (const char *shell)
       if (*line != '#' && STREQ (line, shell))
 	{
 	  endusershell ();
-	  return 0;
+	  return false;
 	}
     }
   endusershell ();
-  return 1;
+  return true;
 }
 
 void
@@ -460,9 +432,8 @@ main (int argc, char **argv)
 {
   int optc;
   const char *new_user = DEFAULT_USER;
-  char *command = 0;
-  char **additional_args = 0;
-  char *shell = 0;
+  char *command = NULL;
+  char *shell = NULL;
   struct passwd *pw;
   struct passwd pw_copy;
 
@@ -475,32 +446,29 @@ main (int argc, char **argv)
   initialize_exit_failure (EXIT_FAIL);
   atexit (close_stdout);
 
-  fast_startup = 0;
-  simulate_login = 0;
-  change_environment = 1;
+  fast_startup = false;
+  simulate_login = false;
+  change_environment = true;
 
   while ((optc = getopt_long (argc, argv, "c:flmps:", longopts, NULL)) != -1)
     {
       switch (optc)
 	{
-	case 0:
-	  break;
-
 	case 'c':
 	  command = optarg;
 	  break;
 
 	case 'f':
-	  fast_startup = 1;
+	  fast_startup = true;
 	  break;
 
 	case 'l':
-	  simulate_login = 1;
+	  simulate_login = true;
 	  break;
 
 	case 'm':
 	case 'p':
-	  change_environment = 0;
+	  change_environment = false;
 	  break;
 
 	case 's':
@@ -518,68 +486,64 @@ main (int argc, char **argv)
 
   if (optind < argc && STREQ (argv[optind], "-"))
     {
-      simulate_login = 1;
+      simulate_login = true;
       ++optind;
     }
   if (optind < argc)
     new_user = argv[optind++];
-  if (optind < argc)
-    additional_args = argv + optind;
 
   pw = getpwnam (new_user);
-  if (pw == 0)
+  if (! (pw && pw->pw_name && pw->pw_name[0] && pw->pw_dir && pw->pw_dir[0]
+	 && pw->pw_passwd))
     error (EXIT_FAIL, 0, _("user %s does not exist"), new_user);
-  endpwent ();
-
-  /* Make sure pw->pw_shell is non-NULL.  It may be NULL when NEW_USER
-     is a username that is retrieved via NIS (YP), but that doesn't have
-     a default shell listed.  */
-  if (pw->pw_shell == NULL || pw->pw_shell[0] == '\0')
-    pw->pw_shell = (char *) DEFAULT_SHELL;
 
   /* Make a copy of the password information and point pw at the local
      copy instead.  Otherwise, some systems (e.g. Linux) would clobber
-     the static data through the getlogin call from log_su.  */
+     the static data through the getlogin call from log_su.
+     Also, make sure pw->pw_shell is a nonempty string.
+     It may be NULL when NEW_USER is a username that is retrieved via NIS (YP),
+     but that doesn't have a default shell listed.  */
   pw_copy = *pw;
   pw = &pw_copy;
   pw->pw_name = xstrdup (pw->pw_name);
+  pw->pw_passwd = xstrdup (pw->pw_passwd);
   pw->pw_dir = xstrdup (pw->pw_dir);
-  pw->pw_shell = xstrdup (pw->pw_shell);
+  pw->pw_shell = xstrdup (pw->pw_shell && pw->pw_shell[0]
+			  ? pw->pw_shell
+			  : DEFAULT_SHELL);
+  endpwent ();
 
   if (!correct_password (pw))
     {
 #ifdef SYSLOG_FAILURE
-      log_su (pw, 0);
+      log_su (pw, false);
 #endif
       error (EXIT_FAIL, 0, _("incorrect password"));
     }
 #ifdef SYSLOG_SUCCESS
   else
     {
-      log_su (pw, 1);
+      log_su (pw, true);
     }
 #endif
 
-  if (shell == 0 && change_environment == 0)
+  if (!shell && !change_environment)
     shell = getenv ("SHELL");
-  if (shell != 0 && getuid () && restricted_shell (pw->pw_shell))
+  if (shell && getuid () != 0 && restricted_shell (pw->pw_shell))
     {
       /* The user being su'd to has a nonstandard shell, and so is
 	 probably a uucp account or has restricted access.  Don't
 	 compromise the account by allowing access with a standard
 	 shell.  */
       error (0, 0, _("using restricted shell %s"), pw->pw_shell);
-      shell = 0;
+      shell = NULL;
     }
-  if (shell == 0)
-    {
-      shell = xstrdup (pw->pw_shell);
-    }
+  shell = xstrdup (shell ? shell : pw->pw_shell);
   modify_environment (pw, shell);
 
   change_identity (pw);
-  if (simulate_login && chdir (pw->pw_dir))
+  if (simulate_login && chdir (pw->pw_dir) != 0)
     error (0, errno, _("warning: cannot change directory to %s"), pw->pw_dir);
 
-  run_shell (shell, command, additional_args);
+  run_shell (shell, command, argv + optind, MAX (0, argc - optind));
 }
