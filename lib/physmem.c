@@ -31,15 +31,16 @@
 # include <sys/pstat.h>
 #endif
 
-#if HAVE_SYSGET && HAVE_SYS_SYSGET_H && HAVE_SYS_SYSINFO_H && SGT_COOKIE_INIT
+#if HAVE_SYSGET && HAVE_SYS_SYSGET_H && HAVE_SYS_SYSINFO_H
 # include <sys/types.h>
 # include <sys/sysget.h>
 # include <sys/sysinfo.h>
 
-# define IRIX_SYSGET_TOTAL \
-    do { double tot; if (irix_sysget (&tot, NULL) == 0) return tot; } while (0)
-# define IRIX_SYSGET_AVAILABLE \
-    do { double fr; if (irix_sysget (NULL, &fr) == 0) return fr; } while (0)
+# if defined SGT_COOKIE_INIT && defined SGT_NODE_INFO && defined SGT_READ
+#  define IRIX_SYSGET_TOTAL \
+    do { double t; if (irix_sysget (&t, NULL) == 0) return t; } while (0)
+#  define IRIX_SYSGET_AVAILABLE \
+    do { double f; if (irix_sysget (NULL, &f) == 0) return f; } while (0)
 
 /* If TOTAL is non-NULL, set *TOTAL to the number of bytes of physical memory.
    If AVAIL is non-NULL, set *AVAIL to the number of bytes of available memory.
@@ -62,7 +63,10 @@ irix_sysget (double *total, double *avail)
     *avail = buf.freemem;
   return 0;
 }
-#else
+# endif
+#endif
+
+#ifndef IRIX_SYSGET_TOTAL
 # define IRIX_SYSGET_TOTAL
 # define IRIX_SYSGET_AVAILABLE
 #endif
