@@ -224,7 +224,9 @@ Usage: %s [OPTION]... MODE[,MODE]... FILE...\n\
       --version           output version information and exit\n\
 \n\
 Each MODE is one or more of the letters ugoa, one of the symbols +-= and\n\
-one or more of the letters rwxXstugo.\n"));
+one or more of the letters rwxXstugo.\n\
+"));
+      puts (_("\nReport bugs to bug-gnu-utils@gnu.ai.mit.edu\n"));
     }
   exit (status);
 }

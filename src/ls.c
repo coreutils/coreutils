@@ -2746,8 +2746,8 @@ equivalent to using --color=none.  Using the --color option without the\n\
 optional WHEN argument is equivalent to using --color=always.  With\n\
 --color=auto, color codes are output only if standard output is connected\n\
 to a terminal (tty).\n\
-"
-		));
+"));
+      puts (_("\nReport bugs to bug-gnu-utils@gnu.ai.mit.edu\n"));
     }
   exit (status);
 }

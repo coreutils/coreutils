@@ -249,7 +249,9 @@ Change the owner and/or group of each FILE to OWNER and/or GROUP.\n\
       --version          output version information and exit\n\
 \n\
 Owner is unchanged if missing.  Group is unchanged if missing, but changed\n\
-to login group if implied by a period.  A colon may replace the period.\n"));
+to login group if implied by a period.  A colon may replace the period.\n\
+"));
+      puts (_("\nReport bugs to bug-gnu-utils@gnu.ai.mit.edu\n"));
     }
   exit (status);
 }

@@ -402,7 +402,9 @@ version control may be set with VERSION_CONTROL, values are:\n\
 \n\
   t, numbered     make numbered backups\n\
   nil, existing   numbered if numbered backups exist, simple otherwise\n\
-  never, simple   always make simple backups\n"));
+  never, simple   always make simple backups\n\
+"));
+      puts (_("\nReport bugs to bug-gnu-utils@gnu.ai.mit.edu\n"));
     }
   exit (status);
 }

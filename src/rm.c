@@ -538,7 +538,9 @@ Remove (unlink) the FILE(s).\n\
   -v, --verbose         explain what is being done\n\
   -r, -R, --recursive   remove the contents of directories recursively\n\
       --help            display this help and exit\n\
-      --version         output version information and exit\n"));
+      --version         output version information and exit\n\
+"));
+      puts (_("\nReport bugs to bug-gnu-utils@gnu.ai.mit.edu\n"));
     }
   exit (status);
 }

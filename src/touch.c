@@ -260,7 +260,9 @@ Update the access and modification times of each FILE to the current time.\n\
       --help             display this help and exit\n\
       --version          output version information and exit\n\
 \n\
-STAMP may be used without -t if none of -drt, nor --, are used.\n"));
+STAMP may be used without -t if none of -drt, nor --, are used.\n\
+"));
+      puts (_("\nReport bugs to bug-gnu-utils@gnu.ai.mit.edu\n"));
     }
   exit (status);
 }

@@ -477,7 +477,9 @@ or all filesystems by default.\n\
   -P, --portability     use the POSIX output format\n\
   -T, --print-type      print filesystem type\n\
       --help            display this help and exit\n\
-      --version         output version information and exit\n"));
+      --version         output version information and exit\n\
+"));
+      puts (_("\nReport bugs to bug-gnu-utils@gnu.ai.mit.edu\n"));
     }
   exit (status);
 }

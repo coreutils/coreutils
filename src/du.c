@@ -233,7 +233,9 @@ Summarize disk usage of each FILE, recursively for directories.\n\
   -s, --summarize       display only a total for each argument\n\
   -x, --one-file-system  skip directories on different filesystems\n\
       --help            display this help and exit\n\
-      --version         output version information and exit\n"));
+      --version         output version information and exit\n\
+"));
+      puts (_("\nReport bugs to bug-gnu-utils@gnu.ai.mit.edu\n"));
     }
   exit (status);
 }

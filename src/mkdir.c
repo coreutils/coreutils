@@ -75,7 +75,9 @@ Create the DIRECTORY(ies), if they do not already exist.\n\
   -m, --mode=MODE   set permission mode (as in chmod), not rwxrwxrwx - umask\n\
       --verbose     print a message for each created directory\n\
       --help        display this help and exit\n\
-      --version     output version information and exit\n"));
+      --version     output version information and exit\n\
+"));
+      puts (_("\nReport bugs to bug-gnu-utils@gnu.ai.mit.edu\n"));
     }
   exit (status);
 }

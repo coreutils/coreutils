@@ -74,7 +74,9 @@ MAJOR MINOR are forbidden for TYPE p, mandatory otherwise.  TYPE may be:\n\
 \n\
   b      create a block (buffered) special file\n\
   c, u   create a character (unbuffered) special file\n\
-  p      create a FIFO\n"));
+  p      create a FIFO\n\
+"));
+      puts (_("\nReport bugs to bug-gnu-utils@gnu.ai.mit.edu\n"));
     }
   exit (status);
 }

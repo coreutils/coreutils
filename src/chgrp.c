@@ -285,7 +285,9 @@ Change the group membership of each FILE to GROUP.\n\
   -v, --verbose           output a diagnostic for every file processed\n\
   -R, --recursive         change files and directories recursively\n\
       --help              display this help and exit\n\
-      --version           output version information and exit\n"));
+      --version           output version information and exit\n\
+"));
+      puts (_("\nReport bugs to bug-gnu-utils@gnu.ai.mit.edu\n"));
     }
   exit (status);
 }
