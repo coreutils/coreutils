@@ -2,6 +2,8 @@
 
 	* Version 5.1.0.
 
+	* Use autoconf-2.58.  Regenerate dependent files.
+
 	* src/tr.c (spec_init): Fix typo in last change.
 
 	* src/sys2.h (case_GETOPT_VERSION_CHAR): Cast NULL to `(char *)' in
