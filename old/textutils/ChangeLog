@@ -1,11 +1,36 @@
 1998-04-26  Jim Meyering  <meyering@ascend.com>
 
+	* src/sort.c (keycompare): Don't return 0 from inside the
+	keyspec-iterating loop.  With this change, test 22a passes.
+	Reported by Zvi Har'El.
+	(strncoll): Remove bogus assertion.
+
+	* configure.in: Use jm_ASSERT.
+	* acconfig.h: Add NDEBUG.
+
+	* src/cut.c: Don't define NDEBUG.
+	* src/csplit.c: Likewise.
+	* src/join.c: Likewise.
+	* src/sort.c: Likewise.
+	* src/tr.c: Likewise.
+
+	* src/cut.c: Don't define _GNU_SOURCE (now it's in config.h).
+	* src/expand.c: Likewise.
+	* src/fold.c: Likewise.
+	* src/join.c: Likewise.
+	* src/sort.c: Likewise.
+	* src/tr.c: Likewise.
+	* src/unexpand.c: Likewise.
+	* src/uniq.c: Likewise.
+
 	* src/tail.c (close_fd): New function -- converted from macro.
 	[struct File_spec] (n_stat_calls): New member.
 	[struct File_spec] (n_unchanged_stats): New member.
 	(max_n_unchanged_stats): New global.
 	Initialize new members.
 	(xwrite): New function -- converted from macro.
+	[struct File_spec] (pretty_name): Remove member.
+	(pretty_name): New function.
 
 	* src/md5sum.c (md5_check): Declare local, `md5num' as _unsigned_ char*.
 	(hex_digits): Declare parameter `s' as _unsigned_ char*.
