@@ -1,7 +1,7 @@
-2000-06-03  Jim Meyering  <meyering@lucent.com>
+2000-05-26  Bruno Haible  <haible@clisp.cons.org>
 
-	* glibc21.m4 (jm_GLIBC21): New macro/file.  From Bruno Haible.
-	* jm-macros.m4 (jm_MACROS): Use jm_GLIBC21.
+	* glibc21.m4: New file.
+	* jm-macros.m4: (jm_MACROS): Call jm_GLIBC21.
 
 2000-05-28  Jim Meyering  <meyering@lucent.com>
 

@@ -1,3 +1,10 @@
+2000-05-26  Bruno Haible  <haible@clisp.cons.org>
+
+	* Makefile.am (install-exec-local): On systems with glibc-2.1 or
+	newer, don't install charset.alias.
+	* config.charset: Change the Linux/glibc rules so they become empty
+	on glibc-2.1 or newer.
+
 2000-06-02  Jim Meyering  <meyering@lucent.com>
 
 	* mountlist.c: Back out last change.  Instead, do this...
