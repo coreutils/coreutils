@@ -97,15 +97,12 @@ char *malloc ();
 # define REAL_DIR_ENTRY(dp) 1
 #endif
 
-/* Which type of backup file names are generated. */
-enum backup_type backup_type = none;
-
 /* The extension added to file names to produce a simple (as opposed
    to numbered) backup file name. */
-const char *simple_backup_suffix = ".orig";
+const char *simple_backup_suffix = "~";
 
-static int max_backup_version __BACKUPFILE_P ((const char *, const char *));
-static int version_number __BACKUPFILE_P ((const char *, const char *, size_t));
+static int max_backup_version PARAMS ((const char *, const char *));
+static int version_number PARAMS ((const char *, const char *, size_t));
 
 /* Return the name of the new backup file for file FILE,
    allocated with malloc.  Return 0 if out of memory.
@@ -113,7 +110,7 @@ static int version_number __BACKUPFILE_P ((const char *, const char *, size_t));
    Do not call this function if backup_type == none. */
 
 char *
-find_backup_file_name (const char *file)
+find_backup_file_name (const char *file, enum backup_type backup_type)
 {
   size_t backup_suffix_size_max;
   size_t file_len = strlen (file);
