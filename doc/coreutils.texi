@@ -5382,6 +5382,22 @@ set.
 Use traditional @sc{posix}-locale dates like @samp{May 14@ @ 2001} and
 @samp{May 14 23:45} unless the user specifies a non-@sc{posix} locale,
 in which case use @sc{iso}-style dates.  This is the default.
+
+@item +@var{format}
+Use @var{format} for dates, where @var{format} is interpreted like the
+format argument of @command{date} (@pxref{date invocation}).  If
+@var{format} contains two format strings separated by a newline, the
+former is used for non-recent files and the latter for recent files;
+if you want the columns to line up, you may need to append trailing
+spaces to one of the two formats.  For example, the following two
+@command{ls} invocations are equivalent:
+
+@example
+newline='
+'
+ls -l --time-style=iso
+ls -l --time-style=+"%Y-%m-%d $@{newline@}%m-%d %H:%M"
+@end example
 @end table
 @end table
 
