@@ -6,6 +6,16 @@
 	(append_repeated_char, append_equiv_class, spec_init): Use `sizeof *var'
 	rather than `sizeof EXPLICIT_TYPE'.  The former is more maintainable
 	and usually shorter.
+	* src/copy.c (copy_internal): Likewise.
+	* src/cp.c (make_path_private): Likewise.
+	* src/tsort.c (new_item, record_relation): Likewise.
+
+	* src/df.c (add_fs_type, add_excluded_fs_type, main): Likewise.
+	(main): Also remove anachronistic cast of xmalloc return value.
+	* src/ptx.c (alloc_and_compile_regex, main): Likewise.
+	(main): Also remove anachronistic cast of xmalloc return value.
+	* src/sort.c (inittables): Likewise.
+	(sort): Also Split a long line.
 
 2003-10-25  Jim Meyering  <meyering@lucent.com>
 
