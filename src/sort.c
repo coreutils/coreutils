@@ -101,6 +101,8 @@ static int hard_LC_TIME;
 
 #endif
 
+#define NONZERO(x) (x != 0)
+
 /* The kind of blanks for '-b' to skip in various options. */
 enum blanktype { bl_start, bl_end, bl_both };
 
@@ -1205,7 +1207,7 @@ keycompare (const struct line *a, const struct line *b)
 	      diff = memcoll (copy_a, new_len_a, copy_b, new_len_b);
 	    }
 	  else if (lena == 0)
-	    diff = - (lenb != 0);
+	    diff = - NONZERO (lenb);
 	  else if (lenb == 0)
 	    goto greater;
 	  else
@@ -1243,7 +1245,7 @@ keycompare (const struct line *a, const struct line *b)
 	    CMP_WITH_IGNORE (UCHAR (*texta), UCHAR (*textb));
 	}
       else if (lena == 0)
-	diff = - (lenb != 0);
+	diff = - NONZERO (lenb);
       else if (lenb == 0)
 	goto greater;
       else
@@ -1328,9 +1330,9 @@ compare (register const struct line *a, register const struct line *b)
   alen = a->length - 1, blen = b->length - 1;
 
   if (alen == 0)
-    diff = - (blen != 0);
+    diff = - NONZERO (blen);
   else if (blen == 0)
-    diff = alen != 0;
+    diff = NONZERO (alen);
 #ifdef ENABLE_NLS
   else if (hard_LC_COLLATE)
     diff = memcoll (a->text, alen, b->text, blen);
@@ -1444,7 +1446,7 @@ finish:
   free (buf.buf);
   free ((char *) lines.lines);
   free (temp.text);
-  return disorder_line_number != 0;
+  return NONZERO (disorder_line_number);
 }
 
 /* Merge lines from FPS onto OFP.  NFPS cannot be greater than NMERGE.
