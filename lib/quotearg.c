@@ -63,9 +63,9 @@
 # include <wchar.h>
 #endif
 
-#if HAVE_MBRTOWC && HAVE_WCHAR_H
+#if HAVE_MBRTOWC
 size_t mbrtowc ();
-# if !HAVE_MBSTATE_T_OBJECT
+# ifdef mbstate_t
 #  define mbrtowc(pwc, s, n, ps) (mbrtowc) (pwc, s, n, 0)
 # endif
 #else
