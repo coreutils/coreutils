@@ -1,3 +1,8 @@
+Mon Mar 29 22:22:40 1993  Jim Meyering  (meyering@comco.com)
+
+	* system.h [ST_NBLOCKS]:  Check also for __hpux.  From Henrik B}kman
+	<Henrik.Bakman@csd.uu.se>.
+
 Sun Mar 28 21:22:30 1993  Jim Meyering  (meyering@comco.com)
 
 	* Makefile.in (dist): Use cp when hard link fails.
