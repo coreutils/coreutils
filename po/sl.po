@@ -1,12 +1,12 @@
 # -*- mode: po; -*- Slovenian message catalog for GNU coreutils.
 # Copyright (C) 1996, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
 # Primo¾ Peterlin <primoz.peterlin@biofiz.mf.uni-lj.si>, 1996, 1999, 2000, 2001, 2002.
-# $Id: sl.po,v 1.21 2002/10/13 17:38:43 meyering Exp $
+# $Id: sl.po,v 1.30 2002/12/13 20:46:20 meyering Exp $
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: GNU coreutils 4.5.2\n"
-"POT-Creation-Date: 2002-10-13 16:06+0200\n"
+"POT-Creation-Date: 2002-12-13 21:25+0100\n"
 "PO-Revision-Date: 2002-10-07 09:47+0200\n"
 "Last-Translator: Primo¾ Peterlin <primoz.peterlin@biofiz.mf.uni-lj.si>\n"
 "Language-Team: Slovenian <translation-team-sl@lists.sourceforge.net>\n"
@@ -16,17 +16,17 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
 "%100==4 ? 3 : 0);\n"
 
-#: lib/argmatch.c:161
+#: lib/argmatch.c:129
 #, c-format
 msgid "invalid argument %s for %s"
 msgstr "neveljaven argument %s za %s"
 
-#: lib/argmatch.c:162
+#: lib/argmatch.c:130
 #, c-format
 msgid "ambiguous argument %s for %s"
 msgstr "dvoumen argument %s za %s"
 
-#: lib/argmatch.c:181
+#: lib/argmatch.c:149
 msgid "Valid arguments are:"
 msgstr "Veljavni argumenti so:"
 
@@ -38,13 +38,13 @@ msgstr "napaka v programu"
 msgid "stack overflow"
 msgstr "prekoraèitev sklada"
 
-#: lib/closeout.c:107 src/cat.c:189 src/cat.c:272 src/cat.c:326
+#: lib/closeout.c:103 src/cat.c:189 src/cat.c:272 src/cat.c:326
 #: src/cksum.c:267 src/head.c:152 src/head.c:196 src/tail.c:323
-#: src/tail.c:1664 src/tr.c:1666 src/tr.c:1912 src/tr.c:2020
+#: src/tail.c:1659 src/tr.c:1666 src/tr.c:1912 src/tr.c:2020
 msgid "write error"
 msgstr "napaka pri pisanju"
 
-#: lib/error.c:129 lib/error.c:157
+#: lib/error.c:135 lib/error.c:163
 msgid "Unknown system error"
 msgstr "Neznana sistemska napaka"
 
@@ -97,101 +97,101 @@ msgstr "deljen pomnilni¹ki predmet"
 msgid "weird file"
 msgstr "èudna datoteka"
 
-#: lib/getopt.c:692 lib/getopt.c:704
+#: lib/getopt.c:688 lib/getopt.c:700
 #, c-format
 msgid "%s: option `%s' is ambiguous\n"
 msgstr "%s: izbira ,%s` je dvoumna\n"
 
-#: lib/getopt.c:737 lib/getopt.c:741
+#: lib/getopt.c:733 lib/getopt.c:737
 #, c-format
 msgid "%s: option `--%s' doesn't allow an argument\n"
 msgstr "%s: izbira ,--%s` ne dovoljuje argumenta\n"
 
-#: lib/getopt.c:750 lib/getopt.c:755
+#: lib/getopt.c:746 lib/getopt.c:751
 #, c-format
 msgid "%s: option `%c%s' doesn't allow an argument\n"
 msgstr "%s: izbira ,%c%s` ne dovoljuje argumenta\n"
 
-#: lib/getopt.c:791 lib/getopt.c:804 lib/getopt.c:1093 lib/getopt.c:1106
+#: lib/getopt.c:787 lib/getopt.c:800 lib/getopt.c:1089 lib/getopt.c:1102
 #, c-format
 msgid "%s: option `%s' requires an argument\n"
 msgstr "%s: izbira ,%s` zahteva argument\n"
 
-#: lib/getopt.c:842 lib/getopt.c:845
+#: lib/getopt.c:838 lib/getopt.c:841
 #, c-format
 msgid "%s: unrecognized option `--%s'\n"
 msgstr "%s: neprepoznana izbira ,--%s`\n"
 
-#: lib/getopt.c:853 lib/getopt.c:856
+#: lib/getopt.c:849 lib/getopt.c:852
 #, c-format
 msgid "%s: unrecognized option `%c%s'\n"
 msgstr "%s: neprepoznana izbira ,%c%s`\n"
 
-#: lib/getopt.c:903 lib/getopt.c:906
+#: lib/getopt.c:899 lib/getopt.c:902
 #, c-format
 msgid "%s: illegal option -- %c\n"
 msgstr "%s: nedovoljena izbira -- %c\n"
 
-#: lib/getopt.c:912 lib/getopt.c:915
+#: lib/getopt.c:908 lib/getopt.c:911
 #, c-format
 msgid "%s: invalid option -- %c\n"
 msgstr "%s: neveljavna izbira -- %c\n"
 
-#: lib/getopt.c:962 lib/getopt.c:973 lib/getopt.c:1159 lib/getopt.c:1172
+#: lib/getopt.c:958 lib/getopt.c:969 lib/getopt.c:1155 lib/getopt.c:1168
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
 msgstr "%s: izbira zahteva argument -- %c\n"
 
-#: lib/getopt.c:1025 lib/getopt.c:1036
+#: lib/getopt.c:1021 lib/getopt.c:1032
 #, c-format
 msgid "%s: option `-W %s' is ambiguous\n"
 msgstr "%s: izbira ,-W %s` je dvoumna\n"
 
-#: lib/getopt.c:1060 lib/getopt.c:1072
+#: lib/getopt.c:1056 lib/getopt.c:1068
 #, c-format
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "%s: izbira ,-W %s` ne dovoljuje argumenta\n"
 
-#: lib/human.c:365
+#: lib/human.c:519
 msgid "block size"
 msgstr "velikost bloka"
 
-#: lib/makepath.c:176 src/copy.c:1270 src/mkdir.c:170
+#: lib/makepath.c:168 src/copy.c:1270 src/mkdir.c:170
 #, c-format
 msgid "cannot create directory %s"
 msgstr "imenika %s ni mogoèe ustvariti"
 
-#: lib/makepath.c:182 lib/makepath.c:424 src/cp.c:446 src/cp.c:468
+#: lib/makepath.c:174 lib/makepath.c:416 src/cp.c:446 src/cp.c:468
 #, c-format
 msgid "%s exists but is not a directory"
 msgstr "%s obstaja, vendar ni imenik"
 
 # ! INEXACT
-#: lib/makepath.c:319 lib/makepath.c:381 lib/makepath.c:443
+#: lib/makepath.c:311 lib/makepath.c:373 lib/makepath.c:435
 #, c-format
 msgid "cannot change owner and/or group of %s"
 msgstr "lastnika in/ali skupine %s ni mogoèe spremeniti"
 
-#: lib/makepath.c:341
+#: lib/makepath.c:333
 #, c-format
 msgid "cannot chdir to directory %s"
 msgstr "dostop do imenika %s ni mogoè"
 
-#: lib/makepath.c:395 lib/makepath.c:449
+#: lib/makepath.c:387 lib/makepath.c:441
 #, c-format
 msgid "cannot change permissions of %s"
 msgstr "dovoljenj %s ni mogoèe spremeniti"
 
 # ! INEXACT
-#: lib/obstack.c:500 lib/obstack.c:503 lib/xmalloc.c:66
+#: lib/obstack.c:487 lib/obstack.c:490 lib/xmalloc.c:63
 msgid "memory exhausted"
 msgstr "zmanjkalo pomnilnika"
 
-#: lib/quotearg.c:270
+#: lib/quotearg.c:236
 msgid "`"
 msgstr ","
 
-#: lib/quotearg.c:271
+#: lib/quotearg.c:237
 msgid "'"
 msgstr "`"
 
@@ -203,50 +203,50 @@ msgstr "^[jJdD]"
 msgid "^[nN]"
 msgstr "^[nN]"
 
-#: lib/unicodeio.c:159
+#: lib/unicodeio.c:155
 msgid "iconv function not usable"
 msgstr "funkcija iconv ne deluje"
 
-#: lib/unicodeio.c:161
+#: lib/unicodeio.c:157
 msgid "iconv function not available"
 msgstr "funkcija iconv ni na voljo"
 
-#: lib/unicodeio.c:168
+#: lib/unicodeio.c:164
 msgid "character out of range"
 msgstr "koda znaka izven obsega"
 
-#: lib/unicodeio.c:231
+#: lib/unicodeio.c:227
 #, c-format
 msgid "cannot convert U+%04X to local character set"
 msgstr "znaka s kodo U+%04X ni mogoèe pretvoriti v lokalni nabor znakov"
 
-#: lib/unicodeio.c:233
+#: lib/unicodeio.c:229
 #, c-format
 msgid "cannot convert U+%04X to local character set: %s"
 msgstr "znaka s kodo U+%04X ni moè pretvoriti v lokalni nabor znakov: %s"
 
-#: lib/userspec.c:178
+#: lib/userspec.c:174
 msgid "invalid user"
 msgstr "neveljavno uporabni¹ko ime"
 
-#: lib/userspec.c:179
+#: lib/userspec.c:175
 msgid "invalid group"
 msgstr "neveljavno ime skupine"
 
-#: lib/userspec.c:181
+#: lib/userspec.c:177
 msgid "cannot get the login group of a numeric UID"
 msgstr "imena skupine, ki pripada ¹tevilènemu UID, ni mogoèe ugotoviti"
 
-#: lib/userspec.c:183
+#: lib/userspec.c:179
 msgid "cannot omit both user and group"
 msgstr "ni mogoèe obenem izpustiti uporabnika in skupine"
 
-#: lib/version-etc.c:61
+#: lib/version-etc.c:57
 #, c-format
 msgid "Written by %s.\n"
 msgstr "Avtor(ica): %s.\n"
 
-#: lib/version-etc.c:67
+#: lib/version-etc.c:63
 msgid ""
 "This is free software; see the source for copying conditions.  There is NO\n"
 "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
@@ -255,32 +255,32 @@ msgstr ""
 "raz¹irjate so navedeni v izvorni kodi. Za program ni NOBENEGA jamstva,\n"
 "niti jamstev USTREZNOSTI ZA PRODAJO ali PRIMERNOSTI ZA UPORABO.\n"
 
-#: lib/xmemcoll.c:61
+#: lib/xmemcoll.c:57
 msgid "string comparison failed"
 msgstr "primerjanje nizov ni uspelo"
 
-#: lib/xmemcoll.c:62
+#: lib/xmemcoll.c:58
 msgid "Set LC_ALL='C' to work around the problem."
 msgstr "Nastavite LC_ALL='C', da bi odpravili te¾avo."
 
-#: lib/xmemcoll.c:64
+#: lib/xmemcoll.c:60
 #, c-format
 msgid "The strings compared were %s and %s."
 msgstr "Primerjana niza sta bila %s in %s."
 
 #: src/basename.c:50 src/cat.c:88 src/chgrp.c:122 src/chmod.c:239
 #: src/chown.c:95 src/chroot.c:41 src/cksum.c:276 src/comm.c:69 src/cp.c:160
-#: src/csplit.c:1492 src/cut.c:163 src/date.c:115 src/dd.c:284 src/df.c:747
-#: src/dircolors.c:100 src/dirname.c:42 src/du.c:181 src/echo.c:73
-#: src/env.c:115 src/expand.c:106 src/expr.c:85 src/factor.c:70 src/fmt.c:267
+#: src/csplit.c:1492 src/cut.c:163 src/date.c:115 src/dd.c:284 src/df.c:776
+#: src/dircolors.c:99 src/dirname.c:42 src/du.c:192 src/echo.c:73
+#: src/env.c:115 src/expand.c:106 src/expr.c:86 src/factor.c:70 src/fmt.c:267
 #: src/fold.c:63 src/head.c:84 src/hostid.c:44 src/hostname.c:63 src/id.c:83
 #: src/install.c:593 src/join.c:140 src/kill.c:89 src/link.c:47 src/ln.c:335
-#: src/logname.c:44 src/ls.c:3614 src/md5sum.c:121 src/mkdir.c:57
-#: src/mkfifo.c:51 src/mknod.c:61 src/mv.c:310 src/nice.c:63 src/nl.c:172
-#: src/od.c:283 src/paste.c:399 src/pathchk.c:141 src/pinky.c:465
+#: src/logname.c:44 src/ls.c:3701 src/md5sum.c:121 src/mkdir.c:57
+#: src/mkfifo.c:51 src/mknod.c:61 src/mv.c:307 src/nice.c:63 src/nl.c:172
+#: src/od.c:283 src/paste.c:399 src/pathchk.c:142 src/pinky.c:465
 #: src/pr.c:2750 src/printenv.c:59 src/printf.c:93 src/ptx.c:1855 src/pwd.c:43
-#: src/rm.c:96 src/rmdir.c:142 src/seq.c:78 src/shred.c:171 src/sleep.c:59
-#: src/sort.c:275 src/split.c:91 src/stat.c:706 src/stty.c:497 src/su.c:433
+#: src/rm.c:96 src/rmdir.c:142 src/seq.c:78 src/shred.c:168 src/sleep.c:59
+#: src/sort.c:272 src/split.c:91 src/stat.c:703 src/stty.c:497 src/su.c:433
 #: src/sum.c:56 src/sync.c:40 src/tac.c:123 src/tail.c:230 src/tee.c:59
 #: src/test.c:985 src/touch.c:234 src/tr.c:323 src/tsort.c:93 src/tty.c:58
 #: src/uname.c:106 src/unexpand.c:371 src/uniq.c:135 src/unlink.c:47
@@ -310,17 +310,17 @@ msgstr ""
 
 #: src/basename.c:66 src/cat.c:124 src/chgrp.c:152 src/chmod.c:265
 #: src/chown.c:139 src/chroot.c:59 src/cksum.c:291 src/comm.c:86 src/cp.c:257
-#: src/csplit.c:1534 src/cut.c:208 src/date.c:217 src/dd.c:331 src/df.c:786
-#: src/dircolors.c:121 src/dirname.c:58 src/du.c:226 src/echo.c:105
-#: src/env.c:134 src/expand.c:131 src/expr.c:148 src/factor.c:90
+#: src/csplit.c:1534 src/cut.c:208 src/date.c:217 src/dd.c:331 src/df.c:815
+#: src/dircolors.c:120 src/dirname.c:58 src/du.c:237 src/echo.c:105
+#: src/env.c:134 src/expand.c:131 src/expr.c:149 src/factor.c:90
 #: src/false.c:28 src/fmt.c:297 src/fold.c:86 src/head.c:115 src/hostid.c:57
 #: src/hostname.c:76 src/id.c:104 src/install.c:648 src/join.c:180
-#: src/kill.c:119 src/link.c:59 src/ln.c:390 src/logname.c:55 src/ls.c:3743
-#: src/md5sum.c:157 src/mkdir.c:76 src/mkfifo.c:68 src/mknod.c:86 src/mv.c:364
-#: src/nice.c:77 src/nl.c:227 src/od.c:370 src/paste.c:423 src/pathchk.c:153
+#: src/kill.c:119 src/link.c:59 src/ln.c:390 src/logname.c:55 src/ls.c:3830
+#: src/md5sum.c:157 src/mkdir.c:76 src/mkfifo.c:68 src/mknod.c:86 src/mv.c:361
+#: src/nice.c:77 src/nl.c:227 src/od.c:370 src/paste.c:423 src/pathchk.c:154
 #: src/pinky.c:492 src/pr.c:2862 src/printenv.c:72 src/printf.c:141
-#: src/pwd.c:54 src/rm.c:128 src/rmdir.c:162 src/seq.c:104 src/shred.c:234
-#: src/sleep.c:75 src/sort.c:346 src/split.c:123 src/stat.c:776 src/stty.c:711
+#: src/pwd.c:54 src/rm.c:128 src/rmdir.c:162 src/seq.c:104 src/shred.c:231
+#: src/sleep.c:75 src/sort.c:343 src/split.c:123 src/stat.c:773 src/stty.c:711
 #: src/su.c:454 src/sum.c:76 src/sync.c:51 src/tac.c:146 src/tail.c:300
 #: src/tee.c:72 src/test.c:1067 src/touch.c:265 src/tr.c:396 src/true.c:28
 #: src/tsort.c:105 src/tty.c:70 src/uname.c:128 src/unexpand.c:394
@@ -335,16 +335,16 @@ msgstr ""
 "Poroèila o napakah javite na <%s>.\n"
 
 #: src/basename.c:114 src/chgrp.c:210 src/chmod.c:353 src/chown.c:211
-#: src/chroot.c:78 src/csplit.c:1464 src/dirname.c:89 src/expr.c:177
+#: src/chroot.c:78 src/csplit.c:1464 src/dirname.c:89 src/expr.c:178
 #: src/install.c:284 src/link.c:87 src/mkdir.c:124 src/mkfifo.c:113
-#: src/mknod.c:141 src/pathchk.c:193 src/rm.c:200 src/rmdir.c:206
-#: src/seq.c:411 src/sleep.c:150 src/stat.c:827 src/unlink.c:88
+#: src/mknod.c:141 src/pathchk.c:194 src/rm.c:200 src/rmdir.c:206
+#: src/seq.c:411 src/sleep.c:150 src/stat.c:824 src/unlink.c:88
 msgid "too few arguments"
 msgstr "premalo argumentov"
 
-#: src/basename.c:115 src/dircolors.c:483 src/dirname.c:90 src/hostid.c:79
+#: src/basename.c:115 src/dircolors.c:482 src/dirname.c:90 src/hostid.c:79
 #: src/hostname.c:122 src/link.c:93 src/mknod.c:143 src/seq.c:417
-#: src/split.c:525 src/tr.c:1848 src/unlink.c:94 src/uptime.c:244
+#: src/split.c:503 src/tr.c:1848 src/unlink.c:94 src/uptime.c:244
 #: src/users.c:169 src/who.c:764
 msgid "too many arguments"
 msgstr "preveè argumentov"
@@ -415,7 +415,7 @@ msgstr ""
 msgid "cannot do ioctl on `%s'"
 msgstr "ioctl na ,%s` ni mogoè"
 
-#: src/cat.c:669 src/dd.c:1225 src/od.c:1013 src/tee.c:181
+#: src/cat.c:669 src/dd.c:1222 src/od.c:1013 src/tee.c:181
 msgid "standard output"
 msgstr "standardni izhod"
 
@@ -762,7 +762,7 @@ msgstr ""
 "Izpi¹emo nadzorno vsoto in dol¾ino v bajtih za vsako DATOTEKO.\n"
 "\n"
 
-#: src/comm.c:35 src/ls.c:126 src/uniq.c:40
+#: src/comm.c:35 src/ls.c:129 src/uniq.c:40
 msgid "Richard Stallman and David MacKenzie"
 msgstr "Richard Stallman in David MacKenzie"
 
@@ -795,7 +795,7 @@ msgstr "dostop do %s ni mogoè"
 msgid "cannot open %s for reading"
 msgstr "datotek %s ni mogoèe odpreti za branje"
 
-#: src/copy.c:232 src/copy.c:286 src/copy.c:301 src/dd.c:1201
+#: src/copy.c:232 src/copy.c:286 src/copy.c:301 src/dd.c:1199
 #, c-format
 msgid "cannot fstat %s"
 msgstr "statusa %s ni moè ugotoviti s fstat"
@@ -816,7 +816,7 @@ msgstr "ni mogoèe odstraniti %s"
 msgid "cannot create regular file %s"
 msgstr "ni mogoèe ustvariti navadne datoteke %s"
 
-#: src/copy.c:328 src/dd.c:818 src/dd.c:1012
+#: src/copy.c:328 src/dd.c:816 src/dd.c:1010
 #, c-format
 msgid "reading %s"
 msgstr "beremo %s"
@@ -826,7 +826,7 @@ msgstr "beremo %s"
 msgid "cannot lseek %s"
 msgstr "premikanje z lseek po %s ni mogoèe"
 
-#: src/copy.c:377 src/copy.c:401 src/dd.c:1056 src/dd.c:1117
+#: src/copy.c:377 src/copy.c:401 src/dd.c:1054 src/dd.c:1115
 #, c-format
 msgid "writing %s"
 msgstr "zapisujemo %s"
@@ -846,7 +846,7 @@ msgstr "%s: naj pi¹emo prek %s navzlic za¹èiti %04lo? "
 msgid "%s: overwrite %s? "
 msgstr "%s: naj pi¹emo prek %s? "
 
-#: src/copy.c:810 src/copy.c:848 src/stat.c:664
+#: src/copy.c:810 src/copy.c:848 src/stat.c:661
 #, c-format
 msgid "cannot stat %s"
 msgstr "statusa %s ni moè ugotoviti s stat"
@@ -972,7 +972,7 @@ msgstr "ni mogoèe ustvariti FIFO %s"
 msgid "cannot create special file %s"
 msgstr "ni mogoèe ustvariti posebne datoteke %s"
 
-#: src/copy.c:1397 src/ls.c:2368 src/stat.c:461
+#: src/copy.c:1397 src/ls.c:2453 src/stat.c:458
 #, c-format
 msgid "cannot read symbolic link %s"
 msgstr "ni mogoèe prebrati simbolne povezave %s"
@@ -1022,7 +1022,7 @@ msgid "Torbjorn Granlund, David MacKenzie, and Jim Meyering"
 msgstr "Torbjorn Granlund, David MacKenzie in Jim Meyering"
 
 # ! INEXACT
-#: src/cp.c:164 src/mv.c:314
+#: src/cp.c:164 src/mv.c:311
 #, c-format
 msgid ""
 "Usage: %s [OPTION]... SOURCE DEST\n"
@@ -1041,11 +1041,11 @@ msgstr ""
 "Prepi¹emo IZVOR v CILJ, ali veè IZVOROV v IMENIK.\n"
 "\n"
 
-#: src/cp.c:174 src/csplit.c:1505 src/cut.c:175 src/df.c:757 src/du.c:190
+#: src/cp.c:174 src/csplit.c:1505 src/cut.c:175 src/df.c:786 src/du.c:201
 #: src/expand.c:119 src/fmt.c:277 src/fold.c:76 src/head.c:98
-#: src/install.c:609 src/kill.c:103 src/ln.c:354 src/ls.c:3624 src/mkdir.c:66
-#: src/mkfifo.c:60 src/mknod.c:70 src/mv.c:324 src/nl.c:185 src/paste.c:413
-#: src/pr.c:2763 src/ptx.c:1867 src/shred.c:181 src/sort.c:289 src/split.c:104
+#: src/install.c:609 src/kill.c:103 src/ln.c:354 src/ls.c:3711 src/mkdir.c:66
+#: src/mkfifo.c:60 src/mknod.c:70 src/mv.c:321 src/nl.c:185 src/paste.c:413
+#: src/pr.c:2763 src/ptx.c:1867 src/shred.c:178 src/sort.c:286 src/split.c:104
 #: src/tac.c:136 src/tail.c:244 src/touch.c:243 src/unexpand.c:384
 #: src/uniq.c:148
 msgid ""
@@ -1207,7 +1207,7 @@ msgstr ""
 "VERSION_CONTROL. Mo¾nosti so:\n"
 "\n"
 
-#: src/cp.c:245 src/install.c:642 src/ln.c:384 src/mv.c:358
+#: src/cp.c:245 src/install.c:642 src/ln.c:384 src/mv.c:355
 msgid ""
 "  none, off       never make backups (even if --backup is given)\n"
 "  numbered, t     make numbered backups\n"
@@ -1275,7 +1275,7 @@ msgstr "prepisujemo veè datotek, vendar zadnji argument %s ni imenik"
 msgid "when preserving paths, the destination must be a directory"
 msgstr "pri ohranitvi poti mora biti cilj imenik"
 
-#: src/cp.c:878 src/install.c:219 src/ln.c:434 src/mv.c:408
+#: src/cp.c:878 src/install.c:219 src/ln.c:434 src/mv.c:405
 #, c-format
 msgid ""
 "warning: --version-control (-V) is obsolete;  support for it\n"
@@ -1292,7 +1292,7 @@ msgstr "ta sistem ne podpira simbolnih povezav"
 msgid "cannot make both hard and symbolic links"
 msgstr "hkratne trde in simbolne povezave niso mogoèe"
 
-#: src/cp.c:1016 src/install.c:275 src/ln.c:530 src/mv.c:486
+#: src/cp.c:1016 src/install.c:275 src/ln.c:530 src/mv.c:483
 msgid "backup type"
 msgstr "vrsta varnostne kopije"
 
@@ -1488,9 +1488,9 @@ msgstr ""
 msgid "David Ihnat, David MacKenzie, and Jim Meyering"
 msgstr "David Ihnat, David MacKenzie in Jim Meyering"
 
-#: src/cut.c:167 src/df.c:751 src/du.c:185 src/expand.c:110 src/fold.c:67
-#: src/head.c:88 src/ls.c:3618 src/nl.c:176 src/paste.c:403 src/pr.c:2754
-#: src/sort.c:279 src/sum.c:60 src/tac.c:127 src/tail.c:234 src/tee.c:63
+#: src/cut.c:167 src/df.c:780 src/du.c:196 src/expand.c:110 src/fold.c:67
+#: src/head.c:88 src/ls.c:3705 src/nl.c:176 src/paste.c:403 src/pr.c:2754
+#: src/sort.c:276 src/sum.c:60 src/tac.c:127 src/tail.c:234 src/tee.c:63
 #: src/unexpand.c:375 src/wc.c:125
 #, c-format
 msgid "Usage: %s [OPTION]... [FILE]...\n"
@@ -1801,7 +1801,7 @@ msgstr ""
 "  ,-` (minus) ne dopolnjuj polja\n"
 "  ,_` (podèrtaj) dopolni polje s presledki\n"
 
-#: src/date.c:239 src/dd.c:1175 src/dircolors.c:540 src/head.c:221
+#: src/date.c:239 src/dd.c:1173 src/dircolors.c:539 src/head.c:221
 #: src/md5sum.c:340 src/md5sum.c:681 src/od.c:959 src/od.c:2001 src/pr.c:1164
 #: src/pr.c:1371 src/pr.c:1493 src/stty.c:912 src/tac.c:483 src/tac.c:489
 #: src/tee.c:151 src/tr.c:2027 src/tsort.c:585
@@ -1955,57 +1955,57 @@ msgstr ""
 msgid "%s+%s records in\n"
 msgstr "%s+%s zapisov na vhodu\n"
 
-#: src/dd.c:365
+#: src/dd.c:364
 #, c-format
 msgid "%s+%s records out\n"
 msgstr "%s+%s zapisov na izhodu\n"
 
 # ! INEXACT
-#: src/dd.c:373
+#: src/dd.c:371
 msgid "truncated record"
 msgstr "odrezan zapis"
 
 # ! INEXACT
-#: src/dd.c:374
+#: src/dd.c:372
 msgid "truncated records"
 msgstr "odrezani zapisi"
 
-#: src/dd.c:384
+#: src/dd.c:382
 #, c-format
 msgid "closing input file %s"
 msgstr "zapiramo vhodno datoteko %s"
 
-#: src/dd.c:387
+#: src/dd.c:385
 #, c-format
 msgid "closing output file %s"
 msgstr "zapiramo izhodno datoteko %s"
 
-#: src/dd.c:471
+#: src/dd.c:469
 #, c-format
 msgid "writing to %s"
 msgstr "pi¹emo na %s"
 
-#: src/dd.c:503
+#: src/dd.c:501
 #, c-format
 msgid "invalid conversion: %s"
 msgstr "neveljavna pretvorba: %s"
 
-#: src/dd.c:559
+#: src/dd.c:557
 #, c-format
 msgid "unrecognized option %s"
 msgstr "neprepoznana izbira %s"
 
-#: src/dd.c:612
+#: src/dd.c:610
 #, c-format
 msgid "unrecognized option %s=%s"
 msgstr "neprepoznana izbira %s=%s"
 
-#: src/dd.c:618
+#: src/dd.c:616
 #, c-format
 msgid "invalid number %s"
 msgstr "neveljavno ¹tevilo %s"
 
-#: src/dd.c:648
+#: src/dd.c:646
 msgid ""
 "only one conv in {ascii,ebcdic,ibm}, {lcase,ucase}, {block,unblock}, "
 "{unblock,sync}"
@@ -2013,7 +2013,7 @@ msgstr ""
 "samo eno od {ascii,ebcdic,ibm}, {lcase,ucase}, {block,unblock}, {unblock,"
 "sync}"
 
-#: src/dd.c:783
+#: src/dd.c:781
 #, c-format
 msgid ""
 "warning: working around lseek kernel bug for file (%s)\n"
@@ -2022,62 +2022,62 @@ msgstr ""
 "opozorilo: obvoz okoli napake lseek v jedru za datoteko (%s)\n"
 "   vrste mt_type=0x%0lx -- glejte <sys/mtio.h> za seznam zvrsti"
 
-#: src/dd.c:1172 src/dd.c:1190
+#: src/dd.c:1170 src/dd.c:1188
 #, c-format
 msgid "opening %s"
 msgstr "odpiramo %s"
 
-#: src/dd.c:1198
+#: src/dd.c:1196
 msgid "file offset out of range"
 msgstr "odmik izven obmoèja"
 
-#: src/dd.c:1216
+#: src/dd.c:1214
 #, c-format
 msgid "advancing past %s bytes in output file %s"
 msgstr "napredovali smo prek %s bajtov v izhodni datoteki %s"
 
-#: src/df.c:46 src/du.c:66
+#: src/df.c:47 src/du.c:66
 msgid "Torbjorn Granlund, David MacKenzie, Larry McVoy, and Paul Eggert"
 msgstr "Torbjorn Granlund, David MacKenzie, Larry McVoy in Paul Eggert"
 
-#: src/df.c:147
+#: src/df.c:152
 msgid "Filesystem "
 msgstr "Dat. sist. "
 
-#: src/df.c:150
+#: src/df.c:155
 msgid "   Type"
 msgstr "  Vrsta"
 
-#: src/df.c:155
+#: src/df.c:160
 #, c-format
 msgid "    Inodes   IUsed   IFree IUse%%"
 msgstr "    Inodov   IUpor   IPros IUpo%%"
 
-#: src/df.c:159
-#, c-format
-msgid "     Size   Used  Avail Use%%"
-msgstr "     Vel.   Upor. Prost Upo%%"
-
-#: src/df.c:161
+#: src/df.c:164
 #, c-format
 msgid "    Size  Used Avail Use%%"
 msgstr "    Vel.  Upor Prost Upo%%"
 
-#: src/df.c:164
+#: src/df.c:166
 #, c-format
-msgid " %4d-blocks      Used Available Capacity"
+msgid "     Size   Used  Avail Use%%"
+msgstr "     Vel.   Upor. Prost Upo%%"
+
+#: src/df.c:169
+#, fuzzy, c-format
+msgid " %4s-blocks      Used Available Capacity"
 msgstr " %4d-blokov      Upor. Na voljo Kapacit."
 
-#: src/df.c:175
+#: src/df.c:200
 #, c-format
 msgid " %4s-blocks      Used Available Use%%"
 msgstr " %4s-blokov      Upor. Na voljo Upo%%"
 
-#: src/df.c:178
+#: src/df.c:204
 msgid " Mounted on\n"
 msgstr " Priklopljeno na\n"
 
-#: src/df.c:752
+#: src/df.c:781
 msgid ""
 "Show information about the filesystem on which each FILE resides,\n"
 "or all filesystems by default.\n"
@@ -2087,7 +2087,7 @@ msgstr ""
 "ali o vseh datoteènih sistemih.\n"
 "\n"
 
-#: src/df.c:760
+#: src/df.c:789
 msgid ""
 "  -a, --all             include filesystems having 0 blocks\n"
 "  -B, --block-size=SIZE use SIZE-byte blocks\n"
@@ -2101,7 +2101,7 @@ msgstr ""
 "2G)\n"
 "  -H, --si              podobno kot -h, vendar z bazo 1000 namesto 1024\n"
 
-#: src/df.c:766
+#: src/df.c:795
 msgid ""
 "  -i, --inodes          list inode information instead of block usage\n"
 "  -k                    like --block-size=1K\n"
@@ -2114,7 +2114,7 @@ msgstr ""
 "  -l, --local           omejimo seznam na lokalni datoteèni sistem\n"
 "      --no-sync         brez klica sync() pred izpisom porabe (privzeto)\n"
 
-#: src/df.c:772
+#: src/df.c:801
 msgid ""
 "  -P, --portability     use the POSIX output format\n"
 "      --sync            invoke sync before getting usage info\n"
@@ -2130,7 +2130,7 @@ msgstr ""
 "  -x, --exclude-type=TIP     brez datoteènih sistemov tipa TIP\n"
 "  -v                    (ignorirano)\n"
 
-#: src/df.c:782 src/du.c:222 src/ls.c:3731
+#: src/df.c:811 src/du.c:233 src/ls.c:3818
 msgid ""
 "\n"
 "SIZE may be (or may be an integer optionally followed by) one of following:\n"
@@ -2142,27 +2142,27 @@ msgstr ""
 "tako\n"
 "dalje za G, T, P, E, Z in Y.\n"
 
-#: src/df.c:894
+#: src/df.c:928
 #, c-format
 msgid "file system type %s both selected and excluded"
 msgstr "tip datoteènega sistema %s je obenem izbran in izloèen"
 
-#: src/df.c:938
+#: src/df.c:972
 msgid "Warning: "
 msgstr "Opozorilo: "
 
-#: src/df.c:941
+#: src/df.c:975
 #, c-format
 msgid "%scannot read table of mounted filesystems"
 msgstr "%stabela priklopljenih datoteènih sistemov ni berljiva"
 
 # ! INEXACT
-#: src/dircolors.c:104
+#: src/dircolors.c:103
 #, c-format
 msgid "Usage: %s [OPTION]... [FILE]\n"
 msgstr "Uporaba: %s [IZBIRA]... [DATOTEKA]...\n"
 
-#: src/dircolors.c:105
+#: src/dircolors.c:104
 msgid ""
 "Output commands to set the LS_COLORS environment variable.\n"
 "\n"
@@ -2180,7 +2180,7 @@ msgstr ""
 "LS_COLORS\n"
 "  -p, --print-database        izpis privzeth vrednosti\n"
 
-#: src/dircolors.c:115
+#: src/dircolors.c:114
 msgid ""
 "\n"
 "If FILE is specified, read it to determine which colors to use for which\n"
@@ -2193,22 +2193,22 @@ msgstr ""
 "datotek oziroma pripon. Sicer se uporabi vgrajena tabela. Za podrobnosti o \n"
 "skladnji datoteke po¾enite ,,dircolors --print-database``.\n"
 
-#: src/dircolors.c:300
+#: src/dircolors.c:299
 #, c-format
 msgid "%s:%lu: invalid line;  missing second token"
 msgstr "%s:%lu: neveljavna vrstica;  manjka drugi element"
 
 # ! INEXACT
-#: src/dircolors.c:372
+#: src/dircolors.c:371
 #, c-format
 msgid "%s:%lu: unrecognized keyword %s"
 msgstr "%s:%lu: neprepoznana kljuèna beseda %s"
 
-#: src/dircolors.c:373
+#: src/dircolors.c:372
 msgid "<internal>"
 msgstr "<interno>"
 
-#: src/dircolors.c:468
+#: src/dircolors.c:467
 msgid ""
 "the options to output dircolors' internal database and\n"
 "to select a shell syntax are mutually exclusive"
@@ -2216,7 +2216,7 @@ msgstr ""
 "izpis privzetih vrednosti (izbira --print-data-base, -p) ni zdru¾ljiv\n"
 "z izbiro sintakse ukazne lupine"
 
-#: src/dircolors.c:476
+#: src/dircolors.c:475
 msgid ""
 "no FILE arguments may be used with the option to output\n"
 "dircolors' internal database"
@@ -2224,7 +2224,7 @@ msgstr ""
 "pri izpisu privzetih vrednosti (izbira --print-data-base, -p) ni dovoljeno\n"
 "podati argumenta DATOTEKA"
 
-#: src/dircolors.c:505
+#: src/dircolors.c:504
 msgid "no SHELL environment variable, and no shell type option given"
 msgstr "spremenljivka SHELL ni nastavljena, niti ni podan tip ukazne lupine"
 
@@ -2250,7 +2250,7 @@ msgstr ""
 "Izpi¹emo IME brez elementa za zadnjo po¹evnico (/); èe IME ne vsebuje\n"
 "po¹evnic, izpi¹emo ,.` (pomeni trenutni imenik).\n"
 
-#: src/du.c:186
+#: src/du.c:197
 msgid ""
 "Summarize disk usage of each FILE, recursively for directories.\n"
 "\n"
@@ -2258,7 +2258,7 @@ msgstr ""
 "Povzetek porabe diska za datoteko DATOTEKA, rekurzivno po podimenikih.\n"
 "\n"
 
-#: src/du.c:193
+#: src/du.c:204
 #, fuzzy
 msgid ""
 "  -a, --all             write counts for all files, not just directories\n"
@@ -2273,7 +2273,7 @@ msgstr ""
 "  -c, --total           skupni povzetek\n"
 "  -D, --dereference-args  razre¹imo poti, èe so simbolne povezave\n"
 
-#: src/du.c:200
+#: src/du.c:211
 msgid ""
 "  -h, --human-readable  print sizes in human readable format (e.g., 1K 234M "
 "2G)\n"
@@ -2287,7 +2287,7 @@ msgstr ""
 "  -k                    isto kot --block-size=1024\n"
 "  -l, --count-links     trde povezeva ¹tejemo po veèkrat\n"
 
-#: src/du.c:206
+#: src/du.c:217
 msgid ""
 "  -L, --dereference     dereference all symbolic links\n"
 "  -S, --separate-dirs   do not include size of subdirectories\n"
@@ -2298,7 +2298,7 @@ msgstr ""
 "  -S, --separate-dirs   brez velikosti podimenikov\n"
 "  -s, --summarize       za vsak argument samo povzetek\n"
 
-#: src/du.c:211
+#: src/du.c:222
 msgid ""
 "  -x, --one-file-system  skip directories on different filesystems\n"
 "  -X FILE, --exclude-from=FILE  Exclude files that match any pattern in "
@@ -2319,34 +2319,34 @@ msgstr ""
 "                        izbiri --all), ki so N ali manj ravni pod trenutnim\n"
 "                        imenikom; --max-depth=0 je isto kot --summarize\n"
 
-#: src/du.c:385
+#: src/du.c:395
 #, c-format
 msgid "cannot change to `..' from directory %s"
 msgstr "iz imenika %s imenik ,..` ni dosegljiv"
 
-#: src/du.c:468
+#: src/du.c:479
 #, c-format
 msgid "cannot change to directory %s"
 msgstr "imenik %s ni dosegljiv"
 
-#: src/du.c:558 src/ls.c:2145 src/wc.c:591
+#: src/du.c:556 src/ls.c:2236 src/wc.c:591
 msgid "total"
 msgstr "skupno"
 
-#: src/du.c:622
+#: src/du.c:625
 #, c-format
 msgid "invalid maximum depth %s"
 msgstr "neveljavna najveèja globina %s"
 
-#: src/du.c:681
+#: src/du.c:685
 msgid "cannot both summarize and show all entries"
 msgstr "mo¾nosti se izkljuèujeta - ali izpis vseh, ali povzetek"
 
-#: src/du.c:688
+#: src/du.c:692
 msgid "warning: summarizing is the same as using --max-depth=0"
 msgstr "opozorilo: povzetek je isto kot izbira --max-depth=0"
 
-#: src/du.c:694
+#: src/du.c:698
 #, c-format
 msgid "warning: summarizing conflicts with --max-depth=%d"
 msgstr "opozorilo: povzetek se izkljuèuje z --max-depth=%d"
@@ -2479,7 +2479,7 @@ msgstr "seznam tabulatorjev mora biti nara¹èajoè"
 msgid "`-LIST' option is obsolete; use `-t LIST'"
 msgstr ",-LIST` je opu¹èena oblika; uporabite ,-t LIST`"
 
-#: src/expr.c:89
+#: src/expr.c:90
 #, c-format
 msgid ""
 "Usage: %s EXPRESSION\n"
@@ -2488,7 +2488,7 @@ msgstr ""
 "Uporaba: %s IZRAZ\n"
 "  ali:   %s IZBIRA\n"
 
-#: src/expr.c:97
+#: src/expr.c:98
 msgid ""
 "\n"
 "Print the value of EXPRESSION to standard output.  A blank line below\n"
@@ -2507,7 +2507,7 @@ msgstr ""
 "                \n"
 "  ARG1 & ARG2       ARG1, èe ni noben argumentov prazen ali enak 0, sicer 0\n"
 
-#: src/expr.c:106
+#: src/expr.c:107
 msgid ""
 "\n"
 "  ARG1 < ARG2       ARG1 is less than ARG2\n"
@@ -2525,7 +2525,7 @@ msgstr ""
 "  ARG1 >= ARG2      ARG1 je veèji ali enak ARG2\n"
 "  ARG1 > ARG2       ARG1 je veèji od ARG2\n"
 
-#: src/expr.c:115
+#: src/expr.c:116
 msgid ""
 "\n"
 "  ARG1 + ARG2       arithmetic sum of ARG1 and ARG2\n"
@@ -2535,7 +2535,7 @@ msgstr ""
 "  ARG1 + ARG2       aritmetièna vsota ARG1 in ARG2\n"
 "  ARG1 - ARG2       aritmetièna razlika ARG1 in ARG2\n"
 
-#: src/expr.c:120
+#: src/expr.c:121
 #, c-format
 msgid ""
 "\n"
@@ -2548,7 +2548,7 @@ msgstr ""
 "  ARG1 / ARG2       aritmetièni koliènik pri deljenju ARG1 z ARG2\n"
 "  ARG1 % ARG2       aritmetièni ostanek pri deljenju ARG1 z ARG2\n"
 
-#: src/expr.c:126
+#: src/expr.c:127
 msgid ""
 "\n"
 "  STRING : REGEXP   anchored pattern match of REGEXP in STRING\n"
@@ -2567,7 +2567,7 @@ msgstr ""
 "0\n"
 "  length NIZ                    do¾ina NIZA\n"
 
-#: src/expr.c:135
+#: src/expr.c:136
 msgid ""
 "  + TOKEN                    interpret TOKEN as a string, even if it is a\n"
 "                               keyword like `match' or an operator like `/'\n"
@@ -2580,7 +2580,7 @@ msgstr ""
 "\n"
 "  ( IZRAZ )         vrednost IZRAZA\n"
 
-#: src/expr.c:141
+#: src/expr.c:142
 msgid ""
 "\n"
 "Beware that many operators need to be escaped or quoted for shells.\n"
@@ -2596,11 +2596,11 @@ msgstr ""
 "vzorcev vrne niz med oklepajema \\( in \\) ali pa prazen niz; èe \\( in \\)\n"
 "nista podana, vrne ¹tevilo znakov, ki se ujemajo, ali 0.\n"
 
-#: src/expr.c:185 src/expr.c:456 src/expr.c:462 src/expr.c:467 src/expr.c:489
+#: src/expr.c:186 src/expr.c:438 src/expr.c:444 src/expr.c:449 src/expr.c:471
 msgid "syntax error"
 msgstr "napaka v skladnji"
 
-#: src/expr.c:402
+#: src/expr.c:384
 #, c-format
 msgid ""
 "warning: unportable BRE: `%s': using `^' as the first character\n"
@@ -2609,11 +2609,11 @@ msgstr ""
 "opozorilo: neprenosljiv osnovni regularni izraz: ,%s` : uporaba ,^` kot\n"
 "prvega znaka v osnovnem regularnem izrazu ni prenosljiva, ignorirano"
 
-#: src/expr.c:604 src/expr.c:643
+#: src/expr.c:586 src/expr.c:625
 msgid "non-numeric argument"
 msgstr "ne-¹tevilèni argument"
 
-#: src/expr.c:610
+#: src/expr.c:592
 msgid "division by zero"
 msgstr "deljenje z niè"
 
@@ -2792,24 +2792,24 @@ msgstr ""
 msgid "cannot reposition file pointer for %s"
 msgstr "ni mogoèe premakniti datoteènega kazalca za %s"
 
-#: src/head.c:256 src/tail.c:1393
+#: src/head.c:256 src/tail.c:1388
 #, c-format
 msgid "%s: %s is so large that it is not representable"
 msgstr "%s: %s je tako veliko, da ni predstavljivo"
 
-#: src/head.c:257 src/tail.c:1395
+#: src/head.c:257 src/tail.c:1390
 msgid "number of lines"
 msgstr "¹tevilo vrstic"
 
-#: src/head.c:257 src/tail.c:1396
+#: src/head.c:257 src/tail.c:1391
 msgid "number of bytes"
 msgstr "¹tevilo bajtov"
 
-#: src/head.c:264 src/tail.c:1483
+#: src/head.c:264 src/tail.c:1478
 msgid "invalid number of lines"
 msgstr "neveljavno ¹tevilo vrstic"
 
-#: src/head.c:265 src/tail.c:1484
+#: src/head.c:265 src/tail.c:1479
 msgid "invalid number of bytes"
 msgstr "neveljavno ¹tevilo bajtov"
 
@@ -3060,7 +3060,7 @@ msgstr ""
 "  -S, --suffix=PRIPONA   izrecno navedemo pripono varnostnih kopij\n"
 "      --verbose       z izpisom imen vseh ustvarjenih imenikov\n"
 
-#: src/install.c:635 src/ln.c:377 src/mv.c:351
+#: src/install.c:635 src/ln.c:377 src/mv.c:348
 msgid ""
 "\n"
 "The backup suffix is `~', unless set with --suffix or SIMPLE_BACKUP_SUFFIX.\n"
@@ -3407,7 +3407,7 @@ msgstr ""
 "                                 povezave\n"
 "  -v, --verbose                z izpisom imen datotek, ki jih povezujemo\n"
 
-#: src/ln.c:490 src/mv.c:462 src/shred.c:1610
+#: src/ln.c:490 src/mv.c:459 src/shred.c:1611
 msgid "missing file argument"
 msgstr "datoteka ni podana"
 
@@ -3438,80 +3438,80 @@ msgstr ""
 msgid "%s: no login name\n"
 msgstr "%s: uporabni¹ko ime ne obstaja\n"
 
-#: src/ls.c:676
+#: src/ls.c:679
 msgid "%b %e  %Y"
 msgstr "%b %e  %Y"
 
-#: src/ls.c:684
+#: src/ls.c:687
 msgid "%b %e %H:%M"
 msgstr "%b %e %H:%M"
 
 # ! INEXACT
-#: src/ls.c:1235
-#, c-format
+#: src/ls.c:1312
+#, fuzzy, c-format
 msgid "ignoring invalid value of environment variable QUOTING_STYLE: %s"
 msgstr "ignoriram neveljavno vrednost spremenljivke QUOTING_STYLE: %s"
 
 # ! INEXACT
-#: src/ls.c:1256
+#: src/ls.c:1339
 #, c-format
 msgid "ignoring invalid width in environment variable COLUMNS: %s"
 msgstr "ignoriram neveljavno ¹irino v spremenljivki COLUMNS: %s"
 
 # ! INEXACT
-#: src/ls.c:1287
+#: src/ls.c:1370
 #, c-format
 msgid "ignoring invalid tab size in environment variable TABSIZE: %s"
 msgstr "ignoriram neveljavni tabulator v spremenljivki TABSIZE: %s"
 
-#: src/ls.c:1402
+#: src/ls.c:1487
 #, c-format
 msgid "invalid line width: %s"
 msgstr "neveljavna ¹irina vrstice: %s"
 
-#: src/ls.c:1472
+#: src/ls.c:1557
 #, c-format
 msgid "invalid tab size: %s"
 msgstr "neveljaven tabulator: %s"
 
-#: src/ls.c:1630
+#: src/ls.c:1717
 #, c-format
 msgid "invalid time style format %s"
 msgstr "neveljavna oblika ure %s"
 
 # ! INEXACT
-#: src/ls.c:1962
+#: src/ls.c:2049
 #, c-format
 msgid "unrecognized prefix: %s"
 msgstr "neprepoznana predpona: %s"
 
-#: src/ls.c:1985
+#: src/ls.c:2072
 msgid "unparsable value for LS_COLORS environment variable"
 msgstr "vrednosti v spremenljivki LS_COLORS ni moè raztolmaèiti"
 
-#: src/ls.c:2053
+#: src/ls.c:2140
 #, c-format
 msgid "cannot determine device and inode of %s"
 msgstr "ni mogoèe ugotoviti enote in inoda datoteke %s"
 
-#: src/ls.c:2063
+#: src/ls.c:2150
 #, c-format
 msgid "not listing already-listed directory: %s"
 msgstr "¾e izpisanega imenika ne izpi¹emo znova: %s"
 
-#: src/ls.c:2112 src/remove.c:910
+#: src/ls.c:2203 src/remove.c:910
 #, c-format
 msgid "reading directory %s"
 msgstr "beremo imenik %s"
 
 # POZOR!!! Razisci, kaj program res tu pocne!
 # ! INEXACT
-#: src/ls.c:2478
+#: src/ls.c:2563
 #, c-format
 msgid "cannot compare file names %s and %s"
 msgstr "ni mogoèe primerjati imen datotek %s in %s"
 
-#: src/ls.c:3619
+#: src/ls.c:3706
 msgid ""
 "List information about the FILEs (the current directory by default).\n"
 "Sort entries alphabetically if none of -cftuSUX nor --sort.\n"
@@ -3521,7 +3521,7 @@ msgstr ""
 "razvr¹èene po abecedi, èe ni podana nobena od izbir -cftuSUX ali --sort.\n"
 "\n"
 
-#: src/ls.c:3627
+#: src/ls.c:3714
 msgid ""
 "  -a, --all                  do not hide entries starting with .\n"
 "  -A, --almost-all           do not list implied . and ..\n"
@@ -3534,7 +3534,7 @@ msgstr ""
 "      --author               izpis avtorja datoteke\n"
 "  -b, --escape               izpis oktalne kode za krmilne znake\n"
 
-#: src/ls.c:3633
+#: src/ls.c:3720
 msgid ""
 "      --block-size=SIZE      use SIZE-byte blocks\n"
 "  -B, --ignore-backups       do not list implied entries ending with ~\n"
@@ -3555,7 +3555,7 @@ msgstr ""
 "imenih;\n"
 "                               sicer: uredimo po ctime\n"
 
-#: src/ls.c:3641
+#: src/ls.c:3728
 msgid ""
 "  -C                         list entries by columns\n"
 "      --color[=WHEN]         control whether color is used to distinguish "
@@ -3573,7 +3573,7 @@ msgstr ""
 "vsebine\n"
 "  -D, --dired                izpis primeren za naèin ,dired` v Emacsu\n"
 
-#: src/ls.c:3648
+#: src/ls.c:3735
 msgid ""
 "  -f                         do not sort, enable -aU, disable -lst\n"
 "  -F, --classify             append indicator (one of */=@|) to entries\n"
@@ -3587,7 +3587,7 @@ msgstr ""
 "                               single-column -1, verbose -l, vertical -C\n"
 "      --full-time            pri dolgem izpisu celoten datum z uro\n"
 
-#: src/ls.c:3655
+#: src/ls.c:3742
 msgid ""
 "  -g                         like -l, but do not list owner\n"
 "  -G, --no-group             inhibit display of group information\n"
@@ -3605,7 +3605,7 @@ msgstr ""
 "  -H, --dereference-command-line  sledimo simbolnim povezavam v ukazni "
 "vrstici\n"
 
-#: src/ls.c:3662
+#: src/ls.c:3749
 msgid ""
 "      --indicator-style=WORD append indicator with style WORD to entry "
 "names:\n"
@@ -3625,7 +3625,7 @@ msgstr ""
 "VZORCU\n"
 "  -k                         isto kot --block-size=1024\n"
 
-#: src/ls.c:3669
+#: src/ls.c:3756
 msgid ""
 "  -l                         use a long listing format\n"
 "  -L, --dereference          when showing file information for a symbolic\n"
@@ -3640,7 +3640,7 @@ msgstr ""
 "  -m                         z vejicami loèena imena prek celotne ¹irine "
 "vrstice\n"
 
-#: src/ls.c:3676
+#: src/ls.c:3763
 msgid ""
 "  -n, --numeric-uid-gid      like -l, but list numeric UIDs and GIDs\n"
 "  -N, --literal              print raw entry names (don't treat e.g. "
@@ -3657,7 +3657,7 @@ msgstr ""
 "=@|)\n"
 
 # ! INEXACT
-#: src/ls.c:3683
+#: src/ls.c:3770
 msgid ""
 "  -q, --hide-control-chars   print ? instead of non graphic characters\n"
 "      --show-control-chars   show non graphic characters as-is (default\n"
@@ -3676,7 +3676,7 @@ msgstr ""
 "      --quoting-style=BESEDA  slog izpisa; BESEDA je lahko literal, shell,\n"
 "                               shell-always, c ali escape\n"
 
-#: src/ls.c:3691
+#: src/ls.c:3778
 msgid ""
 "  -r, --reverse              reverse order while sorting\n"
 "  -R, --recursive            list subdirectories recursively\n"
@@ -3686,7 +3686,7 @@ msgstr ""
 "  -R, --recursive            rekurziven izpis podimenikov\n"
 "  -s, --size                 izpis velikosti datotek (v blokih)\n"
 
-#: src/ls.c:3696
+#: src/ls.c:3783
 msgid ""
 "  -S                         sort by file size\n"
 "      --sort=WORD            extension -X, none -U, size -S, time -t,\n"
@@ -3712,7 +3712,7 @@ msgstr ""
 "sort\n"
 "                               tudi uredimo po izbranem èasu\n"
 
-#: src/ls.c:3705
+#: src/ls.c:3792
 msgid ""
 "      --time-style=STYLE     show times using style STYLE:\n"
 "                               full-iso, long-iso, iso, locale, +FORMAT\n"
@@ -3738,7 +3738,7 @@ msgstr ""
 "  -t                         ureditev po datumu zadnje modifikacije\n"
 "  -T, --tabsize=STOLPCEV     tabulator nastavljen na STOLPCEV namesto na 8\n"
 
-#: src/ls.c:3716
+#: src/ls.c:3803
 msgid ""
 "  -u                         with -lt: sort by, and show, access time\n"
 "                               with -l: show access time and sort by name\n"
@@ -3751,7 +3751,7 @@ msgstr ""
 "  -U                         brez urejanja; kot so v imeniku\n"
 "  -v                         urejanje po ¹tevilki razlièice\n"
 
-#: src/ls.c:3723
+#: src/ls.c:3810
 msgid ""
 "  -w, --width=COLS           assume screen width instead of current value\n"
 "  -x                         list entries by lines instead of by columns\n"
@@ -3764,7 +3764,7 @@ msgstr ""
 "  -X                         abecedna ureditev po priponah\n"
 "  -1                         izpis po eno datoteko v vrstici\n"
 
-#: src/ls.c:3735
+#: src/ls.c:3822
 msgid ""
 "\n"
 "By default, color is not used to distinguish types of files.  That is\n"
@@ -4072,7 +4072,7 @@ msgstr "ni mogoèe nastaviti dovoljenj za %s"
 msgid "Mike Parker, David MacKenzie, and Jim Meyering"
 msgstr "Mike Parker, David MacKenzie in Jim Meyering"
 
-#: src/mv.c:320
+#: src/mv.c:317
 msgid ""
 "Rename SOURCE to DEST, or move SOURCE(s) to DIRECTORY.\n"
 "\n"
@@ -4081,7 +4081,7 @@ msgstr ""
 "\n"
 
 # ! INEXACT
-#: src/mv.c:327
+#: src/mv.c:324
 msgid ""
 "      --backup[=CONTROL]       make a backup of each existing destination "
 "file\n"
@@ -4102,7 +4102,7 @@ msgstr ""
 "obstojeèe\n"
 "                                 ciljne datoteko\n"
 
-#: src/mv.c:335
+#: src/mv.c:332
 msgid ""
 "      --reply={yes,no,query}   specify how to handle the prompt about an\n"
 "                                 existing destination file\n"
@@ -4117,7 +4117,7 @@ msgstr ""
 "                                 IZVOROV\n"
 "  -S, --suffix=PRIPONA         izrecno navedena PRIPONA varnostnih kopij\n"
 
-#: src/mv.c:342
+#: src/mv.c:339
 msgid ""
 "      --target-directory=DIRECTORY  move all SOURCE arguments into "
 "DIRECTORY\n"
@@ -4131,12 +4131,12 @@ msgstr ""
 "                                 obstojeèe ciljne ali èe ciljna ne obstaja\n"
 "  -v, --verbose                z razlago poteka\n"
 
-#: src/mv.c:470
+#: src/mv.c:467
 #, c-format
 msgid "specified target, %s is not a directory"
 msgstr "navedeni cilj %s ni imenik"
 
-#: src/mv.c:478
+#: src/mv.c:475
 msgid "when moving multiple files, last argument must be a directory"
 msgstr "pri premikanju veèih datotek mora biti zadnji argument imenik"
 
@@ -4281,22 +4281,22 @@ msgstr ""
 "  rn   desno poravnano, brez vodilnih nièel\n"
 "  rz   desno poravnano, z vodilnimi nièlami\n"
 
-#: src/nl.c:500
+#: src/nl.c:504
 #, c-format
 msgid "invalid starting line number: `%s'"
 msgstr "neveljavna zaèetna ¹tevilka vrstice: ,%s`"
 
-#: src/nl.c:510
+#: src/nl.c:514
 #, c-format
 msgid "invalid line number increment: `%s'"
 msgstr "neveljaven vrstièni inkrement: ,%s`"
 
-#: src/nl.c:523
+#: src/nl.c:527
 #, c-format
 msgid "invalid number of blank lines: `%s'"
 msgstr "neveljavno ¹tevilo praznih vrstic: ,%s`"
 
-#: src/nl.c:537
+#: src/nl.c:541
 #, c-format
 msgid "invalid line number field width: `%s'"
 msgstr "neveljavna ¹irina polja s ¹tevilko vrstice: ,%s`"
@@ -4591,12 +4591,12 @@ msgstr ""
 "  -d, --delimiters=SEZNAM  za loèitev uporabimo znake s SEZNAMA namesto TAB\n"
 "  -s, --serial            datoteke zdru¾ujemo zaporedno namesto vzporedno\n"
 
-#: src/pathchk.c:145
+#: src/pathchk.c:146
 #, c-format
 msgid "Usage: %s [OPTION]... NAME...\n"
 msgstr "Uporaba: %s [IZBIRA]... IME...\n"
 
-#: src/pathchk.c:146
+#: src/pathchk.c:147
 msgid ""
 "Diagnose unportable constructs in NAME.\n"
 "\n"
@@ -4606,27 +4606,27 @@ msgstr ""
 "\n"
 "  -p, --portability   preveri za vse sisteme POSIX, ne le za tega\n"
 
-#: src/pathchk.c:236
+#: src/pathchk.c:237
 #, c-format
 msgid "path `%s' contains nonportable character `%c'"
 msgstr "pot ,%s` vsebuje neprenosljiv znak ,%c`"
 
-#: src/pathchk.c:256
+#: src/pathchk.c:257
 #, c-format
 msgid "`%s' is not a directory"
 msgstr ",%s` ni imenik"
 
-#: src/pathchk.c:267
+#: src/pathchk.c:268
 #, c-format
 msgid "directory `%s' is not searchable"
 msgstr "imenik ,%s` ni berljiv"
 
-#: src/pathchk.c:354
+#: src/pathchk.c:355
 #, c-format
 msgid "name `%s' has length %ld; exceeds limit of %ld"
 msgstr "dol¾ina imena ,%s` je %ld; presega mejo %ld"
 
-#: src/pathchk.c:380
+#: src/pathchk.c:381
 #, c-format
 msgid "path `%s' has length %d; exceeds limit of %ld"
 msgstr "dol¾ina poti ,%s` je %d; presega mejo %ld"
@@ -4668,11 +4668,13 @@ msgid "Login"
 msgstr "Login"
 
 #: src/pinky.c:388
-msgid "   Name"
+#, fuzzy
+msgid "Name"
 msgstr "    Ime"
 
 #: src/pinky.c:389
-msgid "TTY"
+#, fuzzy
+msgid " TTY"
 msgstr "TTY"
 
 #: src/pinky.c:391
@@ -5125,8 +5127,9 @@ msgstr ""
 "  \\v      vertikalni tabulator\n"
 
 #: src/printf.c:128
+#, fuzzy
 msgid ""
-"  \\xNNN   byte with hexadecimal value NNN (1 to 3 digits)\n"
+"  \\xNN    byte with hexadecimal value NN (1 to 2 digits)\n"
 "\n"
 "  \\uNNNN  character with hexadecimal value NNNN (4 digits)\n"
 "  \\UNNNNNNNN  character with hexadecimal value NNNNNNNN (8 digits)\n"
@@ -5160,31 +5163,31 @@ msgstr "%s: prièakovana je ¹tevilèna vrednost"
 msgid "%s: value not completely converted"
 msgstr "%s: vrednost nepopolno pretvorjena"
 
-#: src/printf.c:251 src/printf.c:275
+#: src/printf.c:251 src/printf.c:277
 msgid "missing hexadecimal number in escape"
 msgstr "v ube¾nem zaporedju manjka ¹estnajsti¹ko ¹tevilo"
 
-#: src/printf.c:287
+#: src/printf.c:289
 #, c-format
 msgid "invalid universal character name \\%c%0*x"
 msgstr "neveljavno univerzalno ime znaka \\%c%0*x"
 
-#: src/printf.c:293
+#: src/printf.c:295
 #, c-format
 msgid "\\%c: invalid escape"
 msgstr "\\%c: neveljaven ube¾ni znak"
 
-#: src/printf.c:501
+#: src/printf.c:503
 #, c-format
 msgid "%%%c: invalid directive"
 msgstr "%%%c: neveljavna direktiva"
 
-#: src/printf.c:558
+#: src/printf.c:560
 #, c-format
 msgid "Usage: %s format [argument...]\n"
 msgstr "Uporaba: %s oblika [argument...]\n"
 
-#: src/printf.c:576
+#: src/printf.c:578
 #, c-format
 msgid "warning: ignoring excess arguments, starting with `%s'"
 msgstr "opozorilo: odveèni argumenti zaèen¹i s ,%s` so bili ignorirani"
@@ -5595,12 +5598,12 @@ msgstr "neveljavno oblikovno doloèilo: ,%s`"
 msgid "format string may not be specified when printing equal width strings"
 msgstr "pri izpisu polj enake ¹irine ni dovoljeno podati oblikovnega doloèila"
 
-#: src/shred.c:175
+#: src/shred.c:172
 #, c-format
 msgid "Usage: %s [OPTIONS] FILE [...]\n"
 msgstr "Uporaba: %s [IZBIRE]... DATOTEKA [...]\n"
 
-#: src/shred.c:176
+#: src/shred.c:173
 msgid ""
 "Overwrite the specified FILE(s) repeatedly, in order to make it harder\n"
 "for even very expensive hardware probing to recover the data.\n"
@@ -5610,7 +5613,7 @@ msgstr ""
 "drugo vsebino.\n"
 "\n"
 
-#: src/shred.c:184
+#: src/shred.c:181
 #, c-format
 msgid ""
 "  -f, --force    change permissions to allow writing if necessary\n"
@@ -5622,7 +5625,7 @@ msgstr ""
 "  -s, --size=N   unièimo podano ¹tevilo zlogov (dovoljene pripone K, M, "
 "G...)\n"
 
-#: src/shred.c:189
+#: src/shred.c:186
 msgid ""
 "  -u, --remove   truncate and remove file after overwriting\n"
 "  -v, --verbose  show progress\n"
@@ -5637,7 +5640,7 @@ msgstr ""
 "unièenje\n"
 "  -              unièimo vsebino standardnega vhoda\n"
 
-#: src/shred.c:198
+#: src/shred.c:195
 msgid ""
 "\n"
 "Delete FILE(s) if --remove (-u) is specified.  The default is not to remove\n"
@@ -5652,7 +5655,7 @@ msgstr ""
 "navadnimi datotekami veèina uporablja izbiro ,--remove`.\n"
 "\n"
 
-#: src/shred.c:206
+#: src/shred.c:203
 msgid ""
 "CAUTION: Note that shred relies on a very important assumption:\n"
 "that the filesystem overwrites data in place.  This is the traditional\n"
@@ -5667,7 +5670,7 @@ msgstr ""
 "na primer ne bo uèinkovit na naslednjih sistemih:\n"
 "\n"
 
-#: src/shred.c:214
+#: src/shred.c:211
 msgid ""
 "* log-structured or journaled filesystems, such as those supplied with\n"
 "  AIX and Solaris (and JFS, ReiserFS, XFS, Ext3, etc.)\n"
@@ -5689,7 +5692,7 @@ msgstr ""
 "  stre¾nik NFS podjetja Network Appliace\n"
 "\n"
 
-#: src/shred.c:224
+#: src/shred.c:221
 msgid ""
 "* filesystems that cache in temporary locations, such as NFS\n"
 "  version 3 clients\n"
@@ -5709,82 +5712,82 @@ msgstr ""
 "in oddaljenih zrcalih. Teh izvodov ne moremo odstraniti in iz njih je\n"
 "mogoèe rekonstruirati unièeno datoteko.\n"
 
-#: src/shred.c:822
+#: src/shred.c:819
 #, c-format
 msgid "%s: cannot rewind"
 msgstr "%s: ni mogoèe previti na zaèetek"
 
-#: src/shred.c:845
+#: src/shred.c:842
 #, c-format
 msgid "%s: pass %lu/%lu (%s)..."
 msgstr "%s: prehod %lu/%lu (%s)..."
 
-#: src/shred.c:882
+#: src/shred.c:879
 #, c-format
 msgid "%s: error writing at offset %s"
 msgstr "%s: napaka med pisanjem pri odmiku %s"
 
-#: src/shred.c:913
+#: src/shred.c:908
 #, c-format
 msgid "%s: file too large"
 msgstr "%s: datoteka prevelika"
 
-#: src/shred.c:934
+#: src/shred.c:931
 #, c-format
 msgid "%s: pass %lu/%lu (%s)...%s"
 msgstr "%s: prehod %lu/%lu (%s)...%s"
 
-#: src/shred.c:944
+#: src/shred.c:947
 #, c-format
 msgid "%s: pass %lu/%lu (%s)...%s/%s %d%%"
 msgstr "%s: prehod %lu/%lu (%s)...%s/%s %d%%"
 
-#: src/shred.c:1205
+#: src/shred.c:1206
 #, c-format
 msgid "%s: invalid file type"
 msgstr "%s: neveljaven tip datoteke"
 
-#: src/shred.c:1222
+#: src/shred.c:1223
 #, c-format
 msgid "%s: file has negative size"
 msgstr "%s: velikost datoteke negativna"
 
-#: src/shred.c:1274
+#: src/shred.c:1275
 #, c-format
 msgid "%s: error truncating"
 msgstr "%s: napaka pri kraj¹anju"
 
-#: src/shred.c:1295
+#: src/shred.c:1296
 #, c-format
 msgid "%s: cannot shred append-only file descriptor"
 msgstr "%s: ni mogoèe unièiti datoteke, v katero smemo le dodajati"
 
-#: src/shred.c:1380
+#: src/shred.c:1381
 #, c-format
 msgid "%s: removing"
 msgstr "%s: bri¹emo"
 
-#: src/shred.c:1421
+#: src/shred.c:1422
 #, c-format
 msgid "%s: renamed to %s"
 msgstr "%s: preimenovano v %s"
 
-#: src/shred.c:1447
+#: src/shred.c:1448
 #, c-format
 msgid "%s: removed"
 msgstr "%s: odstranjeno"
 
-#: src/shred.c:1512
+#: src/shred.c:1513
 #, c-format
 msgid "%s: cannot remove"
 msgstr "%s: ni mogoèe odstraniti"
 
-#: src/shred.c:1560
+#: src/shred.c:1561
 #, c-format
 msgid "%s: invalid number of passes"
 msgstr "%s: neveljavno ¹tevilo prehodov"
 
-#: src/shred.c:1577
+#: src/shred.c:1578
 #, c-format
 msgid "%s: invalid file size"
 msgstr "%s: neveljavna velikost datoteke"
@@ -5819,7 +5822,7 @@ msgstr ""
 msgid "invalid time interval `%s'"
 msgstr "neveljaven èasovni interval ,%s`"
 
-#: src/sleep.c:177 src/tail.c:1036
+#: src/sleep.c:177 src/tail.c:1031
 msgid "cannot read realtime clock"
 msgstr "ure s stvarnim èasom ni moè prebrati"
 
@@ -5827,7 +5830,7 @@ msgstr "ure s stvarnim èasom ni moè prebrati"
 msgid "Mike Haertel and Paul Eggert"
 msgstr "Mike Haertel in Paul Eggert"
 
-#: src/sort.c:283
+#: src/sort.c:280
 msgid ""
 "Write sorted concatenation of all FILE(s) to standard output.\n"
 "\n"
@@ -5840,7 +5843,7 @@ msgstr ""
 "Izbire pri urejanju:\n"
 "\n"
 
-#: src/sort.c:292
+#: src/sort.c:289
 msgid ""
 "  -b, --ignore-leading-blanks ignore leading blanks\n"
 "  -d, --dictionary-order      consider only blanks and alphanumeric "
@@ -5852,7 +5855,7 @@ msgstr ""
 "  -d,  --dictionary-order     v kljuèih upo¹tevamo samo znake [a-zA-Z0-9 ]\n"
 "  -f , --ignore-case          male in velike èrke so v kljuèih enakovredne\n"
 
-#: src/sort.c:297
+#: src/sort.c:294
 msgid ""
 "  -g, --general-numeric-sort  compare according to general numerical value\n"
 "  -i, --ignore-nonprinting    consider only printable characters\n"
@@ -5869,7 +5872,7 @@ msgstr ""
 "  -r, --reverse               izpis v obrnjenem vrstnem redu\n"
 "\n"
 
-#: src/sort.c:305
+#: src/sort.c:302
 msgid ""
 "Other options:\n"
 "\n"
@@ -5895,7 +5898,7 @@ msgstr ""
 "                              primerjav\n"
 "  -S, --buffer-size=VELIKOST  doloèimo VELIKOST medpomnilnika\n"
 
-#: src/sort.c:315
+#: src/sort.c:312
 #, c-format
 msgid ""
 "  -t, --field-separator=SEP use SEP instead of non- to whitespace "
@@ -5917,12 +5920,12 @@ msgstr ""
 "                              sicer izpi¹emo samo prve od zaporednih enakih "
 "vrstic\n"
 
-#: src/sort.c:322
+#: src/sort.c:319
 msgid "  -z, --zero-terminated     end lines with 0 byte, not newline\n"
 msgstr ""
 "  -z, --zero-terminated     vrstice naj se zakljuèijo z znakom NUL, ne LF\n"
 
-#: src/sort.c:327
+#: src/sort.c:324
 msgid ""
 "\n"
 "POS is F[.C][OPTS], where F is the field number and C the character "
@@ -5941,7 +5944,7 @@ msgstr ""
 "\n"
 "VELIKOSTI lahko sledi ena od naslednji multiplikativnih pripon:\n"
 
-#: src/sort.c:336
+#: src/sort.c:333
 #, c-format
 msgid ""
 "% 1% of memory, b 1, K 1024 (default), and so on for M, G, T, P, E, Z, Y.\n"
@@ -5962,92 +5965,92 @@ msgstr ""
 "obna¹anje\n"
 "(urejanje po ¹tevilski vrednosti bajtov), uporabite LC_ALL=C.\n"
 
-#: src/sort.c:447
+#: src/sort.c:444
 msgid "cannot create temporary file"
 msgstr "zaèasne datoteke ni mogoèe ustvariti"
 
-#: src/sort.c:470
+#: src/sort.c:467
 msgid "open failed"
 msgstr "odpiranje ni uspelo"
 
-#: src/sort.c:490 src/sort.c:2495
+#: src/sort.c:487 src/sort.c:2496
 msgid "close failed"
 msgstr "zapiranje ni uspelo"
 
-#: src/sort.c:498
+#: src/sort.c:495
 msgid "write failed"
 msgstr "pisanje ni uspelo"
 
-#: src/sort.c:644
+#: src/sort.c:641
 msgid "sort size"
 msgstr "velikost urejanja"
 
-#: src/sort.c:718
+#: src/sort.c:715
 msgid "stat failed"
 msgstr "poizvedba po statusu ni uspela"
 
-#: src/sort.c:975
+#: src/sort.c:972
 msgid "read failed"
 msgstr "branje ni uspelo"
 
-#: src/sort.c:1573
+#: src/sort.c:1570
 #, c-format
 msgid "%s: %s:%s: disorder: "
 msgstr "%s: %s:%s: neurejenost: "
 
-#: src/sort.c:1577
+#: src/sort.c:1574
 msgid "standard error"
 msgstr "standardna napaka"
 
-#: src/sort.c:2035
+#: src/sort.c:2032
 #, c-format
 msgid "%s: invalid field specification `%s'"
 msgstr "%s: neveljavno doloèijo polja: ,%s`"
 
-#: src/sort.c:2061
+#: src/sort.c:2058
 #, c-format
 msgid "%s: count `%.*s' too large"
 msgstr "%s: ¹tevec ,%.*s` je prevelik"
 
-#: src/sort.c:2067
+#: src/sort.c:2064
 #, c-format
 msgid "%s: invalid count at start of `%s'"
 msgstr "%s: neveljaven ¹tevec na zaèetku ,%s`"
 
-#: src/sort.c:2297
+#: src/sort.c:2298
 msgid "invalid number after `-'"
 msgstr "neveljavno ¹tevilo za ,-`"
 
-#: src/sort.c:2300 src/sort.c:2346 src/sort.c:2373
+#: src/sort.c:2301 src/sort.c:2347 src/sort.c:2374
 msgid "invalid number after `.'"
 msgstr "neveljavno ¹tevilo za ,.`"
 
-#: src/sort.c:2303 src/sort.c:2382
+#: src/sort.c:2304 src/sort.c:2383
 msgid "stray character in field spec"
 msgstr "zablodeli znak v doloèilu polja"
 
-#: src/sort.c:2337
+#: src/sort.c:2338
 msgid "invalid number at field start"
 msgstr "neveljavno ¹tevilo zaèetka polja"
 
-#: src/sort.c:2341 src/sort.c:2369
+#: src/sort.c:2342 src/sort.c:2370
 msgid "field number is zero"
 msgstr "¹tevilka polja je niè"
 
-#: src/sort.c:2350
+#: src/sort.c:2351
 msgid "character offset is zero"
 msgstr "znakovni zamik je niè"
 
-#: src/sort.c:2365
+#: src/sort.c:2366
 msgid "invalid number after `,'"
 msgstr "neveljavno ¹tevilo za \",\""
 
-#: src/sort.c:2410
+#: src/sort.c:2411
 #, c-format
 msgid "multi-character tab `%s'"
 msgstr "veèznakovni tabulator ,%s`"
 
-#: src/sort.c:2478
+#: src/sort.c:2479
 #, c-format
 msgid "extra operand `%s' not allowed with -c"
 msgstr "dodatni operand ,%s` pri izbiri -c ni dovoljen"
@@ -6102,45 +6105,45 @@ msgstr "Pripone izhodnih datotek so izèrpane"
 msgid "creating file `%s'\n"
 msgstr "ustvarjamo datoteko ,%s`\n"
 
-#: src/split.c:364
+#: src/split.c:342
 msgid "cannot split in more than one way"
 msgstr "razcep na veè kot en naèin ni mogoè"
 
-#: src/split.c:417
+#: src/split.c:395
 #, c-format
 msgid "%s: invalid suffix length"
 msgstr "%s: neveljavno dol¾ina pripone"
 
-#: src/split.c:431 src/split.c:457
+#: src/split.c:409 src/split.c:435
 #, c-format
 msgid "%s: invalid number of bytes"
 msgstr "%s: neveljavno ¹tevilo bajtov"
 
-#: src/split.c:444
+#: src/split.c:422
 #, c-format
 msgid "%s: invalid number of lines"
 msgstr "%s: neveljavno ¹tevilo vrstic"
 
-#: src/split.c:497
+#: src/split.c:475
 #, c-format
 msgid "`-%d' option is obsolete; use `-l %d'"
 msgstr ",-%d` je opu¹èena oblika; uporabite ,-l %d`"
 
-#: src/split.c:510
+#: src/split.c:488
 msgid "invalid number"
 msgstr "neveljavno ¹tevilo"
 
-#: src/stat.c:634
+#: src/stat.c:631
 #, c-format
 msgid "cannot read file system information for %s"
 msgstr "ni mogoèe prebrati datoteènega sistema %s"
 
-#: src/stat.c:710
+#: src/stat.c:707
 #, c-format
 msgid "Usage: %s [OPTION] FILE...\n"
 msgstr "Uporaba: %s [IZBIRA] DATOTEKA...\n"
 
-#: src/stat.c:711
+#: src/stat.c:708
 msgid ""
 "Display file or filesystem status.\n"
 "\n"
@@ -6156,14 +6159,15 @@ msgstr ""
 "  -L, --dereference     sledimo povezavam\n"
 "  -t, --terse           izpis podatkov v zgo¹èeni obliki\n"
 
-#: src/stat.c:722
+#: src/stat.c:719
+#, fuzzy
 msgid ""
 "\n"
 "The valid format sequences for files (without --filesystem):\n"
 "\n"
-"  %A - Access rights in human readable form\n"
-"  %a - Access rights in octal\n"
-"  %b - Number of blocks allocated\n"
+"  %A   Access rights in human readable form\n"
+"  %a   Access rights in octal\n"
+"  %b   Number of blocks allocated\n"
 msgstr ""
 "\n"
 "Veljavna formatna zaporedja za datoteke (brez --filesystem):\n"
@@ -6172,14 +6176,15 @@ msgstr ""
 "  %a - Pravice do dostopa v osmi¹kem zapisu\n"
 "  %b - ©tevilo dodeljenih blokov\n"
 
-#: src/stat.c:729
+#: src/stat.c:726
+#, fuzzy
 msgid ""
-"  %D - Device number in hex\n"
-"  %d - Device number in decimal\n"
-"  %F - File type\n"
-"  %f - raw mode in hex\n"
-"  %G - Group name of owner\n"
-"  %g - Group ID of owner\n"
+"  %D   Device number in hex\n"
+"  %d   Device number in decimal\n"
+"  %F   File type\n"
+"  %f   raw mode in hex\n"
+"  %G   Group name of owner\n"
+"  %g   Group ID of owner\n"
 msgstr ""
 "  %D - ©tevilo naprave v ¹estnajsti¹kem zapisu\n"
 "  %d - ©tevilo naprave v deseti¹kem zapisu\n"
@@ -6188,16 +6193,17 @@ msgstr ""
 "  %G - Ime skupine lastnika\n"
 "  %g - ©tevilka skupine lastnika\n"
 
-#: src/stat.c:737
+#: src/stat.c:734
+#, fuzzy
 msgid ""
-"  %h - Number of hard links\n"
-"  %i - Inode number\n"
-"  %N - Quoted File name with dereference if symbolic link\n"
-"  %n - File name\n"
-"  %o - IO block size\n"
-"  %s - Total size, in bytes\n"
-"  %T - Minor device type in hex\n"
-"  %t - Major device type in hex\n"
+"  %h   Number of hard links\n"
+"  %i   Inode number\n"
+"  %N   Quoted File name with dereference if symbolic link\n"
+"  %n   File name\n"
+"  %o   IO block size\n"
+"  %s   Total size, in bytes\n"
+"  %T   Minor device type in hex\n"
+"  %t   Major device type in hex\n"
 msgstr ""
 "  %h - ©tevilo trdih povezav\n"
 "  %i - ©tevilka inoda\n"
@@ -6208,16 +6214,17 @@ msgstr ""
 "  %T - Pomo¾na ¹tevilka zvrsti enote, ¹estnajsti¹ko\n"
 "  %t - Glavna ¹tevilka zvrsti enote, ¹estnajsti¹ko\n"
 
-#: src/stat.c:747
+#: src/stat.c:744
+#, fuzzy
 msgid ""
-"  %U - User name of owner\n"
-"  %u - User ID of owner\n"
-"  %X - Time of last access as seconds since Epoch\n"
-"  %x - Time of last access\n"
-"  %Y - Time of last modification as seconds since Epoch\n"
-"  %y - Time of last modification\n"
-"  %Z - Time of last change as seconds since Epoch\n"
-"  %z - Time of last change\n"
+"  %U   User name of owner\n"
+"  %u   User ID of owner\n"
+"  %X   Time of last access as seconds since Epoch\n"
+"  %x   Time of last access\n"
+"  %Y   Time of last modification as seconds since Epoch\n"
+"  %y   Time of last modification\n"
+"  %Z   Time of last change as seconds since Epoch\n"
+"  %z   Time of last change\n"
 "\n"
 msgstr ""
 "  %U - Uporabni¹ko ime lastnika\n"
@@ -6229,15 +6236,16 @@ msgstr ""
 "  %Z - Èas zadnje spremembe inoda, v sekundah od 1970-01-01\n"
 "  %z - Èas zadnje spremembe inoda\n"
 
-#: src/stat.c:759
+#: src/stat.c:756
+#, fuzzy
 msgid ""
 "Valid format sequences for file systems:\n"
 "\n"
-"  %a - Free blocks available to non-superuser\n"
-"  %b - Total data blocks in file system\n"
-"  %c - Total file nodes in file system\n"
-"  %d - Free file nodes in file system\n"
-"  %f - Free blocks in file system\n"
+"  %a   Free blocks available to non-superuser\n"
+"  %b   Total data blocks in file system\n"
+"  %c   Total file nodes in file system\n"
+"  %d   Free file nodes in file system\n"
+"  %f   Free blocks in file system\n"
 msgstr ""
 "Veljavna formatna zaporedja za datoteène sisteme:\n"
 "\n"
@@ -6247,14 +6255,15 @@ msgstr ""
 "  %d - ©tevilo prostih inodov v datoteènem sistemu\n"
 "  %f - ©tevilo prostih blokov v datoteènem sistemu\n"
 
-#: src/stat.c:768
+#: src/stat.c:765
+#, fuzzy
 msgid ""
-"  %i - File System id in hex\n"
-"  %l - Maximum length of filenames\n"
-"  %n - File name\n"
-"  %s - Optimal transfer block size\n"
-"  %T - Type in human readable form\n"
-"  %t - Type in hex\n"
+"  %i   File System id in hex\n"
+"  %l   Maximum length of filenames\n"
+"  %n   File name\n"
+"  %s   Optimal transfer block size\n"
+"  %T   Type in human readable form\n"
+"  %t   Type in hex\n"
 msgstr ""
 "  %i - Identifikacijska ¹tevilka datoteènega sistema, ¹estnajsti¹ko\n"
 "  %l - Najveèja dovoljena dol¾ina imen datotek\n"
@@ -6741,7 +6750,7 @@ msgstr "nov_naèin: naèin\n"
 msgid "%s: no size information for this device"
 msgstr "%s: ni podatka o velikosti te enote"
 
-#: src/stty.c:1914
+#: src/stty.c:1947
 #, c-format
 msgid "invalid integer argument `%s'"
 msgstr "neveljaven celo¹tevilèni argument ,%s`"
@@ -7016,67 +7025,67 @@ msgstr ""
 msgid "closing %s (fd=%d)"
 msgstr "zapiramo %s (fd=%d)"
 
-#: src/tail.c:396
-#, c-format
-msgid "%s: cannot seek to offset %s%s"
+#: src/tail.c:391
+#, fuzzy, c-format
+msgid "%s: cannot seek to offset %s"
 msgstr "%s: premik na odmik %s%s ni mogoè"
 
-#: src/tail.c:400
-#, c-format
-msgid "%s: cannot seek to relative offset %s%s"
+#: src/tail.c:395
+#, fuzzy, c-format
+msgid "%s: cannot seek to relative offset %s"
 msgstr "%s: premik na relativni odmik %s%s ni mogoè"
 
-#: src/tail.c:405
-#, c-format
-msgid "%s: cannot seek to end-relative offset %s%s"
+#: src/tail.c:400
+#, fuzzy, c-format
+msgid "%s: cannot seek to end-relative offset %s"
 msgstr "%s: premik na odmik %s%s (relativno od konca) ni mogoè"
 
-#: src/tail.c:823
+#: src/tail.c:818
 #, c-format
 msgid "`%s' has become inaccessible"
 msgstr ",%s` je postala nedostopna"
 
-#: src/tail.c:840
+#: src/tail.c:835
 #, c-format
 msgid "`%s' has been replaced with an untailable file; giving up on this name"
 msgstr ""
 ",%s` je bila nadome¹èena z datoteko, kateri ni moè slediti konca; opu¹èamo"
 
-#: src/tail.c:861
+#: src/tail.c:856
 #, c-format
 msgid "`%s' has become accessible"
 msgstr ",%s` je postala dostopna"
 
-#: src/tail.c:869
+#: src/tail.c:864
 #, c-format
 msgid "`%s' has appeared;  following end of new file"
 msgstr ",%s` se je pojavila;  sledimo konec nove datoteka"
 
-#: src/tail.c:880
+#: src/tail.c:875
 #, c-format
 msgid "`%s' has been replaced;  following end of new file"
 msgstr ",%s` je bila zamenjana;  sledimo konec nove datoteke"
 
-#: src/tail.c:1005
+#: src/tail.c:1000
 #, c-format
 msgid "%s: file truncated"
 msgstr "%s: datoteka je porezana"
 
-#: src/tail.c:1025
+#: src/tail.c:1020
 msgid "no files remaining"
 msgstr "nobene datoteke ni veè"
 
-#: src/tail.c:1241
+#: src/tail.c:1236
 #, c-format
 msgid "%s: cannot follow end of this type of file; giving up on this name"
 msgstr "%s: koncu te zvrsti datoteke ni mogoèe slediti; s tem imenom odnehamo"
 
-#: src/tail.c:1361
+#: src/tail.c:1356
 #, c-format
 msgid "%c: invalid suffix character in obsolescent option"
 msgstr "%c: neveljavna enoznakovna pripona pri zastareli izbiri"
 
-#: src/tail.c:1410
+#: src/tail.c:1405
 #, c-format
 msgid ""
 "too many arguments;  When using tail's obsolescent option syntax (%s)\n"
@@ -7087,7 +7096,7 @@ msgstr ""
 "le\n"
 "eno datoteko. Namesto tega uporabite izbiri -n ali -c."
 
-#: src/tail.c:1419
+#: src/tail.c:1414
 #, c-format
 msgid ""
 "Warning: it is not portable to use two or more file arguments with\n"
@@ -7097,45 +7106,45 @@ msgstr ""
 "Opozorilo: pri uporabi stare skladnje (%s) navedba dveh ali veè datotek\n"
 "ni prenosljiva. Namesto nje uporabite izbiri -n ali -c."
 
-#: src/tail.c:1428
+#: src/tail.c:1423
 #, c-format
 msgid "`%s' option is obsolete; use `%s-%c %.*s'"
 msgstr ",%s` je opu¹èena oblika; uporabite ,%s-%c %.*s`"
 
-#: src/tail.c:1489
+#: src/tail.c:1484
 #, c-format
 msgid "%s is larger than the maximum file size on this system"
 msgstr "%s presega najveèjo dovoljeno velikost datoteke na tem sistemu"
 
-#: src/tail.c:1515
+#: src/tail.c:1510
 #, c-format
 msgid "%s: invalid maximum number of unchanged stats between opens"
 msgstr "%s: neveljavno najveèje ¹tevilo nespremenjenih statusov med odpiranji"
 
-#: src/tail.c:1527
+#: src/tail.c:1522
 #, c-format
 msgid "%s: invalid maximum number of consecutive size changes"
 msgstr "%s: neveljavno najveèje ¹tevilo zaporednih sprememb velikosti"
 
-#: src/tail.c:1539
+#: src/tail.c:1534
 #, c-format
 msgid "%s: invalid PID"
 msgstr "%s: neveljavno ¹tevilo PID"
 
-#: src/tail.c:1554
+#: src/tail.c:1549
 #, c-format
 msgid "%s: invalid number of seconds"
 msgstr "%s: neveljavno ¹tevilo sekund"
 
-#: src/tail.c:1573
+#: src/tail.c:1568
 msgid "warning: --retry is useful only when following by name"
 msgstr "opozorilo: izbira --retry je uporabna le, kadar ji sledi ime"
 
-#: src/tail.c:1577
+#: src/tail.c:1572
 msgid "warning: PID ignored; --pid=PID is useful only when following"
 msgstr "opozorilo: PID ignoriran; --pid=PID je uporabno samo pri sledenju"
 
-#: src/tail.c:1580
+#: src/tail.c:1575
 msgid "warning: --pid=PID is not supported on this system"
 msgstr "opozorilo: izbira --pid=PID na tem sistemu ni podprta"
 
@@ -8288,6 +8297,11 @@ msgid ""
 msgstr ""
 "Ponavljaje izpisujemo vrstico s podanim NIZOM (privzeto ,y`).\n"
 "\n"
+
+# ! INEXACT
+#, fuzzy
+#~ msgid "environment variable, QUOTING_STYLE"
+#~ msgstr "ignoriram neveljavno vrednost spremenljivke QUOTING_STYLE: %s"
 
 #~ msgid "%s: is so large that it is not representable"
 #~ msgstr "%s: je tako veliko, da ni predstavljivo"

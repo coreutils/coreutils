@@ -4,13 +4,13 @@
 # Thomas Olsson <cid95tho@lustudat.student.lu.se>, 1997.
 # Daniel Resare <daniel@resare.com> 1999, 2000.
 # Göran Uddeborg <goeran@uddeborg.pp.se>, 1996, 1997, 1998, 1999, 2000, 2001, 2002.
-# $Revision: 1.20 $
+# $Revision: 1.30 $
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: coreutils 4.5.2\n"
-"POT-Creation-Date: 2002-10-13 16:06+0200\n"
-"PO-Revision-Date: 2002-10-08 19:15+0200\n"
+"Project-Id-Version: coreutils 4.5.3\n"
+"POT-Creation-Date: 2002-12-13 21:25+0100\n"
+"PO-Revision-Date: 2002-10-14 10:49+0200\n"
 "Last-Translator: Göran Uddeborg <goeran@uddeborg.pp.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -18,17 +18,17 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: lib/argmatch.c:161
+#: lib/argmatch.c:129
 #, c-format
 msgid "invalid argument %s for %s"
 msgstr "felaktigt argument %s till %s"
 
-#: lib/argmatch.c:162
+#: lib/argmatch.c:130
 #, c-format
 msgid "ambiguous argument %s for %s"
 msgstr "tvetydigt argument %s till %s"
 
-#: lib/argmatch.c:181
+#: lib/argmatch.c:149
 msgid "Valid arguments are:"
 msgstr "Giltiga argument är:"
 
@@ -40,13 +40,13 @@ msgstr "programfel"
 msgid "stack overflow"
 msgstr "stackspill"
 
-#: lib/closeout.c:107 src/cat.c:189 src/cat.c:272 src/cat.c:326
+#: lib/closeout.c:103 src/cat.c:189 src/cat.c:272 src/cat.c:326
 #: src/cksum.c:267 src/head.c:152 src/head.c:196 src/tail.c:323
-#: src/tail.c:1664 src/tr.c:1666 src/tr.c:1912 src/tr.c:2020
+#: src/tail.c:1659 src/tr.c:1666 src/tr.c:1912 src/tr.c:2020
 msgid "write error"
 msgstr "skrivfel"
 
-#: lib/error.c:129 lib/error.c:157
+#: lib/error.c:135 lib/error.c:163
 msgid "Unknown system error"
 msgstr "Okänt systemfel"
 
@@ -98,99 +98,99 @@ msgstr "delat minne-objekt"
 msgid "weird file"
 msgstr "konstig fil"
 
-#: lib/getopt.c:692 lib/getopt.c:704
+#: lib/getopt.c:688 lib/getopt.c:700
 #, c-format
 msgid "%s: option `%s' is ambiguous\n"
 msgstr "%s: flaggan \"%s\" är tvetydig\n"
 
-#: lib/getopt.c:737 lib/getopt.c:741
+#: lib/getopt.c:733 lib/getopt.c:737
 #, c-format
 msgid "%s: option `--%s' doesn't allow an argument\n"
 msgstr "%s: flaggan \"--%s\" tar inget argument\n"
 
-#: lib/getopt.c:750 lib/getopt.c:755
+#: lib/getopt.c:746 lib/getopt.c:751
 #, c-format
 msgid "%s: option `%c%s' doesn't allow an argument\n"
 msgstr "%s: flaggan \"%c%s\" tar inget argument\n"
 
-#: lib/getopt.c:791 lib/getopt.c:804 lib/getopt.c:1093 lib/getopt.c:1106
+#: lib/getopt.c:787 lib/getopt.c:800 lib/getopt.c:1089 lib/getopt.c:1102
 #, c-format
 msgid "%s: option `%s' requires an argument\n"
 msgstr "%s: flaggan \"%s\" kräver ett argument\n"
 
-#: lib/getopt.c:842 lib/getopt.c:845
+#: lib/getopt.c:838 lib/getopt.c:841
 #, c-format
 msgid "%s: unrecognized option `--%s'\n"
 msgstr "%s: okänd flagga \"--%s\"\n"
 
-#: lib/getopt.c:853 lib/getopt.c:856
+#: lib/getopt.c:849 lib/getopt.c:852
 #, c-format
 msgid "%s: unrecognized option `%c%s'\n"
 msgstr "%s: okänd flagga \"%c%s\"\n"
 
-#: lib/getopt.c:903 lib/getopt.c:906
+#: lib/getopt.c:899 lib/getopt.c:902
 #, c-format
 msgid "%s: illegal option -- %c\n"
 msgstr "%s: otillåten flagga -- %c\n"
 
-#: lib/getopt.c:912 lib/getopt.c:915
+#: lib/getopt.c:908 lib/getopt.c:911
 #, c-format
 msgid "%s: invalid option -- %c\n"
 msgstr "%s: ogiltig flagga -- %c\n"
 
-#: lib/getopt.c:962 lib/getopt.c:973 lib/getopt.c:1159 lib/getopt.c:1172
+#: lib/getopt.c:958 lib/getopt.c:969 lib/getopt.c:1155 lib/getopt.c:1168
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
 msgstr "%s: flaggan kräver ett argument -- %c\n"
 
-#: lib/getopt.c:1025 lib/getopt.c:1036
+#: lib/getopt.c:1021 lib/getopt.c:1032
 #, c-format
 msgid "%s: option `-W %s' is ambiguous\n"
 msgstr "%s: flaggan \"-W %s\" är tvetydig\n"
 
-#: lib/getopt.c:1060 lib/getopt.c:1072
+#: lib/getopt.c:1056 lib/getopt.c:1068
 #, c-format
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "%s: flaggan \"-W %s\" tar inget argument\n"
 
-#: lib/human.c:365
+#: lib/human.c:519
 msgid "block size"
 msgstr "blockstorlek"
 
-#: lib/makepath.c:176 src/copy.c:1270 src/mkdir.c:170
+#: lib/makepath.c:168 src/copy.c:1270 src/mkdir.c:170
 #, c-format
 msgid "cannot create directory %s"
 msgstr "kan inte skapa katalog %s"
 
-#: lib/makepath.c:182 lib/makepath.c:424 src/cp.c:446 src/cp.c:468
+#: lib/makepath.c:174 lib/makepath.c:416 src/cp.c:446 src/cp.c:468
 #, c-format
 msgid "%s exists but is not a directory"
 msgstr "%s finns men är inte en katalog"
 
-#: lib/makepath.c:319 lib/makepath.c:381 lib/makepath.c:443
+#: lib/makepath.c:311 lib/makepath.c:373 lib/makepath.c:435
 #, c-format
 msgid "cannot change owner and/or group of %s"
 msgstr "kan inte ändra ägare och/eller grupp för %s"
 
-#: lib/makepath.c:341
+#: lib/makepath.c:333
 #, c-format
 msgid "cannot chdir to directory %s"
 msgstr "kan inte byta till katalog %s"
 
-#: lib/makepath.c:395 lib/makepath.c:449
+#: lib/makepath.c:387 lib/makepath.c:441
 #, c-format
 msgid "cannot change permissions of %s"
 msgstr "kan inte ändra rättigheter på %s"
 
-#: lib/obstack.c:500 lib/obstack.c:503 lib/xmalloc.c:66
+#: lib/obstack.c:487 lib/obstack.c:490 lib/xmalloc.c:63
 msgid "memory exhausted"
 msgstr "minnet slut"
 
-#: lib/quotearg.c:270
+#: lib/quotearg.c:236
 msgid "`"
 msgstr "\""
 
-#: lib/quotearg.c:271
+#: lib/quotearg.c:237
 msgid "'"
 msgstr "\""
 
@@ -202,50 +202,50 @@ msgstr "^[yYjJ]"
 msgid "^[nN]"
 msgstr "^[nN]"
 
-#: lib/unicodeio.c:159
+#: lib/unicodeio.c:155
 msgid "iconv function not usable"
 msgstr "iconv-funktion inte användbar"
 
-#: lib/unicodeio.c:161
+#: lib/unicodeio.c:157
 msgid "iconv function not available"
 msgstr "iconv-funktion inte tillgänglig"
 
-#: lib/unicodeio.c:168
+#: lib/unicodeio.c:164
 msgid "character out of range"
 msgstr "tecken utanför intervall"
 
-#: lib/unicodeio.c:231
+#: lib/unicodeio.c:227
 #, c-format
 msgid "cannot convert U+%04X to local character set"
 msgstr "kan inte konvertera U+%04X till lokal teckenuppsättning"
 
-#: lib/unicodeio.c:233
+#: lib/unicodeio.c:229
 #, c-format
 msgid "cannot convert U+%04X to local character set: %s"
 msgstr "kan inte konvertera U+%04X till lokal teckenuppsättning: %s"
 
-#: lib/userspec.c:178
+#: lib/userspec.c:174
 msgid "invalid user"
 msgstr "ogiltig användare"
 
-#: lib/userspec.c:179
+#: lib/userspec.c:175
 msgid "invalid group"
 msgstr "ogiltig grupp"
 
-#: lib/userspec.c:181
+#: lib/userspec.c:177
 msgid "cannot get the login group of a numeric UID"
 msgstr "kan inte ta reda på inloggningsgruppen för ett numeriskt UID"
 
-#: lib/userspec.c:183
+#: lib/userspec.c:179
 msgid "cannot omit both user and group"
 msgstr "kan inte utelämna både användare och grupp"
 
-#: lib/version-etc.c:61
+#: lib/version-etc.c:57
 #, c-format
 msgid "Written by %s.\n"
 msgstr "Skrivet av %s.\n"
 
-#: lib/version-etc.c:67
+#: lib/version-etc.c:63
 msgid ""
 "This is free software; see the source for copying conditions.  There is NO\n"
 "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
@@ -254,32 +254,32 @@ msgstr ""
 "finns INGEN garanti, även underförstådd garanti vid KÖP, eller\n"
 "LÄMPLIGHET FÖR NÅGOT SPECIELLT ÄNDAMÅL.\n"
 
-#: lib/xmemcoll.c:61
+#: lib/xmemcoll.c:57
 msgid "string comparison failed"
 msgstr "strängjämförelse misslyckades"
 
-#: lib/xmemcoll.c:62
+#: lib/xmemcoll.c:58
 msgid "Set LC_ALL='C' to work around the problem."
 msgstr "Sätt LC_ALL='C' för att gå runt problemet."
 
-#: lib/xmemcoll.c:64
+#: lib/xmemcoll.c:60
 #, c-format
 msgid "The strings compared were %s and %s."
 msgstr "De jämförda strängarna var %s och %s."
 
 #: src/basename.c:50 src/cat.c:88 src/chgrp.c:122 src/chmod.c:239
 #: src/chown.c:95 src/chroot.c:41 src/cksum.c:276 src/comm.c:69 src/cp.c:160
-#: src/csplit.c:1492 src/cut.c:163 src/date.c:115 src/dd.c:284 src/df.c:747
-#: src/dircolors.c:100 src/dirname.c:42 src/du.c:181 src/echo.c:73
-#: src/env.c:115 src/expand.c:106 src/expr.c:85 src/factor.c:70 src/fmt.c:267
+#: src/csplit.c:1492 src/cut.c:163 src/date.c:115 src/dd.c:284 src/df.c:776
+#: src/dircolors.c:99 src/dirname.c:42 src/du.c:192 src/echo.c:73
+#: src/env.c:115 src/expand.c:106 src/expr.c:86 src/factor.c:70 src/fmt.c:267
 #: src/fold.c:63 src/head.c:84 src/hostid.c:44 src/hostname.c:63 src/id.c:83
 #: src/install.c:593 src/join.c:140 src/kill.c:89 src/link.c:47 src/ln.c:335
-#: src/logname.c:44 src/ls.c:3614 src/md5sum.c:121 src/mkdir.c:57
-#: src/mkfifo.c:51 src/mknod.c:61 src/mv.c:310 src/nice.c:63 src/nl.c:172
-#: src/od.c:283 src/paste.c:399 src/pathchk.c:141 src/pinky.c:465
+#: src/logname.c:44 src/ls.c:3701 src/md5sum.c:121 src/mkdir.c:57
+#: src/mkfifo.c:51 src/mknod.c:61 src/mv.c:307 src/nice.c:63 src/nl.c:172
+#: src/od.c:283 src/paste.c:399 src/pathchk.c:142 src/pinky.c:465
 #: src/pr.c:2750 src/printenv.c:59 src/printf.c:93 src/ptx.c:1855 src/pwd.c:43
-#: src/rm.c:96 src/rmdir.c:142 src/seq.c:78 src/shred.c:171 src/sleep.c:59
-#: src/sort.c:275 src/split.c:91 src/stat.c:706 src/stty.c:497 src/su.c:433
+#: src/rm.c:96 src/rmdir.c:142 src/seq.c:78 src/shred.c:168 src/sleep.c:59
+#: src/sort.c:272 src/split.c:91 src/stat.c:703 src/stty.c:497 src/su.c:433
 #: src/sum.c:56 src/sync.c:40 src/tac.c:123 src/tail.c:230 src/tee.c:59
 #: src/test.c:985 src/touch.c:234 src/tr.c:323 src/tsort.c:93 src/tty.c:58
 #: src/uname.c:106 src/unexpand.c:371 src/uniq.c:135 src/unlink.c:47
@@ -311,17 +311,17 @@ msgstr ""
 
 #: src/basename.c:66 src/cat.c:124 src/chgrp.c:152 src/chmod.c:265
 #: src/chown.c:139 src/chroot.c:59 src/cksum.c:291 src/comm.c:86 src/cp.c:257
-#: src/csplit.c:1534 src/cut.c:208 src/date.c:217 src/dd.c:331 src/df.c:786
-#: src/dircolors.c:121 src/dirname.c:58 src/du.c:226 src/echo.c:105
-#: src/env.c:134 src/expand.c:131 src/expr.c:148 src/factor.c:90
+#: src/csplit.c:1534 src/cut.c:208 src/date.c:217 src/dd.c:331 src/df.c:815
+#: src/dircolors.c:120 src/dirname.c:58 src/du.c:237 src/echo.c:105
+#: src/env.c:134 src/expand.c:131 src/expr.c:149 src/factor.c:90
 #: src/false.c:28 src/fmt.c:297 src/fold.c:86 src/head.c:115 src/hostid.c:57
 #: src/hostname.c:76 src/id.c:104 src/install.c:648 src/join.c:180
-#: src/kill.c:119 src/link.c:59 src/ln.c:390 src/logname.c:55 src/ls.c:3743
-#: src/md5sum.c:157 src/mkdir.c:76 src/mkfifo.c:68 src/mknod.c:86 src/mv.c:364
-#: src/nice.c:77 src/nl.c:227 src/od.c:370 src/paste.c:423 src/pathchk.c:153
+#: src/kill.c:119 src/link.c:59 src/ln.c:390 src/logname.c:55 src/ls.c:3830
+#: src/md5sum.c:157 src/mkdir.c:76 src/mkfifo.c:68 src/mknod.c:86 src/mv.c:361
+#: src/nice.c:77 src/nl.c:227 src/od.c:370 src/paste.c:423 src/pathchk.c:154
 #: src/pinky.c:492 src/pr.c:2862 src/printenv.c:72 src/printf.c:141
-#: src/pwd.c:54 src/rm.c:128 src/rmdir.c:162 src/seq.c:104 src/shred.c:234
-#: src/sleep.c:75 src/sort.c:346 src/split.c:123 src/stat.c:776 src/stty.c:711
+#: src/pwd.c:54 src/rm.c:128 src/rmdir.c:162 src/seq.c:104 src/shred.c:231
+#: src/sleep.c:75 src/sort.c:343 src/split.c:123 src/stat.c:773 src/stty.c:711
 #: src/su.c:454 src/sum.c:76 src/sync.c:51 src/tac.c:146 src/tail.c:300
 #: src/tee.c:72 src/test.c:1067 src/touch.c:265 src/tr.c:396 src/true.c:28
 #: src/tsort.c:105 src/tty.c:70 src/uname.c:128 src/unexpand.c:394
@@ -337,16 +337,16 @@ msgstr ""
 "Rapportera kommentarer om översättningen till <sv@li.org>.\n"
 
 #: src/basename.c:114 src/chgrp.c:210 src/chmod.c:353 src/chown.c:211
-#: src/chroot.c:78 src/csplit.c:1464 src/dirname.c:89 src/expr.c:177
+#: src/chroot.c:78 src/csplit.c:1464 src/dirname.c:89 src/expr.c:178
 #: src/install.c:284 src/link.c:87 src/mkdir.c:124 src/mkfifo.c:113
-#: src/mknod.c:141 src/pathchk.c:193 src/rm.c:200 src/rmdir.c:206
-#: src/seq.c:411 src/sleep.c:150 src/stat.c:827 src/unlink.c:88
+#: src/mknod.c:141 src/pathchk.c:194 src/rm.c:200 src/rmdir.c:206
+#: src/seq.c:411 src/sleep.c:150 src/stat.c:824 src/unlink.c:88
 msgid "too few arguments"
 msgstr "för få argument"
 
-#: src/basename.c:115 src/dircolors.c:483 src/dirname.c:90 src/hostid.c:79
+#: src/basename.c:115 src/dircolors.c:482 src/dirname.c:90 src/hostid.c:79
 #: src/hostname.c:122 src/link.c:93 src/mknod.c:143 src/seq.c:417
-#: src/split.c:525 src/tr.c:1848 src/unlink.c:94 src/uptime.c:244
+#: src/split.c:503 src/tr.c:1848 src/unlink.c:94 src/uptime.c:244
 #: src/users.c:169 src/who.c:764
 msgid "too many arguments"
 msgstr "för många argument"
@@ -415,7 +415,7 @@ msgstr ""
 msgid "cannot do ioctl on `%s'"
 msgstr "Kan inte göra \"ioctl\" på \"%s\""
 
-#: src/cat.c:669 src/dd.c:1225 src/od.c:1013 src/tee.c:181
+#: src/cat.c:669 src/dd.c:1222 src/od.c:1013 src/tee.c:181
 msgid "standard output"
 msgstr "standard ut"
 
@@ -758,7 +758,7 @@ msgstr ""
 "Skriv CRC-kontrollsumma och byteantal för varje FIL.\n"
 "\n"
 
-#: src/comm.c:35 src/ls.c:126 src/uniq.c:40
+#: src/comm.c:35 src/ls.c:129 src/uniq.c:40
 msgid "Richard Stallman and David MacKenzie"
 msgstr "Richard Stallman och David MacKenzie"
 
@@ -791,7 +791,7 @@ msgstr "kan komma åt %s"
 msgid "cannot open %s for reading"
 msgstr "kan inte öppna %s för läsning"
 
-#: src/copy.c:232 src/copy.c:286 src/copy.c:301 src/dd.c:1201
+#: src/copy.c:232 src/copy.c:286 src/copy.c:301 src/dd.c:1199
 #, c-format
 msgid "cannot fstat %s"
 msgstr "kan inte göra fstat på %s"
@@ -812,7 +812,7 @@ msgstr "kan inte ta bort %s"
 msgid "cannot create regular file %s"
 msgstr "kan inte skapa normal fil %s"
 
-#: src/copy.c:328 src/dd.c:818 src/dd.c:1012
+#: src/copy.c:328 src/dd.c:816 src/dd.c:1010
 #, c-format
 msgid "reading %s"
 msgstr "läser %s"
@@ -822,7 +822,7 @@ msgstr "läser %s"
 msgid "cannot lseek %s"
 msgstr "kan inte göra lseek i %s"
 
-#: src/copy.c:377 src/copy.c:401 src/dd.c:1056 src/dd.c:1117
+#: src/copy.c:377 src/copy.c:401 src/dd.c:1054 src/dd.c:1115
 #, c-format
 msgid "writing %s"
 msgstr "skriver %s"
@@ -842,7 +842,7 @@ msgstr "%s: ersätt %s och åsidosätt därmed rättigheterna %04lo? "
 msgid "%s: overwrite %s? "
 msgstr "%s: skriv över %s? "
 
-#: src/copy.c:810 src/copy.c:848 src/stat.c:664
+#: src/copy.c:810 src/copy.c:848 src/stat.c:661
 #, c-format
 msgid "cannot stat %s"
 msgstr "kan inte ta status på %s"
@@ -967,7 +967,7 @@ msgstr "kan inte skapa fifo %s"
 msgid "cannot create special file %s"
 msgstr "kan inte skapa specialfil %s"
 
-#: src/copy.c:1397 src/ls.c:2368 src/stat.c:461
+#: src/copy.c:1397 src/ls.c:2453 src/stat.c:458
 #, c-format
 msgid "cannot read symbolic link %s"
 msgstr "kan inte läsa symbolisk länk %s"
@@ -1016,7 +1016,7 @@ msgstr "%s -> %s (återta säkerhetskopia)\n"
 msgid "Torbjorn Granlund, David MacKenzie, and Jim Meyering"
 msgstr "Torbjörn Granlund, David MacKenzie och Jim Meyering"
 
-#: src/cp.c:164 src/mv.c:314
+#: src/cp.c:164 src/mv.c:311
 #, c-format
 msgid ""
 "Usage: %s [OPTION]... SOURCE DEST\n"
@@ -1035,11 +1035,11 @@ msgstr ""
 "Kopiera KÄLLA till DEST, eller flera KÄLLOR till KATALOG.\n"
 "\n"
 
-#: src/cp.c:174 src/csplit.c:1505 src/cut.c:175 src/df.c:757 src/du.c:190
+#: src/cp.c:174 src/csplit.c:1505 src/cut.c:175 src/df.c:786 src/du.c:201
 #: src/expand.c:119 src/fmt.c:277 src/fold.c:76 src/head.c:98
-#: src/install.c:609 src/kill.c:103 src/ln.c:354 src/ls.c:3624 src/mkdir.c:66
-#: src/mkfifo.c:60 src/mknod.c:70 src/mv.c:324 src/nl.c:185 src/paste.c:413
-#: src/pr.c:2763 src/ptx.c:1867 src/shred.c:181 src/sort.c:289 src/split.c:104
+#: src/install.c:609 src/kill.c:103 src/ln.c:354 src/ls.c:3711 src/mkdir.c:66
+#: src/mkfifo.c:60 src/mknod.c:70 src/mv.c:321 src/nl.c:185 src/paste.c:413
+#: src/pr.c:2763 src/ptx.c:1867 src/shred.c:178 src/sort.c:286 src/split.c:104
 #: src/tac.c:136 src/tail.c:244 src/touch.c:243 src/unexpand.c:384
 #: src/uniq.c:148
 msgid ""
@@ -1194,7 +1194,7 @@ msgstr ""
 "med miljövariabeln VERSION_CONTROL.  Den kan ha följande värden:\n"
 "\n"
 
-#: src/cp.c:245 src/install.c:642 src/ln.c:384 src/mv.c:358
+#: src/cp.c:245 src/install.c:642 src/ln.c:384 src/mv.c:355
 msgid ""
 "  none, off       never make backups (even if --backup is given)\n"
 "  numbered, t     make numbered backups\n"
@@ -1261,7 +1261,7 @@ msgstr "kopiering av flera filer, men sista argumentet %s är inte en katalog"
 msgid "when preserving paths, the destination must be a directory"
 msgstr "när sökvägen skall bevaras måste destinationen vara en katalog"
 
-#: src/cp.c:878 src/install.c:219 src/ln.c:434 src/mv.c:408
+#: src/cp.c:878 src/install.c:219 src/ln.c:434 src/mv.c:405
 #, c-format
 msgid ""
 "warning: --version-control (-V) is obsolete;  support for it\n"
@@ -1278,7 +1278,7 @@ msgstr "symboliska länkar stöds inte på detta system"
 msgid "cannot make both hard and symbolic links"
 msgstr "kan inte göra både hårda och symboliska länkar"
 
-#: src/cp.c:1016 src/install.c:275 src/ln.c:530 src/mv.c:486
+#: src/cp.c:1016 src/install.c:275 src/ln.c:530 src/mv.c:483
 msgid "backup type"
 msgstr "säkerhetskopietyp"
 
@@ -1474,9 +1474,9 @@ msgstr ""
 msgid "David Ihnat, David MacKenzie, and Jim Meyering"
 msgstr "David Ihnat, David MacKenzie och Jim Meyering"
 
-#: src/cut.c:167 src/df.c:751 src/du.c:185 src/expand.c:110 src/fold.c:67
-#: src/head.c:88 src/ls.c:3618 src/nl.c:176 src/paste.c:403 src/pr.c:2754
-#: src/sort.c:279 src/sum.c:60 src/tac.c:127 src/tail.c:234 src/tee.c:63
+#: src/cut.c:167 src/df.c:780 src/du.c:196 src/expand.c:110 src/fold.c:67
+#: src/head.c:88 src/ls.c:3705 src/nl.c:176 src/paste.c:403 src/pr.c:2754
+#: src/sort.c:276 src/sum.c:60 src/tac.c:127 src/tail.c:234 src/tee.c:63
 #: src/unexpand.c:375 src/wc.c:125
 #, c-format
 msgid "Usage: %s [OPTION]... [FILE]...\n"
@@ -1778,7 +1778,7 @@ msgstr ""
 "  \"-\" (bindestreck) fyll inte ut fältet\n"
 "  \"_\" (understrykning) fyll ut fältet med blanksteg\n"
 
-#: src/date.c:239 src/dd.c:1175 src/dircolors.c:540 src/head.c:221
+#: src/date.c:239 src/dd.c:1173 src/dircolors.c:539 src/head.c:221
 #: src/md5sum.c:340 src/md5sum.c:681 src/od.c:959 src/od.c:2001 src/pr.c:1164
 #: src/pr.c:1371 src/pr.c:1493 src/stty.c:912 src/tac.c:483 src/tac.c:489
 #: src/tee.c:151 src/tr.c:2027 src/tsort.c:585
@@ -1927,55 +1927,55 @@ msgstr ""
 msgid "%s+%s records in\n"
 msgstr "%s+%s poster in\n"
 
-#: src/dd.c:365
+#: src/dd.c:364
 #, c-format
 msgid "%s+%s records out\n"
 msgstr "%s+%s poster ut\n"
 
-#: src/dd.c:373
+#: src/dd.c:371
 msgid "truncated record"
 msgstr "stympad post"
 
-#: src/dd.c:374
+#: src/dd.c:372
 msgid "truncated records"
 msgstr "stympade poster"
 
-#: src/dd.c:384
+#: src/dd.c:382
 #, c-format
 msgid "closing input file %s"
 msgstr "stänger infil %s"
 
-#: src/dd.c:387
+#: src/dd.c:385
 #, c-format
 msgid "closing output file %s"
 msgstr "stänger utdatafil %s"
 
-#: src/dd.c:471
+#: src/dd.c:469
 #, c-format
 msgid "writing to %s"
 msgstr "skrivning till %s"
 
-#: src/dd.c:503
+#: src/dd.c:501
 #, c-format
 msgid "invalid conversion: %s"
 msgstr "ogiltig konvertering: %s"
 
-#: src/dd.c:559
+#: src/dd.c:557
 #, c-format
 msgid "unrecognized option %s"
 msgstr "okänd flagga %s"
 
-#: src/dd.c:612
+#: src/dd.c:610
 #, c-format
 msgid "unrecognized option %s=%s"
 msgstr "okänd flagga %s=%s"
 
-#: src/dd.c:618
+#: src/dd.c:616
 #, c-format
 msgid "invalid number %s"
 msgstr "ogiltigt antal %s"
 
-#: src/dd.c:648
+#: src/dd.c:646
 msgid ""
 "only one conv in {ascii,ebcdic,ibm}, {lcase,ucase}, {block,unblock}, "
 "{unblock,sync}"
@@ -1983,7 +1983,7 @@ msgstr ""
 "endast en konvertering av {ascii,ebcdic,ibm}, {lcase,ucase}, {block,"
 "unblock}, {unblock,sync}"
 
-#: src/dd.c:783
+#: src/dd.c:781
 #, c-format
 msgid ""
 "warning: working around lseek kernel bug for file (%s)\n"
@@ -1992,62 +1992,62 @@ msgstr ""
 "varning: går runt fel i kärnan i lseek för fil (%s)\n"
 "  med mt_type=0x%0lx -- se <sys/mtio.h> för en lista av typer"
 
-#: src/dd.c:1172 src/dd.c:1190
+#: src/dd.c:1170 src/dd.c:1188
 #, c-format
 msgid "opening %s"
 msgstr "öppnar %s"
 
-#: src/dd.c:1198
+#: src/dd.c:1196
 msgid "file offset out of range"
 msgstr "filposition utanför intervallet"
 
-#: src/dd.c:1216
+#: src/dd.c:1214
 #, c-format
 msgid "advancing past %s bytes in output file %s"
 msgstr "passerar %s byte i utdatafil %s"
 
-#: src/df.c:46 src/du.c:66
+#: src/df.c:47 src/du.c:66
 msgid "Torbjorn Granlund, David MacKenzie, Larry McVoy, and Paul Eggert"
 msgstr "Torbjörn Granlund, David MacKenzie, Larry McVoy och Paul Eggert"
 
-#: src/df.c:147
+#: src/df.c:152
 msgid "Filesystem "
 msgstr "Filsystem  "
 
-#: src/df.c:150
+#: src/df.c:155
 msgid "   Type"
 msgstr "    Typ"
 
-#: src/df.c:155
+#: src/df.c:160
 #, c-format
 msgid "    Inodes   IUsed   IFree IUse%%"
 msgstr "    Inoder IAnvända  IFria IAnv%%"
 
-#: src/df.c:159
-#, c-format
-msgid "     Size   Used  Avail Use%%"
-msgstr "  Storlek Använt  Tillg Anv%%"
-
-#: src/df.c:161
+#: src/df.c:164
 #, c-format
 msgid "    Size  Used Avail Use%%"
 msgstr " Storlek Anvnt Tillg Anv%%"
 
-#: src/df.c:164
+#: src/df.c:166
 #, c-format
-msgid " %4d-blocks      Used Available Capacity"
+msgid "     Size   Used  Avail Use%%"
+msgstr "  Storlek Använt  Tillg Anv%%"
+
+#: src/df.c:169
+#, fuzzy, c-format
+msgid " %4s-blocks      Used Available Capacity"
 msgstr "  %4d-block    Använt Tillgängl    Kapac"
 
-#: src/df.c:175
+#: src/df.c:200
 #, c-format
 msgid " %4s-blocks      Used Available Use%%"
 msgstr "  %4s-block    Använt Tillgängl Anv%%"
 
-#: src/df.c:178
+#: src/df.c:204
 msgid " Mounted on\n"
 msgstr " Monterat på\n"
 
-#: src/df.c:752
+#: src/df.c:781
 msgid ""
 "Show information about the filesystem on which each FILE resides,\n"
 "or all filesystems by default.\n"
@@ -2057,7 +2057,7 @@ msgstr ""
 "filsystem.\n"
 "\n"
 
-#: src/df.c:760
+#: src/df.c:789
 msgid ""
 "  -a, --all             include filesystems having 0 blocks\n"
 "  -B, --block-size=SIZE use SIZE-byte blocks\n"
@@ -2070,7 +2070,7 @@ msgstr ""
 "  -h, --human-readable  skriv storlekar i läsbart format (t.ex. 1K 234M 2G)\n"
 "  -H, --si              d:o, men använd multipler av 1000 istället för 1024\n"
 
-#: src/df.c:766
+#: src/df.c:795
 msgid ""
 "  -i, --inodes          list inode information instead of block usage\n"
 "  -k                    like --block-size=1K\n"
@@ -2084,7 +2084,7 @@ msgstr ""
 "      --no-sync         anropa inte sync innan information hämtas "
 "(normalfall)\n"
 
-#: src/df.c:772
+#: src/df.c:801
 msgid ""
 "  -P, --portability     use the POSIX output format\n"
 "      --sync            invoke sync before getting usage info\n"
@@ -2100,7 +2100,7 @@ msgstr ""
 "  -x, --exclude-type=TYP   utelämna filsystem av typ TYP\n"
 "  -v                    (ignorerad)\n"
 
-#: src/df.c:782 src/du.c:222 src/ls.c:3731
+#: src/df.c:811 src/du.c:233 src/ls.c:3818
 msgid ""
 "\n"
 "SIZE may be (or may be an integer optionally followed by) one of following:\n"
@@ -2111,26 +2111,26 @@ msgstr ""
 "följande: kB 1000, K 1024, MB 1 000 000, M 1 048 576, och så vidare\n"
 "för G, T, P, E, Z, Y.\n"
 
-#: src/df.c:894
+#: src/df.c:928
 #, c-format
 msgid "file system type %s both selected and excluded"
 msgstr "filsystemstypen %s är både vald och exkluderad"
 
-#: src/df.c:938
+#: src/df.c:972
 msgid "Warning: "
 msgstr "Varning: "
 
-#: src/df.c:941
+#: src/df.c:975
 #, c-format
 msgid "%scannot read table of mounted filesystems"
 msgstr "%skan inte läsa tabellen över monterade filsystem"
 
-#: src/dircolors.c:104
+#: src/dircolors.c:103
 #, c-format
 msgid "Usage: %s [OPTION]... [FILE]\n"
 msgstr "Användning: %s [FLAGGA]... [FIL]\n"
 
-#: src/dircolors.c:105
+#: src/dircolors.c:104
 msgid ""
 "Output commands to set the LS_COLORS environment variable.\n"
 "\n"
@@ -2147,7 +2147,7 @@ msgstr ""
 "  -c, --csh, --c-shell        skriv kod för att sätta LS_COLORS i C-skal\n"
 "  -p, --print-database        visa standardvärden\n"
 
-#: src/dircolors.c:115
+#: src/dircolors.c:114
 msgid ""
 "\n"
 "If FILE is specified, read it to determine which colors to use for which\n"
@@ -2159,21 +2159,21 @@ msgstr ""
 "vilka filtyper och ändelser.  Annars används en fördefinierad databas.  För\n"
 "detaljer om formatet på dessa filer, kör \"dircolors --print-database\".\n"
 
-#: src/dircolors.c:300
+#: src/dircolors.c:299
 #, c-format
 msgid "%s:%lu: invalid line;  missing second token"
 msgstr "%s:%lu: ogiltig rad;  inget andra element"
 
-#: src/dircolors.c:372
+#: src/dircolors.c:371
 #, c-format
 msgid "%s:%lu: unrecognized keyword %s"
 msgstr "%s:%lu: okänt nyckelord %s"
 
-#: src/dircolors.c:373
+#: src/dircolors.c:372
 msgid "<internal>"
 msgstr "<intern>"
 
-#: src/dircolors.c:468
+#: src/dircolors.c:467
 msgid ""
 "the options to output dircolors' internal database and\n"
 "to select a shell syntax are mutually exclusive"
@@ -2181,7 +2181,7 @@ msgstr ""
 "flaggorna för att skriva ut dircolors interna databas och att välja en\n"
 "skalsyntax är ömsesidigt uteslutande"
 
-#: src/dircolors.c:476
+#: src/dircolors.c:475
 msgid ""
 "no FILE arguments may be used with the option to output\n"
 "dircolors' internal database"
@@ -2189,7 +2189,7 @@ msgstr ""
 "inget FILargument får ges tillsammans med flaggan för att visa dircolors\n"
 "interna databas"
 
-#: src/dircolors.c:505
+#: src/dircolors.c:504
 msgid "no SHELL environment variable, and no shell type option given"
 msgstr "ingen SHELL-miljövariabel, och ingen flagga för skalvariant angiven"
 
@@ -2215,7 +2215,7 @@ msgstr ""
 "Skriv ut NAMN med dess avslutande /komponent borttagen; om NAMN inte\n"
 "innehåller något /, skriv \".\" (som betyder aktuell katalog)\n"
 
-#: src/du.c:186
+#: src/du.c:197
 msgid ""
 "Summarize disk usage of each FILE, recursively for directories.\n"
 "\n"
@@ -2223,8 +2223,7 @@ msgstr ""
 "Sammanfatta diskanvändningen för varje FIL, rekursivt för kataloger.\n"
 "\n"
 
-#: src/du.c:193
-#, fuzzy
+#: src/du.c:204
 msgid ""
 "  -a, --all             write counts for all files, not just directories\n"
 "  -B, --block-size=SIZE use SIZE-byte blocks\n"
@@ -2236,9 +2235,9 @@ msgstr ""
 "  -B, --block-size=STRL använd STRL byte stora block\n"
 "  -b, --bytes           skriv storlek i byte\n"
 "  -c, --total           rapportera totalsumman\n"
-"  -D, --dereference-args  följ SÖKVÄGar när de är symboliska länkar\n"
+"  -D, --dereference-args  följ FILer som är symboliska länkar\n"
 
-#: src/du.c:200
+#: src/du.c:211
 msgid ""
 "  -h, --human-readable  print sizes in human readable format (e.g., 1K 234M "
 "2G)\n"
@@ -2251,7 +2250,7 @@ msgstr ""
 "  -k                    som --block-size=1K\n"
 "  -l, --count-links     räkna storlek flera gånger för hårda länkar\n"
 
-#: src/du.c:206
+#: src/du.c:217
 msgid ""
 "  -L, --dereference     dereference all symbolic links\n"
 "  -S, --separate-dirs   do not include size of subdirectories\n"
@@ -2261,7 +2260,7 @@ msgstr ""
 "  -S, --separate-dirs   ta inte med storlek på underkataloger\n"
 "  -s, --summarize       visa bara summan för varje argument\n"
 
-#: src/du.c:211
+#: src/du.c:222
 msgid ""
 "  -x, --one-file-system  skip directories on different filesystems\n"
 "  -X FILE, --exclude-from=FILE  Exclude files that match any pattern in "
@@ -2282,34 +2281,34 @@ msgstr ""
 "som\n"
 "                          --summarize\n"
 
-#: src/du.c:385
+#: src/du.c:395
 #, c-format
 msgid "cannot change to `..' from directory %s"
 msgstr "kan inte byta till \"..\" från katalog %s"
 
-#: src/du.c:468
+#: src/du.c:479
 #, c-format
 msgid "cannot change to directory %s"
 msgstr "kan inte byta till katalog %s"
 
-#: src/du.c:558 src/ls.c:2145 src/wc.c:591
+#: src/du.c:556 src/ls.c:2236 src/wc.c:591
 msgid "total"
 msgstr "totalt"
 
-#: src/du.c:622
+#: src/du.c:625
 #, c-format
 msgid "invalid maximum depth %s"
 msgstr "ogiltigt maxdjup %s"
 
-#: src/du.c:681
+#: src/du.c:685
 msgid "cannot both summarize and show all entries"
 msgstr "kan inte samtidigt bara visa summan och alla storlekar"
 
-#: src/du.c:688
+#: src/du.c:692
 msgid "warning: summarizing is the same as using --max-depth=0"
 msgstr "varning: att summera är detsamma som att använda --max-depth=0"
 
-#: src/du.c:694
+#: src/du.c:698
 #, c-format
 msgid "warning: summarizing conflicts with --max-depth=%d"
 msgstr "varning: att summera står i konflikt med --max-depth=%d"
@@ -2439,7 +2438,7 @@ msgstr "storleken på tabbarna måste vara stigande"
 msgid "`-LIST' option is obsolete; use `-t LIST'"
 msgstr "flagga \"-LIST\" är föråldrad, använd \"-t LIST\""
 
-#: src/expr.c:89
+#: src/expr.c:90
 #, c-format
 msgid ""
 "Usage: %s EXPRESSION\n"
@@ -2449,7 +2448,7 @@ msgstr ""
 "   eller:   %s FLAGGA\n"
 "\n"
 
-#: src/expr.c:97
+#: src/expr.c:98
 msgid ""
 "\n"
 "Print the value of EXPRESSION to standard output.  A blank line below\n"
@@ -2468,7 +2467,7 @@ msgstr ""
 "\n"
 "  ARG1 & ARG2       ARG1 om inget av argumenten är null eller 0, annars 0\n"
 
-#: src/expr.c:106
+#: src/expr.c:107
 msgid ""
 "\n"
 "  ARG1 < ARG2       ARG1 is less than ARG2\n"
@@ -2486,7 +2485,7 @@ msgstr ""
 "  ARG1 >= ARG2      ARG1 är större än eller lika med ARG2\n"
 "  ARG1 > ARG2       ARG1 är större än ARG2\n"
 
-#: src/expr.c:115
+#: src/expr.c:116
 msgid ""
 "\n"
 "  ARG1 + ARG2       arithmetic sum of ARG1 and ARG2\n"
@@ -2496,7 +2495,7 @@ msgstr ""
 "  ARG1 + ARG2       aritmetisk summa av ARG1 och ARG2\n"
 "  ARG1 - ARG2       aritmetisk differens mellan ARG1 och ARG2\n"
 
-#: src/expr.c:120
+#: src/expr.c:121
 #, c-format
 msgid ""
 "\n"
@@ -2509,7 +2508,7 @@ msgstr ""
 "  ARG1 / ARG2       aritmetisk kvot av ARG1 dividerat med ARG2\n"
 "  ARG1 % ARG2       aritmetisk rest av ARG1 dividerat med ARG2\n"
 
-#: src/expr.c:126
+#: src/expr.c:127
 msgid ""
 "\n"
 "  STRING : REGEXP   anchored pattern match of REGEXP in STRING\n"
@@ -2527,7 +2526,7 @@ msgstr ""
 "  index STRÄNG BOKST      index i STRÄNG där BOKST påträffats, eller 0\n"
 "  length STRÄNG           längden av STRÄNG\n"
 
-#: src/expr.c:135
+#: src/expr.c:136
 msgid ""
 "  + TOKEN                    interpret TOKEN as a string, even if it is a\n"
 "                               keyword like `match' or an operator like `/'\n"
@@ -2540,7 +2539,7 @@ msgstr ""
 "\"/\"\n"
 "  ( UTTRYCK )                värdet av UTTRYCK\n"
 
-#: src/expr.c:141
+#: src/expr.c:142
 msgid ""
 "\n"
 "Beware that many operators need to be escaped or quoted for shells.\n"
@@ -2557,11 +2556,11 @@ msgstr ""
 "returneras \n"
 "antalet tecken som överensstämmer, eller 0.\n"
 
-#: src/expr.c:185 src/expr.c:456 src/expr.c:462 src/expr.c:467 src/expr.c:489
+#: src/expr.c:186 src/expr.c:438 src/expr.c:444 src/expr.c:449 src/expr.c:471
 msgid "syntax error"
 msgstr "syntaxfel"
 
-#: src/expr.c:402
+#: src/expr.c:384
 #, c-format
 msgid ""
 "warning: unportable BRE: `%s': using `^' as the first character\n"
@@ -2571,11 +2570,11 @@ msgstr ""
 "ett\n"
 "grundläggande reguljärt uttryck är inte portabelt; det ignoreras"
 
-#: src/expr.c:604 src/expr.c:643
+#: src/expr.c:586 src/expr.c:625
 msgid "non-numeric argument"
 msgstr "ickenumeriskt argument"
 
-#: src/expr.c:610
+#: src/expr.c:592
 msgid "division by zero"
 msgstr "division med noll"
 
@@ -2756,24 +2755,24 @@ msgstr ""
 msgid "cannot reposition file pointer for %s"
 msgstr "kan inte flytta filpekaren för %s"
 
-#: src/head.c:256 src/tail.c:1393
+#: src/head.c:256 src/tail.c:1388
 #, c-format
 msgid "%s: %s is so large that it is not representable"
 msgstr "%s: %s är så stor att den inte kan representeras"
 
-#: src/head.c:257 src/tail.c:1395
+#: src/head.c:257 src/tail.c:1390
 msgid "number of lines"
 msgstr "antal rader"
 
-#: src/head.c:257 src/tail.c:1396
+#: src/head.c:257 src/tail.c:1391
 msgid "number of bytes"
 msgstr "antal byte"
 
-#: src/head.c:264 src/tail.c:1483
+#: src/head.c:264 src/tail.c:1478
 msgid "invalid number of lines"
 msgstr "felaktigt antal rader"
 
-#: src/head.c:265 src/tail.c:1484
+#: src/head.c:265 src/tail.c:1479
 msgid "invalid number of bytes"
 msgstr "felaktigt antal byte"
 
@@ -3025,7 +3024,7 @@ msgstr ""
 "  -S, --suffix=ÄNDELSE ersätt den vanliga säkerhetskopieändelsen\n"
 "      --verbose       skriv namnet på varje katalog som skapas\n"
 
-#: src/install.c:635 src/ln.c:377 src/mv.c:351
+#: src/install.c:635 src/ln.c:377 src/mv.c:348
 msgid ""
 "\n"
 "The backup suffix is `~', unless set with --suffix or SIMPLE_BACKUP_SUFFIX.\n"
@@ -3370,7 +3369,7 @@ msgstr ""
 "      --target-directory=KATALOG  ange KATALOG som länkarna skall skapas i\n"
 "  -v, --verbose               skriv namnet på varje fil före länkning\n"
 
-#: src/ln.c:490 src/mv.c:462 src/shred.c:1610
+#: src/ln.c:490 src/mv.c:459 src/shred.c:1611
 msgid "missing file argument"
 msgstr "filargument saknas"
 
@@ -3404,74 +3403,74 @@ msgstr "%s: inget inloggningsnamn\n"
 # Dessa två format skall expandera till samma längd.  (Det finns en
 # kommentar omedelbart innan dem i koden om det.  Hur får man xgettext
 # att ta med kommentarer?)
-#: src/ls.c:676
+#: src/ls.c:679
 msgid "%b %e  %Y"
 msgstr "%e %b  %Y"
 
-#: src/ls.c:684
+#: src/ls.c:687
 msgid "%b %e %H:%M"
 msgstr "%e %b %H.%M"
 
-#: src/ls.c:1235
-#, c-format
+#: src/ls.c:1312
+#, fuzzy, c-format
 msgid "ignoring invalid value of environment variable QUOTING_STYLE: %s"
 msgstr "ignorerar ogiltigt värde på miljövariabeln QUOTING_STYLE: %s"
 
-#: src/ls.c:1256
+#: src/ls.c:1339
 #, c-format
 msgid "ignoring invalid width in environment variable COLUMNS: %s"
 msgstr "ignorerar felaktig bredd i miljövariabeln COLUMNS: %s"
 
-#: src/ls.c:1287
+#: src/ls.c:1370
 #, c-format
 msgid "ignoring invalid tab size in environment variable TABSIZE: %s"
 msgstr "ignorerar felaktigt tabulatorsteg i miljövariabeln TABSIZE: %s"
 
-#: src/ls.c:1402
+#: src/ls.c:1487
 #, c-format
 msgid "invalid line width: %s"
 msgstr "felaktig radlängd: %s"
 
-#: src/ls.c:1472
+#: src/ls.c:1557
 #, c-format
 msgid "invalid tab size: %s"
 msgstr "felaktigt tabulatorsteg %s"
 
-#: src/ls.c:1630
+#: src/ls.c:1717
 #, c-format
 msgid "invalid time style format %s"
 msgstr "felaktigt tidsstilsformat %s"
 
-#: src/ls.c:1962
+#: src/ls.c:2049
 #, c-format
 msgid "unrecognized prefix: %s"
 msgstr "okänt prefix: %s"
 
-#: src/ls.c:1985
+#: src/ls.c:2072
 msgid "unparsable value for LS_COLORS environment variable"
 msgstr "obegripligt värde på LS_COLORS-miljövariabeln"
 
-#: src/ls.c:2053
+#: src/ls.c:2140
 #, c-format
 msgid "cannot determine device and inode of %s"
 msgstr "kan inte avgöra enhet och inod för %s"
 
-#: src/ls.c:2063
+#: src/ls.c:2150
 #, c-format
 msgid "not listing already-listed directory: %s"
 msgstr "listar inte redan listad katalog: %s"
 
-#: src/ls.c:2112 src/remove.c:910
+#: src/ls.c:2203 src/remove.c:910
 #, c-format
 msgid "reading directory %s"
 msgstr "läser katalog %s"
 
-#: src/ls.c:2478
+#: src/ls.c:2563
 #, c-format
 msgid "cannot compare file names %s and %s"
 msgstr "kan inte jämföra filnamnen %s och %s"
 
-#: src/ls.c:3619
+#: src/ls.c:3706
 msgid ""
 "List information about the FILEs (the current directory by default).\n"
 "Sort entries alphabetically if none of -cftuSUX nor --sort.\n"
@@ -3481,7 +3480,7 @@ msgstr ""
 "posterna alfabetiskt om ingen av -cftuSUX eller --sort anges.\n"
 "\n"
 
-#: src/ls.c:3627
+#: src/ls.c:3714
 msgid ""
 "  -a, --all                  do not hide entries starting with .\n"
 "  -A, --almost-all           do not list implied . and ..\n"
@@ -3493,7 +3492,7 @@ msgstr ""
 "      --author               skriv ut författare för varje fil\n"
 "  -b, --escape               skriv oktala koder för ickegrafiska tecken\n"
 
-#: src/ls.c:3633
+#: src/ls.c:3720
 msgid ""
 "      --block-size=SIZE      use SIZE-byte blocks\n"
 "  -B, --ignore-backups       do not list implied entries ending with ~\n"
@@ -3512,7 +3511,7 @@ msgstr ""
 "                               med -l: visa ctime och sortera alfabetiskt\n"
 "                               annars: sortera efter ctime\n"
 
-#: src/ls.c:3641
+#: src/ls.c:3728
 msgid ""
 "  -C                         list entries by columns\n"
 "      --color[=WHEN]         control whether color is used to distinguish "
@@ -3531,7 +3530,7 @@ msgstr ""
 "  -d, --directory            lista kataloger istället för deras innehåll\n"
 "  -D, --dired                anpassa utdata för Emacs dired-funktion\n"
 
-#: src/ls.c:3648
+#: src/ls.c:3735
 msgid ""
 "  -f                         do not sort, enable -aU, disable -lst\n"
 "  -F, --classify             append indicator (one of */=@|) to entries\n"
@@ -3546,7 +3545,7 @@ msgstr ""
 "                               single-column -1, verbose -l, vertical -C\n"
 "      --full-time            som -l --time-style=full-iso\n"
 
-#: src/ls.c:3655
+#: src/ls.c:3742
 msgid ""
 "  -g                         like -l, but do not list owner\n"
 "  -G, --no-group             inhibit display of group information\n"
@@ -3563,7 +3562,7 @@ msgstr ""
 "1024\n"
 "  -H, --dereference-command-line  följ symboliska länkar på kommandoraden\n"
 
-#: src/ls.c:3662
+#: src/ls.c:3749
 msgid ""
 "      --indicator-style=WORD append indicator with style WORD to entry "
 "names:\n"
@@ -3583,7 +3582,7 @@ msgstr ""
 "                               skalMÖNSTER\n"
 "  -k                         som --block-size=1K\n"
 
-#: src/ls.c:3669
+#: src/ls.c:3756
 msgid ""
 "  -l                         use a long listing format\n"
 "  -L, --dereference          when showing file information for a symbolic\n"
@@ -3600,7 +3599,7 @@ msgstr ""
 "  -m                         fyll bredden med en kommaseparerad lista av "
 "poster\n"
 
-#: src/ls.c:3676
+#: src/ls.c:3763
 msgid ""
 "  -n, --numeric-uid-gid      like -l, but list numeric UIDs and GIDs\n"
 "  -N, --literal              print raw entry names (don't treat e.g. "
@@ -3616,7 +3615,7 @@ msgstr ""
 "  -p, --file-type            lägg till en indikator (en av /=@|) till "
 "poster\n"
 
-#: src/ls.c:3683
+#: src/ls.c:3770
 msgid ""
 "  -q, --hide-control-chars   print ? instead of non graphic characters\n"
 "      --show-control-chars   show non graphic characters as-is (default\n"
@@ -3637,7 +3636,7 @@ msgstr ""
 "                               literal, locale, shell, shell-always, c, "
 "escape\n"
 
-#: src/ls.c:3691
+#: src/ls.c:3778
 msgid ""
 "  -r, --reverse              reverse order while sorting\n"
 "  -R, --recursive            list subdirectories recursively\n"
@@ -3647,7 +3646,7 @@ msgstr ""
 "  -R, --recursive            visa underkataloger rekursivt\n"
 "  -s, --size                 skriv storleken i block för varje fil\n"
 
-#: src/ls.c:3696
+#: src/ls.c:3783
 msgid ""
 "  -S                         sort by file size\n"
 "      --sort=WORD            extension -X, none -U, size -S, time -t,\n"
@@ -3670,7 +3669,7 @@ msgstr ""
 "                               angiven tid som sorteringsnyckel om --"
 "sort=time\n"
 
-#: src/ls.c:3705
+#: src/ls.c:3792
 msgid ""
 "      --time-style=STYLE     show times using style STYLE:\n"
 "                               full-iso, long-iso, iso, locale, +FORMAT\n"
@@ -3695,7 +3694,7 @@ msgstr ""
 "  -t                         sortera efter modifieringstid\n"
 "  -T, --tabsize=KOLUMN       antag tabulatorsteg varje KOLUMN, inte var 8:e\n"
 
-#: src/ls.c:3716
+#: src/ls.c:3803
 msgid ""
 "  -u                         with -lt: sort by, and show, access time\n"
 "                               with -l: show access time and sort by name\n"
@@ -3710,7 +3709,7 @@ msgstr ""
 "  -U                         sortera inte; lista poster i katalogordning\n"
 "  -v                         sortera efter version\n"
 
-#: src/ls.c:3723
+#: src/ls.c:3810
 msgid ""
 "  -w, --width=COLS           assume screen width instead of current value\n"
 "  -x                         list entries by lines instead of by columns\n"
@@ -3722,7 +3721,7 @@ msgstr ""
 "  -X                         sortera alfabetiskt efter ändelser\n"
 "  -1                         lista en fil per rad\n"
 
-#: src/ls.c:3735
+#: src/ls.c:3822
 msgid ""
 "\n"
 "By default, color is not used to distinguish types of files.  That is\n"
@@ -4022,7 +4021,7 @@ msgstr "kan inte sätta rättigheter på %s"
 msgid "Mike Parker, David MacKenzie, and Jim Meyering"
 msgstr "Mike Parker, David MacKenzie och Jim Meyering"
 
-#: src/mv.c:320
+#: src/mv.c:317
 msgid ""
 "Rename SOURCE to DEST, or move SOURCE(s) to DIRECTORY.\n"
 "\n"
@@ -4030,7 +4029,7 @@ msgstr ""
 "Byt namn på KÄLLA till DEST eller flytta KÄLLor till KATALOG.\n"
 "\n"
 
-#: src/mv.c:327
+#: src/mv.c:324
 msgid ""
 "      --backup[=CONTROL]       make a backup of each existing destination "
 "file\n"
@@ -4049,7 +4048,7 @@ msgstr ""
 "  -i, --interactive            fråga innan något skrivs över\n"
 "                                 detsamma som --reply=query\n"
 
-#: src/mv.c:335
+#: src/mv.c:332
 msgid ""
 "      --reply={yes,no,query}   specify how to handle the prompt about an\n"
 "                                 existing destination file\n"
@@ -4063,7 +4062,7 @@ msgstr ""
 "                                 KÄLLargument\n"
 "  -S, --suffix=ÄNDELSE         ersätt den vanliga säkerhetskopieändelsen\n"
 
-#: src/mv.c:342
+#: src/mv.c:339
 msgid ""
 "      --target-directory=DIRECTORY  move all SOURCE arguments into "
 "DIRECTORY\n"
@@ -4079,12 +4078,12 @@ msgstr ""
 "                                 inte finns\n"
 "  -v, --verbose                förklara vad som görs\n"
 
-#: src/mv.c:470
+#: src/mv.c:467
 #, c-format
 msgid "specified target, %s is not a directory"
 msgstr "angivet mål, %s är inte en katalog"
 
-#: src/mv.c:478
+#: src/mv.c:475
 msgid "when moving multiple files, last argument must be a directory"
 msgstr "när flera filer flyttas måste sista argumentet vara en katalog"
 
@@ -4222,22 +4221,22 @@ msgstr ""
 "  rz   högerjusterat, inledande nollor\n"
 "\n"
 
-#: src/nl.c:500
+#: src/nl.c:504
 #, c-format
 msgid "invalid starting line number: `%s'"
 msgstr "felaktigt första radnummer: \"%s\""
 
-#: src/nl.c:510
+#: src/nl.c:514
 #, c-format
 msgid "invalid line number increment: `%s'"
 msgstr "felaktig ökning av radnummer: \"%s\""
 
-#: src/nl.c:523
+#: src/nl.c:527
 #, c-format
 msgid "invalid number of blank lines: `%s'"
 msgstr "felaktigt antal tomma rader: \"%s\""
 
-#: src/nl.c:537
+#: src/nl.c:541
 #, c-format
 msgid "invalid line number field width: `%s'"
 msgstr "felaktig bredd på radnumrets fält: \"%s\""
@@ -4528,12 +4527,12 @@ msgstr ""
 "  -s, --serial            klistra in en fil i taget i stället för "
 "parallellt\n"
 
-#: src/pathchk.c:145
+#: src/pathchk.c:146
 #, c-format
 msgid "Usage: %s [OPTION]... NAME...\n"
 msgstr "Användning: %s [FLAGGA]... NAMN...\n"
 
-#: src/pathchk.c:146
+#: src/pathchk.c:147
 msgid ""
 "Diagnose unportable constructs in NAME.\n"
 "\n"
@@ -4543,27 +4542,27 @@ msgstr ""
 "\n"
 "  -p, --portability   kontrollera mot alla POSIX-system, inte bara detta\n"
 
-#: src/pathchk.c:236
+#: src/pathchk.c:237
 #, c-format
 msgid "path `%s' contains nonportable character `%c'"
 msgstr "sökvägen \"%s\" innehåller det icke-portabla tecknet \"%c\""
 
-#: src/pathchk.c:256
+#: src/pathchk.c:257
 #, c-format
 msgid "`%s' is not a directory"
 msgstr "\"%s\" är inte någon katalog"
 
-#: src/pathchk.c:267
+#: src/pathchk.c:268
 #, c-format
 msgid "directory `%s' is not searchable"
 msgstr "katalogen \"%s\" är inte sökbar"
 
-#: src/pathchk.c:354
+#: src/pathchk.c:355
 #, c-format
 msgid "name `%s' has length %ld; exceeds limit of %ld"
 msgstr "namnet \"%s\" har längden %ld; överskrider gränsen på %ld"
 
-#: src/pathchk.c:380
+#: src/pathchk.c:381
 #, c-format
 msgid "path `%s' has length %d; exceeds limit of %ld"
 msgstr "sökvägen \"%s\" har längden %d; överskrider gränsen på %ld"
@@ -4605,11 +4604,13 @@ msgid "Login"
 msgstr "Inloggningsnamn"
 
 #: src/pinky.c:388
-msgid "   Name"
+#, fuzzy
+msgid "Name"
 msgstr "   Namn"
 
 #: src/pinky.c:389
-msgid "TTY"
+#, fuzzy
+msgid " TTY"
 msgstr "TTY"
 
 #: src/pinky.c:391
@@ -5054,8 +5055,9 @@ msgstr ""
 "  \\v      vertikal tabulator\n"
 
 #: src/printf.c:128
+#, fuzzy
 msgid ""
-"  \\xNNN   byte with hexadecimal value NNN (1 to 3 digits)\n"
+"  \\xNN    byte with hexadecimal value NN (1 to 2 digits)\n"
 "\n"
 "  \\uNNNN  character with hexadecimal value NNNN (4 digits)\n"
 "  \\UNNNNNNNN  character with hexadecimal value NNNNNNNN (8 digits)\n"
@@ -5090,31 +5092,31 @@ msgstr "%s:  ett numeriskt värde förväntas"
 msgid "%s: value not completely converted"
 msgstr "%s: värdet kunde inte konverteras helt"
 
-#: src/printf.c:251 src/printf.c:275
+#: src/printf.c:251 src/printf.c:277
 msgid "missing hexadecimal number in escape"
 msgstr "saknar hexadecimal siffra i kontrollsekvens"
 
-#: src/printf.c:287
+#: src/printf.c:289
 #, c-format
 msgid "invalid universal character name \\%c%0*x"
 msgstr "ogiltigt universellt-teckennamn \\%c%0*x"
 
-#: src/printf.c:293
+#: src/printf.c:295
 #, c-format
 msgid "\\%c: invalid escape"
 msgstr "\\%c: felaktig kontrollsekvens"
 
-#: src/printf.c:501
+#: src/printf.c:503
 #, c-format
 msgid "%%%c: invalid directive"
 msgstr "%%%c: felaktigt direktiv"
 
-#: src/printf.c:558
+#: src/printf.c:560
 #, c-format
 msgid "Usage: %s format [argument...]\n"
 msgstr "Användning: %s format [argument...]\n"
 
-#: src/printf.c:576
+#: src/printf.c:578
 #, c-format
 msgid "warning: ignoring excess arguments, starting with `%s'"
 msgstr "varning: ignorerar överflödiga argument, startar med \"%s\""
@@ -5517,12 +5519,12 @@ msgstr "felaktig formatsträng: \"%s\""
 msgid "format string may not be specified when printing equal width strings"
 msgstr "formatsträng får inte anges när strängar med lika vidd skrivs"
 
-#: src/shred.c:175
+#: src/shred.c:172
 #, c-format
 msgid "Usage: %s [OPTIONS] FILE [...]\n"
 msgstr "Användning: %s [FLAGGOR] FIL [...]\n"
 
-#: src/shred.c:176
+#: src/shred.c:173
 msgid ""
 "Overwrite the specified FILE(s) repeatedly, in order to make it harder\n"
 "for even very expensive hardware probing to recover the data.\n"
@@ -5532,7 +5534,7 @@ msgstr ""
 "även för väldigt dyra hårdvaruutrustningar att ta fram data.\n"
 "\n"
 
-#: src/shred.c:184
+#: src/shred.c:181
 #, c-format
 msgid ""
 "  -f, --force    change permissions to allow writing if necessary\n"
@@ -5543,7 +5545,7 @@ msgstr ""
 "  -n, --iterations=N  Skriv över N gånger istället för standard (%d)\n"
 "  -s, --size=N   strimla detta antal byte (ändelse som K, M, G fungerar)\n"
 
-#: src/shred.c:189
+#: src/shred.c:186
 msgid ""
 "  -u, --remove   truncate and remove file after overwriting\n"
 "  -v, --verbose  show progress\n"
@@ -5558,7 +5560,7 @@ msgstr ""
 "                   dölja strimlandet\n"
 "  -              strimla standard ut\n"
 
-#: src/shred.c:198
+#: src/shred.c:195
 msgid ""
 "\n"
 "Delete FILE(s) if --remove (-u) is specified.  The default is not to remove\n"
@@ -5575,7 +5577,7 @@ msgstr ""
 "--remove.\n"
 "\n"
 
-#: src/shred.c:206
+#: src/shred.c:203
 msgid ""
 "CAUTION: Note that shred relies on a very important assumption:\n"
 "that the filesystem overwrites data in place.  This is the traditional\n"
@@ -5591,7 +5593,7 @@ msgstr ""
 "någon effekt:\n"
 "\n"
 
-#: src/shred.c:214
+#: src/shred.c:211
 msgid ""
 "* log-structured or journaled filesystems, such as those supplied with\n"
 "  AIX and Solaris (and JFS, ReiserFS, XFS, Ext3, etc.)\n"
@@ -5611,7 +5613,7 @@ msgstr ""
 "* filsystem som tar ögonblicksbilder, såsom Network Appliances NFS-server\n"
 "\n"
 
-#: src/shred.c:224
+#: src/shred.c:221
 msgid ""
 "* filesystems that cache in temporary locations, such as NFS\n"
 "  version 3 clients\n"
@@ -5630,83 +5632,83 @@ msgstr ""
 "kopior av filen som inte kan tas bort, och som gör att det går att\n"
 "återskapa den strimlade filen senare.\n"
 
-#: src/shred.c:822
+#: src/shred.c:819
 #, c-format
 msgid "%s: cannot rewind"
 msgstr "%s: kan inte backa till början"
 
-#: src/shred.c:845
+#: src/shred.c:842
 #, c-format
 msgid "%s: pass %lu/%lu (%s)..."
 msgstr "%s: pass %lu/%lu (%s)..."
 
-#: src/shred.c:882
+#: src/shred.c:879
 #, c-format
 msgid "%s: error writing at offset %s"
 msgstr "%s: fel vid skrivning vid position %s"
 
-#: src/shred.c:913
+#: src/shred.c:908
 #, c-format
 msgid "%s: file too large"
 msgstr "%s: filen är för stor"
 
-#: src/shred.c:934
+#: src/shred.c:931
 #, c-format
 msgid "%s: pass %lu/%lu (%s)...%s"
 msgstr "%s: pass %lu/%lu (%s)...%s"
 
-#: src/shred.c:944
+#: src/shred.c:947
 #, c-format
 msgid "%s: pass %lu/%lu (%s)...%s/%s %d%%"
 msgstr "%s: pass %lu/%lu (%s)...%s/%s %d%%"
 
-#: src/shred.c:1205
+#: src/shred.c:1206
 #, c-format
 msgid "%s: invalid file type"
 msgstr "%s: ogiltig filtyp"
 
-#: src/shred.c:1222
+#: src/shred.c:1223
 #, c-format
 msgid "%s: file has negative size"
 msgstr "%s: filen har negativ storlek"
 
-#: src/shred.c:1274
+#: src/shred.c:1275
 #, c-format
 msgid "%s: error truncating"
 msgstr "%s: fel vid avhuggning"
 
-#: src/shred.c:1295
+#: src/shred.c:1296
 #, c-format
 msgid "%s: cannot shred append-only file descriptor"
 msgstr ""
 "%s: kan inte skriva över filidentiferare som bara är öppnad för tillägg"
 
-#: src/shred.c:1380
+#: src/shred.c:1381
 #, c-format
 msgid "%s: removing"
 msgstr "%s: tar bort"
 
-#: src/shred.c:1421
+#: src/shred.c:1422
 #, c-format
 msgid "%s: renamed to %s"
 msgstr "%s: namnändrad till %s"
 
-#: src/shred.c:1447
+#: src/shred.c:1448
 #, c-format
 msgid "%s: removed"
 msgstr "%s: borttagen"
 
-#: src/shred.c:1512
+#: src/shred.c:1513
 #, c-format
 msgid "%s: cannot remove"
 msgstr "%s: kan inte ta bort"
 
-#: src/shred.c:1560
+#: src/shred.c:1561
 #, c-format
 msgid "%s: invalid number of passes"
 msgstr "%s: ogiltigt antal pass"
 
-#: src/shred.c:1577
+#: src/shred.c:1578
 #, c-format
 msgid "%s: invalid file size"
 msgstr "%s: ogiltig filstorlek"
@@ -5740,7 +5742,7 @@ msgstr ""
 msgid "invalid time interval `%s'"
 msgstr "felaktigt tidsintervall: \"%s\""
 
-#: src/sleep.c:177 src/tail.c:1036
+#: src/sleep.c:177 src/tail.c:1031
 msgid "cannot read realtime clock"
 msgstr "kan inte läsa realtidsklockan"
 
@@ -5748,7 +5750,7 @@ msgstr "kan inte läsa realtidsklockan"
 msgid "Mike Haertel and Paul Eggert"
 msgstr "Mike Haertel och Paul Eggert"
 
-#: src/sort.c:283
+#: src/sort.c:280
 msgid ""
 "Write sorted concatenation of all FILE(s) to standard output.\n"
 "\n"
@@ -5760,7 +5762,7 @@ msgstr ""
 "Sorteringsflaggor:\n"
 "\n"
 
-#: src/sort.c:292
+#: src/sort.c:289
 msgid ""
 "  -b, --ignore-leading-blanks ignore leading blanks\n"
 "  -d, --dictionary-order      consider only blanks and alphanumeric "
@@ -5772,7 +5774,7 @@ msgstr ""
 "tecken\n"
 "  -f, --ignore-case           byt gemener mot versaler\n"
 
-#: src/sort.c:297
+#: src/sort.c:294
 msgid ""
 "  -g, --general-numeric-sort  compare according to general numerical value\n"
 "  -i, --ignore-nonprinting    consider only printable characters\n"
@@ -5787,7 +5789,7 @@ msgstr ""
 "  -n, --numeric-sort          jämför i enlighet strängens numeriska värde\n"
 "  -r, --reverse               kasta om resultatet av jämförelser\n"
 
-#: src/sort.c:305
+#: src/sort.c:302
 msgid ""
 "Other options:\n"
 "\n"
@@ -5810,7 +5812,7 @@ msgstr ""
 "                              utvägsjämförelse\n"
 "  -S, --buffer-size=STORLEK använd STORLEK för huvudminnesbuffer\n"
 
-#: src/sort.c:315
+#: src/sort.c:312
 #, c-format
 msgid ""
 "  -t, --field-separator=SEP use SEP instead of non- to whitespace "
@@ -5830,11 +5832,11 @@ msgstr ""
 "                              annars: mata endast ut den första av flera "
 "lika\n"
 
-#: src/sort.c:322
+#: src/sort.c:319
 msgid "  -z, --zero-terminated     end lines with 0 byte, not newline\n"
 msgstr "  -z, --zero-terminated     avsluta rader med byte 0, inte ny rad\n"
 
-#: src/sort.c:327
+#: src/sort.c:324
 msgid ""
 "\n"
 "POS is F[.C][OPTS], where F is the field number and C the character "
@@ -5853,7 +5855,7 @@ msgstr ""
 "\n"
 "STORLEK kan följas av följande multiplikativa ändelser:\n"
 
-#: src/sort.c:336
+#: src/sort.c:333
 #, c-format
 msgid ""
 "% 1% of memory, b 1, K 1024 (default), and so on for M, G, T, P, E, Z, Y.\n"
@@ -5875,92 +5877,92 @@ msgstr ""
 "Sätt LC_ALL=C för att få traditionell sorteringsordning som använder\n"
 "de underliggande bytevärdena.\n"
 
-#: src/sort.c:447
+#: src/sort.c:444
 msgid "cannot create temporary file"
 msgstr "kan inte skapa temporärfil"
 
-#: src/sort.c:470
+#: src/sort.c:467
 msgid "open failed"
 msgstr "open misslyckades"
 
-#: src/sort.c:490 src/sort.c:2495
+#: src/sort.c:487 src/sort.c:2496
 msgid "close failed"
 msgstr "stängning misslyckades"
 
-#: src/sort.c:498
+#: src/sort.c:495
 msgid "write failed"
 msgstr "skrivfel"
 
-#: src/sort.c:644
+#: src/sort.c:641
 msgid "sort size"
 msgstr "sorteringsstorlek"
 
-#: src/sort.c:718
+#: src/sort.c:715
 msgid "stat failed"
 msgstr "stat misslyckades"
 
-#: src/sort.c:975
+#: src/sort.c:972
 msgid "read failed"
 msgstr "read misslyckades"
 
-#: src/sort.c:1573
+#: src/sort.c:1570
 #, c-format
 msgid "%s: %s:%s: disorder: "
 msgstr "%s: %s:%s: oordning: "
 
-#: src/sort.c:1577
+#: src/sort.c:1574
 msgid "standard error"
 msgstr "standard fel"
 
-#: src/sort.c:2035
+#: src/sort.c:2032
 #, c-format
 msgid "%s: invalid field specification `%s'"
 msgstr "%s: felaktig fältspecifikation \"%s\""
 
-#: src/sort.c:2061
+#: src/sort.c:2058
 #, c-format
 msgid "%s: count `%.*s' too large"
 msgstr "%s: antal \"%.*s\" för stort"
 
-#: src/sort.c:2067
+#: src/sort.c:2064
 #, c-format
 msgid "%s: invalid count at start of `%s'"
 msgstr "%s: felaktigt antal i början på \"%s\""
 
-#: src/sort.c:2297
+#: src/sort.c:2298
 msgid "invalid number after `-'"
 msgstr "felaktigt nummer efter \"-\""
 
-#: src/sort.c:2300 src/sort.c:2346 src/sort.c:2373
+#: src/sort.c:2301 src/sort.c:2347 src/sort.c:2374
 msgid "invalid number after `.'"
 msgstr "felaktigt nummer efter \".\""
 
-#: src/sort.c:2303 src/sort.c:2382
+#: src/sort.c:2304 src/sort.c:2383
 msgid "stray character in field spec"
 msgstr "extra tecken i fältspecifikation"
 
-#: src/sort.c:2337
+#: src/sort.c:2338
 msgid "invalid number at field start"
 msgstr "felaktigt nummer vid fältstart"
 
-#: src/sort.c:2341 src/sort.c:2369
+#: src/sort.c:2342 src/sort.c:2370
 msgid "field number is zero"
 msgstr "fältnummer är noll"
 
-#: src/sort.c:2350
+#: src/sort.c:2351
 msgid "character offset is zero"
 msgstr "teckenplats är noll"
 
-#: src/sort.c:2365
+#: src/sort.c:2366
 msgid "invalid number after `,'"
 msgstr "felaktigt nummer efter \",\""
 
-#: src/sort.c:2410
+#: src/sort.c:2411
 #, c-format
 msgid "multi-character tab `%s'"
 msgstr "flerteckenstabulator \"%s\""
 
-#: src/sort.c:2478
+#: src/sort.c:2479
 #, c-format
 msgid "extra operand `%s' not allowed with -c"
 msgstr "extra operand \"%s\" inte tillåtet med -c"
@@ -6010,45 +6012,45 @@ msgstr "Slut på utfiländelser"
 msgid "creating file `%s'\n"
 msgstr "skapar fil \"%s\"\n"
 
-#: src/split.c:364
+#: src/split.c:342
 msgid "cannot split in more than one way"
 msgstr "kan inte dela på mer än ett sätt"
 
-#: src/split.c:417
+#: src/split.c:395
 #, c-format
 msgid "%s: invalid suffix length"
 msgstr "%s: felaktig ändelselängd"
 
-#: src/split.c:431 src/split.c:457
+#: src/split.c:409 src/split.c:435
 #, c-format
 msgid "%s: invalid number of bytes"
 msgstr "%s: felaktigt antal byte"
 
-#: src/split.c:444
+#: src/split.c:422
 #, c-format
 msgid "%s: invalid number of lines"
 msgstr "%s: felaktigt antal rader"
 
-#: src/split.c:497
+#: src/split.c:475
 #, c-format
 msgid "`-%d' option is obsolete; use `-l %d'"
 msgstr "flagga \"-%d\" är föråldrad, använd \"-l %d\""
 
-#: src/split.c:510
+#: src/split.c:488
 msgid "invalid number"
 msgstr "ogiltigt antal"
 
-#: src/stat.c:634
+#: src/stat.c:631
 #, c-format
 msgid "cannot read file system information for %s"
 msgstr "kan inte läsa filsysteminformation för %s"
 
-#: src/stat.c:710
+#: src/stat.c:707
 #, c-format
 msgid "Usage: %s [OPTION] FILE...\n"
 msgstr "Användning: %s [FLAGGA] FIL...\n"
 
-#: src/stat.c:711
+#: src/stat.c:708
 msgid ""
 "Display file or filesystem status.\n"
 "\n"
@@ -6064,14 +6066,15 @@ msgstr ""
 "  -L, --link            följ länkar\n"
 "  -t, --terse           skriv informationen i kortfattat format\n"
 
-#: src/stat.c:722
+#: src/stat.c:719
+#, fuzzy
 msgid ""
 "\n"
 "The valid format sequences for files (without --filesystem):\n"
 "\n"
-"  %A - Access rights in human readable form\n"
-"  %a - Access rights in octal\n"
-"  %b - Number of blocks allocated\n"
+"  %A   Access rights in human readable form\n"
+"  %a   Access rights in octal\n"
+"  %b   Number of blocks allocated\n"
 msgstr ""
 "\n"
 "De giltiga formatsekvenserna för filer (utan --filesystem):\n"
@@ -6080,14 +6083,15 @@ msgstr ""
 "  %a - Åtkomsträttigheter oktalt\n"
 "  %b - Antal använda block\n"
 
-#: src/stat.c:729
+#: src/stat.c:726
+#, fuzzy
 msgid ""
-"  %D - Device number in hex\n"
-"  %d - Device number in decimal\n"
-"  %F - File type\n"
-"  %f - raw mode in hex\n"
-"  %G - Group name of owner\n"
-"  %g - Group ID of owner\n"
+"  %D   Device number in hex\n"
+"  %d   Device number in decimal\n"
+"  %F   File type\n"
+"  %f   raw mode in hex\n"
+"  %G   Group name of owner\n"
+"  %g   Group ID of owner\n"
 msgstr ""
 "  %D - Enhetsnummer hexadecimalt\n"
 "  %d - Enhetsnummer decimalt\n"
@@ -6096,16 +6100,17 @@ msgstr ""
 "  %G - Gruppnamn på ägare\n"
 "  %g - Gruppid på ägare\n"
 
-#: src/stat.c:737
+#: src/stat.c:734
+#, fuzzy
 msgid ""
-"  %h - Number of hard links\n"
-"  %i - Inode number\n"
-"  %N - Quoted File name with dereference if symbolic link\n"
-"  %n - File name\n"
-"  %o - IO block size\n"
-"  %s - Total size, in bytes\n"
-"  %T - Minor device type in hex\n"
-"  %t - Major device type in hex\n"
+"  %h   Number of hard links\n"
+"  %i   Inode number\n"
+"  %N   Quoted File name with dereference if symbolic link\n"
+"  %n   File name\n"
+"  %o   IO block size\n"
+"  %s   Total size, in bytes\n"
+"  %T   Minor device type in hex\n"
+"  %t   Major device type in hex\n"
 msgstr ""
 "  %h - Antal hårda länkar\n"
 "  %i - Inodnummer\n"
@@ -6116,16 +6121,17 @@ msgstr ""
 "  %T - Undre enhetsnummer hexadecimalt\n"
 "  %t - Övre enhetsnummer hexadecimalt\n"
 
-#: src/stat.c:747
+#: src/stat.c:744
+#, fuzzy
 msgid ""
-"  %U - User name of owner\n"
-"  %u - User ID of owner\n"
-"  %X - Time of last access as seconds since Epoch\n"
-"  %x - Time of last access\n"
-"  %Y - Time of last modification as seconds since Epoch\n"
-"  %y - Time of last modification\n"
-"  %Z - Time of last change as seconds since Epoch\n"
-"  %z - Time of last change\n"
+"  %U   User name of owner\n"
+"  %u   User ID of owner\n"
+"  %X   Time of last access as seconds since Epoch\n"
+"  %x   Time of last access\n"
+"  %Y   Time of last modification as seconds since Epoch\n"
+"  %y   Time of last modification\n"
+"  %Z   Time of last change as seconds since Epoch\n"
+"  %z   Time of last change\n"
 "\n"
 msgstr ""
 "  %U - Användarnamn på ägare\n"
@@ -6138,15 +6144,16 @@ msgstr ""
 "  %z - Senaste ändringstidpunkt\n"
 "\n"
 
-#: src/stat.c:759
+#: src/stat.c:756
+#, fuzzy
 msgid ""
 "Valid format sequences for file systems:\n"
 "\n"
-"  %a - Free blocks available to non-superuser\n"
-"  %b - Total data blocks in file system\n"
-"  %c - Total file nodes in file system\n"
-"  %d - Free file nodes in file system\n"
-"  %f - Free blocks in file system\n"
+"  %a   Free blocks available to non-superuser\n"
+"  %b   Total data blocks in file system\n"
+"  %c   Total file nodes in file system\n"
+"  %d   Free file nodes in file system\n"
+"  %f   Free blocks in file system\n"
 msgstr ""
 "Giltiga formatsekvenser för filsystem:\n"
 "\n"
@@ -6156,14 +6163,15 @@ msgstr ""
 "  %d - Fria filnoder i filsystem\n"
 "  %f - Fria block i filsystem\n"
 
-#: src/stat.c:768
+#: src/stat.c:765
+#, fuzzy
 msgid ""
-"  %i - File System id in hex\n"
-"  %l - Maximum length of filenames\n"
-"  %n - File name\n"
-"  %s - Optimal transfer block size\n"
-"  %T - Type in human readable form\n"
-"  %t - Type in hex\n"
+"  %i   File System id in hex\n"
+"  %l   Maximum length of filenames\n"
+"  %n   File name\n"
+"  %s   Optimal transfer block size\n"
+"  %T   Type in human readable form\n"
+"  %t   Type in hex\n"
 msgstr ""
 "  %i - Filsystemid hexadecimalt\n"
 "  %l - Maxlängd på filnamn\n"
@@ -6652,7 +6660,7 @@ msgstr "new_mode: inställning\n"
 msgid "%s: no size information for this device"
 msgstr "%s: ingen storleksinformation på denna enhet"
 
-#: src/stty.c:1914
+#: src/stty.c:1947
 #, c-format
 msgid "invalid integer argument `%s'"
 msgstr "felaktigt heltalsargument \"%s\""
@@ -6925,67 +6933,67 @@ msgstr ""
 msgid "closing %s (fd=%d)"
 msgstr "stänger %s (fd=%d)"
 
-#: src/tail.c:396
-#, c-format
-msgid "%s: cannot seek to offset %s%s"
+#: src/tail.c:391
+#, fuzzy, c-format
+msgid "%s: cannot seek to offset %s"
 msgstr "%s: kan inte söka till position %s%s"
 
-#: src/tail.c:400
-#, c-format
-msgid "%s: cannot seek to relative offset %s%s"
+#: src/tail.c:395
+#, fuzzy, c-format
+msgid "%s: cannot seek to relative offset %s"
 msgstr "%s: kan inte söka till relativ position %s%s"
 
-#: src/tail.c:405
-#, c-format
-msgid "%s: cannot seek to end-relative offset %s%s"
+#: src/tail.c:400
+#, fuzzy, c-format
+msgid "%s: cannot seek to end-relative offset %s"
 msgstr "%s: kan inte söka till slut-relativ position %s%s"
 
-#: src/tail.c:823
+#: src/tail.c:818
 #, c-format
 msgid "`%s' has become inaccessible"
 msgstr "\"%s\" har blivit oåtkomlig"
 
 # Hu vilka översättninga!!
-#: src/tail.c:840
+#: src/tail.c:835
 #, c-format
 msgid "`%s' has been replaced with an untailable file; giving up on this name"
 msgstr "\"%s\" har ersatts av en fil som inte kan följas; ger upp detta namn"
 
-#: src/tail.c:861
+#: src/tail.c:856
 #, c-format
 msgid "`%s' has become accessible"
 msgstr "\"%s\" har blivit åtkomlig"
 
-#: src/tail.c:869
+#: src/tail.c:864
 #, c-format
 msgid "`%s' has appeared;  following end of new file"
 msgstr "\"%s\" har dykt upp; följer slutet på en ny fil"
 
-#: src/tail.c:880
+#: src/tail.c:875
 #, c-format
 msgid "`%s' has been replaced;  following end of new file"
 msgstr "\"%s\" har bytts ut, följer slutet på den nya filen"
 
-#: src/tail.c:1005
+#: src/tail.c:1000
 #, c-format
 msgid "%s: file truncated"
 msgstr "%s: fil stympad"
 
-#: src/tail.c:1025
+#: src/tail.c:1020
 msgid "no files remaining"
 msgstr "inga fler filer"
 
-#: src/tail.c:1241
+#: src/tail.c:1236
 #, c-format
 msgid "%s: cannot follow end of this type of file; giving up on this name"
 msgstr "%s: kan inte följa slutet på denna sorts fil, ger upp med detta namn"
 
-#: src/tail.c:1361
+#: src/tail.c:1356
 #, c-format
 msgid "%c: invalid suffix character in obsolescent option"
 msgstr "%c: ogiltigt ändelsetecken i gammalmodig flagga"
 
-#: src/tail.c:1410
+#: src/tail.c:1405
 #, c-format
 msgid ""
 "too many arguments;  When using tail's obsolescent option syntax (%s)\n"
@@ -6996,7 +7004,7 @@ msgstr ""
 "får det inte vara mer än ett filargument.  Använd de likvärdiga\n"
 "flaggorna -n eller -c istället."
 
-#: src/tail.c:1419
+#: src/tail.c:1414
 #, c-format
 msgid ""
 "Warning: it is not portable to use two or more file arguments with\n"
@@ -7007,45 +7015,45 @@ msgstr ""
 "med tail:s föråldrade flaggsyntax (%s).  Använd de likvärdiga\n"
 "flaggorna -n eller -c istället."
 
-#: src/tail.c:1428
+#: src/tail.c:1423
 #, c-format
 msgid "`%s' option is obsolete; use `%s-%c %.*s'"
 msgstr "flagga \"%s\" är föråldrad, använd \"%s-%c %.*s\""
 
-#: src/tail.c:1489
+#: src/tail.c:1484
 #, c-format
 msgid "%s is larger than the maximum file size on this system"
 msgstr "%s är större än den maximala filstorleken på detta system"
 
-#: src/tail.c:1515
+#: src/tail.c:1510
 #, c-format
 msgid "%s: invalid maximum number of unchanged stats between opens"
 msgstr "%s: ogiltigt antal oförändrade status mellan öppningar"
 
-#: src/tail.c:1527
+#: src/tail.c:1522
 #, c-format
 msgid "%s: invalid maximum number of consecutive size changes"
 msgstr "%s: ogiltigt antal successiva storleksändringar"
 
-#: src/tail.c:1539
+#: src/tail.c:1534
 #, c-format
 msgid "%s: invalid PID"
 msgstr "%s: felaktigt PID"
 
-#: src/tail.c:1554
+#: src/tail.c:1549
 #, c-format
 msgid "%s: invalid number of seconds"
 msgstr "%s: ogiltigt antal sekunder"
 
-#: src/tail.c:1573
+#: src/tail.c:1568
 msgid "warning: --retry is useful only when following by name"
 msgstr "varning: --retry är bara användbar när filer följs via namn"
 
-#: src/tail.c:1577
+#: src/tail.c:1572
 msgid "warning: PID ignored; --pid=PID is useful only when following"
 msgstr "varning: PID ignorerad, --pid=PID är användbar bara när man följer"
 
-#: src/tail.c:1580
+#: src/tail.c:1575
 msgid "warning: --pid=PID is not supported on this system"
 msgstr "varning: --pid=PID stöds inte på detta system"
 
@@ -8184,3 +8192,7 @@ msgid ""
 msgstr ""
 "Skriv gång på gång en rad med alla specifierade STRÄNG(ar), eller \"y\"\n"
 "\n"
+
+#, fuzzy
+#~ msgid "environment variable, QUOTING_STYLE"
+#~ msgstr "ignorerar ogiltigt värde på miljövariabeln QUOTING_STYLE: %s"

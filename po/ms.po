@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: coreutils 4.5.3\n"
-"POT-Creation-Date: 2002-10-13 16:06+0200\n"
+"POT-Creation-Date: 2002-12-13 21:25+0100\n"
 "PO-Revision-Date: 2002-10-20 10:57+0800\n"
 "Last-Translator: Hasbullah Bin Pit (sebol) <sebol@ikhlas.com>\n"
 "Language-Team: Malay <translation-team-ms@lists.sourceforge.net>\n"
@@ -13,17 +13,17 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: lib/argmatch.c:161
+#: lib/argmatch.c:129
 #, c-format
 msgid "invalid argument %s for %s"
 msgstr "hujah tidak sah %s bagi %s"
 
-#: lib/argmatch.c:162
+#: lib/argmatch.c:130
 #, c-format
 msgid "ambiguous argument %s for %s"
 msgstr "hujah ambiguous %s bagi %s"
 
-#: lib/argmatch.c:181
+#: lib/argmatch.c:149
 msgid "Valid arguments are:"
 msgstr "Hujah sah adalah:"
 
@@ -35,13 +35,13 @@ msgstr "ralat program"
 msgid "stack overflow"
 msgstr "tindanan melimpah"
 
-#: lib/closeout.c:107 src/cat.c:189 src/cat.c:272 src/cat.c:326
+#: lib/closeout.c:103 src/cat.c:189 src/cat.c:272 src/cat.c:326
 #: src/cksum.c:267 src/head.c:152 src/head.c:196 src/tail.c:323
-#: src/tail.c:1664 src/tr.c:1666 src/tr.c:1912 src/tr.c:2020
+#: src/tail.c:1659 src/tr.c:1666 src/tr.c:1912 src/tr.c:2020
 msgid "write error"
 msgstr "ralat menulis"
 
-#: lib/error.c:129 lib/error.c:157
+#: lib/error.c:135 lib/error.c:163
 msgid "Unknown system error"
 msgstr "Ralat sistem yang tidak diketahui"
 
@@ -93,99 +93,99 @@ msgstr "objek memori terkongsi"
 msgid "weird file"
 msgstr "fail pelik"
 
-#: lib/getopt.c:692 lib/getopt.c:704
+#: lib/getopt.c:688 lib/getopt.c:700
 #, c-format
 msgid "%s: option `%s' is ambiguous\n"
 msgstr "%s: opsyen `%s' adalah ambiguous\n"
 
-#: lib/getopt.c:737 lib/getopt.c:741
+#: lib/getopt.c:733 lib/getopt.c:737
 #, c-format
 msgid "%s: option `--%s' doesn't allow an argument\n"
 msgstr "%s: opsyen `--%s' tidak mengizinkan hujah\n"
 
-#: lib/getopt.c:750 lib/getopt.c:755
+#: lib/getopt.c:746 lib/getopt.c:751
 #, c-format
 msgid "%s: option `%c%s' doesn't allow an argument\n"
 msgstr "%s: opsyen `%c%s' tidak mengizinkan hujah\n"
 
-#: lib/getopt.c:791 lib/getopt.c:804 lib/getopt.c:1093 lib/getopt.c:1106
+#: lib/getopt.c:787 lib/getopt.c:800 lib/getopt.c:1089 lib/getopt.c:1102
 #, c-format
 msgid "%s: option `%s' requires an argument\n"
 msgstr "%s: opsyen  `%s' memerlukan hujah\n"
 
-#: lib/getopt.c:842 lib/getopt.c:845
+#: lib/getopt.c:838 lib/getopt.c:841
 #, c-format
 msgid "%s: unrecognized option `--%s'\n"
 msgstr "%s: opensyen tidak dikenali `--%s'\n"
 
-#: lib/getopt.c:853 lib/getopt.c:856
+#: lib/getopt.c:849 lib/getopt.c:852
 #, c-format
 msgid "%s: unrecognized option `%c%s'\n"
 msgstr "%s: opensyen tidak dikenali `%c%s'\n"
 
-#: lib/getopt.c:903 lib/getopt.c:906
+#: lib/getopt.c:899 lib/getopt.c:902
 #, c-format
 msgid "%s: illegal option -- %c\n"
 msgstr "%s: opsyen tidak dibenarkan -- %c\n"
 
-#: lib/getopt.c:912 lib/getopt.c:915
+#: lib/getopt.c:908 lib/getopt.c:911
 #, c-format
 msgid "%s: invalid option -- %c\n"
 msgstr "%s: opsyen tidak sah -- %c\n"
 
-#: lib/getopt.c:962 lib/getopt.c:973 lib/getopt.c:1159 lib/getopt.c:1172
+#: lib/getopt.c:958 lib/getopt.c:969 lib/getopt.c:1155 lib/getopt.c:1168
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
 msgstr "%s: opsyen memerlukan hujah -- %c\n"
 
-#: lib/getopt.c:1025 lib/getopt.c:1036
+#: lib/getopt.c:1021 lib/getopt.c:1032
 #, c-format
 msgid "%s: option `-W %s' is ambiguous\n"
 msgstr "%s: opsyen `-W %s' adalah ambiguous\n"
 
-#: lib/getopt.c:1060 lib/getopt.c:1072
+#: lib/getopt.c:1056 lib/getopt.c:1068
 #, c-format
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "%s: opsyen `-W %s' tidak mengizinkan hujan\n"
 
-#: lib/human.c:365
+#: lib/human.c:519
 msgid "block size"
 msgstr "saiz blok"
 
-#: lib/makepath.c:176 src/copy.c:1270 src/mkdir.c:170
+#: lib/makepath.c:168 src/copy.c:1270 src/mkdir.c:170
 #, c-format
 msgid "cannot create directory %s"
 msgstr "tak dapat mencipta direktori %s"
 
-#: lib/makepath.c:182 lib/makepath.c:424 src/cp.c:446 src/cp.c:468
+#: lib/makepath.c:174 lib/makepath.c:416 src/cp.c:446 src/cp.c:468
 #, c-format
 msgid "%s exists but is not a directory"
 msgstr "%s wujud tapi ianya bukan direktori"
 
-#: lib/makepath.c:319 lib/makepath.c:381 lib/makepath.c:443
+#: lib/makepath.c:311 lib/makepath.c:373 lib/makepath.c:435
 #, c-format
 msgid "cannot change owner and/or group of %s"
 msgstr "tak dapat menukar hakmilik dan/atau kumpulan %s"
 
-#: lib/makepath.c:341
+#: lib/makepath.c:333
 #, c-format
 msgid "cannot chdir to directory %s"
 msgstr "tak dapat chdir ke direktori %s"
 
-#: lib/makepath.c:395 lib/makepath.c:449
+#: lib/makepath.c:387 lib/makepath.c:441
 #, c-format
 msgid "cannot change permissions of %s"
 msgstr "tak dapat menukar keizinan %s"
 
-#: lib/obstack.c:500 lib/obstack.c:503 lib/xmalloc.c:66
+#: lib/obstack.c:487 lib/obstack.c:490 lib/xmalloc.c:63
 msgid "memory exhausted"
 msgstr "memori keletihan"
 
-#: lib/quotearg.c:270
+#: lib/quotearg.c:236
 msgid "`"
 msgstr "`"
 
-#: lib/quotearg.c:271
+#: lib/quotearg.c:237
 msgid "'"
 msgstr "`"
 
@@ -197,81 +197,81 @@ msgstr "^[yY]"
 msgid "^[nN]"
 msgstr "^[tT]"
 
-#: lib/unicodeio.c:159
+#: lib/unicodeio.c:155
 msgid "iconv function not usable"
 msgstr "fungsi iconv tak boleh digunakan"
 
-#: lib/unicodeio.c:161
+#: lib/unicodeio.c:157
 msgid "iconv function not available"
 msgstr "fungsi iconv tidak ada"
 
-#: lib/unicodeio.c:168
+#: lib/unicodeio.c:164
 msgid "character out of range"
 msgstr "aksara di luar julat"
 
-#: lib/unicodeio.c:231
+#: lib/unicodeio.c:227
 #, c-format
 msgid "cannot convert U+%04X to local character set"
 msgstr "tak dapat menukar U+%04X ke set aksara lokal"
 
-#: lib/unicodeio.c:233
+#: lib/unicodeio.c:229
 #, c-format
 msgid "cannot convert U+%04X to local character set: %s"
 msgstr "tak dapat menukar U+%04X ke set aksara lokal: %s"
 
-#: lib/userspec.c:178
+#: lib/userspec.c:174
 msgid "invalid user"
 msgstr "pengguna tidak sah"
 
-#: lib/userspec.c:179
+#: lib/userspec.c:175
 msgid "invalid group"
 msgstr "kumpulan tidak sah"
 
-#: lib/userspec.c:181
+#: lib/userspec.c:177
 msgid "cannot get the login group of a numeric UID"
 msgstr "tak boleh mendapatkan kumpulan logmasuk untuk UID numerik"
 
-#: lib/userspec.c:183
+#: lib/userspec.c:179
 msgid "cannot omit both user and group"
 msgstr "tak dapat omit kedua-dua pengguna dan kumpulan"
 
-#: lib/version-etc.c:61
+#: lib/version-etc.c:57
 #, c-format
 msgid "Written by %s.\n"
 msgstr "Ditulis oleh %s.\n"
 
-#: lib/version-etc.c:67
+#: lib/version-etc.c:63
 msgid ""
 "This is free software; see the source for copying conditions.  There is NO\n"
 "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
 msgstr ""
 
-#: lib/xmemcoll.c:61
+#: lib/xmemcoll.c:57
 msgid "string comparison failed"
 msgstr "perbandingan rentetan gagal"
 
-#: lib/xmemcoll.c:62
+#: lib/xmemcoll.c:58
 msgid "Set LC_ALL='C' to work around the problem."
 msgstr "Tetapkan LC_ALL='C' untuk mengatasi masalah."
 
-#: lib/xmemcoll.c:64
+#: lib/xmemcoll.c:60
 #, c-format
 msgid "The strings compared were %s and %s."
 msgstr "Rentetan dibandingkan adalah %s dan %s."
 
 #: src/basename.c:50 src/cat.c:88 src/chgrp.c:122 src/chmod.c:239
 #: src/chown.c:95 src/chroot.c:41 src/cksum.c:276 src/comm.c:69 src/cp.c:160
-#: src/csplit.c:1492 src/cut.c:163 src/date.c:115 src/dd.c:284 src/df.c:747
-#: src/dircolors.c:100 src/dirname.c:42 src/du.c:181 src/echo.c:73
-#: src/env.c:115 src/expand.c:106 src/expr.c:85 src/factor.c:70 src/fmt.c:267
+#: src/csplit.c:1492 src/cut.c:163 src/date.c:115 src/dd.c:284 src/df.c:776
+#: src/dircolors.c:99 src/dirname.c:42 src/du.c:192 src/echo.c:73
+#: src/env.c:115 src/expand.c:106 src/expr.c:86 src/factor.c:70 src/fmt.c:267
 #: src/fold.c:63 src/head.c:84 src/hostid.c:44 src/hostname.c:63 src/id.c:83
 #: src/install.c:593 src/join.c:140 src/kill.c:89 src/link.c:47 src/ln.c:335
-#: src/logname.c:44 src/ls.c:3614 src/md5sum.c:121 src/mkdir.c:57
-#: src/mkfifo.c:51 src/mknod.c:61 src/mv.c:310 src/nice.c:63 src/nl.c:172
-#: src/od.c:283 src/paste.c:399 src/pathchk.c:141 src/pinky.c:465
+#: src/logname.c:44 src/ls.c:3701 src/md5sum.c:121 src/mkdir.c:57
+#: src/mkfifo.c:51 src/mknod.c:61 src/mv.c:307 src/nice.c:63 src/nl.c:172
+#: src/od.c:283 src/paste.c:399 src/pathchk.c:142 src/pinky.c:465
 #: src/pr.c:2750 src/printenv.c:59 src/printf.c:93 src/ptx.c:1855 src/pwd.c:43
-#: src/rm.c:96 src/rmdir.c:142 src/seq.c:78 src/shred.c:171 src/sleep.c:59
-#: src/sort.c:275 src/split.c:91 src/stat.c:706 src/stty.c:497 src/su.c:433
+#: src/rm.c:96 src/rmdir.c:142 src/seq.c:78 src/shred.c:168 src/sleep.c:59
+#: src/sort.c:272 src/split.c:91 src/stat.c:703 src/stty.c:497 src/su.c:433
 #: src/sum.c:56 src/sync.c:40 src/tac.c:123 src/tail.c:230 src/tee.c:59
 #: src/test.c:985 src/touch.c:234 src/tr.c:323 src/tsort.c:93 src/tty.c:58
 #: src/uname.c:106 src/unexpand.c:371 src/uniq.c:135 src/unlink.c:47
@@ -299,17 +299,17 @@ msgstr ""
 
 #: src/basename.c:66 src/cat.c:124 src/chgrp.c:152 src/chmod.c:265
 #: src/chown.c:139 src/chroot.c:59 src/cksum.c:291 src/comm.c:86 src/cp.c:257
-#: src/csplit.c:1534 src/cut.c:208 src/date.c:217 src/dd.c:331 src/df.c:786
-#: src/dircolors.c:121 src/dirname.c:58 src/du.c:226 src/echo.c:105
-#: src/env.c:134 src/expand.c:131 src/expr.c:148 src/factor.c:90
+#: src/csplit.c:1534 src/cut.c:208 src/date.c:217 src/dd.c:331 src/df.c:815
+#: src/dircolors.c:120 src/dirname.c:58 src/du.c:237 src/echo.c:105
+#: src/env.c:134 src/expand.c:131 src/expr.c:149 src/factor.c:90
 #: src/false.c:28 src/fmt.c:297 src/fold.c:86 src/head.c:115 src/hostid.c:57
 #: src/hostname.c:76 src/id.c:104 src/install.c:648 src/join.c:180
-#: src/kill.c:119 src/link.c:59 src/ln.c:390 src/logname.c:55 src/ls.c:3743
-#: src/md5sum.c:157 src/mkdir.c:76 src/mkfifo.c:68 src/mknod.c:86 src/mv.c:364
-#: src/nice.c:77 src/nl.c:227 src/od.c:370 src/paste.c:423 src/pathchk.c:153
+#: src/kill.c:119 src/link.c:59 src/ln.c:390 src/logname.c:55 src/ls.c:3830
+#: src/md5sum.c:157 src/mkdir.c:76 src/mkfifo.c:68 src/mknod.c:86 src/mv.c:361
+#: src/nice.c:77 src/nl.c:227 src/od.c:370 src/paste.c:423 src/pathchk.c:154
 #: src/pinky.c:492 src/pr.c:2862 src/printenv.c:72 src/printf.c:141
-#: src/pwd.c:54 src/rm.c:128 src/rmdir.c:162 src/seq.c:104 src/shred.c:234
-#: src/sleep.c:75 src/sort.c:346 src/split.c:123 src/stat.c:776 src/stty.c:711
+#: src/pwd.c:54 src/rm.c:128 src/rmdir.c:162 src/seq.c:104 src/shred.c:231
+#: src/sleep.c:75 src/sort.c:343 src/split.c:123 src/stat.c:773 src/stty.c:711
 #: src/su.c:454 src/sum.c:76 src/sync.c:51 src/tac.c:146 src/tail.c:300
 #: src/tee.c:72 src/test.c:1067 src/touch.c:265 src/tr.c:396 src/true.c:28
 #: src/tsort.c:105 src/tty.c:70 src/uname.c:128 src/unexpand.c:394
@@ -324,16 +324,16 @@ msgstr ""
 "Lapor pepijat ke <%s>.\n"
 
 #: src/basename.c:114 src/chgrp.c:210 src/chmod.c:353 src/chown.c:211
-#: src/chroot.c:78 src/csplit.c:1464 src/dirname.c:89 src/expr.c:177
+#: src/chroot.c:78 src/csplit.c:1464 src/dirname.c:89 src/expr.c:178
 #: src/install.c:284 src/link.c:87 src/mkdir.c:124 src/mkfifo.c:113
-#: src/mknod.c:141 src/pathchk.c:193 src/rm.c:200 src/rmdir.c:206
-#: src/seq.c:411 src/sleep.c:150 src/stat.c:827 src/unlink.c:88
+#: src/mknod.c:141 src/pathchk.c:194 src/rm.c:200 src/rmdir.c:206
+#: src/seq.c:411 src/sleep.c:150 src/stat.c:824 src/unlink.c:88
 msgid "too few arguments"
 msgstr "terlalu sedikit hujah"
 
-#: src/basename.c:115 src/dircolors.c:483 src/dirname.c:90 src/hostid.c:79
+#: src/basename.c:115 src/dircolors.c:482 src/dirname.c:90 src/hostid.c:79
 #: src/hostname.c:122 src/link.c:93 src/mknod.c:143 src/seq.c:417
-#: src/split.c:525 src/tr.c:1848 src/unlink.c:94 src/uptime.c:244
+#: src/split.c:503 src/tr.c:1848 src/unlink.c:94 src/uptime.c:244
 #: src/users.c:169 src/who.c:764
 msgid "too many arguments"
 msgstr "terlalu banyak hujah"
@@ -388,7 +388,7 @@ msgstr ""
 msgid "cannot do ioctl on `%s'"
 msgstr "tak dapat ioctl pada  `%s'"
 
-#: src/cat.c:669 src/dd.c:1225 src/od.c:1013 src/tee.c:181
+#: src/cat.c:669 src/dd.c:1222 src/od.c:1013 src/tee.c:181
 msgid "standard output"
 msgstr "output standard"
 
@@ -444,7 +444,8 @@ msgstr ""
 
 #: src/chgrp.c:138 src/chown.c:112
 msgid ""
-"  -h, --no-dereference   affect symbolic links instead of any referenced file\n"
+"  -h, --no-dereference   affect symbolic links instead of any referenced "
+"file\n"
 "                         (available only on systems that can change the\n"
 "                         ownership of a symlink)\n"
 msgstr ""
@@ -505,7 +506,8 @@ msgstr ""
 msgid ""
 "Change the mode of each FILE to MODE.\n"
 "\n"
-"  -c, --changes           like verbose but report only when a change is made\n"
+"  -c, --changes           like verbose but report only when a change is "
+"made\n"
 "  -f, --silent, --quiet   suppress most error messages\n"
 "  -v, --verbose           output a diagnostic for every file processed\n"
 "      --reference=RFILE   use RFILE's mode instead of MODE values\n"
@@ -600,8 +602,10 @@ msgstr ""
 msgid ""
 "      --from=CURRENT_OWNER:CURRENT_GROUP\n"
 "                         change the owner and/or group of each file only if\n"
-"                         its current owner and/or group match those specified\n"
-"                         here.  Either may be omitted, in which case a match\n"
+"                         its current owner and/or group match those "
+"specified\n"
+"                         here.  Either may be omitted, in which case a "
+"match\n"
 "                         is not required for the omitted attribute.\n"
 msgstr ""
 
@@ -675,7 +679,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/comm.c:35 src/ls.c:126 src/uniq.c:40
+#: src/comm.c:35 src/ls.c:129 src/uniq.c:40
 msgid "Richard Stallman and David MacKenzie"
 msgstr "Richard Stallman dan David MacKenzie"
 
@@ -703,7 +707,7 @@ msgstr "Tak dapat mengakses %s"
 msgid "cannot open %s for reading"
 msgstr "tak dapat buka %s untuk dibaca"
 
-#: src/copy.c:232 src/copy.c:286 src/copy.c:301 src/dd.c:1201
+#: src/copy.c:232 src/copy.c:286 src/copy.c:301 src/dd.c:1199
 #, c-format
 msgid "cannot fstat %s"
 msgstr "tak dapat fstat %s"
@@ -724,7 +728,7 @@ msgstr "tak dapat membuang %s"
 msgid "cannot create regular file %s"
 msgstr "tak dapat memcipta fail biasa %s"
 
-#: src/copy.c:328 src/dd.c:818 src/dd.c:1012
+#: src/copy.c:328 src/dd.c:816 src/dd.c:1010
 #, c-format
 msgid "reading %s"
 msgstr "membaca %s"
@@ -734,7 +738,7 @@ msgstr "membaca %s"
 msgid "cannot lseek %s"
 msgstr "tak dapat lseek %s"
 
-#: src/copy.c:377 src/copy.c:401 src/dd.c:1056 src/dd.c:1117
+#: src/copy.c:377 src/copy.c:401 src/dd.c:1054 src/dd.c:1115
 #, c-format
 msgid "writing %s"
 msgstr "menulis %s"
@@ -754,7 +758,7 @@ msgstr "%s: menindih %s, menindih mod %04lo? "
 msgid "%s: overwrite %s? "
 msgstr "%s: tindih %s? "
 
-#: src/copy.c:810 src/copy.c:848 src/stat.c:664
+#: src/copy.c:810 src/copy.c:848 src/stat.c:661
 #, c-format
 msgid "cannot stat %s"
 msgstr "tak dapat stat %s"
@@ -879,7 +883,7 @@ msgstr "tak boleh mencipta fifo %s"
 msgid "cannot create special file %s"
 msgstr "tak boleh mencipta fail istimewa %s"
 
-#: src/copy.c:1397 src/ls.c:2368 src/stat.c:461
+#: src/copy.c:1397 src/ls.c:2453 src/stat.c:458
 #, c-format
 msgid "cannot read symbolic link %s"
 msgstr "tak dapat membaca pautan simbolik %s"
@@ -928,7 +932,7 @@ msgstr "%s -> %s (nyahbackup)\n"
 msgid "Torbjorn Granlund, David MacKenzie, and Jim Meyering"
 msgstr "Torbjorn Granlund, David MacKenzie, dan Jim Meyering"
 
-#: src/cp.c:164 src/mv.c:314
+#: src/cp.c:164 src/mv.c:311
 #, c-format
 msgid ""
 "Usage: %s [OPTION]... SOURCE DEST\n"
@@ -947,22 +951,28 @@ msgstr ""
 "Salin SUMBER ke DEST, atau banyak SUMBER ke DIREKTORI.\n"
 "\n"
 
-#: src/cp.c:174 src/csplit.c:1505 src/cut.c:175 src/df.c:757 src/du.c:190
+#: src/cp.c:174 src/csplit.c:1505 src/cut.c:175 src/df.c:786 src/du.c:201
 #: src/expand.c:119 src/fmt.c:277 src/fold.c:76 src/head.c:98
-#: src/install.c:609 src/kill.c:103 src/ln.c:354 src/ls.c:3624 src/mkdir.c:66
-#: src/mkfifo.c:60 src/mknod.c:70 src/mv.c:324 src/nl.c:185 src/paste.c:413
-#: src/pr.c:2763 src/ptx.c:1867 src/shred.c:181 src/sort.c:289 src/split.c:104
+#: src/install.c:609 src/kill.c:103 src/ln.c:354 src/ls.c:3711 src/mkdir.c:66
+#: src/mkfifo.c:60 src/mknod.c:70 src/mv.c:321 src/nl.c:185 src/paste.c:413
+#: src/pr.c:2763 src/ptx.c:1867 src/shred.c:178 src/sort.c:286 src/split.c:104
 #: src/tac.c:136 src/tail.c:244 src/touch.c:243 src/unexpand.c:384
 #: src/uniq.c:148
-msgid "Mandatory arguments to long options are mandatory for short options too.\n"
-msgstr "Hujah mandatori kepada opsyen panjang andalah mandatori bagi opsyen pendek juga.\n"
+msgid ""
+"Mandatory arguments to long options are mandatory for short options too.\n"
+msgstr ""
+"Hujah mandatori kepada opsyen panjang andalah mandatori bagi opsyen pendek "
+"juga.\n"
 
 #: src/cp.c:177
 msgid ""
 "  -a, --archive                same as -dpR\n"
-"      --backup[=CONTROL]       make a backup of each existing destination file\n"
-"  -b                           like --backup but does not accept an argument\n"
-"      --copy-contents          copy contents of special files when recursive\n"
+"      --backup[=CONTROL]       make a backup of each existing destination "
+"file\n"
+"  -b                           like --backup but does not accept an "
+"argument\n"
+"      --copy-contents          copy contents of special files when "
+"recursive\n"
 "  -d                           same as --no-dereference --preserve=link\n"
 msgstr ""
 
@@ -996,7 +1006,8 @@ msgstr ""
 msgid ""
 "  -R, -r, --recursive          copy directories recursively\n"
 "      --remove-destination     remove each existing destination file before\n"
-"                                 attempting to open it (contrast with --force)\n"
+"                                 attempting to open it (contrast with --"
+"force)\n"
 msgstr ""
 
 #: src/cp.c:209
@@ -1012,7 +1023,8 @@ msgstr ""
 msgid ""
 "  -s, --symbolic-link          make symbolic links instead of copying\n"
 "  -S, --suffix=SUFFIX          override the usual backup suffix\n"
-"      --target-directory=DIRECTORY  move all SOURCE arguments into DIRECTORY\n"
+"      --target-directory=DIRECTORY  move all SOURCE arguments into "
+"DIRECTORY\n"
 msgstr ""
 
 #: src/cp.c:221
@@ -1030,7 +1042,8 @@ msgid ""
 "By default, sparse SOURCE files are detected by a crude heuristic and the\n"
 "corresponding DEST file is made sparse as well.  That is the behavior\n"
 "selected by --sparse=auto.  Specify --sparse=always to create a sparse DEST\n"
-"file whenever the SOURCE file contains a long enough sequence of zero bytes.\n"
+"file whenever the SOURCE file contains a long enough sequence of zero "
+"bytes.\n"
 "Use --sparse=never to inhibit creation of sparse files.\n"
 "\n"
 msgstr ""
@@ -1038,12 +1051,13 @@ msgstr ""
 #: src/cp.c:239
 msgid ""
 "The backup suffix is `~', unless set with --suffix or SIMPLE_BACKUP_SUFFIX.\n"
-"The version control method may be selected via the --backup option or through\n"
+"The version control method may be selected via the --backup option or "
+"through\n"
 "the VERSION_CONTROL environment variable.  Here are the values:\n"
 "\n"
 msgstr ""
 
-#: src/cp.c:245 src/install.c:642 src/ln.c:384 src/mv.c:358
+#: src/cp.c:245 src/install.c:642 src/ln.c:384 src/mv.c:355
 msgid ""
 "  none, off       never make backups (even if --backup is given)\n"
 "  numbered, t     make numbered backups\n"
@@ -1101,7 +1115,7 @@ msgstr "menyalin banyak fail, tetapi hujah terakhir %s adalah bukan direktori"
 msgid "when preserving paths, the destination must be a directory"
 msgstr "bila mengekalkan path, destinasi mestilah direktori"
 
-#: src/cp.c:878 src/install.c:219 src/ln.c:434 src/mv.c:408
+#: src/cp.c:878 src/install.c:219 src/ln.c:434 src/mv.c:405
 #, c-format
 msgid ""
 "warning: --version-control (-V) is obsolete;  support for it\n"
@@ -1116,7 +1130,7 @@ msgstr "pautan simbolik tidak disokong pada sistem ini"
 msgid "cannot make both hard and symbolic links"
 msgstr "tak dapat buat kecua-dua pautan simbolik dan keras"
 
-#: src/cp.c:1016 src/install.c:275 src/ln.c:530 src/mv.c:486
+#: src/cp.c:1016 src/install.c:275 src/ln.c:530 src/mv.c:483
 msgid "backup type"
 msgstr "jenis backup"
 
@@ -1292,9 +1306,9 @@ msgstr ""
 msgid "David Ihnat, David MacKenzie, and Jim Meyering"
 msgstr "Torbjorn Granlund, David MacKenzie, dan Jim Meyering"
 
-#: src/cut.c:167 src/df.c:751 src/du.c:185 src/expand.c:110 src/fold.c:67
-#: src/head.c:88 src/ls.c:3618 src/nl.c:176 src/paste.c:403 src/pr.c:2754
-#: src/sort.c:279 src/sum.c:60 src/tac.c:127 src/tail.c:234 src/tee.c:63
+#: src/cut.c:167 src/df.c:780 src/du.c:196 src/expand.c:110 src/fold.c:67
+#: src/head.c:88 src/ls.c:3705 src/nl.c:176 src/paste.c:403 src/pr.c:2754
+#: src/sort.c:276 src/sum.c:60 src/tac.c:127 src/tail.c:234 src/tee.c:63
 #: src/unexpand.c:375 src/wc.c:125
 #, c-format
 msgid "Usage: %s [OPTION]... [FILE]...\n"
@@ -1402,13 +1416,17 @@ msgid ""
 msgstr ""
 "Papar masa semasa dalam FORMAT diberi, atau tetapkan tarikh sistem.\n"
 "\n"
-"  -d, --date=RENTETAN       papar masa diterangkan oleh RENTETAN, bukan `now'\n"
-"  -f, --file=DATEFILE       seperti --date sekali bagi setiap baris DATEFILE\n"
-"  -ITIMESPEC, --iso-8601[=TIMESPEC]  output tarikh/masa dalam format ISO 8601.\n"
+"  -d, --date=RENTETAN       papar masa diterangkan oleh RENTETAN, bukan "
+"`now'\n"
+"  -f, --file=DATEFILE       seperti --date sekali bagi setiap baris "
+"DATEFILE\n"
+"  -ITIMESPEC, --iso-8601[=TIMESPEC]  output tarikh/masa dalam format ISO "
+"8601.\n"
 "                            TIMESPEC=`date' untuk tarikh sahaja,\n"
 "                           `hours', `minutes', atau `seconds' baru tarikh \n"
 "                            dan masa untuk menunjukkan kejituan.\n"
-"                            --iso-8601 tanpa TIMESPEC default kepada `date'.\n"
+"                            --iso-8601 tanpa TIMESPEC default kepada "
+"`date'.\n"
 
 #: src/date.c:135
 msgid ""
@@ -1518,7 +1536,7 @@ msgid ""
 "  `_' (underscore) pad the field with spaces\n"
 msgstr ""
 
-#: src/date.c:239 src/dd.c:1175 src/dircolors.c:540 src/head.c:221
+#: src/date.c:239 src/dd.c:1173 src/dircolors.c:539 src/head.c:221
 #: src/md5sum.c:340 src/md5sum.c:681 src/od.c:959 src/od.c:2001 src/pr.c:1164
 #: src/pr.c:1371 src/pr.c:1493 src/stty.c:912 src/tac.c:483 src/tac.c:489
 #: src/tee.c:151 src/tr.c:2027 src/tsort.c:585
@@ -1552,7 +1570,8 @@ msgid ""
 msgstr ""
 
 #: src/date.c:399
-msgid "a format string may not be specified when using the --rfc-822 (-R) option"
+msgid ""
+"a format string may not be specified when using the --rfc-822 (-R) option"
 msgstr ""
 
 #: src/date.c:435
@@ -1633,153 +1652,159 @@ msgstr ""
 msgid "%s+%s records in\n"
 msgstr "%s+%s rekod masuk\n"
 
-#: src/dd.c:365
+#: src/dd.c:364
 #, c-format
 msgid "%s+%s records out\n"
 msgstr "%s+%s rekod keluar\n"
 
-#: src/dd.c:373
+#: src/dd.c:371
 msgid "truncated record"
 msgstr ""
 
-#: src/dd.c:374
+#: src/dd.c:372
 msgid "truncated records"
 msgstr ""
 
-#: src/dd.c:384
+#: src/dd.c:382
 #, c-format
 msgid "closing input file %s"
 msgstr "menutup fail input %s"
 
-#: src/dd.c:387
+#: src/dd.c:385
 #, c-format
 msgid "closing output file %s"
 msgstr ""
 
-#: src/dd.c:471
+#: src/dd.c:469
 #, c-format
 msgid "writing to %s"
 msgstr "Menulis  ke %s."
 
-#: src/dd.c:503
+#: src/dd.c:501
 #, c-format
 msgid "invalid conversion: %s"
 msgstr "penukaran tidak sah: %s"
 
-#: src/dd.c:559
+#: src/dd.c:557
 #, c-format
 msgid "unrecognized option %s"
 msgstr "opsyen tidak dikenali %s"
 
-#: src/dd.c:612
+#: src/dd.c:610
 #, c-format
 msgid "unrecognized option %s=%s"
 msgstr "opsyen tidak dikenali %s=%s"
 
-#: src/dd.c:618
+#: src/dd.c:616
 #, c-format
 msgid "invalid number %s"
 msgstr "nombor tidak sah %s"
 
-#: src/dd.c:648
-msgid "only one conv in {ascii,ebcdic,ibm}, {lcase,ucase}, {block,unblock}, {unblock,sync}"
+#: src/dd.c:646
+msgid ""
+"only one conv in {ascii,ebcdic,ibm}, {lcase,ucase}, {block,unblock}, "
+"{unblock,sync}"
 msgstr ""
 
-#: src/dd.c:783
+#: src/dd.c:781
 #, c-format
 msgid ""
 "warning: working around lseek kernel bug for file (%s)\n"
 "  of mt_type=0x%0lx -- see <sys/mtio.h> for the list of types"
 msgstr ""
 
-#: src/dd.c:1172 src/dd.c:1190
+#: src/dd.c:1170 src/dd.c:1188
 #, c-format
 msgid "opening %s"
 msgstr "Membuka %s"
 
-#: src/dd.c:1198
+#: src/dd.c:1196
 msgid "file offset out of range"
 msgstr ""
 
-#: src/dd.c:1216
+#: src/dd.c:1214
 #, c-format
 msgid "advancing past %s bytes in output file %s"
 msgstr ""
 
-#: src/df.c:46 src/du.c:66
+#: src/df.c:47 src/du.c:66
 #, fuzzy
 msgid "Torbjorn Granlund, David MacKenzie, Larry McVoy, and Paul Eggert"
 msgstr "Torbjorn Granlund, David MacKenzie, dan Jim Meyering"
 
-#: src/df.c:147
+#: src/df.c:152
 msgid "Filesystem "
 msgstr "Sistem fail"
 
-#: src/df.c:150
+#: src/df.c:155
 msgid "   Type"
 msgstr "   Jenis"
 
-#: src/df.c:155
+#: src/df.c:160
 #, c-format
 msgid "    Inodes   IUsed   IFree IUse%%"
 msgstr ""
 
-#: src/df.c:159
-#, c-format
-msgid "     Size   Used  Avail Use%%"
-msgstr ""
-
-#: src/df.c:161
+#: src/df.c:164
 #, c-format
 msgid "    Size  Used Avail Use%%"
 msgstr ""
 
-#: src/df.c:164
+#: src/df.c:166
 #, c-format
-msgid " %4d-blocks      Used Available Capacity"
+msgid "     Size   Used  Avail Use%%"
 msgstr ""
 
-#: src/df.c:175
+#: src/df.c:169
+#, c-format
+msgid " %4s-blocks      Used Available Capacity"
+msgstr ""
+
+#: src/df.c:200
 #, c-format
 msgid " %4s-blocks      Used Available Use%%"
 msgstr ""
 
-#: src/df.c:178
+#: src/df.c:204
 msgid " Mounted on\n"
 msgstr "dilekapkan pada\n"
 
-#: src/df.c:752
+#: src/df.c:781
 msgid ""
 "Show information about the filesystem on which each FILE resides,\n"
 "or all filesystems by default.\n"
 "\n"
 msgstr ""
 
-#: src/df.c:760
+#: src/df.c:789
 msgid ""
 "  -a, --all             include filesystems having 0 blocks\n"
 "  -B, --block-size=SIZE use SIZE-byte blocks\n"
-"  -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n"
+"  -h, --human-readable  print sizes in human readable format (e.g., 1K 234M "
+"2G)\n"
 "  -H, --si              likewise, but use powers of 1000 not 1024\n"
 msgstr ""
 "  -a, --all             termasuk sistemfail yang mempunyai 0 blok\n"
 "  -B, --block-size=SIZE guna blok SIZE-byte\n"
-"  -h, --human-readable  cetak saiz dalam format bolehdibaca manusia (e.g., 1K 234M 2G)\n"
+"  -h, --human-readable  cetak saiz dalam format bolehdibaca manusia (e.g., "
+"1K 234M 2G)\n"
 "  -H, --si              sebaliknya, guna kuasa 1000 bukannya 1024\n"
 
-#: src/df.c:766
+#: src/df.c:795
 msgid ""
 "  -i, --inodes          list inode information instead of block usage\n"
 "  -k                    like --block-size=1K\n"
 "  -l, --local           limit listing to local filesystems\n"
-"      --no-sync         do not invoke sync before getting usage info (default)\n"
+"      --no-sync         do not invoke sync before getting usage info "
+"(default)\n"
 msgstr ""
 "  -i, --inodes          senarai maklimat inod selain drpd penggunaan blok\n"
 "  -k                    seperti --block-size=1K\n"
 "  -l, --local           hadkan penyenaraian ke sistem fail lokal\n"
-"      --no-sync         jangan panggil sync sebelum mendapat maklumat penggunaan (default)\n"
+"      --no-sync         jangan panggil sync sebelum mendapat maklumat "
+"penggunaan (default)\n"
 
-#: src/df.c:772
+#: src/df.c:801
 msgid ""
 "  -P, --portability     use the POSIX output format\n"
 "      --sync            invoke sync before getting usage info\n"
@@ -1789,42 +1814,45 @@ msgid ""
 "  -v                    (ignored)\n"
 msgstr ""
 "  -P, --portability     menggunakan format output POSIX\n"
-"      --sync            panggil sync sebelum mendapatkan maklumat penggunaan\n"
+"      --sync            panggil sync sebelum mendapatkan maklumat "
+"penggunaan\n"
 "  -t, --type=JENIS      hadkan penyenaraian ke sistemfail jenis JENIS\n"
 "  -T, --print-type      cetak jenis sistemfail\n"
-"  -x, --exclude-type=TYPE   hadkan penyenaraian ke ke sistemfail bukan jenis JENIS\n"
+"  -x, --exclude-type=TYPE   hadkan penyenaraian ke ke sistemfail bukan jenis "
+"JENIS\n"
 "  -v                    (diabaikan)\n"
 
-#: src/df.c:782 src/du.c:222 src/ls.c:3731
+#: src/df.c:811 src/du.c:233 src/ls.c:3818
 msgid ""
 "\n"
 "SIZE may be (or may be an integer optionally followed by) one of following:\n"
 "kB 1000, K 1024, MB 1,000,000, M 1,048,576, and so on for G, T, P, E, Z, Y.\n"
 msgstr ""
 "\n"
-"SAIZ boleh jadi (atau boleh jadi intege diikuti dengan berikut) satu drpd berikut:\n"
+"SAIZ boleh jadi (atau boleh jadi intege diikuti dengan berikut) satu drpd "
+"berikut:\n"
 "kB 1000, K 1024, MB 1,000,000, M 1,048,576, dan lagi bagi G, T, P, E, Z, Y.\n"
 
-#: src/df.c:894
+#: src/df.c:928
 #, c-format
 msgid "file system type %s both selected and excluded"
 msgstr ""
 
-#: src/df.c:938
+#: src/df.c:972
 msgid "Warning: "
 msgstr "Amaran: "
 
-#: src/df.c:941
+#: src/df.c:975
 #, c-format
 msgid "%scannot read table of mounted filesystems"
 msgstr ""
 
-#: src/dircolors.c:104
+#: src/dircolors.c:103
 #, c-format
 msgid "Usage: %s [OPTION]... [FILE]\n"
 msgstr "Penggunaan: %s [OPSYEN]...[FAIL]...\n"
 
-#: src/dircolors.c:105
+#: src/dircolors.c:104
 msgid ""
 "Output commands to set the LS_COLORS environment variable.\n"
 "\n"
@@ -1836,11 +1864,12 @@ msgstr ""
 "Arahan output untuk menetapkan persekitaran pembolehubah LS_COLORS.\n"
 "\n"
 "Tentukan format output:\n"
-"  -b, --sh, --bourne-shell    kod output shell Bourne shell menetapkan LS_COLORS\n"
+"  -b, --sh, --bourne-shell    kod output shell Bourne shell menetapkan "
+"LS_COLORS\n"
 "  -c, --csh, --c-shell        kod output shell C menetapkan LS_COLORS\n"
 "  -p, --print-database        output default\n"
 
-#: src/dircolors.c:115
+#: src/dircolors.c:114
 msgid ""
 "\n"
 "If FILE is specified, read it to determine which colors to use for which\n"
@@ -1848,35 +1877,36 @@ msgid ""
 "For details on the format of these files, run `dircolors --print-database'.\n"
 msgstr ""
 
-#: src/dircolors.c:300
+#: src/dircolors.c:299
 #, c-format
 msgid "%s:%lu: invalid line;  missing second token"
 msgstr ""
 
-#: src/dircolors.c:372
+#: src/dircolors.c:371
 #, c-format
 msgid "%s:%lu: unrecognized keyword %s"
 msgstr "%s:%lu: katakunci tidak dikenali %s"
 
-#: src/dircolors.c:373
+#: src/dircolors.c:372
 msgid "<internal>"
 msgstr "<dalaman>"
 
-#: src/dircolors.c:468
+#: src/dircolors.c:467
 msgid ""
 "the options to output dircolors' internal database and\n"
 "to select a shell syntax are mutually exclusive"
 msgstr ""
 
-#: src/dircolors.c:476
+#: src/dircolors.c:475
 msgid ""
 "no FILE arguments may be used with the option to output\n"
 "dircolors' internal database"
 msgstr ""
 
-#: src/dircolors.c:505
+#: src/dircolors.c:504
 msgid "no SHELL environment variable, and no shell type option given"
-msgstr "tiada pembolehubah persekitaran SHELL; dan tiada opsyen jenis shell diberi"
+msgstr ""
+"tiada pembolehubah persekitaran SHELL; dan tiada opsyen jenis shell diberi"
 
 #: src/dirname.c:33 src/pathchk.c:59
 #, fuzzy
@@ -1899,7 +1929,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/du.c:186
+#: src/du.c:197
 msgid ""
 "Summarize disk usage of each FILE, recursively for directories.\n"
 "\n"
@@ -1907,7 +1937,7 @@ msgstr ""
 "Ringkasan penggunaan cakera bagi setiap FAIL, rekursif bagi direktori.\n"
 "\n"
 
-#: src/du.c:193
+#: src/du.c:204
 msgid ""
 "  -a, --all             write counts for all files, not just directories\n"
 "  -B, --block-size=SIZE use SIZE-byte blocks\n"
@@ -1916,60 +1946,63 @@ msgid ""
 "  -D, --dereference-args  dereference FILEs that are symbolic links\n"
 msgstr ""
 
-#: src/du.c:200
+#: src/du.c:211
 msgid ""
-"  -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n"
+"  -h, --human-readable  print sizes in human readable format (e.g., 1K 234M "
+"2G)\n"
 "  -H, --si              likewise, but use powers of 1000 not 1024\n"
 "  -k                    like --block-size=1K\n"
 "  -l, --count-links     count sizes many times if hard linked\n"
 msgstr ""
 
-#: src/du.c:206
+#: src/du.c:217
 msgid ""
 "  -L, --dereference     dereference all symbolic links\n"
 "  -S, --separate-dirs   do not include size of subdirectories\n"
 "  -s, --summarize       display only a total for each argument\n"
 msgstr ""
 
-#: src/du.c:211
+#: src/du.c:222
 msgid ""
 "  -x, --one-file-system  skip directories on different filesystems\n"
-"  -X FILE, --exclude-from=FILE  Exclude files that match any pattern in FILE.\n"
+"  -X FILE, --exclude-from=FILE  Exclude files that match any pattern in "
+"FILE.\n"
 "      --exclude=PATTERN Exclude files that match PATTERN.\n"
-"      --max-depth=N     print the total for a directory (or file, with --all)\n"
+"      --max-depth=N     print the total for a directory (or file, with --"
+"all)\n"
 "                          only if it is N or fewer levels below the command\n"
 "                          line argument;  --max-depth=0 is the same as\n"
 "                          --summarize\n"
 msgstr ""
 
-#: src/du.c:385
+#: src/du.c:395
 #, c-format
 msgid "cannot change to `..' from directory %s"
 msgstr "tak dapat menukar ke `..' drpd direktori %s"
 
-#: src/du.c:468
+#: src/du.c:479
 #, c-format
 msgid "cannot change to directory %s"
 msgstr "Gagal menukar direktori %s "
 
-#: src/du.c:558 src/ls.c:2145 src/wc.c:591
+#: src/du.c:556 src/ls.c:2236 src/wc.c:591
 msgid "total"
 msgstr "jumlah"
 
-#: src/du.c:622
+#: src/du.c:625
 #, c-format
 msgid "invalid maximum depth %s"
 msgstr "Kedalaman maksimum %s"
 
-#: src/du.c:681
+#: src/du.c:685
 msgid "cannot both summarize and show all entries"
 msgstr ""
 
-#: src/du.c:688
+#: src/du.c:692
 msgid "warning: summarizing is the same as using --max-depth=0"
 msgstr ""
 
-#: src/du.c:694
+#: src/du.c:698
 #, c-format
 msgid "warning: summarizing conflicts with --max-depth=%d"
 msgstr ""
@@ -2047,7 +2080,8 @@ msgid ""
 msgstr ""
 
 #: src/expand.c:126
-msgid "  -t, --tabs=LIST     use comma separated list of explicit tab positions\n"
+msgid ""
+"  -t, --tabs=LIST     use comma separated list of explicit tab positions\n"
 msgstr ""
 
 #: src/expand.c:173 src/unexpand.c:153
@@ -2066,7 +2100,7 @@ msgstr ""
 msgid "`-LIST' option is obsolete; use `-t LIST'"
 msgstr ""
 
-#: src/expr.c:89
+#: src/expr.c:90
 #, c-format
 msgid ""
 "Usage: %s EXPRESSION\n"
@@ -2075,7 +2109,7 @@ msgstr ""
 "Pengunaan: %s UNGKAPAN\n"
 "    atau: %s OPSYEN\n"
 
-#: src/expr.c:97
+#: src/expr.c:98
 msgid ""
 "\n"
 "Print the value of EXPRESSION to standard output.  A blank line below\n"
@@ -2086,7 +2120,7 @@ msgid ""
 "  ARG1 & ARG2       ARG1 if neither argument is null or 0, otherwise 0\n"
 msgstr ""
 
-#: src/expr.c:106
+#: src/expr.c:107
 msgid ""
 "\n"
 "  ARG1 < ARG2       ARG1 is less than ARG2\n"
@@ -2097,14 +2131,14 @@ msgid ""
 "  ARG1 > ARG2       ARG1 is greater than ARG2\n"
 msgstr ""
 
-#: src/expr.c:115
+#: src/expr.c:116
 msgid ""
 "\n"
 "  ARG1 + ARG2       arithmetic sum of ARG1 and ARG2\n"
 "  ARG1 - ARG2       arithmetic difference of ARG1 and ARG2\n"
 msgstr ""
 
-#: src/expr.c:120
+#: src/expr.c:121
 #, c-format
 msgid ""
 "\n"
@@ -2113,7 +2147,7 @@ msgid ""
 "  ARG1 % ARG2       arithmetic remainder of ARG1 divided by ARG2\n"
 msgstr ""
 
-#: src/expr.c:126
+#: src/expr.c:127
 msgid ""
 "\n"
 "  STRING : REGEXP   anchored pattern match of REGEXP in STRING\n"
@@ -2124,7 +2158,7 @@ msgid ""
 "  length STRING              length of STRING\n"
 msgstr ""
 
-#: src/expr.c:135
+#: src/expr.c:136
 msgid ""
 "  + TOKEN                    interpret TOKEN as a string, even if it is a\n"
 "                               keyword like `match' or an operator like `/'\n"
@@ -2132,32 +2166,33 @@ msgid ""
 "  ( EXPRESSION )             value of EXPRESSION\n"
 msgstr ""
 
-#: src/expr.c:141
+#: src/expr.c:142
 msgid ""
 "\n"
 "Beware that many operators need to be escaped or quoted for shells.\n"
 "Comparisons are arithmetic if both ARGs are numbers, else lexicographical.\n"
 "Pattern matches return the string matched between \\( and \\) or null; if\n"
-"\\( and \\) are not used, they return the number of characters matched or 0.\n"
+"\\( and \\) are not used, they return the number of characters matched or "
+"0.\n"
 msgstr ""
 
-#: src/expr.c:185 src/expr.c:456 src/expr.c:462 src/expr.c:467 src/expr.c:489
+#: src/expr.c:186 src/expr.c:438 src/expr.c:444 src/expr.c:449 src/expr.c:471
 #, fuzzy
 msgid "syntax error"
 msgstr "ralat menulis"
 
-#: src/expr.c:402
+#: src/expr.c:384
 #, c-format
 msgid ""
 "warning: unportable BRE: `%s': using `^' as the first character\n"
 "of the basic regular expression is not portable; it is being ignored"
 msgstr ""
 
-#: src/expr.c:604 src/expr.c:643
+#: src/expr.c:586 src/expr.c:625
 msgid "non-numeric argument"
 msgstr "hujah bukan-numerik"
 
-#: src/expr.c:610
+#: src/expr.c:592
 msgid "division by zero"
 msgstr "dibahagi dengan sifar"
 
@@ -2181,7 +2216,8 @@ msgstr ""
 #: src/factor.c:85
 msgid ""
 "\n"
-"  Print the prime factors of all specified integer NUMBERs.  If no arguments\n"
+"  Print the prime factors of all specified integer NUMBERs.  If no "
+"arguments\n"
 "  are specified on the command line, they are read from standard input.\n"
 msgstr ""
 "\n"
@@ -2307,27 +2343,27 @@ msgstr ""
 msgid "cannot reposition file pointer for %s"
 msgstr "tak memperolehi setem masa bagi %s"
 
-#: src/head.c:256 src/tail.c:1393
+#: src/head.c:256 src/tail.c:1388
 #, c-format
 msgid "%s: %s is so large that it is not representable"
 msgstr ""
 
-#: src/head.c:257 src/tail.c:1395
+#: src/head.c:257 src/tail.c:1390
 #, fuzzy
 msgid "number of lines"
 msgstr "nombor hujah yang salah"
 
-#: src/head.c:257 src/tail.c:1396
+#: src/head.c:257 src/tail.c:1391
 #, fuzzy
 msgid "number of bytes"
 msgstr "nombor hujah yang salah"
 
-#: src/head.c:264 src/tail.c:1483
+#: src/head.c:264 src/tail.c:1478
 #, fuzzy
 msgid "invalid number of lines"
 msgstr "nombor tidak sah %s"
 
-#: src/head.c:265 src/tail.c:1484
+#: src/head.c:265 src/tail.c:1479
 #, fuzzy
 msgid "invalid number of bytes"
 msgstr "nombor tidak sah %s"
@@ -2527,27 +2563,32 @@ msgstr ""
 
 #: src/install.c:619
 msgid ""
-"  -D                  create all leading components of DEST except the last,\n"
+"  -D                  create all leading components of DEST except the "
+"last,\n"
 "                        then copy SOURCE to DEST;  useful in the 1st format\n"
-"  -g, --group=GROUP   set group ownership, instead of process' current group\n"
-"  -m, --mode=MODE     set permission mode (as in chmod), instead of rwxr-xr-x\n"
+"  -g, --group=GROUP   set group ownership, instead of process' current "
+"group\n"
+"  -m, --mode=MODE     set permission mode (as in chmod), instead of rwxr-xr-"
+"x\n"
 "  -o, --owner=OWNER   set ownership (super-user only)\n"
 msgstr ""
 
 #: src/install.c:626
 msgid ""
-"  -p, --preserve-timestamps   apply access/modification times of SOURCE files\n"
+"  -p, --preserve-timestamps   apply access/modification times of SOURCE "
+"files\n"
 "                        to corresponding destination files\n"
 "  -s, --strip         strip symbol tables, only for 1st and 2nd formats\n"
 "  -S, --suffix=SUFFIX override the usual backup suffix\n"
 "  -v, --verbose       print the name of each directory as it is created\n"
 msgstr ""
 
-#: src/install.c:635 src/ln.c:377 src/mv.c:351
+#: src/install.c:635 src/ln.c:377 src/mv.c:348
 msgid ""
 "\n"
 "The backup suffix is `~', unless set with --suffix or SIMPLE_BACKUP_SUFFIX.\n"
-"The version control method may be selected via the --backup option or through\n"
+"The version control method may be selected via the --backup option or "
+"through\n"
 "the VERSION_CONTROL environment variable.  Here are the values:\n"
 "\n"
 msgstr ""
@@ -2657,7 +2698,8 @@ msgstr ""
 msgid ""
 "  -s, --signal=SIGNAL, -SIGNAL\n"
 "                   specify the name or number of the signal to be sent\n"
-"  -l, --list       list signal names, or convert signal names to/from numbers\n"
+"  -l, --list       list signal names, or convert signal names to/from "
+"numbers\n"
 "  -t, --table      print a table of signal information\n"
 msgstr ""
 
@@ -2716,7 +2758,8 @@ msgid ""
 "Call the link function to create a link named FILE2 to an existing FILE1.\n"
 "\n"
 msgstr ""
-"Panggil fungsi pautan untuk mencipta pautan bernama FAIL2 ke FILE1 sedia ada.\n"
+"Panggil fungsi pautan untuk mencipta pautan bernama FAIL2 ke FILE1 sedia "
+"ada.\n"
 "\n"
 
 #: src/link.c:98
@@ -2731,7 +2774,8 @@ msgstr "Mike Parker and David MacKenzie"
 #: src/ln.c:167
 #, c-format
 msgid "%s: warning: making a hard link to a symbolic link is not portable"
-msgstr "%s: amaran: membuat pautan keras ke pautan simbolik adalah tidak portable"
+msgstr ""
+"%s: amaran: membuat pautan keras ke pautan simbolik adalah tidak portable"
 
 #: src/ln.c:174
 #, c-format
@@ -2797,7 +2841,8 @@ msgstr ""
 
 #: src/ln.c:357
 msgid ""
-"      --backup[=CONTROL]      make a backup of each existing destination file\n"
+"      --backup[=CONTROL]      make a backup of each existing destination "
+"file\n"
 "  -b                          like --backup but does not accept an argument\n"
 "  -d, -F, --directory         hard link directories (super-user only)\n"
 "  -f, --force                 remove existing destination files\n"
@@ -2814,12 +2859,13 @@ msgstr ""
 #: src/ln.c:369
 msgid ""
 "  -S, --suffix=SUFFIX         override the usual backup suffix\n"
-"      --target-directory=DIRECTORY  specify the DIRECTORY in which to create\n"
+"      --target-directory=DIRECTORY  specify the DIRECTORY in which to "
+"create\n"
 "                                the links\n"
 "  -v, --verbose               print name of each file before linking\n"
 msgstr ""
 
-#: src/ln.c:490 src/mv.c:462 src/shred.c:1610
+#: src/ln.c:490 src/mv.c:459 src/shred.c:1611
 msgid "missing file argument"
 msgstr "kehilangan hujah fail"
 
@@ -2850,74 +2896,76 @@ msgstr ""
 msgid "%s: no login name\n"
 msgstr "%s: tiada nama logmasuk\n"
 
-#: src/ls.c:676
+#: src/ls.c:679
 msgid "%b %e  %Y"
 msgstr "%b %e  %Y"
 
-#: src/ls.c:684
+#: src/ls.c:687
 msgid "%b %e %H:%M"
 msgstr "%b %e %H:%M"
 
-#: src/ls.c:1235
-#, c-format
+#: src/ls.c:1312
+#, fuzzy, c-format
 msgid "ignoring invalid value of environment variable QUOTING_STYLE: %s"
-msgstr "mengabai nilai pembolehubah persekitaran QUOTING_STYLE yang tidak sah: %s"
+msgstr ""
+"mengabai nilai pembolehubah persekitaran QUOTING_STYLE yang tidak sah: %s"
 
-#: src/ls.c:1256
+#: src/ls.c:1339
 #, c-format
 msgid "ignoring invalid width in environment variable COLUMNS: %s"
 msgstr "mengabai lebar yg. tak sah pada pembolehubah persekitaran COLUMNS: %s"
 
-#: src/ls.c:1287
+#: src/ls.c:1370
 #, c-format
 msgid "ignoring invalid tab size in environment variable TABSIZE: %s"
-msgstr "mengabai saiz tab yg. tak sah pada pembolehubah persekitaran TABSIZE: %s"
+msgstr ""
+"mengabai saiz tab yg. tak sah pada pembolehubah persekitaran TABSIZE: %s"
 
-#: src/ls.c:1402
+#: src/ls.c:1487
 #, c-format
 msgid "invalid line width: %s"
 msgstr "lebar baris tidak sah: %s"
 
-#: src/ls.c:1472
+#: src/ls.c:1557
 #, c-format
 msgid "invalid tab size: %s"
 msgstr "saiz tab tidak sah: %s"
 
-#: src/ls.c:1630
+#: src/ls.c:1717
 #, c-format
 msgid "invalid time style format %s"
 msgstr "format gaya tarikh tidak sah %s"
 
-#: src/ls.c:1962
+#: src/ls.c:2049
 #, c-format
 msgid "unrecognized prefix: %s"
 msgstr "prefix tidak dikenali: %s"
 
-#: src/ls.c:1985
+#: src/ls.c:2072
 msgid "unparsable value for LS_COLORS environment variable"
 msgstr "nilai pembolehubah persekitaran LS_COLORS tidak boleh dihantar"
 
-#: src/ls.c:2053
+#: src/ls.c:2140
 #, c-format
 msgid "cannot determine device and inode of %s"
 msgstr "tak dapat menentukan peranti dan inod bagi %s"
 
-#: src/ls.c:2063
+#: src/ls.c:2150
 #, c-format
 msgid "not listing already-listed directory: %s"
 msgstr "tak dapat menyenaraikan direktori tersedia-tersenarai: %s"
 
-#: src/ls.c:2112 src/remove.c:910
+#: src/ls.c:2203 src/remove.c:910
 #, c-format
 msgid "reading directory %s"
 msgstr "membaca direktori %s"
 
-#: src/ls.c:2478
+#: src/ls.c:2563
 #, c-format
 msgid "cannot compare file names %s and %s"
 msgstr "tak boleh banding nama fail %s dan %s"
 
-#: src/ls.c:3619
+#: src/ls.c:3706
 msgid ""
 "List information about the FILEs (the current directory by default).\n"
 "Sort entries alphabetically if none of -cftuSUX nor --sort.\n"
@@ -2927,7 +2975,7 @@ msgstr ""
 "Inih semasukan mengikut abjad jika tiada  -cftuSUX atau --sort.\n"
 "\n"
 
-#: src/ls.c:3627
+#: src/ls.c:3714
 msgid ""
 "  -a, --all                  do not hide entries starting with .\n"
 "  -A, --almost-all           do not list implied . and ..\n"
@@ -2939,37 +2987,45 @@ msgstr ""
 "      --author               cetak penulis bagi setiap fail\n"
 "  -b, --escape               cetak escape oktal bagi aksara bukangrafik\n"
 
-#: src/ls.c:3633
+#: src/ls.c:3720
 msgid ""
 "      --block-size=SIZE      use SIZE-byte blocks\n"
 "  -B, --ignore-backups       do not list implied entries ending with ~\n"
-"  -c                         with -lt: sort by, and show, ctime (time of last\n"
+"  -c                         with -lt: sort by, and show, ctime (time of "
+"last\n"
 "                               modification of file status information)\n"
 "                               with -l: show ctime and sort by name\n"
 "                               otherwise: sort by ctime\n"
 msgstr ""
 "      --block-size=SAIZ      guna blok SAIZ-byte\n"
 "  -B, --ignore-backups       jangan senarai kemasukan berakhir dengan ~\n"
-"  -c                         dengan -lt: isih dengan, dan papar, ctime (masa\n"
-"                               terkahir diubahsuai drpd maklumat status fail)\n"
-"                               dengan -l: papar ctime dan isih mengikut nama\n"
+"  -c                         dengan -lt: isih dengan, dan papar, ctime "
+"(masa\n"
+"                               terkahir diubahsuai drpd maklumat status "
+"fail)\n"
+"                               dengan -l: papar ctime dan isih mengikut "
+"nama\n"
 "                               sebaliknya: isih mengikut ctime\n"
 
-#: src/ls.c:3641
+#: src/ls.c:3728
 msgid ""
 "  -C                         list entries by columns\n"
-"      --color[=WHEN]         control whether color is used to distinguish file\n"
-"                               types.  WHEN may be `never', `always', or `auto'\n"
+"      --color[=WHEN]         control whether color is used to distinguish "
+"file\n"
+"                               types.  WHEN may be `never', `always', or "
+"`auto'\n"
 "  -d, --directory            list directory entries instead of contents\n"
 "  -D, --dired                generate output designed for Emacs' dired mode\n"
 msgstr ""
 "  -C                         senarai kemasukan mengikut kolum\n"
 "      --color[=BILA]         kawal samada warna digunakan untuk membezakan \n"
-"                               jenis fail .  BILA boleh jadi `never', `always', atau `auto'\n"
-"  -d, --directory            senarai kemasukan direktori selain drpd kandungannya\n"
+"                               jenis fail .  BILA boleh jadi `never', "
+"`always', atau `auto'\n"
+"  -d, --directory            senarai kemasukan direktori selain drpd "
+"kandungannya\n"
 "  -D, --dired                jana output direka untuk mod dired Emacs\n"
 
-#: src/ls.c:3648
+#: src/ls.c:3735
 msgid ""
 "  -f                         do not sort, enable -aU, disable -lst\n"
 "  -F, --classify             append indicator (one of */=@|) to entries\n"
@@ -2983,58 +3039,67 @@ msgstr ""
 "                               kolum-tunggal -1, verbose -l, menegak -C\n"
 "      --full-time            seperti -l --time-style=full-iso\n"
 
-#: src/ls.c:3655
+#: src/ls.c:3742
 msgid ""
 "  -g                         like -l, but do not list owner\n"
 "  -G, --no-group             inhibit display of group information\n"
-"  -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n"
+"  -h, --human-readable  print sizes in human readable format (e.g., 1K 234M "
+"2G)\n"
 "      --si                   likewise, but use powers of 1000 not 1024\n"
 "  -H, --dereference-command-line  follow symbolic links on the command line\n"
 msgstr ""
 "  -g                         seperti -l, tapi tak senaraikan pemilik\n"
 "  -G, --no-group             tidak papar maklumat kumpulan\n"
-"  -h, --human-readable  cetak saiz dlm format bolehdibaca manusia (e.g., 1K 234M 2G)\n"
+"  -h, --human-readable  cetak saiz dlm format bolehdibaca manusia (e.g., 1K "
+"234M 2G)\n"
 "      --si                   sebaliknya, guna kuasaf 1000 bukan 1024\n"
 "  -H, --dereference-command-line  ikut pautan simbolik pada arahan baris\n"
 
-#: src/ls.c:3662
+#: src/ls.c:3749
 msgid ""
-"      --indicator-style=WORD append indicator with style WORD to entry names:\n"
-"                               none (default), classify (-F), file-type (-p)\n"
+"      --indicator-style=WORD append indicator with style WORD to entry "
+"names:\n"
+"                               none (default), classify (-F), file-type (-"
+"p)\n"
 "  -i, --inode                print index number of each file\n"
-"  -I, --ignore=PATTERN       do not list implied entries matching shell PATTERN\n"
+"  -I, --ignore=PATTERN       do not list implied entries matching shell "
+"PATTERN\n"
 "  -k                         like --block-size=1K\n"
 msgstr ""
 
-#: src/ls.c:3669
+#: src/ls.c:3756
 msgid ""
 "  -l                         use a long listing format\n"
 "  -L, --dereference          when showing file information for a symbolic\n"
 "                               link, show information for the file the link\n"
 "                               references rather than for the link itself\n"
-"  -m                         fill width with a comma separated list of entries\n"
+"  -m                         fill width with a comma separated list of "
+"entries\n"
 msgstr ""
 
-#: src/ls.c:3676
+#: src/ls.c:3763
 msgid ""
 "  -n, --numeric-uid-gid      like -l, but list numeric UIDs and GIDs\n"
-"  -N, --literal              print raw entry names (don't treat e.g. control\n"
+"  -N, --literal              print raw entry names (don't treat e.g. "
+"control\n"
 "                               characters specially)\n"
 "  -o                         like -l, but do not list group information\n"
 "  -p, --file-type            append indicator (one of /=@|) to entries\n"
 msgstr ""
 
-#: src/ls.c:3683
+#: src/ls.c:3770
 msgid ""
 "  -q, --hide-control-chars   print ? instead of non graphic characters\n"
 "      --show-control-chars   show non graphic characters as-is (default\n"
-"                             unless program is `ls' and output is a terminal)\n"
+"                             unless program is `ls' and output is a "
+"terminal)\n"
 "  -Q, --quote-name           enclose entry names in double quotes\n"
 "      --quoting-style=WORD   use quoting style WORD for entry names:\n"
-"                               literal, locale, shell, shell-always, c, escape\n"
+"                               literal, locale, shell, shell-always, c, "
+"escape\n"
 msgstr ""
 
-#: src/ls.c:3691
+#: src/ls.c:3778
 msgid ""
 "  -r, --reverse              reverse order while sorting\n"
 "  -R, --recursive            list subdirectories recursively\n"
@@ -3044,22 +3109,25 @@ msgstr ""
 "  -R, --recursive            senarai subdirektori secara rekursif\n"
 "  -s, --size                 cetak saiz bagi setiap fail, dalam blok\n"
 
-#: src/ls.c:3696
+#: src/ls.c:3783
 msgid ""
 "  -S                         sort by file size\n"
 "      --sort=WORD            extension -X, none -U, size -S, time -t,\n"
 "                               version -v\n"
-"                             status -c, time -t, atime -u, access -u, use -u\n"
-"      --time=WORD            show time as WORD instead of modification time:\n"
+"                             status -c, time -t, atime -u, access -u, use -"
+"u\n"
+"      --time=WORD            show time as WORD instead of modification "
+"time:\n"
 "                               atime, access, use, ctime or status; use\n"
 "                               specified time as sort key if --sort=time\n"
 msgstr ""
 
-#: src/ls.c:3705
+#: src/ls.c:3792
 msgid ""
 "      --time-style=STYLE     show times using style STYLE:\n"
 "                               full-iso, long-iso, iso, locale, +FORMAT\n"
-"                             FORMAT is interpreted like `date'; if FORMAT is\n"
+"                             FORMAT is interpreted like `date'; if FORMAT "
+"is\n"
 "                             FORMAT1<newline>FORMAT2, FORMAT1 applies to\n"
 "                             non-recent files and FORMAT2 to recent files;\n"
 "                             if STYLE is prefixed with `posix-', STYLE\n"
@@ -3068,7 +3136,7 @@ msgid ""
 "  -T, --tabsize=COLS         assume tab stops at each COLS instead of 8\n"
 msgstr ""
 
-#: src/ls.c:3716
+#: src/ls.c:3803
 msgid ""
 "  -u                         with -lt: sort by, and show, access time\n"
 "                               with -l: show access time and sort by name\n"
@@ -3077,7 +3145,7 @@ msgid ""
 "  -v                         sort by version\n"
 msgstr ""
 
-#: src/ls.c:3723
+#: src/ls.c:3810
 msgid ""
 "  -w, --width=COLS           assume screen width instead of current value\n"
 "  -x                         list entries by lines instead of by columns\n"
@@ -3085,7 +3153,7 @@ msgid ""
 "  -1                         list one file per line\n"
 msgstr ""
 
-#: src/ls.c:3735
+#: src/ls.c:3822
 msgid ""
 "\n"
 "By default, color is not used to distinguish types of files.  That is\n"
@@ -3112,7 +3180,8 @@ msgstr ""
 #, c-format
 msgid ""
 "\n"
-"  -b, --binary            read files in binary mode (default on DOS/Windows)\n"
+"  -b, --binary            read files in binary mode (default on DOS/"
+"Windows)\n"
 "  -c, --check             check %s sums against given list\n"
 "  -t, --text              read files in text mode (default)\n"
 "\n"
@@ -3191,7 +3260,8 @@ msgid "checksums"
 msgstr ""
 
 #: src/md5sum.c:564
-msgid "the --binary and --text options are meaningless when verifying checksums"
+msgid ""
+"the --binary and --text options are meaningless when verifying checksums"
 msgstr ""
 
 #: src/md5sum.c:572
@@ -3227,7 +3297,8 @@ msgstr ""
 
 #: src/mkdir.c:69
 msgid ""
-"  -m, --mode=MODE   set permission mode (as in chmod), not rwxrwxrwx - umask\n"
+"  -m, --mode=MODE   set permission mode (as in chmod), not rwxrwxrwx - "
+"umask\n"
 "  -p, --parents     no error if existing, make parent directories as needed\n"
 "  -v, --verbose     print a message for each created directory\n"
 msgstr ""
@@ -3254,7 +3325,8 @@ msgid ""
 msgstr ""
 
 #: src/mkfifo.c:63 src/mknod.c:73
-msgid "  -m, --mode=MODE   set permission mode (as in chmod), not a=rw - umask\n"
+msgid ""
+"  -m, --mode=MODE   set permission mode (as in chmod), not a=rw - umask\n"
 msgstr ""
 
 #: src/mkfifo.c:93 src/mknod.c:210
@@ -3339,7 +3411,7 @@ msgstr "tak dapat menetapkan keizinan bagi %s"
 msgid "Mike Parker, David MacKenzie, and Jim Meyering"
 msgstr ""
 
-#: src/mv.c:320
+#: src/mv.c:317
 msgid ""
 "Rename SOURCE to DEST, or move SOURCE(s) to DIRECTORY.\n"
 "\n"
@@ -3347,17 +3419,19 @@ msgstr ""
 "Tukarnama SUMBER ke DEST, atau pindahkan SUMBER ke DIREKTORI.\n"
 "\n"
 
-#: src/mv.c:327
+#: src/mv.c:324
 msgid ""
-"      --backup[=CONTROL]       make a backup of each existing destination file\n"
-"  -b                           like --backup but does not accept an argument\n"
+"      --backup[=CONTROL]       make a backup of each existing destination "
+"file\n"
+"  -b                           like --backup but does not accept an "
+"argument\n"
 "  -f, --force                  do not prompt before overwriting\n"
 "                                 equivalent to --reply=yes\n"
 "  -i, --interactive            prompt before overwrite\n"
 "                                 equivalent to --reply=query\n"
 msgstr ""
 
-#: src/mv.c:335
+#: src/mv.c:332
 msgid ""
 "      --reply={yes,no,query}   specify how to handle the prompt about an\n"
 "                                 existing destination file\n"
@@ -3366,21 +3440,22 @@ msgid ""
 "  -S, --suffix=SUFFIX          override the usual backup suffix\n"
 msgstr ""
 
-#: src/mv.c:342
+#: src/mv.c:339
 msgid ""
-"      --target-directory=DIRECTORY  move all SOURCE arguments into DIRECTORY\n"
+"      --target-directory=DIRECTORY  move all SOURCE arguments into "
+"DIRECTORY\n"
 "  -u, --update                 move only when the SOURCE file is newer\n"
 "                                 than the destination file or when the\n"
 "                                 destination file is missing\n"
 "  -v, --verbose                explain what is being done\n"
 msgstr ""
 
-#: src/mv.c:470
+#: src/mv.c:467
 #, c-format
 msgid "specified target, %s is not a directory"
 msgstr "Sasaran yang dinyatakan, %s adalah bukan direktori"
 
-#: src/mv.c:478
+#: src/mv.c:475
 msgid "when moving multiple files, last argument must be a directory"
 msgstr "bila memindah banyak fail, hujah terakhir mestilah direktori"
 
@@ -3445,9 +3520,11 @@ msgstr ""
 msgid ""
 "  -h, --header-numbering=STYLE    use STYLE for numbering header lines\n"
 "  -i, --page-increment=NUMBER     line number increment at each line\n"
-"  -l, --join-blank-lines=NUMBER   group of NUMBER empty lines counted as one\n"
+"  -l, --join-blank-lines=NUMBER   group of NUMBER empty lines counted as "
+"one\n"
 "  -n, --number-format=FORMAT      insert line numbers according to FORMAT\n"
-"  -p, --no-renumber               do not reset line numbers at logical pages\n"
+"  -p, --no-renumber               do not reset line numbers at logical "
+"pages\n"
 "  -s, --number-separator=STRING   add STRING after (possible) line number\n"
 msgstr ""
 
@@ -3481,22 +3558,22 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/nl.c:500
+#: src/nl.c:504
 #, fuzzy, c-format
 msgid "invalid starting line number: `%s'"
 msgstr "nombor peranti major tidak sah %s"
 
-#: src/nl.c:510
+#: src/nl.c:514
 #, fuzzy, c-format
 msgid "invalid line number increment: `%s'"
 msgstr "lebar baris tidak sah: %s"
 
-#: src/nl.c:523
+#: src/nl.c:527
 #, fuzzy, c-format
 msgid "invalid number of blank lines: `%s'"
 msgstr "nombor tidak sah %s"
 
-#: src/nl.c:537
+#: src/nl.c:541
 #, fuzzy, c-format
 msgid "invalid line number field width: `%s'"
 msgstr "lebar baris tidak sah: %s"
@@ -3523,7 +3600,9 @@ msgstr ""
 #: src/od.c:299
 #, fuzzy
 msgid "All arguments to long options are mandatory for short options.\n"
-msgstr "Hujah mandatori kepada opsyen panjang andalah mandatori bagi opsyen pendek juga.\n"
+msgstr ""
+"Hujah mandatori kepada opsyen panjang andalah mandatori bagi opsyen pendek "
+"juga.\n"
 
 #: src/od.c:302
 msgid ""
@@ -3534,7 +3613,8 @@ msgstr ""
 #: src/od.c:306
 msgid ""
 "  -N, --read-bytes=BYTES      limit dump to BYTES input bytes\n"
-"  -s, --strings[=BYTES]       output strings of at least BYTES graphic chars\n"
+"  -s, --strings[=BYTES]       output strings of at least BYTES graphic "
+"chars\n"
 "  -t, --format=TYPE           select output format or formats\n"
 "  -v, --output-duplicates     do not use * to mark line suppression\n"
 "  -w, --width[=BYTES]         output BYTES bytes per output line\n"
@@ -3718,39 +3798,39 @@ msgid ""
 "  -s, --serial            paste one file at a time instead of in parallel\n"
 msgstr ""
 
-#: src/pathchk.c:145
+#: src/pathchk.c:146
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION]... NAME...\n"
 msgstr "Penggunaan: %s [OPSYEN] NAMA...\n"
 
-#: src/pathchk.c:146
+#: src/pathchk.c:147
 msgid ""
 "Diagnose unportable constructs in NAME.\n"
 "\n"
 "  -p, --portability   check for all POSIX systems, not only this one\n"
 msgstr ""
 
-#: src/pathchk.c:236
+#: src/pathchk.c:237
 #, c-format
 msgid "path `%s' contains nonportable character `%c'"
 msgstr ""
 
-#: src/pathchk.c:256
+#: src/pathchk.c:257
 #, fuzzy, c-format
 msgid "`%s' is not a directory"
 msgstr "%s adalah satu direktori"
 
-#: src/pathchk.c:267
+#: src/pathchk.c:268
 #, c-format
 msgid "directory `%s' is not searchable"
 msgstr ""
 
-#: src/pathchk.c:354
+#: src/pathchk.c:355
 #, c-format
 msgid "name `%s' has length %ld; exceeds limit of %ld"
 msgstr ""
 
-#: src/pathchk.c:380
+#: src/pathchk.c:381
 #, c-format
 msgid "path `%s' has length %d; exceeds limit of %ld"
 msgstr ""
@@ -3793,11 +3873,11 @@ msgid "Login"
 msgstr ""
 
 #: src/pinky.c:388
-msgid "   Name"
+msgid "Name"
 msgstr ""
 
 #: src/pinky.c:389
-msgid "TTY"
+msgid " TTY"
 msgstr ""
 
 #: src/pinky.c:391
@@ -3978,11 +4058,13 @@ msgstr ""
 #: src/pr.c:2792
 msgid ""
 "  -h HEADER, --header=HEADER\n"
-"                    use a centered HEADER instead of filename in page header,\n"
+"                    use a centered HEADER instead of filename in page "
+"header,\n"
 "                    -h \"\" prints a blank line, don't use -h\"\"\n"
 "  -i[CHAR[WIDTH]], --output-tabs[=CHAR[WIDTH]]\n"
 "                    replace spaces with CHARs (TABs) to tab WIDTH (8)\n"
-"  -J, --join-lines  merge full lines, turns off -W line truncation, no column\n"
+"  -J, --join-lines  merge full lines, turns off -W line truncation, no "
+"column\n"
 "                    alignment, --sep-string[=STRING] sets separators\n"
 msgstr ""
 
@@ -4017,7 +4099,8 @@ msgstr ""
 #: src/pr.c:2823
 msgid ""
 "  -s[CHAR],--separator[=CHAR]\n"
-"                    separate columns by a single character, default for CHAR\n"
+"                    separate columns by a single character, default for "
+"CHAR\n"
 "                    is the <TAB> character without -w and 'no char' with -w\n"
 "                    -s[CHAR] turns off line truncation of all 3 column\n"
 "                    options (-COLUMN|-a -COLUMN|-m) except -w is set\n"
@@ -4031,27 +4114,31 @@ msgstr ""
 msgid ""
 "                    separate columns by STRING,\n"
 "                    without -S: Default separator <TAB> with -J and <space>\n"
-"                    otherwise (same as -S\" \"), no effect on column options\n"
+"                    otherwise (same as -S\" \"), no effect on column "
+"options\n"
 "  -t, --omit-header omit page headers and trailers\n"
 msgstr ""
 
 #: src/pr.c:2839
 msgid ""
 "  -T, --omit-pagination\n"
-"                    omit page headers and trailers, eliminate any pagination\n"
+"                    omit page headers and trailers, eliminate any "
+"pagination\n"
 "                    by form feeds set in input files\n"
 "  -v, --show-nonprinting\n"
 "                    use octal backslash notation\n"
 "  -w PAGE_WIDTH, --width=PAGE_WIDTH\n"
 "                    set page width to PAGE_WIDTH (72) characters for\n"
-"                    multiple text-column output only, -s[char] turns off (72)\n"
+"                    multiple text-column output only, -s[char] turns off "
+"(72)\n"
 msgstr ""
 
 #: src/pr.c:2849
 msgid ""
 "  -W PAGE_WIDTH, --page-width=PAGE_WIDTH\n"
 "                    set page width to PAGE_WIDTH (72) characters always,\n"
-"                    truncate lines, except -J option is set, no interference\n"
+"                    truncate lines, except -J option is set, no "
+"interference\n"
 "                    with -S or -s\n"
 msgstr ""
 
@@ -4077,7 +4164,8 @@ msgstr ""
 
 #: src/printf.c:84
 #, c-format
-msgid "warning: %s: character(s) following character constant have been ignored"
+msgid ""
+"warning: %s: character(s) following character constant have been ignored"
 msgstr ""
 
 #: src/printf.c:97
@@ -4123,7 +4211,7 @@ msgstr ""
 
 #: src/printf.c:128
 msgid ""
-"  \\xNNN   byte with hexadecimal value NNN (1 to 3 digits)\n"
+"  \\xNN    byte with hexadecimal value NN (1 to 2 digits)\n"
 "\n"
 "  \\uNNNN  character with hexadecimal value NNNN (4 digits)\n"
 "  \\UNNNNNNNN  character with hexadecimal value NNNNNNNN (8 digits)\n"
@@ -4148,31 +4236,31 @@ msgstr ""
 msgid "%s: value not completely converted"
 msgstr ""
 
-#: src/printf.c:251 src/printf.c:275
+#: src/printf.c:251 src/printf.c:277
 msgid "missing hexadecimal number in escape"
 msgstr ""
 
-#: src/printf.c:287
+#: src/printf.c:289
 #, c-format
 msgid "invalid universal character name \\%c%0*x"
 msgstr ""
 
-#: src/printf.c:293
+#: src/printf.c:295
 #, fuzzy, c-format
 msgid "\\%c: invalid escape"
 msgstr "%s: fail saiz tidak sah"
 
-#: src/printf.c:501
+#: src/printf.c:503
 #, fuzzy, c-format
 msgid "%%%c: invalid directive"
 msgstr "%s: fail saiz tidak sah"
 
-#: src/printf.c:558
+#: src/printf.c:560
 #, c-format
 msgid "Usage: %s format [argument...]\n"
 msgstr ""
 
-#: src/printf.c:576
+#: src/printf.c:578
 #, c-format
 msgid "warning: ignoring excess arguments, starting with `%s'"
 msgstr ""
@@ -4191,7 +4279,8 @@ msgstr ""
 
 #: src/ptx.c:1863
 msgid ""
-"Output a permuted index, including context, of the words in the input files.\n"
+"Output a permuted index, including context, of the words in the input "
+"files.\n"
 "\n"
 msgstr ""
 
@@ -4226,7 +4315,8 @@ msgstr ""
 msgid ""
 "  -r, --references               first field of each line is a reference\n"
 "  -t, --typeset-mode               - not implemented -\n"
-"  -w, --width=NUMBER             output width in columns, reference excluded\n"
+"  -w, --width=NUMBER             output width in columns, reference "
+"excluded\n"
 msgstr ""
 
 #: src/ptx.c:1898
@@ -4392,7 +4482,8 @@ msgstr ""
 msgid ""
 "\n"
 "Note that if you use rm to remove a file, it is usually possible to recover\n"
-"the contents of that file.  If you want more assurance that the contents are\n"
+"the contents of that file.  If you want more assurance that the contents "
+"are\n"
 "truly unrecoverable, consider using shred.\n"
 msgstr ""
 
@@ -4448,7 +4539,8 @@ msgstr ""
 msgid ""
 "Print numbers from FIRST to LAST, in steps of INCREMENT.\n"
 "\n"
-"  -f, --format=FORMAT      use printf style floating-point FORMAT (default: %g)\n"
+"  -f, --format=FORMAT      use printf style floating-point FORMAT (default: %"
+"g)\n"
 "  -s, --separator=STRING   use STRING to separate numbers (default: \\n)\n"
 "  -w, --equal-width        equalize width by padding with leading zeroes\n"
 msgstr ""
@@ -4490,19 +4582,19 @@ msgstr "rentetan mod tidak sah: %s"
 msgid "format string may not be specified when printing equal width strings"
 msgstr ""
 
-#: src/shred.c:175
+#: src/shred.c:172
 #, c-format
 msgid "Usage: %s [OPTIONS] FILE [...]\n"
 msgstr "Penggunaan: %s [OPSYEN] FAIL [...]\n"
 
-#: src/shred.c:176
+#: src/shred.c:173
 msgid ""
 "Overwrite the specified FILE(s) repeatedly, in order to make it harder\n"
 "for even very expensive hardware probing to recover the data.\n"
 "\n"
 msgstr ""
 
-#: src/shred.c:184
+#: src/shred.c:181
 #, c-format
 msgid ""
 "  -f, --force    change permissions to allow writing if necessary\n"
@@ -4513,7 +4605,7 @@ msgstr ""
 "  -n, --iterations=N  Tindih sebanyak  N kali selain drpd  default (%d)\n"
 "  -s, --size=N   lunyai ia berapa byte (suffiks seperti K, M, G diterima)\n"
 
-#: src/shred.c:189
+#: src/shred.c:186
 msgid ""
 "  -u, --remove   truncate and remove file after overwriting\n"
 "  -v, --verbose  show progress\n"
@@ -4522,7 +4614,7 @@ msgid ""
 "  -              shred standard output\n"
 msgstr ""
 
-#: src/shred.c:198
+#: src/shred.c:195
 msgid ""
 "\n"
 "Delete FILE(s) if --remove (-u) is specified.  The default is not to remove\n"
@@ -4532,7 +4624,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/shred.c:206
+#: src/shred.c:203
 msgid ""
 "CAUTION: Note that shred relies on a very important assumption:\n"
 "that the filesystem overwrites data in place.  This is the traditional\n"
@@ -4542,7 +4634,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/shred.c:214
+#: src/shred.c:211
 msgid ""
 "* log-structured or journaled filesystems, such as those supplied with\n"
 "  AIX and Solaris (and JFS, ReiserFS, XFS, Ext3, etc.)\n"
@@ -4554,7 +4646,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/shred.c:224
+#: src/shred.c:221
 msgid ""
 "* filesystems that cache in temporary locations, such as NFS\n"
 "  version 3 clients\n"
@@ -4566,82 +4658,82 @@ msgid ""
 "to be recovered later.\n"
 msgstr ""
 
-#: src/shred.c:822
+#: src/shred.c:819
 #, c-format
 msgid "%s: cannot rewind"
 msgstr ""
 
-#: src/shred.c:845
+#: src/shred.c:842
 #, c-format
 msgid "%s: pass %lu/%lu (%s)..."
 msgstr ""
 
-#: src/shred.c:882
+#: src/shred.c:879
 #, c-format
 msgid "%s: error writing at offset %s"
 msgstr ""
 
-#: src/shred.c:913
+#: src/shred.c:908
 #, c-format
 msgid "%s: file too large"
 msgstr ""
 
-#: src/shred.c:934
+#: src/shred.c:931
 #, c-format
 msgid "%s: pass %lu/%lu (%s)...%s"
 msgstr ""
 
-#: src/shred.c:944
+#: src/shred.c:947
 #, c-format
 msgid "%s: pass %lu/%lu (%s)...%s/%s %d%%"
 msgstr ""
 
-#: src/shred.c:1205
+#: src/shred.c:1206
 #, c-format
 msgid "%s: invalid file type"
 msgstr ""
 
-#: src/shred.c:1222
+#: src/shred.c:1223
 #, c-format
 msgid "%s: file has negative size"
 msgstr ""
 
-#: src/shred.c:1274
+#: src/shred.c:1275
 #, c-format
 msgid "%s: error truncating"
 msgstr ""
 
-#: src/shred.c:1295
+#: src/shred.c:1296
 #, c-format
 msgid "%s: cannot shred append-only file descriptor"
 msgstr ""
 
-#: src/shred.c:1380
+#: src/shred.c:1381
 #, c-format
 msgid "%s: removing"
 msgstr "%s: membuang"
 
-#: src/shred.c:1421
+#: src/shred.c:1422
 #, c-format
 msgid "%s: renamed to %s"
 msgstr "%s: ditukarnama ke %s"
 
-#: src/shred.c:1447
+#: src/shred.c:1448
 #, c-format
 msgid "%s: removed"
 msgstr "%s: dibuang"
 
-#: src/shred.c:1512
+#: src/shred.c:1513
 #, c-format
 msgid "%s: cannot remove"
 msgstr "%s: tak dapat buang"
 
-#: src/shred.c:1560
+#: src/shred.c:1561
 #, c-format
 msgid "%s: invalid number of passes"
 msgstr ""
 
-#: src/shred.c:1577
+#: src/shred.c:1578
 #, c-format
 msgid "%s: invalid file size"
 msgstr "%s: fail saiz tidak sah"
@@ -4656,7 +4748,8 @@ msgid ""
 "Usage: %s NUMBER[SUFFIX]...\n"
 "  or:  %s OPTION\n"
 "Pause for NUMBER seconds.  SUFFIX may be `s' for seconds (the default),\n"
-"`m' for minutes, `h' for hours or `d' for days.  Unlike most implementations\n"
+"`m' for minutes, `h' for hours or `d' for days.  Unlike most "
+"implementations\n"
 "that require NUMBER be an integer, here NUMBER may be an arbitrary floating\n"
 "point number.\n"
 "\n"
@@ -4667,7 +4760,7 @@ msgstr ""
 msgid "invalid time interval `%s'"
 msgstr "format gaya tarikh tidak sah %s"
 
-#: src/sleep.c:177 src/tail.c:1036
+#: src/sleep.c:177 src/tail.c:1031
 #, fuzzy
 msgid "cannot read realtime clock"
 msgstr "tak boleh mencipta pautan %s"
@@ -4676,7 +4769,7 @@ msgstr "tak boleh mencipta pautan %s"
 msgid "Mike Haertel and Paul Eggert"
 msgstr ""
 
-#: src/sort.c:283
+#: src/sort.c:280
 msgid ""
 "Write sorted concatenation of all FILE(s) to standard output.\n"
 "\n"
@@ -4684,14 +4777,15 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/sort.c:292
+#: src/sort.c:289
 msgid ""
 "  -b, --ignore-leading-blanks ignore leading blanks\n"
-"  -d, --dictionary-order      consider only blanks and alphanumeric characters\n"
+"  -d, --dictionary-order      consider only blanks and alphanumeric "
+"characters\n"
 "  -f, --ignore-case           fold lower case to upper case characters\n"
 msgstr ""
 
-#: src/sort.c:297
+#: src/sort.c:294
 msgid ""
 "  -g, --general-numeric-sort  compare according to general numerical value\n"
 "  -i, --ignore-nonprinting    consider only printable characters\n"
@@ -4701,7 +4795,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/sort.c:305
+#: src/sort.c:302
 msgid ""
 "Other options:\n"
 "\n"
@@ -4709,28 +4803,32 @@ msgid ""
 "  -k, --key=POS1[,POS2]     start a key at POS1, end it at POS 2 (origin 1)\n"
 "  -m, --merge               merge already sorted files; do not sort\n"
 "  -o, --output=FILE         write result to FILE instead of standard output\n"
-"  -s, --stable              stabilize sort by disabling last-resort comparison\n"
+"  -s, --stable              stabilize sort by disabling last-resort "
+"comparison\n"
 "  -S, --buffer-size=SIZE    use SIZE for main memory buffer\n"
 msgstr ""
 
-#: src/sort.c:315
+#: src/sort.c:312
 #, c-format
 msgid ""
-"  -t, --field-separator=SEP use SEP instead of non- to whitespace transition\n"
+"  -t, --field-separator=SEP use SEP instead of non- to whitespace "
+"transition\n"
 "  -T, --temporary-directory=DIR  use DIR for temporaries, not $TMPDIR or %s\n"
 "                              multiple options specify multiple directories\n"
 "  -u, --unique              with -c: check for strict ordering\n"
-"                              otherwise: output only the first of an equal run\n"
+"                              otherwise: output only the first of an equal "
+"run\n"
 msgstr ""
 
-#: src/sort.c:322
+#: src/sort.c:319
 msgid "  -z, --zero-terminated     end lines with 0 byte, not newline\n"
 msgstr ""
 
-#: src/sort.c:327
+#: src/sort.c:324
 msgid ""
 "\n"
-"POS is F[.C][OPTS], where F is the field number and C the character position\n"
+"POS is F[.C][OPTS], where F is the field number and C the character "
+"position\n"
 "in the field.  OPTS is one or more single-letter ordering options, which\n"
 "override global ordering options for that key.  If no key is given, use the\n"
 "entire line as the key.\n"
@@ -4738,7 +4836,7 @@ msgid ""
 "SIZE may be followed by the following multiplicative suffixes:\n"
 msgstr ""
 
-#: src/sort.c:336
+#: src/sort.c:333
 #, c-format
 msgid ""
 "% 1% of memory, b 1, K 1024 (default), and so on for M, G, T, P, E, Z, Y.\n"
@@ -4751,105 +4849,105 @@ msgid ""
 "native byte values.\n"
 msgstr ""
 
-#: src/sort.c:447
+#: src/sort.c:444
 #, fuzzy
 msgid "cannot create temporary file"
 msgstr "tak dapat memcipta fail biasa %s"
 
-#: src/sort.c:470
+#: src/sort.c:467
 msgid "open failed"
 msgstr ""
 
-#: src/sort.c:490 src/sort.c:2495
+#: src/sort.c:487 src/sort.c:2496
 #, fuzzy
 msgid "close failed"
 msgstr "fail istimewa blok"
 
-#: src/sort.c:498
+#: src/sort.c:495
 #, fuzzy
 msgid "write failed"
 msgstr "fail pelik"
 
-#: src/sort.c:644
+#: src/sort.c:641
 #, fuzzy
 msgid "sort size"
 msgstr "saiz blok"
 
-#: src/sort.c:718
+#: src/sort.c:715
 msgid "stat failed"
 msgstr ""
 
-#: src/sort.c:975
+#: src/sort.c:972
 #, fuzzy
 msgid "read failed"
 msgstr "fail biasa"
 
-#: src/sort.c:1573
+#: src/sort.c:1570
 #, c-format
 msgid "%s: %s:%s: disorder: "
 msgstr ""
 
-#: src/sort.c:1577
+#: src/sort.c:1574
 #, fuzzy
 msgid "standard error"
 msgstr "output standard"
 
-#: src/sort.c:2035
+#: src/sort.c:2032
 #, fuzzy, c-format
 msgid "%s: invalid field specification `%s'"
 msgstr "%s: fail saiz tidak sah"
 
-#: src/sort.c:2061
+#: src/sort.c:2058
 #, c-format
 msgid "%s: count `%.*s' too large"
 msgstr ""
 
-#: src/sort.c:2067
+#: src/sort.c:2064
 #, fuzzy, c-format
 msgid "%s: invalid count at start of `%s'"
 msgstr "hujah tidak sah %s bagi %s"
 
-#: src/sort.c:2297
+#: src/sort.c:2298
 #, fuzzy
 msgid "invalid number after `-'"
 msgstr "nombor tidak sah %s"
 
-#: src/sort.c:2300 src/sort.c:2346 src/sort.c:2373
+#: src/sort.c:2301 src/sort.c:2347 src/sort.c:2374
 #, fuzzy
 msgid "invalid number after `.'"
 msgstr "nombor tidak sah %s"
 
-#: src/sort.c:2303 src/sort.c:2382
+#: src/sort.c:2304 src/sort.c:2383
 #, fuzzy
 msgid "stray character in field spec"
 msgstr "fail istimewa aksara"
 
-#: src/sort.c:2337
+#: src/sort.c:2338
 #, fuzzy
 msgid "invalid number at field start"
 msgstr "nombor tidak sah %s"
 
-#: src/sort.c:2341 src/sort.c:2369
+#: src/sort.c:2342 src/sort.c:2370
 #, fuzzy
 msgid "field number is zero"
 msgstr "nombor tidak sah %s"
 
-#: src/sort.c:2350
+#: src/sort.c:2351
 #, fuzzy
 msgid "character offset is zero"
 msgstr "fail istimewa aksara"
 
-#: src/sort.c:2365
+#: src/sort.c:2366
 #, fuzzy
 msgid "invalid number after `,'"
 msgstr "nombor tidak sah %s"
 
-#: src/sort.c:2410
+#: src/sort.c:2411
 #, c-format
 msgid "multi-character tab `%s'"
 msgstr ""
 
-#: src/sort.c:2478
+#: src/sort.c:2479
 #, c-format
 msgid "extra operand `%s' not allowed with -c"
 msgstr ""
@@ -4890,47 +4988,47 @@ msgstr ""
 msgid "creating file `%s'\n"
 msgstr "mencipta %s"
 
-#: src/split.c:364
+#: src/split.c:342
 #, fuzzy
 msgid "cannot split in more than one way"
 msgstr "tak boleh nyatakan masa lebih daripada satu sumber"
 
-#: src/split.c:417
+#: src/split.c:395
 #, fuzzy, c-format
 msgid "%s: invalid suffix length"
 msgstr "%s: fail saiz tidak sah"
 
-#: src/split.c:431 src/split.c:457
+#: src/split.c:409 src/split.c:435
 #, fuzzy, c-format
 msgid "%s: invalid number of bytes"
 msgstr "nombor tidak sah %s"
 
-#: src/split.c:444
+#: src/split.c:422
 #, fuzzy, c-format
 msgid "%s: invalid number of lines"
 msgstr "nombor tidak sah %s"
 
-#: src/split.c:497
+#: src/split.c:475
 #, c-format
 msgid "`-%d' option is obsolete; use `-l %d'"
 msgstr ""
 
-#: src/split.c:510
+#: src/split.c:488
 #, fuzzy
 msgid "invalid number"
 msgstr "nombor tidak sah %s"
 
-#: src/stat.c:634
+#: src/stat.c:631
 #, c-format
 msgid "cannot read file system information for %s"
 msgstr "tak dapat membaca maklumat sistem fail bagi %s"
 
-#: src/stat.c:710
+#: src/stat.c:707
 #, c-format
 msgid "Usage: %s [OPTION] FILE...\n"
 msgstr "Penggunaan: %s [OPSYEN] FAIL...\n"
 
-#: src/stat.c:711
+#: src/stat.c:708
 msgid ""
 "Display file or filesystem status.\n"
 "\n"
@@ -4940,70 +5038,70 @@ msgid ""
 "  -t, --terse           print the information in terse form\n"
 msgstr ""
 
-#: src/stat.c:722
+#: src/stat.c:719
 msgid ""
 "\n"
 "The valid format sequences for files (without --filesystem):\n"
 "\n"
-"  %A - Access rights in human readable form\n"
-"  %a - Access rights in octal\n"
-"  %b - Number of blocks allocated\n"
+"  %A   Access rights in human readable form\n"
+"  %a   Access rights in octal\n"
+"  %b   Number of blocks allocated\n"
 msgstr ""
 
-#: src/stat.c:729
+#: src/stat.c:726
 msgid ""
-"  %D - Device number in hex\n"
-"  %d - Device number in decimal\n"
-"  %F - File type\n"
-"  %f - raw mode in hex\n"
-"  %G - Group name of owner\n"
-"  %g - Group ID of owner\n"
+"  %D   Device number in hex\n"
+"  %d   Device number in decimal\n"
+"  %F   File type\n"
+"  %f   raw mode in hex\n"
+"  %G   Group name of owner\n"
+"  %g   Group ID of owner\n"
 msgstr ""
 
-#: src/stat.c:737
+#: src/stat.c:734
 msgid ""
-"  %h - Number of hard links\n"
-"  %i - Inode number\n"
-"  %N - Quoted File name with dereference if symbolic link\n"
-"  %n - File name\n"
-"  %o - IO block size\n"
-"  %s - Total size, in bytes\n"
-"  %T - Minor device type in hex\n"
-"  %t - Major device type in hex\n"
+"  %h   Number of hard links\n"
+"  %i   Inode number\n"
+"  %N   Quoted File name with dereference if symbolic link\n"
+"  %n   File name\n"
+"  %o   IO block size\n"
+"  %s   Total size, in bytes\n"
+"  %T   Minor device type in hex\n"
+"  %t   Major device type in hex\n"
 msgstr ""
 
-#: src/stat.c:747
+#: src/stat.c:744
 msgid ""
-"  %U - User name of owner\n"
-"  %u - User ID of owner\n"
-"  %X - Time of last access as seconds since Epoch\n"
-"  %x - Time of last access\n"
-"  %Y - Time of last modification as seconds since Epoch\n"
-"  %y - Time of last modification\n"
-"  %Z - Time of last change as seconds since Epoch\n"
-"  %z - Time of last change\n"
+"  %U   User name of owner\n"
+"  %u   User ID of owner\n"
+"  %X   Time of last access as seconds since Epoch\n"
+"  %x   Time of last access\n"
+"  %Y   Time of last modification as seconds since Epoch\n"
+"  %y   Time of last modification\n"
+"  %Z   Time of last change as seconds since Epoch\n"
+"  %z   Time of last change\n"
 "\n"
 msgstr ""
 
-#: src/stat.c:759
+#: src/stat.c:756
 msgid ""
 "Valid format sequences for file systems:\n"
 "\n"
-"  %a - Free blocks available to non-superuser\n"
-"  %b - Total data blocks in file system\n"
-"  %c - Total file nodes in file system\n"
-"  %d - Free file nodes in file system\n"
-"  %f - Free blocks in file system\n"
+"  %a   Free blocks available to non-superuser\n"
+"  %b   Total data blocks in file system\n"
+"  %c   Total file nodes in file system\n"
+"  %d   Free file nodes in file system\n"
+"  %f   Free blocks in file system\n"
 msgstr ""
 
-#: src/stat.c:768
+#: src/stat.c:765
 msgid ""
-"  %i - File System id in hex\n"
-"  %l - Maximum length of filenames\n"
-"  %n - File name\n"
-"  %s - Optimal transfer block size\n"
-"  %T - Type in human readable form\n"
-"  %t - Type in hex\n"
+"  %i   File System id in hex\n"
+"  %l   Maximum length of filenames\n"
+"  %n   File name\n"
+"  %s   Optimal transfer block size\n"
+"  %T   Type in human readable form\n"
+"  %t   Type in hex\n"
 msgstr ""
 
 #: src/stty.c:501
@@ -5076,14 +5174,16 @@ msgstr ""
 msgid ""
 "   ispeed N      set the input speed to N\n"
 " * line N        use line discipline N\n"
-"   min N         with -icanon, set N characters minimum for a completed read\n"
+"   min N         with -icanon, set N characters minimum for a completed "
+"read\n"
 "   ospeed N      set the output speed to N\n"
 msgstr ""
 
 #: src/stty.c:559
 msgid ""
 " * rows N        tell the kernel that the terminal has N rows\n"
-" * size          print the number of rows and columns according to the kernel\n"
+" * size          print the number of rows and columns according to the "
+"kernel\n"
 "   speed         print the terminal speed\n"
 "   time N        with -icanon, set read timeout of N tenths of a second\n"
 msgstr ""
@@ -5103,7 +5203,8 @@ msgid ""
 "   [-]cstopb     use two stop bits per character (one with `-')\n"
 "   [-]hup        send a hangup signal when the last process closes the tty\n"
 "   [-]hupcl      same as [-]hup\n"
-"   [-]parenb     generate parity bit in output and expect parity bit in input\n"
+"   [-]parenb     generate parity bit in output and expect parity bit in "
+"input\n"
 "   [-]parodd     set odd parity (even with `-')\n"
 msgstr ""
 
@@ -5196,7 +5297,8 @@ msgstr ""
 #: src/stty.c:648
 msgid ""
 "   [-]isig       enable interrupt, quit, and suspend special characters\n"
-"   [-]noflsh     disable flushing after interrupt and quit special characters\n"
+"   [-]noflsh     disable flushing after interrupt and quit special "
+"characters\n"
 " * [-]prterase   same as [-]echoprt\n"
 " * [-]tostop     stop background jobs that try to write to the terminal\n"
 " * [-]xcase      with icanon, escape with `\\' for uppercase characters\n"
@@ -5318,7 +5420,7 @@ msgstr ""
 msgid "%s: no size information for this device"
 msgstr ""
 
-#: src/stty.c:1914
+#: src/stty.c:1947
 #, fuzzy, c-format
 msgid "invalid integer argument `%s'"
 msgstr "hujah tidak sah %s bagi %s"
@@ -5529,67 +5631,67 @@ msgstr ""
 msgid "closing %s (fd=%d)"
 msgstr "menutup %s"
 
-#: src/tail.c:396
+#: src/tail.c:391
 #, fuzzy, c-format
-msgid "%s: cannot seek to offset %s%s"
+msgid "%s: cannot seek to offset %s"
 msgstr "tak dapat lseek %s"
+
+#: src/tail.c:395
+#, fuzzy, c-format
+msgid "%s: cannot seek to relative offset %s"
+msgstr "tak boleh mencipta fifo %s"
 
 #: src/tail.c:400
 #, fuzzy, c-format
-msgid "%s: cannot seek to relative offset %s%s"
+msgid "%s: cannot seek to end-relative offset %s"
 msgstr "tak boleh mencipta fifo %s"
 
-#: src/tail.c:405
-#, c-format
-msgid "%s: cannot seek to end-relative offset %s%s"
-msgstr ""
-
-#: src/tail.c:823
+#: src/tail.c:818
 #, c-format
 msgid "`%s' has become inaccessible"
 msgstr ""
 
-#: src/tail.c:840
+#: src/tail.c:835
 #, c-format
 msgid "`%s' has been replaced with an untailable file; giving up on this name"
 msgstr ""
 
-#: src/tail.c:861
+#: src/tail.c:856
 #, c-format
 msgid "`%s' has become accessible"
 msgstr ""
 
-#: src/tail.c:869
+#: src/tail.c:864
 #, c-format
 msgid "`%s' has appeared;  following end of new file"
 msgstr ""
 
-#: src/tail.c:880
+#: src/tail.c:875
 #, c-format
 msgid "`%s' has been replaced;  following end of new file"
 msgstr ""
 
-#: src/tail.c:1005
+#: src/tail.c:1000
 #, c-format
 msgid "%s: file truncated"
 msgstr ""
 
-#: src/tail.c:1025
+#: src/tail.c:1020
 #, fuzzy
 msgid "no files remaining"
 msgstr "kehilangan hujah fail"
 
-#: src/tail.c:1241
+#: src/tail.c:1236
 #, c-format
 msgid "%s: cannot follow end of this type of file; giving up on this name"
 msgstr ""
 
-#: src/tail.c:1361
+#: src/tail.c:1356
 #, fuzzy, c-format
 msgid "%c: invalid suffix character in obsolescent option"
 msgstr "aksara tidak sah pada %s pada rentetan mod %s"
 
-#: src/tail.c:1410
+#: src/tail.c:1405
 #, c-format
 msgid ""
 "too many arguments;  When using tail's obsolescent option syntax (%s)\n"
@@ -5597,7 +5699,7 @@ msgid ""
 "option instead."
 msgstr ""
 
-#: src/tail.c:1419
+#: src/tail.c:1414
 #, c-format
 msgid ""
 "Warning: it is not portable to use two or more file arguments with\n"
@@ -5605,45 +5707,45 @@ msgid ""
 "option instead."
 msgstr ""
 
-#: src/tail.c:1428
+#: src/tail.c:1423
 #, c-format
 msgid "`%s' option is obsolete; use `%s-%c %.*s'"
 msgstr ""
 
-#: src/tail.c:1489
+#: src/tail.c:1484
 #, c-format
 msgid "%s is larger than the maximum file size on this system"
 msgstr ""
 
-#: src/tail.c:1515
+#: src/tail.c:1510
 #, c-format
 msgid "%s: invalid maximum number of unchanged stats between opens"
 msgstr ""
 
-#: src/tail.c:1527
+#: src/tail.c:1522
 #, c-format
 msgid "%s: invalid maximum number of consecutive size changes"
 msgstr ""
 
-#: src/tail.c:1539
+#: src/tail.c:1534
 #, fuzzy, c-format
 msgid "%s: invalid PID"
 msgstr "%s: fail saiz tidak sah"
 
-#: src/tail.c:1554
+#: src/tail.c:1549
 #, fuzzy, c-format
 msgid "%s: invalid number of seconds"
 msgstr "nombor tidak sah %s"
 
-#: src/tail.c:1573
+#: src/tail.c:1568
 msgid "warning: --retry is useful only when following by name"
 msgstr ""
 
-#: src/tail.c:1577
+#: src/tail.c:1572
 msgid "warning: PID ignored; --pid=PID is useful only when following"
 msgstr ""
 
-#: src/tail.c:1580
+#: src/tail.c:1575
 #, fuzzy
 msgid "warning: --pid=PID is not supported on this system"
 msgstr "pautan simbolik tidak disokong pada sistem ini"
@@ -5847,7 +5949,8 @@ msgstr ""
 #: src/test.c:1055
 msgid ""
 "  -S FILE     FILE exists and is a socket\n"
-"  -t [FD]     file descriptor FD (stdout by default) is opened on a terminal\n"
+"  -t [FD]     file descriptor FD (stdout by default) is opened on a "
+"terminal\n"
 "  -u FILE     FILE exists and its set-user-ID bit is set\n"
 "  -w FILE     FILE exists and is writable\n"
 "  -x FILE     FILE exists and is executable\n"
@@ -5856,7 +5959,8 @@ msgstr ""
 #: src/test.c:1062
 msgid ""
 "\n"
-"Beware that parentheses need to be escaped (e.g., by backslashes) for shells.\n"
+"Beware that parentheses need to be escaped (e.g., by backslashes) for "
+"shells.\n"
 "INTEGER may also be -l STRING, which evaluates to the length of STRING.\n"
 msgstr ""
 
@@ -5874,7 +5978,8 @@ msgid "too many arguments\n"
 msgstr "terlalu banyak hujah"
 
 #: src/touch.c:39
-msgid "Paul Rubin, Arnold Robbins, Jim Kingdon, David MacKenzie, and Randy Smith"
+msgid ""
+"Paul Rubin, Arnold Robbins, Jim Kingdon, David MacKenzie, and Randy Smith"
 msgstr ""
 
 #: src/touch.c:164 src/touch.c:179 src/touch.c:217
@@ -5906,7 +6011,8 @@ msgstr ""
 msgid ""
 "  -r, --reference=FILE   use this file's times instead of current time\n"
 "  -t STAMP               use [[CC]YY]MMDDhhmm[.ss] instead of current time\n"
-"  --time=WORD            set time given by WORD: access atime use (same as -a)\n"
+"  --time=WORD            set time given by WORD: access atime use (same as -"
+"a)\n"
 "                           modify mtime (same as -m)\n"
 msgstr ""
 
@@ -5927,7 +6033,8 @@ msgstr "tak boleh nyatakan masa lebih daripada satu sumber"
 
 #: src/touch.c:372
 #, c-format
-msgid "warning: `touch %s' is obsolete; use `touch -t %04d%02d%02d%02d%02d.%02d'"
+msgid ""
+"warning: `touch %s' is obsolete; use `touch -t %04d%02d%02d%02d%02d.%02d'"
 msgstr ""
 
 #: src/touch.c:393
@@ -5946,7 +6053,8 @@ msgid ""
 "\n"
 "  -c, --complement        first complement SET1\n"
 "  -d, --delete            delete characters in SET1, do not translate\n"
-"  -s, --squeeze-repeats   replace each input sequence of a repeated character\n"
+"  -s, --squeeze-repeats   replace each input sequence of a repeated "
+"character\n"
 "                            that is listed in SET1 with a single occurrence\n"
 "                            of that character\n"
 "  -t, --truncate-set1     first truncate SET1 to length of SET2\n"
@@ -6510,7 +6618,9 @@ msgid "Warning: -i will be removed in a future release;   use -u instead"
 msgstr ""
 
 #: src/who.c:722
-msgid "Warning: the meaning of '-l' will change in a future release to conform to POSIX"
+msgid ""
+"Warning: the meaning of '-l' will change in a future release to conform to "
+"POSIX"
 msgstr ""
 
 #: src/whoami.c:53
@@ -6539,3 +6649,8 @@ msgid ""
 "Repeatedly output a line with all specified STRING(s), or `y'.\n"
 "\n"
 msgstr ""
+
+#, fuzzy
+#~ msgid "environment variable, QUOTING_STYLE"
+#~ msgstr ""
+#~ "mengabai nilai pembolehubah persekitaran QUOTING_STYLE yang tidak sah: %s"
