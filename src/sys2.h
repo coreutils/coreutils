@@ -94,8 +94,8 @@
 # define S_TYPEISSHM(Stat_buf_p) 0
 #endif
 
-#ifndef S_TYPEISTMO
-# define S_TYPEISTMO(Stat_buf_p) 0
+#ifndef S_TYPEISMQ
+# define S_TYPEISMQ(Stat_buf_p) 0
 #endif
 
 
