@@ -35,6 +35,7 @@ libfetish_a_SOURCES = \
   dirfd.h \
   dup-safer.c \
   exclude.c exclude.h \
+  exitfail.c exitfail.h \
   filemode.c filemode.h \
   file-type.c file-type.h \
   fnmatch_.h \
