@@ -59,7 +59,7 @@ you must run the autoconf test for a properly working realloc -- see realloc.m4
 int xalloc_exit_failure = EXIT_FAILURE;
 
 /* If non NULL, call this function when memory is exhausted. */
-void (*xalloc_fail_func) () = 0;
+void (*xalloc_fail_func) PARAMS ((void)) = 0;
 
 /* If XALLOC_FAIL_FUNC is NULL, or does return, display this message
    before exiting when memory is exhausted.  Goes through gettext. */
