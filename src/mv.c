@@ -47,6 +47,7 @@
 #include <sys/types.h>
 
 #include "system.h"
+#include "path-concat.h"
 #include "backupfile.h"
 #include "error.h"
 
@@ -66,7 +67,6 @@ int safe_read ();
 int full_write ();
 void strip_trailing_slashes ();
 int euidaccess ();
-char *stpcpy ();
 
 /* The name this program was run with. */
 char *program_name;
@@ -117,7 +117,7 @@ static struct option const long_options[] =
 /* If PATH is an existing directory, return nonzero, else 0.  */
 
 static int
-is_real_dir (char *path)
+is_real_dir (const char *path)
 {
   struct stat stats;
 
@@ -128,7 +128,7 @@ is_real_dir (char *path)
    Return 1 if an error occurred, 0 if successful. */
 
 static int
-copy_reg (char *source, char *dest)
+copy_reg (const char *source, const char *dest)
 {
   int ifd;
   int ofd;
@@ -137,7 +137,8 @@ copy_reg (char *source, char *dest)
 
   if (!S_ISREG (source_stats.st_mode))
     {
-      error (0, 0, _("cannot move `%s' across filesystems: Not a regular file"),
+      error (0, 0,
+	     _("cannot move `%s' across filesystems: Not a regular file"),
 	     source);
       return 1;
     }
@@ -233,7 +234,7 @@ copy_reg (char *source, char *dest)
    Return 0 if successful, 1 if an error occurred.  */
 
 static int
-do_move (char *source, char *dest)
+do_move (const char *source, const char *dest)
 {
   char *dest_backup = NULL;
 
@@ -344,7 +345,7 @@ do_move (char *source, char *dest)
    Return 0 if successful, 1 if an error occurred.  */
 
 static int
-movefile (char *source, char *dest)
+movefile (const char *source, const char *dest)
 {
   strip_trailing_slashes (source);
 
@@ -354,14 +355,15 @@ movefile (char *source, char *dest)
       /* Target is a directory; build full target filename. */
       char *base;
       char *new_dest;
+      int fail;
 
       base = basename (source);
-      /* Remove a (single) trailing slash if there is at least one.  */
-      if (dest[strlen (dest) - 1] == '/')
-        dest[strlen (dest) - 1] = '\0';
-      new_dest = (char *) alloca (strlen (dest) + 1 + strlen (base) + 1);
-      stpcpy (stpcpy (stpcpy (new_dest, dest), "/"), base);
-      return do_move (source, new_dest);
+      new_dest = path_concat (dest, base, NULL);
+      if (new_dest == NULL)
+	error (1, 0, _("virtual memory exhausted"));
+      fail = do_move (source, new_dest);
+      free (new_dest);
+      return fail;
     }
   else
     return do_move (source, dest);
