@@ -11,6 +11,8 @@ AC_DEFUN([gl_FUNC_MEMRCHR],
   dnl Persuade glibc <string.h> to declare memrchr().
   AC_REQUIRE([AC_GNU_SOURCE])
 
+  AC_CHECK_DECLS_ONCE([memrchr])
+
   AC_REPLACE_FUNCS(memrchr)
   if test $ac_cv_func_memrchr = no; then
     gl_PREREQ_MEMRCHR
