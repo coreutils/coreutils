@@ -3,6 +3,9 @@ package Test;
 require 5.002;
 use strict;
 
+# Tell head to accept old-style options like `-1'.
+$Test::env_default = ['_POSIX2_VERSION=199209'];
+
 my @tv = (
 
 # -b option is no longer an official option. But it's still working to
