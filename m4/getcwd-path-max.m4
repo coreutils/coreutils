@@ -126,7 +126,7 @@ main ()
        [gl_cv_func_getcwd_vs_path_max=no],
        [gl_cv_func_getcwd_vs_path_max=no])])
 
-  if test $gl_cv_func_getcwd_vs_path_max = yes; then
+  if test $gl_cv_func_getcwd_vs_path_max = no; then
     AC_LIBOBJ(getcwd)
     AC_DEFINE(getcwd, rpl_getcwd,
       [Define to rpl_getcwd if the wrapper function should be used.])
