@@ -191,7 +191,7 @@ cwrite (int new_file_flag, const char *bp, int bytes)
       if (output_desc < 0)
 	error (EXIT_FAILURE, errno, "%s", outfile);
     }
-  if (full_write (output_desc, bp, bytes) != bytes)
+  if (full_write (output_desc, bp, bytes) != (size_t) bytes)
     error (EXIT_FAILURE, errno, "%s", outfile);
 }
 
@@ -358,6 +358,14 @@ line_bytes_split (int nchars)
   free (buf);
 }
 
+#define FAIL_ONLY_ONE_WAY()					\
+  do								\
+    {								\
+      error (0, 0, _("cannot split in more than one way"));	\
+      usage (EXIT_FAILURE);					\
+    }								\
+  while (0)
+
 int
 main (int argc, char **argv)
 {
@@ -401,21 +409,21 @@ main (int argc, char **argv)
 	  break;
 
 	case 'a':
-	  if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
-	      || tmp_long < 0 || tmp_long > SIZE_MAX)
-	    {
-	      error (0, 0, _("%s: invalid suffix length"), optarg);
-	      usage (EXIT_FAILURE);
-	    }
-	  suffix_length = tmp_long;
+	  {
+	    unsigned long tmp;
+	    if (xstrtoul (optarg, NULL, 10, &tmp, "") != LONGINT_OK
+		|| SIZE_MAX < tmp)
+	      {
+		error (0, 0, _("%s: invalid suffix length"), optarg);
+		usage (EXIT_FAILURE);
+	      }
+	    suffix_length = tmp;
+	  }
 	  break;
 
 	case 'b':
 	  if (split_type != type_undef)
-	    {
-	      error (0, 0, _("cannot split in more than one way"));
-	      usage (EXIT_FAILURE);
-	    }
+	    FAIL_ONLY_ONE_WAY ();
 	  split_type = type_bytes;
 	  if (xstrtol (optarg, NULL, 10, &tmp_long, "bkm") != LONGINT_OK
 	      || tmp_long < 0 || tmp_long > INT_MAX)
@@ -428,10 +436,7 @@ main (int argc, char **argv)
 
 	case 'l':
 	  if (split_type != type_undef)
-	    {
-	      error (0, 0, _("cannot split in more than one way"));
-	      usage (EXIT_FAILURE);
-	    }
+	    FAIL_ONLY_ONE_WAY ();
 	  split_type = type_lines;
 	  if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
 	      || tmp_long < 0 || tmp_long > INT_MAX)
@@ -444,11 +449,7 @@ main (int argc, char **argv)
 
 	case 'C':
 	  if (split_type != type_undef)
-	    {
-	      error (0, 0, _("cannot split in more than one way"));
-	      usage (EXIT_FAILURE);
-	    }
-
+	    FAIL_ONLY_ONE_WAY ();
 	  split_type = type_byteslines;
 	  if (xstrtol (optarg, NULL, 10, &tmp_long, "bkm") != LONGINT_OK
 	      || tmp_long < 0 ||  tmp_long > INT_MAX)
@@ -470,10 +471,7 @@ main (int argc, char **argv)
 	case '8':
 	case '9':
 	  if (split_type != type_undef && split_type != type_digits)
-	    {
-	      error (0, 0, _("cannot split in more than one way"));
-	      usage (EXIT_FAILURE);
-	    }
+	    FAIL_ONLY_ONE_WAY ();
 	  if (digits_optind != 0 && digits_optind != this_optind)
 	    accum = 0;		/* More than one number given; ignore other. */
 	  digits_optind = this_optind;
