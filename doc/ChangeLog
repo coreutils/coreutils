@@ -1,3 +1,7 @@
+2002-05-26  Jim Meyering  <meyering@lucent.com>
+
+	* coreutils.texi: Use @acronym in place of most uses of @sc.
+
 2002-04-28  Jim Meyering  <meyering@lucent.com>
 
 	* coreutils.texi: Change `@code{PROG}' to `@command{PROG}'.
