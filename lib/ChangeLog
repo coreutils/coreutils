@@ -10,6 +10,7 @@
 	* regex.c: Update from libc.
 	* regex.h: Likewise.
 	* getopt1.c: Likewise.
+	* memcmp.c: Likewise.
 
 	* getusershell.c (setusershell) [HAVE_FSEEKO]: Use fseek0.
 	Patch by Ulrich Drepper.
