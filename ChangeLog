@@ -1,5 +1,8 @@
 2004-09-19  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* src/echo.c (main): Don't pass NULL to strcmp when
+	POSIXLY_CORRECT and given no arguments.
+
 	* src/md5sum.c (STRING_OPTION): Remove.
 	(long_options, main): Remove support for undocumented and
 	obsolete --string option, as suggested in the 1996-09-26 patch.
