@@ -2,6 +2,8 @@
 
 	* Version 4.0.41.
 
+	* depcomp: New version, from automake.
+
 	`chmod 0 file; rm file' would no longer prompt before removal.
 	* src/remove.c (remove_file): Revert last change.
 	Reported by Vin Shelton.
