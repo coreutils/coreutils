@@ -371,7 +371,7 @@ re_protect (const char *const_dst_path, int src_offset,
 /* FIXME: find a way to synch this function with the one in lib/makepath.c. */
 
 static int
-make_path_private (const char *const_dirpath, int src_offset, int mode,
+make_path_private (const char *const_dirpath, size_t src_offset, int mode,
 		   const char *verbose_fmt_string, struct dir_attr **attr_list,
 		   int *new_dst, int (*xstat)())
 {
@@ -582,8 +582,6 @@ do_copy (int n_files, char **file, const char *target_directory,
 	      /* Append all of `arg' (minus any trailing slash) to `dest'.  */
 	      dst_path = path_concat (target_directory, arg_no_trailing_slash,
 				      &arg_in_concat);
-	      if (dst_path == NULL)
-		xalloc_die ();
 
 	      /* For --parents, we have to make sure that the directory
 	         dir_name (dst_path) exists.  We may have to create a few
