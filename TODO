@@ -1,0 +1,10 @@
+put old ChangeLog files somewhere...
+Add them to EXTRA_DIST
+
+Move things so there are no symlinks from repository to
+any directory other than common
+
+Make bug-reporting address bug-coreutils@gnu.org work.
+grep 'bug-.*utils' src/*.c
+
+merge .po files
