@@ -1,3 +1,8 @@
+1999-02-01  Jim Meyering  <meyering@ascend.com>
+
+	* lib/strcasecmp.c (STRXCASECMP_FUNCTION): Don't increment within macro
+	argument list.  From Akim Demaille.
+
 1999-01-31  Jim Meyering  <meyering@ascend.com>
 
 	* doc/fileutils.texi: Wrap the @top node in @ifnottex instead of
