@@ -150,7 +150,7 @@ for copy in cp mv; do
 done
 
 test $fail = 1 &&
-  { (exit $?); exit; }
+  { (exit 1); exit; }
 
 cat <<\EOF > $expected
 1 cp loc_reg rem_sl [cp: `loc_reg' and `rem_sl' are the same file ](loc_reg) (rem_sl -> dir/loc_reg)
@@ -199,9 +199,8 @@ cat <<\EOF > $expected
 
 EOF
 
-# Uncomment this if you see a failure and want to try to diagnose it.
-#diff -u $expected $actual 1>&2
+# Some folks may don't have diff.
+cmp $expected $actual \
+  || { diff -c $expected $actual 1>&2; fail=1; }
 
-cmp $expected $actual
-
-(exit $?); exit
+(exit $fail); exit
