@@ -157,8 +157,8 @@ test_stat (path, finfo)
 }
 
 /* Do the same thing access(2) does, but use the effective uid and gid,
-   and don't make the mistake of telling root that any file is
-   executable. */
+   and don't make the mistake of telling root that any file is executable.
+   But this loses when the containing filesystem is mounted e.g. read-only.  */
 static int
 eaccess (path, mode)
      char *path;

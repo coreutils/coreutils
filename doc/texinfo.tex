@@ -24,7 +24,7 @@
 
 % This automatically updates the version number based on RCS.
 \def\deftexinfoversion$#1: #2 ${\def\texinfoversion{#2}}
-\deftexinfoversion$Revision: 1.6 $
+\deftexinfoversion$Revision: 1.7 $
 \message{Loading texinfo package [Version \texinfoversion]:}
 
 % Print the version number if in a .fmt file.
@@ -168,9 +168,14 @@
 % Do @cropmarks to get crop marks
 \def\cropmarks{\let\onepageout=\croppageout }
 
+\newinsert\margin \dimen\margin=\maxdimen
+
 \def\pagebody#1{\vbox to\pageheight{\boxmaxdepth=\maxdepth #1}}
 {\catcode`\@ =11
 \gdef\pagecontents#1{\ifvoid\topins\else\unvbox\topins\fi
+% marginal hacks, juha@viisa.uucp (Juha Takala)
+\ifvoid\margin\else % marginal info is present
+  \rlap{\kern\hsize\vbox to\z@{\kern1pt\box\margin \vss}}\fi
 \dimen@=\dp#1 \unvbox#1
 \ifvoid\footins\else\vskip\skip\footins\footnoterule \unvbox\footins\fi
 \ifr@ggedbottom \kern-\dimen@ \vfil \fi}
@@ -901,12 +906,14 @@ where each line of input produces a line of output.}
 
 % Set the font macro #1 to the font named #2, adding on the
 % specified font prefix (normally `cm').
-\def\fontprefix{cm}
 \def\setfont#1#2{\font#1=\fontprefix#2}
 
-% Enter `@setfontprefix dc' to use the dc fonts instead of the cm fonts.
-\def\setfontprefix{\parsearg\\setfontprefixzzz}
-\def\setfontprefixzzz#1{\gdef\fontprefix{#1}}
+% Use cm as the default font prefix.
+% To specify the font prefix, you must define \fontprefix
+% before you read in texinfo.tex.
+\ifx\fontprefix\undefined
+\def\fontprefix{cm}
+\fi
 
 \ifx\bigger\relax
 \let\mainmagstep=\magstep1
@@ -924,11 +931,11 @@ where each line of input produces a line of output.}
 \setfont\textsl{sl10 scaled \mainmagstep}
 \setfont\textsf{ss10 scaled \mainmagstep}
 \setfont\textsc{csc10 scaled \mainmagstep}
-\setfont\texti{mi10 scaled \mainmagstep}
-\setfont\textsy{sy10 scaled \mainmagstep}
+\font\texti=cmmi10 scaled \mainmagstep
+\font\textsy=cmsy10 scaled \mainmagstep
 
 % A few fonts for @defun, etc.
-\setfont\defbf{bx10 scaled \magstep1 %was 1314}
+\setfont\defbf{bx10 scaled \magstep1} %was 1314
 \setfont\deftt{tt10 scaled \magstep1}
 \def\df{\let\tentt=\deftt \let\tenbf = \defbf \bf}
 
@@ -945,8 +952,8 @@ where each line of input produces a line of output.}
 \let\indsf=\indrm
 \let\indbf=\indrm
 \let\indsc=\indrm
-\setfont\indi{mi9}
-\setfont\indsy{sy9}
+\font\indi=cmmi9
+\font\indsy=cmsy9
 
 % Fonts for headings
 \setfont\chaprm{bx12 scaled \magstep2}
@@ -956,8 +963,8 @@ where each line of input produces a line of output.}
 \setfont\chapsf{ss12 scaled \magstep2}
 \let\chapbf=\chaprm
 \setfont\chapsc{csc10 scaled\magstep3}
-\setfont\chapi{mi12 scaled \magstep2}
-\setfont\chapsy{sy10 scaled \magstep3}
+\font\chapi=cmmi12 scaled \magstep2
+\font\chapsy=cmsy10 scaled \magstep3
 
 \setfont\secrm{bx12 scaled \magstep1}
 \setfont\secit{ti12 scaled \magstep1}
@@ -966,8 +973,8 @@ where each line of input produces a line of output.}
 \setfont\secsf{ss12 scaled \magstep1}
 \setfont\secbf{bx12 scaled \magstep1}
 \setfont\secsc{csc10 scaled\magstep2}
-\setfont\seci{mi12 scaled \magstep1}
-\setfont\secsy{sy10 scaled \magstep2}
+\font\seci=cmmi12 scaled \magstep1
+\font\secsy=cmsy10 scaled \magstep2
 
 % \setfont\ssecrm{bx10 scaled \magstep1}    % This size an font looked bad.
 % \setfont\ssecit{cmti10 scaled \magstep1}    % The letters were too crowded.
@@ -990,13 +997,13 @@ where each line of input produces a line of output.}
 \setfont\ssecsf{ss12 scaled \magstephalf}
 \setfont\ssecbf{bx12 scaled \magstephalf}
 \setfont\ssecsc{csc10 scaled \magstep1}
-\setfont\sseci{mi12 scaled \magstephalf}
-\setfont\ssecsy{sy10 scaled \magstep1}
+\font\sseci=cmmi12 scaled \magstephalf
+\font\ssecsy=cmsy10 scaled \magstep1
 % The smallcaps and symbol fonts should actually be scaled \magstep1.5,
 % but that is not a standard magnification.
 
 % Fonts for title page:
-\setfont\titlerm ={bx12 scaled \magstep3}
+\setfont\titlerm{bx12 scaled \magstep3}
 \let\authorrm = \secrm
 
 % In order for the font changes to affect most math symbols and letters,
@@ -2031,7 +2038,13 @@ July\or August\or September\or October\or November\or December\fi
 
 \let\indexbackslash=0  %overridden during \printindex.
 
+% workhorse for all \fooindexes
+% #1 is name of index, #2 is stuff to put there
 \def\doind #1#2{%
+% Put the index entry in the margin if desired.
+\ifx\SETmarginindex\relax\else%
+\insert\margin{\hbox{\vrule height8pt depth3pt width0pt #2}}%
+\fi%
 {\count10=\lastpenalty %
 {\indexdummies % Must do this here, since \bf, etc expand at this stage
 \escapechar=`\\%
@@ -2467,7 +2480,7 @@ July\or August\or September\or October\or November\or December\fi
 \def\chapteryyy #1{\numhead0{#1}} % normally numhead0 calls chapterzzz
 \def\chapterzzz #1{\seccheck{chapter}%
 \secno=0 \subsecno=0 \subsubsecno=0
-\global\advance \chapno by 1 \message{Chapter \the\chapno}%
+\global\advance \chapno by 1 \message{\putwordChapter \the\chapno}%
 \chapmacro {#1}{\the\chapno}%
 \gdef\thissection{#1}%
 \gdef\thischaptername{#1}%
@@ -3848,7 +3861,7 @@ July\or August\or September\or October\or November\or December\fi
 
 % Use \turnoffactive so that punctuation chars such as underscore
 % work in node names.
-\def\dosetq #1#2{{\let\folio=0 \turnoffactive%
+\def\dosetq #1#2{{\let\folio=0 \turnoffactive \auxhat%
 \edef\next{\write\auxfile{\internalsetq {#1}{#2}}}%
 \next}}
 
@@ -3987,6 +4000,7 @@ July\or August\or September\or October\or November\or December\fi
 \catcode `\{=1 \catcode `\}=2
 \catcode `\%=\other
 \catcode `\'=0
+\catcode`\^=7 % to make ^^e4 etc usable in xref tags 
 \catcode `\\=\other
 \openin 1 \jobname.aux
 \ifeof 1 \else \closein 1 \input \jobname.aux \global\havexrefstrue
@@ -4208,8 +4222,8 @@ July\or August\or September\or October\or November\or December\fi
 % textwidth; \voffset; \hoffset (!); binding offset.  All require a dimension;
 % header is additional; added length extends the bottom of the page.
 
-\def\changepagesizes#1#2#3#4#5
-{\global\vsize= #1
+\def\changepagesizes#1#2#3#4#5{
+ \global\vsize= #1
  \advance\vsize by \topskip
  \global\voffset= #3
  \global\hsize= #2
@@ -4267,6 +4281,7 @@ July\or August\or September\or October\or November\or December\fi
 \def~{{\tt \char '176}}
 \chardef\hat=`\^
 \catcode`\^=\active
+\def\auxhat{\def^{'hat}}
 \def^{{\tt \hat}}
 
 \catcode`\_=\active

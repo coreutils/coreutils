@@ -1,3 +1,8 @@
+Wed Nov 02 18:52:20 1994  Jim Meyering  (meyering@comco.com)
+
+	* doc/Makefile.in (install): Remove test for existence of info
+	file.  Simply change to $(srcdir) instead.
+
 Wed Oct 26 23:40:07 1994  Jim Meyering  (meyering@comco.com)
 
 	* safe-xstat.hin [EINTR]: Always define safe_l?stat.
