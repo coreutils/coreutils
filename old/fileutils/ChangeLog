@@ -1,5 +1,46 @@
 2001-05-11  Paul Eggert  <eggert@twinsun.com>
 
+	dirname code cleanup.  base_name now behaves more compatibly
+	with POSIX basename when given file names that have trailing
+	slashes, and similarly for dir_name.  Add new primitives
+	base_len and dir_len.  Put the directory-name-related decls
+	into dirname.h.
+
+	* src/chmod.c (strip_trailing_slashes): Remove; now in dirname.h.
+	* src/chown.c (strip_trailing_slashes): Likewise.
+	* src/cp.c (strip_trailing_slashes): Likewise.
+	* src/df.c (strip_trailing_slashes): Likewise.
+	* src/ln.c (strip_trailing_slashes): Likewise.
+	* src/mkdir.c (strip_trailing_slashes): Likewise.
+	* src/rm.c (strip_trailing_slashes): Likewise.
+	* src/rmdir.c (strip_trailing_slashes): Likewise.
+
+	* src/dircolors.c, src/ls.c, src/remove.c:
+	Include "dirname.h", to get base_name.
+
+	* src/cp.c (make_path_private): Use dir_len instead of
+	dir_name, and avoid an extra mealloc call.
+
+	* src/df.c (find_mount_point): No need to strip trailing
+	slashes before invoking new dir_name.
+
+	* src/mv.c: Include "dirname.h".
+	(strip_trailing_slashes_2): Remove; now done by
+	strip_trailing_slashes.  All callers changed.
+
+	* src/sys2.h (base_name): Remove decl; now in dirname.h.
+
+	* src/copy.c (copy_internal): Remove the code that tested for NULL
+	dir_name return value.  That can't happen.
+
+2001-05-12  Jim Meyering  <meyering@lucent.com>
+
+	* src/ls.c (usage): Wording changes related to -o, -n, and -g.
+	* doc/omni-utils.texi: Likewise.
+	From Paul Eggert.
+
+2001-05-11  Paul Eggert  <eggert@twinsun.com>
+
 	* src/chmod.c (mode_changed, change_file_mode):
 	There's no need to invoke both lstat and stat here, so call just
 	one of the two functions.
