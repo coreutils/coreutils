@@ -43,10 +43,10 @@ test_LDADD = $(LDADD) $(LIB_EACCESS)
 __LDADD = $(LDADD) $(LIB_EACCESS)
 
 # for clock_gettime and fdatasync
-dd_LDADD = $(LDADD) $(LIB_FDATASYNC)
+dd_LDADD = $(LDADD) $(LIB_GETHRXTIME) $(LIB_FDATASYNC)
 dir_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
 ls_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
-shred_LDADD = $(LDADD) $(LIB_FDATASYNC)
+shred_LDADD = $(LDADD) $(LIB_GETHRXTIME) $(LIB_FDATASYNC)
 vdir_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
 
 ## If necessary, add -lm to resolve use of pow in lib/strtod.c.
@@ -69,7 +69,7 @@ seq_LDADD = $(LDADD) $(SEQ_LIBM)
 # If necessary, add -lm to resolve the `pow' reference in lib/strtod.c
 # or for the fesetround reference in programs using nanosec.c.
 nanosec_libs = \
-  $(LDADD) $(FESETROUND_LIBM) $(POW_LIB) $(LIB_NANOSLEEP)
+  $(LDADD) $(FESETROUND_LIBM) $(POW_LIB) $(LIB_XNANOSLEEP) $(LIB_NANOSLEEP)
 
 sleep_LDADD = $(nanosec_libs)
 tail_LDADD = $(nanosec_libs)
