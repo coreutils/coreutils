@@ -8595,6 +8595,10 @@ This version of @command{false} is implemented as a C program, and is thus
 more secure and faster than a shell script implementation, and may safely
 be used as a dummy shell for the purpose of disabling accounts.
 
+Note that @command{false} (unlike all other programs documented herein)
+exits unsuccessfully, even when invoked with
+@option{--help} or @option{--version}.
+
 
 @node true invocation
 @section @command{true}: Do nothing, successfully
