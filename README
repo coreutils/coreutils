@@ -37,7 +37,7 @@ Special thanks to Paul Eggert, Brian Matthews, Bruce Evans, Karl Berry,
 Kaveh Ghazi, and François Pinard for help with debugging and porting
 these programs.  Many thanks to all of the people who have taken the
 time to submit problem reports and fixes.  All contributed changes are
-attributed in the ChangeLog file.
+attributed in the ChangeLog files.
 
 And thanks to the following people who have provided accounts for
 portability testing on many different types of systems: Bob Proulx,
@@ -45,7 +45,7 @@ Christian Robert, François Pinard, Greg McGary, Harlan Stenn,
 Joel N. Weber, Mark D. Roth, Matt Schalit, Nelson H. F. Beebe,
 Réjean Payette, Sam Tardieu.
 
-Thanks to Michael Stone for inflicting test releases of the fileutils
+Thanks to Michael Stone for inflicting test releases of this package
 on Debian's unstable distribution, and to all the kind folks who used
 that distribution and found and reported bugs.
 
@@ -58,9 +58,9 @@ If you run the tests on a SunOS4.1.4 system, expect the ctime-part of
 the ls `time-1' test to fail.  I believe that is due to a bug in the
 way Sun implemented link(2) and chmod(2).
 
-***************************************
-Last-minute notes, before coreutils-5.0
----------------------------------------
+***********************
+HPUX 11.x build failure
+-----------------------
 
 A known problem exists when compiling on HPUX on both hppa and ia64
 in 64-bit mode (i.e. +DD64) on all known HPUX 11.x versions.  This
@@ -95,6 +95,20 @@ If you can run the tests as root, please do so and report any
 problems.  We get much less test coverage in that mode, and it's
 arguably more important that these tools work well when run by
 root than when run by less privileged users.
+
+***************
+Reporting bugs:
+---------------
+
+IMPORTANT: if you take the time to report a test failure,
+please be sure to include the output of running `make check'
+in verbose mode for each each failing test.  For example,
+if the test that fails is tests/mv/hard-link-1, then you
+would run this command:
+
+  env VERBOSE=yes make check -C tests/mv TESTS=hard-link-1 >> log 2>&1
+
+and then include the contents of the file `log' in your bug report.
 
 ***************************************
 
@@ -135,9 +149,9 @@ use the versions of
 
 Usually it's fine to use versions that are newer than those specified.
 
-These programs all recognize the `--version' option.  When reporting
-bugs, please include in the subject line both the package name/version
-and the name of the program for which you found a problem.
+All of these programs except `test' recognize the `--version' option.
+When reporting bugs, please include in the subject line both the package
+name/version and the name of the program for which you found a problem.
 
 For general documentation on the coding and usage standards
 this distribution follows, see the GNU Coding Standards,
