@@ -1,3 +1,8 @@
+2000-07-03  Paul Eggert  <eggert@twinsun.com>
+
+	* mbstate_t.m4 (AC_MBSTATE_T_OBJECT): Port to autoconf 2.13.
+	Add AC_CHECK_HEADERS(stdlib.h), since we use HAVE_STDLIB_H.
+
 2000-07-02  Jim Meyering  <meyering@lucent.com>
 
 	* mbstate_t.m4: Also define mbstate_t, if necessary.
