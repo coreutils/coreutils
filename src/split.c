@@ -502,7 +502,7 @@ main (int argc, char **argv)
 
   /* Open the input file.  */
   if (STREQ (infile, "-"))
-    input_desc = 0;
+    input_desc = STDIN_FILENO;
   else
     {
       input_desc = open (infile, O_RDONLY);
