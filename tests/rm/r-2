@@ -21,13 +21,11 @@ mkdir t t/a t/a/b || framework_failure=1
 > t/a/b/g || framework_failure=1
 
 # FIXME: if this fails, it's a framework failure
-cat <<EOF | sort > t/E || framework_failure=1
-removing all entries of directory \`t/a'
-removing all entries of directory \`t/a/b'
-removing \`t/a/b/g'
-removing the directory itself: \`t/a/b'
-removing \`t/a/f'
-removing the directory itself: \`t/a'
+cat <<\EOF | sort > t/E || framework_failure=1
+removed directory: `t/a'
+removed directory: `t/a/b'
+removed `t/a/b/g'
+removed `t/a/f'
 EOF
 
 if test $framework_failure = 1; then
@@ -46,5 +44,6 @@ fi
 
 # Compare expected and actual output.
 cmp t/E t/O || fail=1
+test $fail = 1 && diff t/E t/O 2> /dev/null
 
 (exit $fail); exit
