@@ -1,3 +1,7 @@
+2000-06-21  Jim Meyering  <meyering@lucent.com>
+
+	* jm-macros.m4 (AC_REPLACE_FUNCS): Add getpass.
+
 2000-06-18  Jim Meyering  <meyering@lucent.com>
 
 	* jm-macros.m4 (AC_REPLACE_FUNCS): Remove mkdir.
