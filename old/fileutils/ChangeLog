@@ -2,9 +2,6 @@
 
 	* Version 4.0.34.
 
-	* src/chown.c (main): Reflect renaming: s/dereference/change_symlinks/.
-	* src/chgrp.c (main): Likewise.
-
 	* src/chown-core.h [enum Dereference_symlink] (dereference): Rename
 	from change_symlinks.
 	* src/chown-core.c: Declare lstat.
@@ -16,6 +13,8 @@
 	from the lstat stats, in order to control whether we operate on symlinks
 	and whether (with -R) we traverse symlinks to directories.
 	When dereferencing, use open/fchown (rather than chown) on symlinks.
+	* src/chown.c (main): Reflect renaming: s/dereference/change_symlinks/.
+	* src/chgrp.c (main): Likewise.
 
 	* src/chown-core.c (describe_change): Use `:' (not `.') to separate the
 	username and group in messages evoked by the --verbose and --changes
