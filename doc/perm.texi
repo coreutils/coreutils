@@ -217,17 +217,14 @@ og-rxw
 
 @cindex copying existing permissions
 @cindex permissions, copying existing
-You can base part of a file's permissions on part of its existing
-permissions.  To do this, instead of using @samp{r}, @samp{w}, or
-@samp{x} after the operator, you use the letter @samp{u}, @samp{g}, or
-@samp{o}.  For example, the mode
-
+You can base a file's permissions on its existing permissions.  To do
+this, instead of using @samp{r}, @samp{w}, or @samp{x} after the
+operator, you use the letter @samp{u}, @samp{g}, or @samp{o}.  For
+example, the mode
 @example
 o+g
 @end example
-
 @noindent
-@c FIXME describe the ls -l notation for showing permissions.
 adds the permissions for users who are in a file's group to the
 permissions that other users have for the file.  Thus, if the file
 started out as mode 664 (@samp{rw-rw-r--}), the above mode would change
