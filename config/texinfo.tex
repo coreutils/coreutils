@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2003-01-08.14}
+\def\texinfoversion{2003-01-10.08}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
@@ -290,7 +290,7 @@
       \egroup % \vbox from first cropmarks clause
       \fi
     }% end of \shipout\vbox
-  }% end of group with \turnoffactive
+  }% end of group with \normalturnoffactive
   \advancepageno
   \ifnum\outputpenalty>-20000 \else\dosupereject\fi
 }
@@ -487,7 +487,7 @@
 \let\udotaccent = \d
 
 % Other special characters: @questiondown @exclamdown
-% Plain TeX defines: @AA @AE @O @OE @L (and lowercase versions) @ss.
+% Plain TeX defines: @AA @AE @O @OE @L (plus lowercase versions) @ss.
 \def\questiondown{?`}
 \def\exclamdown{!`}
 
@@ -2867,99 +2867,104 @@ width0pt\relax} \fi
 % laboriously list every single command here.)
 % 
 \def\indexdummies{%
-\def\ { }%
-\def\@{@}% change to @@ when we switch to @ as escape char in aux files.
-% Need these in case \tex is in effect and \{ is a \delimiter again.
-% But can't use \lbracecmd and \rbracecmd because texindex assumes
-% braces and backslashes are used only as delimiters.  
-\let\{ = \mylbrace
-\let\} = \myrbrace
-\def\_{{\realbackslash _}}%
-\normalturnoffactive
-%
-% Take care of the plain tex accent commands.
-\def\,##1{\realbackslash ,{##1}}%
-\def\"{\realbackslash "}%
-\def\`{\realbackslash `}%
-\def\'{\realbackslash '}%
-\def\^{\realbackslash ^}%
-\def\~{\realbackslash ~}%
-\def\={\realbackslash =}%
-\def\b{\realbackslash b}%
-\def\c{\realbackslash c}%
-\def\d{\realbackslash d}%
-\def\u{\realbackslash u}%
-\def\v{\realbackslash v}%
-\def\H{\realbackslash H}%
-\def\dotless##1{\realbackslash dotless {##1}}%
-% Take care of the plain tex special European modified letters.
-\def\AA{\realbackslash AA}%
-\def\AE{\realbackslash AE}%
-\def\L{\realbackslash L}%
-\def\OE{\realbackslash OE}%
-\def\O{\realbackslash O}%
-\def\aa{\realbackslash aa}%
-\def\ae{\realbackslash ae}%
-\def\l{\realbackslash l}%
-\def\oe{\realbackslash oe}%
-\def\o{\realbackslash o}%
-\def\ss{\realbackslash ss}%
-%
-% Although these internals commands shouldn't show up, sometimes they do.
-\def\bf{\realbackslash bf }%
-\def\gtr{\realbackslash gtr}%
-\def\hat{\realbackslash hat}%
-\def\less{\realbackslash less}%
-%\def\rm{\realbackslash rm }%
-\def\sf{\realbackslash sf}%
-\def\sl{\realbackslash sl }%
-\def\tclose##1{\realbackslash tclose {##1}}%
-\def\tt{\realbackslash tt}%
-%
-\def\b##1{\realbackslash b {##1}}%
-\def\i##1{\realbackslash i {##1}}%
-\def\sc##1{\realbackslash sc {##1}}%
-\def\t##1{\realbackslash t {##1}}%
-\def\r##1{\realbackslash r {##1}}%
-%
-\def\TeX{\realbackslash TeX}%
-\def\acronym##1{\realbackslash acronym {##1}}%
-\def\cite##1{\realbackslash cite {##1}}%
-\def\code##1{\realbackslash code {##1}}%
-\def\command##1{\realbackslash command {##1}}%
-\def\dfn##1{\realbackslash dfn {##1}}%
-\def\dots{\realbackslash dots }%
-\def\emph##1{\realbackslash emph {##1}}%
-\def\env##1{\realbackslash env {##1}}%
-\def\file##1{\realbackslash file {##1}}%
-\def\kbd##1{\realbackslash kbd {##1}}%
-\def\key##1{\realbackslash key {##1}}%
-\def\math##1{\realbackslash math {##1}}%
-\def\option##1{\realbackslash option {##1}}%
-\def\samp##1{\realbackslash samp {##1}}%
-\def\strong##1{\realbackslash strong {##1}}%
-\def\uref##1{\realbackslash uref {##1}}%
-\def\url##1{\realbackslash url {##1}}%
-\def\var##1{\realbackslash var {##1}}%
-\def\w{\realbackslash w }%
-%
-% These math commands don't seem likely to be used in index entries.
-\def\copyright{\realbackslash copyright}%
-\def\equiv{\realbackslash equiv}%
-\def\error{\realbackslash error}%
-\def\expansion{\realbackslash expansion}%
-\def\point{\realbackslash point}%
-\def\print{\realbackslash print}%
-\def\result{\realbackslash result}%
-%
-% Handle some cases of @value -- where the variable name does not
-% contain - or _, and the value does not contain any
-% (non-fully-expandable) commands.
-\let\value = \expandablevalue
-%
-\unsepspaces
-% Turn off macro expansion
-\turnoffmacros
+  \def\ { }%
+  \def\@{@}% change to @@ when we switch to @ as escape char in aux files.
+  % Need these in case \tex is in effect and \{ is a \delimiter again.
+  % But can't use \lbracecmd and \rbracecmd because texindex assumes
+  % braces and backslashes are used only as delimiters.  
+  \let\{ = \mylbrace
+  \let\} = \myrbrace
+  \def\_{{\realbackslash _}}%
+  \normalturnoffactive
+  %
+  % Accents.
+  \def\,##1{\realbackslash ,{##1}}%
+  \def\"{\realbackslash "}%
+  \def\`{\realbackslash `}%
+  \def\'{\realbackslash '}%
+  \def\^{\realbackslash ^}%
+  \def\~{\realbackslash ~}%
+  \def\={\realbackslash =}%
+  \def\b{\realbackslash b}%
+  \def\c{\realbackslash c}%
+  \def\d{\realbackslash d}%
+  \def\u{\realbackslash u}%
+  \def\v{\realbackslash v}%
+  \def\H{\realbackslash H}%
+  \def\dotaccent##1{\realbackslash dotaccent {##1}}%
+  \def\ringaccent##1{\realbackslash ringaccent {##1}}%
+  \def\tieaccent##1{\realbackslash tieaccent {##1}}%
+  \def\ubaraccent##1{\realbackslash ubaraccent {##1}}%
+  \def\udotaccent##1{\realbackslash udotaccent {##1}}%
+  \def\dotless##1{\realbackslash dotless {##1}}%
+  % Other non-English letters.
+  \def\AA{\realbackslash AA}%
+  \def\AE{\realbackslash AE}%
+  \def\L{\realbackslash L}%
+  \def\OE{\realbackslash OE}%
+  \def\O{\realbackslash O}%
+  \def\aa{\realbackslash aa}%
+  \def\ae{\realbackslash ae}%
+  \def\l{\realbackslash l}%
+  \def\oe{\realbackslash oe}%
+  \def\o{\realbackslash o}%
+  \def\ss{\realbackslash ss}%
+  %
+  % Although these internals commands shouldn't show up, sometimes they do.
+  \def\bf{\realbackslash bf }%
+  \def\gtr{\realbackslash gtr}%
+  \def\hat{\realbackslash hat}%
+  \def\less{\realbackslash less}%
+  %\def\rm{\realbackslash rm }%
+  \def\sf{\realbackslash sf}%
+  \def\sl{\realbackslash sl }%
+  \def\tclose##1{\realbackslash tclose {##1}}%
+  \def\tt{\realbackslash tt}%
+  %
+  \def\b##1{\realbackslash b {##1}}%
+  \def\i##1{\realbackslash i {##1}}%
+  \def\r##1{\realbackslash r {##1}}%
+  \def\sc##1{\realbackslash sc {##1}}%
+  \def\t##1{\realbackslash t {##1}}%
+  %
+  \def\TeX{\realbackslash TeX}%
+  \def\acronym##1{\realbackslash acronym {##1}}%
+  \def\cite##1{\realbackslash cite {##1}}%
+  \def\code##1{\realbackslash code {##1}}%
+  \def\command##1{\realbackslash command {##1}}%
+  \def\dfn##1{\realbackslash dfn {##1}}%
+  \def\dots{\realbackslash dots }%
+  \def\emph##1{\realbackslash emph {##1}}%
+  \def\env##1{\realbackslash env {##1}}%
+  \def\file##1{\realbackslash file {##1}}%
+  \def\kbd##1{\realbackslash kbd {##1}}%
+  \def\key##1{\realbackslash key {##1}}%
+  \def\math##1{\realbackslash math {##1}}%
+  \def\option##1{\realbackslash option {##1}}%
+  \def\samp##1{\realbackslash samp {##1}}%
+  \def\strong##1{\realbackslash strong {##1}}%
+  \def\uref##1{\realbackslash uref {##1}}%
+  \def\url##1{\realbackslash url {##1}}%
+  \def\var##1{\realbackslash var {##1}}%
+  \def\w{\realbackslash w }%
+  %
+  % These math commands don't seem likely to be used in index entries.
+  \def\copyright{\realbackslash copyright}%
+  \def\equiv{\realbackslash equiv}%
+  \def\error{\realbackslash error}%
+  \def\expansion{\realbackslash expansion}%
+  \def\point{\realbackslash point}%
+  \def\print{\realbackslash print}%
+  \def\result{\realbackslash result}%
+  %
+  % Handle some cases of @value -- where the variable name does not
+  % contain - or _, and the value does not contain any
+  % (non-fully-expandable) commands.
+  \let\value = \expandablevalue
+  %
+  \unsepspaces
+  % Turn off macro expansion
+  \turnoffmacros
 }
 
 % If an index command is used in an @example environment, any spaces
@@ -2970,73 +2975,78 @@ width0pt\relax} \fi
 
 % \indexnofonts no-ops all font-change commands.
 % This is used when outputting the strings to sort the index by.
-\def\indexdummyfont#1{#1}
 \def\indexdummytex{TeX}
 \def\indexdummydots{...}
 
 \def\indexnofonts{%
-\def\@{@}%
-% how to handle braces?
-\def\_{\normalunderscore}%
-%
-\let\,=\indexdummyfont
-\let\"=\indexdummyfont
-\let\`=\indexdummyfont
-\let\'=\indexdummyfont
-\let\^=\indexdummyfont
-\let\~=\indexdummyfont
-\let\==\indexdummyfont
-\let\b=\indexdummyfont
-\let\c=\indexdummyfont
-\let\d=\indexdummyfont
-\let\u=\indexdummyfont
-\let\v=\indexdummyfont
-\let\H=\indexdummyfont
-\let\dotless=\indexdummyfont
-% Take care of the plain tex special European modified letters.
-\def\AA{AA}%
-\def\AE{AE}%
-\def\L{L}%
-\def\OE{OE}%
-\def\O{O}%
-\def\aa{aa}%
-\def\ae{ae}%
-\def\l{l}%
-\def\oe{oe}%
-\def\o{o}%
-\def\ss{ss}%
-%
-% Don't no-op \tt, since it isn't a user-level command
-% and is used in the definitions of the active chars like <, >, |, etc.
-% Likewise with the other plain tex font commands.
-%\let\tt=\indexdummyfont
-%
-\let\b=\indexdummyfont
-\let\i=\indexdummyfont
-\let\r=\indexdummyfont
-\let\sc=\indexdummyfont
-\let\t=\indexdummyfont
-%
-\let\TeX=\indexdummytex
-\let\acronym=\indexdummyfont
-\let\cite=\indexdummyfont
-\let\code=\indexdummyfont
-\let\command=\indexdummyfont
-\let\dfn=\indexdummyfont
-\let\dots=\indexdummydots
-\let\emph=\indexdummyfont
-\let\env=\indexdummyfont
-\let\file=\indexdummyfont
-\let\kbd=\indexdummyfont
-\let\key=\indexdummyfont
-\let\math=\indexdummyfont
-\let\option=\indexdummyfont
-\let\samp=\indexdummyfont
-\let\strong=\indexdummyfont
-\let\uref=\indexdummyfont
-\let\url=\indexdummyfont
-\let\var=\indexdummyfont
-\let\w=\indexdummyfont
+  \def\ { }%
+  \def\@{@}%
+  % how to handle braces?
+  \def\_{\normalunderscore}%
+  %
+  \let\,=\asis
+  \let\"=\asis
+  \let\`=\asis
+  \let\'=\asis
+  \let\^=\asis
+  \let\~=\asis
+  \let\==\asis
+  \let\b=\asis
+  \let\c=\asis
+  \let\d=\asis
+  \let\u=\asis
+  \let\v=\asis
+  \let\H=\asis
+  \let\dotaccent=\asis
+  \let\ringaccent=\asis
+  \let\tieaccent=\asis
+  \let\ubaraccent=\asis
+  \let\udotaccent=\asis
+  \let\dotless=\asis
+  % Take care of the plain tex special European modified letters.
+  \def\AA{AA}%
+  \def\AE{AE}%
+  \def\L{L}%
+  \def\OE{OE}%
+  \def\O{O}%
+  \def\aa{aa}%
+  \def\ae{ae}%
+  \def\l{l}%
+  \def\oe{oe}%
+  \def\o{o}%
+  \def\ss{ss}%
+  %
+  % Don't no-op \tt, since it isn't a user-level command
+  % and is used in the definitions of the active chars like <, >, |, etc.
+  % Likewise with the other plain tex font commands.
+  %\let\tt=\asis
+  %
+  \let\b=\asis
+  \let\i=\asis
+  \let\r=\asis
+  \let\sc=\asis
+  \let\t=\asis
+  %
+  \let\TeX=\indexdummytex
+  \let\acronym=\asis
+  \let\cite=\asis
+  \let\code=\asis
+  \let\command=\asis
+  \let\dfn=\asis
+  \let\dots=\indexdummydots
+  \let\emph=\asis
+  \let\env=\asis
+  \let\file=\asis
+  \let\kbd=\asis
+  \let\key=\asis
+  \let\math=\asis
+  \let\option=\asis
+  \let\samp=\asis
+  \let\strong=\asis
+  \let\uref=\asis
+  \let\url=\asis
+  \let\var=\asis
+  \let\w=\asis
 }
 
 % To define \realbackslash, we must make \ not be an escape.
@@ -3609,22 +3619,19 @@ width0pt\relax} \fi
 \outer\def\chapter{\parsearg\chapteryyy}
 \def\chapteryyy #1{\numhead0{#1}} % normally numhead0 calls chapterzzz
 \def\chapterzzz #1{%
-\secno=0 \subsecno=0 \subsubsecno=0
-\global\advance \chapno by 1 \message{\putwordChapter\space \the\chapno}%
-\chapmacro {#1}{\the\chapno}%
-\gdef\thissection{#1}%
-\gdef\thischaptername{#1}%
-% We don't substitute the actual chapter name into \thischapter
-% because we don't want its macros evaluated now.
-\xdef\thischapter{\putwordChapter{} \the\chapno: \noexpand\thischaptername}%
-\toks0 = {#1}%
-\edef\temp{\noexpand\writetocentry{\realbackslash chapentry{\the\toks0}%
-                                  {\the\chapno}}}%
-\temp
-\donoderef
-\global\let\section = \numberedsec
-\global\let\subsection = \numberedsubsec
-\global\let\subsubsection = \numberedsubsubsec
+  \secno=0 \subsecno=0 \subsubsecno=0
+  \global\advance \chapno by 1 \message{\putwordChapter\space \the\chapno}%
+  \chapmacro {#1}{\the\chapno}%
+  \gdef\thissection{#1}%
+  \gdef\thischaptername{#1}%
+  % We don't substitute the actual chapter name into \thischapter
+  % because we don't want its macros evaluated now.
+  \xdef\thischapter{\putwordChapter{} \the\chapno: \noexpand\thischaptername}%
+  \writetocentry{chap}{#1}{{\the\chapno}}
+  \donoderef
+  \global\let\section = \numberedsec
+  \global\let\subsection = \numberedsubsec
+  \global\let\subsubsection = \numberedsubsubsec
 }
 
 % we use \chapno to avoid indenting back
@@ -3635,21 +3642,18 @@ width0pt\relax} \fi
 \outer\def\appendix{\parsearg\appendixyyy}
 \def\appendixyyy #1{\apphead0{#1}} % normally apphead0 calls appendixzzz
 \def\appendixzzz #1{%
-\secno=0 \subsecno=0 \subsubsecno=0
-\global\advance \appendixno by 1
-\message{\putwordAppendix\space \appendixletter}%
-\chapmacro {#1}{\appendixbox{\putwordAppendix{} \appendixletter}}%
-\gdef\thissection{#1}%
-\gdef\thischaptername{#1}%
-\xdef\thischapter{\putwordAppendix{} \appendixletter: \noexpand\thischaptername}%
-\toks0 = {#1}%
-\edef\temp{\noexpand\writetocentry{\realbackslash appendixentry{\the\toks0}%
-                       {\appendixletter}}}%
-\temp
-\appendixnoderef
-\global\let\section = \appendixsec
-\global\let\subsection = \appendixsubsec
-\global\let\subsubsection = \appendixsubsubsec
+  \secno=0 \subsecno=0 \subsubsecno=0
+  \global\advance \appendixno by 1
+  \message{\putwordAppendix\space \appendixletter}%
+  \chapmacro {#1}{\appendixbox{\putwordAppendix{} \appendixletter}}%
+  \gdef\thissection{#1}%
+  \gdef\thischaptername{#1}%
+  \xdef\thischapter{\putwordAppendix{} \appendixletter: \noexpand\thischaptername}%
+  \writetocentry{appendix}{#1}{{\appendixletter}}
+  \appendixnoderef
+  \global\let\section = \appendixsec
+  \global\let\subsection = \appendixsubsec
+  \global\let\subsubsection = \appendixsubsubsec
 }
 
 % @centerchap is like @unnumbered, but the heading is centered.
@@ -3662,150 +3666,121 @@ width0pt\relax} \fi
 \outer\def\unnumbered{\parsearg\unnumberedyyy}
 \def\unnumberedyyy #1{\unnmhead0{#1}} % normally unnmhead0 calls unnumberedzzz
 \def\unnumberedzzz #1{%
-\secno=0 \subsecno=0 \subsubsecno=0
-%
-% This used to be simply \message{#1}, but TeX fully expands the
-% argument to \message.  Therefore, if #1 contained @-commands, TeX
-% expanded them.  For example, in `@unnumbered The @cite{Book}', TeX
-% expanded @cite (which turns out to cause errors because \cite is meant
-% to be executed, not expanded).
-%
-% Anyway, we don't want the fully-expanded definition of @cite to appear
-% as a result of the \message, we just want `@cite' itself.  We use
-% \the<toks register> to achieve this: TeX expands \the<toks> only once,
-% simply yielding the contents of <toks register>.  (We also do this for
-% the toc entries.)
-\toks0 = {#1}\message{(\the\toks0)}%
-%
-\unnumbchapmacro {#1}%
-\gdef\thischapter{#1}\gdef\thissection{#1}%
-\toks0 = {#1}%
-\edef\temp{\noexpand\writetocentry{\realbackslash unnumbchapentry{\the\toks0}{\the\chapno}}}%
-\temp
-\unnumbnoderef
-\global\let\section = \unnumberedsec
-\global\let\subsection = \unnumberedsubsec
-\global\let\subsubsection = \unnumberedsubsubsec
+  \secno=0 \subsecno=0 \subsubsecno=0
+  %
+  % This used to be simply \message{#1}, but TeX fully expands the
+  % argument to \message.  Therefore, if #1 contained @-commands, TeX
+  % expanded them.  For example, in `@unnumbered The @cite{Book}', TeX
+  % expanded @cite (which turns out to cause errors because \cite is meant
+  % to be executed, not expanded).
+  %
+  % Anyway, we don't want the fully-expanded definition of @cite to appear
+  % as a result of the \message, we just want `@cite' itself.  We use
+  % \the<toks register> to achieve this: TeX expands \the<toks> only once,
+  % simply yielding the contents of <toks register>.  (We also do this for
+  % the toc entries.)
+  \toks0 = {#1}\message{(\the\toks0)}%
+  %
+  \unnumbchapmacro {#1}%
+  \gdef\thischapter{#1}\gdef\thissection{#1}%
+  \writetocentry{unnumbchap}{#1}{{\the\chapno}}
+  \unnumbnoderef
+  \global\let\section = \unnumberedsec
+  \global\let\subsection = \unnumberedsubsec
+  \global\let\subsubsection = \unnumberedsubsubsec
 }
 
 % Sections.
 \outer\def\numberedsec{\parsearg\secyyy}
 \def\secyyy #1{\numhead1{#1}} % normally calls seczzz
 \def\seczzz #1{%
-\subsecno=0 \subsubsecno=0 \global\advance \secno by 1 %
-\gdef\thissection{#1}\secheading {#1}{\the\chapno}{\the\secno}%
-\toks0 = {#1}%
-\edef\temp{\noexpand\writetocentry{\realbackslash secentry{\the\toks0}%
-                                  {\the\chapno}{\the\secno}}}%
-\temp
-\donoderef
-\nobreak
+  \subsecno=0 \subsubsecno=0 \global\advance \secno by 1 %
+  \gdef\thissection{#1}\secheading {#1}{\the\chapno}{\the\secno}%
+  \writetocentry{sec}{#1}{{\the\chapno}{\the\secno}}
+  \donoderef
+  \nobreak
 }
 
 \outer\def\appendixsection{\parsearg\appendixsecyyy}
 \outer\def\appendixsec{\parsearg\appendixsecyyy}
 \def\appendixsecyyy #1{\apphead1{#1}} % normally calls appendixsectionzzz
 \def\appendixsectionzzz #1{%
-\subsecno=0 \subsubsecno=0 \global\advance \secno by 1 %
-\gdef\thissection{#1}\secheading {#1}{\appendixletter}{\the\secno}%
-\toks0 = {#1}%
-\edef\temp{\noexpand\writetocentry{\realbackslash secentry{\the\toks0}%
-                                  {\appendixletter}{\the\secno}}}%
-\temp
-\appendixnoderef
-\nobreak
+  \subsecno=0 \subsubsecno=0 \global\advance \secno by 1 %
+  \gdef\thissection{#1}\secheading {#1}{\appendixletter}{\the\secno}%
+  \writetocentry{sec}{#1}{{\appendixletter}{\the\secno}}
+  \appendixnoderef
+  \nobreak
 }
 
 \outer\def\unnumberedsec{\parsearg\unnumberedsecyyy}
 \def\unnumberedsecyyy #1{\unnmhead1{#1}} % normally calls unnumberedseczzz
 \def\unnumberedseczzz #1{%
-\plainsecheading {#1}\gdef\thissection{#1}%
-\toks0 = {#1}%
-\edef\temp{\noexpand\writetocentry{\realbackslash unnumbsecentry%
-  {\the\toks0}{\the\chapno}{\the\secno}}}%
-\temp
-\unnumbnoderef
-\nobreak
+  \plainsecheading {#1}\gdef\thissection{#1}%
+  \writetocentry{unnumbsec}{#1}{{\the\chapno}{\the\secno}}
+  \unnumbnoderef
+  \nobreak
 }
 
 % Subsections.
 \outer\def\numberedsubsec{\parsearg\numberedsubsecyyy}
 \def\numberedsubsecyyy #1{\numhead2{#1}} % normally calls numberedsubseczzz
 \def\numberedsubseczzz #1{%
-\gdef\thissection{#1}\subsubsecno=0 \global\advance \subsecno by 1 %
-\subsecheading {#1}{\the\chapno}{\the\secno}{\the\subsecno}%
-\toks0 = {#1}%
-\edef\temp{\noexpand\writetocentry{\realbackslash subsecentry{\the\toks0}%
-                                    {\the\chapno}{\the\secno}{\the\subsecno}}}%
-\temp
-\donoderef
-\nobreak
+  \gdef\thissection{#1}\subsubsecno=0 \global\advance \subsecno by 1 %
+  \subsecheading {#1}{\the\chapno}{\the\secno}{\the\subsecno}%
+  \writetocentry{subsec}{#1}{{\the\chapno}{\the\secno}{\the\subsecno}}
+  \donoderef
+  \nobreak
 }
 
 \outer\def\appendixsubsec{\parsearg\appendixsubsecyyy}
 \def\appendixsubsecyyy #1{\apphead2{#1}} % normally calls appendixsubseczzz
 \def\appendixsubseczzz #1{%
-\gdef\thissection{#1}\subsubsecno=0 \global\advance \subsecno by 1 %
-\subsecheading {#1}{\appendixletter}{\the\secno}{\the\subsecno}%
-\toks0 = {#1}%
-\edef\temp{\noexpand\writetocentry{\realbackslash subsecentry{\the\toks0}%
-                                {\appendixletter}{\the\secno}{\the\subsecno}}}%
-\temp
-\appendixnoderef
-\nobreak
+  \gdef\thissection{#1}\subsubsecno=0 \global\advance \subsecno by 1 %
+  \subsecheading {#1}{\appendixletter}{\the\secno}{\the\subsecno}%
+  \writetocentry{subsec}{#1}{{\appendixletter}{\the\secno}{\the\subsecno}}
+  \appendixnoderef
+  \nobreak
 }
 
 \outer\def\unnumberedsubsec{\parsearg\unnumberedsubsecyyy}
 \def\unnumberedsubsecyyy #1{\unnmhead2{#1}} %normally calls unnumberedsubseczzz
 \def\unnumberedsubseczzz #1{%
-\plainsubsecheading {#1}\gdef\thissection{#1}%
-\toks0 = {#1}%
-\edef\temp{\noexpand\writetocentry{\realbackslash unnumbsubsecentry%
-  {\the\toks0}{\the\chapno}{\the\secno}{\the\subsecno}}}%
-\temp
-\unnumbnoderef
-\nobreak
+  \plainsubsecheading {#1}\gdef\thissection{#1}%
+  \writetocentry{unnumbsubsec}{#1}{{\the\chapno}{\the\secno}{\the\subsecno}}
+  \unnumbnoderef
+  \nobreak
 }
 
 % Subsubsections.
 \outer\def\numberedsubsubsec{\parsearg\numberedsubsubsecyyy}
 \def\numberedsubsubsecyyy #1{\numhead3{#1}} % normally numberedsubsubseczzz
 \def\numberedsubsubseczzz #1{%
-\gdef\thissection{#1}\global\advance \subsubsecno by 1 %
-\subsubsecheading {#1}
-  {\the\chapno}{\the\secno}{\the\subsecno}{\the\subsubsecno}%
-\toks0 = {#1}%
-\edef\temp{\noexpand\writetocentry{\realbackslash subsubsecentry{\the\toks0}%
-  {\the\chapno}{\the\secno}{\the\subsecno}{\the\subsubsecno}}}%
-\temp
-\donoderef
-\nobreak
+  \gdef\thissection{#1}\global\advance \subsubsecno by 1 %
+  \subsubsecheading {#1}
+    {\the\chapno}{\the\secno}{\the\subsecno}{\the\subsubsecno}%
+  \writetocentry{subsubsec}{#1}{{\the\chapno}{\the\secno}{\the\subsecno}{\the\subsubsecno}}
+  \donoderef
+  \nobreak
 }
 
 \outer\def\appendixsubsubsec{\parsearg\appendixsubsubsecyyy}
 \def\appendixsubsubsecyyy #1{\apphead3{#1}} % normally appendixsubsubseczzz
 \def\appendixsubsubseczzz #1{%
-\gdef\thissection{#1}\global\advance \subsubsecno by 1 %
-\subsubsecheading {#1}
-  {\appendixletter}{\the\secno}{\the\subsecno}{\the\subsubsecno}%
-\toks0 = {#1}%
-\edef\temp{\noexpand\writetocentry{\realbackslash subsubsecentry{\the\toks0}%
-  {\appendixletter}{\the\secno}{\the\subsecno}{\the\subsubsecno}}}%
-\temp
-\appendixnoderef
-\nobreak
+  \gdef\thissection{#1}\global\advance \subsubsecno by 1 %
+  \subsubsecheading {#1}
+    {\appendixletter}{\the\secno}{\the\subsecno}{\the\subsubsecno}%
+  \writetocentry{subsubsec}{#1}{{\appendixletter}{\the\secno}{\the\subsecno}{\the\subsubsecno}}
+  \appendixnoderef
+  \nobreak
 }
 
 \outer\def\unnumberedsubsubsec{\parsearg\unnumberedsubsubsecyyy}
 \def\unnumberedsubsubsecyyy #1{\unnmhead3{#1}} %normally unnumberedsubsubseczzz
 \def\unnumberedsubsubseczzz #1{%
-\plainsubsubsecheading {#1}\gdef\thissection{#1}%
-\toks0 = {#1}%
-\edef\temp{\noexpand\writetocentry{\realbackslash unnumbsubsubsecentry%
-  {\the\toks0}{\the\chapno}{\the\secno}{\the\subsecno}{\the\subsubsecno}}}%
-\temp
-\unnumbnoderef
-\nobreak
+  \plainsubsubsecheading {#1}\gdef\thissection{#1}%
+  \writetocentry{unnumbsubsubsec}{#1}{{\the\chapno}{\the\secno}{\the\subsecno}{\the\subsubsecno}}
+  \unnumbnoderef
+  \nobreak
 }
 
 % These are variants which are not "outer", so they can appear in @ifinfo.
@@ -3846,16 +3821,16 @@ width0pt\relax} \fi
 
 \def\majorheading{\parsearg\majorheadingzzz}
 \def\majorheadingzzz #1{%
-{\advance\chapheadingskip by 10pt \chapbreak }%
-{\chapfonts \vbox{\hyphenpenalty=10000\tolerance=5000
-                  \parindent=0pt\raggedright
-                  \rm #1\hfill}}\bigskip \par\penalty 200}
+  {\advance\chapheadingskip by 10pt \chapbreak }%
+  {\chapfonts \vbox{\hyphenpenalty=10000\tolerance=5000
+                    \parindent=0pt\raggedright
+                    \rm #1\hfill}}\bigskip \par\penalty 200}
 
 \def\chapheading{\parsearg\chapheadingzzz}
 \def\chapheadingzzz #1{\chapbreak %
-{\chapfonts \vbox{\hyphenpenalty=10000\tolerance=5000
-                  \parindent=0pt\raggedright
-                  \rm #1\hfill}}\bigskip \par\penalty 200}
+  {\chapfonts \vbox{\hyphenpenalty=10000\tolerance=5000
+                    \parindent=0pt\raggedright
+                    \rm #1\hfill}}\bigskip \par\penalty 200}
 
 % @heading, @subheading, @subsubheading.
 \def\heading{\parsearg\plainsecheading}
@@ -4022,16 +3997,22 @@ width0pt\relax} \fi
 % Called from @chapter, etc.  We supply {\folio} at the end of the
 % argument, which will end up as the last argument to the \...entry macro.
 %
-% We open the .toc file here instead of at @setfilename or any other
-% fixed time so that @contents can be put in the document anywhere.
+% Usage: \writetocentry{chap}{The Name of The Game}{{\the\chapno}}
+% We open the .toc file for writing here instead of at @setfilename (or
+% any other fixed time) so that @contents can be anywhere in the document.
 %
 \newif\iftocfileopened
-\def\writetocentry#1{%
+\def\writetocentry#1#2#3{%
   \iftocfileopened\else
     \immediate\openout\tocfile = \jobname.toc
     \global\tocfileopenedtrue
   \fi
-  \iflinks \write\tocfile{#1{\folio}}\fi
+  %
+  \iflinks
+    \toks0 = {#2}%
+    \edef\temp{\write\tocfile{\realbackslash #1entry{\the\toks0}#3{\folio}}}%
+    \temp
+  \fi
   %
   % Tell \shipout to create a page destination if we're doing pdf, which
   % will be the target of the links in the table of contents.  We can't
