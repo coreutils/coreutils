@@ -2,6 +2,17 @@
 
 	* Version 4.1.9.
 
+	* src/copy.c: Change all `preserving ...' diagnostics to
+	`failed to preserve ...' to make the failure clearer.
+	* src/cp.c: Likewise.
+
+2002-04-03  Alfred M. Szmidt  <ams@kemisten.nu>
+
+	* src/copy.c Include hurd.h.
+	(copy_internal): Preserve the stat.st_author field.
+
+2002-06-21  Jim Meyering  <meyering@lucent.com>
+
 	* src/ls.c (LOGIN_NAME_MAX): Define if not already defined.
 	(ID_LENGTH_MAX): Define.
 	(ST_DM_MODE): New macro.  Code moved from...
