@@ -4,7 +4,7 @@
 # Created: 1993-05-16
 # Public domain.
 
-scriptversion=2003-06-14.23
+scriptversion=2003-09-26.19
 
 errstatus=0
 dirmode=""
@@ -65,12 +65,25 @@ case $dirmode in
     if mkdir -p -- . 2>/dev/null; then
       echo "mkdir -p -- $*"
       exec mkdir -p -- "$@"
+    else
+      # On NextStep and OpenStep, the `mkdir' command does not
+      # recognize any option.  It will interpret all options as
+      # directories to create, and then abort because `.' already
+      # exists.
+      test -d ./-p && rmdir ./-p
+      test -d ./-- && rmdir ./--
     fi
     ;;
   *)
     if mkdir -m "$dirmode" -p -- . 2>/dev/null; then
       echo "mkdir -m $dirmode -p -- $*"
       exec mkdir -m "$dirmode" -p -- "$@"
+    else
+      # Clean up after NextStep and OpenStep mkdir.
+      for d in ./-m ./-p ./-- "./$dirmode";
+      do
+        test -d $d && rmdir $d
+      done
     fi
     ;;
 esac
