@@ -118,55 +118,39 @@ read_utmp (const char *filename, size_t *n_entries, STRUCT_UTMP **utmp_buf,
 #else
 
 int
-read_utmp (const char *filename, size_t *n_entries, STRUCT_UTMP **utmp_buf)
+read_utmp (const char *filename, size_t *n_entries, STRUCT_UTMP **utmp_buf,
+	   int options)
 {
-  FILE *utmp;
-  struct stat file_stats;
-  size_t n_read;
-  size_t size;
-  size_t i;
-  size_t n_desired;
-  STRUCT_UTMP *buf;
+  size_t n_read = 0;
+  size_t n_alloc = 0;
+  STRUCT_UTMP *utmp = NULL;
+  int saved_errno;
+  FILE *f = fopen (filename, "r");
 
-  utmp = fopen (filename, "r");
-  if (utmp == NULL)
+  if (! f)
     return -1;
 
-  if (fstat (fileno (utmp), &file_stats) != 0)
+  for (;;)
     {
-      int e = errno;
-      fclose (utmp);
-      errno = e;
-      return -1;
+      if (n_read == n_alloc)
+	utmp = x2nrealloc (utmp, &n_alloc, sizeof *utmp);
+      if (fread (&utmp[n_read], sizeof utmp[n_read], 1, f) == 0)
+	break;
+      n_read += desirable_utmp_entry (&utmp[n_read], options);
     }
-  if (! (0 <= file_stats.st_size && file_stats.st_size <= SIZE_MAX))
-    xalloc_die ();
-  size = file_stats.st_size;
-  buf = xmalloc (size);
-  n_read = fread (buf, sizeof *buf, size / sizeof *buf, utmp);
-  if (ferror (utmp))
+
+  saved_errno = ferror (f) ? errno : 0;
+  if (fclose (f) != 0)
+    saved_errno = errno;
+  if (saved_errno != 0)
     {
-      int e = errno;
-      free (buf);
-      fclose (utmp);
-      errno = e;
-      return -1;
-    }
-  if (fclose (utmp) != 0)
-    {
-      int e = errno;
-      free (buf);
-      errno = e;
+      free (utmp);
+      errno = saved_errno;
       return -1;
     }
 
-  n_desired = 0;
-  for (i = 0; i < n_read; i++)
-    if (desirable_utmp_entry (&utmp[i], options))
-      utmp[n_desired++] = utmp[i];
-
-  *n_entries = n_desired;
-  *utmp_buf = buf;
+  *n_entries = n_read;
+  *utmp_buf = utmp;
 
   return 0;
 }
