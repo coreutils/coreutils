@@ -1,3 +1,27 @@
+	* chmod.c chown.c cp.c dd.c df.c du.c install.c ln.c ls.c
+	mkdir.c mkfifo.c mknod.c mv.c mvdir.c rm.c rmdir.c sync.c
+	touch.c (main): Initialize for internationalized message support:
+	call setlocale, bindtextdomain, and textdomain.
+	* system.h: Add definitions and includes for NLS.
+	* Makefile.am (SUBDIRS): Add intl and po.
+	* src/Makefile.am (datadir): Define.
+	(localedir): Define.
+	(DEFS): Add LOCALEDIR definition.
+	(LDADD): Add @INTLLIBS@.
+	* aclocal.m4: Add NLS-related macro definitions from
+	gettext distribution.
+	* acconfig.h (ENABLE_NLS, HAVE_CATGETS, HAVE_GETTEXT, HAVE_LC_MESSAGES,
+	HAVE_STPCPY): New macros.
+	Add PACKAGE and VERSION.
+	* configure.in (PACKAGE): Define with AC_DEFINE_UNQUOTED.
+	(VERSION): Likewise.
+	(ALL_LINGUAS): Define.
+	(ud_GNU_GETTEXT): Use it.
+	Link an nls file.
+	(AC_OUTPUT): Reflect addition of two new directories, intl and po.
+	Create po/Makefile.
+  	From François Pinard.
+
 Thu Mar  7 20:26:07 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* df.c (main): Tell read_filesystem_list that it should determine
