@@ -192,7 +192,6 @@ static struct symbol_value const flags[] =
   {"append",	O_APPEND},
   {"direct",	O_DIRECT},
   {"dsync",	O_DSYNC},
-  {"noctty",	O_NOCTTY},
   {"nofollow",	O_NOFOLLOW},
   {"nonblock",	O_NONBLOCK},
   {"sync",	O_SYNC},
@@ -384,9 +383,6 @@ Each FLAG symbol may be:\n\
 	fputs (_("  nonblock  use non-blocking I/O\n"), stdout);
       if (O_NOFOLLOW)
 	fputs (_("  nofollow  do not follow symlinks\n"), stdout);
-      if (O_NOCTTY)
-	fputs (_("  noctty    do not assign controlling terminal from file\n"),
-	       stdout);
       fputs (_("\
 \n\
 Note that sending a SIGUSR1 signal to a running `dd' process makes it\n\
@@ -1300,7 +1296,8 @@ main (int argc, char **argv)
     }
   else
     {
-      if (open_fd (STDIN_FILENO, input_file, O_RDONLY | input_flags, 0) < 0)
+      int opts = input_flags | O_NOCTTY;
+      if (open_fd (STDIN_FILENO, input_file, O_RDONLY | opts, 0) < 0)
 	error (EXIT_FAILURE, errno, _("opening %s"), quote (input_file));
     }
 
@@ -1313,7 +1310,7 @@ main (int argc, char **argv)
     {
       mode_t perms = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH;
       int opts
-	= (output_flags
+	= (output_flags | O_NOCTTY
 	   | (conversions_mask & C_NOCREAT ? 0 : O_CREAT)
 	   | (conversions_mask & C_EXCL ? O_EXCL : 0)
 	   | (seek_records || (conversions_mask & C_NOTRUNC) ? 0 : O_TRUNC));
