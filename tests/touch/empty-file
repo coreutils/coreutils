@@ -1,0 +1,49 @@
+#!/bin/sh
+# Make sure touch can set the mtime on an empty file.
+# Volker Borchert reported that touch 3.16r (and presumably all before that)
+# fails to work on SunOS 4.1.3 with `most of the recommended patches' when
+# the empty file is on an NFS-mounted 4.2 volume.
+
+: ${RM=rm}
+: ${TOUCH=touch}
+
+if test "$VERBOSE" = yes; then
+  set -x
+  $TOUCH --version
+fi
+
+# FIXME: find writable directories on other partitions
+# and run the test in those directories, too.
+
+dirs=.
+
+framework_failure=0
+
+for d in $dirs; do
+  rm -rf $d/a $d/b
+  : > $d/a || framework_failure=1
+  : > $d/b || framework_failure=1
+done
+
+if test $framework_failure = 1; then
+  echo 'failure in testing framework'
+  exit 1
+fi
+
+sleep 2
+for d in $dirs; do
+  $TOUCH $d/a || fail=1
+  set x `$LS -t $d/a $d/b`
+  test "$*" = "x $d/a $d/b" || fail=1
+done
+
+sleep 2
+for d in $dirs; do
+  $TOUCH $d/b
+  set x `$LS -t $d/a $d/b`
+  test "$*" = "x $d/b $d/a" || fail=1
+
+  $RM -rf $d/a $d/b
+done
+
+exit $fail
