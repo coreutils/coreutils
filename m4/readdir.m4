@@ -1,4 +1,4 @@
-#serial 6
+#serial 7
 
 dnl SunOS's readdir is broken in such a way that rm.c has to add extra code
 dnl to test whether a NULL return value really means there are no more files
@@ -18,7 +18,6 @@ dnl Written by Jim Meyering.
 AC_DEFUN([GL_FUNC_READDIR],
 [dnl
 AC_REQUIRE([AC_HEADER_DIRENT])
-AC_CHECK_HEADERS_ONCE(string.h)
 AC_CACHE_CHECK([for working readdir], gl_cv_func_working_readdir,
   [dnl
   # Arrange for deletion of the temporary directory this test creates, in
@@ -28,9 +27,7 @@ AC_CACHE_CHECK([for working readdir], gl_cv_func_working_readdir,
   AC_TRY_RUN(
 [#   include <stdio.h>
 #   include <sys/types.h>
-#   if HAVE_STRING_H
-#    include <string.h>
-#   endif
+#   include <string.h>
 
 #   ifdef HAVE_DIRENT_H
 #    include <dirent.h>
