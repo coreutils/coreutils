@@ -1,23 +1,19 @@
 /* error.c -- error handler for noninteractive utilities
    Copyright (C) 1990, 91, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 
-This file is part of the GNU C Library.  Its master source is NOT part of
-the C library, however.  The master source lives in /gd/gnu/lib.
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2, or (at your option)
+   any later version.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
-
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
 /* Written by David MacKenzie <djm@gnu.ai.mit.edu>.  */
 
@@ -145,3 +141,70 @@ error (status, errnum, message, va_alist)
     exit (status);
 }
 
+/* Sometimes we want to have at most one error per line.  This
+   variable controls whether this mode is selected or not.  */
+int error_one_per_line;
+
+void
+#if defined(VA_START) && __STDC__
+error_at_line (int status, int errnum, const char *file_name,
+	       unsigned int line_number, const char *message, ...)
+#else
+error_at_line (status, errnum, file_name, line_number, message, va_alist)
+     int status;
+     int errnum;
+     const char *file_name;
+     unsigned int line_number;
+     char *message;
+     va_dcl
+#endif
+{
+#ifdef VA_START
+  va_list args;
+#endif
+
+  if (error_one_per_line)
+    {
+      static const char *old_file_name;
+      static unsigned int old_line_number;
+
+      if (old_line_number == line_number &&
+	  (file_name == old_file_name || !strcmp (old_file_name, file_name)))
+	/* Simply return and print nothing.  */
+	return;
+
+      old_file_name = file_name;
+      old_line_number = line_number;
+    }
+
+  if (error_print_progname)
+    (*error_print_progname) ();
+  else
+    {
+      fflush (stdout);
+      fprintf (stderr, "%s:", program_name);
+    }
+
+  if (file_name != NULL)
+    fprintf (stderr, "%s:%d: ", file_name, line_number);
+
+#ifdef VA_START
+  VA_START (args, message);
+# if HAVE_VPRINTF || _LIBC
+  vfprintf (stderr, message, args);
+# else
+  _doprnt (message, args, stderr);
+# endif
+  va_end (args);
+#else
+  fprintf (stderr, message, a1, a2, a3, a4, a5, a6, a7, a8);
+#endif
+
+  ++error_message_count;
+  if (errnum)
+    fprintf (stderr, ": %s", strerror (errnum));
+  putc ('\n', stderr);
+  fflush (stderr);
+  if (status)
+    exit (status);
+}
