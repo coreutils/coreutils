@@ -1,3 +1,12 @@
+Sun Apr 21 08:04:51 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* Makefile.am (LDADD): Put @INTLLIBS@ before package library.
+
+	* od.c: Include <values.h>.
+	[!BITSPERBYTE]: Define.
+	[OFF_T_MAX]: Use BITSPERBYTE, not 8, and cast the result to off_t.
+	* configure.in (AC_CHECK_HEADERS): Add values.h.
+
 Fri Apr 19 23:48:53 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* Makefile.am (cvs-dist): New rule.  Based on the one from
