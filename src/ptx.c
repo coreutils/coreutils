@@ -504,24 +504,26 @@ initialize_regex (void)
   if (word_regex_string && *word_regex_string)
     word_regex = alloc_and_compile_regex (word_regex_string);
   else if (!break_file)
-    if (gnu_extensions)
-      {
+    {
+      if (gnu_extensions)
+	{
 
-	/* Simulate \w+.  */
+	  /* Simulate \w+.  */
 
-	for (character = 0; character < CHAR_SET_SIZE; character++)
-	  word_fastmap[character] = isalpha (character) ? 1 : 0;
-      }
-    else
-      {
+	  for (character = 0; character < CHAR_SET_SIZE; character++)
+	    word_fastmap[character] = isalpha (character) ? 1 : 0;
+	}
+      else
+	{
 
-	/* Simulate [^ \t\n]+.  */
+	  /* Simulate [^ \t\n]+.  */
 
-	memset (word_fastmap, 1, CHAR_SET_SIZE);
-	word_fastmap[' '] = 0;
-	word_fastmap['\t'] = 0;
-	word_fastmap['\n'] = 0;
-      }
+	  memset (word_fastmap, 1, CHAR_SET_SIZE);
+	  word_fastmap[' '] = 0;
+	  word_fastmap['\t'] = 0;
+	  word_fastmap['\n'] = 0;
+	}
+    }
 }
 
 /*------------------------------------------------------------------------.
@@ -1706,30 +1708,32 @@ static void
 output_one_dumb_line (void)
 {
   if (!right_reference)
-    if (auto_reference)
-      {
+    {
+      if (auto_reference)
+	{
 
-        /* Output the `reference' field, in such a way that GNU emacs
-           next-error will handle it.  The ending colon is taken from the
-           gap which follows.  */
+	  /* Output the `reference' field, in such a way that GNU emacs
+	     next-error will handle it.  The ending colon is taken from the
+	     gap which follows.  */
 
-	print_field (reference);
-	putchar (':');
-	print_spaces (reference_max_width
-		      + gap_size
-		      - (reference.end - reference.start)
-		      - 1);
-      }
-    else
-      {
+	  print_field (reference);
+	  putchar (':');
+	  print_spaces (reference_max_width
+			+ gap_size
+			- (reference.end - reference.start)
+			- 1);
+	}
+      else
+	{
 
-	/* Output the `reference' field and its following gap.  */
+	  /* Output the `reference' field and its following gap.  */
 
-	print_field (reference);
-	print_spaces (reference_max_width
-		    + gap_size
-		    - (reference.end - reference.start));
-      }
+	  print_field (reference);
+	  print_spaces (reference_max_width
+			+ gap_size
+			- (reference.end - reference.start));
+	}
+    }
 
   if (tail.start < tail.end)
     {
