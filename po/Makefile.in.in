@@ -35,7 +35,7 @@ subdir = po
 
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
-MKINSTALLDIRS = @MKINSTALLDIRS@
+MKINSTALLDIRS = $(top_srcdir)/@MKINSTALLDIRS@
 
 CC = @CC@
 GENCAT = @GENCAT@
@@ -55,7 +55,7 @@ COMPILE = $(CC) -c $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS) $(XCFLAGS)
 SOURCES = cat-id-tbl.c
 POFILES = @POFILES@
 GMOFILES = @GMOFILES@
-DISTFILES = Makefile.in.in POTFILES.in $(PACKAGE).pot \
+DISTFILES = ChangeLog Makefile.in.in POTFILES.in $(PACKAGE).pot \
 stamp-cat-id $(POFILES) $(GMOFILES) $(SOURCES)
 
 POTFILES = \
@@ -91,20 +91,15 @@ all: all-@USE_NLS@
 all-yes: cat-id-tbl.c $(CATALOGS)
 all-no:
 
-$(PACKAGE).pot: @MAINT@$(POTFILES)
+$(srcdir)/$(PACKAGE).pot: $(POTFILES)
 	$(XGETTEXT) --default-domain=$(PACKAGE) --directory=$(top_srcdir) \
 	  --add-comments --keyword=_ --keyword=N_ \
 	  --files-from=$(srcdir)/POTFILES.in
-	if [ ! -s $(PACKAGE).po ] \
-	  || cmp -s $(PACKAGE).po $(srcdir)/$(PACKAGE).pot; then \
-	  rm -f $(PACKAGE).po; \
-	else \
-	  rm -f $(srcdir)/$(PACKAGE).pot \
-	    && mv $(PACKAGE).po $(srcdir)/$(PACKAGE).pot; \
-	fi
+	rm -f $(srcdir)/$(PACKAGE).pot
+	mv $(PACKAGE).po $(srcdir)/$(PACKAGE).pot
 
-cat-id-tbl.c: stamp-cat-id
-stamp-cat-id: $(PACKAGE).pot
+$(srcdir)/cat-id-tbl.c: stamp-cat-id; @:
+$(srcdir)/stamp-cat-id: $(PACKAGE).pot
 	rm -f cat-id-tbl.tmp
 	sed -f ../intl/po2tbl.sed $(srcdir)/$(PACKAGE).pot \
 		| sed -e "s/@PACKAGE NAME@/$(PACKAGE)/" > cat-id-tbl.tmp
@@ -130,11 +125,12 @@ install-data-yes: all
 	fi
 	@catalogs='$(CATALOGS)'; \
 	for cat in $$catalogs; do \
+	  cat=`basename $$cat`; \
 	  case "$$cat" in \
 	    *.gmo) destdir=$(gnulocaledir);; \
 	    *)     destdir=$(localedir);; \
 	  esac; \
-	  lang=`echo $$cat | sed 's/$(CATOBJEXT)$$//'`; \
+	  lang=`echo $$cat | sed 's/\$(CATOBJEXT)$$//'`; \
 	  dir=$$destdir/$$lang/LC_MESSAGES; \
 	  if test -r $(MKINSTALLDIRS); then \
 	    $(MKINSTALLDIRS) $$dir; \
@@ -169,8 +165,8 @@ install-data-yes: all
 	  else \
 	    $(top_srcdir)/mkinstalldirs $(gettextsrcdir); \
 	  fi; \
-	  cd $(srcdir) && \
-	    $(INSTALL_DATA) Makefile.in.in $(gettextsrcdir)/Makefile.in.in; \
+	  $(INSTALL_DATA) $(srcdir)/Makefile.in.in \
+			  $(gettextsrcdir)/Makefile.in.in; \
 	else \
 	  : ; \
 	fi
@@ -181,7 +177,8 @@ installcheck:
 uninstall:
 	catalogs='$(CATALOGS)'; \
 	for cat in $$catalogs; do \
-	  lang=`echo $$cat | sed 's/$(CATOBJEXT)$$//'`; \
+	  cat=`basename $$cat`; \
+	  lang=`echo $$cat | sed 's/\$(CATOBJEXT)$$//'`; \
 	  rm -f $(localedir)/$$lang/LC_MESSAGES/$(PACKAGE)$(INSTOBJEXT); \
 	  rm -f $(localedir)/$$lang/LC_MESSAGES/$(PACKAGE)$(INSTOBJEXT).m; \
 	  rm -f $(gnulocaledir)/$$lang/LC_MESSAGES/$(PACKAGE)$(INSTOBJEXT); \
@@ -223,7 +220,8 @@ update-po: Makefile
 	cd $(srcdir); \
 	catalogs='$(CATALOGS)'; \
 	for cat in $$catalogs; do \
-	  lang=`echo $$cat | sed 's/$(CATOBJEXT)$$//'`; \
+	  cat=`basename $$cat`; \
+	  lang=`echo $$cat | sed 's/\$(CATOBJEXT)$$//'`; \
 	  mv $$lang.po $$lang.old.po; \
 	  echo "$$lang:"; \
 	  if $(MSGMERGE) $$lang.old.po $(PACKAGE).pot -o $$lang.po; then \
@@ -242,9 +240,9 @@ POTFILES: POTFILES.in
 	    posrcprefix="../"; \
 	  fi; \
 	  rm -f $@-t $@ \
-	    && sed -e '/^#/d' -e '/^[ 	]*$$/d' \
-	      -e "s@.*@	$$posrcprefix& \\\\@" \
-	      -e '$$s/\(.*\) \\/\1/' < $(srcdir)/$@.in > $@-t \
+	    && (sed -e '/^#/d' -e '/^[ 	]*$$/d' \
+		    -e "s@.*@	$$posrcprefix& \\\\@" < $(srcdir)/$@.in \
+		| sed -e '$$s/\\$$//') > $@-t \
 	    && chmod a-w $@-t \
 	    && mv $@-t $@ )
 
