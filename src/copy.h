@@ -1,6 +1,7 @@
 #ifndef COPY_H
 # define COPY_H
 
+# include <stdbool.h>
 # include "hash.h"
 
 /* Control creation of sparse files (files with holes).  */
@@ -62,52 +63,52 @@ struct cp_options
 {
   enum backup_type backup_type;
 
-  /* If nonzero, copy all files except (directories and, if not dereferencing
-     them, symbolic links,) as if they were regular files. */
-  int copy_as_regular;
+  /* If true, copy all files except (directories and, if not dereferencing
+     them, symbolic links,) as if they were regular files.  */
+  bool copy_as_regular;
 
   /* How to handle symlinks.  */
   enum Dereference_symlink dereference;
 
-  /* If nonzero, remove each existing destination nondirectory before
-     trying to open it. */
-  int unlink_dest_before_opening;
+  /* If true, remove each existing destination nondirectory before
+     trying to open it.  */
+  bool unlink_dest_before_opening;
 
-  /* If nonzero, first try to open each existing destination nondirectory,
+  /* If true, first try to open each existing destination nondirectory,
      then, if the open fails, unlink and try again.
      This option must be set for `cp -f', in case the destination file
      exists when the open is attempted.  It is irrelevant to `mv' since
      any destination is sure to be removed before the open.  */
-  int unlink_dest_after_failed_open;
+  bool unlink_dest_after_failed_open;
 
-  /* If nonzero, create hard links instead of copying files.
+  /* If true, create hard links instead of copying files.
      Create destination directories as usual. */
-  int hard_link;
+  bool hard_link;
 
   /* This value is used to determine whether to prompt before removing
      each existing destination file.  It works differently depending on
      whether move_mode is set.  See code/comments in copy.c.  */
   enum Interactive interactive;
 
-  /* If nonzero, rather than copying, first attempt to use rename.
+  /* If true, rather than copying, first attempt to use rename.
      If that fails, then resort to copying.  */
-  int move_mode;
+  bool move_mode;
 
   /* This process's effective user ID.  */
   uid_t myeuid;
 
-  /* If nonzero, when copying recursively, skip any subdirectories that are
+  /* If true, when copying recursively, skip any subdirectories that are
      on different file systems from the one we started on.  */
-  int one_file_system;
+  bool one_file_system;
 
-  /* If nonzero, attempt to give the copies the original files' permissions,
+  /* If true, attempt to give the copies the original files' permissions,
      owner, group, and timestamps. */
-  int preserve_ownership;
-  int preserve_mode;
-  int preserve_timestamps;
+  bool preserve_ownership;
+  bool preserve_mode;
+  bool preserve_timestamps;
 
   /* Enabled for mv, and for cp by the --preserve=links option.
-     If nonzero, attempt to preserve in the destination files any
+     If true, attempt to preserve in the destination files any
      logical hard links between the source files.  If used with cp's
      --no-dereference option, and copying two hard-linked files,
      the two corresponding destination files will also be hard linked.
@@ -116,45 +117,45 @@ struct cp_options
      hard links are *not* preserved.  However, when copying a file F and
      a symlink S to F, the resulting S and F in the destination directory
      will be hard links to the same file (a copy of F).  */
-  int preserve_links;
+  bool preserve_links;
 
-  /* If nonzero and any of the above (for preserve) file attributes cannot
+  /* If true and any of the above (for preserve) file attributes cannot
      be applied to a destination file, treat it as a failure and return
      nonzero immediately.  E.g. cp -p requires this be nonzero, mv requires
      it be zero.  */
-  int require_preserve;
+  bool require_preserve;
 
-  /* If nonzero, copy directories recursively and copy special files
+  /* If true, copy directories recursively and copy special files
      as themselves rather than copying their contents. */
-  int recursive;
+  bool recursive;
 
-  /* If nonzero, set file mode to value of MODE.  Otherwise,
+  /* If true, set file mode to value of MODE.  Otherwise,
      set it based on current umask modified by UMASK_KILL.  */
-  int set_mode;
+  bool set_mode;
 
   /* Set the mode of the destination file to exactly this value
-     if USE_MODE is nonzero.  */
+     if SET_MODE is nonzero.  */
   mode_t mode;
 
   /* Control creation of sparse files.  */
   enum Sparse_type sparse_mode;
 
-  /* If nonzero, create symbolic links instead of copying files.
+  /* If true, create symbolic links instead of copying files.
      Create destination directories as usual. */
-  int symbolic_link;
+  bool symbolic_link;
 
   /* The bits to preserve in created files' modes. */
   mode_t umask_kill;
 
-  /* If nonzero, do not copy a nondirectory that has an existing destination
+  /* If true, do not copy a nondirectory that has an existing destination
      with the same or newer modification time. */
-  int update;
+  bool update;
 
-  /* If nonzero, display the names of the files before copying them. */
-  int verbose;
+  /* If true, display the names of the files before copying them. */
+  bool verbose;
 
-  /* If nonzero, stdin is a tty.  */
-  int stdin_tty;
+  /* If true, stdin is a tty.  */
+  bool stdin_tty;
 
   /* This is a set of destination name/inode/dev triples.  Each such triple
      represents a file we have created corresponding to a source file name
@@ -199,10 +200,10 @@ int rpl_rename (const char *, const char *);
 #  define rename rpl_rename
 # endif
 
-int
+bool
 copy (const char *src_path, const char *dst_path,
-      int nonexistent_dst, const struct cp_options *options,
-      int *copy_into_self, int *rename_succeeded);
+      bool nonexistent_dst, const struct cp_options *options,
+      bool *copy_into_self, bool *rename_succeeded);
 
 void
 dest_info_init (struct cp_options *);
