@@ -1,19 +1,22 @@
 #!/bin/sh
 
-test=r-2
-
-: ${TMPDIR=.}
-
 if test "$VERBOSE" = yes; then
   rm --version
   set -x
 fi
 
-tmp=$TMPDIR/t-rm.$$
+pwd=`pwd`
+tmp=r2-$$
+trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
+trap 'exit $?' 1 2 13 15
 
-mkdir $tmp $tmp/a $tmp/a/b
-> $tmp/a/f
-> $tmp/a/b/g
+framework_failure=0
+mkdir $tmp || framework_failure=1
+cd $tmp
+
+mkdir t t/a t/a/b || framework_failure=1
+> t/a/f || framework_failure=1
+> t/a/b/g || framework_failure=1
 
 LANGUAGE=C
 export LANGUAGE
@@ -21,27 +24,30 @@ LC_ALL=C
 export LC_ALL
 
 # FIXME: if this fails, it's a framework failure
-cat <<EOF | sort > $tmp/$test.E
-removing all entries of directory $tmp/a
-removing all entries of directory $tmp/a/b
-removing $tmp/a/b/g
-removing the directory itself: $tmp/a/b
-removing $tmp/a/f
-removing the directory itself: $tmp/a
+cat <<EOF | sort > t/$test.E || framework_failure=1
+removing all entries of directory t/a
+removing all entries of directory t/a/b
+removing t/a/b/g
+removing the directory itself: t/a/b
+removing t/a/f
+removing the directory itself: t/a
 EOF
+
+if test $framework_failure = 1; then
+  echo 'failure in testing framework'
+  exit 1
+fi
 
 # Note that both the expected output (above) and the actual output lines
 # are sorted, because directory entries may be processed in arbitrary order.
 fail=0
-rm --verbose -r $tmp/a | sort > $tmp/$test.O || fail=1
+rm --verbose -r t/a | sort > t/$test.O || fail=1
 
-if test -d $tmp/a; then
+if test -d t/a; then
   fail=1
 fi
 
 # Compare expected and actual output.
-cmp $tmp/$test.E $tmp/$test.O || fail=1
-
-rm -rf $tmp
+cmp t/$test.E t/$test.O || fail=1
 
 exit $fail
