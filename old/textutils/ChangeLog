@@ -1,3 +1,16 @@
+Thu Mar 13 21:46:04 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/tr.c (main): Make sure c1 is not -1 before using it as an
+	array index.  Patch from Greg McGary.  Although this is truly a
+	bug, I believe it would not cause tr to misbehave on most systems.
+	I could not construct a test case with which this bug causes tr
+	to generate invalid output.
+
+	* tests/pr-test/Test.pm: Add test that -o 0 works.
+
+	* src/pr.c (main): Allow use of 0 (zero) as the margin offset
+	argument to the -o option.  Patch from Gary Anderson.
+
 Fri Feb 28 22:32:51 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/uniq.c (usage): Fix typo in --help output.  From Andreas Schwab.
