@@ -24,6 +24,18 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#ifdef S_IEXEC
+#ifndef S_IXUSR
+#define S_IXUSR S_IEXEC
+#endif
+#ifndef S_IXGRP
+#define S_IXGRP (S_IEXEC >> 3)
+#endif
+#ifndef S_IXOTH
+#define S_IXOTH (S_IEXEC >> 6)
+#endif
+#endif /* S_IEXEC */
+
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
