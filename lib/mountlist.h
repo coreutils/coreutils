@@ -45,6 +45,9 @@ struct mount_entry *read_filesystem_list PARAMS ((int need_fs_type));
      || !strcmp (Fs_type, "ignore"))
 #endif
 
+#undef STREQ
+#define STREQ(a, b) (strcmp ((a), (b)) == 0)
+
 #ifndef ME_REMOTE
 /* A file system is `remote' if its Fs_name contains a `:'
    or if (it is of type smbfs and its Fs_name starts with `//').  */
