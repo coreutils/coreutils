@@ -1,4 +1,4 @@
-#serial 37   -*- autoconf -*-
+#serial 38   -*- autoconf -*-
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
@@ -176,9 +176,9 @@ AC_DEFUN(jm_MACROS,
      LIBS="$ac_seq_save_LIBS"
     ])
 
-  jm_LANGINFO_CODESET
+  AM_LANGINFO_CODESET
   jm_GLIBC21
-  jm_ICONV
+  AM_ICONV
   jm_FUNC_UNLINK_BUSY_TEXT
 
   # These tests are for df.
