@@ -173,7 +173,7 @@ endef
 
 alpha: writable-files po-check
 	$(MAKE) cvs-dist
-	$(MAKE) -s announcement > /tmp/announce-$(distdir)
+	$(MAKE) -s announcement > /tmp/announce-$(PACKAGE)-$(VERSION)
 	ln $(distdir).tar.gz ../release
 	chmod a-w $(distdir).tar.gz
 	cd $(release-archive-dir) \
