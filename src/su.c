@@ -237,10 +237,15 @@ log_su (const struct passwd *pw, int successful)
      the user, especially if someone su's from a su-shell.  */
   old_user = getlogin ();
   if (old_user == NULL)
-    old_user = "";
+    {
+      /* getlogin can fail -- usually due to lack of utmp entry.
+	 Resort to getpwuid.  */
+      struct passwd *pwd = getpwuid (getuid ());
+      old_user = (pwd ? pwd->pw_name : "");
+    }
   tty = ttyname (2);
   if (tty == NULL)
-    tty = "";
+    tty = "none";
   /* 4.2BSD openlog doesn't have the third parameter.  */
   openlog (basename (program_name), 0
 #ifdef LOG_AUTH
@@ -317,8 +322,9 @@ modify_environment (const struct passwd *pw, const char *shell)
       xputenv (concat ("SHELL", "=", shell));
       xputenv (concat ("USER", "=", pw->pw_name));
       xputenv (concat ("LOGNAME", "=", pw->pw_name));
-      xputenv (concat ("PATH", "=", pw->pw_uid
-		       ? DEFAULT_LOGIN_PATH : DEFAULT_ROOT_LOGIN_PATH));
+      xputenv (concat ("PATH", "=", (pw->pw_uid
+				     ? DEFAULT_LOGIN_PATH
+				     : DEFAULT_ROOT_LOGIN_PATH)));
     }
   else
     {
