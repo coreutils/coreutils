@@ -45,6 +45,14 @@ my @Tests =
      ['check-bsd2', '--check', '--status',
 				{IN=> {'f.md5' => "MD5 (f) = $degenerate\n"}},
 				{AUX=> {f=> 'bar'}}, {EXIT=> 1}],
+     # The sha1sum and md5sum drivers share a lot of code.
+     # Ensure that md5sum does *not* share the part that makes
+     # sha1sum accept BSD format.
+     ['check-bsd3', '--check', {IN=> {'f.sha1' => "SHA1 (f) = $degenerate\n"}},
+				{AUX=> {f=> ''}},
+				{ERR=>"md5sum: f.sha1: no properly formatted "
+				       . "MD5 checksum lines found\n"},
+				{EXIT=> 1}],
     );
 
 # Insert the `--text' argument for each test.
