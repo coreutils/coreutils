@@ -129,10 +129,10 @@ struct buffer_record
 
 int safe_read ();
 
-static void cleanup __P ((void));
 static void close_output_file __P ((void));
 static void create_output_file __P ((void));
-static void save_line_to_file __P ((struct cstring *line));
+static void delete_all_files __P ((void));
+static void save_line_to_file __P ((const struct cstring *line));
 static void usage __P ((int status));
 
 /* The name this program was run with. */
@@ -232,6 +232,43 @@ static struct option const longopts[] =
   {NULL, 0, NULL, 0}
 };
 
+/* Optionally remove files created so far; then exit.
+   Called when an error detected. */
+
+static void
+cleanup (void)
+{
+  if (output_stream)
+    close_output_file ();
+
+  if (remove_files)
+    delete_all_files ();
+}
+
+static void
+cleanup_fatal (void)
+{
+  cleanup ();
+  exit (1);
+}
+
+static RETSIGTYPE
+interrupt_handler (int sig)
+{
+#ifdef SA_INTERRUPT
+  struct sigaction sigact;
+
+  sigact.sa_handler = SIG_DFL;
+  sigemptyset (&sigact.sa_mask);
+  sigact.sa_flags = 0;
+  sigaction (sig, &sigact, NULL);
+#else				/* !SA_INTERRUPT */
+  signal (sig, SIG_DFL);
+#endif				/* SA_INTERRUPT */
+  cleanup ();
+  kill (getpid (), sig);
+}
+
 /* Allocate N bytes of memory dynamically, with error checking.  */
 
 static char *
@@ -243,7 +280,7 @@ xmalloc (unsigned int n)
   if (p == NULL)
     {
       error (0, 0, _("virtual memory exhausted"));
-      cleanup ();
+      cleanup_fatal ();
     }
   return p;
 }
@@ -267,7 +304,7 @@ xrealloc (char *p, unsigned int n)
   if (p == NULL)
     {
       error (0, 0, _("virtual memory exhausted"));
-      cleanup ();
+      cleanup_fatal ();
     }
   return p;
 }
@@ -306,7 +343,7 @@ read_input (char *dest, unsigned int max_n_bytes)
   if (bytes_read < 0)
     {
       error (0, errno, _("read error"));
-      cleanup ();
+      cleanup_fatal ();
     }
 
   return bytes_read;
@@ -692,7 +729,7 @@ no_more_lines (void)
 /* Set the name of the input file to NAME and open it. */
 
 static void
-set_input_file (char *name)
+set_input_file (const char *name)
 {
   if (!strcmp (name, "-"))
     input_desc = 0;
@@ -722,7 +759,7 @@ write_to_file (unsigned int last_line, boolean ignore, int argnum)
   if (first_line > last_line)
     {
       error (0, 0, _("%s: line number out of range"), global_argv[argnum]);
-      cleanup ();
+      cleanup_fatal ();
     }
 
   lines = last_line - first_line;
@@ -733,7 +770,7 @@ write_to_file (unsigned int last_line, boolean ignore, int argnum)
       if (line == NULL)
 	{
 	  error (0, 0, _("%s: line number out of range"), global_argv[argnum]);
-	  cleanup ();
+	  cleanup_fatal ();
 	}
       if (!ignore)
 	save_line_to_file (line);
@@ -755,7 +792,7 @@ dump_rest_of_file (void)
    on iteration REPETITION if nonzero. */
 
 static void
-handle_line_error (struct control *p, int repetition)
+handle_line_error (const struct control *p, int repetition)
 {
   fprintf (stderr, _("%s: `%d': line number out of range"),
 	   program_name, p->lines_required);
@@ -764,7 +801,7 @@ handle_line_error (struct control *p, int repetition)
   else
     fprintf (stderr, "\n");
 
-  cleanup ();
+  cleanup_fatal ();
 }
 
 /* Determine the line number that marks the end of this file,
@@ -773,7 +810,7 @@ handle_line_error (struct control *p, int repetition)
    REPETITION is the repetition number. */
 
 static void
-process_line_count (struct control *p, int repetition)
+process_line_count (const struct control *p, int repetition)
 {
   unsigned int linenum;
   unsigned int last_line_to_save = p->lines_required * (repetition + 1);
@@ -820,7 +857,7 @@ regexp_error (struct control *p, int repetition, boolean ignore)
       dump_rest_of_file ();
       close_output_file ();
     }
-  cleanup ();
+  cleanup_fatal ();
 }
 
 /* Read the input until a line matches the regexp in P, outputting
@@ -869,7 +906,7 @@ process_regexp (struct control *p, int repetition)
 	  if (ret == -2)
 	    {
 	      error (0, 0, _("error in regular expression search"));
-	      cleanup ();
+	      cleanup_fatal ();
 	    }
 	  if (ret == -1)
 	    {
@@ -909,7 +946,7 @@ process_regexp (struct control *p, int repetition)
 	  if (ret == -2)
 	    {
 	      error (0, 0, _("error in regular expression search"));
-	      cleanup ();
+	      cleanup_fatal ();
 	    }
 	  if (ret >= 0)
 	    break;
@@ -978,7 +1015,7 @@ create_output_file (void)
   if (output_stream == NULL)
     {
       error (0, errno, "%s", output_filename);
-      cleanup ();
+      cleanup_fatal ();
     }
   files_created++;
   bytes_written = 0;
@@ -1012,7 +1049,7 @@ close_output_file (void)
 	{
 	  error (0, errno, _("write error for `%s'"), output_filename);
 	  output_stream = NULL;
-	  cleanup ();
+	  cleanup_fatal ();
 	}
       if (bytes_written == 0 && elide_empty_files)
 	{
@@ -1027,26 +1064,11 @@ close_output_file (void)
     }
 }
 
-/* Optionally remove files created so far; then exit.
-   Called when an error detected. */
-
-static void
-cleanup (void)
-{
-  if (output_stream)
-    close_output_file ();
-
-  if (remove_files)
-    delete_all_files ();
-
-  exit (1);
-}
-
 /* Save line LINE to the output file and
    increment the character count for the current file. */
 
 static void
-save_line_to_file (struct cstring *line)
+save_line_to_file (const struct cstring *line)
 {
   fwrite (line->str, sizeof (char), line->len, output_stream);
   bytes_written += line->len;
@@ -1088,7 +1110,7 @@ new_control_record (void)
 /* FIXME: use xstrtoul in place of this function.  */
 
 static boolean
-string_to_number (int *result, char *num)
+string_to_number (int *result, const char *num)
 {
   char ch;
   int val = 0;
@@ -1113,7 +1135,7 @@ string_to_number (int *result, char *num)
    NUM is the numeric part of STR. */
 
 static void
-check_for_offset (struct control *p, char *str, char *num)
+check_for_offset (struct control *p, const char *str, const char *num)
 {
   if (*num != '-' && *num != '+')
     error (1, 0, _("%s: `+' or `-' expected after delimeter"), str);
@@ -1184,7 +1206,7 @@ extract_regexp (int argnum, boolean ignore, char *str)
   if (err)
     {
       error (0, 0, _("%s: invalid regular expression: %s"), str, err);
-      cleanup ();
+      cleanup_fatal ();
     }
 
   if (closing_delim[1])
@@ -1377,13 +1399,6 @@ max_out (char *format)
   return out_count;
 }
 
-static void
-interrupt_handler (int signum)
-{
-  error (0, 0, _("interrupted"));
-  cleanup ();
-}
-
 void
 main (int argc, char **argv)
 {
@@ -1497,7 +1512,7 @@ main (int argc, char **argv)
   if (close (input_desc) < 0)
     {
       error (0, errno, _("read error"));
-      cleanup ();
+      cleanup_fatal ();
     }
 
   exit (0);
