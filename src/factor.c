@@ -1,5 +1,5 @@
 /* factor -- print factors of n.
-   Copyright (C) 86, 95, 96, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 86, 95, 96, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -26,9 +26,10 @@
 #define NDEBUG 1
 
 #include "system.h"
-#include "long-options.h"
+#include "closeout.h"
 #include "error.h"
 #include "human.h"
+#include "long-options.h"
 #include "readtokens.h"
 #include "xstrtol.h"
 
@@ -202,6 +203,8 @@ main (int argc, char **argv)
     }
   if (fail)
     usage (1);
+
+  close_stdout ();
 
   exit (fail);
 }
