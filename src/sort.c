@@ -540,7 +540,7 @@ struct_month_cmp (const void *m1, const void *m2)
 static void
 inittables (void)
 {
-  int i;
+  size_t i;
 
   for (i = 0; i < UCHAR_LIM; ++i)
     {
@@ -686,8 +686,8 @@ default_sort_size (void)
    not specified by the user, use a default.  */
 
 static size_t
-sort_buffer_size (FILE *const *fps, int nfps,
-		  char *const *files, int nfiles,
+sort_buffer_size (FILE *const *fps, size_t nfps,
+		  char *const *files, size_t nfiles,
 		  size_t line_bytes)
 {
   /* A bound on the input size.  If zero, the bound hasn't been
@@ -701,7 +701,7 @@ sort_buffer_size (FILE *const *fps, int nfps,
      This extra room might be needed when preparing to read EOF.  */
   size_t size = worst_case_per_input_byte + 1;
 
-  int i;
+  size_t i;
 
   for (i = 0; i < nfiles; i++)
     {
@@ -1001,7 +1001,7 @@ fillbuf (struct buffer *buf, register FILE *fp, char const *file)
 	      if (key)
 		{
 		  /* Precompute the position of the first key for
-                     efficiency. */
+		     efficiency.  */
 		  line->keylim = (key->eword == SIZE_MAX
 				  ? p
 				  : limfield (line, key));
@@ -1280,45 +1280,50 @@ general_numcompare (const char *sa, const char *sb)
 	  : memcmp ((char *) &a, (char *) &b, sizeof a));
 }
 
-/* Return an integer in 1..12 of the month name S with length LEN.
+/* Return an integer in 1..12 of the month name MONTH with length LEN.
    Return 0 if the name in S is not recognized.  */
 
 static int
-getmonth (const char *s, size_t len)
+getmonth (char const *month, size_t len)
 {
-  char *month;
-  register size_t i;
-  register int lo = 0, hi = MONTHS_PER_YEAR, result;
+  size_t lo = 0;
+  size_t hi = MONTHS_PER_YEAR;
+  char const *monthlim = month + len;
 
-  while (len > 0 && blanks[to_uchar (*s)])
+  for (;;)
     {
-      ++s;
-      --len;
+      if (month == monthlim)
+	return 0;
+      if (!blanks[to_uchar (*month)])
+	break;
+      ++month;
     }
-
-  if (len == 0)
-    return 0;
-
-  month = alloca (len + 1);
-  for (i = 0; i < len; ++i)
-    month[i] = fold_toupper[to_uchar (s[i])];
-  month[len] = '\0';
 
   do
     {
-      int ix = (lo + hi) / 2;
+      size_t ix = (lo + hi) / 2;
+      char const *m = month;
+      char const *n = monthtab[ix].name;
 
-      if (strncmp (month, monthtab[ix].name, strlen (monthtab[ix].name)) < 0)
-	hi = ix;
-      else
-	lo = ix;
+      for (;; m++, n++)
+	{
+	  if (!*n)
+	    return monthtab[ix].val;
+	  if (m == monthlim || fold_toupper[to_uchar (*m)] < to_uchar (*n))
+	    {
+	      hi = ix;
+	      break;
+	    }
+	  else if (fold_toupper[to_uchar (*m)] > to_uchar (*n))
+	    {
+	      lo = ix + 1;
+	      break;
+	    }
+	}
     }
-  while (hi - lo > 1);
+  while (lo < hi);
 
-  result = (!strncmp (month, monthtab[lo].name, strlen (monthtab[lo].name))
-	    ? monthtab[lo].val : 0);
-
-  return result;
+  return 0;
 }
 
 /* Compare two lines A and B trying every key in sequence until there
@@ -1360,12 +1365,14 @@ keycompare (const struct line *a, const struct line *b)
       else if (key->month)
 	diff = getmonth (texta, lena) - getmonth (textb, lenb);
       /* Sorting like this may become slow, so in a simple locale the user
-         can select a faster sort that is similar to ascii sort  */
+	 can select a faster sort that is similar to ascii sort.  */
       else if (HAVE_SETLOCALE && hard_LC_COLLATE)
 	{
 	  if (ignore || translate)
 	    {
-	      char *copy_a = alloca (lena + 1 + lenb + 1);
+	      char buf[4000];
+	      size_t size = lena + 1 + lenb + 1;
+	      char *copy_a = (size <= sizeof buf ? buf : xmalloc (size));
 	      char *copy_b = copy_a + lena + 1;
 	      size_t new_len_a, new_len_b, i;
 
@@ -1391,6 +1398,9 @@ keycompare (const struct line *a, const struct line *b)
 		}
 
 	      diff = xmemcoll (copy_a, new_len_a, copy_b, new_len_b);
+
+	      if (sizeof buf < size)
+		free (copy_a);
 	    }
 	  else if (lena == 0)
 	    diff = - NONZERO (lenb);
@@ -1505,7 +1515,6 @@ compare (register const struct line *a, register const struct line *b)
   if (keylist)
     {
       diff = keycompare (a, b);
-      alloca (0);
       if (diff | unique | stable)
 	return diff;
     }
@@ -1618,8 +1627,7 @@ check (char const *file_name)
    file has not been opened yet (or written to, if standard output).  */
 
 static void
-mergefps (char **files, register int nfiles,
-	  FILE *ofp, const char *output_file)
+mergefps (char **files, size_t nfiles, FILE *ofp, char const *output_file)
 {
   FILE *fps[NMERGE];		/* Input streams for each file.  */
   struct buffer buffer[NMERGE];	/* Input buffers for each file. */
@@ -1629,10 +1637,12 @@ mergefps (char **files, register int nfiles,
   size_t savealloc = 0;		/* Size allocated for the saved line. */
   struct line const *cur[NMERGE]; /* Current line in each line table. */
   struct line const *base[NMERGE]; /* Base of each line table.  */
-  int ord[NMERGE];		/* Table representing a permutation of fps,
+  size_t ord[NMERGE];		/* Table representing a permutation of fps,
 				   such that cur[ord[0]] is the smallest line
 				   and will be next output. */
-  register int i, j, t;
+  size_t i;
+  size_t j;
+  size_t t;
   struct keyfield const *key = keylist;
   saved.text = NULL;
 
@@ -1729,7 +1739,7 @@ mergefps (char **files, register int nfiles,
 	    }
 	  else
 	    {
-	      /* We reached EOF on fps[ord[0]]. */
+	      /* We reached EOF on fps[ord[0]].  */
 	      for (i = 1; i < nfiles; ++i)
 		if (ord[i] > ord[0])
 		  --ord[i];
@@ -1756,10 +1766,8 @@ mergefps (char **files, register int nfiles,
 	 a line larger than it. */
       for (i = 1; i < nfiles; ++i)
 	{
-	  t = compare (cur[ord[0]], cur[ord[i]]);
-	  if (!t)
-	    t = ord[0] - ord[i];
-	  if (t < 0)
+	  int cmp = compare (cur[ord[0]], cur[ord[i]]);
+	  if (cmp < 0 || (cmp == 0 && ord[0] < ord[i]))
 	    break;
 	}
       t = ord[0];
@@ -1896,10 +1904,10 @@ sortlines_temp (struct line *lines, size_t nlines, struct line *temp)
    Catching these obscure cases would slow down performance in
    common cases.  */
 
-static int
-first_same_file (char * const *files, int nfiles, char const *outfile)
+static size_t
+first_same_file (char * const *files, size_t nfiles, char const *outfile)
 {
-  int i;
+  size_t i;
   bool got_outstat = false;
   struct stat instat, outstat;
 
@@ -1936,12 +1944,13 @@ first_same_file (char * const *files, int nfiles, char const *outfile)
    exceed NMERGE.  A null OUTPUT_FILE stands for standard output.  */
 
 static void
-merge (char **files, int nfiles, int max_merge, char const *output_file)
+merge (char **files, size_t nfiles, size_t max_merge, char const *output_file)
 {
   while (max_merge < nfiles)
     {
       FILE *tfp;
-      int i, t = 0;
+      size_t i;
+      size_t t = 0;
       char *temp;
       for (i = 0; i < nfiles / NMERGE; ++i)
 	{
@@ -1963,10 +1972,10 @@ merge (char **files, int nfiles, int max_merge, char const *output_file)
 /* Sort NFILES FILES onto OUTPUT_FILE. */
 
 static void
-sort (char * const *files, int nfiles, char const *output_file)
+sort (char * const *files, size_t nfiles, char const *output_file)
 {
   struct buffer buf;
-  int n_temp_files = 0;
+  size_t n_temp_files = 0;
   bool output_file_created = false;
 
   buf.alloc = 0;
@@ -2043,7 +2052,7 @@ sort (char * const *files, int nfiles, char const *output_file)
 
   if (! output_file_created)
     {
-      int i = n_temp_files;
+      size_t i = n_temp_files;
       struct tempnode *node;
       char **tempfiles = xnmalloc (n_temp_files, sizeof *tempfiles);
       for (node = temphead; i > 0; node = node->next)
@@ -2197,7 +2206,7 @@ main (int argc, char **argv)
   int c = 0;
   bool checkonly = false;
   bool mergeonly = false;
-  int nfiles = 0;
+  size_t nfiles = 0;
   bool posixly_correct = (getenv ("POSIXLY_CORRECT") != NULL);
   bool obsolete_usage = (posix2_version () < 200112);
   char const *short_options = (obsolete_usage
@@ -2245,7 +2254,7 @@ main (int argc, char **argv)
   inittables ();
 
   {
-    int i;
+    size_t i;
     static int const sig[] = { SIGHUP, SIGINT, SIGPIPE, SIGTERM };
     enum { nsigs = sizeof sig / sizeof sig[0] };
 
@@ -2285,9 +2294,9 @@ main (int argc, char **argv)
   for (;;)
     {
       /* Parse an operand as a file after "--" was seen; or if
-         pedantic and a file was seen, unless the POSIX version
-         predates 1003.1-2001 and -c was not seen and the operand is
-         "-o FILE" or "-oFILE".  */
+	 pedantic and a file was seen, unless the POSIX version
+	 predates 1003.1-2001 and -c was not seen and the operand is
+	 "-o FILE" or "-oFILE".  */
 
       if (c == -1
 	  || (posixly_correct && nfiles != 0
@@ -2554,7 +2563,7 @@ main (int argc, char **argv)
 
   if (mergeonly)
     {
-      int max_merge = first_same_file (files, MIN (nfiles, NMERGE), outfile);
+      size_t max_merge = first_same_file (files, MIN (nfiles, NMERGE), outfile);
       merge (files, nfiles, max_merge, outfile);
     }
   else
