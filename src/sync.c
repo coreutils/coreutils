@@ -23,7 +23,6 @@
 
 #include "system.h"
 #include "long-options.h"
-#include "version.h"
 #include "error.h"
 
 /* The name this program was run with. */
@@ -56,7 +55,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "sync", version_string, usage);
+  parse_long_options (argc, argv, "sync", PACKAGE_VERSION, usage);
 
   if (argc != 1)
     error (0, 0, _("ignoring all arguments"));

@@ -36,7 +36,6 @@
 #endif
 
 #include "system.h"
-#include "version.h"
 #include "xstrtoul.h"
 #include "error.h"
 
@@ -298,7 +297,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("chgrp - %s\n", version_string);
+      printf ("chgrp - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 

@@ -38,7 +38,6 @@
 #include <sys/types.h>
 
 #include "system.h"
-#include "version.h"
 #include "error.h"
 #include "argmatch.h"
 
@@ -342,7 +341,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("touch - %s\n", version_string);
+      printf ("touch - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 

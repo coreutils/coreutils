@@ -36,7 +36,6 @@
 #include <getopt.h>
 
 #include "system.h"
-#include "version.h"
 #include "error.h"
 
 #ifndef _POSIX_VERSION
@@ -277,7 +276,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("chown - %s\n", version_string);
+      printf ("chown - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 

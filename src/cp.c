@@ -26,7 +26,6 @@
 #include <getopt.h>
 #include "cp.h"
 #include "backupfile.h"
-#include "version.h"
 #include "argmatch.h"
 
 #ifndef _POSIX_VERSION
@@ -324,7 +323,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("cp - %s\n", version_string);
+      printf ("cp - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 

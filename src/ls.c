@@ -60,7 +60,6 @@
 
 #include "obstack.h"
 #include "ls.h"
-#include "version.h"
 #include "error.h"
 #include "argmatch.h"
 
@@ -639,7 +638,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("ls - %s\n", version_string);
+      printf ("ls - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 

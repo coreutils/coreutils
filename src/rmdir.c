@@ -28,7 +28,6 @@
 #include <sys/types.h>
 
 #include "system.h"
-#include "version.h"
 #include "error.h"
 
 void strip_trailing_slashes ();
@@ -124,7 +123,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("rmdir - %s\n", version_string);
+      printf ("rmdir - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 

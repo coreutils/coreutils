@@ -51,7 +51,6 @@
 #include <assert.h>
 
 #include "system.h"
-#include "version.h"
 #include "save-cwd.h"
 #include "error.h"
 
@@ -335,7 +334,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("du - %s\n", version_string);
+      printf ("du - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 

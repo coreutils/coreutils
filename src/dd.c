@@ -63,7 +63,6 @@
 #include <getopt.h>
 
 #include "system.h"
-#include "version.h"
 #include "error.h"
 
 #define equal(p, q) (strcmp ((p),(q)) == 0)
@@ -340,7 +339,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("dd - %s\n", version_string);
+      printf ("dd - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 

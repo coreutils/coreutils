@@ -30,7 +30,6 @@
 
 #include "modechange.h"
 #include "system.h"
-#include "version.h"
 #include "error.h"
 
 void mode_string ();
@@ -297,7 +296,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("chmod - %s\n", version_string);
+      printf ("chmod - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 

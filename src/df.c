@@ -27,7 +27,6 @@
 #include "mountlist.h"
 #include "fsusage.h"
 #include "system.h"
-#include "version.h"
 #include "error.h"
 
 char *xmalloc ();
@@ -231,7 +230,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("df - %s\n", version_string);
+      printf ("df - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 

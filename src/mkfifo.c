@@ -29,7 +29,6 @@
 
 #include "system.h"
 #include "modechange.h"
-#include "version.h"
 #include "error.h"
 
 /* The name this program was run with. */
@@ -105,7 +104,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("mkfifo - %s\n", version_string);
+      printf ("mkfifo - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 

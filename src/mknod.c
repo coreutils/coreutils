@@ -34,7 +34,6 @@
 
 #include "system.h"
 #include "modechange.h"
-#include "version.h"
 #include "error.h"
 #include "xstrtol.h"
 
@@ -114,7 +113,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("mknod - %s\n", version_string);
+      printf ("mknod - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 

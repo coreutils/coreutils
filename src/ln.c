@@ -28,7 +28,6 @@
 
 #include "system.h"
 #include "backupfile.h"
-#include "version.h"
 #include "error.h"
 
 int link ();			/* Some systems don't declare this anywhere. */
@@ -371,7 +370,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("ln - %s\n", version_string);
+      printf ("ln - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 

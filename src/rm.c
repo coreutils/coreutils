@@ -23,7 +23,6 @@
 #include <sys/types.h>
 
 #include "system.h"
-#include "version.h"
 #include "error.h"
 
 #ifdef D_INO_IN_DIRENT
@@ -158,7 +157,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("rm - %s\n", version_string);
+      printf ("rm - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 

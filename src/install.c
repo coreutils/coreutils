@@ -60,7 +60,6 @@
 #include <grp.h>
 
 #include "system.h"
-#include "version.h"
 #include "backupfile.h"
 #include "modechange.h"
 #include "makepath.h"
@@ -222,7 +221,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("install - %s\n", version_string);
+      printf ("install - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 
