@@ -23,7 +23,7 @@ VPATH = @srcdir@
 CC = @CC@
 AR = ar
 RANLIB = @RANLIB@
-DEFS = @DEFS@
+DEFS = -Dlint @DEFS@
 CFLAGS = @CFLAGS@
 YACC = @YACC@
 
