@@ -154,7 +154,7 @@ get_fs_usage (path, disk, fsp)
 #define CONVERT_BLOCKS(b) adjust_blocks ((b), fsd.f_fsize, 512)
 #endif
 
-#ifdef STAT_STATFS4		/* SVR3, Dynix, Irix.  */
+#ifdef STAT_STATFS4		/* SVR3, Dynix, Irix, AIX.  */
   struct statfs fsd;
 
   if (statfs (path, &fsd, sizeof fsd, 0) < 0)
@@ -162,12 +162,16 @@ get_fs_usage (path, disk, fsp)
   /* Empirically, the block counts on most SVR3 and SVR3-derived
      systems seem to always be in terms of 512-byte blocks,
      no matter what value f_bsize has.  */
-#define CONVERT_BLOCKS(b) (b)
-#ifndef _SEQUENT_		/* _SEQUENT_ is DYNIX/ptx.  */
-#ifndef DOLPHIN			/* DOLPHIN 3.8.alfa/7.18 has f_bavail */
-#define f_bavail f_bfree
-#endif
-#endif
+# if _AIX
+#  define CONVERT_BLOCKS(b) adjust_blocks ((b), fsd.f_bsize, 512)
+# else
+#  define CONVERT_BLOCKS(b) (b)
+#  ifndef _SEQUENT_		/* _SEQUENT_ is DYNIX/ptx.  */
+#   ifndef DOLPHIN		/* DOLPHIN 3.8.alfa/7.18 has f_bavail */
+#    define f_bavail f_bfree
+#   endif
+#  endif
+# endif
 #endif
 
 #ifdef STAT_STATVFS		/* SVR4.  */
