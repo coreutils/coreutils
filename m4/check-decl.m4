@@ -1,4 +1,4 @@
-#serial 6
+#serial 7
 
 dnl This is just a wrapper function to encapsulate this kludge.
 dnl Putting it in a separate file like this helps share it between
@@ -6,6 +6,7 @@ dnl different packages.
 AC_DEFUN(jm_CHECK_DECLS,
 [
   AC_REQUIRE([_jm_DECL_HEADERS])
+  AC_REQUIRE([AC_HEADER_TIME])
   headers='
 #include <stdio.h>
 #if HAVE_STRING_H
@@ -24,6 +25,18 @@ AC_DEFUN(jm_CHECK_DECLS,
 #if HAVE_UNISTD_H
 # include <unistd.h>
 #endif
+
+#include <sys/types.h>
+#if TIME_WITH_SYS_TIME
+# include <sys/time.h>
+# include <time.h>
+#else
+# if HAVE_SYS_TIME_H
+#  include <sys/time.h>
+# else
+#  include <time.h>
+# endif
+#endif
 '
 
   if test x = y; then
@@ -41,10 +54,11 @@ AC_DEFUN(jm_CHECK_DECLS,
     AC_DEFINE(HAVE_DECL_STRSTR, 1, [Define if this function is declared.])
     AC_DEFINE(HAVE_DECL_STRTOUL, 1, [Define if this function is declared.])
     AC_DEFINE(HAVE_DECL_STRTOULL, 1, [Define if this function is declared.])
+    AC_DEFINE(HAVE_DECL_NANOSLEEP, 1, [Define if this function is declared.])
   fi
 
   jm_CHECK_DECLARATIONS($headers, free lseek malloc \
-                        memchr realloc stpcpy strstr strtoul strtoull)
+                        memchr nanosleep realloc stpcpy strstr strtoul strtoull)
 ])
 
 dnl FIXME: when autoconf has support for it.
@@ -52,5 +66,5 @@ dnl This is a little helper so we can require these header checks.
 AC_DEFUN(_jm_DECL_HEADERS,
 [
   AC_REQUIRE([AC_HEADER_STDC])
-  AC_CHECK_HEADERS(memory.h string.h strings.h stdlib.h unistd.h)
+  AC_CHECK_HEADERS(memory.h string.h strings.h stdlib.h unistd.h sys/time.h)
 ])
