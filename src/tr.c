@@ -204,9 +204,9 @@ struct Spec_list
        class construct e.g. [=c=].  */
     int has_equiv_class;
 
-    /* Non-zero if this spec contains at least one of [:upper:] or
-       [:lower:] class constructs.  */
-    int has_upper_or_lower;
+    /* Non-zero if this spec contains at least one character class
+       construct.  E.g. [:digit:].  */
+    int has_char_class;
 
     /* Non-zero if this spec contains at least one of the character class
        constructs (all but upper and lower) that aren't allowed in s2.  */
@@ -1333,7 +1333,7 @@ get_spec_stats (struct Spec_list *s)
   s->n_indefinite_repeats = 0;
   s->has_equiv_class = 0;
   s->has_restricted_char_class = 0;
-  s->has_upper_or_lower = 0;
+  s->has_char_class = 0;
   for (p = s->head->next; p; p = p->next)
     {
       switch (p->type)
@@ -1349,6 +1349,7 @@ get_spec_stats (struct Spec_list *s)
 	  break;
 
 	case RE_CHAR_CLASS:
+	  s->has_char_class = 1;
 	  for (i = 0; i < N_CHARS; i++)
 	    if (is_char_class_member (p->u.char_class, i))
 	      ++len;
@@ -1356,7 +1357,6 @@ get_spec_stats (struct Spec_list *s)
 	    {
 	    case CC_UPPER:
 	    case CC_LOWER:
-	      s->has_upper_or_lower = 1;
 	      break;
 	    default:
 	      s->has_restricted_char_class = 1;
@@ -1502,6 +1502,27 @@ string2_extend (const struct Spec_list *s1, struct Spec_list *s2)
   s2->length = s1->length;
 }
 
+/* Return non-zero if S is a non-empty list in which exactly one
+   character (but potentially, many instances of it) appears.
+   E.g.  [X*] or xxxxxxxx.  */
+
+static int
+homogeneous_spec_list (struct Spec_list *s)
+{
+  int b, c;
+
+  s->state = BEGIN_STATE;
+
+  if ((b = get_next (s, NULL)) == -1)
+    return 0;
+
+  while ((c = get_next (s, NULL)) != -1)
+    if (c != b)
+      return 0;
+
+  return 1;
+}
+
 /* Die with an error message if S1 and S2 describe strings that
    are not valid with the given command line switches.
    A side effect of this function is that if a valid [c*] or
@@ -1520,25 +1541,9 @@ validate (struct Spec_list *s1, struct Spec_list *s2)
 	     _("the [c*] repeat construct may not appear in string1"));
     }
 
-  /* FIXME: it isn't clear from the POSIX spec that this is invalid,
-     but in the spirit of the other restrictions put on translation
-     with character classes, this seems a logical interpretation.  */
-  if (complement && s1->has_upper_or_lower)
-    {
-      error (EXIT_FAILURE, 0,
-	     _("character classes may not be used when translating \
-and complementing"));
-    }
-
   if (s2)
     {
       get_s2_spec_stats (s2, s1->length);
-      if (s2->has_restricted_char_class)
-	{
-	  error (EXIT_FAILURE, 0,
-		 _("when translating, the only character classes that may \
-appear in\n\tstring2 are `upper' and `lower'"));
-	}
 
       if (s2->n_indefinite_repeats > 1)
 	{
@@ -1569,10 +1574,21 @@ when translating"));
 		}
 	    }
 
-	  if (complement && s2->has_upper_or_lower)
-	    error (EXIT_FAILURE, 0,
-		   _("character classes may not be used when translating \
-and complementing"));
+	  if (complement && s1->has_char_class
+	      && ! (s2->length == s1->length && homogeneous_spec_list (s2)))
+	    /* FIXME: update NEWS */
+	    {
+	      error (EXIT_FAILURE, 0,
+		     _("when translating with complemented character classes,\
+\nstring2 must map all characters in the domain to one"));
+	    }
+
+	  if (s2->has_restricted_char_class)
+	    {
+	      error (EXIT_FAILURE, 0,
+		     _("when translating, the only character classes that may \
+appear in\n\tstring2 are `upper' and `lower'"));
+	    }
 	}
       else
 	/* Not translating.  */
