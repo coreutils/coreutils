@@ -1,3 +1,7 @@
+2000-06-21  Jim Meyering  <meyering@lucent.com>
+
+	* getpass.c: New file, from Bruno Haible.  Required for BeOS.
+
 2000-06-17  Bruno Haible  <haible@clisp.cons.org>
 
 	* xgetcwd.c (xgetcwd): If the required pathname length is smaller
