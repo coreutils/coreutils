@@ -72,6 +72,17 @@ my @tv = (
 # Prior to 1.22i, you couldn't use a delimiter that would sign-extend.
 ['8bit-delim', "'-d\255' -f2,3 --out=_", "a\255b\255c\n", "b_c\n",	0],
 
+# New functionality:
+['out-delim1', '-c1-3,5- --output-d=:', "abcdefg\n", "abc:efg\n",	0],
+# A totally overlapped field shouldn't change anything:
+['out-delim2', '-c1-3,2,5- --output-d=:', "abcdefg\n", "abc:efg\n",	0],
+# Partial overlap: index `2' is not at the start of a range.
+['out-delim3', '-c1-3,2-4,6 --output-d=:', "abcdefg\n", "abcd:f\n",	0],
+# Ensure that the following two commands produce the same output.
+# Before an off-by-one fix, the output from the former would not contain a `:'.
+['out-delim4', '-c4-,2-3 --output-d=:', "abcdefg\n", "bc:defg\n",	0],
+['out-delim5', '-c2-3,4- --output-d=:', "abcdefg\n", "bc:defg\n",	0],
+
 );
 
 # Don't use a pipe for failing tests.  Otherwise, sometimes they
