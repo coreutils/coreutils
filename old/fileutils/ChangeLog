@@ -1,7 +1,7 @@
 1998-01-10  Jim Meyering  <meyering@na-net.ornl.gov>
 
-	* src/ls.c (decode_switches) [-u]: Fix bug whereby -u had no effect
-	without -l or -t.  Now, -u (like -c) implies --sort=time.
+	* src/ls.c (decode_switches) [-u]: Fix bug whereby -u worked only
+	with -l or -t.  Now, -u (like -c) implies --sort=time.
 	(usage): Correct descriptions of --sort, --time, and -t.
 	Suggestions from Andreas Schwab.
 
