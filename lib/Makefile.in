@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.4b from Makefile.am
+# Makefile.in generated automatically by automake 1.4c from Makefile.am
 
 # Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000
 # Free Software Foundation, Inc.
@@ -67,8 +67,6 @@ CATALOGS = @CATALOGS@
 CATOBJEXT = @CATOBJEXT@
 CC = @CC@
 CPP = @CPP@
-CXX = @CXX@
-CXXCPP = @CXXCPP@
 DATADIRNAME = @DATADIRNAME@
 DEPDIR = @DEPDIR@
 DF_PROG = @DF_PROG@
@@ -803,19 +801,19 @@ maintainer-clean-am:  maintainer-clean-noinstLIBRARIES \
 
 maintainer-clean: maintainer-clean-am
 
-.PHONY: mostlyclean-noinstLIBRARIES distclean-noinstLIBRARIES \
-clean-noinstLIBRARIES maintainer-clean-noinstLIBRARIES \
-mostlyclean-compile distclean-compile clean-compile \
-maintainer-clean-compile mostlyclean-kr distclean-kr clean-kr \
-maintainer-clean-kr tags mostlyclean-tags distclean-tags clean-tags \
-maintainer-clean-tags mostlyclean-depend distclean-depend clean-depend \
-maintainer-clean-depend distdir info-am info dvi-am dvi check check-am \
-installcheck-am installcheck all-recursive-am install-exec-local \
-install-exec-am install-exec install-data-am install-data install-am \
-install uninstall-local uninstall-am uninstall all-local all-redirect \
-all-am all install-strip installdirs mostlyclean-generic \
-distclean-generic clean-generic maintainer-clean-generic clean \
-mostlyclean distclean maintainer-clean
+.PHONY: all all-am all-local all-recursive-am all-redirect check \
+check-am clean clean-compile clean-depend clean-generic clean-kr \
+clean-noinstLIBRARIES clean-tags distclean distclean-compile \
+distclean-depend distclean-generic distclean-kr \
+distclean-noinstLIBRARIES distclean-tags distdir dvi dvi-am info \
+info-am install install-am install-data install-data-am install-exec \
+install-exec-am install-exec-local install-strip installcheck \
+installcheck-am installdirs maintainer-clean maintainer-clean-compile \
+maintainer-clean-depend maintainer-clean-generic maintainer-clean-kr \
+maintainer-clean-noinstLIBRARIES maintainer-clean-tags mostlyclean \
+mostlyclean-compile mostlyclean-depend mostlyclean-generic \
+mostlyclean-kr mostlyclean-noinstLIBRARIES mostlyclean-tags tags \
+uninstall uninstall-am uninstall-local
 
 lstat.c: xstat.in
 	sed \

@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.4b from Makefile.am
+# Makefile.in generated automatically by automake 1.4c from Makefile.am
 
 # Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000
 # Free Software Foundation, Inc.
@@ -67,8 +67,6 @@ CATALOGS = @CATALOGS@
 CATOBJEXT = @CATOBJEXT@
 CC = @CC@
 CPP = @CPP@
-CXX = @CXX@
-CXXCPP = @CXXCPP@
 DATADIRNAME = @DATADIRNAME@
 DEPDIR = @DEPDIR@
 DF_PROG = @DF_PROG@
@@ -152,6 +150,7 @@ Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
 
 tags: TAGS
 TAGS:
+
 
 check-TESTS: $(TESTS)
 	@failed=0; all=0; xfail=0; xpass=0; \
@@ -277,12 +276,12 @@ maintainer-clean-am:  maintainer-clean-generic distclean-am
 
 maintainer-clean: maintainer-clean-am
 
-.PHONY: tags check-TESTS distdir info-am info dvi-am dvi check check-am \
-installcheck-am installcheck install-exec-am install-exec \
-install-data-am install-data install-am install uninstall-am uninstall \
-all-redirect all-am all install-strip installdirs mostlyclean-generic \
-distclean-generic clean-generic maintainer-clean-generic clean \
-mostlyclean distclean maintainer-clean
+.PHONY: all all-am all-redirect check check-TESTS check-am clean \
+clean-generic distclean distclean-generic distdir dvi dvi-am info \
+info-am install install-am install-data install-data-am install-exec \
+install-exec-am install-strip installcheck installcheck-am installdirs \
+maintainer-clean maintainer-clean-generic mostlyclean \
+mostlyclean-generic uninstall uninstall-am
 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
