@@ -26,10 +26,23 @@
 #endif
 
 #include <stdio.h>
+
 #if HAVE_STRING_H
+# if !STDC_HEADERS && HAVE_MEMORY_H
+#  include <memory.h>
+# endif
 # include <string.h>
+#else
+# if HAVE_STRINGS_H
+#  include <strings.h>
+# endif
 #endif
-#include <sys/types.h>
+#if HAVE_STDLIB_H
+# include <stdlib.h>
+#endif
+#if HAVE_UNISTD_H
+# include <unistd.h>
+#endif
 
 #ifndef HAVE_DECL_MALLOC
 "this configure-time declaration test was not run"
