@@ -1,5 +1,8 @@
 2003-06-06  Jim Meyering  <jim@meyering.net>
 
+	* jm-macros.m4: Require gl_FUNC_ALLOCA.
+	* alloca.m4: New file, from gnulib.
+
 	* stdbool.m4: Update from gnulib.
 
 2003-06-04  Paul Eggert  <eggert@twinsun.com>
