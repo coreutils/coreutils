@@ -6,6 +6,8 @@
 	* Makefile.am (libfetish_a_SOURCES): Add full-read.c and full-read.h.
 	* full-read.c, full-read.h: New files.
 
+	Update from gnulib.
+
 	2002-12-10  Paul Eggert  <eggert@twinsun.com>
 	Port exclude.c and exclude.h to more non-GNU systems, e.g. Solaris 7.
 	* exclude.h (EXCLUDE_ANCHORED, EXCLUDE_INCLUDE, EXCLUDE_WILDCARDS):
@@ -17,6 +19,7 @@
 	instead of FNM_FILE_NAME, for compatibility with pure POSIX sytems.
 
 	Update from gnulib.
+
 	* utime.c (utime_null): Use SAFE_READ_ERROR.
 	(utime_null): No need to call ftruncate if the file was nonempty.
 	* getdate.y (get_date): Test HAVE_STRUCT_TM_TM_ZONE, not HAVE_TM_ZONE.
