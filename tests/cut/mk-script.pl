@@ -114,10 +114,8 @@ foreach $test_vector (@Test::t)
     my ($test_name, $flags, $in_spec, $expected, $e_ret_code)
 	= @{$test_vector};
 
-    my $h = spec_to_list ($in_spec, $test_name, 'in');
+    my $in = spec_to_list ($in_spec, $test_name, 'in');
 
-    my $in1 = "t$test_name.in1";
-    my $in2 = "t$test_name.in2";
     my $exp_name = "t$test_name.exp";
     my $out = "t$test_name.out";
 
@@ -129,7 +127,7 @@ foreach $test_vector (@Test::t)
 
     my @srcdir_rel_in_file;
     my $f;
-    foreach $f (@{ $h->{ALL_FILES} })
+    foreach $f (@{ $in->{ALL_FILES} })
       {
 	push (@srcdir_rel_in_file, "\$srcdir/$f")
       }
