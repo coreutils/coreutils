@@ -240,7 +240,7 @@ xfields (struct line *line)
 	}
       while (ptr != lim);
     }
-	  
+
   extract_field (line, ptr, lim - ptr);
 }
 
