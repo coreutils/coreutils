@@ -65,9 +65,7 @@
 #include <signal.h>
 
 /* Get MB_CUR_MAX.  */
-#if HAVE_STDLIB_H
-# include <stdlib.h>
-#endif
+#include <stdlib.h>
 
 /* Get mbstate_t, mbrtowc(), mbsinit(), wcwidth().  */
 #if HAVE_WCHAR_H
