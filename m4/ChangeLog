@@ -1,5 +1,7 @@
 2003-06-07  Jim Meyering  <jim@meyering.net>
 
+	* tzset.m4: New file. Used by strftime.m4.
+
 	* strftime.m4: Update from gnulib.
 	* tm_gmtoff.m4: New file, used by strftime.m4.
 	* mktime.m4: New file.  From gnulib.
