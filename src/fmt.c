@@ -383,7 +383,7 @@ main (argc, argv)
 
   if (show_version)
     {
-      printf ("%s - %s\n", program_name, version_string);
+      printf ("fmt - %s\n", version_string);
       exit (0);
     }
 
