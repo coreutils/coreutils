@@ -1,5 +1,8 @@
 Changes in release 2.1
 [2.0g]
+* sort's --help output now warns that it is locale-aware
+* tail: fix a buffer underrun error that occurred on an empty pipe,
+  also thanks to bounded pointers
 * pr: fix a bounds violation found by Greg McGary's bounded-pointers-enabled gcc
   It could have caused (with low probability) the columns on the last page of
   output *not* to be `balanced' when they should have been.
