@@ -32,9 +32,11 @@
 #if LONG
 # define C_STRTOD c_strtold
 # define DOUBLE long double
+# define STRTOD_L strtold_l
 #else
 # define C_STRTOD c_strtod
 # define DOUBLE double
+# define STRTOD_L strtod_l
 #endif
 
 /* c_strtold falls back on strtod if strtold isn't declared.  */
@@ -48,6 +50,15 @@ DOUBLE
 C_STRTOD (char const *nptr, char **endptr)
 {
   DOUBLE r;
+
+#ifdef LC_ALL_MASK
+
+  locale_t c_locale = newlocale (LC_ALL_MASK, "C", 0);
+  r = STRTOD_L (nptr, endptr, c_locale);
+  freelocale (c_locale);
+
+#else
+
   char *saved_locale = setlocale (LC_NUMERIC, NULL);
 
   if (saved_locale)
@@ -63,6 +74,8 @@ C_STRTOD (char const *nptr, char **endptr)
       setlocale (LC_NUMERIC, saved_locale);
       free (saved_locale);
     }
+
+#endif
 
   return r;
 }
