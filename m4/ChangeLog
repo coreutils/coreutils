@@ -1,6 +1,6 @@
 2003-08-18  Jim Meyering  <jim@meyering.net>
 
-	* getloadavg.m4: Use `[\t ]', not [ \t] (where \t is a literal TAB).
+	* getloadavg.m4: Use [\t ], not [ \t] (where \t is a literal TAB).
 	* lib-ld.m4: Likewise.
 
 2003-08-16  Paul Eggert  <eggert@twinsun.com>
