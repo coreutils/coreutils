@@ -1434,9 +1434,12 @@ wipename (char *oldname, char const *qoldname, struct Options const *flags)
   size_t len = base_len (base);
   char *dir = dir_name (newname);
   char *qdir = xstrdup (quotearg_colon (dir));
-  int dir_fd = open (dir, O_RDONLY | O_NOCTTY);
   bool first = true;
   bool ok = true;
+
+  int dir_fd = open (dir, O_WRONLY | O_NOCTTY);
+  if (dir_fd < 0)
+    dir_fd = open (dir, O_RDONLY | O_NOCTTY);
 
   if (flags->verbose)
     error (0, 0, _("%s: removing"), qoldname);
