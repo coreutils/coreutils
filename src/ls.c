@@ -911,8 +911,8 @@ dired_dump_obstack (const char *prefix, struct obstack *os)
     }
 }
 
-static unsigned int
-dev_ino_hash (void const *x, unsigned int table_size)
+static size_t
+dev_ino_hash (void const *x, size_t table_size)
 {
   struct dev_ino const *p = x;
   return (uintmax_t) p->st_ino % table_size;
