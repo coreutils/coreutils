@@ -45,10 +45,13 @@
 # endif
 #endif
 
-#include "path-concat.h"
+#ifndef DIRECTORY_SEPARATOR
+# define DIRECTORY_SEPARATOR '/'
+#endif
 
-char *xmalloc ();
-char *xrealloc ();
+#ifndef ISSLASH
+# define ISSLASH(C) ((C) == DIRECTORY_SEPARATOR)
+#endif
 
 /* The following static variable is declared 'volatile' to avoid a
    possible multithread problem in the function get_charset_aliases. If we
@@ -71,7 +74,24 @@ get_charset_aliases ()
   if (cp == NULL)
     {
       FILE *fp;
-      char *file_name = path_concat (LIBDIR, "charset.alias", NULL);
+      const char *dir = LIBDIR;
+      const char *base = "charset.alias";
+      char *file_name;
+
+      /* Concatenate dir and base into freshly allocated file_name.  */
+      {
+	size_t dir_len = strlen (dir);
+	size_t base_len = strlen (base);
+	int add_slash = (dir_len > 0 && !ISSLASH (dir[dir_len - 1]));
+	file_name = (char *) malloc (dir_len + add_slash + base_len + 1);
+	if (file_name != NULL)
+	  {
+	    memcpy (file_name, dir, dir_len);
+	    if (add_slash)
+	      file_name[dir_len] = DIRECTORY_SEPARATOR;
+	    memcpy (file_name + dir_len + add_slash, base, base_len + 1);
+	  }
+      }
 
       if (file_name == NULL || (fp = fopen (file_name, "r")) == NULL)
 	/* Out of memory or file not found, treat it as empty.  */
@@ -111,12 +131,18 @@ get_charset_aliases ()
 	      if (res_size == 0)
 		{
 		  res_size = l1 + 1 + l2 + 1;
-		  res_ptr = xmalloc (res_size + 1);
+		  res_ptr = malloc (res_size + 1);
 		}
 	      else
 		{
 		  res_size += l1 + 1 + l2 + 1;
-		  res_ptr = xrealloc (res_ptr, res_size + 1);
+		  res_ptr = realloc (res_ptr, res_size + 1);
+		}
+	      if (res_ptr == NULL)
+		{
+		  /* Out of memory. */
+		  res_size = 0;
+		  break;
 		}
 	      strcpy (res_ptr + res_size - (l2 + 1) - (l1 + 1), buf1);
 	      strcpy (res_ptr + res_size - (l2 + 1), buf2);
@@ -167,13 +193,13 @@ locale_charset ()
 # if HAVE_SETLOCALE
   locale = setlocale (LC_CTYPE, NULL);
 # endif
-  if (locale == NULL)
+  if (locale == NULL || locale[0] == '\0')
     {
       locale = getenv ("LC_ALL");
-      if (locale == NULL)
+      if (locale == NULL || locale[0] == '\0')
 	{
 	  locale = getenv ("LC_CTYPE");
-	  if (locale == NULL)
+	  if (locale == NULL || locale[0] == '\0')
 	    locale = getenv ("LANG");
 	}
     }
@@ -185,7 +211,7 @@ locale_charset ()
 
 #endif
 
-  if (codeset != NULL)
+  if (codeset != NULL && codeset[0] != '\0')
     {
       /* Resolve alias. */
       for (aliases = get_charset_aliases ();
