@@ -2,6 +2,8 @@
 # FIXME: This test requires ln -s.
 # cp from 3.16 fails this test
 
+: ${CP=cp}
+
 rm -rf a b
 msg=bar
 echo $msg > a
@@ -10,8 +12,8 @@ ln -s a b
 fail=0
 
 # It should fail with a message something like this:
-#   ./cp: `a' and `b' are the same file
-./cp -d a b 2>/dev/null
+#   cp: `a' and `b' are the same file
+$CP -d a b 2>/dev/null
 
 # Fail this test if the exit status is not 1
 test $? = 1 || fail=1
