@@ -579,7 +579,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("nl - %s\n", PACKAGE_VERSION);
+      printf ("nl (GNU %s) %s\n", PACKAGE, VERSION);
       exit (EXIT_SUCCESS);
     }
 

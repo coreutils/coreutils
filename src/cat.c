@@ -581,7 +581,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("cat - %s\n", PACKAGE_VERSION);
+      printf ("cat (GNU %s) %s\n", PACKAGE, VERSION);
       exit (EXIT_SUCCESS);
     }
 

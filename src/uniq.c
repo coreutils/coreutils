@@ -384,7 +384,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("uniq - %s\n", PACKAGE_VERSION);
+      printf ("uniq (GNU %s) %s\n", PACKAGE, VERSION);
       exit (EXIT_SUCCESS);
     }
 

@@ -368,7 +368,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("expand - %s\n", PACKAGE_VERSION);
+      printf ("expand (GNU %s) %s\n", PACKAGE, VERSION);
       exit (EXIT_SUCCESS);
     }
 

@@ -250,7 +250,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("comm - %s\n", PACKAGE_VERSION);
+      printf ("comm (GNU %s) %s\n", PACKAGE, VERSION);
       exit (EXIT_SUCCESS);
     }
 

@@ -1848,7 +1848,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("tr - %s\n", PACKAGE_VERSION);
+      printf ("tr (GNU %s) %s\n", PACKAGE, VERSION);
       exit (EXIT_SUCCESS);
     }
 

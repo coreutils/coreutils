@@ -307,7 +307,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("cksum - %s\n", PACKAGE_VERSION);
+      printf ("cksum (GNU %s) %s\n", PACKAGE, VERSION);
       exit (EXIT_SUCCESS);
     }
 

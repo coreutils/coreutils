@@ -473,7 +473,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("paste - %s\n", PACKAGE_VERSION);
+      printf ("paste (GNU %s) %s\n", PACKAGE, VERSION);
       exit (EXIT_SUCCESS);
     }
 

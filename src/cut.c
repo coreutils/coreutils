@@ -737,7 +737,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("cut - %s\n", PACKAGE_VERSION);
+      printf ("cut (GNU %s) %s\n", PACKAGE, VERSION);
       exit (EXIT_SUCCESS);
     }
 

@@ -454,7 +454,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("split - %s\n", PACKAGE_VERSION);
+      printf ("split (GNU %s) %s\n", PACKAGE, VERSION);
       exit (EXIT_SUCCESS);
     }
 
