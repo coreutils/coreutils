@@ -1,6 +1,12 @@
-2001-09-28  Jim Meyering  <meyering@lucent.com>
+2001-09-29  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.1.
+
+	* mkinstalldirs: Update from master.
+
+	* Makefile.maint (wget-update): Add mkinstalldirs.
+
+2001-09-28  Jim Meyering  <meyering@lucent.com>
 
 	This mv command should fail (likewise for cp), rather than
 	silently clobbering one of the source files.
