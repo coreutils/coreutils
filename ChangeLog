@@ -1,3 +1,12 @@
+2002-08-25  Jim Meyering  <meyering@lucent.com>
+
+	* src/cat.c (main): Close STDIN_FILENO rather than a literal `0'.
+	* src/tac.c (main): Likewise.
+	* src/tail.c (main): Likewise.
+	* src/tee.c (main): Likewise.
+	* src/tr.c (main): Likewise.
+	* src/wc.c (main): Likewise.
+
 2002-08-20  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.5.1.
