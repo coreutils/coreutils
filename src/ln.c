@@ -1,5 +1,5 @@
 /* `ln' program to create links between files.
-   Copyright (C) 86, 89, 90, 91, 1995-2000 Free Software Foundation, Inc.
+   Copyright (C) 86, 89, 90, 91, 1995-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -520,7 +520,7 @@ main (int argc, char **argv)
 
   if (target_directory_specified || n_files > 2)
     {
-      int i;
+      unsigned int i;
       unsigned int last_file_idx = (target_directory_specified
 				    ? n_files - 1
 				    : n_files - 2);
