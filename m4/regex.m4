@@ -63,7 +63,7 @@ AC_DEFUN(jm_WITH_REGEX,
 		    jm_with_regex=$withval,
 		    jm_with_regex=$ac_use_included_regex)
 	if test "$jm_with_regex" = yes; then
-	  LIBOBJS="$LIBOBJS regex.o"
+	  LIBOBJS="$LIBOBJS regex.$ac_objext"
 	fi
       ],
     )

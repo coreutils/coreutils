@@ -42,7 +42,7 @@ AC_DEFUN(jm_FUNC_CHOWN,
 	     jm_cv_func_working_chown=no)
   ])
   if test $jm_cv_func_working_chown = no; then
-    LIBOBJS="$LIBOBJS chown.o"
+    LIBOBJS="$LIBOBJS chown.$ac_objext"
     AC_DEFINE_UNQUOTED(chown, rpl_chown,
       [Define to rpl_chown if the replacement function should be used.])
   fi

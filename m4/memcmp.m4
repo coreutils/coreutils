@@ -38,7 +38,8 @@ changequote([, ])dnl
    jm_cv_func_memcmp_working=yes,
    jm_cv_func_memcmp_working=no,
    jm_cv_func_memcmp_working=no)])
-test $jm_cv_func_memcmp_working = no && LIBOBJS="$LIBOBJS memcmp.o"
+test $jm_cv_func_memcmp_working = no \
+  && LIBOBJS="$LIBOBJS memcmp.$ac_objext"
 AC_SUBST(LIBOBJS)dnl
 ])
 
