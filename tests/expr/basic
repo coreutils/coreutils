@@ -26,14 +26,17 @@ my $prog = $ENV{PROG} || die "$0: \$PROG not specified in environment\n";
 
 my @Tests =
     (
-     ['invalid-a', '3 + -', {ERR => "$prog: non-numeric argument\n"},
-      {EXIT => 1}],
-
      ['a', '5 + 6', {OUT => '11'}],
+     ['b', '5 - 6', {OUT => '-1'}],
+     ['c', '5 \* 6', {OUT => '30'}],
+     ['d', '100 / 6', {OUT => '16'}],
+     ['e', '100 % 6', {OUT => '4'}],
+
+     ['fail-a', '3 + -', {ERR => "$prog: non-numeric argument\n"},
+      {EXIT => 2}],
     );
 
-# Prepend the command line argument and append a newline to end
-# of each expected `OUT' string.
+# Append a newline to end of each expected `OUT' string.
 my $t;
 foreach $t (@Tests)
   {
@@ -41,7 +44,7 @@ foreach $t (@Tests)
     my $e;
     foreach $e (@$t)
       {
-	$e->{OUT} = "$arg1: $e->{OUT}\n"
+	$e->{OUT} .= "\n"
 	  if ref $e eq 'HASH' and exists $e->{OUT};
       }
   }
