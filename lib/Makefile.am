@@ -136,7 +136,7 @@ libfetish_a_SOURCES = \
   xstrtol.c xstrtol.h \
   xstrtoul.c \
   xstrtoumax.c \
-  yesno.c
+  yesno.c yesno.h
 
 libfetish_a_SOURCES += \
   printf-args.h \
