@@ -247,7 +247,7 @@ find_dir_entry (struct stat *dot_sb, struct Path *path, size_t parent_height)
 
 /* Construct the full, absolute name of the current working
    directory and store it in *PATH.
-   The getcwd function does nearly the same task, but is typically
+   The getcwd function performs nearly the same task, but is typically
    unable to handle names longer than PATH_MAX.  This function has
    no such limitation.  However, this function *can* fail due to
    permission problems or a lack of memory, while Linux's getcwd
@@ -260,6 +260,9 @@ find_dir_entry (struct stat *dot_sb, struct Path *path, size_t parent_height)
    used as a getcwd replacement.  Unfortunately, considering all of
    the information the caller would require in order to produce good
    diagnostics, it doesn't seem worth the added complexity.
+   In any case, any getcwd replacement must *not* exceed the PATH_MAX
+   limitation.  Otherwise, functions like `chdir' would fail with
+   ENAMETOOLONG.
 
    FIXME-maybe: if find_dir_entry fails due to permissions, try getcwd,
    in case the unreadable directory is close enough to the root that
