@@ -1,5 +1,5 @@
 /* GNU's who.
-   Copyright (C) 1992-2002 Free Software Foundation, Inc.
+   Copyright (C) 1992-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -384,7 +384,7 @@ print_boottime (const STRUCT_UTMP *utmp_ent)
 static char *
 make_id_equals_comment (STRUCT_UTMP const *utmp_ent)
 {
-  char *comment = xmalloc (sizeof (_("id=")) + sizeof UT_ID (utmp_ent) + 1);
+  char *comment = xmalloc (strlen (_("id=")) + sizeof UT_ID (utmp_ent) + 1);
 
   /* Cast field width argument to `int' to avoid warning from gcc.  */
   sprintf (comment, "%s%.*s", _("id="), (int) sizeof UT_ID (utmp_ent),
@@ -400,9 +400,9 @@ print_deadprocs (const STRUCT_UTMP *utmp_ent)
   PIDSTR_DECL_AND_INIT (pidstr, utmp_ent);
 
   if (!exitstr)
-    exitstr = xmalloc (sizeof (_("term="))
+    exitstr = xmalloc (strlen (_("term="))
 		       + INT_STRLEN_BOUND (UT_EXIT_E_TERMINATION (utmp_ent)) + 1
-		       + sizeof (_("exit="))
+		       + strlen (_("exit="))
 		       + INT_STRLEN_BOUND (UT_EXIT_E_EXIT (utmp_ent))
 		       + 1);
   sprintf (exitstr, "%s%d %s%d", _("term="), UT_EXIT_E_TERMINATION (utmp_ent),
@@ -455,11 +455,11 @@ print_runlevel (const STRUCT_UTMP *utmp_ent)
   int curr = UT_PID (utmp_ent) % 256;
 
   if (!runlevline)
-    runlevline = xmalloc (sizeof (_("run-level")) + 3);
+    runlevline = xmalloc (strlen (_("run-level")) + 3);
   sprintf (runlevline, "%s %c", _("run-level"), curr);
 
   if (!comment)
-    comment = xmalloc (sizeof (_("last=")) + 2);
+    comment = xmalloc (strlen (_("last=")) + 2);
   sprintf (comment, "%s%c", _("last="), (last == 'N') ? 'S' : last);
 
   print_line ("", ' ', runlevline, time_string (utmp_ent),
