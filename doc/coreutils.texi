@@ -11997,29 +11997,35 @@ the exit status of @var{command} otherwise
 @section @command{nice}: Run a command with modified scheduling priority
 
 @pindex nice
+@cindex nice value
 @cindex modifying scheduling priority
 @cindex scheduling priority, modifying
 @cindex priority, modifying
 @cindex appropriate privileges
 
-@command{nice} prints or modifies the scheduling priority of a job.
+@command{nice} prints or modifies a process's @dfn{nice value},
+a parameter that affects the process's scheduling priority.
 Synopsis:
 
 @example
 nice [@var{option}]@dots{} [@var{command} [@var{arg}]@dots{}]
 @end example
 
-If no arguments are given, @command{nice} prints the current scheduling
-priority, which it inherited.  Otherwise, @command{nice} runs the given
-@var{command} with its scheduling priority adjusted.  If no
-@var{adjustment} is given, the priority of the command is incremented by
-10.  You must have appropriate privileges to specify a negative
-adjustment.  The priority can be adjusted by @command{nice} over the range
-of @minus{}20 (the highest priority) to 19 (the lowest).
+If no arguments are given, @command{nice} prints the current nice
+value, which it inherited.  Otherwise, @command{nice} runs the given
+@var{command} with its nice value adjusted.  By default, its nice
+value is incremented by 10.
+
+Nice values range at least from @minus{}20 (resulting in the most
+favorable scheduling) through 19 (the least favorable).  Some systems
+may have a wider range of nice values; conversely, other systems may
+enforce more restrictive limits.  An attempt to set the nice value
+outside the supported range is treated as an attempt to use the
+minimum or maximum supported value.
 
 @cindex conflicts with shell built-ins
 @cindex built-in shell commands, conflicts with
-Because most shells have a built-in command by the same name, using the
+Because many shells have a built-in command by the same name, using the
 unadorned command name in a script or interactively may get you
 different functionality than that described here.
 
@@ -12030,7 +12036,10 @@ The program accepts the following option.  Also see @ref{Common options}.
 @itemx --adjustment=@var{adjustment}
 @opindex -n
 @opindex --adjustment
-Add @var{adjustment} instead of 10 to the command's priority.
+Add @var{adjustment} instead of 10 to the command's nice value.  If
+@var{adjustment} is negative and you lack appropriate privileges,
+@command{nice} issues a warning but otherwise acts as if you specified
+a zero adjustment.
 
 On older systems, @command{nice} supports an obsolete option
 @option{-@var{adjustment}}.  @acronym{POSIX} 1003.1-2001 (@pxref{Standards
@@ -12053,46 +12062,47 @@ the exit status of @var{command} otherwise
 It is sometimes useful to run non-interactive programs with reduced priority.
 
 @example
-$ nice factor `echo '2^997 - 1'|bc`
+$ nice factor 4611686018427387903
 @end example
 
 Since @command{nice} prints the current priority,
-we can invoke it through itself to demonstrate how it works:
+you can invoke it through itself to demonstrate how it works.
 
-The default behavior is to reduce priority by @samp{10}.
+The default behavior is to increase the nice value by @samp{10}:
 
 @example
+$ nice
+0
 $ nice nice
 10
-@end example
-
-@example
 $ nice -n 10 nice
 10
 @end example
 
-The @var{adjustment} is relative to the current priority.
-Here, the first @command{nice} invocation runs the second one at priority
-@samp{10}, and it in turn runs the final one at a priority lowered by
-@samp{3} more.
+The @var{adjustment} is relative to the current nice value.  In the
+next example, the first @command{nice} invocation runs the second one
+with nice value 10, and it in turn runs the final one with a nice
+value that is 3 more:
 
 @example
 $ nice nice -n 3 nice
 13
 @end example
 
-Specifying a priority larger than @samp{19} is the same as specifying @samp{19}.
+Specifying a nice value larger than the supported range
+is the same as specifying the maximum supported value:
 
 @example
-$ nice -n 30 nice
+$ nice -n 10000000000 nice
 19
 @end example
 
-Only a privileged user may run a process with higher priority.
+Only a privileged user may run a process with higher priority:
 
 @example
 $ nice -n -1 nice
 nice: cannot set priority: Permission denied
+0
 $ sudo nice -n -1 nice
 -1
 @end example
