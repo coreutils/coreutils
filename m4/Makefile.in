@@ -127,6 +127,7 @@ d-ino.m4 \
 d-type.m4 \
 error.m4 \
 fnmatch.m4 \
+fpending.m4 \
 fstypename.m4 \
 fsusage.m4 \
 ftruncate.m4 \
