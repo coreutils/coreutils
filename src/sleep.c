@@ -36,6 +36,13 @@
 #include "long-options.h"
 #include "xstrtod.h"
 
+#if HAVE_FENV_H
+# include <fenv.h>
+#endif
+#if 199901 <= __STDC_VERSION__
+ #pragma STDC FENV_ACCESS ON
+#endif
+
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "sleep"
 
@@ -80,8 +87,6 @@ static int
 apply_suffix (double *s, char suffix_char)
 {
   unsigned int multiplier;
-
-  assert (*s <= TIME_T_MAX);
 
   switch (suffix_char)
     {
@@ -148,7 +153,7 @@ clock_get_realtime (struct timespec *ts)
 {
   int fail;
 #if USE_CLOCK_GETTIME
-  fail = clock_gettime (CLOCK_REALTIME, &ts);
+  fail = clock_gettime (CLOCK_REALTIME, ts);
 #else
   struct timeval tv;
   fail = gettimeofday (&tv, NULL);
@@ -168,8 +173,10 @@ main (int argc, char **argv)
 {
   int i;
   double seconds = 0.0;
+  double ns;
   int c;
   int fail = 0;
+  int forever;
   struct timespec ts_start;
   struct timespec ts_stop;
   struct timespec ts_sleep;
@@ -203,38 +210,56 @@ main (int argc, char **argv)
       usage (1);
     }
 
+#ifdef FE_UPWARD
+  /* Always round up, since we must sleep for at least the specified
+     interval.  */
+  fesetround (FE_UPWARD);
+#endif
+
   for (i = optind; i < argc; i++)
     {
       double s;
       const char *p;
       if (xstrtod (argv[i], &p, &s)
-	  /* No negative intervals.  */
-	  || s < 0
-	  /* S must fit in a time_t.  */
-	  || TIME_T_MAX < s
+	  /* Nonnegative interval.  */
+	  || ! (0 <= s)
 	  /* No extra chars after the number and an optional s,m,h,d char.  */
 	  || (*p && *(p+1))
 	  /* Check any suffix char and update S based on the suffix.  */
-	  || apply_suffix (&s, *p)
-	  /* Make sure the sum fits in a time_t.  */
-	  || TIME_T_MAX < (seconds += s)
-	  )
+	  || apply_suffix (&s, *p))
 	{
 	  error (0, 0, _("invalid time interval `%s'"), argv[i]);
 	  fail = 1;
 	}
+
+      seconds += s;
     }
 
   if (fail)
     usage (1);
 
-  /* Add this here so we end up rounding to the nearest nanosecond.
-     This ensures that that tv_nsec will be no larger than 999,999,999.  */
-  seconds += .0000000005;
-
-  /* Separate whole seconds from nanoseconds.  */
+  /* Separate whole seconds from nanoseconds.
+     Be careful to detect any overflow.  */
   ts_sleep.tv_sec = seconds;
-  ts_sleep.tv_nsec = (seconds - ts_sleep.tv_sec) * 1000000000;
+  ns = 1e9 * (seconds - ts_sleep.tv_sec);
+  forever = ! (ts_sleep.tv_sec <= seconds && 0 <= ns && ns <= 1e9);
+  ts_sleep.tv_nsec = ns;
+
+  /* Round up to the next whole number, if necessary, so that we
+     always sleep for at least the request amount of time.  */
+  ts_sleep.tv_nsec += (ts_sleep.tv_nsec < ns);
+
+  /* Normalize the interval length.  nanosleep requires this.  */
+  if (1000000000 <= ts_sleep.tv_nsec)
+    {
+      time_t t = ts_sleep.tv_sec + 1;
+
+      /* Detect floating point overflow (NaN) in interval length. */
+      forever |= (t < ts_sleep.tv_sec);
+
+      ts_sleep.tv_sec = t;
+      ts_sleep.tv_nsec -= 1000000000;
+    }
 
   ts_stop.tv_sec = ts_start.tv_sec + ts_sleep.tv_sec;
   ts_stop.tv_nsec = ts_start.tv_nsec + ts_sleep.tv_nsec;
@@ -242,6 +267,17 @@ main (int argc, char **argv)
     {
       ++ts_stop.tv_sec;
       ts_stop.tv_nsec -= 1000000000;
+    }
+
+  /* Detect integer overflow.  */
+  forever |= (ts_stop.tv_sec < ts_start.tv_sec
+	      || (ts_stop.tv_sec == ts_start.tv_sec
+		  && ts_stop.tv_nsec < ts_start.tv_nsec));
+
+  if (forever)
+    {
+      ts_sleep.tv_sec = ts_stop.tv_sec = TIME_T_MAX;
+      ts_sleep.tv_nsec = ts_stop.tv_nsec = 999999999;
     }
 
   while (1)
