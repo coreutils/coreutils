@@ -1,3 +1,7 @@
+1999-12-26  Jim Meyering  <meyering@ascend.com>
+
+	* lib/nanosleep.c (nanosleep): New file.
+
 1999-12-23  Jim Meyering  <meyering@ascend.com>
 
 	* src/sleep.c (USE_CLOCK_GETTIME): Define.
