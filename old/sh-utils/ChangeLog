@@ -2,6 +2,13 @@
 
 	* Version 2.0.13.
 
+	* src/Makefile.am (false.c): Convert only the final EXIT_SUCCESS
+	into EXIT_FAILURE.  Otherwise, false --help and false --version
+	would fail.
+
+	* src/true.c (main): Add an explicit `exit (EXIT_SUCCESS);'
+	for --version, rather than falling through.
+
 	* Upgrade to gettext-0.11.3.
 	* Upgrade to autoconf-2.53b.
 
