@@ -60,6 +60,7 @@ strftime.m4 \
 timespec.m4 \
 uintmax_t.m4 \
 ulonglong.m4 \
+unlink-busy.m4 \
 uptime.m4 \
 utimbuf.m4 \
 utime.m4 \
