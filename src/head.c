@@ -15,16 +15,7 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
-/* Options:
-   -b			Print first N 512-byte blocks.
-   -c, --bytes=N[bkm]	Print first N bytes
-			[or 512-byte blocks, kilobytes, or megabytes].
-   -k			Print first N kilobytes.
-   -N, -l, -n, --lines=N	Print first N lines.
-   -m			Print first N megabytes.
-   -q, --quiet, --silent	Never print filename headers.
-   -v, --verbose		Always print filename headers.
-
+/* Options: (see usage)
    Reads from standard input if no files are given or when a filename of
    ``-'' is encountered.
    By default, filename headers are printed only if more than one file
@@ -397,7 +388,7 @@ Usage: %s [OPTION]... [FILE]...\n\
       printf ("\
 \n\
   -c, --bytes=SIZE         print first SIZE bytes\n\
-  -l, -n, --lines=NUMBER   print first NUMBER lines instead of first 10\n\
+  -n, --lines=NUMBER   print first NUMBER lines instead of first 10\n\
   -q, --quiet, --silent    never print headers giving file names\n\
   -v, --verbose            always print headers giving file names\n\
       --help               display this help and exit\n\
