@@ -1,6 +1,14 @@
-2003-03-08  Jim Meyering  <jim@meyering.net>
+2003-03-09  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.10.
+
+	* src/remove.c (AD_stack_pop): Cast sizeof... to int before
+	changing its sign.  This avoids a warning from gcc on 64-bit systems.
+	Reported by Bob Proulx.
+	(pop_dir): Reverse order of sign change and cast, to be consistent
+	with the above.
+
+2003-03-08  Jim Meyering  <jim@meyering.net>
 
 	* tests/Makefile.am (evar-check): Check for POSIXLY_CORRECT not as a
 	shell variable, but only in the environment.  With /bin/sh->bash, the
