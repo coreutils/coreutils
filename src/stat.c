@@ -678,6 +678,7 @@ usage (int status)
   else
     {
       printf (_("Usage: %s [OPTION] FILE...\n"), program_name);
+      printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
       fputs (_("\
 Display file or file system status.\n\
 \n\
