@@ -32,6 +32,7 @@
 #include "system.h"
 #include "closeout.h"
 #include "error.h"
+#include "posixver.h"
 #include "xstrtol.h"
 #include "safe-read.h"
 
@@ -110,12 +111,6 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (_("\
 \n\
 SIZE may have a multiplier suffix: b for 512, k for 1K, m for 1 Meg.\n\
-"), stdout);
-      if (POSIX2_VERSION < 200112)
-	fputs (_("\
-\n\
-(obsolete)  If -VALUE is used as first OPTION, same as -c VALUE when one of\n\
-multipliers bkm follows concatenated, else same as -n VALUE.\n\
 "), stdout);
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
@@ -297,8 +292,7 @@ main (int argc, char **argv)
 
   print_headers = 0;
 
-  if (POSIX2_VERSION < 200112
-      && 1 < argc && argv[1][0] == '-' && ISDIGIT (argv[1][1]))
+  if (1 < argc && argv[1][0] == '-' && ISDIGIT (argv[1][1]))
     {
       char *a = argv[1];
       char *n_string = ++a;
@@ -348,13 +342,15 @@ main (int argc, char **argv)
 	    }
 	}
 
-      if (OBSOLETE_OPTION_WARNINGS && ! getenv ("POSIXLY_CORRECT"))
-	error (0, 0,
-	       _("warning: `head -%s' is obsolete; use `head -%c %.*s%.*s%s'"),
-	       n_string, count_lines ? 'n' : 'c',
-	       (int) (end_n_string - n_string), n_string,
-	       multiplier_char != 0, &multiplier_char,
-	       header_mode_option[header_mode]);
+      if (200112 <= posix2_version ())
+	{
+	  error (0, 0, _("`-%s' option is obsolete; use `-%c %.*s%.*s%s'"),
+		 n_string, count_lines ? 'n' : 'c',
+		 (int) (end_n_string - n_string), n_string,
+		 multiplier_char != 0, &multiplier_char,
+		 header_mode_option[header_mode]);
+	  usage (EXIT_FAILURE);
+	}
 
       /* Append the multiplier character (if any) onto the end of
 	 the digit string.  Then add NUL byte if necessary.  */
