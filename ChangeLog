@@ -1,6 +1,25 @@
-2004-11-14  Paul Eggert  <eggert@cs.ucla.edu>
+2004-11-15  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	* NEWS: New dd operand "status=noxfer".
+	* src/dd.c (C_ASCII, C_EBCDIC, C_IBM, C_BLOCK, C_UNBLOCK,
+	C_LCASE, C_UCASE, C_SWAB, C_NOERROR, C_NOTRUNC, C_SYNC, C_TWOBUFS,
+	C_NOCREAT, C_EXCL, C_FDATASYNC, C_FSYNC): Now constants, not
+	macros.
+	(STATUS_NOXFER, statuses): New constants.
+	(usage, print_stats, scanargs): Add support for status=noxfer.
+	(usage): Update status output to match new behavior.
+	(print_stats): Always output complete byte count.
+	Put space between numbers and units, as SI requires.
+	Use ngettext so that i18n can use plurals for "byte" and "second".
+	Don't multiply by 1e-9 (inexact); divide by 1e9 (which is exact).
+	(iflag_error_msgid, oflag_error_msgid): Remove; replace uses by
+	the string.
+	* tests/dd/skip-seek (@Tests): Use status=noxfer to avoid
+	problems with regression testing.
+
+2004-11-14  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: dd now outputs total bytes, seconds, and bytes per second.
 	* src/Makefile.am (dd_LDADD): Add $(LIB_CLOCK_GETTIME).
