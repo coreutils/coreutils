@@ -1,3 +1,7 @@
+2003-02-09  Jim Meyering  <jim@meyering.net>
+
+	* euidaccess.h: New file.
+
 2003-02-08  Jim Meyering  <jim@meyering.net>
 
 	* ftw.c (ftw_startup): Don't shadow outer declaration of save_err.
