@@ -1,3 +1,17 @@
+1998-05-30  Jim Meyering  <meyering@ascend.com>
+
+	* Version 3.16p.
+
+	Solve the `rm -f rm' problem more cleanly.
+	* src/.rm-warning: Remove file.
+	* src/automake-wrap: New file.
+	* src/Makefile.am (AUTOMAKE): Define to use automake-wrap.
+	(Makefile.in): Depend on automake-wrap.
+	(EXTRA_DIST): Add automake-wrap.
+	(DISTCLEANFILES): Remove definition.
+	(rm_DEPENDENCIES): Likewise.
+	(.rm-warn-stamp): Remove rule.
+
 1998-05-27  Jim Meyering  <meyering@ascend.com>
 
 	* tests/ls/Makefile.am (TESTS): s/cr-1/rt-1/
