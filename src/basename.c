@@ -1,5 +1,5 @@
 /* basename -- strip directory and suffix from filenames
-   Copyright (C) 1990-1997, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1990-1997, 1999, 2000, 2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@
 
 #include "system.h"
 #include "long-options.h"
+#include "dirname.h"
 #include "error.h"
 #include "closeout.h"
 
@@ -38,9 +39,6 @@
 #define PROGRAM_NAME "basename"
 
 #define AUTHORS "FIXME unknown"
-
-char *base_name ();
-void strip_trailing_slashes ();
 
 /* The name this program was run with. */
 char *program_name;
@@ -118,9 +116,8 @@ main (int argc, char **argv)
       usage (1);
     }
 
-  strip_trailing_slashes (argv[1]);
-
   name = base_name (argv[1]);
+  name[base_len (name)] = '\0';
 
   if (argc == 3)
     remove_suffix (name, argv[2]);
