@@ -10240,21 +10240,39 @@ its file system's maximum.
 A nonexistent @var{name} is not an error, so long a file with that
 name could be created under the above conditions.
 
-The program accepts the following option.  Also see @ref{Common options}.
+The program accepts the following options.  Also see @ref{Common options}.
 Options must precede operands.
 
 @table @samp
 
 @item -p
-@itemx --portability
 @opindex -p
-@opindex --portability
-Do not perform checks based on the underlying file system.  Instead,
-check the length of each file name and its components against the
-@acronym{POSIX} minimum limits for portability.  Also check that the file
-name contains only characters that are in the portable file name
+Instead of performing checks based on the underlying file system,
+print a message if any of these conditions is true:
+
+@enumerate
+@item
+A file name is empty.
+
+@item
+The length of a file name or one of its components exceeds the
+@acronym{POSIX} minimum limits for portability.
+
+@item
+A file name contains a character outside the portable file name
 character set, namely, the ASCII letters and digits, @samp{-},
 @samp{.}, @samp{/}, and @samp{_}.
+@end enumerate
+
+@item -P
+@opindex -P
+Print a message if a file name is empty, or if it contains a component
+that begins with @samp{-}.
+
+@item --portability
+@opindex --portability
+Print a message if a file name is not portable to all @acronym{POSIX}
+hosts.  This option is equivalent to @samp{-p -P}.
 
 @end table
 
