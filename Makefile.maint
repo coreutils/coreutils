@@ -110,5 +110,4 @@ alpha:
 	done
 	@echo '#   put $(distdir).tar.gz'
 	@echo '# send the /tmp/announcement e-mail'
-	@echo 'pot-mail $(distdir).tar.gz | bash'
 	@echo =====================================
