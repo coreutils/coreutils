@@ -1,5 +1,5 @@
 /* env - run a program in a modified environment
-   Copyright (C) 86,91,92,93,94,95,96,1997 Free Software Foundation, Inc.
+   Copyright (C) 1986, 1991-1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -88,8 +88,6 @@
 
 int putenv ();
 
-static void usage PARAMS ((int status));
-
 extern char **environ;
 
 /* The name by which this program was run. */
@@ -109,6 +107,32 @@ static struct option const longopts[] =
   {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
+
+void
+usage (int status)
+{
+  if (status != 0)
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
+	     program_name);
+  else
+    {
+      printf (_("\
+Usage: %s [OPTION]... [-] [NAME=VALUE]... [COMMAND [ARG]...]\n"),
+	      program_name);
+      printf (_("\
+Set each NAME to VALUE in the environment and run COMMAND.\n\
+\n\
+  -i, --ignore-environment   start with an empty environment\n\
+  -u, --unset=NAME           remove variable from the environment\n\
+      --help                 display this help and exit\n\
+      --version              output version information and exit\n\
+\n\
+A mere - implies -i.  If no COMMAND, print the resulting environment.\n\
+"));
+      puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
+    }
+  exit (status);
+}
 
 int
 main (register int argc, register char **argv, char **envp)
@@ -178,30 +202,4 @@ main (register int argc, register char **argv, char **envp)
 
   execvp (argv[optind], &argv[optind]);
   error (errno == ENOENT ? 127 : 126, errno, "%s", argv[optind]);
-}
-
-static void
-usage (int status)
-{
-  if (status != 0)
-    fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
-  else
-    {
-      printf (_("\
-Usage: %s [OPTION]... [-] [NAME=VALUE]... [COMMAND [ARG]...]\n"),
-	      program_name);
-      printf (_("\
-Set each NAME to VALUE in the environment and run COMMAND.\n\
-\n\
-  -i, --ignore-environment   start with an empty environment\n\
-  -u, --unset=NAME           remove variable from the environment\n\
-      --help                 display this help and exit\n\
-      --version              output version information and exit\n\
-\n\
-A mere - implies -i.  If no COMMAND, print the resulting environment.\n\
-"));
-      puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
-    }
-  exit (status);
 }
