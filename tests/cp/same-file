@@ -44,8 +44,12 @@ for args in 'foo symlink' 'symlink foo' 'foo foo' 'sl1 sl2' 'foo hardlink'; do
 	# and put brackets around the output.
 	test -s .err && echo "[`sed 's/^[^:][^:]*:/cp:/' .err`]"
 	# Strip off all but the file names.
-	ls="`ls -lG * \
-	    | sed 's/^..............................................//'`"
+	exclude=`echo " .err"|sed 's/ / --ignore=/g'`
+	ls="`ls -lG $exclude . \
+	    | sed \
+	        -e '/^total /d' \
+		-e 's/^..............................................//' \
+    `"
 	echo "($ls)"
 	# Make sure the original is unchanged and that
 	# the destination is a copy.
@@ -156,4 +160,3 @@ cat <<\EOF > $expected
 EOF
 
 cmp $expected $actual || diff -u $expected $actual 1>&2
-    cat $actual 1>&2
