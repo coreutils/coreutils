@@ -26,6 +26,12 @@
 #include <sys/types.h>
 #include <assert.h>
 
+#if HAVE_STDBOOL_H
+# include <stdbool.h>
+#else
+typedef enum {false = 0, true = 1} bool;
+#endif
+
 #include "save-cwd.h"
 #include "system.h"
 #include "closeout.h"
@@ -125,7 +131,7 @@ static struct obstack len_stack;
    This construct is used to detect directory cycles so that RM can warn
    about them rather than iterating endlessly.  */
 #ifdef ENABLE_CYCLE_CHECK
-static struct HT *active_dir_map;
+static struct hash_table *active_dir_map;
 #endif
 
 static inline unsigned int
@@ -169,12 +175,12 @@ hash_active_dir_ent (void const *x, unsigned int table_size)
   return ade->inum % table_size;
 }
 
-static int
+static bool
 hash_compare_active_dir_ents (void const *x, void const *y)
 {
   struct active_dir_ent const *a = x;
   struct active_dir_ent const *b = y;
-  return (a->inum == b->inum ? 0 : 1);
+  return a->inum == b->inum;
 }
 
 /* A hash function for null-terminated char* strings using
@@ -197,10 +203,10 @@ hash_pjw (const void *x, unsigned int tablesize)
   return (h % tablesize);
 }
 
-static int
+static bool
 hash_compare_strings (void const *x, void const *y)
 {
-  return strcmp (x, y);
+  return strcmp (x, y) == 0;
 }
 
 static inline void
@@ -418,7 +424,7 @@ remove_cwd_entries (const struct rm_options *x)
   /* NULL or a malloc'd and initialized hash table of entries in the
      current directory that have been processed but not removed --
      due either to an error or to an interactive `no' response.  */
-  struct HT *ht = NULL;
+  struct hash_table *ht = NULL;
 
   /* FIXME: describe */
   static struct obstack entry_name_pool;
@@ -468,8 +474,8 @@ remove_cwd_entries (const struct rm_options *x)
 
 /* FILE should be skipped if it is `.' or `..', or if it is in
    the table, HT, of entries we've already processed.  */
-#define SKIPPABLE(Ht, File) (DOT_OR_DOTDOT(File) \
-			     || (Ht && hash_query_in_table (Ht, File)))
+#define SKIPPABLE(Ht, File) \
+  (DOT_OR_DOTDOT(File) || (Ht && hash_lookup (Ht, File)))
 
 	  /* FIXME: use readdir_r directly into an obstack to avoid
 	     the obstack_copy0 below --
@@ -534,17 +540,17 @@ remove_cwd_entries (const struct rm_options *x)
 	     we don't consider it again if we reopen this directory later.  */
 	  if (status != RM_OK)
 	    {
-	      int fail;
+	      bool done;
 
 	      if (ht == NULL)
 		{
-		  ht = hash_initialize (HT_INITIAL_CAPACITY, NULL,
-					hash_pjw, hash_compare_strings);
+		  ht = hash_initialize (HT_INITIAL_CAPACITY, hash_pjw,
+					hash_compare_strings, NULL);
 		  if (ht == NULL)
 		    error (1, 0, _("virtual memory exhausted"));
 		}
-	      HASH_INSERT_NEW_ITEM (ht, entry_name, &fail);
-	      if (fail)
+	      hash_insert (ht, entry_name, &done);
+	      if (!done)
 		error (1, 0, _("virtual memory exhausted"));
 	    }
 	  else
@@ -769,7 +775,7 @@ rm (struct File_spec *fs, int user_specified_name, const struct rm_options *x)
 #ifdef ENABLE_CYCLE_CHECK
   if (S_ISDIR (filetype_mode))
     {
-      int fail;
+      bool done;
       struct active_dir_ent *old_ent;
 
       /* Insert this directory in the active_dir_map.
@@ -780,12 +786,11 @@ rm (struct File_spec *fs, int user_specified_name, const struct rm_options *x)
 	 other.  But since people don't often try to delete hierarchies
 	 containing mount points, and when they do, duplicate inode
 	 numbers are not that likely, this isn't worth detecting.  */
-      old_ent = hash_insert_if_absent (active_dir_map,
-				       make_active_dir_ent (fs->inum,
-							    current_depth ()),
-				       &fail);
-      if (fail)
-	error (1, 0, _("virtual memory exhausted"));
+      old_ent = hash_insert (active_dir_map,
+			     make_active_dir_ent (fs->inum, current_depth ()),
+			     &done);
+      if (!done)
+	  error (1, 0, _("virtual memory exhausted"));
 
       if (old_ent)
 	{
@@ -835,7 +840,7 @@ The following two directories have the same inode number:\n"));
 
 	/* Remove this directory from the active_dir_map.  */
 	tmp.inum = fs->inum;
-	old_ent = hash_delete_if_present (active_dir_map, &tmp);
+	old_ent = hash_delete (active_dir_map, &tmp);
 	assert (old_ent != NULL);
 	free (old_ent);
       }
@@ -853,9 +858,9 @@ remove_init (void)
   obstack_init (&len_stack);
 
 #ifdef ENABLE_CYCLE_CHECK
-  active_dir_map = hash_initialize (ACTIVE_DIR_INITIAL_CAPACITY, free,
+  active_dir_map = hash_initialize (ACTIVE_DIR_INITIAL_CAPACITY,
 				    hash_active_dir_ent,
-				    hash_compare_active_dir_ents);
+				    hash_compare_active_dir_ents, free);
 #endif
 }
 
