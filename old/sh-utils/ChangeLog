@@ -1,3 +1,12 @@
+Thu Jun  6 21:57:08 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* po/Makefile.in.in: Update from gettext-0.10.16.
+	* intl/*: Likewise.
+	* ABOUT-NLS: Likewise.
+	* aclocal.m4 (AC_REPLACE_GNU_GETOPT): Move definition to precede
+	gettext-related ones.
+	Update from gettext-0.10.16.
+
 Wed May 29 21:28:53 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/expr.c (docolon): Give a warning when the first character
