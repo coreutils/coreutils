@@ -1,0 +1,2688 @@
+\input texinfo
+@c %**start of header
+@setfilename sh-utils.info
+@settitle GNU shell utilities
+@c %**end of header
+
+@c Define new indices for commands, filenames, and options.
+@defcodeindex cm
+@defcodeindex fl
+@defcodeindex op
+
+@c Put everything in one index (arbitrarily chosen to be the concept index).
+@syncodeindex cm cp
+@syncodeindex fl cp
+@syncodeindex fn cp
+@syncodeindex ky cp
+@syncodeindex op cp
+@syncodeindex pg cp
+@syncodeindex vr cp
+
+@ifinfo
+@format
+START-INFO-DIR-ENTRY
+* Shell utilities: (sh-utils).	basename date dirname echo env expr false
+			groups hostname id logname pathchk printenv printf
+		        pwd sleep su tee test true tty users who whoami yes
+END-INFO-DIR-ENTRY
+@end format
+@end ifinfo
+
+@ifinfo
+This file documents the GNU set of shell utilities.
+
+Copyright (C) 1994 Free Software Foundation, Inc.
+
+Permission is granted to make and distribute verbatim copies of
+this manual provided the copyright notice and this permission notice
+are preserved on all copies.
+
+@ignore
+Permission is granted to process this file through TeX and print the
+results, provided the printed document carries copying permission
+notice identical to this one except for the removal of this paragraph
+(this paragraph not being relevant to the printed manual).
+
+@end ignore
+Permission is granted to copy and distribute modified versions of this
+manual under the conditions for verbatim copying, provided that the entire
+resulting derived work is distributed under the terms of a permission
+notice identical to this one.
+
+Permission is granted to copy and distribute translations of this manual
+into another language, under the above conditions for modified versions,
+except that this permission notice may be stated in a translation approved
+by the Foundation.
+@end ifinfo
+
+@titlepage
+@title GNU sh-utils, version 1.10
+@subtitle A set of shell utilities
+@subtitle for version 1.10, August 1994
+@author Jim Meyering
+
+@page
+@vskip 0pt plus 1filll
+Copyright @copyright{} 1994 Free Software Foundation, Inc.
+
+Permission is granted to make and distribute verbatim copies of
+this manual provided the copyright notice and this permission notice
+are preserved on all copies.
+
+Permission is granted to copy and distribute modified versions of this
+manual under the conditions for verbatim copying, provided that the entire
+resulting derived work is distributed under the terms of a permission
+notice identical to this one.
+
+Permission is granted to copy and distribute translations of this manual
+into another language, under the above conditions for modified versions,
+except that this permission notice may be stated in a translation approved
+by the Foundation.
+@end titlepage
+
+
+@ifinfo
+@node Top
+@top GNU shell utilities
+
+@cindex shell utilities
+@cindex utilities for shell programming
+
+This manual documents GNU shell utilities.  It covers release 1.10.
+
+@cindex POSIX.2
+The GNU shell utilities are mostly compatible with the POSIX.2 standard.
+
+@menu
+* Common options::              Common options.
+* Printing text::               echo printf yes
+* Conditions::                  false true test expr
+* Redirection::                 tee
+* File name manipulation::      dirname basename pathchk
+* Working context information::  pwd stty printenv tty
+* User information::            id logname whoami groups users who
+* System context::              date uname hostname
+* Modified command invocation::  env nice nohup su
+* Delaying::                    sleep
+* Index::                       General index.
+@end menu
+@end ifinfo
+
+
+@node Common options
+@chapter Common options
+
+@cindex common options
+
+Certain options are available in all these programs.  Rather than
+writing identical descriptions for each of the programs, they are
+described here.  In fact, every GNU program accepts (or should accept)
+these options.
+
+Many shell utilities take arbitrary strings as arguments.  In those
+cases, @samp{--help} and @samp{--version} are taken as these options
+only if there is one and exactly one command line argument.
+
+@table @samp
+
+@item --help
+@opindex --help
+@cindex help, online
+Print a usage message listing all available options, then exit successfully.
+
+@item --version
+@opindex --version
+@cindex version number, finding
+Print the version number, then exit successfully.
+
+@end table
+
+
+@node Printing text
+@chapter Printing text
+
+@cindex printing text, commands for
+@cindex commands for printing text
+
+This section describes commands that display text strings.
+
+@menu
+* echo invocation::             Print a line of text.
+* printf invocation::           Format and print data.
+* yes invocation::              Print a string until interrupted.
+@end menu
+
+
+@node echo invocation
+@section @code{echo}: Print a line of text
+
+@pindex echo
+@cindex displaying text
+@cindex printing text
+@cindex text, displaying
+@cindex arbitrary text, displaying
+
+Synopsis:
+
+@example
+echo [ @var{option} ]@dots{} [ @var{string} ]@dots{}
+@end example
+
+@code{echo} writes each given @var{string} to standard output, with a
+space between each and a newline after the last one.
+
+The program accepts the following options. Also @pxref{Common options}.
+
+@table @code
+@item -n
+Do not output the trailing newline.
+
+@item -e
+@cindex backslash escapes
+Enable interpretation of the following backslash-escaped characters in
+each @var{string}:
+
+@table @code
+@item \a
+alert (bell)
+@item \b
+backspace
+@item \c
+suppress trailing newline
+@item \f
+form feed
+@item \n
+new line
+@item \r
+carriage return
+@item \t
+horizontal tab
+@item \v
+vertical tab
+@item \\
+backslash
+@item \@var{nnn}
+the character whose ASCII code is @var{nnn} (octal); if @var{nnn} is not
+a valid octal number, it is printed literally.
+@end table
+
+@end table
+
+
+@node printf invocation
+@section @code{printf}: Format and print data
+
+@pindex printf
+Synopsis:
+
+@example
+printf @var{format} [ @var{argument} ]@dots{}
+@end example
+
+@code{printf} prints the @var{format} string, interpreting @samp{%}
+directives and @samp{\} escapes in the same way as the C @code{printf}
+function.  The @var{format} argument is re-used as necessary to convert
+all of the given @var{argument}s.
+
+@code{printf} has one additional directive, @samp{%b}, which prints its
+argument string with @samp{\} escapes interpreted in the same way as in
+the @var{format} string.
+
+@kindex \0ooo
+@kindex \0xhhh
+@code{printf} interprets @samp{\0ooo} in @var{format} as an octal number
+(if @var{ooo} is 0 to 3 octal digits) specifying a character to print,
+and @samp{\xhhh} as a hexadecimal number (if @var{hhh} is 1 to 3 hex
+digits) specifying a character to print.
+
+@kindex \c
+An additional escape, @samp{\c}, causes @code{printf} to produce no
+further output.
+
+The only options are a lone @samp{--help} or
+@samp{--version}. @xref{Common options}).
+
+
+@node yes invocation
+@section @code{yes}: Print a string until interrupted
+
+@pindex yes
+@cindex repeated output of a string
+
+@code{yes} prints the command line arguments, separated by spaces and
+followed by a newline, forever until it is killed.  If no arguments are
+given, it prints @samp{y} followed by a newline forever until killed.
+
+The only options are a lone @samp{--help} or
+@samp{--version}. @xref{Common options}).
+
+
+@node Conditions
+@chapter Conditions
+
+@cindex conditions
+@cindex commands for exit status
+@cindex exit status commands
+
+This section describes commands that are primarily useful for their exit
+status, rather than their output.  Thus, they are often used as the
+condition of shell @code{if} statements, or as the last command in a
+pipeline.
+
+@menu
+* false invocation::            Do nothing, unsuccessfully.
+* true invocation::             Do nothing, successfully.
+* test invocation::             Check file types and compare values.
+* expr invocation::             Evaluate expressions.
+@end menu
+
+
+@node false invocation
+@section @code{false}: Do nothing, unsuccessfully
+
+@pindex false
+
+@cindex exit status of @code{true}
+@cindex failure exit status
+@code{false} does nothing except return an exit status of 1, meaning
+@dfn{failure}.  It can be used as a place holder in shell scripts
+where an unsuccessful command is needed.
+
+Any arguments are ignored, except for a lone @samp{--help} or
+@samp{--version} (@pxref{Common options}).
+
+
+@node true invocation
+@section @code{true}: Do nothing, successfully
+
+@pindex true
+@cindex do nothing, successfully
+@cindex no-op
+@cindex successful exit
+
+@cindex exit status of @code{true}
+@code{true} does nothing except return an exit status of 0, meaning
+@dfn{success}.  It can be used as a place holder in shell scripts
+where a successful command is needed, although the shell built-in
+command @code{:} (colon) may be faster.
+
+Any arguments are ignored, except for a lone @samp{--help} or
+@samp{--version} (@pxref{Common options}).
+
+
+@node test invocation
+@section @code{test}: Check file types and compare values
+
+@pindex test
+@cindex check file types
+@cindex compare values
+@cindex expression evaluation
+
+@code{test} returns a status of 0 (true) or 1 (false) depending on the
+evaluation of the conditional expression @var{expr}.  Each part of the
+expression must be a separate argument.
+
+@code{test} has file status checks, string operators, and numeric
+comparison operators.
+
+@cindex conflicts with shell built-ins
+@cindex built-in shell commands, conflicts with
+Because most shells have a built-in command by the same name, using the
+unadorned command name in a script or interactively may get you
+different functionality than that described here.
+
+Besides the options below, @code{test} accepts a lone @samp{--help} or
+@samp{--version}. @xref{Common options}).  A single non-option argument
+is also allowed: @code{test} returns true if the argument is not null.
+
+@menu
+* File type tests::             -[bcdfhLpSt]
+* Access permission tests::     -[gkruwxOG]
+* File characteristics tests::  -e -s -nt -ot -ef 
+* String tests::                -z -n = !=
+* Numeric tests::               -eq -ne -lt -le -gt -ge
+* Connectives for test::        ! -a -o
+@end menu
+
+
+@node File type tests
+@subsection File type tests
+
+@cindex file type tests
+
+These options test for particular types of files.  (Everything's a file,
+but not all files are the same!)
+
+@table @samp
+
+@item -b @var{file}
+@opindex -b
+@cindex block special check
+True if @var{file} exists and is a block special device.
+
+@item -c @var{file}
+@opindex -c
+@cindex character special check
+True if @var{file} exists and is a character special device.
+
+@item -d @var{file}
+@opindex -d
+@cindex directory check
+True if @var{file} exists and is a directory.
+
+@item -f @var{file}
+@opindex -f
+@cindex regular file check
+True if @var{file} exists and is a regular file.
+
+@item -h @var{file}
+@itemx -L @var{file}
+@opindex -L
+@opindex -h
+@cindex symbolic link check
+True if @var{file} exists and is a symbolic link.
+
+@item -p @var{file}
+@opindex -p
+@cindex named pipe check
+True if @var{file} exists and is a named pipe.
+
+@item -S @var{file}
+@opindex -S
+@cindex socket check
+True if @var{file} exists and is a socket.
+
+@item -t [ @var{fd} ]
+@opindex -t
+@cindex terminal check
+True if @var{fd} is opened on a terminal.  If @var{fd} is omitted, it
+defaults to 1 (standard output).
+
+@end table
+
+
+@node Access permission tests
+@subsection Access permission tests
+
+@cindex access permission tests
+@cindex permission tests
+
+These options test for particular access permissions.
+
+@table @samp
+
+@item -g @var{file}
+@opindex -g
+@cindex set-group-id check
+True if @var{file} exists and has its set-group-id bit set.
+
+@item -k @var{file}
+@opindex -k
+@cindex sticky bit check
+True if @var{file} has its @dfn{sticky} bit set.
+
+@item -r @var{file}
+@opindex -r
+@cindex readable file check
+True if @var{file} exists and is readable.
+
+@item -u @var{file}
+@opindex -u
+@cindex set-user-id check
+True if @var{file} exists and has its set-user-id bit set.
+
+@item -w @var{file}
+@opindex -w
+@cindex writable file check
+True if @var{file} exists and is writable.
+
+@item -x @var{file}
+@opindex -x
+@cindex executable file check
+True if @var{file} exists and is executable.
+
+@item -O @var{file}
+@opindex -O
+@cindex owned by effective uid check
+True if @var{file} exists and is owned by the current effective user id.
+
+@item -G @var{file}
+@opindex -G
+@cindex owned by effective gid check
+True if @var{file} exists and is owned by the current effective group id.
+
+@end table
+
+@node File characteristics tests
+@subsection File characteristics tests
+
+@cindex file characteristics tests
+
+These options test other file characteristics.
+
+@table @samp
+
+@item -e @var{file}
+@opindex -e
+@cindex existence-of-file check
+True if @var{file} exists.
+
+@item -s @var{file}
+@opindex -s
+@cindex nonempty file check
+True if @var{file} exists and has a size greater than zero.
+
+@item @var{file1} -nt @var{file2}
+@opindex -nt
+@cindex newer-than file check
+True if @var{file1} is newer (according to modification date) than
+@var{file2}.
+
+@item @var{file1} -ot @var{file2}
+@opindex -ot
+@cindex older-than file check
+True if @var{file1} is older (according to modification date) than
+@var{file2}.
+
+@item @var{file1} -ef @var{file2}
+@opindex -ef
+@cindex same file check
+@cindex hard link check
+True if @var{file1} and @var{file2} have the same device and inode
+numbers, i.e., if they are hard links to each other.
+
+@end table
+
+
+@node String tests
+@subsection String tests
+
+@cindex string tests
+
+These options test string characteristics.  Strings are not quoted for
+@code{test}, though you may need to quote them to protect characters
+with special meaning to the shell, e.g., spaces.
+
+@table @samp
+
+@item -z @var{string}
+@opindex -z
+@cindex zero-length string check
+True if the length of @var{string} is zero.
+
+@item -n @var{string}
+@itemx @var{string}
+@opindex -n
+@cindex nonzero-length string check
+True if the length of @var{string} is non-zero.
+
+@item @var{string1} = @var{string2}
+@opindex =
+@cindex equal string check
+True if the strings are equal.
+
+@item @var{string1} != @var{string2}
+@opindex !=
+@cindex not-equal string check
+True if the strings are not equal.
+
+@end table
+
+
+@node Numeric tests
+@subsection Numeric tests
+
+@cindex numeric tests
+@cindex arithmetic tests
+
+Numeric relationals.  The arguments must be entirely numeric (possibly
+negative), or the special expression @w{@code{-l @var{string}}}, which
+evaluates to the length of @var{string}.
+
+@table @samp
+
+@item @var{arg1} -eq @var{arg2}
+@itemx @var{arg1} -ne @var{arg2}
+@itemx @var{arg1} -lt @var{arg2}
+@itemx @var{arg1} -le @var{arg2}
+@itemx @var{arg1} -gt @var{arg2}
+@itemx @var{arg1} -ge @var{arg2}
+@opindex -eq
+@opindex -ne
+@opindex -lt
+@opindex -le
+@opindex -gt
+@opindex -ge
+These arithmetic binary operators return true if @var{arg1} is equal,
+not-equal, less-than, less-than-or-equal, greater-than, or
+greater-than-or-equal than @var{arg2}, respectively.
+
+@end table
+
+For example:
+
+@example
+test -1 -gt -2 && echo yes
+@result{} yes
+test -l abc -gt 1 && echo yes
+@result{} yes
+test 0x100 -eq 1
+@error{} test: integer expression expected before -eq
+@end example
+
+
+@node Connectives for test
+@subsection Connectives for @code{test}
+
+@cindex logical connectives
+@cindex connectives, logical
+
+The usual logical connectives.
+
+@table @samp
+
+@item ! @var{expr}
+@opindex !
+True if @var{expr} is false.
+
+@item @var{expr1} -a @var{expr2}
+@opindex -a
+@cindex logical and operator
+@cindex and operator
+True if both @var{expr1} and @var{expr2} are true.
+
+@item @var{expr1} -o @var{expr2}
+@opindex -o
+@cindex logical or operator
+@cindex or operator
+True if either @var{expr1} or @var{expr2} is true.
+
+@end table
+
+
+@node expr invocation
+@section @code{expr}: Evaluate expressions
+
+@pindex expr
+@cindex expression evaluation
+@cindex evaluation of expressions
+
+@code{expr} evaluates an expression and writes the result on standard
+output.  Each token of the expression must be a separate argument.
+
+Operands are either numbers or strings.  @code{expr} coerces
+anything appearing in an operand position to an integer or a string
+depending on the operation being applied to it.
+
+Strings are not quoted for @code{expr}, though you may need to quote
+them to protect characters with special meaning to the shell, e.g.,
+spaces.
+
+@cindex parentheses for grouping
+Operators may given as infix symbols or prefix keywords.  Parentheses
+may be used for grouping in the usual manner (you must quote parentheses
+to avoid the shell evaluating them, however).
+
+@cindex exit status of @code{expr}
+Exit status:
+
+@display
+0 if the expression is neither null nor 0,
+1 if the expression is null or 0,
+2 for invalid expressions.
+@end display
+
+@menu
+* Relations for expr::          | & < <= = == != >= >
+* Numeric expressions::         + - * / %
+* String expressions::          : match substr index length
+* Examples of expr::            Examples.
+@end menu
+
+
+@node Relations for expr
+@subsection relations for @code{expr}
+
+@cindex connectives, logical
+@cindex logical connectives
+@cindex relations, numeric or string
+
+The usual logical connectives and relations, in order of precedence.
+
+@table @asis
+
+@item @code{|}
+@kindex |
+@cindex logical or operator
+@cindex or operator
+Yields its first argument if it is neither null nor 0, otherwise its
+second argument.
+
+@item @code{&}
+@kindex &
+@cindex logical and operator
+@cindex and operator
+Yields its first argument if neither argument is null or 0, otherwise
+0.
+
+@item @code{<}, @code{<=}, @code{=}, @code{==}, @code{!=}, @code{>=}, @code{>}
+@kindex <
+@kindex <=
+@kindex =
+@kindex ==
+@kindex >
+@kindex >=
+@cindex comparison operators
+Compare the arguments and return 1 if the relation is true, 0 otherwise.
+@code{==} is a synonym for @code{=}.  @code{expr} first tries to coerce
+both arguments to numbers and do a numeric comparison; if either
+coercion fails, it does a lexicographic comparison.
+
+@end table
+
+
+@node Numeric expressions
+@subsection Numeric expressions
+
+@cindex numeric expressions
+@cindex expressions, numeric
+
+Numeric operators, in order of increasing precedence.  The connectives
+(previous section) have higher precedence, the string operators
+(following section) have lower.
+
+@table @asis
+
+@item @code{+}, @code{-}
+@kindex +
+@kindex -
+@cindex addition
+@cindex subtraction
+Addition and subtraction.  Both arguments are coerced to numbers;
+an error occurs if this cannot be done.
+
+@item @code{*}, @code{/}, @code{%}
+@kindex *
+@kindex /
+@kindex %
+@cindex multiplication
+@cindex division
+@cindex remainder
+Multiplication, division, remainder.  Both arguments are coerced to
+numbers; an error occurs if this cannot be done.
+
+@end table
+
+
+@node String expressions
+@subsection String expressions
+
+@cindex string expressions
+@cindex expressions, string
+
+String operators.  These have lowest precedence.
+
+@table @code
+
+@item @var{string} : @var{regex}
+@cindex pattern matching
+@cindex regular expression matching
+@cindex matching patterns
+Perform pattern matching.  The arguments are coerced to strings and the
+second is considered to be a (basic, a la @code{grep}) regular
+expression, with a @code{^} implicitly prepended.  The first argument is
+then matched against this regular expression.
+
+If the match succeeds and @var{regex} uses @samp{\(} and @samp{\)}, the
+@code{:} expression returns the part of @var{string} that matched the
+subexpression; otherwise, it returns the number of characters matched.
+
+If the match fails, the @code{:} operator returns the null string if
+@samp{\(} and @samp{\)} are used in @var{regex}, otherwise 0.
+
+Only the first @samp{\( @dots{} \)} pair is relevant to the return
+value; additional pairs are meaningful only for grouping the regular
+expression operators.
+
+@xref{Top, , Regular Expression Library, regex, Regex}, for details of
+regular expression syntax.
+
+@item match @var{string} @var{regex}
+@cmindex match
+An alternative way to do pattern matching.  This is the same as
+@w{@samp{@var{string} : @var{regex}}}.
+
+@item substr @var{string} @var{position} @var{length}
+@cmindex substr
+Returns the substring of @var{string} beginning at @var{position}
+with length at most @var{length}.  If either @var{position} or
+@var{length} is negative or non-numeric, returns the null string.
+
+@item index @var{string} @var{character-class}
+@cmindex index
+Returns the first position in @var{string} where the first character in
+@var{charset} was found.  If no character in @var{charset} is found in
+@var{string}, return 0.
+
+@item length @var{string}
+@cmindex length
+Returns the length of @var{string}.
+
+@end table
+
+The keywords cannot be used as strings.
+
+
+@node Examples of expr
+@subsection Examples of @code{expr}
+
+@cindex examples of @code{expr}
+Here are a few examples, including quoting for shell metacharacters.
+
+To add 1 to the shell variable @code{foo}, in Bourne-compatible shells:
+@example
+foo=`expr $foo + 1`
+@end example
+
+To print the non-directory part of the file name stored in 
+@code{$fname}, which need not contain a @code{/}.
+@example
+expr $fname : '.*/\(^.*\)' '^|' $fname
+@end example
+
+@example
+expr abc : 'a\(.\)c'
+@result{} b
+expr index abcdef cz
+@result{} 3
+expr index index a
+@error{} expr: syntax error
+
+@end example
+
+
+@node Redirection
+@chapter Redirection
+
+@cindex redirection
+@cindex commands for redirection
+
+Unix shells commonly provide several forms of @dfn{redirection}---ways
+to change the input source or output destination of a command.  But one
+useful redirection is performed by a separate command, not by the shell;
+it's described here.
+
+
+@menu
+* tee invocation::              Redirect output to multiple files.
+@end menu
+
+@node tee invocation
+@section @code{tee}: Redirect output to multiple files
+
+@pindex tee
+@cindex pipe fitting
+@cindex destinations, multiple output
+@cindex read from stdin and write to stdout and files
+
+The @code{tee} command copies standard input to standard output and also
+to any files given as arguments. This is useful when you not only want
+to send some data down a pipe, but also to save a copy.
+
+Synopsis:
+
+@example
+tee [ @var{option} ]@dots{} [ @var{file} ]@dots{}
+@end example
+
+If a file being written to does not already exist, it is created.  If a
+file being written to already exists, the data it previously contained
+is overwritten unless the @code{-a} option is used.
+
+The program accepts the following options.  Also @pxref{Common options}.
+
+@table @code
+@item -a
+@itemx --append
+@opindex -a
+@opindex --append
+Append standard input to the given files rather than overwriting
+them.
+
+@item -i
+@itemx --ignore-interrupts
+@opindex -i
+@opindex --ignore-interrupts
+Ignore interrupt signals.
+
+@end table
+
+
+@node File name manipulation
+@chapter File name manipulation
+
+@cindex file name manipulation
+@cindex manipulation of file names
+@cindex commands for file name manipulation
+
+This section describes commands that manipulate file names.
+
+@menu
+* basename invocation::         Strip directory and suffix from a filename.
+* dirname invocation::          Strip non-directory suffix from file name.
+* pathchk invocation::          Check file name portability.
+@end menu
+
+
+@node basename invocation
+@section @code{basename}: Strip directory and suffix from a filename
+
+@pindex basename
+@cindex strip directory and suffix from filenames
+@cindex directory, stripping from filenames
+@cindex suffix, stripping from filenames
+@cindex filenames, stripping directory and suffix
+@cindex leading directory components, stripping
+
+Synopsis:
+
+@example
+basename @var{name} [ @var{suffix} ]
+@end example
+
+The @code{basename} command removes any leading directory components
+from @var{name}.  If @var{suffix} is specified and is identical
+to the end of @var{name}, it is removed from @var{name} as well.
+@code{basename} prints the result on standard output.
+
+The only options are @samp{--help} and @samp{--version}. @xref{Common
+options}).
+
+
+@node dirname invocation
+@section @code{dirname}: Strip non-directory suffix from file name
+
+@pindex dirname
+@cindex directory components, printing
+@cindex stripping non-directory suffix
+@cindex non-directory suffix, stripping
+
+Synopsis:
+
+@example
+dirname @var{name}
+@end example
+
+@code{dirname} prints all but the final slash-delimited component
+of @var{name}.  If @var{name} is a single component,
+@code{dirname} prints @samp{.} (meaning the current directory).
+
+The only options are @samp{--help} and @samp{--version}. @xref{Common
+options}).
+
+
+@node pathchk invocation
+@section @code{pathchk}: Check file name portability
+
+@pindex pathchk
+@cindex file names, checking validity and portability
+@cindex valid file names, checking for
+@cindex portable file names, checking for
+
+Synopsis:
+
+@example
+pathchk [ @var{option} ]@dots{} @var{name}@dots{}
+@end example
+
+For each @var{name}, @code{pathchk} prints a message if any of
+these conditions is true:
+@enumerate
+@item
+one of the existing directories in @var{name} does not have search
+(execute) permission,
+@item
+the length of @var{name} is larger than its filesystem's maximum
+file name length,
+@item
+the length of one component of @var{name}, corresponding to an
+existing directory name, is larger than its filesystem's maximum
+length for a file name component.
+@end enumerate
+
+The program accepts the following option. Also @pxref{Common options}.
+
+@table @code
+
+@item -p
+@itemx --portability
+@opindex -p
+@opindex --portability
+Instead of performing length checks on the underlying filesystem,
+test the length of each file name and its components against the
+POSIX.1 minimum limits for portability.  Also check that the file
+name contains no characters not in the portable filename character set.
+
+@end table
+
+@cindex exit status of @code{pathchk}
+Exit status:
+
+@display
+0 if all specified file names passed all of the tests,
+1 otherwise.
+@end display
+
+
+@node Working context information
+@chapter Working context information
+
+@cindex working context
+@cindex commands for printing the working context
+
+This section describes commands that display or alter the context in
+which you are working: the current directory, the terminal settings, and
+so forth.  See also the user-related commands in the next section.
+
+@menu
+* pwd invocation::              Print working directory.
+* stty invocation::             Print or change terminal characteristics.
+* printenv invocation::         Print all or part of the environment.
+* tty invocation::              Print file name of terminal on standard input.
+@end menu
+
+
+@node pwd invocation
+@section @code{pwd}: Print working directory
+
+@pindex pwd
+@cindex print name of current directory
+@cindex current working directory, printing
+@cindex working directory, printing
+
+@cindex symbolic links and @code{pwd}
+@code{pwd} prints the fully resolved name of the current directory.
+That is, all components of the printed name will be actual directory
+names---none will be symbolic links.
+
+@cindex conflicts with shell built-ins
+@cindex built-in shell commands, conflicts with
+Because most shells have a built-in command by the same name, using the
+unadorned command name in a script or interactively may get you
+different functionality than that described here.
+
+The only options are a lone @samp{--help} or
+@samp{--version}. @xref{Common options}).
+
+
+@node stty invocation
+@section @code{stty}: Print or change terminal characteristics
+
+@pindex stty
+@cindex change or print terminal settings
+@cindex terminal settings
+@cindex line settings of terminal
+
+If given no arguments, @code{stty} prints the baud rate, line
+discipline number (on systems that support it), and line settings
+that have been changed from the values set by @samp{stty sane}.
+Mode reading and setting are performed on the tty line connected to
+standard input.
+
+@code{stty} accepts many non-option arguments that change aspects of
+the terminal line operation, as described below.
+
+Synopses:
+
+@example
+stty [ @var{setting} ]@dots{}
+stty [ @var{option} ]
+@end example
+
+The program accepts the following options.  Also @pxref{Common options}.
+
+@table @code
+@item -a
+@itemx --all
+@opindex -a
+@opindex --all
+Print all current settings in human-readable form.
+
+@item -g
+@itemx --save
+@opindex -g
+@opindex --save
+@cindex machine-readable @code{stty} output
+Print all current settings in a form that can be used as an argument to
+another @code{stty} command to restore the current settings.
+
+@end table
+
+Many settings can be turned off by preceding them with a @samp{-}.
+Such arguments are marked below with ``May be negated'' in their
+description.  The descriptions themselves refer to the positive
+case, that is, when @emph{not} negated (unless stated otherwise,
+of course).
+
+Some settings are not available on all POSIX systems, since they use
+extensions.  Such arguments are marked below with ``Non-POSIX'' in their
+description.  On non-POSIX systems, those or other settings also may not
+be available, but it's not feasible to document all the variations: just
+try it and see.
+
+@menu
+* Control::                     Control settings
+* Input::                       Input settings
+* Output::                      Output settings
+* Local::                       Local settings
+* Combination::                 Combination settings
+* Characters::                  Special characters
+* Special::                     Special settings
+@end menu
+
+
+@node Control
+@subsection Control settings
+
+@cindex control settings
+Control settings:
+
+@table @code
+@item parenb
+@opindex parenb
+@cindex two-way parity
+Generate parity bit in output and expect parity bit in input.
+May be negated.
+
+@item parodd
+@opindex parodd
+@cindex odd parity
+@cindex even parity
+Set odd parity (even if negated).  May be negated.
+
+@item cs5
+@itemx cs6
+@itemx cs7
+@itemx cs8
+@opindex cs@var{n}
+@cindex character size
+@cindex eight-bit characters
+Set character size to 5, 6, 7, or 8 bits.
+
+@item hup
+@itemx hupcl
+@opindex hup[cl]
+Send a hangup signal when the last process closes the tty.  May be
+negated.
+
+@item cstopb
+@opindex cstopb
+@cindex stop bits
+Use two stop bits per character (one if negated).  May be negated.
+
+@item cread
+@opindex cread
+Allow input to be received.  May be negated.
+
+@item clocal
+@opindex clocal
+@cindex modem control
+Disable modem control signals.  May be negated.
+
+@item crtscts
+@opindex crtscts
+@cindex hardware flow control
+@cindex flow control, hardware
+Enable RTS/CTS handshaking.  Non-POSIX.  May be negated.
+@end table
+
+
+@node Input
+@subsection Input settings
+
+@cindex input settings
+
+@table @code
+@item ignbrk
+@opindex ignbrk
+@cindex breaks, ignoring
+Ignore breaks.  May be negated.
+
+@item brkint
+@opindex brkint
+@cindex breaks, cause interrupts
+Make breaks cause an interrupt signal.  May be negated.
+
+@item ignpar
+@opindex ignpar
+@cindex parity, ignoring
+Ignore parity errors.  May be negated.
+
+@item parmrk
+@opindex parmrk
+@cindex parity errors, marking
+Mark parity errors (with a 255-0-character sequence).  May be negated.
+
+@item inpck
+@opindex inpck
+Enable input parity checking.  May be negated.
+
+@item istrip
+@opindex istrip
+@cindex eight-bit input
+Clear high (8th) bit of input characters.  May be negated.
+
+@item inlcr
+@opindex inlcr
+@cindex newline, translating to return
+Translate newline to carriage return.  May be negated.
+
+@item igncr
+@opindex igncr
+@cindex return, ignoring
+Ignore carriage return.  May be negated.
+
+@item icrnl
+@opindex icrnl
+@cindex return, translating to newline
+Translate carriage return to newline.  May be negated.
+
+@item ixon
+@opindex ixon
+@kindex C-s/C-q flow control
+@cindex XON/XOFF flow control
+Enable XON/XOFF flow control.  May be negated.
+
+@item ixoff
+@itemx tandem
+@opindex ixoff
+@opindex tandem
+@cindex software flow control
+@cindex flow control, software
+Enable sending of @code{stop} character when the system input buffer
+is almost full, and @code{start} character when it becomes almost
+empty again.  May be negated.
+
+@item iuclc
+@opindex iuclc
+@cindex uppercase, translating to lowercase
+Translate uppercase characters to lowercase.  Non-POSIX.  May be
+negated.
+
+@item ixany
+@opindex ixany
+Allow any character to restart output (only the start character
+if negated).  Non-POSIX.  May be negated.
+
+@item imaxbel
+@opindex imaxbel
+@cindex beeping at input buffer full
+Enable beeping and not flushing input buffer if a character arrives
+when the input buffer is full.  Non-POSIX.  May be negated.
+@end table
+
+
+@node Output
+@subsection Output settings
+
+@cindex output settings
+These arguments specify output-related operations.
+
+@table @code
+@item opost
+@opindex opost
+Postprocess output.  May be negated.
+
+@item olcuc
+@opindex olcuc
+@cindex lowercase, translating to output
+Translate lowercase characters to uppercase.  Non-POSIX.  May be
+negated.
+
+@item ocrnl
+@opindex ocrnl
+@cindex return, translating to newline
+Translate carriage return to newline.  Non-POSIX.  May be negated.
+
+@item onlcr
+@opindex onlcr
+@cindex newline, translating to crlf
+Translate newline to carriage return-newline.  Non-POSIX.  May be
+negated.
+
+@item onocr
+@opindex onocr
+Do not print carriage returns in the first column.  Non-POSIX.
+May be negated.
+
+@item onlret
+@opindex onlret
+Newline performs a carriage return.  Non-POSIX.  May be negated.
+
+@item ofill
+@opindex ofill
+@cindex pad instead of timing for delaying
+Use fill (padding) characters instead of timing for delays.  Non-POSIX.
+May be negated.
+
+@item ofdel
+@opindex ofdel
+@cindex pad character
+Use delete characters for fill instead of null characters.  Non-POSIX.
+May be negated.
+
+@item nl1
+@itemx nl0
+@opindex nl@var{n}
+Newline delay style.  Non-POSIX.
+
+@item cr3
+@itemx cr2
+@itemx cr1
+@itemx cr0
+@opindex cr@var{n}
+Carriage return delay style.  Non-POSIX.
+
+@item tab3
+@itemx tab2
+@itemx tab1
+@itemx tab0
+@opindex tab@var{n}
+Horizontal tab delay style.  Non-POSIX.
+
+@item bs1
+@itemx bs0
+@opindex bs@var{n}
+Backspace delay style.  Non-POSIX.
+
+@item vt1
+@itemx vt0
+@opindex vt@var{n}
+Vertical tab delay style.  Non-POSIX.
+
+@item ff1
+@itemx ff0
+@opindex ff@var{n}
+Form feed delay style.  Non-POSIX.
+@end table
+
+
+@node Local
+@subsection Local settings
+
+@cindex local settings
+
+@table @code
+@item isig
+@opindex isig
+Enable @code{interrupt}, @code{quit}, and @code{suspend} special
+characters.  May be negated.
+
+@item icanon
+@opindex icanon
+Enable @code{erase}, @code{kill}, @code{werase}, and @code{rprnt}
+special characters.  May be negated.
+
+@item iexten
+@opindex iexten
+Enable non-POSIX special characters.  May be negated.
+
+@item echo
+@opindex echo
+Echo input characters.  May be negated.
+
+@item echoe
+@itemx crterase
+@opindex echoe
+@opindex crterase
+Echo @code{erase} characters as backspace-space-backspace.  May be
+negated.
+
+@item echok
+@opindex echok
+@cindex newline echoing after @code{kill}
+Echo a newline after a @code{kill} character.  May be negated.
+
+@item echonl
+@opindex echonl
+@cindex newline, echoing
+Echo newline even if not echoing other characters.  May be negated.
+
+@item noflsh
+@opindex noflsh
+@cindex flushing, disabling
+Disable flushing after @code{interrupt} and @code{quit} special
+characters.  May be negated.
+
+@item xcase
+@opindex xcase
+@cindex case translation
+Enable input and output of uppercase characters by preceding their
+lowercase equivalents with @samp{\}, when @code{icanon} is set.
+Non-POSIX.  May be negated.
+
+@item tostop
+@opindex tostop
+@cindex background jobs, stopping at terminal write
+Stop background jobs that try to write to the terminal.  Non-POSIX.
+May be negated.
+
+@item echoprt
+@itemx prterase
+@opindex echoprt
+@opindex prterase
+Echo erased characters backward, between @samp{\} and @samp{/}.
+Non-POSIX.  May be negated.
+
+@item echoctl
+@itemx ctlecho
+@opindex echoctl
+@opindex ctlecho
+@cindex control characters, using @samp{^@var{c}}
+@cindex hat notation for control characters
+Echo control characters in hat notation (@samp{^@var{c}}) instead
+of literally.  Non-POSIX.  May be negated.
+
+@item echoke
+@itemx crtkill
+@opindex echoke
+@opindex crtkill
+Echo the @code{kill} special character by erasing each character on
+the line as indicated by the @code{echoprt} and @code{echoe} settings,
+instead of by the @code{echoctl} and @code{echok} settings.  Non-POSIX.
+May be negated.
+@end table
+
+
+@node Combination
+@subsection Combination settings
+
+@cindex combination settings
+Combination settings:
+
+@table @code
+@item evenp
+@opindex evenp
+@itemx parity
+@opindex parity
+Same as @code{parenb -parodd cs7}.  May be negated.  If negated, same
+as @code{-parenb cs8}.
+
+@item oddp
+@opindex oddp
+Same as @code{parenb parodd cs7}.  May be negated.  If negated, same
+as @code{-parenb cs8}.
+
+@item nl
+@opindex nl
+Same as @code{-icrnl -onlcr}.  May be negated.  If negated, same as
+@code{icrnl -inlcr -igncr onlcr -ocrnl -onlret}.
+
+@item ek
+@opindex ek
+Reset the @code{erase} and @code{kill} special characters to their default
+values.
+
+@item sane
+@opindex sane
+Same as:
+@c This is too long to write inline.
+@example
+cread -ignbrk brkint -inlcr -igncr icrnl -ixoff -iuclc -ixany
+imaxbel opost -olcuc -ocrnl onlcr -onocr -onlret -ofill -ofdel
+nl0 cr0 tab0 bs0 vt0 ff0 isig icanon iexten echo echoe echok -echonl
+-noflsh -xcase -tostop -echoprt echoctl echoke
+@end example
+@noindent and also sets all special characters to their default values.
+
+@item cooked
+@opindex cooked
+Same as @code{brkint ignpar istrip icrnl ixon opost isig icanon}, plus
+sets the @code{eof} and @code{eol} characters to their default values
+if they are the same as the @code{min} and @code{time} characters.
+May be negated.  If negated, same as @code{raw}.
+
+@item raw
+@opindex raw
+Same as:
+@example
+-ignbrk -brkint -ignpar -parmrk -inpck -istrip -inlcr -igncr
+-icrnl -ixon -ixoff -iuclc -ixany -imaxbel -opost -isig -icanon
+-xcase min 1 time 0
+@end example
+@noindent May be negated.  If negated, same as @code{cooked}.
+
+@item cbreak
+@opindex cbreak
+Same as @code{-icanon}.  May be negated.  If negated, same as
+@code{icanon}.
+
+@item pass8
+@opindex pass8
+@cindex eight-bit characters
+Same as @code{-parenb -istrip cs8}.  May be negated.  If negated,
+same as @code{parenb istrip cs7}.
+
+@item litout
+@opindex litout
+Same as @code{-parenb -istrip -opost cs8}.  May be negated.
+If negated, same as @code{parenb istrip opost cs7}.
+
+@item decctlq
+@opindex decctlq
+Same as @code{-ixany}.  Non-POSIX.  May be negated.
+
+@item tabs
+@opindex tabs
+Same as @code{tab0}.  Non-POSIX.  May be negated.  If negated, same
+as @code{tab3}.
+
+@item lcase
+@itemx LCASE
+@opindex lcase
+@opindex LCASE
+Same as @code{xcase iuclc olcuc}.  Non-POSIX.  May be negated.
+
+@item crt
+@opindex crt
+Same as @code{echoe echoctl echoke}.
+
+@item dec
+@opindex dec
+Same as @code{echoe echoctl echoke -ixany intr ^C erase ^? kill C-u}.
+@end table
+
+
+@node Characters
+@subsection Special characters
+
+@cindex special characters
+@cindex characters, special
+
+The special characters' default values vary from system to system.
+They are set with the syntax @samp{name value}, where the names are
+listed below and the value can be given either literally, in hat
+notation (@samp{^@var{c}}), or as an integer which may start with
+@samp{0x} to indicate hexadecimal, @samp{0} to indicate octal, or
+any other digit to indicate decimal.  Giving a value of @code{^-} or
+@code{undef} disables that special character.
+
+@table @code
+@item intr
+@opindex intr
+Send an interrupt signal.
+
+@item quit
+@opindex quit
+Send a quit signal.
+
+@item erase
+@opindex erase
+Erase the last character typed.
+
+@item kill
+@opindex kill
+Erase the current line.
+
+@item eof
+@opindex eof
+Send an end of file (terminate the input).
+
+@item eol
+@opindex eol
+End the line.
+
+@item eol2
+@opindex eol2
+Alternate character to end the line.  Non-POSIX.
+
+@item swtch
+@opindex swtch
+Switch to a different shell layer.  Non-POSIX.
+
+@item start
+@opindex start
+Restart the output after stopping it.
+
+@item stop
+@opindex stop
+Stop the output.
+
+@item susp
+@opindex susp
+Send a terminal stop signal.
+
+@item dsusp
+@opindex dsusp
+Send a terminal stop signal after flushing the input.  Non-POSIX.
+
+@item rprnt
+@opindex rprnt
+Redraw the current line.  Non-POSIX.
+
+@item werase
+@opindex werase
+Erase the last word typed.  Non-POSIX.
+
+@item lnext
+@opindex lnext
+Enter the next character typed literally, even if it is a special
+character.  Non-POSIX.
+@end table
+
+
+@node Special
+@subsection Special settings
+
+@cindex special settings
+
+@table @code
+@item min @var{n}
+@opindex min
+Set the minimum number of characters that will satisfy a read until
+the time value has expired, when @code{-icanon} is set.
+
+@item time @var{n}
+@opindex time
+Set the number of tenths of a second before reads time out if the min
+number of characters have not been read, when @code{-icanon} is set.
+
+@item ispeed @var{n}
+@opindex ispeed
+Set the input speed to @var{n}.
+
+@item ospeed @var{n}
+@opindex ospeed
+Set the output speed to @var{n}.
+
+@item rows @var{n}
+@opindex rows
+Tell the tty kernel driver that the terminal has @var{n} rows.  Non-POSIX.
+
+@item cols @var{n}
+@itemx columns @var{n}
+@opindex cols
+@opindex columns
+Tell the kernel that the terminal has @var{n} columns.  Non-POSIX.
+
+@item size
+@opindex size
+@vindex LINES
+@vindex COLUMNS
+Print the number of rows and columns that the kernel thinks the
+terminal has.  (Systems that don't support rows and cols in the kernel
+typically use the environment variables @code{LINES} and @code{COLUMNS}
+instead; however, GNU @code{stty} does not know anything about them.)
+Non-POSIX.
+
+@item line @var{n}
+@opindex line
+Use line discipline @var{n}.  Non-POSIX.
+
+@item speed
+@opindex speed
+Print the terminal speed.
+
+@item @var{n}
+@cindex baud rate, setting
+Set the input and output speeds to @var{n}.  @var{n} can be one
+of: 0 50 75 110 134 134.5 150 200 300 600 1200 1800 2400 4800 9600
+19200 38400 @code{exta} @code{extb}.  @code{exta} is the same as
+19200; @code{extb} is the same as 38400.  0 hangs up the line if
+@code{-clocal} is set.
+@end table
+
+
+@node printenv invocation
+@section @code{printenv}: Print all or part of the environment
+
+@pindex printenv
+@cindex printing all or part of the environment
+@cindex environment, printing all or part of
+
+Synopsis:
+
+@example
+printenv [ @var{option} ] [ @var{variable} ]@dots{}
+@end example
+
+If no @var{variable}s are specified, @code{printenv} prints the entire
+environment.  Otherwise, it prints the value of each @var{variable} that
+is set, and nothing for those that are not set.
+
+The only options are a lone @samp{--help} or
+@samp{--version}. @xref{Common options}).
+
+@cindex exit status of @code{printenv}
+Exit status:
+
+@display
+0 if all variables specified were found
+1 if at least one specified variable was not found
+2 if a write error occurred
+@end display
+
+
+@node tty invocation
+@section @code{tty}: Print file name of terminal on standard input
+
+@pindex tty
+@cindex print terminal file name
+@cindex terminal file name, printing
+
+@code{tty} prints the file name of the tty connected to its standard
+input.  It prints @samp{not a tty} if standard input is not a tty.
+
+Synopsis:
+
+@example
+tty [ @var{option} ]@dots{}
+@end example
+
+The program accepts the following option.  Also @pxref{Common options}.
+
+@table @code
+
+@item -s
+@itemx --silent
+@itemx --quiet
+@opindex -s
+@opindex --silent
+@opindex --quiet
+Print nothing; only return an exit status.
+
+@end table
+
+@cindex exit status of @code{tty}
+Exit status:
+
+@display
+0 if standard input is a tty
+1 if standard input is not a tty
+2 if given incorrect arguments
+3 if a write error occurs
+@end display
+
+
+@node User information
+@chapter User information
+
+@cindex user information, commands for
+@cindex commands for printing user information
+
+This section describes commands that print user-related information:
+logins, groups, and so forth.
+
+@menu
+* id invocation::               Print real and effective uid and gid.
+* logname invocation::          Print current login name.
+* whoami invocation::           Print effective user id.
+* groups invocation::           Print group names a user is in.
+* users invocation::            Print login names of users currently logged in.
+* who invocation::              Print who is currently logged in.
+@end menu
+
+
+@node id invocation
+@section @code{id}: Print real and effective uid and gid
+
+@pindex id
+@cindex real uid and gid, printing
+@cindex effective uid and gid, printing
+@cindex printing real and effective uid and gid
+
+@noindent @code{id} prints information about the given user, or the process
+running it if no user is specified.
+
+Synopsis:
+
+@example
+id [ @var{option} ]@dots{} [ @var{username} ]
+@end example
+
+By default, it prints the real user ID, real group ID, effective user ID
+if different from the real user ID, effective group ID if different from
+the real group ID, and supplemental group IDs.
+
+Each of these numeric values is preceded by an identifying string and
+followed by the corresponding user or group name in parentheses.
+
+The options cause @code{id} to print only part of the above information.
+Also @pxref{Common options}.
+
+@table @code
+@item -g
+@itemx --group
+@opindex -g
+@opindex --group
+Print only the group ID.
+
+@item -G
+@itemx --groups
+@opindex -G
+@opindex --groups
+Print only the supplementary groups.
+
+@item -n
+@itemx --name
+@opindex -n
+@opindex --name
+Print the user or group name instead of the ID number.  Requires
+@code{-u}, @code{-g}, or @code{-G}.
+
+@item -r
+@itemx --real
+@opindex -r
+@opindex --real
+Print the real, instead of effective, user or group ID.  Requires
+@code{-u}, @code{-g}, or @code{-G}.
+
+@item -u
+@itemx --user
+@opindex -u
+@opindex --user
+Print only the user ID.
+
+@end table
+
+
+@node logname invocation
+@section @code{logname}: Print current login name
+
+@pindex logname
+@cindex printing user's login name
+@cindex login name, printing
+@cindex user name, printing
+
+@flindex /etc/utmp
+@flindex utmp
+
+@code{logname} prints the calling user's name, as found in the file
+@file{/etc/utmp}, and exits with a status of 0.  If there is no
+@file{/etc/utmp} entry for the calling process, @code{logname} prints
+an error message and exits with a status of 1.
+
+The only options are @samp{--help} and @samp{--version}. @xref{Common
+options}).
+
+
+@node whoami invocation
+@section @code{whoami}: Print effective user id
+
+@pindex whoami
+@cindex effective UID, printing
+@cindex printing the effective UID
+
+@code{whoami} prints the user name associated with the current
+effective user id.  It is equivalent to the command @samp{id -un}.
+
+The only options are @samp{--help} and @samp{--version}. @xref{Common
+options}).
+
+
+@node groups invocation
+@section @code{groups}: Print group names a user is in
+
+@pindex groups
+@cindex printing groups a user is in
+@cindex supplementary groups, printing
+
+@code{groups} prints the names of the primary and any supplementary
+groups that each given @var{username}, or the current process if none
+are given, is in.  If user names are given, the name of each user is
+printed before the list of that user's groups.
+
+Synopsis:
+
+@example
+groups [ @var{username} ]@dots{}
+@end example
+
+The group lists are equivalent to the output of the command @samp{id -Gn}.
+
+The only options are @samp{--help} and @samp{--version}. @xref{Common
+options}).
+
+
+@node users invocation
+@section @code{users}: Print login names of users currently logged in
+
+@pindex users
+@cindex printing current usernames
+@cindex usernames, printing current
+
+@cindex login sessions, printing users with
+@code{users} prints on a single line a blank-separated list of user
+names of users currently logged in to the current host.  Each user name
+corresponds to a login session, so if a user has more than one login
+session, that user's name will appear the same number of times in the
+output.
+
+Synopsis:
+
+@example
+users [ @var{file} ]
+@end example
+
+@flindex /etc/utmp
+@flindex /etc/wtmp
+With no @var{file} argument, @code{users} extracts its information from
+the file @file{/etc/utmp}.  If a file argument is given, @code{users}
+uses that file instead.  A common choice is @file{/etc/wtmp}.
+
+The only options are @samp{--help} and @samp{--version}. @xref{Common
+options}).
+
+
+@node who invocation
+@section @code{who}: Print who is currently logged in
+
+@pindex who
+@cindex printing current user information
+@cindex information, about current users
+
+Synopsis:
+
+@example
+@code{who} [ @var{option} ] [ @var{file} ] [ am i ]
+@end example
+
+@cindex terminal lines, currently used
+@cindex login time
+@cindex remote hostname
+If given no non-option arguments, @code{who} prints the following
+information for each user currently logged on: login name, terminal
+line, login time, and remote hostname or X display.
+
+@flindex /etc/utmp
+@flindex /etc/wtmp
+If given one non-option argument, @code{who} uses that instead of
+@file{/etc/utmp} as the name of the file containing the record of
+users logged on.  @file{/etc/wtmp} is commonly given as an argument
+to @code{who} to look at who has previously logged on.
+
+@opindex am i
+@opindex who am i
+If given two non-option arguments, @code{who} prints only the entry
+for the user running it (determined from its standard input), preceded
+by the hostname.  Traditionally, the two arguments given are @samp{am
+i}, as in @samp{who am i}.
+
+The program accepts the following options.  Also @pxref{Common options}.
+
+@table @code
+@item -m
+@opindex -m
+Same as @samp{who am i}.
+
+@item -q
+@itemx --count
+@opindex -q
+@opindex --count
+Print only the login names and the number of users logged on.
+Overrides all other options.
+
+@item -s
+@opindex -s
+Ignored; for compatibility with other versions of @code{who}.
+
+@item -i
+@itemx -u
+@itemx --idle
+@opindex -i
+@opindex -u
+@opindex --idle
+@cindex idle time
+After the login time, print the number of hours and minutes that the
+user has been idle.  @samp{.} means the user was active in last minute.
+@samp{old} means the user was idle for more than 24 hours.
+
+@item -H
+@itemx --heading
+@opindex -H
+@opindex --heading
+Print a line of column headings.
+
+@item -w
+@itemx -T
+@itemx --mesg
+@itemx --message
+@itemx --writable
+@opindex -w
+@opindex -T
+@opindex --mesg
+@opindex --message
+@opindex --writable
+@cindex message status
+@pindex write@r{, allowed}
+After each login name print a character indicating the user's message status:
+
+@display
+@samp{+} allowing @code{write} messages
+@samp{-} disallowing @code{write} messages
+@samp{?} cannot find terminal device
+@end display
+
+@end table
+
+
+@node System context
+@chapter System context
+
+@cindex system context
+@cindex context, system
+@cindex commands for system context
+
+This section describes commands that print or change system-wide
+information.
+
+@menu
+* date invocation::             Print or set system date and time.
+* uname invocation::            Print system information.
+* hostname invocation::         Print or set system name.
+@end menu
+
+
+@node date invocation
+@section @code{date}: Print or set system date and time
+
+@pindex date
+@cindex time, printing or setting
+@cindex printing the current time
+
+@code{date} with no arguments prints the current time and date, in
+the format of the @samp{%c} directive (described below).
+
+Synopsis:
+
+@example
+date [ @var{option} ]@dots{} [ +@var{format} ] @c
+[@var{MMDDhhmm}[[@var{CC}]@var{YY}][.@var{ss}] ]
+@end example
+
+@findex strftime @r{and @code{date}}
+@cindex time formats
+@cindex formatting times
+If given an argument that starts with a @samp{+}, @code{date} prints the
+current time and date (or the time and date specified by the
+@code{--date} option, see below) in the format defined by that argument,
+which is the same as in the @code{strftime} function.  Except for
+directives, which start with @samp{%}, characters in the format string
+are printed unchanged.  The directives are described below.
+
+@cindex numeric field padding
+@cindex padding of numeric fields
+By default, @code{date} pads numeric fields with zeroes.
+GNU @code{date} recognizes the following nonstandard numeric modifiers
+between the @samp{%} and the directive.
+
+@table @code
+@item -
+(hyphen) do not pad the field
+@item _
+(underscore) pad the field with spaces
+@end table
+
+@menu
+* Time directives::             %[HIklMprsSTXZ]
+* Date directives::             %[aAbBcdDhjmUwWxyY]
+* Literal directives::          %[%nt]
+* Setting the time::            Changing the system clock.
+* Options for date::            Instead of the current time.
+* Examples of date::            Examples.
+@end menu
+
+@node Time directives
+@subsection Time directives
+
+@cindex time directives
+@cindex directives, time
+
+@code{date} directives related to times.
+
+@table @code
+@item %H
+hour (00@dots{}23)
+@item %I
+hour (01@dots{}12)
+@item %k
+hour ( 0@dots{}23)
+@item %l
+hour ( 1@dots{}12)
+@item %M
+minute (00@dots{}59)
+@item %p
+locale's AM or PM
+@item %r
+time, 12-hour (hh:mm:ss [AP]M)
+@item %s
+@cindex epoch, seconds since
+@cindex seconds since the epoch
+seconds since 1970-01-01 00:00:00 UCT (a nonstandard extension)
+@item %S
+second (00@dots{}61)
+@item %T
+time, 24-hour (hh:mm:ss)
+@item %X
+locale's time representation (%H:%M:%S)
+@item %Z
+time zone (e.g., EDT), or nothing if no time zone is
+determinable
+@end table
+
+
+@node Date directives
+@subsection Date directives
+
+@cindex date directives
+@cindex directives, date
+
+@code{date} directives related to dates.
+
+@table @code
+@item %a
+locale's abbreviated weekday name (Sun@dots{}Sat)
+@item %A
+locale's full weekday name, variable length (Sunday@dots{}Saturday)
+@item %b
+locale's abbreviated month name (Jan@dots{}Dec)
+@item %B
+locale's full month name, variable length (January@dots{}December)
+@item %c
+locale's date and time (Sat Nov 04 12:02:33 EST 1989)
+@item %d
+day of month (01@dots{}31)
+@item %D
+date (mm/dd/yy)
+@item %h
+same as %b
+@item %j
+day of year (001@dots{}366)
+@item %m
+month (01@dots{}12)
+@item %U
+week number of year with Sunday as first day of week (00@dots{}53)
+@item %w
+day of week (0@dots{}6) with 0 corresponding to Sunday
+@item %W
+week number of year with Monday as first day of week (00@dots{}53)
+@item %x
+locale's date representation (mm/dd/yy)
+@item %y
+last two digits of year (00@dots{}99)
+@item %Y
+year (1970@dots{}.)
+@end table
+
+
+@node Literal directives
+@subsection Literal directives
+
+@cindex literal directives
+@cindex directives, literal
+
+@code{date} directives that produce literal strings.
+
+@table @code
+@item %%
+a literal %
+@item %n
+a newline
+@item %t
+a horizontal tab
+@end table
+
+
+@node Setting the time
+@subsection Setting the time
+
+@cindex setting the time
+@cindex time setting
+
+If given an argument that does not start with @samp{+}, @code{date}
+sets the system clock to the time and date specified by that argument.
+The argument must consist entirely of digits, which have the following
+meaning:
+
+@table @var
+@item MM
+month
+@item DD
+day within month
+@item hh
+hour
+@item mm
+minute
+@item CC
+first two digits of year (optional)
+@item YY
+last two digits of year (optional)
+@item ss
+second (optional)
+@end table
+
+You must have appropriate privileges to set the system clock.
+
+
+@node Options for date
+@subsection Options for @code{date}
+
+@cindex @code{date} options
+@cindex options for @code{date}
+
+The program accepts the following options. Also @pxref{Common options}.
+
+@table @code
+
+@item -d @var{datestr}
+@itemx --date=@var{datestr}
+@opindex -d
+@opindex --date
+@cindex parsing date strings
+@cindex date strings, parsing
+@cindex arbitrary date strings, parsing
+Display the time and date specified in @var{datestr} instead of the
+current time and date. @var{datestr} can be in almost any common format.
+
+@item -s @var{datestr}
+@itemx --set=@var{datestr}
+@opindex -s
+@opindex --set
+Set the time and date to @var{datestr}, which can be in almost any
+common format.  It can contain month names, timezones, @samp{am} and
+@samp{pm}, etc.
+
+@item -u
+@itemx --uct
+@itemx --universal
+@opindex -u
+@opindex --uct
+@opindex --universal
+@cindex universal coordinated time
+@cindex Greenwich Mean Time
+Print or set the time and date in Universal Coordinated Time instead of
+in local (wall clock) time.
+
+@end table
+
+
+@node Examples of date
+@subsection Examples of @code{date}
+
+@cindex examples of @code{date}
+
+Here are a few examples.
+
+@itemize @bullet
+
+@item
+To print the date of the day before yesterday:
+@example
+date --date '2 days ago'
+@end example
+
+@item
+To print the date of the day three months and one day hence:
+@example
+date --date '3 months 1 day'
+@end example
+
+@item
+To print the day of year of Christmas in the current year:
+@example
+date --date '25 Dec' +%j
+@end example
+
+@item
+To print the current full month name and the day of the month:
+@example
+date '+%B %d'
+@end example
+
+But this may not be what you want because for the first nine days of
+the month, the @samp{%d} expands to a zero-padded two-digit field,
+for example @samp{date -d 1-may '+%B %d'} will print @samp{May 01}.
+
+@item
+To print the same date but without the leading zero for one-digit days
+of month, you can use the nonstandard @code{-} modifier to suppress
+the padding altogether.
+@example
+date -d 1-may '+%B %-d'
+@end example
+
+@end itemize
+
+
+@node uname invocation
+@section @code{uname}: Print system information
+
+@pindex uname
+@cindex print system information
+@cindex system information, printing
+
+@code{uname} prints information about the machine and operating system
+it is run on.  If no options are given, @code{uname} acts as if the
+@code{-s} option were given.  If multiple options are given or the
+@code{-a} option is given, the selected information is printed in
+the order @var{snrvm} with a space between items.
+
+Synopsis:
+
+@example
+uname [ @var{option} ]@dots{}
+@end example
+
+The program accepts the following options.  Also @pxref{Common options}.
+
+@table @code
+@item -m
+@itemx --machine
+@opindex -m
+@opindex --machine
+@cindex machine type
+@cindex hardware type
+Print the machine (hardware) type.
+
+@item -n
+@itemx --nodename
+@opindex -n
+@opindex --nodename
+@cindex hostname
+@cindex node name
+@cindex network node name
+Print the machine's network node hostname.
+
+@item -r
+@itemx --release
+@opindex -r
+@opindex --release
+@cindex operating system release
+@cindex release of operating system
+Print the operating system release.
+
+@item -s
+@itemx --sysname
+@opindex -s
+@opindex --sysname
+@cindex operating system name
+@cindex name of operating system
+Print the operating system name.
+
+@item -v
+@opindex -v
+@cindex operating system version
+@cindex version of operating system
+Print the operating system version.
+
+@item -a
+@itemx --all
+@opindex -a
+@opindex --all
+Print all of the above information.
+
+@end table
+
+
+@node hostname invocation
+@section @code{hostname}: Print or set system name
+
+@pindex hostname
+@cindex setting the hostname
+@cindex printing the hostname
+@cindex system name, printing
+
+With no arguments, @code{hostname} prints the name of the current host
+system.  With one argument, it sets the current host name to the
+specified string.  You must have appropriate privileges to set the host
+name.
+
+Synopsis:
+
+@example
+hostname [ @var{name} ]
+@end example
+
+The only options are @samp{--help} and @samp{--version}. @xref{Common
+options}).
+
+
+@node Modified command invocation
+@chapter Modified command invocation
+
+@cindex modified command invocation
+@cindex invocation of commands, modified
+@cindex commands for invoking other commands
+
+This section describes commands that run other commands in some context
+different than the current one: a modified environment, as a different
+user, etc.
+
+@menu
+* env invocation::              Modify the environment.
+* nice invocation::             Modify the scheduling priority.
+* nohup invocation::            Immunize to hangups.
+* su invocation::               Modify the user and group id.
+@end menu
+
+
+@node env invocation
+@section @code{env}: Run a program in a modified environment
+
+@pindex env
+@cindex environment, running a program in a modified
+@cindex modified environment, running a program in
+
+@code{env} runs a command with an environment modified as specified
+by the command line arguments.
+
+Synopses:
+
+@example
+env [ @var{option} ]@dots{} [ @var{name}=@var{value} ]@dots{} @c
+[ @var{command} [ @var{args} ]@dots{} ]
+env
+@end example
+
+Arguments of the form @samp{@var{variable}=@var{value}} set
+the environment variable @var{variable} to value @var{value}.
+@var{value} may be empty (@samp{@var{variable}=}).  Setting a variable
+to an empty value is different from unsetting it.
+
+The first remaining argument specifies the program name to invoke; it is
+searched for according to the @code{PATH} environment variable.  Any
+remaining arguments are passed as arguments to that program.
+
+@cindex environment, printing
+
+If no command name is specified following the environment
+specifications, the resulting environment is printed.  This is like
+specifying a command name of @code{printenv}.
+
+The program accepts the following options. Also @pxref{Common options}.
+
+@table @code
+
+@item -u @var{name}
+@itemx --unset=@var{name}
+@opindex -u
+@opindex -unset
+Remove variable @var{name} from the environment, if it was in the
+environment.
+
+@item -
+@itemx -i
+@itemx --ignore-environment
+@opindex -
+@opindex -i
+@opindex --ignore-environment
+Start with an empty environment, ignoring the inherited environment.
+
+@end table
+
+
+@node nice invocation
+@section @code{nice}: Run a program with modified scheduling priority
+
+@pindex nice
+@cindex modifying scheduling priority
+@cindex scheduling priority, modifying
+@cindex priority, modifying
+
+If no arguments are given, @code{nice} prints the current scheduling
+priority, which it inherited.  Otherwise, @code{nice} runs the given
+@var{command} with its scheduling priority adjusted.  If no
+@var{adjustment} is given, the priority of the command is incremented by
+10.  You must have appropriate privileges to specify a negative
+adjustment.  The priority can be adjusted by @code{nice} over the range
+of -20 (the highest priority) to 19 (the lowest).
+
+Synopsis:
+
+@example
+nice [ @var{option} ]@dots{} [ @var{command} [ @var{arg} ]@dots{} ]
+@end example
+
+@cindex conflicts with shell built-ins
+@cindex built-in shell commands, conflicts with
+Because most shells have a built-in command by the same name, using the
+unadorned command name in a script or interactively may get you
+different functionality than that described here.
+
+The program accepts the following option. Also @pxref{Common options}.
+
+@table @code
+@item -n @var{adjustment}
+@itemx -@var{adjustment}
+@itemx --adjustment=@var{adjustment}
+@opindex -n
+@opindex --adjustment
+@opindex -@var{adjustment}
+Add @var{adjustment} instead of 10 to the command's priority.
+@end table
+
+
+@node nohup invocation
+@section @code{nohup}: Run a program immune to hangups
+
+@pindex nohup
+@cindex hangups, immunity to
+@cindex immunity to hangups
+
+@flindex nohup.out
+@code{nohup} runs the given @var{command} with hangup signals ignored,
+so that the command can continue running in the background after you log
+out. 
+
+Synopsis:
+
+@example
+nohup @var{command} [ @var{arg} ]@dots{}
+@end example
+
+Also, the scheduling priority is increased by 5. If standard output is a
+tty, it and standard error are redirected so that they are appended to
+the file @file{nohup.out}; if that cannot be written to, they are
+appended to the file @file{$HOME/nohup.out}.  If that cannot be written
+to, the command is not run.
+
+If @code{nohup} creates either @file{nohup.out} or
+@file{$HOME/nohup.out}, it creates it with no ``group'' or ``other''
+access permissions.  It does not change the permissions if the output
+file already existed.
+
+@code{nohup} does not automatically put the command it runs in the
+background; you must do that explicitly, by ending the command line
+with an @samp{&}.
+
+The only options are @samp{--help} and @samp{--version}. @xref{Common
+options}).
+
+
+@node su invocation
+@section @code{su}: Run a shell with substitute user and group id
+
+@pindex su
+@cindex substitute user and group IDs
+@cindex user ID, switching
+@cindex super-user, becoming
+@cindex root, becoming
+
+@code{su} allows one user to temporarily become another user.  It runs a
+command (often an interactive shell) with the real and effective user
+id, group id, and supplemental groups of a given @var{user}.
+
+Synopsis:
+
+@example
+su [ @var{option} ]@dots{} [ @var{user} [ @var{arg} ]@dots{} ]
+@end example
+
+@cindex passwd entry, and @code{su} shell
+@flindex /bin/sh
+@flindex /etc/passwd
+If no @var{user} is given, the default is @code{root}, the super-user.
+The shell to use is taken from @var{user}'s @code{passwd} entry, or
+@file{/bin/sh} if none is specified there.  If @var{user} has a
+password, @code{su} prompts for the password unless run by a user with
+effective user ID of zero (the super-user).
+
+@vindex HOME
+@vindex SHELL
+@vindex USER
+@vindex LOGNAME
+@cindex login shell
+By default, @code{su} does not change the current directory.
+It sets the environment variables @code{HOME} and @code{SHELL}
+from the password entry for @var{user}, and if @var{user} is not
+the super-user, sets @code{USER} and @code{LOGNAME} to @var{user}.
+By default, the shell is not a login shell.
+
+If one or more @var{arg}s are given, they are passed as additional
+arguments to the shell.
+
+@cindex @samp{-su}
+@code{su} does not handle @file{/bin/sh} or any other shells specially
+(e.g., by setting @code{argv[0]} to @samp{-su}, passing @code{-c} only
+to certain shells, etc.).
+
+@findex syslog
+On systems that have @code{syslog}, @code{su} can be compiled to report
+failed, and optionally successful, @code{su} attempts using
+@code{syslog}.
+
+@cindex wheel group, not supported
+@cindex group wheel, not supported
+@cindex fascism
+This program does not support a ``wheel group'' that restricts who
+can @code{su} to super-user accounts, because that can help fascist
+system administrators hold unwarranted power over other users.
+
+The program accepts the following options.  Also @pxref{Common options}.
+
+@table @code
+@item -c @var{command}
+@itemx --command=@var{command}
+@opindex -c
+@opindex --command
+Pass @var{command}, a single command line to run, to the shell with
+a @code{-c} option instead of starting an interactive shell.
+
+@item -f
+@itemx --fast
+@opindex -f
+@opindex --fast
+@flindex .cshrc
+@cindex file name pattern expansion, disabled
+@cindex globbing, disabled
+Pass the @code{-f} option to the shell.  This probably only makes sense
+if the shell run is @code{csh} or @code{tcsh}, for which the @code{-f}
+option prevents reading the startup file (@file{.cshrc}).  With
+Bourne-like shells, the @code{-f} option disables file name pattern
+expansion (globbing), which is not likely to be useful.
+
+@item -
+@itemx -l
+@itemx --login
+@opindex -
+@opindex -l
+@opindex --login
+@c other variables already indexed above
+@vindex TERM
+@vindex PATH
+@cindex login shell, creating
+Make the shell a login shell.  This means the following.  Unset all
+environment variables except @code{TERM}, @code{HOME}, and @code{SHELL}
+(which are set as described above), and @code{USER} and @code{LOGNAME}
+(which are set, even for the super-user, as described above), and set
+@code{PATH} to a compiled-in default value.  Change to @var{user}'s home
+directory.  Prepend @samp{-} to the shell's name, intended to make it
+read its login startup file(s).
+
+@item -m
+@itemx -p
+@itemx --preserve-environment
+@opindex -m
+@opindex -p
+@opindex --preserve-environment
+@cindex environment, preserving
+@flindex /etc/shells
+@cindex restricted shell
+Do not change the environment variables @code{HOME}, @code{USER},
+@code{LOGNAME}, or @code{SHELL}.  Run the shell given in the environment
+variable @code{SHELL} instead of the shell from @var{user}'s passwd
+entry, unless the user running @code{su} is not the superuser and
+@var{user}'s shell is restricted.  A @dfn{restricted shell} is one that
+is not listed in the file @file{/etc/shells}, or in a compiled-in list
+if that file does not exist.  Parts of what this option does can be
+overridden by @code{--login} and @code{--shell}.
+
+@item -s @var{shell}
+@itemx --shell=@var{shell}
+@opindex -s
+@opindex --shell
+Run @var{shell} instead of the shell from @var{user}'s passwd entry,
+unless the user running @code{su} is not the superuser and @var{user}'s
+shell is restricted (see @samp{-m} just above).
+
+@end table
+
+
+@node Delaying
+@chapter Delaying
+
+@cindex delaying commands
+@cindex commands for delaying
+
+Perhaps @code{wait} or other commands should be described here also?
+
+@menu
+* sleep invocation::            Delay for a specified time.
+@end menu
+
+
+@node sleep invocation
+@section @code{sleep}: Delay for a specified time
+
+@pindex sleep
+@cindex delay for a specified time
+
+@code{sleep} pauses for an amount of time specified by the sum of
+the values of the command line arguments.
+
+Synopsis:
+
+@example
+sleep [ @var{number}[smhd] ]@dots{}
+@end example
+
+@cindex time units
+Each argument is a number followed by an optional unit; the default
+is seconds.  The units are:
+
+@table @code
+@item s
+seconds
+@item m
+minutes
+@item h
+hours
+@item d
+days
+@end table
+
+The only options are @samp{--help} and @samp{--version}. @xref{Common
+options}).
+
+
+@node Index
+@unnumbered Index
+
+@printindex cp
+
+@contents
+@bye
+
+@c Local variables:
+@c texinfo-column-for-description: 33
+@c End:
