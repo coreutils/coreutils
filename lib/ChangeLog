@@ -1,3 +1,7 @@
+2001-01-03  Paul Eggert  <eggert@twinsun.com>
+
+	* lib/strftime.c: Sync with glibc time/strftime.c 1.81.
+
 2001-01-03  Jim Meyering  <meyering@lucent.com>
 
 	* unicodeio.c (print_unicode_char): Remove `const' from declaration of
