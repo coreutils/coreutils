@@ -1,8 +1,15 @@
+Tue Mar  5 22:49:33 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* getdate.y (RelativeMonth): Add 1900 to the year so that relative
+	date specs that push the year through the end of the century work.
+  	For example, `date -d "01/01/1998 3 years" +%Y' now prints 2001.
+	From Peter Dalgaard (pd@kubism.ku.dk).
+
 Mon Mar  4 23:46:43 1996  Jim Meyering  (meyering@na-net.ornl.gov)
-	
+
 	* seq.c (main): Exit after processing --version.
 	Reported by François Pinard.
-	
+
 Fri Mar  1 23:46:32 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* expr.c (docolon): Don't initialize re_syntax_options to
