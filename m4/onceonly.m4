@@ -1,5 +1,5 @@
-# onceonly.m4 serial 1
-dnl Copyright (C) 2002 Free Software Foundation, Inc.
+# onceonly.m4 serial 2
+dnl Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
 dnl Public License, this file may be distributed as part of a program
@@ -21,15 +21,20 @@ dnl inside an AC_DEFUNed function, the gl_CHECK_HEADERS macro call expands to
 dnl empty, and the check will be inserted before the body of the AC_DEFUNed
 dnl function.
 
+dnl Taken from Autoconf 2.50; can be removed once we assume 2.50 or later.
+define([m4_quote], [[$*]])
+
 # AC_CHECK_HEADERS_ONCE(HEADER1 HEADER2 ...) is a once-only variant of
 # AC_CHECK_HEADERS(HEADER1 HEADER2 ...).
 AC_DEFUN([AC_CHECK_HEADERS_ONCE], [
   :
   AC_FOREACH([gl_HEADER_NAME], [$1], [
-    AC_DEFUN([gl_CHECK_HEADER_]translit(gl_HEADER_NAME,[./-], [___]), [
+    AC_DEFUN([gl_CHECK_HEADER_]m4_quote(translit(defn([gl_HEADER_NAME]),
+						 [-./], [___])), [
       AC_CHECK_HEADERS(gl_HEADER_NAME)
     ])
-    AC_REQUIRE([gl_CHECK_HEADER_]translit(gl_HEADER_NAME,[./-], [___]))
+    AC_REQUIRE([gl_CHECK_HEADER_]m4_quote(translit(gl_HEADER_NAME,
+						   [-./], [___])))
   ])
 ])
 
@@ -38,10 +43,10 @@ AC_DEFUN([AC_CHECK_HEADERS_ONCE], [
 AC_DEFUN([AC_CHECK_FUNCS_ONCE], [
   :
   AC_FOREACH([gl_FUNC_NAME], [$1], [
-    AC_DEFUN([gl_CHECK_FUNC_]gl_FUNC_NAME, [
-      AC_CHECK_FUNCS(gl_FUNC_NAME)
+    AC_DEFUN([gl_CHECK_FUNC_]defn([gl_FUNC_NAME]), [
+      AC_CHECK_FUNCS(defn([gl_FUNC_NAME]))
     ])
-    AC_REQUIRE([gl_CHECK_FUNC_]gl_FUNC_NAME)
+    AC_REQUIRE([gl_CHECK_FUNC_]defn([gl_FUNC_NAME]))
   ])
 ])
 
@@ -50,9 +55,9 @@ AC_DEFUN([AC_CHECK_FUNCS_ONCE], [
 AC_DEFUN([AC_CHECK_DECLS_ONCE], [
   :
   AC_FOREACH([gl_DECL_NAME], [$1], [
-    AC_DEFUN([gl_CHECK_DECL_]gl_DECL_NAME, [
-      AC_CHECK_DECLS(gl_DECL_NAME)
+    AC_DEFUN([gl_CHECK_DECL_]defn([gl_DECL_NAME]), [
+      AC_CHECK_DECLS(defn([gl_DECL_NAME]))
     ])
-    AC_REQUIRE([gl_CHECK_DECL_]gl_DECL_NAME)
+    AC_REQUIRE([gl_CHECK_DECL_]defn([gl_DECL_NAME]))
   ])
 ])
