@@ -413,7 +413,7 @@ only be used in pairs to specify case conversion.  -s uses SET1 if not\n\
 translating nor deleting; else squeezing uses SET2 and occurs after\n\
 translation or deletion.\n\
 "));
-      puts (_("\nReport bugs to <textutils-bugs@gnu.ai.mit.edu>."));
+      puts (_("\nReport bugs to <textutils-bugs@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

@@ -184,7 +184,7 @@ each being `SIDE.FIELD' or `0'.  Default FORMAT outputs the join field,\n\
 the remaining fields from FILE1, the remaining fields from FILE2, all\n\
 separated by CHAR.\n\
 "));
-      puts (_("\nReport bugs to <textutils-bugs@gnu.ai.mit.edu>."));
+      puts (_("\nReport bugs to <textutils-bugs@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

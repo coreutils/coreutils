@@ -2473,7 +2473,7 @@ Paginate or columnate FILE(s) for printing.\n\
 -T implied by -l nn when nn <= 10 or <= 3 with -f. With no FILE, or when\n\
 FILE is -, read standard input.\n\
 "));
-      puts (_("\nReport bugs to <textutils-bugs@gnu.ai.mit.edu>."));
+      puts (_("\nReport bugs to <textutils-bugs@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

@@ -74,7 +74,7 @@ Print checksum and block counts for each FILE.\n\
 \n\
 With no FILE, or when FILE is -, read standard input.\n\
 "));
-      puts (_("\nReport bugs to <textutils-bugs@gnu.ai.mit.edu>."));
+      puts (_("\nReport bugs to <textutils-bugs@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

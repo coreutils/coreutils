@@ -134,7 +134,7 @@ standard input), writing to OUTPUT (or standard output).\n\
 A field is a run of whitespace, then non-whitespace characters.\n\
 Fields are skipped before chars.\n\
 "));
-      puts (_("\nReport bugs to <textutils-bugs@gnu.ai.mit.edu>."));
+      puts (_("\nReport bugs to <textutils-bugs@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

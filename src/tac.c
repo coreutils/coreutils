@@ -166,7 +166,7 @@ With no FILE, or when FILE is -, read standard input.\n\
       --help               display this help and exit\n\
       --version            output version information and exit\n\
 "));
-      puts (_("\nReport bugs to <textutils-bugs@gnu.ai.mit.edu>."));
+      puts (_("\nReport bugs to <textutils-bugs@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

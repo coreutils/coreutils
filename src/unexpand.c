@@ -386,7 +386,7 @@ With no FILE, or when FILE is -, read standard input.\n\
 \n\
 Instead of -t NUMBER or -t LIST, -NUMBER or -LIST may be used.\n\
 "));
-      puts (_("\nReport bugs to <textutils-bugs@gnu.ai.mit.edu>."));
+      puts (_("\nReport bugs to <textutils-bugs@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
