@@ -3,6 +3,7 @@
 ##m4-files-begin
 EXTRA_DIST = \
   README jm-glibc-io.m4 jm-glibc-io.m4n Makefile.am.in \
+acl.m4 \
 afs.m4 \
 assert.m4 \
 bison.m4 \
