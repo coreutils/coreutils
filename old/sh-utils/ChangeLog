@@ -1,3 +1,12 @@
+1998-10-31  Jim Meyering  <meyering@ascend.com>
+
+	* tests/factor/Makefile.am: Rewrite to use new testing framework.
+	* tests/factor/Test.pm: Remove file.
+	* tests/factor/factor-tests: Remove file.
+	* tests/factor/basic: New file (rewrite of Test.pm).
+
+	* acconfig.h (stat): New #undef.
+
 1998-10-03  Jim Meyering  <meyering@ascend.com>
 
 	* man/Makefile.am: Switch to using help2man.
