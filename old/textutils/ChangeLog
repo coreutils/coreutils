@@ -1,3 +1,15 @@
+2000-04-09  Jim Meyering  <meyering@lucent.com>
+
+	* doc/textutils.texi: Include constants.texi.
+	(tail invocation): Use `@value's instead of referring to the
+	output of `tail --help' for defaults.
+	* doc/Makefile.am (constants.texi): New rule.
+	(CLEANFILES): Add constants.texi.
+	(textutils.dvi, textutils.info): Depend on constants.texi.
+
+	* src/tail.c (usage): Clarify descriptions of the --max-* options.
+	From Karl Berry.
+
 2000-04-03  Jim Meyering  <meyering@lucent.com>
 
 	* configure.in (AC_CHECK_HEADERS): Remove langinfo.h.  Now it's in m4/.
