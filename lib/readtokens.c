@@ -108,9 +108,10 @@ readtoken (FILE *stream,
   if (!same_delimiters)
     {
       const char *t;
+      unsigned int j;
       saved_delim = delim;
-      for (i = 0; i < sizeof (isdelim); i++)
-	isdelim[i] = 0;
+      for (j = 0; j < sizeof (isdelim); j++)
+	isdelim[j] = 0;
       for (t = delim; *t; t++)
 	isdelim[(unsigned int) *t] = 1;
     }
