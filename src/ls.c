@@ -124,7 +124,6 @@ int wcwidth ();
 #include "same.h"
 #include "strverscmp.h"
 #include "xstrtol.h"
-#include "xalloc.h"
 #include "xreadlink.h"
 
 /* Use access control lists only under all the following conditions.
