@@ -1034,9 +1034,10 @@ EXPRESSION is true or false and sets exit status.  It is one of:\n\
   -e FILE     FILE exists\n\
   -f FILE     FILE exists and is a regular file\n\
   -g FILE     FILE exists and is set-group-ID\n\
+  -h FILE     FILE exists and is a symbolic link (same as -L)\n\
   -G FILE     FILE exists and is owned by the effective group ID\n\
   -k FILE     FILE exists and has its sticky bit set\n\
-  -L FILE     FILE exists and is a symbolic link\n\
+  -L FILE     FILE exists and is a symbolic link (same as -h)\n\
   -O FILE     FILE exists and is owned by the effective user ID\n\
   -p FILE     FILE exists and is a named pipe\n\
   -r FILE     FILE exists and is readable\n\
