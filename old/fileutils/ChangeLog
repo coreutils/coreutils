@@ -2,6 +2,9 @@
 
 	* Version 4.0.32.
 
+	* Makefile.maint (GZIP_ENV): Define to --no-name, so the timestamp
+	is not included in the .tar.gz file.
+
 	* tests/mkdir/perm (tests): Use `empty' (instead of just blanks) to
 	indicate no `-m' option.  Using just blanks wasn't portable to
 	Solaris2.5.1's /bin/sh.
