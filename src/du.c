@@ -123,7 +123,7 @@ static int opt_count_all = 0;
 static int opt_one_file_system = 0;
 
 /* If nonzero, print a grand total at the end. */
-static int opt_combined_arguments = 0;
+static int print_totals = 0;
 
 /* If nonzero, do not add sizes of subdirectories. */
 static int opt_separate_dirs = 0;
@@ -628,13 +628,13 @@ du_files (char **files)
       else
 	str_copyc (path, arg);
 
-      if (!opt_combined_arguments)
+      if (!print_totals)
 	hash_reset ();
 
       count_entry (arg, 1, 0, 0);
     }
 
-  if (opt_combined_arguments)
+  if (print_totals)
     print_size (tot_size, _("total"));
 }
 
@@ -681,7 +681,7 @@ main (int argc, char **argv)
 	  break;
 
 	case 'c':
-	  opt_combined_arguments = 1;
+	  print_totals = 1;
 	  break;
 
 	case 'h':
