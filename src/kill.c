@@ -104,9 +104,10 @@ Send signals to processes, or list signals.\n\
 Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
-  -s, --signal SIGNAL, -SIGNAL  Name or number of signal to be sent.\n\
-  -l, --list                    List signal names.\n\
-  -t, --table                   Print a table of signal information.\n\
+  -s, --signal=SIGNAL, -SIGNAL\n\
+                   specify the name or number of the signal to be sent\n\
+  -l, --list       list signal names, or convert signal names to/from numbers\n\
+  -t, --table      print a table of signal information\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
