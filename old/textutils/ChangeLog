@@ -1,5 +1,7 @@
 2000-08-06  Jim Meyering  <meyering@lucent.com>
 
+	* Version 2.0g.
+
 	* src/tail.c (pipe_lines): Declare local `cp' to be const.
 
 2000-08-04  Greg McGary  <greg@mcgary.org>
