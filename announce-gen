@@ -6,7 +6,7 @@ use Getopt::Long;
 use Digest::MD5;
 use Digest::SHA1;
 
-(my $VERSION = '$Revision: 1.19 $ ') =~ tr/[0-9].//cd;
+(my $VERSION = '$Revision: 1.20 $ ') =~ tr/[0-9].//cd;
 (my $ME = $0) =~ s|.*/||;
 
 my %valid_release_types = map {$_ => 1} qw (alpha beta major);
@@ -295,8 +295,8 @@ EOF
   print "\nHere are GPG detached signatures:\n";
   foreach my $url (@url_dir_list)
     {
-      print "  $url/$tgz.asc\n";
-      print "  $url/$tbz.asc\n";
+      print "  $url/$tgz.sig\n";
+      print "  $url/$tbz.sig\n";
     }
 
   # FIXME: clean up upon interrupt or die
