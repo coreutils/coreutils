@@ -58,11 +58,19 @@ static int ignore_fail_on_non_empty;
 /* If nonzero, output a diagnostic for every directory processed.  */
 static int verbose;
 
+/* For long options that have no equivalent short option, use a
+   non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
+enum
+{
+  IGNORE_FAIL_ON_NON_EMPTY_OPTION = CHAR_MAX + 1
+};
+
 static struct option const longopts[] =
 {
   /* Don't name this `--force' because it's not close enough in meaning
      to e.g. rm's -f option.  */
-  {"ignore-fail-on-non-empty", no_argument, NULL, CHAR_MAX + 1},
+  {"ignore-fail-on-non-empty", no_argument, NULL,
+   IGNORE_FAIL_ON_NON_EMPTY_OPTION},
 
   {"path", no_argument, NULL, 'p'},
   {"parents", no_argument, NULL, 'p'},
@@ -177,7 +185,7 @@ main (int argc, char **argv)
 	case 'p':
 	  empty_paths = 1;
 	  break;
-	case CHAR_MAX + 1:
+	case IGNORE_FAIL_ON_NON_EMPTY_OPTION:
 	  ignore_fail_on_non_empty = 1;
 	  break;
 	case 14:
