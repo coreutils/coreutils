@@ -2,6 +2,9 @@
 
 	* Version 4.1.9.
 
+	* tests/mv/part-fail: Also accept the permission-denied diagnostic
+	issued by some losing systems.  Reported by Volker Borchert.
+
 	* src/remove.c (remove_entry): Use DT_IS_DIR only if
 	HAVE_STRUCT_DIRENT_D_TYPE is defined.
 
