@@ -49,9 +49,6 @@
 /* Number of lines/chars/blocks to head. */
 #define DEFAULT_NUMBER 10
 
-/* Size of atomic reads. */
-#define BUFSIZE (512 * 8)
-
 /* Useful only when eliding tail bytes or lines.
    If nonzero, skip the is-regular-file test used to determine whether
    to use the lseek optimization.  Instead, use the more general (and
@@ -183,7 +180,7 @@ write_header (const char *filename)
 static enum Copy_fd_status
 copy_fd (int src_fd, FILE *o_stream, uintmax_t n_bytes)
 {
-  char buf[BUFSIZE];
+  char buf[BUFSIZ];
   const size_t buf_size = sizeof (buf);
 
   /* Copy the file contents.  */
@@ -215,7 +212,7 @@ elide_tail_bytes_pipe (const char *filename, int fd, uintmax_t n_elide_0)
   size_t n_elide = n_elide_0;
 
 #ifndef HEAD_TAIL_PIPE_READ_BUFSIZE
-# define HEAD_TAIL_PIPE_READ_BUFSIZE BUFSIZE
+# define HEAD_TAIL_PIPE_READ_BUFSIZE BUFSIZ
 #endif
 #define READ_BUFSIZE HEAD_TAIL_PIPE_READ_BUFSIZE
 
@@ -476,8 +473,9 @@ elide_tail_lines_pipe (const char *filename, int fd, uintmax_t n_elide)
 {
   struct linebuffer
   {
-    unsigned int nbytes, nlines;
     char buffer[BUFSIZ];
+    size_t nbytes;
+    size_t nlines;
     struct linebuffer *next;
   };
   typedef struct linebuffer LBUFFER;
@@ -497,9 +495,9 @@ elide_tail_lines_pipe (const char *filename, int fd, uintmax_t n_elide)
   while (1)
     {
       n_read = safe_read (fd, tmp->buffer, BUFSIZ);
-      tmp->nbytes = n_read;
       if (n_read == 0 || n_read == SAFE_READ_ERROR)
 	break;
+      tmp->nbytes = n_read;
       tmp->nlines = 0;
       tmp->next = NULL;
 
@@ -753,8 +751,8 @@ elide_tail_lines_file (const char *filename, int fd, uintmax_t n_elide)
 static int
 head_bytes (const char *filename, int fd, uintmax_t bytes_to_write)
 {
-  char buffer[BUFSIZE];
-  size_t bytes_to_read = BUFSIZE;
+  char buffer[BUFSIZ];
+  size_t bytes_to_read = BUFSIZ;
 
   /* Need BINARY I/O for the byte counts to be accurate.  */
   SET_BINARY2 (fd, fileno (stdout));
@@ -782,7 +780,7 @@ head_bytes (const char *filename, int fd, uintmax_t bytes_to_write)
 static int
 head_lines (const char *filename, int fd, uintmax_t lines_to_write)
 {
-  char buffer[BUFSIZE];
+  char buffer[BUFSIZ];
 
   /* Need BINARY I/O for the byte counts to be accurate.  */
   /* FIXME: do we really need this when counting *lines*?  */
@@ -790,7 +788,7 @@ head_lines (const char *filename, int fd, uintmax_t lines_to_write)
 
   while (lines_to_write)
     {
-      size_t bytes_read = safe_read (fd, buffer, BUFSIZE);
+      size_t bytes_read = safe_read (fd, buffer, BUFSIZ);
       size_t bytes_to_write = 0;
 
       if (bytes_read == SAFE_READ_ERROR)
