@@ -1,3 +1,12 @@
+2003-01-06  Jim Meyering  <jim@meyering.net>
+
+	Update from gnulib.
+	* utime.c (utime_null): Use SAFE_READ_ERROR.
+	(utime_null): No need to call ftruncate if the file was nonempty.
+	* getdate.y (get_date): Test HAVE_STRUCT_TM_TM_ZONE, not HAVE_TM_ZONE.
+	* canon-host.c (strdup): Remove unused declaration.
+	Patches by Bruno Haible.
+
 2003-01-04  Jim Meyering  <jim@meyering.net>
 
 	* version-etc.c: Update copyright date.
