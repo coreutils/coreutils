@@ -34,6 +34,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   chmod now accepts multiple mode-like options, e.g., "chmod -r -w f".
 
+  chown is no longer subject to a race condition vulnerability, when
+  used with --from=O:G and without the (-h) --no-dereference option.
+
   cut's --output-delimiter=D option works with abutting byte ranges.
 
   du no longer segfaults when a subdirectory of an operand
