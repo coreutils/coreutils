@@ -1,3 +1,9 @@
+1997-07-16  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/groups.sh: Exit with status from `id' command.
+	Don't print `$name : $groups' if id fails.
+	Reported by Austin Donnelly.
+
 1997-07-15  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/getloadavg.c: Merge in changes from FSF.
