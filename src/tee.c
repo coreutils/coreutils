@@ -166,7 +166,7 @@ tee (int nfiles, const char **files)
   int ret = 0;
   const char *mode_string = (append ? "a" : "w");
 
-  descriptors = xmalloc ((nfiles + 1) * sizeof (descriptors[0]));
+  descriptors = xnmalloc (nfiles + 1, sizeof *descriptors);
 
   /* Move all the names `up' one in the argv array to make room for
      the entry for standard output.  This writes into argv[argc].  */
