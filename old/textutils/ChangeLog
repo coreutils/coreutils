@@ -1,7 +1,6 @@
 2000-08-19  Jim Meyering  <meyering@lucent.com>
 
-	* src/comm.c (writeline): Correct comments.
-	From Bruno Haible.
+	* src/comm.c (writeline): Correct comments.  From Bruno Haible.
 
 2000-08-11  Paul Eggert  <eggert@twinsun.com>
 
