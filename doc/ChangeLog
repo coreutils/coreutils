@@ -1,3 +1,9 @@
+2004-06-15  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (yes invocation): "--" is now supported.
+	(false invocation, true invocation): --help and --version now
+	work unconditionally.
+
 2004-06-07  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi: Remove menu references to just-removed subsection.
