@@ -241,7 +241,7 @@ re_protect (const char *const_dst_path, int src_offset,
 
 	  if (utime (dst_path, &utb))
 	    {
-	      error (0, errno, "%s", dst_path);
+	      error (0, errno, _("preserving times for %s"), dst_path);
 	      return 1;
 	    }
 
@@ -250,7 +250,7 @@ re_protect (const char *const_dst_path, int src_offset,
 	  if (chown (dst_path, src_sb.st_uid, src_sb.st_gid)
 	      && (errno != EPERM || myeuid == 0))
 	    {
-	      error (0, errno, "%s", dst_path);
+	      error (0, errno, _("preserving ownership for %s"), dst_path);
 	      return 1;
 	    }
 	}
@@ -259,7 +259,7 @@ re_protect (const char *const_dst_path, int src_offset,
 	{
 	  if (chmod (dst_path, src_sb.st_mode & x->umask_kill))
 	    {
-	      error (0, errno, "%s", dst_path);
+	      error (0, errno, _("preserving permissions for %s"), dst_path);
 	      return 1;
 	    }
 	}
