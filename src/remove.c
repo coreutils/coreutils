@@ -552,17 +552,14 @@ remove_cwd_entries (const struct rm_options *x)
 	     we don't consider it again if we reopen this directory later.  */
 	  if (status != RM_OK)
 	    {
-	      bool done;
-
 	      if (ht == NULL)
 		{
-		  ht = hash_initialize (HT_INITIAL_CAPACITY, hash_pjw,
+		  ht = hash_initialize (HT_INITIAL_CAPACITY, NULL, hash_pjw,
 					hash_compare_strings, NULL);
 		  if (ht == NULL)
 		    error (1, 0, _("virtual memory exhausted"));
 		}
-	      hash_insert (ht, entry_name, &done);
-	      if (!done)
+	      if (! hash_insert (ht, entry_name))
 		error (1, 0, _("virtual memory exhausted"));
 	    }
 	  else
@@ -808,24 +805,19 @@ rm (struct File_spec *fs, int user_specified_name, const struct rm_options *x)
 #ifdef ENABLE_CYCLE_CHECK
   if (S_ISDIR (filetype_mode))
     {
-      bool done;
       struct active_dir_ent *old_ent;
+      struct active_dir_ent *new_ent;
 
-      /* Insert this directory in the active_dir_map.
-	 If there is already a directory in the map with the same inum,
+      /* If there is already a directory in the map with the same inum,
 	 then there's *probably* a directory cycle.  This test can get
 	 a false positive if two directories have the same inode number
-	 but different device numbers and one directory contains the
+	 but different device numbers, and one directory contains the
 	 other.  But since people don't often try to delete hierarchies
 	 containing mount points, and when they do, duplicate inode
 	 numbers are not that likely, this isn't worth detecting.  */
-      old_ent = hash_insert (active_dir_map,
-			     make_active_dir_ent (fs->inum, current_depth ()),
-			     &done);
-      if (!done)
-	  error (1, 0, _("virtual memory exhausted"));
 
-      if (old_ent)
+      new_ent = make_active_dir_ent (fs->inum, current_depth ());
+      if (hash_lookup (active_dir_map, new_ent))
 	{
 	  error (0, 0, _("\
 WARNING: Circular directory structure.\n\
@@ -849,6 +841,10 @@ The following two directories have the same inode number:\n"));
 	    }
 	  exit (1);
 	}
+
+      /* Put this directory in the active_dir_map.  */
+      if (! hash_insert (active_dir_map, new_ent))
+	error (1, 0, _("virtual memory exhausted"));
     }
 #endif
 
@@ -891,7 +887,7 @@ remove_init (void)
   obstack_init (&len_stack);
 
 #ifdef ENABLE_CYCLE_CHECK
-  active_dir_map = hash_initialize (ACTIVE_DIR_INITIAL_CAPACITY,
+  active_dir_map = hash_initialize (ACTIVE_DIR_INITIAL_CAPACITY, NULL,
 				    hash_active_dir_ent,
 				    hash_compare_active_dir_ents, free);
 #endif
