@@ -1,5 +1,5 @@
 /* Get the system load averages.
-   Copyright (C) 1985, 86, 87, 88, 89, 91, 92, 93, 1994, 1995
+   Copyright (C) 1985, 86, 87, 88, 89, 91, 92, 93, 1994, 1995, 1997
    	Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -51,7 +51,7 @@
    DGUX
    eunice			UNIX emulator under VMS.
    hpux
-   MSDOS			No-op for MSDOS.
+   __MSDOS__			No-op for MSDOS.
    NeXT
    sgi
    sequent			Sequent Dynix 3.x.x (BSD)
@@ -60,7 +60,7 @@
    UMAX
    UMAX4_3
    VMS
-   WIN32			No-op for Windows95/NT.
+   WINDOWS32			No-op for Windows95/NT.
    __linux__			Linux: assumes /proc filesystem mounted.
    				Support from Michael K. Johnson.
    __NetBSD__			NetBSD: assumes /kern filesystem mounted.
@@ -167,6 +167,9 @@ extern int errno;
 
 # if defined (__osf__) && (defined (__alpha) || defined (__alpha__))
 #  define OSF_ALPHA
+#  include <sys/mbuf.h>
+#  include <sys/socket.h>
+#  include <net/route.h>
 #  include <sys/table.h>
 # endif
 
@@ -444,6 +447,14 @@ extern int errno;
 
 # endif /* LOAD_AVE_TYPE */
 
+# if defined(__GNU__) && !defined (NeXT)
+/* Note that NeXT Openstep defines __GNU__ even though it should not.  */
+/* GNU system acts much like NeXT, for load average purposes,
+   but not exactly.  */
+#  define NeXT
+#  define host_self mach_host_self
+# endif
+
 # ifdef NeXT
 #  ifdef HAVE_MACH_MACH_H
 #   include <mach/mach.h>
@@ -543,7 +554,7 @@ getloadavg (loadavg, nelem)
   elem = -1;
 # endif
 
-# if !defined (LDAV_DONE) && defined (SUNOS_5)
+# if !defined (LDAV_DONE) && defined (HAVE_LIBKSTAT)
 /* Use libkstat because we don't have to be root.  */
 #  define LDAV_DONE
   kstat_ctl_t *kc;
@@ -588,7 +599,7 @@ getloadavg (loadavg, nelem)
     }
 
   kstat_close (kc);
-# endif /* SUNOS_5 */
+# endif /* HAVE_LIBKSTAT */
 
 # if !defined (LDAV_DONE) && defined (hpux) && defined (HAVE_PSTAT_GETDYNAMIC)
 /* Use pstat_getdynamic() because we don't have to be root.  */
@@ -826,7 +837,7 @@ getloadavg (loadavg, nelem)
        : (load_ave.tl_avenrun.l[0] / (double) load_ave.tl_lscale));
 # endif	/* OSF_MIPS */
 
-# if !defined (LDAV_DONE) && (defined (MSDOS) || defined (WIN32))
+# if !defined (LDAV_DONE) && (defined (__MSDOS__) || defined (WINDOWS32))
 #  define LDAV_DONE
 
   /* A faithful emulation is going to have to be saved for a rainy day.  */
@@ -834,7 +845,7 @@ getloadavg (loadavg, nelem)
     {
       loadavg[elem] = 0.0;
     }
-# endif  /* MSDOS */
+# endif  /* __MSDOS__ || WINDOWS32 */
 
 # if !defined (LDAV_DONE) && defined (OSF_ALPHA)
 #  define LDAV_DONE
