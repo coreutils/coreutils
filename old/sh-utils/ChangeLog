@@ -1,3 +1,7 @@
+1998-03-27  Jim Meyering  <meyering@eng.ascend.com>
+
+	* Makefile.am (AUTOMAKE_OPTIONS): Require 1.2h.
+
 1998-03-26  Jim Meyering  <meyering@eng.ascend.com>
 
 	* src/date.c (batch_convert): Remove spurious space in error message.
