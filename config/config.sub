@@ -3,7 +3,7 @@
 #   Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
 #   2000, 2001, 2002 Free Software Foundation, Inc.
 
-timestamp='2002-09-05'
+timestamp='2002-11-13'
 
 # This file is (in principle) common to ALL GNU software.
 # The presence of a machine in this file suggests that SOME GNU software
@@ -977,10 +977,6 @@ case $basic_machine in
 		basic_machine=hppa1.1-winbond
 		os=-proelf
 		;;
-	windows32)
-		basic_machine=i386-pc
-		os=-windows32-msvcrt
-		;;
 	xps | xps100)
 		basic_machine=xps100-honeywell
 		;;
@@ -1113,11 +1109,12 @@ case $os in
 	      | -chorusos* | -chorusrdb* \
 	      | -cygwin* | -pe* | -psos* | -moss* | -proelf* | -rtems* \
 	      | -mingw32* | -linux-gnu* | -uxpv* | -beos* | -mpeix* | -udk* \
-	      | -interix* | -uwin* | -rhapsody* | -darwin* | -opened* \
+	      | -interix* | -uwin* | -mks* | -rhapsody* | -darwin* | -opened* \
 	      | -openstep* | -oskit* | -conix* | -pw32* | -nonstopux* \
 	      | -storm-chaos* | -tops10* | -tenex* | -tops20* | -its* \
 	      | -os2* | -vos* | -palmos* | -uclinux* | -nucleus* \
-	      | -morphos* | -superux* | -rtmk* | -rtmk-nova* | -windiss* | -powermax*)
+	      | -morphos* | -superux* | -rtmk* | -rtmk-nova* | -windiss* \
+	      | -powermax* | -dnix*)
 	# Remember, each alternative MUST END IN *, to match a version number.
 		;;
 	-qnx*)

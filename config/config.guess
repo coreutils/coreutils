@@ -3,7 +3,7 @@
 #   Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
 #   2000, 2001, 2002 Free Software Foundation, Inc.
 
-timestamp='2002-10-21'
+timestamp='2002-11-13'
 
 # This file is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by
@@ -449,7 +449,7 @@ EOF
     Motorola:*:4.3:PL8-*)
 	echo powerpc-harris-powermax
 	exit 0 ;;
-    Night_Hawk:*:*:PowerMAX_OS)
+    Night_Hawk:*:*:PowerMAX_OS | Synergy:PowerMAX_OS:*:*)
 	echo powerpc-harris-powermax
 	exit 0 ;;
     Night_Hawk:Power_UNIX:*:*)
@@ -771,6 +771,9 @@ EOF
     x86:Interix*:3*)
 	echo i386-pc-interix3
 	exit 0 ;;
+    [345]86:Windows_95:* | [345]86:Windows_98:* | [345]86:Windows_NT:*)
+	echo i${UNAME_MACHINE}-pc-mks
+	exit 0 ;;
     i*:Windows_NT*:* | Pentium*:Windows_NT*:*)
 	# How do we know it's Interix rather than the generic POSIX subsystem?
 	# It also conflicts with pre-2.0 versions of AT&T UWIN. Should we
@@ -994,6 +997,9 @@ EOF
 	exit 0 ;;
     mc68k:UNIX:SYSTEM5:3.51m)
 	echo m68k-convergent-sysv
+	exit 0 ;;
+    M680?0:D-NIX:5.3:*)
+	echo m68k-diab-dnix
 	exit 0 ;;
     M68*:*:R3V[567]*:*)
 	test -r /sysV68 && echo 'm68k-motorola-sysv' && exit 0 ;;
