@@ -1,6 +1,11 @@
-2003-02-05  Jim Meyering  <jim@meyering.net>
+2003-02-06  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.6.
+
+	* src/du.c (process_file): Don't return early for excluded files
+	or for files whose dev/inode we've already seen.
+
+2003-02-05  Jim Meyering  <jim@meyering.net>
 
 	* tests/du/exclude: New file.
 	* tests/du/Makefile.am (TESTS): Add exclude.
