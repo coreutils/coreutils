@@ -1,5 +1,24 @@
 1998-01-10  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/system.h [HAVE_LIMITS_H]: Include limits.h
+	(TYPE_SIGNED): Define.
+	(TYPE_MINIMUM): Define.
+	(TYPE_MAXIMUM): Define.
+	(CHAR_BIT): Define.
+	(SCHAR_MAX): Define.
+	(UCHAR_MAX): Define.
+	(SHRT_MAX): Define.
+	(INT_MAX): Define.
+	(UINT_MAX): Define.
+	(LONG_MAX): Define.
+	(ULONG_MAX): Define.
+	* src/*.c: Remove definitions of those symbols.
+
+	* src/csplit.c: Move inclusion of regex.h/rx.h to follow system.h
+	since it now includes limit.h which defines RE_DUP_MAX.
+	* src/nl.c: Likewise.
+	* src/tac.c: Likewise.
+
 	* lib/xstrtol.c (bkm_scale): Renamed from BKM_SCALE.
 	Rewrite macro as function.  Return a value.  Update caller.
 	Cast __ZLONG_MAX `__unsigned long int' before casting to double to
