@@ -57,7 +57,7 @@ int argcasematch
    default, set to a function calling the macro ARGMATCH_EXIT_FAILURE
    which, by default is `exit (2)'.*/
 typedef void (*argmatch_exit_fn) PARAMS ((void));
-extern argmatch_exit_fn argmatch_exit_failure;
+extern argmatch_exit_fn argmatch_die;
 
 /* Report on stderr why argmatch failed.  Report correct values. */
 
@@ -97,13 +97,13 @@ int __xargmatch_internal
   (Vallist [__xargmatch_internal ((Context), (Arg), (Arglist),	\
                                   (const char *) (Vallist),	\
 				  sizeof (*(Vallist)),		\
-				  1, argmatch_exit_failure)])
+				  1, argmatch_die)])
 
 # define XARGCASEMATCH(Context, Arg, Arglist, Vallist)		\
   (Vallist [__xargmatch_internal ((Context), (Arg), (Arglist),	\
                                   (const char *) (Vallist),	\
 				  sizeof (*(Vallist)),		\
-				  0, argmatch_exit_failure)])
+				  0, argmatch_die)])
 
 /* Convert a value into a corresponding argument. */
 

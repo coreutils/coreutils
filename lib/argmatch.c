@@ -67,7 +67,7 @@ __argmatch_die (void)
   ARGMATCH_DIE;
 }
 
-argmatch_exit_fn argmatch_exit_failure = __argmatch_exit_failure;
+argmatch_exit_fn argmatch_die = __argmatch_die;
 
 /* If ARG is an unambiguous match for an element of the
    null-terminated array ARGLIST, return the index in ARGLIST
