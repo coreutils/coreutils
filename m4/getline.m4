@@ -14,7 +14,7 @@ AC_DEFUN(AM_FUNC_GETLINE,
   if test $am_getline_needs_run_time_check = yes; then
     AC_CHECK_HEADERS(string.h)
     AC_CACHE_CHECK([for working getline function], am_cv_func_working_getline,
-    [echo fooN |tr -d '\012'|tr N '\012' > conftestdata
+    [echo fooN |tr -d '\012'|tr N '\012' > conftest.data
     AC_TRY_RUN([
 #    include <stdio.h>
 #    include <sys/types.h>
@@ -26,7 +26,7 @@ AC_DEFUN(AM_FUNC_GETLINE,
       char *line = NULL;
       size_t siz = 0;
       int len;
-      FILE *in = fopen ("./conftestdata", "r");
+      FILE *in = fopen ("./conftest.data", "r");
       if (!in)
 	return 1;
       len = getline (&line, &siz, in);
