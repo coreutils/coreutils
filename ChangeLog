@@ -1,6 +1,11 @@
-2002-10-17  Jim Meyering  <meyering@lucent.com>
+2002-10-18  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.5.4.
+
+	* src/system.h (ST_BLKSIZE): Correct comment describing how to
+	reproduce HPUX-11 cat failure.  From Petter Reinholdtsen.
+
+2002-10-17  Jim Meyering  <meyering@lucent.com>
 
 	Fix a problem that could make e.g., `cat' misbehave on systems which
 	give invalid (unreasonably large) values for stat.st_blksize.
