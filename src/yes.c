@@ -25,6 +25,7 @@
 #include "error.h"
 #include "system.h"
 #include "long-options.h"
+#include "closeout.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "yes"
@@ -53,6 +54,7 @@ Repeatedly output a line with all specified STRING(s), or `y'.\n\
   --version   output version information and exit\n"));
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
     }
+  close_stdout ();
   exit (status);
 }
 
