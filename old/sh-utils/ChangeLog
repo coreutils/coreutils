@@ -1,3 +1,8 @@
+Wed Oct  9 00:26:55 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* checks/nice: Protect echoed args with leading `x' so echo doesn't
+	interpret leading -n on e.g. SunOS systems.
+
 Mon Oct  7 18:46:28 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/getloadavg.c [__hpux]: Define hpux. From Eric Backus.
