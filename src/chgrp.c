@@ -328,11 +328,15 @@ Usage: %s [OPTION]... GROUP FILE...\n\
 Change the group membership of each FILE to GROUP.\n\
 \n\
   -c, --changes          like verbose but report only when a change is made\n\
+      --dereference      affect the referent of each symbolic link, rather\n\
+                         than the symbolic link itself\n\
   -h, --no-dereference   affect symbolic links instead of any referenced file\n\
-                         (available only on systems with lchown system call)\n\
+                         (available only on systems that can change the\n\
+                         ownership of a symlink)\n\
   -f, --silent, --quiet  suppress most error messages\n\
-      --reference=RFILE  use RFILE's group instead of using a GROUP value\n\
-  -R, --recursive        change files and directories recursively\n\
+      --reference=RFILE  use RFILE's group rather than the specified\n\
+                         GROUP value\n\
+  -R, --recursive        operate on files and directories recursively\n\
   -v, --verbose          output a diagnostic for every file processed\n\
       --help             display this help and exit\n\
       --version          output version information and exit\n\
