@@ -17,9 +17,9 @@
 
 #include <config.h>
 #include <stdio.h>
+#include <assert.h>
 #include <sys/types.h>
-#include <signal.h>
-#include <sys/time.h>
+#include <time.h>
 #include <getopt.h>
 
 #include <math.h>
@@ -27,7 +27,10 @@
 # include <float.h>
 #else
 # define DBL_MAX 1.7976931348623159e+308
-# define DBL_MIN 2.2250738585072010e-308
+#endif
+
+#ifndef TIME_T_MAX
+# define TIME_T_MAX TYPE_MAXIMUM (time_t)
 #endif
 
 #include "system.h"
@@ -42,9 +45,6 @@
 
 /* The name by which this program was run. */
 char *program_name;
-
-/* This is set once we've received the SIGCONT signal.  */
-static int suspended;
 
 static struct option const long_options[] =
 {
@@ -73,26 +73,6 @@ h for hours or d for days.\n\
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
     }
   exit (status);
-}
-
-/* Handle SIGCONT. */
-
-static void
-sighandler (int sig)
-{
-#ifdef SA_INTERRUPT
-  struct sigaction sigact;
-
-  sigact.sa_handler = SIG_DFL;
-  sigemptyset (&sigact.sa_mask);
-  sigact.sa_flags = 0;
-  sigaction (sig, &sigact, NULL);
-#else
-  signal (sig, SIG_DFL);
-#endif
-
-  suspended = 1;
-  kill (getpid (), sig);
 }
 
 /* FIXME: describe */
@@ -129,39 +109,6 @@ apply_suffix (double *s, char suffix_char)
   return 0;
 }
 
-/* Subtract the `struct timeval' values X and Y,
-   storing the result in RESULT.
-   Return 1 if the difference is negative, otherwise 0.
-   From the GNU libc manual.  */
-
-static int
-timeval_subtract (struct timeval *result,
-		  const struct timeval *x, struct timeval *y)
-{
-  /* Perform the carry for the later subtraction by updating Y. */
-  if (x->tv_usec < y->tv_usec)
-    {
-      int nsec = (y->tv_usec - x->tv_usec) / 1000000 + 1;
-      y->tv_usec -= 1000000 * nsec;
-      y->tv_sec += nsec;
-    }
-
-  if (x->tv_usec - y->tv_usec > 1000000)
-    {
-      int nsec = (y->tv_usec - x->tv_usec) / 1000000;
-      y->tv_usec += 1000000 * nsec;
-      y->tv_sec -= nsec;
-    }
-
-  /* Compute the time remaining to wait.
-     `tv_usec' is certainly positive. */
-  result->tv_sec = x->tv_sec - y->tv_sec;
-  result->tv_usec = x->tv_usec - y->tv_usec;
-
-  /* Return 1 if result is negative. */
-  return x->tv_sec < y->tv_sec;
-}
-
 int
 main (int argc, char **argv)
 {
@@ -169,17 +116,8 @@ main (int argc, char **argv)
   double seconds = 0.0;
   int c;
   int fail = 0;
-  struct timeval tv_start;
-  struct timeval tv_stop;
-  int i_sec;
-  int i_usec;
-#ifdef SA_INTERRUPT
-  struct sigaction oldact, newact;
-#endif
-
-  /* Record start time.  */
-  /* FIXME: this is not portable.  write replacement based on times? */
-  gettimeofday (&tv_start, NULL);
+  int interrupted;
+  struct timespec ts;
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -214,62 +152,33 @@ main (int argc, char **argv)
       if (xstrtod (argv[i], &p, &s)
 	  /* No negative intervals.  */
 	  || s < 0
-	  /* No extra chars after number and optional s,m,h,d char. */
+	  /* No extra chars after the number and an optional s,m,h,d char. */
 	  || (*p && *(p+1))
-	  /* Update S based on suffix char. */
-	  || apply_suffix (&s, *p))
+	  /* Update S based on suffix char.  */
+	  || apply_suffix (&s, *p)
+	  /* Make sure the sum fits in a time_t.  */
+	  || (seconds += s) > TIME_T_MAX
+	  )
 	{
 	  error (0, 0, _("invalid time interval `%s'"), argv[i]);
 	  fail = 1;
-	  continue;
 	}
-
-      /* FIXME-maybe: This could overflow.  */
-      seconds += s;
     }
-
 
   if (fail)
     usage (1);
 
-#ifdef SA_INTERRUPT
-  newact.sa_handler = sighandler;
-  sigemptyset (&newact.sa_mask);
-  newact.sa_flags = 0;
-
-  sigaction (SIGCONT, NULL, &oldact);
-  if (oldact.sa_handler != SIG_IGN)
-    sigaction (SIGCONT, &newact, NULL);
-#else
-  if (signal (SIGCONT, SIG_IGN) != SIG_IGN)
-    signal (SIGCONT, sighandler);
-#endif
-
-  i_sec = floor (seconds);
-  sleep (i_sec);
-  i_usec = (int) ((seconds - i_sec) * 1000000);
-  /* FIXME: not portable: write replacement based on select.  */
-  usleep (i_usec);
-
-  if (!suspended)
-    exit (0);
-
-  tv_stop.tv_sec = tv_start.tv_sec + i_sec;
-  tv_stop.tv_usec = tv_start.tv_usec + i_usec;
-
-  /* FIXME: use nanosleep!!! then move signal handling into the replacement.  */
+  ts.tv_sec = seconds;
+  ts.tv_nsec = (int) ((seconds - ts.tv_sec) * 1000000000 + .5);
 
   while (1)
     {
-      struct timeval diff;
-      struct timeval tv_now;
-      int negative;
-      gettimeofday (&tv_now, NULL);
-      negative = timeval_subtract (&diff, &tv_stop, &tv_now);
-      if (negative)
+      struct timespec remaining;
+      interrupted = nanosleep (&ts, &remaining);
+      assert (!interrupted || errno == EINTR);
+      if (!interrupted)
 	break;
-      sleep (diff.tv_sec);
-      usleep (diff.tv_usec);
+      ts = remaining;
     }
 
   exit (0);
