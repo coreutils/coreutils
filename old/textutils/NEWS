@@ -1,5 +1,12 @@
 Changes in release 1.23
 [1.22n]
+* tail accepts the following new options (some of which were added in 1.22g):
+  --retry
+  --follow[={name|descriptor}]
+  --max-unchanged-stats=N
+  --max-consecutive-size-changes=N
+  --sleep-interval=S
+* wc uses the POSIX-mandated output format when POSIXLY_CORRECT is set
 * To maintain compatibility with sort, comm and join now obey the LC_COLLATE
   locale, and comm now considers newlines to be part of the lines.
 * use lib/memchr.c only if it's not provided by the system -- this means
@@ -40,7 +47,7 @@ Changes in release 1.23
 * uniq accepts new option: --all-repeated (-D).
 * Windows/DOS portability fixes
 * new program: tsort
-* tail has several new options: FIXME
+* tail has several new options
 * md5sum can handle file names with embedded backslash characters
 * pr accepts long option names (see `pr --help')
 * new program: ptx (moved to this package from being its own distribution)
