@@ -774,10 +774,11 @@ passname (unsigned char const *data, char name[PASS_NAME_SIZE])
 }
 
 /* Request that all data for FD be transferred to the corresponding
-   storage device.  QNAME is the file name (quoted for colons), and
-   *ST its status.  Report any errors found.  Return 0 on success, -1
+   storage device.  QNAME is the file name (quoted for colons).
+   Report any errors found.  Return 0 on success, -1
    (setting errno) on failure.  It is not an error if fdatasync and/or
-   fsync is not supported for this file.  */
+   fsync is not supported for this file, or if the file is not a
+   writable file descriptor.  */
 static int
 dosync (int fd, char const *qname)
 {
@@ -787,7 +788,7 @@ dosync (int fd, char const *qname)
   if (fdatasync (fd) == 0)
     return 0;
   err = errno;
-  if (err != EINVAL)
+  if (err != EINVAL && err != EBADF)
     {
       error (0, err, _("%s: fdatasync failed"), qname);
       errno = err;
@@ -798,7 +799,7 @@ dosync (int fd, char const *qname)
   if (fsync (fd) == 0)
     return 0;
   err = errno;
-  if (err != EINVAL)
+  if (err != EINVAL && err != EBADF)
     {
       error (0, err, _("%s: fsync failed"), qname);
       errno = err;
@@ -1399,8 +1400,8 @@ incname (char *name, size_t len)
  * is ANSI-standard.
  *
  * To force the directory data out, we try to open the directory and
- * invoke fdatasync on it.  This is rather non-standard, so we don't
- * insist that it works, just fall back to a global sync in that case.
+ * invoke fdatasync and/or fsync on it.  This is non-standard, so don't
+ * insist that it works: just fall back to a global sync in that case.
  * This is fairly significantly Unix-specific.  Of course, on any
  * filesystem with synchronous metadata updates, this is unnecessary.
  */
