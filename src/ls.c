@@ -548,8 +548,11 @@ static size_t dired_pos;
 /* With --dired, store pairs of beginning and ending indices of filenames.  */
 static struct obstack dired_obstack;
 
-/* With --dired and --recursive, store pairs of beginning and ending
-   indices of directory names.  */
+/* With --dired, store pairs of beginning and ending indices of any
+   directory names that appear as headers (just before `total' line)
+   for lists of directory entries.  Such directory names are seen when
+   listing hierarchies using -R and when a directory is listed with at
+   least one other command line argument.  */
 static struct obstack subdired_obstack;
 
 /* Save the current index on the specified obstack, OBS.  */
@@ -586,15 +589,20 @@ dired_dump_obstack (prefix, os)
      const char *prefix;
      struct obstack *os;
 {
-  int i, n_pos;
-  size_t *pos;
+  int n_pos;
 
-  fputs (prefix, stdout);
   n_pos = obstack_object_size (os) / sizeof (size_t);
-  pos = (size_t *) obstack_finish (os);
-  for (i = 0; i < n_pos; i++)
-    printf (" %d", (int) pos[i]);
-  fputs ("\n", stdout);
+  if (n_pos > 0)
+    {
+      int i;
+      size_t *pos;
+
+      pos = (size_t *) obstack_finish (os);
+      fputs (prefix, stdout);
+      for (i = 0; i < n_pos; i++)
+	printf (" %d", (int) pos[i]);
+      fputs ("\n", stdout);
+    }
 }
 
 void
@@ -631,8 +639,7 @@ main (argc, argv)
   if (dired && format == long_format)
     {
       obstack_init (&dired_obstack);
-      if (trace_dirs)
-	obstack_init (&subdired_obstack);
+      obstack_init (&subdired_obstack);
     }
 
   nfiles = 100;
@@ -686,8 +693,7 @@ main (argc, argv)
     {
       /* No need to free these since we're about to exit.  */
       dired_dump_obstack ("//DIRED//", &dired_obstack);
-      if (trace_dirs)
-	dired_dump_obstack ("//SUBDIRED//", &subdired_obstack);
+      dired_dump_obstack ("//SUBDIRED//", &subdired_obstack);
     }
 
   exit (exit_status);
