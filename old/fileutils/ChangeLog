@@ -5,7 +5,11 @@
 	* tests/rm/Makefile.am (TESTS): Add new test `empty-name',
 	but comment it out.
 	* tests/rm/empty-name: New file.
+
 	* acconfig.h (stat): New #undef.
+	This omission was uncovered when Mark Kettenis reported that
+	`rm -r ''' got a failed assertion on the Hurd.  This change
+	doesn't fix *that* problem.
 
 1998-10-25  Jim Meyering  <meyering@ascend.com>
 
