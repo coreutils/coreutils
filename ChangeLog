@@ -2,9 +2,12 @@
 
 	* Version 5.0.91.
 
+	* tests/misc/Makefile.am (TESTS): Add stat-fmt.
+
 	* src/stat.c (print_it): Avoid buffer overrun that would
 	occur when the user-specified format string ends with `%'.
 	Patch by Tommi Kyntola.
+	* tests/misc/stat-fmt: New file.  Test for above-fixed bug.
 
 2003-08-26  Jim Meyering  <jim@meyering.net>
 
