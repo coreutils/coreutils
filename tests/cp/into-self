@@ -35,7 +35,7 @@ fail=0
 cp -R dir dir 2> out && fail=1
 
 cat > exp <<\EOF
-cp: cannot copy a directory `dir' into itself `dir/dir'
+cp: cannot copy a directory, `dir', into itself, `dir/dir'
 EOF
 #'
 
