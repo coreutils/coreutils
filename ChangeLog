@@ -1,6 +1,10 @@
-2003-10-05  Jim Meyering  <jim@meyering.net>
+2003-10-07  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.92.
+
+	* Use automake-1.7.8.  Regenerate dependent files.
+
+2003-10-05  Jim Meyering  <jim@meyering.net>
 
 	* src/chown-core.c (change_file_owner): Remove set-but-not-used local.
 
