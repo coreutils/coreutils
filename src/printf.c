@@ -576,7 +576,7 @@ main (int argc, char **argv)
       ++argv;
     }
 
-  if (argc == 1)
+  if (argc <= 1)
     {
       fprintf (stderr, _("Usage: %s format [argument...]\n"), program_name);
       exit (EXIT_FAILURE);
