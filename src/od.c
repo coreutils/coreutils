@@ -421,6 +421,7 @@ my_strtoul (s, base, val, allow_bkm_suffix)
 
   assert (0 <= base && base <= 36);
 
+  errno = 0;
   tmp = strtoul (s, &p, base);
   if (errno != 0)
     return UINT_OVERFLOW;
