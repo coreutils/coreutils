@@ -2,6 +2,9 @@
 
 	* getloadavg.m4: Use [\t ], not [ \t] (where \t is a literal TAB).
 	* lib-ld.m4: Likewise.
+	* po.m4: Likewise.
+
+	* nls.m4, po.m4: New files, from gnulib.
 
 2003-08-16  Paul Eggert  <eggert@twinsun.com>
 
