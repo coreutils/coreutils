@@ -9,6 +9,26 @@ Mon Mar 29 21:27:56 1993  Jim Meyering  (meyering@comco.com)
 	* cut.c, expand.c, join.c, nl.c: Always call error with errno
 	(not zero) after failed fclose or non-zero ferror.
 
+Sun Mar 28 16:59:31 1993  Mike Haertel  (mike@cs.uoregon.edu)
+
+	* configure.in: Add check for working memcmp; use GNU's if
+	the system's doesn't grok the 8th bit.
+	* memcmp.c: Fix it so it groks the 8th bit.
+	TODO: We really need to provide a fast memcmp, since most
+	machines will have a broken memcmp.  Probably should get
+	the one from glibc.
+	* sort.c (mergefps): Maintain keybeg and keylim when copying
+	the current line to `saved'.
+	(numcompare): Skip white space here since -n no longer implies -b.
+	(getmonth): Skip white space here since -M no longer implies -b.
+	(compare): Completely overhauled to make the 8th bit work right,
+	also to properly handle the global reverse option.
+	(set_ordering): -n no longer implies -b, according to Posix.
+	For consistency, -M also no longer implies -b.
+	(main): Correct treatment of -r and global keys.
+	(findlines): Clear keybeg and keylim if no keys are used.
+	(sort): Avoid overwriting tempfiles[] array bounds.
+
 Sun Mar 21 22:29:29 1993  Jim Meyering  (meyering@comco.com)
 
 	* pr.c (close_file): Reverse May 13, '92 change, but add the condition

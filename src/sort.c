@@ -554,6 +554,11 @@ findlines (buf, lines)
 	      lines->lines[lines->used].keybeg = beg;
 	    }
 	}
+      else
+	{
+	  lines->lines[lines->used].keybeg = 0;
+	  lines->lines[lines->used].keylim = 0;
+	}
 
       ++lines->used;
       beg = ptr + 1;
@@ -629,6 +634,11 @@ numcompare (a, b)
   register int tmpa, tmpb, loga, logb, tmp;
 
   tmpa = UCHAR (*a), tmpb = UCHAR (*b);
+
+  while (blanks[tmpa])
+    tmpa = UCHAR (*++a);
+  while (blanks[tmpb])
+    tmpb = UCHAR (*++b);
 
   if (tmpa == '-')
     {
@@ -723,6 +733,9 @@ getmonth (s, len)
 {
   char month[4];
   register int i, lo = 0, hi = 12;
+
+  while (len > 0 && blanks[UCHAR(*s)])
+    ++s, --len;
 
   if (len < 3)
     return 0;
@@ -877,36 +890,34 @@ compare (a, b)
 {
   int diff, tmpa, tmpb, mini;
 
+  /* First try to compare on the specified keys (if any).
+     The only two cases with no key at all are unadorned sort,
+     and unadorned sort -r. */
   if (keyhead.next)
     {
       diff = keycompare (a, b);
-      if (diff)
+      if (diff != 0)
 	return diff;
-      if (!unique && !stable)
-	{
-	  tmpa = a->length, tmpb = b->length;
-	  diff = memcmp (a->text, b->text, min (tmpa, tmpb));
-	  if (!diff)
-	    diff = tmpa - tmpb;
-	}
+      if (unique || stable)
+	return 0;
     }
+
+  /* If the keys all compare equal (or no keys were specified)
+     fall through to the default byte-by-byte comparison. */
+  tmpa = a->length, tmpb = b->length;
+  mini = min (tmpa, tmpb);
+  if (mini == 0)
+    diff = tmpa - tmpb;
   else
     {
-      tmpa = a->length, tmpb = b->length;
-      mini = min (tmpa, tmpb);
-      if (mini == 0)
-	diff = tmpa - tmpb;
-      else
-	{
-	  char *ap = a->text, *bp = b->text;
+      char *ap = a->text, *bp = b->text;
 
-	  diff = *ap - *bp;
+      diff = UCHAR (*ap) - UCHAR (*bp);
+      if (diff == 0)
+	{
+	  diff = memcmp (ap, bp, mini);
 	  if (diff == 0)
-	    {
-	      diff = memcmp (ap, bp, mini);
-	      if (diff == 0)
-		diff = tmpa - tmpb;
-	    }
+	    diff = tmpa - tmpb;
 	}
     }
 
@@ -1069,6 +1080,18 @@ mergefps (fps, nfps, ofp)
 	      saved.length = lines[ord[0]].lines[cur[ord[0]]].length;
 	      bcopy (lines[ord[0]].lines[cur[ord[0]]].text, saved.text,
 		     saved.length + 1);
+	      if (lines[ord[0]].lines[cur[ord[0]]].keybeg != NULL)
+		{
+		  saved.keybeg = saved.text +
+		    (lines[ord[0]].lines[cur[ord[0]]].keybeg
+		     - lines[ord[0]].lines[cur[ord[0]]].text);
+		}
+	      if (lines[ord[0]].lines[cur[ord[0]]].keylim != NULL)
+		{
+		  saved.keylim = saved.text +
+		    (lines[ord[0]].lines[cur[ord[0]]].keylim
+		     - lines[ord[0]].lines[cur[ord[0]]].text);
+		}
 	      savedflag = 1;
 	    }
 	}
@@ -1308,7 +1331,7 @@ sort (files, nfiles, ofp)
     {
       tempfiles = (char **) xmalloc (ntemp * sizeof (char *));
       i = ntemp;
-      for (node = temphead.next; node; node = node->next)
+      for (node = temphead.next; i > 0; node = node->next)
 	tempfiles[--i] = node->name;
       merge (tempfiles, ntemp, ofp);
       free ((char *) tempfiles);
@@ -1392,10 +1415,10 @@ set_ordering (s, key, blanktype)
 	  key->ignore = nonprinting;
 	  break;
 	case 'M':
-	  key->skipsblanks = key->skipeblanks = key->month = 1;
+	  key->month = 1;
 	  break;
 	case 'n':
-	  key->skipsblanks = key->skipeblanks = key->numeric = 1;
+	  key->numeric = 1;
 	  break;
 	case 'r':
 	  key->reverse = 1;
@@ -1673,9 +1696,9 @@ main (argc, argv)
       }
 
   if (!keyhead.next && (gkey.ignore || gkey.translate || gkey.skipsblanks
-			|| gkey.reverse || gkey.skipeblanks
-			|| gkey.month || gkey.numeric))
+			|| gkey.skipeblanks || gkey.month || gkey.numeric))
     insertkey (&gkey);
+  reverse = gkey.reverse;
 
   if (nfiles == 0)
     {
