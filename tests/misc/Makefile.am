@@ -10,6 +10,7 @@ TESTS_ENVIRONMENT = \
   PROG=$$tst
 
 TESTS = \
+  stat-fmt \
   fold \
   nohup \
   readlink \
