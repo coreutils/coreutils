@@ -98,6 +98,8 @@ url_dir_list = $(foreach x,a b,ftp://$($(x)_host)/$($(x)_url_dir))
 
 md5 = $(shell md5sum < $(my_distdir).tar.gz|sed 's/  -//')
 sha1 = $(shell sha1sum < $(my_distdir).tar.gz|sed 's/  -//')
+tgz-size = $(shell du --human $(my_distdir).tar.gz|sed 's/M.*/MB/')
+xd-size = $(shell du --human $(xd-delta)|sed 's/M.*/MB/')
 
 rel-check:
 	tarz=/tmp/rel-check-tarz-$$$$; \
@@ -119,13 +121,13 @@ announcement: NEWS ChangeLog $(distdir).tar.gz
 	  echo FIXME: put comments here; \
 	  echo; \
 	  for url in $(url_dir_list); do \
-	    echo "  $$url/$(my_distdir).tar.gz"; \
+	    echo "  $$url/$(my_distdir).tar.gz   ($(tgz-size))"; \
 	  done; \
 	  echo; \
 	  echo And here are xdelta-style diffs; \
 	  echo; \
 	  for url in $(url_dir_list); do \
-	    echo "  $$url/$(xd-delta)"; \
+	    echo "  $$url/$(xd-delta)   ($(xd-size))"; \
 	  done; \
 	  echo; \
 	  echo "Here are the MD5 and SHA1 signatures for the .tar.gz file"; \
