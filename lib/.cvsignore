@@ -11,3 +11,4 @@ safe-lstat.h
 safe-stat.c
 safe-stat.h
 stat.c
+unlocked-io.h
