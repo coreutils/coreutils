@@ -1,6 +1,13 @@
-2005-03-26  Paul Eggert  <eggert@cs.ucla.edu>
+2005-03-27  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/dcgen: Simplify further, clean up.
+	Add a standard-output-closing global destructor.
+	Require perl-5.002.
+	* src/wheel-gen.pl: Use the same global destructor as dcgen.
+
+2005-03-26  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/dcgen: Squeeze multiple blanks into one.  Output a simple
 	array of adjacent strings rather than a more complicated data
