@@ -168,9 +168,9 @@ am__DEPENDENCIES_2 = @ALLOCA@
 am_libfetish_a_OBJECTS = acl.$(OBJEXT) getdate.$(OBJEXT) \
 	posixtm.$(OBJEXT) posixver.$(OBJEXT) strftime.$(OBJEXT) \
 	getopt.$(OBJEXT) getopt1.$(OBJEXT) hash.$(OBJEXT) \
-	hash-pjw.$(OBJEXT) addext.$(OBJEXT) allocsa.$(OBJEXT) \
-	argmatch.$(OBJEXT) backupfile.$(OBJEXT) basename.$(OBJEXT) \
-	c-strtod.$(OBJEXT) c-strtold.$(OBJEXT) canon-host.$(OBJEXT) \
+	hash-pjw.$(OBJEXT) allocsa.$(OBJEXT) argmatch.$(OBJEXT) \
+	backupfile.$(OBJEXT) basename.$(OBJEXT) c-strtod.$(OBJEXT) \
+	c-strtold.$(OBJEXT) canon-host.$(OBJEXT) \
 	canonicalize.$(OBJEXT) cloexec.$(OBJEXT) closeout.$(OBJEXT) \
 	cycle-check.$(OBJEXT) diacrit.$(OBJEXT) dirname.$(OBJEXT) \
 	dup-safer.$(OBJEXT) exclude.$(OBJEXT) exitfail.$(OBJEXT) \
@@ -239,11 +239,10 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	$(DEPDIR)/strtoumax.Po $(DEPDIR)/strverscmp.Po \
 @AMDEP_TRUE@	$(DEPDIR)/tempname.Po $(DEPDIR)/utime.Po \
 @AMDEP_TRUE@	$(DEPDIR)/vasnprintf.Po $(DEPDIR)/vasprintf.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/acl.Po ./$(DEPDIR)/addext.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/allocsa.Po ./$(DEPDIR)/argmatch.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/backupfile.Po ./$(DEPDIR)/basename.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/c-strtod.Po ./$(DEPDIR)/c-strtold.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/canon-host.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/acl.Po ./$(DEPDIR)/allocsa.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/argmatch.Po ./$(DEPDIR)/backupfile.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/basename.Po ./$(DEPDIR)/c-strtod.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/c-strtold.Po ./$(DEPDIR)/canon-host.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/canonicalize.Po ./$(DEPDIR)/cloexec.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/closeout.Po ./$(DEPDIR)/cycle-check.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/diacrit.Po ./$(DEPDIR)/dirname.Po \
@@ -426,7 +425,6 @@ libfetish_a_SOURCES = \
   hash.c hash.h \
   hash-pjw.c hash-pjw.h \
   __fpending.h \
-  addext.c \
   allocsa.c allocsa.h \
   argmatch.c argmatch.h \
   backupfile.c backupfile.h \
@@ -674,7 +672,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/vasnprintf.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/vasprintf.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/acl.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/addext.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/allocsa.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/argmatch.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/backupfile.Po@am__quote@
