@@ -50,6 +50,10 @@ my @tv = (
 ['53', '-s 1 -f 1',"a aaa\nb aaa\n",     "a aaa\n",             0],
 # Fixed in 2.0.15
 ['54', '-s 4',     "abc\nabcd\n",        "abc\n",               0],
+# Supported in 2.0.15
+['55', '-s 0',     "abc\nabcd\n",        "abc\nabcd\n",         0],
+['56', '-s 0',     "abc\n",              "abc\n",               0],
+['57', '-w 0',     "abc\nabcd\n",        "abc\n",               0],
 # Only account for a number of characters
 ['60', '-w 1',"a a\nb a\n",      "a a\nb a\n",         0],
 ['61', '-w 3',"a a\nb a\n",      "a a\nb a\n",         0],
