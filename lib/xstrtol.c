@@ -199,6 +199,7 @@ __xstrtol (const char *s, char **ptr, int strtol_base,
 	  break;
 
 	case 'G': /* Giga */
+	case 'g': /* 'g' is undocumented; for compatibility only */
 	  overflow = bkm_scale_by_power (&tmp, base, 3);
 	  break;
 
@@ -207,7 +208,7 @@ __xstrtol (const char *s, char **ptr, int strtol_base,
 	  break;
 
 	case 'M': /* Mega */
-	case 'm': /* 'm' is undocumented; for backward compatibility only */
+	case 'm': /* 'm' is undocumented; for compatibility only */
 	  overflow = bkm_scale_by_power (&tmp, base, 2);
 	  break;
 
@@ -216,6 +217,7 @@ __xstrtol (const char *s, char **ptr, int strtol_base,
 	  break;
 
 	case 'T': /* Tera */
+	case 't': /* 't' is undocumented; for compatibility only */
 	  overflow = bkm_scale_by_power (&tmp, base, 4);
 	  break;
 
