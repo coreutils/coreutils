@@ -1017,12 +1017,12 @@ copy_with_unblock (char const *buf, size_t nread)
    in FLAGS.  The file's name is NAME.  */
 
 static void
-set_fd_flags (int fd, int flags, char const *name)
+set_fd_flags (int fd, int add_flags, char const *name)
 {
-  if (flags)
+  if (add_flags)
     {
       int old_flags = fcntl (fd, F_GETFL);
-      int new_flags = old_flags | flags;
+      int new_flags = old_flags < 0 ? add_flags : (old_flags | add_flags);
       if (old_flags < 0
 	  || (new_flags != old_flags && fcntl (fd, F_SETFL, new_flags) == -1))
 	error (EXIT_FAILURE, errno, _("setting flags for %s"), quote (name));
