@@ -5,7 +5,7 @@
 1999-04-22  Jim Meyering  <meyering@ascend.com>
 
 	* src/shred.c (word32): Don't use `#error'; it runs afoul of
-	SunOS 4.1.4 cc.
+	SunOS 4.1.4 cc.  From Paul Eggert.
 
 	* lib/strtoull.c: Guard strong_alias and weak_alias with #ifdef _LIBC.
 
