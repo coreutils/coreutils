@@ -3,6 +3,7 @@
 	* Version 4.5.5.
 
 	* tests/du/no-x: New test, for functionality added to lib/ftw.c.
+	* tests/du/Makefile.am (TESTS): Add no-x.
 
 2003-01-21  Jim Meyering  <jim@meyering.net>
 
