@@ -55,7 +55,6 @@ char *parse_user_spec ();
 void strip_trailing_slashes ();
 char *xmalloc ();
 char *xrealloc ();
-int isnumber ();
 
 static int change_file_owner ();
 static int change_dir_owner ();
