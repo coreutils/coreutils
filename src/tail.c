@@ -1310,7 +1310,7 @@ parse_obsolescent_option (int argc, const char *const *argv,
 
 	  error (0, 0,
 		 _("%s: %s is so large that it is not representable"),
-		 n_string_tmp, (count_lines
+		 n_string_tmp, (t_count_lines
 				? _("number of lines")
 				: _("number of bytes")));
 	  free (n_string_tmp);
