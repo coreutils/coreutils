@@ -1,6 +1,11 @@
-2005-03-01  Jim Meyering  <jim@meyering.net>
+2005-03-01  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	* src/Makefile.am (nanosec_libs): Remove $(LIB_XANOSLEEP); no
+	longer needed.
+
+2005-03-01  Jim Meyering  <jim@meyering.net>
 
 	* src/copy.c (copy_internal): Change test of source type from
 	!S_ISREG to S_ISLNK.  Reported by Paul Eggert in
