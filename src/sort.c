@@ -59,6 +59,55 @@ void free ();
 /* The kind of blanks for '-b' to skip in various options. */
 enum blanktype { bl_start, bl_end, bl_both };
 
+/* Lines are held in core as counted strings. */
+struct line
+{
+  char *text;			/* Text of the line. */
+  int length;			/* Length not including final newline. */
+  char *keybeg;			/* Start of first key. */
+  char *keylim;			/* Limit of first key. */
+};
+
+/* Arrays of lines. */
+struct lines
+{
+  struct line *lines;		/* Dynamically allocated array of lines. */
+  int used;			/* Number of slots used. */
+  int alloc;			/* Number of slots allocated. */
+  int limit;			/* Max number of slots to allocate.  */
+};
+
+/* Input buffers. */
+struct buffer
+{
+  char *buf;			/* Dynamically allocated buffer. */
+  int used;			/* Number of bytes used. */
+  int alloc;			/* Number of bytes allocated. */
+  int left;			/* Number of bytes left after line parsing. */
+};
+
+struct keyfield
+{
+  int sword;			/* Zero-origin 'word' to start at. */
+  int schar;			/* Additional characters to skip. */
+  int skipsblanks;		/* Skip leading white space at start. */
+  int eword;			/* Zero-origin first word after field. */
+  int echar;			/* Additional characters in field. */
+  int skipeblanks;		/* Skip trailing white space at finish. */
+  int *ignore;			/* Boolean array of characters to ignore. */
+  char *translate;		/* Translation applied to characters. */
+  int numeric;			/* Flag for numeric comparison. */
+  int month;			/* Flag for comparison by month name. */
+  int reverse;			/* Reverse the sense of comparison. */
+  struct keyfield *next;	/* Next keyfield to try. */
+};
+
+struct month
+{
+  char *name;
+  int val;
+};
+
 /* The name this program was run with. */
 char *program_name;
 
@@ -79,11 +128,7 @@ static char fold_toupper[UCHAR_LIM];
 
 /* Table mapping 3-letter month names to integers.
    Alphabetic order allows binary search. */
-static struct month
-{
-  char *name;
-  int val;
-} const monthtab[] =
+static struct month const monthtab[] =
 {
   {"APR", 4},
   {"AUG", 8},
@@ -139,49 +184,8 @@ static int unique;
 /* Nonzero if any of the input files are the standard input. */
 static int have_read_stdin;
 
-/* Lines are held in core as counted strings. */
-struct line
-{
-  char *text;			/* Text of the line. */
-  int length;			/* Length not including final newline. */
-  char *keybeg;			/* Start of first key. */
-  char *keylim;			/* Limit of first key. */
-};
-
-/* Arrays of lines. */
-struct lines
-{
-  struct line *lines;		/* Dynamically allocated array of lines. */
-  int used;			/* Number of slots used. */
-  int alloc;			/* Number of slots allocated. */
-  int limit;			/* Max number of slots to allocate.  */
-};
-
-/* Input buffers. */
-struct buffer
-{
-  char *buf;			/* Dynamically allocated buffer. */
-  int used;			/* Number of bytes used. */
-  int alloc;			/* Number of bytes allocated. */
-  int left;			/* Number of bytes left after line parsing. */
-};
-
 /* Lists of key field comparisons to be tried. */
-static struct keyfield
-{
-  int sword;			/* Zero-origin 'word' to start at. */
-  int schar;			/* Additional characters to skip. */
-  int skipsblanks;		/* Skip leading white space at start. */
-  int eword;			/* Zero-origin first word after field. */
-  int echar;			/* Additional characters in field. */
-  int skipeblanks;		/* Skip trailing white space at finish. */
-  int *ignore;			/* Boolean array of characters to ignore. */
-  char *translate;		/* Translation applied to characters. */
-  int numeric;			/* Flag for numeric comparison. */
-  int month;			/* Flag for comparison by month name. */
-  int reverse;			/* Reverse the sense of comparison. */
-  struct keyfield *next;	/* Next keyfield to try. */
-} keyhead;
+static struct keyfield keyhead;
 
 static void
 usage (int status)
