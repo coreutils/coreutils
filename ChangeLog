@@ -1,6 +1,16 @@
-2004-11-25  Jim Meyering  <jim@meyering.net>
+2004-11-25  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	Fix problem reported by Scott S. Tinsley for HP-UX 11.11 using
+	HP's ANSI C compiler.  Declaring int functions causes warnings on
+	some modern systems and shouldn't be needed to compile on ancient
+	ones.
+	* src/copy.h (stat, lstat, rename): Remove decls.
+	* src/install.c (stat): Remove decl.
+	* src/ln.c (link, symlink): Remove decls.
+
+2004-11-25  Jim Meyering  <jim@meyering.net>
 
 	* man/help2man: Import help2man-1.35.1.
 	* man/Makefile.am (.x.1): Remove now-unnecessary use of
