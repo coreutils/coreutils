@@ -667,7 +667,7 @@ cp_option_init (struct cp_options *x)
   x->unlink_dest_after_failed_open = 0;
   x->failed_unlink_is_fatal = 1;
   x->hard_link = 0;
-  x->interactive = 0;
+  x->interactive = I_UNSPECIFIED;
   x->myeuid = geteuid ();
   x->move_mode = 0;
   x->one_file_system = 0;
@@ -682,6 +682,9 @@ cp_option_init (struct cp_options *x)
   x->symbolic_link = 0;
   x->set_mode = 0;
   x->mode = 0;
+
+  /* Not used.  */
+  x->stdin_tty = 0;
 
   /* Find out the current file creation mask, to knock the right bits
      when using chmod.  The creation mask is set to be liberal, so
@@ -766,7 +769,7 @@ main (int argc, char **argv)
 	  break;
 
 	case 'i':
-	  x.interactive = 1;
+	  x.interactive = I_ON;
 	  break;
 
 	case 'l':
