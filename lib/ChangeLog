@@ -1,3 +1,7 @@
+2001-01-30  Bruno Haible  <haible@clisp.cons.org>
+
+	* config.charset: Update for FreeBSD 4.2.
+
 2001-01-26  Jim Meyering  <meyering@lucent.com>
 
 	* quotearg.c: Include stddef.h.
