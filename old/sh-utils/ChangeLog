@@ -1,3 +1,20 @@
+1998-10-03  Jim Meyering  <meyering@ascend.com>
+
+	* src/Makefile.am (install-exec-local): Change comments to use `##'
+	to avoid automake warning.
+
+	* lib/Makefile.am (noinst_HEADERS): s/posixtm.c/posixtm.h/
+	(libsu_a_SOURCES): s/posixtm.y/posixtm.y/
+	(libsu_a_SOURCES): Remove getdate.c.  Add fnmatch.h.
+
+	* src/date.c (main): Update to use new version of posixtime.
+	* lib/posixtm.c: New file.
+	* lib/posixtm.h: New file.
+	* lib/posixtm.y: Remove file.
+
+	* lib/fnmatch.c: New file. (unused)
+	* lib/fnmatch.h: New file. (unused)
+
 1998-09-27  Jim Meyering  <meyering@ascend.com>
 
 	* src/seq.c (main): Decrement optind when we find an `option' that
