@@ -5,6 +5,7 @@
 	(io_functions): Define.
 	(unlocked-io.h): New rule.
 	(DISTCLEANFILES): Add unlocked-io.h.
+	(all-local): Depend on unlocked-io.h, to ensure it is created.
 
 	* unlocked-io.hin: New file
 
