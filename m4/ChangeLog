@@ -1,5 +1,7 @@
 2000-05-05  Jim Meyering  <meyering@lucent.com>
 
+	* search-libs.m4: Update from autoconf.
+
 	su doesn't work on Solaris2.6.
 	* lib-check.m4: When checking for struct spwd.sp_pwdp, also include
 	<shadow.h>.  Reported by Dragos Harabor.
