@@ -424,7 +424,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "dircolors", PACKAGE_VERSION, usage);
+  parse_long_options (argc, argv, "dircolors", GNU_PACKAGE, VERSION, usage);
 
   while ((optc = getopt_long (argc, argv, "bcp", long_options, NULL))
 	 != EOF)

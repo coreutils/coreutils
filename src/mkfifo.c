@@ -106,7 +106,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("mkfifo (GNU %s) %s\n", PACKAGE, VERSION);
+      printf ("mkfifo (%s) %s\n", GNU_PACKAGE, VERSION);
       exit (0);
     }
 

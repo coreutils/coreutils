@@ -305,7 +305,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("chmod (GNU %s) %s\n", PACKAGE, VERSION);
+      printf ("chmod (%s) %s\n", GNU_PACKAGE, VERSION);
       exit (0);
     }
 

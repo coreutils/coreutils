@@ -121,7 +121,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("mkdir (GNU %s) %s\n", PACKAGE, VERSION);
+      printf ("mkdir (%s) %s\n", GNU_PACKAGE, VERSION);
       exit (0);
     }
 

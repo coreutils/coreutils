@@ -302,7 +302,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("chown (GNU %s) %s\n", PACKAGE, VERSION);
+      printf ("chown (%s) %s\n", GNU_PACKAGE, VERSION);
       exit (0);
     }
 

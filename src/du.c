@@ -336,7 +336,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("du (GNU %s) %s\n", PACKAGE, VERSION);
+      printf ("du (%s) %s\n", GNU_PACKAGE, VERSION);
       exit (0);
     }
 

@@ -56,7 +56,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "sync", PACKAGE_VERSION, usage);
+  parse_long_options (argc, argv, "sync", GNU_PACKAGE, VERSION, usage);
 
   if (argc != 1)
     error (0, 0, _("ignoring all arguments"));
