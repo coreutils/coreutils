@@ -416,14 +416,12 @@ install_file_to_path (const char *from, const char *to,
   if (!STREQ (dest_dir, ".")
       && !isdir (dest_dir))
     {
-      /* FIXME: Note that it's a little kludgey (even dangerous) that we
-	 derive the permissions for parent directories from the permissions
-	 specfied for the file, but since this option is intended mainly to
-	 help installers when the distribution doesn't provide proper install
-	 rules, it's not so bad.  Maybe use something like this instead:
-	 int parent_dir_mode = (mode | (S_IRUGO | S_IXUGO)) & (~SPECIAL_BITS);
-	 */
-      fail = make_path (dest_dir, mode, mode, owner_id, group_id, 0,
+      /* Someone will probably ask for a new option or three to specify
+	 owner, group, and permissions for parent directories.  Remember
+	 that this option is intended mainly to help installers when the
+	 distribution doesn't provide proper install rules.  */
+#define DIR_MODE 0755
+      fail = make_path (dest_dir, DIR_MODE, DIR_MODE, owner_id, group_id, 0,
 			(x->verbose ? _("creating directory `%s'") : NULL));
 
       if (fail == 0)
