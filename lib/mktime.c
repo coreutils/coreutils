@@ -100,7 +100,10 @@
 #endif
 
 /* How many days come before each month (0-12).  */
-STATIC const unsigned short int __mon_yday[2][13] =
+#ifndef _LIBC
+static
+#endif
+const unsigned short int __mon_yday[2][13] =
   {
     /* Normal years.  */
     { 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365 },
@@ -213,7 +216,10 @@ ranged_convert (struct tm *(*convert) (const time_t *, struct tm *),
    Use *OFFSET to keep track of a guess at the offset of the result,
    compared to what the result would be for UTC without leap seconds.
    If *OFFSET's guess is correct, only one CONVERT call is needed.  */
-STATIC time_t
+#ifndef _LIBC
+static
+#endif
+time_t
 __mktime_internal (struct tm *tp,
 		   struct tm *(*convert) (const time_t *, struct tm *),
 		   time_t *offset)
