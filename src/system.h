@@ -129,10 +129,7 @@ void *memrchr (const void *, int, size_t);
 #endif
 
 #include <stdbool.h>
-
-#define getopt system_getopt
 #include <stdlib.h>
-#undef getopt
 
 /* The following test is to work around the gross typo in
    systems like Sony NEWS-OS Release 4.0C, whereby EXIT_FAILURE
