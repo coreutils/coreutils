@@ -66,6 +66,14 @@ typedef double LONG_DOUBLE;
 # define LDBL_DIG DBL_DIG
 #endif
 
+#if HAVE_UNSIGNED_LONG_LONG
+typedef unsigned long long ulonglong_t;
+#else
+/* This is just a place-holder to avoid a few `#if' directives.
+   In this case, the type isn't actually used.  */
+typedef unsigned long int ulonglong_t;
+#endif
+
 enum size_spec
   {
     NO_SIZE,
@@ -77,7 +85,8 @@ enum size_spec
     /* FIXME: add INTMAX support, too */
     FLOAT_SINGLE,
     FLOAT_DOUBLE,
-    FLOAT_LONG_DOUBLE
+    FLOAT_LONG_DOUBLE,
+    N_SIZE_SPECS
   };
 
 enum output_format
@@ -136,9 +145,18 @@ static const int width_bytes[] =
   sizeof (short int),
   sizeof (int),
   sizeof (long int),
+  sizeof (ulonglong_t),
   sizeof (float),
   sizeof (double),
   sizeof (LONG_DOUBLE)
+};
+
+/* Ensure that for each member of `enum size_spec' there is an
+   initializer in the width_bytes array.  */
+struct assert_width_bytes_matches_size_spec_decl
+{
+  int t1[sizeof width_bytes / sizeof width_bytes[0] - N_SIZE_SPECS];
+  int t2[N_SIZE_SPECS - sizeof width_bytes / sizeof width_bytes[0]];
 };
 
 /* Names for some non-printing characters.  */
@@ -230,14 +248,6 @@ static FILE *in_stream;
 
 /* If nonzero, at least one of the files we read was standard input.  */
 static int have_read_stdin;
-
-#if HAVE_UNSIGNED_LONG_LONG
-typedef unsigned long long ulonglong_t;
-#else
-/* This is just a place-holder to avoid a few `#if' directives.
-   In this case, the type isn't actually used.  */
-typedef unsigned long int ulonglong_t;
-#endif
 
 #define MAX_INTEGRAL_TYPE_SIZE sizeof (ulonglong_t)
 static enum size_spec integral_type_size[MAX_INTEGRAL_TYPE_SIZE + 1];
