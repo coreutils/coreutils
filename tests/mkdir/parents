@@ -1,0 +1,55 @@
+#!/bin/sh
+# make sure mkdir's -p options works properly
+
+if test "$VERBOSE" = yes; then
+  set -x
+  mkdir --version
+fi
+
+pwd=`pwd`
+tmp=parents-$$
+trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
+trap '(exit $?); exit' 1 2 13 15
+
+framework_failure=0
+
+# Record absolute path of srcdir.
+cd $srcdir || framework_failure=1
+abs_srcdir=`pwd`
+
+cd $pwd || framework_failure=1
+mkdir $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+mkdir e-dir || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo 'failure in testing framework'
+  (exit 1); exit
+fi
+
+fail=0
+
+# Make sure `mkdir -p existing-dir' succeeds
+# and that `mkdir existing-dir' fails.
+mkdir -p e-dir || fail=1
+mkdir e-dir > /dev/null 2>&1 && fail=1
+
+umask 077
+mode_str=drwxr-x-wx
+mode_arg=`$abs_srcdir/../rwx-to-mode $mode_str`
+mkdir -m $mode_arg a || fail=1
+
+d_mode_str=drwx-w--wx
+d_mode_arg=`$abs_srcdir/../rwx-to-mode $d_mode_str`
+mkdir -p -m $d_mode_arg a/b/c/d
+
+# Make sure the permissions of `a' haven't been changed.
+p=`ls -ld a|sed 's/ .*//'`; case $p in $mode_str);; *) fail=1;; esac
+# `b's and `c's should reflect the umask
+p=`ls -ld a/b|sed 's/ .*//'`; case $p in drwx------);; *) fail=1;; esac
+p=`ls -ld a/b/c|sed 's/ .*//'`; case $p in drwx------);; *) fail=1;; esac
+
+# `d's perms are determined by the -m argument.
+p=`ls -ld a/b/c/d|sed 's/ .*//'`; case $p in $d_mode_str);; *) fail=1;; esac
+
+(exit $fail); exit
