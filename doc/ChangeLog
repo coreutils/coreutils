@@ -1,3 +1,8 @@
+2002-09-13  Jim Meyering  <meyering@lucent.com>
+
+	* coreutils.texi (tail invocation): In --sleep-interval=NUMBER,
+	NUMBER may now be a floating point number.
+
 2002-08-30  Jim Meyering  <meyering@lucent.com>
 
 	* coreutils.texi [START-INFO-DIR-ENTRY]: Don't use sc{} on LHS.
