@@ -1,7 +1,7 @@
 2001-09-20  Jim Meyering  <meyering@lucent.com>
 
 	* xstrtoimax.m4 (jm_AC_PREREQ_XSTRTOIMAX): Check for declaration of
-	strtoumax.
+	strtoimax.
 	* xstrtoumax.m4 (jm_AC_PREREQ_XSTRTOUMAX): Check for declaration of
 	strtoumax.
 
