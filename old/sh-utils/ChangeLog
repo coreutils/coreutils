@@ -1,5 +1,7 @@
 2000-05-29  Jim Meyering  <meyering@lucent.com>
 
+	* tests/nice: Remove now-unused reference to srcdir.
+
 	* src/help-version: Use `WARNING', not just `Warning' in the
 	broken-/bin/sh diagnostic, to be consistent with other such warnings.
 

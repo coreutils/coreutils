@@ -1,3 +1,7 @@
+2000-05-22  Jim Meyering  <meyering@lucent.com>
+
+	* makepath.c: Remove old, now-unnecessary `#ifdef __MSDOS__' block.
+
 2000-05-18  Jim Meyering  <meyering@lucent.com>
 
 	* hash.c (hash_rehash): Fix a nasty bug: copy the free entry list
