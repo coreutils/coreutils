@@ -30,7 +30,7 @@ my @tv = (
 ['obs-5', '-1k', [\'in'], [\'in-1024'], 0], #'
 
 # This test fails for textutils-1.22, because head let 4096m overflow to 0.
-# Now it gets a diagnostic.
+# Now it fails with a diagnostic.
 ['fail-0', '-n 4096m', "a\n", "", 1],
 
 # In spite of its name, this test passes -- just to contrast with the above.
