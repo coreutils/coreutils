@@ -136,7 +136,7 @@ print_factors (const char *s)
   int n_factors;
   int i;
 
-  if (xstrtoul (s, NULL, 10, &n, NULL) != LONGINT_OK)
+  if (xstrtoul (s, NULL, 10, &n, "") != LONGINT_OK)
     {
       error (0, 0, _("`%s' is not a valid positive integer"), s);
       return 1;
