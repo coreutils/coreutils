@@ -2390,6 +2390,32 @@ input.  This is useful when you have many dates to process, because the
 system overhead of starting up the @code{date} executable many times can
 be considerable.
 
+@item -I[@var{timespec}]
+@itemx --iso-8601[=@var{timespec}]
+@opindex -I[@var{timespec}]
+@opindex --iso-8601[=@var{timespec}]
+Display the date using the ISO 8601 format, @samp{%Y-%m-%d}.
+
+The optional argument @var{timespec} specifies the number of additional
+terms of the time to include.  It can be one of the following:
+@table @samp
+@item auto
+The default behavior: print just the date.
+
+@item hours
+Append the hour of the day to the date.
+
+@item minutes
+Append the hours and minutes.
+
+@item seconds
+Append the hours, minutes, and seconds.
+@end table
+
+If showing any time terms, then include the time zone using the format
+@samp{%z}.  If @samp{--utc} is also specified, use @samp{%Z} in place of
+@samp{%z}.
+
 @item -R
 @itemx --rfc-822
 @opindex -R
