@@ -388,8 +388,13 @@ struct COLUMN
 	CLOSED
       }
     status;			/* Status of the file pointer. */
-    int (*print_func) ();	/* Func to print lines in this col. */
-    void (*char_func) ();	/* Func to print/store chars in this col. */
+
+    /* Func to print lines in this col. */
+    int (*print_func) PARAMS ((struct COLUMN *));
+
+    /* Func to print/store chars in this col. */
+    void (*char_func) PARAMS ((int));
+
     int current_line;		/* Index of current place in line_vector. */
     int lines_stored;		/* Number of lines stored in buff. */
     int lines_to_print;		/* No. lines stored or space left on page. */
